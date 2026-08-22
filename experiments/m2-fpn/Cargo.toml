@@ -1,0 +1,17 @@
+# Own workspace root, so the parent workspace does not adopt it and a normal
+# `cargo build` at the repo root never compiles this.
+[workspace]
+
+[package]
+name = "m2-fpn"
+version = "0.0.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[dependencies]
+rawler = "0.7.2"
+rayon = "1"
+
+[profile.release]
+opt-level = 3
