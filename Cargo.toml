@@ -1,0 +1,34 @@
+[workspace]
+resolver = "3"
+members = ["crates/strehl-core", "crates/strehl-raw", "crates/strehl-cli"]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.98"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/chcaru/strehl"
+authors = ["Chris Caruso"]
+
+[workspace.dependencies]
+strehl-core = { path = "crates/strehl-core" }
+strehl-raw = { path = "crates/strehl-raw" }
+
+anyhow = "1.0"
+thiserror = "2.0"
+rayon = "1.12"
+clap = { version = "4.5", features = ["derive"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# RAW decode. LGPL-2.1 -- LINK ONLY, DO NOT READ. See AGENTS.md.
+rawler = "0.7.2"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+
+[profile.bench]
+inherits = "release"
+debug = true

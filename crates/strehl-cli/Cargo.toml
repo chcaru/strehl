@@ -1,0 +1,21 @@
+[package]
+name = "strehl-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Command-line interface for strehl."
+
+[[bin]]
+name = "strehl"
+path = "src/main.rs"
+
+[dependencies]
+strehl-core.workspace = true
+strehl-raw.workspace = true
+clap.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true

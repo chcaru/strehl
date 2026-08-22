@@ -1,0 +1,32 @@
+# Build artifacts
+/target/
+**/*.rs.bk
+*.pdb
+
+# Stacked output and test renders -- never commit heavy binaries
+/out/
+*.tif
+*.tiff
+*.dng
+*.exr
+*.png
+*.jpg
+*.jpeg
+
+# RAW inputs are never committed
+*.ARW
+*.arw
+*.NEF
+*.CR2
+*.CR3
+*.RAF
+*.ORF
+*.RW2
+
+# Local benchmark and profiling output
+*.json.gz
+/bench-results/
+/profiles/
+
+.DS_Store
+Thumbs.db
