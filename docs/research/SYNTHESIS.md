@@ -487,7 +487,9 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
 **Needs the owner:**
 1. **20 lens-cap dark frames at ISO 100 and ISO 400.** Two-minute capture, no extra gear. Unblocks
    experiment 2, the go/no-go on the central pillar. `rawler` cannot supply masked pixels (M1).
-   *Outstanding.*
+   *Owner will provide later; proceeding without. Full capture spec in
+   [`../captures-needed.md`](../captures-needed.md).* **Until it exists, every claim that depends on
+   frame averaging is `ARGUED`, not `MEASURED`.**
 2. ~~A rail-captured stack~~ — **no rail available. Rail support deferred from v1 (§9).**
 
 **Needs measurement, not argument:**

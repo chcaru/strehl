@@ -69,6 +69,7 @@ monolithic binary and ship only that binary.
 | `crates/strehl-core/` | Types, noise model, tile views, geometry |
 | `crates/strehl-raw/` | RAW decode behind `rawler` |
 | `crates/strehl-cli/` | The binary |
+| `docs/captures-needed.md` | **Data owed by the owner.** Read before asking for captures. |
 | `docs/research/` | Research corpus and decision record |
 
 ## Research corpus
