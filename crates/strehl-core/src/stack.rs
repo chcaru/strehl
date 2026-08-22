@@ -281,7 +281,7 @@ mod tests {
     }
 
     #[test]
-    fn absorb_is_associative_over_every_partition_of_the_stack() {
+    fn absorb_is_associative_over_every_contiguous_partition() {
         let (w, h) = (13usize, 7usize);
         let whole = fold_order(&[0, 1, 2, 3, 4, 5, 6], w, h);
 
@@ -373,5 +373,98 @@ mod tests {
             .map(|i| if i % 16 < 8 { 2 } else { 30 })
             .collect();
         assert_eq!(speckle_fraction(&idx, g, 2), 0.0);
+    }
+
+    /// The border convention, pinned to exact counts.
+    ///
+    /// The window is clamped, not reflected and not skipped, so an edge pixel
+    /// sees 6 neighbours and a corner pixel 4. With an even count `w[n / 2]` is
+    /// the **upper** median, which is what makes the border asymmetric: the
+    /// same pattern can speckle on one edge and not on the opposite one. The
+    /// exact fractions below encode that choice, so changing it breaks these
+    /// tests loudly rather than silently moving the headline percentage.
+    ///
+    /// The tool's reported 34.381% includes borders. On a 3516 x 2344 plane the
+    /// border is 0.07% of pixels, which is why an independent re-derivation
+    /// that excluded them landed at 34.385%.
+    #[test]
+    fn the_border_convention_is_clamped_with_an_upper_median() {
+        let g = geom(16, 16);
+
+        // A ramp of 4 per column. Every interior pixel equals its own
+        // neighbourhood median, so nothing there can speckle. Column 0 sees
+        // only columns 0 and 1; the upper median of {0,0,0,4,4,4} is 4, and
+        // 4 - 0 exceeds the tolerance of 2. Column 15 sees columns 14 and 15,
+        // whose upper median is column 15's own value, so it stays clean.
+        let ramp: Vec<u16> = (0..g.pixels()).map(|i| 4 * (i % 16) as u16).collect();
+        assert_eq!(speckle_fraction(&ramp, g, 2), 16.0 / 256.0);
+
+        // The same ramp at a step of 1 is inside the tolerance everywhere.
+        let gentle: Vec<u16> = (0..g.pixels()).map(|i| (i % 16) as u16).collect();
+        assert_eq!(speckle_fraction(&gentle, g, 2), 0.0);
+
+        // A constant map is the trivial floor.
+        assert_eq!(speckle_fraction(&vec![9u16; g.pixels()], g, 2), 0.0);
+
+        // The ramp above fixes how *many* border pixels speckle but not which,
+        // because flipping to the lower median moves the effect from column 0
+        // to column 15 and leaves the count identical. This pair is asymmetric
+        // and fixes the side: with the upper median a **dark** edge column
+        // against a bright field speckles, and a **bright** edge column against
+        // a dark field does not. Only `w[n / 2]` satisfies both.
+        let e = geom(4, 4);
+        let dark_edge: Vec<u16> = (0..e.pixels())
+            .map(|i| if i % 4 == 0 { 0 } else { 20 })
+            .collect();
+        let bright_edge: Vec<u16> = (0..e.pixels())
+            .map(|i| if i % 4 == 0 { 20 } else { 0 })
+            .collect();
+        assert_eq!(speckle_fraction(&dark_edge, e, 2), 4.0 / 16.0);
+        assert_eq!(speckle_fraction(&bright_edge, e, 2), 0.0);
+    }
+
+    /// The worst case the metric can see, and the one it cannot.
+    ///
+    /// This is the null the 34.381% figure needs at the top end. Alternating
+    /// **columns** saturate the metric: a centre pixel is outnumbered 6 to 3 in
+    /// its own neighbourhood, so every interior pixel speckles.
+    ///
+    /// A **checkerboard** is the higher-frequency pattern and yet is invisible
+    /// to the metric, because the centre's own value occupies the four
+    /// diagonals plus the centre — 5 of 9 — and therefore *is* the median.
+    ///
+    /// Both are proved by how the count scales rather than by one number: the
+    /// stripe count grows with **area** (`w * h - h`, every pixel but the last
+    /// column) and the checkerboard count grows with **perimeter**
+    /// (`w + h - 2`, exactly half the border), which is only possible if the
+    /// checkerboard's interior contributes nothing at any size.
+    ///
+    /// Recorded because it is a real limitation of the statistic, not a bug in
+    /// this function: 34.381% is blind to the highest-frequency winner map
+    /// possible, so it understates instability in that specific mode.
+    #[test]
+    fn alternating_columns_saturate_the_metric_but_a_checkerboard_hides_from_it() {
+        for (w, h) in [(16usize, 16usize), (24, 24), (32, 32)] {
+            let g = geom(w, h);
+            let px = g.pixels() as f64;
+
+            let stripes: Vec<u16> = (0..g.pixels())
+                .map(|i| if (i % w) % 2 == 0 { 0 } else { 10 })
+                .collect();
+            let want = (w * h - h) as f64 / px;
+            assert!(
+                (speckle_fraction(&stripes, g, 2) - want).abs() < 1e-12,
+                "stripes at {w}x{h}"
+            );
+
+            let checker: Vec<u16> = (0..g.pixels())
+                .map(|i| if ((i % w) + (i / w)) % 2 == 0 { 0 } else { 10 })
+                .collect();
+            let want = (w + h - 2) as f64 / px;
+            assert!(
+                (speckle_fraction(&checker, g, 2) - want).abs() < 1e-12,
+                "checkerboard at {w}x{h}"
+            );
+        }
     }
 }

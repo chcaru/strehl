@@ -482,6 +482,60 @@ fn report_winners(selection: &Selection) {
     eprintln!();
 }
 
+/// The numbers behind the headline ratio.
+///
+/// Split out from the reporting because the ratio is the number the whole
+/// milestone rests on and it had no regression test of its own — the 52 library
+/// tests all exercised synthetic units, and an independent re-derivation is not
+/// a substitute for covering the code that actually produced the figure
+/// (`AGENTS.md` rule 11). `report_flat_roi` is now printing only.
+struct FlatRoiStats {
+    pixels: usize,
+    stacked_mean: f64,
+    stacked_sigma: f64,
+    single_mean: f64,
+    single_sigma: f64,
+    /// Above 1.0 means the stack is noisier than one unstacked frame.
+    ratio: f64,
+    distinct_winners: usize,
+    median_winner: u16,
+}
+
+fn flat_roi_stats(
+    selection: &Selection,
+    middle_roi: &[f32],
+    roi: Roi,
+    geom: PlaneGeometry,
+    black: f32,
+) -> FlatRoiStats {
+    let stacked: Vec<f32> = (roi.y..roi.y + roi.height)
+        .flat_map(|py| (roi.x..roi.x + roi.width).map(move |px| (px, py)))
+        .map(|(px, py)| selection.green_mean(geom.index(px, py)) - black)
+        .collect();
+
+    let (stacked_mean, stacked_sigma) = mean_and_sigma(&stacked);
+    let (single_mean, single_sigma) = mean_and_sigma(middle_roi);
+
+    let mut roi_index: Vec<u16> = (roi.y..roi.y + roi.height)
+        .flat_map(|py| (roi.x..roi.x + roi.width).map(move |px| (px, py)))
+        .map(|(px, py)| selection.index()[geom.index(px, py)])
+        .collect();
+    roi_index.sort_unstable();
+    let median_winner = roi_index[roi_index.len() / 2];
+    roi_index.dedup();
+
+    FlatRoiStats {
+        pixels: stacked.len(),
+        stacked_mean,
+        stacked_sigma,
+        single_mean,
+        single_sigma,
+        ratio: stacked_sigma / single_sigma,
+        distinct_winners: roi_index.len(),
+        median_winner,
+    }
+}
+
 fn report_flat_roi(
     merged: &Partial,
     roi: Roi,
@@ -490,58 +544,46 @@ fn report_flat_roi(
     noise: &NoiseModel,
     middle: u16,
 ) -> Result<()> {
-    let stacked: Vec<f32> = (roi.y..roi.y + roi.height)
-        .flat_map(|py| (roi.x..roi.x + roi.width).map(move |px| (px, py)))
-        .map(|(px, py)| merged.selection.green_mean(geom.index(px, py)) - levels.black)
-        .collect();
     let single = merged
         .middle_roi
         .as_ref()
         .context("the middle frame's ROI was never captured")?;
-
-    let (stack_mean, stack_sigma) = mean_and_sigma(&stacked);
-    let (single_mean, single_sigma) = mean_and_sigma(single);
-    let ratio = stack_sigma / single_sigma;
-
-    let mut roi_index: Vec<u16> = (roi.y..roi.y + roi.height)
-        .flat_map(|py| (roi.x..roi.x + roi.width).map(move |px| (px, py)))
-        .map(|(px, py)| merged.selection.index()[geom.index(px, py)])
-        .collect();
-    roi_index.sort_unstable();
-    let distinct = {
-        let mut d = roi_index.clone();
-        d.dedup();
-        d.len()
-    };
+    let s = flat_roi_stats(&merged.selection, single, roi, geom, levels.black);
 
     eprintln!();
     eprintln!("--- flat-ROI noise control (MEASURED) ---");
     eprintln!(
         "roi             : x {} y {} w {} h {} in plane coordinates ({} px)",
-        roi.x,
-        roi.y,
-        roi.width,
-        roi.height,
-        stacked.len()
+        roi.x, roi.y, roi.width, roi.height, s.pixels
     );
     eprintln!(
-        "stacked green   : sigma {stack_sigma:8.3} DN   mean {stack_mean:9.2} DN   (argmax over {} frames)",
+        "stacked green   : sigma {:8.3} DN   mean {:9.2} DN   (argmax over {} frames)",
+        s.stacked_sigma,
+        s.stacked_mean,
         merged.selection.frames_folded()
     );
     eprintln!(
-        "single frame {middle:<3}: sigma {single_sigma:8.3} DN   mean {single_mean:9.2} DN   (no stacking at all)"
+        "single frame {middle:<3}: sigma {:8.3} DN   mean {:9.2} DN   (no stacking at all)",
+        s.single_sigma, s.single_mean
     );
     eprintln!(
         "model predicts  : sigma {:8.3} DN for one green-luma sample at that level",
-        noise.green_luma_sigma(single_mean as f32)
+        noise.green_luma_sigma(s.single_mean as f32)
     );
-    eprintln!("RATIO           : {ratio:.3}x");
+    eprintln!(
+        "                  that is a TEMPORAL per-sample sigma; the two above are SPATIAL sds"
+    );
+    eprintln!(
+        "                  of noise plus whatever scene structure the ROI still has, so they"
+    );
+    eprintln!("                  are not the same quantity and are not expected to match.");
+    eprintln!("RATIO           : {:.3}x", s.ratio);
     eprintln!(
         "                  A RATIO ABOVE 1.0 MEANS THE STACK IS NOISIER THAN ONE UNSTACKED FRAME."
     );
     eprintln!(
-        "winners in roi  : {distinct} distinct frames, median {}",
-        roi_index[roi_index.len() / 2]
+        "winners in roi  : {} distinct frames, median {}",
+        s.distinct_winners, s.median_winner
     );
     Ok(())
 }
@@ -689,5 +731,291 @@ mod tests {
         assert!((m - 5.0).abs() < 1e-9);
         assert!((s - 2.0).abs() < 1e-9);
         assert_eq!(mean_and_sigma(&[]), (0.0, 0.0));
+    }
+
+    /// Sentinel for the padding and for everything outside the active area.
+    /// Real padding is zeros, which black subtraction would turn into a large
+    /// negative and might not be noticed; this fails loudly instead.
+    const POISON: u16 = 60_000;
+
+    const TEST_BLACK: f32 = 500.0;
+
+    /// A synthetic frame carrying the two geometry hazards the real decoder
+    /// has: the buffer is wider and taller than the active area, and the active
+    /// area does not begin at `(0, 0)`. Any read that uses `stride` instead of
+    /// the active row width, or forgets the origin, lands on [`POISON`].
+    ///
+    /// The origin is even in both axes so the RGGB phase is preserved, which is
+    /// the only origin a CFA plane mapping can accept.
+    fn synthetic_frame(
+        pw: usize,
+        ph: usize,
+        mut quad: impl FnMut(usize, usize) -> [u16; 4],
+    ) -> Frame {
+        let (aw, ah) = (2 * pw, 2 * ph);
+        let (ox, oy) = (2usize, 4usize);
+        let stride = aw + ox + 3;
+        let buffer_height = ah + oy + 2;
+        let mut data = vec![POISON; stride * buffer_height];
+        for py in 0..ph {
+            for px in 0..pw {
+                let q = quad(px, py);
+                for (plane, v) in [CfaPlane::R, CfaPlane::G1, CfaPlane::G2, CfaPlane::B]
+                    .into_iter()
+                    .zip(q)
+                {
+                    let (dx, dy) = plane.rggb_offset();
+                    data[(oy + 2 * py + dy) * stride + ox + 2 * px + dx] = v;
+                }
+            }
+        }
+        Frame {
+            data,
+            stride,
+            buffer_height,
+            active: strehl_raw::Region {
+                x: ox,
+                y: oy,
+                width: aw,
+                height: ah,
+            },
+            levels: Levels {
+                black: TEST_BLACK,
+                white: 15360.0,
+            },
+            iso: Some(100.0),
+            wb_coeffs: [2.0, 1.0, 1.5, f32::NAN],
+            camera: "synthetic".into(),
+            path: PathBuf::from("synthetic"),
+        }
+    }
+
+    /// Deterministic Gaussian source. A fixed seed keeps every assertion below
+    /// reproducible run to run.
+    struct Lcg(u64);
+
+    impl Lcg {
+        fn unit(&mut self) -> f64 {
+            self.0 = self
+                .0
+                .wrapping_mul(6_364_136_223_846_793_005)
+                .wrapping_add(1_442_695_040_888_963_407);
+            ((self.0 >> 32) as u32 as f64 + 0.5) / 4_294_967_296.0
+        }
+
+        fn normal(&mut self) -> f64 {
+            let (u1, u2) = (self.unit(), self.unit());
+            (-2.0 * u1.ln()).sqrt() * (std::f64::consts::TAU * u2).cos()
+        }
+    }
+
+    /// Hand-computed values, and the one that matters is the corner.
+    ///
+    /// The frame's active sample at `(x, y)` is `1000 + 10 * y + x`, so the
+    /// green of plane pixel `(px, py)` is
+    /// `0.5 * (G1 + G2) = 1000 + 20 * py + 2 * px + 5.5`, and after black
+    /// subtraction `505.5 + 20 * py + 2 * px`.
+    #[test]
+    fn roi_green_is_hand_computable_and_never_reads_the_padding() {
+        let f = synthetic_frame(6, 5, |px, py| {
+            let at = |dx: usize, dy: usize| (1000 + 10 * (2 * py + dy) + (2 * px + dx)) as u16;
+            [at(0, 0), at(1, 0), at(0, 1), at(1, 1)]
+        });
+        let expect = |px: usize, py: usize| 505.5 + 20.0 * py as f32 + 2.0 * px as f32;
+
+        // Interior, and row-major order.
+        let roi = Roi {
+            x: 1,
+            y: 1,
+            width: 3,
+            height: 2,
+        };
+        let got = roi_green(&f, roi, TEST_BLACK);
+        assert_eq!(got.len(), 6);
+        for (i, v) in got.iter().enumerate() {
+            let (px, py) = (roi.x + i % roi.width, roi.y + i / roi.width);
+            assert!((v - expect(px, py)).abs() < 1e-3, "at ({px},{py}): {v}");
+        }
+
+        // The bottom-right corner quad — the last real row and column, one
+        // sample away from the padding in both axes.
+        let corner = Roi {
+            x: 5,
+            y: 4,
+            width: 1,
+            height: 1,
+        };
+        let got = roi_green(&f, corner, TEST_BLACK);
+        assert_eq!(got.len(), 1);
+        assert!(
+            (got[0] - expect(5, 4)).abs() < 1e-3,
+            "corner was {}",
+            got[0]
+        );
+        // POISON would have shown up as a value three orders of magnitude out.
+        assert!(got[0] < 1000.0);
+
+        // The whole plane, edges included, still never sees the padding.
+        let all = roi_green(
+            &f,
+            Roi {
+                x: 0,
+                y: 0,
+                width: 6,
+                height: 5,
+            },
+            TEST_BLACK,
+        );
+        assert_eq!(all.len(), 30);
+        assert!(all.iter().all(|v| *v < 1000.0));
+    }
+
+    /// The estimator recovers a sigma that was put in on purpose, and the
+    /// green average halves the variance.
+    ///
+    /// The second half is what `--flat-roi`'s "model predicts" line depends on:
+    /// the output green is the mean of two independent sensor samples, so its
+    /// noise is a factor of sqrt(2) below a single green sample's.
+    #[test]
+    fn roi_green_and_mean_and_sigma_recover_an_injected_noise_level() {
+        const LEVEL: f64 = 4000.0;
+        const SIGMA: f64 = 50.0;
+        let (pw, ph) = (128usize, 128usize);
+
+        // G1 and G2 given the *same* deviation: the average keeps it intact.
+        let mut rng = Lcg(0x5EED_1234);
+        let common = synthetic_frame(pw, ph, |_, _| {
+            let v = (LEVEL + SIGMA * rng.normal()).round() as u16;
+            [v, v, v, v]
+        });
+        let roi = Roi {
+            x: 0,
+            y: 0,
+            width: pw,
+            height: ph,
+        };
+        let (mean, sigma) = mean_and_sigma(&roi_green(&common, roi, TEST_BLACK));
+        assert!(
+            (mean - (LEVEL - TEST_BLACK as f64)).abs() < 1.0,
+            "mean {mean}"
+        );
+        assert!((sigma / SIGMA - 1.0).abs() < 0.02, "sigma {sigma}");
+
+        // G1 and G2 given *independent* deviations: the average must land a
+        // factor of sqrt(2) lower.
+        let mut rng = Lcg(0x5EED_1234);
+        let independent = synthetic_frame(pw, ph, |_, _| {
+            let mut s = || (LEVEL + SIGMA * rng.normal()).round() as u16;
+            [s(), s(), s(), s()]
+        });
+        let (_, sigma) = mean_and_sigma(&roi_green(&independent, roi, TEST_BLACK));
+        let want = SIGMA / 2.0f64.sqrt();
+        assert!((sigma / want - 1.0).abs() < 0.03, "sigma {sigma} vs {want}");
+    }
+
+    /// Stacking one frame must give a ratio of exactly 1.000.
+    ///
+    /// This is the headline path's identity check. The two sides of the ratio
+    /// are produced by different code — `roi_green` walks the decoded frame,
+    /// `flat_roi_stats` walks the merged `Selection` — so if they disagree
+    /// about which pixels the ROI names, or in which order, this fails.
+    #[test]
+    fn a_single_frame_stack_has_a_flat_roi_ratio_of_exactly_one() {
+        let (pw, ph) = (32usize, 24usize);
+        let geom = PlaneGeometry {
+            width: pw,
+            height: ph,
+        };
+        let mut rng = Lcg(0xC0FF_EE01);
+        let f = synthetic_frame(pw, ph, |_, _| {
+            let mut s = || (4000.0 + 80.0 * rng.normal()).round() as u16;
+            [s(), s(), s(), s()]
+        });
+
+        let mut sel = Selection::new(geom);
+        sel.fold(0, &f, &vec![1.0f32; geom.pixels()]).unwrap();
+
+        let roi = Roi {
+            x: 3,
+            y: 5,
+            width: 20,
+            height: 14,
+        };
+        let single = roi_green(&f, roi, TEST_BLACK);
+        let s = flat_roi_stats(&sel, &single, roi, geom, TEST_BLACK);
+
+        assert_eq!(s.pixels, 20 * 14);
+        assert!((s.ratio - 1.0).abs() < 1e-9, "ratio {}", s.ratio);
+        assert!((s.stacked_sigma - s.single_sigma).abs() < 1e-6);
+        assert!((s.stacked_mean - s.single_mean).abs() < 1e-6);
+        assert_eq!(s.distinct_winners, 1);
+        assert_eq!(s.median_winner, 0);
+    }
+
+    /// A winner that is k times noisier reports a ratio of k.
+    ///
+    /// Frame 1 is given a strictly higher focus everywhere, so argmax must
+    /// select it at every pixel; its green swings +/- 3d about the same level
+    /// the control swings +/- d about. The population sd of a two-valued
+    /// alternation is exactly its amplitude, so the expected ratio is exactly
+    /// 3.0 with no sampling slack.
+    #[test]
+    fn the_flat_roi_ratio_is_the_ratio_of_the_two_sigmas() {
+        let (pw, ph) = (16usize, 16usize);
+        let geom = PlaneGeometry {
+            width: pw,
+            height: ph,
+        };
+        let level = 4000.0f32;
+        let d = 10.0f32;
+
+        let swing = |px: usize, py: usize, amp: f32| {
+            let sign = if (px + py).is_multiple_of(2) {
+                1.0
+            } else {
+                -1.0
+            };
+            (level + sign * amp).round() as u16
+        };
+        let quiet = synthetic_frame(pw, ph, |px, py| {
+            let v = swing(px, py, d);
+            [v, v, v, v]
+        });
+        let loud = synthetic_frame(pw, ph, |px, py| {
+            let v = swing(px, py, 3.0 * d);
+            [v, v, v, v]
+        });
+
+        let mut sel = Selection::new(geom);
+        sel.fold(0, &quiet, &vec![1.0f32; geom.pixels()]).unwrap();
+        sel.fold(1, &loud, &vec![2.0f32; geom.pixels()]).unwrap();
+
+        let roi = Roi {
+            x: 0,
+            y: 0,
+            width: pw,
+            height: ph,
+        };
+        let control = roi_green(&quiet, roi, TEST_BLACK);
+        let s = flat_roi_stats(&sel, &control, roi, geom, TEST_BLACK);
+
+        assert_eq!(s.distinct_winners, 1);
+        assert_eq!(s.median_winner, 1);
+        assert!(
+            (s.single_sigma - d as f64).abs() < 1e-6,
+            "{}",
+            s.single_sigma
+        );
+        assert!(
+            (s.stacked_sigma - 3.0 * d as f64).abs() < 1e-6,
+            "{}",
+            s.stacked_sigma
+        );
+        assert!((s.ratio - 3.0).abs() < 1e-9, "ratio {}", s.ratio);
+
+        // Both sides are black-subtracted, so the means agree even though only
+        // one of them passed through `roi_green`.
+        assert!((s.stacked_mean - s.single_mean).abs() < 1e-6);
+        assert!((s.single_mean - (level - TEST_BLACK) as f64).abs() < 1e-6);
     }
 }
