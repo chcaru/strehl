@@ -21,8 +21,11 @@
 
 use std::path::{Path, PathBuf};
 
+use rawler::decoders::RawDecodeParams;
+use rawler::rawsource::RawSource;
 use rayon::prelude::*;
 use strehl_core::noise::Levels;
+use strehl_core::plane::{PlaneGeometry, QuadSource};
 
 #[derive(Debug, thiserror::Error)]
 pub enum RawError {
@@ -68,7 +71,13 @@ pub struct Frame {
     /// The region of `data` that contains real sensor readings.
     pub active: Region,
     pub levels: Levels,
-    pub iso: f32,
+    /// Sensor sensitivity as the file reports it, `None` when the file did not
+    /// say. Never defaulted to a plausible value: the noise model's gain is
+    /// linear in ISO, so a guessed ISO is a silently wrong noise floor.
+    pub iso: Option<f32>,
+    /// As-shot white balance, `[R, G, B, ?]`. The fourth element is `NaN` on
+    /// the A7C II (no emerald channel) — never iterate all four (MEASURED, M1).
+    pub wb_coeffs: [f32; 4],
     pub camera: String,
     pub path: PathBuf,
 }
@@ -97,14 +106,53 @@ impl Frame {
     pub fn useful_bytes(&self) -> usize {
         self.active.pixels() * std::mem::size_of::<u16>()
     }
+
+    /// As-shot white balance as `[R, G, B]` gains normalised so green is 1.0.
+    ///
+    /// `None` when the coefficients are unusable. The fourth coefficient is
+    /// never touched.
+    pub fn wb_gains(&self) -> Option<[f32; 3]> {
+        let [r, g, b, _] = self.wb_coeffs;
+        if !(r.is_finite() && g.is_finite() && b.is_finite()) || g <= 0.0 || r <= 0.0 || b <= 0.0 {
+            return None;
+        }
+        Some([r / g, 1.0, b / g])
+    }
+}
+
+impl QuadSource for Frame {
+    fn geometry(&self) -> PlaneGeometry {
+        PlaneGeometry::from_active(self.active.width, self.active.height)
+    }
+
+    fn quad_rows(&self, py: usize) -> (&[u16], &[u16]) {
+        (self.active_row(2 * py), self.active_row(2 * py + 1))
+    }
 }
 
 /// Decode one RAW file.
+///
+/// The file is read once into a [`RawSource`] and then queried twice: for the
+/// pixel data and for the EXIF block that carries ISO. Reading ISO rather than
+/// assuming base ISO matters because the noise model's gain is linear in it.
 pub fn decode(path: &Path) -> Result<Frame, RawError> {
-    let img = rawler::decode_file(path).map_err(|e| RawError::Decode {
+    let fail = |e: String| RawError::Decode {
         path: path.to_path_buf(),
-        source: anyhow::anyhow!("{e:?}"),
-    })?;
+        source: anyhow::anyhow!(e),
+    };
+
+    let source = RawSource::new(path).map_err(|e| fail(format!("{e}")))?;
+    let params = RawDecodeParams::default();
+
+    let img = rawler::decode(&source, &params).map_err(|e| fail(format!("{e:?}")))?;
+
+    // ISO is best-effort: a frame that decodes but has no ISO tag must still
+    // stack, with the noise model visibly downgraded rather than guessed.
+    let iso = rawler::get_decoder(&source)
+        .and_then(|d| d.raw_metadata(&source, &params))
+        .ok()
+        .and_then(|m| m.exif.iso_speed_ratings.map(u32::from).or(m.exif.iso_speed))
+        .map(|v| v as f32);
 
     let pattern = img.camera.cfa.name.clone();
     if pattern != "RGGB" {
@@ -154,7 +202,8 @@ pub fn decode(path: &Path) -> Result<Frame, RawError> {
         buffer_height: img.height,
         active,
         levels: Levels { black, white },
-        iso: 0.0,
+        iso,
+        wb_coeffs: img.wb_coeffs,
         camera: img.clean_model.clone(),
         path: path.to_path_buf(),
     })
@@ -193,7 +242,8 @@ mod tests {
                 black: 512.0,
                 white: 15360.0,
             },
-            iso: 100.0,
+            iso: Some(100.0),
+            wb_coeffs: [2.861, 1.0, 1.482, f32::NAN],
             camera: "test".into(),
             path: PathBuf::from("test"),
         }
@@ -233,5 +283,46 @@ mod tests {
         assert_eq!(useful, 65_932_032);
         let waste = 1.0 - useful as f64 / allocated as f64;
         assert!((waste - 0.1017).abs() < 0.001, "waste was {waste}");
+    }
+
+    #[test]
+    fn quad_rows_are_active_rows_at_twice_the_plane_pitch() {
+        let f = synthetic();
+        assert_eq!(
+            f.geometry(),
+            PlaneGeometry {
+                width: 1,
+                height: 1
+            }
+        );
+        let (a, b) = f.quad_rows(0);
+        assert_eq!(a, &[10, 20]);
+        assert_eq!(b, &[30, 40]);
+    }
+
+    #[test]
+    fn white_balance_normalises_green_to_one_and_ignores_the_nan() {
+        // Measured, M1: the A7C II reports [2.861, 1.0, 1.482, NaN].
+        let f = synthetic();
+        let g = f.wb_gains().unwrap();
+        assert!((g[0] - 2.861).abs() < 1e-6);
+        assert_eq!(g[1], 1.0);
+        assert!((g[2] - 1.482).abs() < 1e-6);
+    }
+
+    #[test]
+    fn white_balance_that_is_not_usable_is_reported_as_absent() {
+        let mut f = synthetic();
+        f.wb_coeffs = [f32::NAN, 1.0, 1.0, f32::NAN];
+        assert!(f.wb_gains().is_none());
+        f.wb_coeffs = [1.0, 0.0, 1.0, f32::NAN];
+        assert!(f.wb_gains().is_none());
+    }
+
+    #[test]
+    fn a_frame_with_no_iso_tag_says_so_rather_than_reporting_zero() {
+        let mut f = synthetic();
+        f.iso = None;
+        assert!(f.iso.is_none());
     }
 }

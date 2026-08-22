@@ -1,10 +1,15 @@
 //! `strehl` command line.
 
-use std::path::PathBuf;
+mod image_out;
+mod stack;
+
+use std::path::{Path, PathBuf};
 use std::time::Instant;
 
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
+
+use stack::{Roi, StackOptions, parse_roi};
 
 #[derive(Parser)]
 #[command(name = "strehl", version, about = "Noise-aware RAW focus stacking")]
@@ -26,21 +31,86 @@ enum Command {
         #[arg(short, long)]
         limit: Option<usize>,
     },
+
+    /// Stack a directory of RAW files by plain per-pixel argmax.
+    ///
+    /// THIS IS THE NAIVE BASELINE, ON PURPOSE. It selects, per pixel, the
+    /// single frame with the highest noise-normalised ring-difference focus
+    /// measure and copies that frame's 2x2 quad. Selection is exactly the
+    /// defect strehl exists to remove, and this subcommand is the reference
+    /// artifact every later quality claim is measured against. It does not
+    /// align, denoise, regularise the winner map, or blend frames.
+    ///
+    /// Output is BINNED, NOT DEMOSAICED: each output pixel is one real sensor
+    /// quad, R = R, G = (G1+G2)/2, B = B, at half the sensor's linear
+    /// resolution. There is no interpolation, so no demosaic artifact
+    /// contaminates the baseline.
+    ///
+    /// Default output is LINEAR and will look very dark in an ordinary viewer.
+    /// That is correct: it is what measurement needs. Pass --srgb for something
+    /// to look at, and do not measure that file.
+    Stack {
+        /// Directory containing RAW files.
+        dir: PathBuf,
+        /// Where to write the stacked 16-bit RGB TIFF.
+        #[arg(short, long)]
+        out: PathBuf,
+        /// Stack at most this many frames, in filename order.
+        #[arg(short, long)]
+        limit: Option<usize>,
+        /// Apply the sRGB transfer curve. For looking at, NOT for measuring.
+        #[arg(long)]
+        srgb: bool,
+        /// Also write the winner map: a 16-bit grayscale TIFF holding the
+        /// literal winning frame index per pixel. Smooth depth-ordered bands
+        /// are what a real scene should give; salt-and-pepper speckle in it is
+        /// the argmax defect made visible. Values are 0..N-1, so autoscale it
+        /// to look at it.
+        #[arg(long, value_name = "PATH")]
+        index_map: Option<PathBuf>,
+        /// Measure the noise penalty over a low-detail region, in PLANE
+        /// coordinates (half sensor resolution). Reports the spatial sigma of
+        /// the stacked green channel against the same region in the single
+        /// middle frame, and their ratio.
+        #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
+        flat_roi: Option<Roi>,
+    },
 }
 
 fn main() -> Result<()> {
+    // `rawler` logs a WARN per frame when its lens database has no entry for
+    // the reported mount/ID. That is true and irrelevant here — nothing in this
+    // pipeline consumes lens metadata yet — and at one line per frame it buries
+    // the measurement output. Errors from that module still get through.
     tracing_subscriber::fmt()
         .with_env_filter(
-            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| "info".into()),
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| "info,rawler::lens=error".into()),
         )
         .init();
 
     match Cli::parse().command {
         Command::Probe { dir, limit } => probe(&dir, limit),
+        Command::Stack {
+            dir,
+            out,
+            limit,
+            srgb,
+            index_map,
+            flat_roi,
+        } => stack::run(&StackOptions {
+            dir,
+            out,
+            limit,
+            srgb,
+            index_map,
+            flat_roi,
+        }),
     }
 }
 
-fn probe(dir: &PathBuf, limit: Option<usize>) -> Result<()> {
+/// RAW files in `dir`, sorted by filename so that frame index is capture order.
+fn raw_paths(dir: &Path, limit: Option<usize>) -> Result<Vec<PathBuf>> {
     let mut paths: Vec<PathBuf> = std::fs::read_dir(dir)
         .with_context(|| format!("reading {}", dir.display()))?
         .filter_map(|e| e.ok().map(|e| e.path()))
@@ -55,8 +125,12 @@ fn probe(dir: &PathBuf, limit: Option<usize>) -> Result<()> {
     if let Some(n) = limit {
         paths.truncate(n);
     }
-
     anyhow::ensure!(!paths.is_empty(), "no RAW files found in {}", dir.display());
+    Ok(paths)
+}
+
+fn probe(dir: &Path, limit: Option<usize>) -> Result<()> {
+    let paths = raw_paths(dir, limit)?;
 
     let bytes: u64 = paths
         .iter()
@@ -78,6 +152,12 @@ fn probe(dir: &PathBuf, limit: Option<usize>) -> Result<()> {
 
     let f = &ok[0];
     println!("camera          : {}", f.camera);
+    println!(
+        "iso             : {}",
+        f.iso
+            .map(|v| format!("{v:.0}"))
+            .unwrap_or_else(|| "UNKNOWN".to_string())
+    );
     println!("buffer          : {} x {}", f.stride, f.buffer_height);
     println!(
         "active area     : {} x {} at ({}, {})  [{:.2} MP]",
@@ -90,6 +170,10 @@ fn probe(dir: &PathBuf, limit: Option<usize>) -> Result<()> {
     println!(
         "levels          : black {}, white {}",
         f.levels.black, f.levels.white
+    );
+    println!(
+        "wb coeffs       : [{}, {}, {}, {}]",
+        f.wb_coeffs[0], f.wb_coeffs[1], f.wb_coeffs[2], f.wb_coeffs[3]
     );
     println!(
         "allocation      : {:.1} MB/frame, {:.1} MB useful ({:.1}% padding)",

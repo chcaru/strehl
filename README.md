@@ -17,9 +17,13 @@ much it trusts its own answer.
 The name is the Strehl ratio: how close a real optical system comes to the
 diffraction-limited ideal.
 
-> **Status: pre-implementation.** The research and architecture are done and are
-> in [`docs/research/`](docs/research/). Code is being built against that plan.
-> Nothing here is usable yet.
+> **Status: walking skeleton.** The research and architecture are done and are
+> in [`docs/research/`](docs/research/). The end-to-end path from RAW files to a
+> stacked image exists and runs, but it currently implements the **naive
+> per-pixel argmax selector** — the very defect described above — on purpose, as
+> the baseline every future quality claim is measured against. See
+> [`docs/M2-baseline-skeleton.md`](docs/M2-baseline-skeleton.md). None of the
+> estimation work below is built yet.
 
 ## What is actually different
 
@@ -53,6 +57,50 @@ Measured, on a Ryzen 9 9950X3D with an RTX 5090: a 60-frame 33 MP stack decodes
 in **1.78 s cold, 0.91 s warm**. See
 [`docs/research/M1-decode-measured.md`](docs/research/M1-decode-measured.md).
 
+## Usage
+
+```
+strehl probe <DIR> [--limit N]     # sensor geometry, levels, ISO, white balance
+strehl stack <DIR> --out <PATH> [--limit N] [--srgb]
+                                  [--index-map <PATH>] [--flat-roi X,Y,W,H]
+```
+
+```console
+$ strehl stack C:\dev\macro\test\109MSDCF --out baseline.tif \
+      --index-map baseline-index.tif --flat-roi 2368,1408,256,256
+```
+
+`stack` streams the directory's RAW frames through a bounded rayon fold — it
+never materialises the focus volume, so peak memory is O(threads), not
+O(frames) — computes a noise-normalised bandpass focus measure per CFA plane,
+and takes the per-pixel argmax.
+
+**What it writes.** `--out` is a **3516 x 2344 16-bit RGB TIFF**: one output
+pixel per physical 2x2 CFA quad, with `R` = R, `G` = (G1+G2)/2, `B` = B taken
+from the winning frame. It is **binned, not demosaiced** — there is no
+interpolation, and therefore no demosaic artifact in the baseline. The cost is
+half linear resolution. White balance is applied as a green-normalised gain; no
+colour matrix is applied, so the output is camera RGB, not colorimetric sRGB.
+
+**Default output is linear** and will look dark in a normal viewer. That is
+correct: it is what measurement needs. `--srgb` applies the sRGB transfer curve
+to produce something viewable — use it for looking at, never for measuring.
+
+**`--index-map`** writes the winner map as a 16-bit grayscale TIFF holding the
+literal frame index (0..N-1) per pixel, so it needs autoscaling to view. It is
+the primary diagnostic: real depth is piecewise smooth, so coherent bands are
+genuine focus structure and salt-and-pepper speckle is the argmax defect made
+visible.
+
+**`--flat-roi X,Y,W,H`** (in plane coordinates) prints the spatial standard
+deviation of the stacked green channel over that ROI next to the same ROI in a
+single unstacked frame, and their ratio. **A ratio above 1.0 means the stack is
+noisier than one unstacked frame.** On the reference bracket it is 1.265x.
+
+`stack` also prints throughput, the enforced in-flight frame bound, the winner
+distribution, index-map speckle, and an explicit provenance line stating whether
+the noise model came from calibration or a fallback guess.
+
 ## Design
 
 Read [`docs/research/SYNTHESIS.md`](docs/research/SYNTHESIS.md) first — it is the
@@ -64,6 +112,12 @@ The six background reports (`A`–`F`) are the underlying research: the prior-ar
 corpus, the algorithmic state of the art, the competitive and licensing
 landscape, the Rust and hardware envelope, the plugin architecture, and the
 optical modelling of the reference rig.
+
+Measurement milestones are recorded separately and label every claim `MEASURED`,
+`VERIFIED`, `DERIVED`, `ARGUED` or `UNVERIFIED`:
+[`M1`](docs/research/M1-decode-measured.md) (decode throughput and sensor
+constants), [`M2`](docs/M2-baseline-skeleton.md) (this baseline, and the argmax
+defect measured on real files).
 
 ## Contributing
 

@@ -117,6 +117,17 @@ impl NoiseModel {
         self.plane(p).sigma(signal_dn)
     }
 
+    /// Standard deviation in DN of the green luma `L = (G1 + G2) / 2`.
+    ///
+    /// The two greens are separate photosites and their read noise is
+    /// independent, so `Var(L) = (Var(G1) + Var(G2)) / 4`. Both are evaluated at
+    /// `luma_dn`, which assumes the two greens carry the same signal — true
+    /// except where a feature falls between the two green lattices.
+    pub fn green_luma_sigma(&self, luma_dn: f32) -> f32 {
+        let v = self.variance(CfaPlane::G1, luma_dn) + self.variance(CfaPlane::G2, luma_dn);
+        (0.25 * v).sqrt()
+    }
+
     /// True when every gating decision made against this model is trustworthy.
     pub fn is_trustworthy(&self) -> bool {
         !matches!(self.provenance, Provenance::Fallback)
@@ -179,5 +190,14 @@ mod tests {
         let p = plane(0.229, 1.47);
         assert_eq!(p.levels.white, 15360.0);
         assert_eq!(p.levels.range(), 14848.0);
+    }
+
+    #[test]
+    fn green_luma_sigma_is_the_averaging_of_two_independent_greens() {
+        let m = NoiseModel::new([plane(0.229, 1.47); 4], 100.0, Provenance::Profile);
+        let single = m.sigma(CfaPlane::G1, 3000.0);
+        let luma = m.green_luma_sigma(3000.0);
+        // Averaging two independent samples: sigma / sqrt(2).
+        assert!((luma - single / 2f32.sqrt()).abs() < 1e-4);
     }
 }

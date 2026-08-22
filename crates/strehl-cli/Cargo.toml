@@ -17,5 +17,7 @@ strehl-core.workspace = true
 strehl-raw.workspace = true
 clap.workspace = true
 anyhow.workspace = true
+rayon.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
+tiff.workspace = true

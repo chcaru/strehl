@@ -10,7 +10,12 @@
 //!   pipeline stages consume it. A private per-stage estimate is the exact
 //!   mechanism behind the prior project's measured 2-5x noise defect.
 
+pub mod boxfilter;
+pub mod focus;
 pub mod noise;
+pub mod plane;
+pub mod profile;
+pub mod stack;
 
 /// Which plane of a 2x2 colour filter array a sample belongs to.
 ///
