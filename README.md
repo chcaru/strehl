@@ -22,7 +22,7 @@ diffraction-limited ideal.
 > stacked image exists and runs, but it currently implements the **naive
 > per-pixel argmax selector** — the very defect described above — on purpose, as
 > the baseline every future quality claim is measured against. See
-> [`docs/M2-baseline-skeleton.md`](docs/M2-baseline-skeleton.md). None of the
+> [`docs/research/M2-baseline-skeleton.md`](docs/research/M2-baseline-skeleton.md). None of the
 > estimation work below is built yet.
 
 ## What is actually different
@@ -67,13 +67,15 @@ strehl stack <DIR> --out <PATH> [--limit N] [--srgb]
 
 ```console
 $ strehl stack C:\dev\macro\test\109MSDCF --out baseline.tif \
-      --index-map baseline-index.tif --flat-roi 2368,1408,256,256
+      --index-map baseline-index.tif --flat-roi 2272,1344,256,256
 ```
 
 `stack` streams the directory's RAW frames through a bounded rayon fold — it
 never materialises the focus volume, so peak memory is O(threads), not
 O(frames) — computes a noise-normalised bandpass focus measure per CFA plane,
-and takes the per-pixel argmax.
+and takes the per-pixel argmax. It does **not** align, denoise, regularise the
+winner map, or blend frames. That is the point: it is the naive baseline, and
+it is what later work has to beat.
 
 **What it writes.** `--out` is a **3516 x 2344 16-bit RGB TIFF**: one output
 pixel per physical 2x2 CFA quad, with `R` = R, `G` = (G1+G2)/2, `B` = B taken
@@ -95,7 +97,9 @@ visible.
 **`--flat-roi X,Y,W,H`** (in plane coordinates) prints the spatial standard
 deviation of the stacked green channel over that ROI next to the same ROI in a
 single unstacked frame, and their ratio. **A ratio above 1.0 means the stack is
-noisier than one unstacked frame.** On the reference bracket it is 1.265x.
+noisier than one unstacked frame.** On the reference bracket it is 1.253x.
+Pick a genuinely low-detail region: scene structure is common to both sigmas and
+biases the ratio toward 1.0.
 
 `stack` also prints throughput, the enforced in-flight frame bound, the winner
 distribution, index-map speckle, and an explicit provenance line stating whether
@@ -116,8 +120,9 @@ optical modelling of the reference rig.
 Measurement milestones are recorded separately and label every claim `MEASURED`,
 `VERIFIED`, `DERIVED`, `ARGUED` or `UNVERIFIED`:
 [`M1`](docs/research/M1-decode-measured.md) (decode throughput and sensor
-constants), [`M2`](docs/M2-baseline-skeleton.md) (this baseline, and the argmax
-defect measured on real files).
+constants), [`M2`](docs/research/M2-baseline-skeleton.md) (this baseline, and the
+argmax defect measured on real files),
+[`M3`](docs/research/M3-alignment-measured.md) (alignment).
 
 ## Contributing
 

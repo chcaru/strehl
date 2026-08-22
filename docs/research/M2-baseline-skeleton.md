@@ -40,8 +40,12 @@ warnings` and `cargo build --release` all exit 0; `cargo test` is 52 passed /
   per-channel gain; no camera-to-sRGB matrix. Output is camera RGB. Colours are
   plausible but not colorimetric. `--srgb` applies only the transfer curve, for
   looking at — not for measuring.
-- **Not aligned.** In-camera focus brackets from the A7C II are close enough to
-  produce a coherent image without alignment; M3 owns that question.
+- **Not aligned.** Frames are used as decoded. M3 measures the inter-frame
+  motion in this bracket as a 4-parameter similarity with **-1.835% total scale
+  drift and no measurable rotation**, i.e. up to ~39 px of displacement at the
+  plane corner between frame 0 and frame 21. The skeleton does not compensate
+  for that, by design — exposing it is part of the baseline's job. §3.2.1 tests
+  whether it contaminates the headline measurement (it does not).
 
 ---
 
@@ -123,49 +127,86 @@ structure along the paint ridges where there is real contrast, and **full-range
 salt-and-pepper** everywhere the surface is smooth. The defect is not subtle and
 it is not a corner case — it is most of the frame.
 
-### 3.2 Flat-ROI noise penalty: 1.265x (MEASURED)
+### 3.2 Flat-ROI noise penalty: 1.253x (MEASURED)
 
-ROI `2368,1408,256,256` in plane coordinates, 65,536 px.
+ROI `2272,1344,256,256` in plane coordinates, 65,536 px.
 
 | Quantity | Value |
 | --- | --- |
-| Stacked green, spatial sd | **34.855 DN** |
-| Single middle frame (11), same ROI | **27.552 DN** |
-| **Ratio** | **1.265x** |
-| Noise model prediction, one green-luma sample | 19.262 DN |
+| Stacked green, spatial sd | **35.328 DN** |
+| Single middle frame (11), same ROI | **28.201 DN** |
+| **Ratio** | **1.253x** |
+| Noise model prediction, one green-luma sample | 19.267 DN |
 | Distinct winning frames inside the ROI | 22 of 22 |
 
-**The stack is 26.5% noisier than one unstacked frame.** Stacking 22 exposures
+**The stack is 25.3% noisier than one unstacked frame.** Stacking 22 exposures
 of the same scene made the flat regions measurably worse than not stacking at
 all. Every one of the 22 frames wins somewhere inside a 256 x 256 patch of
 featureless paper.
 
-**How the ROI was chosen.** The green channel was box-downsampled 8x to suppress
-per-pixel noise, and every 256 x 256 block with a mean between 8000 and 55000
-(16-bit) was ranked by the residual standard deviation of the downsampled block —
-i.e. by *scene structure*, deliberately not by stacked noise, which would have
-biased the ratio downward. `2368,1408` was the flattest block in the frame.
+**How the ROI was chosen.** The green channel was box-downsampled 16x to
+suppress per-pixel noise, and 256 x 256 blocks were ranked by the residual
+standard deviation of the downsampled block — i.e. by *scene structure*,
+deliberately not by stacked noise, which would have biased the ratio downward.
+`2272,1344` is the flattest block available closest to the plane centre.
 Inspected at 1:1 with 1%-percentile autoscaling it shows only faint paper fibre.
 
-**This 1.265x is a lower bound (DERIVED).** No region of a real macro photograph
+M3 measures a **-1.835% scale drift** across the 22 frames, so an ROI far from
+the plane centre does not hold identical scene content in every frame, and a
+naive reading would be that this contaminates the ratio. §3.2.1 tests that
+directly rather than assuming either way.
+
+**This 1.253x is a lower bound (DERIVED).** No region of a real macro photograph
 is perfectly flat, and the residual scene structure is common to both
 measurements, so it inflates both sigmas and drags the ratio toward 1.0.
-Removing it in quadrature:
+Removing 10.93 DN of measured structure in quadrature gives **1.292x**;
+inferring the structure instead by trusting the noise model for the single frame
+gives **1.49x**. The second is conditional on a gain SYNTHESIS §4.1 already
+flags as derived rather than photon-transfer measured. Both move the same way.
+The honest statement is **1.253x measured, 1.29–1.49x once scene structure is
+accounted for.**
 
-| Structure estimate | Method | Corrected ratio |
-| --- | --- | --- |
-| 15.233 DN | 8x-downsampled sd of the stacked ROI (data-driven, itself a lower bound) | **1.366x** |
-| 19.700 DN | inferred by trusting the noise model for the single frame | **1.493x** |
+### 3.2.1 The ratio does not track scale drift (MEASURED)
 
-**Status: DERIVED, not MEASURED** — correction B is conditional on a gain that
-SYNTHESIS §4.1 already flags as derived from white-level consistency rather than
-a photon-transfer curve. Both corrections move the same way. The honest statement
-is **1.265x measured, 1.37–1.49x once scene structure is accounted for.**
+The scene's only genuinely flat regions are paper, and all of them sit 880+ px
+from the plane centre; the centre itself is the dark paint crossing, which is
+the busiest part of the frame. So "flat" and "central" could not both be
+satisfied, and the question of whether drift was driving the number had to be
+answered by measurement. Five ROIs, same size, spanning the available radii:
+
+| ROI | radius | drift 0→21 | structure | raw ratio | structure-corrected |
+| --- | --- | --- | --- | --- | --- |
+| `1648,928` | 284 px | 5.2 px | 36.75 DN | 1.053x | 1.113x |
+| `1824,1344` | 536 px | 9.8 px | 33.35 DN | 1.091x | 1.263x |
+| **`2272,1344`** | **881 px** | **16.2 px** | **10.93 DN** | **1.253x** | **1.292x** |
+| `2352,1408` | 982 px | 18.0 px | 10.44 DN | 1.263x | 1.303x |
+| `2368,1408` | 996 px | 18.3 px | 10.50 DN | 1.265x | 1.305x |
+
+Three independent reasons the trend is structure, not drift:
+
+1. **Across the three flat ROIs, drift varies by 13% (16.2 → 18.3 px) and the
+   ratio varies by 1% (1.253 → 1.265).** If drift set the number it would track
+   drift. It does not.
+2. **The low-drift ROIs are not flat.** Their raw ratios are lower because they
+   carry 3x more scene structure, which is common to numerator and denominator
+   and pulls the ratio toward 1.0. Correcting each for its *own* structure
+   collapses the spread from 1.053–1.265 to 1.29–1.31 for every ROI that is
+   actually flat.
+3. **Drift cannot inject more variance than there is structure to misregister.**
+   With 10.93 DN of structure, the worst case is sqrt(2) x 10.93 = 15.5 DN. The
+   observed excess is sqrt(35.328² - 28.201²) = 21.3 DN. Even crediting drift
+   with its theoretical maximum, sqrt(21.3² - 15.5²) = 14.6 DN of noise-driven
+   excess remains, i.e. **a hard floor of 1.13x**.
+
+**Status: MEASURED for the table, ARGUED for the interpretation.** The
+worst-case-drift floor of 1.13x is the number to quote if someone disputes the
+alignment confound. It is still above 1.0.
 
 ### 3.3 Against the prior corpus
 
 The prior corpus put the argmax noise penalty at **1.82x** in flat areas. We
-measure 1.265x raw / 1.37–1.49x corrected.
+measure 1.253x raw / 1.29–1.49x corrected, with a worst-case-drift floor of
+1.13x.
 
 **Status: ARGUED.** Same sign, same order of magnitude, smaller number. Three
 plausible reasons, none of which rescue argmax: our stack is 22 frames rather
@@ -211,9 +252,14 @@ focus measure.
 
 ## What this does NOT show
 
-- **No alignment.** Frames were used as decoded. If the bracket had meaningful
-  parallax the argmax would also be selecting misregistration, and the speckle
-  number would be contaminated. M3 owns this.
+- **No alignment, and the index map shows it.** M3 measures -1.835% scale drift
+  across this bracket, up to ~39 px at the plane corner. Some of the §3.1
+  speckle at large radius is therefore misregistration being selected rather
+  than noise being selected, and the two are not separated here. §3.2.1 shows
+  the *flat-ROI ratio* is not drift-driven, but no equivalent control exists for
+  the speckle percentage. **Treat 34.381% as an upper bound on the noise-only
+  defect.** Re-measuring speckle after M3's alignment lands is the obvious
+  follow-up.
 - **Peak RSS is measured for 22 frames, not 200.** The O(workers) bound is
   instrumented and the arithmetic is in the tool, but the large-N run has not
   been done.
@@ -229,5 +275,5 @@ focus measure.
   cross-frame ranking at a fixed pixel is consumed, so the proxy is adequate
   here; the focus-measure bake-off must do it properly.
 - **No claim that this output is good.** It is deliberately the honest worst
-  case. It is 26.5% noisier than doing nothing, in the places where doing
+  case. It is 25.3% noisier than doing nothing, in the places where doing
   nothing would have been fine.
