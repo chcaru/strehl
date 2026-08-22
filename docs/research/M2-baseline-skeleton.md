@@ -120,8 +120,11 @@ each worker still holds one frame at a time. Memory is O(workers), never O(N).
 **The headroom claim was wrong, and wrong in the unsafe direction.** The
 worker count is `min(budget / per_worker, cpus, frames)` = `min(20, 32, N)`, so
 it saturates at **20**, not at the 11 this stack happens to use. At saturation
-the real peak is **7.6 GB against SYNTHESIS §3.2's 8 GB ratchet — 0.4 GB of
-headroom, not the 3.8 GB this document originally claimed.**
+the real peak is **7,616 MiB against SYNTHESIS §3.2's 8 GB ratchet.** Read as
+binary that is 576 MiB of headroom — **7%, not the 3.8 GB this document
+originally claimed.** Read as decimal it is 7.99 GB against 8.0 GB, i.e. none at
+all. **The ratchet does not currently say which it means, and at this margin it
+has to.**
 
 > **CORRECTED, twice over.** The original text said "the same binary at 200
 > frames still holds 11 in flight" and "the 8 GB ratchet survives with 3.8 GB of
@@ -514,7 +517,7 @@ stated rather than the text quietly swapped:
 | 1 | residual structure 10.9 DN | **~20.4 DN**; corrected ratio **1.48x**, not 1.29–1.31x | §3.2.2 |
 | 2 | "hard floor of 1.13x" | **retracted — no floor**; replaced by the mean/placebo controls | §3.2.3 |
 | 3 | 19.267 vs 28.201 tabulated together | **different quantities**; matched properly they agree to 1.01x | §3.2.1 |
-| 4 | peak RSS 4.12–4.20 GB, 3.8 GB headroom | **7.6 GB at saturation, 0.4 GB headroom**; RSS tracks thread count | §2.2, §2.2.1 |
+| 4 | peak RSS 4.12–4.20 GB, 3.8 GB headroom | **7,616 MiB at saturation, 576 MiB headroom**; RSS tracks thread count | §2.2, §2.2.1 |
 | 5 | "still 11 in flight at 200 frames" | **15 at N=44, 20 at N>=100**, measured to N=220 | §2.2 |
 | 6 | "focus+fold is 41% of decode" | **~74% of decode**, 42% of total CPU | §2 |
 | 7 | 34.4% speckle, no null | no-information null is **53.5%**; upper bound only | §3.1 |
@@ -573,8 +576,10 @@ reproduce unchanged after the refactor.
 - **`MEMORY_BUDGET_BYTES` under-predicts real RSS by 27%** (§2.2). Peak RSS is
   now measured to N=220 and the O(workers) bound is confirmed, but the tool's
   own budget arithmetic does not model the decoder's scratch, so the 8 GB
-  ratchet is defended by 0.4 GB rather than by the budget. Unfixed, deliberately
-  — it is a change to an irreversible-decision ratchet.
+  ratchet is defended by 576 MiB rather than by the budget — and by nothing at
+  all if the ratchet is read as decimal GB. Unfixed, deliberately — it is a
+  change to an irreversible-decision ratchet, and the ratchet needs its units
+  pinned down first.
 - **The two RSS measurements have not been reconciled by the other party**
   (§2.2.1). The thread-count explanation is this author's, and is ARGUED.
   `SYNTHESIS.md` fact 22 currently carries the 1.81–1.94 GB figure and the "more
