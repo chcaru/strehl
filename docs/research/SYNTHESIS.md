@@ -45,13 +45,15 @@ per subband, which frame is sharpest, and copy it. That single decision produces
 - **Selection amplifies noise.** Argmax over N noise-only coefficients returns
   1.95x single-frame noise at N=10 and 2.61x at N=60 (MEASURED, B, own simulation), against
   1/sqrt(N) for averaging. Low-temperature softmax is indistinguishable from hardmax.
-  **This is now measured on our own sensor, our own files, by our own baseline** (MEASURED, M2):
-  a plain argmax stack of 22 frames is **1.253x noisier than one unstacked frame** on a flat
-  region — 1.29-1.31x once common scene structure is removed, and never below **1.13x** even if
-  inter-frame drift is credited with its full theoretical contribution. **34.4%** of pixels
-  disagree with their own 3x3 median winner index, on a subject whose depth is piecewise smooth.
-  The prior project's 1.82x in flat highlights (A §1) is the same sign and the same order, and is
-  no longer the claim this rests on.
+  **This is now measured on our own sensor and our own files, and independently verified**
+  (MEASURED, M2 + M2-verification): a plain argmax stack of 22 frames is **1.253x noisier than
+  one unstacked frame** on a flat region, **~1.48x** once shared scene structure is removed.
+  **The cause is proven, not inferred.** On the same frames and the same region, a plain mean
+  gives **0.534x** and a *placebo* selector with argmax's identical winner histogram but no
+  coupling to the pixel's own noise gives **0.981x** — so neither drift nor scene structure can
+  produce the effect. It is already present at **N=3** with 1.5 px of total drift, and grows
+  monotonically in N. The prior project's 1.82x in flat highlights (A §1) is the same sign and
+  the same order, and is no longer the claim this rests on.
 - **Selection needs a sharpness metric, and the standard metric inverts under noise.** The
   Laplacian's winner-margin goes *negative* at sigma >= 0.01 — it actively prefers the wrong
   frame — while ring-difference filtering stays highest at every noise level
@@ -86,6 +88,13 @@ field:
    therefore selected from a regularised focus field** — spatially smoothed, parabola-fitted
    across frame index, and averaged over the top-k frames whose focus measure lies within the
    noise floor of the peak. The peak-vs-floor quantity is already computed for §1.3.
+
+   **This is now measured, and it also sets a limit** (fact 23). Regularising the focus field with
+   a 17x17 smooth drops winner speckle **34.4% -> 0.868%** and noise **1.253x -> 1.075x**. So the
+   correction works — **but 1.075x is still above 1.0.** A regularised selector is still a
+   selector. Only averaging goes below a single frame (0.534x). **Both halves are required and
+   neither alone is sufficient**, which is the difference between this design and "a stacker with
+   a better focus measure".
 
    *(b) The honest gain is ~sqrt(N) in flat regions, ~1.2–1.8x on detail — not 3–5.5x
    everywhere.* At the recommended step (`step = DoF/k`, `k ~ 1.3–1.5`, F), the number of frames
@@ -303,10 +312,12 @@ keys from day one, source-level kernel composition, and manifest-first stage dec
 | 16 | Composing 21 adjacent-pair fits underestimates total drift by **32%** — **25 px error at the sensor corner** — while each individual fit looks excellent (0.446 px residual) | **Never chain.** Always align to a fixed reference. The cause is pixel locking, a *systematic* bias that compounds, not a random walk | M3 (MEASURED) |
 | 17 | Going from 4 to 12 motion parameters reduces the residual by **≤6%**, on filtered and unfiltered tile sets alike. Rotation ≤0.21 px at the corner | A **4-parameter similarity** is the whole model for in-camera bracketing. Keep rotation as a tripod-flex guard | M3 (MEASURED) |
 | 18 | Residual after any global model is **0.6-1.3 px**, against a 0.19 px estimator floor, and richer geometry does not touch it | Neither noise nor global model error. Candidates: depth-dependent magnification, or blur-induced correlation bias. Discriminate by correlating per-tile residual against the winner-index map | M3 (MEASURED fact, UNVERIFIED cause) |
-| 19 | A naive argmax stack of 22 frames is **1.253x noisier than one unstacked frame** on a flat ROI (structure-corrected 1.29-1.31x across three flat ROIs). Crediting inter-frame drift with its full theoretical contribution still leaves a floor of **1.13x** | **The defect the project exists to remove is now measured on our own sensor and our own files.** The corpus's borrowed 1.82x is no longer load-bearing: same sign, same order, independently reproduced | M2 (MEASURED) |
-| 20 | **34.4%** of pixels differ by more than 2 from their 3x3 median winner index | Depth is piecewise smooth, so this is argmax electing noise. An **upper** bound — at large radius some of it is argmax selecting misregistration, since the baseline does not align | M2 (MEASURED, upper bound) |
-| 21 | Ring-difference focus + fold costs **188 ms/frame** against decode's 248 ms/frame — **41% of decode**, for the cheapest focus measure anyone would consider | Any budget that treats focus measurement as negligible beside decode is wrong on this hardware. Fact 11's decode-dominated framing is too generous | M2 (MEASURED) |
-| 22 | Peak RSS **4.12-4.20 GB** at 22 frames against 3.53 GB predicted; in-flight frames bounded at 11, never O(N). Output byte-identical (SHA-256) across different rayon reduction trees | The O(workers) working-set claim of §3.2 holds in practice, under the 8 GB ratchet. The parallel argmax reduce is genuinely associative | M2 (MEASURED) |
+| 19 | A naive argmax stack of 22 frames is **1.253x noisier than one unstacked frame** on a flat ROI; **~1.48x** structure-corrected. On the same frames and ROI, a plain **mean gives 0.534x** and a placebo selector with the identical winner histogram gives **0.981x**. Present already at **N=3** (1.5 px drift), monotone in N | **The defect the project exists to remove is measured on our own files, and its cause is proven.** Drift and scene structure push the ratio *below* 1.0; only selection coupled to per-pixel noise pushes it above. The corpus's borrowed 1.82x is no longer load-bearing | M2 + M2-verification (MEASURED) |
+| 20 | Winner-index speckle **34.4%**, against a no-information null of **53.5%** (i.i.d. draws from the observed winner histogram) and **0.868%** for a 17x17-regularised focus field. Still 21.7% in the busiest contrast decile | The winner map carries *some* spatial information but is nowhere near a depth map. **A fair upper bound on selector instability and nothing more** — it cannot separate "argmax elected noise" from "no frame is in focus here, so the error is harmless". Never quote it without the null | M2-verification (MEASURED) |
+| 21 | Ring-difference focus + fold costs **~74% of decode** (196.8 vs 267.6 ms/frame), i.e. **42% of total CPU**, for the cheapest focus measure anyone would consider | Any budget treating focus measurement as negligible beside decode is wrong on this hardware. Fact 11's decode-dominated framing is too generous. *(M2 published "41% of decode" — a conflation of "% of decode" with "% of total"; corrected)* | M2-verification (MEASURED) |
+| 22 | Peak RSS **1.81-1.94 GB** at 22 frames over 9 runs, 1.93 GB at 44 frames. In-flight frames = `min(20, 32, N)`, so 11 at N=22, **15 at N=44, 20 at N=200** — O(workers), never O(N). Output byte-identical (SHA-256) across different rayon reduction trees and thread counts | The §3.2 working-set claim holds with **more** headroom than published. The parallel argmax reduce is genuinely associative. *(M2 published 4.12-4.20 GB and "still 11 at 200 frames"; both refuted)* | M2-verification (MEASURED) |
+| 23 | Regularising the focus field (17x17 smooth) before argmax drops speckle **34.4% -> 0.868%** and noise **1.253x -> 1.075x** — **but 1.075x is still above 1.0.** Only averaging goes below one frame | **Direct measured support for §1.1(a), and a warning.** The architecture needs *both* halves: a regularised reference to stop the selector electing noise, **and** a noise-gated estimator that averages where frames agree. A better selector is not enough | M2-verification (MEASURED) |
+| 24 | On high-detail ROIs a mean's sigma looks harmless (0.899x, 0.995x) while its mean gradient **collapses -58% and -53%**; argmax *raises* gradient | **Sigma alone cannot see detail destruction.** This is rule 9 working: the flat-ROI metric is valid precisely because its paired control fails as it should | M2-verification (MEASURED) |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -358,19 +369,38 @@ the baseline got 2.6-3.0x cleaner — noticed only in retrospect, by a manual au
 signal fired.
 
 In a project whose whole premise is third-party contributable algorithms, that is the default
-failure mode, not an edge case. So the A/B harness is a **first-class component from commit one**,
-not a later addition:
+failure mode, not an edge case.
+
+**And it has already recurred inside this project.** M2's report compared a *temporal per-sample*
+sigma (19.267 DN, from the noise model) against a *spatial* sd of noise **plus scene structure**
+(28.201 DN, from the image) and presented the 1.46x gap as an unexplained model failure. Matched
+properly — high-pass the ROI first — they agree to **1.01x**. That is the same spatial-vs-temporal
+confusion that got the prior corpus's 1.10x claim retracted, committed by an agent that had read
+the retraction, in a document written to the labelling discipline. It was caught only because a
+second agent was told to re-derive rather than review. **Rule 8 is not paranoia, and self-verification
+does not work.** In the same pass, four other supporting numbers in the same document were refuted
+(`M2-verification.md` §3) — while the headline itself survived and was strengthened.
+
+So the A/B harness is a **first-class component from commit one**, not a later addition:
 
 1. Every quality claim stored with a **named baseline artifact hash**.
 2. **Pair every sharpness metric with a no-signal flat-ROI control**, and every noise metric with a
-   genuinely *temporal* estimator.
-3. Re-measure **non-default flag combinations** — the NLM inversion lived entirely inside an opt-in
+   genuinely *temporal* estimator. **Never compare a spatial sd to a temporal sigma** — high-pass
+   first, or compare like with like.
+3. **Every headline number needs a regression test on its own code path.** M2's 1.253x had 52
+   passing tests behind the library and **zero** covering `report_flat_roi` / `roi_green` /
+   `speckle_fraction`, the code that actually produced it.
+4. **Every claimed defect needs a placebo.** The control that proved argmax was the cause was not a
+   better measurement of argmax — it was a *different merge rule* on identical data (mean 0.534x)
+   and a selector with the same winner statistics but no noise coupling (0.981x). Quote the
+   placebo alongside the effect or the effect is only correlational.
+5. Re-measure **non-default flag combinations** — the NLM inversion lived entirely inside an opt-in
    flag, and default-only CI is blind to it.
-4. Ratchet **wall clock and peak RSS** together.
-5. **Resolve every citation to a retrievable artifact before it reaches a design decision.**
-6. Property-test the plugin graph on four properties, not just confluence: invariance,
+6. Ratchet **wall clock and peak RSS** together.
+7. **Resolve every citation to a retrievable artifact before it reaches a design decision.**
+8. Property-test the plugin graph on four properties, not just confluence: invariance,
    **sensitivity** (distinguishable configs must produce distinguishable output), no-residue
-   across runs, and a calibrated fixture recovering the known -1.012% / [+412,-180] px. Confluence
+   across runs, and a calibrated fixture recovering a known synthetic warp. Confluence
    alone is passed by a function that returns a constant.
 
 ---
@@ -444,8 +474,11 @@ form. So build the skeleton *as* the harness.
 -> TIFF out`, in **1.03 s** for the whole stack. It delivered what it was built to deliver: a real
 stacked image, the **named baseline artifact** §5 mandates, the harness experiments 3 and 4 need,
 and above all *the measured argmax-noise defect on our own data* — **1.253x noisier than a single
-unstacked frame**, floor 1.13x, with 34.4% index speckle (facts 19-22). The thesis number is no
-longer borrowed. Everything after this is measured as a delta against a baseline that exists.
+unstacked frame**, ~1.48x structure-corrected, with 34.4% index speckle (facts 19-24). It was then
+**independently re-derived by a second agent** (`M2-verification.md`), which confirmed the headline,
+*proved its cause* with a mean/placebo control the author never ran, and refuted five supporting
+numbers. The thesis number is no longer borrowed, and no longer merely correlational. Everything
+after this is measured as a delta against a baseline that exists.
 
 1. ~~**`rawler` decode throughput**~~ — **DONE. See `M1-decode-measured.md`.** 122/122 files
    decoded across two corpora, 0 failures. **60-frame stack: 1.78 s cold, 0.91 s warm** (rayon

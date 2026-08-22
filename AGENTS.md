@@ -49,6 +49,9 @@ monolithic binary and ship only that binary.
    2–5x defect.
 4. **Never let a merge reference be a raw per-band argmax.** Argmax over N
    frames returns 1.95–2.61x single-frame noise. Use a regularised focus field.
+   Measured: regularising drops speckle 34.4% -> 0.87% and noise 1.253x ->
+   1.075x — necessary, and **still above 1.0**. A regularised selector is still
+   a selector; the noise-gated average is the other half.
 5. **Fit geometry at runtime; do not bake it.** Scale drift and the scale
    centre are per-stack quantities. Only sensor calibration belongs in a
    profile, and profiles live in data files.
@@ -65,7 +68,23 @@ monolithic binary and ship only that binary.
 9. **Pair every sharpness metric with a flat-ROI control.** A sharpening pass
    raises gradient energy on featureless foam; that is how the prior project
    fooled itself.
-10. **kebab-case** for directories and files. Crates are `strehl-*`.
+10. **Never compare a spatial sd to a temporal sigma.** They are different
+    physical quantities. A spatial sd over an image region carries scene
+    structure; a temporal sigma across frames does not. High-pass first, or
+    compare like with like. This error has now caused **two** retractions —
+    the prior corpus's 1.10x correlated-noise claim, and M2's "unexplained"
+    1.46x model gap, which was 1.01x once matched properly.
+11. **Every claimed defect needs a placebo, and every headline number needs a
+    regression test on its own code path.** What proved argmax was the cause of
+    M2's 1.253x was not a better measurement of argmax — it was a *different
+    merge rule* on identical data (mean, 0.534x) and a selector with the same
+    winner histogram but no noise coupling (0.981x). Without those it was only
+    correlational. And the 1.253x itself had 52 tests behind the library and
+    zero covering the code that produced it.
+12. **The author never verifies their own work.** M2 was self-verified
+    thoroughly and still shipped five wrong supporting numbers, two of them in
+    the direction that loses an argument. See `docs/research/M2-verification.md`.
+13. **kebab-case** for directories and files. Crates are `strehl-*`.
 
 ## Layout
 
@@ -85,6 +104,7 @@ monolithic binary and ship only that binary.
 | `REVIEW.md` | Adversarial review that corrected four design errors |
 | `M1-decode-measured.md` | Measured decode throughput and sensor constants |
 | `M2-baseline-skeleton.md` | The naive argmax baseline, and the measured defect it exposes |
+| `M2-verification.md` | **Independent re-derivation of M2.** Headline confirmed and causally proven; five supporting numbers refuted |
 | `M3-alignment-measured.md` | Measured alignment cost, motion model, and why chaining is dead |
 | `M4-fpn-measured.md` | Dark-frame noise: sigma-vs-N, the fixed-pattern floor, read noise vs ISO |
 | `A-prior-corpus.md` | The prior attempt, filtered; includes retractions |
