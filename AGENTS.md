@@ -84,7 +84,9 @@ monolithic binary and ship only that binary.
 | `SYNTHESIS.md` | **Start here.** Decision record, revised after review. |
 | `REVIEW.md` | Adversarial review that corrected four design errors |
 | `M1-decode-measured.md` | Measured decode throughput and sensor constants |
+| `M2-baseline-skeleton.md` | The naive argmax baseline, and the measured defect it exposes |
 | `M3-alignment-measured.md` | Measured alignment cost, motion model, and why chaining is dead |
+| `M4-fpn-measured.md` | Dark-frame noise: sigma-vs-N, the fixed-pattern floor, read noise vs ISO |
 | `A-prior-corpus.md` | The prior attempt, filtered; includes retractions |
 | `B-algorithms-sota.md` | Algorithmic state of the art per stage |
 | `C-landscape.md` | Competitors, licensing, artifact taxonomy |

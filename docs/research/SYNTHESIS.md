@@ -44,9 +44,14 @@ per subband, which frame is sharpest, and copy it. That single decision produces
 
 - **Selection amplifies noise.** Argmax over N noise-only coefficients returns
   1.95x single-frame noise at N=10 and 2.61x at N=60 (MEASURED, B, own simulation), against
-  1/sqrt(N) for averaging. Low-temperature softmax is indistinguishable from hardmax. The prior
-  project measured exactly this in the wild: output sigma 2.3-4.6x the source cross-frame sigma,
-  and 1.82x worse than a *single frame* in flat highlights (MEASURED, A §1).
+  1/sqrt(N) for averaging. Low-temperature softmax is indistinguishable from hardmax.
+  **This is now measured on our own sensor, our own files, by our own baseline** (MEASURED, M2):
+  a plain argmax stack of 22 frames is **1.253x noisier than one unstacked frame** on a flat
+  region — 1.29-1.31x once common scene structure is removed, and never below **1.13x** even if
+  inter-frame drift is credited with its full theoretical contribution. **34.4%** of pixels
+  disagree with their own 3x3 median winner index, on a subject whose depth is piecewise smooth.
+  The prior project's 1.82x in flat highlights (A §1) is the same sign and the same order, and is
+  no longer the claim this rests on.
 - **Selection needs a sharpness metric, and the standard metric inverts under noise.** The
   Laplacian's winner-margin goes *negative* at sigma >= 0.01 — it actively prefers the wrong
   frame — while ring-difference filtering stays highest at every noise level
@@ -298,6 +303,10 @@ keys from day one, source-level kernel composition, and manifest-first stage dec
 | 16 | Composing 21 adjacent-pair fits underestimates total drift by **32%** — **25 px error at the sensor corner** — while each individual fit looks excellent (0.446 px residual) | **Never chain.** Always align to a fixed reference. The cause is pixel locking, a *systematic* bias that compounds, not a random walk | M3 (MEASURED) |
 | 17 | Going from 4 to 12 motion parameters reduces the residual by **≤6%**, on filtered and unfiltered tile sets alike. Rotation ≤0.21 px at the corner | A **4-parameter similarity** is the whole model for in-camera bracketing. Keep rotation as a tripod-flex guard | M3 (MEASURED) |
 | 18 | Residual after any global model is **0.6-1.3 px**, against a 0.19 px estimator floor, and richer geometry does not touch it | Neither noise nor global model error. Candidates: depth-dependent magnification, or blur-induced correlation bias. Discriminate by correlating per-tile residual against the winner-index map | M3 (MEASURED fact, UNVERIFIED cause) |
+| 19 | A naive argmax stack of 22 frames is **1.253x noisier than one unstacked frame** on a flat ROI (structure-corrected 1.29-1.31x across three flat ROIs). Crediting inter-frame drift with its full theoretical contribution still leaves a floor of **1.13x** | **The defect the project exists to remove is now measured on our own sensor and our own files.** The corpus's borrowed 1.82x is no longer load-bearing: same sign, same order, independently reproduced | M2 (MEASURED) |
+| 20 | **34.4%** of pixels differ by more than 2 from their 3x3 median winner index | Depth is piecewise smooth, so this is argmax electing noise. An **upper** bound — at large radius some of it is argmax selecting misregistration, since the baseline does not align | M2 (MEASURED, upper bound) |
+| 21 | Ring-difference focus + fold costs **188 ms/frame** against decode's 248 ms/frame — **41% of decode**, for the cheapest focus measure anyone would consider | Any budget that treats focus measurement as negligible beside decode is wrong on this hardware. Fact 11's decode-dominated framing is too generous | M2 (MEASURED) |
+| 22 | Peak RSS **4.12-4.20 GB** at 22 frames against 3.53 GB predicted; in-flight frames bounded at 11, never O(N). Output byte-identical (SHA-256) across different rayon reduction trees | The O(workers) working-set claim of §3.2 holds in practice, under the 8 GB ratchet. The parallel argmax reduce is genuinely associative | M2 (MEASURED) |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -430,25 +439,28 @@ procrastination as standalone tasks**, because each needs decoded frames, a cali
 volume and an output path — i.e. you build most of the skeleton to run them anyway, in throwaway
 form. So build the skeleton *as* the harness.
 
-**Step 0 — the walking skeleton (one afternoon, zero plugin machinery).**
-`decode 20 ARW -> calibrate -> NO alignment -> ring-difference focus volume -> plain argmax select
--> tiled TIFF out`, on a subset with negligible drift. This yields, in one pass:
-(a) a real stacked image; (b) the **named baseline artifact** §5 mandates and which does not yet
-exist; (c) the harness experiments 3 and 4 need; and (d) *the measured argmax-noise defect on our
-own data*, which is the exact number the whole thesis argues against. Everything after this is
-measured as a delta against a baseline that exists.
+~~**Step 0 — the walking skeleton.**~~ — **DONE. See `M2-baseline-skeleton.md`.**
+`decode 22 ARW -> calibrate -> NO alignment -> ring-difference focus volume -> plain argmax select
+-> TIFF out`, in **1.03 s** for the whole stack. It delivered what it was built to deliver: a real
+stacked image, the **named baseline artifact** §5 mandates, the harness experiments 3 and 4 need,
+and above all *the measured argmax-noise defect on our own data* — **1.253x noisier than a single
+unstacked frame**, floor 1.13x, with 34.4% index speckle (facts 19-22). The thesis number is no
+longer borrowed. Everything after this is measured as a delta against a baseline that exists.
 
 1. ~~**`rawler` decode throughput**~~ — **DONE. See `M1-decode-measured.md`.** 122/122 files
    decoded across two corpora, 0 failures. **60-frame stack: 1.78 s cold, 0.91 s warm** (rayon
    across files; 2.5x over one-at-a-time, because concurrent reads double effective disk
    bandwidth). Sensor constants independently confirmed. Decode is **6–12% of a 15 s budget, not
    the wall** — the dependency risk is cleared and the budget term is pinned.
-2. **The sigma-vs-N curve.** >= 64 frames, static scene, **fixed focus**, straight ARW, NR off,
-   plus matched darks. Plot per-pixel *temporal* sigma vs N, log-log, at ISO 100 and 6400. Slope
-   -0.5 means independent; any asymptote **is** the fixed-pattern floor; re-run after master-bias
-   subtraction to get the calibratable fraction. Go/no-go on the central pillar. **Extend it to a
-   real photon-transfer curve** to measure `g` directly rather than inferring it — nearly free.
-   *Blocked on 20 lens-cap dark frames at ISO 100 and ISO 400.*
+2. **The sigma-vs-N curve.** Plot the *spatial* sd of an N-frame average, log-log. Slope -0.5 means
+   independent; any asymptote **is** the fixed-pattern floor; re-run after disjoint-half master-bias
+   subtraction to get the calibratable fraction. Go/no-go on the central pillar.
+   **UNBLOCKED — running.** The owner delivered `D:\macro-dark-frames`: **11 ISO settings x 22
+   frames** (first 2 of each discarded for stabilisation), well beyond the 2 ISOs requested. The
+   extra ISOs additionally permit a model-free test of fact 14's **ISO 400 second base ISO** via a
+   discontinuity in read noise vs ISO. **A photon-transfer measurement of `g` is still not possible
+   from darks** — no signal, no signal-variance — so `g` stays DERIVED and question 6 stays open,
+   now needing flat fields rather than darks.
 3. **Focus-measure bake-off on real RAW**, against the noise model: ring-difference vs SML vs
    Tenengrad vs wavelet, scored by winner-margin versus sigma. Closes risk 2. *Run on the skeleton.*
    This — not the rail requirement — is what justifies build-time WGSL splicing.
@@ -521,12 +533,13 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
 ## 10. Open questions
 
 **Needs the owner:**
-1. **20 lens-cap dark frames at ISO 100 and ISO 400.** Two-minute capture, no extra gear. Unblocks
-   experiment 2, the go/no-go on the central pillar. `rawler` cannot supply masked pixels (M1).
-   *Owner will provide later; proceeding without. Full capture spec in
-   [`../captures-needed.md`](../captures-needed.md).* **Until it exists, every claim that depends on
-   frame averaging is `ARGUED`, not `MEASURED`.**
+1. ~~20 lens-cap dark frames at ISO 100 and ISO 400~~ — **DELIVERED at `D:\macro-dark-frames`:
+   11 ISO settings x 22 frames, first 2 of each discarded.** Experiment 2 is unblocked and running;
+   see `M4-fpn-measured.md` when it lands.
 2. ~~A rail-captured stack~~ — **no rail available. Rail support deferred from v1 (§9).**
+3. **Flat fields, if `g` is to be measured rather than inferred.** Darks cannot supply a
+   photon-transfer curve. Spec to be added to [`../captures-needed.md`](../captures-needed.md) §4
+   only if experiment 2 shows it would change a decision.
 
 **Needs measurement, not argument:**
 3. ~~Alignment cost for the two-phase design~~ — **closed by M3.** 13-16 ms/frame, 0.78-0.96 s for
