@@ -402,9 +402,19 @@ so.** The owner asked for pluggable camera and lens specifics. What survives is:
   the PDAF map, PDAF depth, field curvature, `FocusPosition2` as depth, LensFun/LCP (neither
   database contains the SEL100M28GM), and vignetting (coefficients are all zeros). Distortion and
   TCA come from Sony's own maker notes, which is decoder work. **The breathing scale prior is dead
-  too** — see §4.1. What remains is **pupil magnification `p`**: unpublished, assumed 1, worth
-  **±38%** on every capture-advisor number at m=1.4, a one-hour bench measurement, and the only gear
-  constant that can be neither read from EXIF nor fitted from a stack.
+  too** — see §4.1. What remains is the **bellows factor `(1 + m/p)`**, where `p` is pupil
+  magnification: unpublished by every manufacturer, currently assumed `p=1`, worth **±38%** on every
+  capture-advisor number at m=1.4 (F1.7b).
+
+  **Correction, and it is mine.** This section previously called `p` "the only gear constant that
+  can be neither read from EXIF nor fitted from a stack". That is **wrong**. A diffraction-limited
+  system has a hard OTF zero at `f_c = 1/(lambda * N_eff)`, so the frequency at which a well-focused
+  frame's power spectrum flattens into its own noise floor **recovers `N_eff`, and hence
+  `(1 + m/p)`, directly from pixels**. The three existing stacks happen to be an aperture sweep at
+  near-constant magnification — f/5.6, f/8, f/11 with `FocusPosition2` 56-59 — so this is measurable
+  on files that already exist, with no bench and no new captures. That is M5. Note also that what
+  the formulas need is the **bellows factor**, not `p`; separating the two requires knowing `m`,
+  which needs a ruler in frame, and matters only for *extrapolating* to a different magnification.
 
 So: **camera profiles are a TOML table; lens profiles are one float and a maker-note parser.**
 Measurement dissolved the rest, mostly by showing that runtime fitting is both cheaper and more
@@ -417,7 +427,7 @@ is not telecentric, so the defocus PSF is **field-dependent** and a single globa
 toward the corners (F §5.3). One of the two candidate causes of M3's unexplained 0.6-1.3 px residual
 is *blur-induced correlation bias*. **If that is the cause, a field-dependent defocus PSF is biasing
 the aligner, and modelling it per lens is real per-lens computation.** Do not close the lens-plugin
-question before running §10 question 4.
+question before running §10 question 6.
 
 **Over-engineering guard.** v1 is one binary, all stages in-tree, no dynamic loading, no WASM,
 no DI container. What must not be foreclosed: the object-safe `Stage` signature, `TileView`
@@ -442,7 +452,7 @@ source-level kernel composition.
 | 9 | Sub-pixel *random* jitter **0.075 px** vs Wronski's >= 0.3 px gate | Classical multi-frame SR is off the table — **but see §6, breathing supplies structured diversity instead** | A (MEASURED) |
 | 10 | H2D **56.9 GB/s**, D2D **1503 GB/s** measured locally; 66 MB frame transfers in 1.2 ms | PCIe is a non-issue. Do not build decode/compute overlap in v1 | D (MEASURED-LOCALLY) |
 | 11 | Full budget 60x33 MP: **2.7-6.1 s**, decode-dominated | 15 s target has 2.5-5.5x margin | D (DERIVED) |
-| 12 | SEL20TC at 2.8x: **MTF@Nyquist = 0.000 at every aperture** (wide open is already N_eff 21.3, past the 18.6 extinction point) | The tool should warn, and offer reduced-resolution output | F (DERIVED) |
+| 12 | A 2x teleconverter at m=2.8: **MTF@Nyquist = 0.000 at every aperture** — wide open is already N_eff 21.3, past the **N_eff 18.6** extinction point, where the diffraction cutoff `pitch/(lambda*N_eff)` falls to Nyquist | The tool should warn, and offer reduced-resolution output. **No longer hypothetical — see fact 26.** But the verdict turns on a magnification nobody has measured: at m=2.0 the same rig is at N_eff 16.8, just *inside* extinction. M5 settles it | F (DERIVED) |
 | 13 | The reference 33-frame stack is **2.4x oversampled**; 14 frames sufficed | A capture advisor is a real feature | F (DERIVED) |
 | 14 | ISO 400 is a **second base ISO** (read noise 4.20 -> 1.47 e-); DR is higher than ISO 320. Usable white level **15360**, not 16383 | Camera plugin must expose `dominated_isos()` and the true white level | F (MEASURED) |
 | 15 | Alignment costs **13-16 ms/frame**; 0.78-0.96 s for 60 frames, scalar CPU, all frames independent | Alignment is ~6% of a 15 s budget. The last unpinned budget term is pinned | M3 (MEASURED) |
@@ -456,6 +466,7 @@ source-level kernel composition.
 | 23 | Regularising the focus field (17x17 smooth) before argmax drops speckle **34.4% -> 0.868%** and noise **1.253x -> 1.075x** — **but 1.075x is still above 1.0.** Only averaging goes below one frame | **Direct measured support for §1.1(a), and a warning.** The architecture needs *both* halves: a regularised reference to stop the selector electing noise, **and** a noise-gated estimator that averages where frames agree. A better selector is not enough | M2-verification (MEASURED) |
 | 24 | On high-detail ROIs a mean's sigma looks harmless (0.899x, 0.995x) while its mean gradient **collapses -58% and -53%**; argmax *raises* gradient | **Sigma alone cannot see detail destruction.** This is rule 9 working: the flat-ROI metric is valid precisely because its paired control fails as it should | M2-verification (MEASURED) |
 | 25 | Argmax's noise excess is **spatially correlated over 3-7 px, not white** — and 3-7 px is exactly `focus.rs`'s own `INNER_RADIUS: 1` / `OUTER_RADIUS: 3` support | **The focus measure and the merge are coupled.** The 17x17 regulariser behind facts 20 and 23 is tuned to *one measure's support*. A contributor pairing a wider measure with the default merge gets a silently wrong stack. Put the support on the interface (§3.4.1 B3). Also why high-pass views understate argmax damage while raw spatial sd overstates the ratio — ~1.48x is the honest figure between them | M2-verification (MEASURED) |
+| 26 | **Every existing test stack was shot with a 2x teleconverter**, disclosed only after M1-M4 were complete. `LensModel = "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"`, `LensSpec = "FE 200mm F5.6 Macro OSS"`, `FocalLength = 200 mm`, `MaxApertureValue = 5.6`. The body composes the TC into reported focal length and aperture; **the maker-note lens ID does not** — it still reads as the bare lens | Two consequences. **(a)** Anything reading `FocalLength`/`FNumber` from EXIF is already TC-correct, so there is no hidden 2x error in the advisor. **(b)** **Keying a lens profile on the lens ID is a bug**: it would apply bare-lens constants to a composed path with a different `p`, twice the focal length and two more stops. The profile key must be the *composed optical path*, and every profiled constant must be measured for the combination actually in use | MEASURED-LOCALLY (exiftool, all three stacks, every frame) |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -578,11 +589,17 @@ Recorded with their queries; **all are UNVERIFIED as wins, and none is on the v1
    default path.
 4. **Alignment residual silently poisons everything downstream** — sub-pixel misalignment looks like
    a focus difference to a focus measure, and like signal to a Wiener gate.
-5. **Additive dark/offset FPN** is the one live threat to the multi-frame averaging pillar. It is
-   absorbed indistinguishably into the noise model's `b` term. **M1 attempted to settle this for
-   free from optically-masked sensor pixels and could not**: `rawler` reports `blackareas` as empty
-   for Sony and crops the masked border away, leaving only synthetic zero padding. **It needs 20
-   lens-cap frames at ISO 100 and ISO 400** — a two-minute capture.
+5. ~~**Additive dark/offset FPN** is the one live threat to the multi-frame averaging pillar~~ —
+   **MEASURED and conditionally resolved (M4).** Raw averaging of darks follows a slope of
+   **-0.2888**, not -0.5, departing from ideal at **N = 2**, and asymptotes at a fixed-pattern floor
+   of **0.377 DN** reached by **N ≈ 7**. Subtracting a master bias built from *disjoint* frames
+   removes 90-100% of that floor's variance and restores the slope to **-0.497 … -0.502 across all
+   eleven ISOs** (-0.5019 at base ISO). So the pillar holds, conditionally: either the merge subtracts a bias frame, or it
+   must not claim more than **2.6x** in the darkest regions at any N. Above roughly **12 DN** of
+   signal it never binds. **The live threat has moved**: darks measure *offset* FPN (DSNU) only.
+   **PRNU — multiplicative, signal-proportional — is invisible in this data and does not average
+   away**, and it would bite in exactly the lit, low-contrast regions where M2 found the argmax
+   defect. UNVERIFIED, and it needs flat fields (§10 question 3).
 6. `rawler` is **link-freely but do-not-read**; `wgpu` 30 raw-memory export for a future CUDA path
    is architecturally possible but **not runtime-tested**.
 7. **Occlusion on a rail** — **deferred with rail support (§9).** At depth discontinuities different
@@ -746,11 +763,14 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
 3. **Flat fields, if `g` is to be measured rather than inferred.** Darks cannot supply a
    photon-transfer curve. Spec to be added to [`../captures-needed.md`](../captures-needed.md) §4
    only if experiment 2 shows it would change a decision.
-4. **Pupil magnification `p` for the SEL100M28GM — a one-hour bench measurement.** It is
-   unpublished, currently assumed `p=1`, and worth **±38%** on every capture-advisor number at
-   m=1.4 (F1.7b). It is **the only gear constant that can be neither read from EXIF nor fitted from
-   a stack** (§3.4.2), which makes it the entire remaining content of a "lens profile". Add to
-   `captures-needed.md`.
+4. ~~Pupil magnification `p` for the SEL100M28GM — a one-hour bench measurement~~ —
+   **superseded, and the premise was wrong twice over.** (a) The rig is not the bare lens: **every
+   stack carries a 2x teleconverter** (fact 26), so the quantity wanted is the bellows factor of the
+   *composed* path, and a bare-lens figure would not apply even if one existed. (b) It does not need
+   a bench: M5 measures `(1 + m/p)` from the diffraction cutoff in the three existing stacks
+   (§3.4.2). **What the owner may still need to supply is a ruler or stage micrometer in frame at
+   the working magnification**, and only if `m` must be separated from `p` in order to extrapolate
+   to other magnifications. The bellows factor itself now needs nothing new.
 
 **Needs measurement, not argument:**
 5. ~~Alignment cost for the two-phase design~~ — **closed by M3.** 13-16 ms/frame, 0.78-0.96 s for

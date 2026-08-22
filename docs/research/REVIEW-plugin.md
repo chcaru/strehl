@@ -148,7 +148,7 @@ runtime, and it was never what E recommended.
 | N3 | E §4.12's own over-engineering test now fires, and no document restated the conclusion | **Recorded, and reframed** | §2 above, §9 |
 | N4 | Fact 21 is a scalar-CPU number constraining a GPU contribution format; experiment 3 unrun | **Open** | risk 10, §10 q11 |
 | N5 | Cordis §6.6 dependency typing is an open problem inherited by out-of-tree plugins | **Recorded** | risk 9 |
-| S1 | Pupil magnification `p` — one-hour bench task, ±38% consequence, the only gear constant neither derivable from EXIF nor fittable from a stack | **Owner action** | §10 q4 |
+| S1 | Pupil magnification `p` — called "the only gear constant neither derivable from EXIF nor fittable from a stack" | **Refuted, by the review's own author.** The rig carries a 2x TC (fact 26) so a bare-lens figure would not apply anyway, and the bellows factor **is** fittable from a stack via the diffraction cutoff — M5 | §3.4.2, §10 q4 |
 | S2 | Do not close the lens-plugin question before §10 q6 — a field-dependent defocus PSF is the one candidate that would earn code | **Gated** | §3.4.2, §10 q6 |
 | S3 | Credit `Provenance::Fallback`, not Cordis's `Inactive{unmet}` | **Applied** | §3.4, §1.3 above |
 
