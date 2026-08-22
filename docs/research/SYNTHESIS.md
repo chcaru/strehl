@@ -262,31 +262,168 @@ wrong and we want to know on day one.
 
 ### 3.4 The plugin model
 
-- A plugin is a **`Stage`**: object-safe, `Send + Sync`, with darktable-style two-pass ROI
-  negotiation, a `resources()` declaration, and `gpu() -> Option<&dyn GpuStage>` so GPU support
-  is genuinely optional with CPU fallback.
+- A plugin is a **`Stage`**: object-safe, `Send + Sync`, with a `resources()` declaration, and
+  `gpu() -> Option<&dyn GpuStage>` so GPU support is genuinely optional with CPU fallback.
 - Large buffers cross the boundary as a **`TileView` descriptor**, never a bare slice, so
   CPU/GPU residency and ownership stay explicit and zero-copy.
-- GPU plugins contribute **WGSL source**, spliced at build time into framework-generated entry
-  points. One dispatch, zero indirect calls, **zero runtime plugin cost**, and two focus measures
-  can fuse into a single dispatch — saving a whole pass over the stack.
+- **The framework owns the warp, the scale centre and the sampler. A plugin never sees a warp.**
+  Rule 2 forbids materialising aligned frames, so a contributed function receives *already-gathered
+  samples at reference coordinates*. See §3.4.1 (B1) — this is not a detail; the naive interface
+  cannot express rule 2 at all.
+- GPU plugins contribute **WGSL source, composed at run time** (`naga_oil`) into framework-generated
+  entry points, with emitted SPIR-V cached by content hash. One dispatch, zero indirect calls, zero
+  runtime plugin cost, and two focus measures can fuse into a single dispatch — saving a whole pass
+  over the stack. **Not `build.rs`** — see §3.4.1 (B2).
+- **A focus measure declares its own spatial support**, and the merge derives its regulariser width
+  from that declaration rather than reading a constant. See §3.4.1 (B3).
+- **A focus measure returns sigma-multiples, not raw response**, so the framework owns the division
+  by the noise floor and rule 3 is enforced by the type rather than by documentation. See
+  §3.4.1 (B4).
 - **Names for the algorithm, constants for the schedule.** This is Halide's algorithm/schedule
   split falling out of the mechanism rather than being imposed on it.
-- Camera and lens models are plugins that **supply priors, never capability**. Every accessor
-  returns `Option`; a geometric correction returns `None` to *disable* rather than approximate,
-  because a wrong distortion coefficient is worse than none. `ScalePrior` has no constructor
-  that omits `sigma`, and the aligner weights the prior by `1/sigma^2` so degradation is
-  continuous rather than a branch.
-- Unsatisfied optional dependencies leave a stage **inactive**, not errored (the Cordis
-  `try_activate -> Inactive{unmet}` shape).
+- **Camera and lens knowledge is a *profile*, which is data, not a plugin.** See §3.4.2. What data
+  there is supplies **priors, never capability**: every accessor returns `Option`, and a geometric
+  correction returns `None` to *disable* rather than approximate, because a wrong distortion
+  coefficient is worse than none.
+- **Unresolved dependencies are settled once at plan time and reported in the output's provenance**
+  — the `Provenance::Fallback` shape already implemented in `noise.rs`/`profile.rs`, whose test
+  asserts that an unknown body falls back *visibly*. This is a **stronger** guarantee than the
+  Cordis `try_activate -> Inactive{unmet}` shape it replaces, and it is the right one for a batch
+  run that decides everything before touching a pixel. Cordis's shape is reactive — it exists so a
+  component can activate later when a provider appears at run time, which cannot happen here.
 
 What we deliberately refuse to make pluggable: the pixel data model, the noise model interface,
-the colour pipeline, and stage ordering semantics. Registries commute; the pixel chain does not.
+the colour pipeline, the interpolation kernel, and stage ordering semantics. Registries commute;
+the pixel chain does not.
+
+### 3.4.1 What measurement did to the plugin model
+
+**The internal justification for plugin machinery is gone. The external one is the whole point,
+and it is the owner's stated requirement.**
+
+`E-plugin-architecture.md` §4.12 sets the test: *"The strongest argument for the whole architecture
+is not extensibility at all — it is that §4.5's declared capabilities and §4.9's caching are what
+let 24 GB of frames be scheduled and re-run cheaply... **If the plugin system is ever justified on
+extensibility alone, it is over-engineered.**"*
+
+Both internal legs have since been cut by our own measurements:
+
+- **§4.5's tiling/capability apparatus solved a 24 GB problem that no longer exists.** §3.2 is
+  titled "the problem dissolves" — u16 CFA fits 60 frames in VRAM with 8x headroom — and fact 22
+  **measured** peak RSS at 1.81-1.94 GB. Nothing needs to be tiled.
+- **§4.9's caching wanted to cache aligned frames.** Rule 2 forbids materialising them, so the
+  artifact does not exist; and fact 15 measured alignment at **0.78-0.96 s for 60 frames, ~6% of
+  budget**, so caching it would save under a second.
+
+**The ruling is not "cut the plugin system".** E's test was written to catch machinery built for
+nobody. The owner asked for this explicitly and in these words: *"the stacking techniques, algos,
+etc. should all be plugins too — recomposable and **easily contributable by others**."* So
+extensibility is not a failed justification here; it is the **only** one that was ever load-bearing,
+and the design must now be judged **solely on contributor experience**. That cuts both ways:
+
+- **Cut everything that existed to serve internal engineering:** `Resources`/`negotiate`/`Access`,
+  the derivation cache, two-pass ROI negotiation, tiling machinery. They were priced for a problem
+  measurement dissolved.
+- **Strengthen everything that serves a contributor**, because that is now the entire return.
+
+Four blocking items follow, and all four are cheap **today** and expensive after the first stage is
+written against the wrong signature.
+
+**B1 — `TileView`/`Stage` as specified cannot express rule 2.** E's
+`Stage::run(ctx, inputs: &[TileView], outputs: &mut [TileViewMut])` is a materialised-buffer-in,
+buffer-out interface with an axis-aligned integer ROI and no warp; the strings `gather` and
+`materialis` appear **nowhere** in E. E and the hardware workstream ran in parallel and rule 2 came
+out of the latter; nobody reconciled them. Worse, a scalar `fn halo(&self) -> u32` **cannot express
+a warp-dependent source ROI** — under a radial similarity the offset is proportional to radius from
+the scale centre, ~0 at the centre and **39 plane px at the corner** on a 22-frame stack (M3 §0), so
+a scalar halo must be sized for the corner and paid everywhere (~2.6x tile area for a 128 px tile).
+And if one kernel gathers bilinear while another gathers bicubic they disagree about what "the same
+pixel" is, at the same 0.6-1.3 px scale as M3's unmodelled residual.
+**Fix:** the framework owns `Warp`, the scale centre and the sampler, and hands contributed
+functions already-gathered samples at reference coordinates; replace `halo() -> u32` with
+`source_roi(&self, out: Roi, warp: &Warp) -> Roi` (default impl `out.expand(halo)`); add the
+interpolation kernel to the rigid-seam list.
+
+**B2 — "build-time WGSL splicing" is a mistranslation of E, and it destroys the headline
+requirement.** E §F2.2 says *"selected by name at **pipeline-build time**"* — and in `wgpu`,
+pipeline creation is a **runtime** call. E §4.2 is explicit: contributed kernels are
+*"hot-reloadable for free (**re-read a file, recompose the shader, rebuild the pipeline**)"*, and
+§F2.2 already specifies *"cache emitted SPIR-V by content hash of (module set, entry point,
+constants) and it is amortised to zero across runs."* "pipeline-build time" became "build time"
+became "`build.rs`", and §7 then logged the resulting contributor cost as a *risk* rather than as a
+*bug*. **The runtime cost of the two is identical** — both end at one `set_pipeline` and one
+dispatch — and both keep the decisive fusion advantage. The only difference is when SPIR-V is
+emitted, and E already amortises that to zero.
+
+| | `build.rs` splicing (as §3.4 wrongly said) | runtime composition (as E actually says) |
+| --- | --- | --- |
+| To contribute | Rust toolchain, full workspace, `cargo build --release` | drop a `.wgsl` in a directory |
+| Iterate | full rebuild per edit | re-run; hot reload for free |
+| Shader error | a `build.rs` failure at a spliced line offset, in generated source the author never sees | a runtime error naming the author's own file and line |
+| A/B two measures | two builds | two config values, one binary |
+| Distribute | fork the repo | ship a file |
+
+**Fix: never write the `build.rs`.** Compose at run time, cache by content hash. This is the single
+highest-value item in this section, because it *is* "easily contributable by others".
+
+**B3 — the focus measure and the merge are coupled, and the coupling is currently invisible.**
+`M2-verification.md` §6 records that argmax's noise excess is *spatially correlated over 3-7 px
+because the ring-difference measure correlates winners* — and 3-7 px is exactly `focus.rs`'s own
+`INNER_RADIUS: 1` / `OUTER_RADIUS: 3` support. **So the 17x17 regulariser that facts 20 and 23 rest
+on is a constant tuned to one measure's support.** §3.3 lists focus volume and merge as separate
+pluggable stages, so a contributor who supplies a 9x9 DCT-energy or multi-scale wavelet measure and
+leaves the merge at its default gets a **silently wrong stack**: no error, plausible output, wrong
+regularisation. §5's property tests cannot catch it — *sensitivity* only requires that
+distinguishable configs produce distinguishable output, and wrong-but-distinguishable passes.
+**Fix:** `fn support_px(&self) -> u32` on the measure; the merge derives its regulariser width from
+it; a property test asserts the derivation.
+
+**B4 — rule 3 is documented, not enforced.** §3.4's enforcement is a refusal to make the noise-model
+*interface* pluggable, which closes the interface but not the behaviour: a plugin handed raw pixels
+can always compute its own local sigma, reintroducing the exact 2-5x defect this project exists to
+remove. **Fix:** (i) contributed measures return a `SigmaMultiples` newtype so the framework owns
+the division — `focus.rs` already does this internally; (ii) add a **fifth** property test,
+*noise-model sensitivity*: perturb the injected model and assert every downstream stage moves as
+predicted. It must be a **non-uniform** perturbation (the read-noise term alone, not a global
+scale), because a global scale cancels out of a ranking and the test would be a tautology — which
+is itself the §5 metric-validity failure mode.
+
+### 3.4.2 Camera and lens: profiles, not plugins
+
+**Stated plainly, because the requirement changed shape under measurement and the docs had not said
+so.** The owner asked for pluggable camera and lens specifics. What survives is:
+
+- **Camera: four numbers** — `gain_divisor`, `read_noise_e_low`, `read_noise_e_high`,
+  `second_base_iso`. White level, black level and the CFA pattern are **decoder output, per frame**,
+  because they are firmware- and compression-dependent (M1 §2). `g` is DERIVED, not measured, and
+  §3.3 puts a runtime estimator on the v1 path whose job is to *validate the profile from the
+  stack*.
+- **Lens: one measured float plus an EXIF parser.** `F-camera-lens-optics.md` §7 rules out by name
+  the PDAF map, PDAF depth, field curvature, `FocusPosition2` as depth, LensFun/LCP (neither
+  database contains the SEL100M28GM), and vignetting (coefficients are all zeros). Distortion and
+  TCA come from Sony's own maker notes, which is decoder work. **The breathing scale prior is dead
+  too** — see §4.1. What remains is **pupil magnification `p`**: unpublished, assumed 1, worth
+  **±38%** on every capture-advisor number at m=1.4, a one-hour bench measurement, and the only gear
+  constant that can be neither read from EXIF nor fitted from a stack.
+
+So: **camera profiles are a TOML table; lens profiles are one float and a maker-note parser.**
+Measurement dissolved the rest, mostly by showing that runtime fitting is both cheaper and more
+accurate than any profile could be (§4.1). This does not weaken the tool — a runtime fit
+generalises to gear nobody has profiled, which is what "generally SOTA" requires — but it must be
+called what it is.
+
+**One candidate could still make gear knowledge into genuine code, and it is unresolved.** The lens
+is not telecentric, so the defocus PSF is **field-dependent** and a single global PSF model is wrong
+toward the corners (F §5.3). One of the two candidate causes of M3's unexplained 0.6-1.3 px residual
+is *blur-induced correlation bias*. **If that is the cause, a field-dependent defocus PSF is biasing
+the aligner, and modelling it per lens is real per-lens computation.** Do not close the lens-plugin
+question before running §10 question 4.
 
 **Over-engineering guard.** v1 is one binary, all stages in-tree, no dynamic loading, no WASM,
 no DI container. What must not be foreclosed: the object-safe `Stage` signature, `TileView`
-descriptors everywhere, `ctx.provide/require` from day one, `(id, semver, params_hash)` in cache
-keys from day one, source-level kernel composition, and manifest-first stage declaration.
+descriptors everywhere, `source_roi(out, warp)` rather than `halo()`, `support_px()`,
+`SigmaMultiples`, a framework-owned sampler, `ctx.provide/require` from day one, and **runtime**
+source-level kernel composition.
 
 ---
 
@@ -318,6 +455,7 @@ keys from day one, source-level kernel composition, and manifest-first stage dec
 | 22 | Peak RSS **1.81-1.94 GB** at 22 frames over 9 runs, 1.93 GB at 44 frames. In-flight frames = `min(20, 32, N)`, so 11 at N=22, **15 at N=44, 20 at N=200** — O(workers), never O(N). Output byte-identical (SHA-256) across different rayon reduction trees and thread counts | The §3.2 working-set claim holds with **more** headroom than published. The parallel argmax reduce is genuinely associative. *(M2 published 4.12-4.20 GB and "still 11 at 200 frames"; both refuted)* | M2-verification (MEASURED) |
 | 23 | Regularising the focus field (17x17 smooth) before argmax drops speckle **34.4% -> 0.868%** and noise **1.253x -> 1.075x** — **but 1.075x is still above 1.0.** Only averaging goes below one frame | **Direct measured support for §1.1(a), and a warning.** The architecture needs *both* halves: a regularised reference to stop the selector electing noise, **and** a noise-gated estimator that averages where frames agree. A better selector is not enough | M2-verification (MEASURED) |
 | 24 | On high-detail ROIs a mean's sigma looks harmless (0.899x, 0.995x) while its mean gradient **collapses -58% and -53%**; argmax *raises* gradient | **Sigma alone cannot see detail destruction.** This is rule 9 working: the flat-ROI metric is valid precisely because its paired control fails as it should | M2-verification (MEASURED) |
+| 25 | Argmax's noise excess is **spatially correlated over 3-7 px, not white** — and 3-7 px is exactly `focus.rs`'s own `INNER_RADIUS: 1` / `OUTER_RADIUS: 3` support | **The focus measure and the merge are coupled.** The 17x17 regulariser behind facts 20 and 23 is tuned to *one measure's support*. A contributor pairing a wider measure with the default merge gets a silently wrong stack. Put the support on the interface (§3.4.1 B3). Also why high-pass views understate argmax damage while raw spatial sd overstates the ratio — ~1.48x is the honest figure between them | M2-verification (MEASURED) |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -331,6 +469,7 @@ instruction is binding — *"don't overfit to anything specific to my setup."* R
 | Scale centre (−176±127, −338±61 px) | Physically the principal point — within a few px of image centre. 176–338 px is **not physical**; x has 72% relative error | **Artifact — confirmed refuted by M3**, which measures **(−22, −113) px** at sensor resolution on a second stack: 8x closer in x, 3x closer in y. Solve per stack, regularised toward the principal point with a **tight** prior. |
 | `g = ISO/436.8`, ISO 400 second base, white level 15360 | Genuine **per-body-model sensor calibration** — the most legitimate constants here. White level and black level independently **confirmed by M1**. | **Keep — but in a camera-profile data file, never in pipeline code.** Read white level from file tags where present (firmware/compression dependent). `g` was validated by reproducing white level to 0.23%, which is a consistency check on one relation, *not* a photon-transfer measurement — extend experiment 1 to a real PTC. Dual-gain behaviour is per body *and* per firmware. |
 | 0.075 px jitter ⇒ MFSR off the table | An artifact of the **capture mode** — in-camera bracketing on a tripod has no camera motion by design | **Do not bake anywhere.** A mechanical rail has 1–10 µm repeatability plus lateral runout; 5 µm at m=1 on a 5.12 µm pitch is ~**1 px**, far above Wronski's ≥0.3 px gate. **MFSR is back on the table for rail users.** |
+| `LensModel::breathing_scale_prior` — F ranked it payoff #2 at 5 stars and F1.13 says it *"is justified and should be built"* | A per-lens prior whose **only job** was to seed and constrain the aligner's scale search | **RETRACTED — M3 removed its job.** A direct per-frame fit is already 3.6x more accurate than any low-order model of drift against frame index, costs 13–16 ms/frame, and an 8x-decimated coarse pass supplies capture range on its own. **A prior cannot beat a free, more-accurate direct measurement, and nothing needs seeding.** This was the second-highest-ranked lens-profile item; with it gone, §3.4.2 is what remains. |
 
 **A live contradiction to resolve before either claim reaches a design decision:** fact #9
 (0.075 px, "MFSR off the table") and novelty bet #1 ("breathing supplies structured, radially
@@ -456,8 +595,26 @@ Recorded with their queries; **all are UNVERIFIED as wins, and none is on the v1
    inspect by "never materialise aligned frames"; a single bad frame (motion, wind, clipping)
    poisoning both reference and average, with no outlier rejection anywhere; **no way to act on the
    confidence map** (a confidence map you cannot act on is a bug report, not a feature); and the
-   contributor loop — build-time WGSL splicing means a plugin author recompiles the whole binary,
-   which is a real unacknowledged cost given that third-party contribution is the premise.
+   contributor loop — ~~build-time WGSL splicing means a plugin author recompiles the whole binary~~
+   — **RESOLVED as a bug, not a risk (§3.4.1 B2).** It was a mistranslation of E's *"pipeline-build
+   time"*, which in `wgpu` is a runtime call. Composing at run time costs nothing at dispatch and
+   removes the recompile entirely.
+
+9. **Out-of-tree plugins inherit an open research problem.** The Cordis paper's §6.6 surveys three
+   approaches to dependency typing — nominal linking, interface drift, key collision — and
+   **completes none of them**. It is stated in the paper as unsolved. In-tree stages never meet it,
+   because the compiler resolves everything; the moment `strehl` ships third-party plugins that
+   declare and discover each other's capabilities, it is ours. This is a further argument for
+   keeping the *shape* and not the *machinery*, and for the contributed surface being data plus
+   WGSL — a shader cannot drift an interface it does not have.
+
+10. **The GPU contribution format is being constrained by a CPU measurement.** Fact 21's "focus is
+    74% of decode" is **scalar Rust, no SIMD, no GPU**, while §9 scopes v1 as `wgpu` compute. Fact
+    10 measured D2D at 1503 GB/s, and 22 frames x 66 MB is 1.45 GB, so a bandwidth-bound bandpass
+    over the whole stack is plausibly single-digit milliseconds. **The size of the fusion prize —
+    the stated justification for constraining how contributors write focus measures — is unpriced,
+    and experiment 3 has not been run.** Port ring-difference to one `wgpu` kernel and time it
+    before letting fusion dictate the contribution format.
 
 ---
 
@@ -540,23 +697,39 @@ wasted:
 Do not silently apply the breathing model to rail data. Detect and warn.
 
 **Cut from v1 by the review — abstractions not earned by any second implementation:**
-darktable-style two-pass ROI negotiation (replaced by `fn halo(&self) -> u32`); the RON pipeline
+darktable-style two-pass ROI negotiation (replaced by `fn source_roi(&self, out, warp) -> Roi`,
+**not** the scalar `halo()` the review first proposed — see §3.4.1 B1); the RON pipeline
 graph (a graph language that can express exactly one topology; replaced by a `serde` struct with an
 algorithm *name* per slot); Cordis-style `ctx.provide/require` DI (a `HashMap<TypeId>` replacing
 eight explicit arguments, converting compile-time errors into runtime ones); `try_activate ->
-Inactive{unmet}` (nothing can be unmet when everything is in-tree); and a universal per-stage CPU
-fallback (keep `gpu() -> Option<..>` in the signature, but don't write every kernel twice).
+Inactive{unmet}` (nothing can be unmet when everything is in-tree; replaced by plan-time resolution
+reported through `Provenance` — §3.4); and a universal per-stage CPU fallback (keep
+`gpu() -> Option<..>` in the signature, but don't write every kernel twice).
 
-**Kept, and correctly credited:** build-time WGSL splicing (~150 lines of `build.rs`, earned by the
-four focus-measure candidates in experiment 3, *not* by the rail case); `TileView` (earned by
-gather-at-consumption, not by plugins); the injected noise model; u16 CFA storage.
+**Also cut, by measurement rather than review (§3.4.1):** `Resources`/`negotiate`/`Access` and the
+tiling apparatus (fact 22 measured 1.81-1.94 GB peak RSS — there is no 24 GB problem to tile), and
+the derivation cache (rule 2 forbids materialising the aligned frames it wanted to cache, and fact
+15 prices all alignment at 0.78-0.96 s). **Both were E §4.12's stated justification for the whole
+architecture.** With them gone, the plugin system stands on contributor experience alone — which is
+exactly what the owner asked for, and is now the only thing it should be designed against.
+
+**Kept, and correctly credited:** **runtime** WGSL composition with a content-hashed SPIR-V cache
+(earned by the four focus-measure candidates in experiment 3; the `build.rs` variant was a
+mistranslation of E and is deleted — §3.4.1 B2); `TileView` (earned by gather-at-consumption, and
+only if it carries the geometry that rule 2 actually needs); the injected noise model; u16 CFA
+storage.
 
 **The genuinely irreversible decisions are about data, not structure** — u16 CFA storage,
-never-materialise/gather-at-consumption, the injected noise model, and `(id, semver, params_hash)`
-cache keys. Those four are load-bearing and must be defended now. The rest are cheap refactors of
+never-materialise/gather-at-consumption, and the injected noise model. Those are load-bearing and
+must be defended now. `(id, semver, params_hash)` cache keys are no longer among them: they were
+the keys of a cache that is no longer being built. The rest are cheap refactors of
 eight known call sites, and the rail requirement demonstrated the principle: the first genuine
 second implementation the project met exerted pressure on **exactly one narrow interface** and on
 none of the framework. Let the second variant of each thing tell you where the seam goes.
+
+**Two signatures stop being cheap the moment the first stage is written against them**
+(§3.4.1 B1, B3): `source_roi(out, warp)` rather than `halo()`, and `support_px()` on the focus
+measure. Fix both before writing a stage, not after.
 
 **Deliberately not v1** — rail capture and occlusion handling, CUDA, dynamic/WASM plugins, GUI,
 decode/compute overlap, learned components, super-resolution, per-channel LCA exploitation.
@@ -573,20 +746,42 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
 3. **Flat fields, if `g` is to be measured rather than inferred.** Darks cannot supply a
    photon-transfer curve. Spec to be added to [`../captures-needed.md`](../captures-needed.md) §4
    only if experiment 2 shows it would change a decision.
+4. **Pupil magnification `p` for the SEL100M28GM — a one-hour bench measurement.** It is
+   unpublished, currently assumed `p=1`, and worth **±38%** on every capture-advisor number at
+   m=1.4 (F1.7b). It is **the only gear constant that can be neither read from EXIF nor fitted from
+   a stack** (§3.4.2), which makes it the entire remaining content of a "lens profile". Add to
+   `captures-needed.md`.
 
 **Needs measurement, not argument:**
-3. ~~Alignment cost for the two-phase design~~ — **closed by M3.** 13-16 ms/frame, 0.78-0.96 s for
+5. ~~Alignment cost for the two-phase design~~ — **closed by M3.** 13-16 ms/frame, 0.78-0.96 s for
    60 frames. The two-phase design itself was superseded: no global frame-index model, no chaining,
    per-frame coarse-to-fine against a fixed reference.
-4. **What the 0.6-1.3 px alignment residual is** (M3 §2.1). It is neither estimator noise
+6. **What the 0.6-1.3 px alignment residual is** (M3 §2.1). It is neither estimator noise
    (0.19 px floor) nor global model error (12 parameters buy ≤6%). Candidates: depth-dependent
    magnification, or blur-induced correlation bias. **Discriminate by correlating the per-tile
    residual against the skeleton's winner-index map**, which is a proxy depth map. Needs the
-   skeleton, and nothing else.
-5. The radial dependence of sub-pixel jitter — resolves the fact #9 / novelty-bet-#1 contradiction
+   skeleton, and nothing else. **This question now also gates §3.4.2** — if the cause is
+   blur-induced correlation bias, a field-dependent defocus PSF is biasing the aligner, and
+   modelling it per lens is the one candidate that would make gear knowledge into genuine code
+   rather than a data file. **Do not close the lens-plugin question before running it.**
+7. The radial dependence of sub-pixel jitter — resolves the fact #9 / novelty-bet-#1 contradiction
    (§4.1). Still live for breathing: bet #1 claims breathing itself supplies sub-pixel diversity.
    M3's per-frame alignment residuals are the raw material.
-6. `g` by direct photon transfer rather than by white-level consistency (§4.1). Needs (1).
+8. `g` by direct photon transfer rather than by white-level consistency (§4.1). Needs (3), not (1).
+9. **Is the focus-measure/merge coupling (fact 25) severe enough to belong on the interface?**
+   Re-run the skeleton's winner map with measures of differing support (3x3/7x7 ring, 5x5/13x13
+   ring, 3x3 Tenengrad) and sweep the regulariser width against the flat-ROI ratio for each. **If
+   the noise-optimal width tracks the measure's outer radius, §3.4.1 B3 is confirmed and
+   `support_px()` is mandatory.** The skeleton already emits `--index-map` and `--flat-roi`, so
+   this is nearly free.
+10. **How big is the halo actually?** Pure arithmetic on M3's already-fitted similarities: for a
+    128 px tile grid, compute `bbox(S_k^-1(tile))` over all k and plot the required halo against
+    radius from the scale centre. Costs nothing and produces the number that either kills or
+    vindicates a scalar `halo()` (§3.4.1 B1).
+11. **Price the GPU fusion prize before it constrains the contribution format** (risk 10). Port
+    ring-difference to one `wgpu` kernel and time the focus volume on the 22-frame stack. Fact 21
+    is a scalar-CPU number, and experiment 3 — which §9 says is what justifies constraining how
+    contributors write focus measures — has not been run.
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must

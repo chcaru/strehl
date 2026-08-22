@@ -1,7 +1,10 @@
 # AGENTS.md — strehl
 
 Noise-aware RAW focus stacker. Rust. CFA-native. Pluggable focus measures, merge
-strategies, alignment models, and camera/lens profiles.
+strategies and alignment models. Camera and lens knowledge is a **profile** — a
+data file, not a plugin: measurement kept reclassifying "camera constants" as
+per-stack quantities that are cheaper and more accurate to fit at runtime. See
+`SYNTHESIS.md` §3.4.2 for exactly what survives.
 
 Read [`docs/research/SYNTHESIS.md`](docs/research/SYNTHESIS.md) before changing
 anything architectural. It is the decision record and it lists what lost.
@@ -102,6 +105,7 @@ monolithic binary and ship only that binary.
 | --- | --- |
 | `SYNTHESIS.md` | **Start here.** Decision record, revised after review. |
 | `REVIEW.md` | Adversarial review that corrected four design errors |
+| `REVIEW-plugin.md` | **Plugin-architecture critique.** Cordis verified against the PDF; four blocking interface fixes; camera/lens plugins are profiles |
 | `M1-decode-measured.md` | Measured decode throughput and sensor constants |
 | `M2-baseline-skeleton.md` | The naive argmax baseline, and the measured defect it exposes |
 | `M2-verification.md` | **Independent re-derivation of M2.** Headline confirmed and causally proven; five supporting numbers refuted |
