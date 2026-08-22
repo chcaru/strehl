@@ -106,6 +106,7 @@ monolithic binary and ship only that binary.
 | `SYNTHESIS.md` | **Start here.** Decision record, revised after review. |
 | `REVIEW.md` | Adversarial review that corrected four design errors |
 | `REVIEW-plugin.md` | **Plugin-architecture critique.** Cordis verified against the PDF; four blocking interface fixes; camera/lens plugins are profiles |
+| `M2-rss-resolved.md` | **Tiebreak.** Two docs disagreed 2.2x on peak RSS; resolved by measurement. Peak tracks live concurrency, and the 8 GB ratchet is at 89% by N=105 |
 | `M1-decode-measured.md` | Measured decode throughput and sensor constants |
 | `M2-baseline-skeleton.md` | The naive argmax baseline, and the measured defect it exposes |
 | `M2-verification.md` | **Independent re-derivation of M2.** Headline confirmed and causally proven; five supporting numbers refuted |

@@ -114,7 +114,7 @@ Both internal legs are gone, killed by this project's own measurements:
 
 | E's justification | What killed it |
 | --- | --- |
-| §4.5 capability/tiling — *"what decides whether 24 GB can be streamed in tiles or must be resident"* | §3.2 "the problem dissolves" (u16 CFA, 60 frames in VRAM with 8x headroom) and **fact 22: measured peak RSS 1.81-1.94 GB.** There is no 24 GB. Nothing needs tiling |
+| §4.5 capability/tiling — *"what decides whether 24 GB can be streamed in tiles or must be resident"* | §3.2 "the problem dissolves" (u16 CFA, 60 frames in VRAM with 8x headroom) and **fact 22: measured peak RSS ~4.0 GB at N=22, 7.16 GB at N=105.** There is no 24 GB. Nothing needs tiling — though the margin is far thinner than fact 22 originally claimed |
 | §4.9 caching — *"changing the merge weighting must not invalidate the aligned frames ... alignment is the expensive part ... worth more to a user than the entire plugin system"* | **Rule 2 forbids materialising aligned frames**, so the artifact does not exist; and **fact 15** prices all alignment at 0.78-0.96 s for 60 frames, ~6% of budget |
 
 **The conclusion is not "cut the plugin system", and the review that reached that conclusion was

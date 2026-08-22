@@ -297,7 +297,8 @@ impl WorkerPlan {
     fn describe(&self) -> String {
         format!(
             "workers         : {} chunks of <= {} frames ({} allowed by the {} MB budget, {} by CPU)\n\
-             working set     : {:.0} MB/worker, {:.2} GB peak (DERIVED, O(workers) not O(frames))",
+             working set     : {:.0} MB/worker, >= {:.2} GB peak (LOWER BOUND -- excludes decoder \
+             scratch; measured peak runs 1.13-1.24x this)",
             self.chunks,
             self.chunk_len,
             self.workers,
