@@ -194,14 +194,18 @@ compounding a 59-step random walk through a parameter whose error amplifies 1541
 (fact #5). Fit **quadratic, not linear** — rail scale goes as `1/(u-d-f)`, which is hyperbolic,
 and the second-order term is ~0.4 px over the reference baseline: detectable, and free to fit.
 
-**Both capture modes use this same two-phase structure**, which is why the rail requirement does
-not force a second pipeline. A rail produces genuine *parallax*: point scale depends on depth, so
-**no global 2D transform can be correct** — but the residual is locally near-constant, which is
-exactly what phase 2's tile search absorbs. Rail therefore promotes tile refinement from optional
-polish to **mandatory**, and makes D's tile-search budget the floor rather than the optimistic
-case. Occlusion at depth discontinuities is a real, separate problem the merge must handle
-explicitly (different frames see *different surfaces*, which the Wiener gate would otherwise
-misread as "sharp vs blurred"); it is tracked by the coverage term in the confidence stage.
+**Both capture modes use this same two-phase structure**, which is why rail support — when it
+lands — does not force a second pipeline. A rail produces genuine *parallax*: point scale depends
+on depth, so **no global 2D transform can be correct** — but the residual is locally near-constant,
+which is exactly what phase 2's tile search absorbs. Rail would therefore promote tile refinement
+from optional polish to **mandatory**, and make D's tile-search budget the floor rather than the
+optimistic case. Occlusion at depth discontinuities is a real, separate problem (different frames
+see *different surfaces*, which the Wiener gate would otherwise misread as "sharp vs blurred").
+
+> **Rail is deferred from v1** — no rail hardware is available, so every rail claim above is
+> *derived and untested*. See §9. `CaptureMode` and mode detection stay; occlusion handling does
+> not. For breathing alone, phase 2 is polish rather than a requirement, and must justify itself by
+> measurement.
 
 **The noise model is injected, not per-stage.** Six of eight stages consume the same calibrated
 per-CFA-plane noise model (B, escalated). If it is not first-class from v1, each stage grows a
@@ -373,9 +377,9 @@ Recorded with their queries; **all are UNVERIFIED as wins, and none is on the v1
    lens-cap frames at ISO 100 and ISO 400** — a two-minute capture.
 6. `rawler` is **link-freely but do-not-read**; `wgpu` 30 raw-memory export for a future CUDA path
    is architecturally possible but **not runtime-tested**.
-7. **Occlusion on a rail** (new, from the rail requirement). At depth discontinuities different
-   frames see different surfaces; the Wiener gate misreads that as sharp-vs-blurred. Halos live at
-   exactly those boundaries. Needs explicit coverage/visibility accounting.
+7. **Occlusion on a rail** — **deferred with rail support (§9).** At depth discontinuities different
+   frames see different surfaces; the Wiener gate misreads that as sharp-vs-blurred, and halos live
+   at exactly those boundaries. Does not arise for in-camera bracketing, where occlusion is fixed.
 8. **Gaps with no coverage in v1 planning at all** (review §7): colour management and the CFA→RGB
    transform (and the hard ordering constraint that white balance scales noise *per channel*, so WB
    must be ordered relative to the noise model); dust and hot pixels, which are fixed in *sensor*
@@ -430,11 +434,29 @@ Test data exists: `C:\dev\macro\test\109MSDCF\*.ARW` (36 MB lossless-compressed)
 ## 9. Scope
 
 **v1** — CLI. ARW in, tiled float TIFF + DNG out. Calibrate, two-phase align (global frame-index
-model + parallel tile refinement) supporting **both** in-camera bracketing and rail capture,
-ring-difference focus volume, noise-gated merge with a regularised reference emitting RGB,
-confidence map, capture advisor. `wgpu` compute. Stages in-tree behind a **minimal** stage
-interface. A/B harness and the RSS/wall-clock ratchet. Sony A7C II + SEL100M28GM profiles **plus a
-runtime noise estimator** for unprofiled bodies.
+model + parallel tile refinement) for **in-camera focus bracketing**, ring-difference focus volume,
+noise-gated merge with a regularised reference emitting RGB, confidence map, capture advisor.
+`wgpu` compute. Stages in-tree behind a **minimal** stage interface. A/B harness and the
+RSS/wall-clock ratchet. Sony A7C II + SEL100M28GM profiles **plus a runtime noise estimator** for
+unprofiled bodies.
+
+**Rail capture is deferred (owner decision).** No rail is available, so every rail claim here would
+be *derived and untested* — shipping it would violate §5. What survives, and why the detour was not
+wasted:
+
+- **The two-phase aligner stays**, because the review showed it is correct for breathing on its own
+  merits: it deletes the serial chain of length N regardless of capture mode. Rail was
+  corroborating evidence, not the reason.
+- **Tile refinement reverts from mandatory to polish.** Rail was what made it mandatory. For
+  breathing, a global model plus refinement is belt-and-braces, and the refinement can be measured
+  and dropped if it earns nothing.
+- **`CaptureMode` stays as a two-variant enum**, and mode detection stays on the roadmap. That is
+  the one narrow seam the rail case genuinely exerted pressure on (§9, review §3), and it costs
+  almost nothing to leave in place.
+- **Occlusion handling (risk 7) is deferred with it.** Breathing does not change occlusion.
+- **MFSR stays out of v1.** Rail was what put it back on the table.
+
+Do not silently apply the breathing model to rail data. Detect and warn.
 
 **Cut from v1 by the review — abstractions not earned by any second implementation:**
 darktable-style two-pass ROI negotiation (replaced by `fn halo(&self) -> u32`); the RON pipeline
@@ -455,25 +477,32 @@ eight known call sites, and the rail requirement demonstrated the principle: the
 second implementation the project met exerted pressure on **exactly one narrow interface** and on
 none of the framework. Let the second variant of each thing tell you where the seam goes.
 
-**Deliberately not v1** — CUDA, dynamic/WASM plugins, GUI, decode/compute overlap, learned
-components, super-resolution, per-channel LCA exploitation.
+**Deliberately not v1** — rail capture and occlusion handling, CUDA, dynamic/WASM plugins, GUI,
+decode/compute overlap, learned components, super-resolution, per-channel LCA exploitation.
 
 ---
 
 ## 10. Open questions
 
 **Needs the owner:**
-1. **20 lens-cap dark frames at ISO 100 and ISO 400.** Two-minute capture; unblocks experiment 2,
-   the go/no-go on the central pillar. `rawler` cannot supply masked pixels (M1).
-2. **A rail-captured stack**, if one can be borrowed or shot. Every rail claim here is currently
-   *derived*, not measured, and rail is now a first-class requirement.
-3. Confirm the LGPL relinking obligation is acceptable (see below).
+1. **20 lens-cap dark frames at ISO 100 and ISO 400.** Two-minute capture, no extra gear. Unblocks
+   experiment 2, the go/no-go on the central pillar. `rawler` cannot supply masked pixels (M1).
+   *Outstanding.*
+2. ~~A rail-captured stack~~ — **no rail available. Rail support deferred from v1 (§9).**
 
 **Needs measurement, not argument:**
-4. Alignment cost for the two-phase design (experiment 4).
-5. The radial dependence of sub-pixel jitter — resolves the fact #9 / novelty-bet-#1 contradiction
-   (§4.1).
-6. `g` by direct photon transfer rather than by white-level consistency (§4.1).
+3. Alignment cost for the two-phase design (experiment 4).
+4. The radial dependence of sub-pixel jitter — resolves the fact #9 / novelty-bet-#1 contradiction
+   (§4.1). Still live for breathing: bet #1 claims breathing itself supplies sub-pixel diversity.
+5. `g` by direct photon transfer rather than by white-level consistency (§4.1). Needs (1).
+
+**Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
+practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
+be able to relink it against a modified `rawler`.** Ship it dynamically linked, or publish object
+files / a reproducible build. Statically linking it into a monolithic binary and shipping only that
+binary is the trap. Separately, the "link but do not read" constraint on GPL sources (enfuse,
+`align_image_stack`, Hugin, darktable, RawTherapee) is a constraint on *how the project works* and
+must be a written project rule in `AGENTS.md` before anyone opens those repositories.
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must

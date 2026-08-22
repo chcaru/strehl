@@ -29,11 +29,14 @@ diffraction-limited ideal.
 | Colour domain | demosaic first, then stack | **CFA-native**; the merge emits RGB directly |
 | Noise | not modelled | calibrated `sigma^2(S, ISO)` injected into every stage |
 | Output | an image | an image **plus a per-pixel confidence map** |
-| Capture geometry | one hardcoded assumption | in-camera bracketing *and* focus rail, detected |
+| Capture geometry | one hardcoded assumption | fitted per stack, not baked from one rig |
 
 No existing tool is RAW-native. Zerene states plainly that "no stacking software
 really works directly with raw files"; Helicon's RAW workflow demosaics via
 Adobe DNG Converter before it aligns anything.
+
+v1 targets **in-camera focus bracketing**. Focus-rail capture is a designed-for
+seam but is deferred until there is hardware to test it against.
 
 ## The honest performance claim
 

@@ -105,6 +105,12 @@ Sony A7C II (`ILCE-7CM2`) + Sony FE 100mm F2.8 Macro GM OSS (`SEL100M28GM`).
 Pixel pitch 5.12 um. RGGB. Black level 512, white level 15360, active area
 7032x4688. Confirmed by measurement, not by documentation.
 
-Support both in-camera focus bracketing (magnification changes; no parallax) and
-focus rails (camera translates; genuine parallax and occlusion). Detect which
-from EXIF plus fitted residual signature — never trust a user flag alone.
+**v1 targets in-camera focus bracketing only** — camera fixed, focus moves, so
+frames differ by magnification and occlusion never changes.
+
+Focus rails translate the camera, producing genuine parallax and occlusion. Rail
+support is **deferred**: no rail hardware is available to test against, and an
+untested geometry model would violate rule 7. The `CaptureMode` enum and mode
+detection stay in place because that is the one seam the rail case genuinely
+needs. Never silently apply the breathing model to rail data — detect from EXIF
+plus fitted residual signature, and warn. Never trust a user flag alone.

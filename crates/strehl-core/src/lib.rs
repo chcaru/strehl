@@ -43,6 +43,12 @@ impl CfaPlane {
 /// How a stack was captured. This changes the alignment prior, and on a rail it
 /// changes what is even representable: rail motion produces genuine parallax, so
 /// no global 2D transform is correct.
+///
+/// v1 implements [`CaptureMode::FocusBracket`] only. [`CaptureMode::Rail`] is a
+/// deliberate seam, not a supported path — there is no rail hardware to test
+/// against, and an untested geometry model is worse than an absent one. Detect
+/// the mode and refuse or warn; never silently apply the breathing model to rail
+/// data.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CaptureMode {
     /// Camera fixed, focus moves. Frames differ by magnification (breathing).
@@ -50,7 +56,16 @@ pub enum CaptureMode {
     FocusBracket,
     /// Camera translates, focus fixed. Scale becomes depth-dependent, and
     /// surfaces occlude and disclose at depth discontinuities.
+    ///
+    /// **Not implemented in v1.**
     Rail,
+}
+
+impl CaptureMode {
+    /// Whether the pipeline can currently process this capture mode correctly.
+    pub fn is_supported(&self) -> bool {
+        matches!(self, CaptureMode::FocusBracket)
+    }
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -82,5 +97,13 @@ mod tests {
         // and it tiles
         assert_eq!(CfaPlane::rggb_at(2, 2), CfaPlane::R);
         assert_eq!(CfaPlane::rggb_at(7033, 4689), CfaPlane::B);
+    }
+
+    #[test]
+    fn rail_capture_is_not_claimed_as_supported() {
+        // Deferred in v1: no rail hardware exists to validate the parallax
+        // model against, and an untested geometry model is worse than none.
+        assert!(CaptureMode::FocusBracket.is_supported());
+        assert!(!CaptureMode::Rail.is_supported());
     }
 }
