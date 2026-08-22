@@ -94,12 +94,15 @@ the primary diagnostic: real depth is piecewise smooth, so coherent bands are
 genuine focus structure and salt-and-pepper speckle is the argmax defect made
 visible.
 
-**`--flat-roi X,Y,W,H`** (in plane coordinates) prints the spatial standard
+**`--flat-roi X,Y,W,H`** (in plane coordinates) prints the **spatial** standard
 deviation of the stacked green channel over that ROI next to the same ROI in a
 single unstacked frame, and their ratio. **A ratio above 1.0 means the stack is
-noisier than one unstacked frame.** On the reference bracket it is 1.253x.
+noisier than one unstacked frame.** On the reference bracket it is 1.253x, and
+~1.48x once shared scene structure is removed.
 Pick a genuinely low-detail region: scene structure is common to both sigmas and
-biases the ratio toward 1.0.
+biases the ratio toward 1.0. Note that both are *spatial* sds over many pixels,
+while the noise model's prediction on the line below them is a *temporal*
+per-sample sigma — they are different quantities and are not expected to match.
 
 `stack` also prints throughput, the enforced in-flight frame bound, the winner
 distribution, index-map speckle, and an explicit provenance line stating whether
