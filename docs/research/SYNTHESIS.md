@@ -173,10 +173,11 @@ Constraint to ratchet in CI from commit one: **peak RSS <= 8 GB, independent of 
 decode (CPU, rayon ACROSS files -- 2.5x over one-at-a-time, MEASURED M1)
   ->  calibrate (black/white/FPN, per CFA plane)
   ->  detect capture mode (breathing | rail) from EXIF + fitted residual signature
-  ->  align  PHASE 1: fit ONE global low-order (quadratic) model of transform vs frame index
-                      at full baseline, regularised toward the principal point
-             PHASE 2: seed every frame from that model and refine per-frame IN PARALLEL
-                      (HDR+ 32px tile search). No frame-to-previous chaining.
+  ->  align  coarse-to-fine tiled NCC against a FIXED reference frame.
+             Every frame independent, all N in parallel. 4-parameter similarity,
+             scale centre regularised toward the principal point.
+             No chaining. No global model of transform vs frame index.
+             (MEASURED M3: 13-16 ms/frame, 0.78-0.96 s for a 60-frame stack)
   ->  focus volume (multi-scale ring-difference, per CFA plane, vs calibrated noise floor)
   ->  merge (band-selective noise-gated accumulation; select above the floor,
              average below it; reference from a REGULARISED focus field, never argmax;
@@ -186,26 +187,51 @@ decode (CPU, rayon ACROSS files -- 2.5x over one-at-a-time, MEASURED M1)
   ->  colour + output (tiled float BigTIFF / DNG)
 ```
 
-**Why alignment is two phases and not a chain (review finding #1).** Chaining frame-to-previous
-is what every existing tool does *because it has no optical prior*. We have one: drift is smooth
-and low-order in frame index (fact #1). Fitting the global model once and seeding from it makes
-the N refinements **embarrassingly parallel** instead of a serial chain of length N, and avoids
-compounding a 59-step random walk through a parameter whose error amplifies 1541x per pair
-(fact #5). Fit **quadratic, not linear** — rail scale goes as `1/(u-d-f)`, which is hyperbolic,
-and the second-order term is ~0.4 px over the reference baseline: detectable, and free to fit.
+**Alignment is coarse-to-fine per frame against a fixed reference. Superseded by M3 —
+measured, not argued.** The original design said "fit one global model of transform vs frame
+index, then seed per-frame refinement from it." Killing the chain was right; the global model
+was not. Measured on the reference stack:
 
-**Both capture modes use this same two-phase structure**, which is why rail support — when it
-lands — does not force a second pipeline. A rail produces genuine *parallax*: point scale depends
-on depth, so **no global 2D transform can be correct** — but the residual is locally near-constant,
-which is exactly what phase 2's tile search absorbs. Rail would therefore promote tile refinement
-from optional polish to **mandatory**, and make D's tile-search budget the floor rather than the
-optimistic case. Occlusion at depth discontinuities is a real, separate problem (different frames
-see *different surfaces*, which the Wiener gate would otherwise misread as "sharp vs blurred").
+- **Chaining fails by 25 px at the sensor corner.** Composing 21 adjacent-pair fits recovers
+  -1.244% total scale against a directly measured -1.835% — a **32% underestimate**, while every
+  individual adjacent fit *looks excellent* (0.446 px residual, better than the direct fits).
+  The mechanism is **pixel locking**, not a random walk: sub-pixel refinement is biased toward
+  integer displacements by a roughly fixed absolute amount, so at the ~1.9 px drift of an
+  adjacent pair it is a ~5% error with a consistent sign that compounds over 21 steps, whereas
+  at the 39 px drift of a direct fit it is ~0.25% and vanishes. Systematic error gets *worse*
+  with more frames, not better.
+- **A global model in frame index is worse than just measuring each frame.** A straight line
+  leaves 0.57 px RMS of scale error at the plane corner, a quadratic 0.50 px, against a per-frame
+  direct-fit precision of 0.16 px. The global model was to be the *seed* for something 3.6x more
+  accurate than itself, and an 8x-decimated coarse pass supplies capture range on its own.
+- **Similarity is the whole model.** 4 parameters. Going to affine (6) or quadratic (12) reduces
+  the residual by at most 6%, on both the filtered and unfiltered tile sets. Rotation is
+  unmeasurable (<=0.21 px at the corner) — keep the parameter as a guard against tripod flex,
+  expect it to stay zero.
+
+All N alignments are therefore independent, which is both the accurate option and the parallel
+one. The remaining 0.6-1.3 px residual is neither estimator noise (floor 0.19 px) nor global
+model error (richer geometry does not touch it); see M3 §2.1 for the two candidate causes and
+the experiment that separates them.
+
+**Both capture modes share this structure**, which is why rail support — when it lands — does not
+force a second pipeline. A rail produces genuine *parallax*: point scale depends on depth, so
+**no global 2D transform can be correct** — but the residual is locally near-constant, which is
+what a per-tile refinement stage absorbs. Rail would promote per-tile refinement from optional to
+**mandatory**, and make D's tile-search budget the floor rather than the optimistic case.
+Occlusion at depth discontinuities is a real, separate problem (different frames see *different
+surfaces*, which the Wiener gate would otherwise misread as "sharp vs blurred").
+
+The measured similarity result (M3 §2) is **specific to in-camera bracketing**, and the mechanism
+says so: the camera does not move, so the image-space effect of refocusing is magnification about
+a fixed point, which is exactly a similarity. That argument does not survive a rail. Rail data
+must never be run through the similarity model.
 
 > **Rail is deferred from v1** — no rail hardware is available, so every rail claim above is
 > *derived and untested*. See §9. `CaptureMode` and mode detection stay; occlusion handling does
-> not. For breathing alone, phase 2 is polish rather than a requirement, and must justify itself by
-> measurement.
+> not. For breathing alone, per-tile refinement beyond the global similarity is polish rather than
+> a requirement, and must justify itself by measurement — M3 puts the unmodelled residual at
+> 0.6-1.3 px, which is the size of the prize.
 
 **The noise model is injected, not per-stage.** Six of eight stages consume the same calibrated
 per-CFA-plane noise model (B, escalated). If it is not first-class from v1, each stage grows a
@@ -254,11 +280,11 @@ keys from day one, source-level kernel composition, and manifest-first stage dec
 
 | # | Fact | Consequence | Source |
 |---|---|---|---|
-| 1 | Inter-frame scale drift **-1.012%** over 33 frames, linear, ~42 px corner displacement | Translation-only alignment is dead on arrival | F (MEASURED) |
+| 1 | Inter-frame scale drift **-1.012%** over 33 frames, linear, ~42 px corner displacement | Translation-only alignment is dead on arrival | F (MEASURED) — **"linear" SUPERSEDED by M3**: a second stack gives -1.835%, and no low-order polynomial in frame index matches a direct per-frame fit |
 | 2 | Reference stack is **in-camera focus bracketing, not a rail** (~85% conf.): `FocusPosition2` 56->57 matches the 0-1 ticks predicted from 2.03 mm travel; interval 0.6492 s +/- 0.0208 s | Frame-to-frame relation is **breathing (magnification)**, not parallax | F (MEASURED) |
-| 3 | Homography residual identical to affine (1.45e-3) | No perspective signal. Use affine | F (MEASURED) |
+| 3 | Homography residual identical to affine (1.45e-3) | No perspective signal. Use affine | F (MEASURED) — **SUPERSEDED by M3**: even affine is more than needed; a 4-parameter similarity is sufficient |
 | 4 | Per-block correlation tracks the **migrating in-focus band**, not geometry — response collapses 0.68 -> 0.13 while ECC composes correctly over 16 chained steps | A block-matching aligner would be **silently wrong** | F (MEASURED) |
-| 5 | Scale-centre amplification **1541x** per frame pair, 98x at full baseline. Corrected estimate x = -176 +/- 127 px, y = -338 +/- 61 px | Solve **one** centre per stack at full baseline, regularised toward image centre. Never profile it — the max-shrink axis sits 4-10 deg from the subject's depth-gradient axis, so it is subject-dependent | F (MEASURED) |
+| 5 | Scale-centre amplification **1541x** per frame pair, 98x at full baseline. Corrected estimate x = -176 +/- 127 px, y = -338 +/- 61 px | Solve **one** centre per stack at full baseline, regularised toward image centre. Never profile it — the max-shrink axis sits 4-10 deg from the subject's depth-gradient axis, so it is subject-dependent | F (MEASURED) — **the centre estimate is REFUTED by M3**: (-22, -113) px. The "never profile it" conclusion stands |
 | 6 | Laplacian winner-margin goes **negative** at sigma >= 0.01; ring-difference stays highest at every sigma | Do not use a Laplacian focus measure | B (MEASURED) |
 | 7 | Argmax over N noise coefficients: 1.95x (N=10) -> 2.61x (N=60) | Selection is the defect. Gate on the noise floor | B (MEASURED) |
 | 8 | PDAF: **0** candidate pixels over 5 frames; anomaly density at the noise floor | No PDAF mask, no PDAF depth cue | A + F (MEASURED, independently) |
@@ -268,6 +294,10 @@ keys from day one, source-level kernel composition, and manifest-first stage dec
 | 12 | SEL20TC at 2.8x: **MTF@Nyquist = 0.000 at every aperture** (wide open is already N_eff 21.3, past the 18.6 extinction point) | The tool should warn, and offer reduced-resolution output | F (DERIVED) |
 | 13 | The reference 33-frame stack is **2.4x oversampled**; 14 frames sufficed | A capture advisor is a real feature | F (DERIVED) |
 | 14 | ISO 400 is a **second base ISO** (read noise 4.20 -> 1.47 e-); DR is higher than ISO 320. Usable white level **15360**, not 16383 | Camera plugin must expose `dominated_isos()` and the true white level | F (MEASURED) |
+| 15 | Alignment costs **13-16 ms/frame**; 0.78-0.96 s for 60 frames, scalar CPU, all frames independent | Alignment is ~6% of a 15 s budget. The last unpinned budget term is pinned | M3 (MEASURED) |
+| 16 | Composing 21 adjacent-pair fits underestimates total drift by **32%** — **25 px error at the sensor corner** — while each individual fit looks excellent (0.446 px residual) | **Never chain.** Always align to a fixed reference. The cause is pixel locking, a *systematic* bias that compounds, not a random walk | M3 (MEASURED) |
+| 17 | Going from 4 to 12 motion parameters reduces the residual by **≤6%**, on filtered and unfiltered tile sets alike. Rotation ≤0.21 px at the corner | A **4-parameter similarity** is the whole model for in-camera bracketing. Keep rotation as a tripod-flex guard | M3 (MEASURED) |
+| 18 | Residual after any global model is **0.6-1.3 px**, against a 0.19 px estimator floor, and richer geometry does not touch it | Neither noise nor global model error. Candidates: depth-dependent magnification, or blur-induced correlation bias. Discriminate by correlating per-tile residual against the winner-index map | M3 (MEASURED fact, UNVERIFIED cause) |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -276,9 +306,9 @@ instruction is binding — *"don't overfit to anything specific to my setup."* R
 
 | "Constant" | What it actually is | Verdict |
 | --- | --- | --- |
-| −1.012% scale drift | Per-**stack** by construction: depends on travel, magnification, focal length, and on a rail also on working distance | **Artifact. Fit at runtime, always.** The only defensible architectural claim is *"drift is smooth and low-order in frame index."* Fit quadratic. |
-| affine ≈ homography (1.45e-3) | An artifact of the *breathing* case, where there is no perspective signal | **Known false for the rail case**, now in scope. Fit affine, measure residual, escalate to homography on threshold. ~20 lines; removes the n=1 dependency. |
-| Scale centre (−176±127, −338±61 px) | Physically the principal point — within a few px of image centre. 176–338 px is **not physical**; x has 72% relative error | **Artifact: subject depth structure leaking into a geometric parameter.** F admits the max-shrink axis sits 4–10° from the subject's depth-gradient axis. Solve per stack, regularised toward the principal point with a **tight** prior. |
+| −1.012% scale drift | Per-**stack** by construction: depends on travel, magnification, focal length, and on a rail also on working distance | **Artifact. Fit at runtime, always.** Confirmed by M3: a second stack measures −1.835%. And the fallback claim *"drift is smooth and low-order in frame index"* is **also wrong** — no low-order polynomial in `k` reaches the accuracy of a direct per-frame fit. Do not model drift against frame index at all. |
+| affine ≈ homography (1.45e-3) | An artifact of the *breathing* case, where there is no perspective signal | **Resolved by M3, and the true answer is stronger: even affine is more than is needed.** A 4-parameter similarity is sufficient; affine (6) and quadratic (12) reduce the residual by ≤6%. The *mechanism* — fixed camera, magnification about a fixed point — generalises to all in-camera bracketing, so this is no longer n=1. It still does not survive a rail. |
+| Scale centre (−176±127, −338±61 px) | Physically the principal point — within a few px of image centre. 176–338 px is **not physical**; x has 72% relative error | **Artifact — confirmed refuted by M3**, which measures **(−22, −113) px** at sensor resolution on a second stack: 8x closer in x, 3x closer in y. Solve per stack, regularised toward the principal point with a **tight** prior. |
 | `g = ISO/436.8`, ISO 400 second base, white level 15360 | Genuine **per-body-model sensor calibration** — the most legitimate constants here. White level and black level independently **confirmed by M1**. | **Keep — but in a camera-profile data file, never in pipeline code.** Read white level from file tags where present (firmware/compression dependent). `g` was validated by reproducing white level to 0.23%, which is a consistency check on one relation, *not* a photon-transfer measurement — extend experiment 1 to a real PTC. Dual-gain behaviour is per body *and* per firmware. |
 | 0.075 px jitter ⇒ MFSR off the table | An artifact of the **capture mode** — in-camera bracketing on a tripod has no camera motion by design | **Do not bake anywhere.** A mechanical rail has 1–10 µm repeatability plus lateral runout; 5 µm at m=1 on a 5.12 µm pitch is ~**1 px**, far above Wronski's ≥0.3 px gate. **MFSR is back on the table for rail users.** |
 
@@ -422,9 +452,14 @@ measured as a delta against a baseline that exists.
 3. **Focus-measure bake-off on real RAW**, against the noise model: ring-difference vs SML vs
    Tenengrad vs wavelet, scored by winner-margin versus sigma. Closes risk 2. *Run on the skeleton.*
    This — not the rail requirement — is what justifies build-time WGSL splicing.
-4. **Alignment cost and accuracy at scale.** Now the largest unpinned budget term, by elimination.
-   Measure the two-phase design (§3.3) against the chained one to confirm the review's ~0.5 s.
-   *Run on the skeleton.*
+4. ~~**Alignment cost and accuracy at scale.**~~ — **DONE. See `M3-alignment-measured.md`.**
+   **13-16 ms/frame; 0.78-0.96 s for a 60-frame stack**, scalar CPU, unoptimised, all frames
+   independent. Chaining measured at **25 px error at the sensor corner** — dead by measurement,
+   not argument. A 4-parameter similarity is sufficient (affine and quadratic buy ≤6%); rotation
+   is unmeasurable; the scale centre is **(−22, −113) px**, refuting the corpus's (−176, −338).
+   No global model of drift against frame index — it is less accurate than the per-frame fit it
+   was supposed to seed. **Open:** the 0.6-1.3 px residual is neither estimator noise nor global
+   model error; the discriminating experiment needs the skeleton's winner-index map.
 
 Test data exists: `C:\dev\macro\test\109MSDCF\*.ARW` (36 MB lossless-compressed) plus `D:\personal\`
 (2310 files, verified decodable).
@@ -433,8 +468,9 @@ Test data exists: `C:\dev\macro\test\109MSDCF\*.ARW` (36 MB lossless-compressed)
 
 ## 9. Scope
 
-**v1** — CLI. ARW in, tiled float TIFF + DNG out. Calibrate, two-phase align (global frame-index
-model + parallel tile refinement) for **in-camera focus bracketing**, ring-difference focus volume,
+**v1** — CLI. ARW in, tiled float TIFF + DNG out. Calibrate, coarse-to-fine per-frame alignment
+against a fixed reference (4-parameter similarity, no chaining) for **in-camera focus bracketing**,
+ring-difference focus volume,
 noise-gated merge with a regularised reference emitting RGB, confidence map, capture advisor.
 `wgpu` compute. Stages in-tree behind a **minimal** stage interface. A/B harness and the
 RSS/wall-clock ratchet. Sony A7C II + SEL100M28GM profiles **plus a runtime noise estimator** for
@@ -493,10 +529,18 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
 2. ~~A rail-captured stack~~ — **no rail available. Rail support deferred from v1 (§9).**
 
 **Needs measurement, not argument:**
-3. Alignment cost for the two-phase design (experiment 4).
-4. The radial dependence of sub-pixel jitter — resolves the fact #9 / novelty-bet-#1 contradiction
+3. ~~Alignment cost for the two-phase design~~ — **closed by M3.** 13-16 ms/frame, 0.78-0.96 s for
+   60 frames. The two-phase design itself was superseded: no global frame-index model, no chaining,
+   per-frame coarse-to-fine against a fixed reference.
+4. **What the 0.6-1.3 px alignment residual is** (M3 §2.1). It is neither estimator noise
+   (0.19 px floor) nor global model error (12 parameters buy ≤6%). Candidates: depth-dependent
+   magnification, or blur-induced correlation bias. **Discriminate by correlating the per-tile
+   residual against the skeleton's winner-index map**, which is a proxy depth map. Needs the
+   skeleton, and nothing else.
+5. The radial dependence of sub-pixel jitter — resolves the fact #9 / novelty-bet-#1 contradiction
    (§4.1). Still live for breathing: bet #1 claims breathing itself supplies sub-pixel diversity.
-5. `g` by direct photon transfer rather than by white-level consistency (§4.1). Needs (1).
+   M3's per-frame alignment residuals are the raw material.
+6. `g` by direct photon transfer rather than by white-level consistency (§4.1). Needs (1).
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
@@ -504,12 +548,4 @@ be able to relink it against a modified `rawler`.** Ship it dynamically linked, 
 files / a reproducible build. Statically linking it into a monolithic binary and shipping only that
 binary is the trap. Separately, the "link but do not read" constraint on GPL sources (enfuse,
 `align_image_stack`, Hugin, darktable, RawTherapee) is a constraint on *how the project works* and
-must be a written project rule in `AGENTS.md` before anyone opens those repositories.
-
-**Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
-practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
-be able to relink it against a modified `rawler`.** Ship it dynamically linked, or publish object
-files / a reproducible build. Statically linking it into a monolithic binary and shipping only that
-binary is the trap. Separately, the "link but do not read" constraint on GPL sources (enfuse,
-`align_image_stack`, Hugin, darktable, RawTherapee) is a constraint on *how the project works* and
-must be a written project rule in `AGENTS.md` before anyone opens those repositories.
+is a written project rule in `AGENTS.md`.

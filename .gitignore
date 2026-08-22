@@ -1,5 +1,5 @@
-# Build artifacts
-/target/
+# Build artifacts -- unanchored, so nested crates under experiments/ match too
+target/
 **/*.rs.bk
 *.pdb
 

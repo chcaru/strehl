@@ -49,18 +49,23 @@ monolithic binary and ship only that binary.
    2–5x defect.
 4. **Never let a merge reference be a raw per-band argmax.** Argmax over N
    frames returns 1.95–2.61x single-frame noise. Use a regularised focus field.
-5. **Fit geometry at runtime; do not bake it.** Scale drift, the affine-vs-
-   homography choice, and the scale centre are per-stack quantities. Only
-   sensor calibration belongs in a profile, and profiles live in data files.
-6. **Never compute statistics over the full decoded buffer.** `rawler` returns
+5. **Fit geometry at runtime; do not bake it.** Scale drift and the scale
+   centre are per-stack quantities. Only sensor calibration belongs in a
+   profile, and profiles live in data files.
+6. **Never chain alignments.** Align every frame against a fixed reference,
+   never against its predecessor. Measured: chaining 21 adjacent pairs
+   underestimates drift by 32%, which is 25 px at the sensor corner, because
+   sub-pixel pixel locking is a systematic bias that compounds. Direct fits are
+   also embarrassingly parallel. See `docs/research/M3-alignment-measured.md`.
+7. **Never compute statistics over the full decoded buffer.** `rawler` returns
    7168x5120 for the A7C II but fills only the 7032x4688 active area. The rest
    is synthetic zeros, not black level.
-7. **Every performance or quality claim needs a command that was run.** Label
+8. **Every performance or quality claim needs a command that was run.** Label
    claims MEASURED / VERIFIED / DERIVED / ARGUED / UNVERIFIED.
-8. **Pair every sharpness metric with a flat-ROI control.** A sharpening pass
+9. **Pair every sharpness metric with a flat-ROI control.** A sharpening pass
    raises gradient energy on featureless foam; that is how the prior project
    fooled itself.
-9. **kebab-case** for directories and files. Crates are `strehl-*`.
+10. **kebab-case** for directories and files. Crates are `strehl-*`.
 
 ## Layout
 
@@ -79,6 +84,7 @@ monolithic binary and ship only that binary.
 | `SYNTHESIS.md` | **Start here.** Decision record, revised after review. |
 | `REVIEW.md` | Adversarial review that corrected four design errors |
 | `M1-decode-measured.md` | Measured decode throughput and sensor constants |
+| `M3-alignment-measured.md` | Measured alignment cost, motion model, and why chaining is dead |
 | `A-prior-corpus.md` | The prior attempt, filtered; includes retractions |
 | `B-algorithms-sota.md` | Algorithmic state of the art per stage |
 | `C-landscape.md` | Competitors, licensing, artifact taxonomy |
@@ -111,7 +117,7 @@ frames differ by magnification and occlusion never changes.
 
 Focus rails translate the camera, producing genuine parallax and occlusion. Rail
 support is **deferred**: no rail hardware is available to test against, and an
-untested geometry model would violate rule 7. The `CaptureMode` enum and mode
+untested geometry model would violate rule 8. The `CaptureMode` enum and mode
 detection stay in place because that is the one seam the rail case genuinely
 needs. Never silently apply the breathing model to rail data — detect from EXIF
 plus fitted residual signature, and warn. Never trust a user flag alone.
