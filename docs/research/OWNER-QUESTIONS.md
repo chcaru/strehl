@@ -93,8 +93,8 @@ take it as a specification. An independent verifier is auditing the repair now.
 - R5 (blur-equalised edges) is untested and is now the better candidate than R4, because it
   plants nothing and so is immune to the mechanism that killed R4.
 - **Time the load-time calibration in F5.3 option A** (one 512² noise-plane pass per stage).
-  It is asserted to be milliseconds and has never been timed; if it is not cheap, the
-  weaker declare-it design comes back. Cheapest open item in the plugin work.
+  **Now bounded at ~1.7 ms by fact 505**, derived rather than timed; an actual timing would
+  still be worth having, but it is no longer blocking.
 - **Run the byte-identity check for fact 503** once M40 releases `merge.rs`. Fact 504 says
   what the test must assert (a bounded flip count, not equality) so that it does not go red
   for the wrong reason.

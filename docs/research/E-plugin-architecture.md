@@ -1592,10 +1592,13 @@ the one that matters:
    Cordis-shaped answer: the host is not asking the plugin for a coeffect it
    cannot reliably supply, it is computing one it already has the means to.
 
-Cost is a few milliseconds at registration — **not measured**, and the honest
-caveat is that it is one noise-plane pass per stage, per configuration change.
-For a `WholeStack` operator or one with an expensive setup this may not be
-free, which is the only reason option B survives.
+Cost is a few milliseconds at registration — **bounded at ~1.7 ms per stage by
+fact 505**, derived from the merge's own measured pass-one time (52.4 ms per
+8.241 MP plane; a 512² plane is 3.18% of that, and the figure includes ARW
+decode that a synthetic plane does not pay). The honest caveat is that this is
+one noise-plane pass per stage, per configuration change. For a `WholeStack`
+operator or one with an expensive setup the bound does not apply, which is the
+only reason option B survives.
 
 #### Option B (fallback) — declare it, and refuse a plugin that does not
 
@@ -1666,11 +1669,11 @@ mandatory rather than customary is close to zero.
   load-time work would be over-engineering and a documentation note would do.
   F5.1 is the survey that was meant to test this and it refuted it — but it
   surveys textbook operators, not real contributions, because there are none yet.
-- **Option A's load-time cost is not measured.** One 512² noise-plane pass per
-  stage is asserted to be milliseconds and has not been timed. If a candidate
-  operator's setup is expensive, or if configuration changes often enough that
-  re-calibration is not amortised, option A degrades to option B. This is the
-  cheapest open item here and should be measured before F5.3 is built.
+- **Option A's load-time cost is bounded but not timed.** Fact 505 bounds it at
+  ~1.7 ms per stage from the merge's own measured pass-one time, conservatively
+  and without needing to decompose that time into decode and compute. It is an
+  upper bound, not a measurement, and it does not cover a `WholeStack` operator
+  or one with expensive setup — for those, option A degrades to option B.
 - **The claim that pre-normalisation is behaviour-preserving is DERIVED, not
   measured.** It rests on `focus.rs`'s own documented invariance — "both the
   argmax and any positive-scaled regulariser are invariant to" a constant
