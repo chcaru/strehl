@@ -149,8 +149,8 @@ take it as a specification. An independent verifier is auditing the repair now.
 
 ## What I found overnight that you should know about
 
-**Ten things.** Items 1–6 are in descending order of how much they change the plan. Items
-7–10 landed later and were appended rather than merged into the ordering — **item 7 is the
+**Twelve things.** Items 1–6 are in descending order of how much they change the plan. Items
+7–12 landed later and were appended rather than merged into the ordering — **item 7 is the
 single most important result of the night** and would sit first if this file were rewritten
 rather than appended to. If you read only one, read 7. If you read two, read 10: it closes
 the external review's central proposal.
@@ -364,6 +364,72 @@ design.** Had the noise cost landed at 1.2× instead of 3.5×, half the kill con
 have rested on an instrument with no power, and the honest answer would have been "cannot be
 scored". Facts 460-479.
 
+**11. The plugin system exists — and building it proved its own design wrong in three
+places, one of them structural.** This was your first structural ask, and
+`crates/strehl-plugin` now ships it: ~3,400 lines, 33 tests, workspace green at 183/183.
+
+The core idea held. A contributed focus operator **cannot** carry a wrong noise constant,
+because there is nowhere to put one: the trait has no slot for it and the host *measures*
+the operator when it registers. That closes the hole M43 found — where someone's plugin
+silently reverted 88% of pixels to pure selection while the log still read `gate 1.00` —
+by making it unrepresentable rather than by testing for it. The measurement is also better
+than the one that produced our shipped constants, reproducing them to −0.018% against the
+Python reference's +0.47%.
+
+**What building it falsified.** The design doc's own sketch of the calibration measured
+noise on a *single unseeded* patch. Across twelve patches that varies by **5.56%** — so
+two runs of the same program would compute different gates, which violates the design's own
+first requirement. The fix for the bug would have shipped a new bug. Also: the measurement
+region was drawn too small in a way that biases each operator differently, and a cost
+estimate in the plan is 35× low. All three are corrected.
+
+**A thing I want to point at, because it is the best example of the method working.** M45's
+first attempt at a *sanity check* was broken — it scaled two quantities that cancel, so it
+was comparing something to itself. It measured zero effect, and a naive reading would have
+called that a pass. Its own rules caught it, it wrote down the broken run verbatim, and it
+started a new check rather than adjusting the old one until it went green. That is the
+discipline that has now caught defects in M12, M40, M44 and M45 — including two of mine.
+
+**One decision is genuinely yours** (question 123), and both options are already built.
+Today `--gate 1.0` means something slightly different for every focus algorithm, so a
+setting you like is not portable to a contributed one — it would be **6.6× off** on the
+standard textbook operator. Making it portable requires changing which pixels get merged,
+though only about **7 in 10 million**. So: do you want `--gate` to be a number that means
+the same thing everywhere, at the cost of a change too small to see, or a number that is
+exactly reproducible today but only meaningful for the algorithm it was tuned on? **My
+recommendation is portable** — the whole point of a plugin system is that presets travel —
+but it is your call and I have not made it.
+
+**12. A shipped constant was wrong by exactly 2× at ISO 50, which is the ISO you shoot at.**
+Fixed and pushed. This one is short but it is the most directly *your problem* of anything
+here.
+
+The pipeline computes how noisy a photo should be from its ISO, and everything downstream —
+including the `--gate` number that decides which pixels get merged — is measured in units of
+that. We divided by the marked ISO. But **Sony's ISO 50 is not a real sensitivity setting**:
+the sensor runs at ISO 100 internally and the extra stop is taken in exposure. So at ISO 50
+we were computing half the correct gain, and therefore believing the image was about **1.4×
+cleaner than it actually is**. Both ISO-50 stacks in the corpus are affected, and a tripod
+macro stack is exactly where you'd choose ISO 50.
+
+**We had already measured this and not noticed.** Back in M4, the dark-frame work found that
+ISO 50 and ISO 100 produce *the same* noise in the file — a ratio of 1.0021 where the formula
+demands 0.5 — and wrote a section titled "ISO 50 is not a real gain step". It called the
+absurd read-noise figure that follows "visibly nonsense … the tell". That finding sat in a
+report for weeks and never reached the code. M25 rediscovered it independently last night
+from a completely different direction — measuring gain from *signal* rather than darkness —
+and got +105% and +126% against the old formula.
+
+I want to be precise about what this means for your existing results: **the merged images
+are not wrong, the confidence numbers attached to them are.** `--gate 1.0` on an ISO-50 stack
+has been behaving like roughly `--gate 1.4`, i.e. more conservative than you asked for. M47
+is auditing every published number that used the old value.
+
+There is one thing I could not determine and did not guess: **where the boundary is.** ISO 50
+is wrong and ISO 100 is right; nothing in the corpus is shot at ISO 64 or 80, so I clamped at
+100 and said in the code that this is the simplest rule consistent with the evidence rather
+than a measured transition. If you ever shoot a few frames at ISO 64, that closes it.
+
 ## Running while you sleep
 
 **Updated again, later in the night.** M16, M19, M25, M40, M41 and M42 have all landed and
@@ -381,16 +447,17 @@ facts**.
 | **M25** | The calibrated simulator / digital twin | **LANDED, folded** (facts 540-550). Usable for noise and selection; **blind to the optics**, by its own negative control. See item 8 |
 | **M40** | Auditing my fact-341 repair under rule 24 (re-choose, do not re-compute) | **LANDED, folded** (facts 440-459). **It refuted the repair and the defect report.** See item 7. `merge.rs` is now held by M18, and the revert is handed to it |
 | **M44** | Finishing M41: it stopped one arm short of a scoreable verdict | **LANDED, folded** (facts 460-479). R3 refuted with the positive control passing; the FRC metric withdrawn as a censored constant. See item 10 |
-| **M45** | **Building the plugin crate** — your #1 structural ask, and the first slice of it in code | Dispatched at the end of the night |
+| **M45** | **Building the plugin crate** — your #1 structural ask, and the first slice of it in code | **LANDED, folded** (facts 520-529). The seam exists and closes the contributed-operator hole *by construction*. **It also refuted three things in its own design doc**, one structural. See item 11 — it has the one decision I have left to you |
+| **M46** | Finding a detail metric that actually has power on this sensor | Running. M44 withdrew the last one we had, so we currently **cannot score our own quality claim**. This is the project's largest blocker |
+| **M47** | Auditing what the wrong ISO-50 gain contaminated | Running. See item 12 — the fix is shipped, and this finds every published number that used the old value |
 
-**The one I would watch is M45.** It is the first attempt to compile the plugin design
-rather than argue about it, and I have asked it to report what breaks rather than quietly
-substitute something weaker.
+**M45 landed, and it is the one I would still read first.** It compiled the plugin design
+rather than arguing about it, and I had asked it to report what breaks rather than quietly
+substitute something weaker. It found three breaks, published them, and fixed them. Item 11.
 
-**M41 needs a note.** Its six-arm kill experiment for review item R3 ran its main arm and
-stopped before the planted positive control. Reading its log, the Fourier Ring Correlation
-metric returns **an identical value for every arm including the permutation null** — a
-negative control that matches the live arm means the metric has no discriminating power on
-this data, so M41's apparent kill cannot currently be scored. M44 is diagnosing that and
-running the missing control. R3 remains refuted on other evidence; it is this *particular*
-experiment that cannot yet carry the verdict.
+**M41's note is now closed by M44.** Its six-arm kill experiment for review item R3 had run
+its main arm and stopped before the planted positive control, and its Fourier Ring
+Correlation metric returned **an identical value for every arm including the permutation
+null**. M44 diagnosed it: that value was not a measurement at all but the last grid point,
+returned whenever the answer runs off the end of the scale. The control has since been run
+and **passes**, so R3 is now refuted on evidence rather than on absence. Item 10.
