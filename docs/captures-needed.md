@@ -103,10 +103,42 @@ Recorded so nobody asks twice.
 ---
 
 
-## 4. Flat fields — OUTSTANDING
+## 4. Flat fields — SCHEDULED
 
-**Status:** requested. Raised by `research/M4-fpn-measured.md` §7 and §8.3.
-Not blocking experiment 3; blocking two things that are currently guesses.
+**Status:** **owner is shooting these in daylight, next opportunity** (agreed
+2026-08-22). Raised by `research/M4-fpn-measured.md` §7 and §8.3. Not blocking
+experiment 3; blocking two things that are currently guesses.
+
+### Daylight-specific notes
+
+Daylight is a good light source for this — bright enough to keep exposures
+short, and free of the flicker that makes artificial sources risky. It has one
+failure mode the generic spec below does not cover.
+
+**The trap: illumination that drifts during a level.** The whole measurement is
+a *temporal* variance per pixel at a known mean. If the light changes while the
+16 frames of one level are being taken, that change enters the per-pixel
+temporal variance and is indistinguishable from sensor noise. It inflates the
+variance, which inflates the fitted gain, which corrupts every electron figure
+downstream. Drift *between* levels is harmless; drift *within* a level is not.
+
+Three mitigations, in order of how much they help:
+
+1. **Shoot in open shade or under overcast, not direct sun**, and point at a
+   diffuser rather than at the sky itself. Sun through moving cloud is the worst
+   case; a bright overcast is nearly ideal.
+2. **Take each level as a fast burst**, so all 16 frames sit inside a few
+   seconds. Take the time between levels, not during one.
+3. **It is recoverable in analysis if it happens** — normalise each frame by its
+   own global mean before computing the temporal variance, which removes a
+   spatially-uniform illumination change while leaving per-pixel noise intact.
+   Treat this as a safety net, not a licence to be careless: it only removes the
+   *uniform* component, and a moving shadow or a changing sky gradient is not
+   uniform.
+
+**Check before analysis, not after:** the frame-to-frame global means within a
+level should be flat to well under 1%. If they trend, that level is suspect and
+should be reshot.
 
 ### What to shoot
 
@@ -125,6 +157,16 @@ Not blocking experiment 3; blocking two things that are currently guesses.
 
 Roughly 112 frames. If that is too many, 8 frames per level at 5 levels is
 still enough, with wider error bars.
+
+**How to hit those levels in practice.** The camera's histogram is of the
+embedded JPEG, not the raw, so do not try to hit the DN targets by eye. Meter
+one exposure that looks like a bright mid-tone, then bracket **+-3 stops in
+1-stop steps** around it. That gives the 7 levels. **Err wide deliberately** —
+clipped frames cost nothing because they are simply dropped, whereas a set that
+never approaches the white level leaves the top of the curve unmeasured.
+
+**Discard the first 2 frames after touching the camera**, the same habit used
+for the dark-frame set.
 
 Also useful and nearly free: repeat one mid-level (say 4000 DN) at **ISO 400**,
 16 frames. That gives a second gain point either side of the dual-gain switch.
