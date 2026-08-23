@@ -43,7 +43,17 @@ closed — it becomes a new open question `MEASURED`.
 | `D:\personal\macro` | 632 | 18,194,001,522 | 632 | 18,194,001,522 |
 
 `data/audit-before.txt` and `data/audit-after.txt` are byte-identical, including
-the newest mtime in each tree.
+the newest mtime in each tree. A third audit taken after the report was written
+(`data/audit-final.txt`) is identical again.
+
+**A gotcha worth recording `MEASURED`.** Verifying the audit with an ad-hoc
+`Get-ChildItem -Recurse -File C:\dev\macro | Measure-Object` returns **17449**
+files / 286,581,830,721 bytes — 1081 files and ~312 MB *short* — and looks
+exactly like evidence that something was deleted. It is not. `Get-ChildItem`
+silently omits hidden and system files without `-Force`; adding `-Force` returns
+18530, matching the harness audit exactly. The checking tool was wrong, not the
+thing being checked. Anyone re-verifying a corpus audit in PowerShell must pass
+`-Force`.
 
 Incidental finding `MEASURED`: `C:\dev\macro\test\119MSDCF` and
 `D:\personal\macro\119MSDCF` are **the same 33 frames**. Running the whole edge
@@ -963,6 +973,13 @@ numbered from 60 as instructed; 50–59 belong to the concurrent milestone.*
     threshold fired; the decision-relevant quantity was the realisable rule,
     which said the opposite. Report the registered result, state that it fires,
     and override on stated grounds. Do not quietly re-cut the threshold.
+
+25. **Verify a corpus audit with `Get-ChildItem -Force`, never without it.**
+    Without `-Force`, `Get-ChildItem -Recurse -File C:\dev\macro` reports 17449
+    files / 286,581,830,721 bytes; with `-Force` it reports 18530 /
+    286,893,514,060, matching the harness audit exactly. The 1081-file gap is
+    hidden and system files, not deletion. An agent spot-checking a read-only
+    guarantee this way will conclude it violated the guarantee when it did not.
 ```
 
 ### §10 — question 15
@@ -1004,6 +1021,11 @@ Two additions. First, to whichever section carries the corpus rules:
 frames (verified byte-identical through a full measurement sweep, M13 fact 69).
 Two stacks means two *different* stacks; use 109MSDCF and 119MSDCF, or
 112MSDCF and 113MSDCF, not a directory and its mirror.
+
+When verifying the read-only guarantee from PowerShell, **always pass `-Force`**:
+`Get-ChildItem -Recurse -File -Force`. Without it, `Get-ChildItem` silently skips
+hidden and system files and under-reports `C:\dev\macro` by 1081 files and
+~312 MB, which looks exactly like evidence that the tree was modified.
 ```
 
 Second, to the terminology section — this one has already caused confusion:
