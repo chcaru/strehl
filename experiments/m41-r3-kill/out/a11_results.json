@@ -1,0 +1,4164 @@
+{
+  "S3-flat-119": {
+    "frame|rho=0": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.28012872422260143,
+          "meas_cens": false,
+          "pred": 0.2758246636259636,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.16855732041726473,
+          "meas_cens": false,
+          "pred": 0.16096507074549168,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.09234636328267581,
+          "meas_cens": false,
+          "pred": 0.09162935136142959,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.33414006688919606,
+          "meas_cens": false,
+          "pred": 0.3320481238038599,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.21113936728448937,
+          "meas_cens": false,
+          "pred": 0.2076037686879012,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.1302092039643976,
+          "meas_cens": false,
+          "pred": 0.13018300482483328,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.0765342943355439,
+          "meas_cens": false,
+          "pred": 0.0773303099510764,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": 1.1643935814676099,
+          "log": 1.1845144574084256,
+          "note": "",
+          "meas": 0.5854882834807479,
+          "meas_cens": false,
+          "pred": 0.6090208230122286,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9334198412248799,
+          "log": 0.8406326965255453,
+          "note": "",
+          "meas": 0.1850917927349073,
+          "meas_cens": false,
+          "pred": 0.1407757083023014,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 1.0202898614460445,
+          "log": null,
+          "note": "",
+          "meas": -0.012988084717767644,
+          "meas_cens": false,
+          "pred": 2.0950703328984474e-05,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9928783116753933,
+          "log": 0.23782538777646303,
+          "note": "",
+          "meas": 0.008037008655879842,
+          "meas_cens": false,
+          "pred": 3.573340255007704e-09,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.8356417928586334,
+          "log": 0.6943058382173174,
+          "note": "",
+          "meas": 10.976595568776236,
+          "meas_cens": false,
+          "pred": 8.553451538085938,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.7845092626717965,
+          "log": 0.5970542169376174,
+          "note": "",
+          "meas": 8.939017251391096,
+          "meas_cens": false,
+          "pred": 5.684156894683838,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.7200704080163047,
+          "log": 0.4658242643062311,
+          "note": "",
+          "meas": 7.605694850955825,
+          "meas_cens": false,
+          "pred": 3.2022294998168945,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.6617682378320603,
+          "log": 0.3403681917455177,
+          "note": "",
+          "meas": 7.07015162575495,
+          "meas_cens": false,
+          "pred": 1.5538206100463867,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 0.9944755155370858,
+          "log": 0.559685179200796,
+          "note": "",
+          "meas": 0.0076138648610950335,
+          "meas_cens": false,
+          "pred": 0.0029564341619124613,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9919083696428198,
+          "log": 0.264051735259005,
+          "note": "",
+          "meas": 0.004809589355962082,
+          "meas_cens": false,
+          "pred": 0.00010505977844787009,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9833165883857421,
+          "log": 0.0832624639915626,
+          "note": "",
+          "meas": 0.004811196853187995,
+          "meas_cens": false,
+          "pred": 3.3937007196005084e-09,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9700393636621115,
+          "log": 0.054440940090974124,
+          "note": "",
+          "meas": 0.004974711886097587,
+          "meas_cens": false,
+          "pred": 2.1109579126697446e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.8638757187324921,
+          "log": 0.7562144720679085,
+          "note": "",
+          "meas": 57.94064559524371,
+          "meas_cens": false,
+          "pred": 49.19108200073242,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.8270835328889035,
+          "log": 0.6841915343422037,
+          "note": "",
+          "meas": 46.58279800767437,
+          "meas_cens": false,
+          "pred": 34.85824966430664,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.7880244970885731,
+          "log": 0.6049067404269225,
+          "note": "",
+          "meas": 39.85277515400066,
+          "meas_cens": false,
+          "pred": 24.938446044921875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.7630919238306786,
+          "log": 0.5452131304931673,
+          "note": "",
+          "meas": 36.14873090594261,
+          "meas_cens": false,
+          "pred": 18.851037979125977,
+          "pred_cens": false
+        }
+      }
+    },
+    "frame|rho=0.5": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.2758246636259636,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.16096507074549168,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.09162935136142959,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.3320481238038599,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.2076037686879012,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.2642399258608301,
+          "meas_cens": false,
+          "pred": 0.13018300482483328,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.09544428828501204,
+          "meas_cens": false,
+          "pred": 0.0773303099510764,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": 0.5695160468265004,
+          "log": 0.46682907714221095,
+          "note": "",
+          "meas": 0.7917014429450169,
+          "meas_cens": false,
+          "pred": 0.6090208230122286,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.43523995349497496,
+          "log": 0.2182043749555715,
+          "note": "",
+          "meas": 0.6092221095034531,
+          "meas_cens": false,
+          "pred": 0.1407757083023014,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.5171854770584992,
+          "log": 0.05691205429982789,
+          "note": "",
+          "meas": 0.4850443247800723,
+          "meas_cens": false,
+          "pred": 2.0950703328984474e-05,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.5063489646814711,
+          "log": 0.030288901398185852,
+          "note": "",
+          "meas": 0.49335371704539216,
+          "meas_cens": false,
+          "pred": 3.573340255007704e-09,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.83753906960455,
+          "log": 0.6951831469499097,
+          "note": "",
+          "meas": 10.985630361699108,
+          "meas_cens": false,
+          "pred": 8.553451538085938,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.7863401605107588,
+          "log": 0.5979443427387433,
+          "note": "",
+          "meas": 8.943075702085899,
+          "meas_cens": false,
+          "pred": 5.684156894683838,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.7214159873028273,
+          "log": 0.46627910327708416,
+          "note": "",
+          "meas": 7.609831749170622,
+          "meas_cens": false,
+          "pred": 3.2022294998168945,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.6636964126644569,
+          "log": 0.34123404966948134,
+          "note": "",
+          "meas": 7.065560948311161,
+          "meas_cens": false,
+          "pred": 1.5538206100463867,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 0.9904719700563863,
+          "log": 0.5575265829467585,
+          "note": "",
+          "meas": 0.007625849702994524,
+          "meas_cens": false,
+          "pred": 0.0029564341619124613,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9818897822699705,
+          "log": 0.25955065159771157,
+          "note": "",
+          "meas": 0.004906437340643781,
+          "meas_cens": false,
+          "pred": 0.00010505977844787009,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.980752970060671,
+          "log": 0.0830789631301527,
+          "note": "",
+          "meas": 0.004817284188568637,
+          "meas_cens": false,
+          "pred": 3.3937007196005084e-09,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9678183319821398,
+          "log": 0.05435721628993361,
+          "note": "",
+          "meas": 0.004976580034501995,
+          "meas_cens": false,
+          "pred": 2.1109579126697446e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.8719354887772981,
+          "log": 0.7623746681330513,
+          "note": "",
+          "meas": 57.964041302861894,
+          "meas_cens": false,
+          "pred": 49.19108200073242,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.8307669917537042,
+          "log": 0.6863394866852363,
+          "note": "",
+          "meas": 46.612468516350106,
+          "meas_cens": false,
+          "pred": 34.85824966430664,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.7906846825329182,
+          "log": 0.6061008933387461,
+          "note": "",
+          "meas": 39.884535170631,
+          "meas_cens": false,
+          "pred": 24.938446044921875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.7670112223796661,
+          "log": 0.5477049973229553,
+          "note": "",
+          "meas": 36.10910087957299,
+          "meas_cens": false,
+          "pred": 18.851037979125977,
+          "pred_cens": false
+        }
+      }
+    },
+    "frame|rho=0.9": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.2758246636259636,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.16096507074549168,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.09162935136142959,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.3320481238038599,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.2076037686879012,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.13018300482483328,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.0773303099510764,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": 0.1130699839250811,
+          "log": 0.08010769764567878,
+          "note": "",
+          "meas": 0.9583994122882669,
+          "meas_cens": false,
+          "pred": 0.6090208230122286,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.08616279208446977,
+          "log": 0.033556758139225505,
+          "note": "",
+          "meas": 0.9223262875527145,
+          "meas_cens": false,
+          "pred": 0.1407757083023014,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.10562256818078307,
+          "log": 0.008251090365018652,
+          "note": "",
+          "meas": 0.8952577430687921,
+          "meas_cens": false,
+          "pred": 2.0950703328984474e-05,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.10084062904461286,
+          "log": 0.004306438784931782,
+          "note": "",
+          "meas": 0.8989270820959382,
+          "meas_cens": false,
+          "pred": 3.573340255007704e-09,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.8396538664297681,
+          "log": 0.6965944706768193,
+          "note": "",
+          "meas": 10.987832134209427,
+          "meas_cens": false,
+          "pred": 8.553451538085938,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.7877938445344803,
+          "log": 0.5987791916886802,
+          "note": "",
+          "meas": 8.943865688313823,
+          "meas_cens": false,
+          "pred": 5.684156894683838,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.723461248028535,
+          "log": 0.4676361952002367,
+          "note": "",
+          "meas": 7.601379097600593,
+          "meas_cens": false,
+          "pred": 3.2022294998168945,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.6640343253787475,
+          "log": 0.34110818957639105,
+          "note": "",
+          "meas": 7.072813570557647,
+          "meas_cens": false,
+          "pred": 1.5538206100463867,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 0.999336935428562,
+          "log": 0.5623884520935124,
+          "note": "",
+          "meas": 0.007597701809593434,
+          "meas_cens": false,
+          "pred": 0.0029564341619124613,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9800233169875833,
+          "log": 0.2569362502918668,
+          "note": "",
+          "meas": 0.004984049792412408,
+          "meas_cens": false,
+          "pred": 0.00010505977844787009,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.984222045555505,
+          "log": 0.08312737721889417,
+          "note": "",
+          "meas": 0.004829381802327727,
+          "meas_cens": false,
+          "pred": 3.3937007196005084e-09,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.967673586338967,
+          "log": 0.05399831853444754,
+          "note": "",
+          "meas": 0.005033184387471436,
+          "meas_cens": false,
+          "pred": 2.1109579126697446e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.8784801891727408,
+          "log": 0.7676480248296871,
+          "note": "",
+          "meas": 57.95973211238234,
+          "meas_cens": false,
+          "pred": 49.19108200073242,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.8325725763112048,
+          "log": 0.6871571517884651,
+          "note": "",
+          "meas": 46.646246335356295,
+          "meas_cens": false,
+          "pred": 34.85824966430664,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.7931698888497071,
+          "log": 0.6076736665867092,
+          "note": "",
+          "meas": 39.87474614103382,
+          "meas_cens": false,
+          "pred": 24.938446044921875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.7674154706037533,
+          "log": 0.547180425154609,
+          "note": "",
+          "meas": 36.17540744809862,
+          "meas_cens": false,
+          "pred": 18.851037979125977,
+          "pred_cens": false
+        }
+      }
+    },
+    "merged|rho=0": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.37424468185036674,
+          "meas_cens": false,
+          "pred": 0.37479490010745564,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.19878578226768978,
+          "meas_cens": false,
+          "pred": 0.20196019769906912,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.11207040401350458,
+          "meas_cens": false,
+          "pred": 0.11094789925174671,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.315198359209323,
+          "meas_cens": false,
+          "pred": 0.3154992630756715,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.17430986454390124,
+          "meas_cens": false,
+          "pred": 0.17408855667408996,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.09706511462499412,
+          "meas_cens": false,
+          "pred": 0.0975775074531357,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": 1.11284036578465,
+          "log": 1.1139357214587493,
+          "note": "",
+          "meas": 0.9592832756468337,
+          "meas_cens": false,
+          "pred": 0.9613627738447503,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9212415566214082,
+          "log": 0.9089099718372782,
+          "note": "",
+          "meas": 0.7428318678199571,
+          "meas_cens": false,
+          "pred": 0.7222314640573702,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 1.013681377480098,
+          "log": null,
+          "note": "",
+          "meas": -0.012902002189983827,
+          "meas_cens": false,
+          "pred": 0.00033508970527433275,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.991997330003393,
+          "log": 0.2884297032807286,
+          "note": "",
+          "meas": 0.008039917520334394,
+          "meas_cens": false,
+          "pred": 5.717344087054687e-08,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9869604174827608,
+          "log": 0.9731547144014493,
+          "note": "",
+          "meas": 8.724224393921402,
+          "meas_cens": false,
+          "pred": 8.553451538085938,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9798530589772556,
+          "log": 0.9561689802704967,
+          "note": "",
+          "meas": 5.94240097391122,
+          "meas_cens": false,
+          "pred": 5.684156894683838,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9666494334254659,
+          "log": 0.9144839780917943,
+          "note": "",
+          "meas": 3.636239828608421,
+          "meas_cens": false,
+          "pred": 3.2022294998168945,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9416678138979038,
+          "log": 0.8133239969003627,
+          "note": "",
+          "meas": 2.3219332666948542,
+          "meas_cens": false,
+          "pred": 1.5538206100463867,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 1.0015941567163196,
+          "log": 0.9530523723855896,
+          "note": "",
+          "meas": 0.003237154042414881,
+          "meas_cens": false,
+          "pred": 0.0029564341619124613,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9999858409462878,
+          "log": 0.7238948387110363,
+          "note": "",
+          "meas": 0.0004008726927847616,
+          "meas_cens": false,
+          "pred": 0.00010505977844787009,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9995471339653615,
+          "log": 0.24724533933972476,
+          "note": "",
+          "meas": 0.00030122077931162716,
+          "meas_cens": false,
+          "pred": 3.3937007196005084e-09,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9987232750618505,
+          "log": 0.16460133205595406,
+          "note": "",
+          "meas": 0.0003113637915443772,
+          "meas_cens": false,
+          "pred": 2.1109579126697446e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.98835921259699,
+          "log": 0.9790503587873042,
+          "note": "",
+          "meas": 49.790128090440405,
+          "meas_cens": false,
+          "pred": 49.19108200073242,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9841446189909551,
+          "log": 0.9693365871176362,
+          "note": "",
+          "meas": 35.74143469032314,
+          "meas_cens": false,
+          "pred": 34.85824966430664,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9776132759286854,
+          "log": 0.9530297022820012,
+          "note": "",
+          "meas": 26.225472334742392,
+          "meas_cens": false,
+          "pred": 24.938446044921875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9713589653202662,
+          "log": 0.9340919056801239,
+          "note": "",
+          "meas": 20.548514923402116,
+          "meas_cens": false,
+          "pred": 18.851037979125977,
+          "pred_cens": false
+        }
+      }
+    },
+    "merged|rho=0.5": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.37479490010745564,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.20196019769906912,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.11094789925174671,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.3154992630756715,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.2643329577996808,
+          "meas_cens": false,
+          "pred": 0.17408855667408996,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.18979252763997148,
+          "meas_cens": false,
+          "pred": 0.0975775074531357,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": 0.5491077017898364,
+          "log": 0.5413844998074442,
+          "note": "",
+          "meas": 0.9797214085220541,
+          "meas_cens": false,
+          "pred": 0.9613627738447503,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.44510311769704036,
+          "log": 0.4037163744337586,
+          "note": "",
+          "meas": 0.8753711797883383,
+          "meas_cens": false,
+          "pred": 0.7222314640573702,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.5152703799708712,
+          "log": 0.08943098929086389,
+          "note": "",
+          "meas": 0.48521158327736114,
+          "meas_cens": false,
+          "pred": 0.00033508970527433275,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.506799039312695,
+          "log": 0.041854565643926075,
+          "note": "",
+          "meas": 0.4933530417889265,
+          "meas_cens": false,
+          "pred": 5.717344087054687e-08,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.987773595082994,
+          "log": 0.9737271268896732,
+          "note": "",
+          "meas": 8.725223363075981,
+          "meas_cens": false,
+          "pred": 8.553451538085938,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9805019255664174,
+          "log": 0.9566302020090948,
+          "note": "",
+          "meas": 5.942223932290833,
+          "meas_cens": false,
+          "pred": 5.684156894683838,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9671849471973049,
+          "log": 0.9148728853930946,
+          "note": "",
+          "meas": 3.6355320196862353,
+          "meas_cens": false,
+          "pred": 3.2022294998168945,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9421670465830779,
+          "log": 0.8137293817945385,
+          "note": "",
+          "meas": 2.3207480913263656,
+          "meas_cens": false,
+          "pred": 1.5538206100463867,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 1.0009660315096698,
+          "log": 0.9525840311945235,
+          "note": "",
+          "meas": 0.00323803410281652,
+          "meas_cens": false,
+          "pred": 0.0029564341619124613,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9991119308001624,
+          "log": 0.7208623497275806,
+          "note": "",
+          "meas": 0.0004065449657298527,
+          "meas_cens": false,
+          "pred": 0.00010505977844787009,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9991118484249016,
+          "log": 0.247139550902201,
+          "note": "",
+          "meas": 0.00030158289283128156,
+          "meas_cens": false,
+          "pred": 3.3937007196005084e-09,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9982896180547977,
+          "log": 0.1645348747707269,
+          "note": "",
+          "meas": 0.00031170585000515655,
+          "meas_cens": false,
+          "pred": 2.1109579126697446e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.9907868109600956,
+          "log": 0.9811509727888215,
+          "note": "",
+          "meas": 49.792377308993494,
+          "meas_cens": false,
+          "pred": 49.19108200073242,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9851997925472523,
+          "log": 0.9700120775908663,
+          "note": "",
+          "meas": 35.747084567981084,
+          "meas_cens": false,
+          "pred": 34.85824966430664,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9783845343984682,
+          "log": 0.9533872027224687,
+          "note": "",
+          "meas": 26.23137292711103,
+          "meas_cens": false,
+          "pred": 24.938446044921875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9722108334497138,
+          "log": 0.9346476647034024,
+          "note": "",
+          "meas": 20.546186822356166,
+          "meas_cens": false,
+          "pred": 18.851037979125977,
+          "pred_cens": false
+        }
+      }
+    },
+    "merged|rho=0.9": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.37479490010745564,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.20196019769906912,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.11094789925174671,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.3154992630756715,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.17408855667408996,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.0975775074531357,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": 0.10912267279306513,
+          "log": 0.10631175278043284,
+          "note": "",
+          "meas": 0.9959539042532279,
+          "meas_cens": false,
+          "pred": 0.9613627738447503,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.08819259366148295,
+          "log": 0.07554923797039387,
+          "note": "",
+          "meas": 0.9752844592728646,
+          "meas_cens": false,
+          "pred": 0.7222314640573702,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.10481717323696275,
+          "log": 0.013621274747556896,
+          "note": "",
+          "meas": 0.8953081306926445,
+          "meas_cens": false,
+          "pred": 0.00033508970527433275,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.10109437768565614,
+          "log": 0.006284896382376888,
+          "note": "",
+          "meas": 0.898926704448805,
+          "meas_cens": false,
+          "pred": 5.717344087054687e-08,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9880657190422459,
+          "log": 0.9739296567901747,
+          "note": "",
+          "meas": 8.725615058724516,
+          "meas_cens": false,
+          "pred": 8.553451538085938,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9808435149164904,
+          "log": 0.95695171129111,
+          "note": "",
+          "meas": 5.941429055615791,
+          "meas_cens": false,
+          "pred": 5.684156894683838,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9674874079114226,
+          "log": 0.9152169441477037,
+          "note": "",
+          "meas": 3.6342620387727673,
+          "meas_cens": false,
+          "pred": 3.2022294998168945,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9422180717877909,
+          "log": 0.8135757929476344,
+          "note": "",
+          "meas": 2.3217888941287113,
+          "meas_cens": false,
+          "pred": 1.5538206100463867,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 1.0008283728650613,
+          "log": 0.9522776388839169,
+          "note": "",
+          "meas": 0.0032394941578462065,
+          "meas_cens": false,
+          "pred": 0.0029564341619124613,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9987676175446942,
+          "log": 0.7186179310568432,
+          "note": "",
+          "meas": 0.00041092092299602776,
+          "meas_cens": false,
+          "pred": 0.00010505977844787009,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9990629126941541,
+          "log": 0.2469706799346101,
+          "note": "",
+          "meas": 0.0003023572412806846,
+          "meas_cens": false,
+          "pred": 3.3937007196005084e-09,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9980046665574411,
+          "log": 0.164013392860671,
+          "note": "",
+          "meas": 0.00031538689891081576,
+          "meas_cens": false,
+          "pred": 2.1109579126697446e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.9921996599244007,
+          "log": 0.9823900687620597,
+          "note": "",
+          "meas": 49.79271059086614,
+          "meas_cens": false,
+          "pred": 49.19108200073242,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9859536594744672,
+          "log": 0.9706105790378758,
+          "note": "",
+          "meas": 35.745507402477315,
+          "meas_cens": false,
+          "pred": 34.85824966430664,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9789574768921181,
+          "log": 0.9538124463211188,
+          "note": "",
+          "meas": 26.229147469186714,
+          "meas_cens": false,
+          "pred": 24.938446044921875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9725034245353384,
+          "log": 0.9346369205862308,
+          "note": "",
+          "meas": 20.552763542972787,
+          "meas_cens": false,
+          "pred": 18.851037979125977,
+          "pred_cens": false
+        }
+      }
+    }
+  },
+  "S1-real-119": {
+    "frame|rho=0": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.4640558551789495,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.30830646613122265,
+          "meas_cens": false,
+          "pred": 0.30195456980941654,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.19698440790633134,
+          "meas_cens": false,
+          "pred": 0.19368476689080452,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.12094663304184439,
+          "meas_cens": false,
+          "pred": 0.11926708228407888,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.3859987747086557,
+          "meas_cens": false,
+          "pred": 0.34787294964112436,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.27457673515269687,
+          "meas_cens": false,
+          "pred": 0.2584835591711438,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.18069623025979714,
+          "meas_cens": false,
+          "pred": 0.17337004140181678,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.11000462677933456,
+          "meas_cens": false,
+          "pred": 0.10444779191358251,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": 0.7229991802669252,
+          "log": 0.6801496126142392,
+          "note": "",
+          "meas": 0.8763837019101794,
+          "meas_cens": false,
+          "pred": 0.8104602282371208,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.7736826116760003,
+          "log": 0.6238403388914486,
+          "note": "",
+          "meas": 0.48679679795176717,
+          "meas_cens": false,
+          "pred": 0.31281358574599616,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 1.038965799375277,
+          "log": 0.5301167844049317,
+          "note": "",
+          "meas": 0.005942338156445572,
+          "meas_cens": false,
+          "pred": 6.378527318959607e-05,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 1.0497651863948076,
+          "log": null,
+          "note": "",
+          "meas": -0.003848653684521211,
+          "meas_cens": false,
+          "pred": 6.943369600991625e-07,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9974656919782547,
+          "log": 0.9961642365764796,
+          "note": "",
+          "meas": 171.14646349115645,
+          "meas_cens": false,
+          "pred": 170.90516662597656,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9980006016159855,
+          "log": 0.9964916627496184,
+          "note": "",
+          "meas": 150.59196090758124,
+          "meas_cens": false,
+          "pred": 150.31460571289062,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9980306185050484,
+          "log": 0.9958395298081868,
+          "note": "",
+          "meas": 107.21312084897431,
+          "meas_cens": false,
+          "pred": 106.85107421875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.995808259527968,
+          "log": 0.9895304509953612,
+          "note": "",
+          "meas": 54.08213567030279,
+          "meas_cens": false,
+          "pred": 53.33216857910156,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 1.0005541344064113,
+          "log": 0.7230505507574554,
+          "note": "",
+          "meas": 2.4987617151912646e-05,
+          "meas_cens": false,
+          "pred": 1.480843546164331e-05,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 1.0002556996343654,
+          "log": 0.4059601245112928,
+          "note": "",
+          "meas": 1.0929864710592634e-05,
+          "meas_cens": false,
+          "pred": 7.437001259877472e-07,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9950956698778428,
+          "log": 0.12356967737723162,
+          "note": "",
+          "meas": 1.0445338515736788e-05,
+          "meas_cens": false,
+          "pred": 3.3918465647345366e-11,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9879492036167845,
+          "log": 0.10182151252660189,
+          "note": "",
+          "meas": 1.0804470741452195e-05,
+          "meas_cens": false,
+          "pred": 2.2730000060130644e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.9826828894221273,
+          "log": 0.9783491619879675,
+          "note": "",
+          "meas": 661.6315594413276,
+          "meas_cens": false,
+          "pred": 658.444580078125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9858499116417173,
+          "log": 0.9808312654284468,
+          "note": "",
+          "meas": 612.7527520393533,
+          "meas_cens": false,
+          "pred": 608.945068359375,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9887952128152635,
+          "log": 0.982319009778164,
+          "note": "",
+          "meas": 509.0380297824819,
+          "meas_cens": false,
+          "pred": 504.2774963378906,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9886825186091571,
+          "log": 0.9783061630451341,
+          "note": "",
+          "meas": 353.74499058325523,
+          "meas_cens": false,
+          "pred": 347.1863708496094,
+          "pred_cens": false
+        }
+      }
+    },
+    "frame|rho=0.5": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.4640558551789495,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.30195456980941654,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.19368476689080452,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.11926708228407888,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.34787294964112436,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.2584835591711438,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.2667671359217926,
+          "meas_cens": false,
+          "pred": 0.17337004140181678,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.19252706785862508,
+          "meas_cens": false,
+          "pred": 0.10444779191358251,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": 0.38278384689921635,
+          "log": 0.34310113901540096,
+          "note": "",
+          "meas": 0.936432717409749,
+          "meas_cens": false,
+          "pred": 0.8104602282371208,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.3836438592816937,
+          "log": 0.24992741528785084,
+          "note": "",
+          "meas": 0.7454361556665341,
+          "meas_cens": false,
+          "pred": 0.31281358574599616,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.5287009035447339,
+          "log": 0.0705405065223097,
+          "note": "",
+          "meas": 0.4948289132775312,
+          "meas_cens": false,
+          "pred": 6.378527318959607e-05,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.5211493347262266,
+          "log": 0.04692163686485922,
+          "note": "",
+          "meas": 0.5015961604765131,
+          "meas_cens": false,
+          "pred": 6.943369600991625e-07,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9967023951697311,
+          "log": 0.9953763357052879,
+          "note": "",
+          "meas": 171.15456587955995,
+          "meas_cens": false,
+          "pred": 170.90516662597656,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9979186083783155,
+          "log": 0.9963969649475322,
+          "note": "",
+          "meas": 150.59524256377935,
+          "meas_cens": false,
+          "pred": 150.31460571289062,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9981038015859036,
+          "log": 0.995929543534034,
+          "note": "",
+          "meas": 107.20854402343123,
+          "meas_cens": false,
+          "pred": 106.85107421875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9957901886666902,
+          "log": 0.9894869956048941,
+          "note": "",
+          "meas": 54.085242985275926,
+          "meas_cens": false,
+          "pred": 53.33216857910156,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 0.9977188390702016,
+          "log": 0.7215618146672401,
+          "note": "",
+          "meas": 2.499424051472962e-05,
+          "meas_cens": false,
+          "pred": 1.480843546164331e-05,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9946758589016179,
+          "log": 0.4016632056771778,
+          "note": "",
+          "meas": 1.111225870180802e-05,
+          "meas_cens": false,
+          "pred": 7.437001259877472e-07,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9940242248053592,
+          "log": 0.12373058075551689,
+          "note": "",
+          "meas": 1.040530137520646e-05,
+          "meas_cens": false,
+          "pred": 3.3918465647345366e-11,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9874488531441491,
+          "log": 0.10210701257152559,
+          "note": "",
+          "meas": 1.0735731832963458e-05,
+          "meas_cens": false,
+          "pred": 2.2730000060130644e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.9844774939128307,
+          "log": 0.9801504988454894,
+          "note": "",
+          "meas": 661.599180174182,
+          "meas_cens": false,
+          "pred": 658.444580078125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9859292530991367,
+          "log": 0.9808954947660495,
+          "note": "",
+          "meas": 612.7596208532502,
+          "meas_cens": false,
+          "pred": 608.945068359375,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9887339463590143,
+          "log": 0.9822267332628632,
+          "note": "",
+          "meas": 509.06181051825985,
+          "meas_cens": false,
+          "pred": 504.2774963378906,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9886199365081673,
+          "log": 0.9781924558585758,
+          "note": "",
+          "meas": 353.77883835734826,
+          "meas_cens": false,
+          "pred": 347.1863708496094,
+          "pred_cens": false
+        }
+      }
+    },
+    "frame|rho=0.9": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.4640558551789495,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.30195456980941654,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.19368476689080452,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.11926708228407888,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.34787294964112436,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.2584835591711438,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.17337004140181678,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.10444779191358251,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": 0.07807994587999761,
+          "log": 0.06736429812465788,
+          "note": "",
+          "meas": 0.9871634574139593,
+          "meas_cens": false,
+          "pred": 0.8104602282371208,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.07861783360802918,
+          "log": 0.04500773206945007,
+          "note": "",
+          "meas": 0.9479910952066051,
+          "meas_cens": false,
+          "pred": 0.31281358574599616,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.10708550576090227,
+          "log": 0.010677306802137763,
+          "note": "",
+          "meas": 0.8977684735687728,
+          "meas_cens": false,
+          "pred": 6.378527318959607e-05,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.10214177535108952,
+          "log": 0.006897410489490452,
+          "note": "",
+          "meas": 0.9022138188297264,
+          "meas_cens": false,
+          "pred": 6.943369600991625e-07,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9969136104740998,
+          "log": 0.9955771051832155,
+          "note": "",
+          "meas": 171.15537035467833,
+          "meas_cens": false,
+          "pred": 170.90516662597656,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9980516961260114,
+          "log": 0.9965256463586197,
+          "note": "",
+          "meas": 150.59405310038323,
+          "meas_cens": false,
+          "pred": 150.31460571289062,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9981372434294051,
+          "log": 0.9959529292042607,
+          "note": "",
+          "meas": 107.2089048187236,
+          "meas_cens": false,
+          "pred": 106.85107421875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9957822702730642,
+          "log": 0.9894417338285717,
+          "note": "",
+          "meas": 54.089072003054774,
+          "meas_cens": false,
+          "pred": 53.33216857910156,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 1.0015088737105622,
+          "log": 0.7249659427205211,
+          "note": "",
+          "meas": 2.4911959401690175e-05,
+          "meas_cens": false,
+          "pred": 1.480843546164331e-05,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9928037645232157,
+          "log": 0.3987957838738986,
+          "note": "",
+          "meas": 1.1257025439450687e-05,
+          "meas_cens": false,
+          "pred": 7.437001259877472e-07,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.994905751061419,
+          "log": 0.12373874040596919,
+          "note": "",
+          "meas": 1.0413070251891678e-05,
+          "meas_cens": false,
+          "pred": 3.3918465647345366e-11,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9880344373686948,
+          "log": 0.1020334215470933,
+          "note": "",
+          "meas": 1.0758373996180895e-05,
+          "meas_cens": false,
+          "pred": 2.2730000060130644e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.9863893819710476,
+          "log": 0.9820640805417725,
+          "note": "",
+          "meas": 661.5684851401912,
+          "meas_cens": false,
+          "pred": 658.444580078125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9861080755941091,
+          "log": 0.9810575105053639,
+          "note": "",
+          "meas": 612.7636977507974,
+          "meas_cens": false,
+          "pred": 608.945068359375,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9888569037389024,
+          "log": 0.9823400256172375,
+          "note": "",
+          "meas": 509.05718926031693,
+          "meas_cens": false,
+          "pred": 504.2774963378906,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9886161793773057,
+          "log": 0.9781519481169584,
+          "note": "",
+          "meas": 353.7975320901298,
+          "meas_cens": false,
+          "pred": 347.1863708496094,
+          "pred_cens": false
+        }
+      }
+    },
+    "merged|rho=0": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.3882319993898679,
+          "meas_cens": false,
+          "pred": 0.37247502632162255,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.22928433754411887,
+          "meas_cens": false,
+          "pred": 0.22685874597054798,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.13563505856315836,
+          "meas_cens": false,
+          "pred": 0.1328913231960492,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.3426030324722764,
+          "meas_cens": false,
+          "pred": 0.3271128934959288,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.21410026287979422,
+          "meas_cens": false,
+          "pred": 0.2094029202418631,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.1257898549717001,
+          "meas_cens": false,
+          "pred": 0.12353097664472242,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.9913402958400286,
+          "meas_cens": false,
+          "pred": 0.9855625125549621,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.5510338030052949,
+          "log": 0.53403786607591,
+          "note": "",
+          "meas": 0.932524881470078,
+          "meas_cens": false,
+          "pred": 0.8777211463230136,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9962025212837933,
+          "log": 0.7052639022778744,
+          "note": "",
+          "meas": 0.007771789792690291,
+          "meas_cens": false,
+          "pred": 0.001019418277220768,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 1.0067714989912406,
+          "log": null,
+          "note": "",
+          "meas": -0.0037290415093877843,
+          "meas_cens": false,
+          "pred": 1.1109271858454993e-05,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9996334353430845,
+          "log": 0.9995504069478386,
+          "note": "",
+          "meas": 170.92147189263025,
+          "meas_cens": false,
+          "pred": 170.90516662597656,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9998004852070794,
+          "log": 0.9997032724997171,
+          "note": "",
+          "meas": 150.33342314473234,
+          "meas_cens": false,
+          "pred": 150.31460571289062,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.999909570636042,
+          "log": 0.999787897468796,
+          "note": "",
+          "meas": 106.87053372261646,
+          "meas_cens": false,
+          "pred": 106.85107421875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9997385210089532,
+          "log": 0.9993502437848903,
+          "note": "",
+          "meas": 53.378212750169595,
+          "meas_cens": false,
+          "pred": 53.33216857910156,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 1.0005673592683235,
+          "log": 0.9759869403774422,
+          "note": "",
+          "meas": 1.5450241105107348e-05,
+          "meas_cens": false,
+          "pred": 1.480843546164331e-05,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 1.0005492377726035,
+          "log": 0.8566500562489264,
+          "note": "",
+          "meas": 1.3784232761326457e-06,
+          "meas_cens": false,
+          "pred": 7.437001259877472e-07,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 1.0001808801219951,
+          "log": 0.30661720814457083,
+          "note": "",
+          "meas": 6.528613516911473e-07,
+          "meas_cens": false,
+          "pred": 3.3918465647345366e-11,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9997345295743246,
+          "log": 0.255617844308711,
+          "note": "",
+          "meas": 6.752621748846693e-07,
+          "meas_cens": false,
+          "pred": 2.2730000060130644e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.9984873388628568,
+          "log": 0.9982008675789414,
+          "note": "",
+          "meas": 658.6559123147487,
+          "meas_cens": false,
+          "pred": 658.444580078125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9989238932776952,
+          "log": 0.9985909782324578,
+          "note": "",
+          "meas": 609.1986786999555,
+          "meas_cens": false,
+          "pred": 608.945068359375,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9990771835205422,
+          "log": 0.9986258094213444,
+          "note": "",
+          "meas": 504.6162493279984,
+          "meas_cens": false,
+          "pred": 504.2774963378906,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9989817751494059,
+          "log": 0.9981828292375385,
+          "note": "",
+          "meas": 347.7021883130224,
+          "meas_cens": false,
+          "pred": 347.1863708496094,
+          "pred_cens": false
+        }
+      }
+    },
+    "merged|rho=0.5": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.37247502632162255,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.22685874597054798,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.1328913231960492,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.3271128934959288,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.2671844599776475,
+          "meas_cens": false,
+          "pred": 0.2094029202418631,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.1925632780601053,
+          "meas_cens": false,
+          "pred": 0.12353097664472242,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.9956380635766772,
+          "meas_cens": false,
+          "pred": 0.9855625125549621,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.2748486260355109,
+          "log": 0.2614503578389735,
+          "note": "",
+          "meas": 0.9663425770168657,
+          "meas_cens": false,
+          "pred": 0.8777211463230136,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.506878978110996,
+          "log": 0.10185022926341035,
+          "note": "",
+          "meas": 0.495180350592266,
+          "meas_cens": false,
+          "pred": 0.001019418277220768,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.49986119469258633,
+          "log": 0.06034097368382277,
+          "note": "",
+          "meas": 0.5016388195791048,
+          "meas_cens": false,
+          "pred": 1.1109271858454993e-05,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9994548730904094,
+          "log": 0.9993658441538713,
+          "note": "",
+          "meas": 170.9233664387928,
+          "meas_cens": false,
+          "pred": 170.90516662597656,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.999780336874487,
+          "log": 0.9996800219443008,
+          "note": "",
+          "meas": 150.33421910589468,
+          "meas_cens": false,
+          "pred": 150.31460571289062,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9999317764422733,
+          "log": 0.9998157083623234,
+          "note": "",
+          "meas": 106.86908780376052,
+          "meas_cens": false,
+          "pred": 106.85107421875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9997278775025991,
+          "log": 0.9993274074338755,
+          "note": "",
+          "meas": 53.37975442787165,
+          "meas_cens": false,
+          "pred": 53.33216857910156,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 1.0002400359389978,
+          "log": 0.9761060386847793,
+          "note": "",
+          "meas": 1.5441960260591315e-05,
+          "meas_cens": false,
+          "pred": 1.480843546164331e-05,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9998746993884519,
+          "log": 0.8542416286181918,
+          "note": "",
+          "meas": 1.391938094267463e-06,
+          "meas_cens": false,
+          "pred": 7.437001259877472e-07,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9998352891803801,
+          "log": 0.3068614311398285,
+          "note": "",
+          "meas": 6.503457268969731e-07,
+          "meas_cens": false,
+          "pred": 3.3918465647345366e-11,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9994234722166061,
+          "log": 0.25596819207940463,
+          "note": "",
+          "meas": 6.71010988526394e-07,
+          "meas_cens": false,
+          "pred": 2.2730000060130644e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.9987102176285272,
+          "log": 0.9984311170740051,
+          "note": "",
+          "meas": 658.6481452608907,
+          "meas_cens": false,
+          "pred": 658.444580078125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9987754955471413,
+          "log": 0.9984370627493396,
+          "note": "",
+          "meas": 609.2076027829053,
+          "meas_cens": false,
+          "pred": 608.945068359375,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9990530736518692,
+          "log": 0.9986013293629946,
+          "note": "",
+          "meas": 504.6184162536383,
+          "meas_cens": false,
+          "pred": 504.2774963378906,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.998922922719779,
+          "log": 0.998103284705071,
+          "note": "",
+          "meas": 347.7198311086909,
+          "meas_cens": false,
+          "pred": 347.1863708496094,
+          "pred_cens": false
+        }
+      }
+    },
+    "merged|rho=0.9": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.37247502632162255,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.22685874597054798,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.1328913231960492,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.3271128934959288,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.2094029202418631,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.12353097664472242,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.9991256334449443,
+          "meas_cens": false,
+          "pred": 0.9855625125549621,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.055307928177864805,
+          "log": 0.051856759033169796,
+          "note": "",
+          "meas": 0.9932296470815232,
+          "meas_cens": false,
+          "pred": 0.8777211463230136,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.10262223455867278,
+          "log": 0.015609870985067711,
+          "note": "",
+          "meas": 0.8977996195695923,
+          "meas_cens": false,
+          "pred": 0.001019418277220768,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.09806900895563202,
+          "log": 0.008991624740583208,
+          "note": "",
+          "meas": 0.9022180820494861,
+          "meas_cens": false,
+          "pred": 1.1109271858454993e-05,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9994836402819015,
+          "log": 0.9993928598190223,
+          "note": "",
+          "meas": 170.92353883512374,
+          "meas_cens": false,
+          "pred": 170.90516662597656,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9998050914498721,
+          "log": 0.9997044614728656,
+          "note": "",
+          "meas": 150.33392012725255,
+          "meas_cens": false,
+          "pred": 150.31460571289062,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9999302676119546,
+          "log": 0.9998104686662235,
+          "note": "",
+          "meas": 106.86964609705673,
+          "meas_cens": false,
+          "pred": 106.85107421875,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9997232793494878,
+          "log": 0.9993135836060475,
+          "note": "",
+          "meas": 53.380786207743476,
+          "meas_cens": false,
+          "pred": 53.33216857910156,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 1.000270854549478,
+          "log": 0.976483496791573,
+          "note": "",
+          "meas": 1.5432215829962623e-05,
+          "meas_cens": false,
+          "pred": 1.480843546164331e-05,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9994913956981784,
+          "log": 0.8524469012300516,
+          "note": "",
+          "meas": 1.4022649885895673e-06,
+          "meas_cens": false,
+          "pred": 7.437001259877472e-07,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9996535266105709,
+          "log": 0.30679721772677804,
+          "note": "",
+          "meas": 6.508287194387754e-07,
+          "meas_cens": false,
+          "pred": 3.3918465647345366e-11,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9992227268895318,
+          "log": 0.25583164138721093,
+          "note": "",
+          "meas": 6.724480132424257e-07,
+          "meas_cens": false,
+          "pred": 2.2730000060130644e-12,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.9990259966224586,
+          "log": 0.9987485977966387,
+          "note": "",
+          "meas": 658.6430179122843,
+          "meas_cens": false,
+          "pred": 658.444580078125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9987676897926259,
+          "log": 0.9984244245260638,
+          "note": "",
+          "meas": 609.2110068724254,
+          "meas_cens": false,
+          "pred": 608.945068359375,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9990649513112989,
+          "log": 0.9986103881589787,
+          "note": "",
+          "meas": 504.61910736038243,
+          "meas_cens": false,
+          "pred": 504.2774963378906,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.998910373579025,
+          "log": 0.9980794791266085,
+          "note": "",
+          "meas": 347.72687423757225,
+          "meas_cens": false,
+          "pred": 347.1863708496094,
+          "pred_cens": false
+        }
+      }
+    }
+  },
+  "S2-synth": {
+    "frame|rho=0": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.4521395788046658,
+          "meas_cens": false,
+          "pred": 0.4523069021966863,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.24359577386214062,
+          "meas_cens": false,
+          "pred": 0.24273757281337496,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.12995449557309108,
+          "meas_cens": false,
+          "pred": 0.13082216948596873,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.40464419406606295,
+          "meas_cens": false,
+          "pred": 0.4036777914220258,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.22207124832448827,
+          "meas_cens": false,
+          "pred": 0.22090992261155207,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.12034000499074743,
+          "meas_cens": false,
+          "pred": 0.11973461576666916,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.9982340927285053,
+          "meas_cens": false,
+          "pred": 0.9983990424526148,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9279647726713321,
+          "log": 0.9275112337025154,
+          "note": "",
+          "meas": 0.985867886156882,
+          "meas_cens": false,
+          "pred": 0.9848673419880468,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 1.035821096137083,
+          "log": null,
+          "note": "",
+          "meas": -0.02739682851453859,
+          "meas_cens": false,
+          "pred": 0.008140829546668454,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9920058760458489,
+          "log": 0.28376553814319183,
+          "note": "",
+          "meas": 0.007952934853269346,
+          "meas_cens": false,
+          "pred": 4.001879576088453e-08,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9992146702764299,
+          "log": 0.998757809805679,
+          "note": "",
+          "meas": 437.7669987917368,
+          "meas_cens": false,
+          "pred": 437.49566650390625,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9993021821796412,
+          "log": 0.9986286694045612,
+          "note": "",
+          "meas": 311.34667764006025,
+          "meas_cens": false,
+          "pred": 310.9980163574219,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9986721439532255,
+          "log": 0.9968117252286478,
+          "note": "",
+          "meas": 167.21058420987475,
+          "meas_cens": false,
+          "pred": 166.51158142089844,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9969480974992642,
+          "log": 0.9883147787018773,
+          "note": "",
+          "meas": 67.34673885145557,
+          "meas_cens": false,
+          "pred": 65.65715789794922,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 1.0001302285514997,
+          "log": 0.997185070407889,
+          "note": "",
+          "meas": 0.020212572427005852,
+          "meas_cens": false,
+          "pred": 0.02010886768727036,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 1.0000104253970206,
+          "log": 0.9741463837454514,
+          "note": "",
+          "meas": 0.001009659907217761,
+          "meas_cens": false,
+          "pred": 0.0008998139861787712,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9997176820635352,
+          "log": 0.4355954635591103,
+          "note": "",
+          "meas": 0.00013125506226563011,
+          "meas_cens": false,
+          "pred": 3.6249720733813435e-08,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9993487795294713,
+          "log": 0.2443497589024929,
+          "note": "",
+          "meas": 0.00015816385489070668,
+          "meas_cens": false,
+          "pred": 9.048804555356413e-13,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.9994524224682257,
+          "log": 0.9991509519900685,
+          "note": "",
+          "meas": 2404.298136220788,
+          "meas_cens": false,
+          "pred": 2403.36328125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9995360397739637,
+          "log": 0.9990970132210261,
+          "note": "",
+          "meas": 1722.3975688525088,
+          "meas_cens": false,
+          "pred": 1721.1904296875,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9990799402220134,
+          "log": 0.998026192484424,
+          "note": "",
+          "meas": 1065.0314829942074,
+          "meas_cens": false,
+          "pred": 1062.6661376953125,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9986204785563946,
+          "log": 0.9962203585302574,
+          "note": "",
+          "meas": 636.4006245298297,
+          "meas_cens": false,
+          "pred": 632.5830078125,
+          "pred_cens": false
+        }
+      }
+    },
+    "frame|rho=0.5": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.4523069021966863,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.24273757281337496,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.13082216948596873,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.4036777914220258,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.26504673705133336,
+          "meas_cens": false,
+          "pred": 0.22090992261155207,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.1900222005994918,
+          "meas_cens": false,
+          "pred": 0.11973461576666916,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.9991167037455885,
+          "meas_cens": false,
+          "pred": 0.9983990424526148,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.4688997138804085,
+          "log": 0.4669270748870062,
+          "note": "",
+          "meas": 0.9928630246999293,
+          "meas_cens": false,
+          "pred": 0.9848673419880468,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.5191692822391278,
+          "log": 0.15032931399008176,
+          "note": "",
+          "meas": 0.48505383259099916,
+          "meas_cens": false,
+          "pred": 0.008140829546668454,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.5104959224115176,
+          "log": 0.041917500828820085,
+          "note": "",
+          "meas": 0.48949420118409315,
+          "meas_cens": false,
+          "pred": 4.001879576088453e-08,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9996266273825704,
+          "log": 0.9991478943369956,
+          "note": "",
+          "meas": 437.75413636671067,
+          "meas_cens": false,
+          "pred": 437.49566650390625,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9993510597810882,
+          "log": 0.9986017303096303,
+          "note": "",
+          "meas": 311.3730352236512,
+          "meas_cens": false,
+          "pred": 310.9980163574219,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9988029925251001,
+          "log": 0.996932834951163,
+          "note": "",
+          "meas": 167.1974163858332,
+          "meas_cens": false,
+          "pred": 166.51158142089844,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9970279753006906,
+          "log": 0.9883539288141064,
+          "note": "",
+          "meas": 67.34570113472905,
+          "meas_cens": false,
+          "pred": 65.65715789794922,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 0.9994067860658374,
+          "log": 0.9965974821219491,
+          "note": "",
+          "meas": 0.020219118798346737,
+          "meas_cens": false,
+          "pred": 0.02010886768727036,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.999450860458611,
+          "log": 0.972113888172548,
+          "note": "",
+          "meas": 0.001018280594070305,
+          "meas_cens": false,
+          "pred": 0.0008998139861787712,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9992768001021965,
+          "log": 0.4353269340812016,
+          "note": "",
+          "meas": 0.00013171050733992208,
+          "meas_cens": false,
+          "pred": 3.6249720733813435e-08,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9989040441957119,
+          "log": 0.24414738555113102,
+          "note": "",
+          "meas": 0.0001589007703430523,
+          "meas_cens": false,
+          "pred": 9.048804555356413e-13,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.999711768536844,
+          "log": 0.9993998587280992,
+          "note": "",
+          "meas": 2404.26158592394,
+          "meas_cens": false,
+          "pred": 2403.36328125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9996371614383538,
+          "log": 0.9991852240437524,
+          "note": "",
+          "meas": 1722.3757052514488,
+          "meas_cens": false,
+          "pred": 1721.1904296875,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9991210625613519,
+          "log": 0.9980380477266649,
+          "note": "",
+          "meas": 1065.0551969197252,
+          "meas_cens": false,
+          "pred": 1062.6661376953125,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9987090126480548,
+          "log": 0.996348258335321,
+          "note": "",
+          "meas": 636.2976252751033,
+          "meas_cens": false,
+          "pred": 632.5830078125,
+          "pred_cens": false
+        }
+      }
+    },
+    "frame|rho=0.9": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.4523069021966863,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.24273757281337496,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.13082216948596873,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.4036777914220258,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.22090992261155207,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.11973461576666916,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.9998233114032246,
+          "meas_cens": false,
+          "pred": 0.9983990424526148,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.09425101289984962,
+          "log": 0.0935715055645819,
+          "note": "",
+          "meas": 0.9985657765501039,
+          "meas_cens": false,
+          "pred": 0.9848673419880468,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.10434476228723143,
+          "log": 0.02269659270535846,
+          "note": "",
+          "meas": 0.8965043500807167,
+          "meas_cens": false,
+          "pred": 0.008140829546668454,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.1021973440405697,
+          "log": 0.006324610449198706,
+          "note": "",
+          "meas": 0.8978006995184551,
+          "meas_cens": false,
+          "pred": 4.001879576088453e-08,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9998695697349678,
+          "log": 0.9993806681998193,
+          "note": "",
+          "meas": 437.74519501060223,
+          "meas_cens": false,
+          "pred": 437.49566650390625,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9993853645036065,
+          "log": 0.9985965972639972,
+          "note": "",
+          "meas": 311.38584443195094,
+          "meas_cens": false,
+          "pred": 310.9980163574219,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9988916817614627,
+          "log": 0.9970313641600027,
+          "note": "",
+          "meas": 167.18373093311058,
+          "meas_cens": false,
+          "pred": 166.51158142089844,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9970610549618543,
+          "log": 0.9883370902078878,
+          "note": "",
+          "meas": 67.35070271125328,
+          "meas_cens": false,
+          "pred": 65.65715789794922,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 0.9991171224969738,
+          "log": 0.9963754994839322,
+          "note": "",
+          "meas": 0.020221260263722188,
+          "meas_cens": false,
+          "pred": 0.02010886768727036,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9991915409771467,
+          "log": 0.9708439650623948,
+          "note": "",
+          "meas": 0.0010237971622966183,
+          "meas_cens": false,
+          "pred": 0.0008998139861787712,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.999091100164696,
+          "log": 0.43511987113880457,
+          "note": "",
+          "meas": 0.00013208315878616392,
+          "meas_cens": false,
+          "pred": 3.6249720733813435e-08,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9986921019064641,
+          "log": 0.24357060052849777,
+          "note": "",
+          "meas": 0.00016119019764394892,
+          "meas_cens": false,
+          "pred": 9.048804555356413e-13,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.9998767813195653,
+          "log": 0.999556651289184,
+          "note": "",
+          "meas": 2404.2425091164673,
+          "meas_cens": false,
+          "pred": 2403.36328125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9996689880856646,
+          "log": 0.9991965579490981,
+          "note": "",
+          "meas": 1722.405346069165,
+          "meas_cens": false,
+          "pred": 1721.1904296875,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9991800351498616,
+          "log": 0.9980998682121415,
+          "note": "",
+          "meas": 1065.0131298429437,
+          "meas_cens": false,
+          "pred": 1062.6661376953125,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9987292980967292,
+          "log": 0.996341350046582,
+          "note": "",
+          "meas": 636.3191592872583,
+          "meas_cens": false,
+          "pred": 632.5830078125,
+          "pred_cens": false
+        }
+      }
+    },
+    "merged|rho=0": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.2711167390807425,
+          "meas_cens": false,
+          "pred": 0.27359371992282283,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.1439956509029359,
+          "meas_cens": false,
+          "pred": 0.14464360060953224,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.4755818452293478,
+          "meas_cens": false,
+          "pred": 0.47541021864175864,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.2529437641780333,
+          "meas_cens": false,
+          "pred": 0.25396237528743576,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.13582474457369054,
+          "meas_cens": false,
+          "pred": 0.1356719133134422,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.9998894488160306,
+          "meas_cens": false,
+          "pred": 0.9998997896902118,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.9991013879117564,
+          "meas_cens": false,
+          "pred": 0.9990405479312245,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 1.059284360618445,
+          "log": 1.2813900013107213,
+          "note": "",
+          "meas": 0.06265066904109197,
+          "meas_cens": false,
+          "pred": 0.11511026438139112,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9920428628794408,
+          "log": 0.33895195986420396,
+          "note": "",
+          "meas": 0.007955126572461127,
+          "meas_cens": false,
+          "pred": 6.40300333220794e-07,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9998893215211218,
+          "log": 0.9998618043882336,
+          "note": "",
+          "meas": 437.51562513053346,
+          "meas_cens": false,
+          "pred": 437.49566650390625,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9999470067455116,
+          "log": 0.999912840445196,
+          "note": "",
+          "meas": 311.0174649977763,
+          "meas_cens": false,
+          "pred": 310.9980163574219,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.999893868088447,
+          "log": 0.9997714387225722,
+          "note": "",
+          "meas": 166.55973156050743,
+          "meas_cens": false,
+          "pred": 166.51158142089844,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9997967290593927,
+          "log": 0.9992461360642385,
+          "note": "",
+          "meas": 65.7642791289726,
+          "meas_cens": false,
+          "pred": 65.65715789794922,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 1.0000653281148961,
+          "log": 0.9998719530956475,
+          "note": "",
+          "meas": 0.020114765294364845,
+          "meas_cens": false,
+          "pred": 0.02010886768727036,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 1.0000475102017112,
+          "log": 0.9985355740724294,
+          "note": "",
+          "meas": 0.0009057421084202507,
+          "meas_cens": false,
+          "pred": 0.0008998139861787712,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 1.0000159125233976,
+          "log": 0.6262820840147351,
+          "note": "",
+          "meas": 8.229550034063701e-06,
+          "meas_cens": false,
+          "pred": 3.6249720733813435e-08,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9999927015596948,
+          "log": 0.35467993612132614,
+          "note": "",
+          "meas": 9.888653976146561e-06,
+          "meas_cens": false,
+          "pred": 9.048804555356413e-13,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.999922647995997,
+          "log": 0.9999075529485397,
+          "note": "",
+          "meas": 2403.4223887238923,
+          "meas_cens": false,
+          "pred": 2403.36328125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9999703811465764,
+          "log": 0.9999526841226147,
+          "note": "",
+          "meas": 1721.2445010234278,
+          "meas_cens": false,
+          "pred": 1721.1904296875,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9999157428243596,
+          "log": 0.9998432076684105,
+          "note": "",
+          "meas": 1062.8418599823806,
+          "meas_cens": false,
+          "pred": 1062.6661376953125,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.999907626334519,
+          "log": 0.9997663789293624,
+          "note": "",
+          "meas": 632.8136322136686,
+          "meas_cens": false,
+          "pred": 632.5830078125,
+          "pred_cens": false
+        }
+      }
+    },
+    "merged|rho=0.5": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.27359371992282283,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.14464360060953224,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.47541021864175864,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.3838535851572761,
+          "meas_cens": false,
+          "pred": 0.25396237528743576,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.1900127823205764,
+          "meas_cens": false,
+          "pred": 0.1356719133134422,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.9999447201240945,
+          "meas_cens": false,
+          "pred": 0.9998997896902118,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.9995495192187956,
+          "meas_cens": false,
+          "pred": 0.9990405479312245,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.5200773463259081,
+          "log": 0.2852011078579463,
+          "note": "",
+          "meas": 0.5397887033544035,
+          "meas_cens": false,
+          "pred": 0.11511026438139112,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.5105022762433666,
+          "log": 0.05009026658096514,
+          "note": "",
+          "meas": 0.48949740770374084,
+          "meas_cens": false,
+          "pred": 6.40300333220794e-07,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 0.9999940751871325,
+          "log": 0.9999613650572803,
+          "note": "",
+          "meas": 437.51219130446106,
+          "meas_cens": false,
+          "pred": 437.49566650390625,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9999595355801774,
+          "log": 0.9999064924781708,
+          "note": "",
+          "meas": 311.02397897256185,
+          "meas_cens": false,
+          "pred": 310.9980163574219,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.999927305640457,
+          "log": 0.9998031918640754,
+          "note": "",
+          "meas": 166.55615473435907,
+          "meas_cens": false,
+          "pred": 166.51158142089844,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9998165939461627,
+          "log": 0.9992555864094708,
+          "note": "",
+          "meas": 65.76407407238815,
+          "meas_cens": false,
+          "pred": 65.65715789794922,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 0.9998846166465694,
+          "log": 0.9997237731740075,
+          "note": "",
+          "meas": 0.020116435939319385,
+          "meas_cens": false,
+          "pred": 0.02010886768727036,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9999141549429101,
+          "log": 0.9980780714990959,
+          "note": "",
+          "meas": 0.0009074677138303531,
+          "meas_cens": false,
+          "pred": 0.0008998139861787712,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9999073910710637,
+          "log": 0.6260097153304818,
+          "note": "",
+          "meas": 8.261258950834297e-06,
+          "meas_cens": false,
+          "pred": 3.6249720733813435e-08,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9998840045610238,
+          "log": 0.3544967090540452,
+          "note": "",
+          "meas": 9.933188916808847e-06,
+          "meas_cens": false,
+          "pred": 9.048804555356413e-13,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 0.9999907123545997,
+          "log": 0.9999732331959431,
+          "note": "",
+          "meas": 2403.4118998842446,
+          "meas_cens": false,
+          "pred": 2403.36328125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9999972036767741,
+          "log": 0.9999766208785394,
+          "note": "",
+          "meas": 1721.237523282881,
+          "meas_cens": false,
+          "pred": 1721.1904296875,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9999268685800803,
+          "log": 0.9998474165873101,
+          "note": "",
+          "meas": 1062.8465640376044,
+          "meas_cens": false,
+          "pred": 1062.6661376953125,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9999306696358621,
+          "log": 0.999800371454028,
+          "note": "",
+          "meas": 632.786145909828,
+          "meas_cens": false,
+          "pred": 632.5830078125,
+          "pred_cens": false
+        }
+      }
+    },
+    "merged|rho=0.9": {
+      "frc_cross_1_7": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.27359371992282283,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.14464360060953224,
+          "pred_cens": false
+        }
+      },
+      "frc_cross_0_5": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.49609375,
+          "pred_cens": true
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.47541021864175864,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.25396237528743576,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": null,
+          "log": null,
+          "note": "both-censored",
+          "meas": 0.49609375,
+          "meas_cens": true,
+          "pred": 0.1356719133134422,
+          "pred_cens": false
+        }
+      },
+      "frc_at_fsig": {
+        "0.5": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.999988943631163,
+          "meas_cens": false,
+          "pred": 0.9998997896902118,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": null,
+          "log": null,
+          "note": "no-pred-change",
+          "meas": 0.9999097952207215,
+          "meas_cens": false,
+          "pred": 0.9990405479312245,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.10304970152222179,
+          "log": 0.04422748630703861,
+          "note": "",
+          "meas": 0.9088122921903022,
+          "meas_cens": false,
+          "pred": 0.11511026438139112,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.10219848791944472,
+          "log": 0.007559025405209253,
+          "note": "",
+          "meas": 0.8978014526819605,
+          "meas_cens": false,
+          "pred": 6.40300333220794e-07,
+          "pred_cens": false
+        }
+      },
+      "hp_sd": {
+        "0.5": {
+          "lin": 1.0000540781782785,
+          "log": 1.0000191270998509,
+          "note": "",
+          "meas": 437.509861211342,
+          "meas_cens": false,
+          "pred": 437.49566650390625,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9999675679069181,
+          "log": 0.9999049052108475,
+          "note": "",
+          "meas": 311.0271317145581,
+          "meas_cens": false,
+          "pred": 310.9980163574219,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9999481247109615,
+          "log": 0.9998258950867642,
+          "note": "",
+          "meas": 166.55308293413222,
+          "meas_cens": false,
+          "pred": 166.51158142089844,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9998266021327791,
+          "log": 0.9992584495399195,
+          "note": "",
+          "meas": 65.7642743753685,
+          "meas_cens": false,
+          "pred": 65.65715789794922,
+          "pred_cens": false
+        }
+      },
+      "p_ratio": {
+        "0.5": {
+          "lin": 0.9998036084130785,
+          "log": 0.9996577394028409,
+          "note": "",
+          "meas": 0.020117170785164236,
+          "meas_cens": false,
+          "pred": 0.02010886768727036,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 0.9998507236563026,
+          "log": 0.997810766716284,
+          "note": "",
+          "meas": 0.0009084906283769665,
+          "meas_cens": false,
+          "pred": 0.0008998139861787712,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.9998583787134342,
+          "log": 0.6257831187040842,
+          "note": "",
+          "meas": 8.288074258849921e-06,
+          "meas_cens": false,
+          "pred": 3.6249720733813435e-08,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9998334184943022,
+          "log": 0.35393052186088664,
+          "note": "",
+          "meas": 1.0074951377755185e-05,
+          "meas_cens": false,
+          "pred": 9.048804555356413e-13,
+          "pred_cens": false
+        }
+      },
+      "mean_grad": {
+        "0.5": {
+          "lin": 1.000031625221246,
+          "log": 1.0000119180097895,
+          "note": "",
+          "meas": 2403.407701706866,
+          "meas_cens": false,
+          "pred": 2403.36328125,
+          "pred_cens": false
+        },
+        "1.0": {
+          "lin": 1.0000067210243175,
+          "log": 0.999981336666569,
+          "note": "",
+          "meas": 1721.243434596754,
+          "meas_cens": false,
+          "pred": 1721.1904296875,
+          "pred_cens": false
+        },
+        "2.0": {
+          "lin": 0.999941202568253,
+          "log": 0.9998619529971233,
+          "note": "",
+          "meas": 1062.8372032484397,
+          "meas_cens": false,
+          "pred": 1062.6661376953125,
+          "pred_cens": false
+        },
+        "4.0": {
+          "lin": 0.9999393935222952,
+          "log": 0.9998069532679119,
+          "note": "",
+          "meas": 632.7835211964722,
+          "meas_cens": false,
+          "pred": 632.5830078125,
+          "pred_cens": false
+        }
+      }
+    }
+  },
+  "verdicts": {
+    "frc_cross_1_7": "NO POWER -- undefined on both detail sources (both-censored)",
+    "frc_cross_0_5": "NO POWER -- undefined on both detail sources (both-censored)",
+    "frc_at_fsig": "HAS POWER; fires on the FLAT source too (rule 9)",
+    "hp_sd": "HAS POWER; fires on the FLAT source too (rule 9)",
+    "p_ratio": "HAS POWER; fires on the FLAT source too (rule 9)",
+    "mean_grad": "HAS POWER; fires on the FLAT source too (rule 9)"
+  },
+  "censoring_ladder": {
+    "S3-flat-119|frame": "sb=1",
+    "S3-flat-119|merged": "sb=1",
+    "S1-real-119|frame": "sb=1",
+    "S1-real-119|merged": "sb=1",
+    "S2-synth|frame": "sb=1",
+    "S2-synth|merged": "sb=2"
+  }
+}

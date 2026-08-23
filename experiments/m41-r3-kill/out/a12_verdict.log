@@ -1,0 +1,77 @@
+M41 step 12 -- scoring the pre-registered kill condition.
+
+THE CONDITION, verbatim from PREREGISTRATION.md (commit f809772):
+    R3 STANDS REFUTED if -- on both 109MSDCF and 119MSDCF --
+        f_D <= 1.02 * f_A, i.e. the deconvolving merge buys less than 2% in FRC
+        resolution over the shipped noise-gated merge,
+    OR if it buys resolution only by paying noise:
+        f_D > 1.02 * f_A but n_D > 1.10 * n_A.
+    R3 MUST BE REOPENED if -- on both stacks --
+        f_D >= 1.05 * f_A and n_D <= 1.05 * n_A.
+    The band between (2%, 5%) is INDETERMINATE.
+
+STATE OF THE TWO METRICS THE CONDITION USES
+  f  (FRC 1/7 crossing) : planted-blur recovery -> NO POWER -- undefined on both detail sources (both-censored)
+     a10: 9/12 of the run-of-record's detail-ROI readings are CENSORED at the ring-grid endpoint 0.4961.
+     a10: repair settings (4 ring counts x 4 thresholds) that are uncensored AND separate detail from flat, on both stacks: NONE.
+  n  (flat-ROI high-pass spatial sd ratio) : planted-blur recovery of the same statistic -> HAS POWER; fires on the FLAT source too (rule 9)
+     and on real data arm E fires it at 144.391x / 295.487x, so it can reject.
+
+EVERY ARM PUT IN D's SEAT.  f is quoted as a BOUND where a10 says it is censored.
+  arm    109MSDCF f_x/f_A  109MSDCF n_x/n_A        verdict    119MSDCF f_x/f_A  119MSDCF n_x/n_A        verdict   milestone
+  D               >=1.348          3.468        REFUTED          >=/<=1.000          3.908        REFUTED   REFUTED
+  D'                1.061          1.148        REFUTED          >=/<=1.000          1.157        REFUTED   REFUTED
+  E               >=1.348        175.912        REFUTED          >=/<=1.000        349.414        REFUTED   REFUTED
+  C               >=1.348          0.536         REOPEN          >=/<=1.000          0.451        REFUTED   SPLIT REOPEN/REFUTED
+  B                 0.873          1.510        REFUTED          >=/<=1.000          1.518        REFUTED   REFUTED
+
+  RULE 20 CHECK.  The scorer is not a tautology: arm C returns 'SPLIT REOPEN/REFUTED', not REFUTED,
+  because its noise ratio (0.536x / 0.451x) does not clear the 1.10x clause.  An input that
+  produces a non-REFUTED answer exists inside this experiment's own output.
+
+DOES THE VERDICT DEPEND ON THE DEAD METRIC?  Sweep f_D/f_A over every value it could
+have taken -- including the ones the censored reading forbids us from excluding -- and
+re-score with the MEASURED noise ratios held fixed.
+     f_D/f_A        109MSDCF        119MSDCF   milestone
+       0.500         REFUTED         REFUTED   REFUTED
+       0.800         REFUTED         REFUTED   REFUTED
+       0.950         REFUTED         REFUTED   REFUTED
+       1.000         REFUTED         REFUTED   REFUTED
+       1.020         REFUTED         REFUTED   REFUTED
+       1.021         REFUTED         REFUTED   REFUTED
+       1.050         REFUTED         REFUTED   REFUTED
+       1.200         REFUTED         REFUTED   REFUTED
+       1.500         REFUTED         REFUTED   REFUTED
+       2.000         REFUTED         REFUTED   REFUTED
+       5.000         REFUTED         REFUTED   REFUTED
+  -> REFUTED at every sampled f_D/f_A: True
+  DERIVED: with n_D/n_A = 3.468 and 3.908, both above 1.10, the two REFUTED clauses
+  ('f <= 1.02' and 'f > 1.02 with n > 1.10') are EXHAUSTIVE over f.  The verdict for arm D
+  is therefore independent of the FRC reading, and survives that metric being withdrawn.
+
+  The same sweep for arm C, whose noise ratio does NOT clear 1.10x -- this is what a
+  verdict that DOES depend on the FRC axis looks like:
+       0.500         REFUTED         REFUTED   REFUTED
+       0.800         REFUTED         REFUTED   REFUTED
+       0.950         REFUTED         REFUTED   REFUTED
+       1.000         REFUTED         REFUTED   REFUTED
+       1.020         REFUTED         REFUTED   REFUTED
+       1.021   INDETERMINATE   INDETERMINATE   INDETERMINATE
+       1.050          REOPEN          REOPEN   REOPEN
+       1.200          REOPEN          REOPEN   REOPEN
+       1.500          REOPEN          REOPEN   REOPEN
+       2.000          REOPEN          REOPEN   REOPEN
+       5.000          REOPEN          REOPEN   REOPEN
+
+  Arithmetic check: CONFLICT cases over an 800k (f, n) grid: 0. The REFUTED and
+  REOPEN clauses are disjoint as written, so no data can satisfy both.
+
+==============================================================================
+M41 VERDICT FOR ARM D (the R3 estimator): REFUTED
+  carried by: the NOISE clause, on a statistic with demonstrated power (a11 recovery
+  +0.967 to +1.000; arm E fires it at 144x/295x on real data).
+  NOT carried by: the FRC clause, which a10 and a11 show has no power here and is withdrawn.
+  What M41 CANNOT say: whether arm D buys any real resolution.  It has no metric able to
+  measure that on this data, and it does not manufacture one.
+==============================================================================
+wrote out/a12_results.json

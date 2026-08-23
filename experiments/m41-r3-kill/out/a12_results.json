@@ -1,0 +1,117 @@
+{
+  "kill_condition": "R3 STANDS REFUTED if -- on both 109MSDCF and 119MSDCF --\n    f_D <= 1.02 * f_A, i.e. the deconvolving merge buys less than 2% in FRC\n    resolution over the shipped noise-gated merge,\nOR if it buys resolution only by paying noise:\n    f_D > 1.02 * f_A but n_D > 1.10 * n_A.\nR3 MUST BE REOPENED if -- on both stacks --\n    f_D >= 1.05 * f_A and n_D <= 1.05 * n_A.\nThe band between (2%, 5%) is INDETERMINATE.",
+  "per_arm": {
+    "D": {
+      "109MSDCF": {
+        "f_ratio": 1.3479186702360508,
+        "n_ratio": 3.4678680018638004,
+        "verdict": "REFUTED",
+        "f_censored": true,
+        "fA_censored": false
+      },
+      "119MSDCF": {
+        "f_ratio": 1.0,
+        "n_ratio": 3.908029897549931,
+        "verdict": "REFUTED",
+        "f_censored": true,
+        "fA_censored": true
+      },
+      "milestone": "REFUTED"
+    },
+    "D'": {
+      "109MSDCF": {
+        "f_ratio": 1.0612726762860825,
+        "n_ratio": 1.1483367950530314,
+        "verdict": "REFUTED",
+        "f_censored": false,
+        "fA_censored": false
+      },
+      "119MSDCF": {
+        "f_ratio": 1.0,
+        "n_ratio": 1.1571626583517087,
+        "verdict": "REFUTED",
+        "f_censored": true,
+        "fA_censored": true
+      },
+      "milestone": "REFUTED"
+    },
+    "E": {
+      "109MSDCF": {
+        "f_ratio": 1.3479186702360508,
+        "n_ratio": 175.9122055234831,
+        "verdict": "REFUTED",
+        "f_censored": true,
+        "fA_censored": false
+      },
+      "119MSDCF": {
+        "f_ratio": 1.0,
+        "n_ratio": 349.4143483822398,
+        "verdict": "REFUTED",
+        "f_censored": true,
+        "fA_censored": true
+      },
+      "milestone": "REFUTED"
+    },
+    "C": {
+      "109MSDCF": {
+        "f_ratio": 1.3479186702360508,
+        "n_ratio": 0.5363049169582146,
+        "verdict": "REOPEN",
+        "f_censored": true,
+        "fA_censored": false
+      },
+      "119MSDCF": {
+        "f_ratio": 1.0,
+        "n_ratio": 0.4511718351462466,
+        "verdict": "REFUTED",
+        "f_censored": true,
+        "fA_censored": true
+      },
+      "milestone": "SPLIT REOPEN/REFUTED"
+    },
+    "B": {
+      "109MSDCF": {
+        "f_ratio": 0.8732724825751975,
+        "n_ratio": 1.5104038168421219,
+        "verdict": "REFUTED",
+        "f_censored": false,
+        "fA_censored": false
+      },
+      "119MSDCF": {
+        "f_ratio": 1.0,
+        "n_ratio": 1.5177429421309887,
+        "verdict": "REFUTED",
+        "f_censored": true,
+        "fA_censored": true
+      },
+      "milestone": "REFUTED"
+    }
+  },
+  "f_sweep_D": {
+    "0.5": "REFUTED",
+    "0.8": "REFUTED",
+    "0.95": "REFUTED",
+    "1.0": "REFUTED",
+    "1.02": "REFUTED",
+    "1.021": "REFUTED",
+    "1.05": "REFUTED",
+    "1.2": "REFUTED",
+    "1.5": "REFUTED",
+    "2.0": "REFUTED",
+    "5.0": "REFUTED"
+  },
+  "f_sweep_C": {
+    "0.5": "REFUTED",
+    "0.8": "REFUTED",
+    "0.95": "REFUTED",
+    "1.0": "REFUTED",
+    "1.02": "REFUTED",
+    "1.021": "INDETERMINATE",
+    "1.05": "REOPEN",
+    "1.2": "REOPEN",
+    "1.5": "REOPEN",
+    "2.0": "REOPEN",
+    "5.0": "REOPEN"
+  },
+  "conflicts": 0
+}

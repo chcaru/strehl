@@ -1,0 +1,391 @@
+M41 step 11 -- planted-blur POSITIVE CONTROL ON THE METRICS.
+  rec_lin = (m(0)-m(sb)) / (pred(0)-pred(sb));   rec_log = ln(m(0)/m(sb)) / ln(pred(0)/pred(sb))
+  1.0 recovers the planted loss, 0.0 is BLIND, <0 is the WRONG SIGN.
+  'C' marks a CENSORED reading (>= the ring-grid endpoint).  A censored value is a BOUND,
+  so no ratio involving it is defined -- that is reported, not rounded to a number.
+  Rule 9: the FLAT source is run FIRST, before either detail source.
+
+================================================================================================
+SOURCE S3-flat-119: mean 830.4 DN, sd 131.7 DN, hp_sd 13.10 DN, P(>f_sig)/P(<f_sig) 1.306e-02
+
+  --- noise 'frame' (x1 single-frame, median modelled sigma 6.84 DN) ---
+    TRUTH CHANNEL (noiseless source; analytic SNR/(1+SNR) for FRC):
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C    0.2758     0.161   0.09163
+      frc_cross_0_5      0.4961C     0.332    0.2076    0.1302   0.07733
+      frc_at_fsig         0.7678     0.609    0.1408  2.10e-05  3.57e-09
+      hp_sd                12.73     8.553     5.684     3.202     1.554
+      p_ratio            0.01232  0.002956  1.05e-04  3.39e-09  2.11e-12
+      mean_grad            62.69     49.19     34.86     24.94     18.85
+
+    MEASURED, shared-noise fraction rho = 0
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C    0.2801    0.1686   0.09235
+      frc_cross_0_5      0.4961C    0.3341    0.2111    0.1302   0.07653
+      frc_at_fsig         0.7704    0.5855    0.1851  -0.01299  0.008037
+      hp_sd                14.46     10.98     8.939     7.606      7.07
+      p_ratio            0.01692  0.007614   0.00481  0.004811  0.004975
+      mean_grad             69.6     57.94     46.58     39.85     36.15
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig            +1.164/+1.185       +0.933/+0.841       +1.020/  --         +0.993/+0.238
+      hp_sd                  +0.836/+0.694       +0.785/+0.597       +0.720/+0.466       +0.662/+0.340
+      p_ratio                +0.994/+0.560       +0.992/+0.264       +0.983/+0.083       +0.970/+0.054
+      mean_grad              +0.864/+0.756       +0.827/+0.684       +0.788/+0.605       +0.763/+0.545
+
+    MEASURED, shared-noise fraction rho = 0.5
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C    0.2642   0.09544
+      frc_at_fsig         0.8821    0.7917    0.6092     0.485    0.4934
+      hp_sd                14.48     10.99     8.943      7.61     7.066
+      p_ratio             0.0169  0.007626  0.004906  0.004817  0.004977
+      mean_grad            69.73     57.96     46.61     39.88     36.11
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig            +0.570/+0.467       +0.435/+0.218       +0.517/+0.057       +0.506/+0.030
+      hp_sd                  +0.838/+0.695       +0.786/+0.598       +0.721/+0.466       +0.664/+0.341
+      p_ratio                +0.990/+0.558       +0.982/+0.260       +0.981/+0.083       +0.968/+0.054
+      mean_grad              +0.872/+0.762       +0.831/+0.686       +0.791/+0.606       +0.767/+0.548
+
+    MEASURED, shared-noise fraction rho = 0.9
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_at_fsig         0.9764    0.9584    0.9223    0.8953    0.8989
+      hp_sd                14.49     10.99     8.944     7.601     7.073
+      p_ratio            0.01695  0.007598  0.004984  0.004829  0.005033
+      mean_grad            69.82     57.96     46.65     39.87     36.18
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig            +0.113/+0.080       +0.086/+0.034       +0.106/+0.008       +0.101/+0.004
+      hp_sd                  +0.840/+0.697       +0.788/+0.599       +0.723/+0.468       +0.664/+0.341
+      p_ratio                +0.999/+0.562       +0.980/+0.257       +0.984/+0.083       +0.968/+0.054
+      mean_grad              +0.878/+0.768       +0.833/+0.687       +0.793/+0.608       +0.767/+0.547
+
+  --- noise 'merged' (x0.25 single-frame, median modelled sigma 1.71 DN) ---
+    TRUTH CHANNEL (noiseless source; analytic SNR/(1+SNR) for FRC):
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C    0.3748     0.202    0.1109
+      frc_cross_0_5      0.4961C   0.4961C    0.3155    0.1741   0.09758
+      frc_at_fsig         0.9814    0.9614    0.7222  3.35e-04  5.72e-08
+      hp_sd                12.73     8.553     5.684     3.202     1.554
+      p_ratio            0.01232  0.002956  1.05e-04  3.39e-09  2.11e-12
+      mean_grad            62.69     49.19     34.86     24.94     18.85
+
+    MEASURED, shared-noise fraction rho = 0
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C    0.3742    0.1988    0.1121
+      frc_cross_0_5      0.4961C   0.4961C    0.3152    0.1743   0.09707
+      frc_at_fsig         0.9816    0.9593    0.7428   -0.0129   0.00804
+      hp_sd                12.84     8.724     5.942     3.636     2.322
+      p_ratio            0.01261  0.003237  4.01e-04  3.01e-04  3.11e-04
+      mean_grad            63.13     49.79     35.74     26.23     20.55
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig            +1.113/+1.114       +0.921/+0.909       +1.014/  --         +0.992/+0.288
+      hp_sd                  +0.987/+0.973       +0.980/+0.956       +0.967/+0.914       +0.942/+0.813
+      p_ratio                +1.002/+0.953       +1.000/+0.724       +1.000/+0.247       +0.999/+0.165
+      mean_grad              +0.988/+0.979       +0.984/+0.969       +0.978/+0.953       +0.971/+0.934
+
+    MEASURED, shared-noise fraction rho = 0.5
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C    0.2643    0.1898
+      frc_at_fsig         0.9907    0.9797    0.8754    0.4852    0.4934
+      hp_sd                12.85     8.725     5.942     3.636     2.321
+      p_ratio            0.01261  0.003238  4.07e-04  3.02e-04  3.12e-04
+      mean_grad            63.17     49.79     35.75     26.23     20.55
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig            +0.549/+0.541       +0.445/+0.404       +0.515/+0.089       +0.507/+0.042
+      hp_sd                  +0.988/+0.974       +0.981/+0.957       +0.967/+0.915       +0.942/+0.814
+      p_ratio                +1.001/+0.953       +0.999/+0.721       +0.999/+0.247       +0.998/+0.165
+      mean_grad              +0.991/+0.981       +0.985/+0.970       +0.978/+0.953       +0.972/+0.935
+
+    MEASURED, shared-noise fraction rho = 0.9
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_at_fsig         0.9981     0.996    0.9753    0.8953    0.8989
+      hp_sd                12.85     8.726     5.941     3.634     2.322
+      p_ratio            0.01261  0.003239  4.11e-04  3.02e-04  3.15e-04
+      mean_grad            63.18     49.79     35.75     26.23     20.55
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig            +0.109/+0.106       +0.088/+0.076       +0.105/+0.014       +0.101/+0.006
+      hp_sd                  +0.988/+0.974       +0.981/+0.957       +0.967/+0.915       +0.942/+0.814
+      p_ratio                +1.001/+0.952       +0.999/+0.719       +0.999/+0.247       +0.998/+0.164
+      mean_grad              +0.992/+0.982       +0.986/+0.971       +0.979/+0.954       +0.973/+0.935
+
+================================================================================================
+SOURCE S1-real-119: mean 1676.0 DN, sd 1621.8 DN, hp_sd 183.65 DN, P(>f_sig)/P(<f_sig) 5.242e-05
+
+  --- noise 'frame' (x1 single-frame, median modelled sigma 6.72 DN) ---
+    TRUTH CHANNEL (noiseless source; analytic SNR/(1+SNR) for FRC):
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C    0.4641     0.302    0.1937    0.1193
+      frc_cross_0_5      0.4961C    0.3479    0.2585    0.1734    0.1044
+      frc_at_fsig         0.9006    0.8105    0.3128  6.38e-05  6.94e-07
+      hp_sd                180.5     170.9     150.3     106.9     53.33
+      p_ratio           5.03e-05  1.48e-05  7.44e-07  3.39e-11  2.27e-12
+      mean_grad            683.6     658.4     608.9     504.3     347.2
+
+    MEASURED, shared-noise fraction rho = 0
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C    0.3083     0.197    0.1209
+      frc_cross_0_5      0.4961C     0.386    0.2746    0.1807      0.11
+      frc_at_fsig         0.9415    0.8764    0.4868  0.005942 -0.003849
+      hp_sd                180.7     171.1     150.6     107.2     54.08
+      p_ratio           6.05e-05  2.50e-05  1.09e-05  1.04e-05  1.08e-05
+      mean_grad            686.4     661.6     612.8       509     353.7
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig            +0.723/+0.680       +0.774/+0.624       +1.039/+0.530       +1.050/  --  
+      hp_sd                  +0.997/+0.996       +0.998/+0.996       +0.998/+0.996       +0.996/+0.990
+      p_ratio                +1.001/+0.723       +1.000/+0.406       +0.995/+0.124       +0.988/+0.102
+      mean_grad              +0.983/+0.978       +0.986/+0.981       +0.989/+0.982       +0.989/+0.978
+
+    MEASURED, shared-noise fraction rho = 0.5
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C    0.2668    0.1925
+      frc_at_fsig         0.9709    0.9364    0.7454    0.4948    0.5016
+      hp_sd                180.7     171.2     150.6     107.2     54.09
+      p_ratio           6.04e-05  2.50e-05  1.11e-05  1.04e-05  1.07e-05
+      mean_grad            686.4     661.6     612.8     509.1     353.8
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig            +0.383/+0.343       +0.384/+0.250       +0.529/+0.071       +0.521/+0.047
+      hp_sd                  +0.997/+0.995       +0.998/+0.996       +0.998/+0.996       +0.996/+0.989
+      p_ratio                +0.998/+0.722       +0.995/+0.402       +0.994/+0.124       +0.987/+0.102
+      mean_grad              +0.984/+0.980       +0.986/+0.981       +0.989/+0.982       +0.989/+0.978
+
+    MEASURED, shared-noise fraction rho = 0.9
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_at_fsig         0.9942    0.9872     0.948    0.8978    0.9022
+      hp_sd                180.7     171.2     150.6     107.2     54.09
+      p_ratio           6.04e-05  2.49e-05  1.13e-05  1.04e-05  1.08e-05
+      mean_grad            686.4     661.6     612.8     509.1     353.8
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig            +0.078/+0.067       +0.079/+0.045       +0.107/+0.011       +0.102/+0.007
+      hp_sd                  +0.997/+0.996       +0.998/+0.997       +0.998/+0.996       +0.996/+0.989
+      p_ratio                +1.002/+0.725       +0.993/+0.399       +0.995/+0.124       +0.988/+0.102
+      mean_grad              +0.986/+0.982       +0.986/+0.981       +0.989/+0.982       +0.989/+0.978
+
+  --- noise 'merged' (x0.25 single-frame, median modelled sigma 1.68 DN) ---
+    TRUTH CHANNEL (noiseless source; analytic SNR/(1+SNR) for FRC):
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C    0.3725    0.2269    0.1329
+      frc_cross_0_5      0.4961C   0.4961C    0.3271    0.2094    0.1235
+      frc_at_fsig         0.9931    0.9856    0.8777  0.001019  1.11e-05
+      hp_sd                180.5     170.9     150.3     106.9     53.33
+      p_ratio           5.03e-05  1.48e-05  7.44e-07  3.39e-11  2.27e-12
+      mean_grad            683.6     658.4     608.9     504.3     347.2
+
+    MEASURED, shared-noise fraction rho = 0
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C    0.3882    0.2293    0.1356
+      frc_cross_0_5      0.4961C   0.4961C    0.3426    0.2141    0.1258
+      frc_at_fsig         0.9961    0.9913    0.9325  0.007772 -0.003729
+      hp_sd                180.5     170.9     150.3     106.9     53.38
+      p_ratio           5.09e-05  1.55e-05  1.38e-06  6.53e-07  6.75e-07
+      mean_grad            683.8     658.7     609.2     504.6     347.7
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig         (no-pred-change)       +0.551/+0.534       +0.996/+0.705       +1.007/  --  
+      hp_sd                  +1.000/+1.000       +1.000/+1.000       +1.000/+1.000       +1.000/+0.999
+      p_ratio                +1.001/+0.976       +1.001/+0.857       +1.000/+0.307       +1.000/+0.256
+      mean_grad              +0.998/+0.998       +0.999/+0.999       +0.999/+0.999       +0.999/+0.998
+
+    MEASURED, shared-noise fraction rho = 0.5
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C    0.2672    0.1926
+      frc_at_fsig         0.9981    0.9956    0.9663    0.4952    0.5016
+      hp_sd                180.5     170.9     150.3     106.9     53.38
+      p_ratio           5.09e-05  1.54e-05  1.39e-06  6.50e-07  6.71e-07
+      mean_grad            683.8     658.6     609.2     504.6     347.7
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig         (no-pred-change)       +0.275/+0.261       +0.507/+0.102       +0.500/+0.060
+      hp_sd                  +0.999/+0.999       +1.000/+1.000       +1.000/+1.000       +1.000/+0.999
+      p_ratio                +1.000/+0.976       +1.000/+0.854       +1.000/+0.307       +0.999/+0.256
+      mean_grad              +0.999/+0.998       +0.999/+0.998       +0.999/+0.999       +0.999/+0.998
+
+    MEASURED, shared-noise fraction rho = 0.9
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_at_fsig         0.9996    0.9991    0.9932    0.8978    0.9022
+      hp_sd                180.5     170.9     150.3     106.9     53.38
+      p_ratio           5.09e-05  1.54e-05  1.40e-06  6.51e-07  6.72e-07
+      mean_grad            683.8     658.6     609.2     504.6     347.7
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig         (no-pred-change)       +0.055/+0.052       +0.103/+0.016       +0.098/+0.009
+      hp_sd                  +0.999/+0.999       +1.000/+1.000       +1.000/+1.000       +1.000/+0.999
+      p_ratio                +1.000/+0.976       +0.999/+0.852       +1.000/+0.307       +0.999/+0.256
+      mean_grad              +0.999/+0.999       +0.999/+0.998       +0.999/+0.999       +0.999/+0.998
+
+================================================================================================
+SOURCE S2-synth: mean 3959.2 DN, sd 1200.0 DN, hp_sd 556.29 DN, P(>f_sig)/P(<f_sig) 7.332e-02
+
+  --- noise 'frame' (x1 single-frame, median modelled sigma 14.76 DN) ---
+    TRUTH CHANNEL (noiseless source; analytic SNR/(1+SNR) for FRC):
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C    0.4523    0.2427    0.1308
+      frc_cross_0_5      0.4961C   0.4961C    0.4037    0.2209    0.1197
+      frc_at_fsig         0.9992    0.9984    0.9849  0.008141  4.00e-08
+      hp_sd                562.5     437.5       311     166.5     65.66
+      p_ratio            0.07304   0.02011  9.00e-04  3.62e-08  9.05e-13
+      mean_grad             2932      2403      1721      1063     632.6
+
+    MEASURED, shared-noise fraction rho = 0
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C    0.4521    0.2436      0.13
+      frc_cross_0_5      0.4961C   0.4961C    0.4046    0.2221    0.1203
+      frc_at_fsig         0.9992    0.9982    0.9859   -0.0274  0.007953
+      hp_sd                562.7     437.8     311.3     167.2     67.35
+      p_ratio            0.07315   0.02021   0.00101  1.31e-04  1.58e-04
+      mean_grad             2933      2404      1722      1065     636.4
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig         (no-pred-change)       +0.928/+0.928       +1.036/  --         +0.992/+0.284
+      hp_sd                  +0.999/+0.999       +0.999/+0.999       +0.999/+0.997       +0.997/+0.988
+      p_ratio                +1.000/+0.997       +1.000/+0.974       +1.000/+0.436       +0.999/+0.244
+      mean_grad              +0.999/+0.999       +1.000/+0.999       +0.999/+0.998       +0.999/+0.996
+
+    MEASURED, shared-noise fraction rho = 0.5
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C     0.265      0.19
+      frc_at_fsig         0.9996    0.9991    0.9929    0.4851    0.4895
+      hp_sd                562.8     437.8     311.4     167.2     67.35
+      p_ratio            0.07312   0.02022  0.001018  1.32e-04  1.59e-04
+      mean_grad             2933      2404      1722      1065     636.3
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig         (no-pred-change)       +0.469/+0.467       +0.519/+0.150       +0.510/+0.042
+      hp_sd                  +1.000/+0.999       +0.999/+0.999       +0.999/+0.997       +0.997/+0.988
+      p_ratio                +0.999/+0.997       +0.999/+0.972       +0.999/+0.435       +0.999/+0.244
+      mean_grad              +1.000/+0.999       +1.000/+0.999       +0.999/+0.998       +0.999/+0.996
+
+    MEASURED, shared-noise fraction rho = 0.9
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_at_fsig         0.9999    0.9998    0.9986    0.8965    0.8978
+      hp_sd                562.8     437.7     311.4     167.2     67.35
+      p_ratio            0.07311   0.02022  0.001024  1.32e-04  1.61e-04
+      mean_grad             2933      2404      1722      1065     636.3
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig         (no-pred-change)       +0.094/+0.094       +0.104/+0.023       +0.102/+0.006
+      hp_sd                  +1.000/+0.999       +0.999/+0.999       +0.999/+0.997       +0.997/+0.988
+      p_ratio                +0.999/+0.996       +0.999/+0.971       +0.999/+0.435       +0.999/+0.244
+      mean_grad              +1.000/+1.000       +1.000/+0.999       +0.999/+0.998       +0.999/+0.996
+
+  --- noise 'merged' (x0.25 single-frame, median modelled sigma 3.69 DN) ---
+    TRUTH CHANNEL (noiseless source; analytic SNR/(1+SNR) for FRC):
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C    0.2736    0.1446
+      frc_cross_0_5      0.4961C   0.4961C    0.4754     0.254    0.1357
+      frc_at_fsig              1    0.9999     0.999    0.1151  6.40e-07
+      hp_sd                562.5     437.5       311     166.5     65.66
+      p_ratio            0.07304   0.02011  9.00e-04  3.62e-08  9.05e-13
+      mean_grad             2932      2403      1721      1063     632.6
+
+    MEASURED, shared-noise fraction rho = 0
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C    0.2711     0.144
+      frc_cross_0_5      0.4961C   0.4961C    0.4756    0.2529    0.1358
+      frc_at_fsig              1    0.9999    0.9991   0.06265  0.007955
+      hp_sd                562.6     437.5       311     166.6     65.76
+      p_ratio            0.07305   0.02011  9.06e-04  8.23e-06  9.89e-06
+      mean_grad             2932      2403      1721      1063     632.8
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig         (no-pred-change)    (no-pred-change)       +1.059/+1.281       +0.992/+0.339
+      hp_sd                  +1.000/+1.000       +1.000/+1.000       +1.000/+1.000       +1.000/+0.999
+      p_ratio                +1.000/+1.000       +1.000/+0.999       +1.000/+0.626       +1.000/+0.355
+      mean_grad              +1.000/+1.000       +1.000/+1.000       +1.000/+1.000       +1.000/+1.000
+
+    MEASURED, shared-noise fraction rho = 0.5
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C    0.3839      0.19
+      frc_at_fsig              1    0.9999    0.9995    0.5398    0.4895
+      hp_sd                562.6     437.5       311     166.6     65.76
+      p_ratio            0.07304   0.02012  9.07e-04  8.26e-06  9.93e-06
+      mean_grad             2932      2403      1721      1063     632.8
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig         (no-pred-change)    (no-pred-change)       +0.520/+0.285       +0.511/+0.050
+      hp_sd                  +1.000/+1.000       +1.000/+1.000       +1.000/+1.000       +1.000/+0.999
+      p_ratio                +1.000/+1.000       +1.000/+0.998       +1.000/+0.626       +1.000/+0.354
+      mean_grad              +1.000/+1.000       +1.000/+1.000       +1.000/+1.000       +1.000/+1.000
+
+    MEASURED, shared-noise fraction rho = 0.9
+      metric                sb=0    sb=0.5      sb=1      sb=2      sb=4
+      frc_cross_1_7      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_cross_0_5      0.4961C   0.4961C   0.4961C   0.4961C   0.4961C
+      frc_at_fsig              1         1    0.9999    0.9088    0.8978
+      hp_sd                562.6     437.5       311     166.6     65.76
+      p_ratio            0.07304   0.02012  9.08e-04  8.29e-06  1.01e-05
+      mean_grad             2932      2403      1721      1063     632.8
+    RECOVERY   rec_lin / rec_log
+      frc_cross_1_7        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_cross_0_5        (both-censored)     (both-censored)     (both-censored)     (both-censored)
+      frc_at_fsig         (no-pred-change)    (no-pred-change)       +0.103/+0.044       +0.102/+0.008
+      hp_sd                  +1.000/+1.000       +1.000/+1.000       +1.000/+1.000       +1.000/+0.999
+      p_ratio                +1.000/+1.000       +1.000/+0.998       +1.000/+0.626       +1.000/+0.354
+      mean_grad              +1.000/+1.000       +1.000/+1.000       +1.000/+1.000       +1.000/+1.000
+
+================================================================================================
+SUMMARY -- rec_lin at sb = 2.0 px, 'merged' noise, rho = 0.  This is the BEST
+case available to every metric: independent noise, no common mode at all.
+  metric                 S3-flat       S1-real      S2-synth   verdict
+  frc_cross_1_7               --            --            --   NO POWER -- undefined on both detail sources (both-censored)
+  frc_cross_0_5               --            --            --   NO POWER -- undefined on both detail sources (both-censored)
+  frc_at_fsig             +1.014        +0.996        +1.059   HAS POWER; fires on the FLAT source too (rule 9)
+  hp_sd                   +0.967        +1.000        +1.000   HAS POWER; fires on the FLAT source too (rule 9)
+  p_ratio                 +1.000        +1.000        +1.000   HAS POWER; fires on the FLAT source too (rule 9)
+  mean_grad               +0.978        +0.999        +1.000   HAS POWER; fires on the FLAT source too (rule 9)
+
+CENSORING LADDER -- how much blur must be planted before the 1/7 crossing
+stops being a bound and becomes a value?  rho = 0 throughout.
+  S3-flat-119  frame  : blurred arm first uncensored at sb=1; the sb=0 REFERENCE is CENSORED -> no ratio to a reference can be formed
+  S3-flat-119  merged : blurred arm first uncensored at sb=1; the sb=0 REFERENCE is CENSORED -> no ratio to a reference can be formed
+  S1-real-119  frame  : blurred arm first uncensored at sb=1; the sb=0 REFERENCE is CENSORED -> no ratio to a reference can be formed
+  S1-real-119  merged : blurred arm first uncensored at sb=1; the sb=0 REFERENCE is CENSORED -> no ratio to a reference can be formed
+  S2-synth     frame  : blurred arm first uncensored at sb=1; the sb=0 REFERENCE is CENSORED -> no ratio to a reference can be formed
+  S2-synth     merged : blurred arm first uncensored at sb=2; the sb=0 REFERENCE is CENSORED -> no ratio to a reference can be formed
+
+MECHANISM -- the shared-noise sweep on the one FRC statistic that is never
+censored (frc_at_fsig), rec_lin at sb = 2.0, 'merged' noise:
+  S3-flat-119  rho=0: +1.014   rho=0.5: +0.515   rho=0.9: +0.105
+  S1-real-119  rho=0: +0.996   rho=0.5: +0.507   rho=0.9: +0.103
+  S2-synth     rho=0: +1.059   rho=0.5: +0.520   rho=0.9: +0.103
+
+wrote out/a11_results.json
