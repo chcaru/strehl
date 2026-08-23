@@ -3,6 +3,34 @@
 **Milestone:** M10. **Target:** SYNTHESIS risk 11 — neither of the project's two
 alignment strategies survives a 100+ frame stack.
 **Experiment:** [`experiments/m10-deep-align/`](../../experiments/m10-deep-align/).
+
+> **Independently reproduced by the orchestrator before folding, with two corrections.**
+>
+> **The central conservation identity reproduces exactly.** Recomputed from `coffee-bean-edges.csv`
+> with independent code: span-1 telescoping total **−1.6875%** (published −1.6876%), span-16
+> **−5.8754%** endpoint-normalised (published −5.8891%), and the monotone ramp holds across all 14
+> spans. **The whole ruling table reproduces to three decimal places** — 5.875 / 6.591 / 6.822 /
+> 6.997 / 9.037 / 14.549 / 24.011 / 40.342 px — as do the **76/105** fixed-reference coverage and
+> the **frame-73** first failure. Direct long anchors are exact: 119MSDCF **−1.01850%**,
+> 109MSDCF **−1.85440%** (the convention is `log a × 100`, which the report does not state).
+> Gates re-run: fmt clean, clippy clean, **67 tests**.
+>
+> **Correction 1 — "agrees to five significant figures" is circular and must not be quoted.**
+> On a 33-frame stack the **span-32 ladder *is* the single direct 0→32 edge**: the same measurement
+> reported twice, so the agreement is exact by construction and carries no information. The genuine
+> evidence is the **monotone convergence** of spans 1→16 toward the anchor
+> (−0.464 → −0.581 → −0.805 → −0.927 → **−1.022%** against −1.0185%), which I reproduced and which
+> is clean. Fact 44 is folded in that corrected form. See SYNTHESIS §5 item 20.
+>
+> **Correction 2 — the "3.33×" ratio is not derived from a stated rule.** span-16/span-1 gives
+> **3.49×**; plateau-mean/span-1 gives **3.25×**. Folded as a range, **~3.2-3.5×**, not a point.
+> *(Separately, this milestone's summary message quoted span 4 as −3.79%; the committed data and
+> this report both say **−2.4119%**, which is what I reproduce. The report is correct.)*
+>
+> **Not a correction, but worth recording:** this report **retracts one of its own claims** in §1.2
+> (that P1 reproduced M3 §0 verbatim) rather than quietly editing it, and it **declined** to fit a
+> span-dependent shrinkage correction because there is only one deep stack and the test would not
+> have been out-of-sample. Both are the right calls.
 **Registered design:** [`PREREGISTRATION.md`](../../experiments/m10-deep-align/PREREGISTRATION.md),
 written before any solver ran, amended once (dated, pre-data) in its §8.
 

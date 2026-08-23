@@ -58,20 +58,44 @@ monolithic binary and ship only that binary.
 5. **Fit geometry at runtime; do not bake it.** Scale drift and the scale
    centre are per-stack quantities. Only sensor calibration belongs in a
    profile, and profiles live in data files.
-6. **Never chain alignments.** Align every frame against a fixed reference,
-   never against its predecessor. Measured: chaining 21 adjacent pairs
-   underestimates drift by 32%, which is 25 px at the sensor corner, because
-   sub-pixel pixel locking is a systematic bias that compounds. Direct fits are
-   also embarrassingly parallel. See `docs/research/M3-alignment-measured.md`.
-   **Qualified by M6 — the rule is right at 22 frames and breaks at 105.** On a
-   105-frame stack, direct-to-frame-0 alignment degrades badly and in places
-   fails outright: 3 of 104 pairs produced no fit at all, and those that did
-   used a median of 18 of 96 tiles at 4.61 px rms, because frames 0 and ~90
-   share almost no correlatable in-focus content (fact 4). **Neither chaining
-   nor a single fixed reference works for deep stacks**, so a deep-stack
-   strategy is an open design problem, not a solved one. Do not chain to escape
-   it; M6 worked around it with a smoothed anchor model fitted across the stack.
-   See `docs/research/M6-residual-halo-measured.md`.
+6. **Never chain alignments, and never rely on a single fixed reference on a
+   deep stack.** Both halves are measured, and the *reason* chaining fails is
+   not the one originally assumed.
+
+   Chaining is not merely noisy. **Short-baseline edges under-report
+   magnification change by ~3.2-3.5x** — on `coffee-bean` the span-1 telescoping
+   ladder totals −1.6876% against span-16's −5.8891%, with a monotone ramp
+   between them (2.19x on 119MSDCF, 1.43x on 109MSDCF). Any span must telescope
+   to the same total, so the gap is pure bias. It is **coherent**, so composing
+   104 edges yields **40.3 plane px** of corner error with **36.4 px in scale
+   alone**. The cause needs a real inter-frame content change and lives below
+   ~0.5 px of differential displacement: a resampler-free control recovers a
+   planted increment at ratio 1.00, the same increment on a real defocus pair
+   recovers at 0.56. **Short baselines look best by tile residual while being
+   worst by truth — never judge an edge by its residual.**
+
+   A single fixed reference fails differently: on a 105-frame stack it places
+   only **76 of 105** frames, first failing at frame 73, because focus has swept
+   the subject and the endpoints share no correlatable in-focus content
+   (fact 4).
+
+   **Do this instead.** Measure a sparse multiscale set of **direct** pairwise
+   fits (a span ladder such as 1,2,3,4,6,8,12,16,24,32,48,64 plus every frame-0
+   pair), composing nothing. **Discard spans 1-2 from the solve.** Then run one
+   global linear least squares for per-frame `(log a, theta, tx, ty)` with Huber
+   IRLS — `unit` weighting on deep stacks, `invvar` on shallow ones. This places
+   105/105 frames at **6.76 plane px** held-out, and 0.58-0.67 px on shallow
+   stacks. **Restrict the solution to the connected component containing the
+   anchor** and report the rest unplaced: an unconstrained minimum-norm solve
+   emits ~1e16 while still reporting full coverage. Verify with cycle
+   consistency and held-out long-edge prediction, and **check the training
+   graph's cycle rank first — a solve over a tree is chaining in disguise**, and
+   any comparison against a chain is then vacuous.
+
+   6.76 px is not good enough for a final render. Treat deep-stack alignment as
+   **usable, not solved** (SYNTHESIS risk 11). See
+   `docs/research/M10-deep-alignment-measured.md` and
+   `docs/research/M3-alignment-measured.md`.
 7. **Never compute statistics over the full decoded buffer.** `rawler` returns
    7168x5120 for the A7C II but fills only the 7032x4688 active area. The rest
    is synthetic zeros, not black level.
@@ -126,6 +150,7 @@ monolithic binary and ship only that binary.
 | `M7-gpu-focus-measured.md` | **The fusion prize, priced.** Ring-difference focus + merge on the GPU is **4.117 ms / 22 frames**, bandwidth-bound at 84% of measured DRAM read. Fusing focus into the merge saves **1.45 ms = 0.14% of the pipeline** — *not* enough to justify constraining plugins to spliceable WGSL. Answers risk 10 / question 11; fact 21 is CPU-time-under-concurrency and cannot bound a GPU design |
 | `M8-scratch-measured.md` | **Decoder scratch, and the term that was actually missing.** Scratch is **39.36 ± 0.11 MiB per concurrent decode**, file-size proportional. But **most of the planner's error was never scratch** — peak resolves into `14.4 MiB floor + live x 342.8 MiB + ⌈log₂ chunks⌉ x 110.04 MiB`, that last term being one `Selection` per level of rayon's reduce tree (= `px x 14`, 550 MiB at 18 chunks). Recommends the worker cap 20 → 16. **Also refutes SYNTHESIS §3.2.1 assertions 1 and 2 at assertion 1's own specified pair**, and finds the "379 vs 321 MB" per-worker gap was a MiB/MB unit mismatch |
 | `M9-support-coupling-measured.md` | **What the merge is actually coupled to, and why nothing goes on the interface for it.** Argmax's noise excess tracks the focus operator's **centre-tap sensitivity fraction φ** (ρ = **+0.918 / +0.894**, p < 0.0001), **not** its support radius (ρ = −0.170 / −0.243, n.s.); a zero-centre-tap Sobel shows **no excess at all (0.9952x)**. For a ring difference **φ = 1/(2·(2·inner+1)²) and the outer radius cancels exactly**, so the proposed `support_px()` would have reported the one term that provably does not matter. **Rejects §3.4.1 B3** — the last Blocking verdict standing on an unmeasured claim — and reinterprets (does not retract) fact 25. Also: the flat-ROI noise objective is **monotone-then-flat with no interior optimum**, and regularising can *harm* |
+| `M10-deep-alignment-measured.md` | **Deep-stack alignment: why chaining really fails, and what works instead.** Chaining does not fail from accumulated random error — **short-baseline edges under-report magnification change by ~3.2-3.5x**, coherently, so 36.4 of the chain's 40.3 px corner error is scale alone. Proved by a telescoping conservation identity (span-1 −1.6876% vs span-16 −5.8891%), then isolated: the bias needs a **real inter-frame content change** and lives **below ~0.5 px** of differential displacement (resampler-free control recovers a planted increment at 1.00; a real defocus pair at 0.56). A global least-squares solve over a sparse multiscale graph of direct edges places **105/105 frames at 6.76 plane px** against a fixed reference's **76/105**. Error is bounded by the *edges*, not the solver. Also: the scale centre is per-stack, not per-rig. **Risk 11 → partially solved; rule 6 rewritten**; facts 43-48 |
 | `M11-focus-bakeoff-measured.md` | **What to select with, and what selection costs.** A 47-operator pre-registered bake-off on two real stacks, scored on a measured Pareto front of selectivity against noise excess. **The shipped `ring(1,3)` ranks 26-27th of 36** (N = 1.3475x, ~45% of the best selectivity); the recommendation is **Tenengrad under an 11x11 box window** (N = 1.1324x) — re-tuning the ring cannot close the gap. Headline: **no operator anywhere on the front is noise-free** (0 of 36 reach N ≤ 1.02x), so operator choice alone cannot rescue a selector. Zero-centre-tap operators *are* noise-free (φ = 0.0000, Ncorr 0.989-0.997) but recover only 34-40% of a planted focus surface. **Windowing and normalisation each re-introduce a centre tap, additively** — so φ must be probed on the whole configured stage, not the kernel. Closes risk 2; facts 37-42 |
 | `A-prior-corpus.md` | The prior attempt, filtered; includes retractions |
 | `B-algorithms-sota.md` | Algorithmic state of the art per stage |

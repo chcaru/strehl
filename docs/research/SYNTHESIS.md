@@ -290,6 +290,12 @@ decode (CPU, rayon ACROSS files -- 2.5x over one-at-a-time, MEASURED M1)
              scale centre regularised toward the principal point.
              No chaining. No global model of transform vs frame index.
              (MEASURED M3: 13-16 ms/frame, 0.78-0.96 s for a 60-frame stack)
+             SUPERSEDED FOR DEEP STACKS by M10: a fixed reference places only 76/105 frames.
+             Use a sparse multiscale graph of DIRECT pairwise fits (discard spans 1-2), then
+             one global Huber-IRLS least squares for per-frame (log a, theta, tx, ty),
+             restricted to the anchor's connected component. 105/105 at 6.76 plane px
+             held-out; 0.58-0.67 px on shallow stacks. The scale centre is fitted PER STACK
+             (fact 48), not per rig. NOT YET IMPLEMENTED in crates/.
   ->  focus volume (Tenengrad = Sobel gradient energy under an 11x11 box window, per CFA plane,
              vs calibrated noise floor. MEASURED M11: replaces the multi-scale ring-difference,
              which ranked 26-27th of 36 operators and cannot be rescued by re-tuning its radii.
@@ -727,6 +733,12 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 40 | **The two axes are governed by different structural variables.** Over 36 operators: **φ predicts noise excess (ρ = +0.583) and not selectivity (ρ = −0.088); support radius predicts selectivity (ρ = +0.553) and not noise (ρ = −0.009)** | **This separation is why a Pareto front exists at all** — selectivity can be bought with support without paying in noise, provided centre-tap sensitivity is not bought along with it. **Fact 35 is scoped, not weakened.** M11 read its ρ = +0.583 as weakening M9's +0.918 / +0.894, but the two are measured over different populations and Spearman's ρ is not population-free. Restricting M11's set to the ring and `dsml` families M9 actually sampled gives **ρ = +0.783**, and the sequence is monotone in heterogeneity: **+0.918/+0.894** (designed crossed grid) → **+0.783** (comparable subset) → **+0.583** (heterogeneous 36). Fact 39 explains why: φ is not the same construct across M11's set. **What replicates unconditionally is the direction and the support null (−0.009, exact)** | M11 (MEASURED); **scoping correction VERIFIED independently** |
 | 41 | **The ring difference is a poor focus measure and the shipped constants are among its worse settings.** `ring(1,3)` ranks **26-27th of 36**: N = **1.3475x**, selectivity **41-49%** of best. The best ring in a 7-configuration sweep, `ring(3,8)`, reaches only **58-60%**. **Tenengrad under an 11x11 box window** reaches **85-99%** at N = **1.1324x** for 7% more cost | **Re-tuning the ring radii cannot close the gap; the operator should be replaced.** Cost is near-irrelevant — M7 measured the whole fused focus+merge at 4.117 ms/22 frames, bandwidth-bound, so this stage is not the bottleneck. *(Ranges span M11's single-stack normalisation and my two-stack pooling; the **ordering is identical under both**, which is what the ruling rests on)* | M11 (MEASURED); ordering VERIFIED independently |
 | 42 | **A joint selectivity/noise objective has an interior optimum in regulariser width; a noise-only objective does not.** Fact 36's boundary-running replicates for noise alone, but on a planted **tilted** depth surface (16-32 frames of depth across 256 px) selectivity peaks near **width 17** and declines by width 33. On a fronto-parallel surface it never turns over | **Tuning a regulariser on fronto-parallel test data will run to the sweep edge and destroy real depth structure.** This is the constructive repair of fact 36 — the objective was under-specified, not broken. **It also means any focus-stacking benchmark built on flat test targets is measuring the wrong thing:** the tilt is what makes the optimum exist | M11 (MEASURED) |
+| 43 | **Short-baseline alignment edges under-report magnification change by ~3.2-3.5x.** On `coffee-bean`, telescoping span-1 edges total **−1.6876%** while span-16 edges total **−5.8891%**, and the ramp is monotone across 14 spans: −1.69, −2.08, −2.30, −2.41, −2.53, −2.83, −3.49, −4.35, −5.14, −5.89, then a plateau near −5.2 to −5.8. The identity `Σ log a` over any span must give the same total; it does not. 2.19x on 119MSDCF, 1.43x on 109MSDCF | **This is why chaining fails, and it is not what anyone assumed.** The failure is not accumulated *random* error — it is a **coherent** shrinkage, which is why composing 104 edges gives 40.3 px of corner error with **36.4 px of it in scale alone**. *(Reproduced independently from the raw edge CSV: span 1 = −1.6875%, span 16 = −5.8754% endpoint-normalised. The "3.33x" in M10's report is not derived from a stated rule — span16/span1 gives 3.49x, plateau-mean/span1 gives 3.25x; **quote the range, not the point**)* | M10 (MEASURED); VERIFIED independently |
+| 44 | **Long edges are the correct ones.** Where a trustworthy long anchor exists it agrees with the long-span ladder: 119MSDCF's ladder climbs −0.464 → −0.581 → −0.805 → −0.927 → **−1.022%** across spans 1→16 against a direct 0→32 edge of **−1.0185%** (78 tiles, rms 1.24); 109MSDCF's span-1 ladder reads −1.296% against a direct 0→21 edge of **−1.8544%** (61 tiles, rms 1.11) | **This fixes the *direction* of fact 43** — short edges are shrunk, long edges are right — which the conservation identity alone cannot do. *(Direct-anchor figures reproduced exactly. **But M10's "agrees to five significant figures" is circular and must not be quoted:** on a 33-frame stack the span-32 ladder **is** the single direct 0→32 edge, the same measurement reported twice. The real evidence is the **monotone convergence** across spans 1→16, which is genuine and which I reproduced)* | M10 (MEASURED); **corrected on verification** |
+| 45 | **The shrinkage requires a real inter-frame content change and lives below ~0.5 px of differential displacement.** A resampler-free band-limited field recovers a planted magnification increment at ratio **1.008 / 0.991** at 0.12 / 0.24 px; the same increment planted on a *real defocus pair* recovers at **0.559 / 0.664**, IQRs disjoint. Above 0.48 px both are unbiased | **So it is neither the resampler nor the estimator's response to geometry** — the two explanations that would have made it an artifact. It needs real defocus change between the frames. Calling it "pixel locking amplified by the defocus step" stays **ARGUED**: a marginal-response model does not account for the ladder at spans 4-8. **Consequence: short baselines look *best* by tile residual while being *worst* by truth — never judge an edge by its residual** | M10 (MEASURED; mechanism ARGUED) |
+| 46 | **A global solve over direct edges covers a deep stack; a fixed reference does not.** On 105 frames a fixed reference places **76/105** (first failure at frame 73); a global least-squares solve over a sparse multiscale graph places **105/105 at 6.76 plane px** held-out, against the chain's **40.3 px**. On shallow stacks the same method reaches **0.58-0.67 px** and agrees with the known-good fixed reference to median 0.305 px (109) / 0.582 px (119) | **Risk 11 moves from open to bounded.** *(Every row of the ruling table reproduced to 3 decimals from the committed CSVs — 5.875 / 6.591 / 6.822 / 6.997 / 9.037 / 14.549 / 24.011 / 40.342 — and the 76/105 coverage and frame-73 first failure are exact)* | M10 (MEASURED); VERIFIED independently |
+| 47 | **Deep-stack alignment error is set by the pairwise measurements, not the solver.** An in-sample solve that has *seen* the test edges reaches only **5.875 px** against the best out-of-sample **6.591 px**, and the raw edges' own cycle consistency is **6.83 px** at leg 8-15 and **13.03 px** at leg 32-104 | **Better solvers cannot help; better *edges* can.** This is what makes 6.76 px a floor rather than a tuning target, and it points all remaining effort at fact 43's shrinkage. It also means the parametric-model win is small — a degree-6 polynomial captures 96.7% of the 116 px corner motion and a straight line 93.9%, a ~6% gain that sits inside the noise | M10 (MEASURED) |
+| 48 | **The scale centre is not a constant of the optics.** Fitted per stack: 109MSDCF **(−27, −131)** sensor px — independently corroborating M3's **(−22, −113)** from a different estimator path — but coffee-bean **(+425, −449)** and 119MSDCF **(−106, −378)** | **One centre per stack survives the falsifier; one centre per rig does not.** So the scale centre must be **fitted at runtime and never baked** — which is what project rule 5 already says, now with a measured reason rather than a cautious one. Another instance of §4.1: this is an *artifact of the capture*, not a calibration constant of the lens | M10 (MEASURED) |
 | 26 | **Every existing test stack was shot with a 2x teleconverter**, disclosed only after M1-M4 were complete. `LensModel = "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"`, `LensSpec = "FE 200mm F5.6 Macro OSS"`, `FocalLength = 200 mm`, `MaxApertureValue = 5.6`. The body composes the TC into reported focal length and aperture; **the maker-note lens ID does not** — it still reads as the bare lens | Two consequences. **(a)** Anything reading `FocalLength`/`FNumber` from EXIF is already TC-correct, so there is no hidden 2x error in the advisor. **(b)** **Keying a lens profile on the lens ID is a bug**: it would apply bare-lens constants to a composed path with a different `p`, twice the focal length and two more stops. The profile key must be the *composed optical path*, and every profiled constant must be measured for the combination actually in use | MEASURED-LOCALLY (exiftool, all three stacks, every frame) |
 | 27 | **The bellows factor of the composed path is `B = (1 + m/p) ∈ [2.41, 3.06]`**, point estimate 2.6-2.9, measured from the diffraction cutoff in the raw CFA. At f/11 the green-quincunx spectrum has a genuine knee at **f_sig = 0.2762 cyc/px**, above which the floor matches the photon-transfer noise model to **0.950x** — so it is a real optical cutoff, not a fitted plateau. **`B = 5` (p = 0.5) is REFUTED 5/5 by a model-free test** at two apertures: there is optical signal at 0.3508 cyc/px, where p=0.5 permits none. **`B = 1` is refuted by ~3x** | **The corpus's "dominant uncertainty in the whole advisor" (±38%) is retired to −20%/+2%, from data the owner already had, with no bench work.** With m ≈ 2.0, **p ≈ 1.0-1.4** — the working assumption of p=1 was right. It does **not** vanish: M5 measures the product `(1 + m/p)` and cannot separate `p` from `m`, so `B` is known at *one* magnification only. A bench measurement of `p` alone would give `B` at any magnification | M5 (MEASURED → DERIVED; independently reproduced) |
 | 28 | **EXIF `FNumber` is the *marked* aperture and is NOT bellows-corrected.** The body composes the teleconverter into `FocalLength` and `FNumber` (fact 26) but applies no correction for working at 2:1. **Marked f/11 is optically f/33** | **The most directly actionable finding in the corpus.** Every advisor formula that reads `FNumber` and treats it as `N_eff` **under-predicts diffraction blur by ~3x** and will recommend f/11 as "safe". Apply `N_eff = FNumber_exif * B`. Consequences at B=3: f/8 discards **40%** of the sensor's 2-D Nyquist area (46% of contrast at 4-px detail), f/11 discards **68%** (90%) — a 33 MP sensor used as ~10.5 MP. Critical sampling is at **N_marked = f/6.21** | M5 §7 (DERIVED, factor-of-3 margin) |
@@ -896,6 +908,30 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      and the direction and the null, which are the parts that carry the mechanism, replicated exactly
      (support null −0.009).
 
+18. **Reach for a conservation identity before reaching for a better estimator.** M10's span ladder
+     was first suspected to be a median-vs-mean weighting artifact. A pure telescoping sum — no
+     median, no weighting, no solver, just `Σ log a` over a fixed span, which *must* give the same
+     total for every span — settled it in one calculation and left nothing to argue with. **When a
+     quantity is subject to a conservation law, check the law first.** It is cheaper than any
+     estimator comparison and immune to every objection about weighting.
+
+19. **Zero failures is not zero error.** M10's `wide64` config produced **0 no-fit pairs out of
+     1601** where the default produced 140, which looked like the win. Its cycle consistency was
+     **35.2 px against 13.0 px**, and it was the only config with a significantly positive
+     error-vs-span slope. **It was not fitting harder; it was failing silently.** A robustness
+     variant that converts failures into wrong answers is strictly worse than one that reports
+     failure. **Always score a "more robust" variant on an independent metric, never on its own
+     failure count.**
+
+20. **Do not corroborate a measurement with itself.** M10 reported that 119MSDCF's span ladder
+     "agrees to five significant figures" with its direct long anchor. On a 33-frame stack the
+     **span-32 ladder *is* the single direct 0→32 edge** — the same number reported twice, so the
+     agreement is exact by construction and carries no information. The genuine evidence was sitting
+     next to it: the **monotone convergence** of spans 1→16 toward the anchor. **Before quoting an
+     agreement, check that the two quantities were computed from disjoint measurements** — and treat
+     any agreement to five significant figures between two noisy estimates as a bug report, not a
+     result.
+
 ---
 
 ## 6. Novelty — verified gaps, labelled as bets
@@ -1001,6 +1037,32 @@ Recorded with their queries; **all are UNVERIFIED as wins, and none is on the v1
     **Mitigation: treat deep-stack alignment as an open design problem, not a solved one.** It is
     plausibly the single largest remaining unknown in §3.3, and 100+ frame stacks are the normal
     case for macro, not the exotic one. Do not let the skeleton's 22-frame success imply otherwise.
+
+    > **STATUS: PARTIALLY SOLVED by M10 — usable, not solved.** A global least-squares solve over a
+    > sparse multiscale graph of **direct** pairwise fits (never composing anything) places **all
+    > 105 frames at 6.76 plane px** held-out corner error, against **76/105 coverage** for a fixed
+    > reference and **40.3 px** for a chain. On shallow stacks it reaches **0.58-0.67 px**, at the
+    > estimator floor. That is usable for a working pipeline and **not good enough for a final
+    > render** — M10's pre-registered `T_usable` was 4.0 px and it missed.
+    >
+    > **The cause is now named, and it is not what this risk assumed.** Chaining does not fail from
+    > accumulated *random* error. **Short-baseline edges under-report magnification change by
+    > ~3.2-3.5x** (fact 43), coherently, so 36.4 px of the chain's 40.3 px is scale alone. The bias
+    > needs a real inter-frame content change and lives below ~0.5 px of differential displacement
+    > (fact 45) — it is not the resampler and not the estimator's response to geometry.
+    > **Operationally: discard spans 1-2 from the solve, and never judge an edge by its residual**,
+    > because short baselines look best by residual while being worst by truth.
+    >
+    > **The residual risk is bounded below by the measurements, not the solver** (fact 47): an
+    > in-sample solve reaches only 5.875 px, and the edges' own cycle consistency is 6.8-13.0 px at
+    > long spans. Better solvers cannot help; better *edges* can.
+    >
+    > **What remains open** is no longer "can a deep stack be aligned globally" — it can — but
+    > **"can the short-baseline shrinkage be calibrated away, and does 6.76 px still matter after
+    > the depth map is applied?"** M10 explicitly **declined** to fit a span-dependent correction,
+    > because fitting and testing it on the same 105 frames would not be out-of-sample and **there
+    > is only one deep stack**. That is the right call and it names the next capture: a **second
+    > deep stack**, ideally of a different subject, is now the cheapest way to make progress here.
 
 ---
 
