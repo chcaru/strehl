@@ -363,6 +363,24 @@ pub struct Estimator {
     /// has been passed. `None` means the estimator is running the plain
     /// uncensored mean and [`Estimator::value`] takes its original path.
     censor_level: Option<u16>,
+    /// Per-pixel accumulators for the **admitted-frame green-luma variance**,
+    /// in `f64`. Empty unless [`Estimator::track_disagreement`] has been called.
+    ///
+    /// This is the sufficient statistic for "how much do the frames the merge
+    /// actually averages disagree with each other, in units the noise model
+    /// predicts". It is a pair of running sums, so it is order-independent,
+    /// reduces additively under [`Estimator::absorb`], and needs **no third
+    /// pass over the frames** — see [`Estimator::disagreement`] for what it can
+    /// and cannot support.
+    ///
+    /// `f64` and not `f32` on purpose. Over 100 frames of ~15000 DN luma the
+    /// sum of squares reaches ~2.4e10 while the variance being recovered from
+    /// it is ~1e3, so `sumsq/n - mean^2` cancels about seven significant
+    /// figures. `f32` carries roughly seven; `f64` carries sixteen. The
+    /// f32-accumulated `sum` field above is *not* reused for the mean for the
+    /// same reason.
+    luma_sum: Vec<f64>,
+    luma_sumsq: Vec<f64>,
     frames: u32,
 }
 
@@ -380,8 +398,35 @@ impl Estimator {
             n: vec![0; n],
             censor: Vec::new(),
             censor_level: None,
+            luma_sum: Vec::new(),
+            luma_sumsq: Vec::new(),
             frames: 0,
         }
+    }
+
+    /// Begin accumulating the admitted-frame green-luma variance.
+    ///
+    /// Opt-in, like [`Estimator::fold_censored`]'s censoring, and for the same
+    /// reason: it costs **16 B/px** and most callers do not want it. It must be
+    /// called before the first fold; calling it after some frames are already
+    /// folded would silently produce a variance over a subset, so that panics.
+    ///
+    /// It **cannot change the merged image.** Nothing in [`Estimator::value`],
+    /// [`Estimator::n_eff`] or the gate reads these accumulators.
+    pub fn track_disagreement(&mut self) {
+        assert_eq!(
+            self.frames, 0,
+            "track_disagreement must be called before the first fold, or the \
+             variance is taken over a subset of the admitted frames"
+        );
+        let n = self.geom.pixels();
+        self.luma_sum = vec![0.0; n];
+        self.luma_sumsq = vec![0.0; n];
+    }
+
+    /// Is this estimator accumulating the admitted-frame variance?
+    pub fn tracks_disagreement(&self) -> bool {
+        !self.luma_sum.is_empty()
     }
 
     pub fn geometry(&self) -> PlaneGeometry {
@@ -403,6 +448,7 @@ impl Estimator {
     pub fn allocated_bytes(&self) -> usize {
         self.geom.pixels() * (4 * size_of::<f32>() + 2 * size_of::<u16>() + size_of::<f32>())
             + self.censor.len()
+            + (self.luma_sum.len() + self.luma_sumsq.len()) * size_of::<f64>()
     }
 
     /// Is this plane's estimate at this pixel a **lower bound** rather than a
@@ -463,7 +509,7 @@ impl Estimator {
         src: &S,
         regularised: &[f32],
     ) -> Result<()> {
-        self.fold_inner(frame_index, src, regularised, None)
+        self.fold_inner(frame_index, src, regularised, None, 1.0, 0.0)
     }
 
     /// [`Estimator::fold`], plus the saturation bookkeeping the plain fold
@@ -500,7 +546,53 @@ impl Estimator {
         regularised: &[f32],
         container_max_dn: u16,
     ) -> Result<()> {
-        self.fold_inner(frame_index, src, regularised, Some(container_max_dn))
+        self.fold_inner(
+            frame_index,
+            src,
+            regularised,
+            Some(container_max_dn),
+            1.0,
+            0.0,
+        )
+    }
+
+    /// [`Estimator::fold_censored`], with a per-frame photometric scale applied
+    /// to the **disagreement accumulator only**.
+    ///
+    /// `L' = black_dn + (L - black_dn) * luma_scale`. The four `sum` planes,
+    /// `n_eff`, the gate and the censoring bits are all untouched, so **this
+    /// cannot change the merged image** — it changes only what
+    /// [`Estimator::disagreement`] reports.
+    ///
+    /// It exists to price one specific rival explanation. Per-frame
+    /// photometric drift is present across most of the corpus (fact 180: 0.91%
+    /// peak-to-peak on `109MSDCF`, 11.70% on `coffee-bean`), and M31-V refuted
+    /// fact 220's mechanism by showing the residual it measured was
+    /// **photometric, not geometric**. So before any disagreement is attributed
+    /// to scene motion, it has to survive removing a scalar per frame. Fact 225
+    /// fixes how that scalar must be estimated: **the mean over all pixels**,
+    /// never a median over a subject-centred region, which absorbs focus signal
+    /// into what it calls gain.
+    ///
+    /// The scale multiplies the signal *above black*, because gain acts on
+    /// photoelectrons and the black level is an offset, not a signal.
+    pub fn fold_censored_probing_photometry<S: QuadSource + ?Sized>(
+        &mut self,
+        frame_index: u16,
+        src: &S,
+        regularised: &[f32],
+        container_max_dn: u16,
+        luma_scale: f32,
+        black_dn: f32,
+    ) -> Result<()> {
+        self.fold_inner(
+            frame_index,
+            src,
+            regularised,
+            Some(container_max_dn),
+            luma_scale,
+            black_dn,
+        )
     }
 
     fn fold_inner<S: QuadSource + ?Sized>(
@@ -509,6 +601,8 @@ impl Estimator {
         src: &S,
         regularised: &[f32],
         censor_level: Option<u16>,
+        luma_scale: f32,
+        black_dn: f32,
     ) -> Result<()> {
         let geom = src.geometry();
         if geom != self.geom {
@@ -558,6 +652,7 @@ impl Estimator {
                 if !admitted {
                     continue;
                 }
+                let mut greens = [0u16; 2];
                 for (s, (ox, oy)) in off.iter().enumerate() {
                     let row = if *oy == 0 { row0 } else { row1 };
                     let v = row[2 * px + ox];
@@ -566,7 +661,31 @@ impl Estimator {
                     {
                         self.censor[i] |= 1 << if winner { s } else { s + 4 };
                     }
+                    // Slots 1 and 3 are G1 and G2 -- see `Estimator::slot`.
+                    if s == 1 {
+                        greens[0] = v;
+                    } else if s == 3 {
+                        greens[1] = v;
+                    }
                     self.sum[s][i] += v as f32;
+                }
+                if !self.luma_sum.is_empty() {
+                    // The same `L = (G1 + G2)/2` the output and the noise model
+                    // use, and captured from the two samples that were just
+                    // summed above rather than re-read from the source, so the
+                    // variance cannot drift from the mean it belongs to.
+                    let raw = 0.5 * (f32::from(greens[0]) + f32::from(greens[1]));
+                    // `luma_scale == 1.0` on every product path, and the
+                    // compiler cannot know that, so keep the arithmetic exact
+                    // in the common case rather than paying a rounding step for
+                    // a diagnostic that is almost never enabled.
+                    let luma = if luma_scale == 1.0 {
+                        f64::from(raw)
+                    } else {
+                        f64::from(black_dn + (raw - black_dn) * luma_scale)
+                    };
+                    self.luma_sum[i] += luma;
+                    self.luma_sumsq[i] += luma * luma;
                 }
                 self.n[i] += 1;
             }
@@ -611,8 +730,92 @@ impl Estimator {
             }
             self.n[i] += other.n[i];
         }
+        if !other.luma_sum.is_empty() {
+            assert!(
+                !self.luma_sum.is_empty(),
+                "one estimator tracked disagreement and the other did not; their \
+                 variances are not commensurable"
+            );
+            for i in 0..self.geom.pixels() {
+                self.luma_sum[i] += other.luma_sum[i];
+                self.luma_sumsq[i] += other.luma_sumsq[i];
+            }
+        } else {
+            assert!(
+                self.luma_sum.is_empty(),
+                "one estimator tracked disagreement and the other did not; their \
+                 variances are not commensurable"
+            );
+        }
         self.frames += other.frames;
         Ok(())
+    }
+
+    /// Noise-normalised disagreement among the frames this pixel actually
+    /// averaged, or `None` where there is nothing to disagree about.
+    ///
+    /// Returns `s2 / sigma_pred^2`, where `s2` is the unbiased sample variance
+    /// of the admitted frames' green luma and `sigma_pred` is what the
+    /// calibrated model predicts for a *single* frame at that luma. **Under the
+    /// null "the admitted frames differ only by sensor noise" the expectation is
+    /// exactly 1.0, for every `n >= 2`** — the null is analytic, so a clean
+    /// stack is a test of this statistic rather than the calibration set for it.
+    ///
+    /// `None` at every pixel where `n_eff == 1`, and that is not a corner case:
+    /// at the shipped gate it is 41.66% of `109MSDCF` and the large majority of
+    /// a stack that cannot reach `n_eff = 3` anywhere. A caller that averages
+    /// this over "the pixels that have it" is measuring a *sub-population*, and
+    /// fact 688 is the standing example of what that costs. Report
+    /// [`Estimator::disagreement_exposure`] beside any aggregate of this.
+    ///
+    /// # What this can and cannot support
+    ///
+    /// It is a **detector, not a corrector.** A variance says the admitted set
+    /// disagrees; it cannot say *which* frame to down-weight, because the
+    /// per-frame residuals were summed away. Recovering those needs either a
+    /// third pass or per-frame state, and §2 of `M60-robustness-mask-at-merge-time.md`
+    /// argues that choice explicitly.
+    ///
+    /// # Panics
+    ///
+    /// If [`Estimator::track_disagreement`] was never called.
+    pub fn disagreement(&self, noise: &NoiseModel, i: usize, black_dn: f32) -> Option<f64> {
+        assert!(
+            !self.luma_sum.is_empty(),
+            "track_disagreement was not called on this estimator"
+        );
+        let n = f64::from(self.n[i]);
+        if n < 2.0 {
+            return None;
+        }
+        let mean = self.luma_sum[i] / n;
+        // Unbiased sample variance, clamped at zero: the two-pass form can go
+        // very slightly negative on a pixel whose frames are all identical.
+        let s2 = ((self.luma_sumsq[i] - n * mean * mean) / (n - 1.0)).max(0.0);
+        let sigma = f64::from(noise.green_luma_sigma((mean - f64::from(black_dn)) as f32));
+        if sigma <= 0.0 {
+            return None;
+        }
+        Some(s2 / (sigma * sigma))
+    }
+
+    /// Fraction of pixels at which [`Estimator::disagreement`] is defined.
+    ///
+    /// This is the **entire surface any robustness mask could ever act on**: a
+    /// pixel that admitted one frame has no disagreement to measure and no
+    /// second frame to prefer. Every aggregate disagreement number in a report
+    /// must be published with this beside it.
+    ///
+    /// # Panics
+    ///
+    /// If [`Estimator::track_disagreement`] was never called.
+    pub fn disagreement_exposure(&self) -> f64 {
+        assert!(
+            !self.luma_sum.is_empty(),
+            "track_disagreement was not called on this estimator"
+        );
+        let exposed = self.n.iter().filter(|&&n| n >= 2).count();
+        exposed as f64 / self.geom.pixels() as f64
     }
 
     /// The merged estimate for one plane at one pixel, in raw DN.
@@ -1590,6 +1793,280 @@ mod tests {
                 whole.has_censored_contributor(CfaPlane::G1, i)
             );
         }
+    }
+
+    // ---- the disagreement instrument (M60) ----
+
+    /// A shot-noise-dominated model, so `sigma_pred` genuinely varies with
+    /// signal.
+    ///
+    /// [`unit_sigma_model`] is the right tool for pinning the variance
+    /// arithmetic, because it makes `sigma_pred` exactly 1.0 and `chi2` is then
+    /// the sample variance itself. But a test that divides by 1.0 has no power
+    /// to notice that the normalisation was dropped, hardcoded, or applied to
+    /// the wrong quantity — subject and object would be the same value (AGENTS
+    /// rule 35). These constants are the A7C II's own order of magnitude but are
+    /// **not** read from `profile.rs`: a plant that shares its constants with
+    /// the code under test cannot fail when that constant is wrong, which is
+    /// fact 738's withdrawal.
+    fn shot_noise_model() -> NoiseModel {
+        let p = PlaneNoise {
+            gain_dn_per_e: 0.3273,
+            read_noise_e: 1.24,
+            levels: Levels {
+                black: 0.0,
+                white: 16383.0,
+            },
+        };
+        NoiseModel::new([p; 4], 100.0, Provenance::Measured)
+    }
+
+    /// Two pixels, `lumas[frame][pixel]` in both green slots. `focus_step`
+    /// separates the frames' focus responses; at 0.0 they tie and every gate
+    /// admits everything, which is what the exact-arithmetic tests want.
+    ///
+    /// `expect_n` is the rule-36 guard: state up front how many frames this
+    /// fixture is supposed to admit, and fail loudly if it admitted a different
+    /// number. Without it, a fixture that quietly admits only the winner makes
+    /// every `disagreement` below `None` and a test of `None == None` ships
+    /// permanently green.
+    fn disagreement_fixture(
+        lumas: &[[u16; 2]],
+        gate: Gate,
+        focus_step: f32,
+        expect_n: u16,
+    ) -> Estimator {
+        let g = geom(2, 1);
+        let field_for = |k: usize| vec![k as f32 * focus_step; g.pixels()];
+        let mut stats = FocusStats::new(g);
+        for k in 0..lumas.len() {
+            stats.fold(k as u16, &field_for(k)).unwrap();
+        }
+        let mut est = Estimator::new(&stats, gate);
+        est.track_disagreement();
+        for (k, row) in lumas.iter().enumerate() {
+            let row = *row;
+            let frame = QuadGrid::new(g.width, g.height, move |x, _| {
+                let l = row[x];
+                // QuadGrid is raster order: row 0 is [R, G1], row 1 is [G2, B].
+                [7, l, l, 9]
+            });
+            est.fold(k as u16, &frame, &field_for(k)).unwrap();
+        }
+        assert!(
+            est.n_eff().iter().all(|n| *n == expect_n),
+            "fixture admitted {:?}, not {expect_n} everywhere",
+            est.n_eff()
+        );
+        est
+    }
+
+    #[test]
+    fn disagreement_recovers_the_sample_variance_of_the_admitted_frames() {
+        // Pixel 0: {100, 110} -> s2 = 10^2/2 = 50. Pixel 1: {95, 115} -> 200.
+        let est = disagreement_fixture(&[[100, 95], [110, 115]], Gate::new(1.0), 0.0, 2);
+        let m = unit_sigma_model();
+        let a = est.disagreement(&m, 0, 0.0).unwrap();
+        let b = est.disagreement(&m, 1, 0.0).unwrap();
+        // `unit_sigma_model` is unit only up to its shot term, which at luma
+        // ~105 is 0.52% of the variance. That is deliberately left in rather
+        // than tuned away, and it is asserted *directionally*: shot noise can
+        // only raise sigma, so it can only lower chi2. A test that merely
+        // bracketed the magnitude would pass if the sign were wrong.
+        assert!(a < 50.0 && (50.0 - a) / 50.0 < 6e-3, "pixel 0 read {a}");
+        assert!(b < 200.0 && (200.0 - b) / 200.0 < 6e-3, "pixel 1 read {b}");
+        // Both pixels share a mean luma of 105, so sigma_pred is identical and
+        // cancels: the ratio is exact whatever the model says.
+        assert!((b / a - 4.0).abs() < 1e-12, "ratio was {}", b / a);
+    }
+
+    #[test]
+    fn a_noiseless_pair_reads_its_squared_separation_over_twice_the_variance() {
+        // The relation M60's break-even is derived from: two admitted frames
+        // separated by `d` with no noise read `chi2 = d^2 / (2 sigma^2)`. With
+        // sigma = 1 and d = 4 that is 8, less the same sub-1% shot term.
+        let est = disagreement_fixture(&[[100, 100], [104, 100]], Gate::new(1.0), 0.0, 2);
+        let m = unit_sigma_model();
+        let a = est.disagreement(&m, 0, 0.0).unwrap();
+        assert!(a < 8.0 && (8.0 - a) / 8.0 < 6e-3, "read {a}");
+        // Identical frames disagree by exactly nothing — not by the small
+        // negative number the two-pass form would otherwise produce.
+        assert_eq!(est.disagreement(&m, 1, 0.0).unwrap(), 0.0);
+    }
+
+    #[test]
+    fn disagreement_is_quadratic_in_the_spread_at_a_fixed_signal_level() {
+        // Both pixels have mean luma 105, so `sigma_pred` is identical at both
+        // and cancels out of the ratio entirely. Twice the spread must be four
+        // times the statistic, whatever the noise model says.
+        let est = disagreement_fixture(&[[100, 95], [110, 115]], Gate::new(1.0), 0.0, 2);
+        let m = shot_noise_model();
+        let a = est.disagreement(&m, 0, 0.0).unwrap();
+        let b = est.disagreement(&m, 1, 0.0).unwrap();
+        assert!((b / a - 4.0).abs() < 1e-12, "ratio was {}", b / a);
+    }
+
+    #[test]
+    fn the_same_spread_reads_smaller_where_the_signal_is_brighter() {
+        // The arm with actual power over the normalisation: identical sample
+        // variance (s2 = 50) at two signal levels a decade apart. If
+        // `sigma_pred` were dropped or hardcoded these would be equal.
+        let est = disagreement_fixture(&[[100, 1000], [110, 1010]], Gate::new(1.0), 0.0, 2);
+        let m = shot_noise_model();
+        let dim = est.disagreement(&m, 0, 0.0).unwrap();
+        let bright = est.disagreement(&m, 1, 0.0).unwrap();
+        // Shot-limited, so sigma^2 grows with signal and chi2 falls by roughly
+        // the signal ratio 1005/105 = 9.57. Bracketed loosely because the read
+        // term is not exactly zero; the point is the direction and the order.
+        assert!(
+            dim / bright > 8.0 && dim / bright < 11.0,
+            "dim {dim} bright {bright} ratio {}",
+            dim / bright
+        );
+    }
+
+    #[test]
+    fn disagreement_is_none_wherever_no_second_frame_was_admitted() {
+        // Frames a full unit apart in focus, gate closed: only the winner is
+        // admitted anywhere, so nothing has anything to disagree with — and
+        // `disagreement_exposure` must say so, because an aggregate over an
+        // empty surface is fact 688's defect exactly.
+        let est = disagreement_fixture(&[[100, 95], [110, 115]], Gate::new(0.0), 1.0, 1);
+        let m = unit_sigma_model();
+        assert!(est.disagreement(&m, 0, 0.0).is_none());
+        assert!(est.disagreement(&m, 1, 0.0).is_none());
+        assert_eq!(est.disagreement_exposure(), 0.0);
+    }
+
+    #[test]
+    fn tracking_disagreement_cannot_change_the_merged_image() {
+        // The instrument is a diagnostic. If enabling it moved a single output
+        // sample it would not be measuring the merge, it would be a merge.
+        let g = geom(4, 4);
+        let focus = |k: u16, i: usize| (k as f32) * 0.004 + (i as f32) * 0.01;
+        let plain = run(g, 5, Gate::new(2.0), focus);
+        let mut stats = FocusStats::new(g);
+        for k in 0..5u16 {
+            let f: Vec<f32> = (0..g.pixels()).map(|i| focus(k, i)).collect();
+            stats.fold(k, &f).unwrap();
+        }
+        let mut tracked = Estimator::new(&stats, Gate::new(2.0));
+        tracked.track_disagreement();
+        for k in 0..5u16 {
+            let f: Vec<f32> = (0..g.pixels()).map(|i| focus(k, i)).collect();
+            tracked.fold(k, &flat_frame(k, g), &f).unwrap();
+        }
+        let mut averaged = 0;
+        for i in 0..g.pixels() {
+            for p in [CfaPlane::R, CfaPlane::G1, CfaPlane::B, CfaPlane::G2] {
+                assert_eq!(plain.value(p, i), tracked.value(p, i));
+            }
+            assert_eq!(plain.n_eff()[i], tracked.n_eff()[i]);
+            if tracked.n_eff()[i] >= 2 {
+                averaged += 1;
+            }
+        }
+        // Rule 36: worthless unless something was actually averaged.
+        assert!(averaged > 0, "no pixel admitted a second frame");
+        assert!(tracked.allocated_bytes() > plain.allocated_bytes());
+    }
+
+    #[test]
+    fn disagreement_absorbs_additively_and_matches_a_sequential_fold() {
+        // `sum` and `sumsq` are a sufficient statistic, which is the whole
+        // argument for the instrument being free: no third pass, no per-frame
+        // state, and workers reducible in any order.
+        let g = geom(4, 4);
+        let focus = |k: u16, i: usize| (k as f32) * 0.05 + (i as f32) * 0.003;
+        let mut stats = FocusStats::new(g);
+        for k in 0..6u16 {
+            let f: Vec<f32> = (0..g.pixels()).map(|i| focus(k, i)).collect();
+            stats.fold(k, &f).unwrap();
+        }
+        let build = |ks: &[u16]| {
+            let mut e = Estimator::new(&stats, Gate::new(3.0));
+            e.track_disagreement();
+            for &k in ks {
+                let f: Vec<f32> = (0..g.pixels()).map(|i| focus(k, i)).collect();
+                e.fold(k, &flat_frame(k, g), &f).unwrap();
+            }
+            e
+        };
+        let whole = build(&[0, 1, 2, 3, 4, 5]);
+        let mut left = build(&[4, 1, 5]);
+        left.absorb(&build(&[3, 0, 2])).unwrap();
+        let m = unit_sigma_model();
+        let mut compared = 0;
+        for i in 0..g.pixels() {
+            match (
+                whole.disagreement(&m, i, 0.0),
+                left.disagreement(&m, i, 0.0),
+            ) {
+                (Some(a), Some(b)) => {
+                    assert!((a - b).abs() < 1e-9, "pixel {i}: {a} vs {b}");
+                    compared += 1;
+                }
+                (None, None) => {}
+                other => panic!("pixel {i} disagrees about being measurable: {other:?}"),
+            }
+        }
+        assert!(compared > 0, "nothing was measurable; this proved nothing");
+        assert_eq!(whole.disagreement_exposure(), left.disagreement_exposure());
+    }
+
+    #[test]
+    fn the_photometric_probe_moves_the_statistic_and_leaves_the_image_alone() {
+        let g = geom(2, 1);
+        let field = vec![1.0f32; g.pixels()];
+        let mut stats = FocusStats::new(g);
+        for k in 0..2u16 {
+            stats.fold(k, &field).unwrap();
+        }
+        let lumas = [[100u16, 95], [110, 115]];
+        let build = |scale: [f32; 2]| {
+            let mut e = Estimator::new(&stats, Gate::new(1.0));
+            e.track_disagreement();
+            for (k, row) in lumas.iter().enumerate() {
+                let row = *row;
+                let frame = QuadGrid::new(g.width, g.height, move |x, _| {
+                    let l = row[x];
+                    [7, l, l, 9]
+                });
+                e.fold_censored_probing_photometry(
+                    k as u16,
+                    &frame,
+                    &field,
+                    u16::MAX,
+                    scale[k],
+                    0.0,
+                )
+                .unwrap();
+            }
+            e
+        };
+        let flat = build([1.0, 1.0]);
+        // Scaling frame 1 by 100/110 makes the two frames coincide at pixel 0,
+        // which must drive that pixel's chi2 to zero.
+        let corrected = build([1.0, 100.0 / 110.0]);
+        let m = unit_sigma_model();
+        // 50 less the same sub-1% shot term as the sibling tests.
+        let base = flat.disagreement(&m, 0, 0.0).unwrap();
+        assert!(base < 50.0 && (50.0 - base) / 50.0 < 6e-3, "read {base}");
+        assert!(corrected.disagreement(&m, 0, 0.0).unwrap() < 1e-6);
+        // The image is untouched: the probe is a measurement knob, not a merge.
+        for i in 0..g.pixels() {
+            for p in [CfaPlane::R, CfaPlane::G1, CfaPlane::B, CfaPlane::G2] {
+                assert_eq!(flat.value(p, i), corrected.value(p, i));
+            }
+        }
+    }
+
+    #[test]
+    #[should_panic(expected = "track_disagreement was not called")]
+    fn reading_disagreement_off_an_untracked_estimator_is_refused() {
+        let g = geom(2, 2);
+        let est = run(g, 3, Gate::new(2.0), |k, _| k as f32 * 0.01);
+        est.disagreement(&unit_sigma_model(), 0, 0.0);
     }
 
     #[test]
