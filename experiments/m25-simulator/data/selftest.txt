@@ -1,0 +1,49 @@
+strehl_sim self-test
+
+group A -- optics reproduce the project's own optical facts
+  PASS  bellows factor B = 1 + m/p = 3.000 (fact 27: 2.41-3.06)
+  PASS  N_eff = N_marked * B = f/33.0 at marked f/11
+  PASS  diffraction cutoff 0.2821 cyc/px vs M5's measured knee 0.2762 at f/11 (fact 27)
+  PASS  MTF at Nyquist is 0.0000 at marked f/8 (N_eff f/24) -- fact 12
+  PASS  MTF at Nyquist is 0.0000 at marked f/11 (N_eff f/33) -- fact 12
+  PASS  cutoff reaches Nyquist at N_eff = f/18.62 (M5: f/18.6)
+  PASS  diffraction OTF is 1.0 at DC
+  PASS  diffraction OTF is monotone
+  PASS  defocus OTF is 1.0 at DC
+  PASS  defocus OTF goes negative (contrast reversal is modelled, not clipped)
+
+group B -- the noise chain reproduces the calibrated model
+  PASS  ISO 160 at 200 DN: sigma 8.693 vs model 8.696 (1.000x)
+  PASS  ISO 160 at 2000 DN: sigma 27.142 vs model 27.110 (1.001x)
+  PASS  ISO 160 at 8000 DN: sigma 54.162 vs model 54.155 (1.000x)
+  PASS  ISO 500 at 200 DN: sigma 15.231 vs model 15.224 (1.000x)
+  PASS  ISO 500 at 2000 DN: sigma 47.902 vs model 47.877 (1.001x)
+  PASS  ISO 500 at 8000 DN: sigma 95.889 vs model 95.710 (1.002x)
+  dark-frame temporal sigma vs M4 §8 (MEASURED comparison):
+      ISO  simulated         M4   ratio
+       50     0.5412     0.9866   0.549
+      100     0.9907     0.9845   1.006
+      200     1.9174     1.7416   1.101
+      400     1.3574     1.1986   1.132
+     1000     3.3378     2.8085   1.188
+     2000     6.6426     5.5330   1.201
+  PASS  fact 14's two-level read noise is within 25% of M4's measured dark sigma at every ISO except 50 (worst 20.1%)
+  PASS  DSNU sd 0.3508 DN vs M4 interpolated 0.3532 DN at ISO 160
+  PASS  hot pixels 1451 of 2048^2 = 0.0346% (M22: 0.0346%)
+  PASS  excess ACROSS FLAGGED PIXELS: mean 3.000 DN, median 0.000 DN (M22: +3.0 mean, 0.0 median)
+
+group C -- CFA sampling is aperture-integrate-then-select
+  PASS  RGGB layout matches raw_pattern [[0,1],[3,2]] (R,G1 / G2,B in row-major)
+  PASS  pixel aperture is the mean of the S x S latent block
+  PASS  aperture MTF at 0.25 cyc/px = 0.9061 vs sinc(0.25) = 0.9003 (1.0065x)
+
+group D -- occlusion is rendered physically (blur then composite)
+  PASS  pixels behind the edge are veiled: 1296.8 DN lies between background 736.0 and foreground 2909.0
+  PASS  blur-then-composite differs from composite-then-blur by 5.2% of level in a 48 px band at the edge
+
+group E -- breathing is a similarity about a centre, not parallax
+  PASS  a +1% scale grows area by 1.0201 (expect 1.0201)
+  PASS  unit scale is a true identity (no resampling loss when nothing moves)
+    round-trip cubic resample RMS error: 0.00918 of unit contrast (discipline 11: resampling is not neutral)
+
+27 passed, 0 failed   [2.5s]
