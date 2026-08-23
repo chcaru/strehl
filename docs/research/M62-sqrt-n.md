@@ -609,8 +609,15 @@ merged ROI statistics are not computed on the same footing.
   and the quietest photometrically (M24: 0.91 % drift). The CLI prints this
   itself. A clean result here is **systematically weaker evidence than it looks**,
   and the §12 capture should not be shot to match it.
-- **Fact 845:** 17 May, so **before** the circular polariser. Irrelevant to a
-  noise measurement; recorded because the rule says record it.
+- **Fact 845 / discipline 409 — checked, unaffected.** `109MSDCF` is 17 May, on
+  the **bare-lens** side of the 25 May boundary, so its numbers stand unqualified.
+  No claim here is hedged on the filter: the word "specular" does not appear in
+  this report or its code, no number is called a lower bound, and the one caveat
+  attached to this stack (bullet above) rests on **M24's measured drift and the
+  measured absence of saturation**, not on optics. Under the corrected rule that
+  caveat is *stronger*, not weaker — the stack's clean highlights are a property
+  of the subject and the exposure, with no filter available to explain them away.
+  `coffee-bean` is not used anywhere in this work.
 - **Fact 800** — the merge is blind to sensor defects, `D_defect/D_control = 1.00
   ± 0.08` — is untouched by this work. This harness measures *noise*, and
   averaging thirty samples of a hot pixel yields a well-averaged hot pixel. Arm
@@ -724,10 +731,17 @@ I wrote this and I cannot verify it. The three things most worth **re-choosing**
 rather than re-computing:
 
 1. **A different latent.** `109MSDCF` is the corpus's quietest, unsaturated
-   stack, and the estimator result may be flattered by it. Re-run Arm A on
-   `foam` or `coffee-bubbles` (ISO 1000, and after the fact-845 polariser) and on
-   a **saturated** crop, where clipping breaks the Gaussian noise assumption the
-   plant is built on.
+   stack, and the estimator result may be flattered by it. Re-run Arm A at a
+   high ISO — `coffee-bubbles` or `foam`, both ISO 1000 — and on a **saturated**
+   crop, where clipping breaks the Gaussian noise assumption the plant is built
+   on. **Filter state matters for the second choice and not the first.** A
+   polariser suppresses speculars, so a CPL-side stack is poor hunting ground
+   for clipped pixels, and both ISO-1000 stacks are on that side (`coffee-bubbles`
+   confirmed, `foam` probable). `coffee-bean` — the obvious large low-ISO
+   alternative at 105 frames — has an **unresolved** filter state (10 May, owner
+   cannot recall) and would import a confound nobody can settle. For a
+   saturation probe prefer `112MSDCF`, `113MSDCF` or `119MSDCF`: bare-lens,
+   dated, unambiguous.
 2. **A different reference.** The whole of §4 turns on defining truth as `L`. A
    verifier who instead denoises `L` and scores against `T` — option (a), which I
    declined — should land on the 1.3912 of the three-reference table, and the
