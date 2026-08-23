@@ -1,0 +1,6 @@
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\04-bee-3-A-antenna-head-k60-104-194.png  (900, 2262)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\04-bee-3-B-eye-antenna-k60-104-194.png  (700, 2262)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\04-bee-3-C-leg-body-k60-104-194.png  (800, 2712)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\04-bee-3-D-wing-thorax-k60-104-194.png  (700, 3312)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\04-bee-3-E-leg-bg-k60-104-194.png  (900, 2712)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\04-bee-3-F-legs-lower-k60-104-194.png  (800, 3312)

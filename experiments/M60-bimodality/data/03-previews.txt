@@ -1,0 +1,22 @@
+=== scene identity, normalised cross-correlation of 8x-binned frame 0 ===
+                 bee-1           bee-2           bee-3           wrapped-text-1  wrapped-text-2  
+bee-1            1.0000          0.6089          0.6036          -0.0394         0.0707          
+bee-2            0.6089          1.0000          0.9562          -0.0653         0.0345          
+bee-3            0.6036          0.9562          1.0000          -0.0447         0.0488          
+wrapped-text-1   -0.0394         -0.0653         -0.0447         1.0000          0.3834          
+wrapped-text-2   0.0707          0.0345          0.0488          0.3834          1.0000          
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-bee-3-k045.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-bee-3-k104.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-bee-3-k149.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-bee-3-k194.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-bee-3-k253.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-bee-1-k045.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-bee-1-k104.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-bee-1-k149.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-bee-1-k194.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-bee-1-k253.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-wrapped-text-1-k019.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-wrapped-text-1-k045.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-wrapped-text-1-k064.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-wrapped-text-1-k084.png (1172, 1757)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\03-wrapped-text-1-k110.png (1172, 1757)

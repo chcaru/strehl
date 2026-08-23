@@ -1,0 +1,25 @@
+134MSDCF      n=299  ISO 100     0.5000s f/5.6   200mm  active (4688, 7028)  pattern [[0, 1], [3, 2]]  span 270s
+135MSDCF      n=299  ISO 400     0.0500s f/5.6   200mm  active (4688, 7028)  pattern [[0, 1], [3, 2]]  span 159s
+136MSDCF      n=299  ISO 100     0.2000s f/5.6   200mm  active (4688, 7028)  pattern [[0, 1], [3, 2]]  span 204s
+131MSDCF      n=130  ISO 100     0.0667s f/5.6   200mm  active (4688, 7028)  pattern [[0, 1], [3, 2]]  span 71s
+133MSDCF      n=120  ISO 400     0.0250s f/5.6   200mm  active (4688, 7028)  pattern [[0, 1], [3, 2]]  span 61s
+109MSDCF      n=22   ISO 160     1.3000s f/11.0  200mm  active (4688, 7028)  pattern [[0, 1], [3, 2]]  span 35s
+coffee-bean   n=105  ISO 50      0.8000s f/8.0   200mm  active (4688, 7028)  pattern [[0, 1], [3, 2]]  span 125s
+112MSDCF      n=79   ISO 500     0.0167s f/11.0  200mm  active (4688, 7028)  pattern [[0, 1], [3, 2]]  span 40s
+113MSDCF      n=63   ISO 500     0.0333s f/11.0  200mm  active (4688, 7028)  pattern [[0, 1], [3, 2]]  span 32s
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-134MSDCF-first-k000.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-134MSDCF-mid-k149.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-134MSDCF-last-k298.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-135MSDCF-first-k000.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-135MSDCF-mid-k149.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-135MSDCF-last-k298.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-136MSDCF-first-k000.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-136MSDCF-mid-k149.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-136MSDCF-last-k298.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-131MSDCF-first-k000.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-131MSDCF-mid-k064.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-131MSDCF-last-k129.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-133MSDCF-first-k000.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-133MSDCF-mid-k060.png  (439x293, 8x binned green)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\fig\01-133MSDCF-last-k119.png  (439x293, 8x binned green)

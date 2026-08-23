@@ -1,0 +1,12 @@
+G0.1  noise constants match crates/strehl-core/src/profile.rs : {'gain_divisor': 436.8, 'base_iso': 100.0, 'read_noise_e_low': 4.2, 'read_noise_e_high': 1.2392, 'second_base_iso': 400.0}
+G0.2  sigma(S) affine + clamped:  ISO500 g=1.144689 RN=1.2392 e-  sigma(0)=1.4185 sigma(1000)=33.8630 DN
+G0.3  unimodal curve -> has2 False everywhere   (k1=4)
+G0.4  bimodal curve -> k1=2 k2=7 dip=5 prominence=5.000 (hand value 5.000)
+G0.5  shoulder -> prominence 1.000, i.e. small not zero; the noise gate must do the rejecting
+G0.6  three peaks -> k2 is the most prominent non-global peak (k2=1, prom=7.000)
+G0.7  monotone-to-the-end curve -> k1 at the stack boundary, has2 False
+G0.8  POWER: pure-noise cube, n=60, 4096 px -> max z = 4.87, frac(z>6) = 0.0000
+G0.9  POWER: same cube with two planted +8 sigma bumps -> frac(z>6) = 0.8530, median z = 6.70
+G0.10 rule 23: sobel_mag refuses a (frames,y,x) cube
+
+GATE 0 PASSED
