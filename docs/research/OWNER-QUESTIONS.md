@@ -1138,3 +1138,71 @@ configuration.** One run fixes it, and it is logged as question 183.
 
 I would rather show you this than a clean headline. The clean headline is one run away
 and it will be worth more when it comes from a single instrument.
+
+---
+
+**44. Your dark frames turned up a hole in the sensor model, and it may mean I have
+been over-estimating noise on most of your photographs. No action needed from you.**
+
+This one is worth reading because it touches almost every stack you have given me.
+
+Dark current -- the charge a sensor accumulates with the lens cap on -- is generated at
+the photodiode, before the ISO amplifier touches anything. So if I take one fixed set of
+hot pixels and ask how many electrons of dark current they carry, the answer must be the
+same at every ISO. It cannot depend on the dial. That is not a modelling assumption, it
+is physics.
+
+I measured it across your 11 ISO groups. The answer comes out in two flat steps: about
+6.3 electrons below ISO 400, about 3.1 electrons at ISO 400 and above. The step lands
+**exactly** on the ISO where your sensor switches conversion gain. Same shutter speed on
+every group, all 242 frames shot inside three and a half minutes, and the ISOs were
+shot in a scrambled order -- so it is not exposure and it is not the sensor warming up.
+
+What it means: above ISO 400 my conversion between raw numbers and electrons is
+extrapolated. The photon-transfer calibration behind it was taken at ISO 160, which is
+in the *other* gain mode.
+
+**The good news is that nothing shipped is wrong in the units the code actually uses.**
+The read-noise constant I corrected earlier was fitted through this same relation, so
+the two errors cancel exactly and every prediction in raw units is unaffected. What is
+wrong is a *label*: above ISO 400 two constants are entangled and only their product was
+ever measured. One consequence for you personally -- if anyone asks, this sensor's
+high-gain read noise is probably around 2.7 electrons, not the 1.24 in my code, and the
+dual-gain improvement is a normal 1.6x rather than an implausible 3.4x.
+
+**The part that might matter:** if this is a conversion-gain error, then the shot-noise
+term above ISO 400 is over-predicted by about 1.47x. That covers 261 of the 421 frames
+in your corpus -- every ISO 500 and ISO 1000 stack. It would mean my noise gate has been
+running too conservatively on those, leaving quality on the table rather than damaging
+anything.
+
+I have **not** verified that, and I am not acting on it. Dark frames have now misled me
+twice, and this is a dark-frame measurement. The experiment that settles it is a
+photon-transfer curve at ISO 500 or 1000, and **it needs no new captures** -- you already
+gave me 261 frames at exactly those settings. It is running.
+
+I also did not change the constants. Fixing this properly means changing the *shape* of
+the model on the strength of one dark-frame result, which is precisely the move that has
+burned me before. What I shipped instead is a test that asserts the current, known-wrong
+behaviour, so the build goes red the moment the model gets better and nobody can quietly
+forget this.
+
+---
+
+**45. One dial, if you are shooting the working-exposure dark frames anyway.**
+
+Capture request section 6 -- lens cap on, at the shutter speeds you actually shoot rather
+than 1/100 s -- has been on the list a while and is still low urgency. If you do get to
+it, shoot the set twice: once at ISO 160 as originally asked, and once at **ISO 1000**.
+
+Cost is one dial in the same session. The reason is item 44: a long exposure makes dark
+current 100-250x larger, so the 2.17x step gets measured with far better signal, at a
+completely different exposure, on a different set of frames. If the step is an artefact
+of very short exposures it will not survive that. If it is a real property of the gain
+switch it will reproduce. Either answer is worth more than the frames cost.
+
+Also worth knowing from the same measurement, since it is your camera: the defects on
+this sensor are 0.0414% of pixels, 99.8% of them isolated single pixels, and **the
+largest defect cluster on the entire sensor is 3 pixels**. No bad columns, no bad rows,
+no blobs. That is a clean sensor, and it means the eventual fix is a coordinate list and
+a median, not a subsystem.

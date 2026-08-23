@@ -434,6 +434,29 @@ because it is nearly free and because the existing darks cannot answer it.
 **What it does NOT affect:** M4's read-noise and FPN results are
 exposure-independent and stand as measured.
 
+**Corroborated, and the argument for it is now stronger** (M48c, 2026-08). An
+independent census of the same darks by a different criterion finds 0.0414% of
+pixels defective (M22 found 0.0346%), 99.8% of them isolated singletons with the
+largest cluster on the sensor being 3 pixels -- so the subsystem this unblocks is
+a coordinate list and a neighbour median, nothing more. What changed is the case
+for building it at all: the merge was measured against a contrast-matched control
+and its defect-specific amplification is **1.00 +/- 0.08**. It lifts a hot pixel
+and genuine detail of the same contrast by the same factor. **The estimator will
+never remove these, so they cannot be left to it.** The urgency is still low --
+in-situ impact is <= 0.39 sigma -- but the request is no longer only about
+completeness.
+
+**One near-free addition, if you are shooting this anyway.** Shoot the same
+frames a second time at **ISO 1000** as well as at ISO 160. Cost: one dial, same
+session, same cap. Why: the delivered darks turned up a **2.17x step in
+dark-current electrons falling exactly at the ISO-400 dual-gain switch**, which
+says the shipped DN-to-electron conversion is extrapolated above ISO 400 (facts
+790-795). A long exposure makes dark current 100-250x larger, so the same step
+measured there has far better signal than the 1/100 s frames could give it, at a
+completely different exposure. If the step is an artefact of the short exposure it
+will not survive; if it is a conversion-gain property it will reproduce. Either
+outcome is worth the dial.
+
 ---
 
 ## 7. Aperture pair — REQUESTED, cheap, high value
