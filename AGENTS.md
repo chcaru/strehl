@@ -526,8 +526,26 @@ record the stem, what it was asked, and where it writes. `experiments/` counts: 
 | `M64` | make the estimator the default path | `crates/**`, `docs/research/M64-estimator-default.md` | reported; **awaiting M62 certification** |
 | `M65` | `n_eff` under regularised vs raw election, at matched tolerance | `docs/research/M65-election-gate-measured.md` | reported |
 | `M66` | is the gate N-dependent, given it compares against a max over N? | `docs/research/M66-gate-n-dependence.md` | live |
+| `M67` | does the merge admit the RIGHT frames? (facts 951, 966) | `docs/research/M67-focus-correctness.md` | live |
 
 **M63 is reserved** for the bimodality milestone above and must not be reissued.
+
+**Unallocated, and deliberately so.** Three measurements are named and waiting for a
+milestone that did not frame them (discipline 441):
+
+- **The B-plane mechanism's ISO sweep** -- the dark-sigma ratio's ISO dependence, flat
+  for a sensor conversion gain and falling for an analog attenuation. Fact 956 names the
+  observable; M61 fixed it and did not run it. Until it runs, `profile.rs` should carry
+  the 0.84x as a **measured per-plane scale of unknown origin**, not a conversion gain.
+- **M55's stratum-noise question** (LOW, UNMEASURED). Must not go to M55.
+- **The green-plane correlation's 3.6% sigma consequence** (fact 958), design-only,
+  needs a fresh decode.
+
+**Blocked on M62's certification, not forgotten:** `crates/strehl-core/src/merge.rs:278`
+carries a **new** unresolved intra-doc link to a `#[cfg(test)]` item, taking `cargo doc`
+from 3 pre-existing warnings to 4 (orchestrator-verified). It is a one-line fix and it is
+**not being made while M62 is certifying that exact file** -- editing an artefact under
+certification is the shared-tree hazard rule 42 exists for.
 
 ## Layout
 
