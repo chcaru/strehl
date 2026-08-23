@@ -149,8 +149,8 @@ take it as a specification. An independent verifier is auditing the repair now.
 
 ## What I found overnight that you should know about
 
-**Fourteen things.** Items 1–6 are in descending order of how much they change the plan. Items
-7–14 landed later and were appended rather than merged into the ordering — **item 7 is the
+**Sixteen things.** Items 1–6 are in descending order of how much they change the plan. Items
+7–16 landed later and were appended rather than merged into the ordering — **item 7 is the
 single most important result of the night** and would sit first if this file were rewritten
 rather than appended to. If you read only one, read 7. If you read two, read 12: a constant
 we shipped was wrong by 2× at the ISO you actually shoot at, and it changes your images.
@@ -491,6 +491,65 @@ number goes to 10.1%, over-producing by 2.1×. **The measurement that agrees wit
 audited less than the one that does not**, and that is exactly backwards when two errors can
 cancel. Rule 18 asks what direction a *failure* points; nothing asked what to do when a
 number stops failing. Now something does. Rule 30's sibling, discipline 287.
+
+**15. I checked a number nobody had ever checked, and it was right. The label on it
+was not.**
+No action needed. This is the good news and the bad news in one item.
+
+Every read-noise and gain constant in this project traces back to one table in one
+report (M4), measured from your 242 dark frames. **Nothing had ever reproduced it.** So I
+re-measured it tonight from your same files, through a different decoder, with a different
+estimator, and compared.
+
+The table is **right**. It reproduces at a ratio of **0.9999 across all eleven ISOs**, with
+a total spread of 0.0001 over a sixfold range. That is as clean a verification as this kind
+of measurement gets, and it is the first independent check any sensor constant here has had.
+
+What was missing was the *label*. It took two passes to reproduce, because my first attempt
+disagreed by 6% at ISO 50 growing to 15% at ISO 2000 — a trend, not an offset. The cause:
+there are several reasonable ways to average "how noisy is a pixel", and M4 used the one
+that squares first. That one is pulled upward by hot pixels, and the hot-pixel tail grows
+with ISO, which is exactly the trend I was seeing.
+
+Nobody wrote that down, so three constants were fitted to a number describing *the sensor
+including its defects* and then used in code that asks *what should this ordinary pixel look
+like*. Your camera has a hot-pixel map already built (that was an earlier milestone) — the
+defects are handled separately, and then paid for a second time inside the noise model.
+
+The concrete consequence is item 16.
+
+**16. A second shipped constant is wrong, and it had also already been measured.**
+Being fixed now; you do not need to do anything.
+
+`read_noise_e_high` — the read-noise figure the model uses above ISO 400 — is set to 1.47
+electrons. Measured, it is **1.24** on the same basis the number was supposed to be on, and
+**1.08** on the basis the code actually needs. It is wrong either way. In practice the model
+over-predicts how noisy your files are by 12% at ISO 400, rising to **22% at ISO 1600**.
+
+**This had been reported.** M4's own table published "4.30 → 1.31" against the shipped
+"4.20 → 1.47" and wrote, in as many words, "11% off on the high side". It never reached the
+code — which is the *second* time tonight I have found exactly that, the first being the
+gain constant in item 12.
+
+Two independent cases of the same failure is a pattern rather than bad luck, so I have put
+an agent on the general question: **which other measured findings in this project never made
+it into the code?** It is auditing all 349 recorded facts against what actually ships. I would
+rather know the answer than assume it is two.
+
+Some good news attached to the bad: this same measurement confirms the item-12 gain fix a
+**third** time, on a route that did not exist when I made the fix. With the corrected gain,
+M4's ISO-50 row implies 4.3095 electrons against ISO 100's 4.3003 — agreement to **0.21%**.
+M4 published 8.6189 for that row and called it "visibly nonsense … the tell". The tell was
+right, and the correction lands on it to a fifth of a percent.
+
+One thing I deliberately did **not** do: I found what looks like a better noise model
+hiding in the same data — there appears to be a small fixed noise floor, around half a
+digital number, that the current formula omits, and adding it fits your sensor to ±1%
+instead of ±4%. I have **not** acted on it. It rests on a two-point fit I did at four in the
+morning, which is the weakest kind of evidence there is, and I have dispatched an agent to
+try to kill it rather than to confirm it. If it survives, it is a real improvement to the
+part of the model that matters most, because a floor matters exactly where the signal is
+faint. If it dies, nothing was built on it.
 
 ## Running while you sleep
 
