@@ -642,6 +642,13 @@ still the right answer at 66%.
 Numbered from 130 per the verification brief. **Proposed, not yet in SYNTHESIS.md** — the verifier does
 not own that file.
 
+> **FOLD NOTE (added by the orchestrator, not the verifier).** These landed in SYNTHESIS as
+> **facts 122-139**, a uniform shift of **−8**. The brief's "number from 130" collided with M20's
+> own facts 140-145, which were already published; the verifier had no way to know that and the
+> error is the orchestrator's. Read `130→122 … 147→139`. Two cross-milestone disciplines
+> (**250, 251**) were also derived from this report together with M39 and are numbered outside
+> the block, because neither milestone owns them alone.
+
 | # | Fact | Provenance |
 | --- | --- | --- |
 | 130 | M20's §3 optics "gate" is a tautology: `B` = 3.064 was itself obtained by inverting `f_c = pitch/(λN)` on the same measured knee the gate re-derives. The table cannot fail. | VERIFIED (v1_optics.py); M5 line 26 |

@@ -55,6 +55,12 @@ monolithic binary and ship only that binary.
    Measured: regularising drops speckle 34.4% -> 0.87% and noise 1.253x ->
    1.075x — necessary, and **still above 1.0**. A regularised selector is still
    a selector; the noise-gated average is the other half.
+   **This rule was written and then broken by M30**, whose fact 242 ("2.3x more
+   clipping whole-stack than at gathered frames") is an argmax artefact: at the
+   shipped 31x31 regularisation it falls to 1.4x, and heavier still to 1.0x.
+   The argmax *flees* clipped frames because clipping flattens the gradient.
+   **The rule applies to analysis scripts, not just to the merge** — any
+   statistic evaluated "at the best frame" inherits argmax's defects.
 5. **Fit geometry at runtime; do not bake it.** Scale drift and the scale
    centre are per-stack quantities. Only sensor calibration belongs in a
    profile, and profiles live in data files.
@@ -122,13 +128,22 @@ monolithic binary and ship only that binary.
    claims MEASURED / VERIFIED / DERIVED / ARGUED / UNVERIFIED.
 9. **Pair every sharpness metric with a flat-ROI control.** A sharpening pass
    raises gradient energy on featureless foam; that is how the prior project
-   fooled itself.
+   fooled itself. **This rule was written, published, and then broken by M38**,
+   whose detail metric credits regularised argmax with **+35.47% "detail" on a
+   flat ROI** — caught by an independent verifier, not by the author who had
+   this rule in front of him. The control is one line. Run it *first*, not as
+   a closing check, because a metric that fails it invalidates every number
+   already computed with it.
 10. **Never compare a spatial sd to a temporal sigma.** They are different
     physical quantities. A spatial sd over an image region carries scene
     structure; a temporal sigma across frames does not. High-pass first, or
-    compare like with like. This error has now caused **two** retractions —
-    the prior corpus's 1.10x correlated-noise claim, and M2's "unexplained"
-    1.46x model gap, which was 1.01x once matched properly.
+    compare like with like. This error has now caused **three** retractions —
+    the prior corpus's 1.10x correlated-noise claim, M2's "unexplained"
+    1.46x model gap (1.01x once matched properly), and fact 88's 119MSDCF
+    "43.2-53.1 DN", which the noise model caps at 22.9 DN at ISO 50 and which
+    inverted the true noise ordering of two stacks. **The cheapest detector is
+    the project's own model: any sigma that exceeds `sqrt(g*S + (RN_e*g)^2)`
+    is not a temporal sigma. Check every published sigma against it.**
 11. **Every claimed defect needs a placebo, and every headline number needs a
     regression test on its own code path.** What proved argmax was the cause of
     M2's 1.253x was not a better measurement of argmax — it was a *different
@@ -195,6 +210,42 @@ monolithic binary and ship only that binary.
     quality. A metric with no stated failure direction is not an acceptance
     criterion.
 19. **kebab-case** for directories and files. Crates are `strehl-*`.
+20. **Before running any gate, control or metric, write down the input that
+    would make it FAIL — and check that such an input exists.** If none does,
+    it is arithmetic, not evidence, and must be labelled so. **Three shipped
+    examples, all caught by independent verifiers and none by the author:**
+    M20's optics "gate" is the algebraic *inverse of its own input* (`B` was
+    obtained by inverting the equation the gate re-derives), so no
+    configuration of the model could have failed it; M38's detail metric
+    scores a flat ROI as *gaining* detail; and M33's two half-step phases,
+    quoted as replicating each other at 0.05%, have hit rates summing to
+    **1.0000 by construction** — they are complements, and a complement cannot
+    corroborate its own partner. **Measuring instead of arguing buys nothing if
+    the measurement has no power to reject.** Rules 9, 11 and 13 are special
+    cases of this one. Prefer the cheap adversarial input: a flat ROI for a
+    detail metric, an a-priori value for a fitted constant, a known destroyer
+    for a quality score, an arithmetic check that two "independent" arms are
+    not the same number twice.
+21. **A fitted constant cannot gate the model it was fitted to.** Where a
+    constant was obtained by inverting a relation, gate that relation with an
+    *independently predicted* value instead. `B = 1 + m/p = 3.000` from pure
+    geometry predicts M5's measured knee to **2.1%** — that is a real gate, it
+    costs one line, and it was available the whole time.
+22. **The rules in this file are an executable checklist, not a creed.**
+    Rules 4, 9 and 10 were each written down, published, and then violated by a
+    later milestone *by the same author who wrote them* — M30's fact 242 is a
+    raw argmax (rule 4), M38's detail metric shipped with no flat-ROI control
+    (rule 9), and fact 88 compared a spatial sd to a temporal sigma (rule 10).
+    All three were caught by independent verifiers. **Agreeing with a rule does
+    not execute it.** Before publishing a milestone, walk this list and name,
+    per rule, the line of code or the command that discharges it.
+23. **`scipy.ndimage.sobel(cube, axis=k)` smooths every axis except `k`.** It
+    applies `[-1,0,1]` along `axis` and `[1,2,1]` along all others — so passing
+    a `(frames, y, x)` cube silently smooths along the **frame axis** and
+    changes the focus measure. M32 did this and inflated its headline σ-count
+    by ~1.7–1.9×. Extract the 2-D plane first, or pass `mode`/`axes`
+    explicitly. **General form: any separable filter applied to an array with a
+    non-spatial axis will touch that axis unless you stop it.**
 
 ## Layout
 
@@ -211,6 +262,10 @@ monolithic binary and ship only that binary.
 | File | What |
 | --- | --- |
 | `SYNTHESIS.md` | **Start here.** Decision record, revised after review. |
+| `M39-verify-detail-metric.md` | **INDEPENDENT.** First outside verification since M2. Found M38's detail metric credits a *flat ROI* with +35% detail, inverted M38's error budget, and showed fact 19's 1.253x does not reproduce on the shipped operator (1.068x) |
+| `M20-VERIFICATION.md` | **INDEPENDENT.** M20's optics gate is a **tautology**; the 15.1% headline is one capture out of a **3.5%–65.8%** corpus range; refutes fact 88's mechanism; flags the f/5.6 advice as a two-stop extrapolation with no aberration term |
+| `M31-VERIFICATION.md` | **INDEPENDENT.** 15 defects across M27–M30. Refutes fact 242 as a raw-argmax artefact (rule 4). Every published number reproduced exactly — **every defect was a choice of estimator, reference, arm or null, not an arithmetic error** |
+| `M36-VERIFICATION.md` | **INDEPENDENT.** M32's focus measure was `sobel` on a *cube*, silently smoothing the frame axis: headline 142–991σ is really **84–512σ**. M33's direction is inverted (48.7% HIT) and its "replication" is complementary by construction. Fact 281's mechanism refuted — the real channel is **acceptance-set size** |
 | `REVIEW.md` | Adversarial review that corrected four design errors |
 | `REVIEW-plugin.md` | **Plugin-architecture critique.** Cordis verified against the PDF; four blocking interface fixes; camera/lens plugins are profiles |
 | `M2-rss-resolved.md` | **Tiebreak.** Two docs disagreed 2.2x on peak RSS; resolved by measurement. Peak tracks live concurrency, and the 8 GB ratchet is at 89% by N=105 |
