@@ -222,6 +222,56 @@ actually carry the intent:**
 3. **Absolute ceiling: 8 GiB**, at a **pinned thread count and a pinned N**, recorded with both.
    Kept as a backstop, but demoted — an unpinned absolute ceiling is the flake described above.
 
+> **ASSERTIONS 1 AND 2 ARE BOTH WRONG AS WRITTEN. M8 measured them, at the exact pair assertion 1
+> named, and both fail on unregressed code.** Reproduced from the raw CSVs independently.
+> **This is my own specification being refuted, and the intent survives while both formulas die.**
+>
+> **Assertion 1 fails: ratio 1.196 at pool=4 and 1.163 at pool=8** — that is +16% to +20% of growth
+> on clean code, on a gate whose entire job is to notice a regression. Giving it a 20% tolerance to
+> make it green would leave it unable to detect anything worth detecting. **Two measured mechanisms,
+> neither of them a leak:**
+> - **`chunks` grows with N until it saturates at `workers`, and the reduce tree costs 110.04 MiB
+>   per level** (fact 33). That is O(log N) growth the assertion did not know about.
+> - **`chunk_len` 1 → 2 fills the concurrency window.** Same `chunks` (16), same pool (4), N=16 vs
+>   N=32: **1912 → 2393 MiB, +25%.** A worker that decodes a single frame is at its high-water mark
+>   only briefly, so the pool never actually fills. My formula compared two points that differ in
+>   *both* confounds at once.
+>
+> **The intent does hold.** Once `chunks` has saturated *and* `chunk_len ≥ 2`, growth in N is nearly
+> flat — the system really is O(workers), not O(N). That is the property; assertion 1 just was not
+> measuring it.
+>
+> **Assertion 2's estimator is wrong.** `peak_rss / live_workers` silently absorbs the process floor
+> *and* the whole reduce tree, so at one pinned condition it ranges over **355.5–384.0 MiB** driven
+> only by how many reduce levels the plan happens to have. Ratcheting it ratchets `chunks`. **The
+> quantity it wants is the fitted slope, 342.8 ± 5.4 MiB per live worker**, which moves when someone
+> adds a buffer and does not move when `chunks` changes.
+
+**Restatement (this replaces assertions 1 and 2 above).**
+
+1. **Shape.** With `RAYON_NUM_THREADS` pinned, compare two `N` that produce the **same `chunks`** and
+   **both have `chunk_len ≥ 2`**. Record `chunks`, `chunk_len`, `threads` and `N` beside the result;
+   **if the two sides differ in `chunks` or `chunk_len`, the gate must fail loudly rather than
+   pass** — a comparison across a confound is not a weaker test, it is a different one.
+   **Take the median of at least 3 repeats per side, and set the tolerance at 12%.** *(That
+   tolerance is not a matter of taste and it is where I part company with M8's own proposal: M8
+   suggests N=40 vs N=60 at 32 threads on a measured 1.049, but 1.049 is a mean of 5, and the N=40
+   condition's own run-to-run spread is **11.7%** — 6861.4 to 7665.1 MiB across 5 runs. Worst case
+   the pair lands at **1.119**. A 5% tolerance on that pair is a flake with extra steps.)*
+2. **Per-worker cost — ratchet the fitted slope, not a ratio.** `342.8 ± 5.4 MiB` per live worker,
+   fitted across a sweep, not divided out of a single run.
+3. **Absolute ceiling: 8 GiB**, unchanged, and still a demoted backstop. **M8 supplied the real-file
+   evidence the GiB-vs-decimal decision previously lacked**: `coffee-bean` at N=60 peaks at
+   **7681 MiB**, which passes 8 GiB with 511 MiB of margin and *fails* 8 decimal GB (7629 MiB). The
+   unit choice flips the verdict on a 60-frame stack of the owner's own files, not merely on the
+   synthetic N=220 run it was decided from.
+
+**A general lesson, and it is why this whole subsection got rewritten twice.** Assertion 1 was
+derived by *reasoning* about what peak RSS should depend on, and it was wrong because two real
+mechanisms — a reduce tree and a concurrency-window filling effect — were not in the mental model.
+**A gate written from a model of the system tests the model, not the system.** Measure the gate's
+own behaviour on known-good code before trusting it to judge unknown code.
+
 **Any peak-RSS figure quoted anywhere in this corpus without its thread count is uninterpretable**,
 and several already published figures were exactly that (see fact 22: two agents measured honestly,
 disagreed 2.2x, and were both right about different thread counts). Quote the thread count or do
@@ -273,8 +323,8 @@ was not. Measured on the reference stack:
 
 All N alignments are therefore independent, which is both the accurate option and the parallel
 one. The remaining 0.6-1.3 px residual is neither estimator noise (floor 0.19 px) nor global
-model error (richer geometry does not touch it); see M3 §2.1 for the two candidate causes and
-the experiment that separates them.
+model error (richer geometry does not touch it). **M3 named two candidate causes and could not
+separate them; M6 did** — see below.
 
 > **The residual's cause is now measured (M6, facts 18 and 31), and it changes this stage.** It is
 > **blur-induced correlation bias**: a tile far from its own best-focus frame correlates worse, and
@@ -623,7 +673,9 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 19 | A naive argmax stack of 22 frames is **1.253x noisier than one unstacked frame** on a flat ROI; **~1.48x** structure-corrected. On the same frames and ROI, a plain **mean gives 0.534x** and a placebo selector with the identical winner histogram gives **0.981x**. Present already at **N=3** (1.5 px drift), monotone in N | **The defect the project exists to remove is measured on our own files, and its cause is proven.** Drift and scene structure push the ratio *below* 1.0; only selection coupled to per-pixel noise pushes it above. The corpus's borrowed 1.82x is no longer load-bearing | M2 + M2-verification (MEASURED) |
 | 20 | Winner-index speckle **34.4%**, against a no-information null of **53.5%** (i.i.d. draws from the observed winner histogram) and **0.868%** for a 17x17-regularised focus field. Still 21.7% in the busiest contrast decile | The winner map carries *some* spatial information but is nowhere near a depth map. **A fair upper bound on selector instability and nothing more** — it cannot separate "argmax elected noise" from "no frame is in focus here, so the error is harmless". Never quote it without the null | M2-verification (MEASURED) |
 | 21 | Ring-difference focus + fold costs **~74% of decode** (196.8 vs 267.6 ms/frame), i.e. **42% of total CPU**, for the cheapest focus measure anyone would consider | Any budget treating focus measurement as negligible beside decode is wrong on this hardware. Fact 11's decode-dominated framing is too generous. *(M2 published "41% of decode" — a conflation of "% of decode" with "% of total"; corrected)* **The ratio survives M7; the inference drawn from it does not.** 196.8 ms/frame is per-frame **CPU time under 32-way concurrency**, not wall clock — the same work is 677 ms of wall for the whole 22-frame stack, and **4.1 ms on the GPU**. So fact 21 may not be used to size a GPU design or to justify a contribution format (fact 30) | M2-verification (MEASURED), scope corrected by M7 |
-| 22 | Peak RSS is a function of **live concurrency, not of the plan**: `min(chunks, rayon pool) x per-worker`. At N=22 it is **833 MB at 1 thread, ~1.6 GB at 3, ~4.0 GB at default (32)**. On **105 real frames** it is **7.16 decimal GB**, against the planner's own 5.77 GB prediction. In-flight frames = `min(20, 32, N)` — O(workers), never O(N). Output byte-identical (SHA-256) across reduction trees and thread counts | **The architecture is right and the constant is not small.** O(workers) holds, but per-worker is **~379 MB measured** against **321 MB modelled**, so the planner licenses more workers than the 6 GiB budget can pay for, and **N=105 already sits at 89% of the 8 GB ratchet**. *(Both prior figures were configuration-specific and each was published as "the" peak: 4.12-4.20 GB and 1.81-1.94 GB. The latter is the `RAYON_NUM_THREADS=3` run. The earlier "far more headroom than published" reading is **inverted** — there is less.)* **This fact is also why the CI ratchet was respecified (§3.2.1): peak RSS depends on core count, so an unpinned absolute ceiling is a flake, not a regression test.** | M2-rss-resolved (MEASURED, n=6 at N=22 + n=1 at N=105) |
+| 22 | Peak RSS is a function of **live concurrency, not of the plan**: `min(chunks, rayon pool) x per-worker`. At N=22 it is **833 MB at 1 thread, ~1.6 GB at 3, ~4.0 GB at default (32)**. On **105 real frames** it is **7.16 decimal GB**, against the planner's own 5.77 GB prediction. In-flight frames = `min(20, 32, N)` — O(workers), never O(N). Output byte-identical (SHA-256) across reduction trees and thread counts | **The architecture is right and the constant is not small.** O(workers) holds, but the planner licenses more workers than the 6 GiB budget can pay for, and **N=105 already sits at 89% of the 8 GB ratchet**. *(Both prior figures were configuration-specific and each was published as "the" peak: 4.12-4.20 GB and 1.81-1.94 GB. The latter is the `RAYON_NUM_THREADS=3` run. The earlier "far more headroom than published" reading is **inverted** — there is less.)* **This fact is also why the CI ratchet was respecified (§3.2.1).** **Two corrections from M8:** (i) the "**379 MB measured vs 321 MB modelled**" gap was **a unit mismatch** — 321 was decimal MB from `describe()`, 379 was MiB from PowerShell; the buffer model is 305.79 MiB = 320.6 decimal MB, so the real per-worker excess is **37.0 ± 5.4 MiB working set and 7.7 ± 6.6 MiB private commit, the latter consistent with zero**. M2's *ratios* survive because both sides were divided consistently. (ii) `peak_live` **exceeds** `min(chunks, pool)` in 8 of 108 runs, so the formula is a close model, not an identity | M2-rss-resolved (MEASURED, n=6 at N=22 + n=1 at N=105); **corrected by M8 (MEASURED)** |
+| 33 | **Most of the planner's error was never decoder scratch — it is the reduce tree.** Peak resolves into **14.4 MiB floor + `live` x 342.8 ± 5.4 MiB + `⌈log₂ chunks⌉` x 110.04 MiB**. That third term is one whole `Selection` per level of rayon's `reduce_with` tree, and **110.04 MiB is exactly `px x 14`** — 8,241,504 plane px x (f32 focus + 5 x u16) — matching the struct to 0.1%. **550 MiB at 18 chunks, larger than all the decoder scratch put together.** Out-of-sample on a never-fitted stack: **8.4% mean, 17.5% max, +0.6% bias**, against run-to-run spread of up to 11.7%; the shipped `a + b·live` model gives 12.0% / 25.2% | **The gap was misattributed for two milestones.** A divide-and-conquer reduction keeps one accumulator alive per level of the tree, which is O(log N) memory nobody had costed. *(Verified independently from the struct definition and the plane geometry — 8,241,504 x 14 = 115,381,056 B = 110.036 MiB — without using M8's fit.)* **Consequence: the honest worker cap at the unchanged 6 GiB budget is 16, not 20** — N=22 → 11 chunks (unchanged), N=105 → 15 (was 18), N=220 → 16 (was 20); measured end-to-end **6909 → 5762 MiB**. Shipped behind `--memory-model m8`, default byte-identical | M8 (MEASURED, k swept 0-32, R² = 0.99998) |
+| 34 | **Decoder scratch is 39.36 ± 0.11 MiB private commit per concurrent decode** on 37.8 MiB ARWs and **32.34 ± 0.06 MiB** on 31.6 MiB ARWs. It is **file-size proportional** (slope 1.009 ± 0.015, intercept 0.685 ± 0.530 MiB, consistent with zero; a constant model has R² = 0), plus **1.51 ± 0.04 MiB per doubling of `RAYON_NUM_THREADS`** because the decoder is itself rayon-parallel (240.4 ms at 1 thread, 53.6 ms at 32). **Allocator retention is separate and bounded**: ≈2 MiB resting, ≤4.15 MiB added to peak, and **exactly flat (0.000 MiB) over decodes 40-104** | Scratch scales with concurrency; retention does not and does not leak. **Fitted over 17 points with all intercepts positive — M2's two-point negative-intercept trap explicitly avoided.** **Pixel-proportional vs constant remains UNVERIFIED**: `active_px` is 32,966,016 on every file available, so one body and one geometry cannot separate them | M8 (MEASURED) |
 | 23 | Regularising the focus field (17x17 smooth) before argmax drops speckle **34.4% -> 0.868%** and noise **1.253x -> 1.075x** — **but 1.075x is still above 1.0.** Only averaging goes below one frame | **Direct measured support for §1.1(a), and a warning.** The architecture needs *both* halves: a regularised reference to stop the selector electing noise, **and** a noise-gated estimator that averages where frames agree. A better selector is not enough | M2-verification (MEASURED) |
 | 24 | On high-detail ROIs a mean's sigma looks harmless (0.899x, 0.995x) while its mean gradient **collapses -58% and -53%**; argmax *raises* gradient | **Sigma alone cannot see detail destruction.** This is rule 9 working: the flat-ROI metric is valid precisely because its paired control fails as it should | M2-verification (MEASURED) |
 | 25 | Argmax's noise excess is **spatially correlated over 3-7 px, not white** — and 3-7 px is exactly `focus.rs`'s own `INNER_RADIUS: 1` / `OUTER_RADIUS: 3` support | **The focus measure and the merge are coupled.** The 17x17 regulariser behind facts 20 and 23 is tuned to *one measure's support*. A contributor pairing a wider measure with the default merge gets a silently wrong stack. Put the support on the interface (§3.4.1 B3). Also why high-pass views understate argmax damage while raw spatial sd overstates the ratio — ~1.48x is the honest figure between them | M2-verification (MEASURED) |
@@ -745,6 +797,20 @@ So the A/B harness is a **first-class component from commit one**, not a later a
     positive-control *recovery* checks, never as evidence about real defocus, and by running its
     null on the torus rather than on shifted copies. **State the resampler's contribution whenever
     resampled data supports a claim about sharpness.**
+12. **State the unit on every memory figure, and never set two figures side by side without
+    checking they share one.** `WorkerPlan::describe()` printed decimal MB; PowerShell's
+    `PeakWorkingSet64 / 1MB` is MiB. Those two numbers were published together as "379 measured vs
+    321 modelled" and read as a 18% modelling error. **The real working-set excess is 37.0 ± 5.4 MiB
+    and the private-commit excess is 7.7 ± 6.6 MiB — consistent with zero.** The error survived two
+    milestones and a respecification of the CI ratchet because ratios were unaffected, so nothing
+    looked wrong. Percentages hide unit bugs; absolute differences expose them.
+13. **A gate written from a model of the system tests the model, not the system.** §3.2.1's
+    assertion 1 was derived by reasoning about what peak RSS ought to depend on. It failed on clean
+    code by 16-20% because two real mechanisms were absent from the reasoning: rayon's reduce tree
+    holds one accumulator per level, and `chunk_len` 1 → 2 fills a concurrency window that
+    `chunk_len = 1` leaves half empty. **Run every new gate against known-good code, at the exact
+    pair it specifies, before trusting it to judge unknown code** — and set its tolerance above the
+    measured run-to-run spread of its own two sides, not above a mean of them.
 
 ---
 
@@ -876,7 +942,7 @@ after this is measured as a delta against a baseline that exists.
    frames** (first 2 of each discarded for stabilisation), well beyond the 2 ISOs requested. The
    extra ISOs additionally permit a model-free test of fact 14's **ISO 400 second base ISO** via a
    discontinuity in read noise vs ISO. **A photon-transfer measurement of `g` is still not possible
-   from darks** — no signal, no signal-variance — so `g` stays DERIVED and question 6 stays open,
+   from darks** — no signal, no signal-variance — so `g` stays DERIVED and **question 8** stays open,
    now needing flat fields rather than darks.
 3. **Focus-measure bake-off on real RAW**, against the noise model: ring-difference vs SML vs
    Tenengrad vs wavelet, scored by winner-margin versus sigma. Closes risk 2. *Run on the skeleton.*
@@ -1005,12 +1071,23 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     alternatives are to raise the ratchet (the box has 64 GB), or to keep the pool and accept that
     the budget constant is nominal. **Do not fix it by lowering `MEMORY_BUDGET_BYTES`** — that
     treats the symptom and makes the model *less* truthful, not more.
-    **Owner's answer: measure the decoder scratch properly first, then decide.** That is M8, now
-    running. The decision itself stays open and stays the owner's; M8 delivers the number, the
-    out-of-sample validation, and the corrected worker counts at N=22/105/220 as a recommendation
-    only. **A prior attempt to fit this was abandoned deliberately and must not be repeated: two
+    **Owner's answer: measure the decoder scratch properly first, then decide.** That was M8, now
+    **landed and independently verified.** **The decision itself is still open and still the
+    owner's**; what follows is a recommendation only.
+    **M8's answer changes the premise: the scratch was never the main term.** Decoder scratch is
+    39.36 MiB per concurrent decode (fact 34), but the reduce tree costs **110.04 MiB per level of
+    `⌈log₂ chunks⌉`** — 550 MiB at 18 chunks, larger than all the scratch combined (fact 33). The
+    question was pointed at the wrong term.
+    **Recommendation: cap 20 → 16.** N=22 → 11 chunks (**unchanged**), N=105 → 15 (was 18),
+    N=220 → 16 (was 20). Measured end-to-end **6909 → 5762 MiB**. `MEMORY_BUDGET_BYTES` untouched,
+    so this does *not* fall into the "fix it by lowering the budget" trap named above. **The speed
+    cost is smaller than this question assumed** — the reference N=22 stack does not move at all.
+    Shipped behind `--memory-model m8` with the default byte-identical, so the owner can take the
+    decision by flipping one default rather than by rewriting the planner.
+    **A prior attempt to fit this was abandoned deliberately and must not be repeated: two
     points (11 workers → 364 MB, 18 → 379 MB) fit a line with a negative intercept, which is
-    unphysical.**
+    unphysical.** *(M8 avoided it — 17 points, k swept 0-32, all intercepts positive. It also found
+    that those two numbers were **in mismatched units**: 321 was decimal MB, 364/379 were MiB.)*
 
 **Needs measurement, not argument:**
 5. ~~Alignment cost for the two-phase design~~ — **closed by M3.** 13-16 ms/frame, 0.78-0.96 s for

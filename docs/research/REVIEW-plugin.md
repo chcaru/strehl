@@ -149,9 +149,27 @@ runtime, and it was never what E recommended.
 | N4 | Fact 21 is a scalar-CPU number constraining a GPU contribution format; experiment 3 unrun | **Open** | risk 10, §10 q11 |
 | N5 | Cordis §6.6 dependency typing is an open problem inherited by out-of-tree plugins | **Recorded** | risk 9 |
 | S1 | Pupil magnification `p` — called "the only gear constant neither derivable from EXIF nor fittable from a stack" | **Refuted, by the review's own author.** The rig carries a 2x TC (fact 26) so a bare-lens figure would not apply anyway, and the bellows factor **is** fittable from a stack via the diffraction cutoff — M5 | §3.4.2, §10 q4 |
-| S2 | Do not close the lens-plugin question before §10 q6 — a field-dependent defocus PSF is the one candidate that would earn code | **Gated** | §3.4.2, §10 q6 |
-| S3 | Credit `Provenance::Fallback`, not Cordis's `Inactive{unmet}` | **Applied** | §3.4, §1.3 above |
+| S2 | Do not close the lens-plugin question before §10 q6 — a field-dependent defocus PSF is the one candidate that would earn code | **Gated** | §3.4.2, §10 q6 || S3 | Credit `Provenance::Fallback`, not Cordis's `Inactive{unmet}` | **Applied** | §3.4, §1.3 above |
 
+> **Post-review corrections (M6, M7). Two of these verdicts were right about the interface and
+> wrong about the number, which is worth recording separately from the verdicts themselves.**
+>
+> - **B1 — upheld, but its evidence was wrong twice.** "39 plane px at corner" is a Euclidean
+>   *displacement*; a halo is a rectangle expansion, so the quantity is `max(|dx|,|dy|)` =
+>   **32.39 px** (1.20x overstatement). And within-frame waste is **1.34x** at 128 px, not the
+>   "~2.6x tile area" claimed — **on its own that would not have killed a scalar `halo()`**. What
+>   actually kills it is **stack dependence**, which B1 never raised: 19.4 / 32.4 / 89.2 px across
+>   three stacks from the same camera. `source_roi(out, &Warp)` stands, on better grounds.
+> - **B2 — upheld as a mistranslation, but its consequence is void.** M7 priced the fusion prize at
+>   **1.449 ms = 0.14% of the pipeline**, so contributors were never going to be constrained to
+>   spliceable WGSL regardless of when splicing happens.
+> - **N4 — closed.** Fact 21 is scalar-CPU-under-concurrency and cannot bound a GPU design (M7).
+> - **S2 — ungated, and the answer is no.** The residual *is* blur-induced (q6 closed by M6), but
+>   the mechanism is **symmetric peak degradation, not directed displacement** — S6 is null on all
+>   three stacks against a statistic that recovers a planted bias at p=0.010. The conditional's two
+>   halves come apart. **The lens profile stays a data file**; the fix is an aligner tile weight
+>   `|c − w|` that needs no lens identity.
+> - **B3 is now the only Blocking verdict still resting on an unmeasured claim** (§10 q9).| S3 | Credit `Provenance::Fallback`, not Cordis's `Inactive{unmet}` | **Applied** | §3.4, §1.3 above |
 ## 4. Verified independently before acting
 
 The critique made strong claims about documents and code. Three load-bearing ones were re-checked
