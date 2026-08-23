@@ -1196,6 +1196,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "strehl-plugin"
+version = "0.0.0"
+dependencies = [
+ "strehl-core",
+ "thiserror",
+]
+
+[[package]]
 name = "strehl-raw"
 version = "0.0.0"
 dependencies = [

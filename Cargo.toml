@@ -1,6 +1,11 @@
 [workspace]
 resolver = "3"
-members = ["crates/strehl-core", "crates/strehl-raw", "crates/strehl-cli"]
+members = [
+    "crates/strehl-core",
+    "crates/strehl-raw",
+    "crates/strehl-plugin",
+    "crates/strehl-cli",
+]
 
 [workspace.package]
 version = "0.0.0"
@@ -13,6 +18,7 @@ authors = ["Chris Caruso"]
 [workspace.dependencies]
 strehl-core = { path = "crates/strehl-core" }
 strehl-raw = { path = "crates/strehl-raw" }
+strehl-plugin = { path = "crates/strehl-plugin" }
 
 anyhow = "1.0"
 thiserror = "2.0"
