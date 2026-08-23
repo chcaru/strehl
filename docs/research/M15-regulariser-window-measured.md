@@ -192,7 +192,24 @@ Same pixels, same numbers to 4 dp. **PASS.**
 > M11's own committed data puts 119MSDCF's four flat ROIs at **43.2–53.1 DN**.
 > Applying the 109 band to 119 would reject four correct ROIs. `MEASURED`
 
-### 0.7 One disclosure
+### 0.7 A free cross-check on M14, from M15's own bytes `VERIFIED`
+
+M14 shipped `tenengrad-w13` in `crates/**` while this milestone was running. Its
+commit message quotes numbers from the *shipped CLI*, a separate implementation
+in a separate workspace. They appear verbatim in M15's committed noise CSV, at
+M2's published ROI `2272,1344,256,256`, regulariser width 1:
+
+| measure | N | stacked σ | distinct winners |
+| --- | ---: | ---: | ---: |
+| `ring-1-3` | 1.252722 | 35.3276 DN | 22 |
+| `tenengrad-w13` | **1.067839** | **30.1138 DN** | **6** |
+
+M14 published `1.253× → 1.068×`, `35.328 → 30.114 DN`, `22 → 6`. Agreement to
+every digit either side prints, through three independent paths (M14's shipped
+crate, M13's harness, M15's invocation of it). I did not plan this check; it
+fell out of Gate B2's ROI overlap. `MEASURED`
+
+### 0.8 One disclosure
 
 A timing probe (`data/_probe.csv`, one cell × 22 measures × 6 widths) was run
 before the pre-registration to size the sweep, and **deleted without any column
@@ -671,15 +688,30 @@ took **651 s**. Derived from file mtimes in `data/`. `MEASURED`
 
 ## 12. The recommendation
 
-**Ship `tenengrad-w13` with the merge regulariser at width 17.** `DERIVED`
+**Keep `tenengrad-w13`. When the merge regulariser lands, run it at width 17.**
+`DERIVED`
+
+Context that sharpens this: as of M14 the shipped pipeline is
+`stack`, the naive per-pixel argmax — its own doc comment says it "does not
+align, denoise, regularise the winner map, or blend frames". **The project
+therefore currently runs at effective regulariser width 1, which is exactly
+M13's setting and M15's control column.** So this milestone is not a
+retrospective audit; it is a forward guarantee about a component that has not
+been written yet.
 
 - w13 survives at every regulariser width in the ladder, on the registered
   primary threshold, with a maximum penalty of 0.121 DN (at g=33) and 0.050 DN
-  at the reference width.
+  at the reference width. **There is no need to revisit the window when the
+  regulariser lands.**
+- **The regulariser is worth a great deal on exactly the cells M13 cared about.**
+  w13's mean absolute `E_excess` over the 30 occluding-edge cells falls from
+  **24.79 DN at g=1 to 15.99 DN at g=17 — a 35% reduction** (§5.1), and the
+  seed noise floor falls 33% with it (§10). That is a larger gain than the whole
+  window axis provides.
 - w14 is very slightly better at g=13/17/33 and very slightly worse at
   g=1/5/9/25. It is one ladder rung and 0.05 DN. **Either is defensible; there
   is no reason to change a shipped constant for 0.05 DN**, and w13 has M13's
-  independent verification behind it.
+  independent verification and M14's shipped implementation behind it.
 - **Do not run the regulariser at width 49.** It is 4× worse than width 17 on the
   joint surface and it is the only setting where w13 fails the sensitivity
   threshold.
