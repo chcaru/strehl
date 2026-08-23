@@ -621,14 +621,71 @@ trusting what a prompt tells me is unanswered. Three of tonight's seventeen item
 are me catching my own mistakes; that ratio is the system working, but it is also
 a warning about the size of the thing.
 
+**18. An audit of the gap between what we have measured and what the code actually
+does found thirteen live defects, and one of them can hide a 6.3x noise
+regression behind a PASS.** I asked M49 to go through the whole corpus and find
+every measured finding that never reached an executable. The worst is our own
+acceptance test: ACCEPTANCE INVARIANT 1, the check that is supposed to stop us
+shipping a noisier merge, is computed from the raw spatial standard deviation --
+the exact statistic our own fact 469 established is dominated by scene structure
+rather than noise. A merge could get 6.3x noisier on the ISO-50 stacks and still
+print PASS. It is being replaced now (M53). Second: the clipped-pixel mask is
+computed, carried, and then never reaches the focus volume, so a permanently
+blown highlight reads focus contrast at its *maximum* while carrying no
+information at all. Third, and the one that stings: a source file cites "fact
+200" for a constant, and fact 200 is a white-balance row. The number is real, the
+citation resolves, and it points at the wrong thing -- which is precisely the
+failure a citation-checker cannot see.
+
+**19. The audit of the ISO-50 gain fix refuted three claims in the brief I wrote
+to commission it, including one that was exactly backwards.** I told M47 the
+symptom was a gate that had been 1.414x too loose. It was 1.414x too TIGHT. Focus
+responses are divided by the model sigma before they meet the gate, and the gate
+itself is a fixed absolute number -- so a sigma that is too small makes the
+normalised differences too large and admits *fewer* frames, not more. Every
+intuition I had about the direction was wrong, and the thing that caught it was
+not reasoning: M47 re-derived the pre-fix published numbers at the corrected gate
+and reproduced them, including an ISO-160 control that reproduced digit for digit
+because it was never affected. What this means for you concretely: when you ran
+`--gate 1.0` on `coffee-bean`, you got what `--gate 0.7071` gives -- 2.571 frames
+averaged per pixel where 4.072 was implied. **The pixels are not corrupted.** They
+are the exact, valid output of a tighter gate than you asked for. The image is
+mislabelled, not wrong. But every noise figure printed beside it is off by a
+factor of 1.414.
+
+**20. Twice in one night, a test designed to catch a broken constant was
+structurally incapable of seeing it.** Our null plant and our noise-model check
+both generate their synthetic noise from the gain constant and then normalise the
+result by the same gain constant. They are scale-invariant in it to within 0.05%.
+Both passed, confidently and repeatedly, through all twelve milestones during
+which that constant was wrong by a factor of two. This is now rule 34: a plant
+validates the operator, never the calibration -- calibration is falsifiable only
+against something external and real. The reason I am flagging it to you rather
+than just fixing it is that it is a *category* of blindness, not an incident, and
+it is the second instance found tonight. I would like every future plant to have
+to state in advance which constants it shares with the thing it is testing.
+
+**21. Two things nobody owns, which I am logging rather than guessing at.** First,
+`read_noise_e_low` -- the read-noise constant for the low-gain half of the
+sensor's dual-conversion-gain readout -- has never been measured by this project
+and has never been assigned to a milestone. We found and are fixing its
+high-conversion-gain sibling; the low one is simply unexamined, and it is on the
+path for any ISO below the conversion-gain switch. Second, there is a measured
+anomaly in the fixed-pattern-noise data from milestone 4 that has now survived
+twelve milestones without anyone either explaining it or declaring it
+unimportant. Neither is urgent. Both are the kind of thing that becomes a
+six-hour debugging session in three weeks if it stays unwritten, so it is
+written.
+
 ---
 
 ## Running while you sleep
 
-**Updated again, later in the night.** M16, M19, M25, M40, M41 and M42 have all landed and
-are folded; M17 was re-tasked as M42 and has landed twice. Two agents are still live and two
-were dispatched after the folds above. The research corpus now stands at **311 measured
-facts**.
+**Updated once more, near dawn.** M16, M19, M25, M40, M41, M42, M45, M47 and M49 have
+all landed and are folded; M17 was re-tasked as M42 and has landed twice. **Five agents are
+still live.** The research corpus now stands at **393 measured facts** (numbered to 602),
+306 disciplines and 136 open questions -- it has roughly doubled overnight, and items 18-21
+above are the part of it you should read.
 
 | Agent | What it is deciding | State |
 | --- | --- | --- |
@@ -642,7 +699,11 @@ facts**.
 | **M44** | Finishing M41: it stopped one arm short of a scoreable verdict | **LANDED, folded** (facts 460-479). R3 refuted with the positive control passing; the FRC metric withdrawn as a censored constant. See item 10 |
 | **M45** | **Building the plugin crate** — your #1 structural ask, and the first slice of it in code | **LANDED, folded** (facts 520-529). The seam exists and closes the contributed-operator hole *by construction*. **It also refuted three things in its own design doc**, one structural. See item 11 — it has the one decision I have left to you |
 | **M46** | Finding a detail metric that actually has power on this sensor | Running. M44 withdrew the last one we had, so we currently **cannot score our own quality claim**. This is the project's largest blocker |
-| **M47** | Auditing what the wrong ISO-50 gain contaminated | Running. See item 12 — the fix is shipped, and this finds every published number that used the old value |
+| **M47** | Auditing what the wrong ISO-50 gain contaminated | **LANDED, folded** (facts 590-602). **It refuted three claims in the brief I wrote for it**, including the direction of the defect: the gate was too TIGHT, not too loose. Most published conclusions survive; two do not. See item 19 |
+| **M49** | Auditing the gap between what we measured and what the code does | **LANDED, folded** (facts 569-589). Thirteen live defects, the worst of which lets a 6.3x noise regression print PASS. See item 18 |
+| **M48** | The second wrong shipped constant: read noise at high conversion gain | Running, and its report has landed on disk. Found via item 16 |
+| **M52** | Whether the gate-transfer fact cluster survives the gain fix | Running. It gates a code change I am deliberately **not** making until it reports |
+| **M53** | Replacing the acceptance statistic that cannot fail | Running. This is M49's worst finding, item 18, and it holds the merge CLI |
 
 **M45 landed, and it is the one I would still read first.** It compiled the plugin design
 rather than arguing about it, and I had asked it to report what breaks rather than quietly
