@@ -4,6 +4,39 @@
 chosen arbitrarily and never justified). Extends M9's centre-tap result from a
 structural claim to a decision.
 
+> **Independently reproduced by the orchestrator before folding, with one correction to this
+> report's own framing.**
+>
+> **Reproduced exactly from the committed CSVs**, with independently written Spearman and
+> permutation code: **ρ(support, N) = −0.009** (identical), **ρ(φ, N) = +0.583** (published
+> +0.579), and every headline noise ratio to 4 decimals — `tenengrad-w5` 1.1324, `stensor-w5`
+> 1.1300, `ring-1-3` 1.3475, `brenner-sym-s2-w0-nonorm` 1.0542, `sml-w5` 1.0875, `varlap-w5`
+> 1.0863. `ring(1,3)` ranks 27th of 36 by my aggregation against 26th by this report's — a
+> tie-ordering difference, not a disagreement. Gates re-run: fmt clean, **67 tests**.
+>
+> **Amendment A1 verified and extended.** φ = **exactly 0.000000** for a bare Sobel at
+> `window = 0` + `Norm::None`; **0.0235** for windowing alone; **0.0321** for normalisation alone;
+> **0.0568** for both — i.e. **approximately additive**, which this report did not state. φ then
+> rises monotonically with window across w0…w11: 0.032 → 0.057 → 0.066 → 0.084 → 0.105.
+>
+> **A by-product that confirms M9's algebra from a second harness.** `ring-1-2`, `ring-1-3` and
+> `ring-1-5` measure φ = 0.0534 / 0.0535 / 0.0559 against the analytic 1/18 = 0.0556, and
+> `ring-0-1` / `ring-0-3` measure 0.4902 / 0.4887 against the analytic 1/2. **Three outer radii at
+> each of two inner radii, and φ depends only on the inner one** — the outer-radius cancellation,
+> reproduced independently of M9.
+>
+> **Correction — "weakens fact 35's magnitude" (fact 40) does not follow.** ρ is a property of the
+> population sampled. Restricting this report's set to the ring and `dsml` families M9 actually
+> used gives **ρ = +0.783**, and the sequence is monotone in heterogeneity: +0.918/+0.894
+> (M9's designed crossed grid) → +0.783 (comparable subset) → +0.583 (the heterogeneous 36).
+> Amendment A1 explains why — φ is not the same construct across this report's operator set.
+> **Fact 35 is folded as scoped, not weakened.** See SYNTHESIS §5 item 17.
+>
+> **One aggregation difference, disclosed.** Selectivity `S/Smax` here is normalised on 109MSDCF;
+> pooling both stacks shifts the mid-pack (e.g. `sml-w5` 0.690 → 0.567) and the zero-centre-tap
+> operators (0.405 → 0.337). **The ordering is identical under both, and pooling makes the H1
+> refutation stronger**, so the ruling is unaffected.
+
 Reproduction: `experiments/m11-focus-bakeoff/README.md`. Every number below is in
 `experiments/m11-focus-bakeoff/data/analysis.txt`, produced by
 `run-m11.ps1` followed by `python m11_analyse.py`. Harness:

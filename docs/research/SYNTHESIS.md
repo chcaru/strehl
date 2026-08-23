@@ -290,7 +290,13 @@ decode (CPU, rayon ACROSS files -- 2.5x over one-at-a-time, MEASURED M1)
              scale centre regularised toward the principal point.
              No chaining. No global model of transform vs frame index.
              (MEASURED M3: 13-16 ms/frame, 0.78-0.96 s for a 60-frame stack)
-  ->  focus volume (multi-scale ring-difference, per CFA plane, vs calibrated noise floor)
+  ->  focus volume (Tenengrad = Sobel gradient energy under an 11x11 box window, per CFA plane,
+             vs calibrated noise floor. MEASURED M11: replaces the multi-scale ring-difference,
+             which ranked 26-27th of 36 operators and cannot be rescued by re-tuning its radii.
+             Tenengrad-w5 PARETO-DOMINATES ring(1,3) on BOTH axes -- noise 1.1324x vs 1.3475x,
+             selectivity ~0.85 vs ~0.41 -- so the swap is not a trade-off. NOT YET IMPLEMENTED:
+             crates/strehl-core/src/focus.rs still ships the ring. See open question 15 --
+             11x11 is a measured LOWER BOUND on the optimum, not the optimum)
   ->  merge (band-selective noise-gated accumulation; select above the floor,
              average below it; reference from a REGULARISED focus field, never argmax;
              anisotropic structure-tensor kernels; emits RGB)
@@ -714,7 +720,13 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 24 | On high-detail ROIs a mean's sigma looks harmless (0.899x, 0.995x) while its mean gradient **collapses -58% and -53%**; argmax *raises* gradient | **Sigma alone cannot see detail destruction.** This is rule 9 working: the flat-ROI metric is valid precisely because its paired control fails as it should | M2-verification (MEASURED) |
 | 25 | Argmax's noise excess is **spatially correlated over 3-7 px, not white** — and 3-7 px is exactly `focus.rs`'s own `INNER_RADIUS: 1` / `OUTER_RADIUS: 3` support | **The focus measure and the merge are coupled** — this stands. Also why high-pass views understate argmax damage while raw spatial sd overstates the ratio — ~1.48x is the honest figure between them. **But the inference drawn from it was wrong (M9).** The observation pairs the *inner* radius, which drives the effect, with the *outer* radius, which does not, and the coincidence made "put the support on the interface" look obvious. `ring(1,3)`'s focus-field autocorrelation length is **L(1/e) = 2 px**, shorter than its own 7 px outer box. **Not retracted — reinterpreted: the coupling is to φ (fact 35), and §3.4.1 B3 is rejected** | M2-verification (MEASURED); **interpretation corrected by M9** |
 | 35 | **Argmax's noise excess tracks the focus operator's centre-tap sensitivity fraction φ, not its support.** ρ(φ, excess) = **+0.918 / +0.894** on two stacks (p < 0.0001); ρ(support radius, excess) = **−0.170 / −0.243**, not significant (p = 0.53 / 0.37). A 3x3 Sobel has a **zero centre tap** and shows **no excess: 0.9952x**. For a ring difference, **φ = 1/(2·(2·inner+1)²)** and **the outer radius cancels exactly** | **The mechanism is that a pixel's own noise votes for its own selection.** How far the operator reaches is irrelevant; how much of its answer comes from the pixel under test is everything. **This kills `support_px()` (§3.4.1 B3) and needs no replacement on the interface** — φ is framework-measurable by finite-differencing any contributed measure. *(The φ formula was re-derived by hand in exact rational arithmetic, independently of M9's harness.)* Among operators declaring **the same** `support_px()`, φ still spans **12.7x-321x** and excess spans **0.74 ratio units**, 37x the severity floor | M9 (MEASURED, 4 families x 4 support radii, two stacks) |
-| 36 | **The flat-ROI noise ratio is monotone-decreasing then flat in regulariser width — there is no interior optimum.** 9 of 16 argmins sit at the sweep edge even after the sweep was extended to width 257. **And regularising can actively harm**: `ring(1,3)` scores **1.3625x at width 3** against **1.2527x unregularised** | **Any procedure that "tunes the regulariser width to minimise noise" is optimising a function with no minimum**, and will run to the widest width offered — which destroys focus selectivity. Width must be chosen against a *combined* objective, not against noise alone. **This also means B3's proposed property test — "assert the merge derives its width from the measure" — would have asserted a derivation with no well-defined target** | M9 (MEASURED) |
+| 36 | **The flat-ROI noise ratio is monotone-decreasing then flat in regulariser width — there is no interior optimum.** 9 of 16 argmins sit at the sweep edge even after the sweep was extended to width 257. **And regularising can actively harm**: `ring(1,3)` scores **1.3625x at width 3** against **1.2527x unregularised** | **Any procedure that "tunes the regulariser width to minimise noise" is optimising a function with no minimum**, and will run to the widest width offered — which destroys focus selectivity. Width must be chosen against a *combined* objective, not against noise alone. **This also means B3's proposed property test — "assert the merge derives its width from the measure" — would have asserted a derivation with no well-defined target.** *Constructively repaired by fact 42: the objective is not broken, it was under-specified* | M9 (MEASURED) |
+| 37 | **Operator choice alone cannot remove argmax's noise excess.** Across a 47-operator bake-off spanning φ from 0.0000 to 0.4778 and support radius 1 to 12, **no operator reaches the pre-registered noise-free bar of N ≤ 1.02x** on real data — the qualifying set was empty, **0 of 36** | Choosing well moves the excess from **1.35x to 1.05x**; it does not reach 1.00x. **This is the strongest direct evidence yet for §1's thesis:** the escape from selection's noise penalty is *estimation*, not a better selector. A project that only swapped in a better focus measure would capture most of the available gain and still be a selector | M11 (MEASURED, pre-registered outcome O4) |
+| 38 | **A zero-centre-tap operator is noise-free and under-selective.** `tenengrad-w0-nonorm` and `brenner-sym-s2-w0-nonorm` measure **φ = 0.0000 exactly** and score Ncorr **0.9888x / 0.9966x** — no measurable excess, confirming fact 35's mechanism — but recover a planted focus surface at only **34-40% of the best operator's rate** | **Viable as a noise reference; not viable as a default.** M11 registered this as hypothesis H1 and refuted it with its own data. *(The 40.4% is M11's single-stack figure; pooling both stacks gives 33.7%, so the refutation is if anything stronger than published — verified independently)* | M11 (MEASURED, H1 refuted) |
+| 39 | **Windowing and pointwise normalisation each re-introduce a centre tap, and roughly additively.** Against **φ = 0.000000** for a bare Sobel at `window = 0` and `Norm::None`: windowing alone (`tenengrad-w2-nonorm`) gives **0.0235**, normalisation alone (`tenengrad-w0`) gives **0.0321**, both together (`tenengrad-w2`) give **0.0568 ≈ their sum**. φ then grows monotonically with window: 0.032 → 0.057 → 0.066 → 0.084 → 0.105 across w0…w11 | **Zero centre tap is a property of the whole configured stage, not of the kernel.** *(Additivity and the monotone window series are my independent extensions.)* **Direct consequence for the plugin framework, easy to get wrong:** §3.4.1's replacement for B3 has the framework measure φ by finite-differencing a contributed measure. It must finite-difference the **complete configured stage, after windowing and normalisation** — probing the contributed kernel alone would report φ = 0 for Tenengrad and be wrong by construction | M11 amendment A1 (MEASURED); extensions VERIFIED independently |
+| 40 | **The two axes are governed by different structural variables.** Over 36 operators: **φ predicts noise excess (ρ = +0.583) and not selectivity (ρ = −0.088); support radius predicts selectivity (ρ = +0.553) and not noise (ρ = −0.009)** | **This separation is why a Pareto front exists at all** — selectivity can be bought with support without paying in noise, provided centre-tap sensitivity is not bought along with it. **Fact 35 is scoped, not weakened.** M11 read its ρ = +0.583 as weakening M9's +0.918 / +0.894, but the two are measured over different populations and Spearman's ρ is not population-free. Restricting M11's set to the ring and `dsml` families M9 actually sampled gives **ρ = +0.783**, and the sequence is monotone in heterogeneity: **+0.918/+0.894** (designed crossed grid) → **+0.783** (comparable subset) → **+0.583** (heterogeneous 36). Fact 39 explains why: φ is not the same construct across M11's set. **What replicates unconditionally is the direction and the support null (−0.009, exact)** | M11 (MEASURED); **scoping correction VERIFIED independently** |
+| 41 | **The ring difference is a poor focus measure and the shipped constants are among its worse settings.** `ring(1,3)` ranks **26-27th of 36**: N = **1.3475x**, selectivity **41-49%** of best. The best ring in a 7-configuration sweep, `ring(3,8)`, reaches only **58-60%**. **Tenengrad under an 11x11 box window** reaches **85-99%** at N = **1.1324x** for 7% more cost | **Re-tuning the ring radii cannot close the gap; the operator should be replaced.** Cost is near-irrelevant — M7 measured the whole fused focus+merge at 4.117 ms/22 frames, bandwidth-bound, so this stage is not the bottleneck. *(Ranges span M11's single-stack normalisation and my two-stack pooling; the **ordering is identical under both**, which is what the ruling rests on)* | M11 (MEASURED); ordering VERIFIED independently |
+| 42 | **A joint selectivity/noise objective has an interior optimum in regulariser width; a noise-only objective does not.** Fact 36's boundary-running replicates for noise alone, but on a planted **tilted** depth surface (16-32 frames of depth across 256 px) selectivity peaks near **width 17** and declines by width 33. On a fronto-parallel surface it never turns over | **Tuning a regulariser on fronto-parallel test data will run to the sweep edge and destroy real depth structure.** This is the constructive repair of fact 36 — the objective was under-specified, not broken. **It also means any focus-stacking benchmark built on flat test targets is measuring the wrong thing:** the tilt is what makes the optimum exist | M11 (MEASURED) |
 | 26 | **Every existing test stack was shot with a 2x teleconverter**, disclosed only after M1-M4 were complete. `LensModel = "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"`, `LensSpec = "FE 200mm F5.6 Macro OSS"`, `FocalLength = 200 mm`, `MaxApertureValue = 5.6`. The body composes the TC into reported focal length and aperture; **the maker-note lens ID does not** — it still reads as the bare lens | Two consequences. **(a)** Anything reading `FocalLength`/`FNumber` from EXIF is already TC-correct, so there is no hidden 2x error in the advisor. **(b)** **Keying a lens profile on the lens ID is a bug**: it would apply bare-lens constants to a composed path with a different `p`, twice the focal length and two more stops. The profile key must be the *composed optical path*, and every profiled constant must be measured for the combination actually in use | MEASURED-LOCALLY (exiftool, all three stacks, every frame) |
 | 27 | **The bellows factor of the composed path is `B = (1 + m/p) ∈ [2.41, 3.06]`**, point estimate 2.6-2.9, measured from the diffraction cutoff in the raw CFA. At f/11 the green-quincunx spectrum has a genuine knee at **f_sig = 0.2762 cyc/px**, above which the floor matches the photon-transfer noise model to **0.950x** — so it is a real optical cutoff, not a fitted plateau. **`B = 5` (p = 0.5) is REFUTED 5/5 by a model-free test** at two apertures: there is optical signal at 0.3508 cyc/px, where p=0.5 permits none. **`B = 1` is refuted by ~3x** | **The corpus's "dominant uncertainty in the whole advisor" (±38%) is retired to −20%/+2%, from data the owner already had, with no bench work.** With m ≈ 2.0, **p ≈ 1.0-1.4** — the working assumption of p=1 was right. It does **not** vanish: M5 measures the product `(1 + m/p)` and cannot separate `p` from `m`, so `B` is known at *one* magnification only. A bench measurement of `p` alone would give `B` at any magnification | M5 (MEASURED → DERIVED; independently reproduced) |
 | 28 | **EXIF `FNumber` is the *marked* aperture and is NOT bellows-corrected.** The body composes the teleconverter into `FocalLength` and `FNumber` (fact 26) but applies no correction for working at 2:1. **Marked f/11 is optically f/33** | **The most directly actionable finding in the corpus.** Every advisor formula that reads `FNumber` and treats it as `N_eff` **under-predicts diffraction blur by ~3x** and will recommend f/11 as "safe". Apply `N_eff = FNumber_exif * B`. Consequences at B=3: f/8 discards **40%** of the sensor's 2-D Nyquist area (46% of contrast at 4-px detail), f/11 discards **68%** (90%) — a 33 MP sensor used as ~10.5 MP. Critical sampling is at **N_marked = f/6.21** | M5 §7 (DERIVED, factor-of-3 margin) |
@@ -865,6 +877,25 @@ So the A/B harness is a **first-class component from commit one**, not a later a
     figure is the cheapest guard against misreading a schema, and it should be the first thing any
     re-analysis prints** — without it I would have "refuted" a correct result on my own bug.
 
+16. **A control can fail because the *control* is wrong, and that must be published as loudly as a
+     treatment failure.** M11 registered a rule-9 pairing — the same planted run on a flat ROI must
+     collapse to within 3x of chance — and it failed at **13.8x and 31.7x**. The cause was the
+     control: a *relatively* flat ROI of a real frame still carries broadband texture and its own
+     inherited read and shot noise, and a planted blur ladder blurs those too. With the base replaced
+     by its own mean — nothing left to blur — the same run sits at **1.12x**. **The rule: when a
+     registered control fails, diagnose it before believing it, and publish the original failure next
+     to the repair. Deleting a failed control and substituting a passing one is indistinguishable,
+     from the outside, from fabrication.**
+
+17. **A correlation coefficient is a property of the population sampled, not of the mechanism.**
+     M11 measured ρ(φ, noise) = +0.583 over 36 heterogeneous operators and read it as *weakening*
+     M9's +0.918 / +0.894. It does not: restricting to the families M9 actually sampled gives
+     **+0.783**, and the sequence is monotone in how heterogeneous the operator set is. **Before
+     reporting that a replication weakens a prior ρ, re-run the prior statistic on the comparable
+     subset.** Otherwise range extension is indistinguishable from a real effect-size reduction —
+     and the direction and the null, which are the parts that carry the mechanism, replicated exactly
+     (support null −0.009).
+
 ---
 
 ## 6. Novelty — verified gaps, labelled as bets
@@ -894,8 +925,17 @@ Recorded with their queries; **all are UNVERIFIED as wins, and none is on the v1
    per-frame refinement (§3.3) removes the Amdahl wall entirely and is *more* accurate.
    **Residual risk is now only that the global model is inadequate for some capture mode**, which
    phase 2 absorbs and the residual measures. Corrected estimate ~0.5 s. Still needs measuring.
-2. **Every focus-measure noise analysis in the literature is synthetic.** Nothing measures focus
-   measures on real 33 MP RAW. Build that benchmark *before* choosing the operator.
+2. ~~**Every focus-measure noise analysis in the literature is synthetic.**~~ — **CLOSED by M11.**
+   The benchmark was built and run on real 33 MP RAW before choosing the operator, exactly as this
+   risk demanded: 47 operators, pre-registered, two stacks, scored on a measured Pareto front of
+   selectivity against noise excess. **The incumbent `ring(1,3)` ranks 26-27th of 36; the
+   recommendation is Tenengrad under an 11x11 box window.** Facts 37-42.
+   **Two residuals carried forward as an open question rather than as risk** (§10 q15): the optimum
+   window is *larger than anything measured* — the post-hoc extension was still improving on both
+   axes at 23x23 — and **no plant contained a depth discontinuity**, which is precisely the regime
+   where a wide window is most likely to do damage that a per-pixel selectivity metric cannot see.
+   **Doing this synthetically would have chosen wrong:** M11 measured `sml-w5` as best at zero
+   noise (0.996) and *worse than the incumbent* at 4x noise.
 3. **All deep MFIF/DfD SOTA is trained outside our regime** — MFIFB is 105 image *pairs*, Lytro has
    no ground truth, FOSSA trains at stack size 5 and 0.8-8.1 m. Keep learned components off the
    default path.
@@ -997,14 +1037,14 @@ after this is measured as a delta against a baseline that exists.
    discontinuity in read noise vs ISO. **A photon-transfer measurement of `g` is still not possible
    from darks** — no signal, no signal-variance — so `g` stays DERIVED and **question 8** stays open,
    now needing flat fields rather than darks.
-3. **Focus-measure bake-off on real RAW**, against the noise model: ring-difference vs SML vs
-   Tenengrad vs wavelet, scored by winner-margin versus sigma. Closes risk 2. *Run on the skeleton.*
-   ~~This — not the rail requirement — is what justifies build-time WGSL splicing.~~ **That last
-   sentence is dead (fact 30).** M7 measured the fusion prize at 0.14%, so nothing justifies
-   splicing and this experiment is no longer load-bearing for the contribution format. **The
-   bake-off is still worth running** — it closes risk 2 and it feeds question 9's support-coupling
-   sweep — but it now decides *which measure ships as the default*, not *how contributors are
-   allowed to write one*.
+3. ~~**Focus-measure bake-off on real RAW**~~ — **DONE. See `M11-focus-bakeoff-measured.md`.**
+   47 operators, pre-registered, two stacks, scored on a measured Pareto front of selectivity
+   against noise excess. **`ring(1,3)` — the shipped default — ranks 26-27th of 36. The winner is
+   Tenengrad (Sobel gradient energy) under an 11x11 box window.** Re-tuning the ring cannot close
+   the gap; the best ring reaches only ~60% of the leader's selectivity. **Risk 2 closed; facts
+   37-42.** The headline result is fact 37: **no operator anywhere on the front is noise-free**, so
+   operator choice alone cannot rescue a selector — which is the strongest direct evidence yet for
+   §1's thesis.
 4. ~~**Alignment cost and accuracy at scale.**~~ — **DONE. See `M3-alignment-measured.md`.**
    **13-16 ms/frame; 0.78-0.96 s for a 60-frame stack**, scalar CPU, unoptimised, all frames
    independent. Chaining measured at **25 px error at the sensor corner** — dead by measurement,
@@ -1200,6 +1240,18 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     aperture from f/6.21 to f/5.69-f/6.83. Both are cheap to close: a second aperture sweep at a
     different magnification for the first, a CFA-green-weighted `λ_eff` for the second. Neither
     blocks anything today, and **both must be stated whenever `B` is quoted.**
+
+15. **Where does the window optimum actually sit, and what does a depth discontinuity do to it?**
+    M11's two carried-forward residuals, inherited from risk 2. Its post-hoc extension was **still
+    improving on both axes at 23x23**, so the recommended 11x11 is a lower bound on the optimum, not
+    the optimum. More seriously, **no plant in M11 contained a depth discontinuity** — every planted
+    surface was continuous, fronto-parallel or tilted. A wide window is exactly the configuration
+    most likely to smear an occluding edge, and **M11's per-pixel selectivity metric is structurally
+    incapable of seeing that damage** (a haloed edge can still elect the right frame per pixel).
+    Fact 42 shows the objective's optimum only exists once the plant has depth structure; a
+    discontinuity is the next rung. **Note this needs no new capture** — it can be planted — which
+    makes it cheap. It is also the one place where the deferred rail (§9, `captures-needed.md` §2)
+    would have supplied real rather than planted evidence.
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
