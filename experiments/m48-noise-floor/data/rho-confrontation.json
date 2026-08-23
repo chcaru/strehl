@@ -1,0 +1,183 @@
+{
+  "_meta": {
+    "script": "12-rho-confrontation.py",
+    "question": "SYNTHESIS 142",
+    "rho_dark_definition": "D^2/(R^2+D^2) on a dark frame: the fraction of a DARK frame's variance that is fixed-pattern. Contains no photon shot noise and no PRNU.",
+    "m46_rho_definition": "fraction of an ILLUMINATED flat ROI's single-frame variance that is common-mode, solved from FRC_flat/(1-FRC_flat)/n_eff. Contains PRNU and any residual scene structure; darks contain neither."
+  },
+  "per_iso": [
+    {
+      "iso": 50.0,
+      "dsnu_dn": 0.38325282483263595,
+      "read_dn": 1.0086611153963838,
+      "rho_dark": 0.12615756612761864,
+      "rho_dark_G1": 0.12567913605286712,
+      "rho_dark_G2": 0.1266292320078305,
+      "rho_censored_G1": 0.12555855305803593,
+      "sem": 0.00033920775780627683,
+      "plane_spread": 0.0009500959549633703
+    },
+    {
+      "iso": 100.0,
+      "dsnu_dn": 0.3832776785527452,
+      "read_dn": 1.0072953292242999,
+      "rho_dark": 0.12647094646610108,
+      "rho_dark_G1": 0.12593579122459722,
+      "rho_dark_G2": 0.12699884773385445,
+      "rho_censored_G1": 0.12583995892142075,
+      "sem": 0.00038064522712209607,
+      "plane_spread": 0.0010630565092572264
+    },
+    {
+      "iso": 200.0,
+      "dsnu_dn": 0.3403414009369738,
+      "read_dn": 1.7853784770496497,
+      "rho_dark": 0.03506446948484841,
+      "rho_dark_G1": 0.030279404462156722,
+      "rho_dark_G2": 0.03972526225388662,
+      "rho_censored_G1": 0.028517189508661556,
+      "sem": 0.00020259159918100273,
+      "plane_spread": 0.009445857791729895
+    },
+    {
+      "iso": 250.0,
+      "dsnu_dn": 0.4121841073637677,
+      "read_dn": 2.219240690836092,
+      "rho_dark": 0.03334607260282766,
+      "rho_dark_G1": 0.029429942625273046,
+      "rho_dark_G2": 0.03716809850141385,
+      "rho_censored_G1": 0.027692616397169856,
+      "sem": 0.00014812012601757583,
+      "plane_spread": 0.007738155876140806
+    },
+    {
+      "iso": 400.0,
+      "dsnu_dn": 0.3813460346338861,
+      "read_dn": 1.2333919928156392,
+      "rho_dark": 0.08725414911598468,
+      "rho_dark_G1": 0.08676543858437116,
+      "rho_dark_G2": 0.08773166767151241,
+      "rho_censored_G1": 0.08640464847257753,
+      "sem": 0.00017946592185870414,
+      "plane_spread": 0.0009662290871412516
+    },
+    {
+      "iso": 500.0,
+      "dsnu_dn": 0.4028819012839373,
+      "read_dn": 1.5025858639695644,
+      "rho_dark": 0.06706966442443756,
+      "rho_dark_G1": 0.06381132792914186,
+      "rho_dark_G2": 0.07023874327455018,
+      "rho_censored_G1": 0.06278160203008938,
+      "sem": 0.00023386623296881029,
+      "plane_spread": 0.006427415345408319
+    },
+    {
+      "iso": 640.0,
+      "dsnu_dn": 0.39126699144133864,
+      "read_dn": 1.85465095931016,
+      "rho_dark": 0.042609943417732506,
+      "rho_dark_G1": 0.036478809167319486,
+      "rho_dark_G2": 0.048523339534678626,
+      "rho_censored_G1": 0.03425412650448555,
+      "sem": 0.00022935449129748932,
+      "plane_spread": 0.01204453036735914
+    },
+    {
+      "iso": 800.0,
+      "dsnu_dn": 0.46497914402089985,
+      "read_dn": 2.30037000445743,
+      "rho_dark": 0.03925367194320319,
+      "rho_dark_G1": 0.034447168284646196,
+      "rho_dark_G2": 0.04390411814928756,
+      "rho_censored_G1": 0.032267627162735124,
+      "sem": 0.00021176135069479626,
+      "plane_spread": 0.009456949864641365
+    },
+    {
+      "iso": 1000.0,
+      "dsnu_dn": 0.5074790593463803,
+      "read_dn": 2.8749701517437916,
+      "rho_dark": 0.030216513800370135,
+      "rho_dark_G1": 0.024732218945301258,
+      "rho_dark_G2": 0.035513932140582516,
+      "rho_censored_G1": 0.021800015375752133,
+      "sem": 0.00011927390669179274,
+      "plane_spread": 0.010781713195281258
+    },
+    {
+      "iso": 1600.0,
+      "dsnu_dn": 0.7203879869175087,
+      "read_dn": 4.505287316823851,
+      "rho_dark": 0.02493008144042171,
+      "rho_dark_G1": 0.016846205694985274,
+      "rho_dark_G2": 0.03263911349432041,
+      "rho_censored_G1": 0.013577226919488001,
+      "sem": 0.00012998305647795514,
+      "plane_spread": 0.015792907799335135
+    },
+    {
+      "iso": 2000.0,
+      "dsnu_dn": 0.865459610876482,
+      "read_dn": 5.652231230950717,
+      "rho_dark": 0.022908105783421447,
+      "rho_dark_G1": 0.015747614210434576,
+      "rho_dark_G2": 0.029789118468919303,
+      "rho_censored_G1": 0.01231344878902968,
+      "sem": 0.00014285731139859891,
+      "plane_spread": 0.014041504258484726
+    }
+  ],
+  "constancy": {
+    "rho_min": 0.022908105783421447,
+    "rho_max": 0.12647094646610108,
+    "rho_max_over_min": 5.520794589556499,
+    "rho_weighted_mean": 0.041409720630952336,
+    "chi2_vs_single_rho": 235379.78967157705,
+    "dof": 10,
+    "dsnu_mean_dn": 0.47753243092786873,
+    "dsnu_cv": 0.3464143842612015,
+    "dsnu_min_dn": 0.3403414009369738,
+    "dsnu_max_dn": 0.865459610876482,
+    "dsnu_max_over_min": 2.542916049865918
+  },
+  "transfer_to_lit_frames": [
+    {
+      "iso": 50.0,
+      "corpus_median_signal_dn": 3253.5,
+      "rho_dark_at_zero_signal": 0.12615756612761864,
+      "rho_from_dsnu_at_corpus_signal": 0.00019689025806629676,
+      "attenuation_factor": 640.7506768828498,
+      "signal_dn_where_rho_halves": 5.085574924050882
+    },
+    {
+      "iso": 500.0,
+      "corpus_median_signal_dn": 271.0,
+      "rho_dark_at_zero_signal": 0.06706966442443756,
+      "rho_from_dsnu_at_corpus_signal": 0.0005191870982558913,
+      "attenuation_factor": 129.18207068269825,
+      "signal_dn_where_rho_halves": 2.114180232513431
+    },
+    {
+      "iso": 1000.0,
+      "corpus_median_signal_dn": 191.5,
+      "rho_dark_at_zero_signal": 0.030216513800370135,
+      "rho_from_dsnu_at_corpus_signal": 0.0005762199000408294,
+      "attenuation_factor": 52.4392055849322,
+      "signal_dn_where_rho_halves": 3.7228413196197385
+    }
+  ],
+  "confrontation": {
+    "m46_rho": 0.3094,
+    "m46_iso": 500.0,
+    "assumed_signal_dn": 271.0,
+    "measured_rho_dark_same_iso": 0.06706966442443756,
+    "naive_ratio": 4.613113881739757,
+    "dsnu_variance_dn2": 0.16231382638216021,
+    "implied_total_fpn_variance_dn2": 139.99090491524163,
+    "dsnu_share_of_m46_fpn": 0.0011594597983378572,
+    "implied_prnu_sd_dn": 11.824913999216209,
+    "implied_prnu_fraction_of_signal": 0.04363436900079782,
+    "dsnu_share_of_lit_frame_variance": 0.0005191870982558913
+  }
+}

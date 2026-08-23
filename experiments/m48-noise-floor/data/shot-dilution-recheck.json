@@ -1,0 +1,62 @@
+{
+  "_meta": {
+    "script": "10-shot-dilution-recheck.py",
+    "purpose": "re-measure script 08 with correct rawpy memory handling; script 08 read raw_colors_visible after the context manager freed it"
+  },
+  "stacks": [
+    {
+      "stack": "coffee-bubbles",
+      "iso": 1000.0,
+      "high_gain_mode": true,
+      "cfa_desc": "RGBG",
+      "greens_per_site": [
+        2
+      ],
+      "n_pixels": 24710448,
+      "signal_dn_median": 191.5,
+      "signal_dn_p0_1": 132.0,
+      "response_shift_mean_pct": 0.34509045807536665,
+      "response_shift_median_pct": 0.3663532774550671,
+      "response_shift_p99_pct": 0.48240352681991894,
+      "frac_pixels_shift_over_1pct": 0.0,
+      "shot_equals_read_at_dn": 4.947115384615384,
+      "frac_pixels_below_crossover": 0.0
+    },
+    {
+      "stack": "113MSDCF",
+      "iso": 500.0,
+      "high_gain_mode": true,
+      "cfa_desc": "RGBG",
+      "greens_per_site": [
+        2
+      ],
+      "n_pixels": 24710448,
+      "signal_dn_median": 271.0,
+      "signal_dn_p0_1": 86.0,
+      "response_shift_mean_pct": 0.1370598292302571,
+      "response_shift_median_pct": 0.1311210548453623,
+      "response_shift_p99_pct": 0.3346636300193051,
+      "frac_pixels_shift_over_1pct": 0.0,
+      "shot_equals_read_at_dn": 2.473557692307692,
+      "frac_pixels_below_crossover": 0.0
+    },
+    {
+      "stack": "119MSDCF-placebo",
+      "iso": 50.0,
+      "high_gain_mode": false,
+      "cfa_desc": "RGBG",
+      "greens_per_site": [
+        2
+      ],
+      "n_pixels": 16473632,
+      "signal_dn_median": 3253.5,
+      "signal_dn_p0_1": 159.0,
+      "response_shift_mean_pct": 0.0,
+      "response_shift_median_pct": 0.0,
+      "response_shift_p99_pct": 0.0,
+      "frac_pixels_shift_over_1pct": 0.0,
+      "shot_equals_read_at_dn": 4.038461538461538,
+      "frac_pixels_below_crossover": 0.0
+    }
+  ]
+}

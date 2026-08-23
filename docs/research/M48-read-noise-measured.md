@@ -983,3 +983,16 @@ strehl merge C:\dev\macro\test\119MSDCF --gate 0.5 --gate 1 --gate 2 --gate 4
 Flip `read_noise_e_high` via a `$env:TEMP` backup copy, never `git checkout --`.
 Confirm `Compiling` lines on every rebuild and reset the file's mtime after
 restoring, or cargo will serve a stale binary.
+
+---
+
+## 13. Follow-on: M48b
+
+The dark-frame machinery built here was reused to attack SYNTHESIS question 142
+(measure the fixed-pattern fraction rho rather than fitting it). That work is
+reported separately in [`M48b-fpn-rho-measured.md`](M48b-fpn-rho-measured.md).
+Two results bear directly on this document: script 08 contains a latent
+use-after-free whose numbers were **re-measured and confirmed identical** (M48b
+local fact 15, so facts 25 and 28 stand), and the shipped noise model's omission
+of a fixed-pattern term is now measured to cost **0.026% on sigma** at the
+working point (M48b local fact 12).
