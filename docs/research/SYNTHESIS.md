@@ -731,12 +731,12 @@ since contributors are not required to be spliceable and only have to emit an `f
 > 110+/discipline 60+, M19 facts 120+, M20's verifier facts 130+, **M23 facts
 > 170+/discipline 80+/question 25+**, **M25 facts 190+/discipline 100+/question
 > 30+**. Facts **140-145 (M20)**, **150-152 (M21)**,
-> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)**, **230-234 (M29)**, **240-243 (M30)**, **260-264 (M32)**, **270-274 (M33)**, **280-284 (M34)**, **300-304 (M35)** and **310-314 (M37)** are folded below and are all
+> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)**, **230-234 (M29)**, **240-243 (M30)**, **260-264 (M32)**, **270-274 (M33)**, **280-284 (M34)**, **300-304 (M35)**, **310-314 (M37)** and **320-324 (M38)** are folded below and are all
 > **NOT INDEPENDENTLY VERIFIED** — they were measured by the
 > orchestrator, and rule 12 binds their author exactly as it binds any milestone.
 > The same reservation rule governs the other two sequences: **discipline 110-111
-> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29), 150 (M30), 170 (M32), 180-181 (M33), 190-191 (M34), 210-211 (M35), 220-221 (M37)** and **question 45 (M28),
-> 50 (M29), 55 (M30), 65 (M32), 70 (M33), 75 (M34), 85 (M35), 90 (M37)** are folded. M23's blocks (discipline 80+, question 25+) and
+> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29), 150 (M30), 170 (M32), 180-181 (M33), 190-191 (M34), 210-211 (M35), 220-221 (M37), 230-231 (M38)** and **question 45 (M28),
+> 50 (M29), 55 (M30), 65 (M32), 70 (M33), 75 (M34), 85 (M35), 90 (M37), 95 (M38)** are folded. M23's blocks (discipline 80+, question 25+) and
 > M25's (discipline 100+, question 30+) remain unclaimed pending their reports;
 > **facts 250+, discipline 160+ and question 60+ are reserved for M31**, the
 > independent verification of M27-M30; **facts 290+, discipline 200+ and question
@@ -886,6 +886,12 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 312 | **A plain LCG in the test harness made the constant vary 1.30× across seeds** (0.01172 / 0.01371 / 0.01522); SplitMix64 cut it to 1.05×, which is itself consistent with the effective sample count | Consecutive LCG outputs lie on lattice planes, Box-Muller consumes them **in pairs**, and filling a raster grid lays that lattice out *spatially* — where a 27-box followed by a 17-box aliases against it differently per seed. **A single-seed measurement would have baked a 30% error into the gate and looked completely stable.** The multi-seed check is what caught it; nothing about the number looked wrong | M37 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 | 313 | **A sample SD over a region a few supports across is biased low: 192² reads 0.01366, 10% under.** 384² gives `0.015277 ± 0.000223` and 512² `0.015214 ± 0.000075` — **0.27 σ apart, so the bias is spent by 384²** | The mean a sample SD subtracts is itself correlated with the samples when the field has a 43×43 correlation length. The drift with plane size is a *falsifiable signature*, not a mystery, and it was diagnosed by predicting the next point rather than by inspection — **the prediction's direction was wrong (I expected a further rise) and its magnitude right**, which is what identified convergence rather than confirmed a story | M37 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 | 314 | **The regulariser is dilution by `W²` and nothing more.** A `W×W` box divides a spike's excess by `W²`, so against a response deficit `d` the break-even spike is `d·W² + baseline`: at `d = 0.1`, `W = 17` that is **29.8**. A 20× spike is killed; a 50× spike survives | Bounds fact 23's speckle win rather than mythologising it. The test asserts **both** outcomes deliberately: a test that only showed the spike dying would not distinguish this regulariser from an arbitrarily strong one, and would pass just as well if the width were wrong. It also says plainly that the regulariser is **not** a robust estimator — outlier rejection (M28's mask) is a separate mechanism and is still unbuilt | M37 (MEASURED + DERIVED) — **NOT INDEPENDENTLY VERIFIED** |
+
+| 320 | **The estimation merge runs on real frames and passes invariant 1.** `109MSDCF`, 22 frames, six-gate sweep including two full decode passes in **2.9 s**. Flat-ROI noise ratio **1.074x** at gate 0 (pure regularised selection), **0.973x** at gate 1.0, **0.890x** at gate 2.0. Two independently-chosen ROIs agree to within **0.6%** at every gate | **The thesis is measured on our own photographs, and the defect it exists to remove sits at 1.253x on the same ROI** (fact 19). Selection is still above 1.0 even after regularisation; only the gated average goes below, which is fact 23's warning coming out the other way round. The ROIs were chosen by M2 on structural grounds long before this code existed, so neither was selected by this outcome | M38 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 321 | **Gate 0 reproduces an independently measured number to 0.1%.** Pure regularised selection with no averaging measures **1.074x** where M2-verification measured **1.075x** for the same operation (fact 23) — different language, different author, different harness, a year of intervening design | **Worth more than the pass it accompanies.** It says the whole pass-one chain — decode, black subtraction, green luma, Tenengrad against the injected noise model, 17×17 regularisation, argmax — reproduces end to end. The merge is not trusted because it looks right | M38 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 322 | **Mean \|∇\| is confounded by noise, and the confound has the same sign as the effect.** Uncorrected, detail fell **−45%** across the gate sweep on both ROIs — fact 24's collapse, apparently on schedule. Removing the model-predicted noise contribution (`corrected = sqrt(raw² − model²)`, exact for forward differences) leaves **−4.6%** and **−3.6%**. **~90% of the apparent detail loss was noise removal scored as blur** | **The verdict inverted.** An uncorrected reading charges the merge for doing the one thing it exists to do, so the metric could not distinguish success from failure. The same confound runs backwards through fact 24 itself: argmax "raises" gradient there and also raises noise 1.253x, so part of that flattering number is the defect. Model term validated against hand calculation: 17.1412 DN predicted vs `2σ = 17.14` | M38 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; `predicted_sigma` divides by `√n`, which FPN does not obey, so corrected retention at wide gates is an **upper bound** |
+| 323 | **Fact 24's gradient convention, identified by measurement rather than assumed.** M2's harness is not preserved, so seven candidate definitions were computed with an **independent numpy implementation**: `mean(0.5(\|dx\|+\|dy\|))` reproduces the published 11.89 and 18.58 to **0.01% and 0.02%**. The pre-registered guess — single-axis `\|dx\|`, from the exact `π/2` ratio the observed 1.552 and 1.600 appeared to bracket — matched one ROI and **missed the other by 17.5%**, because that ROI is **1.43× anisotropic** | **A single-ROI check would have confirmed a wrong answer.** Same shape as facts 73, 203 and 211: a quantity reading confidently while its assumption is absent. Two consequences — there is **no constant conversion** between the harnesses, so comparison against fact 24 must be made in fact 24's convention (now a reported column); and the same script cross-validates the new Rust metric against numpy at ratio **1.0000** | M38 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 324 | **The gate does not transfer, and a fixed threshold is not a calibration.** At gate 2.0, `mean n_eff` runs **2.258, 2.891, 4.774, 6.226, 7.422** across `119MSDCF`/`109MSDCF`/`113MSDCF`/`112MSDCF`/`coffee-bean` — a **3.3× range**. But `n_eff/N` clusters at **0.068–0.079** for four of five, so the acceptance set is roughly **a fixed fraction of the bracket, not a fixed count**. Solving each stack for `n_eff = 3` needs thresholds spanning **1.1 to 2.9** | **Answers question 90 by refusing its premise, and would have shipped wrong**: gate 2.0 is the honest reading of `109MSDCF` and a **2.6× error** on `coffee-bean`. The threshold must be **solved per stack against a target `n_eff`**, which pass two can do in one sweep since many accumulators cost one decode. §4.1's "profiles as data, not constants" arriving in a new place. Consistent with fact 213 (`coffee-bean` 2–4× over-dense). `109MSDCF` at 0.131 is unexplained | M38 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; whole-image statistic, so no ROI was selected by outcome |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -1425,6 +1431,23 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      small** — otherwise the band admits anything and the test silently has no power.
      Correlated samples make this mandatory rather than pedantic: 219,000 pixels were 118
      measurements.**
+
+230. **A metric whose confound shares the sign of the effect will confirm whatever you already
+     believe.** Mean |∇| falls when a merge blurs and falls when a merge denoises, so read
+     uncorrected it charges the estimator for its own purpose — and read the other way it
+     credited argmax for raising noise (fact 24 against fact 19). The repair is **not a caveat
+     in the report**: subtract the confound with the calibrated model, in whatever algebraic
+     form makes it separable. The absolute gradient does not decompose but the squared one
+     does, so the metric became `sqrt(raw² − model²)` and the apparent −45% became −4.6%.
+     **Audit every paired control for this.** Confounds that share a sign are invisible — they
+     never produce a surprising number, only a wrong one.
+
+231. **When the harness behind a published number is not preserved, identify its convention by
+     enumeration and measurement, not by reasoning.** A reasoned guess got the family right and
+     the member wrong, and would have passed on the single ROI it was checked against.
+     Enumerating seven candidates hit **0.01%** on both ROIs. This is cheap — one script, one
+     independent implementation. **And keep the harness**: this cost an afternoon only because
+     M2's code was not kept, which is a preventable class of debt.
 
 ---
 
@@ -2028,8 +2051,11 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
 90. **What is the gate threshold, and does the built merge actually beat 1.0 on real
     frames?** `Gate::threshold` is the one free parameter in the merge and it is
     deliberately unmeasured and explicit at the API boundary rather than buried in a
-    default. Its calibration target is already measured — fact 211's `n_eff ≈ 3` — and
-    `Estimator::n_eff` is an output for exactly that purpose. **Nothing here has touched a
+    default. Its calibration target is already measured — **fact 212's `nwide = 3`** at full
+    sampling density, the count of frames within 50% of peak height — and `Estimator::n_eff` is
+    an output for exactly that purpose. The two acceptance sets are **not the same rule**
+    (`nwide` thresholds on peak *height*, the gate on the calibrated *noise*), so 3 is a target
+    to land near, not a number to reproduce. **Nothing here has touched a
     real frame yet.** The merge is proven never to be *noisier* than one frame, which is a
     statement about σ; fact 24 is the reason that is not sufficient, because a mean's σ
     can look harmless while its gradient collapses 58%. So the acceptance test is the
@@ -2039,6 +2065,34 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     existing flat-ROI metric rather than reimplementing it, per discipline 210 — is the
     next build step. `UNVERIFIED`.
     *(Raised by M37; numbered 90 to clear the reserved question blocks.)*
+
+    > **M38: half answered, half refused.** Both acceptance tests **pass on real frames**
+    > (facts 320, 322) — flat-ROI 0.890x at gate 2.0 against argmax's 1.253x, detail retained
+    > to −4.6% once the noise confound is removed. But the question's *premise* is wrong:
+    > **there is no single threshold** (fact 324). At gate 2.0 `n_eff` spans 2.26–7.42 across
+    > five stacks, and the threshold that lands on fact 212's target of 3 ranges 1.1–2.9. The
+    > free parameter should be **the target `n_eff`, not the gate** — which is a better API
+    > anyway, since it is the quantity with a measured calibration behind it and the one a
+    > user can reason about. What remains open is how the solve is specified; see question 95.
+
+95. **What is the right gate parameterisation, now that a fixed threshold is known not to
+    transfer?** Fact 324 measured `n_eff/N` clustering at 0.068–0.079 on four of five stacks,
+    which says the acceptance set is roughly a fixed *fraction* of the bracket — the signature
+    of a through-focus peak of fixed optical width sampled at varying density. Three candidates,
+    all cheap because pass two folds many accumulators for the price of one decode:
+    **(a)** solve per stack for a target `n_eff` by bisection on the gate;
+    **(b)** normalise the gate by the measured focus-step density, which makes it a statement
+    about depth rather than about frame count;
+    **(c)** normalise per pixel by the local through-focus curve width, which is the only one
+    that adapts *within* an image and is the natural precursor to the posterior formulation.
+    `109MSDCF`'s 0.131 outlier must be explained before any of them is trusted — it is the
+    shallowest stack at 22 frames, so a boundary or under-sampling effect is the first
+    hypothesis. **Also unresolved:** `at_bracket_boundary` reads 7.60% on `coffee-bean` and
+    2.02% on `119MSDCF`, while fact 300 reports 7.38% for `119MSDCF`. The definitions differ
+    (all-pixel regularised winner index against a parabola-fit peak on a reliable subset), so
+    this is not yet a conflict — but the numbers are close enough, and attached to the wrong
+    stacks, that one of the two should be re-derived before either is cited. `UNVERIFIED`.
+    *(Raised by M38.)*
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
