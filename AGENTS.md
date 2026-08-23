@@ -294,6 +294,21 @@ monolithic binary and ship only that binary.
     every absolute block proposed in a report so far has either collided or
     moved.
 
+29. **A string-anchored edit deletes its anchor. Re-emit it, then verify a
+    structural count.** Twice in one night an edit whose `old_str` was a
+    heading or a table-row prefix silently consumed that anchor: one
+    concatenated the M43 and M45 corpus rows into a single 2 602-character
+    line, the other deleted `## 9. Corpus locations` and orphaned its body
+    under `## 10`. Both produced valid-looking Markdown and neither was visible
+    in the edited region. **The tell is always a deletion count that should
+    have been zero and was not** — so before committing, count deletions
+    (`git diff -- <paths> | Select-String "^-"`, and note that `^-[^-]` misses
+    deleted *blank* lines) and account for every one; and re-list the
+    structures you did not intend to touch — headings with
+    `Select-String "^## "`, table rows by counting unescaped pipes per row.
+    Anchor on the smallest *unique* string that is not itself structural, or
+    include the anchor verbatim at the head of the replacement.
+
 ## Layout
 
 | Path | What |
