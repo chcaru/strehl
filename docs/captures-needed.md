@@ -809,4 +809,3 @@ visible in some frames, so the truth is recoverable.
 - **Anything requiring a focus rail.** Deferred permanently, per section 2.
 - **Higher-resolution or more careful versions of existing stacks.** Nothing on
   this list is blocked by capture quality.
-

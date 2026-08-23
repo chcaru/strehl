@@ -556,26 +556,27 @@ impl Estimator {
         )
     }
 
-    /// [`Estimator::fold_censored`], with a per-frame photometric scale applied
-    /// to the **disagreement accumulator only**.
+    /// [`Estimator::fold_censored`], with a per-frame **affine photometric
+    /// correction** applied to the disagreement accumulator only.
     ///
-    /// `L' = black_dn + (L - black_dn) * luma_scale`. The four `sum` planes,
-    /// `n_eff`, the gate and the censoring bits are all untouched, so **this
-    /// cannot change the merged image** — it changes only what
-    /// [`Estimator::disagreement`] reports.
+    /// `L' = L * luma_scale + luma_offset`. The four `sum` planes, `n_eff`, the
+    /// gate and the censoring bits are all untouched, so **this cannot change
+    /// the merged image** — it changes only what [`Estimator::disagreement`]
+    /// reports.
     ///
-    /// It exists to price one specific rival explanation. Per-frame
-    /// photometric drift is present across most of the corpus (fact 180: 0.91%
-    /// peak-to-peak on `109MSDCF`, 11.70% on `coffee-bean`), and M31-V refuted
-    /// fact 220's mechanism by showing the residual it measured was
-    /// **photometric, not geometric**. So before any disagreement is attributed
-    /// to scene motion, it has to survive removing a scalar per frame. Fact 225
-    /// fixes how that scalar must be estimated: **the mean over all pixels**,
-    /// never a median over a subject-centred region, which absorbs focus signal
-    /// into what it calls gain.
+    /// It exists to price rival explanations for disagreement, and the affine
+    /// form rather than a bare gain is deliberate. M24 measured that per-frame
+    /// photometric drift is real across most of the corpus (0.91% peak-to-peak
+    /// on `109MSDCF`, 11.70% on `coffee-bean`) and that EXIF does not predict
+    /// it, so the correction must be **fitted from the data**. M28 §6 added
+    /// *how* to fit the gain — the mean over all pixels, never a median over a
+    /// subject-centred region, which absorbs focus signal into what it calls
+    /// gain. But M24 §5 left the shape open in as many words: *"Whether a single
+    /// global gain per frame suffices, or an offset term is also needed, is
+    /// unmeasured."* A scale-only signature cannot ask that question, so this
+    /// one carries both terms.
     ///
-    /// The scale multiplies the signal *above black*, because gain acts on
-    /// photoelectrons and the black level is an offset, not a signal.
+    /// Passing `luma_offset = 0.0` gives the pure-gain case.
     pub fn fold_censored_probing_photometry<S: QuadSource + ?Sized>(
         &mut self,
         frame_index: u16,
@@ -583,7 +584,7 @@ impl Estimator {
         regularised: &[f32],
         container_max_dn: u16,
         luma_scale: f32,
-        black_dn: f32,
+        luma_offset: f32,
     ) -> Result<()> {
         self.fold_inner(
             frame_index,
@@ -591,7 +592,7 @@ impl Estimator {
             regularised,
             Some(container_max_dn),
             luma_scale,
-            black_dn,
+            luma_offset,
         )
     }
 
@@ -602,7 +603,7 @@ impl Estimator {
         regularised: &[f32],
         censor_level: Option<u16>,
         luma_scale: f32,
-        black_dn: f32,
+        luma_offset: f32,
     ) -> Result<()> {
         let geom = src.geometry();
         if geom != self.geom {
@@ -675,14 +676,14 @@ impl Estimator {
                     // summed above rather than re-read from the source, so the
                     // variance cannot drift from the mean it belongs to.
                     let raw = 0.5 * (f32::from(greens[0]) + f32::from(greens[1]));
-                    // `luma_scale == 1.0` on every product path, and the
-                    // compiler cannot know that, so keep the arithmetic exact
-                    // in the common case rather than paying a rounding step for
-                    // a diagnostic that is almost never enabled.
-                    let luma = if luma_scale == 1.0 {
+                    // The identity correction holds on every product path, and
+                    // the compiler cannot know that, so keep the arithmetic
+                    // exact in the common case rather than paying a rounding
+                    // step for a diagnostic that is almost never enabled.
+                    let luma = if luma_scale == 1.0 && luma_offset == 0.0 {
                         f64::from(raw)
                     } else {
-                        f64::from(black_dn + (raw - black_dn) * luma_scale)
+                        f64::from(raw * luma_scale + luma_offset)
                     };
                     self.luma_sum[i] += luma;
                     self.luma_sumsq[i] += luma * luma;
@@ -2023,7 +2024,7 @@ mod tests {
             stats.fold(k, &field).unwrap();
         }
         let lumas = [[100u16, 95], [110, 115]];
-        let build = |scale: [f32; 2]| {
+        let build = |corr: [(f32, f32); 2]| {
             let mut e = Estimator::new(&stats, Gate::new(1.0));
             e.track_disagreement();
             for (k, row) in lumas.iter().enumerate() {
@@ -2037,26 +2038,50 @@ mod tests {
                     &frame,
                     &field,
                     u16::MAX,
-                    scale[k],
-                    0.0,
+                    corr[k].0,
+                    corr[k].1,
                 )
                 .unwrap();
             }
             e
         };
-        let flat = build([1.0, 1.0]);
+        let flat = build([(1.0, 0.0); 2]);
         // Scaling frame 1 by 100/110 makes the two frames coincide at pixel 0,
         // which must drive that pixel's chi2 to zero.
-        let corrected = build([1.0, 100.0 / 110.0]);
+        let corrected = build([(1.0, 0.0), (100.0 / 110.0, 0.0)]);
+        // The offset arm reaches the same place by the other route. It is
+        // tested because M24 §5 leaves the *shape* of the correction open, so a
+        // scale-only probe would beg the question it was built to ask, and an
+        // untested parameter is a parameter that silently does nothing.
+        let offset_corrected = build([(1.0, 0.0), (1.0, -10.0)]);
+        // Gain and offset must be distinguishable, or the two arms are one arm
+        // wearing two hats; pixel 1 is where they separate, asserted below.
         let m = unit_sigma_model();
         // 50 less the same sub-1% shot term as the sibling tests.
         let base = flat.disagreement(&m, 0, 0.0).unwrap();
         assert!(base < 50.0 && (50.0 - base) / 50.0 < 6e-3, "read {base}");
         assert!(corrected.disagreement(&m, 0, 0.0).unwrap() < 1e-6);
+        assert!(offset_corrected.disagreement(&m, 0, 0.0).unwrap() < 1e-6);
+        // Pixel 1 is where the two arms must part company, and the direction is
+        // arithmetic, not taste. Frame 0 reads 95 and frame 1 reads 115, so the
+        // gain that zeroed pixel 0 leaves `115*(100/110) - 95 = 9.545` while the
+        // offset that zeroed pixel 0 leaves `115 - 10 - 95 = 10.0`. chi2 goes as
+        // the square of that, so the gain arm must read `(9.545/10)^2 = 0.9112`
+        // of the offset arm, less a sub-percent correction because the two arms
+        // land on slightly different means and so on slightly different sigmas.
+        // If the offset parameter were silently ignored the two would be equal.
+        let gain_at_1 = corrected.disagreement(&m, 1, 0.0).unwrap();
+        let offset_at_1 = offset_corrected.disagreement(&m, 1, 0.0).unwrap();
+        let ratio = gain_at_1 / offset_at_1;
+        assert!(
+            gain_at_1 > 1.0 && offset_at_1 > 1.0 && (ratio - 0.9112).abs() < 0.01,
+            "gain {gain_at_1}, offset {offset_at_1}, ratio {ratio} (expected 0.9112)"
+        );
         // The image is untouched: the probe is a measurement knob, not a merge.
         for i in 0..g.pixels() {
             for p in [CfaPlane::R, CfaPlane::G1, CfaPlane::B, CfaPlane::G2] {
                 assert_eq!(flat.value(p, i), corrected.value(p, i));
+                assert_eq!(flat.value(p, i), offset_corrected.value(p, i));
             }
         }
     }

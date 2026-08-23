@@ -195,16 +195,26 @@ fn main() -> Result<()> {
     // over *all* pixels, never a median over a subject-centred region).
     let mut stats = FocusStats::new(geom);
     let mut frame_mean = vec![0.0f64; paths.len()];
+    // Per-pixel mean luma over every frame. A4 regresses each frame against it
+    // to fit a two-parameter photometric correction; it is *not* used as a
+    // disagreement reference, which is the thing M28 §1 measured to be 10x
+    // worse than an adjacent-frame one.
+    let mut ref_sum = vec![0.0f64; geom.pixels()];
     for (index, path) in paths.iter().enumerate() {
         let frame = pipe.field_for(path)?;
         stats.fold(index as u16, &pipe.reg)?;
         let mut acc = 0.0f64;
-        for &v in &pipe.luma {
+        for (r, &v) in ref_sum.iter_mut().zip(&pipe.luma) {
             acc += f64::from(v);
+            *r += f64::from(v);
         }
         // `green_luma_with_clip` has already removed black, so this is signal.
         frame_mean[index] = acc / pipe.luma.len() as f64;
         drop(frame);
+    }
+    let inv_n = 1.0 / paths.len() as f64;
+    for r in &mut ref_sum {
+        *r *= inv_n;
     }
     let grand = frame_mean.iter().sum::<f64>() / frame_mean.len() as f64;
     let scale: Vec<f32> = frame_mean.iter().map(|m| (grand / m) as f32).collect();
@@ -233,9 +243,53 @@ fn main() -> Result<()> {
             e
         })
         .collect();
+    // A4's arm: the same pixels again, under a *two*-parameter per-frame
+    // correction instead of A1b's one.
+    let mut affine: Vec<Estimator> = gates
+        .iter()
+        .map(|g| {
+            let mut e = Estimator::new(&stats, Gate::new(*g));
+            e.track_disagreement();
+            e
+        })
+        .collect();
+    let mut fits: Vec<(f32, f32)> = Vec::with_capacity(paths.len());
+    // A4b: the offset analogue of fact 225's gain, `s` pinned to 1 so the fit
+    // has exactly one degree of freedom and cannot buy a reduction by
+    // collapsing the frame onto the reference. This is the arm that answers
+    // M24 §5 as asked; A4's two-parameter fit can pass for reasons that are not
+    // photometry, and on one stack it does.
+    let mut offs: Vec<Estimator> = gates
+        .iter()
+        .map(|g| {
+            let mut e = Estimator::new(&stats, Gate::new(*g));
+            e.track_disagreement();
+            e
+        })
+        .collect();
 
     for (index, path) in paths.iter().enumerate() {
         let frame = pipe.field_for(path)?;
+        // Least squares of the all-frame mean on this frame's luma, over every
+        // pixel: `ref ~ s*L + c`. Two parameters against 8.2M samples, so the
+        // in-sample bias is 2/8.2e6 and is not the reason for any result below.
+        let (mut sl, mut sr, mut sll, mut slr) = (0.0f64, 0.0f64, 0.0f64, 0.0f64);
+        for (&l, &r) in pipe.luma.iter().zip(&ref_sum) {
+            let l = f64::from(l);
+            sl += l;
+            sr += r;
+            sll += l * l;
+            slr += l * r;
+        }
+        let n = pipe.luma.len() as f64;
+        let denom = n * sll - sl * sl;
+        let (s, c) = if denom.abs() < 1e-9 {
+            (1.0, 0.0)
+        } else {
+            let s = (n * slr - sl * sr) / denom;
+            (s, (sr - s * sl) / n)
+        };
+        fits.push((s as f32, c as f32));
         for e in &mut ests {
             e.fold_censored(index as u16, &frame, &pipe.reg, CONTAINER_MAX_DN)?;
         }
@@ -251,8 +305,34 @@ fn main() -> Result<()> {
                 0.0,
             )?;
         }
+        for e in &mut affine {
+            e.fold_censored_probing_photometry(
+                index as u16,
+                &frame,
+                &pipe.reg,
+                CONTAINER_MAX_DN,
+                s as f32,
+                c as f32,
+            )?;
+        }
+        for e in &mut offs {
+            e.fold_censored_probing_photometry(
+                index as u16,
+                &frame,
+                &pipe.reg,
+                CONTAINER_MAX_DN,
+                1.0,
+                (grand - frame_mean[index]) as f32,
+            )?;
+        }
         drop(frame);
     }
+
+    let slo = fits.iter().map(|f| f.0).fold(f32::INFINITY, f32::min);
+    let shi = fits.iter().map(|f| f.0).fold(f32::NEG_INFINITY, f32::max);
+    let clo = fits.iter().map(|f| f.1).fold(f32::INFINITY, f32::min);
+    let chi = fits.iter().map(|f| f.1).fold(f32::NEG_INFINITY, f32::max);
+    println!("A4 affine fit   : s in {slo:.4}..{shi:.4}, c in {clo:.2}..{chi:.2} DN");
 
     println!();
     println!("--- admitted-frame disagreement (MEASURED) ---");
@@ -268,8 +348,8 @@ fn main() -> Result<()> {
         best_focus: stats.best_focus(),
         threshold,
     };
-    for ((g, e), n) in gates.iter().zip(&ests).zip(&norm) {
-        report(*g, e, n, &cx);
+    for ((((g, e), n), a), o) in gates.iter().zip(&ests).zip(&norm).zip(&affine).zip(&offs) {
+        report(*g, e, n, a, o, &cx);
     }
     Ok(())
 }
@@ -284,7 +364,14 @@ struct Ctx<'a> {
     threshold: f64,
 }
 
-fn report(gate: f32, e: &Estimator, norm: &Estimator, cx: &Ctx<'_>) {
+fn report(
+    gate: f32,
+    e: &Estimator,
+    norm: &Estimator,
+    affine: &Estimator,
+    offs: &Estimator,
+    cx: &Ctx<'_>,
+) {
     let (noise, black, geom, best_focus, threshold) =
         (cx.noise, cx.black, cx.geom, cx.best_focus, cx.threshold);
     let px = geom.pixels();
@@ -321,6 +408,10 @@ fn report(gate: f32, e: &Estimator, norm: &Estimator, cx: &Ctx<'_>) {
     let mut over = 0u64;
     let mut norm_sum = 0.0f64;
     let mut norm_cnt = 0u64;
+    let mut aff_sum = 0.0f64;
+    let mut aff_cnt = 0u64;
+    let mut off_sum = 0.0f64;
+    let mut off_cnt = 0u64;
     for (i, &focus) in best_focus.iter().enumerate().take(px) {
         if let Some(c) = e.disagreement(noise, i, black) {
             chi2.push(c);
@@ -340,6 +431,14 @@ fn report(gate: f32, e: &Estimator, norm: &Estimator, cx: &Ctx<'_>) {
         if let Some(c) = norm.disagreement(noise, i, black) {
             norm_sum += c;
             norm_cnt += 1;
+        }
+        if let Some(c) = affine.disagreement(noise, i, black) {
+            aff_sum += c;
+            aff_cnt += 1;
+        }
+        if let Some(c) = offs.disagreement(noise, i, black) {
+            off_sum += c;
+            off_cnt += 1;
         }
     }
     let exposure = e.disagreement_exposure();
@@ -373,6 +472,28 @@ fn report(gate: f32, e: &Estimator, norm: &Estimator, cx: &Ctx<'_>) {
         "  A1b photometric: mean chi2 {normed:.4} after removing a per-frame scalar gain \
          ({:.1}% of the excess over 1.0 removed)",
         100.0 * (mean - normed) / (mean - 1.0)
+    );
+    assert_eq!(
+        aff_cnt,
+        chi2.len() as u64,
+        "the affine arm must cover the same pixels or A4 is not paired"
+    );
+    let affined = aff_sum / aff_cnt as f64;
+    println!(
+        "  A4  affine     : mean chi2 {affined:.4} after removing a per-frame gain AND offset \
+         ({:.1}% of the excess over 1.0 removed)",
+        100.0 * (mean - affined) / (mean - 1.0)
+    );
+    assert_eq!(
+        off_cnt,
+        chi2.len() as u64,
+        "the offset arm must cover the same pixels or A4b is not paired"
+    );
+    let offset_only = off_sum / off_cnt as f64;
+    println!(
+        "  A4b offset only: mean chi2 {offset_only:.4} after removing a per-frame offset, s == 1 \
+         ({:.1}% of the excess over 1.0 removed)",
+        100.0 * (mean - offset_only) / (mean - 1.0)
     );
     print!("  by n_eff      :");
     for (b, (cnt, sum)) in by_n.iter().enumerate().skip(2) {

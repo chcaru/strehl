@@ -142,7 +142,7 @@ real cross-power of ring `f` of configuration `i`'s pair — i.e. canonical
 | id | statistic | form | outcome |
 | --- | --- | --- | --- |
 | K0 | `sigpow` (control only) | `C(f_sig)` | control fired correctly; see §3 |
-| **K1** | **`dsig`** | OLS slope of `log[C₂/C₁]` on `−4π²f²`, reported `sign(b)√|b|` px | **kept, with measured validity conditions; fails PR1, PR13/PR14** |
+| **K1** | **`dsig`** | OLS slope of `log[C₂/C₁]` on `−4π²f²`, reported `sign(b)√\|b\|` px | **kept, with measured validity conditions; fails PR1, PR13/PR14** |
 | K2 | `rmtf2` | `[C₂/C₁](f_hi) / [C₂/C₁](f_lo)` | strictly dominated by K1; same failures, less information |
 | K3 | `ccent` | `√(Σf²C/ΣC)` over the band, absolute | degree 0 in gain (measured 0.000000) but not pedestal-blind; moves −0.7% to −17% across the PM_M ladder while true MTF falls 0.91→0.002 — **rejected**, it is a monotone-but-uncalibrated scene descriptor |
 | K4 | `dsig_ped` | K1 with a white pedestal subtracted | **not implemented.** PR10 measured the white pedestal not binding in the operational range (§6), so the fix had no failure to repair |

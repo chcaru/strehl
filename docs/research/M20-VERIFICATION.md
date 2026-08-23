@@ -25,7 +25,7 @@ used.
 | Gate | Claim | Verdict |
 | --- | --- | --- |
 | 1 | The optics model reproduces facts 12 / 27 / 28 | **REPRODUCED** — arithmetic exact. **But the gate is a TAUTOLOGY** (§1). |
-| 2 | `L̂ = ΣH*Y/(Σ|H|²+σ²/S)` is MMSE; gain is `√(Σ|H|²)/max|H|` | **REPRODUCED** and strengthened to an analytic proof. **CORRECTED**: the residual's cause is misattributed (§2). |
+| 2 | `L̂ = ΣH*Y/(Σ\|H\|²+σ²/S)` is MMSE; gain is `√(Σ\|H\|²)/max\|H\|` | **REPRODUCED** and strengthened to an analytic proof. **CORRECTED**: the residual's cause is misattributed (§2). |
 | 3.1 | Unguarded Wiener is worse than selection, by up to 31% | **REPRODUCED** — all 20 cells to 4 dp; worst penalty 31.3% (§3). |
 | 3.2 | Implementable crossover σ ≈ 0.03; power-law prior loses everywhere | **REPRODUCED** — crossover 0.0324 (§3). |
 | 3.3 | 15.1% of real pixels below crossover; median 3.3× past; survives 2× error | **REPRODUCED on 109MSDCF, REFUTED as a corpus figure** — the range is 3.5%–65.8% (§4). |

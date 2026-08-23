@@ -1242,4 +1242,3 @@ It also measures sigma at the 1/8-2.5 s exposures the real stacks use, which no 
 capture does, and yields the working-exposure hot-pixel and dust map for free. Sections 13a-c
 ask for a half-step interleave, one stack with the teleconverter removed, and one deliberate
 occluding edge. Section 14 records what would NOT help, so a session is not wasted on it.
-
