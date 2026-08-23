@@ -125,6 +125,24 @@ impl TileGeom {
         (j + self.margin) * self.geom.width + (i + self.margin)
     }
 
+    /// A tile geometry over an in-memory buffer that is *not* lifted from a
+    /// frame: `geom` is the buffer, and the ROI is its interior inset by
+    /// `margin`. Used by the self-test, where the "plane" is synthetic.
+    pub fn identity(geom: PlaneGeometry, margin: usize) -> Self {
+        Self {
+            roi: Roi {
+                x: margin,
+                y: margin,
+                width: geom.width - 2 * margin,
+                height: geom.height - 2 * margin,
+            },
+            margin,
+            geom,
+            x0: 0,
+            y0: 0,
+        }
+    }
+
     pub fn roi_geom(&self) -> PlaneGeometry {
         PlaneGeometry {
             width: self.roi.width,

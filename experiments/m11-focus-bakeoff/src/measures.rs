@@ -776,6 +776,44 @@ pub fn design() -> Vec<Measure> {
         .with_norm(Norm::BoxMean(2)),
     );
 
+    // Amendment A1 (pre-registration §8): the strictly-zero-phi operators.
+    //
+    // Every other zero-centre-tap candidate above is either windowed or
+    // pointwise-normalised, and **both of those re-introduce a centre tap** --
+    // the window mean because it averages neighbours' responses, each of which
+    // does depend on the centre pixel, and the `sigma(L(p))` divisor because it
+    // is a function of the centre pixel by definition. These two are the only
+    // members of the set with phi identically 0 by construction, and they are
+    // what the "is a zero-centre-tap operator viable as the default?" question
+    // actually rests on.
+    v.push(
+        Measure::new(
+            "tenengrad-w0-nonorm",
+            Family::Tenengrad,
+            Role::Treatment,
+            1,
+            Kind::Tenengrad {
+                window: 0,
+                squared: false,
+            },
+        )
+        .with_norm(Norm::None),
+    );
+    v.push(
+        Measure::new(
+            "brenner-sym-s2-w0-nonorm",
+            Family::Brenner,
+            Role::Treatment,
+            2,
+            Kind::Brenner {
+                step: 2,
+                symmetric: true,
+                window: 0,
+            },
+        )
+        .with_norm(Norm::None),
+    );
+
     // Controls.
     v.push(Measure::new(
         "ctl-const",

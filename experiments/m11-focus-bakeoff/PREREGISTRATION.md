@@ -294,3 +294,82 @@ results is not.
 Every claim in the report carries one of **MEASURED / VERIFIED / DERIVED / ARGUED /
 UNVERIFIED** (rule 8). Raw CSVs are committed, not just conclusions (rule 12) — the
 orchestrator re-verifies against them, and the author does not verify his own work.
+
+---
+
+## 8. Amendments
+
+Made **after** §1–§7 were committed but **before any measurement was run**, all forced by
+harness self-test failures — that is, by controls doing their job. The commit ordering is
+the evidence: the self-test that produced each finding runs on synthetic data only and
+never touches a RAW file. **No decision rule, threshold or outcome branch is changed by
+any amendment.**
+
+### A1 — the registered set contained no operator with strictly zero phi
+
+The self-test asserted that `tenengrad-w2-nonorm`, `brenner-sym-s2-w2` and `stensor-w2`
+have exactly zero centre sensitivity. All three **failed**: measured 6.4e-3, 9.9e-2 and
+3.5e-3 respectively against a required 0.
+
+The reason is structural and was missed at design time. **A window mean re-introduces a
+centre tap.** `tenengrad-wN` is the box mean over a `(2N+1)²` window of Sobel energies;
+Sobel's own centre coefficient is zero, but the *neighbours'* Sobel energies inside that
+window do depend on the centre pixel, so the windowed operator's response at `p` depends
+on `L(p)`. The pointwise `sigma(L(p))` divisor does the same thing for the same reason:
+it is a function of the centre pixel by construction.
+
+So every "zero-centre-tap" candidate in the registered set was in fact non-zero, and the
+milestone's highest-value question — *is a zero-centre-tap operator viable as the
+default?* — could not have been answered cleanly by it.
+
+**Amendment:** add two operators, `tenengrad-w0-nonorm` and `brenner-sym-s2-w0-nonorm`,
+being the only forms with `window = 0` **and** `Norm::None`. Both now measure exactly
+`0.000e0` centre sensitivity in the self-test. Set size 37 → 39. Nothing is removed.
+
+This is the amendment most at risk of looking like fitting the design to a hoped-for
+answer, so: it was made before any RAW frame was opened, it *adds* candidates rather than
+removing inconvenient ones, and it makes H1 **easier to falsify**, not harder — the new
+operators are the crudest in the set and now have to earn their selectivity on the same
+scale as everything else.
+
+The re-introduction of a centre tap by windowing and by normalisation is itself now a
+**registered prediction to be measured**: `phi(tenengrad-w0-nonorm) = 0 <
+phi(tenengrad-w0) < phi(tenengrad-w2-nonorm)`, holding the base operator fixed.
+
+### A2 — the synthetic positive-control texture was not a valid control
+
+The self-test asserted that a noiseless planted stack is recovered by `ring-1-3`. It
+failed at 27% of pixels wrong. The cause was the control texture, not the operator: it
+was a sum of four sinusoid products, and a bandpass response there is
+`sum_j c_j exp(-sigma^2 k_j^2 / 2)` over a handful of components whose signs are
+*spatially coherent*, so cancellation puts a zero crossing at an interior `sigma` and
+`|response|` stops being monotone in blur. Whole nodal lines voted for the most-defocused
+frame.
+
+**Amendment:** `synthetic_texture` is now a deterministic broadband random field —
+white Gaussian noise summed over five octaves from 1 px to 8 px with 1/f weighting,
+variance-normalised. Component signs are spatially incoherent, there is content at every
+scale the operator set can see, and there is no nodal structure.
+
+### A3 — two clarifications the self-test forced, and one added statistic
+
+- **Mirror ties.** The ladder is exactly symmetric about `w_true`, so with
+  `noise_scale = 0` the frames at `w_true +/- d` are **bit-identical** and the shipped
+  tie-break gives every mirror tie to the lower index. `mean_winner` is therefore not a
+  bias diagnostic on a noiseless plant. `acc` is unaffected — it only asks whether
+  `w_true` won — and remains the registered statistic. Now asserted as a control.
+- **§4's `P0 >= 0.90` threshold is a threshold on the metric, not on every operator at
+  every width.** A *pointwise* bandpass response is a noisy estimator of local sharpness
+  **even with zero sensor noise**: at one pixel it is a zero-mean random variable whose
+  *scale* shrinks with blur, so a single-pixel argmax is only stochastically biased
+  toward the sharp frame. Measured on the noiseless broadband control, `ring-1-3` scores
+  `acc = 0.723` pointwise and `acc = 1.0000` under a 17-wide box. The control is
+  therefore read as: **the metric is valid if the planted surface is recovered at
+  `>= 0.90` by some operator/width in the set**, which it is. The per-operator width-1
+  numbers remain the registered ranking input. This reading is fixed now, before any
+  treatment is run.
+- **Added reported statistic:** `--alpha` becomes a swept list, so the planted ladder's
+  *steepness* (px of blur per frame of defocus) can be varied. This measures
+  depth-discrimination directly — how much defocus an operator needs before it can tell
+  frames apart — which the milestone brief asks for and §2.2 did not provide. Reported
+  only; the ranking still uses the registered `alpha = 0.35`.

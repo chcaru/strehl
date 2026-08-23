@@ -201,27 +201,59 @@ pub fn plant(base: &[f32], geom: PlaneGeometry, noise: &NoiseModel, spec: PlantS
 /// a selectivity statistic that cannot see the answer here is broken before it
 /// ever meets a sensor. Constructed by summing sinusoids on the lattice, so no
 /// resampling and no interpolation is involved.
+/// A deterministic, broadband synthetic texture for the noiseless positive
+/// control.
+///
+/// **Why not a sum of sinusoids.** The first version of this function summed
+/// four sinusoid products. It failed its own positive control: a bandpass
+/// response at a pixel is `sum_j c_j exp(-sigma^2 k_j^2 / 2)` over the
+/// components present there, and with only a handful of components the `c_j`
+/// carry coherent signs, so cancellation puts a zero crossing at an interior
+/// `sigma` and `|response|` stops being monotone in blur. Whole nodal *lines*
+/// of the product texture then vote for the most-defocused frame. That is a
+/// defect of the control texture, not of the operator — but it makes the
+/// control useless.
+///
+/// A broadband random field has spatially incoherent component signs, content
+/// at every scale a 1 px stencil or a 12 px ring can see, and no nodal
+/// structure, so `|response|` is monotone in `sigma` essentially everywhere.
+/// The field is generated from a fixed seed, so the control is reproducible.
 pub fn synthetic_texture(geom: PlaneGeometry, base_dn: f32, amplitude: f32) -> Vec<f32> {
-    let (w, h) = (geom.width, geom.height);
-    let mut v = vec![0.0f32; w * h];
-    for y in 0..h {
-        for x in 0..w {
-            let (xf, yf) = (x as f32, y as f32);
-            let mut s = 0.0f32;
-            // Octaves from ~1.5 px to ~40 px, so a wide-support bandpass and a
-            // 3x3 stencil both have something to see.
-            for (fx, fy, amp) in [
-                (2.11f32, 1.87f32, 1.00f32),
-                (0.97, 1.29, 0.80),
-                (0.41, 0.33, 0.60),
-                (0.157, 0.211, 0.45),
-            ] {
-                s += amp * (xf * fx + 0.7 * yf * fy).sin() * (yf * fy - 0.3 * xf * fx).cos();
+    let n = geom.pixels();
+    let mut rng = Rng::new(0x5EED_0F0C);
+    let white: Vec<f32> = (0..n).map(|_| rng.normal()).collect();
+
+    // Octaves from 1 px to ~16 px with 1/f amplitude, which is roughly the
+    // spectrum of natural imagery and gives every operator in the set
+    // something to see at its own scale.
+    let mut acc = vec![0.0f32; n];
+    let mut tmp = vec![0.0f32; n];
+    for (sigma, w) in [(0.0f32, 1.0f32), (1.0, 1.4), (2.0, 2.0), (4.0, 2.8), (8.0, 4.0)] {
+        if sigma == 0.0 {
+            for i in 0..n {
+                acc[i] += w * white[i];
             }
-            v[y * w + x] = base_dn + amplitude * s;
+        } else {
+            gaussian_blur(&white, geom, sigma, &mut tmp);
+            // A blurred white field loses variance as ~1/(2*sqrt(pi)*sigma) per
+            // axis; rescale so every octave contributes comparably before the
+            // 1/f weighting is applied.
+            let gain = 2.0 * std::f32::consts::PI.sqrt() * sigma;
+            for i in 0..n {
+                acc[i] += w * gain * tmp[i];
+            }
         }
     }
-    v
+    let mean = acc.iter().map(|v| *v as f64).sum::<f64>() / n as f64;
+    let var = acc
+        .iter()
+        .map(|v| (*v as f64 - mean) * (*v as f64 - mean))
+        .sum::<f64>()
+        / n as f64;
+    let sd = var.sqrt().max(1e-12) as f32;
+    acc.iter()
+        .map(|v| base_dn + amplitude * (v - mean as f32) / sd)
+        .collect()
 }
 
 #[cfg(test)]

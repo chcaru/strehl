@@ -712,11 +712,11 @@ fn planted_mode(rest: &[String]) -> Result<(), String> {
     let w_trues = a.list_usize("w-true", &[5, 11, 16])?;
     let noise_scales = a.list_f32("noise-scales", &[1.0])?;
     let sigma0 = a.f32_or("sigma0", 0.8)?;
-    let alpha = a.f32_or("alpha", 0.35)?;
+    let alphas = a.list_f32("alpha", &[0.35])?;
     let seed = a.one("seed").and_then(|v| v.parse::<u64>().ok()).unwrap_or(20261101);
     let synthetic = a.has("synthetic");
     let null = a.has("null");
-    let alpha = if null { 0.0 } else { alpha };
+    let alphas: Vec<f32> = if null { vec![0.0] } else { alphas };
 
     let roi_specs = a.many("roi");
     if roi_specs.is_empty() {
@@ -734,7 +734,7 @@ fn planted_mode(rest: &[String]) -> Result<(), String> {
         frames: nframes,
         w_true: *w_trues.iter().max().unwrap_or(&0),
         sigma0,
-        alpha,
+        alpha: alphas.iter().cloned().fold(0.0f32, f32::max),
         noise_scale: 0.0,
         seed,
     };
@@ -811,47 +811,23 @@ fn planted_mode(rest: &[String]) -> Result<(), String> {
         );
 
         for &w_true in &w_trues {
-            for &noise_scale in &noise_scales {
-                let spec = PlantSpec {
-                    frames: nframes,
-                    w_true,
-                    sigma0,
-                    alpha,
-                    noise_scale,
-                    seed: seed
-                        .wrapping_mul(1_000_003)
-                        .wrapping_add((ri * 97 + w_true) as u64),
-                };
-                let stackf = planted::plant(&base, tg.geom, &stack.noise, spec);
-                for (k, f) in stackf.iter().enumerate() {
-                    let (m, _) = mean_and_sigma(f);
-                    fcsv.push_str(&format!(
-                        "{},\"{}\",{},{},{},{},{},{},{},{},{:.4},{:.5},{:.3}\n",
-                        stack.label,
-                        tg.roi,
-                        roi_kind,
-                        base_name,
-                        base_frame,
+            for &alpha in &alphas {
+                for &noise_scale in &noise_scales {
+                    let spec = PlantSpec {
+                        frames: nframes,
                         w_true,
                         sigma0,
                         alpha,
                         noise_scale,
-                        k,
-                        spec.blur_sigma(k),
-                        highpass_sd(tg, f, 2),
-                        m,
-                    ));
-                }
-
-                for m in &ms {
-                    let vol = focus_volume_owned(m, &stackf, tg.geom, &stack.noise);
-                    let rows: Vec<(usize, PlantedCell)> = widths
-                        .par_iter()
-                        .map(|w| (*w, planted_cell(tg, &vol, (w - 1) / 2, w_true)))
-                        .collect();
-                    for (w, c) in rows {
-                        csv.push_str(&format!(
-                            "{},\"{}\",{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{:.6},{:.6},{:.4},{:.3},{},{:.6}\n",
+                        seed: seed
+                            .wrapping_mul(1_000_003)
+                            .wrapping_add((ri * 97 + w_true) as u64),
+                    };
+                    let stackf = planted::plant(&base, tg.geom, &stack.noise, spec);
+                    for (k, f) in stackf.iter().enumerate() {
+                        let (m, _) = mean_and_sigma(f);
+                        fcsv.push_str(&format!(
+                            "{},\"{}\",{},{},{},{},{},{},{},{},{:.4},{:.5},{:.3}\n",
                             stack.label,
                             tg.roi,
                             roi_kind,
@@ -861,22 +837,48 @@ fn planted_mode(rest: &[String]) -> Result<(), String> {
                             sigma0,
                             alpha,
                             noise_scale,
-                            spec.seed,
-                            nframes,
-                            m.name,
-                            m.family.as_str(),
-                            m.role.as_str(),
-                            m.norm_str(),
-                            m.support_radius,
-                            w,
-                            (w - 1) / 2,
-                            c.acc,
-                            c.acc1,
-                            c.mae,
-                            c.mean_winner,
-                            c.distinct_winners,
-                            c.speckle,
+                            k,
+                            spec.blur_sigma(k),
+                            highpass_sd(tg, f, 2),
+                            m,
                         ));
+                    }
+
+                    for m in &ms {
+                        let vol = focus_volume_owned(m, &stackf, tg.geom, &stack.noise);
+                        let rows: Vec<(usize, PlantedCell)> = widths
+                            .par_iter()
+                            .map(|w| (*w, planted_cell(tg, &vol, (w - 1) / 2, w_true)))
+                            .collect();
+                        for (w, c) in rows {
+                            csv.push_str(&format!(
+                                "{},\"{}\",{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{:.6},{:.6},{:.4},{:.3},{},{:.6}\n",
+                                stack.label,
+                                tg.roi,
+                                roi_kind,
+                                base_name,
+                                base_frame,
+                                w_true,
+                                sigma0,
+                                alpha,
+                                noise_scale,
+                                spec.seed,
+                                nframes,
+                                m.name,
+                                m.family.as_str(),
+                                m.role.as_str(),
+                                m.norm_str(),
+                                m.support_radius,
+                                w,
+                                (w - 1) / 2,
+                                c.acc,
+                                c.acc1,
+                                c.mae,
+                                c.mean_winner,
+                                c.distinct_winners,
+                                c.speckle,
+                            ));
+                        }
                     }
                 }
             }
@@ -1513,7 +1515,7 @@ fn selftest() -> Result<(), String> {
     let ring = ms.iter().find(|m| m.name == "ring-1-3").unwrap();
     let vol = focus_volume_owned(ring, &stackf, geom, &noise);
     let inset = 24;
-    let mut wrong = 0usize;
+    let mut hist = vec![0usize; spec.frames];
     let mut total = 0usize;
     for y in inset..geom.height - inset {
         for x in inset..geom.width - inset {
@@ -1524,17 +1526,66 @@ fn selftest() -> Result<(), String> {
                     best = (k, f[q]);
                 }
             }
-            if best.0 != spec.w_true {
-                wrong += 1;
-            }
+            hist[best.0] += 1;
             total += 1;
         }
     }
+    let acc = hist[spec.w_true] as f64 / total as f64;
+    let mean_w = hist
+        .iter()
+        .enumerate()
+        .map(|(k, c)| k as f64 * *c as f64)
+        .sum::<f64>()
+        / total as f64;
+    let chance = 1.0 / spec.frames as f64;
+    // The ladder is exactly mirror-symmetric about `w_true`, so with
+    // `noise_scale = 0` the frames at `w_true +/- d` are **bit-identical**, and
+    // the shipped tie-break hands every mirror tie to the lower index. That is
+    // why the winner histogram is one-sided here and why `mean_winner` is not a
+    // bias diagnostic on a noiseless plant. It does not touch `acc`, which only
+    // asks whether `w_true` itself won.
+    let mirrors_tie = (1..=spec.w_true.min(spec.frames - 1 - spec.w_true))
+        .all(|d| stackf[spec.w_true - d] == stackf[spec.w_true + d]);
+    println!(
+        "        winner histogram {:?} (w_true {}, mirror frames identical: {})",
+        hist, spec.w_true, mirrors_tie
+    );
     check!(
         ok,
         failed,
-        wrong == 0,
-        "noiseless planted stack is recovered exactly by ring-1-3 ({wrong} of {total} wrong)"
+        mirrors_tie,
+        "the noiseless ladder is exactly mirror-symmetric about w_true"
+    );
+    // A *pointwise* focus measure on a random texture is a noisy estimator of
+    // sharpness even with no sensor noise: the bandpass response at one pixel
+    // is a zero-mean random variable whose *scale* shrinks with blur, so a
+    // single-pixel argmax is only stochastically biased toward the sharp frame.
+    // What the builder must guarantee is that the bias points at `w_true` and
+    // that aggregating removes the scatter. Both are asserted; "0 wrong" is
+    // not, because it is not true of any pointwise operator.
+    check!(
+        ok,
+        failed,
+        acc > 4.0 * chance && (mean_w - spec.w_true as f64).abs() < 1.0,
+        "noiseless planted stack is centred on w_true={} pointwise (acc {:.3} vs chance {:.3}, mean winner {:.2})",
+        spec.w_true,
+        acc,
+        chance,
+        mean_w
+    );
+    let agg = planted_cell(
+        &TileGeom::identity(geom, inset),
+        &vol,
+        8,
+        spec.w_true,
+    );
+    check!(
+        ok,
+        failed,
+        agg.acc > 0.95,
+        "noiseless planted stack is recovered by ring-1-3 with a 17-wide box (acc {:.4}, mae {:.3})",
+        agg.acc,
+        agg.mae
     );
 
     // ---------------------------------------------------------------- group C
@@ -1640,14 +1691,23 @@ fn selftest() -> Result<(), String> {
     );
 
     // ---------------------------------------------------------------- group E
-    println!("group E -- centre taps that are supposed to be exactly zero");
+    println!("group E -- which operators actually have a zero centre tap");
     let probe_geom = PlaneGeometry {
         width: 129,
         height: 129,
     };
     let probe = planted::synthetic_texture(probe_geom, 3000.0, 150.0);
     let centre = (probe_geom.height / 2) * probe_geom.width + probe_geom.width / 2;
+    // Only an operator that is BOTH unwindowed AND unnormalised has phi
+    // identically zero. A window mean averages neighbours' responses, and every
+    // neighbour's response does depend on the centre pixel; the pointwise
+    // `sigma(L(p))` divisor is a function of the centre pixel by construction.
+    // Both therefore re-introduce a centre tap on an operator that had none.
+    // This is the amendment-A1 claim, asserted here as a control before it is
+    // measured as a result.
     for name in [
+        "tenengrad-w0-nonorm",
+        "brenner-sym-s2-w0-nonorm",
         "tenengrad-w2-nonorm",
         "brenner-sym-s2-w2",
         "stensor-w2",
@@ -1666,16 +1726,13 @@ fn selftest() -> Result<(), String> {
         bumped[centre] += 8.0;
         m.compute(&bumped, probe_geom, &noise, 0, &mut s, &mut b);
         let d = ((b[centre] - a[centre]) as f64 / 8.0).abs();
-        let want_zero = matches!(
-            name,
-            "tenengrad-w2-nonorm" | "brenner-sym-s2-w2" | "stensor-w2"
-        );
+        let want_zero = matches!(name, "tenengrad-w0-nonorm" | "brenner-sym-s2-w0-nonorm");
         let cond = if want_zero { d < 1e-9 } else { d > 1e-9 };
         check!(
             ok,
             failed,
             cond,
-            "{name:<22} centre sensitivity {d:.3e} ({} zero)",
+            "{name:<26} centre sensitivity {d:.3e} ({} zero)",
             if want_zero { "must be" } else { "must not be" }
         );
     }
