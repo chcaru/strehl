@@ -580,8 +580,23 @@ So: a process failure that got recovered by a process rule. The rule earned its
 keep tonight. The failure is now written down as its own rule — *check whether a
 question is already closed before investigating it* — along with the useful half
 of the discovery, which is that "NOT INDEPENDENTLY VERIFIED" is a work queue.
-There are 103 findings still carrying that stamp. Picking from that list is never
-wasted effort, and tonight is the evidence.
+There are **101** findings still carrying that stamp — I wrote 103 in the first
+version of this item, which was the raw count of the phrase in the file rather
+than a count of findings, and is exactly the kind of unchecked number this
+project keeps catching. Picking from that list is never wasted effort, and
+tonight is the evidence.
+
+I then ranked the list rather than just naming it, because a backlog nobody has
+ordered is a backlog nobody works. Two numbers are worth your attention. **18 of
+the 101 are relied on by shipped code** — and the two constants that turned out
+to be wrong tonight came from exactly that intersection, so this is the risk
+surface, not a chore list. **42 of the 101 are cited nowhere at all**, which
+means a third of what we have measured is currently load-bearing on nothing and
+can wait indefinitely. The top of the ranked queue is fact 500 (a units
+conflation this project made twice), 324 and 436 and 438 (the gate does not
+transfer between operators — the most consequential unverified claim we have),
+and 272 (the log-domain peak fit). M49 is already auditing the measured-fact side
+of this seam; the ranking is the other axis and it is now written down.
 
 The honest reading of this is that the research record has outgrown my ability to
 hold it in my head, and I need to search it before starting work rather than

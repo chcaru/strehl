@@ -1,0 +1,615 @@
+{
+  "total_facts": 356,
+  "tagged_facts": 101,
+  "tag_occurrences_in_file": 103,
+  "tagged_and_in_code": 18,
+  "tagged_and_uncited": 39,
+  "queue": [
+    {
+      "fact": 500,
+      "in_code": true,
+      "cited_by": 6,
+      "headline": "Fact 437's `k` = 5.94 was wrong, and the error was a units conflation in this project's own two published constants."
+    },
+    {
+      "fact": 324,
+      "in_code": true,
+      "cited_by": 5,
+      "headline": "The gate does not transfer, and a fixed threshold is not a calibration."
+    },
+    {
+      "fact": 436,
+      "in_code": true,
+      "cited_by": 5,
+      "headline": "The merge gate's tolerance is exactly linear in a constant that belongs to the operator, not to the host."
+    },
+    {
+      "fact": 438,
+      "in_code": true,
+      "cited_by": 5,
+      "headline": "Neither capability negotiation nor the confluence property test can catch it."
+    },
+    {
+      "fact": 272,
+      "in_code": true,
+      "cited_by": 4,
+      "headline": "The log-domain (Gaussian) three-point fit with baseline subtraction is the fix, and it settles `B` \u00a74.4's UNVERIFIED marker."
+    },
+    {
+      "fact": 90,
+      "in_code": true,
+      "cited_by": 3,
+      "headline": "0.0 windows"
+    },
+    {
+      "fact": 200,
+      "in_code": true,
+      "cited_by": 3,
+      "headline": "As-shot white balance is a large per-channel gain that varies per stack."
+    },
+    {
+      "fact": 439,
+      "in_code": true,
+      "cited_by": 3,
+      "headline": "Across seven textbook focus operators, the noise constant the gate is calibrated in spans 10.4x."
+    },
+    {
+      "fact": 152,
+      "in_code": true,
+      "cited_by": 2,
+      "headline": "Bimodality is invisible at the focus measure's own scale."
+    },
+    {
+      "fact": 212,
+      "in_code": true,
+      "cited_by": 2,
+      "headline": "Uniform under-sampling needs no optics model to detect."
+    },
+    {
+      "fact": 260,
+      "in_code": true,
+      "cited_by": 2,
+      "headline": "A self-normalised posterior temperature is blind to the evidence, and non-monotone in it."
+    },
+    {
+      "fact": 300,
+      "in_code": true,
+      "cited_by": 2,
+      "headline": "Question 70 cannot be answered from existing captures, and the gate that says so is M33's own."
+    },
+    {
+      "fact": 262,
+      "in_code": true,
+      "cited_by": 1,
+      "headline": "The no-information fixed point of a softmax posterior is not `H/log n = 1`, and it drifts with `n`: 0.888 \u2192 0.850 for n = 53 \u2192 9"
+    },
+    {
+      "fact": 283,
+      "in_code": true,
+      "cited_by": 1,
+      "headline": "Fact 261 is right about the typical pixel and silent about the minority \u2014 and confidence lives in the minority."
+    },
+    {
+      "fact": 509,
+      "in_code": true,
+      "cited_by": 1,
+      "headline": "The pending M17+M42 edit silently re-scales the merge gate by 1.53x."
+    },
+    {
+      "fact": 273,
+      "in_code": true,
+      "cited_by": 0,
+      "headline": "The same fit is adequate for peak POSITION and disqualifying for peak HEIGHT."
+    },
+    {
+      "fact": 501,
+      "in_code": true,
+      "cited_by": 0,
+      "headline": "A two-target calibration caught it; a one-target calibration would have shipped it."
+    },
+    {
+      "fact": 510,
+      "in_code": true,
+      "cited_by": 0,
+      "headline": "radius alone (w13->w11) gives k = 1.125"
+    },
+    {
+      "fact": 242,
+      "in_code": false,
+      "cited_by": 9,
+      "headline": "The clipping a merge sees is not the clipping in the stack: 0.075% at gathered frames against 0.177% whole-stack, a 2.3\u00d7 reduction."
+    },
+    {
+      "fact": 261,
+      "in_code": false,
+      "cited_by": 6,
+      "headline": "Focus evidence on this rig is overwhelming: the through-focus peak stands 142\u2013991 \u03c3 above its own curve"
+    },
+    {
+      "fact": 150,
+      "in_code": false,
+      "cited_by": 5,
+      "headline": "The occlusion-bimodality mechanism is real and measured."
+    },
+    {
+      "fact": 203,
+      "in_code": false,
+      "cited_by": 5,
+      "headline": "Clipping defeats discipline 29, and both confidence candidates fail in the same direction."
+    },
+    {
+      "fact": 211,
+      "in_code": false,
+      "cited_by": 5,
+      "headline": "The gap disguises itself as a *better* peak."
+    },
+    {
+      "fact": 240,
+      "in_code": false,
+      "cited_by": 5,
+      "headline": "Exposure allocation is neutral at fixed light. Splitting a budget across exposures neither gains nor loses anything in the shot-noise regime."
+    },
+    {
+      "fact": 213,
+      "in_code": false,
+      "cited_by": 4,
+      "headline": "The deployable reshoot criterion, and a verdict on real capture practice."
+    },
+    {
+      "fact": 433,
+      "in_code": false,
+      "cited_by": 4,
+      "headline": "Fact 243 quotes the weaker of two numbers M30's own script wrote."
+    },
+    {
+      "fact": 141,
+      "in_code": false,
+      "cited_by": 3,
+      "headline": "The unguarded Wiener merge LOSES to plain argmax at realistic noise, even given oracle depth *and* an oracle prior"
+    },
+    {
+      "fact": 230,
+      "in_code": false,
+      "cited_by": 3,
+      "headline": "The merge does NOT dilute dust. The estimator's supposed free lunch is worth `D = 0.999`."
+    },
+    {
+      "fact": 241,
+      "in_code": false,
+      "cited_by": 3,
+      "headline": "This sensor is shot-noise limited across its entire usable range."
+    },
+    {
+      "fact": 243,
+      "in_code": false,
+      "cited_by": 3,
+      "headline": "Verdict on HDR co-bracketing: support it, do not default it, trigger it per stack."
+    },
+    {
+      "fact": 271,
+      "in_code": false,
+      "cited_by": 3,
+      "headline": "Three-point parabolic peak interpolation gives a HEIGHT estimate that is anti-correlated with the quantity it reports."
+    },
+    {
+      "fact": 437,
+      "in_code": false,
+      "cited_by": 3,
+      "headline": "A wrong operator constant silently degrades the estimator into the selector."
+    },
+    {
+      "fact": 96,
+      "in_code": false,
+      "cited_by": 2,
+      "headline": "nothing"
+    },
+    {
+      "fact": 180,
+      "in_code": false,
+      "cited_by": 2,
+      "headline": "Per-frame photometric drift is present across most of the corpus"
+    },
+    {
+      "fact": 220,
+      "in_code": false,
+      "cited_by": 2,
+      "headline": "R10's robustness mask needs one correction: compare against the immediate neighbours, not a running estimate over the stack."
+    },
+    {
+      "fact": 222,
+      "in_code": false,
+      "cited_by": 2,
+      "headline": "Measured sensitivity of the mask, with a plant built from the frame's own content and a shift-zero placebo."
+    },
+    {
+      "fact": 232,
+      "in_code": false,
+      "cited_by": 2,
+      "headline": "Dust is undetectable from subject stacks: the limit is a 32\u201350% shadow, against real dust of 1\u201315%."
+    },
+    {
+      "fact": 263,
+      "in_code": false,
+      "cited_by": 2,
+      "headline": "The defect in selection is not a noise problem."
+    },
+    {
+      "fact": 270,
+      "in_code": false,
+      "cited_by": 2,
+      "headline": "At operational sampling, ~~48.7%~~ "
+    },
+    {
+      "fact": 304,
+      "in_code": false,
+      "cited_by": 2,
+      "headline": "Fact 272 had a real confound, now priced, and it survives: 9% of its margin is the baseline and 91% is the log domain"
+    },
+    {
+      "fact": 91,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "8.0 vs 8.0"
+    },
+    {
+      "fact": 92,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "14\u201322\u00d7 more vertical gradient energy than horizontal"
+    },
+    {
+      "fact": 97,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "0.6759 DN"
+    },
+    {
+      "fact": 145,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "`mean \\|\u2207\\|` is a ONE-SIDED metric."
+    },
+    {
+      "fact": 201,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "The noise model is only valid in native per-channel raw DN, and white-balancing first breaks it by up to 2.86\u00d7."
+    },
+    {
+      "fact": 221,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "The M4 noise model predicts the clean adjacent-frame tile residual to 9.9%, with no free parameters."
+    },
+    {
+      "fact": 223,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "The tile scale is not a sensitivity knob."
+    },
+    {
+      "fact": 231,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "A self-ratio static map responds to defect depth \u00d7 LOCAL SCENE BRIGHTNESS relative to its neighbourhood: `R \u2248 0.92\u00b7(g/blur(g))` at the defect."
+    },
+    {
+      "fact": 233,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "The static-map floor is scene texture, not noise, so it cannot be bought with frames."
+    },
+    {
+      "fact": 264,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "M20 and M32 explain each other."
+    },
+    {
+      "fact": 274,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "The through-focus response has heavier shoulders than a Gaussian."
+    },
+    {
+      "fact": 284,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "Explicit flags are nearly free and nearly redundant."
+    },
+    {
+      "fact": 301,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "The deficit ladder's log\u2013log slope is a second adequacy diagnostic, and a cheaper one."
+    },
+    {
+      "fact": 302,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "The log fit beats the parabola on every stack \u2014 2.05\u00d7 / 1.53\u00d7 / 1.79\u00d7 \u2014 across a 2\u00d7 range of marked aperture and a 10\u00d7 range of ISO"
+    },
+    {
+      "fact": 323,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "Fact 24's gradient convention, identified by measurement rather than assumed."
+    },
+    {
+      "fact": 330,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "The gate is now solved, not chosen, and the solve is confirmed end to end."
+    },
+    {
+      "fact": 331,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "`coffee-bean`'s acceptance set is strongly bimodal, and its boundary fraction is gate-invariant."
+    },
+    {
+      "fact": 432,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "M31-V's \"31x31, the shipped scale\" is correct, and the shipped constants do not say 31."
+    },
+    {
+      "fact": 434,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "Re-derived verdict on HDR co-bracketing: unchanged in what it recommends, inverted in why."
+    },
+    {
+      "fact": 435,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "And 7.05% is a lower bound, by the same mechanism that killed fact 242."
+    },
+    {
+      "fact": 485,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "worst-case"
+    },
+    {
+      "fact": 487,
+      "in_code": false,
+      "cited_by": 1,
+      "headline": "width-9 smooth ramp"
+    },
+    {
+      "fact": 94,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "0.0036\u20130.0136 DN"
+    },
+    {
+      "fact": 95,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "44\u201399 % of a corpus tile's total variance"
+    },
+    {
+      "fact": 98,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "level"
+    },
+    {
+      "fact": 99,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "is"
+    },
+    {
+      "fact": 151,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "But the detector is unusable without the noise model."
+    },
+    {
+      "fact": 160,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "Recurrence, not a \u03c3 threshold, is the correct hot-pixel discriminator."
+    },
+    {
+      "fact": 161,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "And it barely matters."
+    },
+    {
+      "fact": 162,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "All 242 delivered darks are 1/100 s; the real stacks run 1/60 s to 2.5 s \u2014 up to 250\u00d7 longer."
+    },
+    {
+      "fact": 181,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "EXIF does not predict the drift, in either direction."
+    },
+    {
+      "fact": 182,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "The drift is not a framing artifact."
+    },
+    {
+      "fact": 202,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "Saturation is real, per-stack, and absent from four of six stacks."
+    },
+    {
+      "fact": 210,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "A hole in the focus bracket is blindly detectable from a single missing frame."
+    },
+    {
+      "fact": 224,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "The detector transfers: a threshold calibrated entirely on the clean stack flags 1.01% / 8.33% / 17.88%"
+    },
+    {
+      "fact": 225,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "M24 said gain must be FITTED; M28 measures HOW, after the wrong choice bit its own script."
+    },
+    {
+      "fact": 234,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "Two stacks shot in the same session of the same subject share 94% of their \"static\" map."
+    },
+    {
+      "fact": 282,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "The honest \"do not trust this pixel\" mask is the UNION, and it is 14.3% of pixels \u2014 3\u00d7 what any single channel reports."
+    },
+    {
+      "fact": 303,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "M33's published calibration reproduces exactly from independently written code: 0.457 / 0.710 / 51.2%"
+    },
+    {
+      "fact": 310,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "The estimation merge is built"
+    },
+    {
+      "fact": 311,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "`FOCUS_NOISE_SD = 0.015214 \u00b1 0.000075`"
+    },
+    {
+      "fact": 312,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "A plain LCG in the test harness made the constant vary 1.30\u00d7 across seeds"
+    },
+    {
+      "fact": 313,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "A sample SD over a region a few supports across is biased low: 192\u00b2 reads 0.01366, 10% under."
+    },
+    {
+      "fact": 314,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "The regulariser is dilution by `W\u00b2` and nothing more."
+    },
+    {
+      "fact": 321,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "Gate 0 reproduces an independently measured number to 0.1%."
+    },
+    {
+      "fact": 428,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "MEASURED. Fact 341's defect is repaired, and the repair is worth 3.1\u00d7 in the artifact it was raised against."
+    },
+    {
+      "fact": 430,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "OPEN. The repair overshoots on the flat ROI: \u221211.5% where a no-detail region should read \u22481.0\u00d7."
+    },
+    {
+      "fact": 480,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "w13"
+    },
+    {
+      "fact": 481,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "MOVES with the operator"
+    },
+    {
+      "fact": 482,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "+0.8604 DN"
+    },
+    {
+      "fact": 483,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "0 of 6"
+    },
+    {
+      "fact": 484,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "+1.1326 DN on 119MSDCF (outside it)"
+    },
+    {
+      "fact": 486,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "radius-INVARIANT"
+    },
+    {
+      "fact": 488,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "<=1.020x"
+    },
+    {
+      "fact": 489,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "entirely by `w0`"
+    },
+    {
+      "fact": 490,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "+0.0041 N (0.38%)"
+    },
+    {
+      "fact": 491,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "1.08637"
+    },
+    {
+      "fact": 506,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "regardless of the distance axis"
+    },
+    {
+      "fact": 507,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "Turnover censoring is orientation-asymmetric and follows the scene exactly."
+    },
+    {
+      "fact": 508,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "rectangular"
+    },
+    {
+      "fact": 511,
+      "in_code": false,
+      "cited_by": 0,
+      "headline": "the magnitude operator. `tenengrad-sq` was never landed"
+    }
+  ]
+}
