@@ -731,12 +731,12 @@ since contributors are not required to be spliceable and only have to emit an `f
 > 110+/discipline 60+, M19 facts 120+, M20's verifier facts 130+, **M23 facts
 > 170+/discipline 80+/question 25+**, **M25 facts 190+/discipline 100+/question
 > 30+**. Facts **140-145 (M20)**, **150-152 (M21)**,
-> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)**, **230-234 (M29)**, **240-243 (M30)**, **260-264 (M32)** and **270-274 (M33)** are folded below and are all
+> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)**, **230-234 (M29)**, **240-243 (M30)**, **260-264 (M32)**, **270-274 (M33)** and **280-284 (M34)** are folded below and are all
 > **NOT INDEPENDENTLY VERIFIED** — they were measured by the
 > orchestrator, and rule 12 binds their author exactly as it binds any milestone.
 > The same reservation rule governs the other two sequences: **discipline 110-111
-> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29), 150 (M30), 170 (M32), 180-181 (M33)** and **question 45 (M28),
-> 50 (M29), 55 (M30), 65 (M32), 70 (M33)** are folded. M23's blocks (discipline 80+, question 25+) and
+> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29), 150 (M30), 170 (M32), 180-181 (M33), 190-191 (M34)** and **question 45 (M28),
+> 50 (M29), 55 (M30), 65 (M32), 70 (M33), 75 (M34)** are folded. M23's blocks (discipline 80+, question 25+) and
 > M25's (discipline 100+, question 30+) remain unclaimed pending their reports;
 > **facts 250+, discipline 160+ and question 60+ are reserved for M31**, the
 > independent verification of M27-M30; and **discipline 30-34 are already taken**
@@ -869,6 +869,11 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 272 | **The log-domain (Gaussian) three-point fit with baseline subtraction is the fix, and it settles `B` §4.4's UNVERIFIED marker.** Exact on a Gaussian response (ratio **1.0000** at every spacing, error ~10⁻¹⁷). On real data at ×2 it reaches calibration ratio **0.710** and **51.2%** of pixels within 2×, against the parabola's 0.457 / 37.5% — **the first estimator in the milestone to clear the pre-registered calibration bar** | Baseline subtraction matters because `log` is not shift-invariant and the focus measure does not reach zero when defocused. **The placebo confirms it is not universally better:** on a curve that genuinely *is* a parabola the parabola fit is exact and the log fit is **3.02× wrong**. Honest scope: the fix works at operational density and degrades under sparse sampling (ratio 0.368 at ×4, 0.223 at ×6). **One-line change wherever interpolation happens** | M33 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 | 273 | **The same fit is adequate for peak POSITION and disqualifying for peak HEIGHT.** Position at ×2: parabola 0.128 dense frames vs the trivial argmax's 0.517 — a **4.03×** gain, only **9.4%** worse than the log fit. Synthetic shrinkage 0.403 (h=4) and 0.110 (h=6) for the parabola; **1.000** for the log fit | **Position is set by the *asymmetry* of three samples — a first-order property any smooth fit captures. Height is *curvature extrapolated beyond* them — entirely a consequence of the assumed functional form, about which three points carry no information.** The parabola is not estimating the peak height from the data; it is reporting its own assumption, evaluated at the data. **This scope limit is what keeps fact 271 from overclaiming against the field**, which mostly uses interpolation for position | M33 (MEASURED + DERIVED mechanism) — **NOT INDEPENDENTLY VERIFIED** |
 | 274 | **The through-focus response has heavier shoulders than a Gaussian.** Fitting a Gaussian width to the decimation ladder gives σ = **1.68 / 2.04 / 2.45 dense frames** from the ×2 / ×4 / ×6 arms; a true Gaussian would give one number | Explains why the log fit is *exact* on synthetic and only *better* on real data, and why both estimators degrade under sparse sampling: the wider the spacing, the more the fit is extrapolating into shoulders neither functional form describes. **Any future sub-frame estimator should be validated on the decimation ladder rather than at one spacing**, since a single-spacing test cannot see this | M33 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; one stack, one aperture, one magnification |
+| 280 | **The confidence output must be a VECTOR; a scalar cannot represent it.** The three real-valued channels' worst-5% sets union to **14.278%** of pixels against a **15.0%** perfectly-disjoint ceiling — **95.19% of the way to complete disjointness** (5.0% if they were the same channel). Every pairwise overlap sits at **0.53×–1.35× of analytic chance**; the label-shuffle null returns **0.0256** against an analytic **0.0256** | Settles M18's output contract. **The controls are what make it readable:** each channel is **70–76% self-reproducible** under an independent noise re-realisation, so this is disagreement between real measurements, not between noise. Three orthogonal noise sources would have produced the overlap table exactly — the reliability ceiling is the control that separates the two cases, and it is a conservative lower bound (both arms carry √2× the real noise) | M34 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 281 | **One channel is NEGATIVELY informative about another's target.** C1 (predicted σ) has a worst-5% lift of **0.89×** on C3's true sub-frame deficit — the pixels it calls least trustworthy have **less** true deficit than average (Spearman −0.0726 against truth, −0.1240 against C3) | **This, not the orthogonality, is the decisive argument for the vector.** Mechanism: photon-starved pixels have **flat** through-focus curves, so missing the peak costs them little — the channel that finds the noisiest pixels is systematically looking *away* from the worst-sampled ones. **No monotone scalar combination of these channels is faithful**, so a "quality score" is not merely lossy, it is wrong | M34 (MEASURED + DERIVED mechanism) — **NOT INDEPENDENTLY VERIFIED** |
+| 282 | **The honest "do not trust this pixel" mask is the UNION, and it is 14.3% of pixels — 3× what any single channel reports.** C3 alone predicts true deficit at Spearman **+0.5560** against a random-channel floor of **+0.0014**; C2 at **+0.3349**; C1 at −0.0726 | **A tool shipping one confidence channel understates its own uncertainty by about 3×.** This is the concrete, checkable form of the product claim: 14.3% of this stack is pixels some channel says not to trust, and the selectors we are competing with report none of them | M34 (MEASURED, ground truth = M33's dense 105-frame grid) — **NOT INDEPENDENTLY VERIFIED**; ground truth honest by 3.87× and no more |
+| 283 | **Fact 261 is right about the typical pixel and silent about the minority — and confidence lives in the minority.** Per pixel, the calibrated posterior's perplexity is within 1% of a delta for only **76.5%** of pixels; p99 = **4.74**, max = **39.05**, and the informative 23.5% correlates with true sub-frame deficit at **+0.3349** | **Answers question 65(b): `n_eff` is degenerate for the typical pixel and genuinely informative in the tail — so it ships.** My own falsified prediction (P2 predicted >95% degenerate). **The general error: fact 261 was measured on binned populations, and a median over a population cannot falsify a claim about that population's tail.** Recheck any fact whose evidence is a median but whose claim is about extremes | M34 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; qualifies but does not overturn fact 261 |
+| 284 | **Explicit flags are nearly free and nearly redundant.** C4 (clip ∪ stack-boundary peak) fires on **0.053%** of pixels and adds only **0.0145%** of genuinely new pixels to the union — **73% of what it flags is already caught** by the three real-valued channels | **Keep the flags, but as an explanation rather than a dimension**: they are the only channel that says *why* instead of *how much*, which is what the reshoot advisor needs. Separately, C4's degenerate row became **a free second null**: a binary flag on 0.053% of pixels has a "worst 5%" that is 99% random tie-breaks, so its overlaps must land at chance by construction — and they measured 0.0250 / 0.0297 / 0.0268 against 0.0256 | M34 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -1352,6 +1357,28 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      0.234%, wrong by 30×. Discipline 142 requires the effect size; it does not by itself stop you
      getting the magnitude right for the wrong estimator. **Pre-register the effect size *and* the
      shape of the distribution it will be read off.****
+
+190. **A rank correlation and an extreme-set overlap answer different questions, and a
+     confidence channel has to be judged on both.** M34's C2 correlates with the true
+     sub-frame deficit at **+0.3349 — 60% of C3's +0.5560** — while their worst-5% sets
+     overlap at **chance**. Neither number alone is true: reporting only the correlation
+     says C2 is a weak C3; reporting only the overlap says C2 is unrelated to C3. What is
+     actually the case is that C2 carries real information across the bulk of the
+     distribution while the specific pixels it calls worst are different pixels. Any claim
+     that two diagnostics are redundant must state which of the two questions it answered.
+
+191. **A defensive clamp that is unreachable in correct operation conceals the bug it was
+     written to guard against. Use an assert.** M34 script 01 computed
+     `1 − exp(min(a0 − peak, 0))`, where `min(·, 0)` existed so a numerically impossible
+     positive value could not produce a negative deficit. A sign error made `a0 − peak`
+     positive for **every** pixel, the clamp fired everywhere, and the channel came out
+     **exactly 0.00000 at the median, the mean *and* p95 — 100.0000% of pixels**. The guard
+     did its job, which is exactly the problem: an assert would have failed on the first
+     pixel instead of producing a plausible-looking all-zeros array. **Corollary, from the
+     same incident: a formula that has already been got wrong once must exist in exactly one
+     place in the repository.** The sign error was character-for-character the one M33 script
+     02 already contained, found and corrected; I reproduced it by retyping the expression
+     instead of importing the corrected one. Retyping a correction discards it.
 
 ---
 
@@ -1918,6 +1945,25 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     aperture-dependent, the fit's functional form becomes a candidate entry in the optical profile**,
     which would be the first thing to genuinely need the camera/lens plugin seam. `UNVERIFIED`.
     *(Raised by M33; numbered 70 to clear the reserved question blocks.)*
+
+75. **Does C1 — the predicted σ of the merged estimate — predict anything real?** M34
+    established that it is *orthogonal* to the other channels (fact 280) and *self-reproducible*
+    at 0.7642 under an independent noise draw. It established nothing about whether it is
+    **right**, because its target is the merged estimate's actual error and this project has no
+    ground truth for that. Worse, the one target it could be scored against it gets **backwards**:
+    fact 281's 0.89× lift. Two ways to obtain the missing truth. **(a) The simulator (M25):** a
+    latent scene rendered through the measured forward model has a known answer at every pixel,
+    so predicted-vs-actual error is directly scoreable — this is the cleanest route and it is
+    already in flight. **(b) A repeat-capture pair:** two identical brackets of a static subject
+    give an empirical per-pixel error from their difference, with no model in the loop at all;
+    it costs one extra bracket and nothing else, and it is the only route that does not inherit
+    the simulator's assumptions. **Until one of these lands, C1 must not appear in a product
+    claim** — shipping a confidence number that has never been checked against a real error is
+    precisely the defect this project exists to remove. Note also that M34's acceptance set has
+    median size **1.0** at a 1σ_f gate, so C1 is currently measuring single-frame SNR rather than
+    any merge benefit; it will change character once M18's gate is tuned, and these numbers must
+    be re-measured against the real merge rather than carried forward. `UNVERIFIED`.
+    *(Raised by M34; numbered 75 to clear the reserved question blocks.)*
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
