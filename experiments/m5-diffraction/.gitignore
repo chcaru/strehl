@@ -1,0 +1,8 @@
+# Python bytecode from the measurement scripts
+__pycache__/
+*.pyc
+
+# Captured console output. The numbers live in
+# docs/research/M5-diffraction-measured.md, not in scratch logs.
+_*.txt
+_*.err
