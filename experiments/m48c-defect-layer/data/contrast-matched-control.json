@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "purpose": "contrast-matched control for script 04's D > 1",
+    "merged_tiff": "C:\\Users\\chris\\AppData\\Local\\Temp\\m48c-bubbles-g2.tiff",
+    "n_frames": 19,
+    "column_offset": 0,
+    "match_tolerance": 0.1
+  },
+  "planes": {
+    "R": {
+      "n_defects": 281,
+      "n_controls": 1124,
+      "defect_in_dn": 6.184210526315809,
+      "defect_out_dn": 8.108786520634197,
+      "D_defect": 1.3112080331238236,
+      "control_in_dn": 6.23684210526315,
+      "control_out_dn": 7.924495917892512,
+      "D_matched_control": 1.2705942821937375,
+      "D_defect_over_D_control": 1.031964374072237
+    },
+    "B": {
+      "n_defects": 1546,
+      "n_controls": 6184,
+      "defect_in_dn": 7.0,
+      "defect_out_dn": 8.617847048406059,
+      "D_defect": 1.2311210069151513,
+      "control_in_dn": 6.907894736842099,
+      "control_out_dn": 8.459721414490351,
+      "D_matched_control": 1.2246453857166997,
+      "D_defect_over_D_control": 1.0052877520905057
+    }
+  }
+}

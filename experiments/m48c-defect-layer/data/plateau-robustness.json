@@ -1,0 +1,63 @@
+{
+  "_meta": {
+    "gain_divisor": 436.8
+  },
+  "tests": {
+    "select_high_measure_low_oos": {
+      "n": 12308,
+      "low_mode_e": 7.42014,
+      "high_mode_e": 2.9566875,
+      "ratio": 2.5096125309150863
+    },
+    "select_low_measure_high_oos": {
+      "n": 4015,
+      "low_mode_e": 11.64891,
+      "high_mode_e": 3.1894199999999997,
+      "ratio": 3.652359990217658
+    },
+    "amplitude_50": {
+      "n": 6822,
+      "low_mode_e": 8.58039,
+      "high_mode_e": 3.210285,
+      "ratio": 2.6727813885683047
+    },
+    "amplitude_90": {
+      "n": 1368,
+      "low_mode_e": 10.62243,
+      "high_mode_e": 4.0637025,
+      "ratio": 2.6139782624343195
+    },
+    "recurrence_3": {
+      "n": 51671,
+      "low_mode_e": 4.99044,
+      "high_mode_e": 1.967745,
+      "ratio": 2.5361212962045387
+    },
+    "recurrence_6": {
+      "n": 13630,
+      "low_mode_e": 8.009820000000001,
+      "high_mode_e": 2.8888275,
+      "ratio": 2.772688919639543
+    },
+    "recurrence_9": {
+      "n": 2843,
+      "low_mode_e": 11.65164,
+      "high_mode_e": 3.8273625000000004,
+      "ratio": 3.0443000891606165
+    },
+    "recurrence_11": {
+      "n": 360,
+      "low_mode_e": 14.84847,
+      "high_mode_e": 4.64958,
+      "ratio": 3.19350780070458
+    },
+    "null_random_pixels": {
+      "low_mode_e": -0.05459999999999999,
+      "high_mode_e": -0.007019999999999991,
+      "ratio": 7.777777777777787
+    }
+  },
+  "ratio_min": 2.5096125309150863,
+  "ratio_max": 3.652359990217658,
+  "ratio_mean": 2.874418784730581
+}

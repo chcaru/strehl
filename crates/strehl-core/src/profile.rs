@@ -76,6 +76,41 @@ pub struct CameraProfile {
     /// PTC; the PTC now exists and the relation survives it at true gain steps.
     /// **SYNTHESIS fact 585 adjudicates this constant by name**: it is not a
     /// fourth wrong sensor constant, and the −10.7% is licensed to stand.
+    ///
+    /// **The relation is calibrated in the LOW gain mode only, and M48c measures
+    /// that it does not carry across [`second_base_iso`](Self::second_base_iso).**
+    /// The PTC above was taken at ISO 160; every ISO ≥ 400 is extrapolation.
+    /// M48c took the 13,630 recurrent hot pixels from the 242 darks — a
+    /// dark-current signal, which is generated at the photodiode *before* the
+    /// analogue gain and therefore cannot depend on the ISO dial — and measured
+    /// their excess at all 11 ISOs. Within each mode the excess is *purely*
+    /// proportional to this relation's `g` (additive term −0.055 DN high,
+    /// −0.125 DN low, both consistent with zero; residuals ≤ 4.8%), but the
+    /// constant of proportionality **steps by 2.17× exactly at ISO 400**:
+    /// 6.69 e⁻ below, 3.08 e⁻ above, for the same pixels.
+    ///
+    /// Exposure and temperature are excluded as causes: all 11 groups are
+    /// 1/100 s to the EXIF, and they were shot interleaved inside 3.5 minutes
+    /// (ISO 400/800/1600 *before* ISO 50/200/250), so no monotone thermal drift
+    /// can produce a step that sorts by gain mode while scrambled in time.
+    ///
+    /// **Consequence, and it is a labelling failure rather than an arithmetic
+    /// one.** [`read_noise_e_high`](Self::read_noise_e_high) was fitted to dark
+    /// σ_DN *through this same `g`*, so the product `RN_e × g` reproduces the
+    /// measured DN and **every DN-domain prediction of this model is unaffected**.
+    /// What is not identified above ISO 400 is the *split*: `gain_divisor` and
+    /// `read_noise_e_high` are degenerate there, and only their product is
+    /// measured. Read in electrons, the high-mode read noise is ~2.7 e⁻ rather
+    /// than 1.2392, and the dual-gain improvement is ~1.6× rather than ~3.4×.
+    ///
+    /// This is **not** fixed here, because fixing it means making gain
+    /// mode-dependent — a model *shape* change — on the strength of one
+    /// measurement, made on darks. The measurement it needs is a PTC at ISO 500
+    /// or 1000, which the corpus can support (261 of 421 frames are at those two
+    /// settings) and which nothing has yet run. Until then the degeneracy is
+    /// documented rather than silently split, and
+    /// `the_gain_relation_is_still_continuous_across_the_dual_gain_switch`
+    /// is the tripwire that fails the day someone changes it.
     pub gain_divisor: f32,
     /// The lowest ISO that is a real analogue gain step.
     ///
@@ -498,6 +533,56 @@ mod tests {
         assert!(
             (0.050..0.056).contains(&worst),
             "worst relative residual in the high mode is {worst}, expected ~5.3%"
+        );
+    }
+
+    /// The gain relation runs continuously through the dual-gain switch, and
+    /// M48c measured that it should not. This test asserts the **known-wrong**
+    /// present behaviour, rule-30 style, so that it goes red the day the model
+    /// is improved rather than letting the improvement land unremarked.
+    ///
+    /// M48c's measurement, on the 13,630 recurrent hot pixels of the 242 darks:
+    /// dark current is generated before the analogue gain, so a fixed set of hot
+    /// pixels must imply the same electron excess at every ISO. It does not. It
+    /// implies 6.69 e⁻ below ISO 400 and 3.08 e⁻ at or above it — a 2.17× step,
+    /// with a purely proportional (additive term ≈ 0) fit inside each mode. All
+    /// 11 dark groups are 1/100 s and were shot interleaved within 3.5 minutes,
+    /// which excludes exposure and temperature.
+    ///
+    /// Only the *product* `gain × read_noise_e` is measured above ISO 400, so
+    /// the DN-domain predictions are right and the electron-domain split is not
+    /// identified. See [`CameraProfile::gain_divisor`].
+    ///
+    /// **What would make it fail:** making gain depend on the mode — which is
+    /// the correct fix, and should be made deliberately, on the strength of a
+    /// PTC at ISO 500 or 1000 rather than on darks alone.
+    #[test]
+    fn the_gain_relation_is_still_continuous_across_the_dual_gain_switch() {
+        let p = by_model("ILCE-7CM2").unwrap();
+
+        // Gain is a single straight line through the switch: doubling the ISO
+        // doubles g on both sides of it and across it.
+        let below = p.gain_dn_per_e(200.0);
+        let above = p.gain_dn_per_e(400.0);
+        assert!(
+            (above / below - 2.0).abs() < 1e-5,
+            "gain steps by {} across the switch, not 2.0; if this is deliberate, \
+             M48c's 2.17x dark-current discrepancy is the measurement to cite",
+            above / below
+        );
+
+        // The measured step, carried as the expected wrong value. 2.174 is
+        // 6.6855 / 3.0765 from the two independent within-mode fits.
+        let measured_step = 6.6855_f64 / 3.0765_f64;
+        assert!(
+            (2.10..2.25).contains(&measured_step),
+            "M48c measured {measured_step}"
+        );
+        // What the model currently asserts instead: no step at all.
+        let modelled_step = 1.0_f64;
+        assert!(
+            (measured_step - modelled_step).abs() > 1.0,
+            "the discrepancy this test exists to record has gone away"
         );
     }
 }

@@ -1,0 +1,360 @@
+{
+  "_meta": {
+    "purpose": "threshold-free amplitude scaling of a FIXED defect set",
+    "gain_divisor": 436.8,
+    "base_iso": 100,
+    "settling_frames_dropped": 2,
+    "n_defects_per_plane": {
+      "R": 101,
+      "G1": 98,
+      "G2": 7757,
+      "B": 5674
+    }
+  },
+  "per_iso": [
+    {
+      "iso": 50,
+      "dir": "122MSDCF",
+      "frames": 20,
+      "gain": 0.22893772893772893,
+      "black_level": 512.0,
+      "planes": {
+        "R": {
+          "median_excess_dn": 1.0750000000000002,
+          "median_excess_e": 4.695600000000001,
+          "p90_excess_dn": 3.5500000000000003
+        },
+        "G1": {
+          "median_excess_dn": 0.9625,
+          "median_excess_e": 4.2042,
+          "p90_excess_dn": 2.7899999999999996
+        },
+        "G2": {
+          "median_excess_dn": 1.9,
+          "median_excess_e": 8.2992,
+          "p90_excess_dn": 3.5250000000000004
+        },
+        "B": {
+          "median_excess_dn": 1.75,
+          "median_excess_e": 7.644,
+          "p90_excess_dn": 3.4250000000000003
+        }
+      },
+      "even_dn": 1.01875,
+      "odd_dn": 1.825
+    },
+    {
+      "iso": 100,
+      "dir": "118MSDCF",
+      "frames": 20,
+      "gain": 0.22893772893772893,
+      "black_level": 512.0,
+      "planes": {
+        "R": {
+          "median_excess_dn": 0.9749999999999999,
+          "median_excess_e": 4.2588,
+          "p90_excess_dn": 3.35
+        },
+        "G1": {
+          "median_excess_dn": 0.7999999999999999,
+          "median_excess_e": 3.4943999999999997,
+          "p90_excess_dn": 2.7575
+        },
+        "G2": {
+          "median_excess_dn": 1.9000000000000001,
+          "median_excess_e": 8.2992,
+          "p90_excess_dn": 3.5749999999999997
+        },
+        "B": {
+          "median_excess_dn": 1.725,
+          "median_excess_e": 7.534800000000001,
+          "p90_excess_dn": 3.3499999999999996
+        }
+      },
+      "even_dn": 0.8875,
+      "odd_dn": 1.8125
+    },
+    {
+      "iso": 200,
+      "dir": "123MSDCF",
+      "frames": 20,
+      "gain": 0.45787545787545786,
+      "black_level": 512.0,
+      "planes": {
+        "R": {
+          "median_excess_dn": 2.75,
+          "median_excess_e": 6.006,
+          "p90_excess_dn": 6.074999999999999
+        },
+        "G1": {
+          "median_excess_dn": 1.9500000000000002,
+          "median_excess_e": 4.258800000000001,
+          "p90_excess_dn": 4.5475
+        },
+        "G2": {
+          "median_excess_dn": 3.8499999999999996,
+          "median_excess_e": 8.4084,
+          "p90_excess_dn": 6.735000000000014
+        },
+        "B": {
+          "median_excess_dn": 3.675,
+          "median_excess_e": 8.0262,
+          "p90_excess_dn": 6.4750000000000005
+        }
+      },
+      "even_dn": 2.35,
+      "odd_dn": 3.7624999999999997
+    },
+    {
+      "iso": 250,
+      "dir": "126MSDCF",
+      "frames": 20,
+      "gain": 0.5723443223443223,
+      "black_level": 512.0,
+      "planes": {
+        "R": {
+          "median_excess_dn": 3.225,
+          "median_excess_e": 5.634720000000001,
+          "p90_excess_dn": 6.525
+        },
+        "G1": {
+          "median_excess_dn": 2.2375,
+          "median_excess_e": 3.90936,
+          "p90_excess_dn": 5.9525
+        },
+        "G2": {
+          "median_excess_dn": 4.625,
+          "median_excess_e": 8.0808,
+          "p90_excess_dn": 8.174999999999999
+        },
+        "B": {
+          "median_excess_dn": 4.4,
+          "median_excess_e": 7.687680000000001,
+          "p90_excess_dn": 7.9
+        }
+      },
+      "even_dn": 2.73125,
+      "odd_dn": 4.5125
+    },
+    {
+      "iso": 400,
+      "dir": "119MSDCF",
+      "frames": 20,
+      "gain": 0.9157509157509157,
+      "black_level": 512.0,
+      "planes": {
+        "R": {
+          "median_excess_dn": 2.9250000000000003,
+          "median_excess_e": 3.1941000000000006,
+          "p90_excess_dn": 4.875
+        },
+        "G1": {
+          "median_excess_dn": 2.7625,
+          "median_excess_e": 3.0166500000000003,
+          "p90_excess_dn": 4.51
+        },
+        "G2": {
+          "median_excess_dn": 2.85,
+          "median_excess_e": 3.1122,
+          "p90_excess_dn": 5.0
+        },
+        "B": {
+          "median_excess_dn": 2.75,
+          "median_excess_e": 3.003,
+          "p90_excess_dn": 4.800000000000001
+        }
+      },
+      "even_dn": 2.84375,
+      "odd_dn": 2.8
+    },
+    {
+      "iso": 500,
+      "dir": "125MSDCF",
+      "frames": 20,
+      "gain": 1.1446886446886446,
+      "black_level": 512.0,
+      "planes": {
+        "R": {
+          "median_excess_dn": 3.75,
+          "median_excess_e": 3.2760000000000002,
+          "p90_excess_dn": 6.825
+        },
+        "G1": {
+          "median_excess_dn": 3.7874999999999996,
+          "median_excess_e": 3.30876,
+          "p90_excess_dn": 6.355
+        },
+        "G2": {
+          "median_excess_dn": 3.575,
+          "median_excess_e": 3.1231200000000006,
+          "p90_excess_dn": 6.185000000000014
+        },
+        "B": {
+          "median_excess_dn": 3.4,
+          "median_excess_e": 2.97024,
+          "p90_excess_dn": 6.025
+        }
+      },
+      "even_dn": 3.76875,
+      "odd_dn": 3.4875
+    },
+    {
+      "iso": 640,
+      "dir": "124MSDCF",
+      "frames": 20,
+      "gain": 1.465201465201465,
+      "black_level": 512.0,
+      "planes": {
+        "R": {
+          "median_excess_dn": 4.025,
+          "median_excess_e": 2.7470625000000006,
+          "p90_excess_dn": 8.225
+        },
+        "G1": {
+          "median_excess_dn": 4.8625,
+          "median_excess_e": 3.31865625,
+          "p90_excess_dn": 7.919999999999999
+        },
+        "G2": {
+          "median_excess_dn": 4.3500000000000005,
+          "median_excess_e": 2.9688750000000006,
+          "p90_excess_dn": 7.7749999999999995
+        },
+        "B": {
+          "median_excess_dn": 4.2,
+          "median_excess_e": 2.8665000000000003,
+          "p90_excess_dn": 7.449999999999999
+        }
+      },
+      "even_dn": 4.44375,
+      "odd_dn": 4.275
+    },
+    {
+      "iso": 800,
+      "dir": "120MSDCF",
+      "frames": 20,
+      "gain": 1.8315018315018314,
+      "black_level": 512.0,
+      "planes": {
+        "R": {
+          "median_excess_dn": 5.8,
+          "median_excess_e": 3.1668,
+          "p90_excess_dn": 10.274999999999999
+        },
+        "G1": {
+          "median_excess_dn": 5.65,
+          "median_excess_e": 3.0849,
+          "p90_excess_dn": 9.495
+        },
+        "G2": {
+          "median_excess_dn": 5.25,
+          "median_excess_e": 2.8665000000000003,
+          "p90_excess_dn": 9.45
+        },
+        "B": {
+          "median_excess_dn": 5.125,
+          "median_excess_e": 2.79825,
+          "p90_excess_dn": 9.05
+        }
+      },
+      "even_dn": 5.725,
+      "odd_dn": 5.1875
+    },
+    {
+      "iso": 1000,
+      "dir": "127MSDCF",
+      "frames": 20,
+      "gain": 2.2893772893772892,
+      "black_level": 512.0,
+      "planes": {
+        "R": {
+          "median_excess_dn": 7.25,
+          "median_excess_e": 3.1668000000000003,
+          "p90_excess_dn": 13.925
+        },
+        "G1": {
+          "median_excess_dn": 8.575,
+          "median_excess_e": 3.74556,
+          "p90_excess_dn": 13.584999999999999
+        },
+        "G2": {
+          "median_excess_dn": 6.5,
+          "median_excess_e": 2.8392000000000004,
+          "p90_excess_dn": 11.6
+        },
+        "B": {
+          "median_excess_dn": 6.2,
+          "median_excess_e": 2.7081600000000003,
+          "p90_excess_dn": 11.375
+        }
+      },
+      "even_dn": 7.9125,
+      "odd_dn": 6.35
+    },
+    {
+      "iso": 1600,
+      "dir": "121MSDCF",
+      "frames": 20,
+      "gain": 3.663003663003663,
+      "black_level": 512.0,
+      "planes": {
+        "R": {
+          "median_excess_dn": 11.649999999999999,
+          "median_excess_e": 3.1804499999999996,
+          "p90_excess_dn": 20.95
+        },
+        "G1": {
+          "median_excess_dn": 10.8875,
+          "median_excess_e": 2.9722874999999997,
+          "p90_excess_dn": 18.667499999999997
+        },
+        "G2": {
+          "median_excess_dn": 10.274999999999999,
+          "median_excess_e": 2.8050749999999995,
+          "p90_excess_dn": 18.575
+        },
+        "B": {
+          "median_excess_dn": 9.975,
+          "median_excess_e": 2.723175,
+          "p90_excess_dn": 18.375
+        }
+      },
+      "even_dn": 11.268749999999999,
+      "odd_dn": 10.125
+    },
+    {
+      "iso": 2000,
+      "dir": "128MSDCF",
+      "frames": 20,
+      "gain": 4.5787545787545785,
+      "black_level": 512.0,
+      "planes": {
+        "R": {
+          "median_excess_dn": 13.625,
+          "median_excess_e": 2.9757000000000002,
+          "p90_excess_dn": 28.225
+        },
+        "G1": {
+          "median_excess_dn": 18.625,
+          "median_excess_e": 4.0677,
+          "p90_excess_dn": 27.824999999999996
+        },
+        "G2": {
+          "median_excess_dn": 12.95,
+          "median_excess_e": 2.82828,
+          "p90_excess_dn": 23.224999999999998
+        },
+        "B": {
+          "median_excess_dn": 12.4,
+          "median_excess_e": 2.7081600000000003,
+          "p90_excess_dn": 22.55
+        }
+      },
+      "even_dn": 16.125,
+      "odd_dn": 12.675
+    }
+  ],
+  "cv_dn": 0.7678911706517103,
+  "cv_e": 0.38729558838891637,
+  "verdict": "amplitude is fixed in electrons -> PRE-gain (dark current)"
+}

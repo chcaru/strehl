@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "purpose": "scripts 04/05 rerun against the correct recurrent defect set",
+    "bug": "hotmask-*.npy is a uint16 ISO bitmask; `& (hp>0)` selected bit 0 (ISO 50)",
+    "recurrence_min": 6,
+    "merged_tiff": "C:\\Users\\chris\\AppData\\Local\\Temp\\m48c-bubbles-g2.tiff"
+  },
+  "planes": {
+    "R": {
+      "recurrent": {
+        "n_defects": 74,
+        "n_controls": 296,
+        "D_defect": 1.4372911865253983,
+        "D_matched_control": 1.0374878376569017,
+        "D_defect_over_D_control": 1.3853571428571407,
+        "defect_in_dn": 9.21052631578948,
+        "defect_out_dn": 13.238208296944467
+      },
+      "iso50_only_as_run_in_04_05": {
+        "n_defects": 281,
+        "n_controls": 1124,
+        "D_defect": 1.3112080331238236,
+        "D_matched_control": 1.323448136006895,
+        "D_defect_over_D_control": 0.9907513543220497,
+        "defect_in_dn": 6.184210526315809,
+        "defect_out_dn": 8.108786520634197
+      }
+    },
+    "B": {
+      "recurrent": {
+        "n_defects": 4766,
+        "n_controls": 19064,
+        "D_defect": 1.2250881736139465,
+        "D_matched_control": 1.323624677374012,
+        "D_defect_over_D_control": 0.9255555555555555,
+        "defect_in_dn": 6.578947368421055,
+        "defect_out_dn": 8.05979061588123
+      },
+      "iso50_only_as_run_in_04_05": {
+        "n_defects": 1546,
+        "n_controls": 6184,
+        "D_defect": 1.2304162144692634,
+        "D_matched_control": 1.3243702764036531,
+        "D_defect_over_D_control": 0.9290575576873235,
+        "defect_in_dn": 7.0,
+        "defect_out_dn": 8.612913501284844
+      }
+    }
+  }
+}
