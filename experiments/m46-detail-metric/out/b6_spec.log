@@ -1,0 +1,73 @@
+==============================================================================
+M46 b6 -- canonical sigpow, the two implicit choices, golden vectors
+==============================================================================
+
+1. THE TWO IMPLICIT CHOICES, sized on the real merged ROI.
+   n = 512, nbin = 64.  Ring centres straddling f_sig = 0.2762:
+     lower 0.269531   upper 0.277344   f_sig sits 85.4% of the way up
+   `frc_at` interpolates.  `ring_power` takes the nearest ring (0.277344).
+
+   b3 form            5.172025e+07
+   b3 form, swapped   5.070543e+07   (asymmetry 1.962e-02)
+   canonical          5.119131e+07   status OK
+   canonical, swapped 5.119131e+07   (asymmetry 0.000e+00)
+   canonical/b3       0.989773
+
+2. THE IDENTITY  FRC_i * P_i == Re<A conj(B)>_i  , measured.
+   detail  FRC +0.99061399  P 5.18963220e+07  product 5.1409222603e+07
+           direct  5.1409222603e+07   relative difference 1.449e-16
+           ring count 3580, ring centre 0.277344 cyc/px
+   flat    FRC +0.94247348  P 4.34991084e+06  product 4.0996756049e+06
+           direct  4.0996756049e+06   relative difference 0.000e+00
+           ring count 3580, ring centre 0.277344 cyc/px
+
+3. RULE 24: RE-CHOOSE, DO NOT RE-COMPUTE.  Fact 619's separation
+   score is re-measured with the canonical form on the same plants.
+   If it falls below 0.90 the two conventions were load-bearing.
+
+   source     variant           d_blur   d_smooth        S
+   S_flat     blur vs smooth   +0.00589  -0.00040    0.936
+   S_flat     post vs smooth   +0.02147  -0.00040    0.982
+   S_detail   blur vs smooth   +0.00727  +0.00004    0.995
+   S_detail   post vs smooth   +0.00662  +0.00004    0.994
+
+4. THE LIKELIEST PORTING BUG: periodic Hann instead of symmetric.
+   `np.hanning` is SYMMETRIC (divides by n-1).  The textbook DSP
+   window is PERIODIC (divides by n).  Cost, measured:
+   n=16   max|w_sym - w_per| = 1.545085e-01   w_sym[-1]=0.000e+00  w_per[-1]=0.038060
+   n=64   max|w_sym - w_per| = 3.787507e-02   w_sym[-1]=0.000e+00  w_per[-1]=0.002408
+   n=512  max|w_sym - w_per| = 4.706208e-03   w_sym[-1]=0.000e+00  w_per[-1]=0.000038
+   sigpow on the real detail pair: symmetric 5.11913118e+07
+                                   periodic  5.12660861e+07
+   relative difference 1.4607e-03
+   MEASURED: the difference is far larger than the golden-vector
+   tolerance below, so a golden vector CATCHES this bug.
+
+5. CHOOSING THE GOLDEN-VECTOR TOLERANCE BY MEASUREMENT.
+   Three perturbations that a correct implementation may legitimately
+   differ by: f32 input storage, summation order, and FFT plan.
+   f32_roundtrip          0.000e+00
+   sum_order              1.455e-16
+   pairwise_vs_naive      0.000e+00
+   The largest legitimate perturbation sets the floor; the periodic-
+   Hann bug sets the ceiling.  A tolerance between them is a test.
+   floor  1.455e-16
+   ceiling 1.461e-03
+
+6. GOLDEN VECTORS.  Every input is a closed form or the documented
+   32-bit mixer, so a Rust test builds it with no shipped data.
+   G1_constant            n=16   nbin=8   f=0.2500  -> +0.0000000000e+00  [ZERO_POWER]  ring c=0.21875 cnt=20
+   G2_sine_same           n=16   nbin=8   f=0.2500  -> +3.7865519412e+01  [OK]  ring c=0.21875 cnt=20
+   G3_sine_phase          n=16   nbin=8   f=0.2500  -> -3.7865519412e+01  [OK]  ring c=0.21875 cnt=20
+   G4_indep_noise         n=32   nbin=8   f=0.2500  -> +1.7820505318e+00  [OK]  ring c=0.21875 cnt=84
+   G5_common_plus_noise   n=32   nbin=16  f=0.2000  -> +4.8922777909e+04  [OK]  ring c=0.203125 cnt=36
+   G6_single_ring         n=16   nbin=1   f=0.2500  -> +8.9943617850e+00  [OK]  ring c=0.25 cnt=193
+   G7_tiny_all_dropped    n=8    nbin=64  f=0.2500  -> +4.5688350859e+00  [OK]  ring c=0.27734375 cnt=8
+   G8_real_fsig           n=64   nbin=64  f=0.2762  -> +1.8957532293e+02  [OK]  ring c=0.27734375 cnt=32
+
+   Rejected inputs (must return an error, not a number):
+   odd_size         ACCEPTED  <-- spec must say which
+   non_square       rejected: square 2-D ROI required
+   shape_mismatch   rejected: shape mismatch
+
+wrote out/b6_golden.json  (3.5s)

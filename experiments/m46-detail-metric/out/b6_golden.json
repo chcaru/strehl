@@ -1,0 +1,149 @@
+{
+  "ambiguity1": {
+    "n": 512,
+    "lo": 0.26953125,
+    "hi": 0.27734375,
+    "frac": 0.8536000000000001
+  },
+  "ambiguity2": {
+    "b3": 51720250.85747271,
+    "b3_swap": 50705426.270470254,
+    "canon": 51191311.82892673,
+    "canon_swap": 51191311.82892673,
+    "ratio": 0.9897730768939308
+  },
+  "identity_detail": {
+    "frc": 0.9906139896261569,
+    "pwr": 51896322.020030014,
+    "prod": 51409222.603185706,
+    "direct": 51409222.60318571,
+    "rel": 1.4492692594153587e-16,
+    "cnt": 3580,
+    "centre": 0.27734375
+  },
+  "identity_flat": {
+    "frc": 0.9424734793666332,
+    "pwr": 4349910.840618285,
+    "prod": 4099675.6048921514,
+    "direct": 4099675.6048921514,
+    "rel": 0.0,
+    "cnt": 3580,
+    "centre": 0.27734375
+  },
+  "canonical_separation": {
+    "S_flat": {
+      "d_blur": 0.005894983997635993,
+      "d_smooth": -0.0004023314652104844,
+      "d_post": 0.021465764809137783,
+      "S_blur": 0.9361106383213292,
+      "S_post": 0.9816018980270164
+    },
+    "S_detail": {
+      "d_blur": 0.0072749762732479606,
+      "d_smooth": 3.866788783313239e-05,
+      "d_post": 0.006621751758764511,
+      "S_blur": 0.9947129109672986,
+      "S_post": 0.9941943766481913
+    }
+  },
+  "hann_variant": {
+    "sym": 51191311.82892673,
+    "per": 51266086.11366028,
+    "rel": 0.001460683113248593
+  },
+  "tolerance_evidence": {
+    "f32_roundtrip": 0.0,
+    "sum_order": 1.4554384974197362e-16,
+    "pairwise_vs_naive": 0.0
+  },
+  "golden": [
+    {
+      "name": "G1_constant",
+      "n": 16,
+      "nbin": 8,
+      "f": 0.25,
+      "value": 0.0,
+      "status": "ZERO_POWER",
+      "ring_centre": 0.21875,
+      "ring_count": 20,
+      "note": "constant image: windowed field is identically zero"
+    },
+    {
+      "name": "G2_sine_same",
+      "n": 16,
+      "nbin": 8,
+      "f": 0.25,
+      "value": 37.86551941172134,
+      "status": "OK",
+      "ring_centre": 0.21875,
+      "ring_count": 20,
+      "note": "identical single sinusoid, ky=0 kx=4 -> 0.25 cyc/px"
+    },
+    {
+      "name": "G3_sine_phase",
+      "n": 16,
+      "nbin": 8,
+      "f": 0.25,
+      "value": -37.865519411721344,
+      "status": "OK",
+      "ring_centre": 0.21875,
+      "ring_count": 20,
+      "note": "anti-phase: cross-power is NEGATIVE, sign must survive"
+    },
+    {
+      "name": "G4_indep_noise",
+      "n": 32,
+      "nbin": 8,
+      "f": 0.25,
+      "value": 1.782050531816128,
+      "status": "OK",
+      "ring_centre": 0.21875,
+      "ring_count": 84,
+      "note": "independent hash fields: near-zero common power"
+    },
+    {
+      "name": "G5_common_plus_noise",
+      "n": 32,
+      "nbin": 16,
+      "f": 0.2,
+      "value": 48922.77790896859,
+      "status": "OK",
+      "ring_centre": 0.203125,
+      "ring_count": 36,
+      "note": "shared sinusoid under independent noise -- the real case"
+    },
+    {
+      "name": "G6_single_ring",
+      "n": 16,
+      "nbin": 1,
+      "f": 0.25,
+      "value": 8.994361784952961,
+      "status": "OK",
+      "ring_centre": 0.25,
+      "ring_count": 193,
+      "note": "nbin=1: one ring spanning the whole band"
+    },
+    {
+      "name": "G7_tiny_all_dropped",
+      "n": 8,
+      "nbin": 64,
+      "f": 0.25,
+      "value": 4.568835085914985,
+      "status": "OK",
+      "ring_centre": 0.27734375,
+      "ring_count": 8,
+      "note": "n=8 nbin=64: every ring has <8 modes -> NO_RINGS"
+    },
+    {
+      "name": "G8_real_fsig",
+      "n": 64,
+      "nbin": 64,
+      "f": 0.2762,
+      "value": 189.57532292764446,
+      "status": "OK",
+      "ring_centre": 0.27734375,
+      "ring_count": 32,
+      "note": "self-correlation at the shipping f_sig and nbin"
+    }
+  ]
+}

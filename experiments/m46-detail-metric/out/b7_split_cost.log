@@ -1,0 +1,87 @@
+==============================================================================
+M46 b7 -- the half-stack split contract, and the cost
+==============================================================================
+
+   stack 112MSDCF, depth-matched indices 6..68 -> 62 frames
+   ROI (1671, 1373, 512, 512) (+/-32 px pad), g=1.144689, rn_e=1.47
+
+   decode 62 frames -> cube (62, 576, 576): 31.30 s
+   focus fields (per-frame, SHARED by both halves): 0.56 s
+
+==============================================================================
+A. THE SPLIT CONTRACT
+==============================================================================
+
+   full-stack merge (62 frames): 0.07 s
+   full-stack hp_sd 58.3284, median 244.56 DN
+
+   split         nA  nB   FRC(f_sig)   ring power    sigpow      vs parity
+   parity       31  31    +0.866129  5.16366e+07  4.47240e+07    1.0000
+   contiguous   31  31    +0.012041  1.75509e+07  2.11333e+05    0.0047
+   block2       32  30    +0.851047  5.33433e+07  4.53977e+07    1.0151
+   block4       32  30    +0.522431  5.49012e+07  2.86821e+07    0.6413
+   random       31  31    +0.681333  5.67691e+07  3.86787e+07    0.8648
+
+   INTERPRETATION GATE, applied to the numbers above:
+   contiguous is 99.5% BELOW parity -> the split rule is
+   LOAD-BEARING and the spec must mandate an interleave.
+
+   ODD FRAME COUNT.  Dropping one frame to force nf odd:
+   nf=61 (odd): parity gives nA=31 nB=30, sigpow 4.47315e+07  (1.0002 x the even parity value)
+
+   UNEQUAL HALVES.  A 3:1 split, to show what n_eff imbalance costs:
+   nA=46 nB=16: sigpow 4.73396e+07  (1.0585 x parity)
+
+==============================================================================
+B. THE COST, timed stage by stage on the real stack
+==============================================================================
+
+   ROI 512x512, 62 frames
+   decode                      31.300 s   UNCHANGED by verify
+   focus fields (per frame)     0.562 s   UNCHANGED by verify
+   merge, full stack            0.072 s
+   merge, two halves            0.103 s   (1.439 x the full merge)
+   sigpow evaluation           0.0318 s   (two 512^2 FFTs)
+
+   baseline pipeline           31.934 s
+   with --verify               32.069 s
+   MARGINAL COST                0.135 s  = 0.4% of the baseline
+
+   MEASURED: the marginal cost is NOT 2x.  Decode and the focus
+   fields dominate and neither is repeated; only the accumulation
+   runs again, over the same total number of frames.
+
+   EXTRAPOLATION (DERIVED, not measured): the full green quad plane
+   is 3514x2344/4 = 2.059e+06 px against this ROI's
+   2.621e+05.  Accumulation is linear in pixels, so the extra
+   merge scales by 7.9x to 0.8 s.  sigpow does NOT scale with the
+   plane: it is evaluated on one square ROI of fixed size, so it
+   stays at 0.0318 s.
+
+==============================================================================
+C. THE f32 PIPELINE ERROR, which numpy cannot show (it upcasts)
+==============================================================================
+   f64 pipeline 4.4723966369e+07
+   f32 pipeline 4.4723952000e+07
+   relative difference 3.213e-07   (n = 512)
+   n=16   golden-vector-sized f32 error 8.209e-08
+   n=32   golden-vector-sized f32 error 4.597e-07
+   n=64   golden-vector-sized f32 error 2.187e-06
+
+==============================================================================
+D. ODD-SIZED AND SMALL ROIs -- what the reference actually does
+==============================================================================
+   n     nbin  status        value            note
+   15    4     OK           +9.45820296e+00   4 of 4 rings survive
+   16    4     OK           +6.20901269e+00   4 of 4 rings survive
+   17    4     OK           +9.82483260e+00   4 of 4 rings survive
+   9     2     OK           +1.74038918e+00   2 of 2 rings survive
+   8     64    OK           +1.33732982e+00   3 of 64 rings survive
+   4     8     NO_RINGS     +0.00000000e+00   0 of 8 rings survive
+   2     4     NO_RINGS     +0.00000000e+00   0 of 4 rings survive
+
+   For ODD n, fftshift puts DC at index n//2 and the grid is
+   asymmetric by one sample; the reference computes a number anyway.
+   The spec RULES on this rather than inheriting it -- see the spec.
+
+wrote out/b7_split_cost.json  (34.1s)
