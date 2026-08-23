@@ -44,6 +44,18 @@ for the project — see §7.
 against facts 12, 27 and 28 (agreement to 3-4 digits), not from a side-by-side
 shot. The two-bracket pair above is what would turn it into a measurement.*
 
+**External corroboration, added after M19's literature survey.** The *shape* of
+this ceiling is not our claim — it is proved. Levin et al. (*ACM TOG* 28(3),
+2009, Claim 2) bound the worst-case defocus MTF power over a depth range by
+`β(ω)·A³/(S·|ω|)` with `β ∈ [0.93, 1]`, and note that under Fourier rather than
+geometric optics the budget "**decreases with the diffraction-limited MTF**" —
+so where the diffraction MTF is zero, the budget is zero (fact 403). That is an
+independent, published derivation of the thing this section is telling you to
+avoid: **no merge, however clever, recovers a band no frame observed.** It is
+also why aperture outranks algorithms here. Every hour spent improving the merge
+before this section is acted on is an hour spent optimising underneath a ceiling
+you could simply have raised.
+
 ---
 
 ## 1. Dark frames — DELIVERED
