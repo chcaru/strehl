@@ -172,8 +172,14 @@ impl Selection {
 /// stack`'s argmax winner are **directly comparable**. Two copies of the
 /// constant could drift and silently make them not be.
 ///
-/// Fact 23's reference points are all at this tolerance: 34.4% for the ring
-/// operator unregularised, 0.868% for Tenengrad regularised.
+/// Fact 23's reference points are at this tolerance but are **both the retired
+/// ring operator** — 34.4% unregularised and 0.868% after a 17x17 smooth
+/// (`M2-verification.md` section 4; `:205` records that the measure was the ring
+/// difference, and Tenengrad did not exist until M14). Neither is a Tenengrad
+/// number, and no section-4 row publishes a regularised-Tenengrad speckle at
+/// all. The operator-matched figure is fact 71's **1.010%**, for *unregularised*
+/// Tenengrad on M2's ROI. Quoting 0.868% as a Tenengrad number, as this comment
+/// did until M56 caught it, compares across two operators at once.
 pub const DEFAULT_SPECKLE_TOLERANCE: u16 = 2;
 
 /// Fraction of plane pixels whose winning frame index differs by more than

@@ -826,7 +826,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 let t0 = Instant::now();
                 let mut err = None;
                 for e in est.iter_mut() {
-                    if let Err(e) = e.fold(index, &frame, &scratch.reg) {
+                    if let Err(e) = e.fold_censored(index, &frame, &scratch.reg, CONTAINER_MAX_DN) {
                         err = Some(map_dim_err(index, e));
                         break;
                     }
@@ -1287,11 +1287,34 @@ fn report(
         "                  smooth depth with sharp edges, and BOTH over-smoothing and \
          manufactured"
     );
+    eprintln!("                  detail move it away from that.");
     eprintln!(
-        "                  detail move it away from that. Fact 23's reference points are 34.4% \
-         (ring"
+        "                  Fact 23's 34.4% -> 0.868% pair is BOTH the retired ring operator, \
+         unregularised"
     );
-    eprintln!("                  operator, unregularised) and 0.868% (Tenengrad, regularised).");
+    eprintln!(
+        "                  then 17x17-regularised (M2-verification section 4; :205 states the \
+         measure"
+    );
+    eprintln!(
+        "                  was the ring difference, and Tenengrad did not exist until M14). \
+         NEITHER is a"
+    );
+    eprintln!(
+        "                  Tenengrad number, and no section-4 row publishes a \
+         regularised-Tenengrad"
+    );
+    eprintln!(
+        "                  speckle at all, so there is no cross-operator reference to quote \
+         here. The"
+    );
+    eprintln!(
+        "                  operator-matched figure is fact 71's 1.010% for UNREGULARISED \
+         Tenengrad on"
+    );
+    eprintln!(
+        "                  this ROI; the regularised comparable is this run's own value, above."
+    );
     Ok(())
 }
 
@@ -1537,9 +1560,32 @@ fn report_statistics(
          appears at radius {STATS_RADIUS})"
     );
     eprintln!(
-        "fine noise sd   : {FINE_FOCUS_NOISE_SD:.6}, MEASURED in-crate, {:.2}x the selection \
-         field's {FOCUS_NOISE_SD:.6}",
-        FINE_FOCUS_NOISE_SD / FOCUS_NOISE_SD
+        "fine noise sd   : {FINE_FOCUS_NOISE_SD:.6}, MEASURED in-crate. The selection field's is \
+         {FOCUS_NOISE_SD:.6},"
+    );
+    eprintln!(
+        "                  but THESE TWO DO NOT DIVIDE. The fine sd is measured with NO \
+         regulariser and"
+    );
+    eprintln!(
+        "                  the selection sd with the \
+         {REGULARISER_WIDTH}x{REGULARISER_WIDTH} box, so their ratio mixes a window-radius"
+    );
+    eprintln!(
+        "                  change with the presence of a regulariser. Put both at the same \
+         regularisation"
+    );
+    eprintln!(
+        "                  and let only the operator window differ and k = 1.815 (fact 500, \
+         verified"
+    );
+    eprintln!(
+        "                  independently by M52 at 1.8145). The printed pair's ratio is 5.94 and \
+         is NOT"
+    );
+    eprintln!(
+        "                  a k: it overstates the seam by 3.27x. Both constants are correct as \
+         consumed."
     );
     eprintln!(
         "memory          : {} B/px = {:.0} MB per gather, CONSTANT in the frame count.",
@@ -1599,18 +1645,26 @@ fn report_statistics(
         100.0 * outside as f64 / px as f64
     );
     eprintln!(
-        "                  The first is a diagnostic and is expected to be large: the fine field \
-         is"
+        "                  The first is a diagnostic and is expected to be large. The fine field \
+         differs"
     );
     eprintln!(
-        "                  {:.2}x noisier than the selection field, so its argmax moves. The \
-         second is",
-        FINE_FOCUS_NOISE_SD / FOCUS_NOISE_SD
+        "                  from the selection field in TWO ways -- a smaller operator window AND \
+         no"
     );
     eprintln!(
-        "                  the actionable one, because off-by-one is still bracketed by the \
-         parabola."
+        "                  regulariser -- so its argmax moves for both reasons. At matched \
+         regularisation"
     );
+    eprintln!(
+        "                  it is noisier by k = 1.815 (fact 500), not the 5.94 the ratio of the \
+         two"
+    );
+    eprintln!(
+        "                  published constants suggests. The second is the actionable one, \
+         because"
+    );
+    eprintln!("                  off-by-one is still bracketed by the parabola.");
     eprintln!();
 
     // (b) top-k
