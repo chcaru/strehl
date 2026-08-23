@@ -459,6 +459,27 @@ monolithic binary and ship only that binary.
     milestone number**, and tell the agent explicitly that "this is already
     answered, nothing to add" is a successful outcome. (SYNTHESIS fact 782.)
 
+41. **A milestone number is an identifier. Allocate it from the index below at
+    dispatch, and record the allocation there before the agent starts.** I
+    dispatched a second `M60` while M54 was still authoring `M60` and `M60c`,
+    which made every `M60` citation in the corpus ambiguous -- **including ones
+    already folded.** M59 then measured whether a linter could catch this and
+    refused to build one, for a reason worth stating in full: **the distinction
+    between "one milestone, several parts" and "two milestones, one number" is
+    not a property of the filesystem.** Filename heuristics run at **80% false
+    positives** (they flag M2, M20, M53, M55 and M60, and only M60 is real);
+    **292 of 293 commits share one author**; and the legitimately multi-part M48
+    and M58 have entirely unrelated slugs, so no similarity threshold that clears
+    them can flag M60. Identity is *who was dispatched and what they were asked*,
+    and that lives only in the dispatch. **The index is therefore the sole source
+    of truth and must be written at dispatch rather than at report time** --
+    afterwards the collision has already happened. Two consequences: suffix a
+    genuine continuation (`M60b`, `M60c`) and never reuse the stem for different
+    work; and **cover `experiments/` too** -- the `M60` collision was three-way,
+    not two, because `experiments/M60-bimodality/` has no report file and was
+    invisible to anything reading `docs/research/` alone.
+    (SYNTHESIS facts 888, 906, 907; disciplines 418, 428.)
+
 ## Layout
 
 | Path | What |
