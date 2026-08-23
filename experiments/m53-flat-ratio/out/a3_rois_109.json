@@ -1,5 +1,6 @@
 {
   "stack": "C:\\dev\\macro\\test\\109MSDCF",
+  "iso": 160,
   "frames": 22,
   "roi": {
     "x": 1356,
@@ -61,5 +62,5 @@
     73.4231948852539
   ],
   "model_sigma_dn": 8.77,
-  "model_sigma_source": "strehl merge 109MSDCF --flat-roi 1356,32,512,512, out/a4_after.log line 72"
+  "model_sigma_source": "out/a4_after.log, shipped CLI, ISO 160 (fact 550 does not move it)"
 }

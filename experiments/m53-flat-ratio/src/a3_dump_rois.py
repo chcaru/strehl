@@ -26,8 +26,25 @@ OUT = os.path.join(os.path.dirname(HERE), "out")
 os.makedirs(OUT, exist_ok=True)
 
 BLACK = 512.0
-STACK = r"C:\dev\macro\test\109MSDCF"
-ROI = (1356, 32, 512, 512)  # x, y, w, h in plane (quad) coordinates
+
+# 109MSDCF is ISO 160 and 119MSDCF is ISO 50, which is the point of dumping
+# both: ISO 50 is an extended (pull) ISO whose gain SYNTHESIS fact 550
+# corrected by 2x, and ISO 160 is a true gain step the fix does not touch. Any
+# quantity that behaves the same on both is not resting on that constant; any
+# quantity that does not, is. M47 used exactly this pairing to save facts
+# 461/479 when the ISO-50 column turned out to be contaminated.
+STACKS = {
+    "109": dict(dir=r"C:\dev\macro\test\109MSDCF", iso=160, roi=(1356, 32, 512, 512),
+                # `strehl merge ... --flat-roi 1356,32,512,512`, out/a4_after.log:
+                # "model predicts  : sigma    8.770 DN"
+                model_sigma=8.770,
+                sigma_source="out/a4_after.log, shipped CLI, ISO 160 (fact 550 does not move it)"),
+    "119": dict(dir=r"C:\dev\macro\test\119MSDCF", iso=50, roi=(1396, 32, 512, 512),
+                # a2_kernel_sweep.log at the SHIPPED gain max(50,100)/436.8:
+                # "model sigma 6.903 -> 9.774 DN"
+                model_sigma=9.774,
+                sigma_source="out/a2_kernel_sweep.log at the shipped post-fact-550 gain, ISO 50"),
+}
 
 
 def quad_green_roi(path, roi):
@@ -45,41 +62,45 @@ def quad_green_roi(path, roi):
 
 
 def main():
-    paths = sorted(glob.glob(os.path.join(STACK, "*.ARW")))
-    if not paths:
-        raise SystemExit(f"no ARW under {STACK}")
-    x, y, w, h = ROI
+    for tag, info in STACKS.items():
+        paths = sorted(glob.glob(os.path.join(info["dir"], "*.ARW")))
+        if not paths:
+            raise SystemExit(f"no ARW under {info['dir']}")
+        x, y, w, h = info["roi"]
 
-    rois = np.empty((len(paths), h, w), dtype=np.float32)
-    for i, p in enumerate(paths):
-        rois[i] = quad_green_roi(p, ROI)
+        rois = np.empty((len(paths), h, w), dtype=np.float32)
+        for i, p in enumerate(paths):
+            rois[i] = quad_green_roi(p, info["roi"])
 
-    blob = os.path.join(OUT, "a3_rois_109.f32")
-    rois.tofile(blob)
+        blob = os.path.join(OUT, f"a3_rois_{tag}.f32")
+        rois.tofile(blob)
 
-    header = {
-        "stack": STACK,
-        "frames": len(paths),
-        "roi": {"x": x, "y": y, "w": w, "h": h},
-        "black": BLACK,
-        "dtype": "f32le",
-        "layout": "frame-major, then row-major",
-        "blob": os.path.basename(blob),
-        "mean_dn": float(rois.mean()),
-        "per_frame_mean_dn": [float(v) for v in rois.mean(axis=(1, 2))],
-        "per_frame_raw_sd_dn": [float(v) for v in rois.std(axis=(1, 2))],
-        # Sourced from the shipped CLI's own printed line for this stack and
-        # ROI ("model predicts : sigma 8.770 DN"), i.e. from the calibrated
-        # noise model, NOT from either statistic under test (rule 35).
-        "model_sigma_dn": 8.770,
-        "model_sigma_source": "strehl merge 109MSDCF --flat-roi 1356,32,512,512, out/a4_after.log line 72",
-    }
-    with open(os.path.join(OUT, "a3_rois_109.json"), "w", encoding="utf-8") as f:
-        json.dump(header, f, indent=2)
+        header = {
+            "stack": info["dir"],
+            "iso": info["iso"],
+            "frames": len(paths),
+            "roi": {"x": x, "y": y, "w": w, "h": h},
+            "black": BLACK,
+            "dtype": "f32le",
+            "layout": "frame-major, then row-major",
+            "blob": os.path.basename(blob),
+            "mean_dn": float(rois.mean()),
+            "per_frame_mean_dn": [float(v) for v in rois.mean(axis=(1, 2))],
+            "per_frame_raw_sd_dn": [float(v) for v in rois.std(axis=(1, 2))],
+            # From the CALIBRATED NOISE MODEL, not from either statistic under
+            # test. Used ONLY to label the sigma-scaled arm of the control; the
+            # sigma-free arm never touches it (fact 599).
+            "model_sigma_dn": info["model_sigma"],
+            "model_sigma_source": info["sigma_source"],
+        }
+        with open(os.path.join(OUT, f"a3_rois_{tag}.json"), "w", encoding="utf-8") as f:
+            json.dump(header, f, indent=2)
 
-    print(f"wrote {blob}  {rois.nbytes} bytes")
-    print(f"frames {len(paths)}  roi {ROI}  mean {rois.mean():.3f} DN")
-    print("per-frame raw sd DN: " + " ".join(f"{v:.2f}" for v in rois.std(axis=(1, 2))))
+        print(f"wrote {blob}  {rois.nbytes} bytes")
+        print(f"  ISO {info['iso']}  frames {len(paths)}  roi {info['roi']}  "
+              f"mean {rois.mean():.3f} DN  model sigma {info['model_sigma']:.3f} DN")
+        print("  per-frame raw sd DN: "
+              + " ".join(f"{v:.2f}" for v in rois.std(axis=(1, 2))))
 
 
 if __name__ == "__main__":

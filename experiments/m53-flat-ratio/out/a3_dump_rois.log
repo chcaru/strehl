@@ -1,3 +1,6 @@
 wrote C:\dev\blog\death-of-software\projects\strehl\experiments\m53-flat-ratio\out\a3_rois_109.f32  23068672 bytes
-frames 22  roi (1356, 32, 512, 512)  mean 413.768 DN
-per-frame raw sd DN: 79.70 79.77 79.54 79.26 78.90 78.07 78.11 77.95 77.35 77.16 77.24 76.27 75.71 75.29 74.61 74.45 74.05 74.19 73.51 73.18 73.66 73.42
+  ISO 160  frames 22  roi (1356, 32, 512, 512)  mean 413.768 DN  model sigma 8.770 DN
+  per-frame raw sd DN: 79.70 79.77 79.54 79.26 78.90 78.07 78.11 77.95 77.35 77.16 77.24 76.27 75.71 75.29 74.61 74.45 74.05 74.19 73.51 73.18 73.66 73.42
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\m53-flat-ratio\out\a3_rois_119.f32  34603008 bytes
+  ISO 50  frames 33  roi (1396, 32, 512, 512)  mean 820.107 DN  model sigma 9.774 DN
+  per-frame raw sd DN: 127.06 127.09 127.43 127.37 127.28 127.71 127.55 127.59 128.18 130.47 130.41 130.95 131.62 131.64 131.54 131.76 131.66 131.98 131.22 130.66 130.34 130.39 130.36 130.15 130.12 130.07 130.13 130.04 130.17 130.10 130.11 130.01 129.98

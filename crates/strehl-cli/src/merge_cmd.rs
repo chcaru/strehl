@@ -1107,13 +1107,13 @@ fn report(
         );
     }
     eprintln!(
-        "                  DO NOT READ THE LEGACY COLUMN AS NOISE (facts 469/441/442/455). It \
-         is a"
+        "                  DO NOT READ THE LEGACY COLUMN AS NOISE (facts 469/441/442/455, \
+         597). It"
     );
-    eprintln!("                  ratio of two RAW SPATIAL sds against ONE arbitrary frame. It is");
+    eprintln!("                  is a ratio of two RAW SPATIAL sds against ONE arbitrary frame.");
     eprintln!(
-        "                  structure-dominated -- the corpus's flat reference frames are \
-         50.9-90.0%"
+        "                  It is structure-dominated -- the corpus's flat reference frames are \
+         50.9-80.0%"
     );
     eprintln!(
         "                  scene by variance and this ROI's own excess is printed above -- it \

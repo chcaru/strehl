@@ -13,9 +13,13 @@
 //!    so ~99 % of the variance is residual scene, and the raw ratio
 //!    under-reported a real noise explosion by **6.3x** (22.767x raw against
 //!    144.391x high-pass). Fact 455: that ROI is not even detail-free —
-//!    per-frame corrected detail spans 5.31-18.66 DN. Fact 442: the reference
-//!    frames of the four flat ROIs are 53.3 %, 50.9 %, 90.0 % and 86.1 % scene
-//!    structure by variance.
+//!    per-frame corrected detail spans 5.31-18.66 DN. Fact 442, **as corrected
+//!    by fact 597**: the reference frames of the four flat ROIs are 53.3 %,
+//!    50.9 %, 80.0 % and 72.2 % scene structure by variance. (Fact 442
+//!    originally published the last two as 90.0 % and 86.1 %; they are the two
+//!    ISO-50 ROIs and M47 re-measured them through the fact-550 gain fix. The
+//!    two ISO-160 figures are unchanged, and the conclusion is unchanged: all
+//!    four are structure-dominated.)
 //! 2. **The denominator was one privileged frame.** Fact 441: holding the merge
 //!    fixed and sweeping which frame occupies the denominator moves the printed
 //!    ratio 1.0245x-1.3252x on `109MSDCF` and **1.0000x-1.5989x** on
@@ -536,9 +540,20 @@ mod tests {
     ///
     /// The plant is an added white field of sd `p`, so the true per-sample noise
     /// ratio is `sqrt(sigma^2 + p^2) / sigma` — obtained from the noise model,
-    /// which is independent of both statistics being scored (rule 35). The
-    /// larger real-data version of this control lives in
-    /// `experiments/m53-flat-ratio/src/a3_negative_control.py`.
+    /// which is independent of both statistics being scored (rule 35).
+    ///
+    /// **Fact 599 applies to the second assertion and is why there is a third.**
+    /// M40's null plant and M41's `noise_constant_check` each drew their noise
+    /// from the gain constant and normalised by a sigma computed from the same
+    /// constant; both were scale-invariant in it and both passed confidently
+    /// through twelve milestones during which it was a factor of two wrong. The
+    /// `predicted` below is built from `SIGMA`, and `SIGMA` also sized the
+    /// plant, so that assertion is partly self-referential — it would still pass
+    /// with `SIGMA` wrong by any factor. The third assertion is not: it predicts
+    /// both sds by quadrature from the **measured** unplanted sds and the
+    /// **measured** sd of the field actually added, with no calibrated constant
+    /// on either side. The larger real-data, two-arm, two-ISO version lives in
+    /// `experiments/m53-flat-ratio/src/a3_negative_control.rs`.
     #[test]
     fn the_high_pass_ratio_catches_a_planted_explosion_the_raw_ratio_misses() {
         const N: usize = 256;
@@ -548,7 +563,8 @@ mod tests {
         let single = add(&scene, &noise_field(0xBEEF_0002, N, SIGMA));
         // sqrt(K^2 - 1) more noise in quadrature makes the total noise K x.
         let extra = (K * K - 1.0).sqrt() as f32 * SIGMA;
-        let merged = add(&single, &noise_field(0xBEEF_0003, N, extra));
+        let plant = noise_field(0xBEEF_0003, N, extra);
+        let merged = add(&single, &plant);
 
         let (_, raw_ref) = mean_and_sd(&single);
         let (_, raw_merged) = mean_and_sd(&merged);
@@ -569,6 +585,7 @@ mod tests {
         // (b) the shipped statistic recovers most of it. The shortfall is the
         //     reference's own structure contamination and nothing else, so it is
         //     asserted against that measured quantity rather than a round number.
+        //     SEE THE FACT-599 NOTE ABOVE: this one is partly self-referential.
         let contamination = structure_contamination(hp_ref, f64::from(SIGMA));
         let predicted = K / contamination;
         assert!(
@@ -580,6 +597,37 @@ mod tests {
             hp_ratio > 4.0 * legacy_ratio,
             "high-pass {hp_ratio:.3}x vs legacy {legacy_ratio:.3}x: the replacement \
              must be a large multiple better, not a rounding better"
+        );
+
+        // (c) the sigma-free assertion. `p` is the sd of the field that was
+        //     actually added, measured, not the nominal `extra`. Both statistics
+        //     add in quadrature; only the high-pass carries the kernel's gain.
+        //     No calibrated constant appears anywhere in this block, so unlike
+        //     (b) it does not pass automatically when the noise model is wrong.
+        //
+        //     The tolerances are DERIVED from the measured margins, not chosen
+        //     round: this fixture agrees to 0.0119 % on the high pass and
+        //     0.0845 % on the raw sd. HP_TOL is set at 0.2 % — 17x the observed
+        //     margin, but still 3x TIGHTER than the 0.63 % error a gainless
+        //     implementation would make here (`hypot(8.6928, 87.2301)` = 87.6621
+        //     against the measured 87.1143). A 2 % tolerance, which is what this
+        //     assertion was first written with, would have passed a gainless
+        //     implementation and been decoration.
+        const HP_TOL: f64 = 0.002;
+        let (_, p) = mean_and_sd(&plant);
+        let want_hp = hp_ref.hypot(HP_NOISE_GAIN * p);
+        let want_raw = raw_ref.hypot(p);
+        assert!(
+            (hp_merged - want_hp).abs() < HP_TOL * want_hp,
+            "high-pass of the planted field {hp_merged:.4} DN against a quadrature \
+             prediction {want_hp:.4} DN from the measured {hp_ref:.4} DN and \
+             {HP_NOISE_GAIN} * {p:.4} DN — if these part company the gain is wrong"
+        );
+        assert!(
+            (raw_merged - want_raw).abs() < 0.005 * want_raw,
+            "raw sd of the planted field {raw_merged:.4} DN against a quadrature \
+             prediction {want_raw:.4} DN from the measured {raw_ref:.4} DN and \
+             {p:.4} DN"
         );
     }
 

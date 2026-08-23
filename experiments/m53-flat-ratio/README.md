@@ -22,9 +22,9 @@ printed beside it. Its white-noise gain is `sqrt(1 - 1/81) = 0.993808`
 | script | what it establishes |
 | --- | --- |
 | `src/a1_reconcile.py` | the shipped kernel **is** M41's, the one behind fact 469: reproduces its published 11.770 DN to 0.0038 % |
-| `src/a2_kernel_sweep.py` | the box side chosen on evidence, not taste: contamination vs `w` on both real corpora |
-| `src/a3_dump_rois.py` | dumps the 22 real `109MSDCF` flat ROIs so the control runs on real, structured input |
-| `src/a3_negative_control.rs` | **the point of the exercise**: plants a noise explosion of known size and scores both statistics against it |
+| `src/a2_kernel_sweep.py` | the box side chosen on evidence, not taste: contamination vs `w` on both real corpora, at M41's gain **and** the shipped post-fact-550 gain |
+| `src/a3_dump_rois.py` | dumps the real flat ROIs of `109MSDCF` (ISO 160) and `119MSDCF` (ISO 50) so the control runs on real, structured input |
+| `src/a3_negative_control.rs` | **the point of the exercise**: plants a noise explosion of known size and scores both statistics against it, in two arms |
 
 ```powershell
 $env:PATH = "$env:USERPROFILE\.cargo\bin;$env:PATH"
@@ -35,27 +35,76 @@ python src\a3_dump_rois.py
 cargo run --release --bin a3-negative-control
 ```
 
-`out/*.f32` (24 MB of decoded ROI) is regenerable and is not committed.
+`out/*.f32` (58 MB of decoded ROI) is regenerable and is not committed.
 
-## Result (`out/a3_negative_control.log`)
+## The control has two arms, and that is because of fact 599
 
-Truth `K` is the planted noise multiplier, solved from the **calibrated noise
-model** — `p = sigma * sqrt(K^2 - 1/n)` — so it comes from neither statistic
-under test (rule 35).
+SYNTHESIS fact 599: M40's null plant and M41's `noise_constant_check` each drew
+their noise from the gain constant `g` and normalised by a sigma computed from
+the **same** `g`. Both were scale-invariant in `g` to ~0.05 % and both passed
+confidently through twelve milestones during which that constant was a factor of
+two wrong. **A plant that supplies its own noise constant is structurally blind
+to that constant being wrong.**
 
-| K planted | OLD reports | OLD under-reports by | NEW reports | NEW under-reports by |
-| --- | --- | --- | --- | --- |
-| 1.000 | 0.990x | 1.010x | 0.973x | 1.028x |
-| 2.000 | 1.010x | 1.980x | 1.842x | 1.086x |
-| 5.000 | 1.139x | 4.390x | 4.529x | 1.104x |
-| 10.000 | 1.513x | 6.610x | 9.036x | 1.107x |
-| 22.767 | 2.796x | 8.142x | 20.559x | 1.107x |
-| 144.391 | 16.631x | 8.682x | 130.368x | 1.108x |
+That trap partly applies here and the control says so out loud. What saves it
+from being M40's mistake is that **the statistic under test is itself
+sigma-free**: `hp(merged) / median_i hp(frame_i)` contains no calibrated
+constant. Only the *labelling* of the plant needs one.
 
-A **10x** noise explosion reads **1.5x** on the old statistic. The DERIVED
-prediction — that each statistic's asymptotic under-report is its own structure
-floor, 8.6969x and 1.1074x — is met to 3 decimal places, which is what makes
-this a test rather than a description.
+### ARM 1 — sigma-free. This is the arm that carries the milestone.
+
+The plant is a size in DN this program picks. The predictions come from the
+**measured** un-planted sds plus the **derived** kernel gain, and nothing else.
+`109MSDCF`, plant sweeping over 512x:
+
+| plant p DN | hp measured | hp predicted | err | raw measured | raw predicted | err |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0.0 | 3.9568 | 3.9568 | −0.00 % | 75.0288 | 75.0288 | 0.00 % |
+| 20.0 | 20.2637 | 20.2662 | −0.01 % | 77.6452 | 77.6487 | −0.00 % |
+| 200.0 | 198.7775 | 198.8010 | −0.01 % | 213.5930 | 213.6102 | −0.01 % |
+| 2560.0 | 2543.8538 | 2544.1515 | −0.01 % | 2561.0162 | 2561.0992 | −0.00 % |
+
+**Separation — how many times more explosion NEW reports than OLD. No sigma in it:**
+
+| stack | ISO | predicted `g·raw_mid/hp_med` | measured | apart |
+| --- | ---: | ---: | ---: | ---: |
+| `109MSDCF` | 160 | 7.8531x | 7.8491x | −0.051 % |
+| `119MSDCF` | 50 | 12.0815x | 12.0649x | −0.137 % |
+
+The content is that `hp(planted)/raw(planted) → g` on a **real structured ROI**:
+measured 0.993299 and 0.992444 against the derived 0.993808.
+
+### ARM 2 — sigma-scaled. What a reader wants, disclosed as partly circular.
+
+`K` is the true noise multiplier against one unstacked frame, so the plant is
+`p = sigma·sqrt(K² − 1/n)` and the calibrated sigma enters. `109MSDCF`:
+
+| K planted | OLD reports | NEW reports | NEW `[lo .. hi]` |
+| ---: | ---: | ---: | --- |
+| 1.000 | 0.990x | 0.973x | `[0.775 .. 1.051]` |
+| 2.000 | 1.010x | 1.842x | `[1.466 .. 1.991]` |
+| 5.000 | 1.139x | 4.529x | `[3.606 .. 4.896]` |
+| 10.000 | **1.513x** | **9.036x** | `[7.195 .. 9.768]` |
+| 22.767 | 2.796x | 20.559x | `[16.371 .. 22.224]` |
+| 144.391 | 16.631x | 130.368x | `[103.810 .. 140.925]` |
+
+A **10x** noise explosion reads **1.5x** on the old statistic.
+
+**The "under-reports by" columns are an algebraic identity, not a test.** Since
+`p ∝ sigma`, as `K` grows `K/OLD → raw_mid/sigma` and `K/NEW → hp_med/(g·sigma)`
+— the same expressions the "prediction" is computed from. An earlier version of
+this README claimed the prediction was "met to three decimal places". That was
+arithmetic and the claim is withdrawn. Their **ratio**, 7.8531x, is arm 1's
+separation with sigma cancelled out, and that one is real.
+
+## Why two stacks
+
+`109MSDCF` is ISO 160, a true gain step untouched by fact 550. `119MSDCF` is
+ISO 50, an extended ISO whose gain that fact doubled. **Arm 1 behaves identically
+on both** (quadrature within 0.02 %, separation within 0.14 %). **Arm 2 does
+not** — `K/OLD` reads 8.6969x on one and 13.4699x on the other. That is the
+pairing M47 used to save facts 461/479, and it shows directly which columns rest
+on the constant.
 
 ## The unplanted finding
 
