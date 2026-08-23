@@ -869,3 +869,25 @@ means the high-ISO read-noise fix matters **more** than I told you, not less. Fl
 because you know your own shooting better than this tooling does: if 62% high-ISO does not
 match how you intend to shoot going forward, that changes which mode we should be
 optimising for.
+
+
+## Running while you sleep -- updated
+
+Supersedes the table above, which was written earlier in the night.
+
+| Milestone | What it is doing | State |
+|---|---|---|
+| **M46 author** | The Rust implementation spec for the detail metric | **LANDED, folded** (facts 637-652). Found two convention defects in its own metric while specifying it. Item 26 |
+| **M48** | The second wrong shipped sensor constant, and then the follow-up | **LANDED, folded** (facts 590-602 earlier, 653-661 for the follow-up). The follow-up refuted its own brief's premise. Now measuring the fixed-pattern-noise fraction from your 242 dark frames -- the one open question your data can answer without a fit |
+| **M52** | Whether the gate-transfer facts survive the gain fix | **LANDED, folded** (facts 627-636). Seven of eight stand; the eighth was stale in shipped CLI help. Items 27 and 29 |
+| **M53** | Replacing the acceptance statistic that cannot fail | Landed its main change (`d48e659`); now holding a queued follow-up to fix the stale numbers and the powerless test in its own file |
+| **M54** | Whether the unpropagated clip mask harms the merged image | Running; report on disk, not yet committed |
+| **M55** | Attacking the detail metric before we believe it | Running. Brief amended mid-flight to attack **both** the old and the re-derived form, and to derive the claimed identity rather than accept one numerical instance of it. **Not told which way the numbers moved** |
+| **M56** | Whether the code's citations of our own research say what the research says | Running. Started because a citation that *resolves* is not a citation that is *correct* -- we have now been bitten by that twice |
+
+**One planned change is deliberately not being made.** The `tenengrad-sq` operator swap was
+scheduled and is now blocked: the gate correction computed for it (1.53x) applies to the
+plugin path, and the shipped binary does not go through the plugin path at all. Applying it
+as specified would silently rescale every gate you have ever measured, by roughly the local
+noise level rather than by the intended factor. Caught before the edit rather than after,
+which is the cheap way round.
