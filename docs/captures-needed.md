@@ -103,6 +103,31 @@ signal variance against signal level and a dark frame has no signal. `g` remains
 `DERIVED` from an unmeasured relation and `SYNTHESIS.md` §10 item 6 stays open.
 See §4 below.
 
+> **Superseded, 2026-08-23 — and the lesson generalises.** A *usable* PTC did
+> arrive, from **stacks already on disk**, without any new capture. M25 measured
+> `g` by photon transfer on `109MSDCF`, `119MSDCF` and `coffee-bean` — 8×8 tiles
+> on one green plane, 5th-percentile variance per mean bin, using the scene's
+> own tonal range as the signal ladder. It recovered `g` = **0.3273 at ISO 160**
+> against the relation's 0.3663 and found a **2.05× error at ISO 50**, now fixed
+> in shipped code (`2a4f5c5`, fact 550). SYNTHESIS §10 question 8 is **closed**.
+>
+> **This paragraph was wrong in a specific and instructive way.** "PTC is
+> impossible from dark frames" is true. "Therefore `g` needs a flat-field
+> capture" does not follow, and nobody checked it — the requirement was
+> *inherited from the textbook procedure* rather than derived from what this
+> measurement actually needs, which is signal variance against signal level from
+> **any** source. A photograph is such a source.
+>
+> **Before adding anything to this file, ask what the measurement needs rather
+> than what the standard procedure prescribes, and try the corpus first.** The
+> owner's time behind a camera is the scarcest input this project has.
+>
+> The flat-field campaign in §4 is **still worth shooting** — it measures PRNU
+> and vignetting, which no existing capture can give, and it yields a *clean*
+> intercept. This PTC's intercept is **not** trustworthy: residual scene texture
+> inflates it to 6.9 e⁻ at ISO 160 against fact 14's 4.20 e⁻, so it constrains
+> the **slope only** and says nothing about `RN_e`.
+
 ### What to shoot (kept for reference / repeat captures)
 
 | | |
@@ -536,3 +561,42 @@ fact 49:
 | `foam` | 100 | 0.2707 → 0.2841 m | 2.52 s/frame | **Not an alignment benchmark.** The scene evolves across the 249-second capture: it decorrelates *within itself* to 0.087/0.122/0.243 where `coffee-bean`, an equally deep sweep, holds 0.979/0.941/0.970. Useful only as a hard case for non-rigid scenes. |
 | `coffee-bubbles` | 19 | **none** (0.2841 m throughout) | 3.33 s/frame | A *soft* null for the aligner — at fixed focus any reported transform is drift or estimator bias, not parallax. Contaminated by real bubble motion (0.947 first-to-last), so it bounds bias from above rather than measuring it. |
 
+---
+
+## 10. Two frames at ISO 64 — REQUESTED, trivial, closes a guess in shipped code
+
+**Status:** requested 2026-08-23. **Thirty seconds of work.** It is the only
+item in this file that removes a constant I had to guess at rather than measure.
+
+**What to shoot.** Point the camera at anything with a bright area — a window, a
+lamp, a sheet of paper. Then, **without moving anything or changing exposure**:
+
+- 2 frames at **ISO 64**
+- 2 frames at **ISO 80**
+- 2 frames at **ISO 50** and 2 at **ISO 100** as the brackets
+
+Any subject, any aperture, handheld is fine. It does not need to be sharp, flat,
+or well-composed. It needs *signal* and it needs the four ISOs to see the same
+scene. Untouched RAW.
+
+**Why.** Sony ISO 50 is an **extended / pull** setting: the sensor reads out at
+base-ISO-100 analogue gain and the stop is taken in exposure. So `g = ISO/436.8`
+is wrong by **2.05×** at ISO 50, which corrupts the noise floor the merge gate is
+denominated in — measured, and fixed in `2a4f5c5` by clamping `g` at a
+`base_iso` of 100.
+
+**But the clamp's location is a guess.** ISO 50 is measured wrong and ISO 100 is
+measured right. **The corpus contains nothing in between**, so `max(ISO, 100)` is
+the simplest rule consistent with the evidence, not a located transition. ISO 64
+and 80 are the only two settings between them. Two frames each and the guess
+becomes a measurement.
+
+**How it will be read.** Per-pixel temporal variance across the frame pair at
+matched mean, compared against the ISO 50 and ISO 100 brackets. If ISO 64 reads
+at the ISO-100 level it is also a pull setting and the clamp is right. If it
+reads at 64/436.8, the clamp is wrong and the transition is real.
+
+**One trap.** *Do not* change shutter or aperture to compensate for the ISO — let
+the frames get brighter. The measurement compares noise at a **known analogue
+gain**, and re-exposing to equalise brightness destroys exactly the difference
+being measured.
