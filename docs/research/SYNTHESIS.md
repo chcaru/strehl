@@ -731,15 +731,16 @@ since contributors are not required to be spliceable and only have to emit an `f
 > 110+/discipline 60+, M19 facts 120+, M20's verifier facts 130+, **M23 facts
 > 170+/discipline 80+/question 25+**, **M25 facts 190+/discipline 100+/question
 > 30+**. Facts **140-145 (M20)**, **150-152 (M21)**,
-> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)**, **230-234 (M29)** and **240-243 (M30)** are folded below and are all
+> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)**, **230-234 (M29)**, **240-243 (M30)** and **260-264 (M32)** are folded below and are all
 > **NOT INDEPENDENTLY VERIFIED** — they were measured by the
 > orchestrator, and rule 12 binds their author exactly as it binds any milestone.
 > The same reservation rule governs the other two sequences: **discipline 110-111
-> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29), 150 (M30)** and **question 45 (M28),
-> 50 (M29), 55 (M30)** are folded. M23's blocks (discipline 80+, question 25+) and
+> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29), 150 (M30), 170 (M32)** and **question 45 (M28),
+> 50 (M29), 55 (M30), 65 (M32)** are folded. M23's blocks (discipline 80+, question 25+) and
 > M25's (discipline 100+, question 30+) remain unclaimed pending their reports;
-> **discipline 30-34 are already taken** by M15's renumbered items, so a new block
-> must not start there.
+> **facts 250+, discipline 160+ and question 60+ are reserved for M31**, the
+> independent verification of M27-M30; and **discipline 30-34 are already taken**
+> by M15's renumbered items, so a new block must not start there.
 
 | # | Fact | Consequence | Source |
 |---|---|---|---|
@@ -858,6 +859,11 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 241 | **This sensor is shot-noise limited across its entire usable range.** Read noise binds where `S < RN_e²·g`: **2.02 / 2.47 / 6.46 DN** above black at ISO 50 / 500 / 160 = **0.014–0.044% of full scale**. Measured fraction of pixels below the boundary, three stacks: **0.0000%** | The dual-gain design does this deliberately — the high-ISO branch drops read noise to 1.47 e⁻ exactly where `g` rises. **Keep the read-noise term in `σ²(S)` — it is what makes the model correct near black, and masked or clipped regions do reach there — but make no design decision *because of* it.** Any argument that depends on read noise for its justification depends, on this rig, on 0.0000% of the frame | M30 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; the boundary is exact given M4's model, the 0.0000% is corpus-specific |
 | 242 | **The clipping a merge sees is not the clipping in the stack: 0.075% at gathered frames against 0.177% whole-stack, a 2.3× reduction.** Two of three stacks have exactly zero of both. `112MSDCF` has **30.7% below SNR 10** at best focus but **0.0% below SNR 5** | **Highlights are disproportionately out of focus** — speculars sit on curved surfaces near the depth extremes — so the highlight case for exposure bracketing is roughly half what a whole-stack figure suggests. `112MSDCF` is not a dynamic-range problem but a *dim frame*, which more light fixes and which fact 240 says more frames supply as well as longer ones. **General instruction: any statistic used to justify a capture change must be evaluated at the frames the merge would gather, not over the stack** | M30 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; best-frame index from an unregularised argmax over M27's focus volume, which rule 4 forbids for output but is adequate for locating signal |
 | 243 | **Verdict on HDR co-bracketing: support it, do not default it, trigger it per stack.** The machinery is already paid for (M24 gain in the forward model), the default path should not spend frames on exposure, and clipping-at-gathered-frames is a computable per-stack trigger | **The review's direction is backwards for highlights:** rescuing clipped pixels needs a **−2 EV** pass; +2 EV clips *more* (**1.89%** newly clipped on `coffee-bean`). Shadow lifting and highlight rescue are opposite operations. The advisory form — "2.4% of gathered pixels are clipped; a −2 EV pass would recover them" — is the same instrument R19 asked for | M30 (DERIVED from facts 240-242) — **NOT INDEPENDENTLY VERIFIED** |
+| 260 | **A self-normalised posterior temperature is blind to the evidence, and non-monotone in it.** Across a **6.1× range of focus evidence** (peak-over-noise 119 → 728) the self-normalised arm reports **0.6480 → 0.6482** — a 0.03% change — falling to 0.6085 in between. Under a 16× SNR degradation it moves **9%** while the calibrated arm moves **22 orders of magnitude**. It reports "≈12 candidate frames" on every bin at every SNR tested | **The sharpest available form of discipline 120**, which M27 could only argue from three instances. Dividing by `std_k(f_k)` divides out the peak height, which *is* the evidence; what survives is the curve's **shape**, a property of the subject and the optics rather than of the measurement. A statistic non-monotone in the quantity it purports to report admits no order-preserving rescue | M32 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 261 | **Focus evidence on this rig is overwhelming: the through-focus peak stands 142–991 σ above its own curve**, across every texture bin including the least textured in the crop. Re-estimated model-free from the focus curve's along-`k` roughness (no noise model, no Monte Carlo, no added noise); the two estimates agree to **1.24×**, the Monte Carlo conservative as predicted | **A calibrated posterior over frame index is a delta function on real data** — perplexity 1.0000, rising only to 1.206 after a 16× SNR degradation that puts the data below the dimmest stack in the corpus, against a no-information null of 33.97. The falsification threshold was pre-registered at ~100×; the conclusion is insensitive to the noise model being wrong by two orders of magnitude | M32 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; measured on `coffee-bean`, the cleanest stack, with degradation applied synthetically rather than captured |
+| 262 | **The no-information fixed point of a softmax posterior is not `H/log n = 1`, and it drifts with `n`: 0.888 → 0.850 for n = 53 → 9**, perplexity **64–72% of `n`**. Simulated null (200k trials) reproduces the scene-free placebo to **0.0137**, inside the pre-registered 0.02 | **The statistic is built from a maximum, and the maximum of `n` noise draws is not typical of them**, so even a perfectly calibrated softmax concentrates on pure noise. Any entropy threshold must be referenced to this `n`-dependent null, not to `log n` — a tool shipping "entropy > 0.9 is unreliable" would call every pixel of a 9-frame stack reliable, by construction. The null is a pure function of `n`, so tabulate it once. **General form: any statistic defined relative to an extremum has a sample-size-dependent null that must be simulated, not reasoned about** | M32 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 263 | **The defect in selection is not a noise problem.** A 142 σ peak is not signal-to-noise limited, so M2's argmax defect in lit low-contrast regions and M27's under-resolved pixels cannot be SNR failures — **they are sampling and model failures: the true peak lies between frames and the estimator has no term for it** | **Relocates confidence.** The uncertain quantity is not *which frame is best* (nearly certain) but **which frames are equivalent** — M27's `n_eff ≈ 3` — and **how far the true peak sits from the nearest sample**. Neither is a function of the focus curve's shape, which is exactly why discipline 120 disqualified shape statistics. Confidence must be built from the predicted σ of the merged estimate, the acceptance-set width, and the sub-frame peak offset | M32 (DERIVED from facts 261, 24, 211) — **NOT INDEPENDENTLY VERIFIED** |
+| 264 | **M20 and M32 explain each other.** M20: the unguarded Wiener estimator *loses* to argmax by up to 31% even with oracle depth, and only **15.1%** of real pixels beat the crossover. M32: when one frame stands 10²–10³ σ above the rest, **the minimum-variance estimator *is* nearly a selector** and the matched filter has nothing to harvest from neighbours | **The thesis survives and gets sharper.** "Estimation, not selection" is a claim about estimating the **pixel value**, and it is untouched. It was never a claim about being unsure which frame won, and it must not become one. The estimation content lives in **averaging among frames that genuinely agree** (M14's 0.534×), in the **sub-frame peak location**, and in the noise model that identifies both | M32 (DERIVED, reconciling M20 + M32) — **NOT INDEPENDENTLY VERIFIED** |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -1311,6 +1317,19 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      the arithmetic of the comparison rather than a property of the world.** Before running a
      two-arm comparison, name the budget the arms are supposed to be spending, and check that the
      arms actually spend the same amount of it.
+
+170. **A population selected by thresholding a statistic computed on averaged data is not
+     selected on the property you think it is.** M32 split pixels into "flat" and "textured" by
+     local contrast measured on the **frame-averaged** image, whose noise floor is `σ/√53 ≈ 1.1`
+     DN — so a 5.9 DN "flat" pixel is real scene structure at 5.4× that floor, and the
+     least-textured bin in the entire crop still carried **119 σ** of focus evidence. There was no
+     information-free real population in the data at all, and every flat-vs-textured comparison
+     was *more evidence against slightly less*. The mechanism is that **averaging moves the noise
+     floor the threshold is implicitly referenced to**, and a percentile threshold hides this
+     perfectly because it always returns a population. A near-relative of discipline 130: picking
+     a threshold that guarantees a sample exists is not the same as picking one that guarantees
+     the sample has the property. **Check that the selected population has the property the
+     experiment needs, using a reference the selection did not use.**
 
 ---
 
@@ -1838,6 +1857,24 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     *nothing* at fixed light, so the decision threshold is not "is HDR worth it" but merely "is
     any pixel clipped", which is a much lower bar than the corpus currently clears.
     `UNVERIFIED`. *(Raised by M30; numbered 55 to clear the reserved question blocks.)*
+
+65. **Where does confidence actually come from, now that the focus curve cannot supply it?**
+    Fact 263 relocated the problem but did not solve it. Three candidates are named and none is
+    measured: **(a)** the predicted σ of the merged estimate under the M4 noise model — cheap,
+    externally referenced, and the one quantity the project already trusts everywhere else, but
+    it reports only *photon* uncertainty and fact 263 says the live failure is not photon
+    uncertainty; **(b)** the width of the acceptance set, i.e. M27's `n_eff` — available in one
+    pass as the calibrated posterior's perplexity (fact 261), with fact 262 supplying the null it
+    would have to be referenced against; **(c)** the sub-frame peak offset — the distance from
+    the true through-focus peak to the nearest sampled frame, which fact 263 argues is the actual
+    mechanism behind M2's argmax defect and which **nothing in the project currently estimates**.
+    My guess is that (c) is load-bearing and (a) is merely easy, and that a shippable confidence
+    output is a small vector rather than a scalar — a predicted σ, an `n_eff`, and a set of flags
+    — which is what discipline 29 demanded before there was a mechanism to justify it. **The
+    cheap falsifiable version:** M13's cells have known depth, so the sub-frame offset is
+    available as ground truth there, and whether (c) predicts M2's defect can be answered on an
+    existing harness. `UNVERIFIED`. *(Raised by M32; numbered 65 to clear the reserved question
+    blocks.)*
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
