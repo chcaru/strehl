@@ -141,7 +141,7 @@ runtime, and it was never what E recommended.
 | --- | --- | --- | --- |
 | B1 | `TileView`/`Stage` cannot express rule 2; scalar `halo()` cannot express a warp-dependent, radially varying source ROI (~0 at centre, 39 plane px at corner) | **Blocking** | §3.4.1 B1, §9, §10 q10 |
 | B2 | *"build-time WGSL splicing"* is a mistranslation of E's *"pipeline-build time"*, which in `wgpu` is a runtime call | **Blocking** | §3.4.1 B2, risk 8 (resolved) |
-| B3 | The 3-7 px winner correlation **is** `focus.rs`'s own `OUTER_RADIUS: 3` support, so the 17x17 regulariser is tuned to one measure | **Blocking** | fact 25, §3.4.1 B3, §10 q9 |
+| B3 | The 3-7 px winner correlation **is** `focus.rs`'s own `OUTER_RADIUS: 3` support, so the 17x17 regulariser is tuned to one measure | **Blocking** → **REJECTED (M9)**: coupling is to centre-tap fraction φ, not support; outer radius cancels algebraically | fact 25, fact 35, §3.4.1 B3, §10 q9 |
 | B4 | Rule 3 is documented, not enforced — a plugin handed raw pixels can always estimate its own sigma | **Blocking** | §3.4.1 B4 |
 | N1 | Camera/lens "plugins" have collapsed to data, and no document said so | **Confirmed** | §3.4.2, `AGENTS.md` header |
 | N2 | `breathing_scale_prior` — F1.13 says *"is justified and should be built"*, F ranks it payoff #2 at 5 stars — but **M3 §4 removed its only job** | **Retracted** | §4.1 |
@@ -170,7 +170,16 @@ runtime, and it was never what E recommended.
 >   three stacks against a statistic that recovers a planted bias at p=0.010. The conditional's two
 >   halves come apart. **The lens profile stays a data file**; the fix is an aligner tile weight
 >   `|c − w|` that needs no lens identity.
-> - **B3 is now the only Blocking verdict still resting on an unmeasured claim** (§10 q9).
+> - **B3 — measured, and rejected.** It was the only Blocking verdict still resting on an unmeasured
+>   claim (§10 q9). M9 measured it: the coupling is real but it is to the operator's **centre-tap
+>   sensitivity fraction φ** (ρ = +0.918 / +0.894), **not** to support radius (ρ = −0.170 / −0.243,
+>   n.s.). For a ring difference **the outer radius cancels from φ algebraically**, so the proposed
+>   `support_px()` would have reported precisely the term that does not matter. Value of putting it
+>   on the interface: **+0.0000 / +0.0009** ratio units against a 0.02 floor. **The verdict was
+>   right that the coupling exists and right that §5's property tests could not catch it; it was
+>   wrong about which quantity couples, and therefore about the fix.** Nothing replaces it on the
+>   interface — φ is framework-measurable. **With B3 resolved, no Blocking verdict rests on an
+>   unmeasured claim.**
 
 ## 4. Verified independently before acting
 

@@ -553,6 +553,40 @@ distinguishable configs produce distinguishable output, and wrong-but-distinguis
 **Fix:** `fn support_px(&self) -> u32` on the measure; the merge derives its regulariser width from
 it; a property test asserts the derivation.
 
+> **B3 IS REJECTED — MEASURED by M9, and independently reproduced. `support_px()` comes off the
+> interface.** B3 was the last Blocking verdict resting on an unmeasured claim, and the claim was
+> half right in a way that made the wrong fix look obvious.
+>
+> **The coupling is real; it is just not to support.** Argmax's noise excess tracks the operator's
+> **centre-tap sensitivity fraction φ** — the share of the operator's total response that comes from
+> the pixel being selected. **ρ(φ, excess) = +0.918 / +0.894** across two stacks (p < 0.0001);
+> **ρ(support radius, excess) = −0.170 / −0.243, not significant** (p = 0.53 / 0.37). A 3x3 Sobel,
+> which has a **zero centre tap**, shows **no excess at all: 0.9952x**. The mechanism is that a
+> pixel's own noise votes for its own selection; how far the operator reaches is irrelevant.
+>
+> **Why `support_px()` specifically cannot work, algebraically.** For a ring difference the
+> linearised kernel is `1/n_i − 1/n_o` at centre and `−1/n_o` in the annulus, so
+> **φ = (1/n_i − 1/n_o) / (2(1 − n_i/n_o)) = 1/(2·n_i) = 1/(2·(2·inner+1)²)** —
+> **the outer radius cancels exactly.** *(Derived by hand in exact rational arithmetic, independent
+> of M9's harness; `ring(1,3)`, `ring(1,12)` and `ring(1,2)` all give φ = 1/18 identically.)*
+> **`support_px()` reports the outer radius. It reports precisely the term that cancels.**
+>
+> **The empirical form of the same point, which needs no model at all:** among operators declaring
+> **the same** `support_px()`, φ still spans **12.7x to 321x** and the noise excess spans up to
+> **0.74 ratio units** — 37x the pre-registered 0.02 severity floor. The interface field has almost
+> no predictive power inside its own equivalence class.
+>
+> **Decision-theoretic form, which is what actually rules.** A merge told only `support_px()`
+> achieves worst-case regret **0.0646 / 0.0037** ratio units against a per-measure oracle; a merge
+> told **nothing** achieves **0.0646 / 0.0045**. **Value of the interface = +0.0000 / +0.0009**,
+> against a 0.02 floor, and below the statistic's own placebo floor of **+0.0326**.
+>
+> **Fix, replacing the one above: nothing goes on the interface.** φ is *framework-measurable* — the
+> framework can finite-difference any contributed measure itself, which is exactly how M9 measured
+> it. Contributors declare nothing; the framework learns what it needs by probing. **This is the
+> better outcome for a plugin system: it cannot be got wrong by a contributor, and it works for
+> measures nobody anticipated.**
+
 **B4 — rule 3 is documented, not enforced.** §3.4's enforcement is a refusal to make the noise-model
 *interface* pluggable, which closes the interface but not the behaviour: a plugin handed raw pixels
 can always compute its own local sigma, reintroducing the exact 2-5x defect this project exists to
@@ -678,7 +712,9 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 34 | **Decoder scratch is 39.36 ± 0.11 MiB private commit per concurrent decode** on 37.8 MiB ARWs and **32.34 ± 0.06 MiB** on 31.6 MiB ARWs. It is **file-size proportional** (slope 1.009 ± 0.015, intercept 0.685 ± 0.530 MiB, consistent with zero; a constant model has R² = 0), plus **1.51 ± 0.04 MiB per doubling of `RAYON_NUM_THREADS`** because the decoder is itself rayon-parallel (240.4 ms at 1 thread, 53.6 ms at 32). **Allocator retention is separate and bounded**: ≈2 MiB resting, ≤4.15 MiB added to peak, and **exactly flat (0.000 MiB) over decodes 40-104** | Scratch scales with concurrency; retention does not and does not leak. **Fitted over 17 points with all intercepts positive — M2's two-point negative-intercept trap explicitly avoided.** **Pixel-proportional vs constant remains UNVERIFIED**: `active_px` is 32,966,016 on every file available, so one body and one geometry cannot separate them | M8 (MEASURED) |
 | 23 | Regularising the focus field (17x17 smooth) before argmax drops speckle **34.4% -> 0.868%** and noise **1.253x -> 1.075x** — **but 1.075x is still above 1.0.** Only averaging goes below one frame | **Direct measured support for §1.1(a), and a warning.** The architecture needs *both* halves: a regularised reference to stop the selector electing noise, **and** a noise-gated estimator that averages where frames agree. A better selector is not enough | M2-verification (MEASURED) |
 | 24 | On high-detail ROIs a mean's sigma looks harmless (0.899x, 0.995x) while its mean gradient **collapses -58% and -53%**; argmax *raises* gradient | **Sigma alone cannot see detail destruction.** This is rule 9 working: the flat-ROI metric is valid precisely because its paired control fails as it should | M2-verification (MEASURED) |
-| 25 | Argmax's noise excess is **spatially correlated over 3-7 px, not white** — and 3-7 px is exactly `focus.rs`'s own `INNER_RADIUS: 1` / `OUTER_RADIUS: 3` support | **The focus measure and the merge are coupled.** The 17x17 regulariser behind facts 20 and 23 is tuned to *one measure's support*. A contributor pairing a wider measure with the default merge gets a silently wrong stack. Put the support on the interface (§3.4.1 B3). Also why high-pass views understate argmax damage while raw spatial sd overstates the ratio — ~1.48x is the honest figure between them | M2-verification (MEASURED) |
+| 25 | Argmax's noise excess is **spatially correlated over 3-7 px, not white** — and 3-7 px is exactly `focus.rs`'s own `INNER_RADIUS: 1` / `OUTER_RADIUS: 3` support | **The focus measure and the merge are coupled** — this stands. Also why high-pass views understate argmax damage while raw spatial sd overstates the ratio — ~1.48x is the honest figure between them. **But the inference drawn from it was wrong (M9).** The observation pairs the *inner* radius, which drives the effect, with the *outer* radius, which does not, and the coincidence made "put the support on the interface" look obvious. `ring(1,3)`'s focus-field autocorrelation length is **L(1/e) = 2 px**, shorter than its own 7 px outer box. **Not retracted — reinterpreted: the coupling is to φ (fact 35), and §3.4.1 B3 is rejected** | M2-verification (MEASURED); **interpretation corrected by M9** |
+| 35 | **Argmax's noise excess tracks the focus operator's centre-tap sensitivity fraction φ, not its support.** ρ(φ, excess) = **+0.918 / +0.894** on two stacks (p < 0.0001); ρ(support radius, excess) = **−0.170 / −0.243**, not significant (p = 0.53 / 0.37). A 3x3 Sobel has a **zero centre tap** and shows **no excess: 0.9952x**. For a ring difference, **φ = 1/(2·(2·inner+1)²)** and **the outer radius cancels exactly** | **The mechanism is that a pixel's own noise votes for its own selection.** How far the operator reaches is irrelevant; how much of its answer comes from the pixel under test is everything. **This kills `support_px()` (§3.4.1 B3) and needs no replacement on the interface** — φ is framework-measurable by finite-differencing any contributed measure. *(The φ formula was re-derived by hand in exact rational arithmetic, independently of M9's harness.)* Among operators declaring **the same** `support_px()`, φ still spans **12.7x-321x** and excess spans **0.74 ratio units**, 37x the severity floor | M9 (MEASURED, 4 families x 4 support radii, two stacks) |
+| 36 | **The flat-ROI noise ratio is monotone-decreasing then flat in regulariser width — there is no interior optimum.** 9 of 16 argmins sit at the sweep edge even after the sweep was extended to width 257. **And regularising can actively harm**: `ring(1,3)` scores **1.3625x at width 3** against **1.2527x unregularised** | **Any procedure that "tunes the regulariser width to minimise noise" is optimising a function with no minimum**, and will run to the widest width offered — which destroys focus selectivity. Width must be chosen against a *combined* objective, not against noise alone. **This also means B3's proposed property test — "assert the merge derives its width from the measure" — would have asserted a derivation with no well-defined target** | M9 (MEASURED) |
 | 26 | **Every existing test stack was shot with a 2x teleconverter**, disclosed only after M1-M4 were complete. `LensModel = "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"`, `LensSpec = "FE 200mm F5.6 Macro OSS"`, `FocalLength = 200 mm`, `MaxApertureValue = 5.6`. The body composes the TC into reported focal length and aperture; **the maker-note lens ID does not** — it still reads as the bare lens | Two consequences. **(a)** Anything reading `FocalLength`/`FNumber` from EXIF is already TC-correct, so there is no hidden 2x error in the advisor. **(b)** **Keying a lens profile on the lens ID is a bug**: it would apply bare-lens constants to a composed path with a different `p`, twice the focal length and two more stops. The profile key must be the *composed optical path*, and every profiled constant must be measured for the combination actually in use | MEASURED-LOCALLY (exiftool, all three stacks, every frame) |
 | 27 | **The bellows factor of the composed path is `B = (1 + m/p) ∈ [2.41, 3.06]`**, point estimate 2.6-2.9, measured from the diffraction cutoff in the raw CFA. At f/11 the green-quincunx spectrum has a genuine knee at **f_sig = 0.2762 cyc/px**, above which the floor matches the photon-transfer noise model to **0.950x** — so it is a real optical cutoff, not a fitted plateau. **`B = 5` (p = 0.5) is REFUTED 5/5 by a model-free test** at two apertures: there is optical signal at 0.3508 cyc/px, where p=0.5 permits none. **`B = 1` is refuted by ~3x** | **The corpus's "dominant uncertainty in the whole advisor" (±38%) is retired to −20%/+2%, from data the owner already had, with no bench work.** With m ≈ 2.0, **p ≈ 1.0-1.4** — the working assumption of p=1 was right. It does **not** vanish: M5 measures the product `(1 + m/p)` and cannot separate `p` from `m`, so `B` is known at *one* magnification only. A bench measurement of `p` alone would give `B` at any magnification | M5 (MEASURED → DERIVED; independently reproduced) |
 | 28 | **EXIF `FNumber` is the *marked* aperture and is NOT bellows-corrected.** The body composes the teleconverter into `FocalLength` and `FNumber` (fact 26) but applies no correction for working at 2:1. **Marked f/11 is optically f/33** | **The most directly actionable finding in the corpus.** Every advisor formula that reads `FNumber` and treats it as `N_eff` **under-predicts diffraction blur by ~3x** and will recommend f/11 as "safe". Apply `N_eff = FNumber_exif * B`. Consequences at B=3: f/8 discards **40%** of the sensor's 2-D Nyquist area (46% of contrast at 4-px detail), f/11 discards **68%** (90%) — a 33 MP sensor used as ~10.5 MP. Critical sampling is at **N_marked = f/6.21** | M5 §7 (DERIVED, factor-of-3 margin) |
@@ -811,6 +847,23 @@ So the A/B harness is a **first-class component from commit one**, not a later a
     `chunk_len = 1` leaves half empty. **Run every new gate against known-good code, at the exact
     pair it specifies, before trusting it to judge unknown code** — and set its tolerance above the
     measured run-to-run spread of its own two sides, not above a mean of them.
+
+14. **Pre-register the full outcome grid, not the outcome you expect.** M9's registered rule had a
+    confirm branch and a reject branch and the observed result landed in **neither** — the
+    load-bearing clause of confirm failed, but the reject branch had its own unmet condition. The
+    ruling then had to lean on **S7, a post-hoc statistic**, which is a strictly weaker position than
+    if the grid had been enumerated up front. **Before running, write down what you will conclude
+    for every cell of the outcome space, including "both conditions fail".** *(M9 disclosed this
+    against itself, which is why it is here and not a defect.)*
+
+15. **When re-analysing someone else's data, reproduce one of their published numbers first.** My
+    first independent pass at M9 produced the *opposite* correlations — ρ(support) = +0.813,
+    ρ(φ) = +0.105 — because the sweep CSV is stratified by ROI and my reader silently kept the last
+    row per measure, collapsing four flat ROIs and four detail ROIs into one. **The tell was that
+    the same script failed to reproduce M2's published 1.253x**, returning 0.9992x. With the strata
+    filtered correctly, every M9 headline reproduced. **A cross-check against a known published
+    figure is the cheapest guard against misreading a schema, and it should be the first thing any
+    re-analysis prints** — without it I would have "refuted" a correct result on my own bug.
 
 ---
 
@@ -1116,13 +1169,15 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
    (§4.1). Still live for breathing: bet #1 claims breathing itself supplies sub-pixel diversity.
    M3's per-frame alignment residuals are the raw material.
 8. `g` by direct photon transfer rather than by white-level consistency (§4.1). Needs (3), not (1).
-9. **Is the focus-measure/merge coupling (fact 25) severe enough to belong on the interface?**
-   Re-run the skeleton's winner map with measures of differing support (3x3/7x7 ring, 5x5/13x13
-   ring, 3x3 Tenengrad) and sweep the regulariser width against the flat-ROI ratio for each. **If
-   the noise-optimal width tracks the measure's outer radius, §3.4.1 B3 is confirmed and
-   `support_px()` is mandatory.** The skeleton already emits `--index-map` and `--flat-roi`, so
-   this is nearly free. **Now the most valuable open item in this section**, since M6 and M7 closed
-   the other two interface questions and B3 is the one still standing on an unmeasured claim.
+9. ~~**Is the focus-measure/merge coupling (fact 25) severe enough to belong on the interface?**~~ —
+   **CLOSED by M9. The coupling is real, it is not to support, and it does not belong on the
+   interface.** Excess tracks the **centre-tap sensitivity fraction φ** (ρ = +0.918 / +0.894), not
+   support radius (ρ = −0.170 / −0.243, n.s.). A merge told only `support_px()` is worth
+   **+0.0000 / +0.0009** ratio units over a merge told nothing, against a pre-registered 0.02 floor
+   and a placebo floor of +0.0326. **`support_px()` comes off; nothing replaces it** — φ is
+   framework-measurable by finite-differencing the contributed measure. §3.4.1 B3 rejected,
+   facts 35 and 36 added, fact 25 reinterpreted. **With this, every question that gated the plugin
+   interface is closed.**
 10. ~~**How big is the halo actually?**~~ — **CLOSED by M6 (fact 32). A scalar `halo()` does not
     survive, but B1's stated reasons were wrong.** Corner halo is **32.39 px**, not 39 — B1 quoted
     the Euclidean *displacement*, and a halo is a rectangle expansion, so the right quantity is

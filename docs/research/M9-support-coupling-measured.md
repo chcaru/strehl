@@ -3,6 +3,20 @@
 **Status:** measured. Answers SYNTHESIS §10 open question 9 and rules on
 plugin-review item **B3**.
 
+> **Independently reproduced by the orchestrator, four legs, before this was folded into
+> SYNTHESIS.** (1) The φ formula **φ = 1/(2·(2·inner+1)²) was re-derived by hand in exact rational
+> arithmetic**, independent of this harness — exact match on 7 configurations, and it shows the
+> outer radius **cancels algebraically**, which is a stronger statement than the correlational one
+> below. (2) Both correlations recomputed from the committed CSVs with independently written
+> Spearman and permutation code: **ρ(φ) = +0.918 / +0.894**, **ρ(support) = −0.170 / −0.243**
+> (published: +0.917 / +0.891 and −0.207 / −0.243). (3) The two cross-checks reproduced: **M2's
+> 1.253x** on the reference ROI and **`tenengrad-w0` at 0.9952x**. (4) Gates re-run at
+> **67 tests passing**, clippy and fmt clean.
+>
+> **One caution recorded against my own first attempt:** an initial pass that did not filter the
+> sweep CSV by `roi_kind` produced the *opposite* correlations. The reproduction of M2's published
+> figure is what exposed it. See SYNTHESIS §5 item 15.
+
 Reproduction: `experiments/m9-support/README.md`. Every number below is in
 `experiments/m9-support/data/analysis-*.txt`, produced by the exact commands in
 that file. Harness: `experiments/m9-support/src/`. Pre-registration:
