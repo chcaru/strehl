@@ -1,0 +1,11 @@
+decoded 79 frames to 3516x2344 green planes in 1615 ms (20.4 ms/frame)
+[mc/m10] base pyramids for 79 frames in 0.05 s
+[mc/m10] 50/367 pairs, 11.2 s
+[mc/m10] 100/367 pairs, 21.6 s
+[mc/m10] 150/367 pairs, 28.2 s
+[mc/m10] 200/367 pairs, 39.1 s
+[mc/m10] 250/367 pairs, 50.5 s
+[mc/m10] 300/367 pairs, 60.9 s
+[mc/m10] 350/367 pairs, 65.6 s
+[mc/m10] 367 pairs x 5 deltas = 4037 fits in 66.7 s (181.8 ms/pair, 16.5 ms/fit)
+wrote data/stack-112-metacal.csv

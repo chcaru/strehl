@@ -1110,6 +1110,21 @@ fn run_pairfit(args: &[String]) {
 /// `--self` replaces `j` with `i`, giving a pair of **real content with zero
 /// defocus difference** carrying the identical resampler and the identical
 /// plant. Its true `R` is 1 by construction, so it is the registered N3 null.
+///
+/// **Added after N3 fired (disclosed, not backfilled).** N3 read `R = 0.372` at
+/// `delta = 1e-4` on frames that differ by *nothing*, which is lower than any
+/// real pair. Two diagnostics were then added to find out why:
+///
+/// * `--pedestal P` warps the moving frame by a single bilinear pass at
+///   `(1+P)(1±d) − 1` instead of `1±d`, so the pair carries a large
+///   pre-existing differential displacement (tiles at varied sub-pixel phase)
+///   with **one** resampling pass and no extra blur. It moves the operating
+///   point, which is the confound to state when reading it.
+/// * `--field` renders reference and both plants as point samples of one
+///   continuous band-limited function at the composed transforms, so **no
+///   interpolator touches anything**. This is M10 P6's resampler-free arm
+///   rebuilt as a two-sided response measurement. If `R` is faithful here and
+///   shrunk under `--self`, the shrinkage at small `delta` is the resampler.
 fn run_metacal(args: &[String]) {
     let dir = &args[2];
     let prefix = &args[3];
@@ -1132,6 +1147,20 @@ fn run_metacal(args: &[String]) {
         .and_then(|s| s.parse().ok())
         .unwrap_or(1);
     let selfpair = has_flag(args, "--self");
+    let pedestal: f32 = arg_val(args, "--pedestal")
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(0.0);
+    let field_reps: usize = arg_val(args, "--field")
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(0);
+    let noise: f32 = arg_val(args, "--noise")
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(4.2);
+
+    if field_reps > 0 {
+        run_metacal_field(&case, &cfgnames, &deltas, field_reps, pedestal, noise, prefix);
+        return;
+    }
 
     let planes = load_planes(dir, limit);
     let n = planes.len();
@@ -1160,6 +1189,9 @@ l_plus,l_minus,r_two,r_plus,r_minus,rms_plus,used_plus,rms_minus,used_minus,plan
     for cfgname in &cfgnames {
         let cfg = cfg_by_name(cfgname);
         let t_pyr = Instant::now();
+        // With a pedestal the base fit is against the once-warped moving frame,
+        // so the base pyramid for `j` is not the one cached here; it is rebuilt
+        // per pair below. The cache still serves every reference frame.
         let pyr: Vec<Pyramid> = planes.par_iter().map(|p| build_pyramid(p, &cfg)).collect();
         eprintln!(
             "[mc/{cfgname}] base pyramids for {n} frames in {:.2} s",
@@ -1181,9 +1213,25 @@ l_plus,l_minus,r_two,r_plus,r_minus,rms_plus,used_plus,rms_minus,used_minus,plan
             .par_iter()
             .map(|&(i, j)| {
                 let rf = &planes[i];
-                let mv = &planes[j];
                 let span = j as i64 - i as i64;
-                let f0 = align_with(&pyr[i], &pyr[j], rf, mv, &spots, &cfg);
+                // `mv_owned` only exists when a pedestal forces a warp.
+                let mv_owned = if pedestal != 0.0 {
+                    Some(warp_known(
+                        &planes[j],
+                        Fit {
+                            g: pedestal,
+                            r: 0.0,
+                            ax: 0.0,
+                            ay: 0.0,
+                        },
+                    ))
+                } else {
+                    None
+                };
+                let mv: &Plane = mv_owned.as_ref().unwrap_or(&planes[j]);
+                let mv_pyr_owned = mv_owned.as_ref().map(|p| build_pyramid(p, &cfg));
+                let mv_pyr: &Pyramid = mv_pyr_owned.as_ref().unwrap_or(&pyr[j]);
+                let f0 = align_with(&pyr[i], mv_pyr, rf, mv, &spots, &cfg);
                 let mut lines = Vec::new();
                 let base = match f0 {
                     Some(s) => s,
@@ -1209,13 +1257,16 @@ l_plus,l_minus,r_two,r_plus,r_minus,rms_plus,used_plus,rms_minus,used_minus,plan
                 for &d in &deltas {
                     let mut cells: [Option<(f64, f32, usize)>; 2] = [None, None];
                     for (k, sgn) in [(0usize, 1.0f32), (1usize, -1.0f32)] {
+                        // One bilinear pass whatever the pedestal: the plant is
+                        // composed into it, never applied on top of a warp.
+                        let g_eff = (1.0 + pedestal) * (1.0 + sgn * d) - 1.0;
                         let w = Fit {
-                            g: sgn * d,
+                            g: g_eff,
                             r: 0.0,
                             ax: 0.0,
                             ay: 0.0,
                         };
-                        let mv2 = warp_known(mv, w);
+                        let mv2 = warp_known(&planes[j], w);
                         let mp2 = build_pyramid(&mv2, &cfg);
                         if let Some(s1) = align_with(&pyr[i], &mp2, rf, &mv2, &spots, &cfg) {
                             let (a1r, a1i) = (1.0f64 + s1.fit.g as f64, s1.fit.r as f64);
@@ -1227,38 +1278,8 @@ l_plus,l_minus,r_two,r_plus,r_minus,rms_plus,used_plus,rms_minus,used_minus,plan
                             cells[k] = Some((l, s1.rms, s1.used));
                         }
                     }
-                    let lp_true = (1.0f64 + d as f64).ln();
-                    let lm_true = (1.0f64 - d as f64).ln();
-                    let f = |c: &Option<(f64, f32, usize)>| match c {
-                        Some((l, r, u)) => (format!("{l:.10}"), format!("{r:.4}"), format!("{u}")),
-                        None => (String::new(), String::new(), "0".to_string()),
-                    };
-                    let (lps, rps, ups) = f(&cells[0]);
-                    let (lms, rms_, ums) = f(&cells[1]);
-                    let r_two = match (&cells[0], &cells[1]) {
-                        (Some((lp, ..)), Some((lm, ..))) => {
-                            format!("{:.9}", (lp - lm) / (lp_true - lm_true))
-                        }
-                        _ => String::new(),
-                    };
-                    let r_plus = cells[0]
-                        .as_ref()
-                        .map(|(l, ..)| format!("{:.9}", l / lp_true))
-                        .unwrap_or_default();
-                    let r_minus = cells[1]
-                        .as_ref()
-                        .map(|(l, ..)| format!("{:.9}", l / lm_true))
-                        .unwrap_or_default();
-                    lines.push(format!(
-                        "{case},{cfgname},{i},{j},{span},{d:.9},{l0:.10},{:.9},{:.6},{:.6},\
-{:.4},{},{:.2},{:.5},{lps},{lms},{r_two},{r_plus},{r_minus},{rps},{ups},{rms_},{ums},{pw},{ph}",
-                        base.fit.r,
-                        base.fit.ax,
-                        base.fit.ay,
-                        base.rms,
-                        base.used,
-                        base.lever_rms,
-                        base.peak_mean
+                    lines.push(mc_row(
+                        &case, cfgname, i, j, span, d, l0, &base, &cells, pw, ph,
                     ));
                 }
                 let k = done.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
@@ -1288,6 +1309,169 @@ l_plus,l_minus,r_two,r_plus,r_minus,rms_plus,used_plus,rms_minus,used_minus,plan
     eprintln!("wrote {path}");
 }
 
+/// One CSV row of `metacal`, shared by the real-frame and field arms.
+#[allow(clippy::too_many_arguments)]
+fn mc_row(
+    case: &str,
+    cfgname: &str,
+    i: usize,
+    j: usize,
+    span: i64,
+    d: f32,
+    l0: f64,
+    base: &Stage,
+    cells: &[Option<(f64, f32, usize)>; 2],
+    pw: usize,
+    ph: usize,
+) -> String {
+    let lp_true = (1.0f64 + d as f64).ln();
+    let lm_true = (1.0f64 - d as f64).ln();
+    let f = |c: &Option<(f64, f32, usize)>| match c {
+        Some((l, r, u)) => (format!("{l:.10}"), format!("{r:.4}"), format!("{u}")),
+        None => (String::new(), String::new(), "0".to_string()),
+    };
+    let (lps, rps, ups) = f(&cells[0]);
+    let (lms, rms_, ums) = f(&cells[1]);
+    let r_two = match (&cells[0], &cells[1]) {
+        (Some((lp, ..)), Some((lm, ..))) => format!("{:.9}", (lp - lm) / (lp_true - lm_true)),
+        _ => String::new(),
+    };
+    let r_plus = cells[0]
+        .as_ref()
+        .map(|(l, ..)| format!("{:.9}", l / lp_true))
+        .unwrap_or_default();
+    let r_minus = cells[1]
+        .as_ref()
+        .map(|(l, ..)| format!("{:.9}", l / lm_true))
+        .unwrap_or_default();
+    format!(
+        "{case},{cfgname},{i},{j},{span},{d:.9},{l0:.10},{:.9},{:.6},{:.6},\
+{:.4},{},{:.2},{:.5},{lps},{lms},{r_two},{r_plus},{r_minus},{rps},{ups},{rms_},{ums},{pw},{ph}",
+        base.fit.r,
+        base.fit.ax,
+        base.fit.ay,
+        base.rms,
+        base.used,
+        base.lever_rms,
+        base.peak_mean
+    )
+}
+
+/// `N4b`: the same two-sided response with **no interpolator anywhere**.
+///
+/// Reference and both plants are independent point samples of one continuous
+/// band-limited field at the composed transforms, so the resampler that
+/// `warp_known` introduces is absent by construction rather than cancelled by
+/// an argument. `pedestal` sets the pair's pre-existing scale offset, so the
+/// `pedestal = 0` arm is the exact resampler-free analogue of the `--self`
+/// null.
+///
+/// The noise seed is held fixed across the three moving renders, so the noise
+/// is a fixed function of output position — a sensor-fixed pattern. A bilinear
+/// plant instead carries the noise with the content. Neither convention matches
+/// the other exactly, and at 0.12 px of plant the difference is far below the
+/// effect being measured.
+#[allow(clippy::too_many_arguments)]
+fn run_metacal_field(
+    case: &str,
+    cfgnames: &[String],
+    deltas: &[f32],
+    reps: usize,
+    pedestal: f32,
+    noise: f32,
+    prefix: &str,
+) {
+    let (w, h) = (3516usize, 2344usize);
+    let path = format!("data/{prefix}-metacal.csv");
+    let mut out = std::io::BufWriter::new(std::fs::File::create(&path).expect("create csv"));
+    let _ = writeln!(
+        out,
+        "case,cfg,ref,mov,span,delta,l0,rot0,ax0,ay0,rms0,used0,lever0,peak0,\
+l_plus,l_minus,r_two,r_plus,r_minus,rms_plus,used_plus,rms_minus,used_minus,plane_w,plane_h"
+    );
+    for cfgname in cfgnames {
+        let cfg = cfg_by_name(cfgname);
+        let spots = tile_grid_m(
+            &Plane { d: vec![], w, h },
+            cfg.fine_tile,
+            cfg.fine_grid.0,
+            cfg.fine_grid.1,
+            cfg.margin,
+        )
+        .expect("grid");
+        let t0 = Instant::now();
+        for rep in 0..reps {
+            let fld = field::Field::new(384, 1.0 / 220.0, 1.0 / 2.6, 0xF1E1D0 ^ (rep as u64));
+            let base_t = Fit {
+                g: pedestal,
+                r: 0.0,
+                ax: 0.0,
+                ay: 0.0,
+            };
+            let rf = fld.render(w, h, None, 900.0, 3000.0, noise, 0x51_u64 ^ (rep as u64));
+            let rp = build_pyramid(&rf, &cfg);
+            let mv = fld.render(
+                w,
+                h,
+                Some(base_t),
+                900.0,
+                3000.0,
+                noise,
+                0x52_u64 ^ (rep as u64),
+            );
+            let mvp = build_pyramid(&mv, &cfg);
+            let base = match align_with(&rp, &mvp, &rf, &mv, &spots, &cfg) {
+                Some(s) => s,
+                None => continue,
+            };
+            let (a0r, a0i) = (1.0f64 + base.fit.g as f64, base.fit.r as f64);
+            let l0 = 0.5 * (a0r * a0r + a0i * a0i).ln();
+            let rows: Vec<String> = deltas
+                .par_iter()
+                .map(|&d| {
+                    let mut cells: [Option<(f64, f32, usize)>; 2] = [None, None];
+                    for (k, sgn) in [(0usize, 1.0f32), (1usize, -1.0f32)] {
+                        let t = compose(&[
+                            base_t,
+                            Fit {
+                                g: sgn * d,
+                                r: 0.0,
+                                ax: 0.0,
+                                ay: 0.0,
+                            },
+                        ]);
+                        let mv2 = fld.render(
+                            w,
+                            h,
+                            Some(t),
+                            900.0,
+                            3000.0,
+                            noise,
+                            0x52_u64 ^ (rep as u64),
+                        );
+                        let mp2 = build_pyramid(&mv2, &cfg);
+                        if let Some(s1) = align_with(&rp, &mp2, &rf, &mv2, &spots, &cfg) {
+                            let (a1r, a1i) = (1.0f64 + s1.fit.g as f64, s1.fit.r as f64);
+                            let den = a0r * a0r + a0i * a0i;
+                            let ir = (a1r * a0r + a1i * a0i) / den;
+                            let ii = (a1i * a0r - a1r * a0i) / den;
+                            let l = 0.5 * (ir * ir + ii * ii).ln();
+                            cells[k] = Some((l, s1.rms, s1.used));
+                        }
+                    }
+                    mc_row(case, cfgname, rep, rep, 0, d, l0, &base, &cells, w, h)
+                })
+                .collect();
+            for r in rows {
+                let _ = writeln!(out, "{r}");
+            }
+            eprintln!("[mc-field/{cfgname}] rep {rep} done ({:.1} s)", t0.elapsed().as_secs_f64());
+        }
+    }
+    let _ = out.flush();
+    eprintln!("wrote {path}");
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 2 {
@@ -1297,7 +1481,7 @@ fn main() {
         eprintln!("  m12-shrinkage edges <dir-of-ARW> <out-prefix> --case NAME [--spans 1,2,4] [--direct0] [--cfg m10|m3|wide] [--limit N]");
         eprintln!("  m12-shrinkage synth <dir-of-ARW> <out-prefix> --case NAME [--n 105] [--flavour warp|integer] [--spans ...] [--direct0]");
         eprintln!("  m12-shrinkage focus <dir-of-ARW> <out-prefix> --case NAME [--tile 96] [--stride 96] [--fmargin 160] [--frozen] [--step 1] [--phase 0]");
-        eprintln!("  m23-metacal   metacal <dir-of-ARW> <out-prefix> --case NAME [--cfgs m10] [--spans 1,2] [--deltas 1e-4,...] [--self] [--stride 1] [--limit N]");
+        eprintln!("  m23-metacal   metacal <dir-of-ARW> <out-prefix> --case NAME [--cfgs m10] [--spans 1,2] [--deltas 1e-4,...] [--self] [--pedestal P] [--field REPS] [--noise E] [--stride 1] [--limit N]");
         std::process::exit(2);
     }
     match args[1].as_str() {

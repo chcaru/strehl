@@ -1,0 +1,5 @@
+decoded 105 frames to 3516x2344 green planes in 2278 ms (21.7 ms/frame)
+[mc/m10] base pyramids for 105 frames in 0.06 s
+[mc/m10] 50/52 pairs, 10.0 s
+[mc/m10] 52 pairs x 5 deltas = 572 fits in 10.3 s (198.8 ms/pair, 18.1 ms/fit)
+wrote data/cb-ped-metacal.csv

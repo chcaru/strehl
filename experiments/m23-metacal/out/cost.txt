@@ -1,0 +1,33 @@
+============================================================================================
+COST OF THE METACALIBRATION PROBE - measured, alternated, per-setting minimum
+  104 span-1 pairs of coffee-bean, cfg=m10, 32 logical cores
+  order run: d1 -> d2 -> d2 -> d1
+============================================================================================
+  d1:  312 fits, measure   5.10 s (  49.2 ms/pair,  16.4 ms/fit), decode 2301 ms, wall 7.6 s
+  d2:  520 fits, measure   9.10 s (  87.3 ms/pair,  17.5 ms/fit), decode 2446 ms, wall 11.7 s
+  d2:  520 fits, measure   8.90 s (  85.4 ms/pair,  17.1 ms/fit), decode 2379 ms, wall 11.5 s
+  d1:  312 fits, measure   5.40 s (  51.8 ms/pair,  17.3 ms/fit), decode 2439 ms, wall 8.0 s
+
+  PER-SETTING MINIMUM (rule 16)
+    1 delta  (3 fits/pair):   5.10 s  ->   49.0 ms/pair
+    2 deltas (5 fits/pair):   8.90 s  ->   85.6 ms/pair
+
+  DERIVED decomposition
+    one +-delta pair (the 'two extra correlation evaluations'): <=   36.5 ms/edge
+    base fit alone (implied):                                   ~   12.5 ms/edge
+    cost multiplier for one delta:                              <=   3.92x
+    (quoted as a BOUND: the two settings differ by a fixed 2 fits, so the
+     difference is an upper bound on the marginal cost, and the implied
+     base is correspondingly a lower bound.)
+
+  WHAT THIS COSTS AT DEPLOYMENT SCALE (DERIVED)
+    coffee-bean spans 1-2                207 edges x  36.5 ms =    7.56 s of extra probe time
+    coffee-bean full m10 edge set       1601 edges x  36.5 ms =   58.50 s of extra probe time
+
+  MEASURED end-to-end for the arms this milestone actually ran:
+    coffee-bean  523 pairs x 5 deltas = 5753 fits in  93.0 s (16.2 ms/fit)
+    112MSDCF     367 pairs x 5 deltas = 4037 fits in  66.7 s (16.5 ms/fit)
+    cb-self       52 pairs x 5 deltas =  572 fits in  10.4 s (18.1 ms/fit)
+    cb-ped        52 pairs x 5 deltas =  572 fits in  10.3 s (18.1 ms/fit)
+    cb-self-ped   52 pairs x 5 deltas =  572 fits in  10.3 s (18.0 ms/fit)
+    field-p0      12 reps                          in 207.7 s

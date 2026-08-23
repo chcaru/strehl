@@ -1,0 +1,109 @@
+====================================================================================================
+GATE (a)  CONSERVATION UNDER THE PER-EDGE CORRECTION - coffee-bean
+  window 0..48,  1/S_W(1) = A_W / T_W(1).   PASS |1/S - 1| <= 0.15, PARTIAL <= 2.13, else FAIL
+====================================================================================================
+
+  coffee-bean: 104 span-1 edges compared with the committed CSV
+    max |l0(M23) - log|a|(committed)| = 5.282e-10   median 2.338e-10
+    G0 PASS (threshold 1e-7; the two are the same deterministic computation)
+
+  anchor A_48 = -2.4257%  (15 tiles, rms 4.83)
+  UNCORRECTED 1/S_48(1) = 3.2604   (M12 published 3.260 on coffee-bean; orchestrator 3.222)
+
+      delta  measured R                 N1 shuffled  N2 const=med  |R| floor 0.2
+                    1/S     median [p05,p95] of 1/S           1/S            1/S
+    1.0e-04      1.5928     1.6550 [ 1.5707, 1.7370]        1.7163         1.5928
+    2.0e-04      1.9095     2.0005 [ 1.9609, 2.0396]        1.9974         1.9095
+    4.0e-04      3.2605     3.2054 [ 3.1877, 3.2224]        3.2236         3.2605
+    8.0e-04      3.2181     3.2373 [ 3.2297, 3.2451]        3.2370         3.2181
+    1.6e-03      3.3124     3.3108 [ 3.3074, 3.3140]        3.3123         3.3124
+
+  VERDICT at the registered primary delta = 2e-04:
+    measured-R 1/S = 1.9095 -> gate (a) PARTIAL
+    N1 shuffled-R  = 2.0005   (93.3% of the measured correction's movement, with ZERO per-edge information)
+    N2 constant-R  = 1.9974   (this is the scalar M12 refuted, on this code path)
+
+  WHERE THE MOVEMENT COMES FROM (the rule-17 shared path)
+        delta   mean 1/R   1/mean R  Jensen ratio  corr(R, l0)  corr(R, used)  corr(R, rms)
+      1.0e-04     1.9683     1.8520        1.0628      -0.3388         0.1319        0.1841
+      2.0e-04     1.6293     1.6078        1.0134      -0.4457         0.1264        0.2177
+      4.0e-04     1.0169     1.0160        1.0009      -0.3200         0.2123        0.4503
+      8.0e-04     1.0071     1.0070        1.0002       0.1312         0.1051       -0.1863
+      1.6e-03     0.9847     0.9847        1.0000       0.0848         0.3031        0.1014
+
+  EVERY width-48 WINDOW AT EVERY OFFSET (M12's verification found a single window is where selection hides)
+        delta  n win   1/S med       min       max   uncorrected med
+      1.0e-04     48    1.5350    1.4294    1.6926            2.8356
+      2.0e-04     48    1.8126    1.6778    1.9641            2.8356
+      4.0e-04     48    2.8092    2.5883    3.2605            2.8356
+      8.0e-04     48    2.8070    2.5826    3.2181            2.8356
+      1.6e-03     48    2.8777    2.6440    3.3124            2.8356
+
+  GATE (a2)  LOCAL TELESCOPING, PER TRIPLE (103 instances, not one aggregate)
+    rho_k = l(k,k+2) / [l(k,k+1) + l(k+1,k+2)].  Unbiased => 1.000.
+    FAILURE DIRECTION: rho is a ratio of small noisy sums; it is undefined
+    where the denominator crosses zero, so the MEDIAN is quoted, never the mean.
+        delta  rho med (uncorr)  rho med (corr)  med R span1  med R span2
+      1.0e-04            1.1816          1.1009       0.5264       0.5715
+      2.0e-04            1.1816          1.1205       0.6126       0.6621
+      4.0e-04            1.1816          1.1927       0.9887       0.9737
+      8.0e-04            1.1816          1.1733       0.9928       0.9969
+      1.6e-03            1.1816          1.1831       1.0159       1.0117
+
+====================================================================================================
+GATE (a)  CONSERVATION UNDER THE PER-EDGE CORRECTION - 112MSDCF
+  window 0..48,  1/S_W(1) = A_W / T_W(1).   PASS |1/S - 1| <= 0.15, PARTIAL <= 2.13, else FAIL
+====================================================================================================
+
+  112MSDCF: 78 span-1 edges compared with the committed CSV
+    max |l0(M23) - log|a|(committed)| = 5.297e-10   median 3.157e-10
+    G0 PASS (threshold 1e-7; the two are the same deterministic computation)
+
+  anchor A_48 = -2.4180%  (42 tiles, rms 3.23)
+  UNCORRECTED 1/S_48(1) = 1.0482   (M12 published 3.260 on coffee-bean; orchestrator 3.222)
+
+      delta  measured R                 N1 shuffled  N2 const=med  |R| floor 0.2
+                    1/S     median [p05,p95] of 1/S           1/S            1/S
+    1.0e-04      0.9603     0.9487 [ 0.9302, 0.9683]        0.9407         0.9603
+    2.0e-04      1.0104     1.0004 [ 0.9889, 1.0126]        1.0001         1.0104
+    4.0e-04      1.0302     1.0230 [ 1.0174, 1.0286]        1.0294         1.0302
+    8.0e-04      1.0428     1.0407 [ 1.0380, 1.0435]        1.0376         1.0428
+    1.6e-03      1.0412     1.0414 [ 1.0400, 1.0428]        1.0422         1.0412
+
+  VERDICT at the registered primary delta = 2e-04:
+    measured-R 1/S = 1.0104 -> gate (a) PASS
+    N1 shuffled-R  = 1.0004   (126.3% of the measured correction's movement, with ZERO per-edge information)
+    N2 constant-R  = 1.0001   (this is the scalar M12 refuted, on this code path)
+
+  WHERE THE MOVEMENT COMES FROM (the rule-17 shared path)
+        delta   mean 1/R   1/mean R  Jensen ratio  corr(R, l0)  corr(R, used)  corr(R, rms)
+      1.0e-04     1.1063     1.0875        1.0172      -0.1023         0.0059       -0.0126
+      2.0e-04     1.0483     1.0426        1.0054      -0.0380        -0.1243       -0.0430
+      4.0e-04     1.0245     1.0231        1.0013      -0.0769        -0.0771        0.1020
+      8.0e-04     1.0073     1.0070        1.0003       0.3031        -0.2043        0.1262
+      1.6e-03     1.0064     1.0064        1.0001      -0.0671         0.2400       -0.2235
+
+  EVERY width-48 WINDOW AT EVERY OFFSET (M12's verification found a single window is where selection hides)
+        delta  n win   1/S med       min       max   uncorrected med
+      1.0e-04     31    0.9287    0.8841    0.9694            1.0119
+      2.0e-04     31    0.9706    0.9200    1.0134            1.0119
+      4.0e-04     31    0.9878    0.9436    1.0335            1.0119
+      8.0e-04     31    1.0024    0.9605    1.0456            1.0119
+      1.6e-03     31    1.0072    0.9655    1.0442            1.0119
+
+  GATE (a2)  LOCAL TELESCOPING, PER TRIPLE (103 instances, not one aggregate)
+    rho_k = l(k,k+2) / [l(k,k+1) + l(k+1,k+2)].  Unbiased => 1.000.
+    FAILURE DIRECTION: rho is a ratio of small noisy sums; it is undefined
+    where the denominator crosses zero, so the MEDIAN is quoted, never the mean.
+        delta  rho med (uncorr)  rho med (corr)  med R span1  med R span2
+      1.0e-04            1.0154          0.9546       0.8974       0.9662
+      2.0e-04            1.0154          0.9818       0.9541       0.9861
+      4.0e-04            1.0154          1.0093       0.9821       0.9884
+      8.0e-04            1.0154          1.0194       0.9899       0.9983
+      1.6e-03            1.0154          1.0190       0.9943       0.9938
+
+====================================================================================================
+GATE (b) SECOND CLAUSE - does the correction move 112MSDCF's 1/S by < 0.10?
+  A correction that 'fixes' a stack with no defocus asymmetry to fix is
+  measuring something else.  Numbers are in the 112MSDCF block above.
+====================================================================================================

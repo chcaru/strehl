@@ -1,0 +1,94 @@
+========================================================================================================
+CONTROL ARMS - is the small-delta response deficit caused by DEFOCUS?
+  median two-sided R = (l+ - l-) / (log(1+d) - log(1-d)).  Unbiased => 1.000
+  FAILURE DIRECTION: R < 1 = under-response.  A deficit that survives the
+  removal of defocus is not a defocus response.
+========================================================================================================
+  arm                                       n    1.0e-04   2.0e-04   4.0e-04   8.0e-04   1.6e-03
+  cb spans 1-2  (real, defocus)           207     0.5465    0.6381    0.9801    0.9942    1.0139
+  cb-ped        (real, +4e-3 ped)          52     0.9533    0.9162    0.9100    1.0448    1.0010
+  cb-self       (self, no defocus)         52     0.3719    0.4716    0.9433    0.9923    1.0222
+  cb-self-ped   (self, +4e-3 ped)          52     0.9346    0.8837    0.8469    1.0736    1.0017
+  field-p0      (no resampler at all)      12     0.9645    0.9717    0.9906    0.9994    1.0012
+  112 spans 1-2 (placebo stack)           155     0.9287    0.9763    0.9853    0.9938    0.9942
+
+  SPREAD (p25-p75) of R, same arms
+  cb spans 1-2  (real, defocus)            [0.471,0.653]    [0.584,0.694]    [0.952,0.999]    [0.986,1.003]    [1.008,1.019]
+  cb-ped        (real, +4e-3 ped)          [0.877,0.998]    [0.879,0.955]    [0.892,0.923]    [1.036,1.056]    [0.998,1.005]
+  cb-self       (self, no defocus)         [0.353,0.385]    [0.454,0.482]    [0.932,0.955]    [0.991,0.994]    [1.021,1.024]
+  cb-self-ped   (self, +4e-3 ped)          [0.921,0.950]    [0.875,0.891]    [0.843,0.851]    [1.071,1.075]    [1.000,1.003]
+  field-p0      (no resampler at all)      [0.960,0.969]    [0.969,0.973]    [0.988,0.994]    [0.998,1.001]    [1.001,1.002]
+  112 spans 1-2 (placebo stack)            [0.856,1.016]    [0.925,1.014]    [0.958,1.005]    [0.979,1.009]    [0.988,1.000]
+
+========================================================================================================
+N4b  THE DECISIVE COMPARISON
+========================================================================================================
+
+  delta = 1.0e-04
+    real defocus pair, bilinear plant about zero   R = 0.5465
+    SELF pair (zero defocus), bilinear plant       R = 0.3719   <- defocus removed, deficit SURVIVES
+    synthetic field, NO resampler anywhere         R = 0.9645   <- resampler removed, deficit gone
+    real pair, plant composed off a 4e-3 pedestal  R = 0.9533
+    self pair, plant composed off a 4e-3 pedestal  R = 0.9346
+
+  delta = 2.0e-04
+    real defocus pair, bilinear plant about zero   R = 0.6381
+    SELF pair (zero defocus), bilinear plant       R = 0.4716   <- defocus removed, deficit SURVIVES
+    synthetic field, NO resampler anywhere         R = 0.9717   <- resampler removed, deficit gone
+    real pair, plant composed off a 4e-3 pedestal  R = 0.9162
+    self pair, plant composed off a 4e-3 pedestal  R = 0.8837
+
+  delta = 4.0e-04
+    real defocus pair, bilinear plant about zero   R = 0.9801
+    SELF pair (zero defocus), bilinear plant       R = 0.9433   <- defocus removed, deficit gone
+    synthetic field, NO resampler anywhere         R = 0.9906   <- resampler removed, deficit gone
+    real pair, plant composed off a 4e-3 pedestal  R = 0.9100
+    self pair, plant composed off a 4e-3 pedestal  R = 0.8469
+
+  delta = 8.0e-04
+    real defocus pair, bilinear plant about zero   R = 0.9942
+    SELF pair (zero defocus), bilinear plant       R = 0.9923   <- defocus removed, deficit gone
+    synthetic field, NO resampler anywhere         R = 0.9994   <- resampler removed, deficit gone
+    real pair, plant composed off a 4e-3 pedestal  R = 1.0448
+    self pair, plant composed off a 4e-3 pedestal  R = 1.0736
+
+  delta = 1.6e-03
+    real defocus pair, bilinear plant about zero   R = 1.0139
+    SELF pair (zero defocus), bilinear plant       R = 1.0222   <- defocus removed, deficit gone
+    synthetic field, NO resampler anywhere         R = 1.0012   <- resampler removed, deficit gone
+    real pair, plant composed off a 4e-3 pedestal  R = 1.0010
+    self pair, plant composed off a 4e-3 pedestal  R = 1.0017
+
+========================================================================================================
+ATTRIBUTION (DERIVED from the rows above)
+========================================================================================================
+  If R measured defocus-induced shrinkage, then removing the defocus
+  (cb -> cb-self) would send R to 1.000 and removing the resampler
+  (cb -> field-p0) would leave it alone.  Read the signs:
+        delta        cb      self     field  self - cb  field - cb
+      1.0e-04    0.5465    0.3719    0.9645    -0.1746     +0.4180
+      2.0e-04    0.6381    0.4716    0.9717    -0.1665     +0.3335
+      4.0e-04    0.9801    0.9433    0.9906    -0.0368     +0.0105
+      8.0e-04    0.9942    0.9923    0.9994    -0.0019     +0.0052
+      1.6e-03    1.0139    1.0222    1.0012    +0.0083     -0.0128
+
+  PEDESTAL ARM - the same plant, measured about a 4e-3 operating point
+  (a ~4.8 plane px differential displacement, so no tile sits in the
+  sub-pixel locking zone).  CONFOUND, stated: the pedestal also moves
+  the operating point, so this arm changes two things at once.
+        delta        cb    cb-ped      self  self-ped
+      1.0e-04    0.5465    0.9533    0.3719    0.9346
+      2.0e-04    0.6381    0.9162    0.4716    0.8837
+      4.0e-04    0.9801    0.9100    0.9433    0.8469
+      8.0e-04    0.9942    1.0448    0.9923    1.0736
+      1.6e-03    1.0139    1.0010    1.0222    1.0017
+
+========================================================================================================
+FIELD ARM REPEATABILITY (12 independent noise realisations)
+========================================================================================================
+      delta  reps  median R        sd       min       max
+    1.0e-04    12    0.9645    0.0071    0.9528    0.9759
+    2.0e-04    12    0.9717    0.0055    0.9618    0.9810
+    4.0e-04    12    0.9906    0.0049    0.9871    1.0040
+    8.0e-04    12    0.9994    0.0028    0.9945    1.0038
+    1.6e-03    12    1.0012    0.0011    0.9989    1.0027

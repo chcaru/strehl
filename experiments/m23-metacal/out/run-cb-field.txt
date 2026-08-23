@@ -1,0 +1,13 @@
+[mc-field/m10] rep 0 done (20.3 s)
+[mc-field/m10] rep 1 done (37.1 s)
+[mc-field/m10] rep 2 done (54.1 s)
+[mc-field/m10] rep 3 done (71.0 s)
+[mc-field/m10] rep 4 done (88.4 s)
+[mc-field/m10] rep 5 done (105.1 s)
+[mc-field/m10] rep 6 done (123.0 s)
+[mc-field/m10] rep 7 done (140.8 s)
+[mc-field/m10] rep 8 done (158.4 s)
+[mc-field/m10] rep 9 done (174.7 s)
+[mc-field/m10] rep 10 done (191.0 s)
+[mc-field/m10] rep 11 done (207.7 s)
+wrote data/cb-field-metacal.csv
