@@ -51,10 +51,23 @@ monolithic binary and ship only that binary.
    per-stage noise estimate is the exact mechanism behind the prior project's
    2–5x defect.
 4. **Never let a merge reference be a raw per-band argmax.** Argmax over N
-   frames returns 1.95–2.61x single-frame noise. Use a regularised focus field.
-   Measured: regularising drops speckle 34.4% -> 0.87% and noise 1.253x ->
-   1.075x — necessary, and **still above 1.0**. A regularised selector is still
-   a selector; the noise-gated average is the other half.
+   frames returns 1.95–2.61x single-frame noise, and regularising the focus
+   field drops that to 1.075x — necessary, and **still above 1.0**. A
+   regularised selector is still a selector; the noise-gated average is the
+   other half. **Do not quote a speckle figure here.** This rule carried
+   `34.4% -> 0.87%` for most of the project's life; M60c established that the
+   pair is *ring*-unregularised to *ring*-regularised, on a **retired
+   operator**, and that **no measurement of regularised-Tenengrad speckle
+   exists** to replace it (facts 932-934). Two separate numbers were being
+   conflated because they agree within 16% by coincidence.
+   **M65 then measured the thing this rule was reaching for and it came out
+   negative:** at the shipped gate, electing on the raw field instead of the
+   regularised one moves `n_eff` by at most 1.2335x — **regularisation of the
+   election is not load-bearing as shipped**, though it is at gate 0.5. And
+   56.70% of pixels change winner while the acceptance set moves 0.44%
+   (facts 961-963). **The speckle of the index map was never evidence about a
+   gate that admits on value.** Keep the rule for the noise figures, which are
+   measured on the shipped operator; drop the justification that was not.
    **This rule was written and then broken by M30**, whose fact 242 ("2.3x more
    clipping whole-stack than at gathered frames") is an argmax artefact: at the
    shipped 31x31 regularisation it falls to 1.4x, and heavier still to 1.0x.
@@ -510,8 +523,9 @@ record the stem, what it was asked, and where it writes. `experiments/` counts: 
 | `M60` (collision, renamed **M63**) | measure through-focus bimodality | `experiments/M60-bimodality/` | live -- renaming to M63 |
 | `M61` | photon transfer curve at ISO 500/1000 | `docs/research/M61-ptc-high-iso-measured.md` | reported; provenance correction routed |
 | `M62` | the square-root-N acceptance harness | `experiments/M62-sqrt-n/`, `docs/research/M62-sqrt-n.md` | reported; **acceptance authority for M64** |
-| `M64` | make the estimator the default path | `crates/**` | live |
-| `M65` | `n_eff` under regularised vs raw election, at matched tolerance | `docs/research/M65-election-gate-measured.md` | live |
+| `M64` | make the estimator the default path | `crates/**`, `docs/research/M64-estimator-default.md` | reported; **awaiting M62 certification** |
+| `M65` | `n_eff` under regularised vs raw election, at matched tolerance | `docs/research/M65-election-gate-measured.md` | reported |
+| `M66` | is the gate N-dependent, given it compares against a max over N? | `docs/research/M66-gate-n-dependence.md` | live |
 
 **M63 is reserved** for the bimodality milestone above and must not be reissued.
 
@@ -531,6 +545,8 @@ record the stem, what it was asked, and where it writes. `experiments/` counts: 
 | --- | --- | --- |
 | `SYNTHESIS.md` | **Start here.** Decision record, revised after review. |
 | `M39-verify-detail-metric.md` | **INDEPENDENT.** First outside verification since M2. Found M38's detail metric credits a *flat ROI* with +35% detail, inverted M38's error budget, and showed fact 19's 1.253x does not reproduce on the shipped operator (1.068x) |
+| `M64-estimator-default.md` | **The shipped default is now an estimator.** `strehl stack <dir> --out x.tif` with no flags exits 0 and writes an image; `DEFAULT_GATE = 4.0`; the argmax selector survives as `ArgmaxBaseline`. Widened M62's degeneracy guard to all seven stacks, 7/7 pass, worst `coffee-bean` 0.30109 -- **not the nominated baseline stack.** Refuted the adaptive `--target-n-eff` rule on M52's own numbers. **Shipped its pre-registered 4.0 although gate 8 scored better.** Facts 947-954, disciplines 449-451 |
+| `M65-election-gate-measured.md` | **Answers the question M60c framed and declined to decide.** Regularising the *election* is **not load-bearing at the shipped gate** (<=1.2335x vs a 1.332 bar) but is at gate 0.5. Measures M60c's category error directly: **56.70% of pixels change winner while the acceptance set moves 0.44%.** Voided its own headline on an unmet pre-registered criterion. Facts 961-966, disciplines 456-458 |
 | `OWNER-QUESTIONS.md` | **Read this before asking Chris anything.** Decisions I could not make alone, captures still outstanding, and two numbers that must NOT reach a user-facing recommendation yet. Append; do not rewrite. |
 | `M20-VERIFICATION.md` | **INDEPENDENT.** M20's optics gate is a **tautology**; the 15.1% headline is one capture out of a **3.5%–65.8%** corpus range; refutes fact 88's mechanism; flags the f/5.6 advice as a two-stop extrapolation with no aberration term |
 | `M31-VERIFICATION.md` | **INDEPENDENT.** 15 defects across M27–M30. Refutes fact 242 as a raw-argmax artefact (rule 4). Every published number reproduced exactly — **every defect was a choice of estimator, reference, arm or null, not an arithmetic error** |
