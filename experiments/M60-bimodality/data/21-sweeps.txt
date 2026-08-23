@@ -1,0 +1,82 @@
+==============================================================================
+MC convergence of sigma_f -- rep count used throughout is 12
+==============================================================================
+   reps=  6  median sigma_f =  2.10811 DN
+   reps= 12  median sigma_f =  2.18596 DN
+   reps= 24  median sigma_f =  2.20482 DN
+   reps= 96  median sigma_f =  2.18154 DN
+   reps=  6  deviation from reps=96:  -3.37%
+   reps= 12  deviation from reps=96:  +0.20%
+   reps= 24  deviation from reps=96:  +1.07%
+   reps= 96  deviation from reps=96:  +0.00%
+
+==============================================================================
+N2  frame-permutation placebo (M21's control), on the real curves
+==============================================================================
+   occ3-wing-thorax   occ       real hit  69.8% sep  27.0 | permuted hit 100.0% sep  98.0
+   occ3-leg-hair-1    occ       real hit  76.6% sep  16.0 | permuted hit 100.0% sep  97.0
+   occ3-leg-hair-2    occ       real hit  78.3% sep  23.0 | permuted hit  99.7% sep 100.0
+   occ3-limb-abdomen  occ       real hit  78.1% sep  53.0 | permuted hit 100.0% sep 100.0
+   occ3-antenna-head  occ       real hit  73.7% sep  49.0 | permuted hit 100.0% sep  96.0
+   occ3-antenna-eye   occ       real hit  85.3% sep  35.0 | permuted hit 100.0% sep  95.0
+   occ3-leg-card-1    occ_flat  real hit  82.5% sep  17.0 | permuted hit 100.0% sep  97.0
+   occ3-claw-card     occ_flat  real hit  78.9% sep  17.0 | permuted hit 100.0% sep  98.0
+   occ3-leg-card-2    occ_flat  real hit  79.0% sep  24.0 | permuted hit  99.9% sep 102.0
+   ctl3-eye           ctl       real hit  56.9% sep  32.0 | permuted hit  99.9% sep  94.0
+   occ1-leg-body-1    occ       real hit  90.6% sep  27.0 | permuted hit 100.0% sep  98.0
+   occ1-leg-body-2    occ       real hit  89.6% sep  32.0 | permuted hit 100.0% sep  98.0
+   occ1-limb-body-r   occ       real hit  84.9% sep  40.0 | permuted hit  99.5% sep  97.0
+   occ1-claw-card     occ_flat  real hit   7.5% sep 110.0 | permuted hit  28.2% sep 124.0
+   occ1-leg-card      occ_flat  real hit  78.0% sep  13.0 | permuted hit 100.0% sep  95.0
+   ctlw1-a            ctl       real hit  54.8% sep  18.0 | permuted hit 100.0% sep  44.5
+   ctlw1-b            ctl       real hit  50.1% sep  17.0 | permuted hit 100.0% sep  44.0
+   ctlw1-c            ctl       real hit  59.4% sep  21.0 | permuted hit 100.0% sep  46.0
+   ctlw1-d            ctl       real hit  56.6% sep  17.0 | permuted hit 100.0% sep  43.0
+   ctlw1-e            ctl       real hit  45.6% sep  26.0 | permuted hit 100.0% sep  46.0
+   ctlw1-f            ctl       real hit  47.0% sep  18.0 | permuted hit 100.0% sep  45.0
+   ctlw2-a            ctl       real hit  30.2% sep  22.0 | permuted hit  98.5% sep  44.0
+   ctlw2-b            ctl       real hit  30.1% sep  19.0 | permuted hit  99.5% sep  42.0
+   ctlw2-c            ctl       real hit   4.9% sep  36.0 | permuted hit  66.1% sep  42.0
+   ctlw2-d            ctl       real hit  33.5% sep  18.0 | permuted hit  99.8% sep  44.0
+
+   occ       real  78.3%  permuted 100.0%
+   occ_flat  real  78.9%  permuted 100.0%
+   ctl       real  47.0%  permuted 100.0%
+
+==============================================================================
+H2  does |k2-k1| track the reference depth step?
+==============================================================================
+   occ       n= 9  Spearman(|k2-k1|, |k_fg-k_bg|) = +0.579  p=0.103
+   occ_flat  n= 5  Spearman(|k2-k1|, |k_fg-k_bg|) = -0.359  p=0.553
+   ctl       n=11  Spearman(|k2-k1|, |k_fg-k_bg|) = -0.575  p=0.0643
+   ALL       n=25  Spearman(|k2-k1|, |k_fg-k_bg|) = +0.066  p=0.755
+
+==============================================================================
+R sweep -- registered primary is R=2 (fact 152)
+==============================================================================
+   bee-3 frame 0/299 1s
+   bee-3 frame 80/299 44s
+   bee-3 frame 160/299 88s
+   bee-3 frame 240/299 132s
+   occ3-wing-thorax   occ      R=1  hit  18.8%  sep  21.0
+   occ3-wing-thorax   occ      R=2  hit  33.6%  sep  27.0
+   occ3-wing-thorax   occ      R=4  hit  39.1%  sep  46.0
+   occ3-wing-thorax   occ      R=8  hit  34.9%  sep  68.0
+   occ3-limb-abdomen  occ      R=1  hit  22.0%  sep  46.0
+   occ3-limb-abdomen  occ      R=2  hit  35.8%  sep  53.0
+   occ3-limb-abdomen  occ      R=4  hit  48.5%  sep  63.0
+   occ3-limb-abdomen  occ      R=8  hit  56.0%  sep  67.0
+   occ3-antenna-head  occ      R=1  hit  16.7%  sep  47.0
+   occ3-antenna-head  occ      R=2  hit  26.6%  sep  49.0
+   occ3-antenna-head  occ      R=4  hit  38.7%  sep  54.0
+   occ3-antenna-head  occ      R=8  hit  51.6%  sep  63.0
+   occ3-leg-card-2    occ_flat R=1  hit  20.4%  sep  22.0
+   occ3-leg-card-2    occ_flat R=2  hit  32.3%  sep  24.0
+   occ3-leg-card-2    occ_flat R=4  hit  43.7%  sep  30.0
+   occ3-leg-card-2    occ_flat R=8  hit  44.5%  sep  37.0
+   ctl3-eye           ctl      R=1  hit   9.0%  sep  26.0
+   ctl3-eye           ctl      R=2  hit  18.0%  sep  32.0
+   ctl3-eye           ctl      R=4  hit  27.9%  sep  48.0
+   ctl3-eye           ctl      R=8  hit  37.8%  sep  79.0
+
+wrote data/21-sweeps.json

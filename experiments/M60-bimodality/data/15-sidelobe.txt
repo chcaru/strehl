@@ -1,0 +1,38 @@
+B2  single depth, composite-then-blur (physically correct), rate=0.50
+     x(px)  side-lobe offset (frames)   predicted x/rate   lobe/focus height
+         2   right    1  left    1               4.0            0.98
+         4   right    9  left    8               8.0            6.17
+         6   right   14  left   12              12.0            4.28
+         8   right   17  left   20              16.0            3.32
+        12   right   26  left   26              24.0            2.28
+        16   right   32  left   34              32.0            1.75
+        24   right   47  left   40              48.0            1.60
+        32   right   53  left   39              64.0            1.30
+
+B3  the same at rate=0.25 -- the offset must double if the law is sigma=x
+         2   right    1  left    1               8.0            0.99
+         4   right   17  left   16              16.0            6.23
+         6   right   26  left   27              24.0            4.29
+         8   right   33  left   37              32.0            3.28
+        12   right   50  left   39              48.0            2.30
+        16   right   66  left   40              64.0            1.80
+        24   right   77  left   32              96.0            1.55
+        32   right   76  left   17             128.0            1.09
+     measured ratio of offsets (rate .25 / rate .50) = 1.873   (2.00 if the law holds)
+
+P2  plant WITH a real second depth: does k2 land on the background peak
+    or on the side-lobe?   n=120, kF=40, rate=0.50
+      D= 20  x~ 4.5 px : k2 within 6 frames of the TRUE bg peak (k= 60)  25.1% | of the side-lobe (k= 49.0)  54.3%   median k2= 47.0
+      D= 20  x~12.0 px : k2 within 6 frames of the TRUE bg peak (k= 60)   0.5% | of the side-lobe (k= 64.0)  68.1%   median k2= 18.0
+      D= 20  x~20.0 px : k2 within 6 frames of the TRUE bg peak (k= 60)   0.0% | of the side-lobe (k= 80.0)  53.8%   median k2=  6.0
+      D= 20  x~32.0 px : k2 within 6 frames of the TRUE bg peak (k= 60)   0.0% | of the side-lobe (k=104.0)  17.1%   median k2= 44.5
+      D= 40  x~ 4.5 px : k2 within 6 frames of the TRUE bg peak (k= 80)  42.9% | of the side-lobe (k= 49.0)  55.8%   median k2= 49.0
+      D= 40  x~12.0 px : k2 within 6 frames of the TRUE bg peak (k= 80)   0.4% | of the side-lobe (k= 64.0)  68.4%   median k2= 18.0
+      D= 40  x~20.0 px : k2 within 6 frames of the TRUE bg peak (k= 80)   0.0% | of the side-lobe (k= 80.0)  56.9%   median k2=  6.0
+      D= 40  x~32.0 px : k2 within 6 frames of the TRUE bg peak (k= 80)   0.1% | of the side-lobe (k=104.0)   2.9%   median k2= 12.0
+      D= 60  x~ 4.5 px : k2 within 6 frames of the TRUE bg peak (k=100)  43.5% | of the side-lobe (k= 49.0)  56.1%   median k2= 51.5
+      D= 60  x~12.0 px : k2 within 6 frames of the TRUE bg peak (k=100)   1.0% | of the side-lobe (k= 64.0)  68.0%   median k2= 18.0
+      D= 60  x~20.0 px : k2 within 6 frames of the TRUE bg peak (k=100)   0.0% | of the side-lobe (k= 80.0)  58.7%   median k2=  5.0
+      D= 60  x~32.0 px : k2 within 6 frames of the TRUE bg peak (k=100)   0.1% | of the side-lobe (k=104.0)   0.1%   median k2= 11.0
+
+wrote data/15-sidelobe.json

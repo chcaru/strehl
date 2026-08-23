@@ -1,0 +1,390 @@
+{
+ "mc": [
+  [
+   6,
+   2.108106786928981
+  ],
+  [
+   12,
+   2.1859550907012064
+  ],
+  [
+   24,
+   2.2048237334420984
+  ],
+  [
+   96,
+   2.181536037530008
+  ]
+ ],
+ "n2": [
+  {
+   "cell": "occ3-wing-thorax",
+   "cls": "occ",
+   "hit": 0.6979166666666666,
+   "hit_perm": 0.9999166666666667,
+   "sep": 27.0,
+   "sep_perm": 98.0
+  },
+  {
+   "cell": "occ3-leg-hair-1",
+   "cls": "occ",
+   "hit": 0.7664166666666666,
+   "hit_perm": 0.9999166666666667,
+   "sep": 16.0,
+   "sep_perm": 97.0
+  },
+  {
+   "cell": "occ3-leg-hair-2",
+   "cls": "occ",
+   "hit": 0.7828333333333334,
+   "hit_perm": 0.99675,
+   "sep": 23.0,
+   "sep_perm": 100.0
+  },
+  {
+   "cell": "occ3-limb-abdomen",
+   "cls": "occ",
+   "hit": 0.7806666666666666,
+   "hit_perm": 0.9998333333333334,
+   "sep": 53.0,
+   "sep_perm": 100.0
+  },
+  {
+   "cell": "occ3-antenna-head",
+   "cls": "occ",
+   "hit": 0.7369166666666667,
+   "hit_perm": 1.0,
+   "sep": 49.0,
+   "sep_perm": 96.0
+  },
+  {
+   "cell": "occ3-antenna-eye",
+   "cls": "occ",
+   "hit": 0.8525833333333334,
+   "hit_perm": 0.9998333333333334,
+   "sep": 35.0,
+   "sep_perm": 95.0
+  },
+  {
+   "cell": "occ3-leg-card-1",
+   "cls": "occ_flat",
+   "hit": 0.8250833333333333,
+   "hit_perm": 1.0,
+   "sep": 17.0,
+   "sep_perm": 97.0
+  },
+  {
+   "cell": "occ3-claw-card",
+   "cls": "occ_flat",
+   "hit": 0.7891666666666667,
+   "hit_perm": 0.9998333333333334,
+   "sep": 17.0,
+   "sep_perm": 98.0
+  },
+  {
+   "cell": "occ3-leg-card-2",
+   "cls": "occ_flat",
+   "hit": 0.7899166666666667,
+   "hit_perm": 0.99875,
+   "sep": 24.0,
+   "sep_perm": 102.0
+  },
+  {
+   "cell": "ctl3-eye",
+   "cls": "ctl",
+   "hit": 0.5686666666666667,
+   "hit_perm": 0.9989166666666667,
+   "sep": 32.0,
+   "sep_perm": 94.0
+  },
+  {
+   "cell": "occ1-leg-body-1",
+   "cls": "occ",
+   "hit": 0.9064166666666666,
+   "hit_perm": 1.0,
+   "sep": 27.0,
+   "sep_perm": 98.0
+  },
+  {
+   "cell": "occ1-leg-body-2",
+   "cls": "occ",
+   "hit": 0.8963333333333333,
+   "hit_perm": 1.0,
+   "sep": 32.0,
+   "sep_perm": 98.0
+  },
+  {
+   "cell": "occ1-limb-body-r",
+   "cls": "occ",
+   "hit": 0.8485833333333334,
+   "hit_perm": 0.9946666666666667,
+   "sep": 40.0,
+   "sep_perm": 97.0
+  },
+  {
+   "cell": "occ1-claw-card",
+   "cls": "occ_flat",
+   "hit": 0.07525,
+   "hit_perm": 0.2821666666666667,
+   "sep": 110.0,
+   "sep_perm": 124.0
+  },
+  {
+   "cell": "occ1-leg-card",
+   "cls": "occ_flat",
+   "hit": 0.7796666666666666,
+   "hit_perm": 1.0,
+   "sep": 13.0,
+   "sep_perm": 95.0
+  },
+  {
+   "cell": "ctlw1-a",
+   "cls": "ctl",
+   "hit": 0.5478333333333333,
+   "hit_perm": 1.0,
+   "sep": 18.0,
+   "sep_perm": 44.5
+  },
+  {
+   "cell": "ctlw1-b",
+   "cls": "ctl",
+   "hit": 0.5006666666666667,
+   "hit_perm": 1.0,
+   "sep": 17.0,
+   "sep_perm": 44.0
+  },
+  {
+   "cell": "ctlw1-c",
+   "cls": "ctl",
+   "hit": 0.5939166666666666,
+   "hit_perm": 1.0,
+   "sep": 21.0,
+   "sep_perm": 46.0
+  },
+  {
+   "cell": "ctlw1-d",
+   "cls": "ctl",
+   "hit": 0.56575,
+   "hit_perm": 1.0,
+   "sep": 17.0,
+   "sep_perm": 43.0
+  },
+  {
+   "cell": "ctlw1-e",
+   "cls": "ctl",
+   "hit": 0.4565,
+   "hit_perm": 1.0,
+   "sep": 26.0,
+   "sep_perm": 46.0
+  },
+  {
+   "cell": "ctlw1-f",
+   "cls": "ctl",
+   "hit": 0.47025,
+   "hit_perm": 1.0,
+   "sep": 18.0,
+   "sep_perm": 45.0
+  },
+  {
+   "cell": "ctlw2-a",
+   "cls": "ctl",
+   "hit": 0.30241666666666667,
+   "hit_perm": 0.9848333333333333,
+   "sep": 22.0,
+   "sep_perm": 44.0
+  },
+  {
+   "cell": "ctlw2-b",
+   "cls": "ctl",
+   "hit": 0.30083333333333334,
+   "hit_perm": 0.9951666666666666,
+   "sep": 19.0,
+   "sep_perm": 42.0
+  },
+  {
+   "cell": "ctlw2-c",
+   "cls": "ctl",
+   "hit": 0.048916666666666664,
+   "hit_perm": 0.661,
+   "sep": 36.0,
+   "sep_perm": 42.0
+  },
+  {
+   "cell": "ctlw2-d",
+   "cls": "ctl",
+   "hit": 0.33516666666666667,
+   "hit_perm": 0.9979166666666667,
+   "sep": 18.0,
+   "sep_perm": 44.0
+  }
+ ],
+ "h2": [
+  {
+   "cls": "occ",
+   "n": 9,
+   "rho": 0.5787705672009662,
+   "p": 0.10250495668891864
+  },
+  {
+   "cls": "occ_flat",
+   "n": 5,
+   "rho": -0.35909242322980395,
+   "p": 0.5528147466433508
+  },
+  {
+   "cls": "ctl",
+   "n": 11,
+   "rho": -0.5748238004108277,
+   "p": 0.06433646758813881
+  },
+  {
+   "cls": "ALL",
+   "n": 25,
+   "rho": 0.06577439865352266,
+   "p": 0.7547567848743226
+  }
+ ],
+ "r": [
+  {
+   "cell": "occ3-wing-thorax",
+   "cls": "occ",
+   "R": 1,
+   "hit": 0.18833333333333332,
+   "sep": 21.0
+  },
+  {
+   "cell": "occ3-wing-thorax",
+   "cls": "occ",
+   "R": 2,
+   "hit": 0.33641666666666664,
+   "sep": 27.0
+  },
+  {
+   "cell": "occ3-wing-thorax",
+   "cls": "occ",
+   "R": 4,
+   "hit": 0.3915,
+   "sep": 46.0
+  },
+  {
+   "cell": "occ3-wing-thorax",
+   "cls": "occ",
+   "R": 8,
+   "hit": 0.3495,
+   "sep": 68.0
+  },
+  {
+   "cell": "occ3-limb-abdomen",
+   "cls": "occ",
+   "R": 1,
+   "hit": 0.22025,
+   "sep": 46.0
+  },
+  {
+   "cell": "occ3-limb-abdomen",
+   "cls": "occ",
+   "R": 2,
+   "hit": 0.35791666666666666,
+   "sep": 53.0
+  },
+  {
+   "cell": "occ3-limb-abdomen",
+   "cls": "occ",
+   "R": 4,
+   "hit": 0.48541666666666666,
+   "sep": 63.0
+  },
+  {
+   "cell": "occ3-limb-abdomen",
+   "cls": "occ",
+   "R": 8,
+   "hit": 0.5600833333333334,
+   "sep": 67.0
+  },
+  {
+   "cell": "occ3-antenna-head",
+   "cls": "occ",
+   "R": 1,
+   "hit": 0.16691666666666666,
+   "sep": 47.0
+  },
+  {
+   "cell": "occ3-antenna-head",
+   "cls": "occ",
+   "R": 2,
+   "hit": 0.26575,
+   "sep": 49.0
+  },
+  {
+   "cell": "occ3-antenna-head",
+   "cls": "occ",
+   "R": 4,
+   "hit": 0.38708333333333333,
+   "sep": 54.0
+  },
+  {
+   "cell": "occ3-antenna-head",
+   "cls": "occ",
+   "R": 8,
+   "hit": 0.5165,
+   "sep": 63.0
+  },
+  {
+   "cell": "occ3-leg-card-2",
+   "cls": "occ_flat",
+   "R": 1,
+   "hit": 0.204,
+   "sep": 22.0
+  },
+  {
+   "cell": "occ3-leg-card-2",
+   "cls": "occ_flat",
+   "R": 2,
+   "hit": 0.323,
+   "sep": 24.0
+  },
+  {
+   "cell": "occ3-leg-card-2",
+   "cls": "occ_flat",
+   "R": 4,
+   "hit": 0.437,
+   "sep": 30.0
+  },
+  {
+   "cell": "occ3-leg-card-2",
+   "cls": "occ_flat",
+   "R": 8,
+   "hit": 0.44516666666666665,
+   "sep": 37.0
+  },
+  {
+   "cell": "ctl3-eye",
+   "cls": "ctl",
+   "R": 1,
+   "hit": 0.0905,
+   "sep": 26.0
+  },
+  {
+   "cell": "ctl3-eye",
+   "cls": "ctl",
+   "R": 2,
+   "hit": 0.17958333333333334,
+   "sep": 32.0
+  },
+  {
+   "cell": "ctl3-eye",
+   "cls": "ctl",
+   "R": 4,
+   "hit": 0.2785,
+   "sep": 48.0
+  },
+  {
+   "cell": "ctl3-eye",
+   "cls": "ctl",
+   "R": 8,
+   "hit": 0.3775,
+   "sep": 79.0
+  }
+ ]
+}

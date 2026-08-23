@@ -1,0 +1,50 @@
+==============================================================================
+numerator and denominator, separately, on the REAL cells
+  prom = f(k2) - f(kd)  DN      denom = sqrt(sig_f(k2)^2 + sig_f(kd)^2)  DN
+==============================================================================
+  occ3-wing-thorax   occ      prom   31.66 DN  denom  3.165 DN  z med  10.09  z p90   33.44  | z*  5.78 | null prom  10.22 DN  null z  3.60
+  occ3-leg-hair-1    occ      prom   25.16 DN  denom  2.853 DN  z med   9.49  z p90   21.76  | z*  5.92 | null prom  11.58 DN  null z  3.68
+  occ3-leg-hair-2    occ      prom   27.98 DN  denom  3.088 DN  z med  10.40  z p90   27.07  | z*  5.65 | null prom  12.38 DN  null z  3.52
+  occ3-limb-abdomen  occ      prom   42.02 DN  denom  3.012 DN  z med  15.05  z p90   47.49  | z*  5.59 | null prom  10.56 DN  null z  3.49
+  occ3-antenna-head  occ      prom   31.07 DN  denom  3.285 DN  z med  12.79  z p90   49.77  | z*  5.55 | null prom  12.59 DN  null z  3.50
+  occ3-antenna-eye   occ      prom   37.79 DN  denom  2.132 DN  z med  18.36  z p90   57.80  | z*  5.62 | null prom   8.01 DN  null z  3.50
+  occ3-leg-card-1    occ_flat prom   30.98 DN  denom  2.962 DN  z med  11.11  z p90   26.10  | z*  5.85 | null prom  11.63 DN  null z  3.67
+  occ3-claw-card     occ_flat prom   27.93 DN  denom  2.775 DN  z med  10.93  z p90   26.70  | z*  5.70 | null prom  10.03 DN  null z  3.63
+  occ3-leg-card-2    occ_flat prom   31.02 DN  denom  2.881 DN  z med  11.39  z p90   36.79  | z*  5.63 | null prom   9.38 DN  null z  3.53
+  ctl3-eye           ctl      prom    9.48 DN  denom  1.570 DN  z med   5.89  z p90   14.75  | z*  5.38 | null prom   4.96 DN  null z  3.42
+  occ1-leg-body-1    occ      prom   40.43 DN  denom  2.954 DN  z med  14.52  z p90   43.09  | z*  5.48 | null prom   8.97 DN  null z  3.52
+  occ1-leg-body-2    occ      prom   40.52 DN  denom  2.477 DN  z med  17.31  z p90   42.74  | z*  5.51 | null prom   9.92 DN  null z  3.43
+  occ1-limb-body-r   occ      prom   67.91 DN  denom  3.361 DN  z med  23.08  z p90   53.97  | z*  5.70 | null prom  14.14 DN  null z  3.57
+  occ1-claw-card     occ_flat prom   13.98 DN  denom  4.318 DN  z med   3.22  z p90    4.88  | z*  5.55 | null prom  15.03 DN  null z  3.48
+  occ1-leg-card      occ_flat prom   28.54 DN  denom  2.871 DN  z med  10.54  z p90   24.66  | z*  5.77 | null prom   9.80 DN  null z  3.62
+  ctlw1-a            ctl      prom   10.03 DN  denom  1.951 DN  z med   5.49  z p90   17.61  | z*  4.86 | null prom   6.24 DN  null z  3.01
+  ctlw1-b            ctl      prom    9.81 DN  denom  2.154 DN  z med   5.05  z p90   16.44  | z*  5.04 | null prom   6.35 DN  null z  3.06
+  ctlw1-c            ctl      prom   11.04 DN  denom  1.792 DN  z med   6.49  z p90   20.72  | z*  4.89 | null prom   5.62 DN  null z  3.00
+  ctlw1-d            ctl      prom   14.90 DN  denom  2.313 DN  z med   6.20  z p90   15.37  | z*  5.18 | null prom   6.52 DN  null z  3.20
+  ctlw1-e            ctl      prom    8.13 DN  denom  1.939 DN  z med   4.47  z p90   14.06  | z*  4.86 | null prom   5.96 DN  null z  3.01
+  ctlw1-f            ctl      prom    9.51 DN  denom  2.268 DN  z med   4.66  z p90   13.48  | z*  5.10 | null prom   6.08 DN  null z  3.13
+  ctlw2-a            ctl      prom   15.82 DN  denom  4.512 DN  z med   3.57  z p90    9.68  | z*  5.04 | null prom  11.53 DN  null z  3.07
+  ctlw2-b            ctl      prom   14.42 DN  denom  4.243 DN  z med   3.47  z p90    9.38  | z*  5.23 | null prom  12.09 DN  null z  3.15
+  ctlw2-c            ctl      prom   18.59 DN  denom  6.576 DN  z med   2.81  z p90    4.13  | z*  4.90 | null prom  21.26 DN  null z  3.06
+  ctlw2-d            ctl      prom   17.14 DN  denom  4.853 DN  z med   3.58  z p90    9.53  | z*  5.00 | null prom  12.96 DN  null z  3.11
+
+  occ       n= 9  prom med   37.79 DN (25.16-67.91)  denom med  3.012 DN  z med  14.52 (9.49-23.08)  z*  5.48- 5.92
+  occ_flat  n= 5  prom med   28.54 DN (13.98-31.02)  denom med  2.881 DN  z med  10.93 (3.22-11.39)  z*  5.55- 5.85
+  ctl       n=11  prom med   11.04 DN (8.13-18.59)  denom med  2.268 DN  z med   4.66 (2.81-6.49)  z*  4.86- 5.38
+
+  Read the prom column, not just z: if the denominators were doing the
+  work the classes would separate on denom and not on prom.
+
+==============================================================================
+does the numerator track EDGE CONTRAST rather than the class label?
+  P5: a defocus side-lobe has height proportional to the step dI
+==============================================================================
+  Spearman(prom, band peak focus response) over 25 cells = +0.772  p=6.1e-06
+  occ       n= 9  prom / band-peak median 0.2145
+  occ_flat  n= 5  prom / band-peak median 0.1849
+  ctl       n=11  prom / band-peak median 0.1333
+
+  If prom/band-peak is the same for occ and occ_flat, the extra raw
+  prominence at occ cells is their extra edge contrast, not depth.
+
+wrote data/24-numden.json

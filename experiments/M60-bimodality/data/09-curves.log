@@ -1,0 +1,50 @@
+== bee-3 : 10 cells
+   pass A 20s
+   bee-3 frame 0/299  1s
+   bee-3 frame 40/299  36s
+   bee-3 frame 80/299  71s
+   bee-3 frame 120/299  108s
+   bee-3 frame 160/299  144s
+   bee-3 frame 200/299  179s
+   bee-3 frame 240/299  214s
+   bee-3 frame 280/299  249s
+   wrote bee-3__occ3-wing-thorax  n=299 P=36000
+   wrote bee-3__occ3-leg-hair-1  n=299 P=36000
+   wrote bee-3__occ3-leg-hair-2  n=299 P=34932
+   wrote bee-3__occ3-limb-abdomen  n=299 P=36000
+   wrote bee-3__occ3-antenna-head  n=299 P=36000
+   wrote bee-3__occ3-antenna-eye  n=299 P=31088
+   wrote bee-3__occ3-leg-card-1  n=299 P=36000
+   wrote bee-3__occ3-claw-card  n=299 P=36000
+   wrote bee-3__occ3-leg-card-2  n=299 P=36000
+   wrote bee-3__ctl3-eye  n=299 P=25884
+   total 312s
+== bee-1 : 5 cells
+   pass A 20s
+   bee-1 frame 0/299  1s
+   bee-1 frame 40/299  27s
+   bee-1 frame 80/299  54s
+   bee-1 frame 120/299  85s
+   bee-1 frame 160/299  112s
+   bee-1 frame 200/299  138s
+   bee-1 frame 240/299  165s
+   bee-1 frame 280/299  193s
+   wrote bee-1__occ1-leg-body-1  n=299 P=36000
+   wrote bee-1__occ1-leg-body-2  n=299 P=33954
+   wrote bee-1__occ1-limb-body-r  n=299 P=36000
+   wrote bee-1__occ1-claw-card  n=299 P=36000
+   wrote bee-1__occ1-leg-card  n=299 P=36000
+   total 243s
+== wrapped-text-1 : 6 cells
+   pass A 9s
+   wrapped-text-1 frame 0/130  1s
+   wrapped-text-1 frame 40/130  31s
+   wrapped-text-1 frame 80/130  62s
+   wrapped-text-1 frame 120/130  93s
+   wrote wrapped-text-1__ctlw1-a  n=130 P=36000
+   wrote wrapped-text-1__ctlw1-b  n=130 P=36000
+   wrote wrapped-text-1__ctlw1-c  n=130 P=36000
+   wrote wrapped-text-1__ctlw1-d  n=130 P=36000
+   wrote wrapped-text-1__ctlw1-e  n=130 P=36000
+   wrote wrapped-text-1__ctlw1-f  n=130 P=36000
+   total 116s

@@ -1,0 +1,93 @@
+==============================================================================
+TEXTURE AUDIT -- can each class's background be veiled at all?
+==============================================================================
+  bee-3            occ3-wing-thorax   occ        bg peak f    53.36 (x 3.46 over its own floor)   fg peak f    34.74   band peak f   106.23
+  bee-3            occ3-leg-hair-1    occ        bg peak f    18.28 (x 1.06 over its own floor)   fg peak f    40.71   band peak f   115.22
+  bee-3            occ3-leg-hair-2    occ        bg peak f    16.56 (x 1.04 over its own floor)   fg peak f    17.23   band peak f    35.12
+  bee-3            occ3-limb-abdomen  occ        bg peak f    18.13 (x 1.07 over its own floor)   fg peak f    33.60   band peak f    30.19
+  bee-3            occ3-antenna-head  occ        bg peak f    19.10 (x 1.17 over its own floor)   fg peak f    57.06   band peak f    52.30
+  bee-3            occ3-antenna-eye   occ        bg peak f    28.22 (x 3.75 over its own floor)   fg peak f    20.58   band peak f    49.27
+  bee-3            occ3-leg-card-1    occ_flat   bg peak f    17.93 (x 1.12 over its own floor)   fg peak f    49.79   band peak f    99.09
+  bee-3            occ3-claw-card     occ_flat   bg peak f    16.03 (x 1.04 over its own floor)   fg peak f    25.39   band peak f    81.68
+  bee-3            occ3-leg-card-2    occ_flat   bg peak f    16.19 (x 1.08 over its own floor)   fg peak f    17.87   band peak f    67.41
+  bee-3            ctl3-eye           ctl        bg peak f    17.13 (x 3.33 over its own floor)   fg peak f    10.53   band peak f    38.06
+  bee-1            occ1-leg-body-1    occ        bg peak f    18.51 (x 1.10 over its own floor)   fg peak f    13.47   band peak f    92.83
+  bee-1            occ1-leg-body-2    occ        bg peak f    16.03 (x 1.24 over its own floor)   fg peak f    25.82   band peak f    49.45
+  bee-1            occ1-limb-body-r   occ        bg peak f    20.28 (x 1.14 over its own floor)   fg peak f    32.79   band peak f    63.68
+  bee-1            occ1-claw-card     occ_flat   bg peak f    16.96 (x 1.10 over its own floor)   fg peak f    16.40   band peak f    17.82
+  bee-1            occ1-leg-card      occ_flat   bg peak f    17.85 (x 1.09 over its own floor)   fg peak f    46.54   band peak f   139.93
+  wrapped-text-1   ctlw1-a            ctl        bg peak f    28.34 (x 2.71 over its own floor)   fg peak f    25.65   band peak f    57.73
+  wrapped-text-1   ctlw1-b            ctl        bg peak f    32.33 (x 2.79 over its own floor)   fg peak f    33.74   band peak f    74.08
+  wrapped-text-1   ctlw1-c            ctl        bg peak f    25.11 (x 2.44 over its own floor)   fg peak f    29.02   band peak f    50.24
+  wrapped-text-1   ctlw1-d            ctl        bg peak f    53.17 (x 4.23 over its own floor)   fg peak f    33.49   band peak f    74.23
+  wrapped-text-1   ctlw1-e            ctl        bg peak f    23.61 (x 2.20 over its own floor)   fg peak f    24.78   band peak f    56.09
+  wrapped-text-1   ctlw1-f            ctl        bg peak f    25.43 (x 2.17 over its own floor)   fg peak f    32.53   band peak f    68.71
+  wrapped-text-2   ctlw2-a            ctl        bg peak f    44.01 (x 1.96 over its own floor)   fg peak f    37.34   band peak f    63.60
+  wrapped-text-2   ctlw2-b            ctl        bg peak f    48.78 (x 2.03 over its own floor)   fg peak f    49.88   band peak f    95.55
+  wrapped-text-2   ctlw2-c            ctl        bg peak f    45.59 (x 1.94 over its own floor)   fg peak f    43.21   band peak f    50.03
+  wrapped-text-2   ctlw2-d            ctl        bg peak f    51.25 (x 2.01 over its own floor)   fg peak f    39.54   band peak f    82.02
+
+  occ        background peak focus response: median    18.51   peak/floor ratio median  1.14
+  occ_flat   background peak focus response: median    16.96   peak/floor ratio median  1.09
+  ctl        background peak focus response: median    32.33   peak/floor ratio median  2.20
+
+==============================================================================
+H4  posterior entropy, over temperature
+==============================================================================
+  cell               class    T=0.5    T=1.0    T=2.0    T=5.0    T=20.0   T=100.0    bnd-mass@T=20
+  occ3-wing-thorax   occ        0.0051   0.0463   0.1118   0.2023   0.6687   0.9955     0.0201
+  occ3-leg-hair-1    occ        0.0027   0.0365   0.1040   0.2016   0.7821   0.9973     0.0314
+  occ3-leg-hair-2    occ        0.0145   0.0718   0.1291   0.2457   0.8754   0.9982     0.0488
+  occ3-limb-abdomen  occ        0.0265   0.0905   0.1441   0.2661   0.8487   0.9976     0.0431
+  occ3-antenna-head  occ        0.0032   0.0378   0.1012   0.1732   0.5713   0.9947     0.0140
+  occ3-antenna-eye   occ        0.0048   0.0474   0.1147   0.2251   0.8685   0.9981     0.0478
+  occ3-leg-card-1    occ_flat   0.0023   0.0336   0.1013   0.1929   0.8118   0.9976     0.0348
+  occ3-claw-card     occ_flat   0.0100   0.0643   0.1244   0.2557   0.8968   0.9983     0.0474
+  occ3-leg-card-2    occ_flat   0.0305   0.0974   0.1569   0.2996   0.9086   0.9983     0.0499
+  ctl3-eye           ctl        0.0023   0.0351   0.1077   0.2504   0.9490   0.9992     0.0737
+  occ1-leg-body-1    occ        0.0077   0.0561   0.1189   0.2241   0.7911   0.9969     0.0310
+  occ1-leg-body-2    occ        0.0058   0.0508   0.1159   0.2117   0.7568   0.9966     0.0369
+  occ1-limb-body-r   occ        0.0056   0.0495   0.1143   0.2196   0.8587   0.9979     0.0420
+  occ1-claw-card     occ_flat   0.6036   0.9024   0.9781   0.9967   0.9998   1.0000     0.0998
+  occ1-leg-card      occ_flat   0.0013   0.0258   0.0914   0.1769   0.7265   0.9966     0.0265
+  ctlw1-a            ctl        0.0336   0.1178   0.2031   0.3903   0.9200   0.9979     0.0655
+  ctlw1-b            ctl        0.0098   0.0716   0.1512   0.3499   0.9026   0.9973     0.0419
+  ctlw1-c            ctl        0.0479   0.1327   0.2226   0.4243   0.9306   0.9981     0.0763
+  ctlw1-d            ctl        0.0016   0.0318   0.1124   0.2643   0.8956   0.9976     0.0364
+  ctlw1-e            ctl        0.0545   0.1366   0.2235   0.4022   0.9128   0.9977     0.0510
+  ctlw1-f            ctl        0.0239   0.1005   0.1814   0.3685   0.9028   0.9974     0.0384
+  ctlw2-a            ctl        0.1069   0.2056   0.3411   0.6724   0.9831   0.9995     0.0750
+  ctlw2-b            ctl        0.0305   0.1196   0.2298   0.5186   0.9680   0.9991     0.0593
+  ctlw2-c            ctl        0.1163   0.2715   0.7592   0.9810   0.9992   1.0000     0.0973
+  ctlw2-d            ctl        0.0789   0.1665   0.2987   0.6199   0.9790   0.9994     0.0679
+
+  occ       median H    0.0056   0.0495   0.1147   0.2196   0.7911   0.9973
+  occ_flat  median H    0.0100   0.0643   0.1244   0.2557   0.8968   0.9983
+  ctl       median H    0.0336   0.1196   0.2226   0.4022   0.9306   0.9981
+
+==============================================================================
+REPLICATE -- bee-2 vs bee-3, same scene, independent capture
+==============================================================================
+  occ3-wing-thorax   occ       median k1 offset bee-2 - bee-3 =    1.0 frames
+  occ3-leg-hair-1    occ       median k1 offset bee-2 - bee-3 =   -2.0 frames
+  occ3-leg-hair-2    occ       median k1 offset bee-2 - bee-3 =   -5.0 frames
+  occ3-limb-abdomen  occ       median k1 offset bee-2 - bee-3 =   -9.0 frames
+  occ3-antenna-head  occ       median k1 offset bee-2 - bee-3 =   15.0 frames
+  occ3-antenna-eye   occ       median k1 offset bee-2 - bee-3 =   -2.0 frames
+  occ3-leg-card-1    occ_flat  median k1 offset bee-2 - bee-3 =   -3.0 frames
+  occ3-claw-card     occ_flat  median k1 offset bee-2 - bee-3 =   -7.0 frames
+  occ3-leg-card-2    occ_flat  median k1 offset bee-2 - bee-3 =    1.0 frames
+  ctl3-eye           ctl       median k1 offset bee-2 - bee-3 =    4.0 frames
+  -> global frame offset used: -2.0 frames
+  occ3-wing-thorax   occ      |dk1| med   5.0 p90   35.0 | frac>10fr  35.2% | AUC entropy 0.669 (T=20: 0.659) peak-height 0.649 | flag A 69.8% B 39.5% both 27.5% (chance 27.6%)
+  occ3-leg-hair-1    occ      |dk1| med   6.0 p90   32.0 | frac>10fr  31.4% | AUC entropy 0.665 (T=20: 0.658) peak-height 0.652 | flag A 76.6% B 38.3% both 32.3% (chance 29.4%)
+  occ3-leg-hair-2    occ      |dk1| med  12.0 p90   41.0 | frac>10fr  53.9% | AUC entropy 0.658 (T=20: 0.603) peak-height 0.584 | flag A 78.3% B 46.4% both 38.6% (chance 36.4%)
+  occ3-limb-abdomen  occ      |dk1| med  24.0 p90   86.0 | frac>10fr  75.6% | AUC entropy 0.593 (T=20: 0.566) peak-height 0.596 | flag A 78.1% B 78.9% both 61.8% (chance 61.6%)
+  occ3-antenna-head  occ      |dk1| med  19.0 p90   54.0 | frac>10fr  89.5% | AUC entropy 0.595 (T=20: 0.561) peak-height 0.544 | flag A 73.7% B 61.8% both 48.1% (chance 45.5%)
+  occ3-antenna-eye   occ      |dk1| med  16.0 p90   46.0 | frac>10fr  63.4% | AUC entropy 0.564 (T=20: 0.538) peak-height 0.508 | flag A 85.3% B 64.4% both 55.6% (chance 54.9%)
+  occ3-leg-card-1    occ_flat |dk1| med   7.0 p90   43.0 | frac>10fr  40.8% | AUC entropy 0.692 (T=20: 0.672) peak-height 0.647 | flag A 82.5% B 28.0% both 25.5% (chance 23.1%)
+  occ3-claw-card     occ_flat |dk1| med   8.0 p90   33.0 | frac>10fr  43.8% | AUC entropy 0.792 (T=20: 0.762) peak-height 0.753 | flag A 78.9% B 52.3% both 42.9% (chance 41.3%)
+  occ3-leg-card-2    occ_flat |dk1| med  11.0 p90   34.0 | frac>10fr  52.5% | AUC entropy 0.600 (T=20: 0.623) peak-height 0.627 | flag A 79.0% B 48.1% both 40.6% (chance 38.0%)
+  ctl3-eye           ctl      |dk1| med   7.0 p90   22.0 | frac>10fr  38.1% | AUC entropy 0.594 (T=20: 0.741) peak-height 0.727 | flag A 56.9% B 28.4% both 20.3% (chance 16.1%)
+
+wrote data/19-entropy.json

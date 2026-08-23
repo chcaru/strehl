@@ -1,0 +1,35 @@
+==============================================================================
+N5 as REGISTERED: fraction of band pixels whose k1 is within 2
+frames of either end of the stack -- no temperature, no free parameter
+==============================================================================
+  occ3-wing-thorax   occ      n=299  k1 at boundary  0.00%  k2 at boundary  0.40%  | sep  27.0  step  17.0  sep/step  1.59
+  occ3-leg-hair-1    occ      n=299  k1 at boundary  0.00%  k2 at boundary  0.12%  | sep  16.0  step  17.0  sep/step  0.94
+  occ3-leg-hair-2    occ      n=299  k1 at boundary  0.04%  k2 at boundary  0.12%  | sep  23.0  step  17.0  sep/step  1.35
+  occ3-limb-abdomen  occ      n=299  k1 at boundary  0.00%  k2 at boundary  0.29%  | sep  53.0  step  71.0  sep/step  0.75
+  occ3-antenna-head  occ      n=299  k1 at boundary  0.00%  k2 at boundary  0.07%  | sep  49.0  step  73.0  sep/step  0.67
+  occ3-antenna-eye   occ      n=299  k1 at boundary  0.00%  k2 at boundary  0.08%  | sep  35.0  step   0.0  sep/step  step=0
+  occ3-leg-card-1    occ_flat n=299  k1 at boundary  0.00%  k2 at boundary  0.22%  | sep  17.0  step  81.0  sep/step  0.21
+  occ3-claw-card     occ_flat n=299  k1 at boundary  0.00%  k2 at boundary  0.37%  | sep  17.0  step  23.0  sep/step  0.74
+  occ3-leg-card-2    occ_flat n=299  k1 at boundary  0.00%  k2 at boundary  0.20%  | sep  24.0  step  61.0  sep/step  0.39
+  ctl3-eye           ctl      n=299  k1 at boundary  0.08%  k2 at boundary  3.52%  | sep  32.0  step   1.0  sep/step 32.00
+  occ1-leg-body-1    occ      n=299  k1 at boundary  0.00%  k2 at boundary  0.22%  | sep  27.0  step  44.0  sep/step  0.61
+  occ1-leg-body-2    occ      n=299  k1 at boundary  0.00%  k2 at boundary  0.44%  | sep  32.0  step  20.0  sep/step  1.60
+  occ1-limb-body-r   occ      n=299  k1 at boundary  0.00%  k2 at boundary  0.04%  | sep  40.0  step  19.0  sep/step  2.11
+  occ1-claw-card     occ_flat n=299  k1 at boundary  1.09%  k2 at boundary  0.91%  | sep 110.0  step  20.0  sep/step  5.50
+  occ1-leg-card      occ_flat n=299  k1 at boundary  0.00%  k2 at boundary  0.38%  | sep  13.0  step  49.0  sep/step  0.27
+  ctlw1-a            ctl      n=130  k1 at boundary  0.06%  k2 at boundary  2.38%  | sep  18.0  step   1.0  sep/step 18.00
+  ctlw1-b            ctl      n=130  k1 at boundary  0.00%  k2 at boundary  1.38%  | sep  17.0  step   3.0  sep/step  5.67
+  ctlw1-c            ctl      n=130  k1 at boundary  0.04%  k2 at boundary  7.85%  | sep  21.0  step   1.0  sep/step 21.00
+  ctlw1-d            ctl      n=130  k1 at boundary  0.00%  k2 at boundary  1.84%  | sep  17.0  step  10.0  sep/step  1.70
+  ctlw1-e            ctl      n=130  k1 at boundary  0.00%  k2 at boundary  2.33%  | sep  26.0  step   1.0  sep/step 26.00
+  ctlw1-f            ctl      n=130  k1 at boundary  0.00%  k2 at boundary  1.83%  | sep  18.0  step   3.0  sep/step  6.00
+  ctlw2-a            ctl      n=120  k1 at boundary  0.00%  k2 at boundary  2.62%  | sep  22.0  step   1.0  sep/step 22.00
+  ctlw2-b            ctl      n=120  k1 at boundary  0.00%  k2 at boundary  3.38%  | sep  19.0  step   0.0  sep/step  step=0
+  ctlw2-c            ctl      n=120  k1 at boundary  0.07%  k2 at boundary  2.05%  | sep  36.0  step   2.0  sep/step 18.00
+  ctlw2-d            ctl      n=120  k1 at boundary  0.00%  k2 at boundary  2.88%  | sep  18.0  step   3.0  sep/step  6.00
+
+  occ       n= 9  k1 at boundary median  0.00% (max  0.04%)  k2 at boundary median  0.12%  | sep/step median  1.15 (n=8 finite)
+  occ_flat  n= 5  k1 at boundary median  0.00% (max  1.09%)  k2 at boundary median  0.37%  | sep/step median  0.39 (n=5 finite)
+  ctl       n=11  k1 at boundary median  0.00% (max  0.08%)  k2 at boundary median  2.38%  | sep/step median 18.00 (n=10 finite)
+
+wrote data/23-boundary.json

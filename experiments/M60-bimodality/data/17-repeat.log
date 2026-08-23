@@ -1,0 +1,19 @@
+bee-2 : 299 frames, ISO 400, 10 cells borrowed from bee-3
+   frame 0/299  1s
+   frame 40/299  36s
+   frame 80/299  69s
+   frame 120/299  103s
+   frame 160/299  136s
+   frame 200/299  169s
+   frame 240/299  203s
+   frame 280/299  237s
+   wrote bee-2__occ3-wing-thorax
+   wrote bee-2__occ3-leg-hair-1
+   wrote bee-2__occ3-leg-hair-2
+   wrote bee-2__occ3-limb-abdomen
+   wrote bee-2__occ3-antenna-head
+   wrote bee-2__occ3-antenna-eye
+   wrote bee-2__occ3-leg-card-1
+   wrote bee-2__occ3-claw-card
+   wrote bee-2__occ3-leg-card-2
+   wrote bee-2__ctl3-eye

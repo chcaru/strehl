@@ -1,0 +1,628 @@
+{
+ "texture": [
+  {
+   "stack": "bee-3",
+   "cell": "occ3-wing-thorax",
+   "cls": "occ",
+   "band_peak": 256.91058349609375,
+   "band_ratio": 15.869686126708984,
+   "fg_peak": 91.45973205566406,
+   "fg_ratio": 7.165163993835449,
+   "bg_peak": 219.98455810546875,
+   "bg_ratio": 13.85482120513916
+  },
+  {
+   "stack": "bee-3",
+   "cell": "occ3-leg-hair-1",
+   "cls": "occ",
+   "band_peak": 192.8855743408203,
+   "band_ratio": 8.477858543395996,
+   "fg_peak": 83.83726501464844,
+   "fg_ratio": 7.341242790222168,
+   "bg_peak": 27.003559112548828,
+   "bg_ratio": 1.580102801322937
+  },
+  {
+   "stack": "bee-3",
+   "cell": "occ3-leg-hair-2",
+   "cls": "occ",
+   "band_peak": 175.9555206298828,
+   "band_ratio": 8.990429878234863,
+   "fg_peak": 42.426910400390625,
+   "fg_ratio": 2.6451570987701416,
+   "bg_peak": 24.951168060302734,
+   "bg_ratio": 1.557588815689087
+  },
+  {
+   "stack": "bee-3",
+   "cell": "occ3-limb-abdomen",
+   "cls": "occ",
+   "band_peak": 177.47613525390625,
+   "band_ratio": 9.07209587097168,
+   "fg_peak": 111.52580261230469,
+   "fg_ratio": 7.703423023223877,
+   "bg_peak": 26.196626663208008,
+   "bg_ratio": 1.5438787937164307
+  },
+  {
+   "stack": "bee-3",
+   "cell": "occ3-antenna-head",
+   "cls": "occ",
+   "band_peak": 270.84002685546875,
+   "band_ratio": 14.945121765136719,
+   "fg_peak": 98.50161743164062,
+   "fg_ratio": 6.0017805099487305,
+   "bg_peak": 27.283422470092773,
+   "bg_ratio": 1.6883816719055176
+  },
+  {
+   "stack": "bee-3",
+   "cell": "occ3-antenna-eye",
+   "cls": "occ",
+   "band_peak": 138.88699340820312,
+   "band_ratio": 8.569339752197266,
+   "fg_peak": 40.995079040527344,
+   "fg_ratio": 6.905054569244385,
+   "bg_peak": 48.32147979736328,
+   "bg_ratio": 6.1493401527404785
+  },
+  {
+   "stack": "bee-3",
+   "cell": "occ3-leg-card-1",
+   "cls": "occ_flat",
+   "band_peak": 189.764404296875,
+   "band_ratio": 8.025350570678711,
+   "fg_peak": 79.76359558105469,
+   "fg_ratio": 5.87156343460083,
+   "bg_peak": 25.320415496826172,
+   "bg_ratio": 1.558110237121582
+  },
+  {
+   "stack": "bee-3",
+   "cell": "occ3-claw-card",
+   "cls": "occ_flat",
+   "band_peak": 151.08038330078125,
+   "band_ratio": 7.243526935577393,
+   "fg_peak": 55.62388610839844,
+   "fg_ratio": 3.7025232315063477,
+   "bg_peak": 24.071678161621094,
+   "bg_ratio": 1.5751382112503052
+  },
+  {
+   "stack": "bee-3",
+   "cell": "occ3-leg-card-2",
+   "cls": "occ_flat",
+   "band_peak": 141.85562133789062,
+   "band_ratio": 7.782360076904297,
+   "fg_peak": 39.31719207763672,
+   "fg_ratio": 3.0558557510375977,
+   "bg_peak": 27.342912673950195,
+   "bg_ratio": 1.8070882558822632
+  },
+  {
+   "stack": "bee-3",
+   "cell": "ctl3-eye",
+   "cls": "ctl",
+   "band_peak": 68.33096313476562,
+   "band_ratio": 8.83150863647461,
+   "fg_peak": 13.71452522277832,
+   "fg_ratio": 3.605248212814331,
+   "bg_peak": 23.219924926757812,
+   "bg_ratio": 4.4012675285339355
+  },
+  {
+   "stack": "bee-1",
+   "cell": "occ1-leg-body-1",
+   "cls": "occ",
+   "band_peak": 188.4425048828125,
+   "band_ratio": 7.69047212600708,
+   "fg_peak": 39.525726318359375,
+   "fg_ratio": 4.079911708831787,
+   "bg_peak": 26.252323150634766,
+   "bg_ratio": 1.550843358039856
+  },
+  {
+   "stack": "bee-1",
+   "cell": "occ1-leg-body-2",
+   "cls": "occ",
+   "band_peak": 183.7498779296875,
+   "band_ratio": 10.274598121643066,
+   "fg_peak": 55.239288330078125,
+   "fg_ratio": 8.917147636413574,
+   "bg_peak": 28.27449607849121,
+   "bg_ratio": 2.1367030143737793
+  },
+  {
+   "stack": "bee-1",
+   "cell": "occ1-limb-body-r",
+   "cls": "occ",
+   "band_peak": 200.10287475585938,
+   "band_ratio": 9.202974319458008,
+   "fg_peak": 94.98674011230469,
+   "fg_ratio": 6.268850803375244,
+   "bg_peak": 28.1453914642334,
+   "bg_ratio": 1.5521944761276245
+  },
+  {
+   "stack": "bee-1",
+   "cell": "occ1-claw-card",
+   "cls": "occ_flat",
+   "band_peak": 26.291440963745117,
+   "band_ratio": 1.6181553602218628,
+   "fg_peak": 23.85417938232422,
+   "fg_ratio": 1.566521167755127,
+   "bg_peak": 24.062536239624023,
+   "bg_ratio": 1.5534839630126953
+  },
+  {
+   "stack": "bee-1",
+   "cell": "occ1-leg-card",
+   "cls": "occ_flat",
+   "band_peak": 233.86776733398438,
+   "band_ratio": 10.46849536895752,
+   "fg_peak": 86.51370239257812,
+   "fg_ratio": 4.231670379638672,
+   "bg_peak": 26.309646606445312,
+   "bg_ratio": 1.5933088064193726
+  },
+  {
+   "stack": "wrapped-text-1",
+   "cell": "ctlw1-a",
+   "cls": "ctl",
+   "band_peak": 78.2291259765625,
+   "band_ratio": 6.075935363769531,
+   "fg_peak": 45.59901428222656,
+   "fg_ratio": 5.0921454429626465,
+   "bg_peak": 42.777305603027344,
+   "bg_ratio": 4.037485122680664
+  },
+  {
+   "stack": "wrapped-text-1",
+   "cell": "ctlw1-b",
+   "cls": "ctl",
+   "band_peak": 95.53309631347656,
+   "band_ratio": 5.198845863342285,
+   "fg_peak": 61.46971893310547,
+   "fg_ratio": 6.34104061126709,
+   "bg_peak": 62.85056686401367,
+   "bg_ratio": 5.339029788970947
+  },
+  {
+   "stack": "wrapped-text-1",
+   "cell": "ctlw1-c",
+   "cls": "ctl",
+   "band_peak": 71.02831268310547,
+   "band_ratio": 5.358471393585205,
+   "fg_peak": 37.37351989746094,
+   "fg_ratio": 4.6875081062316895,
+   "bg_peak": 36.969566345214844,
+   "bg_ratio": 3.5980546474456787
+  },
+  {
+   "stack": "wrapped-text-1",
+   "cell": "ctlw1-d",
+   "cls": "ctl",
+   "band_peak": 111.78868103027344,
+   "band_ratio": 5.0374345779418945,
+   "fg_peak": 82.86599731445312,
+   "fg_ratio": 7.5705060958862305,
+   "bg_peak": 81.79198455810547,
+   "bg_ratio": 6.366663455963135
+  },
+  {
+   "stack": "wrapped-text-1",
+   "cell": "ctlw1-e",
+   "cls": "ctl",
+   "band_peak": 78.38733673095703,
+   "band_ratio": 5.582221984863281,
+   "fg_peak": 39.47991180419922,
+   "fg_ratio": 4.656310558319092,
+   "bg_peak": 36.32720947265625,
+   "bg_ratio": 3.346508502960205
+  },
+  {
+   "stack": "wrapped-text-1",
+   "cell": "ctlw1-f",
+   "cls": "ctl",
+   "band_peak": 95.79783630371094,
+   "band_ratio": 4.686962127685547,
+   "fg_peak": 57.47028350830078,
+   "fg_ratio": 5.274239540100098,
+   "bg_peak": 56.73328399658203,
+   "bg_ratio": 4.709767818450928
+  },
+  {
+   "stack": "wrapped-text-2",
+   "cell": "ctlw2-a",
+   "cls": "ctl",
+   "band_peak": 89.31495666503906,
+   "band_ratio": 3.451467275619507,
+   "fg_peak": 46.834720611572266,
+   "fg_ratio": 3.0745112895965576,
+   "bg_peak": 51.02649688720703,
+   "bg_ratio": 2.238654136657715
+  },
+  {
+   "stack": "wrapped-text-2",
+   "cell": "ctlw2-b",
+   "cls": "ctl",
+   "band_peak": 123.39865112304688,
+   "band_ratio": 3.862071990966797,
+   "fg_peak": 80.80811309814453,
+   "fg_ratio": 5.376891613006592,
+   "bg_peak": 79.37232971191406,
+   "bg_ratio": 3.233346462249756
+  },
+  {
+   "stack": "wrapped-text-2",
+   "cell": "ctlw2-c",
+   "cls": "ctl",
+   "band_peak": 61.605953216552734,
+   "band_ratio": 2.540494918823242,
+   "fg_peak": 49.946964263916016,
+   "fg_ratio": 2.139209270477295,
+   "bg_peak": 54.30141830444336,
+   "bg_ratio": 2.2699921131134033
+  },
+  {
+   "stack": "wrapped-text-2",
+   "cell": "ctlw2-d",
+   "cls": "ctl",
+   "band_peak": 115.00079345703125,
+   "band_ratio": 3.498926877975464,
+   "fg_peak": 71.43438720703125,
+   "fg_ratio": 3.343932628631592,
+   "bg_peak": 75.58915710449219,
+   "bg_ratio": 2.910837411880493
+  }
+ ],
+ "replicate_matched": [
+  {
+   "cell": "occ3-wing-thorax",
+   "cls": "occ",
+   "q": 0.6979166666666666,
+   "kappa": -0.012669068450849193,
+   "p_obs": 0.573,
+   "p_chance": 0.5783420138888888,
+   "sep_corr": 0.006964210900226617,
+   "k2_agree6": 0.12334422845346636,
+   "n_both": 5813,
+   "npx": 12000
+  },
+  {
+   "cell": "occ3-leg-hair-1",
+   "cls": "occ",
+   "q": 0.7664166666666666,
+   "kappa": 0.10951433658255624,
+   "p_obs": 0.6811666666666667,
+   "p_chance": 0.6419556805555555,
+   "sep_corr": 0.16707972816281227,
+   "k2_agree6": 0.16460735859417902,
+   "n_both": 7284,
+   "npx": 12000
+  },
+  {
+   "cell": "occ3-leg-hair-2",
+   "cls": "occ",
+   "q": 0.7828333333333334,
+   "kappa": 0.1068906182829912,
+   "p_obs": 0.6963333333333334,
+   "p_chance": 0.659989388888889,
+   "sep_corr": 0.18989286563001093,
+   "k2_agree6": 0.13391442155309033,
+   "n_both": 7572,
+   "npx": 12000
+  },
+  {
+   "cell": "occ3-limb-abdomen",
+   "cls": "occ",
+   "q": 0.7806666666666666,
+   "kappa": 0.0061880449256216715,
+   "p_obs": 0.6596666666666666,
+   "p_chance": 0.6575475555555554,
+   "sep_corr": 0.6591113092792645,
+   "k2_agree6": 0.09787059787059788,
+   "n_both": 7326,
+   "npx": 12000
+  },
+  {
+   "cell": "occ3-antenna-head",
+   "cls": "occ",
+   "q": 0.7369166666666667,
+   "kappa": 0.14160910180912242,
+   "p_obs": 0.6671666666666667,
+   "p_chance": 0.6122590138888888,
+   "sep_corr": 0.2324031088662241,
+   "k2_agree6": 0.09874379199532574,
+   "n_both": 6846,
+   "npx": 12000
+  },
+  {
+   "cell": "occ3-antenna-eye",
+   "cls": "occ",
+   "q": 0.8525833333333334,
+   "kappa": 0.06379700705671887,
+   "p_obs": 0.7646666666666667,
+   "p_chance": 0.7486300138888888,
+   "sep_corr": 0.24503781738297595,
+   "k2_agree6": 0.11860755187663001,
+   "n_both": 8819,
+   "npx": 12000
+  },
+  {
+   "cell": "occ3-leg-card-1",
+   "cls": "occ_flat",
+   "q": 0.8250833333333333,
+   "kappa": 0.10789036328638765,
+   "p_obs": 0.7425,
+   "p_chance": 0.7113583472222222,
+   "sep_corr": 0.18168836790543713,
+   "k2_agree6": 0.10746768788894208,
+   "n_both": 8356,
+   "npx": 12000
+  },
+  {
+   "cell": "occ3-claw-card",
+   "cls": "occ_flat",
+   "q": 0.7891666666666667,
+   "kappa": 0.12400716220559233,
+   "p_obs": 0.7085,
+   "p_chance": 0.6672347222222221,
+   "sep_corr": 0.0697035665426981,
+   "k2_agree6": 0.08535163838880974,
+   "n_both": 7721,
+   "npx": 12000
+  },
+  {
+   "cell": "occ3-leg-card-2",
+   "cls": "occ_flat",
+   "q": 0.7899166666666667,
+   "kappa": 0.13527299055901726,
+   "p_obs": 0.713,
+   "p_chance": 0.6681033472222222,
+   "sep_corr": 0.08044590059607215,
+   "k2_agree6": 0.151862833569679,
+   "n_both": 7757,
+   "npx": 12000
+  },
+  {
+   "cell": "ctl3-eye",
+   "cls": "ctl",
+   "q": 0.5686666666666667,
+   "kappa": 0.18496134200412753,
+   "p_obs": 0.6001666666666666,
+   "p_chance": 0.5094302222222222,
+   "sep_corr": -0.1622942661790432,
+   "k2_agree6": 0.10011299435028248,
+   "n_both": 4425,
+   "npx": 12000
+  }
+ ],
+ "geometry": [
+  {
+   "cell": "occ3-wing-thorax",
+   "cls": "occ",
+   "n": 299,
+   "fwhm": 13.0,
+   "sep": 27.0,
+   "step": 17.0,
+   "sep_over_fwhm": 2.076923076923077
+  },
+  {
+   "cell": "occ3-leg-hair-1",
+   "cls": "occ",
+   "n": 299,
+   "fwhm": 10.0,
+   "sep": 16.0,
+   "step": 17.0,
+   "sep_over_fwhm": 1.6
+  },
+  {
+   "cell": "occ3-leg-hair-2",
+   "cls": "occ",
+   "n": 299,
+   "fwhm": 10.0,
+   "sep": 23.0,
+   "step": 17.0,
+   "sep_over_fwhm": 2.3
+  },
+  {
+   "cell": "occ3-limb-abdomen",
+   "cls": "occ",
+   "n": 299,
+   "fwhm": 12.0,
+   "sep": 53.0,
+   "step": 71.0,
+   "sep_over_fwhm": 4.416666666666667
+  },
+  {
+   "cell": "occ3-antenna-head",
+   "cls": "occ",
+   "n": 299,
+   "fwhm": 10.0,
+   "sep": 49.0,
+   "step": 73.0,
+   "sep_over_fwhm": 4.9
+  },
+  {
+   "cell": "occ3-antenna-eye",
+   "cls": "occ",
+   "n": 299,
+   "fwhm": 9.0,
+   "sep": 35.0,
+   "step": 0.0,
+   "sep_over_fwhm": 3.888888888888889
+  },
+  {
+   "cell": "occ3-leg-card-1",
+   "cls": "occ_flat",
+   "n": 299,
+   "fwhm": 8.0,
+   "sep": 17.0,
+   "step": 81.0,
+   "sep_over_fwhm": 2.125
+  },
+  {
+   "cell": "occ3-claw-card",
+   "cls": "occ_flat",
+   "n": 299,
+   "fwhm": 10.0,
+   "sep": 17.0,
+   "step": 23.0,
+   "sep_over_fwhm": 1.7
+  },
+  {
+   "cell": "occ3-leg-card-2",
+   "cls": "occ_flat",
+   "n": 299,
+   "fwhm": 13.0,
+   "sep": 24.0,
+   "step": 61.0,
+   "sep_over_fwhm": 1.8461538461538463
+  },
+  {
+   "cell": "ctl3-eye",
+   "cls": "ctl",
+   "n": 299,
+   "fwhm": 6.0,
+   "sep": 32.0,
+   "step": 1.0,
+   "sep_over_fwhm": 5.333333333333333
+  },
+  {
+   "cell": "occ1-leg-body-1",
+   "cls": "occ",
+   "n": 299,
+   "fwhm": 11.0,
+   "sep": 27.0,
+   "step": 44.0,
+   "sep_over_fwhm": 2.4545454545454546
+  },
+  {
+   "cell": "occ1-leg-body-2",
+   "cls": "occ",
+   "n": 299,
+   "fwhm": 9.0,
+   "sep": 32.0,
+   "step": 20.0,
+   "sep_over_fwhm": 3.5555555555555554
+  },
+  {
+   "cell": "occ1-limb-body-r",
+   "cls": "occ",
+   "n": 299,
+   "fwhm": 8.0,
+   "sep": 40.0,
+   "step": 19.0,
+   "sep_over_fwhm": 5.0
+  },
+  {
+   "cell": "occ1-claw-card",
+   "cls": "occ_flat",
+   "n": 299,
+   "fwhm": 3.0,
+   "sep": 110.0,
+   "step": 20.0,
+   "sep_over_fwhm": 36.666666666666664
+  },
+  {
+   "cell": "occ1-leg-card",
+   "cls": "occ_flat",
+   "n": 299,
+   "fwhm": 9.0,
+   "sep": 13.0,
+   "step": 49.0,
+   "sep_over_fwhm": 1.4444444444444444
+  },
+  {
+   "cell": "ctlw1-a",
+   "cls": "ctl",
+   "n": 130,
+   "fwhm": 12.0,
+   "sep": 18.0,
+   "step": 1.0,
+   "sep_over_fwhm": 1.5
+  },
+  {
+   "cell": "ctlw1-b",
+   "cls": "ctl",
+   "n": 130,
+   "fwhm": 14.0,
+   "sep": 17.0,
+   "step": 3.0,
+   "sep_over_fwhm": 1.2142857142857142
+  },
+  {
+   "cell": "ctlw1-c",
+   "cls": "ctl",
+   "n": 130,
+   "fwhm": 14.0,
+   "sep": 21.0,
+   "step": 1.0,
+   "sep_over_fwhm": 1.5
+  },
+  {
+   "cell": "ctlw1-d",
+   "cls": "ctl",
+   "n": 130,
+   "fwhm": 9.0,
+   "sep": 17.0,
+   "step": 10.0,
+   "sep_over_fwhm": 1.8888888888888888
+  },
+  {
+   "cell": "ctlw1-e",
+   "cls": "ctl",
+   "n": 130,
+   "fwhm": 14.0,
+   "sep": 26.0,
+   "step": 1.0,
+   "sep_over_fwhm": 1.8571428571428572
+  },
+  {
+   "cell": "ctlw1-f",
+   "cls": "ctl",
+   "n": 130,
+   "fwhm": 14.0,
+   "sep": 18.0,
+   "step": 3.0,
+   "sep_over_fwhm": 1.2857142857142858
+  },
+  {
+   "cell": "ctlw2-a",
+   "cls": "ctl",
+   "n": 120,
+   "fwhm": 13.0,
+   "sep": 22.0,
+   "step": 1.0,
+   "sep_over_fwhm": 1.6923076923076923
+  },
+  {
+   "cell": "ctlw2-b",
+   "cls": "ctl",
+   "n": 120,
+   "fwhm": 13.0,
+   "sep": 19.0,
+   "step": 0.0,
+   "sep_over_fwhm": 1.4615384615384615
+  },
+  {
+   "cell": "ctlw2-c",
+   "cls": "ctl",
+   "n": 120,
+   "fwhm": 5.0,
+   "sep": 36.0,
+   "step": 2.0,
+   "sep_over_fwhm": 7.2
+  },
+  {
+   "cell": "ctlw2-d",
+   "cls": "ctl",
+   "n": 120,
+   "fwhm": 13.0,
+   "sep": 18.0,
+   "step": 3.0,
+   "sep_over_fwhm": 1.3846153846153846
+  }
+ ]
+}

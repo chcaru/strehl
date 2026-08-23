@@ -1,0 +1,27 @@
+bee-3            occ3-wing-thorax   occ      n=299  band: prom   31.663 / den  3.165 = z  10.09 | z*  5.78 hit  69.8% sep  27.0 w  13.0 H 0.046
+bee-3            occ3-leg-hair-1    occ      n=299  band: prom   25.164 / den  2.853 = z   9.49 | z*  5.92 hit  76.6% sep  16.0 w  10.0 H 0.037
+bee-3            occ3-leg-hair-2    occ      n=299  band: prom   27.977 / den  3.088 = z  10.40 | z*  5.65 hit  78.3% sep  23.0 w  10.0 H 0.072
+bee-3            occ3-limb-abdomen  occ      n=299  band: prom   42.023 / den  3.012 = z  15.05 | z*  5.59 hit  78.1% sep  53.0 w  12.0 H 0.090
+bee-3            occ3-antenna-head  occ      n=299  band: prom   31.068 / den  3.285 = z  12.79 | z*  5.55 hit  73.7% sep  49.0 w  10.0 H 0.038
+bee-3            occ3-antenna-eye   occ      n=299  band: prom   37.792 / den  2.132 = z  18.36 | z*  5.62 hit  85.3% sep  35.0 w   9.0 H 0.047
+bee-3            occ3-leg-card-1    occ_flat n=299  band: prom   30.984 / den  2.962 = z  11.11 | z*  5.85 hit  82.5% sep  17.0 w   8.0 H 0.034
+bee-3            occ3-claw-card     occ_flat n=299  band: prom   27.932 / den  2.775 = z  10.93 | z*  5.70 hit  78.9% sep  17.0 w  10.0 H 0.064
+bee-3            occ3-leg-card-2    occ_flat n=299  band: prom   31.018 / den  2.881 = z  11.39 | z*  5.63 hit  79.0% sep  24.0 w  13.0 H 0.097
+bee-3            ctl3-eye           ctl      n=299  band: prom    9.483 / den  1.570 = z   5.89 | z*  5.38 hit  56.9% sep  32.0 w   6.0 H 0.035
+bee-1            occ1-leg-body-1    occ      n=299  band: prom   40.428 / den  2.954 = z  14.52 | z*  5.48 hit  90.6% sep  27.0 w  11.0 H 0.056
+bee-1            occ1-leg-body-2    occ      n=299  band: prom   40.515 / den  2.477 = z  17.31 | z*  5.51 hit  89.6% sep  32.0 w   9.0 H 0.051
+bee-1            occ1-limb-body-r   occ      n=299  band: prom   67.907 / den  3.361 = z  23.08 | z*  5.70 hit  84.9% sep  40.0 w   8.0 H 0.050
+bee-1            occ1-claw-card     occ_flat n=299  band: prom   13.982 / den  4.318 = z   3.22 | z*  5.55 hit   7.5% sep 110.0 w   3.0 H 0.902
+bee-1            occ1-leg-card      occ_flat n=299  band: prom   28.539 / den  2.871 = z  10.54 | z*  5.77 hit  78.0% sep  13.0 w   9.0 H 0.026
+wrapped-text-1   ctlw1-a            ctl      n=130  band: prom   10.032 / den  1.951 = z   5.49 | z*  4.86 hit  54.8% sep  18.0 w  12.0 H 0.118
+wrapped-text-1   ctlw1-b            ctl      n=130  band: prom    9.806 / den  2.154 = z   5.05 | z*  5.04 hit  50.1% sep  17.0 w  14.0 H 0.072
+wrapped-text-1   ctlw1-c            ctl      n=130  band: prom   11.038 / den  1.792 = z   6.49 | z*  4.89 hit  59.4% sep  21.0 w  14.0 H 0.133
+wrapped-text-1   ctlw1-d            ctl      n=130  band: prom   14.903 / den  2.313 = z   6.20 | z*  5.18 hit  56.6% sep  17.0 w   9.0 H 0.032
+wrapped-text-1   ctlw1-e            ctl      n=130  band: prom    8.131 / den  1.939 = z   4.47 | z*  4.86 hit  45.6% sep  26.0 w  14.0 H 0.137
+wrapped-text-1   ctlw1-f            ctl      n=130  band: prom    9.507 / den  2.268 = z   4.66 | z*  5.10 hit  47.0% sep  18.0 w  14.0 H 0.100
+wrapped-text-2   ctlw2-a            ctl      n=120  band: prom   15.816 / den  4.512 = z   3.57 | z*  5.04 hit  30.2% sep  22.0 w  13.0 H 0.206
+wrapped-text-2   ctlw2-b            ctl      n=120  band: prom   14.418 / den  4.243 = z   3.47 | z*  5.23 hit  30.1% sep  19.0 w  13.0 H 0.120
+wrapped-text-2   ctlw2-c            ctl      n=120  band: prom   18.595 / den  6.576 = z   2.81 | z*  4.90 hit   4.9% sep  36.0 w   5.0 H 0.271
+wrapped-text-2   ctlw2-d            ctl      n=120  band: prom   17.141 / den  4.853 = z   3.58 | z*  5.00 hit  33.5% sep  18.0 w  13.0 H 0.167
+
+wrote data/12-percell.json  (25 cells)

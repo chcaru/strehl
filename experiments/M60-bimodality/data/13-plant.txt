@@ -1,0 +1,34 @@
+B1  fact-73 blindness check: box mean of |grad| across a blurred edge
+    monotone step, box entirely containing the step
+    sigma   0.0   sum|grad| across the edge  1000.000000   box121     8.264463   box5 at edge   200.0000   box5 12px off     0.0000
+    sigma   1.0   sum|grad| across the edge  1000.000000   box121     8.264463   box5 at edge   193.2178   box5 12px off    -0.0000
+    sigma   2.0   sum|grad| across the edge  1000.000000   box121     8.264463   box5 at edge   153.0815   box5 12px off     0.0000
+    sigma   3.0   sum|grad| across the edge  1000.000000   box121     8.264463   box5 at edge   116.9277   box5 12px off     0.0924
+    sigma   6.0   sum|grad| across the edge  1000.000000   box121     8.264463   box5 at edge    64.2671   box5 12px off     8.3730
+    sigma  12.0   sum|grad| across the edge  1000.000000   box121     8.264463   box5 at edge    32.9610   box5 12px off    19.3375
+    total variation across the edge varies by 6.82121e-13 over sigma 0..12  -> conserved
+    box radius 2 at the edge varies 200.0000 -> 32.9610  (ratio 0.165)
+
+P1  two-layer plant.  n=120 frames, kF=40, defocus rate swept,
+    veil zone = the 24 px of background nearest the silhouette
+    rate 0.25  D=0 null: z* (1% FPR) = 17.86  npx=2304
+      D=  0  veil hit    1.9%   far-bg hit    0.0%   median |k2-k1| when fired   25.0   z_med   6.49
+      D=  5  veil hit    9.2%   far-bg hit    0.0%   median |k2-k1| when fired   24.0   z_med   6.18
+      D= 10  veil hit   13.7%   far-bg hit    0.0%   median |k2-k1| when fired   28.0   z_med   6.41
+      D= 20  veil hit   14.5%   far-bg hit    0.0%   median |k2-k1| when fired   37.0   z_med   5.19
+      D= 40  veil hit   15.1%   far-bg hit    0.0%   median |k2-k1| when fired   43.0   z_med   5.76
+      D= 60  veil hit   16.2%   far-bg hit    0.0%   median |k2-k1| when fired   42.0   z_med   6.82
+    rate 0.50  D=0 null: z* (1% FPR) = 16.45  npx=2304
+      D=  0  veil hit    0.9%   far-bg hit    0.0%   median |k2-k1| when fired   13.0   z_med   5.98
+      D=  5  veil hit   14.1%   far-bg hit    0.0%   median |k2-k1| when fired   14.0   z_med   6.74
+      D= 10  veil hit   14.7%   far-bg hit    0.0%   median |k2-k1| when fired   19.0   z_med   6.80
+      D= 20  veil hit   16.9%   far-bg hit    0.0%   median |k2-k1| when fired   25.0   z_med   7.48
+      D= 40  veil hit   17.4%   far-bg hit    0.0%   median |k2-k1| when fired   21.0   z_med   8.51
+      D= 60  veil hit   18.2%   far-bg hit    0.0%   median |k2-k1| when fired   21.0   z_med   8.67
+
+P1b  same but with an UNTEXTURED background (fact 73's case)
+      D=  0  veil hit   16.8%   z_med   6.87
+      D= 20  veil hit   16.1%   z_med   7.09
+      D= 60  veil hit   16.2%   z_med   7.22
+
+wrote data/13-plant.json

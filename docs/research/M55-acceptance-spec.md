@@ -659,7 +659,11 @@ displacing it. **The gate is unaffected**: `split` is pinned, the KILL fires eit
 choice that destroys the measurement is exactly what B3 exists to catch. **The interpretation of
 the number is affected**, and in the same direction as fact 705's amendment: a 5.1x nuisance
 sounds like something an operator could correct for; one of its three admissible values cannot
-be corrected, only avoided. `block-4`'s null status is unmeasured — SYNTHESIS question 199.
+be corrected, only avoided. `block-4`'s null status was unmeasured when this was written.
+§7.3 measures it: on **this exact cell** block-4 is `z = +24.08`, **outside** the null, and
+contiguous is `z = +0.53`, inside it. The `max` is therefore the contiguous term — P49's
+"dominated by" was an inference and is now MEASURED — **but the non-null arm alone still kills
+B3 at 1.88x the signal step, so the gate never depended on the null term.** See P55.
 
 **3. The audit has to be on the OPERATION, not the word — and there is at least one dependant
 the word cannot find. ARGUED, and cheap to settle.**
@@ -689,6 +693,113 @@ grep on the operation — `[:n//2]`, `[:len(x)//2]`, `first half`, `array_split`
 that never names what it is doing. **A retracted premise should be audited by its operation, not
 by its vocabulary**, because the vocabulary is what the author chose and the operation is what
 ran.
+
+### 7.3 Question 199 — where a **block-4** split sits relative to the roll-null. MEASURED.
+
+Fact 881's audit left one gap. Fact 705's leverage table put a **block-4** split (`d = 0.35870`)
+between parity and contiguous (`0.99530`), and nobody had run the null on it. SYNTHESIS question
+199 asks whether "inside the null" is a property of contiguity specifically, or of block size
+along a continuum — and if the latter, parity's own distance from the null is an assumption
+that every parity-split number in the corpus rests on.
+
+**Pre-registered as PR34 in the session store before `src/e15_block4_null.py` was written.**
+Decision rule fixed in advance: **INSIDE at `|z| < 2.0`**, the threshold `e12_null.py` used
+verbatim for PR31, so the answer is *comparable* to fact 861 rather than merely similar. Three
+outcome branches were written with no preferred direction, and the mixed branch said, in advance:
+*report the split verdict and pick no side.* A second observable was registered as a falsifier of
+my own reasoning, and a reproducibility gate as a discard condition.
+
+**The instrument is the same object, not a copy.** `e15_block4_null.py` imports `e12_null` and
+calls its `spec`, `canon_from`, `null_by_roll`, `merge` and `load_cube`. `e12_null.py` is
+unmodified (rule 15). Same 48 rolls, same `minshift = 64`, same `seed = 5`, same
+`z = (C - mean(null)) / sd(null)`, same six cells, same frame ranges. Whole run 153.8 s.
+
+**Reproducibility gate — met, and by more than it required.** I required contiguous `z` to
+reproduce fact 861 within 0.05. Every parity and contiguous field is **bit-identical** to
+`out/e12_null.json`: `112MSDCF|detail` parity `C = 44723965.44992557`, `z = 34.74075687739667`;
+contiguous `C = 211332.5345102412`, `z = 0.525541716985541`. The two runs are the same
+computation, so the block-4 column reads against the other two with no comparability caveat.
+
+| stack | ROI | `z` contiguous | `z` **block-4** | `z` parity | block-4 verdict |
+|---|---|---|---|---|---|
+| `112MSDCF` | detail | +0.53 | **+24.08** | +34.74 | outside |
+| `113MSDCF` | centre | -1.25 | **+4.64** | +18.24 | outside |
+| `foam` | centre | +1.91 | **+7.58** | +20.58 | outside |
+| `112MSDCF` | flat | +0.84 | **-0.42** | +15.95 | **INSIDE null** |
+| `113MSDCF` | flat | +1.45 | **-1.60** | +13.79 | **INSIDE null** |
+| `foam` | flat | +1.28 | **+1.76** | +2.18 | **INSIDE null** |
+
+(`out/e15_block4_null.log`. Rows are grouped here by ROI class; the log prints them by stack.)
+
+**Verdict, exactly as pre-registered: SPLIT — 3 of 6 inside — and I pick no side.**
+Neither branch the question anticipated survives. "Inside the null" is **not** a property of
+contiguity specifically: block-4 reads null on three cells. It is **not** a property of block
+size alone either: block-4 reads `z = +24.08` on another. It is a joint property of **the split
+and the ROI**.
+
+**The mixture is not scattered — it partitions exactly on ROI content. Post-hoc, and here is
+its null.** The three cells inside are exactly the three flat ROIs; the three outside are exactly
+the three detail/centre ROIs, across three different stacks. Under the hypothesis that block-4's
+in/out status is independent of ROI class, the probability that the inside set is exactly the
+flat set is `1 / C(6,3) = 0.05`. One in twenty on six cells, **not** pre-registered for block-4;
+treat it as a lead, not a result. It is, however, the *same* contrast PR31 pre-registered for
+contiguous and did not find.
+
+**This does not revive fact 707 and does not reopen question 165.** Contiguous is still inside
+the null on the flat ROIs (`+0.84`, `+1.45`, `+1.28`) *and* on the detail ROIs, so §7's
+answer — the K-independence of the flat contiguous penalty is the K-independence of a null
+— stands unchanged. **PR31 also remains NOT MET as registered**, because PR31 was a statement
+about contiguous. What block-4 adds is an explanation of *why* PR31 failed: at a 31-frame offset
+both ROI classes are already on the floor, so the contrast PR31 predicted exists but is invisible
+there. **A floor hides a contrast; it does not disprove one.**
+
+**What it does to parity — reassurance, with one exception the spec itself would reject.**
+Parity is measured outside the null on **6 of 6** cells, `z` from `+2.18` to `+34.74`. For these
+cells parity's distance from the null is now a measurement and not an assumption, which is the
+reassuring half of question 199. The exception: **`foam|flat` parity is `z = +2.18`**, which
+clears PR31's line by 0.18 and **fails this spec's own B9 gate of `|z| >= 3.0`**. On one cell in
+six, a parity split on a low-texture ROI does not produce a reading B9 would accept. That is not
+a reason to distrust parity; it is a reason to require the `z` per cell, which B9 already does.
+
+**Mechanism — ARGUED, with one confound measured out.** The three splits differ in the
+rank-matched frame offset between the halves: sort each half, pair by rank, and the offset is
+**1** frame for parity, **exactly 4** for block-4 and **31** for contiguous (DERIVED from the
+index construction in `splits_for`). `|z|` falls monotonically with that offset on all three
+detail cells. A flat ROI starts with far less common power to lose — parity `z` of
+15.95 / 13.79 / 2.18 against 34.74 / 18.24 / 20.58 on detail — so it crosses into the null at
+a smaller offset. That is a statement about defocus tolerance, not about contiguity.
+**The frame-count confound is measured out, not argued away.** Block-4 gives unequal halves when
+`nf` is not a multiple of 8 (32 and 30 at `nf = 62`), and unequal halves would be an alternative
+explanation. On `113MSDCF` (`nf = 63`) parity and block-4 have **identical** half sizes — 32
+and 31 frames, from `out/e15_block4_null.json` — and read `+13.79` and `-1.60` on the same
+flat ROI. Half size cannot be the cause.
+
+**PR34's second observable — NOT MET, and the defect is in my own pre-registration.** I
+registered `|z_contiguous| <= |z_block-4| <= |z_parity|` per cell and said any violation
+falsifies the continuum framing. There is **1 violation of 6**: `112MSDCF|flat`, where
+`|z_contiguous| = 0.84` exceeds `|z_block-4| = 0.42`. I record it NOT MET and do not relax it.
+I also record why it is uninformative: **both of those readings are inside the null**, so their
+`|z|` ordering is a coin flip between two half-normal draws and the test has no power there.
+Where it had power — the three cells where block-4 is outside — the ordering held **3 of
+3**, with `z` margins of 10.7, 13.6 and 13.0 between block-4 and parity. Two of the three
+"ordered" flat cells are the same coin flip landing the other way. **An ordering test between two
+null readings is not a test**, and I should have stated in advance which comparisons it was
+powered for.
+
+**A cross-check that came free, and it repairs my own P49 in both directions.**
+`calibrate.py:143` uses this exact cell (`112MSDCF` detail, frames 6:68) and
+`spec_v1.compare(ref, test) = (ref - test) / |ref|`. From e15's measured `C` values,
+`d(contiguous) = 0.99527` and `d(block-4) = 0.35869`; fact 705/881 report **0.99530** and
+**0.35870**. **e15 reproduces fact 705's leverage table to 3e-5 from a different script and a
+different code path.** Two consequences, pulling opposite ways. First, P49's claim that the B3
+`split` leverage is *dominated by* the null arm was an inference and is now MEASURED: the `max`
+is the contiguous term. Second, and it cuts against my own hedge, **the non-null arm alone still
+kills B3**: `0.35869 / 0.19114 = 1.88x` the B3 reference signal step, against a limit of 1.00
+(DERIVED, from the calibrate log's `B3 signal step |d| = 0.19114` and e15's `C`; the two scripts'
+`ref` agree to six significant figures, `+4.47240e+07`). Fact 881 retracted the contiguous arm of
+fact 705's mechanism. **The block-4 arm survives it, is measured outside the null, and is a real
+nuisance leverage of 1.9x the signal** — so fact 705's conclusion holds on evidence fact 881
+could not see, for a different reason than fact 705 gave.
 
 ---
 
@@ -794,6 +905,35 @@ Numbers are placeholders; the orchestrator assigns them.
   halves does not cancel in a difference, so a noise floor would be biased **high**, not null.
   Unmeasured; settled by one re-run with a parity split.
 
+- **P51 (MEASURED).** A **block-4** half-stack split reads **inside** the roll-null
+  (`|z| < 2.0`) on **3 of 6** real cells and outside it on the other three: `z` = +24.08, +4.64,
+  +7.58 outside and -0.42, -1.60, +1.76 inside, against parity +2.18 to +34.74 on all six and
+  contiguous inside on all six. **"Inside the null" is a joint property of the split and the ROI
+  — not of contiguity, and not of block size alone.** Pre-registered as PR34 with a
+  no-side-picked mixed branch; the run reproduces fact 861's parity and contiguous columns
+  bit-identically, so it is comparable rather than merely similar.
+- **P52 (MEASURED, and it answers the reassuring half of question 199).** A **parity** split is
+  outside the roll-null on **6 of 6** real cells, so its distance from the null is a measurement
+  and not an assumption. On **1 of 6** — `foam|flat`, `z = +2.18` — it clears PR31's
+  line by 0.18 and **fails this spec's own B9 gate of `|z| >= 3.0`**. A parity split on a
+  low-texture ROI is not automatically safe, which is why B9 requires the `z` per cell.
+- **P53 (MEASURED, post-hoc, quoted with its null).** The three block-4 cells inside the null are
+  **exactly** the three flat ROIs, across three stacks; `p = 1/C(6,3) = 0.05` under independence.
+  This is the detail/flat contrast PR31 pre-registered for contiguous and failed to find, and it
+  explains that failure: at a 31-frame offset both ROI classes are already on the floor.
+  **It does not revive fact 707** — contiguous flat is still a null reading.
+- **P54 (MEASURED, against my own pre-registration).** PR34's ordering observable is **NOT MET**:
+  1 violation of 6, at `112MSDCF|flat`. The violating pair are **both inside the null**, where
+  `|z|` ordering is a coin flip; the test held 3 of 3 where it had power. **An ordering test
+  between two null readings has no power** and should not have been registered without a clause
+  saying which pairs it was powered for. The defect is in the pre-registration, not the data.
+- **P55 (MEASURED, and it partially un-retracts fact 705).** e15's `C` values reproduce fact 705's
+  leverage table from a different script: `d(contiguous) = 0.99527` against 0.99530, and
+  `d(block-4) = 0.35869` against 0.35870. Fact 881 correctly retracted the contiguous arm as a
+  null reading; **the block-4 arm is measured outside the null and survives**, at **1.88x** the
+  B3 reference signal step of 0.19114, so B3's `split` KILL fires on the non-null arm alone.
+  The split choice remains a real nuisance with more leverage than the signal.
+
 ## 9. Proposed disciplines
 
 - **Build the null by permuting the data, not by resampling the statistic's internals.** A roll,
@@ -846,6 +986,16 @@ Numbers are placeholders; the orchestrator assigns them.
 - **Treat an uncommitted experiment file as already lost.** `open(p, "w")` truncates before it
   validates its own arguments, so a script that fails on line 1 can still destroy its input.
   Commit before patching, or patch via a temp file and `os.replace`.
+- **An ordering test between two readings that are both inside their null is a coin flip.**
+  When pre-registering an ordering over `|z|`, state which pairs the test is powered for —
+  those where at least one member is outside its own null — and score only those. I
+  registered one without that clause and it produced a violation that means nothing.
+- **Certify a splitting rule per ROI class, never globally.** The same split reads far outside
+  the null on a detail ROI and inside it on a flat ROI of the same stack and frame range. "Use
+  parity" is an incomplete instruction without the per-cell `z` showing it worked on that cell.
+- **A floor hides a contrast; it does not disprove one.** A pre-registered contrast that fails at
+  an extreme setting of a nuisance must be re-tested at an intermediate setting before it is
+  recorded as absent. PR31's detail/flat contrast is real and was invisible at a 31-frame offset.
 
 ## 10. Proposed questions
 
@@ -862,6 +1012,16 @@ Numbers are placeholders; the orchestrator assigns them.
   thing".
 - What is the smallest number of held-out cells that can *accept* a metric at a stated
   confidence? I set 24 by argument, not by a power calculation.
+- Where between a **1-frame** and a **4-frame** rank-matched split offset does a flat ROI
+  cross into the null? Block-4 (offset 4) is inside on all three flat ROIs and parity (offset 1)
+  is outside on all three, one of them marginally. `strehl`'s own half-stack confidence estimate
+  needs that boundary, and it is one re-parameterisation of `e15_block4_null.py` with `block-2`
+  and `block-3` arms.
+- Is `foam|flat`'s parity `z = +2.18` a property of that ROI, of `foam`, or of low-texture
+  regions generally? It is the only real cell measured so far where a **parity** split fails
+  this spec's own null gate, and §4's ROI rule states that some held-out ROIs **will** land
+  on flat regions. If a flat held-out ROI cannot clear B9 even under the pinned split, B6 and
+  B9 are in tension on those cells and the spec does not say which wins.
 
 ---
 
@@ -894,6 +1054,9 @@ change must be committed before the candidate is re-run.**
 | " | `out/calibrate_v0_zeronoise.log/.json` | revision 1 disclosure (6.1) |
 | " | `out/calibrate_v1_1rep.log/.json` | revision 2 disclosure (6.1) |
 | `src/validate_heldout.py` | `out/heldout.log/.json` | substrate only; no pixel decoded |
+| `src/e13_rename_check.py` | `out/e13_rename_check.log/.json` | EXIF verification of the rename |
+| `src/e14_b6_rollup_test.py` | `out/e14_b6_rollup_test.log` | B6 property tests, incl. a planted wrong answer |
+| `src/e15_block4_null.py` | `out/e15_block4_null.log/.json` | PR34 — question 199, the block-4 null |
 
 Every number in this document is quoted verbatim from those logs. `e11_q165.py` contains a
 disclosed defect in its standard error (a division by a possibly-negative half-plane sum,

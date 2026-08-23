@@ -1,0 +1,95 @@
+==============================================================================
+POWER  -- asserted before any result is read (fact 779)
+==============================================================================
+  class ctl        cells=11   band pixels per cell: min 12000  median 12000  total 132000
+  class occ        cells= 9   band pixels per cell: min 12000  median 12000  total 108000
+  class occ_flat   cells= 5   band pixels per cell: min 12000  median 12000  total 60000
+
+  The unit of analysis is the CELL. With 9 occ vs 11 ctl cells a
+  two-sided Mann-Whitney can reach p<0.05 only if the distributions
+  barely overlap; the smallest detectable shift is roughly a full
+  separation of the two per-cell medians.
+  Within a cell, 12000 band pixels resolve a hit rate to +-0.89% (binomial,
+  ignoring spatial correlation, which makes the true interval wider).
+
+==============================================================================
+H1  does the second peak clear the calibrated noise floor?
+    z* set per cell at 1%% FPR on that cell's own noise-only null
+==============================================================================
+  bee-3            occ3-wing-thorax   occ      n=299  hit  69.8%  null  1.0%  z*  5.78  sep  27.0  |k_fg-k_bg|  17.0  k2~k_bg  16.9%
+  bee-3            occ3-leg-hair-1    occ      n=299  hit  76.6%  null  1.0%  z*  5.92  sep  16.0  |k_fg-k_bg|  17.0  k2~k_bg   7.2%
+  bee-3            occ3-leg-hair-2    occ      n=299  hit  78.3%  null  1.0%  z*  5.65  sep  23.0  |k_fg-k_bg|  17.0  k2~k_bg  11.5%
+  bee-3            occ3-limb-abdomen  occ      n=299  hit  78.1%  null  1.0%  z*  5.59  sep  53.0  |k_fg-k_bg|  71.0  k2~k_bg   5.0%
+  bee-3            occ3-antenna-head  occ      n=299  hit  73.7%  null  1.0%  z*  5.55  sep  49.0  |k_fg-k_bg|  73.0  k2~k_bg   2.8%
+  bee-3            occ3-antenna-eye   occ      n=299  hit  85.3%  null  1.0%  z*  5.62  sep  35.0  |k_fg-k_bg|   0.0  k2~k_bg  14.0%
+  bee-3            occ3-leg-card-1    occ_flat n=299  hit  82.5%  null  1.0%  z*  5.85  sep  17.0  |k_fg-k_bg|  81.0  k2~k_bg   0.1%
+  bee-3            occ3-claw-card     occ_flat n=299  hit  78.9%  null  1.0%  z*  5.70  sep  17.0  |k_fg-k_bg|  23.0  k2~k_bg  11.2%
+  bee-3            occ3-leg-card-2    occ_flat n=299  hit  79.0%  null  1.0%  z*  5.63  sep  24.0  |k_fg-k_bg|  61.0  k2~k_bg   6.9%
+  bee-3            ctl3-eye           ctl      n=299  hit  56.9%  null  1.0%  z*  5.38  sep  32.0  |k_fg-k_bg|   1.0  k2~k_bg   9.9%
+  bee-1            occ1-leg-body-1    occ      n=299  hit  90.6%  null  1.0%  z*  5.48  sep  27.0  |k_fg-k_bg|  44.0  k2~k_bg   1.0%
+  bee-1            occ1-leg-body-2    occ      n=299  hit  89.6%  null  1.0%  z*  5.51  sep  32.0  |k_fg-k_bg|  20.0  k2~k_bg   8.9%
+  bee-1            occ1-limb-body-r   occ      n=299  hit  84.9%  null  1.0%  z*  5.70  sep  40.0  |k_fg-k_bg|  19.0  k2~k_bg   6.1%
+  bee-1            occ1-claw-card     occ_flat n=299  hit   7.5%  null  1.0%  z*  5.55  sep 110.0  |k_fg-k_bg|  20.0  k2~k_bg   2.9%
+  bee-1            occ1-leg-card      occ_flat n=299  hit  78.0%  null  1.0%  z*  5.77  sep  13.0  |k_fg-k_bg|  49.0  k2~k_bg   0.2%
+  wrapped-text-1   ctlw1-a            ctl      n=130  hit  54.8%  null  1.0%  z*  4.86  sep  18.0  |k_fg-k_bg|   1.0  k2~k_bg  24.2%
+  wrapped-text-1   ctlw1-b            ctl      n=130  hit  50.1%  null  1.0%  z*  5.04  sep  17.0  |k_fg-k_bg|   3.0  k2~k_bg  17.7%
+  wrapped-text-1   ctlw1-c            ctl      n=130  hit  59.4%  null  1.0%  z*  4.89  sep  21.0  |k_fg-k_bg|   1.0  k2~k_bg  20.1%
+  wrapped-text-1   ctlw1-d            ctl      n=130  hit  56.6%  null  1.0%  z*  5.18  sep  17.0  |k_fg-k_bg|  10.0  k2~k_bg   8.5%
+  wrapped-text-1   ctlw1-e            ctl      n=130  hit  45.6%  null  1.0%  z*  4.86  sep  26.0  |k_fg-k_bg|   1.0  k2~k_bg  20.1%
+  wrapped-text-1   ctlw1-f            ctl      n=130  hit  47.0%  null  1.0%  z*  5.10  sep  18.0  |k_fg-k_bg|   3.0  k2~k_bg  23.5%
+  wrapped-text-2   ctlw2-a            ctl      n=120  hit  30.2%  null  1.0%  z*  5.04  sep  22.0  |k_fg-k_bg|   1.0  k2~k_bg  26.6%
+  wrapped-text-2   ctlw2-b            ctl      n=120  hit  30.1%  null  1.0%  z*  5.23  sep  19.0  |k_fg-k_bg|   0.0  k2~k_bg  13.9%
+  wrapped-text-2   ctlw2-c            ctl      n=120  hit   4.9%  null  1.0%  z*  4.90  sep  36.0  |k_fg-k_bg|   2.0  k2~k_bg   7.1%
+  wrapped-text-2   ctlw2-d            ctl      n=120  hit  33.5%  null  1.0%  z*  5.00  sep  18.0  |k_fg-k_bg|   3.0  k2~k_bg  21.2%
+
+  class occ        n_cells= 9  hit rate median  78.3%  range  69.8- 90.6%
+  class occ_flat   n_cells= 5  hit rate median  78.9%  range   7.5- 82.5%
+  class ctl        n_cells=11  hit rate median  47.0%  range   4.9- 59.4%
+  occ       vs ctl       : AUC 1.000  p=0.0001971
+  occ       vs occ_flat  : AUC 0.600  p=0.6064
+  occ_flat  vs ctl       : AUC 0.818  p=0.05174
+
+  n-matched: only cells with n=299
+    occ       n_cells= 9  median  78.3%
+    occ_flat  n_cells= 5  median  78.9%
+    ctl       n_cells= 1  median  56.9%
+
+==============================================================================
+H3  is the second peak AT THE BACKGROUND'S FOCUS FRAME?
+    k_bg is the median argmax of the cell's PALE INTERIOR pixels --
+    a different pixel set from the band, so this is not circular.
+==============================================================================
+  occ        |k_fg-k_bg| median  19.0   k2 within 6 frames of k_bg: median   7.2%   of k_fg:  10.4%
+  occ_flat   |k_fg-k_bg| median  49.0   k2 within 6 frames of k_bg: median   2.9%   of k_fg:  14.6%
+  ctl        |k_fg-k_bg| median   1.0   k2 within 6 frames of k_bg: median  20.1%   of k_fg:  19.5%
+  occ        permuted pairing (another cell's k_bg): median   1.6%
+  occ_flat   permuted pairing (another cell's k_bg): median   0.5%
+  ctl        permuted pairing (another cell's k_bg): median  10.8%
+
+==============================================================================
+N5  mass at the stack boundary -- the 'ran out of frames' diagnosis
+==============================================================================
+  occ        posterior mass in the outer 5% of frames: median 0.0000  p90 0.0000
+  occ_flat   posterior mass in the outer 5% of frames: median 0.0000  p90 0.0000
+  ctl        posterior mass in the outer 5% of frames: median 0.0000  p90 0.0000
+
+==============================================================================
+frame-density sweep: the same cells, thinned along the focus axis
+==============================================================================
+  occ3-wing-thorax   occ       n=299 hit  69.8% sep  27.0  n=150 hit  66.9% sep  15.0  n= 75 hit  61.0% sep   9.0  n= 38 hit  48.7% sep   7.0  n= 23 hit  35.0% sep   6.0
+  occ3-leg-hair-1    occ       n=299 hit  76.6% sep  16.0  n=150 hit  74.0% sep   9.0  n= 75 hit  62.6% sep   6.0  n= 38 hit  39.8% sep   6.0  n= 23 hit  25.1% sep   6.0
+  occ3-leg-hair-2    occ       n=299 hit  78.3% sep  23.0  n=150 hit  75.8% sep  12.0  n= 75 hit  68.3% sep   7.0  n= 38 hit  49.6% sep   6.0  n= 23 hit  36.0% sep   6.0
+  occ3-limb-abdomen  occ       n=299 hit  78.1% sep  53.0  n=150 hit  78.1% sep  27.0  n= 75 hit  76.9% sep  15.0  n= 38 hit  72.7% sep   8.0  n= 23 hit  65.2% sep   6.0
+  occ3-antenna-head  occ       n=299 hit  73.7% sep  49.0  n=150 hit  73.1% sep  25.0  n= 75 hit  72.3% sep  13.0  n= 38 hit  65.8% sep   7.0  n= 23 hit  57.1% sep   5.0
+  occ3-antenna-eye   occ       n=299 hit  85.3% sep  35.0  n=150 hit  84.3% sep  18.0  n= 75 hit  80.5% sep  11.0  n= 38 hit  69.7% sep   7.0  n= 23 hit  60.7% sep   5.0
+  occ3-leg-card-1    occ_flat  n=299 hit  82.5% sep  17.0  n=150 hit  80.8% sep   9.0  n= 75 hit  73.4% sep   5.0  n= 38 hit  53.2% sep   4.0  n= 23 hit  36.8% sep   5.0
+  occ3-claw-card     occ_flat  n=299 hit  78.9% sep  17.0  n=150 hit  76.5% sep   9.0  n= 75 hit  69.0% sep   6.0  n= 38 hit  55.4% sep   6.0  n= 23 hit  40.8% sep   6.0
+  occ3-leg-card-2    occ_flat  n=299 hit  79.0% sep  24.0  n=150 hit  77.3% sep  13.0  n= 75 hit  71.6% sep   7.0  n= 38 hit  56.2% sep   6.0  n= 23 hit  41.2% sep   6.0
+  ctl3-eye           ctl       n=299 hit  56.9% sep  32.0  n=150 hit  53.3% sep  20.0  n= 75 hit  47.6% sep  14.0  n= 38 hit  36.8% sep  10.0  n= 23 hit  27.4% sep   8.0
+  occ1-leg-body-1    occ       n=299 hit  90.6% sep  27.0  n=150 hit  88.7% sep  15.0  n= 75 hit  84.5% sep   8.0  n= 38 hit  71.4% sep   6.0  n= 23 hit  59.5% sep   4.0
+  occ1-leg-body-2    occ       n=299 hit  89.6% sep  32.0  n=150 hit  88.1% sep  17.0  n= 75 hit  82.4% sep  11.0  n= 38 hit  67.0% sep   8.0  n= 23 hit  51.8% sep   6.0
+  occ1-limb-body-r   occ       n=299 hit  84.9% sep  40.0  n=150 hit  84.8% sep  20.0  n= 75 hit  83.0% sep  11.0  n= 38 hit  76.4% sep   6.0  n= 23 hit  69.2% sep   4.0
+  occ1-claw-card     occ_flat  n=299 hit   7.5% sep 110.0  n=150 hit   7.3% sep  57.0  n= 75 hit   6.6% sep  29.0  n= 38 hit   6.1% sep  15.0  n= 23 hit   5.5% sep   9.0
+  occ1-leg-card      occ_flat  n=299 hit  78.0% sep  13.0  n=150 hit  73.5% sep   7.0  n= 75 hit  57.3% sep   4.0  n= 38 hit  26.6% sep  12.0  n= 23 hit  11.3% sep   9.0
+
+wrote data/18-classes.json

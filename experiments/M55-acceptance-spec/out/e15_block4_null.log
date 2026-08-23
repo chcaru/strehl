@@ -1,0 +1,71 @@
+==============================================================================
+M55b E15 -- question 199: is a block-4 split inside the roll-null?  (PR34)
+==============================================================================
+  Instrument imported from e12_null (fact 861).  48 rolls, minshift 64,
+  seed 5, z = (value - mean_null) / sd_null.  INSIDE at |z| < 2.0.
+
+   stack      ROI      split         C            sd(NULL)        z      verdict
+   112MSDCF   detail   parity       +4.4724e+07   1.2892e+06   +34.74   outside
+   112MSDCF   detail   block-4      +2.8682e+07   1.2015e+06   +24.08   outside
+   112MSDCF   detail   contiguous   +2.1133e+05   4.7653e+05    +0.53   INSIDE null
+
+   112MSDCF   flat     parity       +1.8912e+06   1.1946e+05   +15.95   outside
+   112MSDCF   flat     block-4      -9.6182e+04   1.4659e+05    -0.42   INSIDE null
+   112MSDCF   flat     contiguous   +5.5139e+04   6.9297e+04    +0.84   INSIDE null
+
+   113MSDCF   centre   parity       +5.3745e+07   2.9726e+06   +18.24   outside
+   113MSDCF   centre   block-4      +1.8122e+07   3.9760e+06    +4.64   outside
+   113MSDCF   centre   contiguous   -1.8641e+06   1.2944e+06    -1.25   INSIDE null
+
+   113MSDCF   flat     parity       +5.4186e+06   4.0203e+05   +13.79   outside
+   113MSDCF   flat     block-4      -8.2658e+05   4.4486e+05    -1.60   INSIDE null
+   113MSDCF   flat     contiguous   +2.5227e+05   2.0039e+05    +1.45   INSIDE null
+
+   foam       centre   parity       +2.4702e+09   1.1869e+08   +20.58   outside
+   foam       centre   block-4      +7.3839e+08   9.6873e+07    +7.58   outside
+   foam       centre   contiguous   +1.4292e+07   7.6286e+06    +1.91   INSIDE null
+
+   foam       flat     parity       +1.2561e+08   5.4348e+07    +2.18   outside
+   foam       flat     block-4      +1.0527e+08   5.7248e+07    +1.76   INSIDE null
+   foam       flat     contiguous   +4.5459e+06   3.2544e+06    +1.28   INSIDE null
+
+==============================================================================
+  REPRODUCIBILITY CHECK -- contiguous z must reproduce fact 861
+==============================================================================
+   112MSDCF   detail   contiguous z =   +0.53   fact 861   +0.53   match
+   112MSDCF   flat     contiguous z =   +0.84   fact 861   +0.84   match
+   113MSDCF   centre   contiguous z =   -1.25   fact 861   -1.25   match
+   113MSDCF   flat     contiguous z =   +1.45   fact 861   +1.45   match
+   foam       centre   contiguous z =   +1.91   fact 861   +1.91   match
+   foam       flat     contiguous z =   +1.28   fact 861   +1.28   match
+   -> run is comparable to fact 861: True
+
+==============================================================================
+  PR34 -- where does block-4 sit?
+==============================================================================
+   112MSDCF   detail   contiguous   +0.53 | block-4   +24.08 | parity    +34.74   block-4 outside
+   112MSDCF   flat     contiguous   +0.84 | block-4    -0.42 | parity    +15.95   block-4 INSIDE
+   113MSDCF   centre   contiguous   -1.25 | block-4    +4.64 | parity    +18.24   block-4 outside
+   113MSDCF   flat     contiguous   +1.45 | block-4    -1.60 | parity    +13.79   block-4 INSIDE
+   foam       centre   contiguous   +1.91 | block-4    +7.58 | parity    +20.58   block-4 outside
+   foam       flat     contiguous   +1.28 | block-4    +1.76 | parity     +2.18   block-4 INSIDE
+
+   block-4 INSIDE the null (|z| < 2.0) in 3 of 6 cells
+   block-4 passes the spec's B9 gate (|z| >= 3.0) in 3 of 6 cells
+   -> SPLIT VERDICT -- 3 of 6 cells inside.  Reported as ambiguous by pre-registration; no side is picked.  The null boundary depends on the cell, not on the split alone
+
+==============================================================================
+  PR34 second observable -- is |z| ordered contiguous <= block-4 <= parity?
+==============================================================================
+   112MSDCF   detail   |z|    0.53 <=    24.08 <=     34.74   ordered
+   112MSDCF   flat     |z|    0.84 <=     0.42 <=     15.95   VIOLATION
+   113MSDCF   centre   |z|    1.25 <=     4.64 <=     18.24   ordered
+   113MSDCF   flat     |z|    1.45 <=     1.60 <=     13.79   ordered
+   foam       centre   |z|    1.91 <=     7.58 <=     20.58   ordered
+   foam       flat     |z|    1.28 <=     1.76 <=      2.18   ordered
+
+   ordering violations: 1 of 6  ['112MSDCF|flat']
+   -> focus offset between paired halves is NOT the sole ordering variable;
+      the continuum framing is wrong regardless of the in/out verdict
+
+   wrote out/e15_block4_null.json  (153.8s)

@@ -1,0 +1,43 @@
+==============================================================================
+denominator check: predicted sigma_f vs observed frame-to-frame scatter
+  sigma_emp is an UPPER bound (curvature inflates it, nothing deflates it)
+==============================================================================
+  bee-3            occ3-wing-thorax   occ       pred   2.292 DN  emp(upper)   2.147 DN  ratio  0.94 | null-cube ratio 1.01
+  bee-3            occ3-leg-hair-1    occ       pred   1.893 DN  emp(upper)   1.844 DN  ratio  0.97 | null-cube ratio 1.02
+  bee-3            occ3-leg-hair-2    occ       pred   2.219 DN  emp(upper)   2.077 DN  ratio  0.95 | null-cube ratio 0.99
+  bee-3            occ3-limb-abdomen  occ       pred   2.093 DN  emp(upper)   1.998 DN  ratio  0.95 | null-cube ratio 0.98
+  bee-3            occ3-antenna-head  occ       pred   2.232 DN  emp(upper)   2.043 DN  ratio  0.93 | null-cube ratio 0.98
+  bee-3            occ3-antenna-eye   occ       pred   1.607 DN  emp(upper)   1.571 DN  ratio  0.96 | null-cube ratio 0.98
+  bee-3            occ3-leg-card-1    occ_flat  pred   1.966 DN  emp(upper)   1.903 DN  ratio  0.97 | null-cube ratio 1.02
+  bee-3            occ3-claw-card     occ_flat  pred   1.951 DN  emp(upper)   1.887 DN  ratio  0.95 | null-cube ratio 1.01
+  bee-3            occ3-leg-card-2    occ_flat  pred   2.024 DN  emp(upper)   1.885 DN  ratio  0.95 | null-cube ratio 0.98
+  bee-3            ctl3-eye           ctl       pred   1.001 DN  emp(upper)   0.904 DN  ratio  0.90 | null-cube ratio 0.96
+  bee-1            occ1-leg-body-1    occ       pred   1.881 DN  emp(upper)   1.843 DN  ratio  0.98 | null-cube ratio 0.99
+  bee-1            occ1-leg-body-2    occ       pred   1.876 DN  emp(upper)   1.797 DN  ratio  0.97 | null-cube ratio 0.97
+  bee-1            occ1-limb-body-r   occ       pred   2.394 DN  emp(upper)   2.274 DN  ratio  0.96 | null-cube ratio 1.00
+  bee-1            occ1-claw-card     occ_flat  pred   2.969 DN  emp(upper)   2.606 DN  ratio  0.89 | null-cube ratio 0.98
+  bee-1            occ1-leg-card      occ_flat  pred   2.123 DN  emp(upper)   1.974 DN  ratio  0.93 | null-cube ratio 1.00
+  wrapped-text-1   ctlw1-a            ctl       pred   1.289 DN  emp(upper)   1.305 DN  ratio  1.00 | null-cube ratio 0.96
+  wrapped-text-1   ctlw1-b            ctl       pred   1.395 DN  emp(upper)   1.408 DN  ratio  1.01 | null-cube ratio 0.97
+  wrapped-text-1   ctlw1-c            ctl       pred   1.224 DN  emp(upper)   1.228 DN  ratio  1.00 | null-cube ratio 0.96
+  wrapped-text-1   ctlw1-d            ctl       pred   1.495 DN  emp(upper)   1.540 DN  ratio  1.01 | null-cube ratio 1.01
+  wrapped-text-1   ctlw1-e            ctl       pred   1.265 DN  emp(upper)   1.267 DN  ratio  0.99 | null-cube ratio 0.96
+  wrapped-text-1   ctlw1-f            ctl       pred   1.424 DN  emp(upper)   1.442 DN  ratio  1.01 | null-cube ratio 0.99
+  wrapped-text-2   ctlw2-a            ctl       pred   2.671 DN  emp(upper)   2.513 DN  ratio  0.94 | null-cube ratio 0.98
+  wrapped-text-2   ctlw2-b            ctl       pred   2.733 DN  emp(upper)   2.706 DN  ratio  0.97 | null-cube ratio 1.00
+  wrapped-text-2   ctlw2-c            ctl       pred   4.581 DN  emp(upper)   3.877 DN  ratio  0.87 | null-cube ratio 0.99
+  wrapped-text-2   ctlw2-d            ctl       pred   3.045 DN  emp(upper)   2.952 DN  ratio  0.96 | null-cube ratio 1.00
+
+  occ       n= 9  real-frame ratio median  0.96 (range  0.93- 0.98)   null-cube ratio median  0.99
+  occ_flat  n= 5  real-frame ratio median  0.95 (range  0.89- 0.97)   null-cube ratio median  1.00
+  ctl       n=11  real-frame ratio median  0.99 (range  0.87- 1.01)   null-cube ratio median  0.98
+
+  ALL       n=25  real-frame ratio median  0.96 (range  0.87- 1.01)
+  ALL       n=25  null-cube  ratio median  0.99 (range  0.96- 1.02)
+
+  Reading: a ratio near 1 on the null cube says the MC estimator and
+  the sd it estimates agree.  A ratio above 1 on real frames is the
+  curvature of the real through-focus curve, not a model error, and
+  it bounds the model error from above.
+
+wrote data/22-sigmacheck.json
