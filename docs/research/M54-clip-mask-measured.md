@@ -582,3 +582,59 @@ compile error at `flat_ratio.rs:621`. That file is M53's and was uncommitted-dir
 throughout; it has zero references to `Estimator`, `merge::` or anything I
 changed, and it self-resolved within two minutes. Reported as observed
 cross-agent state, not touched. **Rule 33 earned its place again here.**
+
+## 11. Filter status of the corpus (added 2026-08-23, after this report was folded)
+
+A circular polariser (Breakthrough X4 CPL 67 mm, in front of the 100 mm GM) was
+disclosed after this report was written. **The orchestrator initially broadcast it
+as present for every frame in the corpus; that universal quantifier was
+withdrawn.** EXIF capture dates then resolved it into a date rule, confirmed by the
+owner. The rule below is the orchestrator's and the owner's, from EXIF I did not
+read myself; I record it only for what it does to this report's claims.
+
+- **CPL OFF (bare lens), up to 17 May:** `112MSDCF`, `113MSDCF` (7 May),
+  `119MSDCF` (9 May), `109MSDCF` (17 May)
+- **CPL ON, 25 May onward:** `coffee-bubbles`; `foam` probable, not confirmed
+- **`coffee-bean` (10 May): UNKNOWN.** On the off side of the boundary, but the
+  owner cannot recall it.
+
+**Nothing here is retracted or hedged as a result, and one thing is strengthened.**
+
+1. **No claim in this report ever rested on the filter.** It contains no reference
+   to a polariser, and its two uses of "specular" describe what was found in the
+   data rather than inferred from the optics.
+2. **The control group is bare-lens, which strengthens the design.** The asymmetry
+   this milestone was built on -- clipping present on `coffee-bean` and
+   `coffee-bubbles`, absent on `109`/`112`/`113`/`119MSDCF` -- has all four
+   never-clipping controls on the OFF side. Those zeros are not filter-suppressed
+   floors; they are bare-lens zeros. Had the controls been CPL-ON the design would
+   have been weak, because a suppressed specular population and a genuinely absent
+   one are indistinguishable in a count.
+3. **The headline is bare-lens and stands unqualified.** The **13.05x seek** at
+   point saturation (section 3, `113MSDCF`, ~2.7 pinned samples of 841) -- the
+   number that made AGENTS rule 4's unconditional "the argmax flees clipped
+   frames" a corpus error (fact 683) -- was measured on a 7 May stack with no
+   filter. So was this report's finding that `113MSDCF` is not clipping-free
+   (fact 202 as amended), which is exactly what a bare lens should be expected to
+   produce.
+4. **`coffee-bean`'s unknown status does not reach the claim it carries.** It
+   supplies the opposite pole, **0.0101x flees** at 1.00000 pinned support. That
+   statistic is conditioned on a *measured* pinning fraction -- all 841 samples of
+   the support pinned, read from the data -- not on any assumption about how the
+   scene came to saturate. A filter changes the exposure needed to reach full
+   saturation; it does not change that the support was measured fully saturated.
+   The confound is real and unresolvable, and it stops short of this number.
+5. **`coffee-bubbles` is CPL ON.** Any statement here about its highlight
+   population is a filtered measurement and should be scoped to it by name rather
+   than generalised to the corpus.
+
+**My own error, recorded because it is this discipline's own failure mode.** Told
+the filter was universal, I proposed amending this report's conclusion to "not
+worth fixing *on a CPL-filtered corpus*", reasoning that suppressing speculars can
+only lower the clipped population, so every zero here was a floor. The reasoning is
+sound and the premise was false: **all four zero-clipping stacks are bare-lens.**
+The hedge would have weakened a correct negative result by crediting its strongest
+evidence to an instrument that was not present. It never reached this file -- I
+gated it on the orchestrator's approval and the retraction arrived first -- but the
+shape is worth keeping: **a direction argument that is valid in form makes its
+premise feel checked.** That is discipline 409.
