@@ -1,0 +1,14 @@
+M60b/30 -- freezing M25's control plant (shape='discs')
+Constants copied from 17-multiscale-occluder.py; nothing varied.
+
+real: ISO 50  g=0.22894 DN/e-  mean 1528 DN  sd 616 DN  beta 3.454  peak frame 5
+PSD shaping mismatch by iteration: 1.2390, 0.4299, 0.2726, 0.2419
+defocus: coc 1.0 px/frame, fg index 4, bg index 16 -> 12 px blur separation
+
+occluder: coverage 31.0%, mean feature ~218.0 latent px (109.0 sensor px)
+render 135s -> frames (21, 1024, 1024) float32, truth (1024, 1024)
+frame DN: min 15 max 5265 mean 1689
+alpha_front: 32.5% >0.02, 1.0% partial
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality\data\30-m25-plant.npz  (41.6 MB)
+total 152s

@@ -1,12 +1,21 @@
-# M60 — Is the through-focus response at occluding edges bimodal?
+# M60 — Occlusion bimodality: the corpus, and the instrument that measured it
 
-**Status: MEASURED. The reviewer's premise does not survive as the foundation of a
-detector.**
+**Status: MEASURED. Two findings. The second reopens a question the corpus had
+closed.**
 
 Milestone type: measurement. **No Rust was written.** `crates/**`, `SYNTHESIS.md`,
 `AGENTS.md`, `OWNER-QUESTIONS.md` and `docs/captures-needed.md` were read-only for
 this milestone. Everything M60 produced lives in
 `experiments/M60-bimodality/**` and in this file.
+
+**This report has two parts, because the commission changed mid-milestone.**
+M60 was originally asked whether the through-focus response at occluding edges is
+bimodal. That is **Part I** (§1–§16), and it stands. The brief was then corrected:
+`M21-occlusion-bimodality-measured.md` had already asked that question, and M25
+had built a plant that failed to reproduce it at **0.23x — the wrong sign**
+(fact 568). The corrected question is better and harder: **is the wrong sign the
+phenomenon, or the instrument?** That is **Part II** (§17–§22), pre-registered
+separately in `PREREGISTRATION-B.md` and committed before it was run.
 
 Every claim below is labelled:
 
@@ -20,7 +29,9 @@ Every claim below is labelled:
 
 ## 0. Verdict, first
 
-**The load-bearing premise fails, and it fails at a specific step.**
+### 0.1 Part I — the corpus
+
+**The reviewer's load-bearing premise fails, and it fails at a specific step.**
 
 The reviewer's chain is:
 
@@ -72,22 +83,111 @@ Downstream of that, the reviewer's other three unifications:
   soft version is exactly 0.0000 at the noise temperature in every class
   (**MEASURED**).
 
-**What survives.** Within roughly 8 px of the silhouette, the plant *does*
+**What survives Part I.** Within roughly 8 px of the silhouette, the plant *does*
 recover the true background peak 25–44% of the time (**MEASURED**), and on the
 occlusion class the separation is comparable in median to the independently
 measured depth step (sep/step median 1.15, n = 8) (**MEASURED**). A narrowly
 scoped near-edge estimator is not excluded by this milestone. It is a different
 and much smaller claim than the one under test.
 
+### 0.2 Part II — the instrument
+
+**Fact 568's headline is falsified. Fact 603's headline is an instrument
+artifact. Neither conclusion required a new plant — only a different statistic on
+the identical frames.**
+
+Facts 150, 151, 152, 568 and 603 all rest on **one function**, `multipeak`,
+defined once in M21 and copied **verbatim** into three M25 scripts (M25's own
+comment says so). Its peak test is `> both neighbours + 0.04 × (that pixel's own
+through-focus range)`. Four published probes attacked fact 568's wrong sign, and
+**every one of them varied the plant. None varied the instrument** (**MEASURED**
+from the source; the probe list is facts 568 and 603).
+
+On M25's control plant, re-rendered from M25's own simulator at M25's own config
+and then held **byte-fixed** while only the statistic changed:
+
+| statistic | truth-gated veiling enrichment | placebo |
+| --- | ---: | ---: |
+| **S0** — M21's `multipeak`, verbatim | **0.19×** (reproduces fact 603's control exactly) | 1.05–1.07 ✓ |
+| **S1** — same function, noise-thresholded | 0.70× / 0.82× — **disqualified**, placebo 1.25–1.26 | ✗ |
+| **S2** — M60's prominence-over-noise | **1.21–1.23×**, the right sign | 1.05–1.07 ✓ |
+
+1. **The mechanism is measured, not argued.** S0's denominator — the pixel's own
+   curve range — is **3.94× larger** at truth-gated veiled pixels than at smooth
+   ones, so S0 demands a ~4× higher bar exactly where occlusion lives
+   (**MEASURED**). The *signal* is the same in both populations: median
+   prominence 3.042 DN veiled vs 2.803 DN smooth, measured on the very cube S0
+   operates on. Only the bar differs.
+2. **Fact 568's claim that "the simulator does not contain the effect it was
+   built to test" is FALSIFIED.** On the identical rendered frames a
+   noise-calibrated statistic reads 1.21–1.23× — the right sign (**MEASURED**).
+3. **Fact 603's "largest single effect ever measured on this statistic, 4.5×" is
+   substantially denominator relief.** Multi-scale occluder geometry moves S0
+   from 0.19× to **0.86×** — reproduced here exactly — while on the same frames
+   S2 moves 1.23× → 1.11×, i.e. **not at all**, and the denominator inflation
+   collapses from 3.94× to 1.26× (**MEASURED**). The geometry did not add
+   veiling. It lowered the bar.
+4. **A second, independent defect compounds the first.** S0 tests the largest
+   *single-frame step* into a peak, not the peak's prominence, and the step is
+   **9.2× smaller** than the prominence at these peak widths (~5.1 frames of
+   rise). Applying S0's own `0.04 × range` bar to the prominence instead of the
+   step — changing nothing else — moves 0.19× → **0.71×** (**MEASURED**).
+5. **The statistic's sensitivity depends on stack depth.** On M60's 299-frame
+   stacks, decimating to 23 frames raises S0's rate **2.8×** (17.2% → 48.5%,
+   median over 10 cells) (**MEASURED**). Rates are not comparable across stacks
+   of different depth, which is what facts 150–151 compare.
+
+**But Part II does not rescue the reviewer.** The mandatory positive control
+(T7) asked where S2's flagged second peak actually lands in a plant whose
+background focus index is **known to be 16**. Answer: within ±2 frames of it
+**47.8%** of the time, against a 26.3% uniform chance rate (**1.82×**) and 30.0%
+in the no-background control population (**1.59×**) — **INDETERMINATE** against
+the pre-registered bar of 2× on both. The `k2` histogram peaks not at the
+background index but at the **stack boundary** (**MEASURED**). So the plant's
+veiling is *partially* visible to a well-normalised detector: it knows which half
+of the stack the background is in, and not which frame.
+
+### 0.3 What the two parts say together
+
+The owner's reframing put it as a disjunction — *either the instrument is broken,
+or the phenomenon is not there.* **Measured answer: both, and they are not
+independent.**
+
+* The instrument **is** broken, in two named and separately measured ways, and
+  that is why fact 568 got the wrong sign (§17–§20).
+* The phenomenon **is** weak. Even in a plant built to contain veiling, with a
+  12 px blur separation and rendered truth, a correctly normalised detector reads
+  only 1.11–1.23× and cannot localise the background's focus frame (§21).
+* And in the real corpus, Part I shows the bimodality that *is* abundant is
+  dominated by a single-depth side-lobe, not by veiling.
+
 **What this does not license.** M60 does **not** show that veiled-background
 peaks do not exist. It shows that firing of a prominence-over-noise bimodality
-statistic is not evidence of one, on this rig, in this corpus, at these labels.
-The strongest limitation is stated in §12 and it is real: only **2 of 9**
-occlusion cells have a background with genuinely focusable texture.
+statistic is not evidence of one, on this rig, in this corpus, at these labels;
+and that the corpus's negative plant result was measured with an instrument that
+cannot see the thing it was pointed at. The strongest limitation is stated in §12
+and it is real: only **2 of 9** occlusion cells have a background with genuinely
+focusable texture.
+
+**One correction to the corrected brief.** `M6-residual-halo-measured.md` was
+named as directly adjacent. It is not: it contains **zero** occurrences of
+"occlusion", "veil", "bimodal" or "depth discontinuity" (**MEASURED**, grep). Its
+"halo" is the focus-breathing rectangle expansion — a gather-area and
+buffer-sizing quantity, per its own §2.2 ("a halo is a rectangle expansion"). The
+two uses of the word name different things and M6 has no bearing on this question.
 
 ---
 
+# PART I — the corpus
+
+
 ## 1. Why M60 exists when M21 already measured this
+
+> **Read with §17.** Part I was designed from M21's *stated* gaps. Part II, written
+> after the brief was corrected and M21 was re-read against its own source, finds
+> a deeper reason: the statistic underlying M21's answer **cannot fire at edges**,
+> which is measured in §19–§20. Section 1 is preserved as written because it is
+> what the Part I design was actually based on.
 
 M21 (`docs/research/M21-occlusion-bimodality-measured.md`, facts 150–152)
 measured a version of this question and folded a result. M60 was commissioned
@@ -1041,8 +1141,14 @@ number in this report.
 3. **Test the flat distance slope.** §8.8 is the one measurement that favours the
    reviewer and M60 cannot resolve it. It needs cells with clean, straight,
    well-separated silhouettes so that distance-to-edge is a clean regressor.
-4. **Capture the missing data.** See §14 — this corpus does not contain the case
-   the hypothesis is actually about.
+4. **Capture the missing data.** See §15 item 4 — this corpus does not contain the
+   case the hypothesis is actually about.
+5. **Read §17–§24 first.** Part II measures that the corpus's *prior* answer to
+   this question was produced by an instrument that cannot fire at edges. That
+   does not change §11's verdict — Part II's own plant reads 1.11–1.23× with a
+   working statistic, and 0.87× on M60's real occlusion cells (§23.1) — but it
+   changes which existing facts a future milestone should trust as its starting
+   point.
 
 ---
 
@@ -1089,6 +1195,10 @@ orchestrator at fold time.** Before folding, match the first ~70 characters of
 each against the whole of `§4` and require zero matches (rule 28, rule 25);
 several of these are close to M21's facts 150–152 in subject and must be checked
 for content collision, not number collision.
+
+**Part II's proposed facts continue this sequence as `P17…P24` in §25, and
+several of them *contradict* facts 150–152, 568 and 603 rather than extending
+them.** Fold the two tables together.
 
 | # | Proposed fact | Label | Source |
 | --- | --- | --- | --- |
@@ -1225,3 +1335,586 @@ back out of `701dc11` and asserts it is byte-identical to the final working-tree
 report (71 294 characters, exit 0), per discipline 351. History was deliberately
 **not** rewritten to unmix it, because another agent's work is in the same
 commit.
+
+---
+
+# PART II — the instrument
+
+## 17. Why there is a Part II, and what reading the three named reports found
+
+The brief was corrected mid-milestone. Three reports that the original commission
+had not named were named: `M21-occlusion-bimodality-measured.md`,
+`M32-posterior-confidence-measured.md`, and `M6-residual-halo-measured.md`. The
+question was reframed from *measure the bimodality* to:
+
+> **Is the occlusion halo in this corpus actually the two-layer veiling
+> phenomenon the reviewer describes, or is it something else that has been called
+> veiling?** M21's instrument returned the wrong sign. Either the instrument is
+> broken, or the phenomenon is not there, and the corpus has eliminated the
+> obvious explanation for the first without establishing the second.
+
+Reading the three, in full, before designing anything, produced four findings
+that changed the design. All four are **MEASURED** by reading committed sources,
+not argued.
+
+### 17.1 M21 used no plants at all
+
+M21's §1 says "Three real stacks, no plants." **The plant in fact 568 is M25's,
+not M21's** — `experiments/m25-simulator`. The corrected brief's instruction "do
+not reuse M21's plant" therefore had no referent, and the instruction that
+mattered instead was: *do not reuse the statistic*, because that **is** shared.
+
+### 17.2 One function carries facts 150, 151, 152, 568 and 603
+
+`multipeak()` is defined once, in
+`experiments/m21-occlusion-bimodality/src/03-permutation-placebo.py`, and copied
+**verbatim** into three M25 scripts — M25's own comment in
+`src/17-multiscale-occluder.py` says "copied verbatim from its committed script."
+Reproduced here exactly as it ships:
+
+```python
+def multipeak(V, thr=0.04):
+    Vs = np.copy(V)
+    Vs[1:-1] = (V[:-2] + 2 * V[1:-1] + V[2:]) / 4.0
+    mx = Vs.max(0); mn = Vs.min(0)
+    rng = np.maximum(mx - mn, 1e-6)
+    ispk = np.zeros_like(Vs, bool)
+    ispk[1:-1] = ((Vs[1:-1] > Vs[:-2] + thr * rng) &
+                  (Vs[1:-1] > Vs[2:]  + thr * rng))
+    return ispk.sum(0) >= 2, (mx - mn) / np.maximum(mx, 1e-6), np.argmax(Vs, 0)
+```
+
+Three properties of it were never varied by any of the five facts that rest on
+it, and each became a Part II hypothesis:
+
+* **H-A.** The peak bar is `0.04 × (that pixel's own through-focus range)`. At an
+  occluding boundary the range is set by the *foreground edge coming into focus*,
+  which is the largest swing in the scene. **The bar is raised precisely where
+  occlusion lives.** This is the shape discipline 338 warns about — a separation
+  score whose denominator is itself driven by the condition under test.
+* **H-B.** The test compares **immediate frame neighbours only**. Sensitivity
+  therefore depends on focus step and frame density, so rates are not comparable
+  across stacks of different depth.
+* **H-C.** The population gate `c13 = (max − min)/max > 0.10` is also relative,
+  so it selects on the same contrast H-A penalises.
+
+### 17.3 M21 measured H-A's consequence and read it as reassurance
+
+M21's §5 reports its statistic at **0.00×** when binned on intensity gradient
+alone — "0.0% at the top decile of intensity gradient vs 9.2% in flat regions" —
+and concludes "the effect cannot be an intensity-edge artifact in disguise."
+
+An occluding edge **is** an intensity edge; that is fact 73's whole point, and it
+is the premise of Part I. A statistic reading **exactly 0.0%** in the top decile
+of intensity gradient is not thereby proven free of edge artifacts. It is
+demonstrated **blind at edges** (**ARGUED**, from M21 §5; the underlying
+blindness is **MEASURED** in §19–§20 below).
+
+### 17.4 M25's oracle fixed the label, not the measurement
+
+M25 did the right thing about *ground truth*: it gated populations on rendered
+truth (`alpha_front`, `visible_focus`) instead of on inferred depth steps. That
+satisfies discipline 358 on the quantity that **labels** the test. But the
+quantity **under** test is still `multipeak`. So fact 568's conclusion —
+"a perfect detector scores near zero here" — holds only if `multipeak` faithfully
+reports bimodality, and that had never been checked.
+
+Four published probes then attacked fact 568's wrong sign: defocus rate, luminance
+step, gain, and multi-scale occluder geometry (facts 568, 603). **Every one of
+them varied the plant. None varied the instrument.** That gap is Part II's entire
+opportunity.
+
+### 17.5 M6 is a name collision
+
+`M6-residual-halo-measured.md` contains **zero** occurrences of "occlusion",
+"veil", "bimodal" or "depth discontinuity" (**MEASURED**, `Select-String` over
+the file). Its "halo" is the focus-breathing rectangle expansion — its §2.2 reads
+"a halo is a rectangle expansion" — a gather-area and buffer-sizing quantity for
+the warp stage. The word is shared; the phenomenon is not. **M6 has no bearing on
+this question**, and this is recorded because the corrected brief named it as
+directly adjacent and a future reader would otherwise chase it.
+
+### 17.6 Why a second pass was warranted rather than a stop
+
+The corrected brief offered an explicit stopping rule: if the question is settled,
+say so and stop. It is not settled, and §17.2–§17.4 say why in one line: **the
+corpus has tested the plant four times and the instrument zero times.** Open
+question 138 asks for "a plant that passes fact 568's bar **or a different,
+truth-bearing route entirely**." Swapping the statistic on frames that are held
+byte-fixed is exactly that second route, and it is cheap.
+
+---
+
+## 18. Pre-registration B
+
+**Frozen as `experiments/M60-bimodality/PREREGISTRATION-B.md` at commit
+`b28b2e3`, before any Part II result existed.** Two addenda were registered later
+and each was committed **before its own run**: §7b (T6) at `a2d8756`, §7c (T7) at
+`20f7e23`. The ordering is checkable in the log and is the point.
+
+### 18.1 Hypotheses
+
+* **H-A** — the contrast-dependent bar suppresses detection where the curve range
+  is large, i.e. at occluding boundaries.
+* **H-B** — the neighbour-only test suppresses detection of peaks broader than
+  one frame.
+* **H-C** — the relative population gate co-selects with H-A.
+
+### 18.2 The three statistics, all run on identical frames
+
+| | definition | what it changes vs S0 |
+| --- | --- | --- |
+| **S0** | M21's `multipeak`, copied verbatim | — (the control) |
+| **S1** | same function, bar replaced by `3σ` from the injected noise model | H-A only |
+| **S2** | M60's Part I statistic: peak prominence over the interior dip, thresholded against the model-predicted σ of the focus response | H-A and H-B |
+
+S1 is the minimal edit — one line — so that any difference between S0 and S1 is
+attributable to the bar alone.
+
+### 18.3 Registered decision rules
+
+| outcome | rule |
+| --- | --- |
+| **INSTRUMENT** | S0 < 1.0 and max(S1, S2) ≥ 1.5, placebo in band |
+| **PARTIAL** | S0 < 1.0 and 1.0 ≤ max(S1, S2) < 1.5 |
+| **PHENOMENON** | all three < 1.0 |
+| **H-A supported** | T2 denominator ratio ≥ 1.5 |
+| any statistic **disqualified** | its permutation placebo outside 0.9–1.15 |
+
+### 18.4 Power, asserted before reading any result
+
+Registered floors: ≥ 500 px per class on M25 plants, ≥ 5 000 px on M60 cells. The
+frozen plant delivers **veiled 10 133 px** and **smooth 994 940 px**
+(**MEASURED**, `data/31-swap.txt`), so at a 10% base rate the standard error on
+the veiled rate is 0.30 pp and a 1.5× enrichment is **≈ 12 sd**. Both floors
+cleared by ≥ 20×. This is fact 779's discipline applied first, not last.
+
+### 18.5 What Part II's discriminators cannot separate
+
+* A statistic swap on **one** plant cannot separate "the instrument is blind" from
+  "the instrument is blind *on plants of this construction*." T6 partly addresses
+  this by re-running on a second geometry.
+* The plant's veiling is rendered by M25's own compositor. **If that compositor's
+  two-layer model is itself wrong, every Part II number inherits the error.** No
+  measurement here can detect that; it would need real data with known depths,
+  which §15 item 4 requests and the corpus does not contain.
+* Enrichment ratios say nothing about *usable* detection. 1.23× is the right sign
+  and a useless detector; §21 is where that matters.
+
+---
+
+## 19. T1, T2, T3 — swapping the statistic on frames held byte-fixed
+
+**Method.** `src/30-render-m25-plant.py` re-renders M25's `discs` control from
+M25's own simulator at M25's own configuration and **freezes the result** to
+`data/30-m25-plant.npz` (41.6 MB) together with the rendered truth arrays. Every
+statistic below reads those identical arrays. The reproduction is faithful: the
+rendered feature size is **218.0 latent px**, and fact 603 records M25's control
+as "218 latent-px discs" (**MEASURED**, `data/30-render.txt`).
+
+### 19.1 T1 — the swap (`data/31-swap.txt`)
+
+| statistic | veiled % | smooth % | **enrichment** | placebo | base rate |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| **S0** M21 verbatim | 1.97 | 10.61 | **0.19×** | 1.05 ✓ | 10.3% |
+| **S1** noise-thresholded | 4.92 | 7.06 | 0.70× | **1.25 ✗** | 7.0% |
+| **S2** prominence-over-noise | 43.10 | 35.66 | **1.21×** | 1.05 ✓ | 35.9% |
+
+**S0 = 0.19× reproduces fact 603's single-scale control value exactly**, which is
+the check that the reproduction is of M25's measurement and not of something
+adjacent to it (**MEASURED**).
+
+Per rule 39, S2's numerator and denominator separately: prominence **7.600 DN**
+veiled vs **6.594 DN** smooth; denominator **2.477** vs **2.357 DN**. The
+enrichment is carried by the numerator, and the denominator is nearly flat across
+the two populations — which is precisely what S0's is not.
+
+Registered verdict: **PARTIAL** (S0 < 1.0, and 1.0 ≤ max(S1, S2) < 1.5).
+
+### 19.2 T2 — the mechanism, measured directly (`data/31-swap.txt`)
+
+| | median curve range `rng` | S0's implied bar |
+| --- | ---: | ---: |
+| truth-gated **veiled** pixels | **108.412 DN** | 4.336 DN |
+| **smooth** pixels | **27.503 DN** | 1.100 DN |
+| ratio | **3.942×** | 3.942× |
+
+For scale, S1's absolute noise-derived bar is **1.067 DN** — i.e. S0 demands
+**4.06× more** than the noise floor justifies at veiled pixels, and almost exactly
+the noise floor at smooth ones. The registered rule was "≥ 1.5 ⇒ H-A supported."
+**H-A is supported at 3.94×** (**MEASURED**).
+
+### 19.3 T3 — lowering the bar uniformly does not fix it (`data/31-swap.txt`)
+
+| `thr` | veiled % | smooth % | enrichment |
+| ---: | ---: | ---: | ---: |
+| 0.040 (as shipped) | 1.97 | 10.61 | 0.19 |
+| 0.020 | 6.91 | 27.16 | 0.25 |
+| 0.010 | 13.79 | 43.52 | 0.32 |
+| 0.005 | 22.05 | 55.29 | 0.40 |
+| 0.002 | 31.30 | 64.28 | 0.49 |
+| 0.000 | 43.53 | 71.39 | 0.61 |
+
+The registered saturation guard (base rate > 90%) never fired; the highest base
+rate reached is 70.4%. Enrichment climbs monotonically and **never crosses 1.0**.
+
+**This is the sharpest single statement of the defect** (**MEASURED**): it is not
+the *level* of S0's threshold that inverts the sign, it is the threshold's
+**contrast-dependence**. Turning the bar down uniformly cannot repair a bar that
+scales with the signal.
+
+### 19.4 S1's disqualification is structural, and it matters (`data/32-swap2.txt`)
+
+S1 failed its placebo at 1.25. `src/32-swap2.py` repaired the two candidate
+implementation causes — per-frame σ, and a threshold that permutes together with
+its frames — and the placebo still reads **1.26** at enrichment 0.82×.
+
+The cause is structural (**DERIVED**, confirmed by the repair failing): frame
+permutation preserves a curve's *range* but destroys its smoothness, manufacturing
+large frame-to-frame jumps at exactly the high-swing pixels. A statistic with an
+**absolute** bar counts those jumps; a statistic whose bar scales with range does
+not. So M25's frame-permutation placebo — the corpus's validation gate for this
+family — **structurally rejects the noise-calibrated fix that M21's own §7
+prescribes.** S2 passes it (1.05–1.07) because prominence-over-dip is
+permutation-robust in a way a neighbour-step test is not.
+
+That is worth recording on its own: **a validation gate that only a
+contrast-relative statistic can pass will keep selecting contrast-relative
+statistics**, which is how a defect survives five facts and four probes.
+
+---
+
+## 20. The mechanism, decomposed (`data/35-mechanism.txt`)
+
+T2 leaves an apparent contradiction. S0's bar at veiled pixels is 4.336 DN, and
+S2 measures 7.600 DN of prominence there — *above* the bar. So why does S0 flag
+only 1.97%?
+
+`src/35-mechanism.py` measures both quantities on the same pixels, on the
+`[1,2,1]`-smoothed cube that S0 itself operates on:
+
+| population | prominence | S0's step | S0's bar | step/bar | prom/bar |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| **veiled** | 3.042 DN | 0.331 DN | 4.336 DN | **0.076** | 0.702 |
+| **smooth** | 2.803 DN | 0.355 DN | 1.100 DN | **0.323** | 2.548 |
+
+Three things are measured here, and together they are the whole defect:
+
+1. **The signal is the same in both populations.** 3.042 vs 2.803 DN of
+   prominence. Whatever separates the two rates, it is not the amount of
+   structure in the curve.
+2. **The bar is 3.94× higher at veiled pixels**, which alone costs a factor of
+   **3.63** in `prom/bar` — H-A.
+3. **S0 does not test the prominence.** It tests the largest single-frame step
+   into the peak, and at these peak widths (**5.08 frames of rise** at veiled,
+   5.24 at smooth) the step is **9.2× smaller** than the prominence — H-B.
+
+H-A and H-B **compound**: `step/bar` is 0.076 at veiled pixels, i.e. the test is
+failed by more than 13× over.
+
+### 20.1 The counterfactual that isolates H-B
+
+Applying **S0's own `0.04 × range` bar** to the prominence instead of to the
+single-frame step — changing nothing else, keeping the contrast-dependent
+denominator intact:
+
+**0.19× → 0.71×** (veiled 46.18%, smooth 64.89%) (**MEASURED**).
+
+So the full decomposition of fact 568's wrong sign, all on identical frames:
+
+| version | what is fixed | enrichment |
+| --- | --- | ---: |
+| S0 as shipped | nothing | **0.19×** |
+| S0's bar on prominence | H-B only | **0.71×** |
+| S2 prominence over noise | H-A + H-B | **1.23×** |
+| fact 603's multi-scale geometry | **the plant**, not the instrument | 0.86× |
+
+**DERIVED from the four rows:** repairing the instrument alone moves the
+statistic across the sign boundary (0.19 → 1.23) without touching the plant,
+while the corpus's largest-ever published improvement to this statistic — which
+did touch the plant, four times — never crosses it.
+
+---
+
+## 21. T6 — fact 603 re-examined (`data/33-t6.txt`)
+
+Fact 603 records that multi-scale occluder geometry moved the statistic from
+0.19× to 0.86×, "the largest single effect ever measured on this statistic,
+4.5×", and that this **eliminated** the leading explanation for fact 568's wrong
+sign. T6 was registered (§7b, commit `a2d8756`) **before** the run and asks one
+question: did the geometry add veiling, or did it lower the bar?
+
+The test is to render both variants and score **S0, S2 and the T2 denominator
+ratio on the identical frames**.
+
+| variant | mean feature | **S0** (veiled/smooth) | **S2** (veiled/smooth) | T2 denom ratio | placebo S0/S2 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `discs` (M25 control) | 218.0 latent px | **0.19×** (1.97 / 10.61%) | 1.23× (40.73 / 33.07%) | **3.942×** | 1.07 / 1.07 ✓ |
+| `discs-powerlaw` r⁻³, 2–160 px | 17.4 latent px | **0.86×** (5.99 / 6.98%) | 1.11× (46.85 / 42.17%) | **1.258×** | 0.99 / 1.01 ✓ |
+
+Power on both: veiled 10 133 / 128 406 px, smooth 994 940 / 625 289 px.
+
+* **S0 improves 4.62×** — 0.19 → 0.86 reproduces fact 603 **exactly**.
+* **S2 improves 0.90×** — the veiling signal, measured with a statistic that can
+  see it, did **not** rise. It fell slightly.
+* **The denominator inflation collapses to 0.32× of its control value**, 3.942 →
+  1.258.
+
+Registered verdict: **DENOMINATOR RELIEF.** Smaller occluders make the
+foreground's in-focus swing smaller at any given veiled pixel, which lowers
+`0.04 × rng`, which lets S0 fire. **Fact 603's 4.5× is substantially an
+instrument effect, not added veiling** (**MEASURED**).
+
+This is the fact-738 trap avoided by construction: the quantity that improved
+(S0) and the quantity that did not (S2) were computed on the **same frames**, so
+the comparison cannot be explained by anything about the plant.
+
+---
+
+## 22. T7 — the mandatory positive control (`data/34-t7.txt`)
+
+The corrected brief made the positive control mandatory and named the strongest
+available outcome: *if the detector finds a synthetic two-layer composite while
+real occluding edges show nothing, the phenomenon is absent from the corpus rather
+than invisible to the tooling* — the distinction fact 568 could not make.
+
+Sign enrichment is not enough for that. A statistic can be enriched at veiled
+pixels for reasons unrelated to the background's focus frame — Part I §9's
+side-lobe does exactly that. So T7 was registered (§7c, `20f7e23`) before its run
+and asks **where the flagged second peak lands**, against the plant's *rendered*
+truth: background focus index **16**, foreground **4**, 21 frames, window ±2.
+Uniform chance is 5 of 19 interior indices = **26.3%**.
+
+| statistic / population | n flagged | k2 within ±2 of bg | k1 within ±2 of fg |
+| --- | ---: | ---: | ---: |
+| **S2 veiled** (truth: has background) | 4 095 | **47.8%** | 11.1% |
+| S2 smooth (truth: no background) | 329 157 | 30.0% | 20.6% |
+| S2 veiled, frames permuted (null) | 10 041 | 29.4% | — |
+| **S0 veiled** | **200** | too few to interpret | — |
+| S0 smooth | 105 565 | 28.5% | 23.8% |
+
+Registered bar: ≥ 2× chance **and** ≥ 2× the flagged-smooth rate. Measured
+**1.82×** and **1.59×** → **INDETERMINATE**. It is not the side-lobe verdict
+either, which required ≤ 34.2% or ≤ 1.15× smooth.
+
+**The `k2` histogram is the more informative result** (**MEASURED**). Percentages
+of flagged S2-veiled pixels by frame index, near the background index:
+
+| index | 14 | 15 | **16 (bg)** | 17 | 18 | **19** |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| S2 veiled | 8.3 | 9.2 | **8.6** | 10.5 | 11.3 | **11.8** |
+
+The mass rises monotonically toward the high indices and **peaks at the stack
+boundary, not at the background index**. The detector knows which *half* of the
+stack the background is in; it does not know which frame.
+
+Two readings are consistent with this and Part II cannot separate them
+(**stated, not resolved**): the plant's background is only 3 px defocused by
+frame 19 at 1 px/frame, so a broad true peak and a truncated stack look alike
+here. Distinguishing them needs a plant with the background placed mid-stack, and
+that is registered as an open question rather than quietly resolved.
+
+Two secondary facts from the same run:
+
+* **S0 flags 200 of 10 133 veiled pixels.** That is the same 2% as T1, and it is
+  why fact 568 could not have located this: **a 200-pixel population cannot
+  support a localisation test.** M21/M25's instrument does not merely get the sign
+  wrong, it destroys the sample.
+* The `k1 in fg±2` column for the permuted null reads 67.4%. That is an artifact
+  of a single shared permutation making `k1` near-deterministic and **is not
+  interpretable**; only the 29.4% ≈ chance figure from that row is a meaningful
+  null. Recorded because it is in the output file and would otherwise be misread.
+
+---
+
+## 23. T4 and T5 — real data, and the frame-density confound
+
+### 23.1 T4 — the same three statistics on M60's real cells (`data/32-swap2.txt`)
+
+| class | cells | S0 % | S1 % | S2 % | median `rng` |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `occ` | 15 | 17.4 | 21.3 | 80.4 | 85.2 DN |
+| `occ_flat` | 8 | **41.1** | 14.7 | 64.4 | 55.3 DN |
+| `ctl` | 12 | 14.0 | 12.5 | 92.6 | 41.2 DN |
+
+occ : ctl ratios — S0 **1.24×**, S1 **1.70×**, S2 **0.87×**.
+
+The registered sign-inversion signature (S0 < 1.0 while S1 > 1.0) **does not
+reproduce on real data**. Recorded as a negative result. The *denominator*
+inflation does reproduce: median `rng` is 85.2 DN at `occ` vs 41.2 DN at `ctl` =
+**2.07×** (**MEASURED**), about half the plant's 3.94× and in the same direction.
+
+Two things follow. First, the real corpus is not a clean replication of the
+plant's geometry, which is §18.5's stated limit. Second — and this is a Part I
+result reinforced with **M21's own statistic** — `occ_flat`, silhouettes on a
+blank card with **no background at all**, has the corpus's **highest S0 rate**.
+Whatever S0 is enriched by on real data, it is not the presence of a background
+to veil.
+
+### 23.2 T5 — H-B confirmed on real stacks (`data/32-swap2.txt`)
+
+S0's rate as the same `bee-3` cells are decimated, median over 10 cells:
+
+| frames `n` | 299 | 150 | 75 | 38 | 23 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| S0 rate | 17.2% | 31.6% | 39.4% | 45.9% | **48.5%** |
+
+**2.8× from thinning the stack alone** (**MEASURED**), monotone throughout, on
+identical scene content. H-B confirmed.
+
+This has a direct consequence for the existing record (**ARGUED**, from the
+measurement): facts 150–151 compare `multipeak` rates across stacks, and those
+stacks do not have equal frame counts or equal focus steps. Rates from this
+statistic are **not comparable across stacks of different depth** without
+normalising for `n`, and none of the published comparisons did.
+
+---
+
+## 24. What Part II changes in the record
+
+Stated as directly as the evidence allows, with the corpus rows named. **M60 may
+not write `SYNTHESIS.md`; these are proposals for the fold, not edits.**
+
+| corpus row | what it says | what Part II measures |
+| --- | --- | --- |
+| **fact 568** | "The simulator does not contain the effect it was built to test" — enrichment 0.23×, wrong sign | **Falsified as stated.** On identical frames S2 reads 1.21–1.23×, the right sign. The plant contains the effect; the statistic could not see it |
+| **fact 603** | multi-scale geometry 0.19 → 0.86, "largest single effect ever measured on this statistic, 4.5×"; eliminated the leading explanation | **Substantially denominator relief.** Same frames: S2 moves 1.23 → 1.11 (0.90×) while the denominator inflation falls 3.942 → 1.258. The geometry lowered the bar |
+| **fact 152** | 0.36× depletion of the statistic at high intensity gradient, on real data | Same artifact, on real data: T4 measures the denominator 2.07× inflated at `occ`. Part I §8 additionally shows the shipped R = 13 box is the *other* half of it |
+| **facts 150, 151** | `multipeak` rates compared across stacks | **Confounded by frame count.** T5 measures 2.8× from decimation alone on identical content |
+| **question 137** | suspects the phenomenon may have been mis-identified | **Partially answered.** The instrument is defective in two measured ways; the phenomenon is also weak (1.11–1.23× in a plant built to contain it) and does not localise the background (T7) |
+| **question 138** | needs "a plant that passes fact 568's bar **or a different, truth-bearing route entirely**" | **The second route is taken and it works.** Hold the frames byte-fixed and vary the statistic. No new plant was needed to falsify fact 568's headline |
+| **discipline 338** | a separation score whose denominator is a null residual behaves like a random number | **A second instance found in production.** `0.04 × range` is a denominator driven by the condition under test. The generalisation in D-g below is the proposal |
+
+**What Part II does *not* change.** Part I's corpus refutation stands, and Part II
+strengthens rather than weakens it: a statistic that *can* see the plant's veiling
+(S2) reads **0.87×** at real occlusion cells versus controls (§23.1) and 1.11–1.23×
+on a plant built to contain veiling. The reviewer's premise does not survive
+either pass.
+
+---
+
+## 25. Proposed facts — Part II
+
+Numbered `P17…P24`, continuing Part I's sequence per AGENTS rule 28. These
+**contradict** existing rows rather than extending them, so the fold must diff
+them against facts 150, 151, 152, 568 and 603 by content and decide supersession
+explicitly.
+
+| # | Proposed fact | Label | Source |
+| --- | --- | --- | --- |
+| **P17** | M21's `multipeak`, the single function underlying facts 150–152, 568 and 603, thresholds peaks at `0.04 × the pixel's own through-focus range`. On M25's frozen `discs` control that denominator is **3.942×** larger at truth-gated veiled pixels (108.412 DN) than at smooth ones (27.503 DN), so the bar is 4.336 DN where occlusion lives against 1.100 DN elsewhere, versus a noise-justified 1.067 DN | MEASURED | `data/31-swap.txt` |
+| **P18** | On frames held byte-fixed, swapping only the statistic moves the truth-gated veiling enrichment from **0.19×** (M21 verbatim) to **1.21–1.23×** (prominence over model-predicted noise), placebos 1.05–1.07 in both cases. **Fact 568's "the simulator does not contain the effect it was built to test" is falsified**: the plant contains it and the instrument could not see it | MEASURED | `data/31-swap.txt`, `data/33-t6.txt` |
+| **P19** | Fact 603's 4.5× improvement is substantially denominator relief. Rendering both variants and scoring on identical frames: S0 0.19 → 0.86 (4.62×) while S2 1.23 → 1.11 (0.90×) and the veiled/smooth range ratio falls 3.942 → 1.258 (0.32×). Multi-scale geometry lowered the bar; it did not add veiling | MEASURED | `data/33-t6.txt` |
+| **P20** | Lowering `multipeak`'s threshold uniformly cannot repair it: 0.040 → 0.000 raises enrichment monotonically 0.19 → 0.61 and never crosses 1.0 (base rate ≤ 70.4%, saturation guard never fired). It is the threshold's contrast-dependence, not its level, that inverts the sign | MEASURED | `data/31-swap.txt` |
+| **P21** | `multipeak` tests the largest single-frame step into a peak, not the peak's prominence; at these peak widths (5.08 frames of rise) the step is **9.2×** smaller. Applying `multipeak`'s own `0.04 × range` bar to the prominence instead, changing nothing else, moves enrichment 0.19 → **0.71×**. The two defects compound: `step/bar` is 0.076 at veiled pixels vs 0.323 at smooth | MEASURED | `data/35-mechanism.txt` |
+| **P22** | `multipeak`'s rate depends strongly on frame count. Decimating identical `bee-3` cells 299 → 23 frames raises the median rate **2.8×** (17.2% → 48.5%), monotone throughout. Rates from this statistic are not comparable across stacks of different depth without normalising for `n` | MEASURED | `data/32-swap2.txt` |
+| **P23** | M25's frame-permutation placebo structurally rejects noise-calibrated peak tests: permutation preserves a curve's range while manufacturing large frame-to-frame jumps at high-swing pixels, so an absolute-bar statistic reads placebo 1.25–1.26 (repairing per-frame σ and permuting the threshold with its frames does not help), while prominence-over-dip reads 1.05–1.07. The corpus's validation gate for this family cannot admit the fix M21 §7 itself prescribes | MEASURED | `data/31-swap.txt`, `data/32-swap2.txt` |
+| **P24** | In a plant whose background focus index is rendered-known at 16 of 21 frames, the flagged second peak lands within ±2 of it 47.8% of the time against 26.3% chance (1.82×) and 30.0% in the no-background population (1.59×) — below the pre-registered 2× bar on both. The `k2` histogram peaks at the **stack boundary** (11.8% at index 19) rather than at the background index (8.6% at 16). M21's statistic flags 200 of 10 133 veiled pixels here, too few to localise at all | MEASURED | `data/34-t7.txt` |
+
+---
+
+## 26. Proposed disciplines — Part II
+
+**D-g.** *A detection threshold that scales with a quantity the condition under
+test also drives is a denominator defect, and it inverts signs rather than merely
+adding noise.* Discipline 338 states this for a null-residual denominator; P17–P21
+are a second, independent instance in production code, where the driven quantity
+is the pixel's own dynamic range and the condition is an occluding edge. The test
+is one line: hold the data fixed, replace the relative bar with an absolute one
+sourced from the noise model, and compare. **Check any threshold of the form
+`c × (max − min)` this way before trusting a null result from it.**
+
+**D-h.** *When a plant fails to show an effect, vary the instrument before varying
+the plant again.* Fact 568's wrong sign drew four published probes and all four
+changed the plant. The instrument swap that falsified the headline took one
+render and one function. **A negative result from a plant is a joint statement
+about the plant and the measurement, and the measurement is usually the cheaper
+half to test** — freeze the frames and swap the statistic, and any difference is
+attributable to the instrument by construction.
+
+**D-i.** *An oracle over the population is not an oracle over the measurement.*
+M25 correctly gated its populations on rendered truth — satisfying discipline 358
+for the quantity that **labels** the test — while the quantity **under** test
+remained unvalidated. Both halves need a truth source. The cheap check is to ask
+what the rendered truth would predict the measured quantity to be, and compare;
+here it would have shown 200 flagged pixels where truth says 10 133.
+
+**D-j.** *A statistic reading exactly zero on a confounder is a blindness result
+until proven otherwise.* M21 §5 read 0.00× at the top decile of intensity
+gradient as proof the effect "cannot be an intensity-edge artifact in disguise."
+Exact zero on a large population is the signature of a statistic that **cannot
+fire** in that regime, and the disambiguating measurement — does the statistic
+detect a **planted** signal in the same regime? — is cheap and decisive.
+
+**D-k.** *A permutation placebo is a property of the statistic's construction, not
+a neutral gate.* Frame permutation preserves range and destroys smoothness, so it
+is systematically harder for absolute-bar statistics than for relative-bar ones
+(P23). A validation gate that only one family can pass will keep selecting that
+family. **State what a placebo preserves and what it destroys, and check that the
+candidate fix is admissible under it before adopting it as the gate.**
+
+---
+
+## 27. Open questions — Part II
+
+5. **Does the plant's background peak actually sit where its truth says?** T7's
+   `k2` mass peaks at the stack boundary, and at 1 px/frame the background is only
+   3 px defocused at frame 19 — so a broad true peak and a truncated stack are not
+   separable in this render. **Re-render with the background focus index near
+   mid-stack and the stack extended past it.** This is one config change and it
+   would turn T7's INDETERMINATE into a verdict.
+6. **Do facts 150 and 151 survive frame-count normalisation?** P22 measures 2.8×
+   from decimation alone. Re-running those comparisons at matched `n`, or with the
+   statistic replaced by S2, is a small job with a large blast radius on the
+   record.
+7. **What does M32's posterior-over-depth read on these same frozen frames?**
+   M60 read M32 for the entropy question (Part I §10 answers it independently and
+   agrees the gain is ≈ 0.01 AUC), but did not run M32's object on the plant. If
+   the posterior's bimodality is computed with prominence rather than a relative
+   step, it may already be free of P17's defect — and that is worth knowing before
+   anyone rebuilds it.
+8. **Is there a third defect?** S2 reads only 1.11–1.23× on a plant *built* to
+   contain veiling with a 12 px blur separation. That is the right sign and a
+   useless detector. Whether the remaining gap is the plant's compositor, the
+   focus operator, or genuine physics is **not** measured here and is the question
+   that decides whether occlusion-aware merging is worth building at all.
+
+---
+
+## 28. Reproduction — Part II
+
+```powershell
+$env:PYTHONIOENCODING = 'utf-8'
+$env:PYTHONPATH = 'C:\dev\blog\death-of-software\projects\strehl\experiments\m25-simulator\src'
+cd C:\dev\blog\death-of-software\projects\strehl\experiments\M60-bimodality
+python src\30-render-m25-plant.py   # ~145 s; freezes M25's control to data/30-m25-plant.npz
+python src\31-swap.py               # T1, T2, T3      -> data/31-swap.txt
+python src\32-swap2.py              # S1 repair, T4, T5 -> data/32-swap2.txt
+python src\33-t6-powerlaw.py        # T6, ~300 s      -> data/33-t6.txt
+python src\34-t7-where.py           # T7              -> data/34-t7.txt
+python src\35-mechanism.py          # the decomposition -> data/35-mechanism.txt
+python src\36-verify-numbers.py     # read-back gate   -> data/36-verify.txt
+```
+
+`36-verify-numbers.py` is the discipline-351 gate for this report: it takes the
+98 headline numbers quoted in Part II and asserts each one is present **both** in
+the `data/*.txt` file cited for it **and** in this document. It currently reports
+`ALL TOKENS PRESENT IN BOTH THE DATA FILE AND THE REPORT` (`data/36-verify.txt`).
+Re-run it after any edit to Part II.
+
+`31-swap.py` contains M21's `ff` and `multipeak` **copied verbatim**, so the S0
+column is M21's function and not a re-implementation of it; `multipeak_abs` next
+to it differs by one line. Nothing under `D:\personal\macro` was written, no Rust
+was built or changed, and `experiments/m21-occlusion-bimodality` and
+`experiments/m25-simulator` were read-only throughout.
+
+`data/30-m25-plant.npz` (41.6 MB) is `.gitignore`d as generated heavy binary and
+is regenerated by the first line above. Its faithfulness check is in
+`data/30-render.txt`: mean feature **218.0 latent px** against fact 603's
+"218 latent-px discs".
+
+**Commit provenance, Part II.** `PREREGISTRATION-B.md` was committed at `b28b2e3`
+before any Part II result; the T6 addendum (§7b) at `a2d8756` and the T7 addendum
+(§7c) at `20f7e23`, each **before its own script was run**. Per discipline 351 no
+exit code is quoted anywhere above as evidence — every number in Part II is read
+back out of the named `data/*.txt` file.

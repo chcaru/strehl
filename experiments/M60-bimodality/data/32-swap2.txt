@@ -1,0 +1,84 @@
+M60b/32 -- S1 repaired, real-data arm, frame density
+PRE-REGISTERED PREREGISTRATION-B.md section 4, commit b28b2e3.
+
+T1r  S1 REPAIRED -- per-frame sigma, placebo permutes the threshold
+  power: veiled 10133, smooth 994940, smaller 10133 >= 5000 POWERED
+  sigma_f per frame: median 1.829 DN (min-frame 1.758, max-frame 1.925); MC 16 reps, 17s
+  z* = 0.674 at 1% FPR (null rate 1.00%)
+  S1r: veiled 4.09%  smooth 4.99%  enrich 0.82x  placebo 1.26  base 5.0%
+  invalidating conditions: placebo OUT OF BAND -> S1r DISQUALIFIED, base OK
+
+T4  REAL DATA -- M60's 25 hand-drawn cells (question 138)
+    labels assigned from intensity and geometry only, never from the
+    focus volume.  Band pixels only; unit of analysis is the CELL.
+
+  cell                              class           n     S0%     S1%     S2%   rng DN
+  bee-1__occ1-claw-card             occ_flat    12000   100.0     0.5     1.9     14.9
+  bee-1__occ1-leg-body-1            occ         12000    34.3    20.9    90.8     36.4
+  bee-1__occ1-leg-body-2            occ         12000    12.2    31.9    85.7     52.1
+  bee-1__occ1-leg-card              occ_flat    12000     7.1    44.8    99.6     81.7
+  bee-1__occ1-limb-body-r           occ         12000    17.4    42.9    88.1     89.2
+  bee-2__ctl3-eye                   ctl         12000    89.4     1.6    18.0     13.6
+  bee-2__occ3-antenna-eye           occ         12000    42.6     8.3    38.8     39.1
+  bee-2__occ3-antenna-head          occ         12000    15.9    21.1    75.1    193.0
+  bee-2__occ3-claw-card             occ_flat    12000    54.2     7.2    46.2     61.3
+  bee-2__occ3-leg-card-1            occ_flat    12000    34.6    11.5    79.6     74.5
+  bee-2__occ3-leg-card-2            occ_flat    12000    59.1     7.8    47.5     45.8
+  bee-2__occ3-leg-hair-1            occ         12000    17.6    21.3    69.6    135.9
+  bee-2__occ3-leg-hair-2            occ         10932    66.5     4.8    24.8     36.6
+  bee-2__occ3-limb-abdomen          occ         12000    25.1    20.1    80.4    106.4
+  bee-2__occ3-wing-thorax           occ         12000    26.0    11.6    56.5    101.0
+  bee-3__ctl3-eye                   ctl         12000    56.0     4.4    38.7     11.6
+  bee-3__occ3-antenna-eye           occ         12000    14.7    26.6    77.6     37.9
+  bee-3__occ3-antenna-head          occ         12000     6.3    27.0    86.5     94.3
+  bee-3__occ3-claw-card             occ_flat    12000    42.5    22.3    59.4     49.3
+  bee-3__occ3-leg-card-1            occ_flat    12000    19.7    34.0    85.8     75.9
+  bee-3__occ3-leg-card-2            occ_flat    12000    39.7    17.9    69.3     35.5
+  bee-3__occ3-leg-hair-1            occ         12000     8.7    49.1    98.5     79.4
+  bee-3__occ3-leg-hair-2            occ         10932    54.0    19.7    51.1     35.6
+  bee-3__occ3-limb-abdomen          occ         12000     6.8    55.5    99.3    104.8
+  bee-3__occ3-wing-thorax           occ         12000    11.2    32.5    90.1     85.2
+  wrapped-text-1__ctlw1-a           ctl         12000    15.0    44.8    97.2     41.5
+  wrapped-text-1__ctlw1-b           ctl         12000     1.8    30.2    95.1     56.7
+  wrapped-text-1__ctlw1-c           ctl         12000    13.0    41.6    97.6     34.3
+  wrapped-text-1__ctlw1-d           ctl         12000     0.4    17.4    94.5     77.7
+  wrapped-text-1__ctlw1-e           ctl         12000     8.3    28.9    97.2     35.5
+  wrapped-text-1__ctlw1-f           ctl         12000     2.6    21.4    92.9     52.4
+  wrapped-text-2__ctlw2-a           ctl         12000    21.3     7.6    92.3     40.8
+  wrapped-text-2__ctlw2-b           ctl         12000     4.6     6.4    75.7     73.4
+  wrapped-text-2__ctlw2-c           ctl         12000    91.3     1.2     1.5     35.5
+  wrapped-text-2__ctlw2-d           ctl         12000    19.4     7.1    71.4     62.0
+
+  class       cells      S0%      S1%      S2%    rng DN
+  occ            15     17.4     21.3     80.4      85.2
+  occ_flat        8     41.1     14.7     64.4      55.3
+  ctl            12     14.0     12.5     92.6      41.2
+
+  occ:ctl ratio by statistic -- the registered sign test:
+    S0 (M21 verbatim)             1.24x
+    S1 (noise-thresholded)        1.70x
+    S2 (M60 prominence)           0.87x
+    median curve range occ 85.2 DN vs ctl 41.2 DN = 2.07x (S0's denominator, on real data)
+
+T5  FRAME DENSITY -- H-B, the neighbour-adjacency defect
+    M21's peak test compares IMMEDIATE frame neighbours, so its
+    sensitivity depends on the focus step.  Decimating a 299-frame
+    stack holds the scene and the noise fixed and varies only n.
+
+  cell                        class         n=299    n=150     n=75     n=38     n=23
+  ctl3-eye                    ctl            56.0     62.9     73.2     79.3     59.7
+  occ3-antenna-eye            occ            14.7     29.7     31.4     28.8     29.6
+  occ3-antenna-head           occ             6.3     16.3     30.3     45.2     35.5
+  occ3-claw-card              occ_flat       42.5     45.6     47.4     56.4     65.9
+  occ3-leg-card-1             occ_flat       19.7     25.2     23.5     27.4     59.0
+  occ3-leg-card-2             occ_flat       39.7     44.1     48.0     56.9     64.5
+  occ3-leg-hair-1             occ             8.7     21.6     24.1     24.5     35.5
+  occ3-leg-hair-2             occ            54.0     60.8     64.3     63.3     61.4
+  occ3-limb-abdomen           occ             6.8     33.4     48.7     46.6     38.1
+  occ3-wing-thorax            occ            11.2     24.3     29.8     24.7     22.9
+  MEDIAN                                     17.2     31.6     39.4     45.9     48.5
+
+  S0 rate at n=299 is 17.2% and at n=23 is 48.5% -> 2.8x
+  H-B predicts the rate FALLS as n rises. CONFIRMED.
+
+total 97s

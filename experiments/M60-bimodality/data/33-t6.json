@@ -1,0 +1,38 @@
+{
+ "rows": [
+  {
+   "label": "discs (control, single-scale)",
+   "s0": 0.18602396304212,
+   "s2": 1.231409179918078,
+   "rng_ratio": 3.9417914355153187,
+   "rng_veiled": 108.41238403320312,
+   "rng_smooth": 27.503328323364258,
+   "placebo0": 1.0669412621591239,
+   "placebo2": 1.0685303166130358,
+   "base0": 10.272333268646095,
+   "base2": 33.38006262110754,
+   "veiled_px": 10133,
+   "smooth_px": 994940,
+   "feature_latent_px": 218.02365003789149
+  },
+  {
+   "label": "discs-powerlaw r^-3, 2-160px",
+   "s0": 0.8587875510302924,
+   "s2": 1.110956602083615,
+   "rng_ratio": 1.2576924027517196,
+   "rng_veiled": 77.06488800048828,
+   "rng_smooth": 61.27482986450195,
+   "placebo0": 0.9899878644728477,
+   "placebo2": 1.007795614511227,
+   "base0": 6.59394251738174,
+   "base2": 43.99314751454245,
+   "veiled_px": 128406,
+   "smooth_px": 625289,
+   "feature_latent_px": 17.44544207911772
+  }
+ ],
+ "s0_ratio": 4.616542605512837,
+ "s2_ratio": 0.9021831412346006,
+ "denom_ratio": 0.31906619701387084,
+ "verdict": "DENOMINATOR RELIEF -- fact 603's 4.5x is substantially an instrument effect"
+}

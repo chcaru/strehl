@@ -1,0 +1,27 @@
+M60b/33 -- T6: fact 603's 4.5x, plant effect or denominator relief?
+PRE-REGISTERED PREREGISTRATION-B.md section 7b, commit a2d8756.
+
+--- discs (control, single-scale) ---
+  occluder: coverage 31.0%, mean feature ~218.0 latent px (109.0 sensor px), render 145s
+  power: veiled 10133  smooth 994940  strong 98.8%
+  S0 (M21 verbatim)  veiled  1.97%  smooth 10.61%  =  0.19x   placebo 1.07  base 10.3%
+  S2 (M60 prominence) veiled 40.73%  smooth 33.07%  =  1.23x   placebo 1.07  base 33.4%
+  T2 denominator: rng veiled  108.412 DN  smooth   27.503 DN  = 3.942x
+  S2 numerator/denominator (rule 39): prom veiled 7.600 smooth 6.594 DN; den veiled 2.442 smooth 2.328 DN
+
+--- discs-powerlaw r^-3, 2-160px ---
+  occluder: coverage 29.5%, mean feature ~17.4 latent px (8.7 sensor px), render 134s
+  power: veiled 128406  smooth 625289  strong 99.9%
+  S0 (M21 verbatim)  veiled  5.99%  smooth  6.98%  =  0.86x   placebo 0.99  base 6.6%
+  S2 (M60 prominence) veiled 46.85%  smooth 42.17%  =  1.11x   placebo 1.01  base 44.0%
+  T2 denominator: rng veiled   77.065 DN  smooth   61.275 DN  = 1.258x
+  S2 numerator/denominator (rule 39): prom veiled 9.578 smooth 8.232 DN; den veiled 2.622 smooth 2.556 DN
+
+T6 VERDICT by the pre-registered rule (section 7b):
+  S0  control 0.19x -> powerlaw 0.86x   = 4.62x improvement   (fact 603 records 0.19 -> 0.86)
+  S2  control 1.23x -> powerlaw 1.11x   = 0.90x improvement
+  T2 denominator ratio  control 3.942x -> powerlaw 1.258x   = 0.32x
+  S2 improvement is NOT comparable to S0's (|0.90-4.62| > 1.38)
+  -> DENOMINATOR RELIEF -- fact 603's 4.5x is substantially an instrument effect
+
+total 300s

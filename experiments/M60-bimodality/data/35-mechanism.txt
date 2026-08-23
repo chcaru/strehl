@@ -1,0 +1,26 @@
+M60b/35 -- the quantity S0 actually tests, measured
+
+POWER: veiled 10133  smooth 994940
+
+The two quantities, on the SAME pixels.
+NOTE: prominence here is measured on the [1,2,1]-smoothed cube, which
+is what S0 operates on. M60's S2 prominence is on the raw cube (rule
+23, no frame-axis smoothing), so the two are not the same number.
+population    prominence   S0 step    S0 bar  step/bar  prom/bar
+veiled            3.042     0.331     4.336     0.076     0.702
+smooth            2.803     0.355     1.100     0.323     2.548
+
+  The signal is the SAME at veiled and smooth pixels (3.042 vs 2.803 DN prominence).
+  The BAR is 3.94x higher at veiled pixels. That is H-A, and it alone costs a factor of 3.63 in prom/bar.
+  S0 tests the STEP, not the prominence, and the step is 9.2x smaller. That is H-B.
+
+Peak width, which is what converts prominence into step:
+  veiled   median prominence / step =   5.08 frames of rise
+  smooth   median prominence / step =   5.24 frames of rise
+
+Counterfactual -- S0's own 0.04*range bar applied to the PROMINENCE
+instead of to the single-frame step, changing nothing else:
+  veiled 46.18%   smooth 64.89%   = 0.71x
+  (for reference, S0 as shipped reads 1.97% / 10.61% = 0.19x)
+
+total 3s

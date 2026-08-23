@@ -1,0 +1,33 @@
+{
+ "rows": {
+  "S2  veiled  (truth: has background)": {
+   "n": 4095,
+   "bg": 47.78998778998779,
+   "fg": 11.135531135531137
+  },
+  "S2  smooth  (truth: no background)": {
+   "n": 329157,
+   "bg": 30.008476198288353,
+   "fg": 20.6293653180701
+  },
+  "S2  veiled, frames permuted (null)": {
+   "n": 10041,
+   "bg": 29.37954387013246,
+   "fg": 67.35384921820535
+  },
+  "S0  veiled  (M21 verbatim)": {
+   "n": 200,
+   "bg": null,
+   "fg": null
+  },
+  "S0  smooth  (M21 verbatim)": {
+   "n": 105565,
+   "bg": 28.466821389665135,
+   "fg": 23.757874295457775
+  }
+ },
+ "chance": 26.31578947368421,
+ "k_bg": 16,
+ "k_fg": 4,
+ "verdict": "INDETERMINATE against the registered rule"
+}
