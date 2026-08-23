@@ -677,15 +677,66 @@ unimportant. Neither is urgent. Both are the kind of thing that becomes a
 six-hour debugging session in three weeks if it stays unwritten, so it is
 written.
 
+**22. The biggest single result of the night: we can now measure our own central
+claim, and until tonight we could not.** `strehl` exists to argue that estimation
+smooths noise where selection does not. Scoring that requires telling "this merge
+blurred the scene" apart from "this merge smoothed the noise" -- and every metric
+in the corpus fired on both, so the claim was unmeasurable by our own tooling. M46
+closed it. The working statistic is `sigpow = FRC x ring power`, and what makes it
+work is structural rather than clever: correlation statistics are **provably** blind
+to a merge that low-passes its own output (a linear filter scales the correlated and
+uncorrelated parts identically, so the ratio cannot move -- this takes even a
+ground-truth oracle down with it, measured at 0.000), while power statistics see the
+loss but cannot tell whether what was removed was signal or noise. One quantity from
+each blind family, multiplied, measures delivered signal. It separates at 0.937 on
+real detail, needs no ground truth, and runs on two merges of disjoint halves of any
+stack you already have -- no new captures, no rail, no flat field. **It is not in the
+code yet**, and given that this project's most-indicted failure is exactly "measured
+results that never reach an executable", I have put an independent verifier on the
+claim and asked M46's author to write an implementation spec with golden test vectors
+so it cannot be re-discovered wrongly later.
+
+**23. Two decisions I want from you, and one number I would like you to help me get.**
+Wiring the new metric in means merging two disjoint half-stacks on every run, roughly
+double the merge cost. **Default, an opt-in `--verify` flag, or not at all?** My
+recommendation is `--verify` defaulting off, because single-digit-second GPU merges
+are a headline number and doubling them by default trades the wrong thing -- but that
+is a product call and it is yours. Second: the shipped detail check is a gradient
+measure that we now know separates at 0.233 against 0.937. **Replace it, or keep it as
+a cheap screen with its limitation printed next to it?** And the number: fact 610
+derives the sensor's fixed-pattern-noise fraction as 0.3094 by *inverting* a
+correlation reading. Your 242 dark frames may be enough to measure it **directly**,
+which would turn a solved quantity into an observed one. Nobody has tried; I have
+logged it as question 142 and pointed the verifier at it.
+
+**24. The tool's self-check currently certifies neither of the two things it claims
+to certify, and two independent milestones found that within hours of each other.**
+Item 18 covered the noise half. M46 supplies the other: the shipped "detail retention"
+invariant is a gradient statistic that cannot distinguish blur from noise smoothing,
+measured at 0.233 separation and 0.018 in paired form, against 0.937 for the new
+metric. Neither finding was looked for -- both fell out of audits aimed elsewhere.
+That is the argument for continuing to spend agents on audits rather than only on new
+capability, and it is also the reason I have not let the "ship it" instinct win
+tonight.
+
+**25. A correction to something this document told you earlier, and to something the
+corpus believed for several milestones.** I described `112MSDCF`/`113MSDCF` as a
+same-subject pair shot "a full stop apart in exposure". It is a stop of *shutter
+time* -- both are ISO 500, 1/60 s against 1/30 s -- which I had never checked and
+which came into the corpus from an outside review. It matters, and in our favour: with
+the ISO identical, the sensor's gain and read noise are held fixed, so the pair
+isolates exactly the terms we want to study. A one-line EXIF read would have settled
+it at any point in the last two days.
+
 ---
 
 ## Running while you sleep
 
-**Updated once more, near dawn.** M16, M19, M25, M40, M41, M42, M45, M47 and M49 have
-all landed and are folded; M17 was re-tasked as M42 and has landed twice. **Five agents are
-still live.** The research corpus now stands at **393 measured facts** (numbered to 602),
-306 disciplines and 136 open questions -- it has roughly doubled overnight, and items 18-21
-above are the part of it you should read.
+**Updated at the end of the night.** M16, M19, M25, M40, M41, M42, M44, M45, M46, M47
+and M49 have landed and are folded. **Four agents are live**, two of them dispatched in the
+last hour to attack tonight's biggest result rather than to build on it. The corpus stands at
+**417 measured facts** (numbered to 626), 314 disciplines and 143 open questions. Items 18-25
+above are the part worth your time; **22 and 23 are the ones that need you**.
 
 | Agent | What it is deciding | State |
 | --- | --- | --- |
@@ -698,12 +749,14 @@ above are the part of it you should read.
 | **M40** | Auditing my fact-341 repair under rule 24 (re-choose, do not re-compute) | **LANDED, folded** (facts 440-459). **It refuted the repair and the defect report.** See item 7. `merge.rs` is now held by M18, and the revert is handed to it |
 | **M44** | Finishing M41: it stopped one arm short of a scoreable verdict | **LANDED, folded** (facts 460-479). R3 refuted with the positive control passing; the FRC metric withdrawn as a censored constant. See item 10 |
 | **M45** | **Building the plugin crate** — your #1 structural ask, and the first slice of it in code | **LANDED, folded** (facts 520-529). The seam exists and closes the contributed-operator hole *by construction*. **It also refuted three things in its own design doc**, one structural. See item 11 — it has the one decision I have left to you |
-| **M46** | Finding a detail metric that actually has power on this sensor | Running. M44 withdrew the last one we had, so we currently **cannot score our own quality claim**. This is the project's largest blocker |
+| **M46** | Finding a detail metric that actually has power on this sensor | **LANDED, folded** (facts 607-626). **It succeeded, and it refuted the bar I set it.** `sigpow` separates blur from noise smoothing at 0.937 with no ground truth. See items 22-24 |
 | **M47** | Auditing what the wrong ISO-50 gain contaminated | **LANDED, folded** (facts 590-602). **It refuted three claims in the brief I wrote for it**, including the direction of the defect: the gate was too TIGHT, not too loose. Most published conclusions survive; two do not. See item 19 |
 | **M49** | Auditing the gap between what we measured and what the code does | **LANDED, folded** (facts 569-589). Thirteen live defects, the worst of which lets a 6.3x noise regression print PASS. See item 18 |
 | **M48** | The second wrong shipped constant: read noise at high conversion gain | Running, and its report has landed on disk. Found via item 16 |
 | **M52** | Whether the gate-transfer fact cluster survives the gain fix | Running. It gates a code change I am deliberately **not** making until it reports |
 | **M53** | Replacing the acceptance statistic that cannot fail | Running. This is M49's worst finding, item 18, and it holds the merge CLI |
+| **M54** | Whether the unpropagated clip mask actually harms the merged image | Running. M49's second-worst finding. Briefed **without** my expected direction, per the lesson of item 19 |
+| **M55** | Attacking item 22's result before we believe it | Running. Independent verifier; refuting M46 is a success condition for it |
 
 **M45 landed, and it is the one I would still read first.** It compiled the plugin design
 rather than arguing about it, and I had asked it to report what breaks rather than quietly
