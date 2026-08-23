@@ -1,0 +1,62 @@
+==============================================================================
+M61 step 22 -- breaking step 21's D2: is B's 16383 real, or a
+               highlight-linkage flag?
+==============================================================================
+
+  A 0.84 post-ADC scale would cap a plane at 13761.
+  Dead zone under test: (13761, 16383).
+
+------------------------------------------------------------------------------
+ARM 1 -- is the region below the ceiling populated in B?
+------------------------------------------------------------------------------
+  stack           frame          plane   n in zone  n at 16383  zone/ceil
+  foam            DSC00001.ARW      G1           0           0        nan
+  foam            DSC00001.ARW       B           0           0        nan
+  foam            DSC00051.ARW      G1        4702        6336     0.7421
+  foam            DSC00051.ARW       B        1706         946     1.8034
+  foam            DSC00100.ARW      G1           0           0        nan
+  foam            DSC00100.ARW       B           0           0        nan
+  coffee-bubbles  DSC00034.ARW      G1        4704        6164     0.7631
+  coffee-bubbles  DSC00034.ARW       B        1204         722     1.6676
+  coffee-bubbles  DSC00043.ARW      G1        5043       16850     0.2993
+  coffee-bubbles  DSC00043.ARW       B        3593        4417     0.8134
+  coffee-bubbles  DSC00052.ARW      G1        3465        4290     0.8077
+  coffee-bubbles  DSC00052.ARW       B        1044         678     1.5398
+
+  B mean zone/ceiling ratio = 1.4561   (acceptance: dead zone iff < 0.0100)
+  -> REGION POPULATED. B carries real values above 13761,
+     which a 0.84 post-ADC scale could not produce.
+     Step 21's D2 SURVIVES this attack.
+
+------------------------------------------------------------------------------
+ARM 2 -- do planes saturate together?  (independent of the cap)
+------------------------------------------------------------------------------
+  If the writer stamps all channels when any saturates, every quad
+  with one saturated plane has all four saturated.
+
+  stack           frame           quads any sat   all four     frac
+  foam            DSC00001.ARW                0          0      nan
+  foam            DSC00051.ARW             7905          7   0.0009
+  foam            DSC00100.ARW                0          0      nan
+  coffee-bubbles  DSC00034.ARW             6809         78   0.0115
+  coffee-bubbles  DSC00043.ARW            19685       1131   0.0575
+  coffee-bubbles  DSC00052.ARW             4704          7   0.0015
+
+  mean all-four fraction = 0.0178
+  -> planes saturate INDEPENDENTLY. No linkage. A B pixel at
+     16383 is a measured saturation, and a 0.84 post-ADC
+     scale could not produce it. D2 SURVIVES.
+
+------------------------------------------------------------------------------
+D5 WITHDRAWN (step 21)
+------------------------------------------------------------------------------
+  Step 21 counted pixels above 15360 -- the white level from my
+  brief -- and read their existence as evidence of a multiplicative
+  step above unity. The file's own declared white_level is 16383,
+  printed by step 21 itself in the D3' block. Values between 15360
+  and 16383 are inside the declared range and evidence nothing.
+  D5's reading is VOID and withdrawn. The discrepancy between the
+  project's 15360 and the file's 16383 is real and is M54's, not
+  mine; recorded, not touched.
+
+==============================================================================

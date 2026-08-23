@@ -84,7 +84,7 @@ I searched `docs/` and `experiments/` for `photon transfer|conversion
 gain|dual.?gain|gain_divisor|second_base_iso|PTC` before running anything, listed
 every file in `docs/research/`, and read the candidates.
 
-**Fact 1 (MEASURED).** Five places had already touched this, and the brief's
+**Fact 1.** **(MEASURED).** Five places had already touched this, and the brief's
 reading list was accurate:
 
 - **`M48c-defect-layer-measured.md` §3, facts 11–22.** From the dark-current
@@ -109,12 +109,12 @@ reading list was accurate:
   states the degeneracy in prose and names the tripwire
   `the_gain_relation_is_still_continuous_across_the_dual_gain_switch`.
 
-**Fact 2 (ARGUED). This was NOT already answered.** M48c *derived* a step from
+**Fact 2.** **(ARGUED). This was NOT already answered.** M48c *derived* a step from
 dark frames; nobody has *measured* the conversion gain from illuminated data
 anywhere above ISO 160. M61 is exactly M48c question 1, and the answer M61 gets
 is the opposite of M48c's derivation — which is why running it was worth it.
 
-**Fact 3 (ARGUED).** M25's intercept caveat is a design constraint, not
+**Fact 3.** **(ARGUED).** M25's intercept caveat is a design constraint, not
 background. `experiments/m25-simulator/src/16-iso50-gain.py` takes the **5th
 percentile of the tile variance** in each level bin. That is biased low by the χ²
 percentile factor (5th pctile of χ²₆₃/63 = 0.726) and biased high by leaked scene
@@ -125,18 +125,18 @@ covariate instead (§1), which is what lets it select hard without biasing `E[v]
 
 ## 1. The pre-registered estimator, criterion and control
 
-**Fact 4 (MEASURED).** The pre-registration is the docstring of
+**Fact 4.** **(MEASURED).** The pre-registration is the docstring of
 `experiments/m61-ptc-high-iso/src/02-ptc-ladder.py`, committed **before the script
 was ever run**, at commit **`7a9b76b`** ("M61: pre-register the high-ISO photon
 transfer curve before running it", 4 files, 1091 insertions), on top of `883a2af`.
 The synthetic power control `03-power-control.py` is in the same commit.
 
-**Fact 5 (MEASURED).** The rest of M61 — scripts 04–07, the Rust cross-check, the
+**Fact 5.** **(MEASURED).** The rest of M61 — scripts 04–07, the Rust cross-check, the
 data files and this report — landed in commit **`0526972`** ("Fold M55b…") rather
 than in a commit of mine, through no act of mine. See error 13; it changes no
 number in this report.
 
-**Fact 40 (MEASURED). Three further pre-registrations, each committed before its
+**Fact 40.** **(MEASURED). Three further pre-registrations, each committed before its
 script was run**, added after the first version of this report was published, when
 the owner corrected two corpus facts I had taken on trust:
 
@@ -203,7 +203,7 @@ MILESTONE STOPS AND REPORTS THAT.**" Second control ISO 50 (`119MSDCF`,
 `coffee-bean`), third control ISO 100 (`bee-1`, `bee-3`, `wrapped-text-1`), same
 band, not gates.
 
-**Fact 6 (MEASURED).** The pre-registration also discloses, in its own text, that
+**Fact 6.** **(MEASURED).** The pre-registration also discloses, in its own text, that
 two exploratory probes (`00-corpus-probe.py`, `01-difference-probe.py`) had
 already been run and that I had seen a smooth-tile σ ratio near 1.0 at every ISO
 before writing it. The pre-registration is therefore **not blind**, and says so.
@@ -214,7 +214,7 @@ before writing it. The pre-registration is therefore **not blind**, and says so.
 
 ### 2.1 Synthetic power control (rule 13: can the plant express the failure?)
 
-**Fact 7 (MEASURED).** `03-power-control.py`, same commit, six cases, seed
+**Fact 7.** **(MEASURED).** `03-power-control.py`, same commit, six cases, seed
 20260823, importing script 02's functions unchanged. **6/6 PASS.**
 
 | case | planted | recovered |
@@ -230,7 +230,7 @@ The estimator is not pinned: `null-doubled` moved the answer by exactly 2.0007×
 
 ### 2.2 The pre-registered ISO-160 control — **PASS**
 
-**Fact 8 (MEASURED).** `109MSDCF`, 22 frames, ISO 160, where `gain_divisor` was
+**Fact 8.** **(MEASURED).** `109MSDCF`, 22 frames, ISO 160, where `gain_divisor` was
 actually calibrated by a real PTC:
 
 ```
@@ -251,7 +251,7 @@ The second and third controls also pass: ISO 50 `r = 0.9835`, ISO 100
 
 ### 2.3 The real-data plant — the strongest control here, and post-hoc
 
-**Fact 9 (MEASURED).** A synthetic control shares its scene model with nothing
+**Fact 9.** **(MEASURED).** A synthetic control shares its scene model with nothing
 real, so I added one that does not. Averaging **disjoint horizontally adjacent
 same-plane pixels** of the real frames keeps the mean and halves the variance: it
 is the *same* scene with the *same* texture, defects, motion and level drift,
@@ -273,7 +273,7 @@ correlated so the scene term shrinks by less than 2×, biasing the plant slightl
 
 ### 2.4 Second decode (rule 32) — bit for bit
 
-**Fact 10 (MEASURED).** Every M61 number came out of `rawpy` (LibRaw).
+**Fact 10.** **(MEASURED).** Every M61 number came out of `rawpy` (LibRaw).
 `experiments/m61-ptc-high-iso/decode-check/` decodes the same frames through
 `strehl-raw` → `rawler`, an independent implementation of Sony's lossless
 compression and the one the shipped binary uses. Four frames, a 512×512
@@ -281,7 +281,7 @@ active-area patch each: **262144/262144 identical, max |diff| = 0**, for all
 four. Tile statistics computed on each decoder's patch agree to every printed
 digit. The decode is not the story.
 
-**Fact 11 (MEASURED).** The two decoders disagree about *geometry*: rawler reports
+**Fact 11.** **(MEASURED).** The two decoders disagree about *geometry*: rawler reports
 the active area as **7032×4688**, `rawpy.raw_image_visible` gives **7028×4688**.
 M61 used rawpy, so it measured a strict subset — 4 columns narrower — of the
 active area. `AGENTS.md` rule 7 states 7032×4688, so rawler matches the rule and
@@ -295,7 +295,7 @@ rawpy is the narrow one.
 
 ### 3.1 The ladder
 
-**Fact 12 (MEASURED).** `02-ptc-ladder.py`, 403 s, 12 stacks, 4 planes each,
+**Fact 12.** **(MEASURED).** `02-ptc-ladder.py`, 403 s, 12 stacks, 4 planes each,
 `r = g_measured/g_model`. Spread is the **observed disagreement between the two
 independent stacks at that ISO** — a re-draw, not a propagation.
 
@@ -315,7 +315,7 @@ Bubble motion, pre-registered as a risk. Its ISO-1000 partner `foam` fits cleanl
 
 ### 3.2 The commissioned answer
 
-**Fact 13 (MEASURED).** Measured-to-predicted conversion gain, and the ratio to
+**Fact 13.** **(MEASURED).** Measured-to-predicted conversion gain, and the ratio to
 the low-mode plateau which is what actually tests the switch:
 
 | | ISO 500 | ISO 1000 |
@@ -336,7 +336,7 @@ the low-mode plateau which is what actually tests the switch:
 number. That drop list was chosen by eye and never stated as a rule; fact 33 now
 states it mechanically and confirms it reproduces exactly.
 
-**Fact 34 (MEASURED). The ISO-1000 arm is gate-dependent and I overstated it.**
+**Fact 34.** **(MEASURED). The ISO-1000 arm is gate-dependent and I overstated it.**
 `13-final-gate.py` recomputes both commissioned ISOs under four different fit
 gates. ISO 500 is stable to the fourth decimal; ISO 1000 is not:
 
@@ -366,13 +366,13 @@ two best-conditioned fits in the whole ladder.
 > filter. Net: ISO 1000 is **less** encumbered than this section says, and still
 > the weaker of the two arms.
 
-**Fact 14 (MEASURED).** ISO 400 — the first ISO in high mode, and the one M48c's
+**Fact 14.** **(MEASURED).** ISO 400 — the first ISO in high mode, and the one M48c's
 step is anchored to — gives `r_high/r_low = 1.014 ± 0.034` (pre-registered) and
 `1.002 ± 0.009` fit-gated. It is the *cleanest* arm in the whole ladder
 (`bee-2` PTC residuals 1.7%, `wrapped-text-2` 5.3%), and it sits on H0 to two
 decimal places.
 
-**Fact 15 (DERIVED).** **H1 is refuted.** Every high-mode arm lands within 5% of
+**Fact 15.** **(DERIVED).** **H1 is refuted.** Every high-mode arm lands within 5% of
 H0, and the deviation that does exist is in the **wrong direction** (upward, not
 downward) and ~12× too small even at the noisiest point. Taking the observed
 stack-to-stack spread at ISO 500 as the scale, H1's 0.460 is **15 σ** away
@@ -381,7 +381,7 @@ same numbers and by the ISO-160 control landing at 0.99.
 
 ### 3.3 The matched pair straddling the switch — retracted from three to one
 
-**Fact 16 (MEASURED, SUPERSEDED — see fact 31).** My brief told me the corpus
+**Fact 16.** **(MEASURED, SUPERSEDED — see fact 31).** My brief told me the corpus
 held **two** same-subject pairs straddling `second_base_iso`, and I reported them
 as such. **The operator has since said that only one of them is a pair at all.**
 The corrected version is fact 31; the original claim is left here per rule 15,
@@ -399,7 +399,7 @@ I had already noticed the `wrapped-text` level mismatch and flagged the pairing 
 conditional and unverified — but I left it in as a supporting number instead of
 withholding it, which is the actual mistake (error 14).
 
-**Fact 31 (MEASURED).** Owner-verified pairing, `13-final-gate.py` and
+**Fact 31.** **(MEASURED).** Owner-verified pairing, `13-final-gate.py` and
 `11-provenance-recheck.py`:
 
 | claimed pair | verdict | why |
@@ -420,7 +420,7 @@ withholding it, which is the actual mistake (error 14).
 The void ratios are printed in `data/provenance-recheck.txt` so the retraction is
 auditable rather than silent, and they must not be cited as evidence.
 
-**Fact 32 (MEASURED).** Two things in that table are worth stating because they
+**Fact 32.** **(MEASURED).** Two things in that table are worth stating because they
 cut in opposite directions and I would rather report both than the flattering one.
 The void `bee-2`/`bee-1` ratio (4.0516) agrees with the genuine `bee-2`/`bee-3`
 ratio (4.0486) to **0.07%**, even though `bee-1` is a different angle and depth —
@@ -433,7 +433,7 @@ a diagnostic, not a defence. (`wrapped-text-1` also fails the fit gate on its ow
 terms — split-half 10.3% — so its error is over-determined and I cannot cleanly
 attribute it to the geometry mismatch.)
 
-**Fact 17 (ARGUED, and now the load-bearing claim of this section).** What the
+**Fact 17.** **(ARGUED, and now the load-bearing claim of this section).** What the
 same-subject pairing buys is *not* validity — each stack's PTC slope is fitted
 independently and needs no partner — but the cancellation of the texture-leakage
 bias of fact 27, because the same scene contributes the same leakage on both
@@ -447,7 +447,7 @@ points, which already agree with H0 (fact 12).
 
 ### 3.4 What this implies for shipped constants — described, not made
 
-**Fact 41 (MEASURED).** Two checks on the M25 citation that P4b's disagreement
+**Fact 41.** **(MEASURED).** Two checks on the M25 citation that P4b's disagreement
 claim rests on, run by `15-verify-report.py` against M25's own text rather than
 taken on trust:
 
@@ -465,17 +465,17 @@ taken on trust:
    checking the correction's scope; having now checked it, the ISO-160 value I
    compare against stands.
 
-**Fact 18 (MEASURED).** On green, across 10 fit-passing stacks and a 20× ISO
+**Fact 18.** **(MEASURED).** On green, across 10 fit-passing stacks and a 20× ISO
 range, `r = 0.9906 ± 0.0178`, i.e. `gain_divisor = 440.9 ± 7.9` against the
 shipped **436.8**. **That is agreement. No change to `gain_divisor` is warranted
 by this milestone, and I have made none.**
 
-**Fact 19 (ARGUED).** The tripwire test
+**Fact 19.** **(ARGUED).** The tripwire test
 `the_gain_relation_is_still_continuous_across_the_dual_gain_switch` in
 `profile.rs` should stay green. M61 is the first illuminated measurement that
 supports it rather than merely failing to contradict it.
 
-**Fact 20 (ARGUED).** `M48c` fact 17 (2.174×, DERIVED) should be **superseded, not
+**Fact 20.** **(ARGUED).** `M48c` fact 17 (2.174×, DERIVED) should be **superseded, not
 deleted**. Its arithmetic is not in question; its *attribution* is. A mechanism
 that produces exactly a fixed-pixel dark-excess step with no conversion-gain
 change is in-camera raw-domain hot-pixel/defect suppression whose strength varies
@@ -484,12 +484,12 @@ ISO-invariant. That is a hypothesis, not a measurement. **M48c fact 21's refusal
 to change constants on dark-frame evidence, citing discipline 326, was correct and
 is now vindicated by illuminated data.**
 
-**Fact 21 (ARGUED).** `profile.rs` is another agent's file and I have not touched
+**Fact 21.** **(ARGUED).** `profile.rs` is another agent's file and I have not touched
 it. `git diff --stat` over `crates/` is empty for this milestone.
 
 ### 3.5 The unexpected result: the B plane
 
-**Fact 22 (MEASURED).** `profile.rs` gives all four CFA planes one gain, and its
+**Fact 22.** **(MEASURED).** `profile.rs` gives all four CFA planes one gain, and its
 doc comment says nothing has measured them apart. Something now has. The B
 plane's PTC slope is **0.8396 ± 0.0112** of the green planes' — across 11 stacks
 and a 20× ISO range, in both gain modes:
@@ -503,11 +503,21 @@ noise. This is **ISO-independent**, so it cancels exactly in every `r_high/r_low
 above and does not touch the headline. Partial independent corroboration: M4's
 dark-σ table has B/G ≈ 0.91.
 
-**Fact 23 (ARGUED).** The mechanism is **not settled**, and I say so rather than
+**Fact 23.** **(ARGUED).** The mechanism is **not settled**, and I say so rather than
 guess. A per-channel digital raw scale w = 0.84 predicts a dark-σ ratio of 0.84
 too; M4 measured 0.91. A genuinely lower B conversion gain with a mix of pre- and
 post-gain read-noise components lands between the two and fits better. Neither is
 established. See question 1.
+
+> **Superseded in part by §4.12 (facts 50–58), not deleted.** Fact 23 was written
+> before the mechanism was tested. The digital-scale half of it is now
+> **refuted** by measurement, not left open: facts 53, 54 and 55. Fact 23's
+> instinct — that a mixed pre/post-gain read-noise decomposition "fits better" —
+> survives and is promoted to a falsifiable design in fact 58 and question 10.
+> Note what fact 23 got wrong beyond the verdict: it framed the choice as digital
+> scale *versus* conversion gain, missing that a **QE difference cannot produce
+> the effect at all** (fact 51) and that **analog attenuation** is a third
+> candidate indistinguishable from conversion gain in any raw statistic (fact 58).
 
 ---
 
@@ -520,7 +530,7 @@ real stacks**, including at ISO 500 and ISO 1000.
 
 ### 4.2 "You chose the tile size and the quantile to get this"
 
-**Fact 24 (MEASURED).** Re-choosing both (rule 24: re-choose, do not re-compute).
+**Fact 24.** **(MEASURED).** Re-choosing both (rule 24: re-choose, do not re-compute).
 This arm runs **greens only, 10 pairs per stack, one low stack and one high stack
 per side**, so its `r_hi/r_lo` is a different estimator from fact 13's and the two
 should be compared for *stability*, not for equality:
@@ -539,14 +549,14 @@ fragility, it is disclosed, and it does not point at H1 (a −1.99 is not a 0.46
 
 ### 4.3 "The high-ISO stacks sit at lower DN, so this is level dependence"
 
-**Fact 25 (MEASURED).** Re-fitting every stack inside the common 50–800 DN window
+**Fact 25.** **(MEASURED).** Re-fitting every stack inside the common 50–800 DN window
 instead of its own full range moves `r_high/r_low` to 1.040 (ISO 400), 1.057
 (ISO 500), 1.219 (ISO 1000) — from 1.014 / 1.046 / 1.267. Same story, no sign
 change, nothing near 0.46.
 
 ### 4.4 "One stack is doing the work"
 
-**Fact 26 (MEASURED).** Fit quality per stack (max PTC bin residual, A–B and A–C
+**Fact 26.** **(MEASURED).** Fit quality per stack (max PTC bin residual, A–B and A–C
 variant spread, split-half disagreement). Seven of the twelve are shown — the
 three best-conditioned, the control, and the three worst; the full table is in
 `data/break-it.txt`:
@@ -566,7 +576,7 @@ the ladder. Dropping the two bad stacks moves the answer *towards* H0, not away.
 
 ### 4.5 "Texture leakage fakes the direction you found"
 
-**Fact 27 (DERIVED, pre-registered as artefact route 2).** Work out the sign
+**Fact 27.** **(DERIVED, pre-registered as artefact route 2).** Work out the sign
 before arguing about it. At a fixed DN level `m` and a fixed scene contrast `c`,
 the texture variance is `(c·m)²` while the noise variance is `g·m`, so the
 texture-to-noise ratio goes as `c·√(m/g)` — **smaller at higher ISO**, because a
@@ -580,7 +590,7 @@ the residual leakage means the true `r_high/r_low` is ≥ what fact 13 reports. 
 matched-`bee` pair, which holds texture, subject and level identical on both sides
 of the switch, independently lands at 4.049 against 4.000.
 
-**Fact 28 (ARGUED).** I originally wrote this section with the sign backwards —
+**Fact 28.** **(ARGUED).** I originally wrote this section with the sign backwards —
 claiming leakage biases `r_high` up — and only caught it while checking the
 report against the arithmetic. The corrected version is stronger for the
 conclusion, which is exactly why it needed checking.
@@ -591,7 +601,7 @@ Killed by §2.4 — bit-for-bit against a second implementation.
 
 ### 4.7 "The B-plane deficit is your tile estimator, not the sensor"
 
-**Fact 29 (MEASURED).** A tile *sample* variance under-reports when the noise is
+**Fact 29.** **(MEASURED).** A tile *sample* variance under-reports when the noise is
 spatially correlated, and the under-reporting shrinks as the tile grows. If
 correlation caused the B deficit, B/green must climb towards 1.0 with tile size:
 
@@ -618,7 +628,7 @@ It climbs by 1–3% and plateaus near 0.85. **Correlation cannot supply the miss
 > **probable, not measured** — a recollection the person who was there hedged is
 > not promoted by being convenient.
 
-**Fact 42 (MEASURED, on corrected provenance).** The polarizer is **not aligned
+**Fact 42.** **(MEASURED, on corrected provenance).** The polarizer is **not aligned
 with the gain-mode split**, and this survives the correction. If it were aligned,
 `r_high/r_low` would confound a transmission change with the switch.
 
@@ -632,7 +642,7 @@ the claim surviving. Switch ratio computed *within* each CPL population, all und
 the **CONSIST** gate: **CPL-ON 1.0219, CPL-off 1.0233, all gated 1.0211.** They
 agree with each other and with H0 = 1.0; none approaches H1 = 1.840.
 
-**Fact 43 (MEASURED).** The verdict does not depend on `foam`'s polarizer state at
+**Fact 43.** **(MEASURED).** The verdict does not depend on `foam`'s polarizer state at
 all. Recomputing under all three assignments it could take:
 
 | assumption | CPL-ON | CPL-off | all gated | closer to |
@@ -646,7 +656,7 @@ recollection is not load-bearing for this milestone's conclusion. That is the
 useful form of the answer: not "the correction did not matter" but "here is the
 range it could have moved things, and it is 0.4%".
 
-**Fact 35 (superseded by facts 42 and 43, left in place per rule 15).** As
+**Fact 35.** **(superseded by facts 42 and 43, left in place per rule 15).** As
 published, this fact put `foam` under CPL-off and reported **CPL-ON 1.0100,
 CPL-off 1.0229, all stacks 1.0189**. Two things are wrong with it, and only one is
 the provenance error. **The numbers were computed under the `resid < 25%` gate by
@@ -659,13 +669,13 @@ all to the correction. Error 21 covers the provenance; error 23 covers the
 mislabel. The original claim — both sides mixed, no alignment, agreement with H0 —
 survives both.
 
-**Fact 36 (superseded by fact 44, left in place per rule 15).** As published, this
+**Fact 36.** **(superseded by fact 44, left in place per rule 15).** As published, this
 fact said the ISO-1000 arm "straddles" the polarizer boundary, and treated that as
 **a second independent reason** — beyond fact 34's gate dependence — to distrust
 ISO 1000. Under the corrected table both ISO-1000 legs are CPL-ON, so there is no
 straddle and **that reason evaporates**.
 
-**Fact 44 (MEASURED).** Of my two published reasons for treating ISO 1000 as the
+**Fact 44.** **(MEASURED).** Of my two published reasons for treating ISO 1000 as the
 weak arm, **one survives and one does not**:
 
 - **Gate dependence survives.** `coffee-bubbles` fails CONSIST on its own internal
@@ -679,7 +689,7 @@ CPL-off, with the control `109MSDCF` also CPL-off — the strongest arm and the
 control on the *same* side of the boundary, which is the configuration needing no
 correction at all. That part of the published fact was right and is unchanged.
 
-**Fact 45 (MEASURED, and it makes my published fact 37 stronger, not weaker).**
+**Fact 45.** **(MEASURED, and it makes my published fact 37 stronger, not weaker).**
 There is **no ISO anywhere in this corpus with stacks on both sides of the
 polarizer boundary**:
 
@@ -701,7 +711,7 @@ report than a test that failed, because it tells the owner exactly what capture
 would fix it: **one stack at an ISO already in the corpus, with the polarizer in
 the other state.**
 
-**Fact 37 (MEASURED, and it is a null with a caveat I must not bury).** The only
+**Fact 37.** **(MEASURED, and it is a null with a caveat I must not bury).** The only
 direct test of "does the CPL perturb a slope" available in this corpus is the one
 ISO with stacks on both sides — ISO 1000 — and **both of its legs fail the fit
 gate** (`coffee-bubbles` split-half 1105%, `foam` max residual 42%). So the direct
@@ -725,7 +735,7 @@ boundary, so the corpus cannot separate the two on any stack.
 
 ### 4.9 "Your answer depends on which stacks you threw away"
 
-**Fact 33 (MEASURED).** The original report dropped `coffee-bubbles` and
+**Fact 33.** **(MEASURED).** The original report dropped `coffee-bubbles` and
 `wrapped-text-1` by eye and called them "the stacks that failed their own fit"
 without stating a rule — which is not good enough, and `12-gate-metric.py` was
 written to find the rule. It falsified two of its own predictions on the way
@@ -743,20 +753,20 @@ CONSIST drops **exactly** `{coffee-bubbles, wrapped-text-1}` and retains the oth
 ten, reproducing the original post-hoc list. So the original choice was
 principled; it was merely unstated.
 
-**Fact 38 (MEASURED). The refutation of H1 does not depend on the gate.** Across
+**Fact 38.** **(MEASURED). The refutation of H1 does not depend on the gate.** Across
 all four gates tested — none, max-residual, A/C-spread, CONSIST — `r_high/r_low`
 spans **1.0189 to 1.1168**. Its **nearest approach to H1 = 0.460 is 0.5589**,
 and its furthest excursion from H0 = 1.000 is 0.1168. Every gate, including no
 gate at all, lands an order of magnitude closer to H0 than to H1.
 
-**Fact 39 (MEASURED).** The "no change to `gain_divisor`" conclusion is likewise
+**Fact 39.** **(MEASURED).** The "no change to `gain_divisor`" conclusion is likewise
 gate-independent. Implied divisor against the shipped **436.8**: no gate 427.3,
 residual gate 442.3, A/C gate 427.3, CONSIST 440.9. All within ~2%, with the
 shipped value inside the observed spread in every case.
 
 ### 4.10 What I did *not* check
 
-**Fact 30 (ARGUED).** No ISO above 1000 was measured — the corpus has none. The
+**Fact 30.** **(ARGUED).** No ISO above 1000 was measured — the corpus has none. The
 high-mode arm rests on 400, 500 and 1000. A gain relation that is straight from
 400 to 1000 and bends at 3200 would not be caught here.
 
@@ -767,7 +777,7 @@ with three different values, and the third version came with something the first
 two did not: a claim about EXIF, which is checkable. Discipline 12 says to check
 it. `18-cpl-date-rule.py` does.
 
-**Fact 46 (MEASURED — the dates; the mapping from date to filter is ARGUED).**
+**Fact 46.** **(MEASURED — the dates; the mapping from date to filter is ARGUED).**
 Every stack falls on the side of 17–25 May that its claimed filter state
 requires. Nothing is contradicted and the rule *could* have been refuted:
 
@@ -797,7 +807,7 @@ side by date. Control passes for the fourth time at 0.9887.
 polarizer was fitted; it can only fail to contradict it. I am labelling it that
 way rather than letting four matching dates promote a recollection.
 
-**Fact 47 (MEASURED, and it is not in any brief I was given).** The CPL-ON
+**Fact 47.** **(MEASURED, and it is not in any brief I was given).** The CPL-ON
 population is **two sessions ninety days apart**, not one. `coffee-bubbles` and
 `foam` are 25 May 2026; `wrapped-text-1/2` and `bee-1/2/3` are **23 August 2026** —
 a few hours before this milestone read them. The brief describes the whole group
@@ -808,7 +818,7 @@ ninety days and an unknown number of lens mounts**, not a single afternoon; any
 argument relying on a constant filter orientation is weaker than it looks.
 Second, it puts a third confound into fact 48 — see below.
 
-**Fact 48 (MEASURED, and three-way confounded — I do not offer it as evidence).**
+**Fact 48.** **(MEASURED, and three-way confounded — I do not offer it as evidence).**
 With `coffee-bean` assigned CPL-off as the date rule predicts, the low-mode CPL-off
 group spans ISO 50 *and* 160, bracketing the ISO-100 CPL-ON group. The shape is
 **non-monotone — a dip exactly at the filtered group**:
@@ -829,7 +839,7 @@ Moving `coffee-bean` shifts the offset from **+1.58% to +1.27%**, and that whole
 arm is conditional on the date rule holding for the one stack the owner could not
 recall.
 
-**Fact 49 (MEASURED — corroboration of the owner's correction, from the clock).**
+**Fact 49.** **(MEASURED — corroboration of the owner's correction, from the clock).**
 The matched-pair correction I acted on in §3.3 was taken purely on the owner's
 say-so. The capture times support it, on a direction pre-registered before the
 run:
@@ -847,6 +857,199 @@ consistent with an unmoved camera and is not proof of identical framing**, so th
 is corroboration of his statement and not an independent measurement of it. I
 pre-registered the direction and deliberately not a threshold, having no
 calibration for how long it takes this owner to move a macro rig.
+
+---
+
+### 4.12 The B-plane mechanism — narrowed by measurement, not settled
+
+Not commissioned. Asked as a follow-up after the fold: *is the B plane's 0.84×
+a property of the sensor or of the decode?* Scripts `20`, `21`, `22`,
+pre-registered at `911dcb3`, `63a13ad`, `b14dc5f`.
+
+**Fact 50.** **(DERIVED).** The question as put is binary and the binary hides the
+most likely candidate. There are three hypotheses, not two:
+
+| | where the scale sits | |
+|---|---|---|
+| **H-A** | sensor conversion gain, **or analog attenuation before the ADC** | pre-quantisation |
+| **H-B** | in-camera **digital** per-channel scale, written into the ARW | post-quantisation |
+| **H-C** | **decoder** applies a scale the file does not contain | post-file |
+
+H-B is neither "sensor" nor "decode" — the camera does it and every decoder
+faithfully reproduces it. It is the hypothesis a binary framing loses.
+
+**Fact 51.** **(DERIVED).** Two things had to be established before choosing an
+observable, and both rule out instruments I might otherwise have reached for:
+
+- **A PTC ratio cannot separate these.** Under a multiplicative scale `s` on DN,
+  mean → `s·mean` and var → `s²·var`, so `var/mean → s·g` — *exactly* what a
+  genuine gain difference gives. Measuring another PTC would have produced 0.84
+  under every hypothesis. Step 21 therefore deliberately measures no PTC.
+- **A QE difference cannot produce the effect at all.** If blue collects fewer
+  electrons, mean and variance fall together and `var/mean` is unchanged. QE is
+  not a candidate and should not be offered as one. This is worth stating because
+  "blue pixels are less sensitive" is the intuitive answer and it is wrong.
+
+**Fact 52.** **(MEASURED).** H-C is excluded, on evidence already in this milestone:
+`strehl-raw`/rawler and rawpy/LibRaw decode this corpus **bit for bit** (§2.4,
+max |diff| = 0), both read through the pre-white-balance, pre-demosaic surface.
+Two independent implementations agreeing bit-for-bit does not exclude a *shared
+convention* — but what remains of H-C is then observationally identical to H-B.
+
+**Fact 53.** **(MEASURED).** **No comb.** A post-quantisation scale `s < 1` maps
+integer codes many-to-one and leaves periodic unreachable codes. Measured over a
+window with median occupancy ≥ 100 px, comparing B against G **at matched
+occupancy, never matched DN** — because a scaled B sits at lower DN and matching
+on DN would pit a sparse B against a dense G and manufacture the result:
+
+**0.00 % empty codes in every plane of all 8 stacks.** No B-specific comb.
+
+**Fact 54.** **(MEASURED).** **B reaches the greens' ceiling.** A 0.84 post-ADC scale
+caps a plane at 0.84 × 16383 = **13761** and can never emit 16383. In `foam` and
+`coffee-bubbles`, B emits **16383** — the same ceiling R, G1 and G2 reach.
+
+**Fact 55.** **(MEASURED).** Fact 54 had an alternative explanation I did not
+pre-register and had to go back for. Many raw writers implement **highlight
+linkage** — stamp all channels at container max when any saturates, so the
+demosaic does not fringe a blown highlight. Under linkage, B's 16383 is a *flag*,
+not a measurement, and fact 54 would be void **and would have looked clean**.
+Step 22 attacked it on two arms with acceptance fixed in advance:
+
+| arm | prediction if linkage | measured | verdict |
+|---|---|---|---|
+| dead zone in (13761, 16383) | count < 1 % of count at 16383 | **145.6 %** | populated |
+| quads saturated in **all four** planes | fraction → 1.0 | **0.018** | independent |
+
+Both arms clear their thresholds by two orders of magnitude in the same
+direction. Arm 2 does not use the 13761 threshold at all, so it is a genuine
+cross-check rather than a restatement of arm 1. **Fact 54 survives.**
+
+**Fact 56.** **(MEASURED).** The declared `black_level_per_channel` is
+`[512, 512, 512, 512]` — identical on all four planes. So no *pedestal-inclusive*
+per-channel scale is declared. This excludes one narrow variant and is
+uninformative between H-A and H-B otherwise.
+
+**Fact 57.** **(DERIVED).** Taken together: **the B plane's 0.84× is applied before
+quantisation.** It is not a decoder artefact (fact 52), not a post-ADC digital
+scale (facts 53, 54, 55), and not a QE difference (fact 51). H-B and H-C are
+refuted; H-A stands.
+
+**Fact 58.** **(ARGUED) — and this is the honest limit.** H-A is *two* mechanisms and
+**nothing in a raw file can separate them.** A true sensor conversion gain and an
+analog per-channel attenuation ahead of the ADC are both upstream of
+quantisation and are identical in every statistic available here. Anyone reading
+fact 57 as "it is the sensor" is over-reading it. What would separate them:
+
+> **The dark-noise decomposition.** If B's lower gain is a *sensor* conversion
+> gain, the read noise generated in the pixel is referred through the same lower
+> gain and B's dark σ scales by exactly 0.84. If it is an *analog attenuation*
+> after the source follower, noise generated **upstream** is attenuated but ADC
+> and quantisation noise **downstream** is not, so the dark-σ ratio lands
+> **above** 0.84. M4's table already reads **B/G ≈ 0.91**, not 0.84. Solving
+> `σ_B²/σ_G² = (s²σ_pre² + σ_post²)/(σ_pre² + σ_post²)` with `s = 0.84` and the
+> ratio at 0.91 puts **~42 % of dark-noise variance downstream of the
+> attenuation** — and that fraction must *fall with ISO*, because analogue gain
+> raises the upstream term while leaving the ADC term fixed. **That ISO
+> dependence is the observable**, it is measurable from dark frames already on
+> disk, and I have not run it. See question 10.
+
+I am not asserting the 42 %: it inherits M4's ratio, which was measured for a
+different purpose, and a single number from a two-term model fitted to one
+observation is not a measurement. It is a *design*, and its value is that it is
+falsifiable — a flat ISO dependence kills it.
+
+---
+
+### 4.13 The G1/G2 correlation — design only, not run
+
+**Fact 59.** **(DERIVED).** SYNTHESIS fact 895 records G1 and G2 temporally
+correlated at **ρ = +0.073**, and nothing in the noise model carries it while
+independence is assumed wherever the greens are averaged. The consequence is
+arithmetic: the variance of a mean of two correlated variables is
+`σ²(1+ρ)/2`, so
+
+> `var(mean) = 0.5365 σ²`, not `0.5 σ²` — a **7.3 % variance excess, 3.6 % in σ**
+
+on **every averaged-green path**, including the merge, whose output green is
+`(G1+G2)/2` (§1, the brief's own warning about the binned domain). Anything that
+gates, weights or thresholds on a predicted green σ is optimistic by 3.6 % there.
+3.6 % is small; it is also *free* to carry, being one constant.
+
+**Fact 60.** **(ARGUED).** The observable that says what ρ *is* — and this is the part
+worth running, because the fix differs by mechanism:
+
+| finding | mechanism | implication |
+|---|---|---|
+| ρ(G1,G2) ≈ ρ(R,B) ≈ ρ(R,G1) | **global common-mode** — supply, temperature, a per-frame offset | a per-frame term, not a green property; subtract a frame-level pedestal and it goes |
+| ρ(G1,G2) alone elevated | **green-specific** — shared column/ADC circuitry | belongs in the noise model as a green covariance |
+| ρ tracks same-column vs different-column pairings | **column circuitry**, decisively | a column-wise term, and the pairing geometry names it |
+
+The third row is the discriminating one and it costs nothing extra: compute ρ for
+pixel pairings that share a column against pairings that do not, within the same
+plane. **I have not run this.** Unlike scripts 11–22 it needs a fresh
+multi-frame decode rather than the committed ladder, and it is not my
+commissioned observable. Recorded as question 11 with the method fixed so
+whoever runs it cannot choose the pairing after seeing the answer.
+
+---
+
+### 4.14 The linter was passing this report by luck, and every other one too
+
+Found by running `corpus_lint` after appending facts 50–60, which is the only
+reason it surfaced at all.
+
+**Fact 61.** **(MEASURED).** `corpus_lint`'s C1 check resolves a bare citation
+like `fact 55` and passes it if **either** the number exists in SYNTHESIS's
+global namespace **or** the report declares it locally:
+
+```python
+if index.resolves(kind, num): continue
+if num in local:              continue   # the report's own numbering
+```
+
+Local numbering is therefore supported. But `local_declarations()` detects a
+declaration with `\*\*(?:Discipline|Question|Fact|Risk)\s+(\d+)\.?\*\*`, which
+requires the number to sit immediately before the closing `**`. The convention
+actually used is `**Fact N (LABEL).**`, with the rule-12 label *inside* the
+bold — **M48c does this, and so did all 60 facts of this report.** It does not
+match. Measured: **11 of this report's 71 declarations were visible** to the
+linter; all 60 facts were invisible.
+
+**Fact 62.** **(DERIVED).** The consequence is worse than a missed check,
+because it does not fail — **it passes**. With `local` empty, every local
+citation falls through to SYNTHESIS's global namespace, and SYNTHESIS has 925
+facts, so **every local citation numbered under 925 resolves — against the wrong
+fact.** This report's facts 1–49 passed clean for exactly that reason. Appending
+facts 50–60 only made a noise because SYNTHESIS's 50–60 range happens to hold
+items of a different *kind*, so resolution failed loudly for once. **The 21
+violations were not a new defect. They were the first time an old one was
+audible.**
+
+**Fact 63.** **(MEASURED).** Fixed for this report only, by one exactly
+invertible rule — close the bold after the number and reopen it, so the rule-12
+label stays on the claim:
+
+`**Fact N (LABEL).**` → `**Fact N.** **(LABEL).**`
+
+`corpus_lint` goes from **22 violations to 1**, and the one that remains is in
+M60, another agent's file. Guarded per discipline 11, and this time the guard is
+stronger than counting: the transform is **invertible**, so the script asserts
+`inverse(transform(text)) == text` byte for byte before writing, plus unchanged
+declaration numbers, unchanged line structure, and no line touched that has no
+Fact declaration on it. All four passed. The dry run also *failed* first, on five
+facts whose header is `**Fact N (LABEL) — prose.**` rather than
+`**Fact N (LABEL).**`; the guard caught them and I rewrote the rule rather than
+shipping a transform that silently skipped 5 of 60.
+
+**Fact 64.** **(ARGUED).** **I did not edit `scripts/corpus_lint.py`, and that is
+a deliberate scope decision rather than caution.** Widening `LOCAL_DECL` is the
+real fix and it is a corpus-wide change: it would alter lint results under every
+agent live in this tree right now, including surfacing new violations in reports
+whose authors are mid-flight. That is not mine to do unilaterally on a milestone
+about photon transfer curves. Filed as question 13. Note what the narrow fix does
+*not* achieve — M48c and every other report using the labelled convention still
+resolve their local citations against SYNTHESIS by luck, and mine is now the only
+one that does not.
 
 ---
 
@@ -1162,6 +1365,121 @@ Registering caveats in advance protects against inventing them afterwards to sui
 a result; it does not protect against a confound the data reveals mid-run. Fact 48
 carries all three, and with them the shape is not evidence for anything.
 
+**Error 25 — I read a black level off an illuminated frame, and it printed a
+table that looked like an answer.** Step 20's D3 took the "black pedestal" from
+`raw_image_visible.min()`. That is the minimum of a *photograph*, a scene
+statistic with no pedestal in it. `raw_image_visible` is by construction the
+**cropped** frame — the masked optical-black border, the only part of the sensor
+that measures a pedestal, is exactly what it excludes. The output duly showed the
+green planes with *higher* floors than R and B in all six stacks, which is what a
+scene with green light in its darkest corner gives.
+
+This one did not raise. Step 20's D1 crashed on a `np.bincount` sign bug in the
+same run and that is how I came to re-read the output at all. **Had the crash not
+happened I would have banked a void D3**, and had those minima landed near 430 by
+chance I would have had a spurious positive and no way to see it. Superseded by
+step 21's D3′, which uses the declared metadata and the real masked band.
+
+**Error 26 — the silent-zero failure the brief warned me about, walked into
+directly.** Step 21's first optical-black routine scanned the **top and left**
+bands. This camera reports `top_margin = left_margin = 0` and hides its masked
+border at the **bottom and right** (`raw_image` 5120×7168 against visible
+4688×7028). A top/left scan returns an **empty array**, raises nothing, and
+prints `UNAVAILABLE` — indistinguishable from a real negative.
+
+Caught only because I smoke-tested for *execution* before committing the
+pre-registration and printed the margins. That is Error 22's lesson doing its job
+one script later, and it is the first time on this milestone a disclosed error has
+prevented its own recurrence.
+
+**Error 27 — I built a discriminator on a constant from my brief without checking
+it against the file, and the file disagreed.** Step 21's D5 counted pixels above
+**15360**, the white level given to me, and read their existence as evidence of a
+multiplicative step above unity somewhere in the chain. The file's declared
+`white_level` is **16383**. Values between 15360 and 16383 are inside the
+declared range and evidence nothing. **D5's reading is void and withdrawn.**
+
+The aggravating detail: `white_level = 16383` was printed **by step 21 itself**,
+in the D3′ block, about forty lines above the D5 conclusion that contradicted it.
+This is Error 24's failure mode exactly — information in my own output, above my
+own conclusion, unread. Twice now. That is why discipline 14 is mechanical rather
+than an intention.
+
+**Error 28 — my pre-registration missed the alternative that would have voided my
+strongest result, and I only found it by re-reading the output.** Step 21's D2
+concluded that B reaching 16383 refutes a post-ADC scale. **Highlight linkage** —
+raw writers stamping all channels at container max when any saturates — makes B's
+16383 a flag rather than a measurement and would have voided D2 completely. It is
+not an exotic mechanism. It did not occur to me until I read the result.
+
+I did then go and test it rather than publish (step 22, both arms, acceptance
+fixed before running), and D2 survived by two orders of magnitude on two
+independent arms. **The result is fine; the process was not.** The whole point of
+pre-registering is to enumerate the ways a clean-looking result can be an
+artefact *before* it looks clean, and here the enumeration happened afterwards.
+Recorded as an error and not as a virtue, because had linkage been real I would
+have needed the same re-reading to catch it, and I might not have re-read.
+
+**Error 29 — a precedence bug I wrote and caught within the same minute.**
+`(row["G1"] + row.get("G2") or row["G1"]) / 2` parses as
+`(row["G1"] + row.get("G2")) or row["G1"]`, which is not the mean of anything and
+would have silently reported a wrong green baseline for D1. Caught by re-reading
+before smoke-testing, so it never ran. Logged because it is the same class as the
+`uint16 & bool` trap the brief warned about: an expression that is *valid Python*,
+raises nothing, and means something other than what it reads as.
+
+**Error 30 — I deleted the `## 5.` header while adding a section, for the fourth
+time on this milestone, in the same edit where I was documenting a guard against
+mechanical edits.** Errors 19 and 20 are the first three. This time the `old_str`
+of a block edit was `---\n\n## 5. My own errors, disclosed` and my replacement
+ended at the new section's last paragraph, silently consuming the header.
+
+The detail that matters: **discipline 11 exists, `16-reorder-error18.py`
+implements it, `23-local-decl-visibility.py` implements a stronger version of it
+with byte-exact invertibility — and I hand-edited anyway.** A guard that lives in
+a script protects only the edits made through the script. Every one of the four
+recurrences came through a direct `edit` call that bypassed it.
+
+Caught within one tool call, because after errors 19 and 20 I now re-list `^## \d`
+after every structural edit. That habit is the only thing that has ever caught
+this, and it caught it again. But the honest reading is that **four occurrences is
+not a slip, it is a property of how I edit**, and the fix is not another
+resolution: it is discipline 16.
+
+**Error 31 — I shipped 49 facts under a lint that was passing them by luck, and I
+had run that lint after every previous edit.** Facts 61–64. `corpus_lint` reported
+clean on this report through six commits. It was resolving every one of my local
+`fact N` citations against SYNTHESIS's global numbering — a different fact each
+time — because it could not see my local declarations. **A green check I had been
+treating as evidence was, for this class of citation, evidence of nothing.**
+
+What makes it mine rather than the tool's: I extended `15-verify-report.py` three
+times specifically to check reference resolution, and built it to check my
+*internal* refs against my *own* declarations. That was the right instinct and it
+is why my numbering is actually sound. But I never asked the obvious next
+question — *does the shared linter agree with my private one, and if it passes,
+what is it passing on?* Two checkers agreeing for different reasons looks exactly
+like corroboration.
+
+**Error 32 — and this is the one that settles it: I deleted Error 29 while
+writing up Error 30, which is the error about deleting things while writing.**
+The `old_str` of that edit was Error 29's whole body plus the `---` beneath it;
+my `new_str` began at Error 30. Error 29 was consumed. Caught one tool call later
+by enumerating errors 27–31 and finding a hole at 29 — the same re-listing habit
+that caught error 30, applied because error 30 had just happened.
+
+Five occurrences now: errors 19, 20 (twice), 30, and this. The pattern is exact
+and I will state it without softening it: **every recurrence happened inside an
+edit whose subject was the previous recurrence.** Writing about the failure is
+itself the condition under which I commit it, presumably because the prose I am
+composing occupies the attention that would otherwise go on what the `old_str` is
+about to swallow.
+
+That is why discipline 16 is stated as a *tooling* requirement and not as
+vigilance. I have now written four separate warnings to myself about this failure
+and committed it during three of them. Nothing in that sequence suggests a sixth
+warning would help.
+
 ---
 
 ## 6. Disciplines and open questions
@@ -1265,8 +1583,60 @@ failed twice more while I was drafting this very discipline (error 20), which is
 the most honest evidence I can offer that "be careful" is not a control.
 `16-reorder-error18.py` implements the guard.
 
-### Open questions
+**Discipline 14 — the constant your script prints and the constant your script
+reasons from must be the same constant, and a script should assert that rather
+than print both.** Errors 24 and 27 are the same failure twice: information sat
+in my own output, forty lines above the conclusion it contradicted, and I did not
+read up. In error 27 the script printed `white_level = 16383` in one block and
+then, in another, tested against 15360 from my brief. Both numbers were on the
+same screen.
 
+"Read your own output before concluding" is not a control, for the same reason
+"be careful" was not one in discipline 11 — it is a resolution, and it failed the
+second time after I had already written the first up. The mechanical form:
+**every constant a script takes from a brief, a doc, or another milestone must be
+read from the data at the point of use and asserted equal, so a disagreement
+raises instead of printing.** Had step 21 asserted `white_level == WHITE` it would
+have died on line one instead of producing a void D5.
+
+This generalises past this milestone: this repo hands constants between agents in
+prose — black 512, white 15360, `gain_divisor` 436.8, `second_base_iso` 400. Every
+one is a place where a brief and a file can disagree silently.
+
+**Discipline 15 — enumerate how a clean result could be an artefact *before* it
+looks clean, and put the enumeration in the pre-registration.** Error 28: my
+strongest B-plane result had an alternative explanation — highlight linkage —
+that would have voided it entirely, and I thought of it only when reading the
+result. It survived the test, so nothing was lost this time, but the protection
+was luck.
+
+The operational form is narrow enough to follow: **for any observable of the form
+"X reached value V, therefore hypothesis H is refuted", write down what else in
+the pipeline could put V there that is not X**, before running. Ceilings,
+sentinels, saturation flags, fill values and error codes all live at the extremes
+of a range, which is precisely where refutation-by-extremum wants to read.
+
+**Discipline 16 — a structural guard that lives only in a script protects only
+the edits made through the script, and every recurrence of this milestone's worst
+failure came through a direct edit that bypassed it.** Discipline 11 named the
+problem, `16-reorder-error18.py` implemented a guard, and
+`23-local-decl-visibility.py` implemented a stronger one with byte-exact
+invertibility. The failure then recurred twice more (errors 30, 32) in hand-edits
+that used neither.
+
+The operational form, and it is the only version of this that has ever worked:
+**after any edit that replaces a multi-line block, re-enumerate the document's
+headers and item numbers as a separate action before doing anything else.** Not
+"check the edit" — *re-derive the index from the file*. Both catches came from
+`Select-String '^## \d'` and from enumerating errors 27–31 and finding a hole.
+Neither came from re-reading the edit.
+
+The stronger form, unimplemented and worth someone's time: make the block-edit
+path *itself* assert the header multiset, rather than relying on a follow-up. As
+long as the guard is a separate step, it is a habit, and this milestone is five
+data points on how habits perform under composition load.
+
+### Open questions
 **Question 1.** What is the B plane's 0.84? A per-channel digital raw scale
 predicts a dark-σ ratio of 0.84 and M4 measured 0.91; a genuinely lower B
 conversion gain with mixed pre-/post-gain read noise fits both but is unproven.
@@ -1334,6 +1704,57 @@ unproven* rather than as work I am recommending: it would be a new estimator wit
 its own control problem, to settle a fact that fact 43 has already shown does not
 change this milestone's verdict. Worth it only if some other milestone needs the
 provenance harder than I did.
+
+**Question 10 — is the B plane's pre-quantisation 0.84× a sensor conversion gain
+or an analog attenuation, and the dark-noise ISO dependence is the way to tell.**
+Facts 57 and 58: the scale is established as pre-quantisation, and no raw-file
+statistic separates those two. The method is fixed in fact 58 so it cannot be
+chosen after the answer: fit `σ_B²/σ_G² = (s²σ_pre² + σ_post²)/(σ_pre² + σ_post²)`
+across ISO with `s = 0.84`. A **sensor** conversion gain predicts the ratio pinned
+at 0.84 and **flat in ISO**; an **analog attenuation** predicts it above 0.84 and
+**falling toward 0.84 as ISO rises**, because analogue gain lifts the upstream
+term while the ADC term stays put. M4's single ratio of 0.91 is one point on that
+curve and cannot distinguish a slope from an offset. This needs dark frames at
+three or more ISOs, which `D:\macro-dark-frames` has and I did not touch.
+
+**Question 11 — what is the G1/G2 correlation ρ = +0.073, and does anything need
+to carry it?** Facts 59 and 60. The consequence is settled arithmetic: **3.6 % in
+σ** on every averaged-green path including the merge. The mechanism is not, and
+the fix differs by mechanism — a global common-mode term is a per-frame pedestal
+and does not belong in the plane model at all, while a green-specific one does.
+The discriminating measurement is in fact 60's table and its third row is the
+decisive one: **ρ for same-column pixel pairings against different-column
+pairings**, within a plane. I fixed the pairing geometry in writing precisely so
+that whoever runs it cannot select it after seeing the answer. Not run; needs a
+fresh multi-frame decode rather than the committed ladder.
+
+**Question 12 — the project says white 15360 and the file says 16383, and
+something is thresholding on the difference.** Error 27. `rawpy`/LibRaw reports
+`white_level = 16383` and `black_level_per_channel = [512,512,512,512]` for every
+frame probed. Both numbers are defensible for different purposes — a conservative
+linearity limit against the container ceiling — but they are 6.7 % apart and any
+clip mask, saturation gate or highlight rejection is silently choosing one. Fact
+55 measured that real data occupies the disputed band: `foam` and `coffee-bubbles`
+put thousands of pixels per plane between 15360 and 16383, and fact 55's arm 2
+showed those planes saturate **independently**, so a mask built on one constant
+and applied per-plane will not behave like a mask built on the other. **This is
+M54's clip mask, not mine — I recorded it and did not touch it.**
+
+**Question 13 — should `corpus_lint`'s `LOCAL_DECL` be widened, and who decides?**
+Facts 61–64. The linter supports report-local numbering but cannot *see* it under
+the labelled convention `**Fact N (LABEL).**`, so local citations silently resolve
+against SYNTHESIS's global namespace and pass against the wrong item whenever the
+number happens to exist there — which, with 925 facts, is nearly always. I fixed
+**this report only**, by an invertible reformat, and deliberately did not touch
+the shared script: widening the regex changes lint results under every agent live
+in this tree and would surface new violations in reports whose authors are
+mid-flight.
+
+The one-line change is `\*\*(?:Discipline|Question|Fact|Risk)\s+(\d+)\s*[(.]` in
+place of the current pattern. **Whoever makes it should expect the corpus's lint
+count to go up, not down** — reports that were passing by false resolution will
+start failing honestly, and that is the point. It is a corpus-wide decision and
+belongs to the orchestrator, not to a milestone about photon transfer curves.
 
 ---
 
@@ -1416,3 +1837,47 @@ provenance harder than I did.
   is corroboration, not proof of identical framing — but the direction was
   pre-registered and it held, which is worth more than my having taken the
   correction on trust, as I originally did.
+- **P5b (MEASURED + DERIVED, extends P5 — the mechanism is now half-settled).**
+  The B plane's 0.84× is applied **before quantisation** (fact 57). Three
+  hypotheses were separated, not two: a **decoder** scale is excluded by the
+  rawler/LibRaw bit-identity (fact 52); an **in-camera digital** scale is refuted
+  twice over — 0.00 % empty codes in every plane of 8 stacks (fact 53), and B
+  emitting **16383** where a 0.84 post-ADC scale caps at 13761 (fact 54); and a
+  **QE difference cannot produce the effect at all**, because `var/mean` is
+  invariant to electron count (fact 51). The 16383 result was attacked for
+  highlight linkage and survived on two independent arms by two orders of
+  magnitude (fact 55). **What is NOT settled**: a true sensor conversion gain
+  versus an analog attenuation ahead of the ADC. **No raw-file statistic can
+  separate those** (fact 58) — anyone reading this as "it is the sensor" is
+  over-reading it. Question 10 fixes the method that would: the dark-σ ratio's
+  **ISO dependence**, flat for a sensor gain and falling for an attenuation.
+  **Still described, not applied.**
+- **P13 (DERIVED).** The G1/G2 correlation ρ = +0.073 (SYNTHESIS fact 895) means
+  `var(mean) = 0.5365 σ²` rather than `0.5 σ²` — **a 3.6 % underestimate in σ on
+  every averaged-green path**, including the merge, whose output green is
+  `(G1+G2)/2`. Small, but free to carry: it is one constant. Whether it *belongs*
+  in the plane model depends on a mechanism nobody has measured, and the fix
+  differs by mechanism (fact 60). **Not run.** Question 11 fixes the pairing
+  geometry in advance so the discriminator cannot be chosen after the answer.
+- **P14 (MEASURED).** **`white_level` in the file is 16383; the project constant
+  is 15360.** Every frame probed declares 16383 and `black_level_per_channel =
+  [512,512,512,512]`. Real data occupies the disputed 6.7 % band — `foam` and
+  `coffee-bubbles` put thousands of pixels per plane above 15360 — and those
+  planes saturate **independently**, not in linked quads (fact 55, arm 2). A
+  per-plane clip mask built on one constant will not behave like one built on the
+  other. **This is M54's, not mine.** Found by walking into it (error 27) and
+  recorded, not acted on. Question 12.
+- **P15 (MEASURED).** **`corpus_lint` C1 has been passing every research report's
+  local citations by false resolution.** It supports report-local numbering, but
+  `local_declarations()` cannot match the corpus's own convention
+  `**Fact N (LABEL).**` — measured, **11 of this report's 71 declarations were
+  visible; all 60 facts were not**. With `local` empty, a bare `fact 41` resolves
+  against SYNTHESIS's global namespace instead, and with 925 facts there it
+  nearly always succeeds — against a different fact. It does not fail; it
+  **passes wrongly**, so a green lint has been evidence of nothing for this class
+  of citation. This report's own facts 1–49 passed clean for exactly that reason
+  through six commits. **M48c and others still do.** I fixed M61 only, by an
+  invertible reformat (fact 63; lint 22 → 1, the remainder M60's), and did not
+  touch the shared script because widening it changes results under every agent
+  live in this tree. The one-line regex change is in question 13, and whoever
+  makes it should expect the corpus lint count to **rise**.
