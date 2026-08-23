@@ -1,0 +1,20 @@
+Does the occluder's own luminance step bury the veiling signature?
+one variable: foreground radiometry.  coc 1.0 px/frame, everything else as 14-stepmap-truth.py
+
+--- step  (fg 1.25x bg) -- as Gate 1c (render 140s) ---
+  truth-gated:  1.61% multi-peak on veiled px vs  6.78% on smooth =  0.24x   (n 9895/997762)
+  gradient magnitude at fg-focus frame: veiled 125.6 DN/px vs smooth 44.0 DN/px = 2.85x
+  overall multi-peak on strong px 6.6%  (real coffee-bean 4.8%)
+
+--- matched (fg == bg)  -- the fix (render 140s) ---
+  truth-gated:  1.99% multi-peak on veiled px vs  6.97% on smooth =  0.28x   (n 9874/997070)
+  gradient magnitude at fg-focus frame: veiled 103.8 DN/px vs smooth 39.3 DN/px = 2.64x
+  overall multi-peak on strong px 6.8%  (real coffee-bean 4.8%)
+
+==========================================================================
+variant                               veiled enrich  edge/flat grad
+step  (fg 1.25x bg) -- as Gate 1c             0.24x           2.85x
+matched (fg == bg)  -- the fix                0.28x           2.64x
+
+VERDICT: removing the luminance step does not help (0.24x -> 0.28x).  The hypothesis is refuted and the failure to reproduce M21's enrichment stands as an unexplained failure axis of the simulator.
+[293s]

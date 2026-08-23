@@ -15,21 +15,30 @@ or **ARGUED** (a judgement).
 
 ## 0. The headline, before the detail
 
-**The simulator reproduces the project's noise-and-selection machinery and does
-not reproduce its optics or its subjects.** That sentence is the deliverable.
+**The simulator reproduces the project's noise-and-selection machinery. It does
+not reproduce the rig's optics in any validated way, and it does not reproduce
+the occlusion signature M21 studies.** That sentence is the deliverable.
 
 | | verdict |
 |---|---|
 | Gate 1a — fact 35's φ↔excess mechanism | **PASS, 16/16 configurations** |
 | Gate 1b — facts 19/23's levels, pre-registered five axes | **PARTIAL, 3/5** |
 | Gate 1b′ — post-hoc axes (c(1), floor, excess over 16 measures) | **PASS 3/3** — declared post-hoc, see §5.3 |
-| Gate 1c — M21's occlusion enrichment | **FAIL** (three attempts; two of the three failures were mine, the third is the simulator's) |
+| Gate 1c — M21's occlusion enrichment | **FAIL.** Three attempts; two failures were mine, the third is real. The base rate now matches (6.6 % vs a real 4.8 %); the enrichment does not, and **with ground truth it has the wrong sign (0.24×)** |
 | Gate 2 — negative control on the simulator | **FIRED on 3 of 4** mis-specifications; **blind to dropping diffraction entirely** |
 
-**ARGUED.** Use it for anything about noise, selection, argmax bias,
-regularisation and confidence. Do **not** yet use it to score deconvolution,
-PSF estimation, or occlusion reconstruction — those depend on exactly the axes
-Gate 2 showed the validation is blind to and Gate 1c showed do not match.
+**ARGUED.** Use it for noise, selection, argmax bias, regularisation and
+confidence — Gate 1a and Gate 2 are direct evidence there. Do **not** use it to
+score deconvolution, PSF estimation or EDoF: Gate 2 proved the validation suite
+is blind to the PSF, so nothing here says the optics are right. Do **not** use
+it to score occlusion reconstruction: §4.3 measures the veiling signature as
+absent, with the wrong sign, on the plant this milestone built.
+
+**One result is worth more than the gates and could not have been obtained any
+other way.** Using the simulator's ground truth, M21's depth-step estimator was
+scored directly: **1.8–3.4 % precision, 10.5–11.9 % recall**, over-flagging by
+**3.5–5.7×** on this plant. Whatever else is true, a project that had no ground
+truth now has an instrument that can say that.
 
 ---
 
@@ -265,7 +274,7 @@ simulator's. All three are reported because the diagnosis is the value.
 pixels multi-peaked. I read this as a failure. It is not: M21's own committed
 table reports **109MSDCF at 60.7 % multi-peak and 0.87× enrichment**, and says
 the detector is noise-saturated there. I had rendered 109MSDCF's flat-ROI
-radiometry (1.4 % contrast, structure:noise ≈ 1:1) and compared it against
+radiometry (1.4 % contrast, structure-to-noise ≈ 0.9:1) and compared it against
 **4.38×**, a number that exists only on `coffee-bean`. **The simulator had
 reproduced the saturated regime correctly and I scored it against the wrong
 regime.**
@@ -325,7 +334,11 @@ statistics. It is still not circular *for this gate*: a radial power spectrum
 is stationary and isotropic and carries no information whatsoever about which
 pixels sit at a depth discontinuity, which is the only thing the enrichment
 ratio scores. But it is a much larger fit and the report should not pretend
-otherwise.
+otherwise. **Also declared:** the isolated check converged to a mismatch of
+0.050, but inside Gate 1c — where the calibration probe is a 512×512 tile
+rather than 1024×1024 — it converged only to **0.2445**. The shaping is
+therefore weaker in the gate than in the check, and the check's 1.51× worst-band
+figure is an *upper bound* on the quality actually delivered.
 
 **MEASURED**, `data/gate1c-shaped.txt`, with the calibration run **before** the
 `coc` fit (the fit's through-focus curve depends on which frequencies the
@@ -342,8 +355,6 @@ subject has):
 39 % and the enrichment moved in the right direction, so the diagnosis was
 correct and incomplete. Under the pre-registered grid, enrichment 1.03× with a
 correct placebo is below the 1.3× FAIL threshold: **FAIL**.
-
-<!--GATE1C3-->
 
 #### The remaining cause, isolated
 
@@ -409,7 +420,39 @@ multi-peaked at **1.6 %** against **6.8 %** on smooth depth — an enrichment of
 **0.24×**. The effect does not merely have the wrong magnitude; **it has the
 wrong sign.**
 
-<!--LUMSTEP-->
+**The leading hypothesis, tested and refuted.** My occluder was rendered at
+`base_e × 1.25` against a background at `base_e`, so the alpha boundary was
+*also* a 25 % luminance step. M21's detector is a Sobel gradient magnitude, so
+that step should dominate the focus response, and it is sharpest exactly when
+the **foreground** is in focus — one dominant peak, buried under a feature I
+put there myself. `15-lumstep-probe.py` re-rendered the same scene with the two
+layers at identical radiometry and changed nothing else. **MEASURED**,
+`data/lumstep-probe.txt`:
+
+| variant | truth-gated veiled enrichment | veiled ÷ smooth gradient at the fg-focus frame |
+|---|---:|---:|
+| step (fg 1.25× bg), as Gate 1c | 0.24× | 2.85× |
+| matched (fg = bg) | **0.28×** | **2.64×** |
+
+**Refuted.** Removing the luminance step moves the enrichment from 0.24× to
+0.28×, and the veiled pixels still carry **2.64×** the gradient magnitude of
+smooth pixels.
+
+**ARGUED — the mechanism, stated as a hypothesis, not a result.** The alpha
+boundary between two *independent* textures is a strong edge whether or not the
+layers differ in mean level, because the textures themselves are uncorrelated
+across it. That edge's sharpness peaks **once**, when the foreground is in
+focus. So the veiled pixel's through-focus curve is dominated by a single large
+peak and the background's contribution registers as a shoulder rather than a
+second peak — which is why the truly-veiled population is *less* multi-peaked,
+not more. M21's real 4.38× therefore depends on something a single smooth disc
+edge does not have. Candidates, none tested: occluding structure at many scales
+and orientations (a real bean's boundary is hairs, facets and crevices);
+backgrounds whose gradient energy is comparable to the occluder's; and a
+smaller foreground/background focus separation, so both peaks fall well inside
+the 21-frame window with comparable amplitude. **This is Gate 1c's failure
+axis and it is the honest answer to the milestone's central question about
+occlusion.**
 
 ### 4.4 Gate 2 — the negative control **fired on 3 of 4**, and the one it
 missed is the important one
@@ -543,6 +586,25 @@ area, so unit-sd normalisation spent nearly all the variance on content the
 sensor cannot represent, and the delivered structure collapsed to the noise
 floor. Now set to zero, with the cost — under-modelled aliasing — stated.
 
+### 5.8 Two occlusion hypotheses I was confident about, both wrong
+
+After Gate 1c attempt 3 I was confident the fitted defocus rate was the cause:
+`coc` had run to the grid edge at 12.0 px/frame, which puts a 144 px blur
+across an edge that M21 examines at R = 2 and R = 13. It is a good argument.
+It is also wrong — enrichment is **flat across a 12× sweep** (§4.3).
+
+I was then confident the occluder's 25 % luminance step was burying the
+signature under a feature I had planted. Also a good argument, also wrong —
+matched radiometry moves the enrichment 0.24× → 0.28× and the veiled pixels
+still carry 2.64× the smooth-pixel gradient.
+
+**ARGUED, and the reason both are in the report:** each hypothesis cost one
+render and about five minutes, and each converted a plausible story into a
+measurement. Had I argued instead of rendered, this report would have
+attributed Gate 1c's failure to the defocus fit — confidently, plausibly, and
+incorrectly. The honest conclusion is the one that survives: the plant does not
+produce the effect and I do not yet know what plant would.
+
 ---
 
 ## 6. Gate 3 — the failure axes
@@ -554,9 +616,11 @@ except where a measurement is cited.
 
 | axis | evidence | why it matters |
 |---|---|---|
+| **The veiling signature at an occluding edge does not reproduce.** | §4.3: truth-gated enrichment **0.24×–0.30×** against a real 4.38×; not caused by the defocus rate (flat over a 12× sweep) or by the occluder's luminance step (0.24× → 0.28×). | This is the use M21 needs and the simulator **cannot yet serve it**. Any occlusion-reconstruction score computed on this plant would be measuring the plant, not the algorithm. |
 | **The optics are unvalidated.** | Gate 2 NC-B: removing diffraction entirely changes high-frequency power by 4.5× in amplitude and passes every gate. | Any deconvolution, EDoF or PSF claim scored on this simulator is scored by a suite proven blind to the PSF. |
-| **Subject spatial statistics.** | §4.3: a single power law over-produces low-frequency power 6× and starves 0.3–0.5 cyc/px by 2× on a real organic subject. | This is what broke Gate 1c. Shaping helps (worst band 8.99× → 1.51×) but is a 64-parameter fit of the real subject. |
-| **The merged-noise floor is ~0.03–0.05 low.** | §4.2 and `data/gate1b-measured-placement.txt` (median |Δfloor| 0.0324, max 0.0515, systematically low). | The floor *is* the estimator's target. Under-modelling it makes every merge look better in simulation than in reality. |
+| **Subject spatial statistics.** | §4.3: a single power law over-produces low-frequency power 6× and starves 0.3–0.5 cyc/px by 2× on a real organic subject. | This is what broke Gate 1c's *base rate*. Shaping fixed it (28.5 % → 6.6 % against a real 4.8 %) but is a 64-parameter fit of the real subject. |
+| **Occluder geometry is one smooth disc edge.** | §4.3, ARGUED: the alpha boundary is a single strong gradient feature that sharpens exactly once. Real occluding structure is multi-scale. | Fixing this is the most likely route to a passing Gate 1c and is untested. |
+| **The merged-noise floor is ~0.03–0.05 low.** | §4.2 and `data/gate1b-measured-placement.txt` (median \|Δfloor\| 0.0324, max 0.0515, systematically low). | The floor *is* the estimator's target. Under-modelling it makes every merge look better in simulation than in reality. |
 | **PRNU is not modelled at all** — because it is unmeasured. | No flat-field capture exists. | Leading suspect for the floor deficit. Cannot be modelled honestly until measured. |
 | **Speckle runs high.** | `ring-1-3` 50.25 % vs 38.15 %; `ring-4-12` 27.7 % vs 10.9 %; `tenengrad-w0` 54.8 % vs 44.7 %. | Regulariser-sizing work would be tuned against a pessimistic winner map. |
 
@@ -571,6 +635,7 @@ except where a measurement is cited.
 | Drift is smooth in frame index | fact 1 says explicitly it is *not* a low-order polynomial; the generator's default is a constant rate and is labelled a **generator convenience, not a model**. Gates that need real drift are given the measured per-frame series. |
 | Through-focus curve shape | on `coffee-bean` the fitted `coc` runs to the grid edge (12.0 px/frame) with RMS shape error 0.17–0.19; the real curve is asymmetric and falls faster than any simulated one |
 | DSNU row/column/pixel split | M4 publishes a scalar; the ⅓/⅓/⅓ split is **ARGUED**, not measured |
+| `channels="green"` fast path | Gate 1c and the occlusion probes render with R and B photosites carrying green radiance, a 3× saving. **Valid for every green-plane statistic in this report; invalid for demosaicing, colour or chroma-noise work.** Declared here rather than left in a docstring. |
 
 ### 6.3 Not modelled at all
 
@@ -640,11 +705,25 @@ over-produces 0.02–0.20 power by **6×** and under-produces 0.30–0.50 by
 response peaks at frames **10, 10, 10 and 7** of 22 — never at the harness's
 own reference frame 11 — and sd@peak exceeds sd@ref by 2 %–12.6 %.
 
-**198. MEASURED.** With `coffee-bean`'s measured radiometry and a two-layer
-occlusion scene with a genuine alpha boundary, M21's committed detector run
-byte-identical reports 28.5 % overall multi-peak against the real 4.8 %, and
-enrichment 0.77× against the real 4.38×; the permutation placebo is correct at
-0.99. The detector saturates on synthetic texture before it can see the edge.
+**198. MEASURED.** With `coffee-bean`'s measured radiometry, a measured 64-bin
+subject spectrum, and a two-layer occlusion scene with a genuine alpha
+boundary, M21's committed detector run byte-identical reports **6.6 %** overall
+multi-peak against the real **4.8 %** — the base rate reproduces — but
+enrichment **1.03×** against the real **4.38×**. The permutation placebo is
+correct at 0.99. Enrichment is flat (1.03×, 0.92×, 1.03×) across a **12×** sweep
+of the defocus rate, so the defocus rate is not the cause.
+
+**198a. MEASURED.** Scored against the simulator's ground truth, M21's
+depth-step estimator (R = 13 argmax, median-filtered 5×5, |∇| ≥ 1) has
+**1.8–3.4 % precision** and **10.5–11.9 % recall**, over-flagging true depth
+steps by **3.5–5.7×**. This is not knowable on any real capture.
+
+**198b. MEASURED.** With a **perfect** depth-step map, the truly-veiled pixels
+(0.02 < α < 0.98) of the simulated occlusion scene are multi-peaked at
+**1.6–2.0 %** against **6.8–7.0 %** on smooth depth — enrichment **0.24×–0.28×**.
+The effect has the **wrong sign**, and it is not caused by the occluder's
+luminance step (removing it moves 0.24× → 0.28×, while veiled pixels still
+carry **2.64×** the gradient magnitude of smooth pixels).
 
 **199. MEASURED.** Blur-then-composite and composite-then-blur differ by
 **5.2 % of level in a 48 px band** at an occluding edge under this rig's
@@ -693,6 +772,24 @@ so the delivered fine-scale content is starved twice.
 simulated result, and state the *count* of fitted numbers. "β" and "a 64-bin
 radial profile" are different claims about how much of reality was assumed.
 
+**108.** When a simulated detector matches a real one's *base rate* but not its
+*enrichment*, do not report either alone. The two can move independently, and
+this milestone had a version of Gate 1c that was wrong on both and a version
+that was right on one — the second looks much better and is no more faithful on
+the axis that matters.
+
+**109.** Before concluding a simulator fails to reproduce an effect, gate the
+statistic on ground truth rather than on the original paper's *estimator*. Here
+the estimated step map had 1.8 % precision, so the estimated enrichment (1.03×)
+and the true enrichment (0.24×) disagreed about even the *sign* of the effect,
+and only one of them is a statement about the forward model.
+
+**110.** A failure hypothesis is worth one render. Two of this milestone's
+three occlusion hypotheses were killed by a single-variable probe costing under
+five minutes each: the defocus-rate hypothesis by a 12× sweep, the
+luminance-step hypothesis by re-rendering with matched radiometry. Neither
+would have been settled by argument.
+
 ---
 
 ## 9. Open questions (30+)
@@ -722,6 +819,26 @@ correlated the real focus field is at long range?
 **35.** Is the simulated speckle excess (50.3 % vs 38.2 %) fully explained by
 the subject-spectrum mismatch, or does it survive spectrum shaping?
 
+**36.** What does a plant need in order to reproduce M21's 4.38×? Three
+untested candidates, in the order this milestone would try them: (a)
+multi-scale occluding structure — many boundaries at many orientations and
+curvatures rather than one smooth disc edge; (b) a background whose gradient
+energy is comparable to the occluder's, so neither peak dominates; (c) a
+smaller foreground/background focus separation, so both peaks fall well inside
+the frame window with comparable amplitude. Each is one render.
+
+**37.** M21's depth-step estimator has **1.8–3.4 % precision** against ground
+truth on this plant (fact 198a). How much of M21's real **4.38×** survives a
+better step-map estimator on real data — and does the 4.38× itself depend on
+the estimator's contamination? This is now checkable in simulation and is the
+most consequential follow-up in this report.
+
+**38.** Does the truth-gated enrichment's **negative** sign (fact 198b) also
+appear on real data if a better depth-step proxy is available? If it does, M21's
+mechanism claim needs revisiting; if it does not, the plant is the problem. The
+simulator cannot distinguish these on its own — it needs a real capture with a
+known occluding geometry, which would be a new entry on `captures-needed.md`.
+
 ---
 
 ## 10. How to reproduce
@@ -742,7 +859,10 @@ python experiments\m25-simulator\src\08-gate1b-prereg-rerun.py      # 244 s   (t
 python experiments\m25-simulator\src\09-diffraction-effect.py       #  60 s
 python experiments\m25-simulator\src\10-spectrum-check.py           # 120 s
 python experiments\m25-simulator\src\11-psd-shaping-check.py        # 200 s
-python experiments\m25-simulator\src\12-gate1c-shaped.py            # ~25 m
+python experiments\m25-simulator\src\12-gate1c-shaped.py          # 1249 s  (the scored Gate 1c)
+python experiments\m25-simulator\src\13-coc-probe.py              # 441 s
+python experiments\m25-simulator\src\14-stepmap-truth.py          # 294 s
+python experiments\m25-simulator\src\15-lumstep-probe.py          # 293 s
 ```
 
 Outputs land in `experiments/m25-simulator/data/`. Reads

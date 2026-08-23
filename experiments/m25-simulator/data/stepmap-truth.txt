@@ -1,0 +1,30 @@
+Ground truth vs M21's estimated depth-step map
+the simulator knows which pixels sit at a depth discontinuity; M21 has to estimate it
+
+real: ISO 50, mean 1528 DN, sd 616 DN, beta 3.454, peak frame 5
+PSD shaping mismatch by iteration: 1.2391, 0.4277, 0.2722, 0.2445
+
+--- coc 1.0 px/frame  (render 137s, green 1024x1024) ---
+  M21 estimated step map:  227995 px flagged; TRUE step map:   39854 px
+  precision   1.8%   recall  10.5%   (over-flagging factor 5.72x)
+  ESTIMATED step map :   6.6% at steps vs   6.4% smooth =  1.03x
+  TRUE      step map :   1.6% at steps vs   6.8% smooth =  0.24x
+  TRUE partial-alpha :   1.6% veiled  vs   6.8% smooth =  0.24x   <- the pixels M21's thesis is about
+  overall multi-peak on strong pixels: 6.6%  (real coffee-bean 4.8%)
+
+--- coc 3.0 px/frame  (render 143s, green 1024x1024) ---
+  M21 estimated step map:  139411 px flagged; TRUE step map:   39927 px
+  precision   3.4%   recall  11.9%   (over-flagging factor 3.49x)
+  ESTIMATED step map :   5.6% at steps vs   6.1% smooth =  0.92x
+  TRUE      step map :   1.8% at steps vs   6.1% smooth =  0.30x
+  TRUE partial-alpha :   1.7% veiled  vs   6.1% smooth =  0.28x   <- the pixels M21's thesis is about
+  overall multi-peak on strong pixels: 5.9%  (real coffee-bean 4.8%)
+
+==========================================================================
+  coc  M21 estimated  true step map  true veiled px
+  1.0          1.03x          0.24x           0.24x
+  3.0          0.92x          0.30x           0.28x
+REAL (M21)          4.38x             --              --
+
+VERDICT: the veiling effect is NOT recoverable even with a perfect depth-step map.  The forward model does not reproduce M21's enrichment on this plant, and that is an honest failure axis of the simulator.
+[294s]

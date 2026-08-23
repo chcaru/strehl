@@ -1,0 +1,39 @@
+Where does the simulated spatial spectrum stop matching the real one?
+(radially averaged power of the green plane, Hann-windowed, black-subtracted)
+
+--- 109MSDCF flat ROI 2272,1344 (ISO 160, coc 1.5, S=3) ---
+  real  mean 2532.3 DN  sd 28.201 DN   fitted beta 1.651
+  sim   mean 2532.6 DN  sd 28.413 DN
+  band (cyc/green-px)          real P        sim P  sim/real
+  0.02-0.05                 4.781e+04    5.225e+04     1.093
+  0.05-0.10                 3.106e+04    3.468e+04     1.117
+  0.10-0.20                 1.482e+04    1.516e+04     1.022
+  0.20-0.30                      7040         5986     0.850
+  0.30-0.40                      5580         5082     0.911
+  0.40-0.50                      5108         4928     0.965
+  slope over 0.02-0.20: real +1.745  sim +1.901
+  slope over 0.20-0.45: real +0.773  sim +0.561
+  modelled white-noise power per bin ~ 371 DN^2 (flat across f)
+
+--- coffee-bean M21 crop (ISO 50, coc 12.0, S=2) ---
+  real  mean 1960.2 DN  sd 613.773 DN   fitted beta 3.515
+  sim   mean 2042.9 DN  sd 615.321 DN
+  band (cyc/green-px)          real P        sim P  sim/real
+  0.02-0.05                 4.599e+05    2.855e+06     6.208
+  0.05-0.10                 5.869e+04    3.672e+05     6.256
+  0.10-0.20                      6195    3.674e+04     5.931
+  0.20-0.30                      2435         2757     1.132
+  0.30-0.40                      2539         1253     0.494
+  0.40-0.50                      2468         1065     0.432
+  slope over 0.02-0.20: real +3.696  sim +4.111
+  slope over 0.20-0.45: real +0.157  sim +1.993
+  modelled white-noise power per bin ~ 83 DN^2 (flat across f)
+
+==============================================================================
+109MSDCF flat ROI 2272,1344      sim/real power over 0.30-0.50 cyc/px = 0.937x
+coffee-bean M21 crop             sim/real power over 0.30-0.50 cyc/px = 0.463x
+
+READ: a ratio below 1 means the simulator delivers LESS fine-scale
+structure than reality at the same total sd, which is exactly what
+would inflate speckle, depress wide-support excess, and flood the
+R=2 multi-peak detector with noise-driven peaks.

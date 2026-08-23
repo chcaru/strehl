@@ -1,0 +1,56 @@
+Gate 1c (second attempt) -- M21 enrichment at coffee-bean conditions
+M21 script: C:\dev\blog\death-of-software\projects\strehl\experiments\m21-occlusion-bimodality\src\03-permutation-placebo.py (byte-identical via runpy)
+
+MEASURED on real coffee-bean at M21's crop (600, 1624, 900, 1924), 21 frames (every 5th of 105):
+  ISO 50, g 0.1145 DN/e-, RN 4.20 e-
+  reference frame 10: mean 1528.2 DN, sd 616.0 DN -> contrast 40.3%
+  modelled green-luma noise 9.36 DN -> structure:noise = 66:1
+  spectral slope beta 3.454; focus peaks at frame 5
+  per-frame level peak-to-peak 17.95% (MEASURED, injected)
+
+fitted coc = 12.0 px/frame (grid 0.5..12.0), RMS shape error 0.1930
+  real: 0.72 0.75 0.80 0.87 0.92 1.00 0.98 0.91 0.80 0.74 0.71 0.68 0.66 0.64 0.62 0.61 0.59 0.58 0.57 0.56 0.55
+  sim : 0.95 0.96 0.98 0.99 1.00 1.00 0.99 0.98 0.97 0.95 0.94 0.92 0.90 0.88 0.86 0.84 0.82 0.80 0.78 0.76 0.73
+
+cells: 109MSDCF slot = OCCLUSION (depth step WITH alpha edge, the test);
+       119MSDCF slot = TERRACE  (same depth step, NO alpha edge);
+       coffee-bean   = TILT     (depth variation, NO step).
+       occluder at focus index 4.0, background at 16.0.
+
+rendered 109MSDCF     (21, 2048, 2048) in 161s   mid green mean 1638 DN sd 583 DN (real 1528 / 616)
+rendered 119MSDCF     (21, 2048, 2048) in 587s   mid green mean 1534 DN sd 605 DN (real 1528 / 616)
+rendered coffee-bean  (21, 2048, 2048) in 567s   mid green mean 1518 DN sd 612 DN (real 1528 / 616)
+
+ground truth on the occlusion cell's crop (TRUE, not estimated -- this is the thing the real corpus cannot supply):
+  foreground coverage 32.7%
+  true depth-step pixels 39932
+  partial-coverage (0.02 < alpha < 0.98) pixels 9911
+
+==============================================================================
+=== R2 occlusion bimodality, with the circularity broken ===
+ - bimodality measured at R=2 (fine, so a two-layer edge is not smeared)
+ - depth steps measured from the R=13 argmax, median-filtered 5x5 (independent scale,
+   robust to the single-pixel argmax flips that a bimodal pixel itself produces)
+ - PLACEBO: permute the frame order. Noise statistics are preserved EXACTLY;
+   genuine focus structure is destroyed. Real enrichment must collapse to ~1.0x.
+
+109MSDCF: 21 frames   strong pixels 100.0%   depth-step map: 126178 at step>=1, 830683 at step<0.25
+   REAL       multi-peak:  23.3% at depth steps vs  30.5% on smooth depth   =  0.77x   (overall 28.5%)
+   PERMUTED   multi-peak:  92.4% at depth steps vs  93.4% on smooth depth   =  0.99x   (overall 93.3%)
+
+119MSDCF: 21 frames   strong pixels 100.0%   depth-step map: 61105 at step>=1, 954614 at step<0.25
+   REAL       multi-peak:  48.4% at depth steps vs  46.2% on smooth depth   =  1.05x   (overall 46.1%)
+   PERMUTED   multi-peak:  89.7% at depth steps vs  87.4% on smooth depth   =  1.03x   (overall 87.6%)
+
+coffee-bean: 21 frames   strong pixels 100.0%   depth-step map: 23759 at step>=1, 996384 at step<0.25
+   REAL       multi-peak:  36.2% at depth steps vs  38.1% on smooth depth   =  0.95x   (overall 38.0%)
+   PERMUTED   multi-peak:  93.8% at depth steps vs  93.9% on smooth depth   =  1.00x   (overall 93.9%)
+
+==============================================================================
+cell                        overall  enrich  placebo
+occlusion (TEST)              28.5%    0.77     0.99
+terrace (no alpha edge)       46.1%    1.05     1.03
+tilt (no depth step)          38.0%    0.95     1.00
+REAL coffee-bean (M21)         4.8%    4.38     1.01
+REAL 109MSDCF (M21)           60.7%    0.87     1.01
+GATE 1c: FAIL  (enrichment >= 2.0x AND placebo 1.00 +/- 0.15)  [1445s]

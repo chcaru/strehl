@@ -1,0 +1,26 @@
+Is NC-B's blind spot the gate's or the knob's?
+
+with_diffraction=True   in-focus green structure sd 20.8089 DN
+with_diffraction=False  in-focus green structure sd 28.4420 DN
+structure sd ratio (no-diffraction / diffraction) = 1.3668
+
+N_eff = 33.00  (marked f/11 at m=2.0, p=1.0)
+
+radially averaged power, green plane (cycles per green px):
+     freq        diffr     no-diffr    ratio
+    0.015    1.526e+09    1.627e+09    1.067
+    0.055    2.207e+08    2.881e+08    1.306
+    0.095    7.353e+07    1.184e+08    1.610
+    0.135    3.076e+07    6.272e+07    2.039
+    0.175    1.547e+07    4.101e+07    2.650
+    0.215    7.455e+06    2.691e+07    3.610
+    0.255    3.813e+06    2.021e+07    5.302
+    0.295    2.037e+06    1.614e+07    7.927
+    0.335    1.006e+06     1.33e+07   13.218
+    0.375    4.217e+05    1.028e+07   24.383
+    0.415    1.865e+05    9.547e+06   51.200
+    0.455    6.729e+04    8.275e+06  122.966
+    0.495         6280    7.102e+06 1131.001
+
+amplitude ratio over 0.30-0.48 cyc/green-px: 4.521x
+VERDICT: the knob is REAL; the rendered image changes materially, so Gate 1 is simply insensitive to it

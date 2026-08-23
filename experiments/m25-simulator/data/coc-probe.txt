@@ -1,0 +1,41 @@
+Probe -- is Gate 1c's FAIL a physics failure or a fitting failure?
+varying ONE parameter: coc_px_per_frame in 1.0, 3.0, 12.0
+everything else identical to Gate 1c attempt 3 (12-gate1c-shaped.py)
+
+real: ISO 50, mean 1528 DN, sd 616 DN, beta 3.454, focus peak frame 5
+PSD shaping mismatch by iteration: 1.2391, 0.4277, 0.2722, 0.2445
+
+slot 119MSDCF     coc   1.0 px/frame -> edge blur 12 px   rendered in 137s   mid green mean 1671 sd 645
+slot 109MSDCF     coc   3.0 px/frame -> edge blur 36 px   rendered in 142s   mid green mean 1671 sd 630
+slot coffee-bean  coc  12.0 px/frame -> edge blur 144 px   rendered in 142s   mid green mean 1669 sd 535
+
+==============================================================================
+=== R2 occlusion bimodality, with the circularity broken ===
+ - bimodality measured at R=2 (fine, so a two-layer edge is not smeared)
+ - depth steps measured from the R=13 argmax, median-filtered 5x5 (independent scale,
+   robust to the single-pixel argmax flips that a bimodal pixel itself produces)
+ - PLACEBO: permute the frame order. Noise statistics are preserved EXACTLY;
+   genuine focus structure is destroyed. Real enrichment must collapse to ~1.0x.
+
+109MSDCF: 21 frames   strong pixels 100.0%   depth-step map: 139411 at step>=1, 815099 at step<0.25
+   REAL       multi-peak:   5.6% at depth steps vs   6.1% on smooth depth   =  0.92x   (overall 5.9%)
+   PERMUTED   multi-peak:  94.5% at depth steps vs  94.0% on smooth depth   =  1.01x   (overall 94.1%)
+
+119MSDCF: 21 frames   strong pixels 99.0%   depth-step map: 227995 at step>=1, 708855 at step<0.25
+   REAL       multi-peak:   6.6% at depth steps vs   6.4% on smooth depth   =  1.03x   (overall 6.6%)
+   PERMUTED   multi-peak:  84.6% at depth steps vs  85.2% on smooth depth   =  0.99x   (overall 85.0%)
+
+coffee-bean: 21 frames   strong pixels 100.0%   depth-step map: 88800 at step>=1, 898101 at step<0.25
+   REAL       multi-peak:  17.9% at depth steps vs  17.4% on smooth depth   =  1.03x   (overall 17.4%)
+   PERMUTED   multi-peak:  94.6% at depth steps vs  96.3% on smooth depth   =  0.98x   (overall 96.1%)
+
+==============================================================================
+SAME occlusion scene, three defocus rates:
+ coc px/frame  edge blur   overall  enrich  placebo
+          1.0        12p      6.6%    1.03     0.99
+          3.0        36p      5.9%    0.92     1.01
+         12.0       144p     17.4%    1.03     0.98
+  REAL coffee-bean (M21)        4.8%    4.38     1.01
+
+VERDICT: enrichment is FLAT across a 12x range of defocus rate (1.03x .. 1.03x).  The defocus rate is NOT the binding cause; the simulator does not reproduce M21's enrichment and that is the honest failure axis.
+[441s]

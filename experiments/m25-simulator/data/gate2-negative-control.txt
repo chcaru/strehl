@@ -1,0 +1,37 @@
+Gate 2 -- negative control on the simulator itself
+
+real ROI 2272,1344: mean 2020.29 DN, sd 28.2007 DN, focus peak frame 10, beta 1.651
+gates: rho(phi,excess) >= 0.7 at p<0.05; tenengrad-w0 excess < 0.02; median |excess_sim - excess_real| <= 0.05
+real single-ROI excesses span 0.0000 .. 0.7419
+
+baseline               mean 2021.00 sd 27.9342  rho_phi +0.931 (p 0.0000)  tenw0 c(1) 0.9841 exc 0.0000  excess MAD 0.0104 slope 1.015  [158s]
+                       axes: phi ok, zero-tap ok, excess-level ok
+NC-A gain 2x           mean 2020.69 sd 28.2257  rho_phi +0.976 (p 0.0000)  tenw0 c(1) 1.0144 exc 0.0000  excess MAD 0.0903 slope 1.524  [166s]
+                       axes: phi ok, zero-tap ok, excess-level FIRED
+NC-B no diffraction    mean 2021.01 sd 28.1152  rho_phi +0.959 (p 0.0000)  tenw0 c(1) 0.9544 exc 0.0000  excess MAD 0.0214 slope 0.986  [157s]
+                       axes: phi ok, zero-tap ok, excess-level ok
+NC-C correlated noise  mean 2020.95 sd 27.7750  rho_phi +0.920 (p 0.0000)  tenw0 c(1) 0.9918 exc 0.0000  excess MAD 0.0602 slope 0.766  [207s]
+                       axes: phi ok, zero-tap ok, excess-level FIRED
+NC-D no noise          mean 2027.99 sd 209.5835  rho_phi +0.516 (p 0.0407)  tenw0 c(1) 0.9759 exc 0.0000  excess MAD 0.1366 slope 0.016  [143s]
+                       axes: phi FIRED, zero-tap ok, excess-level FIRED
+
+==============================================================================
+  variant                   phi  zerotap  exc-lvl  fired?
+  baseline                   ok       ok       ok  no
+  NC-A gain 2x               ok       ok     FIRE  YES
+  NC-B no diffraction        ok       ok       ok  no
+  NC-C correlated noise      ok       ok     FIRE  YES
+  NC-D no noise            FIRE       ok     FIRE  YES
+
+3 of 4 mis-specifications fired.
+BLIND SPOTS -- Gate 1 did NOT catch these, so Gate 1 is not evidence about them:
+  * NC-B no diffraction
+GATE 2: PASS (3/4 fired)  [840s]
+
+csv
+variant,mean,sd,rho_phi,p_phi,rho_sup,p_sup,ten_c1,ten_exc,excess_mad,excess_slope
+baseline,2021.002426147461,27.9342252416915,0.9314667230715727,1.5864359036287574e-07,-0.2732547192509589,0.30582860356971037,0.984074762653963,0.0,0.010437475806783114,1.0145691284618465
+NC-A gain 2x,2020.6933517456055,28.22570220191505,0.9764359351988218,1.0164757155785362e-10,-0.33979981978478624,0.19786011790241723,1.0143851280540048,0.0,0.09031530288224598,1.523719144965058
+NC-B no diffraction,2021.0130233764648,28.115201644580903,0.9587628865979381,4.8747198294164946e-09,-0.2669855726880463,0.3174977455861645,0.9543721821900513,0.0,0.021444531641458875,0.9860728807909896
+NC-C correlated noise,2020.9500732421875,27.77500988309214,0.9196760050580085,4.668461773967607e-07,-0.17609748573950684,0.514155957403871,0.9917689097949707,0.0,0.06018429859893437,0.7659932261739661
+NC-D no noise,2027.9855346679688,209.58346898819863,0.5162121988119645,0.040653303631344645,0.18321023401468525,0.4970244475236462,0.9759114784737747,0.0,0.13662599999999991,0.016008917079028094

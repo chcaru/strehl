@@ -68,6 +68,133 @@ def fit_beta(value_roi: np.ndarray, lo=0.02, hi=0.20) -> float:
     return float(-slope)
 
 
+def calibrate_contrast(cfg, sensor_hw, base_e, contrast_e, beta, seed,
+                       target_struct_dn, iso, psd=None) -> float:
+    """Return the corrected latent texture contrast, in electrons.
+
+    The latent texture is attenuated by diffraction, defocus and the pixel
+    aperture before it reaches the green plane, so a latent contrast fitted
+    from the *observed* ROI sd under-shoots.  One noise-free single-frame
+    render at the plane's own focus index measures the attenuation directly;
+    the correction is exact to first order because the whole optical chain is
+    linear in contrast.
+
+    Returns the contrast that makes the simulated in-focus green structure sd
+    equal `target_struct_dn`.  This is one of the three FITTED nuisance
+    parameters -- see `PREREGISTRATION.md`.
+    """
+    import copy
+
+    from .render import render_stack
+    from . import stackio as _io
+
+    probe = copy.deepcopy(cfg)
+    probe.capture = Capture(iso=cfg.capture.iso, n_frames=1,
+                            coc_px_per_frame=cfg.capture.coc_px_per_frame,
+                            gain_pp=0.0)
+    probe.shot = probe.read = probe.fpn = False
+    u = 0.0
+    sc = SC.flat_texture(sensor_hw, cfg_supersample(cfg), base_e, contrast_e,
+                         u, beta=beta, seed=seed, margin=cfg.margin_px,
+                         psd=psd)
+    st = render_stack(sc, probe, scale_series=np.array([1.0]),
+                      focus_planes=np.array([u]))
+    got = float(_io.green_value(st.frames[0]).std())
+    assert got > 1e-6, "calibration render produced no structure"
+    return contrast_e * target_struct_dn / got
+
+
+def radial_power(a, nb: int = 64):
+    """Radially averaged power of a green plane, Hann-windowed and normalised
+    so that a white field of variance s^2 gives s^2 in every bin.
+
+    The normalisation matters: it is what lets the modelled sensor noise be
+    subtracted from a real spectrum to leave the subject's structure.
+    """
+    a = np.asarray(a, np.float64)
+    a = a - a.mean()
+    win = np.hanning(a.shape[0])[:, None] * np.hanning(a.shape[1])[None, :]
+    p = np.abs(np.fft.rfft2(a * win)) ** 2 / (win ** 2).sum()
+    fy = np.fft.fftfreq(a.shape[0])[:, None]
+    fx = np.fft.rfftfreq(a.shape[1])[None, :]
+    fr = np.sqrt(fy * fy + fx * fx)
+    edges = np.linspace(0.0, 0.5, nb + 1)
+    idx = np.clip(np.digitize(fr.ravel(), edges) - 1, 0, nb - 1)
+    tot = np.bincount(idx, weights=p.ravel(), minlength=nb)
+    cnt = np.bincount(idx, minlength=nb)
+    ok = cnt > 0
+    return 0.5 * (edges[:-1] + edges[1:])[ok], tot[ok] / cnt[ok]
+
+
+def target_psd(real_green: np.ndarray, iso: float, nb: int = 64,
+               floor_frac: float = 0.05):
+    """The real subject's STRUCTURE power spectrum: the observed radial power
+    minus the modelled flat sensor-noise power.
+
+    Bins where the residual falls below `floor_frac` of the noise level are
+    clamped there, and their count is returned, because in those bins the real
+    structure is not measurable and the target is an extrapolation, not a
+    measurement.  DERIVED, and the caller must report the clamped count.
+    """
+    nm = NoiseModel.for_iso(iso)
+    f, p = radial_power(real_green, nb)
+    nv = 0.5 * (nm.gain_dn_per_e * float(np.mean(real_green))
+                + (nm.read_noise_e * nm.gain_dn_per_e) ** 2)
+    s = p - nv
+    clamped = int(np.sum(s < floor_frac * nv))
+    s = np.maximum(s, floor_frac * nv)
+    return f, s, nv, clamped
+
+
+def calibrate_psd(cfg, sensor_hw, base_e, contrast_e, beta, seed, target_f,
+                  target_p, focus_index, iters: int = 3, nb: int = 64):
+    """Return `(freq, amp)` -- a latent radial amplitude profile whose rendered
+    green plane matches `target_p` band by band.
+
+    Iterative because the optical chain, though linear, is not diagonal in the
+    binned radial coordinate.  Each pass renders one NOISE-FREE in-focus frame,
+    compares its radial power with the target, and multiplies the latent
+    amplitude by the square root of the shortfall.
+
+    **Declare this when using it.**  It widens the fitted-nuisance set from one
+    number (beta) to a whole radial profile -- roughly 60 numbers of the real
+    subject's second-order statistics.  It cannot fit anything about depth:
+    a radial power spectrum is stationary and isotropic and carries no
+    information about which pixels sit at a depth discontinuity, which is what
+    Gate 1c scores.
+    """
+    import copy
+
+    from .render import render_stack
+    from . import stackio as _io
+
+    probe = copy.deepcopy(cfg)
+    probe.capture = Capture(iso=cfg.capture.iso, n_frames=1,
+                            coc_px_per_frame=cfg.capture.coc_px_per_frame,
+                            gain_pp=0.0)
+    probe.shot = probe.read = probe.fpn = False
+    ss = cfg_supersample(cfg)
+    freq = np.asarray(target_f, float)
+    want = np.asarray(target_p, float)
+    want = want / want.sum()
+    amp = np.sqrt(np.maximum(want, 1e-12))
+    hist = []
+    for _ in range(iters):
+        sc = SC.flat_texture(sensor_hw, ss, base_e, contrast_e, focus_index,
+                             beta=beta, seed=seed, margin=cfg.margin_px,
+                             psd=(freq, amp))
+        st = render_stack(sc, probe, scale_series=np.array([1.0]),
+                          focus_planes=np.array([focus_index]))
+        g = _io.green_value(st.frames[0]).astype(np.float64)
+        f, p = radial_power(g, nb)
+        got = np.interp(freq, f, p)
+        got = got / max(got.sum(), 1e-30)
+        hist.append(float(np.median(np.abs(np.log(
+            np.maximum(got, 1e-12) / np.maximum(want, 1e-12))))))
+        amp = amp * np.sqrt(np.clip(want / np.maximum(got, 1e-12), 1e-4, 1e4))
+    return freq, amp, hist
+
+
 def cfg_109(coc_px_per_frame: float, n_frames: int = 22, seed: int = 1,
             margin_px: int = 48, **kw) -> RenderConfig:
     """A render config matched to `109MSDCF`: ISO 160, marked f/11, 22 frames.

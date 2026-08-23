@@ -1,0 +1,35 @@
+Does PSD shaping deliver the real subject's spectrum?
+
+real crop (512, 512): mean 1960.2 DN, sd 613.77 DN, fitted beta 3.398
+modelled flat noise power 83 DN^2/bin; 0 of 64 bins clamped at the noise floor (structure NOT measurable there)
+
+calibrate_psd shape mismatch (median |log ratio|) by iteration: 1.1007, 0.0536, 0.0507, 0.0501
+
+--- single power law (old) ---   sim sd 613.75 DN (real 613.77)
+  band                real P       sim P  sim/real
+  0.02-0.05        4.599e+05   3.733e+06     8.116
+  0.05-0.10        5.869e+04   5.187e+05     8.838
+  0.10-0.20             6195   5.569e+04     8.990
+  0.20-0.30             2435        3836     1.575
+  0.30-0.40             2539        1332     0.525
+  0.40-0.50             2468        1036     0.420
+
+--- shaped PSD (new) ---   sim sd 613.47 DN (real 613.77)
+  band                real P       sim P  sim/real
+  0.02-0.05        4.599e+05   3.411e+05     0.742
+  0.05-0.10        5.869e+04   3.883e+04     0.662
+  0.10-0.20             6195        4477     0.723
+  0.20-0.30             2435        1996     0.820
+  0.30-0.40             2539        2050     0.808
+  0.40-0.50             2468        2125     0.861
+
+==============================================================================
+  band                 old       new
+  0.02-0.05          8.116     0.742
+  0.05-0.10          8.838     0.662
+  0.10-0.20          8.990     0.723
+  0.20-0.30          1.575     0.820
+  0.30-0.40          0.525     0.808
+  0.40-0.50          0.420     0.861
+worst band error: old 8.99x, new 1.51x
+VERDICT: shaping helps

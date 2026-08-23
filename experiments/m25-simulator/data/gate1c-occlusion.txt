@@ -1,0 +1,45 @@
+Gate 1c -- M21's occlusion bimodality on scenes with ground truth
+M21 script: C:\dev\blog\death-of-software\projects\strehl\experiments\m21-occlusion-bimodality\src\03-permutation-placebo.py (run byte-identical via runpy)
+CFA 2048x2048 at raw offset (1200, 1800); supersample 2; margin 40; K=22; coc 1.0 px/frame
+foreground/near focus index 5.0, background/far 16.0 (depth step 11 frames)
+
+fitted from real 109MSDCF: base 5515.4 e-, contrast 56.2 e-, beta 1.651
+calibrated latent contrast 102.9 e- sd
+
+rendered 109MSDCF     (22, 2048, 2048) in 191s   mid-frame green mean 2417.0 DN, sd 540.5 DN
+rendered 119MSDCF     (22, 2048, 2048) in 603s   mid-frame green mean 2020.5 DN, sd 33.9 DN
+rendered coffee-bean  (22, 2048, 2048) in 586s   mid-frame green mean 2020.0 DN, sd 34.3 DN
+
+ground truth on the occlusion cell's crop (TRUE, not estimated):
+  foreground coverage 32.7% of pixels
+  true depth-step pixels (|grad true focus| >= 1): 39635
+  partial-coverage (0.02 < alpha < 0.98) pixels: 9911
+
+==============================================================================
+M21 03-permutation-placebo.py, verbatim, on the simulated stacks:
+------------------------------------------------------------------------------
+=== R2 occlusion bimodality, with the circularity broken ===
+ - bimodality measured at R=2 (fine, so a two-layer edge is not smeared)
+ - depth steps measured from the R=13 argmax, median-filtered 5x5 (independent scale,
+   robust to the single-pixel argmax flips that a bimodal pixel itself produces)
+ - PLACEBO: permute the frame order. Noise statistics are preserved EXACTLY;
+   genuine focus structure is destroyed. Real enrichment must collapse to ~1.0x.
+
+109MSDCF: 22 frames   strong pixels 68.9%   depth-step map: 176730 at step>=1, 477101 at step<0.25
+   REAL       multi-peak:  80.1% at depth steps vs  82.1% on smooth depth   =  0.98x   (overall 81.4%)
+   PERMUTED   multi-peak:  90.6% at depth steps vs  90.4% on smooth depth   =  1.00x   (overall 90.5%)
+
+119MSDCF: 22 frames   strong pixels 77.7%   depth-step map: 147858 at step>=1, 592788 at step<0.25
+   REAL       multi-peak:  88.0% at depth steps vs  88.2% on smooth depth   =  1.00x   (overall 88.1%)
+   PERMUTED   multi-peak:  89.1% at depth steps vs  89.1% on smooth depth   =  1.00x   (overall 89.1%)
+
+coffee-bean: 5 frames   strong pixels 32.0%   depth-step map: 12022 at step>=1, 306566 at step<0.25
+   REAL       multi-peak:   0.6% at depth steps vs   0.5% on smooth depth   =  1.05x   (overall 0.5%)
+   PERMUTED   multi-peak:   0.5% at depth steps vs   0.5% on smooth depth   =  0.97x   (overall 0.5%)
+
+------------------------------------------------------------------------------
+occlusion cell enrichment  = 0.98   (M21 real corpus: 4.38x)
+occlusion cell placebo     = 1.0  (M21 real corpus: 1.01x)
+terrace  cell enrichment   = 1.0   (control: depth step, no alpha edge)
+tilt     cell enrichment   = 1.05   (control: no depth step)
+GATE 1c: FAIL  (criterion: enrichment >= 2.0x AND placebo 1.00 +/- 0.15)  [1416s]

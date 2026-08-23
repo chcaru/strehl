@@ -1,0 +1,43 @@
+Gate 1b -- PRE-REGISTERED five axes, rerun with MEASURED placement
+ROI 2272,1344; measure ring-1-3; widths [1, 3, 5, 7, 9, 13, 17, 21, 25, 33, 41, 49, 65, 81, 97]
+
+MEASURED on the real stack (scene placement, not physics):
+  focus peak frame 10 (m9 divides by frame 11); mean 2020.29 DN; sd 28.2007 DN; level p-p 1.026%
+  fitted base 5515.4 e-, contrast 56.2 e-, beta 1.651
+targets:
+  argmax_w1           1.2527 +/- 0.05  [m9 CSV, this ROI (like-for-like)]
+  mean                0.5340 +/- 0.05  [fact 19, M2 (different harness)]
+  placebo             0.9810 +/- 0.05  [fact 19, M2 (different harness)]
+  argmax_w17          1.0737 +/- 0.05  [m9 CSV, this ROI (like-for-like)]
+  speckle_w17_pp      0.8286 +/- 2.0   [m9 CSV, this ROI (like-for-like)]
+
+coc 0.5  : argmax(1) 1.2016  argmax(17) 1.0475  floor 1.0235  mean 0.7254  placebo 1.0109  speckle 54.72% -> 9.642%  [2/5]  [44s]
+coc 1.0  : argmax(1) 1.1769  argmax(17) 1.0449  floor 1.0392  mean 0.6932  placebo 0.9899  speckle 52.59% -> 5.751%  [2/5]  [44s]
+coc 1.5  : argmax(1) 1.1661  argmax(17) 1.0443  floor 1.0318  mean 0.6655  placebo 0.9889  speckle 50.41% -> 3.120%  [2/5]  [48s]
+coc 2.0  : argmax(1) 1.1636  argmax(17) 1.0466  floor 1.0234  mean 0.6419  placebo 0.9795  speckle 48.99% -> 1.646%  [3/5]  [44s]
+coc 3.0  : argmax(1) 1.1411  argmax(17) 1.0434  floor 1.0184  mean 0.6002  placebo 0.9620  speckle 47.80% -> 0.612%  [3/5]  [46s]
+
+==============================================================================
+  axis                target    tol      best       at  ok
+  argmax_w1           1.2527  0.050    1.2016   coc0.5  NO
+  mean                0.5340  0.050    0.6002   coc3.0  NO
+  placebo             0.9810  0.050    0.9795   coc2.0  yes
+  argmax_w17          1.0737  0.050    1.0475   coc0.5  yes
+  speckle_w17_pp      0.8286  2.000    0.6119   coc3.0  yes
+
+configurations satisfying ALL five axes at once: 0
+best single configuration: coc 2.0 at 3/5
+    argmax_w1        sim    1.1636 vs    1.2527  delta -0.0891  MISS
+    mean             sim    0.6419 vs    0.5340  delta +0.1079  MISS
+    placebo          sim    0.9795 vs    0.9810  delta -0.0015  ok
+    argmax_w17       sim    1.0466 vs    1.0737  delta -0.0271  ok
+    speckle_w17_pp   sim    1.6464 vs    0.8286  delta +0.8178  ok
+GATE 1b (pre-registered axes): PARTIAL (3/5 reachable, best joint 3/5)  [244s]
+
+csv
+coc,argmax_w1,argmax_w17,floor,mean,placebo,speckle_w1_pp,speckle_w17_pp,winners_w1,mean_dn,sd,n_ok
+0.5,1.201603579341273,1.047468946989734,1.0235149885186352,0.7254369037117365,1.0108938435717318,54.71954345703125,9.64202880859375,22,2021.631950378418,28.155980579397873,2
+1.0,1.176884430723361,1.0448551378040363,1.0391785323224634,0.6932242283690447,0.9898535390430018,52.593994140625,5.75103759765625,22,2021.8491744995117,28.182322475264506,2
+1.5,1.166113059204584,1.0442667037360622,1.0318497580548043,0.6655419398380517,0.9889432758226521,50.40740966796875,3.12042236328125,22,2021.6552658081055,28.09255516361718,2
+2.0,1.1635799599162018,1.0465894610926019,1.0234005619853062,0.6418539453069391,0.9794861172386412,48.98681640625,1.64642333984375,22,2021.5542449951172,27.930010148661474,3
+3.0,1.141108783154563,1.0433713436523406,1.0184292341571923,0.6001875140388685,0.9619890749414212,47.80120849609375,0.61187744140625,22,2021.6018524169922,27.897729239840466,3

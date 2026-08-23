@@ -66,6 +66,13 @@ class RenderConfig:
     depth_bands: int = 12               # for layers with a spatially varying
                                         # focus map; ignored for scalar focus
     resampler_order: int = 3            # discipline 11: state the resampler
+    channels: str = "rgb"               # "rgb", or "green" for a 3x cheaper
+                                        # render when only the green planes
+                                        # are read.  R and B photosites then
+                                        # carry green radiance; that is
+                                        # invalid for demosaicing and valid
+                                        # for every green-plane statistic in
+                                        # this milestone.
 
 
 @dataclass
@@ -109,7 +116,7 @@ def similarity_warp(img: np.ndarray, scale: float, cx: float, cy: float,
 def _layer_terms(layer: Layer, k: float, cache: opt.OtfCache,
                  coc_per_frame: float, lam_nm: float, cfg: RenderConfig,
                  radiance: np.ndarray, alpha: np.ndarray,
-                 focus: np.ndarray | float):
+                 focus: np.ndarray | float, opaque: bool = False):
     """Return `(C, A)`: premultiplied blurred colour and blurred coverage for
     one layer at one frame, at one wavelength.
 
@@ -119,18 +126,24 @@ def _layer_terms(layer: Layer, k: float, cache: opt.OtfCache,
     exactly and the scalar case is recovered when there is one band.  The
     decomposition ignores *within-layer* self-occlusion -- a stated
     approximation.
+
+    `opaque` short-circuits the alpha blur for a layer whose alpha is
+    identically 1: any DC-preserving blur of a constant 1 is 1, so computing
+    it costs an FFT pair to learn nothing.
     """
     if np.isscalar(focus) or np.ndim(focus) == 0:
         coc = abs(k - float(focus)) * coc_per_frame
         h = cache.total(coc, lam_nm, cfg.with_diffraction)
-        return opt.blur(radiance * alpha, h), opt.blur(alpha, h)
+        A = np.ones_like(radiance) if opaque else opt.blur(alpha, h)
+        return opt.blur(radiance if opaque else radiance * alpha, h), A
 
     lo, hi = float(np.min(focus)), float(np.max(focus))
     nb = 1 if hi - lo < 1e-6 else int(cfg.depth_bands)
     if nb == 1:
         coc = abs(k - 0.5 * (lo + hi)) * coc_per_frame
         h = cache.total(coc, lam_nm, cfg.with_diffraction)
-        return opt.blur(radiance * alpha, h), opt.blur(alpha, h)
+        A = np.ones_like(radiance) if opaque else opt.blur(alpha, h)
+        return opt.blur(radiance if opaque else radiance * alpha, h), A
 
     centres = np.linspace(lo, hi, nb)
     step = centres[1] - centres[0]
@@ -143,9 +156,12 @@ def _layer_terms(layer: Layer, k: float, cache: opt.OtfCache,
             continue
         h = cache.total(abs(k - c) * coc_per_frame, lam_nm, cfg.with_diffraction)
         Cn += opt.blur(radiance * alpha * w, h)
-        An += opt.blur(alpha * w, h)
         Wn += opt.blur(w, h)
+        if not opaque:
+            An += opt.blur(alpha * w, h)
     Wn = np.maximum(Wn, 1e-6)
+    if opaque:
+        return Cn / Wn, np.ones_like(radiance)
     return Cn / Wn, An / Wn
 
 
@@ -211,20 +227,24 @@ def render_stack(sc: Scene, cfg: RenderConfig,
     frames = np.empty((K, Hs, Ws), dtype=np.uint16)
     y0, y1 = m * S, (m + Hs) * S
     x0, x1 = m * S, (m + Ws) * S
+    opaque = [bool(np.all(lay.alpha >= 1.0)) for lay in sc.layers]
+    chan_idx = (0, 1, 2) if cfg.channels == "rgb" else (1,)
 
     for k in range(K):
         s = scale_series[k]
         tx = cfg.breathing.tx_px * S
         ty = cfg.breathing.ty_px * S
         warped = []
-        for lay in sc.layers:
+        for li, lay in enumerate(sc.layers):
             rad = similarity_warp(lay.radiance, s, cx, cy, tx, ty,
                                   cfg.breathing.rotation_rad,
                                   cfg.resampler_order)
-            alp = similarity_warp(lay.alpha, s, cx, cy, tx, ty,
-                                  cfg.breathing.rotation_rad,
-                                  cfg.resampler_order)
-            alp = np.clip(alp, 0.0, 1.0)
+            if opaque[li]:
+                alp = lay.alpha
+            else:
+                alp = np.clip(similarity_warp(
+                    lay.alpha, s, cx, cy, tx, ty,
+                    cfg.breathing.rotation_rad, cfg.resampler_order), 0.0, 1.0)
             if np.ndim(lay.focus) == 0:
                 foc = float(lay.focus)
             else:
@@ -233,17 +253,22 @@ def render_stack(sc: Scene, cfg: RenderConfig,
             warped.append((rad, alp, foc))
 
         chans = np.empty((Hs, Ws, 3), dtype=np.float64)
-        for ci, cname in enumerate(CHANNELS):
+        for ci in chan_idx:
+            cname = CHANNELS[ci]
             lam = (LAMBDA_NM[cname] if cfg.chromatic_diffraction
                    else LAMBDA_NM["G"])
             acc = np.zeros((exp_h, exp_w), dtype=np.float64)
-            for (rad, alp, foc) in warped:                 # far -> near
+            for li, (rad, alp, foc) in enumerate(warped):        # far -> near
                 C, A = _layer_terms(None, focus_planes[k], cache,
                                     cfg.capture.coc_px_per_frame, lam, cfg,
-                                    rad * cfg.channel_scale[ci], alp, foc)
+                                    rad * cfg.channel_scale[ci], alp, foc,
+                                    opaque=opaque[li])
                 acc = C + (1.0 - np.clip(A, 0.0, 1.0)) * acc
             acc = acc[y0:y1, x0:x1] * gain_series[k]
             chans[:, :, ci] = pixel_aperture_integrate(acc, S)
+        if cfg.channels != "rgb":
+            chans[:, :, 0] = chans[:, :, 1]
+            chans[:, :, 2] = chans[:, :, 1]
 
         e = mosaic(chans)
         frames[k] = expose(e, cfg.capture.iso, cfg.sensor, fixed, rng,
