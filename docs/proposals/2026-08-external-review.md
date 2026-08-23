@@ -23,7 +23,7 @@ project actually did, and links to the measurement where one exists.
 | R6 | Analysis-by-synthesis alignment against the re-blurred latent (v2) | large | **DEFERRED.** Correct endpoint, needs the latent estimate to exist first |
 | R7 | **(mean, max) dual focus response** for fact 73's monotone-edge blind spot, running max via van Herk/Gil-Werman | cheap | **ACCEPTED → M17.** Core claim pre-confirmed by the orchestrator: monotone-edge discrimination ratio **1.0000** (mean, blind) vs **0.2592** (max). Noise cost is real (CV 0.0265 vs 0.0065 at blur 3), which is exactly why the *dual* is right and a replacement is not |
 | R8 | Orientation anomaly (question 20) explained by row/column FPN interacting with Sobel-x/y | cheap | **ACCEPTED → M16.** If confirmed, `WINDOW_RADIUS = 13` itself may carry a directional bias, which would touch every window number M13 and M15 produced |
-| R9 | Per-frame photometric normalisation (gain + offset) in the forward model | small | **ACCEPTED, unscheduled.** Fact 52's same-subject pair is a full stop apart; risk 8 names it; nothing plans it |
+| R9 | Per-frame photometric normalisation (gain + offset) in the forward model | small | **MEASURED — see [M24](../research/M24-photometric-drift-measured.md). Premise confirmed, and the requirement is sharper than stated.** Drift is real and widespread: **2.88% / 6.84% / 8.93% / 11.70%** peak-to-peak on four stacks, with the framing confound discharged (central-ROI ratios 1.50/2.05/0.92, r = +0.85…+0.97). The new part: **EXIF does not predict it in either direction** — two stacks vary 7–9% with a single distinct `(exposure, ISO, f-number)`, and on `coffee-bean`, which *does* change exposure mid-capture, the level moves **16% of what EXIF predicts** (1.0443 vs 1.2800). So the gain must be **fitted from the data, never read from metadata**, and since σ²(S) is signal-dependent the noise model has to see it. Dispatched to M18. **`109MSDCF` is the quietest stack at 0.91%** — the corpus this project measured on is the one that hides this |
 | R10 | Robustness/outlier mask (Wronski Eq. 5–9 shape) | small | **ACCEPTED → M18 stretch goal.** `foam` moves and `coffee-bubbles` has bubble motion; one twitching antenna currently poisons both reference and average |
 | R11 | Hot pixels + dust from the 242 delivered darks; dust smears under warp | small | **MEASURED — see [M22](../research/M22-hot-pixels-measured.md). The premise is right; the urgency is refuted.** A recurrence-derived map (agreement across the 11 ISO groups, not a σ cut) finds **11,393 real defects = 0.0346%** — but in real 1.3 s frames they displace a pixel by **+3.0 DN, i.e. ≤ 0.39σ**, flat across three signal decades. This sensor is clean; build the map, do not let it preempt the merge. Two things the review could not have known: **all 242 darks are 1/100 s while real stacks run 1/60 s–2.5 s**, so the map is complete for the wrong exposure (now `captures-needed.md` §6), and **dust is invisible in darks** — it is multiplicative and stays blocked on the flats (§4). The warp-smearing claim is untested and is the right follow-up |
 | R12 | PRNU term `σ²(S) = gS + (RN·g)² + (κS)²` must enter the *model*, not the report | small | **ACCEPTED, blocked on the flat-field capture** (`captures-needed.md` §4) |
@@ -107,7 +107,14 @@ is **1.15× on 15% of pixels**. The review attached the big finding to the small
    ground-truth depth *and* the project's first true occlusion null.
 3. The flat-field capture ([`captures-needed.md`](../captures-needed.md) §4) is still the blocker
    for R12 (PRNU).
-4. **Process question.** M20 refutes the headline of a review that is, on the whole, unusually
+4. **Two questions about how the corpus was lit and metered**, raised by M24 and worth thirty
+   seconds each. (a) Was `coffee-bean` shot in an **auto-exposure** mode? Its EXIF changes `4/5 s`
+   → `5/8 s` mid-bracket while the measured level barely moves — the signature of the body
+   compensating a drifting light. The answer decides whether in-camera bracketing can be trusted to
+   hold exposure fixed at all. (b) Was the lighting **continuous/mains-powered or flash**?
+   `112MSDCF` varies 6.84% with entirely constant EXIF at **1/60 s**, which is the classic
+   mains-flicker beat.
+5. **Process question.** M20 refutes the headline of a review that is, on the whole, unusually
    good — and several of its other proposals (R2 occlusion bimodality, R4 metacalibration, R14 the
    fold seam) are strong. Do you want the reviewer's remaining items worked through at the same
    depth, or should the project return to the build sequence in R26 now that the merge is landing?
