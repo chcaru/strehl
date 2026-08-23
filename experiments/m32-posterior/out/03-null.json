@@ -1,0 +1,102 @@
+{
+  "null": {
+    "n53": {
+      "n": 53,
+      "entropy_median": 0.8879360217958953,
+      "entropy_p05": 0.8180481680142249,
+      "perplexity_median": 33.966176039621956,
+      "perplexity_over_n": 0.640871246030603
+    },
+    "n27": {
+      "n": 27,
+      "entropy_median": 0.874674180920358,
+      "entropy_p05": 0.7709613947565478,
+      "perplexity_median": 17.863926698470937,
+      "perplexity_over_n": 0.6616269147581829
+    },
+    "n18": {
+      "n": 18,
+      "entropy_median": 0.8660106372017602,
+      "entropy_p05": 0.7340732752297054,
+      "perplexity_median": 12.220228932391677,
+      "perplexity_over_n": 0.6789016073550932
+    },
+    "n14": {
+      "n": 14,
+      "entropy_median": 0.8602286903796823,
+      "entropy_p05": 0.7090727958804947,
+      "perplexity_median": 9.681267477750659,
+      "perplexity_over_n": 0.6915191055536185
+    },
+    "n9": {
+      "n": 9,
+      "entropy_median": 0.8502783945859741,
+      "entropy_p05": 0.6575907124460125,
+      "perplexity_median": 6.4769685604694525,
+      "perplexity_over_n": 0.7196631733854947
+    }
+  },
+  "texture_sweep": {
+    "bin0": {
+      "texture_dn": 11.493204116821289,
+      "signal_dn": 837.6509399414062,
+      "peak_over_noise": 119.30519906578428,
+      "arm_N_entropy": 0.00022748093482771422,
+      "arm_N_perplexity": 1.00090357369301,
+      "arm_S_entropy": 0.6480486804895085,
+      "arm_S_perplexity": 13.104326411673018,
+      "frac_perplexity_under_1p05": 0.6821666666666667
+    },
+    "bin1": {
+      "texture_dn": 21.14237403869629,
+      "signal_dn": 1360.6416015625,
+      "peak_over_noise": 223.66332910532515,
+      "arm_N_entropy": 2.7430006509813577e-08,
+      "arm_N_perplexity": 1.000000108905139,
+      "arm_S_entropy": 0.6110563258704947,
+      "arm_S_perplexity": 11.314351865383323,
+      "frac_perplexity_under_1p05": 0.8353333333333334
+    },
+    "bin2": {
+      "texture_dn": 30.327381134033203,
+      "signal_dn": 1480.056640625,
+      "peak_over_noise": 285.7761715187695,
+      "arm_N_entropy": 6.668397259083345e-11,
+      "arm_N_perplexity": 1.0000000002647549,
+      "arm_S_entropy": 0.608506681777055,
+      "arm_S_perplexity": 11.200396856380742,
+      "frac_perplexity_under_1p05": 0.881
+    },
+    "bin3": {
+      "texture_dn": 42.585208892822266,
+      "signal_dn": 1604.0,
+      "peak_over_noise": 360.1193852765055,
+      "arm_N_entropy": 1.9343793091881514e-13,
+      "arm_N_perplexity": 1.000000000000768,
+      "arm_S_entropy": 0.6154187409865768,
+      "arm_S_perplexity": 11.512023979099684,
+      "frac_perplexity_under_1p05": 0.9036666666666666
+    },
+    "bin4": {
+      "texture_dn": 63.04115676879883,
+      "signal_dn": 1810.4150390625,
+      "peak_over_noise": 467.8526422540439,
+      "arm_N_entropy": 4.725509532338803e-17,
+      "arm_N_perplexity": 1.0000000000000002,
+      "arm_S_entropy": 0.6286447190756815,
+      "arm_S_perplexity": 12.13268502517284,
+      "frac_perplexity_under_1p05": 0.9251666666666667
+    },
+    "bin5": {
+      "texture_dn": 103.85205841064453,
+      "signal_dn": 2059.45263671875,
+      "peak_over_noise": 728.044951585162,
+      "arm_N_entropy": 2.651621072790121e-23,
+      "arm_N_perplexity": 1.0,
+      "arm_S_entropy": 0.6482497629741234,
+      "arm_S_perplexity": 13.114792518238119,
+      "frac_perplexity_under_1p05": 0.9491666666666667
+    }
+  },
+  "note": {}
+}

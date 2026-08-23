@@ -1,0 +1,79 @@
+{
+  "temperature": {
+    "bin0": {
+      "texture_dn": 11.488445281982422,
+      "T_mc": 18.07252956081895,
+      "T_roughness": 15.360495067286205,
+      "ratio_median": 0.8057322807223807,
+      "peak_over_T_mc": 115.13933486680241,
+      "peak_over_T_roughness": 141.90235677237652
+    },
+    "bin1": {
+      "texture_dn": 21.100948333740234,
+      "T_mc": 24.229301071781403,
+      "T_roughness": 18.045447694652815,
+      "ratio_median": 0.7790962319562053,
+      "peak_over_T_mc": 226.78605896034497,
+      "peak_over_T_roughness": 285.93343834242233
+    },
+    "bin2": {
+      "texture_dn": 30.365997314453125,
+      "T_mc": 24.858525705313504,
+      "T_roughness": 18.750314082996816,
+      "ratio_median": 0.7736556638233126,
+      "peak_over_T_mc": 286.06182962169635,
+      "peak_over_T_roughness": 373.89177439565776
+    },
+    "bin3": {
+      "texture_dn": 42.61308288574219,
+      "T_mc": 25.672683680571883,
+      "T_roughness": 19.46177474022548,
+      "ratio_median": 0.7715229557788872,
+      "peak_over_T_mc": 358.4302087385418,
+      "peak_over_T_roughness": 467.33186935399124
+    },
+    "bin4": {
+      "texture_dn": 62.87438201904297,
+      "T_mc": 26.40899323031116,
+      "T_roughness": 19.687291347544452,
+      "ratio_median": 0.7545850673145089,
+      "peak_over_T_mc": 471.73504214004834,
+      "peak_over_T_roughness": 621.1114195607136
+    },
+    "bin5": {
+      "texture_dn": 104.52377319335938,
+      "T_mc": 27.66754026487104,
+      "T_roughness": 20.436996917170028,
+      "ratio_median": 0.7357487994523992,
+      "peak_over_T_mc": 726.304453391167,
+      "peak_over_T_roughness": 990.7874752217738
+    }
+  },
+  "sweep_as_perplexity": {
+    "s1": {
+      "arm_N_perplexity": 1.0,
+      "arm_S_perplexity": 13.045155699969705,
+      "null_perplexity": 33.966
+    },
+    "s2": {
+      "arm_N_perplexity": 1.0000000000256168,
+      "arm_S_perplexity": 12.976539429444442,
+      "null_perplexity": 33.966
+    },
+    "s4": {
+      "arm_N_perplexity": 1.0000203571324322,
+      "arm_S_perplexity": 12.79261691876095,
+      "null_perplexity": 33.966
+    },
+    "s8": {
+      "arm_N_perplexity": 1.0124612074951007,
+      "arm_S_perplexity": 12.402950589386014,
+      "null_perplexity": 33.966
+    },
+    "s16": {
+      "arm_N_perplexity": 1.2063471871057225,
+      "arm_S_perplexity": 11.846253692913177,
+      "null_perplexity": 33.966
+    }
+  }
+}
