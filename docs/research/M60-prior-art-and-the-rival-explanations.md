@@ -536,4 +536,72 @@ Corpus runs: `109MSDCF` (22 frames), `coffee-bubbles` (19), `foam` (100), all at
 | G7 | MEASURED, 3 stacks | No per-frame photometric correction removes merge-time disagreement. M24 §5 answered **no**. |
 | G8 | ARGUED from all of the above | Nothing to build. 15.7% null false-positive rate to defend 8.20% of the worst stack's pixels against a 76–84% detail-composition signal. Ship-order note, not a mask. |
 | — | OPEN | **Temporal stability of the M22 defect population is unmeasured.** A flickering hot pixel is not static and would fire a mask. ~2,800 pixels. `D:\macro-dark-frames\` can settle it with no subject. |
+| G9 | MEASURED, in this tree | **`git add <paths>` does not path-scope a commit.** See §11. |
+
+---
+
+## 11. G9 — a process defect measured live: path-scoping the *add* does not path-scope the *commit*
+
+The standing instruction in every brief I have received reads:
+
+> "**Commit path-scoped — `git add <specific paths>` only.** Never `git add -A`
+> or `git add .`: five agents are writing to this tree and you will commit their
+> half-finished work."
+
+**I followed it exactly and my work was committed by somebody else anyway.**
+
+MEASURED, in this tree, this session:
+
+1. `git add crates/strehl-core/src/merge.rs crates/strehl-cli/examples/m60-disagreement.rs docs/research/M60-prior-art-and-the-rival-explanations.md`
+   — verified by `git diff --cached --stat`: exactly my 3 paths, 720 insertions,
+   35 deletions, nothing else.
+2. `git -c core.commentChar=';' commit -F <file>` — printed `On branch main` and
+   a *Changes not staged for commit* listing, which is git's **nothing-staged**
+   output, not a commit.
+3. `git log --oneline -- <my report>` resolves to **`921e37a`**, another agent's
+   commit, titled *"Repair 11 linter violations, including a broken table nobody
+   could see, and fold M59"*.
+4. `git show --stat 921e37a` contains all three of my paths at their exact line
+   counts (129 / 87 / 539) alongside that agent's own work **and three
+   orchestrator-owned files** (`SYNTHESIS.md`, `OWNER-QUESTIONS.md`,
+   `captures-needed.md`).
+5. Content verified present and intact in `HEAD`: `luma_offset` is in
+   `merge.rs`, the report's second headline is in the report.
+
+**G9. ARGUED from the above, and the mechanism is forced.** `git commit` with no
+pathspec commits **the index**, which is *shared mutable state across every agent
+in this working tree*. Between my `add` and my `commit`, another agent ran a
+bare `git commit`; it took my staged files because they were in the index. My
+`add` was correctly path-scoped and that bought nothing. I cannot see the other
+agent's exact command, so the mechanism is ARGUED rather than MEASURED — but
+every observation above is consistent with it and I know of no other way three
+files can be staged by one process and committed by another.
+
+**The instruction is insufficient, and the repair is one character of syntax:**
+
+```
+git -c core.commentChar=';' commit -F <msgfile> -- <paths>      # safe
+git add <paths> ; git -c core.commentChar=';' commit -F <msgfile>   # NOT safe
+```
+
+`commit -- <paths>` commits the working-tree content of exactly those paths and
+**ignores the index entirely**, so it is immune to whatever another agent has
+staged and cannot sweep their files in. It is also immune in the other
+direction: it will not lose your work to their message.
+
+**Consequences worth folding:**
+
+- The code and report of this milestone are in `921e37a` under a title that
+  describes neither. Anyone bisecting for the affine-photometry change or for
+  G3/G4 will not find it by message. **This commit is the pointer.**
+- I have not amended, rebased or reset anything. With five agents live, rewriting
+  a commit that contains four other agents' work — including the orchestrator's
+  `SYNTHESIS.md` — would be far more destructive than a mis-titled commit. The
+  rule against `git checkout --` exists for the same reason and generalises.
+- The other agent's commit was not path-scoped and swept three orchestrator-owned
+  files. I am reporting that as an observation, not an accusation: **the same
+  thing happened to me in the opposite direction, from an instruction we were
+  both following.** That is the signature of a defective rule rather than a
+  careless agent.
+
 
