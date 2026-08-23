@@ -351,6 +351,18 @@ pub struct Estimator {
     /// Number of frames admitted at each pixel. This is `n_eff` for a plain
     /// mean, and it is an output, not a diagnostic — see fact 212.
     n: Vec<u16>,
+    /// Per-pixel, per-plane censoring state, four bits packed into one byte:
+    /// bit `s` of `censor[i]` is set when plane `s` at pixel `i` is censored.
+    ///
+    /// Empty unless [`Estimator::fold_censored`] is used, in which case bits
+    /// `0..=3` mean "the **winner's** own sample on this plane was pinned at
+    /// the container maximum", and bits `4..=7` mean "some *other* admitted
+    /// frame was pinned there and has been excluded from the sum".
+    censor: Vec<u8>,
+    /// The container maximum passed to [`Estimator::fold_censored`], once one
+    /// has been passed. `None` means the estimator is running the plain
+    /// uncensored mean and [`Estimator::value`] takes its original path.
+    censor_level: Option<u16>,
     frames: u32,
 }
 
@@ -366,6 +378,8 @@ impl Estimator {
             max_index: stats.max_index,
             sum: [vec![0.0; n], vec![0.0; n], vec![0.0; n], vec![0.0; n]],
             n: vec![0; n],
+            censor: Vec::new(),
+            censor_level: None,
             frames: 0,
         }
     }
@@ -388,6 +402,38 @@ impl Estimator {
     }
     pub fn allocated_bytes(&self) -> usize {
         self.geom.pixels() * (4 * size_of::<f32>() + 2 * size_of::<u16>() + size_of::<f32>())
+            + self.censor.len()
+    }
+
+    /// Is this plane's estimate at this pixel a **lower bound** rather than a
+    /// measurement?
+    ///
+    /// True when the winning frame's own sample there was pinned at the
+    /// container maximum, which only [`Estimator::fold_censored`] can observe.
+    /// A true here means [`Estimator::value`] returns the container maximum and
+    /// the real scene value is somewhere at or above it — the merge does not
+    /// know where, and neither does the sensor.
+    #[inline]
+    pub fn is_censored(&self, p: CfaPlane, i: usize) -> bool {
+        !self.censor.is_empty() && self.censor[i] & (1 << Self::slot(p)) != 0
+    }
+
+    /// Did some *non-winning* admitted frame contribute a pinned sample here?
+    ///
+    /// This is a flag, not a behaviour: such samples are still summed, exactly
+    /// as they are under [`Estimator::fold`]. It is exposed because a censored
+    /// contributor biases the mean upward by an unknown amount, and a caller
+    /// emitting per-pixel confidence should be able to see that. Changing the
+    /// arithmetic here would need a per-plane admitted count, which the
+    /// estimator deliberately does not carry.
+    #[inline]
+    pub fn has_censored_contributor(&self, p: CfaPlane, i: usize) -> bool {
+        !self.censor.is_empty() && self.censor[i] & (1 << (Self::slot(p) + 4)) != 0
+    }
+
+    /// The container maximum this estimator is censoring against, if any.
+    pub fn censor_level(&self) -> Option<u16> {
+        self.censor_level
     }
 
     #[inline]
@@ -417,6 +463,53 @@ impl Estimator {
         src: &S,
         regularised: &[f32],
     ) -> Result<()> {
+        self.fold_inner(frame_index, src, regularised, None)
+    }
+
+    /// [`Estimator::fold`], plus the saturation bookkeeping the plain fold
+    /// cannot do.
+    ///
+    /// `container_max_dn` is the raw value at which the container pins — for
+    /// this project [`crate::clip::CONTAINER_MAX_DN`], **not** `Levels::white`,
+    /// which is a declared calibration bound and is not where real data pins.
+    ///
+    /// The rule is keyed on the **winner**, and that is the whole of the design:
+    ///
+    /// * If the winner's own sample on a plane is pinned, the estimate there is
+    ///   a lower bound, not a mean. Averaging a censored observation with
+    ///   uncensored ones estimates neither quantity, and it can only move the
+    ///   result *down*, away from a value we know the truth is at or above.
+    ///   [`Estimator::value`] therefore reports the pin and
+    ///   [`Estimator::is_censored`] reports why.
+    /// * If the winner's sample is *not* pinned, nothing is excluded. A pinned
+    ///   sample from some other admitted frame is recorded by
+    ///   [`Estimator::has_censored_contributor`] and still summed.
+    ///
+    /// What this deliberately does **not** do is let saturation touch the focus
+    /// volume or the winner election. M54 measured that: propagating the mask
+    /// into the election moves the winner at 2.7% (`coffee-bean`) to 7.0%
+    /// (`coffee-bubbles`) of the plane, 30x to 240x more pixels than are
+    /// actually clipped at their winner, almost all of them pixels that are
+    /// never clipped in any frame, and it darkens real highlights by 1000-3300
+    /// DN because it is structurally forbidden from ever electing the frame in
+    /// which a highlight is brightest.
+    pub fn fold_censored<S: QuadSource + ?Sized>(
+        &mut self,
+        frame_index: u16,
+        src: &S,
+        regularised: &[f32],
+        container_max_dn: u16,
+    ) -> Result<()> {
+        self.fold_inner(frame_index, src, regularised, Some(container_max_dn))
+    }
+
+    fn fold_inner<S: QuadSource + ?Sized>(
+        &mut self,
+        frame_index: u16,
+        src: &S,
+        regularised: &[f32],
+        censor_level: Option<u16>,
+    ) -> Result<()> {
         let geom = src.geometry();
         if geom != self.geom {
             return Err(Error::DimensionMismatch {
@@ -432,6 +525,20 @@ impl Estimator {
                 want: (self.geom.pixels(), 1),
             });
         }
+        if let Some(level) = censor_level {
+            match self.censor_level {
+                None => {
+                    self.censor_level = Some(level);
+                    self.censor = vec![0u8; self.geom.pixels()];
+                }
+                Some(prev) => assert_eq!(
+                    prev, level,
+                    "frames folded against different container maxima are not commensurable"
+                ),
+            }
+        } else if self.censor_level.is_some() {
+            panic!("an estimator cannot mix fold and fold_censored");
+        }
 
         let off = [
             CfaPlane::R.rggb_offset(),
@@ -446,14 +553,20 @@ impl Estimator {
             let base = py * w;
             for px in 0..w {
                 let i = base + px;
-                let admitted = self.best_index[i] == frame_index
-                    || self.gate.admits(regularised[i], self.best_focus[i]);
+                let winner = self.best_index[i] == frame_index;
+                let admitted = winner || self.gate.admits(regularised[i], self.best_focus[i]);
                 if !admitted {
                     continue;
                 }
                 for (s, (ox, oy)) in off.iter().enumerate() {
                     let row = if *oy == 0 { row0 } else { row1 };
-                    self.sum[s][i] += row[2 * px + ox] as f32;
+                    let v = row[2 * px + ox];
+                    if let Some(level) = censor_level
+                        && v >= level
+                    {
+                        self.censor[i] |= 1 << if winner { s } else { s + 4 };
+                    }
+                    self.sum[s][i] += v as f32;
                 }
                 self.n[i] += 1;
             }
@@ -480,6 +593,18 @@ impl Estimator {
             "estimators gated against different winner fields cannot be reduced"
         );
         assert_eq!(self.gate, other.gate, "estimators used different gates");
+        assert_eq!(
+            self.censor_level, other.censor_level,
+            "estimators censored against different container maxima cannot be reduced"
+        );
+        if !other.censor.is_empty() {
+            if self.censor.is_empty() {
+                self.censor = vec![0u8; self.geom.pixels()];
+            }
+            for (a, b) in self.censor.iter_mut().zip(&other.censor) {
+                *a |= *b;
+            }
+        }
         for i in 0..self.geom.pixels() {
             for s in 0..4 {
                 self.sum[s][i] += other.sum[s][i];
@@ -491,11 +616,22 @@ impl Estimator {
     }
 
     /// The merged estimate for one plane at one pixel, in raw DN.
+    ///
+    /// Under [`Estimator::fold_censored`] this returns the container maximum
+    /// wherever the winner's own sample was pinned there — see
+    /// [`Estimator::is_censored`]. Under [`Estimator::fold`] it is always the
+    /// plain admitted mean.
     #[inline]
     pub fn value(&self, p: CfaPlane, i: usize) -> f32 {
+        let s = Self::slot(p);
+        if let Some(level) = self.censor_level
+            && self.censor[i] & (1 << s) != 0
+        {
+            return level as f32;
+        }
         let n = self.n[i];
         debug_assert!(n > 0, "pixel {i} admitted no frame");
-        self.sum[Self::slot(p)][i] / n as f32
+        self.sum[s][i] / n as f32
     }
 
     /// Green as the output uses it, `(G1 + G2) / 2`, still in raw DN.
@@ -1268,6 +1404,204 @@ mod tests {
             est.fold(0, &small, &[0.0; 12]),
             Err(Error::DimensionMismatch { .. })
         ));
+    }
+
+    // ---- saturation censoring (M54) ------------------------------------
+    //
+    // Rule 34 declaration: these fixtures share **no** constant with the code
+    // under test. The pin is `TEST_PIN = 4095`, chosen deliberately different
+    // from `clip::CONTAINER_MAX_DN = 16383`, so a hard-coded production
+    // constant in `fold_censored` would fail every one of these. The expected
+    // means below are hand-arithmetic on the fixture's own sample values, not
+    // anything read back out of the estimator.
+
+    const TEST_PIN: u16 = 4095;
+
+    /// Three frames tied at the top and one far below, so the gate admits
+    /// exactly three. `pinned_at` chooses which of those carries the pinned
+    /// greens.
+    fn censoring_fixture(g: PlaneGeometry) -> (FocusStats, Vec<Vec<f32>>) {
+        // Frame 1 wins everywhere; 0 and 2 sit just inside a threshold-1 gate;
+        // frame 3 is far outside it.
+        let fields: Vec<Vec<f32>> = (0..4u16)
+            .map(|k| {
+                let f = match k {
+                    1 => 1.0,
+                    0 | 2 => 1.0 - 0.5 * FOCUS_NOISE_SD,
+                    _ => 0.0,
+                };
+                vec![f; g.pixels()]
+            })
+            .collect();
+        let mut stats = FocusStats::new(g);
+        for (k, f) in fields.iter().enumerate() {
+            stats.fold(k as u16, f).unwrap();
+        }
+        assert!(
+            stats.best_index().iter().all(|b| *b == 1),
+            "fixture must elect frame 1 everywhere"
+        );
+        (stats, fields)
+    }
+
+    fn censoring_frame(k: u16, g: PlaneGeometry, pinned: &[u16]) -> QuadGrid {
+        // R and B stay far from the pin so they act as an in-fixture control:
+        // whatever censoring does, it must not touch them.
+        let greens = if pinned.contains(&k) { TEST_PIN } else { 1000 };
+        QuadGrid::new(g.width, g.height, move |_, _| [200, greens, greens, 300])
+    }
+
+    #[test]
+    fn a_censored_winner_reports_the_bound_instead_of_a_diluted_mean() {
+        let g = geom(4, 4);
+        let (stats, fields) = censoring_fixture(g);
+        let gate = Gate::new(1.0);
+
+        let mut plain = Estimator::new(&stats, gate);
+        let mut cens = Estimator::new(&stats, gate);
+        for k in 0..4u16 {
+            let frame = censoring_frame(k, g, &[1]);
+            plain.fold(k, &frame, &fields[k as usize]).unwrap();
+            cens.fold_censored(k, &frame, &fields[k as usize], TEST_PIN)
+                .unwrap();
+        }
+
+        // Rule 36: the fixture must actually exercise dilution. Three frames
+        // admitted, one of them the pinned winner, two of them at 1000.
+        assert!(
+            cens.n_eff().iter().all(|n| *n == 3),
+            "fixture must admit three frames or there is nothing to dilute"
+        );
+        // Hand arithmetic on the fixture's own numbers: (4095 + 1000 + 1000)/3.
+        let diluted = 6095.0f32 / 3.0;
+        assert!(diluted < TEST_PIN as f32);
+        for i in 0..g.pixels() {
+            assert!((plain.value(CfaPlane::G1, i) - diluted).abs() < 1e-3);
+            assert_eq!(cens.value(CfaPlane::G1, i), TEST_PIN as f32);
+            assert_eq!(cens.value(CfaPlane::G2, i), TEST_PIN as f32);
+            assert!(cens.is_censored(CfaPlane::G1, i));
+            assert!(!cens.has_censored_contributor(CfaPlane::G1, i));
+            // The unsaturated planes must be untouched, and must still be the
+            // plain mean rather than any bound.
+            assert_eq!(cens.value(CfaPlane::R, i), 200.0);
+            assert_eq!(cens.value(CfaPlane::B, i), 300.0);
+            assert!(!cens.is_censored(CfaPlane::R, i));
+            assert!(!cens.is_censored(CfaPlane::B, i));
+        }
+        // The bound is strictly brighter than what the plain mean emitted, by
+        // the amount the pinned sample was dragged down: 4095 - 2031.67.
+        assert!(
+            (cens.value(CfaPlane::G1, 0) - plain.value(CfaPlane::G1, 0) - 2063.333).abs() < 0.01
+        );
+    }
+
+    #[test]
+    fn a_censored_contributor_is_flagged_but_never_silently_changes_the_mean() {
+        // The other half of the winner-keyed rule: frame 2 is pinned but frame
+        // 1 wins, so the winner's own sample is a real measurement and nothing
+        // may be substituted for it.
+        let g = geom(4, 4);
+        let (stats, fields) = censoring_fixture(g);
+        let gate = Gate::new(1.0);
+
+        let mut plain = Estimator::new(&stats, gate);
+        let mut cens = Estimator::new(&stats, gate);
+        for k in 0..4u16 {
+            let frame = censoring_frame(k, g, &[2]);
+            plain.fold(k, &frame, &fields[k as usize]).unwrap();
+            cens.fold_censored(k, &frame, &fields[k as usize], TEST_PIN)
+                .unwrap();
+        }
+        assert!(cens.n_eff().iter().all(|n| *n == 3));
+        // Hand arithmetic: (1000 + 1000 + 4095)/3, the same number, because the
+        // pinned contributor is still summed.
+        let mean = 6095.0f32 / 3.0;
+        for i in 0..g.pixels() {
+            assert!((cens.value(CfaPlane::G1, i) - mean).abs() < 1e-3);
+            assert_eq!(cens.value(CfaPlane::G1, i), plain.value(CfaPlane::G1, i));
+            assert!(!cens.is_censored(CfaPlane::G1, i));
+            assert!(cens.has_censored_contributor(CfaPlane::G1, i));
+            assert!(!cens.has_censored_contributor(CfaPlane::R, i));
+        }
+    }
+
+    #[test]
+    fn censoring_is_a_bit_exact_no_op_when_nothing_reaches_the_container() {
+        // The in-test analogue of M54's `109/112/119MSDCF` control: on data that
+        // never pins, the censored fold must be indistinguishable from the plain
+        // one at every pixel of every plane.
+        let g = geom(6, 5);
+        let (stats, fields) = censoring_fixture(g);
+        let gate = Gate::new(1.0);
+
+        let mut plain = Estimator::new(&stats, gate);
+        let mut cens = Estimator::new(&stats, gate);
+        for k in 0..4u16 {
+            let frame = censoring_frame(k, g, &[]);
+            plain.fold(k, &frame, &fields[k as usize]).unwrap();
+            cens.fold_censored(k, &frame, &fields[k as usize], TEST_PIN)
+                .unwrap();
+        }
+        assert!(cens.n_eff().iter().all(|n| *n == 3), "fixture must average");
+        assert_eq!(cens.censor_level(), Some(TEST_PIN));
+        for p in [CfaPlane::R, CfaPlane::G1, CfaPlane::B, CfaPlane::G2] {
+            for i in 0..g.pixels() {
+                assert_eq!(cens.value(p, i), plain.value(p, i));
+                assert!(!cens.is_censored(p, i));
+                assert!(!cens.has_censored_contributor(p, i));
+            }
+        }
+    }
+
+    #[test]
+    fn censored_estimators_reduce_by_union_of_their_flags() {
+        let g = geom(4, 4);
+        let (stats, fields) = censoring_fixture(g);
+        let gate = Gate::new(1.0);
+        let fold_set = |ks: &[u16]| {
+            let mut e = Estimator::new(&stats, gate);
+            for k in ks {
+                let frame = censoring_frame(*k, g, &[1, 2]);
+                e.fold_censored(*k, &frame, &fields[*k as usize], TEST_PIN)
+                    .unwrap();
+            }
+            e
+        };
+        let whole = fold_set(&[0, 1, 2, 3]);
+        // Split so that the winner's pin lands in one half and the contributor's
+        // in the other -- neither half alone carries both flags.
+        let mut left = fold_set(&[0, 1]);
+        let right = fold_set(&[2, 3]);
+        assert!(left.is_censored(CfaPlane::G1, 0));
+        assert!(!left.has_censored_contributor(CfaPlane::G1, 0));
+        assert!(!right.is_censored(CfaPlane::G1, 0));
+        assert!(right.has_censored_contributor(CfaPlane::G1, 0));
+        left.absorb(&right).unwrap();
+        assert_eq!(left.frames_folded(), 4);
+        for i in 0..g.pixels() {
+            assert_eq!(left.n_eff()[i], whole.n_eff()[i]);
+            assert_eq!(left.value(CfaPlane::G1, i), whole.value(CfaPlane::G1, i));
+            assert_eq!(
+                left.is_censored(CfaPlane::G1, i),
+                whole.is_censored(CfaPlane::G1, i)
+            );
+            assert_eq!(
+                left.has_censored_contributor(CfaPlane::G1, i),
+                whole.has_censored_contributor(CfaPlane::G1, i)
+            );
+        }
+    }
+
+    #[test]
+    #[should_panic(expected = "cannot mix fold and fold_censored")]
+    fn mixing_the_two_folds_in_one_estimator_is_refused() {
+        let g = geom(4, 4);
+        let (stats, fields) = censoring_fixture(g);
+        let mut est = Estimator::new(&stats, Gate::new(1.0));
+        est.fold_censored(0, &censoring_frame(0, g, &[1]), &fields[0], TEST_PIN)
+            .unwrap();
+        est.fold(1, &censoring_frame(1, g, &[1]), &fields[1])
+            .unwrap();
     }
 
     #[test]
