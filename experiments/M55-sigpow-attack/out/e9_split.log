@@ -1,0 +1,218 @@
+==============================================================================
+M55 E8 (PR14) -- is A.0.3's identity a measurement or algebra?
+==============================================================================
+   A.0.3 verifies FRC_i * P_i == Re(sum A conj B)/count to 1.4e-16.
+   DERIVED: FRC_i = num/den and P_i = den/count, so the product is
+   num/count for ANY complex A,B with den > 0.  The den cancels.  This
+   is cancellation of a common factor, not a property of images.
+   Testing whether ANY of the conventions the spec agonises over can
+   break it.  If none can, the 1.4e-16 has no power (rule 21).
+
+   case                        Re-form FRC*P vs canon   MAG-form FRC*P vs canon
+   ordinary real, n=64              1.172e-16              2.000e+00   <-- MAG-form BREAKS
+   ordinary real, n=64 +periodic Hann     0.000e+00              2.000e+00   <-- MAG-form BREAKS
+   ordinary real, n=64 +ortho FFT     1.172e-16              2.000e+00   <-- MAG-form BREAKS
+   ODD n=65                         0.000e+00              2.000e+00   <-- MAG-form BREAKS
+   anti-correlated (neg)            0.000e+00              2.000e+00   <-- MAG-form BREAKS
+   1e8 dynamic range                0.000e+00              0.000e+00
+   COMPLEX-valued input             0.000e+00              2.682e+00   <-- MAG-form BREAKS
+   identical a is b                 0.000e+00              0.000e+00
+
+   The Re-form identity is exact under EVERY convention including odd n,
+   complex input, ortho FFT and the wrong window.  It is algebra.
+   The MAGNITUDE form of FRC -- the other standard convention, and the
+   one m41lib's docstring describes -- BREAKS it wherever cross-power
+   is negative.  That is an UNSTATED CONDITION on A.0.3.
+
+==============================================================================
+M55 E8 (PR21) -- b6_spec.py:129 says 'fourth power'.  Measure it.
+==============================================================================
+      lam    both inputs scaled     exponent      one input scaled   exponent
+       2.0        4.000000000000    2.00000     2.000000000000    1.00000
+       3.0        9.000000000000    2.00000     3.000000000000    1.00000
+      10.0      100.000000000000    2.00000    10.000000000000    1.00000
+
+==============================================================================
+M55 E8 (PR15) -- canonical vs old separation, ONE independent harness
+==============================================================================
+   k=1.05   sb=0.02077  S(canon) 0.975   S(old) 0.937
+   matched sb = 0.04959 px   (b3 published 0.04999)
+   k=sqrt2  S(canon) 0.976   S(old) 0.936   |  post-filter: S(canon) 0.976  S(old) 0.938
+            d_blur(canon) +0.00719  d_smooth(canon) +0.00018
+   k=2.0    sb=0.06084  S(canon) 0.974   S(old) 0.930
+   k=8.0    sb=0.06961  S(canon) 0.971   S(old) 0.916
+
+==============================================================================
+M55 E8 (PR16) -- does the canonical form fix the rule-18 inversion?
+==============================================================================
+   PM_M: destroy resolution, add fixed structure COMMON to both halves,
+   amplitude re-solved so hp_sd returns to baseline.  d per A.4.1.
+   A.4.2: |d|<0.0005 no claim | d>+0.003 lost signal | d<-0.003 MORE signal
+
+      sb    fake amp   hp_sd    true MTF    d(canon)     d(old)    A.4.2 says
+     0.25     12.496   58.8009    0.9113    +0.04940   +0.04969    lost signal
+     0.50     23.174   58.7998    0.6870    +0.11284   +0.11354    lost signal
+     1.00     38.373   58.7982    0.2231    -0.17487   -0.17302    MORE signal
+     2.00     51.865   58.7973    0.0068    -1.03306   -1.02991    MORE signal
+
+==============================================================================
+M55 E8 (PR20) -- A.4.2's thresholds against degree-2 gain sensitivity
+==============================================================================
+   DERIVED: gain (1+eps) on the test merge gives d = 1-(1+eps)^2 ~ -2eps.
+      eps      d(measured)   saturates which A.4.2 threshold
+    0.00025     -0.000500   exceeds the 0.0005 no-claim floor
+    0.00050     -0.001000   exceeds the 0.0005 no-claim floor
+    0.00150     -0.003002   exceeds the +-0.003 DECISION threshold
+    0.00300     -0.006009   exceeds the +-0.003 DECISION threshold
+    0.01000     -0.020100   exceeds the +-0.003 DECISION threshold
+    0.11700     -0.247689   exceeds the +-0.003 DECISION threshold
+   PR11 MEASURED real merge-gate configurations differ in median level by
+   up to 11.7 %.  The last row is that case.
+
+wrote out/e8_canonical.json  (135.9s)
+
+==============================================================================
+M55 E9 -- 112MSDCF, 62 frames   (the author's stack)
+==============================================================================
+
+  ROI detail (1671, 1373, 512, 512)   level 222.0 DN
+     split          n_A  n_B   FRC(f_sig)     canonical sigpow   vs parity
+     parity          31   31    +0.866128        4.47240e+07      1.0000
+     contiguous      31   31    +0.012041        2.11333e+05      0.0047
+     block-2         32   30    +0.851047        4.53977e+07      1.0151
+     block-4         32   30    +0.522431        2.86821e+07      0.6413
+     block-8         32   30    +0.248218        1.08409e+07      0.2424
+     random          31   31    +0.518568        3.40809e+07      0.7620
+     PR22 swap asymmetry:  OLD form 2.6304e-01   CANONICAL 0.0000e+00   (A.0.2 reports 1.96e-02)
+
+     PR19 depth-window discriminator (best-focus frame index 46 of 62)
+     window K   frames    parity sigpow    contiguous/parity    FRC contig
+            8        8      3.87414e+07              0.7325     +0.577960
+           16       16      4.18825e+07              0.5917     +0.528112
+           32       32      4.31466e+07              0.5801     +0.528657
+           62       62      4.47240e+07              0.0047     +0.012041
+
+     PR17 real separation, canonical, k=sqrt2 of REAL photons
+       hp_sd 60.597 -> 59.465, matched blur sb = 0.20411 px
+       baseline 5.61722e+07  BLUR 4.95056e+07  SMOOTH 4.47240e+07
+       d_blur +0.11868   d_smooth +0.20381   S(canonical) = 0.368
+
+  ROI flat (2747, 32, 512, 512)   level 108.0 DN
+     split          n_A  n_B   FRC(f_sig)     canonical sigpow   vs parity
+     parity          31   31    +0.650723        1.89120e+06      1.0000
+     contiguous      31   31    +0.032870        5.51390e+04      0.0292
+     block-2         32   30    +0.358592        1.35035e+06      0.7140
+     block-4         32   30    -0.025565       -9.61817e+04     -0.0509
+     block-8         32   30    -0.000768       -2.43974e+03     -0.0013
+     random          31   31    -0.075568       -3.96330e+05     -0.2096
+     PR22 swap asymmetry:  OLD form 7.8102e-02   CANONICAL 0.0000e+00   (A.0.2 reports 1.96e-02)
+
+     PR19 depth-window discriminator (best-focus frame index 37 of 62)
+     window K   frames    parity sigpow    contiguous/parity    FRC contig
+            8        8      1.95242e+06             -0.1972     -0.086505
+           16       16      1.69202e+06             -0.2251     -0.094655
+           32       32      1.70419e+06             -0.2496     -0.109313
+           62       62      1.89120e+06              0.0292     +0.032870
+
+     PR17 real separation, canonical, k=sqrt2 of REAL photons
+       hp_sd 19.396 -> 17.257, matched blur sb = 0.41871 px
+       baseline 2.47779e+06  BLUR 1.45611e+06  SMOOTH 1.89120e+06
+       d_blur +0.41233   d_smooth +0.23674   S(canonical) = 0.635
+
+==============================================================================
+M55 E9 -- 113MSDCF, 63 frames   (NOT used by the author)
+==============================================================================
+
+  ROI centre (916, 1501, 512, 512)   level 567.5 DN
+     split          n_A  n_B   FRC(f_sig)     canonical sigpow   vs parity
+     parity          32   31    +0.789868        5.37447e+07      1.0000
+     contiguous      31   31    -0.061070       -1.86411e+06     -0.0347
+     block-2         32   31    +0.764176        5.28848e+07      0.9840
+     block-4         32   31    +0.191271        1.81215e+07      0.3372
+     block-8         32   31    +0.158452        1.18634e+07      0.2207
+     random          31   31    +0.524905        3.97852e+07      0.7403
+     PR22 swap asymmetry:  OLD form 3.4227e-02   CANONICAL 0.0000e+00   (A.0.2 reports 1.96e-02)
+
+     PR19 depth-window discriminator (best-focus frame index 40 of 63)
+     window K   frames    parity sigpow    contiguous/parity    FRC contig
+            8        8      4.69433e+07              0.4451     +0.307348
+           16       16      4.13239e+07              0.3312     +0.248053
+           32       32      5.23353e+07              0.2305     +0.197694
+           63       63      5.37447e+07             -0.0347     -0.061070
+
+     PR17 real separation, canonical, k=sqrt2 of REAL photons
+       hp_sd 108.962 -> 107.546, matched blur sb = 0.17637 px
+       baseline 4.64953e+07  BLUR 4.23125e+07  SMOOTH 5.37447e+07
+       d_blur +0.08996   d_smooth -0.15592   S(canonical) = 0.366
+
+  ROI flat (2747, 32, 512, 512)   level 212.0 DN
+     split          n_A  n_B   FRC(f_sig)     canonical sigpow   vs parity
+     parity          32   31    +0.604374        5.41858e+06      1.0000
+     contiguous      31   31    +0.062420        2.52268e+05      0.0466
+     block-2         32   31    +0.398688        4.25327e+06      0.7849
+     block-4         32   31    -0.065211       -8.26584e+05     -0.1525
+     block-8         32   31    -0.013237       -1.30765e+05     -0.0241
+     random          31   31    +0.589722        5.52810e+06      1.0202
+     PR22 swap asymmetry:  OLD form 1.5543e-01   CANONICAL 0.0000e+00   (A.0.2 reports 1.96e-02)
+
+     PR19 depth-window discriminator (best-focus frame index 38 of 63)
+     window K   frames    parity sigpow    contiguous/parity    FRC contig
+            8        8      5.29852e+06              0.3502     +0.190274
+           16       16      5.13431e+06              0.3528     +0.204199
+           32       32      4.81865e+06              0.3568     +0.201405
+           63       63      5.41858e+06              0.0466     +0.062420
+
+     PR17 real separation, canonical, k=sqrt2 of REAL photons
+       hp_sd 35.415 -> 33.374, matched blur sb = 0.31245 px
+       baseline 7.12531e+05  BLUR 5.30991e+05  SMOOTH 5.41858e+06
+       d_blur +0.25478   d_smooth -6.60469   S(canonical) = 0.037
+
+==============================================================================
+M55 E9 -- foam, 62 frames   (NOT used by the author)
+==============================================================================
+
+  ROI centre (916, 1501, 512, 512)   level 680.5 DN
+     split          n_A  n_B   FRC(f_sig)     canonical sigpow   vs parity
+     parity          31   31    +0.795618        2.47023e+09      1.0000
+     contiguous      31   31    +0.059674        1.42917e+07      0.0058
+     block-2         32   30    +0.296097        1.27767e+09      0.5172
+     block-4         32   30    +0.201562        7.38392e+08      0.2989
+     block-8         32   30    +0.012106        2.98893e+07      0.0121
+     random          31   31    +0.573259        2.01712e+09      0.8166
+     PR22 swap asymmetry:  OLD form 4.1763e-02   CANONICAL 0.0000e+00   (A.0.2 reports 1.96e-02)
+
+     PR19 depth-window discriminator (best-focus frame index 41 of 62)
+     window K   frames    parity sigpow    contiguous/parity    FRC contig
+            8        8      2.39522e+09              0.0979     +0.148357
+           16       16      2.41109e+09              0.0901     +0.139409
+           32       32      2.46653e+09              0.0934     +0.147631
+           62       62      2.47023e+09              0.0058     +0.059674
+
+     PR17 real separation, canonical, k=sqrt2 of REAL photons
+       hp_sd 766.593 -> 635.132, matched blur sb = 0.70485 px
+       baseline 3.40584e+09  BLUR 7.55950e+08  SMOOTH 2.47023e+09
+       d_blur +0.77804   d_smooth +0.27471   S(canonical) = 0.739
+
+  ROI flat (2747, 32, 512, 512)   level 642.5 DN
+     split          n_A  n_B   FRC(f_sig)     canonical sigpow   vs parity
+     parity          31   31    +0.071856        1.25611e+08      1.0000
+     contiguous      31   31    +0.029944        4.54590e+06      0.0362
+     block-2         32   30    -0.019513       -3.86484e+07     -0.3077
+     block-4         32   30    +0.068334        1.05271e+08      0.8381
+     block-8         32   30    +0.038308        5.11111e+07      0.4069
+     random          31   31    +0.000585        1.21298e+06      0.0097
+     PR22 swap asymmetry:  OLD form 9.4306e-03   CANONICAL 0.0000e+00   (A.0.2 reports 1.96e-02)
+
+     PR19 depth-window discriminator (best-focus frame index 43 of 62)
+     window K   frames    parity sigpow    contiguous/parity    FRC contig
+            8        8      1.73821e+08             -0.2652     -0.045189
+           16       16      1.07659e+08             -0.4341     -0.048142
+           32       32      1.41642e+08             -0.5530     -0.079289
+           62       62      1.25611e+08              0.0362     +0.029944
+
+     PR17 real separation, canonical, k=sqrt2 of REAL photons
+       hp_sd 624.417 -> 446.737, matched blur sb = 1.00254 px
+       baseline 5.73536e+08  BLUR 2.73817e+07  SMOOTH 1.25611e+08
+       d_blur +0.95226   d_smooth +0.78099   S(canonical) = 0.549
+
+wrote out/e9_split.json  (230.6s)

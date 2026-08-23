@@ -1,0 +1,72 @@
+==============================================================================
+M55 E8 (PR14) -- is A.0.3's identity a measurement or algebra?
+==============================================================================
+   A.0.3 verifies FRC_i * P_i == Re(sum A conj B)/count to 1.4e-16.
+   DERIVED: FRC_i = num/den and P_i = den/count, so the product is
+   num/count for ANY complex A,B with den > 0.  The den cancels.  This
+   is cancellation of a common factor, not a property of images.
+   Testing whether ANY of the conventions the spec agonises over can
+   break it.  If none can, the 1.4e-16 has no power (rule 21).
+
+   case                        Re-form FRC*P vs canon   MAG-form FRC*P vs canon
+   ordinary real, n=64              1.172e-16              2.000e+00   <-- MAG-form BREAKS
+   ordinary real, n=64 +periodic Hann     0.000e+00              2.000e+00   <-- MAG-form BREAKS
+   ordinary real, n=64 +ortho FFT     1.172e-16              2.000e+00   <-- MAG-form BREAKS
+   ODD n=65                         0.000e+00              2.000e+00   <-- MAG-form BREAKS
+   anti-correlated (neg)            0.000e+00              2.000e+00   <-- MAG-form BREAKS
+   1e8 dynamic range                0.000e+00              0.000e+00
+   COMPLEX-valued input             0.000e+00              2.682e+00   <-- MAG-form BREAKS
+   identical a is b                 0.000e+00              0.000e+00
+
+   The Re-form identity is exact under EVERY convention including odd n,
+   complex input, ortho FFT and the wrong window.  It is algebra.
+   The MAGNITUDE form of FRC -- the other standard convention, and the
+   one m41lib's docstring describes -- BREAKS it wherever cross-power
+   is negative.  That is an UNSTATED CONDITION on A.0.3.
+
+==============================================================================
+M55 E8 (PR21) -- b6_spec.py:129 says 'fourth power'.  Measure it.
+==============================================================================
+      lam    both inputs scaled     exponent      one input scaled   exponent
+       2.0        4.000000000000    2.00000     2.000000000000    1.00000
+       3.0        9.000000000000    2.00000     3.000000000000    1.00000
+      10.0      100.000000000000    2.00000    10.000000000000    1.00000
+
+==============================================================================
+M55 E8 (PR15) -- canonical vs old separation, ONE independent harness
+==============================================================================
+   k=1.05   sb=0.02077  S(canon) 0.975   S(old) 0.937
+   matched sb = 0.04959 px   (b3 published 0.04999)
+   k=sqrt2  S(canon) 0.976   S(old) 0.936   |  post-filter: S(canon) 0.976  S(old) 0.938
+            d_blur(canon) +0.00719  d_smooth(canon) +0.00018
+   k=2.0    sb=0.06084  S(canon) 0.974   S(old) 0.930
+   k=8.0    sb=0.06961  S(canon) 0.971   S(old) 0.916
+
+==============================================================================
+M55 E8 (PR16) -- does the canonical form fix the rule-18 inversion?
+==============================================================================
+   PM_M: destroy resolution, add fixed structure COMMON to both halves,
+   amplitude re-solved so hp_sd returns to baseline.  d per A.4.1.
+   A.4.2: |d|<0.0005 no claim | d>+0.003 lost signal | d<-0.003 MORE signal
+
+      sb    fake amp   hp_sd    true MTF    d(canon)     d(old)    A.4.2 says
+     0.25     12.496   58.8009    0.9113    +0.04940   +0.04969    lost signal
+     0.50     23.174   58.7998    0.6870    +0.11284   +0.11354    lost signal
+     1.00     38.373   58.7982    0.2231    -0.17487   -0.17302    MORE signal
+     2.00     51.865   58.7973    0.0068    -1.03306   -1.02991    MORE signal
+
+==============================================================================
+M55 E8 (PR20) -- A.4.2's thresholds against degree-2 gain sensitivity
+==============================================================================
+   DERIVED: gain (1+eps) on the test merge gives d = 1-(1+eps)^2 ~ -2eps.
+      eps      d(measured)   saturates which A.4.2 threshold
+    0.00025     -0.000500   exceeds the 0.0005 no-claim floor
+    0.00050     -0.001000   exceeds the 0.0005 no-claim floor
+    0.00150     -0.003002   exceeds the +-0.003 DECISION threshold
+    0.00300     -0.006009   exceeds the +-0.003 DECISION threshold
+    0.01000     -0.020100   exceeds the +-0.003 DECISION threshold
+    0.11700     -0.247689   exceeds the +-0.003 DECISION threshold
+   PR11 MEASURED real merge-gate configurations differ in median level by
+   up to 11.7 %.  The last row is that case.
+
+wrote out/e8_canonical.json  (133.4s)

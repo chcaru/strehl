@@ -1,0 +1,48 @@
+==============================================================================
+M55 E10 (PR23) -- is the separation score S a stable statistic?
+==============================================================================
+   matched blur held FIXED at sb = 0.04959 px (from PR15) so only REPS moves.
+   d_blur and d_smooth are means over REPS independent seed pairs.
+
+     REPS    d_blur      d_smooth    se(d_smooth)   d_smooth/se    S(canon)
+        1   +0.00717    +0.00215           nan           nan       0.770
+        2   +0.00718    +0.00128       0.00087          1.47       0.849
+        4   +0.00719    +0.00080       0.00057          1.39       0.900
+        8   +0.00719    +0.00018       0.00054          0.34       0.976
+       16   +0.00719    +0.00015       0.00041          0.36       0.980
+       32   +0.00719    +0.00048       0.00029          1.66       0.937
+       64   +0.00719    +0.00021       0.00020          1.01       0.972
+
+   S(canon) ranges 0.770 .. 0.980 across REPS with the SAME plant,
+   SAME seeds and SAME blur.  Author reports 0.995; my PR15 read 0.976.
+   d_smooth at REPS=8 is 0.34 standard errors from zero.
+
+==============================================================================
+M55 E10 (PR22 verification) -- why the old form's swap asymmetry is 26 %
+==============================================================================
+   DERIVED: old = FRC * mean|A|^2, and FRC is swap-symmetric, so
+   old(a,b)/old(b,a) = P_a/P_b exactly.  Confirming on the author's own
+   configuration: 112MSDCF frames 6..68, detail ROI, parity split.
+     P_a 5.893981e+07   P_b 4.523841e+07   P_a/P_b 1.302871
+     FRC(a,b) 0.86908375   FRC(b,a) 0.86908375  (symmetric)
+     old(a,b) 5.122363e+07   old(b,a) 3.931597e+07
+     relative to the mean: 2.6304e-01
+     relative to old(a,b): 2.3246e-01
+     A.0.2 reports 1.96e-02.  canonical swap difference: 0.0000e+00
+
+==============================================================================
+M55 E10 -- LEVERAGE: what moves canonical sigpow, and by how much
+==============================================================================
+   All as |d| on the author's own stack and ROI, canonical form.
+     halving noise variance (k=sqrt2), on the PLANT        0.00021
+     a 0.05 px optical blur, on the PLANT                  0.00719
+     a 0.15 % photometric gain                             0.00300  (PR20)
+     block-4 instead of parity split                       0.35870  (PR18, = 1-0.6413)
+     contiguous instead of parity split                    0.99530  (PR18, = 1-0.0047)
+     PM_M: destroy detail to MTF 0.007 + common structure   1.03306  (PR16, NEGATIVE d)
+
+   Split choice has 50x the leverage of the blur signal the metric
+   exists to detect, and 1751x the leverage of the noise term it is
+   supposed to be blind to.
+
+wrote out/e10_stability.json  (44.4s)
