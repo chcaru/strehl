@@ -725,6 +725,7 @@ mod tests {
             baseline_lo: 96,
             baseline_hi: 128,
             max_d: 140,
+            mis_tol: 2,
         };
         let region: Vec<usize> = (0..g.pixels()).collect();
         let oracle = scene.oracle();
@@ -756,6 +757,7 @@ mod tests {
             baseline_lo: 96,
             baseline_hi: 128,
             max_d: 140,
+            mis_tol: 2,
         };
         let region: Vec<usize> = (0..g.pixels()).collect();
         let oracle = scene.oracle();

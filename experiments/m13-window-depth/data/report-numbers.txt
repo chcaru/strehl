@@ -1,0 +1,84 @@
+== adaptive: range of oracle and realisable gains ==
+  all configurations: n = 30
+    oracle gain    : min 1.47%  max 46.84%   >=5%: 28/30
+    realisable gain: min -153.55%  max 5.44%   negative: 18/30
+  step > 0 only: n = 24
+    oracle gain    : min 5.70%  max 46.84%   >=5%: 24/24
+    realisable gain: min -70.60%  max 5.44%   negative: 12/24
+  step == 0 (null): n = 6
+    oracle gain    : min 1.47%  max 15.11%   >=5%: 4/6
+    realisable gain: min -153.55%  max -22.38%   negative: 6/6
+
+== 109MSDCF / vertical / step 32: acc, E_excess, bleed_fg ==
+     w      acc  E_excess  bleed_fg
+     0   0.2655     76.58      7.86
+     1   0.3863     55.32      9.92
+     2   0.5013     39.66      9.78
+     3   0.5978     34.83     12.24
+     5   0.7196     30.62     15.11
+     6   0.7654     28.64     16.84
+     8   0.8239     25.89     18.75
+     9   0.8455     24.89     19.05
+    10   0.8620     24.15     18.53
+    11   0.8747     23.58     17.85
+    12   0.8852     23.14     17.61
+    13   0.8939     22.90     16.98
+    15   0.9084     22.69     15.79
+    17   0.9177     23.54     14.51
+    18   0.9210     23.73     13.94
+    20   0.9272     25.02     12.74
+    23   0.9355     27.91     11.01
+    26   0.9428     30.48      9.21
+    33   0.9569     33.53      1.19
+    40   0.9667     37.82      1.53
+  w40 vs w15 optimum: 66.7% worse (rule: 100*(E40-E15)/E15)
+
+== N reduction in excess, w5 -> w13 ==
+  N(w5)  = 1.1324   excess 0.1324
+  N(w8)  = 1.1019   excess 0.1019
+  N(w13) = 1.0864   excess 0.0864
+  reduction in excess w5->w13: 34.8% (rule: (excess5 - excess13)/excess5)
+
+== cost: full table ==
+        tenengrad-w0   1.9240
+        tenengrad-w1   3.3482
+        tenengrad-w2   3.3549
+        tenengrad-w3   3.4042
+        tenengrad-w5   3.3805
+        tenengrad-w6   3.3767
+        tenengrad-w8   3.3821
+        tenengrad-w9   3.4093
+       tenengrad-w10   3.3749
+       tenengrad-w11   3.3540
+       tenengrad-w12   3.3435
+       tenengrad-w13   3.3806
+       tenengrad-w15   3.3850
+       tenengrad-w17   3.3670
+       tenengrad-w18   3.3251
+       tenengrad-w20   3.3281
+       tenengrad-w23   3.3290
+       tenengrad-w26   3.3298
+       tenengrad-w33   3.3398
+       tenengrad-w40   3.3350
+            ring-1-3   3.3309
+  windowed spread: min 3.3251 max 3.4093 = 2.53%
+  w5 3.3805  w13 3.3806  delta +0.00%
+  ring-1-3 3.3309  tenengrad-w5 is +1.49% of it
+
+== support radius and tap count at w13 ==
+  support_radius from the harness: 14
+  analytic (2*sr+1)^2 = 841 taps
+
+== phi at the windows the report quotes (delta = 8 DN) ==
+  phi-109MSDCF.csv
+    w  0  phi 0.029019520  taps 9
+    w 13  phi 0.139049420  taps 841
+    w 15  phi 0.147113110  taps 1089
+    w 17  phi 0.147380100  taps 1369
+    w 40  phi 0.114581540  taps 6889
+  phi-109MSDCF-nonorm.csv
+    w  0  phi 0.000000000  taps 8
+    w 13  phi 0.001287840  taps 841
+    w 15  phi 0.000984700  taps 1089
+    w 17  phi 0.000777320  taps 1369
+    w 40  phi 0.000149020  taps 6889
