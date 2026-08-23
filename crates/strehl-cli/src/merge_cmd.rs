@@ -93,10 +93,25 @@ pub struct MergeOptions {
     pub target_n_eff: Option<f64>,
     /// Gather per-pixel through-focus sufficient statistics during pass two.
     ///
-    /// Opt-in because it is not free: `ThroughFocus` costs 60 B/px, which on the
-    /// A7C II plane is 494 MB per worker and will reduce the worker count the
-    /// memory budget licenses. With it off, the merge path's memory is exactly
-    /// what M37/M38 measured.
+    /// Opt-in because it is not free, and **two different per-worker figures
+    /// are in circulation for it**, so this says which is which:
+    ///
+    /// * **60 B/px = 494 MB** is [`ThroughFocus`] *alone*, the payload of the
+    ///   struct itself. It is the right number for "what does the gathered
+    ///   statistic cost", and the wrong one for "what does this flag cost".
+    /// * **64 B/px = 527 MB** is what setting this field actually costs, and
+    ///   is what a run reports, because it also forces a `FINE_FIELD_PER_PX`
+    ///   4 B/px fine focus plane into every pass-two worker. This is the
+    ///   number a user deciding whether to pass `--stats` wants.
+    ///
+    /// Neither is stale; they are two quantities under one label, which is the
+    /// failure mode section 5 of `SYNTHESIS.md` calls the corpus's worst. The
+    /// 527 figure is `px * (FINE_FIELD_PER_PX + gathers * bytes_per_pixel())`
+    /// at `gathers = 1`; `stats_placebo` raises `gathers` to 2 and the total
+    /// to 124 B/px, so 527 MB is the floor for this flag, not a constant.
+    ///
+    /// Either way it reduces the worker count the memory budget licenses. With
+    /// it off, the merge path's memory is exactly what M37/M38 measured.
     pub stats: bool,
     /// Also gather a frame-permutation placebo alongside the statistics.
     ///
