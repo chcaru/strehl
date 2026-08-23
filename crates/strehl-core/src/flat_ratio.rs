@@ -80,10 +80,12 @@
 //! [`structure_contamination`] factor. Measured on the two corpus flat ROIs
 //! (`experiments/m53-flat-ratio/out/a2_kernel_sweep.log`) that factor is
 //! **1.2756x** (`109MSDCF`) and **1.9101x** (`119MSDCF`, at the stale ISO-50
-//! gain; ~1.35x at the M25-corrected gain), against the legacy raw statistic's
-//! **8.70x** and **19.07x**. So the replacement does not remove the
-//! under-report, it shrinks it by 6.8x / 14.1x and — unlike the raw ratio —
-//! **prints the residual bound next to the number**.
+//! gain M41 measured with; **1.3490x** at the gain the code ships today, since
+//! SYNTHESIS fact 550 doubled `g` at ISO 50 and sigma goes as its square root),
+//! against the legacy raw statistic's **8.70x** and **19.07x**. So the
+//! replacement does not remove the under-report, it shrinks it by 6.8x / 14.1x
+//! and — unlike the raw ratio — **prints the residual bound next to the
+//! number**.
 //!
 //! A narrower box shrinks it further: `w = 3` measures 1.0234x on `109MSDCF`
 //! and still separates the detail ROI from the flat one by 2.23x, so it has not
