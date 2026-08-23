@@ -113,6 +113,7 @@ monolithic binary and ship only that binary.
 | `M3-alignment-measured.md` | Measured alignment cost, motion model, and why chaining is dead |
 | `M4-fpn-measured.md` | Dark-frame noise: sigma-vs-N, the fixed-pattern floor, read noise vs ISO |
 | `M5-diffraction-measured.md` | **The bellows factor, measured from the raw CFA.** `B = (1+m/p) ∈ [2.41, 3.06]`, `p ≈ 1.0-1.4`; `p=0.5` refuted model-free. EXIF `FNumber` is **not** bellows-corrected — marked f/11 is optically f/33 |
+| `M7-gpu-focus-measured.md` | **The fusion prize, priced.** Ring-difference focus + merge on the GPU is **4.117 ms / 22 frames**, bandwidth-bound at 84% of measured DRAM read. Fusing focus into the merge saves **1.45 ms = 0.14% of the pipeline** — *not* enough to justify constraining plugins to spliceable WGSL. Answers risk 10 / question 11; fact 21 is CPU-time-under-concurrency and cannot bound a GPU design |
 | `M6-residual-halo-measured.md` | **The residual is defocus, and the halo is not a scalar.** M3's 0.6-1.3 px residual is blur-induced peak degradation, not depth-dependent magnification: in-focus tiles align at 0.14-0.17 px. No field-dependent asymmetric PSF found, so the lens plugin stays a data file. Corner halo 32.4 px (B1's 39 is a *displacement*), corner:centre 141x, and a scalar `halo()` dies on stack-dependence (19.4/32.4/89.2 px), not on waste |
 | `A-prior-corpus.md` | The prior attempt, filtered; includes retractions |
 | `B-algorithms-sota.md` | Algorithmic state of the art per stage |

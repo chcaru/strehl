@@ -414,6 +414,35 @@ emitted, and E already amortises that to zero.
 **Fix: never write the `build.rs`.** Compose at run time, cache by content hash. This is the single
 highest-value item in this section, because it *is* "easily contributable by others".
 
+> **B2 SUPERSEDED BY MEASUREMENT — M7 priced the thing both options were competing to preserve, and
+> it is worth 0.14% of the pipeline.** The table above argues about *when* to splice WGSL. M7 asked
+> whether to splice at all, by porting ring-difference to one `wgpu` kernel and timing the fused and
+> unfused paths side by side (`M7-gpu-focus-measured.md`). Results, independently reproduced:
+>
+> | Quantity | Measured |
+> | --- | --- |
+> | Focus + merge, fused, 22 frames on the 5090 | **4.117 ms** (0.187 ms/frame), bandwidth-bound at **84%** of measured DRAM read |
+> | Same, unfused — focus written to memory, merge reads it back (**i.e. a plugin that just emits a focus field**) | 5.566 ms |
+> | **The fusion prize** | **1.449 ms = 0.14% of a cold pipeline, 0.20% warm** |
+> | Full focus volume resident — the *most permissive* plugin model there is | only 1.683 ms worse than fused |
+> | GPU vs best parallel CPU | **~165x** |
+>
+> **So the fusion prize does not pay for the contribution format, and it is not close.** Splicing
+> would make a contributor inherit our tile size, halo, shared-memory layout, register budget and
+> single-pass restriction, make their measure untestable in isolation, and — worst — **harden fact
+> 25's radius/regulariser coupling into the ABI**. All to buy back 0.14%.
+>
+> **The rule is therefore "run on the GPU, emit an `f32` focus field", not "be spliceable".** That
+> keeps the 165x, which is the part that actually matters, and costs the plugin model nothing.
+> Fusion survives as an **internal** optimisation the framework may apply to its own built-in
+> measures: M7's self-test group 6 proves fused and unfused produce **bit-identical** focus fields
+> and winner maps, so fusion is an implementation detail and not a different answer.
+>
+> **This retires the B2 debate rather than settling it.** Both columns of the table above assumed
+> the fusion advantage was "decisive"; it was never measured until now. Runtime composition remains
+> right for the framework's *own* kernels, so the `build.rs` verdict stands — but no contributor is
+> required to be spliceable, so the contributor-experience column is moot.
+
 **B3 — the focus measure and the merge are coupled, and the coupling is currently invisible.**
 `M2-verification.md` §6 records that argmax's noise excess is *spatially correlated over 3-7 px
 because the ring-difference measure correlates winners* — and 3-7 px is exactly `focus.rs`'s own
@@ -493,7 +522,8 @@ question before running §10 question 6.
 no DI container. What must not be foreclosed: the object-safe `Stage` signature, `TileView`
 descriptors everywhere, `source_roi(out, warp)` rather than `halo()`, `support_px()`,
 `SigmaMultiples`, a framework-owned sampler, `ctx.provide/require` from day one, and **runtime**
-source-level kernel composition.
+source-level kernel composition — the last now scoped by fact 30 to the framework's **own** kernels,
+since contributors are not required to be spliceable and only have to emit an `f32` focus field.
 
 ---
 
@@ -521,7 +551,7 @@ source-level kernel composition.
 | 18 | Residual after any global model is **0.6-1.3 px**, against a 0.19 px estimator floor, and richer geometry does not touch it | Neither noise nor global model error. Candidates: depth-dependent magnification, or blur-induced correlation bias. Discriminate by correlating per-tile residual against the winner-index map | M3 (MEASURED fact, UNVERIFIED cause) |
 | 19 | A naive argmax stack of 22 frames is **1.253x noisier than one unstacked frame** on a flat ROI; **~1.48x** structure-corrected. On the same frames and ROI, a plain **mean gives 0.534x** and a placebo selector with the identical winner histogram gives **0.981x**. Present already at **N=3** (1.5 px drift), monotone in N | **The defect the project exists to remove is measured on our own files, and its cause is proven.** Drift and scene structure push the ratio *below* 1.0; only selection coupled to per-pixel noise pushes it above. The corpus's borrowed 1.82x is no longer load-bearing | M2 + M2-verification (MEASURED) |
 | 20 | Winner-index speckle **34.4%**, against a no-information null of **53.5%** (i.i.d. draws from the observed winner histogram) and **0.868%** for a 17x17-regularised focus field. Still 21.7% in the busiest contrast decile | The winner map carries *some* spatial information but is nowhere near a depth map. **A fair upper bound on selector instability and nothing more** — it cannot separate "argmax elected noise" from "no frame is in focus here, so the error is harmless". Never quote it without the null | M2-verification (MEASURED) |
-| 21 | Ring-difference focus + fold costs **~74% of decode** (196.8 vs 267.6 ms/frame), i.e. **42% of total CPU**, for the cheapest focus measure anyone would consider | Any budget treating focus measurement as negligible beside decode is wrong on this hardware. Fact 11's decode-dominated framing is too generous. *(M2 published "41% of decode" — a conflation of "% of decode" with "% of total"; corrected)* | M2-verification (MEASURED) |
+| 21 | Ring-difference focus + fold costs **~74% of decode** (196.8 vs 267.6 ms/frame), i.e. **42% of total CPU**, for the cheapest focus measure anyone would consider | Any budget treating focus measurement as negligible beside decode is wrong on this hardware. Fact 11's decode-dominated framing is too generous. *(M2 published "41% of decode" — a conflation of "% of decode" with "% of total"; corrected)* **The ratio survives M7; the inference drawn from it does not.** 196.8 ms/frame is per-frame **CPU time under 32-way concurrency**, not wall clock — the same work is 677 ms of wall for the whole 22-frame stack, and **4.1 ms on the GPU**. So fact 21 may not be used to size a GPU design or to justify a contribution format (fact 30) | M2-verification (MEASURED), scope corrected by M7 |
 | 22 | Peak RSS is a function of **live concurrency, not of the plan**: `min(chunks, rayon pool) x per-worker`. At N=22 it is **833 MB at 1 thread, ~1.6 GB at 3, ~4.0 GB at default (32)**. On **105 real frames** it is **7.16 decimal GB**, against the planner's own 5.77 GB prediction. In-flight frames = `min(20, 32, N)` — O(workers), never O(N). Output byte-identical (SHA-256) across reduction trees and thread counts | **The architecture is right and the constant is not small.** O(workers) holds, but per-worker is **~379 MB measured** against **321 MB modelled**, so the planner licenses more workers than the 6 GiB budget can pay for, and **N=105 already sits at 89% of the 8 GB ratchet**. *(Both prior figures were configuration-specific and each was published as "the" peak: 4.12-4.20 GB and 1.81-1.94 GB. The latter is the `RAYON_NUM_THREADS=3` run. The earlier "far more headroom than published" reading is **inverted** — there is less.)* **This fact is also why the CI ratchet was respecified (§3.2.1): peak RSS depends on core count, so an unpinned absolute ceiling is a flake, not a regression test.** | M2-rss-resolved (MEASURED, n=6 at N=22 + n=1 at N=105) |
 | 23 | Regularising the focus field (17x17 smooth) before argmax drops speckle **34.4% -> 0.868%** and noise **1.253x -> 1.075x** — **but 1.075x is still above 1.0.** Only averaging goes below one frame | **Direct measured support for §1.1(a), and a warning.** The architecture needs *both* halves: a regularised reference to stop the selector electing noise, **and** a noise-gated estimator that averages where frames agree. A better selector is not enough | M2-verification (MEASURED) |
 | 24 | On high-detail ROIs a mean's sigma looks harmless (0.899x, 0.995x) while its mean gradient **collapses -58% and -53%**; argmax *raises* gradient | **Sigma alone cannot see detail destruction.** This is rule 9 working: the flat-ROI metric is valid precisely because its paired control fails as it should | M2-verification (MEASURED) |
@@ -530,6 +560,7 @@ source-level kernel composition.
 | 27 | **The bellows factor of the composed path is `B = (1 + m/p) ∈ [2.41, 3.06]`**, point estimate 2.6-2.9, measured from the diffraction cutoff in the raw CFA. At f/11 the green-quincunx spectrum has a genuine knee at **f_sig = 0.2762 cyc/px**, above which the floor matches the photon-transfer noise model to **0.950x** — so it is a real optical cutoff, not a fitted plateau. **`B = 5` (p = 0.5) is REFUTED 5/5 by a model-free test** at two apertures: there is optical signal at 0.3508 cyc/px, where p=0.5 permits none. **`B = 1` is refuted by ~3x** | **The corpus's "dominant uncertainty in the whole advisor" (±38%) is retired to −20%/+2%, from data the owner already had, with no bench work.** With m ≈ 2.0, **p ≈ 1.0-1.4** — the working assumption of p=1 was right. It does **not** vanish: M5 measures the product `(1 + m/p)` and cannot separate `p` from `m`, so `B` is known at *one* magnification only. A bench measurement of `p` alone would give `B` at any magnification | M5 (MEASURED → DERIVED; independently reproduced) |
 | 28 | **EXIF `FNumber` is the *marked* aperture and is NOT bellows-corrected.** The body composes the teleconverter into `FocalLength` and `FNumber` (fact 26) but applies no correction for working at 2:1. **Marked f/11 is optically f/33** | **The most directly actionable finding in the corpus.** Every advisor formula that reads `FNumber` and treats it as `N_eff` **under-predicts diffraction blur by ~3x** and will recommend f/11 as "safe". Apply `N_eff = FNumber_exif * B`. Consequences at B=3: f/8 discards **40%** of the sensor's 2-D Nyquist area (46% of contrast at 4-px detail), f/11 discards **68%** (90%) — a 33 MP sensor used as ~10.5 MP. Critical sampling is at **N_marked = f/6.21** | M5 §7 (DERIVED, factor-of-3 margin) |
 | 29 | **The project's noise model is independently confirmed to ±10% by a method sharing none of its assumptions.** The spectral floor above the cutoff is a structure-free sigma estimate: floor/model = **0.950-1.093x** across 15 f/11 cases spanning a **4.8x signal range** (422-2027 DN), so it tests the *slope* of the photon-transfer relation, not one point. Immerkaer on the same ROIs agrees to 0.896-1.020x | Three structurally independent routes now concur. **Where they disagree the disagreement is diagnostic**: at f/8 the ratio is 4.58-20.19x because the "floor" still contains subject signal, which is exactly how M5 detected that f/8 has no reachable floor. Uses no darks, no flats, no Immerkaer kernel, no fitted gain | M5 §8 (MEASURED, n=15) |
+| 30 | **The fusion prize is 0.14% of the pipeline.** Ring-difference focus + merge, fused into one `wgpu` kernel, runs the 22-frame stack in **4.117 ms** — bandwidth-bound at **84%** of the measured DRAM read ceiling, predicted to **1.05x by a zero-free-parameter model**. Unfused (focus written to memory, merge reads it back — i.e. *a plugin that merely emits a focus field*) costs 5.566 ms. **Prize = 1.449 ms = 0.14% cold / 0.20% warm.** Keeping the entire focus volume resident, the most permissive plugin model there is, costs only 1.683 ms more than fusing. GPU vs best parallel CPU: **~165x** | **This kills the case for constraining contributors to spliceable WGSL** (§3.4.1 B2), which was the stated justification for the whole spliced-kernel contribution format. Splicing would make a contributor inherit our tile size, halo, shared-memory layout, register budget and single-pass restriction, make their measure untestable in isolation, and harden fact 25's coupling into the ABI — to buy back 0.14%. **The rule becomes "run on the GPU, emit an `f32` focus field."** That keeps the 165x, which is the part that matters. Fusion survives as an internal optimisation: fused and unfused are **bit-identical** (self-test group 6), so it is an implementation detail, not a different answer | M7 (MEASURED; independently reproduced to 0.1%) |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -698,13 +729,17 @@ Recorded with their queries; **all are UNVERIFIED as wins, and none is on the v1
    keeping the *shape* and not the *machinery*, and for the contributed surface being data plus
    WGSL — a shader cannot drift an interface it does not have.
 
-10. **The GPU contribution format is being constrained by a CPU measurement.** Fact 21's "focus is
-    74% of decode" is **scalar Rust, no SIMD, no GPU**, while §9 scopes v1 as `wgpu` compute. Fact
-    10 measured D2D at 1503 GB/s, and 22 frames x 66 MB is 1.45 GB, so a bandwidth-bound bandpass
-    over the whole stack is plausibly single-digit milliseconds. **The size of the fusion prize —
-    the stated justification for constraining how contributors write focus measures — is unpriced,
-    and experiment 3 has not been run.** Port ring-difference to one `wgpu` kernel and time it
-    before letting fusion dictate the contribution format.
+10. ~~**The GPU contribution format is being constrained by a CPU measurement.**~~ — **CONFIRMED as a
+    real defect, then CLOSED by M7 (fact 30).** The suspicion was right and the consequence was
+    larger than stated. Fact 21's "focus is 74% of decode" is scalar CPU; fact 10 measured D2D at
+    1503 GB/s and suggested the focus volume might be single-digit milliseconds. **It is 4.117 ms**,
+    bandwidth-bound at 84% of the measured read ceiling. **The fusion prize that justified
+    constraining contributors to spliceable WGSL is 1.449 ms — 0.14% of the pipeline.** Ruling: the
+    contribution rule is *"run on the GPU, emit an `f32` focus field"*, not *"be spliceable"*.
+    Fusion stays as an internal optimisation, and is provably bit-identical either way. **General
+    lesson, and it is the reason this risk was worth writing down: a measurement taken on one
+    execution substrate was about to fix a public interface on another.** Check the substrate before
+    a number is allowed to constrain an interface.
 
 ---
 
@@ -896,10 +931,14 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     128 px tile grid, compute `bbox(S_k^-1(tile))` over all k and plot the required halo against
     radius from the scale centre. Costs nothing and produces the number that either kills or
     vindicates a scalar `halo()` (§3.4.1 B1).
-11. **Price the GPU fusion prize before it constrains the contribution format** (risk 10). Port
-    ring-difference to one `wgpu` kernel and time the focus volume on the 22-frame stack. Fact 21
-    is a scalar-CPU number, and experiment 3 — which §9 says is what justifies constraining how
-    contributors write focus measures — has not been run.
+11. ~~**Price the GPU fusion prize before it constrains the contribution format**~~ — **CLOSED by M7.
+    The answer is no.** The fused focus+merge kernel runs 22 frames in **4.117 ms**, bandwidth-bound
+    at 84% of the measured read ceiling; the fusion prize is **1.449 ms = 0.14% of the pipeline**;
+    the most permissive plugin model imaginable (whole focus volume resident) costs 1.683 ms more
+    than fusing. **Contributors will not be constrained to spliceable WGSL.** Fact 30, risk 10.
+    Independently reproduced to within 0.1%. *(Note that this closes question 11 without running
+    experiment 3 — the bake-off is still worth doing, but it is no longer load-bearing for the
+    plugin interface, which is what §9 had staked on it.)*
 14. **Does `B` hold away from 2:1, and how much does the λ assumption cost?** M5's two disclosed
     systematics. `B` is measured at **one** focus distance (`FocusDistance2` 0.274-0.277 m); at
     infinity `B → 1` trivially and the interpolation between is unmeasured. And `λ_eff = 550 nm` is
