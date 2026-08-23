@@ -1446,7 +1446,8 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     against w5 (fact 65). One texture pair per stack cannot distinguish an occlusion-geometry effect
     from a texture effect. Note this is the *second* open question whose answer needs a corpus with
     deliberate variation in subject depth and texture — the first is fact 53's unexplained shrinkage
-    mechanism. **One capture campaign would serve both.**
+    mechanism. **One capture campaign would serve both, and it is specified in
+    [`../captures-needed.md`](../captures-needed.md) §5.**
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must

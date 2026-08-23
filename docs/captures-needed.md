@@ -236,7 +236,60 @@ measurement.
 
 ---
 
-## 5. Corpus locations — read-only
+## 5. Deep stacks with deliberate scene variation — REQUESTED
+
+**Status:** requested. Not urgent, not blocking anything today, but **two
+separate open questions now need the same capture**, so one afternoon of
+shooting closes both.
+
+**Why.** The corpus is five stacks, and two independent results have run out of
+road on exactly that:
+
+- **Fact 53 — the shrinkage mechanism is unexplained.** Short-baseline alignment
+  edges under-report magnification change by anywhere from **1.03x to 3.26x**,
+  and it is a property of the *scene*, not the optics (fact 51). Ten candidate
+  predictors were tested against the edge sets and **none** of them predicts
+  which stacks shrink. With five stacks, no correlation can reach significance —
+  the critical value is ρ = 0.600 at n = 5.
+- **Question 18 — one cell behaves unlike every other.** The `119MSDCF`
+  horizontal texture pair puts its focus-window optimum at w8 at *all five*
+  depth steps, the only cell with a constant argmin, and it is the source of
+  every head-to-head loss the recommended window suffers. One texture pair per
+  stack cannot tell an occlusion-geometry effect from a texture effect.
+
+Both are asking the same question: **which property of a subject drives this?**
+That cannot be answered by analysis, only by more stacks that vary the property
+on purpose.
+
+### What to shoot
+
+**8-12 stacks**, same rig and same method as the existing corpus (in-camera
+focus bracketing; no rail needed). Depth 40+ frames each so the long-baseline
+anchors exist. The point is **deliberate variation**, so vary these on purpose
+rather than shooting a dozen of the same thing:
+
+| Axis | Span it |
+| --- | --- |
+| **Subject depth** | Something almost flat (a coin, a leaf face-on) through something deep (a flower head, a pine cone, an insect). This is the axis most likely to matter and the corpus barely varies it. |
+| **Texture scale** | Fine high-frequency detail (fabric weave, sand, chitin) *and* smooth low-contrast surfaces (a petal, a polished shell). |
+| **Occluding edges** | At least three subjects with **genuine occlusion** — a near element in front of a far one with real separation, e.g. a stem crossing in front of a background, or hairs standing off a surface. This is the configuration the whole window result turns on and the corpus has almost none of it. |
+| **Depth-gradient direction** | Not everything front-to-back. Include subjects whose depth runs left-right and diagonally. `119MSDCF`'s anomaly is specifically in a *horizontal* geometry. |
+
+**Keep constant:** aperture, ISO, lighting and magnification within each stack,
+as now. Vary them *between* stacks if convenient — that is useful, not harmful.
+
+**Note the subject in the folder name** (e.g. `pine-cone-deep`,
+`petal-smooth`, `stem-occlusion`), because the whole point is correlating
+behaviour against subject properties, and EXIF does not record what was in
+front of the lens.
+
+**Do not** shoot the same subject twice at different densities and label it two
+stacks — fact 50 records how that misled us once already, and fact 69 records a
+directory mirrored to a second path being mistaken for a second sample.
+
+---
+
+## 6. Corpus locations — read-only
 
 **Never write to any of these.**
 
