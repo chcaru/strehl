@@ -1,0 +1,73 @@
+{
+  "N": 30,
+  "sqrt_N": 5.477225575051661,
+  "constants": {
+    "gain_divisor": 436.8,
+    "base_iso": 100.0,
+    "read_noise_e_low": 4.2,
+    "read_noise_e_high": 1.2392,
+    "second_base_iso": 400.0,
+    "iso": 160.0,
+    "gain_dn_per_e": 0.3663003663003663,
+    "read_noise_e": 4.2,
+    "read_noise_dn": 1.5384615384615383,
+    "black": 512.0,
+    "white": 15360.0
+  },
+  "roi": {
+    "inset": 32,
+    "shape": [
+      960,
+      960
+    ],
+    "pixels": 921600
+  },
+  "latent_green": {
+    "mean_raw_dn": 1741.902043185764,
+    "mean_signal_dn": 1229.902043185764,
+    "min_raw_dn": 565.0,
+    "max_raw_dn": 2703.0
+  },
+  "binned_green_noise": {
+    "model_var_dn2": 226.44021641891976,
+    "model_sigma_dn": 15.04793063576915,
+    "note": "Var((G1+G2)/2) = (sigma_G1^2 + sigma_G2^2)/4, NoiseModel::green_luma_sigma"
+  },
+  "trap": {
+    "hp_box_side": 9,
+    "hp_noise_gain": 0.9938079899999065,
+    "latent_hp_sd_dn": 59.990937667680434,
+    "predicted_flat_roi_hp_ratio": 1.0295371303765457,
+    "ceiling_texture_free_scene": 1.3912166872805047
+  },
+  "ladder": [
+    {
+      "k": 1,
+      "expected": 1.0
+    },
+    {
+      "k": 2,
+      "expected": 1.4142135623730951
+    },
+    {
+      "k": 3,
+      "expected": 1.7320508075688772
+    },
+    {
+      "k": 5,
+      "expected": 2.23606797749979
+    },
+    {
+      "k": 10,
+      "expected": 3.1622776601683795
+    },
+    {
+      "k": 20,
+      "expected": 4.47213595499958
+    },
+    {
+      "k": 30,
+      "expected": 5.477225575051661
+    }
+  ]
+}

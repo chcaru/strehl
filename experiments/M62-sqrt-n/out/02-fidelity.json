@@ -1,0 +1,40 @@
+{
+  "constants": {
+    "gain_divisor": 436.8,
+    "base_iso": 100.0,
+    "read_noise_e_low": 4.2,
+    "read_noise_e_high": 1.2392,
+    "second_base_iso": 400.0,
+    "iso": 160.0,
+    "gain_dn_per_e": 0.3663003663003663,
+    "read_noise_e": 4.2,
+    "read_noise_dn": 1.5384615384615383,
+    "black": 512.0,
+    "white": 15360.0
+  },
+  "F1_decode_roundtrip": {
+    "cli_iso": 160.0,
+    "profile_not_fallback": true,
+    "max_abs_dn": 0.11326771953918069,
+    "rms_dn": 0.06538528249535783,
+    "tiff_quantisation_step_dn": 0.22656595712214847,
+    "expected_rms_dn": 0.09249516467242601,
+    "pass_": true
+  },
+  "F3_burst_sigma": {
+    "frames": 24,
+    "empirical_pooled_rms_dn": 18.704614624842982,
+    "model_rms_dn": 18.700153404104782,
+    "model_mean_dn": 16.957365387057358,
+    "ratio_empirical_over_model": 1.0002385659968556
+  },
+  "burst_report": {
+    "n": 1,
+    "seed": 1000,
+    "dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M62-sqrt-n\\data\\fidelity",
+    "sigma_mean_dn": 16.957365387057358,
+    "sigma_min_dn": 2.6004746299338968,
+    "sigma_max_dn": 28.55148641885109,
+    "clipped_samples": 0
+  }
+}
