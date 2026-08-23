@@ -23,9 +23,10 @@ is reported below as MET or NOT MET, in the words it was written in.
 
 | | before M64 | after M64 |
 |---|---|---|
-| `strehl stack <dir> -o x.tif` | unregularised per-pixel argmax | **the estimating merge at gate 4.0** |
-| `strehl merge <dir> -o x.tif` | **exit 1** — see below | the same path (hidden alias) |
-| `strehl argmax-baseline <dir> -o x.tif` | did not exist | the old `strehl stack`, unchanged |
+| `strehl stack <dir> --out x.tif` (no other flags) | unregularised per-pixel argmax | **the estimating merge at gate 4.0, one image** |
+| `strehl merge <dir> --out x.tif` (no other flags) | **exit 1, no image** — fact 915 | the same path (hidden alias) |
+| `strehl stack <dir>` (no flags at all) | argmax report | estimator report, one gate rung |
+| `strehl argmax-baseline <dir> --out x.tif` | did not exist | the old `strehl stack`, unchanged |
 
 Two separate defects, not one.
 
@@ -42,6 +43,60 @@ given; pick one`, because the default was a four-rung diagnostic ladder
 (0.5, 1, 2, 4) that writes no image. M62 measured this and recorded its
 pre-M64 verdict as `REJECT`, blocking on `DEFAULT`. So the estimator was not
 merely non-default — **there was no default merged output in the binary.**
+
+This is now SYNTHESIS fact 915, folded after this milestone began. It matches
+what section 1.1 records, which I found independently while reading the CLI; I
+am not claiming priority over it, and it is the more precise statement of the
+two. **The binary had a research ladder where a product needs a verb.**
+
+### 1.1a What the no-flags invocation means now — the decision, and its evidence
+
+**It writes one image at a constant gate of 4.0. It is not automatic.** MEASURED
+end to end, the exact invocation fact 915 names:
+
+```
+strehl stack D:\personal\macro\coffee-bubbles --out 40-noflags-coffee-bubbles.tif
+  -> exit 0, wrote 3516 x 2344 16-bit RGB linear TIFF, 49,449,626 bytes
+```
+
+**Why a constant and not an automatic rule.** The obvious automatic rule is
+"solve the gate that hits a target `mean n_eff`", since the crate already has
+the solver. It loses on M52's own numbers, and it loses badly:
+
+- **A target `n_eff` is not a property of the data; a gate is.** `--gate T`
+  asserts *average every frame whose focus response is statistically
+  indistinguishable from the winner's, at `T*sqrt(2)` SDs of the measured focus
+  noise*. That is a fixed statement about the sensor's noise, and it is
+  stack-independent by construction — which is this project's whole thesis. A
+  target `n_eff` asserts *average this many frames*, which is a statement about
+  how much averaging I happen to want and is answerable from no measurement.
+- **The 28.9x spread M52 measured is an argument against targeting `n_eff`, not
+  against a fixed gate.** The two spreads are different objects: the gate needed
+  for a fixed `n_eff` spans 28.9x, and the `n_eff` produced by a fixed gate
+  spans 22.15x (section 2.4, MEASURED). The second spread is the estimator
+  *responding* to how much focus disagreement each stack actually contains, and
+  suppressing it would be suppressing the signal.
+- **The decisive one: an auto-rule would have built the degenerate merge on
+  purpose.** M52 measured that `foam` needs gate **21.9934** to reach
+  `n_eff = 3`, and cannot reach it anywhere on the 0.5-4.0 ladder. A rule
+  targeting `n_eff = 3` would therefore drive `foam` to a tolerance of
+  `21.9934 * sqrt(2) = 31.1` SDs of focus noise — abandoning focus
+  discrimination entirely on the one corpus stack where focus is *most*
+  discriminating. My own guard confirms that character: at gate 4.0 `foam`
+  admits **1.359 of 100** frames, `n_eff/N = 0.0136`, the lowest in the corpus.
+  **The automatic rule fails M62's Requirement G by construction, on a stack
+  that is in the corpus today.** DERIVED from M52's solver output plus section
+  2.4's measurement.
+- It also cannot be built without a third decode pass (M49 defect 11), so it
+  would be unjustified *and* expensive.
+
+**What the constant costs, stated plainly.** A gate is not portable (M52), so
+4.0 is a starting point and not a calibration, and `--help` says exactly that.
+On `foam` the default buys almost nothing — predicted sigma gain **0.9079x**,
+barely better than one frame — because `foam` genuinely has one sharp frame per
+pixel. That is the correct answer for `foam` and a thin one; a user who wants
+more averaging there has the knob, and the reported `mean n_eff` tells them
+where they are. I did not tune the constant to improve it.
 
 ### 1.2 The restructuring I chose, and why the alternative lost
 
@@ -105,7 +160,7 @@ plane pixels per arm, 64x64 block bootstrap. Binary
 |---|---|---|---|
 | PR1 | default within 2% of `sqrt(30)`, i.e. `[5.368, 5.587]` | **5.431624**, rel **0.833%** | **MET** |
 | PR2 | efficiency `R/sqrt(mean n_eff)` in `[0.98, 1.02]` | **1.000076** | **MET** |
-| PR3 | focus guard: `mean n_eff / N < 0.95` on the real 22-frame stack | **0.2267** (4.987 of 22) | **MET** |
+| PR3 | focus guard: `mean n_eff / N < 0.95` on the real 22-frame stack | **0.2267** (4.987 of 22); **7 of 7 corpus stacks pass**, worst 0.3011 | **MET** |
 | PR4 | `stack` and `merge` are the same path | ratio identical; output **SHA-256 identical** (`96f71f10...`) | **MET** |
 | PR5 | knob reaches its estimator end, within 0.5% at gate 8 | **5.477678**, rel **0.0083%** | **MET** |
 | PR6 | knob reaches its selector end, gate 0 at or below 1.05 | **0.976815** | **MET** |
@@ -151,6 +206,52 @@ flips: the baseline is noisier than a single frame, the default is quieter.
 Detail retention over `1630,1044,256,256` reads **1.236x, verdict ok** — the
 merge is not collapsing detail to get there, which is the failure fact 24
 describes for a plain mean.
+
+### 2.4 The degeneracy guard, run over the WHOLE corpus rather than one stack
+
+This is the arm that can fail the milestone, and M62 is right that its own
+`sqrt(N)` battery cannot supply it: a static burst has every frame in focus, so
+a merge that admits everything **unconditionally** scores exactly `sqrt(N)` and
+is indistinguishable there from a correct estimator (fact 916).
+
+**Requirement G asks for `n_eff/N < 0.95` on one real through-focus stack. I ran
+it on all seven, because one stack does not cover what I shipped.** A constant
+default gate meets a corpus whose gate-to-`n_eff` mapping M52 measured varying
+28.9x; `109MSDCF` alone cannot speak for `foam` or `coffee-bean`. Same binary,
+same shipped default, no gate flags — the no-flags invocation itself:
+
+| stack | N | gate | tol | mean `n_eff` | `n_eff/N` | pred sigma gain |
+|---|---|---|---|---|---|---|
+| `foam` | 100 | 4.0 | 0.086063 | 1.359 | **0.01359** | 0.9079x |
+| `113MSDCF` | 63 | 4.0 | 0.086063 | 8.581 | **0.13621** | 0.6074x |
+| `119MSDCF` | 33 | 4.0 | 0.086063 | 4.723 | **0.14312** | 0.5006x |
+| `112MSDCF` | 79 | 4.0 | 0.086063 | 12.037 | **0.15237** | 0.5408x |
+| `coffee-bubbles` | 19 | 4.0 | 0.086063 | 3.529 | **0.18574** | 0.6438x |
+| `109MSDCF` | 22 | 4.0 | 0.086063 | 4.987 | **0.22668** | 0.4916x |
+| `coffee-bean` | 105 | 4.0 | 0.086063 | 31.614 | **0.30109** | 0.6655x |
+| *static burst* | 30 | 4.0 | — | 29.539 | *1.000* | — |
+
+**7 of 7 pass. Worst case `coffee-bean` at 0.30109 — a 3.16x margin below the
+0.95 threshold**, against 1.000 on the burst measured by the same binary in the
+same session. The guard has power here and it is not close.
+
+Two things this table says that one stack could not:
+
+- **The shipped default still discriminates focus everywhere in the corpus**,
+  not just on the stack most of this project's numbers came from. `109MSDCF` is
+  not even the worst case; `coffee-bean` is, by 1.33x.
+- **`n_eff/N` spans 22.15x at a fixed gate** — 0.0136 on `foam` to 0.3011 on
+  `coffee-bean`. That is the estimator adapting to each stack, and it is the
+  measurement that decided section 1.1a against an automatic rule.
+
+`n_eff` is reported beside every gate here and in every table in this report
+(rule 39). Reproduce with `python src/21-guard-corpus.py`, which reads the JSON
+`11-focus-guard.py` already wrote and re-measures nothing.
+
+**What this arm still cannot do**, in M62's words and not mine: it reads the
+binary's **self-reported** `n_eff`. It does not verify the merge picked the
+*right* frames, only that it is still choosing between them. Focus-correctness
+is unmeasured, here and in the corpus.
 
 ---
 
@@ -398,10 +499,17 @@ focus**. Neither tests focus correctness, and the burst's noise is drawn from th
 same `g` and `RN_e` the gate uses, so both are circular with respect to sensor
 calibration (rule 34). `11-focus-guard.py` is the only arm that touches real
 through-focus data and it reads the binary's self-reported `n_eff`; it shows the
-merge still discriminates (0.2267 of N), **not that it admits the right frames**.
+merge still discriminates (**0.0136 to 0.3011 across all seven corpus stacks**,
+section 2.4), **not that it admits the right frames**. Widening it from one stack
+to seven raises the cost of the degenerate merge slipping through; it does not
+change what the observable is.
+
 The sharpness cost of gate 4.0 on real frames is unmeasured in this corpus on any
 axis, which the pre-registration said before the result existed and which
-`DEFAULT_GATE`'s doc comment says in the source.
+`DEFAULT_GATE`'s doc comment says in the source. **`foam` is where I would look
+first**: it is the stack the default helps least (predicted sigma gain 0.9079x at
+`n_eff` 1.359 of 100), so it is the cheapest place to find out whether the gate
+is admitting frames it should not.
 
 ---
 
@@ -511,6 +619,12 @@ file; the arm is in my own spec, labelled as mine.
 | `stack` and `merge` produce SHA-256-identical output | MEASURED | same, `96f71f10...` |
 | `argmax-baseline` scores 0.769033477 | MEASURED | `out/10-acceptance-m64-extra.json` |
 | The default admits 4.987 of 22 frames on a real stack | MEASURED | `out/11-focus-guard-m64.json` |
+| The no-flags `stack <dir> --out x.tif` exits 0 and writes a 49,449,626-byte TIFF | MEASURED | section 1.1a, `out/40-noflags-*` |
+| All 7 corpus stacks pass the guard at the shipped default; worst 0.30109 | MEASURED | `out/11-focus-guard-m64-*.json`, section 2.4 |
+| `n_eff/N` spans 22.15x across the corpus at fixed gate 4.0 | MEASURED | section 2.4 |
+| `foam` gains only 0.9079x at the default, `n_eff` 1.359 of 100 | MEASURED | section 2.4 |
+| An auto-rule targeting `n_eff` = 3 would fail Requirement G on `foam` | DERIVED | M52's solver gate 21.9934; section 1.1a |
+| A constant gate beats an automatic target-`n_eff` rule for the default | ARGUED | section 1.1a |
 | Default 0.749x vs baseline 1.223x HP ratio on real frames, detail 1.236x | MEASURED | `out/30-*.log`, `out/31-*.log`, post-hoc |
 | In-crate default 3.4251x, gate 0 1.0033x, ladder in section 4.2 | MEASURED | `cargo test -- --nocapture` |
 | The invariant fails at `DEFAULT_GATE` 0.0 and 0.4 | MEASURED | section 4.2 |
@@ -561,12 +675,38 @@ than `FOCUS_NOISE_SD`. Anyone quoting that row as shipped-pipeline behaviour get
 a mean `n_eff` a few tenths of a percent high. The shipped ladder is M52 section
 4.1's, and the same report gives both.
 
+**P4.** The shipped default gate discriminates focus on **every** stack in the
+corpus, not only on the one Requirement G samples: `n_eff/N` runs 0.0136
+(`foam`) to 0.3011 (`coffee-bean`) at the shipped default, against 1.000 on the
+static burst, with the worst case a 3.16x margin below G's 0.95 threshold. This
+is the corpus-wide form of fact 917's `109MSDCF` measurement and supersedes
+nothing in it.
+
+**P5.** `n_eff` at a **fixed** gate spans 22.15x across the seven corpus stacks.
+This is a different object from fact 324's 28.9x, which is the gate needed for a
+**fixed `n_eff`**, and the two point in opposite directions: the first is the
+estimator adapting to how much focus disagreement a stack contains, the second is
+why targeting a fixed `n_eff` is not a sound default rule.
+
+**P6.** An automatic default that solved for a target `mean n_eff` of 3 would
+drive `foam` to gate 21.9934, a tolerance of 31.1 SDs of focus noise, and would
+therefore fail M62's Requirement G by construction on a stack that is in the
+corpus today. DERIVED from fact 324's solver output and P4's measurement. This is
+the evidence the shipped default is a constant.
+
 **Discipline D1.** A table row naming a *component* as "(shipped)" while
 carrying a constant the shipped build does not have is a citation trap, because
 the label survives the quotation and the constant does not. Where a row differs
 from the binary in any constant, the cell should say which — the report that
 contains section 5.3 also contains the correct value 30 lines away, and that was
 not enough to stop it being misquoted in this milestone's own first draft.
+
+**Discipline D2.** A degeneracy guard that samples **one** stack does not cover a
+default that ships a **constant** parameter, because the corpus varies in exactly
+the dimension the constant is fixed in. Requirement G asks for one stack; running
+it on all seven cost one afternoon of compute, moved the worst observed case from
+0.2267 to 0.3011, and changed which stack the milestone's residual risk sits on
+(`coffee-bean`, not `109MSDCF`). Where a default is a constant, guard the spread.
 
 **Question Q1.** Is any other published ladder in the corpus a re-measured-constant
 run rather than a shipped-pipeline run? P3 was found by accident while sourcing

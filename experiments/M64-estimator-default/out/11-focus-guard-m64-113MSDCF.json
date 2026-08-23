@@ -1,0 +1,31 @@
+{
+  "stack": "D:\\personal\\macro\\113MSDCF",
+  "frames": 63,
+  "tag": "m64-113MSDCF",
+  "provenance": {
+    "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\release\\strehl.exe",
+    "binary_mtime": "2026-08-23T15:46:49",
+    "binary_sha256": "60646c68679a3ab847b829769506eb6ba2990d85127658dfe023de9cb7661f40",
+    "constants_from": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+    "repo_head": "f7da2d73749470fb36d6a2eefb655663b430b64e",
+    "crates_dirty": true,
+    "crates_dirty_files": [
+      "?? crates/strehl-cli/examples/m65-election.rs"
+    ]
+  },
+  "ladder": [
+    {
+      "gate": 4.0,
+      "tolerance": 0.086063,
+      "mean_n_eff": 8.581,
+      "n_eff_1_pct": 16.66,
+      "boundary_pct": 1.12,
+      "pred_sigma_gain": 0.6074,
+      "n_eff_over_N": 0.1362063492063492
+    }
+  ],
+  "min_n_eff_over_N": 0.1362063492063492,
+  "max_n_eff_over_N": 0.1362063492063492,
+  "selects_somewhere": true,
+  "note": "observable only. A merge that reports n_eff/N >= 0.95 at EVERY gate it offers has stopped discriminating focus on a real stack, and the sqrt(N) battery cannot see that."
+}

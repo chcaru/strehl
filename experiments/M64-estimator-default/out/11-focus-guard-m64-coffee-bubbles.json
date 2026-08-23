@@ -1,0 +1,32 @@
+{
+  "stack": "D:\\personal\\macro\\coffee-bubbles",
+  "frames": 19,
+  "tag": "m64-coffee-bubbles",
+  "provenance": {
+    "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\release\\strehl.exe",
+    "binary_mtime": "2026-08-23T15:46:49",
+    "binary_sha256": "60646c68679a3ab847b829769506eb6ba2990d85127658dfe023de9cb7661f40",
+    "constants_from": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+    "repo_head": "f7da2d73749470fb36d6a2eefb655663b430b64e",
+    "crates_dirty": true,
+    "crates_dirty_files": [
+      "?? crates/strehl-cli/examples/m65-election-tmp.rs",
+      "?? crates/strehl-cli/examples/m65-election.rs"
+    ]
+  },
+  "ladder": [
+    {
+      "gate": 4.0,
+      "tolerance": 0.086063,
+      "mean_n_eff": 3.529,
+      "n_eff_1_pct": 16.57,
+      "boundary_pct": 0.75,
+      "pred_sigma_gain": 0.6438,
+      "n_eff_over_N": 0.18573684210526314
+    }
+  ],
+  "min_n_eff_over_N": 0.18573684210526314,
+  "max_n_eff_over_N": 0.18573684210526314,
+  "selects_somewhere": true,
+  "note": "observable only. A merge that reports n_eff/N >= 0.95 at EVERY gate it offers has stopped discriminating focus on a real stack, and the sqrt(N) battery cannot see that."
+}
