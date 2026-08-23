@@ -2125,6 +2125,18 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     > per pixel by the local through-focus width, is the one that dissolves the question rather
     > than answering it, and it is the same object the posterior formulation needs anyway.
 
+    > **One weak lead, recorded so it is not re-derived.** If `n_eff` tracks the peak width in
+    > frames, the natural normaliser is the bracket span *actually used* rather than the frame
+    > count. M35's `01-build.json` has the argmax percentiles for two stacks: `119MSDCF` spans
+    > p05–p95 = 4–30 (26 frames of 33), `112MSDCF` spans 11–66 (55 of 79). Normalising gate
+    > 2.0's `n_eff` by that span gives **0.0868 and 0.1132** — a 1.30× spread, **worse** than
+    > `n_eff/N`'s 0.0684 and 0.0788 (1.15×). So the obvious refinement makes the fit worse on
+    > the only two stacks where the data already exists, which is evidence against it but is
+    > **two points and does not include the `109MSDCF` outlier itself** — the stack that raised
+    > the question is not in M35's build. Getting it needs argmax percentiles from the merge
+    > command, roughly ten lines and five runs. Not started, so that the night ends on a
+    > verified boundary rather than mid-measurement.
+
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
 be able to relink it against a modified `rawler`.** Ship it dynamically linked, or publish object

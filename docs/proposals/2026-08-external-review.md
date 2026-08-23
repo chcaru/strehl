@@ -131,6 +131,17 @@ is **1.15× on 15% of pixels**. The review attached the big finding to the small
    state, which matters more, because it means **facts 210-314 remain unverified by anyone but
    their author**. Do you want these re-run, and if so as agents or by me directly? My read is
    that the verification backlog is now the project's largest risk, ahead of any unbuilt feature.
+
+   > **Retested at the end of the night, and it is not transient.** I launched one more agent —
+   > `ultra-verifier`, flagship model, a tightly scoped falsification brief on M38's metric
+   > correction, with "write a file to disk as your first action" as an explicit instruction so
+   > that progress would be visible. **473 seconds, `total_turns: 0`, zero bytes on disk.** That
+   > is the tenth consecutive agent to produce nothing, across three agent types and two
+   > models, so it is environmental rather than a bad brief. **I am not launching more**, and
+   > every measurement in the corpus from M20 onward therefore has the same author as its
+   > verifier, which is exactly the arrangement rule 12 exists to forbid. This is the one thing
+   > tonight I could not work around.
+
 7. **The merge's one free parameter needs a decision or a measurement, not a default.**
    `Gate::threshold` sets how far below the winner a frame may sit and still be averaged in.
    Fact 212 already supplies the calibration target (`nwide = 3`) and `Estimator::n_eff` reports
@@ -182,3 +193,7 @@ is **1.15× on 15% of pixels**. The review attached the big finding to the small
    > this: preserving M35's script is what made a ten-minute resolution possible where M38 §3
    > cost an afternoon for exactly the opposite reason, and *near-matching numbers on adjacent
    > quantities are a smell worth chasing even when they turn out innocent*.
+   >
+   > **Checked against the source, not the report:** `experiments/m35-fit-generality/out/01-build.json`
+   > holds `frac_argmax_at_boundary` = **0.0738** and **0.0208**, so the ratios quoted above
+   > (3.65 and 3.41) come from the JSON M35 actually wrote rather than from prose about it.
