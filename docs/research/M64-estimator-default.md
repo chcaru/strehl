@@ -585,14 +585,57 @@ file; the arm is in my own spec, labelled as mine.
 - **Rule 39** (negative control in the same test): gate 0, inside the same test.
 - **Rule 40**: section 12.
 - **Never `git checkout --`**: `merge.rs` restored from `$env:TEMP` (section 4.2).
-- **Path-scoped commits**: `bd050ff` touched only
-  `experiments/M64-estimator-default/`; `7213eff` touched only the four crate
-  files. Six other agents were live and HEAD moved under me twice
-  (`7d13140` to `654b1cd9`) without `crates/` going dirty.
 - **`corpus_lint`**: one pre-existing `S3` in
   `docs/research/M60-prior-art-and-the-rival-explanations.md` (ends in 3
   newlines), a live agent's file. Reported, not fixed — the same call M59 made on
   the same file. No violation is attributable to M64.
+- **Rule 42 / commit hygiene**: audited and disclosed in section 9.1. **0 foreign
+  files across all 56 files in 4 commits** — but I used the unsafe pattern to get
+  there, and the clean result is partly luck.
+
+### 9.1 Rule 42 audit — I used the unsafe pattern, and got away with it
+
+Rule 42 landed after my four commits were already written. **All four used
+exactly the pattern it forbids**: `git add -- <paths>` to scope the staging,
+then a bare `git -c core.commentChar=';' commit -F <msgfile>` — which writes the
+**entire shared index**, not my paths. Six agents were live in this tree
+throughout, and HEAD moved under me at least five times
+(`a8eddc0`, `7d13140`, `654b1cd9`, `a0ba437`, `7f3c105`).
+
+Audited with `git show --name-only` per the rule, not with `git status`:
+
+| commit | files | foreign |
+|---|---|---|
+| `bd050ff` pre-registration | 2 | **0** |
+| `7213eff` crate change | 4 | **0** |
+| `f7da2d7` report + evidence | 35 | **0** |
+| `43c8258` corpus guard | 15 | **0** |
+| **total** | **56** | **0** |
+
+Checked mechanically against an explicit ownership list
+(`docs/research/M64-estimator-default.md`, the four crate files,
+`experiments/M64-estimator-default/`), not by reading the output.
+
+**Nothing to disclose, but the exposure was real and I am not claiming
+diligence for it.** I did run `git diff --cached --name-only` before three of
+the four commits and it was clean each time — which is precisely the check rule
+42 says does not protect you, and in M55's case that check was also true when it
+ran. My commits are clean because no concurrent agent happened to stage anything
+inside my four windows, not because the method prevented it.
+
+One thing that reduced the blast radius without being intended as protection:
+the other agents' work visible in `git status` during my session was almost
+entirely **untracked** (`experiments/M56-citations/*.json`,
+`experiments/M59-corpus-linter/msg*.txt`, `experiments/M60-bimodality/*`,
+`crates/strehl-cli/examples/m65-election.rs`), and untracked files are not in the
+index, so a bare commit cannot sweep them. The one **modified tracked** file
+present for most of my session — `experiments/M55-acceptance-spec/src/spec_v1.py`
+— was never staged by its owner inside my windows. That is a fact about their
+timing, not about my method. DERIVED from `git status` snapshots taken during
+the session plus the audit above.
+
+**Adopted going forward:** `git commit -- <paths>`, which scopes the commit
+itself. The commit recording this section is the first to use it.
 
 ---
 
@@ -707,6 +750,15 @@ the dimension the constant is fixed in. Requirement G asks for one stack; runnin
 it on all seven cost one afternoon of compute, moved the worst observed case from
 0.2267 to 0.3011, and changed which stack the milestone's residual risk sits on
 (`coffee-bean`, not `109MSDCF`). Where a default is a constant, guard the spread.
+
+**Discipline D3.** An audit that is a *separate command* from the operation it
+guards cannot constrain that operation in a shared tree, because nothing holds
+the state still in between. `git diff --cached --name-only` before a bare
+`git commit` is the instance rule 42 names, and it read clean before three of
+M64's four commits while providing no protection at all. The generalisation:
+prefer an operation that is *intrinsically* scoped (`git commit -- <paths>`) over
+an unscoped operation preceded by a check, and audit after the fact with
+`git show --name-only` — the only view that sees what was actually written.
 
 **Question Q1.** Is any other published ladder in the corpus a re-measured-constant
 run rather than a shipped-pipeline run? P3 was found by accident while sourcing
