@@ -731,12 +731,12 @@ since contributors are not required to be spliceable and only have to emit an `f
 > 110+/discipline 60+, M19 facts 120+, M20's verifier facts 130+, **M23 facts
 > 170+/discipline 80+/question 25+**, **M25 facts 190+/discipline 100+/question
 > 30+**. Facts **140-145 (M20)**, **150-152 (M21)**,
-> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)**, **230-234 (M29)**, **240-243 (M30)**, **260-264 (M32)**, **270-274 (M33)**, **280-284 (M34)** and **300-304 (M35)** are folded below and are all
+> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)**, **230-234 (M29)**, **240-243 (M30)**, **260-264 (M32)**, **270-274 (M33)**, **280-284 (M34)**, **300-304 (M35)** and **310-314 (M37)** are folded below and are all
 > **NOT INDEPENDENTLY VERIFIED** — they were measured by the
 > orchestrator, and rule 12 binds their author exactly as it binds any milestone.
 > The same reservation rule governs the other two sequences: **discipline 110-111
-> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29), 150 (M30), 170 (M32), 180-181 (M33), 190-191 (M34), 210-211 (M35)** and **question 45 (M28),
-> 50 (M29), 55 (M30), 65 (M32), 70 (M33), 75 (M34), 85 (M35)** are folded. M23's blocks (discipline 80+, question 25+) and
+> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29), 150 (M30), 170 (M32), 180-181 (M33), 190-191 (M34), 210-211 (M35), 220-221 (M37)** and **question 45 (M28),
+> 50 (M29), 55 (M30), 65 (M32), 70 (M33), 75 (M34), 85 (M35), 90 (M37)** are folded. M23's blocks (discipline 80+, question 25+) and
 > M25's (discipline 100+, question 30+) remain unclaimed pending their reports;
 > **facts 250+, discipline 160+ and question 60+ are reserved for M31**, the
 > independent verification of M27-M30; **facts 290+, discipline 200+ and question
@@ -881,6 +881,11 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 302 | **The log fit beats the parabola on every stack — 2.05× / 1.53× / 1.79× — across a 2× range of marked aperture and a 10× range of ISO**, and in all twelve cells measured across two factorials | **This survives the failed adequacy gate, and the reason is general: a ratio between two estimators scored against the SAME reference is robust to a multiplicative error in that reference, because it cancels. An absolute calibration against the same reference is not.** So the part of M33 that M18 actually needs — *which* estimator — generalises, while the part that does not generalise is the part nothing depends on | M35 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; the absolute calibrations for `119`/`112` are **not reportable** |
 | 303 | **M33's published calibration reproduces exactly from independently written code: 0.457 / 0.710 / 51.2%**, to three decimals on all three | Confirms M33's arithmetic (its *design* is fact 304). Also resolves an apparent 20% disagreement with M35 script 02 that looked like one of the two milestones being wrong: they compute **different statistics** — median-of-per-pixel-ratios versus ratio-of-means, on different baselines and pixel sets. **When quoting a calibration number, quote M33's cell**, which is the one that reproduces | M35 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 | 304 | **Fact 272 had a real confound, now priced, and it survives: 9% of its margin is the baseline and 91% is the log domain** (3% / 97% at ×4). M33 script 04 ran `parabola-raw`, `log-raw` and `log-baseline` but **never `parabola-baseline`**, so its headline changed two things at once. The missing cell reads **0.479** against the raw parabola's 0.457 and the log fit's 0.710 | **Fact 272 is better supported than when published**, because the alternative explanation has been measured instead of dismissed. The relative deficit `1 − a0/peak` is not shift-invariant for the parabola either, so this was not a nitpick — it could have gone the other way. **My pre-registered guess (⅓ of the margin) was falsified in the fact's favour**, and was registered before running precisely because fact 272 was already folded | M35 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 310 | **The estimation merge is built** (`crates/strehl-core/src/merge.rs`, 21 tests, 91 passing workspace-wide, clippy clean). Two-pass: pass one folds each frame's **17×17-regularised** focus field into a winner map, pass two admits every frame within the gate of the winner and averages them in native raw DN. Both passes are commutative and associative, pinned by test rather than assumed | Facts 84 and 19 stop being priced-but-unbuilt. **"Never noisier than one frame" is now a proof rather than a measurement**: the winning frame is admitted unconditionally at its own pixels, so `n_eff ≥ 1` structurally, and averaging `n` independent frames scales σ by exactly `1/√n` — the test asserts the exact factor, not an inequality. Two passes because the gate needs each frame's response relative to a winner not known until all frames are seen; this answers the review's §6 architectural seam in favour of **two-pass**, not sufficient statistics | M37 (BUILT + MEASURED) — **NOT INDEPENDENTLY VERIFIED**; no real-data run yet, see question 90 |
+| 311 | **`FOCUS_NOISE_SD = 0.015214 ± 0.000075`** — the SD of the σ-normalised regularised focus response under pure noise, measured in-crate over 12 seeds on a 512² plane. It implies **~348 effective independent samples** against a nominal `43×43 = 1849` combined support | The gate threshold can be **a single pure number** rather than a per-pixel field, because `FocusField::compute` already divides by the model's σ — which is what makes one threshold valid across the frame and across ISOs. **Assuming independence would have made the gate 2.3× too tight**: stencil overlap and the box-of-box weighting cost a factor of 5.3, and no closed form could have supplied it. The response mean also matches the closed-form Rayleigh value `0.5427` to <3%, which is the structural check that the operator chain is what the measurement assumes | M37 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 312 | **A plain LCG in the test harness made the constant vary 1.30× across seeds** (0.01172 / 0.01371 / 0.01522); SplitMix64 cut it to 1.05×, which is itself consistent with the effective sample count | Consecutive LCG outputs lie on lattice planes, Box-Muller consumes them **in pairs**, and filling a raster grid lays that lattice out *spatially* — where a 27-box followed by a 17-box aliases against it differently per seed. **A single-seed measurement would have baked a 30% error into the gate and looked completely stable.** The multi-seed check is what caught it; nothing about the number looked wrong | M37 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 313 | **A sample SD over a region a few supports across is biased low: 192² reads 0.01366, 10% under.** 384² gives `0.015277 ± 0.000223` and 512² `0.015214 ± 0.000075` — **0.27 σ apart, so the bias is spent by 384²** | The mean a sample SD subtracts is itself correlated with the samples when the field has a 43×43 correlation length. The drift with plane size is a *falsifiable signature*, not a mystery, and it was diagnosed by predicting the next point rather than by inspection — **the prediction's direction was wrong (I expected a further rise) and its magnitude right**, which is what identified convergence rather than confirmed a story | M37 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 314 | **The regulariser is dilution by `W²` and nothing more.** A `W×W` box divides a spike's excess by `W²`, so against a response deficit `d` the break-even spike is `d·W² + baseline`: at `d = 0.1`, `W = 17` that is **29.8**. A 20× spike is killed; a 50× spike survives | Bounds fact 23's speckle win rather than mythologising it. The test asserts **both** outcomes deliberately: a test that only showed the spike dying would not distinguish this regulariser from an arbitrarily strong one, and would pass just as well if the width were wrong. It also says plainly that the regulariser is **not** a robust estimator — outlier rejection (M28's mask) is a separate mechanism and is still unbuilt | M37 (MEASURED + DERIVED) — **NOT INDEPENDENTLY VERIFIED** |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -1401,7 +1406,25 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      support "the log fit beats the parabola" (2.05× and 1.79×) while their absolute
      calibrations are unreportable. **When a ground truth fails its adequacy gate, do not
      discard the experiment — work out which of its statistics were invariant to the
-     failure, and report only those, saying which.**
+     failure, and report only those, saying which.
+
+220. **A test's random number generator is part of the measurement apparatus, not
+     scaffolding.** An LCG feeding Box-Muller and written into a raster grid puts the
+     generator's lattice structure into *space*, where any box filter will alias against
+     it — 1.30× across seeds on a constant that looked perfectly stable at one seed.
+     **Use SplitMix64 or better for anything whose spread is the measurement**, and always
+     run more than one seed. The single-seed version of this measurement was not noisy;
+     it was confidently wrong.
+
+221. **Derive a test's tolerance from its effective sample count; never choose it.** Two
+     failures in one afternoon came from choosing: a 5% stability bound that no honest
+     version of the measurement could have met (~118 independent samples per seed put the
+     floor at 6.5%), and a 1.25× band wide enough to admit a value that was later found to
+     be 30% wrong. The repair is to compute the standard error inside the test, assert the
+     constant sits within four of them, **and separately assert that the standard error is
+     small** — otherwise the band admits anything and the test silently has no power.
+     Correlated samples make this mandatory rather than pedantic: 219,000 pixels were 118
+     measurements.**
 
 ---
 
@@ -2001,6 +2024,21 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     verifier.** Resolving it also fixes which convention `strehl-core` should use, which is a
     decision that has to be made anyway. `UNVERIFIED`.
     *(Raised by M35; numbered 85 to clear the reserved question blocks.)*
+
+90. **What is the gate threshold, and does the built merge actually beat 1.0 on real
+    frames?** `Gate::threshold` is the one free parameter in the merge and it is
+    deliberately unmeasured and explicit at the API boundary rather than buried in a
+    default. Its calibration target is already measured — fact 211's `n_eff ≈ 3` — and
+    `Estimator::n_eff` is an output for exactly that purpose. **Nothing here has touched a
+    real frame yet.** The merge is proven never to be *noisier* than one frame, which is a
+    statement about σ; fact 24 is the reason that is not sufficient, because a mean's σ
+    can look harmless while its gradient collapses 58%. So the acceptance test is the
+    **paired** one M2-verification established: flat-ROI noise ratio ≤ 1.0 *and* detail
+    retained, measured with the same harness that produced 1.253×, on the same frames.
+    Wiring the two-pass merge into `strehl-cli` as an additive subcommand — reusing the
+    existing flat-ROI metric rather than reimplementing it, per discipline 210 — is the
+    next build step. `UNVERIFIED`.
+    *(Raised by M37; numbered 90 to clear the reserved question blocks.)*
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
