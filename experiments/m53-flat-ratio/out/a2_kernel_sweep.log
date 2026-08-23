@@ -1,0 +1,28 @@
+
+=== 109MSDCF: 22 frames, middle 11
+    flat   mean   413.50 DN  raw sd    76.272 DN  model sigma  8.770 DN  -> raw sd / sigma    8.70x
+    detail mean   777.27 DN  raw sd   732.760 DN  model sigma 11.981 DN
+     w    gain    flat hp_sd  contamination   detail hp_sd  detail/flat
+     3  0.942809      8.4623        1.0234x        18.839        2.23x
+     5  0.979796      9.5185        1.1077x        38.199        4.01x
+     7  0.989743     10.3905        1.1970x        60.332        5.81x
+     9  0.993808     11.1181        1.2756x        82.511        7.42x
+    11  0.995859     11.6923        1.3387x       103.802        8.88x
+    15  0.997775     12.4566        1.4235x       142.545       11.44x
+    21  0.998866     12.7852        1.4595x       189.651       14.83x
+    27  0.999314     13.0461        1.4886x       221.989       17.02x
+
+=== 119MSDCF: 33 frames, middle 16
+    flat   mean   830.44 DN  raw sd   131.655 DN  model sigma  6.903 DN  -> raw sd / sigma   19.07x
+    detail mean  1676.03 DN  raw sd  1621.847 DN  model sigma  9.800 DN
+     w    gain    flat hp_sd  contamination   detail hp_sd  detail/flat
+     3  0.942809     10.4319        1.6030x        40.289        3.86x
+     5  0.979796     11.7143        1.7321x        86.244        7.36x
+     7  0.989743     12.4805        1.8268x       135.044       10.82x
+     9  0.993808     13.1032        1.9101x       183.810       14.03x
+    11  0.995859     13.6917        1.9918x       231.187       16.89x
+    15  0.997775     14.8856        2.1613x       318.336       21.39x
+    21  0.998866     16.7399        2.4279x       422.465       25.24x
+    27  0.999314     18.1306        2.6284x       493.239       27.20x
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\m53-flat-ratio\out\a2_kernel_sweep.json

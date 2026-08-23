@@ -1,0 +1,14 @@
+stack        : C:\dev\macro\test\109MSDCF  (22 frames, middle index 11)
+roi          : x 1356 y 32 w 512 h 512 (plane coords)
+
+raw spatial sd            :    76.2716 DN   (M41 log: 76.272)
+M41 hp_sd  (reflect, full):    11.7696 DN   (M41 log: 11.77)
+M53 hp_sd  (valid interior):   11.1181 DN
+M53 / M41                 :   0.944653x
+M41 reproduced to         : 0.0038% of the published 11.770
+
+white-noise gain, theory  : 0.993808  = sqrt(1 - 1/81)
+white-noise gain, M41     : 0.994397 +- 0.000938
+white-noise gain, M53     : 0.994481 +- 0.001109
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\m53-flat-ratio\out\a1_roi_109_mid.f32  (512x512 little-endian f32, row-major)

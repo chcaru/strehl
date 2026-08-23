@@ -12,6 +12,7 @@
 
 pub mod boxfilter;
 pub mod clip;
+pub mod flat_ratio;
 pub mod focus;
 pub mod merge;
 pub mod noise;

@@ -1,0 +1,25 @@
+# Own workspace root, so the parent workspace does not adopt it and a normal
+# `cargo build` at the repo root never compiles this. Same convention as
+# `experiments/m11-focus-bakeoff` and `experiments/m9-support`.
+[workspace]
+
+[package]
+name = "m53-flat-ratio"
+version = "0.0.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[[bin]]
+name = "a3-negative-control"
+path = "src/a3_negative_control.rs"
+
+[dependencies]
+# The SHIPPED statistic, not a copy of it. The whole point of the control is to
+# interrogate the code the stacker actually runs.
+strehl-core = { path = "../../crates/strehl-core" }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1

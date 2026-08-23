@@ -40,6 +40,7 @@ use std::time::Instant;
 use anyhow::{Context, Result, bail, ensure};
 use rayon::prelude::*;
 use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
+use strehl_core::flat_ratio::{self, FrameFlat};
 use strehl_core::focus::FocusField;
 use strehl_core::merge::{
     Estimator, FOCUS_NOISE_SD, FocusStats, Gate, REGULARISER_WIDTH, regularise,
@@ -58,8 +59,8 @@ use strehl_raw::Frame;
 
 use crate::image_out;
 use crate::stack::{
-    MEMORY_BUDGET_BYTES, Roi, flat_roi_stats, mean_and_sigma, provenance_line, roi_green,
-    srgb_encode,
+    MEMORY_BUDGET_BYTES, Roi, flat_roi_stats, mean_and_sigma, provenance_line, report_hp_reference,
+    roi_green, srgb_encode,
 };
 
 pub struct MergeOptions {
@@ -549,9 +550,15 @@ struct Pass1 {
     /// constant in the frame count, so the ratchet is untouched.
     clip: ClipCensus,
     /// The middle frame's flat and detail ROIs, kept by whichever worker
-    /// decoded it. This is the unstacked reference both invariants compare to.
+    /// decoded it. `flat` now feeds the LEGACY raw ratio only; the noise
+    /// invariant references `flat_frames` instead.
     flat: Option<Vec<f32>>,
     detail: Option<Vec<f32>>,
+    /// `(frame index, flat-ROI moments)` for **every** frame. Three `f64` per
+    /// frame, so it is constant in the ROI size and irrelevant to the ratchet.
+    /// Fact 441: one privileged denominator moves the published ratio 1.60x, so
+    /// there is no longer a privileged denominator to move.
+    flat_frames: Vec<(u16, FrameFlat)>,
     t: Timings,
 }
 
@@ -711,13 +718,22 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             let mut clip = ClipCensus::new(geom);
             let mut scratch = Scratch::new(geom, false);
             let (mut flat, mut detail) = (None, None);
+            let mut flat_frames: Vec<(u16, FrameFlat)> = Vec::with_capacity(chunk.len());
             let mut t = Timings::default();
 
             for (offset, path) in chunk.iter().enumerate() {
                 let index = first_index + offset as u16;
                 let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;
+                if let Some(r) = opts.flat_roi {
+                    // Every frame, not only the middle one. The denominator of
+                    // the noise invariant is the whole distribution (fact 441).
+                    let g = roi_green(&frame, r, levels.black);
+                    flat_frames.push((index, flat_ratio::frame_flat(&g, r.width, r.height)));
+                    if index == middle {
+                        flat = Some(g);
+                    }
+                }
                 if index == middle {
-                    flat = opts.flat_roi.map(|r| roi_green(&frame, r, levels.black));
                     detail = opts.detail_roi.map(|r| roi_green(&frame, r, levels.black));
                 }
                 ctx.release(frame);
@@ -732,6 +748,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 clip,
                 flat,
                 detail,
+                flat_frames,
                 t,
             })
         })
@@ -741,6 +758,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 a.clip.absorb(&b.clip).map_err(|e| map_dim_err(0, e))?;
                 a.flat = a.flat.or(b.flat);
                 a.detail = a.detail.or(b.detail);
+                a.flat_frames.extend(b.flat_frames);
                 a.t.add(b.t);
                 Ok(a)
             }
@@ -965,15 +983,117 @@ fn report(
         roi.x, roi.y, roi.width, roi.height
     );
     let (single_mean, single_sigma) = mean_and_sigma(single);
+    let model_sigma = f64::from(noise.green_luma_sigma(single_mean as f32));
     eprintln!(
-        "single frame {middle:<3}: sigma {single_sigma:8.3} DN   mean {single_mean:9.2} DN   \
+        "single frame {middle:<3}: raw sd {single_sigma:8.3} DN   mean {single_mean:9.2} DN   \
          (no stacking at all)"
     );
     eprintln!(
-        "model predicts  : sigma {:8.3} DN for one green-luma sample at that level",
-        noise.green_luma_sigma(single_mean as f32)
+        "model predicts  : sigma {model_sigma:8.3} DN for one green-luma sample at that level, \
+         so this"
     );
-    eprintln!("  gate      sigma DN       mean DN      RATIO   winners in roi");
+    eprintln!(
+        "                  ROI's RAW sd is {:.2}x the noise in it -- that excess is scene, and \
+         it is",
+        single_sigma / model_sigma
+    );
+    eprintln!("                  why the raw ratio below is a LEGACY column and not the verdict.");
+
+    // ---- the noise statistic ----------------------------------------------
+    let per_frame: Vec<(u16, f64)> = p1
+        .flat_frames
+        .iter()
+        .filter_map(|(i, f)| f.hp_sd.map(|v| (*i, v)))
+        .collect();
+    let reference = flat_ratio::FlatReference::new(&per_frame);
+    match &reference {
+        Some(reference) => {
+            eprintln!();
+            report_hp_reference(reference, model_sigma, "                  ");
+            eprintln!(
+                "  gate       hp sd DN     HP RATIO   over every frame     n frames   \
+                 vs frame {middle} alone"
+            );
+            for e in &p2.est {
+                let s = flat_roi_stats(e, single, roi, geom, levels.black);
+                match s.stacked_hp_sd {
+                    Some(hp) => {
+                        let r = reference.ratio(hp);
+                        // The last column is exactly the number the old
+                        // convention would have printed: one privileged frame in
+                        // the denominator. It is here so fact 441's spread is
+                        // visible as a difference, not only as an interval.
+                        let privileged = s
+                            .single_hp_sd
+                            .map(|d| format!("{:.3}x", hp / d))
+                            .unwrap_or_else(|| "n/a".into());
+                        eprintln!(
+                            "  {:5.2}   {:10.3}   {:9.3}x   [{:6.3}x .. {:6.3}x]   {:>8}   \
+                             {:>14}",
+                            e.gate().threshold,
+                            hp,
+                            r.median,
+                            r.lo,
+                            r.hi,
+                            reference.frames(),
+                            privileged
+                        );
+                    }
+                    None => eprintln!(
+                        "  {:5.2}   ROI is smaller than one {}x{} high-pass box",
+                        e.gate().threshold,
+                        flat_ratio::HP_BOX_SIDE,
+                        flat_ratio::HP_BOX_SIDE
+                    ),
+                }
+            }
+            eprintln!(
+                "                  PASS is <= 1.000x against the SAME-OPERATOR baseline: \
+                 regularised argmax."
+            );
+            eprintln!(
+                "                  Fact 19's 1.253x was a DIFFERENT focus operator and does \
+                 not reproduce"
+            );
+            eprintln!(
+                "                  here; it is not this pipeline's baseline and must not be \
+                 quoted as one."
+            );
+            eprintln!(
+                "                  A plain unweighted mean measured 0.534x on the LEGACY \
+                 statistic, which"
+            );
+            eprintln!(
+                "                  is a floor and not a target, because of invariant 2. \
+                 THE BASELINE FOR"
+            );
+            eprintln!(
+                "                  THIS COLUMN HAS NOT BEEN RE-MEASURED: fact 343's 1.0739x is \
+                 a RAW-sd"
+            );
+            eprintln!(
+                "                  number and cannot be carried across to a high-pass sd. Run \
+                 `strehl stack`"
+            );
+            eprintln!(
+                "                  on the same frames and ROI for the same-operator argmax \
+                 figure."
+            );
+        }
+        None => {
+            eprintln!();
+            eprintln!(
+                "HP RATIO        : NOT AVAILABLE -- no frame's flat ROI holds a whole {}x{} \
+                 high-pass box.",
+                flat_ratio::HP_BOX_SIDE,
+                flat_ratio::HP_BOX_SIDE
+            );
+        }
+    }
+
+    // ---- the number this replaced, kept readable ---------------------------
+    eprintln!();
+    eprintln!("  gate    LEGACY raw sd    mean DN   LEGACY RATIO   winners in roi");
     for e in &p2.est {
         let s = flat_roi_stats(e, single, roi, geom, levels.black);
         eprintln!(
@@ -981,52 +1101,33 @@ fn report(
             e.gate().threshold,
             s.stacked_sigma,
             s.stacked_mean,
-            s.ratio,
+            s.legacy_raw_ratio,
             s.distinct_winners,
             s.median_winner
         );
     }
     eprintln!(
-        "                  PASS is <= 1.000x against the SAME-OPERATOR baseline: regularised \
-         argmax"
+        "                  DO NOT READ THE LEGACY COLUMN AS NOISE (facts 469/441/442/455). It \
+         is a"
+    );
+    eprintln!("                  ratio of two RAW SPATIAL sds against ONE arbitrary frame. It is");
+    eprintln!(
+        "                  structure-dominated -- the corpus's flat reference frames are \
+         50.9-90.0%"
     );
     eprintln!(
-        "                  measured 1.0739x on these frames and this ROI (fact 343). Fact 19's \
-         1.253x"
+        "                  scene by variance and this ROI's own excess is printed above -- it \
+         moves"
     );
     eprintln!(
-        "                  was a DIFFERENT focus operator and does not reproduce here -- it is \
-         not"
-    );
-    eprintln!(
-        "                  this pipeline's baseline and must not be quoted as one. A plain \
-         unweighted"
-    );
-    eprintln!(
-        "                  mean measured 0.534x, which is the floor, not a target, because of \
-         invariant 2."
-    );
-    eprintln!(
-        "                  CAVEAT (facts 469/441/442): this RATIO is a ratio of two RAW SPATIAL \
-         sds."
-    );
-    eprintln!(
-        "                  It is structure-dominated (these reference frames are 50.9-90.0% \
-         scene by"
-    );
-    eprintln!(
-        "                  variance), it moves over a 1.60x range with the free choice of \
-         denominator"
-    );
-    eprintln!(
-        "                  frame, and on a planted noise explosion it under-reported by 6.3x. \
-         Read it"
-    );
-    eprintln!(
-        "                  as a smoke test, not as a noise measurement, until it is replaced by \
+        "                  over a 1.60x range with the free choice of denominator frame, and on \
          a"
     );
-    eprintln!("                  high-pass residual sd.");
+    eprintln!(
+        "                  planted noise explosion it under-reported by 6.3x. It is printed \
+         only so"
+    );
+    eprintln!("                  that reports written before this change stay comparable.");
     eprintln!();
 
     let Some(droi) = opts.detail_roi else {

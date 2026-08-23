@@ -32,6 +32,7 @@ use std::time::Instant;
 
 use anyhow::{Context, Result, bail, ensure};
 use rayon::prelude::*;
+use strehl_core::flat_ratio::{self, FrameFlat};
 use strehl_core::focus::FocusField;
 use strehl_core::noise::{Levels, NoiseModel, Provenance};
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma};
@@ -432,8 +433,13 @@ impl WorkerPlan {
 struct Partial {
     selection: Selection,
     /// Black-subtracted green over the flat ROI, from the middle frame, kept by
-    /// whichever worker happened to decode it.
+    /// whichever worker happened to decode it. Feeds the LEGACY raw ratio only.
     middle_roi: Option<Vec<f32>>,
+    /// `(frame index, that frame's flat-ROI moments)` for **every** frame, not
+    /// just the middle one. Three `f64` per frame, so it is constant in the ROI
+    /// size and irrelevant to the memory ratchet, and it is what makes fact
+    /// 441's privileged-denominator defect unrepresentable.
+    flat_frames: Vec<(u16, FrameFlat)>,
     decode_secs: f64,
     fold_secs: f64,
 }
@@ -444,6 +450,7 @@ impl Partial {
         if self.middle_roi.is_none() {
             self.middle_roi = other.middle_roi;
         }
+        self.flat_frames.extend(other.flat_frames);
         self.decode_secs += other.decode_secs;
         self.fold_secs += other.fold_secs;
         Ok(())
@@ -469,6 +476,7 @@ impl FoldContext<'_> {
         let mut field = FocusField::new(self.geom);
         let mut luma = vec![0.0f32; self.geom.pixels()];
         let mut middle_roi = None;
+        let mut flat_frames = Vec::with_capacity(chunk.len());
         let (mut decode_secs, mut fold_secs) = (0.0, 0.0);
 
         for (offset, path) in chunk.iter().enumerate() {
@@ -494,6 +502,7 @@ impl FoldContext<'_> {
                 index,
                 &frame,
                 &mut middle_roi,
+                &mut flat_frames,
             );
             // Explicit: the frame is gone before the next decode starts. This
             // is the whole memory argument.
@@ -506,11 +515,13 @@ impl FoldContext<'_> {
         Ok(Partial {
             selection,
             middle_roi,
+            flat_frames,
             decode_secs,
             fold_secs,
         })
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn fold_one(
         &self,
         selection: &mut Selection,
@@ -519,6 +530,7 @@ impl FoldContext<'_> {
         index: u16,
         frame: &Frame,
         middle_roi: &mut Option<Vec<f32>>,
+        flat_frames: &mut Vec<(u16, FrameFlat)>,
     ) -> Result<()> {
         if frame.levels != self.levels {
             bail!(
@@ -541,10 +553,14 @@ impl FoldContext<'_> {
                 ),
                 other => anyhow::anyhow!(other),
             })?;
-        if index == self.middle
-            && let Some(roi) = self.roi
-        {
-            *middle_roi = Some(roi_green(frame, roi, self.levels.black));
+        if let Some(roi) = self.roi {
+            // Every frame, not only the middle one: the reference for the noise
+            // invariant is the distribution, and a distribution needs all of it.
+            let g = roi_green(frame, roi, self.levels.black);
+            flat_frames.push((index, flat_ratio::frame_flat(&g, roi.width, roi.height)));
+            if index == self.middle {
+                *middle_roi = Some(g);
+            }
         }
         Ok(())
     }
@@ -647,8 +663,23 @@ pub(crate) struct FlatRoiStats {
     pub stacked_sigma: f64,
     pub single_mean: f64,
     pub single_sigma: f64,
-    /// Above 1.0 means the stack is noisier than one unstacked frame.
-    pub ratio: f64,
+    /// **LEGACY, structure-dominated. Not a noise measurement.**
+    ///
+    /// `stacked_sigma / single_sigma`: two RAW spatial sds. Retained so that
+    /// every number the corpus published against it stays readable, and for no
+    /// other purpose. Fact 469 measured it under-reporting a real noise
+    /// explosion by 6.3x, because on a real "flat" ROI ~99 % of the raw
+    /// variance is residual scene (76.272 DN raw against a modelled 8.77 DN).
+    /// Use [`FlatRoiStats::stacked_hp_sd`] against a
+    /// [`strehl_core::flat_ratio::FlatReference`] instead.
+    pub legacy_raw_ratio: f64,
+    /// High-pass residual sd of the merged ROI, DN. The noise statistic.
+    /// `None` when the ROI is smaller than one high-pass box.
+    pub stacked_hp_sd: Option<f64>,
+    /// High-pass residual sd of `middle_roi`, DN. One frame, so it is only a
+    /// like-for-like partner for the legacy column; the reference a ratio
+    /// should be taken against is the whole per-frame distribution (fact 441).
+    pub single_hp_sd: Option<f64>,
     pub distinct_winners: usize,
     pub median_winner: u16,
 }
@@ -682,10 +713,87 @@ pub(crate) fn flat_roi_stats<F: GreenField + ?Sized>(
         stacked_sigma,
         single_mean,
         single_sigma,
-        ratio: stacked_sigma / single_sigma,
+        legacy_raw_ratio: stacked_sigma / single_sigma,
+        stacked_hp_sd: flat_ratio::highpass_sd(&stacked, roi.width, roi.height),
+        single_hp_sd: flat_ratio::highpass_sd(middle_roi, roi.width, roi.height),
         distinct_winners: roi_index.len(),
         median_winner,
     }
+}
+
+/// The lines that turn a high-pass sd into a readable acceptance verdict.
+///
+/// Shared by `strehl stack` and `strehl merge` so the two subcommands cannot
+/// drift into printing two different invariants (discipline 210). `indent` is
+/// the continuation prefix each caller already uses.
+pub(crate) fn report_hp_reference(
+    reference: &flat_ratio::FlatReference,
+    model_sigma: f64,
+    indent: &str,
+) {
+    let contamination = flat_ratio::structure_contamination(reference.median(), model_sigma);
+    eprintln!(
+        "reference hp sd : median {:8.3} DN over {} frames   \
+         min {:8.3} (frame {})   max {:8.3} (frame {})",
+        reference.median(),
+        reference.frames(),
+        reference.min(),
+        reference.min_frame(),
+        reference.max(),
+        reference.max_frame()
+    );
+    eprintln!(
+        "{indent}NO SINGLE REFERENCE FRAME. Fact 441: holding the merge fixed and \
+         sweeping which"
+    );
+    eprintln!(
+        "{indent}frame supplies the denominator moved the old published ratio over a \
+         1.60x range,"
+    );
+    eprintln!(
+        "{indent}so the whole distribution is carried. This stack's own spread is \
+         {:.4}x.",
+        reference.spread()
+    );
+    eprintln!(
+        "{indent}high pass is x - box{}(x) on the ROI's valid interior, the kernel \
+         behind fact 469;",
+        flat_ratio::HP_BOX_SIDE
+    );
+    eprintln!(
+        "{indent}white noise of sd s comes out at s * {:.6} (DERIVED: sqrt(1 - 1/{})), \
+         so the",
+        flat_ratio::HP_NOISE_GAIN,
+        flat_ratio::HP_BOX_SIDE * flat_ratio::HP_BOX_SIDE
+    );
+    eprintln!(
+        "{indent}sd above reads against the calibrated model rather than in arbitrary \
+         units."
+    );
+    eprintln!(
+        "{indent}STRUCTURE FLOOR: median hp sd is {contamination:.4}x the model's \
+         per-sample sigma."
+    );
+    eprintln!(
+        "{indent}Rule 10 -- that is a SPATIAL sd over a TEMPORAL sigma, so it is a \
+         one-sided"
+    );
+    eprintln!(
+        "{indent}reading, not an equality: 1.0000x means noise-dominated and the excess \
+         is"
+    );
+    eprintln!(
+        "{indent}residual scene. IT IS ALSO THE FACTOR BY WHICH EVERY RATIO BELOW \
+         UNDER-REPORTS A"
+    );
+    eprintln!(
+        "{indent}LARGE EXPLOSION, so these ratios are LOWER BOUNDS. The legacy raw ratio's \
+         own"
+    );
+    eprintln!(
+        "{indent}floor on this ROI is raw sd / sigma, printed above, and it is the 6.3x \
+         of fact 469."
+    );
 }
 
 fn report_flat_roi(
@@ -729,10 +837,70 @@ fn report_flat_roi(
         "                  of noise plus whatever scene structure the ROI still has, so they"
     );
     eprintln!("                  are not the same quantity and are not expected to match.");
-    eprintln!("RATIO           : {:.3}x", s.ratio);
+    let model_sigma = f64::from(noise.green_luma_sigma(s.single_mean as f32));
+
+    // ---- the noise statistic ------------------------------------------------
+    let per_frame: Vec<(u16, f64)> = merged
+        .flat_frames
+        .iter()
+        .filter_map(|(i, f)| f.hp_sd.map(|v| (*i, v)))
+        .collect();
+    match (flat_ratio::FlatReference::new(&per_frame), s.stacked_hp_sd) {
+        (Some(reference), Some(stacked_hp)) => {
+            eprintln!();
+            eprintln!(
+                "stacked hp sd   : {stacked_hp:8.3} DN   (argmax over {} frames)",
+                merged.selection.frames_folded()
+            );
+            report_hp_reference(&reference, model_sigma, "                  ");
+            let r = reference.ratio(stacked_hp);
+            eprintln!(
+                "HP RATIO        : {:.3}x vs the median frame   [{:.3}x .. {:.3}x] over every \
+                 frame",
+                r.median, r.lo, r.hi
+            );
+            if let Some(d) = s.single_hp_sd {
+                // What the old privileged-denominator convention would have
+                // printed, in the same units, so fact 441 is visible as a
+                // difference and not only as an interval.
+                eprintln!(
+                    "                  against frame {middle} alone -- the frame the old \
+                     convention privileged --"
+                );
+                eprintln!(
+                    "                  the same statistic reads {:.3}x.",
+                    stacked_hp / d
+                );
+            }
+            eprintln!(
+                "                  ABOVE 1.0 MEANS THE STACK IS NOISIER THAN ONE UNSTACKED \
+                 FRAME."
+            );
+        }
+        _ => {
+            eprintln!();
+            eprintln!(
+                "HP RATIO        : NOT AVAILABLE -- the ROI is smaller than one {}x{} high-pass \
+                 box.",
+                flat_ratio::HP_BOX_SIDE,
+                flat_ratio::HP_BOX_SIDE
+            );
+        }
+    }
+
+    // ---- the number this replaced, kept readable ----------------------------
+    eprintln!();
     eprintln!(
-        "                  A RATIO ABOVE 1.0 MEANS THE STACK IS NOISIER THAN ONE UNSTACKED FRAME."
+        "LEGACY RAW RATIO: {:.3}x  -- DO NOT READ AS NOISE.",
+        s.legacy_raw_ratio
     );
+    eprintln!("                  Two RAW spatial sds. Fact 469: on a real flat ROI ~99% of that");
+    eprintln!(
+        "                  variance is residual scene, and this ratio under-reported a \
+         planted"
+    );
+    eprintln!("                  noise explosion by 6.3x. Printed only so older reports remain");
+    eprintln!("                  comparable. The HP RATIO above is the acceptance number.");
     eprintln!(
         "winners in roi  : {} distinct frames, median {}",
         s.distinct_winners, s.median_winner
@@ -1096,6 +1264,22 @@ mod tests {
         assert_eq!(mean_and_sigma(&[]), (0.0, 0.0));
     }
 
+    /// The two crates each carry a moment helper, and the acceptance invariant
+    /// mixes their outputs in one ratio. If they ever disagreed the report would
+    /// be measuring the harness (discipline 210), so assert they do not.
+    #[test]
+    fn the_core_and_cli_moment_helpers_agree() {
+        let mut rng = Lcg(0x0053_0001);
+        let v: Vec<f32> = (0..4096)
+            .map(|_| 800.0 + 37.0 * rng.normal() as f32)
+            .collect();
+        let (m1, s1) = mean_and_sigma(&v);
+        let (m2, s2) = strehl_core::flat_ratio::mean_and_sd(&v);
+        assert!((m1 - m2).abs() < 1e-12, "{m1} vs {m2}");
+        assert!((s1 - s2).abs() < 1e-12, "{s1} vs {s2}");
+        assert_eq!(strehl_core::flat_ratio::mean_and_sd(&[]), (0.0, 0.0));
+    }
+
     /// Sentinel for the padding and for everything outside the active area.
     /// Real padding is zeros, which black subtraction would turn into a large
     /// negative and might not be noticed; this fails loudly instead.
@@ -1308,9 +1492,20 @@ mod tests {
         let s = flat_roi_stats(&sel, &single, roi, geom, TEST_BLACK);
 
         assert_eq!(s.pixels, 20 * 14);
-        assert!((s.ratio - 1.0).abs() < 1e-9, "ratio {}", s.ratio);
+        assert!(
+            (s.legacy_raw_ratio - 1.0).abs() < 1e-9,
+            "ratio {}",
+            s.legacy_raw_ratio
+        );
         assert!((s.stacked_sigma - s.single_sigma).abs() < 1e-6);
         assert!((s.stacked_mean - s.single_mean).abs() < 1e-6);
+        // The high-pass side has to agree for the same reason, and it walks a
+        // different buffer again (`stacked` is gathered from the `Selection`).
+        let (a, b) = (
+            s.stacked_hp_sd.expect("20x14 holds a 9x9 box"),
+            s.single_hp_sd.expect("20x14 holds a 9x9 box"),
+        );
+        assert!((a - b).abs() < 1e-6, "hp sd {a} vs {b}");
         assert_eq!(s.distinct_winners, 1);
         assert_eq!(s.median_winner, 0);
     }
@@ -1374,7 +1569,47 @@ mod tests {
             "{}",
             s.stacked_sigma
         );
-        assert!((s.ratio - 3.0).abs() < 1e-9, "ratio {}", s.ratio);
+        assert!(
+            (s.legacy_raw_ratio - 3.0).abs() < 1e-9,
+            "ratio {}",
+            s.legacy_raw_ratio
+        );
+        // The high-pass ratio sees the same 3x. A checkerboard at the Nyquist
+        // frequency is entirely in the box's pass band, so this fixture cannot
+        // separate the two statistics — that separation is
+        // `flat_ratio::the_high_pass_ratio_catches_a_planted_explosion_the_raw_ratio_misses`,
+        // where the fixture carries structure. What it does check is that the
+        // new column agrees with the old one where they must agree, and that
+        // both absolute sds land on their closed form.
+        //
+        // A 9x9 box over a checkerboard covers 41 cells of one sign and 40 of
+        // the other, so its mean is ±d/81 and the residual is ±d·80/81 at every
+        // interior pixel. The interior here is 8x8, an even checkerboard, so
+        // the residual mean is 0 and the sd is exactly d·80/81.
+        //
+        // Tolerance is DERIVED, not tuned. `boxfilter::horizontal_sums` stores
+        // its running row sums as f32 (`boxfilter.rs`), so each of the 9 row
+        // sums (≤ 9·3518 ≈ 31662, where f32 ulp is 2^-8) carries up to
+        // 0.00195 DN of rounding; the box mean therefore carries up to
+        // 9·0.00195/81 ≈ 2.2e-4 DN. Against a 9.88 DN residual that is 2.2e-5
+        // relative, and the ratio can carry roughly that again. 1e-3 DN
+        // absolute and 1e-4 relative are those bounds with margin. This
+        // fixture is a deliberately hostile 353:1 pedestal-to-residual ratio;
+        // a real flat ROI runs nearer 41:1.
+        let hp_quiet = s.single_hp_sd.expect("16x16 holds a 9x9 box");
+        let hp_loud = s.stacked_hp_sd.expect("ditto");
+        let closed_form = d as f64 * 80.0 / 81.0;
+        assert!(
+            (hp_quiet - closed_form).abs() < 1e-3,
+            "single hp sd {hp_quiet} vs closed form {closed_form}"
+        );
+        assert!(
+            (hp_loud - 3.0 * closed_form).abs() < 1e-3,
+            "stacked hp sd {hp_loud} vs closed form {}",
+            3.0 * closed_form
+        );
+        let hp_ratio = hp_loud / hp_quiet;
+        assert!((hp_ratio - 3.0).abs() < 1e-4, "hp ratio {hp_ratio}");
 
         // Both sides are black-subtracted, so the means agree even though only
         // one of them passed through `roi_green`.

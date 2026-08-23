@@ -1,0 +1,45 @@
+    Updating crates.io index
+     Locking 8 packages to latest compatible versions
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling anyhow v1.0.104
+   Compiling thiserror v2.0.20
+   Compiling syn v3.0.3
+   Compiling thiserror-impl v2.0.20
+   Compiling strehl-core v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core)
+   Compiling m53-flat-ratio v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\experiments\m53-flat-ratio)
+    Finished `release` profile [optimized] target(s) in 4.94s
+     Running `target\release\a3-negative-control.exe`
+M53 a3 -- NEGATIVE CONTROL for the flat-ROI acceptance statistic
+input      : C:\dev\blog\death-of-software\projects\strehl\experiments\m53-flat-ratio\out\a3_rois_109.f32
+frames     : 22   roi 512x512 plane px (109MSDCF, plane 1356,32 -- fact 469's ROI)
+model sigma: 8.770 DN per green-luma sample (calibrated model)
+
+OLD denominator : ONE frame, index 11. raw spatial sd 76.272 DN
+NEW denominator : 22 frames. hp sd median 9.652 DN  min 8.929 (frame 21)  max 12.121 (frame 9)
+                  spread 1.3575x -- fact 441 measured 1.60x on 119MSDCF; this is the same defect
+                  measured on this ROI, and it is why no single frame is used.
+
+DERIVED asymptotic under-report factors (the prediction this run tests):
+  OLD : rawsd(frame 11) / sigma          = 8.6969x
+  NEW : median hp sd / (gain * sigma)      = 1.1074x
+  gain = 0.993807990 = sqrt(1 - 1/81)
+
+merge surrogate : unweighted mean of all 22. mean 413.77 DN   raw sd 75.029 DN   hp sd 3.957 DN
+                  the SHIPPED argmax merge on this same ROI reads raw sd 76.052 DN and hp sd 9.455 DN
+                  (out/a4_after.log), so the surrogate sits in the same place as the real thing.
+
+planted explosion, 8 seeds each:
+
+  K true    plant p DN |  OLD ratio  OLD under-reports |  NEW ratio  [lo .. hi]        NEW under-reports
+     1.000       8.568 |     0.990x           1.010x |     0.973x  [ 0.775x ..  1.051x]           1.028x
+     2.000      17.440 |     1.010x           1.980x |     1.842x  [ 1.466x ..  1.991x]           1.086x
+     5.000      43.810 |     1.139x           4.390x |     4.529x  [ 3.606x ..  4.896x]           1.104x
+    10.000      87.680 |     1.513x           6.610x |     9.036x  [ 7.195x ..  9.768x]           1.107x
+    22.767     199.658 |     2.796x           8.142x |    20.559x  [16.371x .. 22.224x]           1.107x
+   144.391    1266.308 |    16.631x           8.682x |   130.368x  [103.810x .. 140.925x]           1.108x
+            seed spread: OLD sd 0.01662x   NEW sd 0.13192x over the 8 seeds
+
+READING: 'under-reports' is K true / reported. 1.000x would be perfect.
+The DERIVED prediction above is that these columns settle at 8.6969x and 1.1074x.
