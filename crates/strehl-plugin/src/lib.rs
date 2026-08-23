@@ -9,20 +9,55 @@
 //! at five gates spanning 35x, with `tol/t` constant to 2.0e-6 — it is exactly
 //! linear.
 //!
+//! **Fact 631 scopes what follows from that linearity, and the scoping matters
+//! here more than anywhere else in the crate**, because the substitution is the
+//! motivating argument. "An operator whose true SD is `k` times the constant
+//! runs at `t/k`" is *exact* for the **same** operator rescaled — scaling the
+//! operator and its constant by 7 moves 18 pixels in 8,236,816 — and **false
+//! across genuinely different operators**, which move `n_eff` by up to 4.54x
+//! and the winner map on **71.5%** of pixels. So `t/k` is the right way to
+//! *price* a mis-calibration and the wrong way to *undo* one: no rescaling of
+//! the gate reproduces a different operator's decisions. That does not weaken
+//! the case for measuring the constant; it removes the only escape from it,
+//! since a host that knew `k` still could not correct for it by moving the
+//! gate.
+//!
 //! `FOCUS_NOISE_SD = 0.015214` is a property of the **focus operator**, not of
 //! the merge: it is the standard deviation of that operator's response to
 //! unit-variance noise, after the operator's own box window and after the
 //! merge's regulariser. Across seven textbook operators the true value spans
-//! **10.4x** (fact 439: ring(1,3) 0.644 to sum-modified-Laplacian 6.680). A
+//! **10.4x** (fact 439: ring(1,3) 0.644 to sum-modified-Laplacian 6.680;
+//! `examples/calibration-survey` re-measures 10.27x on this crate's own path).
+//! **Fact 635 scopes that span too**: it is partly a property of the stencil
+//! constants written in this repository, and under one consistent convention it
+//! is **2.12x** — see [`reference`] for what moves and what does not. A
 //! contributed operator that inherits the host's constant while having a true
-//! scale `k` times larger silently runs at effective gate `t/k`; at `k = 5.94`
-//! an intended `--gate 1.0` becomes 0.168 and 87.8% of pixels fall back to a
-//! single frame instead of the intended 41.7%. Fact 438: **every such case is
+//! scale `k` times larger silently runs at effective gate `t/k`; at SML's
+//! measured `k` = 6.68 an intended `--gate 1.0` becomes **0.150**, and **89.02%**
+//! of pixels fall back to a single frame instead of the intended **41.66%**
+//! (MEASURED, M58, `strehl merge` on 109MSDCF). Fact 438: **every such case is
 //! indistinguishable from the log, the exit code, and the calibration block.**
+//!
+//! That illustration used to be written with `k` = 5.94, which is
+//! `FINE_FOCUS_NOISE_SD / FOCUS_NOISE_SD`. **Fact 500 refuted that pair**: those
+//! two constants are measured in different configurations, and the honest
+//! same-configuration quantity is 1.815, so no operator reachable through this
+//! crate's pipeline has `k` = 5.94 *from that derivation*. SML is used instead
+//! because it is a real operator with a host-measured constant, and it prices
+//! the seam higher than the mistake did.
 //!
 //! It is not hypothetical. Facts 509-511: this project's own first pending
 //! operator change — `tenengrad-sq` at radius 11 replacing `|grad|` at radius
-//! 13 — moves the constant by `k = 1.528`, turning `--gate 1.0` into 0.654.
+//! 13 — moves the constant by `k` = 1.528 **on this crate's path**. On the path
+//! the change would actually land it moves by more, and by an amount nobody has
+//! measured: fact 662 composes facts 583 and 632 to show that `strehl-cli` does
+//! not depend on `strehl-plugin` at all, so the edit necessarily reaches
+//! `strehl-core/src/focus.rs`, which has a single divide and no degree concept.
+//! There, `k` = 1.528 **understates** by roughly the local sigma (8.6-24.6 DN on
+//! this corpus). **The pending change is blocked, not calibrated** — question
+//! 147 is where the path gets recorded. That this crate can price the edit on
+//! its own path and the shipping binary cannot price it on *its* path is the
+//! seam, restated as a fact about a commit that is waiting to land.
 //!
 //! Workstream E §F4's four plugin properties (P1 confluence, P2 sensitivity, P3
 //! no residue, P4 calibrated fixture) all **pass** an operator with a wrong
@@ -55,8 +90,14 @@
 //! - It removes the parameter from the contract entirely, which is the only
 //!   version in which `--gate` is genuinely dimensionless (see [`Gate`]).
 //!
-//! Fact 505 bounds the cost at ~1.7 ms per stage; [`CalibrationPlan`] documents
-//! what this crate actually measured, which is larger, and why.
+//! Fact 505 bounded the cost at ~1.7 ms per stage. **That bound is refuted and
+//! its number must not be quoted**: fact 525 measured 5.02 ms per 512² plane
+//! and 60.3 ms per registration, 2.95x and 35x the bound, and M58 re-measured
+//! 4.98 ms and 59.73 ms on this crate's own probe. Fact 505's *conclusion*
+//! survives — 60 ms once per operator per host start is not a cost worth
+//! trading a correctness property for — but it survives on the measurement, not
+//! on the derivation. [`CalibrationPlan`] documents what this crate actually
+//! measured and why 12 seeds is where the cost goes.
 //!
 //! # Layout
 //!

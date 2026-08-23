@@ -10,6 +10,14 @@
 //! operator whose true SD is `k` times the constant runs at `t/k`, and fact 438
 //! is that nothing observable changes.
 //!
+//! **Read `t/k` as a price, not as a repair.** Fact 631 scopes it: the
+//! substitution is exact for the same operator rescaled — scale the operator
+//! and its constant by 7 and 18 pixels in 8,236,816 move — and false across
+//! genuinely different operators, which shift `n_eff` by up to 4.54x and the
+//! winner map on 71.5% of pixels. So there is no gate a user could type that
+//! recovers a correctly calibrated operator's decisions from a mis-calibrated
+//! one. `--gate` is the wrong place to fix this, which is why the fix is here.
+//!
 //! After: the field is divided by its own host-measured noise SD before the
 //! gate, so its noise SD is **1.0 by construction** and
 //!
@@ -363,6 +371,11 @@ mod tests {
     /// operator. There is no code path by which SML could have inherited
     /// 0.015214, because [`Calibration`] has no public constructor and
     /// [`FocusMeasure`] has no method that could supply one.
+    ///
+    /// 6.680 is quoted below as *this repository's* SML, not as a property of
+    /// SML: fact 635 scopes fact 439 by showing a `k` scales exactly with any
+    /// constant folded into the stencil, and this one folds none. The band is
+    /// wide because the number is convention-dependent; the *seam* is not.
     #[test]
     fn registering_a_mismatched_operator_yields_its_own_constant_not_the_hosts() {
         let mut reg = registry();

@@ -355,9 +355,20 @@ pub(crate) fn provenance_line(noise: &NoiseModel) -> String {
         // Wording tracks `profile.rs`'s own doc comments rather than
         // paraphrasing them: `gain_divisor` ("the PTC now exists and the
         // relation survives it at true gain steps"), `base_iso` ("MEASURED
-        // twice, independently" + fact 200a's unlocated boundary), and
+        // twice, independently" + question 126's unlocated boundary), and
         // `read_noise_e_low`/`_high` (dark frames, with a shape error the
         // module asserts rather than hides).
+        //
+        // The boundary citation is `SYNTHESIS question 126`, not "fact 200a".
+        // `200a` is a report-local sub-item at `M25-simulator-measured.md:858`
+        // and folded into SYNTHESIS as a *question*, so it has no fact number
+        // and a reader who went looking for one found nothing (fact 717). The
+        // claim itself is true and unchanged; only the label was unresolvable.
+        //
+        // `profile.rs`'s own `base_iso` doc carries the same resolution in a
+        // longer form that keeps M25's provenance. That form is right for a doc
+        // comment and wrong here: this string is printed to a *user*, who has
+        // no access to the M25 report and can only follow a SYNTHESIS number.
         Provenance::Profile => format!(
             concat!(
                 "noise model     : PROVENANCE=Profile -- camera profile at ISO {:.0}. ",
@@ -382,9 +393,9 @@ pub(crate) fn provenance_line(noise: &NoiseModel) -> String {
                 "Below the profile's\n",
                 "                  base ISO the sensor reads out at base-ISO gain (extended/pull ",
                 "ISO); that floor\n",
-                "                  is measured, but the ISO at which it starts is not (fact ",
-                "200a -- the corpus\n",
-                "                  holds no ISO 64 or 80 capture)."
+                "                  is measured, but the ISO at which it starts is not (SYNTHESIS ",
+                "question 126\n",
+                "                  -- the corpus holds no ISO 64 or 80 capture)."
             ),
             noise.iso
         ),
@@ -1019,6 +1030,85 @@ fn write_outputs(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// **Every citation this binary prints must be resolvable by the person
+    /// reading it**, and the only documents that person can reach are
+    /// `SYNTHESIS.md` and the source. Report-local labels are not resolvable.
+    ///
+    /// This is the regression pin for fact 717. `provenance_line` printed
+    /// "(fact 200a -- the corpus holds no ISO 64 or 80 capture)" on every
+    /// `stack` and `merge` run. `200a` is a sub-item of `M25-simulator-
+    /// measured.md:858` and folded into SYNTHESIS as **question 126**; it has
+    /// no fact number, so a reader who searched for one found nothing. The
+    /// claim was and remains true — only the label was dangling.
+    ///
+    /// Rule 35: the subject is the rendered string and the object is a
+    /// *pattern class* ("no `fact <digits><letter>` token"), not another copy
+    /// of the same literal. An edit that reintroduced any report-local
+    /// sub-item label, not merely `200a`, fails this.
+    ///
+    /// Rule 36: the fixture asserts it actually reached the interesting branch
+    /// — the `Profile` arm is the only one carrying citations, and a fixture
+    /// that silently rendered `Fallback` would pass a token scan vacuously.
+    #[test]
+    fn every_citation_the_binary_prints_resolves_to_synthesis_or_the_source() {
+        use strehl_core::noise::PlaneNoise;
+
+        let plane = PlaneNoise {
+            gain_dn_per_e: 0.3273,
+            read_noise_e: 1.2392,
+            levels: Levels {
+                black: 512.0,
+                white: 15360.0,
+            },
+        };
+        let rendered: Vec<String> = [
+            Provenance::Profile,
+            Provenance::Measured,
+            Provenance::Fallback,
+        ]
+        .into_iter()
+        .map(|p| provenance_line(&NoiseModel::new([plane; 4], 160.0, p)))
+        .collect();
+
+        // Rule 36: prove the interesting branch was exercised and is the one
+        // that carries citations at all.
+        assert!(
+            rendered[0].contains("PROVENANCE=Profile"),
+            "the Profile arm did not render; this scan would be vacuous"
+        );
+        assert!(
+            rendered[0].contains("fact 550") && rendered[0].contains("question 126"),
+            "the Profile arm is supposed to be the citation-bearing one: {}",
+            rendered[0]
+        );
+
+        for line in &rendered {
+            // A report-local sub-item label: a fact number with a letter glued
+            // to it. These exist only inside `docs/research/M*.md` and never
+            // in SYNTHESIS, so they are unresolvable to a reader of this output.
+            let mut chars = line.char_indices();
+            for (i, _) in chars.by_ref() {
+                let Some(rest) = line[i..].strip_prefix("fact ") else {
+                    continue;
+                };
+                let digits: String = rest.chars().take_while(char::is_ascii_digit).collect();
+                if digits.is_empty() {
+                    continue;
+                }
+                let after = rest[digits.len()..].chars().next();
+                assert!(
+                    !after.is_some_and(|c| c.is_ascii_alphabetic()),
+                    "printed output cites report-local sub-item `fact {}{}`, which no \
+                     reader can resolve; cite the SYNTHESIS fact or question it folded \
+                     as. Full line:\n{}",
+                    digits,
+                    after.unwrap_or(' '),
+                    line
+                );
+            }
+        }
+    }
 
     #[test]
     fn roi_parses_four_unsigned_fields() {

@@ -37,10 +37,14 @@
 //!
 //! # Cost
 //!
-//! Fact 505 bounds this at **~1.7 ms per stage** for a 512x512 plane, derived
-//! from the merge's own measured pass-one time. That bound is per seed; the
-//! host default runs twelve of them, and [`CalibrationPlan::host_default`]
-//! documents the trade.
+//! Fact 505 bounded this at ~1.7 ms per stage for a 512x512 plane, derived from
+//! the merge's own measured pass-one time. **The bound is refuted and its
+//! number must not be quoted** (fact 505's own Source column says so, and fact
+//! 525 supplies the replacement): the measured cost is **5.02 ms per 512²
+//! plane** and **60.3 ms per registration** at 12 seeds, 2.95x and 35x the
+//! bound. M58 re-measured 4.98 ms and 59.73 ms here. That is per seed; the host
+//! default runs twelve of them, and [`CalibrationPlan::host_default`] documents
+//! the trade. Fact 505's conclusion — negligible — stands on the measurement.
 
 use strehl_core::merge::FOCUS_NOISE_SD;
 use strehl_core::plane::PlaneGeometry;
@@ -97,8 +101,8 @@ impl CalibrationPlan {
     /// is itself correlated with the samples; 384 gives `0.015277 +/- 0.000223`
     /// and 512 gives `0.015214 +/- 0.000075`, a difference of 0.27 standard
     /// errors, so the bias is spent by 384 and 512 is kept for the tighter
-    /// interval. 512 is also the plane size fact 505's ~1.7 ms cost bound is
-    /// derived for.
+    /// interval. 512 is also the plane size fact 525 measures the calibration
+    /// cost at: **5.02 ms per plane, 60.3 ms for all twelve seeds.**
     #[must_use]
     pub fn host_default() -> Self {
         Self {
@@ -615,6 +619,95 @@ mod tests {
         assert!(right.passed, "the fine target must still pass: {right:?}");
     }
 
+    /// **Fact 500's decomposition, recomputed rather than quoted.**
+    ///
+    /// The corpus has carried `FINE_FOCUS_NOISE_SD / FOCUS_NOISE_SD = 5.942`
+    /// as a refuted number and `1.815` as its replacement, and until this test
+    /// existed the replacement had been measured **once**, in Python, by the
+    /// milestone that refuted the first one
+    /// (`experiments/m43-plugin-seam/03-fine-in-gate-path.py`). Fact 580 parked
+    /// five citing sites rather than substitute an unverified replacement,
+    /// citing the 1.074 episode. This is the arm that unparks them: three
+    /// calibrations on the host's own Rust pipeline, and the ratios asserted
+    /// against fact 500's published values.
+    ///
+    /// ```text
+    /// A  tenengrad w13 -> r8    the SELECTION field as consumed  (FOCUS_NOISE_SD)
+    /// B  tenengrad w2  -> none  the FINE field as consumed       (FINE_FOCUS_NOISE_SD)
+    /// C  tenengrad w2  -> r8    fact 500's same-configuration quantity
+    /// ```
+    ///
+    /// `B/A` is what `through_focus.rs` quotes; it is a **product** of a window
+    /// term `C/A` and a regulariser term `B/C`, and fact 437's error was
+    /// charging the whole product to the window.
+    ///
+    /// Rule 20 — inputs that make this fail: computing `C` without the
+    /// regulariser (then `C/A` reads ~5.9 and the window term absorbs the
+    /// regulariser again, which is fact 437 verbatim); computing `B` *with* it
+    /// (then `B/C` reads 1.0 and the decomposition collapses); a wrong
+    /// `FINE_WINDOW_RADIUS`; any change to `REGULARISER_RADIUS`, which moves
+    /// `B/C` and is exactly the staleness the module docs say a declared
+    /// constant cannot detect.
+    ///
+    /// Rule 35 — the assertions' object is fact 500's published number, not
+    /// anything this test computes, so subject and object are independent.
+    #[test]
+    fn the_fine_constant_factors_into_a_window_term_and_a_regulariser_term() {
+        let plan = CalibrationPlan::host_default();
+        let fine_radius = strehl_core::focus::FINE_WINDOW_RADIUS;
+
+        let a = calibrate(&Tenengrad::shipped(), FieldConfig::SHIPPED, &plan).unwrap();
+        let b = calibrate(&Tenengrad::at_radius(fine_radius), FieldConfig::BARE, &plan).unwrap();
+        let c = calibrate(
+            &Tenengrad::at_radius(fine_radius),
+            FieldConfig::SHIPPED,
+            &plan,
+        )
+        .unwrap();
+
+        let window_term = f64::from(c.response_sd()) / f64::from(a.response_sd());
+        let regulariser_term = f64::from(b.response_sd()) / f64::from(c.response_sd());
+        let as_consumed = f64::from(b.response_sd()) / f64::from(a.response_sd());
+
+        println!(
+            "A selection w13+r8 {:e} +/- {:e}\n\
+             B fine      w2 bare {:e} +/- {:e}\n\
+             C fine      w2 + r8 {:e} +/- {:e}\n\
+             window term C/A = {window_term:.4} (fact 500: 1.815)\n\
+             regulariser term B/C = {regulariser_term:.4} (fact 500: 3.273)\n\
+             as consumed  B/A = {as_consumed:.4} (the published pair: 5.942)",
+            a.response_sd(),
+            a.sem(),
+            b.response_sd(),
+            b.sem(),
+            c.response_sd(),
+            c.sem(),
+        );
+
+        // The two ends are the crate's own published constants, and the
+        // self-check already pins them to four standard errors; assert them
+        // here too so a failure of this test localises to the ratio rather
+        // than to an arm.
+        assert!(
+            (window_term - 1.815).abs() / 1.815 < 0.03,
+            "fact 500's same-configuration quantity is 1.815; measured {window_term:.4}"
+        );
+        assert!(
+            (regulariser_term - 3.273).abs() / 3.273 < 0.03,
+            "fact 500's overstatement factor is 3.273x; measured {regulariser_term:.4}"
+        );
+        assert!(
+            (as_consumed - 5.942).abs() / 5.942 < 0.03,
+            "the ratio of the two published constants is 5.942; measured {as_consumed:.4}"
+        );
+        // Rule 36: the fixture must have exercised the interesting branch.
+        // If the regulariser were absent from arm C, this would be ~1.0.
+        assert!(
+            regulariser_term > 2.0,
+            "arm C must actually be regularised, or the decomposition is vacuous"
+        );
+    }
+
     /// A constant-returning focus measure — workstream E §F4.6 **fault 2**,
     /// "confident and wrong", which the document says confluence provably
     /// cannot catch — is refused at calibration.
@@ -794,6 +887,15 @@ mod tests {
     /// accidentally implemented as the shipped operator. The shipped arm is the
     /// discriminator: it must read 1.000 in the *same* call that reads 6-7 for
     /// SML, so a calibrator that simply returned something large fails too.
+    ///
+    /// The bands are wide on purpose. Fact 439's 6.680 and 1.367 are **not**
+    /// convention-independent properties of "SML" and "tenengrad-squared":
+    /// fact 635 shows a `k` moves by exactly whatever scalar a stencil folds
+    /// in, and [`crate::reference`]'s SML carries no `1/8`. Anyone porting
+    /// these operators from another codebase should expect a different number
+    /// and let the calibrator find it — which is the whole point of the seam.
+    /// What this test pins is that the calibrator *responds to the operator*,
+    /// and that is convention-free.
     #[test]
     fn the_measured_constant_tracks_the_operator_not_the_host_default() {
         let plan = CalibrationPlan::host_default();

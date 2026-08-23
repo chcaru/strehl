@@ -138,8 +138,13 @@ fn main() {
     );
 
     println!(
-        "\nPROBE 3 -- cost. Fact 505 bounds option A at ~1.7 ms per stage, derived from\n\
-         the merge's pass-one time. Measured here, release build, per 512^2 plane:\n"
+        "\nPROBE 3 -- cost. Fact 505's ~1.7 ms per stage was a DERIVED BOUND and it is\n\
+         REFUTED: fact 525 measured 5.02 ms per 512^2 plane and 60.3 ms per registration,\n\
+         2.95x and 35x the bound, and fact 505's own row says the figure must not be\n\
+         quoted. Its CONCLUSION stands -- 60 ms once per operator per host start is not a\n\
+         cost worth trading a correctness property for. Compare the numbers below against\n\
+         fact 525's 5.02 / 60.3, NOT against 1.7: a run that beats the bound would mean\n\
+         this probe had stopped measuring what fact 525 measured.\n"
     );
     for (label, op) in [
         (

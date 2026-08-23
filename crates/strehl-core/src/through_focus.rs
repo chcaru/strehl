@@ -121,12 +121,35 @@ pub const PEAK_SEPARATION: u16 = 2;
 /// scale. The two are not the same penalty and neither is derivable from the
 /// other, which is why both are measured.
 ///
-/// It is **5.94x larger than [`FOCUS_NOISE_SD`]**, and that is the whole trade:
-/// the fine field can see a second layer and cannot see a small difference.
-/// Every statistic derived from it is therefore reported in units of this
-/// constant and never in bare response units.
+/// It is **5.94x larger than [`FOCUS_NOISE_SD`] as the two fields are actually
+/// consumed**, and that is the trade: the fine field can see a second layer and
+/// cannot see a small difference. Every statistic derived from it is therefore
+/// reported in units of this constant and never in bare response units.
 ///
-/// It is a function of [`FINE_WINDOW_RADIUS`] alone and is wrong if that changes.
+/// **That 5.94 is a product of two things, and fact 437 charged the whole of it
+/// to the window.** Fact 500 unpicked it and this crate's sibling
+/// `strehl-plugin` re-measures the decomposition on the same pipeline
+/// (`calibrate::tests::the_fine_constant_factors_into_a_window_term_and_a_regulariser_term`):
+///
+/// ```text
+/// 5.943  =  1.811  x  3.281
+///           ^^^^^     ^^^^^
+///           w13 -> w2 at the SAME r8 regulariser   (fact 500: 1.815)
+///                     the r8 regulariser being ABSENT here and present there
+/// ```
+///
+/// So the honest answer to "how much noisier is a five-pixel window than a
+/// twenty-seven-pixel one" is **1.815**, not 5.94; the remaining 3.27x is the
+/// price of consuming this field raw, which M21 says is mandatory. Both numbers
+/// are needed and they answer different questions. **Never quote 5.94 as an
+/// operator `k`** — that is fact 437's retired error, and fact 500 records it
+/// because the failure mode is general: a ratio of two constants means nothing
+/// unless both were measured in the same configuration.
+///
+/// It is a function of [`FINE_WINDOW_RADIUS`] alone and is wrong if that
+/// changes. The 3.281 term above is a function of
+/// [`crate::merge::REGULARISER_RADIUS`] and is wrong if *that* changes — which
+/// is why it is stated as a decomposition rather than folded into one number.
 pub const FINE_FOCUS_NOISE_SD: f32 = 0.090_400;
 
 /// Sentinel for "no frame has been folded into this slot yet".
@@ -512,7 +535,14 @@ impl ThroughFocus {
     ///
     /// **This is a diagnostic, not a screen.** MEASURED on 109MSDCF it is false
     /// at 78% of pixels, which is what a 5.94x noisier field should do and not
-    /// a defect. Use [`fine_peak_outside_triple`](Self::fine_peak_outside_triple)
+    /// a defect. **The 5.94 here is the right number**, and deliberately not
+    /// fact 500's 1.815: both fields enter this comparison exactly as the merge
+    /// consumes them — the selection field regularised, the fine field raw — and
+    /// 5.94 is the ratio of their noise *in that state*. 1.815 answers a
+    /// different question (the same operator at two windows under the same
+    /// regulariser) and would understate this disagreement rate by 3.27x. See
+    /// [`crate::through_focus::FINE_FOCUS_NOISE_SD`] for the decomposition.
+    /// Use [`fine_peak_outside_triple`](Self::fine_peak_outside_triple)
     /// for anything that has to gate a pixel.
     pub fn anchor_is_fine_argmax(&self, i: usize) -> bool {
         self.top_idx[i][0] == self.anchor[i]
@@ -1069,15 +1099,150 @@ mod tests {
         );
     }
 
-    /// The two scales are not interchangeable, and this pins the direction and
-    /// rough size of the trade so that swapping them cannot pass silently.
+    /// **The two scales are not interchangeable, and this measures the trade
+    /// rather than restating it.**
+    ///
+    /// This test used to read `assert!((5.0..7.0).contains(&(FINE_FOCUS_NOISE_SD
+    /// / FOCUS_NOISE_SD)))`. That is rule 35 exactly: both terms are compile-time
+    /// constants in this crate, so the assertion's subject and object are the
+    /// same two values and it had **no power to fail** against anything but an
+    /// edit to the constants it was made of. M52 flagged it as "the framing fact
+    /// 500 retired" and asked the fold to carry it; M58 found the framing is
+    /// defensible and the *power* was the real defect.
+    ///
+    /// What it does now: measures all three SDs on one set of twelve 512x512
+    /// noise planes, through the real operator and the real regulariser, on an
+    /// identical interior so the ratios compare the same pixels, and asserts the
+    /// **decomposition** against fact 500's published numbers.
+    ///
+    /// ```text
+    /// fine_bare / sel  = 5.94   the two fields AS CONSUMED -- what this test's name claims
+    /// fine_reg  / sel  = 1.815  fact 500: the same operator, two windows, ONE regulariser
+    /// fine_bare / fine_reg = 3.273  the price of consuming the fine field raw
+    /// ```
+    ///
+    /// Rule 20 — inputs that make this fail: regularising the fine arm (then
+    /// 5.94 collapses to 1.8 and the first assertion fires); dropping the
+    /// regulariser from the selection arm (fact 501's +24%, and all three
+    /// ratios move); a changed `FINE_WINDOW_RADIUS` or `REGULARISER_RADIUS`;
+    /// and a normalisation that is not flat in signal, which the module's own
+    /// notes measure at 0.929x.
+    ///
+    /// Rule 34 — the plant supplies unit-variance Gaussian luma and
+    /// [`unit_sigma_model`] makes the divisor exactly 1.0, so this test shares
+    /// the *normalisation* constant with the code under test and can prove
+    /// nothing about it. It is a test of the operator chain and of the two
+    /// window radii, which is all it claims. The absolute calibration is
+    /// falsifiable only against real data.
     #[test]
     fn the_fine_scale_is_much_noisier_than_the_selection_scale() {
-        let ratio = FINE_FOCUS_NOISE_SD / FOCUS_NOISE_SD;
+        let g = geom(512, 512);
+        let noise = unit_sigma_model();
+        // One margin for all three arms, taken as the widest any of them needs
+        // (Sobel + selection window + regulariser), so the three SDs are over
+        // an identical pixel set and their ratios are exact comparisons.
+        let margin =
+            SOBEL_RADIUS + 1 + crate::focus::WINDOW_RADIUS + crate::merge::REGULARISER_RADIUS;
+        let seeds: [u64; 12] = [
+            0xC0FFEE,
+            0x5EED,
+            0xBADF00D,
+            1,
+            2,
+            3,
+            0xDEADBEEF,
+            0x1234_5678,
+            99,
+            0xFACE,
+            0xA5A5_A5A5,
+            7,
+        ];
+
+        let interior_sd = |f: &[f32]| -> f64 {
+            let mut vals = Vec::new();
+            for y in margin..g.height - margin {
+                for x in margin..g.width - margin {
+                    vals.push(f64::from(f[y * g.width + x]));
+                }
+            }
+            let mean = vals.iter().sum::<f64>() / vals.len() as f64;
+            (vals.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / (vals.len() - 1) as f64).sqrt()
+        };
+
+        let mut field = FocusField::new(g);
+        let mut fine = vec![0.0f32; g.pixels()];
+        let mut scratch = vec![0.0f32; g.pixels()];
+        let mut reg = vec![0.0f32; g.pixels()];
+        let (mut sels, mut bares, mut regs) = (Vec::new(), Vec::new(), Vec::new());
+        for seed in seeds {
+            let mut rng = Rng::new(seed);
+            let luma: Vec<f32> = (0..g.pixels()).map(|_| rng.normal()).collect();
+            field.compute_with_fine(&luma, &noise, FINE_WINDOW_RADIUS, &mut fine);
+
+            bares.push(interior_sd(&fine));
+            crate::merge::regularise(field.values(), g, &mut scratch, &mut reg);
+            sels.push(interior_sd(&reg));
+            crate::merge::regularise(&fine, g, &mut scratch, &mut reg);
+            regs.push(interior_sd(&reg));
+        }
+
+        let avg = |v: &[f64]| v.iter().sum::<f64>() / v.len() as f64;
+        let rel_sem = |v: &[f64]| {
+            let m = avg(v);
+            let n = v.len() as f64;
+            let var = v.iter().map(|s| (s - m).powi(2)).sum::<f64>() / (n - 1.0);
+            (var / n).sqrt() / m
+        };
+        let (sel, bare, regd) = (avg(&sels), avg(&bares), avg(&regs));
+        let as_consumed = bare / sel;
+        let same_config = regd / sel;
+        let regulariser_term = bare / regd;
+
+        println!(
+            "selection w13+r8 {sel:e}  fine w2 bare {bare:e}  fine w2+r8 {regd:e}\n\
+             as consumed {as_consumed:.4} (published pair 5.942)  \
+             same-config {same_config:.4} (fact 500: 1.815)  \
+             regulariser {regulariser_term:.4} (fact 500: 3.273)"
+        );
+
+        // Rule 36: the instrument must be tight enough for the bands below to
+        // reject anything. At ~0.5% relative sem a +/-3% band rejects fact
+        // 501's +24%, fact 509's +52.8% and fact 510's +12.5% alike.
+        for (label, v) in [
+            ("selection", &sels),
+            ("fine bare", &bares),
+            ("fine reg", &regs),
+        ] {
+            assert!(
+                rel_sem(v) < 0.01,
+                "{label} relative sem {:.4} is too large for this test to have power",
+                rel_sem(v)
+            );
+        }
+
+        // Anchors, so a failure localises to one arm rather than to a ratio.
         assert!(
-            (5.0..7.0).contains(&ratio),
-            "the fine field is supposed to be materially noisier than the \
-             selection field, and by a measured amount; ratio {ratio:.2}x"
+            (sel - f64::from(FOCUS_NOISE_SD)).abs() / f64::from(FOCUS_NOISE_SD) < 0.02,
+            "the selection arm must reproduce FOCUS_NOISE_SD; got {sel:e}"
+        );
+        assert!(
+            (bare - f64::from(FINE_FOCUS_NOISE_SD)).abs() / f64::from(FINE_FOCUS_NOISE_SD) < 0.02,
+            "the fine arm must reproduce FINE_FOCUS_NOISE_SD; got {bare:e}"
+        );
+
+        assert!(
+            (as_consumed - 5.942).abs() / 5.942 < 0.03,
+            "the fine field is supposed to be materially noisier AS CONSUMED, by \
+             the ratio of the two published constants; got {as_consumed:.4}x"
+        );
+        assert!(
+            (same_config - 1.815).abs() / 1.815 < 0.03,
+            "fact 500's same-configuration quantity is 1.815 (M52 measured 1.8145, \
+             M58 1.8114); got {same_config:.4}x"
+        );
+        assert!(
+            (regulariser_term - 3.273).abs() / 3.273 < 0.03,
+            "fact 500's overstatement factor is 3.273x; got {regulariser_term:.4}x"
         );
     }
 

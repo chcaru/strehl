@@ -80,7 +80,9 @@ pub enum Window {
     /// The host cannot assume the cost is O(1) in the radius here, which is the
     /// case §F5.3 flags as degrading option A back to option B: an operator
     /// with an expensive aggregation is one whose load-time calibration is no
-    /// longer bounded by fact 505's ~1.7 ms.
+    /// longer bounded by fact 525's measured 5.02 ms per plane. (Fact 505's
+    /// ~1.7 ms bound is refuted and must not be quoted; 5.02 ms is the measured
+    /// figure that replaces it.)
     Custom { radius: usize },
 }
 
