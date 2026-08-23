@@ -349,9 +349,38 @@ does not reproduce on the shipped operator"* for exactly this reason.
 section 4 row publishes a regularised-Tenengrad speckle at all, so the string invents a
 reference point and attributes it to a fact.
 
-**Duplicated internally.** `strehl-core/src/stack.rs`, the `DEFAULT_SPECKLE_TOLERANCE` doc
-comment, carries the identical mis-attribution: *"34.4% for the ring operator
-unregularised, 0.868% for Tenengrad regularised"*.
+**CORRECTED 2026-08-23, from this audit's own committed evidence, for routing.** The
+original text of this finding named a second site as "`strehl-core/src/stack.rs`, the
+`DEFAULT_SPECKLE_TOLERANCE` doc comment". **The symbol name is not supported by any
+captured evidence** — `DEFAULT_SPECKLE_TOLERANCE` appears in none of the context dumps —
+and re-reading `join_a.txt` and `raw_fact_lines.txt` shows the finding was both
+mis-stated and under-enumerated. The accurate statement:
+
+**Fact 23's row names no operator at all.** Its text (`join_a.txt:37`) is:
+
+> "Regularising the focus field (17x17 smooth) before argmax drops speckle
+> **34.4% -> 0.868%** and noise **1.253x -> 1.075x**"
+
+So the defect is *not* that code quotes fact 23. It is that **two sites add an operator
+attribution the row does not contain, and pick the wrong operator**, while **two sibling
+sites quote the same row operator-neutrally and are correct**:
+
+| Site | Crate | Quoted content | Verdict |
+| --- | --- | --- | --- |
+| `strehl-cli/src/merge_cmd.rs:1281`, the speckle-companion `eprintln!` | **strehl-cli** | `"detail move it away from that. Fact 23's reference points are 34.4% \` ... rendering at runtime as *"34.4% (ring operator, unregularised) and 0.868% (Tenengrad, regularised)"* | **WRONG, user-visible** |
+| `strehl-core/src/stack.rs:175` | **strehl-core** | `/// Fact 23's reference points are all at this tolerance: 34.4% for the ring` | **WRONG** — same invented attribution. Anchor on this quoted line; the enclosing symbol name is **unverified**. |
+| `strehl-cli/src/merge_cmd.rs:16`, module header | strehl-cli | `//! over the focus field drops winner-index speckle from 34.4% to 0.868%` | **CORRECT — do not edit** |
+| `strehl-core/src/merge.rs:196` | strehl-core | `/// 34.4% to 0.868% (fact 23), and speckle *is* the winner's curse made visible.` | **CORRECT — do not edit** |
+
+**The repair spans two crates and therefore two owners**, and two of the four sites must be
+left alone. Runtime rendering of the wrong string is captured verbatim at
+`roi_109.txt:166-167`, `roi_119.txt:166-167`, `roi_109_g0.txt:154-155` and
+`roi_119_g0.txt:154-155`.
+
+**This is a fifth error by this audit** and it is the same error as the other two: I named
+a symbol from memory instead of from the captured line, and I enumerated from a grouping
+instead of from the evidence, so I missed the two correct sites that make the defect
+legible. See section 9.
 
 **Aggravating.** The same file states the identical operator caveat **correctly** for fact
 19 about 210 lines earlier: *"Fact 19's 1.253x was a DIFFERENT focus operator and does not
@@ -623,6 +652,16 @@ sections 3.5 and 3.8 of this document.** The consequences:
 - Only **two** of my eight fact-439 sites quote the span; five quote a `k` that fact 635
   leaves untouched; and **three sites quoting `6.680` were missing from the list entirely
   — the same index over-counted and under-counted at once.**
+
+**5. NEW — I named `DEFAULT_SPECKLE_TOLERANCE` as U1's second site from memory, and it is
+in none of my captured evidence.** Correcting it from `join_a.txt` and `raw_fact_lines.txt`
+showed the finding was wrong in a second way as well: **fact 23's row names no operator**,
+so the defect is an *invented attribution*, not a misquotation — and **two sibling sites
+quote the row correctly and must not be edited**, which I had not noticed because I had
+grouped by fact number again. Full correction in section 4.1. This error was caught only
+because the orchestrator asked a routing question precise enough that memory was not good
+enough to answer it, which is itself the finding: **"which symbol, which crate" is a
+question that forces you back to the evidence, and "is this citation wrong" is not.**
 
 **The general lesson, and I think the most valuable thing in this report:** I built an
 instrument that indexes citations *by number*, then used it to make claims about what the
