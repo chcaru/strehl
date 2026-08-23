@@ -2,3 +2,4 @@
 # sweep. data/binary-equivalence.txt records that the two binaries produce
 # byte-identical edge CSVs; the run scripts fall back to target/ when absent.
 target-aux/
+.m16-msg.txt
