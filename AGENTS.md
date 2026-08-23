@@ -498,6 +498,23 @@ monolithic binary and ship only that binary.
     sweep succeeds silently and leaves a clean status behind it.
     (SYNTHESIS facts 930, 931; discipline 436.)
 
+### Milestone allocation ledger (rule 41 -- written at DISPATCH, not at report time)
+
+A milestone number is an identifier. Allocate here **before** the agent starts, and
+record the stem, what it was asked, and where it writes. `experiments/` counts: the
+`M60` collision was three-way precisely because one claimant lived only there.
+
+| stem | dispatched to do | writes to | state |
+|---|---|---|---|
+| `M60` / `M60b` / `M60c` | speckle-citation repair in `merge.rs`, then the gate's justification | `docs/research/M60b-*.md`, `docs/research/M60c-*.md` | reported |
+| `M60` (collision, renamed **M63**) | measure through-focus bimodality | `experiments/M60-bimodality/` | live -- renaming to M63 |
+| `M61` | photon transfer curve at ISO 500/1000 | `docs/research/M61-ptc-high-iso-measured.md` | reported; provenance correction routed |
+| `M62` | the square-root-N acceptance harness | `experiments/M62-sqrt-n/`, `docs/research/M62-sqrt-n.md` | reported; **acceptance authority for M64** |
+| `M64` | make the estimator the default path | `crates/**` | live |
+| `M65` | `n_eff` under regularised vs raw election, at matched tolerance | `docs/research/M65-election-gate-measured.md` | live |
+
+**M63 is reserved** for the bimodality milestone above and must not be reissued.
+
 ## Layout
 
 | Path | What |
