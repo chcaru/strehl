@@ -17,13 +17,15 @@ much it trusts its own answer.
 The name is the Strehl ratio: how close a real optical system comes to the
 diffraction-limited ideal.
 
-> **Status: walking skeleton.** The research and architecture are done and are
-> in [`docs/research/`](docs/research/). The end-to-end path from RAW files to a
-> stacked image exists and runs, but it currently implements the **naive
-> per-pixel argmax selector** — the very defect described above — on purpose, as
-> the baseline every future quality claim is measured against. See
-> [`docs/research/M2-baseline-skeleton.md`](docs/research/M2-baseline-skeleton.md). None of the
-> estimation work below is built yet.
+> **Status: the estimation merge is built and runs.** `strehl merge` implements
+> the thesis end to end on real RAW files: a 17x17-regularised winner field in
+> pass one, a noise-gated average in pass two, with `n_eff`, boundary flags and
+> per-pixel confidence as outputs. `strehl stack` is still the **naive per-pixel
+> argmax baseline**, kept deliberately as the reference artifact every quality
+> claim is measured against. Not yet built: alignment into the merge,
+> deconvolution, outlier rejection, occlusion modelling. The research corpus is
+> in [`docs/research/`](docs/research/), and
+> [`SYNTHESIS.md`](docs/research/SYNTHESIS.md) is the decision record.
 
 ## What is actually different
 
@@ -45,25 +47,88 @@ seam but is deferred until there is hardware to test it against.
 ## The honest performance claim
 
 Not "N times less noise". The gain depends entirely on how many frames actually
-see a given point in focus:
+see a given point in focus. Measured on the 22-frame reference bracket, over a
+low-detail region, against a single unstacked frame:
 
-- **~sqrt(N) in flat and smooth regions** — which is precisely where current
-  tools are *worse than a single unstacked frame*.
-- **~1.2–1.8x on resolved detail**, because at a sane focus step only about 1.3
-  to 1.5 frames have any given depth inside their depth of field.
-- **Never worse than a single frame anywhere.** Wiener shrinkage cannot amplify.
+| gate | mean `n_eff` | flat-ROI noise | |
+| --- | --- | --- | --- |
+| 0.0 | 1.000 | **1.074x** | selection — *worse than not stacking* |
+| 0.5 | 1.414 | 1.027x | still worse |
+| 1.0 | 1.884 | **0.973x** | first gate that beats one frame |
+| 2.0 | 2.891 | 0.890x | |
+| 4.0 | 4.987 | 0.788x | |
+| — | — | 1.253x | the argmax baseline `strehl stack` ships |
+| — | *N* | 0.534x | a plain mean — the floor, and it destroys 58% of detail |
 
-Measured, on a Ryzen 9 9950X3D with an RTX 5090: a 60-frame 33 MP stack decodes
-in **1.78 s cold, 0.91 s warm**. See
-[`docs/research/M1-decode-measured.md`](docs/research/M1-decode-measured.md).
+Read the first row carefully, because it is the whole argument. **At `n_eff` = 1
+the merge is doing exactly what every other stacker does — selecting — and it is
+measurably 7.4% noisier than the single frame it selected from.** Selection is
+not free. That is why the gate exists, and it is why gate 0 is a diagnostic
+rather than a shipping configuration.
+
+It is also a correction. This README previously claimed *"never worse than a
+single frame anywhere — Wiener shrinkage cannot amplify"*. That is false, the
+project's own guard test asserted it for four days, and the test passed only
+because the noise model was blind in precisely the place the invariant could be
+violated. Both were fixed; see facts 428-431 in
+[`SYNTHESIS.md`](docs/research/SYNTHESIS.md).
+
+The honest claim is narrower: **averaging two or more frames is strictly better
+than one, and the gate is what decides when that is safe.**
+
+On resolved detail the expected gain is **~1.2-1.8x** — at a sane focus step only
+about 1.3 to 1.5 frames have any given depth inside their depth of field — but
+that figure is `ARGUED`, not measured, and the noise column above is not a
+result on its own: a plain mean wins it outright while collapsing detail, which
+is why `merge` refuses to report it without a `--detail-roi`.
+
+**Speed.** The same 22-frame 33 MP stack merges in **3.19 s** end to end
+(1.15 s pass one, 2.04 s pass two) at **262 MB/s** over 836 MB of RAW, on a
+Ryzen 9 9950X3D. Peak memory is bounded at 5 in-flight frames — **never O(N)** —
+and decode alone is 1.78 s cold, 0.91 s warm. See
+[`M1`](docs/research/M1-decode-measured.md).
 
 ## Usage
 
 ```
 strehl probe <DIR> [--limit N]     # sensor geometry, levels, ISO, white balance
-strehl stack <DIR> --out <PATH> [--limit N] [--srgb]
-                                  [--index-map <PATH>] [--flat-roi X,Y,W,H]
+strehl merge <DIR> [--out <PATH>]  # THE THESIS: noise-gated estimation
+                   [--gate T...] [--target-n-eff N] [--limit N] [--srgb]
+                   [--flat-roi X,Y,W,H] [--detail-roi X,Y,W,H]
+                   [--stats] [--stats-placebo] [--confidence-tail Q]
+strehl stack <DIR> --out <PATH>    # the naive argmax baseline, for comparison
+                   [--limit N] [--srgb]
+                   [--index-map <PATH>] [--flat-roi X,Y,W,H]
 ```
+
+### `merge` — the estimation path
+
+```console
+$ strehl merge C:\dev\macro\test\109MSDCF --target-n-eff 3 --out merged.tif \
+      --flat-roi 2272,1344,256,256 --detail-roi <X,Y,W,H>
+```
+
+Two passes over the frames. Pass one elects a winner per pixel from a
+17x17-regularised focus field; pass two averages every frame whose regularised
+response the calibrated noise model **cannot separate** from that winner. Where
+one frame is unambiguously sharpest it degenerates to selection; where several
+are indistinguishable it averages them, which is the only operation that goes
+below single-frame noise.
+
+**Set `--target-n-eff`, not `--gate`.** A fixed gate is not a calibration: at
+gate 2.0 the achieved `n_eff` spans 2.26-7.42 across five stacks, and reaching
+`n_eff` = 3 needs gates from 1.1 to 2.9. `--gate` is repeatable and the whole
+ladder folds in one pass two, so a sweep costs one decode budget, not one per
+value — that is how the table above was produced.
+
+`--stats` opts into the per-pixel through-focus sufficient statistics (sub-frame
+peak by parabola fit, top-4 frames, a bimodality statistic) at a **5-pixel**
+window rather than the 27-pixel selection window, because occlusion bimodality
+is *depleted* at the selection scale. Fixed 60 B/px, constant in frame count. It
+costs 494 MB per worker and **cannot change the merged image** — that is
+asserted by byte-identical hash, not by argument.
+
+### `stack` — the baseline it has to beat
 
 ```console
 $ strehl stack C:\dev\macro\test\109MSDCF --out baseline.tif \
@@ -121,11 +186,23 @@ landscape, the Rust and hardware envelope, the plugin architecture, and the
 optical modelling of the reference rig.
 
 Measurement milestones are recorded separately and label every claim `MEASURED`,
-`VERIFIED`, `DERIVED`, `ARGUED` or `UNVERIFIED`:
+`VERIFIED`, `DERIVED`, `ARGUED` or `UNVERIFIED`. There are forty-odd of them;
+[`AGENTS.md`](AGENTS.md) carries the index. Entry points:
 [`M1`](docs/research/M1-decode-measured.md) (decode throughput and sensor
-constants), [`M2`](docs/research/M2-baseline-skeleton.md) (this baseline, and the
-argmax defect measured on real files),
-[`M3`](docs/research/M3-alignment-measured.md) (alignment).
+constants), [`M2`](docs/research/M2-baseline-skeleton.md) (the argmax defect
+measured on real files), [`M3`](docs/research/M3-alignment-measured.md)
+(alignment), [`M18`](docs/research/M18-merge-implemented.md) (the merge and its
+sufficient-statistics seam), and
+[`G-edof`](docs/research/G-edof-deconvolution.md) (the EDOF/microscopy survey).
+
+**Findings that lost are kept, and marked.** Withdrawn rows stay in the table
+with the reason attached rather than being deleted — fact 242 was refuted by an
+independent verification of the project's own work, and fact 341 was a defect in
+shipped Rust found the same way. Four independent verifications have run over
+fourteen milestones; **not one defect they found was arithmetic.** Every one was
+a *choice* — of estimator, reference, arm, or null. That is why verification
+here is required to re-choose rather than re-compute, and why the author of a
+result never verifies it.
 
 ## Contributing
 
