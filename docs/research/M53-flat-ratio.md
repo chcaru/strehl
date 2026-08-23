@@ -309,6 +309,21 @@ F-number, to avoid colliding with a numbering the orchestrator owns:
 - **`4c02816`** — a circular polarizer is in the optical path for the whole
   corpus, so every clip statistic in `a5` is a **lower bound**.
 
+  > **[Editorial note, added later — the quoted claim above is REFUTED.]** The
+  > universal quantifier ("the whole corpus") was the orchestrator's
+  > generalisation, circulated to five agents before it had been checked, and
+  > `4c02816` repeated it in good faith. EXIF capture dates refute it: the
+  > filter was fitted from **25 May** onward only. Of twelve stacks, **seven are
+  > on-side** (`coffee-bubbles`, `foam`, `wrapped-text-1/2`, `bee-1/2/3`),
+  > **four are bare-lens** (`109MSDCF` 17 May, `119MSDCF` 9 May, `112MSDCF` and
+  > `113MSDCF` 7 May), and **one is unknown** (`coffee-bean`, 10 May — the
+  > owner cannot recall it; unknown, not off). The commit text is left standing
+  > because falsifying a quoted historical record is worse than a stale claim.
+  > Corrected in `ceb9a99`; the date rule and a per-headline scoping table are
+  > in `out/a5_censoring_endtoend.md`. **`109MSDCF`'s 0.0000% clip census and
+  > bit-exact no-op are bare-lens and need no hedge at all** — the hedge above
+  > made that control look weaker than it is. (Facts 877-880, discipline 409.)
+
 ---
 
 ## 8. The 494 / 527 MB help strings
@@ -359,3 +374,56 @@ usize::from(opts.stats_placebo)`, so `--stats --stats-placebo` gives 124 B/px
   very-low-frequency explosion. Documented, untested.
 - **`generated_ladders()` shape coverage is argued, not measured.**
 - **Three F-slots are unrecoverable** (§1), and no fact depends on them.
+
+---
+
+## 10. Exposure to M55b's contiguous-split null
+
+M55b established that a **contiguous** half-stack split yields two half-merges
+whose ring cross-power is statistically indistinguishable from two unrelated
+images, on 6 of 6 real cells, detail ROIs as well as flat. Facts 641 and 702
+were therefore read inside the null and fact 707's mechanism dissolves. This
+section names which M53 quantities are exposed. Asked for as a list, answered
+from the files rather than from memory.
+
+**Nothing M53 measured rests on a half-stack split of any kind.** Checked by
+searching every `.py`/`.rs`/`.log`/`.md` under `experiments/m53-flat-ratio/`
+and both owned source files for `half-stack`, `halves`, `contiguous`, `parity`,
+`cross-power`, `split-half`, `even/odd frames`. One hit, and it is a false
+positive: `a2_kernel_sweep.py:79` says `(G1+G2)/2` "halves the variance",
+which is **intra-frame Bayer green averaging**, not a stack split.
+(`splitmix64` in `flat_ratio.rs` is a PRNG.)
+
+| quantity | construction | exposed? |
+|---|---|---|
+| the shipped statistic `hp(merged)/median_i hp(F_i)` | one merged image against the per-frame distribution, **all** frames | **no** |
+| negative control arms 1 and 2 | plant into merged output, compare statistics | **no** |
+| a5 `fold_censored` before/after | two binaries, same full stack | **no** |
+| q183 legacy-vs-HP on M2's ROI | merges over the full stack | **no** |
+| kernel sweep `w = 3..15` | high-pass sd, single images | **no** |
+| fact 441 spread (1.3575x) | per-frame sds, no pairing | **no** |
+| speckle 34.381 / 0.868 / 1.010 % (fact 752) | `speckle_fraction(best_index, geom, tol)` at `merge_cmd.rs:1286` — **spatial** neighbour comparison on one winner map | **no** |
+
+The statistic is structurally immune: it never forms a cross-quantity between
+two subsets of frames, which is the object M55b showed to be null. Its
+denominator is a **median over every frame**, which is the opposite of a split.
+
+**Two where I am not certain, flagged rather than guessed:**
+
+1. **`n_eff` = 3 on `foam`** (quoted from M52 at `a5_censoring_endtoend.md:89`,
+   used only as context for why `foam` is the corpus's hardest stack). I read
+   `n_eff` as an effective-sample-size over the merge weights, not a split
+   statistic — `merge_cmd.rs:82` discusses it as a gate target — but **I did
+   not verify M52's construction** and this is not my number. If it is
+   weight-based it is unexposed; I am not asserting that.
+2. **M2's placebo A (0.981x)**, named in `M53-flat-roi-statistic.md` as the one
+   thing q183 could **not** reproduce. I recall it as a half-**ROI** shifted
+   winner map — a *spatial* rearrangement, a different object from a half-
+   *stack* split — but **I never reconstructed it**, which is exactly why it is
+   listed there as an open hole. **If placebo A in fact split the stack, it is
+   exposed and my inability to reproduce it becomes more interesting, not
+   less.** Someone who can read M2's construction should check it.
+
+No M53 conclusion changes if both turn out exposed: neither feeds the
+statistic, the control, or any acceptance number. (MEASURED for the table,
+ARGUED for the immunity claim, explicitly UNVERIFIED for the two flagged.)
