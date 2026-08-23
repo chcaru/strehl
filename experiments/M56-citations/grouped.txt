@@ -1,0 +1,135 @@
+distinct facts: 77  instances: 260
+3|strehl-cli/src/merge_cmd.rs|2280
+4|strehl-cli/src/merge_cmd.rs|2280
+12|strehl-cli/src/merge_cmd.rs|2280
+14|strehl-core/src/profile.rs|141, 262
+19|strehl-cli/src/merge_cmd.rs|30, 251, 1055
+19|strehl-cli/src/stack.rs|677
+19|strehl-core/src/merge.rs|6, 9, 28
+19|strehl-core/src/through_focus.rs|207, 1631
+23|strehl-cli/src/merge_cmd.rs|1281
+23|strehl-core/src/merge.rs|17, 19, 27, 94, 196, 1163, 1621
+23|strehl-core/src/stack.rs|175
+24|strehl-cli/src/merge_cmd.rs|31, 232, 241, 251, 262, 1139, 1204, 1246, 1457...
+24|strehl-core/src/merge.rs|28, 983
+27|strehl-cli/src/merge_cmd.rs|2280
+28|strehl-cli/src/merge_cmd.rs|2280
+32|strehl-core/src/focus.rs|114
+32|strehl-plugin/src/field.rs|74
+33|strehl-cli/src/merge_cmd.rs|14
+33|strehl-core/src/focus.rs|198
+33|strehl-core/src/merge.rs|44
+35|strehl-core/src/focus.rs|808
+36|strehl-core/src/merge.rs|73
+37|strehl-core/src/focus.rs|26
+39|strehl-core/src/focus.rs|61, 754, 825, 914
+41|strehl-core/src/focus.rs|19
+42|strehl-core/src/merge.rs|76
+60|strehl-core/src/focus.rs|23, 71
+62|strehl-core/src/focus.rs|665
+73|strehl-core/src/clip.rs|21
+82|strehl-core/src/focus.rs|103
+82|strehl-core/src/merge.rs|1674
+84|strehl-cli/src/merge_cmd.rs|674
+84|strehl-core/src/merge.rs|18, 67
+84|strehl-plugin/src/field.rs|42
+86|strehl-cli/src/merge_cmd.rs|674
+86|strehl-core/src/merge.rs|67
+90|strehl-plugin/src/reference.rs|168
+152|strehl-cli/src/merge_cmd.rs|1521
+152|strehl-core/src/focus.rs|87
+152|strehl-plugin/src/measure.rs|38, 139
+152|strehl-plugin/src/reference.rs|552
+200|strehl-cli/src/stack.rs|358, 366
+200|strehl-core/src/profile.rs|72, 87, 92, 112
+212|strehl-cli/src/main.rs|152
+212|strehl-cli/src/merge_cmd.rs|21, 82, 681, 929
+212|strehl-core/src/merge.rs|57, 352, 396, 1164
+260|strehl-core/src/through_focus.rs|284
+261|strehl-core/src/through_focus.rs|82
+262|strehl-core/src/through_focus.rs|619
+263|strehl-core/src/merge.rs|35, 1143
+264|strehl-core/src/merge.rs|35, 1143
+272|strehl-cli/src/merge_cmd.rs|1573
+272|strehl-core/src/through_focus.rs|164, 448, 1299
+273|strehl-core/src/through_focus.rs|423
+280|strehl-cli/src/merge_cmd.rs|1775
+280|strehl-core/src/through_focus.rs|663, 755
+281|strehl-cli/src/merge_cmd.rs|1775
+281|strehl-core/src/through_focus.rs|663, 755
+282|strehl-cli/src/merge_cmd.rs|1775
+282|strehl-core/src/through_focus.rs|663, 755
+283|strehl-core/src/through_focus.rs|82, 609
+300|strehl-core/src/merge.rs|667
+300|strehl-core/src/through_focus.rs|637
+302|strehl-core/src/through_focus.rs|448
+304|strehl-cli/src/merge_cmd.rs|1573
+304|strehl-core/src/through_focus.rs|448, 1299
+310|strehl-cli/src/merge_cmd.rs|678
+311|strehl-cli/src/merge_cmd.rs|678
+312|strehl-cli/src/merge_cmd.rs|678
+313|strehl-cli/src/merge_cmd.rs|678
+320|strehl-core/src/merge.rs|94, 1263
+321|strehl-core/src/merge.rs|94
+324|strehl-cli/src/main.rs|139, 145
+324|strehl-cli/src/merge_cmd.rs|79, 188, 1929, 1932, 2001, 2002, 2021
+341|strehl-core/src/merge.rs|119, 707, 1293
+341|strehl-core/src/through_focus.rs|1862, 1887
+343|strehl-cli/src/merge_cmd.rs|1071
+343|strehl-cli/src/stack.rs|677
+343|strehl-core/src/merge.rs|6, 8, 22
+436|strehl-plugin/src/lib.rs|8
+436|strehl-plugin/src/registry.rs|7
+438|strehl-plugin/examples/calibration-survey.rs|73
+438|strehl-plugin/src/lib.rs|20
+438|strehl-plugin/src/registry.rs|10
+439|strehl-plugin/src/calibrate.rs|228, 815, 816, 829, 834
+439|strehl-plugin/src/field.rs|98
+439|strehl-plugin/src/lib.rs|16, 72
+439|strehl-plugin/src/measure.rs|27, 71
+439|strehl-plugin/src/reference.rs|1, 16, 25, 33, 213, 259, 308, 420
+439|strehl-plugin/src/registry.rs|360, 378
+440|strehl-core/src/merge.rs|97, 853, 869
+441|strehl-cli/src/merge_cmd.rs|559, 729, 1024, 1110
+441|strehl-cli/src/stack.rs|723, 788, 906
+441|strehl-core/src/flat_ratio.rs|23, 251, 277, 340, 634, 644, 657
+442|strehl-cli/src/merge_cmd.rs|1110
+442|strehl-core/src/flat_ratio.rs|16, 18
+443|strehl-core/src/merge.rs|105, 853, 869
+446|strehl-core/src/merge.rs|101, 853, 869
+448|strehl-core/src/merge.rs|132, 863
+452|strehl-core/src/merge.rs|702, 1175
+453|strehl-core/src/merge.rs|702, 1175
+454|strehl-core/src/merge.rs|108, 853, 869
+455|strehl-cli/src/merge_cmd.rs|1110
+455|strehl-core/src/flat_ratio.rs|15
+458|strehl-core/src/merge.rs|127, 889
+469|strehl-cli/src/merge_cmd.rs|1110
+469|strehl-cli/src/stack.rs|712, 802, 837, 939
+469|strehl-core/src/flat_ratio.rs|11, 33, 36, 40, 96, 229, 391, 510, 515
+500|strehl-plugin/src/calibrate.rs|24, 524
+500|strehl-plugin/src/field.rs|18
+500|strehl-plugin/src/lib.rs|47
+500|strehl-plugin/src/measure.rs|18, 65
+501|strehl-plugin/src/calibrate.rs|36, 526, 558
+502|strehl-plugin/src/calibrate.rs|4
+502|strehl-plugin/src/measure.rs|9
+503|strehl-plugin/src/registry.rs|26, 479, 527, 561
+504|strehl-plugin/src/registry.rs|26, 158, 479, 561, 565, 626
+505|strehl-plugin/examples/f5-design-probes.rs|141
+505|strehl-plugin/src/calibrate.rs|40, 100
+505|strehl-plugin/src/lib.rs|58
+505|strehl-plugin/src/measure.rs|83
+509|strehl-plugin/src/calibrate.rs|559
+509|strehl-plugin/src/lib.rs|23
+509|strehl-plugin/src/reference.rs|125
+510|strehl-plugin/src/calibrate.rs|559
+510|strehl-plugin/src/lib.rs|23
+510|strehl-plugin/src/measure.rs|140
+510|strehl-plugin/src/reference.rs|91
+511|strehl-plugin/src/lib.rs|23
+550|strehl-cli/src/stack.rs|367
+550|strehl-core/src/flat_ratio.rs|88
+550|strehl-core/src/profile.rs|144
+597|strehl-core/src/flat_ratio.rs|17
+599|strehl-core/src/flat_ratio.rs|545

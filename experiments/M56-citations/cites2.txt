@@ -1,0 +1,21 @@
+citation instances: 260
+distinct numbers: 77
+numbers: [3, 4, 12, 14, 19, 23, 24, 27, 28, 32, 33, 35, 36, 37, 39, 41, 42, 60, 62, 73, 82, 84, 86, 90, 152, 200, 212, 260, 261, 262, 263, 264, 272, 273, 280, 281, 282, 283, 300, 302, 304, 310, 311, 312, 313, 320, 321, 324, 341, 343, 436, 438, 439, 440, 441, 442, 443, 446, 448, 452, 453, 454, 455, 458, 469, 500, 501, 502, 503, 504, 505, 509, 510, 511, 550, 597, 599]
+   3  crates/strehl-cli/src/main.rs
+  55  crates/strehl-cli/src/merge_cmd.rs
+  12  crates/strehl-cli/src/stack.rs
+   1  crates/strehl-core/src/clip.rs
+  22  crates/strehl-core/src/flat_ratio.rs
+  14  crates/strehl-core/src/focus.rs
+  57  crates/strehl-core/src/merge.rs
+   7  crates/strehl-core/src/profile.rs
+   1  crates/strehl-core/src/stack.rs
+  23  crates/strehl-core/src/through_focus.rs
+   1  crates/strehl-plugin/examples/calibration-survey.rs
+   1  crates/strehl-plugin/examples/f5-design-probes.rs
+  15  crates/strehl-plugin/src/calibrate.rs
+   4  crates/strehl-plugin/src/field.rs
+   9  crates/strehl-plugin/src/lib.rs
+   9  crates/strehl-plugin/src/measure.rs
+  12  crates/strehl-plugin/src/reference.rs
+  14  crates/strehl-plugin/src/registry.rs

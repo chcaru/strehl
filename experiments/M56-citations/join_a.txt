@@ -1,0 +1,67 @@
+====================================================================================================
+FACT 3  (SYNTHESIS.md:770)
+| 3 | Homography residual identical to affine (1.45e-3) | No perspective signal. Use affine | F (MEASURED) — **SUPERSEDED by M3**: even affine is more than needed; a 4-parameter similarity is sufficient |
+---------------------------------------- cited at:
+  crates/strehl-cli/src/merge_cmd.rs:2280  /// reproduce facts 12/27/28 to 3-4 digits (25 frames, oracle depth, latent
+====================================================================================================
+FACT 4  (SYNTHESIS.md:771)
+| 4 | Per-block correlation tracks the **migrating in-focus band**, not geometry — response collapses 0.68 -> 0.13 while ECC composes correctly over 16 chained steps | A block-matching aligner would be **silently wrong** | F (MEASURED) |
+---------------------------------------- cited at:
+  crates/strehl-cli/src/merge_cmd.rs:2280  /// reproduce facts 12/27/28 to 3-4 digits (25 frames, oracle depth, latent
+====================================================================================================
+FACT 12  (SYNTHESIS.md:779)
+| 12 | A 2x teleconverter at m=2.8: **MTF@Nyquist = 0.000 at every aperture** — wide open is already N_eff 21.3, past the **N_eff 18.6** extinction point, where the diffraction cutoff `pitch/(lambda*N_eff)` falls to Nyquist | The tool should warn, and offer reduced-resolution output. **No longer hypothetical — see fact 26.** But the verdict turns on a magnification nobody has measured: at m=2.0 the same rig is at N_eff 16.8, just *inside* extinction. **M5 settled it (fact 27), and confirmed this row by direct measurement**: the `N_eff = 18.6` extinction point is reproduced to three digits from the measured cutoff, and the MTF@Nyquist row for m=2.00 (0.036 / 0.000 / 0.000 at f/5.6, f/8, f/11) is reproduced exactly. The warning stands | F (DERIVED) → **confirmed by M5 (MEASURED)** |
+---------------------------------------- cited at:
+  crates/strehl-cli/src/merge_cmd.rs:2280  /// reproduce facts 12/27/28 to 3-4 digits (25 frames, oracle depth, latent
+====================================================================================================
+FACT 14  (SYNTHESIS.md:781)
+| 14 | ISO 400 is a **second base ISO** (read noise 4.20 -> 1.47 e-); DR is higher than ISO 320. Usable white level **15360**, not 16383 | Camera plugin must expose `dominated_isos()` and the true white level | F (MEASURED) |
+---------------------------------------- cited at:
+  crates/strehl-core/src/profile.rs:141  /// rising to 22.2% at ISO 1600**. M4 §8.3 saw it — "fact 14's 4.20 → 1.47
+  crates/strehl-core/src/profile.rs:262  // at ISO 400. Noise vs ISO is not monotone. Fact 14's own 1.47 was
+====================================================================================================
+FACT 19  (SYNTHESIS.md:788)
+| 19 | A naive argmax stack of 22 frames is **1.253x noisier than one unstacked frame** on a flat ROI; **~1.48x** structure-corrected. On the same frames and ROI, a plain **mean gives 0.534x** and a placebo selector with the identical winner histogram gives **0.981x**. Present already at **N=3** (1.5 px drift), monotone in N | **The defect the project exists to remove is measured on our own files, and its cause is proven.** Drift and scene structure push the ratio *below* 1.0; only selection coupled to per-pixel noise pushes it above. The corpus's borrowed 1.82x is no longer load-bearing | M2 + M2-verification (MEASURED) |
+---------------------------------------- cited at:
+  crates/strehl-cli/src/merge_cmd.rs:30  //! Two acceptance invariants, and they are a **pair**. Fact 19 measured a plain
+  crates/strehl-cli/src/merge_cmd.rs:251  /// *raises* gradient (fact 24), and argmax also raises noise (fact 19) — the
+  crates/strehl-cli/src/merge_cmd.rs:1055  "                  Fact 19's 1.253x was a DIFFERENT focus operator and does \
+  crates/strehl-cli/src/stack.rs:635  /// the shipped operator (fact 343), not fact 19's 1.253x, which was measured on
+  crates/strehl-core/src/merge.rs:6  //! against one unstacked frame (fact 343). Fact 19's widely-quoted **1.253x**
+  crates/strehl-core/src/merge.rs:9  //! pipeline's baseline, so it is not quoted as one. Fact 19 is not refuted — it
+  crates/strehl-core/src/merge.rs:28  //!   0.534x (fact 19) but collapses detail by more than half (fact 24), so the
+  crates/strehl-core/src/through_focus.rs:207  /// response to focus position is destroyed. Fact 19's placebo — same winner
+  crates/strehl-core/src/through_focus.rs:1631  /// The placebo must preserve exactly what fact 19's placebo preserved — the
+====================================================================================================
+FACT 23  (SYNTHESIS.md:794)
+| 23 | Regularising the focus field (17x17 smooth) before argmax drops speckle **34.4% -> 0.868%** and noise **1.253x -> 1.075x** — **but 1.075x is still above 1.0.** Only averaging goes below one frame | **Direct measured support for §1.1(a), and a warning.** The architecture needs *both* halves: a regularised reference to stop the selector electing noise, **and** a noise-gated estimator that averages where frames agree. A better selector is not enough | M2-verification (MEASURED) |
+---------------------------------------- cited at:
+  crates/strehl-cli/src/merge_cmd.rs:1281  "                  detail move it away from that. Fact 23's reference points are 34.4% \
+  crates/strehl-core/src/merge.rs:17  //!   (fact 23) and cuts absolute reconstruction error at occluding edges by
+  crates/strehl-core/src/merge.rs:19  //!   quality win still unbuilt. **Note what it does *not* do here:** fact 23's
+  crates/strehl-core/src/merge.rs:27  //!   frame. *Only averaging goes below one* (fact 23). A plain mean reaches
+  crates/strehl-core/src/merge.rs:94  /// of two agreeing measurements (facts 320, 321, 23). M40 audited it under rule
+  crates/strehl-core/src/merge.rs:196  /// 34.4% to 0.868% (fact 23), and speckle *is* the winner's curse made visible.
+  crates/strehl-core/src/merge.rs:1163  // mean of exactly the three, which is fact 23's "only averaging goes
+  crates/strehl-core/src/merge.rs:1621  /// mechanism fact 23 measured: a lone noise spike in one frame's focus field
+  crates/strehl-core/src/stack.rs:175  /// Fact 23's reference points are all at this tolerance: 34.4% for the ring
+====================================================================================================
+FACT 24  (SYNTHESIS.md:795)
+| 24 | On high-detail ROIs a mean's sigma looks harmless (0.899x, 0.995x) while its mean gradient **collapses -58% and -53%**; argmax *raises* gradient | **Sigma alone cannot see detail destruction.** This is rule 9 working: the flat-ROI metric is valid precisely because its paired control fails as it should | M2-verification (MEASURED) |
+---------------------------------------- cited at:
+  crates/strehl-cli/src/merge_cmd.rs:31  //! mean at 0.534x the single-frame noise; fact 24 measured that the same plain
+  crates/strehl-cli/src/merge_cmd.rs:232  /// **`m2_pooled_abs` is fact 24's convention**, identified by measurement, not
+  crates/strehl-cli/src/merge_cmd.rs:241  /// fact 24 legitimate; the two harnesses differ by 1.55x and 1.60x, an
+  crates/strehl-cli/src/merge_cmd.rs:251  /// *raises* gradient (fact 24), and argmax also raises noise (fact 19) — the
+  crates/strehl-cli/src/merge_cmd.rs:262  /// `mean(0.5*(|dx| + |dy|))` — fact 24's convention, for comparability.
+  crates/strehl-cli/src/merge_cmd.rs:1139  "                  at 0.534x while collapsing detail 58% (fact 24). Pass \
+  crates/strehl-cli/src/merge_cmd.rs:1204  "                  is sqrt(raw^2 - model^2), the only column judged. `m2` is fact 24's"
+  crates/strehl-cli/src/merge_cmd.rs:1246  "                  CORRECTED retention falling as the gate opens, which is fact 24's"
+  crates/strehl-cli/src/merge_cmd.rs:1457  /// Corrected retention below this is fact 24's collapse.
+  crates/strehl-cli/src/merge_cmd.rs:1459  /// Registered at 0.90 because fact 24's measured collapse is **-58% and -53%**
+  crates/strehl-cli/src/merge_cmd.rs:1484  // orchestrator's simulation and the -58%/-53% fact 24 measured, or it cannot
+  crates/strehl-cli/src/merge_cmd.rs:2130  // the collapse fact 24 measured. Correcting for noise must not have
+  crates/strehl-cli/src/merge_cmd.rs:2169  // M38 §1 identified fact 24's convention as mean(0.5*(|dx|+|dy|)) by
+  crates/strehl-cli/src/merge_cmd.rs:2299  // Fact 24's collapse: -58% and -53%.
+  crates/strehl-core/src/merge.rs:28  //!   0.534x (fact 19) but collapses detail by more than half (fact 24), so the
+  crates/strehl-core/src/merge.rs:983  /// which fact 24 says destroys detail.
