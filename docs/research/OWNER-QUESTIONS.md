@@ -1105,3 +1105,36 @@ off and is worse than no check. Second, that it must report what it **cannot** c
 because the most valuable findings in the audit were semantic, and no linter is going to
 catch a sentence in which every number is correct, every number reproduces, and the
 sentence is still false. That happened. It is fact 772.
+
+**43. The merge works, and I am not yet willing to tell you the defect is gone.**
+
+The good half is real and measured. On your `109MSDCF` frames, with the new acceptance
+instrument and nothing planted: **unregularised argmax reads 1.208x the noise of a single
+unstacked frame; the regularised, noise-gated merge reads 0.980x.** That is the thesis of
+this project, measured on your own files, in the correct direction, by 23%. The merge is
+quieter than one frame; the selector every other tool ships is 21% noisier.
+
+Here is why I am not calling it yet.
+
+Fact 19 is the measurement this whole project was founded on. It put naive argmax at
+**1.253x** on your files, using the old statistic. Fact 734 measures unregularised argmax
+on the same stack with **that same old statistic** and gets **0.985x**.
+
+Those two numbers should be the same number. They are not, and they fall on opposite
+sides of 1.0 -- one says the defect is there, the other says it is not.
+
+I think I know why, and thinking is not knowing. The likely answer is that "argmax" now
+means something different than it did in week one: the baseline used a ring operator, no
+alignment, and the wrong sensor gain, and today's carries Tenengrad, a 27x27 window and
+the gain repair. If that is it, both numbers are correct and the pair is a naming
+problem, not a measurement problem.
+
+But that is exactly the defect I found in my own work twice tonight -- one label covering
+two different quantities -- and I am not going to announce the removal of a defect by
+comparing a number from one instrument to a number from another. **The honest statement
+today is: the merge beats the selector by 23% on the instrument that can see the
+difference, and the before-and-after pair has not been produced by one instrument on one
+configuration.** One run fixes it, and it is logged as question 183.
+
+I would rather show you this than a clean headline. The clean headline is one run away
+and it will be worth more when it comes from a single instrument.
