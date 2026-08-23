@@ -1876,6 +1876,22 @@ Recorded with their queries; **all are UNVERIFIED as wins, and none is on the v1
 - **Diffraction+defocus PSF modelling at macro magnification** — `N_eff` flattens the focus peak,
   degrading sub-frame interpolation.
 
+**Settled as NOT novel — do not add these to the list above.** M19 surveyed the
+microscopy/EDOF literature the corpus had never read, and closed two claims the external
+review encouraged:
+
+- **The multi-frame Wiener merge across the focus axis is published**, with its error law:
+  Levin et al., MIT-CSAIL-TR-2009-019 (2009), Appendix B Eq. (52), and Eqs. (54)-(57)
+  evaluate it *specifically for a focal stack*. The estimator is not ours (fact 400). What
+  remains as a bet is the **calibration** — a measured diffraction OTF and a photon-transfer
+  σ — not the formula. Levin concludes *against* the focal stack, but only under a
+  fixed-total-exposure assumption a static macro subject does not impose (fact 401).
+- **"First to model the occlusion halo" is FALSE.** The two-layer model has been formulated
+  and inverted at least six times since Asada et al. 1995, which predicted the
+  non-monotonic brightness transition fact 150 measured 28 years later (fact 411). The
+  defensible claim is **"first shipping focus-stacking tool to model it"**, and even that is
+  `could not confirm`.
+
 ---
 
 ## 7. Risks
