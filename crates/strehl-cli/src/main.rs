@@ -9,7 +9,7 @@ use std::time::Instant;
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 
-use stack::{Roi, StackOptions, parse_roi};
+use stack::{MemoryModel, Roi, StackOptions, parse_roi};
 
 #[derive(Parser)]
 #[command(name = "strehl", version, about = "Noise-aware RAW focus stacking")]
@@ -74,6 +74,13 @@ enum Command {
         /// middle frame, and their ratio.
         #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
         flat_roi: Option<Roi>,
+        /// How to turn the memory budget into a worker count. `buffers` is the
+        /// shipped model: the sum of the per-worker buffers, which MEASURED
+        /// (M8) under-counts peak RSS. `m8` adds the measured decoder scratch,
+        /// the rayon reduce tree and the process floor, and plans fewer, larger
+        /// chunks. Off by default; see `docs/research/M8-scratch-measured.md`.
+        #[arg(long, value_enum, default_value_t = MemoryModel::Buffers)]
+        memory_model: MemoryModel,
     },
 }
 
@@ -98,6 +105,7 @@ fn main() -> Result<()> {
             srgb,
             index_map,
             flat_roi,
+            memory_model,
         } => stack::run(&StackOptions {
             dir,
             out,
@@ -105,6 +113,7 @@ fn main() -> Result<()> {
             srgb,
             index_map,
             flat_roi,
+            memory_model,
         }),
     }
 }

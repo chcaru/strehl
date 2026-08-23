@@ -1,0 +1,366 @@
+==============================================================================
+1. SINGLE DECODE IN ISOLATION  (data/single.csv)
+==============================================================================
+  frame buffer (exact, from the decoder): 73400320 B = 70.00 MiB
+
+  -- first decode in each process (process warm-up, reported separately) --
+  scratch_commit  idx=0              n=18   mean    49.07 MiB  sd  5.468  min    41.04  max    58.29
+
+  -- every later decode (steady state) --
+  scratch_commit                     n=660  mean    40.50 MiB  sd  4.245  min    31.92  max    49.57
+  scratch_ws                         n=660  mean    74.56 MiB  sd  5.490  min    63.17  max    86.39
+  hold_commit - base (frame only)    n=660  mean    70.19 MiB  sd  2.372  min    60.96  max    79.34
+  after_commit - base (retention)    n=660  mean     0.05 MiB  sd  2.372  min    -9.18  max     9.20
+  file_bytes                         n=660  mean    35.94 MiB  sd  2.395  min    31.58  max    39.04
+
+  hold-minus-base / frame_bytes: mean 1.00273x (the frame buffer is accounted for exactly; anything else is scratch)
+
+  active_px is constant at 32966016 across every file available (1 distinct value(s)),
+  so pixel-proportional and constant CANNOT be separated by this corpus. Stated, not fitted.
+
+  Model comparison, per RAYON_NUM_THREADS group. x is file_bytes in MiB,
+  y is scratch_commit in MiB, so the slope is dimensionless.
+  threads model                                 a (MiB)                  b  resid sd      R^2
+        1 constant           a           36.962+/-0.167                       2.4770   0.0000
+        1 proportional     b*x                             1.0283+/-0.0010    0.5234   0.9553
+        1 affine       a + b*x            0.685+/-0.530    1.0093+/-0.0147    0.5226   0.9557
+        4 constant           a           40.020+/-0.165                       2.4547   0.0000
+        4 proportional     b*x                             1.1128+/-0.0018    0.9757   0.8419
+        4 affine       a + b*x            5.787+/-0.912    0.9525+/-0.0253    0.8988   0.8665
+       32 constant           a           44.526+/-0.243                       3.6033   0.0000
+       32 proportional     b*x                             1.2364+/-0.0065    3.4646   0.0750
+       32 affine       a + b*x           19.829+/-3.258    0.6871+/-0.0905    3.2115   0.2093
+
+  Same three models pooled over all thread counts, with a thread term:
+    a + b*x                      R^2=0.2483 resid sd=3.6834 MiB   a=8.7669+/-2.1577  b=0.8830+/-0.0599
+    a + b*x + c*log2(threads)    R^2=0.7845 resid sd=1.9735 MiB   a=5.2394+/-1.1593  b=0.8830+/-0.0321  c=1.5118+/-0.0374
+
+  Leave-one-corpus-out: fit the affine model without one set, predict it.
+    threads= 1 held out 109MSDCF         n=21   mean err  -0.99%  max |err|  1.62%
+    threads= 1 held out 119MSDCF         n=32   mean err  +0.91%  max |err|  2.03%
+    threads= 1 held out coffee-bean      n=104  mean err  -0.08%  max |err|  2.01%
+    threads= 1 held out dark-122MSDCF    n=21   mean err  +0.46%  max |err|  2.20%
+    threads= 1 held out dark-123MSDCF    n=21   mean err  +0.24%  max |err|  2.05%
+    threads= 1 held out dark-128MSDCF    n=21   mean err  -0.55%  max |err|  1.80%
+    threads= 4 held out 109MSDCF         n=21   mean err  +0.21%  max |err|  2.41%
+    threads= 4 held out 119MSDCF         n=32   mean err  -0.65%  max |err|  3.51%
+    threads= 4 held out coffee-bean      n=104  mean err  +0.91%  max |err| 10.33%
+    threads= 4 held out dark-122MSDCF    n=21   mean err  -0.17%  max |err|  2.11%
+    threads= 4 held out dark-123MSDCF    n=21   mean err  +1.99%  max |err|  4.56%
+    threads= 4 held out dark-128MSDCF    n=21   mean err  -1.72%  max |err|  2.83%
+    threads=32 held out 109MSDCF         n=21   mean err  -4.86%  max |err|  6.38%
+    threads=32 held out 119MSDCF         n=32   mean err  -4.45%  max |err|  5.79%
+    threads=32 held out coffee-bean      n=104  mean err  +8.73%  max |err| 26.84%
+    threads=32 held out dark-122MSDCF    n=21   mean err  +0.87%  max |err|  3.10%
+    threads=32 held out dark-123MSDCF    n=21   mean err  +0.90%  max |err|  3.25%
+    threads=32 held out dark-128MSDCF    n=21   mean err  -1.75%  max |err|  3.50%
+
+  Per corpus (real stacks and real dark frames, same body, same pixel count):
+    threads= 1 109MSDCF         n=21   file  36.27 MiB  scratch_commit  37.63 MiB (+1.36 over file)  scratch_ws  73.30 MiB
+    threads= 1 119MSDCF         n=32   file  36.67 MiB  scratch_commit  37.41 MiB (+0.75 over file)  scratch_ws  73.68 MiB
+    threads= 1 coffee-bean      n=104  file  37.80 MiB  scratch_commit  38.85 MiB (+1.05 over file)  scratch_ws  76.09 MiB
+    threads= 1 dark-122MSDCF    n=21   file  31.59 MiB  scratch_commit  32.48 MiB (+0.90 over file)  scratch_ws  63.71 MiB
+    threads= 1 dark-123MSDCF    n=21   file  31.99 MiB  scratch_commit  32.93 MiB (+0.94 over file)  scratch_ws  64.56 MiB
+    threads= 1 dark-128MSDCF    n=21   file  33.62 MiB  scratch_commit  34.78 MiB (+1.16 over file)  scratch_ws  67.90 MiB
+    threads= 4 109MSDCF         n=21   file  36.27 MiB  scratch_commit  40.26 MiB (+3.99 over file)  scratch_ws  73.79 MiB
+    threads= 4 119MSDCF         n=32   file  36.67 MiB  scratch_commit  40.94 MiB (+4.28 over file)  scratch_ws  74.46 MiB
+    threads= 4 coffee-bean      n=104  file  37.80 MiB  scratch_commit  41.71 MiB (+3.91 over file)  scratch_ws  76.61 MiB
+    threads= 4 dark-122MSDCF    n=21   file  31.59 MiB  scratch_commit  35.91 MiB (+4.32 over file)  scratch_ws  64.63 MiB
+    threads= 4 dark-123MSDCF    n=21   file  31.99 MiB  scratch_commit  35.81 MiB (+3.81 over file)  scratch_ws  65.30 MiB
+    threads= 4 dark-128MSDCF    n=21   file  33.62 MiB  scratch_commit  38.35 MiB (+4.73 over file)  scratch_ws  68.62 MiB
+    threads=32 109MSDCF         n=21   file  36.27 MiB  scratch_commit  46.80 MiB (+10.54 over file)  scratch_ws  79.95 MiB
+    threads=32 119MSDCF         n=32   file  36.67 MiB  scratch_commit  46.77 MiB (+10.11 over file)  scratch_ws  80.73 MiB
+    threads=32 coffee-bean      n=104  file  37.80 MiB  scratch_commit  44.81 MiB (+7.01 over file)  scratch_ws  80.95 MiB
+    threads=32 dark-122MSDCF    n=21   file  31.59 MiB  scratch_commit  41.32 MiB (+9.74 over file)  scratch_ws  70.26 MiB
+    threads=32 dark-123MSDCF    n=21   file  31.99 MiB  scratch_commit  41.57 MiB (+9.58 over file)  scratch_ws  71.09 MiB
+    threads=32 dark-128MSDCF    n=21   file  33.62 MiB  scratch_commit  43.56 MiB (+9.93 over file)  scratch_ws  74.38 MiB
+
+  scratch_commit - file_bytes, the fixed residue:
+  scratch_commit - file_bytes        n=660  mean     4.56 MiB  sd  3.691  min     0.29  max    11.33
+
+  by RAYON_NUM_THREADS (does the decoder's own parallelism cost memory?):
+  threads=1 scratch_commit           n=220  mean    36.96 MiB  sd  2.477  min    31.92  max    40.57
+  threads=1 scratch_ws               n=220  mean    72.41 MiB  sd  4.775  min    63.17  max    78.91
+  threads=1 decode_secs*1e9          n=220  mean   229.24 MiB  sd 21.849  min   181.29  max   258.64
+  threads=4 scratch_commit           n=220  mean    40.02 MiB  sd  2.455  min    34.92  max    44.16
+  threads=4 scratch_ws               n=220  mean    73.04 MiB  sd  4.685  min    63.87  max    79.66
+  threads=4 decode_secs*1e9          n=220  mean    81.33 MiB  sd  9.058  min    69.52  max   102.14
+  threads=32 scratch_commit          n=220  mean    44.53 MiB  sd  3.603  min    37.50  max    49.57
+  threads=32 scratch_ws              n=220  mean    78.23 MiB  sd  5.041  min    69.63  max    86.39
+  threads=32 decode_secs*1e9         n=220  mean    51.09 MiB  sd  2.069  min    44.54  max    56.55
+
+==============================================================================
+2. SEQUENTIAL DECODES � separating retention from scratch  (data/seq.csv)
+==============================================================================
+  One decode is ever live. True scratch cannot accumulate here, so any
+  growth in the kernel peak or in resting commit is the allocator holding on.
+
+  threads=1, n=138 sequential decodes
+    resting commit after drop : 9.70 .. 10.98 MiB, slope 1,119 +/- 1,713 B/decode
+    kernel peak commit        : 116.12 .. 120.39 MiB, slope 25,718 +/- 2,264 B/decode
+    kernel peak working set   : 155.93 .. 162.84 MiB
+    peak commit at i=1 vs i=last: 116.12 -> 120.39 MiB (+4.27 MiB over 137 decodes)
+
+  threads=32, n=138 sequential decodes
+    resting commit after drop : 13.32 .. 25.02 MiB, slope 73,321 +/- 8,985 B/decode
+    kernel peak commit        : 127.97 .. 135.01 MiB, slope 30,256 +/- 2,292 B/decode
+    kernel peak working set   : 165.14 .. 175.41 MiB
+    peak commit at i=1 vs i=last: 127.97 -> 135.01 MiB (+7.04 MiB over 137 decodes)
+
+==============================================================================
+3. CONCURRENT DECODES � the constrained fit  (data/conc.csv)
+==============================================================================
+  peak = a + b*k over a swept k, so the fixed overhead and the per-decode
+  cost are separated by the data instead of by assumption. Two points
+  cannot do this; that is why the earlier attempt produced a negative
+  intercept (M2-rss-resolved.md section 4).
+
+  --- mode=drop  stack=coffee-bean  RAYON_NUM_THREADS=1  mean file 37.79 MiB ---
+
+  kernel peak COMMIT
+    intercept a =    10,105,138 +/- 1,828,083 B  (    9.64 MiB)
+    slope     b =   114,668,241 +/-   119,792 B  (  109.36 MiB per concurrent decode)
+    R^2 = 0.999984, residual sd = 4.48 MiB, n = 17
+    b - frame_bytes = 41,267,921 B = 39.36 MiB
+
+  kernel peak WORKING SET
+    intercept a =    76,904,828 +/- 8,497,658 B  (   73.34 MiB)
+    slope     b =    81,970,684 +/-   556,841 B  (   78.17 MiB per concurrent decode)
+    R^2 = 0.999308, residual sd = 20.81 MiB, n = 17
+    b - frame_bytes = 8,570,364 B = 8.17 MiB
+
+  --- mode=drop  stack=coffee-bean  RAYON_NUM_THREADS=32  mean file 37.79 MiB ---
+
+  kernel peak COMMIT
+    intercept a =    36,607,261 +/- 5,082,244 B  (   34.91 MiB)
+    slope     b =   114,930,079 +/-   333,033 B  (  109.61 MiB per concurrent decode)
+    R^2 = 0.999874, residual sd = 12.44 MiB, n = 17
+    b - frame_bytes = 41,529,759 B = 39.61 MiB
+
+  kernel peak WORKING SET
+    intercept a =    39,964,460 +/- 18,840,953 B  (   38.11 MiB)
+    slope     b =   151,841,522 +/- 1,234,624 B  (  144.81 MiB per concurrent decode)
+    R^2 = 0.999009, residual sd = 46.13 MiB, n = 17
+    b - frame_bytes = 78,441,202 B = 74.81 MiB
+
+  --- mode=drop  stack=dark-ISO50  RAYON_NUM_THREADS=1  mean file 31.59 MiB ---
+
+  kernel peak COMMIT
+    intercept a =     9,538,130 +/-   978,292 B  (    9.10 MiB)
+    slope     b =   107,314,252 +/-    64,106 B  (  102.34 MiB per concurrent decode)
+    R^2 = 0.999995, residual sd = 2.40 MiB, n = 17
+    b - frame_bytes = 33,913,932 B = 32.34 MiB
+
+  kernel peak WORKING SET
+    intercept a =    75,761,832 +/- 7,815,845 B  (   72.25 MiB)
+    slope     b =    67,305,549 +/-   512,162 B  (   64.19 MiB per concurrent decode)
+    R^2 = 0.999132, residual sd = 19.14 MiB, n = 17
+    b - frame_bytes = -6,094,771 B = -5.81 MiB
+
+  --- mode=drop  stack=dark-ISO50  RAYON_NUM_THREADS=32  mean file 31.59 MiB ---
+
+  kernel peak COMMIT
+    intercept a =    35,032,725 +/- 4,220,310 B  (   33.41 MiB)
+    slope     b =   107,873,194 +/-   276,552 B  (  102.88 MiB per concurrent decode)
+    R^2 = 0.999901, residual sd = 10.33 MiB, n = 17
+    b - frame_bytes = 34,472,874 B = 32.88 MiB
+
+  kernel peak WORKING SET
+    intercept a =    36,655,930 +/- 6,859,838 B  (   34.96 MiB)
+    slope     b =   139,042,020 +/-   449,516 B  (  132.60 MiB per concurrent decode)
+    R^2 = 0.999843, residual sd = 16.80 MiB, n = 17
+    b - frame_bytes = 65,641,700 B = 62.60 MiB
+
+  --- mode=hold  stack=coffee-bean  RAYON_NUM_THREADS=32  mean file 37.79 MiB ---
+
+  kernel peak COMMIT
+    intercept a =    30,178,028 +/- 2,836,849 B  (   28.78 MiB)
+    slope     b =   114,451,666 +/-   170,724 B  (  109.15 MiB per concurrent decode)
+    R^2 = 0.999984, residual sd = 4.92 MiB, n = 9
+    b - frame_bytes = 41,051,346 B = 39.15 MiB
+
+  kernel peak WORKING SET
+    intercept a =   117,815,957 +/- 76,048,619 B  (  112.36 MiB)
+    slope     b =   137,517,557 +/- 4,576,668 B  (  131.15 MiB per concurrent decode)
+    R^2 = 0.992306, residual sd = 131.78 MiB, n = 9
+    b - frame_bytes = 64,117,237 B = 61.15 MiB
+
+==============================================================================
+4. THE REAL STACKER  (stack.csv + reps.csv + floor.csv fitted; holdout.csv held out)
+==============================================================================
+  modelled per_worker_bytes = 320,645,440 B = 305.79 MiB = 320.6 decimal MB
+    Selection  px*14 =  115,381,056 B =  110.04 MiB
+    FocusField px*12 =   98,898,048 B =   94.32 MiB
+    luma       px* 4 =   32,966,016 B =   31.44 MiB
+    frame            =   73,400,320 B =   70.00 MiB
+  NOTE ON UNITS. M2-rss-resolved quoted '321 MB' (decimal, from describe())
+  next to '364/379 MB' read from PowerShell's /1MB, which is MiB. The ratio it
+  derived is unaffected; the absolute gap those two numbers appear to show is.
+
+  peak_live reported by the binary vs min(chunks, threads):
+    100/108 agree; 8 disagree, ALL of them by
+    exceeding it. Concurrent decodes are NOT bounded by min(chunks, pool).
+      coffee-bean N=105 t=8 chunks=18 peak_live=10  >  min(chunks,threads)=8
+      coffee-bean N=105 t=10 chunks=18 peak_live=13  >  min(chunks,threads)=10
+      coffee-bean N=20 t=8 chunks=20 peak_live=10  >  min(chunks,threads)=8
+      coffee-bean N=40 t=8 chunks=20 peak_live=12  >  min(chunks,threads)=8
+      coffee-bean N=60 t=8 chunks=20 peak_live=12  >  min(chunks,threads)=8
+      coffee-bean N=105 t=8 chunks=18 peak_live=10  >  min(chunks,threads)=8
+      coffee-bean N=105 t=8 chunks=18 peak_live=10  >  min(chunks,threads)=8
+      119MSDCF N=33 t=5 chunks=17 peak_live=6  >  min(chunks,threads)=5
+
+  --- THE FLOOR: one thread, tiny N (data/floor.csv) ---
+  live == 1 throughout, so everything above one worker's buffers is
+  runtime, prologue, epilogue, and partials waiting in the reduce tree.
+    chunks= 1  n=3  peak_ws   320.2 MiB  sd 0.06  ceil(log2 c)=0
+    chunks= 2  n=3  peak_ws   430.3 MiB  sd 0.06  ceil(log2 c)=1  step + 110.1 MiB
+    chunks= 3  n=3  peak_ws   540.4 MiB  sd 0.08  ceil(log2 c)=2  step + 110.1 MiB
+    chunks= 4  n=3  peak_ws   540.3 MiB  sd 0.02  ceil(log2 c)=2  step +  -0.0 MiB
+    chunks= 6  n=3  peak_ws   650.4 MiB  sd 0.10  ceil(log2 c)=3  step + 110.0 MiB
+    chunks= 8  n=3  peak_ws   650.4 MiB  sd 0.04  ceil(log2 c)=3  step +   0.1 MiB
+    at chunks=1: 320.2 MiB, minus one worker's buffers (305.8 MiB) = 14.4 MiB of process floor.
+    the step size is 110.04 MiB, which is px*14 = one Selection, to 0.1% .
+
+  --- run-to-run spread at repeated conditions (peak_ws) ---
+    109MSDCF     N= 22 t= 1  n=4  mean    833.2 MiB  sd    0.1 MiB  ( 0.01%)  range 833..833
+    109MSDCF     N= 22 t= 6  n=4  mean   2333.3 MiB  sd   35.8 MiB  ( 1.54%)  range 2303..2384
+    109MSDCF     N= 22 t=32  n=4  mean   4121.7 MiB  sd  141.0 MiB  ( 3.42%)  range 3910..4196
+    coffee-bean  N=  1 t= 1  n=3  mean    320.2 MiB  sd    0.1 MiB  ( 0.02%)  range 320..320
+    coffee-bean  N=  2 t= 1  n=3  mean    430.3 MiB  sd    0.1 MiB  ( 0.02%)  range 430..430
+    coffee-bean  N=  3 t= 1  n=3  mean    540.4 MiB  sd    0.1 MiB  ( 0.01%)  range 540..540
+    coffee-bean  N=  4 t= 1  n=3  mean    540.3 MiB  sd    0.0 MiB  ( 0.00%)  range 540..540
+    coffee-bean  N=  6 t= 1  n=3  mean    650.4 MiB  sd    0.1 MiB  ( 0.02%)  range 650..650
+    coffee-bean  N=  8 t= 1  n=3  mean    650.4 MiB  sd    0.0 MiB  ( 0.01%)  range 650..650
+    coffee-bean  N= 20 t=32  n=4  mean   5065.7 MiB  sd  117.9 MiB  ( 2.33%)  range 4961..5235
+    coffee-bean  N= 40 t=32  n=4  mean   7360.8 MiB  sd  356.6 MiB  ( 4.85%)  range 6977..7665
+    coffee-bean  N= 60 t=32  n=4  mean   7621.2 MiB  sd   74.9 MiB  ( 0.98%)  range 7517..7681
+    coffee-bean  N=105 t= 8  n=4  mean   3858.4 MiB  sd  279.6 MiB  ( 7.25%)  range 3610..4134
+    coffee-bean  N=105 t=32  n=4  mean   6900.6 MiB  sd    9.5 MiB  ( 0.14%)  range 6889..6911
+    pooled relative sd = 1.47%  (max 7.25%)
+
+  8 of 82 fit runs are under-filled (chunk_len == 1 with many chunks): a worker that decodes
+  exactly one frame is only briefly at its high-water mark, so the concurrency
+  window never fills. Those are excluded from the headline fit.
+
+  --- target peak_ws ---
+    [all runs, n=82]
+      a + b*live                       R^2=0.92677 sd=  672.3 MiB  a=459.8+/-118.5  b=325.3+/-10.2 (MiB)
+      a + b*live + c*chunks            R^2=0.93945 sd=  615.2 MiB  a=-49.8+/-165.7  b=280.8+/-14.4  c=69.1+/-17.0 (MiB)  <-- NEGATIVE INTERCEPT, unphysical
+      a + b*live + c*threads           R^2=0.92899 sd=  666.3 MiB  a=436.8+/-118.4  b=361.2+/-25.0  c=-21.5+/-13.7 (MiB)
+      a + b*live + c*ceil(log2 chunks) R^2=0.93874 sd=  618.8 MiB  a=-309.8+/-224.2  b=293.2+/-12.5  c=266.6+/-67.9 (MiB)  <-- NEGATIVE INTERCEPT, unphysical
+      a + b*live + px*14*ceil(log2 chunks) R^2=0.93461 sd=  635.3 MiB  a=142.1+/-112.0  b=312.0+/-9.7 (MiB)
+      floor pinned too, b free         R^2=0.93355 sd=  634.5 MiB  floor=14.4 (MEASURED)  b=320.6+/-6.0 (MiB)
+    [well-filled only, n=74]
+      a + b*live                       R^2=0.97755 sd=  385.9 MiB  a=356.5+/-69.2  b=356.6+/-6.4 (MiB)
+      a + b*live + c*chunks            R^2=0.98954 sd=  265.2 MiB  a=-136.8+/-72.5  b=312.4+/-6.6  c=67.9+/-7.5 (MiB)  <-- NEGATIVE INTERCEPT, unphysical
+      a + b*live + c*threads           R^2=0.97931 sd=  373.0 MiB  a=336.1+/-67.5  b=389.3+/-14.7  c=-19.7+/-8.0 (MiB)
+      a + b*live + c*ceil(log2 chunks) R^2=0.98639 sd=  302.6 MiB  a=-293.6+/-110.1  b=327.9+/-6.5  c=228.0+/-33.6 (MiB)  <-- NEGATIVE INTERCEPT, unphysical
+      a + b*live + px*14*ceil(log2 chunks) R^2=0.98402 sd=  325.5 MiB  a=42.8+/-58.4  b=342.8+/-5.4 (MiB)
+      floor pinned too, b free         R^2=0.98397 sd=  323.6 MiB  floor=14.4 (MEASURED)  b=344.8+/-3.5 (MiB)
+
+    HEADLINE, peak_ws, well-filled, buffers + pinned reduce tree:
+      per-worker b = 359,416,706 +/- 5,633,571 B = 342.8 +/- 5.4 MiB = 359.4 decimal MB
+      process floor a = 44,881,982 +/- 61,255,782 B = 42.8 MiB
+      b - modelled buffers = 38,771,266 B = 37.0 +/- 5.4 MiB   <-- THE SCRATCH TERM, in situ
+      b / modelled = 1.1209x
+
+    OUT OF SAMPLE � 119MSDCF (33 frames, f/5.6, ISO 50), never fitted:
+      N=33 t= 2 chunks=17 live= 2 rep=1  predicted   1278.5 MiB, observed   1430.2 MiB, error -10.61%
+      N=33 t= 2 chunks=17 live= 2 rep=2  predicted   1278.5 MiB, observed   1421.2 MiB, error -10.04%
+      N=33 t= 5 chunks=17 live= 5 rep=1  predicted   2306.8 MiB, observed   2795.2 MiB, error -17.47%
+      N=33 t= 5 chunks=17 live= 5 rep=2  predicted   2306.8 MiB, observed   2326.7 MiB, error  -0.85%
+      N=33 t= 9 chunks=17 live= 9 rep=1  predicted   3677.9 MiB, observed   3443.6 MiB, error  +6.80%
+      N=33 t= 9 chunks=17 live= 9 rep=2  predicted   3677.9 MiB, observed   3396.1 MiB, error  +8.30%
+      N=33 t=17 chunks=17 live=17 rep=1  predicted   6420.0 MiB, observed   5844.8 MiB, error  +9.84%
+      N=33 t=32 chunks=17 live=17 rep=1  predicted   6420.0 MiB, observed   5941.1 MiB, error  +8.06%
+      N=33 t=17 chunks=17 live=17 rep=2  predicted   6420.0 MiB, observed   5914.6 MiB, error  +8.54%
+      N=33 t=32 chunks=17 live=17 rep=2  predicted   6420.0 MiB, observed   6209.6 MiB, error  +3.39%
+      mean |error| = 8.39%, max |error| = 17.47%, bias = +0.60%
+      for comparison, plain a + b*live: mean |error| 11.97%, max 25.21%
+
+  --- target peak_commit ---
+    [all runs, n=82]
+      a + b*live                       R^2=0.96583 sd=  450.4 MiB  a=512.5+/-79.4  b=325.6+/-6.8 (MiB)
+      a + b*live + c*chunks            R^2=0.98578 sd=  292.4 MiB  a=-114.1+/-78.7  b=270.9+/-6.8  c=85.0+/-8.1 (MiB)  <-- NEGATIVE INTERCEPT, unphysical
+      a + b*live + c*threads           R^2=0.96990 sd=  425.4 MiB  a=482.0+/-75.6  b=373.3+/-15.9  c=-28.5+/-8.7 (MiB)
+      a + b*live + c*ceil(log2 chunks) R^2=0.97920 sd=  353.6 MiB  a=-285.1+/-128.1  b=292.3+/-7.1  c=276.3+/-38.8 (MiB)  <-- NEGATIVE INTERCEPT, unphysical
+      a + b*live + px*14*ceil(log2 chunks) R^2=0.97436 sd=  390.1 MiB  a=194.8+/-68.8  b=312.4+/-5.9 (MiB)
+      floor pinned too, b free         R^2=0.97292 sd=  394.3 MiB  floor=48.9 (MEASURED)  b=322.2+/-3.8 (MiB)
+    [well-filled only, n=74]
+      a + b*live                       R^2=0.96268 sd=  460.3 MiB  a=500.6+/-82.6  b=327.4+/-7.6 (MiB)
+      a + b*live + c*chunks            R^2=0.98391 sd=  304.4 MiB  a=-106.6+/-83.2  b=273.0+/-7.5  c=83.5+/-8.6 (MiB)  <-- NEGATIVE INTERCEPT, unphysical
+      a + b*live + c*threads           R^2=0.96708 sd=  435.3 MiB  a=470.7+/-78.7  b=375.2+/-17.1  c=-28.8+/-9.3 (MiB)
+      a + b*live + c*ceil(log2 chunks) R^2=0.97699 sd=  363.9 MiB  a=-264.7+/-132.4  b=293.6+/-7.9  c=268.4+/-40.4 (MiB)  <-- NEGATIVE INTERCEPT, unphysical
+      a + b*live + px*14*ceil(log2 chunks) R^2=0.97201 sd=  398.6 MiB  a=186.9+/-71.5  b=313.5+/-6.6 (MiB)
+      floor pinned too, b free         R^2=0.97056 sd=  401.7 MiB  floor=48.9 (MEASURED)  b=323.2+/-4.3 (MiB)
+
+    HEADLINE, peak_commit, well-filled, buffers + pinned reduce tree:
+      per-worker b = 328,771,595 +/- 6,898,285 B = 313.5 +/- 6.6 MiB = 328.8 decimal MB
+      process floor a = 195,958,472 +/- 75,007,464 B = 186.9 MiB
+      b - modelled buffers = 8,126,155 B = 7.7 +/- 6.6 MiB   <-- THE SCRATCH TERM, in situ
+      b / modelled = 1.0253x
+
+    OUT OF SAMPLE � 119MSDCF (33 frames, f/5.6, ISO 50), never fitted:
+      N=33 t= 2 chunks=17 live= 2 rep=1  predicted   1364.1 MiB, observed   1361.8 MiB, error  +0.17%
+      N=33 t= 2 chunks=17 live= 2 rep=2  predicted   1364.1 MiB, observed   1361.8 MiB, error  +0.17%
+      N=33 t= 5 chunks=17 live= 5 rep=1  predicted   2304.8 MiB, observed   2958.5 MiB, error -22.10%
+      N=33 t= 5 chunks=17 live= 5 rep=2  predicted   2304.8 MiB, observed   2466.3 MiB, error  -6.55%
+      N=33 t= 9 chunks=17 live= 9 rep=1  predicted   3558.9 MiB, observed   3650.0 MiB, error  -2.49%
+      N=33 t= 9 chunks=17 live= 9 rep=2  predicted   3558.9 MiB, observed   3650.3 MiB, error  -2.50%
+      N=33 t=17 chunks=17 live=17 rep=1  predicted   6067.3 MiB, observed   5866.6 MiB, error  +3.42%
+      N=33 t=32 chunks=17 live=17 rep=1  predicted   6067.3 MiB, observed   5881.9 MiB, error  +3.15%
+      N=33 t=17 chunks=17 live=17 rep=2  predicted   6067.3 MiB, observed   5867.4 MiB, error  +3.41%
+      N=33 t=32 chunks=17 live=17 rep=2  predicted   6067.3 MiB, observed   5882.3 MiB, error  +3.15%
+      mean |error| = 4.71%, max |error| = 22.10%, bias = -2.02%
+      for comparison, plain a + b*live: mean |error| 9.56%, max 27.75%
+
+  --- SHAPE TEST (SYNTHESIS 3.2.1 assertion 1), thread count PINNED ---
+  assertion 1 says peak must not grow with N at a pinned pool.
+    threads=4: N=8 ->  1598.9 MiB, N=12 ->  1790.5 MiB, ratio 1.120  (chunks 8 -> 12, chunk_len 1 -> 1)
+    threads=4: N=8 ->  1598.9 MiB, N=16 ->  1912.1 MiB, ratio 1.196  (chunks 8 -> 16, chunk_len 1 -> 1)
+    threads=4: N=8 ->  1598.9 MiB, N=32 ->  2392.7 MiB, ratio 1.496  (chunks 8 -> 16, chunk_len 1 -> 2)
+    threads=8: N=16 ->  2832.6 MiB, N=24 ->  2990.4 MiB, ratio 1.056  (chunks 16 -> 12, chunk_len 1 -> 2)
+    threads=8: N=16 ->  2832.6 MiB, N=32 ->  3297.3 MiB, ratio 1.164  (chunks 16 -> 16, chunk_len 1 -> 2)
+    threads=8: N=16 ->  2832.6 MiB, N=64 ->  3611.9 MiB, ratio 1.275  (chunks 16 -> 16, chunk_len 1 -> 4)
+
+  and with `chunks` matched as well as `threads` (coffee-bean, t=32, chunks=20):
+    N= 40, chunk_len=2:  7260.9 MiB  (n=5)
+    N= 60, chunk_len=3:  7614.9 MiB  (n=5)
+
+  --- what a no-intercept 'peak / live' says, at the conditions M2 used ---
+    109MSDCF N=22 t=32 live=11 rep=0: peak_ws/live = 356.7 MiB (374.0 decimal MB)
+    109MSDCF N=22 t=32 live=11 rep=1: peak_ws/live = 381.5 MiB (400.0 decimal MB)
+    109MSDCF N=22 t=32 live=11 rep=2: peak_ws/live = 381.2 MiB (399.8 decimal MB)
+    109MSDCF N=22 t=32 live=11 rep=3: peak_ws/live = 380.6 MiB (399.1 decimal MB)
+    109MSDCF N=22 t=32 live=11 rep=4: peak_ws/live = 355.5 MiB (372.8 decimal MB)
+    coffee-bean N=105 t=32 live=18 rep=0: peak_ws/live = 378.7 MiB (397.1 decimal MB)
+    coffee-bean N=105 t=32 live=18 rep=1: peak_ws/live = 383.2 MiB (401.8 decimal MB)
+    coffee-bean N=105 t=32 live=18 rep=2: peak_ws/live = 382.7 MiB (401.3 decimal MB)
+    coffee-bean N=105 t=32 live=18 rep=3: peak_ws/live = 383.6 MiB (402.2 decimal MB)
+    coffee-bean N=105 t=32 live=18 rep=4: peak_ws/live = 384.0 MiB (402.6 decimal MB)
+
+==============================================================================
+5. WHAT AN HONEST MODEL WOULD DO TO THE PLAN  (RECOMMENDATION, not applied)
+==============================================================================
+  buffers only (shipped) : 320,645,440 B = 305.8 MiB
+  M8 per worker          : 359,416,706 +/- 5,633,571 B = 342.8 +/- 5.4 MiB (1.121x)
+  M8 process floor       : 44,881,982 B = 42.8 MiB
+  M8 reduce tree         : 115,381,056 B x ceil(log2 chunks) = 110.0 MiB per level
+  budget                 : 6,442,450,944 B = 6144 MiB = 6.44 decimal GB
+
+  worker cap under the M8 model: 16  (+/-1 sigma on b: 16..16)
+  worker cap as shipped        : 20
+
+      N |          now           |           M8           |   predicted peak   
+        | workers  chunks   len | workers  chunks   len |       now        M8
+  ----------------------------------------------------------------------------
+     22 |      20      11     2 |      16      11     2 |     4253M     4253M
+     33 |      20      17     2 |      16      11     3 |     6420M     4253M
+    105 |      20      18     6 |      16      15     7 |     6763M     5624M
+    220 |      20      20    11 |      16      16    14 |     7448M     5967M
+
+  (predicted peak is the M8 model applied to BOTH plans, so the two columns
+   are comparable; 'now' is what the shipped plan actually costs, not what
+   the shipped model claims it costs.)
+
+  per_worker_bytes value to hand the planner for a cap of 16: 402,653,184 B

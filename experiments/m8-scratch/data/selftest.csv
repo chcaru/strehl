@@ -1,0 +1,14 @@
+#kind,name,planted_bytes,ws_delta_bytes,commit_delta_bytes,ratio_ws,ratio_commit,verdict
+selftest,S1 idle drift (null),0,32768,16384,,,PASS
+selftest,S2 known allocation 64 MiB,67108864,67104768,67284992,0.9999,1.0026,PASS
+selftest,S2 known allocation 256 MiB,268435456,268435456,269000704,1.0000,1.0021,PASS
+selftest,S2 known allocation 1024 MiB,1073741824,1073737728,1075888128,1.0000,1.0020,PASS
+selftest,S2 known allocation 2048 MiB,2147483648,2147483648,2151698432,1.0000,1.0020,PASS
+selftest,S3 committed but untouched,1073741824,4096,1075871744,0.0000,1.0020,PASS
+selftest,S4 spike 8 MiB hold 0 us (life 647 us),8388608,,,,1.000,PASS
+selftest,S4 spike 8 MiB hold 200 us (life 1312 us),8388608,,,,1.000,PASS
+selftest,S4 spike 64 MiB hold 0 us (life 5042 us),67108864,,,,1.000,PASS
+selftest,S4 spike 512 MiB hold 0 us (life 44495 us),536870912,,,,1.000,PASS
+selftest,S4 spike 512 MiB hold 50000 us (life 100598 us),536870912,,,,1.000,PASS
+selftest,S5 phase attribution,1073741824,,0,1.0020,0.0000,PASS
+selftest,S6 kernel peak >= largest planted,2147483648,2151686144,2152411136,,,PASS

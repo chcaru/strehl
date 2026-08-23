@@ -1,0 +1,18 @@
+# Own workspace root, so the parent workspace does not adopt it and a normal
+# `cargo build` at the repo root never compiles this.
+[workspace]
+
+[package]
+name = "m8-scratch"
+version = "0.0.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[dependencies]
+# The project's own decode path, so what is measured is the code the stacker
+# runs. `rawler` is reached only through this wrapper and is never read.
+strehl-raw = { path = "../../crates/strehl-raw" }
+
+[profile.release]
+opt-level = 3

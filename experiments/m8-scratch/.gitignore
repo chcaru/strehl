@@ -1,0 +1,17 @@
+# Rust build output (also covered by the repo-root target/ rule, repeated here
+# because this is a standalone workspace).
+target/
+Cargo.lock.orig
+
+# Per-run console capture from the harness -- 456 files of raw stdout/stderr.
+# The measurement lives in data/*.csv and data/analysis.txt, and the report
+# lives in docs/research/M8-scratch-measured.md. Regenerate with run-m8.ps1.
+data/logs/
+
+# The byte copy negative-control.ps1 takes before it regresses stack.rs.
+# If this file exists after a run, the restore did not complete -- see the
+# README, "things that will bite you".
+*.negctl-backup
+
+# Stack output written by the end-to-end verification in the README.
+*.tif

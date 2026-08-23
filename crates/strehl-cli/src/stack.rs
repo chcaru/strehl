@@ -41,6 +41,74 @@ use crate::image_out;
 /// decoder's own scratch and the output buffers.
 const MEMORY_BUDGET_BYTES: usize = 6 << 30;
 
+/// Peak RSS with one chunk on one thread, above that one worker's own buffers:
+/// the runtime, the prologue frame's residue, and the epilogue. MEASURED (M8,
+/// `experiments/m8-scratch`, `data/floor.csv`): 320.2 MiB at N=1 minus 305.8
+/// MiB of buffers, over 3 runs with a spread of 0.06 MiB.
+const PROCESS_FLOOR_BYTES: usize = 15_099_494;
+
+/// Marginal peak RSS per concurrent worker *above* `per_worker_bytes`: the
+/// decoder's own scratch plus the file-backed pages of the ARW it is reading.
+/// MEASURED (M8): 37.0 +/- 5.4 MiB, fitted over 74 real-stack runs with the
+/// thread count pinned; independently, an isolated single decode costs 39.4
+/// MiB of private commit above its output buffer. See
+/// `docs/research/M8-scratch-measured.md`.
+const DECODER_SCRATCH_BYTES: usize = 38_797_312;
+
+/// How `WorkerPlan` converts the memory budget into a worker count.
+///
+/// The default is the model that has always shipped, and M8 did not change it:
+/// changing how many workers a stack gets is the owner's decision, not a
+/// measurement's. `M8` is the opt-in honest alternative.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, clap::ValueEnum)]
+pub enum MemoryModel {
+    /// Sum of the per-worker buffers, and nothing else. MEASURED (M2, M8) to
+    /// under-count peak RSS by 12% per worker, and to omit both the process
+    /// floor and the reduce tree entirely.
+    #[default]
+    Buffers,
+    /// Buffers + measured decoder scratch + the rayon reduce tree + the process
+    /// floor. Opt-in via `--memory-model m8`.
+    M8,
+}
+
+/// Levels of a binary reduce over `chunks` items, i.e. `ceil(log2(chunks))`.
+/// MEASURED (M8): each level holds one more `Selection` alive, in exact 110.04
+/// MiB steps at N = 1, 2, 3, 4, 6, 8 on a single thread.
+fn reduce_levels(chunks: usize) -> usize {
+    if chunks <= 1 {
+        0
+    } else {
+        (chunks - 1).ilog2() as usize + 1
+    }
+}
+
+/// M8's predicted peak RSS: a process floor, `live` workers each holding their
+/// buffers plus the decoder's scratch, and one `Selection` per level of the
+/// reduce tree. Out-of-sample error on a stack never used to fit it: mean 8.4%,
+/// max 17.5%, against a run-to-run spread of up to 7.3%.
+fn m8_peak_bytes(chunks: usize, live: usize, px: usize, per_worker_bytes: usize) -> usize {
+    PROCESS_FLOOR_BYTES
+        + live * (per_worker_bytes + DECODER_SCRATCH_BYTES)
+        + reduce_levels(chunks) * px * 14
+}
+
+/// The same model at full overlap, which is the case the planner has to pay
+/// for: every chunk live at once.
+fn m8_predicted_peak_bytes(chunks: usize, px: usize, per_worker_bytes: usize) -> usize {
+    m8_peak_bytes(chunks, chunks, px, per_worker_bytes)
+}
+
+/// The largest worker count whose M8-predicted peak still fits the budget.
+/// Searched rather than divided, because the reduce-tree term is not linear.
+fn m8_worker_cap(px: usize, per_worker_bytes: usize) -> usize {
+    let mut workers = 1;
+    while m8_predicted_peak_bytes(workers + 1, px, per_worker_bytes) <= MEMORY_BUDGET_BYTES {
+        workers += 1;
+    }
+    workers
+}
+
 /// A winner index this far from its 3x3 neighbourhood median is counted as
 /// speckle rather than depth structure.
 const SPECKLE_TOLERANCE: u16 = 2;
@@ -78,6 +146,7 @@ pub struct StackOptions {
     pub srgb: bool,
     pub index_map: Option<PathBuf>,
     pub flat_roi: Option<Roi>,
+    pub memory_model: MemoryModel,
 }
 
 pub fn run(opts: &StackOptions) -> Result<()> {
@@ -123,7 +192,7 @@ pub fn run(opts: &StackOptions) -> Result<()> {
         );
     }
 
-    let plan = WorkerPlan::new(paths.len(), geom, frame_bytes);
+    let plan = WorkerPlan::new(paths.len(), geom, frame_bytes, opts.memory_model);
 
     eprintln!("strehl stack -- naive per-pixel argmax baseline (SYNTHESIS §8 step 0)");
     eprintln!("camera          : {camera}");
@@ -272,15 +341,20 @@ struct WorkerPlan {
     chunks: usize,
     chunk_len: usize,
     per_worker_bytes: usize,
+    px: usize,
+    model: MemoryModel,
 }
 
 impl WorkerPlan {
-    fn new(frames: usize, geom: PlaneGeometry, frame_bytes: usize) -> Self {
+    fn new(frames: usize, geom: PlaneGeometry, frame_bytes: usize, model: MemoryModel) -> Self {
         // Selection is f32 focus + 4 u16 channels + u16 index; FocusField is
         // three f32 planes; luma is one more.
         let px = geom.pixels();
         let per_worker_bytes = px * (14 + 12 + 4) + frame_bytes;
-        let by_memory = (MEMORY_BUDGET_BYTES / per_worker_bytes).max(1);
+        let by_memory = match model {
+            MemoryModel::Buffers => (MEMORY_BUDGET_BYTES / per_worker_bytes).max(1),
+            MemoryModel::M8 => m8_worker_cap(px, per_worker_bytes),
+        };
         let by_cpu = std::thread::available_parallelism()
             .map(|v| v.get())
             .unwrap_or(1);
@@ -291,14 +365,26 @@ impl WorkerPlan {
             chunks: frames.div_ceil(chunk_len),
             chunk_len,
             per_worker_bytes,
+            px,
+            model,
         }
+    }
+
+    /// What the buffer model alone accounts for. A lower bound, and known to be
+    /// one: it omits the process floor, the decoder's scratch, and the reduce
+    /// tree.
+    fn buffers_only_bytes(&self) -> usize {
+        self.chunks * self.per_worker_bytes
     }
 
     fn describe(&self) -> String {
         format!(
-            "workers         : {} chunks of <= {} frames ({} allowed by the {} MB budget, {} by CPU)\n\
-             working set     : {:.0} MB/worker, >= {:.2} GB peak (LOWER BOUND -- excludes decoder \
-             scratch; measured peak runs 1.13-1.24x this)",
+            "workers         : {} chunks of <= {} frames ({} allowed by the {} MB budget, {} by CPU, \
+             model {:?})\n\
+             working set     : {:.0} MB/worker buffers, >= {:.2} GB peak (LOWER BOUND -- buffers \
+             only)\n\
+             predicted peak  : {:.2} GB (MEASURED model, M8: + {:.0} MB/worker decoder scratch, \
+             + {} x {:.0} MB reduce tree, + {:.0} MB floor; +/-8.4% out of sample)",
             self.chunks,
             self.chunk_len,
             self.workers,
@@ -306,8 +392,14 @@ impl WorkerPlan {
             std::thread::available_parallelism()
                 .map(|v| v.get())
                 .unwrap_or(1),
+            self.model,
             self.per_worker_bytes as f64 / 1e6,
-            (self.chunks * self.per_worker_bytes) as f64 / 1e9,
+            self.buffers_only_bytes() as f64 / 1e9,
+            m8_predicted_peak_bytes(self.chunks, self.px, self.per_worker_bytes) as f64 / 1e9,
+            DECODER_SCRATCH_BYTES as f64 / 1e6,
+            reduce_levels(self.chunks),
+            (self.px * 14) as f64 / 1e6,
+            PROCESS_FLOOR_BYTES as f64 / 1e6,
         )
     }
 }
@@ -701,28 +793,218 @@ mod tests {
     fn worker_plan_is_bounded_by_memory_not_by_frame_count() {
         let geom = PlaneGeometry::from_active(7032, 4688);
         // 400 frames must not give 400 workers.
-        let plan = WorkerPlan::new(400, geom, 73_400_320);
+        let plan = WorkerPlan::new(400, geom, 73_400_320, MemoryModel::Buffers);
         assert!(plan.chunks <= plan.workers);
         assert!(plan.per_worker_bytes * plan.chunks <= MEMORY_BUDGET_BYTES);
         assert!(plan.chunk_len * plan.chunks >= 400);
         // And a stack smaller than the worker count does not over-split.
-        let small = WorkerPlan::new(3, geom, 73_400_320);
+        let small = WorkerPlan::new(3, geom, 73_400_320, MemoryModel::Buffers);
         assert!(small.chunks <= 3);
+    }
+
+    /// The default must be exactly what shipped before M8. M8 measured the
+    /// under-count; it did not license changing the plan.
+    #[test]
+    fn the_default_memory_model_is_unchanged_by_m8() {
+        let geom = PlaneGeometry::from_active(7032, 4688);
+        assert_eq!(MemoryModel::default(), MemoryModel::Buffers);
+        let plan = WorkerPlan::new(400, geom, 73_400_320, MemoryModel::default());
+        // px * 30 + frame_bytes, with px = 3516 * 2344.
+        assert_eq!(plan.per_worker_bytes, 320_645_440);
+        assert_eq!(MEMORY_BUDGET_BYTES / plan.per_worker_bytes, 20);
+        // 22 frames, 105 frames, 220 frames, as M2 and M8 measured them.
+        for (frames, chunks) in [(22usize, 11usize), (105, 18), (220, 20)] {
+            let p = WorkerPlan::new(frames, geom, 73_400_320, MemoryModel::Buffers);
+            assert_eq!(p.chunks, chunks, "{frames} frames");
+        }
+    }
+
+    /// `ceil(log2(chunks))`, which MEASURED (M8, `data/floor.csv`) is how many
+    /// extra `Selection`s the reduce tree holds alive.
+    #[test]
+    fn reduce_levels_is_ceil_log2() {
+        for (chunks, levels) in [
+            (0usize, 0usize),
+            (1, 0),
+            (2, 1),
+            (3, 2),
+            (4, 2),
+            (5, 3),
+            (8, 3),
+            (9, 4),
+            (16, 4),
+            (17, 5),
+            (18, 5),
+            (20, 5),
+            (32, 5),
+            (33, 6),
+        ] {
+            assert_eq!(reduce_levels(chunks), levels, "chunks = {chunks}");
+        }
+    }
+
+    /// The two measured constants, checked against the measurements they came
+    /// from rather than against themselves. If someone edits either, this goes
+    /// red and names the datum it violated.
+    #[test]
+    fn the_m8_constants_match_the_measurements_they_came_from() {
+        let geom = PlaneGeometry::from_active(7032, 4688);
+        let px = geom.pixels();
+        let per_worker = px * 30 + 73_400_320;
+        let mib = |v: f64| v * (1u64 << 20) as f64;
+
+        // MEASURED (M8, data/floor.csv): coffee-bean N=1, RAYON_NUM_THREADS=1,
+        // peak working set 320.2 MiB over 3 runs, spread 0.06 MiB.
+        let floor_from_data = mib(320.2) - per_worker as f64;
+        assert!(
+            (PROCESS_FLOOR_BYTES as f64 - floor_from_data).abs() / floor_from_data < 0.05,
+            "PROCESS_FLOOR_BYTES = {PROCESS_FLOOR_BYTES} but N=1 measured a floor of \
+             {floor_from_data:.0} B"
+        );
+
+        // MEASURED (M8, data/floor.csv): the peak steps by exactly 110.04 MiB
+        // as chunks crosses 1 -> 2 -> 3 -> 5, i.e. one Selection per level.
+        let step = m8_peak_bytes(2, 1, px, per_worker) - m8_peak_bytes(1, 1, px, per_worker);
+        assert_eq!(step, px * 14);
+        assert!((step as f64 - mib(110.04)).abs() / mib(110.04) < 0.005);
+        assert_eq!(
+            m8_peak_bytes(4, 1, px, per_worker),
+            m8_peak_bytes(3, 1, px, per_worker),
+            "chunks 3 and 4 are the same reduce depth; MEASURED 540.4 and 540.3 MiB"
+        );
+    }
+
+    /// The scratch term, tested where it is actually resident: full overlap,
+    /// every chunk live at once. Tolerance 8%, against a MEASURED run-to-run
+    /// spread of up to 7.3% and an out-of-sample error of 8.4% mean.
+    #[test]
+    fn the_m8_model_reproduces_the_measured_full_overlap_peaks() {
+        let geom = PlaneGeometry::from_active(7032, 4688);
+        let px = geom.pixels();
+        let per_worker = px * 30 + 73_400_320;
+        // (chunks, MEASURED mean peak working set in MiB) at RAYON_NUM_THREADS
+        // >= chunks and chunk_len >= 2, so live == chunks. Sources: 109MSDCF
+        // N=22 (n=5), 119MSDCF N=33 holdout (n=4), coffee-bean N=105 (n=5) and
+        // N=40 (n=5). experiments/m8-scratch/data/*.csv.
+        for (chunks, measured_mib) in [
+            (11usize, 4121.7f64),
+            (17, 5978.0),
+            (18, 6900.6),
+            (20, 7360.8),
+        ] {
+            let predicted =
+                m8_predicted_peak_bytes(chunks, px, per_worker) as f64 / (1u64 << 20) as f64;
+            let err = (predicted - measured_mib) / measured_mib;
+            assert!(
+                err.abs() < 0.08,
+                "chunks = {chunks}: predicted {predicted:.0} MiB vs measured {measured_mib:.0} \
+                 MiB ({:+.1}%)",
+                100.0 * err
+            );
+        }
+        // It must never claim a plan is cheaper than its buffers alone, and it
+        // must be monotone in the worker count.
+        let mut prev = 0;
+        for chunks in 1..=64 {
+            let p = m8_predicted_peak_bytes(chunks, px, per_worker);
+            assert!(p > chunks * per_worker);
+            assert!(p > prev);
+            prev = p;
+        }
+    }
+
+    /// KNOWN LIMITATION, recorded so it cannot be forgotten: at one live worker
+    /// the peak is reached during the *fold*, not the decode, so no decoder
+    /// scratch is resident and the model over-predicts. Over-predicting is the
+    /// safe direction for a budget, but it is not accuracy.
+    #[test]
+    fn the_m8_model_over_predicts_at_a_single_live_worker() {
+        let geom = PlaneGeometry::from_active(7032, 4688);
+        let px = geom.pixels();
+        let per_worker = px * 30 + 73_400_320;
+        // (chunks, MEASURED peak working set in MiB at RAYON_NUM_THREADS=1)
+        for (chunks, measured_mib) in [
+            (1usize, 320.2f64),
+            (2, 430.3),
+            (4, 540.3),
+            (8, 650.4),
+            (18, 836.0),
+        ] {
+            let predicted = m8_peak_bytes(chunks, 1, px, per_worker) as f64 / (1u64 << 20) as f64;
+            let err = (predicted - measured_mib) / measured_mib;
+            assert!(
+                (0.0..0.15).contains(&err),
+                "chunks = {chunks}, live = 1: predicted {predicted:.0} MiB vs measured \
+                 {measured_mib:.0} MiB ({:+.1}%); the model is supposed to over-predict here, \
+                 by under 15%",
+                100.0 * err
+            );
+        }
+    }
+
+    /// The opt-in model plans fewer, larger chunks on big stacks and leaves
+    /// small ones alone, and its plan fits the budget it was derived from.
+    #[test]
+    fn the_m8_memory_model_is_opt_in_and_plans_within_the_budget() {
+        let geom = PlaneGeometry::from_active(7032, 4688);
+        let px = geom.pixels();
+        let per_worker = px * 30 + 73_400_320;
+        assert_eq!(m8_worker_cap(px, per_worker), 16);
+        // MEASURED (M8): N=22 is unchanged, N=105 drops 18 -> 15, N=220 drops
+        // 20 -> 16. If any of these move, the report is stale.
+        for (frames, buffers_chunks, m8_chunks) in [
+            (22usize, 11usize, 11usize),
+            (33, 17, 11),
+            (105, 18, 15),
+            (220, 20, 16),
+        ] {
+            let b = WorkerPlan::new(frames, geom, 73_400_320, MemoryModel::Buffers);
+            let m = WorkerPlan::new(frames, geom, 73_400_320, MemoryModel::M8);
+            assert_eq!(b.chunks, buffers_chunks, "buffers, {frames} frames");
+            assert_eq!(m.chunks, m8_chunks, "m8, {frames} frames");
+            assert!(m.chunks <= b.chunks, "m8 must never plan MORE workers");
+            assert!(
+                m8_predicted_peak_bytes(m.chunks, px, per_worker) <= MEMORY_BUDGET_BYTES,
+                "m8 plan for {frames} frames exceeds the budget it was derived from"
+            );
+            assert!(m.chunk_len * m.chunks >= frames);
+        }
+    }
+
+    /// `describe()` must state the honest figure whichever model is in force,
+    /// and must not present the buffer sum as anything but a lower bound.
+    #[test]
+    fn describe_reports_both_the_lower_bound_and_the_measured_prediction() {
+        let geom = PlaneGeometry::from_active(7032, 4688);
+        for model in [MemoryModel::Buffers, MemoryModel::M8] {
+            let plan = WorkerPlan::new(105, geom, 73_400_320, model);
+            let text = plan.describe();
+            assert!(text.contains("LOWER BOUND"), "{text}");
+            assert!(text.contains("predicted peak"), "{text}");
+            assert!(text.contains("MEASURED model, M8"), "{text}");
+            assert!(
+                m8_predicted_peak_bytes(plan.chunks, plan.px, plan.per_worker_bytes)
+                    > plan.buffers_only_bytes(),
+                "the predicted peak must exceed the buffer-only lower bound"
+            );
+        }
     }
 
     #[test]
     fn every_frame_is_covered_exactly_once_by_the_chunking() {
         let geom = PlaneGeometry::from_active(7032, 4688);
-        for frames in [1usize, 2, 3, 22, 60, 199, 200] {
-            let plan = WorkerPlan::new(frames, geom, 73_400_320);
-            let mut seen = 0usize;
-            for c in 0..plan.chunks {
-                let start = c * plan.chunk_len;
-                let end = ((c + 1) * plan.chunk_len).min(frames);
-                assert!(start < end, "empty chunk for {frames} frames");
-                seen += end - start;
+        for model in [MemoryModel::Buffers, MemoryModel::M8] {
+            for frames in [1usize, 2, 3, 22, 60, 199, 200] {
+                let plan = WorkerPlan::new(frames, geom, 73_400_320, model);
+                let mut seen = 0usize;
+                for c in 0..plan.chunks {
+                    let start = c * plan.chunk_len;
+                    let end = ((c + 1) * plan.chunk_len).min(frames);
+                    assert!(start < end, "empty chunk for {frames} frames");
+                    seen += end - start;
+                }
+                assert_eq!(seen, frames);
             }
-            assert_eq!(seen, frames);
         }
     }
 
