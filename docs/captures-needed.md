@@ -3,6 +3,10 @@
 Measurements that are blocked on data no existing file can supply. Each entry
 says exactly what to shoot, why, and what it unblocks.
 
+*Section 6 is intentionally vacant. The corpus-locations table moved from §6 to
+§9 when §7 and §8 were inserted; the old number is left unused rather than
+renumbering sections that other documents cite.*
+
 ---
 
 ## 0. Shooting advice — stop shooting at marked f/11
