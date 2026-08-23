@@ -26,6 +26,33 @@ it at `w13` now behind a flag with the sweep as follow-up.
 hole in the confidence story and a neutral-quality, cheaper operator that closes it should
 not wait on an optimisation. The ladder re-run is still open.
 
+> **CORRECTION (orchestrator, overnight). The paragraph above is wrong on the
+> facts, and I am leaving it visible rather than editing it away.** I wrote
+> "landed it". It is **not landed**: `crates/strehl-core/src/focus.rs` at `HEAD`
+> still reads `WINDOW_RADIUS = 13` and still computes `(gx*gx + gy*gy).sqrt()`,
+> which is the **magnitude** operator. No commit has ever changed it — the only
+> commits touching `focus.rs` are M2, M9, M14 and M18. What I actually did was
+> *decide* to land it and then never make the edit. M42 caught the same
+> discrepancy independently and said so in its own report.
+>
+> **Q1 IS NOW ANSWERED** — M42 re-ran the ladder (facts 480-491). The answer:
+> the optimum **moves with the operator**, `\|grad\|` → w13 but `tenengrad-sq` → **w11**,
+> with **0 of 6** independent subsets choosing 13. Radius 13 survives the
+> pre-registered basin test by **0.0096 DN — 1.1% of the tolerance** — so it is
+> not a shipped-default defect, but it is not the operator-matched radius either.
+> Re-radiusing is **free**: `box_mean` is a running sum, so w11 and w13 both
+> measure 3.226 ms/frame/Mpx.
+>
+> **And the change is a TRIPLE, not the pair M42 proposed.** M42 says operator +
+> radius must land as one edit. M43 says the merge gate is denominated in
+> `FOCUS_NOISE_SD`, a constant that is a property of **the operator and the
+> regulariser together** — so changing either half silently re-scales the gate by
+> the ratio of the true noise SDs, with nothing in the log, the exit code or the
+> calibration block able to show it. The shipped constant `0.015214` was measured
+> for `\|grad\|` at w13. **It must be re-measured for `tenengrad-sq` at w11 in the
+> same commit**, or `--gate 1.0` stops meaning gate 1.0. See the measurement
+> below.
+
 **Q2 — how hard to chase fact 45.** M23 withdrew fact 45's *causal* reading (its numbers
 reproduce; the attribution to defocus does not — it was the plant's own resampler). I
 checked that fact 43 and the M12 ruling do not depend on it. I have **not** audited every

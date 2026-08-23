@@ -51,6 +51,27 @@ is itself not yet applied. **Both changes should land together, as one edit**, b
 shipping the operator without the radius is precisely the pairing defect Q1 was raised to
 prevent.
 
+> **ORCHESTRATOR ADDENDUM ON FOLD — the edit is a TRIPLE, not a pair.** Folded as
+> facts **480-491**, disciplines **258-261**, questions **103-105**. M42's reading of
+> `focus.rs` is confirmed: `HEAD` still has `WINDOW_RADIUS = 13` and `.sqrt()`, so
+> neither change is live (fact 511).
+>
+> M42 is right that operator and radius must land together, and it is one member
+> short. The merge gate is denominated in `FOCUS_NOISE_SD` (M43, fact 436: `tol` is
+> *exactly* linear in it), and that constant is a property of the operator, the
+> window **and** the regulariser together. The shipped `0.015214` was measured for
+> `\|grad\|` at w13. Measured for the proposed `tenengrad-sq` at w11 under the same
+> r8 regulariser it is **0.023249** — **k = 1.528**. Landing M42's pair without the
+> constant turns **`--gate 1.0` into an effective gate of 0.654**, and by fact 438
+> the log, the exit code and the calibration block would all be unchanged.
+>
+> Attribution (fact 510): **the radius change alone is a 12.5% gate shift** (k = 1.125),
+> the operator alone 1.364. So even the "free" half of M42's recommendation is not free
+> on this axis — free on quality, noise and runtime, as measured, but not on calibration.
+>
+> **Ship all three in one commit**, and take the new constant from the crate's own
+> calibration test rather than from the Python cross-check quoted here.
+
 ---
 
 ## Gate 1 — M13's headline reproduces from my harness
