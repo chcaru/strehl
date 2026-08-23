@@ -1,0 +1,14 @@
+{
+  "gate0.0": {
+    "off": "aea56b5c8557b826a71a79a27b0f257d9386fa8b5da4408ac8fc73f7a80fefa0",
+    "on": "aea56b5c8557b826a71a79a27b0f257d9386fa8b5da4408ac8fc73f7a80fefa0",
+    "identical": true
+  },
+  "gate16.0": {
+    "off": "d5317263ba4b1ae8e00c0e9bed399cf3e358d78755fd2c2ce44b02ed96dbb206",
+    "on": "d5317263ba4b1ae8e00c0e9bed399cf3e358d78755fd2c2ce44b02ed96dbb206",
+    "identical": true
+  },
+  "frames": 10,
+  "roi": "64,64,512,512"
+}

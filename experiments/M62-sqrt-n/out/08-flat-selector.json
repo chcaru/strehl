@@ -1,0 +1,76 @@
+{
+  "summary": {
+    "gate0.0": {
+      "ratio_mean": 0.951624709594657,
+      "ratio_sd_between_seeds": 0.0005773792919866442,
+      "boot_se_seed0": 0.0005982580444255964,
+      "mean_n_eff": 1.0,
+      "per_seed": [
+        0.951003015329628,
+        0.9521440969569537,
+        0.951727016497389
+      ]
+    },
+    "gate16.0": {
+      "ratio_mean": 5.47368596864415,
+      "ratio_sd_between_seeds": 0.0017031740679473888,
+      "boot_se_seed0": 0.004190392227488746,
+      "mean_n_eff": 30.0,
+      "per_seed": [
+        5.472626189546441,
+        5.475650589214407,
+        5.472781127171604
+      ]
+    },
+    "selection_penalty_pct": 5.083442024739826,
+    "comparison": {
+      "textured_synthetic_crop": 0.976815,
+      "flat_synthetic_field": 0.951624709594657,
+      "real_dark_field": 0.9277221816789586,
+      "note": "all three are `strehl merge --gate 0`, n_eff == 1 at every pixel"
+    }
+  },
+  "per_seed": {
+    "gate0.0": {
+      "0": {
+        "ratio": 0.951003015329628,
+        "boot_se": 0.0005982580444255964,
+        "mean_n_eff": 1.0
+      },
+      "1": {
+        "ratio": 0.9521440969569537,
+        "boot_se": 0.0006092877516275869,
+        "mean_n_eff": 1.0
+      },
+      "2": {
+        "ratio": 0.951727016497389,
+        "boot_se": 0.0005600171893829941,
+        "mean_n_eff": 1.0
+      }
+    },
+    "gate16.0": {
+      "0": {
+        "ratio": 5.472626189546441,
+        "boot_se": 0.004190392227488746,
+        "mean_n_eff": 30.0
+      },
+      "1": {
+        "ratio": 5.475650589214407,
+        "boot_se": 0.004254358919884808,
+        "mean_n_eff": 30.0
+      },
+      "2": {
+        "ratio": 5.472781127171604,
+        "boot_se": 0.003574554177650672,
+        "mean_n_eff": 30.0
+      }
+    }
+  },
+  "latent": "constant 512+1230 DN, no structure",
+  "n": 30,
+  "seeds": [
+    0,
+    1,
+    2
+  ]
+}

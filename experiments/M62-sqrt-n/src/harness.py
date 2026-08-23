@@ -34,7 +34,7 @@ CONTAINER_MAX = 16383
 INSET = 32
 
 
-def constants():
+def constants(iso=ISO):
     """Sensor constants, parsed out of the shipped crate at the built sha."""
     src = PROFILE_RS.read_text(encoding="utf-8")
     block = src[src.index("const A7C2: CameraProfile"):]
@@ -56,15 +56,15 @@ def constants():
     nsrc = NOISE_RS.read_text(encoding="utf-8")
     assert "black: 512.0" in nsrc and "white: 15360.0" in nsrc
 
-    g = max(ISO, base_iso) / gain_divisor
-    rn_e = rn_high if ISO >= second_base else rn_low
+    g = max(iso, base_iso) / gain_divisor
+    rn_e = rn_high if iso >= second_base else rn_low
     return dict(
         gain_divisor=gain_divisor,
         base_iso=base_iso,
         read_noise_e_low=rn_low,
         read_noise_e_high=rn_high,
         second_base_iso=second_base,
-        iso=ISO,
+        iso=iso,
         gain_dn_per_e=g,
         read_noise_e=rn_e,
         read_noise_dn=rn_e * g,

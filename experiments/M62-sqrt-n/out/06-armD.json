@@ -1,0 +1,339 @@
+{
+  "group": "D:\\macro-dark-frames\\118MSDCF",
+  "iso": 100,
+  "exposure_s": 0.01,
+  "frames_used": [
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00003.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00004.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00005.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00006.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00007.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00008.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00009.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00010.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00011.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00012.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00013.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00014.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00015.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00016.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00017.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00018.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00019.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00020.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00021.ARW",
+    "D:\\macro-dark-frames\\118MSDCF\\DSC00022.ARW"
+  ],
+  "skipped": 2,
+  "crop": {
+    "y0": 1024,
+    "x0": 2048,
+    "size": 2048,
+    "rggb_phase": [
+      0,
+      0
+    ]
+  },
+  "pedestal_dn": 1230,
+  "constants": {
+    "gain_divisor": 436.8,
+    "base_iso": 100.0,
+    "read_noise_e_low": 4.2,
+    "read_noise_e_high": 1.2392,
+    "second_base_iso": 400.0,
+    "iso": 100,
+    "gain_dn_per_e": 0.22893772893772893,
+    "read_noise_e": 4.2,
+    "read_noise_dn": 0.9615384615384616,
+    "black": 512.0,
+    "white": 15360.0
+  },
+  "drift": {
+    "per_frame_mean_dn": [
+      512.2249255180359,
+      512.2214272022247,
+      512.1934831142426,
+      512.2062730789185,
+      512.2151873111725,
+      512.2017874717712,
+      512.2692432403564,
+      512.2643435001373,
+      512.1919264793396,
+      512.2054855823517,
+      512.2126982212067,
+      512.1897633075714,
+      512.2402882575989,
+      512.2340223789215,
+      512.2187745571136,
+      512.2438611984253,
+      512.2374792098999,
+      512.2125067710876,
+      512.2628393173218,
+      512.2515661716461
+    ],
+    "first": 512.2249255180359,
+    "last": 512.2515661716461,
+    "span_dn": 0.07947993278503418,
+    "slope_dn_per_frame": 0.0015063235634181897
+  },
+  "D1": {
+    "R": {
+      "temporal_sd_dn": 1.0064281962069477,
+      "model_sigma_dn": 0.9615384615384616,
+      "measured_over_model": 1.0466853240552256,
+      "mean_level_dn": 512.2128980034722,
+      "ladder": {
+        "1": {
+          "ms_single_raw": 1.1119596462673613,
+          "ms_merged_raw": 1.1080630533854168,
+          "truth_var_correction": 0.10128977141203703,
+          "tiff_q2": 0.0,
+          "ratio": 1.0019333199980365,
+          "expected": 1.0
+        },
+        "2": {
+          "ms_single_raw": 1.1119596462673613,
+          "ms_merged_raw": 0.6027770290798612,
+          "truth_var_correction": 0.10128977141203703,
+          "tiff_q2": 0.0,
+          "ratio": 1.419628498896383,
+          "expected": 1.4142135623730951
+        },
+        "3": {
+          "ms_single_raw": 1.1119596462673613,
+          "ms_merged_raw": 0.4340809208622684,
+          "truth_var_correction": 0.10128977141203703,
+          "tiff_q2": 0.0,
+          "ratio": 1.7426845324350015,
+          "expected": 1.7320508075688772
+        },
+        "5": {
+          "ms_single_raw": 1.1119596462673613,
+          "ms_merged_raw": 0.2996653971354169,
+          "truth_var_correction": 0.10128977141203703,
+          "tiff_q2": 0.0,
+          "ratio": 2.257150438194562,
+          "expected": 2.23606797749979
+        },
+        "10": {
+          "ms_single_raw": 1.1119596462673613,
+          "ms_merged_raw": 0.20035170355902784,
+          "truth_var_correction": 0.10128977141203703,
+          "tiff_q2": 0.0,
+          "ratio": 3.1941202580368504,
+          "expected": 3.1622776601683795
+        }
+      }
+    },
+    "G1": {
+      "temporal_sd_dn": 0.9934576145589475,
+      "model_sigma_dn": 0.9615384615384616,
+      "measured_over_model": 1.0331959191413054,
+      "mean_level_dn": 512.2063848741319,
+      "ladder": {
+        "1": {
+          "ms_single_raw": 1.0854227973090278,
+          "ms_merged_raw": 1.0699448676215277,
+          "truth_var_correction": 0.09869580319251543,
+          "tiff_q2": 0.0,
+          "ratio": 1.0079365593592857,
+          "expected": 1.0
+        },
+        "2": {
+          "ms_single_raw": 1.0854227973090278,
+          "ms_merged_raw": 0.5839923936631944,
+          "truth_var_correction": 0.09869580319251543,
+          "tiff_q2": 0.0,
+          "ratio": 1.425919094411621,
+          "expected": 1.4142135623730951
+        },
+        "3": {
+          "ms_single_raw": 1.0854227973090278,
+          "ms_merged_raw": 0.4247441297743053,
+          "truth_var_correction": 0.09869580319251543,
+          "tiff_q2": 0.0,
+          "ratio": 1.7396325173901075,
+          "expected": 1.7320508075688772
+        },
+        "5": {
+          "ms_single_raw": 1.0854227973090278,
+          "ms_merged_raw": 0.29613015407986104,
+          "truth_var_correction": 0.09869580319251543,
+          "tiff_q2": 0.0,
+          "ratio": 2.2355642017649306,
+          "expected": 2.23606797749979
+        },
+        "10": {
+          "ms_single_raw": 1.0854227973090278,
+          "ms_merged_raw": 0.197160568576389,
+          "truth_var_correction": 0.09869580319251543,
+          "tiff_q2": 0.0,
+          "ratio": 3.1656148861792612,
+          "expected": 3.1622776601683795
+        }
+      }
+    },
+    "G2": {
+      "temporal_sd_dn": 0.9990500889579629,
+      "model_sigma_dn": 0.9615384615384616,
+      "measured_over_model": 1.0390120925162813,
+      "mean_level_dn": 512.2052291666666,
+      "ladder": {
+        "1": {
+          "ms_single_raw": 1.0996180230034722,
+          "ms_merged_raw": 1.0907113606770833,
+          "truth_var_correction": 0.09981010802469135,
+          "tiff_q2": 0.0,
+          "ratio": 1.0044841690763011,
+          "expected": 1.0
+        },
+        "2": {
+          "ms_single_raw": 1.0996180230034722,
+          "ms_merged_raw": 0.5952044162326388,
+          "truth_var_correction": 0.09981010802469135,
+          "tiff_q2": 0.0,
+          "ratio": 1.4206358795836682,
+          "expected": 1.4142135623730951
+        },
+        "3": {
+          "ms_single_raw": 1.0996180230034722,
+          "ms_merged_raw": 0.4297465892650457,
+          "truth_var_correction": 0.09981010802469135,
+          "tiff_q2": 0.0,
+          "ratio": 1.740776904356793,
+          "expected": 1.7320508075688772
+        },
+        "5": {
+          "ms_single_raw": 1.0996180230034722,
+          "ms_merged_raw": 0.3020491210937496,
+          "truth_var_correction": 0.09981010802469135,
+          "tiff_q2": 0.0,
+          "ratio": 2.223442059263429,
+          "expected": 2.23606797749979
+        },
+        "10": {
+          "ms_single_raw": 1.0996180230034722,
+          "ms_merged_raw": 0.20132705078124993,
+          "truth_var_correction": 0.09981010802469135,
+          "tiff_q2": 0.0,
+          "ratio": 3.138260713715539,
+          "expected": 3.1622776601683795
+        }
+      }
+    },
+    "B": {
+      "temporal_sd_dn": 0.9189994451726418,
+      "model_sigma_dn": 0.9615384615384616,
+      "measured_over_model": 0.9557594229795474,
+      "mean_level_dn": 512.251765733507,
+      "ladder": {
+        "1": {
+          "ms_single_raw": 0.9275185763888888,
+          "ms_merged_raw": 0.9255968750000001,
+          "truth_var_correction": 0.08445599802276234,
+          "tiff_q2": 0.0,
+          "ratio": 1.0011416666910709,
+          "expected": 1.0
+        },
+        "2": {
+          "ms_single_raw": 0.9275185763888888,
+          "ms_merged_raw": 0.5025477756076387,
+          "truth_var_correction": 0.08445599802276234,
+          "tiff_q2": 0.0,
+          "ratio": 1.42001879590703,
+          "expected": 1.4142135623730951
+        },
+        "3": {
+          "ms_single_raw": 0.9275185763888888,
+          "ms_merged_raw": 0.36340718074845535,
+          "truth_var_correction": 0.08445599802276234,
+          "tiff_q2": 0.0,
+          "ratio": 1.7384644037510233,
+          "expected": 1.7320508075688772
+        },
+        "5": {
+          "ms_single_raw": 0.9275185763888888,
+          "ms_merged_raw": 0.2506604166666654,
+          "truth_var_correction": 0.08445599802276234,
+          "tiff_q2": 0.0,
+          "ratio": 2.252208656628208,
+          "expected": 2.23606797749979
+        },
+        "10": {
+          "ms_single_raw": 0.9275185763888888,
+          "ms_merged_raw": 0.16741459418402765,
+          "truth_var_correction": 0.08445599802276234,
+          "tiff_q2": 0.0,
+          "ratio": 3.18785977001734,
+          "expected": 3.1622776601683795
+        }
+      }
+    },
+    "green": {
+      "temporal_sd_dn": 0.7295852407230444,
+      "model_sigma_dn": 0.6799103665255264,
+      "measured_over_model": 1.0730609160312796,
+      "mean_level_dn": 512.2058070203993,
+      "ladder": {
+        "1": {
+          "ms_single_raw": 0.5857234917534724,
+          "ms_merged_raw": 0.5793905436197919,
+          "truth_var_correction": 0.05322946234809027,
+          "tiff_q2": 0.0,
+          "ratio": 1.0060000692962314,
+          "expected": 1.0
+        },
+        "2": {
+          "ms_single_raw": 0.5857234917534724,
+          "ms_merged_raw": 0.3150079752604168,
+          "truth_var_correction": 0.05322946234809027,
+          "tiff_q2": 0.0,
+          "ratio": 1.4262326462642618,
+          "expected": 1.4142135623730951
+        },
+        "3": {
+          "ms_single_raw": 0.5857234917534724,
+          "ms_merged_raw": 0.22849093665605788,
+          "truth_var_correction": 0.05322946234809027,
+          "tiff_q2": 0.0,
+          "ratio": 1.7430672413125001,
+          "expected": 1.7320508075688772
+        },
+        "5": {
+          "ms_single_raw": 0.5857234917534724,
+          "ms_merged_raw": 0.1602714355468749,
+          "truth_var_correction": 0.05322946234809027,
+          "tiff_q2": 0.0,
+          "ratio": 2.2303874780559747,
+          "expected": 2.23606797749979
+        },
+        "10": {
+          "ms_single_raw": 0.5857234917534724,
+          "ms_merged_raw": 0.10665833062066006,
+          "truth_var_correction": 0.05322946234809027,
+          "tiff_q2": 0.0,
+          "ratio": 3.156962213678393,
+          "expected": 3.1622776601683795
+        }
+      }
+    }
+  },
+  "D2": {
+    "gate0.0": {
+      "ratio": 0.9277221816789586,
+      "ms_merged_raw": 0.676205352679632,
+      "ms_single_raw": 0.5857234917534722,
+      "truth_var_correction": 0.05322946234809027,
+      "tiff_q2": 0.004277677743889602,
+      "expected": "1.0 (selector)"
+    },
+    "gate16.0": {
+      "ratio": 3.1374585338819494,
+      "ms_merged_raw": 0.1116023428859141,
+      "ms_single_raw": 0.5857234917534722,
+      "truth_var_correction": 0.05322946234809027,
+      "tiff_q2": 0.004277677743889602,
+      "expected": "3.1623 = sqrt(10)"
+    }
+  }
+}
