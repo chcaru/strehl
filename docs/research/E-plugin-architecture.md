@@ -1487,12 +1487,202 @@ A test suite nobody has watched go red is not evidence. Four injections, each ta
 | 2 | `FocusMeasure::measure` returns a plausible constant `0.5`; or `breathing_prior` returns `Some(ScalePrior{ ratio: 1.0, sigma: 1e-9 })` — confident and wrong | **P2** (and **P4**) — P1 still passes | Your named failure mode. A confident-constant instrument is *perfectly confluent*. Only sensitivity and the calibrated fixture see it. |
 | 3 | `std::mem::forget` an `Effect`, or swap `Vec`+pop for `Vec`+`drain(..)` (FIFO instead of LIFO disposal) | **P3** — the second run differs | Breaks Cordis's twisted composition. FIFO disposal is the subtlest of the four and would survive code review. |
 | 4 | Build the stage registry with `HashMap` and iterate it directly | **P1**, but *only* if the harness re-seeds `RandomState` per case | **Worth stating explicitly:** `HashMap` iteration order is stable *within a process*, so a naive in-process proptest would **miss this**. The harness must either use an explicitly-seeded hasher it can vary, or run cases in subprocesses. This is a place where a plausible-looking test is silently blind. |
+| 5 | A contributed `FocusMeasure` that is correct in every respect except that its response noise SD differs from the host's `FOCUS_NOISE_SD` | **NOTHING BELOW CATCHES IT** — see F5 | Added by M43, after the constant this table predates was measured. The plugin is capability-compatible, perfectly confluent, sensitive, leaves no residue, and puts the peak in the right place — so P1–P4 all pass. It is nonetheless measurably wrong: at `--gate 1.0` a `k` = 6.68 operator reverts 87.76% of pixels to pure selection. |
 
 Fault 2 is the one you asked about, and the honest answer is that **the confluence property cannot catch it, by construction** — confluence is a statement about *determinism*, and a constant is maximally deterministic. It is caught only by P2's sensitivity assertion and P4's calibrated fixture. That is the argument for shipping all four properties rather than the elegant one.
 
 ### F4.7 Cost
 
 `FIXTURE_8_FRAMES` should be 8 frames at ~512×512, not 40 at 33 MP — the properties are about *plan resolution and ordering*, which are resolution-independent. Full-resolution runs belong in a nightly job, not in `cargo test`.
+
+---
+
+## F5 — Amendment (M43): the calibration contract
+
+**Status: MEASURED amendment, added after this document was written.** F1–F4
+predate the measurement of `FOCUS_NOISE_SD`, and the gap they leave is not a
+missing test — it is a missing *contract*. Sources: SYNTHESIS facts 436–439,
+500–501, disciplines 256–257; [`M43-plugin-calibration-seam.md`](M43-plugin-calibration-seam.md).
+
+### F5.1 The gap
+
+The merge admits a frame at a pixel when its focus response is within
+
+```
+tol = t · √2 · FOCUS_NOISE_SD
+```
+
+of the winner's, where `t` is the user's `--gate`. That relation is **exactly
+linear**, verified against the shipped binary at five gates spanning 35×
+(`tol/t` constant to 2.0e-6). `FOCUS_NOISE_SD` is a property of **the focus
+operator**, not of the host — its own doc comment says so.
+
+So the gate is denominated in a unit that the replaceable component owns, and
+**F3.3's `Caps` has no field for it**. A contributed focus measure inherits the
+host's constant, and the gate silently rescales by `k = SD_plugin / 0.015214`.
+Measured across seven textbook operators, `k` spans **10.4×**:
+
+| operator | `k` | effective gate at a declared `1.0` |
+| --- | --- | --- |
+| ring(1,3) | 0.644 | 1.552 |
+| tenengrad *(shipped)* | 1.000 | 1.000 |
+| sum-modified-Laplacian | 6.680 | 0.150 |
+
+At `k` = 6.68 the tool reverts **87.76%** of pixels to pure selection — it
+becomes the defect the project exists to remove — while the log, the exit code
+and the CLI's calibration block are byte-identical to a correct run. The worst
+case is not adversarial: SML is *the* canonical shape-from-focus operator, and
+therefore the single likeliest third-party contribution. The over-admitting end
+is populated by `ring(1,3)`, which is this project's own first shipped operator.
+
+### F5.2 Why F4 cannot catch it — this is the important part
+
+Fault 5 in F4.6 passes every property this document proposes:
+
+- **P1 (confluence).** The constant is not an ordering property. A plugin with
+  the wrong one commutes *exactly as well* as the correct one.
+- **P2 (sensitivity).** Its output does change when the input changes. It is a
+  real focus measure, not a constant; F4.6's anti-tautology clause is satisfied.
+- **P3 (no residue).** Nothing to do with effect disposal.
+- **P4 (calibrated fixture).** F4.5's fixture asserts *recovered geometry* —
+  where the peak is. **A wrong noise SD does not move the peak.** It moves only
+  the width of the admission band around it, which no fixture asserting a
+  location can see.
+
+F4.6 concluded that fault 2 was the one confluence could not catch and that
+P2+P4 covered it. Fault 5 is a strictly harder case: **P2 and P4 do not cover
+it either.** Shipping all four properties is necessary and not sufficient.
+
+### F5.3 What the API must therefore require
+
+The obvious fix is to make the plugin *declare* its constant. That is not the
+best fix, and the ranking below is the useful part.
+
+#### Option A (preferred) — the host measures the plugin at load time
+
+The host already owns everything needed: a noise plane, the window, the
+regulariser, and the sigma normalisation. So it can simply run the candidate
+operator through its own full configuration and read the SD off:
+
+```rust
+/// Measured by the HOST, once, when the stage is registered. Not declared,
+/// not trusted, not defaulted.
+fn calibrate(op: &dyn FocusMeasure, cfg: &FieldConfig) -> f32 {
+    // unit-variance Gaussian plane, unit-sigma noise model, interior only
+    let field = cfg.run(op, &unit_noise_plane(512, 512), &unit_sigma_model());
+    interior_sd(&field, cfg.support_radius())
+}
+```
+
+Then `tol = t · √2 · calibrate(op, cfg)`, and the gate is correct by
+construction for **any** operator at **any** window with **any** regulariser.
+
+This is strictly better than a declaration on four counts, and the fourth is
+the one that matters:
+
+1. **No trust.** A declaration can be wrong; a measurement cannot be wrong in
+   the same way. Fault 5 becomes unrepresentable rather than merely detectable.
+2. **No configuration coupling.** The constant depends on the operator *and* the
+   host's window *and* the host's regulariser (fact 500). A plugin cannot know
+   the last of those, so a plugin-declared constant is under-determined in
+   principle — not merely in practice.
+3. **No versioning problem.** Change `REGULARISER_RADIUS` and every declared
+   constant in the ecosystem goes stale silently. A measured one re-derives.
+4. **It removes the parameter from the contract entirely**, which is the
+   Cordis-shaped answer: the host is not asking the plugin for a coeffect it
+   cannot reliably supply, it is computing one it already has the means to.
+
+Cost is a few milliseconds at registration — **not measured**, and the honest
+caveat is that it is one noise-plane pass per stage, per configuration change.
+For a `WholeStack` operator or one with an expensive setup this may not be
+free, which is the only reason option B survives.
+
+#### Option B (fallback) — declare it, and refuse a plugin that does not
+
+For operators too expensive to probe at load time, extend F3.3's `Caps`:
+
+```rust
+/// The response SD of THIS operator under unit-sigma noise. Mandatory:
+/// `Caps` cannot be constructed without it, and there is no default.
+#[derive(Clone, Copy, Debug)]
+pub struct NoiseCalibration {
+    pub response_sd: f32,
+    /// Standard error, so the host can refuse a guess rather than a measurement.
+    pub response_sd_sem: f32,
+    /// Fact 152: an operator and its window are one object, not two parameters.
+    pub window_radius: u32,
+    /// Fact 500: this repository published two such constants that differ in
+    /// exactly this, and then divided one by the other as though they were
+    /// commensurable. The field exists because that mistake was made here first.
+    pub includes_regulariser: bool,
+}
+```
+
+**No default.** A default here is a silent 10× gate error, which is precisely
+the failure this amendment exists to prevent. Under option B the load-time
+conformance check of F5.4 becomes mandatory, because a declaration that is
+never checked is a comment.
+
+#### Independent of A or B
+
+1. **The host, not the plugin, owns the gate arithmetic.** The plugin never
+   receives a tolerance.
+2. **`--gate` must not appear in any contributed profile, preset or manifest.**
+   It is not a portable number (discipline 256). The portable form is the
+   achieved outcome — `--target-n-eff`, per fact 324. A second, independent
+   argument for that interface, arriving from portability rather than from
+   calibration.
+3. **Under option A, `--gate` becomes genuinely dimensionless** — `tol = t · √2`
+   against a response whose noise SD is 1.0 by construction — which is the
+   condition under which point 2 could be relaxed. It is the only version of
+   this design in which a number in a shared preset means the same thing on
+   two different operators.
+
+### F5.4 F4.5 is upgraded: one target is not enough
+
+F4.5 proposes a single calibrated fixture. Discipline 257 supersedes that:
+**calibrate against at least two targets that differ in a known way, and make
+the instrument refuse to report when calibration fails.**
+
+The reason is measured, not stylistic. The M43 instrument was a Python model of
+the focus operator checked against both constants this crate measures in-house.
+It matched `FINE_FOCUS_NOISE_SD` to **+0.20%** and missed `FOCUS_NOISE_SD` by
+**+24.26%** — and the single thing those two configurations differ in was the
+bug. A one-target version would have been tuned into agreement and the survey
+built on it would have been silently wrong by a quarter. One target can be
+matched by a compensating error; the *pattern* of pass and fail is what carries
+the diagnosis.
+
+Concretely, for a focus-measure plugin the conformance harness should assert
+`response_sd` at **two** window radii and refuse the plugin if either misses.
+The measurement already exists twice in-crate
+(`the_focus_noise_constant_is_the_measured_one`,
+`the_fine_focus_noise_constant_is_the_measured_one`), so the cost of making it
+mandatory rather than customary is close to zero.
+
+### F5.5 What would falsify this amendment
+
+- If a survey of *actually contributed* operators clustered near `k` = 1, the
+  load-time work would be over-engineering and a documentation note would do.
+  F5.1 is the survey that was meant to test this and it refuted it — but it
+  surveys textbook operators, not real contributions, because there are none yet.
+- **Option A's load-time cost is not measured.** One 512² noise-plane pass per
+  stage is asserted to be milliseconds and has not been timed. If a candidate
+  operator's setup is expensive, or if configuration changes often enough that
+  re-calibration is not amortised, option A degrades to option B. This is the
+  cheapest open item here and should be measured before F5.3 is built.
+- **The claim that pre-normalisation is behaviour-preserving is DERIVED, not
+  measured.** It rests on `focus.rs`'s own documented invariance — "both the
+  argmax and any positive-scaled regulariser are invariant to" a constant
+  rescale — plus fact 436's exact linearity of `tol` in the constant. Together
+  those imply that dividing the field by its noise SD and multiplying the
+  tolerance by the same factor leaves the admission set bit-for-bit unchanged
+  for the shipped operator. **That should be checked against the binary before
+  it is relied on**; it is a one-line change and a byte-identical-output test,
+  and the merge is the wrong place to be confidently wrong.
+- If the merge moved to `--target-n-eff` (fact 324) *and* the solver for it were
+  insensitive to the operator's noise SD, the seam would close on its own. That
+  is not obviously true and is worth checking before building F5.3.
 
 ---
 
