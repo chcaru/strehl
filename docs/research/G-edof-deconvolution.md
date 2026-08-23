@@ -793,6 +793,18 @@ Everything runs through the existing decode path. **No new captures are required
 
 **These are proposals for another agent to accept, edit or reject.** All are external-literature facts; none is an in-house measurement.
 
+> **FOLD RECONCILIATION (orchestrator, added after the fold).** These twenty
+> facts are folded into `SYNTHESIS.md` at **400–419**, not at the 120–139
+> proposed below. The block moved because M20-V already held 122–139 by the
+> time this report was folded; per rule 25 the whole block was shifted to open
+> ground rather than interleaved. The mapping is exactly ordinal — proposed
+> `120 + i` became fact `400 + i` for `i = 0..19` — and all twenty were
+> verified to match on content before this note was written.
+> **This fold is complete. Do not re-fold it.** The numbers 120–139 are still
+> unused in `SYNTHESIS.md`, so a number-availability check will wrongly suggest
+> this milestone is unfolded; that near-miss is what rule 28 now exists to
+> prevent. Check by content, not by number.
+
 | # | Proposed fact | Label |
 |---|---|---|
 | 120 | **The multi-frame Wiener merge across a focal stack is published, with its error law.** Levin et al., MIT-CSAIL-TR-2009-019 (2009), Appendix B, Eq. (52) is the estimator verbatim; Eq. (53) gives `E[error] = (σ⁻²Σ_j\|φ̂_j\|² + σ_ω⁻²)⁻¹`. **The project's fact 140 re-derived a published result and `SYNTHESIS.md` §6 must not claim it as novel.** | VERIFIED (full text) |
