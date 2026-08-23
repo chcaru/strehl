@@ -1,0 +1,9 @@
+# Generated measurement artifacts — regenerate with the commands in README.md.
+data/
+out/
+__pycache__/
+
+# A copy of strehl.exe pinned to a commit, so the CLI could not change underneath
+# this measurement while another agent was editing crates/. The provenance file
+# is committed; the binary is not.
+bin/*.exe
