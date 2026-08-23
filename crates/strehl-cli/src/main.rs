@@ -135,10 +135,22 @@ enum Command {
 
         /// Solve the gate ladder for the gate achieving this mean n_eff.
         ///
-        /// This is the parameter to set, not --gate. Fact 324 measured that a
-        /// fixed gate is not a calibration: at gate 2.0 mean n_eff spans
-        /// 2.26-7.42 across five stacks, and reaching n_eff = 3 needs gates
-        /// from 1.1 to 2.9. Fact 212's nwide = 3 is the calibration target.
+        /// This is the parameter to set, not --gate. A fixed gate is not a
+        /// calibration, and the effect is far larger than fact 324 published:
+        /// M52 re-measured all SEVEN stacks against the current pipeline and
+        /// found mean n_eff at gate 2.0 spanning 1.177 (foam) to 14.386
+        /// (coffee-bean), a 12.22x spread, with the gates that solve for a
+        /// given n_eff spanning 0.7618 to 21.9934 - a factor of 28.9.
+        ///
+        /// Fact 324's own numbers for the two ISO-50 stacks are stale: they
+        /// were folded before commit 2a4f5c5 corrected the ISO-50 gain floor,
+        /// so 119MSDCF is 2.847 and not 2.258, and coffee-bean is 14.386 and
+        /// not 7.422. Its stated mechanism - that n_eff is a roughly fixed
+        /// fraction of bracket length - is refuted: n_eff/N ranges 11.6x.
+        ///
+        /// Practical consequence: foam CANNOT reach n_eff = 3 anywhere on the
+        /// shipped 0.5-4.0 ladder. Fact 212's nwide = 3 is the calibration
+        /// target, and on some stacks this flag is the only way to hit it.
         #[arg(long, value_name = "N")]
         target_n_eff: Option<f64>,
 
