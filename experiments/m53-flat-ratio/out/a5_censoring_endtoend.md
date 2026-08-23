@@ -88,28 +88,93 @@ saturates drifts across the sensor, so it clips in many frames but not the same
 pixel in all of them. This is the same stack M52 found cannot reach
 `n_eff` = 3 anywhere on the shipped 0.5-4.0 ladder.
 
-## Caveat added after the fact: a polarizer is in the optical path
+## Caveat corrected: the polarizer was NOT universal, and three of these stacks are bare-lens
 
-Every frame in this corpus was shot through a *Breakthrough Photography X4 CPL
-67 mm* circular polarizer (Schott B270, MRC16), which was not in any brief when
-the measurements above were made. **A polarizer suppresses specular
-highlights**, and every number in this file is a clipping or specular
-statistic, so all of them are conditioned on it:
+**Superseded disclosure.** An earlier version of this section said a
+*Breakthrough Photography X4 CPL 67 mm* (Schott B270, MRC16) was in the optical
+path for **every frame in the corpus**, and hedged every number below as a
+lower bound. **That was wrong.** The orchestrator circulated the universal claim
+to five agents before it had been checked; the owner has since confirmed the
+filter was fitted for only part of the corpus. The split follows EXIF capture
+date cleanly:
 
-- the clip censuses (0.5052% and 1.1983% ever clipped),
-- the changed-pixel counts (184 and 630),
-- the finding that changed pixels sit at the 98.27th brightness percentile.
+| stack | captured | CPL | used in a5 |
+|---|---|---|---|
+| `109MSDCF` | 17 May | **off** | **yes** |
+| `119MSDCF` | 9 May | off | no (see below) |
+| `112MSDCF` / `113MSDCF` | 7 May | off | no |
+| `coffee-bean` | 10 May | **unknown** — owner cannot recall | no (see below) |
+| `coffee-bubbles` | 25 May | **on** | **yes** |
+| `foam` | 25 May | **probably on** — owner: *"probably. i doubt i would've removed it. but don't recall specifically"* | **yes** |
+| `wrapped-text-1/2`, `bee-1/2/3` | 25 May on | on | no |
 
-The direction is one-sided and worth stating: suppressing speculars can only
-*reduce* the population of pinned samples, so **the measured effect sizes here
-are lower bounds on what a bare lens would give.** The qualitative conclusions
-— that the change is confined to the ever-clipped set, that every change is a
-rise, that the bias removed reaches 13855 DN — do not depend on how many
-pixels clip, only on which ones do. Those stand. The *magnitudes* should be
-read as specific to a polarized corpus.
+`coffee-bean` sits on the off side of the 17-May/25-May boundary but is
+**unknown, not off** — the owner does not recall it specifically. `foam` sits
+6.5 minutes after `coffee-bubbles` in one session, which is why it is probable
+rather than confirmed.
 
-Nobody has measured the filter's transmission or uniformity, and this
-milestone did not either. (Disclosed, not measured.)
+### What survives, and what it applies to
+
+**The one-sided argument itself is unchanged and correct**: suppressing
+speculars can only *reduce* the population of pinned samples, so where a
+polarizer was fitted the effect sizes are lower bounds. What was wrong is the
+**population it was applied to**. Per headline:
+
+| headline | stack | CPL | reading |
+|---|---|---|---|
+| 0.0000% clipped, SHA256 identical | `109MSDCF` | **off** | **bare lens. No hedge. See below — this one gets stronger.** |
+| 0.5052% ever clipped (41632) | `coffee-bubbles` | on | lower bound |
+| 1.1983% ever clipped (98760) | `foam` | probably on | lower bound, conditional on `foam` |
+| 184 changed px, R1/G184/B0 | `coffee-bubbles` | on | lower bound |
+| 630 changed px, R0/G628/B10 | `foam` | probably on | lower bound, conditional |
+| min before-value 36942/65535 | `coffee-bubbles` | on | lower bound |
+| 98.27th percentile, 31767/65535, median 2071 | `foam` | probably on | lower bound, conditional |
+| 13855 DN worst case, median 1967, 0.002–0.008% | `coffee-bubbles` + `foam` | **both on** | lower bound; **does not mix optical paths** |
+| 823 changed samples, 0 falls | `coffee-bubbles` + `foam` | both on | direction is a theorem regardless |
+
+**No a5 headline pools across the CPL boundary.** Every effect size comes from
+the two on-side stacks; `109MSDCF` contributed exactly zero changed pixels and
+so enters no pooled magnitude. The 0.002–0.008% range spans `coffee-bubbles`
+and `foam` only, both on the same side.
+
+**The `109MSDCF` result is strengthened, not weakened, by this correction.**
+It was shot bare-lens on 17 May, so its 0.0000% clip census **cannot be
+attributed to specular suppression**. The bit-exact no-op there is a property
+of a genuinely clip-free stack under an unfiltered lens, which is a cleaner
+control than the superseded disclosure allowed it to be. (MEASURED; the
+re-reading is DERIVED from the capture date, and nothing was re-run.)
+
+The qualitative conclusions were never at risk and are not now: that the change
+is confined to the ever-clipped set, that every change is a rise (a theorem),
+and that the bias removed reaches 13855 DN, all depend on *which* pixels clip,
+not how many.
+
+### Question 194 — is a5 exposed to `coffee-bean`'s unresolvable provenance?
+
+**No. (DERIVED.)** Two independent reasons, and it is worth being precise
+because the milestone-wide stack list below is easy to misread:
+
+1. **`coffee-bean` contributes no measurement to a5 — or to M53 at all.** Its
+   name occurs in three M53 logs, and in every case inside a canned diagnostic
+   block the binary *prints*, quoting M24's photometric-drift survey
+   (`a0_before.log:57-58`: "coffee-bean 11.70% -> 2.21"). **M53 never opened a
+   `coffee-bean` frame.** a5's runs are `109MSDCF`, `coffee-bubbles` and
+   `foam` — the three rows of the result table — and nothing else. This was
+   checked by searching every `.md`/`.log`/`.py`/`.rs` under
+   `experiments/m53-flat-ratio/`, not assumed from the result table.
+2. **The one thing a5 inherits from `coffee-bean` is optics-independent.** a5
+   consumes `CONTAINER_MAX_DN`, which M54 established partly on `coffee-bean`
+   (`M54-clip-mask-measured.md`: "15360 is not a clip point on `coffee-bean`;
+   16383 is"). But `clip.rs:33` declares 16383 as **the 14-bit container
+   maximum**, i.e. 2^14 − 1 — an algebraic property of the container, not a
+   fitted optical measurement. **A polarizer cannot move 2^14 − 1.** The
+   confound therefore does not propagate.
+
+Where a5 *would* be exposed is any headline pooling `coffee-bean` into an
+effect size, and there is none.
+
+Nobody has measured the filter's transmission or uniformity, and this milestone
+did not either. (Disclosed, not measured.)
 
 ## Corpus rename, mid-milestone
 
@@ -117,11 +182,18 @@ The owner renamed five directories in `D:\personal\macro` while this milestone
 was running: `131MSDCF` -> `wrapped-text-1`, `133MSDCF` -> `wrapped-text-2`,
 `134/135/136MSDCF` -> `bee-1/2/3`. Same files, same counts.
 
-**No stack used anywhere in M53 was renamed.** All five this milestone touched
+**No stack used anywhere in M53 was renamed.** All five the *milestone* touched
 — `109MSDCF`, `119MSDCF`, `coffee-bean`, `coffee-bubbles`, `foam` — keep their
-names, and no renamed name appears in any M53 file. Nothing here was re-run or
-relabelled. Recorded so a later reader does not mistake the rename for a change
-of subject.
+names, and no renamed name appears in any M53 file. **This is the milestone-wide
+list, not a5's**: a5 itself measured only `109MSDCF`, `coffee-bubbles` and
+`foam`, the three rows of the result table. `119MSDCF` was measured elsewhere in
+M53 (the negative control's ISO-50 arm and the kernel sweep) but contributes no
+number here. **`coffee-bean` was never measured by M53 at all** — every
+occurrence of the name in an M53 log sits inside a canned diagnostic block the
+binary *prints*, quoting M24's photometric-drift survey (`a0_before.log:57-58`).
+Nothing here was re-run or relabelled. Recorded so a later reader does not
+mistake the rename for a change of subject — or this list for a5's measurement
+set.
 
 ## Verification
 
