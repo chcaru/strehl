@@ -340,10 +340,52 @@ pub fn run(opts: &StackOptions) -> Result<()> {
     Ok(())
 }
 
+/// The one line that tells a user how much to trust every number under it.
+///
+/// **This string is a claim about `strehl_core::profile`, so it goes stale when
+/// that module is corrected and nothing here changes.** It already did once:
+/// commit `2a4f5c5` fixed the ISO-50 gain and rewrote `profile.rs`'s doc
+/// comment to record that the gain relation now has a photon-transfer curve
+/// behind it, while this line went on telling every user the opposite —
+/// "DERIVED from white-level consistency, not a photon-transfer measurement" —
+/// on every run of both subcommands. If `profile.rs` changes what it claims,
+/// this changes with it.
 pub(crate) fn provenance_line(noise: &NoiseModel) -> String {
     match noise.provenance {
+        // Wording tracks `profile.rs`'s own doc comments rather than
+        // paraphrasing them: `gain_divisor` ("the PTC now exists and the
+        // relation survives it at true gain steps"), `base_iso` ("MEASURED
+        // twice, independently" + fact 200a's unlocated boundary), and
+        // `read_noise_e_low`/`_high` (dark frames, with a shape error the
+        // module asserts rather than hides).
         Provenance::Profile => format!(
-            "noise model     : PROVENANCE=Profile -- camera profile at ISO {:.0}. Trustworthy for ranking; the gain is DERIVED from white-level consistency, not a photon-transfer measurement.",
+            concat!(
+                "noise model     : PROVENANCE=Profile -- camera profile at ISO {:.0}. ",
+                "Trustworthy for ranking.\n",
+                "                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal ",
+                "(M25 fact 200,\n",
+                "                  SYNTHESIS fact 550). The divisor was originally DERIVED by ",
+                "reproducing the\n",
+                "                  camera's own white level, which checks one relation and is ",
+                "not a PTC; the\n",
+                "                  PTC now exists and the relation survives it at true gain ",
+                "steps -- the ISO 160\n",
+                "                  control measures 0.3273 DN/e- against the relation's 0.3663, ",
+                "10.7% low.\n",
+                "                  READ NOISE: not photon-transfer measured. DERIVED from dark ",
+                "frames, and below\n",
+                "                  ISO 400 it carries a shape error `profile.rs` asserts rather ",
+                "than hides.\n",
+                "                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants ",
+                "describe the\n",
+                "                  camera MODEL and nothing here was fitted from this stack. ",
+                "Below the profile's\n",
+                "                  base ISO the sensor reads out at base-ISO gain (extended/pull ",
+                "ISO); that floor\n",
+                "                  is measured, but the ISO at which it starts is not (fact ",
+                "200a -- the corpus\n",
+                "                  holds no ISO 64 or 80 capture)."
+            ),
             noise.iso
         ),
         Provenance::Measured => format!(
