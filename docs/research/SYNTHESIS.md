@@ -314,7 +314,12 @@ decode (CPU, rayon ACROSS files -- 2.5x over one-at-a-time, MEASURED M1)
              focus volume, never from focus magnitude -- see discipline 29)
   ->  merge (band-selective noise-gated accumulation; select above the floor,
              average below it; reference from a REGULARISED focus field, never argmax;
-             anisotropic structure-tensor kernels; emits RGB)
+             anisotropic structure-tensor kernels; emits RGB.
+             THE REGULARISER IS NOT BUILT YET AND IS THE LARGEST MEASURED QUALITY WIN
+             OUTSTANDING: at width 17 it cuts absolute reconstruction error 35% (fact 84),
+             more than the entire window axis provides. It does NOT reopen the window
+             choice -- w13 holds at every width 1-33 (fact 80). Width 3 is WORSE than no
+             regulariser at all (fact 86); do not ship a narrow one)
   ->  confidence (peak-vs-floor, modality, out-of-range, index-map coherence, residuals,
                   coverage/occlusion. peak-vs-floor is load-bearing and must be measured
                   ACROSS FRAMES: fact 73 shows focus magnitude can be large where the
@@ -710,7 +715,16 @@ since contributors are not required to be spliceable and only have to emit an `f
 > was folded. Anchor any edit on row *content*, never on position. **Numbers
 > 55-59 are unallocated**: M12 and M13 ran concurrently and were told to number
 > from 50 and 60 respectively so their facts could not collide, and M12 needed
-> only five. Nothing was deleted.
+> only five. Nothing was deleted. **74-79 are unallocated for the same reason**:
+> M14 took 70-73 and M15 was reserved from 80.
+>
+> **The convention now covers questions and discipline items too, because that
+> is where it first failed.** M14 and M15 ran concurrently; facts were reserved
+> (70+ and 80+) and did not collide, but **both proposed "question 19" and both
+> proposed discipline items starting at 30**, because only the fact table had a
+> reservation rule. M15's were renumbered to question 20 and discipline 31-34 on
+> fold. **Give every concurrent milestone a reserved block in all three
+> sequences**, and reconcile at the fold, never in the agent's own report.
 
 | # | Fact | Consequence | Source |
 |---|---|---|---|
@@ -777,6 +791,15 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 71 | **The shipped CLI reproduces M13's separately-written harness to every printed digit.** On 109MSDCF at M2's flat ROI: stacked σ **30.114** DN vs M13's 30.1138, single-frame σ **28.201** vs 28.2007, ratio **1.068x** vs 1.067839, **6** distinct winners vs 6. Against the retired ring on the same ROI: ratio 1.253x → 1.068x, distinct winners 22 → 6, index speckle **34.381% → 1.010%** | **Two independently written implementations, in different crates, agree.** This is the cross-check that distinguishes "the operator is right" from "one harness is self-consistent". The 34x speckle collapse is the merge electing 34x less of its own noise | M14 (MEASURED) — **VERIFIED**: I ran `strehl stack` myself on 109MSDCF and read 30.114 / 28.201 / 1.068x / 6 / 1.010% off the shipped binary, then read 1.067839 / 30.1138 / 6 out of M13's committed CSV. Not circular — M13's CSV predates M14 and was produced by a different codebase |
 | 72 | **φ under pointwise normalisation is a property of the SCENE, not the operator: it spans 47x (0.0085 → 0.3987) over a 64x texture-amplitude range while the operator does not change at all.** Landing inside M13 §6.4's proposed `0.10 < φ < 0.18` bracket requires a texture amplitude near 330 DN | **M13 §6.4's bracket was a plant in disguise** and asserting it would have pinned one ROI — the exact failure M13 itself warned against. What is pinned instead is what is analytic: **841 taps** (`(2·(1+13)+1)²`), `φ_nonorm(w0) = 0`, `φ_nonorm(w13)/(1/729) ∈ (0.88, 1.00)`, plus the two structural relations φ *does* obey (divisor dominates the centre tap; φ tracks contrast) | M14 (MEASURED) — **VERIFIED**: the rising trend is *derivable* — the gradient path's centre sensitivity is scale-free in contrast while the divisor path's scales with it, so φ → 1 as amplitude grows. Mechanism and measurement agree |
 | 73 | **The shipped 27x27 operator has EXACTLY ZERO focus discrimination on an untextured monotone edge.** Sobel magnitude under a radius-13 box reads **37.037037** on a step blurred at σ = 0, 1, 2 **and** 3 — identical to 8 significant figures. Cause: mean \|∇\| over a window wider than the blur is total variation ÷ area, and blur **conserves** TV on a monotone edge. Radius 1 discriminates the same pair at **0.376**, radius 3 at 0.747, radius 13 at **1.0000**. Positive control on broadband texture: 45.13 → 28.88 → 13.64 → 6.90 → 2.24 across the same blur ladder | **A blind spot that no prior measurement covers, and the cost of the w13 decision that M13 could not see** — M13's edge plant is a *textured* occlusion boundary (`build_edge_textures` extracts real tiles), so the texture always carried the focus signal. Smooth gradients are common in macro: specular falloff on a carapace, a defocused background, a petal edge. **Design consequence: confidence must be derived from cross-frame spread in the focus volume, never from focus magnitude** — here the magnitude is *large* (37.04, comparable to sharp texture's 45.13) while the discriminating information is exactly zero. Opens question 19 | ORCHESTRATOR (MEASURED + DERIVED) — mine, not M14's. M14 found the mechanism while diagnosing why an old test was unpassable and reported it as a note about a test; it is a property of the operator it shipped. Reproduced independently in `tvcheck.py` with a null (step) and a positive control (texture) |
+| 80 | **The focus-window optimum does not move under the merge regulariser.** Over 30 occluding-edge cells the window argmin is **13 or 14 — always `interior`, never an endpoint — at every regulariser width from 1 to 33** (and w8 only at the degenerate g=49, which is 4x worse overall) | **Question 17 is closed and M13's w13 stands unchanged.** My own hypothesis — that a 27x27 box and the regulariser are substitutes, so the true window might be ~1.5x too wide — is **REFUTED on the aggregate**. The last recommendation-moving caveat on the window is discharged | M15 (MEASURED) — **VERIFIED**: I recomputed the whole argmin sequence `13,14,13,13,14,14,13,14,8` from M15's committed CSVs with independently written code. Exact |
+| 81 | **Shipping w13 rather than the per-width optimum costs 0.000–0.121 DN over regulariser widths 1–33**, and **0.050 DN** at the reference width 17, against M13's pre-registered 0.87 DN threshold and its w11–w15 basin flatness | w13 survives everywhere the project would actually operate. The cost never approaches the threshold at any width | M15 (MEASURED) — **VERIFIED**: all **9 of 9** values reproduce (0.0000/0.0330/0.0000/0.0000/0.0797/0.0504/0.0000/0.1205/0.5513). The quantity is `regret(w13) − regret(w*)`, *not* the absolute regret level, which is ~3.0–3.4 DN |
+| 82 | **The window and the regulariser substitute only where the window's job is variance reduction.** On zero-step cells the optimal window narrows at **1.72 window-radius units per regulariser-radius unit (r² = 0.94)**; on cells carrying a depth discontinuity the rate is **−0.03 (r² = 0.10)** — no substitution at all | **This is what makes the null interpretable.** At an occluding boundary the window buys *contrast localisation*, which the regulariser cannot supply because it acts **after** the per-frame focus field is formed. The two are not redundant where the decision is actually made | M15 (MEASURED + ARGUED) — **VERIFIED**: I re-fitted both OLS slopes and got **−1.72 / r² 0.94** and **+0.03 / r² 0.10**. **Sign convention**: M15 quotes a *substitution rate* (positive = the regulariser replaces window), which is the negation of the raw slope of w\* on regulariser radius `(g−1)/2`. Both agree under that convention |
+| 83 | **A flat aggregate optimum can be a cancellation, not an absence of movement.** Between regulariser width 1 and 17 the `horizontal` edge cells move narrower **10 of 10** (median −2.5) while `vertical` moves wider **6 of 10** (median +1.5) and `bar` moves wider **6 of 10** (median +1.0); the aggregate median shift is **0** | Reporting only the aggregate would have hidden a real, unanimous, orientation-dependent effect. It also doubles as the **positive control that the design can resolve a moving optimum** — which is what licenses reading fact 80's flatness as a null rather than as an insensitive instrument | M15 (MEASURED) — **VERIFIED**: 10/10, 6/10 and the medians all reproduce. **CORRECTION to M15's framing**: it presents this as horizontal-vs-vertical, but `bar` (a third of the cells) moves *with* vertical. The accurate statement is **`horizontal` is the outlier**, not that the two named geometries oppose each other |
+| 84 | **The merge regulariser at width 17 cuts w13's absolute reconstruction error by 35%** (24.79 → 15.99 DN mean over the 30 occluding-edge cells) and the seed noise floor by 33% (0.228 → 0.153 DN) | **A larger gain than the entire window axis provides**, and `strehl stack` does **not** regularise yet — so this is the single largest measured quality win still unbuilt. Fact 80 is therefore a *forward* guarantee: the window will not need revisiting when the regulariser ships | M15 (MEASURED) — **VERIFIED**: 24.7914 → 15.9939, **35.5%**, over 30 cells |
+| 85 | **Fact 61 survives the regulariser as a plateau, not a turnover.** Above regulariser width 9 the zero-step argmin is nominally `interior` (w33/w26/w20/w16/w10), but the w40 **endpoint's regret is 0.0000–0.0003 DN** — two orders of magnitude below a 3σ seed bar | The *label* broke, the *finding* did not: on a fronto-parallel plant, wider stops paying but never starts hurting. Reporting the label alone would have manufactured a turnover that is not there | M15 (MEASURED, self-corrected) — **VERIFIED**: my null-stratum table reproduces both the labels and the ≤0.0003 DN endpoint regret |
+| 86 | **The merge regulariser at width 3 is worse than no regulariser at all on merged noise.** `ring-1-3` N *rises* 1.2773 → 1.3856 (109MSDCF) and 1.4177 → 1.4785 (119MSDCF) before falling monotonically to ~1.07/1.08 | **Independently reproduces fact 36 on a different measure and a different harness, unregistered.** A narrow regulariser correlates neighbouring selections without averaging enough of them to pay for it | M15 (MEASURED) — **VERIFIED**: both rises and the subsequent monotone fall reproduce exactly from M15's committed noise CSVs |
+| 87 | **M13's w13 is an aggregate over cells whose own optima span w8–w33**, the `vertical` geometry's median sitting at w17 against w10.5 for `bar` and `horizontal`. M13's ladder also omits w14 and w16, which concealed a ≤0.121 DN one-rung movement | The recommendation is correct as published but is a *central tendency*, not a per-cell truth. This is the measurement behind question 16's adaptivity headroom, seen from a different direction | M15 (MEASURED, from M13's own committed bytes) |
+| 88 | **The "flat ROI ≈ 28–30 DN `single_sigma`" discriminator is 109MSDCF-specific.** M11's committed data puts 119MSDCF's four flat ROIs at **43.2 / 49.0 / 50.8 / 53.1 DN**; applying 109's band to 119 rejects **all four correct ROIs** | **This was a live trap in `AGENTS.md`**, where it was written as general guidance for anyone reusing a harness; it is now corrected in place. Separate flat from detail *within* a stack; never carry an absolute threshold across stacks | M15 (MEASURED) — **VERIFIED**: I read all eight flat ROIs out of M11's own CSVs; 109 spans 27.6–30.0 and 119 spans 43.2–53.1 |
 | 26 | **Every existing test stack was shot with a 2x teleconverter**, disclosed only after M1-M4 were complete. `LensModel = "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"`, `LensSpec = "FE 200mm F5.6 Macro OSS"`, `FocalLength = 200 mm`, `MaxApertureValue = 5.6`. **CORRECTED 2026-08-22 — this row previously claimed the maker-note lens ID "still reads as the bare lens". That is false.** Sony enumerates the *composed path* as its own ID: `LensType3` = **32893** bare, **33093** +1.4x, **33094** +2x, and every corpus frame reports **33094**. The tags that are useless are `LensType` (65535) and `LensType2` (0) | Two consequences, one of them now inverted. **(a)** Anything reading `FocalLength`/`FNumber` from EXIF is already TC-correct, so there is no hidden 2x error in the advisor. **(b)** **Key a lens profile on `LensType3`, which already denotes the composed optical path.** The original conclusion — "keying on the lens ID is a bug" — was right about the *requirement* (the key must denote the composed path, since `p`, focal length and aperture all differ) and wrong about the *fact*, because it generalised from `LensType`/`LensType2` to all lens identity. The surviving rule is narrower and sharper: **key on `LensType3`; never on `LensType`, `LensType2`, or a parsed `LensModel` string** | MEASURED-LOCALLY (exiftool `-n`, all corpus stacks; ID table read from exiftool's own `Sony:LensType3` lookup) |
 | 27 | **The bellows factor of the composed path is `B = (1 + m/p) ∈ [2.41, 3.06]`**, point estimate 2.6-2.9, measured from the diffraction cutoff in the raw CFA. At f/11 the green-quincunx spectrum has a genuine knee at **f_sig = 0.2762 cyc/px**, above which the floor matches the photon-transfer noise model to **0.950x** — so it is a real optical cutoff, not a fitted plateau. **`B = 5` (p = 0.5) is REFUTED 5/5 by a model-free test** at two apertures: there is optical signal at 0.3508 cyc/px, where p=0.5 permits none. **`B = 1` is refuted by ~3x** | **The corpus's "dominant uncertainty in the whole advisor" (±38%) is retired to −20%/+2%, from data the owner already had, with no bench work.** With m ≈ 2.0, **p ≈ 1.0-1.4** — the working assumption of p=1 was right. It does **not** vanish: M5 measures the product `(1 + m/p)` and cannot separate `p` from `m`, so `B` is known at *one* magnification only. A bench measurement of `p` alone would give `B` at any magnification | M5 (MEASURED → DERIVED; independently reproduced) |
 | 28 | **EXIF `FNumber` is the *marked* aperture and is NOT bellows-corrected.** The body composes the teleconverter into `FocalLength` and `FNumber` (fact 26) but applies no correction for working at 2:1. **Marked f/11 is optically f/33** | **The most directly actionable finding in the corpus.** Every advisor formula that reads `FNumber` and treats it as `N_eff` **under-predicts diffraction blur by ~3x** and will recommend f/11 as "safe". Apply `N_eff = FNumber_exif * B`. Consequences at B=3: f/8 discards **40%** of the sensor's 2-D Nyquist area (46% of contrast at 4-px detail), f/11 discards **68%** (90%) — a 33 MP sensor used as ~10.5 MP. Critical sampling is at **N_marked = f/6.21** | M5 §7 (DERIVED, factor-of-3 margin) |
@@ -1043,6 +1066,36 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      drift, cache warming and clock ramp to whichever parameter was measured last. Confirmed from
      the other side by my own re-run: the residual spread it reports (0.69%) disagrees with M14's
      (1.28%) by more than either differs from zero, so **quote flatness as a bound, not a value**.
+
+31. **An `interior` argmin label is only meaningful when the argmin is separated from its
+     neighbours — especially from the endpoints — by more than the noise floor.** Item 25 refuses
+     to call an *endpoint* argmin an optimum; this is the mirror error, calling a **plateau** a
+     turnover. Publish the separation next to the label. M15 §3: the zero-step argmin reads
+     `interior` at w33/w26/w20/w16/w10 while the w40 endpoint sits within **0.0003 DN** of the
+     minimum — nominally a turnover, actually a plateau, and fact 61 survives because M15 checked
+     the separation instead of the label.
+
+32. **A max-over-cells regret statistic is not comparable across a treatment that changes the
+     dispersion of per-cell optima.** Mean regret is, because the cell set is fixed; the max is
+     not. Register decision thresholds on mean regret, and always check **absolute** error before
+     believing a worst-case regression. M15 §5.1: worst-case regret at w13 *doubled* while w13's
+     absolute error *fell 35%* — the statistic moved the wrong way against a treatment that was
+     helping. M15 registered this arm itself and disclosed it as invalid rather than dropping it.
+
+33. **When a null result is the finding, publish the stratum on which the effect IS present, as
+     the positive control that the design could have resolved it.** A null is only evidence if the
+     same ladder, seeds, objective and aggregation rule are shown moving somewhere. M15 §4:
+     substitution rate **1.72 (r² 0.94)** on the zero-step stratum against **≈0 (r² 0.10)** on the
+     decision stratum, from one harness invocation. Fact 83's orientation split is a second such
+     control — the aggregate is flat *because two unanimous effects cancel*, not because nothing
+     moves.
+
+34. **Prefer re-running a prior milestone's harness unmodified to reimplementing it.** The
+     experiment binaries are deterministic, so byte-identity of the replication CSV is the
+     strongest available form of item 15's reproduction gate, and it simultaneously proves the
+     binary *and* its inputs are unchanged. M15 §0.2 reproduced M13's committed CSVs by SHA-256 on
+     both stacks. **State explicitly that this is a consistency check, not independent evidence**
+     (item 20) — it cannot detect an error that was already in the harness.
 
 ---
 
@@ -1458,17 +1511,26 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     explicit occlusion detection. This is also the natural home for the project's confidence output
     — an occlusion detector and a confidence map are close to the same object.
 
-17. **Does the window optimum survive the merge regulariser?** **Every one of M13's 7,200 edge
-    measurements is at regulariser `width = 1` — that is, with the regulariser switched off.** M2
+17. **~~Does the window optimum survive the merge regulariser?~~ — CLOSED by M15. Yes, and my
+    hypothesis was refuted.** The argmin is **w13–w14, always `interior`, at every regulariser
+    width from 1 to 33**; shipping w13 costs **0.050 DN** at the reference width 17 against a
+    pre-registered 0.87 DN threshold (facts 80–81). The redundancy argument below was right about
+    the *mechanism* and wrong about *where it applies*: the regulariser does substitute for the
+    window at **1.72 : 1** — but only on cells with **no depth discontinuity** (r² 0.94). On the
+    cells that actually decide the window, the substitution rate is **≈ 0** (fact 82), because a
+    wide window buys contrast *localisation* at an occluding boundary and the regulariser cannot
+    supply it — it acts after the per-frame focus field is formed. **M13's recommendation stands
+    unchanged and its last recommendation-moving caveat is discharged.** The regulariser remains
+    the largest unbuilt quality win in the project (fact 84: −35% absolute error), so fact 80 is
+    best read as a *forward guarantee* that shipping it will not reopen the window.
+    *(Original statement of the question, preserved:)* Every one of M13's 7,200 edge
+    measurements is at regulariser `width = 1` — that is, with the regulariser switched off. M2
     measured that the regulariser alone cuts merged-noise excess from 1.2527 to 1.0737 at width 17,
     which is a *larger* noise reduction than the entire window axis provides (1.1324 → 1.0778 over
     w5→w40). The two mechanisms are plausibly redundant: if the regulariser is already buying the
     variance reduction, the wide window's benefit shrinks while its occlusion-halo cost does not,
-    and **the optimum should move narrower than w13**. This is the one unmeasured factor that can
-    move the recommendation — the other four in M13 §7.6 are scope caveats — and it is **cheap**,
-    because M13's own Gate 1 already ran the harness at width 17. Until it is measured, w13 is the
-    optimum for an unregularised pipeline. *(Raised by the orchestrator while verifying M13, which
-    disclosed the gap but did not propose it as a question.)*
+    and **the optimum should move narrower than w13**. *(Raised by the orchestrator while verifying
+    M13, which disclosed the gap but did not propose it as a question.)*
 
 18. **Why does the 119MSDCF horizontal texture pair behave differently?** Its `E_excess` optimum
     sits at **w8 at all five depth steps** — the only cell with a constant argmin — while the other
@@ -1493,6 +1555,18 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     not need to change at all. **Guard against overfitting to the fix:** this must be scored on the
     same edge cells M13 used, so a repair cannot silently regress the textured-occlusion case that
     picked w13 in the first place.
+
+20. **Why does edge orientation set the direction the window optimum moves?** Under regularisation,
+    `horizontal` occluding edges move the optimum narrower **unanimously** (10/10, median −2.5)
+    while `vertical` (6/10, +1.5) and `bar` (6/10, +1.0) move wider; they cancel in the aggregate
+    (fact 83). Both the Sobel pair and the box window are 90°-symmetric, so the asymmetry is either
+    **texture anisotropy** in these two stacks — harmless, and a corpus artefact — or a property of
+    the `|d| ≤ 24` band geometry that `E_excess` uses, which would be a **defect M13 and M15
+    share** and would put a directional bias in every window number either produced. Distinguishing
+    them needs a synthetic isotropic texture and a rotated band; both are cheap. `UNVERIFIED`.
+    *(Raised by M15 as its question 19; renumbered to 20 — 19 was taken by fact 73's blind spot in
+    a concurrent milestone. This is exactly the collision the fact-number reservation under §4
+    exists to prevent, arriving on the question list instead.)*
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must

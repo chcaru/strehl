@@ -12,6 +12,58 @@ produced. `VERIFIED` = a number produced twice through disjoint paths.
 `ARGUED` = a mechanism I believe and have not isolated. `UNVERIFIED` = a
 belief I am flagging so nobody quotes it as fact.
 
+> ### ORCHESTRATOR VERIFICATION — 2026-08-22
+>
+> **Independently verified. Zero reporting defects — the third milestone running.**
+> This milestone refutes a hypothesis **I** raised while verifying M13, so I
+> checked the result that suits me least, hardest. It holds.
+>
+> Recomputed from M15's committed CSVs with independently written code
+> (`m15verify.py`, `m15b.py`, `m15c.py`):
+>
+> - **The answer.** Argmin sequence `13, 14, 13, 13, 14, 14, 13, 14, 8` across
+>   the nine regulariser widths — **exact**, all `interior`.
+> - **The decision cost**, all **9 of 9** values: 0.0000 / 0.0330 / 0.0000 /
+>   0.0000 / 0.0797 / 0.0504 / 0.0000 / 0.1205 / 0.5513 DN. Note this is
+>   `regret(w13) − regret(w*)`, **not** the absolute regret level (~3.0–3.4 DN);
+>   I recomputed the wrong quantity first and had to re-read §5 to find the
+>   right one. Worth stating explicitly in §5 for the next reader.
+> - **Gate A byte-identity** — I hashed the CSVs myself: `5A35B7E6AE7C14AC…`
+>   (109) and `6F5F89C82E9517D3…` (119), M13's and M15's identical on both.
+>   M15's own caveat that this is a *consistency* check, not independent
+>   evidence, is correct and is now discipline 34.
+> - **The mechanism (fact 82)**, by re-fitting both regressions: **−1.72,
+>   r² 0.94** on the zero-step stratum and **+0.03, r² 0.10** on the decision
+>   stratum. The raw slopes carry the **opposite sign** to the report's
+>   "1.72 / −0.03", because the report quotes a *substitution rate*. Both are
+>   consistent; the convention is now stated in fact 82 so nobody reads a sign
+>   error into it.
+> - **Fact 84**: 24.7914 → 15.9939 DN, **35.5%**, over 30 cells.
+> - **Fact 86**: N rises at g=3 on **both** stacks before falling — an
+>   unregistered reproduction of fact 36 on a different measure and harness.
+> - **Fact 88**: 109 spans 27.6–30.0 DN, 119 spans 43.2–53.1 DN, from M11's own
+>   CSVs.
+> - **Fact 85 / the plateau**: my null-stratum table reproduces the `interior`
+>   labels *and* the ≤0.0003 DN endpoint regret that makes them meaningless.
+>
+> **One correction, to framing not to arithmetic.** Fact 83 is presented as
+> `horizontal` versus `vertical`. `bar` is a third of the cells and moves **with**
+> `vertical` (6/10 wider, median +1.0). The accurate statement is that
+> **`horizontal` is the outlier**, not that two named geometries oppose each
+> other — which slightly strengthens question 20, since one geometry behaving
+> differently from the other two is more suggestive of a band-geometry defect
+> than a two-way split would be.
+>
+> **Two numbering collisions, fixed on fold.** M15 proposed its new question as
+> 19 and its discipline items as 30–33; both had been taken hours earlier by the
+> concurrent M14 fold. They are renumbered to **question 20** and **discipline
+> 31–34**. Facts 80–88 were unaffected — which is what the §4 reservation
+> convention is for, and it should be extended to questions and discipline items.
+>
+> **Acted on immediately:** fact 88 was a **live trap in `AGENTS.md`**, written
+> there as general harness-reuse guidance. Corrected in place.
+
+
 ---
 
 ## The one-paragraph answer
