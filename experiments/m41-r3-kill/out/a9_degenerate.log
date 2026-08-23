@@ -1,0 +1,5 @@
+M41 step 9 -- degenerate control imposed by construction (s = 0).
+  [109MSDCF] D'(s=0) vs C  [EXACT-EQUALITY PREDICTION]: RMS residual 0.0099 DN (0.0013% of |C| = 776.9 DN), max |residual| 0.12 DN, out-of-range 0.000%
+  [109MSDCF] D (s=0) vs C  [diffraction term alone]: RMS residual 86.4240 DN (11.1237% of |C| = 776.9 DN), max |residual| 632.73 DN, out-of-range 33.271%
+  [119MSDCF] D'(s=0) vs C  [EXACT-EQUALITY PREDICTION]: RMS residual 0.0013 DN (0.0001% of |C| = 1655.6 DN), max |residual| 0.05 DN, out-of-range 0.000%
+  [119MSDCF] D (s=0) vs C  [diffraction term alone]: RMS residual 465.6277 DN (28.1239% of |C| = 1655.6 DN), max |residual| 4421.69 DN, out-of-range 61.880%

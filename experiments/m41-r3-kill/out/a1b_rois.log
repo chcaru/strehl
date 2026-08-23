@@ -1,0 +1,10 @@
+--- 109MSDCF: 22 frames ISO 160 g=0.36630 plane 3514x2344
+    detail x=2215 y=699: mean 777 sd 732.8 hp_sd 82.31 model_sigma 11.98 hp_sd/sigma 6.87
+    flat   x=1356 y=0: mean 406 sd 63.8 hp_sd 9.93 model_sigma 8.69 hp_sd/sigma 1.14   <-- rule 10 detector; near 1.0 means the ROI is noise-dominated, which is what a flat ROI must be
+--- 119MSDCF: 33 frames ISO 50 g=0.11447 plane 3514x2344
+    detail x=2251 y=800: mean 1676 sd 1621.8 hp_sd 183.65 model_sigma 9.80 hp_sd/sigma 18.74
+    flat   x=1396 y=0: mean 817 sd 123.4 hp_sd 12.40 model_sigma 6.85 hp_sd/sigma 1.81   <-- rule 10 detector; near 1.0 means the ROI is noise-dominated, which is what a flat ROI must be
+--- coffee-bubbles: 19 frames ISO 1000 g=2.28938 plane 3514x2344
+    detail x=1674 y=893: mean 1700 sd 3200.0 hp_sd 1362.21 model_sigma 44.18 hp_sd/sigma 30.83
+    flat   x=21 y=0: mean 176 sd 34.4 hp_sd 21.14 model_sigma 14.41 hp_sd/sigma 1.47   <-- rule 10 detector; near 1.0 means the ROI is noise-dominated, which is what a flat ROI must be
+wrote out/rois_b.json

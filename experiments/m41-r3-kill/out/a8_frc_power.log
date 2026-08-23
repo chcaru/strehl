@@ -1,0 +1,13 @@
+M41 step 8 -- power check on split-half FRC.  See docstring for the two predictions; this control can fail.
+  [109MSDCF] FLAT ROI (no scene detail by construction)
+      arm C split-half FRC: 1/7 crossing 0.4961 cyc/px   @0.10  0.899  @0.20  0.430  @0.28  0.295  @0.35  0.251  @0.45  0.255
+      same halves, COMMON MODE REMOVED: 1/7 crossing 0.0039   @0.10 -1.000  @0.20 -1.000  @0.28 -1.000  @0.35 -1.000  @0.45 -1.000
+  [109MSDCF] DETAIL ROI (for reference)
+      arm C split-half FRC: 1/7 crossing 0.4961 cyc/px   @0.10  0.998  @0.20  0.946  @0.28  0.595  @0.35  0.252  @0.45  0.196
+      same halves, COMMON MODE REMOVED: 1/7 crossing 0.0039   @0.10 -1.000  @0.20 -1.000  @0.28 -1.000  @0.35 -1.000  @0.45 -1.000
+  [119MSDCF] FLAT ROI (no scene detail by construction)
+      arm C split-half FRC: 1/7 crossing 0.4961 cyc/px   @0.10  0.974  @0.20  0.831  @0.28  0.677  @0.35  0.636  @0.45  0.598
+      same halves, COMMON MODE REMOVED: 1/7 crossing 0.0039   @0.10 -1.000  @0.20 -1.000  @0.28 -1.000  @0.35 -1.000  @0.45 -1.000
+  [119MSDCF] DETAIL ROI (for reference)
+      arm C split-half FRC: 1/7 crossing 0.4961 cyc/px   @0.10  1.000  @0.20  0.993  @0.28  0.950  @0.35  0.838  @0.45  0.631
+      same halves, COMMON MODE REMOVED: 1/7 crossing 0.0039   @0.10 -1.000  @0.20 -1.000  @0.28 -1.000  @0.35 -1.000  @0.45 -1.000

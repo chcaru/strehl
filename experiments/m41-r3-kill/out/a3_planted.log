@@ -1,0 +1,40 @@
+M41 POSITIVE CONTROL -- planted synthetic, forward model exactly true.
+latent (512, 512), mean 1538.9 DN, p99.9 4505.5 DN
+
+--- noise x0.25 (median modelled sigma 3.47 DN) ---
+    A : PSNR  28.262 dB   grad-corr 0.9004
+    B : PSNR  29.472 dB   grad-corr 0.9378
+    C : PSNR  28.047 dB   grad-corr 0.8929
+    D : PSNR  21.149 dB   grad-corr 0.9166
+    D': PSNR  20.123 dB   grad-corr 0.8658
+    E : PSNR  21.056 dB   grad-corr 0.8127
+    D - A = -7.113 dB PSNR, +0.0162 grad-corr
+
+--- noise x1 (median modelled sigma 6.95 DN) ---
+    A : PSNR  28.261 dB   grad-corr 0.9003
+    B : PSNR  29.489 dB   grad-corr 0.9372
+    C : PSNR  28.047 dB   grad-corr 0.8928
+    D : PSNR  21.141 dB   grad-corr 0.9066
+    D': PSNR  20.123 dB   grad-corr 0.8657
+    E : PSNR  20.758 dB   grad-corr 0.6229
+    D - A = -7.120 dB PSNR, +0.0063 grad-corr
+
+--- noise x4 (median modelled sigma 13.89 DN) ---
+    A : PSNR  28.260 dB   grad-corr 0.9001
+    B : PSNR  29.512 dB   grad-corr 0.9343
+    C : PSNR  28.046 dB   grad-corr 0.8927
+    D : PSNR  21.128 dB   grad-corr 0.8918
+    D': PSNR  20.122 dB   grad-corr 0.8651
+    E : PSNR  19.737 dB   grad-corr 0.3819
+    D - A = -7.132 dB PSNR, -0.0083 grad-corr
+
+--- noise x16 (median modelled sigma 27.77 DN) ---
+    A : PSNR  28.250 dB   grad-corr 0.8987
+    B : PSNR  29.441 dB   grad-corr 0.9211
+    C : PSNR  28.041 dB   grad-corr 0.8922
+    D : PSNR  21.115 dB   grad-corr 0.8787
+    D': PSNR  20.120 dB   grad-corr 0.8626
+    E : PSNR  17.073 dB   grad-corr 0.2025
+    D - A = -7.135 dB PSNR, -0.0200 grad-corr
+
+RULE 13 -- can the plant express the failure? D-A across the sweep: x0.25: -7.11 dB, x1.0: -7.12 dB, x4.0: -7.13 dB, x16.0: -7.14 dB

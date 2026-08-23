@@ -1,0 +1,14 @@
+--- 109MSDCF: 22 frames, ISO 160, g=0.36630 DN/e-, RN=4.2 e-, quad plane 3514x2344
+    detail ROI x=1984 y=832 512x512: mean 782 DN, sd 707.0, model sigma 12.02, ten_sig 242372.4
+    flat   ROI x=1728 y=448 512x512: mean 576 DN, sd 523.1, model sigma 10.33, ten_sig 90573.8
+    flat-ROI sd/model_sigma = 50.651  (rule 10: >>1 means the ROI carries structure, not just noise)
+--- 119MSDCF: 33 frames, ISO 50, g=0.11447 DN/e-, RN=4.2 e-, quad plane 3514x2344
+    detail ROI x=1344 y=576 512x512: mean 1574 DN, sd 1412.1, model sigma 9.50, ten_sig 1015773.4
+    flat   ROI x=320 y=832 512x512: mean 1573 DN, sd 1404.1, model sigma 9.50, ten_sig 670496.9
+    flat-ROI sd/model_sigma = 147.870  (rule 10: >>1 means the ROI carries structure, not just noise)
+--- coffee-bubbles: 19 frames, ISO 1000, g=2.28938 DN/e-, RN=1.47 e-, quad plane 3514x2344
+    detail ROI x=1728 y=1088 512x512: mean 1407 DN, sd 2874.1, model sigma 40.20, ten_sig 65011772.0
+    flat   ROI x=448 y=1344 512x512: mean 196 DN, sd 40.0, model sigma 15.17, ten_sig 8623.8
+    flat-ROI sd/model_sigma = 2.639  (rule 10: >>1 means the ROI carries structure, not just noise)
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\m41-r3-kill\out\rois.json

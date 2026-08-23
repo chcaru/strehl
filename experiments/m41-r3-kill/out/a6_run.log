@@ -1,0 +1,61 @@
+M41 RUN OF RECORD.  Kill condition committed in f809772 before any data.
+arm-A operator control: pure-noise regularised focus sd 0.015367+-0.000359 vs shipped FOCUS_NOISE_SD 0.015214 -> 1.0101x
+f_sig = 0.2762 cyc/px (fact 27).  tile 128/64.  gate solved for n_eff = 3 (fact 212).
+
+=== 109MSDCF: 22 frames, decode 17.9s, detail [2215, 699, 512, 512] flat [1356, 32, 512, 512]
+    self-calibrated s = 1.1856 quad px/frame (through-focus FWHM measured 10.0 frames, modelled 9.0); gate t = 3.3269
+    FLAT ROI single middle frame: SPATIAL sd 76.272 DN, high-pass SPATIAL sd 11.770 DN (model sigma 8.77 DN)
+      NOISE AXIS.  hp_ratio is the one with power: the raw sd of this ROI is dominated by residual scene structure.
+      A : sd    76.197 (0.999x)   hp_sd     9.661 (0.821x)   oor   0.000%
+      B : sd    75.636 (0.992x)   hp_sd    14.591 (1.240x)   oor   0.000%
+      C : sd    75.029 (0.984x)   hp_sd     5.181 (0.440x)   oor   0.000%
+      D : sd    87.423 (1.146x)   hp_sd    33.502 (2.846x)   oor  13.916%
+      D': sd    78.236 (1.026x)   hp_sd    11.094 (0.943x)   oor   1.112%
+      E : sd  1736.509 (22.767x)   hp_sd  1699.412 (144.391x)   oor  99.034%
+    DETAIL ROI, arm A n_eff = 3.00
+      A : sd     731.88  hp_sd    87.973  oor   0.000%  P(>f_sig)/P(<f_sig) 7.7251e-05
+      B : sd     706.06  hp_sd    87.634  oor   0.000%  P(>f_sig)/P(<f_sig) 3.8921e-04
+      C : sd     718.73  hp_sd    49.053  oor   0.000%  P(>f_sig)/P(<f_sig) 5.4482e-06
+      D : sd     818.04  hp_sd   271.424  oor  63.966%  P(>f_sig)/P(<f_sig) 3.0754e-05
+      D': sd     748.28  hp_sd    98.652  oor  26.338%  P(>f_sig)/P(<f_sig) 9.7235e-05
+      E : sd    5474.56  hp_sd  5201.106  oor  98.764%  P(>f_sig)/P(<f_sig) 5.2612e-01
+      DETAIL AXIS (FRC, split-half).  Rule 18: FRC is a per-ring CORRELATION and is amplitude-free, so it cannot see how much power an arm put in a band -- only whether the two halves agree there.
+      A : 1/7 crossing 0.3680 cyc/px   @0.10  0.976  @0.20  0.875  @0.28  0.565  @0.35  0.224  @0.45 -0.001
+      B : 1/7 crossing 0.3214 cyc/px   @0.10  0.949  @0.20  0.766  @0.28  0.228  @0.35  0.033  @0.45 -0.266
+      C : 1/7 crossing 0.4961 cyc/px   @0.10  0.998  @0.20  0.946  @0.28  0.595  @0.35  0.252  @0.45  0.196
+      D : 1/7 crossing 0.4961 cyc/px   @0.10  0.994  @0.20  0.954  @0.28  0.724  @0.35  0.789  @0.45  0.844
+      D': 1/7 crossing 0.3906 cyc/px   @0.10  0.995  @0.20  0.950  @0.28  0.709  @0.35  0.298  @0.45  0.020
+      E : 1/7 crossing 0.4961 cyc/px   @0.10  0.994  @0.20  0.949  @0.28  0.623  @0.35  0.685  @0.45  0.735
+    PERMUTATION NULL (frame->OTF assignment shuffled): FRC 1/7 0.4961 (D 0.4961), hp_sd 135.753 (D 271.424), oor 48.00% (D 63.97%)
+    CIRCULARITY s=0.5928 (0.5s): FRC 1/7 0.4961  hp_sd 233.963  oor 55.92%
+    CIRCULARITY s=2.3712 (2s): FRC 1/7 0.4961  hp_sd 268.037  oor 67.09%
+
+=== 119MSDCF: 33 frames, decode 26.8s, detail [2251, 800, 512, 512] flat [1396, 32, 512, 512]
+    self-calibrated s = 0.6017 quad px/frame (through-focus FWHM measured 17.0 frames, modelled 17.0); gate t = 4.1758
+    FLAT ROI single middle frame: SPATIAL sd 131.655 DN, high-pass SPATIAL sd 13.098 DN (model sigma 6.90 DN)
+      NOISE AXIS.  hp_ratio is the one with power: the raw sd of this ROI is dominated by residual scene structure.
+      A : sd   130.183 (0.989x)   hp_sd    11.077 (0.846x)   oor   0.000%
+      B : sd   131.176 (0.996x)   hp_sd    16.812 (1.283x)   oor   0.000%
+      C : sd   129.317 (0.982x)   hp_sd     4.997 (0.382x)   oor   0.000%
+      D : sd   139.550 (1.060x)   hp_sd    43.288 (3.305x)   oor  35.166%
+      D': sd   130.793 (0.993x)   hp_sd    12.818 (0.979x)   oor   0.601%
+      E : sd  3883.074 (29.494x)   hp_sd  3870.348 (295.487x)   oor  99.403%
+    DETAIL ROI, arm A n_eff = 3.00
+      A : sd    1614.67  hp_sd   210.143  oor   0.000%  P(>f_sig)/P(<f_sig) 1.0746e-04
+      B : sd    1567.28  hp_sd   209.450  oor   0.000%  P(>f_sig)/P(<f_sig) 3.0268e-04
+      C : sd    1574.13  hp_sd   115.666  oor   0.000%  P(>f_sig)/P(<f_sig) 5.6789e-06
+      D : sd    2072.83  hp_sd  1148.136  oor  81.249%  P(>f_sig)/P(<f_sig) 2.1224e-03
+      D': sd    1629.72  hp_sd   230.389  oor  23.217%  P(>f_sig)/P(<f_sig) 1.3276e-04
+      E : sd   22603.49  hp_sd 22153.346  oor  99.351%  P(>f_sig)/P(<f_sig) 6.5495e-01
+      DETAIL AXIS (FRC, split-half).  Rule 18: FRC is a per-ring CORRELATION and is amplitude-free, so it cannot see how much power an arm put in a band -- only whether the two halves agree there.
+      A : 1/7 crossing 0.4961 cyc/px   @0.10  0.996  @0.20  0.982  @0.28  0.934  @0.35  0.855  @0.45  0.628
+      B : 1/7 crossing 0.4961 cyc/px   @0.10  0.991  @0.20  0.924  @0.28  0.657  @0.35  0.537  @0.45  0.261
+      C : 1/7 crossing 0.4961 cyc/px   @0.10  1.000  @0.20  0.993  @0.28  0.950  @0.35  0.838  @0.45  0.631
+      D : 1/7 crossing 0.4961 cyc/px   @0.10  0.999  @0.20  0.995  @0.28  0.986  @0.35  0.991  @0.45  0.987
+      D': 1/7 crossing 0.4961 cyc/px   @0.10  1.000  @0.20  0.995  @0.28  0.977  @0.35  0.927  @0.45  0.727
+      E : 1/7 crossing 0.4961 cyc/px   @0.10  0.999  @0.20  0.995  @0.28  0.960  @0.35  0.969  @0.45  0.970
+    PERMUTATION NULL (frame->OTF assignment shuffled): FRC 1/7 0.4961 (D 0.4961), hp_sd 524.013 (D 1148.136), oor 63.74% (D 81.25%)
+    CIRCULARITY s=0.3009 (0.5s): FRC 1/7 0.4961  hp_sd 1032.771  oor 78.52%
+    CIRCULARITY s=1.2034 (2s): FRC 1/7 0.4961  hp_sd 1059.034  oor 80.36%
+
+wrote out/a6_results.json

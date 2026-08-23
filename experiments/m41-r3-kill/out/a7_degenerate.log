@@ -1,0 +1,6 @@
+coffee-bubbles: 19 frames ISO 1000, detail ROI [1674, 893, 512, 512]
+  through-focus response across frames: min 3.60367 max 8.66036 spread 5.05669 = 235.02 gate sigma
+  (fact 49 says this stack is at CONSTANT focus; the spread above is the check that it really is, in the shipped gate's own units)
+  self-calibrated s = 0.8509 quad px/frame (FWHM measured 8.0 of 19 frames -> a flat curve should saturate the frame count)
+  D' vs C: RMS residual 1130.4894 DN, max |residual| 10467.67 DN, relative RMS 61.7092% of |C|; out-of-range 5.975%
+  D vs C: RMS residual 8992.9102 DN, max |residual| 93961.68 DN, relative RMS 490.8891% of |C|; out-of-range 87.467%

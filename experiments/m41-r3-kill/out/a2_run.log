@@ -1,0 +1,55 @@
+M41 -- six pre-registered merge arms.  Kill condition: commit f809772.
+f_sig = 0.2762 cyc/px (fact 27).  gate = 0.5.  tile 128/64.
+[109MSDCF] decoded 22 frames, detail (2215, 699, 512, 512) flat (1356, 32, 512, 512), 8.1s
+[109MSDCF] SELF-CALIBRATED blur growth s = 1.1856 quad px/frame (through-focus FWHM measured 9.0 frames, modelled 9.0)
+[109MSDCF] FLAT ROI, single middle frame: SPATIAL sd 76.272 DN, high-pass SPATIAL sd 11.770 DN  (rule 10: these are SPATIAL, never compared to a temporal sigma)
+    flat A : sd   75.502 (0.990x)  hp_sd    7.553 (0.642x)  out-of-range 0.000%
+    flat B : sd   76.447 (1.002x)  hp_sd   14.939 (1.269x)  out-of-range 0.000%
+    flat C : sd   75.029 (0.984x)  hp_sd    5.181 (0.440x)  out-of-range 0.000%
+    flat D : sd   69.880 (0.916x)  hp_sd   20.849 (1.771x)  out-of-range 18.156%
+    flat D': sd   66.322 (0.870x)  hp_sd    6.628 (0.563x)  out-of-range 16.830%
+    flat E : sd  242.279 (3.177x)  hp_sd  218.305 (18.548x)  out-of-range 92.162%
+[109MSDCF] arm A mean accepted frame count n_eff = 10.36 (detail ROI)
+    det  A : sd    725.24  hp_sd   68.400  oor  0.000%  P(>f_sig)/P(<f_sig) 1.394e-05
+    det  B : sd    711.80  hp_sd   92.571  oor  0.000%  P(>f_sig)/P(<f_sig) 3.621e-04
+    det  C : sd    718.73  hp_sd   49.053  oor  0.000%  P(>f_sig)/P(<f_sig) 5.448e-06
+    det  D : sd    665.38  hp_sd  170.569  oor 67.750%  P(>f_sig)/P(<f_sig) 6.739e-06
+    det  D': sd    632.03  hp_sd   62.392  oor 59.314%  P(>f_sig)/P(<f_sig) 4.438e-05
+    det  E : sd   1151.33  hp_sd  860.227  oor 92.307%  P(>f_sig)/P(<f_sig) 7.419e-02
+    FRC  A : 1/7 crossing 0.4141 cyc/px   FRC@0.10 0.992  FRC@0.20 0.920  FRC@0.35 0.179
+    FRC  B : 1/7 crossing 0.3240 cyc/px   FRC@0.10 0.968  FRC@0.20 0.667  FRC@0.35 0.024
+    FRC  C : 1/7 crossing 0.4961 cyc/px   FRC@0.10 0.998  FRC@0.20 0.946  FRC@0.35 0.252
+    FRC  D : 1/7 crossing 0.4961 cyc/px   FRC@0.10 0.995  FRC@0.20 0.954  FRC@0.35 0.909
+    FRC  D': 1/7 crossing 0.4085 cyc/px   FRC@0.10 0.995  FRC@0.20 0.951  FRC@0.35 0.313
+    FRC  E : 1/7 crossing 0.4961 cyc/px   FRC@0.10 0.995  FRC@0.20 0.950  FRC@0.35 0.862
+[109MSDCF] PERMUTATION NULL: D with shuffled frame->OTF assignment, FRC 1/7 crossing 0.4961 cyc/px (D was 0.4961)
+[109MSDCF] CIRCULARITY: s=0.5928 (s/2) FRC 1/7 crossing 0.4961 cyc/px
+[109MSDCF] CIRCULARITY: s=2.3712 (2s) FRC 1/7 crossing 0.4961 cyc/px
+
+[119MSDCF] decoded 33 frames, detail (2251, 800, 512, 512) flat (1396, 32, 512, 512), 12.5s
+[119MSDCF] SELF-CALIBRATED blur growth s = 0.6896 quad px/frame (through-focus FWHM measured 15.0 frames, modelled 17.0)
+[119MSDCF] FLAT ROI, single middle frame: SPATIAL sd 131.655 DN, high-pass SPATIAL sd 13.098 DN  (rule 10: these are SPATIAL, never compared to a temporal sigma)
+    flat A : sd  130.881 (0.994x)  hp_sd    8.085 (0.617x)  out-of-range 0.000%
+    flat B : sd  131.164 (0.996x)  hp_sd   16.904 (1.291x)  out-of-range 0.000%
+    flat C : sd  129.317 (0.982x)  hp_sd    4.997 (0.382x)  out-of-range 0.000%
+    flat D : sd  116.675 (0.886x)  hp_sd   25.478 (1.945x)  out-of-range 26.559%
+    flat D': sd  113.174 (0.860x)  hp_sd    8.072 (0.616x)  out-of-range 17.641%
+    flat E : sd  368.649 (2.800x)  hp_sd  327.401 (24.996x)  out-of-range 93.340%
+[119MSDCF] arm A mean accepted frame count n_eff = 15.60 (detail ROI)
+    det  A : sd   1604.73  hp_sd  170.542  oor  0.000%  P(>f_sig)/P(<f_sig) 1.927e-05
+    det  B : sd   1580.35  hp_sd  216.390  oor  0.000%  P(>f_sig)/P(<f_sig) 2.260e-04
+    det  C : sd   1574.13  hp_sd  115.666  oor  0.000%  P(>f_sig)/P(<f_sig) 5.679e-06
+    det  D : sd   1589.52  hp_sd  708.085  oor 78.207%  P(>f_sig)/P(<f_sig) 7.958e-04
+    det  D': sd   1380.38  hp_sd  152.365  oor 62.030%  P(>f_sig)/P(<f_sig) 6.566e-05
+    det  E : sd   3788.22  hp_sd 3111.734  oor 95.471%  P(>f_sig)/P(<f_sig) 1.304e-01
+    FRC  A : 1/7 crossing 0.4961 cyc/px   FRC@0.10 0.998  FRC@0.20 0.985  FRC@0.35 0.811
+    FRC  B : 1/7 crossing 0.4961 cyc/px   FRC@0.10 0.995  FRC@0.20 0.925  FRC@0.35 0.541
+    FRC  C : 1/7 crossing 0.4961 cyc/px   FRC@0.10 1.000  FRC@0.20 0.993  FRC@0.35 0.838
+    FRC  D : 1/7 crossing 0.4961 cyc/px   FRC@0.10 0.999  FRC@0.20 0.995  FRC@0.35 0.987
+    FRC  D': 1/7 crossing 0.4961 cyc/px   FRC@0.10 0.999  FRC@0.20 0.995  FRC@0.35 0.926
+    FRC  E : 1/7 crossing 0.4961 cyc/px   FRC@0.10 0.999  FRC@0.20 0.995  FRC@0.35 0.991
+[119MSDCF] PERMUTATION NULL: D with shuffled frame->OTF assignment, FRC 1/7 crossing 0.4961 cyc/px (D was 0.4961)
+[119MSDCF] CIRCULARITY: s=0.3448 (s/2) FRC 1/7 crossing 0.4961 cyc/px
+[119MSDCF] CIRCULARITY: s=1.3791 (2s) FRC 1/7 crossing 0.4961 cyc/px
+
+wrote out/a2_results.json
