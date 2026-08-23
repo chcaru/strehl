@@ -1,0 +1,12 @@
+{
+  "n_frames": 105,
+  "crop": [
+    1024,
+    1024
+  ],
+  "box_radius": 2,
+  "argmax_p05": 20,
+  "argmax_median": 30,
+  "argmax_p95": 46,
+  "frames_holding_1pct": 30
+}

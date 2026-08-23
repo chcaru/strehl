@@ -1,0 +1,50 @@
+{
+  "synthetic": {
+    "gaussian": {
+      "h2": {
+        "null_abs_err_samples": 0.24869716462011798,
+        "parabola_abs_err_samples": 0.03444810755023102,
+        "log_abs_err_samples": 4.85722573273506e-17,
+        "parabola_shrinkage": NaN,
+        "log_shrinkage": NaN
+      },
+      "h4": {
+        "null_abs_err_samples": 0.2506419844111398,
+        "parabola_abs_err_samples": 0.12069055001723372,
+        "log_abs_err_samples": 2.7755575615628914e-17,
+        "parabola_shrinkage": 0.4025866473109512,
+        "log_shrinkage": 1.0
+      },
+      "h6": {
+        "null_abs_err_samples": 0.25024385518188086,
+        "parabola_abs_err_samples": 0.19169948335174664,
+        "log_abs_err_samples": 0.0,
+        "parabola_shrinkage": 0.11024787723497638,
+        "log_shrinkage": 1.0
+      }
+    }
+  },
+  "real": {
+    "x2even": {
+      "null_abs_err_dense_frames": 0.5165841549112962,
+      "parabola_abs_err_dense_frames": 0.12823157922411355,
+      "log_baseline_abs_err_dense_frames": 0.11622188042375825,
+      "parabola_gain_over_null": 4.028525251244462,
+      "log_gain_over_null": 4.444809815740129
+    },
+    "x4": {
+      "null_abs_err_dense_frames": 1.006834424898413,
+      "parabola_abs_err_dense_frames": 0.478434973789847,
+      "log_baseline_abs_err_dense_frames": 0.33407778096248997,
+      "parabola_gain_over_null": 2.1044331624064463,
+      "log_gain_over_null": 3.0137724873461718
+    },
+    "x6": {
+      "null_abs_err_dense_frames": 1.7012817987972184,
+      "parabola_abs_err_dense_frames": 0.9195626318976533,
+      "log_baseline_abs_err_dense_frames": 0.6376420382533627,
+      "parabola_gain_over_null": 1.8500988837338597,
+      "log_gain_over_null": 2.668082868967346
+    }
+  }
+}
