@@ -1,0 +1,18 @@
+==============================================================================
+M55b -- b6_rollup property test (no corpus data read)
+==============================================================================
+   PASS  complete, all pass -> PASS
+   PASS  planted: pooled 91.7% >= 90%, subject 'wrapped-text' 75% -> must KILL
+          kill: subject groups below 90%: wrapped-text 75%
+   PASS  24 cells from one stack -> KILL
+          kill: 1 stacks (need 6); 1 distinct subjects (need 3)
+   PASS  cells that do not declare stack -> KILL
+          kill: 24 cells do not declare stack and roi; 0 stacks (need 6); 0 distinct subjects (need 3)
+   PASS  one stack with only 3 ROIs -> KILL
+          kill: stacks with fewer than 4 ROIs: {'bee-2': 3}
+   PASS  one wrong-sign cell -> KILL
+          kill: 1 cells report the WRONG DIRECTION above the decision threshold
+   PASS  6 stack-slots but only 2 subjects -> KILL
+          kill: 5 stacks (need 6); 2 distinct subjects (need 3)
+
+   -> 7/7 property assertions hold

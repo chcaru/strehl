@@ -1,0 +1,85 @@
+{
+ "rows": [
+  {
+   "new": "bee-1",
+   "n": 299,
+   "iso_first": "100",
+   "exp_first": "1/2",
+   "exp_last": "1/3",
+   "matched_old": "134MSDCF",
+   "agrees": true,
+   "datetime_first": "2026:08:23 11:42:25",
+   "datetime_last": "2026:08:23 11:46:55"
+  },
+  {
+   "new": "bee-2",
+   "n": 299,
+   "iso_first": "400",
+   "exp_first": "1/20",
+   "exp_last": "1/25",
+   "matched_old": "135MSDCF",
+   "agrees": true,
+   "datetime_first": "2026:08:23 11:54:44",
+   "datetime_last": "2026:08:23 11:57:23"
+  },
+  {
+   "new": "bee-3",
+   "n": 299,
+   "iso_first": "100",
+   "exp_first": "1/5",
+   "exp_last": "1/6",
+   "matched_old": "136MSDCF",
+   "agrees": true,
+   "datetime_first": "2026:08:23 11:58:28",
+   "datetime_last": "2026:08:23 12:01:52"
+  },
+  {
+   "new": "coffee-bean",
+   "n": 105,
+   "iso_first": "50",
+   "exp_first": "4/5",
+   "exp_last": "5/8",
+   "matched_old": "coffee-bean",
+   "agrees": true,
+   "datetime_first": "2026:05:10 16:31:09",
+   "datetime_last": "2026:05:10 16:33:14"
+  },
+  {
+   "new": "wrapped-text-1",
+   "n": 130,
+   "iso_first": "100",
+   "exp_first": "1/15",
+   "exp_last": "1/20",
+   "matched_old": "131MSDCF",
+   "agrees": true,
+   "datetime_first": "2026:08:23 11:30:08",
+   "datetime_last": "2026:08:23 11:31:19"
+  },
+  {
+   "new": "wrapped-text-2",
+   "n": 120,
+   "iso_first": "400",
+   "exp_first": "1/40",
+   "exp_last": "1/40",
+   "matched_old": "133MSDCF",
+   "agrees": true,
+   "datetime_first": "2026:08:23 11:34:52",
+   "datetime_last": "2026:08:23 11:35:53"
+  }
+ ],
+ "agree_all": true,
+ "subjects": {
+  "wrapped-text": [
+   "wrapped-text-1",
+   "wrapped-text-2"
+  ],
+  "bee": [
+   "bee-1",
+   "bee-2",
+   "bee-3"
+  ],
+  "coffee-bean": [
+   "coffee-bean"
+  ]
+ }
+}

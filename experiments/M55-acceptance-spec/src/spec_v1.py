@@ -39,6 +39,9 @@ TH = dict(
     b5_inrange_frac=1.00,
     # B6 real data
     b6_min_stacks=6, b6_min_rois=4, b6_quantile=0.10,
+    # The corpus offers only THREE distinct subjects across the six held-out
+    # stacks (see RENAMED below).  Six stacks is not six scenes.
+    b6_min_subjects=3,
     # B7 stability
     b7_reps=(1, 2, 4, 8, 16, 32, 64), b7_max_headline_swing=0.05,
     # B8 calibration
@@ -81,7 +84,12 @@ KILL_CONDITIONS = {
  "B5": "Any held-out cell returns a value outside the declared range with Status Ok; or the "
        "comparison denominator is not bounded away from zero in every held-out cell.",
  "B6": "The 10th-percentile held-out cell fails the candidate's own decision rule on a merge "
-       "pair whose true ordering is known; fewer than 6 stacks or fewer than 4 ROIs per stack.",
+       "pair whose true ordering is known; fewer than 6 stacks, fewer than 4 ROIs per stack, "
+       "or fewer than 3 distinct SUBJECTS.  The pass fraction must additionally hold WITHIN "
+       "each subject group: the held-out set contains three stacks of one subject and two of "
+       "another, so a pooled fraction can be carried by one scene.  Every cell must declare "
+       "its stack and ROI; b6_rollup enforces this and a candidate that cannot supply it "
+       "has not run B6.",
  "B7": "The headline score moves by more than 0.05 across the REPS sweep with everything else "
        "held fixed; or the null term is within 2 standard errors of zero at the largest REPS "
        "while a ratio against it is quoted.",
@@ -488,7 +496,22 @@ def b9_null_z(cand, a, b, seed=5):
 # The ROIs are fixed by a rule so that no ROI can be chosen on its result.
 # The split is PINNED to parity: a contiguous split reads inside the roll-null
 # --------------------------------------------------------------------------
-HELD_OUT = ("coffee-bean", "131MSDCF", "133MSDCF", "134MSDCF", "135MSDCF", "136MSDCF")
+# RENAME, 2026-08-23, mid-milestone: the owner renamed five of these directories.
+# Same files, same counts, same bytes; new names.  The mapping below was NOT taken
+# on trust -- e13_rename_check.py re-read EXIF from the new directories and matched
+# each to exactly one pre-rename fingerprint in out/heldout.json (n, ISO and exposure
+# of first and last frame, f-number, lens), unique across all six.  Old names are kept
+# here so that nobody later reads a pre-rename result as a different stack.
+RENAMED = {"131MSDCF": "wrapped-text-1", "133MSDCF": "wrapped-text-2",
+           "134MSDCF": "bee-1", "135MSDCF": "bee-2", "136MSDCF": "bee-3"}
+HELD_OUT = ("coffee-bean", "wrapped-text-1", "wrapped-text-2", "bee-1", "bee-2", "bee-3")
+# The rename revealed something the old numeric names concealed and that B6 was
+# written without: these six stacks are only THREE subjects.  bee-1/-3 are ISO 100
+# and bee-2 is ISO 400 of the same subject; wrapped-text-1/-2 are ISO 100 and 400 of
+# another.  A pooled pass fraction over 24 cells can therefore be carried by one scene.
+SUBJECT_OF = {"coffee-bean": "coffee-bean",
+              "wrapped-text-1": "wrapped-text", "wrapped-text-2": "wrapped-text",
+              "bee-1": "bee", "bee-2": "bee", "bee-3": "bee"}
 DEV_STACKS = ("112MSDCF", "113MSDCF", "foam", "109MSDCF", "119MSDCF", "coffee-bubbles")
 QUAD_W, QUAD_H = 2344, 3514
 ROI_FRACTIONS = ((0.25, 0.25), (0.75, 0.25), (0.50, 0.50), (0.50, 0.80))
@@ -525,14 +548,48 @@ def b6_cell(cand, a, b, sd=None):
 
 
 def b6_rollup(cells):
+    """Roll up held-out cells.  Every cell must carry `stack` and `roi` in
+    addition to what b6_cell returns -- the caller adds them, because only the
+    caller knows which stack it loaded.  Coverage is ENFORCED here and not
+    merely stated in KILL_CONDITIONS: an unenforced kill condition is fact
+    711's disease one level up, and this function had it until 2026-08-23.
+    """
     n = len(cells)
     frac = sum(c["passed"] for c in cells) / n if n else 0.0
     wrong = [c for c in cells if c["wrong_sign"]]
-    ok = frac >= 1.0 - TH["b6_quantile"] and not wrong
+    reasons = []
+    undeclared = [i for i, c in enumerate(cells) if "stack" not in c or "roi" not in c]
+    if undeclared:
+        reasons.append(f"{len(undeclared)} cells do not declare stack and roi")
+    stacks = sorted({c["stack"] for c in cells if "stack" in c})
+    subjects = sorted({SUBJECT_OF.get(st, st) for st in stacks})
+    per_stack = {st: sum(1 for c in cells if c.get("stack") == st) for st in stacks}
+    thin = {st: k for st, k in per_stack.items() if k < TH["b6_min_rois"]}
+    if len(stacks) < TH["b6_min_stacks"]:
+        reasons.append(f"{len(stacks)} stacks (need {TH['b6_min_stacks']})")
+    if len(subjects) < TH["b6_min_subjects"]:
+        reasons.append(f"{len(subjects)} distinct subjects (need {TH['b6_min_subjects']})")
+    if thin:
+        reasons.append(f"stacks with fewer than {TH['b6_min_rois']} ROIs: {thin}")
+    by_sub = {}
+    for c in cells:
+        by_sub.setdefault(SUBJECT_OF.get(c.get("stack"), c.get("stack")), []).append(c)
+    sub_frac = {k: (sum(x["passed"] for x in v) / len(v)) for k, v in by_sub.items()}
+    need = 1.0 - TH["b6_quantile"]
+    weak = {k: v for k, v in sub_frac.items() if v < need}
+    if weak:
+        reasons.append(f"subject groups below {100 * need:.0f}%: "
+                       + ", ".join(f"{k} {100 * v:.0f}%" for k, v in sorted(weak.items())))
+    if frac < need:
+        reasons.append(f"{100 * frac:.0f}% of cells pass (need {100 * need:.0f}%)")
+    if wrong:
+        reasons.append(f"{len(wrong)} cells report the WRONG DIRECTION above the "
+                       f"decision threshold")
+    ok = not reasons
     return dict(passed=ok, n_cells=n, frac_passed=frac, n_wrong_sign=len(wrong),
-                kill=None if ok else (
-                    f"{100 * frac:.0f}% of held-out cells pass (need {100 * (1 - TH['b6_quantile']):.0f}%); "
-                    f"{len(wrong)} cells report the WRONG DIRECTION above the decision threshold"))
+                n_stacks=len(stacks), n_subjects=len(subjects),
+                subject_frac=sub_frac, cells_per_stack=per_stack,
+                kill=None if ok else "; ".join(reasons))
 
 
 # --------------------------------------------------------------------------

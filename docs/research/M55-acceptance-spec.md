@@ -14,6 +14,12 @@ own results is exactly the risk pre-registration exists to control.
 I did not look at M57's work and did not coordinate with it. No candidate influenced any
 number here.
 
+**Amended once after registration, on 2026-08-23**, because the owner renamed five corpus
+directories mid-milestone and the rename exposed a defect in B6. Every amendment **tightens**
+B6 and none loosens anything; the trigger was external to any candidate; no candidate existed.
+The full account, the defect, the repair and the proof that the repair moved no number are in
+§4.1 and P42-P43.
+
 ---
 
 ## 0. How this is used
@@ -23,8 +29,10 @@ It ships a `Candidate` object (§2) and is run through ten batteries. **A candid
 only if every battery passes.** There is no partial credit and no "noted but proceeding".
 
 ```
-python experiments/M55-acceptance-spec/src/calibrate.py       # battery self-check
-python experiments/M55-acceptance-spec/src/validate_heldout.py
+python experiments/M55-acceptance-spec/src/calibrate.py         # battery self-check
+python experiments/M55-acceptance-spec/src/e14_b6_rollup_test.py  # B6 property tests
+python experiments/M55-acceptance-spec/src/validate_heldout.py    # EXIF only
+python experiments/M55-acceptance-spec/src/e13_rename_check.py    # EXIF only
 ```
 
 `spec_v1.py` imports no candidate. `ref_metrics.py` exists solely to give the battery power.
@@ -274,22 +282,109 @@ images**, and no other battery caught that.
 
 ## 4. The held-out set — named now, before any candidate exists
 
-**Six stacks, none used by M46 or by M55's attack, none of which I have scored:**
+**Six stacks, none used by M46 or by M55's attack, none of which I have scored.** Five of the
+six directories were **renamed by the owner on 2026-08-23 while this milestone was running** —
+same files, same counts, same bytes, new names. Both names are given so that no later reader
+takes a pre-rename result for a different stack:
 
 ```
-   stack            ARW     ISO   exposure       f  lens
-   coffee-bean      105      50        4/5       8  FE 100mm F2.8 Macro GM OSS + 2x
-   131MSDCF         130     100       1/15    28/5  FE 100mm F2.8 Macro GM OSS + 2x
-   133MSDCF         120     400       1/40    28/5  FE 100mm F2.8 Macro GM OSS + 2x
-   134MSDCF         299     100        1/2    28/5  FE 100mm F2.8 Macro GM OSS + 2x
-   135MSDCF         299     400       1/20    28/5  FE 100mm F2.8 Macro GM OSS + 2x
-   136MSDCF         299     100        1/5    28/5  FE 100mm F2.8 Macro GM OSS + 2x
+   stack            was         ARW     ISO   exp(1)   exp(n)      f  lens
+   coffee-bean      -           105      50      4/5      5/8      8  FE 100mm F2.8 GM + 2x
+   wrapped-text-1   131MSDCF    130     100     1/15     1/20   28/5  FE 100mm F2.8 GM + 2x
+   wrapped-text-2   133MSDCF    120     400     1/40     1/40   28/5  FE 100mm F2.8 GM + 2x
+   bee-1            134MSDCF    299     100      1/2      1/3   28/5  FE 100mm F2.8 GM + 2x
+   bee-2            135MSDCF    299     400     1/20     1/25   28/5  FE 100mm F2.8 GM + 2x
+   bee-3            136MSDCF    299     100      1/5      1/6   28/5  FE 100mm F2.8 GM + 2x
 ```
+
+**MEASURED — I did not take the rename mapping on trust.** `src/e13_rename_check.py` re-read
+EXIF from the new directories and matched each against the pre-rename fingerprints in the
+already-committed `out/heldout.json`: frame count, ISO and exposure of the first *and* last
+frame, f-number and lens. Those fingerprints are unique across all six stacks both before and
+after, so the mapping is determined by the data rather than asserted. **All six agree with the
+owner's stated mapping** (`out/e13_rename_check.log`). This is also a two-party EXIF cross-check:
+my pre-rename read and the owner's post-rename read agree on every `n` and every ISO.
+
 Three ISOs (50, 100, 400), five exposures, one optical configuration. First **64** frames of
 each, **parity** split.
 
+### 4.1 The rename revealed a defect in B6, and B6 is amended — MEASURED
+
+The old numeric names concealed something that `bee-1 / bee-2 / bee-3` and
+`wrapped-text-1 / wrapped-text-2` make obvious: **the six held-out stacks are only three
+subjects.** B6 required six stacks and four ROIs each, 24 cells, and I wrote that requirement
+believing six stacks meant six scenes. It does not. A pooled pass fraction over 24 cells can be
+carried by one scene photographed three times.
+
+Worse, on inspection forced by the rename: **`b6_min_stacks` and `b6_min_rois` were declared in
+`TH` and in the prose kill condition and were read by no code at all.** `b6_rollup(cells)`
+never received stack identity, so it would have accepted 24 cells from a single stack. That is
+fact 711's disease — values pinned, properties not — reproduced *inside the spec written to
+prevent it*. I found it only because the rename made me open the function.
+
+Three amendments, all of which make B6 **strictly harder**:
+
+- `TH["b6_min_subjects"] = 3`, and the pass fraction must hold **within each subject group**, not
+  only pooled.
+- Every cell must declare its `stack` and `roi`; a candidate that cannot supply them has not
+  run B6.
+- Coverage is now **enforced in `b6_rollup`**, not stated in prose.
+
+**Power evidence, per rule 39 — a planted wrong answer is rejected.**
+`src/e14_b6_rollup_test.py`, `out/e14_b6_rollup_test.log`, 7/7 assertions:
+
+```
+   PASS  planted: pooled 91.7% >= 90%, subject 'wrapped-text' 75% -> must KILL
+          kill: subject groups below 90%: wrapped-text 75%
+   PASS  24 cells from one stack -> KILL     kill: 1 stacks (need 6); 1 distinct subjects (need 3)
+   PASS  cells that do not declare stack -> KILL
+   PASS  one stack with only 3 ROIs -> KILL  kill: stacks with fewer than 4 ROIs: {'bee-2': 3}
+   PASS  one wrong-sign cell -> KILL
+   PASS  6 stack-slots but only 2 subjects -> KILL
+```
+The planted case is exactly the hole the rename exposed: **the pre-amendment code passed it.**
+
+**The rule I used to decide the amendment was legitimate, and I propose it as a discipline.** A
+pre-registered spec may be amended after registration only if (a) no candidate yet exists,
+(b) the trigger is information from outside the candidate set — here, an owner's rename — and
+(c) **the amendment can only tighten, never loosen.** All three hold. An amendment that could
+loosen a threshold is indistinguishable from tuning, whatever its stated motive.
+
+**What I could not fix.** Three subjects is the *ceiling* the corpus allows, not a target I
+chose: every other stack is a development stack and is burned. B6 therefore cannot demonstrate
+subject-generality beyond three scenes, and that is a stated limitation of this spec rather than
+a solved problem. **A candidate that passes B6 has been shown to work on three subjects.**
+
+### 4.2 A cross-ISO arm that the rename makes available — PRE-REGISTERED BUT CONDITIONAL
+
+`bee-1` (ISO 100) and `bee-3` (ISO 100) against `bee-2` (ISO 400), and `wrapped-text-1` (100)
+against `wrapped-text-2` (400), are matched-*subject* pairs straddling the sensor's dual-gain
+boundary. If they are also matched *scenes*, they support a battery arm nothing else in the
+corpus can support: **a candidate's verdict on the same subject must not change when only ISO
+changes.** I pre-register it here, before any candidate exists, as **B6-ISO**, with the same
+threshold as B6 and the same held-out status.
+
+**It is conditional and I am not enabling it.** The owner has stated that whether the subject
+and lighting held still between those captures is unknown and has asked. Exposures are not
+matched either (ISO 100 at 1/2 s against ISO 400 at 1/20 s is 10x the light for 4x the gain), so
+electron levels differ and equal signal must not be assumed. **B6-ISO is armed only if the owner
+confirms the scene held still**; until then it is a named, dated, unexecuted arm, which is worth
+recording precisely because it was written before the candidates.
+
+### 4.3 A gear fact that arrived late, and what it can and cannot touch
+
+Every frame in the corpus was shot through a **Breakthrough X4 CPL 67 mm circular polarizer**,
+which was in no earlier brief. A polarizer suppresses specular highlights, so **clipping and
+specular statistics on this corpus are not what a bare lens would give**. For this spec I
+checked which of my constants could be affected and state the result rather than leave it open:
+`b2_gain = 0.117` is a ratio between two merges of the *same* frames, so any fixed transmission
+cancels; `b1_cap_frac = 0.004857` derives from **dark** frames, which have no light path at all.
+Neither is exposed. The exposure of B5's range contract and B6's ROI content **is** — a ROI
+that would clip on a bare lens may not clip here — and that is recorded as a limitation, not
+measured.
+
 **Development stacks, permanently excluded from B6:** `112MSDCF`, `113MSDCF`, `foam`,
-`109MSDCF`, `119MSDCF`, `coffee-bubbles`.
+`109MSDCF`, `119MSDCF`, `coffee-bubbles`. All six retain their original names.
 
 **ROIs are fixed by a rule, not by choice** — four per stack, identical for every stack,
 at fractions `(0.25,0.25) (0.75,0.25) (0.50,0.50) (0.50,0.80)` of the quad plane:
@@ -307,7 +402,9 @@ held-out set the spec's author has measured is not held out.**
 
 ## 5. What the battery measured about itself — calibration
 
-`out/calibrate.log`, final run. `PASS`/`FAIL` are the battery's verdicts, not mine.
+`out/calibrate.log`, final run. `PASS`/`FAIL` are the battery's verdicts, not mine. **This
+table has since been reproduced twice from scratch** -- `out/calibrate_rerun_after_recovery.log`
+and `out/calibrate_after_rename.log` -- with no number differing in either.
 
 ```
    candidate                 B0    B1    B2    B4    B7   verdict
@@ -532,9 +629,38 @@ Numbers are placeholders; the orchestrator assigns them.
 - **P39 (MEASURED).** Fact 707's numbers move by a factor of two on the definition of
   "best-focus frame" (frame 38 vs 39): 0.3502/0.3528/0.3568 against 0.1636/0.1698/0.1224. The
   qualitative claim replicates under both definitions.
-- **P40 (MEASURED).** The held-out substrate exists and is adequate: six unused stacks,
-  105-299 frames each, three ISOs, one optical configuration, validated from EXIF without
-  decoding a pixel.
+- **P40 (MEASURED, AMENDED after the 2026-08-23 rename -- see P44).** The held-out substrate
+  exists: six unused stacks, 105-299 frames each, three ISOs, one optical configuration,
+  validated from EXIF without decoding a pixel. I originally wrote "and is adequate".
+  **That word is withdrawn:** the six stacks are only three subjects.
+- **P41 (MEASURED).** The mid-milestone rename of five corpus directories was verified from the
+  data, not accepted on assertion: each new directory's EXIF fingerprint (frame count, ISO and
+  exposure of the first *and* last frame, f-number, lens) matches exactly one pre-rename entry
+  in the already-committed `out/heldout.json`, and those fingerprints are unique across all six
+  held-out stacks. All six agree with the owner's stated mapping. Two independent EXIF reads,
+  different days, different code, agree on every `n` and every ISO.
+- **P42 (MEASURED, against my own instrument, again).** B6's coverage kill condition -- "fewer
+  than 6 stacks or fewer than 4 ROIs per stack" -- was declared in `TH` and in prose and was
+  **read by no code**. `b6_rollup(cells)` never received stack identity and would have accepted
+  24 cells from one stack. **Fact 711's disease reproduced inside the spec written to prevent
+  it.** After repair, a planted set with pooled pass fraction 91.7% (above the 90% gate) and one
+  subject group at 75% is **killed**; the pre-repair code passes it. 7/7 property assertions,
+  `out/e14_b6_rollup_test.log`.
+- **P43 (MEASURED).** The repair is numerically inert, pre-registered before the run: a full
+  re-run of `calibrate.py` (833.8 s) differs from the pre-edit run on **4 of 83 lines** -- one
+  is the held-out name line that was the point of the edit, three are the known
+  `PYTHONHASHSEED` set-ordering block. **Parsed JSON compares equal order-insensitively: not one
+  number moved.** `out/calibrate_after_rename.log`.
+- **P44 (MEASURED, and it weakens P40).** The six held-out stacks are **three subjects**:
+  `bee-1/-2/-3` are one, `wrapped-text-1/-2` are another, `coffee-bean` is the third. Six stacks
+  is not six scenes, and three is the ceiling the corpus allows because every other stack is a
+  burned development stack. **A candidate that passes B6 has been shown to work on three
+  subjects, not six.**
+- **P45 (DERIVED).** Within the held-out set, subject and ISO are crossed on two subjects:
+  `bee-1`/`bee-3` at ISO 100 against `bee-2` at ISO 400, and `wrapped-text-1` at 100 against
+  `wrapped-text-2` at 400. Exposures are not matched (10x the light for 4x the gain), so equal
+  electron level must not be assumed. Whether the scene held still between captures is
+  **unverified**, so the cross-ISO arm B6-ISO is registered and left disarmed.
 
 ## 9. Proposed disciplines
 
@@ -557,6 +683,18 @@ Numbers are placeholders; the orchestrator assigns them.
   it does not disqualify one member of it.
 - **Golden vectors pin values; they do not pin properties.** A frozen spec must freeze
   monotonicity, homogeneity, swap invariance and the negative branch as executable assertions.
+- **A corpus rename is a silent-failure event, not a cosmetic one.** A `glob` on a directory
+  that no longer exists returns `[]` and raises nothing, so a measurement that reads zero files
+  reports zero problems. After any corpus change, grep every script for hardcoded stack names
+  before the next run, and verify the mapping from EXIF rather than from the announcement.
+- **A pre-registered spec may be amended only if it can be shown that the amendment could not
+  have been tuned.** Three conditions, all checkable by a third party: no candidate yet exists,
+  the trigger is external to the candidate set, and the amendment can only **tighten**. An
+  amendment that could loosen a threshold is indistinguishable from tuning whatever its motive.
+- **A kill condition that no code reads is prose.** Every threshold in a spec's constant table
+  must be traceable to a line that enforces it, and the enforcement must be shown rejecting a
+  planted violation. Two of this spec's own thresholds sat unenforced until a directory rename
+  forced the function open.
 - **An executable spec must be bit-reproducible by a third party, so never serialise a set.**
   Re-running this battery produced output identical in every number and different in three lines,
   purely because a `set` literal's iteration order follows `PYTHONHASHSEED`. Found only because

@@ -1,0 +1,23 @@
+==============================================================================
+M55b -- rename verification (EXIF and counts only, no pixel decoded)
+==============================================================================
+   pre-rename fingerprints unique across 6 stacks: True
+   post-rename fingerprints unique across 6 stacks: True
+
+   new name           ARW    ISO    exp(1)    exp(n) matches old    claimed        agree
+   bee-1              299    100       1/2       1/3 134MSDCF       bee-1          YES
+   bee-2              299    400      1/20      1/25 135MSDCF       bee-2          YES
+   bee-3              299    100       1/5       1/6 136MSDCF       bee-3          YES
+   coffee-bean        105     50       4/5       5/8 coffee-bean    coffee-bean    YES
+   wrapped-text-1     130    100      1/15      1/20 131MSDCF       wrapped-text-1 YES
+   wrapped-text-2     120    400      1/40      1/40 133MSDCF       wrapped-text-2 YES
+
+   -> rename mapping independently confirmed for every stack: True
+
+   distinct SUBJECTS in the held-out set: 3
+      bee              3 stack(s): bee-1, bee-2, bee-3                      ISO ['100', '400', '100']
+      coffee-bean      1 stack(s): coffee-bean                              ISO ['50']
+      wrapped-text     2 stack(s): wrapped-text-1, wrapped-text-2           ISO ['100', '400']
+   B6 was written assuming 6 stacks meant 6 scenes.  It does not.
+
+   wrote out/e13_rename_check.json
