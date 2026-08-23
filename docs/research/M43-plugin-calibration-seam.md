@@ -69,6 +69,18 @@ system first.
 
 ## 2. What it costs, measured
 
+> **CORRECTION, added after §8 was measured.** The paragraph immediately below
+> is **wrong** and is kept because the error is instructive. `k = 5.942` divides
+> `FINE_FOCUS_NOISE_SD` by `FOCUS_NOISE_SD`, and **those two constants are not
+> the same kind of quantity** — the coarse one is measured *with* the 17×17
+> regulariser applied, the fine one *without*. The two operators therefore do
+> not "differ only in window radius", and the honest `k` for that pair is
+> **1.815**, not 5.942 (§8). **The table below is unaffected**: it was produced
+> by running the binary at effective gates 0.168 and 5.94, not by trusting the
+> pair. And §8's survey supplies a *larger* real `k` — **6.68**, from the
+> sum-modified-Laplacian — so the corrected record prices this seam higher than
+> the mistake did. SYNTHESIS facts 500, 439.
+
 `FINE_FOCUS_NOISE_SD / FOCUS_NOISE_SD = 0.090400 / 0.015214 = **5.942x**`. These
 are two real operators already in this codebase, differing only in window
 radius, so `k = 5.94` is not a strawman — it is what happens if a contributor
@@ -155,7 +167,9 @@ Three consequences worth stating separately:
   not by loading a plugin. That is sufficient to show the *mechanism* and
   insufficient to show that a real implementation would hit it.
 - **`k = 5.94` is illustrative, not a distribution.** No survey of plausible
-  contributed operators' noise SDs exists.
+  contributed operators' noise SDs exists. **— SUPERSEDED by §8**, which
+  surveys seven and finds a 10.4× spread. The illustrative figure was also
+  wrong; see the correction at §2.
 - **Only one stack.** The `n_eff` figures are `109MSDCF` at 22 frames; fact 324
   measured that `n_eff` at a fixed gate spans 2.26-7.42 across five stacks, so
   the *absolute* numbers here are stack-specific. The *ratio* argument is not.
@@ -172,3 +186,91 @@ $ strehl merge C:\dev\macro\test\109MSDCF --gate 0.168 0.5 1.0 2.0 5.94
 Read the `tol(DN-norm)`, `mean n_eff` and `n_eff=1 %` columns. Constants are at
 `crates/strehl-core/src/merge.rs` (`FOCUS_NOISE_SD`) and
 `crates/strehl-core/src/through_focus.rs` (`FINE_FOCUS_NOISE_SD`).
+
+## 8. The spread of `k`, measured — and a correction to §2
+
+§6 said `k = 5.94` was illustrative and that no survey existed. This is the
+survey, and it answers SYNTHESIS question 102.
+
+### 8.1 The instrument, and why it is admissible
+
+A Python model of the focus operator, calibrated against **both** constants the
+crate measures in-house, **each in its own configuration**:
+
+| target | configuration | crate | Python | deviation |
+| --- | --- | --- | --- | --- |
+| `FOCUS_NOISE_SD` | w13 → regulariser r8 | 0.015214 | 0.015286 ± 0.000040 | +0.47% |
+| `FINE_FOCUS_NOISE_SD` | w2, no regulariser | 0.090400 | 0.090579 ± 0.000066 | +0.20% |
+
+8 seeds × 2048² unit-variance Gaussian planes; interior only, replicate borders
+dropped. **The script refuses to print the survey if either target misses.**
+
+That refusal is not decoration — it fired. The first instrument
+(`02-operator-noise-spread.py`, kept in the tree) modelled the coarse field
+*without* the regulariser and read **+24.26%** high against `FOCUS_NOISE_SD`
+while matching `FINE_FOCUS_NOISE_SD` to **+0.20%**. One target passing and one
+failing localises the fault to the single thing the two configurations differ
+in, which was the bug — and which is also the error in §2. A one-target
+calibration would have been tuned into agreement and the survey below would have
+been silently wrong by a quarter.
+
+This is the narrow, structural answer to M31-V's standing objection that this
+project's Python proxies were never checked against the crate.
+
+### 8.2 The survey
+
+Seven textbook focus operators, each in the shipped configuration
+(operator → 27×27 box → 17×17 regulariser), as
+`k = SD / FOCUS_NOISE_SD`:
+
+| operator | SD | `k` | effective gate at `--gate 1.0` |
+| --- | --- | --- | --- |
+| ring(1,3) | 0.009804 | **0.644** | 1.552 |
+| tenengrad `\|∇\|` *(shipped)* | 0.015337 | 1.008 | 0.992 |
+| tenengrad-squared | 0.020799 | 1.367 | 0.731 |
+| Brenner | 0.029846 | 1.962 | 0.510 |
+| local variance (3×3) | 0.037653 | 2.475 | 0.404 |
+| Laplacian | 0.100266 | 6.590 | 0.152 |
+| sum-modified-Laplacian | 0.101623 | **6.680** | 0.150 |
+
+The shipped operator reads 1.008 where it must read 1.000 by construction; the
+0.8% is the instrument's own noise floor at 4 seeds, and it bounds the
+resolution of every other row.
+
+**`k` spans 10.4× across seven operators, none of them adversarial.** Three
+things follow:
+
+1. **The worst case is the most likely contribution.** Nayar & Nakagawa's
+   sum-modified-Laplacian is *the* canonical shape-from-focus operator. It is
+   the first thing a contributor reaching for a classical focus measure would
+   reach for, and it lands at `k` = 6.68 — an effective gate of 0.150 at a
+   declared 1.0.
+2. **Both directions are populated by operators that actually exist.**
+   ring(1,3) is *this project's own first shipped operator* and errs the other
+   way, over-admitting at an effective 1.55.
+3. **The load-time refusal in §4 is therefore mandatory, not tidy.** §5 named
+   "plausible operators cluster near `k` = 1" as the finding that would have
+   demoted this to a documentation problem. It is refuted.
+
+### 8.3 The correction to §2
+
+Measuring the fine operator *as the host would actually run it* —
+`SD(regularise(box_mean(|∇|, 2))) = 0.027613` — gives `k = 1.815`, not 5.942.
+§2 overstated that pair by **3.27×**. The direction was pre-registered in the
+measuring script's docstring before the number was computed (a small window
+leaves more high-frequency power for the regulariser to remove, so regularising
+the fine field must cost it proportionally more), and it held.
+
+The §2 cost table stands unchanged, because it was produced by running the
+binary at effective gates rather than by trusting the pair. What fails is one
+sentence of provenance — and §8.2 replaces it with a larger `k` from a real
+operator.
+
+### 8.4 Reproduce
+
+```console
+$ python experiments/m43-plugin-seam/02b-operator-noise-spread.py
+$ python experiments/m43-plugin-seam/03-fine-in-gate-path.py
+```
+
+SYNTHESIS facts 439, 500, 501; discipline 257; question 102 answered.
