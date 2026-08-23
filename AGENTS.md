@@ -387,6 +387,19 @@ monolithic binary and ship only that binary.
     needs a spread ships permanently green and looks like coverage. (SYNTHESIS
     fact 573, discipline 302.)
 
+37. **Insert into SYNTHESIS by locating the end of an ITEM, never the end of a
+    line, and always inside the target section's slice.** Facts, disciplines and
+    questions share one integer namespace three times over, and items wrap onto
+    continuation lines indented five spaces. A regex like `^150\. \*\*.*?$`
+    matched over the whole document finds *discipline* 150 before question 150,
+    and matches only its first line — so the insert lands in the wrong section
+    *and* severs the item it anchored to. Both failures have happened: questions
+    151–154 were written into §5 after discipline 150's opening line, and
+    question 143 was split by an earlier fold. Slice the section first, then
+    match through the item's end (`(?=\n\d+\. \*\*|\n## )`). A byte-length-
+    preserving diff of 7 deletions and 7 identical additions is what a correct
+    repair of this looks like. (SYNTHESIS fact 679.)
+
 ## Layout
 
 | Path | What |

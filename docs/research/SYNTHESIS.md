@@ -1675,10 +1675,6 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      the predicted null, redesign rather than run.
 
 150. **A control must hold constant the resource that is actually scarce — and the scarce
-151. **Should `FOCUS_NOISE_SD`'s doc comment state that it is sensor-independent?** One sentence, in `merge.rs`, and it is the durable fix for the false premise that commissioned an entire milestone. Owned by whoever holds `merge.rs`. (M48, fact 653)
-152. **Should the four `1.47` fixtures become `plane(0.229, 4.20)`?** Zero behavioural effect is expected at every site and measured at the one that could have been masked, but they currently describe a sensor that does not exist. Spans `focus.rs`, `noise.rs`, `measure.rs` and an example -- three different owners. (M48, fact 659)
-153. **Is there any real capture where the read-noise error bites?** It exceeds 5% only below ~10 DN black-subtracted at ISO 1000, and no frame in the corpus goes near it (0.1st percentile = 132 DN). A genuinely dark subject at high ISO could; worth re-checking if the corpus ever gains one. (M48)
-154. **Does the per-pixel `r(S)` variation across a frame justify a spatially-varying gate calibration?** `normalise_by_luma_sigma` divides per pixel, so the ratio varies within a frame as well as across ISO; measured range is small (p99 0.482%). The machinery is the same as question 130's and the two should be scoped together if either is built. (M48)
      resource is a property of the domain, not of the data structure.** M30's first script
      compared a +2 EV frame against a +0 EV duplicate and called the duplicate a placebo. It
      held **frame count** fixed, because frames are what the array is indexed by. Frame count is
@@ -3163,6 +3159,9 @@ until that lands.
      tried.
 
 143. **Should invariants 4 and 5 be restated on the delivered image rather than the focus
+     field?** Fact 623 notes they prove the regulariser's behaviour on the focus *field*,
+     while the thesis is claimed about the delivered image. That is a weaker claim than
+     the one made in public, and fact 619 removes the excuse for it.
 144. **What gate does `foam` actually want?** It reaches `n_eff` = 3 only at gate **21.99**, 5x higher than any other stack and above the entire shipped ladder. `foam` is ISO 1000 with 1.20% of pixels clipped in at least one frame and a `boundary %` of exactly 0.00. Is this a real property of a low-contrast subject, or is the focus field dominated by something the noise model mis-prices? (M52, fact 628)
 145. **Should the host calibrate at two sigmas rather than one?** One extra plane at, say, sigma = 16 would make a mis-declared `Normalisation` degree detectable at load time, turning the seam's last remaining declaration into a measurement. Is there a reason not to? (M52, fact 633)
 146. **Is a per-operator noise constant worth its complexity, if the gate must be solved per (operator, stack) pair regardless?** The constant buys a meaningful *unit* for `--gate`; fact 630 shows it does not buy transferability. Fact 438's load-time refusal may be defensible purely as a unit check rather than as a calibration. (M52)
@@ -3170,6 +3169,7 @@ until that lands.
 148. **Does the shipped pipeline guarantee a stable depth ordering at the point where a half-stack split would be taken**, including after speckle and bracket-boundary rejection? The split contract requires parity *on the depth-sorted index*, and fact 641 measures that getting this wrong returns 0.47% of the true value while still looking like a reading. (M46 App.A)
 149. **Should `sigpow` read the same ROI the existing flat/detail acceptance invariants use, a new one, or should the CLI read several and report the worst?** It is defined on one square ROI, and fact 650's `d` thresholds are one ROI's calibration rather than a constant. (M46 App.A)
 150. **At 0.4% marginal cost (fact 644), should verification be the default with `--no-verify` as the escape, rather than an opt-in `--verify`?** This reverses the premise of question 139, which assumed roughly 2x. (M46 App.A)
-     field?** Fact 623 notes they prove the regulariser's behaviour on the focus *field*,
-     while the thesis is claimed about the delivered image. That is a weaker claim than
-     the one made in public, and fact 619 removes the excuse for it.
+151. **Should `FOCUS_NOISE_SD`'s doc comment state that it is sensor-independent?** One sentence, in `merge.rs`, and it is the durable fix for the false premise that commissioned an entire milestone. Owned by whoever holds `merge.rs`. (M48, fact 653)
+152. **Should the four `1.47` fixtures become `plane(0.229, 4.20)`?** Zero behavioural effect is expected at every site and measured at the one that could have been masked, but they currently describe a sensor that does not exist. Spans `focus.rs`, `noise.rs`, `measure.rs` and an example -- three different owners. (M48, fact 659)
+153. **Is there any real capture where the read-noise error bites?** It exceeds 5% only below ~10 DN black-subtracted at ISO 1000, and no frame in the corpus goes near it (0.1st percentile = 132 DN). A genuinely dark subject at high ISO could; worth re-checking if the corpus ever gains one. (M48)
+154. **Does the per-pixel `r(S)` variation across a frame justify a spatially-varying gate calibration?** `normalise_by_luma_sigma` divides per pixel, so the ratio varies within a frame as well as across ISO; measured range is small (p99 0.482%). The machinery is the same as question 130's and the two should be scoped together if either is built. (M48)
