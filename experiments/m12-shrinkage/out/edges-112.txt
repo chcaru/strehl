@@ -1,0 +1,31 @@
+decoded 79 frames to 3516x2344 green planes in 1743 ms (22.1 ms/frame)
+[stack-112] 79 frames, spans [1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 32, 40, 48], direct0 true, 1017 pairs
+[stack-112/m10] building pyramids at [8] for 79 frames
+[stack-112/m10] pyramids in 0.05 s
+[stack-112/m10] anchor grid 12x8 tile 128 margin 96 -> 96 spots
+[stack-112/m10] 100/1017 pairs, 1.5 s elapsed
+[stack-112/m10] 200/1017 pairs, 2.7 s elapsed
+[stack-112/m10] 300/1017 pairs, 3.9 s elapsed
+[stack-112/m10] 400/1017 pairs, 5.1 s elapsed
+[stack-112/m10] 500/1017 pairs, 6.3 s elapsed
+[stack-112/m10] 600/1017 pairs, 7.6 s elapsed
+[stack-112/m10] 700/1017 pairs, 8.9 s elapsed
+[stack-112/m10] 800/1017 pairs, 10.1 s elapsed
+[stack-112/m10] 900/1017 pairs, 11.4 s elapsed
+[stack-112/m10] 1000/1017 pairs, 12.5 s elapsed
+[stack-112/m10] 1017 pairs in 12.5 s (12.3 ms/pair); 0 no-fit
+[stack-112/wide64] building pyramids at [32, 16, 8] for 79 frames
+[stack-112/wide64] pyramids in 0.13 s
+[stack-112/wide64] anchor grid 16x11 tile 64 margin 96 -> 176 spots
+[stack-112/wide64] 100/1017 pairs, 2.8 s elapsed
+[stack-112/wide64] 200/1017 pairs, 5.0 s elapsed
+[stack-112/wide64] 300/1017 pairs, 7.3 s elapsed
+[stack-112/wide64] 400/1017 pairs, 9.6 s elapsed
+[stack-112/wide64] 500/1017 pairs, 12.1 s elapsed
+[stack-112/wide64] 600/1017 pairs, 14.4 s elapsed
+[stack-112/wide64] 700/1017 pairs, 16.9 s elapsed
+[stack-112/wide64] 800/1017 pairs, 19.2 s elapsed
+[stack-112/wide64] 900/1017 pairs, 21.7 s elapsed
+[stack-112/wide64] 1000/1017 pairs, 23.6 s elapsed
+[stack-112/wide64] 1017 pairs in 23.6 s (23.3 ms/pair); 0 no-fit
+wrote data/stack-112-edges.csv

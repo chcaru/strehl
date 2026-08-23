@@ -1,0 +1,208 @@
+==============================================================================
+SECTION A  -  C5, the within-capture spread of S_24(1)
+  Disjoint 24-frame windows inside one capture.  Same subject, same
+  rig, same sweep, same estimator; only the part of the sweep moves.
+  This is the noise floor the section-4 threshold is built from.
+==============================================================================
+
+  coffee-bean
+    window   0..24   S_24(1) = 0.2652   1/S = 3.770   (anchor 20 tiles, rms 4.34)
+    window  24..48   S_24(1) = 0.2932   1/S = 3.411   (anchor 35 tiles, rms 3.10)
+    window  48..72   S_24(1) = 0.3276   1/S = 3.052   (anchor 18 tiles, rms 2.84)
+    window  72..96   S_24(1) = 0.3069   1/S = 3.258   (anchor 15 tiles, rms 4.11)
+    mean 0.2982   sd 0.0262   range 0.0624
+
+  119MSDCF
+    window   0..24   S_24(1) = 0.4764   1/S = 2.099   (anchor 73 tiles, rms 0.82)
+
+  112MSDCF
+    window   0..24   S_24(1) = 0.9100   1/S = 1.099   (anchor 50 tiles, rms 3.39)
+    window  24..48   S_24(1) = 0.9894   1/S = 1.011   (anchor 77 tiles, rms 1.65)
+    window  48..72   S_24(1) = 1.0209   1/S = 0.980   (anchor 74 tiles, rms 2.26)
+    mean 0.9734   sd 0.0572   range 0.1109
+
+  113MSDCF
+    window   0..24   S_24(1) = 0.9408   1/S = 1.063   (anchor 64 tiles, rms 3.70)
+    window  24..48   S_24(1) = 0.9910   1/S = 1.009   (anchor 79 tiles, rms 1.53)
+    mean 0.9659   sd 0.0355   range 0.0502
+
+  REGISTERED sigma_w (112 and 113 pooled, 3 d.f.): 0.0510
+  (all five stacks pooled, 6 d.f., reported not used: 0.0405)
+
+==============================================================================
+SECTION B  -  the registered primary comparison, 112 vs 113
+  Statistic: S_24(1) averaged over each stack's disjoint windows.
+  MATCHING if |diff| <= 2 sigma_w, MATERIALLY DIFFERENT if > 3 sigma_w.
+==============================================================================
+    112 mean S_24(1) = 0.9734   (n=3 windows)
+    113 mean S_24(1) = 0.9659   (n=2 windows)
+    |difference|     = 0.0075  =  0.15 sigma_w
+    -> MATCHING
+    (robustness: restricting 112 to the two windows 113 also covers gives 0.9497, |diff| = 0.0162 = 0.32 sigma_w)
+    ratio-of-ratios Q = rho_shrink(112)/rho_shrink(113) = 0.9923
+
+==============================================================================
+SECTION C  -  the headline ladder, every stack, W=48 where possible
+  1/S_W(1) is the shrinkage ratio, by the stated rule A_W / T_W(1).
+==============================================================================
+           stack    W   S_W(1)  1/S_W(1)  S_W(16)/S_W(1)     A_W %  d_true(1) px  anchor tiles
+     coffee-bean   48   0.3067     3.260           3.513   -2.4257         1.081            15
+        119MSDCF   32   0.4547     2.199           2.213   -1.0185         0.676            78
+        109MSDCF   16   0.7590     1.318             nan   -1.4474         1.925            66
+        112MSDCF   48   0.9541     1.048           1.072   -2.4180         1.077            42
+        113MSDCF   48   0.9739     1.027           1.037   -2.3609         1.052            51
+
+  Anchor robustness: the same S_W(1) recomputed against a *second*,
+  disjoint long anchor T_W(W/2) (two edges) instead of the single
+  direct edge (0,W).  Both are disjoint from the span-1 chain.
+           stack  S via (0,W)  S via T_W(W/2)    ratio
+     coffee-bean       0.3067          0.2813   0.9173
+        119MSDCF       0.4547          0.4519   0.9939
+        109MSDCF       0.7590          0.7657   1.0089
+        112MSDCF       0.9541          0.9485   0.9942
+        113MSDCF       0.9739          0.9652   0.9911
+
+==============================================================================
+SECTION D  -  the registered parameterisation test (section 2)
+==============================================================================
+  H-index vs H-phys on the 112/113 pair is DEGENERATE: m12_premise.py
+  measures rate(112)/rate(113) = 1.004, not the 0.795 that a shared
+  focus interval at two densities requires.  The two captures share a
+  per-frame physical step, so span s is the SAME physical baseline in
+  both and H-index and H-phys make identical predictions here.
+  The registered SSD test is therefore not run: it cannot discriminate.
+
+  What CAN be tested is H-disp across all five stacks: fact 45 says the
+  governing variable is the edge's true differential corner displacement
+  d = rho * s * |rate_true|.  If so, S collapses onto one curve in d.
+
+           stack  span  d_true px   S_W(s)
+     coffee-bean     1      1.081   0.3067
+     coffee-bean     2      2.162   0.3334
+     coffee-bean     3      3.243   0.3681
+     coffee-bean     4      4.324   0.3774
+     coffee-bean     6      6.485   0.4594
+     coffee-bean     8      8.647   0.5880
+     coffee-bean    12     12.971   0.9878
+        119MSDCF     1      0.676   0.4547
+        119MSDCF     2      1.352   0.5691
+        119MSDCF     4      2.704   0.7903
+        119MSDCF     8      5.407   0.9111
+        109MSDCF     1      1.925   0.7590
+        109MSDCF     2      3.850   0.9436
+        109MSDCF     4      7.701   0.9867
+        109MSDCF     8     15.402   0.9911
+        112MSDCF     1      1.077   0.9541
+        112MSDCF     2      2.155   0.9730
+        112MSDCF     3      3.232   0.9764
+        112MSDCF     4      4.310   0.9790
+        112MSDCF     6      6.465   0.9875
+        112MSDCF     8      8.620   0.9871
+        112MSDCF    12     12.929   0.9982
+        113MSDCF     1      1.052   0.9739
+        113MSDCF     2      2.103   0.9862
+        113MSDCF     3      3.155   0.9929
+        113MSDCF     4      4.207   0.9916
+        113MSDCF     6      6.310   0.9991
+        113MSDCF     8      8.413   1.0036
+        113MSDCF    12     12.620   1.0179
+
+  The decisive pair - matched differential displacement, different stacks:
+    coffee-bean span 1: d = 1.081 px, S = 0.3067
+    112MSDCF span 1: d = 1.077 px, S = 0.9541
+      d differs by 0.3%, S differs by 0.321x
+    coffee-bean span 1: d = 1.081 px, S = 0.3067
+    113MSDCF span 1: d = 1.052 px, S = 0.9739
+      d differs by 2.8%, S differs by 0.315x
+
+==============================================================================
+SECTION E  -  C7, the in-sample positive control for the correction
+==============================================================================
+     coffee-bean  k = 3.2604   in-sample rel err = 0.000e+00
+        119MSDCF  k = 2.1993   in-sample rel err = 0.000e+00
+        109MSDCF  k = 1.3176   in-sample rel err = 0.000e+00
+        112MSDCF  k = 1.0482   in-sample rel err = 1.417e-16
+        113MSDCF  k = 1.0268   in-sample rel err = 1.452e-16
+    worst 1.452e-16   PASS (gate 1e-9)
+
+==============================================================================
+SECTION F  -  the registered out-of-sample test (section 5)
+  Fit k = 1/S_A,W(1) on stack A; predict stack B's own long anchor
+  from B's span-1 edges alone.  A's edges and B's edges are disjoint;
+  B's span-1 edges and B's anchor edge are disjoint.
+  VIABLE iff rel_err_corrected <= 0.10 AND <= 0.5 x uncorrected.
+==============================================================================
+          fit on -> test on          k_A  uncorr err   corr err    gain  cond1  cond2
+     coffee-bean -> 119MSDCF       3.260      0.5453     0.4825   0.885   FAIL   FAIL
+     coffee-bean -> 109MSDCF       3.260      0.2410     1.4745   6.117   FAIL   FAIL
+     coffee-bean -> 112MSDCF       3.260      0.0459     2.1106  45.933   FAIL   FAIL
+     coffee-bean -> 113MSDCF       3.260      0.0261     2.1753  83.372   FAIL   FAIL
+        119MSDCF -> coffee-bean    2.199      0.6933     0.3255   0.469   FAIL   PASS
+        119MSDCF -> 109MSDCF       2.199      0.2410     0.6692   2.776   FAIL   FAIL
+        119MSDCF -> 112MSDCF       2.199      0.0459     1.0982  23.901   FAIL   FAIL
+        119MSDCF -> 113MSDCF       2.199      0.0261     1.1419  43.764   FAIL   FAIL
+        109MSDCF -> coffee-bean    1.318      0.6933     0.5959   0.859   FAIL   FAIL
+        109MSDCF -> 119MSDCF       1.318      0.5453     0.4009   0.735   FAIL   FAIL
+        109MSDCF -> 112MSDCF       1.318      0.0459     0.2570   5.594   FAIL   FAIL
+        109MSDCF -> 113MSDCF       1.318      0.0261     0.2832  10.855   FAIL   FAIL
+        112MSDCF -> coffee-bean    1.048      0.6933     0.6785   0.979   FAIL   FAIL
+        112MSDCF -> 119MSDCF       1.048      0.5453     0.5234   0.960   FAIL   FAIL
+        112MSDCF -> 109MSDCF       1.048      0.2410     0.2045   0.848   FAIL   FAIL
+        112MSDCF -> 113MSDCF       1.048      0.0261     0.0208   0.798   PASS   FAIL
+        113MSDCF -> coffee-bean    1.027      0.6933     0.6851   0.988   FAIL   FAIL
+        113MSDCF -> 119MSDCF       1.027      0.5453     0.5331   0.978   FAIL   FAIL
+        113MSDCF -> 109MSDCF       1.027      0.2410     0.2207   0.916   FAIL   FAIL
+        113MSDCF -> 112MSDCF       1.027      0.0459     0.0204   0.444   PASS   PASS
+
+    registered 112<->113 pair passes both directions: False
+    cross-scene ordered pairs passing both conditions: 0/18
+    worst cross-scene transfer: coffee-bean -> 113MSDCF, correction makes it 83.4x WORSE (0.0261 -> 2.1753)
+
+==============================================================================
+SECTION G  -  C8, what the correction does to a real chain
+  Composed span-1 chain vs the DIRECT (0,j) edges, which are disjoint
+  from every edge in the chain.  Worst plane-px corner error.
+==============================================================================
+
+  coffee-bean
+    uncorrected                k=1.0000  n= 25  worst    36.99 px   median    7.26 px   worst scale part    33.29 px
+    self-fitted (in-sample)    k=3.2604  n= 25  worst    13.92 px   median    3.54 px   worst scale part    10.46 px
+
+  119MSDCF
+    uncorrected                k=1.0000  n= 32  worst    12.39 px   median    6.63 px   worst scale part    11.71 px
+    self-fitted (in-sample)    k=2.1993  n= 32  worst     1.64 px   median    1.16 px   worst scale part     0.95 px
+
+  109MSDCF
+    uncorrected                k=1.0000  n= 21  worst    12.30 px   median    5.47 px   worst scale part    11.79 px
+    self-fitted (in-sample)    k=1.3176  n= 21  worst     3.68 px   median    1.52 px   worst scale part     3.18 px
+
+  112MSDCF
+    uncorrected                k=1.0000  n= 78  worst     5.27 px   median    3.77 px   worst scale part     3.71 px
+    self-fitted (in-sample)    k=1.0482  n= 78  worst     5.66 px   median    3.00 px   worst scale part     3.35 px
+    fitted on 113MSDCF         k=1.0268  n= 78  worst     4.66 px   median    3.13 px   worst scale part     3.04 px
+
+  113MSDCF
+    uncorrected                k=1.0000  n= 62  worst     4.09 px   median    2.52 px   worst scale part     3.40 px
+    self-fitted (in-sample)    k=1.0268  n= 62  worst     3.36 px   median    1.92 px   worst scale part     2.67 px
+    fitted on 112MSDCF         k=1.0482  n= 62  worst     3.26 px   median    1.91 px   worst scale part     2.25 px
+
+==============================================================================
+SECTION H  -  C6, the disjointness audit (SYNTHESIS section 5 item 20)
+==============================================================================
+    span rows used in every ruling: s < W only; overlaps found: 0   PASS
+    section F: k comes from stack A's edges, the test uses stack B's
+    edges only -> disjoint by construction for every ordered pair.
+    section G: chain uses span-1 edges (k,k+1); truth uses direct
+    edges (0,j) -> disjoint for every j >= 2.
+
+==============================================================================
+SECTION I  -  the registered outcome grid (section 6)
+==============================================================================
+    section 4 verdict: MATCHING
+    section 5 out-of-sample, registered 112<->113 pair: FAILS
+    cross-scene transfer: 0/18 ordered pairs pass
+
+    RULING (registered grid): PARTIAL/NEGATIVE
+    R2 (section 6): a correction that does not beat doing nothing is
+    not a calibration.  Cross-scene transfer is the case the project
+    would actually ship, and it is reported above.

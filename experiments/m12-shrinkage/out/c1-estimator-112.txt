@@ -1,0 +1,16 @@
+compose() self-check: -0.020791326 vs closed form -0.020791324 (err 1.68e-9)
+
+=== synthetic control, cfg=m3 (margin 10) ===
+decoded 1 frames to 3516x2344 green planes in 87 ms (87.0 ms/frame)
+  pure translation: ax   +3.855 (err +0.155)  ay   -2.254 (err +0.146)  g -0.000002 (err -0.000002)  r -0.000001 (err -0.000001)  rms 0.016 px  89/96 tiles
+  scale only -1.0%: ax   -0.005 (err -0.005)  ay   -0.001 (err -0.001)  g -0.010048 (err -0.000048)  r -0.000000 (err -0.000000)  rms 0.142 px  92/96 tiles
+   scale+trans+rot: ax   -5.252 (err -0.002)  ay   +1.753 (err +0.003)  g -0.005113 (err +0.000007)  r +0.000308 (err -0.000002)  rms 0.170 px  96/96 tiles
+ tiny scale -0.05%: ax   +0.001 (err +0.001)  ay   +0.003 (err +0.003)  g -0.000516 (err -0.000016)  r -0.000003 (err -0.000003)  rms 0.158 px  96/96 tiles
+worst scale error 4.79e-5 = 0.101 px at the plane corner (radius 2113 px)
+
+=== synthetic control, cfg=m10 (margin 96) ===
+  pure translation: ax   +3.853 (err +0.153)  ay   -2.256 (err +0.144)  g -0.000003 (err -0.000003)  r -0.000003 (err -0.000003)  rms 0.019 px  91/96 tiles
+  scale only -1.0%: ax   +0.017 (err +0.017)  ay   -0.005 (err -0.005)  g -0.009950 (err +0.000050)  r +0.000009 (err +0.000009)  rms 0.170 px  96/96 tiles
+   scale+trans+rot: ax   -5.242 (err +0.008)  ay   +1.751 (err +0.001)  g -0.005121 (err -0.000001)  r +0.000305 (err -0.000005)  rms 0.177 px  96/96 tiles
+ tiny scale -0.05%: ax   +0.005 (err +0.005)  ay   +0.000 (err +0.000)  g -0.000501 (err -0.000001)  r -0.000004 (err -0.000004)  rms 0.159 px  96/96 tiles
+worst scale error 4.95e-5 = 0.105 px at the plane corner (radius 2113 px)

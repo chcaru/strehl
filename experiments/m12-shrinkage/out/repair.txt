@@ -1,0 +1,44 @@
+==============================================================================
+C4 REPAIR - the same planted-increment command on all four stacks
+  Median recovery ratio over spans 1-4.  M10 fact 45 measured 0.559 /
+  0.664 on coffee-bean defocus pairs at 0.12 / 0.24 px.
+==============================================================================
+
+           stack  1/S_W(1)    |g|=1e-04   |g|=2e-04   |g|=4e-04   |g|=8e-04   |g|=2e-03   |g|=4e-03
+     coffee-bean     3.260        0.529       0.640       1.020       0.994       1.015       0.990
+        119MSDCF     2.199        0.878       0.897       1.016       0.999       0.987       1.001
+        112MSDCF     1.048        0.893       0.938       0.981       1.002       0.995       0.997
+        113MSDCF     1.027        0.926       0.983       0.980       0.987       0.998       0.996
+
+  The contrast the registered clause was reaching for:
+    |g| = 1e-04: coffee-bean 0.529 vs 112MSDCF 0.893  (shortfall 0.471 vs 0.107)
+    |g| = 2e-04: coffee-bean 0.640 vs 112MSDCF 0.938  (shortfall 0.360 vs 0.062)
+
+  Verdict rule: the increment control is an INDEPENDENT probe of the
+  same underlying property.  It never telescopes, never uses an anchor,
+  and works on ONE pair at a time.  If it orders the stacks the same way
+  the ladder does, two disjoint measurement paths agree.
+    increment order (most shrunk first): coffee-bean < 119MSDCF < 112MSDCF < 113MSDCF
+    ladder    order (most shrunk first): coffee-bean < 119MSDCF < 112MSDCF < 113MSDCF
+    same ordering: True
+
+==============================================================================
+ANCHOR-FREE SHRINKAGE - no long anchor anywhere in the statistic
+  R(s*) = T_W(1) / T_W(s*), s* = largest divisor span with median
+  tiles >= 50.  Both totals telescope the same window and must
+  be equal.  Disjoint edge sets.  The anchor edge is not used.
+==============================================================================
+
+           stack    W   s*  tiles(1)  tiles(s*)   T_W(1) %   T_W(s*) %    R(s*)  1/S_W(1)
+     coffee-bean   48   12        89         55    -0.7503     -2.3966   0.3105     3.260
+        119MSDCF   32   16        92         84    -0.4644     -1.0247   0.4519     2.199
+        109MSDCF   16    8        80         66    -1.1004     -1.4346   0.7657     1.318
+        112MSDCF   48   24        86         74    -2.3082     -2.4320   0.9485     1.048
+        113MSDCF   48   24        88         76    -2.3000     -2.3820   0.9652     1.027
+
+  1/R(s*) is the shrinkage measured without any long anchor:
+     coffee-bean  1/R(12) = 3.221   1/S_W(1) = 3.260
+        119MSDCF  1/R(16) = 2.213   1/S_W(1) = 2.199
+        109MSDCF  1/R(8) = 1.306   1/S_W(1) = 1.318
+        112MSDCF  1/R(24) = 1.054   1/S_W(1) = 1.048
+        113MSDCF  1/R(24) = 1.036   1/S_W(1) = 1.027

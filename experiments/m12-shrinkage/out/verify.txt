@@ -1,0 +1,30 @@
+==============================================================================
+FULL-STACK CHAIN RECOVERY - telescope every span-1 edge, compare with
+  the longest direct edge (0, j) the stack provides.  Disjoint.
+==============================================================================
+           stack    j    chain %   direct %  recovery  tiles
+     coffee-bean   82    -1.4425    -4.2465    0.3348      8
+        119MSDCF   32    -0.4644    -1.0185    0.4547     78
+        109MSDCF   21    -1.2966    -1.8544    0.6972     61
+        112MSDCF   78    -3.7096    -3.7448    0.9904     67
+        113MSDCF   62    -2.9472    -3.0210    0.9752     67
+
+==============================================================================
+DERIVED RATIOS QUOTED IN THE REPORT
+==============================================================================
+        oracle coffee-bean chain vs M10 global solve =   2.0592   report says 2.06x
+         oracle coffee-bean chain vs T_usable 4.0 px =   3.4800   report says 3.5x
+         worst cross-scene transfer 0.0261 -> 2.1753 =  83.3448   report says 83.4x
+          coffee-bean vs 112 shrinkage 3.260 / 1.048 =   3.1107   report says 3.11x
+             112 uncorrected -> self-fitted worst px =   1.0740   report says 1.07x worse
+                 fact 43 span16/span1 on coffee-bean =   3.4896   report says 3.49x
+                       wide64 anchor rms vs m10, 112 =   2.6130   report says 2.6x
+                       wide64 anchor rms vs m10, 113 =   2.4112   report says 2.4x
+
+==============================================================================
+C1 SPOT CHECK - the estimator control, worst scale error in plane px
+==============================================================================
+    [112] worst scale error 4.79e-5 = 0.101 px at the plane corner (radius 2113 px)
+    [112] worst scale error 4.95e-5 = 0.105 px at the plane corner (radius 2113 px)
+    [113] worst scale error 4.52e-5 = 0.096 px at the plane corner (radius 2113 px)
+    [113] worst scale error 4.46e-5 = 0.094 px at the plane corner (radius 2113 px)

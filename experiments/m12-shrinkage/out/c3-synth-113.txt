@@ -1,0 +1,14 @@
+decoded 1 frames to 3516x2344 green planes in 85 ms (85.4 ms/frame)
+[synth-113] building depth field and 63 synthetic frames
+[synth-113] synthesised in 14.0 s
+wrote data/synth-113-truth.csv
+[synth-113/m10] building pyramids at [8] for 63 frames
+[synth-113/m10] pyramids in 0.04 s
+[synth-113/m10] anchor grid 12x8 tile 128 margin 96 -> 96 spots
+[synth-113/m10] 100/558 pairs, 1.5 s elapsed
+[synth-113/m10] 200/558 pairs, 2.7 s elapsed
+[synth-113/m10] 300/558 pairs, 4.0 s elapsed
+[synth-113/m10] 400/558 pairs, 5.3 s elapsed
+[synth-113/m10] 500/558 pairs, 6.9 s elapsed
+[synth-113/m10] 558 pairs in 6.9 s (12.4 ms/pair); 0 no-fit
+wrote data/synth-113-edges.csv

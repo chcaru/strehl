@@ -1,0 +1,29 @@
+==============================================================================
+CAPTURE METADATA - 112MSDCF vs 113MSDCF
+==============================================================================
+
+  112MSDCF: 79 frames
+    FocusDistance2  0.318921 -> 0.329684 m   span 0.010763 m
+    FocusPosition2  68 -> 70   distinct positions 3
+    exposure 0.01666667 s   f/11   ISO 500   LensType3 33094
+    inter-frame distance step: mean 137.99 um, median 0.00 um, zero steps 76/78
+    non-zero steps: n=2  mean 5381.62 um  min 5265.07  max 5498.17
+    runs of equal FocusPosition2: {15: 1, 16: 1, 48: 1}
+    FocusPosition2 steps: {0.0: 76, 1.0: 2}
+
+  113MSDCF: 63 frames
+    FocusDistance2  0.318921 -> 0.329684 m   span 0.010763 m
+    FocusPosition2  68 -> 70   distinct positions 3
+    exposure 0.03333333 s   f/11   ISO 500   LensType3 33094
+    inter-frame distance step: mean 173.60 um, median 0.00 um, zero steps 60/62
+    non-zero steps: n=2  mean 5381.62 um  min 5265.07  max 5498.17
+    runs of equal FocusPosition2: {5: 1, 10: 1, 48: 1}
+    FocusPosition2 steps: {0.0: 60, 1.0: 2}
+
+==============================================================================
+THE LEVER THAT SEPARATES frame-index span FROM physical baseline
+==============================================================================
+  112: 79 frames, 78 steps over 10.7632 mm -> 137.990 um/frame
+  113: 63 frames, 62 steps over 10.7632 mm -> 173.601 um/frame
+  ratio of physical baselines per unit frame-index span (113/112) = 1.2581
+  identical focus interval? start 0.318921 vs 0.318921 m, end 0.329684 vs 0.329684 m
