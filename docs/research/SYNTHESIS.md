@@ -731,14 +731,15 @@ since contributors are not required to be spliceable and only have to emit an `f
 > 110+/discipline 60+, M19 facts 120+, M20's verifier facts 130+, **M23 facts
 > 170+/discipline 80+/question 25+**, **M25 facts 190+/discipline 100+/question
 > 30+**. Facts **140-145 (M20)**, **150-152 (M21)**,
-> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)** and **230-234 (M29)** are folded below and are all
+> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)**, **230-234 (M29)** and **240-243 (M30)** are folded below and are all
 > **NOT INDEPENDENTLY VERIFIED** — they were measured by the
 > orchestrator, and rule 12 binds their author exactly as it binds any milestone.
 > The same reservation rule governs the other two sequences: **discipline 110-111
-> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29)** and **question 45 (M28), 50 (M29)**
-> are folded. M23's blocks (discipline 80+, question 25+) and M25's (discipline
-> 100+, question 30+) remain unclaimed pending their reports; **discipline 30-34
-> are already taken** by M15's renumbered items, so a new block must not start there.
+> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29), 150 (M30)** and **question 45 (M28),
+> 50 (M29), 55 (M30)** are folded. M23's blocks (discipline 80+, question 25+) and
+> M25's (discipline 100+, question 30+) remain unclaimed pending their reports;
+> **discipline 30-34 are already taken** by M15's renumbered items, so a new block
+> must not start there.
 
 | # | Fact | Consequence | Source |
 |---|---|---|---|
@@ -853,6 +854,10 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 232 | **Dust is undetectable from subject stacks: the limit is a 32–50% shadow, against real dust of 1–15%.** Six-stack per-location conjunction; the 50% positive control fires at all three planted locations, 32% at none. **Q9: no excess over the shift null** anywhere in the tail (raw −0.0001, standardised +0.0006 at p0.001) | A null result **with a bound attached**, which is the only kind worth recording. Also: a `min`-conjunction across heterogeneous instruments is bounded by its worst member — the raw variant never fires at any depth because `coffee-bubbles`' map rms is 6.5× `coffee-bean`'s and alone sets the tail | M29 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; sweep is too coarse to separate the three locations |
 | 233 | **The static-map floor is scene texture, not noise, so it cannot be bought with frames.** Map rms vs frame count over a 16× sweep: 0.14412 → 0.15447, **exponent +0.025** — dead flat, against −0.5 for shot noise. The stochastic part alone (adjacent-frame difference) is **1.6%**, a ~10× separation | **The scene is common to every frame of a stack, so averaging within a stack cannot remove it.** A flat field reaches a **0.120%** floor at n=20 (ISO 100, 8,000 DN) from the calibrated model with no free parameters — a **158× improvement**, at which a 5% shadow is a **42σ** detection. Yields a *specification*: **≥16 flats per working aperture, ISO 100, mid-tone 8,000–12,000 DN** | M29 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; one stack for the n-sweep |
 | 234 | **Two stacks shot in the same session of the same subject share 94% of their "static" map.** `112MSDCF` × `113MSDCF` **r = 0.9370** against a shift null of 0.0845, while different-subject pairs give **0.002–0.016**. Same-ish median 0.4685 vs different-subject 0.0017 — a **271.92×** ratio | The pre-registered control that killed the first version of the instrument: the map is measuring **residual scene structure**, not sensor. Kept because it is also the cleanest available demonstration that "static across the frames of one stack" and "static in sensor coordinates" are different properties, and that only cross-*subject* evidence can distinguish them | M29 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 240 | **Exposure allocation is neutral at fixed light. Splitting a budget across exposures neither gains nor loses anything in the shot-noise regime.** `m` base frames + `m` at +2 EV cost the same `5m` time units as `5m` base frames and reach the same variance; measured per pixel, the median ratio is **1.00041 / 1.00470 / 1.00192** across three stacks, residual attributable to read noise in the predicted direction | **This constrains R15, R16 and R17 together, and is the most reusable thing in the capture-design workstream.** How a light budget is *divided across frames* does not affect noise — only the total does. Every capture-design decision therefore reduces to the **non-noise** asymmetries: read noise (fact 241), clipping (fact 242), focus coverage (fact 213), outlier rejection (fact 222), and **aperture (M20's 9.6×)**. Only the last is large, and it is the only one that changes the *optics* rather than the allocation | M30 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; assumes shutter-based EV change and ignores motion blur, which a real long exposure would incur |
+| 241 | **This sensor is shot-noise limited across its entire usable range.** Read noise binds where `S < RN_e²·g`: **2.02 / 2.47 / 6.46 DN** above black at ISO 50 / 500 / 160 = **0.014–0.044% of full scale**. Measured fraction of pixels below the boundary, three stacks: **0.0000%** | The dual-gain design does this deliberately — the high-ISO branch drops read noise to 1.47 e⁻ exactly where `g` rises. **Keep the read-noise term in `σ²(S)` — it is what makes the model correct near black, and masked or clipped regions do reach there — but make no design decision *because of* it.** Any argument that depends on read noise for its justification depends, on this rig, on 0.0000% of the frame | M30 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; the boundary is exact given M4's model, the 0.0000% is corpus-specific |
+| 242 | **The clipping a merge sees is not the clipping in the stack: 0.075% at gathered frames against 0.177% whole-stack, a 2.3× reduction.** Two of three stacks have exactly zero of both. `112MSDCF` has **30.7% below SNR 10** at best focus but **0.0% below SNR 5** | **Highlights are disproportionately out of focus** — speculars sit on curved surfaces near the depth extremes — so the highlight case for exposure bracketing is roughly half what a whole-stack figure suggests. `112MSDCF` is not a dynamic-range problem but a *dim frame*, which more light fixes and which fact 240 says more frames supply as well as longer ones. **General instruction: any statistic used to justify a capture change must be evaluated at the frames the merge would gather, not over the stack** | M30 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; best-frame index from an unregularised argmax over M27's focus volume, which rule 4 forbids for output but is adequate for locating signal |
+| 243 | **Verdict on HDR co-bracketing: support it, do not default it, trigger it per stack.** The machinery is already paid for (M24 gain in the forward model), the default path should not spend frames on exposure, and clipping-at-gathered-frames is a computable per-stack trigger | **The review's direction is backwards for highlights:** rescuing clipped pixels needs a **−2 EV** pass; +2 EV clips *more* (**1.89%** newly clipped on `coffee-bean`). Shadow lifting and highlight rescue are opposite operations. The advisory form — "2.4% of gathered pixels are clipped; a −2 EV pass would recover them" — is the same instrument R19 asked for | M30 (DERIVED from facts 240-242) — **NOT INDEPENDENTLY VERIFIED** |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -1294,6 +1299,18 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      produced a positive is not evidence; it is a wasted pass. **Pair every pre-registered
      prediction with a pre-registered effect size**, and if the predicted effect does not clear
      the predicted null, redesign rather than run.
+
+150. **A control must hold constant the resource that is actually scarce — and the scarce
+     resource is a property of the domain, not of the data structure.** M30's first script
+     compared a +2 EV frame against a +0 EV duplicate and called the duplicate a placebo. It
+     held **frame count** fixed, because frames are what the array is indexed by. Frame count is
+     not scarce; **exposure time** is, and a +2 EV frame costs four units of it. The comparison
+     put four units of light against one and recovered `√4/√2 = 1.414` to four significant
+     figures. **The tell is available for free: a result that reproduces a constant that exactly,
+     across three stacks with different ISOs, signals and scenes that should all perturb it, is
+     the arithmetic of the comparison rather than a property of the world.** Before running a
+     two-arm comparison, name the budget the arms are supposed to be spending, and check that the
+     arms actually spend the same amount of it.
 
 ---
 
@@ -1805,6 +1822,22 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     live case, which would make it a low priority — but it is the sort of thing that is cheap to
     settle once the M25 twin can plant a defect with ground truth. `UNVERIFIED`. *(Raised by M29;
     numbered 50 to clear the reserved question blocks.)*
+
+55. **Does a genuinely high-contrast subject overturn M30's verdict on exposure bracketing?**
+    Fact 240 (allocation is neutral at fixed light) is a property of the *sensor* and does not
+    depend on the subject. Facts 241-242 do: **0.0000% read-limited and 0.075% clipped are
+    measurements of this corpus**, which is three stacks of a bean, a coin-like subject and a
+    coffee surface, all under diffuse continuous light. A wet chitinous insect under flash — the
+    canonical macro subject and the one the tool most wants to serve — could plausibly clip one
+    to two orders of magnitude more, at which point the per-stack advisory in fact 243 starts
+    firing routinely and the "support it, do not default it" ruling may need revisiting for
+    specular subjects specifically. **The measurement is cheap and needs no new theory** — the
+    clipping-at-gathered-frames statistic runs on any stack — but it needs a capture that does
+    not exist yet, so it is a question rather than a request until a specular subject is shot.
+    Note the asymmetry that makes this worth watching: neutrality means bracketing costs
+    *nothing* at fixed light, so the decision threshold is not "is HDR worth it" but merely "is
+    any pixel clipped", which is a much lower bar than the corpus currently clears.
+    `UNVERIFIED`. *(Raised by M30; numbered 55 to clear the reserved question blocks.)*
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
