@@ -473,6 +473,15 @@ The bracket samples focus at discrete z. The true peak lies between slices. Stan
 
 I did **not** find a paper in this workstream that measures parabolic-vs-Gaussian sub-frame interpolation accuracy specifically on a focus stack. Mark the choice **UNVERIFIED** and settle it empirically on our own data.
 
+> **SETTLED by [M33](M33-subframe-offset-measured.md) — use the Gaussian (log-domain) fit, with baseline subtraction.**
+> *Annotation added by the orchestrator at fold time; the original text above is left as written.*
+> The parabolic fit's **peak position** is adequate at operational sampling (4.03× better than the
+> trivial argmax, only 9.4% worse than the log fit), but its **peak height** is anti-correlated with
+> the truth — on a synthetic Gaussian its predicted deficit falls 21× while the true deficit rises 8×.
+> The log fit is exact on a Gaussian response and reaches calibration 0.710 / 51.2%-within-2× on real
+> data, against the parabola's 0.457 / 37.5%. Baseline subtraction is required because `log` is not
+> shift-invariant and the focus measure does not reach zero when defocused. Facts 271-274.
+
 Two things the literature *does* make clear are prerequisites for this fit to mean anything:
 
 1. The response must be **positively curved at the peak** — Surh's CUR metric. At σ ≥ 0.01 the Laplacian's curvature is **negative** (§2.3), so a parabolic fit on a Laplacian focus volume in noisy regions fits a *minimum* and returns garbage. Sub-frame interpolation is only valid on a noise-robust measure.

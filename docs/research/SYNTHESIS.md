@@ -731,12 +731,12 @@ since contributors are not required to be spliceable and only have to emit an `f
 > 110+/discipline 60+, M19 facts 120+, M20's verifier facts 130+, **M23 facts
 > 170+/discipline 80+/question 25+**, **M25 facts 190+/discipline 100+/question
 > 30+**. Facts **140-145 (M20)**, **150-152 (M21)**,
-> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)**, **230-234 (M29)**, **240-243 (M30)** and **260-264 (M32)** are folded below and are all
+> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)**, **230-234 (M29)**, **240-243 (M30)**, **260-264 (M32)** and **270-274 (M33)** are folded below and are all
 > **NOT INDEPENDENTLY VERIFIED** — they were measured by the
 > orchestrator, and rule 12 binds their author exactly as it binds any milestone.
 > The same reservation rule governs the other two sequences: **discipline 110-111
-> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29), 150 (M30), 170 (M32)** and **question 45 (M28),
-> 50 (M29), 55 (M30), 65 (M32)** are folded. M23's blocks (discipline 80+, question 25+) and
+> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29), 150 (M30), 170 (M32), 180-181 (M33)** and **question 45 (M28),
+> 50 (M29), 55 (M30), 65 (M32), 70 (M33)** are folded. M23's blocks (discipline 80+, question 25+) and
 > M25's (discipline 100+, question 30+) remain unclaimed pending their reports;
 > **facts 250+, discipline 160+ and question 60+ are reserved for M31**, the
 > independent verification of M27-M30; and **discipline 30-34 are already taken**
@@ -864,6 +864,11 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 262 | **The no-information fixed point of a softmax posterior is not `H/log n = 1`, and it drifts with `n`: 0.888 → 0.850 for n = 53 → 9**, perplexity **64–72% of `n`**. Simulated null (200k trials) reproduces the scene-free placebo to **0.0137**, inside the pre-registered 0.02 | **The statistic is built from a maximum, and the maximum of `n` noise draws is not typical of them**, so even a perfectly calibrated softmax concentrates on pure noise. Any entropy threshold must be referenced to this `n`-dependent null, not to `log n` — a tool shipping "entropy > 0.9 is unreliable" would call every pixel of a 9-frame stack reliable, by construction. The null is a pure function of `n`, so tabulate it once. **General form: any statistic defined relative to an extremum has a sample-size-dependent null that must be simulated, not reasoned about** | M32 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 | 263 | **The defect in selection is not a noise problem.** A 142 σ peak is not signal-to-noise limited, so M2's argmax defect in lit low-contrast regions and M27's under-resolved pixels cannot be SNR failures — **they are sampling and model failures: the true peak lies between frames and the estimator has no term for it** | **Relocates confidence.** The uncertain quantity is not *which frame is best* (nearly certain) but **which frames are equivalent** — M27's `n_eff ≈ 3` — and **how far the true peak sits from the nearest sample**. Neither is a function of the focus curve's shape, which is exactly why discipline 120 disqualified shape statistics. Confidence must be built from the predicted σ of the merged estimate, the acceptance-set width, and the sub-frame peak offset | M32 (DERIVED from facts 261, 24, 211) — **NOT INDEPENDENTLY VERIFIED** |
 | 264 | **M20 and M32 explain each other.** M20: the unguarded Wiener estimator *loses* to argmax by up to 31% even with oracle depth, and only **15.1%** of real pixels beat the crossover. M32: when one frame stands 10²–10³ σ above the rest, **the minimum-variance estimator *is* nearly a selector** and the matched filter has nothing to harvest from neighbours | **The thesis survives and gets sharper.** "Estimation, not selection" is a claim about estimating the **pixel value**, and it is untouched. It was never a claim about being unsure which frame won, and it must not become one. The estimation content lives in **averaging among frames that genuinely agree** (M14's 0.534×), in the **sub-frame peak location**, and in the noise model that identifies both | M32 (DERIVED, reconciling M20 + M32) — **NOT INDEPENDENTLY VERIFIED** |
+| 270 | **At operational sampling, 48.7% of pixels miss their focus peak entirely and give up a median 4.64% of their focus response** — **10.74%** at p90, **17.34%** at p99. Deficit grows to 9.74% (×4) and 19.60% (×6) mean. Replication across the two ×2 phases agrees to **0.05%** | Question 65's candidate (c), and the **only** one of the three with a measured magnitude. Nothing at the median, a great deal in a large minority — **the exact profile of something a per-pixel confidence map exists to report and a global quality number cannot**. **The all-pixel median is meaningless here**: half the population sits at exactly 1.0, so the median reports which side of 50% the point mass fell on (0.234% vs 0.000% for the two phases — not a difference between them) | M33 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; ground truth is the 105-frame grid, which misses its own peaks by 0.711% against the ×2 grid's 2.753% — adequate at **3.87×**, but a ×4 grid would not have been |
+| 271 | **Three-point parabolic peak interpolation gives a HEIGHT estimate that is anti-correlated with the quantity it reports.** On a synthetic Gaussian its predicted deficit **falls 21×** (1.55% → 0.07%) while the true deficit **rises 8×** (3.08% → 24.57%). On real data it is pinned near **1.5%** while the truth runs 2.75% → 19.60%; calibration ratio 0.457 / 0.115 / 0.042 at ×2/×4/×6 | **Discipline 120's failure mode in a third independent guise, this time inside the most standard piece of sub-pixel machinery in the field.** The parabola's *relative* deficit depends only on the **shape** of three samples, which is scale-free, so it barely moves with the spacing that determines the answer. **Never use the parabola's peak height for anything** — gate thresholds, quality reporting, or confidence | M33 (MEASURED, synthetic + real) — **NOT INDEPENDENTLY VERIFIED** |
+| 272 | **The log-domain (Gaussian) three-point fit with baseline subtraction is the fix, and it settles `B` §4.4's UNVERIFIED marker.** Exact on a Gaussian response (ratio **1.0000** at every spacing, error ~10⁻¹⁷). On real data at ×2 it reaches calibration ratio **0.710** and **51.2%** of pixels within 2×, against the parabola's 0.457 / 37.5% — **the first estimator in the milestone to clear the pre-registered calibration bar** | Baseline subtraction matters because `log` is not shift-invariant and the focus measure does not reach zero when defocused. **The placebo confirms it is not universally better:** on a curve that genuinely *is* a parabola the parabola fit is exact and the log fit is **3.02× wrong**. Honest scope: the fix works at operational density and degrades under sparse sampling (ratio 0.368 at ×4, 0.223 at ×6). **One-line change wherever interpolation happens** | M33 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 273 | **The same fit is adequate for peak POSITION and disqualifying for peak HEIGHT.** Position at ×2: parabola 0.128 dense frames vs the trivial argmax's 0.517 — a **4.03×** gain, only **9.4%** worse than the log fit. Synthetic shrinkage 0.403 (h=4) and 0.110 (h=6) for the parabola; **1.000** for the log fit | **Position is set by the *asymmetry* of three samples — a first-order property any smooth fit captures. Height is *curvature extrapolated beyond* them — entirely a consequence of the assumed functional form, about which three points carry no information.** The parabola is not estimating the peak height from the data; it is reporting its own assumption, evaluated at the data. **This scope limit is what keeps fact 271 from overclaiming against the field**, which mostly uses interpolation for position | M33 (MEASURED + DERIVED mechanism) — **NOT INDEPENDENTLY VERIFIED** |
+| 274 | **The through-focus response has heavier shoulders than a Gaussian.** Fitting a Gaussian width to the decimation ladder gives σ = **1.68 / 2.04 / 2.45 dense frames** from the ×2 / ×4 / ×6 arms; a true Gaussian would give one number | Explains why the log fit is *exact* on synthetic and only *better* on real data, and why both estimators degrade under sparse sampling: the wider the spacing, the more the fit is extrapolating into shoulders neither functional form describes. **Any future sub-frame estimator should be validated on the decimation ladder rather than at one spacing**, since a single-spacing test cannot see this | M33 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; one stack, one aperture, one magnification |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -1329,7 +1334,24 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      perfectly because it always returns a population. A near-relative of discipline 130: picking
      a threshold that guarantees a sample exists is not the same as picking one that guarantees
      the sample has the property. **Check that the selected population has the property the
-     experiment needs, using a reference the selection did not use.**
+     experiment needs, using a reference the selection did not use.
+
+180. **When a statistic can be exactly zero for a large fraction of the population, the median
+     reports the size of that fraction, not the size of the effect.** M33's retention is exactly
+     1.0 for every pixel whose focus peak happens to land on a sampled frame — about half of them
+     at ×2 sampling — so the median sat on the boundary of that point mass and returned 0.234% for
+     one phase and *exactly* 0.000% for the other. That difference is not a difference between the
+     two stacks; it is which side of 50% the mass fell on. The quantity with meaning was the
+     deficit **conditional on missing**, which is **4.64% — twenty times larger**. Check for point
+     masses before choosing a quantile, and when one exists, report the mixture: the mass fraction
+     and the conditional distribution, never a quantile that straddles them.
+
+181. **A pre-registered effect size protects only the estimator you named.** M33's P1 predicted
+     ~7% median deficit from a Gaussian argument. The conditional median came out at 4.64%, so the
+     *physics* was close — but the statistic actually named, the all-pixel median, came out at
+     0.234%, wrong by 30×. Discipline 142 requires the effect size; it does not by itself stop you
+     getting the magnitude right for the wrong estimator. **Pre-register the effect size *and* the
+     shape of the distribution it will be read off.****
 
 ---
 
@@ -1868,6 +1890,9 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     would have to be referenced against; **(c)** the sub-frame peak offset — the distance from
     the true through-focus peak to the nearest sampled frame, which fact 263 argues is the actual
     mechanism behind M2's argmax defect and which **nothing in the project currently estimates**.
+    **UPDATE — (c) is now measured: M33 gives it a magnitude (fact 270: 48.7% of pixels miss, median
+    deficit 4.64%, p99 17.34%) and an estimator that clears a calibration bar (fact 272). (a) and (b)
+    remain unmeasured, and whether (c) *predicts M2's defect* is still open.**
     My guess is that (c) is load-bearing and (a) is merely easy, and that a shippable confidence
     output is a small vector rather than a scalar — a predicted σ, an `n_eff`, and a set of flags
     — which is what discipline 29 demanded before there was a mechanism to justify it. **The
@@ -1875,6 +1900,24 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     available as ground truth there, and whether (c) predicts M2's defect can be answered on an
     existing harness. `UNVERIFIED`. *(Raised by M32; numbered 65 to clear the reserved question
     blocks.)*
+
+70. **Does the log-domain sub-frame fit hold up away from this stack's optics?** Fact 272 settles
+    `B` §4.4 on `coffee-bean` at one aperture and one magnification, and fact 274 already shows the
+    response is **not** exactly Gaussian — the implied width drifts 1.68 → 2.45 dense frames across
+    the decimation ladder. The Gaussian model is therefore an approximation that happens to be much
+    better than the parabolic one *here*, and two things could change that. **(a) Aperture:** M5
+    measured `N_eff = N_marked × (1 + m/p)`, so the defocus and diffraction contributions trade off
+    with aperture, and the through-focus shape is their convolution — a wide-open frame is
+    defocus-dominated and plausibly closer to Gaussian, a stopped-down one is diffraction-dominated
+    and plausibly not. **(b) Focus-measure scale:** everything in M33 used radius 2, and M21 already
+    found that scale changes what the curve reveals (bimodality present at R=2, invisible at R=13).
+    A wider window averages over more depth and must broaden the response, possibly changing which
+    functional form fits. **The cheap version needs no new capture** — `112MSDCF` and `119MSDCF` are
+    different apertures and magnifications, and the radius sweep is free — so this is a question only
+    because it has not been run, not because it is blocked. **If the shape turns out to be
+    aperture-dependent, the fit's functional form becomes a candidate entry in the optical profile**,
+    which would be the first thing to genuinely need the camera/lens plugin seam. `UNVERIFIED`.
+    *(Raised by M33; numbered 70 to clear the reserved question blocks.)*
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
