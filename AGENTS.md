@@ -527,16 +527,16 @@ record the stem, what it was asked, and where it writes. `experiments/` counts: 
 | `M65` | `n_eff` under regularised vs raw election, at matched tolerance | `docs/research/M65-election-gate-measured.md` | reported |
 | `M66` | is the gate N-dependent, given it compares against a max over N? | `docs/research/M66-gate-n-dependence.md` | live |
 | `M67` | does the merge admit the RIGHT frames? (facts 951, 966) | `docs/research/M67-focus-correctness.md` | live |
+| `M68` | is the B plane's 0.84x a sensor conversion gain or a pre-ADC attenuation? | `docs/research/M68-b-plane-mechanism.md` | live |
 
 **M63 is reserved** for the bimodality milestone above and must not be reissued.
 
 **Unallocated, and deliberately so.** Three measurements are named and waiting for a
 milestone that did not frame them (discipline 441):
 
-- **The B-plane mechanism's ISO sweep** -- the dark-sigma ratio's ISO dependence, flat
-  for a sensor conversion gain and falling for an analog attenuation. Fact 956 names the
-  observable; M61 fixed it and did not run it. Until it runs, `profile.rs` should carry
-  the 0.84x as a **measured per-plane scale of unknown origin**, not a conversion gain.
+- ~~The B-plane mechanism's ISO sweep~~ -- **dispatched as M68.** Until it reports,
+  `profile.rs` must carry the 0.84x as a **measured per-plane scale of unknown origin**,
+  not a conversion gain: the two behave differently when ISO changes.
 - **M55's stratum-noise question** (LOW, UNMEASURED). Must not go to M55.
 - **The green-plane correlation's 3.6% sigma consequence** (fact 958), design-only,
   needs a fresh decode.
