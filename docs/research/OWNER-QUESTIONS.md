@@ -1242,3 +1242,41 @@ It also measures sigma at the 1/8-2.5 s exposures the real stacks use, which no 
 capture does, and yields the working-exposure hot-pixel and dust map for free. Sections 13a-c
 ask for a half-step interleave, one stack with the teleconverter removed, and one deliberate
 occluding edge. Section 14 records what would NOT help, so a session is not wasted on it.
+
+**50. ANSWERED, NEGATIVELY -- your review's second-ranked proposal is dead.** You ranked
+"the posterior-over-depth object with bimodal occlusion reconstruction" second by expected
+value and called it "the first structural kill of the occlusion halo I'm aware of in any
+stacking tool." It was measured and it does not work. The signal is real and abundant --
+78.3% of pixels at hand-labelled occluding edges show a clean second peak in the
+through-focus curve, AUC 1.000 against controls. **The peak is not a second depth.** Five
+controls, any of which could have vindicated it: it fires identically on silhouettes against
+blank card where there is no background to veil (78.9%); its second peak lands on the
+background's actual focus frame 7.2% of the time against 1.6% chance; **it does not
+reproduce across two 299-frame captures of the same scene** (kappa +0.11); a derived
+single-depth defocus side-lobe reproduces the whole phenomenon, and against a known planted
+depth the side-lobe wins the second slot 54-68% of the time while the true background peak
+wins 0.0-1.0%; and peak prominence tracks edge contrast rather than occlusion (rho +0.772).
+Two further limbs of the same proposal also failed: posterior entropy adds about 0.01 AUC
+over plain peak height, and the "no frame in focus" boundary-mass limb **has no population**
+in the corpus at all. The posterior may still be worth building as bookkeeping; the four
+capabilities you argued fall out of it for free do not. Facts 967-970.
+
+**51. FOR YOU, NOT URGENT -- three of your proposals are alive and one is now cheaper.**
+Alive and unmeasured: multi-frame Wiener deconvolution as the merge core (your third), the
+metacalibrated and blur-equalised alignment edges (your fourth), and the calibrated simulator
+(your fifth, and partially built already as M25). Your first -- build the priced merge now --
+is done: the shipped default is an estimator as of this session, pending an independent
+certification that was still running when this was written. **The EDOF/microscopy literature
+gap you identified was surveyed and it changes one thing:** iterative deconvolution has 28
+years of prior art and the novelty claim there is false, so the deconvolution work should be
+positioned as applying a known estimator to a calibrated CFA-native macro pipeline, not as a
+new estimator. That is a smaller claim and a defensible one.
+
+**52. OPEN, FOR WHEN YOU ARE BACK -- the largest hole is not on your list.** Two milestones
+independently volunteered the same limitation without being asked: everything this project
+has measured about the merge concerns **how many frames it averages, not whether they are
+the right frames**. The square-root-N battery, the degeneracy guard and the whole gate ladder
+are all silent on it -- a merge that admits a fixed wrong set scores identically to one that
+admits the right set. A milestone is running on it now. If it reports that per-pixel focus
+correctness is not measurable on real captures with what exists today, **that becomes a
+capture request**, and it would move ahead of the flat fields in priority.
