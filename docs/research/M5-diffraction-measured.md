@@ -11,6 +11,20 @@ Every claim below carries a label: **MEASURED**, **VERIFIED**, **DERIVED**, **AR
 
 Code: `experiments/m5-diffraction/`. Every number here comes from a command quoted in §12.
 
+> **Independently reproduced by the orchestrating agent, not the author** (SYNTHESIS §5: the author
+> never verifies their own work). Three legs, all re-run from scratch:
+>
+> | Leg | Result |
+> | --- | --- |
+> | `m5_selftest.py` | All 10 groups pass. False alarms on white noise **3/240 (1.25%)**; the knee rule correctly reports *no signal* on all three lattices. |
+> | `m5_measure.py null` on `D:\macro-dark-frames` | **113/330 raw detections (34.2%), 0 surviving the `dyn ≥ 10` gate** — reproduces §3.1 exactly, including the failure it discloses. |
+> | `m5_measure.py measure coffee-bean --n 8.0` | **Deliberately a stack the author did not re-run.** 0/15 cases with a valid floor, inflated **4.58-20.19x**, out-of-band bound **B < 3.317**, bandwidth 77.6% / area 60.2% — every figure identical to §1, §4.2 and §9.1. |
+>
+> The B=5 refutation was also re-derived by hand and is genuinely model-free: at f/8 with B=5,
+> `f_c = 5.12/(0.55·5·8) = 0.2327 cyc/px`, yet there is signal above the noise model at
+> 0.3508 cyc/px, giving `B < 5.12/(0.55·8·0.3508) = 3.317`. No knee detection is involved.
+> The f/11 bounds check likewise: `f_c = 0.2762 ⇒ B = 3.064`; `f_c ≤ 0.3508 ⇒ B ≥ 2.412`.
+
 ---
 
 ## 0. The verdict in one paragraph

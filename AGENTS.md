@@ -112,6 +112,7 @@ monolithic binary and ship only that binary.
 | `M2-verification.md` | **Independent re-derivation of M2.** Headline confirmed and causally proven; five supporting numbers refuted |
 | `M3-alignment-measured.md` | Measured alignment cost, motion model, and why chaining is dead |
 | `M4-fpn-measured.md` | Dark-frame noise: sigma-vs-N, the fixed-pattern floor, read noise vs ISO |
+| `M5-diffraction-measured.md` | **The bellows factor, measured from the raw CFA.** `B = (1+m/p) ∈ [2.41, 3.06]`, `p ≈ 1.0-1.4`; `p=0.5` refuted model-free. EXIF `FNumber` is **not** bellows-corrected — marked f/11 is optically f/33 |
 | `A-prior-corpus.md` | The prior attempt, filtered; includes retractions |
 | `B-algorithms-sota.md` | Algorithmic state of the art per stage |
 | `C-landscape.md` | Competitors, licensing, artifact taxonomy |

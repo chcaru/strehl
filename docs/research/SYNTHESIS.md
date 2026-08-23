@@ -25,7 +25,8 @@ Status: **Proposal, revised after adversarial review.** Nothing here is built.
 
 Source: six parallel `claude-opus-5` research workstreams (A prior-corpus, B algorithms,
 C landscape, D Rust/hardware, E plugin architecture, F camera/lens optics), plus follow-ups,
-one adversarial review, and one measurement.
+two adversarial reviews, and five measurements (M1 decode, M2 baseline + independent
+re-derivation, M3 alignment, M4 dark-frame FPN, M5 diffraction).
 Reports: `A-prior-corpus.md`, `B-algorithms-sota.md`, `C-landscape.md`,
 `D-rust-and-hardware.md`, `E-plugin-architecture.md`, `F-camera-lens-optics.md`,
 `M1-decode-measured.md`.
@@ -414,8 +415,9 @@ so.** The owner asked for pluggable camera and lens specifics. What survives is:
   database contains the SEL100M28GM), and vignetting (coefficients are all zeros). Distortion and
   TCA come from Sony's own maker notes, which is decoder work. **The breathing scale prior is dead
   too** — see §4.1. What remains is the **bellows factor `(1 + m/p)`**, where `p` is pupil
-  magnification: unpublished by every manufacturer, currently assumed `p=1`, worth **±38%** on every
-  capture-advisor number at m=1.4 (F1.7b).
+  magnification: unpublished by every manufacturer, **now measured rather than assumed — `p ≈ 1.0-1.4`
+  for the composed path (fact 27)**, and previously worth ±38% on every capture-advisor number at
+  m=1.4 (F1.7b).
 
   **Correction, and it is mine.** This section previously called `p` "the only gear constant that
   can be neither read from EXIF nor fitted from a stack". That is **wrong**. A diffraction-limited
@@ -426,6 +428,17 @@ so.** The owner asked for pluggable camera and lens specifics. What survives is:
   on files that already exist, with no bench and no new captures. That is M5. Note also that what
   the formulas need is the **bellows factor**, not `p`; separating the two requires knowing `m`,
   which needs a ruler in frame, and matters only for *extrapolating* to a different magnification.
+
+  **M5 ran, and it answered.** `(1 + m/p) ∈ [2.41, 3.06]`, `p ≈ 1.0-1.4`, `p = 0.5` refuted
+  model-free (fact 27). The ±38% advisory collapses to **−20%/+2%**. **So the lens profile's one
+  float now has measured content rather than an assumption in it** — and the profile must store `p`,
+  not `B`, because `B` depends on the shot's magnification while `p` is the property of the optical
+  path. Storing `B` would silently apply one magnification's bellows factor to every other.
+
+  **And the float earns its place, because EXIF actively misleads here.** `FNumber` is the *marked*
+  aperture with no bellows correction (fact 28), so a tool that reads EXIF and stops is wrong by ~3x
+  at 2:1 and will recommend f/11 as safe when it is optically f/33. The lens profile is small, but
+  it is the difference between a correct advisor and a confidently wrong one.
 
 So: **camera profiles are a TOML table; lens profiles are one float and a maker-note parser.**
 Measurement dissolved the rest, mostly by showing that runtime fitting is both cheaper and more
@@ -463,7 +476,7 @@ source-level kernel composition.
 | 9 | Sub-pixel *random* jitter **0.075 px** vs Wronski's >= 0.3 px gate | Classical multi-frame SR is off the table — **but see §6, breathing supplies structured diversity instead** | A (MEASURED) |
 | 10 | H2D **56.9 GB/s**, D2D **1503 GB/s** measured locally; 66 MB frame transfers in 1.2 ms | PCIe is a non-issue. Do not build decode/compute overlap in v1 | D (MEASURED-LOCALLY) |
 | 11 | Full budget 60x33 MP: **2.7-6.1 s**, decode-dominated | 15 s target has 2.5-5.5x margin | D (DERIVED) |
-| 12 | A 2x teleconverter at m=2.8: **MTF@Nyquist = 0.000 at every aperture** — wide open is already N_eff 21.3, past the **N_eff 18.6** extinction point, where the diffraction cutoff `pitch/(lambda*N_eff)` falls to Nyquist | The tool should warn, and offer reduced-resolution output. **No longer hypothetical — see fact 26.** But the verdict turns on a magnification nobody has measured: at m=2.0 the same rig is at N_eff 16.8, just *inside* extinction. M5 settles it | F (DERIVED) |
+| 12 | A 2x teleconverter at m=2.8: **MTF@Nyquist = 0.000 at every aperture** — wide open is already N_eff 21.3, past the **N_eff 18.6** extinction point, where the diffraction cutoff `pitch/(lambda*N_eff)` falls to Nyquist | The tool should warn, and offer reduced-resolution output. **No longer hypothetical — see fact 26.** But the verdict turns on a magnification nobody has measured: at m=2.0 the same rig is at N_eff 16.8, just *inside* extinction. **M5 settled it (fact 27), and confirmed this row by direct measurement**: the `N_eff = 18.6` extinction point is reproduced to three digits from the measured cutoff, and the MTF@Nyquist row for m=2.00 (0.036 / 0.000 / 0.000 at f/5.6, f/8, f/11) is reproduced exactly. The warning stands | F (DERIVED) → **confirmed by M5 (MEASURED)** |
 | 13 | The reference 33-frame stack is **2.4x oversampled**; 14 frames sufficed | A capture advisor is a real feature | F (DERIVED) |
 | 14 | ISO 400 is a **second base ISO** (read noise 4.20 -> 1.47 e-); DR is higher than ISO 320. Usable white level **15360**, not 16383 | Camera plugin must expose `dominated_isos()` and the true white level | F (MEASURED) |
 | 15 | Alignment costs **13-16 ms/frame**; 0.78-0.96 s for 60 frames, scalar CPU, all frames independent | Alignment is ~6% of a 15 s budget. The last unpinned budget term is pinned | M3 (MEASURED) |
@@ -478,6 +491,9 @@ source-level kernel composition.
 | 24 | On high-detail ROIs a mean's sigma looks harmless (0.899x, 0.995x) while its mean gradient **collapses -58% and -53%**; argmax *raises* gradient | **Sigma alone cannot see detail destruction.** This is rule 9 working: the flat-ROI metric is valid precisely because its paired control fails as it should | M2-verification (MEASURED) |
 | 25 | Argmax's noise excess is **spatially correlated over 3-7 px, not white** — and 3-7 px is exactly `focus.rs`'s own `INNER_RADIUS: 1` / `OUTER_RADIUS: 3` support | **The focus measure and the merge are coupled.** The 17x17 regulariser behind facts 20 and 23 is tuned to *one measure's support*. A contributor pairing a wider measure with the default merge gets a silently wrong stack. Put the support on the interface (§3.4.1 B3). Also why high-pass views understate argmax damage while raw spatial sd overstates the ratio — ~1.48x is the honest figure between them | M2-verification (MEASURED) |
 | 26 | **Every existing test stack was shot with a 2x teleconverter**, disclosed only after M1-M4 were complete. `LensModel = "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"`, `LensSpec = "FE 200mm F5.6 Macro OSS"`, `FocalLength = 200 mm`, `MaxApertureValue = 5.6`. The body composes the TC into reported focal length and aperture; **the maker-note lens ID does not** — it still reads as the bare lens | Two consequences. **(a)** Anything reading `FocalLength`/`FNumber` from EXIF is already TC-correct, so there is no hidden 2x error in the advisor. **(b)** **Keying a lens profile on the lens ID is a bug**: it would apply bare-lens constants to a composed path with a different `p`, twice the focal length and two more stops. The profile key must be the *composed optical path*, and every profiled constant must be measured for the combination actually in use | MEASURED-LOCALLY (exiftool, all three stacks, every frame) |
+| 27 | **The bellows factor of the composed path is `B = (1 + m/p) ∈ [2.41, 3.06]`**, point estimate 2.6-2.9, measured from the diffraction cutoff in the raw CFA. At f/11 the green-quincunx spectrum has a genuine knee at **f_sig = 0.2762 cyc/px**, above which the floor matches the photon-transfer noise model to **0.950x** — so it is a real optical cutoff, not a fitted plateau. **`B = 5` (p = 0.5) is REFUTED 5/5 by a model-free test** at two apertures: there is optical signal at 0.3508 cyc/px, where p=0.5 permits none. **`B = 1` is refuted by ~3x** | **The corpus's "dominant uncertainty in the whole advisor" (±38%) is retired to −20%/+2%, from data the owner already had, with no bench work.** With m ≈ 2.0, **p ≈ 1.0-1.4** — the working assumption of p=1 was right. It does **not** vanish: M5 measures the product `(1 + m/p)` and cannot separate `p` from `m`, so `B` is known at *one* magnification only. A bench measurement of `p` alone would give `B` at any magnification | M5 (MEASURED → DERIVED; independently reproduced) |
+| 28 | **EXIF `FNumber` is the *marked* aperture and is NOT bellows-corrected.** The body composes the teleconverter into `FocalLength` and `FNumber` (fact 26) but applies no correction for working at 2:1. **Marked f/11 is optically f/33** | **The most directly actionable finding in the corpus.** Every advisor formula that reads `FNumber` and treats it as `N_eff` **under-predicts diffraction blur by ~3x** and will recommend f/11 as "safe". Apply `N_eff = FNumber_exif * B`. Consequences at B=3: f/8 discards **40%** of the sensor's 2-D Nyquist area (46% of contrast at 4-px detail), f/11 discards **68%** (90%) — a 33 MP sensor used as ~10.5 MP. Critical sampling is at **N_marked = f/6.21** | M5 §7 (DERIVED, factor-of-3 margin) |
+| 29 | **The project's noise model is independently confirmed to ±10% by a method sharing none of its assumptions.** The spectral floor above the cutoff is a structure-free sigma estimate: floor/model = **0.950-1.093x** across 15 f/11 cases spanning a **4.8x signal range** (422-2027 DN), so it tests the *slope* of the photon-transfer relation, not one point. Immerkaer on the same ROIs agrees to 0.896-1.020x | Three structurally independent routes now concur. **Where they disagree the disagreement is diagnostic**: at f/8 the ratio is 4.58-20.19x because the "floor" still contains subject signal, which is exactly how M5 detected that f/8 has no reachable floor. Uses no darks, no flats, no Immerkaer kernel, no fitted gain | M5 §8 (MEASURED, n=15) |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -492,6 +508,7 @@ instruction is binding — *"don't overfit to anything specific to my setup."* R
 | `g = ISO/436.8`, ISO 400 second base, white level 15360 | Genuine **per-body-model sensor calibration** — the most legitimate constants here. White level and black level independently **confirmed by M1**. | **Keep — but in a camera-profile data file, never in pipeline code.** Read white level from file tags where present (firmware/compression dependent). `g` was validated by reproducing white level to 0.23%, which is a consistency check on one relation, *not* a photon-transfer measurement — extend experiment 1 to a real PTC. Dual-gain behaviour is per body *and* per firmware. |
 | 0.075 px jitter ⇒ MFSR off the table | An artifact of the **capture mode** — in-camera bracketing on a tripod has no camera motion by design | **Do not bake anywhere.** A mechanical rail has 1–10 µm repeatability plus lateral runout; 5 µm at m=1 on a 5.12 µm pitch is ~**1 px**, far above Wronski's ≥0.3 px gate. **MFSR is back on the table for rail users.** |
 | `LensModel::breathing_scale_prior` — F ranked it payoff #2 at 5 stars and F1.13 says it *"is justified and should be built"* | A per-lens prior whose **only job** was to seed and constrain the aligner's scale search | **RETRACTED — M3 removed its job.** A direct per-frame fit is already 3.6x more accurate than any low-order model of drift against frame index, costs 13–16 ms/frame, and an 8x-decimated coarse pass supplies capture range on its own. **A prior cannot beat a free, more-accurate direct measurement, and nothing needs seeding.** This was the second-highest-ranked lens-profile item; with it gone, §3.4.2 is what remains. |
+| Bellows factor `B = (1 + m/p) ≈ 2.6–2.9` (fact 27) | **Not a constant at all** — `m` is per shot, `p` is per composed optical path. M5 measures the *product*, at one magnification | **Store `p`, never `B`.** `p ≈ 1.0–1.4` is the genuinely profileable half and it is a property of the lens+TC path, not of the body or the subject. `B` must be recomputed per shot from the profile's `p` and the shot's `m`. A profile that caches `B` applies 2:1's bellows factor to a 1:4 shot and is wrong by 2x in the safe direction — i.e. silently. **This is the strongest surviving case for a lens profile**, because fact 28 shows EXIF alone gives the wrong answer by ~3x. |
 
 **A live contradiction to resolve before either claim reaches a design decision:** fact #9
 (0.075 px, "MFSR off the table") and novelty bet #1 ("breathing supplies structured, radially
@@ -563,6 +580,12 @@ So the A/B harness is a **first-class component from commit one**, not a later a
    **sensitivity** (distinguishable configs must produce distinguishable output), no-residue
    across runs, and a calibrated fixture recovering a known synthetic warp. Confluence
    alone is passed by a function that returns a constant.
+9. **A synthetic null is not a null.** M5's cutoff estimator false-alarms on **0.4% of white-noise
+   tiles (3/240) and on 34.2% of real dark frames (113/330)** — an 85x gap, because real darks carry
+   M4's row/column FPN and synthetic noise does not. The estimator is only safe because a second,
+   independent gate (`dyn ≥ 10`) suppresses all 113. **Run every null on real sensor data, and when
+   a guard is what makes a result valid, publish the guard with the result** — anyone reusing the
+   estimator without it inherits a 1-in-3 false-alarm rate.
 
 ---
 
@@ -775,13 +798,13 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
    photon-transfer curve. Spec to be added to [`../captures-needed.md`](../captures-needed.md) §4
    only if experiment 2 shows it would change a decision.
 4. ~~Pupil magnification `p` for the SEL100M28GM — a one-hour bench measurement~~ —
-   **superseded, and the premise was wrong twice over.** (a) The rig is not the bare lens: **every
-   stack carries a 2x teleconverter** (fact 26), so the quantity wanted is the bellows factor of the
-   *composed* path, and a bare-lens figure would not apply even if one existed. (b) It does not need
-   a bench: M5 measures `(1 + m/p)` from the diffraction cutoff in the three existing stacks
-   (§3.4.2). **What the owner may still need to supply is a ruler or stage micrometer in frame at
-   the working magnification**, and only if `m` must be separated from `p` in order to extrapolate
-   to other magnifications. The bellows factor itself now needs nothing new.
+   **CLOSED by M5 (fact 27), and the premise was wrong twice over.** (a) The rig is not the bare
+   lens: **every stack carries a 2x teleconverter** (fact 26), so the quantity wanted is the bellows
+   factor of the *composed* path, and a bare-lens figure would not apply even if one existed. (b) It
+   did not need a bench: M5 measured `(1 + m/p) ∈ [2.41, 3.06]` from the diffraction cutoff in the
+   existing stacks. **What the owner may still optionally supply is a ruler or stage micrometer in
+   frame at the working magnification** — needed only to separate `m` from `p`, and hence to
+   extrapolate `B` to *other* magnifications. Nothing is blocked on it.
 
 **Needs a decision, not a measurement — both raised by `M2-rss-resolved.md` §4:**
 12. **What unit is the 8 GB ratchet in?** Undefined today, and at 7% margin it decides the verdict:
@@ -826,6 +849,13 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     ring-difference to one `wgpu` kernel and time the focus volume on the 22-frame stack. Fact 21
     is a scalar-CPU number, and experiment 3 — which §9 says is what justifies constraining how
     contributors write focus measures — has not been run.
+14. **Does `B` hold away from 2:1, and how much does the λ assumption cost?** M5's two disclosed
+    systematics. `B` is measured at **one** focus distance (`FocusDistance2` 0.274-0.277 m); at
+    infinity `B → 1` trivially and the interpolation between is unmeasured. And `λ_eff = 550 nm` is
+    **assumed** — it is M5's largest single error term at ±10%, and it moves the advisor's critical
+    aperture from f/6.21 to f/5.69-f/6.83. Both are cheap to close: a second aperture sweep at a
+    different magnification for the first, a CFA-green-weighted `λ_eff` for the second. Neither
+    blocks anything today, and **both must be stated whenever `B` is quoted.**
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
