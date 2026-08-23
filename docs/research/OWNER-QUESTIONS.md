@@ -938,3 +938,63 @@ bar was never escaped inside a table cell.
 
 All repaired, and all found by auditing every row rather than only the rows being
 added -- which is the actual lesson, and is now a written rule.
+
+## Overnight, part two: the detail metric is gone
+
+**35. The way strehl was going to score its own thesis does not work, and I am
+retracting it entirely rather than patching it.** Item 26 told you to turn the detail
+metric on by default. Item 32 withdrew that advice. This withdraws the metric.
+
+The problem it was built to solve is real and still open. The project's whole claim is
+that estimating a pixel from many frames beats picking the sharpest frame, and to say
+that honestly you need a number that goes up when an image genuinely has more detail
+and does not go up when the image has merely been smoothed. Every ordinary sharpness
+measure fails that test: blur and noise-smoothing look identical to it. The metric we
+had appeared to pass.
+
+Three findings killed it, all measured, none of them arguable:
+
+- **It is non-monotone in the thing it measures.** Feed it images of known, decreasing
+  true detail and past roughly two thirds of a pixel of blur its verdict inverts: it
+  reports the blurrier image as the more detailed one. At the worst point it fires 344
+  times past its own decision threshold, in the wrong direction.
+- **Brightness saturates it.** A photometric difference of 0.15% is enough to max out
+  its decision threshold. Real merge settings differ in brightness by around 12%, which
+  moves it 83 times past threshold on brightness alone, with no change in detail at all.
+- **It cannot be run on real data.** It needs the stack split into two halves. Which
+  split you choose moves the reading 50 times more than the optical effect it is
+  supposed to detect, and 1751 times more than the noise effect. On a real stack you
+  cannot vary the two independently, so the separation it showed exists only on
+  synthetic test images.
+
+On your actual stacks it scores 0.37 to 0.74 where it needs above 0.90, and on the very
+region its author tuned it on, the improved version is **worse** than the one it
+replaced.
+
+**Nothing shipped and nothing is lost but a claim.** No code consumed this. But it was
+the project's answer to "how do we prove the thesis", and that question is open again.
+Finding a replacement is now the top research item.
+
+**36. Five things the tool prints that are wrong, which you would have seen.** An audit
+read every fact citation in the code and checked what the cited row actually says,
+rather than whether the number exists. 260 citations, 18 files, 11 defects.
+
+The ones you would hit: the merge prints a speckle figure labelled as one measurement
+when it is a different one, 39 times larger, with the correct number printed three lines
+above it. A timing bound the corpus explicitly retired is quoted in five places, one of
+which prints it and then measures against it, so running the example looks like a
+failure when it is not. Two runs print a refuted constant. Every single run prints a
+citation to "fact 200a", which is not a fact and resolves to nothing. And the memory
+help understated its own option's cost by 7%, contradicted by the same binary in the
+same run.
+
+I fixed the memory one myself. The rest are dispatched.
+
+**37. The one genuinely good result of the night, for contrast.** Two agents measured
+your sensor's fixed-pattern noise independently, on different nights, with different
+code, neither aware of the other, for different reasons. They agree to 1.4%.
+
+That is what a confirmation looks like. The claim it replaced had been "confirmed to
+0.4%" by a check that, when someone finally tested it, passes for any value between
+0.02 and 3.0. Precision is not evidence. Agreement between instruments that cannot
+see each other is.

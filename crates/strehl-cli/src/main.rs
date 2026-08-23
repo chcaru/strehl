@@ -163,9 +163,15 @@ enum Command {
         /// frames. Fixed 60 B/px, constant in the frame count; a focus volume
         /// would be 4*N B/px and is forbidden.
         ///
-        /// Opt-in: it costs 494 MB per worker on this sensor and will reduce
+        /// Opt-in: it costs 527 MB per worker on this sensor and will reduce
         /// the worker count the memory budget licenses. It cannot change the
         /// merged image.
+        ///
+        /// That is 64 B/px, not the 60 B/px of `ThroughFocus` alone: the flag
+        /// also forces a 4 B/px fine focus plane into every pass-two worker's
+        /// scratch (`merge_cmd.rs`'s `FINE_FIELD_PER_PX`). Quoting the struct's
+        /// own footprint understated the option's cost by 6.7%, which the
+        /// binary contradicted in the same run under `--stats`.
         #[arg(long)]
         stats: bool,
 

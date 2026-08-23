@@ -413,6 +413,32 @@ monolithic binary and ship only that binary.
     bars were written unescaped. Escape as `\|`, and subtract escaped pipes
     before comparing. (SYNTHESIS facts 679, 693 and 694.)
 
+38. **Cite by symbol and by content, never by line number alone, and never
+    quote a figure without first reading the row it comes from end to end.**
+    Two of the corpus's own line-number citations were wrong on the day they
+    were checked, and nothing had re-checked them in between. Worse, a number
+    can resolve to a real row and still not support the sentence quoting it:
+    one site pairs one operator's gate with a different operator's pixel
+    fraction, and both numbers re-measure exactly. **Resolving is not
+    supporting.** Read to the end of the Source column before quoting -- some
+    rows carry an explicit prohibition on their own number, and one such figure
+    is quoted at five sites including a `println!` in the example that measured
+    its refutation. When you fold an amendment into a row, **grep `crates/` for
+    the fact number and fix the citing code in the same commit**: an amendment
+    that stays in SYNTHESIS reaches nobody. (SYNTHESIS facts 713-723,
+    disciplines 343-347.)
+
+39. **Do not report a separation, a ratio or a confirmation without reporting
+    the null it is measured against, with its standard error.** Two numbers
+    this project believed for weeks died the same night to the same defect. A
+    score of the form `|d_signal| / (|d_signal| + |d_null|)` reads 0.770 to
+    0.976 on one plant with only the repetition count varying, because
+    `d_null` was consistent with zero. A confirmation quoted "to 0.4%" passes
+    for every value of the parameter between 0.02 and 3.0. **Before quoting an
+    agreement, plant a wrong answer and check the test rejects it.** A test
+    that cannot fail has not passed. (SYNTHESIS facts 695, 697, disciplines
+    338, 342.)
+
 ## Layout
 
 | Path | What |
