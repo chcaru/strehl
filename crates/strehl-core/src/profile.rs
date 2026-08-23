@@ -20,14 +20,32 @@ use crate::noise::{Levels, NoiseModel, PlaneNoise, Provenance};
 pub struct CameraProfile {
     /// `clean_model` as the decoder reports it.
     pub model: &'static str,
-    /// Gain is `iso / gain_divisor` DN per electron.
+    /// Gain is `max(iso, base_iso) / gain_divisor` DN per electron.
     ///
-    /// **DERIVED, not measured.** The divisor was obtained by reproducing the
-    /// camera's own white level to 0.23% — a consistency check on one relation,
-    /// not a photon-transfer curve. SYNTHESIS §10 open question 5 owes a real
-    /// PTC measurement, which needs the dark frames listed in
-    /// `docs/captures-needed.md`.
+    /// **MEASURED at ISO 160, by photon transfer on signal** (M25 fact 200):
+    /// 0.3273 against the relation's 0.3663, 10.7% low. The divisor was
+    /// originally DERIVED by reproducing the camera's own white level to 0.23%,
+    /// which is a consistency check on one relation and not a PTC; the PTC now
+    /// exists and the relation survives it at true gain steps.
     pub gain_divisor: f32,
+    /// The lowest ISO that is a real analogue gain step.
+    ///
+    /// Settings below this are **extended / pull** ISOs: the sensor reads out at
+    /// `base_iso` gain and the stop is taken in exposure. Dividing by the marked
+    /// ISO there under-states `g`, and since `sigma^2 = g*S + (RN_e*g)^2` is
+    /// linear in `g`, it under-states the whole noise floor.
+    ///
+    /// **MEASURED twice, independently.** M4 §8.2 from dark frames: ISO 50 and
+    /// ISO 100 give the same dark sigma in DN, 0.9866 against 0.9845, a ratio of
+    /// 1.0021 where a genuine gain step demands 0.5. M25 fact 200 from signal,
+    /// by photon transfer on two real ISO-50 stacks: `g` measures 0.2342 and
+    /// 0.2583, which is +105% and +126% against the marked-ISO relation and
+    /// within +2% and +13% of this floor.
+    ///
+    /// **The boundary itself is not measured** (M25 fact 200a): the corpus holds
+    /// no ISO 64 or ISO 80 capture, so 100 is the simplest value consistent with
+    /// the evidence rather than a located transition.
+    pub base_iso: f32,
     /// Read noise in electrons below [`Self::second_base_iso`].
     pub read_noise_e_low: f32,
     /// Read noise in electrons at and above it.
@@ -47,7 +65,7 @@ impl CameraProfile {
     }
 
     pub fn gain_dn_per_e(&self, iso: f32) -> f32 {
-        iso / self.gain_divisor
+        iso.max(self.base_iso) / self.gain_divisor
     }
 
     /// Build the injected noise model for one stack.
@@ -72,6 +90,7 @@ impl CameraProfile {
 const A7C2: CameraProfile = CameraProfile {
     model: "ILCE-7CM2",
     gain_divisor: 436.8,
+    base_iso: 100.0,
     read_noise_e_low: 4.20,
     read_noise_e_high: 1.47,
     second_base_iso: 400.0,
@@ -159,5 +178,50 @@ mod tests {
         let p = by_model("ILCE-7CM2").unwrap();
         assert!((p.gain_dn_per_e(100.0) - 100.0 / 436.8).abs() < 1e-6);
         assert!((p.gain_dn_per_e(800.0) - 8.0 * p.gain_dn_per_e(100.0)).abs() < 1e-6);
+    }
+
+    /// Extended ISOs are not gain steps, and the dark frames say so.
+    ///
+    /// M4 §8.2 measured sigma_temporal at **0.9866 DN at ISO 50** against
+    /// **0.9845 DN at ISO 100** — a ratio of **1.0021**. The marked-ISO relation
+    /// predicts 0.5. This test holds the model to the measurement rather than to
+    /// the relation, because the relation is what was wrong.
+    #[test]
+    fn extended_iso_reads_out_at_base_gain() {
+        let p = by_model("ILCE-7CM2").unwrap();
+        assert_eq!(p.gain_dn_per_e(50.0), p.gain_dn_per_e(100.0));
+
+        // Dark: S = 0, so sigma = RN_e * g and the ratio is the gain ratio.
+        let s50 = p.noise_model(50.0, levels()).sigma(CfaPlane::R, 0.0);
+        let s100 = p.noise_model(100.0, levels()).sigma(CfaPlane::R, 0.0);
+        let measured = 0.9866 / 0.9845;
+        assert!(
+            ((s50 / s100) - measured).abs() < 0.01,
+            "M4 measured {measured}, model gives {}",
+            s50 / s100
+        );
+
+        // The defect this replaced, stated so it cannot come back silently.
+        let marked_iso_relation = 50.0 / 436.8;
+        assert!(
+            (p.gain_dn_per_e(50.0) / marked_iso_relation - 2.0).abs() < 1e-4,
+            "the floor must be worth exactly the 2.05x M25 measured"
+        );
+    }
+
+    /// A true gain step below base ISO would break the floor, so no profile may
+    /// declare one it does not honour.
+    #[test]
+    fn every_profile_bases_its_gain_at_or_below_its_second_base() {
+        for p in PROFILES {
+            assert!(
+                p.base_iso <= p.second_base_iso,
+                "{}: base {} above second base {}",
+                p.model,
+                p.base_iso,
+                p.second_base_iso
+            );
+            assert!(p.base_iso > 0.0, "{}: base ISO must be positive", p.model);
+        }
     }
 }
