@@ -1,0 +1,59 @@
+--- K1: pure-noise response SD, the crate's own procedure ---
+regularised     : 1.521409e-2 +/- 7.468e-5  (declared 1.521400e-2, 0.00 SEM away)
+unregularised   : 1.883040e-2 +/- 7.202e-5
+k_sd            : 1.23770  (raw / reg; arm X' scales the gate by this)
+K1              : PASS
+
+stack           : D:\personal\macro\113MSDCF
+frames          : 22
+plane           : 3516 x 2344
+iso / black     : Some(500.0) / 512
+gates           : 0 0.5 1 2 4 64
+
+--- K6: the tracked raw election reproduces FocusStats' tie-break ---
+mismatched px   : 0 of 8241504  PASS
+
+--- D4: election disagreement rate (an INDEX-map quantity) ---
+win_R != win_W  : 36.5772% of the plane (3014508 of 8241504)
+
+--- K2: the harness's counter against the shipped Estimator (gate 4) ---
+arm R           : harness 9.112203792  Estimator 9.112203792
+arm X           : harness 8.190727809  Estimator 8.190727809
+K2              : PASS
+
+--- K4: where the elections agree, the arms must agree exactly ---
+violations      : 0 over 6 gates  PASS
+
+--- K5: can the plant express the failure at both ends? ---
+arm R           : gate 0 -> 1.000002 [ok]   gate 64 -> 21.2153 of 22 [ok]  PASS
+arm W           : gate 0 -> 2.191864 [NOT MET]   gate 64 -> 21.2370 of 22 [ok]  FAIL
+arm X           : gate 0 -> 1.000002 [ok]   gate 64 -> 21.1102 of 22 [ok]  PASS
+arm X'          : gate 0 -> 1.000002 [ok]   gate 64 -> 21.4238 of 22 [ok]  PASS
+(span, post-hoc: the range each arm's ladder actually covers)
+arm R           : 1.0000 .. 21.2153 of 22  (21.22x)
+arm W           : 2.1919 .. 21.2370 of 22  (9.69x)
+arm X           : 1.0000 .. 21.1102 of 22  (21.11x)
+arm X'          : 1.0000 .. 21.4238 of 22  (21.42x)
+
+--- MEAN n_eff BY ARM AND GATE (MEASURED) ---
+  gate         R          W          X         X'  |   rho_W   rho_X  rho_X'
+  0.00    1.00000    2.19186    1.00000    1.00000  |  2.1919  1.0000  1.0000
+  0.50    1.62903    3.11779    1.41173    1.53662  |  1.9139  0.8666  0.9433
+  1.00    2.70320    4.34329    2.01663    2.37978  |  1.6067  0.7460  0.8804
+  2.00    5.58977    6.83879    3.85248    4.93331  |  1.2234  0.6892  0.8826
+  4.00    9.11220    9.66958    8.19073    9.60742  |  1.0612  0.8989  1.0543
+ 64.00   21.21525   21.23703   21.11021   21.42375  |  1.0010  0.9950  1.0098
+
+--- n_eff == 1 FRACTION (the plane on which the merge is a selector) ---
+  gate         R          W          X         X'
+  0.00   99.9998%   63.4228%   99.9998%   99.9998%
+  0.50   69.4360%   53.6697%   73.3863%   68.6379%
+  1.00   54.1581%   46.1282%   56.4235%   50.5781%
+  2.00   36.8301%   33.8773%   37.5103%   31.9310%
+  4.00   18.5866%   17.7728%   20.3298%   15.8952%
+ 64.00    0.0000%    0.0000%    0.0343%    0.0166%
+
+--- PAIRED PER-PIXEL DIFFERENCE AGAINST ARM R, at gate 4 ---
+W   - R         : mean  +0.55738  range [  +0,  +21]  non-zero on 16.2483% of px
+X   - R         : mean  -0.92148  range [ -21,  +21]  non-zero on 64.1726% of px
+X'  - R         : mean  +0.49521  range [ -21,  +21]  non-zero on 57.5496% of px

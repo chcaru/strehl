@@ -1,0 +1,53 @@
+--- K1: pure-noise response SD, the crate's own procedure ---
+regularised     : 1.521409e-2 +/- 7.468e-5  (declared 1.521400e-2, 0.00 SEM away)
+unregularised   : 1.883040e-2 +/- 7.202e-5
+k_sd            : 1.23770  (raw / reg; arm X' scales the gate by this)
+K1              : PASS
+
+stack           : D:\personal\macro\113MSDCF
+frames          : 63
+plane           : 3516 x 2344
+iso / black     : Some(500.0) / 512
+gates           : 4 1000 1000000
+
+--- K6: the tracked raw election reproduces FocusStats' tie-break ---
+mismatched px   : 0 of 8241504  PASS
+
+--- D4: election disagreement rate (an INDEX-map quantity) ---
+win_R != win_W  : 56.6997% of the plane (4672905 of 8241504)
+
+--- K2: the harness's counter against the shipped Estimator (gate 4) ---
+arm R           : harness 8.580934863  Estimator 8.580934863
+arm X           : harness 6.924616187  Estimator 6.924616187
+K2              : PASS
+
+--- K4: where the elections agree, the arms must agree exactly ---
+violations      : 0 over 3 gates  PASS
+
+--- K5: can the plant express the failure at both ends? ---
+arm R           : SKIPPED, the ladder lacks 0 or 64
+arm W           : SKIPPED, the ladder lacks 0 or 64
+arm X           : SKIPPED, the ladder lacks 0 or 64
+arm X'          : SKIPPED, the ladder lacks 0 or 64
+(span, post-hoc: the range each arm's ladder actually covers)
+arm R           : 8.5809 .. 63.0000 of 63  (7.34x)
+arm W           : 10.1196 .. 63.0000 of 63  (6.23x)
+arm X           : 6.9246 .. 63.0000 of 63  (9.10x)
+arm X'          : 8.5436 .. 63.0000 of 63  (7.37x)
+
+--- MEAN n_eff BY ARM AND GATE (MEASURED) ---
+  gate         R          W          X         X'  |   rho_W   rho_X  rho_X'
+  4.00    8.58093   10.11964    6.92462    8.54355  |  1.1793  0.8070  0.9956
+1000.00   63.00000   63.00000   62.99957   62.99999  |  1.0000  1.0000  1.0000
+1000000.00   63.00000   63.00000   63.00000   63.00000  |  1.0000  1.0000  1.0000
+
+--- n_eff == 1 FRACTION (the plane on which the merge is a selector) ---
+  gate         R          W          X         X'
+  4.00   16.6605%    9.3148%   34.5012%   28.3885%
+1000.00    0.0000%    0.0000%    0.0000%    0.0000%
+1000000.00    0.0000%    0.0000%    0.0000%    0.0000%
+
+--- PAIRED PER-PIXEL DIFFERENCE AGAINST ARM R, at gate 4 ---
+W   - R         : mean  +1.53870  range [  +0,  +62]  non-zero on 35.9366% of px
+X   - R         : mean  -1.65632  range [ -62,  +58]  non-zero on 71.4093% of px
+X'  - R         : mean  -0.03738  range [ -62,  +60]  non-zero on 69.0700% of px
