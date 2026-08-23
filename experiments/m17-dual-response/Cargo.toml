@@ -1,0 +1,24 @@
+# Own workspace root, so the parent workspace does not adopt it and a normal
+# `cargo build` at the repo root never compiles this. Same convention as
+# `experiments/m13-window-depth`, whose harness this crate is a fork of.
+[workspace]
+
+[package]
+name = "m17-dual-response"
+version = "0.0.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[dependencies]
+# Same dependencies as M13, and for the same reason: the comparison is only
+# admissible if the fork reproduces M13's own published rows digit for digit,
+# which means the same box filter, noise model, plane geometry and tie-break.
+strehl-core = { path = "../../crates/strehl-core" }
+strehl-raw = { path = "../../crates/strehl-raw" }
+rayon = "1"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1

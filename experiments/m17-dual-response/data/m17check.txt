@@ -1,0 +1,19 @@
+  PASS  G5 mean-w13 reads A/27 at every sigma  [37.03703689575195, 37.03703308105469, 37.03704071044922, 37.03704071044922] vs 37.037037
+  PASS  G5 mean-w13 blind-spot ratio is exactly 1  1.00000010
+  PASS  G5b mean-w1 recovers fact 73's 0.376  0.375464
+  PASS  dual with weight 0 is exactly the status quo  0 px differ
+  PASS  max and mean agree at window 0 (same gradient field)  0 px differ
+  PASS  tgp100 == tgmax through the measure layer  0 px differ
+  PASS  support radius  tenengrad-w13: 14 (want 14)
+  PASS  support radius  tgmax-w13: 14 (want 14)
+  PASS  support radius  tgp95-w13: 14 (want 14)
+  PASS  support radius  tgdual-geo-w13: 14 (want 14)
+  PASS  support radius  tgrad-larger-w1-w13: 14 (want 14)
+  PASS  support radius  tenengrad-sq-w13: 14 (want 14)
+  PASS  support radius  tenengrad-w40: 41 (want 41)
+  PASS  sigma degree  tenengrad-w13: 1 (want 1)
+  PASS  sigma degree  tgmax-w13: 1 (want 1)
+  PASS  sigma degree  tgdual-geo-w13: 1 (want 1)
+  PASS  sigma degree  tenengrad-sq-w13: 2 (want 2)
+
+ALL PASS

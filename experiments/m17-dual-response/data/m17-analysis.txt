@@ -1,0 +1,246 @@
+==============================================================================
+M17 -- dual (mean, max) focus response.  Analysis of committed CSVs.
+==============================================================================
+
+-- GATES ------------------------------------------------------------
+GATE 3  edge harness reproduces M13 digit-for-digit: PASS (216 rows compared)
+GATE 4  noise harness reproduces M13 digit-for-digit: PASS (24 rows compared)
+
+-- AXIS 1: the blind spot -------------------------------------------
+D = r(defocused) / r(in-focus) at the boundary column. 1.0000 = blind.
+
+  B1 normalised (shipped semantics), noiseless (noise_scale=0), sigma 3 vs sigma 0:
+    measure                               step           ramp9   texture-synth    texture-real
+    tenengrad-w13                       1.1299          0.9999          0.4265          0.1569
+    tgmax-w13                           0.2928          0.8587          0.3494          0.1237
+    tgp95-w13                           0.2928          0.8376          0.4691          0.1639
+    tgp99-w13                           0.2928          0.8587          0.4285          0.1532
+    tgdual-geo-w13                      0.5752          0.9266          0.3860          0.1393
+    tgdual-sum-w13                      0.3505          0.8940          0.3685          0.1316
+    tgdual-tie5-w13                     0.7925          0.9815          0.4164          0.1523
+    tgrad-larger-w1-w13                 0.4242          0.8446          0.4265          0.1047
+    tgrad-geo-w1-w13                    0.6923          0.9190          0.4867          0.1083
+    tenengrad-sq-w13                    0.2375          0.6802          0.1795          0.0247
+    tgrms-w13                           0.4873          0.8248          0.4237          0.1570
+    tenengrad-w1                        0.4242          0.8446          0.5554          0.0748
+    tenengrad-w3                        0.8439          0.7784          0.4001          0.0962
+    tenengrad-w0                        0.2928          0.8587          0.7598          0.0910
+
+  B1 un-normalised (operator only), noiseless (noise_scale=0), sigma 3 vs sigma 0:
+    measure                               step           ramp9   texture-synth    texture-real
+    tenengrad-w13-nonorm                1.0000          0.9999          0.3683          0.1584
+    tgmax-w13-nonorm                    0.2592          0.8587          0.3017          0.1249
+    tgp95-w13-nonorm                    0.2592          0.8376          0.4051          0.1655
+    tgp99-w13-nonorm                    0.2592          0.8587          0.3700          0.1547
+    tgdual-geo-w13-nonorm               0.5091          0.9266          0.3333          0.1407
+    tgdual-sum-w13-nonorm               0.3102          0.8940          0.3182          0.1329
+    tgdual-tie5-w13-nonorm              0.7015          0.9815          0.3595          0.1538
+    tgrad-larger-w1-w13-nonorm          0.3755          0.8446          0.3683          0.1058
+    tgrad-geo-w1-w13-nonorm             0.6128          0.9190          0.4203          0.1094
+    tenengrad-sq-w13-nonorm             0.1860          0.6802          0.1338          0.0251
+    tgrms-w13-nonorm                    0.4313          0.8248          0.3658          0.1586
+    tenengrad-w1-nonorm                 0.3755          0.8446          0.4796          0.0755
+    tenengrad-w3-nonorm                 0.7470          0.7784          0.3455          0.0972
+    tenengrad-w0-nonorm                 0.2592          0.8587          0.6560          0.0919
+
+  B1 normalised, WITH sensor noise (noise_scale=1, 3 seeds):
+    measure                               step           ramp9   texture-synth    texture-real
+    tenengrad-w13                       1.0409          0.9469          0.4359          0.6272
+    tgmax-w13                           0.3129          0.8462          0.3534          0.5541
+    tgp95-w13                           0.2883          0.8170          0.4742          0.6193
+    tgp99-w13                           0.3023          0.8325          0.4319          0.5922
+    tgdual-geo-w13                      0.5706          0.8951          0.3925          0.5890
+    tgdual-sum-w13                      0.3700          0.8710          0.3737          0.5717
+    tgdual-tie5-w13                     0.7716          0.9336          0.4249          0.6172
+    tgrad-larger-w1-w13                 0.4167          0.8431          0.4359          0.6275
+    tgrad-geo-w1-w13                    0.6585          0.8934          0.4805          0.5705
+    tenengrad-sq-w13                    0.2413          0.6856          0.1868          0.3901
+    tgrms-w13                           0.4912          0.8280          0.4322          0.6245
+    tenengrad-w1                        0.4167          0.8431          0.5297          0.5462
+    tenengrad-w3                        0.8224          0.7805          0.3977          0.6969
+    tenengrad-w0                        0.2912          0.8577          0.6821          0.7368
+
+  NULL CONTROL (sigma 0 vs sigma 0, independent noise draws):
+    worst-case ratio across the 3 seeds; must be ~1.0000
+    tenengrad-w13                 1.0111
+    tgmax-w13                     1.0014
+    tgp95-w13                     1.0119
+    tgp99-w13                     1.0038
+    tgdual-geo-w13                1.0059
+    tgdual-sum-w13                1.0020
+    tgdual-tie5-w13               1.0073
+    tgrad-larger-w1-w13           1.0154
+    tgrad-geo-w1-w13              1.0133
+    tenengrad-sq-w13              1.0133
+    tgrms-w13                     1.0066
+    tenengrad-w1                  1.0154
+    tenengrad-w3                  1.0065
+    tenengrad-w0                  1.0339
+
+  B2 realistic compositor (noiseless), frame 29 vs frame 20 (= 3.15 sigma of extra blur):
+    tenengrad-w13                 0.9066   (in-focus 4.848 -> defocused 4.395)
+    tgmax-w13                     0.2483   (in-focus 47.578 -> defocused 11.814)
+    tgp95-w13                     0.2483   (in-focus 47.578 -> defocused 11.814)
+    tgp99-w13                     0.2483   (in-focus 47.578 -> defocused 11.814)
+    tgdual-geo-w13                0.4745   (in-focus 15.187 -> defocused 7.206)
+    tgdual-sum-w13                0.3092   (in-focus 52.425 -> defocused 16.209)
+    tgdual-tie5-w13               0.6899   (in-focus 7.227 -> defocused 4.986)
+    tgrad-larger-w1-w13           0.3113   (in-focus 37.177 -> defocused 11.573)
+    tgrad-geo-w1-w13              0.5313   (in-focus 13.425 -> defocused 7.132)
+    tenengrad-sq-w13              0.1975   (in-focus 187.699 -> defocused 37.063)
+    tgrms-w13                     0.4444   (in-focus 13.700 -> defocused 6.088)
+    tenengrad-w1                  0.3113   (in-focus 37.177 -> defocused 11.573)
+    tenengrad-w3                  0.5613   (in-focus 18.694 -> defocused 10.494)
+    tenengrad-w0                  0.2483   (in-focus 47.578 -> defocused 11.814)
+
+  B2 realistic compositor (with sensor noise, 3 seeds), frame 29 vs frame 20 (= 3.15 sigma of extra blur):
+    tenengrad-w13                 0.8547   (in-focus 5.288 -> defocused 4.520)
+    tgmax-w13                     0.2625   (in-focus 48.381 -> defocused 12.698)
+    tgp95-w13                     0.2481   (in-focus 47.251 -> defocused 11.725)
+    tgp99-w13                     0.2582   (in-focus 47.871 -> defocused 12.360)
+    tgdual-geo-w13                0.4736   (in-focus 15.996 -> defocused 7.576)
+    tgdual-sum-w13                0.3208   (in-focus 53.670 -> defocused 17.218)
+    tgdual-tie5-w13               0.6688   (in-focus 7.708 -> defocused 5.155)
+    tgrad-larger-w1-w13           0.3142   (in-focus 37.069 -> defocused 11.646)
+    tgrad-geo-w1-w13              0.5182   (in-focus 14.001 -> defocused 7.255)
+    tenengrad-sq-w13              0.2001   (in-focus 186.980 -> defocused 37.417)
+    tgrms-w13                     0.4473   (in-focus 13.674 -> defocused 6.117)
+    tenengrad-w1                  0.3142   (in-focus 37.069 -> defocused 11.646)
+    tenengrad-w3                  0.5608   (in-focus 18.752 -> defocused 10.517)
+    tenengrad-w0                  0.2480   (in-focus 47.890 -> defocused 11.876)
+
+-- AXIS 2: quality on M13's 36 occluding-edge cells ------------------
+  36 cells (30 with a depth step, 6 zero-step)
+
+    measure                     mean excess_dn  delta vs w13  worst cell   zero-step
+    tenengrad-w13                      24.8460       +0.0000     59.7734     20.0868
+    tenengrad-sq-w13                   22.7013       -2.1447     47.4121     15.6367
+    tenengrad-w40                      59.3818      +34.5358    153.4223     14.2686
+    tgdual-geo-w13                     29.5807       +4.7346     49.5026     15.0344
+    tgdual-sum-w13                     39.1482      +14.3022     83.5465     14.9438
+    tgdual-tie5-w13                    23.1729       -1.6732     47.2994     15.4978
+    tgmax-w13                          43.7571      +18.9111    105.4634     15.0293
+    tgp95-w13                          26.3006       +1.4545     57.2953     16.6725
+    tgp99-w13                          37.3433      +12.4973     73.2326     15.1765
+    tgrad-geo-w1-w13                   50.3181      +25.4721     98.9109     54.1118
+    tgrad-larger-w1-w13                40.2584      +15.4123     90.9275     39.5055
+
+-- AXIS 2b: paired per-cell comparison vs the shipped operator -------
+  sign test over the 30 depth-step cells; a mean is worthless if it
+  is carried by two cells.  win = candidate's excess_dn is LOWER.
+
+    measure                     wins/30   median d  worst reg  best gain  p(two-sided)
+    tenengrad-sq-w13              15/30     -0.2748   +10.1009   -18.9568       1.00000
+    tenengrad-w40                  1/30    +21.0111  +125.4640    -9.2829       0.00000
+    tgdual-geo-w13                 7/30     +4.3925   +29.2866   -12.8041       0.00522
+    tgdual-sum-w13                 3/30     +9.3751   +63.3304   -12.8001       0.00001
+    tgdual-tie5-w13               14/30     +0.2120    +6.9321   -15.3074       0.85554
+    tgmax-w13                      2/30    +13.4368   +85.2474   -12.7728       0.00000
+    tgp95-w13                     14/30     +1.2406   +22.8320   -20.3024       0.85554
+    tgp99-w13                      3/30     +8.7773   +52.8102   -13.5747       0.00001
+    tgrad-geo-w1-w13               0/30    +16.5735   +62.7351    +7.0836       0.00000
+    tgrad-larger-w1-w13            0/30    +11.9676   +31.9201    +6.6801       0.00000
+
+  winner, split by stack and shape (mean excess_dn delta vs w13):
+    109MSDCF    bar@274w24     +0.1218   (3/5 cells improved)
+    109MSDCF    horizontal@210   +2.4891   (0/5 cells improved)
+    109MSDCF    vertical@274   -1.3990   (4/5 cells improved)
+    119MSDCF    bar@274w24     -1.0743   (3/5 cells improved)
+    119MSDCF    horizontal@210   +3.5583   (0/5 cells improved)
+    119MSDCF    vertical@274  -16.5641   (5/5 cells improved)
+
+-- AXIS 1b: is the shipped D>1 real, or pixel-side junk? -------------
+  D read at the bright-side boundary column x0 and at the dark-side
+  column x0-1.  If the sign flips, D>1 is a normalisation artefact
+  that varies with which pixel you ask, not a preference for defocus.
+
+    measure                        D at x0   D at x0-1               verdict
+    tenengrad-w13                   1.1299      0.8353            SIGN FLIPS
+    tgmax-w13                       0.2928      0.2165        same side of 1
+    tgp95-w13                       0.2928      0.2165        same side of 1
+    tgp99-w13                       0.2928      0.2165        same side of 1
+    tgdual-geo-w13                  0.5752      0.4252        same side of 1
+    tgdual-sum-w13                  0.3505      0.2592        same side of 1
+    tgdual-tie5-w13                 0.7925      0.5859        same side of 1
+    tgrad-larger-w1-w13             0.4242      0.3136        same side of 1
+    tgrad-geo-w1-w13                0.6923      0.5118        same side of 1
+    tenengrad-sq-w13                0.2375      0.1298        same side of 1
+    tgrms-w13                       0.4873      0.3603        same side of 1
+    tenengrad-w1                    0.4242      0.3136        same side of 1
+    tenengrad-w3                    0.8439      0.6239        same side of 1
+    tenengrad-w0                    0.2928      0.2165        same side of 1
+
+  same check on the UN-NORMALISED operator (no sigma divide):
+    measure                        D at x0   D at x0-1
+    tenengrad-w13-nonorm         1.0000001   1.0000001
+    tgmax-w13-nonorm             0.2591550   0.2591550
+    tgp95-w13-nonorm             0.2591549   0.2591549
+    tgp99-w13-nonorm             0.2591550   0.2591550
+    tgdual-geo-w13-nonorm        0.5090727   0.5090727
+    tgdual-sum-w13-nonorm        0.3102477   0.3102477
+    tgdual-tie5-w13-nonorm       0.7014506   0.7014506
+    tgrad-larger-w1-w13-nonorm   0.3754641   0.3754640
+    tgrad-geo-w1-w13-nonorm      0.6127513   0.6127512
+    tenengrad-sq-w13-nonorm      0.1860299   0.1860299
+    tgrms-w13-nonorm             0.4313118   0.4313118
+    tenengrad-w1-nonorm          0.3754641   0.3754640
+    tenengrad-w3-nonorm          0.7469502   0.7469503
+    tenengrad-w0-nonorm          0.2591550   0.2591549
+
+-- AXIS 3: merged noise on flat ROIs ---------------------------------
+    measure                     N pooled   delta N    109MSDCF    119MSDCF
+    tenengrad-w13                1.08637  +0.00000     1.07661     1.09613
+    tenengrad-sq-w13             1.08491  -0.00147     1.07175     1.09806
+    tenengrad-w0                 1.06320  -0.02317     0.98874     1.13767
+    tenengrad-w40                1.07782  -0.00855     1.06425     1.09139
+    tgdual-geo-w13               1.08084  -0.00553     1.06355     1.09813
+    tgdual-sum-w13               1.07882  -0.00756     1.05295     1.10468
+    tgdual-tie5-w13              1.08324  -0.00313     1.07171     1.09478
+    tgmax-w13                    1.07826  -0.00811     1.04771     1.10881
+    tgp95-w13                    1.08592  -0.00045     1.07081     1.10103
+    tgp99-w13                    1.08366  -0.00271     1.06937     1.09795
+    tgrad-geo-w1-w13             1.27890  +0.19252     1.29321     1.26459
+    tgrad-larger-w1-w13          1.32312  +0.23675     1.33888     1.30737
+
+-- AXIS 4: cost ------------------------------------------------------
+    per-setting MINIMUM over alternating-direction passes, ms/frame/Mpx
+    filter               r=1       r=2       r=3       r=5       r=8      r=13      r=21      r=34      r=40   max/min
+    box_mean          1.4776    1.4837    1.4808    1.4791    1.4746    1.4725    1.4665    1.4587    1.4549      1.02x
+    box_max           1.3570    1.6425    1.8990    2.4378    3.0865    3.9655    5.1575    6.2620    6.6557      4.90x
+    worst within-setting spread (max/min over passes): box_mean +3.1%, box_max +215.6%
+
+    exact windowed percentile, auxiliary run (CONTAMINATED: this
+    run overlapped the edge sweep, spreads to +127%; the growth is
+    3 orders of magnitude so the ordering is not in doubt):
+    filter                 r=1         r=3         r=8        r=13        r=21        r=40   max/min
+    box_mean              1.73        1.73        1.73        1.76        1.75        1.76        1x
+    box_max               2.00        2.15        3.35        4.48        5.92        8.13        4x
+    window_p95           16.97      130.76      400.38      818.23     1949.80     5979.51      352x
+
+    whole-measure cost, ms/frame/Mpx (min over alternating passes):
+    tenengrad-w13                 3.4136      1.00x   (pass spread +189.8%)
+    tgmax-w13                     5.8363      1.71x   (pass spread +24.2%)
+    tgdual-geo-w13                8.2214      2.41x   (pass spread +4.1%)
+    tgdual-sum-w13                7.9126      2.32x   (pass spread +4.6%)
+    tgdual-tie5-w13               7.7254      2.26x   (pass spread +6.4%)
+    tgrad-larger-w1-w13           5.6331      1.65x   (pass spread +2.1%)
+    tgrad-geo-w1-w13              5.7282      1.68x   (pass spread +1.5%)
+    tenengrad-sq-w13              3.2794      0.96x   (pass spread +3.4%)
+    tgrms-w13                     3.4829      1.02x   (pass spread +1.9%)
+    tenengrad-w0                  1.9415      0.57x   (pass spread +5.8%)
+    tenengrad-w40                 3.3850      0.99x   (pass spread +33.6%)
+
+-- DECISION ----------------------------------------------------------
+  pre-registered: SHIP iff D <= 0.9 and dE <= +0.87 DN and dN <= +0.02 and cost is O(1) in radius.
+
+    candidate                   D (step)   dE (DN)        dN  r-flat?         verdict
+    tenengrad-w13                 1.1299   +0.0000  +0.00000      yes              NO
+    tgmax-w13                     0.2928  +18.9111  -0.00811       NO              NO
+    tgp95-w13                     0.2928   +1.4545  -0.00045       NO            FLAG
+    tgp99-w13                     0.2928  +12.4973  -0.00271       NO              NO
+    tgdual-geo-w13                0.5752   +4.7346  -0.00553       NO              NO
+    tgdual-sum-w13                0.3505  +14.3022  -0.00756       NO              NO
+    tgdual-tie5-w13               0.7925   -1.6732  -0.00313       NO       NO (cost)
+    tgrad-larger-w1-w13           0.4242  +15.4123  +0.23675      yes              NO
+    tgrad-geo-w1-w13              0.6923  +25.4721  +0.19252      yes              NO
+    tenengrad-sq-w13              0.2375   -2.1447  -0.00147      yes            SHIP
