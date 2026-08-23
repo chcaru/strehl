@@ -12,6 +12,7 @@
 
 pub mod boxfilter;
 pub mod focus;
+pub mod merge;
 pub mod noise;
 pub mod plane;
 pub mod profile;
