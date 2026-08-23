@@ -1,0 +1,237 @@
+
+==============================================================================
+STACK 109MSDCF -- 22 frames, widths [1, 3, 5, 7, 9, 13, 17, 21, 25, 33, 41, 49, 65, 81, 97, 129, 161, 193, 257]
+==============================================================================
+flat ROIs   : ['2272,1344,256,256', '2505,441,256,256', '2665,1513,256,256', '329,1353,256,256']
+detail ROIs : ['2089,1065,256,256']
+modes       : [('g1', 'g2')]
+
+==============================================================================
+109MSDCF :: PLACEBO (select on g1, evaluate on g2)
+==============================================================================
+s_roi: ring-1-3 at width 17 over 4 flat ROIs = ['1.0379', '1.0180', '1.0268', '1.0868'], sd 0.0307
+severity threshold T = max(0.02, 3*s_roi) = 0.0922 ratio units
+
+-- NULL CONTROL: declared support varies, operator identical --
+measure        declared_px  real_px              W90 per ROI  W90 pooled
+nullctl-d1               3        7          [7, 13, 13, 13]          13
+nullctl-d3               7        7          [7, 13, 13, 13]          13
+nullctl-d6              13        7          [7, 13, 13, 13]          13
+nullctl-d12             25        7          [7, 13, 13, 13]          13
+nullctl-d24             49        7          [7, 13, 13, 13]          13
+NULL VERDICT: pooled W90 takes 1 distinct value(s) [13] across 5 declarations -- PASS, statistic ignores the declaration
+
+-- POSITIVE CONTROL: support genuinely varies, family fixed --
+measure        support_px              W90 per ROI  W90 pooled    floor      top
+posctl-e0               7          [7, 13, 13, 13]          13   1.0408   1.0562
+posctl-e4              15          [1, 1, 193, 17]           1   1.0446   1.0446
+posctl-e10             27        [5, 193, 193, 25]         257   1.0466   1.0485
+posctl-e20             47       [257, 161, 161, 7]         257   1.0469   1.0561
+posctl-e38             83       [257, 81, 161, 41]         257   1.0475   1.0572
+POSITIVE VERDICT: pooled W90 spans 1..257 (257.0x), Spearman rho vs support = +0.783 -- PASS, the statistic can detect support-driven movement
+
+-- TREATMENTS: 4 families x 4 support radii --
+measure        family     sup_px              W90 per ROI   W90  argmin interior   floor     top  Wharm
+dsml-s1        dsml            3             [1, 1, 1, 1]     1       1    False  0.9697  0.9697    257
+dsml-s12       dsml           25          [1, 17, 21, 21]    21      21     True  1.0381  1.0480    257
+dsml-s3        dsml            7             [1, 1, 1, 1]     1       1    False  1.0065  1.0065    257
+dsml-s6        dsml           13             [1, 1, 1, 1]     1       1    False  1.0309  1.0309    257
+ring-0-1       ring            3             [1, 1, 1, 1]     1       1    False  0.9761  0.9761    257
+ring-1-3       ring            7          [7, 13, 13, 13]    13      13     True  1.0408  1.0562      5
+ring-2-6       ring           13         [13, 13, 17, 17]    13      17     True  1.0375  1.0918      5
+ring-4-12      ring           25         [17, 21, 21, 21]    21      21     True  1.0158  1.0733      9
+sml-w0         sml             3             [1, 1, 1, 1]     1       1    False  0.9697  0.9697    257
+sml-w11        sml            25             [7, 3, 1, 1]     1       1    False  1.0028  1.0028    257
+sml-w2         sml             7             [1, 1, 3, 1]     1       1    False  0.9749  0.9749    257
+sml-w5         sml            13             [5, 1, 7, 3]     3       3     True  0.9881  0.9892    257
+tenengrad-w0   tenengrad       3             [1, 1, 1, 1]     1       1    False  0.9976  0.9976    257
+tenengrad-w11  tenengrad      25         [5, 257, 193, 7]   257     257    False  1.0468  1.0516    129
+tenengrad-w2   tenengrad       7           [1, 1, 257, 1]     1       1    False  1.0392  1.0392    257
+tenengrad-w5   tenengrad      13          [1, 1, 257, 17]     1       1    False  1.0458  1.0458    257
+
+S2  Spearman rho(support_radius, W90) over 16 treatments = +0.635, permutation p = 0.0119
+
+    W90 grid (rows = family, cols = support radius):
+      family           1       3       6      12   range
+      dsml             1       1       1      21      20
+      ring             1      13      13      21      20
+      sml              1       1       3       1       2
+      tenengrad        1       1       1     257     256
+      range            0      12      12     256
+    mean within-family range across support = 74.5 px
+    mean between-family range at fixed support = 70.0 px
+    within/between = 1.06 (PREREG wants >= 2.0 for 'tracks support specifically')
+    within-family slope, dsml      : dW90/dlog2(support) =   +4.70 px
+    within-family slope, ring      : dW90/dlog2(support) =   +5.20 px
+    within-family slope, sml       : dW90/dlog2(support) =   +0.18 px
+    within-family slope, tenengrad : dW90/dlog2(support) =  +60.11 px
+
+S6  discriminator: same declared support_px=25, dsml-s12 (no internal averaging) W90=21, ring-4-12 (25x25 internal average) W90=21 -- agree
+
+S3  one-width regret over the treatments (pooled over flat ROIs):
+         w0    regret worst measure 
+          1    0.0575 ring-4-12     
+          3    0.0667 ring-2-6      
+          5    0.0669 ring-2-6      
+          7    0.0649 ring-4-12     
+          9    0.0614 ring-4-12     
+         13    0.0479 tenengrad-w0  
+         17    0.0500 tenengrad-w0  
+         21    0.0506 tenengrad-w0  
+         25    0.0522 tenengrad-w0  
+         33    0.0557 tenengrad-w0  
+         41    0.0578 ring-0-1      
+         49    0.0649 ring-0-1      
+         65    0.0711 ring-0-1      
+         81    0.0742 dsml-s1       
+         97    0.0783 dsml-s1       
+        129    0.0826 dsml-s1       
+        161    0.0825 dsml-s1       
+        193    0.0842 dsml-s1       
+        257    0.0841 dsml-s1       
+    R* = 0.0479 ratio units at w0* = 13 (worst measure tenengrad-w0), threshold T = 0.0922
+    S3 verdict: BELOW T -- one width serves everything
+    S3 against the 0.02 floor alone: EXCEEDS
+    per-ROI R*: [('w=1', '0.0267'), ('w=17', '0.0443'), ('w=17', '0.0424'), ('w=21', '0.0520')]
+    mean 0.0413, sd 0.0106 -> supplementary threshold 3*sd = 0.0319; R* EXCEEDS it
+
+S4  usable band per measure (noise within 10% of its floor AND detail within 5% of its peak), detail ROI 2089,1065,256,256:
+      dsml-s1        [1]
+      dsml-s12       [21]
+      dsml-s3        [1]
+      dsml-s6        [1]
+      ring-0-1       [1]
+      ring-1-3       [13]
+      ring-2-6       [13, 17, 21, 25, 33]
+      ring-4-12      [21, 25]
+      sml-w0         [1]
+      sml-w11        [1]
+      sml-w2         [1]
+      sml-w5         [3]
+      tenengrad-w0   []
+      tenengrad-w11  [257]
+      tenengrad-w2   [1]
+      tenengrad-w5   [1]
+    INTERSECTION over all 16 treatments = []
+    measures whose own band is empty (no width satisfies THEM, so no support declaration could help either): ['tenengrad-w0']
+    INTERSECTION over the 15 measures with a non-empty band = []
+    S4 verdict: EMPTY -- no single width works
+    same with an absolute 0.02 ratio-unit noise tolerance instead of 10% relative: intersection = []
+
+    detail-side gradient, DN/px, on 2089,1065,256,256 (peak and value at w0*=13):
+      measure            g(1)  g(peak)  w_peak   g(w0*)    loss
+      dsml-s1          72.343   72.343       1   68.074   5.90%
+      dsml-s12         65.290   68.280     257   67.720   0.82%
+      dsml-s3          69.706   69.706       1   68.208   2.15%
+      dsml-s6          67.522   68.320      97   68.157   0.24%
+      ring-0-1         71.999   71.999       1   68.088   5.43%
+      ring-1-3         69.098   69.098       1   68.279   1.19%
+      ring-2-6         66.139   68.281      97   67.823   0.67%
+      ring-4-12        62.879   68.295     257   65.785   3.68%
+      sml-w0           72.343   72.343       1   68.074   5.90%
+      sml-w11          68.027   68.280     129   68.024   0.37%
+      sml-w2           69.215   69.215       1   67.952   1.82%
+      sml-w5           68.239   68.284     129   67.952   0.49%
+      tenengrad-w0     64.032   68.577      17   68.513   0.09%
+      tenengrad-w11    67.850   68.292     193   68.088   0.30%
+      tenengrad-w2     68.361   68.496      21   68.451   0.07%
+      tenengrad-w5     68.158   68.412      17   68.304   0.16%
+
+S5  harm zone Wharm (widest width worse than no regularisation): 5..257, Spearman rho vs support = -0.335
+    a blind framework must choose w0 > 257 to clear every harm zone; w0* = 13
+
+S7  worst-case regret against a per-measure oracle, by what the framework is allowed to know:
+      knows nothing (one width for all)     R = 0.0479 at w0 = 13
+      knows support_px() only               R = 0.0154
+          support radius   1: width    1, class regret 0.0000
+          support radius   3: width    1, class regret 0.0154
+          support radius   6: width   13, class regret 0.0112
+          support radius  12: width   17, class regret 0.0077
+      knows the operator family only        R = 0.0274
+          family dsml      : width    1, class regret 0.0099
+          family ring      : width   17, class regret 0.0274
+          family sml       : width    1, class regret 0.0011
+          family tenengrad : width    1, class regret 0.0048
+      knows family AND support              R = 0.0000
+    VALUE OF support_px() = 0.0479 - 0.0154 = +0.0326 ratio units
+    value of family label  = +0.0205 ratio units
+    S7 verdict vs T=0.0922: support_px() does not earn its place
+    S7 verdict vs the 0.02 floor: earns its place
+    leave-one-out robustness (drop one treatment, recompute):
+        without dsml-s1        R_blind 0.0479  R_support 0.0154  value +0.0326
+        without dsml-s12       R_blind 0.0479  R_support 0.0154  value +0.0326
+        without dsml-s3        R_blind 0.0479  R_support 0.0112  value +0.0367
+        without dsml-s6        R_blind 0.0479  R_support 0.0154  value +0.0326
+        without ring-0-1       R_blind 0.0479  R_support 0.0154  value +0.0326
+        without ring-1-3       R_blind 0.0479  R_support 0.0112  value +0.0367
+        without ring-2-6       R_blind 0.0479  R_support 0.0154  value +0.0326
+        without ring-4-12      R_blind 0.0452  R_support 0.0154  value +0.0298
+        without sml-w0         R_blind 0.0479  R_support 0.0154  value +0.0326
+        without sml-w11        R_blind 0.0479  R_support 0.0154  value +0.0326
+        without sml-w2         R_blind 0.0479  R_support 0.0154  value +0.0326
+        without sml-w5         R_blind 0.0479  R_support 0.0154  value +0.0326
+        without tenengrad-w0   R_blind 0.0304  R_support 0.0154  value +0.0151
+        without tenengrad-w11  R_blind 0.0479  R_support 0.0154  value +0.0326
+        without tenengrad-w2   R_blind 0.0479  R_support 0.0154  value +0.0326
+        without tenengrad-w5   R_blind 0.0479  R_support 0.0154  value +0.0326
+    worst-case value of support_px() over all leave-one-out subsets = +0.0367 (dropping dsml-s3)
+
+    W_eff (smallest width within 0.02 ratio units of the measure's own floor), the degeneracy-free restatement of S1:
+        dsml-s1        sup_px   3  W_eff    1
+        dsml-s12       sup_px  25  W_eff    1
+        dsml-s3        sup_px   7  W_eff    1
+        dsml-s6        sup_px  13  W_eff    1
+        ring-0-1       sup_px   3  W_eff    1
+        ring-1-3       sup_px   7  W_eff    1
+        sml-w0         sup_px   3  W_eff    1
+        sml-w11        sup_px  25  W_eff    1
+        sml-w2         sup_px   7  W_eff    1
+        sml-w5         sup_px  13  W_eff    1
+        tenengrad-w0   sup_px   3  W_eff    1
+        tenengrad-w11  sup_px  25  W_eff    1
+        tenengrad-w2   sup_px   7  W_eff    1
+        tenengrad-w5   sup_px  13  W_eff    1
+        ring-2-6       sup_px  13  W_eff   13
+        ring-4-12      sup_px  25  W_eff   17
+      Spearman rho(support_radius, W_eff) = +0.348, p = 0.2346
+      W_eff spans 1..17; the single width that satisfies the most measures is 1, satisfying 14 of 16
+
+S8  what the naive-argmax noise excess actually tracks (ADDITION, declared in the report); phi from data/sensitivity-109MSDCF.csv:
+      measure        sup_px   taps      phi     c(1)    floor   excess
+      ring-0-1            3         0.48469   0.9761   0.9761   0.0000
+      dsml-s12           25         0.46534   1.0480   1.0381   0.0099
+      dsml-s6            13         0.44773   1.0309   1.0309   0.0000
+      dsml-s3             7         0.43795   1.0065   1.0065   0.0000
+      dsml-s1             3         0.43568   0.9697   0.9697   0.0000
+      sml-w0              3         0.43568   0.9697   0.9697   0.0000
+      ring-1-3            7         0.05499   1.0562   1.0408   0.0154
+      sml-w2              7         0.03567   0.9749   0.9749   0.0000
+      tenengrad-w2        7         0.03456   1.0392   1.0392   0.0000
+      ring-2-6           13         0.01920   1.0918   1.0375   0.0543
+      sml-w5             13         0.00787   0.9892   0.9881   0.0011
+      tenengrad-w5       13         0.00652   1.0458   1.0458   0.0000
+      ring-4-12          25         0.00540   1.0733   1.0158   0.0575
+      sml-w11            25         0.00374   1.0028   1.0028   0.0000
+      tenengrad-w11      25         0.00314   1.0516   1.0468   0.0048
+      tenengrad-w0        3         0.00284   0.9976   0.9976   0.0000
+    Spearman rho(centre-tap fraction phi, argmax excess) = -0.189, p = 0.4750
+    Spearman rho(support radius,        argmax excess) = +0.557, p = 0.0299
+
+    each measure at its own W_eff -- noise and detail together:
+      measure             phi  W_eff    ratio  grad DN/px  ratio@w=1  grad@w=1
+      ring-0-1        0.48469      1   0.9761      71.999     0.9761    71.999
+      dsml-s12        0.46534      1   1.0480      65.290     1.0480    65.290
+      dsml-s6         0.44773      1   1.0309      67.522     1.0309    67.522
+      dsml-s3         0.43795      1   1.0065      69.706     1.0065    69.706
+      dsml-s1         0.43568      1   0.9697      72.343     0.9697    72.343
+      sml-w0          0.43568      1   0.9697      72.343     0.9697    72.343
+      ring-1-3        0.05499      1   1.0562      69.098     1.0562    69.098
+      sml-w2          0.03567      1   0.9749      69.215     0.9749    69.215
+      tenengrad-w2    0.03456      1   1.0392      68.361     1.0392    68.361
+      ring-2-6        0.01920     13   1.0425      67.823     1.0918    66.139
+      sml-w5          0.00787      1   0.9892      68.239     0.9892    68.239
+      tenengrad-w5    0.00652      1   1.0458      68.158     1.0458    68.158
+      ring-4-12       0.00540     17   1.0235      66.534     1.0733    62.879
+      sml-w11         0.00374      1   1.0028      68.027     1.0028    68.027
+      tenengrad-w11   0.00314      1   1.0516      67.850     1.0516    67.850
+      tenengrad-w0    0.00284      1   0.9976      64.032     0.9976    64.032

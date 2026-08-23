@@ -36,8 +36,8 @@ use tile::{beats, mean_and_sigma, FrameTile, Roi, TileGeom};
 
 /// The regulariser widths swept by default, in plane px. Odd, because the
 /// regulariser is a centred box of `2r+1`.
-const DEFAULT_WIDTHS: [usize; 16] = [
-    1, 3, 5, 7, 9, 13, 17, 21, 25, 33, 41, 49, 65, 81, 97, 129,
+const DEFAULT_WIDTHS: [usize; 19] = [
+    1, 3, 5, 7, 9, 13, 17, 21, 25, 33, 41, 49, 65, 81, 97, 129, 161, 193, 257,
 ];
 
 fn main() {
@@ -50,8 +50,9 @@ fn main() {
         "xcheck" => xcheck(rest),
         "sweep" => sweep(rest),
         "acf" => acf(rest),
+        "sensitivity" => sensitivity(rest),
         _ => Err(format!(
-            "usage: m9-support <selftest|rois|xcheck|sweep|acf> [args]\n{}",
+            "usage: m9-support <selftest|rois|xcheck|sweep|acf|sensitivity> [args]\n{}",
             "see experiments/m9-support/README.md"
         )),
     };
@@ -77,10 +78,16 @@ fn parse_args(rest: &[String]) -> Args {
         if let Some(name) = a.strip_prefix("--") {
             let takes_value = !matches!(name, "placebo" | "planes");
             if takes_value && i + 1 < rest.len() {
-                flags.entry(name.to_string()).or_default().push(rest[i + 1].clone());
+                flags
+                    .entry(name.to_string())
+                    .or_default()
+                    .push(rest[i + 1].clone());
                 i += 2;
             } else {
-                flags.entry(name.to_string()).or_default().push(String::new());
+                flags
+                    .entry(name.to_string())
+                    .or_default()
+                    .push(String::new());
                 i += 1;
             }
         } else {
@@ -93,7 +100,10 @@ fn parse_args(rest: &[String]) -> Args {
 
 impl Args {
     fn one(&self, name: &str) -> Option<&str> {
-        self.flags.get(name).and_then(|v| v.first()).map(String::as_str)
+        self.flags
+            .get(name)
+            .and_then(|v| v.first())
+            .map(String::as_str)
     }
     fn many(&self, name: &str) -> Vec<String> {
         self.flags.get(name).cloned().unwrap_or_default()
@@ -297,7 +307,12 @@ fn mean_gradient(v: &[f32], geom: PlaneGeometry) -> f64 {
 }
 
 /// Focus fields for one measure over every frame, one padded tile each.
-fn focus_volume(m: &Measure, luma: &[&[f32]], geom: PlaneGeometry, noise: &NoiseModel) -> Vec<Vec<f32>> {
+fn focus_volume(
+    m: &Measure,
+    luma: &[&[f32]],
+    geom: PlaneGeometry,
+    noise: &NoiseModel,
+) -> Vec<Vec<f32>> {
     luma.par_iter()
         .map(|l| {
             let mut scratch = Scratch::default();
@@ -328,13 +343,19 @@ fn sweep(rest: &[String]) -> Result<(), String> {
     let widths: Vec<usize> = match a.one("widths") {
         Some(s) => s
             .split(',')
-            .map(|v| v.trim().parse::<usize>().map_err(|e| format!("--widths: {e}")))
+            .map(|v| {
+                v.trim()
+                    .parse::<usize>()
+                    .map_err(|e| format!("--widths: {e}"))
+            })
             .collect::<Result<_, _>>()?,
         None => DEFAULT_WIDTHS.to_vec(),
     };
     for w in &widths {
         if w % 2 == 0 {
-            return Err(format!("regulariser width {w} is even; a centred box is 2r+1"));
+            return Err(format!(
+                "regulariser width {w} is even; a centred box is 2r+1"
+            ));
         }
     }
 
@@ -357,7 +378,9 @@ fn sweep(rest: &[String]) -> Result<(), String> {
                     return Err(format!("--measures: no measure named {w}"));
                 }
             }
-            all.into_iter().filter(|m| want.contains(&m.name.as_str())).collect()
+            all.into_iter()
+                .filter(|m| want.contains(&m.name.as_str()))
+                .collect()
         }
         None => design(),
     };
@@ -398,7 +421,13 @@ fn sweep(rest: &[String]) -> Result<(), String> {
         let luma: Vec<&[f32]> = if placebo {
             tiles
                 .iter()
-                .map(|t| t[ri].g1.as_ref().expect("--placebo needs the planes").as_slice())
+                .map(|t| {
+                    t[ri]
+                        .g1
+                        .as_ref()
+                        .expect("--placebo needs the planes")
+                        .as_slice()
+                })
                 .collect()
         } else {
             tiles.iter().map(|t| t[ri].luma.as_slice()).collect()
@@ -406,13 +435,23 @@ fn sweep(rest: &[String]) -> Result<(), String> {
         let value: Vec<&[f32]> = if placebo {
             tiles
                 .iter()
-                .map(|t| t[ri].g2.as_ref().expect("--placebo needs the planes").as_slice())
+                .map(|t| {
+                    t[ri]
+                        .g2
+                        .as_ref()
+                        .expect("--placebo needs the planes")
+                        .as_slice()
+                })
                 .collect()
         } else {
             tiles.iter().map(|t| t[ri].green.as_slice()).collect()
         };
         let single = value[stack.middle];
-        let (select_on, evaluate_on) = if placebo { ("g1", "g2") } else { ("luma", "luma") };
+        let (select_on, evaluate_on) = if placebo {
+            ("g1", "g2")
+        } else {
+            ("luma", "luma")
+        };
 
         for m in &ms {
             let t1 = std::time::Instant::now();
@@ -460,7 +499,10 @@ fn sweep(rest: &[String]) -> Result<(), String> {
     }
 
     std::fs::write(&out_path, csv).map_err(|e| format!("writing {out_path}: {e}"))?;
-    eprintln!("wrote {out_path} in {:.1} s total", t0.elapsed().as_secs_f64());
+    eprintln!(
+        "wrote {out_path} in {:.1} s total",
+        t0.elapsed().as_secs_f64()
+    );
     Ok(())
 }
 
@@ -642,7 +684,10 @@ fn rois(rest: &[String]) -> Result<(), String> {
         y += stride;
     }
     let (cx, cy) = (w as f64 / 2.0, h as f64 / 2.0);
-    println!("{} candidate blocks of {size}x{size} at stride {stride}, margin {margin}", blocks.len());
+    println!(
+        "{} candidate blocks of {size}x{size} at stride {stride}, margin {margin}",
+        blocks.len()
+    );
 
     // Non-overlapping picks only: eight shifts of one flat patch are one flat
     // patch, and reporting them as eight ROIs would fake independence.
@@ -661,7 +706,9 @@ fn rois(rest: &[String]) -> Result<(), String> {
             break;
         }
         if disjoint(&picked, b) {
-            let r = (((b.x + size / 2) as f64 - cx).powi(2) + ((b.y + size / 2) as f64 - cy).powi(2)).sqrt();
+            let r = (((b.x + size / 2) as f64 - cx).powi(2)
+                + ((b.y + size / 2) as f64 - cy).powi(2))
+            .sqrt();
             println!(
                 "  {},{},{size},{size}   structure sd {:8.3} DN   mean |grad| {:7.3} DN/px   radius {r:7.1} px",
                 b.x, b.y, b.sd, b.grad
@@ -679,7 +726,9 @@ fn rois(rest: &[String]) -> Result<(), String> {
             break;
         }
         if disjoint(&picked, b) {
-            let r = (((b.x + size / 2) as f64 - cx).powi(2) + ((b.y + size / 2) as f64 - cy).powi(2)).sqrt();
+            let r = (((b.x + size / 2) as f64 - cx).powi(2)
+                + ((b.y + size / 2) as f64 - cy).powi(2))
+            .sqrt();
             println!(
                 "  {},{},{size},{size}   structure sd {:8.3} DN   mean |grad| {:7.3} DN/px   radius {r:7.1} px",
                 b.x, b.y, b.sd, b.grad
@@ -758,8 +807,14 @@ fn xcheck(rest: &[String]) -> Result<(), String> {
     let value: Vec<&[f32]> = tiles.iter().map(|t| t[0].green.as_slice()).collect();
     let vol = focus_volume(m, &luma, tg.geom, &stack.noise);
 
-    println!("xcheck: {} frames, roi {roi}, measure {}", stack.paths.len(), m.name);
-    println!("  M2 published 1.253x at width 1 and 1.075x at width 17 (17x17-smoothed focus field)");
+    println!(
+        "xcheck: {} frames, roi {roi}, measure {}",
+        stack.paths.len(),
+        m.name
+    );
+    println!(
+        "  M2 published 1.253x at width 1 and 1.075x at width 17 (17x17-smoothed focus field)"
+    );
     for w in widths {
         let c = merge_cell(&tg, &vol, &value, value[stack.middle], (w - 1) / 2);
         println!(
@@ -774,7 +829,157 @@ fn xcheck(rest: &[String]) -> Result<(), String> {
     Ok(())
 }
 
-// ------------------------------------------------------------------- self-tests
+// ------------------------------------------------------- centre-weight probe
+
+/// How much of a measure's response at a pixel comes from **that pixel's own
+/// value**, measured on real sensor data by finite difference.
+///
+/// The motivation is empirical: the naive-argmax noise excess turns out to vary
+/// over 0.99x..1.83x across the design, and it does not track support. The
+/// obvious mechanism is that a selector can only elect a pixel's own noise if
+/// the measure it maximises actually reads that pixel. This mode measures that
+/// quantity without knowing anything about the operator, which is the situation
+/// a framework is in with a third-party plugin.
+///
+/// Method. Every measure here is shift invariant away from the border, so
+/// `d r(q) / d L(p)` depends only on `q - p`. Perturbing a **sparse lattice** of
+/// pixels at once, with spacing wider than twice the largest support, yields the
+/// whole kernel in one pass without the lattice points contaminating each other.
+/// The reported number is
+///
+/// ```text
+/// phi = |dr(0)| / sum over |d| <= R of |dr(d)|
+/// ```
+///
+/// the fraction of the response's total sensitivity that sits on the centre tap.
+/// Rectification makes the operators nonlinear, so this is a secant, not a
+/// derivative, and it is measured at the operating point that matters: real
+/// frames at the real noise level, per the "run every null on real sensor data"
+/// rule. `--delta` is reported with the result and swept to show stability.
+fn sensitivity(rest: &[String]) -> Result<(), String> {
+    let a = parse_args(rest);
+    let dir = a
+        .positional
+        .first()
+        .ok_or("sensitivity needs a directory")?;
+    let stack = open_stack(
+        Path::new(dir),
+        a.one("limit").and_then(|v| v.parse().ok()),
+        a.one("label"),
+    )?;
+    let roi = Roi::parse(a.one("roi").unwrap_or("2272,1344,256,256"))?;
+    let out_path = a.one("out").map(String::from);
+    let deltas: Vec<f32> = match a.one("deltas") {
+        Some(s) => s
+            .split(',')
+            .map(|v| v.trim().parse::<f32>().map_err(|e| format!("{e}")))
+            .collect::<Result<_, _>>()?,
+        None => vec![1.0, 8.0, 32.0],
+    };
+
+    let ms = design();
+    let reach = max_support(&ms);
+    let spacing = 4 * reach + 2;
+    let margin = spacing;
+    let tg = TileGeom::new(roi, margin, stack.plane)?;
+    let tiles = extract_tiles(&stack, std::slice::from_ref(&tg), false)?;
+    let geom = tg.geom;
+    let noise = &stack.noise;
+
+    // Lattice points, kept `reach` clear of the tile border so no clamped
+    // border value ever enters a difference.
+    let mut lattice: Vec<usize> = Vec::new();
+    let mut y = spacing;
+    while y + spacing < geom.height {
+        let mut x = spacing;
+        while x + spacing < geom.width {
+            lattice.push(y * geom.width + x);
+            x += spacing;
+        }
+        y += spacing;
+    }
+    if lattice.is_empty() {
+        return Err("tile too small for the sensitivity lattice".into());
+    }
+
+    let mut csv = String::from("stack,roi,measure,family,role,support_radius,support_px,delta,centre_abs,total_abs,phi,taps\n");
+    println!(
+        "sensitivity: {} frames, roi {roi}, tile {}x{}, {} lattice points spaced {spacing} px, reach {reach}",
+        stack.paths.len(),
+        geom.width,
+        geom.height,
+        lattice.len()
+    );
+    println!(
+        "{:<14} {:>7} {:>12} {:>12} {:>9} {:>6}",
+        "measure", "delta", "centre |dr|", "total |dr|", "phi", "taps"
+    );
+    for m in &ms {
+        for &delta in &deltas {
+            let mut scratch = Scratch::default();
+            let mut base = vec![0.0f32; geom.pixels()];
+            let mut bump = vec![0.0f32; geom.pixels()];
+            let n = (2 * reach + 1) * (2 * reach + 1);
+            let mut kernel = vec![0.0f64; n];
+            let mut samples = 0usize;
+            for t in &tiles {
+                let luma = &t[0].luma;
+                m.compute(luma, geom, noise, &mut scratch, &mut base);
+                let mut perturbed = luma.clone();
+                for &p in &lattice {
+                    perturbed[p] += delta;
+                }
+                m.compute(&perturbed, geom, noise, &mut scratch, &mut bump);
+                for &p in &lattice {
+                    let (px, py) = (p % geom.width, p / geom.width);
+                    for dy in 0..2 * reach + 1 {
+                        for dx in 0..2 * reach + 1 {
+                            let (qx, qy) = (px + dx - reach, py + dy - reach);
+                            let q = qy * geom.width + qx;
+                            kernel[dy * (2 * reach + 1) + dx] += (bump[q] - base[q]).abs() as f64;
+                        }
+                    }
+                    samples += 1;
+                }
+            }
+            let scale = samples as f64 * delta as f64;
+            let centre = kernel[reach * (2 * reach + 1) + reach] / scale;
+            let total: f64 = kernel.iter().sum::<f64>() / scale;
+            let taps = kernel.iter().filter(|v| **v / scale > 1e-6).count();
+            let phi = if total > 0.0 {
+                centre / total
+            } else {
+                f64::NAN
+            };
+            println!(
+                "{:<14} {delta:>7.1} {centre:>12.6} {total:>12.6} {phi:>9.5} {taps:>6}",
+                m.name
+            );
+            csv.push_str(&format!(
+                "{},\"{}\",{},{},{},{},{},{},{:.8},{:.8},{:.6},{}\n",
+                stack.label,
+                roi,
+                m.name,
+                m.family.as_str(),
+                m.role.as_str(),
+                m.support_radius,
+                m.support_px(),
+                delta,
+                centre,
+                total,
+                phi,
+                taps
+            ));
+        }
+    }
+    if let Some(p) = out_path {
+        std::fs::write(&p, csv).map_err(|e| format!("{p}: {e}"))?;
+        println!("wrote {p}");
+    }
+    Ok(())
+}
+
+// ---------------------------------------------------------------- self-tests
 
 macro_rules! check {
     ($ok:expr, $failed:expr, $cond:expr, $($arg:tt)*) => {{
@@ -810,7 +1015,13 @@ fn selftest() -> Result<(), String> {
         for m in design() {
             m.compute(&flat, geom, &noise, &mut scratch, &mut out);
             let peak = out.iter().cloned().fold(0.0f32, f32::max);
-            check!(ok, failed, peak < 1e-3, "{:<14} is zero on a flat field ({peak:.2e})", m.name);
+            check!(
+                ok,
+                failed,
+                peak < 1e-3,
+                "{:<14} is zero on a flat field ({peak:.2e})",
+                m.name
+            );
         }
 
         // A sharper texture must score higher than a blurred copy of itself,
@@ -825,7 +1036,13 @@ fn selftest() -> Result<(), String> {
             let a = interior_mean(&out, geom, 45);
             m.compute(&soft, geom, &noise, &mut scratch, &mut out);
             let b = interior_mean(&out, geom, 45);
-            check!(ok, failed, a > b, "{:<14} prefers the sharp texture ({a:.2} > {b:.2})", m.name);
+            check!(
+                ok,
+                failed,
+                a > b,
+                "{:<14} prefers the sharp texture ({a:.2} > {b:.2})",
+                m.name
+            );
         }
     }
 
@@ -866,7 +1083,10 @@ fn selftest() -> Result<(), String> {
     println!("group C -- the design is actually crossed, and the controls are what they claim");
     {
         let ms = design();
-        let t: Vec<&Measure> = ms.iter().filter(|m| m.role == measures::Role::Treatment).collect();
+        let t: Vec<&Measure> = ms
+            .iter()
+            .filter(|m| m.role == measures::Role::Treatment)
+            .collect();
         let supports: Vec<usize> = {
             let mut v: Vec<usize> = t.iter().map(|m| m.support_radius).collect();
             v.sort_unstable();
@@ -879,19 +1099,53 @@ fn selftest() -> Result<(), String> {
             v.dedup();
             v
         };
-        check!(ok, failed, supports.len() >= 4, "at least 4 support radii: {supports:?}");
-        check!(ok, failed, families.len() >= 4, "at least 4 families: {families:?}");
-        let full = supports
+        check!(
+            ok,
+            failed,
+            supports.len() >= 4,
+            "at least 4 support radii: {supports:?}"
+        );
+        check!(
+            ok,
+            failed,
+            families.len() >= 4,
+            "at least 4 families: {families:?}"
+        );
+        let full = supports.iter().all(|s| {
+            families.iter().all(|f| {
+                t.iter()
+                    .any(|m| m.support_radius == *s && m.family.as_str() == *f)
+            })
+        });
+        check!(
+            ok,
+            failed,
+            full,
+            "every family appears at every support radius"
+        );
+        let nulls: Vec<&Measure> = ms
             .iter()
-            .all(|s| families.iter().all(|f| t.iter().any(|m| m.support_radius == *s && m.family.as_str() == *f)));
-        check!(ok, failed, full, "every family appears at every support radius");
-        let nulls: Vec<&Measure> = ms.iter().filter(|m| m.role == measures::Role::NullControl).collect();
+            .filter(|m| m.role == measures::Role::NullControl)
+            .collect();
         let declared: Vec<usize> = nulls.iter().map(|m| m.declared_radius).collect();
         let real: Vec<usize> = nulls.iter().map(|m| m.support_radius).collect();
-        check!(ok, failed, declared.len() >= 4 && declared.iter().collect::<std::collections::BTreeSet<_>>().len() == declared.len(),
-            "null control declares {declared:?} -- all different");
-        check!(ok, failed, real.iter().all(|r| *r == real[0]),
-            "null control is one operator at {real:?} -- all the same");
+        check!(
+            ok,
+            failed,
+            declared.len() >= 4
+                && declared
+                    .iter()
+                    .collect::<std::collections::BTreeSet<_>>()
+                    .len()
+                    == declared.len(),
+            "null control declares {declared:?} -- all different"
+        );
+        check!(
+            ok,
+            failed,
+            real.iter().all(|r| *r == real[0]),
+            "null control is one operator at {real:?} -- all the same"
+        );
     }
 
     println!("group D -- the knee statistic fires when the knee moves, and not otherwise");
@@ -917,29 +1171,61 @@ fn selftest() -> Result<(), String> {
             let floor = curve.iter().cloned().fold(f64::INFINITY, f64::min);
             let target = floor + 0.10 * (top - floor);
             let idx = knee.and_then(|k| widths.iter().position(|w| *w == k));
-            let first_crossing = idx.is_some_and(|i| curve[i] <= target && (i == 0 || curve[i - 1] > target));
+            let first_crossing =
+                idx.is_some_and(|i| curve[i] <= target && (i == 0 || curve[i - 1] > target));
             check!(ok, failed, first_crossing,
                 "planted decay {planted}: knee {knee:?} is the first grid width under the 10% target");
             if let Some(k) = knee {
                 knees.push(k);
             }
         }
-        check!(ok, failed, knees.len() == 4 && knees.windows(2).all(|p| p[0] < p[1]),
-            "knee increases strictly with the planted decay scale: {knees:?}");
+        check!(
+            ok,
+            failed,
+            knees.len() == 4 && knees.windows(2).all(|p| p[0] < p[1]),
+            "knee increases strictly with the planted decay scale: {knees:?}"
+        );
         // Two curves with knees an octave apart must not report the same knee.
-        let c1: Vec<f64> = widths.iter().map(|w| 1.0 + 0.25 * (-(*w as f64) / 4.0).exp()).collect();
-        let c2: Vec<f64> = widths.iter().map(|w| 1.0 + 0.25 * (-(*w as f64) / 32.0).exp()).collect();
-        check!(ok, failed, knee_width(&widths, &c1, 0.10) < knee_width(&widths, &c2, 0.10),
-            "knee separates a 8x change in decay scale");
+        let c1: Vec<f64> = widths
+            .iter()
+            .map(|w| 1.0 + 0.25 * (-(*w as f64) / 4.0).exp())
+            .collect();
+        let c2: Vec<f64> = widths
+            .iter()
+            .map(|w| 1.0 + 0.25 * (-(*w as f64) / 32.0).exp())
+            .collect();
+        check!(
+            ok,
+            failed,
+            knee_width(&widths, &c1, 0.10) < knee_width(&widths, &c2, 0.10),
+            "knee separates a 8x change in decay scale"
+        );
         // A flat curve has no knee to find.
         let flat: Vec<f64> = widths.iter().map(|_| 1.1).collect();
-        check!(ok, failed, knee_width(&widths, &flat, 0.10) == Some(widths[0]),
-            "a flat curve reports the first width, not a spurious one");
+        check!(
+            ok,
+            failed,
+            knee_width(&widths, &flat, 0.10) == Some(widths[0]),
+            "a flat curve reports the first width, not a spurious one"
+        );
         // A curve that only improves at the very last width must say so
         // instead of reporting an early knee.
-        let late: Vec<f64> = widths.iter().map(|w| if *w == *widths.last().unwrap() { 1.0 } else { 1.5 }).collect();
-        check!(ok, failed, knee_width(&widths, &late, 0.10) == Some(*widths.last().unwrap()),
-            "a knee at the sweep edge is reported at the edge, not earlier");
+        let late: Vec<f64> = widths
+            .iter()
+            .map(|w| {
+                if *w == *widths.last().unwrap() {
+                    1.0
+                } else {
+                    1.5
+                }
+            })
+            .collect();
+        check!(
+            ok,
+            failed,
+            knee_width(&widths, &late, 0.10) == Some(*widths.last().unwrap()),
+            "a knee at the sweep edge is reported at the edge, not earlier"
+        );
     }
 
     println!("group E -- the merge reproduces the arithmetic it is supposed to");
@@ -966,24 +1252,64 @@ fn selftest() -> Result<(), String> {
         let vals: Vec<&[f32]> = vec![&value];
         for radius in [0usize, 1, 3] {
             let c = merge_cell(&tg, &focus, &vals, &value, radius);
-            check!(ok, failed, (c.ratio - 1.0).abs() < 1e-12,
-                "one-frame stack has ratio exactly 1 at radius {radius} ({:.15})", c.ratio);
+            check!(
+                ok,
+                failed,
+                (c.ratio - 1.0).abs() < 1e-12,
+                "one-frame stack has ratio exactly 1 at radius {radius} ({:.15})",
+                c.ratio
+            );
         }
         // A winner exactly 3x noisier must report exactly 3.000.
         let noisy: Vec<f32> = value.iter().map(|v| 3.0 * v).collect();
-        let focus2 = vec![vec![0.0f32; tg.geom.pixels()], vec![1.0f32; tg.geom.pixels()]];
+        let focus2 = vec![
+            vec![0.0f32; tg.geom.pixels()],
+            vec![1.0f32; tg.geom.pixels()],
+        ];
         let vals2: Vec<&[f32]> = vec![&value, &noisy];
         let c = merge_cell(&tg, &focus2, &vals2, &value, 0);
-        check!(ok, failed, (c.ratio - 3.0).abs() < 1e-6, "a 3x noisier winner reports 3.000 ({:.6})", c.ratio);
-        check!(ok, failed, c.distinct_winners == 1, "and exactly one distinct winner ({})", c.distinct_winners);
+        check!(
+            ok,
+            failed,
+            (c.ratio - 3.0).abs() < 1e-6,
+            "a 3x noisier winner reports 3.000 ({:.6})",
+            c.ratio
+        );
+        check!(
+            ok,
+            failed,
+            c.distinct_winners == 1,
+            "and exactly one distinct winner ({})",
+            c.distinct_winners
+        );
     }
 
     println!("group F -- ties go to the lower frame index, as the shipped selector does");
     {
-        check!(ok, failed, beats(1.0, 0, 1.0, 1), "equal focus, lower index wins");
-        check!(ok, failed, !beats(1.0, 1, 1.0, 0), "equal focus, higher index loses");
-        check!(ok, failed, !beats(f32::NAN, 0, f32::NEG_INFINITY, u16::MAX), "NaN never wins");
-        check!(ok, failed, beats(0.5, 5, f32::NEG_INFINITY, u16::MAX), "anything beats the sentinel");
+        check!(
+            ok,
+            failed,
+            beats(1.0, 0, 1.0, 1),
+            "equal focus, lower index wins"
+        );
+        check!(
+            ok,
+            failed,
+            !beats(1.0, 1, 1.0, 0),
+            "equal focus, higher index loses"
+        );
+        check!(
+            ok,
+            failed,
+            !beats(f32::NAN, 0, f32::NEG_INFINITY, u16::MAX),
+            "NaN never wins"
+        );
+        check!(
+            ok,
+            failed,
+            beats(0.5, 5, f32::NEG_INFINITY, u16::MAX),
+            "anything beats the sentinel"
+        );
     }
 
     println!("group G -- the gradient control moves in the direction it must");
@@ -994,11 +1320,21 @@ fn selftest() -> Result<(), String> {
         };
         let sharp = texture(geom);
         let soft = blurred(&sharp, geom, 3);
-        check!(ok, failed, mean_gradient(&sharp, geom) > mean_gradient(&soft, geom),
+        check!(
+            ok,
+            failed,
+            mean_gradient(&sharp, geom) > mean_gradient(&soft, geom),
             "mean |grad| is higher on unblurred texture ({:.3} > {:.3})",
-            mean_gradient(&sharp, geom), mean_gradient(&soft, geom));
+            mean_gradient(&sharp, geom),
+            mean_gradient(&soft, geom)
+        );
         let flat = vec![1000.0f32; geom.pixels()];
-        check!(ok, failed, mean_gradient(&flat, geom) == 0.0, "and exactly zero on a flat field");
+        check!(
+            ok,
+            failed,
+            mean_gradient(&flat, geom) == 0.0,
+            "and exactly zero on a flat field"
+        );
     }
 
     println!();
@@ -1059,7 +1395,11 @@ fn interior_mean(v: &[f32], geom: PlaneGeometry, inset: usize) -> f64 {
             n += 1;
         }
     }
-    if n == 0 { 0.0 } else { sum / n as f64 }
+    if n == 0 {
+        0.0
+    } else {
+        sum / n as f64
+    }
 }
 
 /// The pre-registered knee: the smallest swept width at which the curve has

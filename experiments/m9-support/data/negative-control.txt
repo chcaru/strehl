@@ -1,0 +1,8 @@
+backed up focus.rs -> C:\dev\blog\death-of-software\projects\strehl\experiments\m9-support\scratch\focus.rs.orig
+red as required: INNER_RADIUS 1 -> 2 (phi 1/18 -> 1/50)
+    
+red as required: OUTER_RADIUS 3 -> 5 (read extent 49 -> 121 taps)
+    assertion `left == right` failed: read extent must be the 7x7 outer box, got 121 taps
+restored and green again
+
+NEGATIVE CONTROL PASSED: the test fires for both planted regressions.

@@ -190,4 +190,103 @@ mod tests {
         let got = field(9, 9, &luma);
         assert!(got.iter().all(|v| v.is_finite() && *v >= 0.0));
     }
+
+    /// How much of this measure's response at a pixel comes from that pixel's
+    /// own value, by finite difference on the shipped code path.
+    ///
+    /// Shift invariance away from the border makes `d focus(q) / d luma(p)` a
+    /// function of `q - p` alone, so perturbing one pixel yields the whole
+    /// sensitivity kernel and `phi = |dr(0)| / sum |dr(d)|` falls straight out.
+    fn centre_tap_fraction(delta: f32, amplitude: f32) -> (f64, usize) {
+        let (w, h) = (65usize, 65usize);
+        // Deterministic textured field. A flat field will not do: the response
+        // is identically zero there and the finite difference would measure the
+        // rectification kink instead of the operator.
+        let luma: Vec<f32> = (0..w * h)
+            .map(|i| {
+                let (x, y) = ((i % w) as f32, (i / w) as f32);
+                3000.0
+                    + amplitude * (x * 1.31).sin() * (y * 1.07).cos()
+                    + 0.5 * amplitude * (x * 0.37 + y * 0.29).sin()
+            })
+            .collect();
+        let base = field(w, h, &luma);
+        let mut bumped = luma.clone();
+        let centre = (h / 2) * w + w / 2;
+        bumped[centre] += delta;
+        let bump = field(w, h, &bumped);
+
+        let reach = OUTER_RADIUS + 2;
+        let (mut at_centre, mut total, mut taps) = (0.0f64, 0.0f64, 0usize);
+        for dy in 0..2 * reach + 1 {
+            for dx in 0..2 * reach + 1 {
+                let q = (h / 2 + dy - reach) * w + (w / 2 + dx - reach);
+                let d = ((bump[q] - base[q]) as f64 / delta as f64).abs();
+                if d > 1e-6 {
+                    taps += 1;
+                }
+                if dx == reach && dy == reach {
+                    at_centre = d;
+                }
+                total += d;
+            }
+        }
+        (at_centre / total, taps)
+    }
+
+    #[test]
+    fn centre_tap_fraction_is_the_value_m9_measured() {
+        // M9 (docs/research/M9-support-coupling-measured.md) established that
+        // the naive-argmax noise excess a merge has to regularise away is
+        // driven by this number and NOT by the measure's spatial support:
+        // Spearman rho = +0.92 against the centre-tap fraction, -0.21 against
+        // the support radius, on two stacks. It measured phi = 0.0550 for this
+        // operator on real A7C II frames.
+        //
+        // A ring difference `|mean(2i+1) - mean(2o+1)| / sigma` has, ignoring
+        // the sigma term, centre coefficient `1/a - 1/b` and total absolute
+        // coefficient `2(1 - a/b)` for `a = (2i+1)^2`, `b = (2o+1)^2`, so
+        //
+        //     phi = 1 / (2a) = 1 / (2 * (2*INNER_RADIUS + 1)^2) = 1/18
+        //
+        // which depends on INNER_RADIUS alone. The tap count pins OUTER_RADIUS,
+        // so the two assertions together pin both constants.
+        //
+        // A regression here means the shipped measure's noise-election
+        // behaviour has changed, which invalidates M9's headline and the ruling
+        // that took `support_px()` off the plugin interface.
+        let analytic = 1.0 / (2.0 * ((2 * INNER_RADIUS + 1) as f64).powi(2));
+        assert!((analytic - 1.0 / 18.0).abs() < 1e-12);
+
+        // Low contrast: the sigma normalisation moves with the centre pixel
+        // too, and its contribution scales with |response|, so the operator's
+        // own coefficient is only recovered cleanly near zero response.
+        let (phi_lo, taps) = centre_tap_fraction(1.0, 4.0);
+        assert_eq!(
+            taps, 49,
+            "read extent must be the 7x7 outer box, got {taps} taps"
+        );
+        assert!(
+            (phi_lo - analytic).abs() < 0.0015,
+            "low-contrast centre-tap fraction was {phi_lo:.5}, analytic is {analytic:.5}"
+        );
+
+        // A realistic operating point, pinned tightly. This is the number that
+        // would move if either radius or the normalisation changed.
+        let (phi, _) = centre_tap_fraction(8.0, 120.0);
+        assert!(
+            (phi - 0.0507).abs() < 0.0015,
+            "centre-tap fraction was {phi:.5}; M9 measured 0.0550 on real frames, \
+             this synthetic operating point gives 0.0507, analytic is {analytic:.5}"
+        );
+
+        // Discrimination: the neighbouring inner radii are 1/2 and 1/50, both
+        // an order of magnitude away, so this band cannot be satisfied by a
+        // different operator that merely happens to read a 7x7 box.
+        let (lo, hi) = (1.0 / 50.0, 1.0 / 2.0);
+        assert!(
+            phi_lo > 2.0 * lo && phi_lo < hi / 4.0,
+            "phi {phi_lo:.5} must sit clear of INNER_RADIUS 2 ({lo:.5}) and 0 ({hi:.5})"
+        );
+    }
 }
