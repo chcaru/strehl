@@ -359,6 +359,7 @@ exposure-independent and stand as measured.
 
 ---
 
+## 7. Aperture pair — REQUESTED, cheap, high value
 
 **Status:** requested. One afternoon. Turns §0's derived table into a
 measurement, and §0 is currently the largest quality claim in the project
