@@ -31,3 +31,4 @@ target/
 .DS_Store
 Thumbs.db
 experiments/*/out/cache/
+experiments/m30-hdr-cobracket/out/cache/
