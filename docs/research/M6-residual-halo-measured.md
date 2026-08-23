@@ -3,6 +3,20 @@
 **Status:** measured. Two independent results, answering SYNTHESIS §10 open
 questions 6 and 10.
 
+> **INDEPENDENTLY REPRODUCED** by the orchestrator, on a separate run, per the ultra rule that an
+> author never verifies their own work. Four legs:
+>
+> | Leg | What was re-done | Result |
+> | --- | --- | --- |
+> | Halo arithmetic | Re-derived by hand from M3's fitted similarity for 109MSDCF, independently of this harness | Displacement **39.89 px** vs their 39.35; halo **32.76 px** vs their 32.39; overstatement ratio **1.217** vs their 1.202. Confirms both the number and, more importantly, the **displacement-vs-halo distinction** |
+> | Self-tests | `m6_selftest.py` re-run in full | All pass. **Group 12 is the one that matters**: S6 recovers a *planted* directional bias at p=0.010 and stays null on a variance-only perturbation at p=0.208 — so **the S6 null on real data is informative, not merely underpowered** |
+> | Halo table | `m6_controls.py` re-run | 19.42 / 32.39 / 89.23 px reproduced exactly |
+> | Full statistics | `m6_measure.py` re-run end to end (~9 min) | Every headline figure reproduced exactly: γ = **+0.05966 / +0.04522**; S5 in-focus **0.172 / 0.144 px** vs far **0.689 / 0.247 px**; within-pair gap **+0.6672 px, p=0.0104**; within-tile **+0.5993 / +0.4602**; S6 b_rad **+0.00068 ± 0.01088**; S2 null on all three |
+>
+> The `coffee-bean` sign inversion at Δ=1,2 (−0.077, −0.083 px) reproduced too. It is disclosed in
+> §2 below rather than smoothed over, which is the correct handling; it is carried into
+> SYNTHESIS §3.3 as a caveat on the proposed fix.
+
 Reproduction: `experiments/m6-residual-halo/README.md`. Every number below is
 in `out/controls.txt` or `out/measure.txt`, produced by the exact commands in
 that file. Rust harness: `experiments/m3-drift/src/main.rs`.

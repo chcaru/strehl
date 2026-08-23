@@ -63,6 +63,15 @@ monolithic binary and ship only that binary.
    underestimates drift by 32%, which is 25 px at the sensor corner, because
    sub-pixel pixel locking is a systematic bias that compounds. Direct fits are
    also embarrassingly parallel. See `docs/research/M3-alignment-measured.md`.
+   **Qualified by M6 — the rule is right at 22 frames and breaks at 105.** On a
+   105-frame stack, direct-to-frame-0 alignment degrades badly and in places
+   fails outright: 3 of 104 pairs produced no fit at all, and those that did
+   used a median of 18 of 96 tiles at 4.61 px rms, because frames 0 and ~90
+   share almost no correlatable in-focus content (fact 4). **Neither chaining
+   nor a single fixed reference works for deep stacks**, so a deep-stack
+   strategy is an open design problem, not a solved one. Do not chain to escape
+   it; M6 worked around it with a smoothed anchor model fitted across the stack.
+   See `docs/research/M6-residual-halo-measured.md`.
 7. **Never compute statistics over the full decoded buffer.** `rawler` returns
    7168x5120 for the A7C II but fills only the 7032x4688 active area. The rest
    is synthetic zeros, not black level.
@@ -113,6 +122,7 @@ monolithic binary and ship only that binary.
 | `M3-alignment-measured.md` | Measured alignment cost, motion model, and why chaining is dead |
 | `M4-fpn-measured.md` | Dark-frame noise: sigma-vs-N, the fixed-pattern floor, read noise vs ISO |
 | `M5-diffraction-measured.md` | **The bellows factor, measured from the raw CFA.** `B = (1+m/p) ∈ [2.41, 3.06]`, `p ≈ 1.0-1.4`; `p=0.5` refuted model-free. EXIF `FNumber` is **not** bellows-corrected — marked f/11 is optically f/33 |
+| `M6-residual-halo-measured.md` | **Why alignment stops at 0.6-1.3 px, and how big the halo is.** The residual is **blur-induced correlation bias**, not depth-dependent magnification: in-focus tiles align at **0.144-0.172 px** (at the 0.19 px estimator floor) while far-from-focus tiles in the same pairs sit at 0.25-0.69 px, surviving within-pair (p=0.010) and within-tile. But the bias is **symmetric degradation, not directed displacement** (S6 null on all three stacks) — so **the lens plugin stays a data file** and the fix is in the aligner (weight tiles by `\|c − w\|`). Halo is **stack-dependent** (19.4 / 32.4 / 89.2 px), which is what kills a scalar `halo()`; §3.4.1 B1's "39 px" was a *displacement*, not a halo. Closes questions 6 and 10, closes §3.4.2, opens risk 11 |
 | `M7-gpu-focus-measured.md` | **The fusion prize, priced.** Ring-difference focus + merge on the GPU is **4.117 ms / 22 frames**, bandwidth-bound at 84% of measured DRAM read. Fusing focus into the merge saves **1.45 ms = 0.14% of the pipeline** — *not* enough to justify constraining plugins to spliceable WGSL. Answers risk 10 / question 11; fact 21 is CPU-time-under-concurrency and cannot bound a GPU design |
 | `A-prior-corpus.md` | The prior attempt, filtered; includes retractions |
 | `B-algorithms-sota.md` | Algorithmic state of the art per stage |

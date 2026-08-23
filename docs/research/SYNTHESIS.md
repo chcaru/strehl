@@ -276,6 +276,25 @@ one. The remaining 0.6-1.3 px residual is neither estimator noise (floor 0.19 px
 model error (richer geometry does not touch it); see M3 §2.1 for the two candidate causes and
 the experiment that separates them.
 
+> **The residual's cause is now measured (M6, facts 18 and 31), and it changes this stage.** It is
+> **blur-induced correlation bias**: a tile far from its own best-focus frame correlates worse, and
+> the estimator reads that as displacement. In-focus tiles already align at **0.144-0.172 px**, at
+> or below the estimator floor. **So the aligner is not broken — it is being fed tiles that cannot
+> answer.**
+>
+> **The fix is a weight, not a model:** weight each tile in the similarity fit by its defocus
+> mismatch `|c − w|` (pair midpoint vs the tile's own best-focus frame), down-weighting tiles far
+> from focus. `w` is the winner-index map the pipeline already computes, so this costs nothing new.
+> It needs **no lens identity and no PSF model**, which is why the lens plugin died with it
+> (§3.4.2). Expected effect is bounded by the measured gap: γ = **+0.0597 / +0.0452 px per frame**
+> of mismatch, contributing 69% and 105% of the mean residual on two of the three stacks.
+>
+> **Two things this does not fix, and they are separate.** (i) The `coffee-bean` stack shows the
+> gap *inverted* at small baselines (−0.077, −0.083 px at Δ=1,2) before turning positive — the
+> weight is not unconditionally safe, and should be validated per stack rather than assumed.
+> (ii) Deep stacks have a prior problem: **the fixed reference itself fails past ~100 frames**
+> (risk 11), and no weighting scheme rescues a pair that shares no correlatable content.
+
 **Both capture modes share this structure**, which is why rail support — when it lands — does not
 force a second pipeline. A rail produces genuine *parallax*: point scale depends on depth, so
 **no global 2D transform can be correct** — but the residual is locally near-constant, which is
@@ -396,6 +415,30 @@ pixel" is, at the same 0.6-1.3 px scale as M3's unmodelled residual.
 functions already-gathered samples at reference coordinates; replace `halo() -> u32` with
 `source_roi(&self, out: Roi, warp: &Warp) -> Roi` (default impl `out.expand(halo)`); add the
 interpolation kernel to the rigid-seam list.
+
+> **B1 CONFIRMED BY M6 — but two of its three numbers were wrong, and the surviving argument is a
+> different one.** M6 did the arithmetic on M3's fitted similarities across all three stacks
+> (`M6-residual-halo-measured.md`). Independently reproduced.
+>
+> - **"39 plane px at the corner" is not a halo.** 39 px is the *Euclidean displacement magnitude*;
+>   a halo is a **rectangle** expansion, so the quantity wanted is `max(|dx|,|dy|)`. Measured:
+>   **32.39 px** on 109MSDCF. B1 overstated by **1.20x**. *(Confirmed by hand: at the fitted scale
+>   centre the corner sits 4,307 px out, giving 39.9 px of displacement but only 32.8 px of halo.)*
+> - **"~2.6x tile area" is also wrong.** The real within-frame waste at 128 px is **1.34x**
+>   (1.17x at 256 px, 1.56x at 64 px). **On its own this would NOT have killed a scalar `halo()`** —
+>   a 1.34x gather overhead is a price an interface could reasonably charge.
+> - **What actually kills it is stack dependence, which B1 never mentioned.** The halo is a property
+>   of *the stack*, not of the lens: corner halo runs **19.42 px / 32.39 px / 89.23 px** across the
+>   three stacks, tracking total drift (−1.029% / −1.835% / −4.575%), and on one stack it grows
+>   0.87 → 18.6 → 89.2 px as N goes 5 → 20 → 100. A `halo() -> usize` is answered **once, without
+>   seeing the stack**, so it must be sized for the worst case (89.23 px) and then costs **4.25x**
+>   and **3.48x** on the other two. Correlation with radius from the scale centre is
+>   **Spearman ρ = 0.963–0.975**, i.e. the radial structure B1 asserted is real.
+>
+> **So the fix stands unchanged and is now better justified:** `source_roi(out, &Warp)` gets both
+> the radial *and* the stack dependence for free, because the `Warp` it is handed is the one that
+> was actually fitted to the stack in hand. **The lesson is that B1 reached the right interface
+> through a mis-stated number** — the kind of thing that survives review and dies to arithmetic.
 
 **B2 — "build-time WGSL splicing" is a mistranslation of E, and it destroys the headline
 requirement.** E §F2.2 says *"selected by name at **pipeline-build time**"* — and in `wgpu`,
@@ -523,6 +566,27 @@ is *blur-induced correlation bias*. **If that is the cause, a field-dependent de
 the aligner, and modelling it per lens is real per-lens computation.** Do not close the lens-plugin
 question before running §10 question 6.
 
+> **RESOLVED, and the answer is no (M6, facts 18 and 31).** The conditional above has a true
+> antecedent and a false consequent, and its two halves come apart. **The cause *is* blur-induced
+> correlation bias** — in-focus tiles align at 0.144-0.172 px, at the estimator floor, while
+> far-from-focus tiles in the same pairs sit at 0.25-0.69 px, and the gap survives within-pair and
+> within-tile. **But the mechanism is symmetric peak degradation, not directed peak displacement.**
+> M6's S6 statistic, which recovers a planted directional bias cleanly and is null on
+> variance-only perturbations, is **null on all three real stacks**. A field-dependent *asymmetric*
+> PSF is what would have made per-lens modelling pay, and there is no evidence of one.
+>
+> **So the last candidate is gone and the lens profile stays a data file: one measured float (`p`,
+> fact 27) plus an EXIF parser.** The fix for the residual belongs in the aligner and needs no lens
+> identity whatsoever — weight tiles by `|c − w|`, down-weighting tiles far from their own best
+> focus. That generalises to every lens, including ones nobody has profiled, which is what
+> "generally SOTA" requires (§4.1).
+>
+> **Two caveats M6 raised against itself, and they are the honest limits of this conclusion.**
+> (i) A *signed-linear* field-dependent PSF is mathematically indistinguishable from a per-pair
+> scale change and is undetectable by **any** residual-based method, including this one — so
+> field-dependence is bounded, not excluded. (ii) This is one camera and one lens: the conclusion
+> is inferred from *absent* field-dependence on this rig, not from a cross-lens comparison.
+
 **Over-engineering guard.** v1 is one binary, all stages in-tree, no dynamic loading, no WASM,
 no DI container. What must not be foreclosed: the object-safe `Stage` signature, `TileView`
 descriptors everywhere, `source_roi(out, warp)` rather than `halo()`, `support_px()`,
@@ -553,7 +617,9 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 15 | Alignment costs **13-16 ms/frame**; 0.78-0.96 s for 60 frames, scalar CPU, all frames independent | Alignment is ~6% of a 15 s budget. The last unpinned budget term is pinned | M3 (MEASURED) |
 | 16 | Composing 21 adjacent-pair fits underestimates total drift by **32%** — **25 px error at the sensor corner** — while each individual fit looks excellent (0.446 px residual) | **Never chain.** Always align to a fixed reference. The cause is pixel locking, a *systematic* bias that compounds, not a random walk | M3 (MEASURED) |
 | 17 | Going from 4 to 12 motion parameters reduces the residual by **≤6%**, on filtered and unfiltered tile sets alike. Rotation ≤0.21 px at the corner | A **4-parameter similarity** is the whole model for in-camera bracketing. Keep rotation as a tripod-flex guard | M3 (MEASURED) |
-| 18 | Residual after any global model is **0.6-1.3 px**, against a 0.19 px estimator floor, and richer geometry does not touch it | Neither noise nor global model error. Candidates: depth-dependent magnification, or blur-induced correlation bias. Discriminate by correlating per-tile residual against the winner-index map | M3 (MEASURED fact, UNVERIFIED cause) |
+| 18 | Residual after any global model is **0.6-1.3 px**, against a 0.19 px estimator floor, and richer geometry does not touch it | ~~Neither noise nor global model error. Candidates: depth-dependent magnification, or blur-induced correlation bias.~~ **RESOLVED by M6: it is blur-induced correlation bias (cause b).** In-focus tiles align at **0.144-0.172 px — at or below the estimator floor** — while far-from-focus tiles in *the same frame pairs* sit at 0.25-0.69 px. The gap survives within the same pair (**+0.667 px, p=0.010**) and within the same tile (**+0.460 to +0.599 px**), so it is not texture, contrast or field position. γ = **+0.0597 / +0.0452 px per frame of defocus mismatch**, against a real-data null of +0.000003 ± 0.000032. Cause (a)'s own signature (S2) is null on all three stacks (all p > 0.22) on a statistic that fires at ρ = −0.83 when (a) is planted | M3 (MEASURED fact), **cause MEASURED by M6** |
+| 31 | **The defocus bias is symmetric peak *degradation*, not directed peak *displacement*.** M6's S6 asks whether the correlation peak is pushed in a preferred direction — the signature of a field-dependent asymmetric PSF. It is **null on all three stacks** (119MSDCF: **+0.0007 ± 0.0109**) against planted signals of ±0.039 to +0.077 that it recovers cleanly, and all three stacks match the *symmetric*-blur control column on S1, S2 and S6 while matching no other column | **This kills the last candidate for a lens plugin that is real code (§3.4.2).** The standing conditional was: *if* the residual is blur-induced, *then* a field-dependent defocus PSF is biasing the aligner and modelling it per lens is genuine per-lens computation. **The antecedent is true and the consequent is false** — the two halves come apart. **The lens profile stays a data file.** The fix belongs in the aligner and needs no lens identity at all: weight tiles by `\|c − w\|`, i.e. down-weight tiles far from their own best focus | M6 (MEASURED, with positive and null controls on the statistic itself) |
+| 32 | **The halo is a property of the stack, not of the lens.** Corner halo runs **19.42 / 32.39 / 89.23 plane px** across the three stacks, tracking total drift (−1.029% / −1.835% / −4.575%), and grows **0.87 → 18.6 → 89.2 px** as N goes 5 → 20 → 100 on one stack. Correlation with radius from the scale centre is **Spearman ρ = 0.963-0.975** | **Kills a scalar `halo()`, but not for the reason §3.4.1 B1 gave.** Within-frame waste is only **1.34x** at 128 px — survivable. What is not survivable is that `halo() -> usize` is answered *once, without seeing the stack*, so it must be sized for the worst case and then costs **4.25x** and **3.48x** on the other two stacks. **B1's "39 px corner halo" was also wrong**: 39 px is the Euclidean *displacement*; a halo is a rectangle expansion, so `max(\|dx\|,\|dy\|)` = **32.39 px**, a 1.20x overstatement. The fix (`source_roi(out, &Warp)`) is unchanged and better justified | M6 (MEASURED; hand-checked independently) |
 | 19 | A naive argmax stack of 22 frames is **1.253x noisier than one unstacked frame** on a flat ROI; **~1.48x** structure-corrected. On the same frames and ROI, a plain **mean gives 0.534x** and a placebo selector with the identical winner histogram gives **0.981x**. Present already at **N=3** (1.5 px drift), monotone in N | **The defect the project exists to remove is measured on our own files, and its cause is proven.** Drift and scene structure push the ratio *below* 1.0; only selection coupled to per-pixel noise pushes it above. The corpus's borrowed 1.82x is no longer load-bearing | M2 + M2-verification (MEASURED) |
 | 20 | Winner-index speckle **34.4%**, against a no-information null of **53.5%** (i.i.d. draws from the observed winner histogram) and **0.868%** for a 17x17-regularised focus field. Still 21.7% in the busiest contrast decile | The winner map carries *some* spatial information but is nowhere near a depth map. **A fair upper bound on selector instability and nothing more** — it cannot separate "argmax elected noise" from "no frame is in focus here, so the error is harmless". Never quote it without the null | M2-verification (MEASURED) |
 | 21 | Ring-difference focus + fold costs **~74% of decode** (196.8 vs 267.6 ms/frame), i.e. **42% of total CPU**, for the cheapest focus measure anyone would consider | Any budget treating focus measurement as negligible beside decode is wrong on this hardware. Fact 11's decode-dominated framing is too generous. *(M2 published "41% of decode" — a conflation of "% of decode" with "% of total"; corrected)* **The ratio survives M7; the inference drawn from it does not.** 196.8 ms/frame is per-frame **CPU time under 32-way concurrency**, not wall clock — the same work is 677 ms of wall for the whole 22-frame stack, and **4.1 ms on the GPU**. So fact 21 may not be used to size a GPU design or to justify a contribution format (fact 30) | M2-verification (MEASURED), scope corrected by M7 |
@@ -661,6 +727,24 @@ So the A/B harness is a **first-class component from commit one**, not a later a
    independent gate (`dyn ≥ 10`) suppresses all 113. **Run every null on real sensor data, and when
    a guard is what makes a result valid, publish the guard with the result** — anyone reusing the
    estimator without it inherits a 1-in-3 false-alarm rate.
+10. **A measurement design can be structurally incapable of answering the question it is pointed
+    at, and it will not tell you.** M3 aligned every frame to frame 0, so for a tile whose best
+    focus is frame `w`, the defocus mismatch of pair `(0, k)` is `|w − k| − |w − 0| = k − 2w`
+    — **an exact linear identity in the very quantity that was supposed to discriminate the two
+    hypotheses.** Every M3 pair would have produced the same residual pattern under either cause.
+    M6 broke the degeneracy with a **sliding baseline** — align `(j, j+Δ)` for every `j` at fixed Δ,
+    so each tile is seen at many defocus levels with its depth fixed, and each defocus level across
+    many depths. **Before running a discriminating experiment, write the identity relating the
+    treatment to the design and check it is not degenerate.** M6 reports its own residual identity
+    collinearity (0.14-0.67) alongside every γ for exactly this reason.
+11. **Resampling is not a neutral operation in an alignment benchmark.** Bilinear interpolation's
+    transfer function depends on the sub-pixel phase, so a synthetic shift plants a
+    sharpness modulation that a correlation-based estimator reads **the same way it reads defocus**.
+    Any benchmark that manufactures ground-truth shifts by resampling has this baked in and will
+    partly measure its own resampler. M6 handled it by using resampled data only for
+    positive-control *recovery* checks, never as evidence about real defocus, and by running its
+    null on the torus rather than on shifted copies. **State the resampler's contribution whenever
+    resampled data supports a claim about sharpness.**
 
 ---
 
@@ -745,6 +829,19 @@ Recorded with their queries; **all are UNVERIFIED as wins, and none is on the v1
     lesson, and it is the reason this risk was worth writing down: a measurement taken on one
     execution substrate was about to fix a public interface on another.** Check the substrate before
     a number is allowed to constrain an interface.
+11. **NEW, opened by M6 — there is no working alignment strategy for deep stacks.** Project rule 6
+    says *never chain, always align to a fixed reference*, and it was measured on 22 frames.
+    **On 105 frames it breaks.** Direct-to-frame-0 alignment degrades badly and in places fails
+    outright: **3 of 104 pairs produced no fit at all**, and those that did used a median of
+    **18 of 96 tiles at 4.61 px rms**, because frames 0 and ~90 share almost no correlatable
+    in-focus content (fact 4 — the winner map is a partition, so a deep stack's endpoints have
+    nearly disjoint sharp regions). The two known options are now **both** refuted at scale:
+    chaining is dead by pixel locking (rule 6, 25 px corner error), and a single fixed reference is
+    dead by content overlap. M6 worked around it with a smoothed anchor model fitted across the
+    stack, which is evidence that *something* in that family works, **not** a specification.
+    **Mitigation: treat deep-stack alignment as an open design problem, not a solved one.** It is
+    plausibly the single largest remaining unknown in §3.3, and 100+ frame stacks are the normal
+    case for macro, not the exotic one. Do not let the skeleton's 22-frame success imply otherwise.
 
 ---
 
@@ -919,14 +1016,17 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
 5. ~~Alignment cost for the two-phase design~~ — **closed by M3.** 13-16 ms/frame, 0.78-0.96 s for
    60 frames. The two-phase design itself was superseded: no global frame-index model, no chaining,
    per-frame coarse-to-fine against a fixed reference.
-6. **What the 0.6-1.3 px alignment residual is** (M3 §2.1). It is neither estimator noise
-   (0.19 px floor) nor global model error (12 parameters buy ≤6%). Candidates: depth-dependent
-   magnification, or blur-induced correlation bias. **Discriminate by correlating the per-tile
-   residual against the skeleton's winner-index map**, which is a proxy depth map. Needs the
-   skeleton, and nothing else. **This question now also gates §3.4.2** — if the cause is
-   blur-induced correlation bias, a field-dependent defocus PSF is biasing the aligner, and
-   modelling it per lens is the one candidate that would make gear knowledge into genuine code
-   rather than a data file. **Do not close the lens-plugin question before running it.**
+6. ~~**What the 0.6-1.3 px alignment residual is**~~ — **CLOSED by M6. It is blur-induced
+   correlation bias (cause b), and the architectural consequence is the opposite of what this
+   question assumed.** In-focus tiles align at **0.144-0.172 px**, at or below the 0.19 px estimator
+   floor; far-from-focus tiles in the same pairs sit at 0.25-0.69 px; the gap survives within-pair
+   (+0.667 px, p=0.010) and within-tile (+0.460 to +0.599 px). Cause (a)'s signature is null
+   everywhere (p > 0.22) on a statistic that fires at ρ = −0.83 when (a) is planted. **But the bias
+   is symmetric degradation, not directed displacement (fact 31), so the lens plugin dies anyway**
+   and §3.4.2 is closed. The fix is in the aligner — weight tiles by `|c − w|` — and needs no lens
+   identity. *(Method note worth keeping: M3's own design could not have answered this. Aligning
+   everything to frame 0 makes `|w − k| − |w − 0| = k − 2w` an exact degeneracy between the two
+   hypotheses. M6 broke it with a sliding baseline, aligning `(j, j+Δ)` for every `j`.)*
 7. The radial dependence of sub-pixel jitter — resolves the fact #9 / novelty-bet-#1 contradiction
    (§4.1). Still live for breathing: bet #1 claims breathing itself supplies sub-pixel diversity.
    M3's per-frame alignment residuals are the raw material.
@@ -936,11 +1036,15 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
    ring, 3x3 Tenengrad) and sweep the regulariser width against the flat-ROI ratio for each. **If
    the noise-optimal width tracks the measure's outer radius, §3.4.1 B3 is confirmed and
    `support_px()` is mandatory.** The skeleton already emits `--index-map` and `--flat-roi`, so
-   this is nearly free.
-10. **How big is the halo actually?** Pure arithmetic on M3's already-fitted similarities: for a
-    128 px tile grid, compute `bbox(S_k^-1(tile))` over all k and plot the required halo against
-    radius from the scale centre. Costs nothing and produces the number that either kills or
-    vindicates a scalar `halo()` (§3.4.1 B1).
+   this is nearly free. **Now the most valuable open item in this section**, since M6 and M7 closed
+   the other two interface questions and B3 is the one still standing on an unmeasured claim.
+10. ~~**How big is the halo actually?**~~ — **CLOSED by M6 (fact 32). A scalar `halo()` does not
+    survive, but B1's stated reasons were wrong.** Corner halo is **32.39 px**, not 39 — B1 quoted
+    the Euclidean *displacement*, and a halo is a rectangle expansion, so the right quantity is
+    `max(|dx|,|dy|)` (1.20x overstatement). Within-frame waste is **1.34x** at 128 px, not 2.6x, and
+    on its own would **not** have killed the interface. What kills it is **stack dependence**, which
+    B1 never raised: 19.42 / 32.39 / 89.23 px across three stacks, and 0.87 → 89.2 px as N goes
+    5 → 100. `source_roi(out, &Warp)` gets both the radial and the stack dependence for free.
 11. ~~**Price the GPU fusion prize before it constrains the contribution format**~~ — **CLOSED by M7.
     The answer is no.** The fused focus+merge kernel runs 22 frames in **4.117 ms**, bandwidth-bound
     at 84% of the measured read ceiling; the fusion prize is **1.449 ms = 0.14% of the pipeline**;
