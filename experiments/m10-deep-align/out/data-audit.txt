@@ -1,0 +1,18 @@
+M10 READ-ONLY DATA AUDIT
+======================================================================
+run: 2026-08-22T22:13:25.5407129-07:00
+
+C:\dev\macro\test\coffee-bean      files    105   bytes    4,161,077,248
+C:\dev\macro\test\109MSDCF         files     22   bytes      836,440,064
+C:\dev\macro\test\119MSDCF         files     35   bytes    1,275,820,519
+D:\macro-dark-frames               files    242   bytes    8,179,392,512
+
+re-audit after final lint pass and reproduction checks
+run: 2026-08-22T22:29:19.7408467-07:00
+
+C:\dev\macro\test\coffee-bean      files    105   bytes     4,161,077,248
+C:\dev\macro\test\109MSDCF         files     22   bytes       836,440,064
+C:\dev\macro\test\119MSDCF         files     35   bytes     1,275,820,519
+D:\macro-dark-frames               files    242   bytes     8,179,392,512
+
+UNCHANGED - identical to the baseline above.

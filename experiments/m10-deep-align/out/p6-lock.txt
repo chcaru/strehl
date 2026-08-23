@@ -1,0 +1,26 @@
+decoded 1 frames to 3516x2344 green planes in 104 ms (104.1 ms/frame)
+[lock/m10] rep 0 done
+[lock/m10] rep 1 done
+[lock/m10] rep 2 done
+[lock/m10] rep 3 done
+[lock/m10] rep 4 done
+[lock/m10] rep 5 done
+[lock/m10] rep 6 done
+[lock/m10] rep 7 done
+[lock/m10] rep 8 done
+[lock/m10] rep 9 done
+[lock/m10] rep 10 done
+[lock/m10] rep 11 done
+[lock/wide64] rep 0 done
+[lock/wide64] rep 1 done
+[lock/wide64] rep 2 done
+[lock/wide64] rep 3 done
+[lock/wide64] rep 4 done
+[lock/wide64] rep 5 done
+[lock/wide64] rep 6 done
+[lock/wide64] rep 7 done
+[lock/wide64] rep 8 done
+[lock/wide64] rep 9 done
+[lock/wide64] rep 10 done
+[lock/wide64] rep 11 done
+wrote data/lock-lock.csv

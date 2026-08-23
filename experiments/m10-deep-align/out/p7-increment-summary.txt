@@ -1,0 +1,33 @@
+==============================================================================
+P7  KNOWN-INCREMENT RECOVERY ON REAL DEFOCUS-MISMATCHED PAIRS
+  ratio = recovered increment / planted increment.
+  Held fixed across the two fits: the pair, its defocus mismatch,
+  its tile dropout, its content overlap.  Only the geometry changes.
+==============================================================================
+
+  cfg=m10
+     span  med_used     |g|=2e-04    |g|=1e-03    |g|=4e-03
+        1        90         0.665        0.999        0.995
+        2        93         0.678        1.011        0.995
+        4        94         0.690        1.004        0.995
+        8        79         1.402        0.823        1.031
+       16        43         0.648        1.098        0.976
+       32        16         0.134        0.207        1.001
+
+  cfg=wide64
+     span  med_used     |g|=2e-04    |g|=1e-03    |g|=4e-03
+        1       153         0.557        1.004        1.005
+        2       156         0.616        1.003        1.002
+        4       158         0.614        0.993        1.005
+        8       153         0.803        1.011        1.008
+       16       108         1.821        0.877        0.979
+       32        38        -0.029        1.486        1.238
+
+  same, split by sign of the planted increment (cfg=m10):
+     span        g>0        g<0
+        1      0.978      0.999
+        2      0.898      1.020
+        4      0.965      0.999
+        8      0.895      1.197
+       16      0.514      1.299
+       32      1.251      0.175

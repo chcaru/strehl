@@ -1,0 +1,101 @@
+==============================================================================
+M10 NUMERIC CONTROLS  (P0 algebra, P5 detector null, P2 positive, P3 null)
+==============================================================================
+
+P0  algebra identities
+  [PASS] compose(T, T^-1) == I: worst 4.85e-13 px
+  [PASS] T_i o rel(i,j) == T_j: worst 7.08e-13 px
+  [PASS] composition associative: worst 9.52e-13 px
+  [PASS] corner_err == max over 4 corners: |diff| 5.68e-14 px
+  [PASS] corner_err_rms == rms over 4 corners: |diff| 2.84e-14 px
+  [PASS] rms corner err == sqrt(rho^2|da|^2 + |db|^2): |diff| 2.84e-14 px
+
+P5  detector null - a perfect solution must score zero
+  [PASS] noiseless edges reproduce truth: worst held-out corner err 0.00e+00 px over 1601 edges
+  [PASS] cycle consistency of exact edges: max 7.04e-13 px over 4000 triples
+  [PASS] training graph has cycles: cycle rank 1497, components 1
+
+P2  positive control - recover a planted camera path
+
+  P2a noiseless edges
+          strategy  covered    median       p90       max
+          S0-fixed  105/105     0.000     0.000     0.000
+          S1-hops1  105/105     0.000     0.000     0.000
+          S2-hops8  105/105     0.000     0.000     0.000
+         S2-hops32  105/105     0.000     0.000     0.000
+             S3-ba  105/105     0.000     0.000     0.000
+        S3-ba-unit  105/105     0.000     0.000     0.000
+          S4-poly3  105/105     0.174     0.276     0.346
+          S4-poly6  105/105     0.095     0.157     0.252
+        S5-centre6  105/105     0.105     0.161     0.252
+      S6-ba-smooth  105/105     0.000     0.000     0.000
+  [PASS] P2a noiseless edges :: S3-ba max err in [0, 1e-06]: max 0.000 px
+  [PASS] P2a noiseless edges :: S1-hops1 max err in [0, 1e-06]: max 0.000 px
+  [PASS] P2a noiseless edges :: S0-fixed max err in [0, 1e-06]: max 0.000 px
+
+  P2b iid edge noise, 0.5 px at the corner
+          strategy  covered    median       p90       max
+          S0-fixed  105/105     0.829     1.310     2.254
+          S1-hops1  105/105     3.621     5.245     6.058
+          S2-hops8  105/105     2.886     3.979     4.838
+         S2-hops32  105/105     1.030     2.000     2.735
+             S3-ba  105/105     0.199     0.289     0.452
+        S3-ba-unit  105/105     0.199     0.289     0.452
+          S4-poly3  105/105     0.230     0.317     0.389
+          S4-poly6  105/105     0.153     0.239     0.305
+        S5-centre6  105/105     0.124     0.196     0.288
+      S6-ba-smooth  105/105     0.199     0.289     0.452
+  [PASS] P2b BA beats the adjacent chain: BA 0.452 px vs chain 6.058 px
+  [PASS] P2b BA beats the fixed reference: BA 0.452 px vs fixed 2.254 px
+
+  P2c coherent per-step lock bias, 0.02 px/frame
+          strategy  covered    median       p90       max
+          S0-fixed  105/105     1.219     2.008     2.351
+          S1-hops1  105/105     3.152     4.380     4.902
+          S2-hops8  105/105     1.182     2.614     3.624
+         S2-hops32  105/105     1.222     2.183     2.712
+             S3-ba  105/105     1.036     1.865     2.137
+        S3-ba-unit  105/105     1.036     1.865     2.137
+          S4-poly3  105/105     1.111     1.975     2.138
+          S4-poly6  105/105     1.114     1.871     2.111
+        S5-centre6  105/105     1.425     1.898     1.997
+      S6-ba-smooth  105/105     1.036     1.865     2.137
+  [PASS] P2c the planted chain failure is detected: chain max 4.902 px (planted 0.02*104 = 2.08 px)
+  [PASS] P2c hop ladder reduces the accumulated bias: hops32 2.712 px vs chain 4.902 px
+    dropped every span > 40: 1313 edges, cycle rank 1209
+
+  P2d no edge longer than span 40
+          strategy  covered    median       p90       max
+          S0-fixed   41/105     0.931     1.286     1.751
+          S1-hops1  105/105     3.106     5.998     6.783
+          S2-hops8  105/105     2.619     3.850     5.954
+         S2-hops32  105/105     1.278     2.402     3.116
+             S3-ba  105/105     0.215     0.319     0.535
+        S3-ba-unit  105/105     0.215     0.319     0.535
+          S4-poly3  105/105     0.249     0.335     0.416
+          S4-poly6  105/105     0.154     0.244     0.297
+        S5-centre6  105/105     0.154     0.238     0.313
+      S6-ba-smooth  105/105     0.215     0.319     0.535
+  [PASS] P2d fixed reference loses coverage: covered 41/105
+  [PASS] P2d BA still covers every frame: 105/105
+  [PASS] P2d BA stays under 1 px: max 0.535 px
+
+P3  null - edges carrying no geometry must not be solvable
+
+  P3 randomised edge payloads
+          strategy  covered    median       p90       max
+          S0-fixed  105/105    59.702   115.070   173.454
+          S1-hops1  105/105    75.516   219.029   312.067
+          S2-hops8  105/105   127.992   204.455   244.891
+         S2-hops32  105/105    59.702   114.869   153.745
+             S3-ba  105/105    50.708    79.355    89.168
+        S3-ba-unit  105/105    50.708    79.355    89.168
+          S4-poly3  105/105    63.050    90.268    96.413
+          S4-poly6  105/105    59.119    87.742    91.370
+        S5-centre6  105/105    59.187    87.810    91.404
+      S6-ba-smooth  105/105    50.707    79.355    89.168
+  [PASS] P3 BA fails on scrambled edges: max 89.168 px
+  [PASS] P3 cycle consistency detects the scramble: median cycle err 49.186 px
+
+==============================================================================
+ALL CONTROLS PASS

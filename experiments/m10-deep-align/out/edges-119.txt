@@ -1,0 +1,15 @@
+decoded 33 frames to 3516x2344 green planes in 938 ms (28.4 ms/frame)
+[shallow-119] 33 frames, spans [1, 2, 3, 4, 6, 8, 12, 16, 24, 32], direct0 true, 244 pairs
+[shallow-119/m10] building pyramids at [8] for 33 frames
+[shallow-119/m10] pyramids in 0.02 s
+[shallow-119/m10] anchor grid 12x8 tile 128 margin 96 -> 96 spots
+[shallow-119/m10] 100/244 pairs, 1.6 s elapsed
+[shallow-119/m10] 200/244 pairs, 3.3 s elapsed
+[shallow-119/m10] 244 pairs in 3.3 s (13.5 ms/pair); 0 no-fit
+[shallow-119/wide64] building pyramids at [32, 16, 8] for 33 frames
+[shallow-119/wide64] pyramids in 0.06 s
+[shallow-119/wide64] anchor grid 16x11 tile 64 margin 96 -> 176 spots
+[shallow-119/wide64] 100/244 pairs, 2.9 s elapsed
+[shallow-119/wide64] 200/244 pairs, 6.1 s elapsed
+[shallow-119/wide64] 244 pairs in 6.3 s (25.6 ms/pair); 0 no-fit
+wrote data/shallow-119-edges.csv

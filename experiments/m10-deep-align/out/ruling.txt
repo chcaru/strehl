@@ -1,0 +1,94 @@
+==============================================================================================
+PREREGISTERED DECISION RULE - section 6, applied mechanically
+  T_solved 1.0 px   T_usable 4.0 px   T_chain 12.5 px   (plane px at the worst plane corner)
+  full-coverage strategies only; tree training graphs excluded
+==============================================================================================
+
+coffee-bean  (105 frames)
+  cfg=m10   125 test edges predicted, top span 72
+    best full-coverage row : S4-poly6 trained on 'span >= 32'
+    E* registered (span 72 ) :   6.758 px over   1 edges  -> cell E
+    E* robust (span >= 56)  :   6.758 px over  35 edges  -> cell E
+    all test spans         : median 6.545 px, max 22.497 px
+    slope on test span     : +0.0618 +- 0.0410 px/frame   significantly > 0: no
+    runners-up by robust E*:
+         7.131 px  S5-centre4     'span >= 32'
+         7.241 px  S4-poly2       'all measurable'
+         7.521 px  S4-poly4       'span >= 32'
+         7.605 px  S4-poly2       'span >= 32'
+  cfg=wide64   353 test edges predicted, top span 104
+    best full-coverage row : S2-hops32 trained on 'span <= 32'
+    E* registered (span 104) :  53.428 px over   1 edges  -> cell F
+    E* robust (span >= 72)  :  31.071 px over 113 edges  -> cell F
+    all test spans         : median 12.306 px, max 64.856 px
+    slope on test span     : +0.6033 +- 0.0296 px/frame   significantly > 0: yes
+    runners-up by robust E*:
+        31.071 px  S2-hops32      'all measurable'
+        32.018 px  S2-hops32      'span <= 32, >= 8'
+        34.753 px  S5-centre4     'span >= 24'
+        35.170 px  S6-ba-smooth   'span >= 24'
+
+109MSDCF  (22 frames)
+  cfg=m10   24 test edges predicted, top span 21
+    best full-coverage row : S2-hops16 trained on 'span <= 16'
+    E* registered (span 21 ) :   1.836 px over   1 edges  -> cell B/C/D
+    E* robust (span >= 16)  :   0.581 px over  11 edges  -> cell A/B
+    all test spans         : median 0.489 px, max 2.761 px
+    slope on test span     : +0.0620 +- 0.0540 px/frame   significantly > 0: no
+    runners-up by robust E*:
+         0.581 px  S2-hops32      'span <= 16'
+         0.581 px  S2-hops16      'span <= 32'
+         0.581 px  S2-hops32      'span <= 32'
+         0.581 px  S2-hops16      'all measurable'
+  cfg=wide64   24 test edges predicted, top span 21
+    best full-coverage row : S2-hops16 trained on 'span <= 16'
+    E* registered (span 21 ) :   1.111 px over   1 edges  -> cell B/C/D
+    E* robust (span >= 16)  :   0.681 px over  11 edges  -> cell A/B
+    all test spans         : median 0.537 px, max 1.480 px
+    slope on test span     : +0.0192 +- 0.0280 px/frame   significantly > 0: no
+    runners-up by robust E*:
+         0.681 px  S2-hops32      'span <= 16'
+         0.681 px  S2-hops16      'span <= 32'
+         0.681 px  S2-hops32      'span <= 32'
+         0.681 px  S2-hops16      'all measurable'
+
+119MSDCF  (33 frames)
+  cfg=m10   41 test edges predicted, top span 32
+    best full-coverage row : S2-hops16 trained on 'span <= 32, >= 8'
+    E* registered (span 32 ) :   0.809 px over   1 edges  -> cell A/B
+    E* robust (span >= 24)  :   0.672 px over  17 edges  -> cell A/B
+    all test spans         : median 0.672 px, max 1.850 px
+    slope on test span     : -0.0225 +- 0.0137 px/frame   significantly > 0: no
+    runners-up by robust E*:
+         0.672 px  S2-hops32      'span <= 32, >= 8'
+         0.696 px  S4-poly2       'span <= 32, >= 8'
+         0.705 px  S3-ba-invvar   'span <= 32, >= 8'
+         0.756 px  S4-poly6       'span <= 32, >= 8'
+  cfg=wide64   41 test edges predicted, top span 32
+    best full-coverage row : S6-ba-smooth trained on 'span <= 32, >= 8'
+    E* registered (span 32 ) :   1.504 px over   1 edges  -> cell B/C/D
+    E* robust (span >= 24)  :   0.877 px over  17 edges  -> cell A/B
+    all test spans         : median 0.758 px, max 1.504 px
+    slope on test span     : +0.0388 +- 0.0081 px/frame   significantly > 0: yes
+    runners-up by robust E*:
+         0.878 px  S3-ba-unit     'span <= 32, >= 8'
+         0.894 px  S2-hops16      'span <= 32, >= 8'
+         0.894 px  S2-hops32      'span <= 32, >= 8'
+         0.902 px  S3-ba-count    'span <= 32, >= 8'
+
+==============================================================================================
+M7  AGREEMENT WITH THE KNOWN-GOOD FIXED REFERENCE (shallow stacks)
+  Where S0-fixed works, a global method must reproduce it.
+==============================================================================================
+    109MSDCF cfg=m10     S0-fixed covers 22/22, BA vs fixed: median 0.305 px, max 1.295 px over 21 frames
+    109MSDCF cfg=wide64  S0-fixed covers 22/22, BA vs fixed: median 0.220 px, max 0.977 px over 21 frames
+    119MSDCF cfg=m10     S0-fixed covers 33/33, BA vs fixed: median 0.582 px, max 1.450 px over 32 frames
+    119MSDCF cfg=wide64  S0-fixed covers 33/33, BA vs fixed: median 0.636 px, max 1.471 px over 32 frames
+
+==============================================================================================
+COVERAGE ON THE DEEP STACK
+==============================================================================================
+  cfg=m10     S0-fixed places 76/105 frames; S3-ba places 105/105
+            frames the fixed reference cannot place: 29, first 12 [73, 76, 77, 78, 79, 80, 81, 83, 84, 85, 86, 87]
+  cfg=wide64  S0-fixed places 105/105 frames; S3-ba places 105/105
+            frames the fixed reference cannot place: 0, first 12 []

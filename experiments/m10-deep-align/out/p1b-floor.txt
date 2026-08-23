@@ -1,0 +1,20 @@
+decoded 81 frames to 3516x2344 green planes in 1831 ms (22.6 ms/frame)
+[floor] base 0 cfg m10 margin 10: 24 warps done
+[floor] base 0 cfg m10 margin 96: 24 warps done
+[floor] base 0 cfg wide margin 10: 24 warps done
+[floor] base 0 cfg wide margin 96: 24 warps done
+[floor] base 0 cfg wide64 margin 10: 24 warps done
+[floor] base 0 cfg wide64 margin 96: 24 warps done
+[floor] base 40 cfg m10 margin 10: 24 warps done
+[floor] base 40 cfg m10 margin 96: 24 warps done
+[floor] base 40 cfg wide margin 10: 24 warps done
+[floor] base 40 cfg wide margin 96: 24 warps done
+[floor] base 40 cfg wide64 margin 10: 24 warps done
+[floor] base 40 cfg wide64 margin 96: 24 warps done
+[floor] base 80 cfg m10 margin 10: 24 warps done
+[floor] base 80 cfg m10 margin 96: 24 warps done
+[floor] base 80 cfg wide margin 10: 24 warps done
+[floor] base 80 cfg wide margin 96: 24 warps done
+[floor] base 80 cfg wide64 margin 10: 24 warps done
+[floor] base 80 cfg wide64 margin 96: 24 warps done
+wrote data/coffee-bean-floor.csv

@@ -1,0 +1,26 @@
+====================================================================================
+CONSERVATION TEST ON THE SYNTHETIC STACK - p4-warp
+  Same telescoping identity as m10_conserve.py, but the answer
+  is known.  A flat ladder means the pipeline does not create one.
+====================================================================================
+
+  planted total   : -4.5758%
+  median lever arm: 1020 plane px
+
+   span  links   covered    total %  ratio to truth  planted diff disp px
+      1    104  104/104     -5.1307          1.1245                 0.415
+      2     52  104/104     -4.8883          1.0700                 0.826
+      3      1    3/104     -0.2510          0.0536                 1.230
+      4     26  104/104     -4.7235          1.0331                 1.654
+      6      1    6/104     -0.4974          0.1065                 2.482
+      8     13  104/104     -4.6189          1.0096                 3.297
+     12      1   12/104     -0.9635          0.2067                 4.936
+     16      6   96/104     -4.4515          0.9722                 6.666
+     24      1   24/104     -1.7663          0.3805                 9.999
+     32      3   96/104     -4.4379          0.9692                13.369
+     48      2   96/104     -4.4178          0.9647                20.279
+     64      1   64/104     -3.5420          0.7699                27.339
+
+  For comparison, the real coffee-bean ladder (out/conservation.txt):
+    span  1 -> -1.6876%   span 16 -> -5.8891%   span 64 -> -5.2877%
+    i.e. a factor 3.33 between the ends.

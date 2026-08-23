@@ -1,0 +1,68 @@
+====================================================================================
+P4  END-TO-END RECOVERY OF A PLANTED PATH - p4-warp, cfg=m10
+  Absolute corner error against planted truth, plane px.
+  DISCLOSED: the 'warp' flavour resamples bilinearly. Recovery only;
+  this control is never evidence about defocus.
+====================================================================================
+
+  105 frames, 761 pairs, 0 no-fit, cycle rank 657, components 1
+  planted total drift at the corner: 98.6 plane px (scale -4.574%)
+
+  train = all measurable: 761 edges, cycle rank 657
+          strategy     cover    median       p90       max
+          S0-fixed  104/105      0.683     1.283     1.644
+          S1-hops1  104/105      5.497    11.438    14.565
+          S2-hops8  104/105      0.567     1.311     2.137
+         S2-hops32  104/105      0.707     1.281     2.172
+      S3-ba-invvar  104/105      0.623     0.709     0.864
+        S3-ba-unit  104/105      0.622     0.746     0.888
+          S4-poly6  104/105      0.651     0.729     0.774
+        S5-centre6  104/105      0.616     0.735     0.797
+      S6-ba-smooth  104/105      0.622     0.746     0.888
+
+  train = span <= 8: 409 edges, cycle rank 305
+          strategy     cover    median       p90       max
+          S0-fixed    8/105      0.343     0.469     0.523
+          S1-hops1  104/105      5.497    11.438    14.565
+          S2-hops8  104/105      0.567     1.311     2.137
+         S2-hops32  104/105      0.567     1.311     2.137
+      S3-ba-invvar  104/105      0.733     1.383     2.399
+        S3-ba-unit  104/105      0.720     1.585     2.660
+          S4-poly6  104/105      0.741     1.561     2.511
+        S5-centre6  104/105      0.701     1.621     2.557
+      S6-ba-smooth  104/105      0.720     1.585     2.660
+
+  train = span 8-32: 281 edges, cycle rank 177
+          strategy     cover    median       p90       max
+          S0-fixed   25/105      0.525     0.777     1.381
+          S1-hops1    0/105         -        -        -
+          S2-hops8   13/105      0.505     0.740     1.144
+         S2-hops32  104/105      0.702     1.344     2.172
+      S3-ba-invvar  104/105      0.560     0.867     1.512
+        S3-ba-unit  104/105      0.571     0.802     1.439
+          S4-poly6  104/105      0.496     0.689     0.930
+        S5-centre6  104/105      0.477     0.733     0.966
+      S6-ba-smooth  104/105      0.557     0.785     1.392
+
+  train = span >= 16: 345 edges, cycle rank 241
+          strategy     cover    median       p90       max
+          S0-fixed   89/105      0.724     1.337     1.644
+          S1-hops1    0/105         -        -        -
+          S2-hops8    0/105         -        -        -
+         S2-hops32  104/105      0.702     1.314     1.850
+      S3-ba-invvar  104/105      0.550     0.950     1.203
+        S3-ba-unit  104/105      0.595     0.944     1.397
+          S4-poly6  104/105      0.635     0.706     0.766
+        S5-centre6  104/105      0.602     0.711     0.751
+      S6-ba-smooth  104/105      0.591     0.939     1.392
+
+  Per-span edge accuracy against truth (direct fits, no solver):
+      span     n   med err       p90  med used   med rms
+         1   104     0.289     0.649        60     0.570
+         2   103     0.368     0.636        61     0.622
+       3-4   102     0.309     0.653        60     0.590
+       5-8   100     0.321     0.648        60     0.602
+      9-16    96     0.383     0.724        62     0.718
+     17-32    88     0.520     0.894        62     0.954
+     33-64   128     0.712     1.219        61     1.229
+    65-104    40     0.921     1.339        62     1.715

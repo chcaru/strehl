@@ -1,0 +1,86 @@
+========================================================================================
+S5  IS THE TRANSLATION PURE MAGNIFICATION ABOUT ONE FIXED CENTRE?
+  B_j = (1 - A_j) * c, one complex c for the whole stack.
+  Centres are plane px from the plane centre, and the sensor
+  equivalent, which is what M3 quoted: M3 measured (-22, -113) px.
+========================================================================================
+
+coffee-bean
+  cfg=m10     deg=4  centre = (  +212.5,   -224.6) plane px = (   +425.0,    -449.2) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     4.101    8.183
+      S4 polynomial B         3.955    8.065
+      free per-frame B        3.953    8.027
+      S5 / free ratio         1.037   (falsifier 3 trips above 3.0)
+  cfg=m10     deg=6  centre = (  +212.2,   -224.5) plane px = (   +424.5,    -449.0) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     4.068    7.991
+      S4 polynomial B         3.949    8.054
+      free per-frame B        3.889    7.870
+      S5 / free ratio         1.046   (falsifier 3 trips above 3.0)
+  cfg=wide64  deg=4  centre = (  +140.4,   -171.6) plane px = (   +280.9,    -343.1) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     7.638   16.024
+      S4 polynomial B         7.532   15.374
+      free per-frame B        7.556   15.134
+      S5 / free ratio         1.011   (falsifier 3 trips above 3.0)
+  cfg=wide64  deg=6  centre = (  +139.5,   -171.1) plane px = (   +279.1,    -342.1) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     7.695   15.702
+      S4 polynomial B         7.581   15.815
+      free per-frame B        7.480   15.826
+      S5 / free ratio         1.029   (falsifier 3 trips above 3.0)
+
+109MSDCF
+  cfg=m10     deg=4  centre = (   -13.7,    -65.5) plane px = (    -27.4,    -131.0) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     0.407    0.627
+      S4 polynomial B         0.347    0.542
+      free per-frame B        0.222    0.350
+      S5 / free ratio         1.837   (falsifier 3 trips above 3.0)
+  cfg=m10     deg=6  centre = (   -13.7,    -65.5) plane px = (    -27.4,    -131.0) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     0.406    0.604
+      S4 polynomial B         0.335    0.507
+      free per-frame B        0.195    0.383
+      S5 / free ratio         2.082   (falsifier 3 trips above 3.0)
+  cfg=wide64  deg=4  centre = (   -20.2,    -61.7) plane px = (    -40.4,    -123.4) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     0.452    0.640
+      S4 polynomial B         0.395    0.579
+      free per-frame B        0.228    0.400
+      S5 / free ratio         1.978   (falsifier 3 trips above 3.0)
+  cfg=wide64  deg=6  centre = (   -20.2,    -61.7) plane px = (    -40.4,    -123.4) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     0.441    0.638
+      S4 polynomial B         0.367    0.543
+      free per-frame B        0.206    0.379
+      S5 / free ratio         2.138   (falsifier 3 trips above 3.0)
+
+119MSDCF
+  cfg=m10     deg=4  centre = (   -52.9,   -188.7) plane px = (   -105.8,    -377.5) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     0.554    0.865
+      S4 polynomial B         0.360    0.832
+      free per-frame B        0.229    0.482
+      S5 / free ratio         2.418   (falsifier 3 trips above 3.0)
+  cfg=m10     deg=6  centre = (   -53.2,   -188.8) plane px = (   -106.4,    -377.5) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     0.557    0.831
+      S4 polynomial B         0.382    0.796
+      free per-frame B        0.244    0.491
+      S5 / free ratio         2.284   (falsifier 3 trips above 3.0)
+  cfg=wide64  deg=4  centre = (   -51.0,   -181.7) plane px = (   -101.9,    -363.4) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     0.636    0.959
+      S4 polynomial B         0.441    0.803
+      free per-frame B        0.279    0.537
+      S5 / free ratio         2.278   (falsifier 3 trips above 3.0)
+  cfg=wide64  deg=6  centre = (   -51.3,   -181.7) plane px = (   -102.5,    -363.5) sensor px
+    training residual, plane px   median / p90
+      S5 one fixed centre     0.616    0.927
+      S4 polynomial B         0.454    0.827
+      free per-frame B        0.303    0.541
+      S5 / free ratio         2.033   (falsifier 3 trips above 3.0)
+
+  rho = 2112.85 plane px; plane is 3516 x 2344.

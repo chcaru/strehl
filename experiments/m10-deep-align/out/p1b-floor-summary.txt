@@ -1,0 +1,22 @@
+estimator corner-error floor: 432 planted-warp recoveries, plane px
+
+     cfg  margin    n  fail   median      p90      max  med_rms  med_used
+     m10      10   72     0    0.167    0.388    0.648    0.460      93.0
+     m10      96   72     0    0.125    0.262    0.365    0.448      92.0
+    wide      10   72     0    0.167    0.388    0.648    0.460      93.0
+    wide      96   72     0    0.125    0.253    0.365    0.448      91.5
+  wide64      10   72     0    0.045    0.127    0.188    0.154     159.0
+  wide64      96   72     0    0.056    0.134    0.159    0.159     162.0
+
+median corner error, plane px, by planted |scale change|:
+  |g| bin            m10/10      m10/96     wide/10     wide/96   wide64/10   wide64/96
+  0.000-0.005        0.133       0.081       0.133       0.081       0.024       0.041
+  0.005-0.020        0.071       0.057       0.071       0.057       0.040       0.055
+  0.020-0.035        0.176       0.157       0.176       0.157       0.036       0.054
+  0.035-0.060        0.315       0.220       0.315       0.220       0.060       0.080
+
+equivalent coffee-bean span (total scale change -4.575% over 104 frames):
+  |g| 0.000-0.005  ->  span 0-11 frames
+  |g| 0.005-0.020  ->  span 11-45 frames
+  |g| 0.020-0.035  ->  span 45-80 frames
+  |g| 0.035-0.060  ->  span 80-136 frames
