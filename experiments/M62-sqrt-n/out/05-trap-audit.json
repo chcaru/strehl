@@ -1,0 +1,42 @@
+{
+  "T1": {
+    "convention": "PREREGISTRATION quotes reference/merged; the CLI prints merged/reference",
+    "predicted_reference_hp_sd_dn": 61.82683285143308,
+    "cli_reference_hp_sd_dn": 61.827,
+    "predicted_merged_hp_sd_dn": 60.053038425938425,
+    "cli_merged_hp_sd_dn": 60.056,
+    "predicted_reduction_factor": 1.0295371303765457,
+    "predicted_cli_ratio": 0.9713102815769814,
+    "cli_ratio": 0.971,
+    "model_sigma_harness_dn": 15.04793063576915,
+    "model_sigma_cli_dn": 15.048,
+    "mean_signal_harness_dn": 1229.902043185764,
+    "mean_signal_cli_dn": 1229.91
+  },
+  "T2": {
+    "python_ideal_mean_ratio": 5.479128597201973,
+    "cli_merge_gate8_ratio": 5.477677513156781,
+    "measured_gap": 0.9997351615280697,
+    "tiff_quantisation_sd_dn": 0.06540395816683882,
+    "merged_residual_sd_dn": 2.7473636843279396,
+    "predicted_gap_from_quantisation": 0.9997167556769234
+  },
+  "T3": {
+    "truth_referenced": {
+      "selector": 0.976815367670973,
+      "estimator": 5.477677513156781,
+      "separation": 5.607689737946324
+    },
+    "cli_flat_roi_hp_on_this_textured_roi": {
+      "selector": 1.009,
+      "estimator": 0.971,
+      "separation": 1.03913491246138
+    },
+    "counterfactual_texture_free_roi": {
+      "shared_latent_plant_reduction": 1.3912166872805047,
+      "real_independent_burst_reduction": 5.477225575051661,
+      "trap_cost_factor": 3.9370039370059056
+    },
+    "structure_floor_hp_sd_over_model_sigma": 4.108652312599681
+  }
+}
