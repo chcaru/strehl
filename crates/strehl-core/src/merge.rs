@@ -69,30 +69,60 @@ pub const REGULARISER_RADIUS: usize = 8;
 /// Width of the merge regulariser box, in plane pixels.
 pub const REGULARISER_WIDTH: usize = 2 * REGULARISER_RADIUS + 1;
 
-/// The measured noise penalty for selecting one frame instead of averaging.
+/// The noise penalty for selecting one frame instead of averaging. **Currently
+/// 1.0 — the measured value was refuted and no admissible replacement exists.**
 ///
 /// A pixel that admitted exactly one frame did not receive an *arbitrary*
 /// frame. It received the frame the focus argmax elected, and the argmax
 /// prefers whichever frame's noise happened to point upward. So `n = 1` is not
-/// "no averaging" — it is selection, and **selection adds noise**.
+/// "no averaging" — it is selection, and **selection adds noise**. That
+/// mechanism is real and is why this hook exists.
 ///
-/// Measured twice, independently, on the same operation: **1.074×** at gate 0
-/// on `109MSDCF` (fact 320) and **1.075×** by M2-verification's separately
-/// written harness a year earlier (facts 23, 321).
+/// What was refuted is the *number*. This shipped at **1.074×** on the strength
+/// of two agreeing measurements (facts 320, 321, 23). M40 audited it under rule
+/// 24 and found every defect was a choice, not an arithmetic slip:
 ///
-/// Fact 341 is the defect this repairs. Without it `predicted_sigma` reports
-/// exactly `1.000×` the single-frame σ at gate 0, the model does not know that
-/// selection adds noise, and the corrected detail metric consequently credits a
-/// **flat** ROI — where no detail can exist — with `+35.47%` detail.
-pub const SELECTION_INFLATION: f32 = 1.074;
+/// - **It has no defined meaning at any value** (fact 440). The estimator was a
+///   ratio of two **spatial** standard deviations against one reference frame;
+///   this multiplies a **temporal** per-sample σ by it. A rule-10 units
+///   violation, now discipline 264.
+/// - **It exceeds its own ceiling** (fact 446). On a pure-noise plant built to
+///   maximise the winner's curse the shipped operator can produce at most
+///   1.0451×/1.0508× (pixel) and 1.0307×/1.0345× (gradient). 1.074 is above the
+///   maximum its own mechanism can generate.
+/// - **It is not a constant** (fact 443). The same estimator on six ROIs across
+///   two stacks reads 1.0001, 1.0739, 1.0867, 0.9841, 1.0601, 1.2732. The
+///   shipped value is one of those six.
+/// - **It made the metric worse than doing nothing** (fact 454). On a
+///   genuinely detail-free plant the corrected detail metric reads **−11.63 DN
+///   where truth is 0** — it crosses zero and lands *further* from truth than
+///   the defect it replaced, with `max(0, .)` hiding the sign.
+///
+/// So this is 1.0 until someone measures the penalty with a **temporal,
+/// structure-free** estimator in this crate. Do not substitute 1.045 (fact
+/// 446's ceiling) or any other plausible-looking value: an unmeasured constant
+/// that happens to be smaller is still an unmeasured constant, and that is the
+/// exact failure this revert exists to undo.
+///
+/// Fact 341 — that `predicted_sigma` reports exactly 1.000× the single-frame σ
+/// at gate 0 — is therefore **open again**, and it is the honest state. A known
+/// missing term is better than a wrong one.
+pub const SELECTION_INFLATION: f32 = 1.0;
 
 /// The noise penalty carried by a pixel that admitted `n` frames.
 ///
-/// Only `n = 1` is measured. For `n > 1` this returns `1.0`, which makes
-/// [`Estimate::predicted_sigma`] a **floor** there rather than an estimate: the
-/// acceptance set is still chosen by a noise-dependent criterion, so some
-/// selection bias survives averaging and is not accounted for. Measuring that
-/// residual is open question 80's other half.
+/// **The two-branch shape is right and is deliberately kept** even though both
+/// branches currently return 1.0. Fact 458 measured `n_eff = 1` across
+/// **41.66%** of the plane at a working gate, so `n = 1` is not a rare corner
+/// that could be folded into the averaging case — it is most of the image, and
+/// it needs its own term the moment one is measured.
+///
+/// Fact 448 also settled the *shape* of that term, and it is not this one:
+/// plant inflation by acceptance-set size decays **smoothly** — 1.0770, 1.0591,
+/// 1.0454, 1.0383, 1.0319, 1.0293, 1.0286, 1.0220 for `n = 1..8` — rather than
+/// stepping to zero at `n = 2`. A step drove a 7.4-point discontinuity straight
+/// through the 41.66% of the plane sitting at `n = 1`. Whatever replaces this
+/// should be a decaying function of `n`, not a two-valued one.
 #[inline]
 #[must_use]
 pub fn selection_inflation(n: u16) -> f32 {
@@ -516,6 +546,45 @@ impl Estimator {
         }
         self.n.iter().map(|n| *n as f64).sum::<f64>() / self.geom.pixels() as f64
     }
+
+    /// Mean over pixels of the per-pixel noise gain `predicted_sigma / single`.
+    ///
+    /// This is the honest answer to "how much did the merge reduce noise", and
+    /// it is deliberately routed **through [`Self::predicted_sigma`]** rather
+    /// than recomputed from `n`. Facts 452/453: the CLI used to print
+    /// `1/sqrt(mean_n_eff)`, which is wrong twice over.
+    ///
+    /// * It never consulted the noise model, so it could not see
+    ///   [`selection_inflation`] and printed exactly `1.0000x` at gate 0 — the
+    ///   very number fact 341 filed as a defect.
+    /// * `1/sqrt(E[n])` is not `E[1/sqrt(n)]`. Jensen's inequality runs one way
+    ///   here — `1/sqrt(.)` is convex, so `E[1/sqrt(n)] >= 1/sqrt(E[n])` — and
+    ///   the old form therefore **understated** the achieved sigma, measured at
+    ///   4.22%, 5.88%, 4.70% and 2.43% at gates 0.5, 1.0, 2.0 and 4.0. It
+    ///   reported the merge as quieter than it is.
+    ///
+    /// Going through `predicted_sigma` means any future term added to the model
+    /// appears here automatically instead of having to be remembered.
+    #[must_use]
+    pub fn mean_predicted_sigma_gain(&self, noise: &NoiseModel, black_dn: f32) -> f64 {
+        let px = self.geom.pixels();
+        if px == 0 {
+            return 0.0;
+        }
+        let total: f64 = (0..px)
+            .map(|i| {
+                let single = noise.green_luma_sigma(self.green_mean(i) - black_dn);
+                if single > 0.0 {
+                    f64::from(self.predicted_sigma(noise, i, black_dn) / single)
+                } else {
+                    // A pixel with no modelled noise has no gain to report; 1.0
+                    // is the neutral element and keeps the mean well defined.
+                    1.0
+                }
+            })
+            .sum();
+        total / px as f64
+    }
 }
 
 #[cfg(test)]
@@ -631,20 +700,51 @@ mod tests {
     /// neither box mean changes a mean. A silent rescale — the zero-gain trap
     /// documented on `unit_sigma_model` — moves this by three orders of
     /// magnitude while leaving the standard deviation looking plausible.
-    /// The selection penalty is a measurement, not a tuning knob. Two harnesses
-    /// written a year apart measured the same operation at 1.074x and 1.075x
-    /// (facts 320, 321, 23); if this constant drifts off that, it is no longer
-    /// the measured quantity and fact 341's repair is undone.
+    /// The selection penalty is a measurement, not a tuning knob — and it is
+    /// currently **absent**, not merely small. M40 refuted the shipped 1.074x
+    /// on four independent grounds (facts 440, 443, 446, 454): it multiplied a
+    /// temporal sigma by a ratio of spatial ones, it exceeded the maximum its
+    /// own mechanism can produce, it varied from 0.9841 to 1.2732 across six
+    /// ROIs, and on a detail-free plant it drove the corrected metric to
+    /// -11.63 DN where truth is 0 — further from truth than the defect it
+    /// replaced.
+    ///
+    /// This test therefore pins 1.0 and exists to make substituting a
+    /// plausible-looking value a deliberate act. If you are here because you
+    /// want to put a number back, the bar is a **temporal, structure-free**
+    /// estimator measured in this crate, and fact 448 says the result should be
+    /// a smooth function of `n`, not a step.
     #[test]
-    fn the_selection_inflation_constant_is_the_measured_one() {
-        assert!(
-            (SELECTION_INFLATION - 1.074).abs() < 5e-4,
-            "gate-0 selection measured 1.074x (fact 320) and 1.075x independently \
-             (fact 23); got {SELECTION_INFLATION}"
+    fn the_selection_penalty_is_absent_until_it_is_measured() {
+        assert_eq!(
+            SELECTION_INFLATION, 1.0,
+            "1.074x was refuted by M40 (facts 440/443/446/454) and reverted; a \
+             replacement must be measured with a temporal, structure-free \
+             estimator in this crate, not assumed"
         );
-        assert_eq!(selection_inflation(0), SELECTION_INFLATION, "n = 0 clamps to 1");
-        assert_eq!(selection_inflation(1), SELECTION_INFLATION, "n = 1 is selection");
-        assert_eq!(selection_inflation(2), 1.0, "n > 1 is unmeasured, so no penalty");
+        assert_eq!(
+            selection_inflation(0),
+            SELECTION_INFLATION,
+            "n = 0 clamps to 1"
+        );
+        assert_eq!(
+            selection_inflation(1),
+            SELECTION_INFLATION,
+            "n = 1 is selection"
+        );
+        assert_eq!(
+            selection_inflation(2),
+            1.0,
+            "n > 1 carries no penalty either, for now"
+        );
+        // The two-branch shape is load-bearing even while both branches agree:
+        // fact 458 puts 41.66% of the plane at n = 1 at a working gate.
+        assert_eq!(
+            selection_inflation(1),
+            selection_inflation(9),
+            "both branches are 1.0 today; this equality is what a measured \
+             penalty is expected to BREAK, and the shape is kept for it"
+        );
     }
 
     #[test]
@@ -922,6 +1022,89 @@ mod tests {
         assert_eq!(est.mean_n_eff(), 3.0);
     }
 
+    /// **The reported noise gain must be Jensen-correct and model-routed.**
+    ///
+    /// Facts 452/453. The CLI's gate table printed `1/sqrt(mean_n_eff)`, which
+    /// is a different number from the mean of the per-pixel gains whenever the
+    /// `n` field is not constant — and it is never constant, because that is
+    /// the entire point of an adaptive gate. `1/sqrt(.)` is convex, so Jensen
+    /// runs strictly one way: the mean of the gains is **greater than or equal
+    /// to** the gain of the mean, with equality only in the degenerate case.
+    /// The old form therefore always understated sigma, i.e. reported the merge
+    /// as quieter than the model says it is. That is the worst direction for a
+    /// number whose job is to be checked against a measurement.
+    ///
+    /// Two things are pinned here. The Jensen direction, with a case that has
+    /// genuinely mixed `n` so the inequality is strict; and the routing, so
+    /// that a term added to `predicted_sigma` cannot silently fail to appear in
+    /// the reported gain the way [`SELECTION_INFLATION`] once did.
+    #[test]
+    fn the_reported_noise_gain_is_the_mean_of_gains_not_the_gain_of_the_mean() {
+        let g = geom(8, 8);
+        let noise = unit_sigma_model();
+        // A through-focus curve whose *width* varies by five decades across the
+        // plane: every pixel peaks at frame 3, but the curvature does not, so
+        // the gate admits a different number of frames at different pixels.
+        // This is the whole point — a fixture with constant n_eff cannot
+        // exercise Jensen, and an earlier version of this test used one.
+        let focus = |k: u16, i: usize| {
+            let curv = 0.5 * 0.1f32.powi((i % 6) as i32);
+            let d = f32::from(k) - 3.0;
+            1.0 - curv * d * d
+        };
+        let mut saw_strict = false;
+        for threshold in [0.0f32, 0.1, 0.3, 0.5, 1.0, 2.0, 3.0, 10.0, 30.0, 100.0] {
+            let est = run(g, 7, Gate::new(threshold), focus);
+            let reported = est.mean_predicted_sigma_gain(&noise, 0.0);
+
+            // Routing: the gain is exactly what predicted_sigma implies, pixel
+            // by pixel. Written out independently of the method under test.
+            //
+            // The tolerance is 1e-6, not something tighter, and deliberately:
+            // `reported` multiplies by the luma sigma inside `predicted_sigma`
+            // and divides it back out, in f32, so it carries a fraction of an
+            // ulp that `by_hand` does not. Measured discrepancy is ~1e-8, about
+            // 0.17 ulp at this magnitude. Any *real* routing error is a
+            // multiplicative factor — SELECTION_INFLATION was 7.4% — so 1e-6
+            // is four orders of magnitude clear of f32 noise and still four
+            // orders inside the smallest defect worth catching.
+            let by_hand: f64 = (0..g.pixels())
+                .map(|i| {
+                    let n = est.n_eff()[i];
+                    f64::from(selection_inflation(n) / (n as f32).sqrt())
+                })
+                .sum::<f64>()
+                / g.pixels() as f64;
+            assert!(
+                (reported - by_hand).abs() < 1e-6,
+                "t={threshold}: reported {reported} is not the model's own \
+                 per-pixel gain {by_hand}"
+            );
+
+            // Jensen: never below the old form, and strictly above it wherever
+            // the gate actually produced a spread of n.
+            let old_form = 1.0 / est.mean_n_eff().sqrt();
+            assert!(
+                reported >= old_form - 1e-9,
+                "t={threshold}: Jensen violated, {reported} < {old_form}"
+            );
+            let spread = est.n_eff().iter().any(|n| *n != est.n_eff()[0]);
+            if spread {
+                saw_strict = true;
+                assert!(
+                    reported > old_form + 1e-6,
+                    "t={threshold}: n varies over the plane, so the two forms \
+                     must differ; got {reported} vs {old_form}"
+                );
+            }
+        }
+        assert!(
+            saw_strict,
+            "no gate produced a spread of n_eff, so the Jensen gap was never \
+             exercised and this test proved nothing"
+        );
+    }
+
     /// **The acceptance invariant, as measurement actually supports it.**
     ///
     /// The old form of this test asserted `merged <= single` at *every* gate,
@@ -935,9 +1118,12 @@ mod tests {
     ///
     /// The true contract has two branches:
     ///   * `n >= 2` — averaging, and strictly better than one frame.
-    ///   * `n == 1` — selection, and measurably *worse*. **This is why gate 0
-    ///     is a diagnostic, not a shipping configuration**, and why the gate
-    ///     exists at all: it is the mechanism that moves pixels off `n = 1`.
+    ///   * `n == 1` — selection, which is *believed* worse but is **not
+    ///     currently priced**. M40 refuted the 1.074x that used to price it, so
+    ///     `n = 1` reports the bare single-frame sigma. Gate 0 remains a
+    ///     diagnostic rather than a shipping configuration for the same
+    ///     underlying reason — it maximises the fraction of the plane sitting
+    ///     at `n = 1`, where the model is known to be optimistic.
     #[test]
     fn averaging_beats_one_frame_and_selection_does_not() {
         let g = geom(8, 8);
@@ -956,10 +1142,14 @@ mod tests {
                 let single = noise.green_luma_sigma(est.green_mean(i));
                 if n == 1 {
                     saw_selection = true;
+                    // KNOWN GAP (fact 341, reopened by M40): with no measured
+                    // penalty this is equality, not the inequality the mechanism
+                    // predicts. Pinned so that measuring a penalty turns this
+                    // assertion red and forces the contract to be restated.
                     assert!(
-                        merged > single,
-                        "t={threshold} pixel {i}: selection must cost more than one \
-                         frame, got {merged} vs {single}"
+                        (merged - single * SELECTION_INFLATION).abs() < 1e-4,
+                        "t={threshold} pixel {i}: n = 1 must track \
+                         SELECTION_INFLATION exactly, got {merged} vs {single}"
                     );
                 } else {
                     saw_averaging = true;
@@ -977,8 +1167,14 @@ mod tests {
                 );
             }
         }
-        assert!(saw_selection, "no n = 1 pixel: the selection branch went untested");
-        assert!(saw_averaging, "no n > 1 pixel: the averaging branch went untested");
+        assert!(
+            saw_selection,
+            "no n = 1 pixel: the selection branch went untested"
+        );
+        assert!(
+            saw_averaging,
+            "no n > 1 pixel: the averaging branch went untested"
+        );
     }
 
     #[test]

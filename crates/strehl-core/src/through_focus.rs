@@ -1854,12 +1854,20 @@ mod tests {
     }
 
     /// C1 is the channel most likely to be misread as "the" confidence, so its
-    /// contract is pinned: it falls as `1/sqrt(n)`, and `n = 1` carries the
-    /// measured selection penalty on top. Fact 341 is what happens without the
-    /// penalty — a flat ROI is credited with +35.47% detail, because the model
-    /// reports selection as costing nothing.
+    /// contract is pinned: it falls as `1/sqrt(n)`, and `n = 1` carries
+    /// whatever selection penalty has been measured — **currently none**.
+    ///
+    /// This test used to assert `one > model`, pricing selection at M40-refuted
+    /// 1.074x. That constant is gone (see [`crate::merge::SELECTION_INFLATION`])
+    /// and with it the guarantee. **Fact 341 is open again and this test now
+    /// pins the gap rather than papering over it**: at `n = 1` the model reports
+    /// exactly the single-frame sigma, which is known to be optimistic because
+    /// the argmax prefers frames whose noise pointed upward.
+    ///
+    /// The `n = 4` arm is unaffected and is the real regression guard here —
+    /// `1/sqrt(n)` never depended on the penalty.
     #[test]
-    fn predicted_sigma_is_the_calibrated_model_with_selection_priced_in() {
+    fn predicted_sigma_is_the_calibrated_model_with_no_selection_penalty_yet() {
         let noise = unit_sigma_model();
         let tf = gather(geom(1, 1), 5, &(0..5).collect::<Vec<_>>(), |k, _| {
             -(k as f32 - 2.0).abs()
@@ -1869,12 +1877,15 @@ mod tests {
         let model = noise.green_luma_sigma(3000.0);
         assert!(
             (one - model * crate::merge::SELECTION_INFLATION).abs() < 1e-6,
-            "n = 1 is selection, not averaging: expected {} got {one}",
+            "n = 1 must track SELECTION_INFLATION exactly: expected {} got {one}",
             model * crate::merge::SELECTION_INFLATION
         );
         assert!(
-            one > model,
-            "selection must cost MORE than one arbitrary frame ({one} vs {model})"
+            (one - model).abs() < 1e-6,
+            "KNOWN GAP, not a passing property: with no measured penalty, n = 1 \
+             reports the bare single-frame sigma ({one} vs {model}). This is \
+             fact 341. When a penalty is measured this assertion is the one to \
+             delete, and the `one > model` guarantee returns with it"
         );
         assert!(
             (four - model / 2.0).abs() < 1e-6,

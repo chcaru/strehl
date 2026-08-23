@@ -918,7 +918,7 @@ fn report(
         "                  rule from this NOISE gate, so 3 is a target to land near, not to match."
     );
     eprintln!(
-        "  gate   tol(DN-norm)     mean n_eff   n_eff=1 %   boundary %   pred sigma gain 1/sqrt(n)"
+        "  gate   tol(DN-norm)     mean n_eff   n_eff=1 %   boundary %   pred sigma gain (model)"
     );
     for e in &p2.est {
         let n_eff = e.n_eff();
@@ -933,7 +933,7 @@ fn report(
             mean,
             100.0 * alone,
             100.0 * boundary,
-            1.0 / mean.sqrt()
+            e.mean_predicted_sigma_gain(noise, levels.black)
         );
     }
     eprintln!();
