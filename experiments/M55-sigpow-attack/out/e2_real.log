@@ -1,0 +1,85 @@
+==============================================================================
+M55 E2 -- fact 620 on REAL disjoint half-stacks, no plant (PR2, PR8)
+==============================================================================
+   76 frames of 112MSDCF, stride 4 -> 4 quarters of 19 frames
+   DN^2 calibration: auto 13.5282 (expect 13.690), cross-indep -0.1587 (expect 0)
+
+==============================================================================
+ROI detail  (1671, 1373, 512, 512)
+==============================================================================
+   level 224.00 DN   model single-frame sd 11.385 DN
+   Q0: 19 frames  mean n_eff 2.972  median 244.75 DN
+   Q1: 19 frames  mean n_eff 2.883  median 245.67 DN
+   Q2: 19 frames  mean n_eff 2.898  median 244.62 DN
+   Q3: 19 frames  mean n_eff 2.976  median 244.61 DN
+
+   COMMON-POWER SPECTRUM of the two quarter-merges, DN^2 per mode
+   (a white common component of variance s^2 reads s^2 at every f)
+      f      C(f) DN^2     P(f) DN^2     FRC(f)   C(f)/FPN_dark
+    0.0508   488632.7821   487773.2894    +1.0018      5858203.8x
+    0.0977   116234.7840   119844.7857    +0.9699      1393535.4x
+    0.1992     7815.3384     9594.8737    +0.8145        93697.9x
+    0.2773     1076.1291     1784.5206    +0.6030        12901.7x
+    0.3477      153.6399      447.3531    +0.3434         1842.0x
+    0.4492       16.5713      164.1393    +0.1010          198.7x
+    0.4883       12.8881      150.2130    +0.0858          154.5x
+
+   RULE 20 POSITIVE CONTROL -- planted blur on the BASELINE pair.
+   predicted sigpow ratio = |H(f_sig)|^2 = exp(-4 pi^2 sb^2 f^2)
+     sb=0.05 px   predicted 0.99250   measured 0.99245   ratio 0.9999
+     sb=0.10 px   predicted 0.97033   measured 0.97012   ratio 0.9998
+     sb=0.20 px   predicted 0.88651   measured 0.88575   ratio 0.9991
+     sb=0.50 px   predicted 0.47099   measured 0.46852   ratio 0.9947
+     sb=1.00 px   predicted 0.04921   measured 0.04824   ratio 0.9803
+
+   MATCHED COST: hp_sd(baseline) 59.8870 -> hp_sd(SMOOTH) 59.3835
+   matched blur sb = 0.13601 px
+
+   metric          baseline      BLUR-ONLY    SMOOTH-ONLY   d_blur   d_smooth      S
+   frc2_at_fsig         0.7285      0.72851       0.8558 -0.0000 -0.1747   0.000
+   hp_sd                59.887       59.383       59.383 +0.0084 +0.0084   0.500
+   p_ratio           0.0031594    0.0028899    0.0024932 +0.0853 +0.2109   0.288
+   mean_grad            238.22       236.63       235.98 +0.0067 +0.0094   0.415
+   ringpow          6.5528e+07   6.1951e+07   5.8555e+07 +0.0546 +0.1064   0.339
+   sigpow_fsig      4.7737e+07   4.5132e+07   5.0111e+07 +0.0546 -0.0497   0.523
+
+==============================================================================
+ROI flat  (2747, 32, 512, 512)
+==============================================================================
+   level 108.50 DN   model single-frame sd 7.970 DN
+   Q0: 19 frames  mean n_eff 2.742  median 105.75 DN
+   Q1: 19 frames  mean n_eff 2.753  median 105.50 DN
+   Q2: 19 frames  mean n_eff 2.776  median 105.33 DN
+   Q3: 19 frames  mean n_eff 2.756  median 105.67 DN
+
+   COMMON-POWER SPECTRUM of the two quarter-merges, DN^2 per mode
+   (a white common component of variance s^2 reads s^2 at every f)
+      f      C(f) DN^2     P(f) DN^2     FRC(f)   C(f)/FPN_dark
+    0.0508    18513.6354    18555.9512    +0.9977       221959.4x
+    0.0977     3571.8948     4011.2204    +0.8905        42823.3x
+    0.1992      280.6900      653.0424    +0.4298         3365.2x
+    0.2773       36.5249      212.7007    +0.1717          437.9x
+    0.3477        5.2416       98.0106    +0.0535           62.8x
+    0.4492        4.2686       50.5512    +0.0844           51.2x
+    0.4883        3.7454       45.1053    +0.0830           44.9x
+
+   RULE 20 POSITIVE CONTROL -- planted blur on the BASELINE pair.
+   predicted sigpow ratio = |H(f_sig)|^2 = exp(-4 pi^2 sb^2 f^2)
+     sb=0.05 px   predicted 0.99250   measured 0.99247   ratio 1.0000
+     sb=0.10 px   predicted 0.97033   measured 0.97023   ratio 0.9999
+     sb=0.20 px   predicted 0.88651   measured 0.88612   ratio 0.9996
+     sb=0.50 px   predicted 0.47099   measured 0.46974   ratio 0.9974
+     sb=1.00 px   predicted 0.04921   measured 0.04875   ratio 0.9906
+
+   MATCHED COST: hp_sd(baseline) 19.3728 -> hp_sd(SMOOTH) 17.5899
+   matched blur sb = 0.37884 px
+
+   metric          baseline      BLUR-ONLY    SMOOTH-ONLY   d_blur   d_smooth      S
+   frc2_at_fsig        0.22085      0.22114      0.67267 -0.0013 -2.0458   0.001
+   hp_sd                19.373        17.59        17.59 +0.0920 +0.0920   0.500
+   p_ratio            0.023957     0.011502     0.010456 +0.5199 +0.5635   0.480
+   mean_grad            67.601       61.424         60.1 +0.0914 +0.1110   0.452
+   ringpow          7.8104e+06    5.055e+06   3.6064e+06 +0.3528 +0.5383   0.396
+   sigpow_fsig      1.7249e+06   1.1179e+06   2.4259e+06 +0.3519 -0.4064   0.464
+
+wrote out/e2_real.json  (58.3s)

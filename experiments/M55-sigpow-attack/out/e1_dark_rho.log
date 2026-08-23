@@ -1,0 +1,72 @@
+==============================================================================
+M55 E1 -- rho measured from DARK FRAMES (PR1, PR2)
+==============================================================================
+
+0. CALIBRATION of the DN^2 normalisation, white field sd 3.7
+   auto spectrum   mean   13.7016 DN^2   expect 13.6900   ratio 1.00085
+   cross, INDEPENDENT   mean   -0.0023 DN^2   expect 0
+   cross, SHARED white  mean   13.8644 DN^2   expect 13.6900   ratio 1.01274
+
+------------------------------------------------------------------------------
+ISO 500  (125MSDCF, 20 frames after dropping 2)
+------------------------------------------------------------------------------
+  m46_flat    level   +0.125 DN   sigma_temporal(1 frame)  1.0926 DN
+              cross-half cov      FPN var   0.08341 DN^2  sd  0.2888 DN
+              bias-corrected      FPN var   0.08231 DN^2  sd  0.2869 DN
+              rho_dark = FPNvar / sigma_t^2 =  0.06987
+              ring cross-spectrum over 0.05-0.49 cyc/px: mean  0.09257  min  0.07030  max  0.15197  max/min   2.16
+              at f_sig 0.09894 DN^2   at 0.45 0.07876 DN^2   flat-field white check 0.796
+  m46_detail  level   +0.150 DN   sigma_temporal(1 frame)  1.0901 DN
+              cross-half cov      FPN var   0.08331 DN^2  sd  0.2886 DN
+              bias-corrected      FPN var   0.08271 DN^2  sd  0.2876 DN
+              rho_dark = FPNvar / sigma_t^2 =  0.07011
+              ring cross-spectrum over 0.05-0.49 cyc/px: mean  0.09035  min  0.07069  max  0.13600  max/min   1.92
+              at f_sig 0.08871 DN^2   at 0.45 0.07824 DN^2   flat-field white check 0.882
+
+------------------------------------------------------------------------------
+ISO 100  (118MSDCF, 20 frames after dropping 2)
+------------------------------------------------------------------------------
+  m46_flat    level   +0.150 DN   sigma_temporal(1 frame)  0.7383 DN
+              cross-half cov      FPN var   0.07393 DN^2  sd  0.2719 DN
+              bias-corrected      FPN var   0.07482 DN^2  sd  0.2735 DN
+              rho_dark = FPNvar / sigma_t^2 =  0.13560
+              ring cross-spectrum over 0.05-0.49 cyc/px: mean  0.07652  min -0.06276  max  0.10254  max/min 102537813.62
+              at f_sig 0.07130 DN^2   at 0.45 0.07387 DN^2   flat-field white check 1.036
+  m46_detail  level   +0.175 DN   sigma_temporal(1 frame)  0.7409 DN
+              cross-half cov      FPN var   0.07468 DN^2  sd  0.2733 DN
+              bias-corrected      FPN var   0.07478 DN^2  sd  0.2735 DN
+              rho_dark = FPNvar / sigma_t^2 =  0.13604
+              ring cross-spectrum over 0.05-0.49 cyc/px: mean  0.07828  min  0.03185  max  0.10305  max/min   3.24
+              at f_sig 0.08050 DN^2   at 0.45 0.06711 DN^2   flat-field white check 0.834
+
+------------------------------------------------------------------------------
+ISO 2000  (128MSDCF, 20 frames after dropping 2)
+------------------------------------------------------------------------------
+  m46_flat    level   +0.100 DN   sigma_temporal(1 frame)  4.0573 DN
+              cross-half cov      FPN var   0.36023 DN^2  sd  0.6002 DN
+              bias-corrected      FPN var   0.37970 DN^2  sd  0.6162 DN
+              rho_dark = FPNvar / sigma_t^2 =  0.02188
+              ring cross-spectrum over 0.05-0.49 cyc/px: mean  0.39499  min -0.73397  max  0.65630  max/min 656296968.17
+              at f_sig 0.44048 DN^2   at 0.45 0.46901 DN^2   flat-field white check 1.065
+  m46_detail  level   +0.050 DN   sigma_temporal(1 frame)  4.0295 DN
+              cross-half cov      FPN var   0.37499 DN^2  sd  0.6124 DN
+              bias-corrected      FPN var   0.37371 DN^2  sd  0.6113 DN
+              rho_dark = FPNvar / sigma_t^2 =  0.02309
+              ring cross-spectrum over 0.05-0.49 cyc/px: mean  0.38726  min -0.05451  max  0.59789  max/min 597890416.78
+              at f_sig 0.35707 DN^2   at 0.45 0.36547 DN^2   flat-field white check 1.024
+
+==============================================================================
+1. PR1 VERDICT -- can rho = 0.3094 be fixed-pattern noise?
+==============================================================================
+   M46 flat ROI    level  106.34 DN   model single-frame sd  7.892 DN
+       rho=0.3094 REQUIRES sigma_FPN =  4.390 DN (var   19.270 DN^2)
+       measured dark FPN (quad plane, ISO 500) = 0.2888 DN (var  0.08341 DN^2)
+       shortfall:    15.20x in sd,     231.0x in VARIANCE
+       a multiplicative PRNU term would have to be  4.119% of signal to close it
+   M46 detail ROI  level  203.11 DN   model single-frame sd 10.847 DN
+       rho=0.3094 REQUIRES sigma_FPN =  6.034 DN (var   36.406 DN^2)
+       measured dark FPN (quad plane, ISO 500) = 0.2888 DN (var  0.08341 DN^2)
+       shortfall:    20.89x in sd,     436.5x in VARIANCE
+       a multiplicative PRNU term would have to be  2.967% of signal to close it
+
+wrote out/e1_dark_rho.json  (46.8s)
