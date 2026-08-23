@@ -731,7 +731,7 @@ since contributors are not required to be spliceable and only have to emit an `f
 > 110+/discipline 60+, M19 facts 120+, M20's verifier facts 130+, **M23 facts
 > 170+/discipline 80+/question 25+**, **M25 facts 190+/discipline 100+/question
 > 30+**. Facts **140-145 (M20)**, **150-152 (M21)**,
-> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)** and **210-213 (M27)** are folded below and are all
+> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)** and **220-225 (M28)** are folded below and are all
 > **NOT INDEPENDENTLY VERIFIED** — they were measured by the
 > orchestrator, and rule 12 binds their author exactly as it binds any milestone.
 
@@ -837,6 +837,12 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 211 | **The gap disguises itself as a *better* peak.** A missing best frame makes the through-focus curve **sharper** (curvature ratio to 2.81) and **better centred** (\|δ\| falls 0.23 → 0.088). The predicted direction was the opposite — the surviving frames flank the true peak at **near-equal focus distance**, so the sampled curve reads symmetric and δ → 0 | **Third independent instance of one pattern**, and the reason it is promoted to discipline 120: fact 73 (monotone edge → magnitude high, information zero), fact 203 (clipped pixel → contrast maximal, information zero), fact 211 (best frame absent → peak looks textbook). Three failure modes, three metrics, all reading **confident where there is nothing to be confident about**. Degenerate inputs make clean-looking outputs | M27 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 | 212 | **Uniform under-sampling needs no optics model to detect.** Where a *hole* leaves an internal control, uniformly-too-coarse steps affect every pixel equally and §1's comparative method cannot work at all. But `nwide` — retained frames within 50% of peak height — falls **3 → 2 → 1 → 1 → 1** under ×1/×2/×3/×4/×6 decimation and is **absolute**: `nwide = 1` means the peak is resolved by one sample and its location is unrecoverable | Refutes the prediction that the reshoot advisor would need the optical model to supply a predicted peak width. **Confound closed (rule 17):** decimation estimates `min` from fewer samples, which would shrink `nwide` for free — holding the threshold at the full-stack minimum gives an **identical** column, and the median minimum drifts only 1.000 → 1.195 | M27 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 | 213 | **The deployable reshoot criterion, and a verdict on real capture practice.** Fraction of reliable pixels resolved by ≤1 sample: **0.01%** at 53 frames, **37.46%** at 27, 59.91% at 18, 69.06% at 14, 75.76% at 9. So `coffee-bean`'s 105-frame bracket is **~2–4× denser than it needed to be** at f/8 — comfortably too fine, not too coarse | Per-pixel, absolute, blind, and directly phrasable as R19's recipe: *"38% of the subject is resolved by a single frame; halve the step."* **DERIVED and contingent: the two capture findings cancel** — M20 wants f/11→f/5.6 for 9.6× contrast at ~2× the frames, and this measures ~2–4× surplus density, so **the aperture change is roughly free in frame count**. Chains to a DOF scaling from the optics model **M20's verifier is checking for circularity**; if that gate is tautological this inherits it | M27 (MEASURED + DERIVED) — **NOT INDEPENDENTLY VERIFIED**; decimation assumes optical but not photometric equivalence to a genuinely coarse bracket |
+| 220 | **R10's robustness mask needs one correction: compare against the immediate neighbours, not a running estimate over the stack.** On the **clean** stack the noise-normalised pairwise residual grows **1.13 → 12.30** as frame separation goes 1 → 16 — **10.9× over 16×**, near-linear, the signature of an accumulating geometric warp (noise would be flat, defocus would saturate). Radial profile centre-to-corner: **1.82× with a whole-stack reference, 0.98× with an adjacent-frame one** | A whole-stack reference buys ~10× more geometric residual for no gain. **The architectural consequence is the opposite of the prediction: the mask CAN run before alignment**, so alignment can be protected from outliers rather than having to precede their detection. Frames adjacent in a clean stack differ by *noise*; frames 16 apart differ by *breathing* | M28 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; three stacks, unaligned, one crop size |
+| 221 | **The M4 noise model predicts the clean adjacent-frame tile residual to 9.9%, with no free parameters.** Median tile \|z\| is **0.7416** against the **0.6745** half-normal expectation for pure noise (= **1.099×**); `coffee-bubbles` 1.645×, `foam` 2.097× | `σ²(S) = g·S + (RN_e·g)²` was calibrated on flat patches; this is an **independent validation on a real subject at 256-sensor-pixel tiles**, a scale and a statistic it was never fitted to. Arrived at incidentally while measuring something else | M28 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; assumes the residual is Gaussian, and the tails are what facts 222/224 measure |
+| 222 | **Measured sensitivity of the mask, with a plant built from the frame's own content and a shift-zero placebo.** A 128-px tile replaced by the same tile taken `s` px away in the same frame (noise, defocus, illumination and sensor position all correct by construction). At FPR 1%: `s`=1 → **15.2%**, 2 → 31.1%, **4 → 53.8%**, 8 → **77.3%**, 16 → 96.2%. **Placebo `s`=0 → 0.0%** at FPR ≤ 1% | 4 green px = 8 sensor px = **41 µm on the sensor ≈ 20 µm at the subject** at m≈2.0, caught **89%** at FPR 5%. The placebo is mildly inflated at FPR 5% (8.3–10.6% vs nominal) because the null frame sits near peak focus — **calibrate the threshold per frame, not per stack**. Lower bound for *translation* only; deformation, occlusion and illumination change are unmeasured | M28 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 223 | **The tile scale is not a sensitivity knob.** Detection at FPR 1% across a 4× range of scale is near-flat: `s`=4 gives **58.3 / 53.8 / 49.2%** at d=4/8/16; `s`=16 gives 97.7 / 96.2 / 85.6%. Planted \|z\| rises with `d` (3.06 → 4.36) but the threshold rises with it too (2.62 → 4.39) | **Choose the tile scale for compute cost, not detection power** — cutting against the usual reasoning about burst-denoising tile sizes. Refutes the predicted `s ≈ d` switch-on. Mechanism: the baseline *tail* is dominated by deterministic defocus structure rather than by noise, so signal and threshold average down together | M28 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 224 | **The detector transfers: a threshold calibrated entirely on the clean stack flags 1.01% / 8.33% / 17.88%** of tiles at FPR 1% on `109MSDCF` / `coffee-bubbles` / `foam` — clean, bubbles-move, scene-evolves. Ordering **pre-registered** from what the stacks are | Converts "it detects plants" into "it detects the real thing", and the two disturbed stacks separate by 2.1× from each other. **Confound stated:** the stacks differ in subject and contrast as well as stability, so this cannot separate *more disturbance* from *more contrast*; \|z\| being noise-normalised handles ISO by construction | M28 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 225 | **M24 said gain must be FITTED; M28 measures HOW, after the wrong choice bit its own script.** Peak-to-peak on `109MSDCF`: median-over-subject-crop **4.28%**, mean-all-px **1.02%**, median-low-gradient 0.94%, mean-low-gradient 0.99% — against M24's independent **0.91%** | **Use the mean over all pixels; never a median over a subject-centred region** — as focus sweeps, subject contrast changes and that median absorbs *focus* signal into what it calls gain. The low-gradient restriction is **not** the safe choice it looks: on `foam` it is the worst estimator (84.98%), because "low gradient in the median reference" selects nothing meaningful when the scene evolves. Estimator **disagreement** is itself a scene-instability signal (5.6× on `foam` vs 1.09× clean) — an observation from three stacks, not a calibrated detector | M28 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -1225,6 +1231,30 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      write down the exact inputs the shipped code will have, and delete every term not on that
      list.** Keep the oracle version if you want the effect size — M27 does — but label it, and
      never cite it as detectability.
+
+130. **A disagreement statistic is only as good as its reference, and the reference should be
+     chosen to minimise the nuisance term rather than to maximise the sample count.** R10 imported
+     the burst-photography shape — disagreement against a running estimate over all frames —
+     which is correct when the frames are nominally identical. In a focus stack it is not: the
+     residual against a whole-stack reference is **10.9× larger** than against the immediate
+     neighbours (fact 220), and every bit of that excess is breathing, which the statistic cannot
+     tell from an outlier. The general instruction: **before averaging more data into a reference,
+     ask what systematically differs between the frames you are adding and the frame you are
+     testing.** Here the answer flipped an architectural ordering — a mask referenced to neighbours
+     runs *before* alignment, so alignment can be protected by it instead of being a prerequisite
+     for it.
+
+131. **When a statistic's baseline is deterministic rather than stochastic, changing the
+     aggregation scale buys nothing — check which regime you are in before tuning it.** Averaging
+     `d²` samples divides the *noise* by `d` and leaves any *deterministic* residual in place, so
+     a scale sweep separates the two: M28's clean-stack residual *rose* 1.01 → 25.07 under lowpass
+     (fact 220's mechanism) rather than collapsing, and detection rate was flat to within 10%
+     across a 4× range of tile size because signal and threshold both scale (fact 223). The
+     corollary is a useful instrument, not just a warning: **sweep the aggregation scale and read
+     the exponent** — flat means noise-dominated, ∝ `d` means fully deterministic, and anything in
+     between measures the spatial structure of the deterministic part. The corollary for design is
+     that a scale chosen "for accuracy" in the deterministic regime is a scale chosen for nothing,
+     and should be picked on compute cost instead.
 
 ---
 
@@ -1696,6 +1726,22 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     *(Raised by M15 as its question 19; renumbered to 20 — 19 was taken by fact 73's blind spot in
     a concurrent milestone. This is exactly the collision the fact-number reservation under §4
     exists to prevent, arriving on the question list instead.)*
+
+45. **Does masking actually improve the merge, and how does the mask interact with the estimator's
+    own weights?** M28 measured a *detector* — that a ≈20 µm subject displacement is caught 53.8%
+    of the time at a 1% false-positive rate, and that a clean-calibrated threshold flags 8.33% of
+    `coffee-bubbles`' tiles and 17.88% of `foam`'s. **It measured no merged image at all.** Whether
+    flagging 8–18% of tiles improves or harms the result is open, and the honest prior is that it
+    could go either way: masking removes contaminated samples but also removes *focus coverage*,
+    which fact 213 measures as the scarcer resource in most brackets. Two specific unknowns. (a)
+    The mask and the merge weights are both down-weighting devices and may double-count — a frame
+    that is off-peak already gets a low weight, so masking it again is not free. (b) M28's plant is
+    a **rigid translation of a square tile**; real outliers deform and occlude, and an occluding
+    edge produces exactly the bimodal through-focus signature M21 measured at 4.38× enrichment, so
+    the mask and the occlusion detector may be firing on the same pixels for opposite reasons —
+    one wanting to discard them, the other wanting to unmix them. Resolving (b) probably requires
+    the M25 twin, since only a simulator knows which of the two a given pixel really is.
+    `UNVERIFIED`. *(Raised by M28; numbered 45 to clear the reserved question blocks.)*
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
