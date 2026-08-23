@@ -302,6 +302,14 @@ pub struct EdgeProfile {
     /// Fraction electing exactly the ground-truth frame — M11's `S`, resolved by
     /// distance from the boundary.
     pub exact: Vec<f64>,
+    /// Fraction electing a frame at least `mis_tol` away from the truth in
+    /// either direction. Unlike `wrong` this counts a **compromise** election —
+    /// a frame lying between the two depths, wrong for both layers — which
+    /// `wrong` cannot see, because such a frame is not strictly nearer either
+    /// layer.
+    pub mis: Vec<f64>,
+    /// Mean `|selected - truth|` in frames.
+    pub dmae: Vec<f64>,
     /// `RMS(merged - ideal)` in DN.
     pub e_merged: Vec<f64>,
     /// `RMS(oracle - ideal)` in DN — the irreducible physical floor.
@@ -337,6 +345,19 @@ pub struct EdgeSummary {
     pub acc: f64,
     /// Election accuracy restricted to `|d| <= band`.
     pub acc_band: f64,
+    /// Equivalent width of the **mis-selection** excess on the background side:
+    /// the same construction as `bleed_bg` but counting `|selected - truth| >=
+    /// mis_tol` instead of "strictly nearer the wrong layer". This one sees a
+    /// compromise election — a frame lying between the two depths — which
+    /// `bleed_bg` is blind to by construction.
+    pub mis_bg: f64,
+    /// The same on the occluder side.
+    pub mis_fg: f64,
+    /// Mean `|selected - truth|` in frames over `|d| <= band`.
+    pub dmae_band: f64,
+    /// Mean `|selected - truth|` in frames over the far baseline band — the
+    /// ambient rate the two `mis_*` widths are measured against.
+    pub dmae_far: f64,
     /// Peak absolute signed bias over the background side of the band, in DN.
     pub peak_bias: f64,
 }
@@ -354,6 +375,10 @@ pub struct ProfileConfig {
     pub baseline_hi: i32,
     /// Maximum `|d|` retained in the profile.
     pub max_d: i32,
+    /// How far from the truth an election has to be, in frames, before `mis`
+    /// counts it. `2` keeps a one-frame wobble — which is inside the depth of
+    /// field of the ladder — out of the halo statistic.
+    pub mis_tol: i32,
 }
 
 impl Default for ProfileConfig {
@@ -363,6 +388,7 @@ impl Default for ProfileConfig {
             baseline_lo: 96,
             baseline_hi: 128,
             max_d: 128,
+            mis_tol: 2,
         }
     }
 }
@@ -387,6 +413,8 @@ pub fn profile(
     let off = cfg.max_d;
     let mut wrong = vec![0.0f64; span];
     let mut exact = vec![0.0f64; span];
+    let mut mis = vec![0.0f64; span];
+    let mut dmae = vec![0.0f64; span];
     let mut se_m = vec![0.0f64; span];
     let mut se_o = vec![0.0f64; span];
     let mut bias = vec![0.0f64; span];
@@ -414,6 +442,11 @@ pub fn profile(
         if sel == scene.truth[p] as i32 {
             exact[bin] += 1.0;
         }
+        let derr = (sel - scene.truth[p] as i32).abs();
+        if derr >= cfg.mis_tol {
+            mis[bin] += 1.0;
+        }
+        dmae[bin] += derr as f64;
         let em = (merged[p] - scene.ideal[p]) as f64;
         let eo = (oracle[p] - scene.ideal[p]) as f64;
         se_m[bin] += em * em;
@@ -426,6 +459,8 @@ pub fn profile(
         d: Vec::new(),
         wrong: Vec::new(),
         exact: Vec::new(),
+        mis: Vec::new(),
+        dmae: Vec::new(),
         e_merged: Vec::new(),
         e_oracle: Vec::new(),
         bias: Vec::new(),
@@ -439,6 +474,8 @@ pub fn profile(
         out.d.push(bin as i32 - off);
         out.wrong.push(wrong[bin] / n);
         out.exact.push(exact[bin] / n);
+        out.mis.push(mis[bin] / n);
+        out.dmae.push(dmae[bin] / n);
         out.e_merged.push((se_m[bin] / n).sqrt());
         out.e_oracle.push((se_o[bin] / n).sqrt());
         out.bias.push(bias[bin] / n);
@@ -464,18 +501,18 @@ fn median(mut v: Vec<f64>) -> f64 {
 /// Equivalent width of the bleed on one side of the boundary, in plane px.
 ///
 /// ```text
-/// W = sum over d in [1, baseline_lo) of max(0, wrong(d) - baseline)
+/// W = sum over d in [1, baseline_lo) of max(0, f(d) - baseline)
 /// ```
 ///
-/// with `baseline = median(wrong(d))` over the far band. No threshold, no fit,
-/// and against a mask dilated by exactly `R` px it returns exactly `R` — which
+/// with `baseline = median(f(d))` over the far band. No threshold, no fit, and
+/// against a mask dilated by exactly `R` px it returns exactly `R - 1` — which
 /// is the positive control and is asserted in `selftest`.
 ///
 /// `sign` is `+1` for the background side and `-1` for the occluder side.
-pub fn bleed_width(p: &EdgeProfile, cfg: ProfileConfig, sign: i32) -> f64 {
+fn equivalent_width(p: &EdgeProfile, f: &[f64], cfg: ProfileConfig, sign: i32) -> f64 {
     let base = median(
         p.d.iter()
-            .zip(&p.wrong)
+            .zip(f)
             .filter(|(d, _)| {
                 let u = **d * sign;
                 u >= cfg.baseline_lo && u <= cfg.baseline_hi
@@ -484,13 +521,28 @@ pub fn bleed_width(p: &EdgeProfile, cfg: ProfileConfig, sign: i32) -> f64 {
             .collect(),
     );
     p.d.iter()
-        .zip(&p.wrong)
+        .zip(f)
         .filter(|(d, _)| {
             let u = **d * sign;
             (1..cfg.baseline_lo).contains(&u)
         })
         .map(|(_, w)| (*w - base).max(0.0))
         .sum()
+}
+
+/// The headline bleed width, over the "strictly nearer the wrong layer" profile.
+pub fn bleed_width(p: &EdgeProfile, cfg: ProfileConfig, sign: i32) -> f64 {
+    equivalent_width(p, &p.wrong, cfg, sign)
+}
+
+/// The companion width, over the `|selected - truth| >= mis_tol` profile.
+///
+/// This one has no exact null — an operator makes elections that far off away
+/// from any edge too — so the far-field baseline is doing real work here rather
+/// than merely confirming zero. Reported alongside `bleed_width`, never instead
+/// of it.
+pub fn mis_width(p: &EdgeProfile, cfg: ProfileConfig, sign: i32) -> f64 {
+    equivalent_width(p, &p.mis, cfg, sign)
 }
 
 /// Summarise a profile into the recorded row.
@@ -520,6 +572,16 @@ pub fn summarise(
     let band_rms = mean_of(&|i| p.e_merged[i]);
     let floor_rms = mean_of(&|i| p.e_oracle[i]);
     let acc_band = mean_of(&|i| p.exact[i]);
+    let dmae_band = mean_of(&|i| p.dmae[i]);
+    let mut num = 0.0;
+    let mut den = 0.0;
+    for (i, d) in p.d.iter().enumerate() {
+        if d.abs() >= cfg.baseline_lo && d.abs() <= cfg.baseline_hi {
+            num += p.dmae[i] * p.count[i] as f64;
+            den += p.count[i] as f64;
+        }
+    }
+    let dmae_far = if den > 0.0 { num / den } else { 0.0 };
     let peak_bias =
         p.d.iter()
             .zip(&p.bias)
@@ -529,6 +591,10 @@ pub fn summarise(
     EdgeSummary {
         bleed_bg: bleed_width(p, cfg, 1),
         bleed_fg: bleed_width(p, cfg, -1),
+        mis_bg: mis_width(p, cfg, 1),
+        mis_fg: mis_width(p, cfg, -1),
+        dmae_band,
+        dmae_far,
         excess_dn: band_rms - floor_rms,
         excess_sigma: if single_sigma > 0.0 {
             (band_rms - floor_rms) / single_sigma
@@ -570,6 +636,33 @@ pub fn halo_positive_control(
             let d = spec.geometry.signed_distance(x, y);
             if (0..radius).contains(&d) {
                 sel[y * geom.width + x] = spec.w_near as u16;
+            }
+        }
+    }
+    sel
+}
+
+/// The **complementarity** control: a selection that elects a compromise frame.
+///
+/// Every pixel within `radius` px of the boundary, on either side, is set to the
+/// frame midway between the two layers' depths. That frame is wrong for both
+/// layers, but it is not *strictly nearer* either of them, so `bleed_width` is
+/// blind to it by construction and must read `0` while `mis_width` recovers
+/// `radius - 1`. This is the measured demonstration of what the first metric
+/// cannot see, and it is asserted rather than merely claimed in prose.
+pub fn compromise_positive_control(
+    scene: &EdgeScene,
+    geom: PlaneGeometry,
+    spec: EdgeSpec,
+    radius: i32,
+) -> Vec<u16> {
+    let mut sel = scene.truth.clone();
+    let mid = ((spec.w_near + spec.w_far) / 2) as u16;
+    for y in 0..geom.height {
+        for x in 0..geom.width {
+            let d = spec.geometry.signed_distance(x, y);
+            if d.abs() < radius {
+                sel[y * geom.width + x] = mid;
             }
         }
     }

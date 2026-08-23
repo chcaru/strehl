@@ -1,0 +1,2 @@
+mirror check: C:\dev\macro\test\119MSDCF and D:\personal\macro\119MSDCF produce a byte-identical edge CSV
+sha256 F076E402697D8D6E2292BEA2C979D0B7E8DC98CB4BAB6C0F6171E0CDE0D11798 for both

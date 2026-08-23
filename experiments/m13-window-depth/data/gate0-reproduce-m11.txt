@@ -1,4 +1,4 @@
-M13 gate 0 — reproducing M11 from M11's committed CSVs
+M13 gate 0 � reproducing M11 from M11's committed CSVs
 ========================================================================
 
 Stratification applied: roi_kind == 'flat' AND width == 1 for N;
@@ -33,7 +33,7 @@ tenengrad-w5                       0.0728     0.0728   -0.00003  PASS
 tenengrad-w8                       0.0872     0.0872   -0.00003  PASS
 tenengrad-w11                      0.1089     0.1089   +0.00003  PASS
 
-Negative control on the reader (SYNTHESIS §5 item 15):
+Negative control on the reader (SYNTHESIS �5 item 15):
   noise, last-row-per-measure, no width filter: ring-1-3 -> 1.1410
   noise, correctly stratified                 : ring-1-3 -> 1.3475
   noise, published                            : ring-1-3 -> 1.3475

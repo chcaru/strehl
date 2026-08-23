@@ -611,12 +611,20 @@ fn phi_sweep(rest: &[String]) -> Result<(), String> {
         lattice.len()
     );
 
-    let mut csv =
-        String::from("stack,roi,measure,window,norm,support_radius,reach,delta,centre_abs,total_abs,phi,taps\n");
+    let mut csv = String::from(
+        "stack,roi,measure,window,norm,support_radius,reach,delta,centre_abs,total_abs,phi,taps\n",
+    );
     for m in &ms {
         for &delta in &deltas {
-            let (phi, taps, centre, total) =
-                centre_tap_lattice(m, &tiles[0][0].luma, geom, &stack.noise, delta, reach, &lattice);
+            let (phi, taps, centre, total) = centre_tap_lattice(
+                m,
+                &tiles[0][0].luma,
+                geom,
+                &stack.noise,
+                delta,
+                reach,
+                &lattice,
+            );
             csv.push_str(&format!(
                 "{},\"{}\",{},{},{},{},{},{},{:.10},{:.10},{:.8},{}\n",
                 stack.label,
@@ -632,7 +640,10 @@ fn phi_sweep(rest: &[String]) -> Result<(), String> {
                 phi,
                 taps
             ));
-            eprintln!("  {:<22} delta {delta:>5.1}  phi {phi:.6}  taps {taps}", m.name);
+            eprintln!(
+                "  {:<22} delta {delta:>5.1}  phi {phi:.6}  taps {taps}",
+                m.name
+            );
         }
     }
     std::fs::write(&out_path, csv).map_err(|e| format!("writing {out_path}: {e}"))?;
@@ -678,7 +689,11 @@ fn centre_tap_lattice(
         .iter()
         .filter(|v| (**v / scale) / total.max(f64::MIN_POSITIVE) > 1e-9)
         .count();
-    let phi = if total > 0.0 { centre / total } else { f64::NAN };
+    let phi = if total > 0.0 {
+        centre / total
+    } else {
+        f64::NAN
+    };
     (phi, taps, centre, total)
 }
 
@@ -1053,6 +1068,7 @@ fn edge_mode(rest: &[String]) -> Result<(), String> {
         baseline_lo: (tex.tg.roi.width as i32 / 2 - 32).max(band + 8),
         baseline_hi: tex.tg.roi.width as i32 / 2 - 4,
         max_d: tex.tg.roi.width as i32,
+        mis_tol: 2,
     };
     eprintln!(
         "  profile: band |d| <= {}, far baseline d in [{}, {}]",
@@ -1062,11 +1078,11 @@ fn edge_mode(rest: &[String]) -> Result<(), String> {
     let mut csv = String::from(
         "stack,shape,frames,w_near,w_far,step,sigma0,alpha,noise_scale,seed,band,\
          measure,family,window,support_radius,width,radius,eff_radius,\
-         acc,acc_band,bleed_bg,bleed_fg,excess_dn,excess_sigma,band_rms,floor_rms,far_rms,\
-         peak_bias,single_sigma\n",
+         acc,acc_band,bleed_bg,bleed_fg,mis_bg,mis_fg,dmae_band,dmae_far,\
+         excess_dn,excess_sigma,band_rms,floor_rms,far_rms,peak_bias,single_sigma\n",
     );
     let mut pcsv = String::from(
-        "stack,shape,step,measure,window,width,d,count,wrong,exact,e_merged,e_oracle,bias\n",
+        "stack,shape,step,measure,window,width,d,count,wrong,exact,mis,dmae,e_merged,e_oracle,bias\n",
     );
 
     let t0 = std::time::Instant::now();
@@ -1158,7 +1174,7 @@ fn edge_mode(rest: &[String]) -> Result<(), String> {
                     .collect();
                 for (w, s, prof) in rows {
                     csv.push_str(&format!(
-                        "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{:.6},{:.6},{:.4},{:.4},{:.4},{:.5},{:.4},{:.4},{:.4},{:.4},{:.4}\n",
+                        "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{:.6},{:.6},{:.4},{:.4},{:.4},{:.4},{:.4},{:.4},{:.4},{:.5},{:.4},{:.4},{:.4},{:.4},{:.4}\n",
                         stack.label,
                         geometry.as_str(),
                         nframes,
@@ -1181,6 +1197,10 @@ fn edge_mode(rest: &[String]) -> Result<(), String> {
                         s.acc_band,
                         s.bleed_bg,
                         s.bleed_fg,
+                        s.mis_bg,
+                        s.mis_fg,
+                        s.dmae_band,
+                        s.dmae_far,
                         s.excess_dn,
                         s.excess_sigma,
                         s.band_rms,
@@ -1196,7 +1216,7 @@ fn edge_mode(rest: &[String]) -> Result<(), String> {
                                     continue;
                                 }
                                 pcsv.push_str(&format!(
-                                    "{},{},{},{},{},{},{},{},{:.6},{:.6},{:.4},{:.4},{:.4}\n",
+                                    "{},{},{},{},{},{},{},{},{:.6},{:.6},{:.6},{:.4},{:.4},{:.4},{:.4}\n",
                                     stack.label,
                                     geometry.as_str(),
                                     step,
@@ -1207,6 +1227,8 @@ fn edge_mode(rest: &[String]) -> Result<(), String> {
                                     p.count[i],
                                     p.wrong[i],
                                     p.exact[i],
+                                    p.mis[i],
+                                    p.dmae[i],
                                     p.e_merged[i],
                                     p.e_oracle[i],
                                     p.bias[i],
@@ -1313,6 +1335,7 @@ fn adaptive_mode(rest: &[String]) -> Result<(), String> {
         baseline_lo: (tex.tg.roi.width as i32 / 2 - 32).max(band + 8),
         baseline_hi: tex.tg.roi.width as i32 / 2 - 4,
         max_d: tex.tg.roi.width as i32,
+        mis_tol: 2,
     };
 
     for &step in &steps {
@@ -1765,6 +1788,7 @@ fn selftest(rest: &[String]) -> Result<(), String> {
         baseline_lo: 96,
         baseline_hi: 150,
         max_d: 192,
+        mis_tol: 2,
     };
     let region: Vec<usize> = (0..g.pixels()).collect();
     {
@@ -1785,6 +1809,14 @@ fn selftest(rest: &[String]) -> Result<(), String> {
             "NULL 1: ground-truth selection has zero excess error",
             format!("excess = {:.3e} DN", s0.excess_dn),
         );
+        c.check(
+            s0.mis_bg.abs() < 1e-12 && s0.mis_fg.abs() < 1e-12,
+            "NULL 1: ground-truth selection has zero mis-selection width",
+            format!(
+                "mis_bg = {:.3e} px, mis_fg = {:.3e} px",
+                s0.mis_bg, s0.mis_fg
+            ),
+        );
     }
     {
         // NULL 2 — the strong one. Keep the intensity edge, the two textures,
@@ -1803,12 +1835,18 @@ fn selftest(rest: &[String]) -> Result<(), String> {
             .collect();
         let p = edge::profile(&scene, g, s, &sel, &merged, &oracle, &region, cfg);
         let bg = edge::bleed_width(&p, cfg, 1);
+        let mbg = edge::mis_width(&p, cfg, 1);
         c.check(
             bg.abs() < 1e-12,
             "NULL 2: a real operator on a zero-step scene has zero bleed",
             format!(
                 "tenengrad-w11 bleed_bg = {bg:.3e} px (intensity edge present, depth step absent)"
             ),
+        );
+        c.check(
+            mbg.abs() < 2.0,
+            "NULL 2: the mis-selection width is near zero too (no exact null available)",
+            format!("tenengrad-w11 mis_bg = {mbg:.3} px against a far-field baseline"),
         );
     }
     {
@@ -1826,14 +1864,43 @@ fn selftest(rest: &[String]) -> Result<(), String> {
                 .collect();
             let p = edge::profile(&scene, g, s, &sel, &merged, &oracle, &region, cfg);
             let got = edge::bleed_width(&p, cfg, 1);
+            let got_mis = edge::mis_width(&p, cfg, 1);
             let want = (r - 1) as f64;
-            all_ok &= (got - want).abs() < 1e-9;
-            trace.push_str(&format!("{r}->{got:.1} "));
+            all_ok &= (got - want).abs() < 1e-9 && (got_mis - want).abs() < 1e-9;
+            trace.push_str(&format!("{r}->{got:.1}/{got_mis:.1} "));
         }
         c.check(
             all_ok,
-            "POSITIVE: a planted halo of known width is recovered exactly",
-            format!("planted->recovered (convention: d starts at 1): {trace}"),
+            "POSITIVE: a planted halo of known width is recovered exactly by both widths",
+            format!("planted->bleed/mis (convention: d starts at 1): {trace}"),
+        );
+    }
+    {
+        // The complementarity control: a compromise election is invisible to
+        // `bleed_width` and visible to `mis_width`. The blind spot is measured,
+        // not asserted in prose.
+        let s = mk(16, 0.0);
+        let scene = EdgeScene::render(&tex_near, &tex_far, g, s, None);
+        let oracle = scene.oracle();
+        let mut trace = String::new();
+        let mut ok = true;
+        for r in [4i32, 12, 30] {
+            let sel = edge::compromise_positive_control(&scene, g, s, r);
+            let merged: Vec<f32> = sel
+                .iter()
+                .enumerate()
+                .map(|(p, k)| scene.frames[*k as usize][p])
+                .collect();
+            let p = edge::profile(&scene, g, s, &sel, &merged, &oracle, &region, cfg);
+            let bg = edge::bleed_width(&p, cfg, 1);
+            let mbg = edge::mis_width(&p, cfg, 1);
+            ok &= bg.abs() < 1e-12 && (mbg - (r - 1) as f64).abs() < 1e-9;
+            trace.push_str(&format!("r{r}: bleed {bg:.1} mis {mbg:.1}  "));
+        }
+        c.check(
+            ok,
+            "COMPLEMENTARITY: a compromise election is invisible to bleed, visible to mis",
+            trace,
         );
     }
     {

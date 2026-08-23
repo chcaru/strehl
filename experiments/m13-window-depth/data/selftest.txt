@@ -1,0 +1,38 @@
+M13 self-test — 27 passed, 0 failed
+
+A. the window axis is what the name says it is
+  PASS  support radius tracks the window  tenengrad-w0 -> radius 1
+  PASS  support radius tracks the window  tenengrad-w2 -> radius 3
+  PASS  support radius tracks the window  tenengrad-w5 -> radius 6
+  PASS  support radius tracks the window  tenengrad-w11 -> radius 12
+  PASS  support radius tracks the window  tenengrad-w20 -> radius 21
+  PASS  support radius tracks the window  tenengrad-w40 -> radius 41
+  PASS  tap count is the analytic support  w0: 9 taps, analytic 9
+  PASS  tap count is the analytic support  w2: 49 taps, analytic 49
+  PASS  tap count is the analytic support  w5: 169 taps, analytic 169
+  PASS  tap count is the analytic support  w11: 625 taps, analytic 625
+
+B. the window's effect on the centre tap, decomposed
+  PASS  un-normalised: phi is non-increasing in window for w >= 1  w1=0.0912 w2=0.0371 w5=0.0081 w8=0.0034 w11=0.0019 w15=0.0010 w20=0.0006 
+  PASS  the zero-centre-tap configuration is exactly zero  phi = 0.000000000
+  PASS  OBSERVED (not asserted): pointwise-normalised phi on SYNTHETIC texture  w0=0.0140 w2=0.0598 w5=0.0316 w8=0.0271 w11=0.0256 w20=0.0243 — compare M11 A1 on real texture in phi mode
+
+C. the occluding-edge plant
+  PASS  a zero depth step renders the ideal image exactly  max |frame[w] - ideal| = 0.00e0 DN
+  PASS  far from the boundary each layer's own frame is ideal  occluder 0.00e0, background 0.00e0
+  PASS  the oracle CANNOT reconstruct the ideal at the boundary  oracle RMS at d in [0,6) = 294.96 DN — the irreducible floor
+
+D. the halo metric: null, positive control, and chance
+  PASS  NULL 1: ground-truth selection has zero bleed  bleed_bg = 0.000e0 px, bleed_fg = 0.000e0 px
+  PASS  NULL 1: ground-truth selection has zero excess error  excess = 0.000e0 DN
+  PASS  NULL 1: ground-truth selection has zero mis-selection width  mis_bg = 0.000e0 px, mis_fg = 0.000e0 px
+  PASS  NULL 2: a real operator on a zero-step scene has zero bleed  tenengrad-w11 bleed_bg = 0.000e0 px (intensity edge present, depth step absent)
+  PASS  NULL 2: the mis-selection width is near zero too (no exact null available)  tenengrad-w11 mis_bg = 0.000 px against a far-field baseline
+  PASS  POSITIVE: a planted halo of known width is recovered exactly by both widths  planted->bleed/mis (convention: d starts at 1): 1->0.0/0.0 3->2.0/2.0 8->7.0/7.0 17->16.0/16.0 32->31.0/31.0 64->63.0/63.0 
+  PASS  COMPLEMENTARITY: a compromise election is invisible to bleed, visible to mis  r4: bleed 0.0 mis 3.0  r12: bleed 0.0 mis 11.0  r30: bleed 0.0 mis 29.0  
+  PASS  CHANCE: a random selector shows no bleed WIDTH but large excess error  bleed_bg = 1.59 px, excess = 117.2 DN — the two metrics see different damage
+
+E. tile exactness at the widest window in the sweep (rule 7 corollary)
+  PASS  winner map is margin-independent on the inset  tenengrad-w5, reg width 9
+  PASS  winner map is margin-independent on the inset  tenengrad-w11, reg width 9
+  PASS  winner map is margin-independent on the inset  tenengrad-w20, reg width 9
