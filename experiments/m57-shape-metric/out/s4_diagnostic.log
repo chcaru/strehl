@@ -1,0 +1,60 @@
+==============================================================================
+M57 S4 -- POST-HOC model-violation diagnostic `gof` (PR12)
+==============================================================================
+  gof = residual RMS of the log[C2/C1] fit, divided by the sweep the
+  fitted Gaussian accounts for.  Dimensionless.  0 = the two
+  configurations really do differ by a Gaussian.
+
+------------------------------------------------------------------------------
+  ROI flat   level 105.1 DN   baseline hp_sd 17.0141 DN
+------------------------------------------------------------------------------
+     source                sb    fake amp   true MTF(f_sig)     dsig px       gof      gof/honest
+     honest Gaussian    0.25      0.0000          0.910178    +0.21814   +0.07355        1.000
+     honest Gaussian    0.50      0.0000          0.686288    +0.44072   +0.03605        1.000
+     honest Gaussian    1.00      0.0000          0.221832    +0.75212   +0.11091        1.000
+     honest Gaussian    2.00      0.0000          0.002422    +0.58909   +0.82264        1.000
+     PM_M adversary     0.25      4.2083          0.910178    +0.10607   +0.72243         9.82
+     PM_M adversary     0.50      7.4399          0.686288    +0.14219   +1.54893        42.97
+     PM_M adversary     1.00     11.6062          0.221832    -0.26826   +1.72680        15.57
+     PM_M adversary     2.00     15.2501          0.002422    -0.84207   +0.38320         0.47
+     rungs where PM_M fools K1 (dsig < half the honest value): [0.25, 0.5, 1.0, 2.0]
+     PR12 requires gof/honest >= 3 at EVERY such rung.  Worst is 0.47 -> FAIL
+
+     real defocus (pillbox), where S1 found K1 non-monotone:
+       r px   zeros in band     dsig px       gof
+        0.50             0     +0.22363  +0.06553
+        1.00             0     +0.45366  +0.03512
+        2.00             0     +0.81748  +0.11253
+        3.00             1     +0.75075  +0.47198
+        5.00             2     -0.46146  +1.68694
+
+     RULE 39 planted wrong answer: the claim 'gof cannot tell PM_M from honest blur'
+       honest gof range [0.03605, 0.82264],  PM_M gof range [0.38320, 1.72680]  -> claim SURVIVES
+
+------------------------------------------------------------------------------
+  ROI detail   level 244.6 DN   baseline hp_sd 58.3284 DN
+------------------------------------------------------------------------------
+     source                sb    fake amp   true MTF(f_sig)     dsig px       gof      gof/honest
+     honest Gaussian    0.25      0.0000          0.910178    +0.24563   +0.01738        1.000
+     honest Gaussian    0.50      0.0000          0.686288    +0.49278   +0.00586        1.000
+     honest Gaussian    1.00      0.0000          0.221832    +0.95822   +0.01853        1.000
+     honest Gaussian    2.00      0.0000          0.002422    +1.19758   +0.23582        1.000
+     PM_M adversary     0.25     12.5635          0.910178    +0.19617   +0.14148         8.14
+     PM_M adversary     0.50     23.2481          0.686288    +0.36795   +0.16508        28.19
+     PM_M adversary     1.00     38.4597          0.221832    +0.47922   +0.53044        28.63
+     PM_M adversary     2.00     51.9673          0.002422    -0.62318   +0.86916         3.69
+     rungs where PM_M fools K1 (dsig < half the honest value): [2.0]
+     PR12 requires gof/honest >= 3 at EVERY such rung.  Worst is 3.69 -> PASS
+
+     real defocus (pillbox), where S1 found K1 non-monotone:
+       r px   zeros in band     dsig px       gof
+        0.50             0     +0.25098  +0.02094
+        1.00             0     +0.50908  +0.00475
+        2.00             0     +1.10599  +0.01366
+        3.00             1     +1.21484  +0.24423
+        5.00             2     +0.80709  +0.72185
+
+     RULE 39 planted wrong answer: the claim 'gof cannot tell PM_M from honest blur'
+       honest gof range [0.00586, 0.23582],  PM_M gof range [0.14148, 0.86916]  -> claim SURVIVES
+
+wrote out/s4_diagnostic.json  (10.3s)

@@ -1,0 +1,154 @@
+==============================================================================
+M57 S1 -- property battery for spectral-SHAPE detail metrics
+==============================================================================
+  plant latent  = M46 b1 merged 112MSDCF ROIs, 512x512
+  rho 0.3094 (fact 610, DERIVED from b1, not re-picked)   g 1.14469 DN/e-   rn_e 1.47 e- (m41lib value, frozen)
+  band [0.05, 0.2762] cyc/px, nbin 64, fixed by PR11
+  rings in band: 29  centres 0.05078 .. 0.26953
+  flat    level   105.07 DN   single-frame sigma  7.846   merged sigma  2.647   n_eff 8.784
+  detail  level   244.56 DN   single-frame sigma 11.891   merged sigma  3.693   n_eff 10.366
+
+==============================================================================
+G0 -- does the instrument recover a KNOWN blur, and can it be WRONG?
+==============================================================================
+  Noiseless pair, no FPN.  Truth is the planted Gaussian sigma exactly.
+   planted sb   dsig px    slope px^2   se_px(jack)   rel err
+        0.000   +0.00000    +0.000000           nan       n/a
+        0.020   +0.01999    +0.000400      2.23e-06   -0.0004
+        0.050   +0.04998    +0.002498      5.74e-06   -0.0004
+        0.100   +0.09996    +0.009992      1.15e-05   -0.0004
+        0.200   +0.19991    +0.039966      2.29e-05   -0.0004
+        0.500   +0.49976    +0.249762      5.70e-05   -0.0005
+        1.000   +0.99934    +0.998678      1.11e-04   -0.0007
+        2.000   +1.99721    +3.988839      2.00e-04   -0.0014
+
+  RULE 39 planted wrong answer: truth 0.10000 px, measured 0.09996 px, se 1.15e-05
+    claim sigma = 0.00 px -> rejected at 8705.7 sigma
+    claim sigma = 0.20 px -> rejected at 8712.9 sigma
+  Geometry cross-check against the reference `rings()` implementation:
+    rings 64 vs 64, centres match True, counts match True
+
+==============================================================================
+PR2 -- PHOTOMETRIC GAIN.  d log|m| / d log lambda, measured.
+==============================================================================
+  sigpow is the POSITIVE CONTROL: facts 701/704 require 2.000 (both)
+  and 1.000 (one input).  If it does not read that, the harness is bad.
+
+  ROI flat   baseline: sigpow 3.065537e+06  dsig +0.044309 px  rmtf2 1.011949  ccent 0.090786
+     mode              lam    sigpow exp   dsig exp    rmtf2 exp   ccent exp
+     both          1.300     2.000000  +1.200e-15*   -0.000000    0.000000
+     both          3.000     2.000000  -2.408e-15*   -0.000000    0.000000
+     one           1.300     1.000000  +2.824e-15*   -0.000000    0.000000
+     one           3.000     1.000000  +1.874e-15*   -0.000000    0.000000
+     * dsig is in px, not a log ratio: the column is the ABSOLUTE move in px,
+       which is the quantity its decision rule is denominated in.
+
+  ROI detail   baseline: sigpow 5.106527e+07  dsig +0.059601 px  rmtf2 0.995866  ccent 0.090181
+     mode              lam    sigpow exp   dsig exp    rmtf2 exp   ccent exp
+     both          1.300     2.000000  -2.290e-16*   -0.000000   -0.000000
+     both          3.000     2.000000  +6.772e-15*   -0.000000    0.000000
+     one           1.300     1.000000  +1.242e-15*   -0.000000    0.000000
+     one           3.000     1.000000  +1.311e-15*   -0.000000    0.000000
+     * dsig is in px, not a log ratio: the column is the ABSOLUTE move in px,
+       which is the quantity its decision rule is denominated in.
+
+==============================================================================
+PR3 -- SEPARATION AT MATCHED COST, with its null (rule 39).
+==============================================================================
+  BLUR-ONLY vs SMOOTH-ONLY at matched hp_sd, k = sqrt(2).  No `S` is
+  reported (fact 695): d_blur and d_smooth each with a standard error.
+
+  ROI flat:  matched blur sb = 0.10491 px against k = sqrt(2)
+     reps   dsig d_blur px   dsig d_smooth px   dsig NULL px    | sigpow d_blur   sigpow d_smooth  sigpow NULL
+        1   +0.09553+-0.00000  +0.04539+-0.00000  +0.05873+-0.00000 |  +0.02579    +0.00933    +0.00835
+        2   +0.09551+-0.00002  +0.04579+-0.00041  +0.05665+-0.00209 |  +0.02591    -0.00367    +0.01373
+        4   +0.09564+-0.00007  +0.01184+-0.02264  +0.02624+-0.02827 |  +0.02590    -0.00093    +0.01374
+        8   +0.09563+-0.00004  +0.00458+-0.01618  +0.02033+-0.01565 |  +0.02590    -0.00099    +0.00555
+       16   +0.09565+-0.00004  +0.00121+-0.01072  +0.01269+-0.01172 |  +0.02592    +0.00203    +0.00652
+       32   +0.09569+-0.00003  +0.00302+-0.00710  +0.00321+-0.00867 |  +0.02591    +0.00235    +0.00478
+     at 32 reps: |d_blur|/se = 3781.7,  |d_smooth|/se = 0.4,  |d_null|/se = 0.4
+     leverage  |d_blur| / |d_smooth| = 31.7x   (sigpow: 11.0x)
+
+  ROI detail:  matched blur sb = 0.04958 px against k = sqrt(2)
+     reps   dsig d_blur px   dsig d_smooth px   dsig NULL px    | sigpow d_blur   sigpow d_smooth  sigpow NULL
+        1   +0.04918+-0.00000  -0.01042+-0.00000  +0.01992+-0.00000 |  +0.00713    +0.00498    +0.00989
+        2   +0.04917+-0.00001  +0.00909+-0.01951  +0.02493+-0.00501 |  +0.00716    -0.00013    +0.00137
+        4   +0.04918+-0.00001  +0.00655+-0.01420  +0.01811+-0.00511 |  +0.00717    -0.00100    +0.00013
+        8   +0.04918+-0.00001  +0.01225+-0.00833  +0.00679+-0.00810 |  +0.00717    -0.00219    -0.00303
+       16   +0.04919+-0.00001  +0.00164+-0.00583  -0.00042+-0.00573 |  +0.00717    -0.00125    -0.00229
+       32   +0.04920+-0.00000  +0.00409+-0.00453  +0.00114+-0.00441 |  +0.00717    -0.00162    -0.00189
+     at 32 reps: |d_blur|/se = 13383.5,  |d_smooth|/se = 0.9,  |d_null|/se = 0.3
+     leverage  |d_blur| / |d_smooth| = 12.0x   (sigpow: 4.4x)
+
+==============================================================================
+PR1 -- MONOTONICITY.  The fact-703 ladder: PM_M destroys resolution
+       AND adds a fixed texture COMMON to both halves, amplitude
+       solved so hp_sd returns to baseline.
+==============================================================================
+
+  ROI flat:  baseline hp_sd = 17.7593 DN
+      sb     fake amp    hp_sd    true MTF(f_sig)   sigpow/base   dsig px      rmtf2      ccent/base
+      0.25      4.1929   17.7593       0.910178       1.05147    +0.0880     1.05808     0.99288
+      0.50      7.4252   17.7593       0.686288       1.13166    +0.1613     1.16061     0.97332
+      1.00     11.5934   17.7593       0.221832       1.54246    -0.2418     1.70710     0.92564
+      2.00     15.2440   17.7593       0.002422       2.42212    -0.8335     3.63405     0.92525
+    dsig monotone increasing? False   all same sign? False
+    sigpow inverts (control MUST be True)? False
+
+  ROI detail:  baseline hp_sd = 58.8241 DN
+      sb     fake amp    hp_sd    true MTF(f_sig)   sigpow/base   dsig px      rmtf2      ccent/base
+      0.25     12.5160   58.8241       0.910178       0.92314    +0.2023     0.92879     0.99031
+      0.50     23.2082   58.8241       0.686288       0.79263    +0.3768     0.81237     0.96436
+      1.00     38.4290   58.8241       0.221832       0.91371    +0.4873     1.00858     0.89659
+      2.00     51.9496   58.8241       0.002422       1.55495    -0.6165     2.30909     0.82710
+    dsig monotone increasing? False   all same sign? False
+    sigpow inverts (control MUST be True)? True
+
+==============================================================================
+PR8 -- REAL DEFOCUS: a PILLBOX OTF with contrast reversals, not a
+       Gaussian.  M46 section 9 item 5 lists this as unmeasured.
+==============================================================================
+
+  ROI flat     (first OTF zero of a radius-r pillbox is at f = 0.6098/r cyc/px)
+       r px    zeros below f_sig    sigpow/base    dsig px     rmtf2
+       0.25                  0        0.96314    +0.1142     0.96467
+       0.50                  0        0.86108    +0.2285     0.86659
+       1.00                  0        0.56018    +0.4562     0.57467
+       2.00                  0        0.22612    +0.8242     0.25058
+       3.00                  1        0.24217    +0.7672     0.30589
+       5.00                  2        0.22453    -0.4505     0.43989
+    dsig monotone increasing across the zeros? False
+
+  ROI detail     (first OTF zero of a radius-r pillbox is at f = 0.6098/r cyc/px)
+       r px    zeros below f_sig    sigpow/base    dsig px     rmtf2
+       0.25                  0        0.95521    +0.1242     0.95670
+       0.50                  0        0.83107    +0.2497     0.83624
+       1.00                  0        0.46293    +0.5098     0.47457
+       2.00                  0        0.03801    +1.1115     0.04201
+       3.00                  1        0.04550    +1.2128     0.05711
+       5.00                  2        0.03476    +0.8155     0.06682
+    dsig monotone increasing across the zeros? False
+
+==============================================================================
+PR10 -- THE PEDESTAL FLOOR.  A white common-mode pedestal is common
+        power that is not scene, so it must bias dsig DOWNWARD and
+        eventually saturate it.  Where does it depart from truth?
+==============================================================================
+
+  ROI flat     rows are planted rho; columns are TRUE blur
+      rho      pedestal/C(f_sig)    sb=0.05     sb=0.10     sb=0.20     sb=0.50     sb=1.00     sb=2.00 
+     0.0000            0.00000     +0.0501     +0.1001     +0.2002     +0.5005     +1.0002        +nan
+     0.0500            0.04356     +0.0492     +0.0984     +0.1967     +0.4890     +0.9348     +1.0778
+     0.3094            0.22411     +0.0456     +0.0912     +0.1818     +0.4424     +0.7554     +0.5967
+     1.0000            0.49123     +0.0388     +0.0775     +0.1537     +0.3612     +0.5423     -0.2366
+      truth                         +0.0500     +0.1000     +0.2000     +0.5000     +1.0000     +2.0000
+
+  ROI detail     rows are planted rho; columns are TRUE blur
+      rho      pedestal/C(f_sig)    sb=0.05     sb=0.10     sb=0.20     sb=0.50     sb=1.00     sb=2.00 
+     0.0000            0.00000     +0.0500     +0.1000     +0.2000     +0.4999     +0.9998     +1.8535
+     0.0500            0.00516     +0.0500     +0.0999     +0.1998     +0.4993     +0.9942     +1.4989
+     0.3094            0.03094     +0.0496     +0.0992     +0.1984     +0.4945     +0.9623     +1.1960
+     1.0000            0.09304     +0.0487     +0.0973     +0.1944     +0.4815     +0.8942     +0.9362
+      truth                         +0.0500     +0.1000     +0.2000     +0.5000     +1.0000     +2.0000
+
+wrote out/s1_properties.json  (58.6s)

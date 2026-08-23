@@ -1,0 +1,314 @@
+==============================================================================
+M57 S3 -- real macro stacks.  Flat ROI first (rule 9).
+  band [0.05, 0.2762] cyc/px, nbin 64, planted blur 0.1 px -- all fixed before this ran (PR11)
+==============================================================================
+
+==============================================================================
+112MSDCF/flat   62 frames   ROI (2747, 32, 512, 512)   level 108.0 DN   (29s)
+==============================================================================
+  merge_subset(all, gate=0.5) vs m41lib.arm_A: max |diff| 0.000e+00 DN
+
+  PR4 -- SPLIT LEVERAGE.  The split is held COMMON to both configurations;
+         config 2 is config 1 with a 0.1 px Gaussian planted on both halves.
+         Truth is 0.100 px for EVERY row.
+     split         n_A  n_B     P_a/P_b   FRC(f_sig)     dsig px    se(jack)    err %      gof    sigpow ratio
+     parity         31   31     0.98492   +0.650723    +0.09998   1.97e-05    -0.02  +0.0006      0.97014
+     contiguous     31   31     0.94056   +0.032870         n/a        nan     +nan      n/a      0.97022
+     block-2        32   30     1.01779   +0.358592    +0.09997   1.98e-05    -0.03  +0.0008      0.97014
+     block-4        32   30     0.90559   -0.025565         n/a        nan     +nan      n/a      0.96953
+     block-8        32   30     1.05512   -0.000768         n/a        nan     +nan      n/a      0.96369
+     random         31   31     1.08001   -0.075568         n/a        nan     +nan      n/a      0.96990
+     MEASURABLE in 2 of 6 split rules -- dsig returns NaN, not a number, when a ring's common power goes
+     non-positive.  Contrast fact 706: sigpow returned a NEGATIVE reference and an undefined sign rule.
+     spread across MEASURABLE split rules  0.00001 px   (0.01% of the planted signal)
+     changing the SPLIT RULE itself, vs parity (truth is NOT zero -- S2 measured a real change):
+        contiguous         n/a px  +-      nan   =     nanx the planted signal
+        block-2       +0.26860 px  +- 9.06e-02   =    2.69x the planted signal
+        block-4            n/a px  +-      nan   =     nanx the planted signal
+        block-8            n/a px  +-      nan   =     nanx the planted signal
+        random             n/a px  +-      nan   =     nanx the planted signal
+  RULE 39 planted wrong answer 0.000 px: rejected at 5081.3 se
+  RULE 39 planted wrong answer 0.200 px: rejected at 5083.1 se
+  PR6 NULL (disjoint mod-4 subsets, matched depth spacing, 15+15 frames each):
+        dsig  +0.37060 px  +- 6.26e-02  -> 5.9 se from zero   = 370.6% of the planted signal
+  PR7 one-sided gain x1.3 on half A only: dsig +0.09998 px vs +0.09998 px unscaled, move 2.28e-09 px
+
+  GATE SWEEP (parity split).  dsig is relative to gate 0.50; negative = SHARPER.
+      gate   n_eff      dsig px    se(jack)      gof     sigpow/base     FRC(f_sig)
+       0.00  31.000    +0.29099   2.59e-01   +1.3390      0.02247     +0.353753
+       0.25   7.737    +0.43031   6.38e-02   +0.3747      0.40745     +0.593180
+       0.50   4.773    +0.00000        nan       n/a      1.00000     +0.650723
+       0.75   2.967    -0.52848   5.70e-02   +0.1423      2.21054     +0.646510
+       0.90   2.153    -0.68133   6.78e-02   +0.1070      3.96412     +0.680214
+       0.99   1.809    -0.69003   6.91e-02   +0.1075      3.94532     +0.570022
+
+==============================================================================
+112MSDCF/detail   62 frames   ROI (1671, 1373, 512, 512)   level 222.0 DN   (62s)
+==============================================================================
+
+  PR4 -- SPLIT LEVERAGE.  The split is held COMMON to both configurations;
+         config 2 is config 1 with a 0.1 px Gaussian planted on both halves.
+         Truth is 0.100 px for EVERY row.
+     split         n_A  n_B     P_a/P_b   FRC(f_sig)     dsig px    se(jack)    err %      gof    sigpow ratio
+     parity         31   31     0.99919   +0.866128    +0.09996   1.39e-05    -0.04  +0.0004      0.97014
+     contiguous     31   31     0.82391   +0.012041         n/a        nan     +nan      n/a      0.97154
+     block-2        32   30     0.99767   +0.851047    +0.09996   1.21e-05    -0.04  +0.0004      0.97014
+     block-4        32   30     0.97944   +0.522431    +0.09995   1.56e-05    -0.05  +0.0004      0.97014
+     block-8        32   30     0.96483   +0.248218    +0.09994   1.81e-05    -0.06  +0.0009      0.97017
+     random         31   31     1.01741   +0.518568    +0.09994   1.50e-05    -0.06  +0.0004      0.97013
+     MEASURABLE in 5 of 6 split rules -- dsig returns NaN, not a number, when a ring's common power goes
+     non-positive.  Contrast fact 706: sigpow returned a NEGATIVE reference and an undefined sign rule.
+     spread across MEASURABLE split rules  0.00002 px   (0.02% of the planted signal)
+     changing the SPLIT RULE itself, vs parity (truth is NOT zero -- S2 measured a real change):
+        contiguous         n/a px  +-      nan   =     nanx the planted signal
+        block-2       -0.10323 px  +- 6.66e-03   =    1.03x the planted signal
+        block-4       +0.36739 px  +- 2.51e-02   =    3.67x the planted signal
+        block-8       +0.64546 px  +- 3.10e-02   =    6.45x the planted signal
+        random        +0.27190 px  +- 1.60e-02   =    2.72x the planted signal
+  RULE 39 planted wrong answer 0.000 px: rejected at 7209.1 se
+  RULE 39 planted wrong answer 0.200 px: rejected at 7215.6 se
+  PR6 NULL (disjoint mod-4 subsets, matched depth spacing, 15+15 frames each):
+        dsig  +0.37456 px  +- 5.73e-02  -> 6.5 se from zero   = 374.6% of the planted signal
+  PR7 one-sided gain x1.3 on half A only: dsig +0.09996 px vs +0.09996 px unscaled, move 1.32e-08 px
+
+  GATE SWEEP (parity split).  dsig is relative to gate 0.50; negative = SHARPER.
+      gate   n_eff      dsig px    se(jack)      gof     sigpow/base     FRC(f_sig)
+       0.00  31.000    +0.70467   2.14e-02   +0.2269      0.02367     +0.734993
+       0.25   9.147    +0.47824   4.32e-03   +0.1226      0.43738     +0.863393
+       0.50   5.365    +0.00000        nan       n/a      1.00000     +0.866128
+       0.75   3.178    -0.38615   1.88e-02   +0.0805      1.57169     +0.739855
+       0.90   1.988    -0.46647   1.58e-02   +0.0692      1.81802     +0.555198
+       0.99   1.430    -0.49608   1.27e-02   +0.0661      2.09541     +0.561617
+
+==============================================================================
+113MSDCF/flat   63 frames   ROI (2747, 32, 512, 512)   level 212.0 DN   (99s)
+==============================================================================
+  merge_subset(all, gate=0.5) vs m41lib.arm_A: max |diff| 0.000e+00 DN
+
+  PR4 -- SPLIT LEVERAGE.  The split is held COMMON to both configurations;
+         config 2 is config 1 with a 0.1 px Gaussian planted on both halves.
+         Truth is 0.100 px for EVERY row.
+     split         n_A  n_B     P_a/P_b   FRC(f_sig)     dsig px    se(jack)    err %      gof    sigpow ratio
+     parity         32   31     0.99037   +0.604374    +0.09997   1.30e-05    -0.03  +0.0006      0.97019
+     contiguous     31   31     0.93711   +0.062420         n/a        nan     +nan      n/a      0.97026
+     block-2        32   31     0.99340   +0.398688    +0.09999   9.28e-06    -0.01  +0.0007      0.97022
+     block-4        32   31     0.91500   -0.065211         n/a        nan     +nan      n/a      0.96959
+     block-8        32   31     1.03891   -0.013237         n/a        nan     +nan      n/a      0.96841
+     random         31   31     0.99166   +0.589722    +0.09999   1.20e-05    -0.01  +0.0008      0.97021
+     MEASURABLE in 3 of 6 split rules -- dsig returns NaN, not a number, when a ring's common power goes
+     non-positive.  Contrast fact 706: sigpow returned a NEGATIVE reference and an undefined sign rule.
+     spread across MEASURABLE split rules  0.00002 px   (0.02% of the planted signal)
+     changing the SPLIT RULE itself, vs parity (truth is NOT zero -- S2 measured a real change):
+        contiguous         n/a px  +-      nan   =     nanx the planted signal
+        block-2       +0.27643 px  +- 1.01e-01   =    2.76x the planted signal
+        block-4            n/a px  +-      nan   =     nanx the planted signal
+        block-8            n/a px  +-      nan   =     nanx the planted signal
+        random        +0.12546 px  +- 6.41e-02   =    1.25x the planted signal
+  RULE 39 planted wrong answer 0.000 px: rejected at 7698.3 se
+  RULE 39 planted wrong answer 0.200 px: rejected at 7702.4 se
+  PR6 NULL (disjoint mod-4 subsets, matched depth spacing, 15+15 frames each):
+        dsig  -0.54406 px  +- 1.33e-01  -> 4.1 se from zero   = 544.1% of the planted signal
+  PR7 one-sided gain x1.3 on half A only: dsig +0.09997 px vs +0.09997 px unscaled, move 1.93e-08 px
+
+  GATE SWEEP (parity split).  dsig is relative to gate 0.50; negative = SHARPER.
+      gate   n_eff      dsig px    se(jack)      gof     sigpow/base     FRC(f_sig)
+       0.00  32.000    +0.38166   1.64e-01   +0.6786      0.01986     +0.383979
+       0.25   8.035    +0.43408   7.43e-02   +0.3307      0.43772     +0.606997
+       0.50   4.916    +0.00000        nan       n/a      1.00000     +0.604374
+       0.75   2.991    -0.60473   6.35e-02   +0.1548      3.04994     +0.686543
+       0.90   2.175    -0.74172   6.91e-02   +0.1282      5.35592     +0.730535
+       0.99   1.853    -0.73985   6.99e-02   +0.1333      5.24390     +0.603545
+
+==============================================================================
+113MSDCF/centre   63 frames   ROI (916, 1501, 512, 512)   level 567.5 DN   (138s)
+==============================================================================
+
+  PR4 -- SPLIT LEVERAGE.  The split is held COMMON to both configurations;
+         config 2 is config 1 with a 0.1 px Gaussian planted on both halves.
+         Truth is 0.100 px for EVERY row.
+     split         n_A  n_B     P_a/P_b   FRC(f_sig)     dsig px    se(jack)    err %      gof    sigpow ratio
+     parity         32   31     0.99846   +0.789868    +0.09995   1.34e-05    -0.05  +0.0007      0.97015
+     contiguous     31   31     0.95354   -0.061070         n/a        nan     +nan      n/a      0.97030
+     block-2        32   31     0.99484   +0.764176    +0.09996   1.35e-05    -0.04  +0.0007      0.97015
+     block-4        32   31     1.00452   +0.191271    +0.09995   4.07e-05    -0.05  +0.0014      0.97011
+     block-8        32   31     1.05669   +0.158452    +0.09997   6.16e-05    -0.03  +0.0021      0.97025
+     random         31   31     1.01899   +0.524905    +0.09995   1.47e-05    -0.05  +0.0008      0.97016
+     MEASURABLE in 5 of 6 split rules -- dsig returns NaN, not a number, when a ring's common power goes
+     non-positive.  Contrast fact 706: sigpow returned a NEGATIVE reference and an undefined sign rule.
+     spread across MEASURABLE split rules  0.00002 px   (0.02% of the planted signal)
+     changing the SPLIT RULE itself, vs parity (truth is NOT zero -- S2 measured a real change):
+        contiguous         n/a px  +-      nan   =     nanx the planted signal
+        block-2       +0.07078 px  +- 2.61e-02   =    0.71x the planted signal
+        block-4       +0.63811 px  +- 1.18e-01   =    6.38x the planted signal
+        block-8       +0.75651 px  +- 1.35e-01   =    7.57x the planted signal
+        random        +0.32679 px  +- 3.56e-02   =    3.27x the planted signal
+  RULE 39 planted wrong answer 0.000 px: rejected at 7467.1 se
+  RULE 39 planted wrong answer 0.200 px: rejected at 7474.6 se
+  PR6 NULL (disjoint mod-4 subsets, matched depth spacing, 15+15 frames each):
+        dsig  -0.23403 px  +- 3.31e-02  -> 7.1 se from zero   = 234.0% of the planted signal
+  PR7 one-sided gain x1.3 on half A only: dsig +0.09995 px vs +0.09995 px unscaled, move 9.95e-10 px
+
+  GATE SWEEP (parity split).  dsig is relative to gate 0.50; negative = SHARPER.
+      gate   n_eff      dsig px    se(jack)      gof     sigpow/base     FRC(f_sig)
+       0.00  32.000    +0.56702   3.29e-02   +0.2515      0.02628     +0.699925
+       0.25   9.906    +0.45079   1.62e-02   +0.1680      0.37922     +0.765616
+       0.50   5.714    +0.00000        nan       n/a      1.00000     +0.789868
+       0.75   3.295    -0.50339   2.37e-02   +0.0812      2.31125     +0.786879
+       0.90   2.015    -0.61988   2.98e-02   +0.0819      3.43560     +0.715230
+       0.99   1.459    -0.62944   2.91e-02   +0.0873      3.64880     +0.609130
+
+==============================================================================
+foam/flat   62 frames   ROI (2747, 32, 512, 512)   level 642.5 DN   (177s)
+==============================================================================
+  merge_subset(all, gate=0.5) vs m41lib.arm_A: max |diff| 0.000e+00 DN
+
+  PR4 -- SPLIT LEVERAGE.  The split is held COMMON to both configurations;
+         config 2 is config 1 with a 0.1 px Gaussian planted on both halves.
+         Truth is 0.100 px for EVERY row.
+     split         n_A  n_B     P_a/P_b   FRC(f_sig)     dsig px    se(jack)    err %      gof    sigpow ratio
+     parity         31   31     1.00029   +0.071856    +0.09992   8.93e-05    -0.08  +0.0012      0.97034
+     contiguous     31   31     0.29215   +0.029944         n/a        nan     +nan      n/a      0.96960
+     block-2        32   30     1.02357   -0.019513         n/a        nan     +nan      n/a      0.96992
+     block-4        32   30     0.96424   +0.068334         n/a        nan     +nan      n/a      0.97005
+     block-8        32   30     1.12331   +0.038308         n/a        nan     +nan      n/a      0.97034
+     random         31   31     1.05935   +0.000585         n/a        nan     +nan      n/a      0.97204
+     MEASURABLE in 1 of 6 split rules -- dsig returns NaN, not a number, when a ring's common power goes
+     non-positive.  Contrast fact 706: sigpow returned a NEGATIVE reference and an undefined sign rule.
+     spread across MEASURABLE split rules  0.00000 px   (0.00% of the planted signal)
+     changing the SPLIT RULE itself, vs parity (truth is NOT zero -- S2 measured a real change):
+        contiguous         n/a px  +-      nan   =     nanx the planted signal
+        block-2            n/a px  +-      nan   =     nanx the planted signal
+        block-4            n/a px  +-      nan   =     nanx the planted signal
+        block-8            n/a px  +-      nan   =     nanx the planted signal
+        random             n/a px  +-      nan   =     nanx the planted signal
+  RULE 39 planted wrong answer 0.000 px: rejected at 1118.8 se
+  RULE 39 planted wrong answer 0.200 px: rejected at 1120.6 se
+  PR6 NULL (disjoint mod-4 subsets, matched depth spacing, 15+15 frames each):
+        dsig  +0.54074 px  +- 1.35e-01  -> 4.0 se from zero   = 540.7% of the planted signal
+  PR7 one-sided gain x1.3 on half A only: dsig +0.09992 px vs +0.09992 px unscaled, move 1.81e-08 px
+
+  GATE SWEEP (parity split).  dsig is relative to gate 0.50; negative = SHARPER.
+      gate   n_eff      dsig px    se(jack)      gof     sigpow/base     FRC(f_sig)
+       0.00  31.000    +0.21401   3.44e-01   +1.0018      0.03143     +0.244448
+       0.25   7.340    +0.13767   3.37e-01   +1.0238      0.98067     +0.141892
+       0.50   4.700    +0.00000        nan       n/a      1.00000     +0.071856
+       0.75   3.263    +0.35713   1.47e-01   +0.8221      0.61472     +0.018401
+       0.90   2.661         n/a        nan       n/a     -1.88736     -0.033614
+       0.99   2.396         n/a        nan       n/a     -1.57401     -0.023928
+
+==============================================================================
+foam/centre   62 frames   ROI (916, 1501, 512, 512)   level 680.5 DN   (216s)
+==============================================================================
+
+  PR4 -- SPLIT LEVERAGE.  The split is held COMMON to both configurations;
+         config 2 is config 1 with a 0.1 px Gaussian planted on both halves.
+         Truth is 0.100 px for EVERY row.
+     split         n_A  n_B     P_a/P_b   FRC(f_sig)     dsig px    se(jack)    err %      gof    sigpow ratio
+     parity         31   31     1.01778   +0.795618    +0.09996   1.50e-05    -0.04  +0.0007      0.97014
+     contiguous     31   31     0.21825   +0.059674         n/a        nan     +nan      n/a      0.97029
+     block-2        32   30     1.03579   +0.296097    +0.10001   2.99e-05    +0.01  +0.0011      0.97016
+     block-4        32   30     0.96995   +0.201562    +0.10000   3.41e-05    +0.00  +0.0017      0.97018
+     block-8        32   30     0.91038   +0.012106         n/a        nan     +nan      n/a      0.97036
+     random         31   31     1.00517   +0.573259    +0.09997   1.83e-05    -0.03  +0.0008      0.97014
+     MEASURABLE in 4 of 6 split rules -- dsig returns NaN, not a number, when a ring's common power goes
+     non-positive.  Contrast fact 706: sigpow returned a NEGATIVE reference and an undefined sign rule.
+     spread across MEASURABLE split rules  0.00005 px   (0.05% of the planted signal)
+     changing the SPLIT RULE itself, vs parity (truth is NOT zero -- S2 measured a real change):
+        contiguous         n/a px  +-      nan   =     nanx the planted signal
+        block-2       +0.57660 px  +- 1.29e-01   =    5.77x the planted signal
+        block-4       +0.72863 px  +- 1.99e-01   =    7.29x the planted signal
+        block-8            n/a px  +-      nan   =     nanx the planted signal
+        random        +0.26749 px  +- 3.84e-02   =    2.67x the planted signal
+  RULE 39 planted wrong answer 0.000 px: rejected at 6653.6 se
+  RULE 39 planted wrong answer 0.200 px: rejected at 6658.8 se
+  PR6 NULL (disjoint mod-4 subsets, matched depth spacing, 15+15 frames each):
+        dsig  +0.49599 px  +- 3.89e-02  -> 12.8 se from zero   = 496.0% of the planted signal
+  PR7 one-sided gain x1.3 on half A only: dsig +0.09996 px vs +0.09996 px unscaled, move 1.06e-08 px
+
+  GATE SWEEP (parity split).  dsig is relative to gate 0.50; negative = SHARPER.
+      gate   n_eff      dsig px    se(jack)      gof     sigpow/base     FRC(f_sig)
+       0.00  31.000    +0.60673   1.51e-02   +0.2102      0.00919     +0.885302
+       0.25   6.273    +0.38979   9.60e-03   +0.2463      0.47446     +0.841937
+       0.50   3.983    +0.00000        nan       n/a      1.00000     +0.795618
+       0.75   2.702    -0.43751   1.95e-02   +0.1614      2.07504     +0.762955
+       0.90   2.217    -0.49644   2.10e-02   +0.2091      2.53827     +0.668080
+       0.99   2.002    -0.49619   2.60e-02   +0.2179      2.66244     +0.611681
+
+==============================================================================
+109MSDCF/flat   22 frames   ROI (2747, 32, 512, 512)   level 1962.5 DN   (231s)
+==============================================================================
+  merge_subset(all, gate=0.5) vs m41lib.arm_A: max |diff| 0.000e+00 DN
+
+  PR4 -- SPLIT LEVERAGE.  The split is held COMMON to both configurations;
+         config 2 is config 1 with a 0.1 px Gaussian planted on both halves.
+         Truth is 0.100 px for EVERY row.
+     split         n_A  n_B     P_a/P_b   FRC(f_sig)     dsig px    se(jack)    err %      gof    sigpow ratio
+     parity         11   11     1.00147   +0.376047    +0.09997   8.92e-06    -0.03  +0.0007      0.97013
+     contiguous     11   11     0.95567   +0.351792    +0.09993   3.39e-05    -0.07  +0.0011      0.97010
+     block-2        12   10     0.92468   +0.287516    +0.10003   3.09e-05    +0.03  +0.0014      0.97011
+     block-4        12   10     0.94256   +0.350816         n/a        nan     +nan      n/a      0.97011
+     block-8        14    8     0.68790   +0.342730    +0.09967   2.04e-04    -0.33  +0.0050      0.97008
+     random         11   11     1.11809   +0.388418    +0.09995   1.30e-05    -0.05  +0.0008      0.97009
+     MEASURABLE in 5 of 6 split rules -- dsig returns NaN, not a number, when a ring's common power goes
+     non-positive.  Contrast fact 706: sigpow returned a NEGATIVE reference and an undefined sign rule.
+     spread across MEASURABLE split rules  0.00036 px   (0.36% of the planted signal)
+     changing the SPLIT RULE itself, vs parity (truth is NOT zero -- S2 measured a real change):
+        contiguous    -0.53032 px  +- 1.04e-01   =    5.30x the planted signal
+        block-2       +0.39197 px  +- 6.49e-02   =    3.92x the planted signal
+        block-4            n/a px  +-      nan   =     nanx the planted signal
+        block-8       -0.76910 px  +- 4.68e-02   =    7.69x the planted signal
+        random        -0.39115 px  +- 6.78e-02   =    3.91x the planted signal
+  RULE 39 planted wrong answer 0.000 px: rejected at 11206.7 se
+  RULE 39 planted wrong answer 0.200 px: rejected at 11212.9 se
+  PR6 NULL (disjoint mod-4 subsets, matched depth spacing, 5+5 frames each):
+        dsig  -0.19071 px  +- 5.26e-02  -> 3.6 se from zero   = 190.7% of the planted signal
+  PR7 one-sided gain x1.3 on half A only: dsig +0.09997 px vs +0.09997 px unscaled, move 9.97e-07 px
+
+  GATE SWEEP (parity split).  dsig is relative to gate 0.50; negative = SHARPER.
+      gate   n_eff      dsig px    se(jack)      gof     sigpow/base     FRC(f_sig)
+       0.00  11.000    -0.08053   2.18e-02   +0.4041      1.00645     +0.379890
+       0.25  10.937    -0.02636   1.09e-02   +0.8106      0.99826     +0.376150
+       0.50  10.914    +0.00000        nan       n/a      1.00000     +0.376047
+       0.75  10.870    +0.04020   5.86e-03   +0.4193      1.00049     +0.375927
+       0.90  10.837    +0.04319   7.50e-03   +0.4826      1.00115     +0.375991
+       0.99  10.820    +0.04083   8.13e-03   +0.5011      1.00048     +0.375613
+
+==============================================================================
+109MSDCF/centre   22 frames   ROI (916, 1501, 512, 512)   level 476.0 DN   (245s)
+==============================================================================
+
+  PR4 -- SPLIT LEVERAGE.  The split is held COMMON to both configurations;
+         config 2 is config 1 with a 0.1 px Gaussian planted on both halves.
+         Truth is 0.100 px for EVERY row.
+     split         n_A  n_B     P_a/P_b   FRC(f_sig)     dsig px    se(jack)    err %      gof    sigpow ratio
+     parity         11   11     0.99982   +0.418781    +0.09999   1.23e-05    -0.01  +0.0007      0.97012
+     contiguous     11   11     1.01306   +0.057792    +0.10027   1.43e-04    +0.27  +0.0041      0.97014
+     block-2        12   10     0.99161   +0.281608    +0.09999   1.49e-05    -0.01  +0.0009      0.97010
+     block-4        12   10     0.99524   +0.158319    +0.10005   1.05e-04    +0.05  +0.0016      0.97005
+     block-8        14    8     1.00418   +0.181460    +0.10009   1.08e-04    +0.09  +0.0020      0.97011
+     random         11   11     0.99775   +0.372893    +0.09998   1.28e-05    -0.02  +0.0008      0.97008
+     MEASURABLE in 6 of 6 split rules -- dsig returns NaN, not a number, when a ring's common power goes
+     non-positive.  Contrast fact 706: sigpow returned a NEGATIVE reference and an undefined sign rule.
+     spread across MEASURABLE split rules  0.00030 px   (0.30% of the planted signal)
+     changing the SPLIT RULE itself, vs parity (truth is NOT zero -- S2 measured a real change):
+        contiguous    +0.73017 px  +- 1.89e-01   =    7.30x the planted signal
+        block-2       +0.29462 px  +- 9.10e-02   =    2.95x the planted signal
+        block-4       +0.62138 px  +- 2.75e-01   =    6.21x the planted signal
+        block-8       +0.39555 px  +- 2.39e-01   =    3.96x the planted signal
+        random        -0.17851 px  +- 3.70e-02   =    1.79x the planted signal
+  RULE 39 planted wrong answer 0.000 px: rejected at 8097.5 se
+  RULE 39 planted wrong answer 0.200 px: rejected at 8099.0 se
+  PR6 NULL (disjoint mod-4 subsets, matched depth spacing, 5+5 frames each):
+        dsig  +0.49578 px  +- 1.23e-01  -> 4.0 se from zero   = 495.8% of the planted signal
+  PR7 one-sided gain x1.3 on half A only: dsig +0.09999 px vs +0.09999 px unscaled, move 8.71e-09 px
+
+  GATE SWEEP (parity split).  dsig is relative to gate 0.50; negative = SHARPER.
+      gate   n_eff      dsig px    se(jack)      gof     sigpow/base     FRC(f_sig)
+       0.00  11.000    +0.46778   7.66e-02   +0.3440      0.20800     +0.402525
+       0.25   8.250    +0.23129   5.99e-02   +0.5451      0.51556     +0.360161
+       0.50   7.268    +0.00000        nan       n/a      1.00000     +0.418781
+       0.75   6.175    -0.34526   2.69e-02   +0.3013      1.87689     +0.490835
+       0.90   5.482    -0.51966   4.06e-02   +0.1848      3.33133     +0.533382
+       0.99   5.107    -0.53832   3.85e-02   +0.1958      3.61635     +0.504684
+
+wrote out/s3_real.json  (246.6s)

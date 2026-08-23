@@ -1,0 +1,67 @@
+==============================================================================
+M57 S2 -- PR5: LATENT-DRIFT PLANT (discipline 340 / rule 34)
+==============================================================================
+  latent (576, 576), depth = tilt 0..0.8 + a 0.2 step at y = h/2
+  32 frames, single-frame sigma 10.847 DN, rho 0.3094
+
+  --- blur rate 0.00 px per unit depth (max defocus 0.00 px) ---
+    half-merge RMS difference   3.8372 DN (a fixed-latent plant gives only the noise term)
+    FRC(f_sig) between halves +0.994557   P_a/P_b = 1.00018  (fact 701 measures 1.30 on real data)
+    ORACLE sigma of half A vs truth -0.03015 px, half B -0.02609 px, |difference| 0.00405 px
+    planted sb   dsig px    se(jack)   ORACLE d-sigma px   error px
+         0.000   +0.00000        nan           +0.00000   +0.00000
+         0.050   +0.04998   5.29e-06           +0.02608   +0.02390
+         0.100   +0.09996   1.06e-05           +0.09041   +0.00955
+         0.250   +0.24989   2.65e-05           +0.24623   +0.00366
+    RE-PAIRING (four-way, all frames, truth NOT guaranteed 0):  dsig -0.00548 +- 1.28e-03   ORACLE says -0.00051   error -0.00497
+    TRUE NULL (same merge pair, two disjoint sub-ROIs):        dsig +0.66616 +- 5.08e-02   ->  13.1 se from zero
+
+  --- blur rate 1.50 px per unit depth (max defocus 1.50 px) ---
+    half-merge RMS difference   3.9143 DN (a fixed-latent plant gives only the noise term)
+    FRC(f_sig) between halves +0.989957   P_a/P_b = 1.00040  (fact 701 measures 1.30 on real data)
+    ORACLE sigma of half A vs truth +0.44564 px, half B +0.44989 px, |difference| 0.00426 px
+    planted sb   dsig px    se(jack)   ORACLE d-sigma px   error px
+         0.000   +0.00000        nan           +0.00000   +0.00000
+         0.050   +0.04997   4.99e-06           +0.04998   -0.00000
+         0.100   +0.09995   9.96e-06           +0.09995   -0.00000
+         0.250   +0.24986   2.48e-05           +0.24988   -0.00001
+    RE-PAIRING (four-way, all frames, truth NOT guaranteed 0):  dsig -0.00752 +- 2.23e-03   ORACLE says +0.00414   error -0.01167
+    TRUE NULL (same merge pair, two disjoint sub-ROIs):        dsig +0.68344 +- 4.92e-02   ->  13.9 se from zero
+
+  --- blur rate 3.00 px per unit depth (max defocus 3.00 px) ---
+    half-merge RMS difference   4.5798 DN (a fixed-latent plant gives only the noise term)
+    FRC(f_sig) between halves +0.981480   P_a/P_b = 0.99907  (fact 701 measures 1.30 on real data)
+    ORACLE sigma of half A vs truth +0.57435 px, half B +0.55990 px, |difference| 0.01445 px
+    planted sb   dsig px    se(jack)   ORACLE d-sigma px   error px
+         0.000   +0.00000        nan           +0.00000   +0.00000
+         0.050   +0.04997   5.21e-06           +0.04997   -0.00000
+         0.100   +0.09994   1.04e-05           +0.09995   -0.00001
+         0.250   +0.24985   2.60e-05           +0.24987   -0.00002
+    RE-PAIRING (four-way, all frames, truth NOT guaranteed 0):  dsig +0.04033 +- 3.79e-03   ORACLE says +0.03982   error +0.00051
+    TRUE NULL (same merge pair, two disjoint sub-ROIs):        dsig +0.68548 +- 4.77e-02   ->  14.4 se from zero
+
+  --- blur rate 6.00 px per unit depth (max defocus 6.00 px) ---
+    half-merge RMS difference   6.0801 DN (a fixed-latent plant gives only the noise term)
+    FRC(f_sig) between halves +0.961295   P_a/P_b = 1.00100  (fact 701 measures 1.30 on real data)
+    ORACLE sigma of half A vs truth +0.58619 px, half B +0.60539 px, |difference| 0.01919 px
+    planted sb   dsig px    se(jack)   ORACLE d-sigma px   error px
+         0.000   +0.00000        nan           +0.00000   +0.00000
+         0.050   +0.04997   4.50e-06           +0.04997   -0.00000
+         0.100   +0.09994   9.00e-06           +0.09995   -0.00001
+         0.250   +0.24985   2.24e-05           +0.24987   -0.00002
+    RE-PAIRING (four-way, all frames, truth NOT guaranteed 0):  dsig +0.06221 +- 4.51e-03   ORACLE says +0.06186   error +0.00035
+    TRUE NULL (same merge pair, two disjoint sub-ROIs):        dsig +0.68866 +- 4.75e-02   ->  14.5 se from zero
+
+==============================================================================
+PR5b -- the configuration itself changes the delivered latent.
+        gate sweep on the drift plant, dsig vs the ORACLE.
+==============================================================================
+     gate   n_eff    ORACLE sigma px   dsig vs gate 0.50 px   se(jack)   ORACLE delta px
+      0.00  16.000          +0.72646                +0.44685   4.44e-03          +0.44483
+      0.25  15.423          +0.70972                +0.41874   6.33e-03          +0.41692
+      0.50  12.404          +0.57435                +0.00000        nan          +0.00000
+      0.75   7.771          +0.37874                -0.41685   2.12e-03          -0.43178
+      0.90   4.207          +0.23978                -0.50470   2.13e-03          -0.52190
+      0.99   1.453          +0.14329                -0.54128   2.12e-03          -0.55619
+
+wrote out/s2_drift.json  (8.5s)

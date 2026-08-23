@@ -1,0 +1,210 @@
+==============================================================================
+M57 S6 -- K6/K7 vs the noise null that killed K1 (PR14-PR17)
+  threshold PR14: |value| <= 0.02 px under N1.  Truth is 0 px.
+==============================================================================
+
+==============================================================================
+112MSDCF/flat   62 frames   n_eff 4.773   merged sigma 3.583 DN   (31s)
+==============================================================================
+  PR15 SIGNAL -- planted 0.1 px blur (truth 0.100 px)
+     candidate         value px    se(jack)     err %
+     K1 dsig          +0.09998    1.97e-05     -0.02
+     K7 dsig_db       +0.09998    1.67e-05     -0.02
+     K6 dsig_lin      +0.09994    2.14e-05     -0.06
+  PR14 NULL N1 -- independent noise on both halves.  TRUTH IS EXACTLY 0 px.
+     candidate           1x sigma      2x sigma      3x sigma
+     K1 dsig              -0.04195      +0.07162      -0.07975
+     K7 dsig_db           -0.03762      +0.05735      -0.08402
+     K6 dsig_lin          +0.01801      +0.03591      -0.08793
+  PR16 GAIN -- one half scaled by 1.30.  TRUTH IS EXACTLY 0 px of MOVE.
+     candidate         move px
+     K1 dsig              2.277e-09
+     K7 dsig_db           1.389e-09
+     K6 dsig_lin          8.519e-09
+  PR17 SPLIT -- split common to both configurations.  Truth 0.100 px for every rule.
+     candidate        spread px    % of signal   measurable
+     K1 dsig             0.000008          0.008        2/5
+     K7 dsig_db          0.000007          0.007        2/5
+     K6 dsig_lin         0.000196          0.196        5/5
+
+==============================================================================
+112MSDCF/detail   62 frames   n_eff 5.365   merged sigma 5.124 DN   (65s)
+==============================================================================
+  PR15 SIGNAL -- planted 0.1 px blur (truth 0.100 px)
+     candidate         value px    se(jack)     err %
+     K1 dsig          +0.09996    1.39e-05     -0.04
+     K7 dsig_db       +0.09995    1.33e-05     -0.05
+     K6 dsig_lin      +0.09990    1.43e-05     -0.10
+  PR14 NULL N1 -- independent noise on both halves.  TRUTH IS EXACTLY 0 px.
+     candidate           1x sigma      2x sigma      3x sigma
+     K1 dsig              +0.00946      -0.00910      -0.04668
+     K7 dsig_db           +0.01153      -0.01095      -0.04789
+     K6 dsig_lin          +0.01365      +0.01420      -0.05001
+  PR16 GAIN -- one half scaled by 1.30.  TRUTH IS EXACTLY 0 px of MOVE.
+     candidate         move px
+     K1 dsig              1.324e-08
+     K7 dsig_db           1.530e-08
+     K6 dsig_lin          1.912e-08
+  PR17 SPLIT -- split common to both configurations.  Truth 0.100 px for every rule.
+     candidate        spread px    % of signal   measurable
+     K1 dsig             0.000021          0.021        5/5
+     K7 dsig_db          0.000020          0.020        5/5
+     K6 dsig_lin         0.000023          0.023        5/5
+
+==============================================================================
+113MSDCF/flat   63 frames   n_eff 4.916   merged sigma 4.930 DN   (100s)
+==============================================================================
+  PR15 SIGNAL -- planted 0.1 px blur (truth 0.100 px)
+     candidate         value px    se(jack)     err %
+     K1 dsig          +0.09997    1.30e-05     -0.03
+     K7 dsig_db       +0.09997    1.06e-05     -0.03
+     K6 dsig_lin      +0.09993    1.72e-05     -0.07
+  PR14 NULL N1 -- independent noise on both halves.  TRUTH IS EXACTLY 0 px.
+     candidate           1x sigma      2x sigma      3x sigma
+     K1 dsig              -0.08684      -0.08662      +0.06591
+     K7 dsig_db           -0.08781      -0.08596      +0.05731
+     K6 dsig_lin          -0.06744      -0.07345      +0.04117
+  PR16 GAIN -- one half scaled by 1.30.  TRUTH IS EXACTLY 0 px of MOVE.
+     candidate         move px
+     K1 dsig              1.928e-08
+     K7 dsig_db           1.375e-08
+     K6 dsig_lin          5.773e-09
+  PR17 SPLIT -- split common to both configurations.  Truth 0.100 px for every rule.
+     candidate        spread px    % of signal   measurable
+     K1 dsig             0.000019          0.019        3/5
+     K7 dsig_db          0.000018          0.018        3/5
+     K6 dsig_lin         0.000102          0.102        5/5
+
+==============================================================================
+113MSDCF/centre   63 frames   n_eff 5.714   merged sigma 7.615 DN   (135s)
+==============================================================================
+  PR15 SIGNAL -- planted 0.1 px blur (truth 0.100 px)
+     candidate         value px    se(jack)     err %
+     K1 dsig          +0.09995    1.34e-05     -0.05
+     K7 dsig_db       +0.09995    1.30e-05     -0.05
+     K6 dsig_lin      +0.09988    1.84e-05     -0.12
+  PR14 NULL N1 -- independent noise on both halves.  TRUTH IS EXACTLY 0 px.
+     candidate           1x sigma      2x sigma      3x sigma
+     K1 dsig              -0.04010      +0.07199      -0.04187
+     K7 dsig_db           -0.03949      +0.07056      -0.03968
+     K6 dsig_lin          -0.02145      +0.05366      -0.00901
+  PR16 GAIN -- one half scaled by 1.30.  TRUTH IS EXACTLY 0 px of MOVE.
+     candidate         move px
+     K1 dsig              9.948e-10
+     K7 dsig_db           5.587e-10
+     K6 dsig_lin          3.537e-09
+  PR17 SPLIT -- split common to both configurations.  Truth 0.100 px for every rule.
+     candidate        spread px    % of signal   measurable
+     K1 dsig             0.000020          0.020        5/5
+     K7 dsig_db          0.000025          0.025        5/5
+     K6 dsig_lin         0.000087          0.087        5/5
+
+==============================================================================
+foam/flat   62 frames   n_eff 4.700   merged sigma 8.301 DN   (170s)
+==============================================================================
+  PR15 SIGNAL -- planted 0.1 px blur (truth 0.100 px)
+     candidate         value px    se(jack)     err %
+     K1 dsig          +0.09992    8.93e-05     -0.08
+     K7 dsig_db       +0.09997    2.03e-04     -0.03
+     K6 dsig_lin      +0.09984    5.13e-05     -0.16
+  PR14 NULL N1 -- independent noise on both halves.  TRUTH IS EXACTLY 0 px.
+     candidate           1x sigma      2x sigma      3x sigma
+     K1 dsig              +0.02052      +0.05276      +0.04653
+     K7 dsig_db           -0.01402      +0.03767      -0.02022
+     K6 dsig_lin          +0.00071      +0.01497      -0.01078
+  PR16 GAIN -- one half scaled by 1.30.  TRUTH IS EXACTLY 0 px of MOVE.
+     candidate         move px
+     K1 dsig              1.807e-08
+     K7 dsig_db           4.622e-09
+     K6 dsig_lin          6.442e-09
+  PR17 SPLIT -- split common to both configurations.  Truth 0.100 px for every rule.
+     candidate        spread px    % of signal   measurable
+     K1 dsig             0.000000          0.000        1/5
+     K7 dsig_db          0.000000          0.000        1/5
+     K6 dsig_lin         0.000244          0.244        5/5
+
+==============================================================================
+foam/centre   62 frames   n_eff 3.983   merged sigma 8.542 DN   (206s)
+==============================================================================
+  PR15 SIGNAL -- planted 0.1 px blur (truth 0.100 px)
+     candidate         value px    se(jack)     err %
+     K1 dsig          +0.09996    1.50e-05     -0.04
+     K7 dsig_db       +0.09996    1.44e-05     -0.04
+     K6 dsig_lin      +0.09989    1.94e-05     -0.11
+  PR14 NULL N1 -- independent noise on both halves.  TRUTH IS EXACTLY 0 px.
+     candidate           1x sigma      2x sigma      3x sigma
+     K1 dsig              +0.01209      -0.02063      +0.00908
+     K7 dsig_db           +0.01185      -0.02068      +0.00928
+     K6 dsig_lin          +0.01061      +0.01459      -0.01551
+  PR16 GAIN -- one half scaled by 1.30.  TRUTH IS EXACTLY 0 px of MOVE.
+     candidate         move px
+     K1 dsig              1.062e-08
+     K7 dsig_db           1.002e-08
+     K6 dsig_lin          1.645e-08
+  PR17 SPLIT -- split common to both configurations.  Truth 0.100 px for every rule.
+     candidate        spread px    % of signal   measurable
+     K1 dsig             0.000046          0.046        4/5
+     K7 dsig_db          0.000039          0.039        4/5
+     K6 dsig_lin         0.000104          0.104        5/5
+
+==============================================================================
+109MSDCF/flat   22 frames   n_eff 10.914   merged sigma 10.153 DN   (219s)
+==============================================================================
+  PR15 SIGNAL -- planted 0.1 px blur (truth 0.100 px)
+     candidate         value px    se(jack)     err %
+     K1 dsig          +0.09997    8.92e-06     -0.03
+     K7 dsig_db       +0.09997    8.87e-06     -0.03
+     K6 dsig_lin      +0.09994    1.28e-05     -0.06
+  PR14 NULL N1 -- independent noise on both halves.  TRUTH IS EXACTLY 0 px.
+     candidate           1x sigma      2x sigma      3x sigma
+     K1 dsig              +0.05749      +0.34310           n/a
+     K7 dsig_db           -0.03004      -0.34118           n/a
+     K6 dsig_lin          -0.06763      +0.29725      +0.46420
+  PR16 GAIN -- one half scaled by 1.30.  TRUTH IS EXACTLY 0 px of MOVE.
+     candidate         move px
+     K1 dsig              9.970e-07
+     K7 dsig_db           9.709e-07
+     K6 dsig_lin          1.136e-06
+  PR17 SPLIT -- split common to both configurations.  Truth 0.100 px for every rule.
+     candidate        spread px    % of signal   measurable
+     K1 dsig             0.000357          0.357        4/5
+     K7 dsig_db          0.024850         24.850        4/5
+     K6 dsig_lin         0.000026          0.026        5/5
+
+==============================================================================
+109MSDCF/centre   22 frames   n_eff 7.268   merged sigma 5.985 DN   (232s)
+==============================================================================
+  PR15 SIGNAL -- planted 0.1 px blur (truth 0.100 px)
+     candidate         value px    se(jack)     err %
+     K1 dsig          +0.09999    1.23e-05     -0.01
+     K7 dsig_db       +0.09999    1.12e-05     -0.01
+     K6 dsig_lin      +0.09989    1.91e-05     -0.11
+  PR14 NULL N1 -- independent noise on both halves.  TRUTH IS EXACTLY 0 px.
+     candidate           1x sigma      2x sigma      3x sigma
+     K1 dsig              +0.12134      -0.23221           n/a
+     K7 dsig_db           +0.10977      -0.22802           n/a
+     K6 dsig_lin          +0.04438      -0.20977      +0.15023
+  PR16 GAIN -- one half scaled by 1.30.  TRUTH IS EXACTLY 0 px of MOVE.
+     candidate         move px
+     K1 dsig              8.714e-09
+     K7 dsig_db           5.211e-09
+     K6 dsig_lin          2.490e-08
+  PR17 SPLIT -- split common to both configurations.  Truth 0.100 px for every rule.
+     candidate        spread px    % of signal   measurable
+     K1 dsig             0.000106          0.106        5/5
+     K7 dsig_db          0.000046          0.046        5/5
+     K6 dsig_lin         0.000105          0.105        5/5
+
+==============================================================================
+VERDICTS (all eight real cells; no cell held out -- PR18)
+==============================================================================
+  candidate         PR14 worst |null|   PR15 worst err %   PR16 worst move   PR17 worst %
+  K1 dsig                   0.34310               0.08         9.970e-07          0.357
+  K7 dsig_db                0.34118               0.05         9.709e-07         24.850
+  K6 dsig_lin               0.46420               0.16         1.136e-06          0.244
+
+  K1 dsig         -> FAIL PR14
+  K7 dsig_db      -> FAIL PR14, PR17
+  K6 dsig_lin     -> FAIL PR14
+
+wrote out/s6_debias.json  (233.0s)

@@ -1,0 +1,133 @@
+==============================================================================
+M57 S5 -- real-data nulls with KNOWN truth.  Flat ROI first (rule 9).
+  profile.rs: g(ISO 500) = 1.14469 DN/e-, read noise 1.2392 e- (M48-corrected value; the merges above use m41lib's frozen 1.47)
+==============================================================================
+
+==============================================================================
+112MSDCF/flat   62 frames   level 105.3 DN   n_eff 4.773   single-frame sigma 7.828 DN   merged 3.583 DN   (36s)
+  SIGNAL: planted 0.1 px blur -> dsig  +0.09998 +- 1.97e-05
+  N1 NULL -- independent noise added to each half.  TRUTH IS EXACTLY 0 px.
+      x merged sigma   added DN     dsig px     se(jack)     |dsig|/signal
+                 1.0      3.583    +0.04104    2.31e-02           0.4105
+                 2.0      7.166    +0.01620    1.44e-01           0.1621
+                 3.0     10.750    -0.11639    3.02e-02           1.1641
+  matched-cost check on the SAME cell: hp_sd baseline 17.2565, +3x noise 20.3051 (+17.67%), 0.1 px blur 17.1489 (-0.62%)
+  N2 NULL -- ONE half scaled (fact 701 measures 1.30 real).  TRUTH IS EXACTLY 0 px.
+      lambda     one-sided dsig px      both-sided dsig px
+        1.10             -1.408e-08             -3.380e-09
+        1.30             -2.277e-09             -2.821e-08
+        3.00             -6.337e-09             -4.923e-08
+
+==============================================================================
+112MSDCF/detail   62 frames   level 244.4 DN   n_eff 5.365   single-frame sigma 11.870 DN   merged 5.124 DN   (73s)
+  SIGNAL: planted 0.1 px blur -> dsig  +0.09996 +- 1.39e-05
+  N1 NULL -- independent noise added to each half.  TRUTH IS EXACTLY 0 px.
+      x merged sigma   added DN     dsig px     se(jack)     |dsig|/signal
+                 1.0      5.124    -0.02532    7.62e-03           0.2533
+                 2.0     10.249    -0.02971    1.02e-02           0.2972
+                 3.0     15.373    +0.05964    1.47e-02           0.5966
+  matched-cost check on the SAME cell: hp_sd baseline 59.4646, +3x noise 61.3970 (+3.25%), 0.1 px blur 59.2146 (-0.42%)
+  N2 NULL -- ONE half scaled (fact 701 measures 1.30 real).  TRUTH IS EXACTLY 0 px.
+      lambda     one-sided dsig px      both-sided dsig px
+        1.10             +2.371e-08             +7.374e-08
+        1.30             +1.324e-08             +4.176e-08
+        3.00             +1.705e-08             +3.395e-08
+
+==============================================================================
+113MSDCF/flat   63 frames   level 207.0 DN   n_eff 4.916   single-frame sigma 10.931 DN   merged 4.930 DN   (111s)
+  SIGNAL: planted 0.1 px blur -> dsig  +0.09997 +- 1.30e-05
+  N1 NULL -- independent noise added to each half.  TRUTH IS EXACTLY 0 px.
+      x merged sigma   added DN     dsig px     se(jack)     |dsig|/signal
+                 1.0      4.930    -0.03652    3.23e-02           0.3653
+                 2.0      9.859    +0.09911    1.64e-02           0.9914
+                 3.0     14.789    -0.06440    4.64e-02           0.6442
+  matched-cost check on the SAME cell: hp_sd baseline 33.3745, +3x noise 36.4400 (+9.19%), 0.1 px blur 33.1896 (-0.55%)
+  N2 NULL -- ONE half scaled (fact 701 measures 1.30 real).  TRUTH IS EXACTLY 0 px.
+      lambda     one-sided dsig px      both-sided dsig px
+        1.10             +2.783e-08             +2.027e-08
+        1.30             -1.928e-08             +1.977e-08
+        3.00             -2.512e-08             -6.907e-09
+
+==============================================================================
+113MSDCF/centre   63 frames   level 577.1 DN   n_eff 5.714   single-frame sigma 18.202 DN   merged 7.615 DN   (149s)
+  SIGNAL: planted 0.1 px blur -> dsig  +0.09995 +- 1.34e-05
+  N1 NULL -- independent noise added to each half.  TRUTH IS EXACTLY 0 px.
+      x merged sigma   added DN     dsig px     se(jack)     |dsig|/signal
+                 1.0      7.615    -0.03026    2.80e-02           0.3027
+                 2.0     15.229    -0.04369    3.93e-02           0.4371
+                 3.0     22.844    +0.05437    1.61e-02           0.5439
+  matched-cost check on the SAME cell: hp_sd baseline 107.5462, +3x noise 109.9159 (+2.20%), 0.1 px blur 107.1413 (-0.38%)
+  N2 NULL -- ONE half scaled (fact 701 measures 1.30 real).  TRUTH IS EXACTLY 0 px.
+      lambda     one-sided dsig px      both-sided dsig px
+        1.10             -7.273e-10             -1.902e-08
+        1.30             +9.948e-10             +2.101e-08
+        3.00             -1.303e-08             -3.109e-08
+
+==============================================================================
+foam/flat   62 frames   level 564.0 DN   n_eff 4.700   single-frame sigma 17.995 DN   merged 8.301 DN   (188s)
+  SIGNAL: planted 0.1 px blur -> dsig  +0.09992 +- 8.93e-05
+  N1 NULL -- independent noise added to each half.  TRUTH IS EXACTLY 0 px.
+      x merged sigma   added DN     dsig px     se(jack)     |dsig|/signal
+                 1.0      8.301    +0.02743    1.54e-02           0.2745
+                 2.0     16.601    -0.05378    3.42e-02           0.5382
+                 3.0     24.902    +0.03241    2.52e-02           0.3244
+  matched-cost check on the SAME cell: hp_sd baseline 446.7373, +3x noise 447.4055 (+0.15%), 0.1 px blur 444.8859 (-0.41%)
+  N2 NULL -- ONE half scaled (fact 701 measures 1.30 real).  TRUTH IS EXACTLY 0 px.
+      lambda     one-sided dsig px      both-sided dsig px
+        1.10             +4.967e-08             +6.503e-10
+        1.30             +1.807e-08             +1.988e-08
+        3.00             +7.571e-08             +1.117e-07
+
+==============================================================================
+foam/centre   62 frames   level 506.0 DN   n_eff 3.983   single-frame sigma 17.047 DN   merged 8.542 DN   (227s)
+  SIGNAL: planted 0.1 px blur -> dsig  +0.09996 +- 1.50e-05
+  N1 NULL -- independent noise added to each half.  TRUTH IS EXACTLY 0 px.
+      x merged sigma   added DN     dsig px     se(jack)     |dsig|/signal
+                 1.0      8.542    -0.00747    1.42e-02           0.0747
+                 2.0     17.084    -0.00934    1.17e-02           0.0934
+                 3.0     25.627    +0.01585    1.66e-02           0.1585
+  matched-cost check on the SAME cell: hp_sd baseline 635.1323, +3x noise 635.5581 (+0.07%), 0.1 px blur 632.6887 (-0.38%)
+  N2 NULL -- ONE half scaled (fact 701 measures 1.30 real).  TRUTH IS EXACTLY 0 px.
+      lambda     one-sided dsig px      both-sided dsig px
+        1.10             +8.437e-09             +2.993e-08
+        1.30             -1.062e-08             -2.710e-08
+        3.00             +4.897e-09             +1.685e-08
+
+==============================================================================
+109MSDCF/flat   22 frames   level 1964.0 DN   n_eff 10.914   single-frame sigma 33.543 DN   merged 10.153 DN   (241s)
+  SIGNAL: planted 0.1 px blur -> dsig  +0.09997 +- 8.92e-06
+  N1 NULL -- independent noise added to each half.  TRUTH IS EXACTLY 0 px.
+      x merged sigma   added DN     dsig px     se(jack)     |dsig|/signal
+                 1.0     10.153    -0.17197    6.29e-02           1.7201
+                 2.0     20.307    +0.36700    1.63e-01           3.6710
+                 3.0     30.460         n/a         nan              nan
+  matched-cost check on the SAME cell: hp_sd baseline 9.8989, +3x noise 31.8645 (+221.90%), 0.1 px blur 9.7133 (-1.88%)
+  N2 NULL -- ONE half scaled (fact 701 measures 1.30 real).  TRUTH IS EXACTLY 0 px.
+      lambda     one-sided dsig px      both-sided dsig px
+        1.10             -4.926e-08             +8.191e-07
+        1.30             -9.970e-07             -1.877e-06
+        3.00             +5.954e-09             +1.077e-07
+
+==============================================================================
+109MSDCF/centre   22 frames   level 453.1 DN   n_eff 7.268   single-frame sigma 16.135 DN   merged 5.985 DN   (254s)
+  SIGNAL: planted 0.1 px blur -> dsig  +0.09999 +- 1.23e-05
+  N1 NULL -- independent noise added to each half.  TRUTH IS EXACTLY 0 px.
+      x merged sigma   added DN     dsig px     se(jack)     |dsig|/signal
+                 1.0      5.985    -0.11805    2.93e-02           1.1806
+                 2.0     11.970    -0.15728    6.75e-02           1.5729
+                 3.0     17.954    -0.29126    4.43e-02           2.9129
+  matched-cost check on the SAME cell: hp_sd baseline 28.4123, +3x noise 33.5434 (+18.06%), 0.1 px blur 28.3231 (-0.31%)
+  N2 NULL -- ONE half scaled (fact 701 measures 1.30 real).  TRUTH IS EXACTLY 0 px.
+      lambda     one-sided dsig px      both-sided dsig px
+        1.10             +1.702e-07             +1.894e-07
+        1.30             +8.714e-09             -5.703e-08
+        3.00             -1.472e-07             -3.072e-08
+
+==============================================================================
+RULE 39 planted wrong answer: 'adding 3x the merged noise is worth at least 0.02 px of resolution'
+  worst |dsig| under N1 at 3x noise, over all cells: 0.29126 px  (109MSDCF/centre)
+  -> claim SURVIVES
+  PR13 (N1) verdict: FAIL
+==============================================================================
+
+wrote out/s5_real_nulls.json  (254.6s)
