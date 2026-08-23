@@ -1,0 +1,65 @@
+{
+ "vertex_formula_check": {
+  "max_dx": 6.099287741534454e-14,
+  "max_dvalue": 2.6645352591003757e-15
+ },
+ "signflip_below_max_frac": 1.0,
+ "m33_repro_40k": {
+  "frac_exact": 0.4868973794758952,
+  "frac_miss": 0.5131026205241048,
+  "mean_all_pct": 2.7527122497558594,
+  "cond_median_pct": 4.640576362609863,
+  "cond_p90_pct": 10.742630004882812,
+  "cond_p99_pct": 17.343326568603516
+ },
+ "m33_all_pixels": {
+  "frac_exact": 0.4892142123999832,
+  "frac_miss": 0.5107857876000168,
+  "mean_all_pct": 2.7531397342681885,
+  "cond_median_pct": 4.668641090393066,
+  "cond_p90_pct": 10.7898530960083,
+  "cond_p99_pct": 17.47892189025879
+ },
+ "m33_odd_40k": {
+  "frac_exact": 0.5131026205241048,
+  "frac_miss": 0.4868973794758952,
+  "mean_all_pct": 2.5902862548828125,
+  "cond_median_pct": 4.595729827880859,
+  "cond_p90_pct": 10.749876022338867,
+  "cond_p99_pct": 16.65325164794922
+ },
+ "m33_x4_40k": {
+  "frac_exact": 0.23904780956191238,
+  "frac_miss": 0.7609521904380876,
+  "mean_all_pct": 9.74313735961914,
+  "cond_median_pct": 11.472284317016602,
+  "cond_p90_pct": 25.237459182739258,
+  "cond_p99_pct": 35.25979995727539
+ },
+ "m33_x6_40k": {
+  "frac_exact": 0.15850670134026806,
+  "frac_miss": 0.841493298659732,
+  "mean_all_pct": 19.606225967407227,
+  "cond_median_pct": 21.42255401611328,
+  "cond_p90_pct": 45.114418029785156,
+  "cond_p99_pct": 58.38142776489258
+ },
+ "reconciliation": {
+  "40k_interior_sample|baseline=False": 2.7527122497558594,
+  "40k_interior_sample|baseline=True": 2.876370668411255,
+  "all_pixels|baseline=False": 2.7531397342681885,
+  "all_pixels|baseline=True": 2.8757588863372803,
+  "M34_exact_form_no_interior": 2.8755853176116943
+ },
+ "P7": {
+  "x1_dense|parabola": 0.7107890697160885,
+  "x1_dense|log_baseline": 0.8874715833734731,
+  "x1_dense|log_min": 0.8756765216043167,
+  "x2even|parabola": 1.5164995027969952,
+  "x2even|log_baseline": 2.4566137880969405,
+  "x2even|log_min": 2.4251467854560294,
+  "adequacy_ratio_parabola": 3.872755458740213,
+  "adequacy_ratio_log_baseline": 3.1017469193686176,
+  "adequacy_ratio_log_min": 3.143526384277892
+ }
+}

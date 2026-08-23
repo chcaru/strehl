@@ -1,0 +1,126 @@
+{
+ "focus3d_M32_as_run": {
+  "bin0": {
+   "texture_dn": 11.532562255859375,
+   "signal_dn": 818.7546997070312,
+   "peak_over_T_mc": 115.50392763153343,
+   "arm_N_entropy": 0.00027057561148849743,
+   "arm_N_perplexity": 1.0010748414046668,
+   "arm_S_entropy": 0.6508375703821843,
+   "arm_S_perplexity": 13.250233343692035,
+   "frac_perp_under_1p05": 0.673
+  },
+  "bin1": {
+   "texture_dn": 21.02379608154297,
+   "signal_dn": 1364.5093994140625,
+   "peak_over_T_mc": 226.5389142342476,
+   "arm_N_entropy": 9.301619057803871e-09,
+   "arm_N_perplexity": 1.0000000369301436,
+   "arm_S_entropy": 0.6071909711670875,
+   "arm_S_perplexity": 11.14204076345425,
+   "frac_perp_under_1p05": 0.8465
+  },
+  "bin2": {
+   "texture_dn": 30.24793243408203,
+   "signal_dn": 1476.61328125,
+   "peak_over_T_mc": 283.21601376180774,
+   "arm_N_entropy": 7.21775607802271e-11,
+   "arm_N_perplexity": 1.0000000002865659,
+   "arm_S_entropy": 0.6083504768302144,
+   "arm_S_perplexity": 11.193452166177877,
+   "frac_perp_under_1p05": 0.8806666666666667
+  },
+  "bin3": {
+   "texture_dn": 42.46174621582031,
+   "signal_dn": 1606.103759765625,
+   "peak_over_T_mc": 359.5061950463348,
+   "arm_N_entropy": 1.5290296219326254e-13,
+   "arm_N_perplexity": 1.000000000000607,
+   "arm_S_entropy": 0.6140857696957063,
+   "arm_S_perplexity": 11.451259992452197,
+   "frac_perp_under_1p05": 0.9076666666666666
+  },
+  "bin4": {
+   "texture_dn": 63.005950927734375,
+   "signal_dn": 1813.688720703125,
+   "peak_over_T_mc": 474.0139548215883,
+   "arm_N_entropy": 8.318344904556271e-17,
+   "arm_N_perplexity": 1.0000000000000002,
+   "arm_S_entropy": 0.6309182078998561,
+   "arm_S_perplexity": 12.242695466018198,
+   "frac_perp_under_1p05": 0.9261666666666667
+  },
+  "bin5": {
+   "texture_dn": 104.00180053710938,
+   "signal_dn": 2072.896240234375,
+   "peak_over_T_mc": 724.1263775004386,
+   "arm_N_entropy": 5.532305321479887e-23,
+   "arm_N_perplexity": 1.0,
+   "arm_S_entropy": 0.6486616238302603,
+   "arm_S_perplexity": 13.136255638511585,
+   "frac_perp_under_1p05": 0.9473333333333334
+  }
+ },
+ "focus2d_M27_M33_M34": {
+  "bin0": {
+   "texture_dn": 11.532562255859375,
+   "signal_dn": 818.7546997070312,
+   "peak_over_T_mc": 83.89726957020994,
+   "arm_N_entropy": 0.00010929356662883806,
+   "arm_N_perplexity": 1.0004340215249905,
+   "arm_S_entropy": 0.5855916853632086,
+   "arm_S_perplexity": 10.226372661673345,
+   "frac_perp_under_1p05": 0.6908333333333333
+  },
+  "bin1": {
+   "texture_dn": 21.02379608154297,
+   "signal_dn": 1364.5093994140625,
+   "peak_over_T_mc": 166.48124317996576,
+   "arm_N_entropy": 9.862968507034774e-10,
+   "arm_N_perplexity": 1.0000000039158863,
+   "arm_S_entropy": 0.53884221105282,
+   "arm_S_perplexity": 8.494007323894802,
+   "frac_perp_under_1p05": 0.8575
+  },
+  "bin2": {
+   "texture_dn": 30.24793243408203,
+   "signal_dn": 1476.61328125,
+   "peak_over_T_mc": 207.6297247756425,
+   "arm_N_entropy": 5.5356710904589836e-12,
+   "arm_N_perplexity": 1.0000000000219782,
+   "arm_S_entropy": 0.5400269263907824,
+   "arm_S_perplexity": 8.534054501975312,
+   "frac_perp_under_1p05": 0.8885
+  },
+  "bin3": {
+   "texture_dn": 42.46174621582031,
+   "signal_dn": 1606.103759765625,
+   "peak_over_T_mc": 262.07640656127603,
+   "arm_N_entropy": 2.953836831733479e-15,
+   "arm_N_perplexity": 1.0000000000000118,
+   "arm_S_entropy": 0.545927550922914,
+   "arm_S_perplexity": 8.736343659024325,
+   "frac_perp_under_1p05": 0.9161666666666667
+  },
+  "bin4": {
+   "texture_dn": 63.005950927734375,
+   "signal_dn": 1813.688720703125,
+   "peak_over_T_mc": 337.7033625728245,
+   "arm_N_entropy": 2.065486600526879e-18,
+   "arm_N_perplexity": 1.0,
+   "arm_S_entropy": 0.5666551454209408,
+   "arm_S_perplexity": 9.485708952526288,
+   "frac_perp_under_1p05": 0.9325
+  },
+  "bin5": {
+   "texture_dn": 104.00180053710938,
+   "signal_dn": 2072.896240234375,
+   "peak_over_T_mc": 511.90408315115513,
+   "arm_N_entropy": 1.1212184579241278e-24,
+   "arm_N_perplexity": 1.0,
+   "arm_S_entropy": 0.5949880695972858,
+   "arm_S_perplexity": 10.615087442575028,
+   "frac_perp_under_1p05": 0.9501666666666667
+  }
+ }
+}

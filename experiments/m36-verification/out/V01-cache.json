@@ -1,0 +1,73 @@
+{
+ "n_files": 105,
+ "raw_shape": [
+  53,
+  1024,
+  1024
+ ],
+ "dense_shape": [
+  105,
+  1024,
+  1024
+ ],
+ "raw_checks": {
+  "raw[0]<-file[0]": {
+   "max_abs_diff": 0.0,
+   "identical": true
+  },
+  "raw[1]<-file[2]": {
+   "max_abs_diff": 0.0,
+   "identical": true
+  },
+  "raw[26]<-file[52]": {
+   "max_abs_diff": 0.0,
+   "identical": true
+  },
+  "raw[52]<-file[104]": {
+   "max_abs_diff": 0.0,
+   "identical": true
+  }
+ },
+ "raw_mismatch_control": 233.0,
+ "dense_checks": {
+  "dense[0]<-file[0]": {
+   "max_abs_diff": 0.0,
+   "max_rel": 0.0,
+   "identical": true
+  },
+  "dense[1]<-file[1]": {
+   "max_abs_diff": 0.0,
+   "max_rel": 0.0,
+   "identical": true
+  },
+  "dense[2]<-file[2]": {
+   "max_abs_diff": 0.0,
+   "max_rel": 0.0,
+   "identical": true
+  },
+  "dense[52]<-file[52]": {
+   "max_abs_diff": 0.0,
+   "max_rel": 0.0,
+   "identical": true
+  },
+  "dense[104]<-file[104]": {
+   "max_abs_diff": 0.0,
+   "max_rel": 0.0,
+   "identical": true
+  }
+ },
+ "cache_identity": {
+  "focus(raw[0]) vs dense[0]": {
+   "max_abs_diff": 0.0,
+   "identical": true
+  },
+  "focus(raw[13]) vs dense[26]": {
+   "max_abs_diff": 0.0,
+   "identical": true
+  },
+  "focus(raw[52]) vs dense[104]": {
+   "max_abs_diff": 0.0,
+   "identical": true
+  }
+ }
+}

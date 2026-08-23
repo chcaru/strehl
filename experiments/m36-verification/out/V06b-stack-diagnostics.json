@@ -1,0 +1,31 @@
+{
+ "119MSDCF": {
+  "n_dense": 33,
+  "n_coarse": 17,
+  "argmax_p05": 2,
+  "argmax_median": 8,
+  "argmax_p95": 15,
+  "frac_boundary": 0.10919380187988281,
+  "median_signal": 1075.9090576171875,
+  "frames_holding_1pct": 17
+ },
+ "112MSDCF": {
+  "n_dense": 79,
+  "n_coarse": 40,
+  "argmax_p05": 5,
+  "argmax_median": 23,
+  "argmax_p95": 33,
+  "frac_boundary": 0.0376739501953125,
+  "median_signal": 179.05062866210938,
+  "frames_holding_1pct": 23
+ },
+ "coffee-bean": {
+  "n_dense": 105,
+  "n_coarse": 53,
+  "argmax_p05": 10,
+  "argmax_median": 15,
+  "argmax_p95": 23,
+  "frac_boundary": 0.00043392181396484375,
+  "frames_holding_1pct": 16
+ }
+}
