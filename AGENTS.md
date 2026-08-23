@@ -330,6 +330,22 @@ monolithic binary and ship only that binary.
     fold only from a committed sha and cite it, and when a milestone reports a
     correction, **re-read the folded row itself** before believing the report's
     account of it.
+32. **`rawpy`'s `raw_image_visible` is a view into LibRaw's buffer, not a
+    copy — and its use-after-free does not reliably crash.** It is invalid the
+    instant the `RawPy` context manager exits. Allocate *and* copy inside the
+    `with`; `.astype(...)` or `.copy()` on the same line is the safe idiom.
+    M50 got this wrong and Windows raised an access violation (0xC0000005) with
+    **no Python traceback**, after several minutes of reading freed memory
+    without complaint. The crash is the lucky outcome. The unlucky one is
+    silently corrupted pixels in a measurement nobody re-checks, which is
+    exactly the class of defect this project exists to avoid shipping.
+    `python -X faulthandler` is what turned a bare exit code into a line number;
+    reach for it first on any native crash.
+
+    Every Python script here that decodes RAW must be checkable against a
+    second, independent decode of the same files. M50 stores a pooled-RMS
+    temporal sigma per plane alongside its results for exactly this reason: it
+    proves the loader, not just the estimator.
 
 ## Layout
 
