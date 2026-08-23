@@ -1,0 +1,733 @@
+{
+  "_meta": {
+    "script": "01-defect-census.py",
+    "preregistered": true,
+    "criterion_A": "|e - med(e)| > K*C_MED*(RN_e*g)/sqrt(T)  [model only]",
+    "criterion_B": "|e - med(e)| > K*1.4826*MAD(e)           [robust]",
+    "K": 6.0,
+    "C_MED": 1.0937776468960052,
+    "implied_fpr_per_plane_per_iso_gaussian": 0.0081,
+    "recurrence_min_groups": 6,
+    "model": {
+      "gain_divisor": 436.8,
+      "base_iso": 100.0,
+      "second_base_iso": 400.0,
+      "read_noise_e_low": 4.2,
+      "read_noise_e_high": 1.2392
+    },
+    "geometry": {
+      "raw_visible_shape": [
+        4688,
+        7028
+      ],
+      "plane_shape": [
+        2344,
+        3514
+      ],
+      "cfa_offsets": {
+        "R": [
+          0,
+          0
+        ],
+        "G1": [
+          0,
+          1
+        ],
+        "G2": [
+          1,
+          0
+        ],
+        "B": [
+          1,
+          1
+        ]
+      },
+      "canonical_decoder": "rawpy raw_image_visible",
+      "note": "SYNTHESIS fact 691: rawler reports a 2-column-wider visible area. A consumer in rawler's frame must check plane_shape before indexing this map."
+    }
+  },
+  "per_iso": [
+    {
+      "iso": 50,
+      "dir": "122MSDCF",
+      "frames": 20,
+      "sigma_frame_model_dn": 0.9615384615384616,
+      "sigma_pred_dn": 0.23516934333934897,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "F_obs_over_pred": 1.8913179485223792,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 13285,
+          "flag_A_cold": 7105,
+          "flag_B_hot": 575,
+          "flag_B_cold": 403,
+          "n_pixels": 8236816
+        },
+        "G1": {
+          "sigma_obs_dn": 0.44478000000001683,
+          "F_obs_over_pred": 1.8913179485227376,
+          "median_excess_dn": -0.05000000000001137,
+          "flag_A_hot": 15599,
+          "flag_A_cold": 8290,
+          "flag_B_hot": 576,
+          "flag_B_cold": 401,
+          "n_pixels": 8236816
+        },
+        "G2": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "F_obs_over_pred": 1.8913179485223792,
+          "median_excess_dn": -0.05000000000001137,
+          "flag_A_hot": 27075,
+          "flag_A_cold": 6953,
+          "flag_B_hot": 3210,
+          "flag_B_cold": 232,
+          "n_pixels": 8236816
+        },
+        "B": {
+          "sigma_obs_dn": 0.4447799999998483,
+          "F_obs_over_pred": 1.891317948522021,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 13276,
+          "flag_A_cold": 3281,
+          "flag_B_hot": 1912,
+          "flag_B_cold": 188,
+          "n_pixels": 8236816
+        }
+      }
+    },
+    {
+      "iso": 100,
+      "dir": "118MSDCF",
+      "frames": 20,
+      "sigma_frame_model_dn": 0.9615384615384616,
+      "sigma_pred_dn": 0.23516934333934897,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "F_obs_over_pred": 1.8913179485223792,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 13235,
+          "flag_A_cold": 7521,
+          "flag_B_hot": 569,
+          "flag_B_cold": 419,
+          "n_pixels": 8236816
+        },
+        "G1": {
+          "sigma_obs_dn": 0.44478000000001683,
+          "F_obs_over_pred": 1.8913179485227376,
+          "median_excess_dn": -0.05000000000001137,
+          "flag_A_hot": 15292,
+          "flag_A_cold": 8156,
+          "flag_B_hot": 614,
+          "flag_B_cold": 411,
+          "n_pixels": 8236816
+        },
+        "G2": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "F_obs_over_pred": 1.8913179485223792,
+          "median_excess_dn": -0.05000000000001137,
+          "flag_A_hot": 27117,
+          "flag_A_cold": 6999,
+          "flag_B_hot": 3349,
+          "flag_B_cold": 234,
+          "n_pixels": 8236816
+        },
+        "B": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "F_obs_over_pred": 1.8913179485223792,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 13591,
+          "flag_A_cold": 3371,
+          "flag_B_hot": 1868,
+          "flag_B_cold": 165,
+          "n_pixels": 8236816
+        }
+      }
+    },
+    {
+      "iso": 200,
+      "dir": "123MSDCF",
+      "frames": 20,
+      "sigma_frame_model_dn": 1.9230769230769231,
+      "sigma_pred_dn": 0.47033868667869794,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "F_obs_over_pred": 0.945658974261548,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 4845,
+          "flag_A_cold": 3882,
+          "flag_B_hot": 5776,
+          "flag_B_cold": 4564,
+          "n_pixels": 8236816
+        },
+        "G1": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "F_obs_over_pred": 0.945658974261548,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 4965,
+          "flag_A_cold": 3951,
+          "flag_B_hot": 5878,
+          "flag_B_cold": 4646,
+          "n_pixels": 8236816
+        },
+        "G2": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "F_obs_over_pred": 0.945658974261548,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 16815,
+          "flag_A_cold": 2731,
+          "flag_B_hot": 18930,
+          "flag_B_cold": 3230,
+          "n_pixels": 8236816
+        },
+        "B": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "F_obs_over_pred": 0.9456589742611896,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 12296,
+          "flag_A_cold": 1962,
+          "flag_B_hot": 13997,
+          "flag_B_cold": 2367,
+          "n_pixels": 8236816
+        }
+      }
+    },
+    {
+      "iso": 250,
+      "dir": "126MSDCF",
+      "frames": 20,
+      "sigma_frame_model_dn": 2.4038461538461537,
+      "sigma_pred_dn": 0.5879233583483724,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.6671699999998988,
+          "F_obs_over_pred": 1.1347907691134276,
+          "median_excess_dn": -0.10000000000002274,
+          "flag_A_hot": 5082,
+          "flag_A_cold": 3946,
+          "flag_B_hot": 3261,
+          "flag_B_cold": 2598,
+          "n_pixels": 8236816
+        },
+        "G1": {
+          "sigma_obs_dn": 0.6671699999998988,
+          "F_obs_over_pred": 1.1347907691134276,
+          "median_excess_dn": -0.10000000000002274,
+          "flag_A_hot": 5329,
+          "flag_A_cold": 4022,
+          "flag_B_hot": 3351,
+          "flag_B_cold": 2623,
+          "n_pixels": 8236816
+        },
+        "G2": {
+          "sigma_obs_dn": 0.5930400000001348,
+          "F_obs_over_pred": 1.0087029058789845,
+          "median_excess_dn": -0.10000000000002274,
+          "flag_A_hot": 16557,
+          "flag_A_cold": 2946,
+          "flag_B_hot": 16027,
+          "flag_B_cold": 2828,
+          "n_pixels": 8236816
+        },
+        "B": {
+          "sigma_obs_dn": 0.593039999999882,
+          "F_obs_over_pred": 1.0087029058785546,
+          "median_excess_dn": -0.0999999999999659,
+          "flag_A_hot": 11865,
+          "flag_A_cold": 2035,
+          "flag_B_hot": 11405,
+          "flag_B_cold": 1950,
+          "n_pixels": 8236816
+        }
+      }
+    },
+    {
+      "iso": 400,
+      "dir": "119MSDCF",
+      "frames": 20,
+      "sigma_frame_model_dn": 1.1347985347985348,
+      "sigma_pred_dn": 0.2775446193010679,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.37065000000008425,
+          "F_obs_over_pred": 1.33546094654431,
+          "median_excess_dn": -0.05000000000001137,
+          "flag_A_hot": 13168,
+          "flag_A_cold": 8567,
+          "flag_B_hot": 4879,
+          "flag_B_cold": 3296,
+          "n_pixels": 8236816
+        },
+        "G1": {
+          "sigma_obs_dn": 0.44478000000001683,
+          "F_obs_over_pred": 1.6025531358528682,
+          "median_excess_dn": -0.05000000000001137,
+          "flag_A_hot": 13958,
+          "flag_A_cold": 9332,
+          "flag_B_hot": 2458,
+          "flag_B_cold": 1863,
+          "n_pixels": 8236816
+        },
+        "G2": {
+          "sigma_obs_dn": 0.37065000000008425,
+          "F_obs_over_pred": 1.33546094654431,
+          "median_excess_dn": -0.05000000000001137,
+          "flag_A_hot": 30397,
+          "flag_A_cold": 6693,
+          "flag_B_hot": 15023,
+          "flag_B_cold": 2259,
+          "n_pixels": 8236816
+        },
+        "B": {
+          "sigma_obs_dn": 0.37065000000008425,
+          "F_obs_over_pred": 1.33546094654431,
+          "median_excess_dn": -0.05000000000001137,
+          "flag_A_hot": 20343,
+          "flag_A_cold": 4451,
+          "flag_B_hot": 10572,
+          "flag_B_cold": 1710,
+          "n_pixels": 8236816
+        }
+      }
+    },
+    {
+      "iso": 500,
+      "dir": "125MSDCF",
+      "frames": 20,
+      "sigma_frame_model_dn": 1.4184981684981686,
+      "sigma_pred_dn": 0.34693077412633483,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.5189099999998651,
+          "F_obs_over_pred": 1.4957162601288982,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 10921,
+          "flag_A_cold": 8250,
+          "flag_B_hot": 2890,
+          "flag_B_cold": 2368,
+          "n_pixels": 8236816
+        },
+        "G1": {
+          "sigma_obs_dn": 0.5189099999998651,
+          "F_obs_over_pred": 1.4957162601288982,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 11169,
+          "flag_A_cold": 8458,
+          "flag_B_hot": 3002,
+          "flag_B_cold": 2436,
+          "n_pixels": 8236816
+        },
+        "G2": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "F_obs_over_pred": 1.2820425086825376,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 28108,
+          "flag_A_cold": 5692,
+          "flag_B_hot": 16179,
+          "flag_B_cold": 2585,
+          "n_pixels": 8236816
+        },
+        "B": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "F_obs_over_pred": 1.2820425086820517,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 20385,
+          "flag_A_cold": 4258,
+          "flag_B_hot": 11363,
+          "flag_B_cold": 1896,
+          "n_pixels": 8236816
+        }
+      }
+    },
+    {
+      "iso": 640,
+      "dir": "124MSDCF",
+      "frames": 20,
+      "sigma_frame_model_dn": 1.8156776556776557,
+      "sigma_pred_dn": 0.44407139088170855,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "F_obs_over_pred": 1.0015957099082324,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 9038,
+          "flag_A_cold": 7437,
+          "flag_B_hot": 9038,
+          "flag_B_cold": 7437,
+          "n_pixels": 8236816
+        },
+        "G1": {
+          "sigma_obs_dn": 0.5189099999998651,
+          "F_obs_over_pred": 1.168528328225702,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 9172,
+          "flag_A_cold": 7657,
+          "flag_B_hot": 5736,
+          "flag_B_cold": 5046,
+          "n_pixels": 8236816
+        },
+        "G2": {
+          "sigma_obs_dn": 0.5189099999998651,
+          "F_obs_over_pred": 1.168528328225702,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 24991,
+          "flag_A_cold": 5366,
+          "flag_B_hot": 18170,
+          "flag_B_cold": 3417,
+          "n_pixels": 8236816
+        },
+        "B": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "F_obs_over_pred": 1.0015957099082324,
+          "median_excess_dn": -0.05000000000006821,
+          "flag_A_hot": 19128,
+          "flag_A_cold": 3895,
+          "flag_B_hot": 19128,
+          "flag_B_cold": 3895,
+          "n_pixels": 8236816
+        }
+      }
+    },
+    {
+      "iso": 800,
+      "dir": "120MSDCF",
+      "frames": 20,
+      "sigma_frame_model_dn": 2.2695970695970695,
+      "sigma_pred_dn": 0.5550892386021358,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.6671699999998988,
+          "F_obs_over_pred": 1.2019148518894234,
+          "median_excess_dn": -0.10000000000002274,
+          "flag_A_hot": 9779,
+          "flag_A_cold": 7373,
+          "flag_B_hot": 5522,
+          "flag_B_cold": 4325,
+          "n_pixels": 8236816
+        },
+        "G1": {
+          "sigma_obs_dn": 0.6671699999998988,
+          "F_obs_over_pred": 1.2019148518894234,
+          "median_excess_dn": -0.10000000000002274,
+          "flag_A_hot": 9780,
+          "flag_A_cold": 7807,
+          "flag_B_hot": 5470,
+          "flag_B_cold": 4585,
+          "n_pixels": 8236816
+        },
+        "G2": {
+          "sigma_obs_dn": 0.5930400000001348,
+          "F_obs_over_pred": 1.0683687572354479,
+          "median_excess_dn": -0.0999999999999659,
+          "flag_A_hot": 25955,
+          "flag_A_cold": 5509,
+          "flag_B_hot": 22250,
+          "flag_B_cold": 4511,
+          "n_pixels": 8236816
+        },
+        "B": {
+          "sigma_obs_dn": 0.593039999999882,
+          "F_obs_over_pred": 1.0683687572349925,
+          "median_excess_dn": -0.0999999999999659,
+          "flag_A_hot": 19353,
+          "flag_A_cold": 3998,
+          "flag_B_hot": 16396,
+          "flag_B_cold": 3200,
+          "n_pixels": 8236816
+        }
+      }
+    },
+    {
+      "iso": 1000,
+      "dir": "127MSDCF",
+      "frames": 20,
+      "sigma_frame_model_dn": 2.836996336996337,
+      "sigma_pred_dn": 0.6938615482526697,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.6671700000000674,
+          "F_obs_over_pred": 0.9615318815117818,
+          "median_excess_dn": -0.10000000000002274,
+          "flag_A_hot": 9092,
+          "flag_A_cold": 7424,
+          "flag_B_hot": 10016,
+          "flag_B_cold": 8137,
+          "n_pixels": 8236816
+        },
+        "G1": {
+          "sigma_obs_dn": 0.7412999999999157,
+          "F_obs_over_pred": 1.0683687572350837,
+          "median_excess_dn": -0.10000000000002274,
+          "flag_A_hot": 9329,
+          "flag_A_cold": 7561,
+          "flag_B_hot": 7917,
+          "flag_B_cold": 6462,
+          "n_pixels": 8236816
+        },
+        "G2": {
+          "sigma_obs_dn": 0.7412999999999157,
+          "F_obs_over_pred": 1.0683687572350837,
+          "median_excess_dn": -0.10000000000002274,
+          "flag_A_hot": 24618,
+          "flag_A_cold": 5450,
+          "flag_B_hot": 21879,
+          "flag_B_cold": 4642,
+          "n_pixels": 8236816
+        },
+        "B": {
+          "sigma_obs_dn": 0.667169999999983,
+          "F_obs_over_pred": 0.9615318815116602,
+          "median_excess_dn": -0.10000000000002274,
+          "flag_A_hot": 18584,
+          "flag_A_cold": 3855,
+          "flag_B_hot": 20188,
+          "flag_B_cold": 4279,
+          "n_pixels": 8236816
+        }
+      }
+    },
+    {
+      "iso": 1600,
+      "dir": "121MSDCF",
+      "frames": 20,
+      "sigma_frame_model_dn": 4.539194139194139,
+      "sigma_pred_dn": 1.1101784772042715,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 1.0378199999998987,
+          "F_obs_over_pred": 0.9348226625807132,
+          "median_excess_dn": -0.14999999999997726,
+          "flag_A_hot": 8524,
+          "flag_A_cold": 7247,
+          "flag_B_hot": 10288,
+          "flag_B_cold": 8692,
+          "n_pixels": 8236816
+        },
+        "G1": {
+          "sigma_obs_dn": 1.037819999999983,
+          "F_obs_over_pred": 0.9348226625807892,
+          "median_excess_dn": -0.14999999999997726,
+          "flag_A_hot": 8651,
+          "flag_A_cold": 7478,
+          "flag_B_hot": 10466,
+          "flag_B_cold": 9075,
+          "n_pixels": 8236816
+        },
+        "G2": {
+          "sigma_obs_dn": 1.11195,
+          "F_obs_over_pred": 1.0015957099080046,
+          "median_excess_dn": -0.14999999999997726,
+          "flag_A_hot": 24346,
+          "flag_A_cold": 5450,
+          "flag_B_hot": 24346,
+          "flag_B_cold": 5450,
+          "n_pixels": 8236816
+        },
+        "B": {
+          "sigma_obs_dn": 1.0378199999998987,
+          "F_obs_over_pred": 0.9348226625807132,
+          "median_excess_dn": -0.14999999999997726,
+          "flag_A_hot": 18079,
+          "flag_A_cold": 3517,
+          "flag_B_hot": 21027,
+          "flag_B_cold": 4397,
+          "n_pixels": 8236816
+        }
+      }
+    },
+    {
+      "iso": 2000,
+      "dir": "128MSDCF",
+      "frames": 20,
+      "sigma_frame_model_dn": 5.673992673992674,
+      "sigma_pred_dn": 1.3877230965053393,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 1.260210000000118,
+          "F_obs_over_pred": 0.9081134436500093,
+          "median_excess_dn": -0.1999999999999318,
+          "flag_A_hot": 8639,
+          "flag_A_cold": 7164,
+          "flag_B_hot": 11179,
+          "flag_B_cold": 9175,
+          "n_pixels": 8236816
+        },
+        "G1": {
+          "sigma_obs_dn": 1.260210000000118,
+          "F_obs_over_pred": 0.9081134436500093,
+          "median_excess_dn": -0.1999999999999318,
+          "flag_A_hot": 8732,
+          "flag_A_cold": 7328,
+          "flag_B_hot": 11309,
+          "flag_B_cold": 9335,
+          "n_pixels": 8236816
+        },
+        "G2": {
+          "sigma_obs_dn": 1.334339999999966,
+          "F_obs_over_pred": 0.9615318815116602,
+          "median_excess_dn": -0.1999999999999318,
+          "flag_A_hot": 24232,
+          "flag_A_cold": 5243,
+          "flag_B_hot": 26112,
+          "flag_B_cold": 5817,
+          "n_pixels": 8236816
+        },
+        "B": {
+          "sigma_obs_dn": 1.260209999999865,
+          "F_obs_over_pred": 0.9081134436498272,
+          "median_excess_dn": -0.15000000000009095,
+          "flag_A_hot": 17310,
+          "flag_A_cold": 3645,
+          "flag_B_hot": 21250,
+          "flag_B_cold": 4801,
+          "n_pixels": 8236816
+        }
+      }
+    }
+  ],
+  "recurrence": {
+    "R": {
+      "hot_by_groups": [
+        8192190,
+        31327,
+        9067,
+        2917,
+        964,
+        250,
+        53,
+        38,
+        4,
+        3,
+        1,
+        2
+      ],
+      "cold_by_groups": [
+        8200435,
+        25836,
+        7262,
+        2357,
+        706,
+        176,
+        32,
+        9,
+        3,
+        0,
+        0,
+        0
+      ],
+      "hot_defects": 101,
+      "cold_defects": 44,
+      "hot_all11": 2,
+      "cold_all11": 0
+    },
+    "G1": {
+      "hot_by_groups": [
+        8196467,
+        28910,
+        7918,
+        2489,
+        728,
+        206,
+        72,
+        19,
+        6,
+        1,
+        0,
+        0
+      ],
+      "cold_by_groups": [
+        8203143,
+        24294,
+        6531,
+        2085,
+        587,
+        135,
+        38,
+        3,
+        0,
+        0,
+        0,
+        0
+      ],
+      "hot_defects": 98,
+      "cold_defects": 41,
+      "hot_all11": 0,
+      "cold_all11": 0
+    },
+    "G2": {
+      "hot_by_groups": [
+        8161946,
+        35567,
+        14698,
+        8110,
+        5127,
+        3603,
+        2646,
+        1949,
+        1424,
+        952,
+        554,
+        240
+      ],
+      "cold_by_groups": [
+        8211110,
+        18848,
+        4866,
+        1482,
+        398,
+        89,
+        19,
+        4,
+        0,
+        0,
+        0,
+        0
+      ],
+      "hot_defects": 7765,
+      "cold_defects": 23,
+      "hot_all11": 240,
+      "cold_all11": 0
+    },
+    "B": {
+      "hot_by_groups": [
+        8173429,
+        31446,
+        12536,
+        6691,
+        4236,
+        2792,
+        2046,
+        1462,
+        1085,
+        627,
+        348,
+        118
+      ],
+      "cold_by_groups": [
+        8215714,
+        15508,
+        4010,
+        1143,
+        337,
+        81,
+        23,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "hot_defects": 5686,
+      "cold_defects": 23,
+      "hot_all11": 118,
+      "cold_all11": 0
+    }
+  },
+  "totals": {
+    "hot_defects": 13650,
+    "cold_defects": 131,
+    "sensor_pixels": 32947264
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "stack": "coffee-bubbles",
+  "frames": 19,
+  "tiff_shape": [
+    2344,
+    3516,
+    3
+  ],
+  "rawpy_plane_shape": [
+    2344,
+    3514
+  ],
+  "planes": {
+    "R": {
+      "n_defects": 101,
+      "tiff_per_dn": 8.207619365636523,
+      "tiff_offset": -3941.9144223081285,
+      "merged_excess_dn_mean": 112.00652585596292,
+      "merged_excess_dn_median": 4.020654288399832,
+      "merged_control_mean": -12.952224750839788,
+      "unaligned_excess_dn_mean": 93.56383533090153,
+      "unaligned_excess_dn_median": 5.578947368421041,
+      "unaligned_control_mean": -4.149557060969259,
+      "D_mean": 1.2788293144676306,
+      "D_median": 1.2153341371754132
+    },
+    "B": {
+      "n_defects": 5686,
+      "tiff_per_dn": 6.284463951240915,
+      "tiff_offset": -3061.5928049682875,
+      "merged_excess_dn_mean": 10.449617216501768,
+      "merged_excess_dn_median": 3.978064031231106,
+      "merged_control_mean": -2.8376203773392312,
+      "unaligned_excess_dn_mean": 5.680313604976212,
+      "unaligned_excess_dn_median": 4.473684210526358,
+      "unaligned_control_mean": -2.083121980117372,
+      "D_mean": 1.7115151466386294,
+      "D_median": 1.1220601226235236
+    }
+  },
+  "column_offset_scan": {
+    "-4": -56.0,
+    "-3": -40.0,
+    "-2": -11.5,
+    "-1": -19.0,
+    "0": 33.0,
+    "1": -25.0,
+    "2": -3.0,
+    "3": 7.0,
+    "4": -57.0
+  },
+  "column_offset_measured": 0,
+  "green_binning": {
+    "n_defects_G1": 98,
+    "merged_G_excess_dn": 128.57265807458532,
+    "unaligned_G1_excess_dn": 202.38399570354454,
+    "ratio": 0.6352906395964268,
+    "note": "expected ~0.5 from (G1+G2)/2 binning alone, NOT estimator dilution; a G1-only defect is halved by the CFA bin"
+  },
+  "_meta": {
+    "script": "04-merge-dilution.py",
+    "D_definition": "merged defect excess / unaligned-mean defect excess, both local-8-neighbour-median highpassed, both control-subtracted",
+    "why_R_and_B_only": "the TIFF G channel bins G1+G2, which halves a single-plane green defect for reasons unrelated to the estimator",
+    "decoder_note": "SYNTHESIS fact 691; column offset measured, not assumed"
+  }
+}

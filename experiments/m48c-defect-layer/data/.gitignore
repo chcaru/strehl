@@ -1,0 +1,5 @@
+# Per-plane defect maps and per-ISO recurrence counts, ~188 MB total.
+# Regenerable from src/01-defect-census.py and src/02-stability-and-clusters.py
+# against the read-only darks at D:\macro-dark-frames. The JSON summaries in
+# this directory are committed; the arrays are not.
+*.npy

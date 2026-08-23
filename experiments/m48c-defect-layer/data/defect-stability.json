@@ -1,0 +1,635 @@
+{
+  "bit_order_iso": [
+    50,
+    100,
+    200,
+    250,
+    400,
+    500,
+    640,
+    800,
+    1000,
+    1600,
+    2000
+  ],
+  "per_iso": [
+    {
+      "iso": 50,
+      "frames": 20,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.333333333334597,
+          "sigma_obs_in_quanta": 5.9999999999990905,
+          "hot": 575,
+          "cold": 403
+        },
+        "G1": {
+          "sigma_obs_dn": 0.44478000000001683,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.333333333333018,
+          "sigma_obs_in_quanta": 6.0000000000002265,
+          "hot": 576,
+          "cold": 401
+        },
+        "G2": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.333333333334597,
+          "sigma_obs_in_quanta": 5.9999999999990905,
+          "hot": 3210,
+          "cold": 232
+        },
+        "B": {
+          "sigma_obs_dn": 0.4447799999998483,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.333333333336176,
+          "sigma_obs_in_quanta": 5.999999999997954,
+          "hot": 1912,
+          "cold": 188
+        }
+      }
+    },
+    {
+      "iso": 100,
+      "frames": 20,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.333333333334597,
+          "sigma_obs_in_quanta": 5.9999999999990905,
+          "hot": 569,
+          "cold": 419
+        },
+        "G1": {
+          "sigma_obs_dn": 0.44478000000001683,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.333333333333018,
+          "sigma_obs_in_quanta": 6.0000000000002265,
+          "hot": 614,
+          "cold": 411
+        },
+        "G2": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.333333333334597,
+          "sigma_obs_in_quanta": 5.9999999999990905,
+          "hot": 3349,
+          "cold": 234
+        },
+        "B": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.333333333334597,
+          "sigma_obs_in_quanta": 5.9999999999990905,
+          "hot": 1868,
+          "cold": 165
+        }
+      }
+    },
+    {
+      "iso": 200,
+      "frames": 20,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.33333333333144,
+          "sigma_obs_in_quanta": 6.000000000001363,
+          "hot": 5776,
+          "cold": 4564
+        },
+        "G1": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.33333333333144,
+          "sigma_obs_in_quanta": 6.000000000001363,
+          "hot": 5878,
+          "cold": 4646
+        },
+        "G2": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.33333333333144,
+          "sigma_obs_in_quanta": 6.000000000001363,
+          "hot": 18930,
+          "cold": 3230
+        },
+        "B": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.333333333334597,
+          "sigma_obs_in_quanta": 5.9999999999990905,
+          "hot": 13997,
+          "cold": 2367
+        }
+      }
+    },
+    {
+      "iso": 250,
+      "frames": 20,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.6671699999998988,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 5.555555555556398,
+          "sigma_obs_in_quanta": 8.999999999998634,
+          "hot": 3261,
+          "cold": 2598
+        },
+        "G1": {
+          "sigma_obs_dn": 0.6671699999998988,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 5.555555555556398,
+          "sigma_obs_in_quanta": 8.999999999998634,
+          "hot": 3351,
+          "cold": 2623
+        },
+        "G2": {
+          "sigma_obs_dn": 0.5930400000001348,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 6.24999999999858,
+          "sigma_obs_in_quanta": 8.000000000001819,
+          "hot": 16027,
+          "cold": 2828
+        },
+        "B": {
+          "sigma_obs_dn": 0.593039999999882,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 6.2500000000012434,
+          "sigma_obs_in_quanta": 7.999999999998408,
+          "hot": 11405,
+          "cold": 1950
+        }
+      }
+    },
+    {
+      "iso": 400,
+      "frames": 20,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.37065000000008425,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 9.999999999997728,
+          "sigma_obs_in_quanta": 5.000000000001136,
+          "hot": 4879,
+          "cold": 3296
+        },
+        "G1": {
+          "sigma_obs_dn": 0.44478000000001683,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.333333333333018,
+          "sigma_obs_in_quanta": 6.0000000000002265,
+          "hot": 2458,
+          "cold": 1863
+        },
+        "G2": {
+          "sigma_obs_dn": 0.37065000000008425,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 9.999999999997728,
+          "sigma_obs_in_quanta": 5.000000000001136,
+          "hot": 15023,
+          "cold": 2259
+        },
+        "B": {
+          "sigma_obs_dn": 0.37065000000008425,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 9.999999999997728,
+          "sigma_obs_in_quanta": 5.000000000001136,
+          "hot": 10572,
+          "cold": 1710
+        }
+      }
+    },
+    {
+      "iso": 500,
+      "frames": 20,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.5189099999998651,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 7.142857142859,
+          "sigma_obs_in_quanta": 6.99999999999818,
+          "hot": 2890,
+          "cold": 2368
+        },
+        "G1": {
+          "sigma_obs_dn": 0.5189099999998651,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 7.142857142859,
+          "sigma_obs_in_quanta": 6.99999999999818,
+          "hot": 3002,
+          "cold": 2436
+        },
+        "G2": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.33333333333144,
+          "sigma_obs_in_quanta": 6.000000000001363,
+          "hot": 16179,
+          "cold": 2585
+        },
+        "B": {
+          "sigma_obs_dn": 0.44477999999993256,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.333333333334597,
+          "sigma_obs_in_quanta": 5.9999999999990905,
+          "hot": 11363,
+          "cold": 1896
+        }
+      }
+    },
+    {
+      "iso": 640,
+      "frames": 20,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.33333333333144,
+          "sigma_obs_in_quanta": 6.000000000001363,
+          "hot": 9038,
+          "cold": 7437
+        },
+        "G1": {
+          "sigma_obs_dn": 0.5189099999998651,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 7.142857142859,
+          "sigma_obs_in_quanta": 6.99999999999818,
+          "hot": 5736,
+          "cold": 5046
+        },
+        "G2": {
+          "sigma_obs_dn": 0.5189099999998651,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 7.142857142859,
+          "sigma_obs_in_quanta": 6.99999999999818,
+          "hot": 18170,
+          "cold": 3417
+        },
+        "B": {
+          "sigma_obs_dn": 0.4447800000001011,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 8.33333333333144,
+          "sigma_obs_in_quanta": 6.000000000001363,
+          "hot": 19128,
+          "cold": 3895
+        }
+      }
+    },
+    {
+      "iso": 800,
+      "frames": 20,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.6671699999998988,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 5.555555555556398,
+          "sigma_obs_in_quanta": 8.999999999998634,
+          "hot": 5522,
+          "cold": 4325
+        },
+        "G1": {
+          "sigma_obs_dn": 0.6671699999998988,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 5.555555555556398,
+          "sigma_obs_in_quanta": 8.999999999998634,
+          "hot": 5470,
+          "cold": 4585
+        },
+        "G2": {
+          "sigma_obs_dn": 0.5930400000001348,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 6.24999999999858,
+          "sigma_obs_in_quanta": 8.000000000001819,
+          "hot": 22250,
+          "cold": 4511
+        },
+        "B": {
+          "sigma_obs_dn": 0.593039999999882,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 6.2500000000012434,
+          "sigma_obs_in_quanta": 7.999999999998408,
+          "hot": 16396,
+          "cold": 3200
+        }
+      }
+    },
+    {
+      "iso": 1000,
+      "frames": 20,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 0.6671700000000674,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 5.555555555554994,
+          "sigma_obs_in_quanta": 9.00000000000091,
+          "hot": 10016,
+          "cold": 8137
+        },
+        "G1": {
+          "sigma_obs_dn": 0.7412999999999157,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 5.000000000000568,
+          "sigma_obs_in_quanta": 9.999999999998863,
+          "hot": 7917,
+          "cold": 6462
+        },
+        "G2": {
+          "sigma_obs_dn": 0.7412999999999157,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 5.000000000000568,
+          "sigma_obs_in_quanta": 9.999999999998863,
+          "hot": 21879,
+          "cold": 4642
+        },
+        "B": {
+          "sigma_obs_dn": 0.667169999999983,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 5.555555555555697,
+          "sigma_obs_in_quanta": 8.99999999999977,
+          "hot": 20188,
+          "cold": 4279
+        }
+      }
+    },
+    {
+      "iso": 1600,
+      "frames": 20,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 1.0378199999998987,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 3.5714285714289202,
+          "sigma_obs_in_quanta": 13.999999999998634,
+          "hot": 10288,
+          "cold": 8692
+        },
+        "G1": {
+          "sigma_obs_dn": 1.037819999999983,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 3.57142857142863,
+          "sigma_obs_in_quanta": 13.99999999999977,
+          "hot": 10466,
+          "cold": 9075
+        },
+        "G2": {
+          "sigma_obs_dn": 1.11195,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 3.3333333333333335,
+          "sigma_obs_in_quanta": 15.0,
+          "hot": 24346,
+          "cold": 5450
+        },
+        "B": {
+          "sigma_obs_dn": 1.0378199999998987,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 3.5714285714289202,
+          "sigma_obs_in_quanta": 13.999999999998634,
+          "hot": 21027,
+          "cold": 4397
+        }
+      }
+    },
+    {
+      "iso": 2000,
+      "frames": 20,
+      "planes": {
+        "R": {
+          "sigma_obs_dn": 1.260210000000118,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 2.94117647058796,
+          "sigma_obs_in_quanta": 17.00000000000159,
+          "hot": 11179,
+          "cold": 9175
+        },
+        "G1": {
+          "sigma_obs_dn": 1.260210000000118,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 2.94117647058796,
+          "sigma_obs_in_quanta": 17.00000000000159,
+          "hot": 11309,
+          "cold": 9335
+        },
+        "G2": {
+          "sigma_obs_dn": 1.334339999999966,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 2.7777777777778483,
+          "sigma_obs_in_quanta": 17.99999999999954,
+          "hot": 26112,
+          "cold": 5817
+        },
+        "B": {
+          "sigma_obs_dn": 1.260209999999865,
+          "quantum_dn": 0.07413,
+          "quantum_rel_pct": 2.9411764705885504,
+          "sigma_obs_in_quanta": 16.999999999998177,
+          "hot": 21250,
+          "cold": 4801
+        }
+      }
+    }
+  ],
+  "planes": {
+    "R": {
+      "hot_defects": 101,
+      "cold_defects": 44,
+      "hot_defect_hits_per_iso": [
+        25,
+        22,
+        51,
+        40,
+        75,
+        69,
+        75,
+        75,
+        74,
+        81,
+        88
+      ],
+      "cold_defect_hits_per_iso": [
+        6,
+        15,
+        30,
+        24,
+        26,
+        26,
+        31,
+        27,
+        29,
+        31,
+        34
+      ],
+      "hot_all11": 2,
+      "components": 101,
+      "component_size_hist": [
+        0,
+        101,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "largest_component": 1,
+      "isolated_singletons": 101
+    },
+    "G1": {
+      "hot_defects": 98,
+      "cold_defects": 41,
+      "hot_defect_hits_per_iso": [
+        12,
+        13,
+        36,
+        30,
+        53,
+        72,
+        83,
+        75,
+        81,
+        79,
+        88
+      ],
+      "cold_defect_hits_per_iso": [
+        13,
+        8,
+        23,
+        22,
+        25,
+        23,
+        26,
+        30,
+        21,
+        30,
+        28
+      ],
+      "hot_all11": 0,
+      "components": 98,
+      "component_size_hist": [
+        0,
+        98,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "largest_component": 1,
+      "isolated_singletons": 98
+    },
+    "G2": {
+      "hot_defects": 7765,
+      "cold_defects": 23,
+      "hot_defect_hits_per_iso": [
+        2165,
+        2197,
+        5944,
+        5516,
+        5566,
+        5705,
+        5924,
+        6089,
+        6021,
+        6197,
+        6335
+      ],
+      "cold_defect_hits_per_iso": [
+        3,
+        5,
+        11,
+        16,
+        16,
+        14,
+        14,
+        16,
+        13,
+        16,
+        18
+      ],
+      "hot_all11": 240,
+      "components": 7745,
+      "component_size_hist": [
+        0,
+        7725,
+        20,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "largest_component": 2,
+      "isolated_singletons": 7725
+    },
+    "B": {
+      "hot_defects": 5686,
+      "cold_defects": 23,
+      "hot_defect_hits_per_iso": [
+        1358,
+        1239,
+        4342,
+        3866,
+        3854,
+        4008,
+        4620,
+        4384,
+        4602,
+        4701,
+        4637
+      ],
+      "cold_defect_hits_per_iso": [
+        7,
+        5,
+        12,
+        18,
+        11,
+        9,
+        15,
+        14,
+        15,
+        14,
+        18
+      ],
+      "hot_all11": 118,
+      "components": 5676,
+      "component_size_hist": [
+        0,
+        5667,
+        8,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "largest_component": 3,
+      "isolated_singletons": 5667
+    }
+  },
+  "_meta": {
+    "script": "02-stability-and-clusters.py",
+    "criterion": "identical to 01 criterion B, K=6 robust MAD",
+    "bit_semantics": "bit b set = flagged in the ISO group at bit_order_iso[b]",
+    "quantisation_disclosure": "mean of T=20 integer frames is quantised at 1/20 DN, so MAD takes only values k*1.4826/20; the per-ISO quantum_rel_pct is the resulting systematic on any ratio"
+  }
+}
