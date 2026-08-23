@@ -149,7 +149,10 @@ take it as a specification. An independent verifier is auditing the repair now.
 
 ## What I found overnight that you should know about
 
-Three things, in descending order of how much they change the plan.
+**Nine things.** Items 1–6 are in descending order of how much they change the plan. Items
+7–9 landed later and were appended rather than merged into the ordering — **item 7 is the
+single most important result of the night** and would sit first if this file were rewritten
+rather than appended to. If you read only one, read 7.
 
 **1. The pluggability requirement — your #1 structural ask — had a hole, and the design
 could not see it.** The merge's gate is calibrated in units of a constant that belongs to
@@ -234,11 +237,94 @@ its row-correlated component is about **a thousand times smaller** than the row 
 the scene itself puts in the tiles. No window number in the corpus is biased. Facts 90-99,
 506-508.
 
+**7. An independent verifier refuted a constant I shipped, and it is the most important
+result of the night.** This one belongs at the top of the list rather than at position 7;
+it is here because I append to this file rather than rewrite it.
+
+Earlier tonight I found a defect (fact 341) and fixed it by introducing
+`SELECTION_INFLATION = 1.074` into the merge. M40 audited that repair under rule 24 —
+*re-choose, do not re-compute*. **The repair does not stand, and neither does the defect
+report that motivated it.**
+
+The arithmetic reproduced to four decimal places. Every single problem was a *choice*:
+
+- **It has no defined meaning at any value.** It multiplies a ratio of two **spatial**
+  standard deviations into a **temporal** per-sample sigma. That is the same units error the
+  project already caught once, in fact 88.
+- **It exceeds its own ceiling.** On a plant built to maximise the winner's curse, the
+  mechanism it models cannot produce more than **1.045×**. I shipped 1.074.
+- **It is not a constant.** The same estimator reads **1.0001× to 1.2732×** across six
+  regions on two stacks. I published one draw from that spread as a property of the code.
+- **The `n > 1` branch is wrong at every `n`.** The real curve decays smoothly from 1.0770
+  to 1.0220; I shipped a step to exactly 1.0, which puts a 7.4-point discontinuity through
+  the **41.66%** of the image that sits at `n = 1`.
+- **The decisive one:** on a genuinely detail-free test image the corrected metric reads
+  **−11.63 DN where the truth is zero**. The correction crosses zero and lands *further*
+  from the truth than the defect it replaced — and the `max(0, ·)` I shipped hides it. In
+  M40's words, shipping 1.074 is worse than shipping nothing, because it turns a visible
+  over-credit into an invisible under-credit clamped to zero.
+
+**And the original defect report was itself wrong.** I described the test region as "a flat
+ROI, where no detail can exist". It is not flat: it spans **3.5×** in per-frame detail across
+the sweep, and the frame that wins most of it carries **1.267×** the reference frame's
+detail *unmerged*. So most of the +35% I attributed to a merge defect is just the reference
+frame being out of focus. Fact 341 is re-opened, not deleted.
+
+M40 also found a **fourth consumer** of the quantity that nobody had enumerated: the CLI
+prints its own version from a different formula, so it still displays the exact number fact
+341 filed as the defect — and it is wrong by 2.4–5.9% for an unrelated reason (averaging in
+the wrong order).
+
+**What I am doing about it:** reverting to 1.0, keeping the two-branch shape, and fixing the
+CLI. The revert is not yet committed because `merge.rs` is held by M18; I have handed the
+change to it rather than race the file. Two of the new disciplines are ones I violated
+directly, and one of them is uncomfortable: I used "the confidence mask is unchanged" as
+evidence the constant was safe. That mask is invariant to *any* order-preserving transform,
+so it could never have been evidence of scale. Facts 440-459.
+
+**8. The simulator landed, and its most valuable result is a confession.** M25 built the
+calibrated digital twin — the instrument the external review ranked #5 because "it compounds
+everything else". It passes its noise-and-selection gates convincingly (16/16 on the
+mechanism behind fact 35, reproduced from calibrated constants with nothing about it built
+in). Then it ran a negative control on *itself*: deliberately break the physics and check
+the gates notice.
+
+They notice a 2× gain error. They notice correlated noise. They notice no noise at all.
+**They do not notice the diffraction PSF being deleted entirely** — a change that moves
+green-plane power at fine scales by **123×**.
+
+That single result disqualifies the simulator from the job the review assigned it. You
+cannot score a deconvolution method on an instrument that cannot tell whether the optics
+are there. The twin is now formally scoped: use it for noise, selection, argmax bias,
+regularisation and confidence; do **not** use it for deconvolution, PSF estimation or
+occlusion. I would rather have this sentence than a simulator that quietly flattered the
+next six experiments.
+
+It also failed its occlusion gate in an informative way: transplanted onto a synthetic
+two-layer scene with known ground truth, our committed occlusion detector reports the
+*opposite* of what it reports on your real coffee-bean stack (0.77× against 4.38×) while its
+placebo stays honest. The detector, not the harness, is what broke.
+
+**And it lands a hit on a shipped constant of yours:** our two-level read-noise model
+under-predicts your sensor's measured dark noise at **ISO 50 by 45%**, while sitting within
+2.6% at ISO 160. Non-monotone error means the model is the wrong *shape*, not just
+mis-tuned — and ISO 50 is exactly what you shoot a tripod macro stack at. Facts 540-550.
+
+**9. A process failure I caught in the act, worth one line.** I nearly wrote a
+twenty-row duplicate of an already-folded milestone. M19's report proposes its facts as
+numbers 120–139; the fold had actually landed them at 400–419 because those numbers were
+taken. Numbers 120–139 are still unused, so the automated availability check said "free",
+truthfully, and invited the duplicate. I stopped only because an unrelated search showed
+M19's text already sitting in the table. The rule is now: **check a fold by content, never
+by number**, and report authors should propose facts as `P1, P2, …` and let the fold assign
+real numbers — every absolute block proposed so far has either collided or moved.
+
 ## Running while you sleep
 
-**Updated at the end of the night.** M16, M41 and M42 have landed and are folded; M17 was
-re-tasked as M42 and has landed twice. Four agents are still live and two were dispatched
-after the folds above.
+**Updated again, later in the night.** M16, M19, M25, M40, M41 and M42 have all landed and
+are folded; M17 was re-tasked as M42 and has landed twice. Two agents are still live and two
+were dispatched after the folds above. The research corpus now stands at **311 measured
+facts**.
 
 | Agent | What it is deciding | State |
 | --- | --- | --- |
@@ -246,9 +332,9 @@ after the folds above.
 | **M42** | Whether `WINDOW_RADIUS = 13` survives the operator change | **LANDED, folded.** It moves to w11, and the edit is a triple. See item 5 |
 | **M17** | The `(mean, max)` dual focus response (question 19) | **LANDED** earlier, then re-tasked as M42. Idle |
 | **M18** | Building the estimation merge — the project's thesis in code | Live, committing to `main` |
-| **M19** | The microscopy/EDOF deconvolution literature the corpus never surveyed | Live, long-runner |
-| **M25** | The calibrated simulator / digital twin | Live, long-runner; has begun writing its report |
-| **M40** | Auditing my fact-341 repair under rule 24 (re-choose, do not re-compute) | Live. **Holds `merge.rs`, which is why the item-5 edit is not made yet** |
+| **M19** | The microscopy/EDOF deconvolution literature the corpus never surveyed | **LANDED, folded** (facts 400-419). Verdict: keep deconvolution an opt-in plugin. It also found that the estimator the reviewer proposed as our core was **published by Levin et al. in 2009**, error law and all — so we must not claim it |
+| **M25** | The calibrated simulator / digital twin | **LANDED, folded** (facts 540-550). Usable for noise and selection; **blind to the optics**, by its own negative control. See item 8 |
+| **M40** | Auditing my fact-341 repair under rule 24 (re-choose, do not re-compute) | **LANDED, folded** (facts 440-459). **It refuted the repair and the defect report.** See item 7. `merge.rs` is now held by M18, and the revert is handed to it |
 | **M44** | Finishing M41: it stopped one arm short of a scoreable verdict | Dispatched at the end of the night |
 | **M45** | **Building the plugin crate** — your #1 structural ask, and the first slice of it in code | Dispatched at the end of the night |
 
