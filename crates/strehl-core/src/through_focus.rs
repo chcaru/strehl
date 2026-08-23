@@ -567,6 +567,20 @@ impl ThroughFocus {
     /// **This is the only form that may be thresholded.** M21's lesson
     /// (SYNTHESIS discipline 120) is that a curve-shape statistic gated on shape
     /// rather than on a calibrated noise scale measures the noise, not the scene.
+    ///
+    /// # This is a per-pixel value, and it must be consumed conditionally
+    ///
+    /// Occlusion enrichment is a **conditional** quantity: the multi-peak rate at
+    /// depth steps against the rate on smooth depth, binned on an *independent*
+    /// depth-step map. A **global** mean of this statistic against a
+    /// frame-permutation null cannot detect occlusion, because permutation
+    /// manufactures multi-peakedness and saturates the comparison — the null
+    /// reads *higher* than the real stack everywhere, so the global ratio is
+    /// pinned below 1 whatever the scene does. M18's `--stats` summary made
+    /// exactly that mistake and concluded "no bimodality enrichment" from a
+    /// 0.86x global ratio on `coffee-bean`, where M21 measures **4.38x**
+    /// conditioned properly against a null of 1.01x. Bin this before you
+    /// summarise it.
     pub fn bimodality_sigma(&self, i: usize) -> Option<f32> {
         self.bimodality(i)
             .map(|v| v / (std::f32::consts::SQRT_2 * FINE_FOCUS_NOISE_SD))

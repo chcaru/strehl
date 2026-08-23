@@ -1389,6 +1389,37 @@ fn report_statistics(
                 "                  The placebo reads HIGH by construction (M21: permutation is a"
             );
             eprintln!("                  null for ENRICHMENT, never for a raw rate).");
+            eprintln!(
+                "                  THIS RATIO IS NOT AN OCCLUSION TEST AND A READING BELOW 1 IS"
+            );
+            eprintln!("                  NOT EVIDENCE OF NO OCCLUSION. Occlusion enrichment is a");
+            eprintln!(
+                "                  CONDITIONAL quantity -- the multi-peak rate at depth steps"
+            );
+            eprintln!(
+                "                  against the rate on smooth depth, binned on an INDEPENDENT"
+            );
+            eprintln!(
+                "                  depth-step map. This is a GLOBAL ratio and it is saturated by"
+            );
+            eprintln!(
+                "                  the fact that permutation manufactures multi-peakedness, so it"
+            );
+            eprintln!(
+                "                  cannot see the effect at all. M21 measures 4.38x on coffee-bean"
+            );
+            eprintln!(
+                "                  conditioned properly, against a null of 1.01x, where this"
+            );
+            eprintln!(
+                "                  global ratio reads 0.86x. Both are correct; only one is an"
+            );
+            eprintln!(
+                "                  answer to the occlusion question. The per-pixel statistic"
+            );
+            eprintln!(
+                "                  supports the conditional test; this summary line does not."
+            );
             // The cut for the C4 bimodality flag. Taken from the PLACEBO's p99,
             // never from the real distribution's own p99: the latter flags
             // exactly 1% of pixels by construction and reports the definition

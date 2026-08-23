@@ -323,6 +323,14 @@ statistic is doing something real (the ratios above are all < 1, so it reads
 ordering), but what it reads is that focus-ordered curves have *fewer* prominent
 far peaks than a shuffle, which is the unimodal signal, not the occlusion one.
 
+> **WITHDRAWN — see §4c.** The bolded conclusion above does not follow from this
+> measurement. It is a **global** real-vs-permuted ratio; occlusion enrichment is
+> a **conditional** quantity (depth step vs smooth depth). M21 measures 4.38x on
+> `coffee-bean` conditioned properly, with its null at 1.01x. The global ratio is
+> saturated by the fact that permutation manufactures multi-peakedness, so it
+> could never have detected the effect. The retained per-pixel statistic is
+> unaffected and still supports the conditional test; only this summary was wrong.
+
 Two candidate explanations, neither tested:
 
 1. `far_val - floor` is an **upper bound** on prominence — the true saddle is at
@@ -450,7 +458,101 @@ Regressed `detail_verdict` to a two-sided `retention >= floor => "ok"` and
 `Copy-Item` preserves the *source* mtime, so a restore can move mtime backwards
 and cargo will skip the rebuild), suite green again.
 
+## 4c. The seam scale, and a correction to my own bimodality claim
+
+M21 (`1a70a80`) landed mid-milestone with two findings that bind the fold seam.
+Both are answered here, and the second forces me to withdraw a claim I made in
+§3.
+
+### The scale decision: form (a)
+
+**Statistics are carried at radius 2, not at the focus scale.** `FINE_WINDOW_RADIUS
+= 2` (`focus.rs:105`) — a 5x5 box on the gradient-magnitude plane. This is
+the same R=2 at which M21 measures 4.38x enrichment, arrived at independently
+before M21 reported, for the same reason: a 27x27 window averages both layers of
+a two-layer occluding edge together and the structure does not survive it.
+
+`compute_with_fine` (`focus.rs:238-258`) builds both fields from **one** shared
+gradient plane, with the fine field a second `box_mean` at `fine_radius`
+(`focus.rs:255`). The box filter is the O(1) separable running sum, so the fine
+field's cost is independent of its radius, and the gradient — the expensive part
+— is computed once and used twice.
+
+**Cost, MEASURED on `coffee-bean` (105 frames, 4 workers):**
+
+- **Memory: one extra f32 plane per worker, 3516 x 2344 x 4 B = 32.97 MB.** It
+  is a `Scratch` plane, so it is O(workers) and constant in the frame count. It
+  does not appear in the 60 B/px gather figure because it is scratch, not state.
+- **Time: bounded above by the 81.8 ms/frame** the whole pass-one focus stage
+  costs (gradient + R=13 box + R=2 box + two normalisations). The fine field is
+  one of those four sub-steps and the two box passes are the same O(1) cost, so
+  the increment is roughly a quarter of that, but I did not isolate it with an
+  alternating sweep and per-setting minima, so **I quote it as a bound, not a
+  value** (project rule 16).
+
+The alternative — form (b), carrying statistics at R=13 and paying a third pass
+later — would have cost the measured warm decode of **74.4 ms/frame** plus the
+focus stage again. On the 105-frame stack that is ~7.8 s of decode alone. Not
+catastrophic, but entirely avoidable, and it is the rewrite the external review
+warned about. It was not taken.
+
+### The noise-normalisation requirement: already satisfied, by construction
+
+M21's second finding is that a curve-shape threshold is worthless without the
+noise model, because noise alone flags 60-98% of pixels as multi-peaked. The
+retained state satisfies this and did so before M21 reported:
+
+- **The retained values are already in units of the calibrated sigma.** Both
+  fields are divided per pixel by `noise.green_luma_sigma(luma)` in
+  `normalise_by_luma_sigma` (`focus.rs:257`, `focus.rs:272-277`). So
+  `top_val`, `triple`, `floor` and `anchor_focus` are noise-normalised at the
+  point of capture. There is no need to retain the signal level `S` in order to
+  reconstruct `sigma(S)` later — the division has already happened, which is
+  strictly better than retaining `S`, because it happens at the pixel's *own*
+  luma rather than at the merged output's.
+- **The thresholdable form is the only one exposed.** `bimodality_sigma` divides
+  by `sqrt(2) * FINE_FOCUS_NOISE_SD`, the SD of a *difference* of two fine
+  responses, and its doc comment already states that this is the only form that
+  may be thresholded.
+- `FINE_FOCUS_NOISE_SD = 0.090400` is re-measured from seeded noise by a test,
+  and the same test re-derives the shipped `FOCUS_NOISE_SD = 0.015214` exactly,
+  which is what validates the instrument.
+
+### CORRECTION: my §3 bimodality claim was the wrong estimand
+
+In §3 I reported placebo ratios of 0.9598x / 0.9775x / 0.8604x and concluded
+that **"no stack shows bimodality enrichment, including M21's occlusion case."**
+
+**That conclusion is withdrawn. It does not follow from what I measured.**
+
+I measured a **global** ratio: the whole plane's bimodality against a
+frame-permutation null. M21 measures a **conditional** one: the multi-peak rate
+at depth steps against the rate on smooth depth, binned on an *independent* R=13
+depth-step map. These are different estimands and mine cannot see the effect.
+
+The reason is visible in my own transcript, which already noted the placebo
+"reads HIGH by construction": permuting frames destroys the smooth unimodal
+through-focus curve and manufactures multi-peakedness, so a global real-vs-null
+ratio is dominated by "real curves are smooth" and saturates. M21's own numbers
+show the same thing far more starkly — on `coffee-bean`, 4.8% real against an
+86.2% permuted rate, a ratio of 0.056. Both of us measure a global ratio well
+below 1; that is the null misbehaving as a global reference, not evidence about
+occlusion.
+
+Conditioned properly, M21 finds **4.38x** on `coffee-bean`, with the permutation
+null at 1.01x and ~2.7x surviving stratification within intensity-gradient
+quintiles. My global number is not in conflict with it and never tested it.
+
+**This is a reporting defect, not a design defect**, and the distinction matters
+for the seam: the retained `bimodality_sigma` is *per-pixel* and
+*noise-normalised*, so a consumer can bin it against any depth-step map it
+likes. Nothing about the fold forecloses M21's conditional test. What was wrong
+was the summary statistic I chose to print, not the state I chose to keep. The
+right global summary to print is a conditional enrichment, and I have not built
+one — see §6.
+
 ## 5. Tests
+
 
 **107 -> 138, delta +31.** No test was removed, weakened, or marked `#[ignore]`.
 
@@ -529,6 +631,16 @@ foundation for it, not a detour around it.
 **Also not built, deliberately:** the per-pixel posterior itself. The brief says
 "do not build that posterior now — but do not foreclose it either", and §1 above
 is the argument that it is not foreclosed.
+
+**Not built, and newly identified in §4c: a conditional bimodality summary.** The
+per-pixel `bimodality_sigma` supports M21's depth-step-vs-smooth-depth
+enrichment, but `--stats` prints only a global real-vs-placebo ratio, which §4c
+shows is the wrong estimand and cannot detect occlusion. Printing the right one
+needs a depth-step map, which M21 owns and which lives under `experiments/` —
+a directory I am forbidden to write to tonight. I did not reach into it. The
+honest state is: the statistic is right, the retained state is right, the
+printed summary is wrong, and fixing the print is a small job for whoever owns
+the occlusion milestone next.
 
 **Not changed:** the focus operator. `WINDOW_RADIUS = 13`, `SUPPORT_RADIUS = 14`,
 Sobel magnitude not squared, 27x27 running-sum box. `compute()` is byte-identical;
