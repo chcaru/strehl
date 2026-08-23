@@ -12,16 +12,28 @@
 //! This module is the baseline's replacement, and it is built out of two
 //! measured findings that were priced long before any of this was written:
 //!
-//! - **Regularise the focus field before choosing a winner.** A 17x17 box mean
-//!   over the focus field drops winner-index speckle from 34.4% to 0.868%
-//!   (fact 23) and cuts absolute reconstruction error at occluding edges by
-//!   35%, 24.79 -> 15.99 DN (fact 84). That was the single largest measured
-//!   quality win still unbuilt. **Note what it does *not* do here:** fact 23's
-//!   companion claim that regularising drops noise 1.253x -> 1.075x is the half
-//!   that fails to reproduce. On the shipped operator regularising moves the
-//!   ratio 1.0678x -> 1.0739x — very slightly the *wrong* way (fact 343). The
-//!   speckle and edge-error wins are real; the noise win was the other
-//!   operator's.
+//! - **Regularise the focus field before choosing a winner.** It cuts absolute
+//!   reconstruction error at occluding edges by 35%, 24.79 -> 15.99 DN
+//!   (fact 84), which is this operator's own number and is the single largest
+//!   measured quality win the baseline left unbuilt.
+//!
+//!   **Both halves of fact 23 are the retired ring difference, and neither is
+//!   this operator's.** Its speckle pair — 34.4% -> 0.868%, which this header
+//!   quoted uncaveated until M60c — was measured with the **ring** operator
+//!   (`M2-verification.md` section 4; `:205` records the measure, and Tenengrad
+//!   did not exist until M14), and **no section-4 row publishes a
+//!   regularised-Tenengrad speckle at all**, so there is no operator-matched
+//!   pair to put here. Fact 71's **1.010%** is *unregularised* Tenengrad on the
+//!   same ROI; the regularised comparable is whatever the binary prints for the
+//!   run in hand. Its noise pair fails the same way: on the shipped operator
+//!   regularising moves the ratio 1.0678x -> 1.0739x, very slightly the *wrong*
+//!   way (fact 343).
+//!
+//!   **The near-coincidence is why this survived at four sites.** Fact 23's
+//!   34.4% -> 0.868% is a *regularisation* effect on the ring; fact 71's
+//!   34.381% -> 1.010% is an *operator* effect with no regularisation in it at
+//!   all. Both start at ~34.4% and land near 1%, for different reasons, so a
+//!   Tenengrad number and a ring number look interchangeable and are not.
 //!
 //! - **Regularisation alone is not enough.** 1.0739x is still worse than one
 //!   frame. *Only averaging goes below one* (fact 23). A plain mean reaches
@@ -187,15 +199,45 @@ pub fn regularise(focus: &[f32], geom: PlaneGeometry, scratch: &mut [f32], dst: 
 /// noise-normalised, and the two frames' sensor noise is independent, so the
 /// standard deviation of the *difference* is `sqrt(2) * FOCUS_NOISE_SD`.
 ///
-/// # The winner's curse, and why the regulariser is the defence
+/// # The winner's curse, and what the corpus does *not* say about the defence
 ///
 /// The reference is a maximum over N frames, so it is biased upward by
 /// selection, which makes every gap look larger than it is and shrinks the
-/// acceptance set. The regulariser is what contains this: averaging the focus
-/// field over 289 pixels before electing a winner is what takes speckle from
-/// 34.4% to 0.868% (fact 23), and speckle *is* the winner's curse made visible.
-/// Electing on the regularised field rather than the raw one is therefore
-/// load-bearing for the gate, not just for the winner map.
+/// acceptance set. That much is mechanism and is not in doubt.
+///
+/// **What this doc used to claim — that the regulariser is what contains it,
+/// cited to fact 23's 34.4% -> 0.868% — does not survive.** Three separate
+/// problems, any one of which is enough:
+///
+/// 1. **Wrong operator.** That pair is the retired ring difference, not
+///    Tenengrad (see the module header). No corpus row publishes a regularised
+///    Tenengrad speckle, so it cannot simply be swapped for a matched one.
+/// 2. **Wrong quantity.** Speckle is a property of the winner *index map*. The
+///    curse is an upward bias in the winner's *value*, and it is the value that
+///    sets the acceptance set. A coherent index map is consistent with a biased
+///    winner, not evidence against one.
+/// 3. **The closest operator-matched arm points the other way.** Fact 343
+///    measures gate-0 selection noise on the shipped operator, same 22 frames
+///    and ROI, at **1.0678x unregularised against 1.0739x regularised** —
+///    regularising *raises* it slightly. That is the curse's measured effect on
+///    the output rather than the acceptance-set size itself, so it is not a
+///    refutation; but it is the nearest thing the corpus has, and it does not
+///    support the claim.
+///
+/// DERIVED, and it suggests why the effect should be small in either direction:
+/// `threshold` is in units of `FOCUS_NOISE_SD`, which is *defined* as the SD of
+/// the **regularised** response. The curse scales with the field's own noise SD
+/// and so does the tolerance, so their ratio — which is what actually admits or
+/// rejects a frame — is first-order invariant to how hard the field is
+/// smoothed. Fact 503 makes the same scaling argument for a constant rescale
+/// and predicts the admission set is bit-for-bit unchanged.
+///
+/// **Status: ARGUED, not measured.** Electing on the regularised field is
+/// load-bearing for the winner map and for edge error (fact 84, this
+/// operator); its value *for the gate* is unestablished, and the measurement
+/// that would settle it is not in the corpus — `n_eff` under regularised versus
+/// raw election at a matched tolerance, on real frames. Do not restore a
+/// stronger sentence here without that number.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Gate {
     /// Admission half-width, in standard deviations of the response difference.
