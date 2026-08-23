@@ -302,10 +302,27 @@ regularisation and confidence; do **not** use it for deconvolution, PSF estimati
 occlusion. I would rather have this sentence than a simulator that quietly flattered the
 next six experiments.
 
-It also failed its occlusion gate in an informative way: transplanted onto a synthetic
-two-layer scene with known ground truth, our committed occlusion detector reports the
-*opposite* of what it reports on your real coffee-bean stack (0.77× against 4.38×) while its
-placebo stays honest. The detector, not the harness, is what broke.
+It also failed its occlusion gate — and the failure turned out to be about the
+simulator, not about our detector. **I originally wrote the opposite here, and M25
+pushed back on it correctly.** Transplanted onto a synthetic two-layer scene, our
+committed occlusion detector found no enrichment at simulated occluding edges
+(1.03×, against 4.38× on your real coffee-bean stack) while its placebo stayed
+honest. I read that as the detector failing. But the simulator had *also* failed
+its own fidelity check on the very same axis, and the decisive test settles it:
+given a **perfect** ground-truth map of where the occlusions are, the simulator's
+veiled pixels are *less* multi-peaked than its smooth ones. The effect simply is
+not in the plant, so no detector could have found it. Blaming the detector assumed
+the simulator was faithful on exactly the axis where it had just been shown not to
+be — circular, and the kind of laundering this milestone exists to prevent. The
+twin is therefore barred from scoring occlusion as well as deconvolution.
+
+What *is* supported about the detector is a cleaner result, and it needed the
+ground truth to see: scored against truth, our depth-step estimator has **1.8–3.4%
+precision and about 11% recall, over-flagging real depth steps by 3.5–5.7×**. That
+is a genuine defect, independent of any plant fidelity question, and no amount of
+measurement on your real captures could have found it, because real captures have
+no truth map. Your original coffee-bean occlusion result stands untouched —
+neither confirmed nor refuted by this milestone.
 
 **And it lands a hit on a shipped constant of yours:** our two-level read-noise model
 under-predicts your sensor's measured dark noise at **ISO 50 by 45%**, while sitting within
