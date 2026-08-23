@@ -1,0 +1,171 @@
+==============================================================================
+M46 b3 -- BLUR-ONLY vs SMOOTH-ONLY, the separation test
+==============================================================================
+
+   rho_fpn = 0.3094 (from b1, not chosen).  8 noise draws per point.
+   S_null is a CONSTANT latent: no detail by construction, unlike the
+   observed flat ROI whose rule-10 detector b2 measured at 6.43.
+
+1. THE INFEASIBLE MATCHING DIRECTION, reported not deleted
+   Can a noise reduction imitate a blur?  Solve k so that
+   hp_sd(SMOOTH) == hp_sd(BLUR) on S_detail:
+   sb=2.000  -> NO SOLUTION (hp_sd target 27.4937; residual with ALL noise removed +31.1960)
+   sb=1.000  -> NO SOLUTION (hp_sd target 44.4940; residual with ALL noise removed +14.1957)
+   sb=0.500  -> NO SOLUTION (hp_sd target 54.0292; residual with ALL noise removed +4.6605)
+   sb=0.250  -> NO SOLUTION (hp_sd target 57.4566; residual with ALL noise removed +1.2331)
+   sb=0.125  -> NO SOLUTION (hp_sd target 58.4523; residual with ALL noise removed +0.2374)
+   MEASURED: none.  The merged detail ROI carries hp_sd 58.8 DN of
+   scene against sigma 3.69 DN of noise, so deleting ALL the
+   noise costs less than a 0.125 px blur.  On this corpus a merge
+   cannot fake sharpness by denoising -- which is a fact about the
+   DATA, not about any metric.
+
+2. THE FEASIBLE MATCHING.  Fix k = sqrt(2) = 1.4142 -- the noise a
+   DOUBLING of the acceptance set buys, i.e. a real merge change --
+   and solve for the blur that costs the same hp_sd on S_detail.
+   sb = 0.04999 px   (hp_sd target 58.7452)
+   hp_sd's separation score is therefore 0.500 BY CONSTRUCTION on
+   S_detail.  Every other statistic is now asked whether it can do
+   better on the SAME pair of plants.
+
+------------------------------------------------------------------------------
+3. S_null   sigma=2.647 DN -> 1.872 DN under SMOOTH-ONLY;  blur sb=0.04999 px
+   NOTE: on this source NO blur width in 0..4 px reproduces the
+   smoothing's hp_sd change (residual +0.3531 at sb=4).
+   That is the correct answer where there is no detail to lose,
+   and it is why S below reads near 0 here.
+------------------------------------------------------------------------------
+   metric          baseline      BLUR-ONLY    SMOOTH-ONLY   d_blur   d_smooth      S
+   frc2_at_fsig        0.73227      0.73227      0.84514 +0.0000 -0.1541   0.000
+   frc2_cross          --           --           --         --       --       --  
+   hp_sd                5.0728       5.0728       4.7199 +0.0000 +0.0696   0.000
+   p_ratio              2.2559       2.2559       2.2542 +0.0000 +0.0007   0.000
+   mean_grad            22.204       22.204        20.66 +0.0000 +0.0695   0.000
+   ringpow           9.459e+05    9.459e+05   8.2032e+05 +0.0000 +0.1328   0.000
+   sigpow_fsig      6.9255e+05   6.9255e+05   6.9325e+05 +0.0000 -0.0010   0.000
+   oracle_fsc        0.0039033    0.0039033    0.0039412 +0.0000 -0.0097   0.000
+   oracle_mtf       2.0771e+09   2.0771e+09   1.9873e+09 +0.0000 +0.0432   0.000
+
+------------------------------------------------------------------------------
+3. S_flat   sigma=2.647 DN -> 1.872 DN under SMOOTH-ONLY;  blur sb=0.04999 px
+   (this source's own matched blur would be sb=0.10508 px)
+------------------------------------------------------------------------------
+   metric          baseline      BLUR-ONLY    SMOOTH-ONLY   d_blur   d_smooth      S
+   frc2_at_fsig        0.92626      0.92586      0.96169 +0.0004 -0.0383   0.011
+   frc2_cross          --           --           --         --       --       --  
+   hp_sd                17.749       17.727       17.652 +0.0013 +0.0055   0.186
+   p_ratio            0.014797     0.014707      0.01375 +0.0061 +0.0707   0.079
+   mean_grad            65.088       65.025       64.207 +0.0010 +0.0135   0.067
+   ringpow          3.3178e+06   3.2996e+06   3.1939e+06 +0.0055 +0.0374   0.128
+   sigpow_fsig      3.0732e+06   3.0549e+06   3.0715e+06 +0.0059 +0.0005   0.917
+   oracle_fsc          0.85082      0.84992      0.86706 +0.0011 -0.0191   0.052
+   oracle_mtf          0.98323      0.97945      0.98357 +0.0038 -0.0003   0.919
+
+------------------------------------------------------------------------------
+3. S_detail   sigma=3.693 DN -> 2.611 DN under SMOOTH-ONLY;  blur sb=0.04999 px
+   (this source's own matched blur would be sb=0.04999 px)
+------------------------------------------------------------------------------
+   metric          baseline      BLUR-ONLY    SMOOTH-ONLY   d_blur   d_smooth      S
+   frc2_at_fsig        0.99081      0.99074      0.99538 +0.0001 -0.0046   0.014
+   frc2_cross          --           --           --         --       --       --  
+   hp_sd                58.801       58.745       58.745 +0.0010 +0.0010   0.501
+   p_ratio           0.0022779    0.0022582    0.0022237 +0.0086 +0.0238   0.267
+   mean_grad            239.32       239.13       238.71 +0.0008 +0.0025   0.233
+   ringpow          5.1222e+07   5.0852e+07   5.0962e+07 +0.0072 +0.0051   0.587
+   sigpow_fsig      5.0752e+07   5.0381e+07   5.0727e+07 +0.0073 +0.0005   0.937
+   oracle_fsc          0.98038      0.98023      0.98263 +0.0001 -0.0023   0.060
+   oracle_mtf           1.0008      0.99704       1.0007 +0.0038 +0.0002   0.958
+
+------------------------------------------------------------------------------
+3. S_synth   sigma=3.693 DN -> 2.611 DN under SMOOTH-ONLY;  blur sb=0.04999 px
+   (this source's own matched blur would be sb=0.00557 px)
+------------------------------------------------------------------------------
+   metric          baseline      BLUR-ONLY    SMOOTH-ONLY   d_blur   d_smooth      S
+   frc2_at_fsig        0.99977      0.99977      0.99989 +0.0000 -0.0001   0.015
+   frc2_cross          --           --           --         --       --       --  
+   hp_sd                219.45       218.24       219.44 +0.0055 +0.0001   0.987
+   p_ratio             0.76774      0.75846      0.76763 +0.0121 +0.0001   0.988
+   mean_grad            1116.9       1113.1       1116.8 +0.0034 +0.0001   0.984
+   ringpow          2.1405e+09   2.1243e+09   2.1404e+09 +0.0076 +0.0000   0.995
+   sigpow_fsig        2.14e+09   2.1238e+09   2.1402e+09 +0.0076 -0.0001   0.990
+   oracle_fsc          0.99952      0.99952      0.99958 +0.0000 -0.0001   0.060
+   oracle_mtf          0.99885      0.99507      0.99889 +0.0038 -0.0000   0.990
+
+==============================================================================
+5. THE PAIRED STATISTIC (question 119): detail reading CONDITIONED on
+   the SAME merge's flat reading.  Ratio form m(detail)/m(flat), which
+   is scale-free; difference form reported next to it.
+==============================================================================
+   metric            base ratio  BLUR ratio  SMOOTH ratio  d_blur   d_smooth      S
+   frc2_at_fsig         1.0697      1.0701       1.035   -0.0004 +0.0324   0.011
+   hp_sd                3.3129      3.3139      3.3279   -0.0003 -0.0045   0.060
+   p_ratio             0.15394     0.15355     0.16172   +0.0025 -0.0505   0.048
+   mean_grad            3.6768      3.6776      3.7179   -0.0002 -0.0112   0.018
+   sigpow_fsig          16.515      16.492      16.515   +0.0014 -0.0000   0.973
+   ringpow              15.439      15.412      15.956   +0.0018 -0.0335   0.050
+
+   difference form m(detail) - m(flat):
+   frc2_at_fsig     S =  0.011   d_blur  -0.0053   d_smooth  +0.4780
+   hp_sd            S =  0.457   d_blur  +0.0008   d_smooth  -0.0010
+   p_ratio          S =  0.066   d_blur  -0.0056   d_smooth  -0.0793
+   mean_grad        S =  0.302   d_blur  +0.0007   d_smooth  -0.0016
+   sigpow_fsig      S =  0.938   d_blur  +0.0074   d_smooth  +0.0005
+   ringpow          S =  0.721   d_blur  +0.0074   d_smooth  +0.0029
+
+==============================================================================
+4. THE COMPLETENESS TEST: does the winning statistic see a LINEAR
+   POST-FILTER?  PM_C is a merge that low-passes its own OUTPUT --
+   the failure mode the project actually fears.  b2 MEASURED that
+   frc2_at_fsig is blind to it by construction (FRC = C/(C+U) with
+   both terms scaled by |H|^2).  A statistic that separates blur from
+   smoothing but cannot see a post-filter is still useless here.
+   The post-filter width is matched to the SAME hp_sd cost, so hp_sd
+   cannot tell ANY of the three apart by construction.
+==============================================================================
+
+   S_flat: matched post-filter width sb_pc = 0.08460 px
+   metric          baseline     POST-FILTER  SMOOTH-ONLY    d_pc   d_smooth      S
+   frc2_at_fsig        0.92626      0.92626      0.96169 -0.0000 -0.0383   0.000
+   frc2_cross          --           --           --         --       --       --  
+   hp_sd                17.749       17.652       17.652 +0.0055 +0.0055   0.499
+   p_ratio            0.014797     0.014188      0.01375 +0.0411 +0.0707   0.368
+   mean_grad            65.088       64.746       64.207 +0.0053 +0.0135   0.280
+   ringpow          3.3178e+06   3.2465e+06   3.1939e+06 +0.0215 +0.0374   0.365
+   sigpow_fsig      3.0732e+06   3.0071e+06   3.0715e+06 +0.0215 +0.0005   0.976
+   oracle_fsc          0.85082      0.85082      0.86706 -0.0000 -0.0191   0.000
+   oracle_mtf          0.98323      0.97261      0.98357 +0.0108 -0.0003   0.969
+
+   S_detail: matched post-filter width sb_pc = 0.04681 px
+   metric          baseline     POST-FILTER  SMOOTH-ONLY    d_pc   d_smooth      S
+   frc2_at_fsig        0.99081      0.99081      0.99538 -0.0000 -0.0046   0.000
+   frc2_cross          --           --           --         --       --       --  
+   hp_sd                58.801       58.745       58.745 +0.0010 +0.0010   0.501
+   p_ratio           0.0022779    0.0022542    0.0022237 +0.0104 +0.0238   0.304
+   mean_grad            239.32       239.12       238.71 +0.0008 +0.0025   0.249
+   ringpow          5.1222e+07   5.0883e+07   5.0962e+07 +0.0066 +0.0051   0.566
+   sigpow_fsig      5.0752e+07   5.0416e+07   5.0727e+07 +0.0066 +0.0005   0.931
+   oracle_fsc          0.98038      0.98038      0.98263 -0.0000 -0.0023   0.000
+   oracle_mtf           1.0008       0.9975       1.0007 +0.0033 +0.0002   0.953
+
+==============================================================================
+6. WHICH STATISTICS SEPARATE?   S >= 0.90 required to call a statistic
+   a RESOLUTION metric; hp_sd is pinned at 0.500 BY THE MATCHING.
+==============================================================================
+   statistic               S_null      S_flat    S_detail     S_synth
+   frc2_at_fsig             0.000       0.011       0.014       0.015
+   frc2_cross                  --          --          --          --
+   hp_sd                    0.000       0.186       0.501       0.987
+   p_ratio                  0.000       0.079       0.267       0.988
+   mean_grad                0.000       0.067       0.233       0.984
+   ringpow                  0.000       0.128       0.587       0.995
+   sigpow_fsig              0.000       0.917       0.937       0.990
+   oracle_fsc               0.000       0.052       0.060       0.060
+   oracle_mtf               0.000       0.919       0.958       0.990
+   paired:frc2_at_fsig                               0.011   (detail/flat)
+   paired:hp_sd                                     0.060   (detail/flat)
+   paired:p_ratio                                   0.048   (detail/flat)
+   paired:mean_grad                                 0.018   (detail/flat)
+   paired:sigpow_fsig                               0.973   (detail/flat)
+   paired:ringpow                                   0.050   (detail/flat)
+
+wrote out/b3_results.json  (225.7s)

@@ -1,0 +1,76 @@
+==============================================================================
+M46 b5 -- the assigned bar and the repaired bar, for b3's statistics
+==============================================================================
+
+1. THE ASSIGNED BAR, verbatim:
+   "recovery >= +0.9 on detail AND <= +0.3 on flat"
+   Planted optical blur sb = 2.0 px, merged noise level, rho = 0.3094.
+   Recovery ratio is `rec_lin` imported unchanged from b2.
+
+   PM_A
+      metric            rec(detail)   rec(flat)    assigned bar
+      frc2_at_fsig       --        --       undefined
+      hp_sd              +0.9958     +0.9782    FAIL
+      p_ratio            +0.9917     +0.9339    FAIL
+      mean_grad          +0.9968     +0.9803    FAIL
+      ringpow            +1.0011     +0.9978    FAIL
+      sigpow_fsig        +1.0014     +0.9989    FAIL
+      oracle_fsc         +0.9993     +0.9695    FAIL
+      oracle_mtf         +1.0000     +1.0000    FAIL
+
+   PM_B
+      metric            rec(detail)   rec(flat)    assigned bar
+      frc2_at_fsig       --        --       undefined
+      hp_sd              +0.9957     +0.9752    FAIL
+      p_ratio            +0.9931     +0.9678    FAIL
+      mean_grad          +0.9875     +0.9178    FAIL
+      ringpow            +1.0005     +0.9940    FAIL
+      sigpow_fsig        +1.0007     +0.9939    FAIL
+      oracle_fsc       +153.3215   +144.8843    FAIL
+      oracle_mtf         +1.0000     +1.0000    FAIL
+
+   PM_C
+      metric            rec(detail)   rec(flat)    assigned bar
+      frc2_at_fsig       --        --       undefined
+      hp_sd              +1.0034     +1.0191    FAIL
+      p_ratio            +1.0495     +1.1636    FAIL
+      mean_grad          +1.0120     +1.0520    FAIL
+      ringpow            +1.0101     +1.0728    FAIL
+      sigpow_fsig        +1.0009     +0.9956    FAIL
+      oracle_fsc         +0.9801     +0.9489    FAIL
+      oracle_mtf         +1.0006     +0.9989    FAIL
+
+==============================================================================
+2. THE REPAIRED BAR.  Second half moved from the observed flat ROI
+   (rule-10 detector 6.43 -- it HAS content, so an honest metric must
+   fire on it) to S_null, a constant latent with no content at all.
+   R1 rec(S_detail, PM_A blur) >= +0.90
+   R2 |rec(S_null)|            <= 0.30   -- false alarm on nothing
+   R3 b3 separation S          >= 0.77   -- blur vs smoothing
+   R4 rec(S_detail, PM_C)      >= +0.90  -- sees a post-filter
+==============================================================================
+
+   metric              R1 rec_det   R2 |rec_null|   R3 sep S   R4 rec_PM_C   VERDICT
+   frc2_at_fsig         --        --        0.014     --      fails R1,R2,R3,R4
+   hp_sd                +0.9958     --        0.501     +1.0034   fails R2,R3
+   p_ratio              +0.9917     --        0.267     +1.0495   fails R2,R3
+   mean_grad            +0.9968     --        0.233     +1.0120   fails R2,R3
+   ringpow              +1.0011     --        0.587     +1.0101   fails R2,R3
+   sigpow_fsig          +1.0014     --        0.937     +1.0009   fails R2
+   oracle_fsc           +0.9993     --        0.060     +0.9801   fails R2,R3
+   oracle_mtf           +1.0000     --        0.958     +1.0006   fails R2
+
+3. THE REGISTERED FAILURE MODE.  Under PM_B the plant blurs (L+P)
+   TOGETHER, so on S_null the only thing that can be lost is the
+   fixed pattern, and a pattern detector will fire on nothing.
+   metric              rec(PM_B, S_null)   rec(PM_C, S_null)
+   frc2_at_fsig         --            --   
+   hp_sd                    +0.6095             +1.1695
+   p_ratio                  +0.1849             +1.0023
+   mean_grad                +0.6193             +1.1698
+   ringpow                  +0.9798             +1.3518
+   sigpow_fsig              +0.9752             +0.9834
+   oracle_fsc               +7.2523             +0.0689
+   oracle_mtf               +1.0000             +1.1889
+
+wrote out/b5_results.json  (48.3s)

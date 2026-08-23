@@ -1,0 +1,77 @@
+==============================================================================
+M46 b1 -- TWO-CAPTURE FRC on 112MSDCF / 113MSDCF
+==============================================================================
+
+1. THE EXPOSURE DIFFERENCE, READ NOT ASSUMED
+   112MSDCF: 79 frames  ISO 500  t=1/60s  f/11  200mm  2026:05:07 21:07:44  ILCE-7CM2
+   113MSDCF: 63 frames  ISO 500  t=1/30s  f/11  200mm  2026:05:07 21:09:00  ILCE-7CM2
+   ISO identical: True.  exposure ratio t113/t112 = 2.0000 = +1.0000 stops
+   MECHANISM: the stop is EXPOSURE TIME, not gain.
+   CONSEQUENCE, stated before the scale is measured: gain g and read
+   noise in DN are IDENTICAL, 113 collected 2x the photons, so after
+   photometric rescaling by c=1/2 it is strictly QUIETER than 112 --
+   var -> c^2 var with the model evaluated on unscaled DN.
+   calibration: g = 1.14469 DN/e-, rn_e = 1.47 (M41's constants)
+
+2. ROI SELECTION (a1b window-mean procedure, unchanged)
+   plane 3514x2344  detail (1671, 1373, 512, 512)  flat (2747, 32, 512, 512)
+
+3. GLOBAL REGISTRATION between the two captures
+   coarse plane shift (113 -> 112): dy=0 px  dx=0 px (from a 4x-decimated plane)
+
+4. DEPTH-RANGE MATCHING (fact 50)
+   113 covers 112's frames 5.5 -> 66.6 of 0 -> 78.
+   112 restricted to indices 6..67 (62 frames); 113 uses all 63.
+
+5. DECODE + MERGE (m41lib.arm_A, imported frozen)
+   112: 62 frames x 2 ROIs in 29.5s
+   113: 63 frames x 2 ROIs in 29.2s
+   arm A 112 detail: mean n_eff = 10.366
+   arm A 112 flat  : mean n_eff = 8.784
+   arm A 113 detail: mean n_eff = 10.189
+   arm A 113 flat  : mean n_eff = 9.097
+
+6. PHOTOMETRIC SCALE (registered ordering: model on unscaled DN)
+   detail: median112/median113 = 0.5095
+   flat  : median112/median113 = 0.5082
+   EXIF prediction c = t112/t113 = 0.5000; measured (detail) 0.5095; disagreement 1.90%
+   CHECK: PASS (<=5%)
+   flat ROI level: 112 105.1 DN -> model sd 7.846 DN
+                   113 206.8 DN -> model sd 10.944 DN
+   after scaling 113 by c=0.5095: its sd becomes 5.576 DN, i.e. 0.7107x 112's.
+   That ratio being BELOW 1 is the registered prediction and is what a
+   longer exposure at equal gain must do.  The two halves of this FRC
+   are therefore NOT equal-noise, which FRC tolerates (it is a
+   normalised correlation) but which is stated rather than hidden.
+
+7. TWO-CAPTURE FRC
+   detail: residual sub-pixel shift dy=+0.125 dx=-0.047 px
+           FRC 1/7 crossing = 0.4961 cyc/px  [CENSORED -- a LOWER BOUND, fact 475]
+           FRC at f_sig=0.2762 = +0.9477
+           curve @ 0.10/0.20/0.2762/0.35/0.45: +0.9965 +0.9825 +0.9477 +0.8176 +0.3865
+   flat  : residual sub-pixel shift dy=+0.109 dx=-0.016 px
+           FRC 1/7 crossing = 0.4961 cyc/px  [CENSORED -- a LOWER BOUND, fact 475]
+           FRC at f_sig=0.2762 = +0.7310
+           curve @ 0.10/0.20/0.2762/0.35/0.45: +0.9843 +0.8708 +0.7310 +0.4974 +0.2511
+
+   RULE 9 READING -- the flat ROI next to the detail ROI, same pass:
+     f=0.1000  detail +0.9965   flat +0.9843   flat/detail +0.9877
+     f=0.2000  detail +0.9825   flat +0.8708   flat/detail +0.8863
+     f=0.2762  detail +0.9477   flat +0.7310   flat/detail +0.7714
+     f=0.3500  detail +0.8176   flat +0.4974   flat/detail +0.6083
+     f=0.4500  detail +0.3865   flat +0.2511   flat/detail +0.6496
+
+8. CONTROL -- SPLIT-HALF WITHIN ONE CAPTURE (M41's split), same ROIs
+   112 detail: crossing 0.4872   at f_sig +0.8691
+   112 flat  : crossing 0.4755   at f_sig +0.6569
+
+9. CONTROL -- DELIBERATE MISALIGNMENT (rule 20: this is the input
+   that would make a working metric look powerless)
+   +0.00 px: crossing 0.4961 [CENS]   at f_sig +0.9477
+   +0.25 px: crossing 0.4961 [CENS]   at f_sig +0.9319
+   +0.50 px: crossing 0.4961 [CENS]   at f_sig +0.8746
+   +1.00 px: crossing 0.4430         at f_sig +0.6663
+   +2.00 px: crossing 0.2908         at f_sig +0.2049
+   +4.00 px: crossing 0.1131         at f_sig +0.1601
+
+wrote out/b1_results.json and out/b1_merges.npz  (85.9s)

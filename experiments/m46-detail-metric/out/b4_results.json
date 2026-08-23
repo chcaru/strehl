@@ -1,0 +1,474 @@
+{
+  "leakage_floor": {
+    "rect": {
+      "p_hi": 9.264984007703727e-07,
+      "p_peak": 9075998786.503698,
+      "p_cut": 1125929955.388943,
+      "db": -159.9104975512653
+    },
+    "hann": {
+      "p_hi": 2.3952695370405653e-05,
+      "p_peak": 1734949942.217062,
+      "p_cut": 149684550.21689713,
+      "db": -138.5993255761137
+    },
+    "blackman": {
+      "p_hi": 2.513141702095166e-06,
+      "p_peak": 1210566770.161182,
+      "p_cut": 98970990.5197892,
+      "db": -146.8277177169976
+    },
+    "bharris": {
+      "p_hi": 1.1096968158341098e-07,
+      "p_peak": 892070017.7684326,
+      "p_cut": 71099076.56862994,
+      "db": -159.0519460322328
+    },
+    "hann_pre9": {
+      "p_hi": 1.9708009036270716e-05,
+      "p_peak": 542466268.0869268,
+      "db": -134.39729985109847
+    }
+  },
+  "bandlimited_frc": {
+    "no_FPN/rect": {
+      "frc_hi": 0.0043225861187873894,
+      "frc_fsig": -0.003976218767316981,
+      "cross": 0.20583979045353645,
+      "censored": false
+    },
+    "no_FPN/hann": {
+      "frc_hi": 0.018136857841428045,
+      "frc_fsig": 0.00948772929909511,
+      "cross": 0.20584535863788625,
+      "censored": false
+    },
+    "no_FPN/blackman": {
+      "frc_hi": 0.016040288188096528,
+      "frc_fsig": 0.011915337523372933,
+      "cross": 0.2075516196254968,
+      "censored": false
+    },
+    "no_FPN/bharris": {
+      "frc_hi": 0.013482472150644732,
+      "frc_fsig": 0.012432232257422113,
+      "cross": 0.21215167074112926,
+      "censored": false
+    },
+    "no_FPN/hann_pre9": {
+      "frc_hi": 0.018047691516217455,
+      "frc_fsig": 0.007170917017031084,
+      "cross": 0.20585378108548782,
+      "censored": false
+    },
+    "with_FPN/rect": {
+      "frc_hi": 0.7653117124277373,
+      "frc_fsig": 0.7627121570518647,
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "with_FPN/hann": {
+      "frc_hi": 0.7667559306187715,
+      "frc_fsig": 0.7738419474098182,
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "with_FPN/blackman": {
+      "frc_hi": 0.7677887664770705,
+      "frc_fsig": 0.7789316938064378,
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "with_FPN/bharris": {
+      "frc_hi": 0.7688262914699805,
+      "frc_fsig": 0.7833384002042165,
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "with_FPN/hann_pre9": {
+      "frc_hi": 0.76692654488547,
+      "frc_fsig": 0.7744013684892644,
+      "cross": 0.49609375,
+      "censored": true
+    }
+  },
+  "real_ladder": {
+    "real_detail/0.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/0.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/0.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/0.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/0.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/1.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/1.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/1.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/1.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/1.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/2.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/2.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/2.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/2.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/2.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/4.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/4.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/4.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/4.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_detail/4.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/0.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/0.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/0.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/0.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/0.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/1.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/1.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/1.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/1.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/1.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/2.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/2.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/2.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/2.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/2.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/4.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/4.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/4.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/4.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "real_flat/4.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/0.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/0.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/0.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/0.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/0.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/1.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/1.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/1.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/1.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/1.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/2.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/2.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/2.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/2.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/2.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/4.0/rect": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/4.0/hann": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/4.0/blackman": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/4.0/bharris": {
+      "cross": 0.49609375,
+      "censored": true
+    },
+    "broadband/4.0/hann_pre9": {
+      "cross": 0.49609375,
+      "censored": true
+    }
+  },
+  "usability": {
+    "real_detail/rect": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "real_detail/hann": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "real_detail/blackman": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "real_detail/bharris": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "real_detail/hann+pre9": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "real_flat/rect": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "real_flat/hann": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "real_flat/blackman": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "real_flat/bharris": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "real_flat/hann+pre9": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "broadband/rect": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "broadband/hann": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "broadband/blackman": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "broadband/bharris": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    },
+    "broadband/hann+pre9": {
+      "c0": 0.49609375,
+      "c2": 0.49609375,
+      "cens": [
+        true,
+        true
+      ],
+      "rec": null
+    }
+  }
+}

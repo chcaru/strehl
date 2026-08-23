@@ -1,0 +1,90 @@
+==============================================================================
+M46 b4 -- question 120: is the sb=0 censoring SPECTRAL LEAKAGE?
+==============================================================================
+
+1. THE LEAKAGE FLOOR, measured with no modelling assumption.
+   `bandlimited` has EXACTLY ZERO Fourier power above 0.20 cyc/px.
+   Ring power measured at 0.45 cyc/px is therefore leakage, 100%.
+   Reported as dB below the peak ring; noiseless, so nothing else
+   can be putting power there.
+
+   window      P(0.45)/P_peak      dB      P(0.45)/P(0.20)
+   rect             1.0208e-16   -159.9       8.2287e-16
+   hann             1.3806e-14   -138.6       1.6002e-13
+   blackman         2.0760e-15   -146.8       2.5393e-14
+   bharris          1.2440e-16   -159.1       1.5608e-15
+   hann+pre9        3.6330e-14   -134.4
+
+2. DOES THE LEAKED POWER CARRY FALSE CORRELATION?
+   Two independent noisy captures of the BAND-LIMITED latent.  Above
+   0.20 cyc/px the only true correlation is the fixed pattern; every
+   other correlated thing up there is leaked from below the cutoff.
+   TRUE FRC above the cutoff, with FPN excluded, is 0 by construction.
+
+   no_FPN:   window       FRC(0.45)   FRC(0.2762)   crossing
+              rect           +0.0043       -0.0040   0.2058           
+              hann           +0.0181       +0.0095   0.2058           
+              blackman       +0.0160       +0.0119   0.2076           
+              bharris        +0.0135       +0.0124   0.2122           
+              hann+pre9      +0.0180       +0.0072   0.2059           
+
+   with_FPN:   window       FRC(0.45)   FRC(0.2762)   crossing
+              rect           +0.7653       +0.7627   0.4961 [CENSORED]
+              hann           +0.7668       +0.7738   0.4961 [CENSORED]
+              blackman       +0.7678       +0.7789   0.4961 [CENSORED]
+              bharris        +0.7688       +0.7833   0.4961 [CENSORED]
+              hann+pre9      +0.7669       +0.7744   0.4961 [CENSORED]
+
+3. DOES THE REPAIR CARRY TO THE REAL SOURCES?
+   The window ladder x a blur ladder on the observed ROIs.  A repair
+   that only works on the analytic channel is not a repair.
+
+   real_detail
+      sb                  rect             hann         blackman          bharris        hann+pre9
+      0.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+      1.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+      2.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+      4.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+
+   real_flat
+      sb                  rect             hann         blackman          bharris        hann+pre9
+      0.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+      1.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+      2.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+      4.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+
+   broadband
+      sb                  rect             hann         blackman          bharris        hann+pre9
+      0.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+      1.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+      2.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+      4.0         0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]      0.4961  [C]
+
+4. IF THE CROSSING UN-CENSORS, DOES IT BECOME A USABLE METRIC?
+   An uncensored number is not automatically an informative one.
+   Recovery ratio on the planted ladder, per window, computed only
+   where BOTH the sb=0 reference and the sb=2 plant are uncensored.
+   The analytic prediction is the SAME frc_pred the M41 harness uses.
+
+   real_detail   window        cross(sb=0)   cross(sb=2)   recovery
+            rect              0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            hann              0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            blackman          0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            bharris           0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            hann+pre9         0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+
+   real_flat   window        cross(sb=0)   cross(sb=2)   recovery
+            rect              0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            hann              0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            blackman          0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            bharris           0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            hann+pre9         0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+
+   broadband   window        cross(sb=0)   cross(sb=2)   recovery
+            rect              0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            hann              0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            blackman          0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            bharris           0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+            hann+pre9         0.4961[C]      0.4961[C]    UNSCORABLE (censored)
+
+wrote out/b4_results.json  (4.6s)
