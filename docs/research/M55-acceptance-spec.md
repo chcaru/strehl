@@ -588,6 +588,42 @@ to be re-runnable by a third party should not serialise a set. It changes no val
 verdict; it would change a byte-for-byte artefact comparison, and anyone re-running
 `calibrate.py` should compare parsed JSON, not bytes.
 
+### 6.5 Protocol incident — a path-scoped `git add` does not make a path-scoped commit
+
+**MEASURED, and it is my error.** The commit that carried §7.3 (`701dc11`) contains **51
+files**. Four are mine. **Forty-seven belong to M60** — `docs/research/M60-bimodality.md` and
+`experiments/M60-bimodality/**` — and I did not intend to commit them.
+
+The sequence, from the shell log:
+
+```
+   git add -- docs/research/M55-acceptance-spec.md experiments/M55-acceptance-spec/src/e15_...
+   git --no-pager diff --cached --name-only
+   -> docs/research/M55-acceptance-spec.md
+      experiments/M55-acceptance-spec/out/e15_block4_null.json
+      experiments/M55-acceptance-spec/out/e15_block4_null.log
+      experiments/M55-acceptance-spec/src/e15_block4_null.py     <- exactly four, audited
+   ... [ ~2 minutes composing the commit message ] ...
+   git -c core.commentChar=';' commit -m "..."
+   -> [main 701dc11] 51 files changed, 12938 insertions(+), 1 deletion(-)
+```
+
+**The index is shared between all live agents, and a bare `git commit` commits the index, not
+the paths you added.** M60 staged its tree in the window between my `add` and my `commit`. My
+audit of `git diff --cached --name-only` was correct **when it ran** and was worthless, because
+it is a separate command from the commit and nothing holds the index still in between. The
+project rule "commit path-scoped, never `git add -A`" is necessary and **not sufficient**: I
+never ran `git add -A` and the effect was the same.
+
+**The correct form is `git commit -- <paths>`**, which takes the working-tree content of exactly
+those paths and ignores the rest of the index.
+
+**I did not rewrite history and I recommend nobody does.** Nothing is lost: M60's files are
+committed intact, exactly as M60 staged them, and are present in the tree. A `git reset` on a
+branch with five live agents can drop a commit made in the same second, which is a larger risk
+than a mis-attributed one. **The defect here is attribution, and this paragraph is the repair.**
+M60's work in `701dc11` is M60's.
+
 ---
 
 ## 7. Question 165, answered — and the question's premise was wrong
@@ -983,6 +1019,12 @@ Numbers are placeholders; the orchestrator assigns them.
   purely because a `set` literal's iteration order follows `PYTHONHASHSEED`. Found only because
   the run was diffed against its own earlier log; a spec whose artefacts are compared by hash
   would have reported a false regression.
+- **On a shared index, `git add -- <paths>` scopes the staging and **not** the commit.**
+  A bare `git commit` writes whatever the index holds at commit time, including files
+  another agent staged while you were composing the message. Auditing
+  `git diff --cached` does not help: it is a separate command and nothing holds the index
+  still. Use `git commit -- <paths>`. "Never `git add -A`" is necessary and not
+  sufficient; I obeyed it and committed 47 files belonging to another milestone.
 - **Treat an uncommitted experiment file as already lost.** `open(p, "w")` truncates before it
   validates its own arguments, so a script that fails on line 1 can still destroy its input.
   Commit before patching, or patch via a temp file and `os.replace`.
