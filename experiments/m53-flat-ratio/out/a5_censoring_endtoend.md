@@ -88,6 +88,41 @@ saturates drifts across the sensor, so it clips in many frames but not the same
 pixel in all of them. This is the same stack M52 found cannot reach
 `n_eff` = 3 anywhere on the shipped 0.5-4.0 ladder.
 
+## Caveat added after the fact: a polarizer is in the optical path
+
+Every frame in this corpus was shot through a *Breakthrough Photography X4 CPL
+67 mm* circular polarizer (Schott B270, MRC16), which was not in any brief when
+the measurements above were made. **A polarizer suppresses specular
+highlights**, and every number in this file is a clipping or specular
+statistic, so all of them are conditioned on it:
+
+- the clip censuses (0.5052% and 1.1983% ever clipped),
+- the changed-pixel counts (184 and 630),
+- the finding that changed pixels sit at the 98.27th brightness percentile.
+
+The direction is one-sided and worth stating: suppressing speculars can only
+*reduce* the population of pinned samples, so **the measured effect sizes here
+are lower bounds on what a bare lens would give.** The qualitative conclusions
+— that the change is confined to the ever-clipped set, that every change is a
+rise, that the bias removed reaches 13855 DN — do not depend on how many
+pixels clip, only on which ones do. Those stand. The *magnitudes* should be
+read as specific to a polarized corpus.
+
+Nobody has measured the filter's transmission or uniformity, and this
+milestone did not either. (Disclosed, not measured.)
+
+## Corpus rename, mid-milestone
+
+The owner renamed five directories in `D:\personal\macro` while this milestone
+was running: `131MSDCF` -> `wrapped-text-1`, `133MSDCF` -> `wrapped-text-2`,
+`134/135/136MSDCF` -> `bee-1/2/3`. Same files, same counts.
+
+**No stack used anywhere in M53 was renamed.** All five this milestone touched
+— `109MSDCF`, `119MSDCF`, `coffee-bean`, `coffee-bubbles`, `foam` — keep their
+names, and no renamed name appears in any M53 file. Nothing here was re-run or
+relabelled. Recorded so a later reader does not mistake the rename for a change
+of subject.
+
 ## Verification
 
 ```
