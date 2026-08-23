@@ -51,7 +51,11 @@ stack the model predicts peak RSS to **8.4% mean / 17.5% max**, against a MEASUR
 scheduling spread of up to 7.3%. If the honest model were adopted the worker cap would fall from
 20 to **16**, which changes the plan at N=105 (18 → 15 chunks) and N=220 (20 → 16) and leaves N=22
 **unchanged at 11**. **This is a recommendation, not a change**: the default sizing is untouched,
-and the honest model ships behind `--memory-model m8`, off by default.
+and the honest model ships behind `--memory-model m8`, off by default. Two SYNTHESIS items move on
+the way past: fact 22 is refined (concurrent decodes are **not** bounded by `min(chunks, pool)`,
+because the decoder is itself rayon-parallel), and **§3.2.1 assertion 1 fails at its own specified
+pair** — at a pinned pool, `N = 4 × pool` exceeds `N = 2 × pool` by 16–20% on unregressed code, so
+that gate would go red today. §10 names both and proposes a restatement.
 
 ---
 
@@ -550,10 +554,34 @@ direction is confirmed (§3.5), but the formula is not exact:
 - Fact 22 also does not mention that **the decoder's own pool costs memory**: scratch rises 36.96 →
   44.53 MiB commit from 1 to 32 threads, +1.51 MiB per doubling. Pinning the pool changes not only
   how many decodes overlap but how much each one costs.
+- Fact 22's own summary — "**~379 MB measured** against **321 MB modelled**" — inherits M2's units
+  mix (§1.1): 379 is MiB, 321 is decimal MB. It is also `peak_ws / live`, which §6.4 shows is not a
+  per-worker constant at all: at the very condition fact 22 quotes it ranges over 378.7–384.0 MiB
+  across five repeats, and at N=22 over 355.5–381.5 MiB, because it silently absorbs the process
+  floor and every level of the reduce tree. The per-worker constant is **342.8 ± 5.4 MiB** (§6.3).
+  **VERIFIED.**
 
-### 10.2 SYNTHESIS §3.2.1 assertion 1 is FALSE as literally stated
+### 10.2 SYNTHESIS §3.2.1 assertion 1 is FALSE **at its own specified pair**
 
-Assertion 1: at a pinned thread count, peak RSS must not grow with N. Measured, pinned:
+§3.2.1 specifies the ratchet as three assertions and calls the first "the real test":
+
+> With `RAYON_NUM_THREADS` **pinned**, peak RSS at `N = 4 × pool` must not exceed peak RSS at
+> `N = 2 × pool` by more than a small tolerance.
+
+That is a precise, testable claim, so M8 tested exactly it — the assertion's own pair, not a
+convenient one. Two pools, two repeats each, `RAYON_NUM_THREADS` pinned:
+
+| pool | N = 2×pool | N = 4×pool | **ratio** | chunks | chunk_len |
+| --- | --- | --- | --- | --- | --- |
+| 4 | 1598.9 MiB | 1912.1 MiB | **1.196** | 8 → 16 | 1 → 1 |
+| 8 | 2832.6 MiB | 3297.3 MiB | **1.164** | 16 → 16 | 1 → 2 |
+
+**+16% to +20% is not "a small tolerance" for a gate whose whole purpose is to catch a regression.**
+As written, assertion 1 fails on unregressed code. It would have to be given a ≥20% tolerance to go
+green today, at which point it can no longer detect the kind of regression it exists to detect.
+**MEASURED.**
+
+Pushing further along the same axis makes the trend unmistakable:
 
 | threads | N | peak ws | ratio vs baseline | chunks | chunk_len |
 | --- | --- | --- | --- | --- | --- |
@@ -565,25 +593,62 @@ Assertion 1: at a pinned thread count, peak RSS must not grow with N. Measured, 
 | 8 | 32 | 3297.3 | 1.164 | 16 | 2 |
 | 8 | 64 | 3611.9 | **1.275** | 16 | 4 |
 
-Peak grows by up to 1.50× with N at a *pinned* pool. Two mechanisms, both measured:
+Two mechanisms, both measured, and neither is a leak:
 
 1. **`chunks` grows with N** until it saturates at `workers`, and the reduce tree costs
-   110.04 MiB per level (§6.1). This is O(log N) growth that the ratchet does not mention.
+   110.04 MiB per level (§6.1). That is O(log N) growth the ratchet does not account for.
 2. **`chunk_len` 1 → 2 fills the concurrency window.** At `chunks` = 16 and threads = 4, N=16
    (`chunk_len` 1) peaks at 1912 MiB and N=32 (`chunk_len` 2) at 2393 MiB — same chunks, same pool,
-   +25%.
+   **+25%**. A worker that decodes one frame is at its high-water mark only briefly, so the pool
+   never actually fills. This is the same effect that made 8 of 82 fit runs unusable (§6.3).
 
-**The ratchet does hold asymptotically.** Once `chunks` has saturated and `chunk_len ≥ 2`, growth in
-N is nearly flat: at 32 threads and 20 chunks, N=40 → 7260.9 MiB and N=60 → 7614.9 MiB, a ratio of
-**1.049** for a 50% increase in frames. The system is O(workers), not O(N) — but **assertion 1 as
-written is testable and fails**, and it should be restated as: *peak RSS is flat in N once
-`chunks == workers` and `chunk_len ≥ 2`; below that it grows as O(log N).*
+**The ratchet's intent does hold; only its formula fails.** Once `chunks` has saturated *and*
+`chunk_len ≥ 2`, growth in N is nearly flat: at 32 threads with `chunks` = 20 on both sides,
+N=40 → 7260.9 MiB and N=60 → 7614.9 MiB, a ratio of **1.049** for a 50% increase in frames. The
+system is O(workers), not O(N).
 
-### 10.3 SYNTHESIS §3.2's 8 GB ratchet is not currently met on real data
+**Proposed restatement**, so the gate tests the property rather than an artefact of it:
 
-MEASURED: `coffee-bean` limited to 60 frames at 32 threads peaks at **7681 MiB = 8.05 decimal GB**,
-and at 40 frames at **7665 MiB**. Under the current plan the 8 GB ratchet is at its limit on a real
-60-frame stack. The M8 plan predicts 5967 MiB at N=220. Reported, not acted on.
+> With `RAYON_NUM_THREADS` pinned, compare two N values that produce the **same `chunks` and both
+> have `chunk_len ≥ 2`**. Peak RSS must not grow by more than a small tolerance. Record `chunks` and
+> `chunk_len` alongside the number; if they differ between the two sides, the comparison is invalid
+> and the gate must fail loudly rather than pass.
+
+At 32 threads, N=40 vs N=60 satisfies this and gives 1.049 — a defensible tolerance.
+
+### 10.3 Assertion 2 is M8's stated target, and `peak_rss / live_workers` is the wrong estimator
+
+§3.2.1 assertion 2 asks for `peak_rss / live_workers` at a pinned thread count, ratcheted as its own
+number, and says "it is the honest target of M8". M8's answer is that **the ratio is not a
+constant**, because it silently absorbs the process floor and the entire reduce tree (§6.4): at the
+same pinned condition it ranges over 355.5–384.0 MiB depending only on how many reduce levels the
+plan happens to have. Ratcheting it would be ratcheting `chunks` as much as per-worker cost.
+
+The quantity assertion 2 actually wants is the **fitted slope**, **342.8 ± 5.4 MiB per live worker**
+(§6.3), which is what regresses when someone adds a buffer and does not move when `chunks` changes.
+It is now available to CI as `m8_peak_bytes()` and is asserted by
+`the_m8_model_reproduces_the_measured_full_overlap_peaks`. **ARGUED** — the restatement is a
+recommendation for the owner; M8 did not edit SYNTHESIS.
+
+### 10.4 The GiB-vs-decimal unit decision is load-bearing on real data, not just on the synthetic run
+
+§3.2.1 decided that `8 GB` means **8 GiB = 8192 MiB**, and justified it on the N=220 synthetic run
+(7616 MiB: fails as decimal, passes as GiB with 576 MiB of margin). M8 supplies the **real-file**
+analogue, which the decision did not have:
+
+| Real run (MEASURED, 32 threads, n=5) | peak ws | vs 8 GiB = 8192 MiB | vs 8 decimal GB = 7629 MiB |
+| --- | --- | --- | --- |
+| `coffee-bean`, N=60 | **7681 MiB** (max of 5) | passes, 511 MiB margin (6.2%) | **fails** |
+| `coffee-bean`, N=40 | 7665 MiB (max of 5) | passes, 527 MiB margin | **fails** |
+| `coffee-bean`, N=105 | 6911 MiB (max of 5) | passes, 1281 MiB margin | passes |
+
+So the unit choice flips the verdict on a **60-frame stack of the owner's own files**, not only on a
+synthetic corpus. The decision as taken is what keeps these green. **VERIFIED** against the
+§3.2.1 constant.
+
+It also shows how little headroom the current plan leaves: 6.2% at N=60, which is **inside** the
+4.85% run-to-run spread measured at N=40 (§6.2) plus its own. The M8 plan predicts 5967 MiB at
+N=220, a 27% margin. Reported as context for §8, not acted on.
 
 ---
 
