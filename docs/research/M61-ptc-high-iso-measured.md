@@ -12,7 +12,7 @@ Rust cross-check in `experiments/m61-ptc-high-iso/decode-check/`.
 
 **Headline in one line (MEASURED):** the conversion gain measured directly at
 ISO 500 and ISO 1000 agrees with what `profile.rs` predicts to **1.03 ± 0.02** and
-**1.04 ± 0.01** of the low-mode plateau. M48c fact 17's derived 2.174× step is
+**1.04 ± 0.01** of the low-mode plateau. M48c fact 18's derived 2.174× step is
 **refuted**; the shipped single-line gain relation is right across the dual-gain
 switch. Separately and unexpectedly, the **B plane's conversion gain is 0.84× the
 greens' at every ISO**, which `profile.rs` does not model.
@@ -28,12 +28,12 @@ every file in `docs/research/`, and read the candidates.
 **Fact 1 (MEASURED).** Five places had already touched this, and the brief's
 reading list was accurate:
 
-- **`M48c-defect-layer-measured.md` §3, facts 11–22.** From the dark-current
+- **`M48c-defect-layer-measured.md` §3, facts 12–22.** From the dark-current
   excess of 13,630 recurrent hot pixels read through the shipped gain relation,
   M48c **DERIVED** that the DN→electron conversion above ISO 400 disagrees with
   the one below it by **2.174×** (6.6855 e⁻ implied below, 3.0765 e⁻ above, same
   pixels, same 1/100 s). It excluded exposure and temperature as causes.
-- **`M48c` fact 21 and §9 question 1.** M48c deliberately did **not** change any
+- **`M48c` fact 22 and §9 question 1.** M48c deliberately did **not** change any
   constant, citing discipline 326 — "dark-frame numbers have twice failed to
   survive contact with illuminated data" — and named a PTC at ISO 500 or 1000
   "the highest-value follow-up in this report", noting nothing had run one.
@@ -70,6 +70,11 @@ covariate instead (§1), which is what lets it select hard without biasing `E[v]
 was ever run**, at commit **`7a9b76b`** ("M61: pre-register the high-ISO photon
 transfer curve before running it", 4 files, 1091 insertions), on top of `883a2af`.
 The synthetic power control `03-power-control.py` is in the same commit.
+
+**Fact 5 (MEASURED).** The rest of M61 — scripts 04–07, the Rust cross-check, the
+data files and this report — landed in commit **`0526972`** ("Fold M55b…") rather
+than in a commit of mine, through no act of mine. See error 12; it changes no
+number in this report.
 
 **The estimator, M61-E1 (DERIVED).** Photon transfer from a **temporal**
 adjacent-frame difference, per CFA plane, on raw DN, never demosaiced, never
@@ -109,7 +114,7 @@ two-pass WLS. **Only the SLOPE is reported.** A forced-zero-intercept variant
 | | prediction |
 |---|---|
 | **H0** shipped model right across the switch | `r(≥400)/r(<400) = 1.000` |
-| **H1** M48c fact 17, low mode pinned by the ISO-160 PTC | `= 1/2.174 = 0.460` |
+| **H1** M48c fact 18, low mode pinned by the ISO-160 PTC | `= 1/2.174 = 0.460` |
 | **H2** same step attributed the other way | `r(<400)/r(≥400) = 0.460` |
 
 **The acceptance criterion, fixed before the run (MEASURED, quoted from the
@@ -119,7 +124,7 @@ MILESTONE STOPS AND REPORTS THAT.**" Second control ISO 50 (`119MSDCF`,
 `coffee-bean`), third control ISO 100 (`bee-1`, `bee-3`, `wrapped-text-1`), same
 band, not gates.
 
-**Fact 5 (MEASURED).** The pre-registration also discloses, in its own text, that
+**Fact 6 (MEASURED).** The pre-registration also discloses, in its own text, that
 two exploratory probes (`00-corpus-probe.py`, `01-difference-probe.py`) had
 already been run and that I had seen a smooth-tile σ ratio near 1.0 at every ISO
 before writing it. The pre-registration is therefore **not blind**, and says so.
@@ -130,7 +135,7 @@ before writing it. The pre-registration is therefore **not blind**, and says so.
 
 ### 2.1 Synthetic power control (rule 13: can the plant express the failure?)
 
-**Fact 6 (MEASURED).** `03-power-control.py`, same commit, six cases, seed
+**Fact 7 (MEASURED).** `03-power-control.py`, same commit, six cases, seed
 20260823, importing script 02's functions unchanged. **6/6 PASS.**
 
 | case | planted | recovered |
@@ -146,12 +151,12 @@ The estimator is not pinned: `null-doubled` moved the answer by exactly 2.0007×
 
 ### 2.2 The pre-registered ISO-160 control — **PASS**
 
-**Fact 7 (MEASURED).** `109MSDCF`, 22 frames, ISO 160, where `gain_divisor` was
+**Fact 8 (MEASURED).** `109MSDCF`, 22 frames, ISO 160, where `gain_divisor` was
 actually calibrated by a real PTC:
 
 ```
 r(160) = 0.9388   (four CFA planes averaged, as pre-registered)
-r(160) = 0.9887   (green planes only — see fact 20)
+r(160) = 0.9887   (green planes only — see fact 21)
 acceptance band 0.80 – 1.20                          → PASS
 ```
 
@@ -167,7 +172,7 @@ The second and third controls also pass: ISO 50 `r = 0.9835`, ISO 100
 
 ### 2.3 The real-data plant — the strongest control here, and post-hoc
 
-**Fact 8 (MEASURED).** A synthetic control shares its scene model with nothing
+**Fact 9 (MEASURED).** A synthetic control shares its scene model with nothing
 real, so I added one that does not. Averaging **disjoint horizontally adjacent
 same-plane pixels** of the real frames keeps the mean and halves the variance: it
 is the *same* scene with the *same* texture, defects, motion and level drift,
@@ -189,7 +194,7 @@ correlated so the scene term shrinks by less than 2×, biasing the plant slightl
 
 ### 2.4 Second decode (rule 32) — bit for bit
 
-**Fact 9 (MEASURED).** Every M61 number came out of `rawpy` (LibRaw).
+**Fact 10 (MEASURED).** Every M61 number came out of `rawpy` (LibRaw).
 `experiments/m61-ptc-high-iso/decode-check/` decodes the same frames through
 `strehl-raw` → `rawler`, an independent implementation of Sony's lossless
 compression and the one the shipped binary uses. Four frames, a 512×512
@@ -197,7 +202,7 @@ active-area patch each: **262144/262144 identical, max |diff| = 0**, for all
 four. Tile statistics computed on each decoder's patch agree to every printed
 digit. The decode is not the story.
 
-**Fact 10 (MEASURED).** The two decoders disagree about *geometry*: rawler reports
+**Fact 11 (MEASURED).** The two decoders disagree about *geometry*: rawler reports
 the active area as **7032×4688**, `rawpy.raw_image_visible` gives **7028×4688**.
 M61 used rawpy, so it measured a strict subset — 4 columns narrower — of the
 active area. `AGENTS.md` rule 7 states 7032×4688, so rawler matches the rule and
@@ -211,7 +216,7 @@ rawpy is the narrow one.
 
 ### 3.1 The ladder
 
-**Fact 11 (MEASURED).** `02-ptc-ladder.py`, 403 s, 12 stacks, 4 planes each,
+**Fact 12 (MEASURED).** `02-ptc-ladder.py`, 403 s, 12 stacks, 4 planes each,
 `r = g_measured/g_model`. Spread is the **observed disagreement between the two
 independent stacks at that ISO** — a re-draw, not a propagation.
 
@@ -231,7 +236,7 @@ Bubble motion, pre-registered as a risk. Its ISO-1000 partner `foam` fits cleanl
 
 ### 3.2 The commissioned answer
 
-**Fact 12 (MEASURED).** Measured-to-predicted conversion gain, and the ratio to
+**Fact 13 (MEASURED).** Measured-to-predicted conversion gain, and the ratio to
 the low-mode plateau which is what actually tests the switch:
 
 | | ISO 500 | ISO 1000 |
@@ -251,13 +256,13 @@ the low-mode plateau which is what actually tests the switch:
 `wrapped-text-1`). Reported **alongside**, never instead of, the pre-registered
 number.
 
-**Fact 13 (MEASURED).** ISO 400 — the first ISO in high mode, and the one M48c's
+**Fact 14 (MEASURED).** ISO 400 — the first ISO in high mode, and the one M48c's
 step is anchored to — gives `r_high/r_low = 1.014 ± 0.034` (pre-registered) and
 `1.002 ± 0.009` fit-gated. It is the *cleanest* arm in the whole ladder
 (`bee-2` PTC residuals 1.7%, `wrapped-text-2` 5.3%), and it sits on H0 to two
 decimal places.
 
-**Fact 14 (DERIVED).** **H1 is refuted.** Every high-mode arm lands within 5% of
+**Fact 15 (DERIVED).** **H1 is refuted.** Every high-mode arm lands within 5% of
 H0, and the deviation that does exist is in the **wrong direction** (upward, not
 downward) and ~12× too small even at the noisiest point. Taking the observed
 stack-to-stack spread at ISO 500 as the scale, H1's 0.460 is **15 σ** away
@@ -266,7 +271,7 @@ same numbers and by the ISO-160 control landing at 0.99.
 
 ### 3.3 The matched-level pairs — the single cleanest test
 
-**Fact 15 (MEASURED).** The corpus contains two pairs of stacks of the **same
+**Fact 16 (MEASURED).** The corpus contains two pairs of stacks of the **same
 subject at the same illumination level**, four minutes apart, straddling the
 switch, which I found in the recon pass and which no prior milestone has used
 (`bee-2`/`bee-3` are ISO 400 / ISO 100, ISO × exposure identical at 20 ISO·s,
@@ -285,31 +290,31 @@ and it lands 1.2% from H0.
 
 ### 3.4 What this implies for shipped constants — described, not made
 
-**Fact 16 (MEASURED).** On green, across 10 fit-passing stacks and a 20× ISO
+**Fact 17 (MEASURED).** On green, across 10 fit-passing stacks and a 20× ISO
 range, `r = 0.9906 ± 0.0178`, i.e. `gain_divisor = 440.9 ± 7.9` against the
 shipped **436.8**. **That is agreement. No change to `gain_divisor` is warranted
 by this milestone, and I have made none.**
 
-**Fact 17 (ARGUED).** The tripwire test
+**Fact 18 (ARGUED).** The tripwire test
 `the_gain_relation_is_still_continuous_across_the_dual_gain_switch` in
 `profile.rs` should stay green. M61 is the first illuminated measurement that
 supports it rather than merely failing to contradict it.
 
-**Fact 18 (ARGUED).** `M48c` fact 17 (2.174×, DERIVED) should be **superseded, not
+**Fact 19 (ARGUED).** `M48c` fact 18 (2.174×, DERIVED) should be **superseded, not
 deleted**. Its arithmetic is not in question; its *attribution* is. A mechanism
 that produces exactly a fixed-pixel dark-excess step with no conversion-gain
 change is in-camera raw-domain hot-pixel/defect suppression whose strength varies
 with ISO — the A7C II applies raw-domain correction and there is no reason it is
-ISO-invariant. That is a hypothesis, not a measurement. **M48c fact 21's refusal
+ISO-invariant. That is a hypothesis, not a measurement. **M48c fact 22's refusal
 to change constants on dark-frame evidence, citing discipline 326, was correct and
 is now vindicated by illuminated data.**
 
-**Fact 19 (ARGUED).** `profile.rs` is another agent's file and I have not touched
+**Fact 20 (ARGUED).** `profile.rs` is another agent's file and I have not touched
 it. `git diff --stat` over `crates/` is empty for this milestone.
 
 ### 3.5 The unexpected result: the B plane
 
-**Fact 20 (MEASURED).** `profile.rs` gives all four CFA planes one gain, and its
+**Fact 21 (MEASURED).** `profile.rs` gives all four CFA planes one gain, and its
 doc comment says nothing has measured them apart. Something now has. The B
 plane's PTC slope is **0.8396 ± 0.0112** of the green planes' — across 11 stacks
 and a 20× ISO range, in both gain modes:
@@ -323,7 +328,7 @@ noise. This is **ISO-independent**, so it cancels exactly in every `r_high/r_low
 above and does not touch the headline. Partial independent corroboration: M4's
 dark-σ table has B/G ≈ 0.91.
 
-**Fact 21 (ARGUED).** The mechanism is **not settled**, and I say so rather than
+**Fact 22 (ARGUED).** The mechanism is **not settled**, and I say so rather than
 guess. A per-channel digital raw scale w = 0.84 predicts a dark-σ ratio of 0.84
 too; M4 measured 0.91. A genuinely lower B conversion gain with a mix of pre- and
 post-gain read-noise components lands between the two and fits better. Neither is
@@ -340,9 +345,9 @@ real stacks**, including at ISO 500 and ISO 1000.
 
 ### 4.2 "You chose the tile size and the quantile to get this"
 
-**Fact 22 (MEASURED).** Re-choosing both (rule 24: re-choose, do not re-compute).
+**Fact 23 (MEASURED).** Re-choosing both (rule 24: re-choose, do not re-compute).
 This arm runs **greens only, 10 pairs per stack, one low stack and one high stack
-per side**, so its `r_hi/r_lo` is a different estimator from fact 12's and the two
+per side**, so its `r_hi/r_lo` is a different estimator from fact 13's and the two
 should be compared for *stability*, not for equality:
 
 | variant | r(109, 160) | r(bee-3, 100) | r(112, 500) | r(foam, 1000) | r_hi/r_lo |
@@ -359,14 +364,14 @@ fragility, it is disclosed, and it does not point at H1 (a −1.99 is not a 0.46
 
 ### 4.3 "The high-ISO stacks sit at lower DN, so this is level dependence"
 
-**Fact 23 (MEASURED).** Re-fitting every stack inside the common 50–800 DN window
+**Fact 24 (MEASURED).** Re-fitting every stack inside the common 50–800 DN window
 instead of its own full range moves `r_high/r_low` to 1.040 (ISO 400), 1.057
 (ISO 500), 1.219 (ISO 1000) — from 1.014 / 1.046 / 1.267. Same story, no sign
 change, nothing near 0.46.
 
 ### 4.4 "One stack is doing the work"
 
-**Fact 24 (MEASURED).** Fit quality per stack (max PTC bin residual, A–B and A–C
+**Fact 25 (MEASURED).** Fit quality per stack (max PTC bin residual, A–B and A–C
 variant spread, split-half disagreement). Seven of the twelve are shown — the
 three best-conditioned, the control, and the three worst; the full table is in
 `data/break-it.txt`:
@@ -386,7 +391,7 @@ the ladder. Dropping the two bad stacks moves the answer *towards* H0, not away.
 
 ### 4.5 "Texture leakage fakes the direction you found"
 
-**Fact 25 (DERIVED, pre-registered as artefact route 2).** Work out the sign
+**Fact 26 (DERIVED, pre-registered as artefact route 2).** Work out the sign
 before arguing about it. At a fixed DN level `m` and a fixed scene contrast `c`,
 the texture variance is `(c·m)²` while the noise variance is `g·m`, so the
 texture-to-noise ratio goes as `c·√(m/g)` — **smaller at higher ISO**, because a
@@ -396,11 +401,11 @@ ISO**, which biases `r_low` up and `r_high/r_low` **down — that is, towards H1
 
 So leakage is precisely the artefact that could have manufactured M48c's step,
 and it did not: the measurement came out **above** 1.0, not below. If anything,
-the residual leakage means the true `r_high/r_low` is ≥ what fact 12 reports. The
+the residual leakage means the true `r_high/r_low` is ≥ what fact 13 reports. The
 matched-`bee` pair, which holds texture, subject and level identical on both sides
 of the switch, independently lands at 4.049 against 4.000.
 
-**Fact 26 (ARGUED).** I originally wrote this section with the sign backwards —
+**Fact 27 (ARGUED).** I originally wrote this section with the sign backwards —
 claiming leakage biases `r_high` up — and only caught it while checking the
 report against the arithmetic. The corrected version is stronger for the
 conclusion, which is exactly why it needed checking.
@@ -411,7 +416,7 @@ Killed by §2.4 — bit-for-bit against a second implementation.
 
 ### 4.7 "The B-plane deficit is your tile estimator, not the sensor"
 
-**Fact 27 (MEASURED).** A tile *sample* variance under-reports when the noise is
+**Fact 28 (MEASURED).** A tile *sample* variance under-reports when the noise is
 spatially correlated, and the under-reporting shrinks as the tile grows. If
 correlation caused the B deficit, B/green must climb towards 1.0 with tile size:
 
@@ -427,7 +432,7 @@ It climbs by 1–3% and plateaus near 0.85. **Correlation cannot supply the miss
 
 ### 4.8 What I did *not* check
 
-**Fact 28 (ARGUED).** No ISO above 1000 was measured — the corpus has none. The
+**Fact 29 (ARGUED).** No ISO above 1000 was measured — the corpus has none. The
 high-mode arm rests on 400, 500 and 1000. A gain relation that is straight from
 400 to 1000 and bends at 3200 would not be caught here.
 
@@ -443,8 +448,8 @@ averaged all four CFA planes, and the B plane reads 16% low at every ISO (fact
 20), so the four-plane mean is dragged down by ~5% at every ISO. On the green
 planes — which is what a photon transfer curve conventionally means, what M25's
 control measured, and where G1 and G2 agree to 0.16% — `r = 0.9906 ± 0.0178` and
-`gain_divisor` is *fine*. **The wrong number is left in fact 11's table as the
-pre-registered result and superseded by fact 16.** It never affected the
+`gain_divisor` is *fine*. **The wrong number is left in fact 12's table as the
+pre-registered result and superseded by fact 17.** It never affected the
 headline, because a constant per-plane offset cancels in `r_high/r_low`; it did
 affect the absolute claim I nearly shipped about a shipped constant, which is the
 same shape of mistake M48 nearly made and the brief warned me about.
@@ -462,7 +467,7 @@ measure ρ.
 **Error 3 — the pre-registration is not blind, and it says so.** I ran two
 exploratory probes first and had already seen a smooth-tile σ ratio near 1.0 at
 every ISO, i.e. I had already seen H1 in trouble, before writing the
-pre-registration. It is disclosed inside the committed docstring (fact 5) and it
+pre-registration. It is disclosed inside the committed docstring (fact 6) and it
 is disclosed here. What the pre-registration genuinely fixed was the *acceptance
 band*, the *control*, the *hypothesis arithmetic* and the *artefact routes* — not
 my ignorance of the answer.
@@ -493,7 +498,7 @@ surviving-pair count. `coffee-bubbles` therefore fitted on a quarter of its
 intended data and I did not notice until the fit blew up.
 
 **Error 8 — an estimator instability I did not anticipate.** `tile 8, q40` on
-`foam` returns a **negative** conversion gain (fact 22). Letting 40% of tiles
+`foam` returns a **negative** conversion gain (fact 23). Letting 40% of tiles
 through at an 8×8 tile size on a moving subject apparently lets enough structure
 into the low bins to invert the WLS slope. I have not diagnosed it further.
 
@@ -503,7 +508,7 @@ exactly 2.5×. M61-E1 never uses exposure time, so it cannot affect any number
 here, but it is a corpus fact somebody should chase.
 
 **Error 10 — I used the narrower decode.** rawpy gives 7028 columns where rawler
-and rule 7 give 7032 (fact 10). Every M61 number is computed on a strict subset of
+and rule 7 give 7032 (fact 11). Every M61 number is computed on a strict subset of
 the active area. Harmless for a slope, wrong for anything that needs the true
 edge.
 
@@ -514,6 +519,22 @@ leakage inflates `r_low` more and biases `r_high/r_low` **towards** H1. The
 conclusion survives — and is in fact stronger, since the measurement went the
 other way — but I published the wrong direction internally before checking it, in
 a section whose entire job was to name the artefacts. Fact 26 records it.
+
+**Error 12 — I lost my own commit to another agent's `git add -A`.** I staged
+scripts 04–07, the Rust cross-check, the data files and this report path-scoped,
+ran `cargo build --workspace` to confirm the new package had not broken the
+workspace, and then ran `git commit -F`. In that window another live agent in the
+same working tree committed with a whole-tree `add`, and **my staged index went
+into their commit, `0526972` "Fold M55b…"**, alongside their `AGENTS.md` and
+`SYNTHESIS.md` edits. My `git commit` then found an empty index and did nothing.
+
+Nothing was lost — every file is in history — but the provenance is wrong: the
+bulk of M61 is attributed to an M55b fold. I did **not** repair it by rewriting
+history. `git reset`, `git rebase` or `git commit --amend` here would have taken
+another agent's committed work with it, and this project has already lost
+uncommitted work once to a `git checkout --`. A wrong commit message is cheaper
+than a destroyed tree. It is my fault for leaving a gap between `git add` and
+`git commit`: in a shared tree those have to be one invocation.
 
 ---
 
@@ -530,7 +551,7 @@ that mistake (error 1).
 plant**, not only a synthetic one. Halving the variance by averaging disjoint
 same-plane neighbours costs three lines and is the only control here that carries
 the real scene, the real motion and the real defects at the real ISO. It is what
-makes fact 14 a refutation rather than a null.
+makes fact 15 a refutation rather than a null.
 
 **Discipline 3 (ARGUED).** When you select tiles to suppress scene texture, select
 on a covariate that is **statistically independent** of the estimator — for
@@ -547,6 +568,11 @@ what let a 1064%-residual stack into a headline number (error 4).
 constrains the *model*, not the sensor, until illuminated data says otherwise.
 M48c's discipline 326 said this and M48c obeyed it. That call is now worth 2.174×.
 
+**Discipline 6 (ARGUED).** In a working tree with other live agents, `git add`
+and `git commit` must be a **single shell invocation**. Path-scoped staging
+protects you from committing someone else's work; it does not protect you from
+someone else committing yours. Error 12.
+
 ### Open questions
 
 **Question 1.** What is the B plane's 0.84? A per-channel digital raw scale
@@ -555,8 +581,8 @@ conversion gain with mixed pre-/post-gain read noise fits both but is unproven.
 A dark-frame PTC per plane against `D:\macro-dark-frames` would separate them.
 The R plane's 0.985 is a smaller version of the same question.
 
-**Question 2.** If M48c's 2.174× is not conversion gain (fact 14), what is it? The
-ISO-dependent raw-domain defect-suppression hypothesis (fact 18) is testable:
+**Question 2.** If M48c's 2.174× is not conversion gain (fact 15), what is it? The
+ISO-dependent raw-domain defect-suppression hypothesis (fact 19) is testable:
 suppression strength should show up as an ISO-dependent *count* of surviving
 outliers in the darks, not as a gain.
 
@@ -564,7 +590,7 @@ outliers in the darks, not as a gain.
 exactly 2.5× (error 9). Corpus metadata problem or camera reporting problem?
 
 **Question 4.** Nothing above ISO 1000 is measured anywhere in this project
-(fact 28). `profile.rs` runs to the camera's ceiling.
+(fact 29). `profile.rs` runs to the camera's ceiling.
 
 **Question 5.** Why does `wrapped-text-1` (ISO 100) fit so badly — 35% residuals,
 a 10% split-half, a 210–2286 DN level range — when its ISO-400 partner
@@ -584,7 +610,7 @@ spread and is currently unexplained.
   **1.017**; as a ratio to the low-mode plateau, **1.032 ± 0.021** and
   **1.038 ± 0.011**. The shipped single-line gain relation is correct across the
   dual-gain switch to within ~4%.
-- **P2 (MEASURED).** M48c fact 17's derived 2.174× conversion-gain step above
+- **P2 (MEASURED).** M48c fact 18's derived 2.174× conversion-gain step above
   ISO 400 is **refuted**. H1 predicted 0.460; every high-mode arm measured
   1.00–1.05, and a 0.460 planted into the real frames of the same stacks was
   recovered as 0.480–0.512.
@@ -597,7 +623,7 @@ spread and is currently unexplained.
   0.3273 DN/e⁻ on the same camera and the same kind of data, a 10.7% gap. M61's
   value should be preferred, because M61-E1 selects on a covariate that is
   statistically independent of its own estimator (fact 3) and because it carries
-  a real-data plant that recovers a halved gain to 2.5% (fact 8), neither of which
+  a real-data plant that recovers a halved gain to 2.5% (fact 9), neither of which
   M25's percentile estimator has. This is an argument, not a re-measurement of
   M25's script, and the orchestrator should treat it as one.
 - **P5 (MEASURED).** The **B plane's conversion gain is 0.840 ± 0.011 of the
