@@ -1,0 +1,143 @@
+{
+  "_meta": {
+    "script": "08-shot-dilution.py",
+    "purpose": "measure why the read_noise_e_high fix did not move the merge gate on real frames: shot-noise dilution",
+    "model": "sigma_DN = sqrt(g*S + (RN_e*g)^2), noise.rs variance()"
+  },
+  "stacks": [
+    {
+      "stack": "coffee-bubbles",
+      "iso": 1000.0,
+      "high_gain_mode": true,
+      "frames": [
+        "DSC00034.ARW",
+        "DSC00035.ARW",
+        "DSC00036.ARW"
+      ],
+      "gain_dn_per_e": 2.2893772893772892,
+      "read_noise_old_e": 1.47,
+      "read_noise_new_e": 1.2392,
+      "n_pixels": 24710448,
+      "signal_dn_percentiles": {
+        "0.1": 132.0,
+        "1": 144.5,
+        "5": 156.0,
+        "25": 175.0,
+        "50": 191.5,
+        "75": 217.5,
+        "95": 680.0,
+        "99": 4510.0
+      },
+      "signal_dn_median": 191.5,
+      "sigma_ratio_at_zero_signal": 0.8429931972789116,
+      "sigma_ratio_percentiles": {
+        "0.1": 0.9947597651254104,
+        "1": 0.9951991243253734,
+        "5": 0.995542924709948,
+        "25": 0.9960144738188449,
+        "50": 0.996349839707314,
+        "75": 0.9967771665574031,
+        "95": 0.9989544753001142,
+        "99": 0.9998414573887747
+      },
+      "sigma_ratio_mean": 0.9965618406527303,
+      "response_shift_mean_pct": 0.34509045807536665,
+      "response_shift_median_pct": 0.3663532774550671,
+      "response_shift_p99_pct": 0.48240352681991894,
+      "frac_pixels_shift_over_1pct": 0.0,
+      "frac_pixels_shift_over_5pct": 0.0,
+      "frac_pixels_shift_over_10pct": 0.0,
+      "shot_equals_read_at_dn": 4.947115384615384,
+      "frac_pixels_below_crossover": 0.0
+    },
+    {
+      "stack": "113MSDCF",
+      "iso": 500.0,
+      "high_gain_mode": true,
+      "frames": [
+        "DSC00001.ARW",
+        "DSC00002.ARW",
+        "DSC00003.ARW"
+      ],
+      "gain_dn_per_e": 1.1446886446886446,
+      "read_noise_old_e": 1.47,
+      "read_noise_new_e": 1.2392,
+      "n_pixels": 24710448,
+      "signal_dn_percentiles": {
+        "0.1": 86.0,
+        "1": 105.0,
+        "5": 129.5,
+        "25": 190.5,
+        "50": 271.0,
+        "75": 475.0,
+        "95": 966.0,
+        "99": 1351.0
+      },
+      "signal_dn_median": 271.0,
+      "sigma_ratio_at_zero_signal": 0.8429931972789116,
+      "sigma_ratio_percentiles": {
+        "0.1": 0.9959467648442285,
+        "1": 0.9966645263171123,
+        "5": 0.9972845777448005,
+        "25": 0.9981437361095575,
+        "50": 0.9986905064732717,
+        "75": 0.9992501959648741,
+        "95": 0.9996304044387386,
+        "99": 0.9997355510158801
+      },
+      "sigma_ratio_mean": 0.9986318186741838,
+      "response_shift_mean_pct": 0.1370598292302571,
+      "response_shift_median_pct": 0.1311210548453623,
+      "response_shift_p99_pct": 0.3346636300193051,
+      "frac_pixels_shift_over_1pct": 0.0,
+      "frac_pixels_shift_over_5pct": 0.0,
+      "frac_pixels_shift_over_10pct": 0.0,
+      "shot_equals_read_at_dn": 2.473557692307692,
+      "frac_pixels_below_crossover": 0.0
+    },
+    {
+      "stack": "119MSDCF-placebo",
+      "iso": 50.0,
+      "high_gain_mode": false,
+      "frames": [
+        "DSC00024.ARW",
+        "DSC00025.ARW"
+      ],
+      "gain_dn_per_e": 0.22893772893772893,
+      "read_noise_old_e": 4.2,
+      "read_noise_new_e": 4.2,
+      "n_pixels": 16473632,
+      "signal_dn_percentiles": {
+        "0.1": 159.0,
+        "1": 206.5,
+        "5": 309.5,
+        "25": 971.0,
+        "50": 3253.5,
+        "75": 4275.0,
+        "95": 4468.5,
+        "99": 4521.0
+      },
+      "signal_dn_median": 3253.5,
+      "sigma_ratio_at_zero_signal": 1.0,
+      "sigma_ratio_percentiles": {
+        "0.1": 1.0,
+        "1": 1.0,
+        "5": 1.0,
+        "25": 1.0,
+        "50": 1.0,
+        "75": 1.0,
+        "95": 1.0,
+        "99": 1.0
+      },
+      "sigma_ratio_mean": 1.0,
+      "response_shift_mean_pct": 0.0,
+      "response_shift_median_pct": 0.0,
+      "response_shift_p99_pct": 0.0,
+      "frac_pixels_shift_over_1pct": 0.0,
+      "frac_pixels_shift_over_5pct": 0.0,
+      "frac_pixels_shift_over_10pct": 0.0,
+      "shot_equals_read_at_dn": 4.038461538461538,
+      "frac_pixels_below_crossover": 0.0
+    }
+  ]
+}

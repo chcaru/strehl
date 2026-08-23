@@ -1,0 +1,358 @@
+{
+  "A_scaling": {
+    "sd_at_k1": 0.01537453677093309,
+    "sem_at_k1": 0.0001399243477868354,
+    "vs_shipped_constant": 1.0105519108014387,
+    "response_mean_at_k1": 0.5426606421816749,
+    "closed_form_rayleigh_mean": 0.5427009409187007,
+    "mean_vs_closed_form": 0.9999257441180079,
+    "per_k": {
+      "0.8000": {
+        "sd": 0.01921817096366637,
+        "sd_times_k": 0.015374536770933096,
+        "ratio_to_k1": 1.2500000000000004,
+        "predicted_ratio_1_over_k": 1.25
+      },
+      "0.9000": {
+        "sd": 0.0170828186343701,
+        "sd_times_k": 0.015374536770933091,
+        "ratio_to_k1": 1.1111111111111112,
+        "predicted_ratio_1_over_k": 1.1111111111111112
+      },
+      "0.9500": {
+        "sd": 0.016183722916771674,
+        "sd_times_k": 0.01537453677093309,
+        "ratio_to_k1": 1.0526315789473684,
+        "predicted_ratio_1_over_k": 1.0526315789473684
+      },
+      "1.0000": {
+        "sd": 0.01537453677093309,
+        "sd_times_k": 0.01537453677093309,
+        "ratio_to_k1": 1.0,
+        "predicted_ratio_1_over_k": 1.0
+      },
+      "1.0500": {
+        "sd": 0.014642415972317224,
+        "sd_times_k": 0.015374536770933086,
+        "ratio_to_k1": 0.9523809523809521,
+        "predicted_ratio_1_over_k": 0.9523809523809523
+      },
+      "1.1000": {
+        "sd": 0.013976851609939172,
+        "sd_times_k": 0.015374536770933091,
+        "ratio_to_k1": 0.9090909090909091,
+        "predicted_ratio_1_over_k": 0.9090909090909091
+      },
+      "1.1232": {
+        "sd": 0.01368815595702732,
+        "sd_times_k": 0.015374536770933086,
+        "ratio_to_k1": 0.8903133903133902,
+        "predicted_ratio_1_over_k": 0.8903133903133903
+      },
+      "1.2000": {
+        "sd": 0.012812113975777575,
+        "sd_times_k": 0.01537453677093309,
+        "ratio_to_k1": 0.8333333333333334,
+        "predicted_ratio_1_over_k": 0.8333333333333334
+      },
+      "1.2223": {
+        "sd": 0.012578366007472053,
+        "sd_times_k": 0.01537453677093309,
+        "ratio_to_k1": 0.8181297553792032,
+        "predicted_ratio_1_over_k": 0.8181297553792032
+      },
+      "1.3000": {
+        "sd": 0.011826566746871612,
+        "sd_times_k": 0.015374536770933096,
+        "ratio_to_k1": 0.7692307692307695,
+        "predicted_ratio_1_over_k": 0.7692307692307692
+      }
+    }
+  },
+  "C_effective": {
+    "shipped_old_1.47": {
+      "per_iso": {
+        "50": {
+          "model_dn": 0.9615384615384616,
+          "measured_dn": 0.986524,
+          "k_model_over_true": 0.9746731570022236,
+          "effective_response_sd": 0.015609335181439999,
+          "gate_error_pct": -2.5326842997776433
+        },
+        "100": {
+          "model_dn": 0.9615384615384616,
+          "measured_dn": 0.98444,
+          "k_model_over_true": 0.9767364811857112,
+          "effective_response_sd": 0.015576360966399999,
+          "gate_error_pct": -2.3263518814288786
+        },
+        "200": {
+          "model_dn": 1.9230769230769231,
+          "measured_dn": 1.741494,
+          "k_model_over_true": 1.1042684746986915,
+          "effective_response_sd": 0.01377744665232,
+          "gate_error_pct": 10.426847469869148
+        },
+        "250": {
+          "model_dn": 2.4038461538461537,
+          "measured_dn": 2.162736,
+          "k_model_over_true": 1.111483858337843,
+          "effective_response_sd": 0.013688008049664004,
+          "gate_error_pct": 11.148385833784303
+        },
+        "400": {
+          "model_dn": 1.346153846153846,
+          "measured_dn": 1.198538,
+          "k_model_over_true": 1.1231632590321257,
+          "effective_response_sd": 0.01354567101234286,
+          "gate_error_pct": 12.316325903212565
+        },
+        "500": {
+          "model_dn": 1.6826923076923075,
+          "measured_dn": 1.46783,
+          "k_model_over_true": 1.1463809212867344,
+          "effective_response_sd": 0.013271330425600003,
+          "gate_error_pct": 14.638092128673442
+        },
+        "640": {
+          "model_dn": 2.1538461538461537,
+          "measured_dn": 1.807805,
+          "k_model_over_true": 1.1914150883785328,
+          "effective_response_sd": 0.012769688875357144,
+          "gate_error_pct": 19.141508837853284
+        },
+        "800": {
+          "model_dn": 2.692307692307692,
+          "measured_dn": 2.246382,
+          "k_model_over_true": 1.1985083980853175,
+          "effective_response_sd": 0.012694112134971432,
+          "gate_error_pct": 19.850839808531752
+        },
+        "1000": {
+          "model_dn": 3.365384615384615,
+          "measured_dn": 2.808366,
+          "k_model_over_true": 1.1983426004248074,
+          "effective_response_sd": 0.012695868439131432,
+          "gate_error_pct": 19.834260042480743
+        },
+        "1600": {
+          "model_dn": 5.384615384615384,
+          "measured_dn": 4.405162,
+          "k_model_over_true": 1.222342194138464,
+          "effective_response_sd": 0.012446596438342858,
+          "gate_error_pct": 22.2342194138464
+        },
+        "2000": {
+          "model_dn": 6.73076923076923,
+          "measured_dn": 5.532721,
+          "k_model_over_true": 1.2165387032473227,
+          "effective_response_sd": 0.012505972855108571,
+          "gate_error_pct": 21.65387032473227
+        }
+      },
+      "summary": {
+        "mean": 0.01350730827551621,
+        "min": 0.012446596438342858,
+        "max": 0.015609335181439999,
+        "spread_pct": 25.41047071594642,
+        "rms_rel_dev_from_shipped_const": 0.13278757740759414,
+        "max_abs_rel_dev_from_shipped_const": 0.18189848571428568,
+        "best_single_scalar": 0.013353410952971843,
+        "max_abs_rel_dev_from_best_scalar": 0.14452404296824384,
+        "spread_in_units_of_published_sem": 42.16984990796188
+      }
+    },
+    "shipped_new_1.2392": {
+      "per_iso": {
+        "50": {
+          "model_dn": 0.9615384615384616,
+          "measured_dn": 0.986524,
+          "k_model_over_true": 0.9746731570022236,
+          "effective_response_sd": 0.015609335181439999,
+          "gate_error_pct": -2.5326842997776433
+        },
+        "100": {
+          "model_dn": 0.9615384615384616,
+          "measured_dn": 0.98444,
+          "k_model_over_true": 0.9767364811857112,
+          "effective_response_sd": 0.015576360966399999,
+          "gate_error_pct": -2.3263518814288786
+        },
+        "200": {
+          "model_dn": 1.9230769230769231,
+          "measured_dn": 1.741494,
+          "k_model_over_true": 1.1042684746986915,
+          "effective_response_sd": 0.01377744665232,
+          "gate_error_pct": 10.426847469869148
+        },
+        "250": {
+          "model_dn": 2.4038461538461537,
+          "measured_dn": 2.162736,
+          "k_model_over_true": 1.111483858337843,
+          "effective_response_sd": 0.013688008049664004,
+          "gate_error_pct": 11.148385833784303
+        },
+        "400": {
+          "model_dn": 1.1347985347985348,
+          "measured_dn": 1.198538,
+          "k_model_over_true": 0.946818986797694,
+          "effective_response_sd": 0.016068541307411234,
+          "gate_error_pct": -5.3181013202305945
+        },
+        "500": {
+          "model_dn": 1.4184981684981686,
+          "measured_dn": 1.46783,
+          "k_model_over_true": 0.9663913181350487,
+          "effective_response_sd": 0.015743105007772755,
+          "gate_error_pct": -3.360868186495125
+        },
+        "640": {
+          "model_dn": 1.8156776556776557,
+          "measured_dn": 1.807805,
+          "k_model_over_true": 1.0043548146385566,
+          "effective_response_sd": 0.015148033123607973,
+          "gate_error_pct": 0.4354814638556581
+        },
+        "800": {
+          "model_dn": 2.2695970695970695,
+          "measured_dn": 2.246382,
+          "k_model_over_true": 1.0103344264675684,
+          "effective_response_sd": 0.015058380276313753,
+          "gate_error_pct": 1.0334426467568436
+        },
+        "1000": {
+          "model_dn": 2.836996336996337,
+          "measured_dn": 2.808366,
+          "k_model_over_true": 1.010194660167634,
+          "effective_response_sd": 0.01506046369070626,
+          "gate_error_pct": 1.0194660167633929
+        },
+        "1600": {
+          "model_dn": 4.539194139194139,
+          "measured_dn": 4.405162,
+          "k_model_over_true": 1.0304261544057038,
+          "effective_response_sd": 0.014764764980926404,
+          "gate_error_pct": 3.0426154405703842
+        },
+        "2000": {
+          "model_dn": 5.673992673992674,
+          "measured_dn": 5.532721,
+          "k_model_over_true": 1.0255338510640017,
+          "effective_response_sd": 0.014835200207399611,
+          "gate_error_pct": 2.5533851064001745
+        }
+      },
+      "summary": {
+        "mean": 0.015029967222178364,
+        "min": 0.013688008049664004,
+        "max": 0.016068541307411234,
+        "spread_pct": 17.391378271476587,
+        "rms_rel_dev_from_shipped_const": 0.04889699846622467,
+        "max_abs_rel_dev_from_shipped_const": 0.10030182399999976,
+        "best_single_scalar": 0.014957413724866454,
+        "max_abs_rel_dev_from_best_scalar": 0.09273852488957379,
+        "spread_in_units_of_published_sem": 31.740443436629743
+      }
+    },
+    "M1_shared_floor": {
+      "per_iso": {
+        "50": {
+          "model_dn": 0.9819940838511145,
+          "measured_dn": 0.986524,
+          "k_model_over_true": 0.995408204819259,
+          "effective_response_sd": 0.015284181832479952,
+          "gate_error_pct": -0.4591795180741043
+        },
+        "100": {
+          "model_dn": 0.9819940838511145,
+          "measured_dn": 0.98444,
+          "k_model_over_true": 0.9975154238461608,
+          "effective_response_sd": 0.015251894493359073,
+          "gate_error_pct": -0.24845761538392352
+        },
+        "200": {
+          "model_dn": 1.7541884188914116,
+          "measured_dn": 1.741494,
+          "k_model_over_true": 1.0072893842249306,
+          "effective_response_sd": 0.015103901856075424,
+          "gate_error_pct": 0.728938422493064
+        },
+        "250": {
+          "model_dn": 2.1591260917703186,
+          "measured_dn": 2.162736,
+          "k_model_over_true": 0.9983308604334132,
+          "effective_response_sd": 0.015239436746846658,
+          "gate_error_pct": -0.16691395665867637
+        },
+        "400": {
+          "model_dn": 1.2081317672930214,
+          "measured_dn": 1.198538,
+          "k_model_over_true": 1.0080045582977104,
+          "effective_response_sd": 0.015093185715045747,
+          "gate_error_pct": 0.8004558297710407
+        },
+        "500": {
+          "model_dn": 1.4609359507876096,
+          "measured_dn": 1.46783,
+          "k_model_over_true": 0.9953032372874309,
+          "effective_response_sd": 0.015285793746098699,
+          "gate_error_pct": -0.4696762712569136
+        },
+        "640": {
+          "model_dn": 1.825073465002468,
+          "measured_dn": 1.807805,
+          "k_model_over_true": 1.0095521723872143,
+          "effective_response_sd": 0.015070048300747613,
+          "gate_error_pct": 0.9552172387214286
+        },
+        "800": {
+          "model_dn": 2.24905690338609,
+          "measured_dn": 2.246382,
+          "k_model_over_true": 1.001190760692567,
+          "effective_response_sd": 0.015195905313264995,
+          "gate_error_pct": 0.11907606925669612
+        },
+        "1000": {
+          "model_dn": 2.7851863304477815,
+          "measured_dn": 2.808366,
+          "k_model_over_true": 0.9917462077406511,
+          "effective_response_sd": 0.015340618276383238,
+          "gate_error_pct": -0.8253792259348858
+        },
+        "1600": {
+          "model_dn": 4.410550453715829,
+          "measured_dn": 4.405162,
+          "k_model_over_true": 1.0012232135199182,
+          "effective_response_sd": 0.015195412765664303,
+          "gate_error_pct": 0.12232135199181648
+        },
+        "2000": {
+          "model_dn": 5.499907187157898,
+          "measured_dn": 5.532721,
+          "k_model_over_true": 0.9940691365347898,
+          "effective_response_sd": 0.015304770504226947,
+          "gate_error_pct": -0.5930863465210212
+        }
+      },
+      "summary": {
+        "mean": 0.01521501359547206,
+        "min": 0.015070048300747613,
+        "max": 0.015340618276383238,
+        "spread_pct": 1.7954154508065034,
+        "rms_rel_dev_from_shipped_const": 0.005762479289961997,
+        "max_abs_rel_dev_from_shipped_const": 0.009461791721597668,
+        "best_single_scalar": 0.015214000097433369,
+        "max_abs_rel_dev_from_best_scalar": 0.00955217885257964,
+        "spread_in_units_of_published_sem": 3.607599675141659
+      }
+    }
+  },
+  "_meta": {
+    "side": 512,
+    "seeds": 12,
+    "shipped_focus_noise_sd": 0.015214,
+    "shipped_focus_noise_sem": 7.5e-05,
+    "operator_model_source": "experiments/m43-plugin-seam/02b-operator-noise-spread.py",
+    "note": "RNG is numpy PCG64, not merge.rs's SplitMix64+Box-Muller. M43 fact 312 showed the generator matters (a plain LCG moved the constant 1.30x across seeds); PCG64 is not an LCG and the 12-seed spread here is the check on that."
+  }
+}

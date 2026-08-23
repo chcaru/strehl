@@ -699,3 +699,287 @@ landed underneath me mid-flight; 184 + 3 = 187.
 Commits: `f95f6f4` (the constant, the estimator decision, the three tests),
 `df76014` (scripts 03–06 and their data), on top of the already-folded `4f7f683`
 (scripts 01–02).
+
+---
+
+## 12. Follow-up: `FOCUS_NOISE_SD` under the new constant
+
+Commissioned after the milestone landed: derive the correct `FOCUS_NOISE_SD`
+under `read_noise_e_high = 1.2392` for hand-off to whoever holds `merge.rs`.
+I did not edit `merge.rs`, `focus.rs` or `plane.rs`. Numbering continues
+locally: facts from 23, disciplines from 9, questions from 9.
+
+### 12.1 The answer to the question actually asked, first and plainly
+
+**Local fact 23 (MEASURED). `FOCUS_NOISE_SD` never descended from
+`read_noise_e_high`, from `CameraProfile`, or from any sensor measurement.
+Its correct value under the new constant is `0.015214` — unchanged. No
+hand-off is required and `merge.rs` should not be edited.**
+
+The brief's premise — that `FOCUS_NOISE_SD` "looks like it descends from the
+read-noise constant" — is the more important finding, and it is false in the
+way the brief suspected. Three independent confirmations:
+
+1. **By code path (READ).** `merge.rs:763`
+   `the_focus_noise_constant_is_the_measured_one` measures the constant against
+   `unit_sigma_model()` (`merge.rs:~624`), a hand-built
+   `PlaneNoise { gain_dn_per_e: 1e-4, read_noise_e: SQRT_2/1e-4 }` chosen so
+   that `sigma_L == 1` exactly, driven by a synthetic SplitMix64 + Box–Muller
+   standard-normal plane. No `CameraProfile` is constructed anywhere on that
+   path.
+2. **By experiment (RUN).** `cargo run --release -p strehl-plugin --example
+   calibration-survey` prints `tenengrad-w13 measured sd = 1.521126e-2, sem
+   7.57e-5, k 0.9998` — **bit-identical to all seven printed digits** at
+   `read_noise_e_high = 1.47` and at `1.2392`, with the rebuild confirmed by
+   `Compiling` lines both times (rule 33).
+3. **By construction.** The plane is unit-variance *by definition*; a change to
+   any real sensor constant cannot reach it.
+
+This is rule 34's exact shape — a plant supplying its own noise constant — and
+it means the constant is a property of the **operator**, not of the sensor. That
+is the right design. It is simply not documented as such at the constant.
+
+**Local fact 24 (MEASURED). The response is exactly inversely proportional to
+the model sigma, not merely to leading order.** Sweeping a scale factor
+`k` on the model sigma over `k` in [0.80, 1.30] (script `07`, section A), the
+product `sd * k` is constant at `1.537454e-02` for every `k`, with residual
+against the predicted `1/k` between −2.22e-16 and +4.44e-16 — floating-point
+epsilon. So *if* `FOCUS_NOISE_SD` had descended from the profile, the correct
+new value would have been `0.015214 * (1.47/1.2392) = 0.018047`. It did not, so
+that number is a counterfactual and must not be shipped.
+
+My Python re-implementation reproduces the shipped constant at `1.537454e-02
+± 1.40e-04` against `0.015214` — **+1.06%, or 1.15 SEM** (M43's independent
+model got +0.47%). A structural check: response mean / closed-form Rayleigh mean
+`0.125*sqrt(12)*sqrt(pi/2) = 0.5427` gives **0.9999**.
+
+### 12.2 Should it be a constant at all? Yes — and the test says so by less than one SEM
+
+The milestone established a shared DN floor beats two mode-specific ones
+(F = 2.75, p = 0.14). **That argument does not carry to this quantity, and the
+reason is more interesting than the answer.**
+
+The effective response SD on real data is `FOCUS_NOISE_SD / k`, where
+`k = sigma_model/sigma_true`. Script `07` computed `k` **at S = 0** and found a
+large per-ISO spread:
+
+| basis | spread across 11 ISOs | worst deviation | best single scalar |
+|---|---|---|---|
+| old `1.47` | 25.41% | +18.19% | 1.335341e-02 |
+| new `1.2392` | 17.39% | +10.03% | 1.495741e-02 |
+| M1 shared floor | **1.80%** | +0.95% | **1.521400e-02** |
+
+**Local fact 25 (MEASURED, and it invalidates my own first reading of that
+table). Those are dark-frame figures, and no pixel that carries focus
+information is a dark frame.** Script `08` measures the per-pixel ratio
+`r(S) = sigma_new(S)/sigma_old(S)` on real frames, using `noise.rs`'s own
+`sqrt(g*S + (RN_e*g)^2)`:
+
+| stack | ISO | median signal | shot==read at | pixels below it | mean shift | p99 shift |
+|---|---|---|---|---|---|---|
+| coffee-bubbles | 1000 | 191.5 DN | 4.95 DN | **0.0000%** | **0.345%** | 0.482% |
+| 113MSDCF | 500 | 271.0 DN | 2.47 DN | **0.0000%** | **0.137%** | 0.335% |
+| 119MSDCF | 50 | 3253.5 DN | 4.04 DN | 0.0000% | 0.000% | 0.000% |
+
+Not one pixel of ~18M sites falls below the shot/read crossover; the darkest
+0.1% of the ISO-1000 stack sits at 132 DN, **27x above it**. The 17.4% spread is
+real but lives entirely at signal levels the corpus does not contain.
+
+**The test, then, in the shape the F-test had:** does the effective response SD
+vary across ISO by more than the constant's own measurement precision? Published
+precision is `0.015214 ± 0.000075`, i.e. **1 SEM = 0.493%**. Measured variation
+on real frames is **0.345% mean and 0.482% at the 99th percentile — both inside
+one SEM.** So `FOCUS_NOISE_SD` is a constant to within its own error bar, and
+the answer is **yes, keep it a scalar** — but for a reason I did not anticipate
+and would not have found by argument: not because the noise model is accurate,
+but because the shot term swamps the model's read-noise error everywhere the
+operator is actually evaluated.
+
+### 12.3 Blast radius, and an end-to-end reproduction
+
+**Local fact 26 (MEASURED — a correction to my own milestone framing). 62% of
+the corpus is in the high-gain mode I changed.** EXIF ISO for every stack:
+
+| stack | n | ISO | mode |
+|---|---|---|---|
+| `C:\dev\macro\test\119MSDCF`, `coffee-bean` | 33, 105 | 50 | low |
+| `C:\dev\macro\test\109MSDCF` | 22 | 160 | low |
+| `D:\personal\macro\112MSDCF`, `113MSDCF` | 79, 63 | **500** | **high** |
+| `D:\personal\macro\coffee-bubbles`, `foam` | 19, 100 | **1000** | **high** |
+
+**261 of 421 frames, in four stacks, sit at ISO >= 400.** In §2 I wrote that the
+low mode is "where the owner actually shoots", citing M25 fact 200's three-stack
+table. That table is the `C:\dev\macro\test` subset, not the corpus. My
+`read_noise_e_low` decision survives — nothing is at ISO 200/250, where its
+shape error lives — but the *reason I gave* was wrong, and the fix I did make
+matters more than I claimed, not less.
+
+**Local fact 27 (MEASURED). The published figure in SYNTHESIS fact 324 for
+`113MSDCF` reproduces digit-for-digit at the old constant, and moves −0.27%
+at the new one.** M47's method: rerun the published metric at the corrected
+parameter, with an unaffected placebo as control. Mean `n_eff` at gate 2.0:
+
+| stack | ISO | mode | old `1.47` | new `1.2392` | delta |
+|---|---|---|---|---|---|
+| `119MSDCF` (placebo) | 50 | low | 2.847 | 2.847 | **0.000%** |
+| `113MSDCF` | 500 | high | **4.774** | 4.761 | −0.27% |
+| `coffee-bubbles` | 1000 | high | 2.114 | 2.109 | −0.24% |
+
+Fact 324 publishes **4.774** for `113MSDCF` at gate 2.0. The old constant
+reproduces it exactly, which validates the whole chain — stack, decode, gate,
+binary. The placebo is identical in every printed digit and every column
+(`n_eff=1` 67.65/43.66/17.33/5.12%, boundary 2.02%), which is what licenses
+reading a 0.24% shift as signal rather than jitter. **Fact 324's conclusion — a
+3.3x range of `n_eff` across stacks — survives untouched**, and it is the *only*
+published fact that quotes a real high-mode stack.
+
+The rest of the `FOCUS_NOISE_SD` fact set is zero-radius for one of two distinct
+reasons, and I checked which applies to each rather than asserting one:
+
+- **311, 313, 439, 460, 500, 520** — measured on a synthetic unit-variance
+  plane ("512² plane", "from the operator alone"). Zero **by construction**,
+  via fact 23: no sensor constant can reach them.
+- **436, 437** — I initially filed these as synthetic and that was wrong. Their
+  provenance column reads "MEASURED — `strehl merge` on 109MSDCF, 22 frames":
+  a **real stack**. They are still zero-radius, but for the other reason —
+  109MSDCF is **ISO 160**, in the low mode I did not touch. The 119MSDCF placebo
+  above is the empirical confirmation that low-mode runs are bit-identical.
+
+**Local fact 28 (MEASURED — my pre-registered prediction, refuted by a factor of
+54).** I predicted that responses would rescale by `1.47/1.2392 = 1.18626` in
+the high mode, so that new `--gate 2.3725` would reproduce old `--gate 2.0`.
+Measured: new `--gate 2.3725` gives `n_eff` **2.358** against old `--gate 2.0`'s
+**2.114** — **+11.5% wrong**, while plain new `--gate 2.0` was already within
+**0.24%**. The corrected gate that actually reproduces the old result is
+**2.005**, indistinguishable from 2.0. The prediction failed because I computed
+the sigma ratio at S = 0 — the second time in this milestone that a dark-frame
+number misled me about illuminated data (the first is local fact 20).
+
+### 12.4 The four hard-coded `1.47` fixtures
+
+All four pair `gain_dn_per_e: 0.229` (the ISO-**100** gain, 100/436.8) with
+`read_noise_e: 1.47` (the ISO-**400+** read noise) and label the model
+`100.0`. **The brief's worry is confirmed, and is broader than flagged: all four
+describe a sensor the profile has never produced, not just `noise.rs`.** The
+coherent fixture is `plane(0.229, 4.20)`.
+
+**Local fact 29 (MEASURED, by reading every assertion). None of the four can
+change a test outcome, and none produces a quotable number. All are
+"absolute value irrelevant".** Ranked by harm if left alone:
+
+1. **`focus.rs:287` — highest.** Not for its assertions: every test using
+   `model()` asserts a ratio (`sh > 1.5*so`), a structural invariant (flat plane
+   is zero; finite and non-negative at zero signal; running sum == naive
+   gather), or a scaling law. No absolute normalised response is asserted
+   anywhere. It ranks first because it is the fixture for
+   `normalise_by_luma_sigma` — the very function `FOCUS_NOISE_SD` calibrates
+   against — so it is the one most likely to be copied into a *new* gate test,
+   which would inherit the fiction silently. It also already contains a test at
+   S = 0, the one regime where read noise is the entire denominator; today it
+   asserts only finiteness, but that is one assertion away from mattering.
+   I checked the one test that could plausibly be *masked* —
+   `a_per_frame_gain_scales_the_normalised_response_by_its_square_root` needs
+   shot dominance — and at its 8000 DN signal shot beats read by **16,000x** at
+   `1.47` and **1,980x** at the correct `4.20`. Nothing is masked.
+2. **`noise.rs` x8 — second.** All eight assertions are algebraic:
+   `variance_is_affine_in_signal` recomputes the floor from the same two
+   literals; `green_luma_sigma...` asserts `sigma/sqrt(2)`;
+   `usable_white_level...` and `fallback_provenance...` never read the noise
+   values at all; `shot_noise_dominates_read_noise_in_the_midtones` asserts
+   `> 100x` and is satisfied by **14,147x** (still **1,734x** at `4.20`). Ranked
+   second only because these are the canonical worked examples of what a
+   `NoiseModel` *is* — eight repetitions make it the most-read instance of the
+   fiction.
+3. **`measure.rs:340` — third.** The assertion is `r.is_err()`: it checks that
+   `Normalisation::Custom` panics rather than silently no-opping. The model is
+   pure scaffolding. Cosmetic only — though note it introduces a *third*
+   distinct levels fiction (black 0.0 / white 16383.0).
+4. **`focus-window-cost.rs:50` — lowest.** An example, not a test; it prints
+   window cost on a synthetic 3000 DN field where shot beats read by ~6,000x.
+   Harmless.
+
+**Which need to change: all four, to `4.20`, in that priority order.** Zero
+behavioural effect is *expected* at every site and *measured* for the one test
+that could have been masked; the receiving agent should still run the suite.
+I did not make the change — `focus.rs` is M54's, and `noise.rs`,
+`measure.rs` and `examples/` are outside my assigned scope.
+
+### 12.5 What I got wrong in this follow-up
+
+**Local fact 30 (my own defect).** I fell into rule 33's trap while checking
+rule 33's property. My first invariance run used `cargo run -q`, which
+suppresses `Compiling` lines — so I had no evidence the binary had been rebuilt,
+and the "bit-identical" result was worthless. I caught it, redid it with
+`cargo clean -p strehl-core --release` and no `-q`, confirmed two `Compiling`
+lines, and only then recorded fact 23. **`-q` silently defeats rule 33.**
+
+Local fact 28 is the other: an S = 0 extrapolation quoted as if it applied to
+real frames, wrong by 54x. Both of my errors this milestone are the same error.
+
+**Local fact 31 (my own defect, caught on review).** I first wrote fact 27 as
+"every one is measured on a synthetic plane, so the radius is exactly zero by
+construction" — for all eight facts. Reading their provenance columns instead of
+their headline text showed 436 and 437 are `strehl merge` runs on a **real
+stack**. The conclusion held, but only by luck: that stack is ISO 160, in the
+mode I did not change. Had it been one of the four ISO-500/1000 stacks I would
+have published a false all-clear. **A fact's headline says what was found; only
+its provenance column says what it was found on.**
+
+### 12.6 Disciplines (continuing local numbering)
+
+**Local discipline 9.** *A constant measured against a synthetic plant must say
+so at the constant, in the words "this does not depend on the camera profile".*
+`FOCUS_NOISE_SD` is correct and well-tested, yet a careful reader commissioned a
+change to it because its doc comment does not exclude the sensor. The cost of
+the missing sentence was a whole milestone of somebody's attention.
+
+**Local discipline 10.** *Never quote a noise-model ratio without stating the
+signal level it was evaluated at.* A read-noise error of +18.6% at S = 0 is
++0.345% at the median pixel of a real frame. The ratio is meaningless without
+its operating point, and dark-frame ratios flatter every read-noise argument by
+one to two orders of magnitude.
+
+**Local discipline 11.** *A negative control that is bit-identical is what
+licenses reading a small delta as signal.* The 0.24% shift on `coffee-bubbles`
+would be indistinguishable from run-to-run jitter had the ISO-50 placebo not
+come back identical in all four gates and all four columns.
+
+**Local discipline 12.** *Read a fact's provenance column, not its headline,
+before deciding whether a change reaches it.* Facts 436 and 437 read like
+synthetic-plane results and are real-stack results (local fact 31). A blast-radius
+audit that skims headlines will clear facts it has not actually checked.
+
+### 12.7 Open questions (continuing local numbering)
+
+**Local question 9.** Should `FOCUS_NOISE_SD`'s doc comment state that it is
+sensor-independent? I believe yes (discipline 9) but `merge.rs` is M54's; this
+is a one-sentence edit for whoever holds it, and it is the durable fix for the
+premise that commissioned this work.
+
+**Local question 10.** The four fixtures should become `plane(0.229, 4.20)`.
+Owned by M54 and others; routed, not done.
+
+**Local question 11.** Is there any real capture where the read-noise error
+bites? The effect exceeds 5% only below **~10 DN** black-subtracted at ISO 1000.
+No frame in the corpus goes near it (0.1st percentile = 132 DN). A genuinely
+dark subject at high ISO could; worth re-checking if the corpus ever gains one.
+
+**Local question 12.** Fact 25's per-pixel `r(S)` varies *across the frame*, not
+just across ISO, because `normalise_by_luma_sigma` divides per pixel. Measured
+range is small (p99 0.482%), so I did not pursue it — but the machinery for a
+spatially-varying gate calibration is the same machinery local question 1 asks
+about, and the two should be scoped together if either is built.
+
+### 12.8 How to reproduce §12
+
+```
+python experiments/m48-noise-floor/src/07-focus-noise-basis.py
+python experiments/m48-noise-floor/src/08-shot-dilution.py
+cargo run --release -p strehl-plugin --example calibration-survey   # no -q
+strehl merge D:\personal\macro\113MSDCF --gate 0.5 --gate 1 --gate 2 --gate 4
+strehl merge C:\dev\macro\test\119MSDCF --gate 0.5 --gate 1 --gate 2 --gate 4
+```
+
+Flip `read_noise_e_high` via a `$env:TEMP` backup copy, never `git checkout --`.
+Confirm `Compiling` lines on every rebuild and reset the file's mtime after
+restoring, or cargo will serve a stale binary.
