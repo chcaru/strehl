@@ -46,6 +46,11 @@ use strehl_core::merge::{
 use strehl_core::noise::{Levels, NoiseModel};
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma};
 use strehl_core::profile;
+use strehl_core::through_focus::{
+    ConfidenceVector, FINE_FOCUS_NOISE_SD, FLAG_BIMODAL, FLAG_BRACKET_BOUNDARY,
+    FLAG_SCALE_DISAGREEMENT, PEAK_SEPARATION, STATS_RADIUS, ThroughFocus, do_not_trust_mask,
+    shuffled_indices,
+};
 use strehl_core::{CfaPlane, Error};
 use strehl_raw::Frame;
 
@@ -73,6 +78,21 @@ pub struct MergeOptions {
     /// needed to reach `n_eff = 3` runs 1.1 to 2.9. A target `n_eff` transfers
     /// where a gate does not, and it is the quantity fact 212 calibrated.
     pub target_n_eff: Option<f64>,
+    /// Gather per-pixel through-focus sufficient statistics during pass two.
+    ///
+    /// Opt-in because it is not free: `ThroughFocus` costs 60 B/px, which on the
+    /// A7C II plane is 494 MB per worker and will reduce the worker count the
+    /// memory budget licenses. With it off, the merge path's memory is exactly
+    /// what M37/M38 measured.
+    pub stats: bool,
+    /// Also gather a frame-permutation placebo alongside the statistics.
+    ///
+    /// Doubles the statistics memory. Without it the bimodality channel has no
+    /// null on this stack and its absolute value means nothing.
+    pub stats_placebo: bool,
+    /// Tail fraction per channel for the "do not trust" union mask. M34 used
+    /// 0.05 and measured a 14.278% union.
+    pub confidence_tail: f64,
 }
 
 /// The outcome of solving a measured gate ladder for a target mean `n_eff`.
@@ -311,6 +331,7 @@ struct Plan {
     chunk_len: usize,
     pass1_bytes: usize,
     pass2_bytes: usize,
+    stats_bytes: usize,
 }
 
 /// Per-worker bytes in pass one: `FocusStats` (f32 focus + u16 index) plus the
@@ -321,12 +342,33 @@ const PASS2_SCRATCH_PER_PX: usize = 4 + 12 + 4 + 4;
 /// One `Estimator`: four f32 sums, a u16 count, and the winner field it was
 /// built from (f32 + u16).
 const ESTIMATOR_PER_PX: usize = 4 * 4 + 2 + 4 + 2;
+/// The extra fine focus plane `--stats` needs in every pass-two worker's
+/// scratch. `ThroughFocus`'s own footprint is priced separately because it is
+/// per gather rather than per frame.
+const FINE_FIELD_PER_PX: usize = 4;
 
 impl Plan {
-    fn new(frames: usize, geom: PlaneGeometry, frame_bytes: usize, gates: usize) -> Self {
+    fn new(
+        frames: usize,
+        geom: PlaneGeometry,
+        frame_bytes: usize,
+        gates: usize,
+        gathers: usize,
+    ) -> Self {
         let px = geom.pixels();
         let pass1_bytes = px * PASS1_PER_PX + frame_bytes;
-        let pass2_bytes = px * (PASS2_SCRATCH_PER_PX + gates * ESTIMATOR_PER_PX) + frame_bytes;
+        // The statistics ride pass two, so they are priced into pass two and
+        // therefore into the worker count. This is the honest place for them:
+        // pricing them outside the per-worker term would license more workers
+        // than the budget pays for, which is exactly the defect M8 measured in
+        // the pre-M8 `buffers` model.
+        let stats_bytes = if gathers > 0 {
+            px * (FINE_FIELD_PER_PX + gathers * ThroughFocus::bytes_per_pixel())
+        } else {
+            0
+        };
+        let pass2_bytes =
+            px * (PASS2_SCRATCH_PER_PX + gates * ESTIMATOR_PER_PX) + stats_bytes + frame_bytes;
         // The binding pass is whichever needs more per worker, so that one
         // worker count is safe for both and the two passes chunk identically.
         let per_worker = pass1_bytes.max(pass2_bytes);
@@ -342,11 +384,12 @@ impl Plan {
             chunk_len,
             pass1_bytes,
             pass2_bytes,
+            stats_bytes,
         }
     }
 
     fn describe(&self) -> String {
-        format!(
+        let mut s = format!(
             "workers         : {} chunks of <= {} frames ({} allowed by the {} MB budget, {} by CPU)\n\
              working set     : {:.0} MB/worker pass 1, {:.0} MB/worker pass 2 (buffers only, a \
              LOWER BOUND)",
@@ -359,7 +402,15 @@ impl Plan {
                 .unwrap_or(1),
             self.pass1_bytes as f64 / 1e6,
             self.pass2_bytes as f64 / 1e6,
-        )
+        );
+        if self.stats_bytes > 0 {
+            s.push_str(&format!(
+                "\n  of which stats: {:.0} MB/worker of through-focus sufficient statistics, \
+                 CONSTANT in the frame count",
+                self.stats_bytes as f64 / 1e6
+            ));
+        }
+        s
     }
 }
 
@@ -381,16 +432,19 @@ struct Scratch {
     field: FocusField,
     box_scratch: Vec<f32>,
     reg: Vec<f32>,
+    /// The fine focus field, allocated only when `--stats` asked for it.
+    fine: Vec<f32>,
 }
 
 impl Scratch {
-    fn new(geom: PlaneGeometry) -> Self {
+    fn new(geom: PlaneGeometry, fine: bool) -> Self {
         let px = geom.pixels();
         Self {
             luma: vec![0.0; px],
             field: FocusField::new(geom),
             box_scratch: vec![0.0; px],
             reg: vec![0.0; px],
+            fine: if fine { vec![0.0; px] } else { Vec::new() },
         }
     }
 }
@@ -448,7 +502,20 @@ impl Ctx<'_> {
             );
         }
         green_luma(&frame, self.levels.black, &mut scratch.luma);
-        scratch.field.compute(&scratch.luma, self.noise);
+        if scratch.fine.is_empty() {
+            scratch.field.compute(&scratch.luma, self.noise);
+        } else {
+            // One shared gradient pass produces both scales. The selection field
+            // is bit-identical either way — pinned by
+            // `through_focus::tests::gathering_statistics_cannot_move_the_selection_field`
+            // — so turning statistics on cannot move the merge.
+            scratch.field.compute_with_fine(
+                &scratch.luma,
+                self.noise,
+                STATS_RADIUS,
+                &mut scratch.fine,
+            );
+        }
         regularise(
             scratch.field.values(),
             self.geom,
@@ -476,6 +543,10 @@ struct Pass1 {
 
 struct Pass2 {
     est: Vec<Estimator>,
+    /// The through-focus sufficient statistics, and their permutation placebo.
+    /// Both `None` unless `--stats` was passed.
+    tf: Option<ThroughFocus>,
+    placebo: Option<ThroughFocus>,
     t: Timings,
 }
 
@@ -545,7 +616,26 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         }
     }
 
-    let plan = Plan::new(paths.len(), geom, frame_bytes, opts.gates.len());
+    let plan = Plan::new(
+        paths.len(),
+        geom,
+        frame_bytes,
+        opts.gates.len(),
+        if opts.stats {
+            1 + usize::from(opts.stats_placebo)
+        } else {
+            0
+        },
+    );
+
+    // The placebo permutation. Fixed, auditable and reproducible.
+    //
+    // NOT a rotation. `k -> (k + n/3) mod n` was the first draft and it is an
+    // isometry of the index line, so adjacency survives and the placebo returned
+    // exactly 1.0000x of the real reading -- a null that had silently become a
+    // copy of its own subject. A seeded shuffle is the fix; the core test
+    // `shuffle_destroys_adjacency_which_a_rotation_does_not` holds the line.
+    let perm: Vec<u16> = shuffled_indices(paths.len(), PLACEBO_SEED);
 
     eprintln!("strehl merge -- regularised winner + noise-gated average (the estimation merge)");
     eprintln!("camera          : {camera}");
@@ -604,7 +694,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         .map(|(ci, chunk)| -> Result<Pass1> {
             let first_index = (ci * plan.chunk_len) as u16;
             let mut stats = FocusStats::new(geom);
-            let mut scratch = Scratch::new(geom);
+            let mut scratch = Scratch::new(geom, false);
             let (mut flat, mut detail) = (None, None);
             let mut t = Timings::default();
 
@@ -677,7 +767,10 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 .iter()
                 .map(|g| Estimator::new(&p1.stats, Gate::new(*g)))
                 .collect();
-            let mut scratch = Scratch::new(geom);
+            let mut tf = opts.stats.then(|| ThroughFocus::new(&p1.stats));
+            let mut placebo = (opts.stats && opts.stats_placebo)
+                .then(|| ThroughFocus::new_permuted(&p1.stats, &perm));
+            let mut scratch = Scratch::new(geom, opts.stats);
             let mut t = Timings::default();
 
             for (offset, path) in chunk.iter().enumerate() {
@@ -695,13 +788,32 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 if let Some(e) = err {
                     return Err(e);
                 }
+                if let Some(tf) = tf.as_mut() {
+                    tf.fold(index, &scratch.fine, &scratch.reg)
+                        .map_err(|e| map_dim_err(index, e))?;
+                }
+                if let Some(p) = placebo.as_mut() {
+                    p.fold(perm[index as usize], &scratch.fine, &scratch.reg)
+                        .map_err(|e| map_dim_err(index, e))?;
+                }
                 t.work += t0.elapsed().as_secs_f64();
             }
-            Ok(Pass2 { est, t })
+            Ok(Pass2 {
+                est,
+                tf,
+                placebo,
+                t,
+            })
         })
         .reduce_with(|a, b| match (a, b) {
             (Ok(mut a), Ok(b)) => {
                 for (x, y) in a.est.iter_mut().zip(b.est.iter()) {
+                    x.absorb(y).map_err(|e| map_dim_err(0, e))?;
+                }
+                if let (Some(x), Some(y)) = (a.tf.as_mut(), b.tf.as_ref()) {
+                    x.absorb(y).map_err(|e| map_dim_err(0, e))?;
+                }
+                if let (Some(x), Some(y)) = (a.placebo.as_mut(), b.placebo.as_ref()) {
                     x.absorb(y).map_err(|e| map_dim_err(0, e))?;
                 }
                 a.t.add(b.t);
@@ -755,6 +867,9 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     eprintln!();
 
     report(opts, &p2, &p1, geom, levels, &noise, middle)?;
+    if opts.stats {
+        report_statistics(opts, &p2, geom, levels, &noise, &perm)?;
+    }
 
     if let Some(path) = &opts.out {
         write_merged(&p2.est[0], levels, wb, opts.srgb, path)?;
@@ -937,6 +1052,347 @@ fn report(
     eprintln!("                  collapse arriving and cannot be explained away as noise removal.");
     Ok(())
 }
+
+/// Report the through-focus sufficient statistics, with their null.
+///
+/// Every channel here is reported next to the placebo that says what it would
+/// read on the same frames with the focus ordering destroyed. That is the only
+/// way any of these numbers means anything: the bimodality screen in particular
+/// is a max-minus-min and is **large by construction** even on pure noise.
+fn report_statistics(
+    opts: &MergeOptions,
+    p2: &Pass2,
+    geom: PlaneGeometry,
+    levels: Levels,
+    noise: &NoiseModel,
+    perm: &[u16],
+) -> Result<()> {
+    let Some(tf) = p2.tf.as_ref() else {
+        return Ok(());
+    };
+    let px = geom.pixels();
+    let frames = tf.frames_folded() as usize;
+
+    eprintln!();
+    eprintln!("--- through-focus sufficient statistics (MEASURED) ---");
+    eprintln!(
+        "                  Gathered in PASS TWO, anchored on pass one's regularised winner, so"
+    );
+    eprintln!(
+        "                  no third pass over the frames is needed to compute a sub-frame peak,"
+    );
+    eprintln!("                  a top-k list or a bimodality statistic from them.");
+    eprintln!(
+        "scale           : {}x{} box on the focus field (fact 152: bimodality is DEPLETED, 0.36x,",
+        2 * STATS_RADIUS + 1,
+        2 * STATS_RADIUS + 1
+    );
+    eprintln!(
+        "                  at the {REGULARISER_WIDTH}x{REGULARISER_WIDTH} selection scale and only \
+         appears at radius {STATS_RADIUS})"
+    );
+    eprintln!(
+        "fine noise sd   : {FINE_FOCUS_NOISE_SD:.6}, MEASURED in-crate, {:.2}x the selection \
+         field's {FOCUS_NOISE_SD:.6}",
+        FINE_FOCUS_NOISE_SD / FOCUS_NOISE_SD
+    );
+    eprintln!(
+        "memory          : {} B/px = {:.0} MB per gather, CONSTANT in the frame count.",
+        ThroughFocus::bytes_per_pixel(),
+        tf.allocated_bytes() as f64 / 1e6
+    );
+    eprintln!(
+        "                  A fine focus VOLUME for these {frames} frames would be {} B/px = \
+         {:.0} MB and is O(frames).",
+        4 * frames,
+        (px * 4 * frames) as f64 / 1e6
+    );
+    eprintln!(
+        "                  Break-even is {} frames; the ratchet holds from there up without bound.",
+        ThroughFocus::bytes_per_pixel().div_ceil(4)
+    );
+    eprintln!();
+
+    // (a) sub-frame peak
+    let offsets: Vec<f32> = (0..px).filter_map(|i| tf.subframe_offset(i)).collect();
+    let deficits: Vec<f32> = (0..px).filter_map(|i| tf.subframe_deficit(i)).collect();
+    eprintln!("(a) SUB-FRAME PEAK, by parabola on the fine triple");
+    eprintln!(
+        "  fitted        : {:.3}% of pixels have a complete concave triple",
+        100.0 * offsets.len() as f64 / px as f64
+    );
+    if !offsets.is_empty() {
+        let mean_abs = offsets.iter().map(|v| v.abs() as f64).sum::<f64>() / offsets.len() as f64;
+        let near_half = offsets.iter().filter(|v| v.abs() > 0.4).count() as f64;
+        eprintln!("  mean |offset| : {mean_abs:.4} frames");
+        eprintln!(
+            "  |offset|>0.4  : {:.3}% of fitted pixels are nearly half a frame from their peak",
+            100.0 * near_half / offsets.len() as f64
+        );
+    }
+    if !deficits.is_empty() {
+        let mut d = deficits.clone();
+        d.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        eprintln!(
+            "  deficit (C3)  : median {:.4}, p90 {:.4}, p99 {:.4}   (log fit with baseline \
+             subtraction, facts 272/304)",
+            d[d.len() / 2],
+            d[d.len() * 9 / 10],
+            d[d.len() * 99 / 100]
+        );
+    }
+    let disagree = (0..px).filter(|i| !tf.anchor_is_fine_argmax(*i)).count();
+    let outside = (0..px).filter(|i| tf.fine_peak_outside_triple(*i)).count();
+    eprintln!(
+        "  scale disagree: {:.3}% of pixels have a fine argmax different from the regularised \
+         winner",
+        100.0 * disagree as f64 / px as f64
+    );
+    eprintln!(
+        "  outside triple: {:.3}% have it further than {PEAK_SEPARATION} frames away -- the \
+         SCREENING form",
+        100.0 * outside as f64 / px as f64
+    );
+    eprintln!(
+        "                  The first is a diagnostic and is expected to be large: the fine field \
+         is"
+    );
+    eprintln!(
+        "                  {:.2}x noisier than the selection field, so its argmax moves. The \
+         second is",
+        FINE_FOCUS_NOISE_SD / FOCUS_NOISE_SD
+    );
+    eprintln!(
+        "                  the actionable one, because off-by-one is still bracketed by the \
+         parabola."
+    );
+    eprintln!();
+
+    // (b) top-k
+    let full = (0..px)
+        .filter(|i| tf.top_indices(*i).iter().all(|k| *k != u16::MAX))
+        .count();
+    let spread: Vec<f32> = (0..px)
+        .map(|i| {
+            let t = tf.top_values(i);
+            t[0] - t[TOP_K_LAST]
+        })
+        .filter(|v| v.is_finite())
+        .collect();
+    eprintln!("(b) TOP-K, k = 4 on the fine field");
+    eprintln!(
+        "  complete      : {:.3}% of pixels have all four slots filled",
+        100.0 * full as f64 / px as f64
+    );
+    if !spread.is_empty() {
+        let mean = spread.iter().map(|v| *v as f64).sum::<f64>() / spread.len() as f64;
+        eprintln!(
+            "  top1 - top4   : mean {mean:.4} = {:.2} fine sigma",
+            mean / (std::f64::consts::SQRT_2 * FINE_FOCUS_NOISE_SD as f64)
+        );
+    }
+    eprintln!();
+
+    // (c) bimodality, against the placebo
+    let bimodal: Vec<f32> = (0..px).filter_map(|i| tf.bimodality_sigma(i)).collect();
+    eprintln!("(c) BIMODALITY -- an UPPER BOUND on the prominence of a separated second peak");
+    // Sort ONCE. An earlier draft passed an unsorted slice to a closure that
+    // sorted a copy per call, and one of those calls was inside a per-pixel
+    // loop: 8.2 million sorts of an 8.2 million element vector. It did not
+    // finish. Sorting up front is the whole fix.
+    let mut bimodal_sorted = bimodal.clone();
+    bimodal_sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let quant = |s: &[f32], q: f64| -> f32 {
+        if s.is_empty() {
+            return 0.0;
+        }
+        s[((q * (s.len() - 1) as f64) as usize).min(s.len() - 1)]
+    };
+    let real_mean = if bimodal.is_empty() {
+        0.0
+    } else {
+        bimodal.iter().map(|v| *v as f64).sum::<f64>() / bimodal.len() as f64
+    };
+    eprintln!(
+        "  real          : mean {real_mean:.3} sigma, median {:.3}, p99 {:.3}",
+        quant(&bimodal_sorted, 0.5),
+        quant(&bimodal_sorted, 0.99)
+    );
+    // Set by the placebo arm below when there is one to set it from.
+    let mut bimodal_cut = if bimodal_sorted.is_empty() {
+        f32::INFINITY
+    } else {
+        quant(&bimodal_sorted, 0.99)
+    };
+    let mut cut_is_circular = true;
+    match p2.placebo.as_ref() {
+        Some(pl) => {
+            let mut fake: Vec<f32> = (0..px).filter_map(|i| pl.bimodality_sigma(i)).collect();
+            let fake_mean = if fake.is_empty() {
+                0.0
+            } else {
+                fake.iter().map(|v| *v as f64).sum::<f64>() / fake.len() as f64
+            };
+            fake.sort_by(|a, b| a.partial_cmp(b).unwrap());
+            eprintln!(
+                "  placebo       : mean {fake_mean:.3} sigma, median {:.3}, p99 {:.3}   \
+                 (seeded shuffle, mean step {:.1} frames, NOT a rotation)",
+                quant(&fake, 0.5),
+                quant(&fake, 0.99),
+                if perm.len() > 1 {
+                    (0..perm.len() - 1)
+                        .map(|k| perm[k].abs_diff(perm[k + 1]) as f64)
+                        .sum::<f64>()
+                        / (perm.len() - 1) as f64
+                } else {
+                    0.0
+                }
+            );
+            eprintln!(
+                "  ratio         : {:.4}x  -- BELOW 1 means the through-focus curve is genuinely",
+                real_mean / fake_mean
+            );
+            eprintln!(
+                "                  focus-ordered at this scale; AT 1 means the stack carries no"
+            );
+            eprintln!(
+                "                  ordering information here and the screen is reading noise."
+            );
+            eprintln!(
+                "                  The placebo reads HIGH by construction (M21: permutation is a"
+            );
+            eprintln!("                  null for ENRICHMENT, never for a raw rate).");
+            // The cut for the C4 bimodality flag. Taken from the PLACEBO's p99,
+            // never from the real distribution's own p99: the latter flags
+            // exactly 1% of pixels by construction and reports the definition
+            // of the quantile back as if it were a measurement. An earlier draft
+            // did that and printed 82417 px -- 1.0000% -- on both stacks.
+            //
+            // Against the null's p99, the flagged fraction is a real number: a
+            // reading BELOW 1% means the real curve has FEWER prominent far
+            // peaks than chance, which is what a focus-ordered stack should do.
+            bimodal_cut = quant(&fake, 0.99);
+            cut_is_circular = false;
+        }
+        None => eprintln!(
+            "  placebo       : NOT MEASURED. Pass --stats-placebo. Without it the number above \
+             is uninterpretable."
+        ),
+    }
+    eprintln!();
+
+    // Confidence vector.
+    let est = &p2.est[0];
+    let vectors: Vec<ConfidenceVector> = (0..px)
+        .map(|i| {
+            tf.confidence(
+                est.n_eff()[i],
+                est.green_mean(i) - levels.black,
+                noise,
+                i,
+                bimodal_cut,
+            )
+        })
+        .collect();
+    let (_, b) = do_not_trust_mask(&vectors, opts.confidence_tail);
+    eprintln!(
+        "(d) CONFIDENCE VECTOR at gate {:.2} -- four channels, NOT a score",
+        est.gate().threshold
+    );
+    eprintln!(
+        "                  Facts 280-282: C1 is ANTI-correlated with C3's target (0.89x lift), so"
+    );
+    eprintln!(
+        "                  no monotone scalar summary is faithful. The honest answer is the UNION."
+    );
+    eprintln!(
+        "  C1 sigma      : worst {:.1}% at >= {:.3} DN -> {} px",
+        100.0 * opts.confidence_tail,
+        b.sigma_cut,
+        b.by_sigma
+    );
+    eprintln!(
+        "  C2 perplexity : worst {:.1}% at >= {:.3} -> {} px",
+        100.0 * opts.confidence_tail,
+        b.perplexity_cut,
+        b.by_perplexity
+    );
+    eprintln!(
+        "  C3 deficit    : worst {:.1}% at >= {:.4} -> {} px",
+        100.0 * opts.confidence_tail,
+        b.deficit_cut,
+        b.by_deficit
+    );
+    let flag_count = |f: u8| vectors.iter().filter(|v| v.has(f)).count();
+    eprintln!(
+        "  C4 flags      : {} px  (boundary {}, bimodal {}, peak outside triple {})",
+        b.by_flags,
+        flag_count(FLAG_BRACKET_BOUNDARY),
+        flag_count(FLAG_BIMODAL),
+        flag_count(FLAG_SCALE_DISAGREEMENT)
+    );
+    eprintln!(
+        "                  bimodal cut {bimodal_cut:.3} sigma, from the {}. {:.4}% of pixels \
+         clear it;",
+        if cut_is_circular {
+            "REAL distribution's own p99 -- CIRCULAR, it flags 1% by definition"
+        } else {
+            "PLACEBO's p99"
+        },
+        100.0 * flag_count(FLAG_BIMODAL) as f64 / px as f64
+    );
+    eprintln!(
+        "                  1% is the no-effect reading, below 1% means FEWER prominent far peaks"
+    );
+    eprintln!("                  than chance -- which is what a focus-ordered stack should give.");
+    eprintln!(
+        "  UNION         : {:.3}% of pixels ({} of {})   -- M34 measured 14.278% at a 5% tail",
+        100.0 * b.union as f64 / b.total as f64,
+        b.union,
+        b.total
+    );
+    // The scale-disagreement channel is new here, so report the union without it
+    // too. Comparing a four-channel union against M34's three-channel one and
+    // calling the difference a finding would be a reporting defect.
+    let m34_like: Vec<ConfidenceVector> = vectors
+        .iter()
+        .map(|v| {
+            let mut c = *v;
+            c.flags &= !FLAG_SCALE_DISAGREEMENT;
+            c
+        })
+        .collect();
+    let (_, b3) = do_not_trust_mask(&m34_like, opts.confidence_tail);
+    eprintln!(
+        "  UNION w/o C4' : {:.3}% ({} px) with the NEW scale-disagreement flag removed -- this is",
+        100.0 * b3.union as f64 / b3.total as f64,
+        b3.union
+    );
+    eprintln!(
+        "                  the channel set M34's 14.278% was measured over, and the only one \
+         comparable."
+    );
+    let mean_pp = (0..px)
+        .map(|i| tf.posterior_perplexity(i) as f64)
+        .sum::<f64>()
+        / px as f64;
+    eprintln!(
+        "  mean C2       : {mean_pp:.4} against mean n_eff {:.4} at this gate -- the soft and hard",
+        est.mean_n_eff()
+    );
+    eprintln!(
+        "                  readings of the same acceptance set, on the same calibrated scale."
+    );
+    Ok(())
+}
+
+/// Index of the last top-k slot. Named so the report cannot silently drift from
+/// `strehl_core::through_focus::TOP_K`.
+const TOP_K_LAST: usize = strehl_core::through_focus::TOP_K - 1;
+
+/// Seed for the placebo frame permutation. Fixed so a placebo reading is
+/// reproducible from the command line alone.
+const PLACEBO_SEED: u64 = 0x4D31_385E;
 
 fn write_merged(
     est: &Estimator,
@@ -1332,8 +1788,8 @@ mod tests {
     fn the_plan_is_bounded_by_memory_and_scales_down_as_accumulators_are_added() {
         let geom = PlaneGeometry::from_active(4688, 7028);
         let frame_bytes = 66_000_000;
-        let one = Plan::new(105, geom, frame_bytes, 1);
-        let eight = Plan::new(105, geom, frame_bytes, 8);
+        let one = Plan::new(105, geom, frame_bytes, 1, 0);
+        let eight = Plan::new(105, geom, frame_bytes, 8, 0);
         assert!(
             eight.workers <= one.workers,
             "more accumulators must not license more workers: {} vs {}",
@@ -1351,11 +1807,68 @@ mod tests {
         }
     }
 
+    /// The memory ratchet, extended for `--stats`. Two things have to hold and
+    /// they pull in opposite directions: turning the statistics on must be
+    /// **priced** (so it cannot license more workers than the budget pays for),
+    /// and its price must be **constant in the frame count** (so the ratchet in
+    /// SYNTHESIS §3.2.1 is not quietly broken by an O(frames) object).
+    #[test]
+    fn the_statistics_are_priced_into_the_plan_and_do_not_grow_with_the_stack() {
+        let geom = PlaneGeometry::from_active(4688, 7028);
+        let frame_bytes = 66_000_000;
+        let off = Plan::new(105, geom, frame_bytes, 1, 0);
+        let on = Plan::new(105, geom, frame_bytes, 1, 1);
+        let with_placebo = Plan::new(105, geom, frame_bytes, 1, 2);
+
+        assert_eq!(off.stats_bytes, 0, "off must cost nothing");
+        assert!(
+            on.pass2_bytes > off.pass2_bytes,
+            "the gather must be priced into pass two, not hidden outside it"
+        );
+        assert!(
+            on.workers <= off.workers,
+            "a bigger working set must not license more workers: {} vs {}",
+            on.workers,
+            off.workers
+        );
+        assert!(
+            with_placebo.stats_bytes > on.stats_bytes,
+            "the placebo is a second gather and must be paid for"
+        );
+
+        // Constant in the frame count: the whole point of the seam decision.
+        for frames in [22usize, 33, 105, 400] {
+            let p = Plan::new(frames, geom, frame_bytes, 1, 1);
+            assert_eq!(
+                p.stats_bytes, on.stats_bytes,
+                "{frames} frames changed the statistics footprint; it is supposed \
+                 to be O(1) in the stack depth"
+            );
+        }
+
+        // And it must genuinely beat the object it replaces at corpus depth.
+        let px = geom.pixels();
+        let volume_22 = px * 4 * 22;
+        assert!(
+            on.stats_bytes < volume_22,
+            "{} B of statistics is not cheaper than a 22-frame fine focus volume \
+             at {} B; the seam decision was wrong",
+            on.stats_bytes,
+            volume_22
+        );
+        assert!(on.workers >= 1);
+        assert!(
+            on.chunks * on.pass1_bytes.max(on.pass2_bytes) <= MEMORY_BUDGET_BYTES
+                || on.workers == 1,
+            "the statistics plan exceeds the budget without being cornered at one worker"
+        );
+    }
+
     #[test]
     fn every_frame_is_covered_exactly_once_by_the_chunking() {
         let geom = PlaneGeometry::from_active(4688, 7028);
         for frames in [1usize, 2, 7, 22, 33, 63, 79, 105] {
-            let plan = Plan::new(frames, geom, 66_000_000, 3);
+            let plan = Plan::new(frames, geom, 66_000_000, 3, 0);
             let mut seen = vec![0u32; frames];
             for ci in 0..plan.chunks {
                 let start = ci * plan.chunk_len;

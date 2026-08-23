@@ -141,6 +141,33 @@ enum Command {
         /// from 1.1 to 2.9. Fact 212's nwide = 3 is the calibration target.
         #[arg(long, value_name = "N")]
         target_n_eff: Option<f64>,
+
+        /// Gather per-pixel through-focus SUFFICIENT STATISTICS in pass two.
+        ///
+        /// The seam the next milestone needs. Retains, per pixel and at a
+        /// FIVE-pixel focus window rather than the 27-pixel selection window,
+        /// enough state to compute a sub-frame peak by parabola fit, a top-4
+        /// frame list, and a bimodality statistic WITHOUT a third pass over the
+        /// frames. Fixed 60 B/px, constant in the frame count; a focus volume
+        /// would be 4*N B/px and is forbidden.
+        ///
+        /// Opt-in: it costs 494 MB per worker on this sensor and will reduce
+        /// the worker count the memory budget licenses. It cannot change the
+        /// merged image.
+        #[arg(long)]
+        stats: bool,
+
+        /// Also gather a frame-permutation placebo beside --stats.
+        ///
+        /// Same responses per pixel, same winning value, adjacency destroyed.
+        /// The bimodality number is not interpretable without it, because the
+        /// statistic is a max minus a min and is large by construction.
+        #[arg(long, requires = "stats")]
+        stats_placebo: bool,
+
+        /// Per-channel tail fraction for the confidence union mask.
+        #[arg(long, value_name = "Q", default_value_t = 0.05)]
+        confidence_tail: f64,
     },
 }
 
@@ -184,6 +211,9 @@ fn main() -> Result<()> {
             flat_roi,
             detail_roi,
             target_n_eff,
+            stats,
+            stats_placebo,
+            confidence_tail,
         } => merge_cmd::run(&MergeOptions {
             dir,
             out,
@@ -193,6 +223,9 @@ fn main() -> Result<()> {
             flat_roi,
             detail_roi,
             target_n_eff,
+            stats,
+            stats_placebo,
+            confidence_tail,
         }),
     }
 }

@@ -82,6 +82,28 @@ use crate::plane::PlaneGeometry;
 /// constant and not a number woven through the code.
 pub const WINDOW_RADIUS: usize = 13;
 
+/// Box-window radius for the **statistics** field: 2, a `5x5` mean.
+///
+/// **MEASURED, M21** (SYNTHESIS fact 152). This is not a second opinion about
+/// the focus measure and it never elects a winner or moves the gate. It exists
+/// because occlusion bimodality is *invisible at the selection scale*: at
+/// [`WINDOW_RADIUS`] = 13 — 27 CFA px, **54 sensor px** — multi-peak enrichment
+/// at depth steps measures **0.36x**, i.e. depleted, because the window averages
+/// the foreground and background layers together and destroys the structure
+/// being looked for. At radius 2 the same detector measures **4.38x** against a
+/// frame-permutation placebo reading 1.01x.
+///
+/// M21 states the consequence as an architectural constraint on the fold seam:
+/// *"the per-pixel sufficient statistics must be carried at a finer scale than
+/// the focus measure, or a second pass must recompute them."* This constant is
+/// the first half of that choice; [`crate::merge::ThroughFocus`] is the second.
+///
+/// **The two scales are not interchangeable and must never be swapped.** The
+/// selection scale is wide because a wide window buys contrast localisation at
+/// an occluding boundary (fact 82); the statistics scale is narrow because
+/// anything wider cannot see a second layer at all.
+pub const FINE_WINDOW_RADIUS: usize = 2;
+
 /// Radius of the gradient stencil. A 3x3 Sobel, so 1.
 pub const SOBEL_RADIUS: usize = 1;
 
@@ -194,14 +216,63 @@ impl FocusField {
             &mut self.scratch,
             &mut self.focus,
         );
-        for (focus, l) in self.focus.iter_mut().zip(luma) {
-            let sigma = noise.green_luma_sigma(*l).max(SIGMA_EPS);
-            *focus /= sigma;
-        }
+        normalise_by_luma_sigma(&mut self.focus, luma, noise);
+    }
+
+    /// Compute the selection field **and** a second, finer field from the same
+    /// gradient pass.
+    ///
+    /// `fine` receives `box_mean(|grad|, fine_radius) / sigma(luma)` — the same
+    /// operator as [`compute`](Self::compute), differing only in the window
+    /// radius. It is the field [`crate::merge::ThroughFocus`] gathers its
+    /// per-pixel statistics from, and it exists because M21 measured occlusion
+    /// bimodality *depleted* at the selection radius (see
+    /// [`FINE_WINDOW_RADIUS`]).
+    ///
+    /// The gradient magnitude is computed **once** and both box means read it,
+    /// so the marginal cost of the second field is one extra separable running
+    /// sum plus one divide — both O(1) in their radii and independent of the
+    /// frame count. `compute` and this method agree exactly on
+    /// [`values`](Self::values); the second field is strictly additional and
+    /// **cannot move the selection**.
+    pub fn compute_with_fine(
+        &mut self,
+        luma: &[f32],
+        noise: &NoiseModel,
+        fine_radius: usize,
+        fine: &mut [f32],
+    ) {
+        assert_eq!(luma.len(), self.geom.pixels());
+        assert_eq!(fine.len(), self.geom.pixels());
+        gradient_magnitude(luma, self.geom, &mut self.grad);
+        box_mean(
+            &self.grad,
+            self.geom,
+            WINDOW_RADIUS,
+            &mut self.scratch,
+            &mut self.focus,
+        );
+        box_mean(&self.grad, self.geom, fine_radius, &mut self.scratch, fine);
+        normalise_by_luma_sigma(&mut self.focus, luma, noise);
+        normalise_by_luma_sigma(fine, luma, noise);
     }
 
     pub fn values(&self) -> &[f32] {
         &self.focus
+    }
+}
+
+/// Divide a windowed gradient response by the per-pixel luma noise sigma.
+///
+/// Factored out so that [`FocusField::compute`] and
+/// [`FocusField::compute_with_fine`] cannot drift apart in the normalisation —
+/// the divisor is the whole of M11's ruling and a silent difference between the
+/// two fields would put the statistics on a different scale from the selection
+/// without any test noticing.
+fn normalise_by_luma_sigma(field: &mut [f32], luma: &[f32], noise: &NoiseModel) {
+    for (f, l) in field.iter_mut().zip(luma) {
+        let sigma = noise.green_luma_sigma(*l).max(SIGMA_EPS);
+        *f /= sigma;
     }
 }
 

@@ -17,6 +17,7 @@ pub mod noise;
 pub mod plane;
 pub mod profile;
 pub mod stack;
+pub mod through_focus;
 
 /// Which plane of a 2x2 colour filter array a sample belongs to.
 ///
