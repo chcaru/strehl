@@ -216,6 +216,42 @@ Stated now, so it cannot be softened afterwards.
   captures**, only that this plant lacks it. M60's first pass speaks to the
   corpus; this milestone speaks to the instrument.
 
+## 7b. Addendum — T6, registered after T1–T5 ran and before T6 ran
+
+**Ordering, stated plainly:** T1–T5 have been run and read. T6 below was written
+after seeing them and **before** the `discs-powerlaw` variant was rendered or
+scored. It is a new question those results raised, not a reinterpretation of
+them, and it is registered here so that ordering is on the record.
+
+T2 measured S0's denominator at **3.942x** larger on veiled pixels than on smooth
+ones in the `discs` control. That gives fact 603 a second possible reading.
+
+Fact 603 records that multi-scale occluder geometry moved truth-gated enrichment
+from 0.19x to 0.86x and calls it "the largest single effect ever measured on this
+statistic, 4.5x". The intended reading is that multi-scale geometry adds veiling.
+But multi-scale geometry also **replaces one large-contrast boundary with many
+small ones**, which lowers each pixel's curve range — and S0's threshold is
+`0.04 x range`. So the same manipulation predicts an improvement with no
+additional veiling whatsoever, purely by relieving the denominator.
+
+**T6.** Render M25's `discs-powerlaw` variant from the same simulator at the same
+config, and on the identical frames measure (a) S0 enrichment, (b) the T2
+denominator ratio, (c) S2 enrichment.
+
+| outcome | condition | reading |
+| --- | --- | --- |
+| **DENOMINATOR RELIEF** | S0 rises toward 0.86x **and** the T2 ratio falls materially toward 1.0 **and** S2 does **not** rise by a comparable factor | fact 603's 4.5x is substantially an instrument effect; the geometry did not add veiling, it lowered the bar |
+| **REAL VEILING** | S0 rises **and** S2 rises by a comparable factor | the geometry genuinely added veiling; fact 603's reading stands |
+| **NEITHER** | S0 does not reproduce near 0.86x | I failed to reproduce the variant; report and stop |
+
+"Comparable factor" is fixed now, before the run: S2's ratio between variants
+within **+/- 30%** of S0's ratio counts as comparable.
+
+**What T6 cannot separate.** Multi-scale geometry changes contrast *and* boundary
+count *and* the number of depth transitions inside a detector window at once.
+T6 can show the denominator moved and that S0 tracks it, but it cannot prove the
+denominator is the *only* route. It also inherits every limitation in section 7.
+
 ## 8. Stopping rule
 
 If T1 returns AMBIGUOUS because M25's render cannot be reproduced, this
