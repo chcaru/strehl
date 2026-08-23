@@ -2337,6 +2337,69 @@ Test data exists: `C:\dev\macro\test\109MSDCF\*.ARW` (36 MB lossless-compressed)
 
 ---
 
+### 8.1 Where this stands after the first research night, and what happens next
+
+**ARGUED, and it revises the external review's proposed ship order on the strength of
+facts measured after that order was written.** The review's sequencing was: *merge
+(regulariser + gate + robustness mask) -> confidence -> deep-alignment metacal ->
+deconvolution core -> occlusion unmixing -> capture designer*, on the argument that
+two of the next builds were already priced and had no open questions in front of them.
+That argument was sound when written. Three things measured since have broken it.
+
+**1. Two of the six items are now refuted or blocked, and neither by opinion.**
+Elevating multi-frame Wiener deconvolution to the merge core -- the review's own
+top-three item -- is **refuted** (facts 460-479, with the positive control passing, so
+the kill is on evidence rather than absence). Occlusion unmixing is **blocked at the
+instrument**: the plant built to score it cannot express veiling at all (fact 568,
+enrichment 0.23x, the wrong sign), and the leading explanation for why has since been
+eliminated by a pre-registered test (fact 603). Occlusion work is not merely unstarted;
+it currently has **no way to be scored**, and question 137 suspects the phenomenon
+itself may have been mis-identified.
+
+**2. The acceptance criteria the build was to be validated against were both broken.**
+This is the finding that actually reorders the list. `ACCEPTANCE INVARIANT 1` rests on
+a statistic fact 469 had already forbidden, and could pass a merge **6.3x noisier**
+(facts 569-589). `ACCEPTANCE INVARIANT 2` is a gradient measure that cannot distinguish
+blur from noise smoothing, separating at **0.233** where the new metric reaches 0.937
+(fact 624). Both were found within hours of each other by audits aimed at other things.
+**The tool's self-check certified neither of the two properties it claimed to certify**,
+which means "build the priced merge now" would have been building against instruments
+that could not have detected the failure modes the build risks.
+
+**3. The missing instrument now exists**, and did not when the order was written (fact
+619). It needs no ground truth, no new captures and no gear the owner lacks.
+
+**The revised order, and the reasoning is the whole point:**
+
+1. **Land the two acceptance instruments.** In flight: M53 (invariant 1) and the
+   `sigpow` specification. **Nothing else should ship before these**, because until
+   they land every subsequent quality claim is unfalsifiable by construction -- which is
+   precisely the defect this project exists to remove from the field.
+2. **Verify `sigpow` independently before depending on it** (M55, in flight). It is the
+   most consequential single result in the corpus and it is currently self-verified.
+   Rule 12 applies to good news as forcefully as to bad.
+3. **Then build the priced merge** -- regulariser (fact 84's -35% absolute error), the
+   noise gate, and the robustness/outlier mask the review correctly identified as
+   missing. The pricing still stands; only the order changed.
+4. **Then confidence with defined semantics**, which is now cheaper than it was: the
+   per-pixel posterior the review proposed subsumes confidence, occlusion detection and
+   "no frame in focus" into one object, and question 16's suspicion that these are the
+   same object was correct.
+5. **Then the unglamorous layer** -- per-frame photometric normalisation (facts 608,
+   626 give both the ordering rule and the measured route), hot pixels and dust, the
+   PRNU term, colour management. The review was right that a SOTA claim dies here, and
+   this is the part with the least research risk left in it.
+6. **Deep-alignment metacalibration and blur-equalisation remain open and unrefuted**,
+   and are the right next *research* item once the above is shipped.
+
+**What this ordering deliberately gives up:** it delays visible capability by two
+milestones in order to make the capability measurable. That is the same trade the
+project made at the start, and the two acceptance-invariant findings are the evidence
+that it keeps paying. **What would falsify it:** if M55 refutes fact 619, item 1 loses
+its second half and the correct response is to ship the merge with an *explicitly
+unmeasured* detail claim rather than to keep hunting for a metric -- the corpus has now
+spent three milestones on that hunt and a fourth is not obviously repayable.
+
 ## 9. Scope
 
 **v1** — CLI. ARW in, tiled float TIFF + DNG out. Calibrate, coarse-to-fine per-frame alignment
