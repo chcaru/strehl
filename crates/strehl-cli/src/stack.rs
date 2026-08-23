@@ -57,18 +57,21 @@ const DECODER_SCRATCH_BYTES: usize = 38_797_312;
 
 /// How `WorkerPlan` converts the memory budget into a worker count.
 ///
-/// The default is the model that has always shipped, and M8 did not change it:
-/// changing how many workers a stack gets is the owner's decision, not a
-/// measurement's. `M8` is the opt-in honest alternative.
+/// The default is `M8`, the measured model. The owner took that decision after
+/// M8 was independently verified: the `Buffers` model licenses 20 workers when
+/// 6 GiB pays for 16, which is a planner error rather than a tuning preference,
+/// and both models produce byte-identical output. `Buffers` stays reachable via
+/// `--memory-model buffers` so the two can be compared.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, clap::ValueEnum)]
 pub enum MemoryModel {
     /// Sum of the per-worker buffers, and nothing else. MEASURED (M2, M8) to
     /// under-count peak RSS by 12% per worker, and to omit both the process
-    /// floor and the reduce tree entirely.
-    #[default]
+    /// floor and the reduce tree entirely. Kept for comparison only.
     Buffers,
     /// Buffers + measured decoder scratch + the rayon reduce tree + the process
-    /// floor. Opt-in via `--memory-model m8`.
+    /// floor. The default. Out-of-sample error 8.4% mean / 17.5% max, against
+    /// 12.0% / 25.2% for `Buffers`.
+    #[default]
     M8,
 }
 
@@ -802,13 +805,13 @@ mod tests {
         assert!(small.chunks <= 3);
     }
 
-    /// The default must be exactly what shipped before M8. M8 measured the
-    /// under-count; it did not license changing the plan.
+    /// The pre-M8 model must stay reachable and must keep reproducing exactly
+    /// the plan that shipped before M8, so the two remain comparable. It is no
+    /// longer the default — see `the_default_memory_model_is_m8`.
     #[test]
-    fn the_default_memory_model_is_unchanged_by_m8() {
+    fn the_buffers_model_still_reproduces_the_pre_m8_plan() {
         let geom = PlaneGeometry::from_active(7032, 4688);
-        assert_eq!(MemoryModel::default(), MemoryModel::Buffers);
-        let plan = WorkerPlan::new(400, geom, 73_400_320, MemoryModel::default());
+        let plan = WorkerPlan::new(400, geom, 73_400_320, MemoryModel::Buffers);
         // px * 30 + frame_bytes, with px = 3516 * 2344.
         assert_eq!(plan.per_worker_bytes, 320_645_440);
         assert_eq!(MEMORY_BUDGET_BYTES / plan.per_worker_bytes, 20);
@@ -816,6 +819,27 @@ mod tests {
         for (frames, chunks) in [(22usize, 11usize), (105, 18), (220, 20)] {
             let p = WorkerPlan::new(frames, geom, 73_400_320, MemoryModel::Buffers);
             assert_eq!(p.chunks, chunks, "{frames} frames");
+        }
+    }
+
+    /// The owner adopted M8 as the default after independent verification. The
+    /// `Buffers` model licenses 20 workers where 6 GiB pays for 16, and both
+    /// models produce byte-identical output, so the only thing this changes is
+    /// that the plan stops exceeding the budget it claims to respect.
+    #[test]
+    fn the_default_memory_model_is_m8() {
+        let geom = PlaneGeometry::from_active(7032, 4688);
+        assert_eq!(MemoryModel::default(), MemoryModel::M8);
+        let px = geom.pixels();
+        let per_worker = px * 30 + 73_400_320;
+        // MEASURED (M8): the reference 22-frame stack does not move at all.
+        for (frames, chunks) in [(22usize, 11usize), (105, 15), (220, 16)] {
+            let p = WorkerPlan::new(frames, geom, 73_400_320, MemoryModel::default());
+            assert_eq!(p.chunks, chunks, "{frames} frames");
+            assert!(
+                m8_predicted_peak_bytes(p.chunks, px, per_worker) <= MEMORY_BUDGET_BYTES,
+                "the default plan for {frames} frames exceeds its own budget"
+            );
         }
     }
 

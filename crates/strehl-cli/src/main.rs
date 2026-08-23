@@ -74,12 +74,13 @@ enum Command {
         /// middle frame, and their ratio.
         #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
         flat_roi: Option<Roi>,
-        /// How to turn the memory budget into a worker count. `buffers` is the
-        /// shipped model: the sum of the per-worker buffers, which MEASURED
-        /// (M8) under-counts peak RSS. `m8` adds the measured decoder scratch,
-        /// the rayon reduce tree and the process floor, and plans fewer, larger
-        /// chunks. Off by default; see `docs/research/M8-scratch-measured.md`.
-        #[arg(long, value_enum, default_value_t = MemoryModel::Buffers)]
+        /// How to turn the memory budget into a worker count. `m8` is the
+        /// default: buffers plus the MEASURED decoder scratch, rayon reduce
+        /// tree and process floor. `buffers` is the pre-M8 model, kept for
+        /// comparison — it MEASURED (M8) licenses more workers than the budget
+        /// pays for. Output is byte-identical either way; only the worker count
+        /// changes. See `docs/research/M8-scratch-measured.md`.
+        #[arg(long, value_enum, default_value_t = MemoryModel::M8)]
         memory_model: MemoryModel,
     },
 }
