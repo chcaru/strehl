@@ -1047,3 +1047,116 @@ unmodified via `runpy`.
 Scripts 03 and 04 are retained deliberately. They are the two documented
 mistakes of §5.1 and §5.2 and deleting them would erase the evidence for the
 discipline items they generated.
+
+---
+
+## 11. 2026-08-23 — Is multi-scale occluder geometry the missing ingredient? (question 132)
+
+> **PRE-REGISTERED. This subsection was written and committed BEFORE the
+> occluder was built or a single frame rendered.** Nothing below the
+> pre-registration line existed at commit time. Added as a new dated section
+> rather than by editing §4.3, so that the text folded from `4f51d0c` does not
+> move.
+
+### 11.1 The hypothesis, and the mechanism it targets
+
+Gate 1c failed and §4.3 killed the two obvious explanations by measurement:
+the defocus rate (flat across a 12× sweep) and the occluder's luminance step
+(0.24× → 0.28×). The leading surviving candidate is the one I named in §4.3 as
+**ARGUED, and never tested: the occluder geometry is too simple.**
+
+The argued mechanism is specific, and it is what makes this testable. My
+occluder is a field of discs of radius ≈ 55 latent px with only ±40 % jitter —
+**effectively single-scale, and every scale present is far larger than the
+defocus blur.** A veiled pixel therefore sits on *one smooth boundary*, and
+that boundary is a single strong gradient feature that sharpens exactly
+**once**, when the foreground is in focus. One dominant peak; the background is
+a shoulder. That is a mechanism for *suppressing* multi-peakedness, and 0.23×
+is what suppression looks like.
+
+**For a veiled pixel to be genuinely bi-peaked its intensity must carry two
+comparable, independently-focusing contributions.** That requires the occluder
+to have structure **at and below the blur scale**, so that a detector window
+sees a genuine mixture of foreground and background rather than one clean
+edge — foreground filigree sharpening at `z_fg`, background texture showing
+through the gaps sharpening at `z_bg`. This is what real macro occluders look
+like: hairs, bristles, setae, foliage. It is not what a 55 px disc looks like.
+
+**ARGUED:** if this is right, the effect should appear as soon as the occluder
+carries power at scales comparable to the defocus blur, and the single-disc
+plant was never capable of expressing it. If it is wrong, multi-scale geometry
+is eliminated and question 132 loses its leading candidate.
+
+### 11.2 What will be built, and why — stated before measuring
+
+At `coc = 1.0` with the foreground at focus index 4 and the background at 16,
+the two layers differ by **≈ 12 px of blur**. Occluder features much larger
+than that behave like the existing disc; features much smaller are smeared to
+a flat veil. **The interesting range is therefore ≈ 2–30 latent px, and the
+existing plant has nothing there.** Two occluders will be built, both spanning
+it, chosen so that a null result is not attributable to one arbitrary shape:
+
+* **A — `fractal`.** A thresholded isotropic `f^-β_mask` Gaussian field, with
+  the threshold set by quantile to hit the coverage target. Power at every
+  scale by construction. `β_mask` controls the balance: **2.6** is smoother and
+  blob-like, **1.6** is fine filigree. Both will be run, because β_mask is
+  exactly the knob the hypothesis is about and running one value would make the
+  result a statement about that value.
+* **B — `discs-powerlaw`.** The existing disc field with radii drawn from
+  `N(r) ∝ r^-3` over **2–160 latent px** (equal area per octave). Less
+  physical than A, but far easier to reason about: it is the *same* generator
+  as the control with one parameter — the size distribution — changed.
+
+The **control** is the existing single-scale `discs` occluder, re-run in the
+same process, which must reproduce its known **0.23×**. Everything else —
+radiometry, PSD shaping, noise, breathing, coverage fraction, seed — is held
+fixed. The only thing that varies is occluder geometry.
+
+### 11.3 The gate — the oracle test, per discipline 297
+
+**The success criterion is the truth-gated enrichment, and M21's detector will
+not be scored at all unless the oracle number is positive.** This is discipline
+297 applied to my own next step: a plant that cannot express an effect under a
+perfect oracle cannot be used to score any detector for it.
+
+Scored on truly-veiled pixels (`0.02 < α < 0.98`) against truly-smooth-depth
+pixels, exactly as §4.3:
+
+| outcome | truth-gated veiled enrichment | reading |
+|---|---|---|
+| **PASS** | **≥ 1.50×** | Multi-scale geometry is the missing ingredient. The plant can express veiling, and M21's detector becomes scoreable on it for the first time. |
+| **PARTIAL** | **1.00× – 1.50×** | The sign is repaired but the magnitude is not. Geometry is *a* cause, not *the* cause. |
+| **FAIL** | **< 1.00×** | Still the wrong sign. Multi-scale occluding structure is **not** the missing ingredient, and question 132's leading candidate is closed. |
+
+Real `coffee-bean` is **4.38×**; none of these thresholds is a claim to have
+matched it.
+
+**Two conditions that invalidate the run regardless of the number:**
+
+1. **Placebo.** The frame-permutation control must read **1.00 ± 0.15** on every
+   variant. Outside that, the harness changed underneath me and no enrichment
+   number from that run is admissible.
+2. **Base-rate sanity.** Overall multi-peakedness on strong pixels must stay
+   within **2–40 %**. The real stack reads 4.8 % and the current plant 10.1 %;
+   §5.1's attempt-1 plant read 81.4 % and was measuring saturation, not focus.
+   A variant that lands outside this band is reported but not scored.
+
+### 11.4 Pre-registered predictions
+
+Recorded so that they can be scored against, per §3's practice:
+
+1. **`fractal` β=1.6 will show the largest enrichment of the three variants**,
+   because it puts the most power at the sub-blur scales the mechanism needs.
+2. **The control will reproduce 0.23× to within ±0.04**, confirming the run is
+   comparable to §4.3.
+3. **I expect PARTIAL, not PASS** — a repaired sign but a magnitude well short
+   of 4.38×. Reasoning: §4.3 measured a 7 % structure-contrast deficit (fact
+   551) and a 2.1× multi-peak over-production that geometry does not address,
+   so even a correct occluder should be scored in a noisier regime than reality.
+4. **`discs-powerlaw` will land between the two `fractal` variants.**
+
+**I will report the outcome whichever way it falls.** A FAIL closes the leading
+hypothesis for question 132 and is a more useful result than a marginal PASS,
+because it redirects effort away from geometry.
+
+<!-- PREREGISTRATION LINE -- nothing below this existed at commit 11.pre -->
