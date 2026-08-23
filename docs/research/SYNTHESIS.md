@@ -739,9 +739,13 @@ since contributors are not required to be spliceable and only have to emit an `f
 > **Facts 122-139 are M20-V** — the independent verification of the deconvolution-ceiling
 > report. The verifier proposed 130-147; that collided with M20's own 140-145 because the
 > orchestrator's brief named a start number without checking it, so the block was shifted
-> by −8 on fold. **Disciplines 250-251 are the cross-milestone findings** M20-V and M39
-> share; they are numbered outside both blocks because neither milestone owns them.
-> **Facts 340-345, discipline 240-242 and question 100 are M39**, the first independent
+> by −8 on fold. **Disciplines 250-252 are the cross-milestone findings** M20-V, M31-V,
+> M36-V and M39 share; they live in §5 with the other disciplines, are numbered outside
+> every milestone block because none owns them, and are the most important things in this
+> document. Note the two namespaces: **facts are `| N |` table rows in §4, disciplines are
+> `N. **` list items in §5**, and the two numbering series are independent — facts 240-243
+> (M30) and disciplines 240-242 (M39) coexist deliberately.
+> **Facts 340-345, disciplines 240-242 and question 100 are M39**, the first independent
 > verification since M2 — and the first block in the corpus whose author is *not* the
 > orchestrator. It supersedes parts of 320 and 322 and opens question 100 against fact 19.
 > **335-339 are unallocated.**
@@ -886,8 +890,6 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 232 | **Dust is undetectable from subject stacks: the limit is a 32–50% shadow, against real dust of 1–15%.** Six-stack per-location conjunction; the 50% positive control fires at all three planted locations, 32% at none. **Q9: no excess over the shift null** anywhere in the tail (raw −0.0001, standardised +0.0006 at p0.001) | A null result **with a bound attached**, which is the only kind worth recording. Also: a `min`-conjunction across heterogeneous instruments is bounded by its worst member — the raw variant never fires at any depth because `coffee-bubbles`' map rms is 6.5× `coffee-bean`'s and alone sets the tail | M29 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; sweep is too coarse to separate the three locations |
 | 233 | **The static-map floor is scene texture, not noise, so it cannot be bought with frames.** Map rms vs frame count over a 16× sweep: 0.14412 → 0.15447, **exponent +0.025** — dead flat, against −0.5 for shot noise. The stochastic part alone (adjacent-frame difference) is **1.6%**, a ~10× separation | **The scene is common to every frame of a stack, so averaging within a stack cannot remove it.** A flat field reaches a **0.120%** floor at n=20 (ISO 100, 8,000 DN) from the calibrated model with no free parameters — a **158× improvement**, at which a 5% shadow is a **42σ** detection. Yields a *specification*: **≥16 flats per working aperture, ISO 100, mid-tone 8,000–12,000 DN** | M29 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; one stack for the n-sweep |
 | 234 | **Two stacks shot in the same session of the same subject share 94% of their "static" map.** `112MSDCF` × `113MSDCF` **r = 0.9370** against a shift null of 0.0845, while different-subject pairs give **0.002–0.016**. Same-ish median 0.4685 vs different-subject 0.0017 — a **271.92×** ratio | The pre-registered control that killed the first version of the instrument: the map is measuring **residual scene structure**, not sensor. Kept because it is also the cleanest available demonstration that "static across the frames of one stack" and "static in sensor coordinates" are different properties, and that only cross-*subject* evidence can distinguish them | M29 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
-| 250 | **A check that cannot fail is not evidence, and this corpus has now shipped two of them.** M20's optics "gate" is the algebraic inverse of its own input (fact 122); M38's detail metric credits regularised argmax with **+35.47% "detail" on a FLAT ROI** (fact 341). Both were written by the orchestrator, both were published as confirmation, and both were caught only by an independent author | **The single most valuable methodological finding of the corpus so far, because it is the failure mode the project's whole measure-first discipline is *supposed* to prevent and did not.** Measuring instead of arguing does nothing if the measurement has no power to reject. **Standing requirement: before running any gate, control or metric, write down the input that would make it fail, and check that such an input exists.** If none does, it is arithmetic, not evidence — label it so. Prefer the cheap adversarial input (a flat ROI for a detail metric; an a-priori value for a fitted constant; a known destroyer for a quality score) and run it *first* | M20-V + M39 (VERIFIED, two independent authors, two independent milestones) |
-| 251 | **`mean \|∇\|` has now failed as a quality metric in three independent measurements**, from three authors: it rises **+35.47%** on a flat ROI under selection (fact 341), it rises **+23.7%** on Wiener output whose gradient *correlation* with truth **falls 12.1%** (fact 136), and at σ=0.050 it reads argmax selection **above the noise-free latent itself** (fact 136) | **Retire unnormalised `mean \|∇\|` as a scoring statistic anywhere in this project.** It is monotone in noise, so on any comparison where the arms differ in noise it measures the noise. The noise-subtracted form (M38 §2) is the minimum admissible replacement, and even it under-subtracts at `n_eff`→1 (fact 341). Gradient *correlation against a reference* survives all three tests and should be preferred wherever a reference exists | M39 + M20-V (MEASURED, three independent measurements) |
 | 240 | **Exposure allocation is neutral at fixed light. Splitting a budget across exposures neither gains nor loses anything in the shot-noise regime.** `m` base frames + `m` at +2 EV cost the same `5m` time units as `5m` base frames and reach the same variance; measured per pixel, the median ratio is **1.00041 / 1.00470 / 1.00192** across three stacks, residual attributable to read noise in the predicted direction | **This constrains R15, R16 and R17 together, and is the most reusable thing in the capture-design workstream.** How a light budget is *divided across frames* does not affect noise — only the total does. Every capture-design decision therefore reduces to the **non-noise** asymmetries: read noise (fact 241), clipping (fact 242), focus coverage (fact 213), outlier rejection (fact 222), and **aperture (M20's 9.6×)**. Only the last is large, and it is the only one that changes the *optics* rather than the allocation | M30 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; assumes shutter-based EV change and ignores motion blur, which a real long exposure would incur |
 | 241 | **This sensor is shot-noise limited across its entire usable range.** Read noise binds where `S < RN_e²·g`: **2.02 / 2.47 / 6.46 DN** above black at ISO 50 / 500 / 160 = **0.014–0.044% of full scale**. Measured fraction of pixels below the boundary, three stacks: **0.0000%** | The dual-gain design does this deliberately — the high-ISO branch drops read noise to 1.47 e⁻ exactly where `g` rises. **Keep the read-noise term in `σ²(S)` — it is what makes the model correct near black, and masked or clipped regions do reach there — but make no design decision *because of* it.** Any argument that depends on read noise for its justification depends, on this rig, on 0.0000% of the frame | M30 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; the boundary is exact given M4's model, the 0.0000% is corpus-specific |
 | 242 | **The clipping a merge sees is not the clipping in the stack: 0.075% at gathered frames against 0.177% whole-stack, a 2.3× reduction.** Two of three stacks have exactly zero of both. `112MSDCF` has **30.7% below SNR 10** at best focus but **0.0% below SNR 5** | **Highlights are disproportionately out of focus** — speculars sit on curved surfaces near the depth extremes — so the highlight case for exposure bracketing is roughly half what a whole-stack figure suggests. `112MSDCF` is not a dynamic-range problem but a *dim frame*, which more light fixes and which fact 240 says more frames supply as well as longer ones. **General instruction: any statistic used to justify a capture change must be evaluated at the frames the merge would gather, not over the stack** | M30 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; best-frame index from an unregularised argmax over M27's focus volume, which rule 4 forbids for output but is adequate for locating signal |
@@ -1512,6 +1514,38 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      structure from its rivals by 24–39 against a 0.096 error. **A test whose inputs are
      symmetric in the thing under test has no power over it**, and uniform-σ noise is the most
      natural and most inert choice available.
+250. **A check that cannot fail is not evidence, and this corpus has now shipped three of
+     them.** M20's optics "gate" re-derives `B` from the very knee `B` was obtained by
+     inverting, and two of its six rows contain no measured quantity at all — no configuration
+     of the model could have failed it, and the report concluded "the model is gated". M38's
+     detail metric credits regularised argmax with **+35.47% "detail" on a FLAT ROI**. M33's
+     two half-step phases, quoted as replicating each other to 0.05%, have hit rates summing
+     to **1.0000 by construction** — complements cannot corroborate each other. All three were
+     written by the orchestrator, published as confirmation, and caught only by independent
+     authors. **This is the failure mode the project's entire measure-first discipline exists
+     to prevent, and measuring instead of arguing did not prevent it**, because a measurement
+     with no power to reject is arithmetic wearing evidence's clothes. **Standing requirement:
+     before running any gate, control or metric, write down the input that would make it fail
+     and confirm such an input exists.** Prefer the cheap adversarial one — a flat ROI for a
+     detail metric, an a-priori value for a fitted constant, a known destroyer for a quality
+     score, an arithmetic check that two "independent" arms are not the same number twice.
+     Disciplines 13, 24 and 242 are special cases; this is the general form.
+251. **Retire unnormalised `mean |∇|` as a scoring statistic.** It has now failed in three
+     independent measurements by three authors: it rises **+35.47%** on a flat ROI under
+     selection (fact 341); it rises **+23.7%** on Wiener output whose gradient *correlation*
+     with truth **falls 12.1%**; and at σ=0.050 it reads plain argmax selection **above the
+     noise-free latent itself** (fact 136). It is monotone in noise, so on any comparison whose
+     arms differ in noise it measures the noise and calls it detail. The noise-subtracted form
+     (M38 §2) is the minimum admissible replacement and still under-subtracts at `n_eff`→1.
+     **Gradient correlation against a reference survived all three tests; prefer it wherever a
+     reference exists.**
+252. **The rules are an executable checklist, not a creed.** `AGENTS.md` rules 4, 9 and 10 were
+     each written down, published, and then violated by a later milestone *by the author who
+     wrote them*: M30's fact 242 is a raw argmax (rule 4), M38's detail metric shipped with no
+     flat-ROI control (rule 9), and fact 88 compared a spatial sd to a temporal σ (rule 10).
+     All three were caught by independent verifiers; none by the author. **Agreeing with a rule
+     does not execute it.** Before publishing a milestone, walk the list and name, per rule,
+     the line of code or the command that discharges it.
 
 ---
 
