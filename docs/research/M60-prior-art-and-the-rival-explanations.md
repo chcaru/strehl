@@ -603,5 +603,3 @@ direction: it will not lose your work to their message.
   thing happened to me in the opposite direction, from an instruction we were
   both following.** That is the signature of a defective rule rather than a
   careless agent.
-
-
