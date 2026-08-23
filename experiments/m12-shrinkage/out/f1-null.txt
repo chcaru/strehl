@@ -1,0 +1,6 @@
+decoded 79 frames to 3516x2344 green planes in 1610 ms (20.4 ms/frame)
+[fnull] SYNTH NULL: 79 warped copies of frame 0, g_total -0.037448
+[fnull] 79 frames (step 1 phase 0), frozen false
+[fnull] 78 direct (0,j) fits in 1.1 s
+[fnull] 693 tiles, 96 px, stride 96
+[fnull] wrote data/focus-null-focus.csv in 0.1 s

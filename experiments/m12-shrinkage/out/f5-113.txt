@@ -1,0 +1,4 @@
+decoded 63 frames to 3516x2344 green planes in 1538 ms (24.4 ms/frame)
+[f113fz] 63 frames (step 1 phase 0), frozen true
+[f113fz] 693 tiles, 96 px, stride 96
+[f113fz] wrote data/focus-113-frozen-focus.csv in 0.1 s

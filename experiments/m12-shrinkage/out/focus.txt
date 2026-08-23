@@ -1,0 +1,146 @@
+==============================================================================
+M12-F  focus-band position, measured from the pixels
+  H-interval predicts beta = 1.2581;  H-step predicts 1.0000
+==============================================================================
+
+  tile acceptance (registered rules)
+           stack  frames          nan        edge  prominence       rival    parabola          ok
+        112MSDCF      79            0           1           8          39           0         645
+        113MSDCF      63            0           1           8          28           0         656
+
+==============================================================================
+PRIMARY - the registered regression
+==============================================================================
+
+  p_112  on  p_113   (Tenengrad, warped grid)
+    tiles accepted in both: 635 (A 645/693, B 656/693)
+    beta = 0.9867   alpha = +5.461 frames   R^2 = 0.9803
+    split-half  left/right: 0.9750 / 0.9906   sigma_beta = 0.0078
+    split-half     checker: 0.9934 / 0.9798   sigma_beta = 0.0068
+    registered sigma_beta (worst half-split) = 0.0078
+    quadratic: gamma = +1.115e-03, curvature at mid-sweep (34.3) = 0.554 frames
+
+    |beta - 1.0000| = 0.0133
+    |beta - 1.2581| = 0.2713
+    VERDICT: H-STEP (shared per-frame step; 112 runs further)
+
+==============================================================================
+F2 - precision controls with KNOWN answers
+  These are the same frames relabelled, so they CANNOT test the
+  hypothesis (SYNTHESIS section 5 item 20).  They calibrate whether
+  the pipeline can resolve a slope difference at all.
+==============================================================================
+
+  p_112(79 frames) on p_112even(40)  -> must be 2.0000 [H-INTERVAL geometry]
+    tiles accepted in both: 642 (A 645/693, B 666/693)
+    beta = 2.0061   alpha = -0.145 frames   R^2 = 0.9976
+    split-half  left/right: 1.9945 / 2.0122   sigma_beta = 0.0089
+    split-half     checker: 2.0090 / 2.0031   sigma_beta = 0.0030
+    registered sigma_beta (worst half-split) = 0.0089
+    quadratic: gamma = +1.278e-03, curvature at mid-sweep (21.3) = 0.189 frames
+    error vs known 2.0000: +0.0061   PASS (gate 0.05)
+
+  p_112even(40) on p_112odd(39)  -> must be 1.0000 [H-STEP geometry]
+    tiles accepted in both: 657 (A 666/693, B 663/693)
+    beta = 0.9877   alpha = +0.776 frames   R^2 = 0.9876
+    split-half  left/right: 0.9843 / 0.9939   sigma_beta = 0.0048
+    split-half     checker: 0.9885 / 0.9868   sigma_beta = 0.0008
+    registered sigma_beta (worst half-split) = 0.0048
+    quadratic: gamma = -1.101e-03, curvature at mid-sweep (20.8) = 0.164 frames
+    error vs known 1.0000: -0.0123   PASS (gate 0.05)
+
+  The pipeline reproduces BOTH signatures from the same data:
+    H-interval geometry -> 2.0061 (truth 2.0000)
+    H-step     geometry -> 0.9877 (truth 1.0000)
+  so it can tell the two apart; the primary result is not a null result in disguise.
+
+==============================================================================
+F1 - the synthetic null: planted magnification, NO focus change
+  Registered pass: <= 10% of tiles accepted.
+==============================================================================
+    null accepted 0/693 = 0.0%
+    real (112)    645/693 = 93.1%
+    PASS (gate 10%)   rejection breakdown: {'nan': 0, 'edge': 693, 'prominence': 0, 'rival': 0, 'parabola': 0, 'ok': 0}
+
+==============================================================================
+F4 - does the verdict depend on the focus measure?
+==============================================================================
+
+  p_112 on p_113   (modified Laplacian)
+    tiles accepted in both: 560 (A 577/693, B 622/693)
+    beta = 0.9839   alpha = +5.501 frames   R^2 = 0.9464
+    split-half  left/right: 0.9651 / 0.9945   sigma_beta = 0.0147
+    split-half     checker: 0.9970 / 0.9708   sigma_beta = 0.0131
+    registered sigma_beta (worst half-split) = 0.0147
+    quadratic: gamma = +8.326e-04, curvature at mid-sweep (32.3) = 0.488 frames
+    |beta_lap - beta_ten| = 0.0028 against 2 sigma = 0.0156   PASS
+
+==============================================================================
+F5 - frozen tile grid: does the statistic inherit the (0,j) fits?
+==============================================================================
+
+  p_112 on p_113   (no warp at all)
+    tiles accepted in both: 646 (A 650/693, B 666/693)
+    beta = 0.9889   alpha = +5.352 frames   R^2 = 0.9842
+    split-half  left/right: 0.9786 / 0.9955   sigma_beta = 0.0084
+    split-half     checker: 0.9926 / 0.9848   sigma_beta = 0.0039
+    registered sigma_beta (worst half-split) = 0.0084
+    quadratic: gamma = +8.687e-04, curvature at mid-sweep (35.8) = 0.488 frames
+    |beta_frozen - beta_warped| = 0.0022 against 2 sigma = 0.0156   PASS
+
+==============================================================================
+U0 - two independent corroborations of the fitted offset and span
+==============================================================================
+  (a) The intercept alpha says where 113's frame 0 sits on 112's index.
+      focus-band regression        alpha = 5.461 frames
+      cross-stack similarity (F3)  g = 2.69038e-03 / rate 4.8460e-04 = 5.552 frames
+      two disjoint observables agree to 0.091 frames
+  (b) What fraction of 112's sweep does 113 cover?
+      from focus index:    62 * 0.9867 / 78 = 0.7843
+      from magnification:  3.0210% / 3.7448%          = 0.8067
+      agree to 2.2 percentage points
+      -> 113 spans 112's frames 5.5 to 66.6 of 0 to 78.
+      H-interval requires this to be 0 to 78.  It is not.
+
+==============================================================================
+U1 - is the stepping uniform?  Two uniform sweeps of the same
+  depth->focus map must be related LINEARLY, whatever that map is,
+  so curvature here means non-uniform stepping in at least one stack.
+==============================================================================
+                                   arm    range       gamma  curvature
+                   PRIMARY  112 vs 113     44.6  +1.115e-03      0.554
+               F2a  known-linear (2.0)     24.3  +1.278e-03      0.189
+               F2b  known-linear (1.0)     24.4  -1.101e-03      0.164
+                      F5   frozen grid     47.4  +8.687e-04      0.488
+
+  The F2 arms are linear BY CONSTRUCTION, so their curvature is the
+  pipeline's own artifact.  Rescaled to the primary's range it predicts:
+    F2a artifact at primary range = 0.635 frames
+    F2b artifact at primary range = 0.547 frames
+
+    measured curvature at mid-sweep = 0.554 frames
+    registered gate 2*sigma*range/2  = 0.349 frames
+    -> INDETERMINATE (between the registered bounds)
+    Practical bound either way: any non-uniformity is under 0.55 frames on a 45-frame sweep = 1.2%.
+
+==============================================================================
+SUMMARY
+==============================================================================
+                                             arm     beta    sigma      n     R^2
+      PRIMARY  p_112 ~ p_113 (Tenengrad, warped)   0.9867   0.0078    635  0.9803
+                     F4       modified Laplacian   0.9839   0.0147    560  0.9464
+                            F5       frozen grid   0.9889   0.0084    646  0.9842
+                           F2a      known 2.0000   2.0061   0.0089    642  0.9976
+                           F2b      known 1.0000   0.9877   0.0048    657  0.9876
+
+    REGISTERED VERDICT: H-STEP (shared per-frame step; 112 runs further)
+    distance from H-interval: 34.7 sigma
+    distance from H-step:     1.7 sigma
+
+    The known-1.0000 control (F2b) returns 0.9877, so the pipeline
+    carries a small negative slope bias.  Dividing the primary by it:
+      0.9867 / 0.9877 = 0.9991
+    which is 1.0000 to within the calibration's own precision.
+
+    wrote data/focus-peaks.csv (6237 rows, 9 arms) -- the distilled measurement, so this
+    regression stays re-checkable without the raw per-frame profiles.

@@ -2,3 +2,8 @@ target/
 __pycache__/
 *.pyc
 data/regress*
+
+# Raw per-tile-per-frame focus profiles: ~18 MB, regenerable in ~5 s per arm
+# from the read-only ARWs.  data/focus-peaks.csv holds the distilled measurement
+# and m12_focus.py falls back to it, so the regression stays re-checkable.
+data/focus-*-focus.csv

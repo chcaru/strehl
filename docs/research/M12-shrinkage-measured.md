@@ -30,12 +30,15 @@ read and reproduced), **DERIVED** (computed from measured inputs, rule stated), 
 
 And a fifth, which is the one that changes the project's plan:
 
-5. **SYNTHESIS fact 49's central premise is false.** `112MSDCF` and `113MSDCF` do **not** sample the
-   same focus interval at two densities. They share a **per-frame** step and 112 simply runs 16
-   frames further. This is measured, not inferred: `rate(112)/rate(113) = 1.0044` where the
-   fact-49 reading requires 0.7949. The consequence is that this pair **cannot** discriminate
-   index-span from physical-baseline parameterisation, which was the milestone's most valuable
-   advertised property. (MEASURED — §4)
+5. **SYNTHESIS fact 49's central premise is false, and this is now measured two independent ways.**
+   `112MSDCF` and `113MSDCF` do **not** sample the same focus interval at two densities. They share
+   a **per-frame** step and 112 runs 16 frames further. By magnification:
+   `rate(112)/rate(113) = 1.0044` where that reading requires 0.7949. By the **focus band itself**,
+   measured from the pixels with no metadata and no distance-map assumption: the tile-wise slope
+   `β = 0.9867 ± 0.0078`, which is **1.7 σ from 1.0000 and 34.7 σ from 1.2581**. 113 covers only
+   112's frames **5.5 → 66.6 of 0 → 78**. The pair therefore **cannot** discriminate index-span from
+   physical-baseline parameterisation, which was the milestone's most valuable advertised property.
+   (MEASURED — §4.1, §4.1a)
 
 ---
 
@@ -213,6 +216,17 @@ It is also the fact that makes §5's failure damning rather than ambiguous: the 
 
 ## 4. Deliverable 3 — index span or physical baseline? And a correction to fact 49
 
+> **Note on a retracted premise.** After the first version of this section was written, the
+> orchestrator independently verified that per-frame focus position is **not** recoverable from EXIF
+> for these stacks, and **retracted** the briefing's claim that the physical step differs between 112
+> and 113 "by a factor of ~78/62 = 1.26" — that figure was computed as `span/(n−1)`, so its ratio is
+> an arithmetic identity equal to the inverse frame-count ratio, not a measurement. The retraction is
+> accepted and acted on here. Every `span/(n−1)`-derived prediction below is labelled
+> **DERIVED-UNDER-ASSUMPTION**, its assumption (uniform stepping) is measured rather than granted in
+> §4.1a, and §4.1's conclusion is re-established from a second observable that needs no metadata at
+> all. The retained half of the premise — that the endpoints agree so the sweeps "cover the same
+> focus interval" — is **also refuted** in §4.1a.
+
 ### 4.1 The 112/113 pair cannot answer this, because fact 49's premise is false
 
 SYNTHESIS fact 49 states that 112 and 113 both sweep **0.3189 → 0.3297 m**. That figure is a decode
@@ -228,6 +242,10 @@ Measured with magnification instead of with the encoder (MEASURED):
 | `rate(112)/rate(113)` | **1.0044** | 0.7949 | 1.0000 |
 | `total(112)/total(113)` | **1.2442** (direct) / 1.2636 (chain) | 1.0000 | 1.2581 |
 
+The two prediction columns are **DERIVED-UNDER-ASSUMPTION**: both are computed as `span/(n−1)` and
+therefore assume the camera stepped focus **uniformly** across each sweep. That assumption is not
+free, and §4.1a measures it rather than granting it.
+
 The per-frame rate profile is flat and identical in both: −0.4846e-3/frame on 112 and
 −0.4825e-3/frame on 113, uniform across the sweep in blocks of ten. The `wide64` arm agrees
 (1.0225 / 1.2584). **112 and 113 share a per-frame focus step; 112 simply runs 16 frames further.**
@@ -237,6 +255,101 @@ The per-frame rate profile is flat and identical in both: −0.4846e-3/frame on 
 was not run.** The dataset's most valuable advertised property does not exist. Reporting this is not
 optional — the milestone brief called this "arguably the most valuable thing in the dataset", and it
 is not there.
+
+### 4.1a The same conclusion from an independent observable — the focus band itself
+
+Everything in §4.1 rests on **magnification**, which is an image measurement but only a *proxy* for
+focus position: equal magnification change implies equal focus change only if the local
+magnification-versus-distance map is shared and locally linear. That assumption was not stated in
+the first draft of this report. It is now discharged by measuring a different physical quantity —
+**where the in-focus band actually sits, per frame, from the pixels.**
+
+Pre-registered separately in `PREREGISTRATION-focus.md`, committed as `07c9c7a` before the
+measurement ran, including a written-in-advance prediction (§6 of that file) so a wrong call would
+be visible rather than absorbed.
+
+**The observable.** For scene tile `t`, the **focus index** `p(t)` is the sub-frame frame index at
+which that tile is sharpest. `p` is a monotone function of the tile's physical depth, and the shape
+of that function is a property of the subject and lens — *identical for two captures of the same
+scene*. So the tile-wise regression `p_112 = α + β·p_113` separates the hypotheses, and **the
+depth-to-focus map cancels whatever its shape**, including the nonlinear motor-unit-to-distance
+mapping a Sony in-camera bracket would produce:
+
+- **H-interval** (fact 49's premise): one interval at two densities → **β = 1.2581**;
+- **H-step** (§4.1's finding): a shared per-frame step → **β = 1.0000**.
+
+693 tiles of 96 px on a 96 px stride, two mean-normalised focus measures, no resampling anywhere —
+the mapped tile centre is rounded to the nearest integer pixel. Mean normalisation is mandatory,
+not cosmetic: 112 was shot at 1/60 s and 113 at 1/30 s, a full stop apart.
+
+**Result (MEASURED):**
+
+| arm | β | σ_β (split-half) | n tiles | R² |
+|---|---|---|---|---|
+| **PRIMARY** — Tenengrad, drift-tracked grid | **0.9867** | 0.0078 | 635 | 0.9803 |
+| F4 — modified Laplacian | 0.9839 | 0.0147 | 560 | 0.9464 |
+| F5 — tile grid frozen, no warp at all | 0.9889 | 0.0084 | 646 | 0.9842 |
+
+**β = 0.9867 ± 0.0078: 1.7 σ from H-step, 34.7 σ from H-interval.** The threshold was measured by
+split-half, not chosen. Registered verdict: **H-STEP.**
+
+**The pipeline can tell the two apart, and this is shown rather than asserted.** Splitting 112 into
+even- and odd-indexed sub-stacks manufactures both geometries from the same data with **known**
+answers:
+
+| control | geometry | truth | measured | error |
+|---|---|---|---|---|
+| F2a — `p_112`(79) on `p_112even`(40) | *H-interval*: one interval, two densities | 2.0000 | **2.0061** | +0.0061 |
+| F2b — `p_112even`(40) on `p_112odd`(39) | *H-step*: shared step, different length | 1.0000 | **0.9877** | −0.0123 |
+
+Both pass the 0.05 gate. These are the same frames relabelled, so per SYNTHESIS §5 item 20 they
+**cannot test the hypothesis** — they are precision controls, and they are labelled as such. What
+they establish is that a 1.2581-vs-1.0000 separation is comfortably inside this pipeline's
+resolution. F2b also calibrates a small negative slope bias: dividing the primary by it gives
+`0.9867 / 0.9877 = ` **0.9991**.
+
+**The null (F1) is emphatic.** Replacing the stack with 79 warped copies of its own first frame —
+the same planted total magnification drift, **no focus change at all** — accepts **0 of 693** tiles,
+against **645 of 693 (93.1%)** on the real stack. All 693 are rejected because the sharpness peak
+sits at a sweep endpoint, which is exactly right for a scene with no moving focus band. The measure
+is reading focus, not scale and not drift. (MEASURED)
+
+**Two disjoint observables corroborate the offset.** The regression's intercept says 113's frame 0
+sits at 112's frame **5.461**. Independently, the direct similarity fit between the two stacks'
+first frames (F3) gives `g = 2.690e-3`, which at 112's measured per-frame rate is **5.552** frames.
+**They agree to 0.09 frames**, from a focus-band statistic and a scale statistic that share no
+fitted quantity. (MEASURED)
+
+**And the coverage settles the retained half of the premise too.** The orchestrator's note keeps the
+claim that "the two sweeps genuinely cover the same focus interval" because the encoder endpoints
+agree. They do not:
+
+| how measured | fraction of 112's sweep covered by 113 |
+|---|---|
+| focus index | `62 × 0.9867 / 78` = **0.7843** |
+| magnification | `3.0210% / 3.7448%` = **0.8067** |
+
+Agreeing to 2.2 percentage points. **113 spans 112's frames 5.5 → 66.6 of 0 → 78** — offset at the
+near end and 12 frames short at the far end. H-interval requires 0 → 78. (MEASURED)
+
+**Was the stepping uniform? Registered answer: INDETERMINATE; practical answer: uniform to ~1%.**
+Two uniform sweeps of the same depth-to-focus map must be related *linearly* whatever that map is,
+so curvature in the regression indicates non-uniform stepping. Measured curvature at mid-sweep is
+**0.554 frames** on a 44.6-frame span (**1.2%**), against a registered gate of 0.349 frames — between
+the registered bounds, so the registered verdict is INDETERMINATE and is reported as such.
+
+A **post-hoc** refinement, flagged as post-hoc because it was not the registered rule: the F2 arms
+are linear *by construction*, so their curvature is the pipeline's own artifact. Rescaled to the
+primary's range they predict **0.635** (F2a) and **0.547** (F2b) frames of apparent curvature. The
+measured 0.554 sits between them. On that comparison the curvature is **entirely accounted for by
+the estimator** and there is no evidence of non-uniform stepping — but the registered gate is what
+governs the verdict, and it says INDETERMINATE. Either way the bound is useful: **any non-uniformity
+in either sweep is under ~1.2% of the sweep length.** (MEASURED; the artifact attribution is ARGUED)
+
+**Net effect on §4.1: it stands, and now rests on two independent observables** — magnification and
+focus-band position — of which the second carries no distance-map assumption. Had β come back
+1.2581 I would have withdrawn §4.1 and proposed fact 50 outright; `PREREGISTRATION-focus.md` §5
+says so in advance.
 
 ### 4.2 What can still be tested, and its answer
 
@@ -427,18 +540,26 @@ says the fix is not a correction factor:
 | C7 | in-sample correction positive control | rel err ≤ 1e-9 | 1.45e-16 — **PASS** |
 | C8 | corrected chain vs disjoint direct edges | reported, not gated | §5.1 |
 | C9 | read-only tree audit | unchanged | **PASS**, see §8 |
+| **F1** | focus extraction on a synthetic stack with planted magnification and **no focus change** | ≤ 10% tiles accepted | **0 / 693 = 0.0%** against 93.1% on the real stack — **PASS** |
+| **F2a** | `p_112`(79) on `p_112even`(40), *H-interval* geometry | `\|β − 2.0000\| ≤ 0.05` | 2.0061 — **PASS** |
+| **F2b** | `p_112even`(40) on `p_112odd`(39), *H-step* geometry | `\|β − 1.0000\| ≤ 0.05` | 0.9877 — **PASS** |
+| **F3** | 112↔113 frame-0 registration | fit succeeds, displacement reported | 4.97 plane px at the corner, 0.95 px at centre, 85/96 tiles — **PASS** |
+| **F4** | Tenengrad vs modified Laplacian | agree within 2 σ_β | 0.0028 vs 0.0156 — **PASS** |
+| **F5** | tile grid frozen, no `(0,j)` warp | agree within 2 σ_β | 0.0022 vs 0.0156 — **PASS** |
 
 ---
 
 ## 8. Read-only audit (C9)
 
-Identical method before and after, byte for byte (MEASURED):
+Identical method before and after, byte for byte (MEASURED). Three snapshots: before the main run,
+after it, and again after the §4.1a focus measurement, which read every frame of both stacks a
+further seven times:
 
 ```
-BEFORE                    AFTER
-C:\dev\macro          : files=17449 bytes=286581830721   ==   files=17449 bytes=286581830721
-D:\macro-dark-frames  : files=242   bytes=8179392512     ==   files=242   bytes=8179392512
-D:\personal\macro     : files=632   bytes=18194001522    ==   files=632   bytes=18194001522
+BEFORE                    AFTER            AFTER M12-F
+C:\dev\macro          : files=17449 bytes=286581830721   ==   ==
+D:\macro-dark-frames  : files=242   bytes=8179392512     ==   ==
+D:\personal\macro     : files=632   bytes=18194001522    ==   ==
 ```
 
 Two disclosures, because a clean audit line is worth nothing if the method is not stated:
@@ -491,9 +612,20 @@ python m12_controls.py   > out/controls.txt       # C3, C4, wide64 arm
 python m12_diagnose.py   > out/diagnose.txt       # decorrelation + candidate predictors
 python m12_repair.py     > out/repair.txt         # C4 repair + anchor-free shrinkage
 python m12_verify.py     > out/verify.txt         # every derived ratio quoted in this report
+
+# M12-F: the focus band, measured from pixels (see README for the full arm list)
+./target/release/m12-shrinkage focus D:\personal\macro\112MSDCF focus-112 --case f112
+./target/release/m12-shrinkage pairfit D:\personal\macro\112MSDCF D:\personal\macro\113MSDCF
+python m12_focus.py      > out/focus.txt          # beta, F1-F5, U0/U1
 ```
 
-`PREREGISTRATION.md` (commit `8326564`) is the binding contract; §6's grid was applied mechanically.
+The ~18 MB of raw per-frame focus profiles are git-ignored; `data/focus-peaks.csv` (266 KB) holds
+the distilled per-tile peaks and `m12_focus.py` falls back to it, so **§4.1a reproduces from a
+fresh clone with no access to the ARWs**. Verified line-for-line identical against the raw run.
+
+`PREREGISTRATION.md` (commit `8326564`) is the binding contract for §2–§6; `PREREGISTRATION-focus.md`
+(commit `07c9c7a`) is the binding contract for §4.1a. Both were committed before the measurements
+they govern; §6's grid was applied mechanically.
 
 ---
 
@@ -540,18 +672,22 @@ And append to its "So what" column:
 
 > ***M12 correction: the "same focus range, two densities" reading is wrong.*** *Measured by
 > magnification: `rate(112)/rate(113) = 1.0044` where that reading requires 0.7949, and
-> `total(112)/total(113) = 1.2442` where it requires 1.0000. They share a per-frame step; 112 runs 16
-> frames further. The pair is still a genuine same-subject replicate — it is **not** an index-vs-
-> physical-baseline discriminator, which is what it was recruited for.*
+> `total(112)/total(113) = 1.2442` where it requires 1.0000. Measured independently from the
+> **focus band in the pixels**, with no metadata and no distance-map assumption: the tile-wise focus-
+> index slope is **0.9867 ± 0.0078**, 1.7 σ from 1.0000 and 34.7 σ from 1.2581, and 113 covers only
+> 112's frames **5.5 → 66.6 of 0 → 78**. They share a per-frame step; 112 runs 16 frames further. The
+> pair is still a genuine same-subject replicate — it is **not** an index-vs-physical-baseline
+> discriminator, which is what it was recruited for.*
 
 ### D. New facts
 
 | # | Fact | So what | Source |
 |---|---|---|---|
-| 50 | **`112MSDCF` and `113MSDCF` share a per-frame focus step, not a focus interval.** Measured by magnification, not by EXIF: per-frame rates **−0.4846e-3** and **−0.4825e-3** per frame (ratio **1.0044**), totals **−3.7448%** and **−3.0210%** (ratio **1.2442**). A shared interval at two densities requires rate ratio 0.7949 and total ratio 1.0000; a shared per-frame step with 112 running 16 frames further predicts 1.0000 and 1.2581. The `wide64` arm agrees (1.0225 / 1.2584). The EXIF reading behind fact 49 comes from `FocusPosition2`, which takes **3 distinct values** (68/69/70) across both stacks | **Corrects fact 49 and removes the discriminator it promised.** Span `s` is the same physical baseline in both stacks, so index-span and physical-baseline parameterisations make identical predictions on this pair and cannot be separated by it. The pair remains a valid same-subject *replicate*. **General lesson: `FocusPosition2` is a coarse encoder — never infer a fine sweep from it; measure the sweep with magnification** | M12 (MEASURED) |
+| 50 | **`112MSDCF` and `113MSDCF` share a per-frame focus step, not a focus interval — measured two independent ways.** *(a) Magnification:* per-frame rates **−0.4846e-3** and **−0.4825e-3** (ratio **1.0044**), totals **−3.7448%** and **−3.0210%** (ratio **1.2442**); `wide64` agrees (1.0225 / 1.2584). *(b) The focus band itself,* from a per-tile sharpness peak over 693 tiles with no metadata and no distance-map assumption: `p_112 = α + β·p_113` gives **β = 0.9867 ± 0.0078**, α = **+5.461** frames. A shared interval at two densities requires rate ratio 0.7949 and β = 1.2581; a shared per-frame step with 112 running 16 frames further predicts 1.0000 and 1.0000. β is **1.7 σ from H-step and 34.7 σ from H-interval**. Corroboration from disjoint observables: α from the focus regression (5.461) vs α from the direct 112↔113 frame-0 similarity fit (5.552) agree to **0.09 frames**; sweep coverage from focus (0.7843) vs from magnification (0.8067) agree to 2.2 pp — **113 spans 112's frames 5.5 → 66.6 of 0 → 78**. The EXIF reading behind fact 49 comes from `FocusPosition2`, which takes **3 distinct values** (68/69/70) across both stacks | **Corrects fact 49 and removes the discriminator it promised.** Span `s` is the same physical baseline in both stacks, so index-span and physical-baseline parameterisations make identical predictions on this pair and cannot be separated by it. The pair remains a valid same-subject *replicate*. **General lesson: `FocusPosition2` is a coarse encoder — never infer a fine sweep from it; measure the sweep from the pixels** | M12 (MEASURED) |
 | 51 | **The shrinkage does not replicate on the new stacks, and it is not a function of baseline.** `1/S_W(1)` = **3.260** (`coffee-bean`), 2.199 (`119`), 1.318 (`109`), **1.048** (`112`), **1.027** (`113`). The decisive pair: `coffee-bean` span 1 at d = 1.081 px gives S = 0.3067, `112MSDCF` span 1 at d = 1.077 px gives S = 0.9541 — displacement matched to **0.3%**, shrinkage differing **3.11×**, at matched per-frame rate (0.512 vs 0.510 e-3) and matched window drift (−2.4257% vs −2.4180%). Chaining all 78 adjacent edges on 112 recovers **99.0%** of the direct `(0,78)` edge, and 113 recovers **97.5%** over 62 edges, where `coffee-bean` recovers ~30% | **Both parameterisations are refuted.** Not frame-index span (S at s=1 ranges 0.307→0.974), not physical baseline or differential displacement (matched d, 3.11× different S). Across stacks the shrinkage is a function of the **scene**. *Anchor-free confirmation: `T_W(1)/T_W(s*)` with s* the longest span above 50 tiles reproduces it to ≤1.2% on all five stacks with no long anchor in the statistic, so it is not an artifact of weak long edges* | M12 (MEASURED) |
 | 52 | **The shrinkage is stable within a scene and does not transfer between scenes.** Two independent captures of the same subject agree to **0.15 σ_w** (0.9734 vs 0.9659, σ_w = 0.0510 from disjoint within-capture windows) — even one stop apart in exposure. But a correction `k = 1/S_W(1)` fitted on one stack and tested on another's disjoint edges passes both registered conditions on **0 of 18** cross-scene ordered pairs; `coffee-bean → 113MSDCF` makes the error **83.4× worse** (0.0261 → 2.1753); the registered 112↔113 pair fails one direction. On a real chain, an **oracle in-sample** correction takes `coffee-bean` from 36.99 px to **13.92 px** — still 2.06× worse than the 6.76 px global solve — and on `112MSDCF` the self-fitted correction makes the worst case *worse* (5.27 → 5.66 px) | **This closes fact 43's open question: no. Do not fit a shrinkage correction.** Measurable and stable is not the same as transferable, and the case the project would ship — fit on the deep stack you have, apply to the next capture — is the catastrophic one. The stability result is what makes this damning rather than ambiguous. **The useful residue is diagnostic**: `1/S_W(1)` is cheap and separates chainable stacks (112/113 at 99.0% / 97.5% over 78 and 62 edges) from unchainable ones (`coffee-bean` at ~30%) | M12 (MEASURED) |
 | 53 | **Nothing measurable in the edge sets predicts which stacks shrink.** Ten candidates over five stacks, best Spearman \|ρ\| = 0.600 at n=5. The two natural stories each die on one row: "noisier ⇒ more shrinkage" is killed by `119MSDCF`, which has the corpus's **lowest** span-1 rms (0.172) and still shrinks 2.20×; "less inter-frame correlation ⇒ more shrinkage" has the **wrong sign**, since `113MSDCF` has the **highest** span-1 NCC peak (0.9737) and the least shrinkage. An independent non-telescoping probe — a known increment planted on one real defocus pair, no anchor and no chain — orders all four tested stacks **identically** to the ladder and reproduces fact 45's signature on `coffee-bean` (0.529 / 0.640 at \|g\| = 1e-4 / 2e-4) while showing 112/113 near-unbiased (0.893 / 0.938) | **The mechanism stays UNVERIFIED, and the corroboration is real because the probes are independent.** Fact 45's "requires a real inter-frame content change" survives, but its *quantitative* signature is `coffee-bean`-specific like fact 43's. Naming the scene property responsible needs a corpus with more than five stacks and deliberate variation in subject depth and texture — a capture request, not an analysis | M12 (MEASURED; mechanism UNVERIFIED) |
+| 54 | **Per-frame focus position is not in EXIF, but it is measurable from the pixels to ~0.01 frames of slope.** `FocusPosition2` is 8-bit and takes 3 values across a 79-frame sweep; `FocusPosition` is absent; `FocusLocation` is an AF rectangle. The working substitute is a **focus index**: for each scene tile, the parabola-interpolated frame index at which a mean-normalised sharpness measure peaks. Mean normalisation is mandatory (112 and 113 differ by a full stop). Tile centres are rounded to integer pixels, so **no resampler is involved**. Because the depth→focus map is a property of the subject, it **cancels** in a tile-wise regression between two captures of the same scene — including a nonlinear motor-unit-to-distance map — leaving only the sweeps' relative step and offset. Measured performance: 93.1% tile acceptance on a real stack, **0%** on a synthetic stack with planted magnification and no focus change, split-half σ_β = 0.0078, agreement across two independent sharpness measures to 0.0028, and known-answer recovery of **2.0061** and **0.9877** against truths of 2.0 and 1.0. Stepping uniformity within a sweep is bounded at **< 1.2%** of sweep length (registered verdict INDETERMINATE; the measured curvature is fully accounted for by the pipeline's artifact on known-linear data) | **The project can now measure focus geometry directly instead of trusting metadata,** which it needs for depth-map work, step-size validation and any future comparison of two sweeps. Also a caution: **any figure computed as `span/(n−1)` is DERIVED-UNDER-ASSUMPTION** — it presupposes uniform stepping, and its ratio between two stacks is then an arithmetic identity equal to the inverse frame-count ratio, not evidence | M12 (MEASURED) |
 
 ### E. New §5 discipline items
 

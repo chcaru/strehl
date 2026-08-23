@@ -50,7 +50,8 @@ An anchor-free variant `T_W(1)/T_W(s*)` reproduces the result to ≤1.2% on all 
 | file | what |
 |---|---|
 | `PREREGISTRATION.md` | the contract: statistic, threshold, refutation criteria, controls C1–C9 |
-| `src/` | copied Rust harness (`edges`, `synthetic`, `synth`, `increment`, `floor`, `lock`) |
+| `PREREGISTRATION-focus.md` | the M12-F contract: focus-index hypotheses, threshold, controls F1–F5 |
+| `src/` | copied Rust harness (`edges`, `synthetic`, `synth`, `increment`, `floor`, `lock`) plus M12's own `focus` and `pairfit` modes |
 | `m12_lib.py` | copy of M10's transform algebra and CSV reader |
 | `m12_ladder.py` | the windowed conservation ladder |
 | `m12_conserve.py` | C2 reproduction gate + all-stack ladders |
@@ -61,7 +62,8 @@ An anchor-free variant `T_W(1)/T_W(s*)` reproduces the result to ≤1.2% on all 
 | `m12_diagnose.py` | decorrelation profile and candidate predictors |
 | `m12_repair.py` | the C4 repair and the anchor-free shrinkage |
 | `m12_verify.py` | recomputes every derived ratio quoted in the report |
-| `data/` | edge CSVs, increment CSVs, EXIF dumps |
+| `m12_focus.py` | M12-F: focus-index regression, controls F1–F5, corroborations U0/U1 |
+| `data/` | edge CSVs, increment CSVs, EXIF dumps, `focus-peaks.csv` (the distilled M12-F measurement) |
 | `out/` | committed console output for every script above |
 
 ## Running it
@@ -87,6 +89,47 @@ python m12_verify.py   > out\verify.txt
 
 Edge measurement is ~24 s (112) and ~18 s (113) on 32 cores. Every Rust mode prepends `data/` to
 the output prefix itself.
+
+### M12-F — measuring the focus band from the pixels
+
+Per-frame focus position is **not** in EXIF (`FocusPosition2` has 3 distinct values across a
+79-frame sweep), so it is measured instead. `focus` mode reports, per scene tile, the
+parabola-interpolated frame index at which a mean-normalised sharpness measure peaks.
+
+```powershell
+$F = ".\target\release\m12-shrinkage.exe"
+
+# primary arms  (tile 96, stride 96, 160 px frame margin are the defaults)
+& $F focus D:\personal\macro\112MSDCF focus-112 --case f112
+& $F focus D:\personal\macro\113MSDCF focus-113 --case f113
+
+# F1 null: planted magnification, no focus change  -> expect ~0% tiles accepted
+& $F focus D:\personal\macro\112MSDCF focus-null --case fnull --synth-scale 3.7448e-2 --synth-n 79
+
+# F2 known-answer arms, built by decimating 112 against itself
+& $F focus D:\personal\macro\112MSDCF focus-112-even --case f112ev --step 2 --phase 0
+& $F focus D:\personal\macro\112MSDCF focus-112-odd  --case f112od --step 2 --phase 1
+
+# F5 frozen tile grid (no (0,j) warp at all)
+& $F focus D:\personal\macro\112MSDCF focus-112-frozen --case f112fz --frozen
+& $F focus D:\personal\macro\113MSDCF focus-113-frozen --case f113fz --frozen
+
+# F3 cross-stack frame-0 registration, for the independent offset check
+& $F pairfit D:\personal\macro\112MSDCF D:\personal\macro\113MSDCF
+
+python m12_focus.py > out\focus.txt
+```
+
+Focus extraction is ~4 s per 79-frame arm on top of a ~1.7 s decode. No resampler is involved:
+mapped tile centres are rounded to integer pixels, which keeps M10 fact 45's resampler question out
+of the measurement. The 160 px frame margin leaves 33 × 21 = 693 tiles; every arm uses the same
+grid so tiles are comparable across arms by index.
+
+The raw `data/focus-*-focus.csv` profiles are ~18 MB and are **git-ignored**. What is committed is
+`data/focus-peaks.csv` (266 KB) — the distilled per-tile peak and acceptance reason for all nine
+arms. `m12_focus.py` writes it when the raw profiles are present and falls back to it when they are
+not, so `python m12_focus.py` reproduces every number in §4.1a of the report on a fresh clone with
+no access to the ARWs. Verified: the cache-only run is line-for-line identical to the raw run.
 
 `D:\personal\macro` is read-only and was not written to; `out/readonly-audit-{before,after}.txt`
 record identical counts and byte totals under the identical enumeration method.

@@ -1,0 +1,3 @@
+C:\dev\macro            : files=17449 bytes=286581830721
+D:\macro-dark-frames    : files=242 bytes=8179392512
+D:\personal\macro       : files=632 bytes=18194001522

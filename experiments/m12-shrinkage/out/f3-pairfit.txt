@@ -1,0 +1,6 @@
+decoded 1 frames to 3516x2344 green planes in 86 ms (85.7 ms/frame)
+decoded 1 frames to 3516x2344 green planes in 59 ms (59.2 ms/frame)
+fit ok: ax -0.9453 ay 0.0475 g -0.00269038 rot -0.00003868
+rms 1.5003 used 85 of 96 peak_mean 0.94888
+corner displacement 4.966 plane px
+centre displacement 0.946 plane px

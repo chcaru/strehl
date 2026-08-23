@@ -792,6 +792,273 @@ fn run_increment(args: &[String]) {
     eprintln!("wrote {path}");
 }
 
+/// `M12-F`: where the in-focus band sits, per frame, measured from the pixels.
+///
+/// The briefing's "the physical step differs by ~78/62" was retracted as an
+/// arithmetic identity (`span/(n−1)`), and M12 §4.1's refutation of fact 49
+/// rests on **magnification**, which is only a *proxy* for focus position. This
+/// mode supplies an independent observable that needs no metadata, no
+/// `span/(n−1)`, and no assumption about the magnification-vs-distance map:
+/// the frame index at which each scene tile is sharpest.
+///
+/// Regressing tile-wise `p_112` on `p_113` separates the two hypotheses
+/// cleanly — slope `78/62 = 1.2581` if the two sweeps cover one interval at two
+/// densities, slope `1.0000` if they share a per-frame step and 112 simply runs
+/// further. The depth→focus map is a property of the subject and cancels,
+/// including a nonlinear motor-unit-to-distance map.
+///
+/// **The `(0,j)` fits are book-keeping, not statistic.** They keep a tile on the
+/// same scene content as the frame drifts (~78 plane px over a full sweep,
+/// against a 96 px window). `--frozen` repeats the whole measurement with the
+/// grid nailed down, as the registered F5 arm.
+///
+/// **No resampling anywhere**: the mapped tile centre is rounded to the nearest
+/// integer pixel. A sub-pixel placement error is irrelevant to a sharpness
+/// integral over 96×96 and would otherwise import the resampler this project
+/// spent M10 fact 45 ruling out.
+fn run_focus(args: &[String]) {
+    let dir = &args[2];
+    let prefix = &args[3];
+    let case = arg_val(args, "--case").unwrap_or_else(|| "case".into());
+    let cfg = cfg_by_name(&arg_val(args, "--cfg").unwrap_or_else(|| "m10".into()));
+    let tile: usize = arg_val(args, "--tile")
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(96);
+    let stride: usize = arg_val(args, "--stride")
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(96);
+    let margin: usize = arg_val(args, "--fmargin")
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(160);
+    let frozen = has_flag(args, "--frozen");
+    let step: usize = arg_val(args, "--step")
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(1);
+    let phase: usize = arg_val(args, "--phase")
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(0);
+    let limit: usize = arg_val(args, "--limit")
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(usize::MAX);
+
+    let all = load_planes(dir, limit);
+    let synth_g: Option<f32> = arg_val(args, "--synth-scale").and_then(|s| s.parse().ok());
+    let synth_n: usize = arg_val(args, "--synth-n")
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(79);
+
+    // F1, the registered null: replace the stack with `synth_n` warped copies of
+    // its own first frame, carrying the *same* total magnification drift as the
+    // real sweep but no focus change whatever. If the sharpness peak is reading
+    // focus, almost no tile should survive the acceptance rules here; if it is
+    // reading scale or drift, this stack will look like a real one.
+    let synth: Vec<Plane> = match synth_g {
+        Some(g) => {
+            let base = &all[0];
+            (0..synth_n)
+                .map(|j| {
+                    let f = j as f32 / (synth_n - 1) as f32;
+                    warp_known(
+                        base,
+                        Fit {
+                            ax: 0.0,
+                            ay: 0.0,
+                            g: g * f,
+                            r: 0.0,
+                        },
+                    )
+                })
+                .collect()
+        }
+        None => Vec::new(),
+    };
+    let source: Vec<&Plane> = if synth.is_empty() {
+        all.iter().collect()
+    } else {
+        eprintln!(
+            "[{case}] SYNTH NULL: {synth_n} warped copies of frame 0, g_total {}",
+            synth_g.unwrap()
+        );
+        synth.iter().collect()
+    };
+    let planes: Vec<&Plane> = source.into_iter().skip(phase).step_by(step).collect();
+    let n = planes.len();
+    let (pw, ph) = (planes[0].w, planes[0].h);
+    eprintln!("[{case}] {n} frames (step {step} phase {phase}), frozen {frozen}");
+
+    // Direct (0,j) similarities, so a tile centre can follow its scene content.
+    let fits: Vec<Fit> = if frozen {
+        vec![Fit::default(); n]
+    } else {
+        let pyr: Vec<Pyramid> = planes.par_iter().map(|p| build_pyramid(p, &cfg)).collect();
+        let spots = tile_grid_m(
+            planes[0],
+            cfg.fine_tile,
+            cfg.fine_grid.0,
+            cfg.fine_grid.1,
+            cfg.margin,
+        )
+        .expect("plane too small for the anchor grid");
+        let t0 = Instant::now();
+        let v: Vec<Fit> = (0..n)
+            .into_par_iter()
+            .map(|j| {
+                if j == 0 {
+                    return Fit::default();
+                }
+                align_with(&pyr[0], &pyr[j], planes[0], planes[j], &spots, &cfg)
+                    .map(|s| s.fit)
+                    .unwrap_or_default()
+            })
+            .collect();
+        eprintln!(
+            "[{case}] {} direct (0,j) fits in {:.1} s",
+            n - 1,
+            t0.elapsed().as_secs_f64()
+        );
+        v
+    };
+
+    // Scene-anchored tile centres, in frame-0 coordinates.
+    let half = tile / 2;
+    let mut centres: Vec<(usize, usize)> = Vec::new();
+    let mut y = margin + half;
+    while y + half + margin <= ph {
+        let mut x = margin + half;
+        while x + half + margin <= pw {
+            centres.push((x, y));
+            x += stride;
+        }
+        y += stride;
+    }
+    eprintln!(
+        "[{case}] {} tiles, {tile} px, stride {stride}",
+        centres.len()
+    );
+
+    let (cx, cy) = (pw as f32 * 0.5, ph as f32 * 0.5);
+    let path = format!("data/{prefix}-focus.csv");
+    let mut out = std::io::BufWriter::new(std::fs::File::create(&path).expect("create focus csv"));
+    let _ = writeln!(out, "case,frame,tile,x0,y0,x,y,mean,tenengrad,modlap");
+
+    let t1 = Instant::now();
+    let rows: Vec<String> = (0..n)
+        .into_par_iter()
+        .flat_map(|j| {
+            let p = planes[j];
+            let f = fits[j];
+            centres
+                .iter()
+                .enumerate()
+                .map(|(ti, &(x0, y0))| {
+                    let (dx, dy) = f.at(x0 as f32, y0 as f32, cx, cy);
+                    let xf = (x0 as f32 + dx).round();
+                    let yf = (y0 as f32 + dy).round();
+                    if xf < half as f32
+                        || yf < half as f32
+                        || xf + half as f32 >= pw as f32
+                        || yf + half as f32 >= ph as f32
+                    {
+                        return format!("{case},{j},{ti},{x0},{y0},,,,,");
+                    }
+                    let (xi, yi) = (xf as usize - half, yf as usize - half);
+                    let (mu, ten, lap) = sharpness(p, xi, yi, tile);
+                    format!("{case},{j},{ti},{x0},{y0},{xi},{yi},{mu:.4},{ten:.8},{lap:.8}")
+                })
+                .collect::<Vec<String>>()
+        })
+        .collect();
+    for r in rows {
+        let _ = writeln!(out, "{r}");
+    }
+    let _ = out.flush();
+    eprintln!(
+        "[{case}] wrote {path} in {:.1} s",
+        t1.elapsed().as_secs_f64()
+    );
+}
+
+/// Two mean-normalised focus measures over one `t`x`t` window.
+///
+/// Normalisation by the window mean is mandatory rather than cosmetic: 112 was
+/// shot at 1/60 s and 113 at 1/30 s, a full stop apart, and an unnormalised
+/// gradient energy would compare a brighter stack against a darker one.
+/// Returning both Tenengrad and the modified Laplacian gives the registered F4
+/// arm — the verdict must not depend on which focus measure is used.
+fn sharpness(p: &Plane, x0: usize, y0: usize, t: usize) -> (f32, f32, f32) {
+    let mut sum = 0f64;
+    for y in y0..y0 + t {
+        let row = &p.d[y * p.w + x0..y * p.w + x0 + t];
+        sum += row.iter().map(|v| *v as f64).sum::<f64>();
+    }
+    let mu = (sum / (t * t) as f64) as f32;
+    if mu.is_nan() || mu <= 0.0 {
+        return (mu, 0.0, 0.0);
+    }
+    let mut ten = 0f64;
+    let mut lap = 0f64;
+    for y in y0 + 1..y0 + t - 1 {
+        for x in x0 + 1..x0 + t - 1 {
+            let i = y * p.w + x;
+            let (l, r) = (p.d[i - 1], p.d[i + 1]);
+            let (u, d) = (p.d[i - p.w], p.d[i + p.w]);
+            let gx = (r - l) as f64;
+            let gy = (d - u) as f64;
+            ten += gx * gx + gy * gy;
+            let c = p.d[i] as f64 * 2.0;
+            lap += ((c - l as f64 - r as f64).abs() + (c - u as f64 - d as f64).abs()).powi(2);
+        }
+    }
+    let m = ((t - 2) * (t - 2)) as f64;
+    let mu2 = (mu as f64) * (mu as f64);
+    (mu, (ten / m / mu2) as f32, (lap / m / mu2) as f32)
+}
+
+/// `M12-F3`: fit the similarity between the first frames of two *different*
+/// stacks, so the two tile grids can be shown to address the same scene points.
+///
+/// Needed because the focus regression matches tiles between `112MSDCF` and
+/// `113MSDCF` by scene position, and "the preview NCC is +0.9961" is not a
+/// registration. This reports the actual displacement in plane px.
+fn run_pairfit(args: &[String]) {
+    let cfg = cfg_by_name(&arg_val(args, "--cfg").unwrap_or_else(|| "m10".into()));
+    let a = load_planes(&args[2], 1);
+    let b = load_planes(&args[3], 1);
+    let (pa, pb) = (&a[0], &b[0]);
+    let spots = tile_grid_m(
+        pa,
+        cfg.fine_tile,
+        cfg.fine_grid.0,
+        cfg.fine_grid.1,
+        cfg.margin,
+    )
+    .expect("plane too small for the anchor grid");
+    let (ya, yb) = (build_pyramid(pa, &cfg), build_pyramid(pb, &cfg));
+    match align_with(&ya, &yb, pa, pb, &spots, &cfg) {
+        Some(s) => {
+            let (cx, cy) = (pa.w as f32 * 0.5, pa.h as f32 * 0.5);
+            let (dx, dy) = s.fit.at(0.0, 0.0, cx, cy);
+            println!(
+                "fit ok: ax {:.4} ay {:.4} g {:.8} rot {:.8}",
+                s.fit.ax, s.fit.ay, s.fit.g, s.fit.r
+            );
+            println!(
+                "rms {:.4} used {} of {} peak_mean {:.5}",
+                s.rms, s.used, s.total, s.peak_mean
+            );
+            println!(
+                "corner displacement {:.3} plane px",
+                (dx * dx + dy * dy).sqrt()
+            );
+            println!(
+                "centre displacement {:.3} plane px",
+                (s.fit.ax.powi(2) + s.fit.ay.powi(2)).sqrt()
+            );
+        }
+        None => println!("fit FAILED"),
+    }
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 2 {
@@ -800,6 +1067,7 @@ fn main() {
         eprintln!("  m12-shrinkage floor <dir-of-ARW> <out-prefix> --case NAME [--margins 10,32,64,96] [--frames 0,40,80] [--n 24]");
         eprintln!("  m12-shrinkage edges <dir-of-ARW> <out-prefix> --case NAME [--spans 1,2,4] [--direct0] [--cfg m10|m3|wide] [--limit N]");
         eprintln!("  m12-shrinkage synth <dir-of-ARW> <out-prefix> --case NAME [--n 105] [--flavour warp|integer] [--spans ...] [--direct0]");
+        eprintln!("  m12-shrinkage focus <dir-of-ARW> <out-prefix> --case NAME [--tile 96] [--stride 96] [--fmargin 160] [--frozen] [--step 1] [--phase 0]");
         std::process::exit(2);
     }
     match args[1].as_str() {
@@ -826,6 +1094,14 @@ fn main() {
         "synth" => {
             assert!(args.len() >= 4, "synth needs <dir> <out-prefix>");
             run_synth(&args);
+        }
+        "focus" => {
+            assert!(args.len() >= 4, "focus needs <dir> <out-prefix>");
+            run_focus(&args);
+        }
+        "pairfit" => {
+            assert!(args.len() >= 4, "pairfit needs <dir-a> <dir-b>");
+            run_pairfit(&args);
         }
         other => {
             eprintln!("unknown mode {other}");

@@ -1,0 +1,5 @@
+decoded 79 frames to 3516x2344 green planes in 1720 ms (21.8 ms/frame)
+[f112od] 39 frames (step 2 phase 1), frozen false
+[f112od] 38 direct (0,j) fits in 0.5 s
+[f112od] 693 tiles, 96 px, stride 96
+[f112od] wrote data/focus-112-odd-focus.csv in 0.0 s
