@@ -1,0 +1,115 @@
+M61 script 06 -- uncertainty roll-up and greens-only headline
+(POST HOC; the four-plane number stays, it is the pre-registered one)
+
+==============================================================================
+A. r = g_measured / g_model, per stack, four planes vs greens only
+==============================================================================
+  stack             ISO   4-plane    greens   G1-G2 %  A-B-C sprd %  half sprd %
+  109MSDCF          160    0.9388    0.9887     0.165          0.35         0.39
+  119MSDCF           50    0.9459    0.9877     0.268          1.33         0.05
+  coffee-bean        50    0.9419    0.9793     0.116          1.63         0.01
+  bee-1             100    0.9296    0.9725     0.260          0.57         0.06
+  bee-3             100    0.9307    0.9732     0.171          0.66         0.04
+  wrapped-text-1    100    0.8639    0.8931     0.161          2.36        10.26
+  bee-2             400    0.9414    0.9850     0.098          0.15         0.07
+  wrapped-text-2    400    0.9353    0.9800    -0.015          0.08         0.22
+  112MSDCF          500    0.9566    0.9976     0.014          0.77         0.08
+  113MSDCF          500    0.9779    1.0249     0.008          1.32         1.53
+  coffee-bubbles   1000    1.3711    1.4660    -0.345          3.22      1103.00
+  foam             1000    0.9727    1.0174     0.105          0.56         0.35
+
+==============================================================================
+B. LADDER: r by ISO, spread = disagreement between the two stacks
+==============================================================================
+  [four planes, all stacks]
+       ISO   n        r       sd
+        50   2   0.9439   0.0028
+       100   3   0.9081   0.0383
+       160   1   0.9388      nan
+       400   2   0.9384   0.0043
+       500   2   0.9673   0.0150
+      1000   2   1.1719   0.2817
+    r_low (ISO<400, n=6) = 0.9251 +- 0.0307
+    ISO    400: r_high/r_low = 1.0143 +- 0.0339   (H0 = 1.000, H1 = 0.460)
+    ISO    500: r_high/r_low = 1.0456 +- 0.0383   (H0 = 1.000, H1 = 0.460)
+    ISO   1000: r_high/r_low = 1.2667 +- 0.3074   (H0 = 1.000, H1 = 0.460)
+
+  [four planes, minus coffee-bubbles]
+       ISO   n        r       sd
+        50   2   0.9439   0.0028
+       100   3   0.9081   0.0383
+       160   1   0.9388      nan
+       400   2   0.9384   0.0043
+       500   2   0.9673   0.0150
+      1000   1   0.9727      nan
+    r_low (ISO<400, n=6) = 0.9251 +- 0.0307
+    ISO    400: r_high/r_low = 1.0143 +- 0.0339   (H0 = 1.000, H1 = 0.460)
+    ISO    500: r_high/r_low = 1.0456 +- 0.0383   (H0 = 1.000, H1 = 0.460)
+    ISO   1000: r_high/r_low = 1.0514 +- 0.0493   (H0 = 1.000, H1 = 0.460)
+
+  [greens only, all stacks]
+       ISO   n        r       sd
+        50   2   0.9835   0.0060
+       100   3   0.9463   0.0461
+       160   1   0.9887      nan
+       400   2   0.9825   0.0035
+       500   2   1.0113   0.0193
+      1000   2   1.2417   0.3173
+    r_low (ISO<400, n=6) = 0.9657 +- 0.0363
+    ISO    400: r_high/r_low = 1.0174 +- 0.0384   (H0 = 1.000, H1 = 0.460)
+    ISO    500: r_high/r_low = 1.0471 +- 0.0441   (H0 = 1.000, H1 = 0.460)
+    ISO   1000: r_high/r_low = 1.2857 +- 0.3320   (H0 = 1.000, H1 = 0.460)
+
+  [greens only, minus coffee-bubbles]
+       ISO   n        r       sd
+        50   2   0.9835   0.0060
+       100   3   0.9463   0.0461
+       160   1   0.9887      nan
+       400   2   0.9825   0.0035
+       500   2   1.0113   0.0193
+      1000   1   1.0174      nan
+    r_low (ISO<400, n=6) = 0.9657 +- 0.0363
+    ISO    400: r_high/r_low = 1.0174 +- 0.0384   (H0 = 1.000, H1 = 0.460)
+    ISO    500: r_high/r_low = 1.0471 +- 0.0441   (H0 = 1.000, H1 = 0.460)
+    ISO   1000: r_high/r_low = 1.0534 +- 0.0559   (H0 = 1.000, H1 = 0.460)
+
+==============================================================================
+C. MATCHED-LEVEL PAIRS ACROSS THE SWITCH (same subject, same DN)
+==============================================================================
+  bee-2 / bee-3  [4-plane]  measured gain ratio 4.0460   H0 4.000   H1 1.840
+  bee-2 / bee-3  [greens]  measured gain ratio 4.0486   H0 4.000   H1 1.840
+  wrapped-text-2 / wrapped-text-1  [4-plane]  measured gain ratio 4.3309   H0 4.000   H1 1.840
+  wrapped-text-2 / wrapped-text-1  [greens]  measured gain ratio 4.3895   H0 4.000   H1 1.840
+
+==============================================================================
+D. WHAT gain_divisor WOULD HAVE TO BE  (described, NOT applied)
+==============================================================================
+  profile.rs: gain_dn_per_e = max(iso, 100) / gain_divisor,
+  gain_divisor = 436.8.  g_measured = r * g_model, so an r that is
+  uniformly off implies gain_divisor / r.
+  [four planes] r over 11 stacks = 0.9395 +- 0.0297  -> gain_divisor = 464.9 (+-14.7)
+  [greens only] r over 11 stacks = 0.9818 +- 0.0339  -> gain_divisor = 444.9 (+-15.4)
+  M25 fact 200 measured 0.3273 DN/e- at ISO 160 by an independent
+  spatial PTC; the model says 0.36630, i.e. r = 0.8935.
+  M61 greens at ISO 160: g = 0.3621 DN/e-, r = 0.9887.
+
+==============================================================================
+E. DROPPING THE TWO STACKS THAT FAILED THEIR OWN FIT (POST HOC)
+==============================================================================
+  coffee-bubbles: PTC residuals to 1064%, a NaN in B, a negative C,
+    a 1103% half-split. Bubble motion, pre-registered as a risk.
+  wrapped-text-1: residuals to 35%, a 10% half-split, and a level
+    range of only 210-2286 DN. Its ISO-400 partner fits cleanly.
+  This is a post-hoc exclusion and is reported alongside, never
+  instead of, the pre-registered number.
+  [four planes] r_low (n=5) = 0.9374 +- 0.0071
+      ISO    400  r = 0.9384 (n=2)   r_high/r_low = 1.0011 +- 0.0088
+      ISO    500  r = 0.9673 (n=2)   r_high/r_low = 1.0319 +- 0.0178
+      ISO   1000  r = 0.9727 (n=1)   r_high/r_low = 1.0377 +- 0.0109
+      all 10 surviving stacks: r = 0.9471 +- 0.0168 -> gain_divisor = 461.2 +- 8.2
+  [greens only] r_low (n=5) = 0.9803 +- 0.0077
+      ISO    400  r = 0.9825 (n=2)   r_high/r_low = 1.0023 +- 0.0087
+      ISO    500  r = 1.0113 (n=2)   r_high/r_low = 1.0316 +- 0.0213
+      ISO   1000  r = 1.0174 (n=1)   r_high/r_low = 1.0378 +- 0.0113
+      all 10 surviving stacks: r = 0.9906 +- 0.0178 -> gain_divisor = 440.9 +- 7.9
+

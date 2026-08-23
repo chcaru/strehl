@@ -1,0 +1,3 @@
+# 512x512 rawler patch dumps for the script-07 second-decode check.
+# Regenerate with decode-check/, do not commit 2 MB of binaries.
+*.bin

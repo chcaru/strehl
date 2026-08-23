@@ -1,0 +1,148 @@
+M61 corpus probe -- exploratory, no measurement here
+corpus: D:\personal\macro
+
+=== 109MSDCF           22 frames   ISO 160    exp 13/10    f/11     ILCE-7CM2  2026:05:17 16:26:38
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     12.0 mean    488.25 p50    567.0 p99.9    782.0 max   1213.0
+      G1 min     55.0 mean   1394.03 p50   1646.0 p99.9   2196.0 max   3523.0
+      G2 min     55.0 mean   1392.75 p50   1644.0 p99.9   2193.0 max   3548.0
+      B  min      0.0 mean    972.21 p50   1074.0 p99.9   1482.0 max   2371.0
+    frame   11  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min      5.0 mean    489.12 p50    576.0 p99.9    782.0 max   1608.0
+      G1 min     41.0 mean   1397.78 p50   1667.0 p99.9   2200.0 max   5424.0
+      G2 min     34.0 mean   1396.53 p50   1664.0 p99.9   2196.0 max   5450.0
+      B  min    -10.0 mean    974.59 p50   1094.0 p99.9   1484.0 max   3455.0
+
+=== 112MSDCF           79 frames   ISO 500    exp 1/60     f/11     ILCE-7CM2  2026:05:07 21:07:44
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min    -19.0 mean     71.10 p50     51.0 p99.9    352.0 max    680.0
+      G1 min     13.0 mean    191.50 p50    139.0 p99.9    893.0 max   1584.0
+      G2 min     10.0 mean    191.53 p50    139.0 p99.9    893.0 max   1632.0
+      B  min      1.0 mean    107.77 p50     80.0 p99.9    492.0 max    796.0
+    frame   39  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min    -20.0 mean     73.02 p50     48.0 p99.9    496.0 max   2628.0
+      G1 min      7.0 mean    196.35 p50    129.0 p99.9   1260.0 max   5901.0
+      G2 min     14.0 mean    196.35 p50    129.0 p99.9   1260.0 max   5904.0
+      B  min     -8.0 mean    110.63 p50     75.0 p99.9    681.0 max   2712.0
+
+=== 113MSDCF           63 frames   ISO 500    exp 1/30     f/11     ILCE-7CM2  2026:05:07 21:09:00
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min      1.0 mean    140.81 p50    100.0 p99.9    709.0 max   1394.0
+      G1 min     52.0 mean    378.80 p50    272.0 p99.9   1820.0 max   3366.0
+      G2 min     44.0 mean    378.73 p50    273.0 p99.9   1820.0 max   3345.0
+      B  min     24.0 mean    213.31 p50    157.0 p99.9   1001.0 max   1697.0
+    frame   31  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min      4.0 mean    146.92 p50     96.0 p99.9    959.0 max   3845.0
+      G1 min     37.0 mean    395.01 p50    260.0 p99.9   2446.0 max   8804.0
+      G2 min     50.0 mean    394.92 p50    260.0 p99.9   2449.0 max   8828.0
+      B  min     20.0 mean    222.38 p50    150.0 p99.9   1322.0 max   4026.0
+
+=== 119MSDCF           33 frames   ISO 50     exp 1/8      f/28/5   ILCE-7CM2  2026:05:09 13:22:39
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     31.0 mean   1002.07 p50   1154.0 p99.9   1624.0 max   1694.0
+      G1 min     92.0 mean   2825.01 p50   3256.0 p99.9   4582.0 max   4705.0
+      G2 min     94.0 mean   2822.10 p50   3251.0 p99.9   4579.0 max   4683.0
+      B  min    -14.0 mean   2048.65 p50   2222.0 p99.9   3214.0 max   3298.0
+    frame   16  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     35.0 mean   1030.71 p50   1194.0 p99.9   1678.0 max   1934.0
+      G1 min     95.0 mean   2905.79 p50   3382.0 p99.9   4735.0 max   5952.0
+      G2 min     95.0 mean   2902.85 p50   3377.0 p99.9   4732.0 max   5848.0
+      B  min    -10.0 mean   2107.18 p50   2304.0 p99.9   3320.0 max   3754.0
+
+=== bee-1             299 frames   ISO 100    exp 1/2      f/28/5   ILCE-7CM2  2026:08:23 11:42:25
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     58.0 mean    945.40 p50    922.0 p99.9   1830.0 max   1903.0
+      G1 min    168.0 mean   2448.47 p50   2352.0 p99.9   4936.0 max   5085.0
+      G2 min    164.0 mean   2446.38 p50   2350.0 p99.9   4932.0 max   5072.0
+      B  min     98.0 mean   1530.42 p50   1462.0 p99.9   3253.0 max   3363.0
+    frame  149  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     32.0 mean    933.75 p50    990.0 p99.9   1766.0 max   2872.0
+      G1 min     93.0 mean   2433.16 p50   2548.0 p99.9   4759.0 max   7141.0
+      G2 min     93.0 mean   2430.99 p50   2546.0 p99.9   4757.0 max   7741.0
+      B  min     54.0 mean   1534.36 p50   1600.0 p99.9   3144.0 max   4503.0
+
+=== bee-2             299 frames   ISO 400    exp 1/20     f/28/5   ILCE-7CM2  2026:08:23 11:54:44
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     45.0 mean    930.75 p50    968.0 p99.9   1832.0 max   1984.0
+      G1 min    162.0 mean   2443.22 p50   2509.0 p99.9   4937.0 max   5154.0
+      G2 min    160.0 mean   2441.37 p50   2507.0 p99.9   4936.0 max   5154.0
+      B  min     90.0 mean   1525.70 p50   1521.0 p99.9   3277.0 max   3468.0
+    frame  149  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     12.0 mean    926.46 p50   1040.0 p99.9   1773.0 max   3640.0
+      G1 min     74.0 mean   2447.37 p50   2741.0 p99.9   4799.0 max   8116.0
+      G2 min     70.0 mean   2445.54 p50   2740.0 p99.9   4797.0 max   8791.0
+      B  min     38.0 mean   1541.97 p50   1709.0 p99.9   3189.0 max   4693.0
+
+=== bee-3             299 frames   ISO 100    exp 1/5      f/28/5   ILCE-7CM2  2026:08:23 11:58:28
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     65.0 mean    943.95 p50    985.0 p99.9   1832.0 max   1902.0
+      G1 min    179.0 mean   2450.49 p50   2524.0 p99.9   4927.0 max   5083.0
+      G2 min    185.0 mean   2448.47 p50   2523.0 p99.9   4925.0 max   5079.0
+      B  min    113.0 mean   1537.52 p50   1539.0 p99.9   3280.0 max   3382.0
+    frame  149  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     27.0 mean    931.11 p50   1047.0 p99.9   1752.0 max   3343.0
+      G1 min     90.0 mean   2434.12 p50   2731.0 p99.9   4731.0 max   8679.0
+      G2 min     92.0 mean   2432.06 p50   2729.0 p99.9   4728.0 max   9795.0
+      B  min     48.0 mean   1541.77 p50   1712.0 p99.9   3157.0 max   4790.0
+
+=== coffee-bean       105 frames   ISO 50     exp 4/5      f/8      ILCE-7CM2  2026:05:10 16:31:09
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 3.1389%
+      R  min    129.0 mean   2569.42 p50   1972.0 p99.9   5796.0 max   5928.0
+      G1 min    343.0 mean   6721.31 p50   5132.0 p99.9  15773.0 max  15871.0
+      G2 min    343.0 mean   6715.37 p50   5125.0 p99.9  15766.0 max  15871.0
+      B  min    190.0 mean   4451.52 p50   3329.0 p99.9  10737.0 max  10972.0
+    frame   52  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.6526%
+      R  min    115.0 mean   2560.98 p50   1979.0 p99.9   5537.0 max   6067.0
+      G1 min    301.0 mean   6735.27 p50   5177.0 p99.9  15088.0 max  15871.0
+      G2 min    301.0 mean   6729.35 p50   5167.0 p99.9  15081.0 max  15871.0
+      B  min    161.0 mean   4479.11 p50   3391.0 p99.9  10280.0 max  11303.0
+
+=== coffee-bubbles     19 frames   ISO 1000   exp 5/2      f/8      ILCE-7CM2  2026:05:25 16:18:29
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0505%
+      R  min    106.0 mean    297.65 p50    237.0 p99.9   6127.0 max  15871.0
+      G1 min     59.0 mean    347.11 p50    190.0 p99.9  14549.2 max  15871.0
+      G2 min     62.0 mean    347.25 p50    191.0 p99.9  14544.2 max  15871.0
+      B  min    -27.0 mean    157.38 p50     68.0 p99.9   8800.0 max  15871.0
+    frame    9  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.1357%
+      R  min    103.0 mean    301.61 p50    242.0 p99.9   8636.0 max  15871.0
+      G1 min     75.0 mean    331.18 p50    192.0 p99.9  15871.0 max  15871.0
+      G2 min     73.0 mean    331.15 p50    192.0 p99.9  15871.0 max  15871.0
+      B  min    -24.0 mean    154.37 p50     68.0 p99.9  13112.2 max  15871.0
+
+=== foam              100 frames   ISO 1000   exp 2        f/8      ILCE-7CM2  2026:05:25 16:25:55
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     74.0 mean    339.80 p50    331.0 p99.9   1140.0 max   1964.0
+      G1 min    229.0 mean    906.16 p50    883.0 p99.9   3109.0 max   5086.0
+      G2 min    249.0 mean    905.85 p50    883.0 p99.9   3105.0 max   5152.0
+      B  min    151.0 mean    594.95 p50    578.0 p99.9   2201.0 max   3846.0
+    frame   50  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0516%
+      R  min    -28.0 mean    316.43 p50    203.0 p99.9   4929.0 max  15871.0
+      G1 min      7.0 mean    838.68 p50    524.0 p99.9  14588.0 max  15871.0
+      G2 min      8.0 mean    838.23 p50    523.0 p99.9  14564.0 max  15871.0
+      B  min    -14.0 mean    549.89 p50    338.0 p99.9   9733.2 max  15871.0
+
+=== wrapped-text-1    130 frames   ISO 100    exp 1/15     f/28/5   ILCE-7CM2  2026:08:23 11:30:08
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     17.0 mean    542.12 p50    546.0 p99.9    880.0 max    925.0
+      G1 min     59.0 mean   1465.09 p50   1490.0 p99.9   2324.0 max   2390.0
+      G2 min     56.0 mean   1464.05 p50   1488.0 p99.9   2323.0 max   2390.0
+      B  min     40.0 mean    957.23 p50    979.0 p99.9   1511.0 max   1562.0
+    frame   65  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     71.0 mean    540.17 p50    551.0 p99.9    939.0 max   1501.0
+      G1 min    204.0 mean   1460.88 p50   1508.0 p99.9   2506.0 max   4067.0
+      G2 min    209.0 mean   1459.82 p50   1506.0 p99.9   2504.0 max   4034.0
+      B  min    141.0 mean    955.41 p50    991.0 p99.9   1624.0 max   2614.0
+
+=== wrapped-text-2    120 frames   ISO 400    exp 1/40     f/28/5   ILCE-7CM2  2026:08:23 11:34:52
+    frame    0  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     27.0 mean    635.25 p50    639.0 p99.9   1153.0 max   1234.0
+      G1 min    118.0 mean   1751.13 p50   1782.0 p99.9   3050.0 max   3226.0
+      G2 min     95.0 mean   1750.09 p50   1780.0 p99.9   3049.0 max   3185.0
+      B  min     67.0 mean   1150.25 p50   1178.0 p99.9   1985.0 max   2113.0
+    frame   60  visible (4688, 7028) full (5120, 7168) pattern [[0, 1], [3, 2]]  >=white 0.0000%
+      R  min     11.0 mean    668.46 p50    688.0 p99.9   1218.0 max   1328.0
+      G1 min     43.0 mean   1842.67 p50   1919.0 p99.9   3223.0 max   3533.0
+      G2 min     49.0 mean   1841.39 p50   1917.0 p99.9   3223.0 max   3647.0
+      B  min     32.0 mean   1210.28 p50   1271.0 p99.9   2098.0 max   2329.0
+
+[19s]

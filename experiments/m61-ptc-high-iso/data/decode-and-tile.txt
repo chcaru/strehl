@@ -1,0 +1,54 @@
+M61 script 07 -- second decode (rawler vs rawpy) and the B-plane
+deficit vs tile size (POST HOC)
+
+==============================================================================
+PART 1 -- rawler (strehl-raw, the shipped decoder) vs rawpy (LibRaw)
+==============================================================================
+  109-a   DSC00009.ARW   patch 512x512 at (1000,1000)  identical 262144/262144 = 100.0000%   max|diff| 0   rawpy shape 4688x7028
+  109-b   DSC00010.ARW   patch 512x512 at (1000,1000)  identical 262144/262144 = 100.0000%   max|diff| 0   rawpy shape 4688x7028
+  112-a   DSC00001.ARW   patch 512x512 at (1000,1000)  identical 262144/262144 = 100.0000%   max|diff| 0   rawpy shape 4688x7028
+  112-b   DSC00002.ARW   patch 512x512 at (1000,1000)  identical 262144/262144 = 100.0000%   max|diff| 0   rawpy shape 4688x7028
+
+  the two decoders' geometry: rawler reports the active area as
+  7032x4688, rawpy's raw_image_visible gives 7028x4688 -- rawpy is
+  4 columns narrower. M61 used rawpy throughout, so it measured a
+  strict subset of the active area.
+
+  same tile statistics computed on each decoder's patch pair:
+  plane  decoder   mean-blk   var(d)/2  ntiles
+  R      rawler      304.80   105.1589    1024   [109MSDCF]
+  R      rawpy       304.80   105.1589    1024
+  G1     rawler     1590.14   569.6453    1024   [109MSDCF]
+  G1     rawpy      1590.14   569.6453    1024
+  G2     rawler     1586.97   569.9377    1024   [109MSDCF]
+  G2     rawpy      1586.97   569.9377    1024
+  B      rawler     1017.84   309.9984    1024   [109MSDCF]
+  B      rawpy      1017.84   309.9984    1024
+  R      rawler       78.86    91.1513    1024   [112MSDCF]
+  R      rawpy        78.86    91.1513    1024
+  G1     rawler      213.30   262.5615    1024   [112MSDCF]
+  G1     rawpy       213.30   262.5615    1024
+  G2     rawler      212.79   262.1892    1024   [112MSDCF]
+  G2     rawpy       212.79   262.1892    1024
+  B      rawler      115.78   118.0500    1024   [112MSDCF]
+  B      rawpy       115.78   118.0500    1024
+
+==============================================================================
+PART 2 -- B/green PTC slope ratio vs tile size
+==============================================================================
+  if short-range noise correlation caused the deficit, the ratio
+  must climb towards 1.0 as the tile grows.
+  stack          ISO  tile         R        G1        G2         B   B/green   R/green
+  109MSDCF       160     8   0.35028   0.36034   0.36102   0.29875    0.8283    0.9711
+  109MSDCF       160    16   0.35004   0.36073   0.36114   0.30549    0.8464    0.9698
+  109MSDCF       160    32   0.35086   0.36859   0.36854   0.30874    0.8377    0.9520
+  112MSDCF       500     8   1.13084   1.14353   1.14195   0.96076    0.8407    0.9896
+  112MSDCF       500    16   1.13571   1.15420   1.15348   0.98274    0.8517    0.9843
+  112MSDCF       500    32   1.14002   1.17339   1.17204   0.99280    0.8466    0.9721
+  bee-3          100     8   0.21928   0.22235   0.22307   0.18726    0.8408    0.9846
+  bee-3          100    16   0.21971   0.22256   0.22323   0.19184    0.8607    0.9857
+  bee-3          100    32   0.22000   0.22286   0.22340   0.19411    0.8699    0.9860
+  foam          1000     8   2.29798   2.32188   2.32349   1.94543    0.8376    0.9894
+  foam          1000    16   2.31371   2.34346   2.35496   2.00369    0.8529    0.9849
+  foam          1000    32   2.34278   2.36458   2.36990   2.02591    0.8558    0.9897
+

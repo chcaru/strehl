@@ -1,0 +1,24 @@
+M61 script 03 -- power control for the estimator (rule 20 / 34 / 39)
+seed 20260823; estimator functions imported from 02-ptc-ladder.py, TILE=8 N_BINS=16 qA=20.0
+
+cases 1-3: ISO-160 regime
+  scene: 109MSDCF frame 11 G1, 3x3 boxed, (2344, 3514) px, mean 3814 e-, i.e. 1397 DN at g=0.36630
+  flat-g366      planted g  0.36630   measured gA  0.36564 gB  0.36412 gC  0.36413
+                 mean level   1397.1 DN   gA/g_plant = 0.9982   band [0.950,1.050]   => PASS
+  flat-g168      planted g  0.16849   measured gA  0.16827 gB  0.16781 gC  0.16783
+                 mean level   1397.1 DN   gA/g_ref = 0.4594   band [0.410,0.510]   => PASS
+  shift-g366     planted g  0.36630   measured gA  0.36660 gB  0.36537 gC  0.36453
+                 mean level   1404.1 DN   gA/g_plant = 1.0008   band [0.950,1.050]   => PASS
+
+cases 4-5: ISO-1000 regime (mean level ~250 DN)
+  iso1000-g229   planted g  2.28938   measured gA  2.28966 gB  2.30204 gC  2.28600
+                 mean level    250.0 DN   gA/g_plant = 1.0001   band [0.950,1.050]   => PASS
+  iso1000-g105   planted g  1.05307   measured gA  1.05012 gB  1.05721 gC  1.04899
+                 mean level    250.0 DN   gA/g_ref = 0.4587   band [0.410,0.510]   => PASS
+
+case 6: the null for the control -- noise scaled by sqrt(2)
+  null-doubled   planted g 0.36630 with sqrt(2)x noise   measured gA 0.73286   ratio 2.0007   band [1.85,2.15]   => PASS
+
+VERDICT: 6/6 pre-registered cases pass.
+The estimator recovers a planted gain, recovers a planted 2.174x gain error as 0.460, is not fooled by a 0.20 px shift plus a 1% level step, works in both level regimes, and is not pinned (case 6 moves it by 2x).  Script 02's comparison has power to reject H0.
+[6s]

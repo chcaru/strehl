@@ -1,0 +1,63 @@
+M61 difference probe -- exploratory, no measurement here
+
+=== 109MSDCF         n=  22  ISO(first/mid/last) ['160']  exp ['13/10']
+    whole-plane: mean   1395.8 DN   sigma_diff/sqrt2    24.52 DN   model   22.66   ratio   1.082
+    smoothest 10% of 8x8 tiles (n=12863): mean level    286.5 DN   median ratio  0.976   p10  0.862 p90  1.097
+    all tiles (n=128627): median ratio  1.014
+
+=== 112MSDCF         n=  79  ISO(first/mid/last) ['500']  exp ['1/60']
+    whole-plane: mean    195.9 DN   sigma_diff/sqrt2    18.83 DN   model   15.04   ratio   1.252
+    smoothest 10% of 8x8 tiles (n=12863): mean level     70.0 DN   median ratio  0.972   p10  0.858 p90  1.087
+    all tiles (n=128627): median ratio  1.024
+
+=== 113MSDCF         n=  63  ISO(first/mid/last) ['500']  exp ['1/30']
+    whole-plane: mean    394.6 DN   sigma_diff/sqrt2    28.87 DN   model   21.30   ratio   1.356
+    smoothest 10% of 8x8 tiles (n=12863): mean level    142.6 DN   median ratio  0.979   p10  0.866 p90  1.093
+    all tiles (n=128627): median ratio  1.039
+
+=== 119MSDCF         n=  33  ISO(first/mid/last) ['50']  exp ['1/6', '1/8']
+    whole-plane: mean   2905.6 DN   sigma_diff/sqrt2    33.29 DN   model   25.81   ratio   1.290
+    smoothest 10% of 8x8 tiles (n=12863): mean level    648.2 DN   median ratio  0.999   p10  0.882 p90  1.128
+    all tiles (n=128627): median ratio  1.035
+
+=== coffee-bean      n= 105  ISO(first/mid/last) ['50']  exp ['4/5', '5/8']
+    whole-plane: mean   6606.0 DN   sigma_diff/sqrt2    63.98 DN   model   38.90   ratio   1.645
+    smoothest 10% of 8x8 tiles (n=12477): mean level   1495.0 DN   median ratio  1.005   p10  0.885 p90  1.137
+    all tiles (n=124761): median ratio  1.023
+
+=== coffee-bubbles   n=  19  ISO(first/mid/last) ['1000']  exp ['5/2']
+    whole-plane: mean    293.5 DN   sigma_diff/sqrt2   142.70 DN   model   26.08   ratio   5.472
+    smoothest 10% of 8x8 tiles (n=12704): mean level    175.7 DN   median ratio  0.997   p10  0.884 p90  1.114
+    all tiles (n=127035): median ratio  1.044
+
+=== foam             n= 100  ISO(first/mid/last) ['1000']  exp ['2', '8/5']
+    whole-plane: mean    823.5 DN   sigma_diff/sqrt2   225.67 DN   model   43.51   ratio   5.187
+    smoothest 10% of 8x8 tiles (n=12768): mean level    251.9 DN   median ratio  1.053   p10  0.917 p90  1.247
+    all tiles (n=127673): median ratio  1.309
+
+=== bee-1            n= 299  ISO(first/mid/last) ['100']  exp ['1/2', '1/3', '2/5']
+    whole-plane: mean   2431.8 DN   sigma_diff/sqrt2    29.43 DN   model   23.61   ratio   1.246
+    smoothest 10% of 8x8 tiles (n=12863): mean level    596.0 DN   median ratio  0.969   p10  0.857 p90  1.085
+    all tiles (n=128627): median ratio  0.991
+
+=== bee-2            n= 299  ISO(first/mid/last) ['400']  exp ['1/20', '1/25']
+    whole-plane: mean   2445.3 DN   sigma_diff/sqrt2    51.80 DN   model   47.33   ratio   1.094
+    smoothest 10% of 8x8 tiles (n=12863): mean level    408.7 DN   median ratio  0.980   p10  0.870 p90  1.098
+    all tiles (n=128627): median ratio  1.000
+
+=== bee-3            n= 299  ISO(first/mid/last) ['100']  exp ['1/5', '1/6']
+    whole-plane: mean   2436.6 DN   sigma_diff/sqrt2    31.76 DN   model   23.64   ratio   1.343
+    smoothest 10% of 8x8 tiles (n=12863): mean level    460.8 DN   median ratio  0.967   p10  0.856 p90  1.085
+    all tiles (n=128627): median ratio  1.000
+
+=== wrapped-text-1   n= 130  ISO(first/mid/last) ['100']  exp ['1/15', '1/20']
+    whole-plane: mean   1461.6 DN   sigma_diff/sqrt2    22.52 DN   model   18.32   ratio   1.229
+    smoothest 10% of 8x8 tiles (n=12863): mean level   1045.6 DN   median ratio  0.973   p10  0.863 p90  1.090
+    all tiles (n=128627): median ratio  1.000
+
+=== wrapped-text-2   n= 120  ISO(first/mid/last) ['400']  exp ['1/40']
+    whole-plane: mean   1811.8 DN   sigma_diff/sqrt2    49.06 DN   model   40.75   ratio   1.204
+    smoothest 10% of 8x8 tiles (n=12863): mean level    934.4 DN   median ratio  1.006   p10  0.886 p90  1.157
+    all tiles (n=128627): median ratio  1.016
+
+[11s]
