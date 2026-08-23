@@ -1,0 +1,15 @@
+Binary equivalence check -- target/ (the binary run-m16.ps1 used for arms A0-A4x8)
+against target-aux/ (the binary that also carries --symmetrise and anisoscan,
+used for run-m16b.ps1 and run-m16c.ps1).
+
+Same command line, both binaries:
+  edge C:\dev\macro\test\109MSDCF --label 109MSDCF
+    --roi-near 2080,1056,384,256 --roi-far 2480,1040,384,256
+    --frames 41 --steps 8 --widths 1,17 --margin 106 --seeds 20260823
+    --measures tenengrad-w8,tenengrad-w13 --shape vertical --shape horizontal --arm EQ
+
+SHA256 of both outputs: D6ACD64811DCD03CA57482191B61F5DDDC649E5116B305D2C86DF60860D79BA0
+RESULT: PASS -- byte identical.
+
+The two binaries therefore differ only in code paths no arm in this milestone
+reaches without an explicit opt-in flag.

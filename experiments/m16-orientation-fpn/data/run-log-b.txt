@@ -1,0 +1,99 @@
+== A11 symmetrised real texture, square ROI (H2: machinery-only asymmetry) ==
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge[A11]: margin 106 px -> tile 468x468, ROI 256x256, scored 256x256; texture=real destripe=none fpn=0.0000DN/row/sensor transpose=false symmetrise=true
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [96, 124], max_d 256
+  vertical step 0: done at 9.2 s
+  vertical step 2: done at 17.8 s
+  vertical step 4: done at 26.4 s
+  vertical step 8: done at 35.0 s
+  vertical step 16: done at 44.1 s
+  vertical step 32: done at 54.2 s
+  horizontal step 0: done at 62.6 s
+  horizontal step 2: done at 71.1 s
+  horizontal step 4: done at 79.4 s
+  horizontal step 8: done at 88.0 s
+  horizontal step 16: done at 96.5 s
+  horizontal step 32: done at 106.7 s
+  bar step 0: done at 115.1 s
+  bar step 2: done at 123.3 s
+  bar step 4: done at 131.6 s
+  bar step 8: done at 140.0 s
+  bar step 16: done at 148.9 s
+  bar step 32: done at 159.2 s
+wrote data\A11-109MSDCF.csv in 159.2 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge[A11]: margin 106 px -> tile 468x468, ROI 256x256, scored 256x256; texture=real destripe=none fpn=0.0000DN/row/sensor transpose=false symmetrise=true
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [96, 124], max_d 256
+  vertical step 0: done at 9.3 s
+  vertical step 2: done at 17.6 s
+  vertical step 4: done at 26.1 s
+  vertical step 8: done at 34.7 s
+  vertical step 16: done at 43.5 s
+  vertical step 32: done at 53.6 s
+  horizontal step 0: done at 61.8 s
+  horizontal step 2: done at 69.9 s
+  horizontal step 4: done at 78.1 s
+  horizontal step 8: done at 86.5 s
+  horizontal step 16: done at 94.9 s
+  horizontal step 32: done at 103.8 s
+  bar step 0: done at 111.1 s
+  bar step 2: done at 118.6 s
+  bar step 4: done at 127.2 s
+  bar step 8: done at 136.0 s
+  bar step 16: done at 144.6 s
+  bar step 32: done at 154.5 s
+wrote data\A11-119MSDCF.csv in 154.5 s
+== A12 symmetrised real texture + destripe-mean (A11's null) ==
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge[A12]: margin 106 px -> tile 468x468, ROI 256x256, scored 256x256; texture=real destripe=mean fpn=0.0000DN/row/sensor transpose=false symmetrise=true
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [96, 124], max_d 256
+  vertical step 0: done at 8.9 s
+  vertical step 2: done at 17.5 s
+  vertical step 4: done at 26.1 s
+  vertical step 8: done at 34.6 s
+  vertical step 16: done at 43.4 s
+  vertical step 32: done at 53.3 s
+  horizontal step 0: done at 61.7 s
+  horizontal step 2: done at 69.9 s
+  horizontal step 4: done at 78.3 s
+  horizontal step 8: done at 86.8 s
+  horizontal step 16: done at 95.5 s
+  horizontal step 32: done at 105.4 s
+  bar step 0: done at 113.6 s
+  bar step 2: done at 121.7 s
+  bar step 4: done at 130.3 s
+  bar step 8: done at 138.8 s
+  bar step 16: done at 147.5 s
+  bar step 32: done at 157.6 s
+wrote data\A12-109MSDCF.csv in 157.6 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge[A12]: margin 106 px -> tile 468x468, ROI 256x256, scored 256x256; texture=real destripe=mean fpn=0.0000DN/row/sensor transpose=false symmetrise=true
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [96, 124], max_d 256
+  vertical step 0: done at 8.5 s
+  vertical step 2: done at 16.8 s
+  vertical step 4: done at 25.3 s
+  vertical step 8: done at 33.9 s
+  vertical step 16: done at 43.2 s
+  vertical step 32: done at 53.2 s
+  horizontal step 0: done at 61.5 s
+  horizontal step 2: done at 69.6 s
+  horizontal step 4: done at 77.9 s
+  horizontal step 8: done at 86.3 s
+  horizontal step 16: done at 95.2 s
+  horizontal step 32: done at 105.3 s
+  bar step 0: done at 113.3 s
+  bar step 2: done at 121.4 s
+  bar step 4: done at 130.0 s
+  bar step 8: done at 138.8 s
+  bar step 16: done at 147.6 s
+  bar step 32: done at 158.8 s
+wrote data\A12-119MSDCF.csv in 158.8 s
+== done ==

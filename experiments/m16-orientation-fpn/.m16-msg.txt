@@ -1,0 +1,47 @@
+M16: harness, gates and plant characterisation
+
+The M16 driver, plus the two gates and the two descriptive scans that had to
+run before any arm.
+
+Harness. `experiments/m16-orientation-fpn/` includes M13's `edge`, `measures`,
+`planted` and `tile` modules BY PATH, unmodified, so the render, `E_excess`,
+the Sobel/Tenengrad operator and the green-luma extraction are M13's exactly.
+M16 adds only a sweep driver and five treatment knobs (`--texture`,
+`--destripe`, `--fpn-sd/-axis/-stage`, `--transpose`, `--score-region`), all of
+which touch ONLY the focus operator's input. `merged` is still taken from the
+untreated frames and `ideal`/`oracle`/`single_sigma` are untouched, so an arm
+changes which frame is elected and nothing else.
+
+A `--margin` override lets an arm sweep a subset of M15's widths while keeping
+M15's tile, and therefore M15's scene: the edge sits at `tile_width / 2`, so
+shrinking the margin would move the boundary relative to the texture and
+silently make a different experiment.
+
+Gate 1 (`m16_gate1.py`, written independently of `m15_analyse.py`): reproduces
+SYNTHESIS fact 83 from M15's committed CSVs. All twelve published numbers
+recovered exactly -- horizontal 10/10 narrower median -2.5, vertical 6/10 wider
++1.5, bar 6/10 wider +1.0, ALL median 0.0. Reference statistic A_ref = -3.5
+windows.
+
+Gate 2 (in `m16_analyse.py`): arm A0 compared against M15's committed
+`edge-*.csv` on all 33 shared columns as strings. 8640 rows, 0 absent, 0
+mismatched. A consistency check, not independent evidence (discipline 34/20).
+
+`fpnscan`: row/column marginal structure and gradient anisotropy of the actual
+texture tiles and of the synthetic control field.
+
+`darkfpn`: decomposes the sensor's fixed pattern into row, column and residual
+parts from D:\macro-dark-frames, using a master bias against a split-half
+difference as the null. M4 measured the total FPN sigma and never decomposed
+it; M5 section 3.1 asserts a row/column form as an argued root cause. This
+measures the split directly, at all 11 ISO groups.
+
+Unit tests: 17 pass, including that a row-constant field has exactly zero
+Sobel-x response (H3's mechanism, asserted rather than assumed), that
+`synthetic_texture_seeded` is bit-identical to M13's at M13's hard-coded seed,
+and that `destripe_mean` preserves the plane mean.
+
+Read-only corpora audited before the run and unchanged:
+C:\dev\macro 18530 files, D:\macro-dark-frames 242, D:\personal\macro 632.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>

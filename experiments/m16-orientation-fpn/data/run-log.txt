@@ -1,0 +1,297 @@
+== 0. audit before ==
+C:\dev\macro files=18530 bytes=286893514060 newest_mtime_unix=1779077256
+D:\macro-dark-frames files=242 bytes=8179392512 newest_mtime_unix=1787435426
+D:\personal\macro files=632 bytes=18194001522 newest_mtime_unix=1779772901
+== 1. selftest (G3, the treatment nulls and positive controls) ==
+G3 ok: synthetic_texture_seeded is bit-identical at seed 0x5EED0F0C
+G3 ok: a different seed gives a different field
+positive control ok: destripe_mean removes a 138.92 DN plant to 2.44e-4 DN
+level control ok: plane mean preserved, 2000.0000 -> 2000.0000 DN
+null control ok: destripe_mean is idempotent to 1.53e-5 DN
+synthetic field: gx2 3075.4874 gy2 3543.7949 aniso 0.8679 row_share 0.0658 col_share 0.1972
+  + 60 DN row plant: gx2 3075.4873 gy2 5769.3182 aniso 0.5331 row_share 0.0945
+positive control ok: a pure row plant drives the anisotropy statistic down
+
+selftest PASS
+== 2. plant characterisation (row/column structure, anisotropy) ==
+== A0 control-rect (Gate 2: must reproduce M15 field for field) ==
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge[A0]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=real destripe=none fpn=0.0000DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 14.6 s
+  vertical step 2: done at 28.6 s
+  vertical step 4: done at 43.0 s
+  vertical step 8: done at 57.4 s
+  vertical step 16: done at 72.0 s
+  vertical step 32: done at 89.4 s
+  horizontal step 0: done at 104.4 s
+  horizontal step 2: done at 119.0 s
+  horizontal step 4: done at 132.8 s
+  horizontal step 8: done at 147.3 s
+  horizontal step 16: done at 162.4 s
+  horizontal step 32: done at 179.5 s
+  bar step 0: done at 193.1 s
+  bar step 2: done at 205.6 s
+  bar step 4: done at 215.6 s
+  bar step 8: done at 225.5 s
+  bar step 16: done at 235.7 s
+  bar step 32: done at 247.5 s
+wrote data\A0-109MSDCF.csv in 247.5 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge[A0]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=real destripe=none fpn=0.0000DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 9.8 s
+  vertical step 2: done at 19.5 s
+  vertical step 4: done at 29.3 s
+  vertical step 8: done at 39.2 s
+  vertical step 16: done at 49.5 s
+  vertical step 32: done at 61.2 s
+  horizontal step 0: done at 70.9 s
+  horizontal step 2: done at 80.5 s
+  horizontal step 4: done at 90.2 s
+  horizontal step 8: done at 108.0 s
+  horizontal step 16: done at 130.0 s
+  horizontal step 32: done at 143.1 s
+  bar step 0: done at 152.9 s
+  bar step 2: done at 162.7 s
+  bar step 4: done at 173.1 s
+  bar step 8: done at 183.2 s
+  bar step 16: done at 193.7 s
+  bar step 32: done at 206.6 s
+wrote data\A0-119MSDCF.csv in 206.6 s
+== A1 destripe-mean, real texture (H3, the reviewer's literal fix) ==
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge[A1]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=real destripe=mean fpn=0.0000DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 11.7 s
+  vertical step 2: done at 22.0 s
+  vertical step 4: done at 32.0 s
+  vertical step 8: done at 42.0 s
+  vertical step 16: done at 52.7 s
+  vertical step 32: done at 64.6 s
+  horizontal step 0: done at 76.4 s
+  horizontal step 2: done at 86.2 s
+  horizontal step 4: done at 95.9 s
+  horizontal step 8: done at 105.9 s
+  horizontal step 16: done at 116.4 s
+  horizontal step 32: done at 128.3 s
+  bar step 0: done at 138.1 s
+  bar step 2: done at 148.0 s
+  bar step 4: done at 158.0 s
+  bar step 8: done at 168.1 s
+  bar step 16: done at 178.6 s
+  bar step 32: done at 190.9 s
+wrote data\A1-109MSDCF.csv in 190.9 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge[A1]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=real destripe=mean fpn=0.0000DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 9.8 s
+  vertical step 2: done at 19.9 s
+  vertical step 4: done at 29.7 s
+  vertical step 8: done at 39.8 s
+  vertical step 16: done at 50.3 s
+  vertical step 32: done at 62.2 s
+  horizontal step 0: done at 71.9 s
+  horizontal step 2: done at 81.8 s
+  horizontal step 4: done at 92.1 s
+  horizontal step 8: done at 102.3 s
+  horizontal step 16: done at 112.8 s
+  horizontal step 32: done at 124.9 s
+  bar step 0: done at 135.0 s
+  bar step 2: done at 145.1 s
+  bar step 4: done at 155.3 s
+  bar step 8: done at 165.7 s
+  bar step 16: done at 176.3 s
+  bar step 32: done at 188.7 s
+wrote data\A1-119MSDCF.csv in 188.7 s
+== A2 destripe-hp, real texture (H3, content-preserving) ==
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge[A2]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=real destripe=hp fpn=0.0000DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 10.1 s
+  vertical step 2: done at 19.9 s
+  vertical step 4: done at 29.8 s
+  vertical step 8: done at 39.8 s
+  vertical step 16: done at 50.8 s
+  vertical step 32: done at 62.8 s
+  horizontal step 0: done at 72.6 s
+  horizontal step 2: done at 83.2 s
+  horizontal step 4: done at 93.0 s
+  horizontal step 8: done at 102.8 s
+  horizontal step 16: done at 113.0 s
+  horizontal step 32: done at 124.8 s
+  bar step 0: done at 134.6 s
+  bar step 2: done at 144.5 s
+  bar step 4: done at 154.4 s
+  bar step 8: done at 164.3 s
+  bar step 16: done at 174.6 s
+  bar step 32: done at 186.4 s
+wrote data\A2-109MSDCF.csv in 186.4 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge[A2]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=real destripe=hp fpn=0.0000DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 9.7 s
+  vertical step 2: done at 19.4 s
+  vertical step 4: done at 29.4 s
+  vertical step 8: done at 39.3 s
+  vertical step 16: done at 49.6 s
+  vertical step 32: done at 61.4 s
+  horizontal step 0: done at 71.2 s
+  horizontal step 2: done at 80.9 s
+  horizontal step 4: done at 90.8 s
+  horizontal step 8: done at 100.8 s
+  horizontal step 16: done at 111.0 s
+  horizontal step 32: done at 123.5 s
+  bar step 0: done at 133.4 s
+  bar step 2: done at 144.0 s
+  bar step 4: done at 153.8 s
+  bar step 8: done at 163.7 s
+  bar step 16: done at 174.6 s
+  bar step 32: done at 186.6 s
+wrote data\A2-119MSDCF.csv in 186.6 s
+== A3 synthetic isotropic texture, no FPN (H1) ==
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge[A3]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=synth destripe=none fpn=0.0000DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 10.3 s
+  vertical step 2: done at 20.5 s
+  vertical step 4: done at 30.3 s
+  vertical step 8: done at 40.1 s
+  vertical step 16: done at 50.3 s
+  vertical step 32: done at 62.0 s
+  horizontal step 0: done at 71.6 s
+  horizontal step 2: done at 81.9 s
+  horizontal step 4: done at 91.7 s
+  horizontal step 8: done at 101.7 s
+  horizontal step 16: done at 112.7 s
+  horizontal step 32: done at 124.5 s
+  bar step 0: done at 135.8 s
+  bar step 2: done at 146.8 s
+  bar step 4: done at 156.5 s
+  bar step 8: done at 166.3 s
+  bar step 16: done at 176.5 s
+  bar step 32: done at 188.3 s
+wrote data\A3-109MSDCF.csv in 188.3 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge[A3]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=synth destripe=none fpn=0.0000DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 9.6 s
+  vertical step 2: done at 19.2 s
+  vertical step 4: done at 28.7 s
+  vertical step 8: done at 38.5 s
+  vertical step 16: done at 48.6 s
+  vertical step 32: done at 60.3 s
+  horizontal step 0: done at 69.9 s
+  horizontal step 2: done at 79.5 s
+  horizontal step 4: done at 89.1 s
+  horizontal step 8: done at 98.8 s
+  horizontal step 16: done at 108.9 s
+  horizontal step 32: done at 120.5 s
+  bar step 0: done at 130.2 s
+  bar step 2: done at 139.9 s
+  bar step 4: done at 149.6 s
+  bar step 8: done at 159.6 s
+  bar step 16: done at 169.7 s
+  bar step 32: done at 181.5 s
+wrote data\A3-119MSDCF.csv in 181.5 s
+== A4 synthetic + planted row FPN (H3 POSITIVE CONTROL) ==
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge[A4x1]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=synth destripe=none fpn=0.3770DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 9.7 s
+  vertical step 2: done at 19.4 s
+  vertical step 4: done at 29.1 s
+  vertical step 8: done at 39.0 s
+  vertical step 16: done at 49.9 s
+  vertical step 32: done at 61.7 s
+  horizontal step 0: done at 72.2 s
+  horizontal step 2: done at 82.6 s
+  horizontal step 4: done at 92.3 s
+  horizontal step 8: done at 102.0 s
+  horizontal step 16: done at 112.1 s
+  horizontal step 32: done at 123.8 s
+  bar step 0: done at 133.5 s
+  bar step 2: done at 143.3 s
+  bar step 4: done at 153.1 s
+  bar step 8: done at 164.9 s
+  bar step 16: done at 175.7 s
+  bar step 32: done at 187.6 s
+wrote data\A4x1-109MSDCF.csv in 187.6 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge[A4x1]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=synth destripe=none fpn=0.3770DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 9.7 s
+  vertical step 2: done at 19.9 s
+  vertical step 4: done at 29.7 s
+  vertical step 8: done at 39.5 s
+  vertical step 16: done at 49.6 s
+  vertical step 32: done at 61.3 s
+  horizontal step 0: done at 70.9 s
+  horizontal step 2: done at 80.6 s
+  horizontal step 4: done at 90.2 s
+  horizontal step 8: done at 100.1 s
+  horizontal step 16: done at 110.7 s
+  horizontal step 32: done at 122.6 s
+  bar step 0: done at 132.3 s
+  bar step 2: done at 142.0 s
+  bar step 4: done at 151.8 s
+  bar step 8: done at 161.5 s
+  bar step 16: done at 171.8 s
+  bar step 32: done at 184.0 s
+wrote data\A4x1-119MSDCF.csv in 184.0 s
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge[A4x8]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=synth destripe=none fpn=3.0160DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 10.2 s
+  vertical step 2: done at 21.5 s
+  vertical step 4: done at 32.1 s
+  vertical step 8: done at 43.0 s
+  vertical step 16: done at 54.6 s
+  vertical step 32: done at 68.0 s
+  horizontal step 0: done at 79.0 s
+  horizontal step 2: done at 90.0 s
+  horizontal step 4: done at 100.9 s
+  horizontal step 8: done at 112.2 s
+  horizontal step 16: done at 123.7 s
+  horizontal step 32: done at 136.7 s
+  bar step 0: done at 147.6 s
+  bar step 2: done at 158.5 s
+  bar step 4: done at 169.5 s
+  bar step 8: done at 180.6 s
+  bar step 16: done at 192.4 s
+  bar step 32: done at 206.3 s
+wrote data\A4x8-109MSDCF.csv in 206.3 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge[A4x8]: margin 106 px -> tile 596x468, ROI 384x256, scored 384x256; texture=synth destripe=none fpn=3.0160DN/row/sensor transpose=false
+  24 measures x 2 widths x 6 steps x 3 shapes x 5 seeds = 4320 rows
+  profile: band |d| <= 24, far baseline d in [160, 188], max_d 384
+  vertical step 0: done at 10.8 s
+  vertical step 2: done at 21.9 s
+  vertical step 4: done at 32.8 s
+  vertical step 8: done at 44.1 s
+  vertical step 16: done at 55.4 s
+  vertical step 32: done at 68.7 s
+  horizontal step 0: done at 79.6 s

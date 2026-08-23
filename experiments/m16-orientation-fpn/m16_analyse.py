@@ -23,6 +23,7 @@ Zero-step cells are the NULL and never enter a decision.
 
 from __future__ import annotations
 
+import re
 import csv
 import math
 import statistics
@@ -105,19 +106,90 @@ class Arm:
         U = sum(1 for v in h if v < 0) / len(h)
         return A, U, sh
 
-    def meanregret(self, g) -> dict:
+    def A_hv(self, drop_seed=None):
+        """POST-HOC refinement of the pre-registered `A`, declared as such.
+
+        The registered statistic pools `vertical` with `bar` because both have
+        VERTICAL boundaries (`EdgeGeometry::Bar` is a bar in x). That is true,
+        but `bar` also differs from the other two in SHAPE -- it is a strip with
+        two boundaries and a finite width, not a half-plane -- so pooling it in
+        mixes a shape effect into a statistic that is supposed to isolate
+        orientation. Arm A11 exposed this: there `horizontal` and `vertical` are
+        numerically identical cell for cell and the entire residual `A` comes
+        from `bar`.
+
+        `A_hv` compares only the two half-plane geometries, which differ in
+        orientation and in nothing else. Both are reported; the registered `A`
+        is never quietly replaced."""
+        sh = self.shifts(drop_seed)
+        h = [v for c, v in sh.items() if c[1] == "horizontal"]
+        v = [v for c, v in sh.items() if c[1] == "vertical"]
+        if not h or not v:
+            return None
+        return statistics.median(h) - statistics.median(v)
+
+    def L(self, g=1, drop_seed=None):
+        """LEVEL asymmetry: median w*(g) on `horizontal` minus median w*(g) on
+        `vertical` + `bar`, in windows.
+
+        `A` measures how the regulariser MOVES each orientation's optimum. `L`
+        measures where those optima SIT before it moves them. In M15's own data
+        `L(1)` is far larger than `A`, which means the orientation asymmetry is
+        not something the regulariser creates -- it is something the scene and
+        the geometry already contain, and the regulariser only nudges."""
+        h = [self.wstar(c, g, drop_seed)[0] for c in self.decision if c[1] == "horizontal"]
+        vb = [self.wstar(c, g, drop_seed)[0] for c in self.decision
+              if c[1] in ("vertical", "bar")]
+        if not h or not vb:
+            return None
+        return statistics.median(h) - statistics.median(vb)
+
+    def L_hv(self, g=1, drop_seed=None):
+        """`L` restricted to the two half-plane geometries. See `A_hv`.
+
+        This is the number that carries the physical explanation: it is the gap,
+        in focus windows, between where a horizontal occluding edge wants its
+        window and where a vertical one does, BEFORE the regulariser is applied
+        at all (`g = 1`)."""
+        h = [self.wstar(c, g, drop_seed)[0] for c in self.decision if c[1] == "horizontal"]
+        v = [self.wstar(c, g, drop_seed)[0] for c in self.decision if c[1] == "vertical"]
+        if not h or not v:
+            return None
+        return statistics.median(h) - statistics.median(v)
+
+    def wmed(self, geo, g=1):
+        vs = [self.wstar(c, g)[0] for c in self.decision if c[1] == geo]
+        return statistics.median(vs) if vs else float("nan")
+
+    def meanregret(self, g, drop_seed=None) -> dict:
         out = {}
         for w in LADDER:
             acc, n = 0.0, 0
             for c in self.decision:
                 if (c, g, w) not in self.vals:
                     continue
-                _, best = self.wstar(c, g)
-                acc += self.E(c, g, w) - best
+                _, best = self.wstar(c, g, drop_seed)
+                acc += self.E(c, g, w, drop_seed) - best
                 n += 1
             if n:
                 out[w] = acc / n
         return out
+
+    def mr_floor(self, g):
+        """Noise floor on the mean-regret curve, discipline 31.
+
+        Leave one seed out at a time and record how far the resulting curve
+        moves. Returns `(argmin_lo, argmin_hi, max_spread_at_w13, basin)` where
+        `basin` is the set of windows that hold the argmin across the five
+        leave-one-out subsets. An `interior` label on an argmin whose separation
+        from its neighbour is smaller than this spread means nothing."""
+        curves = [self.meanregret(g, s) for s in self.seeds]
+        argmins = []
+        for mr in curves:
+            ws = [w for w in LADDER if w in mr]
+            argmins.append(min(ws, key=lambda w: mr[w]))
+        at13 = [mr[13] - min(mr.values()) for mr in curves if 13 in mr]
+        return min(argmins), max(argmins), (max(at13) - min(at13)) if at13 else float("nan")
 
     def level(self, g, w) -> float:
         """Mean absolute E_excess over the decision cells, in DN. The
@@ -128,8 +200,12 @@ class Arm:
 
 def load_arms() -> dict:
     arms = {}
+    # Windows globs are case-insensitive, so `A*` also matches `anisoscan-*`.
+    # Require a literal capital A followed by a digit.
     for path in sorted(DATA.glob("A*-*MSDCF.csv")):
         name = path.name.split("-")[0]
+        if not re.fullmatch(r"A\d+[a-z0-9]*", name):
+            continue
         arms.setdefault(name, []).extend(read(path))
     return {k: Arm(k, v) for k, v in sorted(arms.items())}
 
@@ -242,7 +318,7 @@ def table_asymmetry(arms: dict, A_ref: float):
     print("   phi = leave-one-seed-out spread of A (max - min over the 5 subsets).")
     print("   A difference smaller than phi is NOT RESOLVED.\n")
     print(f"   {'arm':<8}{'texture':<8}{'destripe':<9}{'fpnDN':>7}{'sq':>3}{'tr':>3}"
-          f"{'med_h':>7}{'med_vb':>8}{'A':>7}{'phi':>7}{'U_h':>6}{'p(h)':>8}  note")
+          f"{'med_h':>7}{'med_vb':>8}{'A':>7}{'A_hv':>7}{'phiHV':>7}{'phi':>7}{'U_h':>6}{'p(h)':>8}{'Lhv1':>7}{'Lhv17':>7}{'wh(1)':>7}{'wv(1)':>7}")
     out = {}
     for name, a in arms.items():
         A, U, sh = a.A_and_U()
@@ -250,6 +326,8 @@ def table_asymmetry(arms: dict, A_ref: float):
             continue
         los = [a.A_and_U(s)[0] for s in a.seeds]
         phi = max(los) - min(los)
+        hv = [a.A_hv(s) for s in a.seeds]
+        phihv = max(hv) - min(hv)
         h = [v for c, v in sh.items() if c[1] == "horizontal"]
         nneg = sum(1 for v in h if v < 0)
         npos = sum(1 for v in h if v > 0)
@@ -262,7 +340,7 @@ def table_asymmetry(arms: dict, A_ref: float):
               f"{float(a.meta['fpn_sd']):>7.3f}{sq:>3}"
               f"{'Y' if a.meta['transpose'] == '1' else '-':>3}"
               f"{statistics.median(h):>7.1f}{statistics.median(vb):>8.1f}"
-              f"{A:>+7.1f}{phi:>7.1f}{U:>6.2f}{p:>8.4f}")
+              f"{A:>+7.1f}{a.A_hv():>+7.1f}{phihv:>7.1f}{phi:>7.1f}{U:>6.2f}{p:>8.4f}{a.L_hv(1):>+7.1f}{a.L_hv(17):>+7.1f}{a.wmed('horizontal'):>7.1f}{a.wmed('vertical'):>7.1f}")
     print(f"\n   M15's committed surface, same statistic: A_ref = {A_ref:+.1f}")
     return out
 
@@ -299,7 +377,9 @@ def table_controls(arms: dict):
     print("   P3 wants the level within 20% and the argmin within +-3 windows of")
     print("   the matching untreated arm. P4 wants the aggregate argmin interior.\n")
     base = {"A1": "A0", "A2": "A0", "A5x64": "A4x64", "A5x64o": "A4x64",
-            "A9": "A6", "A3": None, "A0": None}
+            "A9": "A6", "A3": None, "A0": None, "A6": "A0", "A7": "A3",
+            "A8": "A6", "A10": "A0", "A11": "A6", "A12": "A11",
+            "A4x1": "A3", "A4x8": "A3", "A4x64": "A3"}
     print(f"   {'arm':<8}{'lvl@w13,g1':>12}{'lvl@w13,g17':>13}{'vs base':>9}   aggregate argmin at g=17")
     for name, a in arms.items():
         l1 = a.level(1, 13)
@@ -355,7 +435,7 @@ def table_window_radius(arms: dict):
     print("   Registered rule: 13 changes only if the corrected argmin leaves M13's")
     print("   published basin w11-w15 AND meanregret(13) - min exceeds 0.87 DN.\n")
     print(f"   {'arm':<8}{'g':>3}{'argmin':>8}{'mr(argmin)':>12}{'mr(w13)':>10}"
-          f"{'penalty':>10}{'basin?':>8}  label")
+          f"{'penalty':>10}{'floor':>9}{'LOO argmin':>12}{'basin?':>8}  label")
     for name, a in arms.items():
         for g in (1, 17):
             mr = a.meanregret(g)
@@ -365,8 +445,16 @@ def table_window_radius(arms: dict):
             best = min(ws, key=lambda w: mr[w])
             pen = mr[13] - mr[best]
             inb = "yes" if 11 <= best <= 15 else "NO"
+            lo, hi, floor = a.mr_floor(g)
+            resolved = "" if pen > floor else "  (penalty BELOW the floor: w13 is NOT resolved from the argmin)"
             print(f"   {name:<8}{g:>3}{best:>8}{mr[best]:>12.4f}{mr[13]:>10.4f}"
-                  f"{pen:>10.4f}{inb:>8}  {label_argmin(mr)}")
+                  f"{pen:>10.4f}{floor:>9.4f}{f'w{lo}-w{hi}':>12}{inb:>8}  "
+                  f"{label_argmin(mr)}{resolved}")
+    print("\n   floor = leave-one-seed-out spread of [meanregret(13) - min], in DN.")
+    print("   LOO argmin = the range the argmin takes over the five leave-one-out")
+    print("   subsets. Discipline 31: an argmin whose penalty at w13 is smaller than")
+    print("   the floor is not distinguishable from w13 and must not be read as a")
+    print("   better window.")
 
 
 def table_null(arms: dict):
@@ -412,6 +500,8 @@ def table_positive_control(arms: dict, A_ref: float):
         A, U, _ = a.A_and_U()
         los = [a.A_and_U(s)[0] for s in a.seeds]
         phi = max(los) - min(los)
+        hv = [a.A_hv(s) for s in a.seeds]
+        phihv = max(hv) - min(hv)
         d = f"{A - refA:+.1f}" if refA is not None else ""
         print(f"   {name:<8}{float(a.meta['fpn_sd']):>10.3f}{A:>+7.1f}{phi:>7.1f}"
               f"{U:>6.2f}{d:>10}{a.level(17, 13):>10.3f}")
@@ -485,6 +575,51 @@ def verdicts(arms: dict, stats: dict, A_ref: float):
         v = "PASS" if abs(A7) <= max(phi7, 1.0) else "FAIL -- the machinery is asymmetric"
         print(f"   N4 (square + isotropic must be symmetric): A(A7) = {A7:+.1f}, "
               f"phi = {phi7:.1f}  ->  {v}")
+    if "A11" in stats:
+        A11, phi11, U11 = stats["A11"]
+        v = ("machinery is SYMMETRIC on a transpose-invariant real-texture plant"
+             if abs(A11) <= max(phi11, 1.0)
+             else "machinery is ASYMMETRIC even with the scene symmetrised -- H2 ALIVE")
+        print(f"   A11 (real texture symmetrised, exactly transpose-invariant): "
+              f"A = {A11:+.1f}, phi = {phi11:.1f}, U = {U11:.2f},"
+              f" |A|/|A_ctrl| = {frac('A11'):.2f}  ->  {v}")
+    if "A12" in stats:
+        A12, phi12, _ = stats["A12"]
+        print(f"   A12 (A11 + destripe-mean, A11's null): A = {A12:+.1f}, "
+              f"phi = {phi12:.1f}")
+
+
+def table_anisoscan() -> None:
+    """Gradient anisotropy before and after each destripe treatment.
+
+    This is what explains a null A1: `destripe mean` removes most of the tile's
+    VARIANCE but leaves its GRADIENT anisotropy where it was, because the
+    anisotropy is 2-D structure at Sobel scale rather than a row-constant
+    offset. A row/column mean subtraction cannot reach it.
+    """
+    print("\n" + "=" * 78)
+    print("9. GRADIENT ANISOTROPY BEFORE AND AFTER DESTRIPE (frame 0)")
+    print("=" * 78)
+    paths = sorted(DATA.glob("anisoscan-*.csv"))
+    if not paths:
+        print("   no anisoscan CSVs, SKIPPED")
+        return
+    rows = []
+    for p in paths:
+        with p.open(newline="", encoding="utf-8") as fh:
+            rows += list(csv.DictReader(fh))
+    print(f"   {'stack':9} {'roi':18} {'variant':8} {'sd_dn':>8} {'row_sd':>9} "
+          f"{'gx2':>9} {'gy2':>10} {'aniso':>7}")
+    for r in rows:
+        if r["frame"] != "0":
+            continue
+        print(f"   {r['stack']:9} {r['roi']:18} {r['variant']:8} "
+              f"{float(r['sd_dn']):8.1f} {float(r['row_sd_raw']):9.2f} "
+              f"{float(r['gx2']):9.2f} {float(r['gy2']):10.2f} "
+              f"{float(r['aniso']):7.3f}")
+    print("   `mean` drives row_sd_raw to exactly 0 by construction. Read gx2 and")
+    print("   aniso across the three variants of each ROI: if they barely move, the")
+    print("   anisotropy the focus operator sees is untouched by the H3 treatment.")
 
 
 def main() -> int:
@@ -505,6 +640,7 @@ def main() -> int:
     table_positive_control(arms, A_ref)
     table_null(arms)
     table_window_radius(arms)
+    table_anisoscan()
     verdicts(arms, stats, A_ref)
     return 0
 

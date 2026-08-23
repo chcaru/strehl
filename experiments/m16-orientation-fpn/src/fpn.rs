@@ -65,7 +65,7 @@ fn profiles(f: &[f32], geom: PlaneGeometry) -> (Vec<f64>, Vec<f64>, f64) {
     let (w, h) = (geom.width, geom.height);
     let mut row = vec![0.0f64; h];
     let mut col = vec![0.0f64; w];
-    for y in 0..h {
+    for (y, r) in row.iter_mut().enumerate() {
         let base = y * w;
         let mut acc = 0.0f64;
         for x in 0..w {
@@ -73,7 +73,7 @@ fn profiles(f: &[f32], geom: PlaneGeometry) -> (Vec<f64>, Vec<f64>, f64) {
             acc += v;
             col[x] += v;
         }
-        row[y] = acc / w as f64;
+        *r = acc / w as f64;
     }
     for c in col.iter_mut() {
         *c /= h as f64;
@@ -90,8 +90,8 @@ fn profiles(f: &[f32], geom: PlaneGeometry) -> (Vec<f64>, Vec<f64>, f64) {
 pub fn destripe_mean(f: &mut [f32], geom: PlaneGeometry) {
     let (row, col, mean) = profiles(f, geom);
     let (w, h) = (geom.width, geom.height);
-    for y in 0..h {
-        let dy = (row[y] - mean) as f32;
+    for (y, rv) in row.iter().enumerate().take(h) {
+        let dy = (rv - mean) as f32;
         let base = y * w;
         for x in 0..w {
             f[base + x] -= dy + (col[x] - mean) as f32;
@@ -297,17 +297,18 @@ fn sobel_at(f: &[f32], geom: PlaneGeometry, x: usize, y: usize) -> (f64, f64) {
         let yy = (y as isize + dy) as usize;
         f[yy * w + xx] as f64
     };
-    let gx = 0.125
-        * (at(1, -1) + 2.0 * at(1, 0) + at(1, 1) - at(-1, -1) - 2.0 * at(-1, 0) - at(-1, 1));
-    let gy = 0.125
-        * (at(-1, 1) + 2.0 * at(0, 1) + at(1, 1) - at(-1, -1) - 2.0 * at(0, -1) - at(1, -1));
+    let gx =
+        0.125 * (at(1, -1) + 2.0 * at(1, 0) + at(1, 1) - at(-1, -1) - 2.0 * at(-1, 0) - at(-1, 1));
+    let gy =
+        0.125 * (at(-1, 1) + 2.0 * at(0, 1) + at(1, 1) - at(-1, -1) - 2.0 * at(0, -1) - at(1, -1));
     (gx, gy)
 }
 
 pub fn scan(f: &[f32], geom: PlaneGeometry, hp_sigma: f32) -> Scan {
     let (w, h) = (geom.width, geom.height);
     let (row, col, mean) = profiles(f, geom);
-    let var_of = |v: &[f64], m: f64| v.iter().map(|x| (x - m) * (x - m)).sum::<f64>() / v.len() as f64;
+    let var_of =
+        |v: &[f64], m: f64| v.iter().map(|x| (x - m) * (x - m)).sum::<f64>() / v.len() as f64;
     let row_var = var_of(&row, mean);
     let col_var = var_of(&col, mean);
     let total_var = f.iter().map(|x| (*x as f64 - mean).powi(2)).sum::<f64>() / f.len() as f64;
@@ -322,9 +323,8 @@ pub fn scan(f: &[f32], geom: PlaneGeometry, hp_sigma: f32) -> Scan {
     let mut resid = f.to_vec();
     destripe_mean(&mut resid, geom);
     let rm = resid.iter().map(|x| *x as f64).sum::<f64>() / resid.len() as f64;
-    let resid_sd = (resid.iter().map(|x| (*x as f64 - rm).powi(2)).sum::<f64>()
-        / resid.len() as f64)
-        .sqrt();
+    let resid_sd =
+        (resid.iter().map(|x| (*x as f64 - rm).powi(2)).sum::<f64>() / resid.len() as f64).sqrt();
 
     let mut sx = 0.0f64;
     let mut sy = 0.0f64;
@@ -351,8 +351,16 @@ pub fn scan(f: &[f32], geom: PlaneGeometry, hp_sigma: f32) -> Scan {
         gx2,
         gy2,
         aniso: if gy2 > 0.0 { gx2 / gy2 } else { 0.0 },
-        row_share: if total_var > 0.0 { row_var / total_var } else { 0.0 },
-        col_share: if total_var > 0.0 { col_var / total_var } else { 0.0 },
+        row_share: if total_var > 0.0 {
+            row_var / total_var
+        } else {
+            0.0
+        },
+        col_share: if total_var > 0.0 {
+            col_var / total_var
+        } else {
+            0.0
+        },
     }
 }
 

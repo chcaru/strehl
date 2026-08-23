@@ -56,10 +56,15 @@ const READ_ONLY_ROOTS: [&str; 3] = [
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
     let mode = args.first().map(String::as_str).unwrap_or("help");
-    let rest = if args.is_empty() { &args[..] } else { &args[1..] };
+    let rest = if args.is_empty() {
+        &args[..]
+    } else {
+        &args[1..]
+    };
     let r = match mode {
         "edge" => edge_mode(rest),
         "fpnscan" => fpnscan_mode(rest),
+        "anisoscan" => anisoscan_mode(rest),
         "darkfpn" => darkfpn_mode(rest),
         "audit" => audit(rest),
         "selftest" => selftest(),
@@ -406,6 +411,85 @@ fn focus_volume_owned(
 /// Descriptive plant characterisation: how much row and column structure the
 /// real texture tiles actually carry, and how isotropic they are. Measured
 /// before the arms, reported as a property of the plant, not as a test.
+/// Measures gradient anisotropy **before and after** each destripe treatment.
+///
+/// Answers a question the arms alone cannot: the A1 treatment removes most of
+/// the row-marginal variance, yet leaves the orientation asymmetry unchanged.
+/// If `aniso` is still far from 1 after `destripe_mean`, the corpus tiles are
+/// anisotropic in two dimensions, not merely in their row marginal — and a
+/// row/column mean subtraction was never going to touch that.
+fn anisoscan_mode(rest: &[String]) -> Result<(), String> {
+    let a = parse_args(rest);
+    let dir = a.positional.first().ok_or("anisoscan needs a directory")?;
+    let stack = open_stack(
+        Path::new(dir),
+        a.one("limit").and_then(|v| v.parse().ok()),
+        a.one("label"),
+    )?;
+    let out_path = a
+        .one("out")
+        .ok_or("anisoscan needs --out <FILE>")?
+        .to_string();
+    let hp_sigma = a.f32_or("hp-sigma", 4.0)?;
+    let rois: Vec<Roi> = a
+        .many("roi")
+        .iter()
+        .map(|s| Roi::parse(s))
+        .collect::<Result<_, _>>()?;
+    if rois.is_empty() {
+        return Err("anisoscan needs at least one --roi X,Y,W,H".into());
+    }
+    let tgs: Vec<TileGeom> = rois
+        .iter()
+        .map(|r| TileGeom::new(*r, 0, stack.plane))
+        .collect::<Result<_, _>>()?;
+    let tiles = extract_tiles(&stack, &tgs, false)?;
+
+    let mut csv = String::from(
+        "stack,iso,roi,frame,variant,width,height,mean_dn,sd_dn,\
+         row_sd_raw,col_sd_raw,gx2,gy2,aniso,row_share,col_share\n",
+    );
+    for (ri, tg) in tgs.iter().enumerate() {
+        for (fi, ft) in tiles.iter().enumerate() {
+            for variant in [Destripe::None, Destripe::Mean, Destripe::Hp] {
+                let mut luma = ft[ri].luma.clone();
+                match variant {
+                    Destripe::None => {}
+                    Destripe::Mean => fpn::destripe_mean(&mut luma, tg.geom),
+                    Destripe::Hp => fpn::destripe_hp(&mut luma, tg.geom, hp_sigma),
+                    Destripe::Oracle => {}
+                }
+                let s = fpn::scan(&luma, tg.geom, hp_sigma);
+                csv.push_str(&format!(
+                    "{},{},{},{},{},{},{},{:.4},{:.4},{:.5},{:.5},{:.6},{:.6},{:.5},{:.6},{:.6}\n",
+                    stack.label,
+                    stack.iso.unwrap_or(0.0),
+                    format_args!(
+                        "{}x{}+{}+{}",
+                        tg.roi.width, tg.roi.height, tg.roi.x, tg.roi.y
+                    ),
+                    fi,
+                    variant.as_str(),
+                    tg.geom.width,
+                    tg.geom.height,
+                    s.mean,
+                    s.sd,
+                    s.row_sd_raw,
+                    s.col_sd_raw,
+                    s.gx2,
+                    s.gy2,
+                    s.aniso,
+                    s.row_share,
+                    s.col_share,
+                ));
+            }
+        }
+    }
+    std::fs::write(&out_path, csv).map_err(|e| format!("write {out_path}: {e}"))?;
+    eprintln!("anisoscan -> {out_path}");
+    Ok(())
+}
+
 fn fpnscan_mode(rest: &[String]) -> Result<(), String> {
     let a = parse_args(rest);
     let dir = a.positional.first().ok_or("fpnscan needs a directory")?;
@@ -414,7 +498,10 @@ fn fpnscan_mode(rest: &[String]) -> Result<(), String> {
         a.one("limit").and_then(|v| v.parse().ok()),
         a.one("label"),
     )?;
-    let out_path = a.one("out").ok_or("fpnscan needs --out <FILE>")?.to_string();
+    let out_path = a
+        .one("out")
+        .ok_or("fpnscan needs --out <FILE>")?
+        .to_string();
     let hp_sigma = a.f32_or("hp-sigma", 4.0)?;
     let rois: Vec<Roi> = a
         .many("roi")
@@ -446,7 +533,7 @@ fn fpnscan_mode(rest: &[String]) -> Result<(), String> {
                 "{},{},{},{},{},{},{:.4},{:.4},{:.5},{:.5},{:.5},{:.5},{:.5},{:.6},{:.6},{:.5},{:.6},{:.6}\n",
                 stack.label,
                 stack.iso.unwrap_or(0.0),
-                format!(
+                format_args!(
                     "{}x{}+{}+{}",
                     rois[ri].width, rois[ri].height, rois[ri].x, rois[ri].y
                 ),
@@ -517,7 +604,10 @@ fn darkfpn_mode(rest: &[String]) -> Result<(), String> {
         .positional
         .first()
         .ok_or("darkfpn needs the dark-frame root")?;
-    let out_path = a.one("out").ok_or("darkfpn needs --out <FILE>")?.to_string();
+    let out_path = a
+        .one("out")
+        .ok_or("darkfpn needs --out <FILE>")?
+        .to_string();
     let roi = Roi::parse(a.one("roi").unwrap_or("1600,1000,512,512"))?;
     let hp_sigma = a.f32_or("hp-sigma", 4.0)?;
     let take = a.usize_or("take", 20)?;
@@ -546,7 +636,11 @@ fn darkfpn_mode(rest: &[String]) -> Result<(), String> {
         // M4 discards the first two frames of every dark group.
         let paths: Vec<PathBuf> = stack.paths.iter().skip(2).take(take).cloned().collect();
         if paths.len() < 8 {
-            eprintln!("  skipping {}: only {} usable frames", dir.display(), paths.len());
+            eprintln!(
+                "  skipping {}: only {} usable frames",
+                dir.display(),
+                paths.len()
+            );
             continue;
         }
         let tg = TileGeom::new(roi, 0, stack.plane)?;
@@ -591,14 +685,25 @@ fn darkfpn_mode(rest: &[String]) -> Result<(), String> {
         // Everything below is a per-frame amplitude: the master's marginals are
         // sqrt(n) quieter in the temporal term but carry the fixed pattern at
         // full strength, so the fixed part is the excess over the difference.
-        let fpn_row = (ms.row_sd_hp.powi(2) - ds.row_sd_hp.powi(2)).max(0.0).sqrt();
-        let fpn_col = (ms.col_sd_hp.powi(2) - ds.col_sd_hp.powi(2)).max(0.0).sqrt();
+        let fpn_row = (ms.row_sd_hp.powi(2) - ds.row_sd_hp.powi(2))
+            .max(0.0)
+            .sqrt();
+        let fpn_col = (ms.col_sd_hp.powi(2) - ds.col_sd_hp.powi(2))
+            .max(0.0)
+            .sqrt();
         let fpn_tot = (ms.sd.powi(2) - ds.sd.powi(2)).max(0.0).sqrt();
         eprintln!(
             "  {} iso {:?}: master row {:.4} col {:.4}; null row {:.4} col {:.4}; \
              fixed row {:.4} col {:.4} total {:.4} DN",
-            stack.label, stack.iso, ms.row_sd_hp, ms.col_sd_hp, ds.row_sd_hp, ds.col_sd_hp,
-            fpn_row, fpn_col, fpn_tot
+            stack.label,
+            stack.iso,
+            ms.row_sd_hp,
+            ms.col_sd_hp,
+            ds.row_sd_hp,
+            ds.col_sd_hp,
+            fpn_row,
+            fpn_col,
+            fpn_tot
         );
         csv.push_str(&format!(
             "{},{},{},{},{},{:.5},{:.5},{:.5},{:.5},{:.5},{:.5},{:.5},{:.5},{:.5},{:.5},{:.5},{:.5}\n",
@@ -703,6 +808,19 @@ fn transpose(src: &[f32], geom: PlaneGeometry) -> Vec<f32> {
     out
 }
 
+/// `T <- (T + T_transpose) / 2` on a square tile.
+///
+/// The sharpest available test of H2. The result is **exactly** invariant under
+/// transposition, so it carries the real corpus's contrast, intensity step and
+/// spatial spectrum while having, by construction, no preferred axis at all.
+/// Any orientation asymmetry that survives this treatment is therefore in the
+/// machinery, not in the scene — no synthetic-texture regime mismatch to argue
+/// about, because the texture is still the corpus's own.
+fn symmetrise(src: &[f32], geom: PlaneGeometry) -> Vec<f32> {
+    let t = transpose(src, geom);
+    src.iter().zip(&t).map(|(a, b)| 0.5 * (a + b)).collect()
+}
+
 #[allow(clippy::too_many_lines)]
 fn edge_mode(rest: &[String]) -> Result<(), String> {
     let a = parse_args(rest);
@@ -739,6 +857,7 @@ fn edge_mode(rest: &[String]) -> Result<(), String> {
     let fpn_stage = FpnStage::parse(a.one("fpn-stage").unwrap_or("sensor"))?;
     let fpn_seed = a.u64_or("fpn-seed", 0x0F1E_2D3C)?;
     let do_transpose = a.has("transpose");
+    let do_symmetrise = a.has("symmetrise");
     let score_region = a.one("score-region").map(String::from);
     let synth_seed = a.u64_or("synth-seed", 0x5EED_0F0C)?;
     let synth_base = a.f32_or("synth-base", 2000.0)?;
@@ -791,7 +910,8 @@ fn edge_mode(rest: &[String]) -> Result<(), String> {
         // Two independent isotropic fields, so the two layers are as unrelated
         // as the two real ROIs are.
         tex.near = fpn::synthetic_texture_seeded(geom, synth_base, synth_amp, synth_seed);
-        tex.far = fpn::synthetic_texture_seeded(geom, synth_base, synth_amp, synth_seed ^ 0x9E37_79B9);
+        tex.far =
+            fpn::synthetic_texture_seeded(geom, synth_base, synth_amp, synth_seed ^ 0x9E37_79B9);
     } else if texture_kind != "real" {
         return Err(format!("unknown --texture {texture_kind:?}"));
     }
@@ -804,6 +924,16 @@ fn edge_mode(rest: &[String]) -> Result<(), String> {
         }
         tex.near = transpose(&tex.near, geom);
         tex.far = transpose(&tex.far, geom);
+    }
+    if do_symmetrise {
+        if geom.width != geom.height {
+            return Err(format!(
+                "--symmetrise needs a square tile; this one is {}x{}. Use a square ROI.",
+                geom.width, geom.height
+            ));
+        }
+        tex.near = symmetrise(&tex.near, geom);
+        tex.far = symmetrise(&tex.far, geom);
     }
     let plant = FpnPlant::new(fpn_sd, &fpn_axis, fpn_stage, fpn_seed, geom)?;
     if plant.active() && fpn_stage == FpnStage::Texture {
@@ -827,7 +957,7 @@ fn edge_mode(rest: &[String]) -> Result<(), String> {
 
     eprintln!(
         "edge[{arm}]: margin {margin} px -> tile {}x{}, ROI {}x{}, scored {}x{}; \
-         texture={texture_kind} destripe={} fpn={:.4}DN/{fpn_axis}/{} transpose={do_transpose}",
+         texture={texture_kind} destripe={} fpn={:.4}DN/{fpn_axis}/{} transpose={do_transpose} symmetrise={do_symmetrise}",
         geom.width,
         geom.height,
         tex.tg.roi.width,
@@ -1136,7 +1266,7 @@ fn selftest() -> Result<(), String> {
         "  + 60 DN row plant: gx2 {:.4} gy2 {:.4} aniso {:.4} row_share {:.4}",
         sr.gx2, sr.gy2, sr.aniso, sr.row_share
     );
-    if !(sr.aniso < s.aniso * 0.9) {
+    if sr.aniso >= s.aniso * 0.9 {
         return Err("positive control FAIL: a pure row plant did not lower gx2/gy2".into());
     }
     println!("positive control ok: a pure row plant drives the anisotropy statistic down");
@@ -1176,7 +1306,13 @@ mod tests {
             .apply(&mut f, g);
         let a = fpn::scan(&f, g, 4.0);
         let b = fpn::scan(&transpose(&f, g), g, 4.0);
-        assert!((a.gx2 - b.gy2).abs() / a.gx2.max(b.gy2) < 1e-4, "{a:?} {b:?}");
-        assert!((a.gy2 - b.gx2).abs() / a.gy2.max(b.gx2) < 1e-4, "{a:?} {b:?}");
+        assert!(
+            (a.gx2 - b.gy2).abs() / a.gx2.max(b.gy2) < 1e-4,
+            "{a:?} {b:?}"
+        );
+        assert!(
+            (a.gy2 - b.gx2).abs() / a.gy2.max(b.gx2) < 1e-4,
+            "{a:?} {b:?}"
+        );
     }
 }
