@@ -94,6 +94,51 @@ pub fn green_luma<S: QuadSource + ?Sized>(src: &S, black: f32, dst: &mut [f32]) 
     }
 }
 
+/// [`green_luma`], plus a per-pixel mask of samples pinned at the container max.
+///
+/// One comparison per sample. The mask is set where **either** green of the quad
+/// is at or above `clip_level` — either is enough, because the luma is their
+/// mean and a pinned contributor makes that mean a lower bound rather than a
+/// measurement.
+///
+/// The luma written is **identical** to what [`green_luma`] writes; clipping is
+/// reported, not repaired. Substituting a value here would move the artefact
+/// into the gradient rather than remove it, and would make the focus field a
+/// function of an invented number. Consumers mask on the flag instead — see
+/// [`ClipCensus`](crate::clip::ClipCensus).
+pub fn green_luma_with_clip<S: QuadSource + ?Sized>(
+    src: &S,
+    black: f32,
+    clip_level: u16,
+    dst: &mut [f32],
+    clipped: &mut [bool],
+) {
+    let geom = src.geometry();
+    assert_eq!(dst.len(), geom.pixels());
+    assert_eq!(clipped.len(), geom.pixels());
+
+    let (g1x, g1y) = CfaPlane::G1.rggb_offset();
+    let (g2x, g2y) = CfaPlane::G2.rggb_offset();
+
+    for py in 0..geom.height {
+        let (row0, row1) = src.quad_rows(py);
+        let g1_row = if g1y == 0 { row0 } else { row1 };
+        let g2_row = if g2y == 0 { row0 } else { row1 };
+        let lo = py * geom.width;
+        let hi = (py + 1) * geom.width;
+        let out = &mut dst[lo..hi];
+        let flags = &mut clipped[lo..hi];
+        for (px, (o, c)) in out.iter_mut().zip(flags.iter_mut()).enumerate() {
+            let r1 = g1_row[2 * px + g1x];
+            let r2 = g2_row[2 * px + g2x];
+            *c = r1 >= clip_level || r2 >= clip_level;
+            let g1 = (r1 as f32 - black).max(0.0);
+            let g2 = (r2 as f32 - black).max(0.0);
+            *o = 0.5 * (g1 + g2);
+        }
+    }
+}
+
 #[cfg(test)]
 pub(crate) mod testing {
     use super::*;
@@ -141,6 +186,41 @@ pub(crate) mod testing {
 mod tests {
     use super::testing::QuadGrid;
     use super::*;
+
+    #[test]
+    fn the_clip_mask_reports_clipping_without_altering_the_luma() {
+        // The contract that makes the mask safe to add to a shipped path: the
+        // focus field must be bit-identical with and without it, so turning
+        // clip detection on cannot move any existing measurement. If this ever
+        // fails, the mask has started repairing data instead of reporting it.
+        let clip = crate::clip::CONTAINER_MAX_DN;
+        let g = QuadGrid::new(4, 4, |px, py| {
+            let base = 1000 + 300 * px as u16 + 111 * py as u16;
+            match (px, py) {
+                // Both greens pinned: the always-clipped shape.
+                (0, 0) => [base, clip, clip, base],
+                // Only G1 pinned — either is enough to flag.
+                (1, 0) => [base, clip, base, base],
+                // Only G2 pinned.
+                (2, 0) => [base, base, clip, base],
+                // Just below the container max must NOT flag.
+                (3, 0) => [base, clip - 1, clip - 1, base],
+                _ => [base, base, base, base],
+            }
+        });
+        let mut plain = vec![0.0f32; 16];
+        green_luma(&g, 512.0, &mut plain);
+        let mut masked = vec![0.0f32; 16];
+        let mut flags = vec![false; 16];
+        green_luma_with_clip(&g, 512.0, clip, &mut masked, &mut flags);
+
+        assert_eq!(plain, masked, "the clip mask must not change the luma");
+        assert!(flags[0] && flags[1] && flags[2], "either green must flag");
+        assert!(!flags[3], "clip_level - 1 is not clipped: the test is `>=`");
+        for (i, f) in flags.iter().enumerate().skip(4) {
+            assert!(!f, "unclipped pixel {i} was flagged");
+        }
+    }
 
     #[test]
     fn rggb_offsets_match_the_mosaic_helper() {

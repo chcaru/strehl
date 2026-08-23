@@ -658,19 +658,142 @@ Three lines in the existing two-pass structure, none of which require a new pass
 
 Not built tonight. Stated so it is a decision, not an oversight.
 
+## 4e. Colour ordering and the clipped-sample mask (M26)
+
+Two asks, one confirmation and one build.
+
+### 1. Gate in native raw DN before white balance: CONFIRMED, and it was already so
+
+The design already gates in native per-channel raw DN, and `merge.rs:298-300`
+already says so as a standing constraint on the `Estimator`. Recording it here so
+it is on the record as a **decision** rather than an accident.
+
+The argument the orchestrator gives is the one that makes it load-bearing, and it
+is worth restating in the terms of this crate. The calibrated model
+`sigma^2(S) = g*S + (RN_e*g)^2` is valid in native DN only. Scale a channel by an
+as-shot multiplier `m` and the *true* noise scales as `m^2 * (g*S + (RN*g)^2)`,
+while applying the model to the scaled value yields `g*(m*S) + (RN*g)^2`. The
+ratio of believed to actual tends to `m` in the read-limited limit and `sqrt(m)`
+in the shot-limited limit. With `R` spanning 2.13-2.86 across this corpus, a gate
+that white-balanced first would believe red up to **2.86x quieter than it is**,
+most strongly in the shadows — which is exactly where M2 measured the argmax
+defect. The failure is silent: nothing crashes, the gate simply selects too
+eagerly and the output drifts back toward the selector this project exists to
+replace.
+
+Concretely, in this crate: `Ctx::field_for` takes the CFA plane straight from
+`strehl-raw`, forms the green luma with no multiplier, and hands it to the focus
+operator; `Estimator::fold` consults `NoiseModel` at that same native level. No
+WB, no colour matrix, and no black subtraction happens before the gate. VERIFIED
+by reading the path; the module note at `merge.rs:298-300` pins the intent.
+
+This also means the crate never needs to read `as_shot_whitebalance`, and so
+cannot hard-code it. When WB is eventually applied it belongs strictly after the
+merge, read per stack.
+
+### 2. The clipped-sample mask: BUILT
+
+`crates/strehl-core/src/clip.rs` (new module) owns `CONTAINER_MAX_DN = 16383` and
+`ClipCensus`. `plane.rs` gains `green_luma_with_clip`, which is
+`green_luma` plus **one comparison per sample** — the cost the orchestrator
+priced it at.
+
+Three design choices worth stating:
+
+**Report, do not repair.** The mask flags; it does not substitute a value. A
+substituted value is itself an edge, and it would land in the gradient operator
+one stage later — trading a known-bad sample for a manufactured one. Under rule
+18 that is the worst possible trade, because the manufactured edge *raises*
+`mean|grad|` and reads as an improvement. `green_luma_with_clip` is therefore
+proven **bit-identical** in its luma output to `green_luma`, by test
+(`the_clip_mask_reports_clipping_without_altering_the_luma`).
+
+**Either green flags the quad.** The plane is a green-average of the 2x2 CFA
+quad. If either green sample is pinned, the average is not a measurement of the
+scene and the quad is flagged. Requiring both would let a half-pinned average
+through as if it were real.
+
+**2 bytes per pixel, constant in frames.** `ClipCensus` carries a `u16` count per
+pixel and the number of frames folded. That is 16.5 MB on this plane at every
+depth — O(workers), never O(frames), so the ratchet is untouched. It is exactly
+mergeable: `absorb` is tested against folding the same frames into one census.
+
+The two white levels are kept distinct and the module doc says why: **15360**
+bounds the noise model's calibrated range, **16383** is what "this sample is
+pinned" means. `noise.rs` is correct as it stands and was not touched.
+
+### The census, MEASURED on three stacks
+
+Reported unconditionally, not behind `--stats` and not behind an ROI flag — it is
+a correctness statement about the stack, not a diagnostic about a rectangle.
+
+| stack | n | ever clipped | always clipped | index speckle |
+| --- | ---: | ---: | ---: | ---: |
+| `109MSDCF` | 22 | 0.0000% (0) | 0.0000% (0) | 0.022% |
+| `119MSDCF` | 33 | 0.0000% (0) | 0.0000% (0) | 0.024% |
+| `coffee-bubbles` | 19 | 0.5052% (41,632) | **0.0088% (724)** | — |
+
+This is a null control and a positive control in one measurement. The two stacks
+M26 reports as unsaturated read **exactly zero** — not "small", zero — and the
+stack M26 reports as pinned at the container maximum fires. A mask that fired on
+109 or 119 would be wrong, and a mask that stayed silent on `coffee-bubbles`
+would be inert.
+
+**I do not claim to reproduce M26's 616.** I measure **724** always-clipped
+pixels, on a different estimand: my census lives on the green-luma plane with the
+either-green rule above, and M26 counted on its own plane definition. Same
+mechanism, same order, different denominator — stating it as agreement would be a
+reporting defect. What is MEASURED here is 724 by this rule.
+
+Both acceptance invariants are unchanged by the mask on 109 and 119 (flat 0.890x
+and 0.960x, retention 1.251x and 1.021x, speckle 0.022% and 0.024%) — which is
+the expected result, since the mask alters no luma and neither stack has a
+clipped sample to flag.
+
+### The caveat I am obliged to carry
+
+M26's closing point applies directly to this milestone's headline: `109` and
+`119` are the two stacks with **no saturation at all**, and M24 found `109` is
+also the quietest photometrically at 0.91%. Every acceptance number in §2 was
+measured on those two. **A clean result on 109/119 is systematically weaker
+evidence than it looks**, and the corpus's hard cases — `coffee-bean` at 1.26%
+saturated and 11.70% photometric drift, `coffee-bubbles` at 8.93% — are not
+exercised by the acceptance tests. That is a stated limitation, not a defect I
+have fixed.
+
+### What the mask does NOT yet do
+
+The census is computed and reported; it is **not yet consumed by the gate**. The
+consumer is one line in `Estimator::fold` — treat a flagged sample as carrying no
+focus information, i.e. force it to the averaging branch rather than letting its
+maximal apparent focus contrast win the selection. I did not wire that tonight
+because it changes merge output and I would rather ship the measurement, the
+mask and the proof it fires than an unmeasured behaviour change at the end of a
+run. The hole M26 identifies is real but its measured incidence on the acceptance
+stacks is exactly zero, so wiring it cannot be validated there.
+
 ## 5. Tests
 
 
-**107 -> 139, delta +32.** No test was removed, weakened, or marked `#[ignore]`.
+**107 -> 146, delta +39.** No test was removed, weakened, or marked `#[ignore]`.
 
 - `strehl-cli` 34 -> 37 (+3)
-- `strehl-core` 65 -> 94 (+29)
+- `strehl-core` 65 -> 101 (+36)
 - `strehl-raw` 8 -> 8 (unchanged)
 
-The suite currently *runs* 140. The extra one is
+The suite currently *runs* 147. The extra one is
 `the_selection_inflation_constant_is_the_measured_one` in `merge.rs`, which is
-another agent's work in the shared tree, not mine. My commits account for +32
+another agent's work in the shared tree, not mine. My commits account for +39
 and no more.
+
+The last seven are §4e's: six in `clip.rs` and one in `plane.rs`. They pin the
+two white levels apart
+(`the_container_maximum_is_not_the_usable_white_level`), the always-clipped
+definition, the empty-census abstention, `absorb` against folding the same frames
+into one census, the 2 B/px O(1)-in-frames footprint at 1/22/33/105/400 frames,
+a dimension mismatch returning an error rather than panicking, and — the
+load-bearing one — that the clip mask leaves the luma **byte-identical**
+(`the_clip_mask_reports_clipping_without_altering_the_luma`).
 
 The 29th core test is
 `a_per_frame_gain_scales_the_normalised_response_by_its_square_root` (§4d): the
@@ -760,6 +883,12 @@ a directory I am forbidden to write to tonight. I did not reach into it. The
 honest state is: the statistic is right, the retained state is right, the
 printed summary is wrong, and fixing the print is a small job for whoever owns
 the occlusion milestone next.
+
+**Not built: the clip mask's consumption by the gate.** §4e builds, tests and
+measures the mask; it does not yet let it change a merge decision. The consumer
+is one line in `Estimator::fold`. Not wired tonight because it changes merge
+output and its measured incidence on both acceptance stacks is **exactly zero**,
+so the change could not be validated where the acceptance tests run.
 
 **Not changed:** the focus operator. `WINDOW_RADIUS = 13`, `SUPPORT_RADIUS = 14`,
 Sobel magnitude not squared, 27x27 running-sum box. `compute()` is byte-identical;

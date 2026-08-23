@@ -11,6 +11,7 @@
 //!   mechanism behind the prior project's measured 2-5x noise defect.
 
 pub mod boxfilter;
+pub mod clip;
 pub mod focus;
 pub mod merge;
 pub mod noise;

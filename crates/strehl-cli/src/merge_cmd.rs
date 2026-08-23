@@ -39,12 +39,13 @@ use std::time::Instant;
 
 use anyhow::{Context, Result, bail, ensure};
 use rayon::prelude::*;
+use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
 use strehl_core::focus::FocusField;
 use strehl_core::merge::{
     Estimator, FOCUS_NOISE_SD, FocusStats, Gate, REGULARISER_WIDTH, regularise,
 };
 use strehl_core::noise::{Levels, NoiseModel};
-use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma};
+use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma_with_clip};
 use strehl_core::profile;
 use strehl_core::stack::{DEFAULT_SPECKLE_TOLERANCE as SPECKLE_TOLERANCE, speckle_fraction};
 use strehl_core::through_focus::{
@@ -435,6 +436,8 @@ struct Scratch {
     reg: Vec<f32>,
     /// The fine focus field, allocated only when `--stats` asked for it.
     fine: Vec<f32>,
+    /// Per-pixel clip flags for the frame currently in `luma`.
+    clipped: Vec<bool>,
 }
 
 impl Scratch {
@@ -446,6 +449,7 @@ impl Scratch {
             box_scratch: vec![0.0; px],
             reg: vec![0.0; px],
             fine: if fine { vec![0.0; px] } else { Vec::new() },
+            clipped: vec![false; px],
         }
     }
 }
@@ -502,7 +506,13 @@ impl Ctx<'_> {
                 self.levels.white
             );
         }
-        green_luma(&frame, self.levels.black, &mut scratch.luma);
+        green_luma_with_clip(
+            &frame,
+            self.levels.black,
+            CONTAINER_MAX_DN,
+            &mut scratch.luma,
+            &mut scratch.clipped,
+        );
         if scratch.fine.is_empty() {
             scratch.field.compute(&scratch.luma, self.noise);
         } else {
@@ -535,6 +545,9 @@ impl Ctx<'_> {
 
 struct Pass1 {
     stats: FocusStats,
+    /// Census of samples pinned at the container maximum. Two bytes per pixel,
+    /// constant in the frame count, so the ratchet is untouched.
+    clip: ClipCensus,
     /// The middle frame's flat and detail ROIs, kept by whichever worker
     /// decoded it. This is the unstacked reference both invariants compare to.
     flat: Option<Vec<f32>>,
@@ -695,6 +708,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         .map(|(ci, chunk)| -> Result<Pass1> {
             let first_index = (ci * plan.chunk_len) as u16;
             let mut stats = FocusStats::new(geom);
+            let mut clip = ClipCensus::new(geom);
             let mut scratch = Scratch::new(geom, false);
             let (mut flat, mut detail) = (None, None);
             let mut t = Timings::default();
@@ -710,9 +724,12 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 stats
                     .fold(index, &scratch.reg)
                     .map_err(|e| map_dim_err(index, e))?;
+                clip.fold(&scratch.clipped)
+                    .map_err(|e| map_dim_err(index, e))?;
             }
             Ok(Pass1 {
                 stats,
+                clip,
                 flat,
                 detail,
                 t,
@@ -721,6 +738,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         .reduce_with(|a, b| match (a, b) {
             (Ok(mut a), Ok(b)) => {
                 a.stats.absorb(&b.stats).map_err(|e| map_dim_err(0, e))?;
+                a.clip.absorb(&b.clip).map_err(|e| map_dim_err(0, e))?;
                 a.flat = a.flat.or(b.flat);
                 a.detail = a.detail.or(b.detail);
                 a.t.add(b.t);
@@ -869,7 +887,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
 
     report(opts, &p2, &p1, geom, levels, &noise, middle)?;
     if opts.stats {
-        report_statistics(opts, &p2, geom, levels, &noise, &perm)?;
+        report_statistics(opts, &p2, &p1.clip, geom, levels, &noise, &perm)?;
     }
 
     if let Some(path) = &opts.out {
@@ -920,6 +938,15 @@ fn report(
     }
     eprintln!();
     report_target_solve(&p2.est, opts.target_n_eff);
+
+    // The clip census and the photometric bound are correctness statements about
+    // the stack, not diagnostics about an ROI, so they must not be gated behind
+    // an ROI flag. Reported before the early return for exactly that reason.
+    eprintln!();
+    report_clip_census(&p1.clip);
+    eprintln!();
+    report_photometric_sensitivity(p1.stats.best_focus());
+    eprintln!();
 
     let Some(roi) = opts.flat_roi else {
         eprintln!(
@@ -1121,9 +1148,72 @@ fn report(
          (ring"
     );
     eprintln!("                  operator, unregularised) and 0.868% (Tenengrad, regularised).");
-    eprintln!();
-    report_photometric_sensitivity(p1.stats.best_focus());
     Ok(())
+}
+
+/// Samples pinned at the raw container maximum, and what they do to confidence.
+///
+/// Always reported, not hidden behind `--stats`, because a clipped pixel is a
+/// correctness question rather than a diagnostic one. On a clean stack this
+/// costs one comparison per sample and prints zeros — M26 measured that four of
+/// six stacks in this corpus have no saturated pixels at all.
+fn report_clip_census(clip: &ClipCensus) {
+    let ever = clip.ever_clipped_fraction();
+    let always = clip.always_clipped_fraction();
+    let total = clip.geometry().pixels();
+    eprintln!("--- CLIPPING CENSUS (MEASURED) ---");
+    eprintln!(
+        "container max   : {CONTAINER_MAX_DN} DN. NOT the usable white level (15360) -- these are"
+    );
+    eprintln!(
+        "                  two different numbers for two different purposes and both are right:"
+    );
+    eprintln!("                  15360 bounds the noise model's calibrated range, 16383 is what");
+    eprintln!("                  \"this sample is pinned\" means. Do not unify them.");
+    eprintln!(
+        "ever clipped    : {:.4}% of pixels ({} of {}) clipped in at least one frame",
+        100.0 * ever,
+        (ever * total as f64).round() as u64,
+        total
+    );
+    eprintln!(
+        "always clipped  : {:.4}% of pixels ({} of {}) pinned in EVERY frame",
+        100.0 * always,
+        (always * total as f64).round() as u64,
+        total
+    );
+    if always > 0.0 {
+        eprintln!(
+            "                  ^ these carry ZERO focus information. M26 measured 616 such px on"
+        );
+        eprintln!(
+            "                  coffee-bubbles reading cross-frame focus contrast 1.0000, the"
+        );
+        eprintln!(
+            "                  metric's MAXIMUM, against 0.5398 median on never-clipped px --"
+        );
+        eprintln!(
+            "                  because 85.9% of them have f_min exactly 0 (inside a uniformly"
+        );
+        eprintln!(
+            "                  clipped blob the gradient is identically zero) while f_max is 52x"
+        );
+        eprintln!(
+            "                  typical (the blob edge crosses them in another frame). Discipline"
+        );
+        eprintln!("                  29 does NOT protect against this: it preferred cross-frame");
+        eprintln!("                  contrast to focus magnitude, but on a pinned pixel BOTH read");
+        eprintln!("                  their maximum, so they fail in the same direction.");
+    } else {
+        eprintln!(
+            "                  No pixel is pinned in every frame, so the maximum-severity case"
+        );
+        eprintln!("                  M26 measured on coffee-bubbles does not arise on this stack.");
+    }
+    eprintln!("                  NOTE 109MSDCF and 119MSDCF are two of the four stacks with NO");
+    eprintln!("                  saturation, and 109 is also the quietest photometrically (M24).");
+    eprintln!("                  A clean result on them is systematically weaker evidence than it");
+    eprintln!("                  looks.");
 }
 
 /// How far a per-frame photometric gain drift moves the gate, in gate units.
@@ -1272,6 +1362,7 @@ const _: () = assert!(DETAIL_COLLAPSE_FLOOR < DETAIL_RISE_FLAG);
 fn report_statistics(
     opts: &MergeOptions,
     p2: &Pass2,
+    clip: &ClipCensus,
     geom: PlaneGeometry,
     levels: Levels,
     noise: &NoiseModel,
@@ -1535,7 +1626,13 @@ fn report_statistics(
             )
         })
         .collect();
-    let (_, b) = do_not_trust_mask(&vectors, opts.confidence_tail);
+    let (mask, b) = do_not_trust_mask(&vectors, opts.confidence_tail);
+    let clip_union = (0..px.min(vectors.len()))
+        .filter(|&i| mask[i] || clip.always_clipped(i))
+        .count();
+    let clip_only = (0..px.min(vectors.len()))
+        .filter(|&i| !mask[i] && clip.always_clipped(i))
+        .count();
     eprintln!(
         "(d) CONFIDENCE VECTOR at gate {:.2} -- four channels, NOT a score",
         est.gate().threshold
@@ -1590,6 +1687,24 @@ fn report_statistics(
         "  UNION         : {:.3}% of pixels ({} of {})   -- M34 measured 14.278% at a 5% tail",
         100.0 * b.union as f64 / b.total as f64,
         b.union,
+        b.total
+    );
+    let always_n = (0..px.min(vectors.len()))
+        .filter(|&i| clip.always_clipped(i))
+        .count();
+    eprintln!(
+        "  C5 clipped    : {always_n} px pinned in EVERY frame carry no focus information at all."
+    );
+    eprintln!(
+        "                  {clip_only} of them are NOT caught by C1-C4, because a pinned pixel"
+    );
+    eprintln!(
+        "                  reads the confidence metric's MAXIMUM rather than its minimum (M26)."
+    );
+    eprintln!(
+        "  UNION + C5    : {:.3}% of pixels ({} of {})   -- the mask a consumer should use",
+        100.0 * clip_union as f64 / b.total as f64,
+        clip_union,
         b.total
     );
     // The scale-disagreement channel is new here, so report the union without it
