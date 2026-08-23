@@ -35,8 +35,8 @@ enum Command {
     /// Stack a directory of RAW files by plain per-pixel argmax.
     ///
     /// THIS IS THE NAIVE BASELINE, ON PURPOSE. It selects, per pixel, the
-    /// single frame with the highest noise-normalised ring-difference focus
-    /// measure and copies that frame's 2x2 quad. Selection is exactly the
+    /// single frame with the highest noise-normalised Tenengrad focus measure
+    /// and copies that frame's 2x2 quad. Selection is exactly the
     /// defect strehl exists to remove, and this subcommand is the reference
     /// artifact every later quality claim is measured against. It does not
     /// align, denoise, regularise the winner map, or blend frames.

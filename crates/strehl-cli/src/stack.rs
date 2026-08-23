@@ -1,7 +1,7 @@
 //! `strehl stack` — the walking skeleton.
 //!
-//! What this is, precisely: `decode -> calibrate -> NO alignment -> ring
-//! difference focus volume -> plain per-pixel argmax -> 16-bit TIFF`. That is
+//! What this is, precisely: `decode -> calibrate -> NO alignment -> Tenengrad
+//! focus volume -> plain per-pixel argmax -> 16-bit TIFF`. That is
 //! SYNTHESIS §8 step 0, and it deliberately implements the naive selector this
 //! whole project argues against, because that selector is the **named baseline
 //! artifact** every later quality claim must be a measured delta against, and
@@ -351,7 +351,8 @@ struct WorkerPlan {
 impl WorkerPlan {
     fn new(frames: usize, geom: PlaneGeometry, frame_bytes: usize, model: MemoryModel) -> Self {
         // Selection is f32 focus + 4 u16 channels + u16 index; FocusField is
-        // three f32 planes; luma is one more.
+        // three f32 planes (gradient, box scratch, focus -- unchanged by M14's
+        // move from the ring difference to Tenengrad); luma is one more.
         let px = geom.pixels();
         let per_worker_bytes = px * (14 + 12 + 4) + frame_bytes;
         let by_memory = match model {

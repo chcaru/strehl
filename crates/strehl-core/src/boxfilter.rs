@@ -1,8 +1,11 @@
 //! Separable box means by running sum.
 //!
-//! The focus measure needs a 3x3 and a 7x7 mean of every pixel of an 8.2 MP
-//! plane, once per frame. A naive gather is 9 + 49 taps per pixel; the running
-//! sum is 4 adds per pixel per axis regardless of radius.
+//! The focus measure needs a 27x27 mean of the gradient magnitude at every
+//! pixel of an 8.2 MP plane, once per frame. A naive gather is 841 taps per
+//! pixel; the running sum is 4 adds per pixel per axis regardless of radius.
+//! **That is not an optimisation, it is what makes the measured window
+//! ruling valid**: M13 §5 found cost flat in the radius to 2.53% over w1-w40
+//! and adopted a 27x27 window on the strength of it.
 //!
 //! # Border policy: clamp the box, divide by the clamped count
 //!
@@ -49,7 +52,11 @@ fn horizontal_sums(src: &[f32], w: usize, h: usize, radius: usize, scratch: &mut
         let out = &mut scratch[y * w..(y + 1) * w];
         // f64 accumulator: a sliding sum adds and subtracts once per pixel
         // across a 3516-wide row, so f32 rounding would random-walk into the
-        // low DN differences the ring filter is trying to resolve.
+        // low DN differences the focus measure is trying to resolve. At the
+        // Tenengrad window each step's rounding is ~2e-2 DN on a 27-tap sum of
+        // gradient magnitudes, which random-walks to ~1 DN across a row --
+        // percent-level against a typical windowed response. The accumulator
+        // is load-bearing, not defensive.
         let mut sum: f64 = row[..(radius + 1).min(w)].iter().map(|v| *v as f64).sum();
         for x in 0..w {
             out[x] = sum as f32;
