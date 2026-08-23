@@ -469,3 +469,116 @@ either of them**, which is the whole content of M54-7.
 - **The model is calibrated over `[0, 14848]` and the merge emits up to 15871.**
   Every censored pixel is 6.9 % outside the noise model's calibrated range by
   construction. That is now explicit rather than silent, but it is unresolved.
+
+---
+
+## 10. Re-take under M48's new `read_noise_e_high` (added 12:45, after the report was first committed)
+
+M48 changed `read_noise_e_high: 1.47 -> 1.2392` in commits `f95f6f4` … `9a7e3da`,
+timestamped **11:17:59 – 11:27:24**. Several of my harness runs are later than
+that, but one intermediate build (`cargo build --release` on the harness alone)
+showed only `Compiling m54-clip-mask` and **not** `Compiling strehl-core`, so by
+rule 33 my numbers were not admissible evidence either way until re-taken.
+
+### M54-9 — only `coffee-bubbles` was ever exposed (MEASURED, structural)
+
+`CameraProfile::read_noise_e(iso)` returns `read_noise_e_high` iff
+`iso >= second_base_iso = 400.0`, else `read_noise_e_low = 4.20`, which M48 did
+not change (`profile.rs:152-158, 188-189`).
+
+| stack | ISO | branch | exposed to M48's change? |
+|---|---|---|---|
+| coffee-bean | 50 | low, 4.20 | **no** |
+| 119MSDCF | 50 | low, 4.20 | **no** |
+| 109/112/113MSDCF | 160 | low, 4.20 | **no** |
+| coffee-bubbles | 1000 | **high** | **yes** |
+
+**Pre-registered prediction, written before the re-take:** after a forced clean
+rebuild, `coffee-bean` and the MSDCF stacks must return **bit-identical**
+numbers; only `coffee-bubbles` may move. If `coffee-bean` moves, the rebuild
+changed something other than the read-noise constant and the re-take is void.
+
+### M54-10 — the re-take is bit-identical, and my original runs already used 1.2392 (MEASURED)
+
+`cargo clean -p strehl-core -p m54-clip-mask` then rebuild, with
+`Compiling strehl-core` / `strehl-raw` / `m54-clip-mask` all visible. Every
+quoted figure came back unchanged on both stacks — census, contamination,
+winner-clip ratio, the arm B displacement and every signed delta:
+
+| quantity | coffee-bubbles before / after | coffee-bean before / after |
+|---|---|---|
+| ever >= 16383 | 41 632 / **41 632** | 784 781 / **784 781** |
+| winner frame clipped | 19 437 / **19 437** | 941 / **941** |
+| winner-clip ratio vs null | 1.4576x / **1.4576x** | 0.0101x / **0.0101x** |
+| arm B winners moved | 575 138 / **575 138** | 224 287 / **224 287** |
+| signed dDN, ever-clipped | -2883.03 / **-2883.03** | -1020.95 / **-1020.95** |
+
+The prediction held on `coffee-bean` (bit-identical, so the re-take is valid) and
+`coffee-bubbles` did not move either. The reason is visible in the harness's own
+header: it printed `sigma(0) = 2.0061` for `coffee-bubbles`, and
+`1.2392 * (1000/436.8) / sqrt(2) = 2.00606`, whereas the old constant gives
+`1.47 * (1000/436.8) / sqrt(2) = 2.3797`. **The original runs had already linked
+the new constant.** Nothing in §§1-9 needs revision.
+
+### M54-11 — the clip question is structurally insensitive to read noise (DERIVED)
+
+Worth stating because it means the timing above could not have mattered. At
+ISO 1000, `gain = 2.28938 DN/e-`, so at a plane signal of 14 848 DN:
+
+| term | new (1.2392) | old (1.47) |
+|---|---|---|
+| read-noise variance | 8.05 DN^2 | 11.33 DN^2 |
+| shot variance | 33 994.2 DN^2 | 33 994.2 DN^2 |
+| green-luma sigma | 130.3854 DN | 130.3917 DN |
+
+Shot noise outweighs read noise **4223:1** there, so a 15.7 % change in the
+constant moves sigma at the top of the range by **0.0048 %**. Every population in
+this report lives at or near saturation by construction. The same constant moves
+`sigma(0)` by **-15.7 %** (2.3797 -> 2.0061), so M48's change is large in the
+shadows and arithmetically irrelevant in the highlights — which is the only place
+a clip mask can act.
+
+### M54-12 — dependence on `FOCUS_NOISE_SD`, stated and not touched
+
+As instructed I have **not** touched `FOCUS_NOISE_SD` and treat its current value
+as given. Splitting my findings by whether they depend on it at all:
+
+- **Independent of it** (argmax-only; the gate is not involved): M54-1
+  (structural), M54-2 (census), M54-3 (histogram), M54-6 (winner-clip rate vs
+  null), and — importantly — **M54-7's winner-displacement counts and signed
+  deltas**, because both arms elect by argmax and `MaskedStats` applies no gate.
+  **The central refutation is therefore gate-free and immune to
+  `FOCUS_NOISE_SD` entirely.**
+- **Dependent on it** (through `Gate::tolerance = threshold * sqrt(2) *
+  FOCUS_NOISE_SD`): M54-4 (`n_eff`), M54-5 (the deficit table and hence the
+  pre-registered criterion), M54-8 (dilution counts) and §6's arm C blast radius.
+  If the constant is later re-derived, those tables must be re-run; the harness
+  reproduces them in about 50 s per stack. Note the gate ladder here spans 8x
+  (0.5 to 4.0) and M54-5's verdict is unchanged across all four rungs, so it
+  would take a change of more than 8x in `FOCUS_NOISE_SD` to disturb the verdict.
+
+For the record: M48 appears to have already closed this at commit `21ae46d`
+(12:00:32) — *"M48: FOCUS_NOISE_SD does not descend from the profile; no change
+needed"* — folded at `f577f42`. If that ruling stands, no re-run is required.
+
+### M54-13 — `focus.rs:287` deliberately not investigated
+
+`focus.rs` is mine and I did not edit it, because the central finding of this
+report is that the fix must **not** live there. Per the orchestrator's
+instruction I did not go looking at the hard-coded `1.47` fixture, so I have
+**no** opinion on whether its absolute value is load-bearing. It remains open and
+unexamined, and should be routed to whoever next has cause to edit that file.
+
+### Workspace state at re-take
+
+**206/206 green** with `Compiling` lines visible for all four crates — not the
+187 in the brief, because the tree also carries M53's and M55's in-flight work;
+my own contribution is +5. Twice during the re-take a `cargo test` run reported
+green with **no** `Compiling` line and was stale: one such run masked a genuine
+red, and a forced rebuild exposed
+`flat_ratio::tests::the_high_pass_ratio_catches_a_planted_explosion_the_raw_ratio_misses`
+failing (120.7943 DN against a quadrature prediction of 120.6923 DN), then a
+compile error at `flat_ratio.rs:621`. That file is M53's and was uncommitted-dirty
+throughout; it has zero references to `Estimator`, `merge::` or anything I
+changed, and it self-resolved within two minutes. Reported as observed
+cross-agent state, not touched. **Rule 33 earned its place again here.**
