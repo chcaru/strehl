@@ -10,9 +10,18 @@ the finding is that nothing survives.
 
 **Scripts.** `experiments/m57-shape-metric/src/{m57lib,s1_properties,
 s2_drift_plant,s3_real,s4_diagnostic,s5_real_nulls,s6_debias,
-s7_bias_or_variance}.py`. Logs and JSON under that experiment's `out/`.
+s7_bias_or_variance,s8_gate_significance}.py`. Logs and JSON under that
+experiment's `out/`.
 Pre-registrations: `PREREGISTRATION.md` (committed `2b1d9b0` with `src/` empty)
 and `PREREGISTRATION-2.md` (committed `a653adf` before `s6` ran).
+
+**Scope note.** The commission was later amended to record that "no candidate
+survives" was a pre-registered acceptable outcome and that nothing is gated on
+this result. The amendment arrived after the measurements were complete and
+changed none of them. Its two working instructions — do not promote a marginal
+candidate, and do not trade quality for cost — were applied as an audit of this
+document, which found and fixed one error; that audit is `s8_gate_significance`
+and the error is recorded in §9.
 
 ---
 
@@ -63,11 +72,22 @@ contrast must exceed roughly **0.1–0.5 px** depending on stack. Under that
 condition it is accurate to 4 decimal places. Outside it, it is accurate to
 about one significant figure and its published error bars are wrong.
 
+**The named failure, so the next attempt does not repeat it:** requirement 2
+fails as a **variance**, not a bias, and that variance is currently 0.343 px per
+512² ROI where the truth is 0. **One specific, cheap experiment would settle
+whether that is fatal** — whether the scatter averages down across disjoint
+ROIs (§11 item 2, Q-b, costed in S8(b) at 3–17 ROIs). It was not run here.
+Naming it does not soften the verdict: as measured, on the evidence that exists,
+K1 fails.
+
 **The strategic result is separate and matters more than the metric.**
 **MEASURED (S2 PR5b, S3 gate sweeps):** on six of eight real cells and on a
 ground-truth plant, the near-selector configuration (`n_eff` 1.4–2.4) delivers
-the **sharpest** output — by 0.50–0.74 px against the shipped gate on real data
-and by 0.556 px on the plant, where the oracle confirms it.
+the **sharpest** output — by 0.496–0.740 px against the shipped gate on real
+data, at **3.95–17.58σ** on jackknife errors corrected by S7's measured
+anti-conservatism factor (≥9.99σ uncorrected), and by 0.556 px on the plant,
+where the oracle confirms it. Of the two remaining cells, one is significant the
+*other* way and one returns `NaN` and reports nothing.
 **A resolution metric cannot defend the estimation thesis, because on
 resolution alone the selector wins.** The estimator's claim has to be
 *equal or better resolution at lower noise*, which is a two-number claim. No
@@ -567,10 +587,41 @@ measured, and a macro stack's ROIs are not obviously independent.
 | 109/centre | +0.468 | +0.231 | −0.345 | −0.520 | **−0.538** | 5.11 |
 
 **In 6 of 8 cells the near-selector is the sharpest configuration, by
-0.496–0.740 px.** These contrasts exceed the noise floor of §8.4 on the detail and
-centre ROIs; on `112/flat` (jackknife se 0.26 px, corrected ≈0.5 px) they do not,
-and that row should not be believed. `109/flat` is flat because its `n_eff`
-barely moves with the gate (11.0 → 10.8).
+0.496–0.740 px.** Rule 39 requires an error bar on each, not on one of them.
+**MEASURED**, contrast against gate 0.50 at gate 0.99, with the sector jackknife
+`se` corrected by the anti-conservatism factor S7 measured — each cell's own
+factor where S7 covered it, the median 1.904 otherwise:
+
+| cell | `dsig`(0.99) | jack `se` | factor | corrected `se` | σ | source |
+| --- | --- | --- | --- | --- | --- | --- |
+| 112/flat | −0.690 | 0.0691 | 2.52 | 0.1745 | **3.95** | own |
+| 112/detail | −0.496 | 0.0127 | 2.23 | 0.0282 | **17.58** | own |
+| 113/flat | −0.740 | 0.0699 | 1.90 | 0.1331 | **5.56** | median |
+| 113/centre | −0.629 | 0.0291 | 1.90 | 0.0553 | **11.37** | median |
+| foam/centre | −0.496 | 0.0260 | 1.90 | 0.0496 | **10.01** | median |
+| 109/centre | −0.538 | 0.0385 | 1.29 | 0.0496 | **10.85** | own |
+| 109/flat | **+0.041** | 0.0081 | 1.90 | 0.0155 | 2.64 *wrong way* | median |
+| foam/flat | `NaN` | — | — | — | — | refuses to report |
+
+**All six clear 2σ, at 3.95–17.58σ.** `109/flat` is significant in the *opposite*
+direction — the shipped gate is very slightly sharper — which is consistent with
+its `n_eff` barely moving across the sweep (11.0 → 10.8). `foam/flat` returns
+`NaN` and reports nothing, which is the designed behaviour, not a pass.
+
+**The conclusion does not depend on the correction.** At the raw, uncorrected
+jackknife every one of the six reads ≥ 9.99σ; the correction moves the weakest
+from 9.99σ to 3.95σ and changes no verdict. The correction factor itself is
+**MEASURED** (S7, 24 draws); its transfer from a re-drawn-noise perturbation to
+a gate-change perturbation is **ARGUED**, and is the reason the raw figure is
+given alongside.
+
+**Correction to an earlier draft of this section (recorded rather than silently
+fixed).** An earlier version disqualified `112/flat` as unbelievable, citing a
+jackknife `se` of 0.26 px. That number is the `se` of the gate **0.00** row, not
+the gate 0.99 row that the contrast actually uses; the correct value is 0.0691.
+`112/flat` survives at 3.95σ. **The error was conservative — it discarded a real
+result — but it was an error, and the six-of-eight count was right for the wrong
+reason on that row.**
 
 **MEASURED (S2 PR5b), with ground truth:** on the drift plant the oracle agrees
 — gate 0.99 (`n_eff` 1.45) really is 0.556 px sharper than gate 0.50.
@@ -635,7 +686,14 @@ transpose, which is bit-identical by construction and could not fail.
    were not touched.
 2. **Whether the §8.4 scatter really falls as `1/√(ROIs)`.** Asserted from the
    variance decomposition, never measured. Multi-ROI aggregation is the obvious
-   route to a usable threshold and it is untested.
+   route to a usable threshold and it is untested. **It is also cheap, and
+   S8(b) costs it:** at the measured per-ROI scatter, a 0.02 px threshold needs
+   3 / 9 / 17 disjoint 512² ROIs on `112/detail` / `112/flat` / `109/centre`,
+   and a 6000×4000 frame holds ≈91 such tiles. Under fact 644 this is one to
+   two frames' worth of area. **The premise, not the cost, is what is
+   unmeasured** — if ROIs share scene structure or fixed-pattern noise the
+   scatter will not average down, and that is exactly what the experiment would
+   find out.
 3. **A correct standard error.** S7 shows the sector jackknife is
    anti-conservative by 1.29–3.09×. No replacement estimator was built. Every
    `se` in this report needs roughly doubling and none of them has been
@@ -714,8 +772,11 @@ transpose, which is bit-identical by construction and could not fail.
 * **P11 (MEASURED).** On 6 of 8 real cells and on a ground-truth plant, the
   near-selector configuration (`n_eff` 1.4–2.4) delivers the **sharpest** output,
   by 0.496–0.740 px against gate 0.50 on real data and 0.556 px on the plant.
-  **A resolution metric alone cannot defend the estimation thesis.**
-  (S3, S2 PR5b.)
+  Every cell carries an error bar: **3.95–17.58σ** on corrected standard errors,
+  9.98–39.14σ uncorrected, verdict identical either way. Of the remaining two,
+  `109/flat` is significant in the opposite direction and `foam/flat` returns
+  `NaN`. **A resolution metric alone cannot defend the estimation thesis.**
+  (S3, S2 PR5b, S8.)
 * **P12 (MEASURED).** `dsig` returns `NaN` rather than a number in 17 of 48 real
   (cell, split) combinations, where fact 706 records `sigpow` returning a
   negative reference with an undefined sign rule. A defined refusal is available
@@ -738,13 +799,25 @@ transpose, which is bit-identical by construction and could not fail.
   candidate that removes the mechanism **entirely** rather than correcting it.
   K6 contains no logarithm; its failing worse than K1 refuted the derivation in
   one run, which a correction term alone would not have done.
+* **D-e.** Rule 39 binds **per cell**, not per claim. An earlier draft of §9
+  supported an eight-cell finding with one error bar, and that one was read off
+  the wrong row of its own table — the `se` of a different gate. Both errors
+  survive casual reading because the conclusion did not change. **When a claim
+  is a count over cells, tabulate every cell's null and `se` explicitly, and
+  state the sigma for each.** The count is the claim; the cells are the
+  evidence. (§9, S8.)
 
 ## 14. Proposed questions
 
 * **Q-a.** What is the PRNU contribution to `C(f_hi)` once flat fields exist,
   and does subtracting it move `dsig` on the cells that currently return `NaN`?
-* **Q-b.** Does the §8.4 scatter fall as `1/√(ROIs)`, and how many independent
-  512² ROIs are needed for a 0.02 px threshold on a 60-frame stack?
+* **Q-b.** Does the §8.4 scatter fall as `1/√(ROIs)`? **This is the single
+  cheapest experiment that could revive K1**, and S8(b) costs it at 3–17
+  disjoint 512² ROIs for a 0.02 px threshold — one to two frames' worth of
+  area, negligible under fact 644. It was not run here and it should be run
+  first. If the scatter averages down, K1's noise null moves from 0.343 px to
+  roughly 0.343/√N and requirement 2 comes back into reach; if it does not, the
+  variance is structural and this whole family is finished.
 * **Q-c.** What is the correct standard error for a ring-band slope statistic on
   a Hermitian FFT with correlated rings, given that the sector jackknife is
   anti-conservative by ≈1.9×?
