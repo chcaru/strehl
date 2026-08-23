@@ -1487,7 +1487,7 @@ A test suite nobody has watched go red is not evidence. Four injections, each ta
 | 2 | `FocusMeasure::measure` returns a plausible constant `0.5`; or `breathing_prior` returns `Some(ScalePrior{ ratio: 1.0, sigma: 1e-9 })` — confident and wrong | **P2** (and **P4**) — P1 still passes | Your named failure mode. A confident-constant instrument is *perfectly confluent*. Only sensitivity and the calibrated fixture see it. |
 | 3 | `std::mem::forget` an `Effect`, or swap `Vec`+pop for `Vec`+`drain(..)` (FIFO instead of LIFO disposal) | **P3** — the second run differs | Breaks Cordis's twisted composition. FIFO disposal is the subtlest of the four and would survive code review. |
 | 4 | Build the stage registry with `HashMap` and iterate it directly | **P1**, but *only* if the harness re-seeds `RandomState` per case | **Worth stating explicitly:** `HashMap` iteration order is stable *within a process*, so a naive in-process proptest would **miss this**. The harness must either use an explicitly-seeded hasher it can vary, or run cases in subprocesses. This is a place where a plausible-looking test is silently blind. |
-| 5 | A contributed `FocusMeasure` that is correct in every respect except that its response noise SD differs from the host's `FOCUS_NOISE_SD` | **NOTHING BELOW CATCHES IT** — see F5 | Added by M43, after the constant this table predates was measured. The plugin is capability-compatible, perfectly confluent, sensitive, leaves no residue, and puts the peak in the right place — so P1–P4 all pass. It is nonetheless measurably wrong: at `--gate 1.0` a `k` = 6.68 operator reverts 87.76% of pixels to pure selection. |
+| 5 | A contributed `FocusMeasure` that is correct in every respect except that its response noise SD differs from the host's `FOCUS_NOISE_SD` | **NOTHING BELOW CATCHES IT** — see F5 | Added by M43, after the constant this table predates was measured. The plugin is capability-compatible, perfectly confluent, sensitive, leaves no residue, and puts the peak in the right place — so P1–P4 all pass. It is nonetheless measurably wrong: at `--gate 1.0` a `k` = 6.68 operator reverts 89.02% of pixels to pure selection. |
 
 Fault 2 is the one you asked about, and the honest answer is that **the confluence property cannot catch it, by construction** — confluence is a statement about *determinism*, and a constant is maximally deterministic. It is caught only by P2's sensitivity assertion and P4's calibrated fixture. That is the argument for shipping all four properties rather than the elegant one.
 
@@ -1528,12 +1528,19 @@ Measured across seven textbook operators, `k` spans **10.4×**:
 | tenengrad *(shipped)* | 1.000 | 1.000 |
 | sum-modified-Laplacian | 6.680 | 0.150 |
 
-At `k` = 6.68 the tool reverts **87.76%** of pixels to pure selection — it
+At `k` = 6.68 the tool reverts **89.02%** of pixels to pure selection — it
 becomes the defect the project exists to remove — while the log, the exit code
 and the CLI's calibration block are byte-identical to a correct run. The worst
 case is not adversarial: SML is *the* canonical shape-from-focus operator, and
 therefore the single likeliest third-party contribution. The over-admitting end
 is populated by `ring(1,3)`, which is this project's own first shipped operator.
+
+> **Correction (SYNTHESIS facts 772, 778).** Both figures above read **87.76%** until
+> they were re-measured. 87.76% is M43's row for `k` = 5.94 at effective gate **0.168**;
+> `k` = 6.68 gives effective gate **0.150**, which measures **89.02%** on `109MSDCF`.
+> The mis-pairing propagated from this document into `strehl-plugin/src/reference.rs`
+> and was caught there first. Both numbers were always real; only the pairing was wrong.
+
 
 ### F5.2 Why F4 cannot catch it — this is the important part
 
