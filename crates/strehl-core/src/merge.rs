@@ -451,8 +451,17 @@ impl Estimator {
     ///
     /// Confidence channel C4. Mass at the bracket boundary means the true peak
     /// is plausibly outside the capture, so no frame here is in focus and the
-    /// merge cannot know it. M35 fact 300 measured 7.38% of `119MSDCF` in this
-    /// state — a bracket that never covered the subject.
+    /// merge cannot know it.
+    ///
+    /// **This is not fact 300's quantity, and the two must not be compared.**
+    /// M35 measured 7.38% of `119MSDCF` "at the boundary" using
+    /// `(argmax <= 1) | (argmax >= n-2)` — two frames deep at each end, on a
+    /// *decimated* stack, from an *unregularised* argmax. This is one frame
+    /// deep, on the full stack, from the regularised winner, so it reads
+    /// strictly lower: 2.02% on the same stack. M38 confirmed the two scale
+    /// together (7.38/2.02 = 3.65 against 2.08/0.61 = 3.41 on `112MSDCF`,
+    /// agreeing to 7%), which is why this is a definition gap and not a
+    /// contradiction. Cite one or the other, never both as one number.
     #[inline]
     pub fn at_bracket_boundary(&self, i: usize) -> bool {
         let k = self.best_index[i];

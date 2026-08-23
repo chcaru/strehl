@@ -2094,6 +2094,20 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     stacks, that one of the two should be re-derived before either is cited. `UNVERIFIED`.
     *(Raised by M38.)*
 
+    > **Boundary discrepancy resolved by reading M35's harness, not by re-measuring.**
+    > `experiments/m35-fit-generality/src/01-build.py:70` computes
+    > `((am <= 1) | (am >= n - 2)).mean()` — **two frames deep at each end**, on a
+    > **decimated** stack, from an **unregularised** argmax. `at_bracket_boundary` is **one**
+    > frame deep, on the **full** stack, from the **regularised** winner. All three differences
+    > push M35's number up, so 7.38% and 2.02% are the same reality read two ways.
+    > **The confirmation is that both stacks scale by the same factor**: 7.38/2.02 = **3.65**
+    > on `119MSDCF` against 2.08/0.61 = **3.41** on `112MSDCF`, agreeing to 7%. If either
+    > number were simply wrong there would be no reason for the ratios to agree. `coffee-bean`
+    > at 7.60% is genuinely the worst-covered stack in the corpus on the stricter definition —
+    > the apparent match with 119MSDCF's 7.38% was coincidence. **`merge.rs`'s doc comment
+    > invited exactly this false comparison and has been corrected.** The remaining part of
+    > this question — the gate parameterisation and `109MSDCF`'s 0.131 outlier — stands.
+
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
 be able to relink it against a modified `rawler`.** Ship it dynamically linked, or publish object

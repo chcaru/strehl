@@ -133,7 +133,52 @@ is **1.15× on 15% of pixels**. The review attached the big finding to the small
    that the verification backlog is now the project's largest risk, ahead of any unbuilt feature.
 7. **The merge's one free parameter needs a decision or a measurement, not a default.**
    `Gate::threshold` sets how far below the winner a frame may sit and still be averaged in.
-   Fact 211 already supplies the calibration target (`n_eff ≈ 3`) and `Estimator::n_eff` reports
+   Fact 212 already supplies the calibration target (`nwide = 3`) and `Estimator::n_eff` reports
    the achieved value, so this is a half-hour measurement once the merge is wired into the CLI —
    but I did not want to pick a number and have it quietly become the shipped default. See
    question 90.
+
+   > **Measured overnight, and the answer is that the question was wrong.** M38 swept the gate
+   > on five stacks: at one fixed threshold `n_eff` runs 2.26 to 7.42, and the threshold needed
+   > to hit 3 runs 1.1 to 2.9. **A fixed gate is not a calibration.** `n_eff/N` clusters at
+   > 0.068–0.079, so the acceptance set is a fixed *fraction* of the bracket. The parameter
+   > should be **the target `n_eff`**, which is also the better API — it is the quantity with a
+   > measured calibration behind it and the one you can reason about without knowing the gate's
+   > units. **No default has been shipped.** See question 95 for how the solve gets specified.
+
+8. **The detail acceptance metric was measuring noise, and it had been for a while.** This is
+   the one thing from the night I would most want a second pair of eyes on, because I found it
+   by accident. Mean |∇| over a detail ROI falls when a merge blurs *and* when a merge denoises.
+   Read uncorrected, the merge showed a **−45% detail collapse** — which is fact 24's number,
+   arriving exactly where the theory predicted a problem. It is an artifact: subtract the
+   calibrated model's noise contribution and it is **−4.6%**, replicated at −3.6% on a second
+   ROI. Roughly **90% of the apparent loss was the merge being charged for doing its job**.
+
+   The uncomfortable part is the other direction. **Fact 24 credits argmax with *raising*
+   gradient, and argmax also raises noise 1.253×** (fact 19) — so some of that flattering number
+   is the defect this project exists to remove, scored as sharpness. I have corrected the metric
+   going forward (fact 322) and left fact 24 standing with the confound noted, because
+   re-deriving it needs M2's frames and ROIs, not just its convention. **Worth deciding whether
+   fact 24 should be re-measured before it is cited again.**
+
+9. **A number to re-derive: `at_bracket_boundary` disagrees with fact 300 in a way that looks
+   like a stack mix-up.** M38 reads 7.60% on `coffee-bean` and 2.02% on `119MSDCF`; fact 300
+   (M35) reports 7.38% for `119MSDCF`. The definitions genuinely differ — all-pixel regularised
+   winner index against a parabola-fit peak on a reliable subset — so this is **not yet a
+   conflict**, and I have not treated it as one. But 7.60 and 7.38 sitting on different stacks
+   is the shape of a transposition, and one of the two should be re-derived before either gets
+   cited. Logged in question 95 as well.
+
+   > **Resolved — no action needed, and the cause was mine.** M35's harness *was* preserved, so
+   > this took reading one line rather than a re-measurement:
+   > `experiments/m35-fit-generality/src/01-build.py:70` counts **two frames deep at each end**,
+   > on a **decimated** stack, from an **unregularised** argmax. Mine counts **one** frame deep,
+   > full stack, regularised winner. Three systematic differences, all in the same direction.
+   > The clincher is that both stacks scale by the same factor between the definitions —
+   > **3.65× on `119MSDCF`, 3.41× on `112MSDCF`** — which a transposition would not produce.
+   > `coffee-bean` really is the worst-covered stack on the stricter definition; the near-match
+   > was coincidence. **The doc comment on `at_bracket_boundary` was citing fact 300 as if it
+   > were the same quantity, which is what set the trap. Fixed.** Two things worth keeping from
+   > this: preserving M35's script is what made a ten-minute resolution possible where M38 §3
+   > cost an afternoon for exactly the opposite reason, and *near-matching numbers on adjacent
+   > quantities are a smell worth chasing even when they turn out innocent*.
