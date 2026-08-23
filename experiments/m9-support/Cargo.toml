@@ -1,0 +1,23 @@
+# Own workspace root, so the parent workspace does not adopt it and a normal
+# `cargo build` at the repo root never compiles this.
+[workspace]
+
+[package]
+name = "m9-support"
+version = "0.0.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[dependencies]
+# The project's own code, so what is measured is the code the stacker runs:
+# the same box filter (same clamped-border policy), the same noise model, the
+# same plane geometry, the same argmax tie-break.
+strehl-core = { path = "../../crates/strehl-core" }
+strehl-raw = { path = "../../crates/strehl-raw" }
+rayon = "1"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1

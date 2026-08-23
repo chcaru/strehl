@@ -1,0 +1,17 @@
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+22538 candidate blocks of 256x256 at stride 16, margin 105
+flattest, non-overlapping (ranked by downsampled structure sd):
+  2361,1417,256,256   structure sd    9.967 DN   mean |grad|  19.876 DN/px   radius   820.7 px
+  2505,441,256,256   structure sd   10.219 DN   mean |grad|  20.512 DN/px   radius  1062.7 px
+  2665,1513,256,256   structure sd   10.270 DN   mean |grad|  20.193 DN/px   radius  1136.3 px
+  329,1353,256,256   structure sd   11.298 DN   mean |grad|  18.972 DN/px   radius  1337.2 px
+  649,1417,256,256   structure sd   11.998 DN   mean |grad|  19.156 DN/px   radius  1049.5 px
+  2633,1209,256,256   structure sd   12.957 DN   mean |grad|  20.171 DN/px   radius  1016.5 px
+most detailed, non-overlapping (ranked by full-resolution mean |grad|):
+  2089,1065,256,256   structure sd  595.548 DN   mean |grad|  61.567 DN/px   radius   459.5 px
+  2489,1049,256,256   structure sd  587.419 DN   mean |grad|  55.558 DN/px   radius   859.0 px
+  2889,1033,256,256   structure sd  596.013 DN   mean |grad|  51.802 DN/px   radius  1259.0 px
+  3145,1017,256,256   structure sd  609.371 DN   mean |grad|  49.067 DN/px   radius  1515.2 px
+  1449,745,256,256   structure sd  699.101 DN   mean |grad|  47.394 DN/px   radius   349.5 px
+  633,1065,256,256   structure sd  576.475 DN   mean |grad|  42.992 DN/px   radius   997.2 px
+rank of 2272,1344,256,256 (snapped to 2272,1344): structure sd 10.663 DN, mean |grad| 19.869 DN/px, 51 of 22538 grid blocks are flatter
