@@ -1029,3 +1029,79 @@ reasoning, which is a real possibility I cannot rule out from the inside.
 
 If you would rather I simply honoured the pre-commitment and killed the hunt, say so and
 I will. It costs nothing to stop.
+
+**39. One capture, one minute, lens cap on, and it is the last thing your data owes the
+sensor model.**
+
+`read_noise_e_low = 4.20` is a number strehl ships and applies to every frame the camera
+takes below ISO 400. It has been checked at ISO 50 and at ISO 100 and it is accurate at
+both, within about 2.5%. **It has never been checked at ISO 160.**
+
+That matters more than it sounds, because ISO 160 is where 22 of your real captures
+actually live. The 242 darks you sent cover eleven ISO settings and 160 is not one of
+them. The constant is validated everywhere except the setting it is used at most.
+
+**22 frames, lens cap on, dark room, same shutter speed as the darks you already shot,
+discard the first two.** Identical procedure to last time. Full detail in
+`docs/captures-needed.md` section 11.
+
+This cannot be recovered from files you already have. Read noise is measured from frames
+with no signal, and every ISO-160 frame in the corpus is a photograph of something, so
+its variance is dominated by light from the subject. I do not expect the error to be
+large. It is a hole in a claim, and it is a cheap claim to close.
+
+(The flat fields in section 10 are still outstanding too, whenever daylight cooperates.)
+
+**40. I broke one of my own rules and an auditor caught it.**
+
+Rule 31 says a fact in the decision record must cite a source that is committed and
+readable. I folded eleven rows citing a report I never committed. The evidence behind it
+lived only in a subagent's context window, and that context is gone.
+
+What I have done: committed the raw evidence that did survive, under
+`experiments/M56-citations/`, and written a stub at `docs/research/M56-citation-audit.md`
+that names precisely what is unrecoverable rather than papering over it. Those eleven
+rows are now *partially* auditable. The numbers can be re-derived from the evidence; the
+reasoning that produced them cannot.
+
+I am flagging it rather than quietly repairing it, because the rule exists specifically
+so this document can be checked by someone who is not me, and for eleven rows it could
+not be. The audit that found it was one I commissioned to check my own work, which is
+the only reason it surfaced.
+
+**41. My instruction to an agent was wrong in a way that would have made the code
+worse.**
+
+I ran a citation audit, it found five places quoting the same number, and I routed all
+five to be corrected together. The agent came back and refused three of them.
+
+The one that matters: at one site the value `5.94` looks like the same defect as the
+other four and it is not. Two different quantities pass through that comparison, and at
+that site both enter exactly as the merge actually consumes them. **Substituting the
+"correct" value I asked for would have introduced a 3.27x error in the opposite
+direction.** The agent decomposed it instead, and showed the two quantities are related
+by a factor the code can now state explicitly.
+
+The lesson is written into the project's rules: **a list of places a number appears is
+not a list of places it is wrong.** An audit that matches on a number cannot tell which
+of two true quantities a sentence needs.
+
+Every one of these audits I have commissioned has now refuted the brief that commissioned
+it. Seven for seven. I have stopped telling verifiers which answer I expect.
+
+**42. Nothing in this repository checks the document that records what the project
+believes.**
+
+The audit above found 29 defects in my own edits to the decision record. All 29 were
+found by reading it one row at a time. There is no test, no lint, no check of any kind
+that verifies a citation resolves, that a stated count matches the list printed beside
+it, or that a row still says what it claims after being amended.
+
+That is the most reproducible defect in the project, because it is the one guaranteed to
+recur. An agent is building `scripts/corpus_lint.py` from it tonight.
+
+I told it two things explicitly. First, that a check which fires falsely will be turned
+off and is worse than no check. Second, that it must report what it **cannot** catch,
+because the most valuable findings in the audit were semantic, and no linter is going to
+catch a sentence in which every number is correct, every number reproduces, and the
+sentence is still false. That happened. It is fact 772.
