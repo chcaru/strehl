@@ -252,6 +252,39 @@ count *and* the number of depth transitions inside a detector window at once.
 T6 can show the denominator moved and that S0 tracks it, but it cannot prove the
 denominator is the *only* route. It also inherits every limitation in section 7.
 
+## 7c. Addendum — T7, registered after T6 ran and before T7 ran
+
+**Ordering:** T6 has been run and read. T7 below was written afterwards and
+**before** any k2-location statistic was computed on either plant.
+
+Section 5 already makes the positive control mandatory, but states no decision
+rule for *where* a flagged second peak lands. T1 and T6 leave that gap open and
+it is load-bearing: the veiled population sits on the occluder boundary, which is
+a high-contrast edge, and M60's first pass established that a high-contrast edge
+at a *single* depth generates secondary through-focus peaks by itself. So S2's
+1.23x could be the same side-lobe artifact rather than veiling, and nothing
+measured so far separates them.
+
+The plant settles it, because it knows the answer. The background layer is at
+focus index **16** and the foreground at **4** by construction.
+
+**T7.** Among veiled pixels that S2 flags, measure the fraction whose `k2` lands
+within +/-2 frames of index 16. Compare against three references computed the
+same way: the flagged **smooth** population (no background to veil), a uniform
+chance rate over interior indices, and a frame-permutation null. Report the full
+`k2` histogram. Repeat for S0's flagged pixels.
+
+| outcome | condition | reading |
+| --- | --- | --- |
+| **VEILING** | flagged-veiled `k2` within +/-2 of 16 is **>= 2x** the uniform chance rate **and >= 2x** the flagged-smooth rate | S2's enrichment is genuine veiling; the plant contains the phenomenon and S0 cannot see it |
+| **SIDE-LOBE** | within **+/-30%** of chance, or not materially above flagged-smooth | S2's enrichment is not veiling either; the plant's veiling is undetectable by any statistic tried here |
+| **INDETERMINATE** | anything between | report as such |
+
+**What T7 cannot separate.** It is a plant result and inherits every limitation
+in section 7. `alpha_front` partial pixels are both veiled *and* on a contrast
+edge, by construction, so a positive result shows `k2` reaches the background
+index, not that it would do so in the absence of the edge.
+
 ## 8. Stopping rule
 
 If T1 returns AMBIGUOUS because M25's render cannot be reproduced, this
