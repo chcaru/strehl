@@ -1,0 +1,47 @@
+==================================================================================
+M42 -- argmin uncertainty: 6 independent (stack x replicate) subsets
+Regret is recomputed inside each subset, so the subsets really are independent.
+==================================================================================
+
+-- magnitude (shipped)
+   109MSDCF  replicate 1   argmin w13  (15 cells)   basin w10..w15
+   109MSDCF  replicate 2   argmin w13  (15 cells)   basin w10..w15
+   109MSDCF  replicate 3   argmin w13  (15 cells)   basin w10..w15
+   119MSDCF  replicate 1   argmin w13  (15 cells)   basin w12..w13
+   119MSDCF  replicate 2   argmin w13  (15 cells)   basin w12..w13
+   119MSDCF  replicate 3   argmin w13  (15 cells)   basin w12..w13
+   -> 6-subset argmin spread: w13 .. w13  ([13])
+   109MSDCF pooled over 3 replicates: argmin w13, basin w10..w15, regret(w13)-regret(min) = +0.0000 DN
+   119MSDCF pooled over 3 replicates: argmin w13, basin w12..w13, regret(w13)-regret(min) = +0.0000 DN
+
+-- squared (M17's recommendation)
+   109MSDCF  replicate 1   argmin w11  (15 cells)   basin w8..w13
+   109MSDCF  replicate 2   argmin w10  (15 cells)   basin w8..w13
+   109MSDCF  replicate 3   argmin w10  (15 cells)   basin w8..w13
+   119MSDCF  replicate 1   argmin w11  (15 cells)   basin w9..w12
+   119MSDCF  replicate 2   argmin w11  (15 cells)   basin w9..w12
+   119MSDCF  replicate 3   argmin w11  (15 cells)   basin w9..w12
+   -> 6-subset argmin spread: w10 .. w11  ([10, 11])
+   109MSDCF pooled over 3 replicates: argmin w10, basin w8..w13, regret(w13)-regret(min) = +0.6075 DN
+   119MSDCF pooled over 3 replicates: argmin w11, basin w9..w12, regret(w13)-regret(min) = +1.1326 DN
+
+-- NULL CONTROL breakdown (sigma 0 vs sigma 0, independent noise draws)
+   worst 5 arms (a null ratio far from 1.0 would mean the ladder can
+   manufacture discrimination out of noise alone):
+     tenengrad-sq-w0-nonorm        1.0683
+     tenengrad-w0-nonorm           1.0336
+     tenengrad-sq-w1-nonorm        1.0310
+     tenengrad-sq-w2-nonorm        1.0217
+     tenengrad-sq-w8-nonorm        1.0208
+   arms with null ratio > 1.02: 6 of 41  -> tenengrad-sq-w0-nonorm, tenengrad-sq-w1-nonorm, tenengrad-sq-w2-nonorm, tenengrad-sq-w6-nonorm, tenengrad-sq-w8-nonorm, tenengrad-w0-nonorm
+
+-- COST: the flat bound, stated without w0
+   magnitude    w1..w40: 3.299..3.363 ms/frame/Mpx  -> <= 1.020x  (a BOUND)
+                w0 alone: 1.931  (w0 skips the box entirely, which is why the with-w0 ratio is ~1.75x)
+   squared      w1..w40: 3.208..3.250 ms/frame/Mpx  -> <= 1.013x  (a BOUND)
+                w0 alone: 1.821  (w0 skips the box entirely, which is why the with-w0 ratio is ~1.75x)
+
+   COMBINED cost of the recommendation vs the shipped operator:
+     tenengrad-w13    (shipped)  3.334 ms/frame/Mpx   1.000x
+     tenengrad-sq-w13            3.226              0.968x
+     tenengrad-sq-w11 (new opt)  3.226              0.968x
