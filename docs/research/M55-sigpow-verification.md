@@ -84,7 +84,7 @@ learned prior, or plain FPN, which is M46's own fact 612 treated only as a nuisa
 Correct sign below ~0.7 px, **inverted above**. Reads 2.03x baseline where true MTF is 0.0068.
 `c_direct` tracks to 0.2% — the concept is fooled, not the code.
 
-### 3.2 `rho = 0.3094` is not fixed-pattern noise — PR1 — MEASURED, out of sample
+### 3.2 `rho = 0.3094` is not *dark* fixed-pattern noise — PR1 — MEASURED, out of sample
 Question 142, taken. 242 ARW, 11 ISOs, `D:\macro-dark-frames`:
 ```
        rho=0.3094 REQUIRES sigma_FPN =  4.390 DN (var   19.270 DN^2)
@@ -97,6 +97,23 @@ against my 0.2888 — **3.6% across two decoders, two estimators, two milestones
 valid common-mode fraction; the attribution to FPN is wrong. On the real flat ROI `C(f)` runs
 221 959x the dark FPN level at f = 0.051 down to 44.9x at 0.488, falling steeply — a white FPN
 component would read flat.
+
+**Addendum, added after commit `c7ce4f0`: independently corroborated, and my heading was too
+strong.** While I was working, **M48b** took the same route (`12fd078`, `d7eedfa`) with its own
+code. Its DSNU at ISO 500 is **0.4029 DN per green plane**; averaging two independent green
+photosites into my quad plane predicts `0.4029/sqrt(2) = 0.2849` against my measured
+**0.2888** - **1.4%, two implementations, same frames**. It derives the PRNU needed to close
+the gap as **4.36%**; I derived **4.119%**. It places the DSNU shortfall at **596x** in
+variance at the frame-median signal and **64x** at a tenth of it; I measured **231x** at a
+more conservative operating point. **Three numbers, two agents, no shared code.**
+
+M48b also makes a scoping point that corrects **my heading**, and I record it against myself:
+`rho_dark = D^2/(R^2+D^2)` and `rho_M46 = (D^2+(P*S)^2)/(g*S+R^2+D^2+(P*S)^2)` are different
+quantities, and **PRNU is fixed-pattern too**. The defensible statement is therefore
+*"`rho = 0.3094` is not **dark** fixed-pattern noise, and closing it requires a
+signal-proportional term of ~4.1-4.4% that is 4-15x published CMOS PRNU"* - not the flat
+"is not fixed-pattern noise" I titled 3.2 with. The measurement and the body text are
+unchanged and unaffected; the title overstated them. **P2 is worded to the corrected scope.**
 
 ### 3.3 Fact 610's "0.4% confirmation" has no power — PR3 — MEASURED
 Planted `rho` from 0.02 to 3.0, ratio measured/predicted 0.9658 … 0.9998. **Every value
@@ -425,7 +442,11 @@ Numbers are placeholders. **P1–P15 attack the original definition; P16–P29 t
   fact 565 / sqrt(2) to 3.6%. Answers question 142.
 - **P2 (MEASURED).** `rho = 0.3094` requires 4.390 DN; the sensor delivers 0.2888 DN — a
   **231x shortfall in variance**. Fact 610's `rho` is a valid common-mode fraction but is
-  **not FPN**; closing it needs a 4.1% PRNU term (ARGUED implausible; question 111 open).
+  **not *dark* FPN (DSNU)**; closing it needs a signal-proportional term of ~4.1% (M48b,
+  independently and concurrently, 4.36%), which is 4-15x published CMOS PRNU (ARGUED
+  implausible; question 111 open). **Corroborated out of sample by M48b's independent
+  measurement**: its DSNU 0.4029 DN/plane vs my 0.2888 DN/quad agree to **1.4%** after the
+  sqrt(2) quad average. PRNU is itself fixed-pattern, so the claim is scoped to darks.
 - **P3 (MEASURED).** Dark FPN ring spectrum is flat to ~20% — **FPN is white, as fact 612
   says** — but real half-merge common power runs 44x–221 959x above it and falls steeply with
   frequency, so FRC censoring on real data is scene and aliased content, not FPN.
