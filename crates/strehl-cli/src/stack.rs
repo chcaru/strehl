@@ -218,7 +218,9 @@ pub fn run(opts: &StackOptions) -> Result<()> {
 
     let plan = WorkerPlan::new(paths.len(), geom, frame_bytes, opts.memory_model);
 
-    eprintln!("strehl stack -- naive per-pixel argmax baseline (SYNTHESIS §8 step 0)");
+    eprintln!(
+        "strehl argmax-baseline -- naive per-pixel argmax (NOT THE DEFAULT; a negative control)"
+    );
     eprintln!("camera          : {camera}");
     eprintln!(
         "iso             : {}",

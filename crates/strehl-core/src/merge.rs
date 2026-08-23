@@ -244,6 +244,58 @@ pub struct Gate {
     pub threshold: f32,
 }
 
+/// The gate the shipped default path runs at (M64).
+///
+/// This is the single exposed knob's resting position, and it is the most
+/// contestable number in the merge. What it is chosen against, and what it is
+/// *not*:
+///
+/// # Why 4.0
+///
+/// The gate compares each frame against a **maximum over N frames**. Under the
+/// null that every frame has equal true focus, the winner sits about
+/// `E[max of N standard normals]` above the mean — 2.04σ at N = 30 — so a
+/// tolerance of `threshold * sqrt(2)` σ admits a statistically indistinguishable
+/// frame only once it clears that selection offset plus a tail. **A fixed
+/// `threshold` is therefore an N-dependent statement**, and M62 measured where
+/// it lands on a 30-frame static burst where every frame is *provably* identical
+/// in focus and the correct answer is known exactly (MEASURED, M62 §6.2):
+///
+/// | `threshold` | mean `n_eff` / 30 | noise reduction | ideal |
+/// | --- | --- | --- | --- |
+/// | 0 | 1.00 / 30 | 0.9768x | 5.4772 |
+/// | 2 | 18.4 / 30 | 3.7764x | 5.4772 |
+/// | **4** | **29.5 / 30** | **5.4316x** | 5.4772 |
+/// | 8 | 30.0 / 30 | 5.4777x | 5.4772 |
+///
+/// At `threshold = 2` the merge **rejects 11.6 of 30 frames it should have
+/// admitted** — an error in the selector direction, and the direction this
+/// project exists to correct. At 4.0 it admits 98.5% of them.
+///
+/// # Why not 8.0, which scores marginally better
+///
+/// `threshold = 8` is a tolerance of `8 * sqrt(2) = 11.3` σ of the focus field's
+/// own noise, and [`tests::real_focus_contrast_is_far_larger_than_the_noise_scale`]
+/// pins real focus contrast at **> 20 σ** — so 8.0 spends over half the
+/// discriminating margin to buy 0.8% of noise. It is also off the ladder every
+/// corpus stack was measured on, so no real stack has ever been run there.
+/// 4.0 is 5.66 σ, 3.5x inside the margin, and M52 measured it on real stacks:
+/// `109MSDCF` admits 5.017 of 22 frames, `foam` 1.361 of 24 — still selecting
+/// hard, not degenerate (MEASURED, M52 §5.3).
+///
+/// # What this number costs, stated where it cannot be missed
+///
+/// **The sharpness price of gate 4.0 on real frames is not measured anywhere in
+/// this corpus, on any axis.** Fact 322 bounds noise-corrected detail loss
+/// across the whole shipped sweep on `109MSDCF` at −4.6%…−0.5% of mean |∇|,
+/// which per rule 18 is admissible against *collapse* only and is not a
+/// resolution measurement. M57's 0.496–0.740 px deficit is measured on a
+/// **fractional peak-height** gate that runs in the opposite direction, so it
+/// does not transfer to this axis except through mean `n_eff`. Anyone raising
+/// this constant on the strength of a √N score alone is tuning to a plant where
+/// every frame is in focus — see M62's own §4, which says so first.
+pub const DEFAULT_GATE: f32 = 4.0;
+
 impl Gate {
     pub fn new(threshold: f32) -> Self {
         assert!(
@@ -2244,5 +2296,314 @@ mod tests {
         let a = run(g, 3, Gate::new(1.0), |_, _| 1.0);
         let b = run(g, 90, Gate::new(1.0), |_, _| 1.0);
         assert_eq!(a.allocated_bytes(), b.allocated_bytes());
+    }
+
+    // ---- the sqrt(N) invariant on the DEFAULT path (M64) -------------------
+
+    /// Frames, plane and scoring window for the static-burst fixture.
+    ///
+    /// `N = 12` rather than M62's 30 because this runs in `cargo test` on every
+    /// commit and the plant is decoded twelve times through two full passes; the
+    /// invariant does not depend on `N`, only the tolerances do, and they are
+    /// derived from this `N` below.
+    const BURST_N: u16 = 12;
+    const BURST_W: usize = 128;
+    const BURST_H: usize = 128;
+    /// Every scored pixel must have its whole support inside the plane.
+    /// `SUPPORT_RADIUS` (14 = Sobel 1 + window 13) plus `REGULARISER_RADIUS`
+    /// (8) is 22; 32 leaves ten quads of margin.
+    const BURST_INSET: usize = 32;
+    /// Fixed so the test is deterministic. Not swept: a threshold that only
+    /// holds for one seed would be a threshold chosen after seeing the data, and
+    /// the margins below (R about 3.4 against a 1.70 floor) are wide enough that
+    /// seed choice is not doing the work.
+    const BURST_SEED: u64 = 0x4D36_3400_0000_0001;
+
+    /// The latent scene, in DN of green luma. Identical in every frame — this is
+    /// a *static burst*, so the only thing that differs between frames is noise.
+    ///
+    /// It has real gradient structure because the focus response is
+    /// `box_mean(|grad L|) / sigma(L)` and a structureless plant would make the
+    /// numerator pure noise, which is a different experiment. The level is kept
+    /// near 200 DN so that `unit_sigma_model`'s shot term stays negligible
+    /// against its read term (1% of variance) and the model the gate uses is the
+    /// one the noise was actually drawn from.
+    fn burst_latent(px: usize, py: usize) -> f32 {
+        let (x, y) = (px as f32, py as f32);
+        200.0 + 60.0 * ((x / 7.0).sin() * (y / 5.0).cos() + 0.5 * ((x + y) / 11.0).sin())
+    }
+
+    /// One frame of the burst: the latent plus independent read noise on each
+    /// green, quantised to `u16` as a real sensor would.
+    ///
+    /// Per-plane sigma is `sqrt(2)` DN, so the green luma `0.5*(G1+G2)` carries
+    /// sigma exactly 1 DN — which is what `unit_sigma_model` declares. R and B
+    /// are constant and unused: the score is on green.
+    fn burst_frame(rng: &mut Rng) -> QuadGrid {
+        let mut noise: Vec<[f32; 2]> = Vec::with_capacity(BURST_W * BURST_H);
+        for _ in 0..BURST_W * BURST_H {
+            noise.push([
+                std::f32::consts::SQRT_2 * rng.normal(),
+                std::f32::consts::SQRT_2 * rng.normal(),
+            ]);
+        }
+        QuadGrid::new(BURST_W, BURST_H, |px, py| {
+            let l = burst_latent(px, py);
+            let n = noise[py * BURST_W + px];
+            let q = |v: f32| v.round().clamp(0.0, 65535.0) as u16;
+            [1000, q(l + n[0]), q(l + n[1]), 1000]
+        })
+    }
+
+    /// Pooled RMS of `a - b` over the inset interior.
+    fn burst_rms(a: &[f32], b: &[f32]) -> f64 {
+        let mut acc = 0.0f64;
+        let mut n = 0usize;
+        for py in BURST_INSET..BURST_H - BURST_INSET {
+            for px in BURST_INSET..BURST_W - BURST_INSET {
+                let i = py * BURST_W + px;
+                let d = (a[i] - b[i]) as f64;
+                acc += d * d;
+                n += 1;
+            }
+        }
+        (acc / n as f64).sqrt()
+    }
+
+    /// Runs the **whole default path** — `green_luma`, `FocusField::compute`,
+    /// `regularise`, pass one, pass two at `gate` — over one static burst.
+    ///
+    /// Returns `(noise reduction R, mean n_eff, single-frame RMS)`. `R` is the
+    /// pooled single-frame RMS against the latent divided by the merged RMS
+    /// against the same latent, which is M62's statistic.
+    fn burst_score(gate: Gate, seed: u64) -> (f64, f64, f64) {
+        let g = PlaneGeometry {
+            width: BURST_W,
+            height: BURST_H,
+        };
+        let noise = unit_sigma_model();
+        let px = g.pixels();
+
+        let mut rng = Rng::new(seed);
+        let frames: Vec<QuadGrid> = (0..BURST_N).map(|_| burst_frame(&mut rng)).collect();
+
+        // The truth, in the same units the merge outputs: green luma of the
+        // noiseless latent. `green_luma` subtracts black, which is 0 here.
+        let truth: Vec<f32> = (0..px)
+            .map(|i| burst_latent(i % BURST_W, i / BURST_W))
+            .collect();
+
+        let mut luma = vec![0.0f32; px];
+        let mut field = FocusField::new(g);
+        let mut scratch = vec![0.0f32; px];
+        let mut reg = vec![0.0f32; px];
+
+        // Every frame's regularised response, computed exactly as `merge_cmd`'s
+        // `field_for` does, and kept so both passes see the same arithmetic.
+        let mut fields: Vec<Vec<f32>> = Vec::with_capacity(BURST_N as usize);
+        // The per-frame single-frame error, pooled across frames: the reference
+        // an ideal estimator improves on by sqrt(N).
+        let mut single_sq = 0.0f64;
+        for frame in &frames {
+            crate::plane::green_luma(frame, 0.0, &mut luma);
+            single_sq += burst_rms(&luma, &truth).powi(2);
+            field.compute(&luma, &noise);
+            regularise(field.values(), g, &mut scratch, &mut reg);
+            fields.push(reg.clone());
+        }
+        let single = (single_sq / BURST_N as f64).sqrt();
+
+        let mut stats = FocusStats::new(g);
+        for (k, f) in fields.iter().enumerate() {
+            stats.fold(k as u16, f).unwrap();
+        }
+        let mut est = Estimator::new(&stats, gate);
+        for (k, f) in fields.iter().enumerate() {
+            est.fold(k as u16, &frames[k], f).unwrap();
+        }
+        assert!(est.every_pixel_is_decided());
+
+        let merged: Vec<f32> = (0..px).map(|i| est.green_mean(i)).collect();
+        let r = single / burst_rms(&merged, &truth);
+
+        // n_eff over the same scored window, not the whole plane: a pixel whose
+        // support runs off the edge is not one this test is reading.
+        let (mut acc, mut n) = (0.0f64, 0usize);
+        for py in BURST_INSET..BURST_H - BURST_INSET {
+            for pxi in BURST_INSET..BURST_W - BURST_INSET {
+                acc += est.n_eff()[py * BURST_W + pxi] as f64;
+                n += 1;
+            }
+        }
+        (r, acc / n as f64, single)
+    }
+
+    /// **The acceptance invariant for the shipped default path (M64).**
+    ///
+    /// On a static burst — focus untouched, subject still — every frame is an
+    /// equally good measurement of the same latent, so the correct answer is
+    /// known *exactly*: average them, and the noise falls by `sqrt(N)`. This is
+    /// the one test in this project whose right answer is arithmetic rather than
+    /// a preference.
+    ///
+    /// A selector cannot get there. It copies one frame per pixel, so it
+    /// inherits that frame's noise, and because the frame is chosen *using* that
+    /// same noise the choice is correlated with it and the result is worse than
+    /// one frame. M62 measured the shipped argmax at **0.7690x** against
+    /// `sqrt(30) = 5.4772` — a 1.30x noise increase — on the identical plant
+    /// where the estimating merge scored 5.4778x.
+    ///
+    /// This test runs the **default path's own code at [`DEFAULT_GATE`]**, not a
+    /// hand-built fold: `green_luma` -> [`crate::focus::FocusField::compute`] ->
+    /// [`regularise`] -> pass one -> pass two, which is the chain
+    /// `merge_cmd::Ctx::field_for` runs. If the default is ever moved back
+    /// towards selection this goes red.
+    ///
+    /// # Why these thresholds and not tighter ones
+    ///
+    /// The plant is 4096 scored pixels of a 128x128 plane, so the RMS ratio
+    /// carries real sampling error, and `R` is bounded above by
+    /// `sqrt(mean n_eff)` — a merge cannot beat the arithmetic of what it
+    /// admitted. The assertions are therefore: the *ideal* mean of all `N`
+    /// recovers `sqrt(N)` (this is the harness calibrating itself, and it is
+    /// tight at 2%); the default admits enough frames to be averaging at all;
+    /// `R` is far above any selector; and `R` is within 20% of the Jensen bound
+    /// its own acceptance set sets. Deliberately loose against `sqrt(N)`,
+    /// because `DEFAULT_GATE` is not chosen to maximise this number — see its
+    /// doc comment — and a tight band here would silently become a demand that
+    /// the gate be raised until this test is happy, which is tuning to a plant
+    /// where every frame is in focus.
+    ///
+    /// The negative control is in the same test, per rule 39: gate 0 is the same
+    /// code path with the acceptance set collapsed to the winner alone, and it
+    /// must land at or below 1.0. Without it, "R is large" would be consistent
+    /// with the harness measuring nothing.
+    #[test]
+    fn the_default_path_reaches_the_arithmetic_limit_on_a_static_burst() {
+        let n = BURST_N as f64;
+        let ideal = n.sqrt();
+
+        // (a) The harness, calibrated against itself. A plain mean of every
+        //     frame must recover sqrt(N) on this plant, or nothing measured
+        //     below means anything.
+        let (r_ideal, _, _) = burst_score(Gate::new(1e6), BURST_SEED);
+        assert!(
+            (r_ideal - ideal).abs() / ideal < 0.02,
+            "harness: a gate wide enough to admit every frame scored {r_ideal:.4}, \
+             but the arithmetic answer is sqrt({n}) = {ideal:.4}. The plant or the \
+             reference is wrong, and no verdict below is readable."
+        );
+
+        // (b) The default path.
+        let (r, n_eff, _) = burst_score(Gate::new(DEFAULT_GATE), BURST_SEED);
+        assert!(
+            n_eff >= 3.0,
+            "the default gate averaged only {n_eff:.3} frames per pixel on a burst \
+             where every frame is an equally valid measurement. Rule 36: a fixture \
+             that does not exercise averaging cannot test an estimator."
+        );
+        assert!(
+            r >= 1.70,
+            "the DEFAULT path scored {r:.4}x on a static burst where sqrt({n}) = \
+             {ideal:.4} is provably correct and a selector scores about 1.0. \
+             The shipped default has regressed towards selection."
+        );
+        let bound = n_eff.sqrt();
+        assert!(
+            r >= 0.80 * bound,
+            "the default path scored {r:.4}x while admitting {n_eff:.3} frames per \
+             pixel, whose arithmetic bound is {bound:.4}x. It is wasting samples it \
+             already paid to decode."
+        );
+
+        // (c) The negative control, in the same test (rule 39). Gate 0 is the
+        //     same code with the acceptance set collapsed to the winner alone.
+        let (r0, n0, _) = burst_score(Gate::new(0.0), BURST_SEED);
+        assert!(
+            (n0 - 1.0).abs() < 1e-9,
+            "gate 0 admitted {n0:.6} frames per pixel; it must admit exactly the winner"
+        );
+        assert!(
+            r0 <= 1.05,
+            "the gate-0 SELECTOR scored {r0:.4}x. A selector cannot beat one frame, \
+             so this harness is measuring something other than what it claims."
+        );
+        assert!(
+            r > 2.0 * r0,
+            "the default ({r:.4}x) is not separated from selection ({r0:.4}x); \
+             whatever this test is measuring, it is not the estimator."
+        );
+
+        // Printed so a CI log carries the measurement and not just a green tick.
+        // `cargo test -p strehl-core -- --nocapture the_default_path_reaches`.
+        eprintln!(
+            "sqrt(N) invariant: N = {BURST_N}, ideal = {ideal:.4}\n  \
+             all-frames mean : {r_ideal:.4}x  (harness calibration, must be ideal +/- 2%)\n  \
+             DEFAULT_GATE {DEFAULT_GATE:<4}: {r:.4}x  at mean n_eff {n_eff:.3}, \
+             bound sqrt(n_eff) = {bound:.4}\n  \
+             gate 0 selector : {r0:.4}x  at mean n_eff {n0:.3}  (negative control)"
+        );
+    }
+
+    /// **Where this fixture stops being able to fail**, pinned so the previous
+    /// test's power is a measurement rather than a hope.
+    ///
+    /// A green tick on a √N test proves nothing unless something makes it red.
+    /// The negative control at gate 0 is one such input, but gate 0 is a
+    /// degenerate special case (the acceptance set is literally the winner), so
+    /// on its own it leaves open the possibility that *any* non-zero gate
+    /// passes — which would make the invariant unable to see a default quietly
+    /// lowered from 4.0 to 0.5.
+    ///
+    /// This walks the ladder and requires three structural things, none of them
+    /// a tuned constant: the acceptance set widens monotonically with the gate;
+    /// the score widens with it; and **at least one non-zero gate below
+    /// [`DEFAULT_GATE`] scores under the 1.70 floor the invariant asserts**.
+    /// That last clause is the power claim, and if a future change to the
+    /// operator makes every gate pass, this test goes red and says so.
+    ///
+    /// # What it also documents
+    ///
+    /// The reason a static Gaussian burst admits essentially every frame at
+    /// `t = 4`: the gate rejects a frame when the winner beats it by more than
+    /// `t·√2` SDs of the response, the winner is a max over `N` and so sits
+    /// about `E[max of N normals]` = 1.63 SDs up at `N = 12`, and
+    /// `4·√2 = 5.66 > 1.63`, so a rejection needs a frame 4 SDs *below* the
+    /// mean. That is DERIVED and the ladder below is the MEASURED check on it.
+    /// It is also why `DEFAULT_GATE` cannot be chosen from this test: everything
+    /// from about 2 upwards looks identical here, and the real cost of the
+    /// difference is on a focus axis this plant does not have.
+    #[test]
+    fn the_burst_fixture_can_fail_below_the_default_gate() {
+        let ladder: Vec<(f32, f64, f64)> = [0.25f32, 0.5, 1.0, 2.0, DEFAULT_GATE]
+            .iter()
+            .map(|t| {
+                let (r, n_eff, _) = burst_score(Gate::new(*t), BURST_SEED);
+                (*t, r, n_eff)
+            })
+            .collect();
+        for w in ladder.windows(2) {
+            let (t0, r0, n0) = w[0];
+            let (t1, r1, n1) = w[1];
+            assert!(
+                n1 >= n0 - 1e-9,
+                "acceptance shrank between gate {t0} ({n0:.3}) and gate {t1} ({n1:.3})"
+            );
+            assert!(
+                r1 >= r0 - 1e-9,
+                "score fell between gate {t0} ({r0:.4}x) and gate {t1} ({r1:.4}x)"
+            );
+        }
+        let weak = ladder
+            .iter()
+            .filter(|(t, _, _)| *t > 0.0 && *t < DEFAULT_GATE)
+            .find(|(_, r, _)| *r < 1.70);
+        assert!(
+            weak.is_some(),
+            "no non-zero gate below DEFAULT_GATE scored under the 1.70 floor, so the \
+             invariant cannot distinguish the shipped default from a near-selector. \
+             Ladder: {ladder:?}"
+        );
+        eprintln!("burst ladder (gate, R, mean n_eff): {ladder:?}");
     }
 }

@@ -683,7 +683,9 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     // `shuffle_destroys_adjacency_which_a_rotation_does_not` holds the line.
     let perm: Vec<u16> = shuffled_indices(paths.len(), PLACEBO_SEED);
 
-    eprintln!("strehl merge -- regularised winner + noise-gated average (the estimation merge)");
+    eprintln!(
+        "strehl stack -- regularised winner + noise-gated average (THE DEFAULT PATH, an estimator)"
+    );
     eprintln!("camera          : {camera}");
     eprintln!(
         "iso             : {}",

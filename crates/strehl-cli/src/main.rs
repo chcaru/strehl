@@ -12,6 +12,7 @@ use clap::{Parser, Subcommand};
 
 use merge_cmd::MergeOptions;
 use stack::{MemoryModel, Roi, StackOptions, parse_roi};
+use strehl_core::merge::DEFAULT_GATE;
 
 #[derive(Parser)]
 #[command(name = "strehl", version, about = "Noise-aware RAW focus stacking")]
@@ -34,94 +35,89 @@ enum Command {
         limit: Option<usize>,
     },
 
-    /// Stack a directory of RAW files by plain per-pixel argmax.
+    /// Stack a directory of RAW files into one image, by noise-gated
+    /// ESTIMATION. This is the default path and the thing strehl is for.
     ///
-    /// THIS IS THE NAIVE BASELINE, ON PURPOSE. It selects, per pixel, the
-    /// single frame with the highest noise-normalised Tenengrad focus measure
-    /// and copies that frame's 2x2 quad. Selection is exactly the
-    /// defect strehl exists to remove, and this subcommand is the reference
-    /// artifact every later quality claim is measured against. It does not
-    /// align, denoise, regularise the winner map, or blend frames.
+    /// Two passes. Pass one elects a winner per pixel from a 17x17-REGULARISED
+    /// focus field. Pass two averages every frame whose regularised response the
+    /// calibrated sensor noise model cannot separate from that winner's. Where
+    /// one frame is unambiguously sharpest it degenerates to selection; where
+    /// several are indistinguishable it averages them, and averaging is the only
+    /// operation that gets BELOW single-frame noise.
     ///
-    /// Output is BINNED, NOT DEMOSAICED: each output pixel is one real sensor
-    /// quad, R = R, G = (G1+G2)/2, B = B, at half the sensor's linear
-    /// resolution. There is no interpolation, so no demosaic artifact
-    /// contaminates the baseline.
+    /// Every shipping focus stacker selects: it picks one frame per pixel and
+    /// therefore inherits that frame's noise, and because the pick is made using
+    /// that same frame's noise the two are correlated and the noise is amplified
+    /// rather than merely retained. On a 30-frame static burst where the right
+    /// answer is known exactly to be sqrt(30) = 5.48x less noise, selection
+    /// scores 0.77x -- a 1.3x noise INCREASE -- and this path scores 5.43x.
+    /// (MEASURED, docs/research/M62-sqrt-n.md.) Run `strehl argmax-baseline` to
+    /// reproduce the selector number yourself.
     ///
-    /// Default output is LINEAR and will look very dark in an ordinary viewer.
-    /// That is correct: it is what measurement needs. Pass --srgb for something
-    /// to look at, and do not measure that file.
-    Stack {
-        /// Directory containing RAW files.
-        dir: PathBuf,
-        /// Where to write the stacked 16-bit RGB TIFF.
-        #[arg(short, long)]
-        out: PathBuf,
-        /// Stack at most this many frames, in filename order.
-        #[arg(short, long)]
-        limit: Option<usize>,
-        /// Apply the sRGB transfer curve. For looking at, NOT for measuring.
-        #[arg(long)]
-        srgb: bool,
-        /// Also write the winner map: a 16-bit grayscale TIFF holding the
-        /// literal winning frame index per pixel. Smooth depth-ordered bands
-        /// are what a real scene should give; salt-and-pepper speckle in it is
-        /// the argmax defect made visible. Values are 0..N-1, so autoscale it
-        /// to look at it.
-        #[arg(long, value_name = "PATH")]
-        index_map: Option<PathBuf>,
-        /// Measure the noise penalty over a low-detail region, in PLANE
-        /// coordinates (half sensor resolution). Reports the spatial sigma of
-        /// the stacked green channel against the same region in the single
-        /// middle frame, and their ratio.
-        #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
-        flat_roi: Option<Roi>,
-        /// How to turn the memory budget into a worker count. `m8` is the
-        /// default: buffers plus the MEASURED decoder scratch, rayon reduce
-        /// tree and process floor. `buffers` is the pre-M8 model, kept for
-        /// comparison — it MEASURED (M8) licenses more workers than the budget
-        /// pays for. Output is byte-identical either way; only the worker count
-        /// changes. See `docs/research/M8-scratch-measured.md`.
-        #[arg(long, value_enum, default_value_t = MemoryModel::M8)]
-        memory_model: MemoryModel,
-    },
-
-    /// Merge a directory of RAW files by noise-gated estimation.
-    ///
-    /// THIS IS THE THESIS. Two passes: pass one elects a winner per pixel from
-    /// a 17x17-REGULARISED focus field, pass two averages every frame whose
-    /// regularised response the calibrated noise model cannot separate from
-    /// that winner. Where one frame is unambiguously sharpest it degenerates to
-    /// selection; where several are indistinguishable it averages them, which
-    /// is the only operation that goes below single-frame noise.
+    /// THERE IS ONE KNOB: --gate. It is a continuum, not a mode switch. Read its
+    /// help for what you are trading; the short version is that low is sharper
+    /// and noisier, high is cleaner and softer, and the honest price list is
+    /// there rather than here.
     ///
     /// It does not yet align, deconvolve, reject outliers, or model occlusion.
     ///
-    /// The gate threshold is UNCALIBRATED on purpose. Pass several `--gate`
-    /// values and they all run in the same pass two for the cost of one decode
-    /// budget; calibrate against the reported mean n_eff.
-    ///
-    /// Output is BINNED, NOT DEMOSAICED, and LINEAR unless --srgb is passed.
-    /// Do not measure an --srgb file.
-    Merge {
+    /// Output is BINNED, NOT DEMOSAICED: each output pixel is one real sensor
+    /// quad, R = R, G = (G1+G2)/2, B = B, at half the sensor's linear
+    /// resolution. Output is LINEAR and will look very dark in an ordinary
+    /// viewer. That is correct: it is what measurement needs. Pass --srgb for
+    /// something to look at, and do not measure that file.
+    #[command(alias = "merge")]
+    Stack {
         /// Directory containing RAW files.
         dir: PathBuf,
         /// Where to write the merged 16-bit RGB TIFF. Requires exactly one
         /// --gate. Omit it to measure without writing an image.
         #[arg(short, long)]
         out: Option<PathBuf>,
-        /// Merge at most this many frames, in filename order.
+        /// Stack at most this many frames, in filename order.
         #[arg(short, long)]
         limit: Option<usize>,
         /// Apply the sRGB transfer curve. For looking at, NOT for measuring.
         #[arg(long)]
         srgb: bool,
-        /// Gate threshold, in units of the combined focus noise: a frame is
-        /// averaged in where its regularised response is within
-        /// `t * sqrt(2) * FOCUS_NOISE_SD` of the winner's. Repeatable; every
-        /// value is folded in the same pass two, so a sweep costs one decode
-        /// budget rather than one per value.
-        #[arg(long = "gate", value_name = "T", num_args = 1.., default_values_t = [0.5, 1.0, 2.0, 4.0])]
+        /// The one knob: how much averaging, in units of the focus noise.
+        ///
+        /// A frame is averaged in where its regularised focus response is within
+        /// `T * sqrt(2) * FOCUS_NOISE_SD` of the winner's. T = 0 is pure
+        /// selection -- one frame per pixel, the thing every other stacker does.
+        /// Raising T admits more frames per pixel and the merge moves along a
+        /// CONTINUUM towards a gated mean. There is no second mode; this dial is
+        /// the whole tradeoff surface.
+        ///
+        /// WHAT YOU ARE TRADING. The comparable axis at both ends is the mean
+        /// number of frames actually averaged per pixel, `mean n_eff`, which
+        /// every run prints. Turning the dial up buys noise and spends
+        /// sharpness:
+        ///
+        ///   NOISE, on a 30-frame static burst where sqrt(30) = 5.48x is
+        ///   provably correct (MEASURED, M62): T=0 scores 0.98x, T=2 3.78x,
+        ///   T=4 5.43x, T=8 5.48x. On real frames a plain unweighted mean of a
+        ///   whole 22-frame stack reaches 0.534x flat-ROI noise (fact 19), and
+        ///   the shipped T=2 reaches 0.890x (fact 320).
+        ///
+        ///   SHARPNESS: that same plain mean collapses detail 58% (fact 24), and
+        ///   that is what the gate exists to avoid. The nearest measured price
+        ///   for admitting more frames is M57's: going from mean n_eff 12.4 to
+        ///   1.45 recovered 0.556 px of PSF width against an oracle-confirmed
+        ///   ground truth, and 0.496-0.740 px on 6 of 8 real cells at
+        ///   3.95-17.58 sigma. READ THE CAVEAT: M57 swept a FRACTIONAL
+        ///   peak-height gate, not this one, and its axis runs the opposite way.
+        ///   Mean n_eff is the only axis the two share, so treat those pixels as
+        ///   the scale of the price, not as a value of T. The sharpness cost of
+        ///   THIS gate on real frames is not measured in this corpus, and no
+        ///   number here should be read as claiming otherwise.
+        ///
+        /// Repeatable: every value is folded in the same pass two, so a sweep
+        /// costs one decode budget rather than one per value. Calibrate against
+        /// the reported mean n_eff -- the gate that gives a chosen n_eff varies
+        /// 28.9x across the corpus (MEASURED, M52), so a gate is not portable
+        /// between stacks and a default is a starting point, not a calibration.
+        #[arg(long = "gate", value_name = "T", num_args = 1.., default_values_t = [DEFAULT_GATE])]
         gates: Vec<f32>,
         /// Low-detail region for the noise invariant, in PLANE coordinates
         /// (half sensor resolution).
@@ -133,24 +129,29 @@ enum Command {
         #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
         detail_roi: Option<Roi>,
 
-        /// Solve the gate ladder for the gate achieving this mean n_eff.
+        /// Report which gate would achieve this mean n_eff. A CALIBRATION AID,
+        /// NOT A SECOND KNOB.
         ///
-        /// This is the parameter to set, not --gate. A fixed gate is not a
-        /// calibration, and the effect is far larger than fact 324 published:
-        /// M52 re-measured all SEVEN stacks against the current pipeline and
-        /// found mean n_eff at gate 2.0 spanning 1.177 (foam) to 14.386
-        /// (coffee-bean), a 12.22x spread, with the gates that solve for a
-        /// given n_eff spanning 0.7618 to 21.9934 - a factor of 28.9.
+        /// It solves the measured gate ladder by interpolation and PRINTS the
+        /// answer. It does not change the merged image: --out still writes at
+        /// --gate. To use it, run once without --out to read the solved gate,
+        /// then pass that gate. This limitation is real and is recorded as
+        /// defect 11 in docs/research/M49-unapplied-findings.md; wiring it to
+        /// the output needs a third pass over the frames and M64 did not build
+        /// one.
+        ///
+        /// Why the number it prints is worth having: a fixed gate is not a
+        /// calibration. M52 re-measured all SEVEN corpus stacks against the
+        /// current pipeline and found mean n_eff at gate 2.0 spanning 1.177
+        /// (foam) to 14.386 (coffee-bean), a 12.22x spread, with the gates that
+        /// solve for a given n_eff spanning 0.7618 to 21.9934 - a factor of
+        /// 28.9. foam CANNOT reach n_eff = 3 anywhere on the 0.5-4.0 ladder.
         ///
         /// Fact 324's own numbers for the two ISO-50 stacks are stale: they
         /// were folded before commit 2a4f5c5 corrected the ISO-50 gain floor,
         /// so 119MSDCF is 2.847 and not 2.258, and coffee-bean is 14.386 and
         /// not 7.422. Its stated mechanism - that n_eff is a roughly fixed
         /// fraction of bracket length - is refuted: n_eff/N ranges 11.6x.
-        ///
-        /// Practical consequence: foam CANNOT reach n_eff = 3 anywhere on the
-        /// shipped 0.5-4.0 ladder. Fact 212's nwide = 3 is the calibration
-        /// target, and on some stacks this flag is the only way to hit it.
         #[arg(long, value_name = "N")]
         target_n_eff: Option<f64>,
 
@@ -187,6 +188,67 @@ enum Command {
         #[arg(long, value_name = "Q", default_value_t = 0.05)]
         confidence_tail: f64,
     },
+
+    /// Stack by plain per-pixel argmax. THE NAIVE BASELINE, NOT THE DEFAULT.
+    ///
+    /// THIS IS A REFERENCE ARTIFACT, ON PURPOSE, AND YOU SHOULD NOT SHIP ITS
+    /// OUTPUT. It selects, per pixel, the single frame with the highest
+    /// noise-normalised Tenengrad focus measure and copies that frame's 2x2
+    /// quad. Selection is exactly the defect strehl exists to remove, and this
+    /// subcommand is the artifact every quality claim is measured against. It
+    /// does not align, denoise, regularise the winner map, or blend frames.
+    ///
+    /// It was `strehl stack` until M64. It scores 0.77x on the 30-frame static
+    /// burst whose correct answer is 5.48x -- a 1.3x noise INCREASE (MEASURED,
+    /// docs/research/M62-sqrt-n.md). It is kept, and kept runnable, because a
+    /// project that deletes its negative control can no longer show that its
+    /// instrument can fail. Use `strehl stack --gate 0` for a selector that
+    /// shares the estimator's regularised winner field; use this one for the
+    /// unregularised argmax as shipped before M64.
+    ///
+    /// Output is BINNED, NOT DEMOSAICED: each output pixel is one real sensor
+    /// quad, R = R, G = (G1+G2)/2, B = B, at half the sensor's linear
+    /// resolution. There is no interpolation, so no demosaic artifact
+    /// contaminates the baseline.
+    ///
+    /// Default output is LINEAR and will look very dark in an ordinary viewer.
+    /// That is correct: it is what measurement needs. Pass --srgb for something
+    /// to look at, and do not measure that file.
+    #[command(name = "argmax-baseline")]
+    ArgmaxBaseline {
+        /// Directory containing RAW files.
+        dir: PathBuf,
+        /// Where to write the stacked 16-bit RGB TIFF.
+        #[arg(short, long)]
+        out: PathBuf,
+        /// Stack at most this many frames, in filename order.
+        #[arg(short, long)]
+        limit: Option<usize>,
+        /// Apply the sRGB transfer curve. For looking at, NOT for measuring.
+        #[arg(long)]
+        srgb: bool,
+        /// Also write the winner map: a 16-bit grayscale TIFF holding the
+        /// literal winning frame index per pixel. Smooth depth-ordered bands
+        /// are what a real scene should give; salt-and-pepper speckle in it is
+        /// the argmax defect made visible. Values are 0..N-1, so autoscale it
+        /// to look at it.
+        #[arg(long, value_name = "PATH")]
+        index_map: Option<PathBuf>,
+        /// Measure the noise penalty over a low-detail region, in PLANE
+        /// coordinates (half sensor resolution). Reports the spatial sigma of
+        /// the stacked green channel against the same region in the single
+        /// middle frame, and their ratio.
+        #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
+        flat_roi: Option<Roi>,
+        /// How to turn the memory budget into a worker count. `m8` is the
+        /// default: buffers plus the MEASURED decoder scratch, rayon reduce
+        /// tree and process floor. `buffers` is the pre-M8 model, kept for
+        /// comparison — it MEASURED (M8) licenses more workers than the budget
+        /// pays for. Output is byte-identical either way; only the worker count
+        /// changes. See `docs/research/M8-scratch-measured.md`.
+        #[arg(long, value_enum, default_value_t = MemoryModel::M8)]
+        memory_model: MemoryModel,
+    },
 }
 
 fn main() -> Result<()> {
@@ -203,7 +265,7 @@ fn main() -> Result<()> {
 
     match Cli::parse().command {
         Command::Probe { dir, limit } => probe(&dir, limit),
-        Command::Stack {
+        Command::ArgmaxBaseline {
             dir,
             out,
             limit,
@@ -220,7 +282,7 @@ fn main() -> Result<()> {
             flat_roi,
             memory_model,
         }),
-        Command::Merge {
+        Command::Stack {
             dir,
             out,
             limit,
