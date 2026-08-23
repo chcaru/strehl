@@ -177,7 +177,7 @@ FIXTURES = [
 
     # ---- the promoted status check ---------------------------------------
     ("A4a: a fact says a question is MOOT; §10 does not", "fire",
-     ["A4"], "does not carry that word",
+     ["A4"], "records no settled verdict",
      doc(facts="| 3 | **Question 170 is MOOT.** | None. | M58 |\n",
          s5=CLEAN_5,
          s10="170. **A question still open.** Nothing has settled it.\n")),
@@ -242,6 +242,40 @@ FIXTURES = [
      ["S5"], "unpaired after code-span stripping",
      doc(s5="9. **A discipline quoting a pipeline.** It runs `decode ->\n"
             "   calibrate -> select end to end.\n",
+         s10=CLEAN_10)),
+
+    # ---- the two mechanisms the HELD-OUT set found ------------------------
+    # Neither could occur in the in-sample set: §4's own prose happened to reuse
+    # §10's exact marker word, and §4's citations happened not to bridge a
+    # clause boundary. Both were false positives out of sample (M46:58 and
+    # M56-citation-audit.md:531) and are now fixed. Each has a control, because
+    # a silent fixture must prove it could have fired (discipline 425).
+    ("A4e: vocabulary mismatch — 'answered' vs a §10 marked CLOSED", "silent",
+     ["A4"], None,
+     doc(facts="| 3 | **Question 120 is answered.** | None. | M46 |\n",
+         s5=CLEAN_5,
+         s10="120. **A question settled under a different word.** **CLOSED** "
+             "by a measurement.\n")),
+
+    ("A4e-control: same sentence, but §10 records no verdict at all", "fire",
+     ["A4"], "question 120 is ANSWERED",
+     doc(facts="| 3 | **Question 120 is answered.** | None. | M46 |\n",
+         s5=CLEAN_5,
+         s10="120. **A question with no verdict.** Nothing has settled it.\n")),
+
+    ("A4f: window bridging — a citation and a verdict in separate clauses",
+     "silent", ["A4"], None,
+     doc(facts="| 3 | **A row citing one thing and asserting another.** | "
+               "(discipline 316) \u2014 the brief's expectation is refuted. | "
+               "M56 |\n",
+         s5="316. **A discipline with no verdict on it.** Body.\n",
+         s10=CLEAN_10)),
+
+    ("A4f-control: drop the clause boundary, keep everything else", "fire",
+     ["A4"], "discipline 316 is REFUTED",
+     doc(facts="| 3 | **A row citing one thing and asserting another.** | "
+               "discipline 316 is refuted. | M56 |\n",
+         s5="316. **A discipline with no verdict on it.** Body.\n",
          s10=CLEAN_10)),
 ]
 

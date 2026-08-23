@@ -919,7 +919,29 @@ def check_a2_count_vs_enumeration(index):
     return out
 
 
+# A settled question may be marked with any of these; the words are synonyms in
+# practice, and A4 must not fire merely because a report said "answered" where
+# §10 said "closed". Found out of sample -- see check_a4_status_coherence.
+SETTLED_MARKERS = frozenset((
+    "MOOT", "ANSWERED", "CLOSED", "RESOLVED", "REFUTED", "WITHDRAWN",
+    "SUPERSEDED",
+))
+
 QUOTED_SPAN = re.compile(r"\"[^\"]*\"|\u201c[^\u201d]*\u201d")
+
+# Hoisted to module level so heldout_probe.py measures the SHIPPED matcher
+# rather than a copy of it that can drift out of step with this one.
+A4_CLAIM = re.compile(
+    r"\b(question|discipline)\s+(\d{1,4})\b(?![\w.])"
+    r"(?P<mid>(?:(?!--)[^.;|)\u2014]){0,60}?)"
+    r"\b(?P<mk>%s)\b" % "|".join(STATUS_MARKERS), re.I)
+A4_NEGATION = re.compile(r"\b(cannot|can't|not|never|no longer|still|un)\b", re.I)
+
+
+def a4_corroborated(body, marker):
+    """True if `body` records a settled verdict compatible with `marker`."""
+    wanted = SETTLED_MARKERS if marker in SETTLED_MARKERS else {marker}
+    return any(re.search(r"\b%s\b" % re.escape(w), body, re.I) for w in wanted)
 
 
 def check_a4_status_coherence(index):
@@ -958,12 +980,33 @@ def check_a4_status_coherence(index):
     prose, the exclusion list is where to look first -- and demoting it back to
     an advisory is the correct response, not widening the exclusions until the
     number goes away.
+
+    OUT-OF-SAMPLE TEST. Running this matcher over every source EXCEPT
+    SYNTHESIS.md -- 402 report files, commit messages, rust and OWNER-QUESTIONS,
+    none of which informed the rules -- gave 67 candidates, and exposed two
+    false-positive mechanisms the in-sample set structurally could not contain:
+
+      1. MARKER VOCABULARY. M46 says "Question 120 is answered"; §10's question
+         120 says `CLOSED`. The question IS settled; only the word differs. In
+         §4 the words happened to align, so this was invisible. Corroboration is
+         therefore tested against SETTLED_MARKERS as an equivalence class, not
+         against the exact word. This preserves all four real detections at
+         eceecb5, whose items carried NO status word at all -- verified by
+         re-running against that blob.
+      2. WINDOW BRIDGING. `discipline 316) -- **the brief's expectation is
+         refuted` matched across a bracket and a dash into an unrelated clause.
+         The 60-character window now stops at `)`, `--` and an em dash as well
+         as at `.`, `;` and `|`.
+
+    What the equivalence class costs: a claim of "answered" is now corroborated
+    by an item reading `CLOSED, REOPENED` -- question 119's shape. A4 sees that
+    §10 has an opinion, not that the opinion has since moved on. Ordering
+    verdicts is beyond a regex, and a check that guesses at it would fire on
+    every legitimately contested item.
     """
     out = []
-    pat = re.compile(
-        r"\b(question|discipline)\s+(\d{1,4})\b(?![\w.])(?P<mid>[^.;|]{0,60}?)"
-        r"\b(?P<mk>%s)\b" % "|".join(STATUS_MARKERS), re.I)
-    negation = re.compile(r"\b(cannot|can't|not|never|no longer|still|un)\b", re.I)
+    pat = A4_CLAIM
+    negation = A4_NEGATION
     kind_section = {"question": 10, "discipline": 5}
     for i, line in enumerate(index.syn.lines):
         if index.syn.fenced[i]:
@@ -978,7 +1021,7 @@ def check_a4_status_coherence(index):
             body = index.item_body(kind_section[kind], num)
             if not body:
                 continue                                  # C1 owns non-existence
-            if re.search(r"\b%s\b" % re.escape(marker), body, re.I):
+            if a4_corroborated(body, marker):
                 continue
             if m.group(0) not in visible:
                 continue                                  # struck through
@@ -991,8 +1034,8 @@ def check_a4_status_coherence(index):
                 continue
             out.append(Violation(
                 SYNTHESIS, i + 1, "A4",
-                "this says %s %d is %s, but §%d's %s %d does not carry that "
-                "word. Either the verdict was written into the wrong namespace "
+                "this says %s %d is %s, but §%d's %s %d records no settled "
+                "verdict at all. Either it was written into the wrong namespace "
                 "(M58c, commit 39b5ca7) or §%d was never updated."
                 % (kind, num, marker, kind_section[kind], kind, num,
                    kind_section[kind]),

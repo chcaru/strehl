@@ -1001,6 +1001,8 @@ carries an unresolved systematic that fact 804 resolved by measurement.
 `fixture_probe.py` now runs 22 synthetic documents. MEASURED: **22 of 22 behaved
 as declared**; `fixture_show.py` prints the unfiltered text of every red, and
 each is the intended check with the intended message and no `Traceback`.
+(§10.2 later added four more, for 26; the count in this heading is the count at
+commit `0e88bb3`, left as measured rather than rewritten.)
 
 The five added for this round, as asked:
 
@@ -1048,6 +1050,194 @@ Unchanged from §5 and §8.7, plus three specific to this round:
   still false (fact 772), a number correct in one configuration and quoted into
   another (fact 768). Nine checks and thirteen ids later, that boundary has not
   moved.
+
+
+---
+
+## 10. Milestone identity, and an out-of-sample test of A4
+
+Two questions from the fourth turn. One is a check I was asked to consider and
+have declined to build; the other is a test of a check I already shipped, and it
+found two real bugs in it.
+
+### 10.1 Milestone identity: a reasoned no, and the convention that would fix it
+
+**The defect.** `M60` currently resolves to three unrelated threads by more than
+one author (MEASURED, at `a4c8abb`):
+
+| thread | artefact |
+|---|---|
+| robustness mask at merge time | `M60-robustness-mask-at-merge-time.md`, `M60c-speckle-citation-and-the-gate.md` |
+| prior art and the rival explanations | `M60-prior-art-and-the-rival-explanations.md` |
+| bimodality | `experiments/M60-bimodality/` — **no report file at all** |
+
+The brief described a two-way collision. It is a **three**-way collision: the
+third thread has an experiment directory and no report, so any check that reads
+`docs/research/` alone cannot see it. **59 bare `M60` references across 11 files
+are ambiguous** (MEASURED), including folded ones.
+
+**Why I am not shipping a check.** I tested the three signals a linter could use.
+All three fail, and they fail for the same reason: *the repository does not
+record milestone identity anywhere, so every candidate signal is a proxy.*
+
+1. **Filename — 80% false positive rate (MEASURED).** The natural rule is "two
+   files with a bare `MNN-` prefix and no letter suffix means two milestones".
+   It flags **5 numbers: M2, M20, M53, M55, M60.** Only M60 is a real collision.
+   M2 (`baseline-skeleton`, `rss-resolved`, `verification`), M20
+   (`VERIFICATION`, `deconvolution-ceiling-measured`), M53 (`flat-ratio`,
+   `flat-roi-statistic`) and M55 (`acceptance-spec`, `sigpow-verification`) are
+   each one milestone written in several parts that simply never adopted the
+   letter suffix. **Four of five firings are false.** That is squarely the rate
+   the brief asked me not to ship, and worse than the `_` arm I already refused
+   in §9.
+2. **Authorship — unusable (MEASURED).** `git log --format=%an` over all 293
+   commits gives **292 × "Chris Caruso" and 1 × "M60"** (commit `5dee1f4`, one
+   agent that happened to set `user.name`). Every agent commits as the owner, so
+   "different author" is not observable. This is the signal the brief suggested
+   might work, and it is the deadest of the three.
+3. **Slug similarity — unusable (MEASURED).** The intuition is that parts of one
+   milestone share a topic. They do not. The two *legitimate* multi-part
+   milestones have entirely unrelated slugs: **M48** is `read-noise` /
+   `fpn-rho` / `defect-layer`; **M58** is `citation-content-repaired` /
+   `fold-fidelity-audit` / `repair-audit`. A similarity threshold that clears
+   M48 and M58 cannot possibly flag M60, whose slugs are no more different.
+
+**The general result (DERIVED).** *The filename cannot distinguish "one
+milestone, several parts" from "two milestones, one number", because the
+distinction is not a property of the filename — it is a property of who was
+dispatched and what they were asked to do, and that is not written down.* No
+amount of cleverness recovers information the repository never stored. A check
+here would be inferring intent from spelling.
+
+**The convention I propose instead.** Make identity explicit, then the check
+becomes trivial and exact — a lookup, not an inference.
+
+> Add a **milestone index** to `AGENTS.md` (owner-maintained, one line per
+> milestone number), assigning each number a single subject at dispatch time:
+>
+> ```
+> | M58 | fold fidelity of the SYNTHESIS folds       | M58, M58b, M58c |
+> | M60 | robustness mask at merge time              | M60, M60c       |
+> | M61 | prior art and the rival explanations       | M61             |
+> ```
+>
+> The linter then checks three things mechanically, with **zero** inference:
+> every `MNN*` report file and `experiments/MNN*` directory is listed under
+> exactly one row; every listed part exists; and no number appears twice. A
+> collision becomes a missing index entry, which is a fact about the file, not a
+> guess about the author.
+
+Two notes on adopting it. The index must be **written at dispatch**, before the
+work, or it degrades into a description of whatever happened — which is how M60
+collided in the first place. And it must cover `experiments/`, or the
+third M60 thread stays invisible; `experiments/` also currently **mixes casing**
+(`m20-`, `m53-` beside `M55-`, `M60-`), which any path-matching rule must fold.
+
+I did not touch `AGENTS.md`. **The renumbering is the owner's call**: one of the
+three M60 threads needs a new number, and all 59 references need revisiting,
+which is exactly the kind of edit the brief reserves to the orchestrator.
+
+### 10.2 An out-of-sample estimate of A4's false-positive rate — yes, and it found two bugs
+
+The question was whether the corpus already contains material that could
+estimate A4's false-positive rate without the in-sample circularity. **It does,
+the estimate is valid for the thing A4 actually does wrong, and running it was
+the most productive hour of this milestone.**
+
+**The held-out set.** A4's exclusions were derived by reading six §4 rows. Held
+out: every report file except `SYNTHESIS.md`, plus `OWNER-QUESTIONS.md`,
+`AGENTS.md`, `crates/**/*.rs`, and **every commit message** — **402 sources**
+(MEASURED), none of which I looked at when writing the rules.
+
+**Is it a valid held-out set?** Partly, and the split matters:
+
+- **Valid for the matcher's false-positive rate.** A4's exclusions are
+  *grammatical* — possessive subject, reported speech, negation, strikethrough.
+  Grammar does not know which file it is in. A possessive that fools the matcher
+  in §4 fools it in `M25-simulator-measured.md`, so held-out prose is a fair test
+  of the **matcher**. This is the same property that made the exclusions worth
+  keeping in §9: they generalise because they are grammatical rather than tuned.
+- **Invalid for A4's defect rate in its shipped scope.** A milestone report
+  legitimately asserts a status *before* the fold — that is what a report is for.
+  A residual in `M46-*.md` may be pending work rather than inconsistency, so the
+  held-out set cannot tell me how many *defects* A4 would find. It can only tell
+  me how often the matcher misreads a sentence. **A4 still runs on `SYNTHESIS.md`
+  only**, and I did not widen it.
+
+**The result (MEASURED, at `a4c8abb`).** Running the *shipped* matcher — the
+probe imports `corpus_lint.A4_CLAIM` and `corpus_lint.a4_corroborated` rather
+than reimplementing them, so it cannot drift out of step with what ships:
+
+| | count |
+|---|---|
+| candidates matched | **65** |
+| corroborated | 63 |
+| excluded (negation) | 1 |
+| excluded (reported speech) | 1 |
+| **residual — would be reported** | **0** |
+
+**Zero false positives on 65 held-out candidates.** Before the two fixes below,
+the same probe gave **67 candidates and 9 residual**.
+
+**The two bugs, which the in-sample set structurally could not contain.** This is
+the payoff, and it is worth more than the rate:
+
+1. **Marker vocabulary mismatch.** `M46-*.md:58` says "Question 120 is
+   *answered*"; §10's question 120 carries **`CLOSED`**. A4 demanded the *same
+   word* and so called a correct sentence a defect. In §4 the wording happened to
+   coincide every time, so **this failure mode could not appear in-sample at
+   all** — not rarely, but never. Fixed with a `SETTLED_MARKERS` equivalence
+   class (`MOOT ANSWERED CLOSED RESOLVED REFUTED WITHDRAWN SUPERSEDED`), so any
+   settled word corroborates any settled claim.
+2. **Window bridging.** `M56-citation-audit.md:531` reads
+   `…discipline 316) — **the brief's expectation is refuted`. A4's 60-character
+   window ran straight across the `)` and the em dash and joined a citation to an
+   unrelated clause's verdict. Fixed by excluding `)`, `--` and `—` from the
+   window, which is a clause boundary in this corpus's prose style.
+
+**The cost of the equivalence class, stated plainly.** Question 119 carries both
+`CLOSED` and `REOPENED`. "Question 119 is answered" now corroborates against it.
+A4 can see *that* §10 has an opinion; it cannot see that the opinion has since
+moved on. Verdict *ordering* is beyond a regex, and I am not attempting it.
+
+**The regression that mattered more than the rate.** Both fixes make A4 strictly
+more forgiving, which is precisely how a calibrated check dies quietly
+(discipline 426: the failure mode of a calibrated check is not that it breaks, it
+is that it gets widened). So `a4_regression.py` rebuilds a probe root from
+`git show eceecb5:docs/research/SYNTHESIS.md` — the blob where the four real
+defects were still live — and asserts all four still fire. **They do: questions
+101, 80, 120, 161, all four retained** (MEASURED). Loosening the matcher removed
+9 false positives and 0 true ones.
+
+Note question **120** appears in both lists. The same question was a *true*
+detection in §4 and the source of a *false* one in `M46`, which is a neat
+illustration that A4 is checking a relationship between two texts, not a property
+of a number.
+
+**Four new fixtures** (26 total, all passing): each mechanism silent, and each
+with a control that removes only the trigger and confirms the fixture could have
+fired (discipline 425).
+
+**What the held-out result does and does not settle.** The in-sample caveat is
+**narrowed, not removed**. The *exclusion rules* are now partly tested out of
+sample; the *choice of which markers count as a verdict* was informed by held-out
+data, so `SETTLED_MARKERS` is itself in-sample with respect to that set. A third,
+genuinely untouched corpus would be needed to close that, and this repository
+does not contain one. Also, only one exclusion firing was cleanly independent
+before the fix — `M25-simulator-measured.md:1129`, *"question 132's leading
+**candidate** is closed"*, a different wording by a different milestone, excluded
+correctly. Five of the other firings were in my own prose, written after I
+derived the rules. After the fix even that firing is masked, because the
+equivalence class now *corroborates* it: the pipeline is right, but the
+possessive rule is no longer independently exercised out of sample, and its power
+now rests on the `A4b-control` fixture alone.
+
+**One more thing the held-out set cannot estimate.** It measures how often A4
+fires *wrongly*. It says nothing about how often A4 stays silent when it should
+fire — the false-*negative* rate — because that requires knowing every real
+inconsistency in the corpus, which is the very thing the check exists to find and
+which nobody has enumerated. **A4's sensitivity is still unmeasured.** Every
+number in this section is about specificity.
 
 ---
 
