@@ -1,0 +1,32 @@
+(i) codes in [600,700): 100 distinct of 100 possible, modal gap 1
+(i) codes in [2400,2600): 200 distinct of 200 possible, modal gap 1
+(i) codes in [6000,6200): 0 distinct of 200 possible, modal gap 0
+    (all gaps 1 => not code-quantised in that range)
+
+(ii) PTC by RATIO, 14162 patches of 24x24 (dof 575).
+     ratio = var(G1-G2) / model.  A percentile of a chi2_dof/dof is divided out,
+     so an unstructured patch reads 1.000 in expectation.
+      signal bin      n        p2        p5       p10       p25
+      150-   250    337     0.981     0.991     0.986     1.016  
+      250-   350    411     0.978     0.985     0.985     0.984  
+      350-   450   1613     0.980     0.983     0.987     0.991  
+      450-   600    981     1.000     1.004     1.007     1.019  
+      600-   800    460     1.036     1.035     1.043     1.074  
+      800-  1000    195     1.188     1.320     1.582     2.840  
+     1000-  1300    381     1.242     1.296     1.422     1.921  
+     1300-  1700   2391     1.032     1.035     1.038     1.040  
+     1700-  2200   6801     1.050     1.050     1.050     1.051  
+     (a well-calibrated model with clean flat patches available in every bin
+      reads ~1.000 at the LOW percentiles; > 1 means the model UNDER-predicts.)
+
+(iii) temporal-pair sigma in the flat ROIs: Var(frame_k - frame_k+1)/2
+   ROI 2272,1344: mean  2020.79 DN   model Var(L) =   371.29 DN^2
+     Var(diff)/2 over the 21 consecutive pairs: min   358.67  median   364.69  max   417.85
+     k = sqrt(min/model) = 0.9829   k = sqrt(median/model) = 0.9911  (UPPER bounds)
+     disjoint-half high-pass covariance =   24.944 DN^2 (temporal noise contributes ZERO in expectation)
+     => fixed high-frequency component f <= 5.097 DN at 2021 DN  (still an UPPER bound: shared scene texture)
+   ROI 2352,1408: mean  2019.75 DN   model Var(L) =   371.10 DN^2
+     Var(diff)/2 over the 21 consecutive pairs: min   356.65  median   365.44  max   429.03
+     k = sqrt(min/model) = 0.9803   k = sqrt(median/model) = 0.9923  (UPPER bounds)
+     disjoint-half high-pass covariance =   24.425 DN^2 (temporal noise contributes ZERO in expectation)
+     => fixed high-frequency component f <= 5.044 DN at 2020 DN  (still an UPPER bound: shared scene texture)

@@ -1,0 +1,78 @@
+==============================================================================
+ATTACK 1 -- does the (2,1,1) structure matter where sigma is NOT uniform?
+==============================================================================
+  ROI A gate  0.0  n in [1,2]  sigma spread 4.498-14.719 DN   corrected   23.5395   (1,1,2):+0.001%  (4,0,0):-0.001%  (0,2,2):+0.001%
+  ROI A gate  2.0  n in [1,7]  sigma spread 2.762-14.719 DN   corrected   23.4970   (1,1,2):-0.002%  (4,0,0):+0.007%  (0,2,2):-0.007%
+  ROI A gate  8.0  n in [1,22]  sigma spread 1.556-14.139 DN   corrected   22.4604   (1,1,2):-0.001%  (4,0,0):+0.004%  (0,2,2):-0.004%
+  ROI B gate  0.0  n in [1,1]  sigma spread 3.979-20.209 DN   corrected   39.1378   (1,1,2):+0.046%  (4,0,0):-0.049%  (0,2,2):+0.049%
+  ROI B gate  2.0  n in [1,9]  sigma spread 1.381-20.071 DN   corrected   37.6324   (1,1,2):+0.020%  (4,0,0):-0.021%  (0,2,2):+0.021%
+  ROI B gate  8.0  n in [1,22]  sigma spread 0.918-18.194 DN   corrected   37.7404   (1,1,2):+0.004%  (4,0,0):-0.005%  (0,2,2):+0.005%
+  => the coefficient STRUCTURE is worth <0.3% even where n varies 1..22.
+     It is correct (script 01), but NO test in the repo can see it: every
+     detail_metrics test passes a spatially uniform sigma array.
+
+==============================================================================
+ATTACK 2 -- selection seams inflate the gate-0 reference
+==============================================================================
+  ROI A:  3.65% of difference pairs cross a winner boundary, carrying  1.63% of the squared-gradient energy
+          mean sq gradient across a seam is  0.44x the within-winner value
+  ROI B:  3.99% of difference pairs cross a winner boundary, carrying  4.68% of the squared-gradient energy
+          mean sq gradient across a seam is  1.18x the within-winner value
+
+==============================================================================
+ATTACK 3 -- what blur does -4.6% correspond to? (metric calibration)
+==============================================================================
+  ROI A: gate-0 corrected 23.5395
+    blur sd   corrected     d%      m2      d%    p25|grad|    d%
+       0.00     23.5395   +0.00%   12.654   +0.00%      9.849   +0.00%
+       0.10     23.5395   +0.00%   12.654   +0.00%      9.849   +0.00%
+       0.20     23.5392   -0.00%   12.654   -0.00%      9.849   -0.00%
+       0.30     23.2115   -1.39%   12.488   -1.31%      9.697   -1.54%
+       0.40     20.2605  -13.93%   11.009  -13.00%      8.337  -15.35%
+       0.50     15.6584  -33.48%    8.836  -30.17%      6.268  -36.36%
+       0.70      9.3476  -60.29%    6.570  -48.08%      3.976  -59.63%
+       1.00      0.0000 -100.00%    5.439  -57.02%      2.850  -71.06%
+  ROI B: gate-0 corrected 39.1378
+    blur sd   corrected     d%      m2      d%    p25|grad|    d%
+       0.00     39.1378   +0.00%   19.531   +0.00%      9.394   +0.00%
+       0.10     39.1378   +0.00%   19.531   +0.00%      9.394   +0.00%
+       0.20     39.1374   -0.00%   19.530   -0.00%      9.394   -0.00%
+       0.30     38.6440   -1.26%   19.273   -1.32%      9.255   -1.48%
+       0.40     34.3285  -12.29%   16.975  -13.09%      8.083  -13.96%
+       0.50     28.2694  -27.77%   13.577  -30.48%      6.279  -33.16%
+       0.70     22.5248  -42.45%   10.001  -48.79%      4.421  -52.94%
+       1.00     19.6975  -49.67%    8.233  -57.85%      3.476  -63.00%
+
+==============================================================================
+ATTACK 4 -- RMS is dominated by the strongest edges. Is it blind to the
+            total destruction of low-contrast fine detail?
+==============================================================================
+  strong edges + fine texture : corrected   333.5759   m2   49.5904
+  fine texture DELETED ENTIRELY: corrected   331.3667   m2   27.4510
+  => deleting 100% of the fine detail costs the corrected metric -0.66% and m2 -44.64%
+     A -4.6% reading is therefore compatible with total loss of low-contrast
+     detail. The metric bounds the STRONG edges, not "detail".
+
+==============================================================================
+ATTACK 5 -- low SNR: invariance break and the max(0,.) clamp
+==============================================================================
+   contrast   raw_rms  noise_rms  corrected(noisy)  corrected(clean)   error
+      1.000    33.316     24.000           23.1080           23.1781    -0.30%
+      0.500    26.538     24.000           11.3259           11.5890    -2.27%
+      0.250    24.491     24.000            4.8801            5.7945   -15.78%
+      0.100    24.209     24.000            3.1745            2.3178   +36.96%
+      0.050    24.204     24.000            3.1321            1.1589  +170.27%
+      0.020    23.877     24.000            0.0000            0.4636  -100.00%
+      0.010    24.019     24.000            0.9576            0.2318  +313.15%
+   (the clamp bites, and the estimator becomes badly biased, once the signal
+    gradient falls under roughly half the noise gradient)
+
+==============================================================================
+ATTACK 6 -- SAME marginal sigma, but spatially correlated / anti-correlated
+==============================================================================
+  white (model is right)   marginal sd 11.930  raw_rms   33.311  corrected   23.0999  vs true   23.1781  (  -0.34%)
+  correlated 3x3           marginal sd 12.000  raw_rms   27.022  corrected   12.4173  vs true   23.1781  ( -46.43%)
+  anti-correlated          marginal sd 12.000  raw_rms   34.836  corrected   25.2502  vs true   23.1781  (  +8.94%)
+  => the correction is exact ONLY for pixel-independent noise. Any stage that
+     resamples (alignment) makes it CONSERVATIVE; any stage that sharpens or
+     deconvolves makes it OPTIMISTIC -- it would credit amplified noise as detail.

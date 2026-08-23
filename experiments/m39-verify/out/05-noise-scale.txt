@@ -1,0 +1,30 @@
+model: g = 0.366300 DN/e-, read = 4.2 e- = 1.538462 DN, read^2 = 2.366864 DN^2
+plane (2344, 3514)
+7957 patches of 32x32, dof 1023
+chi2 5.0th-percentile correction factor: 0.92840
+
+  signal bin      n    var(D) 5th pct   /corr = sigma_D^2   model 2*sigma_G^2   ratio
+    100-  200    440            80.82               87.05              107.91    0.807
+    200-  400    647           195.89              211.00              270.70    0.779
+    400-  700   1267           291.36              313.83              349.91    0.897
+    700- 1100    310           575.11              619.46              667.23    0.928
+   1100- 1600   1189          1080.13             1163.43             1124.83    1.034
+   1600- 2300   4095          1287.50             1386.80             1482.82    0.935
+
+  fit Var(D) = 0.725578 * S + -25.886   ->  g_measured = 0.362789 DN/e- (model 0.366300, ratio 0.9904)
+  read^2_measured = -12.9432 DN^2 -> read = 0.0000 DN = 0.000 e-  (model 4.2 e-)
+  => sigma scale factor k = sqrt(measured/model) at the two detail-ROI levels:
+     ROI A at  394.6235 DN: measured   260.444  model   293.835  k = 0.9415
+     ROI B at 1153.3351 DN: measured   810.948  model   849.668  k = 0.9769
+
+  the two flat ROIs directly (no percentile, no binning):
+    ROI 2272,1344: mean  2020.29 DN  var(G1-G2)   1569.41  model   1484.80  k = 1.0281  (UPPER bound: structure adds)
+    ROI 2352,1408: mean  2019.38 DN  var(G1-G2)   1567.43  model   1484.13  k = 1.0277  (UPPER bound: structure adds)
+
+(2) fixed-pattern upper bound in the flat ROI 2272,1344,256,256
+   mean signal 2020.79 DN, model sigma_L = 19.269 DN, N = 22
+   var(high-pass of ONE frame)      =   448.414 DN^2  (pure white noise would give 356.440 + scene)
+   var(high-pass of the 22-frame mean) =    40.578 DN^2
+   temporal part expected in the mean  =    16.202 DN^2
+   => high-frequency FIXED component <=    24.376 DN^2 -> f <= 5.039 DN at 2021 DN signal
+   (UPPER bound: unresolved scene texture and inter-frame drift both inflate it)

@@ -1,0 +1,12 @@
+MC trials: 4000000
+model                                           max |per-px err|  rel err on mean
+CLAIM C  2*s_i^2 + s_{i+1}^2 + s_{i+w}^2                 0.09556        1.227e-04
+rival A  1*s_i^2 + s_{i+1}^2 + s_{i+w}^2                24.69234        3.173e-01
+rival B  4*s_i^2 (all weight on i)                      39.42749        3.853e-02
+rival C  2*(s_{i+1}^2 + s_{i+w}^2)                      39.38826        3.555e-02
+
+mean noise contribution (MC)   : 41.990040
+mean noise contribution CLAIM C: 41.984888
+MC standard error on that mean : 0.008253  (rough)
+
+affine-variance identity: mean(sigma^2(S)) = 148.28807964  sigma^2(mean S) = 148.28807964  equal: True

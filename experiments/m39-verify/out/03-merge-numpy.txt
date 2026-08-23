@@ -1,0 +1,50 @@
+  frame  0 DSC00009.ARW     0.4 s
+  frame  1 DSC00010.ARW     0.7 s
+  frame  2 DSC00011.ARW     1.1 s
+  frame  3 DSC00012.ARW     1.5 s
+  frame  4 DSC00013.ARW     1.9 s
+  frame  5 DSC00014.ARW     2.2 s
+  frame  6 DSC00015.ARW     2.7 s
+  frame  7 DSC00016.ARW     3.1 s
+  frame  8 DSC00017.ARW     3.6 s
+  frame  9 DSC00018.ARW     4.1 s
+  frame 10 DSC00019.ARW     4.7 s
+  frame 11 DSC00020.ARW     5.6 s
+  frame 12 DSC00021.ARW     6.2 s
+  frame 13 DSC00022.ARW     6.7 s
+  frame 14 DSC00023.ARW     7.4 s
+  frame 15 DSC00024.ARW     8.0 s
+  frame 16 DSC00025.ARW     8.5 s
+  frame 17 DSC00026.ARW     8.9 s
+  frame 18 DSC00027.ARW     9.4 s
+  frame 19 DSC00028.ARW     9.9 s
+  frame 20 DSC00029.ARW    10.4 s
+  frame 21 DSC00030.ARW    10.9 s
+
+=== ROI A 1630,1044 ===
+single frame 11: m2=11.8907  iso=18.4576  raw_rms=25.3920  noise_rms=17.1412  corrected=18.7332
+winner index: 6 distinct, median 9, mode 9
+  gate  corrected  retention    raw_rms   noise_rms         m2        iso   n_eff(roi)
+  0.00    23.5395     1.257x    29.1091    17.1240    12.6541    19.6696      1.000
+  0.50    23.5625     1.258x    27.7924    14.7387    11.3547    17.6611      1.640
+  1.00    23.5504     1.257x    26.6405    12.4537    10.2453    15.9459      2.391
+  2.00    23.4970     1.254x    25.4698     9.8286     9.0637    14.1150      3.671
+  4.00    23.1517     1.236x    24.4171     7.7585     8.0630    12.5632      6.163
+  8.00    22.4604     1.199x    23.1781     5.7233     6.8975    10.7449     13.614
+  gate 0 -> gate 8 :  m2 12.6541 -> 6.8975 (-45.5%)   corrected 23.5395 -> 22.4604 (-4.6%)
+  gate 0 -> gate 2 :  m2 -28.4%   corrected -0.2%
+
+=== ROI B 64,800 ===
+single frame 11: m2=18.5840  iso=29.7240  raw_rms=49.1005  noise_rms=29.1763  corrected=39.4918
+winner index: 13 distinct, median 7, mode 7
+  gate  corrected  retention    raw_rms   noise_rms         m2        iso   n_eff(roi)
+  0.00    39.1378     0.991x    48.6292    28.8622    19.5306    31.1880      1.000
+  0.50    38.4882     0.975x    46.8931    26.7883    18.3380    29.3479      1.281
+  1.00    38.1713     0.967x    45.3381    24.4642    17.1661    27.5463      1.617
+  2.00    37.6324     0.953x    42.6961    20.1683    15.0922    24.3468      2.450
+  4.00    37.3467     0.946x    40.3383    15.2448    12.7265    20.6828      4.225
+  8.00    37.7404     0.956x    39.3000    10.9612    10.8081    17.7752      8.758
+  gate 0 -> gate 8 :  m2 19.5306 -> 10.8081 (-44.7%)   corrected 39.1378 -> 37.7404 (-3.6%)
+  gate 0 -> gate 2 :  m2 -22.7%   corrected -3.8%
+
+total 11.0 s

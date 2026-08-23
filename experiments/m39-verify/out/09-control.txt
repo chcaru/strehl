@@ -1,0 +1,55 @@
+==============================================================================
+(a) THE CONTROL: the plain unweighted mean of all 22 frames
+==============================================================================
+                      corrected  vs gate0   raw_rms  noise_rms       m2  vs gate0
+  ROI A
+   gate 0 (selection)    23.5395    +0.00%   29.1091    17.1240  12.6541    +0.00%
+   gate 2.0              23.4970    -0.18%   25.4698     9.8286   9.0637   -28.37%
+   gate 8.0              22.4604    -4.58%   23.1781     5.7233   6.8975   -45.49%
+   PLAIN MEAN n=22       12.1387   -48.43%   12.6770     3.6549   5.0229   -60.31%
+  ROI B
+   gate 0 (selection)    39.1378    +0.00%   48.6292    28.8622  19.5306    +0.00%
+   gate 2.0              37.6324    -3.85%   42.6961    20.1683  15.0922   -22.73%
+   gate 8.0              37.7404    -3.57%   39.3000    10.9612  10.8081   -44.66%
+   PLAIN MEAN n=22       34.0653   -12.96%   34.6285     6.2199   8.8057   -54.91%
+
+==============================================================================
+(b) how concentrated is the squared-gradient energy in the REAL ROIs?
+==============================================================================
+  ROI A: the top  1.30% of difference pairs carry 50% of the squared-gradient energy;
+          top 16.01% carry 80%;  top 30.07% carry 90%.
+          the strongest 50.0% of differences carry 96.92% of the energy
+          the strongest 25.0% of differences carry 87.39% of the energy
+          the strongest 10.0% of differences carry 73.53% of the energy
+  ROI B: the top  1.49% of difference pairs carry 50% of the squared-gradient energy;
+          top 11.21% carry 80%;  top 20.72% carry 90%.
+          the strongest 50.0% of differences carry 98.78% of the energy
+          the strongest 25.0% of differences carry 92.83% of the energy
+          the strongest 10.0% of differences carry 78.15% of the energy
+
+==============================================================================
+(c) blur calibration with the noise held INDEPENDENT (script 08 attack 3
+    blurred the noise too, which over-subtracts)
+==============================================================================
+  ROI A: model sigma at gate 0 = 8.541 DN mean
+    blur sd    corrected      d%       m2       d%
+       0.00      23.1060   +0.00%    12.707   +0.00%
+       0.05      23.2680   +0.70%    12.783   +0.59%
+       0.10      23.1462   +0.17%    12.796   +0.70%
+       0.15      23.2096   +0.45%    12.811   +0.82%
+       0.20      23.1291   +0.10%    12.785   +0.61%
+       0.25      23.0882   -0.08%    12.729   +0.17%
+       0.30      23.1015   -0.02%    12.769   +0.48%
+       0.40      22.2206   -3.83%    12.568   -1.10%
+       0.60      19.3592  -16.22%    12.100   -4.78%
+  ROI B: model sigma at gate 0 = 12.633 DN mean
+    blur sd    corrected      d%       m2       d%
+       0.00      39.2459   +0.00%    19.439   +0.00%
+       0.05      39.2667   +0.05%    19.439   -0.00%
+       0.10      39.2805   +0.09%    19.520   +0.41%
+       0.15      39.4058   +0.41%    19.501   +0.32%
+       0.20      39.2461   +0.00%    19.413   -0.14%
+       0.25      39.2610   +0.04%    19.433   -0.03%
+       0.30      39.1083   -0.35%    19.405   -0.17%
+       0.40      38.0420   -3.07%    19.049   -2.01%
+       0.60      35.5381   -9.45%    18.274   -5.99%

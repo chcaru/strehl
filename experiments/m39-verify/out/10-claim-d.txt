@@ -1,0 +1,51 @@
+====================================================================================
+CLAIM D -- the argmax baseline, both selectors, same frames
+====================================================================================
+
+--- ROI flat 2272,1344 ---
+  single frame 11: sigma  28.2007 DN   mean   2020.29 DN   m2  23.2791   raw_rms  41.2512
+                     model noise_rms  38.5328   corrected  14.7270
+  unregularised argmax       flat-sigma ratio 1.0678x   m2  24.3052 ( +4.41%)   raw_rms  43.1701 ( +4.65%)
+                             corrected with MODEL noise (n=1)       19.4948 (+32.37%)
+                             corrected if noise is really 1.253x    0.0000 (-100.00%)  [fact 19 unregularised]
+                             corrected if noise is really 1.075x   12.2131 (-17.07%)  [fact 23 regularised]
+                             winner-index speckle (4-neighbour disagreement): 11.00%
+  17x17-regularised argmax   flat-sigma ratio 1.0739x   m2  24.4521 ( +5.04%)   raw_rms  43.3988 ( +5.21%)
+                             corrected with MODEL noise (n=1)       19.9501 (+35.47%)
+                             corrected if noise is really 1.253x    0.0000 (-100.00%)  [fact 19 unregularised]
+                             corrected if noise is really 1.075x   12.9164 (-12.29%)  [fact 23 regularised]
+                             winner-index speckle (4-neighbour disagreement):  2.38%
+
+--- ROI detail A 1630,1044 ---
+  single frame 11: sigma  65.8971 DN   mean    394.62 DN   m2  11.8907   raw_rms  25.3920
+                     model noise_rms  17.1412   corrected  18.7332
+  unregularised argmax       flat-sigma ratio 1.0107x   m2  11.8179 ( -0.61%)   raw_rms  26.8343 ( +5.68%)
+                             corrected with MODEL noise (n=1)       20.7291 (+10.65%)
+                             corrected if noise is really 1.253x   16.2535 (-13.24%)  [fact 19 unregularised]
+                             corrected if noise is really 1.075x   19.6088 ( +4.67%)  [fact 23 regularised]
+                             winner-index speckle (4-neighbour disagreement): 35.45%
+  17x17-regularised argmax   flat-sigma ratio 1.0269x   m2  12.6540 ( +6.42%)   raw_rms  29.1087 (+14.64%)
+                             corrected with MODEL noise (n=1)       23.5390 (+25.65%)
+                             corrected if noise is really 1.253x   19.6707 ( +5.00%)  [fact 19 unregularised]
+                             corrected if noise is really 1.075x   22.5488 (+20.37%)  [fact 23 regularised]
+                             winner-index speckle (4-neighbour disagreement):  3.65%
+
+--- ROI detail B 64,800 ---
+  single frame 11: sigma 949.3051 DN   mean   1153.34 DN   m2  18.5840   raw_rms  49.1005
+                     model noise_rms  29.1763   corrected  39.4918
+  unregularised argmax       flat-sigma ratio 1.0005x   m2  19.5140 ( +5.00%)   raw_rms  49.5405 ( +0.90%)
+                             corrected with MODEL noise (n=1)       40.2968 ( +2.04%)
+                             corrected if noise is really 1.253x   33.9187 (-14.11%)  [fact 19 unregularised]
+                             corrected if noise is really 1.075x   38.6600 ( -2.11%)  [fact 23 regularised]
+                             winner-index speckle (4-neighbour disagreement): 25.92%
+  17x17-regularised argmax   flat-sigma ratio 0.9991x   m2  19.5306 ( +5.09%)   raw_rms  48.6292 ( -0.96%)
+                             corrected with MODEL noise (n=1)       39.1378 ( -0.90%)
+                             corrected if noise is really 1.253x   32.5106 (-17.68%)  [fact 19 unregularised]
+                             corrected if noise is really 1.075x   37.4450 ( -5.18%)  [fact 23 regularised]
+                             winner-index speckle (4-neighbour disagreement):  3.99%
+
+====================================================================================
+the corrected metric against its own error bar
+====================================================================================
+  ROI A: 40 fresh noise draws at the gate-0 noise level on a fixed signal: corrected mean 23.1770, sd 0.0623 (0.269%)
+  ROI B: 40 fresh noise draws at the gate-0 noise level on a fixed signal: corrected mean 39.2995, sd 0.1236 (0.315%)
