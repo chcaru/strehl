@@ -1121,7 +1121,90 @@ fn report(
          (ring"
     );
     eprintln!("                  operator, unregularised) and 0.868% (Tenengrad, regularised).");
+    eprintln!();
+    report_photometric_sensitivity(p1.stats.best_focus());
     Ok(())
+}
+
+/// How far a per-frame photometric gain drift moves the gate, in gate units.
+///
+/// # Why this exists, and what it does NOT do
+///
+/// There is **no per-frame gain term in this merge** (see the module note on
+/// `Estimator`). M24 measured that this corpus really does drift: 0.91% peak to
+/// peak on `109MSDCF`, 2.88% on `119MSDCF`, and **11.70% on `coffee-bean`**. So
+/// the omission has a price, and this prints it rather than leaving it implicit.
+///
+/// # The conversion, and its one assumption
+///
+/// The focus response is `box_mean(|grad L|) / sigma(L)`, so scaling a frame's
+/// signal by `g` scales the numerator by exactly `g`. In the shot-noise-limited
+/// regime `sigma ~ sqrt(S)`, so the denominator scales by `sqrt(g)` and the
+/// normalised response scales by **`sqrt(g)`**. A fractional level drift `d`
+/// therefore moves the response by `d/2` of itself. That is DERIVED, and it is
+/// an UPPER BOUND on the read-noise-dominated end, where sigma is flat in signal
+/// and the response scales by the full `g` instead — in deep shadow the
+/// sensitivity is twice what is printed here.
+///
+/// Expressed in gate units, because that is the only scale on which "does this
+/// matter" has an answer: one gate unit is `sqrt(2) * FOCUS_NOISE_SD`, the SD of
+/// a *difference* of two regularised responses.
+fn report_photometric_sensitivity(best_focus: &[f32]) {
+    let mut f: Vec<f32> = best_focus
+        .iter()
+        .copied()
+        .filter(|v| v.is_finite())
+        .collect();
+    if f.is_empty() {
+        return;
+    }
+    f.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let q = |p: f64| -> f64 { f[((p * (f.len() - 1) as f64) as usize).min(f.len() - 1)] as f64 };
+    let (med, p10, p90) = (q(0.5), q(0.10), q(0.90));
+    let unit = (2.0f64).sqrt() * strehl_core::merge::FOCUS_NOISE_SD as f64;
+    // Gate units moved per 1% of level drift: (d/2) * F / unit, with d = 0.01.
+    let per_pct = |focus: f64| 0.5 * 0.01 * focus / unit;
+    eprintln!("--- PHOTOMETRIC DRIFT SENSITIVITY (DERIVED from a MEASURED response) ---");
+    eprintln!(
+        "winner response : median {med:.4}, p10 {p10:.4}, p90 {p90:.4}  (regularised, \
+         DN-normalised)"
+    );
+    eprintln!("gate unit       : {unit:.6}  = sqrt(2) * FOCUS_NOISE_SD, the SD of a difference");
+    eprintln!(
+        "sensitivity     : {:.3} gate units per 1% of per-frame level drift (median pixel),",
+        per_pct(med)
+    );
+    eprintln!(
+        "                  {:.3} at p10 and {:.3} at p90. Shot-limited; in read-noise-",
+        per_pct(p10),
+        per_pct(p90)
+    );
+    eprintln!("                  dominated shadow it is 2x this.");
+    eprintln!(
+        "corpus (M24)    : 109MSDCF drifts 0.91% -> {:.2} gate units. 119MSDCF 2.88% -> {:.2}.",
+        per_pct(med) * 0.91,
+        per_pct(med) * 2.88
+    );
+    eprintln!(
+        "                  coffee-bean 11.70% -> {:.2}. coffee-bubbles 8.93% -> {:.2}.",
+        per_pct(med) * 11.70,
+        per_pct(med) * 8.93
+    );
+    eprintln!("                  109MSDCF is the QUIETEST stack in the corpus and is the one most");
+    eprintln!(
+        "                  of this project's numbers were measured on, so a clean 109 result"
+    );
+    eprintln!("                  is NOT evidence that photometric variation is handled.");
+    eprintln!("STATUS          : NO per-frame gain term is fitted or applied. This merge assumes");
+    eprintln!(
+        "                  constant photometry across the stack. The number above is the size"
+    );
+    eprintln!(
+        "                  of that assumption, not a correction for it. Do NOT read gain from"
+    );
+    eprintln!("                  EXIF to fix it: M24 measured two stacks drifting 6.84% and 8.93%");
+    eprintln!("                  with CONSTANT EXIF, and coffee-bean moving only 16% of what its");
+    eprintln!("                  EXIF change predicts (1.0443 measured vs 1.2800). Fit it.");
 }
 
 /// One-sided reading of a corrected-retention ratio.

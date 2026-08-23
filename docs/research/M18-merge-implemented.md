@@ -551,19 +551,132 @@ was the summary statistic I chose to print, not the state I chose to keep. The
 right global summary to print is a conditional enrichment, and I have not built
 one — see §6.
 
+## 4d. Photometric drift: the omission, stated and priced
+
+M24 (`ce5ad73`) measured that this corpus really does drift photometrically. This
+merge has **no per-frame gain term**, so rather than leave that implicit, this
+section states where it would go and measures how big the assumption is.
+
+### The scaling law, MEASURED in-crate
+
+The focus response is `box_mean(|grad L|) / sigma(L)`. Scaling a frame's signal
+by `g` scales the numerator by exactly `g`; in the shot-noise-limited regime
+`sigma ~ sqrt(S)` scales the denominator by `sqrt(g)`. So the normalised
+response moves by **`sqrt(g)`**, and a fractional level drift `d` moves it by
+`d/2` of itself.
+
+That is not asserted, it is tested:
+`a_per_frame_gain_scales_the_normalised_response_by_its_square_root`
+(`focus.rs`) applies `g = 1.44` to a synthetic plane deep in the shot-limited
+regime and requires the normalised response to move by `1.2000`. It carries a
+**positive control that discriminates the two hypotheses**: the *unnormalised*
+response in the same test must move by the full `1.44`, so the test cannot pass
+by accepting both. **Negative control:** replacing the sigma divisor with a
+constant makes the normalised response move by `1.4400` and the test goes RED —
+so this is evidence, not arithmetic (rule 20).
+
+Stated failure direction (rule 18): `sqrt(g)` is the **shot-limited** answer and
+therefore a *lower* bound on sensitivity. Where read noise dominates, sigma is
+flat in signal and the response moves by the full `g` — **twice** as sensitive.
+Deep shadow is the worse case, not the better one.
+
+### The response scale, MEASURED on real RAW
+
+| stack | median | p10 | p90 | gate units per **1%** drift (median / p90) |
+| --- | ---: | ---: | ---: | ---: |
+| 109MSDCF | 0.8119 | 0.7431 | 3.8662 | 0.189 / 0.898 |
+| 119MSDCF | 1.5168 | 1.3311 | 10.1007 | 0.352 / 2.347 |
+
+One gate unit is `sqrt(2) * FOCUS_NOISE_SD = 0.021516`, the SD of a *difference*
+of two regularised responses — the only scale on which "does this matter" has an
+answer.
+
+### The consequence, DERIVED from those two MEASURED inputs
+
+Combining M24's measured drift with each stack's own measured response scale:
+
+| stack | drift (M24) | gate units, median px | gate units, p90 px |
+| --- | ---: | ---: | ---: |
+| `109MSDCF` | 0.91% | 0.17 | 0.82 |
+| `119MSDCF` | 2.88% | **1.02** | **6.76** |
+| `coffee-bean` | 11.70% | **2.21** | 10.5 |
+| `coffee-bubbles` | 8.93% | **1.68** | 8.0 |
+
+(109 and 119 rows use each stack's own scale; the coffee rows use 109's scale as
+the conservative one, since I did not merge those stacks tonight.)
+
+**The default gate ladder tops out at `t = 4`, and `t = 2` is the reference.** On
+`119MSDCF` — the *second quietest* stack — photometric drift alone displaces the
+response by a **full gate unit** at the median pixel and **~6.8** at textured
+pixels, where selection actually happens. On `coffee-bean` it is 2.2 and ~10.5.
+Drift of that size is not distinguishable from focus by this gate.
+
+This raises R9 from ARGUED to DERIVED-with-measured-inputs. It is **not**
+MEASURED: I did not fit a gain, and I did not measure any change in merge
+output. The honest claim is that the assumption is large enough to matter, not
+that a specific image is wrong.
+
+**Why 109 never showed this:** at 0.91% it is 0.17 gate units — genuinely
+negligible. 109 is the quietest stack in the corpus and carries most of this
+project's numbers, including this milestone's headline. A clean 109 result is
+not evidence that photometry is handled, and the report now says so in the
+binary.
+
+### The ordering decision, and why
+
+**Gate in native raw DN. Do not pre-scale frames.** `Estimator`'s module note
+already fixes this: no white balance, no colour transform and no black
+subtraction happens before the gate, because the noise model is calibrated in
+raw DN and any of those would put the gate and the model in different spaces. A
+per-frame gain is the same class of operation and must obey the same rule.
+
+The reason is the one M24 flags: `sigma^2(S)` is signal-dependent, so scaling
+frame `k` by `g_k` scales its noise too. Applying `g_k` to the pixels while
+gating against an unscaled sigma miscalibrates the gate by exactly `g_k` — it
+would *manufacture* the error it was added to remove. So when the gain term is
+built, the correct shape is to **apply `g_k` to the noise model as well as to
+the signal**, i.e. gate on `(L_k / g_k)` against `sigma(L_k) / g_k`, which is
+identical to gating in native units with `sigma` evaluated at the frame's own
+observed level. Native-units gating is therefore not merely convenient, it is
+the form that is automatically correct under an unknown gain, and it is what
+ships.
+
+### Where the gain term would go
+
+Three lines in the existing two-pass structure, none of which require a new pass:
+
+1. **Fit** in pass one, alongside the focus field, which already touches every
+   pixel of every frame. A robust per-frame level ratio against a running
+   reference — the same shape as the robustness mask of brief item 4 — costs one
+   scalar per frame and no extra decode. **Fit it, do not read it:** M24 measured
+   two stacks drifting 6.84% and 8.93% with *constant* EXIF, and `coffee-bean`
+   moving only 16% of what its EXIF change predicts (1.0443 against 1.2800).
+2. **Carry** it as a `Vec<f32>` of length `frames` on the `Plan` — O(frames)
+   scalars, not O(frames) planes, so the memory ratchet is untouched.
+3. **Apply** it inside `Estimator::fold`, to the signal and to the sigma
+   together, per the ordering above.
+
+Not built tonight. Stated so it is a decision, not an oversight.
+
 ## 5. Tests
 
 
-**107 -> 138, delta +31.** No test was removed, weakened, or marked `#[ignore]`.
+**107 -> 139, delta +32.** No test was removed, weakened, or marked `#[ignore]`.
 
 - `strehl-cli` 34 -> 37 (+3)
-- `strehl-core` 65 -> 93 (+28)
+- `strehl-core` 65 -> 94 (+29)
 - `strehl-raw` 8 -> 8 (unchanged)
 
-The suite currently *runs* 139, not 138. The extra one is
+The suite currently *runs* 140. The extra one is
 `the_selection_inflation_constant_is_the_measured_one` in `merge.rs`, which is
-another agent's uncommitted work in the shared tree, not mine. My commits
-account for +31 and no more.
+another agent's work in the shared tree, not mine. My commits account for +32
+and no more.
+
+The 29th core test is
+`a_per_frame_gain_scales_the_normalised_response_by_its_square_root` (§4d): the
+`sqrt(g)` law the photometric sensitivity report rests on, with a positive
+control discriminating `sqrt(g)` from `g` and a negative control that turns it
+red.
 
 Two of the three CLI tests are the correction's:
 `a_gradient_increase_is_never_scored_as_a_pass` (every retention at and above
@@ -631,6 +744,12 @@ foundation for it, not a detour around it.
 **Also not built, deliberately:** the per-pixel posterior itself. The brief says
 "do not build that posterior now — but do not foreclose it either", and §1 above
 is the argument that it is not foreclosed.
+
+**Not built: the per-frame photometric gain term.** Stated and priced in §4d
+rather than left implicit — the `sqrt(g)` law is tested, the response scale is
+measured on both stacks, and the fit/carry/apply location is named. On
+`119MSDCF` the unmodelled drift is worth a full gate unit at the median pixel.
+This is the largest *stated* gap in the merge tonight.
 
 **Not built, and newly identified in §4c: a conditional bimodality summary.** The
 per-pixel `bimodality_sigma` supports M21's depth-step-vs-smooth-depth

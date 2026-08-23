@@ -306,10 +306,68 @@ mod tests {
         f.values().to_vec()
     }
 
-    /// The un-normalised response, `box_mean_r(|grad|)`, on the shipped code
-    /// path. Only the divisor differs from [`FocusField::compute`]; this is
-    /// M11's `Norm::None` arm, and it is what makes the analytic centre-tap
-    /// anchors below testable.
+    /// A per-frame photometric gain moves the normalised focus response by
+    /// `sqrt(g)`, not by `g` and not by nothing.
+    ///
+    /// This is the claim M18's photometric-sensitivity report is built on, and
+    /// it is the reason a gain drift is not photometrically neutral to the gate:
+    /// the response is `box_mean(|grad L|) / sigma(L)`, so scaling `L` by `g`
+    /// scales the numerator by exactly `g`, while in the shot-noise-limited
+    /// regime `sigma ~ sqrt(S)` scales the denominator by `sqrt(g)`.
+    ///
+    /// **What would make this fail:** normalising by something that is not the
+    /// signal-dependent sigma (a constant divisor would give `g`, no divisor
+    /// would give `g`), or running it at a level where read noise dominates and
+    /// sigma is flat (which would also give `g`). Both are real, reachable
+    /// states of this code, so this is evidence and not arithmetic. The level is
+    /// chosen deep in the shot-limited regime on purpose: at 8000 DN with
+    /// gain 0.229 the shot term is ~1832 against a read term of ~0.11.
+    #[test]
+    fn a_per_frame_gain_scales_the_normalised_response_by_its_square_root() {
+        let (w, h) = (64usize, 64usize);
+        let base: Vec<f32> = (0..w * h)
+            .map(|i| {
+                let (x, y) = ((i % w) as f32, (i / w) as f32);
+                8000.0
+                    + 900.0 * (x * 1.9).sin() * (y * 1.7).cos()
+                    + 500.0 * (x * 0.83 + y * 0.61).sin()
+            })
+            .collect();
+        let g = 1.44f32;
+        let scaled: Vec<f32> = base.iter().map(|v| v * g).collect();
+
+        let interior_mean = |v: &[f32]| -> f64 {
+            let m = SUPPORT_RADIUS;
+            let mut s = 0.0f64;
+            let mut n = 0usize;
+            for y in m..h - m {
+                for x in m..w - m {
+                    s += v[y * w + x] as f64;
+                    n += 1;
+                }
+            }
+            s / n as f64
+        };
+        let a = interior_mean(&field(w, h, &base));
+        let b = interior_mean(&field(w, h, &scaled));
+        let ratio = b / a;
+        let expected = (g as f64).sqrt();
+        assert!(
+            (ratio - expected).abs() < 0.01,
+            "a gain of {g} must move the response by sqrt(g) = {expected:.4}, got {ratio:.4}"
+        );
+        // And the positive control that separates sqrt(g) from g: the
+        // UNNORMALISED response must move by the full g, so the test is
+        // discriminating between the two hypotheses rather than accepting both.
+        let ua = interior_mean(&unnormalised(w, h, &base, WINDOW_RADIUS));
+        let ub = interior_mean(&unnormalised(w, h, &scaled, WINDOW_RADIUS));
+        let uratio = ub / ua;
+        assert!(
+            (uratio - g as f64).abs() < 1e-3,
+            "the unnormalised response must move by the full g = {g}, got {uratio:.4}"
+        );
+    }
+
     fn unnormalised(w: usize, h: usize, luma: &[f32], radius: usize) -> Vec<f32> {
         let geom = geometry(w, h);
         let (mut grad, mut scratch, mut out) = (
