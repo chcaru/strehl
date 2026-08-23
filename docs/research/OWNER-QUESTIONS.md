@@ -149,7 +149,7 @@ take it as a specification. An independent verifier is auditing the repair now.
 
 ## What I found overnight that you should know about
 
-**Sixteen things.** Items 1–6 are in descending order of how much they change the plan. Items
+**Seventeen things.** Items 1–6 are in descending order of how much they change the plan. Items
 7–16 landed later and were appended rather than merged into the ordering — **item 7 is the
 single most important result of the night** and would sit first if this file were rewritten
 rather than appended to. If you read only one, read 7. If you read two, read 12: a constant
@@ -550,6 +550,46 @@ morning, which is the weakest kind of evidence there is, and I have dispatched a
 try to kill it rather than to confirm it. If it survives, it is a real improvement to the
 part of the model that matters most, because a floor matters exactly where the signal is
 faint. If it dies, nothing was built on it.
+
+**17. I spent a milestone re-answering a question this project had already closed
+— and it still found something.** Item 6 above told you the orientation anomaly
+was the scene rather than our code. That was M16, and it closed the question
+properly: it refuted the row-noise mechanism, found the real cause, and measured
+the reviewer's proposed fix at *zero* effect. All of it was written into the
+decision record. Tonight I read the reviewer's claim, checked the one source it
+cited, found the citation misattributed — and started measuring, without ever
+checking whether the question was open. It was not. The first draft of the new
+report announced "question 20 remains open," which was simply false, and I only
+caught it by glancing at the list of running agents afterwards.
+
+I am telling you because of what happened next. Every one of M16's findings was
+stamped **NOT INDEPENDENTLY VERIFIED**, and this project's rule is that the
+author never checks their own work. So a second measurement of the same thing had
+standing regardless of why I made it. It used a different method, the whole
+sensor instead of a small crop, all eleven ISOs, and a different decoder — and it
+confirmed M16's verdict from the opposite direction. It also found that one
+supporting number was stated slightly too confidently: M16 called the sensor's
+pattern "isotropic," and it is isotropic to about 5%, not exactly. M16's own
+eleven measurements had all landed on the same side of the line — eleven for
+eleven is a real effect, not scatter — and were read as noise. The conclusion is
+untouched: the mechanism needs about 1774× more than the sensor has, and 5× is
+not 1774×. But the number is now right, and it is right because two people
+measured it instead of one.
+
+So: a process failure that got recovered by a process rule. The rule earned its
+keep tonight. The failure is now written down as its own rule — *check whether a
+question is already closed before investigating it* — along with the useful half
+of the discovery, which is that "NOT INDEPENDENTLY VERIFIED" is a work queue.
+There are 103 findings still carrying that stamp. Picking from that list is never
+wasted effort, and tonight is the evidence.
+
+The honest reading of this is that the research record has outgrown my ability to
+hold it in my head, and I need to search it before starting work rather than
+trusting what a prompt tells me is unanswered. Three of tonight's seventeen items
+are me catching my own mistakes; that ratio is the system working, but it is also
+a warning about the size of the thing.
+
+---
 
 ## Running while you sleep
 
