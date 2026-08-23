@@ -1439,6 +1439,37 @@ report (71 294 characters, exit 0), per discipline 351. History was deliberately
 **not** rewritten to unmix it, because another agent's work is in the same
 commit.
 
+**Sweep audit, run against this milestone's own commits (rule 42).** The
+mechanism behind `701dc11` was later generalised: `git add -- <paths>` scopes
+only the *staging*, so a subsequent bare `git commit` writes the whole shared
+index and silently absorbs whatever a concurrent agent staged in the interim. A
+`git diff --cached` audit does not protect against it, because nothing holds the
+index still between the audit and the commit.
+
+M63 was on the receiving end of that in `701dc11`, and was asked to check
+whether it had ever been on the causing end. **It has not** (**MEASURED**). All
+ten of this milestone's commits were audited with `git show --name-only`, which
+reads what actually landed rather than what was staged:
+
+| commit | files | foreign |
+| --- | ---: | ---: |
+| `5dee1f4` pre-registration | 14 | **0** |
+| `789d214` Part I report | 2 | **0** |
+| `b28b2e3` / `a2d8756` / `20f7e23` Part II registrations | 1 each | **0** |
+| `d544bfa` Part II | 20 | **0** |
+| `476421d` corpus rename | 3 | **0** |
+| `d18fbd9` polarizer scoping | 2 | **0** |
+| `9cb31f7` renumber to M63 | 3 | **0** |
+| `9e022f5` S3 lint fix | 1 | **0** |
+
+Every one used `git commit -F <msg> -- <explicit pathspec>`, which is the form
+rule 42 now requires, so the index was never the thing being committed. One
+commit, `9e022f5`, does touch a file this milestone does not own —
+`docs/research/M60-prior-art-and-the-rival-explanations.md`, a whitespace-only
+S3 repair on another agent's report. **That was requested and is disclosed in its
+own commit message**, and it is deliberately a separate commit so its owner can
+revert it without disturbing the renumber. It is not a sweep.
+
 ---
 
 # PART II — the instrument
