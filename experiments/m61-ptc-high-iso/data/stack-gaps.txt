@@ -1,0 +1,46 @@
+========================================================================
+M61 step 19 -- inter-stack gaps in the August session
+========================================================================
+
+  stack               n  start    end           dur   gap from prev
+  wrapped-text-1    130  11:30:08 11:31:19     71s              --
+  wrapped-text-2    120  11:34:52 11:35:53     61s         3.5 min
+  bee-1             299  11:42:25 11:46:55    270s         6.5 min
+  bee-2             299  11:54:44 11:57:23    159s         7.8 min
+  bee-3             299  11:58:28 12:01:52    204s         1.1 min
+
+------------------------------------------------------------------------
+THE OWNER'S MATCHED-PAIR CORRECTION, checked against the clock
+------------------------------------------------------------------------
+  claim: bee-2 / bee-3 ARE matched (same subject, angle, depth)
+         bee-1 is a DIFFERENT angle and depth
+         wrapped-text-1 / -2 are slightly different angles/depth
+
+  bee-2 -> bee-3 (claimed MATCHED)              1.1 min
+  bee-1 -> bee-2 (claimed DIFFERENT)            7.8 min
+  wrapped-text-1 -> -2 (claimed DIFFERENT)      3.5 min
+
+  matched gap is the SHORTEST of the three -> YES, corroborates
+
+  A short gap is consistent with an unmoved camera. It is NOT proof
+  of identical framing, and this is corroboration of the owner's
+  statement, not an independent measurement of it. The direction was
+  pre-registered; no threshold was.
+
+------------------------------------------------------------------------
+THE SESSION SPLIT INSIDE THE CPL-ON POPULATION
+------------------------------------------------------------------------
+  25 May 2026   coffee-bubbles, foam            (ISO 1000)
+  23 Aug 2026   wrapped-text-1/2, bee-1/2/3     (ISO 100, 400)
+  ninety days apart. The brief describes both as '25 May onward',
+  which is true and hides that these are two sessions, not one.
+
+  Consequence for script 18 arm D: its ISO-100 group is entirely
+  August and its ISO-50/160 groups are entirely May, so the dip at
+  ISO 100 is confounded with SUBJECT, with SESSION, and with ninety
+  days of anything else. Three confounds, not one.
+
+  Consequence for 'no intentional rotation between shoots': that
+  assumption now spans ninety days and an unknown number of lens
+  mounts, rather than a single afternoon.
+========================================================================

@@ -38,10 +38,17 @@ real provenance:
 
 > **`foam` was corrected after this report was first committed.** My brief placed
 > it under CPL-off and I restated that. Asked directly, the owner said *"probably.
-> i doubt i would've removed it. but don't recall specifically"*, and it sits 6.5
-> minutes after `coffee-bubbles` — named CPL-on — in a single session. It is
-> carried here as **probable, not measured**, and §4.8 fact 43 shows the
-> milestone's verdict is identical whether it is on, off, or dropped. Error 21.
+> i doubt i would've removed it. but don't recall specifically"*, and it sits
+> **6 min 26 s** after `coffee-bubbles` — named CPL-on — in a single session,
+> which §4.11 confirms from EXIF. It is carried here as **probable, not
+> measured**, and §4.8 fact 43 shows the milestone's verdict is identical whether
+> it is on, off, or dropped. Error 21.
+>
+> **The date rule behind this table is verified in §4.11** (fact 46): every named
+> stack falls on the side of the 17–25 May boundary its filter state requires, and
+> the control `109MSDCF` is CPL-off by owner naming *and* by date. Note what the
+> dates also revealed and no brief mentioned — **the CPL-ON group is two sessions
+> ninety days apart**, 25 May and 23 August (fact 47).
 
 There was no intentional rotation between shoots. A CPL costs roughly 1.5–2 stops
 and can vary across the frame, so **any comparison straddling that boundary
@@ -139,6 +146,8 @@ the owner corrected two corpus facts I had taken on trust:
 | **`1cdb1eb`** | `12-gate-metric.py` | which fit-quality metric predicts slope error; Q-1…Q-4 and D1…D3, with Q-4 pre-committing to *withdrawing* the ISO-1000 number if the answer went the other way |
 | **`b0c0f92`** | `13-final-gate.py` | the replacement gate, after script 12 disqualified its own selection rule; G1…G3 and predicted membership fixed in advance |
 | **`d34fa32`** | `17-cpl-recorrect.py` | the `foam` polarizer correction routed from SYNTHESIS fact 925; arms A–E, two predictions, **and the direction of the expected effect** — that correcting it *removes* a reason to doubt ISO 1000 — recorded before the run so the outcome could not be read as motivated |
+| **`ee9b0df`** | `18-cpl-date-rule.py` | the owner's CPL date rule checked against EXIF rather than restated; arms A–E, the label discipline (dates MEASURED, date→filter ARGUED), and the subject confound on the bracket test, all fixed in advance. **Smoke-tested for execution before commit, per error 22** |
+| **`23684fd`** | `19-stack-gaps.py` | the ninety-day session split, and the inter-stack gaps as a check on the owner's matched-pair correction; **direction pre-registered, threshold deliberately not**, having no calibration for how long the owner takes to reposition a rig |
 
 The chain is worth reading in order, because **script 11 falsified part of script
 11's own design, script 12 disqualified script 12's own rule, and script 17 would
@@ -751,6 +760,94 @@ shipped value inside the observed spread in every case.
 high-mode arm rests on 400, 500 and 1000. A gain relation that is straight from
 400 to 1000 and bends at 3200 would not be caught here.
 
+### 4.11 The polarizer date rule, checked rather than restated
+
+This section exists because the same provenance fact was given to me three times
+with three different values, and the third version came with something the first
+two did not: a claim about EXIF, which is checkable. Discipline 12 says to check
+it. `18-cpl-date-rule.py` does.
+
+**Fact 46 (MEASURED — the dates; the mapping from date to filter is ARGUED).**
+Every stack falls on the side of 17–25 May that its claimed filter state
+requires. Nothing is contradicted and the rule *could* have been refuted:
+
+| stack | ISO | n | first frame | claimed | side by date |
+|---|---|---|---|---|---|
+| `112MSDCF` | 500 | 79 | 2026:05:07 21:07:44 | off | off |
+| `113MSDCF` | 500 | 63 | 2026:05:07 21:09:00 | off | off |
+| `119MSDCF` | 50 | 33 | 2026:05:09 13:22:39 | off | off |
+| `coffee-bean` | 50 | 105 | 2026:05:10 16:31:09 | **unknown** | off |
+| `109MSDCF` | 160 | 22 | 2026:05:17 16:26:38 | off | off |
+| `coffee-bubbles` | 1000 | 19 | 2026:05:25 16:18:29 | on | on |
+| `foam` | 1000 | 100 | 2026:05:25 16:25:55 | **probable on** | on |
+| `wrapped-text-1` | 100 | 130 | 2026:08:23 11:30:08 | on | on |
+| `wrapped-text-2` | 400 | 120 | 2026:08:23 11:34:52 | on | on |
+| `bee-1` | 100 | 299 | 2026:08:23 11:42:25 | on | on |
+| `bee-2` | 400 | 299 | 2026:08:23 11:54:44 | on | on |
+| `bee-3` | 100 | 299 | 2026:08:23 11:58:28 | on | on |
+
+**The `foam` gap is confirmed**: `coffee-bubbles` ends 16:19:29 and `foam` begins
+16:25:55 on the same day — **6 min 26 s**. That is the entire basis for `foam`
+being probably-on, and it is now an ARGUED inference from a MEASURED gap rather
+than from a recollection alone. **The control's provenance is confirmed by two
+independent routes**: `109MSDCF` is owner-named CPL-off *and* falls on the off
+side by date. Control passes for the fourth time at 0.9887.
+
+**A consistency check is not a measurement of the filter.** It cannot show the
+polarizer was fitted; it can only fail to contradict it. I am labelling it that
+way rather than letting four matching dates promote a recollection.
+
+**Fact 47 (MEASURED, and it is not in any brief I was given).** The CPL-ON
+population is **two sessions ninety days apart**, not one. `coffee-bubbles` and
+`foam` are 25 May 2026; `wrapped-text-1/2` and `bee-1/2/3` are **23 August 2026** —
+a few hours before this milestone read them. The brief describes the whole group
+as "25 May onward", which is true and conceals the split.
+
+Two things follow. First, **"no intentional rotation between shoots" now spans
+ninety days and an unknown number of lens mounts**, not a single afternoon; any
+argument relying on a constant filter orientation is weaker than it looks.
+Second, it puts a third confound into fact 48 — see below.
+
+**Fact 48 (MEASURED, and three-way confounded — I do not offer it as evidence).**
+With `coffee-bean` assigned CPL-off as the date rule predicts, the low-mode CPL-off
+group spans ISO 50 *and* 160, bracketing the ISO-100 CPL-ON group. The shape is
+**non-monotone — a dip exactly at the filtered group**:
+
+| ISO | CPL | r (greens) | stacks |
+|---|---|---|---|
+| 50 | off | 0.9835 | `119MSDCF`, `coffee-bean` |
+| **100** | **on** | **0.9729** | `bee-1`, `bee-3` |
+| 160 | off | 0.9887 | `109MSDCF` |
+
+An ISO trend does not easily produce a dip at the middle point. **That is not
+enough to call it the polarizer, and I am not calling it that.** The ISO-100
+stacks differ from their bracket in *three* ways at once: filter state, subject
+(`bee` versus coffee and the older stacks), and session (August versus May). The
+question moves from "CPL or ISO" to "CPL or subject or ninety days", which is a
+worse degeneracy than the one it replaces, not a resolution. n = 2 against 3.
+Moving `coffee-bean` shifts the offset from **+1.58% to +1.27%**, and that whole
+arm is conditional on the date rule holding for the one stack the owner could not
+recall.
+
+**Fact 49 (MEASURED — corroboration of the owner's correction, from the clock).**
+The matched-pair correction I acted on in §3.3 was taken purely on the owner's
+say-so. The capture times support it, on a direction pre-registered before the
+run:
+
+| gap | claimed | measured |
+|---|---|---|
+| `bee-2` → `bee-3` | **matched** | **1.1 min** |
+| `bee-1` → `bee-2` | different angle/depth | 7.8 min |
+| `wrapped-text-1` → `-2` | different angle/depth | 3.5 min |
+
+The pair the owner calls matched has the **shortest** gap of the three, by a
+factor of three to seven — consistent with a camera that was not moved, while the
+two he calls repositioned have gaps long enough to reposition in. **A short gap is
+consistent with an unmoved camera and is not proof of identical framing**, so this
+is corroboration of his statement and not an independent measurement of it. I
+pre-registered the direction and deliberately not a threshold, having no
+calibration for how long it takes this owner to move a macro rig.
+
 ---
 
 ## 5. My own errors, disclosed
@@ -856,7 +953,7 @@ reference with its surrounding context and read them one at a time.
 `src/10-fix-refs.py` restores them, verified against M48c's own headers, and
 asserts that each replacement fires exactly once. This is the same class of
 mistake as error 1: a mechanical transformation applied one scope too wide. It
-cost the least of my twenty-three errors to fix and would have been the most
+cost the least of my twenty-four errors to fix and would have been the most
 expensive to publish.
 
 **Error 13 — I lost my own commit to another agent's `git add -A`.** I staged
@@ -1045,6 +1142,26 @@ and the check here was three lines of grep.** The substantive claim in fact 35 �
 both sides mixed, no alignment with the gain split, agreement with H0 — is
 unaffected under either gate.
 
+**Error 24 — I pre-registered a confound list, and it was incomplete in a way my
+own output had already shown me.** `18-cpl-date-rule.py` registered, before
+running, that a dip at ISO 100 would be confounded with **subject** — and I
+treated that as the caveat. It is confounded with **three** things: subject,
+session, and ninety days of elapsed time, because the ISO-100 stacks are all from
+23 August and their ISO-50 and ISO-160 bracket is all from May.
+
+The part worth recording is where the missing information was. **It was printed
+forty lines above the conclusion, in arm A of the same script**, in a table of
+capture dates I had just read closely enough to verify a 6-minute gap in. I
+registered the confound I had thought of in advance and then did not re-derive the
+list from what the run had put in front of me.
+
+So the discipline is narrower than "think of all the confounds", which is not
+actionable. It is: **a pre-registered caveat is a floor, not a ceiling, and it must
+be re-opened against the run's own output before the conclusion is written.**
+Registering caveats in advance protects against inventing them afterwards to suit
+a result; it does not protect against a confound the data reveals mid-run. Fact 48
+carries all three, and with them the shape is not evidence for anything.
+
 ---
 
 ## 6. Disciplines and open questions
@@ -1128,6 +1245,13 @@ look weaker, agreed with the caution I already held, and so drew no scrutiny. **
 premise that flatters your scepticism is as unexamined as one that flatters your
 hypothesis.**
 
+**Discipline 13 (ARGUED).** **A pre-registered caveat is a floor, not a ceiling.**
+Fixing the confounds you can foresee protects you from inventing convenient ones
+afterwards; it does nothing about a confound the run itself reveals. Before
+writing the conclusion, re-derive the caveat list from the output actually
+produced — error 24 is a case where the missing confound was printed forty lines
+above the conclusion, by the same script, in a table I had already read.
+
 **Discipline 11 (ARGUED).** **When replacing a block of text that begins with a
 heading, re-emit the heading in the replacement.** Errors 12/13, 19 and 20 in this
 report are one defect three times: an anchored replacement whose new text did not
@@ -1183,6 +1307,15 @@ gated set is at ISO 160. Nothing in the current corpus can separate them. One
 stack shot at ISO 160 with the CPL on, or at ISO 100 with it off, would settle it
 in a single capture — and this is the only question here that new data would close
 cheaply.
+
+*Partially addressed and made worse, not better, by fact 48.* Assigning
+`coffee-bean` to CPL-off by the date rule brackets the ISO-100 group with ISO 50
+and ISO 160, and the shape is a **dip at ISO 100** — which an ISO trend does not
+easily produce. But the ISO-100 stacks differ from their bracket in filter state,
+subject **and** session (August against May), so the degeneracy widens from two
+candidates to three. The capture this question asks for is unchanged and is now
+better specified: **ISO 160, CPL on, same subject as `109MSDCF`, ideally the same
+session as an ISO-100 stack.**
 
 **Question 8.** Is the ISO-1000 arm real? It rests on a single stack (`foam`)
 whose partner is unusable, it moves from 1.0174 to 1.2417 depending on the fit
@@ -1270,3 +1403,16 @@ provenance harder than I did.
   measured slope is unavailable *by construction*, not spoiled by data quality.
   The cheapest capture that would close it is one stack at an ISO already present,
   with the filter in the other state — which is the same capture P9 asks for.
+- **P11 (MEASURED).** **The corpus splits into two sessions ninety days apart**
+  (fact 47): 7–25 May 2026, and 23 August 2026 (`wrapped-text-1/2`, `bee-1/2/3`).
+  Every brief so far has described the polarized stacks as "25 May onward", which
+  hides the split. Any milestone comparing an August stack against a May one is
+  crossing a ninety-day boundary in subject, technique and filter handling, and
+  "no intentional rotation between shoots" spans that gap rather than an
+  afternoon. The polarizer date rule itself is verified and holds (fact 46).
+- **P12 (MEASURED).** **The owner's matched-pair correction is corroborated by the
+  capture clock** (fact 49): `bee-2` → `bee-3`, the pair he calls matched, has a
+  **1.1 min** gap against 7.8 and 3.5 min for the two he calls repositioned. This
+  is corroboration, not proof of identical framing — but the direction was
+  pre-registered and it held, which is worth more than my having taken the
+  correction on trust, as I originally did.

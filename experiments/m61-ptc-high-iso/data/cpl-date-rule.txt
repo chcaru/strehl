@@ -1,0 +1,88 @@
+============================================================================
+M61 step 18 -- does the owner's CPL date rule survive its own EXIF?
+============================================================================
+
+----------------------------------------------------------------------------
+ARM A -- MEASURED capture dates, against the CLAIMED filter state
+----------------------------------------------------------------------------
+  stack              ISO    n  first frame          last frame             claim  side by date
+  119MSDCF            50   33  2026:05:09 13:22:39  2026:05:09 13:23:00      off  off
+  coffee-bean         50  105  2026:05:10 16:31:09  2026:05:10 16:33:14      unk  off
+  wrapped-text-1     100  130  2026:08:23 11:30:08  2026:08:23 11:31:19       on  on
+  bee-1              100  299  2026:08:23 11:42:25  2026:08:23 11:46:55       on  on
+  bee-3              100  299  2026:08:23 11:58:28  2026:08:23 12:01:52       on  on
+  109MSDCF           160   22  2026:05:17 16:26:38  2026:05:17 16:27:13      off  off
+  wrapped-text-2     400  120  2026:08:23 11:34:52  2026:08:23 11:35:53       on  on
+  bee-2              400  299  2026:08:23 11:54:44  2026:08:23 11:57:23       on  on
+  112MSDCF           500   79  2026:05:07 21:07:44  2026:05:07 21:08:24      off  off
+  113MSDCF           500   63  2026:05:07 21:09:00  2026:05:07 21:09:32      off  off
+  coffee-bubbles    1000   19  2026:05:25 16:18:29  2026:05:25 16:19:29       on  on
+  foam              1000  100  2026:05:25 16:25:55  2026:05:25 16:30:04       on  on
+
+  Every named stack falls on the side its filter state claims.
+  The date rule is CONSISTENT with the owner's naming.
+
+  LABEL: the dates are MEASURED. The date->filter mapping is the
+  owner's ARGUED inference. Consistency cannot prove the filter was
+  fitted; it can only fail to contradict it. It COULD have refuted
+  the rule, and did not.
+
+----------------------------------------------------------------------------
+ARM B -- the 6.5-minute gap that makes `foam` probably-ON
+----------------------------------------------------------------------------
+  coffee-bubbles   n=19   2026:05:25 16:18:29  ..  2026:05:25 16:19:29
+  foam             n=100  2026:05:25 16:25:55  ..  2026:05:25 16:30:04
+
+  same calendar day        -> YES
+  foam starts after cb ends-> YES
+  A filter is not unscrewed between two stacks minutes apart in
+  one session. This is the whole basis for `foam` = probably-ON,
+  and it is an ARGUED inference from a MEASURED gap.
+
+----------------------------------------------------------------------------
+ARM E -- THE CONTROL, fourth run (109MSDCF, ISO 160)
+----------------------------------------------------------------------------
+  owner naming: CPL-off.  date rule: off.  the two AGREE.
+  measured/predicted, greens = 0.9887   band 0.80-1.20 -> PASS
+
+----------------------------------------------------------------------------
+ARM C -- coffee-bean moved from UNKNOWN to off, as the rule predicts
+----------------------------------------------------------------------------
+  coffee-bean UNKNOWN (as published)
+    CPL-ON  n=2  r=0.9729   ['bee-1', 'bee-3']
+    CPL-off n=2  r=0.9882   ['109MSDCF', '119MSDCF']
+    offset (off/on - 1)  = +1.58%
+
+  coffee-bean off (date rule)
+    CPL-ON  n=2  r=0.9729   ['bee-1', 'bee-3']
+    CPL-off n=3  r=0.9852   ['109MSDCF', '119MSDCF', 'coffee-bean']
+    offset (off/on - 1)  = +1.27%
+
+  CONDITIONAL: this holds only if the date rule holds, and
+  coffee-bean is precisely the stack the owner could not recall.
+
+----------------------------------------------------------------------------
+ARM D -- THE BRACKET: is low-mode r monotone in ISO, or a dip at 100?
+----------------------------------------------------------------------------
+     ISO    CPL   r(greens)  stacks
+      50    off      0.9835  ['119MSDCF', 'coffee-bean']
+     100     on      0.9729  ['bee-1', 'bee-3']
+     160    off      0.9887  ['109MSDCF']
+
+  monotone in ISO (50 -> 100 -> 160)   -> NO
+  dip at ISO 100 (below both neighbours) -> YES
+    r(50) = 0.9835   r(100) = 0.9729   r(160) = 0.9887
+
+  Shape 2. An ISO trend does not easily make a non-monotone dip
+  exactly at the group carrying the filter. BUT -- and this was
+  pre-registered before the run -- the ISO-100 stacks are also
+  DIFFERENT SUBJECTS (bee, wrapped-text) from the ISO-50 and
+  ISO-160 stacks (coffee-bean, 119MSDCF, 109MSDCF). So this
+  moves the question from 'CPL or ISO' to 'CPL or SUBJECT'.
+  It is a DIFFERENT degeneracy, not a resolution. n = 2 vs 3.
+
+============================================================================
+Dates are MEASURED from EXIF. Filter states are the owner's ARGUED
+inference from those dates. Slopes are re-grouped from the committed
+ptc-ladder.csv -- no frame was re-decoded for this script.
+============================================================================
