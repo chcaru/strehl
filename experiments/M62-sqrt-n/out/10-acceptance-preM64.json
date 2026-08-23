@@ -1,0 +1,297 @@
+{
+  "overall": "REJECT",
+  "reason": "a required arm failed",
+  "blocking": [
+    "DEFAULT"
+  ],
+  "power_ok": [
+    "SELECTOR-shipped",
+    "SELECTOR-same-binary"
+  ],
+  "power_lost": [],
+  "determinism": {
+    "DEFAULT": {
+      "status": "UNSUPPORTED"
+    }
+  },
+  "focus_guard": "run src/11-focus-guard.py separately",
+  "spec": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M62-sqrt-n\\src\\acceptance-spec.json",
+  "tag": "preM64",
+  "n": 30,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "elapsed_s": 15.885524988174438,
+  "provenance": {
+    "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\release\\strehl.exe",
+    "binary_mtime": "2026-08-23T15:20:03",
+    "binary_sha256": "082af4208d91e91a6e241b3cd2c56fbfa76c12561290834e2dfb078028e0c16a",
+    "constants_from": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+    "repo_head": "30e5a176be9632a83cfcd3fae91cd3070e301677",
+    "crates_dirty": false,
+    "crates_dirty_files": []
+  },
+  "constants": {
+    "gain_divisor": 436.8,
+    "base_iso": 100.0,
+    "read_noise_e_low": 4.2,
+    "read_noise_e_high": 1.2392,
+    "second_base_iso": 400.0,
+    "iso": 160.0,
+    "gain_dn_per_e": 0.3663003663003663,
+    "read_noise_e": 4.2,
+    "read_noise_dn": 1.5384615384615383,
+    "black": 512.0,
+    "white": 15360.0
+  },
+  "tolerances": {
+    "ladder_rel": 0.01,
+    "selector_abs": 0.005,
+    "selector_ceiling": 1.05,
+    "estimator_rel": 0.02,
+    "efficiency_band": [
+      0.98,
+      1.02
+    ],
+    "focus_guard_n_eff_over_n": 0.95
+  },
+  "summary": {
+    "A0-ladder:1": {
+      "arm": "A0-ladder",
+      "k": 1,
+      "expected": 1.0,
+      "criterion": "ladder_rel",
+      "role": "instrument",
+      "required": true,
+      "ratio_mean": 1.0006933061719776,
+      "ratio_sd_between_seeds": 0.001391728529930629,
+      "ratio_per_seed": [
+        0.9996687871560282,
+        1.0022777964808955,
+        1.000133334879009
+      ],
+      "bootstrap_se_seed0": 0.000891175240419872,
+      "verdict": "PASS"
+    },
+    "A0-ladder:2": {
+      "arm": "A0-ladder",
+      "k": 2,
+      "expected": 1.4142135623730951,
+      "criterion": "ladder_rel",
+      "role": "instrument",
+      "required": true,
+      "ratio_mean": 1.4152374012254711,
+      "ratio_sd_between_seeds": 0.0005573452700564576,
+      "ratio_per_seed": [
+        1.4146065674345631,
+        1.415663137186552,
+        1.4154424990552983
+      ],
+      "bootstrap_se_seed0": 0.0012493341438851082,
+      "verdict": "PASS"
+    },
+    "A0-ladder:3": {
+      "arm": "A0-ladder",
+      "k": 3,
+      "expected": 1.7320508075688772,
+      "criterion": "ladder_rel",
+      "role": "instrument",
+      "required": true,
+      "ratio_mean": 1.732659747147124,
+      "ratio_sd_between_seeds": 0.0013594889023358376,
+      "ratio_per_seed": [
+        1.7320566280239853,
+        1.7317061590807017,
+        1.7342164543366847
+      ],
+      "bootstrap_se_seed0": 0.0016733744276352287,
+      "verdict": "PASS"
+    },
+    "A0-ladder:5": {
+      "arm": "A0-ladder",
+      "k": 5,
+      "expected": 2.23606797749979,
+      "criterion": "ladder_rel",
+      "role": "instrument",
+      "required": true,
+      "ratio_mean": 2.2378776156651523,
+      "ratio_sd_between_seeds": 0.001980616775966855,
+      "ratio_per_seed": [
+        2.238159136231001,
+        2.2357713014039575,
+        2.2397024093604982
+      ],
+      "bootstrap_se_seed0": 0.002092230332411159,
+      "verdict": "PASS"
+    },
+    "A0-ladder:10": {
+      "arm": "A0-ladder",
+      "k": 10,
+      "expected": 3.1622776601683795,
+      "criterion": "ladder_rel",
+      "role": "instrument",
+      "required": true,
+      "ratio_mean": 3.1632031665621256,
+      "ratio_sd_between_seeds": 0.0021028377783145983,
+      "ratio_per_seed": [
+        3.1656312129972144,
+        3.1619699182646808,
+        3.162008368424482
+      ],
+      "bootstrap_se_seed0": 0.002580023659602236,
+      "verdict": "PASS"
+    },
+    "A0-ladder:20": {
+      "arm": "A0-ladder",
+      "k": 20,
+      "expected": 4.47213595499958,
+      "criterion": "ladder_rel",
+      "role": "instrument",
+      "required": true,
+      "ratio_mean": 4.4723164690162625,
+      "ratio_sd_between_seeds": 0.002555967508740921,
+      "ratio_per_seed": [
+        4.4741463762675515,
+        4.473406895527774,
+        4.469396135253462
+      ],
+      "bootstrap_se_seed0": 0.003941103723141858,
+      "verdict": "PASS"
+    },
+    "A0-ladder:30": {
+      "arm": "A0-ladder",
+      "k": 30,
+      "expected": 5.477225575051661,
+      "criterion": "ladder_rel",
+      "role": "instrument",
+      "required": true,
+      "ratio_mean": 5.479128597201973,
+      "ratio_sd_between_seeds": 0.006740543610158966,
+      "ratio_per_seed": [
+        5.486464080033825,
+        5.47771428581118,
+        5.473207425760916
+      ],
+      "bootstrap_se_seed0": 0.004394959175318392,
+      "verdict": "PASS"
+    },
+    "B1a-const-selector": {
+      "arm": "B1a-const-selector",
+      "criterion": "selector_abs",
+      "expect": "one",
+      "role": "instrument",
+      "required": true,
+      "note": "copy frame 0 everywhere. The zero point.",
+      "ratio_mean": 1.0006933061719776,
+      "ratio_sd_between_seeds": 0.001391728529930629,
+      "ratio_per_seed": [
+        0.9996687871560282,
+        1.0022777964808955,
+        1.000133334879009
+      ],
+      "bootstrap_se_seed0": 0.000891175240419872,
+      "verdict": "PASS"
+    },
+    "B1b-random-selector": {
+      "arm": "B1b-random-selector",
+      "criterion": "selector_abs",
+      "expect": "one",
+      "role": "instrument",
+      "required": true,
+      "note": "full winner histogram, no noise coupling (rule 11's placebo).",
+      "ratio_mean": 0.9996075249921891,
+      "ratio_sd_between_seeds": 0.0006153519461559658,
+      "ratio_per_seed": [
+        0.9988989233356527,
+        0.9999163199208042,
+        1.0000073317201106
+      ],
+      "bootstrap_se_seed0": 0.0008801399057562858,
+      "verdict": "PASS"
+    },
+    "DEFAULT": {
+      "arm": "DEFAULT",
+      "verdict": "UNSUPPORTED",
+      "log": "out/10-preM64-s0-DEFAULT.log",
+      "role": "decision",
+      "required": true,
+      "criterion": "estimator_rel",
+      "note": "NO tuning flags. This is the arm that decides whether the estimating merge is the DEFAULT path. If the binary refuses this invocation the arm is UNSUPPORTED, which is itself a result."
+    },
+    "SELECTOR-shipped": {
+      "arm": "SELECTOR-shipped",
+      "criterion": "selector_ceiling",
+      "expect": "le_one",
+      "role": "power",
+      "required": false,
+      "cli": {},
+      "out_sha256": "864a04cc6feca5392fe4b59596483815c3c96c5c72eb639fc31cf09efc2f92d5",
+      "note": "the shipped unregularised argmax; 0.7690 at a8eddc0. NOT required, and deliberately so: if `stack` is the entry point that gets converted to an estimator, this arm SHOULD stop scoring low, and auto-rejecting on that would be pre-committing to reject the change the battery exists to judge. Scoring high here is recorded as NO-POWER, not FAIL.",
+      "ratio_mean": 0.769033476561744,
+      "ratio_sd_between_seeds": 0.00021970767934743042,
+      "ratio_per_seed": [
+        0.7692582278612409,
+        0.7688191862202427,
+        0.7690230156037482
+      ],
+      "bootstrap_se_seed0": 0.012049561206462603,
+      "verdict": "POWER-OK"
+    },
+    "SELECTOR-same-binary": {
+      "arm": "SELECTOR-same-binary",
+      "criterion": "selector_ceiling",
+      "expect": "le_one",
+      "role": "power",
+      "required": false,
+      "cli": {
+        "gate": 0.0,
+        "mean_n_eff": 1.0,
+        "n_eff_1_pct": 100.0,
+        "pred_sigma_gain": 1.0,
+        "hp_sd_dn": 62.374,
+        "hp_ratio": 1.009
+      },
+      "out_sha256": "83179e591608b47e936d9148f465acc6fa3e899e06651e2042177a283da86a98",
+      "note": "same binary, one parameter, n_eff == 1; 0.9768 at a8eddc0. Not required: a merge that removes --gate legitimately cannot offer it, and the loss of this control must then be reported.",
+      "efficiency": 0.9773281896822165,
+      "ratio_mean": 0.976815367670973,
+      "ratio_sd_between_seeds": 0.0006592252202584875,
+      "ratio_per_seed": [
+        0.9773281896822165,
+        0.9770461302274552,
+        0.9760717831032474
+      ],
+      "bootstrap_se_seed0": 0.0008873320772949091,
+      "verdict": "POWER-OK"
+    },
+    "ESTIMATOR-explicit": {
+      "arm": "ESTIMATOR-explicit",
+      "criterion": "estimator_rel",
+      "expect": "sqrt_n",
+      "role": "reference",
+      "required": false,
+      "cli": {
+        "gate": 8.0,
+        "mean_n_eff": 30.0,
+        "n_eff_1_pct": 0.0,
+        "pred_sigma_gain": 0.1826,
+        "hp_sd_dn": 60.056,
+        "hp_ratio": 0.971
+      },
+      "out_sha256": "cf0d22b3ecbbe10fd8dedfd432fa63d20f0ebc2f547ee52ec5b61de0b92e05f6",
+      "note": "M62's headline invocation, 5.4777 at a8eddc0, kept for continuity. Not required: it may cease to exist.",
+      "efficiency": 1.0014072256887439,
+      "ratio_mean": 5.477677513156781,
+      "ratio_sd_between_seeds": 0.006680579599636637,
+      "ratio_per_seed": [
+        5.484933267583918,
+        5.476318041673432,
+        5.471781230212994
+      ],
+      "bootstrap_se_seed0": 0.0044028000933678535,
+      "verdict": "PASS"
+    }
+  }
+}

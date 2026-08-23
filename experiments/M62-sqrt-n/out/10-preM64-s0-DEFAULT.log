@@ -1,0 +1,7 @@
+$ C:\dev\blog\death-of-software\projects\strehl\target\release\strehl.exe merge C:\dev\blog\death-of-software\projects\strehl\experiments\M62-sqrt-n\data\acc-preM64-s0 --flat-roi 32,32,960,960 --out C:\dev\blog\death-of-software\projects\strehl\experiments\M62-sqrt-n\data\acc-preM64-s0-DEFAULT.tif
+
+[exit 1]
+--- stdout ---
+
+--- stderr ---
+Error: --out writes one image, but 4 gates were given; pick one

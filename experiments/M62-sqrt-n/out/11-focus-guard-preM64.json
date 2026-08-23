@@ -1,0 +1,56 @@
+{
+  "stack": "D:\\personal\\macro\\109MSDCF",
+  "frames": 22,
+  "tag": "preM64",
+  "provenance": {
+    "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\release\\strehl.exe",
+    "binary_mtime": "2026-08-23T15:20:03",
+    "binary_sha256": "082af4208d91e91a6e241b3cd2c56fbfa76c12561290834e2dfb078028e0c16a",
+    "constants_from": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+    "repo_head": "30e5a176be9632a83cfcd3fae91cd3070e301677",
+    "crates_dirty": false,
+    "crates_dirty_files": []
+  },
+  "ladder": [
+    {
+      "gate": 0.5,
+      "tolerance": 0.010758,
+      "mean_n_eff": 1.414,
+      "n_eff_1_pct": 66.46,
+      "boundary_pct": 2.22,
+      "pred_sigma_gain": 0.8922,
+      "n_eff_over_N": 0.06427272727272727
+    },
+    {
+      "gate": 1.0,
+      "tolerance": 0.021516,
+      "mean_n_eff": 1.884,
+      "n_eff_1_pct": 41.66,
+      "boundary_pct": 2.22,
+      "pred_sigma_gain": 0.7942,
+      "n_eff_over_N": 0.08563636363636364
+    },
+    {
+      "gate": 2.0,
+      "tolerance": 0.043032,
+      "mean_n_eff": 2.891,
+      "n_eff_1_pct": 15.45,
+      "boundary_pct": 2.22,
+      "pred_sigma_gain": 0.6452,
+      "n_eff_over_N": 0.13140909090909092
+    },
+    {
+      "gate": 4.0,
+      "tolerance": 0.086063,
+      "mean_n_eff": 4.987,
+      "n_eff_1_pct": 4.62,
+      "boundary_pct": 2.22,
+      "pred_sigma_gain": 0.4916,
+      "n_eff_over_N": 0.22668181818181818
+    }
+  ],
+  "min_n_eff_over_N": 0.06427272727272727,
+  "max_n_eff_over_N": 0.22668181818181818,
+  "selects_somewhere": true,
+  "note": "observable only. A merge that reports n_eff/N >= 0.95 at EVERY gate it offers has stopped discriminating focus on a real stack, and the sqrt(N) battery cannot see that."
+}

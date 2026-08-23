@@ -2,15 +2,24 @@
 
 Every sensor constant here is READ FROM the shipped crate rather than retyped:
 see `constants()` for the parse of `crates/strehl-core/src/profile.rs`.
+
+**Nothing here is bound to the binary M62 measured.** The executable under test
+comes from `$STREHL_BIN` (default: the working tree's release build) and the
+constants from `$STREHL_SRC` (default: the repo). `provenance()` records the
+binary's sha256, the repo HEAD and whether `crates/` was dirty, so a reader can
+tell what was actually run without taking anyone's word for it.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
+import os
 import pathlib
 import re
 import subprocess
 import sys
+import time
 
 import numpy as np
 
@@ -18,10 +27,68 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from dngwrite import write_cfa_dng  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+REPO = ROOT.parents[1]
 BUILD = ROOT / "build-head"
-STREHL = BUILD / "target" / "release" / "strehl.exe"
-PROFILE_RS = BUILD / "crates" / "strehl-core" / "src" / "profile.rs"
-NOISE_RS = BUILD / "crates" / "strehl-core" / "src" / "noise.rs"
+
+
+def _pick(env, *candidates):
+    """First existing path among `$env` then `candidates`. Never silently empty."""
+    v = os.environ.get(env)
+    if v:
+        p = pathlib.Path(v).expanduser().resolve()
+        assert p.exists(), f"${env} = {p} does not exist"
+        return p
+    for c in candidates:
+        if c.exists():
+            return c
+    raise AssertionError(f"none of {[str(c) for c in candidates]} exist; set ${env}")
+
+
+def binary():
+    """The `strehl` executable under test.
+
+    Override with `$STREHL_BIN`. Defaults to the working tree's release build,
+    then to the `build-head/` archive export M62 used when the tree would not
+    compile. Nothing here is specific to the binary M62 measured.
+    """
+    return _pick(
+        "STREHL_BIN",
+        REPO / "target" / "release" / "strehl.exe",
+        BUILD / "target" / "release" / "strehl.exe",
+    )
+
+
+def src_root():
+    """The crate tree the sensor constants are parsed from.
+
+    Override with `$STREHL_SRC`. **Must correspond to the binary under test** --
+    the harness compares its own model against the binary's, and a mismatch
+    would compare two different profiles. `provenance()` records both so a
+    reader can check.
+    """
+    return _pick("STREHL_SRC", REPO, BUILD)
+
+
+def provenance():
+    """Where the binary and the constants actually came from, for the record."""
+    exe, src = binary(), src_root()
+    try:
+        sha = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"],
+                             capture_output=True, text=True).stdout.strip()
+        dirty = subprocess.run(["git", "-C", str(REPO), "status", "--porcelain", "--", "crates"],
+                               capture_output=True, text=True).stdout.strip()
+    except Exception:
+        sha, dirty = "unknown", "unknown"
+    return dict(
+        binary=str(exe),
+        binary_mtime=time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(exe.stat().st_mtime)),
+        binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),
+        constants_from=str(src),
+        repo_head=sha,
+        crates_dirty=bool(dirty),
+        crates_dirty_files=dirty.splitlines() if dirty else [],
+    )
+
 
 DATA = ROOT / "data"
 EVID = ROOT / "out"
@@ -35,8 +102,8 @@ INSET = 32
 
 
 def constants(iso=ISO):
-    """Sensor constants, parsed out of the shipped crate at the built sha."""
-    src = PROFILE_RS.read_text(encoding="utf-8")
+    """Sensor constants, parsed out of the crate tree matching the binary."""
+    src = (src_root() / "crates" / "strehl-core" / "src" / "profile.rs").read_text(encoding="utf-8")
     block = src[src.index("const A7C2: CameraProfile"):]
     block = block[: block.index("};")]
 
@@ -53,7 +120,7 @@ def constants(iso=ISO):
 
     # Levels: the doc comment on `Levels::white` and the profile tests both name
     # 512 / 15360. Confirm the numbers appear in noise.rs rather than assuming.
-    nsrc = NOISE_RS.read_text(encoding="utf-8")
+    nsrc = (src_root() / "crates" / "strehl-core" / "src" / "noise.rs").read_text(encoding="utf-8")
     assert "black: 512.0" in nsrc and "white: 15360.0" in nsrc
 
     g = max(iso, base_iso) / gain_divisor
@@ -177,15 +244,24 @@ def ratio_and_se(merged_g, truth_g, single_resid_ms, block=64, rng_seed=7):
     return point, float(draws.std(ddof=1))
 
 
-def run_cli(args, log_path):
-    cmd = [str(STREHL)] + [str(a) for a in args]
+def run_cli(args, log_path, check=True):
+    """Run the binary under test. Returns stdout+stderr, or `None` if it refused.
+
+    `check=False` lets an arm probe an invocation the binary may not support --
+    an UNSUPPORTED arm is a result, not a crash.
+    """
+    cmd = [str(binary())] + [str(a) for a in args]
     p = subprocess.run(cmd, capture_output=True, text=True)
     log_path.parent.mkdir(parents=True, exist_ok=True)
     log_path.write_text(
-        "$ " + " ".join(cmd) + "\n\n--- stdout ---\n" + p.stdout + "\n--- stderr ---\n" + p.stderr,
+        "$ " + " ".join(cmd) + f"\n\n[exit {p.returncode}]\n--- stdout ---\n" + p.stdout
+        + "\n--- stderr ---\n" + p.stderr,
         encoding="utf-8",
     )
-    assert p.returncode == 0, f"{' '.join(cmd)} exited {p.returncode}\n{p.stderr[-4000:]}"
+    if p.returncode != 0:
+        if not check:
+            return None
+        raise AssertionError(f"{' '.join(cmd)} exited {p.returncode}\n{p.stderr[-4000:]}")
     return p.stdout + "\n" + p.stderr
 
 
