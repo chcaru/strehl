@@ -1,0 +1,339 @@
+GATE 1 -- reproduce SYNTHESIS fact 83 from M15's committed CSVs
+  geometry       n   w*(1)  w*(17)   shift  narrow  wide  same   verdict
+  bar           10    10.5    12.0    +1.0       2     6     2   MATCH
+  horizontal    10     9.0     7.0    -2.5      10     0     0   MATCH
+  vertical      10    17.0    19.0    +1.5       2     6     2   MATCH
+  ALL           30    13.0    12.0    +0.0      14    12     4   MATCH
+  reference statistic: A_ref = -3.50 windows, U_ref = 1.00
+  GATE 1 PASS
+
+loaded 16 arms: A0, A1, A10, A11, A12, A2, A3, A4x1, A4x64, A4x8, A5x64, A5x64o, A6, A7, A8, A9
+
+GATE 2 -- arm A0 reproduces M15's harness field for field
+  rows compared 8640, absent from M15 0, mismatched 0
+  Byte-level agreement on every shared field. This is a CONSISTENCY
+  CHECK, not independent evidence (discipline 34 / 20).
+  GATE 2 PASS
+
+==============================================================================
+1. THE ORIENTATION ASYMMETRY, PER ARM
+==============================================================================
+   A = median shift(horizontal) - median shift(vertical UNION bar), in windows.
+   phi = leave-one-seed-out spread of A (max - min over the 5 subsets).
+   A difference smaller than phi is NOT RESOLVED.
+
+   arm     texture destripe   fpnDN sq tr  med_h  med_vb      A   A_hv  phiHV    phi   U_h    p(h)   Lhv1  Lhv17  wh(1)  wv(1)
+   A0      real    none       0.000  -  -   -2.5     1.0   -3.5   -4.0    1.5    1.0  1.00  0.0020   -8.0  -12.0    9.0   17.0
+   A1      real    mean       0.000  -  -   -3.0     0.5   -3.5   -3.0    1.5    1.0  0.90  0.0215   -9.5  -14.5    7.0   16.5
+   A10     real    none       0.000  Y  -   -5.5     1.0   -6.5   -7.0    1.5    1.0  1.00  0.0020   -8.5  -12.5    8.5   17.0
+   A11     real    none       0.000  Y  -   -7.0    -3.0   -4.0   +0.0    1.0    1.0  1.00  0.0020   +0.0   +0.0    8.0    8.0
+   A12     real    mean       0.000  Y  -   -2.0    -4.0   +2.0   +1.0    1.0    1.5  0.80  0.0391   +0.0   +0.5    7.0    7.0
+   A2      real    hp         0.000  -  -   -2.5     0.5   -3.0   -3.5    1.5    1.0  0.80  0.1094   -8.0  -11.5    9.5   17.5
+   A3      synth   none       0.000  -  -    5.0     3.0   +2.0   +4.0    0.5    0.5  0.30  0.3438   -1.5   +2.0    3.0    4.5
+   A4x1    synth   none       0.377  -  -    5.0     3.0   +2.0   +4.0    0.0    0.0  0.30  0.3438   -1.5   +2.0    3.0    4.5
+   A4x64   synth   none      24.128  -  -    4.0     4.0   +0.0   +3.0    0.5    0.5  0.30  0.3438   -1.5   +2.0    3.0    4.5
+   A4x8    synth   none       3.016  -  -    5.0     3.0   +2.0   +4.0    0.5    0.5  0.30  0.3438   -1.5   +3.0    3.0    4.5
+   A5x64   synth   mean      24.128  -  -    5.0     2.5   +2.5   +3.5    1.0    1.0  0.00  0.0020   -1.0   +2.5    3.0    4.0
+   A5x64o  synth   oracle    24.128  -  -    5.0     3.0   +2.0   +4.0    0.5    0.5  0.30  0.3438   -1.5   +2.0    3.0    4.5
+   A6      real    none       0.000  Y  -   -4.0     2.0   -6.0   -7.5    0.0    0.0  1.00  0.0020  -12.0  -17.0    8.0   20.0
+   A7      synth   none       0.000  Y  -    4.0     2.5   +1.5   +2.0    0.5    1.0  0.30  0.5078   +2.0   +3.0    7.0    5.0
+   A8      real    none       0.000  Y  Y    3.5    -4.0   +7.5   +7.5    0.0    0.0  0.30  0.3438  +12.0  +17.0   20.0    8.0
+   A9      real    hp         0.000  Y  -   -3.5     2.0   -5.5   -5.5    0.5    0.5  1.00  0.0020   -9.0  -13.5    8.0   17.0
+
+   M15's committed surface, same statistic: A_ref = -3.5
+
+==============================================================================
+2. PER-GEOMETRY BREAKDOWN (the fact-83 table, per arm)
+==============================================================================
+
+   A0  texture=real destripe=none fpn=0.00000DN/row/sensor transpose=0 scored=384x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     9.0     7.0    -2.5      10     0     0
+     vertical     10    17.0    19.0    +1.5       2     6     2
+     bar          10    10.5    12.0    +1.0       2     6     2
+     ALL          30    13.0    12.0    +0.0      14    12     4
+
+   A1  texture=real destripe=mean fpn=0.00000DN/row/sensor transpose=0 scored=384x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     7.0     2.5    -3.0       9     1     0
+     vertical     10    16.5    17.0    +0.0       4     4     2
+     bar          10     8.5     9.0    +1.0       4     6     0
+     ALL          30     8.5     9.0    -1.0      17    11     2
+
+   A10  texture=real destripe=none fpn=0.00000DN/row/sensor transpose=0 scored=256x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     8.5     6.5    -5.5      10     0     0
+     vertical     10    17.0    19.0    +1.5       2     6     2
+     bar          10    10.5    12.0    +1.0       2     6     2
+     ALL          30    13.0    12.0    +0.0      14    12     4
+
+   A11  texture=real destripe=none fpn=0.00000DN/row/sensor transpose=0 scored=256x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     8.0     0.5    -7.0      10     0     0
+     vertical     10     8.0     0.5    -7.0      10     0     0
+     bar          10    13.5    13.5    -3.0       7     3     0
+     ALL          30     9.0     7.0    -4.5      27     3     0
+
+   A12  texture=real destripe=mean fpn=0.00000DN/row/sensor transpose=0 scored=256x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     7.0     3.5    -2.0       8     1     1
+     vertical     10     7.0     3.0    -3.0      10     0     0
+     bar          10    14.5     9.0    -4.5      10     0     0
+     ALL          30     8.0     6.0    -4.0      28     1     1
+
+   A2  texture=real destripe=hp fpn=0.00000DN/row/sensor transpose=0 scored=384x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     9.5     7.5    -2.5       8     2     0
+     vertical     10    17.5    19.0    +1.0       3     5     2
+     bar          10    10.0    11.5    +0.5       2     5     3
+     ALL          30    12.0    11.5    +0.0      13    12     5
+
+   A3  texture=synth destripe=none fpn=0.00000DN/row/sensor transpose=0 scored=384x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     3.0     8.0    +5.0       3     7     0
+     vertical     10     4.5     6.0    +1.0       1     6     3
+     bar          10     4.0     8.5    +4.0       0    10     0
+     ALL          30     4.0     8.0    +4.0       4    23     3
+
+   A4x1  texture=synth destripe=none fpn=0.37700DN/row/sensor transpose=0 scored=384x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     3.0     8.0    +5.0       3     7     0
+     vertical     10     4.5     6.0    +1.0       1     6     3
+     bar          10     4.0     9.0    +4.5       0     9     1
+     ALL          30     4.0     8.0    +3.5       4    22     4
+
+   A4x64  texture=synth destripe=none fpn=24.12800DN/row/sensor transpose=0 scored=384x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     3.0     7.5    +4.0       3     7     0
+     vertical     10     4.5     5.5    +1.0       3     6     1
+     bar          10     4.0     8.0    +4.0       0    10     0
+     ALL          30     4.0     8.0    +4.0       6    23     1
+
+   A4x8  texture=synth destripe=none fpn=3.01600DN/row/sensor transpose=0 scored=384x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     3.0     8.0    +5.0       3     7     0
+     vertical     10     4.5     5.0    +1.0       3     6     1
+     bar          10     4.0     8.0    +4.0       0    10     0
+     ALL          30     4.0     8.0    +3.5       6    23     1
+
+   A5x64  texture=synth destripe=mean fpn=24.12800DN/row/sensor transpose=0 scored=384x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     3.0     8.0    +5.0       0    10     0
+     vertical     10     4.0     5.5    +1.5       4     6     0
+     bar          10     4.0     9.0    +4.0       0    10     0
+     ALL          30     4.0     8.0    +4.0       4    26     0
+
+   A5x64o  texture=synth destripe=oracle fpn=24.12800DN/row/sensor transpose=0 scored=384x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     3.0     8.0    +5.0       3     7     0
+     vertical     10     4.5     6.0    +1.0       1     6     3
+     bar          10     4.0     8.5    +4.0       0    10     0
+     ALL          30     4.0     8.0    +4.0       4    23     3
+
+   A6  texture=real destripe=none fpn=0.00000DN/row/sensor transpose=0 scored=256x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     8.0     3.0    -4.0      10     0     0
+     vertical     10    20.0    20.0    +3.5       3     7     0
+     bar          10    11.0    15.5    +0.0       4     4     2
+     ALL          30    12.0    15.5    -2.0      17    11     2
+
+   A7  texture=synth destripe=none fpn=0.00000DN/row/sensor transpose=0 scored=256x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     7.0    10.0    +4.0       3     6     1
+     vertical     10     5.0     7.0    +2.0       3     7     0
+     bar          10     3.0     7.0    +3.5       1     9     0
+     ALL          30     4.0     7.0    +3.0       7    22     1
+
+   A8  texture=real destripe=none fpn=0.00000DN/row/sensor transpose=1 scored=256x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10    20.0    20.0    +3.5       3     7     0
+     vertical     10     8.0     3.0    -4.0      10     0     0
+     bar          10    14.5    11.0    -3.0       9     0     1
+     ALL          30    14.0    11.0    -4.0      22     7     1
+
+   A9  texture=real destripe=hp fpn=0.00000DN/row/sensor transpose=0 scored=256x256
+     geometry      n   w*(1)  w*(17)   shift  narrow  wide  same
+     horizontal   10     8.0     4.0    -3.5      10     0     0
+     vertical     10    17.0    17.5    +2.0       3     7     0
+     bar          10    10.0    12.0    +1.5       3     6     1
+     ALL          30    11.0    12.0    -1.0      16    13     1
+
+==============================================================================
+3. CONTROLS -- have I destroyed the signal? (P3, P4)
+==============================================================================
+   level = mean E_excess over the 30 decision cells, in DN.
+   P3 wants the level within 20% and the argmin within +-3 windows of
+   the matching untreated arm. P4 wants the aggregate argmin interior.
+
+   arm       lvl@w13,g1  lvl@w13,g17  vs base   aggregate argmin at g=17
+   A0            24.791       15.994            w14 interior, separated from its better neighbour by 0.0504 DN
+   A1            30.033       20.175   +26.1%   w12 interior, separated from its better neighbour by 0.0509 DN
+   A10           24.350       15.375    -3.9%   w14 interior, separated from its better neighbour by 0.0512 DN
+   A11            9.548        9.088  -327.4%   w11 interior, separated from its better neighbour by 0.0304 DN
+   A12           12.558       10.541   +16.0%   w6 interior, separated from its better neighbour by 0.0491 DN
+   A2            30.012       21.481   +34.3%   w12 interior, separated from its better neighbour by 0.0947 DN
+   A3            13.294       12.698            w8 interior, separated from its better neighbour by 0.0033 DN
+   A4x1          13.294       12.698    +0.0%   w8 interior, separated from its better neighbour by 0.0025 DN
+   A4x64         13.692       12.947    +2.0%   w7 interior, separated from its better neighbour by 0.0098 DN
+   A4x8          13.313       12.708    +0.1%   w8 interior, separated from its better neighbour by 0.0007 DN
+   A5x64         13.437       12.759    -1.4%   w7 interior, separated from its better neighbour by 0.0016 DN
+   A5x64o        13.294       12.698    -1.9%   w8 interior, separated from its better neighbour by 0.0033 DN
+   A6            17.681       -3.996  -125.0%   w15 interior, separated from its better neighbour by 0.1503 DN
+   A7            12.965       12.637    -0.5%   w8 interior, separated from its better neighbour by 0.0071 DN
+   A8            19.669        9.433  -336.1%   w12 interior, separated from its better neighbour by 0.0199 DN
+   A9            25.639        7.758  -294.1%   w12 interior, separated from its better neighbour by 0.1531 DN
+
+==============================================================================
+4. THE TRANSPOSE TEST -- does the asymmetry rotate with the scene?
+==============================================================================
+   A6 is a square ROI, untransposed. A8 is the same machinery with the
+   textures transposed, so the SCENE rotates and the MACHINERY does not.
+   If the asymmetry follows the scene, A8's horizontal behaves like A6's
+   vertical. If it follows the machinery, A8 == A6.
+
+   geometry      A6 med shift  A8 med shift  A6 med w*(1)  A8 med w*(1)
+   horizontal            -4.0          +3.5           8.0          20.0
+   vertical              +3.5          -4.0          20.0           8.0
+   bar                   +0.0          -3.0          11.0          14.5
+
+   median |shift(A8, same geometry)   - shift(A6)| = 8.0
+   median |shift(A8, rotated geometry)- shift(A6)| = 0.0
+   The smaller one names what the asymmetry is bolted to.
+
+==============================================================================
+7. POSITIVE CONTROL P1/P2 -- can a planted row FPN move the asymmetry?
+==============================================================================
+   A3 is the isotropic synthetic plant with no FPN. A4xK adds a row
+   pattern of K x 0.377 DN to every frame the operator sees -- exactly
+   H3's mechanism, and nothing else. A5 removes it again.
+   If NO amplitude moves A, the plant cannot express H3 and the H3 arms
+   carry no information (project rule 13 / discipline 24).
+
+   arm      fpn sd DN      A    phi   U_h  dA vs A3   lvl@w13
+   A3           0.000   +2.0    0.5  0.30      +0.0    12.698
+   A4x1         0.377   +2.0    0.0  0.30      +0.0    12.698
+   A4x8         3.016   +2.0    0.5  0.30      +0.0    12.708
+   A4x64       24.128   +0.0    0.5  0.30      -2.0    12.947
+   A5x64       24.128   +2.5    1.0  0.00      +0.5    12.759
+   A5x64o      24.128   +2.0    0.5  0.30      +0.0    12.698
+   A7           0.000   +1.5    1.0  0.30      -0.5    12.637
+
+==============================================================================
+6. NULL CONTROL N3 -- the zero-step stratum
+==============================================================================
+   These cells have an intensity edge, two textures and the whole
+   compositing path, but NO depth discontinuity. If the orientation
+   asymmetry is about occlusion, it must be weaker here.
+
+   arm        med_h  med_vb  A0step   per-geometry median w*(1)
+   A0          -8.0   -17.0    +9.0   horizontal=16, vertical=40, bar=40
+   A1         -10.0   -24.5   +14.5   horizontal=14, vertical=40, bar=40
+   A10        -10.5   -17.0    +6.5   horizontal=16, vertical=40, bar=40
+   A11        -11.5    -9.5    -2.0   horizontal=17, vertical=16, bar=30
+   A12        -10.0   -10.5    +0.5   horizontal=16, vertical=14, bar=26
+   A2         -11.5   -11.5    +0.0   horizontal=20, vertical=40, bar=30
+   A3          -4.5    -6.5    +2.0   horizontal=4, vertical=5, bar=8
+   A4x1        -4.5    -6.5    +2.0   horizontal=4, vertical=5, bar=8
+   A4x64       -5.0    -6.5    +1.5   horizontal=5, vertical=6, bar=8
+   A4x8        -4.5    -6.5    +2.0   horizontal=4, vertical=5, bar=8
+   A5x64       -5.0    -6.5    +1.5   horizontal=5, vertical=6, bar=7
+   A5x64o      -4.5    -6.5    +2.0   horizontal=4, vertical=5, bar=8
+   A6          -8.0   -17.0    +9.0   horizontal=12, vertical=40, bar=33
+   A7          -6.5    -6.0    -0.5   horizontal=6, vertical=6, bar=6
+   A8         -17.0    -6.5   -10.5   horizontal=40, vertical=11, bar=30
+   A9          -8.0   -17.0    +9.0   horizontal=14, vertical=40, bar=33
+
+==============================================================================
+5. DOES WINDOW_RADIUS = 13 SURVIVE?
+==============================================================================
+   meanregret(w, g) over the 30 decision cells. The shipped radius is 13.
+   Registered rule: 13 changes only if the corrected argmin leaves M13's
+   published basin w11-w15 AND meanregret(13) - min exceeds 0.87 DN.
+
+   arm       g  argmin  mr(argmin)   mr(w13)   penalty    floor  LOO argmin  basin?  label
+   A0        1      13      3.2839    3.2839    0.0000   0.0000     w13-w13     yes  w13 interior, separated from its better neighbour by 0.1803 DN  (penalty BELOW the floor: w13 is NOT resolved from the argmin)
+   A0       17      14      2.9697    3.0201    0.0504   0.0075     w14-w14     yes  w14 interior, separated from its better neighbour by 0.0504 DN
+   A1        1      13      3.4366    3.4366    0.0000   0.0000     w13-w13     yes  w13 interior, separated from its better neighbour by 0.1315 DN  (penalty BELOW the floor: w13 is NOT resolved from the argmin)
+   A1       17      12      2.8560    2.9069    0.0509   0.0133     w12-w12     yes  w12 interior, separated from its better neighbour by 0.0509 DN
+   A10       1      13      3.3456    3.3456    0.0000   0.0000     w13-w13     yes  w13 interior, separated from its better neighbour by 0.2182 DN  (penalty BELOW the floor: w13 is NOT resolved from the argmin)
+   A10      17      14      2.7475    2.9382    0.1908   0.0079     w14-w14     yes  w14 interior, separated from its better neighbour by 0.0512 DN
+   A11       1      12      2.4901    2.5362    0.0461   0.0117     w12-w12     yes  w12 interior, separated from its better neighbour by 0.0461 DN
+   A11      17      11      2.4187    2.6836    0.2649   0.0088     w11-w11     yes  w11 interior, separated from its better neighbour by 0.0304 DN
+   A12       1       6      1.9269    3.8997    1.9728   0.0265       w6-w6      NO  w6 interior, separated from its better neighbour by 0.0260 DN
+   A12      17       6      0.6288    2.8016    2.1728   0.0084       w6-w6      NO  w6 interior, separated from its better neighbour by 0.0491 DN
+   A2        1      13      3.3991    3.3991    0.0000   0.0000     w13-w13     yes  w13 interior, separated from its better neighbour by 0.0115 DN  (penalty BELOW the floor: w13 is NOT resolved from the argmin)
+   A2       17      12      3.3307    3.4524    0.1217   0.0086     w12-w12     yes  w12 interior, separated from its better neighbour by 0.0947 DN
+   A3        1       4      0.1219    0.7714    0.6494   0.0107       w4-w4      NO  w4 interior, separated from its better neighbour by 0.1074 DN
+   A3       17       8      0.0366    0.2509    0.2143   0.0037       w8-w8      NO  w8 interior, separated from its better neighbour by 0.0033 DN
+   A4x1      1       4      0.1196    0.7708    0.6512   0.0114       w4-w4      NO  w4 interior, separated from its better neighbour by 0.1096 DN
+   A4x1     17       8      0.0368    0.2500    0.2132   0.0038       w8-w8      NO  w8 interior, separated from its better neighbour by 0.0025 DN
+   A4x64     1       4      0.0791    0.9905    0.9114   0.0167       w4-w4      NO  w4 interior, separated from its better neighbour by 0.1367 DN
+   A4x64    17       7      0.0279    0.3037    0.2758   0.0070       w7-w7      NO  w7 interior, separated from its better neighbour by 0.0098 DN
+   A4x8      1       4      0.1168    0.7850    0.6682   0.0126       w4-w4      NO  w4 interior, separated from its better neighbour by 0.1091 DN
+   A4x8     17       8      0.0361    0.2503    0.2142   0.0036       w7-w8      NO  w8 interior, separated from its better neighbour by 0.0007 DN
+   A5x64     1       4      0.0818    0.8841    0.8022   0.0175       w4-w4      NO  w4 interior, separated from its better neighbour by 0.1134 DN
+   A5x64    17       7      0.0631    0.3146    0.2515   0.0054       w7-w7      NO  w7 interior, separated from its better neighbour by 0.0016 DN
+   A5x64o    1       4      0.1219    0.7714    0.6494   0.0107       w4-w4      NO  w4 interior, separated from its better neighbour by 0.1074 DN
+   A5x64o   17       8      0.0366    0.2509    0.2143   0.0037       w8-w8      NO  w8 interior, separated from its better neighbour by 0.0033 DN
+   A6        1      12      4.5682    4.7554    0.1872   0.0225     w12-w12     yes  w12 interior, separated from its better neighbour by 0.1872 DN
+   A6       17      15      2.1999    2.8758    0.6759   0.0105     w15-w15     yes  w15 interior, separated from its better neighbour by 0.1503 DN
+   A7        1       4      0.3732    0.5890    0.2159   0.0115       w4-w4      NO  w4 interior, separated from its better neighbour by 0.0277 DN
+   A7       17       8      0.1325    0.2526    0.1201   0.0092       w8-w8      NO  w8 interior, separated from its better neighbour by 0.0071 DN
+   A8        1      13      4.4856    4.4856    0.0000   0.0000     w13-w13     yes  w13 interior, separated from its better neighbour by 0.3659 DN  (penalty BELOW the floor: w13 is NOT resolved from the argmin)
+   A8       17      12      2.9363    2.9562    0.0199   0.0120     w12-w12     yes  w12 interior, separated from its better neighbour by 0.0199 DN
+   A9        1      11      4.9667    5.4489    0.4822   0.0292     w11-w11     yes  w11 interior, separated from its better neighbour by 0.0284 DN
+   A9       17      12      2.6492    2.8023    0.1531   0.0334     w12-w12     yes  w12 interior, separated from its better neighbour by 0.1531 DN
+
+   floor = leave-one-seed-out spread of [meanregret(13) - min], in DN.
+   LOO argmin = the range the argmin takes over the five leave-one-out
+   subsets. Discipline 31: an argmin whose penalty at w13 is smaller than
+   the floor is not distinguishable from w13 and must not be read as a
+   better window.
+
+==============================================================================
+9. GRADIENT ANISOTROPY BEFORE AND AFTER DESTRIPE (frame 0)
+==============================================================================
+   stack     roi                variant     sd_dn    row_sd       gx2        gy2   aniso
+   109MSDCF  596x468+1974+950   none        744.0    539.66    238.77    1205.34   0.198
+   109MSDCF  596x468+1974+950   mean        421.0      0.00    199.15    1031.48   0.193
+   109MSDCF  596x468+1974+950   hp          742.1    537.43    229.63    1169.45   0.196
+   109MSDCF  596x468+2374+934   none        781.7    766.77     64.84     891.47   0.073
+   109MSDCF  596x468+2374+934   mean        148.7      0.00     63.92     670.58   0.095
+   109MSDCF  596x468+2374+934   hp          779.7    764.72     64.26     853.53   0.075
+   109MSDCF  468x468+1974+950   none        723.1    491.85    287.64    1278.55   0.225
+   109MSDCF  468x468+1974+950   mean        437.0      0.00    237.32    1014.31   0.234
+   109MSDCF  468x468+1974+950   hp          720.2    488.26    276.12    1207.32   0.229
+   109MSDCF  468x468+2374+934   none        784.0    772.69     66.01     904.94   0.073
+   109MSDCF  468x468+2374+934   mean        130.8      0.00     65.05     623.01   0.104
+   109MSDCF  468x468+2374+934   hp          781.5    770.16     65.41     844.88   0.077
+   119MSDCF  596x468+1910+1046  none       1521.1   1009.40   1002.59    3413.93   0.294
+   119MSDCF  596x468+1910+1046  mean        918.6      0.00    865.52    1708.63   0.507
+   119MSDCF  596x468+1910+1046  hp         1513.7    999.09    981.77    2734.92   0.359
+   119MSDCF  596x468+2422+1046  none       1735.8   1730.79    112.91    2442.02   0.046
+   119MSDCF  596x468+2422+1046  mean        124.2      0.00    109.86     341.85   0.321
+   119MSDCF  596x468+2422+1046  hp         1728.0   1722.99    111.54    1762.64   0.063
+   119MSDCF  468x468+1910+1046  none       1413.0    847.33   1252.53    3665.20   0.342
+   119MSDCF  468x468+1910+1046  mean        925.0      0.00   1078.25    1834.78   0.588
+   119MSDCF  468x468+1910+1046  hp         1404.3    834.14   1226.23    2931.92   0.418
+   119MSDCF  468x468+2422+1046  none       1731.9   1727.71    117.51    2468.26   0.048
+   119MSDCF  468x468+2422+1046  mean        115.3      0.00    114.21     322.42   0.354
+   119MSDCF  468x468+2422+1046  hp         1724.0   1719.80    116.03    1752.18   0.066
+   `mean` drives row_sd_raw to exactly 0 by construction. Read gx2 and
+   aniso across the three variants of each ROI: if they barely move, the
+   anisotropy the focus operator sees is untouched by the H3 treatment.
+
+==============================================================================
+8. THE PRE-REGISTERED DECISION RULES, APPLIED MECHANICALLY
+==============================================================================
+   A_ctrl = -3.5 (arm A0), phi_ctrl = 1.0, U_ctrl = 1.00
+
+   P1 (the plant can express H3): FIRED at A4x64 dA=-2.0
+   H3 via A1 (destripe mean): |A|/|A_ctrl| = 1.00, U = 0.90  ->  REFUTED
+   H3 via A2 (destripe hp): |A|/|A_ctrl| = 0.86, U = 0.80  ->  UNRESOLVED
+
+   H1 (texture anisotropy): A(A3) = +2.0, |A|/|A_ctrl| = 0.57, U = 0.30, sign opposite  ->  UNRESOLVED
+   H2 (evaluation geometry): A(A6 square) = -6.0, |A|/|A_ctrl| = 1.71
+     H2a probe A10 (square scored band, rect plant): A = -6.5, |A|/|A_ctrl| = 1.86
+   N4 (square + isotropic must be symmetric): A(A7) = +1.5, phi = 1.0  ->  FAIL -- the machinery is asymmetric
+   A11 (real texture symmetrised, exactly transpose-invariant): A = -4.0, phi = 1.0, U = 1.00, |A|/|A_ctrl| = 1.14  ->  machinery is ASYMMETRIC even with the scene symmetrised -- H2 ALIVE
+   A12 (A11 + destripe-mean, A11's null): A = +2.0, phi = 1.5

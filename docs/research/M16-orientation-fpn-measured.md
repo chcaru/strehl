@@ -48,9 +48,9 @@ happen. Three hypotheses were on the table, plus two this milestone added:
 
 | hypothesis | verdict | the number that decides it |
 | --- | --- | --- |
-| **H1** texture anisotropy | **SUPPORTED** | Make the corpus texture exactly transpose-invariant and hold every other variable fixed: `L_hv(1)` goes from **−12.0 windows to +0.0** (A6 → A11, `φ_hv` = 1.0). Rotate the scene 90° instead: median \|shift(A8, rotated geometry) − shift(A6)\| = **0.0 windows**, against 8.0 for the same geometry. |
-| **H2** shared band-geometry defect | **REFUTED** | The same 0.0-vs-8.0 transpose test, run on identical machinery, an identical `\|d\| ≤ 24` band and an identical square scored region. H2b specifically: squaring the ROI *enlarges* the asymmetry (`A_hv` −4.0 → −7.5) instead of removing it. |
-| **H3** row/column fixed-pattern noise | **REFUTED** | The sensor's master bias is isotropic at all 11 dark ISO groups (`gx²/gy²` = 0.968–0.999) and its row-correlated part is **0.0036–0.0136 DN** at the two corpus ISOs, against **11.8–51.4 DN** of row structure in the tiles — a ratio of ~10³. The reviewer's fix changes the asymmetry by **0.0 windows** (`A` = −3.5 → −3.5). |
+| **H1** texture anisotropy | **SUPPORTED** | Make the corpus texture exactly transpose-invariant and hold every other variable fixed: `L_hv(1)` goes from **−12.0 windows to +0.0** (A6 → A11, `φ_hv` = 1.0). Rotate the scene 90° instead: median \|shift(A8, rotated geometry) − shift(A6)\| = **0.0 windows**, against 8.0 for the same geometry. Categorically: cells with no turnover inside the sweep run **15/60 `vertical`, 0/60 `horizontal`** on the corpus, **16/60 `horizontal`, 0/60 `vertical`** once the scene is transposed, and **0/60 everywhere** once the texture is symmetrised. |
+| **H2** shared band-geometry defect | **REFUTED** | The same 0.0-vs-8.0 transpose test, run on identical machinery, an identical `\|d\| ≤ 24` band and an identical square scored region. The band geometry is a *gain* on the statistic, not a source: squaring the scored region with the plant untouched takes `A_hv` −4.0 → −7.0 (A0 → A10), yet symmetrising the texture under that same geometry still nulls it to +0.0. |
+| **H3** row/column fixed-pattern noise | **REFUTED**, by the pre-registered rule | The sensor's master bias is isotropic at all 11 dark ISO groups (`gx²/gy²` = 0.968–0.999) and its row-correlated part is **0.0036–0.0136 DN** at the two corpus ISOs, against **11.8–51.4 DN** of row structure in the tiles — a ratio of ~10³. The reviewer's fix changes the asymmetry by **0.0 windows** (`A` = −3.5 → −3.5, `U` = 0.90). Positive control P1 fires only at **1774×** the sensor's row amplitude, and even there reproduces just half the effect. |
 | **H4** unresolved | **not needed** | H1 accounts for the whole effect. |
 
 **`WINDOW_RADIUS = 13` survives**, under every arm: the mean-regret argmin stays
@@ -66,10 +66,14 @@ focus window (median `w*(1)` 9.0 against 17.0). It is **not** a defect, it does
 **not** bias the window numbers, and the reviewer's proposed cause and cure are
 both measured to be inert here.
 
-**The most important caveat, up front:** the pre-registered positive control for
-H3 **did not fire** — planting a row pattern at 1× and 8× the measured amplitude
-moved the asymmetry by exactly zero windows. The H3 refutation therefore does not
-rest on the treatment arms. See §6.1 and §8.
+**The caveats, up front.** (a) The pre-registered positive control for H3 fired
+only on the **last rung** of the amplitude ladder, at 1774× the sensor's real row
+FPN; below that the plant could not express H3's failure mode at all, and this
+report was twice drafted reporting H3 as NOT MEASURED. (b) The purest machinery
+null, A7, came out at `A_hv` = +2.0 against a 1.0 floor rather than at zero —
+unexplained, though its sign is a coin toss and it points the *wrong way*. (c)
+Two of six pre-registered predictions were wrong, both of them mine about the
+mechanism. See §8, §9 and §10.
 
 ---
 
@@ -289,17 +293,35 @@ far the regulariser moves them.
 `φ` is the leave-one-seed-out spread of the statistic — the noise floor.
 All MEASURED.
 
-| arm | texture | treatment | sq | `A` | `A_hv` | `φ_hv` | `U_h` | p(h) | `L_hv(1)` | `L_hv(17)` | `w*(1)` horiz | `w*(1)` vert |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **A0** | corpus | none | – | **−3.5** | **−4.0** | 1.5 | 1.00 | 0.0020 | **−8.0** | −12.0 | 9.0 | 17.0 |
-| A1 | corpus | `mean` | – | **−3.5** | −3.0 | 1.5 | 0.90 | 0.0215 | −9.5 | −14.5 | 7.0 | 16.5 |
-| A2 | corpus | `hp` | – | −3.0 | −3.5 | 1.5 | 0.80 | 0.1094 | −8.0 | −11.5 | 9.5 | 17.5 |
-| A3 | synthetic | none | – | +2.0 | +4.0 | 0.5 | 0.30 | 0.3438 | −1.5 | +2.0 | 3.0 | 4.5 |
-| A4x1 | synthetic | +0.377 DN row FPN | – | +2.0 | +4.0 | 0.0 | 0.30 | 0.3438 | −1.5 | +2.0 | 3.0 | 4.5 |
-| A4x8 | synthetic | +3.016 DN row FPN | – | +2.0 | +4.0 | 1.0 | 0.20 | 0.3750 | −2.0 | +3.0 | 3.0 | 5.0 |
-| **A6** | corpus | none | **Y** | −6.0 | **−7.5** | 0.0 | 1.00 | 0.0020 | **−12.0** | −17.0 | 8.0 | 20.0 |
-| **A11** | corpus **symmetrised** | none | **Y** | −4.0 | **+0.0** | 1.0 | 1.00 | 0.0020 | **+0.0** | **+0.0** | **8.0** | **8.0** |
-| A12 | corpus symmetrised | `mean` | Y | +2.0 | +1.0 | 1.0 | 0.80 | 0.0391 | +0.0 | +0.5 | 7.0 | 7.0 |
+| arm | texture | treatment | sq | tr | `A` | `A_hv` | `φ_hv` | `U_h` | p(h) | `L_hv(1)` | `L_hv(17)` | `w*(1)` horiz | `w*(1)` vert |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| **A0** | corpus | none | – | – | **−3.5** | **−4.0** | 1.5 | 1.00 | 0.0020 | **−8.0** | −12.0 | 9.0 | 17.0 |
+| A1 | corpus | `mean` | – | – | **−3.5** | −3.0 | 1.5 | 0.90 | 0.0215 | −9.5 | −14.5 | 7.0 | 16.5 |
+| A2 | corpus | `hp` | – | – | −3.0 | −3.5 | 1.5 | 0.80 | 0.1094 | −8.0 | −11.5 | 9.5 | 17.5 |
+| A3 | synthetic | none | – | – | +2.0 | +4.0 | 0.5 | 0.30 | 0.3438 | −1.5 | +2.0 | 3.0 | 4.5 |
+| A4x1 | synthetic | +0.377 DN row FPN | – | – | +2.0 | +4.0 | 0.0 | 0.30 | 0.3438 | −1.5 | +2.0 | 3.0 | 4.5 |
+| A4x8 | synthetic | +3.016 DN row FPN | – | – | +2.0 | +4.0 | 0.5 | 0.30 | 0.3438 | −1.5 | +3.0 | 3.0 | 4.5 |
+| **A4x64** | synthetic | +24.128 DN row FPN | – | – | **+0.0** | +3.0 | 0.5 | 0.30 | 0.3438 | −1.5 | +2.0 | 3.0 | 4.5 |
+| A5x64 | synthetic | 24.128 DN + `mean` | – | – | +2.5 | +3.5 | 1.0 | 0.00 | 0.0020 | −1.0 | +2.5 | 3.0 | 4.0 |
+| A5x64o | synthetic | 24.128 DN + oracle | – | – | +2.0 | +4.0 | 0.5 | 0.30 | 0.3438 | −1.5 | +2.0 | 3.0 | 4.5 |
+| **A6** | corpus | none | **Y** | – | −6.0 | **−7.5** | 0.0 | 1.00 | 0.0020 | **−12.0** | **−17.0** | **8.0** | **20.0** |
+| A7 | synthetic | none | Y | – | +1.5 | +2.0 | 1.0 | 0.30 | 0.5078 | +2.0 | +3.0 | 7.0 | 5.0 |
+| **A8** | corpus **transposed** | none | **Y** | **Y** | +7.5 | **+7.5** | 0.0 | 0.30 | 0.3438 | **+12.0** | **+17.0** | **20.0** | **8.0** |
+| A9 | corpus | `hp` | Y | – | −5.5 | −5.5 | 0.5 | 1.00 | 0.0020 | −9.0 | −13.5 | 8.0 | 17.0 |
+| A10 | corpus | none, square band | Y* | – | −6.5 | −7.0 | 1.5 | 1.00 | 0.0020 | −8.5 | −12.5 | 8.5 | 17.0 |
+| **A11** | corpus **symmetrised** | none | **Y** | – | −4.0 | **+0.0** | 1.0 | 1.00 | 0.0020 | **+0.0** | **+0.0** | **8.0** | **8.0** |
+| A12 | corpus symmetrised | `mean` | Y | – | +2.0 | +1.0 | 1.0 | 0.80 | 0.0391 | +0.0 | +0.5 | 7.0 | 7.0 |
+
+*(A10's `sq` is starred: its **plant** is rectangular and only its **scored
+region** is square. Every other `Y` squares both.)*
+
+**Read A6 against A8 row for row.** They are the same binary, the same square
+ROI, the same band, the same seeds; A8's textures are transposed. Every statistic
+inverts, to the decimal: `A_hv` −7.5 → **+7.5**, `L_hv(1)` −12.0 → **+12.0**,
+`L_hv(17)` −17.0 → **+17.0**, `w*(1)` 8.0 / 20.0 → **20.0 / 8.0**. Nothing is
+approximately mirrored; it is exactly mirrored. (`A` is the exception at −6.0 →
++7.5, because `bar` is always a bar in *x* and so does not rotate with the
+texture — §4.1 again.)
 
 *(A11's `A = −4.0` against `A_hv = +0.0` is exactly the pooling artefact of §4.1:
 `horizontal` and `vertical` agree perfectly and `bar` does not follow them.)*
@@ -331,16 +353,58 @@ which together leave it nothing to explain:
    REFUTED branch is `|A| ≥ 0.75·|A_ctrl|` and `U ≥ 0.9` — both met. On `L_hv(1)`
    the fix makes the asymmetry *worse*, −8.0 → −9.5.
 
-> **The honest caveat, stated loudly.** The pre-registered positive control **P1
-> did not fire**: planting a row pattern of 0.377 DN (A4x1) or 3.016 DN (A4x8)
-> on the isotropic synthetic plant moved `A` by **+0.0 windows** — the arms are
-> numerically identical to the un-planted A3. By the letter of the registered
-> rule, that makes the *A1 arm* "NOT MEASURED", not "REFUTED" (project rule 13 /
-> discipline 24: a plant that cannot express the failure carries no information).
-> The refutation above therefore does **not** rest on A1. It rests on findings
-> 1–3, which are direct amplitude measurements independent of any arm, and on
-> §6.3, which accounts for **all** of the effect by another mechanism and leaves
-> no residual for H3 to explain.
+> **The pre-registered control chain closed — and it closed late.** For most of
+> this milestone the positive control **P1 had not fired**, and §6.1 was written
+> to rest only on findings 1–3 because the registered rule would otherwise have
+> forced the A1 arm to "NOT MEASURED" (project rule 13 / discipline 24). It
+> fired on the last arm. The record of that is left standing here deliberately:
+> the amplitude ladder was run to completion *because* the verdict was not yet
+> earned, not to decorate one that already was.
+
+**The amplitude ladder, and the number that kills H3.** A4x*K* plants a
+row-correlated pattern of standard deviation *K* directly on the operator's
+input, on the isotropic synthetic plant — H3's mechanism and nothing else. A5x64
+is A4x64 with the reviewer's fix applied. MEASURED, 30 cells each:
+
+| arm | row FPN | × the sensor's real row FPN | `A` | `φ` | `ΔA` vs A3 | `E_excess` @ w13 |
+| --- | --- | --- | --- | --- | --- | --- |
+| A3 | 0 DN | — | +2.0 | 0.5 | — | 12.698 |
+| A4x1 | 0.377 DN | 28× | +2.0 | 0.0 | **+0.0** | 12.698 |
+| A4x8 | 3.016 DN | 222× | +2.0 | 0.5 | **+0.0** | 12.708 |
+| **A4x64** | 24.128 DN | **1774×** | +0.0 | 0.5 | **−2.0** | 12.947 |
+| **A5x64** | 24.128 DN **+ fix** | 1774× | +2.5 | 1.0 | **+0.5** | 12.759 |
+| **A5x64o** | 24.128 DN **+ oracle removal** | 1774× | +2.0 | 0.5 | **+0.0** | 12.698 |
+
+- **P1 FIRES, at 64× and only at 64×.** `ΔA` = −2.0 windows against a floor of
+  0.5, and in the registered direction — `A` moves *more negative*, making
+  `horizontal` more of an outlier, which is fact 83's direction. The plant can
+  express H3's failure mode. The measurement carries information.
+- **P2 PASSES, and its upper bound is exact.** Applying `destripe mean` to that
+  same 24.128 DN plant returns `A` to +2.5, i.e. `ΔA` vs A3 = **+0.5**, inside
+  the 1.0 floor, and the `E_excess` level to −1.4 % of A3's. Subtracting the
+  planted pattern *exactly* (A5x64o, oracle removal — the fix's own ceiling)
+  returns `A` to **+2.0** and the level to **12.698**, i.e. to A3 to four decimal
+  places. So the treatment is doing what it says, and the residual +0.5 in A5x64
+  is the price of estimating the pattern from the data rather than knowing it.
+- **Therefore the registered REFUTED branch is satisfied outright.** It reads
+  *"P1 fires at some amplitude **and** A1 gives `|A| ≥ 0.75·|A_ctrl|` **and**
+  `U ≥ 0.9`"*. P1 fires; A1 gives `|A|/|A_ctrl|` = **1.00** and `U` = **0.90**.
+  H3 is **REFUTED by the pre-registered rule**, not by argument.
+
+**And the ladder gives the quantitative kill.** The amplitude at which H3's
+mechanism first becomes detectable at all lies between 3.016 DN and 24.128 DN.
+The sensor supplies **0.0036–0.0136 DN** (§3.1). So:
+
+> **The sensor's row-correlated fixed pattern is at least 222× smaller than an
+> amplitude already MEASURED to be too small to move the statistic, and 1774×
+> smaller than the amplitude that finally moved it — which even then produced
+> only −2.0 windows, about half of the −4.0-window asymmetry M15 observed.**
+
+Even granting H3 a plant 1774× more row-striped than this sensor, it reproduces
+at most half the effect. At the sensor's real amplitude, extrapolating linearly
+in amplitude (which over-states it, since a noise term should enter through
+variance), the contribution is `2.0 × 0.0136 / 24.128 ≈` **0.0011 windows**, or
+**0.03 %** of the asymmetry. DERIVED, from MEASURED inputs.
 
 ### 6.2 H2 — a defect in the shared band geometry: **REFUTED**
 
@@ -370,10 +434,33 @@ Three further MEASURED results agree:
   `A_hv` −7.5 → **+0.0**, `L_hv(1)` −12.0 → **+0.0**, `w*(1)` 8.0 vs 20.0 →
   **8.0 vs 8.0**. Nothing in the band, the operator, the regulariser or the
   scoring changed between A6 and A11.
-- **H2b (plant aspect) is refuted specifically.** Squaring the ROI so that both
-  orientations get 128 px of each layer does not remove the asymmetry — it
-  **enlarges** it, `A_hv` −4.0 → −7.5 and `L_hv(1)` −8.0 → −12.0. This falsifies
-  the milestone's own prediction 2, which gave H2b 50 %.
+- **The two H2 sub-mechanisms separate cleanly, and neither creates the
+  asymmetry — they only change how it is expressed.** A10 holds the plant
+  identical to A0 (rectangular 384×256 ROI, same margin, same edge, same seeds)
+  and changes *only* the scored region to a centred 256×256 square. MEASURED:
+
+  | arm | plant ROI | scored region | `A` | `A_hv` | `L_hv(1)` | `w*(1)` h / v |
+  | --- | --- | --- | --- | --- | --- | --- |
+  | A0 | 384×256 | 384×256 | −3.5 | −4.0 | −8.0 | 9.0 / 17.0 |
+  | **A10** | 384×256 | **256×256** | **−6.5** | **−7.0** | −8.5 | 8.5 / 17.0 |
+  | A6 | **256×256** | 256×256 | −6.0 | −7.5 | **−12.0** | 8.0 / **20.0** |
+
+  Reading down: **H2a (scored-band shape) is what nearly doubles the *shift*
+  statistic** — `A_hv` −4.0 → −7.0 across A0→A10, a 1.75× gain, with the plant
+  untouched — while leaving the *level* gap alone (−8.0 → −8.5, inside
+  `φ_hv` = 1.5). **H2b (plant aspect) does the opposite**: A10→A6 leaves the
+  shift alone (−7.0 → −7.5, inside the floor) and widens the level gap −8.5 →
+  −12.0, because squaring the ROI gives the vertical edge only 128 px of each
+  layer to accumulate `Gx` from instead of 192 — which is H1's mechanism, not a
+  defect. This falsifies the milestone's own prediction 2, which attributed the
+  A0→A6 enlargement to plant aspect; it is mostly the scored region.
+
+  **But neither is a cause.** A11 runs A6's exact plant aspect, exact scored
+  region, exact band and exact code, and nulls the asymmetry to `A_hv` = +0.0 by
+  changing the texture alone. A rectangular scoring region is an *orientation-
+  non-neutral gain* on the shift statistic, not a source of bias: it means M13
+  and M15 saw roughly **half** the asymmetry that was there, in the shift. It
+  did not put any there.
 - **Code reading** found the merge regulariser (`box_mean`, symmetric shrinking
   window on both axes, checked against a naive gather by its own unit test), the
   focus operator (`sqrt(Gx²+Gy²)`, rotation-invariant), the defocus blur
@@ -420,6 +507,83 @@ a vertical edge cut across horizontally-lineated texture never accumulates enoug
 beside `horizontal`'s 17. The asymmetry is therefore **not about occlusion at
 all**; it is about which gradient axis the subject happens to supply.
 
+### 6.4 The hardest evidence: which geometry runs off the end of the ladder
+
+Every statistic above is a median of window positions, and medians invite
+arguments about pooling, floors and ties. **Censoring does not.** A cell either
+turns over inside the sweep or it does not. Counting the cells whose mean-regret
+argmin lands on the last rung, `w40`, over all 60 cells per geometry per
+regulariser width (`data/censoring.csv`, regenerate with `m16_censoring.py`):
+
+| arm | plant | `horizontal` @ w1 / w17 | `vertical` @ w1 / w17 |
+| --- | --- | --- | --- |
+| A0 | corpus, rect | **0/60** / 0/60 | **10/60** / 0/60 |
+| A6 | corpus, square | **0/60** / 0/60 | **15/60** / 6/60 |
+| **A8** | corpus, square, **transposed** | **16/60** / 7/60 | **0/60** / 0/60 |
+| A9 | corpus, square, `destripe hp` | 0/60 / 0/60 | 15/60 / 8/60 |
+| A10 | corpus, rect plant, square band | 0/60 / 0/60 | 10/60 / 0/60 |
+| **A11** | corpus, square, **symmetrised** | **0/60** / 0/60 | **0/60** / 0/60 |
+| A12 | corpus, symmetrised, `destripe mean` | 0/60 / 0/60 | 0/60 / 0/60 |
+| A7 | synthetic isotropic, square | 0/60 / 0/60 | 0/60 / 0/60 |
+
+Read A6 against A8. Transpose the scene and the censoring transposes with it:
+15/60 vertical becomes **16/60 horizontal**, and 0/60 horizontal becomes
+**0/60 vertical**. One cell in sixty of slop, on a binary count, across a 90°
+rotation of the subject with the code held fixed. Then read A6 against A11: make
+the same corpus texture transpose-invariant and **every cell turns over**,
+0/60 in all six columns.
+
+There is no version of H2 that survives this. A band-geometry defect cannot
+follow the scene through a transpose, and it cannot be switched off by averaging
+a texture with its own transpose. MEASURED, categorical, and independent of
+every median, floor and pooling choice elsewhere in this report.
+
+It also flags a real limitation on M15's statistic and on M16's own `A`: on the
+real corpus **8–25 % of `vertical` cells and up to 13 % of `bar` cells have no
+turnover inside the sweep**, so any median that includes them is censored from
+below. `horizontal` is never censored on the untransposed corpus — not once in
+480 cells. The measured shifts are therefore **conservative**: the true
+`vertical` optima lie at or beyond `w40`, which would make the gap wider, not
+narrower.
+
+### 6.5 Every pre-registered decision rule, scored mechanically
+
+Printed verbatim by `m16_analyse.py`, so the reader can check that the verdicts
+above are what the rules committed in `1939c55` actually say — including the two
+that do **not** come out the way §1 does.
+
+| registered rule | inputs | mechanical output |
+| --- | --- | --- |
+| **P1** — the plant can express H3 | `ΔA` = +0.0 / +0.0 / −2.0 at 0.377 / 3.016 / 24.128 DN, `φ` = 0.5 | **FIRED at A4x64** |
+| **H3 via A1** (`destripe mean`) | `\|A\|/\|A_ctrl\|` = 1.00 ≥ 0.75, `U` = 0.90 ≥ 0.9 | **REFUTED** |
+| **H3 via A2** (`destripe hp`) | `\|A\|/\|A_ctrl\|` = 0.86 ≥ 0.75, `U` = 0.80 **< 0.9** | **UNRESOLVED** |
+| **H2** | `\|A(A6)\|/\|A_ctrl\|` = 1.71 ≥ 0.75 **and** the transpose test rotates (0.0 vs 8.0) | **REFUTED** |
+| **H2a vs H2b** | A10 = −6.5 behaves like A6 = −6.0, not like A0 = −3.5 | **the band shape carried it** |
+| **H1 via A3** (registered arm) | `\|A\|/\|A_ctrl\|` = 0.57, `U` = 0.30, sign opposite | **UNRESOLVED** |
+| **N4** — machinery must be symmetric | `A(A7)` = +1.5, `φ` = 1.0 | **FAIL** |
+| **A11** on the *registered pooled* statistic | `A` = −4.0, `φ` = 1.0, `U` = 1.00 | **"H2 ALIVE"** |
+
+Two of these need answering rather than burying.
+
+**The registered `H1` arm came out UNRESOLVED, and §1 still says SUPPORTED.**
+That is because the registered H1 arm was A3, the synthetic plant, whose
+mean-regret argmin sits at w4/w8 against the corpus's w12–w15 — a different
+regime, so it cannot speak about the corpus (§8, P3). The evidence §1 relies on
+is A11, A8 and the censoring counts, all of which are **declared additions made
+after preregistration** and are labelled as such in §4. The registered rule is
+not being overridden; it is being reported as having failed to decide, and a
+better instrument is being reported beside it.
+
+**The `A11` line says "H2 ALIVE", and §1 says REFUTED.** This is the pooled-
+statistic defect of §4.1 in its purest form. A11's residual `A` = −4.0 is
+**entirely** `bar`: `horizontal` and `vertical` are numerically identical on that
+arm, `A_hv` = **+0.0**, `L_hv` = **+0.0**, censoring 0/60 in both. `bar` differs
+from `vertical` in *shape*, not orientation, so pooling it into an orientation
+statistic imports a variable the hypothesis is not about. The registered **H2**
+rule — the one that names the transpose test — is met outright, and it is the
+rule that decides. But the pooled number is on the record, and it is the single
+strongest argument anyone could make against this milestone's H2 verdict.
+
 ---
 
 ## 7. Does `WINDOW_RADIUS = 13` survive? **Yes.**
@@ -444,12 +608,17 @@ the range the argmin takes over the five leave-one-out subsets. MEASURED.
 | A8 transposed | 17 | 12 | 1.1590 | 1.2604 | 0.1014 | 0.0110 | w12 | yes |
 | A11 symmetrised | 1 | 12 | 2.4901 | 2.5362 | 0.0461 | 0.0117 | w12 | yes |
 | A11 symmetrised | 17 | 11 | 2.4187 | 2.6836 | 0.2649 | 0.0088 | w11 | yes |
+| A9 `hp`, square | 1 | 14 | 1.5474 | 1.6008 | 0.0534 | 0.0174 | w14 | yes |
+| A9 `hp`, square | 17 | 12 | 1.2876 | 1.3123 | 0.0247 | 0.0101 | w12 | yes |
+| A10 square band | 1 | 13 | 3.3456 | 3.3456 | 0.0000 | 0.0000 | w13 | yes |
+| A10 square band | 17 | 14 | 2.7475 | 2.9382 | 0.1908 | 0.0079 | w14 | yes |
 
-**Every arm on real texture puts the argmin inside w11–w15, and the largest
+**All fourteen real-texture rows put the argmin inside w11–w15, and the largest
 penalty at w13 anywhere is 0.6759 DN — below the registered 0.87 DN threshold.**
 Neither limb of the rule fires. `WINDOW_RADIUS = 13` **survives**, and it
-survives under the H3 correction (A1, A2), under the squared geometry (A6),
-under a 90° scene rotation (A8) and under a fully isotropised plant (A11).
+survives under the H3 correction (A1, A2, A9), under the squared geometry (A6),
+under a squared scoring band with the plant unchanged (A10), under a 90° scene
+rotation (A8) and under a fully isotropised plant (A11).
 
 The argmins are well resolved: the leave-one-seed-out floor is 0.0000–0.0234 DN
 and the argmin does not move at all across the five subsets. But note that at
@@ -476,9 +645,9 @@ cannot move and a positive that must.
 | **N1** no-op treatment is bit-identical | driver skips the clone when no treatment is active | **PASS** by construction; A0 is byte-identical to M15 (Gate 2) |
 | **N2** `destripe` on a plant with no row structure | synthetic plant, `aniso` 0.99996 | **PASS** — A4x1's `A` is identical to A3's |
 | **N3** zero-step stratum | no depth discontinuity | **INFORMATIVE, not null** — see §6.3; the asymmetry is *larger* here, which is itself the finding |
-| **N4** square + isotropic must be symmetric | `A(A7) ≈ 0` | **A7 pending at time of writing** — superseded in practice by A11/A12, which are the same test with corpus statistics |
-| **P1** planted row FPN must move `A` | some amplitude changes the asymmetry | **FAIL — did not fire at 0.377 DN or 3.016 DN.** `ΔA = +0.0` at both |
-| **P2** the fix must undo the plant | A5 returns A4 to A3 | vacuous while P1 has not fired |
+| **N4** square + isotropic must be symmetric | `A(A7)` at the noise floor | **MARGINAL** — `A` = +1.5, `A_hv` = +2.0 against `φ_hv` = 1.0, so the median is 1 window outside the floor; but `U_h` = 0.30, `p` = 0.5078, i.e. the *sign* is a coin toss. See below |
+| **P1** planted row FPN must move `A` | some amplitude in {1, 8, 64}× changes the asymmetry beyond the floor, in fact 83's direction | **PASS at 64× only.** `ΔA` = +0.0 / +0.0 / **−2.0** windows at 0.377 / 3.016 / 24.128 DN, floor 0.5 |
+| **P2** the fix must undo the plant | A5x64 returns A4x64 to within the floor of A3 | **PASS.** `A` +0.0 → +2.5, `ΔA` vs A3 = +0.5 inside the 1.0 floor; level back to −1.4 % of A3. Oracle removal A5x64o returns `A` to +2.0 and the level to 12.698 — exactly A3 |
 | **P3** treatments must not destroy the signal | level within 20 %, argmin within ±3 windows | A1 +26.1 %, A2 +34.3 %, A11 −39.3 % — **all outside the 20 % band**; argmins all within ±2 windows and inside w11–w15 |
 | **P4** aggregate argmin must be interior | not at a ladder endpoint | **PASS** for every arm |
 | **G1** Gate 1, reproduce fact 83 | 12 numbers exact | **PASS** |
@@ -486,17 +655,37 @@ cannot move and a positive that must.
 | **G3** synthetic texture bit-identical to M13's | at seed `0x5EED_0F0C` | **PASS** |
 | **G4** read-only corpora unchanged | audit before/after | **PASS** |
 
-Two of these are real failures and are not being dressed up.
+Two of these need saying plainly rather than being left in a table cell.
 
-**P1 failed, and that is the single biggest weakness in this milestone.** A row
-pattern of 0.377 DN and of 3.016 DN, planted directly on the operator's input on
-an isotropic plant — exactly H3's mechanism and nothing else — moved the
-asymmetry by **zero windows**. So the pathway "row FPN → orientation asymmetry"
-was never demonstrated to exist at all at the amplitudes tested, and the A1/A2
-arms consequently cannot, on their own, refute a mechanism they were never shown
-able to detect. This is why §6.1 rests on the direct amplitude measurements and
-on H1's completeness instead. *The 64× arm (24.128 DN) was still running when
-this was written; §11 records what it showed.*
+**P1 fired only on the very last rung, and that is the whole point of running
+the ladder.** At 0.377 DN (28× the sensor's real row FPN) and at 3.016 DN
+(222×), the planted row pattern moved the orientation asymmetry by **exactly
+zero windows**. Only at 24.128 DN — **1774×** — did it move `A` at all, and then
+by −2.0 windows, roughly half of what M15 measured on the real corpus. Had the
+ladder stopped at 8×, this milestone would have had to report H3 as **NOT
+MEASURED**, because a plant that cannot express a failure carries no information
+about it (project rule 13 / discipline 24). It is worth recording that this
+report was drafted that way, twice, before the last arm landed. The lesson is not
+that the ladder happened to be long enough; it is that **an amplitude ladder must
+be run until the positive control fires or the amplitude becomes physically
+absurd** — and here it became absurd first. The amplitude that finally worked is
+three orders of magnitude above anything this sensor can produce.
+
+**N4 came out marginal, and it is worth saying why.** On the isotropic synthetic
+plant with a square ROI and a square scored region — no corpus, no FPN, nothing
+left but the machinery — `A_hv(A7)` = +2.0 against `φ_hv` = 1.0. That is one
+window outside its own floor, so N4 does not cleanly pass. Three things keep it
+from being load-bearing. First, `U_h` = 0.30 with `p` = 0.5078: only 3 of 10
+horizontal cells move the same way, which is a coin toss, against `U_h` = 1.00
+and `p` = 0.0020 for every corpus arm. Second, the **sign is opposite** to the
+corpus effect (+2.0 against A6's −7.5), so it cannot be a scaled-down version of
+it. Third, at the zero-step stratum A7's three geometries land on the *same*
+window — `horizontal` = 6, `vertical` = 6, `bar` = 6. A11 is the better null
+anyway: it isotropises the corpus's own texture rather than substituting a
+different spectrum, runs at the corpus's own operating point, and comes out at
+`A_hv` = **+0.0**, `L_hv` = **+0.0**. **UNVERIFIED:** M16 did not chase down the
+residual +2.0 on A7. It is small, unsigned and in the wrong direction, but it is
+not zero and it is not explained.
 
 **P3's 20 % level band was too tight for two of the treatments, and it was the
 wrong test for A11.** `destripe mean` and `destripe hp` necessarily change the
@@ -542,6 +731,14 @@ Stated plainly, as required.
    one where `horizontal` and `vertical` agree exactly. A strip of finite width
    is a different problem from a half-plane and M16 did not investigate it.
    UNVERIFIED.
+7. **The residual +2.0 windows on A7.** The purest machinery null — isotropic
+   synthetic texture, square ROI, square scored region, no FPN — did not come out
+   at zero. `A_hv(A7)` = +2.0 against `φ_hv` = 1.0. Its sign consistency is a
+   coin toss (`U_h` = 0.30, `p` = 0.5078) and its sign is *opposite* to the
+   corpus effect, so it cannot be a scaled version of it, and A11 nulls exactly
+   on the corpus's own texture. But +2.0 is not 0.0 and M16 did not chase it.
+   UNVERIFIED. Most likely finite-realisation anisotropy of the two independent
+   synthetic layers, but that is ARGUED, not measured.
 
 ---
 
@@ -549,16 +746,17 @@ Stated plainly, as required.
 
 | # | prediction | confidence | outcome |
 | --- | --- | --- | --- |
-| 1 | H3 will be REFUTED on the real corpus | 60 % | **RIGHT** (§6.1), though not by the route registered |
-| 2 | H2b (plant aspect) will be SUPPORTED | 50 % | **WRONG** — squaring the ROI *enlarged* the asymmetry, `A_hv` −4.0 → −7.5 |
+| 1 | H3 will be REFUTED on the real corpus | 60 % | **RIGHT** (§6.1), and in the end by the registered route, though only after the ladder was extended to 64× |
+| 2 | H2b (plant aspect) will be SUPPORTED | 50 % | **WRONG** — and wrong twice over. Squaring the ROI *enlarged* the asymmetry rather than removing it, and A10 then showed most of the enlargement was the *scored region* (H2a), not the plant aspect (§6.2) |
 | 3 | H1 will be REFUTED | 55 % | **WRONG** — H1 is supported, decisively |
-| 4 | P1 will fire only at 8× or 64×, not 1× | 65 % | **WRONG at 8×** — it did not fire at 1× or 8× |
+| 4 | P1 will fire only at 8× or 64×, not 1× | 65 % | **RIGHT** — it fired at 64× and nowhere below (§8) |
 | 5 | `WINDOW_RADIUS = 13` will survive | 80 % | **RIGHT** (§7) |
 | 6 | A0 ↔ M15 reproduction will pass exactly | 85 % | **RIGHT** |
 
-Three of six wrong, including both of the ones about my own preferred mechanism.
-The preregistration earned its keep: prediction 3 in particular would have been
-very easy to quietly forget.
+Two of six wrong, and both of them were about my own preferred mechanism: I
+expected the corpus to be blameless and the geometry to be at fault, and it is
+the other way round. The preregistration earned its keep — prediction 3 in
+particular would have been very easy to quietly forget.
 
 ---
 
@@ -595,18 +793,67 @@ this milestone. **Any published `dmae_far`, `bleed_*` or `mis_*` number for a
 ```powershell
 $env:PATH = "$env:USERPROFILE\.cargo\bin;$env:PATH"
 cd experiments\m16-orientation-fpn
-.\run-m16.ps1          # arms A0-A10, audit-bracketed; skips arms already present
-.\run-m16b.ps1         # A11, A12  (declared additions)
-.\run-m16c.ps1         # the same arms as run-m16.ps1, reordered by decision value
-python m16_gate1.py    # fact 83 from M15's committed CSVs, independent code
-python m16_analyse.py  # every table in this report
+.\run-m16.ps1           # arms A0-A10, audit-bracketed; skips arms already present
+.\run-m16b.ps1          # A11, A12  (declared additions)
+.\run-m16c.ps1          # the same arms as run-m16.ps1, reordered by decision value
+python m16_gate1.py     # fact 83 from M15's committed CSVs, independent code
+python m16_analyse.py   # every table in this report except SS 6.4
+python m16_censoring.py # SS 6.4, and data/censoring.csv
 ```
 
 Every table above is regenerated from the committed CSVs in
-`experiments/m16-orientation-fpn/data/` by `m16_analyse.py` alone. **Nobody needs
-to run the harness to check the headline** — the CSVs are the evidence and the
-analyser reads only them.
+`experiments/m16-orientation-fpn/data/` by `m16_analyse.py` and
+`m16_censoring.py` alone. **Nobody needs to run the harness to check the
+headline** — the CSVs are the evidence and the analysers read only them. Their
+stdout is committed as `data/analysis.txt` and `data/censoring.txt` so a reader
+can diff rather than re-run.
+
+A note on the sweep scripts: they are three files rather than one because the
+arms were queued in three waves as the design tightened, and each script skips
+any arm whose CSV already exists. Running all three in order from a clean
+`data/` reproduces the full 17-arm set. `run-m16c.ps1` re-lists arms that
+`run-m16.ps1` also lists; that is deliberate and idempotent, not a duplicate run.
 
 `data/binary-equivalence.txt` records that the two binaries used
 (`target/` for A0–A4x8, `target-aux/` for the rest) produce byte-identical edge
-CSVs from the same command line, SHA256 matched.
+CSVs from the same command line, SHA256 matched. **Byte-identity with M15
+(Gate 2) is a consistency check, not independent evidence** (discipline 34 / 20);
+the independent evidence is `m16_gate1.py`, which recomputes fact 83 from M15's
+committed data with its own code and shares nothing with the harness.
+
+---
+
+## 13. Proposed SYNTHESIS entries
+
+Numbered from 90 as instructed by the orchestrator. **Note for reconciliation:**
+`crates/strehl-core/src/merge.rs` already cites "fact 320" and this report cites
+fact 162, so the live fact list runs well past 90; M16 has used the reserved
+block as directed and has not checked it for collisions.
+
+### §4 facts
+
+| # | Fact | Consequence | Source |
+| --- | --- | --- | --- |
+| 90 | The occluding-edge orientation asymmetry of fact 83 is a property of the corpus subjects, not of the merge, the focus operator or the `\|d\| ≤ 24` band. Transposing the plant's textures 90° while holding every piece of machinery fixed transposes the asymmetry exactly: median \|shift(rotated geometry) − shift(control)\| = **0.0 windows**, against **8.0** for the same geometry. | Fact 83 is not a defect and there is no code change that removes it. Question 20 is closed. | M16 §6.2, arms A6/A8, 30 cells, `data/A{6,8}-*.csv` |
+| 91 | Making the corpus texture exactly transpose-invariant (`T ← (T + Tᵀ)/2`, which forces `Σgx² = Σgy²` identically) removes the asymmetry completely: median `w*(1)` goes from 8.0 `horizontal` vs 20.0 `vertical` to **8.0 vs 8.0**, and `A_hv` from −7.5 to **+0.0** windows against a leave-one-seed-out floor of 1.0. | An isotropy intervention on the *scene*, with the machinery untouched, is sufficient to null the effect. Nothing is left for a machinery defect to explain. | M16 §6.3, arms A6/A11, `data/A11-*.csv` |
+| 92 | Mechanism: a horizontal edge is localised by `Gy` and a vertical edge by `Gx`, and the corpus's far-field texture carries **14–22× more vertical gradient energy than horizontal** (`gx²/gy²` = 0.046–0.073; near-field 0.198–0.294). | The horizontal edge is handed 14–22× more gradient signal, needs less spatial averaging and settles on a much smaller focus window — median `w*(1)` 9.0 against 17.0. Any future corpus with different lineation will move these window numbers. | M16 §3.2/§6.3, `data/fpnscan-*.csv` |
+| 93 | The sensor's fixed pattern is **isotropic at every measured ISO**: master-bias `gx²/gy²` = **0.968–0.999** across all 11 dark ISO groups (50–2000), 20 frames each, against a scaled split-half null. | Row-banded FPN is not a mechanism this sensor makes available. Any future proposal resting on row/column FPN asymmetry must first move this number. | M16 §3.1, `data/darkfpn.csv` |
+| 94 | The row-correlated component of the sensor's fixed pattern is **0.0036–0.0136 DN** at the corpus ISOs (50 and 160) — about **0.3 % of fixed-pattern variance** — against **11.8–51.4 DN** of row-marginal structure in the texture tiles the harness uses. A ratio of ~10³. | The row structure in the corpus tiles is scene, not sensor, by three orders of magnitude. | M16 §3.1/§3.2, `data/darkfpn.csv`, `data/fpnscan-*.csv` |
+| 95 | Per-frame row/column mean subtraction removes **44–99 % of a corpus tile's total variance** while moving `gx²` by only **3–17 %** and leaving `gx²/gy²` still 2–10× from isotropic. | Destriping cannot correct a Sobel-scale directional bias. The focus operator is a high-pass and never used the component the treatment removes. A destripe arm therefore tests almost nothing about a gradient-domain effect. | M16 §3.3, `data/anisoscan-*.csv` |
+| 96 | The reviewer's proposed fix — per-frame row and column mean subtraction before the focus operator — changes fact 83 by **nothing**: `A` = −3.5 → −3.5 windows. On the level statistic it is **worse**: `L_hv(1)` = −8.0 → −9.5. | The fix is inert on this corpus and is not worth shipping for this reason. It may still be worth having for others; M16 did not test any. | M16 §6.1, arms A0/A1, `data/A1-*.csv` |
+| 97 | `WINDOW_RADIUS = 13` survives every M16 arm. The mean-regret argmin stays inside M13's published w11–w15 basin under destriping, a squared ROI, a 90° scene rotation and a fully isotropised plant; the largest penalty at w13 anywhere is **0.6759 DN**, below M15's registered 0.87 DN threshold. Leave-one-seed-out floor 0.0000–0.0234 DN, argmin stable across all five subsets. | No window number M13 or M15 produced is biased by an orientation defect, because there is no orientation defect. 13 stands. | M16 §7, `data/A*-*.csv` |
+| 98 | The orientation effect is larger in the **level** than in the **shift**, and it is present with **no depth discontinuity at all**. At step 0 on the real corpus the `vertical` geometry's argmin runs to the ladder endpoint w40 — *no turnover found within the sweep* — while `horizontal` turns over at 12–20; symmetrising the texture brings `vertical` back to 16 beside `horizontal`'s 17. | Fact 83's ±2.5-window regulariser shift is a second-order consequence of an 8–12-window gap that is already there at width 1. Future work should measure the level, not the shift. | M16 §6.3, N3 stratum, `data/A{0,2,6,11}-*.csv` |
+| 102 | **Turnover censoring is orientation-asymmetric and follows the scene exactly.** Counting cells whose mean-regret argmin lands on the last rung of the sweep: on the corpus `vertical` is censored 10–15/60 and `horizontal` **0/60 in 480 cells**; transposing the scene 90° swaps this to `horizontal` 16/60 and `vertical` 0/60; symmetrising the texture gives **0/60 in every column**. | A categorical, non-parametric confirmation of fact 90 that is independent of every median, noise floor and pooling choice. It also means M15's and M16's `vertical` medians are **censored from below**, so the true orientation gap is wider than measured, not narrower. | M16 §6.4, `data/censoring.csv`, arms A6/A8/A11 |
+| 99 | H3's mechanism **is** expressible in the harness, but only at absurd amplitude. Planting a row-correlated pattern on the isotropic synthetic plant moves the orientation statistic by **0.0 windows at 0.377 DN (28× the sensor), 0.0 at 3.016 DN (222×) and −2.0 at 24.128 DN (1774×)**, floor 0.5; applying the fix at 24.128 DN returns it to within +0.5 of the unplanted arm. | The positive and negative controls both pass, so the H3 arms carry information and the refutation is by the pre-registered rule rather than by argument. And even at 1774× the sensor's amplitude the mechanism reproduces only **half** of fact 83; at the real amplitude, ≈0.03 %. | M16 §6.1/§8, arms A3/A4x1/A4x8/A4x64/A5x64 |
+| 100 | M13's `edge_mode` derives `baseline_lo`, `baseline_hi` and `max_d` from `roi.width` **regardless of the distance axis**. On a 384×256 ROI a `horizontal` edge's far baseline band `[160, 188]` is **empty**, `dmae_far` falls back to `0.0`, and `equivalent_width`'s baseline is `median(∅)`. | Any published `dmae_far`, `bleed_*` or `mis_*` number for a horizontal edge on a non-square ROI is unsound. `E_excess` reads none of these and is unaffected — which is why it was M15's and M16's primary statistic. | M16 §11, `experiments/m13-window-depth/src/edge.rs`, VERIFIED by reading; predicted in M16's preregistration §6 before measurement |
+| 101 | A **rectangular** scoring region is an orientation-non-neutral gain on the regulariser-shift statistic. Holding the plant, band, seeds and code identical and scoring a centred 256×256 square instead of the full 384×256 ROI takes `A_hv` from −4.0 to **−7.0 windows** (1.75×) while leaving the level gap `L_hv(1)` at −8.0 → −8.5, inside the 1.5-window floor. | M13 and M15 measured roughly **half** the orientation shift that was present. The rectangle does not *create* bias — symmetrising the texture under the identical square geometry still nulls it to +0.0 — but it under-reports it. Prefer the level statistic, or a square region, for any future orientation claim. | M16 §6.2, arms A0/A10/A6, `data/A10-*.csv` |
+
+### §5 discipline items
+
+| # | Discipline |
+| --- | --- |
+| 40 | **A treatment that removes a defect also removes whatever scene content shares its geometry.** When the scene component is orders of magnitude larger than the defect — here ~10³ — the treatment arm cannot separate them, and a null result from it means nothing on its own. Only a planted positive control at a measured amplitude, plus a direct measurement of the defect's amplitude, can decide. M16's H3 arms were nulls for exactly this reason and the verdict had to come from elsewhere. |
+| 41 | **Before blaming the machinery, make the scene symmetric under the transformation the machinery is accused of breaking, and re-measure.** For a 90° orientation claim that is `T ← (T + Tᵀ)/2` on a square tile: one line, exact, and it keeps the corpus's own contrast and spectrum, so there is no synthetic-regime objection to answer. Transposing the scene (`T ← Tᵀ`) is the complementary test and is even cheaper. |
+| 42 | **Pooling two conditions because they share one property imports every property they do not share.** M16 pre-registered `vertical ∪ bar` because both have vertical boundaries. `bar` also differs in *shape*, and on the decisive arm the entire residual statistic came from `bar` alone while `horizontal` and `vertical` agreed exactly. Report the unpooled contrast beside the registered one; never silently replace it. |
+| 43 | **A synthetic control that lands in a different regime from the real data cannot carry a verdict about the real data.** Check the control's mean-regret argmin against the published basin first. M16's registered isotropic arm sat at w4/w8 against the corpus's w12–w15 and had to be replaced by a symmetrised *real-texture* arm before it could decide anything. |
+| 44 | **Count the censored cells before quoting a median of argmins, and report the count.** Discipline 25 forbids reading an endpoint argmin as an optimum, but a *median over a set containing endpoint cells* smuggles the same error back in one level up. In M16 the censoring rate was 0/60 for one orientation and 15/60 for the other on the same data, so the medians being compared were not the same kind of quantity. The censoring count is also the most robust statistic in the milestone — binary per cell, immune to floors, ties and pooling — and it should be computed first, not last. |

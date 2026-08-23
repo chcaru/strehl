@@ -19,7 +19,13 @@ $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
 $exe = "target-aux\release\m16-orientation-fpn.exe"
-if (-not (Test-Path $exe)) { throw "build target-aux first" }
+if (-not (Test-Path $exe)) {
+    $exe = "target\release\m16-orientation-fpn.exe"
+    if (-not (Test-Path $exe)) {
+        $env:PATH = "$env:USERPROFILE\.cargo\bin;$env:PATH"
+        cargo build --release
+    }
+}
 
 $W15 = @(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 23, 26, 33, 40)
 $MEAS = ($W15 | ForEach-Object { "tenengrad-w$_" }) -join ","
