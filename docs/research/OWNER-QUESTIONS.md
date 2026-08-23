@@ -38,6 +38,30 @@ a definition that arbitrary.
 **What I did:** left it open; the shipped contract uses the acceptance-set-size channel,
 which is the only quantity that generalised across all three stacks.
 
+**Q4 — is gate 0 a shipping configuration at all, or only a diagnostic?** This is the one
+decision tonight that I think is genuinely yours, because it is a product question wearing
+a numerical disguise. Gate 0 admits exactly one frame per pixel, which is **selection** —
+the thing every other stacker does and the thing this project exists to replace. Repairing
+fact 341 forced the point into the open: selection is not free, it measurably costs
+**1.074× in noise** against a single frame, and until commit `253e56f` our own model
+reported that cost as 1.000× and could not see it. The test that was supposed to guard the
+merge, `the_merged_estimate_is_never_noisier_than_a_single_frame`, passed for four days
+**because the model was blind in precisely the place the invariant could be violated** — it
+was proving an invariant against a model that could not express its violation. That is the
+fifth check we have found with no power to fail, and the first one inside shipped Rust
+rather than in an experiment.
+**What I did:** priced selection into `predicted_sigma` at n=1, restated the invariant as a
+two-branch contract (n≥2 strictly beats one frame; n=1 is measurably worse), and made the
+test assert that **both branches actually occur**, so it cannot pass vacuously again. Gate 0
+is now documented as a diagnostic, not a shipping default.
+**What I could not settle, and why it needs you:** if gate 0 is only ever a diagnostic, the
+honest thing is to stop reporting it as a merge arm in comparisons — but it is also the only
+arm that is directly comparable to what every competitor ships, which makes it the most
+useful number in any benchmark we publish. Keeping it means publishing a configuration we
+tell people not to use; dropping it means losing the apples-to-apples column. My default is
+to keep it, clearly labelled as the competitor-equivalent baseline rather than as an option.
+Say the word if you would rather it disappear from user-facing output entirely.
+
 ## Warnings — things I am deliberately not surfacing to users yet
 
 **W1 — the f/5.6 advice.** M20 §7 suggests shooting wider and letting reconstruction do the
@@ -49,6 +73,17 @@ at f/5.6 on real glass. Flagged in M20-VERIFICATION §5.5.
 clipping whole-stack" is dead: at the shipped regularisation it is 1.4×, and heavier still
 1.0×. Fact 243's HDR verdict rests partly on it and has not been re-derived.
 
+**W3 — M38's retention band is not settled, and the fact-341 repair may overshoot.** After
+pricing selection into `predicted_sigma`, the corrected gate-0 detail figure moved from
+**+35.47% to 0.885× (−11.5%)** — it did not land on 1.0×, it crossed it, and the artifact
+changed sign. Two readings are open and I cannot currently separate them: either the 1.074×
+constant is too large for this code path, or **−11.5% is the correct reading of a region
+that is low-detail rather than detail-free** (the flat ROI's own single-frame corrected value
+is 14.7270, not 0, so it does contain some structure). Until that is resolved — it is
+question 101, and it needs a synthetic null rather than an argument — **do not quote M38's
+retention band as a settled number**, in a README, a benchmark, or anywhere a reader would
+take it as a specification. An independent verifier is auditing the repair now.
+
 ## Cheap follow-ups I did not run
 
 - Run `113MSDCF` as a second placebo for M23's gate (b); currently n=1. ~63 frames, cheap.
@@ -57,3 +92,20 @@ clipping whole-stack" is dead: at the shipped regularisation it is 1.4×, and he
   contributes to fact 43's span dependence. This is the live thread M23 left behind.
 - R5 (blur-equalised edges) is untested and is now the better candidate than R4, because it
   plants nothing and so is immune to the mechanism that killed R4.
+
+## Running while you sleep
+
+Six agents are live. Two are long-runners that have not reported yet; three were dispatched
+tonight; one is a verifier of my own work, because on this project the author never verifies
+their own work and the fact-341 repair above is mine.
+
+| Agent | What it is deciding | Age at time of writing |
+| --- | --- | --- |
+| **M16** | Whether row/column FPN explains the orientation anomaly (question 20). If it does, `WINDOW_RADIUS = 13` carries a directional bias and **every window number M13 and M15 produced** inherits it | 18.5 h |
+| **M25** | The calibrated simulator / digital twin — the instrument that would let us answer question 101 with a synthetic null instead of an argument | 15.3 h |
+| **M40** | Auditing my fact-341 repair against five named choice points, under rule 24 (re-choose, do not re-compute) | dispatched tonight |
+| **M41** | The pre-registered six-arm kill experiment for review item R3 (deconvolution as the core merge). R3 is currently marked REFUTED on the strength of M20 alone, and M20 never touched `crates/**` | dispatched tonight |
+| **M42** | Whether `WINDOW_RADIUS = 13` survives the operator change. 13 was tuned for `\|grad\|`; we now ship `tenengrad-sq`. **A window optimum is a property of the operator/window pair**, and nobody has checked the new pair | dispatched tonight |
+
+M42 is the one I would watch. If 13 is wrong for the operator we just adopted, it is a
+shipped-default defect, and it sits underneath a large fraction of the corpus's numbers.
