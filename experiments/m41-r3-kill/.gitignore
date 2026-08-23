@@ -1,0 +1,5 @@
+out/*.npy
+out/*.npz
+out/*.tif
+out/*.tiff
+out/*.png
