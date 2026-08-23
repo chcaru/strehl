@@ -1,0 +1,62 @@
+M13 committed data: 36 cells, 20 windows, 3 seeds, stratum width=1
+  109MSDCF: 18 cells
+  119MSDCF: 18 cells
+  depth-step cells: 30   zero-step cells: 6
+
+-- objective: excess_dn, cells WITH a depth step (30 cells) --
+   window  mean regret  worst regret                     worst cell
+        0      103.531       170.555       119MSDCF/vertical@274/s2
+        1       68.384       131.382       119MSDCF/vertical@274/s2
+        2       41.539        96.085       119MSDCF/vertical@274/s2
+        3       30.103        83.789       119MSDCF/vertical@274/s2
+        5       17.499        64.548       119MSDCF/vertical@274/s2
+        6       13.195        56.186       119MSDCF/vertical@274/s2
+        8        7.011        39.879       119MSDCF/vertical@274/s2
+        9        5.520        32.664       119MSDCF/vertical@274/s2
+       10        4.513        26.373       119MSDCF/vertical@274/s2
+       11        3.852        20.988       119MSDCF/vertical@274/s2
+       12        3.457        16.347       119MSDCF/vertical@274/s2
+       13        3.171        12.111       119MSDCF/vertical@274/s2
+       15        4.037        25.319     119MSDCF/horizontal@210/s8
+       17        6.187        35.663     119MSDCF/horizontal@210/s8
+       18        7.359        37.697    119MSDCF/horizontal@210/s16
+       20       11.020        47.180    119MSDCF/horizontal@210/s16
+       23       20.903       101.353        119MSDCF/bar@274w24/s32
+       26       27.599       130.498        119MSDCF/bar@274w24/s32
+       33       33.280       138.284        119MSDCF/bar@274w24/s32
+       40       37.707       132.020    119MSDCF/horizontal@210/s32
+    min mean regret : w13 (3.171)  [interior]
+    min worst regret: w13 (12.111)  [interior]
+
+-- NULL: zero-step cells only (6 cells) --
+        0     120.1363
+        1      83.0552
+        2      56.1679
+        3      45.6978
+        5      31.4617
+        6      26.2744
+        8      17.4145
+        9      14.3251
+       10      11.5619
+       11       9.4542
+       12       7.5739
+       13       5.8185
+       15       3.7772
+       17       2.7260
+       18       2.3751
+       20       1.9446
+       23       0.9983
+       26       0.8464
+       33       0.1393
+       40       0.0002
+    min mean regret : w40 (0.0002)  [ENDPOINT]
+
+-- GATE 1 --
+  [PASS] argmin mean regret == w13            got w13
+  [PASS] mean regret == 3.171 DN              got 3.1708
+  [PASS] argmin worst regret == w13           got w13
+  [PASS] worst regret == 12.111 DN            got 12.1110
+  [PASS] zero-step argmin == w40 ENDPOINT     got w40
+  [PASS] zero-step regret == 0.000 DN         got 0.0002
+
+GATE 1: PASS
