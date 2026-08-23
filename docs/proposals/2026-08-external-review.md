@@ -37,7 +37,7 @@ project actually did, and links to the measurement where one exists.
 | R20 | Depth + uncertainty as a first-class product | design | **QUEUED** behind R2 |
 | R21 | Depth-from-breathing: the fitted `log a` ladder + measured `p` is a metric ruler needing no lens DB | cheap | **QUEUED — attractive.** Cross-checkable against fact 54's pixel-measured focus index |
 | R22 | Calibrated simulator / digital twin | medium | **ACCEPTED in part, already earning.** M20 built a 1-D instance and gated it against facts 12/27/28 to 3–4 digits; it then reproduced fact 24 **unprompted** (−49% vs measured −58%/−53%). That is the compounding value the review predicted. A 2-D version is worth building |
-| R23 | Physical ground truth (tilted planar targets), SSIMULACRA2/butteraugli scoring | capture | **QUEUED.** Add tilted-target capture to `captures-needed.md` |
+| R23 | Physical ground truth (tilted planar targets), SSIMULACRA2/butteraugli scoring | capture | **ACCEPTED → requested** as [`captures-needed.md`](../captures-needed.md) §8. A plane is the only analytic ground-truth depth obtainable without a rail, and it doubles as the project's first **occlusion null** — any halo or bimodality flag raised on a plane is a false positive by construction |
 | R24 | Per-stack self-supervision (predict frame k from k±2); learned adaptivity gate trained only on the twin | medium | **DEFERRED but noted as covenant-safe.** Both avoid risk 3's domain gap |
 | R25 | **EDOF/microscopy literature was never surveyed** | cheap | **ACCEPTED → M19.** Correctly identified gap in workstream B |
 | R26 | Ship order: merge → confidence → alignment metacal → deconvolution → occlusion → capture designer | process | **ACCEPTED with one change.** M20 moves deconvolution *out* of the core sequence. Revised: **merge (M18) → confidence/posterior → alignment metacal+blur-equalisation → occlusion unmixing → capture designer**, with deconvolution as an opt-in stage whenever someone wants it |
@@ -99,8 +99,15 @@ is **1.15× on 15% of pixels**. The review attached the big finding to the small
 
 1. **Stop shooting at marked f/11.** It is optically f/33 (fact 28); MTF@Nyquist is 0.000
    (fact 12); critical sampling is at marked **f/6.21**. M20 §4.4 puts the cost at **9.6×** in
-   4-px contrast against f/5.6. The trade is 2× the frames for the same depth. Is that acceptable
-   for your subjects, or is frame count the binding constraint?
-2. **Tilted planar target** (R23) — a ruler or grid at a known angle, shot as a normal bracket,
-   gives analytic ground-truth depth for free. Worth adding to `captures-needed.md` §5?
-3. The flat-field capture (`captures-needed.md` §4) is still the blocker for R12 (PRNU).
+   4-px contrast against f/5.6. The trade is 2× the frames for the same depth — *not* more light.
+   Written up as [`captures-needed.md`](../captures-needed.md) §0, with the aperture-pair capture
+   that would turn it from DERIVED into MEASURED as §7.
+2. **Tilted planar target** — now requested as [`captures-needed.md`](../captures-needed.md) §8.
+   A textured flat surface at 30–60° to the sensor, shot as a normal bracket, gives analytic
+   ground-truth depth *and* the project's first true occlusion null.
+3. The flat-field capture ([`captures-needed.md`](../captures-needed.md) §4) is still the blocker
+   for R12 (PRNU).
+4. **Process question.** M20 refutes the headline of a review that is, on the whole, unusually
+   good — and several of its other proposals (R2 occlusion bimodality, R4 metacalibration, R14 the
+   fold seam) are strong. Do you want the reviewer's remaining items worked through at the same
+   depth, or should the project return to the build sequence in R26 now that the merge is landing?

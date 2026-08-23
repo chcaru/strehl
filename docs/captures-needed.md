@@ -5,6 +5,47 @@ says exactly what to shoot, why, and what it unblocks.
 
 ---
 
+## 0. Shooting advice — stop shooting at marked f/11
+
+Not a capture request. A change to how the existing rig is used, and the
+largest single quality lever measured anywhere in this project.
+
+**Marked f/11 is optically f/33** on this rig (fact 28: the body writes the
+marked aperture into EXIF and applies no bellows correction for working at 2:1).
+At that effective aperture the diffraction cutoff falls to 0.2762 cyc/px against
+a Nyquist of 0.5, so **MTF at Nyquist is exactly 0.000** (fact 12, measured).
+More than half the band the sensor can record is empty before any software runs,
+and no stacker — this one included — can put it back. Critical sampling is at
+**marked f/6.21**.
+
+Measured cost, at matched focus-axis sampling and fixed subject depth
+(`research/M20-deconvolution-ceiling-measured.md` §4.4):
+
+| marked | optical `N_eff` | contrast at 4-px detail | vs f/11 |
+| --- | --- | --- | --- |
+| f/4 | 12.0 | 0.5977 | **12.9x** |
+| f/5.6 | 16.8 | 0.4467 | **9.6x** |
+| f/8 | 24.0 | 0.2416 | **5.2x** |
+| f/11 | 33.0 | 0.0463 | 1.0x |
+| f/16 | 48.0 | 0.0000 | zero |
+
+**The trade is frame count, not light.** Depth of field scales with `N_eff`, so
+covering the same subject depth at f/5.6 instead of f/11 needs about **2x the
+frames**. It does not need more total light — a wider aperture more than pays
+for the extra frames. At a fixed total capture time the end-to-end SNR at 4-px
+detail is **13.5x** better at f/5.6; even holding total light constant it is
+**6.9x** better.
+
+**Try it on the next stack.** Same subject, two brackets: one as usual at f/11,
+one at f/5.6 with twice the frames. That pair is also a genuinely useful capture
+for the project — see §7.
+
+*Caveat, stated honestly: the table is DERIVED from a diffraction model gated
+against facts 12, 27 and 28 (agreement to 3-4 digits), not from a side-by-side
+shot. The two-bracket pair above is what would turn it into a measurement.*
+
+---
+
 ## 1. Dark frames — DELIVERED
 
 **Status:** delivered and measured. Results in
@@ -289,7 +330,84 @@ directory mirrored to a second path being mistaken for a second sample.
 
 ---
 
-## 6. Corpus locations — read-only
+## 7. Aperture pair — REQUESTED, cheap, high value
+
+**Status:** requested. One afternoon. Turns §0's derived table into a
+measurement, and §0 is currently the largest quality claim in the project
+resting on a model rather than on data.
+
+**What to shoot.** One subject, two brackets, back to back, nothing else changed:
+
+| | Bracket A | Bracket B |
+| --- | --- | --- |
+| Aperture | **marked f/11** (as currently shot) | **marked f/5.6** |
+| Frames | as you would normally shoot it | **about 2x** bracket A |
+| Depth covered | identical | identical |
+| ISO, lighting, magnification, subject | identical | identical |
+| Exposure | metered normally | metered normally (it will be shorter) |
+
+Choose a subject with **fine high-frequency detail** — chitin, fabric weave,
+sand, hairs. Smooth subjects cannot show the difference because they have no
+energy at the frequencies diffraction is removing.
+
+**Do not** try to match total exposure time or total light between the two.
+The comparison the project needs is the one a photographer would actually make:
+the same subject, shot the way each aperture wants to be shot.
+
+**What it settles.** Whether the 9.6x contrast figure in §0 survives contact with
+a real lens. The model assumes a diffraction-limited system; a real lens at f/5.6
+also has aberrations that f/11 suppresses, and the model does not know about
+them. If aberrations dominate at f/5.6 the advantage shrinks — and that is
+exactly the number nobody has.
+
+If it is convenient, a third bracket at **marked f/8** makes it a curve rather
+than a pair.
+
+---
+
+## 8. Tilted planar target — REQUESTED, cheap
+
+**Status:** requested. Not blocking, but it is the only source of **analytic
+ground-truth depth** available without a rail, and the project currently scores
+every depth and merge result against plants it made up itself.
+
+**What to shoot.** A **flat, densely textured, rigid surface**, positioned at a
+steep angle to the sensor plane so that focus sweeps across it, captured as an
+ordinary in-camera focus bracket.
+
+| | |
+| --- | --- |
+| Target | Flat and rigid: fine sandpaper, a printed noise/grid pattern on card, a banknote, a ceramic tile with texture. **Not** paper that can curl. |
+| Texture | Dense and broadband. A printed random-dot or noise pattern is ideal; a regular grid is acceptable but aliases. |
+| Angle | Steep — roughly **30-60 degrees** to the sensor plane, so the near and far ends of the frame are several depths of field apart. |
+| Frames | 40+, covering near edge to far edge. |
+| Aperture | Shoot it **twice**, at marked f/5.6 and marked f/11, if that is cheap. This makes it serve §7 as well. |
+| Also record | Roughly what the tilt angle was, and the approximate near and far distances. Rough is fine — the *planarity* is what matters, not the numbers. |
+
+**Why it is worth an afternoon.** A plane is the one subject whose true depth map
+is known in closed form up to three parameters, and those three parameters can be
+fitted from the data itself. So:
+
+- **Depth accuracy becomes measurable**, not merely plausible. Fit a plane to the
+  estimated depth map; the residual *is* the error, per pixel, with no oracle.
+- **The confidence map becomes testable.** Confidence claims to predict where the
+  estimate is wrong. On a plane that is a direct check: does predicted uncertainty
+  correlate with actual residual?
+- **It is a null for occlusion.** A plane has no depth discontinuities anywhere,
+  so any bimodality, halo or occlusion flag the pipeline raises on it is a **false
+  positive**, by construction. The project has no such null today.
+- **It calibrates the focus axis.** Depth is linear across the frame, so the
+  fitted per-frame focus position must be monotone and smooth — an independent
+  check on fact 54's pixel-measured focus index and on the depth-from-breathing
+  idea.
+
+**One trap.** Fill the frame with the target and nothing else. A visible edge,
+background or mount reintroduces exactly the depth discontinuity the null is
+supposed to exclude.
+
+---
+
+## 9. Corpus locations — read-only
 
 **Never write to any of these.**
 
