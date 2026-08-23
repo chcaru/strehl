@@ -1,0 +1,73 @@
+C:\dev\blog\death-of-software\projects\strehl\experiments\M55-acceptance-spec\src\e11_q165.py:20: SyntaxWarning: invalid escape sequence '\p'
+  Read-only with respect to D:\personal\macro.  No existing script is modified.
+==============================================================================
+M55b E11 -- question 165: the flat-ROI contiguous penalty
+==============================================================================
+   PR29  Gaussian sigma 0.0500 px -> true MTF at f_sig=0.2762 is 0.996242   (loss  0.376 %)
+   PR29  Gaussian sigma 0.1245 px -> true MTF at f_sig=0.2762 is 0.976929   (loss  2.307 %)
+   PR29  Gaussian sigma 0.2645 px -> true MTF at f_sig=0.2762 is 0.900011   (loss  9.999 %)
+   PR29  Gaussian sigma 0.5000 px -> true MTF at f_sig=0.2762 is 0.686288   (loss 31.371 %)
+
+==============================================================================
+  112MSDCF  flat ROI (2747, 32, 512, 512)  62 frames
+==============================================================================
+     best-focus frame 38 of 62; median level   108.00 DN
+      K   split        C (canon)        SE        |C|/SE   contig/parity    level_a   level_b
+C:\dev\blog\death-of-software\projects\strehl\experiments\M55-acceptance-spec\src\e11_q165.py:87: RuntimeWarning: overflow encountered in scalar divide
+  scale = r_full.sum() / max(r_half.sum(), 1e-300) if abs(r_half.sum()) > 0 else 2.0
+      8   parity       +1.88538e+06  1.0383e+05     18.16                    123.08    122.95
+      8   contiguous   -4.78217e+05         inf      0.00        -0.2536     123.82    121.86
+     16   parity       +1.62718e+06  9.0988e+04     17.88                    124.06    123.86
+     16   contiguous   -5.05168e+05         inf      0.00        -0.3105     124.86    121.75
+     32   parity       +1.78201e+06  8.8113e+04     20.22                    124.32    124.61
+     32   contiguous   -5.65461e+05         inf      0.00        -0.3173     124.85    121.88
+     62   parity       +1.89120e+06  9.3347e+04     20.26                    124.47    124.64
+     62   contiguous   +5.51390e+04  3.3895e+04      1.63         0.0292     125.98    123.97
+
+==============================================================================
+  113MSDCF  flat ROI (2747, 32, 512, 512)  63 frames
+==============================================================================
+     best-focus frame 39 of 63; median level   212.00 DN
+      K   split        C (canon)        SE        |C|/SE   contig/parity    level_a   level_b
+      8   parity       +4.90841e+06  2.5999e+05     18.88                    242.65    241.55
+      8   contiguous   +8.02782e+05  2.4043e+05      3.34         0.1636     243.34    240.19
+     16   parity       +5.04181e+06  2.7298e+05     18.47                    244.78    244.02
+     16   contiguous   +8.56001e+05  2.2324e+05      3.83         0.1698     246.35    239.73
+     32   parity       +5.05912e+06  2.6958e+05     18.77                    245.34    245.69
+     32   contiguous   +6.19255e+05  2.3908e+05      2.59         0.1224     246.34    239.93
+     63   parity       +5.41858e+06  2.9358e+05     18.46                    245.48    245.62
+     63   contiguous   +2.52268e+05  8.1187e+04      3.11         0.0466     248.83    245.00
+
+==============================================================================
+  foam  flat ROI (2747, 32, 512, 512)  62 frames
+==============================================================================
+     best-focus frame 44 of 62; median level   642.50 DN
+      K   split        C (canon)        SE        |C|/SE   contig/parity    level_a   level_b
+      8   parity       +1.77731e+08  6.1227e+07      2.90                    809.72    807.38
+      8   contiguous   +2.61507e+07  2.5395e+07      1.03         0.1471     796.95    803.23
+     16   parity       +1.48715e+08  5.4213e+07      2.74                    829.92    831.91
+     16   contiguous   +2.38823e+07  2.2146e+07      1.08         0.1606     812.10    812.88
+     32   parity       +1.42438e+08  5.2685e+07      2.70                    883.78    887.97
+     32   contiguous   +1.91792e+07  2.1326e+07      0.90         0.1346     852.31    847.51
+     62   parity       +1.25611e+08  5.2704e+07      2.38                    912.63    919.08
+     62   contiguous   +4.54590e+06  2.4333e+06      1.87         0.0362     955.14    881.20
+
+==============================================================================
+  PR25 -- is the flat-ROI contiguous cross-power distinguishable from zero?
+==============================================================================
+   112MSDCF   full K: C +5.51390e+04  SE 3.3895e+04  |C|/SE     1.63   consistent with 0
+   113MSDCF   full K: C +2.52268e+05  SE 8.1187e+04  |C|/SE     3.11   REAL (>=3)
+   foam       full K: C +4.54590e+06  SE 2.4333e+06  |C|/SE     1.87   consistent with 0
+
+   1 of 3 stacks significant  ->  H1 SUPPORTED -- the flat-ROI ratio is a noise residual
+
+==============================================================================
+  PR26 -- the cross-STACK floor: same ROI coordinates, different subjects
+==============================================================================
+   112MSDCF   x 113MSDCF    C +2.80442e+06  SE 1.6270e+05  |C|/SE   17.24   = 148.288 % of the smaller within-stack parity C
+   112MSDCF   x foam        C -2.23983e+06  SE        inf  |C|/SE    0.00   = 118.434 % of the smaller within-stack parity C
+   113MSDCF   x foam        C +1.53619e+06  SE 2.1352e+06  |C|/SE    0.72   =  28.350 % of the smaller within-stack parity C
+
+   worst cross-stack fraction 148.288 %  ->  FLOOR MATERIAL (>=10%)
+
+wrote out/e11_q165.json  (98.8s)

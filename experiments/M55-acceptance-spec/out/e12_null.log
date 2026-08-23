@@ -1,0 +1,49 @@
+==============================================================================
+M55b E12 -- the empirical null for a ring cross-power (PR30/PR31/PR32)
+==============================================================================
+  A roll of >=64 px destroys correspondence and preserves everything else.
+  48 rolls per cell.  'z' is (value - mean_null) / sd_null.
+
+   stack      ROI      split         C            mode-SE      sd(NULL)   NULL/modeSE     z
+   112MSDCF   detail   parity       +4.4724e+07   1.4456e+06   1.2892e+06         0.9x     34.74
+   112MSDCF   detail   contiguous   +2.1133e+05   3.3115e+05   4.7653e+05         1.4x      0.53
+   112MSDCF   flat     parity       +1.8912e+06   9.6593e+04   1.1946e+05         1.2x     15.95
+   112MSDCF   flat     contiguous   +5.5139e+04   3.3412e+04   6.9297e+04         2.1x      0.84
+   113MSDCF   centre   parity       +5.3745e+07   1.9114e+06   2.9726e+06         1.6x     18.24
+   113MSDCF   centre   contiguous   -1.8641e+06   5.2628e+05   1.2944e+06         2.5x     -1.25
+   113MSDCF   flat     parity       +5.4186e+06   2.9644e+05   4.0203e+05         1.4x     13.79
+   113MSDCF   flat     contiguous   +2.5227e+05   8.2454e+04   2.0039e+05         2.4x      1.45
+   foam       centre   parity       +2.4702e+09   9.5842e+07   1.1869e+08         1.2x     20.58
+   foam       centre   contiguous   +1.4292e+07   4.1623e+06   7.6286e+06         1.8x      1.91
+   foam       flat     parity       +1.2561e+08   5.2672e+07   5.4348e+07         1.0x      2.18
+   foam       flat     contiguous   +4.5459e+06   2.4176e+06   3.2544e+06         1.3x      1.28
+
+==============================================================================
+  PR30 -- is a mode-scatter standard error usable for this statistic?
+==============================================================================
+   sd(NULL)/mode-SE over 12 cells: min 0.9x  median 1.4x  max 2.5x
+   -> mode-scatter SE is adequate
+
+==============================================================================
+  PR31 -- where does the contiguous split sit inside the null?
+==============================================================================
+   112MSDCF   detail   contiguous z =   +0.53   INSIDE the null     (parity z =   +34.74)
+   112MSDCF   flat     contiguous z =   +0.84   INSIDE the null     (parity z =   +15.95)
+   113MSDCF   centre   contiguous z =   -1.25   INSIDE the null     (parity z =   +18.24)
+   113MSDCF   flat     contiguous z =   +1.45   INSIDE the null     (parity z =   +13.79)
+   foam       centre   contiguous z =   +1.91   INSIDE the null     (parity z =   +20.58)
+   foam       flat     contiguous z =   +1.28   INSIDE the null     (parity z =    +2.18)
+
+   flat ROIs inside the null: 3 of 3   detail/centre ROIs inside the null: 3 of 3
+   -> Q165 NOT answered by this route
+
+==============================================================================
+  PR32 -- E9 and E11 disagree because 'best focus' is defined twice
+==============================================================================
+   113MSDCF flat: E9 best-focus frame 38; E11 best-focus frame 39
+   e9_grad       K= 8 +0.3502   K=16 +0.3528   K=32 +0.3568
+   e11_coarse    K= 8 +0.1636   K=16 +0.1698   K=32 +0.1224
+   Neither definition trends toward 1.0 as K narrows on this flat ROI,
+   so fact 707's qualitative claim replicates; its NUMBERS do not.
+
+wrote out/e12_null.json  (221.6s)

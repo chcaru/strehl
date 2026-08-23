@@ -1,0 +1,78 @@
+==============================================================================
+M55b -- CALIBRATION OF THE ACCEPTANCE BATTERY (PR27 / PR28)
+==============================================================================
+   reference signal step: true MTF 1.00 -> 0.90 at f_sig, Gaussian sd 0.2645 px
+   M46's 0.05 px step is an MTF loss of 0.376 %  (MEASURED)
+   B1 grid: 17 points, 0.980 down to 0.0100, max adjacent ratio 1.3318
+   ROI rule -> [(458, 750, 512, 512), (1374, 750, 512, 512), (916, 1501, 512, 512), (916, 2402, 512, 512)]
+   HELD OUT (not touched by this file): coffee-bean, 131MSDCF, 133MSDCF, 134MSDCF, 135MSDCF, 136MSDCF
+
+------------------------------------------------------------------------------
+ PLANT BATTERIES
+------------------------------------------------------------------------------
+   candidate                 B0    B1    B2    B4    B7   verdict
+   sigpow-canonical       PASS  FAIL  FAIL  FAIL  FAIL   REJECTED on B1, B2, B4, B7
+        B1: inversion depth 0.128428 exceeds the candidate's own no_claim_floor 0.0005 (256.9x)
+        B2: an 11.7% one-sided gain (or a swap) moves |d| to 0.247689, 495.4x the no_claim_floor
+        B4: specificity 0.34, sensitivity 1.00; both must be >= 0.90
+        B7: headline S swings 0.012 across REPS (limit 0.05); and the null is within 2 SE of zero at the largest REPS, so any ratio against it is void
+        B1 inversion depth: plain 0, compensated 0.12843   (floor 0.0005)
+        B2 degree: both-scaled +2.0000, one-scaled +1.0000;  swap d +0.000e+00
+        B7 S swing 0.012; null within 2 SE of zero: True
+   constant               PASS  PASS  PASS  FAIL  FAIL   REJECTED on B4, B7
+        B4: specificity 1.00, sensitivity 0.00; both must be >= 0.90
+        B7: headline S swings nan across REPS (limit 0.05)
+        B1 inversion depth: plain 0, compensated 0   (floor 0.0005)
+        B2 degree: both-scaled +0.0000, one-scaled +0.0000;  swap d +0.000e+00
+        B7 S swing nan; null within 2 SE of zero: False
+   ring-power-of-mean     PASS  FAIL  FAIL  FAIL  PASS   REJECTED on B1, B2, B4
+        B1: inversion depth 0.128428 exceeds the candidate's own no_claim_floor 0.0005 (256.9x)
+        B2: an 11.7% one-sided gain (or a swap) moves |d| to 0.247689, 495.4x the no_claim_floor
+        B4: specificity 0.34, sensitivity 1.00; both must be >= 0.90
+        B1 inversion depth: plain 0, compensated 0.12843   (floor 0.0005)
+        B2 degree: both-scaled +2.0000, one-scaled +1.2619;  swap d +0.000e+00
+        B7 S swing 0.011; null within 2 SE of zero: False
+   band-ratio-PROBE       PASS  FAIL  PASS  FAIL  FAIL   REJECTED on B1, B4, B7
+        B1: inversion depth 0.511192 exceeds the candidate's own no_claim_floor 0.0005 (1022.4x)
+        B4: specificity 0.19, sensitivity 1.00; both must be >= 0.90
+        B7: headline S swings 0.022 across REPS (limit 0.05); and the null is within 2 SE of zero at the largest REPS, so any ratio against it is void
+        B1 inversion depth: plain 0, compensated 0.51119   (floor 0.0005)
+        B2 degree: both-scaled -0.0000, one-scaled -0.0000;  swap d +0.000e+00
+        B7 S swing 0.022; null within 2 SE of zero: True
+
+==============================================================================
+  PR28 -- does the battery have POWER?  (known-bad must die)
+==============================================================================
+   constant               KILLED
+   sigpow-canonical       KILLED
+   ring-power-of-mean     KILLED
+   REF_SIGPOW killed on B1 (fact 703): True; on B2 (fact 704): True
+   -> PR28 MET
+
+==============================================================================
+  PR27 -- is the battery PASSABLE?  (the probe must survive B1 and B2)
+==============================================================================
+   band-ratio probe: B1 FAIL, B2 PASS, overall REJECTED on B1, B4, B7
+   -> PR27 NOT MET -- thresholds must be revised
+
+==============================================================================
+  B3 / B6 / B9 on a DEVELOPMENT stack (112MSDCF detail).  Held-out untouched.
+==============================================================================
+
+   sigpow-canonical
+     B6 cell: ref +4.47240e+07  d +0.19114  roll-null z +34.74  detected True  PASS
+     B3 signal step |d| = 0.19114
+        split        leverage      5.21x  limit 1.00  FAIL
+        nbin         leverage      1.00x  limit 1.00  FAIL
+        ring_offset  leverage      2.05x  limit 1.00  FAIL
+        B3 KILL: nuisance 'split' has leverage 5.2x the reference signal step, over its limit of 1.00 (pinned)
+
+   band-ratio-PROBE
+     B6 cell: ref +7.11277e-03  d +0.17611  roll-null z +0.63  detected True  FAIL
+     B3 signal step |d| = 0.17611
+        split        leverage      5.07x  limit 1.00  FAIL
+        nbin         leverage      2.12x  limit 1.00  FAIL
+        f_ref        leverage     10.91x  limit 1.00  FAIL
+        B3 KILL: nuisance 'split' has leverage 5.1x the reference signal step, over its limit of 1.00 (pinned)
+
+wrote out/calibrate.json  (208.0s)

@@ -1,0 +1,15 @@
+==============================================================================
+M55b -- held-out substrate validation (EXIF and counts only)
+==============================================================================
+   stack            ARW     ISO   exposure       f  lens                          
+   coffee-bean      105      50        4/5       8  FE 100mm F2.8 Macro GM OSS + 2
+   131MSDCF         130     100       1/15    28/5  FE 100mm F2.8 Macro GM OSS + 2
+   133MSDCF         120     400       1/40    28/5  FE 100mm F2.8 Macro GM OSS + 2
+   134MSDCF         299     100        1/2    28/5  FE 100mm F2.8 Macro GM OSS + 2
+   135MSDCF         299     400       1/20    28/5  FE 100mm F2.8 Macro GM OSS + 2
+   136MSDCF         299     100        1/5    28/5  FE 100mm F2.8 Macro GM OSS + 2
+
+   ROIs, by rule, identical for every stack: [(458, 750, 512, 512), (1374, 750, 512, 512), (916, 1501, 512, 512), (916, 2402, 512, 512)]
+   frames used per stack: first 64; split: parity
+   -> substrate VALID
+   No pixel of any held-out stack was decoded by this file.

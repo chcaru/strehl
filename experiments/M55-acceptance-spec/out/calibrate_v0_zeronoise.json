@@ -1,0 +1,244 @@
+{
+ "plant": {
+  "sigpow-canonical": {
+   "B0": {
+    "passed": true,
+    "kill": null
+   },
+   "B1": {
+    "inv_plain": 0.0,
+    "inv_comp": 0.12842768062478627,
+    "passed": false,
+    "kill": "inversion depth 0.128428 exceeds the candidate's own no_claim_floor 0.0005 (256.9x)"
+   },
+   "B2": {
+    "passed": false,
+    "kill": "an 11.7% one-sided gain (or a swap) moves |d| to 0.247689, 495.4x the no_claim_floor",
+    "d_both": -0.24768899999999738,
+    "d_one": -0.11699999999999888,
+    "d_swap": 0.0,
+    "degree_both": 1.9999999999999976,
+    "degree_one": 0.9999999999999986
+   },
+   "B4": {
+    "passed": false,
+    "specificity": 0.34375,
+    "sensitivity": 1.0,
+    "kill": "specificity 0.34, sensitivity 1.00; both must be >= 0.90"
+   },
+   "B7": {
+    "passed": false,
+    "swing": 0.012461079895053184,
+    "null_consistent_with_zero": true,
+    "kill": "headline S swings 0.012 across REPS (limit 0.05); and the null is within 2 SE of zero at the largest REPS, so any ratio against it is void"
+   },
+   "verdict": "REJECTED on B1, B2, B4, B7"
+  },
+  "constant": {
+   "B0": {
+    "passed": true,
+    "kill": null
+   },
+   "B1": {
+    "inv_plain": 0.0,
+    "inv_comp": 0.0,
+    "passed": true,
+    "kill": null
+   },
+   "B2": {
+    "passed": true,
+    "kill": null,
+    "d_both": 0.0,
+    "d_one": 0.0,
+    "d_swap": 0.0,
+    "degree_both": 0.0,
+    "degree_one": 0.0
+   },
+   "B4": {
+    "passed": false,
+    "specificity": 1.0,
+    "sensitivity": 0.0,
+    "kill": "specificity 1.00, sensitivity 0.00; both must be >= 0.90"
+   },
+   "B7": {
+    "passed": false,
+    "swing": NaN,
+    "null_consistent_with_zero": false,
+    "kill": "headline S swings nan across REPS (limit 0.05)"
+   },
+   "verdict": "REJECTED on B4, B7"
+  },
+  "ring-power-of-mean": {
+   "B0": {
+    "passed": true,
+    "kill": null
+   },
+   "B1": {
+    "inv_plain": 0.0,
+    "inv_comp": 0.12842768062478616,
+    "passed": false,
+    "kill": "inversion depth 0.128428 exceeds the candidate's own no_claim_floor 0.0005 (256.9x)"
+   },
+   "B2": {
+    "passed": false,
+    "kill": "an 11.7% one-sided gain (or a swap) moves |d| to 0.247689, 495.4x the no_claim_floor",
+    "d_both": -0.24768899999999738,
+    "d_one": -0.12042224999999701,
+    "d_swap": 0.0,
+    "degree_both": 1.9999999999999976,
+    "degree_one": 1.2618595071429148
+   },
+   "B4": {
+    "passed": false,
+    "specificity": 0.34375,
+    "sensitivity": 1.0,
+    "kill": "specificity 0.34, sensitivity 1.00; both must be >= 0.90"
+   },
+   "B7": {
+    "passed": true,
+    "swing": 0.010812544931871337,
+    "null_consistent_with_zero": false,
+    "kill": null
+   },
+   "verdict": "REJECTED on B1, B2, B4"
+  },
+  "band-ratio-PROBE": {
+   "B0": {
+    "passed": true,
+    "kill": null
+   },
+   "B1": {
+    "inv_plain": 0.0,
+    "inv_comp": 0.51119194815863,
+    "passed": false,
+    "kill": "inversion depth 0.511192 exceeds the candidate's own no_claim_floor 0.0005 (1022.4x)"
+   },
+   "B2": {
+    "passed": true,
+    "kill": null,
+    "d_both": 5.646518105747433e-15,
+    "d_one": 2.6350417826821354e-15,
+    "d_swap": 0.0,
+    "degree_both": -1.5158528209771672e-15,
+    "degree_one": -1.0105685473181112e-15
+   },
+   "B4": {
+    "passed": false,
+    "specificity": 0.1875,
+    "sensitivity": 1.0,
+    "kill": "specificity 0.19, sensitivity 1.00; both must be >= 0.90"
+   },
+   "B7": {
+    "passed": false,
+    "swing": 0.02151935157020446,
+    "null_consistent_with_zero": true,
+    "kill": "headline S swings 0.022 across REPS (limit 0.05); and the null is within 2 SE of zero at the largest REPS, so any ratio against it is void"
+   },
+   "verdict": "REJECTED on B1, B4, B7"
+  }
+ },
+ "pr28": {
+  "met": true,
+  "killed": {
+   "constant": true,
+   "sigpow-canonical": true,
+   "ring-power-of-mean": true
+  }
+ },
+ "pr27": {
+  "met": false,
+  "verdict": "REJECTED on B1, B4, B7"
+ },
+ "real": {
+  "sigpow-canonical": {
+   "cell": {
+    "ref": 44723965.44992557,
+    "test": 36175331.73110274,
+    "d": 0.1911421233073387,
+    "status": "Ok",
+    "status_test": "Ok",
+    "z": 34.74075687739667,
+    "z_pass": true,
+    "detected": true,
+    "wrong_sign": false,
+    "passed": true
+   },
+   "b3": {
+    "passed": false,
+    "kill": "nuisance 'split' has leverage 5.2x the reference signal step, over its limit of 1.00 (pinned)",
+    "signal_d": 0.1911421233073387,
+    "rows": {
+     "split": {
+      "leverage": 5.206987967843924,
+      "limit": 1.0,
+      "pinned": true,
+      "passed": false
+     },
+     "nbin": {
+      "leverage": 1.0046528148009584,
+      "limit": 1.0,
+      "pinned": true,
+      "passed": false
+     },
+     "ring_offset": {
+      "leverage": 2.0501926627624227,
+      "limit": 1.0,
+      "pinned": true,
+      "passed": false
+     }
+    }
+   },
+   "b5": {
+    "passed": true,
+    "zero_reference": [],
+    "kill": null
+   },
+   "b5_out_of_range": []
+  },
+  "band-ratio-PROBE": {
+   "cell": {
+    "ref": 0.007112771279486318,
+    "test": 0.005860132104123368,
+    "d": 0.17611126889116216,
+    "status": "Ok",
+    "status_test": "Ok",
+    "z": 0.6302564365541027,
+    "z_pass": false,
+    "detected": true,
+    "wrong_sign": false,
+    "passed": false
+   },
+   "b3": {
+    "passed": false,
+    "kill": "nuisance 'split' has leverage 5.1x the reference signal step, over its limit of 1.00 (pinned)",
+    "signal_d": 0.17611126889116216,
+    "rows": {
+     "split": {
+      "leverage": 5.0652779815105875,
+      "limit": 1.0,
+      "pinned": true,
+      "passed": false
+     },
+     "nbin": {
+      "leverage": 2.1234331962183166,
+      "limit": 1.0,
+      "pinned": true,
+      "passed": false
+     },
+     "f_ref": {
+      "leverage": 10.914064911511764,
+      "limit": 1.0,
+      "pinned": true,
+      "passed": false
+     }
+    }
+   },
+   "b5": {
+    "passed": true,
+    "zero_reference": [],
+    "kill": null
+   },
+   "b5_out_of_range": []
+  }
+ }
+}

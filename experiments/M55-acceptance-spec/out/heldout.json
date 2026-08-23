@@ -1,0 +1,110 @@
+{
+ "coffee-bean": {
+  "n": 105,
+  "first": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "4/5",
+   "EXIF FNumber": "8",
+   "EXIF ISOSpeedRatings": "50",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "last": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "5/8",
+   "EXIF FNumber": "8",
+   "EXIF ISOSpeedRatings": "50",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "enough": true
+ },
+ "131MSDCF": {
+  "n": 130,
+  "first": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "1/15",
+   "EXIF FNumber": "28/5",
+   "EXIF ISOSpeedRatings": "100",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "last": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "1/20",
+   "EXIF FNumber": "28/5",
+   "EXIF ISOSpeedRatings": "100",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "enough": true
+ },
+ "133MSDCF": {
+  "n": 120,
+  "first": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "1/40",
+   "EXIF FNumber": "28/5",
+   "EXIF ISOSpeedRatings": "400",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "last": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "1/40",
+   "EXIF FNumber": "28/5",
+   "EXIF ISOSpeedRatings": "400",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "enough": true
+ },
+ "134MSDCF": {
+  "n": 299,
+  "first": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "1/2",
+   "EXIF FNumber": "28/5",
+   "EXIF ISOSpeedRatings": "100",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "last": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "1/3",
+   "EXIF FNumber": "28/5",
+   "EXIF ISOSpeedRatings": "100",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "enough": true
+ },
+ "135MSDCF": {
+  "n": 299,
+  "first": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "1/20",
+   "EXIF FNumber": "28/5",
+   "EXIF ISOSpeedRatings": "400",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "last": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "1/25",
+   "EXIF FNumber": "28/5",
+   "EXIF ISOSpeedRatings": "400",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "enough": true
+ },
+ "136MSDCF": {
+  "n": 299,
+  "first": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "1/5",
+   "EXIF FNumber": "28/5",
+   "EXIF ISOSpeedRatings": "100",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "last": {
+   "Image Model": "ILCE-7CM2",
+   "EXIF ExposureTime": "1/6",
+   "EXIF FNumber": "28/5",
+   "EXIF ISOSpeedRatings": "100",
+   "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+  },
+  "enough": true
+ }
+}
