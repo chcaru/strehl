@@ -266,6 +266,18 @@ monolithic binary and ship only that binary.
     **byte-identical output** with it on and off, placebo included — the way
     fact 420 does. An argument that a channel is read-only is not evidence that
     it is.
+27. **Before declaring a long-running process dead, state what a healthy one
+    would look like at this instant.** If a working run and a failed run predict
+    the same observation, the observation is not evidence and the correct action
+    is to wait. Three specific traps, all of which fired here (see
+    [`2026-08-external-review.md`](docs/proposals/2026-08-external-review.md) §5
+    item 6): **zero bytes on disk is not zero work** — an agent that reads for
+    three hours before its first write is indistinguishable from a corpse under
+    a file-count probe; **a turn counter read at 473 s measures the sampling
+    instant, not the run**; and **a stand-down is an intervention, not an
+    observation** — telling live workers to stop causes the silence it was sent
+    to diagnose. Ten agents were written off on this evidence and every one of
+    them later landed a folded milestone.
 
 ## Layout
 
