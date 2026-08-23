@@ -1,0 +1,17 @@
+{
+ "union_three_channels": 0.14278221130371094,
+ "fraction_of_disjoint_ceiling": 0.9518814086914062,
+ "union_plus_real_c4_flags": 0.1429271697998047,
+ "c4_worst5_is_random_tiebreak": true,
+ "reliability_ceiling": {
+  "C1_sigma": 0.764246656010768,
+  "C2_perplexity": 0.6947569175071114,
+  "C3_deficit": 0.7351690357597922
+ },
+ "cross_over_ceiling": {
+  "C1_sigma|C3_deficit": 0.0184991469151642,
+  "C1_sigma|C2_perplexity": 0.04980159121574466,
+  "C2_perplexity|C3_deficit": 0.03843070767226539
+ },
+ "P3_ceiling_over_060": true
+}
