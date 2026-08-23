@@ -603,7 +603,7 @@ The sequence, from the shell log:
       experiments/M55-acceptance-spec/out/e15_block4_null.json
       experiments/M55-acceptance-spec/out/e15_block4_null.log
       experiments/M55-acceptance-spec/src/e15_block4_null.py     <- exactly four, audited
-   ... [ ~2 minutes composing the commit message ] ...
+   ... [ interval while composing the commit message; not timed, so not quoted ] ...
    git -c core.commentChar=';' commit -m "..."
    -> [main 701dc11] 51 files changed, 12938 insertions(+), 1 deletion(-)
 ```
@@ -623,6 +623,12 @@ committed intact, exactly as M60 staged them, and are present in the tree. A `gi
 branch with five live agents can drop a commit made in the same second, which is a larger risk
 than a mis-attributed one. **The defect here is attribution, and this paragraph is the repair.**
 M60's work in `701dc11` is M60's.
+
+**The invariant that mattered held, and I checked it rather than asserting it.** Over all five of my commits
+(`a353c3b`, `54a8305`, `8364492`, `701dc11`, `d931203`), files touched outside `docs/research/M55-*`
+and `experiments/M55-acceptance-spec/`: **47, all in `701dc11`, all M60's**. Files touched under
+`crates/`: **0**. Files touched in `SYNTHESIS.md`, `AGENTS.md` or `OWNER-QUESTIONS.md`: **0**.
+(`git show --no-walk --name-only` per commit.)
 
 ---
 
