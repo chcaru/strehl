@@ -347,6 +347,43 @@ monolithic binary and ship only that binary.
     temporal sigma per plane alongside its results for exactly this reason: it
     proves the loader, not just the estimator.
 
+33. **A `cargo test` result with no `Compiling` line above it is not evidence
+    — in either direction.** Cargo's fingerprint can consider a stale artifact
+    fresh and will then report results for code that is not on disk, complete
+    with a convincing file and line number. This happened twice in one night, to
+    two agents, by two mechanisms: a file written while cargo was fingerprinting
+    it, and a file restored with `Copy-Item`, which preserves the *source's*
+    older mtime. **After any restore, set `LastWriteTime` to `Get-Date`.** Before
+    trusting a workspace run that follows an edit, force the rebuild — touch the
+    file, set a unique `RUSTFLAGS` cfg, or `cargo clean -p <crate>`. Read the
+    compile lines, not just the test lines. (SYNTHESIS fact 576, disciplines
+    299/300.)
+
+34. **A plant that supplies its own noise constant cannot detect that constant
+    being wrong.** M40's null plant and M41's `noise_constant_check` each draw
+    noise from `g` and normalise by the same `g`; they are scale-invariant in it
+    to 0.05% and passed confidently through all twelve milestones the gain was a
+    factor of two wrong. **A plant validates the operator, never the
+    calibration.** Calibration is falsifiable only against an external relation
+    on real data. When a plant shares a constant with the thing it is testing,
+    say so in the pre-registration and name what else could catch it.
+    (SYNTHESIS fact 599, discipline 304.)
+
+35. **A test whose subject and object are the same value has no power to fail.**
+    `assert!((SELECTION_INFLATION - 1.074).abs() < 5e-4)` passed every day the
+    constant was wrong, under four paragraphs of well-written doc comment. This
+    is not rule 30 — nothing was excluded; the assertion simply had no
+    independent term. Assert a constant against an **independently obtained
+    quantity**, against a **named report number a human can go and read**, or
+    prove the test's power with a **negative control**. (SYNTHESIS fact 587,
+    discipline 298.)
+
+36. **Show that the fixture exercises the property under test.** Assert that the
+    interesting case actually occurred — `saw_selection`, `saw_strict` — and fail
+    loudly when it did not. A fixture that produces a constant where the test
+    needs a spread ships permanently green and looks like coverage. (SYNTHESIS
+    fact 573, discipline 302.)
+
 ## Layout
 
 | Path | What |
@@ -359,8 +396,8 @@ monolithic binary and ship only that binary.
 
 ## Research corpus
 
-| File | What |
-| --- | --- |
+| File | What | Agent |
+| --- | --- | --- |
 | `SYNTHESIS.md` | **Start here.** Decision record, revised after review. |
 | `M39-verify-detail-metric.md` | **INDEPENDENT.** First outside verification since M2. Found M38's detail metric credits a *flat ROI* with +35% detail, inverted M38's error budget, and showed fact 19's 1.253x does not reproduce on the shipped operator (1.068x) |
 | `OWNER-QUESTIONS.md` | **Read this before asking Chris anything.** Decisions I could not make alone, captures still outstanding, and two numbers that must NOT reach a user-facing recommendation yet. Append; do not rewrite. |
@@ -420,6 +457,8 @@ monolithic binary and ship only that binary.
 | `M45-plugin-crate-implemented.md` | **The plugin seam is built, and it closes the §F4.6 fault-5 hole by construction rather than by test.** `crates/strehl-plugin` (~3 400 lines, 33 tests): `FocusMeasure` **deliberately has no noise-SD method** and `Calibration` has **no public constructor**, so a contributed operator has nowhere to put a wrong constant — the host measures it at load. The calibrator reproduces `FOCUS_NOISE_SD` to **−0.018%** and `FINE_FOCUS_NOISE_SD` to **−0.000%**, an order of magnitude tighter than the Python reference, and reproduces all seven fact-439 `k` values to **±0.43%** — an independent second-language confirmation of M43, SML at 6.6833 vs 6.680. **It also refuted three things in §F5.3's own published sketch, one structurally:** the sketch's `calibrate()` is *unseeded*, measuring **5.56% spread** across planes, so the fix for fault 5 as designed would have violated §F4's confluence property; the margin omits the host regulariser (bias +0.31% and operator-dependent, so it does not cancel in `k`); and fact 505's 1.7 ms cost bound is **2.95× low per plane, 35× low per registration**. §F5.5's proposed byte-identical test **would have gone red**. **Read §6.2 regardless of what you are doing here** — its first positive control divided both the field *and* the tolerance by the same wrong constant, which is the identical comparison, measured 0 flips in both arms, and would have let a `rate < 1e-4` assertion pass green with zero power. Facts 520-529, disciplines 284-286, questions 123-125. **Nothing is wired into `merge.rs`** — that is one multiplication, owned by whoever holds that file. |
 | `M43-plugin-calibration-seam.md` | **The pluggability requirement has a measured hole, and the existing design cannot see it.** The gate is calibrated in units of a constant owned by the *focus operator*, and workstream E has no slot for it. A contributed operator that inherits the host's constant silently rescales the gate: measured, one such mistake reverts **87.76% of pixels to pure selection** while the log still reads `gate 1.00`. Capability negotiation, confluence and the §F4.3 sensitivity test all pass it — **a missing contract, not a missing test**. §8 surveys seven textbook operators and finds `k` spanning **10.4×**, worst case **6.68** at the sum-modified-Laplacian — the canonical SFF operator, i.e. the likeliest contribution there is — which makes the load-time refusal mandatory. **§8 also corrects §2's own `k`**: it had divided a regularised SD by an unregularised one, and a two-target calibration caught it. Facts 436-439, 500-501, disciplines 256-257, question 102. |
 | `M50-fpn-anisotropy-measured.md` | **M16's row-FPN refutation, verified independently from the sensor side -- and one of its supporting numbers stated too confidently.** Measured the fixed pattern by cross-half covariance (temporal noise contributes exactly zero in expectation; the estimate may go negative, so it can say "no") on full CFA planes at all 11 ISOs, placebo at 1.2% of plant. Row term is 1.8-12.8% of per-pixel FPN and the COLUMN term is larger at 4 of 11 ISOs; the proposed fix moves the anisotropy index 0.009 on a +-1 scale while destroying 99.96% of *planted* banding. Fact 93 loses its NOT-INDEPENDENTLY-VERIFIED tag and gains fact 560's qualification: isotropic to ~5%, not exactly, positive at 11/11 ISOs (M16's own numbers never once cross 1.000). Verdict unchanged -- M16's ladder needs 1774x. By-products: M4 §5 verified at 1.0043, §8.1 a third time at 0.99993, the `rawpy` use-after-free (rule 32), and a ratio statistic that returned **-494.885** for the most positive case there is. Started as a duplicate of a CLOSED question -- see discipline 294. | Orchestrator |
+| [`M49-unapplied-findings.md`](docs/research/M49-unapplied-findings.md) | **Thirteen measured findings that never reached the code, and the mechanism behind all of them.** The worst: ACCEPTANCE INVARIANT 1 is computed from the raw spatial sd that fact 469 forbade, so a merge could get **6.3x** noisier and still print PASS. Also: the clip mask never reaches the focus volume (always-clipped pixels read focus contrast at its **maximum**, carrying zero information); `--target-n-eff` cannot produce an image; `profile.rs` cites a fact number that resolves to a **different fact**, which a number-validity check cannot see. The mechanisms are the point -- **a test whose subject and object are the same value has no power to fail** (that is how 1.074 passed every day), and **a consequence reaches one consumer and not its siblings** (four instances, and in every one the file that was edited was correct afterwards). Clean negative: nobody hid anything. `merge.rs:74-108` is four paragraphs explaining why the constant it declares is wrong. The corpus writes corrections into the doc comment instead of into the value. | M49 |
+| [`M47-gain-blast-radius.md`](docs/research/M47-gain-blast-radius.md) | **The ISO-50 gain fix is correct; three claims in the brief that commissioned this audit are not.** The gate was **1.414x too TIGHT, not too loose** -- responses are sigma-normalised against a fixed absolute tolerance, so a too-small sigma admits FEWER frames. Proven end to end: the pre-fix published `n_eff` reproduces at corrected gate `X/sqrt(2)` on both ISO-50 stacks with the ISO-160 placebo unmoved **digit for digit**. **A plant that supplies its own noise constant cannot detect that constant being wrong** -- M40's and M41's plants are scale-invariant in `g` to 0.05% and passed cleanly through all twelve milestones it was a factor of two wrong. Most conclusions survive (fact 88's refutation at 1.33-1.64x; fact 241's 0.0000% with a 28.5x margin, re-measured across all four CFA planes); fact 324's clustering half does not, and fact 472's stack ordering inverts. User impact stated honestly: the pixels are the exact valid output of a tighter gate -- **mislabelled, not wrong** -- but every sigma printed beside them is off by sqrt(2). | M47 |
 
 Claims inherited from `C:\dev\macro` are suspect by default. Several were
 retracted under scrutiny — including a headline noise finding that measured
