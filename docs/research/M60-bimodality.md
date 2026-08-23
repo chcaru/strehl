@@ -1230,21 +1230,46 @@ number in this report.
 8. **No milestone-level replication.** Everything here is one agent, one pass.
    The scripts are deterministic given their seeds and every number in this report
    names the file it came from.
-9. **A circular polarizer is in the optical path for every frame in this corpus,
-   and M60 did not know that while measuring.** Reported by the owner after this
-   milestone closed: a Breakthrough Photography X4 CPL 67 mm (Schott B270, MRC16),
-   never named in any brief. Its transmission and uniformity are unmeasured by
-   anyone. **This is not neutral for M60 specifically**, because a polarizer
+9. **A circular polarizer is in the optical path for every frame M60 measured —
+   but not for every frame in the corpus, and the difference matters.** Reported
+   by the owner after this milestone closed: a Breakthrough Photography X4 CPL
+   67 mm (Schott B270, MRC16), in front of the 100 mm GM. An earlier broadcast
+   stated it was in the path corpus-wide; **that universal quantifier was
+   retracted** and resolved by EXIF capture date into `CPL ON` from 25 May
+   (`bee-1`, `bee-2`, `bee-3`, `wrapped-text-1`, `wrapped-text-2`,
+   `coffee-bubbles`, `foam`) and `CPL OFF` up to 17 May (`109MSDCF`, `112MSDCF`,
+   `113MSDCF`, `119MSDCF`), with `coffee-bean` **UNKNOWN**.
+
+   **M60's exposure to this is bounded and was checked, not assumed**
+   (**MEASURED**, by enumerating `src/cells.py`): the measured cell set is
+   `bee-1`, `bee-3`, `wrapped-text-1`, `wrapped-text-2`, and the replicate arm
+   adds `bee-2`. **All five are on the ON side**, so the caveat applies uniformly
+   to M60's real-data numbers rather than unevenly across them — which is a
+   cleaner position than the corpus-wide claim would have given. `109MSDCF` is
+   the only OFF-side stack this milestone ever registered and it was
+   **substituted before any measurement** for unrelated reasons (§3, D-1), so no
+   number here is hedged against a bare-lens stack and **there is no hedge to
+   remove**. `coffee-bean`, `112MSDCF`, `113MSDCF`, `119MSDCF`, `foam` and
+   `coffee-bubbles` appear in this report **only as stack-selection rationale**
+   (§2.1) and carry no measurement, so **no headline of M60's inherits
+   `coffee-bean`'s unknown filter state**.
+
+   **Part II's headline is immune by construction.** P17–P21 — the instrument
+   defect, which is this milestone's main result — are measured entirely on M25's
+   rendered plant. There is no lens, no filter and no photon in that arm.
+
+   What remains genuinely polarizer-conditioned is the real-data arm. A polarizer
    suppresses specular highlights, and speculars are among the highest-contrast
-   features a scene offers — so they are exactly what drives the through-focus
+   features a scene offers, so they are exactly what drives the through-focus
    *range* that P17's denominator is built from. The direction is stateable and
-   the magnitude is not (**ARGUED**): with speculars suppressed, the real-data
-   denominator inflation measured in §23.1 (`occ` 85.2 DN vs `ctl` 41.2 DN,
-   **2.07×**) is more likely an **under**-estimate of what a bare lens would give
-   than an over-estimate. That would make P17's defect worse on unpolarized data,
-   not better, so no conclusion in this report is at risk from it — but the 2.07×
-   should be quoted as polarizer-conditioned. Part I's contrast statistics (§8.7,
-   §24 of Part I's numerator/denominator split) carry the same caveat.
+   the magnitude is not (**ARGUED**): with speculars suppressed, the denominator
+   inflation measured in §23.1 (`occ` 85.2 DN vs `ctl` 41.2 DN, **2.07×**) is
+   more likely an **under**-estimate of what a bare lens would give than an
+   over-estimate. That makes P17's defect worse on unpolarized data, not better,
+   so no conclusion in this report is at risk — but the 2.07× should be quoted as
+   *measured on CPL-ON stacks*, not as a corpus constant. Part I's contrast
+   statistics (§8.7, §24) carry the same scoping.
+
    The noise-model denominator is **not** affected: it was validated empirically
    against observed scatter on these same frames (P10, 0.96 median ratio), so any
    light loss is already inside the measurement.
