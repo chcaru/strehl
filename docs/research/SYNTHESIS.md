@@ -731,7 +731,7 @@ since contributors are not required to be spliceable and only have to emit an `f
 > 110+/discipline 60+, M19 facts 120+, M20's verifier facts 130+, **M23 facts
 > 170+/discipline 80+/question 25+**, **M25 facts 190+/discipline 100+/question
 > 30+**. Facts **140-145 (M20)**, **150-152 (M21)**,
-> **160-162 (M22)**, **180-182 (M24)** and **200-203 (M26)** are folded below and are all
+> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)** and **210-213 (M27)** are folded below and are all
 > **NOT INDEPENDENTLY VERIFIED** — they were measured by the
 > orchestrator, and rule 12 binds their author exactly as it binds any milestone.
 
@@ -833,6 +833,10 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 201 | **The noise model is only valid in native per-channel raw DN, and white-balancing first breaks it by up to 2.86×.** Scaling a channel by `m` gives true `σ² = m²(gS + (RN·g)²)`, while applying the model to WB'd values gives `g(mS) + (RN·g)²`. The ratio → **`m`** in the read-limited (shadow) limit, **`√m`** in the shot-limited limit — so red is believed **2.86× quieter than it is, most strongly in the shadows** | **Ordering rule: gate in native raw DN; apply WB and the colour matrix after the merge.** The failure is silent — the gate simply rejects too aggressively, reverting toward the selector the project exists to replace, and it does so hardest exactly where M2 measured the argmax defect. A plugin needing earlier WB must transform the noise model with it, as part of the contract | M26 (DERIVED from fact 200 + the calibrated model) — **NOT INDEPENDENTLY VERIFIED** |
 | 202 | **Saturation is real, per-stack, and absent from four of six stacks.** `coffee-bean` has **1.26%** of pixels ≥ 15360 and `coffee-bubbles` has 62,054 pinned at the 14-bit container max — while `109`, `119`, `112`, `113` contain **zero**, topping out at **39–61%** of the white level. Separately, `rawpy` exposes **two** white levels: `white_level` = **16383** (container) and `camera_white_level_per_channel` = **15360** | Detect saturation; never assume it either way. **The two white levels are both right and are used for different purposes** — the clip mask wants the container max, the noise model's range wants 15360. **Checked and clean:** `noise.rs` already documents and tests this (`usable_white_level_is_not_the_container_maximum`). Second respect (after fact 180) in which **`109`/`119` are the gentlest stacks in the corpus** — a clean result on them is systematically weaker evidence than it looks | M26 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 | 203 | **Clipping defeats discipline 29, and both confidence candidates fail in the same direction.** Cross-frame focus contrast reads **1.0000 — its maximum — on always-clipped pixels** (median; n=616) against 0.5398 never-clipped, at pixels pinned in every frame that carry zero information. Mechanism: **85.9%** of them have `f_min` **exactly 0** (uniformly clipped blob interior in ≥1 frame) vs **0.0000%** of never-clipped, while median `f_max` is **7,598 vs 145.6** — 52× typical — as the blob's edge crosses in another frame | **Mask samples at/above the container max before the focus volume and propagate the mask** — one comparison per sample, closing a maximum-severity hole. Discipline 29 was chosen *because* magnitude fails on fact 73; this is the same class of failure arriving through the quantity picked to prevent it. **The partially-clipped population is a weak effect**: a raw 1.67× elevation collapsed to **1.06–1.09×** under brightness matching, so ~90% was brightness (discipline 70, applied to the orchestrator's own first framing). No brightness-matched control is constructible for the always-clipped group — no unclipped pixel reaches that level by definition | M26 (MEASURED mechanism, DERIVED consequence) — **NOT INDEPENDENTLY VERIFIED**; frames unaligned, 616 px = 0.0075%, green sublattice and R=2 only |
+| 210 | **A hole in the focus bracket is blindly detectable from a single missing frame.** Removing a contiguous block from `coffee-bean` (53 frames, f/8), peak-curvature ratio against a **fixed** control band runs **1.88 → 2.81** for gaps of 1→6 frames, against a null (same frame count removed from a region no group peaks in) **stable at 1.40–1.43**; excess **+0.45 to +1.39**. Parabola vertex offset \|δ\| moves in parallel, excess **−0.10 to −0.48** against a null stable at 0.83–0.87 | Ground truth is **by construction** — no plant, no simulation: remove frames and the pixels whose best frame was among them have provably lost coverage. Both detectors use **only the reduced stack**, so both are deployable at inference time | M27 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; one stack, one 1500×1500 crop, R=2, frames unaligned |
+| 211 | **The gap disguises itself as a *better* peak.** A missing best frame makes the through-focus curve **sharper** (curvature ratio to 2.81) and **better centred** (\|δ\| falls 0.23 → 0.088). The predicted direction was the opposite — the surviving frames flank the true peak at **near-equal focus distance**, so the sampled curve reads symmetric and δ → 0 | **Third independent instance of one pattern**, and the reason it is promoted to discipline 120: fact 73 (monotone edge → magnitude high, information zero), fact 203 (clipped pixel → contrast maximal, information zero), fact 211 (best frame absent → peak looks textbook). Three failure modes, three metrics, all reading **confident where there is nothing to be confident about**. Degenerate inputs make clean-looking outputs | M27 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 212 | **Uniform under-sampling needs no optics model to detect.** Where a *hole* leaves an internal control, uniformly-too-coarse steps affect every pixel equally and §1's comparative method cannot work at all. But `nwide` — retained frames within 50% of peak height — falls **3 → 2 → 1 → 1 → 1** under ×1/×2/×3/×4/×6 decimation and is **absolute**: `nwide = 1` means the peak is resolved by one sample and its location is unrecoverable | Refutes the prediction that the reshoot advisor would need the optical model to supply a predicted peak width. **Confound closed (rule 17):** decimation estimates `min` from fewer samples, which would shrink `nwide` for free — holding the threshold at the full-stack minimum gives an **identical** column, and the median minimum drifts only 1.000 → 1.195 | M27 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 213 | **The deployable reshoot criterion, and a verdict on real capture practice.** Fraction of reliable pixels resolved by ≤1 sample: **0.01%** at 53 frames, **37.46%** at 27, 59.91% at 18, 69.06% at 14, 75.76% at 9. So `coffee-bean`'s 105-frame bracket is **~2–4× denser than it needed to be** at f/8 — comfortably too fine, not too coarse | Per-pixel, absolute, blind, and directly phrasable as R19's recipe: *"38% of the subject is resolved by a single frame; halve the step."* **DERIVED and contingent: the two capture findings cancel** — M20 wants f/11→f/5.6 for 9.6× contrast at ~2× the frames, and this measures ~2–4× surplus density, so **the aperture change is roughly free in frame count**. Chains to a DOF scaling from the optics model **M20's verifier is checking for circularity**; if that gate is tautological this inherits it | M27 (MEASURED + DERIVED) — **NOT INDEPENDENTLY VERIFIED**; decimation assumes optical but not photometric equivalence to a genuinely coarse bracket |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -1095,6 +1099,13 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      > input has to be masked.** The item stands as written — it is still right about fact 73 — but
      > it is not sufficient on its own.
 
+     > **SUPERSEDED IN SCOPE by discipline 120 (M27).** A *third* instance — a bracket missing its
+     > best frame reads as a **sharper, better-centred** peak (fact 211) — shows the problem is not
+     > confined to metrics with degenerate denominators. **No self-normalised shape statistic may
+     > be shipped as confidence at all**, cross-frame spread included. This item survives as the
+     > right instruction for choosing a *focus measure*; the confidence output itself must be built
+     > from externally-referenced quantities (predicted σ, effective sample count, flags).
+
 30. **Time a parameter sweep with alternating direction and take the per-setting minimum.** M14
      found a single forward sweep reading **−0.7%** and a reverse sweep **+19%** on the same binary
      and the same settings, and `FocusField::compute` reading **21% slow** purely because it was
@@ -1188,6 +1199,32 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      numerator's floor zero, and check whether any real input can do both.** In this case the fix
      was not a better metric but masking the input — three bad pixels' worth of work for a
      maximum-severity hole.
+
+120. **A self-normalised shape statistic measures goodness of fit, never presence of evidence — so
+     none of them may be shipped as confidence.** Three independent failure modes now read
+     *maximum* confidence where information is *absent*: an untextured monotone edge (fact 73,
+     focus magnitude high), a pixel clipped in every frame (fact 203, peak contrast exactly 1.0),
+     and a bracket missing the best frame (fact 211, peak *sharper* and *better centred* than a
+     well-sampled one). Discipline 111 diagnosed the first two as a denominator problem; the third
+     has no degenerate denominator at all — the curve really is sharp and really is symmetric,
+     because the two surviving frames flank the true peak at equal distance. **The common cause is
+     more general than saturation: any statistic computed over a neighbourhood describes the data
+     it was given, and a neighbourhood containing no evidence is a well-behaved input.** The
+     consequence is a hard design constraint on strehl's headline output: curvature ratios, peak
+     contrast and vertex offsets are all disqualified as confidence. Confidence must be built from
+     quantities with an **external, absolute referent** — predicted σ from the calibrated noise
+     model, effective sample count, and explicit flags — which is what discipline 29's semantics
+     were reaching for and is now *derived* rather than asserted.
+
+121. **A detector that divides by a quantity unavailable at inference time is an effect-size
+     measurement wearing a detector's clothes.** M27's first pass scored `f_reduced / f_full` and
+     produced a beautiful monotone table (16/26/49/62/73% peak loss for gaps of 1/2/4/6/8 frames)
+     with a control pinned at exactly 1.0000 — and it was worthless as a detector, because the
+     full-stack peak does not exist when you need it. The tell is the perfect control: a control
+     that cannot move is usually an identity, not evidence. **Before running a detector experiment,
+     write down the exact inputs the shipped code will have, and delete every term not on that
+     list.** Keep the oracle version if you want the effect size — M27 does — but label it, and
+     never cite it as detectability.
 
 ---
 
