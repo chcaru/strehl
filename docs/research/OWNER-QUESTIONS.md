@@ -89,6 +89,27 @@ tell people not to use; dropping it means losing the apples-to-apples column. My
 to keep it, clearly labelled as the competitor-equivalent baseline rather than as an option.
 Say the word if you would rather it disappear from user-facing output entirely.
 
+**Q5 — how much do you weight worst-case regret?** M42 found that `tenengrad-sq`'s *mean*
+regret picks radius **11** but its *worst-case* regret picks **9**, and the current 13 carries
+a **51% tail penalty** (19.83 DN vs 13.14 DN). M42 explicitly declined to make this call on
+its own, and it is genuinely a taste question about the product rather than a measurement:
+mean regret optimises the typical pixel, tail regret optimises the worst edge in the frame.
+It matters more than it looks, because the per-pixel confidence map we intend to ship is
+calibrated on tail behaviour — so a tail-weighted objective would also change what the
+confidence number is promising the user.
+*My default if you say nothing:* **w11**, the mean-regret optimum, because the confidence
+map does not exist yet and I would rather not tune a radius for a consumer that has not been
+built. Easy to revisit — re-radiusing costs 0.000 ms.
+
+**Q6 — is the half-cured smooth ramp worth its own milestone?** `tenengrad-sq` closes fact
+73's blind spot on monotone *steps* (discrimination 1.0000 → 0.1860) but only half-cures it
+on smooth *ramps* (→ 0.6802), and **no radius in the w8–w40 ladder improves that**. Ramps are
+arguably the more common macro case: specular falloff across a carapace, defocused
+backgrounds, petal edges. This is now question 103 in the corpus.
+*My read:* worth a milestone, but after the plugin crate and the triple edit, because a
+better operator is exactly the kind of thing the plugin seam is supposed to make cheap to
+try — and it would be the first real test of whether that seam earns its keep.
+
 ## Warnings — things I am deliberately not surfacing to users yet
 
 **W1 — the f/5.6 advice.** M20 §7 suggests shooting wider and letting reconstruction do the
@@ -174,21 +195,71 @@ estimation work was unbuilt and asserted "never worse than a single frame" — t
 falsified earlier tonight. Rewritten, with the retraction stated in the performance section
 rather than buried.
 
+**4. `tenengrad-sq` was never actually landed, and this document said it was.** Q1 above
+recorded "What I did: landed it". It is not landed. `crates/strehl-core/src/focus.rs` at
+`HEAD` still reads `WINDOW_RADIUS = 13` and computes `(gx*gx + gy*gy).sqrt()` — the
+magnitude operator — and the only commits ever to touch that file are M2, M9, M14 and M18.
+I decided to land it and then never made the edit. M42 caught the same discrepancy
+independently from its own reading of the file. The wrong paragraph is left visible with a
+correction under it. **The upside is that item 5 has not shipped.**
+
+**5. That un-made edit turns out to be a three-part change, and the third part moves the
+gate by 1.53×.** M42 answered Q1: the window optimum belongs to the *operator*, and the
+optimum for `tenengrad-sq` is **w11, not w13** — 0 of 6 independent subsets choose 13,
+against 6 of 6 for the operator we actually ship. Thirteen survives the pre-registered
+tolerance by 1.1% of the bar, so it is not a shipped-default defect, and moving to 11 is
+free: `box_mean` is a running sum, so both radii cost 3.226 ms/frame/Mpx.
+
+M42 concludes operator and radius must land together. Right, and one member short. The
+merge gate is denominated in `FOCUS_NOISE_SD`, and **that constant is a property of the
+operator, the window and the regulariser jointly**. The shipped 0.015214 was measured for
+`|grad|` at w13. For `tenengrad-sq` at w11 it is **0.023249** — so landing the pair without
+the constant turns **`--gate 1.0` into an effective gate of 0.654**, with the log, the exit
+code and the calibration block all unchanged. Even the radius change *alone* — the half M42
+correctly prices as free on quality, noise and runtime — is a **12.5% gate shift**.
+
+This is the first time the plugin hole in item 1 has been load-bearing on a real pending
+commit of our own rather than on a hypothetical contributor. **Ship all three in one
+commit.** Facts 509-511, discipline 262.
+
+**6. The orientation anomaly is the scene, not our code — and `WINDOW_RADIUS = 13`
+survives.** M16 spent six hours on question 20 and killed it properly. Rotating the *plant's
+textures* 90° with every piece of machinery held fixed transposes the asymmetry exactly, and
+symmetrising the texture nulls it to zero. The mechanism is that a horizontal edge is
+localised by `Gy` and a vertical one by `Gx`, and this corpus carries **14–22× more vertical
+gradient energy**. The reviewer's proposed destriping fix moves the statistic by **0.0
+windows** and is *worse* on the level statistic, and the row-FPN mechanism it assumed is
+refuted at source: your sensor's fixed pattern is **isotropic at all 11 measured ISOs**, and
+its row-correlated component is about **a thousand times smaller** than the row structure
+the scene itself puts in the tiles. No window number in the corpus is biased. Facts 90-99,
+506-508.
+
 ## Running while you sleep
 
-Six agents are live. Two are long-runners that have not reported yet; three were dispatched
-tonight; one is a verifier of my own work, because on this project the author never verifies
-their own work and the fact-341 repair above is mine.
+**Updated at the end of the night.** M16, M41 and M42 have landed and are folded; M17 was
+re-tasked as M42 and has landed twice. Four agents are still live and two were dispatched
+after the folds above.
 
-| Agent | What it is deciding | Age at time of writing |
+| Agent | What it is deciding | State |
 | --- | --- | --- |
-| **M16** | Whether row/column FPN explains the orientation anomaly (question 20). If it does, `WINDOW_RADIUS = 13` carries a directional bias and **every window number M13 and M15 produced** inherits it | 18.5 h |
-| **M25** | The calibrated simulator / digital twin — the instrument that would let us answer question 101 with a synthetic null instead of an argument | 15.3 h |
-| **M40** | Auditing my fact-341 repair against five named choice points, under rule 24 (re-choose, do not re-compute) | dispatched tonight |
-| **M41** | The pre-registered six-arm kill experiment for review item R3 (deconvolution as the core merge). R3 is currently marked REFUTED on the strength of M20 alone, and M20 never touched `crates/**` | dispatched tonight |
-| **M42** | Whether `WINDOW_RADIUS = 13` survives the operator change. 13 was tuned for `\|grad\|`; we now ship `tenengrad-sq`. **A window optimum is a property of the operator/window pair**, and nobody has checked the new pair | dispatched tonight |
+| **M16** | Whether row/column FPN explains the orientation anomaly (question 20) | **LANDED, folded.** Question 20 closed; `WINDOW_RADIUS = 13` survives. See item 6 |
+| **M42** | Whether `WINDOW_RADIUS = 13` survives the operator change | **LANDED, folded.** It moves to w11, and the edit is a triple. See item 5 |
+| **M17** | The `(mean, max)` dual focus response (question 19) | **LANDED** earlier, then re-tasked as M42. Idle |
+| **M18** | Building the estimation merge — the project's thesis in code | Live, committing to `main` |
+| **M19** | The microscopy/EDOF deconvolution literature the corpus never surveyed | Live, long-runner |
+| **M25** | The calibrated simulator / digital twin | Live, long-runner; has begun writing its report |
+| **M40** | Auditing my fact-341 repair under rule 24 (re-choose, do not re-compute) | Live. **Holds `merge.rs`, which is why the item-5 edit is not made yet** |
+| **M44** | Finishing M41: it stopped one arm short of a scoreable verdict | Dispatched at the end of the night |
+| **M45** | **Building the plugin crate** — your #1 structural ask, and the first slice of it in code | Dispatched at the end of the night |
 
-M42 is the one I would watch. If 13 is wrong for the operator we just adopted, it is a
-shipped-default defect, and it sits underneath a large fraction of the corpus's numbers.
+**The one I would watch is M45.** It is the first attempt to compile the plugin design
+rather than argue about it, and I have asked it to report what breaks rather than quietly
+substitute something weaker.
 
-M16 has started writing its report to disk, so it is close.
+**M41 needs a note.** Its six-arm kill experiment for review item R3 ran its main arm and
+stopped before the planted positive control. Reading its log, the Fourier Ring Correlation
+metric returns **an identical value for every arm including the permutation null** — a
+negative control that matches the live arm means the metric has no discriminating power on
+this data, so M41's apparent kill cannot currently be scored. M44 is diagnosing that and
+running the missing control. R3 remains refuted on other evidence; it is this *particular*
+experiment that cannot yet carry the verdict.
