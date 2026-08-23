@@ -63,16 +63,24 @@ monolithic binary and ship only that binary.
    not the one originally assumed.
 
    Chaining is not merely noisy. **Short-baseline edges under-report
-   magnification change by ~3.2-3.5x** — on `coffee-bean` the span-1 telescoping
-   ladder totals −1.6876% against span-16's −5.8891%, with a monotone ramp
-   between them (2.19x on 119MSDCF, 1.43x on 109MSDCF). Any span must telescope
-   to the same total, so the gap is pure bias. It is **coherent**, so composing
-   104 edges yields **40.3 plane px** of corner error with **36.4 px in scale
-   alone**. The cause needs a real inter-frame content change and lives below
-   ~0.5 px of differential displacement: a resampler-free control recovers a
-   planted increment at ratio 1.00, the same increment on a real defocus pair
-   recovers at 0.56. **Short baselines look best by tile residual while being
-   worst by truth — never judge an edge by its residual.**
+   magnification change**, and any span must telescope to the same total, so the
+   gap is pure bias rather than accumulated error. On `coffee-bean` the span-1
+   ladder totals −1.6876% against span-16's −5.8891%. The bias is **coherent**,
+   so composing 104 edges yields **40.3 plane px** of corner error with
+   **36.4 px in scale alone**. It needs a real inter-frame content change and
+   lives below ~0.5 px of differential displacement: a resampler-free control
+   recovers a planted increment at ratio 1.00, the same increment on a real
+   defocus pair recovers at 0.56. **Short baselines look best by tile residual
+   while being worst by truth — never judge an edge by its residual.**
+
+   **Its magnitude is a property of the scene, not of the optics.** Across the
+   five-stack corpus `1/S_W(1)` ranges **1.03x to 3.26x**: `coffee-bean` 3.26,
+   `119MSDCF` 2.20, `109MSDCF` 1.32, but `112MSDCF` **1.05** and `113MSDCF`
+   **1.03** — essentially none. Chaining all 78 adjacent edges on `112MSDCF`
+   recovers **99.0%** of the direct long edge. Two stacks matched to 0.3% in
+   per-frame displacement still differ **3.11x** in shrinkage, so it is not a
+   function of baseline in any parameterisation, and no measurable property of
+   the edge sets predicts it. Do not quote a single number for it.
 
    A single fixed reference fails differently: on a 105-frame stack it places
    only **76 of 105** frames, first failing at frame 73, because focus has swept
@@ -92,9 +100,20 @@ monolithic binary and ship only that binary.
    graph's cycle rank first — a solve over a tree is chaining in disguise**, and
    any comparison against a chain is then vacuous.
 
+   **Do not fit a shrinkage correction to escape any of this.** It is
+   measurable and stable within a scene, and it transfers to **0 of 18**
+   cross-scene pairs, making the worst case **83.4x worse**. Even an *oracle
+   in-sample* correction leaves a chain at **13.92 px**, twice the error the
+   plain global solve already achieves without it. The case the project would
+   ship — fit on the deep stack you have, apply to the next capture — is the
+   catastrophic one. Computing `1/S_W(1)` per stack is still worthwhile as a
+   **diagnostic**, since it cleanly separates chainable stacks from unchainable
+   ones, but it is a gauge, not a gain.
+
    6.76 px is not good enough for a final render. Treat deep-stack alignment as
    **usable, not solved** (SYNTHESIS risk 11). See
-   `docs/research/M10-deep-alignment-measured.md` and
+   `docs/research/M10-deep-alignment-measured.md`,
+   `docs/research/M12-shrinkage-measured.md` and
    `docs/research/M3-alignment-measured.md`.
 7. **Never compute statistics over the full decoded buffer.** `rawler` returns
    7168x5120 for the A7C II but fills only the 7032x4688 active area. The rest
@@ -151,6 +170,7 @@ monolithic binary and ship only that binary.
 | `M8-scratch-measured.md` | **Decoder scratch, and the term that was actually missing.** Scratch is **39.36 ± 0.11 MiB per concurrent decode**, file-size proportional. But **most of the planner's error was never scratch** — peak resolves into `14.4 MiB floor + live x 342.8 MiB + ⌈log₂ chunks⌉ x 110.04 MiB`, that last term being one `Selection` per level of rayon's reduce tree (= `px x 14`, 550 MiB at 18 chunks). Recommends the worker cap 20 → 16. **Also refutes SYNTHESIS §3.2.1 assertions 1 and 2 at assertion 1's own specified pair**, and finds the "379 vs 321 MB" per-worker gap was a MiB/MB unit mismatch |
 | `M9-support-coupling-measured.md` | **What the merge is actually coupled to, and why nothing goes on the interface for it.** Argmax's noise excess tracks the focus operator's **centre-tap sensitivity fraction φ** (ρ = **+0.918 / +0.894**, p < 0.0001), **not** its support radius (ρ = −0.170 / −0.243, n.s.); a zero-centre-tap Sobel shows **no excess at all (0.9952x)**. For a ring difference **φ = 1/(2·(2·inner+1)²) and the outer radius cancels exactly**, so the proposed `support_px()` would have reported the one term that provably does not matter. **Rejects §3.4.1 B3** — the last Blocking verdict standing on an unmeasured claim — and reinterprets (does not retract) fact 25. Also: the flat-ROI noise objective is **monotone-then-flat with no interior optimum**, and regularising can *harm* |
 | `M10-deep-alignment-measured.md` | **Deep-stack alignment: why chaining really fails, and what works instead.** Chaining does not fail from accumulated random error — **short-baseline edges under-report magnification change by ~3.2-3.5x**, coherently, so 36.4 of the chain's 40.3 px corner error is scale alone. Proved by a telescoping conservation identity (span-1 −1.6876% vs span-16 −5.8891%), then isolated: the bias needs a **real inter-frame content change** and lives **below ~0.5 px** of differential displacement (resampler-free control recovers a planted increment at 1.00; a real defocus pair at 0.56). A global least-squares solve over a sparse multiscale graph of direct edges places **105/105 frames at 6.76 plane px** against a fixed reference's **76/105**. Error is bounded by the *edges*, not the solver. Also: the scale centre is per-stack, not per-rig. **Risk 11 → partially solved; rule 6 rewritten**; facts 43-48 |
+| `M12-shrinkage-measured.md` | **Can the short-baseline shrinkage be calibrated away? No.** Fitted on one stack it transfers to **0 of 18** cross-scene pairs and makes the worst case **83.4x worse**; even an oracle in-sample correction leaves a chain at twice the error the plain global solve already achieves. The magnitude is a property of the **scene**, ranging 1.03x-3.26x across five stacks — two stacks matched to 0.3% in displacement differ **3.11x** — so fact 43's "3.2-3.5x" is rescoped to `coffee-bean` alone. Also **corrects fact 49**: `112`/`113` share a per-frame focus step rather than sampling one interval at two densities, measured both by magnification and from the focus band in the pixels. Introduces a **focus index** measurable without metadata, since `FocusPosition2` has only 3 distinct values across a 79-frame sweep. **Rule 6 amended; risk 11's shrinkage question closed**; facts 50-54 |
 | `M11-focus-bakeoff-measured.md` | **What to select with, and what selection costs.** A 47-operator pre-registered bake-off on two real stacks, scored on a measured Pareto front of selectivity against noise excess. **The shipped `ring(1,3)` ranks 26-27th of 36** (N = 1.3475x, ~45% of the best selectivity); the recommendation is **Tenengrad under an 11x11 box window** (N = 1.1324x) — re-tuning the ring cannot close the gap. Headline: **no operator anywhere on the front is noise-free** (0 of 36 reach N ≤ 1.02x), so operator choice alone cannot rescue a selector. Zero-centre-tap operators *are* noise-free (φ = 0.0000, Ncorr 0.989-0.997) but recover only 34-40% of a planted focus surface. **Windowing and normalisation each re-introduce a centre tap, additively** — so φ must be probed on the whole configured stage, not the kernel. Closes risk 2; facts 37-42 |
 | `A-prior-corpus.md` | The prior attempt, filtered; includes retractions |
 | `B-algorithms-sota.md` | Algorithmic state of the art per stage |

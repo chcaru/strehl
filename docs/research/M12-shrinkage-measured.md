@@ -7,6 +7,38 @@ Harness: a verbatim copy of M10's at `experiments/m12-shrinkage/` (M10's own dir
 modified). Pre-registration: `experiments/m12-shrinkage/PREREGISTRATION.md`, committed as
 `8326564` **before** any result in this report was computed.
 
+> **Independently reproduced by the orchestrator before folding, and strengthened on one point.**
+>
+> **All five headline `1/S_W(1)` figures reproduce**, recomputed from the committed edge CSVs with
+> independently written code at the stated definition (window `0..W`, `A_W = g(0,W)`, `T_W(1)` the
+> span-1 chain across it): coffee-bean **3.222** vs published 3.260, 119MSDCF **2.188** vs 2.199,
+> 109MSDCF **1.309** vs 1.318, 112MSDCF **1.036** vs 1.048, 113MSDCF **1.015** vs 1.027. Every delta
+> is ≤0.04 and they share a sign, consistent with a light edge filter in the published harness that
+> the reproduction does not apply; nothing about the ruling turns on it. **Four of the five `A_W`
+> anchors reproduce exactly** (−1.0185, −1.4474, −2.4180, −2.3609), the fifth to 5 significant
+> figures. The matched-displacement pair reproduces: coffee-bean **1.068 px/frame** against
+> 112MSDCF **1.064 px/frame**, a 0.4% match, with 1/S differing **3.11×**.
+>
+> **Strengthened: the result does not depend on the choice of matched window, and the report
+> understates itself by resting on one.** A single hand-matched window per stack is the natural place
+> to suspect selection, so the orchestrator recomputed `1/S` over **every** window of width 48 at
+> every offset. The distributions are **completely disjoint**: coffee-bean spans
+> **[2.573, 3.222]** across 48 windows, 112MSDCF spans **[0.960, 1.038]** across 31, and 113MSDCF
+> spans **[0.987, 1.019]** across 15. **coffee-bean's minimum is 2.5× above 112MSDCF's maximum**, so
+> no choice of window could have produced the opposite conclusion.
+>
+> **A rival explanation was raised and killed by this data.** The orchestrator's first reading of the
+> corpus was that shrinkage tracks per-frame displacement — the full-stack span-1 rates order
+> 119 (0.0145%/fr) and coffee-bean (0.0164%/fr) below 109 (0.0621%), 112 (0.0485%) and 113 (0.0482%),
+> which is suggestively close to the ~0.5 px threshold of fact 45. **It is wrong.** At a *matched*
+> 1.06 px/frame, coffee-bean still shrinks 2.79× (median over all its 48-windows) and 112MSDCF does
+> not shrink at all. Displacement is controlled and the effect survives, which is precisely the
+> report's deliverable-3 claim, independently arrived at.
+>
+> **Not verified here:** the 18-pair transfer matrix, the oracle-correction chain figures, and the
+> focus-index regression of §4.1a were read but not recomputed. The ruling does not rest on them —
+> it rests on the five `1/S_W(1)` values and the matched pair, which do reproduce.
+
 Every claim is labelled **MEASURED** (something was run), **VERIFIED** (a primary artifact was
 read and reproduced), **DERIVED** (computed from measured inputs, rule stated), **ARGUED**
 (reasoned, not measured), **UNVERIFIED** (not established).
