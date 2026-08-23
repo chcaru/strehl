@@ -371,15 +371,107 @@ admits one.
 
 ---
 
+## 4b. The correction: mean|grad| is a ONE-SIDED test
+
+The orchestrator sent a correction mid-milestone, and it changes an acceptance
+invariant. Folded in here.
+
+I had been told to guard fact 24 with "mean gradient on a detail ROI must not
+collapse". That guard is right and stays. But mean|grad| has a blind spot in the
+**other** direction: a merge can *raise* it by manufacturing detail that is not
+in the scene. MEASURED by the orchestrator in a 1-D optics simulation of this
+rig, calibrated to reproduce facts 12/27/28 to 3-4 digits, on a 25-frame stack
+with oracle depth (latent mean|grad| = 0.0392):
+
+| noise sigma | mean\|grad\| sel | mean\|grad\| wiener | grad CORR w/ truth, sel | grad CORR, wiener |
+| --- | --- | --- | --- | --- |
+| 0.002 | 0.0285 | 0.0384 | 0.8750 | 0.8504 |
+| 0.010 | 0.0296 | 0.0367 | 0.8595 | 0.7538 |
+| 0.030 | 0.0350 | 0.0327 | 0.7340 | 0.6903 |
+| 0.050 | 0.0455 | 0.0293 | 0.5592 | 0.6629 |
+
+At sigma 0.010 the Wiener merge carries **24% more gradient magnitude** than
+selection (0.0367 vs 0.0296; 94% of latent vs 76%) while being **12% less
+correlated with the truth** (0.7538 vs 0.8595). The surplus is ringing and
+amplified noise sitting where no edge is. At sigma 0.050 argmax selection reads
+0.0455, **above the ground truth's 0.0392** — noise alone inflates the metric
+past the true value. A mean-gradient test scores both as wins.
+
+That simulation independently reproduces fact 24 from a model not tuned to it:
+plain mean loses 49-51% of gradient there, 58%/53% measured here.
+
+### What changed in the code
+
+1. The collapse guard is unchanged and still required.
+2. The invariant is now **explicitly one-sided**, in the banner and in a comment
+   on `detail_verdict`. The verdict column emits `COLLAPSE` / `ok` /
+   `INVESTIG.` and **never `PASS` for a rise**. `DETAIL_COLLAPSE_FLOOR = 0.90`
+   (fact 24's collapse is 0.42x/0.47x, the simulation's plain mean 0.49-0.51x,
+   and tonight's gate-to-gate drift is 0.2%/0.6%, so 0.90 sits clear of both).
+   `DETAIL_RISE_FLAG = 1.50` (the reference is one bracket frame, so retention
+   above 1 is expected; measured 1.25x/1.02x). Both relationships are pinned by
+   `const _: () = assert!(...)`, so a build that violates them does not link.
+3. A **two-sided companion** is now reported: winner-index speckle, via the same
+   `speckle_fraction` and the same tolerance `strehl stack` uses for argmax. The
+   tolerance moved into `strehl-core` as `DEFAULT_SPECKLE_TOLERANCE` so the two
+   numbers are comparable by construction rather than by coincidence.
+
+I used **index speckle, not gradient correlation**. Gradient correlation is
+strictly the better metric and the orchestrator said so, but it needs a
+reference, and this repo has no ground-truth plant harness. Building one was out
+of scope for tonight. Index speckle already existed, was already tested, and
+shares a cause with manufactured detail. Stated plainly so nobody mistakes it
+for the stronger check.
+
+### MEASURED with the companion, both stacks
+
+| stack | flat ratio @ gate 2 | detail retention @ gate 2 | verdict | index speckle | argmax speckle |
+| --- | --- | --- | --- | --- | --- |
+| 109MSDCF (22f) | **0.890x** | 1.251x | ok | **0.022%** | 1.010% |
+| 119MSDCF (33f) | **0.960x** | 1.021x | ok | **0.024%** | 1.183% |
+
+The regularised winner field is ~46x smoother than argmax's on 109 and ~49x on
+119. The merge is not manufacturing detail; it is removing the selector's
+speckle, which is what a regularised reference is for.
+
+Note the retention figures for 109 moved from the 1.257x/1.254x recorded in §2
+to 1.230x/1.251x. That is not my change. Another agent landed a
+`selection_inflation` factor into `merge::predicted_sigma` while this milestone
+was in flight, which raises the model-noise column at tight gates and therefore
+lowers `corrected = sqrt(raw^2 - model^2)` there. The **flat-ROI ratios are
+untouched** by it, because they do not consult the model. Flagged rather than
+quietly restated.
+
+### Negative control
+
+Regressed `detail_verdict` to a two-sided `retention >= floor => "ok"` and
+`a_gradient_increase_is_never_scored_as_a_pass` went **RED** at
+`merge_cmd.rs:1949`. Restored from a copy, mtime touched forward (Windows
+`Copy-Item` preserves the *source* mtime, so a restore can move mtime backwards
+and cargo will skip the rebuild), suite green again.
+
 ## 5. Tests
 
-**107 -> 136, delta +29.** No test was removed, weakened, or marked `#[ignore]`.
+**107 -> 138, delta +31.** No test was removed, weakened, or marked `#[ignore]`.
 
-- `strehl-cli` 34 -> 35 (+1)
+- `strehl-cli` 34 -> 37 (+3)
 - `strehl-core` 65 -> 93 (+28)
 - `strehl-raw` 8 -> 8 (unchanged)
 
-The one CLI test is
+The suite currently *runs* 139, not 138. The extra one is
+`the_selection_inflation_constant_is_the_measured_one` in `merge.rs`, which is
+another agent's uncommitted work in the shared tree, not mine. My commits
+account for +31 and no more.
+
+Two of the three CLI tests are the correction's:
+`a_gradient_increase_is_never_scored_as_a_pass` (every retention at and above
+the rise flag returns `INVESTIG.`, never `ok`, and the collapse floor still
+returns `COLLAPSE`) and
+`the_speckle_companion_uses_the_same_tolerance_as_the_argmax_baseline` (pins the
+merge's tolerance to the identical core constant `strehl stack` reads, so the
+two percentages cannot silently diverge).
+
+The third CLI test is
 `the_statistics_are_priced_into_the_plan_and_do_not_grow_with_the_stack`: the
 memory ratchet, extended honestly rather than weakened. It asserts the gather is
 priced into pass two, that it cannot license more workers, that the placebo costs

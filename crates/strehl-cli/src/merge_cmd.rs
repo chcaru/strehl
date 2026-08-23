@@ -46,6 +46,7 @@ use strehl_core::merge::{
 use strehl_core::noise::{Levels, NoiseModel};
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma};
 use strehl_core::profile;
+use strehl_core::stack::{DEFAULT_SPECKLE_TOLERANCE as SPECKLE_TOLERANCE, speckle_fraction};
 use strehl_core::through_focus::{
     ConfidenceVector, FINE_FOCUS_NOISE_SD, FLAG_BIMODAL, FLAG_BRACKET_BOUNDARY,
     FLAG_SCALE_DISAGREEMENT, PEAK_SEPARATION, STATS_RADIUS, ThroughFocus, do_not_trust_mask,
@@ -1003,13 +1004,44 @@ fn report(
         droi.x, droi.y, droi.width, droi.height
     );
     eprintln!(
-        "                  MEAN |GRAD| IS CONFOUNDED BY NOISE and the confound has the same sign"
+        "                  THIS IS A ONE-SIDED TEST. It is valid against COLLAPSE and against"
     );
-    eprintln!("                  as the effect: cutting sigma cuts gradient with zero blur, so an");
     eprintln!(
-        "                  uncorrected reading charges the merge for doing its job. `corrected` is"
+        "                  nothing else. mean|grad| can be RAISED by ringing, by amplified noise"
     );
-    eprintln!("                  sqrt(raw^2 - model^2), the only column judged. `m2` is fact 24's");
+    eprintln!(
+        "                  and by manufactured edges, so an INCREASE is never evidence of quality."
+    );
+    eprintln!(
+        "                  MEASURED in the orchestrator's calibrated 1-D optics simulation (25"
+    );
+    eprintln!(
+        "                  frames, oracle depth, latent mean|grad| 0.0392): at sigma 0.010 a Wiener"
+    );
+    eprintln!(
+        "                  merge reads 0.0367 against selection's 0.0296 -- 24% MORE gradient --"
+    );
+    eprintln!(
+        "                  while its gradient CORRELATION with truth is 0.7538 against 0.8595, i.e."
+    );
+    eprintln!(
+        "                  12% LESS faithful. At sigma 0.050 argmax reads 0.0455, ABOVE the ground"
+    );
+    eprintln!(
+        "                  truth. A mean-gradient test scores both of those as wins. It must not."
+    );
+    eprintln!(
+        "                  MEAN |GRAD| IS ALSO CONFOUNDED BY NOISE and that confound has the same"
+    );
+    eprintln!(
+        "                  sign as the effect: cutting sigma cuts gradient with zero blur, so"
+    );
+    eprintln!(
+        "                  an uncorrected reading charges the merge for doing its job. `corrected`"
+    );
+    eprintln!(
+        "                  is sqrt(raw^2 - model^2), the only column judged. `m2` is fact 24's"
+    );
     eprintln!("                  convention (M38 §1), reported so that comparison is legitimate.");
     eprintln!(
         "single frame {middle:<3}: corrected {:8.4}   raw rms {:8.4}   model noise {:8.4}   \
@@ -1017,7 +1049,8 @@ fn report(
         base.corrected_rms, base.raw_rms, base.noise_rms, base.m2_pooled_abs, base.iso_mean
     );
     eprintln!(
-        "  gate     corrected     RETENTION      raw rms   model noise         m2        iso"
+        "  gate     corrected     RETENTION   VERDICT      raw rms   model noise         m2        \
+         iso"
     );
     for e in &p2.est {
         let merged = roi_green_merged(e, droi, geom, levels.black);
@@ -1026,11 +1059,13 @@ fn report(
             .map(|(px, py)| e.predicted_sigma(noise, geom.index(px, py), levels.black))
             .collect();
         let m = detail_metrics(&merged, &sig, droi.width, droi.height);
+        let retention = m.corrected_rms / base.corrected_rms;
         eprintln!(
-            "  {:5.2}   {:9.4}   {:9.3}x   {:10.4}   {:11.4}   {:8.4}   {:8.4}",
+            "  {:5.2}   {:9.4}   {:9.3}x   {:9}   {:10.4}   {:11.4}   {:8.4}   {:8.4}",
             e.gate().threshold,
             m.corrected_rms,
-            m.corrected_rms / base.corrected_rms,
+            retention,
+            detail_verdict(retention),
             m.raw_rms,
             m.noise_rms,
             m.m2_pooled_abs,
@@ -1050,8 +1085,100 @@ fn report(
         "                  CORRECTED retention falling as the gate opens, which is fact 24's"
     );
     eprintln!("                  collapse arriving and cannot be explained away as noise removal.");
+    eprintln!(
+        "                  A rise is INVESTIGATE, not PASS: see the speckle companion below, which"
+    );
+    eprintln!("                  is two-sided and shares a cause with manufactured detail.");
+    eprintln!();
+
+    // The two-sided companion. mean|grad| cannot tell manufactured detail from
+    // real detail; a winner-index map can, because ringing and amplified noise
+    // both decorrelate the winner from its neighbours and speckle is exactly
+    // that decorrelation. This is the SAME `speckle_fraction` the argmax
+    // baseline is quoted against (`strehl stack`), on the merge's own
+    // regularised winner, so the two numbers are directly comparable.
+    let speckle = speckle_fraction(p1.stats.best_index(), geom, SPECKLE_TOLERANCE);
+    eprintln!("--- COMPANION (two-sided): winner-index speckle (MEASURED) ---");
+    eprintln!(
+        "index speckle   : {:.3}% of pixels differ by more than {SPECKLE_TOLERANCE} from their \
+         3x3 median index",
+        100.0 * speckle
+    );
+    eprintln!(
+        "                  On the REGULARISED winner, the same statistic and tolerance `strehl \
+         stack`"
+    );
+    eprintln!(
+        "                  reports for argmax. Unlike mean|grad| this is two-sided: a real scene \
+         gives"
+    );
+    eprintln!(
+        "                  smooth depth with sharp edges, and BOTH over-smoothing and \
+         manufactured"
+    );
+    eprintln!(
+        "                  detail move it away from that. Fact 23's reference points are 34.4% \
+         (ring"
+    );
+    eprintln!("                  operator, unregularised) and 0.868% (Tenengrad, regularised).");
     Ok(())
 }
+
+/// One-sided reading of a corrected-retention ratio.
+///
+/// **Deliberately never returns "PASS" for a value above 1.** The orchestrator
+/// MEASURED (calibrated 1-D optics simulation, 25 frames, oracle depth, 2026-08)
+/// that a Wiener merge can carry **24% more** mean|grad| than selection while
+/// having **12% less** gradient correlation with the truth, and that at sigma
+/// 0.050 argmax selection reads mean|grad| *above the ground truth's*. Every one
+/// of those is a merge inventing detail, and every one of them would be scored a
+/// win by a two-sided reading of this number.
+///
+/// This merge is a regulariser plus a noise gate, not a deconvolution, so it is
+/// not itself at risk of manufacturing detail. The verdict exists so the TEST
+/// cannot be gamed by a later merge that is.
+fn detail_verdict(retention: f64) -> &'static str {
+    if retention < DETAIL_COLLAPSE_FLOOR {
+        "COLLAPSE"
+    } else if retention > DETAIL_RISE_FLAG {
+        "INVESTIG."
+    } else {
+        "ok"
+    }
+}
+
+/// Corrected retention below this is fact 24's collapse.
+///
+/// Registered at 0.90 because fact 24's measured collapse is **-58% and -53%**
+/// (retention 0.42x and 0.47x) and the orchestrator's simulation independently
+/// reproduces a plain mean at -49% to -51%. A 10% floor sits an order of
+/// magnitude above the noise on this metric while leaving a wide margin below
+/// the failure it is aimed at, so it cannot fire on ordinary gate-to-gate drift
+/// (MEASURED tonight: 0.2% on 109MSDCF, 0.6% on 119MSDCF across gate 0 to 2.0).
+const DETAIL_COLLAPSE_FLOOR: f64 = 0.90;
+
+/// Corrected retention above this is a flag to investigate, never a pass.
+///
+/// Set at 1.50 rather than 1.00 because the reference is one frame of a focus
+/// bracket and much of a detail ROI is genuinely out of focus in it, so
+/// retention above 1 is the *expected* reading — 1.257x and 1.027x tonight. A
+/// merge finding 50% more corrected gradient than the sharpest thing in the
+/// reference frame is more likely to be ringing than to be focus.
+const DETAIL_RISE_FLAG: f64 = 1.50;
+
+// Pinned at compile time rather than in a test, because these are relationships
+// between constants and a build that violates one should not link.
+//
+// The rise flag must sit above 1.0: retention above 1 is EXPECTED here, because
+// the reference is one frame of a focus bracket and much of a detail ROI is out
+// of focus in it (1.257x and 1.027x MEASURED tonight).
+const _: () = assert!(DETAIL_RISE_FLAG > 1.0);
+// The collapse floor must sit above the -49% a plain mean produces in the
+// orchestrator's simulation and the -58%/-53% fact 24 measured, or it cannot
+// catch the failure it exists for.
+const _: () = assert!(DETAIL_COLLAPSE_FLOOR > 0.51);
+// And the band must be non-empty, or every reading is a verdict.
+const _: () = assert!(DETAIL_COLLAPSE_FLOOR < DETAIL_RISE_FLAG);
 
 /// Report the through-focus sufficient statistics, with their null.
 ///
@@ -1782,6 +1909,60 @@ mod tests {
     fn degenerate_rois_do_not_panic() {
         assert_eq!(detail_metrics(&[1.0], &[1.0], 1, 1).corrected_rms, 0.0);
         assert_eq!(detail_metrics(&[1.0, 2.0], &[1.0, 1.0], 2, 1).iso_mean, 0.0);
+    }
+
+    /// **The detail invariant is ONE-SIDED and this test is what says so.**
+    ///
+    /// The orchestrator MEASURED, in a 1-D optics simulation calibrated to
+    /// reproduce facts 12/27/28 to 3-4 digits (25 frames, oracle depth, latent
+    /// mean|grad| 0.0392):
+    ///
+    /// | sigma | mean\|grad\| sel | wiener | grad corr sel | grad corr wiener |
+    /// |---|---|---|---|---|
+    /// | 0.010 | 0.0296 | 0.0367 | 0.8595 | 0.7538 |
+    /// | 0.050 | 0.0455 | 0.0293 | 0.5592 | 0.6629 |
+    ///
+    /// At sigma 0.010 the Wiener merge has **24% more** gradient magnitude and
+    /// **12% less** gradient correlation with the truth — the extra magnitude is
+    /// ringing sitting where no edge exists. At sigma 0.050 argmax selection
+    /// reads 0.0455, **above the ground truth's 0.0392**: pure noise inflating
+    /// the metric past the true value.
+    ///
+    /// A two-sided reading scores both of those as wins. So `detail_verdict`
+    /// must never return a passing string for a large increase, and this test
+    /// fails if someone later "simplifies" it into `retention >= floor`.
+    #[test]
+    fn a_gradient_increase_is_never_scored_as_a_pass() {
+        // Fact 24's collapse: -58% and -53%.
+        assert_eq!(detail_verdict(0.42), "COLLAPSE");
+        assert_eq!(detail_verdict(0.47), "COLLAPSE");
+        // The orchestrator's plain-mean reproduction: -49% to -51%.
+        assert_eq!(detail_verdict(0.51), "COLLAPSE");
+        assert_eq!(detail_verdict(0.49), "COLLAPSE");
+
+        // Tonight's real readings, both stacks, gate 0 through 2.0.
+        for r in [1.257, 1.254, 1.027, 1.021] {
+            assert_eq!(detail_verdict(r), "ok", "real reading {r} must not flag");
+        }
+
+        // And the direction that matters: a large rise is NOT a pass.
+        for r in [1.6, 2.0, 5.0] {
+            let v = detail_verdict(r);
+            assert_ne!(v, "ok", "retention {r} was scored as acceptable");
+            assert_eq!(v, "INVESTIG.");
+        }
+    }
+
+    /// The merge's speckle companion has to be quoted at the same tolerance as
+    /// `strehl stack`'s, or the two numbers are not comparable and the companion
+    /// is worthless. One constant, in core, imported by both.
+    #[test]
+    fn the_speckle_companion_uses_the_same_tolerance_as_the_argmax_baseline() {
+        assert_eq!(
+            SPECKLE_TOLERANCE,
+            strehl_core::stack::DEFAULT_SPECKLE_TOLERANCE
+        );
+        assert_eq!(SPECKLE_TOLERANCE, crate::stack::speckle_tolerance_in_use());
     }
 
     #[test]

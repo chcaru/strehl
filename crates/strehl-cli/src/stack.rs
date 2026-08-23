@@ -120,7 +120,21 @@ fn m8_worker_cap(px: usize, per_worker_bytes: usize) -> usize {
 
 /// A winner index this far from its 3x3 neighbourhood median is counted as
 /// speckle rather than depth structure.
-const SPECKLE_TOLERANCE: u16 = 2;
+///
+/// Re-exported from core rather than defined here so that this number and the
+/// merge's speckle companion are the same number by construction. They are
+/// quoted against each other; two copies could drift.
+use strehl_core::stack::DEFAULT_SPECKLE_TOLERANCE as SPECKLE_TOLERANCE;
+
+/// The tolerance this command actually passed to `speckle_fraction`.
+///
+/// Exists so `merge_cmd`'s companion-metric test can assert the two commands
+/// quote the same number, rather than asserting it against a literal that could
+/// be changed in one place.
+#[cfg(test)]
+pub fn speckle_tolerance_in_use() -> u16 {
+    SPECKLE_TOLERANCE
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Roi {

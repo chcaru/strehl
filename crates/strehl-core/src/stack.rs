@@ -165,6 +165,17 @@ impl Selection {
     }
 }
 
+/// The tolerance every speckle number in this project is quoted at.
+///
+/// Lives beside [`speckle_fraction`] rather than at either call site because the
+/// metric's whole value is that the merge's regularised winner and `strehl
+/// stack`'s argmax winner are **directly comparable**. Two copies of the
+/// constant could drift and silently make them not be.
+///
+/// Fact 23's reference points are all at this tolerance: 34.4% for the ring
+/// operator unregularised, 0.868% for Tenengrad regularised.
+pub const DEFAULT_SPECKLE_TOLERANCE: u16 = 2;
+
 /// Fraction of plane pixels whose winning frame index differs by more than
 /// `tolerance` from the median index of its 3x3 neighbourhood.
 ///
@@ -173,6 +184,16 @@ impl Selection {
 /// allowing `tolerance` frames of slack is argmax electing a noise spike instead
 /// of the in-focus frame. The neighbourhood is clamped at the border and
 /// includes the centre pixel.
+///
+/// # Why this is kept next to the detail metric
+///
+/// Unlike mean|grad|, this is **two-sided**, and that is what makes it the right
+/// companion. Mean|grad| can be raised by ringing, by amplified noise or by
+/// manufactured edges — the orchestrator MEASURED a Wiener merge carrying 24%
+/// more gradient than selection while being 12% *less* correlated with the
+/// truth, and argmax at sigma 0.050 reading *above* the ground truth. A winner
+/// map cannot be gamed that way: over-smoothing and manufactured detail both
+/// move it away from smooth-bands-with-sharp-edges, in opposite directions.
 pub fn speckle_fraction(index: &[u16], geom: PlaneGeometry, tolerance: u16) -> f64 {
     let (w, h) = (geom.width, geom.height);
     assert_eq!(index.len(), geom.pixels());
