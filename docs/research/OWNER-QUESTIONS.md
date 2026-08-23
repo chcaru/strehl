@@ -998,3 +998,34 @@ That is what a confirmation looks like. The claim it replaced had been "confirme
 0.4%" by a check that, when someone finally tested it, passes for any value between
 0.02 and 3.0. Precision is not evidence. Agreement between instruments that cannot
 see each other is.
+
+**38. A decision I had pre-committed to, and am now honouring against my own
+inclination.** When I last revised the build order I wrote a condition into it: *if the
+independent verifier refutes the detail metric, stop gating the build on it, ship the
+merge with an explicitly unmeasured detail claim, and do not start a fourth hunt for a
+metric.* I wrote that before the verifier reported. It reported, and it refuted.
+
+So the order changes:
+
+- **The merge is no longer waiting on anything but one acceptance instrument**, which is
+  in flight. It was previously waiting on two.
+- **strehl will not claim detail retention until it can measure it.** It can and will
+  still claim the noise half of the thesis, which has working instruments. The tool
+  should say so in its own output rather than staying quiet about the gap. Every
+  competitor makes the sharpness claim freely; not making it is the visible difference.
+
+**Where I am overruling my own pre-commitment, stated plainly so you can overrule me
+back.** I did start a fourth hunt. My reason is that the first three searched an
+unbounded space and this one cannot: one of the results from last night is a *proof*
+that rules out an entire family of candidate metrics without testing any of them, and
+four more are measured constraints on what a candidate must look like. I think that
+makes it a different search rather than a fourth try at the same one.
+
+I have bounded it so it cannot repeat the failure it is overruling: **the hunt gates
+nothing, the build proceeds beside it, and if it comes back empty the answer is the
+unmeasured claim above, not a fifth hunt.** The reasoning is written into the research
+document in a form deliberately quotable against me if it turns out to be motivated
+reasoning, which is a real possibility I cannot rule out from the inside.
+
+If you would rather I simply honoured the pre-commitment and killed the hunt, say so and
+I will. It costs nothing to stop.

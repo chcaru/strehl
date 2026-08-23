@@ -1282,6 +1282,7 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 721 | **The `LADDERS` fixture is stale on 8 of its 20 rungs, and is at `:1934`, not the `:1833` the corpus records.** | Eight wrong rungs in a fixture that exists to pin a curve. Combined with fact 719, **two of the corpus's own line-number citations were wrong on the same day they were checked**, which is the measurement behind discipline 344. | M56 (MEASURED) |
 | 722 | **`reference.rs:259-261` pairs one configuration's gate with a different configuration's pixel fraction.** It says fact 439's SML `k = 6.680` \"at a declared `--gate 1.0` is an effective gate of 0.150 and reverts **87.76%** of pixels\". Fact 439 gives the 0.150 and **no pixel fraction**; the 87.76% is M43's row for `k = 5.94` at gate **0.168**. M56 measured both on 109MSDCF: gate 0.168 -> **87.76%** (reproducing M43 to four figures), gate 0.150 -> **89.02%**. | **Both numbers are individually correct and the pairing is wrong**, which is precisely what a number-validity check cannot see. `lib.rs:18-20` pairs them correctly, so the crate contains its own counter-example. | M56 (MEASURED) |
 | 723 | **`strehl-plugin` cites three facts without the scopings later milestones attached, and one of those scopings REFUTES the stated purpose of the code citing it.** Fact 436's substitution is stated unqualified though fact 631 scoped it to the same operator rescaled; fact 439's \"spans 10.4x\" is quoted at eight sites though fact 635 gives **2.12x** under one consistent convention; and `reference.rs:125-127` presents fact 509's `k = 1.528` as the calibration for a pending edit that **fact 662 shows cannot land there at all**. **None of the amending numbers appears anywhere in `crates/`.** | **An amendment folded into a row does not propagate to the code citing the row.** The corpus has no mechanism for this, and 436's substitution is the crate's motivating argument. | M56 (MEASURED) |
+| 724 | **A pre-registered falsification condition written into the SHIP ORDER fired, on the milestone it named, in the direction it named.** Section 8 read: *\"if M55 refutes fact 619, item 1 loses its second half and the correct response is to ship the merge with an explicitly unmeasured detail claim rather than to keep hunting for a metric.\"* M55 refuted fact 619. | **The corpus pre-registers experiments; this is the first time it pre-registered a DECISION.** It is worth more than the experiment case, because it bound the author's hand at exactly the moment a sunk-cost argument was most available -- three milestones and a verifier had been spent on the metric. The section now records both the honouring and one bounded override, with the override's reasoning written to be quotable against itself. | M-main (DERIVED from M55) |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -2496,18 +2497,28 @@ blur from noise smoothing, separating at **0.233** where the new metric reaches 
 which means "build the priced merge now" would have been building against instruments
 that could not have detected the failure modes the build risks.
 
-**3. The missing instrument now exists**, and did not when the order was written (fact
-619). It needs no ground truth, no new captures and no gear the owner lacks.
+**3. The missing instrument does NOT exist.** This clause previously read "the missing
+instrument now exists (fact 619)". **Facts 695-712 refute fact 619 and fact 620**: the
+metric is non-monotone in true resolution, a 0.15% photometric change saturates its
+decision threshold, and on real data the half-stack split choice outweighs the optical
+signal it measures by 50x. The reasoning that produced the revised order below was
+sound; one of its three premises has since been measured false.
 
 **The revised order, and the reasoning is the whole point:**
 
-1. **Land the two acceptance instruments.** In flight: M53 (invariant 1) and the
-   `sigpow` specification. **Nothing else should ship before these**, because until
-   they land every subsequent quality claim is unfalsifiable by construction -- which is
-   precisely the defect this project exists to remove from the field.
-2. **Verify `sigpow` independently before depending on it** (M55, in flight). It is the
-   most consequential single result in the corpus and it is currently self-verified.
-   Rule 12 applies to good news as forcefully as to bad.
+1. **Land acceptance invariant 1** (M53, in flight). This half of the original item 1
+   stands unchanged and still gates everything after it.
+   **The second half -- the `sigpow` specification -- is struck.** There is no detail
+   instrument to land, and per fact 724 the pre-registered response to that outcome was
+   written into this section before M55 reported.
+2. **Ship the merge with an EXPLICITLY UNMEASURED detail claim.** This is the
+   pre-registered consequence, honoured rather than re-argued. `strehl` may not claim
+   detail retention until an instrument exists; it may still claim, and must still
+   measure, the noise properties -- those have working instruments (facts 19, 343) and
+   are the thesis's other half. **State the absence in the tool's own output**, so the
+   gap is a disclosure rather than a silence. That is the project's own standard applied
+   to itself, and it is the one place where a competitor's marketing claim and `strehl`'s
+   honest one visibly differ.
 3. **Then build the priced merge** -- regulariser (fact 84's -35% absolute error), the
    noise gate, and the robustness/outlier mask the review correctly identified as
    missing. The pricing still stands; only the order changed.
@@ -2522,13 +2533,29 @@ that could not have detected the failure modes the build risks.
 6. **Deep-alignment metacalibration and blur-equalisation remain open and unrefuted**,
    and are the right next *research* item once the above is shipped.
 
-**What this ordering deliberately gives up:** it delays visible capability by two
-milestones in order to make the capability measurable. That is the same trade the
-project made at the start, and the two acceptance-invariant findings are the evidence
-that it keeps paying. **What would falsify it:** if M55 refutes fact 619, item 1 loses
-its second half and the correct response is to ship the merge with an *explicitly
-unmeasured* detail claim rather than to keep hunting for a metric -- the corpus has now
-spent three milestones on that hunt and a fourth is not obviously repayable.
+**What this ordering deliberately gives up:** it delays visible capability by one
+milestone rather than two, because the second gate no longer exists. It gives up the
+ability to claim detail retention at all until an instrument is found.
+
+**The falsification condition written here FIRED, and this is what honouring it looks
+like.** It read: *"if M55 refutes fact 619, item 1 loses its second half and the correct
+response is to ship the merge with an explicitly unmeasured detail claim rather than to
+keep hunting for a metric -- the corpus has now spent three milestones on that hunt and
+a fourth is not obviously repayable."* M55 refuted it. Item 1 has lost its second half
+and the merge is no longer gated on a detail instrument.
+
+**Where I am deliberately overriding it, and why.** A fourth hunt (M57) is commissioned
+and running. The pre-registration said a fourth was not obviously repayable, and I am
+proceeding anyway on one stated ground: **the previous three hunts searched an unbounded
+space, and this one does not.** Fact 617/708 is a *proof* that forecloses every
+normalised correlation at a single frequency without running it, and facts 703-706 are
+measured constraints on shape, homogeneity, realisability and sign that no earlier hunt
+had. That is a genuinely different search, not a fourth attempt at the same one.
+**The override is bounded so that it cannot repeat the failure it is overriding: M57
+does not gate anything, the build proceeds in parallel, and if M57 finds nothing the
+answer is the unmeasured claim above rather than a fifth hunt.** If that reasoning is
+post-hoc rationalisation of the kind pre-registration exists to prevent, this paragraph
+is the evidence for the prosecution and it is deliberately written to be quotable.
 
 ## 9. Scope
 
@@ -3130,9 +3157,9 @@ is a written project rule in `AGENTS.md`.
 
 117. **Does arm D′ — guarded RIF without the diffraction term — beat the shipped merge on a metric with power, at ≤ 1.10× its noise?** It is the only survivor here and it was never what R3 asked for. (M44 §8.)
 
-118. **What ground-truth-free detail metric *does* have power on this sensor, given that split-half FRC does not?** A candidate: FRC between the merges of two *independent captures* of the same subject (112MSDCF / 113MSDCF), where the fixed-pattern component is still common-mode but the read-noise realisation and the subject sampling are not — this would bound how much of §3.6's effect is FPN and how much is amplitude-free correlation. §3.8.3 puts a number on the prize: recovery scales as (1 − ρ), and the measured common-mode fraction on one capture is 0.63–0.98. (M44 §8.)
+118. **What ground-truth-free detail metric *does* have power on this sensor, given that split-half FRC does not?** A candidate: FRC between the merges of two *independent captures* of the same subject (112MSDCF / 113MSDCF), where the fixed-pattern component is still common-mode but the read-noise realisation and the subject sampling are not — this would bound how much of §3.6's effect is FPN and how much is amplitude-free correlation. §3.8.3 puts a number on the prize: recovery scales as (1 − ρ), and the measured common-mode fraction on one capture is 0.63–0.98. (M44 §8.) **REOPENED by facts 695-706**: fact 619 answered this and is refuted. Fact 708 narrows it usefully -- an oracle at one frequency is equally blind, so the answer cannot be a single-frequency statistic of any kind. See question 164 and milestone M57.
 
-119. **Is there any admissible detail metric here at all?** The band-power ratio and FRC-at-`f_sig` both recover a planted blur at ≥ +0.99, but both also fire at ≥ +0.94 on a flat ROI, so neither separates "blurred the scene" from "smoothed the noise". Does a *paired* statistic — detail reading conditioned on the flat reading of the same merge — separate them, and can that be shown on a plant where only one of the two is present? (M44 §8.)
+119. **Is there any admissible detail metric here at all?** The band-power ratio and FRC-at-`f_sig` both recover a planted blur at ≥ +0.99, but both also fire at ≥ +0.94 on a flat ROI, so neither separates "blurred the scene" from "smoothed the noise". Does a *paired* statistic — detail reading conditioned on the flat reading of the same merge — separate them, and can that be shown on a plant where only one of the two is present? (M44 §8.) **REOPENED, and it is now the project's largest blocker again.** Fact 619 closed this; facts 695-706 refute fact 619. The paired statistic this question proposes was what `sigpow` became, and it failed for reasons this question did not anticipate: non-monotonicity in true resolution, gain sensitivity, and a nuisance term with 50x the leverage of the signal.
 
 120. **Why is the `sb = 0` split-half FRC reference censored on every source, including the analytic truth channel?** Correlated content surviving to Nyquist (aliasing, PRNU) and spectral leakage from the window are both candidates; a Blackman window and a 9×9 high-pass pre-filter each restore an uncensored crossing at `sb = 4` but neither was traced to the `sb = 0` case here. (M44 §8.)
 
@@ -3217,7 +3244,7 @@ until that lands.
      central claim (fact 619). My recommendation is `--verify`, defaulting off, because
      the GPU path's single-digit-second merge is a headline number and doubling it by
      default trades the wrong thing -- but this is a product decision, not a technical
-     one, and it is yours.
+     one, and it is yours. **MOOT: there is nothing to wire.** Facts 695-706 refute the metric. Fact 644's measured 0.4% cost stands and applies to any replacement with the same two-half-merge shape.
 
 140. **Should the shipped `mean_grad` detail invariant be replaced, or kept alongside
      `sigpow` as a cheap screen with its limitation documented?** Fact 624 measures it at
@@ -3247,7 +3274,7 @@ until that lands.
 146. **Is a per-operator noise constant worth its complexity, if the gate must be solved per (operator, stack) pair regardless?** The constant buys a meaningful *unit* for `--gate`; fact 630 shows it does not buy transferability. Fact 438's load-time refusal may be defensible purely as a unit check rather than as a calibration. (M52)
 147. **Does the pending M17+M42 edit land in `focus.rs` or through the plugin `FocusMeasure` path?** Fact 509's 1.53x is right for one and wrong for the other by roughly the local sigma, and **no document in the repository says which**. This blocks change (c). (M52, fact 632) **ANSWERED by fact 662: it lands in `focus.rs`, because `strehl-cli` does not depend on `strehl-plugin` at all (fact 583) and the binary has no other path. So `k = 1.5306` is the wrong correction for the code that would actually change, and change (c) is not to be applied as specified.**
 148. **Does the shipped pipeline guarantee a stable depth ordering at the point where a half-stack split would be taken**, including after speckle and bracket-boundary rejection? The split contract requires parity *on the depth-sorted index*, and fact 641 measures that getting this wrong returns 0.47% of the true value while still looking like a reading. (M46 App.A)
-149. **Should `sigpow` read the same ROI the existing flat/detail acceptance invariants use, a new one, or should the CLI read several and report the worst?** It is defined on one square ROI, and fact 650's `d` thresholds are one ROI's calibration rather than a constant. (M46 App.A)
+149. **Should `sigpow` read the same ROI the existing flat/detail acceptance invariants use, a new one, or should the CLI read several and report the worst?** It is defined on one square ROI, and fact 650's `d` thresholds are one ROI's calibration rather than a constant. (M46 App.A) **MOOT** per facts 695-706, but the question is well-posed and should be re-asked of any replacement: fact 650's thresholds were one ROI's calibration rather than a constant, and fact 707 shows an unidentified mechanism operates on flat ROIs specifically.
 150. **At 0.4% marginal cost (fact 644), should verification be the default with `--no-verify` as the escape, rather than an opt-in `--verify`?** This reverses the premise of question 139, which assumed roughly 2x. (M46 App.A) **WITHDRAWN by facts 695-706: the metric this question would have defaulted on is non-monotone in true resolution, its decision threshold is saturated by a 0.15% gain change, and it reads negative in 7 of 36 real cells. The 0.4% cost figure stands and is now moot.**
 151. **Should `FOCUS_NOISE_SD`'s doc comment state that it is sensor-independent?** One sentence, in `merge.rs`, and it is the durable fix for the false premise that commissioned an entire milestone. Owned by whoever holds `merge.rs`. (M48, fact 653)
 152. **Should the four `1.47` fixtures become `plane(0.229, 4.20)`?** Zero behavioural effect is expected at every site and measured at the one that could have been masked, but they currently describe a sensor that does not exist. Spans `focus.rs`, `noise.rs`, `measure.rs` and an example -- three different owners. (M48, fact 659)
