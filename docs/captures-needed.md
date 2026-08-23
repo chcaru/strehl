@@ -354,6 +354,33 @@ measurement.
 
 ---
 
+**STOP -- READ THIS BEFORE SHOOTING THE FLATS (added 2026-08, before capture).**
+
+Your optical path includes a **Breakthrough X4 CPL circular polariser**, which was
+not known when the section above was written. It changes this capture in two ways
+and one of them will quietly ruin it.
+
+1. **Do not shoot a sky flat through the polariser.** Blue sky is strongly
+   linearly polarised, and the degree of polarisation varies across the sky with
+   angle from the sun. A CPL pointed at it imposes a large, rotation-dependent
+   brightness gradient across the frame. **That gradient would be recorded as if
+   it were the lens's vignetting**, and every frame divided by the flat would then
+   be wrong in a smooth, plausible-looking way that is very hard to detect
+   afterwards. Shoot against an **unpolarised diffuse source** instead: an
+   electroluminescent panel, a white surface lit by several sources, or several
+   layers of diffuser over a window -- **not** open sky.
+
+2. **The filter must be on, at the same rotation as when you shoot subjects.** The
+   flat has to describe the *same optical path*. If the polariser is normally on
+   the lens, it must be on for the flat. If you rotate it between shoots, tell me,
+   because then there is no single flat that covers the corpus.
+
+If an unpolarised source is not practical, **take the polariser off for both the
+flat and a re-shoot of whatever the flat will be applied to.** A flat without the
+filter is valid; a flat with the filter against sky is not.
+
+---
+
 ## 5. Deep stacks with deliberate scene variation — REQUESTED
 
 **Status:** requested. Not urgent, not blocking anything today, but **two
