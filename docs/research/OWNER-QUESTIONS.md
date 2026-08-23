@@ -768,3 +768,104 @@ Correlation metric returned **an identical value for every arm including the per
 null**. M44 diagnosed it: that value was not a measurement at all but the last grid point,
 returned whenever the answer runs off the end of the scale. The control has since been run
 and **passes**, so R3 is now refuted on evidence rather than on absence. Item 10.
+
+
+---
+
+## Decisions
+
+**26. Item 22 changed under me overnight, and the decision it asked for is now much
+cheaper.** I asked M46's author for a Rust implementation spec for `sigpow`, the detail
+metric that closed our largest blocker. I got the spec, and I also got something I did
+not ask for: **it audited its own definition and found two defects in it.** The metric
+multiplied a correlation interpolated *between* frequency-ring centres by a power taken
+at the *nearest* ring -- at the shipping geometry those are 85/15 different things, so
+the product was never the per-ring quantity its whole admissibility argument rested on.
+And its power reference came from the first image only, so swapping the two half-merges
+moved the value. A statistic whose value depends on argument order is not a statistic.
+
+Neither defect was reachable by any test we had, because neither is an *error*. Both are
+conventions, and both halves were separately, obviously right.
+
+The re-derivation deletes both and makes it simpler -- the mean per-mode real
+cross-power of one frequency ring, no ratio and no interpolation. The author reports
+separation **improving**, 0.937 to 0.995 on real detail. **I have folded those numbers as
+MEASURED AND UNVERIFIED and said so in the row**, because here the author never verifies
+its own work. M55 was already attacking the old form; I amended its brief to attack both
+and to derive the claimed identity rather than accept one numerical instance of it. **I
+did not tell it which way the numbers moved.**
+
+**What this changes for you:** the cost was assumed to be roughly 2x and is measured at
+**0.4%** of the pipeline, because decode is 31.3 s of a 31.9 s run and is not repeated.
+At 0.4% I no longer think an opt-in `--verify` is the right shape, and I would **default
+it on with `--no-verify` as the escape**. Still your call, but it is now a far cheaper
+call than when I asked it.
+
+## Warnings -- things I am deliberately not surfacing to users yet
+
+**27. One of your stacks cannot reach the calibration target on the shipped dial.**
+M52 re-measured the merge gate across **all seven** stacks against the current pipeline.
+`foam` reaches the target only at gate **21.99**. The shipped ladder stops at **4.0**. A
+user turning that dial to its end never arrives -- and until commit `1980538` the CLI
+help quoted numbers that made it sound reachable. I have fixed the help text.
+
+Nothing needed from you. Recorded because it is the kind of thing that reads as a bug
+report from a stranger, and I would rather you heard it from me first. `foam` is ISO 1000
+with 1.2% of pixels clipped in at least one frame; whether that is a genuinely
+low-contrast subject or a noise-model mis-pricing is now an open question.
+
+**28. The half-stack split has a trap in it, and the obvious implementation walks
+straight into it.** The detail metric compares two merges built from disjoint halves of
+one stack. M46 measured how those halves must be chosen and the obvious way is
+catastrophically wrong: a **contiguous** split -- first half, second half -- returns
+**0.47%** of the correct value, because a focus stack sweeps depth monotonically and the
+two halves end up focused on different parts of the subject.
+
+Worse, the intuitive safeguard is the second-worst option measured: a **random** split
+scores 0.86, because a random half contains runs of three and four consecutive frames.
+The contract is **parity on the depth-sorted index**, and nothing else. Flagged because
+an implementer who splits the obvious way gets a number that looks exactly like a
+reading and is noise.
+
+## What I found overnight that you should know about
+
+**29. A per-operator noise constant does *not* make the merge gate portable, which
+dents an architectural belief.** The plugin design assumed that letting each focus
+operator carry its own measured noise constant would make `--gate 2.0` mean the same
+thing whichever operator was loaded. **M52 measured it and it does not.** Five operators,
+each carrying its own correctly measured constant, still spread **4.54x** in the merge's
+effective frame count, with the gates that solve for a target spanning 3.60x. The placebo
+-- the same operator reached by two different code paths -- spans **1.00000x**, so the
+instrument is sound.
+
+The seam fixes the **units** of `--gate`. It does not fix its **meaning**. This
+strengthens the case, already the direction of travel, that the target-based control and
+not the raw gate is the real user-facing dial. Whether the per-operator constant earns
+its complexity at all is now an open question; I lean toward keeping it because a
+meaningful unit is worth something and the load-time refusal it enables is cheap, but
+that is an argument and not a measurement and I have labelled it as one.
+
+**30. A worry I raised in item 16 is closed, and it closed by being wrong.** I had M48
+chase whether the corrected read-noise constant had contaminated the constant the merge
+gate is expressed in. **It has not, and it never could have.** That constant is
+calibrated against a synthetic unit-variance plane with no camera profile anywhere on the
+path -- it is a property of the *operator*, not of the sensor, and the survey prints the
+same value to seven digits at both the old and the new constant. Its blast radius on
+published results is **-0.27%** at worst, with an ISO-50 placebo identical in every
+printed digit. The only thing worth fixing is a missing sentence in a doc comment: nothing
+at the constant says it is sensor-independent, and the absence of that sentence cost a
+milestone of somebody's attention.
+
+**31. A correction to something this document told you earlier about your own
+shooting.** An earlier milestone stated that the low-gain ISO mode is "where you actually
+shoot", and I repeated it. **That was drawn from the three test stacks in
+`C:\dev\macro\test`, not from your corpus.** Counting every frame we have: **261 of 421
+frames -- 62% -- sit at ISO 500 or 1000**, in `112MSDCF`, `113MSDCF`, `coffee-bubbles`
+and `foam`.
+
+The decision it was used to justify survives, because nothing in the corpus sits at the
+narrow ISO range where that decision's error lives. But the reason given was wrong, and it
+means the high-ISO read-noise fix matters **more** than I told you, not less. Flagged
+because you know your own shooting better than this tooling does: if 62% high-ISO does not
+match how you intend to shoot going forward, that changes which mode we should be
+optimising for.
