@@ -69,11 +69,13 @@ pub struct CameraProfile {
     pub model: &'static str,
     /// Gain is `max(iso, base_iso) / gain_divisor` DN per electron.
     ///
-    /// **MEASURED at ISO 160, by photon transfer on signal** (M25 fact 200):
-    /// 0.3273 against the relation's 0.3663, 10.7% low. The divisor was
-    /// originally DERIVED by reproducing the camera's own white level to 0.23%,
-    /// which is a consistency check on one relation and not a PTC; the PTC now
-    /// exists and the relation survives it at true gain steps.
+    /// **MEASURED at ISO 160, by photon transfer on signal** (M25 fact 200,
+    /// SYNTHESIS fact 550): 0.3273 against the relation's 0.3663, 10.7% low.
+    /// The divisor was originally DERIVED by reproducing the camera's own white
+    /// level to 0.23%, which is a consistency check on one relation and not a
+    /// PTC; the PTC now exists and the relation survives it at true gain steps.
+    /// **SYNTHESIS fact 585 adjudicates this constant by name**: it is not a
+    /// fourth wrong sensor constant, and the −10.7% is licensed to stand.
     pub gain_divisor: f32,
     /// The lowest ISO that is a real analogue gain step.
     ///
@@ -84,14 +86,15 @@ pub struct CameraProfile {
     ///
     /// **MEASURED twice, independently.** M4 §8.2 from dark frames: ISO 50 and
     /// ISO 100 give the same dark sigma in DN, 0.9866 against 0.9845, a ratio of
-    /// 1.0021 where a genuine gain step demands 0.5. M25 fact 200 from signal,
-    /// by photon transfer on two real ISO-50 stacks: `g` measures 0.2342 and
-    /// 0.2583, which is +105% and +126% against the marked-ISO relation and
-    /// within +2% and +13% of this floor.
+    /// 1.0021 where a genuine gain step demands 0.5. M25 fact 200 (SYNTHESIS
+    /// fact 550) from signal, by photon transfer on two real ISO-50 stacks: `g`
+    /// measures 0.2342 and 0.2583, which is +105% and +126% against the
+    /// marked-ISO relation and within +2% and +13% of this floor.
     ///
-    /// **The boundary itself is not measured** (M25 fact 200a): the corpus holds
-    /// no ISO 64 or ISO 80 capture, so 100 is the simplest value consistent with
-    /// the evidence rather than a located transition.
+    /// **The boundary itself is not measured** (M25 fact 200a, which folded as
+    /// SYNTHESIS *question* 126 — it is an open question, not a fact): the
+    /// corpus holds no ISO 64 or ISO 80 capture, so 100 is the simplest value
+    /// consistent with the evidence rather than a located transition.
     pub base_iso: f32,
     /// Read noise in electrons below [`Self::second_base_iso`].
     ///
@@ -108,10 +111,15 @@ pub struct CameraProfile {
     /// +5.6% / +6.3%.
     ///
     /// 4.20 reads **−2.5% / −2.3% / +10.4% / +11.1%**. It is the *more* accurate
-    /// choice at ISO 50 and 100, which is where this body is actually used — the
-    /// corpus's real stacks are ISO 50 and ISO 160 (M25 fact 200's table).
-    /// Moving to 4.0153 would buy a smaller worst case at two ISOs no capture
-    /// uses, pay for it with 4.3% of accuracy where every capture lives, and
+    /// choice at ISO 50 and 100, which is where the captures this constant
+    /// governs actually sit. M25 fact 200's table (SYNTHESIS fact 550) names
+    /// three stacks at ISO 50 and ISO 160, but that is the `C:\dev\macro\test`
+    /// subset and not the corpus. The measured census is **160 of 421 frames
+    /// below ISO 400, every one of them at ISO 50 or 160**; the other 261 sit at
+    /// ISO 500 and 1000, where [`read_noise_e_high`](Self::read_noise_e_high)
+    /// rules instead. **No capture anywhere uses ISO 200 or 250.** So moving to
+    /// 4.0153 would buy a smaller worst case at two ISOs nothing shoots, pay for
+    /// it with 4.3% of accuracy at every ISO this constant does govern, and
     /// leave the shape error untouched.
     ///
     /// The tolerated disagreement is asserted at its expected wrong value in
@@ -333,8 +341,10 @@ mod tests {
     /// The model is plane-independent by construction, so comparing it against
     /// the 4-plane mean is like for like at the level the model is defined.
     const DARK_SIGMA_RMS_DN: [(f32, f32, f32); 11] = [
-        // Low mode. The two ISOs the corpus actually shoots, and the model is
-        // 2.3–2.5% low at both — the best a scalar `read_noise_e_low` does here.
+        // Low mode. ISO 50 is the only one of these the corpus actually shoots
+        // — its other low-mode stack is ISO 160, which this dark set has no row
+        // for — and the model is 2.3–2.5% low at both, the best a scalar
+        // `read_noise_e_low` does here.
         (50.0, 0.986524, 0.97467),
         (100.0, 0.98444, 0.97674),
         // Still low mode, and KNOWINGLY WRONG. The implied read noise falls 12%
