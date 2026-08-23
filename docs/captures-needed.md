@@ -3,10 +3,6 @@
 Measurements that are blocked on data no existing file can supply. Each entry
 says exactly what to shoot, why, and what it unblocks.
 
-*Section 6 is intentionally vacant. The corpus-locations table moved from §6 to
-§9 when §7 and §8 were inserted; the old number is left unused rather than
-renumbering sections that other documents cite.*
-
 ---
 
 ## 0. Shooting advice — stop shooting at marked f/11
@@ -334,7 +330,35 @@ directory mirrored to a second path being mistaken for a second sample.
 
 ---
 
-## 7. Aperture pair — REQUESTED, cheap, high value
+## 6. Dark frames at working exposure — REQUESTED, very cheap
+
+**What:** the same lens-cap routine you already did, but at the **shutter speeds
+you actually shoot**, not 1/100 s. 12–16 frames at each of roughly 1/8 s, 1 s
+and 2.5 s. ISO can stay at one value (160 is representative); exposure time is
+the variable that matters here, not gain. Lens cap on, body cap is even better,
+in a dark room. The first two frames are still discarded, so shoot 14–18.
+
+**Why:** the 242 darks you delivered are all **1/100 s**, but your real stacks
+run from 1/60 s to 2.5 s — up to **250×** longer
+([M22](research/M22-hot-pixels-measured.md) §4). Dark current accumulates with
+time, so a pixel with moderate dark current is invisible at 10 ms and plainly
+visible in a 1.3 s frame. The delivered set is a complete map *for the wrong
+exposure*.
+
+This is not hypothetical. A cross-scene test with a shift control finds roughly
+**839 scene-independent defects** at a 4σ bar, of which the 1/100 s map contains
+**5** (M22 §5).
+
+**What it unblocks:** a correct hot-pixel map, and the offset term that goes with
+it. Note this is a **low-urgency** request — M22 measured the in-situ impact of
+the currently-known defects at ≤ 0.39σ, so nothing is being held up. It is listed
+because it is nearly free and because the existing darks cannot answer it.
+
+**What it does NOT affect:** M4's read-noise and FPN results are
+exposure-independent and stand as measured.
+
+---
+
 
 **Status:** requested. One afternoon. Turns §0's derived table into a
 measurement, and §0 is currently the largest quality claim in the project
