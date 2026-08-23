@@ -600,3 +600,49 @@ reads at 64/436.8, the clamp is wrong and the transition is real.
 the frames get brighter. The measurement compares noise at a **known analogue
 gain**, and re-exposing to equalise brightness destroys exactly the difference
 being measured.
+
+## 11. Dark frames at ISO 160 -- REQUESTED, trivial, closes a hole in a shipped constant
+
+**Cost: about a minute, indoors, lens cap on. No daylight, no subject, no rail.**
+
+`read_noise_e_low = 4.20` is a shipped sensor constant. It governs every frame the
+camera takes below ISO 400, and in this corpus that means **ISO 50 and ISO 160**.
+
+It has been checked at ISO 50 and ISO 100 and is accurate there (-2.5% and -2.3%).
+**It has never been checked at ISO 160**, because the 242-frame dark set delivered
+earlier has no ISO-160 row -- while the corpus has **22 real captures** at that ISO.
+The constant is validated everywhere except the setting it is used at most.
+
+This is not expected to be a large error. It is a hole in a claim, and the claim is
+cheap to close.
+
+### What to shoot
+
+**22 frames at ISO 160, lens cap on, in a dark room, same shutter speed as the other
+dark sets.** Identical procedure to the darks already delivered:
+
+- Lens cap on, and the body's own cap if the lens is off. Total darkness matters more
+  than the room being dark -- any light leak invalidates the whole set.
+- **Discard the first two frames.** The earlier set was shot this way and it was the
+  right call; the sensor settles.
+- Same shutter speed and same body temperature regime as the existing darks, or the
+  comparison against ISO 50 and ISO 100 is not like-for-like.
+
+### Why this cannot come from existing files
+
+Read noise is measured from frames with **no signal**. Every ISO-160 frame in the
+corpus is a photograph of something, so its variance is dominated by shot noise from
+the subject. There is no way to recover a read-noise floor from a lit frame at the
+precision this needs. The 242 delivered darks cover ISO 50, 100, 200, 250, 320, 400,
+500, 640, 800, 1600 and 2000 -- **160 is the gap, and it is the one that matters.**
+
+### What it unblocks
+
+Answers question 172 and closes fact 732. Either the constant is accurate at ISO 160,
+in which case a shipped number stops being a guess at the setting it is used at most,
+or it is not, in which case the corpus has been carrying a measurable error on 22 of
+its frames and the shape of the correction becomes visible.
+
+**One trap.** Do not change the ISO by using a different exposure mode that might pull
+or push. Set ISO 160 explicitly. The whole point is the analogue gain at that specific
+setting, and an ISO the body reaches by a different route is a different measurement.

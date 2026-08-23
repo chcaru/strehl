@@ -366,7 +366,16 @@ monolithic binary and ship only that binary.
     `cargo test -q` suppress the `Compiling` lines, which are exactly the
     evidence this rule requires. M48 fell into that while checking this rule's
     own property, caught it, and redid the run before recording anything.
-    (SYNTHESIS fact 576, disciplines 299/300; `-q` from fact 660.)
+    **The line to look for depends on the command: `cargo build`, `cargo test`
+    and `cargo run` print `Compiling <crate>`; `cargo check`, `cargo clippy` and
+    `cargo doc` print `Checking <crate>` or `Documenting <crate>` and NEVER print
+    `Compiling`.** This rule previously demanded a `Compiling` line unconditionally,
+    which made it unsatisfiable by clippy and check -- and cost an agent four
+    invocations and a needless `cargo clean` before it checked rather than
+    guessed. **The property is: read the line that proves the tool rebuilt, and
+    know which line that is for the tool you ran.**
+    (SYNTHESIS fact 576, disciplines 299/300; `-q` from fact 660; the
+    `Checking`/`Documenting` hole from fact 730 and discipline 350.)
 
 34. **A plant that supplies its own noise constant cannot detect that constant
     being wrong.** M40's null plant and M41's `noise_constant_check` each draw
