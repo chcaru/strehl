@@ -96,8 +96,12 @@ Recorded so nobody asks twice.
   vignetting correction.)
 - **A focus-bracketed stack.** Already have 22 frames in
   `C:\dev\macro\test\109MSDCF` plus 2310 further ARWs, all verified decodable.
+- **A second deep stack, for the fact-43 shrinkage calibration.** Was the one
+  outstanding *photographic* request after M10. **Already satisfied** by
+  `D:\personal\macro\112MSDCF` (79 frames) and `113MSDCF` (63 frames) — see §5.
 
 ---
+
 
 ## 4. Flat fields — OUTSTANDING
 
@@ -187,3 +191,26 @@ measurement.
    clustered, so the smooth-surface normalisation above will *not* remove them,
    and they would be counted as PRNU. If any remain they must be masked before
    the statistic is taken.
+
+---
+
+## 5. Corpus locations — read-only
+
+**Never write to any of these.**
+
+| Path | Contents |
+| --- | --- |
+| `C:\dev\macro\test\` | The original three stacks: `109MSDCF` 22, `119MSDCF` 33, `coffee-bean` 105. |
+| `D:\macro-dark-frames\` | 11 ISO subdirectories x 22 frames = 242 darks. §1. |
+| `D:\personal\macro\` | Seven stacks. Three are **byte-identical duplicates** of `C:\dev\macro\test` (verified by count, size and MD5) — do not treat them as independent evidence. Four are new. |
+
+The four new stacks, all on the same rig (`LensType3` 33094), characterised in
+fact 49:
+
+| Stack | Frames | Focus sweep | Pace | Use |
+| --- | --- | --- | --- | --- |
+| `112MSDCF` | 79 | 0.3189 → 0.3297 m | 0.51 s/frame | **The fact-43 pair.** Same subject and same sweep as `113MSDCF`, preview-NCC **+0.9961**. Fit the span-dependent shrinkage on one, test on the other. |
+| `113MSDCF` | 63 | 0.3189 → 0.3297 m | 0.52 s/frame | As above. |
+| `foam` | 100 | 0.2707 → 0.2841 m | 2.52 s/frame | **Not an alignment benchmark.** The scene evolves across the 249-second capture: it decorrelates *within itself* to 0.087/0.122/0.243 where `coffee-bean`, an equally deep sweep, holds 0.979/0.941/0.970. Useful only as a hard case for non-rigid scenes. |
+| `coffee-bubbles` | 19 | **none** (0.2841 m throughout) | 3.33 s/frame | A *soft* null for the aligner — at fixed focus any reported transform is drift or estimator bias, not parallax. Contaminated by real bubble motion (0.947 first-to-last), so it bounds bias from above rather than measuring it. |
+
