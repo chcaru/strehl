@@ -13,6 +13,53 @@
 //!
 //! Black and white levels are **not** here. Those come from the file, per frame,
 //! because they are firmware and compression dependent.
+//!
+//! # Which statistic these constants are — discipline 291
+//!
+//! **Every noise constant in this file is a pooled RMS temporal sigma:**
+//! `sqrt(mean over pixels of the per-pixel temporal variance)`, over **20** dark
+//! frames at one ISO, with the owner's **first two stabilisation frames per
+//! directory dropped**, on the raw integer DN with no black subtraction.
+//!
+//! M4 §8.1's table is that statistic. It has been reproduced through an
+//! independent decoder (`rawpy`, not `strehl-raw`) at all **44** published cells
+//! — every plane at every ISO — at ratios **0.99986–0.99998**. What M4 never
+//! said is *which* statistic it is, and three constants were then fitted to it
+//! as though it described a typical pixel. It does not: on the same frames the
+//! **mean** pixel reads 5.9% below the pooled RMS at ISO 50 and **14.6%** below
+//! at ISO 1600, and the **median** pixel 9.8% and **24.1%** below.
+//!
+//! **The pooled RMS is the right choice, and that is measured rather than
+//! preferred.**
+//!
+//! - *The consumer averages, and the gate is calibrated on the fluctuation.*
+//!   [`FocusField::compute`](crate::focus::FocusField::compute) divides a 27x27
+//!   windowed gradient mean by this model's sigma; the merge regulariser
+//!   averages that again over 17x17; [`Gate`](crate::merge::Gate) then compares
+//!   response *differences* against the single scalar
+//!   `sqrt(2) * `[`FOCUS_NOISE_SD`](crate::merge::FOCUS_NOISE_SD). The
+//!   fluctuation of a spatial mean over pixels with unequal variances is set by
+//!   the **mean variance** — the pooled RMS squared — not by the mean sigma.
+//!   Normalising by the mean pixel would leave the real response **6.3% noisier
+//!   at ISO 50 and 17.1% noisier at ISO 1600** than that constant assumes, so
+//!   the gate would be that much too tight, and worse the higher the ISO.
+//! - *The typical-pixel basis cannot be delivered anyway.* The argument for it
+//!   is that hot pixels are a separate concern with their own map (M22) and
+//!   their own milestone (M29). Measured: the whole of M22's recurrent map —
+//!   11,393 px, **0.0346%** of the sensor — carries only 2.2%–3.6% of the
+//!   temporal variance, and an *oracle* excision of all of it moves the pooled
+//!   RMS by **1.1%–1.8%**, roughly a tenth of the gap. Meeting the mean pixel
+//!   takes **0.64%–1.23% of every plane**, which is 18x–36x the map and is not
+//!   a defect set at all. There is nothing to hand off.
+//!
+//! **What is genuinely wrong is the shape, and re-basing would not have fixed
+//! it.** Per-pixel temporal sigma has a coefficient of variation of **0.32** at
+//! ISO 100 rising to **0.58** at ISO 1600 (DERIVED from the mean/RMS ratio); the
+//! 99th-percentile pixel sits at **2.5x** the median at ISO 100 and **4.3x** at
+//! ISO 1600 (MEASURED). No scalar on any basis represents that. The honest
+//! object is a per-pixel sigma *field*, and the 242 delivered darks are already
+//! enough to build one. **Scoped, not built** — see
+//! `docs/research/M48-read-noise-measured.md`.
 
 use crate::noise::{Levels, NoiseModel, PlaneNoise, Provenance};
 
@@ -47,8 +94,55 @@ pub struct CameraProfile {
     /// the evidence rather than a located transition.
     pub base_iso: f32,
     /// Read noise in electrons below [`Self::second_base_iso`].
+    ///
+    /// **DELIBERATELY NOT RE-FITTED. The reason is a fact about the model, and
+    /// it is asserted as one.**
+    ///
+    /// A dark frame has `S = 0`, so `RN_e = sigma_DN / g` directly. On the
+    /// pooled-RMS basis and this profile's [`base_iso`](Self::base_iso) gain the
+    /// four low-mode ISOs imply **4.3091 / 4.3000 / 3.8034 / 3.7787 e-** at ISO
+    /// 50 / 100 / 200 / 250. That is not scatter about a constant: the implied
+    /// read noise *falls monotonically*, by 12% between ISO 100 and ISO 250.
+    /// **This is a shape error and no scalar can fix it.** The best single value
+    /// under relative least squares, 4.0153, still misses by −6.8% / −6.6% /
+    /// +5.6% / +6.3%.
+    ///
+    /// 4.20 reads **−2.5% / −2.3% / +10.4% / +11.1%**. It is the *more* accurate
+    /// choice at ISO 50 and 100, which is where this body is actually used — the
+    /// corpus's real stacks are ISO 50 and ISO 160 (M25 fact 200's table).
+    /// Moving to 4.0153 would buy a smaller worst case at two ISOs no capture
+    /// uses, pay for it with 4.3% of accuracy where every capture lives, and
+    /// leave the shape error untouched.
+    ///
+    /// The tolerated disagreement is asserted at its expected wrong value in
+    /// `the_model_is_checked_against_measured_dark_sigma_at_every_iso`, per
+    /// rule 30 — so it goes red the day the model shape improves, which is the
+    /// day anyone would want to hear about it.
     pub read_noise_e_low: f32,
     /// Read noise in electrons at and above it.
+    ///
+    /// **DERIVED from the independently verified dark table**, on the pooled-RMS
+    /// basis named in this module's header. With `S = 0` the seven high-mode
+    /// ISOs imply **1.3088 / 1.2823 / 1.2338 / 1.2265 / 1.2267 / 1.2026 /
+    /// 1.2083 e-** at ISO 400 / 500 / 640 / 800 / 1000 / 1600 / 2000. This value
+    /// is the single `RN_e` minimising the **relative** residual over those
+    /// seven, `argmin sum (RN/RN_i − 1)^2` — relative because sigma spans 4.6x
+    /// across the mode and an absolute fit would be decided by ISO 2000 alone.
+    /// Residuals here: −5.3% / −3.4% / +0.4% / +1.0% / +1.0% / +3.0% / +2.6%.
+    ///
+    /// **Only the first two digits are physical.** The rest are carried so the
+    /// fit is reproducible, and
+    /// `the_high_mode_read_noise_is_the_relative_least_squares_optimum` asserts
+    /// the derivation, not just the number.
+    ///
+    /// **The previous value, 1.47, was wrong on every basis:** +18.4% against
+    /// this one, +36.5% against the mean pixel, +51.9% against the median. The
+    /// shipped model over-predicted measured dark sigma by **12.3% at ISO 400
+    /// rising to 22.2% at ISO 1600**. M4 §8.3 saw it — "fact 14's 4.20 → 1.47
+    /// e- measures as 4.30 → 1.31 e-: 2.4% off on the low-gain side, 11% off on
+    /// the high side" — and the correction never reached the code. That is the
+    /// same failure mode as the ISO-50 gain defect (fact 550): measured in a
+    /// research document, never carried across to the constant it invalidated.
     pub read_noise_e_high: f32,
     /// The dual-gain switch point. Above it read noise *drops*, so this is not
     /// a monotone-in-ISO model. Per body and per firmware.
@@ -92,7 +186,7 @@ const A7C2: CameraProfile = CameraProfile {
     gain_divisor: 436.8,
     base_iso: 100.0,
     read_noise_e_low: 4.20,
-    read_noise_e_high: 1.47,
+    read_noise_e_high: 1.2392,
     second_base_iso: 400.0,
 };
 
@@ -164,10 +258,12 @@ mod tests {
 
     #[test]
     fn the_second_base_iso_lowers_read_noise() {
-        // Fact #14: 4.20 e- -> 1.47 e- at ISO 400. Noise vs ISO is not monotone.
+        // Fact #14's mechanism, at M48's re-derived value: 4.20 e- -> 1.2392 e-
+        // at ISO 400. Noise vs ISO is not monotone. Fact 14's own 1.47 was
+        // +18.4% against the measurement it was supposed to summarise.
         let p = by_model("ILCE-7CM2").unwrap();
         assert_eq!(p.read_noise_e(320.0), 4.20);
-        assert_eq!(p.read_noise_e(400.0), 1.47);
+        assert_eq!(p.read_noise_e(400.0), 1.2392);
         let floor_320 = p.noise_model(320.0, levels()).sigma(CfaPlane::R, 0.0);
         let floor_400 = p.noise_model(400.0, levels()).sigma(CfaPlane::R, 0.0);
         assert!(floor_400 < floor_320, "{floor_400} vs {floor_320}");
@@ -223,5 +319,164 @@ mod tests {
             );
             assert!(p.base_iso > 0.0, "{}: base ISO must be positive", p.model);
         }
+    }
+
+    /// The measured dark table this profile's constants are fitted to.
+    ///
+    /// `(ISO, sigma_DN, expected model/measured)`. `sigma_DN` is the **pooled
+    /// RMS temporal sigma** over 20 dark frames, stabilisation shots dropped,
+    /// averaged over the four CFA planes — the statistic named in this module's
+    /// header. Source: M4 §8.1, independently reproduced through `rawpy` at
+    /// ratios 0.99986–0.99998 in `experiments/m48-noise-floor`
+    /// (`data/estimator-reconciliation.json`, `data/variance-concentration.json`).
+    ///
+    /// The model is plane-independent by construction, so comparing it against
+    /// the 4-plane mean is like for like at the level the model is defined.
+    const DARK_SIGMA_RMS_DN: [(f32, f32, f32); 11] = [
+        // Low mode. The two ISOs the corpus actually shoots, and the model is
+        // 2.3–2.5% low at both — the best a scalar `read_noise_e_low` does here.
+        (50.0, 0.986524, 0.97467),
+        (100.0, 0.98444, 0.97674),
+        // Still low mode, and KNOWINGLY WRONG. The implied read noise falls 12%
+        // from ISO 100 to ISO 250, so one scalar cannot serve both ends of the
+        // mode. Asserted at the wrong value rather than carved out (rule 30):
+        // SYNTHESIS question 129's additive DN floor is what would fix it, and
+        // when it lands these two rows must change.
+        (200.0, 1.741494, 1.10427),
+        (250.0, 2.162736, 1.11148),
+        // High mode, at M48's re-derived 1.2392. The residual is the same shape
+        // error one mode up — the ends of the mode disagree by 8.8% — but it is
+        // now centred instead of sitting entirely on one side, which is the
+        // whole of what re-fitting a scalar can buy.
+        (400.0, 1.198538, 0.94682),
+        (500.0, 1.46783, 0.96639),
+        (640.0, 1.807805, 1.00435),
+        (800.0, 2.246382, 1.01033),
+        (1000.0, 2.808366, 1.01019),
+        (1600.0, 4.405162, 1.03043),
+        (2000.0, 5.532721, 1.02553),
+    ];
+
+    /// Every measured ISO, asserted. No carve-outs — rule 30 and discipline 288.
+    ///
+    /// M25's dark-noise self-test excluded ISO 50 *because the model was known to
+    /// be wrong there*, which silenced the one assertion that would have caught a
+    /// 2x gain defect. So this test covers **all eleven** ISOs in the corpus and
+    /// carries the known disagreements as expected values rather than as gaps.
+    ///
+    /// **What would make it fail:** any change to `read_noise_e_*`,
+    /// `gain_divisor`, `base_iso`, `second_base_iso` or the variance relation —
+    /// including an *improvement*, which is the point. The tolerance is 0.1%,
+    /// tight enough that a 0.3% move in either read-noise constant trips it.
+    #[test]
+    fn the_model_is_checked_against_measured_dark_sigma_at_every_iso() {
+        let p = by_model("ILCE-7CM2").unwrap();
+        for (iso, measured_dn, expected_ratio) in DARK_SIGMA_RMS_DN {
+            // A dark frame is S = 0, so sigma reduces to RN_e * g.
+            let model_dn = p.noise_model(iso, levels()).sigma(CfaPlane::R, 0.0);
+            let ratio = model_dn / measured_dn;
+            assert!(
+                (ratio / expected_ratio - 1.0).abs() < 1e-3,
+                "ISO {iso}: model {model_dn} DN / measured {measured_dn} DN = \
+                 {ratio}, expected {expected_ratio} ({:+.2}% vs {:+.2}%)",
+                100.0 * (ratio - 1.0),
+                100.0 * (expected_ratio - 1.0)
+            );
+        }
+    }
+
+    /// The `base_iso` fix, confirmed from a route that did not exist when it was
+    /// made — and cheap enough to keep forever.
+    ///
+    /// ISO 50 is an extended/pull setting, so it reads out at ISO 100's gain and
+    /// the two must imply the *same* electron read noise. Under this profile's
+    /// gain they do, to **0.21%**. Under the marked-ISO relation M4 §8.3 used,
+    /// ISO 50 implied 8.6183 e- against ISO 100's 4.3000 — M4 published exactly
+    /// that and called it "visibly nonsense … the tell".
+    ///
+    /// **What would make it fail:** removing `base_iso`, or moving it above 50
+    /// or below 100. The second assertion is the placebo — it shows the first
+    /// one is testing the floor and not an identity, because the same data under
+    /// the un-floored gain disagrees by 100%.
+    #[test]
+    fn the_iso_50_and_iso_100_darks_imply_the_same_read_noise() {
+        let p = by_model("ILCE-7CM2").unwrap();
+        // Read from the one table, so the two tests cannot drift apart.
+        let (s50, s100) = (DARK_SIGMA_RMS_DN[0].1, DARK_SIGMA_RMS_DN[1].1);
+        assert_eq!(
+            (DARK_SIGMA_RMS_DN[0].0, DARK_SIGMA_RMS_DN[1].0),
+            (50.0, 100.0)
+        );
+
+        let implied = |iso: f32, sigma: f32| sigma / p.gain_dn_per_e(iso);
+        let ratio = implied(50.0, s50) / implied(100.0, s100);
+        assert!(
+            (ratio - 1.0).abs() < 0.01,
+            "ISO 50 implies {} e-, ISO 100 implies {} e-, ratio {ratio}",
+            implied(50.0, s50),
+            implied(100.0, s100)
+        );
+
+        // Placebo: the relation this replaced, on the same two measurements.
+        let marked = s50 / (50.0 / p.gain_divisor);
+        let marked_ratio = marked / implied(100.0, s100);
+        assert!(
+            marked_ratio > 1.9,
+            "the marked-ISO relation must still be visibly broken here, got \
+             {marked_ratio}; if it is not, this test has no power"
+        );
+    }
+
+    /// The *derivation* of `read_noise_e_high`, not just its value.
+    ///
+    /// §5 discipline 3: every headline number needs a regression test on its own
+    /// code path. The shipped constant is `argmin_RN sum (RN/RN_i − 1)^2` over
+    /// the seven high-mode ISOs, and this recovers that argmin by brute force
+    /// from the measured table, independently of the closed form used to compute
+    /// it. It also pins the residual spread, which is what says how many digits
+    /// of the constant mean anything.
+    ///
+    /// **What would make it fail:** shipping a rounded value, shipping the
+    /// *unweighted mean* of the per-ISO values (1.2413, which is 0.17% away and
+    /// outside the grid tolerance), or re-basing onto the mean pixel (1.0731) or
+    /// the median pixel (0.9679) without saying so.
+    #[test]
+    fn the_high_mode_read_noise_is_the_relative_least_squares_optimum() {
+        let p = by_model("ILCE-7CM2").unwrap();
+        let implied: Vec<f64> = DARK_SIGMA_RMS_DN
+            .iter()
+            .filter(|(iso, _, _)| *iso >= 400.0)
+            .map(|(iso, sigma, _)| *sigma as f64 / (*iso as f64 / p.gain_divisor as f64))
+            .collect();
+        assert_eq!(implied.len(), 7);
+
+        let objective =
+            |rn: f64| -> f64 { implied.iter().map(|r| (rn / r - 1.0).powi(2)).sum::<f64>() };
+
+        let step = 2e-4;
+        let mut best = (f64::INFINITY, 0.0);
+        for k in 0..=2500 {
+            let rn = 1.0 + step * k as f64;
+            let o = objective(rn);
+            if o < best.0 {
+                best = (o, rn);
+            }
+        }
+        assert!(
+            (best.1 - p.read_noise_e_high as f64).abs() <= step,
+            "grid argmin {} vs shipped {}",
+            best.1,
+            p.read_noise_e_high
+        );
+
+        // The spread that limits how many digits are meaningful.
+        let worst = implied
+            .iter()
+            .map(|r| (p.read_noise_e_high as f64 / r - 1.0).abs())
+            .fold(0.0f64, f64::max);
+        assert!(
+            (0.050..0.056).contains(&worst),
+            "worst relative residual in the high mode is {worst}, expected ~5.3%"
+        );
     }
 }
