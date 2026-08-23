@@ -11,7 +11,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data"
-REPORT = HERE.parents[2] / "docs" / "research" / "M60-bimodality.md"
+REPORT = HERE.parents[2] / "docs" / "research" / "M63-bimodality.md"
 
 # (token as written in the report, data file it is cited from)
 CHECKS = [

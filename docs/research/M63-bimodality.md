@@ -1,15 +1,30 @@
-# M60 — Occlusion bimodality: the corpus, and the instrument that measured it
+# M63 — Occlusion bimodality: the corpus, and the instrument that measured it
 
 **Status: MEASURED. Two findings. The second reopens a question the corpus had
 closed.**
 
 Milestone type: measurement. **No Rust was written.** `crates/**`, `SYNTHESIS.md`,
 `AGENTS.md`, `OWNER-QUESTIONS.md` and `docs/captures-needed.md` were read-only for
-this milestone. Everything M60 produced lives in
+this milestone. Everything M63 produced lives in
 `experiments/M60-bimodality/**` and in this file.
 
+> **Renumbered M60 → M63 after the work was complete.** `M60` had been dispatched
+> to more than one agent; M54's milestone came first and keeps the number. This
+> report was `docs/research/M60-bimodality.md` and any citation to that path means
+> this file. **The experiment directory deliberately keeps its `M60-bimodality`
+> name** — it is referenced by `SYNTHESIS.md` (facts 831 and 907) and by four other
+> agents' reports (M55, M59, M64, and M54's `M60-robustness-mask-at-merge-time.md`),
+> and renaming it would break live citations to fix a cosmetic mismatch. Prose in
+> this report says M63; paths say M60, and they are the same milestone.
+> **The scripts under `src/` also keep their `M60`/`M60b` print labels on
+> purpose**: those labels are echoed verbatim into the frozen `data/*.txt` outputs
+> that are this milestone's evidence, and `m60lib.py` is imported by thirty of
+> them. Rewriting the labels without re-running would desync the scripts from the
+> outputs they produced, and re-running to fix a name is exactly the manufactured
+> work the owner asked agents not to do.
+
 **This report has two parts, because the commission changed mid-milestone.**
-M60 was originally asked whether the through-focus response at occluding edges is
+M63 was originally asked whether the through-focus response at occluding edges is
 bimodal. That is **Part I** (§1–§16), and it stands. The brief was then corrected:
 `M21-occlusion-bimodality-measured.md` had already asked that question, and M25
 had built a plant that failed to reproduce it at **0.23x — the wrong sign**
@@ -110,7 +125,7 @@ and then held **byte-fixed** while only the statistic changed:
 | --- | ---: | ---: |
 | **S0** — M21's `multipeak`, verbatim | **0.19×** (reproduces fact 603's control exactly) | 1.05–1.07 ✓ |
 | **S1** — same function, noise-thresholded | 0.70× / 0.82× — **disqualified**, placebo 1.25–1.26 | ✗ |
-| **S2** — M60's prominence-over-noise | **1.21–1.23×**, the right sign | 1.05–1.07 ✓ |
+| **S2** — M63's prominence-over-noise | **1.21–1.23×**, the right sign | 1.05–1.07 ✓ |
 
 1. **The mechanism is measured, not argued.** S0's denominator — the pixel's own
    curve range — is **3.94× larger** at truth-gated veiled pixels than at smooth
@@ -132,7 +147,7 @@ and then held **byte-fixed** while only the statistic changed:
    **9.2× smaller** than the prominence at these peak widths (~5.1 frames of
    rise). Applying S0's own `0.04 × range` bar to the prominence instead of the
    step — changing nothing else — moves 0.19× → **0.71×** (**MEASURED**).
-5. **The statistic's sensitivity depends on stack depth.** On M60's 299-frame
+5. **The statistic's sensitivity depends on stack depth.** On M63's 299-frame
    stacks, decimating to 23 frames raises S0's rate **2.8×** (17.2% → 48.5%,
    median over 10 cells) (**MEASURED**). Rates are not comparable across stacks
    of different depth, which is what facts 150–151 compare.
@@ -161,7 +176,7 @@ independent.**
 * And in the real corpus, Part I shows the bimodality that *is* abundant is
   dominated by a single-depth side-lobe, not by veiling.
 
-**What this does not license.** M60 does **not** show that veiled-background
+**What this does not license.** M63 does **not** show that veiled-background
 peaks do not exist. It shows that firing of a prominence-over-noise bimodality
 statistic is not evidence of one, on this rig, in this corpus, at these labels;
 and that the corpus's negative plant result was measured with an instrument that
@@ -181,7 +196,7 @@ two uses of the word name different things and M6 has no bearing on this questio
 # PART I — the corpus
 
 
-## 1. Why M60 exists when M21 already measured this
+## 1. Why M63 exists when M21 already measured this
 
 > **Read with §17.** Part I was designed from M21's *stated* gaps. Part II, written
 > after the brief was corrected and M21 was re-read against its own source, finds
@@ -190,9 +205,9 @@ two uses of the word name different things and M6 has no bearing on this questio
 > what the Part I design was actually based on.
 
 M21 (`docs/research/M21-occlusion-bimodality-measured.md`, facts 150–152)
-measured a version of this question and folded a result. M60 was commissioned
+measured a version of this question and folded a result. M63 was commissioned
 because M21's answer is *enrichment of a shape statistic at depth steps inferred
-from the same focus volume*, and its own §8 lists three gaps that decide M60's
+from the same focus volume*, and its own §8 lists three gaps that decide M63's
 design (**ARGUED**, from reading M21):
 
 1. M21 never used the calibrated noise model. Its only control was a
@@ -202,7 +217,7 @@ design (**ARGUED**, from reading M21):
 3. M21 never measured the **separation in frames**, only the *rate* of
    multi-peakedness.
 
-M60 supplies all three: an injected, externally validated noise model; hand
+M63 supplies all three: an injected, externally validated noise model; hand
 labels that never touch the focus volume; and separations in frames with their
 dependence on `n` and on operator scale.
 
@@ -210,7 +225,7 @@ M13's "occluding-edge cells" were named in the brief as a ready-made hand-labell
 harness. **They are not.** They are a synthetic Porter-Duff plant
 (`experiments/m13-window-depth/src/edge.rs`), and M13 §2.5 item 4 says so:
 "the plant has no disocclusion; both layers are fully observed everywhere"
-(**MEASURED**, by reading the source). M60 therefore re-implemented it in Python
+(**MEASURED**, by reading the source). M63 therefore re-implemented it in Python
 in the role it can actually fill — a positive control — and hand-labelled its own
 real cells.
 
@@ -244,17 +259,17 @@ Excluded on purpose: `foam` (scene evolves during capture) and `coffee-bubbles`
 occlusion, and `coffee-bean` is where M21's number already lives.
 
 The three 299-frame stacks had never been touched by any milestone. They were
-named `134MSDCF`/`135MSDCF`/`136MSDCF` and `131MSDCF`/`133MSDCF` when M60 started
+named `134MSDCF`/`135MSDCF`/`136MSDCF` and `131MSDCF`/`133MSDCF` when M63 started
 and were **renamed by the owner while a probe was running**. The mapping is fixed
 by exact fingerprint — frame count, ISO, shutter, EXIF timestamps — recorded in
 `data/02-corpus-rename.txt`. Nothing under `D:\` was written.
 
 **Rename confirmed independently after the milestone closed** (**MEASURED**). The
 owner supplied an EXIF read of the five renamed directories taken from his own
-copy. It agrees with `data/01-survey.csv` — which M60 wrote *before* the rename,
+copy. It agrees with `data/01-survey.csv` — which M63 wrote *before* the rename,
 under the old names — on **all five stacks, on both ISO and shutter**:
 
-| new name | old name | n | ISO | M60's shutter | owner's shutter |
+| new name | old name | n | ISO | M63's shutter | owner's shutter |
 | --- | --- | ---: | ---: | ---: | --- |
 | `bee-1` | `134MSDCF` | 299 | 100 | 0.5000 s | 1/2 s ✓ |
 | `bee-2` | `135MSDCF` | 299 | 400 | 0.0500 s | 1/20 s ✓ |
@@ -271,7 +286,7 @@ same bytes, not two different corpora.
 ### 2.6b A matched-scene pair, measured — and one that is not
 
 `data/03-previews.txt` holds a normalised cross-correlation of the 8×-binned
-first frame of all five stacks, computed for M60's own scene-identity check. It
+first frame of all five stacks, computed for M63's own scene-identity check. It
 bears on a question the owner has flagged as open — whether the ISO-100/ISO-400
 captures are of a held scene — so it is surfaced here (**MEASURED**):
 
@@ -282,7 +297,7 @@ captures are of a held scene — so it is surfaced here (**MEASURED**):
 | **`wrapped-text-1` vs `wrapped-text-2`** | 100 / 400 | **0.3834** |
 
 **The two candidate matched-scene pairs are not equivalent.** `bee-2`/`bee-3` is
-a genuine re-capture of one scene and M60 used it as such (§8.9). The
+a genuine re-capture of one scene and M63 used it as such (§8.9). The
 `wrapped-text` pair is **not** — 0.3834 is a different framing, which is also
 what direct viewing showed when the cells were labelled (`src/cells.py` records
 `wrapped-text-2` as "second framing, second ISO").
@@ -483,7 +498,7 @@ other three `bee-1` occlusion cells, `data/06-cells.csv`). Final set: 9 `occ`,
 
 Fact 73 says the box mean of gradient magnitude is blind on monotone edges,
 because blur conserves total variation. **An occluding edge is an edge**, so if
-that blindness held at M60's operator scale, nothing about curve shape at these
+that blindness held at M63's operator scale, nothing about curve shape at these
 cells would be admissible.
 
 `src/13-plant.py` → `data/13-plant.txt` (**MEASURED**):
@@ -512,7 +527,7 @@ looking for it.
 
 Discipline 338: a separation score whose denominator is a null residual behaves
 like a random number. Facts 695–706 refuted a metric of exactly that shape after
-three milestones. M60's denominator is a *predicted* sd from an injected model,
+three milestones. M63's denominator is a *predicted* sd from an injected model,
 which is the right shape — but that is worth nothing unless the model actually
 predicts the observed scatter, and the check must not run against the constant
 that generated the prediction (fact 738).
@@ -634,7 +649,7 @@ veiled-background focus peak is physically impossible there. AUC against `occ` i
 **0.600, p = 0.61**: indistinguishable.
 
 **6.3 The permutation placebo saturates.** `src/21-sweeps.py` (**MEASURED**),
-M21's control run on M60's cells at M60's calibrated `z*`: permuting the frame
+M21's control run on M63's cells at M63's calibrated `z*`: permuting the frame
 order per pixel destroys all through-focus structure while preserving the
 marginal exactly, and gives a hit rate of **100.0%** in every class (median), with
 median separation 94–102 frames on the 299-frame stacks.
@@ -835,7 +850,7 @@ not even expressible at the noise temperature.
 
 ### 8.5 The one the pre-registration did not list: a single defocusing edge
 
-See §9. It is the discriminator that decided the milestone, and M60 did not know
+See §9. It is the discriminator that decided the milestone, and M63 did not know
 it existed when the pre-registration was frozen. It is therefore **post-hoc and
 labelled so** — but it is *derived analytically* and confirmed against a plant
 whose ground truth is known, which is a different epistemic status from a
@@ -895,7 +910,7 @@ fixed second depth it must be flat. The occlusion class has a slope of
 **+0.053 fr/px — flat**, which is what the reviewer predicts. The **control**
 class has +0.632 fr/px, which is the side-lobe law, clearly.
 
-Two readings, and M60 cannot choose between them with the data it has
+Two readings, and M63 cannot choose between them with the data it has
 (**ARGUED**): either occlusion cells genuinely carry a fixed second depth that the
 side-lobe hides in aggregate, or the occlusion cells' silhouettes are so convoluted
 (hairs, antennae, legs at all angles) that "distance to the nearest silhouette" is
@@ -1064,7 +1079,7 @@ pixels (beyond the veil zone) hit **0.0%** at every D, correctly.
 **untextured** background — fact 73's case — and applies the textured cell's `z*`:
 **16.8% at D = 0**, i.e. indistinguishable from the 16.2% it gives at D = 60
 (**MEASURED**). A `z*` calibrated on textured data is meaningless on untextured
-data. M60's per-cell matched-null design already handles this; it is recorded
+data. M63's per-cell matched-null design already handles this; it is recorded
 because any future detector that calibrates a single global threshold will walk
 straight into it.
 
@@ -1139,13 +1154,13 @@ tall sharp peak is more trustworthy than a low flat one.
 
 | step in the argument | status | evidence |
 | --- | --- | --- |
-| a background pixel near an occluding boundary is veiled by defocused foreground | **not tested** — physically uncontroversial, and M60 measured no unmixing | — |
+| a background pixel near an occluding boundary is veiled by defocused foreground | **not tested** — physically uncontroversial, and M63 measured no unmixing | — |
 | the observation is a two-layer composite | **not tested** | — |
 | its through-focus curve is bimodal | **MEASURED, TRUE, and much more common than claimed** | 78.3% of occlusion band pixels clear a calibrated noise floor; 9/9 cells; AUC 1.000 vs control (§6) |
 | **the bimodality identifies occlusion** | **MEASURED, FALSE** | fires at 78.9% where no background exists to veil (§6.2); control cells at 47% (§6.1); permutation placebo at 100% (§6.3) |
 | **the second mode is the background's focus frame** | **MEASURED, FALSE** | 7.2% of pixels, vs 1.6% chance (§8.6); in a plant with a known second depth, 0.0–1.0% beyond 8 px while the single-depth side-lobe takes 54–68% (§9.3) |
 | **the separation is a property of the scene** | **MEASURED, FALSE** | grows monotonically with the operator box radius, 21→68 frames (§7.3); floors at 4–6 frames as `n` falls (§7.2); κ ≈ 0.11 across two captures of the same scene (§8.9) |
-| no selector can be right at an occluding edge | **not tested, and untouched by this result** | M60 measured detectability, not selector error |
+| no selector can be right at an occluding edge | **not tested, and untouched by this result** | M63 measured detectability, not selector error |
 | a reconstruction could fit the two-component model in bimodal cells | **premise removed** — "bimodal cells" is not a usable population selector | §6.2, §8.6, §8.9 |
 | posterior entropy is confidence | **MEASURED, TRUE BUT REDUNDANT** | AUC 0.63 vs 0.62 for peak height alone (§10.1) |
 | bimodality is occlusion detection | **MEASURED, FALSE** | as above |
@@ -1179,19 +1194,19 @@ number in this report.
    analytic and its parameters (`ΔI`, `rate`, `x`) are estimable from the same
    volume. A statistic that fits and removes the side-lobe pair, *then* asks
    whether a residual second mode survives, is a genuinely different instrument
-   from the one M60 refuted. M60 did not build it.
+   from the one M63 refuted. M63 did not build it.
 2. **Restrict to the near-edge band.** The plant recovers the true background peak
    25–44% of the time within ~4.5 px, and 0.0–1.0% beyond 8 px (§9.3). A
    deliberately narrow near-edge estimator is not excluded.
 3. **Test the flat distance slope.** §8.8 is the one measurement that favours the
-   reviewer and M60 cannot resolve it. It needs cells with clean, straight,
+   reviewer and M63 cannot resolve it. It needs cells with clean, straight,
    well-separated silhouettes so that distance-to-edge is a clean regressor.
 4. **Capture the missing data.** See §15 item 4 — this corpus does not contain the
    case the hypothesis is actually about.
 5. **Read §17–§24 first.** Part II measures that the corpus's *prior* answer to
    this question was produced by an instrument that cannot fire at edges. That
    does not change §11's verdict — Part II's own plant reads 1.11–1.23× with a
-   working statistic, and 0.87× on M60's real occlusion cells (§23.1) — but it
+   working statistic, and 0.87× on M63's real occlusion cells (§23.1) — but it
    changes which existing facts a future milestone should trust as its starting
    point.
 
@@ -1203,7 +1218,7 @@ number in this report.
    is photographed on a white card. The background peak/floor focus ratio is 1.58
    median across `occ` (§8.7); only `occ3-wing-thorax` (13.85) and
    `occ3-antenna-eye` (6.15) have backgrounds with real focusable structure.
-   **M60 therefore cannot claim to have refuted "veiled background peaks exist in
+   **M63 therefore cannot claim to have refuted "veiled background peaks exist in
    textured-background occlusion."** It claims something narrower and still
    decisive: *firing of this statistic is not evidence that one is present.*
    Note that `occ3-antenna-eye` — one of the two — has a measured depth step of
@@ -1230,7 +1245,7 @@ number in this report.
 8. **No milestone-level replication.** Everything here is one agent, one pass.
    The scripts are deterministic given their seeds and every number in this report
    names the file it came from.
-9. **A circular polarizer is in the optical path for every frame M60 measured —
+9. **A circular polarizer is in the optical path for every frame M63 measured —
    but not for every frame in the corpus, and the difference matters.** Reported
    by the owner after this milestone closed: a Breakthrough Photography X4 CPL
    67 mm (Schott B270, MRC16), in front of the 100 mm GM. An earlier broadcast
@@ -1240,18 +1255,18 @@ number in this report.
    `coffee-bubbles`, `foam`) and `CPL OFF` up to 17 May (`109MSDCF`, `112MSDCF`,
    `113MSDCF`, `119MSDCF`), with `coffee-bean` **UNKNOWN**.
 
-   **M60's exposure to this is bounded and was checked, not assumed**
+   **M63's exposure to this is bounded and was checked, not assumed**
    (**MEASURED**, by enumerating `src/cells.py`): the measured cell set is
    `bee-1`, `bee-3`, `wrapped-text-1`, `wrapped-text-2`, and the replicate arm
    adds `bee-2`. **All five are on the ON side**, so the caveat applies uniformly
-   to M60's real-data numbers rather than unevenly across them — which is a
+   to M63's real-data numbers rather than unevenly across them — which is a
    cleaner position than the corpus-wide claim would have given. `109MSDCF` is
    the only OFF-side stack this milestone ever registered and it was
    **substituted before any measurement** for unrelated reasons (§3, D-1), so no
    number here is hedged against a bare-lens stack and **there is no hedge to
    remove**. `coffee-bean`, `112MSDCF`, `113MSDCF`, `119MSDCF`, `foam` and
    `coffee-bubbles` appear in this report **only as stack-selection rationale**
-   (§2.1) and carry no measurement, so **no headline of M60's inherits
+   (§2.1) and carry no measurement, so **no headline of M63's inherits
    `coffee-bean`'s unknown filter state**.
 
    **Part II's headline is immune by construction.** P17–P21 — the instrument
@@ -1303,9 +1318,9 @@ them.** Fold the two tables together.
 | **P11** | The box mean of Sobel magnitude is **not** blind at R = 2. Across a monotone step blurred σ = 0→12, total variation is conserved to 6.8e-13 (fact 73 reproduced exactly) while the R = 2 box response at the edge falls 200.0 → 32.96 (ratio 0.165). Fact 73's blindness is a large-box property, which also explains fact 152's 0.36× depletion at the shipped R = 13 | MEASURED | `data/13-plant.txt` |
 | **P12** | A bimodality threshold calibrated on a textured-background null is invalid on untextured background: applying a textured cell's `z*` to an untextured two-layer plant gives 16.8% "hits" at **zero** planted depth separation, against 16.2% at D = 60 | MEASURED | `data/13-plant.txt` |
 | **P13** | On the occlusion class the measured separation is comparable in median to the independently measured depth step (sep/step 1.15, n = 8, range 0.61–2.11) but the two are not significantly correlated across cells: Spearman +0.579, p = 0.103 (n = 9); across all 25 cells +0.066, p = 0.755. One labelled occlusion cell with a **zero-frame** reference depth step has the corpus's highest hit rate, 85.3% | MEASURED | `data/21-sweeps.txt`, `data/23-boundary.txt` |
-| **P14** | M21's frame-permutation placebo, run on M60's cells at M60's calibrated `z*`, fires at 100.0% (median, every class) against 78.3% on real occlusion data. A bimodality hit rate is therefore not interpretable as the fraction of pixels containing two depths | MEASURED | `data/21-sweeps.txt` |
+| **P14** | M21's frame-permutation placebo, run on M63's cells at M63's calibrated `z*`, fires at 100.0% (median, every class) against 78.3% on real occlusion data. A bimodality hit rate is therefore not interpretable as the fraction of pixels containing two depths | MEASURED | `data/21-sweeps.txt` |
 | **P15** | The prominence of the second through-focus peak tracks **edge contrast**, not depth: Spearman(prom, band peak focus response) = +0.772, p = 6.1e-6 over 25 cells; prominence normalised by band contrast is 0.2145 at occlusion cells and 0.1849 at blank-card silhouettes — within 16% — against 0.1333 at no-discontinuity cells. Confirms P5's ΔI-proportionality on real data | MEASURED | `data/24-numden.txt` |
-| **P16** | In M60's `z`, the numerator does the work and the denominator does not: median prominence is 37.79 / 28.54 / 11.04 DN across `occ` / `occ_flat` / `ctl` — a 3.4× spread — while the median predicted denominator is 3.012 / 2.881 / 2.268 DN. Median `z` at occlusion cells is 14.52 against a per-cell threshold of 5.48–5.92 | MEASURED | `data/24-numden.txt` |
+| **P16** | In M63's `z`, the numerator does the work and the denominator does not: median prominence is 37.79 / 28.54 / 11.04 DN across `occ` / `occ_flat` / `ctl` — a 3.4× spread — while the median predicted denominator is 3.012 / 2.881 / 2.268 DN. Median `z` at occlusion cells is 14.52 against a per-cell threshold of 5.48–5.92 | MEASURED | `data/24-numden.txt` |
 
 ---
 
@@ -1340,7 +1355,7 @@ the operator scale.* If it moves with either, it is not a scene measurement. Bot
 sweeps are cheap and both were decisive here.
 
 **D-f.** *An externally validated denominator is not the same as an externally
-sourced one.* Discipline 338 warns against a null-residual denominator. M60's
+sourced one.* Discipline 338 warns against a null-residual denominator. M63's
 denominator came from the injected model, which is the right shape — but it was
 worth quoting only after §4.3 showed it predicts the observed scatter on real
 frames to 4%, using an estimator that shares no arithmetic with it. The
@@ -1352,7 +1367,7 @@ validation is a separate measurement and should be run whenever a model-predicte
 ## 15. Open questions
 
 1. **Does the near-edge regime survive on real textured-background occlusion?**
-   The plant recovers the true background peak 25–44% within ~4.5 px (P6). M60 has
+   The plant recovers the true background peak 25–44% within ~4.5 px (P6). M63 has
    n = 2 real cells with focusable background texture and one of them has a
    zero-frame depth step. **This is the single measurement that would most change
    the verdict.**
@@ -1361,8 +1376,8 @@ validation is a separate measurement and should be run whenever a model-predicte
    prominence test. Not measured; it is a different instrument, not a retune.
 3. **Is the flat `occ` distance slope (+0.053 fr/px, §8.8) a fixed second depth or
    a noisy regressor?** It is the strongest surviving point for the reviewer and
-   M60 cannot resolve it. It needs cells with clean straight silhouettes.
-4. **Capture request (for `docs/captures-needed.md`, which M60 may not write).**
+   M63 cannot resolve it. It needs cells with clean straight silhouettes.
+4. **Capture request (for `docs/captures-needed.md`, which M63 may not write).**
    The corpus contains **no stack with a deliberate occluding edge in front of a
    textured background at a known depth separation.** Every occlusion in
    `bee-1`/`bee-3` is a limb against a white card. The measurement this question
@@ -1399,7 +1414,7 @@ python src\23-boundary.py      # N5 as registered
 python src\24-numden.py        # numerator vs denominator, contrast scaling
 ```
 
-Every script carries an `if __name__ == "__main__":` guard. `M60_REPS` sets the
+Every script carries an `if __name__ == "__main__":` guard. `M63_REPS` sets the
 Monte-Carlo rep count (default 12; §4.4). All corpus reads are read-only; nothing
 under `D:\personal\macro` was written. `cargo` is not required — no Rust was
 built or changed.
@@ -1415,9 +1430,9 @@ side-lobe directly and are worth regenerating before reading §9.
 **Commit provenance.** The pre-registration (§2) was committed at `5dee1f4`
 **before any hypothesis result** — that ordering is the point of this milestone
 and it is checkable in the log. The remaining 47 files, including this report,
-landed in commit `701dc11` rather than in one of M60's own: a concurrently
-running agent ran a non-path-scoped commit in the window between M60 staging its
-paths and committing them, and swept M60's files in alongside four M55 files.
+landed in commit `701dc11` rather than in one of M63's own: a concurrently
+running agent ran a non-path-scoped commit in the window between M63 staging its
+paths and committing them, and swept M63's files in alongside four M55 files.
 Nothing was lost or altered — `src/25-verify-commit.py` reads the committed blob
 back out of `701dc11` and asserts it is byte-identical to the final working-tree
 report (71 294 characters, exit 0), per discipline 351. History was deliberately
@@ -1554,7 +1569,7 @@ and each was committed **before its own run**: §7b (T6) at `a2d8756`, §7c (T7)
 | --- | --- | --- |
 | **S0** | M21's `multipeak`, copied verbatim | — (the control) |
 | **S1** | same function, bar replaced by `3σ` from the injected noise model | H-A only |
-| **S2** | M60's Part I statistic: peak prominence over the interior dip, thresholded against the model-predicted σ of the focus response | H-A and H-B |
+| **S2** | M63's Part I statistic: peak prominence over the interior dip, thresholded against the model-predicted σ of the focus response | H-A and H-B |
 
 S1 is the minimal edit — one line — so that any difference between S0 and S1 is
 attributable to the bar alone.
@@ -1571,7 +1586,7 @@ attributable to the bar alone.
 
 ### 18.4 Power, asserted before reading any result
 
-Registered floors: ≥ 500 px per class on M25 plants, ≥ 5 000 px on M60 cells. The
+Registered floors: ≥ 500 px per class on M25 plants, ≥ 5 000 px on M63 cells. The
 frozen plant delivers **veiled 10 133 px** and **smooth 994 940 px**
 (**MEASURED**, `data/31-swap.txt`), so at a 10% base rate the standard error on
 the veiled rate is 0.30 pp and a 1.5× enrichment is **≈ 12 sd**. Both floors
@@ -1817,7 +1832,7 @@ Two secondary facts from the same run:
 
 ## 23. T4 and T5 — real data, and the frame-density confound
 
-### 23.1 T4 — the same three statistics on M60's real cells (`data/32-swap2.txt`)
+### 23.1 T4 — the same three statistics on M63's real cells (`data/32-swap2.txt`)
 
 | class | cells | S0 % | S1 % | S2 % | median `rng` |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -1860,7 +1875,7 @@ normalising for `n`, and none of the published comparisons did.
 
 ## 24. What Part II changes in the record
 
-Stated as directly as the evidence allows, with the corpus rows named. **M60 may
+Stated as directly as the evidence allows, with the corpus rows named. **M63 may
 not write `SYNTHESIS.md`; these are proposals for the fold, not edits.**
 
 | corpus row | what it says | what Part II measures |
@@ -1899,7 +1914,7 @@ explicitly.
 | **P23** | M25's frame-permutation placebo structurally rejects noise-calibrated peak tests: permutation preserves a curve's range while manufacturing large frame-to-frame jumps at high-swing pixels, so an absolute-bar statistic reads placebo 1.25–1.26 (repairing per-frame σ and permuting the threshold with its frames does not help), while prominence-over-dip reads 1.05–1.07. The corpus's validation gate for this family cannot admit the fix M21 §7 itself prescribes | MEASURED | `data/31-swap.txt`, `data/32-swap2.txt` |
 | **P24** | In a plant whose background focus index is rendered-known at 16 of 21 frames, the flagged second peak lands within ±2 of it 47.8% of the time against 26.3% chance (1.82×) and 30.0% in the no-background population (1.59×) — below the pre-registered 2× bar on both. The `k2` histogram peaks at the **stack boundary** (11.8% at index 19) rather than at the background index (8.6% at 16). M21's statistic flags 200 of 10 133 veiled pixels here, too few to localise at all | MEASURED | `data/34-t7.txt` |
 | **P25** | Of the two ISO-100/ISO-400 stack pairs in the corpus, only one is a matched scene. Normalised cross-correlation of the 8×-binned first frame gives `bee-2`↔`bee-3` **0.9562** but `wrapped-text-1`↔`wrapped-text-2` **0.3834**; `bee-1`↔`bee-3` is 0.6036 (same subject, different pose). The `wrapped-text` pair is a re-framing, not a re-capture, and is not usable as a matched-scene control | MEASURED | `data/03-previews.txt` |
-| **P26** | M60's pre-rename corpus survey, written before the owner renamed five directories, agrees with the owner's independent post-rename EXIF read on all five stacks for both ISO and shutter (`bee-1` 299/100/0.5 s, `bee-2` 299/400/0.05 s, `bee-3` 299/100/0.2 s, `wrapped-text-1` 130/100/0.0667 s, `wrapped-text-2` 120/400/0.025 s). The rename mapping is confirmed by two independent reads | MEASURED | `data/01-survey.csv`, owner report 2026-08-23 |
+| **P26** | M63's pre-rename corpus survey, written before the owner renamed five directories, agrees with the owner's independent post-rename EXIF read on all five stacks for both ISO and shutter (`bee-1` 299/100/0.5 s, `bee-2` 299/400/0.05 s, `bee-3` 299/100/0.2 s, `wrapped-text-1` 130/100/0.0667 s, `wrapped-text-2` 120/400/0.025 s). The rename mapping is confirmed by two independent reads | MEASURED | `data/01-survey.csv`, owner report 2026-08-23 |
 
 ---
 
@@ -1958,7 +1973,7 @@ candidate fix is admissible under it before adopting it as the gate.**
    statistic replaced by S2, is a small job with a large blast radius on the
    record.
 7. **What does M32's posterior-over-depth read on these same frozen frames?**
-   M60 read M32 for the entropy question (Part I §10 answers it independently and
+   M63 read M32 for the entropy question (Part I §10 answers it independently and
    agrees the gain is ≈ 0.01 AUC), but did not run M32's object on the plant. If
    the posterior's bimodality is computed with prominence rather than a relative
    step, it may already be free of P17's defect — and that is worth knowing before

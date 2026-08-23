@@ -1,4 +1,4 @@
 M60b/36 -- read-back of Part II numbers
-  report   M60-bimodality.md  118554 chars
+  report   M63-bimodality.md  119644 chars
   checked  109 tokens across 8 data files
   ALL TOKENS PRESENT IN BOTH THE DATA FILE AND THE REPORT
