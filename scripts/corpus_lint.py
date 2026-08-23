@@ -726,6 +726,13 @@ LOCAL_DECL = [
     re.compile(r"^\*\*(\d+)\.\s"),
     re.compile(r"^\|\s*(\d+)\s*\|"),
     re.compile(r"\*\*(?:Discipline|Question|Fact|Risk)\s+(\d+)\.?\*\*", re.I),
+    # A declaration may carry a parenthetical label before the closing bold:
+    # `**Fact 12 (MEASURED).**` is the corpus convention and was invisible to the
+    # pattern above, which requires the number to abut the closing `**`. Measured
+    # 2026-08-xx: 57 declarations across 6 reports were invisible, 29 in M48c alone.
+    # Their local citations then resolved against SYNTHESIS's global numbering and
+    # passed against an unrelated fact. See SYNTHESIS fact for the measurement.
+    re.compile(r"\*\*(?:Discipline|Question|Fact|Risk)\s+(\d+)\s*\([^)\n]*\)\.?\*\*", re.I),
     re.compile(r"^#+\s*(?:Discipline|Question|Fact)\s+(\d+)\b", re.I),
 ]
 
