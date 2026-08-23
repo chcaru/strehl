@@ -108,6 +108,24 @@ FIXTURES = [
      doc(s5="221. **A discipline that over-closes its span.****\n",
          s10=CLEAN_10)),
 
+    ("B5: `~~` opened by an amendment and never closed", "fire",
+     ["S5"], "strikethrough never closes",
+     doc(s5=CLEAN_5,
+         s10="165. **A question amended in place.** ~~The premise this refutes\n"
+             "    was never closed, so everything after it reads as retracted\n"
+             "    including this sentence, which nobody meant to retract.\n")),
+
+    ("B6: a fact ROW with an unclosed `~~`", "fire",
+     ["S5"], "fact 622",
+     doc(facts="| 622 | **A fact.** | ~~Superseded by M55b. | M1 |\n",
+         s5=CLEAN_5, s10=CLEAN_10)),
+
+    ("B7: a backtick the code-span stripper cannot pair", "fire",
+     ["S5"], "unpaired after code-span stripping",
+     doc(s5="9. **A discipline.** The identifier `n_eff never closes, so every\n"
+            "   stripped-then-counted check below it is silently wrong.\n",
+         s10=CLEAN_10)),
+
     # ---- invariant B, must NOT fire --------------------------------------
     ("B3: a bold span spanning three continuation lines", "silent",
      ["S5"], None,
@@ -122,6 +140,19 @@ FIXTURES = [
      doc(facts="| 7 | **A fact naming the `**` token.** | None. | M1 |\n",
          s5="9. **A discipline about markup.** Write `**` when you mean bold;\n"
             "   a bare `**` in a code span is not markup.\n",
+         s10=CLEAN_10)),
+
+    ("B8: a `~~` span opening and closing on different lines", "silent",
+     ["S5"], None,
+     doc(s5=CLEAN_5,
+         s10="165. **A question amended in place.** ~~The premise this refuted\n"
+             "    spans a soft line break and does close here.~~ M55b answered\n"
+             "    it by refuting the premise.\n")),
+
+    ("B9: a code span legitimately spanning a line break", "silent",
+     ["S5"], None,
+     doc(s5="9. **A discipline quoting a pipeline.** It runs `decode ->\n"
+            "   calibrate -> select` end to end.\n",
          s10=CLEAN_10)),
 
     # ---- invariant A, must fire ------------------------------------------
@@ -144,12 +175,74 @@ FIXTURES = [
          s5="12. **A discipline numbered 12.** Body.\n",
          s10="12. **An unrelated question also numbered 12.** Body.\n")),
 
-    # ---- the advisory must be able to fire, and must not fail the run ----
-    ("A4: status claim uncorroborated by §10 (ADVISORY: exit stays 0)",
-     "advisory", ["C1"], "does not carry that word",
+    # ---- the promoted status check ---------------------------------------
+    ("A4a: a fact says a question is MOOT; §10 does not", "fire",
+     ["A4"], "does not carry that word",
      doc(facts="| 3 | **Question 170 is MOOT.** | None. | M58 |\n",
          s5=CLEAN_5,
          s10="170. **A question still open.** Nothing has settled it.\n")),
+
+    ("A4b: possessive subject — the HYPOTHESIS is closed, not the question",
+     "silent", ["A4"], None,
+     doc(facts="| 3 | **Question 132's leading hypothesis is closed by a "
+               "FAIL.** | None. | M50 |\n",
+         s5=CLEAN_5,
+         s10="132. **A question whose leading hypothesis died.** Still "
+             "`UNVERIFIED`.\n")),
+
+    ("A4c: reported speech — a defect report QUOTING a false sentence",
+     "silent", ["A4"], None,
+     doc(facts="| 761 | **A row carried an amendment and its contradiction.** | "
+               "fact 622 said \"Question 119 is answered negatively\" beside a "
+               "headline recording 119 is REOPENED. | M58 |\n",
+         s5=CLEAN_5,
+         s10="119. **A question reopened.** **REOPENED**, the largest blocker.\n")),
+
+    ("A4d: struck-through claims are retracted, not asserted", "silent",
+     ["A4"], None,
+     doc(facts="| 3 | **~~Question 170 is MOOT~~ — withdrawn.** | None. | M58 |\n",
+         s5=CLEAN_5,
+         s10="170. **A question still open.** Nothing has settled it.\n")),
+
+    # ---- exclusion controls ----------------------------------------------
+    # Each is the corresponding silent fixture with ONLY the exclusion trigger
+    # removed. If one of these stays silent, the fixture above it was silent
+    # because nothing matched -- not because the exclusion worked -- and the
+    # exclusion is untested (SYNTHESIS discipline 250: three shipped checks that
+    # could not fail).
+    ("A4b-control: drop the possessive, keep everything else", "fire",
+     ["A4"], "question 132 is CLOSED",
+     doc(facts="| 3 | **Question 132 is closed by a FAIL.** | None. | M50 |\n",
+         s5=CLEAN_5,
+         s10="132. **A question whose leading hypothesis died.** Still "
+             "`UNVERIFIED`.\n")),
+
+    ("A4c-control: drop the quotation marks, keep everything else", "fire",
+     ["A4"], "question 119 is ANSWERED",
+     doc(facts="| 761 | **A row carried an amendment and its contradiction.** | "
+               "fact 622 said Question 119 is answered negatively beside a "
+               "headline. | M58 |\n",
+         s5=CLEAN_5,
+         s10="119. **A question reopened.** It is the largest blocker.\n")),
+
+    ("A4d-control: drop the strikethrough, keep everything else", "fire",
+     ["A4"], "question 170 is MOOT",
+     doc(facts="| 3 | **Question 170 is MOOT — withdrawn.** | None. | M58 |\n",
+         s5=CLEAN_5,
+         s10="170. **A question still open.** Nothing has settled it.\n")),
+
+    ("B8-control: drop the closing `~~`, keep everything else", "fire",
+     ["S5"], "strikethrough never closes",
+     doc(s5=CLEAN_5,
+         s10="165. **A question amended in place.** ~~The premise this refuted\n"
+             "    spans a soft line break and does close here. M55b answered\n"
+             "    it by refuting the premise.\n")),
+
+    ("B9-control: drop the closing backtick, keep everything else", "fire",
+     ["S5"], "unpaired after code-span stripping",
+     doc(s5="9. **A discipline quoting a pipeline.** It runs `decode ->\n"
+            "   calibrate -> select end to end.\n",
+         s10=CLEAN_10)),
 ]
 
 

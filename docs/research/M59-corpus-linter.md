@@ -742,7 +742,14 @@ question 170 carried no MOOT marker.
 So the invariant that pays for itself here is B, not A. A is worth having on its
 measured 3% rate, but on this specific defect it is the wrong instrument.
 
-### 8.5 The status check: built, measured, and demoted to an advisory (`A4`)
+### 8.5 The status check: built, measured, and demoted to an advisory (`A4`) — **REVERSED in §9.3**
+
+> **SUPERSEDED.** The conclusion below — that A4's residual was prose and the
+> check should stay advisory — is wrong. I measured the rate and did not read the
+> six claims; four of them are real inconsistencies. A4 was promoted to a failing
+> check in §9.3, which supersedes this subsection. The measurement is left intact
+> because the reasoning error is the useful part, and amending a headline while
+> leaving the claim standing is the defect fact 761 records.
 
 Since §8.4 identifies status coherence as the check that would have caught the
 170 defect, I built it: for every `question|discipline N … <MARKER>` claim,
@@ -796,6 +803,9 @@ is the same shape as the 170 defect. But I have not adjudicated them, and the
 linter does not claim they are wrong.
 
 ### 8.6 Fixtures — nine synthetic documents, each proving one property
+
+> Extended to **22** in §9.4, including five exclusion controls. The nine below
+> are the original set and all still pass.
 
 Built as small synthetic documents rather than mutations of the real file, as
 asked: `experiments/M59-corpus-linter/fixture_probe.py`. Each asserts three
@@ -866,6 +876,178 @@ throughout: a sentence in which every number is correct and the sentence is
 still false (fact 772), a number right in one configuration and quoted into
 another (fact 768), a citation that resolves and is nevertheless the weaker
 source (fact 729). Adding S5, N5 and A4 does not move that boundary by one inch.
+
+## 9. Strikethrough, the other delimiters, and A4's promotion
+
+Folded after the orchestrator found an unclosed `~~` on question 165 by hand,
+having just repaired four `**` defects on a hunch. `S5` passed throughout. This
+section covers three things: extending `S5` to `~~`, measuring whether the same
+generalisation is safe for `_`, `*` and `` ` ``, and reversing my earlier call
+on A4.
+
+Measured at `10a03df`/`eceecb5` unless stated. The document is under concurrent
+edit by five other agents; every count is pinned.
+
+### 9.1 `S5` extended to every delimiter with a measured zero base rate
+
+The orchestrator asked for `~~`. I measured all the paired delimiters at once,
+because the decision to ship one and not another should rest on a number.
+MEASURED over **1,060 units** — §5/§10 items, their continuation paragraphs, and
+every §4 fact row — with code spans stripped first:
+
+| delimiter | odd units | shipped |
+|---|---|---|
+| `**` | 0 | yes |
+| `~~` | 0 | yes |
+| `__` | 0 | yes |
+| `*` (single) | 0, once escaped `\*` is excluded | yes |
+| `_` (single) | **17** | **no** |
+| `` ` `` residue | 0 | yes, as an instrument check |
+
+**`~~` is clean at HEAD**, so this arm confirms the 165 repair rather than
+finding anything new. It has fixtures instead of findings (§9.4).
+
+**`*` needed one correction to be shippable.** MEASURED: 1 odd unit, fact 82 —
+and reading it, the culprit is `the raw slope of w\* on regulariser radius`, an
+**escaped** asterisk being counted as markup. Excluding `\*` takes it to 0. That
+is a real bug in the naive form of the check, found by inspecting the single
+outlier rather than by tuning it away.
+
+**`_` is not shippable and I am not shipping it.** MEASURED: 17 odd units,
+caused by identifiers written outside code spans — `N_eff`, `σ_β`, `φ_nonorm`,
+`f_sig`. No counter can distinguish those from italics. Seventeen false
+positives is a check that gets switched off, which is the failure mode this
+whole report has argued against.
+
+### 9.2 Backticks: a check on my own instrument
+
+The orchestrator's observation is the sharpest point in the brief — an odd
+backtick would make the code-span stripper unreliable, and the stripper is what
+`S5`, `A2` and `A4` all run on before counting anything. A corrupted instrument
+does not fail loudly; it quietly changes what every other check measures.
+
+MEASURED: scanning non-fenced SYNTHESIS lines leaves **4 backticks** unpaired —
+which looks like a finding and is not. All four are two code spans that
+legitimately **span a line break**, in §8 (`` `decode 22 ARW -> … -> TIFF out` ``)
+and §9 (`` `try_activate -> Inactive{unmet}` ``). A per-line scan splits them and
+sees two orphans each.
+
+Measured per **unit**, residue is **0**. The reason is worth recording, because
+it is the same lesson as §8.1 arriving from a different direction: `CODE_SPAN`'s
+`` `+[^`]*`+ `` has a negated character class, and `[^`]` matches newlines, so
+joining an item's lines before stripping already handles multi-line spans
+correctly. Verified directly — a synthetic multi-line span leaves residue 0, a
+genuinely unclosed backtick leaves residue 1.
+
+So `S5` asserts zero residue per unit. DERIVED: this is the only check here that
+guards another check rather than the corpus, and it is the one I would keep if I
+had to drop the rest, because a silent instrument failure is unfalsifiable from
+the output.
+
+### 9.3 A4 promoted from advisory to check — reversing my own call
+
+I recommended advisory status in §8.5 on a measured 32% residual, writing "a
+third of the corpus is not a defect rate; it is prose". **That was wrong, and
+the way it was wrong is the finding.** I measured the rate and did not read the
+six claims. A rate is not an adjudication.
+
+Reading each residual against its §10 item — `a4_adjudicate.py` prints both
+sides — gives four real inconsistencies and two false positives:
+
+| claim | §10 item says | verdict |
+|---|---|---|
+| fact 430 → "question 101 **REFUTED" | no status word; reads fully open | **real** |
+| fact 431 → "Feeds question 80 **REFUTED by M40 (fact 448)**" | "should probably both exist" | **real** |
+| fact 603 → "Question 132's **leading hypothesis** is closed" | correctly still `UNVERIFIED` | false positive |
+| fact 611 → "Question 120 is closed, and unusually decisively" | no status word at all | **real** |
+| fact 761 → *quotes* `"Question 119 is answered negatively"` as the defect it reports | carries `REOPENED` | false positive |
+| fact 804 → "Question 161 / fact 691 is RESOLVED by measurement" | "until this is settled" | **real** |
+
+Both false positives have **grammatical** signatures, not statistical ones, so
+they are excluded by rule rather than by threshold:
+
+- **Possessive subject.** "Question 132's leading hypothesis is closed" does not
+  assert question 132 is closed. The subject is the hypothesis. Excluded when
+  `'s` follows the number.
+- **Reported speech.** Fact 761 *quotes* a false sentence in the course of
+  reporting it as a defect. Quoting is not asserting — the same principle as the
+  `~~strikethrough~~` exclusion already in the check, where retracted text is not
+  assertion either. Excluded when the match sits inside `"…"`.
+
+**The honest limit, stated because it is the obvious objection:** both rules were
+derived from the only two false positives in the corpus, so the measured
+0-false-positive rate is **in-sample**. The rules are grammatical and should
+generalise — ARGUED, not MEASURED. If A4 starts firing on prose, the exclusion
+list is where to look, and demoting it back to advisory is the correct response,
+**not** widening exclusions until the number goes away. That distinction is the
+whole difference between this and overfitting, and I would rather name it than
+have it found.
+
+**A4 now FAILS at HEAD with 4 violations.** That is intended: they are real, and
+this report does not fix them.
+
+| line | claim | what §10 says |
+|---|---|---|
+| `SYNTHESIS.md:1014` | fact 430 asserts question 101 REFUTED | open; "until this is settled the gate-0 denominator is not trustworthy" |
+| `SYNTHESIS.md:1015` | fact 431 asserts question 80 REFUTED | open; "should probably both exist, or the gated one should be renamed" |
+| `SYNTHESIS.md:1169` | fact 611 asserts question 120 closed "unusually decisively" | open; still lists both candidate hypotheses |
+| `SYNTHESIS.md:1362` | fact 804 asserts question 161 RESOLVED "by measurement" | still claims "every cross-checked percentage carries a 0.057% systematic until this is settled" |
+
+The last is the one I would fix first: §10 currently tells a reader the corpus
+carries an unresolved systematic that fact 804 resolved by measurement.
+
+### 9.4 Fixtures: 22, each proving one property, with exclusion controls
+
+`fixture_probe.py` now runs 22 synthetic documents. MEASURED: **22 of 22 behaved
+as declared**; `fixture_show.py` prints the unfiltered text of every red, and
+each is the intended check with the intended message and no `Traceback`.
+
+The five added for this round, as asked:
+
+| fixture | expect | result |
+|---|---|---|
+| B5: `~~` opened by an amendment, never closed | fire | ok |
+| B6: a **fact row** with an unclosed `~~` | fire | ok |
+| B7: a backtick the stripper cannot pair | fire | ok |
+| B8: `~~` opening and closing on different lines | silent | ok |
+| B9: a code span legitimately spanning a line break | silent | ok |
+
+**And five exclusion controls, which are the part I would not have written a
+week ago.** A silent fixture can be silent for the wrong reason: if the document
+never produced a candidate match, the exclusion it claims to test was never
+exercised, and the fixture is discipline 250's dead check wearing a green tick.
+Each control is the silent fixture with **only the trigger removed**:
+
+| control | expect | result |
+|---|---|---|
+| A4b-control: drop the possessive `'s` | fire | ok |
+| A4c-control: drop the quotation marks | fire | ok |
+| A4d-control: drop the `~~` | fire | ok |
+| B8-control: drop the closing `~~` | fire | ok |
+| B9-control: drop the closing backtick | fire | ok |
+
+All five fire. Every exclusion in `A4` and every silent case in `S5` is
+therefore proven to be silent *because the rule fired*, not because nothing
+matched.
+
+### 9.5 What is still invisible
+
+Unchanged from §5 and §8.7, plus three specific to this round:
+
+- **`S5` proves a delimiter count is even, never that the span covers the right
+  text.** `~~A~~ B ~~C~~` and `~~A B C~~` both balance and mean different things.
+  An amendment that strikes through the wrong clause is invisible.
+- **`_` is unchecked**, so an unclosed single underscore italic would pass. This
+  is a known, measured gap, accepted because the alternative fires 17 times.
+- **`A4` sees the word, not the verdict.** A §10 item saying "CLOSED" in an
+  unrelated sentence corroborates any claim that the question is closed. It also
+  cannot see the converse defect — a question that *is* settled but which no fact
+  row claims — because nothing asserts anything for it to disagree with.
+- The semantic class remains untouched: a citation that resolves and is the
+  weaker source (fact 729), a sentence whose every number is right and which is
+  still false (fact 772), a number correct in one configuration and quoted into
+  another (fact 768). Nine checks and thirteen ids later, that boundary has not
+  moved.
 
 ---
 

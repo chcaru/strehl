@@ -493,15 +493,32 @@ def numbered_item_units(index, sections):
             i += 1
 
 
-def check_s5_emphasis_balance(index):
-    """Invariant B. An item whose `**` count is odd has an unterminated bold span
-    and stops rendering as written.
+MARKUP_TOKENS = (
+    # (delimiter, regex matching one delimiter, what an odd count means)
+    ("**", re.compile(r"\*\*"), "bold span never closes"),
+    ("~~", re.compile(r"~~"), "strikethrough never closes, so text nobody "
+                              "meant to retract reads as retracted"),
+    ("__", re.compile(r"(?<!_)__(?!_)"), "bold span never closes"),
+    ("*", re.compile(r"(?<![\\*])\*(?!\*)"), "italic span never closes"),
+)
 
-    M58c/82f13b0: prepending a clause to a `N. **Headline**` item consumes the
+
+def check_s5_emphasis_balance(index):
+    """Invariant B, generalised to every paired inline delimiter with a measured
+    base rate of zero on this corpus.
+
+    M58c/82f13b0: prepending a clause to a `N. **Headline**` item consumes its
     opening `**`, and the item silently mis-renders from there. Four §5 items
     had never closed their final span (disciplines 170, 181, 211, 221 -- the
-    last over-closing with `****`); nobody noticed for an unknown number of
-    commits, because nothing rendered the file in CI.
+    last over-closing with `****`).
+
+    `~~` was added after the same defect recurred under a different delimiter:
+    question 165 was amended with a strikethrough that opened `~~` and never
+    closed it, and ~200 characters read as retracted. `**` parity passed
+    throughout. In this corpus `~~` is how a retracted claim is marked -- 20
+    closed spans at 10a03df -- so an unclosed one silently retracts text nobody
+    meant to retract. That is worse than a mis-rendered heading: it inverts
+    meaning rather than losing formatting.
 
     The method is the whole check. Measured on SYNTHESIS §5+§10 at 4c02816:
 
@@ -510,33 +527,52 @@ def check_s5_emphasis_balance(index):
         per ITEM, joined, code spans kept     2 flags
         per ITEM, joined, code spans stripped 0 flags   <- shipped
 
-    Numbered items wrap across continuation lines and a bold span legitimately
-    opens on one line and closes on another, so per-line counting is worse than
+    Numbered items wrap across continuation lines and a span legitimately opens
+    on one line and closes on another, so per-line counting is worse than
     useless. Both the join and the strip are load-bearing.
 
-    Fact rows are single lines, so each row is its own unit; 640 of 640 balance.
+    Which delimiters ship, measured over 1060 units at 10a03df:
+
+        `**`  0 odd      `~~`  0 odd      `__`  0 odd
+        `*`   0 odd, once an escaped `\\*` is excluded (1 without: fact 82)
+        `_`  17 odd -- NOT SHIPPED. `N_eff`, `sigma_beta`, `f_sig` and
+             `phi_nonorm` are identifiers written outside code spans, and no
+             counter can tell those from italics. Seventeen false positives is
+             a check that gets switched off, so `_` is left alone.
     """
     out = []
-    for sec, num, line, label, text in numbered_item_units(index, (5, 10)):
-        n = strip_code_spans(text).count("**")
-        if n % 2:
-            kind = "discipline" if sec == 5 else "question"
+    units = [("§%d %s" % (sec, label),
+              ("discipline %d" % num) if sec == 5 else ("question %d" % num),
+              line, text)
+             for sec, num, line, label, text in numbered_item_units(index, (5, 10))]
+    units += [("§4 fact row", "fact %d" % num, line, index.syn.lines[line - 1])
+              for num, line in index.fact_rows_all]
+
+    for label, who, line, text in units:
+        stripped = strip_code_spans(text)
+        for token, pat, meaning in MARKUP_TOKENS:
+            n = len(pat.findall(stripped))
+            if n % 2:
+                out.append(Violation(
+                    SYNTHESIS, line, "S5",
+                    "%s (%s): odd number of `%s` (%d) after code spans are "
+                    "stripped, so a %s"
+                    % (who, label, token, n, meaning),
+                    text.strip().split("\n")[0]))
+        # The stripper is this linter's instrument: S5 above, A2's matching and
+        # A4's all depend on it. A backtick it cannot pair leaves residue, and
+        # from that point the strip is silently wrong. CODE_SPAN's `[^`]*`
+        # matches newlines, so a code span that legitimately spans a line break
+        # inside one unit leaves NO residue -- two such spans exist in §8/§9 and
+        # were verified against this. Residue therefore means genuinely unpaired.
+        residue = stripped.count("`")
+        if residue:
             out.append(Violation(
                 SYNTHESIS, line, "S5",
-                "%s %d: %s has an odd number of `**` (%d) after code spans are "
-                "stripped, so a bold span never closes and the item mis-renders "
-                "from that point"
-                % (kind, num, label, n),
+                "%s (%s): %d backtick(s) unpaired after code-span stripping, so "
+                "every stripped-then-counted check in this linter is unreliable "
+                "on this unit" % (who, label, residue),
                 text.strip().split("\n")[0]))
-    for num, line in index.fact_rows_all:
-        raw = index.syn.lines[line - 1]
-        n = strip_code_spans(raw).count("**")
-        if n % 2:
-            out.append(Violation(
-                SYNTHESIS, line, "S5",
-                "fact %d: row has an odd number of `**` (%d) after code spans "
-                "are stripped, so a bold span never closes" % (num, n),
-                raw))
     return out
 
 
@@ -883,31 +919,45 @@ def check_a2_count_vs_enumeration(index):
     return out
 
 
-def advisory_a4_status_coherence(index):
-    """HEURISTIC, AND DELIBERATELY NOT A CHECK.
+QUOTED_SPAN = re.compile(r"\"[^\"]*\"|\u201c[^\u201d]*\u201d")
 
-    The defect M58c records is that fact 771 asserted "Question 170 is MOOT"
-    while §10's question 170 carried no MOOT marker, because the verdict had
-    been written into DISCIPLINE 170 instead. C1 is silent on this: question 170
-    exists, so the citation resolves. Only comparing the ASSERTED STATUS against
-    the referenced item's own text can see it.
 
-    So this was built as a failing check and then measured, at 4c02816:
+def check_a4_status_coherence(index):
+    """If a fact says a question is answered, closed or moot, the question must
+    say so itself.
 
-        `<kind> N ... <MARKER>` claims found        19
-        referenced item carries the marker          11
-        claim sits inside ~~strikethrough~~          1
-        negated prose ("cannot be answered")         1
-        RESIDUAL                                     6  = 32%
+    M58c: fact 771 asserted "Question 170 is MOOT" while §10's question 170
+    carried no MOOT marker, because the verdict had been written into DISCIPLINE
+    170 instead. C1 is silent -- question 170 exists, so the citation resolves.
+    Only comparing the ASSERTED STATUS against the referenced item's own text
+    can see it.
 
-    A third of the corpus is not a defect rate; it is prose. "Question 132's
-    leading hypothesis is closed" and "Question 101 **REFUTED" are a fact row
-    recording a verdict, and whether §10 must echo it is a judgement call. A
-    check firing on 6 of 19 would be turned off within a day, which is worse
-    than no check (fact 725's lesson, and the reason A2 is scoped as tightly as
-    it is). It is therefore an advisory: a review list, never an exit code.
+    This shipped first as an advisory, on a measured 32% residual that I called
+    "prose, not a defect rate". That call was wrong, and the way it was wrong is
+    worth recording: I measured the rate and did not read the six. Reading them
+    against their §10 items gives four REAL inconsistencies (questions 101, 80,
+    120 and 161 -- each asserted settled by a fact row while §10 still reads
+    open, question 161's item still claiming a systematic that fact 804
+    resolved) and two false positives. A rate is not an adjudication.
 
-    The residual six are listed in M59-corpus-linter.md for adjudication.
+    The two false positives have grammatical signatures, not statistical ones,
+    so they are excluded by rule rather than by threshold:
+
+      - POSSESSIVE. "Question 132's leading hypothesis is closed" does not
+        assert that question 132 is closed; the subject is the hypothesis, and
+        §10's question 132 is correctly still UNVERIFIED.
+      - REPORTED SPEECH. Fact 761 QUOTES `"Question 119 is answered negatively"`
+        as an example of the defect it is reporting. Quoting a false sentence is
+        not asserting it -- the same principle as the existing ~~strikethrough~~
+        exclusion, where retracted text is not assertion either.
+
+    HONEST LIMIT, and the reason this docstring is long: both exclusions were
+    derived from the only two false positives in the corpus, so the measured
+    0-false-positive rate is IN-SAMPLE. The rules are grammatical and should
+    generalise, but that is ARGUED, not measured. If this check starts firing on
+    prose, the exclusion list is where to look first -- and demoting it back to
+    an advisory is the correct response, not widening the exclusions until the
+    number goes away.
     """
     out = []
     pat = re.compile(
@@ -920,6 +970,7 @@ def advisory_a4_status_coherence(index):
             continue
         bare = strip_code_spans(line)
         visible = STRIKETHROUGH.sub("", bare)
+        quoted = [(m.start(), m.end()) for m in QUOTED_SPAN.finditer(bare)]
         for m in pat.finditer(bare):
             kind = m.group(1).lower()
             num = int(m.group(2))
@@ -931,15 +982,20 @@ def advisory_a4_status_coherence(index):
                 continue
             if m.group(0) not in visible:
                 continue                                  # struck through
+            if bare[m.end(2):m.end(2) + 2] in ("'s", "\u2019s"):
+                continue                                  # possessive subject
+            if any(a <= m.start() < b for a, b in quoted):
+                continue                                  # reported speech
             if negation.search(m.group("mid")) or \
                     negation.search(bare[max(0, m.start() - 40):m.start()]):
                 continue
             out.append(Violation(
                 SYNTHESIS, i + 1, "A4",
-                "HEURISTIC: this says %s %d is %s, but §%d's %s %d does not "
-                "carry that word. Either the verdict was written into the wrong "
-                "namespace (M58c, commit 39b5ca7) or the prose is loose."
-                % (kind, num, marker, kind_section[kind], kind, num),
+                "this says %s %d is %s, but §%d's %s %d does not carry that "
+                "word. Either the verdict was written into the wrong namespace "
+                "(M58c, commit 39b5ca7) or §%d was never updated."
+                % (kind, num, marker, kind_section[kind], kind, num,
+                   kind_section[kind]),
                 m.group(0)))
     return out
 
@@ -968,8 +1024,9 @@ def advisory_a3_amendment(index):
 # driver
 # --------------------------------------------------------------------------
 
-CHECKS = ["S1", "S2", "S3", "S4", "S5", "N1", "N2", "N4", "N5", "C1", "A1", "A2"]
-ADVISORIES = ["N3", "A3", "A4"]
+CHECKS = ["S1", "S2", "S3", "S4", "S5", "N1", "N2", "N4", "N5", "C1", "A1",
+          "A2", "A4"]
+ADVISORIES = ["N3", "A3"]
 
 
 def collect_files(root):
@@ -1051,6 +1108,8 @@ def main(argv=None):
         violations += check_a1_question_status(md_docs + rs_docs, index)
     if "A2" in wanted:
         violations += check_a2_count_vs_enumeration(index)
+    if "A4" in wanted:
+        violations += check_a4_status_coherence(index)
 
     violations.sort(key=lambda v: (v.check, v.path, v.line))
 
@@ -1080,8 +1139,7 @@ def main(argv=None):
         print("corpus_lint: OK — no violations")
 
     if args.advisory:
-        adv = advisory_n3_shape(index) + advisory_a3_amendment(index) \
-            + advisory_a4_status_coherence(index)
+        adv = advisory_n3_shape(index) + advisory_a3_amendment(index)
         print("")
         print("--- ADVISORY (heuristics; these do NOT affect the exit code) ---")
         for v in adv:
