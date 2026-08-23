@@ -1,0 +1,105 @@
+M61 script 11 -- provenance recheck (matched pairs + CPL boundary)
+==========================================================================
+Regroups already-measured per-stack slopes. No re-decode; bytes unchanged.
+
+C1. CONTROL -- 109MSDCF @ ISO 160, CPL-OFF, untouched by both corrections
+--------------------------------------------------------------------------
+  r(109MSDCF, greens) = 0.9887   band (0.8, 1.2)   PASS
+
+PROVENANCE TABLE -- every stack, both boundaries
+--------------------------------------------------------------------------
+  stack              ISO   mode      CPL  r(greens)   resid%   fit
+  119MSDCF            50    low      off     0.9877     44.7  FAIL
+  coffee-bean         50    low  UNKNOWN     0.9793      6.4    ok
+  bee-1              100    low       ON     0.9725      1.1    ok
+  bee-3              100    low       ON     0.9732      0.5    ok
+  wrapped-text-1     100    low       ON     0.8931     33.6  FAIL
+  109MSDCF           160    low      off     0.9887     18.2    ok
+  bee-2              400   high       ON     0.9850      0.7    ok
+  wrapped-text-2     400   high       ON     0.9800      3.0    ok
+  112MSDCF           500   high      off     0.9976      1.2    ok
+  113MSDCF           500   high      off     1.0249      2.3    ok
+  coffee-bubbles    1000   high       ON     1.4660    407.0  FAIL
+  foam              1000   high      off     1.0174     42.0  FAIL
+
+A. MATCHED-PAIR RETRACTION
+--------------------------------------------------------------------------
+  A matched pair measures the gain STEP directly: g(400)/g(100) should
+  be 4.000 under H0 (gain tracks ISO) and 1.840 under H1 (M48c's 2.174x
+  step, i.e. 4.000/2.174).
+
+  CONFIRMED  bee-2 / bee-3 (greens) = 4.0486   H0 4.000   H1 1.840
+             deviation from H0 = +1.22%
+
+  VOID       wrapped-text-2 / wrapped-text-1 (greens) = 4.3895  -- different angles / depth
+  VOID       bee-2 / bee-1 (greens) = 4.0516  -- bee-1 is a different angle and depth
+
+  The void ratios are printed so the retraction is auditable. They are
+  NOT evidence and must not be cited. Note the wrapped-text ratio
+  (4.39) was 9.7% from H0 while the genuine pair is 1.2% from H0 --
+  the unmatched pair was the NOISIER one, which is what a subject
+  geometry change should do.
+
+B. CPL BALANCE -- is the polarizer aligned with the gain-mode split?
+--------------------------------------------------------------------------
+  gain-mode split, computed on CPL subsets:
+  all stacks                         r_lo 0.9657 (n6)  r_hi 1.0785 (n6)  ratio 1.1168 +/- 0.2018
+  CPL-ON only                        r_lo 0.9463 (n3)  r_hi 1.1437 (n3)  ratio 1.2086 +/- 0.3008
+  CPL-OFF only                       r_lo 0.9882 (n2)  r_hi 1.0133 (n3)  ratio 1.0254 +/- 0.0143
+
+  same, with the mechanical fit gate (resid < 25%):
+  all stacks, gated                  r_lo 0.9784 (n4)  r_hi 0.9969 (n4)  ratio 1.0189 +/- 0.0220
+  CPL-ON only, gated                 r_lo 0.9729 (n2)  r_hi 0.9825 (n2)  ratio 1.0100 +/- 0.0037
+  CPL-OFF only, gated                r_lo 0.9887 (n1)  r_hi 1.0113 (n2)  ratio 1.0229 +/- nan
+
+  CPL composition of each side of the gain boundary:
+    low  (ISO < 400): 3 ON, 2 off, 1 unknown
+        ON  bee-1, bee-3, wrapped-text-1
+        off 119MSDCF, 109MSDCF
+        unk coffee-bean
+    high (ISO >= 400): 3 ON, 3 off, 0 unknown
+        ON  bee-2, wrapped-text-2, coffee-bubbles
+        off 112MSDCF, 113MSDCF, foam
+
+C. DROP THE UNKNOWN-PROVENANCE STACK (coffee-bean)
+--------------------------------------------------------------------------
+  all minus coffee-bean              r_lo 0.9630 (n5)  r_hi 1.0785 (n6)  ratio 1.1199 +/- 0.2033
+  gated minus coffee-bean            r_lo 0.9781 (n3)  r_hi 0.9969 (n4)  ratio 1.0192 +/- 0.0226
+  greens roll-up, gated, all      = 0.9877 +/- 0.0172 (n8)
+  greens roll-up, gated, no c-bean= 0.9889 +/- 0.0182 (n7)
+
+D. SAME-ISO CPL CROSSING -- the only direct test of P-C in this corpus
+--------------------------------------------------------------------------
+  coffee-bubbles   ISO 1000  CPL ON    r(greens) 1.4660  resid 407.0%  <-- FAILS ITS OWN FIT
+  foam             ISO 1000  CPL off   r(greens) 1.0174  resid 42.0%  <-- FAILS ITS OWN FIT
+  |difference| = 0.4487
+  Weak by construction: one leg failed its fit in script 02, which was
+  pre-registered here as a known limitation, not discovered after.
+
+E. THE ISO-100 DEFICIT -- pre-registered suspicion, tested
+--------------------------------------------------------------------------
+  ISO   50  all   n2 r=0.9835   CPL off/unk
+           gated n1 r=0.9793   (coffee-bean)
+  ISO  100  all   n3 r=0.9463   CPL ON
+           gated n2 r=0.9729   (bee-1, bee-3)
+  ISO  160  all   n1 r=0.9887   CPL off
+           gated n1 r=0.9887   (109MSDCF)
+
+ACCEPTANCE
+==========================================================================
+  C1 control 109MSDCF               0.9887  PASS
+  C3 CPL invariance in low mode     |dON-OFF| 0.0419 vs within-group spread 0.0461  PASS
+       low CPL-ON  mean 0.9463 (n3) spread 0.0461
+       low CPL-off mean 0.9882 (n2) spread 0.0006
+  C4 r_high/r_low > 0.85 everywhere  PASS
+       all                1.1168   dist to H0 0.1168   dist to H1 0.6568
+       CPL-ON             1.2086   dist to H0 0.2086   dist to H1 0.7486
+       CPL-OFF            1.0254   dist to H0 0.0254   dist to H1 0.5654
+       no coffee-bean     1.1199   dist to H0 0.1199   dist to H1 0.6599
+       all gated          1.0189   dist to H0 0.0189   dist to H1 0.5589
+       ON gated           1.0100   dist to H0 0.0100   dist to H1 0.5500
+       OFF gated          1.0229   dist to H0 0.0229   dist to H1 0.5629
+       no c-bean gated    1.0192   dist to H0 0.0192   dist to H1 0.5592
+
+  NOTE: C2 (headline unchanged) is verified by construction -- this
+  script reads the same CSV script 02 wrote and never re-decodes.

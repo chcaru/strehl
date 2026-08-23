@@ -1,0 +1,87 @@
+M61 script 12 -- which fit-quality metric predicts slope error?
+==============================================================================
+
+  stack              ISO        r   resid%    A/B%    A/C%   half%
+  119MSDCF            50   0.9877     44.7     3.1     0.7     0.0
+  coffee-bean         50   0.9793      6.4     3.5     0.2     0.0
+  bee-1              100   0.9725      1.1     1.2     0.0     0.0
+  bee-3              100   0.9732      0.5     1.4     0.1     0.0
+  wrapped-text-1     100   0.8931     33.6     0.0     5.0    10.3
+  109MSDCF           160   0.9887     18.2     0.2     0.8     0.4
+  bee-2              400   0.9850      0.7     0.3     0.0     0.0
+  wrapped-text-2     400   0.9800      3.0     0.1     0.2     0.2
+  112MSDCF           500   0.9976      1.2     1.8     0.4     0.1
+  113MSDCF           500   1.0249      2.3     3.2     1.6     1.5
+  coffee-bubbles    1000   1.4660    407.0     7.8     2.7  1105.3
+  foam              1000   1.0174     42.0     1.3     0.9     0.3
+
+T1. CONTROL ANCHOR -- 109MSDCF, the one stack with a known answer
+------------------------------------------------------------------------------
+  true error |r-1|     = 0.0113  (1.1%)
+  resid_pct            = 18.2%   <- would look BAD
+  A/B, A/C, half       = 0.2%, 0.8%, 0.4%   <- look GOOD
+  A stack known to be accurate scores badly on resid_pct and well on
+  the consistency metrics. That is one data point, not a result.
+
+T2. REPLICATE DISAGREEMENT -- deviation from own ISO-group median
+------------------------------------------------------------------------------
+  ISO    50: n=2  median r = 0.9835
+      119MSDCF         r=0.9877  |dev|=0.0042
+      coffee-bean      r=0.9793  |dev|=0.0042
+  ISO   100: n=3  median r = 0.9725
+      bee-1            r=0.9725  |dev|=0.0000
+      bee-3            r=0.9732  |dev|=0.0007
+      wrapped-text-1   r=0.8931  |dev|=0.0794
+  ISO   160: n=1 (109MSDCF) -- excluded, no replicate
+  ISO   400: n=2  median r = 0.9825
+      bee-2            r=0.9850  |dev|=0.0025
+      wrapped-text-2   r=0.9800  |dev|=0.0025
+  ISO   500: n=2  median r = 1.0113
+      112MSDCF         r=0.9976  |dev|=0.0137
+      113MSDCF         r=1.0249  |dev|=0.0137
+  ISO  1000: n=2  median r = 1.2417
+      coffee-bubbles   r=1.4660  |dev|=0.2243
+      foam             r=1.0174  |dev|=0.2243
+
+  Spearman rho between each metric and |deviation from ISO median|:
+      resid_pct    rho =   0.746   (n=11)
+      ab_pct       rho =   0.297   (n=11)
+      ac_pct       rho =   0.897   (n=11)
+      half_pct     rho =   0.682   (n=11)
+
+D1. WINNING METRIC
+------------------------------------------------------------------------------
+  best   ac_pct       rho 0.897
+  second resid_pct    rho 0.746
+  DECLARED diagnostic metric: ac_pct
+
+D3. THE HEADLINE UNDER EVERY GATE
+------------------------------------------------------------------------------
+  no gate (all 12 stacks)       
+      ISO 500  1.0113 +/- 0.0193 (n2)     ISO 1000  1.2417 +/- 0.3173 (n2)
+      r_hi/r_lo 1.1168   (H0 1.000, H1 0.460)
+  script-11 gate resid<25%      
+      ISO 500  1.0113 +/- 0.0193 (n2)     ISO 1000  nan +/- nan (n0)
+      r_hi/r_lo 1.0189   (H0 1.000, H1 0.460)
+  half_pct < 5%                 
+      ISO 500  1.0113 +/- 0.0193 (n2)     ISO 1000  1.0174 +/- nan (n1)
+      r_hi/r_lo 1.0211   (H0 1.000, H1 0.460)
+  half_pct < 2%                 
+      ISO 500  1.0113 +/- 0.0193 (n2)     ISO 1000  1.0174 +/- nan (n1)
+      r_hi/r_lo 1.0211   (H0 1.000, H1 0.460)
+  ac_pct < 10%                  
+      ISO 500  1.0113 +/- 0.0193 (n2)     ISO 1000  1.2417 +/- 0.3173 (n2)
+      r_hi/r_lo 1.1168   (H0 1.000, H1 0.460)
+
+  ISO-1000 membership under each gate:
+      no gate      coffee-bubbles, foam
+      resid<25%    NONE -- ISO 1000 unmeasurable under this gate
+      half<5%      foam
+      half<2%      foam
+      ac<10%       coffee-bubbles, foam
+
+  Does the control survive each gate? (D2)
+      resid<25%    109MSDCF KEPT
+      half<5%      109MSDCF KEPT
+      half<2%      109MSDCF KEPT
+      ac<10%       109MSDCF KEPT

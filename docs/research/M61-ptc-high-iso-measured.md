@@ -7,7 +7,7 @@ Every claim is labelled **MEASURED**, **DERIVED** or **ARGUED**.
 
 Source data: the read-only corpus at `D:\personal\macro`, 12 stacks, 1554 frames,
 ISO 50 → 1000. Nothing was written to `D:\personal\macro`, `D:\macro-dark-frames`
-or `C:\dev\macro`. Scripts: `experiments/m61-ptc-high-iso/src/00`–`07` plus the
+or `C:\dev\macro`. Scripts: `experiments/m61-ptc-high-iso/src/00`–`14` plus the
 Rust cross-check in `experiments/m61-ptc-high-iso/decode-check/`.
 
 **Two corpus facts that arrived from the owner mid-milestone and are recorded
@@ -23,22 +23,43 @@ re-running. `grep '13[1-6]MSDCF' experiments/m61-ptc-high-iso` is empty. The
 counts, ISOs and exposures in `data/corpus-probe.txt` match the owner's
 independent EXIF read frame for frame.
 
-*The polarizer.* A Breakthrough Photography X4 CPL 67 mm is in the optical path
-for **every frame in the corpus**, and was in no brief. **It does not touch any
-number in this report (ARGUED):** a photon transfer curve relates DN to the
-variance of that same DN at the sensor, so a fixed attenuator in front of the lens
-changes *where on the curve you sample*, not its slope. It is why the ISO-500
-stacks sample only 50–800 DN, and it is why no probed frame in the corpus has a
-single pixel at or above white (`>=white 0.0000%` for all 12 stacks) — which
-suits M61, since a PTC must avoid the saturation knee anyway. Anything that reads
-clipping or specular statistics off this corpus is reading a polarized corpus.
+*The polarizer — a correction to what I published first.* A Breakthrough
+Photography X4 CPL 67 mm is in the optical path, and was in no brief. **My first
+version of this paragraph said it was on "every frame in the corpus". That is
+false**, and the owner corrected it after this report was first committed. The
+real provenance:
+
+| CPL | stacks |
+|---|---|
+| **ON (confirmed)** | `bee-1`, `bee-2`, `bee-3`, `wrapped-text-1`, `wrapped-text-2`, `coffee-bubbles` |
+| **off (reported)** | `109MSDCF`, `112MSDCF`, `113MSDCF`, `119MSDCF`, `foam` |
+| **UNKNOWN even to the owner** | `coffee-bean` |
+
+There was no intentional rotation between shoots. A CPL costs roughly 1.5–2 stops
+and can vary across the frame, so **any comparison straddling that boundary
+confounds a transmission change with whatever it is measuring**. The argument
+that it cannot touch a PTC *slope* still stands and is unchanged (ARGUED): the
+curve relates DN to the variance of that same DN at the sensor, so a fixed
+attenuator changes *where on the curve you sample*, not its gradient; and a
+spatial non-uniformity of the filter is part of the **fixed** scene, so it cancels
+in a temporal difference exactly as the subject does. But an argument is not a
+measurement, the premise I gave it was wrong, and §4.8 now tests it against the
+boundary instead of asserting it. The CPL is also why the ISO-500 stacks sample
+only 50–800 DN, and why no probed frame in the corpus has a single pixel at or
+above white (`>=white 0.0000%` for all 12 stacks) — which suits M61, since a PTC
+must avoid the saturation knee anyway. Anything that reads clipping or specular
+statistics off this corpus is reading a **partly** polarized corpus, and must
+consult the table above rather than assuming either state.
 
 **Headline in one line (MEASURED):** the conversion gain measured directly at
 ISO 500 and ISO 1000 agrees with what `profile.rs` predicts to **1.03 ± 0.02** and
 **1.04 ± 0.01** of the low-mode plateau. M48c fact 17's derived 2.174× step is
-**refuted**; the shipped single-line gain relation is right across the dual-gain
-switch. Separately and unexpectedly, the **B plane's conversion gain is 0.84× the
-greens' at every ISO**, which `profile.rs` does not model.
+**refuted** — and §4.9 shows that refutation survives every fit gate tested,
+never coming closer than 0.55 to H1. The shipped single-line gain relation is
+right across the dual-gain switch. **The ISO-1000 arm specifically is weaker than
+this line suggests and is gate-dependent (fact 34); ISO 500 is not.** Separately
+and unexpectedly, the **B plane's conversion gain is 0.84× the greens' at every
+ISO**, which `profile.rs` does not model.
 
 ---
 
@@ -64,7 +85,8 @@ reading list was accurate:
   ISO 160: 0.3273 DN/e⁻ against the model's 0.36630, i.e. −10.7%. ISO 50 rows
   likewise. **Both are in the LOW gain mode.** Fact 200 carries the caveat the
   brief flagged: only the **slope** is trustworthy, the **intercept** is inflated
-  by residual scene texture.
+  by residual scene texture. **Two things about this citation I checked rather
+  than assumed, both after the first version of this report** (fact 41).
 - **`M4-fpn-measured.md` §8.** The model-free dark-σ table, the 45% drop at
   ISO 400, and the flat `σ_DN/ISO` plateaus (0.008680 low, 0.002842 high, ±4%).
   Dark σ, not shot noise: it constrains read noise, not conversion gain.
@@ -98,6 +120,20 @@ The synthetic power control `03-power-control.py` is in the same commit.
 data files and this report — landed in commit **`0526972`** ("Fold M55b…") rather
 than in a commit of mine, through no act of mine. See error 13; it changes no
 number in this report.
+
+**Fact 40 (MEASURED). Three further pre-registrations, each committed before its
+script was run**, added after the first version of this report was published, when
+the owner corrected two corpus facts I had taken on trust:
+
+| commit | script | what it fixed before running |
+|---|---|---|
+| **`a4c8abb`** | `11-provenance-recheck.py` | the matched-pair retraction and the CPL boundary; predictions P-A…P-D and criteria C1…C5, including arm E, a suspicion registered *against* my own published result |
+| **`1cdb1eb`** | `12-gate-metric.py` | which fit-quality metric predicts slope error; Q-1…Q-4 and D1…D3, with Q-4 pre-committing to *withdrawing* the ISO-1000 number if the answer went the other way |
+| **`b0c0f92`** | `13-final-gate.py` | the replacement gate, after script 12 disqualified its own selection rule; G1…G3 and predicted membership fixed in advance |
+
+The chain is worth reading in order, because **script 11 falsified part of script
+11's own design and script 12 disqualified script 12's own rule** — both visible
+only because the predictions were committed first. Errors 15–17 record them.
 
 **The estimator, M61-E1 (DERIVED).** Photon transfer from a **temporal**
 adjacent-frame difference, per CFA plane, on raw DN, never demosaiced, never
@@ -277,7 +313,29 @@ the low-mode plateau which is what actually tests the switch:
 
 ‡ post-hoc, dropping the two stacks that failed their own fit (`coffee-bubbles`,
 `wrapped-text-1`). Reported **alongside**, never instead of, the pre-registered
-number.
+number. That drop list was chosen by eye and never stated as a rule; fact 33 now
+states it mechanically and confirms it reproduces exactly.
+
+**Fact 34 (MEASURED). The ISO-1000 arm is gate-dependent and I overstated it.**
+`13-final-gate.py` recomputes both commissioned ISOs under four different fit
+gates. ISO 500 is stable to the fourth decimal; ISO 1000 is not:
+
+| gate | ISO 500 | ISO 1000 |
+|---|---|---|
+| no gate | 1.0113 ± 0.0193 (n2) | 1.2417 ± 0.3173 (n2) |
+| max residual < 25% | 1.0113 ± 0.0193 (n2) | **UNMEASURABLE (n0)** |
+| A/C variant spread < 10% | 1.0113 ± 0.0193 (n2) | 1.2417 ± 0.3173 (n2) |
+| **CONSIST** (fact 33) | 1.0113 ± 0.0193 (n2) | 1.0174 (n1, single stack) |
+
+**ISO 1000 spans 1.0174 to 1.2417 depending on the gate, and vanishes entirely
+under one of them.** The quoted 1.017 is the CONSIST value and rests on a *single*
+stack, `foam`, whose partner is unusable. **ISO 1000 should be read as
+"consistent with the model, one stack, gate-dependent", not as a measurement of
+the same standing as ISO 500.** The one-line headline at the top of this report
+says 1.04 ± 0.01 for ISO 1000; that uncertainty is the internal spread of a single
+stack and does **not** cover the gate dependence. ISO 500, by contrast, is
+identical under every gate tested and rests on two independent stacks that are the
+two best-conditioned fits in the whole ladder.
 
 **Fact 14 (MEASURED).** ISO 400 — the first ISO in high mode, and the one M48c's
 step is anchored to — gives `r_high/r_low = 1.014 ± 0.034` (pre-registered) and
@@ -292,13 +350,14 @@ stack-to-stack spread at ISO 500 as the scale, H1's 0.460 is **15 σ** away
 ((1.046 − 0.460)/0.038). H2 (the step attributed the other way) is refuted by the
 same numbers and by the ISO-160 control landing at 0.99.
 
-### 3.3 The same-subject pairs straddling the switch — the cleanest test
+### 3.3 The matched pair straddling the switch — retracted from three to one
 
-**Fact 16 (MEASURED).** The corpus contains two pairs of stacks of the **same
-subject photographed at ISO 100 and at ISO 400**, minutes apart, straddling
-`second_base_iso`, which I found in the recon pass and which no prior milestone
-has used. The two pairs are **not equally good**, and my first draft of this
-section over-claimed by treating them as equivalent:
+**Fact 16 (MEASURED, SUPERSEDED — see fact 31).** My brief told me the corpus
+held **two** same-subject pairs straddling `second_base_iso`, and I reported them
+as such. **The operator has since said that only one of them is a pair at all.**
+The corrected version is fact 31; the original claim is left here per rule 15,
+because two of the three legs of this arm were void and a reader needs to see
+which numbers were withdrawn. What I originally published:
 
 | pair | ISO | exposure | ISO·s | G1 mean, frame 0 | level match |
 |---|---|---|---|---|---|
@@ -307,32 +366,75 @@ section over-claimed by treating them as equivalent:
 | `wrapped-text-2` | 400 | 1/40 s | 10.0 | 1751.13 | **19.5% apart** |
 | `wrapped-text-1` | 100 | 1/15 s | 6.7 | 1465.09 | |
 
-Only the **`bee` pair is level-matched**; `wrapped-text` is a same-subject pair at
-different signal levels, and its own EXIF ratio (1.50) does not reproduce its
-measured level ratio (1.195) either. The gain ratio between a pair is a direct
-measurement of the switch:
+I had already noticed the `wrapped-text` level mismatch and flagged the pairing as
+conditional and unverified — but I left it in as a supporting number instead of
+withholding it, which is the actual mistake (error 14).
 
-| pair | measured gain ratio | H0 | H1 |
-|---|---|---|---|
-| **`bee-2` / `bee-3` (greens)** | **4.0486** | 4.000 | 1.840 |
-| `bee-2` / `bee-3` (4 planes) | 4.0460 | 4.000 | 1.840 |
-| `wrapped-text-2` / `wrapped-text-1` (greens) | 4.3895 † | 4.000 | 1.840 |
+**Fact 31 (MEASURED).** Owner-verified pairing, `13-final-gate.py` and
+`11-provenance-recheck.py`:
 
-† `wrapped-text-1` also fails its own fit (§4.4). The `bee` pair is the
-trustworthy one and it lands **1.2% from H0**.
+| claimed pair | verdict | why |
+|---|---|---|
+| **`bee-2` (400) / `bee-3` (100)** | **CONFIRMED** | same subject, same angle, same depth |
+| `bee-2` / `bee-1` | **VOID** | `bee-1` is a **different angle and depth** |
+| `wrapped-text-2` / `wrapped-text-1` | **VOID** | both "slightly different angles / depth" |
 
-**Fact 17 (ARGUED).** What the same-subject pairing buys is *not* validity — each
-stack's PTC slope is fitted independently and needs no partner — but the
-cancellation of the texture-leakage bias of fact 27, because the same scene
-contributes the same leakage on both sides. **That cancellation is conditional on
-the subject and the lighting having held still between the two captures, which is
-unverified.** The owner has put the question to the camera's operator and it is
-open. The circumstantial evidence is good — `bee-2` at 11:54:44 and `bee-3` at
-11:58:28, plane means 0.30% apart and p99.9 within 0.2% — but it is circumstantial.
-If the scenes did drift, this arm degrades to two ordinary ladder points, which
-already agree with H0 (fact 12).
+**Exactly one genuine matched pair exists, not three.** The surviving measurement:
+
+| pair | measured gain ratio | H0 | H1 | status |
+|---|---|---|---|---|
+| **`bee-2` / `bee-3` (greens)** | **4.0486** — **+1.22% from H0** | 4.000 | 1.840 | **stands** |
+| `bee-2` / `bee-3` (4 planes) | 4.0460 | 4.000 | 1.840 | stands |
+| ~~`wrapped-text-2` / `wrapped-text-1`~~ | ~~4.3895~~ | 4.000 | 1.840 | **VOID — not a pair** |
+| ~~`bee-2` / `bee-1`~~ | ~~4.0516~~ | 4.000 | 1.840 | **VOID — not a pair** |
+
+The void ratios are printed in `data/provenance-recheck.txt` so the retraction is
+auditable rather than silent, and they must not be cited as evidence.
+
+**Fact 32 (MEASURED).** Two things in that table are worth stating because they
+cut in opposite directions and I would rather report both than the flattering one.
+The void `bee-2`/`bee-1` ratio (4.0516) agrees with the genuine `bee-2`/`bee-3`
+ratio (4.0486) to **0.07%**, even though `bee-1` is a different angle and depth —
+which is what fact 17 predicts, since each slope is fitted independently and the
+pairing was never load-bearing for validity. But the void `wrapped-text` ratio was
+**9.7% from H0 where the genuine pair is 1.2%**, so an unmatched pair *can* go
+badly wrong. **The first observation may not be used to rehabilitate the second.**
+I only know which pair behaved well after being told which was genuine, so this is
+a diagnostic, not a defence. (`wrapped-text-1` also fails the fit gate on its own
+terms — split-half 10.3% — so its error is over-determined and I cannot cleanly
+attribute it to the geometry mismatch.)
+
+**Fact 17 (ARGUED, and now the load-bearing claim of this section).** What the
+same-subject pairing buys is *not* validity — each stack's PTC slope is fitted
+independently and needs no partner — but the cancellation of the texture-leakage
+bias of fact 27, because the same scene contributes the same leakage on both
+sides. **That cancellation is conditional on the subject and the lighting having
+held still between the two captures.** The operator has now confirmed the
+*framing* held for `bee-2`/`bee-3`; whether the *lighting* did is still not
+established. The circumstantial evidence is good — `bee-2` at 11:54:44 and
+`bee-3` at 11:58:28, plane means 0.30% apart and p99.9 within 0.2% — but it is
+circumstantial. If the scenes did drift, this arm degrades to two ordinary ladder
+points, which already agree with H0 (fact 12).
 
 ### 3.4 What this implies for shipped constants — described, not made
+
+**Fact 41 (MEASURED).** Two checks on the M25 citation that P4b's disagreement
+claim rests on, run by `15-verify-report.py` against M25's own text rather than
+taken on trust:
+
+1. **M25 measured the same stack I did.** M25's ISO-160 PTC row is
+   `` `109MSDCF` (**control**) | 160 | 0.3273 | −10.7% ``
+   (`M25-simulator-measured.md:837`). That is the *identical* stack M61 uses as
+   its control, so the 0.3273 vs 0.3622 disagreement is not two milestones
+   measuring different data — it is **two estimators disagreeing by 10.7% on the
+   same bytes**. That makes P4b sharper and more worth resolving than I first
+   wrote it.
+2. **M25's fact 200 carries a post-fold correction, and it does not reach this
+   number.** M25 records that `g = ISO/436.8` was wrong by 2.05× below ISO 100,
+   which moved its Gate 1c (ISO 50) figures. The same note states "Gates 1a, 1b
+   and 2 run at ISO 160 and are unaffected". I had cited a corrected fact without
+   checking the correction's scope; having now checked it, the ISO-160 value I
+   compare against stands.
 
 **Fact 18 (MEASURED).** On green, across 10 fit-passing stacks and a 20× ISO
 range, `r = 0.9906 ± 0.0178`, i.e. `gain_divisor = 440.9 ± 7.9` against the
@@ -474,7 +576,80 @@ correlation caused the B deficit, B/green must climb towards 1.0 with tile size:
 It climbs by 1–3% and plateaus near 0.85. **Correlation cannot supply the missing
 16%.** The B deficit is in the data.
 
-### 4.8 What I did *not* check
+### 4.8 "The polarizer explains it" — the CPL boundary, tested not asserted
+
+**Fact 35 (MEASURED).** The CPL is on six stacks and off five, with one unknown,
+so the sceptical question is whether the polarizer is **aligned with the gain-mode
+split** — if it were, `r_high/r_low` would confound a transmission change with the
+switch. It is not aligned. `11-provenance-recheck.py`:
+
+| side of the gain switch | CPL ON | CPL off | unknown |
+|---|---|---|---|
+| low (ISO < 400) | 3 (`bee-1`, `bee-3`, `wrapped-text-1`) | 2 (`119MSDCF`, `109MSDCF`) | 1 (`coffee-bean`) |
+| high (ISO ≥ 400) | 3 (`bee-2`, `wrapped-text-2`, `coffee-bubbles`) | 3 (`112MSDCF`, `113MSDCF`, `foam`) | 0 |
+
+**Both sides are mixed in nearly the same proportion**, so the CPL cannot generate
+a spurious step. Computing the switch ratio *within* each CPL population, under
+the CONSIST gate: **CPL-ON only 1.0100, CPL-off only 1.0229, all stacks 1.0189.**
+They agree with each other and with H0, and none of them approaches H1.
+
+**Fact 36 (MEASURED).** The commissioned ISO-500 headline rests on `112MSDCF` and
+`113MSDCF`, both **CPL-off**, and the control `109MSDCF` is **CPL-off**. So the
+control and the strongest arm sit on the *same* side of the polarizer boundary,
+which is the configuration that needs no correction at all. The ISO-1000 arm is
+the one that straddles: `coffee-bubbles` is CPL-ON and `foam` is CPL-off, which is
+a second independent reason — beyond fact 34's gate dependence — to treat ISO 1000
+as the weak arm.
+
+**Fact 37 (MEASURED, and it is a null with a caveat I must not bury).** The only
+direct test of "does the CPL perturb a slope" available in this corpus is the one
+ISO with stacks on both sides — ISO 1000 — and **both of its legs fail the fit
+gate** (`coffee-bubbles` split-half 1105%, `foam` max residual 42%). So the direct
+test is **not available**: I pre-registered it as weak and it turned out to be
+void. The indirect evidence is fact 35's agreement between CPL populations.
+
+What I can see is a residual worth recording. In low mode, the CPL-ON stacks
+average `r = 0.9729` (gated) and the CPL-off stack reads `0.9887` — a **1.6%**
+offset in the direction "CPL-ON reads lower". It passed my pre-registered
+invariance criterion, but only because the ON group's spread was inflated by
+`wrapped-text-1`; once gated, the ON group agrees internally to 0.07% and the 1.6%
+gap is *resolved*, not noise. **It is also perfectly degenerate with ISO**: every
+CPL-ON low-mode stack is at ISO 100 and the CPL-off one is at ISO 160, so "CPL
+effect" and "ISO-100 effect" cannot be separated in this corpus at all. I report
+it as an unresolved 1.6% and name both candidates (question 7).
+
+### 4.9 "Your answer depends on which stacks you threw away"
+
+**Fact 33 (MEASURED).** The original report dropped `coffee-bubbles` and
+`wrapped-text-1` by eye and called them "the stacks that failed their own fit"
+without stating a rule — which is not good enough, and `12-gate-metric.py` was
+written to find the rule. It falsified two of its own predictions on the way
+(errors 15 and 16). The gate that survives is the conjunction of the two
+*consistency* metrics, **`half_pct < 5%` AND `ac_pct < 10%`** (M61 gate
+"CONSIST"), chosen by what a gate must do rather than by rank correlation:
+
+- it must **reject** a stack whose own halves disagree, since that is direct
+  evidence the slope is not reproducible;
+- it must **retain** the control, which is known accurate to 1.1%;
+- it must **not** rest on max residual, because the control (18.2%) and
+  `119MSDCF` (44.7%) score badly there while being clean on every other metric.
+
+CONSIST drops **exactly** `{coffee-bubbles, wrapped-text-1}` and retains the other
+ten, reproducing the original post-hoc list. So the original choice was
+principled; it was merely unstated.
+
+**Fact 38 (MEASURED). The refutation of H1 does not depend on the gate.** Across
+all four gates tested — none, max-residual, A/C-spread, CONSIST — `r_high/r_low`
+spans **1.0189 to 1.1168**. Its **nearest approach to H1 = 0.460 is 0.5589**,
+and its furthest excursion from H0 = 1.000 is 0.1168. Every gate, including no
+gate at all, lands an order of magnitude closer to H0 than to H1.
+
+**Fact 39 (MEASURED).** The "no change to `gain_divisor`" conclusion is likewise
+gate-independent. Implied divisor against the shipped **436.8**: no gate 427.3,
+residual gate 442.3, A/C gate 427.3, CONSIST 440.9. All within ~2%, with the
+shipped value inside the observed spread in every case.
+
+### 4.10 What I did *not* check
 
 **Fact 30 (ARGUED).** No ISO above 1000 was measured — the corpus has none. The
 high-mode arm rests on 400, 500 and 1000. A gain relation that is straight from
@@ -585,7 +760,7 @@ reference with its surrounding context and read them one at a time.
 `src/10-fix-refs.py` restores them, verified against M48c's own headers, and
 asserts that each replacement fires exactly once. This is the same class of
 mistake as error 1: a mechanical transformation applied one scope too wide. It
-cost the least of my thirteen errors to fix and would have been the most
+cost the least of my twenty errors to fix and would have been the most
 expensive to publish.
 
 **Error 13 — I lost my own commit to another agent's `git add -A`.** I staged
@@ -603,6 +778,116 @@ another agent's committed work with it, and this project has already lost
 uncommitted work once to a `git checkout --`. A wrong commit message is cheaper
 than a destroyed tree. It is my fault for leaving a gap between `git add` and
 `git commit`: in a shared tree those have to be one invocation.
+
+**Error 14 — I noticed the `wrapped-text` pair was wrong and published it
+anyway.** Checking the corpus levels, I found `wrapped-text-1`/`-2` sat 19.5%
+apart where the `bee` pair sat 0.30% apart, and that their EXIF exposure ratio
+(1.50) did not reproduce their measured level ratio (1.195). I wrote that up
+honestly, marked the pairing "conditional and unverified" — **and then left the
+4.3895 ratio in the evidence table as a supporting number.** The operator has now
+confirmed it was never a matched pair at all. The failure is not that I missed the
+signal; it is that having found it I *hedged* instead of *withholding*. A number I
+have just argued is untrustworthy does not belong in a table of evidence, however
+carefully daggered. Fact 31 retracts it and fact 16 is left in place, superseded,
+so the retraction is visible.
+
+**Error 15 — my prediction Q-1 was falsified.** I predicted in
+`12-gate-metric.py` that max PTC bin residual would correlate *weakly* with slope
+error, reasoning that one bad bin cannot move a slope fitted over many. It came
+out at rho = 0.746, the second strongest of four metrics. The reasoning was wrong:
+the stacks with one catastrophic bin mostly turn out to have several.
+
+**Error 16 — my prediction Q-2 was falsified.** I predicted split-half
+disagreement would be the *best* predictor. It ranked third of four (rho = 0.682).
+Both Q-1 and Q-2 are left in the committed docstring where I wrote them.
+
+**Error 17 — the selection rule I pre-registered was disqualified by its own
+output, and its ground-truth proxy was degenerate.** `12-gate-metric.py` declared
+that the metric with the highest rank correlation would be the gate. That rule
+chose `ac_pct`, and a gate at `ac_pct < 10%` **retains `coffee-bubbles`** — the
+single most broken stack in the ladder, split-half 1105%, reading `r = 1.466`
+where its ISO partner reads 1.017. A rule that cannot reject that is not a gate,
+whatever its correlation.
+
+Worse, reading the output showed the proxy itself was broken. I scored each stack
+by its deviation from its own ISO-group median, but **the median of two numbers is
+their midpoint, so both members of a two-member group receive an identical
+deviation by construction** — and four of the five groups have n = 2. Within those
+groups the proxy has *zero* discriminating power: `coffee-bubbles` and `foam` both
+score 0.2243 despite one being clean and the other broken. The rank correlations
+therefore mostly measure which ISO group a stack sits in, not whether that stack
+is the bad one. Only ISO 100 (n = 3) discriminates at all. **rho was never the
+right instrument and I built a whole selection rule on it.** Fact 33 replaces it
+with a gate chosen by what a gate must *do*, which reproduces the original drop
+list exactly — so the conclusion was never at risk, but the justification I
+offered for it was worthless for two independent reasons.
+
+**Error 18 — I labelled a claim ARGUED on a premise I had not checked.** I wrote
+that the CPL "is in the optical path for **every frame in the corpus**" and
+concluded it "does not touch any number in this report". The physics of the second
+half is still right, and I have left it standing. But the first half was simply
+false — the polarizer is on six stacks, off five, and unknown on one — and I
+asserted it flatly because the brief did. The correct move on receiving an
+unverified corpus fact is to record it as unverified and design a check, which is
+what §4.8 now does. **The failure mode is specific and worth naming: a sound
+argument resting on an unexamined premise reads exactly like a measurement, and
+the ARGUED label did not save me, because I applied it to the inference and not to
+the premise.**
+
+**Error 19 — I duplicated a block of proposed facts and my own verifier could not
+see it.** Rewriting §7 to add P8 and P9, I replaced a region ending at P4 with a
+region ending at P9, and left the original P4b–P7 sitting underneath. The report
+carried **two copies** of four proposed facts, one of them the stale
+pre-correction wording of P4b. `15-verify-report.py` passed the document in that
+state, because it checked that fact, discipline, question and error headers were
+unique and that every reference resolved — and a duplicated block violates none of
+those. I found it only because an unrelated edit reported an ambiguous match.
+
+The lesson generalises past this document: **a consistency checker validates the
+invariants you thought of, and silently blesses everything else.** The check now
+also asserts the `P` labels are unique, which is one more invariant and still not
+a proof. A duplicated *paragraph* inside a fact would still pass.
+
+**Two near-misses from the same verification pass, recorded because they were my
+errors of process even though neither reached the report.** The checker first
+reported that `M25 fact 200` and `discipline 326` did not resolve. Both citations
+were in fact correct — `fact 200` is at `M25-simulator-measured.md:837` and
+discipline 326 is quoted verbatim from `M48c-defect-layer-measured.md:219` — and
+the failures were bugs in my checker: a reference window that used a non-greedy
+quantifier and therefore matched *zero* characters of context, and a literal-space
+pattern that could not span a line wrap. The non-greedy window was the worse of
+the two, because it was silently over-excluding **my own error 13** as though it
+were an external citation. Had I trusted the first run, I would have "fixed" two
+correct citations. **A verifier that fails is cheap; a verifier that passes for
+the wrong reason is what costs you.**
+
+**Error 20 — and I made error 19's mistake twice more, in the paragraphs
+disclosing error 19.** Inserting the text above, I again replaced a heading line
+with a new block and dropped the heading it was anchored to, deleting **Error
+18**'s own header; then, writing the discipline that tells me not to do that, I
+did it a third time and deleted **Discipline 10**'s. Both were caught by
+re-reading the region immediately after the edit, so neither survived into a
+commit — but the repetition is the point. *This specific edit pattern* — replacing
+an anchor string that begins a block, with a block that does not re-emit the
+anchor — has now failed **four times in one document**: errors 12 and 13, and
+twice here. It is not carelessness about a particular sentence, it is a defective
+habit, and the fix has to be a mechanical guard rather than an intention.
+Discipline 11 states it, and `16-reorder-error18.py` is the first thing in this
+milestone to actually implement it: it moves a block only if the header multiset,
+the non-empty line multiset and the character count are all provably unchanged.
+
+There is a fifth instance I should record honestly, because it is the one my
+tooling caught rather than my eyes. After adding the duplicate-`P`-label check
+from error 19, the verifier reported a **duplicate Error 18 header**. It was a
+false positive — the second "header" was the inline reference `**Error 18**` in
+the paragraph above, which a line wrap had pushed to column zero — but a false
+positive that took a real look to dismiss, and the fix (require the number to be
+followed by an em dash, a paren or a period, which `**Error 18**` is not) also
+made the check strictly sharper. **The tightened pattern immediately found that
+`**Question N.**` headers had never been matched at all**, so the question block
+had been silently reporting `n=8` from a looser pattern that would equally have
+counted any inline `**Question 3**` reference. Every check in this file has now
+been wrong at least once.
 
 ---
 
@@ -648,6 +933,44 @@ regex cannot tell them apart. Renumber the headers mechanically, then dump every
 reference with its context and read them. Error 12 is what happens otherwise, and
 `corpus_lint` cannot see it.
 
+**Discipline 8 (ARGUED).** Following from that: **once a report is committed, new
+facts are appended with new numbers, never inserted.** Facts 31–39 in this report
+are therefore *not* in document order, which is mildly ugly and completely safe —
+no existing citation, internal or external, shifted when they were added. The
+alternative is another renumbering cascade over a document that other reports
+already cite. Ugly and stable beats tidy and fragile.
+
+**Discipline 9 (ARGUED).** **A fit gate must be chosen by what it has to do, not
+by a correlation.** Rank the candidate gates against fixed requirements — reject
+the stacks known to be irreproducible, retain the stack known to be accurate — and
+check the membership it produces before adopting it. The metric that won my rank
+correlation (error 17) would have kept a stack with 1105% split-half
+disagreement. Relatedly, a same-group median is **not** a usable error proxy for
+groups of two, because both members get the same deviation by construction.
+
+**Discipline 10 (ARGUED).** **An unverified corpus fact must be recorded as
+unverified and then checked, not restated as background.** Both corrections that
+hit this milestone — the matched pairs and the polarizer — arrived as confident
+statements in a brief, and I passed both through into a report as settled context.
+Provenance that changes the meaning of a comparison (what was in the optical path,
+whether two stacks show the same scene) is *data*, and belongs under the same
+labelling discipline as a measurement. Where it cannot be checked, the arm that
+depends on it is confounded and must be labelled so — see fact 37, where the CPL
+and ISO are perfectly degenerate and I could not separate them.
+
+**Discipline 11 (ARGUED).** **When replacing a block of text that begins with a
+heading, re-emit the heading in the replacement.** Errors 12/13, 19 and 20 in this
+report are one defect three times: an anchored replacement whose new text did not
+restore its own anchor, which either deletes a header or leaves the block that
+followed it duplicated underneath. No reference check catches this — the
+references stay valid throughout, which is exactly why `15-verify-report.py`
+passed the report while it carried two copies of four proposed facts. The guard
+has to be structural rather than a resolution to be careful: **assert that the set
+of headings before and after an edit differs only by what you meant to add.** It
+failed twice more while I was drafting this very discipline (error 20), which is
+the most honest evidence I can offer that "be careful" is not a control.
+`16-reorder-error18.py` implements the guard.
+
 ### Open questions
 
 **Question 1.** What is the B plane's 0.84? A per-channel digital raw scale
@@ -672,11 +995,30 @@ light trend: `bee-2`, captured between them at 11:54:44, matches `bee-3` to 0.30
 **Question 5.** Why does `wrapped-text-1` (ISO 100) fit so badly — 35% residuals,
 a 10% split-half, a 210–2286 DN level range — when its ISO-400 partner
 `wrapped-text-2` fits to 5%? Both are undocumented stacks no milestone had used
-before M61.
+before M61. Now partly answered: the operator reports the two `wrapped-text`
+stacks are at different angles and depths (fact 31), so they are not a partner
+pair and the comparison in this question is weaker than it looks. The bad fit
+itself is still unexplained.
 
 **Question 6.** `112MSDCF` and `113MSDCF`, the two ISO-500 stacks, disagree by
 2.7% (0.9976 vs 1.0249 on green). That is larger than either stack's internal
-spread and is currently unexplained.
+spread and is currently unexplained. Both are CPL-off, so the polarizer is not a
+candidate.
+
+**Question 7.** In low mode, the CPL-ON stacks read `r = 0.9729` and the CPL-off
+stack reads `0.9887` — a resolved 1.6% offset (fact 37). **Is that the polarizer
+or is it ISO 100?** The two are perfectly degenerate in this corpus: every
+CPL-ON low-mode stack is at ISO 100 and the only CPL-off low-mode stack in the
+gated set is at ISO 160. Nothing in the current corpus can separate them. One
+stack shot at ISO 160 with the CPL on, or at ISO 100 with it off, would settle it
+in a single capture — and this is the only question here that new data would close
+cheaply.
+
+**Question 8.** Is the ISO-1000 arm real? It rests on a single stack (`foam`)
+whose partner is unusable, it moves from 1.0174 to 1.2417 depending on the fit
+gate, and it vanishes entirely under one gate (fact 34). It also straddles the CPL
+boundary (fact 36). Any future ISO-1000 capture — CPL state recorded, static
+subject — would replace the weakest arm in this report.
 
 ---
 
@@ -686,23 +1028,35 @@ spread and is currently unexplained.
   at ISO 500 is **1.011 ± 0.019** of what `profile.rs` predicts, and at ISO 1000
   **1.017**; as a ratio to the low-mode plateau, **1.032 ± 0.021** and
   **1.038 ± 0.011**. The shipped single-line gain relation is correct across the
-  dual-gain switch to within ~4%.
+  dual-gain switch to within ~4%. **The ISO-500 number is stable under every fit
+  gate tested; the ISO-1000 number is not** — it rests on one stack and moves to
+  1.242 ungated (fact 34). Quote ISO 500 as the result and ISO 1000 as support.
 - **P2 (MEASURED).** M48c fact 17's derived 2.174× conversion-gain step above
   ISO 400 is **refuted**. H1 predicted 0.460; every high-mode arm measured
   1.00–1.05, and a 0.460 planted into the real frames of the same stacks was
-  recovered as 0.480–0.512.
-- **P3 (MEASURED).** Two matched-level stack pairs straddling the switch
-  (`bee-2`/`bee-3`, `wrapped-text-2`/`wrapped-text-1`) measure a gain ratio of
-  **4.049** against an ISO ratio of 4.000. H1 predicted 1.840.
+  recovered as 0.480–0.512. **The refutation is gate-independent**: across four
+  fit gates including no gate at all, `r_high/r_low` never comes closer than
+  **0.559** to H1 and never departs H0 by more than 0.117 (fact 38).
+- **P3 (MEASURED, RESTATED — the first version of this was wrong).** **One**
+  owner-verified matched pair straddling the switch, `bee-2`/`bee-3`, measures a
+  gain ratio of **4.0486** against an ISO ratio of 4.000 (+1.22%). H1 predicted
+  1.840. My earlier claim of **two** pairs was withdrawn after the operator
+  confirmed `wrapped-text-1`/`-2` are at different angles and depths and `bee-1`
+  is a different angle and depth from `bee-2` (fact 31). Those ratios are void.
 - **P4 (MEASURED).** On green, `gain_divisor = 440.9 ± 7.9` against the shipped
-  436.8, over 10 stacks and a 20× ISO range. **No change is warranted.**
+  436.8, over 10 stacks and a 20× ISO range. **No change is warranted**, and that
+  conclusion is gate-independent: every gate tested implies 427–442 (fact 39).
 - **P4b (ARGUED).** M61 and M25 fact 200 **disagree** at ISO 160: 0.3622 vs
-  0.3273 DN/e⁻ on the same camera and the same kind of data, a 10.7% gap. M61's
-  value should be preferred, because M61-E1 selects on a covariate that is
-  statistically independent of its own estimator (fact 3) and because it carries
-  a real-data plant that recovers a halved gain to 2.5% (fact 9), neither of which
-  M25's percentile estimator has. This is an argument, not a re-measurement of
-  M25's script, and the orchestrator should treat it as one.
+  0.3273 DN/e⁻ — **on the same stack, `109MSDCF`**, which was M25's control as
+  well as mine (fact 41). A 10.7% gap between two estimators on identical bytes,
+  not two milestones measuring different data. M61's value should be preferred,
+  because M61-E1 selects on a covariate that is statistically independent of its
+  own estimator (fact 3) and because it carries a real-data plant that recovers a
+  halved gain to 2.5% (fact 9), neither of which M25's percentile estimator has.
+  This is an argument, not a re-measurement of M25's script, and the orchestrator
+  should treat it as one. **It is also the cheapest open item here to settle
+  definitively**: both estimators are committed, and both run on one stack that is
+  already on disk.
 - **P5 (MEASURED).** The **B plane's conversion gain is 0.840 ± 0.011 of the
   greens'**, at every ISO from 50 to 1000, in both gain modes; R is
   0.985 ± 0.017; G1 and G2 agree to 0.16%. `profile.rs` models one gain for all
@@ -713,3 +1067,17 @@ spread and is currently unexplained.
 - **P7 (ARGUED).** The tripwire
   `the_gain_relation_is_still_continuous_across_the_dual_gain_switch` should stay
   green, now on illuminated evidence rather than on absence of evidence.
+- **P8 (MEASURED).** **The corpus is only partly polarized.** The CPL is
+  confirmed on `bee-1/2/3`, `wrapped-text-1/2` and `coffee-bubbles`; reported off
+  on `109MSDCF`, `112MSDCF`, `113MSDCF`, `119MSDCF` and `foam`; and **unknown on
+  `coffee-bean`**. This corrects an earlier statement of mine that it was on every
+  frame. M54's clip mask and anything else reading specular or clipping statistics
+  needs this table, not a single assumption. The CPL is **not** aligned with the
+  dual-gain split — both sides are mixed in nearly equal proportion — so it cannot
+  manufacture a step (fact 35).
+- **P9 (ARGUED).** A residual **1.6%** offset between CPL-ON and CPL-off stacks in
+  low mode is **perfectly degenerate with ISO 100 vs ISO 160** in this corpus and
+  cannot be separated by any reanalysis (fact 37, question 7). One capture at ISO
+  160 with the CPL on, or ISO 100 with it off, would settle it. Until then, no
+  claim in the corpus that straddles the CPL boundary should be quoted below the
+  2% level.
