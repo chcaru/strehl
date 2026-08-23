@@ -1,0 +1,52 @@
+{
+ "x2": {
+  "parabola_raw": {
+   "calib_median": 0.4568797629890461,
+   "within2x": 0.37545689361079976,
+   "n": 20519
+  },
+  "parabola_baseline": {
+   "calib_median": 0.47907162177379425,
+   "within2x": 0.3940737852721867,
+   "n": 20519
+  },
+  "log_raw": {
+   "calib_median": 0.6640900400330563,
+   "within2x": 0.4962230128173888,
+   "n": 20519
+  },
+  "log_baseline": {
+   "calib_median": 0.7103695217543902,
+   "within2x": 0.5119157853696574,
+   "n": 20519
+  },
+  "margin_total": 0.2534897587653441,
+  "margin_from_baseline": 0.022191858784748164,
+  "margin_from_log": 0.2312978999805959
+ },
+ "x4": {
+  "parabola_raw": {
+   "calib_median": 0.11526102496636959,
+   "within2x": 0.04973374531588982,
+   "n": 30422
+  },
+  "parabola_baseline": {
+   "calib_median": 0.12223621363352472,
+   "within2x": 0.05588061271448294,
+   "n": 30422
+  },
+  "log_raw": {
+   "calib_median": 0.31727288940724163,
+   "within2x": 0.2593846558411676,
+   "n": 30422
+  },
+  "log_baseline": {
+   "calib_median": 0.36820513673795424,
+   "within2x": 0.3147722043258168,
+   "n": 30422
+  },
+  "margin_total": 0.25294411177158466,
+  "margin_from_baseline": 0.00697518866715513,
+  "margin_from_log": 0.24596892310442953
+ }
+}

@@ -1,0 +1,66 @@
+{
+ "cells": {
+  "m33_40k|p5_decimated|median_of_ratios": {
+   "parabola": 0.4568797629890461,
+   "log_baseline": 0.7103695217543902,
+   "n": 20519
+  },
+  "m33_40k|p5_decimated|ratio_of_means": {
+   "parabola": 0.42635168113271854,
+   "log_baseline": 0.6776750350206223,
+   "n": 20519
+  },
+  "m33_40k|min_dense|median_of_ratios": {
+   "parabola": 0.4568797629890461,
+   "log_baseline": 0.7014381929806798,
+   "n": 20519
+  },
+  "m33_40k|min_dense|ratio_of_means": {
+   "parabola": 0.42635168113271854,
+   "log_baseline": 0.6673639758234435,
+   "n": 20519
+  },
+  "m35_all|p5_decimated|median_of_ratios": {
+   "parabola": 0.4357294688639507,
+   "log_baseline": 0.6789215771840031,
+   "n": 535467
+  },
+  "m35_all|p5_decimated|ratio_of_means": {
+   "parabola": 0.40781930177237624,
+   "log_baseline": 0.6491264324026709,
+   "n": 535467
+  },
+  "m35_all|min_dense|median_of_ratios": {
+   "parabola": 0.4357294688639507,
+   "log_baseline": 0.6697031660083864,
+   "n": 535467
+  },
+  "m35_all|min_dense|ratio_of_means": {
+   "parabola": 0.40781930177237624,
+   "log_baseline": 0.6386344926819658,
+   "n": 535467
+  }
+ },
+ "attribution": {
+  "statistic": {
+   "parabola": -0.03052808185632755,
+   "log_baseline": -0.03269448673376785
+  },
+  "baseline": {
+   "parabola": 0.0,
+   "log_baseline": -0.00893132877371039
+  },
+  "pixel_set": {
+   "parabola": -0.021150294125095392,
+   "log_baseline": -0.03144794457038702
+  }
+ },
+ "m33_published": {
+  "parabola": 0.457,
+  "log": 0.71
+ },
+ "m35_script02": {
+  "parabola": 0.549,
+  "log": 0.841
+ }
+}

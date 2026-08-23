@@ -1,0 +1,32 @@
+{
+ "119MSDCF": {
+  "n_frames": 33,
+  "f_marked": 5.6,
+  "iso": 50,
+  "g": 0.11446886446886446,
+  "rn_e": 4.2,
+  "decode_s": 18.0,
+  "signal_median": 1067.0,
+  "snr_median": 96.4557113647461,
+  "frac_below_snr10": 0.0,
+  "argmax_p05": 4,
+  "argmax_median": 15,
+  "argmax_p95": 30,
+  "frac_argmax_at_boundary": 0.0738210678100586
+ },
+ "112MSDCF": {
+  "n_frames": 79,
+  "f_marked": 11.0,
+  "iso": 500,
+  "g": 1.1446886446886446,
+  "rn_e": 1.47,
+  "decode_s": 44.7,
+  "signal_median": 186.0,
+  "snr_median": 12.663217544555664,
+  "frac_below_snr10": 0.29105567932128906,
+  "argmax_p05": 11,
+  "argmax_median": 45,
+  "argmax_p95": 66,
+  "frac_argmax_at_boundary": 0.020781517028808594
+ }
+}

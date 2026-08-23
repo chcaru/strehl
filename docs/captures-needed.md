@@ -432,6 +432,34 @@ exactly the number nobody has.
 If it is convenient, a third bracket at **marked f/8** makes it a curve rather
 than a pair.
 
+### Added by M35 — frame count is now load-bearing, and it settles a second question
+
+**This same shoot also answers question 70**, but only if the brackets are
+**denser than normal**. Shoot **at least 2.5× your usual frame count** for the
+subject — roughly **80–120 frames** rather than 30–40 — at each aperture.
+
+The reason is a gate M33 wrote and M35 applied. A dense bracket is used as its own
+ground truth by decimating it and asking what the sparser version lost; that is
+honest only if the dense grid's **own** sampling deficit is much smaller than the
+one being measured. `coffee-bean` (105 frames) clears it at **3.62×**.
+[M35](research/M35-fit-generality-measured.md) measured the two existing stacks
+that would otherwise have answered question 70 and **both failed**:
+
+| stack | frames | marked f | headroom | |
+| --- | --- | --- | --- | --- |
+| `119MSDCF` | 33 | f/5.6 | **2.18×** | ❌ too coarse to be its own reference |
+| `112MSDCF` | 79 | f/11 | **2.10×** | ❌ too coarse to be its own reference |
+
+So the aperture question cannot be answered from what is already on disk, and the
+shortfall is frames, not light. `119MSDCF` also has **7.38%** of its pixels
+peaking at the very edge of the bracket, which means the 33 frames did not cover
+the subject's depth at all.
+
+Practically: pick a subject shallow enough that 100 frames still covers it
+comfortably end to end, and let the bracket run past the subject on both sides.
+Depth coverage and frame density are both required; neither substitutes for the
+other.
+
 ---
 
 ## 8. Tilted planar target — REQUESTED, cheap
