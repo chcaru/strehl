@@ -371,6 +371,7 @@ mod tests {
     #[test]
     fn the_model_is_checked_against_measured_dark_sigma_at_every_iso() {
         let p = by_model("ILCE-7CM2").unwrap();
+        let mut checked = 0;
         for (iso, measured_dn, expected_ratio) in DARK_SIGMA_RMS_DN {
             // A dark frame is S = 0, so sigma reduces to RN_e * g.
             let model_dn = p.noise_model(iso, levels()).sigma(CfaPlane::R, 0.0);
@@ -382,7 +383,17 @@ mod tests {
                 100.0 * (ratio - 1.0),
                 100.0 * (expected_ratio - 1.0)
             );
+            checked += 1;
         }
+        // Rule 36: prove the loop ran. An empty or truncated table would
+        // otherwise pass this test in silence, which is how a no-carve-outs
+        // test quietly becomes a carve-out.
+        assert_eq!(checked, 11, "every measured ISO must be checked");
+        assert!(
+            DARK_SIGMA_RMS_DN.iter().any(|(iso, _, _)| *iso < 400.0)
+                && DARK_SIGMA_RMS_DN.iter().any(|(iso, _, _)| *iso >= 400.0),
+            "both gain modes must be represented"
+        );
     }
 
     /// The `base_iso` fix, confirmed from a route that did not exist when it was

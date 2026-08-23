@@ -312,6 +312,36 @@ the constant by brute-force grid search from the measured table, so the
 *derivation* is tested and not just the number, and pins the ±5.3% residual
 spread that says how many digits mean anything.
 
+### 5.1 Rules 33–36 landed while this milestone was in flight
+
+Four new rules were folded into `AGENTS.md` between my first commit and my last.
+I re-read the tests against them rather than assuming they were compatible.
+
+- **Rule 33** (*no `Compiling` line, no evidence*; *after any restore set
+  `LastWriteTime`*). My negative control already set `LastWriteTime` after the
+  `Copy-Item` restore and already checked for the `Compiling` line — that hazard
+  was in my brief. But my final workspace run had *not* been forced. I re-ran it
+  with `cargo clean -p strehl-core`, read the four `Compiling` lines, and only
+  then recorded 187. **Compliant, after a correction.**
+- **Rule 34** (*a plant that supplies its own noise constant cannot detect that
+  constant being wrong*). Not applicable — there is no plant here. The
+  independent term is real measured data through a second decoder.
+- **Rule 35** (*a test whose subject and object are the same value has no power
+  to fail*). This is the rule my tests were most at risk from, since a test of a
+  constant is exactly the shape rule 35 describes. All three satisfy it by the
+  first *and* third routes rule 35 allows: the object is an **independently
+  obtained quantity** (M4's table, re-derived through `rawpy`) and the power is
+  **proved by a negative control** (§8), which put three of the three red.
+  `the_iso_50_and_iso_100_darks_imply_the_same_read_noise` additionally carries
+  its own inline placebo.
+- **Rule 36** (*show that the fixture exercises the property under test*). My
+  every-ISO test did **not** comply as first written: an empty or truncated
+  table would have passed it in silence — which is how a no-carve-outs test
+  quietly becomes a carve-out, the precise failure rule 30 exists to stop. It
+  now asserts that eleven rows were checked and that both gain modes are
+  represented. **This was a real defect, found by reading a rule that landed
+  after I wrote the test.**
+
 ---
 
 ## 6. Finding 5 — I tried to kill the DN noise floor and failed
@@ -655,10 +685,16 @@ JSON from 02–04 and touch no raws.
 
 ```powershell
 cd C:\dev\blog\death-of-software\projects\strehl
-cargo test --workspace                                  # 187 passing
+cargo clean -p strehl-core                              # rule 33: force the rebuild
+cargo test --workspace                                  # 187 passing, 4 Compiling lines
 cargo fmt --all -- --check                              # clean
 cargo clippy --workspace --all-targets -- -D warnings   # clean
 ```
+
+`cargo test --workspace` breaks down as 37 + 108 + 33 + 8 + 0 + 1 + 0. Three of
+the 108 in `strehl-core` are new here. The workspace was at 183 when I took my
+baseline and at 184 when I finished, because another milestone's `merge.rs` work
+landed underneath me mid-flight; 184 + 3 = 187.
 
 Commits: `f95f6f4` (the constant, the estimator decision, the three tests),
 `df76014` (scripts 03–06 and their data), on top of the already-folded `4f7f683`
