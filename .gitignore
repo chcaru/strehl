@@ -32,3 +32,18 @@ target/
 Thumbs.db
 experiments/*/out/cache/
 experiments/m30-hdr-cobracket/out/cache/
+
+# Regenerable numeric artifacts, ignored by FORMAT not location.
+# A 455 MB focus volume reached a commit and was rejected by GitHub's 100 MB
+# limit because it sat in experiments/m31-verification/out/ rather than in
+# experiments/*/out/cache/, which was the only ignored path. Location-based
+# rules only cover the directories someone remembered; these formats are
+# always regenerable, so ignore them everywhere.
+*.npy
+*.npz
+__pycache__/
+*.pyc
+# ...except these two, which are committed RESULTS rather than caches and are
+# already tracked (gitignore does not untrack, but state the intent).
+!experiments/m29-static-defects/out/static-109.npy
+!experiments/m39-verify/out/07-merged-rois.npz
