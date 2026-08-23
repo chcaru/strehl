@@ -1,0 +1,3 @@
+# Per-ISO per-pixel temporal mean/variance caches: 11 x ~530 MB of float32.
+# Regenerate with src/01-dark-iso-sweep.py; never committed.
+cache/

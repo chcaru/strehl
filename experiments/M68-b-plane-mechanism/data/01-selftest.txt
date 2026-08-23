@@ -1,0 +1,13 @@
+=== selftest: planted ladders through fit_alpha_delta ===
+  null     alpha_high ratio 1.0000 (planted 1.0000)  delta ratio 1.0000 (planted 1.0000)
+  P2       alpha_high ratio 0.7049 (planted 0.7049)  delta ratio 1.0000 (planted 1.0000)
+  P4-ish   alpha_high ratio 0.7049 (planted 0.7049)  delta ratio 2.7800 (planted 2.7800)
+  jackknife on the null ladder: {'alpha_low': 0.0, 'alpha_high': 0.0, 'delta_low': 0.0, 'delta_high': 0.0}
+=== selftest: plane split geometry ===
+  R  -> [[0, 2, 4], [12, 14, 16]]
+  G1 -> [[1, 3, 5], [13, 15, 17]]
+  G2 -> [[6, 8, 10], [18, 20, 22]]
+  B  -> [[7, 9, 11], [19, 21, 23]]
+=== selftest: defect_flags on a planted map ===
+  flagged 2 (expect 2 planted, found at [(10, 10), (40, 33)])
+SELFTEST OK

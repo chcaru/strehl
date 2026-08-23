@@ -1,0 +1,19 @@
+M68 step 00 - derivation checked against a simulated chain
+planted s = 0.84, s^2 = 0.7056
+
+eq (2) check: b=0.0844 -> var/mean = 0.8401 (target 0.84)
+
+green plant: sigma@400 = 1.2315 DN, sigma@2000 = 5.6504 DN (M4 measures 1.2266/1.2403 and 5.6165/5.6883)
+green fit:   alpha = 7.9201e-06, delta = 0.2513 DN^2
+
+hypothesis                     alpha     delta  a_B/a_G  d_B/d_G   r@400  r@2000
+--------------------------------------------------------------------------------
+green (no scale)          7.9201e-06    0.2513   1.0000   1.0000  1.0000  1.0000
+P1 charge-domain          7.9018e-06    0.2544   0.9977   1.0122  1.0000  0.9990
+P2/P3 analog pre-ADC      5.5811e-06    0.2555   0.7047   1.0166  0.8688  0.8409
+P4 digital post-ADC       5.5558e-06    0.6981   0.7015   2.7779  0.9917  0.8477
+
+expected from the derivation:
+  P1  alpha ratio 0.9981  (~1.00: dark electron-domain noise is 0.66% of the upstream variance), delta ratio 1.00
+  P2  alpha ratio 0.7056, delta ratio 1.00, sigma ratio falls toward 0.84
+  P4  alpha ratio 0.7056, delta ratio NOT ANALYTIC (lattice); sigma ratio near 1 at low ISO, toward 0.84 at high ISO
