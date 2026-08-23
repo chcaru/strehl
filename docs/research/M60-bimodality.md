@@ -249,6 +249,51 @@ and were **renamed by the owner while a probe was running**. The mapping is fixe
 by exact fingerprint — frame count, ISO, shutter, EXIF timestamps — recorded in
 `data/02-corpus-rename.txt`. Nothing under `D:\` was written.
 
+**Rename confirmed independently after the milestone closed** (**MEASURED**). The
+owner supplied an EXIF read of the five renamed directories taken from his own
+copy. It agrees with `data/01-survey.csv` — which M60 wrote *before* the rename,
+under the old names — on **all five stacks, on both ISO and shutter**:
+
+| new name | old name | n | ISO | M60's shutter | owner's shutter |
+| --- | --- | ---: | ---: | ---: | --- |
+| `bee-1` | `134MSDCF` | 299 | 100 | 0.5000 s | 1/2 s ✓ |
+| `bee-2` | `135MSDCF` | 299 | 400 | 0.0500 s | 1/20 s ✓ |
+| `bee-3` | `136MSDCF` | 299 | 100 | 0.2000 s | 1/5 s ✓ |
+| `wrapped-text-1` | `131MSDCF` | 130 | 100 | 0.0667 s | 1/15 s ✓ |
+| `wrapped-text-2` | `133MSDCF` | 120 | 400 | 0.0250 s | 1/40 s ✓ |
+
+**Reader's warning.** `data/01-survey.txt`, `data/01-survey.csv` and the
+`fig/01-*` filenames are frozen artefacts written before the rename and therefore
+carry the **old** names. Every script in `src/` and every number in this report
+uses the new ones. The two naming schemes in this experiment directory are the
+same bytes, not two different corpora.
+
+### 2.6b A matched-scene pair, measured — and one that is not
+
+`data/03-previews.txt` holds a normalised cross-correlation of the 8×-binned
+first frame of all five stacks, computed for M60's own scene-identity check. It
+bears on a question the owner has flagged as open — whether the ISO-100/ISO-400
+captures are of a held scene — so it is surfaced here (**MEASURED**):
+
+| pair | ISO | NCC |
+| --- | --- | ---: |
+| **`bee-2` vs `bee-3`** | 400 / 100 | **0.9562** |
+| `bee-1` vs `bee-3` | 100 / 100 | 0.6036 |
+| **`wrapped-text-1` vs `wrapped-text-2`** | 100 / 400 | **0.3834** |
+
+**The two candidate matched-scene pairs are not equivalent.** `bee-2`/`bee-3` is
+a genuine re-capture of one scene and M60 used it as such (§8.9). The
+`wrapped-text` pair is **not** — 0.3834 is a different framing, which is also
+what direct viewing showed when the cells were labelled (`src/cells.py` records
+`wrapped-text-2` as "second framing, second ISO").
+
+Two caveats, stated because this number will be reused: NCC is computed on frame
+0 only, so it measures scene similarity at the *start* of each stack rather than
+stability through it; and frame 0 of two stacks sits at different focus
+positions, so some of any shortfall is focus, not motion. The 0.9562 / 0.3834 gap
+is far larger than that effect could explain, but a milestone that needs
+through-stack stability should measure it directly rather than inherit this.
+
 ### 2.2 Instrument
 
 **Focus measure.** `f_k(x)` = box mean of Sobel gradient magnitude at radius `R`
@@ -1185,6 +1230,24 @@ number in this report.
 8. **No milestone-level replication.** Everything here is one agent, one pass.
    The scripts are deterministic given their seeds and every number in this report
    names the file it came from.
+9. **A circular polarizer is in the optical path for every frame in this corpus,
+   and M60 did not know that while measuring.** Reported by the owner after this
+   milestone closed: a Breakthrough Photography X4 CPL 67 mm (Schott B270, MRC16),
+   never named in any brief. Its transmission and uniformity are unmeasured by
+   anyone. **This is not neutral for M60 specifically**, because a polarizer
+   suppresses specular highlights, and speculars are among the highest-contrast
+   features a scene offers — so they are exactly what drives the through-focus
+   *range* that P17's denominator is built from. The direction is stateable and
+   the magnitude is not (**ARGUED**): with speculars suppressed, the real-data
+   denominator inflation measured in §23.1 (`occ` 85.2 DN vs `ctl` 41.2 DN,
+   **2.07×**) is more likely an **under**-estimate of what a bare lens would give
+   than an over-estimate. That would make P17's defect worse on unpolarized data,
+   not better, so no conclusion in this report is at risk from it — but the 2.07×
+   should be quoted as polarizer-conditioned. Part I's contrast statistics (§8.7,
+   §24 of Part I's numerator/denominator split) carry the same caveat.
+   The noise-model denominator is **not** affected: it was validated empirically
+   against observed scatter on these same frames (P10, 0.96 median ratio), so any
+   light loss is already inside the measurement.
 
 ---
 
@@ -1795,7 +1858,7 @@ either pass.
 
 ## 25. Proposed facts — Part II
 
-Numbered `P17…P24`, continuing Part I's sequence per AGENTS rule 28. These
+Numbered `P17…P26`, continuing Part I's sequence per AGENTS rule 28. These
 **contradict** existing rows rather than extending them, so the fold must diff
 them against facts 150, 151, 152, 568 and 603 by content and decide supersession
 explicitly.
@@ -1810,6 +1873,8 @@ explicitly.
 | **P22** | `multipeak`'s rate depends strongly on frame count. Decimating identical `bee-3` cells 299 → 23 frames raises the median rate **2.8×** (17.2% → 48.5%), monotone throughout. Rates from this statistic are not comparable across stacks of different depth without normalising for `n` | MEASURED | `data/32-swap2.txt` |
 | **P23** | M25's frame-permutation placebo structurally rejects noise-calibrated peak tests: permutation preserves a curve's range while manufacturing large frame-to-frame jumps at high-swing pixels, so an absolute-bar statistic reads placebo 1.25–1.26 (repairing per-frame σ and permuting the threshold with its frames does not help), while prominence-over-dip reads 1.05–1.07. The corpus's validation gate for this family cannot admit the fix M21 §7 itself prescribes | MEASURED | `data/31-swap.txt`, `data/32-swap2.txt` |
 | **P24** | In a plant whose background focus index is rendered-known at 16 of 21 frames, the flagged second peak lands within ±2 of it 47.8% of the time against 26.3% chance (1.82×) and 30.0% in the no-background population (1.59×) — below the pre-registered 2× bar on both. The `k2` histogram peaks at the **stack boundary** (11.8% at index 19) rather than at the background index (8.6% at 16). M21's statistic flags 200 of 10 133 veiled pixels here, too few to localise at all | MEASURED | `data/34-t7.txt` |
+| **P25** | Of the two ISO-100/ISO-400 stack pairs in the corpus, only one is a matched scene. Normalised cross-correlation of the 8×-binned first frame gives `bee-2`↔`bee-3` **0.9562** but `wrapped-text-1`↔`wrapped-text-2` **0.3834**; `bee-1`↔`bee-3` is 0.6036 (same subject, different pose). The `wrapped-text` pair is a re-framing, not a re-capture, and is not usable as a matched-scene control | MEASURED | `data/03-previews.txt` |
+| **P26** | M60's pre-rename corpus survey, written before the owner renamed five directories, agrees with the owner's independent post-rename EXIF read on all five stacks for both ISO and shutter (`bee-1` 299/100/0.5 s, `bee-2` 299/400/0.05 s, `bee-3` 299/100/0.2 s, `wrapped-text-1` 130/100/0.0667 s, `wrapped-text-2` 120/400/0.025 s). The rename mapping is confirmed by two independent reads | MEASURED | `data/01-survey.csv`, owner report 2026-08-23 |
 
 ---
 

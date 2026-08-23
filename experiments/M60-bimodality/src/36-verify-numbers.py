@@ -63,6 +63,13 @@ CHECKS = [
     ("46.18", "35-mechanism.txt"), ("64.89", "35-mechanism.txt"),
     ("0.71x", "35-mechanism.txt"), ("3.63", "35-mechanism.txt"),
     ("9.2x", "35-mechanism.txt"),
+    # corpus rename / matched-scene pair (added after the owner's 2026-08-23 note)
+    ("0.9562", "03-previews.txt"), ("0.3834", "03-previews.txt"),
+    ("0.6036", "03-previews.txt"),
+    ("299", "01-survey.csv"), ("130", "01-survey.csv"), ("120", "01-survey.csv"),
+    ("0.5000", "01-survey.txt"), ("0.0500", "01-survey.txt"),
+    ("0.2000", "01-survey.txt"), ("0.0667", "01-survey.txt"),
+    ("0.0250", "01-survey.txt"),
 ]
 
 
