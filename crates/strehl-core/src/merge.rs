@@ -69,6 +69,36 @@ pub const REGULARISER_RADIUS: usize = 8;
 /// Width of the merge regulariser box, in plane pixels.
 pub const REGULARISER_WIDTH: usize = 2 * REGULARISER_RADIUS + 1;
 
+/// The measured noise penalty for selecting one frame instead of averaging.
+///
+/// A pixel that admitted exactly one frame did not receive an *arbitrary*
+/// frame. It received the frame the focus argmax elected, and the argmax
+/// prefers whichever frame's noise happened to point upward. So `n = 1` is not
+/// "no averaging" — it is selection, and **selection adds noise**.
+///
+/// Measured twice, independently, on the same operation: **1.074×** at gate 0
+/// on `109MSDCF` (fact 320) and **1.075×** by M2-verification's separately
+/// written harness a year earlier (facts 23, 321).
+///
+/// Fact 341 is the defect this repairs. Without it `predicted_sigma` reports
+/// exactly `1.000×` the single-frame σ at gate 0, the model does not know that
+/// selection adds noise, and the corrected detail metric consequently credits a
+/// **flat** ROI — where no detail can exist — with `+35.47%` detail.
+pub const SELECTION_INFLATION: f32 = 1.074;
+
+/// The noise penalty carried by a pixel that admitted `n` frames.
+///
+/// Only `n = 1` is measured. For `n > 1` this returns `1.0`, which makes
+/// [`Estimate::predicted_sigma`] a **floor** there rather than an estimate: the
+/// acceptance set is still chosen by a noise-dependent criterion, so some
+/// selection bias survives averaging and is not accounted for. Measuring that
+/// residual is open question 80's other half.
+#[inline]
+#[must_use]
+pub fn selection_inflation(n: u16) -> f32 {
+    if n <= 1 { SELECTION_INFLATION } else { 1.0 }
+}
+
 /// Standard deviation of the regularised focus response under pure sensor noise.
 ///
 /// **Measured, not assumed** — see `the_focus_noise_constant_is_the_measured_one`.
@@ -439,12 +469,15 @@ impl Estimator {
     /// makes it available per pixel with no second capture.
     ///
     /// Averaging `n` independent frames divides the standard deviation by
-    /// `sqrt(n)`. The frames are independent in their sensor noise; they are
-    /// not independent in their fixed-pattern noise, so this is a floor rather
-    /// than a complete account.
+    /// `sqrt(n)`, and `n = 1` is then penalised by [`selection_inflation`]
+    /// because one admitted frame means *selection*, not "no averaging". The
+    /// frames are independent in their sensor noise; they are not independent
+    /// in their fixed-pattern noise, so this remains a floor rather than a
+    /// complete account.
     pub fn predicted_sigma(&self, noise: &NoiseModel, i: usize, black_dn: f32) -> f32 {
         let luma = self.green_mean(i) - black_dn;
-        noise.green_luma_sigma(luma) / (self.n[i] as f32).sqrt()
+        let n = self.n[i];
+        noise.green_luma_sigma(luma) * selection_inflation(n) / (n as f32).sqrt()
     }
 
     /// Did this pixel's winner land on the first or last frame of the stack?
@@ -598,6 +631,22 @@ mod tests {
     /// neither box mean changes a mean. A silent rescale — the zero-gain trap
     /// documented on `unit_sigma_model` — moves this by three orders of
     /// magnitude while leaving the standard deviation looking plausible.
+    /// The selection penalty is a measurement, not a tuning knob. Two harnesses
+    /// written a year apart measured the same operation at 1.074x and 1.075x
+    /// (facts 320, 321, 23); if this constant drifts off that, it is no longer
+    /// the measured quantity and fact 341's repair is undone.
+    #[test]
+    fn the_selection_inflation_constant_is_the_measured_one() {
+        assert!(
+            (SELECTION_INFLATION - 1.074).abs() < 5e-4,
+            "gate-0 selection measured 1.074x (fact 320) and 1.075x independently \
+             (fact 23); got {SELECTION_INFLATION}"
+        );
+        assert_eq!(selection_inflation(0), SELECTION_INFLATION, "n = 0 clamps to 1");
+        assert_eq!(selection_inflation(1), SELECTION_INFLATION, "n = 1 is selection");
+        assert_eq!(selection_inflation(2), 1.0, "n > 1 is unmeasured, so no penalty");
+    }
+
     #[test]
     fn the_focus_noise_constant_is_the_measured_one() {
         let g = geom(512, 512);
@@ -873,17 +922,28 @@ mod tests {
         assert_eq!(est.mean_n_eff(), 3.0);
     }
 
-    /// **The acceptance invariant: never noisier than one frame.**
+    /// **The acceptance invariant, as measurement actually supports it.**
     ///
-    /// Fact 19 measured the baseline at 1.253x a single frame; this is the
-    /// property that makes that impossible here. It is proved rather than
-    /// sampled: averaging `n` independent samples scales sigma by
-    /// `1/sqrt(n)`, and `n >= 1` is structural, so the merged sigma can never
-    /// exceed the single-frame sigma at any pixel under any gate.
+    /// The old form of this test asserted `merged <= single` at *every* gate,
+    /// reasoning that averaging `n` samples scales sigma by `1/sqrt(n)` and
+    /// `n >= 1` is structural. That reasoning is wrong at `n = 1`, and it
+    /// passed only because `predicted_sigma` was blind in exactly the same
+    /// place: `n = 1` is not "averaging one sample", it is **selection**, and
+    /// fact 320 measured selection at **1.074x a single frame** — noisier, not
+    /// equal. The invariant was being proved against a model that could not
+    /// express its own violation.
+    ///
+    /// The true contract has two branches:
+    ///   * `n >= 2` — averaging, and strictly better than one frame.
+    ///   * `n == 1` — selection, and measurably *worse*. **This is why gate 0
+    ///     is a diagnostic, not a shipping configuration**, and why the gate
+    ///     exists at all: it is the mechanism that moves pixels off `n = 1`.
     #[test]
-    fn the_merged_estimate_is_never_noisier_than_a_single_frame() {
+    fn averaging_beats_one_frame_and_selection_does_not() {
         let g = geom(8, 8);
         let noise = unit_sigma_model();
+        let mut saw_selection = false;
+        let mut saw_averaging = false;
         for threshold in [0.0f32, 0.5, 1.0, 3.0, 100.0] {
             let est = run(g, 7, Gate::new(threshold), |k, i| {
                 ((i * 13 + k as usize * 5) % 11) as f32 * 1e-4
@@ -894,14 +954,31 @@ mod tests {
                 assert!(n >= 1, "t={threshold} pixel {i} admitted nothing");
                 let merged = est.predicted_sigma(&noise, i, 0.0);
                 let single = noise.green_luma_sigma(est.green_mean(i));
+                if n == 1 {
+                    saw_selection = true;
+                    assert!(
+                        merged > single,
+                        "t={threshold} pixel {i}: selection must cost more than one \
+                         frame, got {merged} vs {single}"
+                    );
+                } else {
+                    saw_averaging = true;
+                    assert!(
+                        merged < single,
+                        "t={threshold} pixel {i}: averaging {n} frames must beat one, \
+                         got {merged} vs {single}"
+                    );
+                }
+                // And the scaling is exactly the model, not approximately.
+                let expected = single * selection_inflation(n) / (n as f32).sqrt();
                 assert!(
-                    merged <= single + 1e-6,
-                    "t={threshold} pixel {i}: merged {merged} > single {single}"
+                    (merged - expected).abs() < 1e-4,
+                    "t={threshold} pixel {i}: {merged} vs {expected}"
                 );
-                // And the improvement is exactly 1/sqrt(n), not approximately.
-                assert!((merged * (n as f32).sqrt() - single).abs() < 1e-4);
             }
         }
+        assert!(saw_selection, "no n = 1 pixel: the selection branch went untested");
+        assert!(saw_averaging, "no n > 1 pixel: the averaging branch went untested");
     }
 
     #[test]

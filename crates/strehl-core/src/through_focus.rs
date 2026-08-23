@@ -707,6 +707,7 @@ impl ThroughFocus {
         }
         ConfidenceVector {
             predicted_sigma: noise.green_luma_sigma(merged_luma_dn)
+                * crate::merge::selection_inflation(n_admitted)
                 / (n_admitted.max(1) as f32).sqrt(),
             perplexity: self.posterior_perplexity(i),
             subframe_deficit: self.subframe_deficit(i),
@@ -1839,9 +1840,12 @@ mod tests {
     }
 
     /// C1 is the channel most likely to be misread as "the" confidence, so its
-    /// contract is pinned: it must fall as `1/sqrt(n)` and nothing else.
+    /// contract is pinned: it falls as `1/sqrt(n)`, and `n = 1` carries the
+    /// measured selection penalty on top. Fact 341 is what happens without the
+    /// penalty — a flat ROI is credited with +35.47% detail, because the model
+    /// reports selection as costing nothing.
     #[test]
-    fn predicted_sigma_is_the_calibrated_model_divided_by_sqrt_n() {
+    fn predicted_sigma_is_the_calibrated_model_with_selection_priced_in() {
         let noise = unit_sigma_model();
         let tf = gather(geom(1, 1), 5, &(0..5).collect::<Vec<_>>(), |k, _| {
             -(k as f32 - 2.0).abs()
@@ -1850,12 +1854,17 @@ mod tests {
         let four = tf.confidence(4, 3000.0, &noise, 0, 1e9).predicted_sigma;
         let model = noise.green_luma_sigma(3000.0);
         assert!(
-            (one - model).abs() < 1e-6,
-            "n = 1 must be the model's own sigma {model}, got {one}"
+            (one - model * crate::merge::SELECTION_INFLATION).abs() < 1e-6,
+            "n = 1 is selection, not averaging: expected {} got {one}",
+            model * crate::merge::SELECTION_INFLATION
+        );
+        assert!(
+            one > model,
+            "selection must cost MORE than one arbitrary frame ({one} vs {model})"
         );
         assert!(
             (four - model / 2.0).abs() < 1e-6,
-            "n = 4 must halve it, got {four}"
+            "n = 4 must halve it with no penalty, got {four}"
         );
     }
 
