@@ -84,6 +84,10 @@ pub enum Role {
     NullControl,
     /// Must land at the extreme of a statistic by construction.
     PositiveControl,
+    /// Added **after** the registered set was scored, to test whether the
+    /// front is truncated by the registered sweep's edge. Reported separately
+    /// and never used to resolve the registered decision rule.
+    Extension,
 }
 
 impl Role {
@@ -92,6 +96,7 @@ impl Role {
             Role::Treatment => "treatment",
             Role::NullControl => "null",
             Role::PositiveControl => "positive",
+            Role::Extension => "extension",
         }
     }
 }
@@ -218,7 +223,15 @@ impl Measure {
         scratch.ensure(geom.pixels());
         match self.kind {
             Kind::Ring { inner, outer } => {
-                ring_response(luma, geom, inner, outer, &mut scratch.a, &mut scratch.b, out);
+                ring_response(
+                    luma,
+                    geom,
+                    inner,
+                    outer,
+                    &mut scratch.a,
+                    &mut scratch.b,
+                    out,
+                );
             }
             Kind::Tenengrad { window, squared } => {
                 sobel(luma, geom, &mut scratch.a, &mut scratch.b);
@@ -386,10 +399,10 @@ fn sobel(luma: &[f32], geom: PlaneGeometry, gx_out: &mut [f32], gy_out: &mut [f3
         for x in 0..w {
             let (xi, yi) = (x as isize, y as isize);
             let at = |dx: isize, dy: isize| clamped(luma, geom, xi + dx, yi + dy);
-            let gx = at(1, -1) + 2.0 * at(1, 0) + at(1, 1) - at(-1, -1) - 2.0 * at(-1, 0)
-                - at(-1, 1);
-            let gy = at(-1, 1) + 2.0 * at(0, 1) + at(1, 1) - at(-1, -1) - 2.0 * at(0, -1)
-                - at(1, -1);
+            let gx =
+                at(1, -1) + 2.0 * at(1, 0) + at(1, 1) - at(-1, -1) - 2.0 * at(-1, 0) - at(-1, 1);
+            let gy =
+                at(-1, 1) + 2.0 * at(0, 1) + at(1, 1) - at(-1, -1) - 2.0 * at(0, -1) - at(1, -1);
             gx_out[y * w + x] = 0.125 * gx;
             gy_out[y * w + x] = 0.125 * gy;
         }
@@ -813,6 +826,52 @@ pub fn design() -> Vec<Measure> {
         )
         .with_norm(Norm::None),
     );
+
+    // Amendment A4 (pre-registration §8): the support axis was truncated.
+    //
+    // On the registered set the best-selectivity operators all sat at the
+    // widest window sampled (w5), i.e. at the **edge of the sweep** -- exactly
+    // the failure mode SYNTHESIS fact 36 warns about. These extend the axis so
+    // the front can be seen to turn over, or seen not to. They are POST-HOC:
+    // the registered ruling is resolved on the registered set alone and these
+    // are reported separately.
+    for window in [8usize, 11] {
+        v.push(Measure::new(
+            &format!("tenengrad-w{window}"),
+            Family::Tenengrad,
+            Role::Extension,
+            1 + window,
+            Kind::Tenengrad {
+                window,
+                squared: false,
+            },
+        ));
+        v.push(Measure::new(
+            &format!("stensor-w{window}"),
+            Family::StructureTensor,
+            Role::Extension,
+            1 + window,
+            Kind::StructureTensor { window },
+        ));
+        v.push(Measure::new(
+            &format!("brenner-sym-s2-w{window}"),
+            Family::Brenner,
+            Role::Extension,
+            2 + window,
+            Kind::Brenner {
+                step: 2,
+                symmetric: true,
+                window,
+            },
+        ));
+        v.push(Measure::new(
+            &format!("sml-w{window}"),
+            Family::Sml,
+            Role::Extension,
+            1 + window,
+            Kind::Sml { window },
+        ));
+    }
 
     // Controls.
     v.push(Measure::new(

@@ -1,0 +1,106 @@
+group A -- the operators themselves
+  PASS  ring-0-1               finite on a flat field, and zero where it should be
+  PASS  ring-0-3               finite on a flat field, and zero where it should be
+  PASS  ring-1-2               finite on a flat field, and zero where it should be
+  PASS  ring-1-3               finite on a flat field, and zero where it should be
+  PASS  ring-1-5               finite on a flat field, and zero where it should be
+  PASS  ring-2-4               finite on a flat field, and zero where it should be
+  PASS  ring-2-6               finite on a flat field, and zero where it should be
+  PASS  ring-3-8               finite on a flat field, and zero where it should be
+  PASS  ring-4-12              finite on a flat field, and zero where it should be
+  PASS  sml-w0                 finite on a flat field, and zero where it should be
+  PASS  sml-w2                 finite on a flat field, and zero where it should be
+  PASS  sml-w5                 finite on a flat field, and zero where it should be
+  PASS  dsml-s1                finite on a flat field, and zero where it should be
+  PASS  dsml-s3                finite on a flat field, and zero where it should be
+  PASS  dsml-s6                finite on a flat field, and zero where it should be
+  PASS  tenengrad-w0           finite on a flat field, and zero where it should be
+  PASS  tenengrad-w2           finite on a flat field, and zero where it should be
+  PASS  tenengrad-w5           finite on a flat field, and zero where it should be
+  PASS  tenengrad-sq-w2        finite on a flat field, and zero where it should be
+  PASS  brenner-fwd-s2-w2      finite on a flat field, and zero where it should be
+  PASS  brenner-sym-s1-w2      finite on a flat field, and zero where it should be
+  PASS  brenner-sym-s2-w2      finite on a flat field, and zero where it should be
+  PASS  brenner-sym-s2-w5      finite on a flat field, and zero where it should be
+  PASS  stensor-w2             finite on a flat field, and zero where it should be
+  PASS  stensor-w5             finite on a flat field, and zero where it should be
+  PASS  varlap-w2              finite on a flat field, and zero where it should be
+  PASS  varlap-w5              finite on a flat field, and zero where it should be
+  PASS  localvar-w2            finite on a flat field, and zero where it should be
+  PASS  dct8-hi                finite on a flat field, and zero where it should be
+  PASS  msband-lo              finite on a flat field, and zero where it should be
+  PASS  msband-hi              finite on a flat field, and zero where it should be
+  PASS  ring-1-3-nonorm        finite on a flat field, and zero where it should be
+  PASS  tenengrad-w2-nonorm    finite on a flat field, and zero where it should be
+  PASS  tenengrad-w2-boxnorm   finite on a flat field, and zero where it should be
+  PASS  tenengrad-w0-nonorm    finite on a flat field, and zero where it should be
+  PASS  brenner-sym-s2-w0-nonorm finite on a flat field, and zero where it should be
+  PASS  ctl-const              finite on a flat field, and zero where it should be
+  PASS  ctl-random             finite on a flat field, and zero where it should be
+  PASS  ctl-luma               finite on a flat field, and zero where it should be
+  PASS  ring-0-1               scores sharp above blurred (1.0661 vs 0.1220)
+  PASS  ring-0-3               scores sharp above blurred (2.1906 vs 0.6498)
+  PASS  ring-1-2               scores sharp above blurred (0.8105 vs 0.2264)
+  PASS  ring-1-3               scores sharp above blurred (1.4633 vs 0.5283)
+  PASS  ring-1-5               scores sharp above blurred (2.5142 vs 1.2357)
+  PASS  ring-2-4               scores sharp above blurred (1.3554 vs 0.6492)
+  PASS  ring-2-6               scores sharp above blurred (2.3769 vs 1.3747)
+  PASS  ring-3-8               scores sharp above blurred (2.5800 vs 1.7615)
+  PASS  ring-4-12              scores sharp above blurred (3.2023 vs 2.5843)
+  PASS  sml-w0                 scores sharp above blurred (4.9525 vs 0.4479)
+  PASS  sml-w2                 scores sharp above blurred (4.9500 vs 0.4467)
+  PASS  sml-w5                 scores sharp above blurred (4.9470 vs 0.4452)
+  PASS  dsml-s1                scores sharp above blurred (4.9525 vs 0.4479)
+  PASS  dsml-s3                scores sharp above blurred (12.0181 vs 3.5746)
+  PASS  dsml-s6                scores sharp above blurred (19.7850 vs 10.3939)
+  PASS  tenengrad-w0           scores sharp above blurred (2.4343 vs 1.1872)
+  PASS  tenengrad-w2           scores sharp above blurred (2.4340 vs 1.1888)
+  PASS  tenengrad-w5           scores sharp above blurred (2.4355 vs 1.1933)
+  PASS  tenengrad-sq-w2        scores sharp above blurred (7.4908 vs 1.7947)
+  PASS  brenner-fwd-s2-w2      scores sharp above blurred (35.8064 vs 7.2530)
+  PASS  brenner-sym-s1-w2      scores sharp above blurred (35.8215 vs 7.2790)
+  PASS  brenner-sym-s2-w2      scores sharp above blurred (85.6432 vs 26.9614)
+  PASS  brenner-sym-s2-w5      scores sharp above blurred (86.0346 vs 27.2550)
+  PASS  stensor-w2             scores sharp above blurred (5.8143 vs 1.6560)
+  PASS  stensor-w5             scores sharp above blurred (4.9509 vs 1.4402)
+  PASS  varlap-w2              scores sharp above blurred (29.2109 vs 0.0701)
+  PASS  varlap-w5              scores sharp above blurred (29.9617 vs 0.1609)
+  PASS  localvar-w2            scores sharp above blurred (12.5738 vs 3.4143)
+  PASS  dct8-hi                scores sharp above blurred (93.3460 vs 1.7036)
+  PASS  msband-lo              scores sharp above blurred (4.1808 vs 2.3073)
+  PASS  msband-hi              scores sharp above blurred (3.2319 vs 0.9976)
+  PASS  ring-1-3-nonorm        scores sharp above blurred (27.1929 vs 9.8200)
+  PASS  tenengrad-w2-nonorm    scores sharp above blurred (45.2484 vs 22.1117)
+  PASS  tenengrad-w2-boxnorm   scores sharp above blurred (2.4334 vs 1.1888)
+  PASS  tenengrad-w0-nonorm    scores sharp above blurred (45.2528 vs 22.0827)
+  PASS  brenner-sym-s2-w0-nonorm scores sharp above blurred (29466.7576 vs 9293.0533)
+group B -- the planted stack builder
+  PASS  blur ladder is minimal at w_true and symmetric (0.800 at 4, 2.200 at 0, 2.200 at 8)
+        winner histogram [727, 338, 394, 358, 4744, 0, 0, 0, 0] (w_true 4, mirror frames identical: true)
+  PASS  the noiseless ladder is exactly mirror-symmetric about w_true
+  PASS  noiseless planted stack is centred on w_true=4 pointwise (acc 0.723 vs chance 0.111, mean winner 3.23)
+  PASS  noiseless planted stack is recovered by ring-1-3 with a 17-wide box (acc 1.0000, mae 0.000)
+group C -- the RNG and the noise injection
+  PASS  normal draws have mean 0.0020 (want 0) and variance 0.9994 (want 1)
+  PASS  the RNG is reproducible from its seed
+  PASS  injected noise sd is the model sigma (18.5484 vs 18.5353 DN)
+group D -- the selectivity statistics, on planted answers
+  PASS  planted_cell scores a perfect volume at acc 1.0000, mae 0.0000
+  PASS  planted_cell on pure noise sits at chance: 0.1441 vs 1/7 = 0.1429
+  PASS  kappa is 1 for identical draws (1.000000)
+  PASS  kappa is 0 for independent draws (0.004374), against agreement 0.1466 and chance 0.1428
+group E -- which operators actually have a zero centre tap
+  PASS  tenengrad-w0-nonorm        centre sensitivity 0.000e0 (must be zero)
+  PASS  brenner-sym-s2-w0-nonorm   centre sensitivity 0.000e0 (must be zero)
+  PASS  tenengrad-w2-nonorm        centre sensitivity 5.963e-2 (must not be zero)
+  PASS  brenner-sym-s2-w2          centre sensitivity 5.455e-2 (must not be zero)
+  PASS  stensor-w2                 centre sensitivity 3.169e-3 (must not be zero)
+  PASS  tenengrad-w0               centre sensitivity 5.923e-5 (must not be zero)
+  PASS  ring-1-3                   centre sensitivity 4.598e-3 (must not be zero)
+  PASS  ctl-luma                   centre sensitivity 2.624e-2 (must not be zero)
+group F -- Parseval, and the DCT band
+  PASS  dct8-hi has no band energy on a constant field (max 0.000e0)
+group G -- the merge path
+  PASS  an all-ties focus volume elects frame 0 (mean 0.000, winners 1)
+
+96 passed, 0 failed

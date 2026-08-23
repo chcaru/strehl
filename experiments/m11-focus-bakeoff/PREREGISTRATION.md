@@ -299,11 +299,17 @@ orchestrator re-verifies against them, and the author does not verify his own wo
 
 ## 8. Amendments
 
-Made **after** §1–§7 were committed but **before any measurement was run**, all forced by
-harness self-test failures — that is, by controls doing their job. The commit ordering is
-the evidence: the self-test that produced each finding runs on synthetic data only and
-never touches a RAW file. **No decision rule, threshold or outcome branch is changed by
-any amendment.**
+**A1–A3** were made after §1–§7 were committed but **before any measurement was run**, all
+forced by harness self-test failures — that is, by controls doing their job. The commit
+ordering is the evidence: the self-test that produced each finding runs on synthetic data
+only and never touches a RAW file.
+
+**A4–A5 are post-hoc** — made after seeing treatment results — and are flagged as such
+everywhere they appear. They **add** measurements; they remove nothing and they change no
+threshold. The registered ruling in §6 is computed on the §1.1 operator set alone, and the
+A4/A5 material is reported separately.
+
+**No decision rule, threshold or outcome branch is changed by any amendment.**
 
 ### A1 — the registered set contained no operator with strictly zero phi
 
@@ -373,3 +379,43 @@ scale the operator set can see, and there is no nodal structure.
   depth-discrimination directly — how much defocus an operator needs before it can tell
   frames apart — which the milestone brief asks for and §2.2 did not provide. Reported
   only; the ranking still uses the registered `alpha = 0.35`.
+
+### A4 — POST-HOC. The registered window sweep truncated the front
+
+Registered windows stopped at `w5` (11x11). Every leading operator landed **at that edge**,
+which is the signature of a truncated sweep, not of an optimum. Four operators
+(`tenengrad`, `stensor`, `brenner-sym-s2`, `sml`) were therefore re-run at `w8` (17x17) and
+`w11` (23x23) under a new `Role::Extension`.
+
+Extension operators are **excluded from the registered ruling** in §6 and reported in their
+own section. They exist to answer one question honestly — *is the front truncated?* — and
+the answer is yes.
+
+A second problem the same inspection exposed: the registered plant is **fronto-parallel**,
+so a wider focus-map regulariser is strictly free and the width axis is one-sided by
+construction. `--tilt K` was added: a layered-defocus render of a linear depth ramp of `K`
+frames across the ROI, with per-pixel ground truth. This makes the width axis two-sided.
+
+### A5 — POST-HOC. Two controls needed repair, and one had to be re-read
+
+- **The registered flat-ROI planted control is not a valid null, and it failed.** §5
+  registered "the same planted run on a flat ROI must collapse to within 3x of chance".
+  Measured: `13.8x` chance (109MSDCF) and `31.7x` (119MSDCF). **Diagnosis, not excuse:** a
+  *relatively* flat ROI of a real frame still carries a broadband texture — its own
+  inherited read and shot noise — and the plant blurs that texture along with everything
+  else. An operator can therefore legitimately recover the ladder from it. The control was
+  mis-designed; it does not test what §5 wanted it to test.
+  **Repair:** `--flat-base` replaces the base image with its own ROI mean, so there is
+  *nothing* to blur and the only frame-to-frame difference left is injected noise. Measured:
+  max `S = 0.0510` = `1.12x` chance (flat ROI) and `0.0545` = `1.20x` chance (detail ROI).
+  **PASS.** This is now the rule-9 pairing of record for the selectivity axis. The failed
+  original is reported alongside it, not deleted.
+- **The registered realised-noise gate was being read off the wrong ROI.** §4 registered
+  "realised per-frame noise spread `<= 10%`". It was computed from `hp_sd` on the *detail*
+  ROI, where `hp_sd` is dominated by scene structure that the plant blurs **by design** —
+  so it can never pass and never could have. Re-read on the flat ROI, where `hp_sd` is
+  dominated by noise: **109MSDCF 9.7% PASS, 119MSDCF 29.5% FAIL.** Consequence, applied as
+  registered: 119MSDCF's planted numbers are demoted to a corroborator and 109MSDCF carries
+  the selectivity ruling. §9 of the analysis shows the ranking is unchanged either way.
+- **Added sweeps:** `--tilt 16` and `--tilt 32`, because tilt 4 was too gentle to turn the
+  width axis over. Reported only.

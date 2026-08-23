@@ -126,13 +126,7 @@ pub fn gaussian_blur(src: &[f32], geom: PlaneGeometry, sigma: f32, out: &mut [f3
 ///
 /// `scale` multiplies the model sigma. The sigma is evaluated at the *local
 /// signal*, so the injected noise is signal-dependent exactly as shot noise is.
-pub fn add_noise(
-    src: &[f32],
-    noise: &NoiseModel,
-    scale: f32,
-    seed: u64,
-    out: &mut [f32],
-) {
+pub fn add_noise(src: &[f32], noise: &NoiseModel, scale: f32, seed: u64, out: &mut [f32]) {
     let mut rng = Rng::new(seed);
     for (o, s) in out.iter_mut().zip(src.iter()) {
         let sigma = noise.green_luma_sigma(*s);
@@ -164,13 +158,20 @@ impl PlantSpec {
 
     /// Widest blur in the ladder, which is what a tile margin has to clear.
     pub fn max_blur_radius(&self) -> usize {
-        let s = self.blur_sigma(0).max(self.blur_sigma(self.frames.saturating_sub(1)));
+        let s = self
+            .blur_sigma(0)
+            .max(self.blur_sigma(self.frames.saturating_sub(1)));
         (3.0 * s).ceil() as usize
     }
 }
 
 /// Build the planted stack from one base plane.
-pub fn plant(base: &[f32], geom: PlaneGeometry, noise: &NoiseModel, spec: PlantSpec) -> Vec<Vec<f32>> {
+pub fn plant(
+    base: &[f32],
+    geom: PlaneGeometry,
+    noise: &NoiseModel,
+    spec: PlantSpec,
+) -> Vec<Vec<f32>> {
     let mut blurred = vec![0.0f32; geom.pixels()];
     (0..spec.frames)
         .map(|k| {
@@ -184,7 +185,7 @@ pub fn plant(base: &[f32], geom: PlaneGeometry, noise: &NoiseModel, spec: PlantS
                     noise,
                     spec.noise_scale,
                     spec.seed
-                        .wrapping_mul(0x1000_0000_1B3)
+                        .wrapping_mul(0x0100_0000_01B3)
                         .wrapping_add(k as u64 + 1),
                     &mut frame,
                 );
@@ -199,8 +200,84 @@ pub fn plant(base: &[f32], geom: PlaneGeometry, noise: &NoiseModel, spec: PlantS
 /// Used for the noiseless positive control: an operator that cannot recover a
 /// planted focus surface *here* has no focus discrimination to trade away, and
 /// a selectivity statistic that cannot see the answer here is broken before it
-/// ever meets a sensor. Constructed by summing sinusoids on the lattice, so no
-/// resampling and no interpolation is involved.
+/// ever meets a sensor.
+///
+/// Build the planted stack from one base plane, with a **tilted** depth
+/// surface: `w_true(x) = w_true + tilt * (x - x_centre) / 256`.
+/// Rendered by layered defocus — the base is blurred once per integer defocus
+/// step `d`, and each pixel linearly interpolates between the two bracketing
+/// steps. Interpolating *blurred images* rather than resampling geometry keeps
+/// SYNTHESIS §5 item 11's trap (resampling artefacts masquerading as signal)
+/// out of the design: nothing is ever shifted, only mixed. The mix is exact
+/// wherever the depth is locally constant and is a first-order approximation
+/// across the ramp, whose gradient is set deliberately small.
+///
+/// Returns the frames and the per-pixel ground truth over the **ROI**.
+#[allow(clippy::too_many_arguments)]
+pub fn plant_tilted(
+    base: &[f32],
+    geom: PlaneGeometry,
+    noise: &NoiseModel,
+    spec: PlantSpec,
+    tilt: f32,
+    roi_x0: usize,
+    roi_y0: usize,
+    roi_w: usize,
+    roi_h: usize,
+) -> (Vec<Vec<f32>>, Vec<f32>) {
+    let n = geom.pixels();
+    let xc = 0.5 * geom.width as f32;
+    let w_at = |x: usize| -> f32 {
+        (spec.w_true as f32 + tilt * (x as f32 - xc) / 256.0).clamp(0.0, spec.frames as f32 - 1.0)
+    };
+
+    // The bank of blurs, indexed by integer defocus step.
+    let max_d = spec.frames;
+    let bank: Vec<Vec<f32>> = (0..=max_d)
+        .map(|d| {
+            let mut out = vec![0.0f32; n];
+            gaussian_blur(base, geom, spec.sigma0 + spec.alpha * d as f32, &mut out);
+            out
+        })
+        .collect();
+
+    let frames = (0..spec.frames)
+        .map(|k| {
+            let mut frame = vec![0.0f32; n];
+            for y in 0..geom.height {
+                for x in 0..geom.width {
+                    let d = (k as f32 - w_at(x)).abs().min(max_d as f32 - 1e-3);
+                    let lo = d.floor() as usize;
+                    let f = d - lo as f32;
+                    let q = y * geom.width + x;
+                    frame[q] = (1.0 - f) * bank[lo][q] + f * bank[lo + 1][q];
+                }
+            }
+            if spec.noise_scale > 0.0 {
+                let mut noisy = vec![0.0f32; n];
+                add_noise(
+                    &frame,
+                    noise,
+                    spec.noise_scale,
+                    spec.seed
+                        .wrapping_mul(0x0100_0000_01B3)
+                        .wrapping_add(k as u64 + 1),
+                    &mut noisy,
+                );
+                frame = noisy;
+            }
+            frame
+        })
+        .collect();
+
+    let truth = (0..roi_h)
+        .flat_map(|j| (0..roi_w).map(move |i| (i, j)))
+        .map(|(i, _j)| w_at(roi_x0 + i))
+        .collect::<Vec<f32>>();
+    let _ = roi_y0;
+    (frames, truth)
+}
+
 /// A deterministic, broadband synthetic texture for the noiseless positive
 /// control.
 ///
@@ -228,7 +305,13 @@ pub fn synthetic_texture(geom: PlaneGeometry, base_dn: f32, amplitude: f32) -> V
     // something to see at its own scale.
     let mut acc = vec![0.0f32; n];
     let mut tmp = vec![0.0f32; n];
-    for (sigma, w) in [(0.0f32, 1.0f32), (1.0, 1.4), (2.0, 2.0), (4.0, 2.8), (8.0, 4.0)] {
+    for (sigma, w) in [
+        (0.0f32, 1.0f32),
+        (1.0, 1.4),
+        (2.0, 2.0),
+        (4.0, 2.8),
+        (8.0, 4.0),
+    ] {
         if sigma == 0.0 {
             for i in 0..n {
                 acc[i] += w * white[i];

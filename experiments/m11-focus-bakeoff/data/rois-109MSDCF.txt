@@ -1,0 +1,16 @@
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+22848 candidate blocks of 256x256 at stride 16, margin 96
+flattest, non-overlapping (ranked by downsampled structure sd):
+  2352,1408,256,256   structure sd    9.967 DN   mean |grad|  19.876 DN/px
+  2496,432,256,256   structure sd   10.219 DN   mean |grad|  20.512 DN/px
+  2656,1504,256,256   structure sd   10.270 DN   mean |grad|  20.193 DN/px
+  320,1344,256,256   structure sd   11.298 DN   mean |grad|  18.972 DN/px
+  640,1408,256,256   structure sd   11.998 DN   mean |grad|  19.156 DN/px
+  2624,1200,256,256   structure sd   12.957 DN   mean |grad|  20.171 DN/px
+most detailed, non-overlapping (ranked by full-resolution mean |grad|):
+  2080,1056,256,256   structure sd  595.548 DN   mean |grad|  61.567 DN/px
+  2480,1040,256,256   structure sd  587.419 DN   mean |grad|  55.558 DN/px
+  2880,1024,256,256   structure sd  596.013 DN   mean |grad|  51.802 DN/px
+  3136,1008,256,256   structure sd  609.371 DN   mean |grad|  49.067 DN/px
+  1440,736,256,256   structure sd  699.101 DN   mean |grad|  47.394 DN/px
+  624,1056,256,256   structure sd  576.475 DN   mean |grad|  42.992 DN/px

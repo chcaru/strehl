@@ -61,8 +61,9 @@ fn main() {
         "planted" => planted_mode(rest),
         "stability" => stability(rest),
         "cost" => cost(rest),
+        "audit" => audit(rest),
         other => Err(format!(
-            "unknown mode {other:?}; expected one of selftest, rois, xcheck, noise, phi, planted, stability, cost"
+            "unknown mode {other:?}; expected one of selftest, rois, xcheck, noise, phi, planted, stability, cost, audit"
         )),
     };
     if let Err(e) = r {
@@ -71,8 +72,57 @@ fn main() {
     }
 }
 
-// ------------------------------------------------------------------ arguments
+// ---------------------------------------------------------------------- audit
+//
+// The capture corpora are irreplaceable and this experiment must not write to
+// them. `audit` records file count, byte total and newest mtime for each root,
+// run once before the chain and once after; the two files must agree exactly.
 
+fn audit(args: &[String]) -> Result<(), String> {
+    let a = parse_args(args);
+    let mut out = String::new();
+    for root in ["C:\\dev\\macro", "D:\\macro-dark-frames"] {
+        let mut files = 0u64;
+        let mut bytes = 0u64;
+        let mut newest = std::time::UNIX_EPOCH;
+        let mut stack = vec![std::path::PathBuf::from(root)];
+        while let Some(dir) = stack.pop() {
+            let rd = match std::fs::read_dir(&dir) {
+                Ok(rd) => rd,
+                Err(e) => return Err(format!("{}: {e}", dir.display())),
+            };
+            for e in rd.flatten() {
+                let md = match e.metadata() {
+                    Ok(md) => md,
+                    Err(_) => continue,
+                };
+                if md.is_dir() {
+                    stack.push(e.path());
+                } else {
+                    files += 1;
+                    bytes += md.len();
+                    if let Ok(t) = md.modified() {
+                        newest = newest.max(t);
+                    }
+                }
+            }
+        }
+        let secs = newest
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_secs())
+            .unwrap_or(0);
+        out.push_str(&format!(
+            "{root} files={files} bytes={bytes} newest_mtime_unix={secs}\n"
+        ));
+    }
+    print!("{out}");
+    if let Some(p) = a.one("out") {
+        std::fs::write(p, &out).map_err(|e| e.to_string())?;
+    }
+    Ok(())
+}
+
+// ------------------------------------------------------------------ arguments
 struct Args {
     positional: Vec<String>,
     flags: Vec<(String, Option<String>)>,
@@ -384,7 +434,24 @@ fn noise_sweep(rest: &[String]) -> Result<(), String> {
     };
     let stack = open_stack(Path::new(dir), limit, a.one("label"))?;
     let out_path = a.one("out").ok_or("noise needs --out <FILE>")?.to_string();
+    // Three arms, all evaluated on real frames:
+    //   default    select on the green luma, evaluate on the green luma -- M2's
+    //              published configuration, and the one the 1.253x refers to.
+    //   --placebo  select on G1, evaluate on G2 -- selection is driven by an
+    //              independent noise realisation, so the operator's *frame
+    //              preferences* survive but the noise coupling is cut. This is
+    //              M2's decoupled placebo (rule 11).
+    //   --coupled-g2  select on G2, evaluate on G2 -- the matched partner of
+    //              the placebo arm. Identical channel, identical frames, only
+    //              the coupling differs, so `coupled_g2 / placebo` is an exact
+    //              structure-corrected noise excess with the frame-preference
+    //              term divided out.
     let placebo = a.has("placebo");
+    let coupled_g2 = a.has("coupled-g2");
+    if placebo && coupled_g2 {
+        return Err("--placebo and --coupled-g2 are different arms; run them separately".into());
+    }
+    let want_planes = placebo || coupled_g2;
 
     let widths = a.list_usize("widths", &DEFAULT_WIDTHS)?;
     for w in &widths {
@@ -423,7 +490,7 @@ fn noise_sweep(rest: &[String]) -> Result<(), String> {
     );
 
     let t0 = std::time::Instant::now();
-    let tiles = extract_tiles(&stack, &tgs, placebo)?;
+    let tiles = extract_tiles(&stack, &tgs, want_planes)?;
     eprintln!("decoded + tiled in {:.1} s", t0.elapsed().as_secs_f64());
 
     let mut csv = String::from(
@@ -438,19 +505,36 @@ fn noise_sweep(rest: &[String]) -> Result<(), String> {
         let luma: Vec<&[f32]> = if placebo {
             tiles
                 .iter()
-                .map(|t| t[ri].g1.as_ref().expect("--placebo needs the planes").as_slice())
+                .map(|t| {
+                    t[ri]
+                        .g1
+                        .as_ref()
+                        .expect("--placebo needs the planes")
+                        .as_slice()
+                })
+                .collect()
+        } else if coupled_g2 {
+            tiles
+                .iter()
+                .map(|t| {
+                    t[ri]
+                        .g2
+                        .as_ref()
+                        .expect("--coupled-g2 needs the planes")
+                        .as_slice()
+                })
                 .collect()
         } else {
             tiles.iter().map(|t| t[ri].luma.as_slice()).collect()
         };
-        let value: Vec<&[f32]> = if placebo {
+        let value: Vec<&[f32]> = if want_planes {
             tiles
                 .iter()
                 .map(|t| {
                     t[ri]
                         .g2_roi
                         .as_ref()
-                        .expect("--placebo needs the planes")
+                        .expect("this arm needs the planes")
                         .as_slice()
                 })
                 .collect()
@@ -458,7 +542,13 @@ fn noise_sweep(rest: &[String]) -> Result<(), String> {
             tiles.iter().map(|t| t[ri].green.as_slice()).collect()
         };
         let single = value[stack.middle];
-        let (select_on, evaluate_on) = if placebo { ("g1", "g2") } else { ("luma", "luma") };
+        let (select_on, evaluate_on) = if placebo {
+            ("g1", "g2")
+        } else if coupled_g2 {
+            ("g2", "g2")
+        } else {
+            ("luma", "luma")
+        };
 
         for m in &ms {
             let t1 = std::time::Instant::now();
@@ -604,7 +694,11 @@ fn phi(rest: &[String]) -> Result<(), String> {
             let total: f64 = kernel.iter().sum::<f64>() / scale;
             let rel = |v: f64| (v / scale) / total.max(f64::MIN_POSITIVE);
             let taps = kernel.iter().filter(|v| rel(**v) > 1e-9).count();
-            let phi = if total > 0.0 { centre / total } else { f64::NAN };
+            let phi = if total > 0.0 {
+                centre / total
+            } else {
+                f64::NAN
+            };
             println!(
                 "{:<22} {delta:>7.1} {centre:>13.6} {total:>13.6} {phi:>9.6} {taps:>6}",
                 m.name
@@ -647,21 +741,38 @@ struct PlantedCell {
 }
 
 fn planted_cell(tg: &TileGeom, focus: &[Vec<f32>], radius: usize, w_true: usize) -> PlantedCell {
+    let truth = vec![w_true as f32; tg.roi.pixels()];
+    planted_cell_map(tg, focus, radius, &truth)
+}
+
+/// The same, against a **per-pixel** ground-truth depth map over the ROI.
+///
+/// A fronto-parallel plant makes the regulariser strictly free: widening the
+/// box can only help, because the truth is constant. That is a one-sided
+/// objective, and SYNTHESIS fact 36 is a standing warning about one-sided
+/// objectives. A tilted plant restores the trade: a wide box now averages
+/// across genuinely different depths and eventually loses.
+fn planted_cell_map(
+    tg: &TileGeom,
+    focus: &[Vec<f32>],
+    radius: usize,
+    truth: &[f32],
+) -> PlantedCell {
     let index = winner_map(tg, focus, radius);
     let n = index.len() as f64;
     let mut hit = 0usize;
     let mut hit1 = 0usize;
     let mut abs = 0.0f64;
     let mut sum = 0.0f64;
-    for k in &index {
-        let d = (*k as isize - w_true as isize).abs();
-        if d == 0 {
+    for (k, t) in index.iter().zip(truth.iter()) {
+        let d = (*k as f64 - *t as f64).abs();
+        if d < 0.5 {
             hit += 1;
         }
-        if d <= 1 {
+        if d < 1.5 {
             hit1 += 1;
         }
-        abs += d as f64;
+        abs += d;
         sum += *k as f64;
     }
     let mut winners = index.clone();
@@ -705,7 +816,10 @@ fn planted_mode(rest: &[String]) -> Result<(), String> {
         a.one("limit").and_then(|v| v.parse().ok()),
         a.one("label"),
     )?;
-    let out_path = a.one("out").ok_or("planted needs --out <FILE>")?.to_string();
+    let out_path = a
+        .one("out")
+        .ok_or("planted needs --out <FILE>")?
+        .to_string();
     let frames_out = a.one("frames-out").map(String::from);
 
     let widths = a.list_usize("widths", &DEFAULT_WIDTHS)?;
@@ -713,10 +827,15 @@ fn planted_mode(rest: &[String]) -> Result<(), String> {
     let noise_scales = a.list_f32("noise-scales", &[1.0])?;
     let sigma0 = a.f32_or("sigma0", 0.8)?;
     let alphas = a.list_f32("alpha", &[0.35])?;
-    let seed = a.one("seed").and_then(|v| v.parse::<u64>().ok()).unwrap_or(20261101);
+    let seed = a
+        .one("seed")
+        .and_then(|v| v.parse::<u64>().ok())
+        .unwrap_or(20261101);
     let synthetic = a.has("synthetic");
+    let flat_base = a.has("flat-base");
     let null = a.has("null");
     let alphas: Vec<f32> = if null { vec![0.0] } else { alphas };
+    let tilt = a.f32_or("tilt", 0.0)?;
 
     let roi_specs = a.many("roi");
     if roi_specs.is_empty() {
@@ -732,7 +851,11 @@ fn planted_mode(rest: &[String]) -> Result<(), String> {
     let nframes = stack.paths.len();
     let probe = PlantSpec {
         frames: nframes,
-        w_true: *w_trues.iter().max().unwrap_or(&0),
+        w_true: if tilt == 0.0 {
+            *w_trues.iter().max().unwrap_or(&0)
+        } else {
+            0
+        },
         sigma0,
         alpha: alphas.iter().cloned().fold(0.0f32, f32::max),
         noise_scale: 0.0,
@@ -761,17 +884,20 @@ fn planted_mode(rest: &[String]) -> Result<(), String> {
     eprintln!("decoded + tiled in {:.1} s", t0.elapsed().as_secs_f64());
 
     let mut csv = String::from(
-        "stack,roi,roi_kind,base,base_frame,w_true,sigma0,alpha,noise_scale,seed,frames,\
+        "stack,roi,roi_kind,base,base_frame,w_true,tilt,sigma0,alpha,noise_scale,seed,frames,\
          measure,family,role,norm,support_radius,width,radius,\
          acc,acc1,mae,mean_winner,distinct_winners,speckle\n",
     );
     let mut fcsv = String::from(
-        "stack,roi,roi_kind,base,base_frame,w_true,sigma0,alpha,noise_scale,frame,\
+        "stack,roi,roi_kind,base,base_frame,w_true,tilt,sigma0,alpha,noise_scale,frame,\
          blur_sigma,hp_sd,roi_mean\n",
     );
 
     for (ri, tg) in tgs.iter().enumerate() {
-        let roi_kind = roi_kinds.get(ri).cloned().unwrap_or_else(|| "detail".into());
+        let roi_kind = roi_kinds
+            .get(ri)
+            .cloned()
+            .unwrap_or_else(|| "detail".into());
 
         // Pick the base frame by its own sharpness on this ROI, using the
         // shipped operator. This decides *what texture the planted stack has*,
@@ -802,6 +928,22 @@ fn planted_mode(rest: &[String]) -> Result<(), String> {
                 "synthetic",
                 planted::synthetic_texture(tg.geom, 2000.0, 240.0),
             )
+        } else if flat_base {
+            // The proper rule-9 null for a *planted* experiment. A "flat" ROI
+            // of a real frame is not a valid null here: planting blurs the base
+            // frame's own inherited read and shot noise, and that noise is a
+            // broadband texture, so an operator can legitimately recover the
+            // ladder from it. A constant base has nothing to blur at all, so
+            // the only frame-to-frame difference left is the injected noise and
+            // the winner must be at chance.
+            let mut acc = 0.0f64;
+            for j in 0..tg.roi.height {
+                for i in 0..tg.roi.width {
+                    acc += tiles[base_frame][ri].luma[tg.roi_index(i, j)] as f64;
+                }
+            }
+            let m = (acc / tg.roi.pixels() as f64) as f32;
+            ("flat-base", vec![m; tg.geom.pixels()])
         } else {
             ("real", tiles[base_frame][ri].luma.clone())
         };
@@ -823,17 +965,35 @@ fn planted_mode(rest: &[String]) -> Result<(), String> {
                             .wrapping_mul(1_000_003)
                             .wrapping_add((ri * 97 + w_true) as u64),
                     };
-                    let stackf = planted::plant(&base, tg.geom, &stack.noise, spec);
+                    let (stackf, truth) = if tilt == 0.0 {
+                        (
+                            planted::plant(&base, tg.geom, &stack.noise, spec),
+                            vec![w_true as f32; tg.roi.pixels()],
+                        )
+                    } else {
+                        planted::plant_tilted(
+                            &base,
+                            tg.geom,
+                            &stack.noise,
+                            spec,
+                            tilt,
+                            tg.margin,
+                            tg.margin,
+                            tg.roi.width,
+                            tg.roi.height,
+                        )
+                    };
                     for (k, f) in stackf.iter().enumerate() {
                         let (m, _) = mean_and_sigma(f);
                         fcsv.push_str(&format!(
-                            "{},\"{}\",{},{},{},{},{},{},{},{},{:.4},{:.5},{:.3}\n",
+                            "{},\"{}\",{},{},{},{},{},{},{},{},{},{:.4},{:.5},{:.3}\n",
                             stack.label,
                             tg.roi,
                             roi_kind,
                             base_name,
                             base_frame,
                             w_true,
+                            tilt,
                             sigma0,
                             alpha,
                             noise_scale,
@@ -848,17 +1008,18 @@ fn planted_mode(rest: &[String]) -> Result<(), String> {
                         let vol = focus_volume_owned(m, &stackf, tg.geom, &stack.noise);
                         let rows: Vec<(usize, PlantedCell)> = widths
                             .par_iter()
-                            .map(|w| (*w, planted_cell(tg, &vol, (w - 1) / 2, w_true)))
+                            .map(|w| (*w, planted_cell_map(tg, &vol, (w - 1) / 2, &truth)))
                             .collect();
                         for (w, c) in rows {
                             csv.push_str(&format!(
-                                "{},\"{}\",{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{:.6},{:.6},{:.4},{:.3},{},{:.6}\n",
+                                "{},\"{}\",{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{:.6},{:.6},{:.4},{:.3},{},{:.6}\n",
                                 stack.label,
                                 tg.roi,
                                 roi_kind,
                                 base_name,
                                 base_frame,
                                 w_true,
+                                tilt,
                                 sigma0,
                                 alpha,
                                 noise_scale,
@@ -924,12 +1085,7 @@ struct StabilityCell {
 /// Two independent noise draws, one winner map each. Cohen's kappa against the
 /// chance level implied by the observed winner histogram, so an operator that
 /// concentrates on one frame cannot look stable for free.
-fn stability_cell(
-    tg: &TileGeom,
-    va: &[Vec<f32>],
-    vb: &[Vec<f32>],
-    radius: usize,
-) -> StabilityCell {
+fn stability_cell(tg: &TileGeom, va: &[Vec<f32>], vb: &[Vec<f32>], radius: usize) -> StabilityCell {
     let wa = winner_map(tg, va, radius);
     let wb = winner_map(tg, vb, radius);
     let n = wa.len();
@@ -976,7 +1132,7 @@ fn stability_cell(
             let s1 = (diffs.iter().map(|d| d * d).sum::<f64>() / (2.0 * nframes as f64)).sqrt();
             // the averaged curve carries sd s1/sqrt(2).
             let s = s1 / std::f64::consts::SQRT_2;
-            if !(s > 0.0) {
+            if s <= 0.0 || !s.is_finite() {
                 continue;
             }
             let mut sorted = curve.clone();
@@ -1011,7 +1167,10 @@ fn stability(rest: &[String]) -> Result<(), String> {
         a.one("limit").and_then(|v| v.parse().ok()),
         a.one("label"),
     )?;
-    let out_path = a.one("out").ok_or("stability needs --out <FILE>")?.to_string();
+    let out_path = a
+        .one("out")
+        .ok_or("stability needs --out <FILE>")?
+        .to_string();
     let widths = a.list_usize("widths", &DEFAULT_WIDTHS)?;
     let betas = a.list_f32("betas", &[1.0])?;
     let seed = a
@@ -1047,7 +1206,10 @@ fn stability(rest: &[String]) -> Result<(), String> {
     );
 
     for (ri, tg) in tgs.iter().enumerate() {
-        let roi_kind = roi_kinds.get(ri).cloned().unwrap_or_else(|| "detail".into());
+        let roi_kind = roi_kinds
+            .get(ri)
+            .cloned()
+            .unwrap_or_else(|| "detail".into());
         for &beta in &betas {
             // The two draws are built once and shared by every measure, so the
             // comparison across measures is paired on identical data.
@@ -1117,7 +1279,10 @@ fn stability(rest: &[String]) -> Result<(), String> {
                         c.margin,
                     ));
                 }
-                eprintln!("  roi {ri} [{roi_kind}] {source} beta {beta} {:<22} done", m.name);
+                eprintln!(
+                    "  roi {ri} [{roi_kind}] {source} beta {beta} {:<22} done",
+                    m.name
+                );
             }
             if use_planes {
                 break;
@@ -1315,13 +1480,14 @@ fn xcheck(rest: &[String]) -> Result<(), String> {
         stack.paths.len(),
         m.name
     );
-    println!("  M2 published 1.253x at width 1 and 1.075x at width 17; M9 reproduced 1.2527 / 1.0737");
+    println!(
+        "  M2 published 1.253x at width 1 and 1.075x at width 17; M9 reproduced 1.2527 / 1.0737"
+    );
 
     // Two margins, to prove the tile answer is margin independent.
     for margin_extra in [0usize, 64] {
-        let margin = widths.iter().map(|w| (w - 1) / 2).max().unwrap_or(0)
-            + m.support_radius
-            + margin_extra;
+        let margin =
+            widths.iter().map(|w| (w - 1) / 2).max().unwrap_or(0) + m.support_radius + margin_extra;
         let tg = TileGeom::new(roi, margin, stack.plane)?;
         let tiles = extract_tiles(&stack, std::slice::from_ref(&tg), false)?;
         let luma: Vec<&[f32]> = tiles.iter().map(|t| t[0].luma.as_slice()).collect();
@@ -1347,7 +1513,11 @@ fn xcheck(rest: &[String]) -> Result<(), String> {
 fn cost(rest: &[String]) -> Result<(), String> {
     let a = parse_args(rest);
     let dir = a.positional.first().ok_or("cost needs a directory")?;
-    let stack = open_stack(Path::new(dir), Some(a.usize_or("limit", 4)?), a.one("label"))?;
+    let stack = open_stack(
+        Path::new(dir),
+        Some(a.usize_or("limit", 4)?),
+        a.one("label"),
+    )?;
     let roi = Roi::parse(a.one("roi").unwrap_or("2272,1344,256,256"))?;
     let reps = a.usize_or("reps", 3)?;
     let out_path = a.one("out").map(String::from);
@@ -1359,8 +1529,13 @@ fn cost(rest: &[String]) -> Result<(), String> {
     let luma: Vec<&[f32]> = tiles.iter().map(|t| t[0].luma.as_slice()).collect();
     let mpx = tg.geom.pixels() as f64 / 1.0e6;
 
-    let mut csv = String::from("stack,roi,measure,family,support_radius,megapixels,frames,ms_per_frame_mpx\n");
-    println!("cost: tile {}x{} = {:.3} Mpx, {reps} reps, single-threaded per frame", tg.geom.width, tg.geom.height, mpx);
+    let mut csv = String::from(
+        "stack,roi,measure,family,support_radius,megapixels,frames,ms_per_frame_mpx\n",
+    );
+    println!(
+        "cost: tile {}x{} = {:.3} Mpx, {reps} reps, single-threaded per frame",
+        tg.geom.width, tg.geom.height, mpx
+    );
     for m in &ms {
         let mut best = f64::INFINITY;
         for _ in 0..reps {
@@ -1444,10 +1619,7 @@ fn selftest() -> Result<(), String> {
             .map(|(x, y)| out[y * geom.width + x])
             .collect();
         let finite = interior.iter().all(|v| v.is_finite());
-        let expect_zero = !matches!(
-            m.kind,
-            measures::Kind::CtlLuma | measures::Kind::CtlRandom
-        );
+        let expect_zero = !matches!(m.kind, measures::Kind::CtlLuma | measures::Kind::CtlRandom);
         let flat_zero = interior.iter().all(|v| v.abs() < 1e-3);
         check!(
             ok,
@@ -1573,12 +1745,7 @@ fn selftest() -> Result<(), String> {
         chance,
         mean_w
     );
-    let agg = planted_cell(
-        &TileGeom::identity(geom, inset),
-        &vol,
-        8,
-        spec.w_true,
-    );
+    let agg = planted_cell(&TileGeom::identity(geom, inset), &vol, 8, spec.w_true);
     check!(
         ok,
         failed,
@@ -1761,7 +1928,9 @@ fn selftest() -> Result<(), String> {
 
     // ---------------------------------------------------------------- group G
     println!("group G -- the merge path");
-    let value: Vec<Vec<f32>> = (0..5).map(|k| vec![100.0 * k as f32; roi.pixels()]).collect();
+    let value: Vec<Vec<f32>> = (0..5)
+        .map(|k| vec![100.0 * k as f32; roi.pixels()])
+        .collect();
     let vrefs: Vec<&[f32]> = value.iter().map(|v| v.as_slice()).collect();
     let ties: Vec<Vec<f32>> = (0..5).map(|_| vec![1.0f32; tgeom.pixels()]).collect();
     let c = merge_cell(&tg, &ties, &vrefs, vrefs[2], 0);

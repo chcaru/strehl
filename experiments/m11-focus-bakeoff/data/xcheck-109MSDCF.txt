@@ -1,0 +1,7 @@
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+xcheck: 22 frames, roi 2272,1344,256,256, measure ring-1-3
+  M2 published 1.253x at width 1 and 1.075x at width 17; M9 reproduced 1.2527 / 1.0737
+  margin  11  width   1: ratio 1.2527x  stacked sd 35.328 DN  single sd 28.201 DN  winners 22  speckle 39.267%
+  margin  11  width  17: ratio 1.0737x  stacked sd 30.280 DN  single sd 28.201 DN  winners 9  speckle 0.829%
+  margin  75  width   1: ratio 1.2527x  stacked sd 35.328 DN  single sd 28.201 DN  winners 22  speckle 39.267%
+  margin  75  width  17: ratio 1.0737x  stacked sd 30.280 DN  single sd 28.201 DN  winners 9  speckle 0.829%

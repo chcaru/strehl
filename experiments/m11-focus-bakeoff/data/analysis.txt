@@ -1,0 +1,284 @@
+==============================================================================
+M11 -- focus-measure bake-off
+==============================================================================
+registered operator set: 39   post-hoc extension: 8
+
+------------------------------------------------------------------------------
+0. REPRODUCTION GATE (SYNTHESIS §5 item 15) -- believe the code path first
+------------------------------------------------------------------------------
+    M2 published 1.253x at width 1 and 1.075x at width 17; M9 reproduced 1.2527 / 1.0737
+    margin  11  width   1: ratio 1.2527x  stacked sd 35.328 DN  single sd 28.201 DN  winners 22  speckle 39.267%
+    margin  11  width  17: ratio 1.0737x  stacked sd 30.280 DN  single sd 28.201 DN  winners 9  speckle 0.829%
+    margin  75  width   1: ratio 1.2527x  stacked sd 35.328 DN  single sd 28.201 DN  winners 22  speckle 39.267%
+    margin  75  width  17: ratio 1.0737x  stacked sd 30.280 DN  single sd 28.201 DN  winners 9  speckle 0.829%
+  ring-1-3 on M2's canonical flat ROI at width 1: 1.2527x (M2 published 1.253x, M9 reproduced 1.2527x)
+  reproduction gate: PASS
+
+------------------------------------------------------------------------------
+1. CONTROLS -- reported before any treatment
+------------------------------------------------------------------------------
+1a. measure-level controls, noise axis (flat ROI, width 1, median over 4 ROIs)
+    109MSDCF  ctl-const    N = 0.8377x   (n=4 ROIs)
+    109MSDCF  ctl-random   N = 0.9350x   (n=4 ROIs)
+    109MSDCF  ctl-luma     N = 0.6604x   (n=4 ROIs)
+    119MSDCF  ctl-const    N = 0.7168x   (n=4 ROIs)
+    119MSDCF  ctl-random   N = 1.2055x   (n=4 ROIs)
+    119MSDCF  ctl-luma     N = 0.7667x   (n=4 ROIs)
+    ctl-const is the instrument floor: it always elects frame 0, so its N is
+    sd(frame 0)/sd(frame middle) on that ROI and measures frame-to-frame
+    scatter, not the operator.
+
+1b. measure-level controls, selectivity axis (planted P1, detail ROIs, width 1)
+    109MSDCF  ctl-const    S = 0.0000   (chance = 0.0455)
+    109MSDCF  ctl-random   S = 0.0451   (chance = 0.0455)
+    109MSDCF  ctl-luma     S = 0.1567   (chance = 0.0455)
+    119MSDCF  ctl-const    S = 0.0000   (chance = 0.0303)
+    119MSDCF  ctl-random   S = 0.0300   (chance = 0.0303)
+    119MSDCF  ctl-luma     S = 0.2211   (chance = 0.0303)
+
+1c. P2 null -- alpha = 0, no focus planted; S must sit at chance 1/N
+    chance = 0.0455; registered threshold = 0.0909
+    max S over treatments = 0.0472 (ring-1-2)
+    median S over treatments = 0.0451
+    P2 null gate: PASS
+
+1d. rule 9 pairing -- the same planted run on a FLAT ROI must collapse to chance
+    109MSDCF  median S over treatments: detail 0.4060   flat 0.1359   chance 0.0455
+    109MSDCF  max S on the flat ROI = 0.6283 (tenengrad-w5), 13.82x chance (registered ceiling 3x)
+    119MSDCF  median S over treatments: detail 0.5135   flat 0.2282   chance 0.0303
+    119MSDCF  max S on the flat ROI = 0.9598 (tenengrad-w5), 31.67x chance (registered ceiling 3x)
+
+1d-bis. constant-base null -- the amended rule 9 pairing (A5)
+    flat ROI    base replaced by its own mean: max S = 0.0510 (brenner-sym-s2-w5), 1.12x chance; median S = 0.0459
+    detail ROI  base replaced by its own mean: max S = 0.0545 (tenengrad-w5), 1.20x chance; median S = 0.0461
+    chance = 0.0455; registered ceiling 3x = 0.1364
+    constant-base null gate: PASS
+
+1e. P0 positive control -- planted surface on a noiseless broadband texture
+    noiseless  best pointwise S = 1.0000 (sml-w2)
+    noise x1   best pointwise S = 1.0000 (tenengrad-w8)
+    noiseless, width  9: best S = 1.0000 (ring-0-1)
+    noiseless, width 17: best S = 1.0000 (ring-0-1)
+    Registered gate (as clarified in amendment A3): the metric is valid if the
+    planted surface is recovered at >= 0.90 by SOME operator/width in the set.
+
+------------------------------------------------------------------------------
+2. THE TWO AXES, per operator, at width 1 (the registered ranking input)
+------------------------------------------------------------------------------
+operator                       phi        N    Ncorr       S  S/Smax   kappa  k(G1G2)       J
+---------------------------------------------------------------------------------------------
+stensor-w5                  0.0987   1.1300   1.0424  0.8119   1.000   0.573    0.337  0.1300
+brenner-sym-s2-w5           0.1234   1.1473   1.0533  0.8103   0.998   0.578    0.350  0.1493
+tenengrad-w5                0.0728   1.1324   1.0455  0.8007   0.986   0.549    0.308  0.1463
+tenengrad-sq-w2             0.0840   1.2239   1.1350  0.6424   0.791   0.540    0.287  0.4327
+brenner-sym-s2-w2           0.0956   1.2405   1.1807  0.6340   0.781   0.555    0.315  0.4596
+stensor-w2                  0.0843   1.2131   1.1283  0.6200   0.764   0.541    0.287  0.4495
+tenengrad-w2-boxnorm        0.0205   1.2254   1.1358  0.6127   0.755   0.546    0.288  0.4707
+tenengrad-w2                0.0612   1.2255   1.1337  0.6096   0.751   0.531    0.275  0.4745
+tenengrad-w2-nonorm         0.0217   1.2256   1.1356  0.6076   0.748   0.544    0.290  0.4772
+brenner-sym-s1-w2           0.0761   1.2168   1.1509  0.5986   0.737   0.512    0.272  0.4795
+brenner-fwd-s2-w2           0.0781   1.2068   1.1509  0.5966   0.735   0.512    0.272  0.4719
+sml-w5                      0.0097   1.0875   1.0496  0.5599   0.690   0.365    0.168  0.3978
+msband-lo                   0.0484   1.3742   1.1289  0.5511   0.679   0.523    0.230  0.6955
+varlap-w5                   0.0130   1.0863   1.0495  0.5274   0.650   0.381    0.180  0.4367
+localvar-w2                 0.0807   1.1492   1.1286  0.5035   0.620   0.531    0.261  0.5290
+ring-3-8                    0.0293   1.2681   1.0529  0.4859   0.598   0.607    0.313  0.6696
+ring-2-6                    0.0273   1.3131   1.0839  0.4676   0.576   0.568    0.263  0.7372
+ring-4-12                   0.0557   1.2427   1.0437  0.4626   0.570   0.636    0.363  0.6729
+ring-2-4                    0.0231   1.2803   1.0704  0.4354   0.536   0.530    0.215  0.7440
+ring-1-5                    0.0571   1.4003   1.1643  0.4329   0.533   0.516    0.210  0.8671
+dct8-hi                     0.0164   1.1117   1.0809  0.4302   0.530   0.423    0.130  0.5819
+sml-w2                      0.0325   1.1679   1.1227  0.4053   0.499   0.302    0.093  0.6688
+ring-1-3                    0.0551   1.3475   1.1504  0.3980   0.490   0.479    0.165  0.8573
+ring-1-3-nonorm             0.0552   1.3472   1.1504  0.3970   0.489   0.483    0.168  0.8582
+dsml-s6                     0.3779   1.7818   1.6661  0.3962   0.488   0.411    0.133  1.2938
+dsml-s3                     0.3734   1.7196   1.6619  0.3490   0.430   0.382    0.102  1.2897
+ring-1-2                    0.0544   1.2928   1.1254  0.3454   0.425   0.431    0.120  0.8673
+varlap-w2                   0.0328   1.1649   1.1215  0.3428   0.422   0.301    0.094  0.7427
+msband-hi                   0.3222   1.7150   1.6598  0.3418   0.421   0.372    0.104  1.2940
+tenengrad-w0                0.0335   1.0632   0.9886  0.3328   0.410   0.461    0.157  0.6533
+brenner-sym-s2-w0-nonorm    0.0000   1.0542   0.9966  0.3287   0.405   0.443    0.163  0.6494
+tenengrad-w0-nonorm         0.0000   1.0609   0.9888  0.3277   0.404   0.465    0.159  0.6572
+ring-0-3                    0.4778   1.8130   1.7668  0.2977   0.367   0.375    0.093  1.4463
+ring-0-1                    0.4736   1.6770   1.7081  0.1738   0.214   0.287    0.035  1.4630
+sml-w0                      0.4093   1.6105   1.6514  0.1572   0.194   0.258    0.026  1.4168
+dsml-s1                     0.4093   1.6105   1.6514  0.1572   0.194   0.258    0.026  1.4168
+
+S_max = 0.8119 (stensor-w5)
+
+------------------------------------------------------------------------------
+3. THE PARETO FRONT (maximise S, minimise N), registered set, width 1
+------------------------------------------------------------------------------
+    brenner-sym-s2-w0-nonorm   N = 1.0542x   S = 0.3287   S/Smax = 0.405   phi = 0.0000
+    tenengrad-w0               N = 1.0632x   S = 0.3328   S/Smax = 0.410   phi = 0.0335
+    varlap-w5                  N = 1.0863x   S = 0.5274   S/Smax = 0.650   phi = 0.0130
+    sml-w5                     N = 1.0875x   S = 0.5599   S/Smax = 0.690   phi = 0.0097
+    stensor-w5                 N = 1.1300x   S = 0.8119   S/Smax = 1.000   phi = 0.0987
+
+------------------------------------------------------------------------------
+4. THE REGISTERED DECISION RULE
+------------------------------------------------------------------------------
+A = { operators with N <= 1.02 } : 0 of 36
+=> registered outcome branch: O4
+
+J = (1 - S/Smax) + lambda * max(0, N - 1), lambda sensitivity:
+    lambda = 0.25  argmin J = stensor-w5                 J = 0.0325
+    lambda = 0.5   argmin J = stensor-w5                 J = 0.0650
+    lambda = 1.0   argmin J = stensor-w5                 J = 0.1300  <- registered
+    lambda = 2.0   argmin J = stensor-w5                 J = 0.2600
+    lambda = 4.0   argmin J = stensor-w5                 J = 0.5200
+
+J ranking at the registered lambda = 1.0 (top 10):
+    0.1300  stensor-w5
+    0.1463  tenengrad-w5
+    0.1493  brenner-sym-s2-w5
+    0.3978  sml-w5
+    0.4327  tenengrad-sq-w2
+    0.4367  varlap-w5
+    0.4495  stensor-w2
+    0.4596  brenner-sym-s2-w2
+    0.4707  tenengrad-w2-boxnorm
+    0.4719  brenner-fwd-s2-w2
+    ... incumbent ring-1-3: J = 0.8573, rank 26 of 36
+
+O5 test -- is the leader inside a tie? (registered: within the measured
+ROI-to-ROI spread on BOTH axes; tie widths come from section 8g)
+    measured tie widths: N 0.1641   S 0.0519
+    argmin J = stensor-w5; tie set has 3 member(s):
+      stensor-w5                 N = 1.1300  S = 0.8119  J = 0.1300  params = 1  cost = 15.89 ms/frame/Mpx
+      tenengrad-w5               N = 1.1324  S = 0.8007  J = 0.1463  params = 1  cost = 6.41 ms/frame/Mpx
+      brenner-sym-s2-w5          N = 1.1473  S = 0.8103  J = 0.1493  params = 2  cost = 4.65 ms/frame/Mpx
+    => O5 fires. Registered tie-break: (i) fewer parameters, (ii) lower cost, (iii) the incumbent.
+      (i) fewest parameters = 1: stensor-w5, tenengrad-w5
+      (ii) lowest cost: tenengrad-w5 at 6.41 ms/frame/Mpx
+    => O5 winner: tenengrad-w5
+
+------------------------------------------------------------------------------
+5. DO THE AXES AGREE? (registered outcome O7 fires below rho = 0.5)
+------------------------------------------------------------------------------
+    Spearman rho(S, kappa[inject])  = +0.756  (n=36)
+    Spearman rho(S, kappa[G1/G2])   = +0.877  (n=36)
+    Spearman rho(phi, N)            = +0.579  (n=36)
+    Spearman rho(support_r, N)      = -0.009  (n=36)
+    Spearman rho(phi, S)            = -0.088  (n=36)
+    Spearman rho(support_r, S)      = +0.553  (n=36)
+
+------------------------------------------------------------------------------
+6. THE ZERO-CENTRE-TAP QUESTION (the milestone's highest-value question)
+------------------------------------------------------------------------------
+    tenengrad-w0-nonorm        phi = 0.0000   N = 1.0609x   S = 0.3277   S/Smax = 0.404
+    brenner-sym-s2-w0-nonorm   phi = 0.0000   N = 1.0542x   S = 0.3287   S/Smax = 0.405
+    tenengrad-w0               phi = 0.0335   N = 1.0632x   S = 0.3328   S/Smax = 0.410
+    tenengrad-w2-nonorm        phi = 0.0217   N = 1.2256x   S = 0.6076   S/Smax = 0.748
+    tenengrad-w2               phi = 0.0612   N = 1.2255x   S = 0.6096   S/Smax = 0.751
+    tenengrad-w5               phi = 0.0728   N = 1.1324x   S = 0.8007   S/Smax = 0.986
+
+------------------------------------------------------------------------------
+7. POST-HOC EXTENSION (amendment A4) -- is the front truncated at w5?
+------------------------------------------------------------------------------
+    tenengrad-w11              phi = 0.1089   N = 1.0908x   S = 0.9407   S/Smax = 1.000   J = 0.0908
+    stensor-w11                phi = 0.3143   N = 1.0918x   S = 0.9307   S/Smax = 0.989   J = 0.1025
+    brenner-sym-s2-w11         phi = 0.3447   N = 1.0952x   S = 0.9263   S/Smax = 0.985   J = 0.1105
+    tenengrad-w8               phi = 0.0872   N = 1.1019x   S = 0.8955   S/Smax = 0.952   J = 0.1500
+    stensor-w8                 phi = 0.1767   N = 1.1051x   S = 0.8893   S/Smax = 0.945   J = 0.1598
+    brenner-sym-s2-w8          phi = 0.2056   N = 1.1112x   S = 0.8862   S/Smax = 0.942   J = 0.1691
+    sml-w11                    phi = 0.0107   N = 1.0681x   S = 0.6914   S/Smax = 0.735   J = 0.3331
+    sml-w8                     phi = 0.0096   N = 1.0668x   S = 0.6328   S/Smax = 0.673   J = 0.3942
+    argmin J over registered+extension = tenengrad-w11
+
+------------------------------------------------------------------------------
+9. ROBUSTNESS OF THE RULING -- does the winner survive other aggregations?
+------------------------------------------------------------------------------
+    109MSDCF alone                               stensor-w5 (0.095), brenner-sym-s2-w5 (0.118), tenengrad-w5 (0.128)
+    119MSDCF alone                               stensor-w5 (0.165), tenengrad-w5 (0.166), brenner-sym-s2-w5 (0.181)
+    structure-corrected noise axis (Ncorr)       stensor-w5 (0.042), brenner-sym-s2-w5 (0.055), tenengrad-w5 (0.059)
+    selectivity measured under tilt4             stensor-w5 (0.138), brenner-sym-s2-w5 (0.147), tenengrad-w5 (0.170)
+    selectivity measured under tilt16            stensor-w5 (0.130), brenner-sym-s2-w5 (0.160), tenengrad-w5 (0.169)
+    selectivity measured under tilt32            stensor-w5 (0.130), tenengrad-w5 (0.161), brenner-sym-s2-w5 (0.167)
+    both axes at regulariser width 9             stensor-w5 (0.109), tenengrad-w5 (0.112), brenner-sym-s2-w5 (0.146)
+    both axes at regulariser width 17            tenengrad-w5 (0.081), stensor-w5 (0.087), ring-1-3 (0.094)
+
+------------------------------------------------------------------------------
+8. SWEEPS
+8a. tilt -- does a wider regulariser still help when depth VARIES?
+    tiltK = K frames of depth change across the 256 px ROI (0 = fronto-parallel)
+    tilt0:
+      ring-1-3                   w1=0.362  w5=0.620  w9=0.799  w17=0.949  w33=0.997
+      tenengrad-w5               w1=0.773  w5=0.836  w9=0.886  w17=0.955  w33=0.988
+      stensor-w5                 w1=0.784  w5=0.842  w9=0.892  w17=0.956  w33=0.980
+      brenner-sym-s2-w5          w1=0.772  w5=0.820  w9=0.866  w17=0.935  w33=0.979
+      tenengrad-w0-nonorm        w1=0.295  w5=0.547  w9=0.729  w17=0.904  w33=0.978
+      sml-w5                     w1=0.504  w5=0.535  w9=0.569  w17=0.632  w33=0.712
+    tilt4:
+      ring-1-3                   w1=0.307  w5=0.528  w9=0.690  w17=0.839  w33=0.912
+      tenengrad-w5               w1=0.645  w5=0.711  w9=0.761  w17=0.843  w33=0.911
+      stensor-w5                 w1=0.665  w5=0.734  w9=0.786  w17=0.861  w33=0.917
+      brenner-sym-s2-w5          w1=0.670  w5=0.733  w9=0.777  w17=0.845  w33=0.906
+      tenengrad-w0-nonorm        w1=0.248  w5=0.463  w9=0.616  w17=0.779  w33=0.885
+      sml-w5                     w1=0.422  w5=0.456  w9=0.490  w17=0.565  w33=0.658
+    tilt16:
+      ring-1-3                   w1=0.298  w5=0.516  w9=0.672  w17=0.783  w33=0.787
+      tenengrad-w5               w1=0.613  w5=0.675  w9=0.716  w17=0.774  w33=0.783
+      stensor-w5                 w1=0.637  w5=0.698  w9=0.734  w17=0.777  w33=0.760
+      brenner-sym-s2-w5          w1=0.629  w5=0.685  w9=0.723  w17=0.766  w33=0.752
+      tenengrad-w0-nonorm        w1=0.238  w5=0.448  w9=0.588  w17=0.718  w33=0.756
+      sml-w5                     w1=0.409  w5=0.443  w9=0.474  w17=0.523  w33=0.542
+    tilt32:
+      ring-1-3                   w1=0.323  w5=0.540  w9=0.677  w17=0.751  w33=0.743
+      tenengrad-w5               w1=0.613  w5=0.666  w9=0.697  w17=0.734  w33=0.730
+      stensor-w5                 w1=0.631  w5=0.683  w9=0.713  w17=0.739  w33=0.709
+      brenner-sym-s2-w5          w1=0.619  w5=0.666  w9=0.695  w17=0.723  w33=0.709
+      tenengrad-w0-nonorm        w1=0.257  w5=0.462  w9=0.595  w17=0.686  w33=0.705
+      sml-w5                     w1=0.410  w5=0.438  w9=0.460  w17=0.493  w33=0.476
+
+8b. ladder steepness alpha (px of blur per frame) -- depth discrimination
+    ring-1-3                   a0.15=0.280  a0.35=0.371  a0.7=0.426  a1.4=0.478
+    tenengrad-w5               a0.15=0.633  a0.35=0.744  a0.7=0.779  a1.4=0.783
+    stensor-w5                 a0.15=0.680  a0.35=0.770  a0.7=0.792  a1.4=0.784
+    brenner-sym-s2-w5          a0.15=0.649  a0.35=0.758  a0.7=0.793  a1.4=0.791
+    tenengrad-w0-nonorm        a0.15=0.222  a0.35=0.295  a0.7=0.338  a1.4=0.385
+    sml-w5                     a0.15=0.444  a0.35=0.547  a0.7=0.580  a1.4=0.594
+    ctl-random                 a0.15=0.046  a0.35=0.046  a0.7=0.046  a1.4=0.046
+
+8c. injected-noise scale
+    ring-1-3                   x0=0.652  x0.5=0.454  x1=0.372  x2=0.285  x4=0.199
+    tenengrad-w5               x0=0.882  x0.5=0.864  x1=0.753  x2=0.576  x4=0.435
+    stensor-w5                 x0=0.895  x0.5=0.879  x1=0.772  x2=0.621  x4=0.496
+    brenner-sym-s2-w5          x0=0.904  x0.5=0.885  x1=0.765  x2=0.613  x4=0.462
+    tenengrad-w0-nonorm        x0=0.592  x0.5=0.375  x1=0.294  x2=0.218  x4=0.149
+    sml-w5                     x0=0.996  x0.5=0.692  x1=0.553  x2=0.306  x4=0.111
+
+8d. regulariser width on the fronto-parallel P1 plant (S) and the flat ROI (N)
+    width  1  ring-1-3: N=1.277 S=0.351   tenengrad-w5: N=1.102 S=0.739   stensor-w5: N=1.095 S=0.759
+    width  9  ring-1-3: N=1.101 S=0.788   tenengrad-w5: N=1.111 S=0.873   stensor-w5: N=1.109 S=0.874
+    width 17  ring-1-3: N=1.075 S=0.935   tenengrad-w5: N=1.081 S=0.954   stensor-w5: N=1.082 S=0.950
+
+8e. realised per-frame noise of the planted ladder (registered ceiling: 10% spread)
+    hp_sd on a DETAIL ROI is dominated by scene structure, not noise, and the plant
+    blurs that structure by design -- so the detail figure is not a noise diagnostic.
+    The flat ROI is the honest read of the realised per-frame noise.
+    109MSDCF  detail median relative spread of hp_sd across the ladder = 109.8%   max = 124.0%
+    109MSDCF  flat   median relative spread of hp_sd across the ladder = 9.7%   max = 10.1%  PASS
+    119MSDCF  detail median relative spread of hp_sd across the ladder = 240.3%   max = 260.6%
+    119MSDCF  flat   median relative spread of hp_sd across the ladder = 29.5%   max = 29.7%  FAIL
+
+8f. cost, single-threaded
+    cheapest  ctl-const                  0.543 ms/frame/Mpx
+    cheapest  ctl-luma                   1.145 ms/frame/Mpx
+    cheapest  ctl-random                 2.831 ms/frame/Mpx
+    cheapest  brenner-sym-s2-w0-nonorm   2.857 ms/frame/Mpx
+    cheapest  dsml-s1                    3.311 ms/frame/Mpx
+    dearest   dct8-hi                    158.626 ms/frame/Mpx
+    dearest   msband-lo                  16.064 ms/frame/Mpx
+    dearest   stensor-w5                 15.891 ms/frame/Mpx
+    dearest   stensor-w11                15.596 ms/frame/Mpx
+    dearest   stensor-w2                 15.434 ms/frame/Mpx
+    candidate ring-1-3                   5.987 ms/frame/Mpx
+    candidate tenengrad-w5               6.411 ms/frame/Mpx
+    candidate stensor-w5                 15.891 ms/frame/Mpx
+    candidate brenner-sym-s2-w5          4.651 ms/frame/Mpx
+
+8g. ROI-to-ROI spread, which sets the tie width for outcome O5
+    109MSDCF  median range of N across ROIs = 0.1210   median range of S across (ROI x w_true) = 0.0685
+    119MSDCF  median range of N across ROIs = 0.2196   median range of S across (ROI x w_true) = 0.0432
+

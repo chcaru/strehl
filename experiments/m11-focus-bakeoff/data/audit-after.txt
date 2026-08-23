@@ -1,0 +1,26 @@
+M11 post-run audit of the read-only capture corpora.
+
+METHOD A -- identical to data\audit-before.txt (Get-ChildItem -Recurse -File, no -Force,
+so hidden items such as .git are skipped). This is the like-for-like comparison.
+
+  before  C:\dev\macro           files=17449 bytes=286581830721
+  after   C:\dev\macro           files=17449 bytes=286581830721   UNCHANGED
+  before  D:\macro-dark-frames   files=242   bytes=8179392512
+  after   D:\macro-dark-frames   files=242   bytes=8179392512     UNCHANGED
+
+METHOD B -- the udit mode of this harness, which walks hidden entries too, so its
+totals are LARGER by construction. Recorded for future runs; there is no efore in this
+method because the pre-run audit predates the mode.
+
+  after   C:\dev\macro           files=18530 bytes=286893514060
+  after   D:\macro-dark-frames   files=242   bytes=8179392512
+
+The 1081-file / 311,683,339-byte gap between A and B is entirely hidden/dot-path content
+(measured: 6659 such files under C:\dev\macro, of which 1081 are invisible to method A).
+It is a difference in how the two walkers enumerate, not a change to the data.
+
+Newest mtime under C:\dev\macro is unchanged and predates this session; a scan for files
+written in the six hours covering the whole M11 run returned zero results.
+
+Nothing in this experiment opens either corpus for writing. Every RAW file is read through
+strehl-raw's decode path.

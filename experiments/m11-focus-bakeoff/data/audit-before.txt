@@ -1,0 +1,2 @@
+C:\dev\macro files=17449 bytes=286581830721 newest_mtime_utc=05/18/2026 04:07:36
+D:\macro-dark-frames files=242 bytes=8179392512 newest_mtime_utc=08/22/2026 21:50:26
