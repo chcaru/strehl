@@ -54,6 +54,20 @@ AMENDMENT_MARKERS = (
     "WITHDRAWN", "SUPERSEDED", "NOT ADMISSIBLE", "RETRACTED",
 )
 
+# Sections of SYNTHESIS.md that declare no numbering namespace and, measured at
+# 4c02816, contain zero numbered list items. See check_n5_item_placement.
+SECTIONS_WITHOUT_NUMBERED_ITEMS = (2, 4, 6, 9)
+
+# Status words a sentence may assert about a question or discipline. Used by
+# advisory A4 only -- see the docstring there for why this is not a check.
+STATUS_MARKERS = (
+    "MOOT", "ANSWERED", "CLOSED", "RESOLVED", "REOPENED", "WITHDRAWN",
+    "SUPERSEDED", "REFUTED",
+)
+
+CODE_SPAN = re.compile(r"`+[^`]*`+")
+STRIKETHROUGH = re.compile(r"~~.*?~~", re.S)
+
 # nouns whose counts A2 is willing to compare against an enumeration. Anything
 # else ("cells", "frames", "stacks") produced false positives at design time.
 CORPUS_NOUNS = r"(?:fact|facts|row|rows|fact rows|question|questions|discipline|disciplines|site|sites)"
@@ -425,6 +439,107 @@ def check_s4_line_endings(docs, index_eol):
 # N — namespace
 # --------------------------------------------------------------------------
 
+def strip_code_spans(text):
+    """Backtick spans are not markup. The corpus legitimately contains a literal
+    `**` inside backticks; counting it as emphasis is a false positive. Measured:
+    stripping is worth exactly 2 false positives on SYNTHESIS at 4c02816 --
+    small, but the whole check is worthless if it fires on legitimate text."""
+    return CODE_SPAN.sub("", text)
+
+
+def numbered_item_units(index, sections):
+    """Yield (section, number, first_line, label, text) for every numbered item
+    in `sections`, grouped with its continuation lines.
+
+    Grouping rule (M58c): continuation runs until a blank line, the next
+    `^\\d+\\. ` item, or a heading. A numbered item may then continue in a
+    further indented paragraph after a blank line -- 8 such paragraphs exist at
+    4c02816 -- so those are yielded as their own units rather than dropped.
+    """
+    syn = index.syn
+    for sec in sections:
+        if sec not in index.spans:
+            continue
+        start, end = index.spans[sec]
+        i = start
+        current = None
+        while i < end:
+            if syn.fenced[i]:
+                i += 1
+                continue
+            m = re.match(r"^(\d+)\. ", syn.lines[i])
+            if m:
+                num = int(m.group(1))
+                j = i + 1
+                while j < end and syn.lines[j].strip() \
+                        and not re.match(r"^\d+\. ", syn.lines[j]) \
+                        and not syn.lines[j].startswith("#"):
+                    j += 1
+                current = num
+                yield (sec, num, i + 1, "item", "\n".join(syn.lines[i:j]))
+                i = j
+                continue
+            line = syn.lines[i]
+            if line.strip() and line.startswith((" ", "\t")) and current is not None:
+                j = i
+                while j < end and syn.lines[j].strip():
+                    j += 1
+                yield (sec, current, i + 1, "continuation paragraph",
+                       "\n".join(syn.lines[i:j]))
+                i = j
+                continue
+            if line.strip() and not line.startswith((" ", "\t")):
+                current = None
+            i += 1
+
+
+def check_s5_emphasis_balance(index):
+    """Invariant B. An item whose `**` count is odd has an unterminated bold span
+    and stops rendering as written.
+
+    M58c/82f13b0: prepending a clause to a `N. **Headline**` item consumes the
+    opening `**`, and the item silently mis-renders from there. Four §5 items
+    had never closed their final span (disciplines 170, 181, 211, 221 -- the
+    last over-closing with `****`); nobody noticed for an unknown number of
+    commits, because nothing rendered the file in CI.
+
+    The method is the whole check. Measured on SYNTHESIS §5+§10 at 4c02816:
+
+        naive, per LINE                     320 flags
+        per ITEM, any line odd              114 flags   (74 in §5 alone)
+        per ITEM, joined, code spans kept     2 flags
+        per ITEM, joined, code spans stripped 0 flags   <- shipped
+
+    Numbered items wrap across continuation lines and a bold span legitimately
+    opens on one line and closes on another, so per-line counting is worse than
+    useless. Both the join and the strip are load-bearing.
+
+    Fact rows are single lines, so each row is its own unit; 640 of 640 balance.
+    """
+    out = []
+    for sec, num, line, label, text in numbered_item_units(index, (5, 10)):
+        n = strip_code_spans(text).count("**")
+        if n % 2:
+            kind = "discipline" if sec == 5 else "question"
+            out.append(Violation(
+                SYNTHESIS, line, "S5",
+                "%s %d: %s has an odd number of `**` (%d) after code spans are "
+                "stripped, so a bold span never closes and the item mis-renders "
+                "from that point"
+                % (kind, num, label, n),
+                text.strip().split("\n")[0]))
+    for num, line in index.fact_rows_all:
+        raw = index.syn.lines[line - 1]
+        n = strip_code_spans(raw).count("**")
+        if n % 2:
+            out.append(Violation(
+                SYNTHESIS, line, "S5",
+                "fact %d: row has an odd number of `**` (%d) after code spans "
+                "are stripped, so a bold span never closes" % (num, n),
+                raw))
+    return out
+
+
 def check_n1_duplicates(index):
     out = []
     seen = {}
@@ -473,6 +588,50 @@ def check_n2_placement(index):
             out.append(Violation(SYNTHESIS, i + 1, "N2",
                                  "four-column `| N |` row outside §4; fact rows "
                                  "live in §4 only", line))
+    return out
+
+
+def check_n5_item_placement(index):
+    """Invariant A, first half, in the only form that has power here.
+
+    M58c: commit 39b5ca7 wrote question 170's verdict into DISCIPLINE 170.
+    Measured rate 1 of 29 numbered items across four audited commits (~3%).
+    The rule as first proposed -- "a `N. **...**` item must sit in §5 or §10" --
+    was MEASURED against this document and fires 21 times on legitimate content:
+    §1 (3 items), §3 (6), §7 (6), §8 (6). §7 is the `risk` namespace, so 15 of
+    those 21 are ordinary prose enumerations in narrative sections. A check that
+    fires 21 times gets turned off, so it is not shipped in that form.
+
+    What IS shipped: four sections carry a table or plain prose and contain
+    ZERO numbered items -- measured at 4c02816, and stable across this
+    document's history. A numbered item appearing in one of them is a
+    misfiled discipline, question or risk. §4 is the one that matters (facts are
+    `| N |` rows, never list items) and is also covered by N2 from the other
+    direction.
+
+    If a narrative section legitimately gains a numbered list, this fires once
+    and someone edits one tuple. That is the intended failure mode: a check that
+    is cheap to re-baseline beats a check tuned until it can never fire.
+    """
+    out = []
+    syn = index.syn
+    named = {2: "Name", 4: "Measured facts", 6: "Novelty", 9: "Scope"}
+    for sec in SECTIONS_WITHOUT_NUMBERED_ITEMS:
+        if sec not in index.spans:
+            continue
+        start, end = index.spans[sec]
+        for i in range(start, end):
+            if syn.fenced[i]:
+                continue
+            m = re.match(r"^(\d+)\. ", syn.lines[i])
+            if m:
+                out.append(Violation(
+                    SYNTHESIS, i + 1, "N5",
+                    "numbered item %s in §%d (%s), which holds no numbering "
+                    "namespace; disciplines belong in §5, questions in §10, "
+                    "risks in §7"
+                    % (m.group(1), sec, named.get(sec, "?")),
+                    syn.lines[i]))
     return out
 
 
@@ -724,6 +883,67 @@ def check_a2_count_vs_enumeration(index):
     return out
 
 
+def advisory_a4_status_coherence(index):
+    """HEURISTIC, AND DELIBERATELY NOT A CHECK.
+
+    The defect M58c records is that fact 771 asserted "Question 170 is MOOT"
+    while §10's question 170 carried no MOOT marker, because the verdict had
+    been written into DISCIPLINE 170 instead. C1 is silent on this: question 170
+    exists, so the citation resolves. Only comparing the ASSERTED STATUS against
+    the referenced item's own text can see it.
+
+    So this was built as a failing check and then measured, at 4c02816:
+
+        `<kind> N ... <MARKER>` claims found        19
+        referenced item carries the marker          11
+        claim sits inside ~~strikethrough~~          1
+        negated prose ("cannot be answered")         1
+        RESIDUAL                                     6  = 32%
+
+    A third of the corpus is not a defect rate; it is prose. "Question 132's
+    leading hypothesis is closed" and "Question 101 **REFUTED" are a fact row
+    recording a verdict, and whether §10 must echo it is a judgement call. A
+    check firing on 6 of 19 would be turned off within a day, which is worse
+    than no check (fact 725's lesson, and the reason A2 is scoped as tightly as
+    it is). It is therefore an advisory: a review list, never an exit code.
+
+    The residual six are listed in M59-corpus-linter.md for adjudication.
+    """
+    out = []
+    pat = re.compile(
+        r"\b(question|discipline)\s+(\d{1,4})\b(?![\w.])(?P<mid>[^.;|]{0,60}?)"
+        r"\b(?P<mk>%s)\b" % "|".join(STATUS_MARKERS), re.I)
+    negation = re.compile(r"\b(cannot|can't|not|never|no longer|still|un)\b", re.I)
+    kind_section = {"question": 10, "discipline": 5}
+    for i, line in enumerate(index.syn.lines):
+        if index.syn.fenced[i]:
+            continue
+        bare = strip_code_spans(line)
+        visible = STRIKETHROUGH.sub("", bare)
+        for m in pat.finditer(bare):
+            kind = m.group(1).lower()
+            num = int(m.group(2))
+            marker = m.group("mk").upper()
+            body = index.item_body(kind_section[kind], num)
+            if not body:
+                continue                                  # C1 owns non-existence
+            if re.search(r"\b%s\b" % re.escape(marker), body, re.I):
+                continue
+            if m.group(0) not in visible:
+                continue                                  # struck through
+            if negation.search(m.group("mid")) or \
+                    negation.search(bare[max(0, m.start() - 40):m.start()]):
+                continue
+            out.append(Violation(
+                SYNTHESIS, i + 1, "A4",
+                "HEURISTIC: this says %s %d is %s, but §%d's %s %d does not "
+                "carry that word. Either the verdict was written into the wrong "
+                "namespace (M58c, commit 39b5ca7) or the prose is loose."
+                % (kind, num, marker, kind_section[kind], kind, num),
+                m.group(0)))
+    return out
+
+
 def advisory_a3_amendment(index):
     """HEURISTIC. Fact 761: "An amendment that leaves the headline intact is
     worse than no amendment." A marker in the Consequence or Source cell but not
@@ -748,8 +968,8 @@ def advisory_a3_amendment(index):
 # driver
 # --------------------------------------------------------------------------
 
-CHECKS = ["S1", "S2", "S3", "S4", "N1", "N2", "N4", "C1", "A1", "A2"]
-ADVISORIES = ["N3", "A3"]
+CHECKS = ["S1", "S2", "S3", "S4", "S5", "N1", "N2", "N4", "N5", "C1", "A1", "A2"]
+ADVISORIES = ["N3", "A3", "A4"]
 
 
 def collect_files(root):
@@ -815,12 +1035,16 @@ def main(argv=None):
         violations += check_s3_hygiene(md_docs + rs_docs, index_eol)
     if "S4" in wanted:
         violations += check_s4_line_endings(md_docs + rs_docs, index_eol)
+    if "S5" in wanted:
+        violations += check_s5_emphasis_balance(index)
     if "N1" in wanted:
         violations += check_n1_duplicates(index)
     if "N2" in wanted:
         violations += check_n2_placement(index)
     if "N4" in wanted:
         violations += check_n4_unallocated(index)
+    if "N5" in wanted:
+        violations += check_n5_item_placement(index)
     if "C1" in wanted:
         violations += check_c1_citations(md_docs + rs_docs, index)
     if "A1" in wanted:
@@ -856,7 +1080,8 @@ def main(argv=None):
         print("corpus_lint: OK — no violations")
 
     if args.advisory:
-        adv = advisory_n3_shape(index) + advisory_a3_amendment(index)
+        adv = advisory_n3_shape(index) + advisory_a3_amendment(index) \
+            + advisory_a4_status_coherence(index)
         print("")
         print("--- ADVISORY (heuristics; these do NOT affect the exit code) ---")
         for v in adv:

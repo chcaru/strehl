@@ -619,6 +619,256 @@ python experiments/M59-corpus-linter/c1_census.py
 python experiments/M59-corpus-linter/a2_coverage.py
 ```
 
+## 8. Invariants A and B (folded in later, from M58c and commit `82f13b0`)
+
+The orchestrator asked for two further invariants after this report's first
+seven sections were written, both carrying a measured failure rate on the
+current corpus, both from `docs/research/M58c-repair-audit.md` (`74ac38f`) and
+the repairs at `82f13b0`. They are folded into the same linter as **S5** and
+**N5**, with one heuristic offered as advisory **A4**.
+
+Everything in this section is measured at `4c02816` unless stated. The document
+is under concurrent edit; totals drift between runs, so every count below is
+pinned to that sha.
+
+### 8.1 Invariant B — emphasis balance per item (`S5`)
+
+The defect: prepending a clause to a `N. **Headline**` item consumes its
+opening `**`, the span never closes, and the item silently stops rendering as
+written. Four §5 items had never closed their final span — disciplines 170, 181,
+211 and 221, the last over-closing with `****`. All four were repaired in
+`82f13b0`.
+
+**The method is the check.** The orchestrator's warning that a naive per-line
+count is "worse than useless" is correct, and the size of the effect is worth
+recording, because it is the entire argument for the two extra steps:
+
+| counting unit | flags in §5+§10 | MEASURED |
+|---|---|---|
+| naive, per **line** | 320 | `inv_probe3.py` |
+| per **item**, any constituent line odd | 114 | `inv_probe3.py` |
+| per **item**, joined, code spans **kept** | 2 | `inv_probe2.py` |
+| per **item**, joined, code spans **stripped** | **0** | shipped as `S5` |
+
+MEASURED. Grouping lines into items removes 112 of the 114; stripping code spans
+removes the last 2. Both steps are load-bearing, and neither is optional.
+
+**Reconciling with the orchestrator's figure.** They reported "about eighty"
+false positives; my first number was 320. The unit differs, and both are right:
+per **item** rather than per line, and §5 alone rather than §5+§10, the count is
+**74** (§10 alone is 40; together 114). MEASURED. 74 is "about eighty", so the
+two implementations agree — I am recording the unit rather than adopting the
+figure, because "320" and "74" are the same measurement of the same document
+and only the denominator moved.
+
+**Result at HEAD: clean.** MEASURED — 0 unbalanced items in §5, 0 in §10, and
+0 of 640 fact rows. Disciplines 170, 181, 211 and 221 all balance. This matches
+the orchestrator's prediction exactly, so this is a confirmation of `82f13b0`,
+not a new finding.
+
+**One blind spot in the rule as specified, closed.** The grouping rule stops at
+a blank line. Eight numbered items continue in a *further* indented paragraph
+after a blank line (§5 item 29 ×2; §10 items 20, 90, 95 ×3, 102) — including the
+`**CLOSED by facts 90-92**` verdict on question 20 — and the rule as written
+never looks at that text at all. `S5` therefore checks those paragraphs as
+their own units. MEASURED: all 8 balance, so this adds coverage at zero cost
+today. DERIVED: without it, an unbalanced span in a verdict paragraph would be
+invisible, which is precisely where verdicts get appended.
+
+### 8.2 Invariant A, first half — placement (`N5`), and why I did not ship it as specified
+
+The rule as proposed is: every `N. **…**` item must sit in §5 or §10.
+
+**MEASURED: that rule fires 21 times on legitimate content at HEAD** — §1 (3
+items), §3 (6), §7 (6), §8 (6). Six of those are the `risk` namespace, which
+lives in §7 and is already indexed by this linter; the other 15 are ordinary
+prose enumerations in narrative sections. M58c itself confirms they are
+legitimate, noting "the §8 ship-order item in §8" among the twenty-eight items
+that landed correctly.
+
+I did not ship it. A check that fires 21 times on a clean document gets turned
+off, and this report has already argued (§5.1) that a false-positive check is
+worse than no check. ARGUED.
+
+What shipped instead: four sections declare no numbering namespace and contain
+**zero** numbered items — §2 Name, §4 Measured facts, §6 Novelty, §9 Scope.
+MEASURED. A numbered item in any of them is a misfiled discipline, question or
+risk. §4 is the one that matters, since facts are `| N |` rows and never list
+items, and it is covered from the other direction by `N2`.
+
+This is a narrower check than the one requested, and I want to be plain about
+the cost: **it has a base rate of zero because I chose the sections by
+measuring them**, so it cannot fire on the §1/§3/§7/§8 shape at all. If a
+narrative section legitimately gains a numbered list, `N5` fires once and
+someone edits one tuple. That failure mode is deliberate — a check that is cheap
+to re-baseline beats a check tuned until it can never fire (discipline 250).
+
+**Result at HEAD: clean.** MEASURED.
+
+### 8.3 Invariant A, second half — cross-reference by section
+
+"For any `Question N` or `Discipline N` reference, assert an item with that
+number exists in the corresponding section" is already implemented, and has been
+since `4e8a40b`: it is `C1`. `C1` resolves each reference against
+`NAMESPACE_SECTION` — `question` → §10, `discipline` → §5, `risk` → §7, `fact` →
+§4's table — and matches to a maximal digit run so `fact 200` never matches
+`fact 200a` (§4.2). It is case-insensitive, so the capitalised `Question 170`
+form is tokenised correctly; verified directly.
+
+**Result at HEAD: clean.** MEASURED — 5,026 citation tokens across 80 markdown
+and 27 Rust files, of which 4,957 are resolvable references; zero unresolved.
+The A1 fixture in §8.6 proves it fires on exactly the M58c shape.
+
+### 8.4 Neither half of invariant A would have caught the defect that motivated it
+
+This is the finding I most want on the record, and it is ARGUED from M58c's own
+account.
+
+Commit `39b5ca7` did not create a misplaced item. It wrote question 170's
+verdict **into the body of the existing discipline 170**. So:
+
+- placement (`N5`) is silent — no item moved, and §5 is a legal home for
+  discipline 170;
+- existence (`C1`) is silent — question 170 exists in §10, so the reference in
+  fact 771 resolves;
+- `N1` (duplicates) is silent — nothing was duplicated.
+
+Two things could have caught it. **`S5` would have**, because the prepended
+clause consumed the item's opening `**` — that is the mechanism M58c records as
+the second of three consequences, and it is machine-visible. And a **status**
+check would have, because fact 771 asserted "Question 170 is MOOT" while §10's
+question 170 carried no MOOT marker.
+
+So the invariant that pays for itself here is B, not A. A is worth having on its
+measured 3% rate, but on this specific defect it is the wrong instrument.
+
+### 8.5 The status check: built, measured, and demoted to an advisory (`A4`)
+
+Since §8.4 identifies status coherence as the check that would have caught the
+170 defect, I built it: for every `question|discipline N … <MARKER>` claim,
+assert the referenced item's own body carries that marker.
+
+MEASURED at `4c02816`:
+
+| | count |
+|---|---|
+| `<kind> N … <MARKER>` claims found | 19 |
+| referenced item **does** carry the marker | 11 |
+| claim sits inside `~~strikethrough~~` | 1 |
+| negated prose ("cannot be answered") | 1 |
+| **residual** | **6** (32%) |
+
+Three separate causes had to be separated before that number was trustworthy,
+and two of them were my own bugs:
+
+1. My first item-body walker stopped at a blank line, so question 20's
+   `**CLOSED by facts 90-92**` paragraph was invisible and the claim "Question
+   20 is closed" was reported as uncorroborated. Extending the body through
+   blank-line-separated paragraphs moved 3 claims from *disagree* to *agree*.
+2. Fact 622's repaired consequence cell contains `~~Question 119 is answered
+   negatively~~` — struck through, i.e. explicitly retracted text. Counting it
+   was a false positive; stripping strikethrough removed it.
+3. "Question 70 cannot be answered" is prose, not a status assertion.
+
+**32% is not a defect rate; it is prose.** "Question 132's leading hypothesis is
+closed" and "Question 101 **REFUTED" are fact rows recording a verdict, and
+whether §10 must echo the word is a judgement call no regex can make. A check
+firing on 6 of 19 would be switched off within a day. It ships as an advisory:
+printed only under `--advisory`, never affecting the exit code, and labelled
+HEURISTIC in its own output. This is a heuristic that flags for human review,
+and I am saying so plainly rather than counting it as a check.
+
+**The six residual claims, for adjudication — not fixed, and possibly all
+correct as written:**
+
+| line | claim | §10 item carries the marker? |
+|---|---|---|
+| `SYNTHESIS.md:1017` | "Question 101 **REFUTED" | no |
+| `SYNTHESIS.md:1018` | "question 80 **REFUTED" | no |
+| `SYNTHESIS.md:1164` | "Question 132's leading hypothesis is closed" | no |
+| `SYNTHESIS.md:1172` | "Question 120 is closed" | no |
+| `SYNTHESIS.md:1322` | "Question 119 is answered" | no |
+| `SYNTHESIS.md:1365` | "Question 161 / fact 691 is RESOLVED" | no |
+
+Questions 120 and 161 are the two I would look at first: neither §10 item
+carries any closure language, and both fact rows read as settled verdicts. That
+is the same shape as the 170 defect. But I have not adjudicated them, and the
+linter does not claim they are wrong.
+
+### 8.6 Fixtures — nine synthetic documents, each proving one property
+
+Built as small synthetic documents rather than mutations of the real file, as
+asked: `experiments/M59-corpus-linter/fixture_probe.py`. Each asserts three
+things, because a red exit code is not evidence of the red you wanted
+(discipline 351): the expected exit code, a fixture-specific needle in the
+output, and the absence of `Traceback`.
+
+| fixture | expect | result |
+|---|---|---|
+| control: a well-formed document | silent | ok |
+| B1: opening `**` consumed by a prepended clause | fire | ok |
+| B2: item ending `.****` (over-closed) | fire | ok |
+| B3: bold span spanning three continuation lines | silent | ok |
+| B4: literal `` `**` `` inside a code span | silent | ok |
+| A1: `Question N` where N exists only in §5 | fire | ok |
+| A2: numbered item in §6, which holds no namespace | fire | ok |
+| A3: N present in both §5 and §10 as unrelated items | silent | ok |
+| A4: status claim uncorroborated by §10 | advisory, exit stays 0 | ok |
+
+MEASURED: 9 of 9 behaved as declared. `fixture_show.py` prints the unfiltered
+output of each firing fixture; every red is the intended check with the intended
+message, e.g.
+
+```
+docs/research/SYNTHESIS.md:10: [S5] discipline 170: item has an odd number of `**` (1)
+      after code spans are stripped, so a bold span never closes and the item
+      mis-renders from that point
+      170. Superseded by M58c, A discipline whose opening marker was eaten.** Body text.
+```
+
+**B1 failed on its first run, and the failure was mine.** I wrote the fixture as
+`170. Superseded by M58c, **A discipline …**` — which still balances, so `S5`
+was right to stay silent. The real mechanism *replaces* the opening marker
+rather than sitting in front of it. One fixture in nine did not exercise the
+property it named, which is the second time in this milestone that the power
+requirement has caught a test that could not fail (§4.1 was the first). AGENTS
+rule 36 earns its place.
+
+MEASURED regression: `power_probe.py`'s original 16 plants still pass unchanged,
+and the full run at HEAD still reports the same 11 violations as §3 — `S5` and
+`N5` add none.
+
+### 8.7 What these two invariants still cannot see
+
+Additional to §5, and specific to the two folded checks:
+
+- **`S5` proves a span closes, not that it closes in the right place.**
+  `**A** headline that lost its emphasis **here**` balances perfectly and is
+  still mis-emphasised. Parity is a necessary condition, never a sufficient one.
+- **`S5` cannot see single-asterisk italics, `_`/`__` emphasis, or unbalanced
+  backticks.** Only `**` is counted, because only `**` has a measured defect
+  history here.
+- **`N5` cannot see a verdict written into the wrong item**, which is the actual
+  M58c defect (§8.4). It sees only a whole item filed in a section that holds no
+  namespace.
+- **`N5`'s section list is a measurement, not a derivation.** It is right for
+  this document at `4c02816` and will need one line changed if the document's
+  shape changes.
+- **`C1` proves a reference resolves, never that it is the right reference.**
+  Unchanged from §5.2 — fact 729's weaker-source problem is invisible to it, and
+  so is a citation that resolves to a real item saying something else entirely.
+- **`A4` cannot distinguish a stale verdict from loose prose**, which is exactly
+  why it is not a check. Its 6 residual hits are a reading list, not a defect
+  list.
+
+None of these four checks can see the semantic class this report has flagged
+throughout: a sentence in which every number is correct and the sentence is
+still false (fact 772), a number right in one configuration and quoted into
+another (fact 768), a citation that resolves and is nevertheless the weaker
+source (fact 729). Adding S5, N5 and A4 does not move that boundary by one inch.
+
+---
+
 **Not done, deliberately:** no defect found here was fixed. `SYNTHESIS.md`,
 `AGENTS.md` and `docs/captures-needed.md` were read and not written.
 `crates/**` was read and not written.
