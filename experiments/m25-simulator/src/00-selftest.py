@@ -112,11 +112,11 @@ def group_b_noise():
         sig = float(fr.std(axis=0, ddof=1).mean())
         m4 = TEMPORAL_SIGMA_DN[iso]
         say(f"    {iso:>5} {sig:>10.4f} {m4:>10.4f} {sig / m4:>7.3f}")
-        if iso != 50:
-            worst = max(worst, abs(sig / m4 - 1.0))
+        worst = max(worst, abs(sig / m4 - 1.0))
     check(worst < 0.25,
-          f"fact 14's two-level read noise is within 25% of M4's measured "
-          f"dark sigma at every ISO except 50 (worst {worst * 100:.1f}%)")
+          f"noise model is within 25% of M4's measured dark sigma at EVERY "
+          f"ISO including 50, once g uses max(ISO,100) (worst "
+          f"{worst * 100:.1f}%)")
 
     # FPN is FIXED: it must survive frame averaging.
     fixed = SE.FixedPattern((2048, 2048), 160.0, A7C2, seed=7)

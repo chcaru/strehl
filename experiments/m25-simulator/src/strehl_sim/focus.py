@@ -44,8 +44,25 @@ class NoiseModel:
     read_noise_e: float
 
     @classmethod
-    def for_iso(cls, iso: float, divisor: float = 436.8) -> "NoiseModel":
-        g = iso / divisor
+    def for_iso(cls, iso: float, divisor: float = 436.8,
+                base_iso: float | None = 100.0) -> "NoiseModel":
+        """Fact 14's noise model, with M25's ISO-50 correction.
+
+        `base_iso` clamps the ISO used for the gain, because this body's
+        analog gain does **not** change below ISO 100.  M4's committed dark
+        sigma_temporal is 0.9866 DN at ISO 50 and 0.9845 DN at ISO 100 -- a
+        ratio of 1.0021, where `g = ISO/436.8` demands 0.5 -- and photon
+        transfer on real signal (`16-iso50-gain.py`) puts both ISO-50 stacks
+        within 2-13 % of the base-ISO-100 gain and 105-126 % away from
+        `ISO/436.8`.  So ISO 50 is an extended (pulled) ISO: the stop is taken
+        in exposure, not in gain.
+
+        Pass `base_iso=None` to restore the uncorrected `ISO/436.8`.  Nothing
+        at or above ISO 100 is affected, so the m9 port check (ISO 160) is
+        unchanged.
+        """
+        eff = iso if base_iso is None else max(iso, base_iso)
+        g = eff / divisor
         rn = 1.47 if iso >= 400 else 4.20
         return cls(g, rn)
 

@@ -21,13 +21,13 @@ group B -- the noise chain reproduces the calibrated model
   PASS  ISO 500 at 8000 DN: sigma 95.889 vs model 95.710 (1.002x)
   dark-frame temporal sigma vs M4 §8 (MEASURED comparison):
       ISO  simulated         M4   ratio
-       50     0.5412     0.9866   0.549
+       50     0.9911     0.9866   1.005
       100     0.9907     0.9845   1.006
       200     1.9174     1.7416   1.101
       400     1.3574     1.1986   1.132
      1000     3.3378     2.8085   1.188
      2000     6.6426     5.5330   1.201
-  PASS  fact 14's two-level read noise is within 25% of M4's measured dark sigma at every ISO except 50 (worst 20.1%)
+  PASS  noise model is within 25% of M4's measured dark sigma at EVERY ISO including 50, once g uses max(ISO,100) (worst 20.1%)
   PASS  DSNU sd 0.3508 DN vs M4 interpolated 0.3532 DN at ISO 160
   PASS  hot pixels 1451 of 2048^2 = 0.0346% (M22: 0.0346%)
   PASS  excess ACROSS FLAGGED PIXELS: mean 3.000 DN, median 0.000 DN (M22: +3.0 mean, 0.0 median)
@@ -46,4 +46,4 @@ group E -- breathing is a similarity about a centre, not parallax
   PASS  unit scale is a true identity (no resampling loss when nothing moves)
     round-trip cubic resample RMS error: 0.00918 of unit contrast (discipline 11: resampling is not neutral)
 
-27 passed, 0 failed   [1.9s]
+27 passed, 0 failed   [1.8s]

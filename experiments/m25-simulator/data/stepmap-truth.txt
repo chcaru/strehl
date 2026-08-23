@@ -2,29 +2,29 @@ Ground truth vs M21's estimated depth-step map
 the simulator knows which pixels sit at a depth discontinuity; M21 has to estimate it
 
 real: ISO 50, mean 1528 DN, sd 616 DN, beta 3.454, peak frame 5
-PSD shaping mismatch by iteration: 1.2391, 0.4277, 0.2722, 0.2445
+PSD shaping mismatch by iteration: 1.2390, 0.4299, 0.2726, 0.2419
 
---- coc 1.0 px/frame  (render 137s, green 1024x1024) ---
-  M21 estimated step map:  227995 px flagged; TRUE step map:   39854 px
-  precision   1.8%   recall  10.5%   (over-flagging factor 5.72x)
-  ESTIMATED step map :   6.6% at steps vs   6.4% smooth =  1.03x
-  TRUE      step map :   1.6% at steps vs   6.8% smooth =  0.24x
-  TRUE partial-alpha :   1.6% veiled  vs   6.8% smooth =  0.24x   <- the pixels M21's thesis is about
-  overall multi-peak on strong pixels: 6.6%  (real coffee-bean 4.8%)
+--- coc 1.0 px/frame  (render 154s, green 1024x1024) ---
+  M21 estimated step map:  225235 px flagged; TRUE step map:   39841 px
+  precision   1.8%   recall  10.2%   (over-flagging factor 5.65x)
+  ESTIMATED step map :  10.2% at steps vs  10.0% smooth =  1.03x
+  TRUE      step map :   2.3% at steps vs  10.4% smooth =  0.22x
+  TRUE partial-alpha :   2.4% veiled  vs  10.4% smooth =  0.23x   <- the pixels M21's thesis is about
+  overall multi-peak on strong pixels: 10.1%  (real coffee-bean 4.8%)
 
---- coc 3.0 px/frame  (render 143s, green 1024x1024) ---
-  M21 estimated step map:  139411 px flagged; TRUE step map:   39927 px
-  precision   3.4%   recall  11.9%   (over-flagging factor 3.49x)
-  ESTIMATED step map :   5.6% at steps vs   6.1% smooth =  0.92x
-  TRUE      step map :   1.8% at steps vs   6.1% smooth =  0.30x
-  TRUE partial-alpha :   1.7% veiled  vs   6.1% smooth =  0.28x   <- the pixels M21's thesis is about
-  overall multi-peak on strong pixels: 5.9%  (real coffee-bean 4.8%)
+--- coc 3.0 px/frame  (render 152s, green 1024x1024) ---
+  M21 estimated step map:  140294 px flagged; TRUE step map:   39928 px
+  precision   3.4%   recall  11.8%   (over-flagging factor 3.51x)
+  ESTIMATED step map :   9.2% at steps vs  10.5% smooth =  0.87x
+  TRUE      step map :   2.6% at steps vs  10.4% smooth =  0.25x
+  TRUE partial-alpha :   2.6% veiled  vs  10.4% smooth =  0.25x   <- the pixels M21's thesis is about
+  overall multi-peak on strong pixels: 10.1%  (real coffee-bean 4.8%)
 
 ==========================================================================
   coc  M21 estimated  true step map  true veiled px
-  1.0          1.03x          0.24x           0.24x
-  3.0          0.92x          0.30x           0.28x
+  1.0          1.03x          0.22x           0.23x
+  3.0          0.87x          0.25x           0.25x
 REAL (M21)          4.38x             --              --
 
 VERDICT: the veiling effect is NOT recoverable even with a perfect depth-step map.  The forward model does not reproduce M21's enrichment on this plant, and that is an honest failure axis of the simulator.
-[294s]
+[322s]

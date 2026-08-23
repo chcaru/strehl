@@ -24,7 +24,7 @@ the occlusion signature M21 studies.** That sentence is the deliverable.
 | Gate 1a — fact 35's φ↔excess mechanism | **PASS, 16/16 configurations** |
 | Gate 1b — facts 19/23's levels, pre-registered five axes | **PARTIAL, 3/5** |
 | Gate 1b′ — post-hoc axes (c(1), floor, excess over 16 measures) | **PASS 3/3** — declared post-hoc, see §5.3 |
-| Gate 1c — M21's occlusion enrichment | **FAIL.** Three attempts; two failures were mine, the third is real. The base rate now matches (6.6 % vs a real 4.8 %); the enrichment does not, and **with ground truth it has the wrong sign (0.24×)** |
+| Gate 1c — M21's occlusion enrichment | **FAIL.** Three attempts; two failures were mine, the third is real. The base rate does **not** match (**10.1 % vs a real 4.8 %**, over-producing 2.1×); the enrichment does not either, and **with ground truth it has the wrong sign (0.23×)** |
 | Gate 2 — negative control on the simulator | **FIRED on 3 of 4** mis-specifications; **blind to dropping diffraction entirely** |
 
 **ARGUED.** Use it for noise, selection, argmax bias, regularisation and
@@ -36,9 +36,17 @@ absent, with the wrong sign, on the plant this milestone built.
 
 **One result is worth more than the gates and could not have been obtained any
 other way.** Using the simulator's ground truth, M21's depth-step estimator was
-scored directly: **1.8–3.4 % precision, 10.5–11.9 % recall**, over-flagging by
+scored directly: **1.8–3.4 % precision, 10.2–11.8 % recall**, over-flagging by
 **3.5–5.7×** on this plant. Whatever else is true, a project that had no ground
 truth now has an instrument that can say that.
+
+> **Post-fold correction.** Fact 200 changed after this report was first folded
+> into `SYNTHESIS.md`, and it moved Gate 1c's numbers. `g = ISO/436.8` is wrong
+> by 2.05× below ISO 100, so every Gate 1c render (ISO 50) had half the correct
+> gain. Corrected: overall multi-peak **6.6 % → 10.1 %**, enrichment 1.03× →
+> **1.03×/0.99×**, truth-gated 0.24× → **0.23×**. **The verdict and every
+> conclusion are unchanged; the claim that the base rate matched is withdrawn.**
+> Gates 1a, 1b and 2 run at ISO 160 and are unaffected. §5.9 documents this.
 
 ---
 
@@ -346,15 +354,20 @@ subject has):
 
 | cell | overall multi-peak | enrichment | permuted |
 |---|---:|---:|---:|
-| occlusion (test) | 28.5 % → **17.4 %** | 0.77× → **1.03×** | 0.98 |
-| terrace | 46.1 % → **21.8 %** | 1.05× → **1.30×** | 1.05 |
-| tilt | 38.0 % → **15.2 %** | 0.95× → **0.96×** | 1.00 |
+| occlusion (test) | 28.5 % → **22.9 %** | 0.77× → **0.99×** | 0.98 |
+| terrace | 46.1 % → **29.0 %** | 1.05× → **1.12×** | 1.04 |
+| tilt | 38.0 % → **23.0 %** | 0.95× → **0.88×** | 1.00 |
 | *real* `coffee-bean` | 4.8 % | 4.38× | 1.01 |
 
-**Large improvement, still a FAIL.** The overall multi-peak fraction fell by
-39 % and the enrichment moved in the right direction, so the diagnosis was
-correct and incomplete. Under the pre-registered grid, enrichment 1.03× with a
-correct placebo is below the 1.3× FAIL threshold: **FAIL**.
+> **Corrected re-run** under `g = max(ISO,100)/436.8` (fact 200). The figures
+> first folded — 17.4 % / 1.03× — came from the half-gain bug. Direction and
+> verdict are unchanged; magnitudes moved. See §5.9.
+
+**Real improvement, still a FAIL, and smaller than first reported.** The
+overall multi-peak fraction fell by 20 % (not the 39 % the buggy run showed)
+and the enrichment moved from 0.77× to 0.99×, so the diagnosis was correct and
+incomplete. Under the pre-registered grid, enrichment 0.99× with a correct
+placebo is below the 1.3× FAIL threshold: **FAIL**.
 
 #### The remaining cause, isolated
 
@@ -372,53 +385,71 @@ occlusion scene into all three of M21's slots at 1.0, 3.0 and 12.0 px/frame.
 
 | coc px/frame | edge blur | overall multi-peak | enrichment | placebo |
 |---:|---:|---:|---:|---:|
-| 1.0 | 12 px | **6.6 %** | 1.03× | 0.99 |
-| 3.0 | 36 px | **5.9 %** | 0.92× | 1.01 |
-| 12.0 | 144 px | 17.4 % | 1.03× | 0.98 |
+| 1.0 | 12 px | **10.1 %** | 1.03× | 0.99 |
+| 3.0 | 36 px | **10.1 %** | 0.87× | 1.00 |
+| 12.0 | 144 px | 22.9 % | 0.99× | 0.98 |
 | *real* `coffee-bean` | — | **4.8 %** | **4.38×** | 1.01 |
+
+> **These figures are the corrected re-run.** Every Gate 1c number in the
+> version of this report folded on the first pass was produced with the ISO-50
+> gain bug of fact 200 — i.e. with **half** the correct `g`, and therefore √2
+> too little shot noise on a stack whose real ISO is 50. The re-run uses
+> `g = max(ISO,100)/436.8`. See §5.9: the correction **removed a result**,
+> because two errors had been cancelling.
 
 **Two findings, and they point in opposite directions.**
 
-**(i) The base rate now matches.** At coc 1.0 the simulator produces **6.6 %**
-overall multi-peakedness against the real **4.8 %** — after the subject-spectrum
-fix, the detector operates in the same regime on simulated data as on real. It
-was 81.4 % in attempt 1 and 28.5 % in attempt 2. The saturation problem is
-solved.
+**(i) The base rate does NOT match — and the claim that it did was an
+artifact.** At coc 1.0 the simulator produces **10.1 %** overall
+multi-peakedness against the real **4.8 %**: it **over-produces by 2.1×**. The
+subject-spectrum fix was a large real improvement (81.4 % in attempt 1, 28.5 %
+in attempt 2, 22.9 % here at matched coc), but it did not close the gap. With
+the *buggy* half-gain this same measurement read 6.6 % and I reported that the
+base rate matched. It did not; the missing shot noise was masking a genuine
+excess. **DERIVED:** since mean is matched to the real stack and the
+simulated structure sd is **537–578 DN against a real 616 DN**, the simulator
+carries ~7 % less structure contrast at matched noise, so its through-focus
+curves are more noise-dominated than real ones. That is the residual PSD
+shortfall of §4.3's shaping (converged mismatch 0.2445, not 0.050) showing up
+downstream, and it is a failure axis in its own right.
 
-**(ii) The enrichment does not, and the defocus rate is not why.** Across a
-**12× range** of defocus rate — a 12 px edge blur to a 144 px one — enrichment
-is **flat at 1.03×, 0.92×, 1.03×**. Cause (b) is eliminated by measurement.
+**(ii) The enrichment does not match, and the defocus rate is not why.** Across
+a **12× range** of defocus rate — a 12 px edge blur to a 144 px one —
+enrichment is **flat at 1.03×, 0.87×, 0.99×**. Cause (b) is eliminated by
+measurement, and it is eliminated under both the buggy and the corrected gain,
+so this conclusion does not depend on the bug.
 
 #### Ground truth, used for the first time in this project
 
 M21 cannot know which *real* pixels sit at a depth discontinuity, so it
 estimates them from the R = 13 argmax, median-filtered 5×5. The simulator
 knows. `14-stepmap-truth.py` asks the two questions the real corpus cannot
-answer. **MEASURED**, `data/stepmap-truth.txt`:
+answer. **MEASURED**, `data/stepmap-truth.txt` (corrected gain):
 
 | | coc 1.0 | coc 3.0 |
 |---|---:|---:|
-| pixels M21's estimator flags as a depth step | 227,995 | 139,411 |
-| pixels that **truly** sit at a depth step | 39,854 | 39,927 |
-| over-flagging factor | **5.72×** | **3.49×** |
+| pixels M21's estimator flags as a depth step | 225,235 | 140,294 |
+| pixels that **truly** sit at a depth step | 39,841 | 39,928 |
+| over-flagging factor | **5.65×** | **3.51×** |
 | precision | **1.8 %** | **3.4 %** |
-| recall | **10.5 %** | **11.9 %** |
-| enrichment with M21's **estimated** step map | 1.03× | 0.92× |
-| enrichment with the **true** step map | **0.24×** | **0.30×** |
-| enrichment on **truly veiled** (0.02 < α < 0.98) pixels | **0.24×** | **0.28×** |
+| recall | **10.2 %** | **11.8 %** |
+| enrichment with M21's **estimated** step map | 1.03× | 0.87× |
+| enrichment with the **true** step map | **0.22×** | **0.25×** |
+| enrichment on **truly veiled** (0.02 < α < 0.98) pixels | **0.23×** | **0.25×** |
 
 **Two separate results, and the second is the bad one.**
 
 **MEASURED.** On this plant M21's step-map estimator has **1.8–3.4 %
-precision** and **10.5–11.9 % recall** against ground truth. It over-flags by
+precision** and **10.2–11.8 % recall** against ground truth. It over-flags by
 3.5–5.7×. That is a real and previously unknowable property of the detector,
 and it is the kind of thing this milestone was built to find.
 
 **MEASURED, and it is the milestone's most uncomfortable number.** With a
 *perfect* depth-step map, the truly-veiled pixels of the simulated scene are
-multi-peaked at **1.6 %** against **6.8 %** on smooth depth — an enrichment of
-**0.24×**. The effect does not merely have the wrong magnitude; **it has the
-wrong sign.**
+multi-peaked at **2.4 %** against **10.4 %** on smooth depth — an enrichment of
+**0.23×**. The effect does not merely have the wrong magnitude; **it has the
+wrong sign.** This number is **stable under the gain correction** (0.24× buggy,
+0.23× corrected), so the sign failure is not an artifact of the bug.
 
 **The leading hypothesis, tested and refuted.** My occluder was rendered at
 `base_e × 1.25` against a background at `base_e`, so the alpha boundary was
@@ -427,7 +458,8 @@ that step should dominate the focus response, and it is sharpest exactly when
 the **foreground** is in focus — one dominant peak, buried under a feature I
 put there myself. `15-lumstep-probe.py` re-rendered the same scene with the two
 layers at identical radiometry and changed nothing else. **MEASURED**,
-`data/lumstep-probe.txt`:
+`data/lumstep-probe.txt` (run under the buggy gain; not re-run, because §5.9
+shows the enrichment is insensitive to it):
 
 | variant | truth-gated veiled enrichment | veiled ÷ smooth gradient at the fg-focus frame |
 |---|---:|---:|
@@ -605,6 +637,48 @@ attributed Gate 1c's failure to the defocus fit — confidently, plausibly, and
 incorrectly. The honest conclusion is the one that survives: the plant does not
 produce the effect and I do not yet know what plant would.
 
+### 5.9 The worst one: two errors that cancelled, and a result that evaporated
+
+This mistake was found **after** the report was first folded into `SYNTHESIS.md`,
+which is exactly the wrong time to find it, and it is the most instructive
+thing in this section.
+
+Fact 200's ISO-50 gain bug means every Gate 1c render used `g = 0.1145` where
+the truth is `g ≈ 0.2289` — **half** the correct gain, and therefore **√2 too
+little shot noise** on a plant calibrated to an ISO-50 stack. Gates 1a, 1b and
+2 all run at ISO 160 and are untouched (`max(160,100) = 160`); the m9 port
+check still reproduces to `max |Δc(1)| = 0.000049` after the fix.
+
+The instructive part is what the missing noise was doing. I reported, as one of
+Gate 1c's two findings, that **"the base rate now matches"** — 6.6 % simulated
+multi-peakedness against a real 4.8 %, down from 81.4 % in attempt 1. I treated
+that as evidence the subject-spectrum diagnosis was correct and the remaining
+failure was localised to the veiling physics.
+
+With the gain corrected the same measurement reads **10.1 %**. The base rate
+does **not** match; the simulator over-produces multi-peakedness by **2.1×**.
+The spectrum fix was real but only partial, and a *second*, independent defect
+— a 7 % structure-contrast deficit, fact 198c — was being hidden by a noise
+deficit of roughly the right size to cancel it.
+
+**Three things I would do differently, and they generalise:**
+
+1. **A metric moving toward the expected value is not confirmation.** Per rule
+   18 I checked the *direction* of Gate 1c's failure, but when a number moved
+   into agreement I stopped interrogating it. Agreement deserves the same
+   audit as disagreement, and it gets less.
+2. **I validated the noise model only where I was already looking.** The
+   self-test compared simulated dark σ against M4 at six ISOs and *carved ISO
+   50 out of the assertion* because it was known to disagree. A known
+   disagreement I had decided to tolerate silently became a live bug in a
+   different gate. The carve-out is now removed and the assertion covers every
+   ISO (27/27 still pass, worst 20.1 %).
+3. **The conclusion survived and the numbers did not.** Enrichment is 1.03× vs
+   0.99× and truth-gated 0.24× vs 0.23× — Gate 1c FAILs identically either way,
+   and §5.8's two killed hypotheses stay killed. That is luck, not method. Had
+   the bug sat in Gate 1a's ISO-160 path instead, the milestone's headline
+   result would have been wrong.
+
 ---
 
 ## 6. Gate 3 — the failure axes
@@ -616,9 +690,9 @@ except where a measurement is cited.
 
 | axis | evidence | why it matters |
 |---|---|---|
-| **The veiling signature at an occluding edge does not reproduce.** | §4.3: truth-gated enrichment **0.24×–0.30×** against a real 4.38×; not caused by the defocus rate (flat over a 12× sweep) or by the occluder's luminance step (0.24× → 0.28×). | This is the use M21 needs and the simulator **cannot yet serve it**. Any occlusion-reconstruction score computed on this plant would be measuring the plant, not the algorithm. |
+| **The veiling signature at an occluding edge does not reproduce.** | §4.3: truth-gated enrichment **0.23×–0.25×** against a real 4.38×; not caused by the defocus rate (flat over a 12× sweep), by the occluder's luminance step (0.24× → 0.28×), or by the fact-200 gain bug (0.24× → 0.23×). | This is the use M21 needs and the simulator **cannot yet serve it**. Any occlusion-reconstruction score computed on this plant would be measuring the plant, not the algorithm. |
 | **The optics are unvalidated.** | Gate 2 NC-B: removing diffraction entirely changes high-frequency power by 4.5× in amplitude and passes every gate. | Any deconvolution, EDoF or PSF claim scored on this simulator is scored by a suite proven blind to the PSF. |
-| **Subject spatial statistics.** | §4.3: a single power law over-produces low-frequency power 6× and starves 0.3–0.5 cyc/px by 2× on a real organic subject. | This is what broke Gate 1c's *base rate*. Shaping fixed it (28.5 % → 6.6 % against a real 4.8 %) but is a 64-parameter fit of the real subject. |
+| **Subject spatial statistics — and the base rate they drive.** | §4.3: a single power law over-produces low-frequency power 6× and starves 0.3–0.5 cyc/px by 2× on a real organic subject. Shaping is a large improvement (28.5 % → 22.9 % at matched coc, 10.1 % at coc 1.0) but **does not close the gap**: the simulator still over-produces multi-peakedness **2.1×** against a real 4.8 %, and delivers only 537–578 DN of structure sd against a real 616 DN (fact 198c). | The multi-peak base rate is the detector's operating point. Anything scored on it is scored in a noisier regime than reality. It is also a 64-parameter fit of the real subject, which weakens the gate — see §4.3's declaration. |
 | **Occluder geometry is one smooth disc edge.** | §4.3, ARGUED: the alpha boundary is a single strong gradient feature that sharpens exactly once. Real occluding structure is multi-scale. | Fixing this is the most likely route to a passing Gate 1c and is untested. |
 | **The merged-noise floor is ~0.03–0.05 low.** | §4.2 and `data/gate1b-measured-placement.txt` (median \|Δfloor\| 0.0324, max 0.0515, systematically low). | The floor *is* the estimator's target. Under-modelling it makes every merge look better in simulation than in reality. |
 | **PRNU is not modelled at all** — because it is unmeasured. | No flat-field capture exists. | Leading suspect for the floor deficit. Cannot be modelled honestly until measured. |
@@ -629,7 +703,7 @@ except where a measurement is cited.
 | axis | measured size |
 |---|---|
 | Wide-support excess deficit | `ring-4-12` excess 0.022 vs 0.115; `ring-2-6` 0.081 vs 0.186 |
-| Read noise at ISO 50 | fact 14's model gives 0.541 DN against M4's measured 0.987 DN — **45 % low**. Affects `coffee-bean` and `119MSDCF`. At ISO 160 it is accurate to 2.6 % and shot variance exceeds read variance **233:1** in the flat ROI, so Gates 1a/1b/2 are unaffected. |
+| **Gain at ISO 50** | `g = ISO/436.8` is wrong by **2.05×** below ISO 100 (fact 200), so the simulator rendered Gate 1c with **half** the correct gain and √2 too little shot noise. Affects **both ISO-50 stacks in the corpus**. Re-run with `g = max(ISO,100)/436.8` — see §4.3's corrected block. |
 | Cubic resampling is not neutral | round-trip RMS 0.00918 of unit contrast (discipline 11) |
 | Pixel aperture at S = 2 | MTF error at 0.25 cyc/px rises from 0.65 % to ~2.6 % |
 | Drift is smooth in frame index | fact 1 says explicitly it is *not* a low-order polynomial; the generator's default is a constant rate and is labelled a **generator convenience, not a model**. Gates that need real drift are given the measured per-frame series. |
@@ -705,33 +779,87 @@ over-produces 0.02–0.20 power by **6×** and under-produces 0.30–0.50 by
 response peaks at frames **10, 10, 10 and 7** of 22 — never at the harness's
 own reference frame 11 — and sd@peak exceeds sd@ref by 2 %–12.6 %.
 
-**198. MEASURED.** With `coffee-bean`'s measured radiometry, a measured 64-bin
-subject spectrum, and a two-layer occlusion scene with a genuine alpha
-boundary, M21's committed detector run byte-identical reports **6.6 %** overall
-multi-peak against the real **4.8 %** — the base rate reproduces — but
-enrichment **1.03×** against the real **4.38×**. The permutation placebo is
-correct at 0.99. Enrichment is flat (1.03×, 0.92×, 1.03×) across a **12×** sweep
-of the defocus rate, so the defocus rate is not the cause.
+**198. MEASURED — CORRECTED AFTER FOLDING. This supersedes the version folded
+as fact 548; the correction reverses one of its two clauses.** With
+`coffee-bean`'s measured radiometry, a measured 64-bin subject spectrum, the
+corrected ISO-50 gain of fact 200, and a two-layer occlusion scene with a
+genuine alpha boundary, M21's committed detector run byte-identical reports
+**10.1 %** overall multi-peak against the real **4.8 %** — the simulator
+**over-produces multi-peakedness by 2.1×**, it does *not* reproduce the base
+rate — and enrichment **1.03×** against the real **4.38×**. The permutation
+placebo is correct at 0.99. Enrichment is flat (**1.03×, 0.87×, 0.99×**) across
+a **12×** sweep of the defocus rate, so the defocus rate is not the cause.
+
+*The folded version said the base rate reproduced (6.6 % vs 4.8 %). That was an
+artifact of the half-gain bug: the missing shot noise masked a real excess. The
+enrichment clause is unchanged and was never affected — see §5.9.*
 
 **198a. MEASURED.** Scored against the simulator's ground truth, M21's
 depth-step estimator (R = 13 argmax, median-filtered 5×5, |∇| ≥ 1) has
-**1.8–3.4 % precision** and **10.5–11.9 % recall**, over-flagging true depth
+**1.8–3.4 % precision** and **10.2–11.8 % recall**, over-flagging true depth
 steps by **3.5–5.7×**. This is not knowable on any real capture.
 
 **198b. MEASURED.** With a **perfect** depth-step map, the truly-veiled pixels
 (0.02 < α < 0.98) of the simulated occlusion scene are multi-peaked at
-**1.6–2.0 %** against **6.8–7.0 %** on smooth depth — enrichment **0.24×–0.28×**.
-The effect has the **wrong sign**, and it is not caused by the occluder's
-luminance step (removing it moves 0.24× → 0.28×, while veiled pixels still
-carry **2.64×** the gradient magnitude of smooth pixels).
+**2.4–2.6 %** against **10.4 %** on smooth depth — enrichment **0.23×–0.25×**.
+The effect has the **wrong sign**; it is **stable under the fact-200 gain
+correction** (0.24× before, 0.23× after); and it is not caused by the
+occluder's luminance step (removing it moves 0.24× → 0.28×, while veiled
+pixels still carry **2.64×** the gradient magnitude of smooth pixels).
+
+**198c. MEASURED.** At matched mean level and matched 64-bin radial spectrum,
+the simulated occlusion scene delivers a green-plane structure sd of
+**537–578 DN against the real 616 DN** — 7 % low. **ARGUED:** this residual
+structure deficit, not the noise model, is the leading remaining explanation
+for the 2.1× multi-peak over-production of fact 198, because it lowers the
+focus signal against a correctly-calibrated noise floor.
 
 **199. MEASURED.** Blur-then-composite and composite-then-blur differ by
 **5.2 % of level in a 48 px band** at an occluding edge under this rig's
 parameters. The ordering is not a refinement.
 
-**200. MEASURED.** Fact 14's two-level read noise under-predicts M4's measured
-dark σ_temporal at ISO 50 by **45 %** (0.541 DN vs 0.987 DN) while being within
-20 % at ISO 100–2000 and within 2.6 % at ISO 160.
+**200. MEASURED — CORRECTED AFTER FOLDING. This supersedes the version folded
+as fact 550, and the correction changes which constant is at fault.** The
+noise model is wrong at ISO 50 by a factor of **2.05×**, and the defect is in
+**`g`, not in `RN_e`**.
+
+* M4's own committed σ_temporal is **0.9866 DN at ISO 50** and **0.9845 DN at
+  ISO 100** — a ratio of **1.0021**, where `g = ISO/436.8` demands **0.5**.
+* Substituting `g(50) = g(100)` moves the ISO-50 prediction from **51.3 % low
+  to 2.5 % low**, matching the model's accuracy at every other ISO.
+* Dark frames only constrain the *product* `RN_e·g`, so `g` was measured
+  independently from **signal** by photon transfer on real captures
+  (`16-iso50-gain.py`, `data/iso50-gain.txt`): 8×8 tiles on one green plane,
+  5th-percentile variance per mean bin.
+
+| stack | ISO | measured g | vs `ISO/436.8` | vs `max(ISO,100)/436.8` |
+|---|---:|---:|---:|---:|
+| `109MSDCF` (**control**) | 160 | 0.3273 | **−10.7 %** | −10.7 % |
+| `119MSDCF` | 50 | 0.2342 | **+105 %** | **+2 %** |
+| `coffee-bean` | 50 | 0.2583 | **+126 %** | **+13 %** |
+
+**DERIVED.** The control recovers the project's ISO-160 constant to 10.7 %, so
+the estimator is calibrated; both ISO-50 stacks then miss `ISO/436.8` by
+105–126 % and land within 2–13 % of the base-ISO-100 value. Dark frames and
+signal agree.
+
+**ARGUED.** ISO 50 on this body is an **extended (pulled) ISO**: the sensor
+runs at its base-ISO-100 analog gain and the stop is taken in exposure, not in
+gain. **Changing `RN_e` at ISO 50 would fix the symptom and be wrong** — it
+would mis-model the shot-noise term, which dominates on any illuminated frame,
+and it would corrupt every ISO that currently works. The correct change is
+`g = max(ISO, 100)/436.8`.
+
+**Caveat, stated plainly:** only the photon-transfer *slope* is trustworthy
+here. The *intercept* is inflated by residual scene texture (it implies 6.9 e⁻
+read noise at ISO 160 against fact 14's 4.20 e⁻), so this measurement says
+nothing about `RN_e` and should not be used to revise it.
+
+**200a. OPEN — the boundary is not measured.** This establishes the model is
+wrong at ISO 50 and right at ISO 100. It does **not** establish where the
+transition sits, because the corpus contains no ISO 64 or ISO 80 capture.
+`max(ISO, 100)` is the *simplest* rule consistent with the evidence, not a
+measured one.
 
 ---
 
@@ -790,6 +918,27 @@ five minutes each: the defocus-rate hypothesis by a 12× sweep, the
 luminance-step hypothesis by re-rendering with matched radiometry. Neither
 would have been settled by argument.
 
+**111.** **A metric that moves into agreement deserves the same audit as one
+that disagrees, and reliably gets less.** Rule 18 asks for the *direction* of a
+failure. It does not ask what happens when a number stops failing. This
+milestone reported "the base rate now matches" (6.6 % vs 4.8 %) and stopped
+looking; with a gain bug corrected the same measurement reads 10.1 % and the
+match was a coincidence between a 7 % structure deficit and a √2 noise deficit
+pulling opposite ways (§5.9).
+
+**112.** **A known model disagreement that you have decided to tolerate must be
+asserted against, not carved out of the assertion.** This report's self-test
+excluded ISO 50 from its dark-noise check *because the model was known to be
+wrong there*. That silenced the one test that would have caught the bug, in the
+one gate that ran at ISO 50. Carve-outs should be `xfail`-style — asserted at
+the *expected wrong value*, so that they fail when the expectation changes.
+
+**113.** **Dark frames constrain only the product `RN_e·g`.** Any claim that
+separates read noise from gain needs a *signal* measurement (photon transfer)
+as well as a dark measurement, or it can attribute an error to the wrong
+constant — as fact 200's first draft did, and it was about to drive a code
+change to `RN_e` that would have been wrong at every ISO.
+
 ---
 
 ## 9. Open questions (30+)
@@ -839,6 +988,19 @@ mechanism claim needs revisiting; if it does not, the plant is the problem. The
 simulator cannot distinguish these on its own — it needs a real capture with a
 known occluding geometry, which would be a new entry on `captures-needed.md`.
 
+**39.** **Where does this body's gain actually stop tracking ISO?** Fact 200
+establishes `g` is wrong at ISO 50 and right at ISO 100, on two independent
+routes. It does **not** locate the transition: the corpus holds no ISO 64 or
+ISO 80 capture, so `max(ISO, 100)` is the simplest rule consistent with the
+evidence, not a measured one. Two short brackets at ISO 64 and 80 would settle
+it, and this belongs on `captures-needed.md`.
+
+**40.** **How much of the 2.1× multi-peak over-production is the 7 % structure
+deficit (fact 198c)?** The two are linked by argument, not measurement. A probe
+that scales latent contrast alone, holding the spectrum and the noise fixed,
+would answer it in one render — and if contrast does not explain it, the noise
+model at ISO 50 is still wrong somewhere the dark frames cannot see.
+
 ---
 
 ## 10. How to reproduce
@@ -863,11 +1025,22 @@ python experiments\m25-simulator\src\12-gate1c-shaped.py          # 1249 s  (the
 python experiments\m25-simulator\src\13-coc-probe.py              # 441 s
 python experiments\m25-simulator\src\14-stepmap-truth.py          # 294 s
 python experiments\m25-simulator\src\15-lumstep-probe.py          # 293 s
+python experiments\m25-simulator\src\16-iso50-gain.py             #   2 s   (fact 200)
 ```
 
+**Order matters for one thing only.** `16-iso50-gain.py` motivates the
+`base_iso=100` correction now baked into `SensorSpec.gain_dn_per_e` and
+`NoiseModel.for_iso`. Scripts **12, 13 and 14 must be run with that correction
+in place** — their committed `data/*.txt` are the corrected re-runs. Scripts
+01–11 and 15 run at ISO 160 or are unaffected; their committed outputs predate
+the correction and are unchanged by it, which the port check confirms
+(`max |Δc(1)| = 0.000049` after the fix). Set `base_iso=None` to restore the
+uncorrected `g = ISO/436.8`.
+
 Outputs land in `experiments/m25-simulator/data/`. Reads
-`C:\dev\macro\test\109MSDCF` and `C:\dev\macro\test\coffee-bean`
-(read-only), `experiments/m9-support/data/sweep-109MSDCF-coupled.csv`, and
+`C:\dev\macro\test\109MSDCF`, `C:\dev\macro\test\coffee-bean` and
+`C:\dev\macro\test\119MSDCF` (read-only),
+`experiments/m9-support/data/sweep-109MSDCF-coupled.csv`, and
 runs `experiments/m21-occlusion-bimodality/src/03-permutation-placebo.py`
 unmodified via `runpy`.
 

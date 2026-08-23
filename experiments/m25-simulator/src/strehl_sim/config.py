@@ -27,6 +27,12 @@ class Sensor:
     cfa: str = "RGGB"
 
     gain_divisor: float = 436.8           # g = ISO / 436.8 DN/e-  (fact 14, F)
+    # M25 fact 200: this body's analog gain does NOT change below ISO 100.
+    # M4's dark sigma_temporal is 0.9866 DN @ISO50 vs 0.9845 @ISO100 (ratio
+    # 1.0021, model demands 0.5), and photon transfer on real signal puts both
+    # ISO-50 stacks within 2-13 % of g(100) and 105-126 % away from g(50).
+    # ISO 50 is an extended (pulled) ISO.  Set to None for uncorrected fact 14.
+    base_iso: float | None = 100.0
     read_noise_e_low: float = 4.20        # below ISO 400
     read_noise_e_high: float = 1.47       # at/above ISO 400
     second_base_iso: float = 400.0
@@ -39,7 +45,8 @@ class Sensor:
     hot_median_dn: float = 0.0
 
     def gain_dn_per_e(self, iso: float) -> float:
-        return iso / self.gain_divisor
+        eff = iso if self.base_iso is None else max(iso, self.base_iso)
+        return eff / self.gain_divisor
 
     def read_noise_e(self, iso: float) -> float:
         return (self.read_noise_e_high if iso >= self.second_base_iso

@@ -2,14 +2,14 @@ Gate 1c (third attempt) -- shaped subject spectrum, coffee-bean conditions
 M21 script: C:\dev\blog\death-of-software\projects\strehl\experiments\m21-occlusion-bimodality\src\03-permutation-placebo.py (byte-identical via runpy)
 
 MEASURED on real coffee-bean at M21's crop (600, 1624, 900, 1924), 21 frames (every 5th of 105):
-  ISO 50, g 0.1145 DN/e-, RN 4.20 e-
+  ISO 50, g 0.2289 DN/e-, RN 4.20 e-
   reference frame 10: mean 1528.2 DN, sd 616.0 DN -> contrast 40.3%
-  modelled green-luma noise 9.36 DN -> structure:noise = 66:1
+  modelled green-luma noise 13.24 DN -> structure:noise = 47:1
   spectral slope beta 3.454; focus peaks at frame 5
   per-frame level peak-to-peak 17.95% (MEASURED, injected)
 
-target PSD: 0 of 64 radial bins clamped at the modelled noise floor (87.6 DN^2/bin)
-calibrate_psd shape mismatch (median |log ratio|) by iteration: 1.2391, 0.4277, 0.2722, 0.2445
+target PSD: 0 of 64 radial bins clamped at the modelled noise floor (175 DN^2/bin)
+calibrate_psd shape mismatch (median |log ratio|) by iteration: 1.2390, 0.4299, 0.2726, 0.2419
 DECLARED: this widens the fitted nuisance set from one number (beta)
   to a 64-bin radial profile of the subject's second-order
   statistics.  A radial power spectrum is stationary and isotropic
@@ -25,9 +25,9 @@ cells: 109MSDCF slot = OCCLUSION (depth step WITH alpha edge, the test);
        coffee-bean   = TILT     (depth variation, NO step).
        occluder at focus index 4.0, background at 16.0.
 
-rendered 109MSDCF     (21, 2048, 2048) in 167s   mid green mean 1669 DN sd 535 DN (real 1528 / 616)
-rendered 119MSDCF     (21, 2048, 2048) in 475s   mid green mean 1532 DN sd 546 DN (real 1528 / 616)
-rendered coffee-bean  (21, 2048, 2048) in 479s   mid green mean 1525 DN sd 577 DN (real 1528 / 616)
+rendered 109MSDCF     (21, 2048, 2048) in 149s   mid green mean 1669 DN sd 537 DN (real 1528 / 616)
+rendered 119MSDCF     (21, 2048, 2048) in 466s   mid green mean 1532 DN sd 548 DN (real 1528 / 616)
+rendered coffee-bean  (21, 2048, 2048) in 474s   mid green mean 1525 DN sd 578 DN (real 1528 / 616)
 
 ground truth on the occlusion cell's crop (TRUE, not estimated -- this is the thing the real corpus cannot supply):
   foreground coverage 32.7%
@@ -42,23 +42,23 @@ ground truth on the occlusion cell's crop (TRUE, not estimated -- this is the th
  - PLACEBO: permute the frame order. Noise statistics are preserved EXACTLY;
    genuine focus structure is destroyed. Real enrichment must collapse to ~1.0x.
 
-109MSDCF: 21 frames   strong pixels 100.0%   depth-step map: 88800 at step>=1, 898101 at step<0.25
-   REAL       multi-peak:  17.9% at depth steps vs  17.4% on smooth depth   =  1.03x   (overall 17.4%)
-   PERMUTED   multi-peak:  91.6% at depth steps vs  93.0% on smooth depth   =  0.98x   (overall 92.9%)
+109MSDCF: 21 frames   strong pixels 100.0%   depth-step map: 87763 at step>=1, 899202 at step<0.25
+   REAL       multi-peak:  22.8% at depth steps vs  23.1% on smooth depth   =  0.99x   (overall 22.9%)
+   PERMUTED   multi-peak:  91.3% at depth steps vs  92.9% on smooth depth   =  0.98x   (overall 92.7%)
 
-119MSDCF: 21 frames   strong pixels 100.0%   depth-step map: 69845 at step>=1, 940981 at step<0.25
-   REAL       multi-peak:  28.1% at depth steps vs  21.6% on smooth depth   =  1.30x   (overall 21.8%)
-   PERMUTED   multi-peak:  90.0% at depth steps vs  85.8% on smooth depth   =  1.05x   (overall 86.1%)
+119MSDCF: 21 frames   strong pixels 100.0%   depth-step map: 68189 at step>=1, 943641 at step<0.25
+   REAL       multi-peak:  32.4% at depth steps vs  29.0% on smooth depth   =  1.12x   (overall 29.0%)
+   PERMUTED   multi-peak:  90.2% at depth steps vs  86.4% on smooth depth   =  1.04x   (overall 86.6%)
 
-coffee-bean: 21 frames   strong pixels 100.0%   depth-step map: 30756 at step>=1, 988259 at step<0.25
-   REAL       multi-peak:  14.6% at depth steps vs  15.3% on smooth depth   =  0.96x   (overall 15.2%)
-   PERMUTED   multi-peak:  95.3% at depth steps vs  95.3% on smooth depth   =  1.00x   (overall 95.3%)
+coffee-bean: 21 frames   strong pixels 100.0%   depth-step map: 30622 at step>=1, 988043 at step<0.25
+   REAL       multi-peak:  20.4% at depth steps vs  23.1% on smooth depth   =  0.88x   (overall 23.0%)
+   PERMUTED   multi-peak:  95.0% at depth steps vs  94.8% on smooth depth   =  1.00x   (overall 94.8%)
 
 ==============================================================================
 cell                        overall  enrich  placebo
-occlusion (TEST)              17.4%    1.03     0.98
-terrace (no alpha edge)       21.8%    1.30     1.05
-tilt (no depth step)          15.2%    0.96     1.00
+occlusion (TEST)              22.9%    0.99     0.98
+terrace (no alpha edge)       29.0%    1.12     1.04
+tilt (no depth step)          23.0%    0.88     1.00
 REAL coffee-bean (M21)         4.8%    4.38     1.01
 REAL 109MSDCF (M21)           60.7%    0.87     1.01
-GATE 1c: FAIL  (enrichment >= 2.0x AND placebo 1.00 +/- 0.15)  [1249s]
+GATE 1c: FAIL  (enrichment >= 2.0x AND placebo 1.00 +/- 0.15)  [1210s]

@@ -1,5 +1,5 @@
 loading C:\dev\macro\test\109MSDCF
-  22 frames, 7028x4688 raw, ISO 160, g=0.36630 DN/e-, RN=4.20 e-  [8.9s]
+  22 frames, 7028x4688 raw, ISO 160, g=0.36630 DN/e-, RN=4.20 e-  [11.9s]
   sweep tile 594x594 (margin 169); phi tile 588x588 (margin 166, reach 41)
   4 flat ROIs pooled for c(1)/floor; phi on 2272,1344,256,256 only
   single_sigma[2272,1344,256,256] = 28.2007  (m9 committed 28.2007)
@@ -28,4 +28,4 @@ Spearman rho(support, excess) = -0.207, p = 0.4419   (m9 committed -0.207)
 max |dphi|   = 0.000006
 max |dc(1)|  = 0.000049
 max |dfloor| = 0.000046
-PORT CHECK: PASS   [299.5s]
+PORT CHECK: PASS   [220.8s]

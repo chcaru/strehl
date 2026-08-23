@@ -1,0 +1,39 @@
+Is fact 14 wrong about READ NOISE at ISO 50, or about GAIN?
+
+M4's committed dark sigma_temporal, and what g = ISO/436.8 predicts:
+    ISO  M4 measured     model  model/M4
+     50       0.9866    0.4808     0.487
+    100       0.9845    0.9615     0.977
+    200       1.7416    1.9231     1.104
+  M4's ISO50/ISO100 ratio = 1.0021; the model demands 0.5000
+  substituting g(50) = g(100): model 0.9615 vs measured 0.9866 = 2.5% error (was 51.3%)
+
+Dark frames only constrain the PRODUCT RN_e*g, so below is g measured from SIGNAL.
+photon transfer: 8x8 tiles on one green plane, 5th-percentile variance per mean bin, 24 bins
+
+--- 109MSDCF     ISO  160   CONTROL -- ISO 160, model known good
+    measured gain             0.32727 DN/e-   (from 24 mean bins)
+    fact 14  g = ISO/436.8    0.36630 DN/e-   ratio measured/model  0.893
+    pulled   g = max(ISO,100)/436.8  0.36630 DN/e-   ratio measured/model  0.893
+    implied read noise           6.92 e-  (2.266 DN)   fact 14 says 4.20 e-
+
+--- 119MSDCF     ISO   50   TEST    -- ISO 50
+    measured gain             0.23422 DN/e-   (from 24 mean bins)
+    fact 14  g = ISO/436.8    0.11447 DN/e-   ratio measured/model  2.046
+    pulled   g = max(ISO,100)/436.8  0.22894 DN/e-   ratio measured/model  1.023
+    implied read noise          23.86 e-  (5.588 DN)   fact 14 says 4.20 e-
+
+--- coffee-bean  ISO   50   TEST    -- ISO 50
+    measured gain             0.25834 DN/e-   (from 24 mean bins)
+    fact 14  g = ISO/436.8    0.11447 DN/e-   ratio measured/model  2.257
+    pulled   g = max(ISO,100)/436.8  0.22894 DN/e-   ratio measured/model  1.128
+    implied read noise          37.93 e-  (9.799 DN)   fact 14 says 4.20 e-
+
+==========================================================================
+control 109MSDCF (ISO 160): estimator recovers g within 10.7% of the project's constant
+the estimator is calibrated, so read the ISO 50 rows:
+  119MSDCF       measured 0.23422: closer to PULLED g (=ISO100)   (errors 105% vs 2%)
+  coffee-bean    measured 0.25834: closer to PULLED g (=ISO100)   (errors 126% vs 13%)
+
+VERDICT: signal agrees with the dark frames.  ISO 50 on this body behaves as base ISO 100.  The defect is in g, NOT in RN_e -- changing the read-noise constant would 'fix' the symptom at ISO 50 and break every other ISO.
+[2s]
