@@ -1,0 +1,660 @@
+####################################################################################################
+crates/strehl-plugin/examples/calibration-survey.rs
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/examples/calibration-survey.rs:73] cites [438]
+     69| 
+     70|     println!(
+     71|         "\nk is the measured scale divided by the host's compiled-in constant. \
+     72|          `gate@1.0` is\nthe effective gate an operator would run at if it \
+>>   73|          inherited that constant instead\nof being measured -- fact 438: nothing \
+     74|          in the log, the exit code or the\ncalibration block would change."
+     75|     );
+     76| }
+     77| 
+####################################################################################################
+crates/strehl-plugin/examples/f5-design-probes.rs
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/examples/f5-design-probes.rs:141] cites [505]
+    137|         (hi - lo) / m * 100.0
+    138|     );
+    139| 
+    140|     println!(
+>>  141|         "\nPROBE 3 -- cost. Fact 505 bounds option A at ~1.7 ms per stage, derived from\n\
+    142|          the merge's pass-one time. Measured here, release build, per 512^2 plane:\n"
+    143|     );
+    144|     for (label, op) in [
+    145|         (
+####################################################################################################
+crates/strehl-plugin/src/calibrate.rs
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:4] cites [502]
+      1| //! **The host measures the plugin. It does not ask the plugin to declare
+      2| //! anything.**
+      3| //!
+>>    4| //! This module is workstream E §F5.3 option A, and SYNTHESIS fact 502. The
+      5| //! whole of it is one idea: the host already owns a noise plane, the operator's
+      6| //! window, its own regulariser and the sigma normalisation, so it can run any
+      7| //! candidate operator through its own configuration at registration and read
+      8| //! the standard deviation off. Then
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:24] cites [500]
+     20| //! Getting the *arithmetic* right is trivial. Getting the *configuration* right
+     21| //! is what M43 got wrong the first time, and it cost 24.26%:
+     22| //!
+     23| //! - the operator runs through its **own** window and then the **host's**
+>>   24| //!   regulariser, in that order — fact 500;
+     25| //! - the plane is unit-variance white Gaussian noise, under a noise model whose
+     26| //!   luma sigma is 1, so the normaliser is exercised without rescaling;
+     27| //! - a margin of `stencil + 1 + window + regulariser` is discarded from every
+     28| //!   edge, because the box filter is replicate-clamped and the border is not
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:36] cites [501]
+     32| //!   the between-seed spread into the estimate.
+     33| //!
+     34| //! Every one of those is a choice that can be made differently and defensibly,
+     35| //! which is exactly why [`self_check`] exists and why it checks **two** targets
+>>   36| //! rather than one (discipline 257, fact 501).
+     37| //!
+     38| //! # Cost
+     39| //!
+     40| //! Fact 505 bounds this at **~1.7 ms per stage** for a 512x512 plane, derived
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:40] cites [505]
+     36| //! rather than one (discipline 257, fact 501).
+     37| //!
+     38| //! # Cost
+     39| //!
+>>   40| //! Fact 505 bounds this at **~1.7 ms per stage** for a 512x512 plane, derived
+     41| //! from the merge's own measured pass-one time. That bound is per seed; the
+     42| //! host default runs twelve of them, and [`CalibrationPlan::host_default`]
+     43| //! documents the trade.
+     44| 
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:100] cites [505]
+     96|     /// deviation over a region only a few supports across subtracts a mean that
+     97|     /// is itself correlated with the samples; 384 gives `0.015277 +/- 0.000223`
+     98|     /// and 512 gives `0.015214 +/- 0.000075`, a difference of 0.27 standard
+     99|     /// errors, so the bias is spent by 384 and 512 is kept for the tighter
+>>  100|     /// interval. 512 is also the plane size fact 505's ~1.7 ms cost bound is
+    101|     /// derived for.
+    102|     #[must_use]
+    103|     pub fn host_default() -> Self {
+    104|         Self {
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:228] cites [439]
+    224|         self.side
+    225|     }
+    226| 
+    227|     /// `response_sd` as a multiple of the host's compiled-in
+>>  228|     /// [`FOCUS_NOISE_SD`] — fact 439's `k`.
+    229|     ///
+    230|     /// A plugin that inherited the host constant while having this `k` would
+    231|     /// run at an effective gate of `1 / k`.
+    232|     #[must_use]
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:524] cites [500]
+    520|     /// Rule 20 — inputs that make this fail, every one of them a mistake
+    521|     /// somebody has actually made in this repository:
+    522|     ///
+    523|     /// - applying the regulariser to the fine arm: fine reads ~0.0276 against a
+>>  524|     ///   target of 0.0904, a 3.3x miss (this is fact 500's error, inverted);
+    525|     /// - omitting it from the coarse arm: coarse reads **+24%** (this is
+    526|     ///   fact 501, verbatim);
+    527|     /// - normalising before windowing, a different `SIGMA_EPS`, a wrong margin,
+    528|     ///   or a lattice-structured RNG (which moved this constant 1.30x across
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:526] cites [501]
+    522|     ///
+    523|     /// - applying the regulariser to the fine arm: fine reads ~0.0276 against a
+    524|     ///   target of 0.0904, a 3.3x miss (this is fact 500's error, inverted);
+    525|     /// - omitting it from the coarse arm: coarse reads **+24%** (this is
+>>  526|     ///   fact 501, verbatim);
+    527|     /// - normalising before windowing, a different `SIGMA_EPS`, a wrong margin,
+    528|     ///   or a lattice-structured RNG (which moved this constant 1.30x across
+    529|     ///   seeds when `merge.rs` tried an LCG).
+    530|     ///
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:558] cites [501]
+    554| 
+    555|         assert!(check.coarse.passed, "coarse target missed: {check:?}");
+    556|         assert!(check.fine.passed, "fine target missed: {check:?}");
+    557|         // And the band has to be narrow enough to mean something: 4 sem at a
+>>  558|         // relative sem of ~0.5% is +/-2%, which rejects fact 501's +24.26%,
+    559|         // fact 509's +52.8% and fact 510's +12.5% alike.
+    560|         let band =
+    561|             SELF_CHECK_SEM_LIMIT * f64::from(check.coarse.sem) / f64::from(check.coarse.target);
+    562|         assert!(
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:559] cites [509, 510]
+    555|         assert!(check.coarse.passed, "coarse target missed: {check:?}");
+    556|         assert!(check.fine.passed, "fine target missed: {check:?}");
+    557|         // And the band has to be narrow enough to mean something: 4 sem at a
+    558|         // relative sem of ~0.5% is +/-2%, which rejects fact 501's +24.26%,
+>>  559|         // fact 509's +52.8% and fact 510's +12.5% alike.
+    560|         let band =
+    561|             SELF_CHECK_SEM_LIMIT * f64::from(check.coarse.sem) / f64::from(check.coarse.target);
+    562|         assert!(
+    563|             band < 0.05,
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:815] cites [439]
+    811|         )
+    812|         .unwrap();
+    813| 
+    814|         println!(
+>>  815|             "shipped k = {:.4}   sml k = {:.4} (fact 439: 6.680)   tenengrad-sq k = {:.4} \
+    816|              (fact 439: 1.367)",
+    817|             shipped.k_against_host_constant(),
+    818|             sml.k_against_host_constant(),
+    819|             sq.k_against_host_constant()
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:816] cites [439]
+    812|         .unwrap();
+    813| 
+    814|         println!(
+    815|             "shipped k = {:.4}   sml k = {:.4} (fact 439: 6.680)   tenengrad-sq k = {:.4} \
+>>  816|              (fact 439: 1.367)",
+    817|             shipped.k_against_host_constant(),
+    818|             sml.k_against_host_constant(),
+    819|             sq.k_against_host_constant()
+    820|         );
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:829] cites [439]
+    825|             shipped.k_against_host_constant()
+    826|         );
+    827|         assert!(
+    828|             (5.5..8.0).contains(&sml.k_against_host_constant()),
+>>  829|             "SML must land near fact 439's 6.680, got {}",
+    830|             sml.k_against_host_constant()
+    831|         );
+    832|         assert!(
+    833|             (1.25..1.50).contains(&sq.k_against_host_constant()),
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/calibrate.rs:834] cites [439]
+    830|             sml.k_against_host_constant()
+    831|         );
+    832|         assert!(
+    833|             (1.25..1.50).contains(&sq.k_against_host_constant()),
+>>  834|             "tenengrad-squared must land near fact 439's 1.367, got {}",
+    835|             sq.k_against_host_constant()
+    836|         );
+    837|     }
+    838| }
+####################################################################################################
+crates/strehl-plugin/src/field.rs
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/field.rs:18] cites [500]
+     14| //! measure, and nothing else in the system would notice.
+     15| //!
+     16| //! # Why the regulariser belongs to the host and not to the plugin
+     17| //!
+>>   18| //! Fact 500. `FOCUS_NOISE_SD` (0.015214) is measured **with** the 17x17
+     19| //! regulariser; `FINE_FOCUS_NOISE_SD` (0.090400) is measured **without** it.
+     20| //! They are not the same kind of quantity and must never be divided by one
+     21| //! another — this repository did exactly that and overstated a ratio by 3.27x.
+     22| //! A plugin cannot know the host's regulariser radius, which is why a
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/field.rs:42] cites [84]
+     38| #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+     39| pub struct FieldConfig {
+     40|     /// Radius of the host's regulariser box, or `None` for no regulariser.
+     41|     ///
+>>   42|     /// `Some(8)` is the shipped merge (fact 84: -35% absolute reconstruction
+     43|     /// error at width 17). `None` is the statistics scale, which is
+     44|     /// deliberately *not* regularised.
+     45|     pub regulariser_radius: Option<usize>,
+     46| }
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/field.rs:74] cites [32]
+     70|     /// The **plugin halo**: the rectangle expansion, in plane pixels, that a
+     71|     /// tile of output needs beyond its own bounds under this operator and this
+     72|     /// regulariser.
+     73|     ///
+>>   74|     /// Rule 15 — this is the SYNTHESIS fact 32 sense of the word (a margin),
+     75|     /// never the occlusion-halo sense (an artifact at an occluding edge).
+     76|     #[must_use]
+     77|     pub fn plugin_halo(self, op: &dyn FocusMeasure) -> usize {
+     78|         op.support_radius() + self.regulariser_radius()
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/field.rs:98] cites [439]
+     94|     /// The `stencil_radius + 1` term generalises it: M43's instrument used
+     95|     /// `radius + 2` for **every** operator including Brenner (stencil 2) and
+     96|     /// `ring(1,3)` (stencil 3), which under-margins those two by 1-2 px. The
+     97|     /// generalisation is the reason the `k` values this crate reports for those
+>>   98|     /// two operators are not expected to match fact 439 to the last digit.
+     99|     #[must_use]
+    100|     pub fn calibration_margin(self, op: &dyn FocusMeasure) -> usize {
+    101|         let stencil = (op.stencil_radius() + 1).max(2);
+    102|         stencil + op.window().radius() + self.regulariser_radius()
+####################################################################################################
+crates/strehl-plugin/src/lib.rs
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/lib.rs:8] cites [436]
+      4| //! # The problem this crate exists to make unrepresentable
+      5| //!
+      6| //! The merge admits a frame into the per-pixel average when its focus response
+      7| //! is within `tol = t * sqrt(2) * FOCUS_NOISE_SD` of the peak, where `t` is the
+>>    8| //! user's `--gate`. Fact 436 verified that relation against the shipped binary
+      9| //! at five gates spanning 35x, with `tol/t` constant to 2.0e-6 — it is exactly
+     10| //! linear.
+     11| //!
+     12| //! `FOCUS_NOISE_SD = 0.015214` is a property of the **focus operator**, not of
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/lib.rs:16] cites [439]
+     12| //! `FOCUS_NOISE_SD = 0.015214` is a property of the **focus operator**, not of
+     13| //! the merge: it is the standard deviation of that operator's response to
+     14| //! unit-variance noise, after the operator's own box window and after the
+     15| //! merge's regulariser. Across seven textbook operators the true value spans
+>>   16| //! **10.4x** (fact 439: ring(1,3) 0.644 to sum-modified-Laplacian 6.680). A
+     17| //! contributed operator that inherits the host's constant while having a true
+     18| //! scale `k` times larger silently runs at effective gate `t/k`; at `k = 5.94`
+     19| //! an intended `--gate 1.0` becomes 0.168 and 87.8% of pixels fall back to a
+     20| //! single frame instead of the intended 41.7%. Fact 438: **every such case is
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/lib.rs:20] cites [438]
+     16| //! **10.4x** (fact 439: ring(1,3) 0.644 to sum-modified-Laplacian 6.680). A
+     17| //! contributed operator that inherits the host's constant while having a true
+     18| //! scale `k` times larger silently runs at effective gate `t/k`; at `k = 5.94`
+     19| //! an intended `--gate 1.0` becomes 0.168 and 87.8% of pixels fall back to a
+>>   20| //! single frame instead of the intended 41.7%. Fact 438: **every such case is
+     21| //! indistinguishable from the log, the exit code, and the calibration block.**
+     22| //!
+     23| //! It is not hypothetical. Facts 509-511: this project's own first pending
+     24| //! operator change — `tenengrad-sq` at radius 11 replacing `|grad|` at radius
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/lib.rs:23] cites [509, 510, 511]
+     19| //! an intended `--gate 1.0` becomes 0.168 and 87.8% of pixels fall back to a
+     20| //! single frame instead of the intended 41.7%. Fact 438: **every such case is
+     21| //! indistinguishable from the log, the exit code, and the calibration block.**
+     22| //!
+>>   23| //! It is not hypothetical. Facts 509-511: this project's own first pending
+     24| //! operator change — `tenengrad-sq` at radius 11 replacing `|grad|` at radius
+     25| //! 13 — moves the constant by `k = 1.528`, turning `--gate 1.0` into 0.654.
+     26| //!
+     27| //! Workstream E §F4's four plugin properties (P1 confluence, P2 sensitivity, P3
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/lib.rs:47] cites [500]
+     43| //! forced by three further facts:
+     44| //!
+     45| //! - A declared constant is **under-determined in principle**. The value
+     46| //!   depends on the host's regulariser radius, which the plugin cannot know.
+>>   47| //!   Fact 500 is the proof by counterexample: this repository's own two
+     48| //!   constants, `FOCUS_NOISE_SD` (0.015214, measured *with* the regulariser)
+     49| //!   and `FINE_FOCUS_NOISE_SD` (0.090400, measured *without* it), are not the
+     50| //!   same kind of quantity and must never be divided by one another. The
+     51| //!   orchestrator made exactly that error and overstated a ratio by 3.27x.
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/lib.rs:58] cites [505]
+     54| //!   re-derives.
+     55| //! - It removes the parameter from the contract entirely, which is the only
+     56| //!   version in which `--gate` is genuinely dimensionless (see [`Gate`]).
+     57| //!
+>>   58| //! Fact 505 bounds the cost at ~1.7 ms per stage; [`CalibrationPlan`] documents
+     59| //! what this crate actually measured, which is larger, and why.
+     60| //!
+     61| //! # Layout
+     62| //!
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/lib.rs:72] cites [439]
+     68| //!   regulariser.
+     69| //! - [`rng`] — the synthetic noise sources. Which generator is used is
+     70| //!   load-bearing and measured, not incidental; see [`rng::NoiseSource`].
+     71| //! - [`calibrate`] — the host-side measurement, and the two-target self-check.
+>>   72| //! - [`reference`] — the seven operators of fact 439, as worked examples and as
+     73| //!   the fault-5 subjects.
+     74| //! - [`registry`] — calibrated operators in, a dimensionless [`Gate`] out.
+     75| //!
+     76| //! # Example
+####################################################################################################
+crates/strehl-plugin/src/measure.rs
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/measure.rs:9] cites [502]
+      5| //!
+      6| //! There is no `fn noise_sd(&self) -> f32`, no `NoiseCalibration` field, and no
+      7| //! way for an implementor to tell the host how noisy its response is. That
+      8| //! omission is the whole design (workstream E §F5.3 option A, SYNTHESIS
+>>    9| //! fact 502). The host measures it instead — see [`crate::calibrate`].
+     10| //!
+     11| //! Three reasons, in increasing order of how much they bind:
+     12| //!
+     13| //! 1. A declaration can be wrong; a measurement cannot be wrong in the same
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/measure.rs:18] cites [500]
+     14| //!    way. Fault 5 of §F4.6 becomes **unrepresentable** rather than merely
+     15| //!    detectable, because there is no place in this file to put a wrong number.
+     16| //! 2. **A declared constant is under-determined in principle.** The response SD
+     17| //!    depends on the operator, on the operator's own window, *and* on the
+>>   18| //!    host's regulariser radius — which the plugin cannot know. Fact 500 is
+     19| //!    this repository dividing two of its own constants that differed in
+     20| //!    exactly that and overstating a ratio by 3.27x.
+     21| //! 3. Changing [`REGULARISER_RADIUS`](strehl_core::merge::REGULARISER_RADIUS)
+     22| //!    would silently stale every declared constant in the ecosystem. A measured
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/measure.rs:27] cites [439]
+     23| //!    one re-derives.
+     24| //!
+     25| //! # The shape the trait has to fit
+     26| //!
+>>   27| //! Every operator in fact 439's survey decomposes into the same three stages,
+     28| //! and this trait is that decomposition:
+     29| //!
+     30| //! ```text
+     31| //! respond()    pointwise stencil, replicate-clamped   e.g. sqrt(Gx^2 + Gy^2)
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/measure.rs:38] cites [152]
+     34| //! ```
+     35| //!
+     36| //! The host then applies its own regulariser on top (see [`crate::field`]).
+     37| //! The split is not cosmetic: the calibrator needs the stencil radius and the
+>>   38| //! window radius **separately** to size the margin it discards, and fact 152
+     39| //! is the standing reminder that an operator and its window are one object
+     40| //! rather than two independent parameters.
+     41| //!
+     42| //! [`Window::Custom`] and [`Normalisation::Custom`] are the escape hatches for
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/measure.rs:65] cites [500]
+     61| /// The operator's own aggregation window — the stage between the stencil and
+     62| /// the normaliser.
+     63| ///
+     64| /// This is **not** the host's regulariser. The two are separate boxes applied
+>>   65| /// in sequence, and conflating them is the fault fact 500 records: the
+     66| /// project's two published noise constants differ in whether the second box
+     67| /// was present, and were then divided by one another.
+     68| #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+     69| pub enum Window {
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/measure.rs:71] cites [439]
+     67| /// was present, and were then divided by one another.
+     68| #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+     69| pub enum Window {
+     70|     /// The stencil response is the field. `ring(1,3)` as originally shipped was
+>>   71|     /// this; under fact 439's survey configuration it is not.
+     72|     None,
+     73|     /// Separable running-sum box mean of the given radius, via
+     74|     /// [`strehl_core::boxfilter::box_mean`]. **O(1) in the radius**, which is
+     75|     /// what makes M13's window ruling valid (cost flat to 2.53% over w1-w40).
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/measure.rs:83] cites [505]
+     79|     ///
+     80|     /// The host cannot assume the cost is O(1) in the radius here, which is the
+     81|     /// case §F5.3 flags as degrading option A back to option B: an operator
+     82|     /// with an expensive aggregation is one whose load-time calibration is no
+>>   83|     /// longer bounded by fact 505's ~1.7 ms.
+     84|     Custom { radius: usize },
+     85| }
+     86| 
+     87| impl Window {
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/measure.rs:139] cites [152]
+    135| /// every worker holds the same operator.
+    136| pub trait FocusMeasure: Send + Sync {
+    137|     /// Stable identity, used as the registry key and printed in reports.
+    138|     ///
+>>  139|     /// Include the window radius. Fact 152: the operator and its window are one
+    140|     /// object, and fact 510 measured a **12.5% gate shift** from a radius
+    141|     /// change alone, so `tenengrad` and `tenengrad-w11` are different things
+    142|     /// and must not share a name.
+    143|     fn id(&self) -> &str;
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/measure.rs:140] cites [510]
+    136| pub trait FocusMeasure: Send + Sync {
+    137|     /// Stable identity, used as the registry key and printed in reports.
+    138|     ///
+    139|     /// Include the window radius. Fact 152: the operator and its window are one
+>>  140|     /// object, and fact 510 measured a **12.5% gate shift** from a radius
+    141|     /// change alone, so `tenengrad` and `tenengrad-w11` are different things
+    142|     /// and must not share a name.
+    143|     fn id(&self) -> &str;
+    144| 
+####################################################################################################
+crates/strehl-plugin/src/reference.rs
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:1] cites [439]
+>>    1| //! The seven operators of SYNTHESIS fact 439, expressed against the trait.
+      2| //!
+      3| //! # These are calibration references, not shipping operators
+      4| //!
+      5| //! Exactly one of them — [`Tenengrad::shipped`] — is what `strehl` runs, and it
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:16] cites [439]
+     12| //!    ([`Brenner`], stencil 2), a stencil that is itself two box means
+     13| //!    ([`Ring`], stencil 3), a squared response ([`TenengradSquared`],
+     14| //!    [`LocalVariance`]), and the canonical shape-from-focus operator
+     15| //!    ([`SumModifiedLaplacian`]).
+>>   16| //! 2. They let fact 439's 10.4x spread be reproduced *inside the crate*, on the
+     17| //!    host's own code path, rather than from a Python model of it.
+     18| //! 3. [`SumModifiedLaplacian`] is the fault-5 demonstration: `k` = 6.68, the
+     19| //!    likeliest third-party contribution there is, and the one that reverts
+     20| //!    87.76% of pixels to pure selection if it inherits the host's constant.
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:25] cites [439]
+     21| //!
+     22| //! **[`Ring`] must not be revived as a shipping operator.** `focus.rs` says so
+     23| //! and M11 measured why: `ring(1,3)` ranks 26-27th of 36, dominated on both
+     24| //! axes of the Pareto front, and no setting of its two radii closes the gap. It
+>>   25| //! is here because it is the *other* end of fact 439's spread — this project's
+     26| //! own first shipped operator, erring at `k` = 0.644 — and a survey with only
+     27| //! the over-noisy direction populated would be a weaker argument.
+     28| //!
+     29| //! # Definitions
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:33] cites [439]
+     29| //! # Definitions
+     30| //!
+     31| //! Taken from M43's reference instrument
+     32| //! (`experiments/m43-plugin-seam/02b-operator-noise-spread.py`) so that the
+>>   33| //! `k` values are comparable to fact 439's, and stated here because a focus
+     34| //! operator's name does not determine its formula — M14's whole (a) finding is
+     35| //! that "Tenengrad" in the literature usually means `Gx^2 + Gy^2` while the
+     36| //! number this project published belongs to the *magnitude*.
+     37| //!
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:91] cites [510]
+     87|     }
+     88| 
+     89|     /// `|grad|` at an arbitrary window radius.
+     90|     ///
+>>   91|     /// Fact 510: a radius change alone is a **12.5% gate shift** (w13 -> w11
+     92|     /// gives `k` = 1.125), so the radius is part of the identity, not a
+     93|     /// decoration on it.
+     94|     #[must_use]
+     95|     pub fn at_radius(radius: usize) -> Self {
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:125] cites [509]
+    121| }
+    122| 
+    123| /// `Gx^2 + Gy^2` — "Tenengrad" as the literature usually means it.
+    124| ///
+>>  125| /// **This is the operator M17 and M42 propose to ship, and fact 509 measured
+    126| /// the edit at `k` = 1.528 against the current constant.** It is here so that
+    127| /// the pending change can be calibrated before it lands rather than after.
+    128| #[derive(Debug, Clone)]
+    129| pub struct TenengradSquared {
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:168] cites [90]
+    164| /// `|I(x+2,y) - I(x,y)|`. Brenner's 1976 gradient, in the absolute form M43's
+    165| /// instrument used.
+    166| ///
+    167| /// The **only asymmetric** operator in the set: it reads horizontally and not
+>>  168| /// vertically. Fact 90 is the reason that is worth flagging rather than
+    169| /// quietly fixing — this corpus carries 14-22x more vertical gradient energy
+    170| /// than horizontal, so an axis-asymmetric operator has a scene-dependent bias
+    171| /// that has nothing to do with its noise scale.
+    172| #[derive(Debug, Clone)]
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:213] cites [439]
+    209|     }
+    210| }
+    211| 
+    212| /// `|4I - I(x-1,y) - I(x+1,y) - I(x,y-1) - I(x,y+1)|`, the 4-neighbour
+>>  213| /// Laplacian magnitude. Fact 439 puts it at `k` = 6.590.
+    214| #[derive(Debug, Clone)]
+    215| pub struct Laplacian {
+    216|     id: String,
+    217|     radius: usize,
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:259] cites [439]
+    255| /// Nayar & Nakagawa's sum-modified-Laplacian, step 1, threshold 0.
+    256| ///
+    257| /// **This is fault 5 of workstream E §F4.6 made concrete.** SML is *the*
+    258| /// canonical shape-from-focus operator, so it is the single likeliest
+>>  259| /// third-party contribution there is — and fact 439 measures it at `k` = 6.680,
+    260| /// which at a declared `--gate 1.0` is an effective gate of **0.150** and
+    261| /// reverts **87.76%** of pixels to pure selection.
+    262| ///
+    263| /// It passes every property workstream E §F4 proposes. The only thing that
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:308] cites [439]
+    304|     }
+    305| }
+    306| 
+    307| /// `|box_mean(I, inner) - box_mean(I, outer)|` — the ring difference the
+>>  308| /// walking skeleton shipped with, and the low end of fact 439's spread at
+    309| /// `k` = 0.644.
+    310| ///
+    311| /// **Do not revive this as a shipping operator.** M11 ranks `ring(1,3)`
+    312| /// 26-27th of 36 and M14 replaced it; `focus.rs` keeps a copy in its own tests
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:420] cites [439]
+    416|         }
+    417|     }
+    418| }
+    419| 
+>>  420| /// Every operator of fact 439's survey, in the shipped window, in the order the
+    421| /// fact lists them.
+    422| ///
+    423| /// Boxed rather than returned by value because they are different types and the
+    424| /// registry holds `Arc<dyn FocusMeasure>`.
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/reference.rs:552] cites [152]
+    548|         assert_eq!(sorted.len(), ids.len(), "ids must be distinct: {ids:?}");
+    549|         for id in &ids {
+    550|             assert!(
+    551|                 id.contains(&format!("w{WINDOW_RADIUS}")),
+>>  552|                 "{id} must carry its window radius (fact 152)"
+    553|             );
+    554|         }
+    555|     }
+    556| 
+####################################################################################################
+crates/strehl-plugin/src/registry.rs
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/registry.rs:7] cites [436]
+      3| //! # What `--gate` means, before and after
+      4| //!
+      5| //! Before: `tol = t * sqrt(2) * FOCUS_NOISE_SD` with `FOCUS_NOISE_SD` a
+      6| //! compiled-in constant measured for one operator at one window under one
+>>    7| //! regulariser. Fact 436 verified that relation against the shipped binary at
+      8| //! five gates spanning 35x, `tol/t` constant to 2.0e-6 — so `t` is exactly
+      9| //! linear in a constant that belongs to the *replaceable* component. An
+     10| //! operator whose true SD is `k` times the constant runs at `t/k`, and fact 438
+     11| //! is that nothing observable changes.
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/registry.rs:10] cites [438]
+      6| //! compiled-in constant measured for one operator at one window under one
+      7| //! regulariser. Fact 436 verified that relation against the shipped binary at
+      8| //! five gates spanning 35x, `tol/t` constant to 2.0e-6 — so `t` is exactly
+      9| //! linear in a constant that belongs to the *replaceable* component. An
+>>   10| //! operator whose true SD is `k` times the constant runs at `t/k`, and fact 438
+     11| //! is that nothing observable changes.
+     12| //!
+     13| //! After: the field is divided by its own host-measured noise SD before the
+     14| //! gate, so its noise SD is **1.0 by construction** and
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/registry.rs:26] cites [503, 504]
+     22| //! different operators (workstream E §F5.3, point 3).
+     23| //!
+     24| //! # The two paths are the same admission set — *in exact arithmetic*
+     25| //!
+>>   26| //! Fact 503 derives it and fact 504 sharpens it: dividing the field by a
+     27| //! positive constant and multiplying the tolerance by the same one changes the
+     28| //! *rounding*, not the mathematics, so a small number of f32 comparisons flip.
+     29| //! The predicted rate is 1e-6 to 1e-5 of decisions. Both paths are offered here
+     30| //! — [`Registered::field`] with [`Registered::gate`], or
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/registry.rs:158] cites [504]
+    154|     ///
+    155|     /// This is the shape the merge has today. It is kept because it is the
+    156|     /// migration path — a host can adopt the *measured* constant without
+    157|     /// adopting the pre-normalisation, and get the correctness property
+>>  158|     /// immediately while the f32 question of fact 504 is settled separately.
+    159|     pub fn raw_field<'w>(
+    160|         &self,
+    161|         ws: &'w mut FieldWorkspace,
+    162|         luma: &[f32],
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/registry.rs:360] cites [439]
+    356| 
+    357|     /// **Fault 5 is unrepresentable, demonstrated end to end through the
+    358|     /// registry.**
+    359|     ///
+>>  360|     /// A deliberately mis-matched operator — SML, fact 439's worst case and the
+    361|     /// likeliest real contribution — is registered against a host whose
+    362|     /// compiled-in constant is 0.015214. The host-measured constant tracks the
+    363|     /// operator. There is no code path by which SML could have inherited
+    364|     /// 0.015214, because [`Calibration`] has no public constructor and
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/registry.rs:378] cites [439]
+    374|         let k = sml.k_against_host_constant();
+    375|         let inherited_effective_gate = 1.0 / k;
+    376|         println!(
+    377|             "SML w13 + r8: host-measured SD {:e} +/- {:e}, k = {k:.4} against the \
+>>  378|              host's {FOCUS_NOISE_SD:e} (fact 439 measures 6.680). A plugin \
+    379|              inheriting the host constant would run --gate 1.0 at {:.4}.",
+    380|             sml.response_sd(),
+    381|             sml.sem(),
+    382|             inherited_effective_gate
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/registry.rs:479] cites [503, 504]
+    475|             "the pre-normalised field must have unit noise SD, got {sd:.4}"
+    476|         );
+    477|     }
+    478| 
+>>  479|     // ------------------------------------------------------------ facts 503/504
+    480| 
+    481|     /// Raw and pre-normalised field stacks for `frames` independent unit-noise
+    482|     /// planes, plus the interior index list.
+    483|     ///
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/registry.rs:527] cites [503]
+    523|     /// How many admission decisions differ between `(raw, raw_tol)` and
+    524|     /// `(norm scaled by an extra `bias`, dimensionless_tol)`.
+    525|     ///
+    526|     /// `bias == 1.0` is the treatment arm: the two arms are then the same
+>>  527|     /// comparison in exact arithmetic (fact 503) and only rounding can differ.
+    528|     /// `bias != 1.0` is a genuinely different gate, and is the positive
+    529|     /// control.
+    530|     fn admission_disagreements(
+    531|         raw: &[Vec<f32>],
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/registry.rs:561] cites [503, 504]
+    557|         }
+    558|         (differing, decisions)
+    559|     }
+    560| 
+>>  561|     /// **Facts 503/504, measured.** Pre-normalising the focus field by its own
+    562|     /// host-measured noise SD is behaviour-preserving in exact arithmetic; in
+    563|     /// f32 it re-rounds, so some admissions may flip.
+    564|     ///
+    565|     /// **The assertion is a bounded flip RATE, never byte-identity.** Fact 504
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/registry.rs:565] cites [504]
+    561|     /// **Facts 503/504, measured.** Pre-normalising the focus field by its own
+    562|     /// host-measured noise SD is behaviour-preserving in exact arithmetic; in
+    563|     /// f32 it re-rounds, so some admissions may flip.
+    564|     ///
+>>  565|     /// **The assertion is a bounded flip RATE, never byte-identity.** Fact 504
+    566|     /// predicted, before this test existed, that an equality assertion would go
+    567|     /// red at a rate of order 1e-6 to 1e-5 and be misread as refuting the
+    568|     /// design. A rate above **1e-4** is the pre-registered refutation: it would
+    569|     /// mean the admission boundary carries far more near-ties than the
+--------------------------------------------------------------------------------
+[crates/strehl-plugin/src/registry.rs:626] cites [504]
+    622|                  control(+1%) {r1:.3e}   control(+0.1%) {r2:.3e}"
+    623|             );
+    624|             assert!(
+    625|                 rate < 1e-4,
+>>  626|                 "gate {t}: flip rate {rate:.3e} exceeds fact 504's pre-registered \
+    627|                  refutation threshold of 1e-4"
+    628|             );
+    629|             assert!(
+    630|                 r1 > 1e-4,

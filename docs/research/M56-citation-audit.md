@@ -96,7 +96,26 @@ strehl.exe merge --help ; strehl.exe stack --help ; strehl.exe --help
 ROI coordinates are M18's canonical pairs (`M18-merge-implemented.md` sections for each
 stack); `3056,416` is fact 441's own 119MSDCF ROI.
 
-Scripts and captured output are under `experiments/M56-citations/`.
+Scripts and captured output are under `experiments/M56-citations/`, committed. The two
+highest-value artefacts are `raw_fact_lines.txt` (all 257 raw citation lines with
+`file:line` and quoted content) and `join_b.txt` (each cited fact's **full section 4 row
+text joined to the code lines that cite it**) — the latter is the actual instrument of a
+content audit, and both of my counting errors in section 9 would have died on contact
+with it.
+
+**Two files are deliberately not committed.** `facts.json` (370 KB) and `disc_ques.json`
+(150 KB) are large mechanical re-serialisations of SYNTHESIS sections 4, 5 and 10; the
+corpus state they pin is recoverable exactly with
+`git show d7eedfa:docs/research/SYNTHESIS.md` plus the committed `parse_facts.py` and
+`parse_dq.py`, and every cited row's text is already quoted inline in `join_b.txt`. They
+are redundant, not lost.
+
+**The directory was deliberately not renamed to `experiments/m56-citation-audit/`.** It is
+already a milestone directory with 11 files tracked in it, and the path
+`experiments/M56-citations/` is referenced from five files this audit may not edit —
+including **`SYNTHESIS.md`'s fact 765, the row that exists to record this very rule-31
+violation** — and hardcoded inside three tracked scripts (`ctx.py`, `extract.py`,
+`group.py`). Renaming would break fact 765's own evidence pointer.
 
 ## 3. Confirmations and corrections of facts 713-723
 

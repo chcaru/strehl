@@ -1,0 +1,464 @@
+####################################################################################################
+crates/strehl-core/src/merge.rs
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:6] cites [19, 343]
+      2| //!
+      3| //! [`stack::Selection`](crate::stack) is the named baseline: per-pixel argmax.
+      4| //! On **this pipeline's** operator — the normalised Tenengrad that actually
+      5| //! ships — M39 measured it at **1.0678x unregularised and 1.0739x regularised**
+>>    6| //! against one unstacked frame (fact 343). Fact 19's widely-quoted **1.253x**
+      7| //! was measured on a *different* focus operator and **does not reproduce here**;
+      8| //! fact 343's consequence is explicit that it may not be quoted as this
+      9| //! pipeline's baseline, so it is not quoted as one. Fact 19 is not refuted — it
+     10| //! is a different measurement of a different thing.
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:8] cites [343]
+      4| //! On **this pipeline's** operator — the normalised Tenengrad that actually
+      5| //! ships — M39 measured it at **1.0678x unregularised and 1.0739x regularised**
+      6| //! against one unstacked frame (fact 343). Fact 19's widely-quoted **1.253x**
+      7| //! was measured on a *different* focus operator and **does not reproduce here**;
+>>    8| //! fact 343's consequence is explicit that it may not be quoted as this
+      9| //! pipeline's baseline, so it is not quoted as one. Fact 19 is not refuted — it
+     10| //! is a different measurement of a different thing.
+     11| //!
+     12| //! This module is the baseline's replacement, and it is built out of two
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:9] cites [19]
+      5| //! ships — M39 measured it at **1.0678x unregularised and 1.0739x regularised**
+      6| //! against one unstacked frame (fact 343). Fact 19's widely-quoted **1.253x**
+      7| //! was measured on a *different* focus operator and **does not reproduce here**;
+      8| //! fact 343's consequence is explicit that it may not be quoted as this
+>>    9| //! pipeline's baseline, so it is not quoted as one. Fact 19 is not refuted — it
+     10| //! is a different measurement of a different thing.
+     11| //!
+     12| //! This module is the baseline's replacement, and it is built out of two
+     13| //! measured findings that were priced long before any of this was written:
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:17] cites [23]
+     13| //! measured findings that were priced long before any of this was written:
+     14| //!
+     15| //! - **Regularise the focus field before choosing a winner.** A 17x17 box mean
+     16| //!   over the focus field drops winner-index speckle from 34.4% to 0.868%
+>>   17| //!   (fact 23) and cuts absolute reconstruction error at occluding edges by
+     18| //!   35%, 24.79 -> 15.99 DN (fact 84). That was the single largest measured
+     19| //!   quality win still unbuilt. **Note what it does *not* do here:** fact 23's
+     20| //!   companion claim that regularising drops noise 1.253x -> 1.075x is the half
+     21| //!   that fails to reproduce. On the shipped operator regularising moves the
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:18] cites [84]
+     14| //!
+     15| //! - **Regularise the focus field before choosing a winner.** A 17x17 box mean
+     16| //!   over the focus field drops winner-index speckle from 34.4% to 0.868%
+     17| //!   (fact 23) and cuts absolute reconstruction error at occluding edges by
+>>   18| //!   35%, 24.79 -> 15.99 DN (fact 84). That was the single largest measured
+     19| //!   quality win still unbuilt. **Note what it does *not* do here:** fact 23's
+     20| //!   companion claim that regularising drops noise 1.253x -> 1.075x is the half
+     21| //!   that fails to reproduce. On the shipped operator regularising moves the
+     22| //!   ratio 1.0678x -> 1.0739x — very slightly the *wrong* way (fact 343). The
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:19] cites [23]
+     15| //! - **Regularise the focus field before choosing a winner.** A 17x17 box mean
+     16| //!   over the focus field drops winner-index speckle from 34.4% to 0.868%
+     17| //!   (fact 23) and cuts absolute reconstruction error at occluding edges by
+     18| //!   35%, 24.79 -> 15.99 DN (fact 84). That was the single largest measured
+>>   19| //!   quality win still unbuilt. **Note what it does *not* do here:** fact 23's
+     20| //!   companion claim that regularising drops noise 1.253x -> 1.075x is the half
+     21| //!   that fails to reproduce. On the shipped operator regularising moves the
+     22| //!   ratio 1.0678x -> 1.0739x — very slightly the *wrong* way (fact 343). The
+     23| //!   speckle and edge-error wins are real; the noise win was the other
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:22] cites [343]
+     18| //!   35%, 24.79 -> 15.99 DN (fact 84). That was the single largest measured
+     19| //!   quality win still unbuilt. **Note what it does *not* do here:** fact 23's
+     20| //!   companion claim that regularising drops noise 1.253x -> 1.075x is the half
+     21| //!   that fails to reproduce. On the shipped operator regularising moves the
+>>   22| //!   ratio 1.0678x -> 1.0739x — very slightly the *wrong* way (fact 343). The
+     23| //!   speckle and edge-error wins are real; the noise win was the other
+     24| //!   operator's.
+     25| //!
+     26| //! - **Regularisation alone is not enough.** 1.0739x is still worse than one
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:27] cites [23]
+     23| //!   speckle and edge-error wins are real; the noise win was the other
+     24| //!   operator's.
+     25| //!
+     26| //! - **Regularisation alone is not enough.** 1.0739x is still worse than one
+>>   27| //!   frame. *Only averaging goes below one* (fact 23). A plain mean reaches
+     28| //!   0.534x (fact 19) but collapses detail by more than half (fact 24), so the
+     29| //!   average has to be taken over exactly those frames that genuinely agree.
+     30| //!
+     31| //! So the merge is: regularise, elect a winner, admit every frame whose focus
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:28] cites [19, 24]
+     24| //!   operator's.
+     25| //!
+     26| //! - **Regularisation alone is not enough.** 1.0739x is still worse than one
+     27| //!   frame. *Only averaging goes below one* (fact 23). A plain mean reaches
+>>   28| //!   0.534x (fact 19) but collapses detail by more than half (fact 24), so the
+     29| //!   average has to be taken over exactly those frames that genuinely agree.
+     30| //!
+     31| //! So the merge is: regularise, elect a winner, admit every frame whose focus
+     32| //! response is statistically indistinguishable from the winner's, and average
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:35] cites [263, 264]
+     31| //! So the merge is: regularise, elect a winner, admit every frame whose focus
+     32| //! response is statistically indistinguishable from the winner's, and average
+     33| //! them. Where one frame stands far above the rest the acceptance set collapses
+     34| //! to that frame and the estimator degenerates to a selector — which is the
+>>   35| //! correct behaviour, and is what facts 263 and 264 say actually happens at a
+     36| //! resolved edge, where the peak stands 10^2-10^3 sigma clear.
+     37| //!
+     38| //! # Why this is two passes and not one
+     39| //!
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:44] cites [33]
+     40| //! The gate needs each frame's focus response *relative to the winner*, and the
+     41| //! winner is not known until every frame has been seen. A single bounded fold
+     42| //! would have to carry per-pixel through-focus state whose size grows with the
+     43| //! acceptance set. Two passes carry O(1) state per pixel instead, and decode is
+>>   44| //! 0.91 s warm (fact 33), so the second pass is cheap. Both passes are
+     45| //! order-independent and associative, so both parallelise by partitioning the
+     46| //! frame list — see the tests, which pin that property rather than assume it.
+     47| //!
+     48| //! # What is measured here and what is not
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:57] cites [212]
+     53| //!
+     54| //! [`Gate::threshold`] is **not** measured. It is the one free parameter in this
+     55| //! module and it is deliberately left explicit at the API boundary rather than
+     56| //! buried in a default, because M27 measured the acceptance-set width it
+>>   57| //! controls (`nwide = 3`, fact 212) and that number is the calibration target.
+     58| //! [`Estimator::n_eff`] is an output for exactly this reason.
+     59| 
+     60| use crate::boxfilter::box_mean;
+     61| use crate::noise::NoiseModel;
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:67] cites [84, 86]
+     63| use crate::{CfaPlane, Error, Result};
+     64| 
+     65| /// Radius of the merge regulariser: 8, giving the measured 17x17 box.
+     66| ///
+>>   67| /// Fact 84 priced width 17 at -35% absolute reconstruction error. Fact 86 is the
+     68| /// reason this is not a tuning knob reaching down to 1: at width 3 the
+     69| /// regulariser is *worse than none at all* (merged noise rises 1.2773 -> 1.3856),
+     70| /// because a narrow box correlates neighbouring selections without averaging
+     71| /// enough of them to pay for it.
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:73] cites [36]
+     69| /// regulariser is *worse than none at all* (merged noise rises 1.2773 -> 1.3856),
+     70| /// because a narrow box correlates neighbouring selections without averaging
+     71| /// enough of them to pay for it.
+     72| ///
+>>   73| /// Fact 36 is the reason it is not tuned upward either: the flat-ROI noise ratio
+     74| /// is monotone-decreasing in width with no interior optimum, so anything that
+     75| /// minimises noise alone runs to the widest width offered and destroys focus
+     76| /// selectivity. Fact 42 supplies the interior optimum only under a *joint*
+     77| /// selectivity/noise objective, and only on tilted depth — which is where 17
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:76] cites [42]
+     72| ///
+     73| /// Fact 36 is the reason it is not tuned upward either: the flat-ROI noise ratio
+     74| /// is monotone-decreasing in width with no interior optimum, so anything that
+     75| /// minimises noise alone runs to the widest width offered and destroys focus
+>>   76| /// selectivity. Fact 42 supplies the interior optimum only under a *joint*
+     77| /// selectivity/noise objective, and only on tilted depth — which is where 17
+     78| /// came from.
+     79| pub const REGULARISER_RADIUS: usize = 8;
+     80| 
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:94] cites [23, 320, 321]
+     90| /// "no averaging" — it is selection, and **selection adds noise**. That
+     91| /// mechanism is real and is why this hook exists.
+     92| ///
+     93| /// What was refuted is the *number*. This shipped at **1.074×** on the strength
+>>   94| /// of two agreeing measurements (facts 320, 321, 23). M40 audited it under rule
+     95| /// 24 and found every defect was a choice, not an arithmetic slip:
+     96| ///
+     97| /// - **It has no defined meaning at any value** (fact 440). The estimator was a
+     98| ///   ratio of two **spatial** standard deviations against one reference frame;
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:97] cites [440]
+     93| /// What was refuted is the *number*. This shipped at **1.074×** on the strength
+     94| /// of two agreeing measurements (facts 320, 321, 23). M40 audited it under rule
+     95| /// 24 and found every defect was a choice, not an arithmetic slip:
+     96| ///
+>>   97| /// - **It has no defined meaning at any value** (fact 440). The estimator was a
+     98| ///   ratio of two **spatial** standard deviations against one reference frame;
+     99| ///   this multiplies a **temporal** per-sample σ by it. A rule-10 units
+    100| ///   violation, now discipline 264.
+    101| /// - **It exceeds its own ceiling** (fact 446). On a pure-noise plant built to
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:101] cites [446]
+     97| /// - **It has no defined meaning at any value** (fact 440). The estimator was a
+     98| ///   ratio of two **spatial** standard deviations against one reference frame;
+     99| ///   this multiplies a **temporal** per-sample σ by it. A rule-10 units
+    100| ///   violation, now discipline 264.
+>>  101| /// - **It exceeds its own ceiling** (fact 446). On a pure-noise plant built to
+    102| ///   maximise the winner's curse the shipped operator can produce at most
+    103| ///   1.0451×/1.0508× (pixel) and 1.0307×/1.0345× (gradient). 1.074 is above the
+    104| ///   maximum its own mechanism can generate.
+    105| /// - **It is not a constant** (fact 443). The same estimator on six ROIs across
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:105] cites [443]
+    101| /// - **It exceeds its own ceiling** (fact 446). On a pure-noise plant built to
+    102| ///   maximise the winner's curse the shipped operator can produce at most
+    103| ///   1.0451×/1.0508× (pixel) and 1.0307×/1.0345× (gradient). 1.074 is above the
+    104| ///   maximum its own mechanism can generate.
+>>  105| /// - **It is not a constant** (fact 443). The same estimator on six ROIs across
+    106| ///   two stacks reads 1.0001, 1.0739, 1.0867, 0.9841, 1.0601, 1.2732. The
+    107| ///   shipped value is one of those six.
+    108| /// - **It made the metric worse than doing nothing** (fact 454). On a
+    109| ///   genuinely detail-free plant the corrected detail metric reads **−11.63 DN
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:108] cites [454]
+    104| ///   maximum its own mechanism can generate.
+    105| /// - **It is not a constant** (fact 443). The same estimator on six ROIs across
+    106| ///   two stacks reads 1.0001, 1.0739, 1.0867, 0.9841, 1.0601, 1.2732. The
+    107| ///   shipped value is one of those six.
+>>  108| /// - **It made the metric worse than doing nothing** (fact 454). On a
+    109| ///   genuinely detail-free plant the corrected detail metric reads **−11.63 DN
+    110| ///   where truth is 0** — it crosses zero and lands *further* from truth than
+    111| ///   the defect it replaced, with `max(0, .)` hiding the sign.
+    112| ///
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:119] cites [341]
+    115| /// 446's ceiling) or any other plausible-looking value: an unmeasured constant
+    116| /// that happens to be smaller is still an unmeasured constant, and that is the
+    117| /// exact failure this revert exists to undo.
+    118| ///
+>>  119| /// Fact 341 — that `predicted_sigma` reports exactly 1.000× the single-frame σ
+    120| /// at gate 0 — is therefore **open again**, and it is the honest state. A known
+    121| /// missing term is better than a wrong one.
+    122| pub const SELECTION_INFLATION: f32 = 1.0;
+    123| 
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:127] cites [458]
+    123| 
+    124| /// The noise penalty carried by a pixel that admitted `n` frames.
+    125| ///
+    126| /// **The two-branch shape is right and is deliberately kept** even though both
+>>  127| /// branches currently return 1.0. Fact 458 measured `n_eff = 1` across
+    128| /// **41.66%** of the plane at a working gate, so `n = 1` is not a rare corner
+    129| /// that could be folded into the averaging case — it is most of the image, and
+    130| /// it needs its own term the moment one is measured.
+    131| ///
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:132] cites [448]
+    128| /// **41.66%** of the plane at a working gate, so `n = 1` is not a rare corner
+    129| /// that could be folded into the averaging case — it is most of the image, and
+    130| /// it needs its own term the moment one is measured.
+    131| ///
+>>  132| /// Fact 448 also settled the *shape* of that term, and it is not this one:
+    133| /// plant inflation by acceptance-set size decays **smoothly** — 1.0770, 1.0591,
+    134| /// 1.0454, 1.0383, 1.0319, 1.0293, 1.0286, 1.0220 for `n = 1..8` — rather than
+    135| /// stepping to zero at `n = 2`. A step drove a 7.4-point discontinuity straight
+    136| /// through the 41.66% of the plane sitting at `n = 1`. Whatever replaces this
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:196] cites [23]
+    192| /// The reference is a maximum over N frames, so it is biased upward by
+    193| /// selection, which makes every gap look larger than it is and shrinks the
+    194| /// acceptance set. The regulariser is what contains this: averaging the focus
+    195| /// field over 289 pixels before electing a winner is what takes speckle from
+>>  196| /// 34.4% to 0.868% (fact 23), and speckle *is* the winner's curse made visible.
+    197| /// Electing on the regularised field rather than the raw one is therefore
+    198| /// load-bearing for the gate, not just for the winner map.
+    199| #[derive(Debug, Clone, Copy, PartialEq)]
+    200| pub struct Gate {
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:352] cites [212]
+    348|     best_index: Vec<u16>,
+    349|     max_index: u16,
+    350|     sum: [Vec<f32>; 4],
+    351|     /// Number of frames admitted at each pixel. This is `n_eff` for a plain
+>>  352|     /// mean, and it is an output, not a diagnostic — see fact 212.
+    353|     n: Vec<u16>,
+    354|     /// Per-pixel, per-plane censoring state, four bits packed into one byte:
+    355|     /// bit `s` of `censor[i]` is set when plane `s` at pixel `i` is censored.
+    356|     ///
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:396] cites [212]
+    392|     }
+    393|     pub fn frames_folded(&self) -> u32 {
+    394|         self.frames
+    395|     }
+>>  396|     /// Frames admitted per pixel. Compare against fact 212's `nwide = 3`.
+    397|     pub fn n_eff(&self) -> &[u16] {
+    398|         &self.n
+    399|     }
+    400|     pub fn best_index(&self) -> &[u16] {
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:667] cites [300]
+    663|     /// Confidence channel C4. Mass at the bracket boundary means the true peak
+    664|     /// is plausibly outside the capture, so no frame here is in focus and the
+    665|     /// merge cannot know it.
+    666|     ///
+>>  667|     /// **This is not fact 300's quantity, and the two must not be compared.**
+    668|     /// M35 measured 7.38% of `119MSDCF` "at the boundary" using
+    669|     /// `(argmax <= 1) | (argmax >= n-2)` — two frames deep at each end, on a
+    670|     /// *decimated* stack, from an *unregularised* argmax. This is one frame
+    671|     /// deep, on the full stack, from the regularised winner, so it reads
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:702] cites [452, 453]
+    698|     /// Mean over pixels of the per-pixel noise gain `predicted_sigma / single`.
+    699|     ///
+    700|     /// This is the honest answer to "how much did the merge reduce noise", and
+    701|     /// it is deliberately routed **through [`Self::predicted_sigma`]** rather
+>>  702|     /// than recomputed from `n`. Facts 452/453: the CLI used to print
+    703|     /// `1/sqrt(mean_n_eff)`, which is wrong twice over.
+    704|     ///
+    705|     /// * It never consulted the noise model, so it could not see
+    706|     ///   [`selection_inflation`] and printed exactly `1.0000x` at gate 0 — the
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:707] cites [341]
+    703|     /// `1/sqrt(mean_n_eff)`, which is wrong twice over.
+    704|     ///
+    705|     /// * It never consulted the noise model, so it could not see
+    706|     ///   [`selection_inflation`] and printed exactly `1.0000x` at gate 0 — the
+>>  707|     ///   very number fact 341 filed as a defect.
+    708|     /// * `1/sqrt(E[n])` is not `E[1/sqrt(n)]`. Jensen's inequality runs one way
+    709|     ///   here — `1/sqrt(.)` is convex, so `E[1/sqrt(n)] >= 1/sqrt(E[n])` — and
+    710|     ///   the old form therefore **understated** the achieved sigma, measured at
+    711|     ///   4.22%, 5.88%, 4.70% and 2.43% at gates 0.5, 1.0, 2.0 and 4.0. It
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:853] cites [440, 443, 446, 454]
+    849|     /// documented on `unit_sigma_model` — moves this by three orders of
+    850|     /// magnitude while leaving the standard deviation looking plausible.
+    851|     /// The selection penalty is a measurement, not a tuning knob — and it is
+    852|     /// currently **absent**, not merely small. M40 refuted the shipped 1.074x
+>>  853|     /// on four independent grounds (facts 440, 443, 446, 454): it multiplied a
+    854|     /// temporal sigma by a ratio of spatial ones, it exceeded the maximum its
+    855|     /// own mechanism can produce, it varied from 0.9841 to 1.2732 across six
+    856|     /// ROIs, and on a detail-free plant it drove the corrected metric to
+    857|     /// -11.63 DN where truth is 0 — further from truth than the defect it
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:863] cites [448]
+    859|     ///
+    860|     /// This test therefore pins 1.0 and exists to make substituting a
+    861|     /// plausible-looking value a deliberate act. If you are here because you
+    862|     /// want to put a number back, the bar is a **temporal, structure-free**
+>>  863|     /// estimator measured in this crate, and fact 448 says the result should be
+    864|     /// a smooth function of `n`, not a step.
+    865|     #[test]
+    866|     fn the_selection_penalty_is_absent_until_it_is_measured() {
+    867|         assert_eq!(
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:869] cites [440, 443, 446, 454]
+    865|     #[test]
+    866|     fn the_selection_penalty_is_absent_until_it_is_measured() {
+    867|         assert_eq!(
+    868|             SELECTION_INFLATION, 1.0,
+>>  869|             "1.074x was refuted by M40 (facts 440/443/446/454) and reverted; a \
+    870|              replacement must be measured with a temporal, structure-free \
+    871|              estimator in this crate, not assumed"
+    872|         );
+    873|         assert_eq!(
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:889] cites [458]
+    885|             1.0,
+    886|             "n > 1 carries no penalty either, for now"
+    887|         );
+    888|         // The two-branch shape is load-bearing even while both branches agree:
+>>  889|         // fact 458 puts 41.66% of the plane at n = 1 at a working gate.
+    890|         assert_eq!(
+    891|             selection_inflation(1),
+    892|             selection_inflation(9),
+    893|             "both branches are 1.0 today; this equality is what a measured \
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:983] cites [24]
+    979| 
+    980|     /// The constant is only meaningful if it is small against real focus
+    981|     /// contrast. If a real through-focus swing were the same size as the noise
+    982|     /// SD, the gate would admit everything and the merge would be a plain mean —
+>>  983|     /// which fact 24 says destroys detail.
+    984|     #[test]
+    985|     fn real_focus_contrast_is_far_larger_than_the_noise_scale() {
+    986|         let g = geom(192, 192);
+    987|         let noise = unit_sigma_model();
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:1143] cites [263, 264]
+   1139|     }
+   1140| 
+   1141|     #[test]
+   1142|     fn with_one_frame_clearly_sharpest_the_estimator_degenerates_to_a_selector() {
+>> 1143|         // Frame 3 stands far above everything: exactly facts 263/264's resolved
+   1144|         // edge, where the peak is 10^2-10^3 sigma clear and there is nothing
+   1145|         // for an average to harvest.
+   1146|         let g = geom(4, 4);
+   1147|         let est = run(g, 6, Gate::new(3.0), |k, _| if k == 3 { 1.0 } else { 0.0 });
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:1163] cites [23]
+   1159| 
+   1160|     #[test]
+   1161|     fn with_frames_that_agree_the_estimator_averages_them() {
+   1162|         // Three frames tied at the top, three far below. The gate must take the
+>> 1163|         // mean of exactly the three, which is fact 23's "only averaging goes
+   1164|         // below one frame" and fact 212's nwide = 3.
+   1165|         let g = geom(4, 4);
+   1166|         let est = run(g, 6, Gate::new(3.0), |k, _| if k < 3 { 5.0 } else { 0.0 });
+   1167|         assert!(est.n_eff().iter().all(|n| *n == 3));
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:1164] cites [212]
+   1160|     #[test]
+   1161|     fn with_frames_that_agree_the_estimator_averages_them() {
+   1162|         // Three frames tied at the top, three far below. The gate must take the
+   1163|         // mean of exactly the three, which is fact 23's "only averaging goes
+>> 1164|         // below one frame" and fact 212's nwide = 3.
+   1165|         let g = geom(4, 4);
+   1166|         let est = run(g, 6, Gate::new(3.0), |k, _| if k < 3 { 5.0 } else { 0.0 });
+   1167|         assert!(est.n_eff().iter().all(|n| *n == 3));
+   1168|         // Frames 0,1,2 carry R = 100, 110, 120.
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:1175] cites [452, 453]
+   1171|     }
+   1172| 
+   1173|     /// **The reported noise gain must be Jensen-correct and model-routed.**
+   1174|     ///
+>> 1175|     /// Facts 452/453. The CLI's gate table printed `1/sqrt(mean_n_eff)`, which
+   1176|     /// is a different number from the mean of the per-pixel gains whenever the
+   1177|     /// `n` field is not constant — and it is never constant, because that is
+   1178|     /// the entire point of an adaptive gate. `1/sqrt(.)` is convex, so Jensen
+   1179|     /// runs strictly one way: the mean of the gains is **greater than or equal
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:1263] cites [320]
+   1259|     /// reasoning that averaging `n` samples scales sigma by `1/sqrt(n)` and
+   1260|     /// `n >= 1` is structural. That reasoning is wrong at `n = 1`, and it
+   1261|     /// passed only because `predicted_sigma` was blind in exactly the same
+   1262|     /// place: `n = 1` is not "averaging one sample", it is **selection**, and
+>> 1263|     /// fact 320 measured selection at **1.074x a single frame** — noisier, not
+   1264|     /// equal. The invariant was being proved against a model that could not
+   1265|     /// express its own violation.
+   1266|     ///
+   1267|     /// The true contract has two branches:
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:1293] cites [341]
+   1289|                 let merged = est.predicted_sigma(&noise, i, 0.0);
+   1290|                 let single = noise.green_luma_sigma(est.green_mean(i));
+   1291|                 if n == 1 {
+   1292|                     saw_selection = true;
+>> 1293|                     // KNOWN GAP (fact 341, reopened by M40): with no measured
+   1294|                     // penalty this is equality, not the inequality the mechanism
+   1295|                     // predicts. Pinned so that measuring a penalty turns this
+   1296|                     // assertion red and forces the contract to be restated.
+   1297|                     assert!(
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:1621] cites [23]
+   1617|         assert!(est.at_bracket_boundary(2));
+   1618|     }
+   1619| 
+   1620|     /// The regulariser is what makes the winner field usable, and this is the
+>> 1621|     /// mechanism fact 23 measured: a lone noise spike in one frame's focus field
+   1622|     /// steals the pixel under a raw argmax and does not under a regularised one.
+   1623|     ///
+   1624|     /// It also pins the **limit**, because the regulariser is dilution and not
+   1625|     /// magic. A `W x W` box divides a spike's excess by `W^2`, so it beats a
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/merge.rs:1674] cites [82]
+   1670|         );
+   1671|     }
+   1672| 
+   1673|     /// The regulariser must not be so strong that it erases a real depth edge —
+>> 1674|     /// the other half of fact 82, which found no window/regulariser substitution
+   1675|     /// at a depth discontinuity.
+   1676|     #[test]
+   1677|     fn the_regulariser_preserves_a_real_depth_edge() {
+   1678|         let g = geom(64, 64);

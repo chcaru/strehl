@@ -1,0 +1,90 @@
+####################################################################################################
+crates/strehl-cli/src/stack.rs
+--------------------------------------------------------------------------------
+[crates/strehl-cli/src/stack.rs:635] cites [19, 343]
+    631|         return (0.0, 0.0);
+    632|     }
+    633|     let n = v.len() as f64;
+    634|     let mean = v.iter().map(|x| *x as f64).sum::<f64>() / n;
+>>  635|     let var = v.iter().map(|x| (*x as f64 - mean).powi(2)).sum::<f64>() / n;
+    636|     (mean, var.sqrt())
+    637| }
+    638| 
+    639| fn report_winners(selection: &Selection) {
+--------------------------------------------------------------------------------
+[crates/strehl-cli/src/stack.rs:670] cites [469]
+    666| /// (`AGENTS.md` rule 11). `report_flat_roi` is now printing only.
+    667| /// Anything that can be asked for a merged green value and a per-pixel winner
+    668| /// index over a plane.
+    669| ///
+>>  670| /// This exists so that [`flat_roi_stats`] has exactly one implementation. The
+    671| /// argmax baseline's ratio and the estimation merge's ratio have to
+    672| /// be produced by the same arithmetic on the same ROI or the comparison is
+    673| /// worthless — M35 lost an afternoon to two harnesses that differed by a
+    674| /// convention, and discipline 210 is the rule that came out of it.
+--------------------------------------------------------------------------------
+[crates/strehl-cli/src/stack.rs:681] cites [441]
+    677| /// the shipped operator (fact 343), not fact 19's 1.253x, which was measured on
+    678| /// a different operator and does not reproduce here.
+    679| pub(crate) trait GreenField {
+    680|     fn green_mean_at(&self, i: usize) -> f32;
+>>  681|     fn winner_index(&self) -> &[u16];
+    682| }
+    683| 
+    684| impl GreenField for Selection {
+    685|     fn green_mean_at(&self, i: usize) -> f32 {
+--------------------------------------------------------------------------------
+[crates/strehl-cli/src/stack.rs:746] cites [441]
+    742|     let (single_mean, single_sigma) = mean_and_sigma(middle_roi);
+    743| 
+    744|     let mut roi_index: Vec<u16> = (roi.y..roi.y + roi.height)
+    745|         .flat_map(|py| (roi.x..roi.x + roi.width).map(move |px| (px, py)))
+>>  746|         .map(|(px, py)| field.winner_index()[geom.index(px, py)])
+    747|         .collect();
+    748|     roi_index.sort_unstable();
+    749|     let median_winner = roi_index[roi_index.len() / 2];
+    750|     roi_index.dedup();
+--------------------------------------------------------------------------------
+[crates/strehl-cli/src/stack.rs:760] cites [469]
+    756|         single_mean,
+    757|         single_sigma,
+    758|         legacy_raw_ratio: stacked_sigma / single_sigma,
+    759|         stacked_hp_sd: flat_ratio::highpass_sd(&stacked, roi.width, roi.height),
+>>  760|         single_hp_sd: flat_ratio::highpass_sd(middle_roi, roi.width, roi.height),
+    761|         distinct_winners: roi_index.len(),
+    762|         median_winner,
+    763|     }
+    764| }
+--------------------------------------------------------------------------------
+[crates/strehl-cli/src/stack.rs:795] cites [469]
+    791|     eprintln!(
+    792|         "{indent}frame supplies the denominator moved the old published ratio over a \
+    793|          1.60x range,"
+    794|     );
+>>  795|     eprintln!(
+    796|         "{indent}so the whole distribution is carried. This stack's own spread is \
+    797|          {:.4}x.",
+    798|         reference.spread()
+    799|     );
+--------------------------------------------------------------------------------
+[crates/strehl-cli/src/stack.rs:864] cites [441]
+    860|     );
+    861|     eprintln!(
+    862|         "stacked green   : sigma {:8.3} DN   mean {:9.2} DN   (argmax over {} frames)",
+    863|         s.stacked_sigma,
+>>  864|         s.stacked_mean,
+    865|         merged.selection.frames_folded()
+    866|     );
+    867|     eprintln!(
+    868|         "single frame {middle:<3}: sigma {:8.3} DN   mean {:9.2} DN   (no stacking at all)",
+--------------------------------------------------------------------------------
+[crates/strehl-cli/src/stack.rs:897] cites [469]
+    893|             eprintln!(
+    894|                 "stacked hp sd   : {stacked_hp:8.3} DN   (argmax over {} frames)",
+    895|                 merged.selection.frames_folded()
+    896|             );
+>>  897|             report_hp_reference(&reference, model_sigma, "                  ");
+    898|             let r = reference.ratio(stacked_hp);
+    899|             eprintln!(
+    900|                 "HP RATIO        : {:.3}x vs the median frame   [{:.3}x .. {:.3}x] over every \
+    901|                  frame",

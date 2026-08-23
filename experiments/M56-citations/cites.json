@@ -1,0 +1,1562 @@
+[
+ {
+  "file": "crates/strehl-cli/src/main.rs",
+  "line": 139,
+  "num": 324,
+  "text": "/// calibration, and the effect is far larger than fact 324 published:"
+ },
+ {
+  "file": "crates/strehl-cli/src/main.rs",
+  "line": 145,
+  "num": 324,
+  "text": "/// Fact 324's own numbers for the two ISO-50 stacks are stale: they"
+ },
+ {
+  "file": "crates/strehl-cli/src/main.rs",
+  "line": 152,
+  "num": 212,
+  "text": "/// shipped 0.5-4.0 ladder. Fact 212's nwide = 3 is the calibration"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 14,
+  "num": 33,
+  "text": "//! Decode is 0.91 s warm (fact 33), so a second pass is the cheaper of the two"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 21,
+  "num": 212,
+  "text": "//! unmeasured (question 90). Its calibration target is fact 212's `nwide = 3`."
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 30,
+  "num": 19,
+  "text": "//! Two acceptance invariants, and they are a **pair**. Fact 19 measured a plain"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 31,
+  "num": 24,
+  "text": "//! mean at 0.534x the single-frame noise; fact 24 measured that the same plain"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 79,
+  "num": 324,
+  "text": "/// Fact 324 measured that a fixed threshold is not a calibration: at gate"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 82,
+  "num": 212,
+  "text": "/// where a gate does not, and it is the quantity fact 212 calibrated."
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 188,
+  "num": 324,
+  "text": "\\x20                 gate, which is what fact 324 says you should be setting.\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 232,
+  "num": 24,
+  "text": "/// **`m2_pooled_abs` is fact 24's convention**, identified by measurement, not"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 241,
+  "num": 24,
+  "text": "/// fact 24 legitimate; the two harnesses differ by 1.55x and 1.60x, an"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 251,
+  "num": 19,
+  "text": "/// *raises* gradient (fact 24), and argmax also raises noise (fact 19) \u2014 the"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 251,
+  "num": 24,
+  "text": "/// *raises* gradient (fact 24), and argmax also raises noise (fact 19) \u2014 the"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 262,
+  "num": 24,
+  "text": "/// `mean(0.5*(|dx| + |dy|))` \u2014 fact 24's convention, for comparability."
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 559,
+  "num": 441,
+  "text": "/// Fact 441: one privileged denominator moves the published ratio 1.60x, so"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 674,
+  "num": 84,
+  "text": "(fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 674,
+  "num": 86,
+  "text": "(fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 678,
+  "num": 310,
+  "text": "(facts 310-313)\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 678,
+  "num": 311,
+  "text": "(facts 310-313)\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 678,
+  "num": 312,
+  "text": "(facts 310-313)\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 678,
+  "num": 313,
+  "text": "(facts 310-313)\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 681,
+  "num": 212,
+  "text": "\"gates           : {}  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)\","
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 729,
+  "num": 441,
+  "text": "// the noise invariant is the whole distribution (fact 441)."
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 929,
+  "num": 212,
+  "text": "\"                  n_eff is frames averaged per pixel. Fact 212 measured nwide = 3 at full\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1024,
+  "num": 441,
+  "text": "// the denominator. It is here so fact 441's spread is"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1055,
+  "num": 19,
+  "text": "\"                  Fact 19's 1.253x was a DIFFERENT focus operator and does \\"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1071,
+  "num": 343,
+  "text": "\"                  THIS COLUMN HAS NOT BEEN RE-MEASURED: fact 343's 1.0739x is \\"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1110,
+  "num": 441,
+  "text": "\"                  DO NOT READ THE LEGACY COLUMN AS NOISE (facts 469/441/442/455, \\"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1110,
+  "num": 442,
+  "text": "\"                  DO NOT READ THE LEGACY COLUMN AS NOISE (facts 469/441/442/455, \\"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1110,
+  "num": 455,
+  "text": "\"                  DO NOT READ THE LEGACY COLUMN AS NOISE (facts 469/441/442/455, \\"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1110,
+  "num": 469,
+  "text": "\"                  DO NOT READ THE LEGACY COLUMN AS NOISE (facts 469/441/442/455, \\"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1139,
+  "num": 24,
+  "text": "\"                  at 0.534x while collapsing detail 58% (fact 24). Pass \\"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1204,
+  "num": 24,
+  "text": "\"                  is sqrt(raw^2 - model^2), the only column judged. `m2` is fact 24's\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1246,
+  "num": 24,
+  "text": "\"                  CORRECTED retention falling as the gate opens, which is fact 24's\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1281,
+  "num": 23,
+  "text": "\"                  detail move it away from that. Fact 23's reference points are 34.4% \\"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1457,
+  "num": 24,
+  "text": "/// Corrected retention below this is fact 24's collapse."
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1459,
+  "num": 24,
+  "text": "/// Registered at 0.90 because fact 24's measured collapse is **-58% and -53%**"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1484,
+  "num": 24,
+  "text": "// orchestrator's simulation and the -58%/-53% fact 24 measured, or it cannot"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1521,
+  "num": 152,
+  "text": "\"scale           : {}x{} box on the focus field (fact 152: bimodality is DEPLETED, 0.36x,\","
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1573,
+  "num": 272,
+  "text": "subtraction, facts 272/304)\","
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1573,
+  "num": 304,
+  "text": "subtraction, facts 272/304)\","
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1775,
+  "num": 280,
+  "text": "\"                  Facts 280-282: C1 is ANTI-correlated with C3's target (0.89x lift), so\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1775,
+  "num": 281,
+  "text": "\"                  Facts 280-282: C1 is ANTI-correlated with C3's target (0.89x lift), so\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1775,
+  "num": 282,
+  "text": "\"                  Facts 280-282: C1 is ANTI-correlated with C3's target (0.89x lift), so\""
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1929,
+  "num": 324,
+  "text": "/// The five ladders fact 324 measured, as `(gate, mean n_eff)`."
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 1932,
+  "num": 324,
+  "text": "/// is edited carelessly, `the_solved_gate_spans_the_range_fact_324_claims`"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 2001,
+  "num": 324,
+  "text": "fn the_solved_gate_spans_the_range_fact_324_claims() {"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 2002,
+  "num": 324,
+  "text": "// Fact 324's design conclusion is that no fixed gate is a calibration."
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 2021,
+  "num": 324,
+  "text": "\"spread {} no longer supports fact 324\","
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 2130,
+  "num": 24,
+  "text": "// the collapse fact 24 measured. Correcting for noise must not have"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 2169,
+  "num": 24,
+  "text": "// M38 \u00a71 identified fact 24's convention as mean(0.5*(|dx|+|dy|)) by"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 2280,
+  "num": 3,
+  "text": "/// reproduce facts 12/27/28 to 3-4 digits (25 frames, oracle depth, latent"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 2280,
+  "num": 4,
+  "text": "/// reproduce facts 12/27/28 to 3-4 digits (25 frames, oracle depth, latent"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 2280,
+  "num": 12,
+  "text": "/// reproduce facts 12/27/28 to 3-4 digits (25 frames, oracle depth, latent"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 2280,
+  "num": 27,
+  "text": "/// reproduce facts 12/27/28 to 3-4 digits (25 frames, oracle depth, latent"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 2280,
+  "num": 28,
+  "text": "/// reproduce facts 12/27/28 to 3-4 digits (25 frames, oracle depth, latent"
+ },
+ {
+  "file": "crates/strehl-cli/src/merge_cmd.rs",
+  "line": 2299,
+  "num": 24,
+  "text": "// Fact 24's collapse: -58% and -53%."
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 358,
+  "num": 200,
+  "text": "// twice, independently\" + fact 200a's unlocated boundary), and"
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 366,
+  "num": 200,
+  "text": "\"(M25 fact 200,\\n\","
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 367,
+  "num": 550,
+  "text": "\"                  SYNTHESIS fact 550). The divisor was originally DERIVED by \","
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 677,
+  "num": 19,
+  "text": "/// the shipped operator (fact 343), not fact 19's 1.253x, which was measured on"
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 677,
+  "num": 343,
+  "text": "/// the shipped operator (fact 343), not fact 19's 1.253x, which was measured on"
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 712,
+  "num": 469,
+  "text": "/// other purpose. Fact 469 measured it under-reporting a real noise"
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 723,
+  "num": 441,
+  "text": "/// should be taken against is the whole per-frame distribution (fact 441)."
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 788,
+  "num": 441,
+  "text": "\"{indent}NO SINGLE REFERENCE FRAME. Fact 441: holding the merge fixed and \\"
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 802,
+  "num": 469,
+  "text": "behind fact 469;\","
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 837,
+  "num": 469,
+  "text": "of fact 469.\""
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 906,
+  "num": 441,
+  "text": "// printed, in the same units, so fact 441 is visible as a"
+ },
+ {
+  "file": "crates/strehl-cli/src/stack.rs",
+  "line": 939,
+  "num": 469,
+  "text": "eprintln!(\"                  Two RAW spatial sds. Fact 469: on a real flat ROI ~99% of that\");"
+ },
+ {
+  "file": "crates/strehl-core/src/clip.rs",
+  "line": 21,
+  "num": 73,
+  "text": "//! fact 73's monotone edge \u2014 but on a pinned pixel *both* candidates read their"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 11,
+  "num": 469,
+  "text": "//! 1. **It is structure-dominated.** Fact 469: on `109MSDCF`'s flat ROI the raw"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 15,
+  "num": 455,
+  "text": "//!    144.391x high-pass). Fact 455: that ROI is not even detail-free \u2014"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 16,
+  "num": 442,
+  "text": "//!    per-frame corrected detail spans 5.31-18.66 DN. Fact 442, **as corrected"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 17,
+  "num": 597,
+  "text": "//!    by fact 597**: the reference frames of the four flat ROIs are 53.3 %,"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 18,
+  "num": 442,
+  "text": "//!    50.9 %, 80.0 % and 72.2 % scene structure by variance. (Fact 442"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 23,
+  "num": 441,
+  "text": "//! 2. **The denominator was one privileged frame.** Fact 441: holding the merge"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 33,
+  "num": 469,
+  "text": "//! # The kernel, and its reconciliation with fact 469"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 36,
+  "num": 469,
+  "text": "//! exactly the kernel that produced fact 469 \u2014 M41's"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 40,
+  "num": 469,
+  "text": "//! plane ROI 1356,32,512,512 \u2014 the exact input behind fact 469's denominator):"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 88,
+  "num": 550,
+  "text": "//! SYNTHESIS fact 550 doubled `g` at ISO 50 and sigma goes as its square root),"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 96,
+  "num": 469,
+  "text": "//! gone blind. `w = 9` ships anyway, because it is the kernel fact 469 was"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 229,
+  "num": 469,
+  "text": "/// never be used for a noise ratio (fact 469)."
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 251,
+  "num": 441,
+  "text": "/// They exist so that fact 441's 1.60x cannot hide inside an unstated choice:"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 277,
+  "num": 441,
+  "text": "/// **This type exists to make fact 441 unrepresentable.** There is no"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 340,
+  "num": 441,
+  "text": "/// `max / min`: fact 441's quantity, computed rather than assumed absent."
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 391,
+  "num": 469,
+  "text": "/// (76.272 DN on `109MSDCF`, fact 469) so the fixture is arguing about the"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 510,
+  "num": 469,
+  "text": "/// Fact 469's mechanism, in a unit test: on a structured ROI the raw sd"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 515,
+  "num": 469,
+  "text": "const SIGMA: f32 = 8.77; // fact 469's modelled sigma on 109MSDCF"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 545,
+  "num": 599,
+  "text": "/// **Fact 599 applies to the second assertion and is why there is a third.**"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 634,
+  "num": 441,
+  "text": "/// Fact 441, made unrepresentable. The fixture is fact 441's own measured"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 644,
+  "num": 441,
+  "text": "(3, 15.989), // fact 441's 1.5989x, against frame 0's 1.0000x"
+ },
+ {
+  "file": "crates/strehl-core/src/flat_ratio.rs",
+  "line": 657,
+  "num": 441,
+  "text": "\"spread {:.4} should reproduce fact 441's 119MSDCF range\","
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 19,
+  "num": 41,
+  "text": "//!   radii closes the gap (SYNTHESIS fact 41)."
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 23,
+  "num": 60,
+  "text": "//!   three noise seeds (SYNTHESIS fact 60)."
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 26,
+  "num": 37,
+  "text": "//! 36 reached N <= 1.02x (fact 37). The escape from selection's noise penalty"
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 61,
+  "num": 39,
+  "text": "//! 0.0013 (fact 39, M13 \u00a71.4)."
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 71,
+  "num": 60,
+  "text": "/// SYNTHESIS fact 60): argmin of both mean regret (3.171 DN) and worst-case"
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 87,
+  "num": 152,
+  "text": "/// **MEASURED, M21** (SYNTHESIS fact 152). This is not a second opinion about"
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 103,
+  "num": 82,
+  "text": "/// an occluding boundary (fact 82); the statistics scale is narrow because"
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 114,
+  "num": 32,
+  "text": "/// tile margin, or the `halo()` rectangle expansion of SYNTHESIS fact 32, from"
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 198,
+  "num": 33,
+  "text": "/// M8's measured ratchet (SYNTHESIS \u00a75, fact 33) are therefore untouched."
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 665,
+  "num": 62,
+  "text": "// fact 62 says such a plant cannot produce a window optimum, so this"
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 754,
+  "num": 39,
+  "text": "/// `Norm::None` arm at a given radius. The distinction matters \u2014 fact 39 is"
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 808,
+  "num": 35,
+  "text": "// against support radius's -0.170 / -0.243, SYNTHESIS fact 35), so a"
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 825,
+  "num": 39,
+  "text": "//     is the half of fact 39 that does not depend on the scene. So are"
+ },
+ {
+  "file": "crates/strehl-core/src/focus.rs",
+  "line": 914,
+  "num": 39,
+  "text": "// 4. Fact 39, on this code path: windowing and pointwise normalisation"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 6,
+  "num": 19,
+  "text": "//! against one unstacked frame (fact 343). Fact 19's widely-quoted **1.253x**"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 6,
+  "num": 343,
+  "text": "//! against one unstacked frame (fact 343). Fact 19's widely-quoted **1.253x**"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 8,
+  "num": 343,
+  "text": "//! fact 343's consequence is explicit that it may not be quoted as this"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 9,
+  "num": 19,
+  "text": "//! pipeline's baseline, so it is not quoted as one. Fact 19 is not refuted \u2014 it"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 17,
+  "num": 23,
+  "text": "//!   (fact 23) and cuts absolute reconstruction error at occluding edges by"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 18,
+  "num": 84,
+  "text": "//!   35%, 24.79 -> 15.99 DN (fact 84). That was the single largest measured"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 19,
+  "num": 23,
+  "text": "//!   quality win still unbuilt. **Note what it does *not* do here:** fact 23's"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 22,
+  "num": 343,
+  "text": "//!   ratio 1.0678x -> 1.0739x \u2014 very slightly the *wrong* way (fact 343). The"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 27,
+  "num": 23,
+  "text": "//!   frame. *Only averaging goes below one* (fact 23). A plain mean reaches"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 28,
+  "num": 19,
+  "text": "//!   0.534x (fact 19) but collapses detail by more than half (fact 24), so the"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 28,
+  "num": 24,
+  "text": "//!   0.534x (fact 19) but collapses detail by more than half (fact 24), so the"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 35,
+  "num": 263,
+  "text": "//! correct behaviour, and is what facts 263 and 264 say actually happens at a"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 35,
+  "num": 264,
+  "text": "//! correct behaviour, and is what facts 263 and 264 say actually happens at a"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 44,
+  "num": 33,
+  "text": "//! 0.91 s warm (fact 33), so the second pass is cheap. Both passes are"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 57,
+  "num": 212,
+  "text": "//! controls (`nwide = 3`, fact 212) and that number is the calibration target."
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 67,
+  "num": 84,
+  "text": "/// Fact 84 priced width 17 at -35% absolute reconstruction error. Fact 86 is the"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 67,
+  "num": 86,
+  "text": "/// Fact 84 priced width 17 at -35% absolute reconstruction error. Fact 86 is the"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 73,
+  "num": 36,
+  "text": "/// Fact 36 is the reason it is not tuned upward either: the flat-ROI noise ratio"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 76,
+  "num": 42,
+  "text": "/// selectivity. Fact 42 supplies the interior optimum only under a *joint*"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 94,
+  "num": 23,
+  "text": "/// of two agreeing measurements (facts 320, 321, 23). M40 audited it under rule"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 94,
+  "num": 320,
+  "text": "/// of two agreeing measurements (facts 320, 321, 23). M40 audited it under rule"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 94,
+  "num": 321,
+  "text": "/// of two agreeing measurements (facts 320, 321, 23). M40 audited it under rule"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 97,
+  "num": 440,
+  "text": "/// - **It has no defined meaning at any value** (fact 440). The estimator was a"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 101,
+  "num": 446,
+  "text": "/// - **It exceeds its own ceiling** (fact 446). On a pure-noise plant built to"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 105,
+  "num": 443,
+  "text": "/// - **It is not a constant** (fact 443). The same estimator on six ROIs across"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 108,
+  "num": 454,
+  "text": "/// - **It made the metric worse than doing nothing** (fact 454). On a"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 119,
+  "num": 341,
+  "text": "/// Fact 341 \u2014 that `predicted_sigma` reports exactly 1.000\u00d7 the single-frame \u03c3"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 127,
+  "num": 458,
+  "text": "/// branches currently return 1.0. Fact 458 measured `n_eff = 1` across"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 132,
+  "num": 448,
+  "text": "/// Fact 448 also settled the *shape* of that term, and it is not this one:"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 196,
+  "num": 23,
+  "text": "/// 34.4% to 0.868% (fact 23), and speckle *is* the winner's curse made visible."
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 352,
+  "num": 212,
+  "text": "/// mean, and it is an output, not a diagnostic \u2014 see fact 212."
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 396,
+  "num": 212,
+  "text": "/// Frames admitted per pixel. Compare against fact 212's `nwide = 3`."
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 667,
+  "num": 300,
+  "text": "/// **This is not fact 300's quantity, and the two must not be compared.**"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 702,
+  "num": 452,
+  "text": "/// than recomputed from `n`. Facts 452/453: the CLI used to print"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 702,
+  "num": 453,
+  "text": "/// than recomputed from `n`. Facts 452/453: the CLI used to print"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 707,
+  "num": 341,
+  "text": "///   very number fact 341 filed as a defect."
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 853,
+  "num": 440,
+  "text": "/// on four independent grounds (facts 440, 443, 446, 454): it multiplied a"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 853,
+  "num": 443,
+  "text": "/// on four independent grounds (facts 440, 443, 446, 454): it multiplied a"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 853,
+  "num": 446,
+  "text": "/// on four independent grounds (facts 440, 443, 446, 454): it multiplied a"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 853,
+  "num": 454,
+  "text": "/// on four independent grounds (facts 440, 443, 446, 454): it multiplied a"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 863,
+  "num": 448,
+  "text": "/// estimator measured in this crate, and fact 448 says the result should be"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 869,
+  "num": 440,
+  "text": "\"1.074x was refuted by M40 (facts 440/443/446/454) and reverted; a \\"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 869,
+  "num": 443,
+  "text": "\"1.074x was refuted by M40 (facts 440/443/446/454) and reverted; a \\"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 869,
+  "num": 446,
+  "text": "\"1.074x was refuted by M40 (facts 440/443/446/454) and reverted; a \\"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 869,
+  "num": 454,
+  "text": "\"1.074x was refuted by M40 (facts 440/443/446/454) and reverted; a \\"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 889,
+  "num": 458,
+  "text": "// fact 458 puts 41.66% of the plane at n = 1 at a working gate."
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 983,
+  "num": 24,
+  "text": "/// which fact 24 says destroys detail."
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 1143,
+  "num": 263,
+  "text": "// Frame 3 stands far above everything: exactly facts 263/264's resolved"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 1143,
+  "num": 264,
+  "text": "// Frame 3 stands far above everything: exactly facts 263/264's resolved"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 1163,
+  "num": 23,
+  "text": "// mean of exactly the three, which is fact 23's \"only averaging goes"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 1164,
+  "num": 212,
+  "text": "// below one frame\" and fact 212's nwide = 3."
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 1175,
+  "num": 452,
+  "text": "/// Facts 452/453. The CLI's gate table printed `1/sqrt(mean_n_eff)`, which"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 1175,
+  "num": 453,
+  "text": "/// Facts 452/453. The CLI's gate table printed `1/sqrt(mean_n_eff)`, which"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 1263,
+  "num": 320,
+  "text": "/// fact 320 measured selection at **1.074x a single frame** \u2014 noisier, not"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 1293,
+  "num": 341,
+  "text": "// KNOWN GAP (fact 341, reopened by M40): with no measured"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 1621,
+  "num": 23,
+  "text": "/// mechanism fact 23 measured: a lone noise spike in one frame's focus field"
+ },
+ {
+  "file": "crates/strehl-core/src/merge.rs",
+  "line": 1674,
+  "num": 82,
+  "text": "/// the other half of fact 82, which found no window/regulariser substitution"
+ },
+ {
+  "file": "crates/strehl-core/src/profile.rs",
+  "line": 72,
+  "num": 200,
+  "text": "/// **MEASURED at ISO 160, by photon transfer on signal** (M25 fact 200):"
+ },
+ {
+  "file": "crates/strehl-core/src/profile.rs",
+  "line": 87,
+  "num": 200,
+  "text": "/// 1.0021 where a genuine gain step demands 0.5. M25 fact 200 from signal,"
+ },
+ {
+  "file": "crates/strehl-core/src/profile.rs",
+  "line": 92,
+  "num": 200,
+  "text": "/// **The boundary itself is not measured** (M25 fact 200a): the corpus holds"
+ },
+ {
+  "file": "crates/strehl-core/src/profile.rs",
+  "line": 112,
+  "num": 200,
+  "text": "/// corpus's real stacks are ISO 50 and ISO 160 (M25 fact 200's table)."
+ },
+ {
+  "file": "crates/strehl-core/src/profile.rs",
+  "line": 141,
+  "num": 14,
+  "text": "/// rising to 22.2% at ISO 1600**. M4 \u00a78.3 saw it \u2014 \"fact 14's 4.20 \u2192 1.47"
+ },
+ {
+  "file": "crates/strehl-core/src/profile.rs",
+  "line": 144,
+  "num": 550,
+  "text": "/// same failure mode as the ISO-50 gain defect (fact 550): measured in a"
+ },
+ {
+  "file": "crates/strehl-core/src/profile.rs",
+  "line": 262,
+  "num": 14,
+  "text": "// at ISO 400. Noise vs ISO is not monotone. Fact 14's own 1.47 was"
+ },
+ {
+  "file": "crates/strehl-core/src/stack.rs",
+  "line": 175,
+  "num": 23,
+  "text": "/// Fact 23's reference points are all at this tolerance: 34.4% for the ring"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 82,
+  "num": 261,
+  "text": "/// perplexity 4.74 and a maximum of 39.05 (facts 261, 283). A top-4 list can"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 82,
+  "num": 283,
+  "text": "/// perplexity 4.74 and a maximum of 39.05 (facts 261, 283). A top-4 list can"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 164,
+  "num": 272,
+  "text": "/// Minimum fine response over every frame. The fit baseline (fact 272)."
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 207,
+  "num": 19,
+  "text": "/// response to focus position is destroyed. Fact 19's placebo \u2014 same winner"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 284,
+  "num": 260,
+  "text": "/// alternative to be blind and non-monotone (fact 260) and SYNTHESIS"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 423,
+  "num": 273,
+  "text": "/// peak **position** and only 9.4% worse than a log-domain fit (fact 273), so"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 448,
+  "num": 272,
+  "text": "/// the log domain and 9% from the baseline (facts 272, 302, 304). The"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 448,
+  "num": 302,
+  "text": "/// the log domain and 9% from the baseline (facts 272, 302, 304). The"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 448,
+  "num": 304,
+  "text": "/// the log domain and 9% from the baseline (facts 272, 302, 304). The"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 609,
+  "num": 283,
+  "text": "/// channel to use where fact 283's tail matters. The identity is"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 619,
+  "num": 262,
+  "text": "/// `n` (fact 262), so a normalised-entropy cut must be simulated per frame"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 637,
+  "num": 300,
+  "text": "/// one frame deep, on the regularised winner. Not fact 300's quantity \u2014 see"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 663,
+  "num": 280,
+  "text": "/// **no monotone scalar summary of these channels is faithful** (facts 280-282)."
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 663,
+  "num": 281,
+  "text": "/// **no monotone scalar summary of these channels is faithful** (facts 280-282)."
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 663,
+  "num": 282,
+  "text": "/// **no monotone scalar summary of these channels is faithful** (facts 280-282)."
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 755,
+  "num": 280,
+  "text": "/// The union is deliberately not a vote or a weighted sum. Facts 280-282 measured"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 755,
+  "num": 281,
+  "text": "/// The union is deliberately not a vote or a weighted sum. Facts 280-282 measured"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 755,
+  "num": 282,
+  "text": "/// The union is deliberately not a vote or a weighted sum. Facts 280-282 measured"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 1299,
+  "num": 272,
+  "text": "/// its height exactly where the linear fit cannot. This is fact 272/304's"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 1299,
+  "num": 304,
+  "text": "/// its height exactly where the linear fit cannot. This is fact 272/304's"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 1631,
+  "num": 19,
+  "text": "/// The placebo must preserve exactly what fact 19's placebo preserved \u2014 the"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 1862,
+  "num": 341,
+  "text": "/// and with it the guarantee. **Fact 341 is open again and this test now"
+ },
+ {
+  "file": "crates/strehl-core/src/through_focus.rs",
+  "line": 1887,
+  "num": 341,
+  "text": "fact 341. When a penalty is measured this assertion is the one to \\"
+ },
+ {
+  "file": "crates/strehl-plugin/examples/calibration-survey.rs",
+  "line": 73,
+  "num": 438,
+  "text": "inherited that constant instead\\nof being measured -- fact 438: nothing \\"
+ },
+ {
+  "file": "crates/strehl-plugin/examples/f5-design-probes.rs",
+  "line": 141,
+  "num": 505,
+  "text": "\"\\nPROBE 3 -- cost. Fact 505 bounds option A at ~1.7 ms per stage, derived from\\n\\"
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 4,
+  "num": 502,
+  "text": "//! This module is workstream E \u00a7F5.3 option A, and SYNTHESIS fact 502. The"
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 24,
+  "num": 500,
+  "text": "//!   regulariser, in that order \u2014 fact 500;"
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 36,
+  "num": 501,
+  "text": "//! rather than one (discipline 257, fact 501)."
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 40,
+  "num": 505,
+  "text": "//! Fact 505 bounds this at **~1.7 ms per stage** for a 512x512 plane, derived"
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 100,
+  "num": 505,
+  "text": "/// interval. 512 is also the plane size fact 505's ~1.7 ms cost bound is"
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 228,
+  "num": 439,
+  "text": "/// [`FOCUS_NOISE_SD`] \u2014 fact 439's `k`."
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 524,
+  "num": 500,
+  "text": "///   target of 0.0904, a 3.3x miss (this is fact 500's error, inverted);"
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 526,
+  "num": 501,
+  "text": "///   fact 501, verbatim);"
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 558,
+  "num": 501,
+  "text": "// relative sem of ~0.5% is +/-2%, which rejects fact 501's +24.26%,"
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 559,
+  "num": 509,
+  "text": "// fact 509's +52.8% and fact 510's +12.5% alike."
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 559,
+  "num": 510,
+  "text": "// fact 509's +52.8% and fact 510's +12.5% alike."
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 815,
+  "num": 439,
+  "text": "\"shipped k = {:.4}   sml k = {:.4} (fact 439: 6.680)   tenengrad-sq k = {:.4} \\"
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 816,
+  "num": 439,
+  "text": "(fact 439: 1.367)\","
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 829,
+  "num": 439,
+  "text": "\"SML must land near fact 439's 6.680, got {}\","
+ },
+ {
+  "file": "crates/strehl-plugin/src/calibrate.rs",
+  "line": 834,
+  "num": 439,
+  "text": "\"tenengrad-squared must land near fact 439's 1.367, got {}\","
+ },
+ {
+  "file": "crates/strehl-plugin/src/field.rs",
+  "line": 18,
+  "num": 500,
+  "text": "//! Fact 500. `FOCUS_NOISE_SD` (0.015214) is measured **with** the 17x17"
+ },
+ {
+  "file": "crates/strehl-plugin/src/field.rs",
+  "line": 42,
+  "num": 84,
+  "text": "/// `Some(8)` is the shipped merge (fact 84: -35% absolute reconstruction"
+ },
+ {
+  "file": "crates/strehl-plugin/src/field.rs",
+  "line": 74,
+  "num": 32,
+  "text": "/// Rule 15 \u2014 this is the SYNTHESIS fact 32 sense of the word (a margin),"
+ },
+ {
+  "file": "crates/strehl-plugin/src/field.rs",
+  "line": 98,
+  "num": 439,
+  "text": "/// two operators are not expected to match fact 439 to the last digit."
+ },
+ {
+  "file": "crates/strehl-plugin/src/lib.rs",
+  "line": 8,
+  "num": 436,
+  "text": "//! user's `--gate`. Fact 436 verified that relation against the shipped binary"
+ },
+ {
+  "file": "crates/strehl-plugin/src/lib.rs",
+  "line": 16,
+  "num": 439,
+  "text": "//! **10.4x** (fact 439: ring(1,3) 0.644 to sum-modified-Laplacian 6.680). A"
+ },
+ {
+  "file": "crates/strehl-plugin/src/lib.rs",
+  "line": 20,
+  "num": 438,
+  "text": "//! single frame instead of the intended 41.7%. Fact 438: **every such case is"
+ },
+ {
+  "file": "crates/strehl-plugin/src/lib.rs",
+  "line": 23,
+  "num": 509,
+  "text": "//! It is not hypothetical. Facts 509-511: this project's own first pending"
+ },
+ {
+  "file": "crates/strehl-plugin/src/lib.rs",
+  "line": 23,
+  "num": 510,
+  "text": "//! It is not hypothetical. Facts 509-511: this project's own first pending"
+ },
+ {
+  "file": "crates/strehl-plugin/src/lib.rs",
+  "line": 23,
+  "num": 511,
+  "text": "//! It is not hypothetical. Facts 509-511: this project's own first pending"
+ },
+ {
+  "file": "crates/strehl-plugin/src/lib.rs",
+  "line": 47,
+  "num": 500,
+  "text": "//!   Fact 500 is the proof by counterexample: this repository's own two"
+ },
+ {
+  "file": "crates/strehl-plugin/src/lib.rs",
+  "line": 58,
+  "num": 505,
+  "text": "//! Fact 505 bounds the cost at ~1.7 ms per stage; [`CalibrationPlan`] documents"
+ },
+ {
+  "file": "crates/strehl-plugin/src/lib.rs",
+  "line": 72,
+  "num": 439,
+  "text": "//! - [`reference`] \u2014 the seven operators of fact 439, as worked examples and as"
+ },
+ {
+  "file": "crates/strehl-plugin/src/measure.rs",
+  "line": 9,
+  "num": 502,
+  "text": "//! fact 502). The host measures it instead \u2014 see [`crate::calibrate`]."
+ },
+ {
+  "file": "crates/strehl-plugin/src/measure.rs",
+  "line": 18,
+  "num": 500,
+  "text": "//!    host's regulariser radius \u2014 which the plugin cannot know. Fact 500 is"
+ },
+ {
+  "file": "crates/strehl-plugin/src/measure.rs",
+  "line": 27,
+  "num": 439,
+  "text": "//! Every operator in fact 439's survey decomposes into the same three stages,"
+ },
+ {
+  "file": "crates/strehl-plugin/src/measure.rs",
+  "line": 38,
+  "num": 152,
+  "text": "//! window radius **separately** to size the margin it discards, and fact 152"
+ },
+ {
+  "file": "crates/strehl-plugin/src/measure.rs",
+  "line": 65,
+  "num": 500,
+  "text": "/// in sequence, and conflating them is the fault fact 500 records: the"
+ },
+ {
+  "file": "crates/strehl-plugin/src/measure.rs",
+  "line": 71,
+  "num": 439,
+  "text": "/// this; under fact 439's survey configuration it is not."
+ },
+ {
+  "file": "crates/strehl-plugin/src/measure.rs",
+  "line": 83,
+  "num": 505,
+  "text": "/// longer bounded by fact 505's ~1.7 ms."
+ },
+ {
+  "file": "crates/strehl-plugin/src/measure.rs",
+  "line": 139,
+  "num": 152,
+  "text": "/// Include the window radius. Fact 152: the operator and its window are one"
+ },
+ {
+  "file": "crates/strehl-plugin/src/measure.rs",
+  "line": 140,
+  "num": 510,
+  "text": "/// object, and fact 510 measured a **12.5% gate shift** from a radius"
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 1,
+  "num": 439,
+  "text": "//! The seven operators of SYNTHESIS fact 439, expressed against the trait."
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 16,
+  "num": 439,
+  "text": "//! 2. They let fact 439's 10.4x spread be reproduced *inside the crate*, on the"
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 25,
+  "num": 439,
+  "text": "//! is here because it is the *other* end of fact 439's spread \u2014 this project's"
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 33,
+  "num": 439,
+  "text": "//! `k` values are comparable to fact 439's, and stated here because a focus"
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 91,
+  "num": 510,
+  "text": "/// Fact 510: a radius change alone is a **12.5% gate shift** (w13 -> w11"
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 125,
+  "num": 509,
+  "text": "/// **This is the operator M17 and M42 propose to ship, and fact 509 measured"
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 168,
+  "num": 90,
+  "text": "/// vertically. Fact 90 is the reason that is worth flagging rather than"
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 213,
+  "num": 439,
+  "text": "/// Laplacian magnitude. Fact 439 puts it at `k` = 6.590."
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 259,
+  "num": 439,
+  "text": "/// third-party contribution there is \u2014 and fact 439 measures it at `k` = 6.680,"
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 308,
+  "num": 439,
+  "text": "/// walking skeleton shipped with, and the low end of fact 439's spread at"
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 420,
+  "num": 439,
+  "text": "/// Every operator of fact 439's survey, in the shipped window, in the order the"
+ },
+ {
+  "file": "crates/strehl-plugin/src/reference.rs",
+  "line": 552,
+  "num": 152,
+  "text": "\"{id} must carry its window radius (fact 152)\""
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 7,
+  "num": 436,
+  "text": "//! regulariser. Fact 436 verified that relation against the shipped binary at"
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 10,
+  "num": 438,
+  "text": "//! operator whose true SD is `k` times the constant runs at `t/k`, and fact 438"
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 26,
+  "num": 503,
+  "text": "//! Fact 503 derives it and fact 504 sharpens it: dividing the field by a"
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 26,
+  "num": 504,
+  "text": "//! Fact 503 derives it and fact 504 sharpens it: dividing the field by a"
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 158,
+  "num": 504,
+  "text": "/// immediately while the f32 question of fact 504 is settled separately."
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 360,
+  "num": 439,
+  "text": "/// A deliberately mis-matched operator \u2014 SML, fact 439's worst case and the"
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 378,
+  "num": 439,
+  "text": "host's {FOCUS_NOISE_SD:e} (fact 439 measures 6.680). A plugin \\"
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 479,
+  "num": 503,
+  "text": "// ------------------------------------------------------------ facts 503/504"
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 479,
+  "num": 504,
+  "text": "// ------------------------------------------------------------ facts 503/504"
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 527,
+  "num": 503,
+  "text": "/// comparison in exact arithmetic (fact 503) and only rounding can differ."
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 561,
+  "num": 503,
+  "text": "/// **Facts 503/504, measured.** Pre-normalising the focus field by its own"
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 561,
+  "num": 504,
+  "text": "/// **Facts 503/504, measured.** Pre-normalising the focus field by its own"
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 565,
+  "num": 504,
+  "text": "/// **The assertion is a bounded flip RATE, never byte-identity.** Fact 504"
+ },
+ {
+  "file": "crates/strehl-plugin/src/registry.rs",
+  "line": 626,
+  "num": 504,
+  "text": "\"gate {t}: flip rate {rate:.3e} exceeds fact 504's pre-registered \\"
+ }
+]

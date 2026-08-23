@@ -1,0 +1,201 @@
+====================================================================================================
+  550|     /// constant in the frame count, so the ratchet is untouched.
+  551|     clip: ClipCensus,
+  552|     /// The middle frame's flat and detail ROIs, kept by whichever worker
+  553|     /// decoded it. `flat` now feeds the LEGACY raw ratio only; the noise
+  554|     /// invariant references `flat_frames` instead.
+  555|     flat: Option<Vec<f32>>,
+  556|     detail: Option<Vec<f32>>,
+  557|     /// `(frame index, flat-ROI moments)` for **every** frame. Three `f64` per
+  558|     /// frame, so it is constant in the ROI size and irrelevant to the ratchet.
+  559|     /// Fact 441: one privileged denominator moves the published ratio 1.60x, so
+  560|     /// there is no longer a privileged denominator to move.
+  561|     flat_frames: Vec<(u16, FrameFlat)>,
+  562|     t: Timings,
+  563| }
+  564| 
+  565| struct Pass2 {
+  566|     est: Vec<Estimator>,
+  567|     /// The through-focus sufficient statistics, and their permutation placebo.
+  568|     /// Both `None` unless `--stats` was passed.
+  569|     tf: Option<ThroughFocus>,
+  570|     placebo: Option<ThroughFocus>,
+  571|     t: Timings,
+  572| }
+  573| 
+  574| fn map_dim_err(index: u16, e: Error) -> anyhow::Error {
+  575|     match e {
+====================================================================================================
+  665|         iso.map(|v| format!("{v:.0}")).unwrap_or("UNKNOWN".into())
+  666|     );
+  667|     eprintln!(
+  668|         "levels          : black {}, white {}",
+  669|         levels.black, levels.white
+  670|     );
+  671|     eprintln!("{}", provenance_line(&noise));
+  672|     eprintln!(
+  673|         "regulariser     : {REGULARISER_WIDTH}x{REGULARISER_WIDTH} box on the focus field \
+  674|          (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)"
+  675|     );
+  676|     eprintln!(
+  677|         "focus noise sd  : {FOCUS_NOISE_SD:.6} on the regularised field, MEASURED in-crate \
+  678|          (facts 310-313)"
+  679|     );
+  680|     eprintln!(
+  681|         "gates           : {}  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)",
+  682|         opts.gates
+  683|             .iter()
+  684|             .map(|g| format!("{g:.2}"))
+  685|             .collect::<Vec<_>>()
+  686|             .join(", ")
+  687|     );
+  688|     eprintln!(
+  689|         "planes          : {} x {} per CFA plane",
+  690|         geom.width, geom.height
+====================================================================================================
+ 1510| 
+ 1511|     eprintln!();
+ 1512|     eprintln!("--- through-focus sufficient statistics (MEASURED) ---");
+ 1513|     eprintln!(
+ 1514|         "                  Gathered in PASS TWO, anchored on pass one's regularised winner, so"
+ 1515|     );
+ 1516|     eprintln!(
+ 1517|         "                  no third pass over the frames is needed to compute a sub-frame peak,"
+ 1518|     );
+ 1519|     eprintln!("                  a top-k list or a bimodality statistic from them.");
+ 1520|     eprintln!(
+ 1521|         "scale           : {}x{} box on the focus field (fact 152: bimodality is DEPLETED, 0.36x,",
+ 1522|         2 * STATS_RADIUS + 1,
+ 1523|         2 * STATS_RADIUS + 1
+ 1524|     );
+ 1525|     eprintln!(
+ 1526|         "                  at the {REGULARISER_WIDTH}x{REGULARISER_WIDTH} selection scale and only \
+ 1527|          appears at radius {STATS_RADIUS})"
+ 1528|     );
+ 1529|     eprintln!(
+ 1530|         "fine noise sd   : {FINE_FOCUS_NOISE_SD:.6}, MEASURED in-crate, {:.2}x the selection \
+ 1531|          field's {FOCUS_NOISE_SD:.6}",
+ 1532|         FINE_FOCUS_NOISE_SD / FOCUS_NOISE_SD
+ 1533|     );
+ 1534|     eprintln!(
+ 1535|         "memory          : {} B/px = {:.0} MB per gather, CONSTANT in the frame count.",
+====================================================================================================
+ 1565|             100.0 * near_half / offsets.len() as f64
+ 1566|         );
+ 1567|     }
+ 1568|     if !deficits.is_empty() {
+ 1569|         let mut d = deficits.clone();
+ 1570|         d.sort_by(|a, b| a.partial_cmp(b).unwrap());
+ 1571|         eprintln!(
+ 1572|             "  deficit (C3)  : median {:.4}, p90 {:.4}, p99 {:.4}   (log fit with baseline \
+ 1573|              subtraction, facts 272/304)",
+ 1574|             d[d.len() / 2],
+ 1575|             d[d.len() * 9 / 10],
+ 1576|             d[d.len() * 99 / 100]
+ 1577|         );
+ 1578|     }
+ 1579|     let disagree = (0..px).filter(|i| !tf.anchor_is_fine_argmax(*i)).count();
+ 1580|     let outside = (0..px).filter(|i| tf.fine_peak_outside_triple(*i)).count();
+ 1581|     eprintln!(
+ 1582|         "  scale disagree: {:.3}% of pixels have a fine argmax different from the regularised \
+ 1583|          winner",
+ 1584|         100.0 * disagree as f64 / px as f64
+ 1585|     );
+ 1586|     eprintln!(
+ 1587|         "  outside triple: {:.3}% have it further than {PEAK_SEPARATION} frames away -- the \
+ 1588|          SCREENING form",
+ 1589|         100.0 * outside as f64 / px as f64
+ 1590|     );
+====================================================================================================
+ 1705|                 "                  CONDITIONAL quantity -- the multi-peak rate at depth steps"
+ 1706|             );
+ 1707|             eprintln!(
+ 1708|                 "                  against the rate on smooth depth, binned on an INDEPENDENT"
+ 1709|             );
+ 1710|             eprintln!(
+ 1711|                 "                  depth-step map. This is a GLOBAL ratio and it is saturated by"
+ 1712|             );
+ 1713|             eprintln!(
+ 1714|                 "                  the fact that permutation manufactures multi-peakedness, so it"
+ 1715|             );
+ 1716|             eprintln!(
+ 1717|                 "                  cannot see the effect at all. M21 measures 4.38x on coffee-bean"
+ 1718|             );
+ 1719|             eprintln!(
+ 1720|                 "                  conditioned properly, against a null of 1.01x, where this"
+ 1721|             );
+ 1722|             eprintln!(
+ 1723|                 "                  global ratio reads 0.86x. Both are correct; only one is an"
+ 1724|             );
+ 1725|             eprintln!(
+ 1726|                 "                  answer to the occlusion question. The per-pixel statistic"
+ 1727|             );
+ 1728|             eprintln!(
+ 1729|                 "                  supports the conditional test; this summary line does not."
+ 1730|             );
+====================================================================================================
+ 1770|     eprintln!(
+ 1771|         "(d) CONFIDENCE VECTOR at gate {:.2} -- four channels, NOT a score",
+ 1772|         est.gate().threshold
+ 1773|     );
+ 1774|     eprintln!(
+ 1775|         "                  Facts 280-282: C1 is ANTI-correlated with C3's target (0.89x lift), so"
+ 1776|     );
+ 1777|     eprintln!(
+ 1778|         "                  no monotone scalar summary is faithful. The honest answer is the UNION."
+ 1779|     );
+ 1780|     eprintln!(
+ 1781|         "  C1 sigma      : worst {:.1}% at >= {:.3} DN -> {} px",
+ 1782|         100.0 * opts.confidence_tail,
+ 1783|         b.sigma_cut,
+ 1784|         b.by_sigma
+ 1785|     );
+ 1786|     eprintln!(
+ 1787|         "  C2 perplexity : worst {:.1}% at >= {:.3} -> {} px",
+ 1788|         100.0 * opts.confidence_tail,
+ 1789|         b.perplexity_cut,
+ 1790|         b.by_perplexity
+====================================================================================================
+ 2120|         assert!(
+ 2121|             (m.m2_pooled_abs - 3.5).abs() < 1e-6,
+ 2122|             "pooled should be 0.5*(3+4), got {}",
+ 2123|             m.m2_pooled_abs
+ 2124|         );
+ 2125|     }
+ 2126| 
+ 2127|     #[test]
+ 2128|     fn the_corrected_column_falls_under_blur_which_is_the_property_it_is_used_for() {
+ 2129|         // Invariant 2 only means something if the CORRECTED quantity detects
+ 2130|         // the collapse fact 24 measured. Correcting for noise must not have
+ 2131|         // made the metric blind to real blur. Noise is zero here so the
+ 2132|         // correction is inert and the fall is entirely optical.
+ 2133|         let (w, h) = (64usize, 64usize);
+ 2134|         let sharp: Vec<f32> = (0..w * h)
+ 2135|             .map(|i| {
+ 2136|                 if ((i % w) / 4 + (i / w) / 4) % 2 == 0 {
+ 2137|                     1000.0
+ 2138|                 } else {
+ 2139|                     0.0
+ 2140|                 }
+====================================================================================================
+ 2160|             b.corrected_rms < 0.75 * a.corrected_rms,
+ 2161|             "blur must cut the corrected metric substantially: sharp {}, blurred {}",
+ 2162|             a.corrected_rms,
+ 2163|             b.corrected_rms
+ 2164|         );
+ 2165|     }
+ 2166| 
+ 2167|     #[test]
+ 2168|     fn the_m2_convention_column_reproduces_the_independently_identified_definition() {
+ 2169|         // M38 §1 identified fact 24's convention as mean(0.5*(|dx|+|dy|)) by
+ 2170|         // measurement, against an independent numpy implementation. This pins
+ 2171|         // the Rust column to that definition on a field where it is hand
+ 2172|         // computable: a pure x-ramp of slope 3 has |dx| = 3, |dy| = 0, so the
+ 2173|         // pooled value is 1.5 while the isotropic value is 3.
+ 2174|         let (w, h) = (8usize, 8usize);
+ 2175|         let v: Vec<f32> = (0..w * h).map(|i| 3.0 * (i % w) as f32).collect();
+ 2176|         let s = vec![0.0f32; w * h];
+ 2177|         let m = detail_metrics(&v, &s, w, h);
+ 2178|         assert!((m.m2_pooled_abs - 1.5).abs() < 1e-9, "{}", m.m2_pooled_abs);
+ 2179|         assert!((m.iso_mean - 3.0).abs() < 1e-9, "{}", m.iso_mean);
+ 2180|         // With zero noise the correction must be inert, not merely small.

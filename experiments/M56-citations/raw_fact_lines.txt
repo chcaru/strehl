@@ -1,0 +1,258 @@
+TOTAL LINES: 257
+crates\strehl-cli\src\main.rs:43: /// artifact every later quality claim is measured against. It does not
+crates\strehl-cli\src\main.rs:48: /// resolution. There is no interpolation, so no demosaic artifact
+crates\strehl-cli\src\main.rs:139: /// calibration, and the effect is far larger than fact 324 published:
+crates\strehl-cli\src\main.rs:143: /// given n_eff spanning 0.7618 to 21.9934 - a factor of 28.9.
+crates\strehl-cli\src\main.rs:145: /// Fact 324's own numbers for the two ISO-50 stacks are stale: they
+crates\strehl-cli\src\main.rs:152: /// shipped 0.5-4.0 ladder. Fact 212's nwide = 3 is the calibration
+crates\strehl-cli\src\merge_cmd.rs:14: //! Decode is 0.91 s warm (fact 33), so a second pass is the cheaper of the two
+crates\strehl-cli\src\merge_cmd.rs:21: //! unmeasured (question 90). Its calibration target is fact 212's `nwide = 3`.
+crates\strehl-cli\src\merge_cmd.rs:30: //! Two acceptance invariants, and they are a **pair**. Fact 19 measured a plain
+crates\strehl-cli\src\merge_cmd.rs:31: //! mean at 0.534x the single-frame noise; fact 24 measured that the same plain
+crates\strehl-cli\src\merge_cmd.rs:79: /// Fact 324 measured that a fixed threshold is not a calibration: at gate
+crates\strehl-cli\src\merge_cmd.rs:82: /// where a gate does not, and it is the quantity fact 212 calibrated.
+crates\strehl-cli\src\merge_cmd.rs:188: \x20                 gate, which is what fact 324 says you should be setting."
+crates\strehl-cli\src\merge_cmd.rs:232: /// **`m2_pooled_abs` is fact 24's convention**, identified by measurement, not
+crates\strehl-cli\src\merge_cmd.rs:241: /// fact 24 legitimate; the two harnesses differ by 1.55x and 1.60x, an
+crates\strehl-cli\src\merge_cmd.rs:242: /// ROI-dependent factor, so the conversion cannot be a constant.
+crates\strehl-cli\src\merge_cmd.rs:251: /// *raises* gradient (fact 24), and argmax also raises noise (fact 19) — the
+crates\strehl-cli\src\merge_cmd.rs:262: /// `mean(0.5*(|dx| + |dy|))` — fact 24's convention, for comparability.
+crates\strehl-cli\src\merge_cmd.rs:559: /// Fact 441: one privileged denominator moves the published ratio 1.60x, so
+crates\strehl-cli\src\merge_cmd.rs:674: (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)"
+crates\strehl-cli\src\merge_cmd.rs:678: (facts 310-313)"
+crates\strehl-cli\src\merge_cmd.rs:681: "gates           : {}  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)",
+crates\strehl-cli\src\merge_cmd.rs:729: // the noise invariant is the whole distribution (fact 441).
+crates\strehl-cli\src\merge_cmd.rs:929: "                  n_eff is frames averaged per pixel. Fact 212 measured nwide = 3 at full"
+crates\strehl-cli\src\merge_cmd.rs:1024: // the denominator. It is here so fact 441's spread is
+crates\strehl-cli\src\merge_cmd.rs:1055: "                  Fact 19's 1.253x was a DIFFERENT focus operator and does \
+crates\strehl-cli\src\merge_cmd.rs:1071: "                  THIS COLUMN HAS NOT BEEN RE-MEASURED: fact 343's 1.0739x is \
+crates\strehl-cli\src\merge_cmd.rs:1110: "                  DO NOT READ THE LEGACY COLUMN AS NOISE (facts 469/441/442/455). It \
+crates\strehl-cli\src\merge_cmd.rs:1139: "                  at 0.534x while collapsing detail 58% (fact 24). Pass \
+crates\strehl-cli\src\merge_cmd.rs:1174: "                  and by manufactured edges, so an INCREASE is never evidence of quality."
+crates\strehl-cli\src\merge_cmd.rs:1204: "                  is sqrt(raw^2 - model^2), the only column judged. `m2` is fact 24's"
+crates\strehl-cli\src\merge_cmd.rs:1246: "                  CORRECTED retention falling as the gate opens, which is fact 24's"
+crates\strehl-cli\src\merge_cmd.rs:1252: eprintln!("                  is two-sided and shares a cause with manufactured detail.");
+crates\strehl-cli\src\merge_cmd.rs:1255: // The two-sided companion. mean|grad| cannot tell manufactured detail from
+crates\strehl-cli\src\merge_cmd.rs:1278: manufactured"
+crates\strehl-cli\src\merge_cmd.rs:1281: "                  detail move it away from that. Fact 23's reference points are 34.4% \
+crates\strehl-cli\src\merge_cmd.rs:1445: /// not itself at risk of manufacturing detail. The verdict exists so the TEST
+crates\strehl-cli\src\merge_cmd.rs:1457: /// Corrected retention below this is fact 24's collapse.
+crates\strehl-cli\src\merge_cmd.rs:1459: /// Registered at 0.90 because fact 24's measured collapse is **-58% and -53%**
+crates\strehl-cli\src\merge_cmd.rs:1484: // orchestrator's simulation and the -58%/-53% fact 24 measured, or it cannot
+crates\strehl-cli\src\merge_cmd.rs:1521: "scale           : {}x{} box on the focus field (fact 152: bimodality is DEPLETED, 0.36x,",
+crates\strehl-cli\src\merge_cmd.rs:1573: subtraction, facts 272/304)",
+crates\strehl-cli\src\merge_cmd.rs:1714: "                  the fact that permutation manufactures multi-peakedness, so it"
+crates\strehl-cli\src\merge_cmd.rs:1775: "                  Facts 280-282: C1 is ANTI-correlated with C3's target (0.89x lift), so"
+crates\strehl-cli\src\merge_cmd.rs:1929: /// The five ladders fact 324 measured, as `(gate, mean n_eff)`.
+crates\strehl-cli\src\merge_cmd.rs:1931: /// Kept here verbatim so the solve and the fact check each other: if either
+crates\strehl-cli\src\merge_cmd.rs:1932: /// is edited carelessly, `the_solved_gate_spans_the_range_fact_324_claims`
+crates\strehl-cli\src\merge_cmd.rs:2001: fn the_solved_gate_spans_the_range_fact_324_claims() {
+crates\strehl-cli\src\merge_cmd.rs:2002: // Fact 324's design conclusion is that no fixed gate is a calibration.
+crates\strehl-cli\src\merge_cmd.rs:2021: "spread {} no longer supports fact 324",
+crates\strehl-cli\src\merge_cmd.rs:2130: // the collapse fact 24 measured. Correcting for noise must not have
+crates\strehl-cli\src\merge_cmd.rs:2169: // M38 §1 identified fact 24's convention as mean(0.5*(|dx|+|dy|)) by
+crates\strehl-cli\src\merge_cmd.rs:2280: /// reproduce facts 12/27/28 to 3-4 digits (25 frames, oracle depth, latent
+crates\strehl-cli\src\merge_cmd.rs:2299: // Fact 24's collapse: -58% and -53%.
+crates\strehl-cli\src\stack.rs:7: //! artifact** every later quality claim must be a measured delta against, and
+crates\strehl-cli\src\stack.rs:440: /// size and irrelevant to the memory ratchet, and it is what makes fact
+crates\strehl-cli\src\stack.rs:635: /// the shipped operator (fact 343), not fact 19's 1.253x, which was measured on
+crates\strehl-cli\src\stack.rs:670: /// other purpose. Fact 469 measured it under-reporting a real noise
+crates\strehl-cli\src\stack.rs:681: /// should be taken against is the whole per-frame distribution (fact 441).
+crates\strehl-cli\src\stack.rs:746: "{indent}NO SINGLE REFERENCE FRAME. Fact 441: holding the merge fixed and \
+crates\strehl-cli\src\stack.rs:760: behind fact 469;",
+crates\strehl-cli\src\stack.rs:786: "{indent}residual scene. IT IS ALSO THE FACTOR BY WHICH EVERY RATIO BELOW \
+crates\strehl-cli\src\stack.rs:795: of fact 469."
+crates\strehl-cli\src\stack.rs:864: // printed, in the same units, so fact 441 is visible as a
+crates\strehl-cli\src\stack.rs:897: eprintln!("                  Two RAW spatial sds. Fact 469: on a real flat ROI ~99% of that");
+crates\strehl-cli\src\stack.rs:1425: /// noise is a factor of sqrt(2) below a single green sample's.
+crates\strehl-cli\src\stack.rs:1452: // factor of sqrt(2) lower.
+crates\strehl-core\examples\focus-window-cost.rs:13: //! measured spread would be a factor of tens, not 2.53%.
+crates\strehl-core\src\boxfilter.rs:14: //! was diluted by invented zeros — which would manufacture a bright ring one
+crates\strehl-core\src\clip.rs:21: //! fact 73's monotone edge — but on a pinned pixel *both* candidates read their
+crates\strehl-core\src\flat_ratio.rs:11: //! 1. **It is structure-dominated.** Fact 469: on `109MSDCF`'s flat ROI the raw
+crates\strehl-core\src\flat_ratio.rs:15: //!    144.391x high-pass). Fact 455: that ROI is not even detail-free —
+crates\strehl-core\src\flat_ratio.rs:16: //!    per-frame corrected detail spans 5.31-18.66 DN. Fact 442: the reference
+crates\strehl-core\src\flat_ratio.rs:19: //! 2. **The denominator was one privileged frame.** Fact 441: holding the merge
+crates\strehl-core\src\flat_ratio.rs:29: //! # The kernel, and its reconciliation with fact 469
+crates\strehl-core\src\flat_ratio.rs:32: //! exactly the kernel that produced fact 469 — M41's
+crates\strehl-core\src\flat_ratio.rs:36: //! plane ROI 1356,32,512,512 — the exact input behind fact 469's denominator):
+crates\strehl-core\src\flat_ratio.rs:47: //! manufactures an edge one radius in, which inflates the residual on precisely
+crates\strehl-core\src\flat_ratio.rs:80: //! [`structure_contamination`] factor. Measured on the two corpus flat ROIs
+crates\strehl-core\src\flat_ratio.rs:81: //! (`experiments/m53-flat-ratio/out/a2_kernel_sweep.log`) that factor is
+crates\strehl-core\src\flat_ratio.rs:90: //! gone blind. `w = 9` ships anyway, because it is the kernel fact 469 was
+crates\strehl-core\src\flat_ratio.rs:201: /// scene structure. That excess is also, exactly, the factor by which a ratio
+crates\strehl-core\src\flat_ratio.rs:223: /// never be used for a noise ratio (fact 469).
+crates\strehl-core\src\flat_ratio.rs:245: /// They exist so that fact 441's 1.60x cannot hide inside an unstated choice:
+crates\strehl-core\src\flat_ratio.rs:271: /// **This type exists to make fact 441 unrepresentable.** There is no
+crates\strehl-core\src\flat_ratio.rs:334: /// `max / min`: fact 441's quantity, computed rather than assumed absent.
+crates\strehl-core\src\flat_ratio.rs:385: /// (76.272 DN on `109MSDCF`, fact 469) so the fixture is arguing about the
+crates\strehl-core\src\flat_ratio.rs:504: /// Fact 469's mechanism, in a unit test: on a structured ROI the raw sd
+crates\strehl-core\src\flat_ratio.rs:509: const SIGMA: f32 = 8.77; // fact 469's modelled sigma on 109MSDCF
+crates\strehl-core\src\flat_ratio.rs:584: /// Fact 441, made unrepresentable. The fixture is fact 441's own measured
+crates\strehl-core\src\flat_ratio.rs:594: (3, 15.989), // fact 441's 1.5989x, against frame 0's 1.0000x
+crates\strehl-core\src\flat_ratio.rs:607: "spread {:.4} should reproduce fact 441's 119MSDCF range",
+crates\strehl-core\src\focus.rs:19: //!   radii closes the gap (SYNTHESIS fact 41).
+crates\strehl-core\src\focus.rs:23: //!   three noise seeds (SYNTHESIS fact 60).
+crates\strehl-core\src\focus.rs:26: //! 36 reached N <= 1.02x (fact 37). The escape from selection's noise penalty
+crates\strehl-core\src\focus.rs:58: //! level, so the omitted factor very nearly cancels out of the comparison.
+crates\strehl-core\src\focus.rs:61: //! 0.0013 (fact 39, M13 §1.4).
+crates\strehl-core\src\focus.rs:71: /// SYNTHESIS fact 60): argmin of both mean regret (3.171 DN) and worst-case
+crates\strehl-core\src\focus.rs:87: /// **MEASURED, M21** (SYNTHESIS fact 152). This is not a second opinion about
+crates\strehl-core\src\focus.rs:103: /// an occluding boundary (fact 82); the statistics scale is narrow because
+crates\strehl-core\src\focus.rs:114: /// tile margin, or the `halo()` rectangle expansion of SYNTHESIS fact 32, from
+crates\strehl-core\src\focus.rs:198: /// M8's measured ratchet (SYNTHESIS §5, fact 33) are therefore untouched.
+crates\strehl-core\src\focus.rs:267: /// Factored out so that [`FocusField::compute`] and
+crates\strehl-core\src\focus.rs:601: // 1.3475x for ring(1,3) and 1.1324x for tenengrad-w5 (SYNTHESIS fact
+crates\strehl-core\src\focus.rs:641: "the placebo must not manufacture an excess, got {n_placebo:.4}"
+crates\strehl-core\src\focus.rs:665: // fact 62 says such a plant cannot produce a window optimum, so this
+crates\strehl-core\src\focus.rs:754: /// `Norm::None` arm at a given radius. The distinction matters — fact 39 is
+crates\strehl-core\src\focus.rs:808: // against support radius's -0.170 / -0.243, SYNTHESIS fact 35), so a
+crates\strehl-core\src\focus.rs:825: //     is the half of fact 39 that does not depend on the scene. So are
+crates\strehl-core\src\focus.rs:914: // 4. Fact 39, on this code path: windowing and pointwise normalisation
+crates\strehl-core\src\merge.rs:6: //! against one unstacked frame (fact 343). Fact 19's widely-quoted **1.253x**
+crates\strehl-core\src\merge.rs:8: //! fact 343's consequence is explicit that it may not be quoted as this
+crates\strehl-core\src\merge.rs:9: //! pipeline's baseline, so it is not quoted as one. Fact 19 is not refuted — it
+crates\strehl-core\src\merge.rs:17: //!   (fact 23) and cuts absolute reconstruction error at occluding edges by
+crates\strehl-core\src\merge.rs:18: //!   35%, 24.79 -> 15.99 DN (fact 84). That was the single largest measured
+crates\strehl-core\src\merge.rs:19: //!   quality win still unbuilt. **Note what it does *not* do here:** fact 23's
+crates\strehl-core\src\merge.rs:22: //!   ratio 1.0678x -> 1.0739x — very slightly the *wrong* way (fact 343). The
+crates\strehl-core\src\merge.rs:27: //!   frame. *Only averaging goes below one* (fact 23). A plain mean reaches
+crates\strehl-core\src\merge.rs:28: //!   0.534x (fact 19) but collapses detail by more than half (fact 24), so the
+crates\strehl-core\src\merge.rs:35: //! correct behaviour, and is what facts 263 and 264 say actually happens at a
+crates\strehl-core\src\merge.rs:44: //! 0.91 s warm (fact 33), so the second pass is cheap. Both passes are
+crates\strehl-core\src\merge.rs:57: //! controls (`nwide = 3`, fact 212) and that number is the calibration target.
+crates\strehl-core\src\merge.rs:67: /// Fact 84 priced width 17 at -35% absolute reconstruction error. Fact 86 is the
+crates\strehl-core\src\merge.rs:73: /// Fact 36 is the reason it is not tuned upward either: the flat-ROI noise ratio
+crates\strehl-core\src\merge.rs:76: /// selectivity. Fact 42 supplies the interior optimum only under a *joint*
+crates\strehl-core\src\merge.rs:94: /// of two agreeing measurements (facts 320, 321, 23). M40 audited it under rule
+crates\strehl-core\src\merge.rs:97: /// - **It has no defined meaning at any value** (fact 440). The estimator was a
+crates\strehl-core\src\merge.rs:101: /// - **It exceeds its own ceiling** (fact 446). On a pure-noise plant built to
+crates\strehl-core\src\merge.rs:105: /// - **It is not a constant** (fact 443). The same estimator on six ROIs across
+crates\strehl-core\src\merge.rs:108: /// - **It made the metric worse than doing nothing** (fact 454). On a
+crates\strehl-core\src\merge.rs:114: /// structure-free** estimator in this crate. Do not substitute 1.045 (fact
+crates\strehl-core\src\merge.rs:119: /// Fact 341 — that `predicted_sigma` reports exactly 1.000× the single-frame σ
+crates\strehl-core\src\merge.rs:127: /// branches currently return 1.0. Fact 458 measured `n_eff = 1` across
+crates\strehl-core\src\merge.rs:132: /// Fact 448 also settled the *shape* of that term, and it is not this one:
+crates\strehl-core\src\merge.rs:166: /// factor of 5.3 against naive independence. **That factor is exactly why this
+crates\strehl-core\src\merge.rs:196: /// 34.4% to 0.868% (fact 23), and speckle *is* the winner's curse made visible.
+crates\strehl-core\src\merge.rs:352: /// mean, and it is an output, not a diagnostic — see fact 212.
+crates\strehl-core\src\merge.rs:396: /// Frames admitted per pixel. Compare against fact 212's `nwide = 3`.
+crates\strehl-core\src\merge.rs:667: /// **This is not fact 300's quantity, and the two must not be compared.**
+crates\strehl-core\src\merge.rs:702: /// than recomputed from `n`. Facts 452/453: the CLI used to print
+crates\strehl-core\src\merge.rs:707: ///   very number fact 341 filed as a defect.
+crates\strehl-core\src\merge.rs:816: /// had to assume away — a factor of 3.2, see [`FOCUS_NOISE_SD`].
+crates\strehl-core\src\merge.rs:853: /// on four independent grounds (facts 440, 443, 446, 454): it multiplied a
+crates\strehl-core\src\merge.rs:863: /// estimator measured in this crate, and fact 448 says the result should be
+crates\strehl-core\src\merge.rs:869: "1.074x was refuted by M40 (facts 440/443/446/454) and reverted; a \
+crates\strehl-core\src\merge.rs:889: // fact 458 puts 41.66% of the plane at n = 1 at a working gate.
+crates\strehl-core\src\merge.rs:983: /// which fact 24 says destroys detail.
+crates\strehl-core\src\merge.rs:1143: // Frame 3 stands far above everything: exactly facts 263/264's resolved
+crates\strehl-core\src\merge.rs:1163: // mean of exactly the three, which is fact 23's "only averaging goes
+crates\strehl-core\src\merge.rs:1164: // below one frame" and fact 212's nwide = 3.
+crates\strehl-core\src\merge.rs:1175: /// Facts 452/453. The CLI's gate table printed `1/sqrt(mean_n_eff)`, which
+crates\strehl-core\src\merge.rs:1216: // multiplicative factor — SELECTION_INFLATION was 7.4% — so 1e-6
+crates\strehl-core\src\merge.rs:1263: /// fact 320 measured selection at **1.074x a single frame** — noisier, not
+crates\strehl-core\src\merge.rs:1293: // KNOWN GAP (fact 341, reopened by M40): with no measured
+crates\strehl-core\src\merge.rs:1621: /// mechanism fact 23 measured: a lone noise spike in one frame's focus field
+crates\strehl-core\src\merge.rs:1674: /// the other half of fact 82, which found no window/regulariser substitution
+crates\strehl-core\src\plane.rs:105: /// reported, not repaired. Substituting a value here would move the artefact
+crates\strehl-core\src\profile.rs:5: //! are per-stack artifacts that must be fitted at runtime. It also ruled that
+crates\strehl-core\src\profile.rs:72: /// **MEASURED at ISO 160, by photon transfer on signal** (M25 fact 200):
+crates\strehl-core\src\profile.rs:87: /// 1.0021 where a genuine gain step demands 0.5. M25 fact 200 from signal,
+crates\strehl-core\src\profile.rs:92: /// **The boundary itself is not measured** (M25 fact 200a): the corpus holds
+crates\strehl-core\src\profile.rs:98: /// **DELIBERATELY NOT RE-FITTED. The reason is a fact about the model, and
+crates\strehl-core\src\profile.rs:112: /// corpus's real stacks are ISO 50 and ISO 160 (M25 fact 200's table).
+crates\strehl-core\src\profile.rs:141: /// rising to 22.2% at ISO 1600**. M4 §8.3 saw it — "fact 14's 4.20 → 1.47
+crates\strehl-core\src\profile.rs:144: /// same failure mode as the ISO-50 gain defect (fact 550): measured in a
+crates\strehl-core\src\profile.rs:261: // Fact #14's mechanism, at M48's re-derived value: 4.20 e- -> 1.2392 e-
+crates\strehl-core\src\profile.rs:262: // at ISO 400. Noise vs ISO is not monotone. Fact 14's own 1.47 was
+crates\strehl-core\src\stack.rs:5: //! that. It is the named baseline artifact SYNTHESIS §5.1 requires and §8 step 0
+crates\strehl-core\src\stack.rs:175: /// Fact 23's reference points are all at this tolerance: 34.4% for the ring
+crates\strehl-core\src\stack.rs:192: /// manufactured edges — the orchestrator MEASURED a Wiener merge carrying 24%
+crates\strehl-core\src\stack.rs:195: /// map cannot be gamed that way: over-smoothing and manufactured detail both
+crates\strehl-core\src\through_focus.rs:82: /// perplexity 4.74 and a maximum of 39.05 (facts 261, 283). A top-4 list can
+crates\strehl-core\src\through_focus.rs:119: /// against a nominal `5 x 5 = 25` — so overlapping Sobel stencils cost a factor
+crates\strehl-core\src\through_focus.rs:164: /// Minimum fine response over every frame. The fit baseline (fact 272).
+crates\strehl-core\src\through_focus.rs:207: /// response to focus position is destroyed. Fact 19's placebo — same winner
+crates\strehl-core\src\through_focus.rs:262: /// factor that grows without bound. **The corpus starts at 22.**
+crates\strehl-core\src\through_focus.rs:284: /// alternative to be blind and non-monotone (fact 260) and SYNTHESIS
+crates\strehl-core\src\through_focus.rs:423: /// peak **position** and only 9.4% worse than a log-domain fit (fact 273), so
+crates\strehl-core\src\through_focus.rs:426: /// fact — which is why [`subframe_deficit`](Self::subframe_deficit) does not
+crates\strehl-core\src\through_focus.rs:448: /// the log domain and 9% from the baseline (facts 272, 302, 304). The
+crates\strehl-core\src\through_focus.rs:577: /// manufactures multi-peakedness and saturates the comparison — the null
+crates\strehl-core\src\through_focus.rs:609: /// channel to use where fact 283's tail matters. The identity is
+crates\strehl-core\src\through_focus.rs:619: /// `n` (fact 262), so a normalised-entropy cut must be simulated per frame
+crates\strehl-core\src\through_focus.rs:637: /// one frame deep, on the regularised winner. Not fact 300's quantity — see
+crates\strehl-core\src\through_focus.rs:663: /// **no monotone scalar summary of these channels is faithful** (facts 280-282).
+crates\strehl-core\src\through_focus.rs:755: /// The union is deliberately not a vote or a weighted sum. Facts 280-282 measured
+crates\strehl-core\src\through_focus.rs:1299: /// its height exactly where the linear fit cannot. This is fact 272/304's
+crates\strehl-core\src\through_focus.rs:1631: /// The placebo must preserve exactly what fact 19's placebo preserved — the
+crates\strehl-core\src\through_focus.rs:1862: /// and with it the guarantee. **Fact 341 is open again and this test now
+crates\strehl-core\src\through_focus.rs:1887: fact 341. When a penalty is measured this assertion is the one to \
+crates\strehl-plugin\examples\calibration-survey.rs:1: //! The fact-439 survey, re-measured by this crate's own calibrator.
+crates\strehl-plugin\examples\calibration-survey.rs:73: inherited that constant instead\nof being measured -- fact 438: nothing \
+crates\strehl-plugin\examples\f5-design-probes.rs:141: "\nPROBE 3 -- cost. Fact 505 bounds option A at ~1.7 ms per stage, derived from\n\
+crates\strehl-plugin\src\calibrate.rs:4: //! This module is workstream E §F5.3 option A, and SYNTHESIS fact 502. The
+crates\strehl-plugin\src\calibrate.rs:24: //!   regulariser, in that order — fact 500;
+crates\strehl-plugin\src\calibrate.rs:36: //! rather than one (discipline 257, fact 501).
+crates\strehl-plugin\src\calibrate.rs:40: //! Fact 505 bounds this at **~1.7 ms per stage** for a 512x512 plane, derived
+crates\strehl-plugin\src\calibrate.rs:100: /// interval. 512 is also the plane size fact 505's ~1.7 ms cost bound is
+crates\strehl-plugin\src\calibrate.rs:228: /// [`FOCUS_NOISE_SD`] — fact 439's `k`.
+crates\strehl-plugin\src\calibrate.rs:524: ///   target of 0.0904, a 3.3x miss (this is fact 500's error, inverted);
+crates\strehl-plugin\src\calibrate.rs:526: ///   fact 501, verbatim);
+crates\strehl-plugin\src\calibrate.rs:558: // relative sem of ~0.5% is +/-2%, which rejects fact 501's +24.26%,
+crates\strehl-plugin\src\calibrate.rs:559: // fact 509's +52.8% and fact 510's +12.5% alike.
+crates\strehl-plugin\src\calibrate.rs:815: "shipped k = {:.4}   sml k = {:.4} (fact 439: 6.680)   tenengrad-sq k = {:.4} \
+crates\strehl-plugin\src\calibrate.rs:816: (fact 439: 1.367)",
+crates\strehl-plugin\src\calibrate.rs:829: "SML must land near fact 439's 6.680, got {}",
+crates\strehl-plugin\src\calibrate.rs:834: "tenengrad-squared must land near fact 439's 1.367, got {}",
+crates\strehl-plugin\src\field.rs:18: //! Fact 500. `FOCUS_NOISE_SD` (0.015214) is measured **with** the 17x17
+crates\strehl-plugin\src\field.rs:42: /// `Some(8)` is the shipped merge (fact 84: -35% absolute reconstruction
+crates\strehl-plugin\src\field.rs:74: /// Rule 15 — this is the SYNTHESIS fact 32 sense of the word (a margin),
+crates\strehl-plugin\src\field.rs:75: /// never the occlusion-halo sense (an artifact at an occluding edge).
+crates\strehl-plugin\src\field.rs:98: /// two operators are not expected to match fact 439 to the last digit.
+crates\strehl-plugin\src\lib.rs:8: //! user's `--gate`. Fact 436 verified that relation against the shipped binary
+crates\strehl-plugin\src\lib.rs:16: //! **10.4x** (fact 439: ring(1,3) 0.644 to sum-modified-Laplacian 6.680). A
+crates\strehl-plugin\src\lib.rs:20: //! single frame instead of the intended 41.7%. Fact 438: **every such case is
+crates\strehl-plugin\src\lib.rs:23: //! It is not hypothetical. Facts 509-511: this project's own first pending
+crates\strehl-plugin\src\lib.rs:43: //! forced by three further facts:
+crates\strehl-plugin\src\lib.rs:47: //!   Fact 500 is the proof by counterexample: this repository's own two
+crates\strehl-plugin\src\lib.rs:58: //! Fact 505 bounds the cost at ~1.7 ms per stage; [`CalibrationPlan`] documents
+crates\strehl-plugin\src\lib.rs:72: //! - [`reference`] — the seven operators of fact 439, as worked examples and as
+crates\strehl-plugin\src\measure.rs:9: //! fact 502). The host measures it instead — see [`crate::calibrate`].
+crates\strehl-plugin\src\measure.rs:18: //!    host's regulariser radius — which the plugin cannot know. Fact 500 is
+crates\strehl-plugin\src\measure.rs:27: //! Every operator in fact 439's survey decomposes into the same three stages,
+crates\strehl-plugin\src\measure.rs:38: //! window radius **separately** to size the margin it discards, and fact 152
+crates\strehl-plugin\src\measure.rs:45: //! and pointwise, which is a fact about textbook focus measures rather than a
+crates\strehl-plugin\src\measure.rs:65: /// in sequence, and conflating them is the fault fact 500 records: the
+crates\strehl-plugin\src\measure.rs:71: /// this; under fact 439's survey configuration it is not.
+crates\strehl-plugin\src\measure.rs:83: /// longer bounded by fact 505's ~1.7 ms.
+crates\strehl-plugin\src\measure.rs:139: /// Include the window radius. Fact 152: the operator and its window are one
+crates\strehl-plugin\src\measure.rs:140: /// object, and fact 510 measured a **12.5% gate shift** from a radius
+crates\strehl-plugin\src\measure.rs:158: /// Replicate rather than zero-pad: a zero-padded gradient manufactures a
+crates\strehl-plugin\src\reference.rs:1: //! The seven operators of SYNTHESIS fact 439, expressed against the trait.
+crates\strehl-plugin\src\reference.rs:16: //! 2. They let fact 439's 10.4x spread be reproduced *inside the crate*, on the
+crates\strehl-plugin\src\reference.rs:25: //! is here because it is the *other* end of fact 439's spread — this project's
+crates\strehl-plugin\src\reference.rs:33: //! `k` values are comparable to fact 439's, and stated here because a focus
+crates\strehl-plugin\src\reference.rs:91: /// Fact 510: a radius change alone is a **12.5% gate shift** (w13 -> w11
+crates\strehl-plugin\src\reference.rs:125: /// **This is the operator M17 and M42 propose to ship, and fact 509 measured
+crates\strehl-plugin\src\reference.rs:168: /// vertically. Fact 90 is the reason that is worth flagging rather than
+crates\strehl-plugin\src\reference.rs:213: /// Laplacian magnitude. Fact 439 puts it at `k` = 6.590.
+crates\strehl-plugin\src\reference.rs:259: /// third-party contribution there is — and fact 439 measures it at `k` = 6.680,
+crates\strehl-plugin\src\reference.rs:308: /// walking skeleton shipped with, and the low end of fact 439's spread at
+crates\strehl-plugin\src\reference.rs:420: /// Every operator of fact 439's survey, in the shipped window, in the order the
+crates\strehl-plugin\src\reference.rs:421: /// fact lists them.
+crates\strehl-plugin\src\reference.rs:552: "{id} must carry its window radius (fact 152)"
+crates\strehl-plugin\src\registry.rs:7: //! regulariser. Fact 436 verified that relation against the shipped binary at
+crates\strehl-plugin\src\registry.rs:10: //! operator whose true SD is `k` times the constant runs at `t/k`, and fact 438
+crates\strehl-plugin\src\registry.rs:26: //! Fact 503 derives it and fact 504 sharpens it: dividing the field by a
+crates\strehl-plugin\src\registry.rs:158: /// immediately while the f32 question of fact 504 is settled separately.
+crates\strehl-plugin\src\registry.rs:319: /// Rule 20 — this fails if the gate carried any operator-dependent factor,
+crates\strehl-plugin\src\registry.rs:326: fn the_gate_is_dimensionless_across_operators_that_differ_by_a_factor_of_six() {
+crates\strehl-plugin\src\registry.rs:360: /// A deliberately mis-matched operator — SML, fact 439's worst case and the
+crates\strehl-plugin\src\registry.rs:378: host's {FOCUS_NOISE_SD:e} (fact 439 measures 6.680). A plugin \
+crates\strehl-plugin\src\registry.rs:479: // ------------------------------------------------------------ facts 503/504
+crates\strehl-plugin\src\registry.rs:527: /// comparison in exact arithmetic (fact 503) and only rounding can differ.
+crates\strehl-plugin\src\registry.rs:561: /// **Facts 503/504, measured.** Pre-normalising the focus field by its own
+crates\strehl-plugin\src\registry.rs:565: /// **The assertion is a bounded flip RATE, never byte-identity.** Fact 504
+crates\strehl-plugin\src\registry.rs:626: "gate {t}: flip rate {rate:.3e} exceeds fact 504's pre-registered \

@@ -1,0 +1,200 @@
+####################################################################################################
+crates/strehl-core/src/flat_ratio.rs
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:11] cites [469]
+      7| //! spatial** sds taken over a "flat" ROI, with the denominator supplied by one
+      8| //! arbitrarily chosen frame (`frames.len() / 2`). It had two independent
+      9| //! defects and a fix for either one alone is not a fix.
+     10| //!
+>>   11| //! 1. **It is structure-dominated.** Fact 469: on `109MSDCF`'s flat ROI the raw
+     12| //!    spatial sd is 76.272 DN against a modelled per-sample sigma of 8.77 DN,
+     13| //!    so ~99 % of the variance is residual scene, and the raw ratio
+     14| //!    under-reported a real noise explosion by **6.3x** (22.767x raw against
+     15| //!    144.391x high-pass). Fact 455: that ROI is not even detail-free —
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:15] cites [455]
+     11| //! 1. **It is structure-dominated.** Fact 469: on `109MSDCF`'s flat ROI the raw
+     12| //!    spatial sd is 76.272 DN against a modelled per-sample sigma of 8.77 DN,
+     13| //!    so ~99 % of the variance is residual scene, and the raw ratio
+     14| //!    under-reported a real noise explosion by **6.3x** (22.767x raw against
+>>   15| //!    144.391x high-pass). Fact 455: that ROI is not even detail-free —
+     16| //!    per-frame corrected detail spans 5.31-18.66 DN. Fact 442, **as corrected
+     17| //!    by fact 597**: the reference frames of the four flat ROIs are 53.3 %,
+     18| //!    50.9 %, 80.0 % and 72.2 % scene structure by variance. (Fact 442
+     19| //!    originally published the last two as 90.0 % and 86.1 %; they are the two
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:16] cites [442]
+     12| //!    spatial sd is 76.272 DN against a modelled per-sample sigma of 8.77 DN,
+     13| //!    so ~99 % of the variance is residual scene, and the raw ratio
+     14| //!    under-reported a real noise explosion by **6.3x** (22.767x raw against
+     15| //!    144.391x high-pass). Fact 455: that ROI is not even detail-free —
+>>   16| //!    per-frame corrected detail spans 5.31-18.66 DN. Fact 442, **as corrected
+     17| //!    by fact 597**: the reference frames of the four flat ROIs are 53.3 %,
+     18| //!    50.9 %, 80.0 % and 72.2 % scene structure by variance. (Fact 442
+     19| //!    originally published the last two as 90.0 % and 86.1 %; they are the two
+     20| //!    ISO-50 ROIs and M47 re-measured them through the fact-550 gain fix. The
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:19] cites [441]
+     15| //!    144.391x high-pass). Fact 455: that ROI is not even detail-free —
+     16| //!    per-frame corrected detail spans 5.31-18.66 DN. Fact 442, **as corrected
+     17| //!    by fact 597**: the reference frames of the four flat ROIs are 53.3 %,
+     18| //!    50.9 %, 80.0 % and 72.2 % scene structure by variance. (Fact 442
+>>   19| //!    originally published the last two as 90.0 % and 86.1 %; they are the two
+     20| //!    ISO-50 ROIs and M47 re-measured them through the fact-550 gain fix. The
+     21| //!    two ISO-160 figures are unchanged, and the conclusion is unchanged: all
+     22| //!    four are structure-dominated.)
+     23| //! 2. **The denominator was one privileged frame.** Fact 441: holding the merge
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:29] cites [469]
+     25| //!    ratio 1.0245x-1.3252x on `109MSDCF` and **1.0000x-1.5989x** on
+     26| //!    `119MSDCF`. A single published number that moves 1.60x over an unstated
+     27| //!    choice is not a measurement.
+     28| //!
+>>   29| //! Defect 1 is answered by [`highpass_sd`], defect 2 by [`FlatReference`],
+     30| //! which keeps the whole per-frame distribution and refuses to name one
+     31| //! denominator.
+     32| //!
+     33| //! # The kernel, and its reconciliation with fact 469
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:32] cites [469]
+     28| //!
+     29| //! Defect 1 is answered by [`highpass_sd`], defect 2 by [`FlatReference`],
+     30| //! which keeps the whole per-frame distribution and refuses to name one
+     31| //! denominator.
+>>   32| //!
+     33| //! # The kernel, and its reconciliation with fact 469
+     34| //!
+     35| //! The operator is `x - box_w(x)` at `w = `[`HP_BOX_SIDE`]` = 9`, which is
+     36| //! exactly the kernel that produced fact 469 — M41's
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:36] cites [469]
+     32| //!
+     33| //! # The kernel, and its reconciliation with fact 469
+     34| //!
+     35| //! The operator is `x - box_w(x)` at `w = `[`HP_BOX_SIDE`]` = 9`, which is
+>>   36| //! exactly the kernel that produced fact 469 — M41's
+     37| //! `hp_sd(a, w=9) = (a - scipy.ndimage.uniform_filter(a, 9)).std()`. Two
+     38| //! conventions differ and the difference was measured rather than assumed
+     39| //! (`experiments/m53-flat-ratio/out/a1_reconcile.log`, on `109MSDCF` frame 11,
+     40| //! plane ROI 1356,32,512,512 — the exact input behind fact 469's denominator):
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:90] cites [469]
+     86| //! **1.2756x** (`109MSDCF`) and **1.9101x** (`119MSDCF`, at the stale ISO-50
+     87| //! gain M41 measured with; **1.3490x** at the gain the code ships today, since
+     88| //! SYNTHESIS fact 550 doubled `g` at ISO 50 and sigma goes as its square root),
+     89| //! against the legacy raw statistic's **8.70x** and **19.07x**. So the
+>>   90| //! replacement does not remove the under-report, it shrinks it by 6.8x / 14.1x
+     91| //! and — unlike the raw ratio — **prints the residual bound next to the
+     92| //! number**.
+     93| //!
+     94| //! A narrower box shrinks it further: `w = 3` measures 1.0234x on `109MSDCF`
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:223] cites [469]
+    219|     }
+    220| }
+    221| 
+    222| /// The three numbers one frame's flat ROI contributes.
+>>  223| #[derive(Debug, Clone, Copy, PartialEq)]
+    224| pub struct FrameFlat {
+    225|     /// Black-subtracted mean over the ROI, DN.
+    226|     pub mean: f64,
+    227|     /// Raw spatial sd, DN. **Legacy.** Kept only so that the number the corpus
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:245] cites [441]
+    241|         mean,
+    242|         raw_sd,
+    243|         hp_sd: highpass_sd(roi, width, height),
+    244|     }
+>>  245| }
+    246| 
+    247| /// A ratio against the whole per-frame reference distribution.
+    248| ///
+    249| /// `median` is the point estimate; `lo` and `hi` are what the same merge would
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:271] cites [441]
+    267|         if self.lo > 0.0 {
+    268|             self.hi / self.lo
+    269|         } else {
+    270|             f64::INFINITY
+>>  271|         }
+    272|     }
+    273| }
+    274| 
+    275| /// Every frame's flat-ROI high-pass sd, sorted, with the frame each came from.
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:334] cites [441]
+    330|     #[must_use]
+    331|     pub fn max(&self) -> f64 {
+    332|         self.sorted[self.sorted.len() - 1].0
+    333|     }
+>>  334| 
+    335|     #[must_use]
+    336|     pub fn max_frame(&self) -> u16 {
+    337|         self.sorted[self.sorted.len() - 1].1
+    338|     }
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:385] cites [469]
+    381|         }
+    382|     }
+    383| 
+    384|     fn noise_field(seed: u64, n: usize, sigma: f32) -> Vec<f32> {
+>>  385|         let mut rng = Rng::new(seed);
+    386|         (0..n * n).map(|_| sigma * rng.normal()).collect()
+    387|     }
+    388| 
+    389|     /// Low-frequency scene structure with no noise in it at all. Amplitudes and
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:504] cites [469]
+    500|         let ramp: Vec<f32> = (0..N)
+    501|             .flat_map(|y| (0..N).map(move |x| 3.0 * x as f32 - 2.0 * y as f32 + 500.0))
+    502|             .collect();
+    503|         assert!(
+>>  504|             mean_and_sd(&ramp).1 > 50.0,
+    505|             "the fixture must have structure"
+    506|         );
+    507|         assert!(highpass_sd(&ramp, N, N).expect("fits") < 1e-2);
+    508|     }
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:509] cites [469]
+    505|             "the fixture must have structure"
+    506|         );
+    507|         assert!(highpass_sd(&ramp, N, N).expect("fits") < 1e-2);
+    508|     }
+>>  509| 
+    510|     /// Fact 469's mechanism, in a unit test: on a structured ROI the raw sd
+    511|     /// reads many times the noise while the high-pass sd reads the noise.
+    512|     #[test]
+    513|     fn the_raw_sd_is_structure_dominated_where_the_high_pass_sd_is_not() {
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:584] cites [441]
+    580|             "high-pass ratio {hp_ratio:.3}x against a predicted {predicted:.3}x \
+    581|              (= planted {K}x / contamination {contamination:.4}x)"
+    582|         );
+    583|         assert!(
+>>  584|             hp_ratio > 4.0 * legacy_ratio,
+    585|             "high-pass {hp_ratio:.3}x vs legacy {legacy_ratio:.3}x: the replacement \
+    586|              must be a large multiple better, not a rounding better"
+    587|         );
+    588|     }
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:594] cites [441]
+    590|     /// Fact 441, made unrepresentable. The fixture is fact 441's own measured
+    591|     /// range on `119MSDCF` — 1.0000x to 1.5989x over the choice of denominator —
+    592|     /// so the assertion's other term is a number in `SYNTHESIS.md` a human can
+    593|     /// go and read.
+>>  594|     #[test]
+    595|     fn the_reference_is_the_whole_frame_distribution_not_one_frame() {
+    596|         let per_frame: Vec<(u16, f64)> = vec![
+    597|             (0, 10.0),
+    598|             (1, 12.4),
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/flat_ratio.rs:607] cites [441]
+    603|         let r = FlatReference::new(&per_frame).expect("five valid frames");
+    604|         assert_eq!(r.frames(), 5);
+    605|         assert_eq!(r.min_frame(), 0);
+    606|         assert_eq!(r.max_frame(), 3);
+>>  607|         assert!((r.min() - 10.0).abs() < 1e-12);
+    608|         assert!((r.max() - 15.989).abs() < 1e-12);
+    609|         assert!((r.median() - 12.4).abs() < 1e-12);
+    610|         assert_eq!(r.median_frame(), 1);
+    611|         assert!(

@@ -1,0 +1,13 @@
+####################################################################################################
+crates/strehl-core/src/clip.rs
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/clip.rs:21] cites [73]
+     17| //! f_max` is then 1.0 by construction.
+     18| //!
+     19| //! This is the failure discipline 29 does **not** protect against. Discipline 29
+     20| //! chose cross-frame contrast over focus magnitude because magnitude fails on
+>>   21| //! fact 73's monotone edge — but on a pinned pixel *both* candidates read their
+     22| //! maximum, so they fail in the same direction and the choice buys nothing.
+     23| //!
+     24| //! # The two white levels, and why both are right
+     25| //!

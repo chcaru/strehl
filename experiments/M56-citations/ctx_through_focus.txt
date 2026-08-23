@@ -1,0 +1,167 @@
+####################################################################################################
+crates/strehl-core/src/through_focus.rs
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:82] cites [261, 283]
+     78| /// budget and that is the size that was agreed.
+     79| ///
+     80| /// **The truncation is real and it binds in exactly the place confidence lives.**
+     81| /// M34 measured the posterior to be a delta at 76.5% of pixels, with p99
+>>   82| /// perplexity 4.74 and a maximum of 39.05 (facts 261, 283). A top-4 list can
+     83| /// represent a perplexity of at most 4, so the p99 pixel is *at the cap*. The
+     84| /// consequence is stated rather than papered over: quantities derived from
+     85| /// [`ThroughFocus::top_values`] are trustworthy as values in the body of the
+     86| /// distribution and only as a **saturation flag** in the tail. The perplexity
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:164] cites [272]
+    160|     anchor_focus: Vec<f32>,
+    161|     /// Fine response at `k* - 1`, `k*`, `k* + 1`. [`f32::NAN`] where the slot is
+    162|     /// off the end of the stack or has not been folded.
+    163|     triple: Vec<[f32; 3]>,
+>>  164|     /// Minimum fine response over every frame. The fit baseline (fact 272).
+    165|     floor: Vec<f32>,
+    166|     /// The `TOP_K` largest fine responses, descending.
+    167|     top_val: Vec<[f32; TOP_K]>,
+    168|     /// Their frame indices, ties to the lower index.
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:207] cites [19]
+    203|     ///
+    204|     /// `perm[k]` is the index frame `k` will be folded under; the anchor becomes
+    205|     /// `perm[k*]`. Every pixel therefore sees exactly the same *multiset* of
+    206|     /// responses and exactly the same winning value, and only the mapping from
+>>  207|     /// response to focus position is destroyed. Fact 19's placebo — same winner
+    208|     /// histogram, decorrelated from the pixel's own noise, reading 0.981x — is
+    209|     /// the model this follows.
+    210|     ///
+    211|     /// # What it is a null for, and what it is not
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:284] cites [260]
+    280|     /// Temperature of the posterior sums, in regularised response units.
+    281|     ///
+    282|     /// The **calibrated** scale, from the injected noise model by way of
+    283|     /// [`FOCUS_NOISE_SD`] — never `std_k(f_k)`. M32 measured the self-normalised
+>>  284|     /// alternative to be blind and non-monotone (fact 260) and SYNTHESIS
+    285|     /// discipline 120 forbids shipping it. It is the standard deviation of a
+    286|     /// *difference* of two responses, matching
+    287|     /// [`Gate::tolerance`](crate::merge::Gate::tolerance) at threshold 1, so the
+    288|     /// soft posterior and the hard gate are on one scale by construction.
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:423] cites [273]
+    419|     /// Sub-frame offset of the peak from the anchor, in frames.
+    420|     ///
+    421|     /// Three-point parabola through the fine responses at `k* - 1, k*, k* + 1`.
+    422|     /// M33 measured the parabola to be 4.03x better than argmax at recovering
+>>  423|     /// peak **position** and only 9.4% worse than a log-domain fit (fact 273), so
+    424|     /// for position it is the right instrument and the extra logarithms are not
+    425|     /// worth it. **It is disqualifying for peak HEIGHT** — that is the same
+    426|     /// fact — which is why [`subframe_deficit`](Self::subframe_deficit) does not
+    427|     /// use it.
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:448] cites [272, 302, 304]
+    444|     /// Confidence channel **C3** of M34's vector, and the reason the log domain
+    445|     /// is not optional. M33/M35 measured a **log-domain fit with the baseline
+    446|     /// subtracted** to beat the linear parabola on peak height on all three
+    447|     /// stacks tested (2.05x / 1.53x / 1.79x), with 91% of the margin coming from
+>>  448|     /// the log domain and 9% from the baseline (facts 272, 302, 304). The
+    449|     /// baseline used here is [`floor`](Self::floor), the curve's own minimum over
+    450|     /// the whole stack, which is why the floor is carried at all.
+    451|     ///
+    452|     /// The value is `1 - f(k*) / f(peak)` on baseline-subtracted responses, so it
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:609] cites [283]
+    605|     /// cannot tell.
+    606|     ///
+    607|     /// **Untruncated.** It is computed from the two exact sums `Z` and `W`, not
+    608|     /// from the top-k list, so it is not capped at [`TOP_K`] and it is the
+>>  609|     /// channel to use where fact 283's tail matters. The identity is
+    610|     /// `H = ln Z - W / Z`, which needs no per-frame revisit.
+    611|     ///
+    612|     /// It is measured on the **regularised** field, deliberately: this is the
+    613|     /// posterior over the quantity the merge actually decides on, so it is
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:619] cites [262]
+    615|     /// rather than being a second opinion on a different scale.
+    616|     ///
+    617|     /// M32's warning applies to any *threshold* placed on it: the no-information
+    618|     /// fixed point of a softmax posterior is not `H / ln n = 1` and drifts with
+>>  619|     /// `n` (fact 262), so a normalised-entropy cut must be simulated per frame
+    620|     /// count and never reasoned about.
+    621|     pub fn posterior_perplexity(&self, i: usize) -> f32 {
+    622|         let z = self.z[i] as f64;
+    623|         // A pixel that folded no frame, or folded NaN, has a degenerate
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:637] cites [300]
+    633|     /// Did the winner land on the first or last frame of the stack?
+    634|     ///
+    635|     /// Confidence channel **C4**, and the same definition as
+    636|     /// [`Estimator::at_bracket_boundary`](crate::merge::Estimator::at_bracket_boundary):
+>>  637|     /// one frame deep, on the regularised winner. Not fact 300's quantity — see
+    638|     /// that method for why the two must never be quoted as one number.
+    639|     pub fn at_bracket_boundary(&self, i: usize) -> bool {
+    640|         let k = self.anchor[i];
+    641|         k == 0 || k == self.max_index
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:663] cites [280, 281, 282]
+    659| ///
+    660| /// A vector, not a score, and that is a measured finding rather than a taste:
+    661| /// M34 found C1 to be *anti*-correlated with C3's target — selecting the worst
+    662| /// 5% by predicted sigma gives only a **0.89x** lift on sub-frame deficit — so
+>>  663| /// **no monotone scalar summary of these channels is faithful** (facts 280-282).
+    664| /// The honest "do not trust this pixel" answer is the *union* of the channels'
+    665| /// tails, which M34 measured at 14.278% of pixels, not a weighted sum.
+    666| ///
+    667| /// Publishing a single number here would be the defect, so this type
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:755] cites [280, 281, 282]
+    751| /// Takes the worst `tail` fraction of each numeric channel independently and
+    752| /// ORs them with the flag bits. This is M34's construction and its 14.278%
+    753| /// figure is what a `tail` of 0.05 produced there.
+    754| ///
+>>  755| /// The union is deliberately not a vote or a weighted sum. Facts 280-282 measured
+    756| /// the channels to disagree about which pixels are bad — which is what makes each
+    757| /// one worth carrying and what makes any scalar collapse of them a lie.
+    758| pub fn do_not_trust_mask(vectors: &[ConfidenceVector], tail: f64) -> (Vec<bool>, MaskBreakdown) {
+    759|     let mut b = MaskBreakdown {
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:1299] cites [272, 304]
+   1295|         );
+   1296|     }
+   1297| 
+   1298|     /// A Gaussian peak's log is exactly a parabola, so the log fit must recover
+>> 1299|     /// its height exactly where the linear fit cannot. This is fact 272/304's
+   1300|     /// margin, reproduced as a unit test rather than cited.
+   1301|     #[test]
+   1302|     fn the_log_fit_beats_a_linear_fit_on_peak_height() {
+   1303|         let n = 9u16;
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:1631] cites [19]
+   1627|     }
+   1628| 
+   1629|     // ---- the placebo ----
+   1630| 
+>> 1631|     /// The placebo must preserve exactly what fact 19's placebo preserved — the
+   1632|     /// multiset of responses and the winning value — and destroy only adjacency.
+   1633|     /// A permutation that changed the floor or the top-k would be measuring
+   1634|     /// something other than ordering.
+   1635|     #[test]
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:1862] cites [341]
+   1858|     /// whatever selection penalty has been measured — **currently none**.
+   1859|     ///
+   1860|     /// This test used to assert `one > model`, pricing selection at M40-refuted
+   1861|     /// 1.074x. That constant is gone (see [`crate::merge::SELECTION_INFLATION`])
+>> 1862|     /// and with it the guarantee. **Fact 341 is open again and this test now
+   1863|     /// pins the gap rather than papering over it**: at `n = 1` the model reports
+   1864|     /// exactly the single-frame sigma, which is known to be optimistic because
+   1865|     /// the argmax prefers frames whose noise pointed upward.
+   1866|     ///
+--------------------------------------------------------------------------------
+[crates/strehl-core/src/through_focus.rs:1887] cites [341]
+   1883|         assert!(
+   1884|             (one - model).abs() < 1e-6,
+   1885|             "KNOWN GAP, not a passing property: with no measured penalty, n = 1 \
+   1886|              reports the bare single-frame sigma ({one} vs {model}). This is \
+>> 1887|              fact 341. When a penalty is measured this assertion is the one to \
+   1888|              delete, and the `one > model` guarantee returns with it"
+   1889|         );
+   1890|         assert!(
+   1891|             (four - model / 2.0).abs() < 1e-6,
