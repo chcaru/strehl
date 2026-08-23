@@ -644,6 +644,255 @@ def w13_vs_w14():
     print("  mean regret (DN), 30 step>0 cells, all seeds.")
 
 
+def null_stratum():
+    """The registered null said every zero-step argmin must be an ENDPOINT.
+    Above g=9 it is not. Decide whether that is a tie-plateau (label artefact)
+    or a genuine turnover (a real finding that rescopes fact 61)."""
+    sec("14. THE NULL STRATUM -- is the interior zero-step argmin real or a tie?")
+    print("stratum: the 6 cells with step == 0, all seeds, E_excess.")
+    print("Registered null (fact 61): at width 1 wider is always better on a scene")
+    print("with no depth step, so w* must be the ENDPOINT w40. Above g=9 it is not.")
+    files = [os.path.join(DATA, f"edge-{s}.csv") for s in STACKS]
+    bw = load_edge(files)
+    widths = sorted(bw)
+    tab, ladder = {}, None
+    wstars = {}
+    for g in widths:
+        cells = {k: v for k, v in cell_values(bw, g, "excess_dn").items() if k[2] == 0}
+        ladder = sorted({w for d in cells.values() for w in d})
+        rank = regret_table(cells, ladder)
+        wstars[g] = min(rank, key=lambda t: t[1])[0]
+        for w, m, _, _ in rank:
+            tab[(w, g)] = m
+    print()
+    print("   w  | " + " ".join(f"{('g=' + str(g)):>8}" for g in widths))
+    print("  ----+" + "-" * (9 * len(widths)))
+    for w in ladder:
+        print(f"  {w:>3} | " + " ".join(f"{tab.get((w, g), float('nan')):>8.4f}"
+                                        for g in widths))
+    print()
+    print("  Is the rise from w* to the w40 endpoint bigger than the seed noise floor?")
+    print(f"  {'width':>6} {'w*':>4} {'regret@w40':>11} {'seed sd':>9} "
+          f"{'sd of a 6-cell mean':>21} {'verdict':>28}")
+    for g in widths:
+        sds = []
+        for cell, wins in bw[g].items():
+            if cell[2] != 0:
+                continue
+            for w, rows in wins.items():
+                vals = [float(r["excess_dn"]) for r in rows]
+                if len(vals) > 1:
+                    sds.append(sd(vals))
+        s = med(sds)
+        se = s / math.sqrt(5) / math.sqrt(6)
+        r40 = tab[(40, g)]
+        verdict = ("TIE -- label artefact" if r40 <= 3 * se
+                   else "REAL turnover, above noise")
+        print(f"  {g:>6} {wstars[g]:>4} {r40:>11.4f} {s:>9.4f} {se:>21.4f} "
+              f"{verdict:>28}")
+    print()
+    print("  seed sd = median over (cell, window) groups of the sd of excess_dn")
+    print("  across the 5 seeds; sd of a 6-cell mean = sd / sqrt(5) / sqrt(6).")
+    print("  A 3-sigma bar is used so a plateau is not mistaken for a turnover.")
+    return wstars
+
+
+def substitution_by_stratum():
+    """The decisive contrast: the substitution rate on cells whose ONLY problem
+    is variance (step == 0), against cells that also carry an occlusion halo."""
+    sec("15. SUBSTITUTION RATE BY STRATUM -- where the substitution actually happens")
+    files = [os.path.join(DATA, f"edge-{s}.csv") for s in STACKS]
+    bw = load_edge(files)
+    widths = sorted(bw)
+    rows = {}
+    for name, keep in (("step > 0 (decision: variance AND halo)", lambda k: k[2] > 0),
+                       ("step = 0 (null: variance ONLY)", lambda k: k[2] == 0)):
+        ws = []
+        for g in widths:
+            cells = {k: v for k, v in cell_values(bw, g, "excess_dn").items() if keep(k)}
+            ladder = sorted({w for d in cells.values() for w in d})
+            ws.append(min(regret_table(cells, ladder), key=lambda t: t[1])[0])
+        rows[name] = ws
+    print()
+    print(f"  {'stratum':>38} " + " ".join(f"{('g=' + str(g)):>6}" for g in widths))
+    for name, ws in rows.items():
+        print(f"  {name:>38} " + " ".join(f"{w:>6}" for w in ws))
+    print()
+    print("  OLS slope of w* on regulariser radius r = (g-1)/2.")
+    print("  H_sub predicts s = 1 (the regulariser buys the window's benefit 1:1);")
+    print("  H_none predicts s = 0.")
+    print()
+    print(f"  {'stratum':>38} {'ladder':>22} {'s (OLS)':>9} {'r^2-ish':>9}")
+    for name, ws in rows.items():
+        for tag, sub in (("all 9 widths", widths),
+                         ("g <= 33 (drop g=49)", [g for g in widths if g <= 33]),
+                         ("g <= 17 (ship range)", [g for g in widths if g <= 17])):
+            idx = [widths.index(g) for g in sub]
+            rs = [(widths[i] - 1) / 2 for i in idx]
+            ys = [ws[i] for i in idx]
+            b, a = ols(rs, ys)
+            pred = [a + b * r for r in rs]
+            my = sum(ys) / len(ys)
+            sst = sum((y - my) ** 2 for y in ys)
+            sse = sum((y - p) ** 2 for y, p in zip(ys, pred))
+            r2 = (1 - sse / sst) if sst > 0 else float("nan")
+            print(f"  {name:>38} {tag:>22} {-b:>9.4f} {r2:>9.4f}")
+    print()
+    print("  This is the control that the design CAN resolve a moving optimum:")
+    print("  the null stratum, where the window's only job is variance reduction,")
+    print("  moves exactly as H_sub predicts. The decision stratum does not.")
+    return rows
+
+
+def worst_driver(surf):
+    sec("16. THE WORST-CASE ARM -- which cell drives worstregret(w13, g), and why")
+    if not surf:
+        return
+    files = [os.path.join(DATA, f"edge-{s}.csv") for s in STACKS]
+    bw = load_edge(files)
+    print("  The registered worst-case gate compares worstregret(w13, g) with M13's")
+    print(f"  published {THRESH_WORST} DN. It FAILS above g=1. This section asks whether")
+    print("  that is w13 getting worse, or the per-cell optima dispersing.")
+    print()
+    print(f"  {'width':>6} {'worst@w13':>10} {'driving cell':>30} {'w* there':>9} "
+          f"{'E@w13':>9} {'E@w* there':>11} {'mean E@w13':>11}")
+    for g in sorted(surf):
+        cells = {k: v for k, v in cell_values(bw, g, "excess_dn").items() if k[2] > 0}
+        ladder = sorted({w for d in cells.values() for w in d})
+        rank = {t[0]: t for t in regret_table(cells, ladder)}
+        w, mean, worst, cellk = rank[13]
+        d = cells[cellk]
+        wbest = min(d, key=lambda k: d[k])
+        tag = f"{cellk[0]}/{cellk[1]}/s{cellk[2]}"
+        meanE = sum(v[13] for v in cells.values()) / len(cells)
+        print(f"  {g:>6} {worst:>10.3f} {tag:>30} {wbest:>9} "
+              f"{d[13]:>9.2f} {d[wbest]:>11.2f} {meanE:>11.2f}")
+    print()
+    print("  E@w13 is absolute reconstruction error over the floor, NOT regret, so it")
+    print("  IS comparable across columns. If E@w13 falls while worstregret rises, the")
+    print("  gate is firing on dispersion of the per-cell optima, not on w13 degrading.")
+
+
+def roi_trap():
+    sec("17. THE ROI TRAP -- flat ROIs taken from M11's COMMITTED CSVs, verified")
+    print("SYNTHESIS: run-m11.ps1 does not list the ROIs in M11's committed CSVs.")
+    print("M15's noise ROIs came via M13's run-m13.ps1, which took them from the")
+    print("committed data. This checks them against M11's committed CSVs directly.")
+    print()
+    print(f"  {'stack':>10} {'roi':>22} {'M11 single_sigma':>18} {'M15 single_sigma':>18} "
+          f"{'match':>7}")
+    allok = True
+    for s in STACKS:
+        m11 = os.path.join(HERE, "..", "m11-focus-bakeoff", "data", f"noise-{s}.csv")
+        m15 = os.path.join(DATA, f"noise-{s}.csv")
+        if not (os.path.exists(m11) and os.path.exists(m15)):
+            print(f"  {s:>10}  missing CSV, skipped")
+            continue
+        def flats(p):
+            out = {}
+            for r in read_csv(p):
+                if r.get("roi_kind") != "flat":
+                    continue
+                out.setdefault(r["roi"], []).append(float(r["single_sigma"]))
+            return {k: med(v) for k, v in out.items()}
+        a, b = flats(m11), flats(m15)
+        for roi in sorted(set(a) | set(b)):
+            ok = roi in a and roi in b and abs(a[roi] - b[roi]) < 1e-4
+            allok = allok and ok
+            print(f"  {s:>10} {roi:>22} {a.get(roi, float('nan')):>18.4f} "
+                  f"{b.get(roi, float('nan')):>18.4f} {('OK' if ok else 'MISMATCH'):>7}")
+    print()
+    print(f"  ==> {'PASS' if allok else 'FAIL'}: M15's flat ROIs are the same pixels as "
+          f"M11's committed flat ROIs.")
+    print("  NOTE: the 28-30 DN flat-ROI discriminator is 109MSDCF-specific. M11's own")
+    print("  committed data puts 119MSDCF flat ROIs at 43-53 DN. Applying the 109 band")
+    print("  to 119 would wrongly reject correct ROIs.")
+
+
+def spotlight(cells_wanted=(("119MSDCF", "vertical", 32), ("109MSDCF", "horizontal", 32))):
+    sec("18. SPOTLIGHT -- the ladder of the cells that drive the worst case")
+    print("Absolute E_excess (DN over the per-cell irreducible floor), seed-averaged.")
+    print("These are NOT regret, so every number here is comparable across columns.")
+    files = [os.path.join(DATA, f"edge-{s}.csv") for s in STACKS]
+    bw = load_edge(files)
+    widths = sorted(bw)
+    for key in cells_wanted:
+        print()
+        print(f"  cell {key[0]}/{key[1]}/s{key[2]}")
+        cells1 = cell_values(bw, widths[0], "excess_dn")
+        ladder = sorted(next(iter(cells1.values())))
+        print("   w  | " + " ".join(f"{('g=' + str(g)):>8}" for g in widths))
+        print("  ----+" + "-" * (9 * len(widths)))
+        for w in ladder:
+            row = []
+            for g in widths:
+                d = cell_values(bw, g, "excess_dn").get(key, {})
+                row.append(f"{d.get(w, float('nan')):>8.2f}")
+            print(f"  {w:>3} | " + " ".join(row))
+        best = []
+        for g in widths:
+            d = cell_values(bw, g, "excess_dn").get(key, {})
+            bw_ = min(d, key=lambda k: d[k])
+            best.append((g, bw_, d[bw_], d.get(13, float("nan"))))
+        print()
+        print(f"  {'width':>6} {'w* here':>8} {'E@w*':>9} {'E@w13':>9} {'w13 penalty':>12}")
+        for g, b, e, e13 in best:
+            print(f"  {g:>6} {b:>8} {e:>9.2f} {e13:>9.2f} {e13 - e:>12.2f}")
+
+
+def by_geometry():
+    sec("19. THE SHIFT BY EDGE GEOMETRY -- the flat aggregate is a cancellation")
+    print("Per-cell argmin over the 24-window ladder, E_excess, seed-averaged,")
+    print("at the control g=1 and at the project's reference g=17.")
+    files = [os.path.join(DATA, f"edge-{s}.csv") for s in STACKS]
+    bw = load_edge(files)
+    c1 = {k: v for k, v in cell_values(bw, 1, "excess_dn").items() if k[2] > 0}
+    c17 = {k: v for k, v in cell_values(bw, 17, "excess_dn").items() if k[2] > 0}
+    groups = {}
+    for k in sorted(c1):
+        if k not in c17:
+            continue
+        a = min(c1[k], key=lambda w: c1[k][w])
+        b = min(c17[k], key=lambda w: c17[k][w])
+        groups.setdefault(k[1], []).append((k, a, b, b - a))
+    print()
+    print(f"  {'geometry':>12} {'cells':>6} {'median w*(1)':>13} {'median w*(17)':>14} "
+          f"{'median shift':>13} {'narrower':>9} {'wider':>6} {'same':>5}")
+    for shape in sorted(groups):
+        rs = groups[shape]
+        print(f"  {shape:>12} {len(rs):>6} {med([r[1] for r in rs]):>13.1f} "
+              f"{med([r[2] for r in rs]):>14.1f} {med([r[3] for r in rs]):>13.1f} "
+              f"{sum(1 for r in rs if r[3] < 0):>9} {sum(1 for r in rs if r[3] > 0):>6} "
+              f"{sum(1 for r in rs if r[3] == 0):>5}")
+    allr = [r for rs in groups.values() for r in rs]
+    print(f"  {'ALL':>12} {len(allr):>6} {med([r[1] for r in allr]):>13.1f} "
+          f"{med([r[2] for r in allr]):>14.1f} {med([r[3] for r in allr]):>13.1f} "
+          f"{sum(1 for r in allr if r[3] < 0):>9} {sum(1 for r in allr if r[3] > 0):>6} "
+          f"{sum(1 for r in allr if r[3] == 0):>5}")
+    print()
+    print("  A flat aggregate optimum is NOT the same as no movement: opposite")
+    print("  cell-level shifts of comparable size cancel in the mean.")
+    print()
+    print("  The same stratification applied to M13's OWN COMMITTED CSVs (width 1,")
+    print("  20-window ladder, its 3 seeds) -- does M13's w13 also hide a spread?")
+    m13 = load_edge([os.path.join(M13_DATA, f"edge-{s}.csv") for s in STACKS])
+    if 1 in m13:
+        cm = {k: v for k, v in cell_values(m13, 1, "excess_dn").items() if k[2] > 0}
+        g2 = {}
+        for k, d in cm.items():
+            g2.setdefault(k[1], []).append(min(d, key=lambda w: d[w]))
+        print(f"    {'geometry':>12} {'cells':>6} {'median w*':>10} {'min':>5} {'max':>5}")
+        for shape in sorted(g2):
+            v = g2[shape]
+            print(f"    {shape:>12} {len(v):>6} {med(v):>10.1f} {min(v):>5} {max(v):>5}")
+        allv = [w for v in g2.values() for w in v]
+        print(f"    {'ALL':>12} {len(allv):>6} {med(allv):>10.1f} {min(allv):>5} "
+              f"{max(allv):>5}")
+        print("    source: experiments/m13-window-depth/data/edge-*.csv (M13's bytes,")
+        print("    not M15's sweep). M13's headline w13 is itself an aggregate over")
+        print("    cells whose own optima span this range.")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out")
@@ -674,6 +923,12 @@ def main():
         secondary()
         blind_spot()
         noise_ladder()
+        null_stratum()
+        substitution_by_stratum()
+        worst_driver(surf)
+        roi_trap()
+        spotlight()
+        by_geometry()
     finally:
         sys.stdout = old
         if stream:

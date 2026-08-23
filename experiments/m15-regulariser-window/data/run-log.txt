@@ -1,0 +1,931 @@
+C:\dev\macro files=18530 bytes=286893514060 newest_mtime_unix=1779077256
+D:\macro-dark-frames files=242 bytes=8179392512 newest_mtime_unix=1787435426
+D:\personal\macro files=632 bytes=18194001522 newest_mtime_unix=1779772901
+M13 self-test — 27 passed, 0 failed
+
+A. the window axis is what the name says it is
+  PASS  support radius tracks the window  tenengrad-w0 -> radius 1
+  PASS  support radius tracks the window  tenengrad-w2 -> radius 3
+  PASS  support radius tracks the window  tenengrad-w5 -> radius 6
+  PASS  support radius tracks the window  tenengrad-w11 -> radius 12
+  PASS  support radius tracks the window  tenengrad-w20 -> radius 21
+  PASS  support radius tracks the window  tenengrad-w40 -> radius 41
+  PASS  tap count is the analytic support  w0: 9 taps, analytic 9
+  PASS  tap count is the analytic support  w2: 49 taps, analytic 49
+  PASS  tap count is the analytic support  w5: 169 taps, analytic 169
+  PASS  tap count is the analytic support  w11: 625 taps, analytic 625
+
+B. the window's effect on the centre tap, decomposed
+  PASS  un-normalised: phi is non-increasing in window for w >= 1  w1=0.0912 w2=0.0371 w5=0.0081 w8=0.0034 w11=0.0019 w15=0.0010 w20=0.0006 
+  PASS  the zero-centre-tap configuration is exactly zero  phi = 0.000000000
+  PASS  OBSERVED (not asserted): pointwise-normalised phi on SYNTHETIC texture  w0=0.0140 w2=0.0598 w5=0.0316 w8=0.0271 w11=0.0256 w20=0.0243 — compare M11 A1 on real texture in phi mode
+
+C. the occluding-edge plant
+  PASS  a zero depth step renders the ideal image exactly  max |frame[w] - ideal| = 0.00e0 DN
+  PASS  far from the boundary each layer's own frame is ideal  occluder 0.00e0, background 0.00e0
+  PASS  the oracle CANNOT reconstruct the ideal at the boundary  oracle RMS at d in [0,6) = 294.96 DN — the irreducible floor
+
+D. the halo metric: null, positive control, and chance
+  PASS  NULL 1: ground-truth selection has zero bleed  bleed_bg = 0.000e0 px, bleed_fg = 0.000e0 px
+  PASS  NULL 1: ground-truth selection has zero excess error  excess = 0.000e0 DN
+  PASS  NULL 1: ground-truth selection has zero mis-selection width  mis_bg = 0.000e0 px, mis_fg = 0.000e0 px
+  PASS  NULL 2: a real operator on a zero-step scene has zero bleed  tenengrad-w11 bleed_bg = 0.000e0 px (intensity edge present, depth step absent)
+  PASS  NULL 2: the mis-selection width is near zero too (no exact null available)  tenengrad-w11 mis_bg = 0.000 px against a far-field baseline
+  PASS  POSITIVE: a planted halo of known width is recovered exactly by both widths  planted->bleed/mis (convention: d starts at 1): 1->0.0/0.0 3->2.0/2.0 8->7.0/7.0 17->16.0/16.0 32->31.0/31.0 64->63.0/63.0 
+  PASS  COMPLEMENTARITY: a compromise election is invisible to bleed, visible to mis  r4: bleed 0.0 mis 3.0  r12: bleed 0.0 mis 11.0  r30: bleed 0.0 mis 29.0  
+  PASS  CHANCE: a random selector shows no bleed WIDTH but large excess error  bleed_bg = 1.59 px, excess = 117.2 DN — the two metrics see different damage
+
+E. tile exactness at the widest window in the sweep (rule 7 corollary)
+  PASS  winner map is margin-independent on the inset  tenengrad-w5, reg width 9
+  PASS  winner map is margin-independent on the inset  tenengrad-w11, reg width 9
+  PASS  winner map is margin-independent on the inset  tenengrad-w20, reg width 9
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+stack 109MSDCF roi 2272,1344,256,256
+  ring-1-3         width  1: N = 1.2527x
+  ring-1-3         width 17: N = 1.0737x
+  tenengrad-w5     width  1: N = 1.0935x
+  tenengrad-w5     width 17: N = 1.0760x
+  tenengrad-w11    width  1: N = 1.0695x
+  tenengrad-w11    width 17: N = 1.0751x
+
+M2 published ring-1-3 at width 1 = 1.2527x and width 17 = 1.0737x on this ROI
+(reproduced by M11's harness to 4 dp). M11's cross-stack aggregate for
+tenengrad-w5 is 1.1324x and for tenengrad-w11 1.0908x; those are medians over
+four flat ROIs and a mean over two stacks, so a single-ROI figure here is only
+required to be of the same magnitude, not identical.
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge: margin 82 px -> tile 548x420, ROI 384x256; 20 measures x 1 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 1.5 s
+  vertical step 2: done at 3.0 s
+  vertical step 4: done at 4.7 s
+  vertical step 8: done at 6.4 s
+  vertical step 16: done at 8.3 s
+  vertical step 32: done at 10.4 s
+  horizontal step 0: done at 12.0 s
+  horizontal step 2: done at 13.6 s
+  horizontal step 4: done at 15.2 s
+  horizontal step 8: done at 16.8 s
+  horizontal step 16: done at 18.3 s
+  horizontal step 32: done at 20.2 s
+  bar step 0: done at 21.7 s
+  bar step 2: done at 23.3 s
+  bar step 4: done at 24.8 s
+  bar step 8: done at 26.3 s
+  bar step 16: done at 27.9 s
+  bar step 32: done at 29.9 s
+wrote data\_repro-tmp.csv in 29.9 s
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge: margin 82 px -> tile 548x420, ROI 384x256; 20 measures x 1 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 1.4 s
+  vertical step 2: done at 2.9 s
+  vertical step 4: done at 4.6 s
+  vertical step 8: done at 6.1 s
+  vertical step 16: done at 7.6 s
+  vertical step 32: done at 9.7 s
+  horizontal step 0: done at 11.3 s
+  horizontal step 2: done at 12.8 s
+  horizontal step 4: done at 14.4 s
+  horizontal step 8: done at 15.9 s
+  horizontal step 16: done at 17.6 s
+  horizontal step 32: done at 19.5 s
+  bar step 0: done at 21.1 s
+  bar step 2: done at 22.7 s
+  bar step 4: done at 24.1 s
+  bar step 8: done at 25.6 s
+  bar step 16: done at 27.3 s
+  bar step 32: done at 29.4 s
+wrote data\_repro-tmp.csv in 29.4 s
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge: margin 82 px -> tile 548x420, ROI 384x256; 20 measures x 1 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 1.4 s
+  vertical step 2: done at 2.9 s
+  vertical step 4: done at 4.6 s
+  vertical step 8: done at 6.1 s
+  vertical step 16: done at 7.9 s
+  vertical step 32: done at 10.0 s
+  horizontal step 0: done at 11.6 s
+  horizontal step 2: done at 13.2 s
+  horizontal step 4: done at 14.7 s
+  horizontal step 8: done at 16.2 s
+  horizontal step 16: done at 17.9 s
+  horizontal step 32: done at 20.0 s
+  bar step 0: done at 21.5 s
+  bar step 2: done at 23.1 s
+  bar step 4: done at 24.7 s
+  bar step 8: done at 26.4 s
+  bar step 16: done at 28.0 s
+  bar step 32: done at 30.2 s
+wrote data\_repro-tmp.csv in 30.2 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge: margin 82 px -> tile 548x420, ROI 384x256; 20 measures x 1 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 1.4 s
+  vertical step 2: done at 2.8 s
+  vertical step 4: done at 4.3 s
+  vertical step 8: done at 6.0 s
+  vertical step 16: done at 7.7 s
+  vertical step 32: done at 9.8 s
+  horizontal step 0: done at 11.3 s
+  horizontal step 2: done at 12.8 s
+  horizontal step 4: done at 14.4 s
+  horizontal step 8: done at 16.0 s
+  horizontal step 16: done at 17.7 s
+  horizontal step 32: done at 19.8 s
+  bar step 0: done at 21.2 s
+  bar step 2: done at 22.6 s
+  bar step 4: done at 24.1 s
+  bar step 8: done at 25.6 s
+  bar step 16: done at 27.3 s
+  bar step 32: done at 29.4 s
+wrote data\_repro-tmp.csv in 29.4 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge: margin 82 px -> tile 548x420, ROI 384x256; 20 measures x 1 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 1.4 s
+  vertical step 2: done at 2.8 s
+  vertical step 4: done at 4.4 s
+  vertical step 8: done at 6.0 s
+  vertical step 16: done at 7.7 s
+  vertical step 32: done at 9.7 s
+  horizontal step 0: done at 11.3 s
+  horizontal step 2: done at 12.8 s
+  horizontal step 4: done at 14.3 s
+  horizontal step 8: done at 15.9 s
+  horizontal step 16: done at 17.5 s
+  horizontal step 32: done at 19.4 s
+  bar step 0: done at 20.8 s
+  bar step 2: done at 22.2 s
+  bar step 4: done at 23.7 s
+  bar step 8: done at 25.4 s
+  bar step 16: done at 27.1 s
+  bar step 32: done at 29.0 s
+wrote data\_repro-tmp.csv in 29.0 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge: margin 82 px -> tile 548x420, ROI 384x256; 20 measures x 1 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 1.4 s
+  vertical step 2: done at 2.9 s
+  vertical step 4: done at 4.5 s
+  vertical step 8: done at 6.0 s
+  vertical step 16: done at 7.7 s
+  vertical step 32: done at 9.8 s
+  horizontal step 0: done at 11.4 s
+  horizontal step 2: done at 12.9 s
+  horizontal step 4: done at 14.4 s
+  horizontal step 8: done at 16.0 s
+  horizontal step 16: done at 17.6 s
+  horizontal step 32: done at 19.5 s
+  bar step 0: done at 21.0 s
+  bar step 2: done at 22.5 s
+  bar step 4: done at 24.0 s
+  bar step 8: done at 25.6 s
+  bar step 16: done at 27.3 s
+  bar step 32: done at 29.2 s
+wrote data\_repro-tmp.csv in 29.2 s
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+margin 65 px -> tiles 386x386; 4 measures x 9 widths x 4 rois
+decoded + tiled in 0.5 s
+  roi 0 [flat] tenengrad-w5         0.0 s
+  roi 0 [flat] tenengrad-w13        0.0 s
+  roi 0 [flat] tenengrad-w40        0.0 s
+  roi 0 [flat] ring-1-3             0.0 s
+  roi 1 [flat] tenengrad-w5         0.0 s
+  roi 1 [flat] tenengrad-w13        0.0 s
+  roi 1 [flat] tenengrad-w40        0.0 s
+  roi 1 [flat] ring-1-3             0.0 s
+  roi 2 [flat] tenengrad-w5         0.0 s
+  roi 2 [flat] tenengrad-w13        0.0 s
+  roi 2 [flat] tenengrad-w40        0.0 s
+  roi 2 [flat] ring-1-3             0.0 s
+  roi 3 [flat] tenengrad-w5         0.0 s
+  roi 3 [flat] tenengrad-w13        0.0 s
+  roi 3 [flat] tenengrad-w40        0.0 s
+  roi 3 [flat] ring-1-3             0.0 s
+wrote data\noise-109MSDCF.csv in 0.7 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+margin 65 px -> tiles 386x386; 4 measures x 9 widths x 4 rois
+decoded + tiled in 0.7 s
+  roi 0 [flat] tenengrad-w5         0.0 s
+  roi 0 [flat] tenengrad-w13        0.0 s
+  roi 0 [flat] tenengrad-w40        0.0 s
+  roi 0 [flat] ring-1-3             0.0 s
+  roi 1 [flat] tenengrad-w5         0.0 s
+  roi 1 [flat] tenengrad-w13        0.0 s
+  roi 1 [flat] tenengrad-w40        0.0 s
+  roi 1 [flat] ring-1-3             0.0 s
+  roi 2 [flat] tenengrad-w5         0.0 s
+  roi 2 [flat] tenengrad-w13        0.0 s
+  roi 2 [flat] tenengrad-w40        0.0 s
+  roi 2 [flat] ring-1-3             0.0 s
+  roi 3 [flat] tenengrad-w5         0.0 s
+  roi 3 [flat] tenengrad-w13        0.0 s
+  roi 3 [flat] tenengrad-w40        0.0 s
+  roi 3 [flat] ring-1-3             0.0 s
+wrote data\noise-119MSDCF.csv in 1.1 s
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge: margin 106 px -> tile 596x468, ROI 384x256; 24 measures x 9 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 2.2 s
+  vertical step 2: done at 4.8 s
+  vertical step 4: done at 7.4 s
+  vertical step 8: done at 10.0 s
+  vertical step 16: done at 12.8 s
+  vertical step 32: done at 16.0 s
+  horizontal step 0: done at 18.7 s
+  horizontal step 2: done at 21.4 s
+  horizontal step 4: done at 24.1 s
+  horizontal step 8: done at 26.8 s
+  horizontal step 16: done at 29.4 s
+  horizontal step 32: done at 32.5 s
+  bar step 0: done at 35.0 s
+  bar step 2: done at 37.6 s
+  bar step 4: done at 40.3 s
+  bar step 8: done at 42.9 s
+  bar step 16: done at 45.8 s
+  bar step 32: done at 49.1 s
+wrote data\_edge-tmp.csv in 49.1 s
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge: margin 106 px -> tile 596x468, ROI 384x256; 24 measures x 9 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 2.7 s
+  vertical step 2: done at 5.6 s
+  vertical step 4: done at 8.4 s
+  vertical step 8: done at 11.2 s
+  vertical step 16: done at 14.1 s
+  vertical step 32: done at 17.5 s
+  horizontal step 0: done at 20.2 s
+  horizontal step 2: done at 22.9 s
+  horizontal step 4: done at 25.6 s
+  horizontal step 8: done at 28.3 s
+  horizontal step 16: done at 31.3 s
+  horizontal step 32: done at 34.7 s
+  bar step 0: done at 37.3 s
+  bar step 2: done at 39.9 s
+  bar step 4: done at 42.5 s
+  bar step 8: done at 45.2 s
+  bar step 16: done at 47.9 s
+  bar step 32: done at 51.0 s
+wrote data\_edge-tmp.csv in 51.0 s
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge: margin 106 px -> tile 596x468, ROI 384x256; 24 measures x 9 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 2.2 s
+  vertical step 2: done at 4.6 s
+  vertical step 4: done at 7.2 s
+  vertical step 8: done at 10.0 s
+  vertical step 16: done at 12.8 s
+  vertical step 32: done at 16.0 s
+  horizontal step 0: done at 18.7 s
+  horizontal step 2: done at 21.2 s
+  horizontal step 4: done at 23.9 s
+  horizontal step 8: done at 26.6 s
+  horizontal step 16: done at 29.3 s
+  horizontal step 32: done at 32.5 s
+  bar step 0: done at 35.1 s
+  bar step 2: done at 37.7 s
+  bar step 4: done at 40.3 s
+  bar step 8: done at 42.9 s
+  bar step 16: done at 45.7 s
+  bar step 32: done at 49.0 s
+wrote data\_edge-tmp.csv in 49.0 s
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge: margin 106 px -> tile 596x468, ROI 384x256; 24 measures x 9 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 2.2 s
+  vertical step 2: done at 4.8 s
+  vertical step 4: done at 7.5 s
+  vertical step 8: done at 10.3 s
+  vertical step 16: done at 13.1 s
+  vertical step 32: done at 16.3 s
+  horizontal step 0: done at 18.9 s
+  horizontal step 2: done at 21.6 s
+  horizontal step 4: done at 24.1 s
+  horizontal step 8: done at 26.8 s
+  horizontal step 16: done at 29.5 s
+  horizontal step 32: done at 32.6 s
+  bar step 0: done at 35.2 s
+  bar step 2: done at 37.8 s
+  bar step 4: done at 40.5 s
+  bar step 8: done at 43.2 s
+  bar step 16: done at 45.9 s
+  bar step 32: done at 49.1 s
+wrote data\_edge-tmp.csv in 49.1 s
+stack 109MSDCF: 22 frames, plane 3516x2344, black 512 white 15360, iso Some(160.0), noise Profile
+  edge textures from frame 9
+edge: margin 106 px -> tile 596x468, ROI 384x256; 24 measures x 9 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 2.2 s
+  vertical step 2: done at 4.8 s
+  vertical step 4: done at 7.2 s
+  vertical step 8: done at 9.9 s
+  vertical step 16: done at 12.5 s
+  vertical step 32: done at 15.6 s
+  horizontal step 0: done at 18.1 s
+  horizontal step 2: done at 20.7 s
+  horizontal step 4: done at 23.2 s
+  horizontal step 8: done at 25.9 s
+  horizontal step 16: done at 28.7 s
+  horizontal step 32: done at 31.9 s
+  bar step 0: done at 34.5 s
+  bar step 2: done at 37.1 s
+  bar step 4: done at 39.6 s
+  bar step 8: done at 42.3 s
+  bar step 16: done at 44.8 s
+  bar step 32: done at 47.6 s
+wrote data\_edge-tmp.csv in 47.6 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge: margin 106 px -> tile 596x468, ROI 384x256; 24 measures x 9 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 2.2 s
+  vertical step 2: done at 4.3 s
+  vertical step 4: done at 6.5 s
+  vertical step 8: done at 8.8 s
+  vertical step 16: done at 11.1 s
+  vertical step 32: done at 13.8 s
+  horizontal step 0: done at 16.0 s
+  horizontal step 2: done at 18.2 s
+  horizontal step 4: done at 20.4 s
+  horizontal step 8: done at 22.7 s
+  horizontal step 16: done at 25.0 s
+  horizontal step 32: done at 27.7 s
+  bar step 0: done at 29.9 s
+  bar step 2: done at 32.2 s
+  bar step 4: done at 34.4 s
+  bar step 8: done at 36.6 s
+  bar step 16: done at 39.0 s
+  bar step 32: done at 41.7 s
+wrote data\_edge-tmp.csv in 41.7 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge: margin 106 px -> tile 596x468, ROI 384x256; 24 measures x 9 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 2.2 s
+  vertical step 2: done at 4.4 s
+  vertical step 4: done at 6.6 s
+  vertical step 8: done at 8.9 s
+  vertical step 16: done at 11.2 s
+  vertical step 32: done at 13.9 s
+  horizontal step 0: done at 16.2 s
+  horizontal step 2: done at 18.4 s
+  horizontal step 4: done at 20.7 s
+  horizontal step 8: done at 23.1 s
+  horizontal step 16: done at 25.4 s
+  horizontal step 32: done at 28.1 s
+  bar step 0: done at 30.3 s
+  bar step 2: done at 32.5 s
+  bar step 4: done at 34.7 s
+  bar step 8: done at 36.9 s
+  bar step 16: done at 39.2 s
+  bar step 32: done at 41.9 s
+wrote data\_edge-tmp.csv in 41.9 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge: margin 106 px -> tile 596x468, ROI 384x256; 24 measures x 9 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 2.2 s
+  vertical step 2: done at 4.4 s
+  vertical step 4: done at 6.6 s
+  vertical step 8: done at 8.8 s
+  vertical step 16: done at 11.1 s
+  vertical step 32: done at 13.8 s
+  horizontal step 0: done at 16.0 s
+  horizontal step 2: done at 18.2 s
+  horizontal step 4: done at 20.4 s
+  horizontal step 8: done at 22.7 s
+  horizontal step 16: done at 25.0 s
+  horizontal step 32: done at 27.7 s
+  bar step 0: done at 29.9 s
+  bar step 2: done at 32.1 s
+  bar step 4: done at 34.3 s
+  bar step 8: done at 36.5 s
+  bar step 16: done at 38.9 s
+  bar step 32: done at 41.5 s
+wrote data\_edge-tmp.csv in 41.6 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge: margin 106 px -> tile 596x468, ROI 384x256; 24 measures x 9 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 2.2 s
+  vertical step 2: done at 4.4 s
+  vertical step 4: done at 6.6 s
+  vertical step 8: done at 8.9 s
+  vertical step 16: done at 11.2 s
+  vertical step 32: done at 14.0 s
+  horizontal step 0: done at 16.2 s
+  horizontal step 2: done at 18.4 s
+  horizontal step 4: done at 20.5 s
+  horizontal step 8: done at 22.8 s
+  horizontal step 16: done at 25.2 s
+  horizontal step 32: done at 27.8 s
+  bar step 0: done at 30.0 s
+  bar step 2: done at 32.2 s
+  bar step 4: done at 34.4 s
+  bar step 8: done at 36.7 s
+  bar step 16: done at 39.1 s
+  bar step 32: done at 41.8 s
+wrote data\_edge-tmp.csv in 41.8 s
+stack 119MSDCF: 33 frames, plane 3516x2344, black 512 white 15360, iso Some(50.0), noise Profile
+  edge textures from frame 17
+edge: margin 106 px -> tile 596x468, ROI 384x256; 24 measures x 9 widths x 6 steps x 3 shapes
+  profile: band |d| <= 24, far baseline d in [160, 188]
+  vertical step 0: done at 2.2 s
+  vertical step 2: done at 4.4 s
+  vertical step 4: done at 6.6 s
+  vertical step 8: done at 8.9 s
+  vertical step 16: done at 11.2 s
+  vertical step 32: done at 13.9 s
+  horizontal step 0: done at 16.2 s
+  horizontal step 2: done at 18.3 s
+  horizontal step 4: done at 20.5 s
+  horizontal step 8: done at 22.8 s
+  horizontal step 16: done at 25.1 s
+  horizontal step 32: done at 27.8 s
+  bar step 0: done at 29.9 s
+  bar step 2: done at 32.2 s
+  bar step 4: done at 34.4 s
+  bar step 8: done at 36.7 s
+  bar step 16: done at 39.0 s
+  bar step 32: done at 41.7 s
+wrote data\_edge-tmp.csv in 41.7 s
+C:\dev\macro files=18530 bytes=286893514060 newest_mtime_unix=1779077256
+D:\macro-dark-frames files=242 bytes=8179392512 newest_mtime_unix=1787435426
+D:\personal\macro files=632 bytes=18194001522 newest_mtime_unix=1779772901
+M15 -- regulariser vs focus window. Analysis of committed CSVs only.
+
+==============================================================================
+GATE A -- reproduce M13 at regulariser width 1 before extending it
+==============================================================================
+SYNTHESIS section 5 item 15. If this fails, nothing below is valid.
+
+  M13's own committed CSVs
+    ladder            : 20 windows, w0..w40
+    cells step>0 / =0 : 30 / 6
+    argmin mean regret (step>0)  : w13 3.171 DN  [interior]   target w13 3.171
+    argmin worst regret (step>0) : w13 12.111 DN  [interior]   target w13 12.111
+    argmin mean regret (step=0)  : w40 0.000 DN  [ENDPOINT]   target w40 ENDPOINT 0.000
+    ==> PASS
+  M15's replication run (repro-edge-*.csv)
+    ladder            : 20 windows, w0..w40
+    cells step>0 / =0 : 30 / 6
+    argmin mean regret (step>0)  : w13 3.171 DN  [interior]   target w13 3.171
+    argmin worst regret (step>0) : w13 12.111 DN  [interior]   target w13 12.111
+    argmin mean regret (step=0)  : w40 0.000 DN  [ENDPOINT]   target w40 ENDPOINT 0.000
+    ==> PASS
+
+  stratum: width == 1; cell = (stack, shape-without-coordinate, step);
+  value   = mean of excess_dn over the 3 seeds; regret vs the per-cell min.
+
+==============================================================================
+GATE A1 -- is the replication byte-identical to M13's committed CSV?
+==============================================================================
+  109MSDCF: sha256 M13 5a35b7e6ae7c14ac  M15 5a35b7e6ae7c14ac  raw-identical=True  line-identical=True  differing lines=0
+  119MSDCF: sha256 M13 6f5f89c82e9517d3  M15 6f5f89c82e9517d3  raw-identical=True  line-identical=True  differing lines=0
+
+==============================================================================
+1. THE SURFACE -- argmin over windows at each regulariser width
+==============================================================================
+
+------------------------------------------------------------------------------
+  cells WITH a depth step (step > 0) -- THE DECISION
+------------------------------------------------------------------------------
+   width  radius  cells  w*(mean)     label   meanreg  w*(worst)     label  worstreg   reg@w13   Delta13
+       1       0     30        13  interior     3.284         13  interior    11.899     3.284     0.000
+       3       1     30        14  interior     3.384         13  interior    13.646     3.417     0.033
+       5       2     30        13  interior     3.304         14  interior    16.301     3.304     0.000
+       9       4     30        13  interior     3.396         14  interior    17.865     3.396     0.000
+      13       6     30        14  interior     3.262         15  interior    18.028     3.342     0.080
+      17       8     30        14  interior     2.970         16  interior    18.056     3.020     0.050
+      25      12     30        13  interior     2.166         16  interior    15.956     2.166     0.000
+      33      16     30        14  interior     1.722         14  interior    10.670     1.842     0.121
+      49      24     30         8  interior     2.143          5  interior     8.766     2.694     0.551
+
+------------------------------------------------------------------------------
+  NULL: step == 0 cells (no discontinuity)
+------------------------------------------------------------------------------
+   width  radius  cells  w*(mean)     label   meanreg  w*(worst)     label  worstreg   reg@w13   Delta13
+       1       0      6        40  ENDPOINT     0.000         40  ENDPOINT     0.000     5.762     5.762
+       3       1      6        40  ENDPOINT     0.000         40  ENDPOINT     0.000     3.997     3.997
+       5       2      6        40  ENDPOINT     0.000         40  ENDPOINT     0.000     3.094     3.094
+       9       4      6        40  ENDPOINT     0.000         40  ENDPOINT     0.000     2.463     2.463
+      13       6      6        33  interior     0.000         33  interior     0.001     1.847     1.847
+      17       8      6        26  interior     0.000         26  interior     0.001     1.296     1.296
+      25      12      6        20  interior     0.000         20  interior     0.000     0.454     0.454
+      33      16      6        16  interior     0.000         16  interior     0.001     0.042     0.042
+      49      24      6        10  interior     0.000         10  interior     0.001     0.000     0.000
+    registered null: every zero-step argmin must be an ENDPOINT (fact 61).
+
+  stratum: rows filtered to `width == g`; cell = (stack, shape, step);
+  value = mean of excess_dn over seeds; regret vs the per-cell min AT THAT g.
+  Delta13 = meanregret(w13, g) - meanregret(w*(g), g): the DN penalty the
+  project pays by shipping M13's w13 at that regulariser width.
+
+==============================================================================
+1. THE SURFACE -- argmin over windows at each regulariser width  [M13's 3 seeds only]
+==============================================================================
+
+------------------------------------------------------------------------------
+  cells WITH a depth step (step > 0) -- THE DECISION
+------------------------------------------------------------------------------
+   width  radius  cells  w*(mean)     label   meanreg  w*(worst)     label  worstreg   reg@w13   Delta13
+       1       0     30        13  interior     3.313         13  interior    11.936     3.313     0.000
+       3       1     30        14  interior     3.392         13  interior    13.956     3.418     0.026
+       5       2     30        13  interior     3.274         14  interior    16.282     3.274     0.000
+       9       4     30        13  interior     3.412         14  interior    17.828     3.412     0.000
+      13       6     30        14  interior     3.281         15  interior    18.165     3.365     0.084
+      17       8     30        14  interior     2.989         16  interior    18.016     3.034     0.045
+      25      12     30        13  interior     2.153         16  interior    15.915     2.153     0.000
+      33      16     30        14  interior     1.720         14  interior    10.686     1.842     0.122
+      49      24     30         8  interior     2.118          5  interior     8.506     2.685     0.566
+
+------------------------------------------------------------------------------
+  NULL: step == 0 cells (no discontinuity)
+------------------------------------------------------------------------------
+   width  radius  cells  w*(mean)     label   meanreg  w*(worst)     label  worstreg   reg@w13   Delta13
+       1       0      6        40  ENDPOINT     0.000         40  ENDPOINT     0.000     5.756     5.756
+       3       1      6        40  ENDPOINT     0.000         40  ENDPOINT     0.000     3.997     3.997
+       5       2      6        40  ENDPOINT     0.000         40  ENDPOINT     0.000     3.102     3.102
+       9       4      6        40  ENDPOINT     0.000         40  ENDPOINT     0.001     2.464     2.463
+      13       6      6        33  interior     0.000         33  interior     0.002     1.848     1.847
+      17       8      6        26  interior     0.000         26  interior     0.000     1.294     1.294
+      25      12      6        20  interior     0.000         20  interior     0.002     0.460     0.459
+      33      16      6        16  interior     0.000         16  interior     0.002     0.044     0.044
+      49      24      6        10  interior     0.000         10  interior     0.002     0.000     0.000
+    registered null: every zero-step argmin must be an ENDPOINT (fact 61).
+
+  stratum: rows filtered to `width == g`; cell = (stack, shape, step);
+  value = mean of excess_dn over seeds; regret vs the per-cell min AT THAT g.
+  Delta13 = meanregret(w13, g) - meanregret(w*(g), g): the DN penalty the
+  project pays by shipping M13's w13 at that regulariser width.
+
+==============================================================================
+1. THE SURFACE -- argmin over windows at each regulariser width  [M13's 20-window ladder only]
+==============================================================================
+
+------------------------------------------------------------------------------
+  cells WITH a depth step (step > 0) -- THE DECISION
+------------------------------------------------------------------------------
+   width  radius  cells  w*(mean)     label   meanreg  w*(worst)     label  worstreg   reg@w13   Delta13
+       1       0     30        13  interior     3.136         13  interior    11.892     3.136     0.000
+       3       1     30        13  interior     3.319         13  interior    13.646     3.319     0.000
+       5       2     30        13  interior     3.243         13  interior    17.232     3.243     0.000
+       9       4     30        13  interior     3.386         15  interior    19.605     3.386     0.000
+      13       6     30        13  interior     3.320         15  interior    18.028     3.320     0.000
+      17       8     30        13  interior     3.012         15  interior    20.464     3.012     0.000
+      25      12     30        13  interior     2.156         15  interior    17.461     2.156     0.000
+      33      16     30        15  interior     1.759         15  interior    11.545     1.829     0.071
+      49      24     30         8  interior     2.120          5  interior     8.766     2.671     0.551
+
+------------------------------------------------------------------------------
+  NULL: step == 0 cells (no discontinuity)
+------------------------------------------------------------------------------
+   width  radius  cells  w*(mean)     label   meanreg  w*(worst)     label  worstreg   reg@w13   Delta13
+       1       0      6        40  ENDPOINT     0.000         40  ENDPOINT     0.000     5.762     5.762
+       3       1      6        40  ENDPOINT     0.000         40  ENDPOINT     0.000     3.997     3.997
+       5       2      6        40  ENDPOINT     0.000         40  ENDPOINT     0.000     3.094     3.094
+       9       4      6        40  ENDPOINT     0.000         40  ENDPOINT     0.000     2.463     2.463
+      13       6      6        33  interior     0.000         33  interior     0.001     1.847     1.847
+      17       8      6        26  interior     0.000         26  interior     0.001     1.296     1.296
+      25      12      6        20  interior     0.000         20  interior     0.000     0.454     0.454
+      33      16      6        17  interior     0.000         17  interior     0.001     0.042     0.042
+      49      24      6        10  interior     0.000         10  interior     0.001     0.000     0.000
+    registered null: every zero-step argmin must be an ENDPOINT (fact 61).
+
+  stratum: rows filtered to `width == g`; cell = (stack, shape, step);
+  value = mean of excess_dn over seeds; regret vs the per-cell min AT THAT g.
+  Delta13 = meanregret(w13, g) - meanregret(w*(g), g): the DN penalty the
+  project pays by shipping M13's w13 at that regulariser width.
+
+==============================================================================
+2. THE WHOLE SURFACE -- mean regret (DN) for every (window, regulariser width)
+==============================================================================
+stratum: 30 cells with step > 0, all seeds, E_excess.
+
+   w  |      g=1      g=3      g=5      g=9     g=13     g=17     g=25     g=33     g=49
+  ----+---------------------------------------------------------------------------------
+    0 |   103.74    71.10    47.07    30.90    20.16    12.32     6.16     3.56     3.74
+    1 |    68.74    55.36    42.19    29.02    19.05    12.15     5.92     3.70     3.26
+    2 |    41.66    39.27    35.52    26.14    17.63    11.65     5.69     3.88     2.83
+    3 |    30.25    29.47    28.34    22.81    16.18    11.08     5.40     4.07     2.64
+    4 |    22.68    22.41    22.51    19.34    14.63    10.27     4.97     4.13     2.50
+    5 |    17.63    17.17    17.55    16.30    13.08     9.35     4.56     3.99     2.43
+    6 |    13.37    13.00    13.43    13.53    11.41     8.30     4.22     3.72     2.37
+    7 |     9.61     9.69    10.33    11.11     9.76     7.16     3.77     3.41     2.20
+    8 |     7.16     7.44     8.07     9.02     8.15     6.09     3.33     3.18     2.14
+    9 |     5.65     5.81     6.49     7.32     6.65     5.14     2.94     2.87     2.16
+   10 |     4.63     4.89     5.42     5.92     5.42     4.27     2.60     2.54     2.25
+   11 |     4.04     4.23     4.56     4.70     4.45     3.65     2.35     2.28     2.36
+   12 |     3.60     3.69     3.74     3.82     3.69     3.20     2.21     2.05     2.53
+   13 |     3.28     3.42     3.30     3.40     3.34     3.02     2.17     1.84     2.69
+   14 |     3.46     3.38     3.32     3.42     3.26     2.97     2.26     1.72     3.06
+   15 |     4.14     4.04     3.73     3.67     3.37     3.11     2.35     1.77     3.37
+   16 |     5.27     4.98     4.51     4.14     3.72     3.36     2.54     1.93     3.77
+   17 |     6.37     6.02     5.53     4.73     4.24     3.71     2.98     2.29     4.36
+   18 |     7.52     7.27     6.60     5.45     4.72     4.16     3.54     2.76     5.05
+   20 |    11.17    10.81     9.74     7.59     6.31     5.63     5.04     4.57     7.31
+   23 |    21.05    20.37    18.58    14.37    11.51     9.37     8.52     8.86    12.54
+   26 |    27.78    27.65    26.37    22.45    18.81    16.48    14.61    16.25    18.14
+   33 |    33.43    34.04    34.42    32.52    31.73    31.85    32.92    33.62    27.81
+   40 |    37.84    38.75    38.88    38.64    38.95    40.00    41.34    40.97    33.16
+
+  Each column is an independent regret table: the per-cell minimum is taken
+  within that column, so columns are NOT comparable to each other in level.
+
+==============================================================================
+3. JOINT (window, regulariser) regret -- the pair the project would ship
+==============================================================================
+stratum: 30 cells with step > 0, all seeds. Per cell the minimum is taken
+over ALL (w, g) pairs at once, so this table IS comparable in level.
+
+  rank  window  width  mean regret  worst regret
+     1      14     17        3.701        22.553
+     2      13     25        3.745        21.947
+     3      13     17        3.752        25.095
+     4      12     25        3.792        23.624
+     5      14     25        3.836        20.444
+     6      15     17        3.843        20.918
+     7      15     25        3.928        23.301
+     8      12     17        3.931        27.430
+     9      11     25        3.932        24.870
+    10      16     17        4.095        20.849
+    11      16     25        4.122        25.943
+    12      10     25        4.175        26.361
+    13      14     13        4.182        21.938
+    14      13     13        4.262        23.786
+    15      15     13        4.294        19.647
+    16      11     17        4.379        30.502
+    17      17     17        4.439        25.623
+    18       9     25        4.515        28.630
+    19      17     25        4.563        30.115
+    20      12     13        4.614        26.819
+  ...
+   214       1      1       78.002       147.005
+   215       0      3       78.208       147.603
+   216       0      1      113.003       183.387
+
+  best window at each regulariser width, on the JOINT scale:
+   width  best w  mean regret  w13 mean regret   penalty
+       1      13       12.549           12.549     0.000
+       3      14       10.496           10.529     0.033
+       5      13        8.352            8.352     0.000
+       9      13        5.540            5.540     0.000
+      13      14        4.182            4.262     0.080
+      17      14        3.701            3.752     0.050
+      25      13        3.745            3.745     0.000
+      33      14        5.401            5.522     0.121
+      49       8       15.764           16.316     0.551
+
+==============================================================================
+4. SUBSTITUTION RATE -- do the window and the regulariser trade off 1:1?
+==============================================================================
+H_sub  (perfect substitution): w*(g) = w*(1) - (g-1)/2, slope s = 1
+H_none (no substitution)     : w*(g) = w*(1),           slope s = 0
+
+  OLS of w*(g) on regulariser radius r over all 9 widths:
+    w* = 14.188 + -0.1602 * r     =>  substitution rate s = 0.1602
+  endpoint contrast (g=1 vs g=17, r=0 vs r=8): s = (13 - 14) / 8 = -0.1250
+
+   width  radius r   w*(g)  H_sub predicts  residual
+       1         0      13              13         0
+       3         1      14              12         2
+       5         2      13              11         2
+       9         4      13               9         4
+      13         6      14               7         7
+      17         8      14               5         9
+      25        12      13               1        12
+      33        16      14               0        14
+      49        24       8               0         8
+
+==============================================================================
+5. DECISION -- the registered rule, applied
+==============================================================================
+  registered primary   : Delta(g) <= 0.87 DN  (M13's own published w11-w15 basin flatness)
+  registered sensitivity: Delta(g) <= 0.29 DN (M13's w12->w13 gap)
+  registered worst-case : worstregret(w13, g) <= 12.111 DN (M13's published worst case at w13)
+
+   width  w*(g)   Delta13   primary    sens  worst@w13  worst gate
+       1     13     0.000      PASS    PASS     11.899        PASS
+       3     14     0.033      PASS    PASS     13.646        FAIL
+       5     13     0.000      PASS    PASS     17.232        FAIL
+       9     13     0.000      PASS    PASS     19.718        FAIL
+      13     14     0.080      PASS    PASS     22.167        FAIL
+      17     14     0.050      PASS    PASS     24.641        FAIL
+      25     13     0.000      PASS    PASS     21.947        FAIL
+      33     14     0.121      PASS    PASS     13.697        FAIL
+      49      8     0.551      PASS    FAIL     12.280        FAIL
+
+  HEADLINE at the project's reference regulariser width 17: Delta = 0.050 DN -> w13 SURVIVES
+  widths at which w13 fails the primary threshold: none
+
+==============================================================================
+6. THE BASIN at each regulariser width -- how flat, and how wide
+==============================================================================
+  g=  1  w*= 13  windows within 0.87 DN of the best: w11..w15  (5 of 24)  members [11, 12, 13, 14, 15]
+  g=  3  w*= 14  windows within 0.87 DN of the best: w11..w15  (5 of 24)  members [11, 12, 13, 14, 15]
+  g=  5  w*= 13  windows within 0.87 DN of the best: w12..w15  (4 of 24)  members [12, 13, 14, 15]
+  g=  9  w*= 13  windows within 0.87 DN of the best: w12..w16  (5 of 24)  members [12, 13, 14, 15, 16]
+  g= 13  w*= 14  windows within 0.87 DN of the best: w12..w16  (5 of 24)  members [12, 13, 14, 15, 16]
+  g= 17  w*= 14  windows within 0.87 DN of the best: w11..w17  (7 of 24)  members [11, 12, 13, 14, 15, 16, 17]
+  g= 25  w*= 13  windows within 0.87 DN of the best: w9..w17  (9 of 24)  members [9, 10, 11, 12, 13, 14, 15, 16, 17]
+  g= 33  w*= 14  windows within 0.87 DN of the best: w10..w17  (8 of 24)  members [10, 11, 12, 13, 14, 15, 16, 17]
+  g= 49  w*=  8  windows within 0.87 DN of the best: w2..w13  (12 of 24)  members [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+
+==============================================================================
+13. w13 vs w14 and w16 -- the windows M13's ladder could not see
+==============================================================================
+   width      w11      w12      w13      w14      w15      w16      w17
+       1    4.040    3.603    3.284    3.464    4.138    5.265    6.370
+       3    4.230    3.685    3.417    3.384    4.035    4.982    6.022
+       5    4.563    3.737    3.304    3.317    3.734    4.512    5.529
+       9    4.695    3.817    3.396    3.423    3.675    4.141    4.732
+      13    4.451    3.694    3.342    3.262    3.374    3.725    4.244
+      17    3.647    3.199    3.020    2.970    3.112    3.364    3.707
+      25    2.353    2.213    2.166    2.258    2.349    2.544    2.984
+      33    2.280    2.052    1.842    1.722    1.772    1.933    2.288
+      49    2.355    2.527    2.694    3.060    3.369    3.770    4.360
+  mean regret (DN), 30 step>0 cells, all seeds.
+
+==============================================================================
+12. PER-CELL argmin at g=1 and g=17 -- is the shift uniform or cell-driven?
+==============================================================================
+                                cell  w* g=1  w* g=17  shift  E@min g=1  E@min g=17
+                     109MSDCF/bar/s2      15       16      1      17.44       14.25
+                     109MSDCF/bar/s4      11       11      0      19.09       13.57
+                     109MSDCF/bar/s8      11       11      0      18.40       11.26
+                    109MSDCF/bar/s16      10       13      3      15.73       10.16
+                    109MSDCF/bar/s32      10       11      1      16.89       13.04
+              109MSDCF/horizontal/s2      13       10     -3      15.01       14.35
+              109MSDCF/horizontal/s4      14       10     -4      14.66       14.03
+              109MSDCF/horizontal/s8      13        9     -4      15.33       14.05
+             109MSDCF/horizontal/s16      10        8     -2      16.33       14.55
+             109MSDCF/horizontal/s32      15        8     -7      12.38       11.25
+                109MSDCF/vertical/s2      20       18     -2      17.50       14.55
+                109MSDCF/vertical/s4      17       16     -1      19.17       14.24
+                109MSDCF/vertical/s8      13       16      3      20.64       12.73
+               109MSDCF/vertical/s16      13       15      2      19.60       13.16
+               109MSDCF/vertical/s32      14       15      1      22.42       15.88
+                     119MSDCF/bar/s2      18       13     -5      19.82        9.20
+                     119MSDCF/bar/s4      13       12     -1      25.04        6.71
+                     119MSDCF/bar/s8       9       12      3      26.11        0.94
+                    119MSDCF/bar/s16      10       12      2      15.31       -1.19
+                    119MSDCF/bar/s32      10       14      4      13.38        3.33
+              119MSDCF/horizontal/s2       8        6     -2      12.64       11.31
+              119MSDCF/horizontal/s4       8        6     -2      14.65       12.64
+              119MSDCF/horizontal/s8       7        6     -1      19.02       19.24
+             119MSDCF/horizontal/s16       7        6     -1      22.89       25.07
+             119MSDCF/horizontal/s32       7        1     -6      18.63       21.99
+                119MSDCF/vertical/s2      33       33      0      22.74       12.06
+                119MSDCF/vertical/s4      33       33      0      34.74       12.35
+                119MSDCF/vertical/s8      17       20      3      43.69       12.51
+               119MSDCF/vertical/s16      17       20      3      46.34       16.52
+               119MSDCF/vertical/s32      20       23      3      49.64       25.48
+  median per-cell shift w*(17) - w*(1) = 0.0, mean -0.40, narrower in 14/30, wider in 12, unchanged in 4
+
+==============================================================================
+7. THE SEED NOISE FLOOR -- measured, not assumed
+==============================================================================
+  g=  1  median seed-to-seed sd of E_excess =  0.228 DN  (over 720 (cell, window) groups, 5 seeds each)
+  g=  3  median seed-to-seed sd of E_excess =  0.205 DN  (over 720 (cell, window) groups, 5 seeds each)
+  g=  5  median seed-to-seed sd of E_excess =  0.191 DN  (over 720 (cell, window) groups, 5 seeds each)
+  g=  9  median seed-to-seed sd of E_excess =  0.171 DN  (over 720 (cell, window) groups, 5 seeds each)
+  g= 13  median seed-to-seed sd of E_excess =  0.156 DN  (over 720 (cell, window) groups, 5 seeds each)
+  g= 17  median seed-to-seed sd of E_excess =  0.153 DN  (over 720 (cell, window) groups, 5 seeds each)
+  g= 25  median seed-to-seed sd of E_excess =  0.136 DN  (over 720 (cell, window) groups, 5 seeds each)
+  g= 33  median seed-to-seed sd of E_excess =  0.137 DN  (over 720 (cell, window) groups, 5 seeds each)
+  g= 49  median seed-to-seed sd of E_excess =  0.187 DN  (over 720 (cell, window) groups, 5 seeds each)
+  M13 published, at g=1 with 3 seeds: 0.193 DN
+
+  standard error of a 30-cell mean regret, from the measured sd:
+    g=  1: sd 0.228 / sqrt(5 seeds) / sqrt(30 cells) = 0.0186 DN
+    g= 17: sd 0.153 / sqrt(5 seeds) / sqrt(30 cells) = 0.0125 DN
+
+==============================================================================
+8. GATE D -- placebo: how far does w* move when NOTHING changes?
+==============================================================================
+Disjoint seed halves at a FIXED regulariser width. Any shift here is
+the null distribution of the treatment shift.
+
+   width  w* half A  w* half B  |shift|  w* all                  per-seed w*
+       1         13         13        0      13         [13, 13, 13, 13, 13]
+       3         14         14        0      14         [14, 14, 13, 13, 14]
+       5         13         13        0      13         [13, 13, 13, 14, 14]
+       9         13         13        0      13         [13, 13, 13, 13, 13]
+      13         14         14        0      14         [14, 14, 14, 14, 14]
+      17         14         14        0      14         [14, 14, 14, 14, 14]
+      25         13         13        0      13         [13, 13, 13, 13, 13]
+      33         14         14        0      14         [14, 14, 14, 14, 14]
+      49          8          8        0       8              [8, 8, 8, 9, 9]
+
+  placebo shift (disjoint seed halves, same width): max 0 window steps, median 0
+
+==============================================================================
+9. SECONDARY OBJECTIVES -- does the ruling depend on which metric I picked?
+==============================================================================
+
+  objective: E_excess (DN over the floor)
+   width  w* step>0     label  w* step=0     label
+       1         13  interior         40  ENDPOINT
+       3         14  interior         40  ENDPOINT
+       5         13  interior         40  ENDPOINT
+       9         13  interior         40  ENDPOINT
+      13         14  interior         33  interior
+      17         14  interior         26  interior
+      25         13  interior         20  interior
+      33         14  interior         16  interior
+      49          8  interior         10  interior
+
+  objective: max mis-selection width (px)
+   width  w* step>0     label  w* step=0     label
+       1         23  interior         40  ENDPOINT
+       3         23  interior         40  ENDPOINT
+       5         23  interior         40  ENDPOINT
+       9         20  interior         40  ENDPOINT
+      13         20  interior         40  ENDPOINT
+      17         20  interior         40  ENDPOINT
+      25         18  interior         40  ENDPOINT
+      33         17  interior         40  ENDPOINT
+      49         12  interior         33  interior
+
+  objective: dmae in the band (frames)
+   width  w* step>0     label  w* step=0     label
+       1         14  interior         40  ENDPOINT
+       3         15  interior         40  ENDPOINT
+       5         14  interior         40  ENDPOINT
+       9         14  interior         40  ENDPOINT
+      13         12  interior         33  interior
+      17         12  interior         26  interior
+      25         15  interior         20  interior
+      33         16  interior         16  interior
+      49         14  interior         10  interior
+
+  objective: far_rms (DN, DISJOINT pixel set from the band)
+   width  w* step>0     label  w* step=0     label
+       1         40  ENDPOINT         40  ENDPOINT
+       3         40  ENDPOINT         40  ENDPOINT
+       5         40  ENDPOINT         40  ENDPOINT
+       9         33  interior         40  ENDPOINT
+      13         23  interior         40  ENDPOINT
+      17         26  interior         40  ENDPOINT
+      25         26  interior         40  ENDPOINT
+      33         26  interior         40  ENDPOINT
+      49         20  interior         33  interior
+
+  NOTE: `acc` and `acc_band` are NESTED sets and are never quoted as
+  agreeing (M13 section 2.5 item 5). `far_rms` and `band_rms` are disjoint,
+  so far_rms may be compared with the band objective.
+
+==============================================================================
+10. GATE C -- W_bleed's blind spot, asserted on real M15 data
+==============================================================================
+M13 section 2.5 item 1: W_bleed cannot see a selector that elects a
+COMPROMISE frame between two layers. Registered as a control, not a caveat
+(SYNTHESIS section 5 item 26). Here it is searched for in M15's own rows.
+
+  found 1935 (width, cell, w_narrow, w_wide) pairs where bleed_fg
+  COLLAPSES while E_excess RISES. Top 8 by bleed collapse:
+   width                               cell  w_a  w_b  bleed_a  bleed_b    exc_a    exc_b
+       5              109MSDCF/vertical/s32    6   40    19.00     0.78    25.84    32.12
+       5              109MSDCF/vertical/s32    8   40    18.97     0.78    23.31    32.12
+       9              109MSDCF/vertical/s32    7   33    18.75     0.58    23.15    27.25
+       9              109MSDCF/vertical/s32    8   33    18.69     0.58    22.24    27.25
+       5              109MSDCF/vertical/s32    6   33    19.00     0.94    25.84    30.04
+       5              109MSDCF/vertical/s32    8   33    18.97     0.94    23.31    30.04
+       3              109MSDCF/vertical/s32    8   40    19.01     1.00    23.83    35.98
+       5              109MSDCF/vertical/s32    9   40    18.77     0.78    22.53    32.12
+
+  rule: bleed_fg drop > 5 px AND excess_dn rise > 2 DN, seed-averaged.
+  Reading W_bleed alone would call the wider window nearly halo-free.
+  Only the oracle-referenced E_excess sees through it.
+
+==============================================================================
+11. GATE B2 -- the regulariser IS switched on: N vs regulariser width
+==============================================================================
+
+  109MSDCF  (stratum: roi_kind == flat, select_on == luma; median over the 4 committed ROIs)
+    measure               g=1      g=3      g=5      g=9     g=13     g=17     g=25     g=33     g=49
+    ring-1-3           1.2773   1.3856   1.1924   1.1014   1.0807   1.0748   1.0724   1.0717   1.0735
+    tenengrad-w13      1.0766   1.0751   1.0726   1.0717   1.0744   1.0749   1.0736   1.0708   1.0674
+    tenengrad-w40      1.0643   1.0675   1.0644   1.0629   1.0628   1.0630   1.0628   1.0634   1.0621
+    tenengrad-w5       1.1017   1.1046   1.1065   1.1110   1.0990   1.0812   1.0729   1.0738   1.0693
+    median single_sigma over these ROIs = 28.39 DN (flat ROI discriminator: 28-30 DN)
+
+  119MSDCF  (stratum: roi_kind == flat, select_on == luma; median over the 4 committed ROIs)
+    measure               g=1      g=3      g=5      g=9     g=13     g=17     g=25     g=33     g=49
+    ring-1-3           1.4177   1.4785   1.2950   1.1815   1.1438   1.1202   1.0911   1.0806   1.0795
+    tenengrad-w13      1.0961   1.0961   1.0937   1.0930   1.0927   1.0926   1.0959   1.0942   1.0910
+    tenengrad-w40      1.0914   1.0902   1.0865   1.0860   1.0858   1.0857   1.0857   1.0861   1.0861
+    tenengrad-w5       1.1631   1.1608   1.1590   1.1541   1.1364   1.1161   1.0960   1.0891   1.0875
+    median single_sigma over these ROIs = 49.91 DN (flat ROI discriminator: 28-30 DN)
