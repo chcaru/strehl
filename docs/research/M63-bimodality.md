@@ -10,7 +10,7 @@ this milestone. Everything M63 produced lives in
 
 > **Renumbered M60 → M63 after the work was complete.** `M60` had been dispatched
 > to more than one agent; M54's milestone came first and keeps the number. This
-> report was `docs/research/M60-bimodality.md` and any citation to that path means
+> report was the `M60-bimodality.md` stem under `docs/research/`, and any citation to it means
 > this file. **The experiment directory deliberately keeps its `M60-bimodality`
 > name** — it is referenced by `SYNTHESIS.md` (facts 831 and 907) and by four other
 > agents' reports (M55, M59, M64, and M54's `M60-robustness-mask-at-merge-time.md`),

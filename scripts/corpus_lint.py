@@ -1070,12 +1070,59 @@ def advisory_a3_amendment(index):
     return out
 
 
+
+def check_c2_report_paths(md_docs, root):
+    """C1 resolves fact/discipline/question NUMBERS and never looks at a file
+    path, so a citation to a report that does not exist passes silently.
+
+    Measured at 6202c9c: the orchestrator folded M63's milestone and cited
+    `docs/research/M60-bimodality.md` three times -- in the very commit whose
+    subject was that report's rename -- because M63 had renamed it to
+    `M63-bimodality.md` and deliberately kept the *experiment* directory on the
+    old stem with a forwarding note. Three dead citations, zero linter output.
+
+    The exemption is grounded in DECLARED data, not inferred intent. Rule 41
+    requires a milestone number to be allocated in AGENTS.md's allocation ledger
+    *at dispatch*, before the agent writes anything, so the ledger legitimately
+    names report paths that do not exist yet. A path appearing in that table is
+    a forward reference and is exempt; anything else is a dead citation. This is
+    deliberately not the heuristic M59 refused to build -- it reads a table the
+    project already maintains rather than guessing from spelling.
+
+    Power, measured against plants: a dead path not in the ledger is caught; a
+    dead path present in the ledger is exempt; a live path never flags.
+    """
+    out = []
+    research = os.path.join(root, "docs", "research")
+    try:
+        existing = set(os.listdir(research))
+    except OSError:
+        return out
+    ledger = ""
+    ap = os.path.join(root, AGENTS)
+    if os.path.isfile(ap):
+        ledger = io.open(ap, encoding="utf-8").read()
+    pat = re.compile(r"docs/research/([A-Za-z0-9_.\-]+\.md)")
+    for doc in md_docs:
+        for i, line in enumerate(doc.lines, 1):
+            for m in pat.finditer(line):
+                name = m.group(1)
+                if name in existing:
+                    continue
+                if ("docs/research/" + name) in ledger:
+                    continue          # declared at dispatch; not yet written
+                out.append(Violation(doc.rel, i, "C2",
+                                     "cites docs/research/%s, which does not "
+                                     "exist and is not allocated in the ledger"
+                                     % name, line.strip()[:160]))
+    return out
+
 # --------------------------------------------------------------------------
 # driver
 # --------------------------------------------------------------------------
 
-CHECKS = ["S1", "S2", "S3", "S4", "S5", "N1", "N2", "N4", "N5", "C1", "A1",
-          "A2", "A4"]
+CHECKS = ["S1", "S2", "S3", "S4", "S5", "N1", "N2", "N4", "N5", "C1", "C2",
+          "A1", "A2", "A4"]
 ADVISORIES = ["N3", "A3"]
 
 
@@ -1154,6 +1201,8 @@ def main(argv=None):
         violations += check_n5_item_placement(index)
     if "C1" in wanted:
         violations += check_c1_citations(md_docs + rs_docs, index)
+    if "C2" in wanted:
+        violations += check_c2_report_paths(md_docs, root)
     if "A1" in wanted:
         violations += check_a1_question_status(md_docs + rs_docs, index)
     if "A2" in wanted:

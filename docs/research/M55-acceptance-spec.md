@@ -608,7 +608,7 @@ verdict; it would change a byte-for-byte artefact comparison, and anyone re-runn
 ### 6.5 Protocol incident — a path-scoped `git add` does not make a path-scoped commit
 
 **MEASURED, and it is my error.** The commit that carried §7.3 (`701dc11`) contains **51
-files**. Four are mine. **Forty-seven belong to M60** — `docs/research/M60-bimodality.md` and
+files**. Four are mine. **Forty-seven belong to M60** — `M60-bimodality.md` (since renamed to `docs/research/M63-bimodality.md`) and
 `experiments/M60-bimodality/**` — and I did not intend to commit them.
 
 The sequence, from the shell log:
