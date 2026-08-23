@@ -646,11 +646,12 @@ ships.
 Three lines in the existing two-pass structure, none of which require a new pass:
 
 1. **Fit** in pass one, alongside the focus field, which already touches every
-   pixel of every frame. A robust per-frame level ratio against a running
-   reference — the same shape as the robustness mask of brief item 4 — costs one
-   scalar per frame and no extra decode. **Fit it, do not read it:** M24 measured
-   two stacks drifting 6.84% and 8.93% with *constant* EXIF, and `coffee-bean`
-   moving only 16% of what its EXIF change predicts (1.0443 against 1.2800).
+   pixel of every frame. It costs one scalar per frame and no extra decode.
+   **Fit it, do not read it:** M24 measured two stacks drifting 6.84% and 8.93%
+   with *constant* EXIF, and `coffee-bean` moving only 16% of what its EXIF
+   change predicts (1.0443 against 1.2800). **Use the plain MEAN over all
+   pixels** — see §4f, where M28 measures that the "robust" choices are the
+   wrong ones here.
 2. **Carry** it as a `Vec<f32>` of length `frames` on the `Plan` — O(frames)
    scalars, not O(frames) planes, so the memory ratchet is untouched.
 3. **Apply** it inside `Estimator::fold`, to the signal and to the sigma
@@ -772,6 +773,93 @@ mask and the proof it fires than an unmeasured behaviour change at the end of a
 run. The hole M26 identifies is real but its measured incidence on the acceptance
 stacks is exactly zero, so wiring it cannot be validated there.
 
+## 4f. M28 landed after this milestone closed: one contradiction, three clears
+
+M28 (robustness mask) arrived after the work above was built, tested and
+committed. Per the orchestrator's instruction I did not rework anything; this
+section records what it changes. **One of its four points contradicts something
+I wrote. Three do not.**
+
+### CONTRADICTION: §4d's gain-fit prescription was wrong on two counts
+
+§4d said the gain should be fitted as "a **robust** per-frame level ratio against
+a **running reference** — the same shape as the robustness mask". M28 measures
+both halves of that sentence to be wrong, and I have corrected §4d in place
+rather than leave a falsified prescription for whoever builds it.
+
+- **"Robust" is the wrong estimator.** On `109MSDCF`, a median over a
+  subject-centred crop reads **4.28%** peak-to-peak where the mean over all
+  pixels reads **1.02%**, against M24's independent full-frame **0.91%**. As
+  focus sweeps, subject contrast changes, so a subject-region median absorbs
+  *focus* signal into what it calls gain. Restricting to low-gradient pixels —
+  the other obviously "robust" move — was the **worst of four** estimators on the
+  evolving stack (84.98% vs 11.05%). The correct estimator is the plain **mean
+  over all pixels**.
+- **"Running reference" is the wrong reference for a focus stack.** Wronski's
+  whole-burst running estimate assumes frames are nominally identical. A focus
+  stack is the opposite: the frames are *supposed* to disagree, and that
+  disagreement is the signal. M28 measures the noise-normalised pairwise residual
+  growing **1.13 -> 12.30** as separation goes 1 -> 16 (near-linear over 16x —
+  accumulating breathing, not noise, which would be flat, and not defocus, which
+  would saturate), and the radial profile at **1.82x** centre-to-corner with a
+  whole-stack reference against **0.98x, flat**, with an adjacent-frame one. The
+  correct form is neighbour-referenced:
+  `z_k = |a_k - (a_{k-1}+a_{k+1})/2| / (sigma*sqrt(1.5))`.
+
+Nothing shipped is wrong — §4d is a "not built" section throughout, and no code
+fits a gain. What was wrong was the instruction I left behind, which is exactly
+the kind of thing that gets built verbatim six weeks later.
+
+### CLEAR 1: no alignment-ordering assumption exists to invalidate
+
+M28 notes its neighbour-referenced mask can run *before* alignment, inverting an
+assumed ordering. VERIFIED by search: the string `align` does not occur anywhere
+in `merge_cmd.rs`, `through_focus.rs`, `focus.rs` or `clip.rs`. This merge has no
+alignment stage and assumes no ordering with one, so there is nothing here to
+correct. The finding is free information for whoever builds alignment, not a
+repair to this milestone.
+
+### CLEAR 2: the corrected shape is MORE compatible with this architecture
+
+Worth stating because it is a happy accident rather than a design win. Both
+passes chunk frames with `paths.par_chunks(plan.chunk_len)` — **contiguous**
+frame ranges per worker. A whole-burst running reference (R10's original shape)
+would have needed either a resident reference plane or its own pass. Three
+*adjacent* frames are already co-resident inside a single pass-one worker's
+window, so the corrected neighbour-referenced residual is computable streaming in
+pass one at O(workers) memory. The only cost is a one-frame halo at chunk
+boundaries. DERIVED from the chunking, not measured — no such mask is built.
+
+Note the seam does **not** serve this: `through_focus.rs` retains the top-k
+frames by focus, which are not in general adjacent. A neighbour-referenced mask
+wants a 3-frame rolling window, which is a pass-one streaming structure, not a
+per-pixel retained one. These are different mechanisms and neither blocks the
+other.
+
+### CLEAR 3: no tile-scale quality knob exists to mistune
+
+M28 warns against tuning tile scale for quality (detection flat within ~10%
+across a 4x range; both signal and false-positive threshold scale together).
+VERIFIED by search: this milestone has no tile aggregation at all — the two
+`tile` matches in my files are substrings of "the la**t**t**e**r" and
+"quan**tile**". Everything built here is per-pixel. Nothing to mistune.
+
+### Convergence on M28's point 4, with a caveat against over-reading it
+
+M28 says do not ship masking on by default, because it removed no samples from
+any actual merge and coverage (fact 213) is the scarcer resource. §4e reached the
+same posture independently for the clip mask: it is **computed and reported, not
+consumed by the gate**.
+
+But the two cases are not the same strength and I do not want the agreement to
+launder one into the other. M28's is a *statistical detector* whose benefit is
+genuinely open (question 45). Clipping is *deterministic*: a sample pinned at the
+container maximum in every frame carries zero information by construction, so
+there is no coverage trade to lose. My reason for not wiring it was narrower and
+purely evidential — measured incidence on both acceptance stacks is exactly zero,
+so the change could not be validated where the tests run. If it is wired later it
+needs a stack that actually clips, not a default-off flag.
+
 ## 5. Tests
 
 
@@ -781,10 +869,22 @@ stacks is exactly zero, so wiring it cannot be validated there.
 - `strehl-core` 65 -> 101 (+36)
 - `strehl-raw` 8 -> 8 (unchanged)
 
-The suite currently *runs* 147. The extra one is
-`the_selection_inflation_constant_is_the_measured_one` in `merge.rs`, which is
-another agent's work in the shared tree, not mine. My commits account for +39
-and no more.
+The suite total has since moved again: another agent added `crates/strehl-plugin`
+(33 tests + 1 doctest) during this run, so `cargo test --workspace` now reports
+**181**. My accounting is unchanged at **+39**; the plugin crate and the
+`merge.rs` test are not mine.
+
+**Gate honesty, since the workspace is shared.** `cargo fmt --all -- --check` and
+`cargo clippy --workspace --all-targets -- -D warnings` are currently **RED**, and
+every diagnostic is inside `crates/strehl-plugin/**` — ten rustfmt diffs and one
+clippy `neg_cmp_op_on_partial_ord` compile error. None is in a file I own and I
+did not touch them. Scoped to my three packages,
+`cargo fmt -p strehl-core -p strehl-cli -p strehl-raw -- --check` and the matching
+clippy invocation both return **0**, and `cargo test --workspace` passes
+everything including their crate. Earlier in the run the same crate had a
+manifest with no lib/bin target, which broke workspace load entirely for >10
+minutes; those gates were run in an isolated copy of my three crates and returned
+fmt 0, clippy 0, 147 tests.
 
 The last seven are §4e's: six in `clip.rs` and one in `plane.rs`. They pin the
 two white levels apart
@@ -863,6 +963,16 @@ went.
 The statistics built here are the input that mask would need — per-pixel
 bimodality and a top-k list are exactly the disagreement evidence — so this is a
 foundation for it, not a detour around it.
+
+**M28 has since made this a fortunate omission rather than a neutral one.** The
+brief specified the mask "in the shape of Wronski et al.'s robustness model",
+i.e. referenced against a running estimate over the whole burst. §4f records
+M28's measurement that this is precisely the wrong shape for a focus stack, where
+frames are *supposed* to disagree — pairwise residual 1.13 -> 12.30 over
+separation 1 -> 16, and a 1.82x centre-to-corner radial bias that goes flat
+(0.98x) under an adjacent-frame reference. Had I built item 4 to the brief, I
+would have built the wrong thing and it would have measured as working. I claim
+no foresight here: I skipped it for time, not for shape.
 
 **Also not built, deliberately:** the per-pixel posterior itself. The brief says
 "do not build that posterior now — but do not foreclose it either", and §1 above
