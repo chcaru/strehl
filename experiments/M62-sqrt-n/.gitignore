@@ -1,4 +1,5 @@
 # The pristine HEAD export used to build a binary from a committed sha, and the
 # synthetic burst itself. Both are regenerable; neither belongs in git.
 build-head/
+build-m64/
 data/

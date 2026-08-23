@@ -1,0 +1,44 @@
+{
+  "spec_version": "1.1-posthoc",
+  "description": "POST-HOC diagnostic, not part of certification. Sweeps --gate on the static burst to establish whether the burst's objective is monotone in the gate. If it is, no static burst -- mine included -- can arbitrate the VALUE of the gate, because maximising the score drives the gate to infinity and destroys the focus stacker. Labelled post-hoc per M62 PREREGISTRATION-M64.md section 6.",
+  "n": 30,
+  "seeds": [0],
+  "iso": 160,
+  "roles": {
+    "reference": "recorded only; never gates a verdict."
+  },
+  "tolerances": {
+    "ladder_rel": 0.01,
+    "selector_abs": 0.005,
+    "selector_ceiling": 1.05,
+    "estimator_rel": 0.02,
+    "efficiency_band": [0.98, 1.02],
+    "focus_guard_n_eff_over_n": 0.95
+  },
+  "arms": [
+    {"name": "gate-0.0", "kind": "cli", "role": "reference", "required": false,
+     "argv": ["stack", "{burst}", "--gate", "0", "--flat-roi", "{roi}", "--out", "{out}"],
+     "expect": "le_one", "criterion": "selector_ceiling", "note": "post-hoc"},
+    {"name": "gate-0.5", "kind": "cli", "role": "reference", "required": false,
+     "argv": ["stack", "{burst}", "--gate", "0.5", "--flat-roi", "{roi}", "--out", "{out}"],
+     "expect": "sqrt_n", "criterion": "estimator_rel", "note": "post-hoc"},
+    {"name": "gate-1.0", "kind": "cli", "role": "reference", "required": false,
+     "argv": ["stack", "{burst}", "--gate", "1", "--flat-roi", "{roi}", "--out", "{out}"],
+     "expect": "sqrt_n", "criterion": "estimator_rel", "note": "post-hoc"},
+    {"name": "gate-2.0", "kind": "cli", "role": "reference", "required": false,
+     "argv": ["stack", "{burst}", "--gate", "2", "--flat-roi", "{roi}", "--out", "{out}"],
+     "expect": "sqrt_n", "criterion": "estimator_rel", "note": "post-hoc"},
+    {"name": "gate-4.0-DEFAULT", "kind": "cli", "role": "reference", "required": false,
+     "argv": ["stack", "{burst}", "--gate", "4", "--flat-roi", "{roi}", "--out", "{out}"],
+     "expect": "sqrt_n", "criterion": "estimator_rel", "note": "post-hoc; the shipped default"},
+    {"name": "gate-8.0", "kind": "cli", "role": "reference", "required": false,
+     "argv": ["stack", "{burst}", "--gate", "8", "--flat-roi", "{roi}", "--out", "{out}"],
+     "expect": "sqrt_n", "criterion": "estimator_rel", "note": "post-hoc"},
+    {"name": "gate-16.0", "kind": "cli", "role": "reference", "required": false,
+     "argv": ["stack", "{burst}", "--gate", "16", "--flat-roi", "{roi}", "--out", "{out}"],
+     "expect": "sqrt_n", "criterion": "estimator_rel", "note": "post-hoc"},
+    {"name": "gate-64.0", "kind": "cli", "role": "reference", "required": false,
+     "argv": ["stack", "{burst}", "--gate", "64", "--flat-roi", "{roi}", "--out", "{out}"],
+     "expect": "sqrt_n", "criterion": "estimator_rel", "note": "post-hoc"}
+  ]
+}

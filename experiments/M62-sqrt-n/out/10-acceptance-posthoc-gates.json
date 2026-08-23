@@ -1,0 +1,251 @@
+{
+  "overall": "CANNOT-CERTIFY",
+  "reason": "no power arm scored below the selector ceiling: the battery has no failing arm and therefore certifies nothing (discipline 419)",
+  "blocking": [],
+  "power_ok": [],
+  "power_lost": [],
+  "determinism": {},
+  "focus_guard": "run src/11-focus-guard.py separately",
+  "spec": "src\\posthoc-gate-sweep.json",
+  "tag": "posthoc-gates",
+  "n": 30,
+  "seeds": [
+    0
+  ],
+  "elapsed_s": 6.420987606048584,
+  "provenance": {
+    "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M62-sqrt-n\\build-m64\\release\\strehl.exe",
+    "binary_mtime": "2026-08-23T16:27:59",
+    "binary_sha256": "ef6849cf8024b1c2d538ae09569c01fe474cf3ef119a2dfe069022a4ea4a3d6d",
+    "constants_from": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+    "repo_head": "d18fbd9fad4a5233a81383846cb9297c08acc577",
+    "crates_dirty": false,
+    "crates_dirty_files": []
+  },
+  "constants": {
+    "gain_divisor": 436.8,
+    "base_iso": 100.0,
+    "read_noise_e_low": 4.2,
+    "read_noise_e_high": 1.2392,
+    "second_base_iso": 400.0,
+    "iso": 160.0,
+    "gain_dn_per_e": 0.3663003663003663,
+    "read_noise_e": 4.2,
+    "read_noise_dn": 1.5384615384615383,
+    "black": 512.0,
+    "white": 15360.0
+  },
+  "tolerances": {
+    "ladder_rel": 0.01,
+    "selector_abs": 0.005,
+    "selector_ceiling": 1.05,
+    "estimator_rel": 0.02,
+    "efficiency_band": [
+      0.98,
+      1.02
+    ],
+    "focus_guard_n_eff_over_n": 0.95
+  },
+  "summary": {
+    "gate-0.0": {
+      "arm": "gate-0.0",
+      "criterion": "selector_ceiling",
+      "expect": "le_one",
+      "role": "reference",
+      "required": false,
+      "cli": {
+        "gate": 0.0,
+        "mean_n_eff": 1.0,
+        "n_eff_1_pct": 100.0,
+        "pred_sigma_gain": 1.0,
+        "hp_sd_dn": 62.374,
+        "hp_ratio": 1.009
+      },
+      "out_sha256": "83179e591608b47e936d9148f465acc6fa3e899e06651e2042177a283da86a98",
+      "note": "post-hoc",
+      "efficiency": 0.9773281896822165,
+      "ratio_mean": 0.9773281896822165,
+      "ratio_sd_between_seeds": 0.0,
+      "ratio_per_seed": [
+        0.9773281896822165
+      ],
+      "bootstrap_se_seed0": 0.0008873320772949091,
+      "verdict": "PASS"
+    },
+    "gate-0.5": {
+      "arm": "gate-0.5",
+      "criterion": "estimator_rel",
+      "expect": "sqrt_n",
+      "role": "reference",
+      "required": false,
+      "cli": {
+        "gate": 0.5,
+        "mean_n_eff": 2.966,
+        "n_eff_1_pct": 26.5,
+        "pred_sigma_gain": 0.6785,
+        "hp_sd_dn": 61.41,
+        "hp_ratio": 0.993
+      },
+      "out_sha256": "829950a5e73b4460e2f76e9d70c65381ac04c1e2fd43ae42a7e322cfebbd22db",
+      "note": "post-hoc",
+      "efficiency": 0.7906377485957714,
+      "ratio_mean": 1.3616425650039787,
+      "ratio_sd_between_seeds": 0.0,
+      "ratio_per_seed": [
+        1.3616425650039787
+      ],
+      "bootstrap_se_seed0": 0.007307769396577155,
+      "verdict": "FAIL"
+    },
+    "gate-1.0": {
+      "arm": "gate-1.0",
+      "criterion": "estimator_rel",
+      "expect": "sqrt_n",
+      "role": "reference",
+      "required": false,
+      "cli": {
+        "gate": 1.0,
+        "mean_n_eff": 6.804,
+        "n_eff_1_pct": 5.69,
+        "pred_sigma_gain": 0.4541,
+        "hp_sd_dn": 60.797,
+        "hp_ratio": 0.983
+      },
+      "out_sha256": "ebe4832afc6081f0a92f3eac7b71c6a917076fffe80d8cb8048138c1375a8aa6",
+      "note": "post-hoc",
+      "efficiency": 0.7556085847377748,
+      "ratio_mean": 1.9709655613362183,
+      "ratio_sd_between_seeds": 0.0,
+      "ratio_per_seed": [
+        1.9709655613362183
+      ],
+      "bootstrap_se_seed0": 0.019093062664884922,
+      "verdict": "FAIL"
+    },
+    "gate-2.0": {
+      "arm": "gate-2.0",
+      "criterion": "estimator_rel",
+      "expect": "sqrt_n",
+      "role": "reference",
+      "required": false,
+      "cli": {
+        "gate": 2.0,
+        "mean_n_eff": 18.434,
+        "n_eff_1_pct": 0.2,
+        "pred_sigma_gain": 0.2488,
+        "hp_sd_dn": 60.271,
+        "hp_ratio": 0.975
+      },
+      "out_sha256": "db6f642e1ee2b2c51cac2f117f6140a7cb15e80357c95f1a837867fcb1a9c5fd",
+      "note": "post-hoc",
+      "efficiency": 0.8759726641084139,
+      "ratio_mean": 3.760974122187037,
+      "ratio_sd_between_seeds": 0.0,
+      "ratio_per_seed": [
+        3.760974122187037
+      ],
+      "bootstrap_se_seed0": 0.037677082549550205,
+      "verdict": "FAIL"
+    },
+    "gate-4.0-DEFAULT": {
+      "arm": "gate-4.0-DEFAULT",
+      "criterion": "estimator_rel",
+      "expect": "sqrt_n",
+      "role": "reference",
+      "required": false,
+      "cli": {
+        "gate": 4.0,
+        "mean_n_eff": 29.539,
+        "n_eff_1_pct": 0.0,
+        "pred_sigma_gain": 0.1842,
+        "hp_sd_dn": 60.064,
+        "hp_ratio": 0.971
+      },
+      "out_sha256": "96f71f10d02692b8ceb26eb07c78f8753f53ee936e6e8baf7c003204e8caf59f",
+      "note": "post-hoc; the shipped default",
+      "efficiency": 1.0000763856295505,
+      "ratio_mean": 5.435394455104036,
+      "ratio_sd_between_seeds": 0.0,
+      "ratio_per_seed": [
+        5.435394455104036
+      ],
+      "bootstrap_se_seed0": 0.006198578584524316,
+      "verdict": "PASS"
+    },
+    "gate-8.0": {
+      "arm": "gate-8.0",
+      "criterion": "estimator_rel",
+      "expect": "sqrt_n",
+      "role": "reference",
+      "required": false,
+      "cli": {
+        "gate": 8.0,
+        "mean_n_eff": 30.0,
+        "n_eff_1_pct": 0.0,
+        "pred_sigma_gain": 0.1826,
+        "hp_sd_dn": 60.056,
+        "hp_ratio": 0.971
+      },
+      "out_sha256": "cf0d22b3ecbbe10fd8dedfd432fa63d20f0ebc2f547ee52ec5b61de0b92e05f6",
+      "note": "post-hoc",
+      "efficiency": 1.0014072256887439,
+      "ratio_mean": 5.484933267583918,
+      "ratio_sd_between_seeds": 0.0,
+      "ratio_per_seed": [
+        5.484933267583918
+      ],
+      "bootstrap_se_seed0": 0.0044028000933678535,
+      "verdict": "PASS"
+    },
+    "gate-16.0": {
+      "arm": "gate-16.0",
+      "criterion": "estimator_rel",
+      "expect": "sqrt_n",
+      "role": "reference",
+      "required": false,
+      "cli": {
+        "gate": 16.0,
+        "mean_n_eff": 30.0,
+        "n_eff_1_pct": 0.0,
+        "pred_sigma_gain": 0.1826,
+        "hp_sd_dn": 60.056,
+        "hp_ratio": 0.971
+      },
+      "out_sha256": "57ff940b7dd7b0410fdaedcc12337839e3b809cbb5bbb07e59a9041dea78f07e",
+      "note": "post-hoc",
+      "efficiency": 1.0014074709439336,
+      "ratio_mean": 5.484934610901917,
+      "ratio_sd_between_seeds": 0.0,
+      "ratio_per_seed": [
+        5.484934610901917
+      ],
+      "bootstrap_se_seed0": 0.00440284825464751,
+      "verdict": "PASS"
+    },
+    "gate-64.0": {
+      "arm": "gate-64.0",
+      "criterion": "estimator_rel",
+      "expect": "sqrt_n",
+      "role": "reference",
+      "required": false,
+      "cli": {
+        "gate": 64.0,
+        "mean_n_eff": 30.0,
+        "n_eff_1_pct": 0.0,
+        "pred_sigma_gain": 0.1826,
+        "hp_sd_dn": 60.056,
+        "hp_ratio": 0.971
+      },
+      "out_sha256": "57ff940b7dd7b0410fdaedcc12337839e3b809cbb5bbb07e59a9041dea78f07e",
+      "note": "post-hoc",
+      "efficiency": 1.0014074709439336,
+      "ratio_mean": 5.484934610901917,
+      "ratio_sd_between_seeds": 0.0,
+      "ratio_per_seed": [
+        5.484934610901917
+      ],
+      "bootstrap_se_seed0": 0.00440284825464751,
+      "verdict": "PASS"
+    }
+  }
+}
