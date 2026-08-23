@@ -127,19 +127,47 @@ def main() -> int:
     with open(CSV, newline="", encoding="utf-8") as fh:
         rows = list(csv.DictReader(fh))
 
-    by = {}
+    # NOTE, disclosed: as committed at d34fa32 this script read columns
+    # "ratio", "half_pct" and "ac_pct" that ptc-ladder.csv does not contain,
+    # and died with a KeyError before producing a number. The metrics below
+    # are lifted verbatim from 13-final-gate.py so the CONSIST membership is
+    # identical to the published one. The pre-registered DESIGN above is
+    # untouched; only the loading was broken. See error 22 in the report.
+    per = {}
     for r in rows:
-        by.setdefault(r["stack"], {})[r["plane"]] = r
+        d = per.setdefault(r["stack"], {})[r["plane"]] = {}
+        for k in ("gA", "gB", "gC", "g_model", "g_half0", "g_half1",
+                  "resid_pct"):
+            d[k] = float(r[k])
+
+    GREENS = ("G1", "G2")
+
+    def gm(s, key):
+        return mean([per[s][p][key] for p in GREENS if p in per[s]])
 
     def r_greens(s):
-        g = [float(by[s][p]["ratio"]) for p in ("G1", "G2") if p in by[s]]
-        return mean(g)
+        return mean([per[s][p]["gA"] / per[s][p]["g_model"]
+                     for p in GREENS if p in per[s]])
+
+    M = {}
+    for s in per:
+        gA = gm(s, "gA")
+        M[s] = {
+            "resid": gm(s, "resid_pct"),
+            "ab": 100 * abs(gm(s, "gB") / gA - 1) if gA else float("nan"),
+            "ac": 100 * abs(gm(s, "gC") / gA - 1) if gA else float("nan"),
+            "half": 100 * abs(gm(s, "g_half1") / gm(s, "g_half0") - 1),
+        }
 
     def consist(s):
-        d = by[s]["G1"]
-        return float(d["half_pct"]) < 5.0 and float(d["ac_pct"]) < 10.0
+        return M[s]["half"] < 5.0 and M[s]["ac"] < 10.0
 
-    gated = [s for s in STACKS if s in by and consist(s)]
+    missing = sorted(set(STACKS) - set(per))
+    if missing:
+        print(f"ABORT stacks named here but absent from the CSV: {missing}")
+        return 1
+
+    gated = [s for s in STACKS if consist(s)]
 
     say("=" * 74)
     say("M61 step 17 -- polariser arm re-run with `foam` corrected to CPL-ON")
@@ -278,9 +306,8 @@ def main() -> int:
     say("ARM D -- WHICH REASONS TO DOUBT ISO 1000 SURVIVE THE CORRECTION?")
     say("-" * 74)
     for s in ("coffee-bubbles", "foam"):
-        d = by[s]["G1"]
-        say(f"  {s:<16} r_greens={r_greens(s):.4f}  half={float(d['half_pct']):.1f}%  "
-            f"ac={float(d['ac_pct']):.1f}%  CONSIST={'keep' if consist(s) else 'DROP'}  "
+        say(f"  {s:<16} r_greens={r_greens(s):.4f}  half={M[s]['half']:.1f}%  "
+            f"ac={M[s]['ac']:.1f}%  CONSIST={'keep' if consist(s) else 'DROP'}  "
             f"CPL={STACKS[s][1]}({STACKS[s][2]})")
     say()
     say("  reason 1, gate dependence: coffee-bubbles fails CONSIST on its own")

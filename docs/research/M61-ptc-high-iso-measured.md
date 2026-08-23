@@ -31,9 +31,17 @@ real provenance:
 
 | CPL | stacks |
 |---|---|
-| **ON (confirmed)** | `bee-1`, `bee-2`, `bee-3`, `wrapped-text-1`, `wrapped-text-2`, `coffee-bubbles` |
-| **off (reported)** | `109MSDCF`, `112MSDCF`, `113MSDCF`, `119MSDCF`, `foam` |
+| **ON (owner named)** | `bee-1`, `bee-2`, `bee-3`, `wrapped-text-1`, `wrapped-text-2`, `coffee-bubbles` |
+| **ON (probable — owner recollection, hedged)** | `foam` |
+| **off (owner reported)** | `109MSDCF`, `112MSDCF`, `113MSDCF`, `119MSDCF` |
 | **UNKNOWN even to the owner** | `coffee-bean` |
+
+> **`foam` was corrected after this report was first committed.** My brief placed
+> it under CPL-off and I restated that. Asked directly, the owner said *"probably.
+> i doubt i would've removed it. but don't recall specifically"*, and it sits 6.5
+> minutes after `coffee-bubbles` — named CPL-on — in a single session. It is
+> carried here as **probable, not measured**, and §4.8 fact 43 shows the
+> milestone's verdict is identical whether it is on, off, or dropped. Error 21.
 
 There was no intentional rotation between shoots. A CPL costs roughly 1.5–2 stops
 and can vary across the frame, so **any comparison straddling that boundary
@@ -130,10 +138,13 @@ the owner corrected two corpus facts I had taken on trust:
 | **`a4c8abb`** | `11-provenance-recheck.py` | the matched-pair retraction and the CPL boundary; predictions P-A…P-D and criteria C1…C5, including arm E, a suspicion registered *against* my own published result |
 | **`1cdb1eb`** | `12-gate-metric.py` | which fit-quality metric predicts slope error; Q-1…Q-4 and D1…D3, with Q-4 pre-committing to *withdrawing* the ISO-1000 number if the answer went the other way |
 | **`b0c0f92`** | `13-final-gate.py` | the replacement gate, after script 12 disqualified its own selection rule; G1…G3 and predicted membership fixed in advance |
+| **`d34fa32`** | `17-cpl-recorrect.py` | the `foam` polarizer correction routed from SYNTHESIS fact 925; arms A–E, two predictions, **and the direction of the expected effect** — that correcting it *removes* a reason to doubt ISO 1000 — recorded before the run so the outcome could not be read as motivated |
 
 The chain is worth reading in order, because **script 11 falsified part of script
-11's own design and script 12 disqualified script 12's own rule** — both visible
-only because the predictions were committed first. Errors 15–17 record them.
+11's own design, script 12 disqualified script 12's own rule, and script 17 would
+not execute as committed** — the first two visible only because the predictions
+were fixed first, the third because a pre-registered docstring certifies intent
+and not that the code beneath it runs. Errors 15–17 and 22 record them.
 
 **The estimator, M61-E1 (DERIVED).** Photon transfer from a **temporal**
 adjacent-frame difference, per CFA plane, on raw DN, never demosaiced, never
@@ -336,6 +347,15 @@ says 1.04 ± 0.01 for ISO 1000; that uncertainty is the internal spread of a sin
 stack and does **not** cover the gate dependence. ISO 500, by contrast, is
 identical under every gate tested and rests on two independent stacks that are the
 two best-conditioned fits in the whole ladder.
+
+> **One qualification on ISO 1000 was withdrawn after this section was written.**
+> I originally gave a *second* reason to distrust it — that its two stacks straddle
+> the polarizer boundary — and that reason is void: `foam` is CPL-on, not off, so
+> both legs sit on the same side (facts 42–44, error 21). The gate dependence
+> described above is unaffected and remains the real limitation, because it comes
+> from `coffee-bubbles`' own internal replicates and has nothing to do with the
+> filter. Net: ISO 1000 is **less** encumbered than this section says, and still
+> the weaker of the two arms.
 
 **Fact 14 (MEASURED).** ISO 400 — the first ISO in high mode, and the one M48c's
 step is anchored to — gives `r_high/r_low = 1.014 ± 0.034` (pre-registered) and
@@ -578,35 +598,109 @@ It climbs by 1–3% and plateaus near 0.85. **Correlation cannot supply the miss
 
 ### 4.8 "The polarizer explains it" — the CPL boundary, tested not asserted
 
-**Fact 35 (MEASURED).** The CPL is on six stacks and off five, with one unknown,
-so the sceptical question is whether the polarizer is **aligned with the gain-mode
-split** — if it were, `r_high/r_low` would confound a transmission change with the
-switch. It is not aligned. `11-provenance-recheck.py`:
+> **Corrected after commit `2d7c7c9`.** The provenance table below originally
+> placed `foam` under CPL-off, on my brief's authority. That is wrong. The owner,
+> asked directly about `foam`, said *"probably. i doubt i would've removed it. but
+> don't recall specifically"* — and `coffee-bubbles`, which he did name as CPL-on,
+> was shot **6.5 minutes earlier in the same session**. Corrected below, re-run in
+> `17-cpl-recorrect.py`, and disclosed as error 21. The correction **removes** a
+> reason to doubt ISO 1000 rather than adding one; I pre-registered that direction
+> before running, so it cannot be read as motivated. `foam`'s state is carried as
+> **probable, not measured** — a recollection the person who was there hedged is
+> not promoted by being convenient.
+
+**Fact 42 (MEASURED, on corrected provenance).** The polarizer is **not aligned
+with the gain-mode split**, and this survives the correction. If it were aligned,
+`r_high/r_low` would confound a transmission change with the switch.
 
 | side of the gain switch | CPL ON | CPL off | unknown |
 |---|---|---|---|
 | low (ISO < 400) | 3 (`bee-1`, `bee-3`, `wrapped-text-1`) | 2 (`119MSDCF`, `109MSDCF`) | 1 (`coffee-bean`) |
-| high (ISO ≥ 400) | 3 (`bee-2`, `wrapped-text-2`, `coffee-bubbles`) | 3 (`112MSDCF`, `113MSDCF`, `foam`) | 0 |
+| high (ISO ≥ 400) | 4 (`bee-2`, `wrapped-text-2`, `coffee-bubbles`, **`foam`**) | 2 (`112MSDCF`, `113MSDCF`) | 0 |
 
-**Both sides are mixed in nearly the same proportion**, so the CPL cannot generate
-a spurious step. Computing the switch ratio *within* each CPL population, under
-the CONSIST gate: **CPL-ON only 1.0100, CPL-off only 1.0229, all stacks 1.0189.**
-They agree with each other and with H0, and none of them approaches H1.
+Both sides still contain both states, which was the pre-registered criterion for
+the claim surviving. Switch ratio computed *within* each CPL population, all under
+the **CONSIST** gate: **CPL-ON 1.0219, CPL-off 1.0233, all gated 1.0211.** They
+agree with each other and with H0 = 1.0; none approaches H1 = 1.840.
 
-**Fact 36 (MEASURED).** The commissioned ISO-500 headline rests on `112MSDCF` and
-`113MSDCF`, both **CPL-off**, and the control `109MSDCF` is **CPL-off**. So the
-control and the strongest arm sit on the *same* side of the polarizer boundary,
-which is the configuration that needs no correction at all. The ISO-1000 arm is
-the one that straddles: `coffee-bubbles` is CPL-ON and `foam` is CPL-off, which is
-a second independent reason — beyond fact 34's gate dependence — to treat ISO 1000
-as the weak arm.
+**Fact 43 (MEASURED).** The verdict does not depend on `foam`'s polarizer state at
+all. Recomputing under all three assignments it could take:
+
+| assumption | CPL-ON | CPL-off | all gated | closer to |
+|---|---|---|---|---|
+| `foam` ON (corrected) | 1.0219 | 1.0233 | 1.0211 | H0 |
+| `foam` off (as published) | 1.0100 | 1.0254 | 1.0211 | H0 |
+| `foam` dropped entirely | 1.0100 | 1.0233 | 1.0170 | H0 |
+
+**The H0/H1 verdict is identical under every assignment**, so an unmeasured
+recollection is not load-bearing for this milestone's conclusion. That is the
+useful form of the answer: not "the correction did not matter" but "here is the
+range it could have moved things, and it is 0.4%".
+
+**Fact 35 (superseded by facts 42 and 43, left in place per rule 15).** As
+published, this fact put `foam` under CPL-off and reported **CPL-ON 1.0100,
+CPL-off 1.0229, all stacks 1.0189**. Two things are wrong with it, and only one is
+the provenance error. **The numbers were computed under the `resid < 25%` gate by
+`11-provenance-recheck.py`, while the sentence around them says "under the CONSIST
+gate".** That mislabel is mine and is independent of the polarizer — under CONSIST
+with `foam` still off, the same three quantities read 1.0100, 1.0254 and 1.0211.
+So the movement from the published triple to fact 42's is **mostly a change of
+gate, not a change of provenance**, and I would have been wrong to attribute it
+all to the correction. Error 21 covers the provenance; error 23 covers the
+mislabel. The original claim — both sides mixed, no alignment, agreement with H0 —
+survives both.
+
+**Fact 36 (superseded by fact 44, left in place per rule 15).** As published, this
+fact said the ISO-1000 arm "straddles" the polarizer boundary, and treated that as
+**a second independent reason** — beyond fact 34's gate dependence — to distrust
+ISO 1000. Under the corrected table both ISO-1000 legs are CPL-ON, so there is no
+straddle and **that reason evaporates**.
+
+**Fact 44 (MEASURED).** Of my two published reasons for treating ISO 1000 as the
+weak arm, **one survives and one does not**:
+
+- **Gate dependence survives.** `coffee-bubbles` fails CONSIST on its own internal
+  replicates — split-half disagreement — which has nothing to do with the
+  polarizer and is unaffected by any provenance change.
+- **The CPL straddle does not.** Both legs are CPL-ON, 6.5 minutes apart in one
+  session.
+
+The commissioned ISO-500 headline still rests on `112MSDCF` and `113MSDCF`, both
+CPL-off, with the control `109MSDCF` also CPL-off — the strongest arm and the
+control on the *same* side of the boundary, which is the configuration needing no
+correction at all. That part of the published fact was right and is unchanged.
+
+**Fact 45 (MEASURED, and it makes my published fact 37 stronger, not weaker).**
+There is **no ISO anywhere in this corpus with stacks on both sides of the
+polarizer boundary**:
+
+| ISO | CPL states present | crossing? |
+|---|---|---|
+| 50 | off, unknown | no |
+| 100 | on only | no |
+| 160 | off only | no |
+| 400 | on only | no |
+| 500 | off only | no |
+| 1000 | on only (after correction) | no |
+
+So the direct test "does a CPL perturb a slope" is **structurally unavailable** —
+unavailable by the design of the corpus, not spoiled by the fit quality of one
+stack. My fact 37 said the test was void because both ISO-1000 legs failed the fit
+gate; that reasoning was contingent on data quality and the truth is
+architectural. A test that cannot be run by construction is a cleaner thing to
+report than a test that failed, because it tells the owner exactly what capture
+would fix it: **one stack at an ISO already in the corpus, with the polarizer in
+the other state.**
 
 **Fact 37 (MEASURED, and it is a null with a caveat I must not bury).** The only
 direct test of "does the CPL perturb a slope" available in this corpus is the one
 ISO with stacks on both sides — ISO 1000 — and **both of its legs fail the fit
 gate** (`coffee-bubbles` split-half 1105%, `foam` max residual 42%). So the direct
 test is **not available**: I pre-registered it as weak and it turned out to be
-void. The indirect evidence is fact 35's agreement between CPL populations.
+void. The indirect evidence is fact 42's agreement between CPL populations.
+*(Superseded in its reasoning by fact 45: the test is unavailable structurally,
+and its premise that ISO 1000 has stacks on both sides is false. The conclusion —
+no direct test — is unchanged.)*
 
 What I can see is a residual worth recording. In low mode, the CPL-ON stacks
 average `r = 0.9729` (gated) and the CPL-off stack reads `0.9887` — a **1.6%**
@@ -616,7 +710,9 @@ invariance criterion, but only because the ON group's spread was inflated by
 gap is *resolved*, not noise. **It is also perfectly degenerate with ISO**: every
 CPL-ON low-mode stack is at ISO 100 and the CPL-off one is at ISO 160, so "CPL
 effect" and "ISO-100 effect" cannot be separated in this corpus at all. I report
-it as an unresolved 1.6% and name both candidates (question 7).
+it as an unresolved 1.6% and name both candidates (question 7). Fact 45 explains
+*why* it is unresolvable in general and not just here: no ISO crosses the
+boundary, so the corpus cannot separate the two on any stack.
 
 ### 4.9 "Your answer depends on which stacks you threw away"
 
@@ -760,7 +856,7 @@ reference with its surrounding context and read them one at a time.
 `src/10-fix-refs.py` restores them, verified against M48c's own headers, and
 asserts that each replacement fires exactly once. This is the same class of
 mistake as error 1: a mechanical transformation applied one scope too wide. It
-cost the least of my twenty errors to fix and would have been the most
+cost the least of my twenty-three errors to fix and would have been the most
 expensive to publish.
 
 **Error 13 — I lost my own commit to another agent's `git add -A`.** I staged
@@ -889,6 +985,66 @@ had been silently reporting `n=8` from a looser pattern that would equally have
 counted any inline `**Question 3**` reference. Every check in this file has now
 been wrong at least once.
 
+**Error 21 — I got `foam`'s polarizer state wrong, in the same document where I
+wrote the discipline against doing exactly that.** My brief listed `foam` as
+CPL-off; I put it in a provenance table and built two claims on it. It is
+probably CPL-on: the owner, asked directly, said *"probably. i doubt i would've
+removed it"*, and `coffee-bubbles` — named CPL-on — was shot 6.5 minutes earlier
+in the same session. Nobody unscrews a filter between two stacks six minutes
+apart.
+
+Three things make this worse than a simple factual slip, and I would rather state
+them than let the correction read as routine.
+
+1. **The correction already existed in the corpus and I did not go and look.**
+   It is recorded at SYNTHESIS fact 846, derived by the orchestrator before my
+   report was committed. I had the corpus, I had rule 40, and I took a brief's
+   table as given.
+2. **Discipline 10, which I wrote in this very report, says not to do this.** Its
+   words are: *an unverified corpus fact must be recorded as unverified and then
+   checked, not restated as background.* I wrote that about the matched pairs,
+   published it, and in the same commit restated a second unverified provenance
+   claim as background. **Writing a discipline is not the same as running it**,
+   and the gap between the two is the actual finding here.
+3. **It was load-bearing in the direction of my own caution, which is why it
+   survived.** The error made ISO 1000 look *worse*, and I was already treating
+   ISO 1000 as the weak arm — so the wrong fact agreed with my prior and I never
+   pushed on it. A mistake that flatters your own scepticism is as invisible as
+   one that flatters your hypothesis, and I had no check that would have caught
+   it. Fact 44 states plainly which of my two reasons for doubting ISO 1000
+   survives (the gate one) and which evaporates (this one).
+
+The verdict does not move: fact 43 recomputes it under `foam` ON, off and dropped,
+and the H0/H1 answer is identical in all three. That is luck about the
+consequence, not diligence about the premise.
+
+**Error 22 — the pre-registered script would not run.** `17-cpl-recorrect.py` as
+committed at `d34fa32` read three CSV columns — `ratio`, `half_pct`, `ac_pct` —
+that `ptc-ladder.csv` does not contain. It died with a `KeyError` before producing
+a number. I fixed the loading by lifting the metric definitions verbatim from
+`13-final-gate.py`, so the gate membership is identical to the published one, and
+left the fix commented at the site. **The pre-registered design was untouched;
+only the loading was broken.** But it is worth being exact about what
+"pre-registered" then bought: a docstring committed before the run fixes the
+*intent*, and it does not certify that the code beneath it executes. A
+pre-registration that has never been run is a promise, not an instrument.
+
+**Error 23 — I labelled a number with the wrong gate, and only caught it because
+two of my own scripts disagreed.** Published fact 35 quotes CPL-ON 1.0100, CPL-off
+1.0229 and all-stacks 1.0189 as being "under the CONSIST gate". They are not: they
+come from `11-provenance-recheck.py`, which used the mechanical `resid < 25%`
+gate. Under CONSIST the same three quantities read 1.0100, 1.0254 and 1.0211.
+
+I found this only because `17-cpl-recorrect.py` returned 1.0211 for a quantity I
+had published as 1.0189, and I chased the 0.2% instead of shrugging at it. Had I
+attributed the difference to the polarizer correction — the obvious story, since
+that was the thing I had just changed — I would have reported a provenance effect
+that was really a gate label. **The near-miss is the lesson: a discrepancy that
+appears right after a change will be attributed to that change unless you check,
+and the check here was three lines of grep.** The substantive claim in fact 35 —
+both sides mixed, no alignment with the gain split, agreement with H0 — is
+unaffected under either gate.
+
 ---
 
 ## 6. Disciplines and open questions
@@ -958,6 +1114,20 @@ labelling discipline as a measurement. Where it cannot be checked, the arm that
 depends on it is confounded and must be labelled so — see fact 37, where the CPL
 and ISO are perfectly degenerate and I could not separate them.
 
+**Discipline 12 (ARGUED).** **Writing a discipline is not running it.**
+Discipline 10 says an unverified corpus fact must be checked rather than restated.
+I published that sentence and, in the same commit, restated a second unverified
+provenance claim as background — `foam`'s polarizer state, whose correction was
+already sitting in the corpus at SYNTHESIS fact 846 (error 21). A discipline
+stated in prose is a note to a future reader; it changes nothing about the run
+that carried it. **The operational form is a list of every premise the report
+relies on that was supplied rather than measured, checked one at a time against
+the corpus before the report is committed.** Mine would have had two entries and
+both were wrong. Note also the direction of that error: it made my own weakest arm
+look weaker, agreed with the caution I already held, and so drew no scrutiny. **A
+premise that flatters your scepticism is as unexamined as one that flatters your
+hypothesis.**
+
 **Discipline 11 (ARGUED).** **When replacing a block of text that begins with a
 heading, re-emit the heading in the replacement.** Errors 12/13, 19 and 20 in this
 report are one defect three times: an anchored replacement whose new text did not
@@ -1016,9 +1186,21 @@ cheaply.
 
 **Question 8.** Is the ISO-1000 arm real? It rests on a single stack (`foam`)
 whose partner is unusable, it moves from 1.0174 to 1.2417 depending on the fit
-gate, and it vanishes entirely under one gate (fact 34). It also straddles the CPL
-boundary (fact 36). Any future ISO-1000 capture — CPL state recorded, static
-subject — would replace the weakest arm in this report.
+gate, and it vanishes entirely under one gate (fact 34). It does **not** straddle
+the CPL boundary — that qualification was mine and it was wrong (fact 44, error
+21); both legs are CPL-on. Any future ISO-1000 capture — CPL state recorded,
+static subject — would replace the weakest arm in this report.
+
+**Question 9.** `foam`'s polarizer state is a hedged recollection, not a
+measurement, and `coffee-bean`'s is unknown to the owner. Is there anything in the
+files themselves that could settle either without asking? Neither EXIF nor a
+filter's presence is recorded by the body, but a CPL costs 1.5–2 stops, so the
+exposure-vs-scene-brightness relation across stacks shot in one session might
+carry the signature. I did not attempt this, and I flag it as *plausible but
+unproven* rather than as work I am recommending: it would be a new estimator with
+its own control problem, to settle a fact that fact 43 has already shown does not
+change this milestone's verdict. Worth it only if some other milestone needs the
+provenance harder than I did.
 
 ---
 
@@ -1067,17 +1249,24 @@ subject — would replace the weakest arm in this report.
 - **P7 (ARGUED).** The tripwire
   `the_gain_relation_is_still_continuous_across_the_dual_gain_switch` should stay
   green, now on illuminated evidence rather than on absence of evidence.
-- **P8 (MEASURED).** **The corpus is only partly polarized.** The CPL is
-  confirmed on `bee-1/2/3`, `wrapped-text-1/2` and `coffee-bubbles`; reported off
-  on `109MSDCF`, `112MSDCF`, `113MSDCF`, `119MSDCF` and `foam`; and **unknown on
-  `coffee-bean`**. This corrects an earlier statement of mine that it was on every
-  frame. M54's clip mask and anything else reading specular or clipping statistics
-  needs this table, not a single assumption. The CPL is **not** aligned with the
-  dual-gain split — both sides are mixed in nearly equal proportion — so it cannot
-  manufacture a step (fact 35).
+- **P8 (MEASURED).** **The corpus is only partly polarized.** The CPL is owner-
+  named on `bee-1/2/3`, `wrapped-text-1/2` and `coffee-bubbles`; **probable on
+  `foam`** (owner recollection, hedged); reported off on `109MSDCF`, `112MSDCF`,
+  `113MSDCF` and `119MSDCF`; and **unknown on `coffee-bean`**. This corrects two
+  earlier statements of mine — that it was on every frame, and that `foam` was off
+  (errors 18 and 21). M54's clip mask and anything else reading specular or
+  clipping statistics needs this table, not a single assumption. The CPL is **not**
+  aligned with the dual-gain split — both sides of the switch contain both states —
+  so it cannot manufacture a step (fact 42), and the milestone's verdict is
+  unchanged whether `foam` is on, off or dropped (fact 43).
 - **P9 (ARGUED).** A residual **1.6%** offset between CPL-ON and CPL-off stacks in
   low mode is **perfectly degenerate with ISO 100 vs ISO 160** in this corpus and
   cannot be separated by any reanalysis (fact 37, question 7). One capture at ISO
   160 with the CPL on, or ISO 100 with it off, would settle it. Until then, no
   claim in the corpus that straddles the CPL boundary should be quoted below the
   2% level.
+- **P10 (MEASURED).** **No ISO in this corpus has stacks on both sides of the
+  polarizer boundary** (fact 45), so the direct test of whether a CPL perturbs a
+  measured slope is unavailable *by construction*, not spoiled by data quality.
+  The cheapest capture that would close it is one stack at an ISO already present,
+  with the filter in the other state — which is the same capture P9 asks for.

@@ -89,6 +89,15 @@ def main() -> int:
     # external references must resolve in the report they name.
     # Each entry: (label, file, regex that must match, note)
     EXT_CHECKS = [
+        ("SYNTH f846 foam CPL", "SYNTHESIS.md",
+         r"\|\s*846\s*\|.*?`foam`.*?straddle the CPL boundary.*?probably false",
+         "the correction that already existed in the corpus (error 21)"),
+        ("SYNTH f849 owner quote", "SYNTHESIS.md",
+         r"probably\.\s*i doubt i would've removed it",
+         "the owner's hedged recollection this report quotes for `foam`"),
+        ("SYNTH f925 routed to M61", "SYNTHESIS.md",
+         r"\|\s*925\s*\|.*?Routed to M61 to correct at source",
+         "the orchestrator routing the foam correction to this milestone"),
         ("M25 fact 200 value", "M25-simulator-measured.md",
          r"\|\s*`109MSDCF`.*?\|\s*160\s*\|\s*0\.3273\s*\|",
          "the 0.3273 DN/e- at ISO 160 that P4b claims to disagree with"),

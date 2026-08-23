@@ -1,0 +1,102 @@
+==========================================================================
+M61 step 17 -- polariser arm re-run with `foam` corrected to CPL-ON
+SYNTHESIS fact 925 / 849; owner: 'probably. i doubt i would've removed it.'
+==========================================================================
+
+CORRECTED PROVENANCE TABLE (grade in brackets)
+  stack              ISO   mode   CPL  grade
+  119MSDCF            50    low   off  named
+  coffee-bean         50    low   unk  unknown
+  bee-1              100    low    on  named
+  bee-3              100    low    on  named
+  wrapped-text-1     100    low    on  named
+  109MSDCF           160    low   off  named
+  bee-2              400   high    on  named
+  wrapped-text-2     400   high    on  named
+  112MSDCF           500   high   off  named
+  113MSDCF           500   high   off  named
+  coffee-bubbles    1000   high    on  named
+  foam              1000   high    on  probable
+
+--------------------------------------------------------------------------
+ARM E -- THE CONTROL (109MSDCF, ISO 160, CPL-off under every table)
+--------------------------------------------------------------------------
+  measured/predicted, greens = 0.9887
+  band 0.80-1.20            -> PASS
+
+--------------------------------------------------------------------------
+ARM A -- IS THE POLARISER ALIGNED WITH THE GAIN SPLIT?
+--------------------------------------------------------------------------
+  all stacks:
+    low  mode: on=3 off=2 unk=1   on=['bee-1', 'bee-3', 'wrapped-text-1'] off=['109MSDCF', '119MSDCF']
+    high mode: on=4 off=2 unk=0   on=['bee-2', 'coffee-bubbles', 'foam', 'wrapped-text-2'] off=['112MSDCF', '113MSDCF']
+
+  CONSIST-gated:
+    low  mode: on=2 off=2 unk=1   on=['bee-1', 'bee-3'] off=['109MSDCF', '119MSDCF']
+    high mode: on=3 off=2 unk=0   on=['bee-2', 'foam', 'wrapped-text-2'] off=['112MSDCF', '113MSDCF']
+
+  switch ratio r_high/r_low within each CPL population (CONSIST gate):
+    population              ratio  n_low  n_high
+    CPL-ON                 1.0219      2       3
+    CPL-off                1.0233      2       2
+    all gated              1.0211      5       5
+
+  H0 (no gain step) predicts 1.0; H1 (M48c's 2.174x step) predicts 1.840.
+  DESIGN CRITERION: both sides of the switch must still contain both
+  CPL states, or the 'not aligned' claim is withdrawn.
+  low-mode CPL states  = ['off', 'on', 'unk']
+  high-mode CPL states = ['off', 'on']
+  both sides mixed     -> YES, claim survives
+
+--------------------------------------------------------------------------
+ARM B -- IS A SAME-ISO CPL CROSSING AVAILABLE ANYWHERE IN THE CORPUS?
+--------------------------------------------------------------------------
+     ISO  CPL states present         usable crossing?
+      50  ['off', 'unk']             no   119MSDCF(off), coffee-bean(unk)
+     100  ['on']                     no   bee-1(on), bee-3(on), wrapped-text-1(on)
+     160  ['off']                    no   109MSDCF(off)
+     400  ['on']                     no   bee-2(on), wrapped-text-2(on)
+     500  ['off']                    no   112MSDCF(off), 113MSDCF(off)
+    1000  ['on']                     no   coffee-bubbles(on), foam(on)
+
+  any ISO with both states -> NO
+  If NO: the direct 'does a CPL perturb a slope' test is STRUCTURALLY
+  UNAVAILABLE in this corpus, not merely spoiled by fit quality.
+  That is a stronger and more useful statement than the one I published.
+
+--------------------------------------------------------------------------
+ARM C -- SENSITIVITY OF THE VERDICT TO `foam`'s POLARISER STATE
+--------------------------------------------------------------------------
+  `foam` CPL-ON is a hedged recollection, so the verdict must be
+  checked under every assignment it could take.
+
+  assumption               CPL-ON  CPL-off      all
+  foam ON (corrected)      1.0219   1.0233   1.0211
+  foam off (published)     1.0100   1.0254   1.0211
+  foam dropped             1.0100   1.0233   1.0170
+
+  distance to H0 (1.000) and to H1 (1.840), 'all gated' column:
+    foam ON (corrected)    ratio=1.0211  |d(H0)|=0.0211  |d(H1)|=0.8189  -> closer to H0
+    foam off (published)   ratio=1.0211  |d(H0)|=0.0211  |d(H1)|=0.8189  -> closer to H0
+    foam dropped           ratio=1.0170  |d(H0)|=0.0170  |d(H1)|=0.8230  -> closer to H0
+
+  verdict flips under any assignment -> NO
+
+--------------------------------------------------------------------------
+ARM D -- WHICH REASONS TO DOUBT ISO 1000 SURVIVE THE CORRECTION?
+--------------------------------------------------------------------------
+  coffee-bubbles   r_greens=1.4660  half=nan%  ac=2.7%  CONSIST=DROP  CPL=on(named)
+  foam             r_greens=1.0174  half=0.3%  ac=0.9%  CONSIST=keep  CPL=on(probable)
+
+  reason 1, gate dependence: coffee-bubbles fails CONSIST on its own
+    internal replicates (split-half), which has nothing to do with the
+    polariser. SURVIVES the correction.
+  reason 2, CPL straddle: under the correction both ISO-1000 legs are
+    CPL-ON, so there is no straddle. EVAPORATES.
+  Net direction: the correction REMOVES a reason to doubt ISO 1000.
+  Pre-registered above, before the run, so it cannot be read as motivated.
+
+==========================================================================
+Every number above is a re-grouping of the committed ptc-ladder.csv.
+No frame was re-decoded; the correction concerns provenance, not pixels.
+==========================================================================
