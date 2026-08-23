@@ -139,7 +139,30 @@ monolithic binary and ship only that binary.
 12. **The author never verifies their own work.** M2 was self-verified
     thoroughly and still shipped five wrong supporting numbers, two of them in
     the direction that loses an argument. See `docs/research/M2-verification.md`.
-13. **kebab-case** for directories and files. Crates are `strehl-*`.
+13. **Sweeping a parameter? Check the plant can express the failure first.**
+    M11 swept the focus window on a fronto-parallel plant and reported it "still
+    improving" at the widest setting. That plant is mathematically incapable of
+    producing an interior optimum for a symmetric window, so the result was not
+    weak evidence — it was **none**, and it cost the project a window less than
+    half the right size. Ask what the stimulus would have to contain for the
+    answer to be anything but the endpoint. **Report an endpoint argmin as "no
+    turnover found within the sweep", never as an optimum.**
+14. **Verifying the read-only corpus guarantee? Use `Get-ChildItem -Force`.**
+    Without `-Force` it silently skips hidden and system files and under-reports
+    `C:\dev\macro` by **1081 files / ~312 MB**, which looks exactly like
+    evidence that the tree was modified. Correct totals: **18530 files /
+    286,893,514,060 bytes**. Also: `C:\dev\macro\test\119MSDCF` and
+    `D:\personal\macro\119MSDCF` are the **same 33 frames**, verified
+    byte-identical through a full measurement sweep. Two stacks must mean two
+    *different* stacks — use 109/119 or 112/113, never a directory and its
+    mirror.
+15. **"Halo" is overloaded — never use the bare word.** In the plugin interface
+    and SYNTHESIS fact 32 it is the *rectangle expansion* a filter needs beyond
+    its output tile (19.42 / 32.39 / 89.23 plane px), an alignment and warp
+    margin. In the stacking literature it is the *artifact* at an occluding edge
+    where the selector drags one surface across another. Say **"plugin halo"**
+    or **"occlusion halo"**.
+16. **kebab-case** for directories and files. Crates are `strehl-*`.
 
 ## Layout
 
@@ -172,6 +195,7 @@ monolithic binary and ship only that binary.
 | `M10-deep-alignment-measured.md` | **Deep-stack alignment: why chaining really fails, and what works instead.** Chaining does not fail from accumulated random error — **short-baseline edges under-report magnification change by ~3.2-3.5x**, coherently, so 36.4 of the chain's 40.3 px corner error is scale alone. Proved by a telescoping conservation identity (span-1 −1.6876% vs span-16 −5.8891%), then isolated: the bias needs a **real inter-frame content change** and lives **below ~0.5 px** of differential displacement (resampler-free control recovers a planted increment at 1.00; a real defocus pair at 0.56). A global least-squares solve over a sparse multiscale graph of direct edges places **105/105 frames at 6.76 plane px** against a fixed reference's **76/105**. Error is bounded by the *edges*, not the solver. Also: the scale centre is per-stack, not per-rig. **Risk 11 → partially solved; rule 6 rewritten**; facts 43-48 |
 | `M12-shrinkage-measured.md` | **Can the short-baseline shrinkage be calibrated away? No.** Fitted on one stack it transfers to **0 of 18** cross-scene pairs and makes the worst case **83.4x worse**; even an oracle in-sample correction leaves a chain at twice the error the plain global solve already achieves. The magnitude is a property of the **scene**, ranging 1.03x-3.26x across five stacks — two stacks matched to 0.3% in displacement differ **3.11x** — so fact 43's "3.2-3.5x" is rescoped to `coffee-bean` alone. Also **corrects fact 49**: `112`/`113` share a per-frame focus step rather than sampling one interval at two densities, measured both by magnification and from the focus band in the pixels. Introduces a **focus index** measurable without metadata, since `FocusPosition2` has only 3 distinct values across a 79-frame sweep. **Rule 6 amended; risk 11's shrinkage question closed**; facts 50-54 |
 | `M11-focus-bakeoff-measured.md` | **What to select with, and what selection costs.** A 47-operator pre-registered bake-off on two real stacks, scored on a measured Pareto front of selectivity against noise excess. **The shipped `ring(1,3)` ranks 26-27th of 36** (N = 1.3475x, ~45% of the best selectivity); the recommendation is **Tenengrad under an 11x11 box window** (N = 1.1324x) — re-tuning the ring cannot close the gap. Headline: **no operator anywhere on the front is noise-free** (0 of 36 reach N ≤ 1.02x), so operator choice alone cannot rescue a selector. Zero-centre-tap operators *are* noise-free (φ = 0.0000, Ncorr 0.989-0.997) but recover only 34-40% of a planted focus surface. **Windowing and normalisation each re-introduce a centre tap, additively** — so φ must be probed on the whole configured stage, not the kernel. Closes risk 2; facts 37-42 |
+| `M13-window-depth-measured.md` | **Where the focus window sits, and why a depth discontinuity is what puts it there.** M11's 11x11 is **dominated** — `tenengrad-w8` beats it in **36 of 36** occluding-edge cells at lower noise and identical cost — and the measured argmin is **`tenengrad-w13`, a 27x27 box**, stable in all three noise seeds. The central finding: **remove the depth step and the objective stops turning over**, running to the sweep endpoint; put it back and an interior optimum appears. So M11's "still improving at 23x23" carried *no* information — a fronto-parallel plant **cannot** turn over. **M11's per-pixel metric is structurally blind to the damage in 30 of 30 cells** (18.48 DN mean penalty), which is why it chose a window less than half the right size. Cost is **flat in the radius** (2.53% spread over w1-w40) because the box is a running sum, so the widening is free. Adaptivity has real oracle headroom (5.7-46.8%) that **no realisable rule reached**. Also corrects **M11 A1's φ monotonicity** (φ peaks at w15-w17 then declines) and proves `D:\personal\macro\119MSDCF` is a **byte-identical mirror**. **Closes question 15; facts 60-69** |
 | `A-prior-corpus.md` | The prior attempt, filtered; includes retractions |
 | `B-algorithms-sota.md` | Algorithmic state of the art per stage |
 | `C-landscape.md` | Competitors, licensing, artifact taxonomy |
@@ -183,6 +207,14 @@ Claims inherited from `C:\dev\macro` are suspect by default. Several were
 retracted under scrutiny — including a headline noise finding that measured
 *spatial* sigma while labelling it *temporal*, and three fabricated citations.
 `A-prior-corpus.md` records which survived.
+
+**Reusing an experiment harness?** `experiments/m11-focus-bakeoff/run-m11.ps1`
+does **not** list the ROIs that appear in M11's committed CSVs. Take ROIs from
+`data/noise-*.csv` and `data/planted-*.csv`, not from the script, or the numbers
+will not reproduce. Quick discriminator: a flat ROI has `single_sigma` ~28-30 DN,
+a detail ROI ~630-700 DN. More generally, **reproduce one published number from
+the original data before extending anyone's experiment** — and stratify on every
+column the original stratified on.
 
 ## Build
 

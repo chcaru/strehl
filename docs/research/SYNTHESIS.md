@@ -296,13 +296,17 @@ decode (CPU, rayon ACROSS files -- 2.5x over one-at-a-time, MEASURED M1)
              restricted to the anchor's connected component. 105/105 at 6.76 plane px
              held-out; 0.58-0.67 px on shallow stacks. The scale centre is fitted PER STACK
              (fact 48), not per rig. NOT YET IMPLEMENTED in crates/.
-  ->  focus volume (Tenengrad = Sobel gradient energy under an 11x11 box window, per CFA plane,
-             vs calibrated noise floor. MEASURED M11: replaces the multi-scale ring-difference,
-             which ranked 26-27th of 36 operators and cannot be rescued by re-tuning its radii.
-             Tenengrad-w5 PARETO-DOMINATES ring(1,3) on BOTH axes -- noise 1.1324x vs 1.3475x,
-             selectivity ~0.85 vs ~0.41 -- so the swap is not a trade-off. NOT YET IMPLEMENTED:
-             crates/strehl-core/src/focus.rs still ships the ring. See open question 15 --
-             11x11 is a measured LOWER BOUND on the optimum, not the optimum)
+  ->  focus volume (Tenengrad = Sobel gradient energy under a 27x27 BOX WINDOW, radius 13,
+             support radius 14, per CFA plane, vs calibrated noise floor. MEASURED M11:
+             replaces the multi-scale ring-difference, which ranked 26-27th of 36 operators
+             and cannot be rescued by re-tuning its radii. Tenengrad PARETO-DOMINATES
+             ring(1,3) on BOTH axes -- noise 1.1324x vs 1.3475x, selectivity ~0.85 vs ~0.41
+             -- so the swap is not a trade-off. WINDOW MEASURED M13, superseding M11's 11x11,
+             which is DOMINATED (fact 65): radius 13 is the regret argmin over 36 occluding-
+             edge cells and stable in all 3 seeds; basin w11-w15 is defensible. The box MUST
+             be the running-sum form -- cost is then O(1) in the radius and the widening is
+             free (fact 66); a naive convolution at radius 13 is ~841x the work.
+             NOT YET IMPLEMENTED: crates/strehl-core/src/focus.rs still ships the ring)
   ->  merge (band-selective noise-gated accumulation; select above the floor,
              average below it; reference from a REGULARISED focus field, never argmax;
              anisotropic structure-tensor kernels; emits RGB)
@@ -694,6 +698,13 @@ since contributors are not required to be spliceable and only have to emit an `f
 
 ## 4. Measured facts that constrain the design
 
+> **Numbering note.** The table is **not** in numeric order — facts 43-54 and
+> 60-69 precede fact 26, because each milestone's block was appended where it
+> was folded. Anchor any edit on row *content*, never on position. **Numbers
+> 55-59 are unallocated**: M12 and M13 ran concurrently and were told to number
+> from 50 and 60 respectively so their facts could not collide, and M12 needed
+> only five. Nothing was deleted.
+
 | # | Fact | Consequence | Source |
 |---|---|---|---|
 | 1 | Inter-frame scale drift **-1.012%** over 33 frames, linear, ~42 px corner displacement | Translation-only alignment is dead on arrival | F (MEASURED) — **"linear" SUPERSEDED by M3**: a second stack gives -1.835%, and no low-order polynomial in frame index matches a direct per-frame fit |
@@ -745,6 +756,16 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 52 | **The shrinkage is stable within a scene and does not transfer between scenes.** Two independent captures of the same subject agree to **0.15 σ_w** (0.9734 vs 0.9659, σ_w = 0.0510 from disjoint within-capture windows) — even a full stop apart in exposure. But a correction `k = 1/S_W(1)` fitted on one stack and tested on another's disjoint edges passes both registered conditions on **0 of 18** cross-scene ordered pairs; `coffee-bean → 113MSDCF` makes the error **83.4× worse**. On a real chain an **oracle in-sample** correction takes `coffee-bean` from 36.99 px to **13.92 px** — still 2.06× worse than the 6.76 px global solve — and on `112MSDCF` a self-fitted correction makes the worst case *worse* (5.27 → 5.66 px) | **This closes fact 43's open question: no.** Measurable and stable is not the same as transferable, and **the case the project would actually ship — fit on the deep stack you have, apply to the next capture — is the catastrophic one.** The stability result is what makes this damning rather than merely inconclusive: the quantity is real, reproducible, and still useless as a correction. **The useful residue is diagnostic**, separating chainable stacks from unchainable ones | M12 (MEASURED) |
 | 53 | **Nothing measurable in the edge sets predicts which stacks shrink.** Ten candidate predictors over five stacks, best Spearman \|ρ\| = 0.600 at n = 5. The two natural stories each die on a single row: *"noisier ⇒ more shrinkage"* is killed by `119MSDCF`, which has the corpus's **lowest** span-1 rms (0.172) and still shrinks 2.20×; *"less inter-frame correlation ⇒ more shrinkage"* has the **wrong sign**, since `113MSDCF` has the **highest** span-1 NCC peak (0.9737) and the least shrinkage. An independent non-telescoping probe — a known increment planted on one real defocus pair, no anchor and no chain — orders all four tested stacks **identically** to the ladder | **The mechanism stays UNVERIFIED, and the corroboration is real because the probes are independent.** Fact 45's "requires a real inter-frame content change" survives, but its *quantitative* signature is `coffee-bean`-specific exactly as fact 43's magnitude is. Naming the responsible scene property needs a corpus larger than five stacks with deliberate variation in subject depth and texture — **that is a capture request, not an analysis** | M12 (MEASURED; mechanism UNVERIFIED) |
 | 54 | **Per-frame focus position is not in EXIF, but it is measurable from the pixels to ~0.01 frames of slope.** `FocusPosition2` is 8-bit and takes **3 values across a 79-frame sweep**; `FocusPosition` is absent; `FocusLocation` is an AF rectangle. The substitute is a **focus index**: per scene tile, the parabola-interpolated frame at which a mean-normalised sharpness measure peaks. Mean normalisation is mandatory (112 and 113 differ by a full stop). Tile centres round to integer pixels, so **no resampler is involved**. Because the depth→focus map belongs to the *subject*, it **cancels** in a tile-wise regression between two captures of the same scene — including a nonlinear motor-unit-to-distance map. Measured: 93.1% tile acceptance on real data against **0%** on a synthetic stack with planted magnification and no focus change, split-half σ_β = 0.0078, agreement across two independent sharpness measures to 0.0028, and known-answer recovery of 2.0061 and 0.9877 against truths of 2.0 and 1.0 | **The project can measure focus geometry directly instead of trusting metadata**, which it needs for depth-map work, step validation, and any comparison of two sweeps. Also a standing caution: **any figure computed as `span/(n−1)` is DERIVED-UNDER-ASSUMPTION** — it presupposes uniform stepping, and its ratio between two stacks is then an arithmetic identity equal to the inverse frame-count ratio, not evidence. *(The orchestrator made exactly this error in briefing M12 and retracted it mid-run.)* | M12 (MEASURED) |
+| 60 | **The focus-measure window optimum is at radius 13 — a 27x27 box — for Tenengrad.** Measured by regret against the per-cell best over **36 cells** (2 stacks x 3 occluding-edge geometries x 6 depth steps x 20 windows x 3 noise seeds; 7,200 measurements), `regret(w,cell) = E_excess(w,cell) − min_w' E_excess(w',cell)`. Argmin of **both** mean regret (3.171 DN) and worst-case regret (12.111 DN), and argmin **independently in each of the three noise seeds** on both objectives. The basin **w11–w15** (23x23 to 31x31) is flat to 0.87 DN against a seed noise floor of 0.193 DN. Getting it wrong is expensive: w40 costs 12x the mean regret, M11's w5 costs 5.5x | **Use a 27x27 box.** Read it as a basin, not a point: the sampled ladder omits w14 and w16, so w13 is not distinguishable from its immediate neighbours, and §3.4 shows a few window steps of genuine scene dependence. **Scope: every one of the 7,200 measurements is at regulariser `width=1`** — see question 17 | M13 (MEASURED) — **VERIFIED**: orchestrator reproduced the argmin structure, both regret aggregates and the full 20-point ladder exactly from the committed CSVs with independently written code |
+| 61 | **The optimum exists only because of depth *discontinuity*.** On the same 36-cell grid the **6 cells with zero depth step** put their argmin at the sweep **endpoint** (w40, an 81x81 box) at regret 0.000 DN — no interior optimum at all. The **30 cells with a non-zero step** all have interior argmins. This is the null/positive pair for the whole question, and it holds under three independent objectives (`E_excess` → w13, `mis_width` → w23, `dmae_band` → w15). A **2-frame** step is already enough to move the argmin off the endpoint | **Sharpens fact 42**: depth *structure* is not sufficient — it must be discontinuous. Any future sweep of a spatial-support parameter must plant a discontinuity or it will return the endpoint by construction | M13 (MEASURED) — **VERIFIED** independently by the orchestrator, both aggregates |
+| 62 | **A fronto-parallel plant cannot turn over.** Exact-hit accuracy and mean frame error both improve monotonically w0→w40 (0.3128→0.9946 and 6.04→0.064 frames). A symmetric box mean of a *constant* is unbiased, so every extra tap is pure variance reduction and there is nothing to smear | **M11's A4 amendment was measured on exactly this configuration.** Its "still improving at 23x23" is therefore not weak evidence of an optimum past 23x23 — it is **no** evidence, because that plant could not have produced any other result | M13 (MEASURED + ARGUED) — **VERIFIED**: all 16 published values reproduce exactly (mean over ROIs, then over stacks) |
+| 63 | **A linear depth ramp is nearly as uninformative.** Under tilt, exact-hit accuracy turns over (argmax w33/w18/w11/w8 at tilt 4/8/16/32 DN-frames/px) but mean frame error does **not** — its argmin is the w40 endpoint at *every* tilt. A symmetric box mean of a *linear* ramp is also unbiased | Reporting either axis alone would have produced a confident wrong answer in **either** direction. A ramp is the friendliest possible non-flat plant for a box window, which is why it cannot settle the question | M13 (MEASURED) |
+| 64 | **M11's per-pixel selectivity metric is structurally blind to occlusion halo.** In **30 of 30** depth-step cells the window chosen by per-pixel exact-hit accuracy is **strictly wider** than the window chosen by reconstruction error; strictly narrower in **0 of 30**. Mean penalty for following accuracy **18.48 DN**, worst **101.35 DN**. On 109MSDCF/vertical/step 32, accuracy climbs monotonically to 0.967 at w40 while `E_excess` is **66% worse** than at its optimum. Restricting accuracy to the boundary band helps but does not fix it | **This is why M11 picked a window less than half the right size** — not an arithmetic slip but a metric that cannot see the failure. The damage concentrates in a band that is a small fraction of the ROI by area, so a per-pixel ROI average barely moves. Any future focus-measure metric must include an edge-referenced term | M13 (MEASURED) — **VERIFIED**: 30/30, 18.48 and 101.35 all reproduce exactly |
+| 65 | **`tenengrad-w5` (11x11) is dominated, not merely a lower bound.** `tenengrad-w8` (17x17) beats it in **36 of 36** edge cells at lower merged noise (N 1.1019 vs 1.1324) and identical cost. It is not a near-tie anywhere: w8's **smallest margin of victory is 2.894 DN** (median 7.52, max 25.39). The recommended `tenengrad-w13` beats w5 in **33 of 36** — all three losses fall in the single 119MSDCF-horizontal cell — but its worst-case regret is 12.1 DN against w5's 64.5 DN | **M11's window ruling is superseded; its operator ruling stands untouched.** If a zero-risk upgrade is wanted over an argmin, w8 is strictly dominating; w13 is better on every aggregate and loses three head-to-heads in one anomalous cell | M13 (MEASURED) — **VERIFIED**; the margin distribution is an orchestrator strengthening M13 did not report (it published the loss as 0.00 DN, which is true but reads as a tie) |
+| 66 | **Focus-operator cost is flat in the window radius.** Spread over w1–w40 is **2.53%** with no trend in radius — the extremes sit at w18 and w9, not at the ends — exactly as a running-sum box filter must behave: **O(1) per pixel independent of radius**. Widening w5→w13 costs **+0.00%** (3.3805→3.3806 ms/frame/Mpx). `w0` is cheaper (1.924) only because it skips the box entirely | **A wide window is free, so the window choice is a pure quality decision.** The box filter **must** be the running-sum form — a naive (2w+1)² convolution at radius 13 would be ~841x the work. Absolute ms/frame/Mpx here are **not** comparable to M11's table: the harnesses time different work, scales differ ~1.9x, unreconciled | M13 (MEASURED) — **VERIFIED**: 2.53%, the w18/w9 extremes, the +1.49% w5-vs-ring gap and the w5/w13 flatness all reproduce exactly |
+| 67 | **Spatial adaptivity has real headroom that no realisable rule reached.** A per-pixel oracle choosing between a narrow and a wide window gains **5.7–46.8%** of band RMS over the better fixed window across the 24 configurations containing a discontinuity. The realisable disagreement gate (narrow where the two windows disagree by more than τ frames, τ ∈ 1..8) gains at most **+5.4%**, is negative in **18 of 30**, and reaches **−153.6%**. Making the selection worse is its typical behaviour, not a rare failure | **Ship a single global window.** Adaptivity is *unrealised*, not rejected — the headroom is larger than the entire w5→w13 improvement, so it is worth more than further window tuning. Becomes question 16 | M13 (MEASURED) |
+| 68 | **CORRECTION to M11 A1: φ does not rise monotonically with window.** Under pointwise normalisation on real texture φ peaks at **w15–w17** (0.1474) and declines to 0.1146 by w40 — argmax at w17 at all three probe amplitudes (δ = 1, 8, 32 DN). It is also non-monotone at *small* w: it spikes at w1 (0.0882), dips to a local minimum at w3 (0.0631), then rises. A1's five values are **correct** and reproduce to ±5e-5. Under `Norm::None`, φ falls monotonically toward the analytic dilution law **1/(2w+1)²**, ratio 0.62 (w1) → 0.978 (w40), and is **exactly 0** at w0 | The monotonicity claim was extrapolation past the data at one end and interpolation across an unsampled dip at the other — **the same error class as A4**. The rise M11 saw belongs to the *pointwise normaliser's* own 1-px centre tap, not to windowing. Consequence for the pinned test: **φ under normalisation is texture-dependent and must not be pinned to 4 dp**, unlike `ring(1,3)`'s 1/18 which is a property of the kernel alone | M13 (MEASURED) — **VERIFIED**: φ_nonorm(w0) = 0 is *derived* independently (Sobel's centre weight is 0 in both kernels, so a centre perturbation cannot change the response at that pixel), and the turnover, the dip and the ratio ladder all reproduce |
+| 69 | **`C:\dev\macro\test\119MSDCF` and `D:\personal\macro\119MSDCF` are the same 33 frames.** A full edge sweep run against each produced a **byte-identical** CSV (sha256 `F076E402…D11798`) | The `D:` tree is a **mirror, not an independent sample**. Two stacks must mean two *different* stacks — use 109/119 or 112/113, never a directory and its mirror. Extends fact 49's duplicate audit from file hashes to measurement output | M13 (MEASURED) |
 | 26 | **Every existing test stack was shot with a 2x teleconverter**, disclosed only after M1-M4 were complete. `LensModel = "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"`, `LensSpec = "FE 200mm F5.6 Macro OSS"`, `FocalLength = 200 mm`, `MaxApertureValue = 5.6`. **CORRECTED 2026-08-22 — this row previously claimed the maker-note lens ID "still reads as the bare lens". That is false.** Sony enumerates the *composed path* as its own ID: `LensType3` = **32893** bare, **33093** +1.4x, **33094** +2x, and every corpus frame reports **33094**. The tags that are useless are `LensType` (65535) and `LensType2` (0) | Two consequences, one of them now inverted. **(a)** Anything reading `FocalLength`/`FNumber` from EXIF is already TC-correct, so there is no hidden 2x error in the advisor. **(b)** **Key a lens profile on `LensType3`, which already denotes the composed optical path.** The original conclusion — "keying on the lens ID is a bug" — was right about the *requirement* (the key must denote the composed path, since `p`, focal length and aperture all differ) and wrong about the *fact*, because it generalised from `LensType`/`LensType2` to all lens identity. The surviving rule is narrower and sharper: **key on `LensType3`; never on `LensType`, `LensType2`, or a parsed `LensModel` string** | MEASURED-LOCALLY (exiftool `-n`, all corpus stacks; ID table read from exiftool's own `Sony:LensType3` lookup) |
 | 27 | **The bellows factor of the composed path is `B = (1 + m/p) ∈ [2.41, 3.06]`**, point estimate 2.6-2.9, measured from the diffraction cutoff in the raw CFA. At f/11 the green-quincunx spectrum has a genuine knee at **f_sig = 0.2762 cyc/px**, above which the floor matches the photon-transfer noise model to **0.950x** — so it is a real optical cutoff, not a fitted plateau. **`B = 5` (p = 0.5) is REFUTED 5/5 by a model-free test** at two apertures: there is optical signal at 0.3508 cyc/px, where p=0.5 permits none. **`B = 1` is refuted by ~3x** | **The corpus's "dominant uncertainty in the whole advisor" (±38%) is retired to −20%/+2%, from data the owner already had, with no bench work.** With m ≈ 2.0, **p ≈ 1.0-1.4** — the working assumption of p=1 was right. It does **not** vanish: M5 measures the product `(1 + m/p)` and cannot separate `p` from `m`, so `B` is known at *one* magnification only. A bench measurement of `p` alone would give `B` at any magnification | M5 (MEASURED → DERIVED; independently reproduced) |
 | 28 | **EXIF `FNumber` is the *marked* aperture and is NOT bellows-corrected.** The body composes the teleconverter into `FocalLength` and `FNumber` (fact 26) but applies no correction for working at 2:1. **Marked f/11 is optically f/33** | **The most directly actionable finding in the corpus.** Every advisor formula that reads `FNumber` and treats it as `N_eff` **under-predicts diffraction blur by ~3x** and will recommend f/11 as "safe". Apply `N_eff = FNumber_exif * B`. Consequences at B=3: f/8 discards **40%** of the sensor's 2-D Nyquist area (46% of contrast at 4-px detail), f/11 discards **68%** (90%) — a 33 MP sensor used as ~10.5 MP. Critical sampling is at **N_marked = f/6.21** | M5 §7 (DERIVED, factor-of-3 margin) |
@@ -959,6 +980,42 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      axis you happen to have replicates on.** The two are rarely the same axis, and the replicate
      axis is always the one that is cheap to measure.
 
+24. **A plant that cannot express the failure mode is not evidence about it.** M11's A4 swept the
+     window on a fronto-parallel plant and reported "still improving at the edge of the sweep". That
+     plant is mathematically incapable of producing an interior optimum for a symmetric window
+     (fact 62), so the observation carried **no** information — it was not weak evidence, it was
+     none. Before sweeping a parameter, ask **what the plant would have to contain for the answer to
+     be anything other than the endpoint**; if the answer is "nothing it contains", fix the plant,
+     not the sweep range. This is item 10 with a sharper edge: item 10 says a design can be
+     structurally incapable of answering; this says **check that property before you spend the
+     compute, and check it on the stimulus rather than the analysis.**
+
+25. **Report an endpoint argmin as "no turnover found within the sweep", never as an optimum.** A
+     mechanical rule, and the cheapest guard in this file. M13's analysis script labels every argmin
+     `interior` or `ENDPOINT` automatically so the distinction cannot be lost in prose.
+
+26. **Where a metric has a known blind spot, control for it rather than disclosing it in prose.**
+     M13's `W_bleed` cannot see a selector that elects a compromise frame *between* two layers, so
+     that blind spot was asserted as a **test** — a planted compromise of radius R must read bleed
+     0.0 and mis R−1 — and not as a caveat. The blind spot then appeared in real data (`bleed_fg`
+     collapsing 18.75 px → 1.19 px while excess error *rose*), and was recognised on sight because
+     the control existed. A caveat in prose would have been read as "the halo went away".
+
+27. **When a pre-registered threshold turns out to be on the wrong quantity, say so and override it
+     explicitly.** M13 registered a 5% threshold on an **oracle** gain it had already documented as
+     "a strict upper bound, never a proposal". The threshold fired and would have mandated an
+     adaptive rule; the decision-relevant quantity was the *realisable* rule, which said the
+     opposite. The correct move — taken — is to **report that the registered test fires, state that
+     it was registered on the wrong quantity, and override on stated grounds.** Quietly re-cutting
+     the threshold is the failure mode this discipline exists to prevent.
+
+28. **Verify a corpus audit with `Get-ChildItem -Force`, never without it.** Without `-Force`,
+     `Get-ChildItem -Recurse -File C:\dev\macro` reports 17,449 files / 286,581,830,721 bytes; with
+     `-Force` it reports **18,530** / **286,893,514,060**, matching the harness audit exactly. The
+     1,081-file gap is hidden and system files, not deletion. **An agent spot-checking the read-only
+     guarantee this way will conclude it was violated when it was not** — the checking tool was
+     wrong, not the thing being checked.
+
 ---
 
 ## 6. Novelty — verified gaps, labelled as bets
@@ -993,10 +1050,12 @@ Recorded with their queries; **all are UNVERIFIED as wins, and none is on the v1
    risk demanded: 47 operators, pre-registered, two stacks, scored on a measured Pareto front of
    selectivity against noise excess. **The incumbent `ring(1,3)` ranks 26-27th of 36; the
    recommendation is Tenengrad under an 11x11 box window.** Facts 37-42.
-   **Two residuals carried forward as an open question rather than as risk** (§10 q15): the optimum
-   window is *larger than anything measured* — the post-hoc extension was still improving on both
-   axes at 23x23 — and **no plant contained a depth discontinuity**, which is precisely the regime
-   where a wide window is most likely to do damage that a per-pixel selectivity metric cannot see.
+   **Both residuals carried forward as q15 are now CLOSED by M13, and both went against M11.**
+   The window is **27x27 (radius 13), not 11x11** — M11's choice is dominated 36/36 by w8 alone
+   (fact 65) — and the missing depth discontinuity was not a gap in coverage but the *whole
+   mechanism*: without one there is no interior optimum at all (fact 61). M11's per-pixel
+   selectivity metric is confirmed blind to the damage in **30 of 30** cells (fact 64), which is
+   why it chose a window less than half the right size. The operator ruling is untouched.
    **Doing this synthetically would have chosen wrong:** M11 measured `sml-w5` as best at zero
    noise (0.996) and *worse than the incumbent* at 4x noise.
 3. **All deep MFIF/DfD SOTA is trained outside our regime** — MFIFB is 105 image *pairs*, Lytro has
@@ -1149,7 +1208,8 @@ after this is measured as a delta against a baseline that exists.
    the gap; the best ring reaches only ~60% of the leader's selectivity. **Risk 2 closed; facts
    37-42.** The headline result is fact 37: **no operator anywhere on the front is noise-free**, so
    operator choice alone cannot rescue a selector — which is the strongest direct evidence yet for
-   §1's thesis.
+   §1's thesis. **The window was subsequently superseded by M13 — 27x27, not 11x11 (facts 60, 65);
+   the operator was not.**
 4. ~~**Alignment cost and accuracy at scale.**~~ — **DONE. See `M3-alignment-measured.md`.**
    **13-16 ms/frame; 0.78-0.96 s for a 60-frame stack**, scalar CPU, unoptimised, all frames
    independent. Chaining measured at **25 px error at the sensor corner** — dead by measurement,
@@ -1346,17 +1406,47 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     different magnification for the first, a CFA-green-weighted `λ_eff` for the second. Neither
     blocks anything today, and **both must be stated whenever `B` is quoted.**
 
-15. **Where does the window optimum actually sit, and what does a depth discontinuity do to it?**
-    M11's two carried-forward residuals, inherited from risk 2. Its post-hoc extension was **still
-    improving on both axes at 23x23**, so the recommended 11x11 is a lower bound on the optimum, not
-    the optimum. More seriously, **no plant in M11 contained a depth discontinuity** — every planted
-    surface was continuous, fronto-parallel or tilted. A wide window is exactly the configuration
-    most likely to smear an occluding edge, and **M11's per-pixel selectivity metric is structurally
-    incapable of seeing that damage** (a haloed edge can still elect the right frame per pixel).
-    Fact 42 shows the objective's optimum only exists once the plant has depth structure; a
-    discontinuity is the next rung. **Note this needs no new capture** — it can be planted — which
-    makes it cheap. It is also the one place where the deferred rail (§9, `captures-needed.md` §2)
-    would have supplied real rather than planted evidence.
+15. **~~Where does the window optimum actually sit, and what does a depth discontinuity do to it?~~
+    CLOSED by M13, and the answer superseded M11's recommendation.** The optimum is at **radius 13
+    (a 27x27 box)**; it turns over **sharply**; and it turns over *only* because of depth
+    discontinuity — remove the step and the argmin runs to the sweep endpoint (facts 60, 61). Both
+    of the question's suspicions were right and both were understated. M11's 11x11 was not a lower
+    bound but **dominated** (fact 65), and the hypothesis that its metric is "structurally incapable
+    of seeing that damage" is confirmed at **30 of 30** cells with an 18.48 DN mean penalty
+    (fact 64). The hypothesis that a fronto-parallel plant says nothing is confirmed and strengthened
+    — such a plant *cannot* turn over (fact 62), so M11's extension carried no information rather
+    than weak information. Adaptivity was measured and is **not** recommended (fact 67). The
+    prediction that this needed no new capture held: everything was planted.
+    See `docs/research/M13-window-depth-measured.md`.
+
+16. **Can any realisable rule reach the adaptive headroom?** A per-pixel oracle choosing between a
+    narrow and a wide focus window gains **5.7-46.8%** of band RMS at occluding edges (fact 67).
+    Every gate M13 tried reached at most **+5.4%** and usually *lost*, down to −153.6%. That
+    headroom is **larger than the entire w5→w13 window improvement**, so it is worth more than any
+    further window tuning. Untried: gating on the focus curve's **peak sharpness** rather than on
+    inter-window disagreement; a guided-filter or cross-bilateral regulariser on the selection map;
+    explicit occlusion detection. This is also the natural home for the project's confidence output
+    — an occlusion detector and a confidence map are close to the same object.
+
+17. **Does the window optimum survive the merge regulariser?** **Every one of M13's 7,200 edge
+    measurements is at regulariser `width = 1` — that is, with the regulariser switched off.** M2
+    measured that the regulariser alone cuts merged-noise excess from 1.2527 to 1.0737 at width 17,
+    which is a *larger* noise reduction than the entire window axis provides (1.1324 → 1.0778 over
+    w5→w40). The two mechanisms are plausibly redundant: if the regulariser is already buying the
+    variance reduction, the wide window's benefit shrinks while its occlusion-halo cost does not,
+    and **the optimum should move narrower than w13**. This is the one unmeasured factor that can
+    move the recommendation — the other four in M13 §7.6 are scope caveats — and it is **cheap**,
+    because M13's own Gate 1 already ran the harness at width 17. Until it is measured, w13 is the
+    optimum for an unregularised pipeline. *(Raised by the orchestrator while verifying M13, which
+    disclosed the gap but did not propose it as a question.)*
+
+18. **Why does the 119MSDCF horizontal texture pair behave differently?** Its `E_excess` optimum
+    sits at **w8 at all five depth steps** — the only cell with a constant argmin — while the other
+    five scatter over w9-w33, and it is the source of **every** head-to-head loss w13 suffers
+    against w5 (fact 65). One texture pair per stack cannot distinguish an occlusion-geometry effect
+    from a texture effect. Note this is the *second* open question whose answer needs a corpus with
+    deliberate variation in subject depth and texture — the first is fact 53's unexplained shrinkage
+    mechanism. **One capture campaign would serve both.**
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must

@@ -5,6 +5,30 @@
 **Reproduce:** `experiments/m13-window-depth/run-m13.ps1`, then `python m13_analyse.py --out data/analysis.txt`.
 **Pre-registered before any data was read:** `experiments/m13-window-depth/PREREGISTRATION.md`, commit `c92d683`.
 
+> **INDEPENDENTLY VERIFIED by the orchestrator (project rule 12).** Every
+> headline number checked reproduced **exactly** from the committed CSVs using
+> separately written code: the §3.1 argmin structure (step = 0 → w40 endpoint at
+> regret 0.000/0.001; step > 0 → w13 at 3.171 mean and 12.111 worst), the whole
+> 20-point §3.2 regret ladder, the §3.5 result (30/30 strictly wider, 18.48 DN
+> mean, 101.35 DN worst), the §1.1 N table, the §1.2 continuous-plant table
+> (16/16 values), the §5 cost figures (2.53% spread, extremes at w18/w9, +1.49%
+> vs `ring-1-3`), the §6.2 head-to-head table, and the §1.4 φ tables including
+> the w17 argmax at all three probe amplitudes and the w1→w3 dip.
+> **No reporting defect was found** — the two apparent discrepancies I chased
+> were both my own mis-stratification (median where the report used a mean over
+> ROIs; the seed-sd stratum). Two independent additions:
+> **(1)** φ_nonorm(w0) = 0 is not merely measured but *derivable* — the Sobel
+> centre weight is 0 in both kernels, so a centre perturbation cannot change the
+> response at that pixel; measurement and derivation agree.
+> **(2)** §6.2 reports w8's worst-case loss against w5 as 0.00 DN, which is true
+> but reads as a tie. w8 does not tie anywhere: its **smallest margin of victory
+> across the 36 cells is 2.894 DN** (median 7.52, max 25.39). The domination is
+> stronger than claimed.
+> **One scope limit promoted to an open question:** all 7,200 edge measurements
+> are at regulariser `width = 1`. §7.6 item 3 discloses this; it is the only
+> unmeasured factor that could *move* the recommendation, so it is now
+> SYNTHESIS §10 **question 17** rather than a caveat.
+
 Every claim below carries a label. `MEASURED` = a number this milestone
 produced. `VERIFIED` = a number produced twice through disjoint paths.
 `DERIVED` = follows from a stated rule applied to measured numbers.
