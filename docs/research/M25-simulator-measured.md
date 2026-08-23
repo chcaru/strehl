@@ -1160,3 +1160,170 @@ hypothesis for question 132 and is a more useful result than a marginal PASS,
 because it redirects effort away from geometry.
 
 <!-- PREREGISTRATION LINE -- nothing below this existed at commit 11.pre -->
+
+### 11.5 Results — MEASURED
+
+`17-multiscale-occluder.py`, `data/multiscale-occluder.txt`. One `coc` (1.0),
+four occluders, everything else held fixed. Feature size is the mean
+`area / perimeter` of the alpha mask, measured on the mask actually built.
+
+| occluder | feature size | **ORACLE** (truth-gated veiled) | placebo | M21 estimated | base rate |
+|---|---:|---:|---:|---:|---:|
+| `discs` — control, single-scale | 218 latent px | **0.19×** | 1.10 | 1.06× | 10.3 % |
+| `fractal` β_mask 2.6 | 22.2 | **0.49×** | 0.98 | 1.06× | 9.7 % |
+| `discs-powerlaw` r^-3, 2–160 px | 17.4 | **0.86×** | 1.01 | 1.05× | **6.6 %** |
+| `fractal` β_mask 1.6 | 3.8 | **0.82×** | 0.96 | 0.98× | 8.0 % |
+| *real* `coffee-bean` (M21) | — | — | — | **4.38×** | 4.8 % |
+
+Both invalidating conditions held on all four variants: every placebo is inside
+1.00 ± 0.15, and every base rate is inside 2–40 %.
+
+**VERDICT: FAIL.** The best admissible variant reaches **0.86×**, short of the
+pre-registered 1.00× needed even for PARTIAL. **Multi-scale occluding structure
+is not the missing ingredient**, and question 132's leading hypothesis is
+closed.
+
+### 11.6 What the FAIL actually shows, and it is not nothing
+
+**MEASURED — geometry is the largest single effect found on this number.**
+Occluder geometry moves the oracle enrichment **0.19× → 0.86×, a 4.5×
+improvement**, on a statistic that nothing else has moved at all: the defocus
+rate was flat across a 12× sweep, and removing the occluder's luminance step
+bought 0.24× → 0.28×. So the §4.3 mechanism argument was **substantially
+right** — a single smooth boundary really was suppressing multi-peakedness —
+and it was still not the whole story.
+
+**MEASURED — and this is the more informative half. It asymptotes below 1.0.**
+Three occluders of very different construction, spanning feature sizes from
+**3.8 to 22.2 latent px** — a 6× range straddling the 12 px blur separation —
+all land in **0.49×–0.86×** and none crosses 1.0. A cause that is exhausted
+before it reaches the target is not the binding one. **ARGUED:** something
+other than geometry is holding the veiled population *below* the smooth
+population, and further geometry work is unlikely to repay it.
+
+**MEASURED — a second, unlooked-for result: geometry also fixes the base rate.**
+`discs-powerlaw` reads **6.6 %** against the real **4.8 %**, the closest any
+plant in this milestone has come, and against the control's 10.3 % under
+identical noise. Fact 198's 2.1× over-production is therefore **partly
+geometric**, not purely the structure-contrast deficit of fact 551 as §4.3
+argued. That argument is weakened and should not be repeated without this
+caveat.
+
+**MEASURED — M21's estimated enrichment is pinned near 1.0 regardless.** It
+reads **1.05×, 1.06×, 1.06×, 0.98×** across a 57× range of occluder feature
+size, while the oracle underneath it moves 4.5×. On the real stack the same
+detector reads 4.38×. Combined with fact 198a's 1.8–3.4 % precision, the
+estimated statistic is **insensitive to the very geometry it is supposed to be
+detecting** on synthetic data.
+
+**A population-validity caveat I have to state.** At β_mask 1.6 the truly-veiled
+population is **707,030 px against 77,330 truly-smooth** — veiled pixels became
+the *majority* and "smooth" became the unusual class. The enrichment ratio is
+still computed correctly, but it is no longer the same kind of comparison as
+the control's 10,133-vs-994,940. **The 0.82× should not be read as directly
+comparable to the 0.19×**, and the 0.86× from `discs-powerlaw` (128,406 vs
+625,289) is the sounder number of the two.
+
+### 11.7 The pre-registered predictions, scored
+
+Three of my four predictions were wrong. Recorded per §3's practice.
+
+| # | prediction | outcome |
+|---|---|---|
+| 1 | `fractal` β=1.6 largest of the three | **WRONG.** `discs-powerlaw` 0.86× beat it at 0.82×, and see the population caveat above |
+| 2 | control reproduces 0.23× to ±0.04 | **MISSED**, at 0.19×. Coverage came out 31.0 % against §4.3's 32.7 % on a different seed path, and the smooth baseline moved 10.4 % → 10.6 % |
+| 3 | expect PARTIAL, not PASS | **WRONG** — it is FAIL. I was optimistic in the pre-registration and the gate caught me |
+| 4 | `discs-powerlaw` between the two `fractal` variants | **WRONG.** It was the highest of all three |
+
+**ARGUED.** The direction was right and the magnitude was not, which is the
+same shape of error as §4.3's "the base rate now matches". I predicted the
+mechanism correctly and over-estimated how much of the gap it owned — twice in
+one milestone, on the same statistic.
+
+### 11.8 The mistake, and how it was found
+
+`discs-powerlaw` first ran as an apparent hang. A power-law size distribution
+with `N(r) ∝ r^-3` over 2–160 px and a fixed *area* target draws
+**≈ 55,000 discs**, and my first implementation ran a full-array
+`np.maximum` over the 4176×4176 latent grid for every one of them — about
+10¹² element-operations. The control's 55 px single-scale field draws ~50
+discs, so the same code had always been fast and I did not think about it.
+
+Found by watching the clock, not by a test: the control rendered in 178 s and
+the second variant produced nothing for 12 minutes. Fixed by restricting each
+disc to its bounding box — **2.2 s**, and the resulting mask matches the slow
+path's coverage and feature size.
+
+**The generalisable part:** the multi-scale variant did not just change a
+number, it changed the *asymptotic cost* of a function that had only ever been
+called with one scale. A parameter that alters the *count* of primitives, not
+just their size, deserves a timing check before a long run — I lost 15 minutes
+to it and could have lost hours had it been left to run overnight.
+
+### 11.9 Proposed additions
+
+Numbered in my own reserved blocks; the fold mapping for §7–§9 was ordinal
+(190–200 → 540–550), so these continue from there.
+
+**201. MEASURED.** Occluder geometry moves the truth-gated veiling enrichment
+from **0.19× (single-scale, 218 latent-px discs) to 0.86×
+(`N(r) ∝ r^-3` over 2–160 latent px)** — a **4.5×** improvement, the largest
+effect measured on this statistic. Placebo 1.01, base rate 6.6 %.
+
+**202. MEASURED.** The effect **saturates below 1.0×**. Three occluders
+spanning **3.8–22.2 latent px** of feature size — straddling the 12 px blur
+separation — give **0.49×, 0.82×, 0.86×**; none reaches the wrong-sign
+boundary at 1.0× and none approaches the real 4.38×. **ARGUED:** occluder
+geometry is a real and large cause of M25's veiling failure but not the
+binding one.
+
+**203. MEASURED.** A multi-scale occluder also lowers the simulated multi-peak
+base rate from **10.3 % to 6.6 %** against a real 4.8 %, under identical noise
+and radiometry. Fact 198's 2.1× over-production is therefore partly geometric,
+which weakens §4.3's attribution of it to the structure-contrast deficit of
+fact 551.
+
+**204. MEASURED.** M21's *estimated* step-map enrichment reads **1.05×, 1.06×,
+1.06×, 0.98×** across a **57× range** of occluder feature size while the oracle
+beneath it moves 4.5×. On synthetic data the estimated statistic is
+insensitive to the geometry it is meant to detect.
+
+**Discipline 114.** A parameter that changes the *number* of primitives a
+generator emits — not merely their size — changes its asymptotic cost, and the
+fast path you have always exercised is no evidence. Time the generator at full
+scale before committing it to a long run (§11.8).
+
+**Discipline 115.** When a variant makes the special population the *majority*
+(here 707,030 veiled against 77,330 smooth), its enrichment ratio is no longer
+comparable to a variant where the special population is rare, even though the
+arithmetic is unchanged. Report the population sizes next to every ratio.
+
+**Question 41.** **If not geometry, what?** Facts 201–202 close the leading
+hypothesis and leave no obvious successor. The one candidate this milestone can
+name: **the simulated scene is two discrete layers, and a real scene is a
+continuous depth field.** M21's step map on a real capture finds discontinuities
+in a continuum with many depths present, so the real 4.38× may be driven by
+depth *multiplicity* rather than by alpha veiling at all — which would make it
+a different phenomenon from the one this plant was built to express. Testable
+with a multi-layer or continuous-depth scene, and it is the natural next
+milestone rather than a probe.
+
+**Question 42.** Why is M21's estimated enrichment (fact 204) pinned at ~1.0 on
+every synthetic plant while reading 4.38× on the real stack? Either the real
+stack contains something the forward model lacks entirely, or the real 4.38×
+has a contribution that is not depth-step veiling. Both readings are consequential
+and this report cannot separate them.
+
+### 11.10 How to reproduce §11
+
+```powershell
+cd C:\dev\blog\death-of-software\projects\strehl
+$env:PYTHONIOENCODING='utf-8'
+python experiments\m25-simulator\src\17-multiscale-occluder.py   # 644 s
+```
+
+Writes `experiments/m25-simulator/data/multiscale-occluder.txt`. Reads
+`C:\dev\macro\test\coffee-bean` read-only. The occluder shapes
+`discs-powerlaw` and `fractal` were added to `strehl_sim/scene.py` for this
+section; `discs`, and therefore every earlier result, is unchanged, and the
+27-test self-test still passes.

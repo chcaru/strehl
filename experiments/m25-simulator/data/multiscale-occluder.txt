@@ -1,0 +1,54 @@
+Is multi-scale occluder geometry the missing ingredient?  (question 132)
+PRE-REGISTERED in M25-simulator-measured.md section 11, committed ce92597 before this script existed.
+GATE: truth-gated veiled enrichment.  PASS >= 1.50x / PARTIAL 1.00-1.50x / FAIL < 1.00x
+Real coffee-bean (M21): 4.38x.  Section 4.3 control measured 0.23x.
+
+real: ISO 50 (g=0.22894 DN/e-, fact 200 corrected), mean 1528 DN, sd 616 DN, beta 3.454, peak frame 5
+PSD shaping mismatch by iteration: 1.2390, 0.4299, 0.2726, 0.2419
+defocus: coc 1.0 px/frame, fg at index 4, bg at 16 -> 12 px of blur separation
+
+--- discs (control, single-scale) ---
+  occluder: coverage 31.0%, mean feature ~218.0 latent px (109.0 sensor px), render 184s
+  truly-veiled px   10133   truly-smooth px  994940
+  ORACLE (truth-gated veiled) :  1.97% veiled vs 10.61% smooth =  0.19x   <-- THE GATE
+  placebo (permuted frames)   :  1.10x
+  M21 estimated step map      :  1.06x  (reference only, not the gate)
+  overall multi-peak on strong pixels: 10.3%  (real 4.8%, sanity band 2-40%)
+
+--- discs-powerlaw r^-3, 2-160px ---
+  occluder: coverage 29.5%, mean feature ~17.4 latent px (8.7 sensor px), render 142s
+  truly-veiled px  128406   truly-smooth px  625289
+  ORACLE (truth-gated veiled) :  5.99% veiled vs  6.98% smooth =  0.86x   <-- THE GATE
+  placebo (permuted frames)   :  1.01x
+  M21 estimated step map      :  1.05x  (reference only, not the gate)
+  overall multi-peak on strong pixels: 6.6%  (real 4.8%, sanity band 2-40%)
+
+--- fractal beta_mask 2.6 ---
+  occluder: coverage 35.0%, mean feature ~22.2 latent px (11.1 sensor px), render 142s
+  truly-veiled px  115785   truly-smooth px  804228
+  ORACLE (truth-gated veiled) :  5.32% veiled vs 10.93% smooth =  0.49x   <-- THE GATE
+  placebo (permuted frames)   :  0.98x
+  M21 estimated step map      :  1.06x  (reference only, not the gate)
+  overall multi-peak on strong pixels: 9.7%  (real 4.8%, sanity band 2-40%)
+
+--- fractal beta_mask 1.6 ---
+  occluder: coverage 35.3%, mean feature ~3.8 latent px (1.9 sensor px), render 154s
+  truly-veiled px  707030   truly-smooth px   77330
+  ORACLE (truth-gated veiled) :  7.79% veiled vs  9.52% smooth =  0.82x   <-- THE GATE
+  placebo (permuted frames)   :  0.96x
+  M21 estimated step map      :  0.98x  (reference only, not the gate)
+  overall multi-peak on strong pixels: 8.0%  (real 4.8%, sanity band 2-40%)
+
+==============================================================================
+occluder                          feat px   ORACLE  placebo     M21   base%
+discs (control, single-scale)       218.0    0.19x    1.10x   1.06x   10.3%
+discs-powerlaw r^-3, 2-160px         17.4    0.86x    1.01x   1.05x    6.6%
+fractal beta_mask 2.6                22.2    0.49x    0.98x   1.06x    9.7%
+fractal beta_mask 1.6                 3.8    0.82x    0.96x   0.98x    8.0%
+REAL coffee-bean (M21)                 --       --       --   4.38x    4.8%
+
+control reproduced 0.19x (section 4.3 measured 0.23x; prediction 2 said +/-0.04 -> MISSED)
+
+best admissible variant: discs-powerlaw r^-3, 2-160px at 0.86x
+VERDICT: FAIL.  Multi-scale occluding structure is NOT the missing ingredient.  Question 132's leading hypothesis is closed and effort should be redirected away from geometry.
+[644s]

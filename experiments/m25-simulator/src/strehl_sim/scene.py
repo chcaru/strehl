@@ -173,26 +173,81 @@ def tilted_plane(sensor_shape, supersample, base_e, contrast_e,
     return Scene([lay], supersample, tuple(sensor_shape), name)
 
 
-def _disc_field(h, w, supersample, frac, rng):
+def _disc_field(h, w, supersample, frac, rng, r_min=None, r_max=None,
+                exponent=None):
     """Signed distance to the union of a random field of discs.
 
     One occluding edge in a frame is not enough for M21's binning, which needs
     >= 500 pixels in each of the depth-step and smooth-depth bins.  A disc
     field gives O(10^4) pixels of boundary while keeping the geometry simple
     enough to reason about.  `frac` sets the areal coverage target.
+
+    Default: single-scale, radius 55 latent px with +/-40 % jitter.  Passing
+    `r_min`/`r_max`/`exponent` instead draws radii from a power law
+    `N(r) ~ r^-exponent` over `[r_min, r_max]` **in latent px**, which is the
+    multi-scale variant of section 11.  `exponent = 3` gives equal occluded
+    area per octave of radius.
     """
-    r_px = 55.0 * supersample
-    area = frac * h * w
-    n = max(1, int(round(area / (np.pi * r_px ** 2))))
-    d = np.full((h, w), -1e9, np.float32)
     yy = np.arange(h, dtype=np.float32)[:, None]
     xx = np.arange(w, dtype=np.float32)[None, :]
-    for _ in range(n):
+    d = np.full((h, w), -1e9, np.float32)
+
+    if exponent is None:
+        radii = []
+        r_px = 55.0 * supersample
+        n = max(1, int(round(frac * h * w / (np.pi * r_px ** 2))))
+        radii = [r_px * rng.uniform(0.6, 1.4) for _ in range(n)]
+    else:
+        # Inverse-transform sample N(r) ~ r^-exponent, then keep drawing until
+        # the *cumulative disc area* reaches the coverage target.  Area, not
+        # count, is the thing being held fixed against the control.
+        lo, hi = float(r_min), float(r_max)
+        a = 1.0 - exponent
+        target = frac * h * w
+        radii, acc = [], 0.0
+        while acc < target and len(radii) < 200000:
+            u = rng.random()
+            r = (lo ** a + u * (hi ** a - lo ** a)) ** (1.0 / a)
+            radii.append(r)
+            acc += np.pi * r * r
+
+    for r in radii:
         cy = rng.uniform(0, h)
         cx = rng.uniform(0, w)
-        rr = r_px * rng.uniform(0.6, 1.4)
-        np.maximum(d, rr - np.sqrt((yy - cy) ** 2 + (xx - cx) ** 2), out=d)
+        # Bounding box only.  A power-law size distribution puts O(10^4) small
+        # discs on the grid, and touching the whole array for each is
+        # quadratic enough to look like a hang: see section 11.6.
+        y0 = max(int(cy - r) - 1, 0)
+        y1 = min(int(cy + r) + 2, h)
+        x0 = max(int(cx - r) - 1, 0)
+        x1 = min(int(cx + r) + 2, w)
+        if y0 >= y1 or x0 >= x1:
+            continue
+        sub = d[y0:y1, x0:x1]
+        dy = yy[y0:y1, 0:1] - cy
+        dx = xx[0:1, x0:x1] - cx
+        np.maximum(sub, r - np.sqrt(dy * dy + dx * dx), out=sub)
     return d
+
+
+def _fractal_field(h, w, frac, beta_mask, rng):
+    """Approximate signed distance to the level set of an `f^-beta` field.
+
+    A thresholded isotropic Gaussian random field has occluding structure at
+    **every** scale, which is the property section 11 is testing and which a
+    disc field of one radius does not have.  The threshold is set by quantile
+    so that areal coverage matches the disc control.
+
+    The raw field value is not a distance, so it is divided by the RMS gradient
+    magnitude of the field.  That makes the level set's transition ~1 latent
+    px on average, matching the anti-aliasing convention used by every other
+    occluder here, instead of a width that drifts with `beta_mask`.
+    """
+    t = powerlaw_texture((h, w), beta_mask, rng)
+    thr = float(np.quantile(t, 1.0 - frac))
+    gy, gx = np.gradient(t)
+    g = float(np.sqrt((gy * gy + gx * gx).mean()))
+    return ((t - thr) / max(g, 1e-9)).astype(np.float32)
 
 
 def stepped_plane(sensor_shape, supersample, base_e, contrast_e,
@@ -245,14 +300,21 @@ def flatten_scene(sc: Scene, name="flattened") -> Scene:
 def two_layer_occlusion(sensor_shape, supersample, bg_e, bg_contrast_e,
                         fg_e, fg_contrast_e, bg_focus, fg_focus,
                         shape="halfplane", edge_frac=0.5, beta=2.0,
-                        seed=0, name="occlusion", margin=0, psd=None) -> Scene:
+                        seed=0, name="occlusion", margin=0, psd=None,
+                        mask_beta=2.6, mask_r=(2.0, 160.0),
+                        mask_exponent=3.0) -> Scene:
     """A foreground object at one depth partially covering a background at
     another, with a genuine alpha boundary.
 
     `shape`:
-      * `halfplane` -- a straight vertical boundary at `edge_frac` of the width;
-      * `disc`      -- a centred disc of radius `edge_frac * min(H, W) / 2`;
-      * `bar`       -- a vertical bar of width `edge_frac * W` centred.
+      * `halfplane`      -- a straight vertical boundary at `edge_frac` of W;
+      * `disc`           -- a centred disc of radius `edge_frac*min(H,W)/2`;
+      * `bar`            -- a vertical bar of width `edge_frac * W` centred;
+      * `discs`          -- a field of ~55 latent-px discs (SINGLE SCALE);
+      * `discs-powerlaw` -- a disc field with radii ~ `r^-mask_exponent` over
+                            `mask_r` latent px (MULTI-SCALE, section 11);
+      * `fractal`        -- a thresholded `f^-mask_beta` field (MULTI-SCALE,
+                            structure at every scale, section 11).
 
     The alpha boundary is anti-aliased over ONE LATENT pixel, i.e. `1 /
     supersample` of a sensor pixel, so the boundary is genuinely sub-pixel and
@@ -273,6 +335,12 @@ def two_layer_occlusion(sensor_shape, supersample, bg_e, bg_contrast_e,
         d = half - np.abs(xx - w / 2.0)
     elif shape == "discs":
         d = _disc_field(h, w, supersample, edge_frac, rng)
+    elif shape == "discs-powerlaw":
+        d = _disc_field(h, w, supersample, edge_frac, rng,
+                        r_min=mask_r[0], r_max=mask_r[1],
+                        exponent=mask_exponent)
+    elif shape == "fractal":
+        d = _fractal_field(h, w, edge_frac, mask_beta, rng)
     else:
         raise ValueError(f"unknown occluder shape {shape!r}")
     alpha = np.clip(d + 0.5, 0.0, 1.0).astype(np.float32)
