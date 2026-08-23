@@ -162,7 +162,7 @@ Taken, avoid: `z-stackr`, `stackaroni`, `focus-stack`, `focusstack`, `ChimpStack
 |---|---|---|
 | Language | Rust | Given |
 | Plugin mechanism | Statically-linked trait-object `Stage`s in a Cordis-shaped context; pipeline composed by declarative RON | **WASM Component Model lost on three verified facts**: the Canonical ABI is a copy boundary by its own explainer's admission, `shared-everything-threads`/`memory-control` are unimplemented in Wasmtime, and `wasi-webgpu` is Phase 2 so a wasm plugin cannot drive the GPU. Our unit of work is ~528 MB/frame (E) |
-| GPU kernel contribution | Distinct **named** functions + framework-generated entry points, selected from config | `naga_oil` `virtual`/`override` lost: it is *total replacement* resolved by DFS import order, which makes algorithm choice a property of import order, kills fusion, and makes A/B impossible (E follow-up) |
+| GPU kernel contribution | **A compute kernel that emits an `f32` focus field.** Contributors are not required to be spliceable; the framework may compose and fuse **its own** kernels from named WGSL functions | `naga_oil` `virtual`/`override` lost: it is *total replacement* resolved by DFS import order, which makes algorithm choice a property of import order and makes A/B impossible (E follow-up). **The "kills fusion" half of that argument is now nearly worthless — fact 30 measured fusion at 0.14% of the pipeline — but the A/B objection stands and is sufficient on its own** |
 | Compute backend | **`wgpu` only for v1.** Keep the CUDA seam, build no CUDA | CUDA fast path estimated at **~1.1x** end-to-end, on a stage that is 15-25% of the budget. Tensor cores irrelevant (every kernel below ~20 FLOP/byte, merge below 0.5). 99 KiB shared memory worth 2-5%, TMA 1-3%, persisting-L2 **0.2%** (D follow-up) |
 | RAW decode | `rawler` (LGPL-2.1), behind a feature flag | Writing an ARW decoder lost: 2-4 months, because no permissive LJPEG implementation exists in any language. LGPL is satisfied by publishing our own source; 11 permissive crates already do this (C follow-up) |
 | Alignment transform | **Affine** | MEASURED on the reference stack: translation 4.32e-3, euclidean 4.29e-3, **affine 1.45e-3**, homography 1.45e-3. Homography adds *literally nothing* — there is no perspective signal (F follow-up) |
@@ -318,10 +318,15 @@ wrong and we want to know on day one.
   Rule 2 forbids materialising aligned frames, so a contributed function receives *already-gathered
   samples at reference coordinates*. See §3.4.1 (B1) — this is not a detail; the naive interface
   cannot express rule 2 at all.
-- GPU plugins contribute **WGSL source, composed at run time** (`naga_oil`) into framework-generated
-  entry points, with emitted SPIR-V cached by content hash. One dispatch, zero indirect calls, zero
-  runtime plugin cost, and two focus measures can fuse into a single dispatch — saving a whole pass
-  over the stack. **Not `build.rs`** — see §3.4.1 (B2).
+- GPU plugins contribute **a compute kernel that emits an `f32` focus field** — that is the whole
+  contract (fact 30). They are *not* required to be spliceable into a fused kernel: M7 measured the
+  fusion prize at **1.449 ms = 0.14% of the pipeline**, which does not pay for making a contributor
+  inherit our tile size, halo, shared-memory layout and register budget. What the contract *does*
+  require is running on the GPU, which is worth **~165x**. The framework may still compose **its
+  own** kernels from WGSL source at run time (`naga_oil`, SPIR-V cached by content hash) and fuse
+  its own built-in measures — fused and unfused are bit-identical, so that is an internal
+  optimisation and never a semantic difference. **Not `build.rs`, and not a spliced contributor
+  ABI** — see §3.4.1 (B2).
 - **A focus measure declares its own spatial support**, and the merge derives its regulariser width
   from that declaration rather than reading a constant. See §3.4.1 (B3).
 - **A focus measure returns sigma-multiples, not raw response**, so the framework owns the division
@@ -778,7 +783,12 @@ after this is measured as a delta against a baseline that exists.
    now needing flat fields rather than darks.
 3. **Focus-measure bake-off on real RAW**, against the noise model: ring-difference vs SML vs
    Tenengrad vs wavelet, scored by winner-margin versus sigma. Closes risk 2. *Run on the skeleton.*
-   This — not the rail requirement — is what justifies build-time WGSL splicing.
+   ~~This — not the rail requirement — is what justifies build-time WGSL splicing.~~ **That last
+   sentence is dead (fact 30).** M7 measured the fusion prize at 0.14%, so nothing justifies
+   splicing and this experiment is no longer load-bearing for the contribution format. **The
+   bake-off is still worth running** — it closes risk 2 and it feeds question 9's support-coupling
+   sweep — but it now decides *which measure ships as the default*, not *how contributors are
+   allowed to write one*.
 4. ~~**Alignment cost and accuracy at scale.**~~ — **DONE. See `M3-alignment-measured.md`.**
    **13-16 ms/frame; 0.78-0.96 s for a 60-frame stack**, scalar CPU, unoptimised, all frames
    independent. Chaining measured at **25 px error at the sensor corner** — dead by measurement,
