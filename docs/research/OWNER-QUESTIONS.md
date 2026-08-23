@@ -891,3 +891,50 @@ plugin path, and the shipped binary does not go through the plugin path at all. 
 as specified would silently rescale every gate you have ever measured, by roughly the local
 noise level rather than by the intended factor. Caught before the edit rather than after,
 which is the cheap way round.
+## Retraction -- read this before acting on item 26
+
+**32. Item 26 is retracted. Do not make that decision yet.** I told you the detail
+metric had turned out to cost 0.4% rather than 2x, and that it should therefore be
+default-on with an escape hatch. That advice assumed the metric works. Overnight the
+verifier attacking it reported **two critical defects on real data**, and the honest
+position is that we do not yet have a detail metric.
+
+It is **non-monotone in the thing it claims to measure**: on a controlled ladder it
+reads 2.03x its baseline at a true sharpness of 0.007, with the competing nuisance
+matched to four figures. Above roughly 0.7 px of blur its sign is inverted, so it
+would score a blurrier merge as more detailed. And swept over a real merge parameter
+it has **no interior optimum** -- it rises all the way to near-pure selection and calls
+that the most detailed result, including a 4.14x rise on a region of the image that
+contains no detail at all. Three further defects (an unnormalised gain sensitivity, an
+asymmetry under swapping its two inputs, and a frequency mismatch) are individually
+fixable; the first two are not.
+
+Nothing shipped. The metric lives only in experiment scripts and no binary consumes
+it, so there is nothing to roll back -- which is the argument for the measure-first
+discipline, made by the discipline paying for itself.
+
+**33. A number in the fact table that everyone has been citing has been refuted, from
+two directions on the same night.** The sensor's fixed-pattern noise fraction was
+solved from a correlation reading, not measured, and the correlation it was checked
+against **passes for any value between 0.02 and 3.0**. It was a test that could not
+fail. Separately, your 242 dark frames measure the fixed-pattern term directly and it
+falls short of what that number requires by two to three orders of magnitude.
+
+The two agents did not know about each other. They used different data and different
+statistics and landed on the same conclusion.
+
+**What it costs you: nothing shipped, and the noise model is confirmed correct** -- the
+term it omits is worth 0.026% on sigma, twenty times smaller than a read-noise error we
+had already corrected. What it costs is a claim, and the flat-field capture in the
+capture list is now the thing that would settle what the number was actually measuring.
+
+**34. Two of my own bookkeeping defects, disclosed.** Four open questions I reported as
+filed had been written into the wrong section of the research document, because facts,
+disciplines and questions share one numbering scheme three times over and my anchor
+matched the wrong one. The same mechanism had quietly cut another question in half
+several commits earlier. Separately, three rows of the fact table have been rendering
+with their source column missing, because mathematical notation containing a vertical
+bar was never escaped inside a table cell.
+
+All repaired, and all found by auditing every row rather than only the rows being
+added -- which is the actual lesson, and is now a written rule.
