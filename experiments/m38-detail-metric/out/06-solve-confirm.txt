@@ -1,0 +1,81 @@
+=== CONFIRMATION: 109MSDCF at the solved gate 2.0964, target was n_eff = 3 ===
+strehl merge -- regularised winner + noise-gated average (the estimation merge)
+camera          : ILCE-7CM2
+iso             : 160
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 160. Trustworthy for ranking; the gain is DERIVED from white-level consistency, not a photon-transfer measurement.
+regulariser     : 17x17 box on the focus field (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)
+focus noise sd  : 0.015214 on the regularised field, MEASURED in-crate (facts 310-313)
+gates           : 2.10  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)
+planes          : 3516 x 2344 per CFA plane
+frames          : 22 from D:\personal\macro\109MSDCF
+workers         : 11 chunks of <= 2 frames (13 allowed by the 6144 MB budget, 32 by CPU)
+working set     : 321 MB/worker pass 1, 469 MB/worker pass 2 (buffers only, a LOWER BOUND)
+
+--- pass one: regularised winner field (MEASURED) ---
+wall clock      : 0.912 s  (41.5 ms/frame)
+  decode        : 5.460 s summed across workers (248.2 ms/frame)
+  focus + reg   : 2.683 s summed across workers (121.9 ms/frame)
+
+--- pass two: gated average (MEASURED) ---
+wall clock      : 1.031 s  (46.8 ms/frame, 1 accumulators)
+  decode        : 4.939 s summed across workers (224.5 ms/frame)
+  field + gate  : 4.216 s summed across workers (191.6 ms/frame)
+total           : 1.943 s  (+0.092 s prologue), 430.6 MB/s over 836.4 MB
+in-flight frames: 11 peak, bound 11 (never O(N))
+
+--- gate calibration (MEASURED) ---
+                  n_eff is frames averaged per pixel. Fact 212 measured nwide = 3 at full
+                  sampling density -- frames within 50% of PEAK HEIGHT, which is a different
+                  rule from this NOISE gate, so 3 is a target to land near, not to match.
+  gate   tol(DN-norm)     mean n_eff   n_eff=1 %   boundary %   pred sigma gain 1/sqrt(n)
+   2.10      0.045106        2.989      14.14%        2.22%         0.5784x
+
+gate solve      : not requested. Pass --target-n-eff 3 to solve the ladder for a
+                  gate, which is what fact 324 says you should be setting.
+
+flat ROI        : not requested. Pass --flat-roi X,Y,W,H for the noise invariant.
+
+=== CROSS-STACK: coffee-bean solved for n_eff = 3 ===
+strehl merge -- regularised winner + noise-gated average (the estimation merge)
+camera          : ILCE-7CM2
+iso             : 50
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 50. Trustworthy for ranking; the gain is DERIVED from white-level consistency, not a photon-transfer measurement.
+regulariser     : 17x17 box on the focus field (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)
+focus noise sd  : 0.015214 on the regularised field, MEASURED in-crate (facts 310-313)
+gates           : 0.50, 1.00, 2.00, 4.00  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)
+planes          : 3516 x 2344 per CFA plane
+frames          : 105 from D:\personal\macro\coffee-bean
+workers         : 6 chunks of <= 18 frames (6 allowed by the 6144 MB budget, 32 by CPU)
+working set     : 321 MB/worker pass 1, 1062 MB/worker pass 2 (buffers only, a LOWER BOUND)
+
+--- pass one: regularised winner field (MEASURED) ---
+wall clock      : 3.898 s  (37.1 ms/frame)
+  decode        : 12.496 s summed across workers (119.0 ms/frame)
+  focus + reg   : 8.501 s summed across workers (81.0 ms/frame)
+
+--- pass two: gated average (MEASURED) ---
+wall clock      : 4.834 s  (46.0 ms/frame, 4 accumulators)
+  decode        : 10.572 s summed across workers (100.7 ms/frame)
+  field + gate  : 14.893 s summed across workers (141.8 ms/frame)
+total           : 8.732 s  (+0.098 s prologue), 476.5 MB/s over 4161.1 MB
+in-flight frames: 6 peak, bound 6 (never O(N))
+
+--- gate calibration (MEASURED) ---
+                  n_eff is frames averaged per pixel. Fact 212 measured nwide = 3 at full
+                  sampling density -- frames within 50% of PEAK HEIGHT, which is a different
+                  rule from this NOISE gate, so 3 is a target to land near, not to match.
+  gate   tol(DN-norm)     mean n_eff   n_eff=1 %   boundary %   pred sigma gain 1/sqrt(n)
+   0.50      0.010758        1.516      77.48%        7.60%         0.8122x
+   1.00      0.021516        2.570      68.32%        7.60%         0.6237x
+   2.00      0.043032        7.422      62.56%        7.60%         0.3671x
+   4.00      0.086063       24.700      58.16%        7.60%         0.2012x
+
+--- gate solved for a target n_eff (MEASURED ladder, INTERPOLATED gate) ---
+target n_eff    : 3.000
+gate            : 1.1063   (log-log interpolation between measured rungs)
+                  Re-run with --gate 1.1063 to confirm; interpolation is not
+                  a measurement, and the rungs bracketing it are.
+
+flat ROI        : not requested. Pass --flat-roi X,Y,W,H for the noise invariant.

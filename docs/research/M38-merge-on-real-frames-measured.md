@@ -195,7 +195,43 @@ re-derived before either is cited. Logged as question 95.
 
 ---
 
-## 5. What this milestone did not do
+## 5. The design conclusion, built and confirmed
+
+Fact 324 says the gate is the wrong parameter. `--target-n-eff` replaces it: the ladder is
+interpolated in log-log for the gate that reaches a requested mean `n_eff`.
+
+Log-log rather than linear because the ladder is geometric and `n_eff` grows superlinearly —
+log-log is **exact** on a power law, where linear interpolation on the same three rungs returns a
+gate 11% low, biased the same way on every stack. And interpolation rather than bisection because
+pass two folds every rung into its own accumulator for the price of one decode, so **the sweep
+already is the solve**.
+
+**Interpolation is not a measurement, so the confirmation run is the result:**
+
+| stack | target `n_eff` | solved gate | measured at that gate | error |
+|---|---|---|---|---|
+| `109MSDCF` | 3.000 | **2.0964** | **2.989** | **0.37%** |
+| `coffee-bean` | 3.000 | **1.1063** | — | — |
+
+The two stacks need gates **1.9× apart** for the same statistic, which is fact 324 restated as
+working code. The CLI prints the solved gate together with an instruction to re-run at it, and
+refuses to extrapolate outside the measured ladder rather than inventing a number.
+
+### 5.1 And the control variable is itself suspect
+
+`coffee-bean` holds **77.5% / 68.3% / 62.6%** of pixels at `n_eff = 1` at gates 0.5/1.0/2.0 while
+its *mean* `n_eff` climbs 1.52 → 2.57 → **7.42**. The distribution is strongly bimodal: a minority
+of pixels averages dozens of frames, most of the image averages one. **A mean target therefore
+buys heavy averaging for a few pixels and none for the majority**, which is not what asking for
+`n_eff = 3` is meant to mean.
+
+So the question moves rather than closes: not "gate or `n_eff`" — that is settled — but **which
+statistic of the `n_eff` distribution to target**. Recorded as question 95.
+
+One free check passed on the way: `boundary %` is **7.60% at every gate** on `coffee-bean`, as it
+must be, since the boundary depends only on the winner field and the gate cannot move it.
+
+## 6. What this milestone did not do
 
 - **No independent verification.** The author of `merge.rs` and `merge_cmd.rs` measured them.
 - **No alignment.** Every number here is on unaligned frames, which fact 19 established is

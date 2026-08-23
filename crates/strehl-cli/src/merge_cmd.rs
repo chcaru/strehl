@@ -65,9 +65,144 @@ pub struct MergeOptions {
     pub gates: Vec<f32>,
     pub flat_roi: Option<Roi>,
     pub detail_roi: Option<Roi>,
+    /// Solve the ladder for the gate that achieves this mean `n_eff`.
+    ///
+    /// **This, not `gates`, is the parameter the project intends to ship.**
+    /// Fact 324 measured that a fixed threshold is not a calibration: at gate
+    /// 2.0 mean `n_eff` runs 2.26 to 7.42 across five stacks, and the gate
+    /// needed to reach `n_eff = 3` runs 1.1 to 2.9. A target `n_eff` transfers
+    /// where a gate does not, and it is the quantity fact 212 calibrated.
+    pub target_n_eff: Option<f64>,
 }
 
-/// The detail half of the acceptance pair, in four conventions.
+/// The outcome of solving a measured gate ladder for a target mean `n_eff`.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub(crate) enum Solve {
+    /// The target lies inside the ladder; this gate reaches it.
+    Gate(f64),
+    /// The target is below everything the ladder measured. The reported gate is
+    /// the ladder's lowest, and it already averages more than asked.
+    BelowLadder { lowest_gate: f64, lowest: f64 },
+    /// The target is above everything the ladder measured. Extrapolating a gate
+    /// from a ladder that never reached the target would be inventing a number.
+    AboveLadder { highest_gate: f64, highest: f64 },
+    /// The ladder is not usable — fewer than two points, or not monotone.
+    Unusable(&'static str),
+}
+
+/// Solve a measured `(gate, mean n_eff)` ladder for the gate hitting `target`.
+///
+/// # Why interpolation and not bisection
+///
+/// Pass two folds every gate in the ladder into its own accumulator for the
+/// price of one decode, so a ladder is nearly free while each bisection step
+/// costs a whole pass. One sweep therefore *is* the solve.
+///
+/// # Why log-log
+///
+/// The ladder is geometric in the gate and `n_eff` grows superlinearly in it
+/// (109MSDCF: 1.414, 1.884, 2.891, 4.987 at gates 0.5, 1, 2, 4). Linear
+/// interpolation on those points would systematically overestimate the gate.
+/// In log-log the same ladder is close to straight, so the residual curvature
+/// between adjacent rungs is small.
+///
+/// # Monotonicity is checked, not assumed
+///
+/// Admission is a threshold on a field fixed before the gate is applied, so a
+/// larger gate admits a superset and `n_eff` cannot fall. That makes
+/// non-monotonicity a bug rather than a property of the data, and it is
+/// reported as `Unusable` rather than silently interpolated across.
+pub(crate) fn solve_gate_for_n_eff(ladder: &[(f64, f64)], target: f64) -> Solve {
+    if ladder.len() < 2 {
+        return Solve::Unusable("a ladder needs at least two rungs to interpolate");
+    }
+    if target.is_nan() || target <= 1.0 {
+        return Solve::Unusable("a target n_eff must exceed 1.0; the winner is always admitted");
+    }
+    let mut v: Vec<(f64, f64)> = ladder.to_vec();
+    v.sort_by(|a, b| {
+        a.0.partial_cmp(&b.0)
+            .expect("gate ladder must not hold NaN")
+    });
+    if v.windows(2).any(|w| w[1].1 < w[0].1) {
+        return Solve::Unusable("n_eff fell as the gate rose, which is a bug, not a measurement");
+    }
+    if v.iter().any(|r| r.0 <= 0.0 || r.1 <= 0.0) {
+        return Solve::Unusable("log-log interpolation needs strictly positive rungs");
+    }
+
+    let (lo, hi) = (v[0], v[v.len() - 1]);
+    if target < lo.1 {
+        return Solve::BelowLadder {
+            lowest_gate: lo.0,
+            lowest: lo.1,
+        };
+    }
+    if target > hi.1 {
+        return Solve::AboveLadder {
+            highest_gate: hi.0,
+            highest: hi.1,
+        };
+    }
+    for w in v.windows(2) {
+        let ((g0, n0), (g1, n1)) = (w[0], w[1]);
+        if target >= n0 && target <= n1 {
+            if (n1 - n0).abs() < f64::EPSILON {
+                return Solve::Gate(g0);
+            }
+            let f = (target.ln() - n0.ln()) / (n1.ln() - n0.ln());
+            return Solve::Gate((g0.ln() + f * (g1.ln() - g0.ln())).exp());
+        }
+    }
+    Solve::Unusable("the target fell between no pair of rungs, which cannot happen")
+}
+
+/// Report the solve, or explain why the sweep did not answer the question.
+fn report_target_solve(est: &[Estimator], target: Option<f64>) {
+    let Some(target) = target else {
+        eprintln!(
+            "gate solve      : not requested. Pass --target-n-eff 3 to solve the ladder for a\n\
+             \x20                 gate, which is what fact 324 says you should be setting."
+        );
+        eprintln!();
+        return;
+    };
+    let ladder: Vec<(f64, f64)> = est
+        .iter()
+        .map(|e| (e.gate().threshold as f64, e.mean_n_eff()))
+        .filter(|r| r.0 > 0.0)
+        .collect();
+
+    eprintln!("--- gate solved for a target n_eff (MEASURED ladder, INTERPOLATED gate) ---");
+    match solve_gate_for_n_eff(&ladder, target) {
+        Solve::Gate(g) => {
+            eprintln!("target n_eff    : {target:.3}");
+            eprintln!("gate            : {g:.4}   (log-log interpolation between measured rungs)");
+            eprintln!(
+                "                  Re-run with --gate {g:.4} to confirm; interpolation is not\n\
+                 \x20                 a measurement, and the rungs bracketing it are."
+            );
+        }
+        Solve::BelowLadder {
+            lowest_gate,
+            lowest,
+        } => eprintln!(
+            "target n_eff {target:.3} is below the ladder: gate {lowest_gate:.4} already \
+             averages {lowest:.3}.\n                  Extend the ladder downward to solve it."
+        ),
+        Solve::AboveLadder {
+            highest_gate,
+            highest,
+        } => eprintln!(
+            "target n_eff {target:.3} is above the ladder: gate {highest_gate:.4} reaches only \
+             {highest:.3}.\n                  Extend the ladder upward; extrapolating would be \
+             inventing a number."
+        ),
+        Solve::Unusable(why) => eprintln!("cannot solve    : {why}"),
+    }
+    eprintln!();
+}
+
 ///
 /// # Why more than one number
 ///
@@ -668,6 +803,7 @@ fn report(
         );
     }
     eprintln!();
+    report_target_solve(&p2.est, opts.target_n_eff);
 
     let Some(roi) = opts.flat_roi else {
         eprintln!(
@@ -843,6 +979,182 @@ fn write_merged(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The five ladders fact 324 measured, as `(gate, mean n_eff)`.
+    ///
+    /// Kept here verbatim so the solve and the fact check each other: if either
+    /// is edited carelessly, `the_solved_gate_spans_the_range_fact_324_claims`
+    /// fails.
+    const LADDERS: [(&str, [(f64, f64); 4]); 5] = [
+        (
+            "119MSDCF",
+            [(0.5, 1.275), (1.0, 1.581), (2.0, 2.258), (4.0, 3.654)],
+        ),
+        (
+            "109MSDCF",
+            [(0.5, 1.414), (1.0, 1.884), (2.0, 2.891), (4.0, 4.987)],
+        ),
+        (
+            "113MSDCF",
+            [(0.5, 1.433), (1.0, 2.198), (2.0, 4.774), (4.0, 8.590)],
+        ),
+        (
+            "112MSDCF",
+            [(0.5, 1.554), (1.0, 2.572), (2.0, 6.226), (4.0, 12.065)],
+        ),
+        (
+            "coffee-bean",
+            [(0.5, 1.516), (1.0, 2.570), (2.0, 7.422), (4.0, 24.700)],
+        ),
+    ];
+
+    fn gate_of(s: Solve) -> f64 {
+        match s {
+            Solve::Gate(g) => g,
+            other => panic!("expected a solved gate, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn log_log_interpolation_is_exact_on_a_power_law() {
+        // n = g^2. The gate for n = 2 is sqrt(2), exactly, and log-log
+        // recovers it because a power law is a straight line in log-log.
+        // This is the whole reason the solve is not linear: linear
+        // interpolation on the same rungs returns 1.3333, which is n = 1.78 —
+        // 11% short of the target, biased the same way on every stack.
+        let g = gate_of(solve_gate_for_n_eff(
+            &[(1.0, 1.0), (2.0, 4.0), (4.0, 16.0)],
+            2.0,
+        ));
+        assert!(
+            (g - std::f64::consts::SQRT_2).abs() < 1e-12,
+            "log-log gave {g}"
+        );
+
+        let linear = 1.0 + (2.0 - 1.0) / (4.0 - 1.0) * (2.0 - 1.0);
+        assert!(
+            (linear * linear - 2.0f64).abs() > 0.2,
+            "linear interpolation must be visibly wrong here, or this test proves nothing"
+        );
+    }
+
+    #[test]
+    fn solving_at_a_rungs_own_value_returns_that_rungs_gate() {
+        for (name, l) in LADDERS {
+            for (gate, n) in l {
+                let g = gate_of(solve_gate_for_n_eff(&l, n));
+                assert!(
+                    (g - gate).abs() < 1e-9,
+                    "{name}: rung {gate} round-tripped to {g}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn the_solved_gate_spans_the_range_fact_324_claims() {
+        // Fact 324's design conclusion is that no fixed gate is a calibration.
+        // That is a claim about a RANGE, so assert the range — a test that
+        // only checked one stack would pass for a broken solve.
+        let gates: Vec<f64> = LADDERS
+            .iter()
+            .map(|(_, l)| gate_of(solve_gate_for_n_eff(l, 3.0)))
+            .collect();
+        let lo = gates.iter().cloned().fold(f64::INFINITY, f64::min);
+        let hi = gates.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
+        assert!(
+            (1.0..1.2).contains(&lo),
+            "lowest solved gate {lo} left the claimed band"
+        );
+        assert!(
+            (2.7..3.1).contains(&hi),
+            "highest solved gate {hi} left the claimed band"
+        );
+        assert!(
+            hi / lo > 2.4,
+            "spread {} no longer supports fact 324",
+            hi / lo
+        );
+    }
+
+    #[test]
+    fn a_solved_gate_reproduces_its_target_when_fed_back() {
+        // Interpolation is only honest if it inverts the ladder it came from.
+        // Rebuild n_eff at the solved gate by interpolating the ladder the
+        // other way, and require the target back.
+        for (name, l) in LADDERS {
+            let g = gate_of(solve_gate_for_n_eff(&l, 3.0));
+            let w = l
+                .windows(2)
+                .find(|w| g >= w[0].0 && g <= w[1].0)
+                .expect("gate in ladder");
+            let f = (g.ln() - w[0].0.ln()) / (w[1].0.ln() - w[0].0.ln());
+            let n = (w[0].1.ln() + f * (w[1].1.ln() - w[0].1.ln())).exp();
+            assert!(
+                (n - 3.0).abs() < 1e-9,
+                "{name}: gate {g} inverted to n_eff {n}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_target_outside_the_ladder_is_refused_rather_than_extrapolated() {
+        let l = [(0.5, 1.414), (1.0, 1.884), (2.0, 2.891)];
+        assert!(matches!(
+            solve_gate_for_n_eff(&l, 1.1),
+            Solve::BelowLadder { .. }
+        ));
+        assert!(matches!(
+            solve_gate_for_n_eff(&l, 9.0),
+            Solve::AboveLadder { .. }
+        ));
+        // And the boundary rungs themselves still solve.
+        assert!((gate_of(solve_gate_for_n_eff(&l, 1.414)) - 0.5).abs() < 1e-9);
+        assert!((gate_of(solve_gate_for_n_eff(&l, 2.891)) - 2.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn a_non_monotone_ladder_is_a_bug_and_is_reported_as_one() {
+        // Admission is a threshold on a field fixed before the gate applies, so
+        // a larger gate admits a superset. n_eff falling is impossible, and
+        // interpolating across it would launder a bug into a number.
+        let bad = [(0.5, 1.414), (1.0, 2.500), (2.0, 2.100)];
+        assert!(matches!(
+            solve_gate_for_n_eff(&bad, 2.2),
+            Solve::Unusable(_)
+        ));
+    }
+
+    #[test]
+    fn degenerate_ladders_and_targets_are_refused() {
+        assert!(matches!(
+            solve_gate_for_n_eff(&[(1.0, 2.0)], 1.5),
+            Solve::Unusable(_)
+        ));
+        assert!(matches!(solve_gate_for_n_eff(&[], 1.5), Solve::Unusable(_)));
+        // n_eff cannot go below 1: the winner is admitted unconditionally.
+        let l = [(0.5, 1.414), (2.0, 2.891)];
+        assert!(matches!(solve_gate_for_n_eff(&l, 1.0), Solve::Unusable(_)));
+        assert!(matches!(
+            solve_gate_for_n_eff(&l, f64::NAN),
+            Solve::Unusable(_)
+        ));
+        // Gate 0 is a valid measurement but not a valid log-log rung; the
+        // caller filters it, and the solve refuses it if the filter is removed.
+        assert!(matches!(
+            solve_gate_for_n_eff(&[(0.0, 1.0), (2.0, 2.9)], 2.0),
+            Solve::Unusable(_)
+        ));
+    }
+
+    #[test]
+    fn an_unsorted_ladder_solves_the_same_as_a_sorted_one() {
+        let sorted = [(0.5, 1.414), (1.0, 1.884), (2.0, 2.891), (4.0, 4.987)];
+        let shuffled = [(2.0, 2.891), (0.5, 1.414), (4.0, 4.987), (1.0, 1.884)];
+        let a = gate_of(solve_gate_for_n_eff(&sorted, 3.0));
+        let b = gate_of(solve_gate_for_n_eff(&shuffled, 3.0));
+        assert!((a - b).abs() < 1e-12, "{a} != {b}");
+    }
 
     #[test]
     fn the_isotropic_column_is_the_analytic_value_on_a_linear_ramp() {

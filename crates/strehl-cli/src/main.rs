@@ -132,6 +132,15 @@ enum Command {
         /// while collapsing detail 58%.
         #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
         detail_roi: Option<Roi>,
+
+        /// Solve the gate ladder for the gate achieving this mean n_eff.
+        ///
+        /// This is the parameter to set, not --gate. Fact 324 measured that a
+        /// fixed gate is not a calibration: at gate 2.0 mean n_eff spans
+        /// 2.26-7.42 across five stacks, and reaching n_eff = 3 needs gates
+        /// from 1.1 to 2.9. Fact 212's nwide = 3 is the calibration target.
+        #[arg(long, value_name = "N")]
+        target_n_eff: Option<f64>,
     },
 }
 
@@ -174,6 +183,7 @@ fn main() -> Result<()> {
             gates,
             flat_roi,
             detail_roi,
+            target_n_eff,
         } => merge_cmd::run(&MergeOptions {
             dir,
             out,
@@ -182,6 +192,7 @@ fn main() -> Result<()> {
             gates,
             flat_roi,
             detail_roi,
+            target_n_eff,
         }),
     }
 }
