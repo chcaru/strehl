@@ -1340,6 +1340,7 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 779 | **A control too small to have power was self-reported by its own milestone and never folded.** M54's `CTRL-bright` ran on **22-107 px** on `coffee-bubbles`; it needed `coffee-bean`'s 2,430,956 px to have any power at all. M54 named it a rule-36 failure in its own report, and caught it by asserting the population size. | **A fold can drop a milestone's self-criticism, and that is the direction to be most careful about.** Assert the population size of a control BEFORE reading its result -- that assertion is what turned an invisible null into a named failure. | M54 s5 item 3, found missing by M58 (MEASURED) |
 | 780 | **A commit message under-reported its own deletions, at the commit that introduced the trailing-newline defect.** `d7eedfa` claimed "two accounted-for deletions". The diff has **three**: fact 610's old line, fact 612's old line, and **the blank line before question 143**. | **Rule 29's tell fired and nobody reconciled it.** A deletion audit performed but not checked against the claim is not an audit -- and the missed line was BLANK, which is exactly the class a `^-[^-]` filter silently drops. Both defects that commit introduced were of the invisible-whitespace kind. | M58 L10 (MEASURED) |
 | 781 | **Twelve defects were filed LOW and at least three were not low.** Fact 676 presented a question CLOSED by facts 90-92 as needing another explanation; fact 612 carried a refuted amplitude with no marker; fact 689 asserted an order-of-magnitude ratio between two percentages with different denominators. | **Severity assigned by an auditor is a hint, not a triage.** In this audit the LOW tier held the content errors and the MODERATE tier held mostly citation errors -- the reverse of what the labels imply. **Read the whole list before deciding what to repair.** | M-main (DERIVED from M58) |
+| 782 | **Two milestones were commissioned onto questions that already had committed reports, and both reports were already listed in the index the orchestrator maintains.** `M21-occlusion-bimodality-measured.md` and `M28-robustness-mask-measured.md` were named in `AGENTS.md` before either brief was written. Caught by listing `docs/research/` for an unrelated reason, after both agents had started. | **The index was current; it was not read.** The failure is not stale tooling and cannot be fixed by better tooling -- no linter detects a brief that omits a prior report. **A brief that omits the prior report is worse than no brief**, because the agent re-derives a settled answer and the duplicate arrives with the authority of a fresh measurement. Now rule 40, with the corrective that fixed both briefs mid-flight: tell the agent that "already answered, nothing to add" is a successful outcome. | M-main (MEASURED) |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -2318,6 +2319,7 @@ frame count, and the exclusion rule — not just its value and its source.**
 368. **Search the codebase for a working instance before recording that none exists** (fact 771). Question 170 asked for a correct citation form that was already committed in four places.
 369. **When a source corroborates the very thing it refutes, fold both halves.** M55 refuted `sigpow`'s separation numbers and, in the same section, measured the canonical form ABOVE the old one at matched repetitions. Only the refutation was folded. **The omission that runs in your own argument's favour is the one to go looking for.** (M58 omission 1, fact 640)
 370. **A deletion audit is not finished until it is reconciled against what you claimed.** `d7eedfa` counted two and deleted three, and the missed one was a blank line -- invisible to the filter, invisible in the render, and load-bearing for item anchoring. **Count from the diff, not from memory, and count blank lines.** (M58 L10, fact 780)
+371. **Search the corpus for the question before commissioning the milestone, and name what you found in the brief.** Two briefs were written onto answered questions while their reports sat in the index. **The corrective is not a check, it is a sentence in the brief**: state the prior report, and state that "this is already settled" is a successful outcome -- otherwise the agent's incentive is to produce a finding. (Fact 782, rule 40)
 ## 6. Novelty — verified gaps, labelled as bets
 
 Recorded with their queries; **all are UNVERIFIED as wins, and none is on the v1 default path.**
@@ -2611,10 +2613,30 @@ sound; one of its three premises has since been measured false.
 3. **Then build the priced merge** -- regulariser (fact 84's -35% absolute error), the
    noise gate, and the robustness/outlier mask the review correctly identified as
    missing. The pricing still stands; only the order changed.
-4. **Then confidence with defined semantics**, which is now cheaper than it was: the
-   per-pixel posterior the review proposed subsumes confidence, occlusion detection and
-   "no frame in focus" into one object, and question 16's suspicion that these are the
-   same object was correct.
+   **IN FLIGHT (M54), and briefed measurement-first**: the mask is only worth building
+   if real stacks show noise-normalised cross-frame disagreement that the calibrated
+   model does not already explain, and **the brief says to report and stop if they do
+   not**. The corpus supplies the failure cases -- `foam` moved during capture,
+   `coffee-bubbles` has bubble motion, and fact 52 records a same-subject pair a full
+   stop apart in exposure. The guard is the governing invariant: a mask can violate
+   "never worse than a single frame" by rejecting good frames in exactly the
+   low-texture regions where disagreement is hardest to tell from noise.
+4. **Then confidence with defined semantics.** The review proposes a per-pixel
+   **posterior over frame-of-best-focus** that subsumes confidence (entropy), occlusion
+   detection (bimodality) and "no frame in focus" (mass at the boundary) into one
+   object, answering question 16's suspicion that these are the same thing.
+   **That is ARGUED, and this section previously asserted it as settled while the
+   paragraph above it recorded occlusion as blocked at the instrument -- an internal
+   contradiction of exactly the class M58 found in the fact table (fact 761).**
+   The premise is now being measured (M60): whether the through-focus response at real
+   occluding edges is bimodal at a separation and amplitude a detector could use, and
+   whether that is separable from noise, from bimodal texture at one depth, and from
+   the periodic subject structure that is the norm in this corpus. **Facts 568 and 603
+   and question 137 are the standing evidence against**: the plant built to score
+   veiling could not express it (enrichment 0.23x, the wrong sign), the leading
+   explanation for why was eliminated by a pre-registered test, and the phenomenon
+   itself may have been mis-identified. If M60 finds the premise false, item 4 keeps
+   the entropy half and loses the occlusion half.
 5. **Then the unglamorous layer** -- per-frame photometric normalisation (facts 608,
    626 give both the ordering rule and the measured route), hot pixels and dust, the
    PRNU term, colour management. The review was right that a SOTA claim dies here, and
