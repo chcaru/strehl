@@ -12,6 +12,57 @@ operator; M13 (`docs/research/M13-window-depth-measured.md`) fact 60 — the win
 > the places where the M11/M13 specs did not survive contact with the code —
 > read that first if you are the verifier.
 
+> ### ORCHESTRATOR VERIFICATION — 2026-08-22
+>
+> **Independently verified. Zero reporting defects — the second milestone of
+> which that is true.** What I re-ran or re-derived myself:
+>
+> - **The cross-implementation agreement (fact 71), which is the load-bearing
+>   claim.** I ran `strehl stack C:\dev\macro\test\109MSDCF --flat-roi
+>   2272,1344,256,256` on the shipped binary and read **30.114 / 28.201 /
+>   1.068x / 6 winners / 1.010% speckle**, then read **1.067839 / 30.1138 / 6**
+>   out of M13's committed `noise-109MSDCF.csv`. **Not circular**: that CSV
+>   predates M14, is committed, and came from a different crate.
+> - **Fact 70**, by reading `m11-focus-bakeoff/src/measures.rs:653-674` myself
+>   (`squared: false`, with `tenengrad-sq-w2` registered separately) *and* by
+>   recomputing M11's published N from M11's own CSVs: `ring-1-3` → 1.3475,
+>   `tenengrad-w5` → 1.1324, both exact. This inverts wording **I** wrote into
+>   SYNTHESIS §3.3 ("gradient energy"); the spec was wrong and M14 was right.
+> - **Gates**: `fmt` 0, `clippy -D warnings` 0, **70 tests** (18 + 44 + 8).
+> - **Memory**: still exactly 3 f32 planes; `allocated_bytes()` untouched, so
+>   M8's ratchet is genuinely intact rather than merely claimed.
+> - **Cost**, by running the example myself — and the number worth quoting is
+>   one this report does not headline: **w1→w13 costs 0.11%**, the range the
+>   milestone actually moves through.
+>
+> **Two corrections, neither changing a decision:**
+>
+> 1. **The cost spread is not stable run to run.** This report says 1.28%,
+>    argmin w30; I measured **0.69%, argmin w40** on the same binary. The
+>    disagreement exceeds either value's distance from zero, so the honest
+>    claim is "flat below ~1.3%", never a point value. Folded as discipline 30
+>    and project rule 16 — which is really this report's *own* timing-harness
+>    finding applied to its own remaining number.
+> 2. **§8's third item is under-reported.** It is filed as a spec item that did
+>    not survive — an explanation for why an old test was unpassable. It is
+>    actually **a property of the operator this milestone shipped**, and I
+>    promoted it to **fact 73**: on an untextured monotone edge the 27×27
+>    response is **37.037037 at blur σ = 0, 1, 2 and 3** — identical to 8
+>    significant figures, zero discrimination — where radius 1 discriminates
+>    the same pair at 0.376. I reproduced it with a null (the step) and a
+>    positive control (broadband texture, 45.13 → 2.24 across the same ladder).
+>    M13 never saw this because its edge plant is a *textured* occlusion
+>    boundary. **Its real consequence is for the confidence channel**, which is
+>    §1's thesis: the magnitude there is *large* (37.04 vs sharp texture's
+>    45.13) while the information is exactly zero, so magnitude-derived
+>    confidence would be most confident where it is blindest. Discipline 29 and
+>    question 19.
+>
+> The judgement call in §6.4 — refusing to pin φ — was **right**, and the
+> reasoning generalises: φ under pointwise normalisation is a scene property.
+> The rising trend is independently *derivable* (the gradient path's centre
+> sensitivity is scale-free in contrast, the divisor path's scales with it).
+
 ---
 
 ## 0. The headline
