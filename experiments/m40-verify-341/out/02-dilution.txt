@@ -1,0 +1,64 @@
+====================================================================================================
+M40 script 02 -- dilution of the gate-0 null, and the exhaustive-null estimator E5
+====================================================================================================
+
+### stack 109MSDCF   iso 160
+  --- ROI flat-M2 2272,1344 ---
+    winner histogram (top 5): f9=52.1%, f10=45.6%, f8=2.2%, f7=0.0%
+    concentration sum(p^2) = 0.4802  -> a histogram-preserving null re-elects the same frame at ~48.0% of pixels by chance alone
+      null arm     changed%   E2 all px   E2 changed-px only   E4 all px   E4 changed-px only
+      shift37       49.81%      1.0191x               1.0384x      1.0124x              1.0269x
+      shift128      50.61%      1.0126x               1.0253x      1.0061x              1.0116x
+      shuffle       51.94%      1.0170x               1.0332x      0.9455x              1.0207x
+    E5  exhaustive null, pixel domain   = 1.1213x     [SELECTION_INFLATION is 1.0740x]
+    E5g exhaustive null, gradient domain = 1.0786x
+    per-frame mean((x_k - mu)^2), DN^2: 427 432 543 588 451 433 444 487 569 564 598 477 507 446 439 461 430 413 462 428 421 446
+      -> spread across frames 413..598, true-winner arm 598
+
+  --- ROI flat-M11 2352,1408 ---
+    winner histogram (top 5): f10=57.7%, f9=39.9%, f8=2.2%, f11=0.2%
+    concentration sum(p^2) = 0.4922  -> a histogram-preserving null re-elects the same frame at ~49.2% of pixels by chance alone
+      null arm     changed%   E2 all px   E2 changed-px only   E4 all px   E4 changed-px only
+      shift37       49.94%      1.0117x               1.0239x      1.0118x              1.0248x
+      shift128      43.24%      1.0121x               1.0287x      1.0100x              1.0241x
+      shuffle       50.48%      1.0157x               1.0319x      0.9486x              1.0265x
+    E5  exhaustive null, pixel domain   = 1.1316x     [SELECTION_INFLATION is 1.0740x]
+    E5g exhaustive null, gradient domain = 1.0839x
+    per-frame mean((x_k - mu)^2), DN^2: 426 426 539 587 447 435 450 485 576 571 611 485 515 452 441 462 431 411 455 426 417 439
+      -> spread across frames 411..611, true-winner arm 610
+
+
+### stack 119MSDCF   iso 50
+  --- ROI flat-M11 2896,1968 ---
+    winner histogram (top 5): f17=44.8%, f18=23.9%, f19=15.6%, f15=7.8%, f16=7.6%
+    concentration sum(p^2) = 0.2940  -> a histogram-preserving null re-elects the same frame at ~29.4% of pixels by chance alone
+      null arm     changed%   E2 all px   E2 changed-px only   E4 all px   E4 changed-px only
+      shift37       72.87%      1.0150x               1.0221x      1.0186x              1.0241x
+      shift128      65.75%      1.0122x               1.0193x      1.0203x              1.0281x
+      shuffle       70.66%      1.0110x               1.0162x      0.8587x              0.9839x
+    E5  exhaustive null, pixel domain   = 1.1074x     [SELECTION_INFLATION is 1.0740x]
+    E5g exhaustive null, gradient domain = 1.1964x
+    per-frame mean((x_k - mu)^2), DN^2: 5497 5375 3609 4625 4710 4038 5142 4735 3373 1625 1727 2855 4186 4495 3735 4065 4266 4248 2335 1425 1247 1212 1219 1105 1082 1083 1085 1113 1139 1198 1265 1346 1407
+      -> spread across frames 1082..5497, true-winner arm 3403
+
+  --- ROI flat-M11 3056,416 ---
+    winner histogram (top 5): f27=62.4%, f28=20.3%, f26=8.0%, f29=5.0%, f25=2.3%
+    concentration sum(p^2) = 0.4408  -> a histogram-preserving null re-elects the same frame at ~44.1% of pixels by chance alone
+      null arm     changed%   E2 all px   E2 changed-px only   E4 all px   E4 changed-px only
+      shift37       56.72%      1.0140x               1.0244x      1.0138x              1.0233x
+      shift128      53.67%      1.0113x               1.0229x      1.0151x              1.0271x
+      shuffle       55.97%      1.0137x               1.0248x      0.9906x              1.0138x
+    E5  exhaustive null, pixel domain   = 0.7513x     [SELECTION_INFLATION is 1.0740x]
+    E5g exhaustive null, gradient domain = 1.1550x
+    per-frame mean((x_k - mu)^2), DN^2: 5173 5008 3335 4297 4427 3760 4852 4466 3084 1390 1478 2593 3854 4089 3234 3468 3617 3589 1715 847 803 865 975 1056 1135 1221 1287 1432 1424 1474 1498 1594 1604
+      -> spread across frames 803..5173, true-winner arm 1448
+
+
+====================================================================================================
+SUMMARY
+====================================================================================================
+  ROI                                   conc    E5 pix   E5 grad  E2 chg-px
+  109MSDCF | flat-M2 2272,1344         0.480   1.1213x   1.0786x    1.0253x
+  109MSDCF | flat-M11 2352,1408        0.492   1.1316x   1.0839x    1.0287x
+  119MSDCF | flat-M11 2896,1968        0.294   1.1074x   1.1964x    1.0193x
+  119MSDCF | flat-M11 3056,416         0.441   0.7513x   1.1550x    1.0229x

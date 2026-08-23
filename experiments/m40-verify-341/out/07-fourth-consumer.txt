@@ -1,0 +1,27 @@
+====================================================================================================
+M40 script 07 -- 'pred sigma gain' is a fourth consumer, and it is not a mean
+====================================================================================================
+  CLI column   = 1/sqrt(mean n)                     [merge_cmd.rs:912, no inflation]
+  true gain    = mean( 1/sqrt(n) )                  [Jensen-correct, no inflation]
+  shipped gain = mean( infl(n)/sqrt(n) )            [what predicted_sigma now implies]
+  sigma-wtd    = mean(sigma*infl/sqrt(n)) / mean(sigma)   [the ratio C1 actually forms]
+
+  --- ROI flat-M2 2272,1344 ---
+     gate   mean n   n=1 %   CLI column   true gain  shipped gain   sigma-wtd   CLI vs true
+     0.00   1.0000 100.00%       1.0000x      1.0000x        1.0740x      1.0740x     +0.00%
+     0.50   1.2995  72.22%       0.8772x      0.9159x        0.9693x      0.9693x     -4.22%
+     1.00   1.6700  43.96%       0.7738x      0.8222x        0.8547x      0.8547x     -5.88%
+     2.00   2.4908   8.80%       0.6336x      0.6648x        0.6714x      0.6713x     -4.70%
+     4.00   4.5354   0.00%       0.4696x      0.4812x        0.4812x      0.4812x     -2.43%
+
+  --- ROI flat-M11 2352,1408 ---
+     gate   mean n   n=1 %   CLI column   true gain  shipped gain   sigma-wtd   CLI vs true
+     0.00   1.0000 100.00%       1.0000x      1.0000x        1.0740x      1.0740x     +0.00%
+     0.50   1.3304  69.42%       0.8670x      0.9073x        0.9587x      0.9588x     -4.45%
+     1.00   1.6918  41.37%       0.7688x      0.8150x        0.8457x      0.8457x     -5.67%
+     2.00   2.4638   7.71%       0.6371x      0.6650x        0.6707x      0.6708x     -4.20%
+     4.00   4.5058   0.03%       0.4711x      0.4838x        0.4838x      0.4838x     -2.63%
+
+  For scale, the CLI's own WHOLE-PLANE reading on this stack (out/05-*.txt):
+    gate 0.00 : mean n_eff 1.000, n_eff=1 100.00%, column 1.0000x  (both arms)
+    gate 1.00 : mean n_eff 1.884, n_eff=1  41.66%, column 0.7285x  (both arms)

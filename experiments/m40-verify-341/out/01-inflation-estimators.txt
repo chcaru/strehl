@@ -1,0 +1,101 @@
+================================================================================================
+M40 script 01 -- four estimators of the gate-0 selection inflation
+================================================================================================
+shift control = roll(win, (37, 53)) ; shuffle seed = 4041
+
+### stack 109MSDCF   iso 160
+    22 frames, middle = 11, gain 0.366300 DN/e-, read 1.5385 DN
+
+  --- ROI flat-M2 2272,1344 ---
+    mean   2020.79 DN   model sigma  19.269 DN   spatial sd(1 frame)   28.201 DN   implied structure sd   20.591 DN
+    winners: 4 distinct, median 9
+      arm        E1 spatial-sd    mean(d^2)      grad energy(d)
+      true           1.0739x        597.959         1671.811
+      shift          1.0688x        575.811         1631.068
+      shuffle        1.0708x        578.185         1870.094
+      fixed          1.0407x        563.669         1621.102
+    E1 (author's, spatial sd ratio)          = 1.0739x   [SELECTION_INFLATION is 1.0740x]
+    E2 pixel-domain vs shift control         = 1.0191x   (vs shuffle 1.0170x, vs fixed 1.0300x)
+    E3 pixel-domain vs calibrated model      = 1.2989x   (shift arm on the same reference 1.2746x)
+    E4 GRADIENT-domain vs shift control      = 1.0124x   (vs shuffle 0.9455x)
+
+  --- ROI flat-M11 2352,1408 ---
+    mean   2019.75 DN   model sigma  19.264 DN   spatial sd(1 frame)   27.491 DN   implied structure sd   19.612 DN
+    winners: 4 distinct, median 10
+      arm        E1 spatial-sd    mean(d^2)      grad energy(d)
+      true           1.0867x        610.429         1690.819
+      shift          1.0771x        596.415         1651.581
+      shuffle        1.0743x        591.719         1878.988
+      fixed          1.0505x        610.548         1643.133
+    E1 (author's, spatial sd ratio)          = 1.0867x   [SELECTION_INFLATION is 1.0740x]
+    E2 pixel-domain vs shift control         = 1.0117x   (vs shuffle 1.0157x, vs fixed 0.9999x)
+    E3 pixel-domain vs calibrated model      = 1.3127x   (shift arm on the same reference 1.2976x)
+    E4 GRADIENT-domain vs shift control      = 1.0118x   (vs shuffle 0.9486x)
+
+  --- ROI detail-M11 2080,1056 ---
+    mean   1152.12 DN   model sigma  13.926 DN   spatial sd(1 frame)  652.275 DN   implied structure sd  652.113 DN
+    winners: 21 distinct, median 9
+      arm        E1 spatial-sd    mean(d^2)      grad energy(d)
+      true           1.0001x       7952.908         3647.746
+      shift          1.0033x       5668.349         3517.302
+      shuffle        0.9997x       5952.168        10931.118
+      fixed          1.0040x       5620.857         3505.551
+    E1 (author's, spatial sd ratio)          = 1.0001x   [SELECTION_INFLATION is 1.0740x]
+    E2 pixel-domain vs shift control         = 1.1845x   (vs shuffle 1.1559x, vs fixed 1.1895x)
+    E3 pixel-domain vs calibrated model      = 6.2661x   (shift arm on the same reference 5.2901x)
+    E4 GRADIENT-domain vs shift control      = 1.0184x   (vs shuffle 0.5777x)
+
+
+### stack 119MSDCF   iso 50
+    33 frames, middle = 16, gain 0.114469 DN/e-, read 0.4808 DN
+
+  --- ROI flat-M11 2896,1968 ---
+    mean   4476.94 DN   model sigma  16.011 DN   spatial sd(1 frame)   50.841 DN   implied structure sd   48.254 DN
+    winners: 6 distinct, median 17
+      arm        E1 spatial-sd    mean(d^2)      grad energy(d)
+      true           1.0601x       3402.965         3216.102
+      shift          1.0255x       3303.306         3099.479
+      shuffle        1.0538x       3329.466         4362.079
+      fixed          1.0137x       4248.393         3173.122
+    E1 (author's, spatial sd ratio)          = 1.0601x   [SELECTION_INFLATION is 1.0740x]
+    E2 pixel-domain vs shift control         = 1.0150x   (vs shuffle 1.0110x, vs fixed 0.8950x)
+    E3 pixel-domain vs calibrated model      = 3.6999x   (shift arm on the same reference 3.6453x)
+    E4 GRADIENT-domain vs shift control      = 1.0186x   (vs shuffle 0.8587x)
+
+  --- ROI flat-M11 3056,416 ---
+    mean   4468.32 DN   model sigma  15.995 DN   spatial sd(1 frame)   43.204 DN   implied structure sd   40.134 DN
+    winners: 8 distinct, median 27
+      arm        E1 spatial-sd    mean(d^2)      grad energy(d)
+      true           1.2732x       1447.941         2923.356
+      shift          1.2673x       1408.116         2844.258
+      shuffle        1.2642x       1409.016         2979.010
+      fixed          1.2731x       1431.660         2891.200
+    E1 (author's, spatial sd ratio)          = 1.2732x   [SELECTION_INFLATION is 1.0740x]
+    E2 pixel-domain vs shift control         = 1.0140x   (vs shuffle 1.0137x, vs fixed 1.0057x)
+    E3 pixel-domain vs calibrated model      = 2.4158x   (shift arm on the same reference 2.3823x)
+    E4 GRADIENT-domain vs shift control      = 1.0138x   (vs shuffle 0.9906x)
+
+  --- ROI detail-M11 2016,1152 ---
+    mean   2064.00 DN   model sigma  10.309 DN   spatial sd(1 frame) 1359.042 DN   implied structure sd 1358.998 DN
+    winners: 19 distinct, median 17
+      arm        E1 spatial-sd    mean(d^2)      grad energy(d)
+      true           0.9841x      36037.057        20028.143
+      shift          0.9940x      33431.825        18742.091
+      shuffle        0.9928x      34497.367        59215.799
+      fixed          1.0014x      33319.635        18608.713
+    E1 (author's, spatial sd ratio)          = 0.9841x   [SELECTION_INFLATION is 1.0740x]
+    E2 pixel-domain vs shift control         = 1.0382x   (vs shuffle 1.0221x, vs fixed 1.0400x)
+    E3 pixel-domain vs calibrated model      = 17.7280x   (shift arm on the same reference 17.0752x)
+    E4 GRADIENT-domain vs shift control      = 1.0337x   (vs shuffle 0.5816x)
+
+
+================================================================================================
+SUMMARY -- every ROI, side by side
+================================================================================================
+  ROI                                       E1    E2 pix  E3 model   E4 grad
+  109MSDCF | flat-M2 2272,1344         1.0739x   1.0191x   1.2989x   1.0124x
+  109MSDCF | flat-M11 2352,1408        1.0867x   1.0117x   1.3127x   1.0118x
+  109MSDCF | detail-M11 2080,1056      1.0001x   1.1845x   6.2661x   1.0184x
+  119MSDCF | flat-M11 2896,1968        1.0601x   1.0150x   3.6999x   1.0186x
+  119MSDCF | flat-M11 3056,416         1.2732x   1.0140x   2.4158x   1.0138x
+  119MSDCF | detail-M11 2016,1152      0.9841x   1.0382x  17.7280x   1.0337x

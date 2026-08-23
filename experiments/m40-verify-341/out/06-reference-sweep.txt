@@ -1,0 +1,198 @@
+====================================================================================================
+M40 script 06 -- the flat-ROI ratio as a function of WHICH FRAME is the reference
+====================================================================================================
+
+### stack 109MSDCF  iso 160  N=22  middle frame = f11
+  --- ROI flat-M2 2272,1344 ---
+    merged (gate 0, argmax): spatial sd 30.2838 DN   model sigma 19.2709   implied structure 23.3611
+    per-frame reference sweep -- ratio = sd(merged)/sd(frame j):
+      frame   sd(DN)  structure   ratio   winner%
+      f0      23.651     13.716  1.2804x    0.00%
+      f1      24.173     14.591  1.2528x    0.00%
+      f2      24.572     15.182  1.2325x    0.00%
+      f3      24.988     15.836  1.2119x    0.00%
+      f4      25.411     16.539  1.1918x    0.00%
+      f5      25.548     16.797  1.1854x    0.00%
+      f6      26.805     18.640  1.1298x    0.00%
+      f7      28.023     20.345  1.0807x    0.03%
+      f8      28.815     21.458  1.0510x    2.23%
+      f9      29.348     22.161  1.0319x   52.10%  <- MODAL WINNER
+      f10     29.560     22.384  1.0245x   45.64%
+      f11     28.201     20.593  1.0739x    0.00%  <- SHIPPED REFERENCE (frames.len()/2)
+      f12     27.690     19.917  1.0937x    0.00%
+      f13     26.927     18.818  1.1246x    0.00%
+      f14     25.760     17.125  1.1756x    0.00%
+      f15     25.283     16.329  1.1978x    0.00%
+      f16     24.661     15.360  1.2280x    0.00%
+      f17     24.340     14.859  1.2442x    0.00%
+      f18     23.869     14.133  1.2688x    0.00%
+      f19     23.450     13.396  1.2914x    0.00%
+      f20     23.161     12.867  1.3075x    0.00%
+      f21     22.852     12.320  1.3252x    0.00%
+
+    ratio vs SHIPPED middle f11      : 1.0739x
+    ratio vs MODAL WINNER f9        : 1.0319x
+    ratio vs winner-WEIGHTED mean sd  : 1.0289x
+    ratio vs MEAN of all frames' sd   : 1.1748x
+    ratio vs SHARPEST-sd frame f10     : 1.3252x   (min over references)
+    ratio vs FLATTEST-sd frame f21     : 1.0245x   (max over references)
+    SPREAD over the N choices of reference: 1.0245x .. 1.3252x
+
+    DERIVED inversions of the same ratio into a NOISE inflation:
+      reference frame f11 is 46.7% noise by variance, 53.3% structure
+      if structure were IDENTICAL in the merge : implied noise inflation 1.1525x
+      with the merge's OWN implied structure    : implied noise inflation 1.0002x
+
+  --- ROI flat-M11 2352,1408 ---
+    merged (gate 0, argmax): spatial sd 29.8743 DN   model sigma 19.2739   implied structure 22.8253
+    per-frame reference sweep -- ratio = sd(merged)/sd(frame j):
+      frame   sd(DN)  structure   ratio   winner%
+      f0      23.214     12.956  1.2869x    0.00%
+      f1      23.491     13.440  1.2717x    0.00%
+      f2      23.912     14.096  1.2493x    0.00%
+      f3      24.310     14.749  1.2289x    0.00%
+      f4      24.687     15.410  1.2101x    0.00%
+      f5      24.936     15.857  1.1980x    0.00%
+      f6      26.083     17.591  1.1454x    0.00%
+      f7      27.167     19.153  1.0997x    0.00%
+      f8      27.959     20.299  1.0685x    2.20%
+      f9      28.583     21.141  1.0452x   39.92%
+      f10     28.880     21.483  1.0344x   57.65%  <- MODAL WINNER
+      f11     27.491     19.614  1.0867x    0.23%  <- SHIPPED REFERENCE (frames.len()/2)
+      f12     27.042     19.011  1.1047x    0.00%
+      f13     26.322     17.945  1.1350x    0.00%
+      f14     25.139     16.181  1.1883x    0.00%
+      f15     24.781     15.547  1.2055x    0.00%
+      f16     24.195     14.606  1.2348x    0.00%
+      f17     23.801     13.965  1.2552x    0.00%
+      f18     23.412     13.353  1.2760x    0.00%
+      f19     23.062     12.712  1.2954x    0.00%
+      f20     22.738     12.097  1.3138x    0.00%
+      f21     22.498     11.659  1.3279x    0.00%
+
+    ratio vs SHIPPED middle f11      : 1.0867x
+    ratio vs MODAL WINNER f10        : 1.0344x
+    ratio vs winner-WEIGHTED mean sd  : 1.0395x
+    ratio vs MEAN of all frames' sd   : 1.1870x
+    ratio vs SHARPEST-sd frame f10     : 1.3279x   (min over references)
+    ratio vs FLATTEST-sd frame f21     : 1.0344x   (max over references)
+    SPREAD over the N choices of reference: 1.0344x .. 1.3279x
+
+    DERIVED inversions of the same ratio into a NOISE inflation:
+      reference frame f11 is 49.1% noise by variance, 50.9% structure
+      if structure were IDENTICAL in the merge : implied noise inflation 1.1698x
+      with the merge's OWN implied structure    : implied noise inflation 1.0006x
+
+
+### stack 119MSDCF  iso 50  N=33  middle frame = f16
+  --- ROI flat-M11 2896,1968 ---
+    merged (gate 0, argmax): spatial sd 53.8977 DN   model sigma 16.0847   implied structure 51.4417
+    per-frame reference sweep -- ratio = sd(merged)/sd(frame j):
+      frame   sd(DN)  structure   ratio   winner%
+      f0      35.636     31.896  1.5125x    0.00%
+      f1      36.079     32.390  1.4939x    0.00%
+      f2      36.706     33.074  1.4684x    0.00%
+      f3      37.303     33.743  1.4449x    0.00%
+      f4      37.779     34.270  1.4267x    0.00%
+      f5      38.478     35.034  1.4007x    0.00%
+      f6      39.246     35.883  1.3733x    0.00%
+      f7      39.759     36.441  1.3556x    0.00%
+      f8      40.881     37.652  1.3184x    0.00%
+      f9      42.341     39.179  1.2729x    0.00%
+      f10     43.385     40.303  1.2423x    0.00%
+      f11     44.311     41.288  1.2163x    0.00%
+      f12     45.639     42.701  1.1809x    0.00%
+      f13     46.802     43.940  1.1516x    0.00%
+      f14     48.760     46.026  1.1054x    0.00%
+      f15     50.381     47.738  1.0698x    7.78%
+      f16     50.841     48.222  1.0601x    7.63%  <- SHIPPED REFERENCE (frames.len()/2)
+      f17     51.535     48.953  1.0458x   44.80%  <- MODAL WINNER
+      f18     50.816     48.209  1.0606x   23.87%
+      f19     50.260     47.636  1.0724x   15.62%
+      f20     48.792     46.091  1.1047x    0.29%
+      f21     47.498     44.716  1.1347x    0.00%
+      f22     46.239     43.374  1.1656x    0.00%
+      f23     45.042     42.102  1.1966x    0.00%
+      f24     43.879     40.855  1.2283x    0.00%
+      f25     42.744     39.631  1.2609x    0.00%
+      f26     41.902     38.720  1.2863x    0.00%
+      f27     41.023     37.766  1.3139x    0.00%
+      f28     40.281     36.957  1.3380x    0.00%
+      f29     39.555     36.162  1.3626x    0.00%
+      f30     38.791     35.323  1.3894x    0.00%
+      f31     38.356     34.844  1.4052x    0.00%
+      f32     37.712     34.131  1.4292x    0.00%
+
+    ratio vs SHIPPED middle f16      : 1.0601x
+    ratio vs MODAL WINNER f17        : 1.0458x
+    ratio vs winner-WEIGHTED mean sd  : 1.0565x
+    ratio vs MEAN of all frames' sd   : 1.2537x
+    ratio vs SHARPEST-sd frame f17     : 1.5125x   (min over references)
+    ratio vs FLATTEST-sd frame f0     : 1.0458x   (max over references)
+    SPREAD over the N choices of reference: 1.0458x .. 1.5125x
+
+    DERIVED inversions of the same ratio into a NOISE inflation:
+      reference frame f16 is 10.0% noise by variance, 90.0% structure
+      if structure were IDENTICAL in the merge : implied noise inflation 1.4946x
+      with the merge's OWN implied structure    : implied noise inflation 0.9986x
+
+  --- ROI flat-M11 3056,416 ---
+    merged (gate 0, argmax): spatial sd 55.0063 DN   model sigma 16.0036   implied structure 52.6267
+    per-frame reference sweep -- ratio = sd(merged)/sd(frame j):
+      frame   sd(DN)  structure   ratio   winner%
+      f0      34.403     30.520  1.5989x    0.00%
+      f1      34.830     30.999  1.5793x    0.00%
+      f2      35.108     31.299  1.5668x    0.00%
+      f3      35.576     31.830  1.5462x    0.00%
+      f4      35.748     32.024  1.5387x    0.00%
+      f5      36.253     32.581  1.5173x    0.00%
+      f6      36.560     32.931  1.5046x    0.00%
+      f7      37.037     33.457  1.4852x    0.00%
+      f8      37.569     34.035  1.4641x    0.00%
+      f9      38.517     35.018  1.4281x    0.00%
+      f10     39.005     35.552  1.4102x    0.00%
+      f11     39.707     36.309  1.3853x    0.00%
+      f12     40.225     36.865  1.3675x    0.00%
+      f13     41.057     37.768  1.3398x    0.00%
+      f14     41.677     38.448  1.3198x    0.00%
+      f15     42.611     39.457  1.2909x    0.00%
+      f16     43.204     40.095  1.2732x    0.00%  <- SHIPPED REFERENCE (frames.len()/2)
+      f17     44.241     41.212  1.2433x    0.00%
+      f18     45.024     42.066  1.2217x    0.00%
+      f19     45.986     43.108  1.1962x    0.00%
+      f20     47.099     44.301  1.1679x    0.00%
+      f21     48.436     45.716  1.1356x    0.00%
+      f22     49.935     47.300  1.1016x    0.00%
+      f23     51.471     48.924  1.0687x    0.00%
+      f24     52.545     50.052  1.0468x    0.61%
+      f25     53.552     51.106  1.0272x    2.27%
+      f26     54.184     51.768  1.0152x    8.04%
+      f27     55.005     52.626  1.0000x   62.44%  <- MODAL WINNER
+      f28     54.461     52.055  1.0100x   20.32%
+      f29     53.597     51.150  1.0263x    5.02%
+      f30     52.493     49.991  1.0479x    1.24%
+      f31     51.641     49.094  1.0652x    0.06%
+      f32     50.146     47.518  1.0969x    0.00%
+
+    ratio vs SHIPPED middle f16      : 1.2732x
+    ratio vs MODAL WINNER f27        : 1.0000x
+    ratio vs winner-WEIGHTED mean sd  : 1.0060x
+    ratio vs MEAN of all frames' sd   : 1.2442x
+    ratio vs SHARPEST-sd frame f27     : 1.5989x   (min over references)
+    ratio vs FLATTEST-sd frame f0     : 1.0000x   (max over references)
+    SPREAD over the N choices of reference: 1.0000x .. 1.5989x
+
+    DERIVED inversions of the same ratio into a NOISE inflation:
+      reference frame f16 is 13.9% noise by variance, 86.1% structure
+      if structure were IDENTICAL in the merge : implied noise inflation 2.3401x
+      with the merge's OWN implied structure    : implied noise inflation 0.9945x
+
+
+====================================================================================================
+SUMMARY
+====================================================================================================
+  ROI                                 vs middle   vs modal    vs wtd    min..max over reference
+  109MSDCF | flat-M2 2272,1344          1.0739x    1.0319x   1.0289x   1.0245x .. 1.3252x
+  109MSDCF | flat-M11 2352,1408         1.0867x    1.0344x   1.0395x   1.0344x .. 1.3279x
+  119MSDCF | flat-M11 2896,1968         1.0601x    1.0458x   1.0565x   1.0458x .. 1.5125x
+  119MSDCF | flat-M11 3056,416          1.2732x    1.0000x   1.0060x   1.0000x .. 1.5989x

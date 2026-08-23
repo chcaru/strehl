@@ -1,0 +1,112 @@
+strehl merge -- regularised winner + noise-gated average (the estimation merge)
+camera          : ILCE-7CM2
+iso             : 160
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 160. Trustworthy for ranking; the gain is DERIVED from white-level consistency, not a photon-transfer measurement.
+regulariser     : 17x17 box on the focus field (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)
+focus noise sd  : 0.015214 on the regularised field, MEASURED in-crate (facts 310-313)
+gates           : 0.00  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)
+planes          : 3516 x 2344 per CFA plane
+frames          : 22 from C:\dev\macro\test\109MSDCF
+workers         : 4 chunks of <= 6 frames (4 allowed by the 6144 MB budget, 32 by CPU)
+working set     : 321 MB/worker pass 1, 1491 MB/worker pass 2 (buffers only, a LOWER BOUND)
+  of which stats: 1022 MB/worker of through-focus sufficient statistics, CONSTANT in the frame count
+
+--- pass one: regularised winner field (MEASURED) ---
+wall clock      : 1.207 s  (54.8 ms/frame)
+  decode        : 2.527 s summed across workers (114.9 ms/frame)
+  focus + reg   : 1.548 s summed across workers (70.4 ms/frame)
+
+--- pass two: gated average (MEASURED) ---
+wall clock      : 4.104 s  (186.5 ms/frame, 1 accumulators)
+  decode        : 2.110 s summed across workers (95.9 ms/frame)
+  field + gate  : 7.228 s summed across workers (328.5 ms/frame)
+total           : 5.310 s  (+0.102 s prologue), 157.5 MB/s over 836.4 MB
+in-flight frames: 4 peak, bound 4 (never O(N))
+
+--- gate calibration (MEASURED) ---
+                  n_eff is frames averaged per pixel. Fact 212 measured nwide = 3 at full
+                  sampling density -- frames within 50% of PEAK HEIGHT, which is a different
+                  rule from this NOISE gate, so 3 is a target to land near, not to match.
+  gate   tol(DN-norm)     mean n_eff   n_eff=1 %   boundary %   pred sigma gain 1/sqrt(n)
+   0.00      0.000000        1.000     100.00%        2.22%         1.0000x
+
+gate solve      : not requested. Pass --target-n-eff 3 to solve the ladder for a
+                  gate, which is what fact 324 says you should be setting.
+
+--- ACCEPTANCE INVARIANT 1 of 2: flat-ROI noise (MEASURED) ---
+roi             : x 2272 y 1344 w 256 h 256 in plane coordinates
+single frame 11 : sigma   28.201 DN   mean   2020.29 DN   (no stacking at all)
+model predicts  : sigma   19.267 DN for one green-luma sample at that level
+  gate      sigma DN       mean DN      RATIO   winners in roi
+   0.00      30.284       2021.20      1.074x   4 distinct, median 9
+                  PASS is <= 1.000x. The argmax baseline measured 1.253x here (fact 19/23),
+                  and a plain unweighted mean measured 0.534x -- which is the floor, not
+                  a target, because of invariant 2.
+
+--- ACCEPTANCE INVARIANT 2 of 2: detail retention (MEASURED) ---
+roi             : x 2272 y 1344 w 256 h 256 in plane coordinates
+                  MEAN |GRAD| IS CONFOUNDED BY NOISE and the confound has the same sign
+                  as the effect: cutting sigma cuts gradient with zero blur, so an
+                  uncorrected reading charges the merge for doing its job. `corrected` is
+                  sqrt(raw^2 - model^2), the only column judged. `m2` is fact 24's
+                  convention (M38 §1), reported so that comparison is legitimate.
+single frame 11 : corrected  14.7270   raw rms  41.2512   model noise  38.5328   m2  23.2791   iso  36.0541
+  gate     corrected     RETENTION      raw rms   model noise         m2        iso
+   0.00     19.9501       1.355x      43.3988       38.5415    24.4521    37.9327
+                  The reference is ONE frame of the bracket, so much of this ROI is out
+                  of focus in it and retention ABOVE 1.0 is expected -- that is the stack
+                  finding focus the reference does not have. The failure this catches is
+                  CORRECTED retention falling as the gate opens, which is fact 24's
+                  collapse arriving and cannot be explained away as noise removal.
+
+--- through-focus sufficient statistics (MEASURED) ---
+                  Gathered in PASS TWO, anchored on pass one's regularised winner, so
+                  no third pass over the frames is needed to compute a sub-frame peak,
+                  a top-k list or a bimodality statistic from them.
+scale           : 5x5 box on the focus field (fact 152: bimodality is DEPLETED, 0.36x,
+                  at the 17x17 selection scale and only appears at radius 2)
+fine noise sd   : 0.090400, MEASURED in-crate, 5.94x the selection field's 0.015214
+memory          : 60 B/px = 494 MB per gather, CONSTANT in the frame count.
+                  A fine focus VOLUME for these 22 frames would be 88 B/px = 725 MB and is O(frames).
+                  Break-even is 15 frames; the ratchet holds from there up without bound.
+
+(a) SUB-FRAME PEAK, by parabola on the fine triple
+  fitted        : 50.689% of pixels have a complete concave triple
+  mean |offset| : 0.2824 frames
+  |offset|>0.4  : 26.122% of fitted pixels are nearly half a frame from their peak
+  deficit (C3)  : median 0.0361, p90 0.2758, p99 0.9162   (log fit with baseline subtraction, facts 272/304)
+  scale disagree: 78.081% of pixels have a fine argmax different from the regularised winner
+  outside triple: 54.843% have it further than 2 frames away -- the SCREENING form
+                  The first is a diagnostic and is expected to be large: the fine field is
+                  5.94x noisier than the selection field, so its argmax moves. The second is
+                  the actionable one, because off-by-one is still bracketed by the parabola.
+
+(b) TOP-K, k = 4 on the fine field
+  complete      : 100.000% of pixels have all four slots filled
+  top1 - top4   : mean 0.2445 = 1.91 fine sigma
+
+(c) BIMODALITY -- an UPPER BOUND on the prominence of a separated second peak
+  real          : mean 8.112 sigma, median 3.504, p99 80.668
+  placebo       : mean 8.451 sigma, median 3.703, p99 82.973   (seeded shuffle, mean step 7.7 frames, NOT a rotation)
+  ratio         : 0.9598x  -- BELOW 1 means the through-focus curve is genuinely
+                  focus-ordered at this scale; AT 1 means the stack carries no
+                  ordering information here and the screen is reading noise.
+                  The placebo reads HIGH by construction (M21: permutation is a
+                  null for ENRICHMENT, never for a raw rate).
+
+(d) CONFIDENCE VECTOR at gate 0.00 -- four channels, NOT a score
+                  Facts 280-282: C1 is ANTI-correlated with C3's target (0.89x lift), so
+                  no monotone scalar summary is faithful. The honest answer is the UNION.
+  C1 sigma      : worst 5.0% at >= 19.732 DN -> 414030 px
+  C2 perplexity : worst 5.0% at >= 5.883 -> 412076 px
+  C3 deficit    : worst 5.0% at >= 0.3288 -> 412076 px
+  C4 flags      : 4610499 px  (boundary 182679, bimodal 75017, peak outside triple 4519852)
+                  bimodal cut 82.973 sigma, from the PLACEBO's p99. 0.9102% of pixels clear it;
+                  1% is the no-effect reading, below 1% means FEWER prominent far peaks
+                  than chance -- which is what a focus-ordered stack should give.
+  UNION         : 61.920% of pixels (5103132 of 8241504)   -- M34 measured 14.278% at a 5% tail
+  UNION w/o C4' : 17.407% (1434605 px) with the NEW scale-disagreement flag removed -- this is
+                  the channel set M34's 14.278% was measured over, and the only one comparable.
+  mean C2       : 3.3206 against mean n_eff 1.0000 at this gate -- the soft and hard
+                  readings of the same acceptance set, on the same calibrated scale.

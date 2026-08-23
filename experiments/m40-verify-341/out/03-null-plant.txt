@@ -1,0 +1,54 @@
+========================================================================================================
+M40 script 03 -- a detail-free plant under the shipped selector
+========================================================================================================
+10 seeds per configuration; 256x256 evaluated, 48 px margin
+The true detail of this plant is EXACTLY ZERO, by construction.
+
+### 109-like L=2021 iso160 N=22
+    model sigma for one green luma sample: 19.2689 DN
+    ONE FRAME (no selection): spatial sd 19.2707 DN = 1.0001x model     raw_rms/noise_rms 0.99942 +- 0.00332
+      -> this row is the control: with no selection both must read 1.000x
+
+      gate  mean n   n=1 %   I_pix(agg)      I_grad     corrected@1.000   corrected@1.074
+      0.00   1.000  100.0%   1.0451x     1.03069x       9.6047 DN     -11.6259 DN
+      0.50   3.205   21.7%   1.0491x     1.03401x       6.9093 DN      -0.2470 DN
+      1.00   7.359    3.3%   1.0423x     1.02923x       4.1909 DN       3.1355 DN
+      2.00  17.451    0.0%   1.0114x     1.00781x       1.1645 DN       1.1250 DN
+      4.00  21.984    0.0%   1.0005x     1.00040x       0.3361 DN       0.0416 DN
+      8.00  22.000    0.0%   1.0005x     1.00035x       0.3246 DN       0.0265 DN
+      (corrected@1.074 is signed: negative means the correction over-subtracts,
+       which the shipped code would clamp to 0 via max(0, .))
+
+      per-n pixel-domain inflation I_pix(n) = sd(merged | n) / (sigma/sqrt(n))
+        gate            n=1         n=2         n=3         n=4         n=5         n=6         n=7         n=8
+        0.00        1.0451x           -           -           -           -           -           -           -
+        0.50        1.0607x     1.0443x     1.0407x     1.0308x     1.0251x     1.0289x     1.0215x     1.0316x
+        1.00        1.0770x     1.0591x     1.0454x     1.0383x     1.0319x     1.0293x     1.0286x     1.0220x
+        2.00              -           -           -           -     1.0464x     0.9931x     1.0204x     1.0268x
+        4.00              -           -           -           -           -           -           -           -
+        8.00              -           -           -           -           -           -           -           -
+
+### 119-like L=4477 iso50 N=33
+    model sigma for one green luma sample: 16.0110 DN
+    ONE FRAME (no selection): spatial sd 16.0155 DN = 1.0003x model     raw_rms/noise_rms 0.99996 +- 0.00365
+      -> this row is the control: with no selection both must read 1.000x
+
+      gate  mean n   n=1 %   I_pix(agg)      I_grad     corrected@1.000   corrected@1.074
+      0.00   1.000  100.0%   1.0508x     1.03447x       8.4747 DN      -9.2406 DN
+      0.50   3.495   20.4%   1.0541x     1.03653x       5.8246 DN       0.8559 DN
+      1.00   8.840    2.6%   1.0452x     1.03020x       3.3222 DN       2.6311 DN
+      2.00  24.351    0.0%   1.0142x     1.00883x       0.8513 DN       0.8463 DN
+      4.00  32.968    0.0%   1.0003x     1.00003x       0.1900 DN       0.0389 DN
+      8.00  33.000    0.0%   1.0003x     1.00003x       0.1886 DN       0.0355 DN
+      (corrected@1.074 is signed: negative means the correction over-subtracts,
+       which the shipped code would clamp to 0 via max(0, .))
+
+      per-n pixel-domain inflation I_pix(n) = sd(merged | n) / (sigma/sqrt(n))
+        gate            n=1         n=2         n=3         n=4         n=5         n=6         n=7         n=8
+        0.00        1.0508x           -           -           -           -           -           -           -
+        0.50        1.0653x     1.0519x     1.0450x     1.0373x     1.0334x     1.0295x     1.0295x     1.0289x
+        1.00        1.0810x     1.0597x     1.0456x     1.0441x     1.0401x     1.0367x     1.0369x     1.0271x
+        2.00              -           -           -           -           -           -           -     1.0502x
+        4.00              -           -           -           -           -           -           -           -
+        8.00              -           -           -           -           -           -           -           -
+
