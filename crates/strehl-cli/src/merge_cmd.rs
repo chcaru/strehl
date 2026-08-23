@@ -76,10 +76,20 @@ pub struct MergeOptions {
     /// Solve the ladder for the gate that achieves this mean `n_eff`.
     ///
     /// **This, not `gates`, is the parameter the project intends to ship.**
-    /// Fact 324 measured that a fixed threshold is not a calibration: at gate
-    /// 2.0 mean `n_eff` runs 2.26 to 7.42 across five stacks, and the gate
-    /// needed to reach `n_eff = 3` runs 1.1 to 2.9. A target `n_eff` transfers
-    /// where a gate does not, and it is the quantity fact 212 calibrated.
+    /// A fixed threshold is not a calibration. M52 re-measured this across all
+    /// seven stacks against the current pipeline: at gate 2.0 mean `n_eff` runs
+    /// **1.177 (`foam`) to 14.386 (`coffee-bean`), a 12.22x spread**, and the
+    /// gate needed to reach `n_eff = 3` runs **0.7618 to 21.9934, a factor of
+    /// 28.9**. `foam` cannot reach `n_eff = 3` anywhere on the shipped 0.5-4.0
+    /// ladder. A target `n_eff` transfers where a gate does not, and it is the
+    /// quantity fact 212 calibrated.
+    ///
+    /// Fact 324 published "2.26 to 7.42" and "1.1 to 2.9" from a five-stack
+    /// sweep taken before commit `2a4f5c5` corrected the ISO-50 gain floor. Its
+    /// conclusion held and its magnitude was understated by 3.7x. The numbers
+    /// above are M52's (`docs/research/M52-gate-cluster-verified.md`), whose
+    /// independent Python merge agrees with the shipped binary to <= 0.09% on
+    /// all seven stacks.
     pub target_n_eff: Option<f64>,
     /// Gather per-pixel through-focus sufficient statistics during pass two.
     ///
@@ -1926,32 +1936,61 @@ fn write_merged(
 mod tests {
     use super::*;
 
-    /// The five ladders fact 324 measured, as `(gate, mean n_eff)`.
+    /// Ladder **shapes** for exercising the solver, generated rather than
+    /// measured, and that is deliberate.
     ///
-    /// Kept here verbatim so the solve and the fact check each other: if either
-    /// is edited carelessly, `the_solved_gate_spans_the_range_fact_324_claims`
-    /// fails.
-    const LADDERS: [(&str, [(f64, f64); 4]); 5] = [
-        (
-            "119MSDCF",
-            [(0.5, 1.275), (1.0, 1.581), (2.0, 2.258), (4.0, 3.654)],
-        ),
-        (
-            "109MSDCF",
-            [(0.5, 1.414), (1.0, 1.884), (2.0, 2.891), (4.0, 4.987)],
-        ),
-        (
-            "113MSDCF",
-            [(0.5, 1.433), (1.0, 2.198), (2.0, 4.774), (4.0, 8.590)],
-        ),
-        (
-            "112MSDCF",
-            [(0.5, 1.554), (1.0, 2.572), (2.0, 6.226), (4.0, 12.065)],
-        ),
-        (
-            "coffee-bean",
-            [(0.5, 1.516), (1.0, 2.570), (2.0, 7.422), (4.0, 24.700)],
-        ),
+    /// Every property the solver has — a rung round-trips to its own gate, a
+    /// solved gate inverts back to its target, a target outside the ladder is
+    /// refused — holds for **any** monotone ladder. Asserting them against
+    /// generated ladders therefore tests strictly *more* than asserting them
+    /// against five frozen measurements, and cannot go stale when the pipeline
+    /// is recalibrated. The generated family spans `n_eff(2.0)` from 1.07 to
+    /// 23.6, which brackets the real corpus's measured 1.177 to 14.386.
+    fn generated_ladders() -> Vec<(String, [(f64, f64); 4])> {
+        let mut out = Vec::new();
+        for p in [0.5_f64, 1.0, 1.5, 2.0, 2.5] {
+            for a in [0.1_f64, 0.5, 1.5, 4.0] {
+                let rung = |g: f64| (g, 1.0 + a * g.powf(p));
+                out.push((
+                    format!("a={a} p={p}"),
+                    [rung(0.5), rung(1.0), rung(2.0), rung(4.0)],
+                ));
+            }
+        }
+        out
+    }
+
+    /// The one real ladder still defensible as current, kept so the solver sees
+    /// a measured shape and not only analytic ones.
+    ///
+    /// `109MSDCF` is ISO 160, which puts it outside **both** of the day's
+    /// calibration changes: `2a4f5c5` moved only ISO 50, and `f95f6f4` moved
+    /// only ISO >= 400. M52 re-measured its gate-2.0 rung against the current
+    /// pipeline and got 2.891 against fact 324's 2.891 — the only one of the
+    /// five that reproduced exactly. The other four rungs are M38's and are not
+    /// independently re-confirmed, so nothing below asserts their values.
+    const LADDER_109MSDCF: [(f64, f64); 4] =
+        [(0.5, 1.414), (1.0, 1.884), (2.0, 2.891), (4.0, 4.987)];
+
+    /// M52's solved gates for `n_eff = 3`, all seven stacks, measured against
+    /// the current pipeline and cross-checked by an independent Python merge
+    /// agreeing with the shipped binary to <= 0.09%.
+    /// `docs/research/M52-gate-cluster-verified.md` section 4.3, commit `f094c37`.
+    ///
+    /// **This is a dated snapshot and it will be wrong again.** It was wrong
+    /// within one day twice already: `2a4f5c5` (09:41) moved the ISO-50 stacks
+    /// and `f95f6f4` (11:17) moved every ISO >= 400 stack. What is asserted
+    /// against it below is deliberately **one-sided**, so that the next
+    /// calibration change makes these assertions *more* true rather than
+    /// quietly false. See `no_single_gate_calibrates_across_the_corpus`.
+    const SOLVED_GATES_M52: [(&str, f64); 7] = [
+        ("coffee-bean", 0.7618),
+        ("112MSDCF", 1.1323),
+        ("113MSDCF", 1.3231),
+        ("109MSDCF", 2.0964),
+        ("119MSDCF", 2.1485),
+        ("coffee-bubbles", 3.2144),
+        ("foam", 21.9934),
     ];
 
     fn gate_of(s: Solve) -> f64 {
@@ -1986,7 +2025,7 @@ mod tests {
 
     #[test]
     fn solving_at_a_rungs_own_value_returns_that_rungs_gate() {
-        for (name, l) in LADDERS {
+        for (name, l) in generated_ladders() {
             for (gate, n) in l {
                 let g = gate_of(solve_gate_for_n_eff(&l, n));
                 assert!(
@@ -1995,51 +2034,174 @@ mod tests {
                 );
             }
         }
-    }
-
-    #[test]
-    fn the_solved_gate_spans_the_range_fact_324_claims() {
-        // Fact 324's design conclusion is that no fixed gate is a calibration.
-        // That is a claim about a RANGE, so assert the range — a test that
-        // only checked one stack would pass for a broken solve.
-        let gates: Vec<f64> = LADDERS
-            .iter()
-            .map(|(_, l)| gate_of(solve_gate_for_n_eff(l, 3.0)))
-            .collect();
-        let lo = gates.iter().cloned().fold(f64::INFINITY, f64::min);
-        let hi = gates.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
-        assert!(
-            (1.0..1.2).contains(&lo),
-            "lowest solved gate {lo} left the claimed band"
-        );
-        assert!(
-            (2.7..3.1).contains(&hi),
-            "highest solved gate {hi} left the claimed band"
-        );
-        assert!(
-            hi / lo > 2.4,
-            "spread {} no longer supports fact 324",
-            hi / lo
-        );
+        for (gate, n) in LADDER_109MSDCF {
+            let g = gate_of(solve_gate_for_n_eff(&LADDER_109MSDCF, n));
+            assert!(
+                (g - gate).abs() < 1e-9,
+                "109MSDCF: rung {gate} round-tripped to {g}"
+            );
+        }
     }
 
     #[test]
     fn a_solved_gate_reproduces_its_target_when_fed_back() {
         // Interpolation is only honest if it inverts the ladder it came from.
         // Rebuild n_eff at the solved gate by interpolating the ladder the
-        // other way, and require the target back.
-        for (name, l) in LADDERS {
-            let g = gate_of(solve_gate_for_n_eff(&l, 3.0));
+        // other way, and require the target back. True of any monotone ladder,
+        // so it is asserted over the generated family and not over a snapshot.
+        let invert = |l: &[(f64, f64); 4], g: f64| {
             let w = l
                 .windows(2)
                 .find(|w| g >= w[0].0 && g <= w[1].0)
                 .expect("gate in ladder");
             let f = (g.ln() - w[0].0.ln()) / (w[1].0.ln() - w[0].0.ln());
-            let n = (w[0].1.ln() + f * (w[1].1.ln() - w[0].1.ln())).exp();
-            assert!(
-                (n - 3.0).abs() < 1e-9,
-                "{name}: gate {g} inverted to n_eff {n}"
-            );
+            (w[0].1.ln() + f * (w[1].1.ln() - w[0].1.ln())).exp()
+        };
+        let mut exercised = 0;
+        for (name, l) in generated_ladders() {
+            // Only ladders that actually bracket the target can be solved; the
+            // rest are the refusal path and are covered separately.
+            let (lo, hi) = (l[0].1, l[3].1);
+            for target in [1.5, 2.0, 3.0, 5.0, 11.0] {
+                if target <= lo || target >= hi {
+                    continue;
+                }
+                let g = gate_of(solve_gate_for_n_eff(&l, target));
+                let n = invert(&l, g);
+                assert!(
+                    (n - target).abs() < 1e-9,
+                    "{name}: gate {g} inverted to n_eff {n}, wanted {target}"
+                );
+                exercised += 1;
+            }
+        }
+        // Rule 36: a loop that skipped every case would pass silently.
+        assert!(
+            exercised > 40,
+            "only {exercised} solves were actually exercised; this test would \
+             pass vacuously if the generated family stopped bracketing the targets"
+        );
+
+        let g = gate_of(solve_gate_for_n_eff(&LADDER_109MSDCF, 3.0));
+        let n = invert(&LADDER_109MSDCF, g);
+        assert!(
+            (n - 3.0).abs() < 1e-9,
+            "109MSDCF: gate {g} inverted to n_eff {n}"
+        );
+    }
+
+    /// **The claim, asserted one-sidedly — and that is the entire design.**
+    ///
+    /// This test replaces `the_solved_gate_spans_the_range_fact_324_claims`,
+    /// which was green while two of its three assertions were false of the
+    /// pipeline. It solved a frozen `LADDERS` fixture and compared the result
+    /// against bands derived from *that same frozen measurement*, so subject
+    /// and object were two copies of one stale snapshot. It could not fail when
+    /// the pipeline moved, which is the only thing it existed to detect.
+    ///
+    /// The rule that generalises out of it: **a claim of the form "X is large"
+    /// must be asserted as a one-sided bound, and the bound must be set from
+    /// the threshold at which the claim stops meaning anything — never from the
+    /// current measurement.** A two-sided band does not encode a claim, it
+    /// encodes a measurement, and a measurement expires.
+    ///
+    /// The old test is the proof of its own rule. Its one-sided `hi / lo > 2.4`
+    /// was *correctly calibrated all along*: the spread was 2.7215x before the
+    /// ISO-50 gain fix and is 28.8703x after, and that assertion is true of
+    /// both. Its two-sided companions — `lo` in `1.0..1.2`, `hi` in `2.7..3.1`
+    /// — were false the moment the pipeline moved (`lo` is now 0.7618 and `hi`
+    /// 21.9934) and had no way to say so. **The surviving assertion and the
+    /// broken ones were in the same function; the difference was one-sidedness.**
+    ///
+    /// So the floors below are the ones that hold against **both** the pre-fix
+    /// five-stack measurement and M52's post-fix seven-stack measurement. That
+    /// is the only check available that distinguishes a floor encoding the
+    /// claim from a floor encoding today's data, and it is how these two were
+    /// chosen: 5.0 and 2.0 were tried first and rejected because they passed
+    /// only the newer snapshot.
+    ///
+    /// A recalibration that ever made the corpus agree would fail this test.
+    /// That is correct: it would be the discovery that the gate had become a
+    /// calibration after all, and it should stop the build.
+    #[test]
+    fn no_single_gate_calibrates_across_the_corpus() {
+        let gates: Vec<f64> = SOLVED_GATES_M52.iter().map(|(_, g)| *g).collect();
+        let lo = gates.iter().copied().fold(f64::INFINITY, f64::min);
+        let hi = gates.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+
+        // 2.7215x pre-fix, 28.8703x post-fix. A gate whose required value moves
+        // 2.4x across subjects is already not a calibration.
+        assert!(
+            hi / lo > 2.4,
+            "solved gates spanned only {:.4}x ({lo:.4} to {hi:.4}). The claim is \
+             that no fixed gate is a calibration; a spread this small would mean \
+             it had become one. That is a finding to investigate, not a bound to \
+             relax",
+            hi / lo
+        );
+
+        // The claim is about the corpus, not about its two extremes: a single
+        // outlier stack would produce a wide spread while the gate still
+        // transferred among the rest. 1.8580x pre-fix, 2.8388x post-fix.
+        let mut sorted = gates.clone();
+        sorted.sort_by(|a, b| a.partial_cmp(b).expect("no NaN"));
+        let q1 = sorted[1];
+        let q3 = sorted[sorted.len() - 2];
+        assert!(
+            q3 / q1 > 1.5,
+            "discarding the extremes, the gates spanned only {:.4}x ({q1:.4} to \
+             {q3:.4}); the spread would then be one outlier rather than a \
+             property of the corpus",
+            q3 / q1
+        );
+
+        // A cross-implementation check, and the one assertion here with a
+        // subject distinct from its object. M52 solved 109MSDCF's gate with an
+        // independent Python merge and got 2.0964; this crate's own solver, on
+        // its own copy of that ladder, must agree. 109MSDCF is the control
+        // stack precisely because ISO 160 is untouched by both of the day's
+        // calibration commits, and indeed its solved gate is 2.0963 pre-fix
+        // against 2.0964 post-fix while the ISO-50 stacks moved by 26% and 94%.
+        let ours = gate_of(solve_gate_for_n_eff(&LADDER_109MSDCF, 3.0));
+        let theirs = SOLVED_GATES_M52
+            .iter()
+            .find(|(n, _)| *n == "109MSDCF")
+            .expect("109MSDCF is in the snapshot")
+            .1;
+        assert!(
+            (ours - theirs).abs() < 1e-3,
+            "this crate solved 109MSDCF to {ours:.4} where M52's independent \
+             implementation got {theirs:.4}"
+        );
+    }
+
+    /// `foam` cannot reach `n_eff = 3` anywhere on the shipped 0.5-4.0 ladder,
+    /// so the solver must refuse rather than extrapolate a gate from a ladder
+    /// that never got there.
+    ///
+    /// This one is behavioural rather than a snapshot: it asserts a *code path*
+    /// against real measured rungs, and `foam` would have to more than double
+    /// its `n_eff` before the assertion changed meaning. Both rungs are M52's,
+    /// section 4.3, and M52 quotes the shipped solver's own reply verbatim —
+    /// *"target n_eff 3.000 is above the ladder: gate 4.0000 reaches only
+    /// 1.361"* — so this is a cross-check against an independent run, not
+    /// against itself.
+    #[test]
+    fn a_stack_the_shipped_ladder_cannot_reach_is_refused_not_extrapolated() {
+        let foam = [(2.0, 1.177), (4.0, 1.361)];
+        match solve_gate_for_n_eff(&foam, 3.0) {
+            Solve::AboveLadder {
+                highest_gate,
+                highest,
+            } => {
+                assert!((highest_gate - 4.0).abs() < 1e-12, "got {highest_gate}");
+                assert!((highest - 1.361).abs() < 1e-12, "got {highest}");
+            }
+            other => panic!(
+                "foam reaches only n_eff 1.361 at the top of the shipped ladder, so \
+                 solving it for 3.0 must refuse; got {other:?}. Extrapolating here \
+                 would invent a gate no measurement supports"
+            ),
         }
     }
 
