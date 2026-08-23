@@ -58,7 +58,13 @@ monolithic binary and ship only that binary.
    **This rule was written and then broken by M30**, whose fact 242 ("2.3x more
    clipping whole-stack than at gathered frames") is an argmax artefact: at the
    shipped 31x31 regularisation it falls to 1.4x, and heavier still to 1.0x.
-   The argmax *flees* clipped frames because clipping flattens the gradient.
+   The argmax *flees* clipped frames because clipping flattens the gradient —
+   **but only when the saturated patch is large relative to the focus window.**
+   M54 measured the flee/seek ratio monotone in the pinned fraction of the
+   support: 0.0101x (flees) at a fully pinned support, 13.05x (**seeks**) at an
+   isolated saturated point, which sits on the steepest edge in the frame and
+   attracts the argmax. Do not quote the flee direction unconditionally.
+   (SYNTHESIS fact 683.)
    **The rule applies to analysis scripts, not just to the merge** — any
    statistic evaluated "at the best frame" inherits argmax's defects.
 5. **Fit geometry at runtime; do not bake it.** Scale drift and the scale
@@ -398,7 +404,14 @@ monolithic binary and ship only that binary.
     question 143 was split by an earlier fold. Slice the section first, then
     match through the item's end (`(?=\n\d+\. \*\*|\n## )`). A byte-length-
     preserving diff of 7 deletions and 7 identical additions is what a correct
-    repair of this looks like. (SYNTHESIS fact 679.)
+    repair of this looks like. **And `\Z` in that lookahead consumes the file's
+    trailing newline when the anchor is the last item**, so an append lands
+    after it and silently strips it — assert the file still ends in exactly one
+    newline after every fold. **Run the pipe-count check across every row in the
+    table, not just the rows this fold added** — three rows had been rendering
+    without their provenance column for several commits because absolute-value
+    bars were written unescaped. Escape as `\|`, and subtract escaped pipes
+    before comparing. (SYNTHESIS facts 679, 693 and 694.)
 
 ## Layout
 
