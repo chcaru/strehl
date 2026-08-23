@@ -1206,3 +1206,40 @@ this sensor are 0.0414% of pixels, 99.8% of them isolated single pixels, and **t
 largest defect cluster on the entire sensor is 3 pixels**. No bad columns, no bad rows,
 no blobs. That is a clean sensor, and it means the eventual fix is a coordinate list and
 a median, not a subsystem.
+
+**46. ANSWERED -- the polariser was not on for every stack, and the split is a date rule.**
+Owner confirms CPL on for `coffee-bubbles`, `bee-1/2/3`, `wrapped-text-1/2`; off for the
+older stacks; `coffee-bean` unknown even to him; no intentional rotation between shoots.
+EXIF capture dates make it a clean boundary: **25 May onward is CPL-on, up to 17 May is
+CPL-off**. Two consequences, both acted on. The flat-field spec (section 4 of
+`captures-needed.md`) now requires the set to be shot **twice, filter on and filter off**,
+because one flat cannot describe two optical paths -- and the ratio of the two flats is a
+free measurement of the filter's transmission map. Second, I had told M61 that the two
+ISO-1000 stacks straddle the boundary; `foam` sits 6.5 minutes after `coffee-bubbles` in
+one session, so that is probably wrong and they are likely both CPL-on. Open item 193.
+
+**47. ANSWERED -- only one genuine matched ISO pair exists, and I had claimed three.**
+`bee-2` (ISO 400) and `bee-3` (ISO 100) are the same subject, angle and depth. `bee-1` is
+a different angle and depth; `wrapped-text-1` and `wrapped-text-2` are both slightly
+different angles and depths. **I inferred "matched pair" from EXIF and filename similarity,
+stated it to M61 as fact, and two of the three were wrong** -- a comparison across them
+would have confounded the analogue gain step with subject geometry and would have looked
+clean. Corrected to M61 mid-run. Discipline 392.
+
+**48. ANSWERED -- ship both merge behaviours.** Owner's answer to the sharpness/noise
+positioning question was "can it be an optional mode? aka - keep both?" Adopted, with one
+refinement: it is better expressed as a single exposed knob than two modes, because the
+tradeoff is a continuum parameterised by the merge gate -- near-selector at one end,
+gated mean at the other. M57's measured 0.496-0.740 px sharpness deficit becomes the
+price list along that axis rather than a defect to hide, and two named presets sit on it.
+
+**49. ASKED -- what else to shoot.** Answered in `docs/captures-needed.md` sections 12-14.
+The headline is section 12: **a 30-frame static burst with the focus untouched**, at a
+working exposure on a real subject. It is the only capture that hands the merge a problem
+whose right answer is known exactly -- true noise reduction is exactly sqrt(N) -- and
+therefore the only test that can distinguish a genuine estimator from a disguised selector.
+It also measures sigma at the 1/8-2.5 s exposures the real stacks use, which no delivered
+capture does, and yields the working-exposure hot-pixel and dust map for free. Sections 13a-c
+ask for a half-step interleave, one stack with the teleconverter removed, and one deliberate
+occluding edge. Section 14 records what would NOT help, so a session is not wasted on it.
+

@@ -370,14 +370,29 @@ and one of them will quietly ruin it.
    electroluminescent panel, a white surface lit by several sources, or several
    layers of diffuser over a window -- **not** open sky.
 
-2. **The filter must be on, at the same rotation as when you shoot subjects.** The
-   flat has to describe the *same optical path*. If the polariser is normally on
-   the lens, it must be on for the flat. If you rotate it between shoots, tell me,
-   because then there is no single flat that covers the corpus.
+2. **Shoot the whole set TWICE -- once with the filter on, once with it off.**
+   This replaces the earlier instruction to simply leave it on. You have since
+   confirmed the polariser was **not** on for every stack, and the EXIF dates make
+   the split a clean rule: everything from **25 May onward is CPL-on**
+   (`coffee-bubbles`, `foam`, `wrapped-text-1/2`, `bee-1/2/3`), everything up to
+   **17 May is CPL-off** (`112`, `113`, `119`, `109`). `coffee-bean` (10 May) sits
+   on the off side of the boundary but you could not recall it, so it is unknown.
 
-If an unpolarised source is not practical, **take the polariser off for both the
-flat and a re-shoot of whatever the flat will be applied to.** A flat without the
-filter is valid; a flat with the filter against sky is not.
+   A flat describes an *optical path*, not a sensor. **One flat therefore cannot
+   cover this corpus** -- applying the CPL-on flat to the May stacks would divide
+   out vignetting that was never there. The two sets differ only by whether the
+   filter is mounted; change nothing else, and do not rotate it between them.
+   Cost is one extra set of the same shots.
+
+   Doing both also delivers something better than a correction: **the ratio of the
+   two flats IS the polariser's transmission map**, measured on your own copy of
+   the filter. That prices the confound instead of caveating it forever, and it is
+   free once both sets exist.
+
+If an unpolarised source is not practical, **shoot the filter-off set only, and
+skip the filter-on set entirely.** A flat without the filter is valid; a flat with
+the filter against sky is not -- and a wrong flat is worse than no flat, because
+it corrupts smoothly and plausibly rather than obviously.
 
 ---
 
@@ -696,3 +711,102 @@ its frames and the shape of the correction becomes visible.
 **One trap.** Do not change the ISO by using a different exposure mode that might pull
 or push. Set ISO 160 explicitly. The whole point is the analogue gain at that specific
 setting, and an ISO the body reaches by a different route is a different measurement.
+
+
+## 12. Static repeat burst -- REQUESTED, 30 seconds, highest value per unit effort
+
+**Status:** requested 2026-08, in response to the owner asking what else would
+help. **Nothing in the corpus can substitute for it and nothing else on this list
+is as cheap.**
+
+### What to shoot
+
+| | |
+| --- | --- |
+| Subject | **A real macro subject with fine texture** -- any of the ones already shot is ideal. Not a test chart, not a flat surface. |
+| Frames | **30**, back to back. |
+| Focus | **Do not touch it.** No bracketing, no refocus, no drift. One focus position for all 30 frames. |
+| Everything else | **Change nothing.** Same aperture, same ISO, same shutter, same light, tripod, electronic shutter or 2-second self-timer. |
+| Exposure | **A working exposure** -- whatever you would really use, in the 1/8 s to 2.5 s range the real stacks use. |
+| Format | RAW (.ARW), all noise reduction off. |
+| Repeat | If cheap, do the same 30 frames again at **ISO 400** without moving anything. |
+
+Discard the first 2 frames, as with the darks.
+
+### Why this is worth more than another focus stack
+
+**It is the only capture that gives the merge a problem whose right answer is
+known exactly.** Every frame is a sample of the *same* latent image, so the true
+merge output is the scene itself and the true noise reduction is exactly
+`sqrt(N)`. Nothing else in the corpus has that property: in a focus stack, every
+frame differs both in noise *and* in focus, and the two cannot be separated
+without a model -- which is the very thing under test.
+
+That gives four things at once, none of which the project currently has:
+
+1. **An empirical null for the entire estimation thesis.** The merge must return
+   `sqrt(30)` = 5.48x noise reduction here. Any shortfall is the estimator's own
+   inefficiency, measured directly rather than argued. The corpus currently prices
+   the gated mean at 0.534x (fact 19) against a *reference* that is itself
+   estimated; this measures it against arithmetic.
+2. **A placebo that can actually fail.** Discipline 250 records that this corpus
+   has already shipped three checks incapable of failing. A merge that secretly
+   selects rather than estimates will score ~1.0x here while a true estimator
+   scores 5.48x. **No existing test separates those two outcomes.**
+3. **Sigma at working exposure, which no delivered capture provides.** The 242
+   dark frames are all 1/100 s, but real stacks run 1/8 s to 2.5 s -- a 12x to
+   250x longer integration. That gap is the binding limitation on the whole
+   sensor model (fact 808: only ~5 of ~839 real defects appear in the dark map).
+   A repeat burst measures the per-pixel temporal noise at the exposure that
+   actually matters, and does it on a real scene rather than in the dark.
+4. **The hot-pixel and dust map at working exposure, for free.** Both are fixed in
+   sensor coordinates and both survive averaging over a static burst, so they
+   stand out against a scene that does not move. This is the capture that makes a
+   defect map possible, and fact 800 established the merge is blind to defects
+   (D_defect/D_control = 1.00 +- 0.08) and therefore cannot be relied on to hide
+   them.
+
+**The ISO 400 repeat, if taken, straddles the dual-gain boundary on a fixed
+scene** -- the same instrument as `bee-2`/`bee-3` (fact 847) but with focus held
+constant too, which removes the last confound from question 184's split.
+
+---
+
+## 13. Three variations on stacks you have already shot -- REQUESTED, cheap
+
+Each is one stack, and each buys something structural. Roughly in value order.
+All three should be shot **with the polariser in a known, recorded state**.
+
+**13a. Half-step interleave.** Reshoot any subject you have already stacked, with
+the focus step **halved** -- or simply shoot the same range twice, the second pass
+offset by half a step. Doubling the sampling density along the focus axis is what
+lets a reconstruction-based merge recover detail between frames rather than
+picking the best of them. It also directly tests whether the current step size is
+already adequate, which is currently assumed and never measured.
+
+**13b. Without the teleconverter.** The same subject at 100 mm, **2x TC removed**.
+Every stack in the corpus is at 200 mm with the converter fitted, so the
+converter's contribution to the point-spread function is entangled with the
+lens's and neither has ever been observed alone. This separates them, and it tests
+the `N_eff = N_marked * (1 + m/p)` model at a genuinely different magnification
+instead of extrapolating it.
+
+**13c. A deliberate occluding edge.** A pin, wire, bristle or blade of grass held
+**in front of** a well-textured background at a clearly different depth, then
+focus-bracketed through both. Occluding edges are where every focus stacker on the
+market produces halos, and the corpus contains them only incidentally, never by
+design. A capture that isolates one turns the halo from an anecdote into a
+measurable quantity with a known correct answer -- the background is genuinely
+visible in some frames, so the truth is recoverable.
+
+---
+
+## 14. What is NOT needed, so you do not waste a session
+
+- **Another ordinary focus stack of a new subject.** The corpus has 12 stacks and
+  1,568 frames. More of the same adds subjects, not information; every item above
+  adds a *degree of freedom the corpus currently cannot separate*.
+- **Anything requiring a focus rail.** Deferred permanently, per section 2.
+- **Higher-resolution or more careful versions of existing stacks.** Nothing on
+  this list is blocked by capture quality.
+
