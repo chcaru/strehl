@@ -480,6 +480,24 @@ monolithic binary and ship only that binary.
     invisible to anything reading `docs/research/` alone.
     (SYNTHESIS facts 888, 906, 907; disciplines 418, 428.)
 
+42. **In this shared working tree, commit with `git commit -- <paths>`. Never
+    `git add <paths>` followed by a bare `git commit`.** The first scopes the
+    commit; the second scopes only the *staging* and then writes **the entire
+    shared index** -- including whatever a concurrent agent staged while you were
+    composing your message. This is measured, not theoretical: M55's `701dc11`
+    contains 51 files of which **47 belong to M60**, and an audit of my own
+    thirteen commits found `0526972` carrying **19 files of M61's experiment
+    tree**. **A `git diff --cached --name-only` audit does not protect you** --
+    it is a separate command, nothing holds the index still between it and the
+    commit, and it was *true when it ran* in M55's case. Note that the existing
+    rule "never `git add -A`" is **necessary and not sufficient**, and that every
+    hygiene rule here was written in the insufficient form until now. **Do not
+    rewrite history to repair a sweep** -- the other agent's files are committed
+    intact, and a reset would destroy live work. Disclose it and move on.
+    **Audit your own commits with `git show --name-only`, not `git status`**: a
+    sweep succeeds silently and leaves a clean status behind it.
+    (SYNTHESIS facts 930, 931; discipline 436.)
+
 ## Layout
 
 | Path | What |
@@ -573,6 +591,8 @@ monolithic binary and ship only that binary.
 | [`M53-flat-ratio.md`](docs/research/M53-flat-ratio.md) | **Replaced ACCEPTANCE INVARIANT 1: the flat-ROI raw spatial sd ratio reads a planted 10x noise explosion as 1.513x.** Ships `x - box9(x)` valid-interior with a DERIVED gain `sqrt(1-1/81)`, referenced to the median over ALL frames with min-max disclosed, so fact 441's 1.60x denominator freedom is unrepresentable. **Its unplanted finding is the strongest result: the legacy statistic ranks unregularised argmax -- the defect the project exists to remove -- as the BETTER of two merges, and passes a 21% real noise increase.** Also: the milestone refuted and withdrew its own headline verification. **This report was itself a rule-31 violation** -- facts 733-757 were folded before it existed (fact 843, question 192); it was written afterwards from the fold's own citations, and three F-slots are marked UNRECOVERABLE rather than reconstructed. Facts 733-757, 843. |
 | [`M53-flat-roi-statistic.md`](docs/research/M53-flat-roi-statistic.md) | **Question 183: facts 19 and 734 were never measured on the same ROI, so the founding number and today's were never comparable.** Fact 19 used `2272,1344,256,256`; fact 734 used `1356,32,512,512`. On M2's own ROI today's binary reproduces M2's denominator EXACTLY (28.201 DN) and the regularised merge crosses 1.0 like for like (1.075x -> 0.890x). **Kills the naming hypothesis** the orchestrator offered. NOT reproduced: M2's 0.981x placebo, and operator-vs-window could not be separated because `ring(1,3)` has no implementation left. Facts 733-757. |
 | [`M62-sqrt-n.md`](docs/research/M62-sqrt-n.md) | **The first acceptance test with a known correct answer.** A static repeat burst is the one problem whose truth is arithmetic: every frame samples the same latent, so an estimator must reach exactly `sqrt(N)` and a selector must reach 1.0. **`strehl merge` scores 5.4778 against `sqrt(30)` = 5.4772 (+0.008%) at gate >= 8; `strehl stack` scores 0.7690 -- a 1.300x noise INCREASE -- and `merge --gate 0` (same binary, `n_eff == 1`) scores 0.9768. Separation 5.61x, against 1.039x for the flat-ROI invariant that ships today.** Demonstrated power, not argued: six selector configurations run, all fail. Ladder calibrated to <= 0.08% at `k` = 1..30. Shared-noise trap resolved by option (b) -- the frozen realisation cancels identically when truth is defined as the latent -- and the resulting prediction matched the CLI's own instrument to 0.03%. Real dark frames (Arm D) show sensor noise averaging as `sqrt(N)` to within 1% on all four planes, replicate M4's dark sigma to 0.7%, and find G1/G2 temporally correlated at rho = +0.073. **Arm A is circular w.r.t. calibration (rule 34) and cannot validate the sensor model; only the real burst can.** Arm C's photon-transfer path is written and smoke-tested, and is what closes fact 808. One pre-registration criterion tripped and is disclosed. |
+| [`M61-ptc-high-iso-measured.md`](docs/research/M61-ptc-high-iso-measured.md) | **Refuted M48c's derived 2.174x dual-gain step by direct photon-transfer measurement** -- conversion gain at ISO 500/1000 agrees with `profile.rs` to 1.03 and 1.04 of the low-mode plateau, surviving every fit gate. **Vindicates M48c's refusal to change a constant on a derived number.** Also found, uncommissioned: **the B plane's conversion gain is 0.84x the greens' at every ISO and `profile.rs` does not model it.** Scopes its own ISO-1000 arm as the weak one. **Its `foam` CPL provenance was wrong and is corrected in SYNTHESIS fact 925 -- read that, not the report's table.** |
+| [`M60c-speckle-citation-and-the-gate.md`](docs/research/M60c-speckle-citation-and-the-gate.md) | **Repaired fact 23's speckle citation in `merge.rs` and restated the gate's justification.** Part of the M60 stem -- see rule 41; `M60` was a three-way collision. |
 
 Claims inherited from `C:\dev\macro` are suspect by default. Several were
 retracted under scrutiny — including a headline noise finding that measured
