@@ -1,0 +1,4 @@
+# Regenerable. Cached regularised-focus cubes and the synthetic burst latent.
+data/
+*.npy
+*.tif
