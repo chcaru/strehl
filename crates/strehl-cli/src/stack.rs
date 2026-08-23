@@ -610,10 +610,14 @@ fn report_winners(selection: &Selection) {
 /// index over a plane.
 ///
 /// This exists so that [`flat_roi_stats`] has exactly one implementation. The
-/// argmax baseline's 1.253x (fact 19) and the estimation merge's ratio have to
+/// argmax baseline's ratio and the estimation merge's ratio have to
 /// be produced by the same arithmetic on the same ROI or the comparison is
 /// worthless — M35 lost an afternoon to two harnesses that differed by a
 /// convention, and discipline 210 is the rule that came out of it.
+///
+/// The baseline number is **1.0678x unregularised / 1.0739x regularised** on
+/// the shipped operator (fact 343), not fact 19's 1.253x, which was measured on
+/// a different operator and does not reproduce here.
 pub(crate) trait GreenField {
     fn green_mean_at(&self, i: usize) -> f32;
     fn winner_index(&self) -> &[u16];

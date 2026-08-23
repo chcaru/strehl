@@ -1,17 +1,29 @@
 //! The estimation merge — **the thing `strehl` exists to build.**
 //!
-//! [`stack::Selection`](crate::stack) is the named baseline: per-pixel argmax,
-//! measured at 1.253x the noise of a single unstacked frame (SYNTHESIS fact 19).
-//! This module is its replacement, and it is built out of two measured findings
-//! that were priced long before any of this was written:
+//! [`stack::Selection`](crate::stack) is the named baseline: per-pixel argmax.
+//! On **this pipeline's** operator — the normalised Tenengrad that actually
+//! ships — M39 measured it at **1.0678x unregularised and 1.0739x regularised**
+//! against one unstacked frame (fact 343). Fact 19's widely-quoted **1.253x**
+//! was measured on a *different* focus operator and **does not reproduce here**;
+//! fact 343's consequence is explicit that it may not be quoted as this
+//! pipeline's baseline, so it is not quoted as one. Fact 19 is not refuted — it
+//! is a different measurement of a different thing.
+//!
+//! This module is the baseline's replacement, and it is built out of two
+//! measured findings that were priced long before any of this was written:
 //!
 //! - **Regularise the focus field before choosing a winner.** A 17x17 box mean
-//!   over the focus field drops winner-index speckle from 34.4% to 0.868% and
-//!   merged noise from 1.253x to 1.075x (fact 23), and cuts absolute
-//!   reconstruction error at occluding edges by 35%, 24.79 -> 15.99 DN
-//!   (fact 84). That was the single largest measured quality win still unbuilt.
+//!   over the focus field drops winner-index speckle from 34.4% to 0.868%
+//!   (fact 23) and cuts absolute reconstruction error at occluding edges by
+//!   35%, 24.79 -> 15.99 DN (fact 84). That was the single largest measured
+//!   quality win still unbuilt. **Note what it does *not* do here:** fact 23's
+//!   companion claim that regularising drops noise 1.253x -> 1.075x is the half
+//!   that fails to reproduce. On the shipped operator regularising moves the
+//!   ratio 1.0678x -> 1.0739x — very slightly the *wrong* way (fact 343). The
+//!   speckle and edge-error wins are real; the noise win was the other
+//!   operator's.
 //!
-//! - **Regularisation alone is not enough.** 1.075x is still worse than one
+//! - **Regularisation alone is not enough.** 1.0739x is still worse than one
 //!   frame. *Only averaging goes below one* (fact 23). A plain mean reaches
 //!   0.534x (fact 19) but collapses detail by more than half (fact 24), so the
 //!   average has to be taken over exactly those frames that genuinely agree.

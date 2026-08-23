@@ -987,13 +987,46 @@ fn report(
         );
     }
     eprintln!(
-        "                  PASS is <= 1.000x. The argmax baseline measured 1.253x here \
-         (fact 19/23),"
+        "                  PASS is <= 1.000x against the SAME-OPERATOR baseline: regularised \
+         argmax"
     );
     eprintln!(
-        "                  and a plain unweighted mean measured 0.534x -- which is the floor, not"
+        "                  measured 1.0739x on these frames and this ROI (fact 343). Fact 19's \
+         1.253x"
     );
-    eprintln!("                  a target, because of invariant 2.");
+    eprintln!(
+        "                  was a DIFFERENT focus operator and does not reproduce here -- it is \
+         not"
+    );
+    eprintln!(
+        "                  this pipeline's baseline and must not be quoted as one. A plain \
+         unweighted"
+    );
+    eprintln!(
+        "                  mean measured 0.534x, which is the floor, not a target, because of \
+         invariant 2."
+    );
+    eprintln!(
+        "                  CAVEAT (facts 469/441/442): this RATIO is a ratio of two RAW SPATIAL \
+         sds."
+    );
+    eprintln!(
+        "                  It is structure-dominated (these reference frames are 50.9-90.0% \
+         scene by"
+    );
+    eprintln!(
+        "                  variance), it moves over a 1.60x range with the free choice of \
+         denominator"
+    );
+    eprintln!(
+        "                  frame, and on a planted noise explosion it under-reported by 6.3x. \
+         Read it"
+    );
+    eprintln!(
+        "                  as a smoke test, not as a noise measurement, until it is replaced by \
+         a"
+    );
+    eprintln!("                  high-pass residual sd.");
     eprintln!();
 
     let Some(droi) = opts.detail_roi else {
