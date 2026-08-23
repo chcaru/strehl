@@ -269,11 +269,51 @@ measurement.
    estimate is precise to well under 0.05% — the quadrature subtraction, not the
    frame count, is what has to be right.
 
-   **One capture-side consequence: clean the sensor first.** Dust motes render
-   sharply in a flat field and appear as localised dark blobs. They are spatially
-   clustered, so the smooth-surface normalisation above will *not* remove them,
-   and they would be counted as PRNU. If any remain they must be masked before
-   the statistic is taken.
+   **One capture-side consequence: do NOT clean the sensor before shooting these.**
+   Dust motes render sharply in a flat field and appear as localised dark blobs.
+   They are spatially clustered, so the smooth-surface normalisation above will
+   *not* remove them, and they would be counted as PRNU — so they must be masked
+   before the PRNU statistic is taken. But they are no longer only a nuisance:
+   M29 makes the dust map a **deliverable**, and cleaning the sensor first would
+   destroy the only evidence of the dust that is in the existing corpus.
+   **Shoot the flats dirty, mask for PRNU, keep the mask as the dust map.**
+
+3. **The dust / static-defect map — added by M29, and now a specification
+   rather than a request.** M29 established three things that together make this
+   the only way to get dust at all. The merge does **not** dilute it (`D = 0.999`
+   at `n_eff ≈ 3`, fact 230, so it must be handled explicitly); it **cannot** be
+   detected from subject stacks (limit 32–50% shadow depth against real dust of
+   1–15%, fact 232); and the floor that blocks it is **scene texture, which does
+   not fall with frame count** (exponent +0.025 over a 16× sweep, fact 233). A
+   flat has `g/blur(g) ≡ 1` by construction, which is exactly the factor that
+   attenuates the response on a subject (`R ≈ 0.92·g/blur(g)`, fact 231).
+
+   **Specification, from the calibrated noise model with no free parameters:**
+
+   | frames | floor | a 5% shadow is |
+   | --- | --- | --- |
+   | 8 | 0.190% | 26σ |
+   | **16** | **0.134%** | **37σ** |
+   | 20 | 0.120% | 42σ |
+   | 64 | 0.067% | 75σ |
+
+   at ISO 100 with the mid-tone at **8,000–12,000 DN**. The §4 set above already
+   satisfies this at its upper levels, so **the PRNU set doubles as the dust set
+   at no extra cost** — nothing additional needs shooting for the f/8 case.
+
+   **What does need shooting separately: one short set per working aperture.**
+   Dust visibility scales with aperture — a stopped-down lens renders motes
+   sharply, a wide one smears them — so a map measured at f/8 does not transfer
+   to f/16. **16 frames at one level (8,000–12,000 DN), at each aperture you
+   actually shoot.** Changing only the aperture between sets means the exposure
+   must be re-metered each time; that is fine, only the level matters.
+
+   **Timing caveat, and it is a real limitation.** Dust moves. A map measured
+   today describes the sensor today, and **cannot be applied to the existing
+   corpus**, which was shot months earlier. Flat fields correct the stacks shot
+   near them in time and nothing else. This is not a reason to delay — it is a
+   reason to shoot a short flat set as *routine practice* alongside real work,
+   which is cheap enough (16 frames, one level) to be habitual.
 
 ---
 

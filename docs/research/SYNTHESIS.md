@@ -731,9 +731,14 @@ since contributors are not required to be spliceable and only have to emit an `f
 > 110+/discipline 60+, M19 facts 120+, M20's verifier facts 130+, **M23 facts
 > 170+/discipline 80+/question 25+**, **M25 facts 190+/discipline 100+/question
 > 30+**. Facts **140-145 (M20)**, **150-152 (M21)**,
-> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)** and **220-225 (M28)** are folded below and are all
+> **160-162 (M22)**, **180-182 (M24)**, **200-203 (M26)**, **210-213 (M27)**, **220-225 (M28)** and **230-234 (M29)** are folded below and are all
 > **NOT INDEPENDENTLY VERIFIED** — they were measured by the
 > orchestrator, and rule 12 binds their author exactly as it binds any milestone.
+> The same reservation rule governs the other two sequences: **discipline 110-111
+> (M26), 120-121 (M27), 130-131 (M28), 140-142 (M29)** and **question 45 (M28), 50 (M29)**
+> are folded. M23's blocks (discipline 80+, question 25+) and M25's (discipline
+> 100+, question 30+) remain unclaimed pending their reports; **discipline 30-34
+> are already taken** by M15's renumbered items, so a new block must not start there.
 
 | # | Fact | Consequence | Source |
 |---|---|---|---|
@@ -843,6 +848,11 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 223 | **The tile scale is not a sensitivity knob.** Detection at FPR 1% across a 4× range of scale is near-flat: `s`=4 gives **58.3 / 53.8 / 49.2%** at d=4/8/16; `s`=16 gives 97.7 / 96.2 / 85.6%. Planted \|z\| rises with `d` (3.06 → 4.36) but the threshold rises with it too (2.62 → 4.39) | **Choose the tile scale for compute cost, not detection power** — cutting against the usual reasoning about burst-denoising tile sizes. Refutes the predicted `s ≈ d` switch-on. Mechanism: the baseline *tail* is dominated by deterministic defocus structure rather than by noise, so signal and threshold average down together | M28 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 | 224 | **The detector transfers: a threshold calibrated entirely on the clean stack flags 1.01% / 8.33% / 17.88%** of tiles at FPR 1% on `109MSDCF` / `coffee-bubbles` / `foam` — clean, bubbles-move, scene-evolves. Ordering **pre-registered** from what the stacks are | Converts "it detects plants" into "it detects the real thing", and the two disturbed stacks separate by 2.1× from each other. **Confound stated:** the stacks differ in subject and contrast as well as stability, so this cannot separate *more disturbance* from *more contrast*; \|z\| being noise-normalised handles ISO by construction | M28 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 | 225 | **M24 said gain must be FITTED; M28 measures HOW, after the wrong choice bit its own script.** Peak-to-peak on `109MSDCF`: median-over-subject-crop **4.28%**, mean-all-px **1.02%**, median-low-gradient 0.94%, mean-low-gradient 0.99% — against M24's independent **0.91%** | **Use the mean over all pixels; never a median over a subject-centred region** — as focus sweeps, subject contrast changes and that median absorbs *focus* signal into what it calls gain. The low-gradient restriction is **not** the safe choice it looks: on `foam` it is the worst estimator (84.98%), because "low gradient in the median reference" selects nothing meaningful when the scene evolves. Estimator **disagreement** is itself a scene-instability signal (5.6× on `foam` vs 1.09× clean) — an observation from three stacks, not a calibrated detector | M28 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 230 | **The merge does NOT dilute dust. The estimator's supposed free lunch is worth `D = 0.999`.** Sensor-fixed defect suppression requires the averaged frames to be *displaced relative to one another*; measured adjacent-frame warp is **sub-pixel — 0.07–0.22 green px** across two stacks, four radii, sixteen tiles each | **A focus merge averages ADJACENT frames precisely because they agree.** M27 put `n_eff ≈ 3` at full sampling density and M28 showed disagreement grows near-linearly with separation, so the merge gathers exactly the frames whose dust positions coincide. A 0.2 px shift does not move a shadow 10–40 px across. **Dust must be handled explicitly — flat-field division or a defect map — it is not a by-product of estimation.** Independently corroborates fact 221 (adjacent residual at 1.099× the noise floor) | M29 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; rests on the `sep 1` column only, the `sep ≥ 8` columns lost phase-correlation lock and are disclosed as unusable |
+| 231 | **A self-ratio static map responds to defect depth × LOCAL SCENE BRIGHTNESS relative to its neighbourhood: `R ≈ 0.92·(g/blur(g))` at the defect.** Response is dead linear in depth (0.342 / 0.342 / 0.342 at 1 / 4 / 16%) and tracks `g/blur` across six stacks × three locations: `g/blur` 0.29 → `R` 0.274; 1.16 → 1.065; ≈1.00 → 0.89–0.95 | **This is why a flat field is the right instrument and a subject frame is not** — a flat has `g/blur(g) ≡ 1` everywhere by construction. Any multiplicative defect map built from subject frames (dust, PRNU, anything) **must divide by the local relative brightness** or it reports a defect field shaped like the scene. The pipeline algebra predicts 0.885 and was right; the empirical 0.274 first measured was **one pixel's `g/blur`**, promoted to a global constant by its author | M29 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 232 | **Dust is undetectable from subject stacks: the limit is a 32–50% shadow, against real dust of 1–15%.** Six-stack per-location conjunction; the 50% positive control fires at all three planted locations, 32% at none. **Q9: no excess over the shift null** anywhere in the tail (raw −0.0001, standardised +0.0006 at p0.001) | A null result **with a bound attached**, which is the only kind worth recording. Also: a `min`-conjunction across heterogeneous instruments is bounded by its worst member — the raw variant never fires at any depth because `coffee-bubbles`' map rms is 6.5× `coffee-bean`'s and alone sets the tail | M29 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; sweep is too coarse to separate the three locations |
+| 233 | **The static-map floor is scene texture, not noise, so it cannot be bought with frames.** Map rms vs frame count over a 16× sweep: 0.14412 → 0.15447, **exponent +0.025** — dead flat, against −0.5 for shot noise. The stochastic part alone (adjacent-frame difference) is **1.6%**, a ~10× separation | **The scene is common to every frame of a stack, so averaging within a stack cannot remove it.** A flat field reaches a **0.120%** floor at n=20 (ISO 100, 8,000 DN) from the calibrated model with no free parameters — a **158× improvement**, at which a 5% shadow is a **42σ** detection. Yields a *specification*: **≥16 flats per working aperture, ISO 100, mid-tone 8,000–12,000 DN** | M29 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; one stack for the n-sweep |
+| 234 | **Two stacks shot in the same session of the same subject share 94% of their "static" map.** `112MSDCF` × `113MSDCF` **r = 0.9370** against a shift null of 0.0845, while different-subject pairs give **0.002–0.016**. Same-ish median 0.4685 vs different-subject 0.0017 — a **271.92×** ratio | The pre-registered control that killed the first version of the instrument: the map is measuring **residual scene structure**, not sensor. Kept because it is also the cleanest available demonstration that "static across the frames of one stack" and "static in sensor coordinates" are different properties, and that only cross-*subject* evidence can distinguish them | M29 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -1256,6 +1266,35 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      that a scale chosen "for accuracy" in the deterministic regime is a scale chosen for nothing,
      and should be picked on compute cost instead.
 
+140. **When a measured constant disagrees with your algebra, the algebra usually has a hidden
+     factor that varies. Find it before adopting the empirical number.** M29 measured a
+     map-domain attenuation of **0.274** where the pipeline algebra predicted **0.885**, and the
+     empirical figure was adopted and carried into a second script without the disagreement being
+     resolved. The algebra was right: the missing factor was `g/blur(g)` at the plant location,
+     which happened to be **0.29** at the one pixel it was measured at (fact 231). A local
+     accident was promoted to a global constant, and every downstream number silently inherited a
+     3.4× error. The tell is available for free — **a constant that disagrees with a derivation is
+     either a bug or a variable, and both are worth an hour.** Note this is the *converse* of the
+     usual advice to trust measurement over argument: measurement wins on *values*, but a
+     measurement that contradicts a derivation has not yet told you *what* it measured.
+
+141. **A conjunction across heterogeneous instruments is bounded by its worst member; either
+     equalise them or accept the worst one's floor.** M29's raw six-stack `min` conjunction never
+     fires at any planted depth, because `coffee-bubbles`' map rms is 6.5× `coffee-bean`'s and
+     alone sets the null tail, while the per-stack drop under a common plant is bounded below by
+     `min_i(R_i)` — the *least* responsive stack (fact 232). The standardised variant fires but
+     pays for it by dividing a common physical quantity by a per-stack scene number. There is no
+     free version of this: **an AND across detectors of unequal quality is an AND with the weakest
+     one**, so the design choice is which members to admit, not how to combine them.
+
+142. **Compute the statistic's expected value before running it.** M29's first script spent a
+     full pass over six stacks on a global correlation whose expected signal, `r ≈ f·A²/σ²`, is an
+     order of magnitude *below its own null* for any plausible defect — one line of algebra,
+     available before any data was touched. A null result from an instrument that could not have
+     produced a positive is not evidence; it is a wasted pass. **Pair every pre-registered
+     prediction with a pre-registered effect size**, and if the predicted effect does not clear
+     the predicted null, redesign rather than run.
+
 ---
 
 ## 6. Novelty — verified gaps, labelled as bets
@@ -1321,9 +1360,15 @@ Recorded with their queries; **all are UNVERIFIED as wins, and none is on the v1
    at exactly those boundaries. Does not arise for in-camera bracketing, where occlusion is fixed.
 8. **Gaps with no coverage in v1 planning at all** (review §7): colour management and the CFA→RGB
    transform (and the hard ordering constraint that white balance scales noise *per channel*, so WB
-   must be ordered relative to the noise model); dust and hot pixels, which are fixed in *sensor*
+   must be ordered relative to the noise model); ~~dust and hot pixels, which are fixed in *sensor*
    coordinates and therefore smear into trails once the subject is stabilised — made harder to
-   inspect by "never materialise aligned frames"; a single bad frame (motion, wind, clipping)
+   inspect by "never materialise aligned frames"~~ — **now MEASURED, and worse than stated.** M22
+   located hot pixels (0.0346% of the sensor) and M29 settled dust: the estimator does **not**
+   dilute it (`D = 0.999` at `n_eff ≈ 3`, fact 230), it cannot be detected from subject stacks at
+   all (limit 32–50% shadow against real dust of 1–15%, fact 232), and the floor is scene texture
+   that does not fall with frame count (fact 233). **Explicit handling — flat-field division or a
+   defect map — is now a requirement rather than a gap**, and it is blocked on the flats specified
+   in `captures-needed.md` §4. The trail-smearing half of the original risk stands unmeasured; a single bad frame (motion, wind, clipping)
    poisoning both reference and average, with no outlier rejection anywhere; **no way to act on the
    confidence map** (a confidence map you cannot act on is a bug report, not a feature); and the
    contributor loop — ~~build-time WGSL splicing means a plugin author recompiles the whole binary~~
@@ -1742,6 +1787,24 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
     one wanting to discard them, the other wanting to unmix them. Resolving (b) probably requires
     the M25 twin, since only a simulator knows which of the two a given pixel really is.
     `UNVERIFIED`. *(Raised by M28; numbered 45 to clear the reserved question blocks.)*
+
+50. **Is there ever a reason to widen the gather deliberately, trading focus coverage for
+    defect suppression?** M29 refuted the free-lunch version — `n_eff ≈ 3` adjacent frames give
+    `D = 0.999`, no suppression at all (fact 230). But the mechanism it identified is a *dial*,
+    not a dead end: suppression is bought by the **span** of frames averaged, not their count,
+    because span is what buys relative displacement. The measured direction is right (dilution
+    appears in the wide-span columns) but the numbers that would price it rest on
+    `06-dilution.py`'s `sep ≥ 8` displacements, which lost phase-correlation lock and are
+    disclosed as unusable. Three things are unknown. (a) The honest exchange rate: a wider gather
+    costs resolved detail — fact 213 already prices focus coverage as the scarcer resource — and
+    nobody has measured what a defect-suppressing span costs in sharpness. (b) Whether it matters
+    at all once flats exist, since flat-field division removes dust outright and is strictly
+    better than diluting it. (c) Whether the same dial helps for defects flats *cannot* fix —
+    fixed-pattern noise that survives calibration, or the trails risk 8 predicts when dust smears
+    under the warp. The likely answer is that (b) makes this moot for dust and (c) is the only
+    live case, which would make it a low priority — but it is the sort of thing that is cheap to
+    settle once the M25 twin can plant a defect with ground truth. `UNVERIFIED`. *(Raised by M29;
+    numbered 50 to clear the reserved question blocks.)*
 
 **Licensing, for the record.** MIT OR Apache-2.0 on our own code is standard and fine. The
 practical obligation comes from linking LGPL-2.1 `rawler`: **anyone we distribute a binary to must
