@@ -1,0 +1,72 @@
+strehl merge -- regularised winner + noise-gated average (the estimation merge)
+camera          : ILCE-7CM2
+iso             : 160
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 160. Trustworthy for ranking; the gain is DERIVED from white-level consistency, not a photon-transfer measurement.
+regulariser     : 17x17 box on the focus field (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)
+focus noise sd  : 0.015214 on the regularised field, MEASURED in-crate (facts 310-313)
+gates           : 0.00, 0.50, 1.00, 2.00, 4.00, 8.00  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)
+planes          : 3516 x 2344 per CFA plane
+frames          : 22 from D:\personal\macro\109MSDCF
+workers         : 4 chunks of <= 6 frames (4 allowed by the 6144 MB budget, 32 by CPU)
+working set     : 321 MB/worker pass 1, 1458 MB/worker pass 2 (buffers only, a LOWER BOUND)
+
+--- pass one: regularised winner field (MEASURED) ---
+wall clock      : 1.052 s  (47.8 ms/frame)
+  decode        : 2.215 s summed across workers (100.7 ms/frame)
+  focus + reg   : 1.307 s summed across workers (59.4 ms/frame)
+
+--- pass two: gated average (MEASURED) ---
+wall clock      : 1.935 s  (88.0 ms/frame, 6 accumulators)
+  decode        : 1.539 s summed across workers (70.0 ms/frame)
+  field + gate  : 3.567 s summed across workers (162.1 ms/frame)
+total           : 2.987 s  (+0.097 s prologue), 280.0 MB/s over 836.4 MB
+in-flight frames: 4 peak, bound 4 (never O(N))
+
+--- gate calibration (MEASURED) ---
+                  n_eff is frames averaged per pixel. Fact 212 measured nwide = 3 at full
+                  sampling density -- frames within 50% of PEAK HEIGHT, which is a different
+                  rule from this NOISE gate, so 3 is a target to land near, not to match.
+  gate   tol(DN-norm)     mean n_eff   n_eff=1 %   boundary %   pred sigma gain 1/sqrt(n)
+   0.00      0.000000        1.000     100.00%        2.22%         1.0000x
+   0.50      0.010758        1.414      66.46%        2.22%         0.8411x
+   1.00      0.021516        1.884      41.66%        2.22%         0.7285x
+   2.00      0.043032        2.891      15.45%        2.22%         0.5881x
+   4.00      0.086063        4.987       4.62%        2.22%         0.4478x
+   8.00      0.172127       10.469       1.17%        2.22%         0.3091x
+
+--- ACCEPTANCE INVARIANT 1 of 2: flat-ROI noise (MEASURED) ---
+roi             : x 2272 y 1344 w 256 h 256 in plane coordinates
+single frame 11 : sigma   28.201 DN   mean   2020.29 DN   (no stacking at all)
+model predicts  : sigma   19.267 DN for one green-luma sample at that level
+  gate      sigma DN       mean DN      RATIO   winners in roi
+   0.00      30.284       2021.20      1.074x   4 distinct, median 9
+   0.50      28.973       2021.08      1.027x   4 distinct, median 9
+   1.00      27.451       2020.95      0.973x   4 distinct, median 9
+   2.00      25.097       2020.42      0.890x   4 distinct, median 9
+   4.00      22.226       2019.12      0.788x   4 distinct, median 9
+   8.00      19.133       2019.20      0.678x   4 distinct, median 9
+                  PASS is <= 1.000x. The argmax baseline measured 1.253x here (fact 19/23),
+                  and a plain unweighted mean measured 0.534x -- which is the floor, not
+                  a target, because of invariant 2.
+
+--- ACCEPTANCE INVARIANT 2 of 2: detail retention (MEASURED) ---
+roi             : x 1630 y 1044 w 256 h 256 in plane coordinates
+                  MEAN |GRAD| IS CONFOUNDED BY NOISE and the confound has the same sign
+                  as the effect: cutting sigma cuts gradient with zero blur, so an
+                  uncorrected reading charges the merge for doing its job. `corrected` is
+                  sqrt(raw^2 - model^2), the only column judged. `m2` is fact 24's
+                  convention (M38 §1), reported so that comparison is legitimate.
+single frame 11 : corrected  18.7332   raw rms  25.3920   model noise  17.1412   m2  11.8907   iso  18.4576
+  gate     corrected     RETENTION      raw rms   model noise         m2        iso
+   0.00     23.5395       1.257x      29.1091       17.1240    12.6541    19.6696
+   0.50     23.5625       1.258x      27.7924       14.7387    11.3547    17.6611
+   1.00     23.5504       1.257x      26.6405       12.4537    10.2453    15.9459
+   2.00     23.4970       1.254x      25.4698        9.8286     9.0637    14.1150
+   4.00     23.1517       1.236x      24.4171        7.7585     8.0630    12.5632
+   8.00     22.4604       1.199x      23.1781        5.7233     6.8975    10.7449
+                  The reference is ONE frame of the bracket, so much of this ROI is out
+                  of focus in it and retention ABOVE 1.0 is expected -- that is the stack
+                  finding focus the reference does not have. The failure this catches is
+                  CORRECTED retention falling as the gate opens, which is fact 24's
+                  collapse arriving and cannot be explained away as noise removal.

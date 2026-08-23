@@ -1,0 +1,60 @@
+{
+  "stack": "D:\\personal\\macro\\109MSDCF",
+  "frames": 22,
+  "middle_index": 11,
+  "middle_file": "DSC00020.ARW",
+  "plane_shape_hw": [
+    2344,
+    3514
+  ],
+  "rois": {
+    "1630,1044": {
+      "roi_xywh": [
+        1630,
+        1044,
+        256,
+        256
+      ],
+      "roi_mean_dn": 394.62347412109375,
+      "conventions": {
+        "iso_mean_sqrt_dx2_dy2": 18.45764666698609,
+        "mean_abs_dx_only": 12.11832372164552,
+        "mean_abs_dy_only": 11.66312187620146,
+        "mean_abs_dx_and_dy_pooled": 11.890722798923491,
+        "mean_half_sum_abs": 11.890722798923491,
+        "rms_sqrt_dx2_dy2": 25.392043379260375,
+        "sobel_iso_over_8": 10.029893701517098
+      },
+      "m2_published": 11.89,
+      "strehl_measured": 18.4576,
+      "best_match_to_m2": "mean_abs_dx_and_dy_pooled",
+      "best_match_rel_err": 6.079048978047119e-05,
+      "iso_over_dx_ratio": 1.5231187985197483,
+      "python_iso_vs_rust_iso": 1.000002528334458
+    },
+    "64,800": {
+      "roi_xywh": [
+        64,
+        800,
+        256,
+        256
+      ],
+      "roi_mean_dn": 1153.335075378418,
+      "conventions": {
+        "iso_mean_sqrt_dx2_dy2": 29.723988529742236,
+        "mean_abs_dx_only": 15.324682814302191,
+        "mean_abs_dy_only": 21.843414071510956,
+        "mean_abs_dx_and_dy_pooled": 18.584048442906575,
+        "mean_half_sum_abs": 18.584048442906575,
+        "rms_sqrt_dx2_dy2": 49.10051750150706,
+        "sobel_iso_over_8": 16.23186968732793
+      },
+      "m2_published": 18.58,
+      "strehl_measured": 29.724,
+      "best_match_to_m2": "mean_abs_dx_and_dy_pooled",
+      "best_match_rel_err": 0.0002178925138092147,
+      "iso_over_dx_ratio": 1.939615252721674,
+      "python_iso_vs_rust_iso": 0.9999996141078669
+    }
+  }
+}

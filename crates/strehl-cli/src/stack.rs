@@ -19,6 +19,12 @@
 //! that decodes a frame, folds it, and **drops it before decoding the next**.
 //! Peak memory is O(workers), not O(frames), and the worker count is derived
 //! from a memory budget rather than from the frame count.
+//!
+//! `merge_cmd` reuses several of this module's helpers rather than
+//! reimplementing them, which is why a few items below are `pub(crate)`. The
+//! flat-ROI metric in particular has to be bit-identical across the argmax
+//! baseline and the estimation merge, or the comparison between them measures
+//! the harness instead of the merge (discipline 210).
 
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -39,7 +45,7 @@ use crate::image_out;
 /// Working-set ceiling used to size the worker pool. SYNTHESIS §3.2 ratchets
 /// peak RSS at 8 GB independent of frame count; this leaves headroom for the
 /// decoder's own scratch and the output buffers.
-const MEMORY_BUDGET_BYTES: usize = 6 << 30;
+pub(crate) const MEMORY_BUDGET_BYTES: usize = 6 << 30;
 
 /// Peak RSS with one chunk on one thread, above that one worker's own buffers:
 /// the runtime, the prologue frame's residue, and the epilogue. MEASURED (M8,
@@ -319,7 +325,7 @@ pub fn run(opts: &StackOptions) -> Result<()> {
     Ok(())
 }
 
-fn provenance_line(noise: &NoiseModel) -> String {
+pub(crate) fn provenance_line(noise: &NoiseModel) -> String {
     match noise.provenance {
         Provenance::Profile => format!(
             "noise model     : PROVENANCE=Profile -- camera profile at ISO {:.0}. Trustworthy for ranking; the gain is DERIVED from white-level consistency, not a photon-transfer measurement.",
@@ -531,7 +537,7 @@ impl FoldContext<'_> {
 }
 
 /// Black-subtracted `(G1 + G2) / 2` over an ROI in plane coordinates.
-fn roi_green(frame: &Frame, roi: Roi, black: f32) -> Vec<f32> {
+pub(crate) fn roi_green(frame: &Frame, roi: Roi, black: f32) -> Vec<f32> {
     let (g1x, g1y) = CfaPlane::G1.rggb_offset();
     let (g2x, g2y) = CfaPlane::G2.rggb_offset();
     let mut out = Vec::with_capacity(roi.width * roi.height);
@@ -548,7 +554,7 @@ fn roi_green(frame: &Frame, roi: Roi, black: f32) -> Vec<f32> {
     out
 }
 
-fn mean_and_sigma(v: &[f32]) -> (f64, f64) {
+pub(crate) fn mean_and_sigma(v: &[f32]) -> (f64, f64) {
     if v.is_empty() {
         return (0.0, 0.0);
     }
@@ -586,20 +592,51 @@ fn report_winners(selection: &Selection) {
 /// tests all exercised synthetic units, and an independent re-derivation is not
 /// a substitute for covering the code that actually produced the figure
 /// (`AGENTS.md` rule 11). `report_flat_roi` is now printing only.
-struct FlatRoiStats {
-    pixels: usize,
-    stacked_mean: f64,
-    stacked_sigma: f64,
-    single_mean: f64,
-    single_sigma: f64,
-    /// Above 1.0 means the stack is noisier than one unstacked frame.
-    ratio: f64,
-    distinct_winners: usize,
-    median_winner: u16,
+/// Anything that can be asked for a merged green value and a per-pixel winner
+/// index over a plane.
+///
+/// This exists so that [`flat_roi_stats`] has exactly one implementation. The
+/// argmax baseline's 1.253x (fact 19) and the estimation merge's ratio have to
+/// be produced by the same arithmetic on the same ROI or the comparison is
+/// worthless — M35 lost an afternoon to two harnesses that differed by a
+/// convention, and discipline 210 is the rule that came out of it.
+pub(crate) trait GreenField {
+    fn green_mean_at(&self, i: usize) -> f32;
+    fn winner_index(&self) -> &[u16];
 }
 
-fn flat_roi_stats(
-    selection: &Selection,
+impl GreenField for Selection {
+    fn green_mean_at(&self, i: usize) -> f32 {
+        self.green_mean(i)
+    }
+    fn winner_index(&self) -> &[u16] {
+        self.index()
+    }
+}
+
+impl GreenField for strehl_core::merge::Estimator {
+    fn green_mean_at(&self, i: usize) -> f32 {
+        self.green_mean(i)
+    }
+    fn winner_index(&self) -> &[u16] {
+        self.best_index()
+    }
+}
+
+pub(crate) struct FlatRoiStats {
+    pub pixels: usize,
+    pub stacked_mean: f64,
+    pub stacked_sigma: f64,
+    pub single_mean: f64,
+    pub single_sigma: f64,
+    /// Above 1.0 means the stack is noisier than one unstacked frame.
+    pub ratio: f64,
+    pub distinct_winners: usize,
+    pub median_winner: u16,
+}
+
+pub(crate) fn flat_roi_stats<F: GreenField + ?Sized>(
+    field: &F,
     middle_roi: &[f32],
     roi: Roi,
     geom: PlaneGeometry,
@@ -607,7 +644,7 @@ fn flat_roi_stats(
 ) -> FlatRoiStats {
     let stacked: Vec<f32> = (roi.y..roi.y + roi.height)
         .flat_map(|py| (roi.x..roi.x + roi.width).map(move |px| (px, py)))
-        .map(|(px, py)| selection.green_mean(geom.index(px, py)) - black)
+        .map(|(px, py)| field.green_mean_at(geom.index(px, py)) - black)
         .collect();
 
     let (stacked_mean, stacked_sigma) = mean_and_sigma(&stacked);
@@ -615,7 +652,7 @@ fn flat_roi_stats(
 
     let mut roi_index: Vec<u16> = (roi.y..roi.y + roi.height)
         .flat_map(|py| (roi.x..roi.x + roi.width).map(move |px| (px, py)))
-        .map(|(px, py)| selection.index()[geom.index(px, py)])
+        .map(|(px, py)| field.winner_index()[geom.index(px, py)])
         .collect();
     roi_index.sort_unstable();
     let median_winner = roi_index[roi_index.len() / 2];
@@ -685,7 +722,7 @@ fn report_flat_roi(
     Ok(())
 }
 
-fn srgb_encode(v: f32) -> f32 {
+pub(crate) fn srgb_encode(v: f32) -> f32 {
     if v <= 0.003_130_8 {
         12.92 * v
     } else {

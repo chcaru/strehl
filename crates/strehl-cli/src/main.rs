@@ -1,6 +1,7 @@
 //! `strehl` command line.
 
 mod image_out;
+mod merge_cmd;
 mod stack;
 
 use std::path::{Path, PathBuf};
@@ -9,6 +10,7 @@ use std::time::Instant;
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 
+use merge_cmd::MergeOptions;
 use stack::{MemoryModel, Roi, StackOptions, parse_roi};
 
 #[derive(Parser)]
@@ -83,6 +85,54 @@ enum Command {
         #[arg(long, value_enum, default_value_t = MemoryModel::M8)]
         memory_model: MemoryModel,
     },
+
+    /// Merge a directory of RAW files by noise-gated estimation.
+    ///
+    /// THIS IS THE THESIS. Two passes: pass one elects a winner per pixel from
+    /// a 17x17-REGULARISED focus field, pass two averages every frame whose
+    /// regularised response the calibrated noise model cannot separate from
+    /// that winner. Where one frame is unambiguously sharpest it degenerates to
+    /// selection; where several are indistinguishable it averages them, which
+    /// is the only operation that goes below single-frame noise.
+    ///
+    /// It does not yet align, deconvolve, reject outliers, or model occlusion.
+    ///
+    /// The gate threshold is UNCALIBRATED on purpose. Pass several `--gate`
+    /// values and they all run in the same pass two for the cost of one decode
+    /// budget; calibrate against the reported mean n_eff.
+    ///
+    /// Output is BINNED, NOT DEMOSAICED, and LINEAR unless --srgb is passed.
+    /// Do not measure an --srgb file.
+    Merge {
+        /// Directory containing RAW files.
+        dir: PathBuf,
+        /// Where to write the merged 16-bit RGB TIFF. Requires exactly one
+        /// --gate. Omit it to measure without writing an image.
+        #[arg(short, long)]
+        out: Option<PathBuf>,
+        /// Merge at most this many frames, in filename order.
+        #[arg(short, long)]
+        limit: Option<usize>,
+        /// Apply the sRGB transfer curve. For looking at, NOT for measuring.
+        #[arg(long)]
+        srgb: bool,
+        /// Gate threshold, in units of the combined focus noise: a frame is
+        /// averaged in where its regularised response is within
+        /// `t * sqrt(2) * FOCUS_NOISE_SD` of the winner's. Repeatable; every
+        /// value is folded in the same pass two, so a sweep costs one decode
+        /// budget rather than one per value.
+        #[arg(long = "gate", value_name = "T", num_args = 1.., default_values_t = [0.5, 1.0, 2.0, 4.0])]
+        gates: Vec<f32>,
+        /// Low-detail region for the noise invariant, in PLANE coordinates
+        /// (half sensor resolution).
+        #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
+        flat_roi: Option<Roi>,
+        /// Detail region for the retention invariant, in PLANE coordinates.
+        /// The flat ROI alone is not a result: a plain mean wins it at 0.534x
+        /// while collapsing detail 58%.
+        #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
+        detail_roi: Option<Roi>,
+    },
 }
 
 fn main() -> Result<()> {
@@ -115,6 +165,23 @@ fn main() -> Result<()> {
             index_map,
             flat_roi,
             memory_model,
+        }),
+        Command::Merge {
+            dir,
+            out,
+            limit,
+            srgb,
+            gates,
+            flat_roi,
+            detail_roi,
+        } => merge_cmd::run(&MergeOptions {
+            dir,
+            out,
+            limit,
+            srgb,
+            gates,
+            flat_roi,
+            detail_roi,
         }),
     }
 }

@@ -42,7 +42,7 @@
 //! [`Gate::threshold`] is **not** measured. It is the one free parameter in this
 //! module and it is deliberately left explicit at the API boundary rather than
 //! buried in a default, because M27 measured the acceptance-set width it
-//! controls (`n_eff ~ 3`, fact 211) and that number is the calibration target.
+//! controls (`nwide = 3`, fact 212) and that number is the calibration target.
 //! [`Estimator::n_eff`] is an output for exactly this reason.
 
 use crate::boxfilter::box_mean;
@@ -277,7 +277,7 @@ pub struct Estimator {
     max_index: u16,
     sum: [Vec<f32>; 4],
     /// Number of frames admitted at each pixel. This is `n_eff` for a plain
-    /// mean, and it is an output, not a diagnostic — see fact 211.
+    /// mean, and it is an output, not a diagnostic — see fact 212.
     n: Vec<u16>,
     frames: u32,
 }
@@ -307,7 +307,7 @@ impl Estimator {
     pub fn frames_folded(&self) -> u32 {
         self.frames
     }
-    /// Frames admitted per pixel. Compare against fact 211's `n_eff ~ 3`.
+    /// Frames admitted per pixel. Compare against fact 212's `nwide = 3`.
     pub fn n_eff(&self) -> &[u16] {
         &self.n
     }
@@ -855,7 +855,7 @@ mod tests {
     fn with_frames_that_agree_the_estimator_averages_them() {
         // Three frames tied at the top, three far below. The gate must take the
         // mean of exactly the three, which is fact 23's "only averaging goes
-        // below one frame" and fact 211's n_eff ~ 3.
+        // below one frame" and fact 212's nwide = 3.
         let g = geom(4, 4);
         let est = run(g, 6, Gate::new(3.0), |k, _| if k < 3 { 5.0 } else { 0.0 });
         assert!(est.n_eff().iter().all(|n| *n == 3));
