@@ -1,0 +1,42 @@
+{
+  "spec_version": "1.1-m64-extra",
+  "description": "M64's OWN spec, not M62's. It exists only to score the arms M62's acceptance-spec.json cannot carry because they did not exist when it was written: the argmax baseline under its new name. Tolerances are copied VERBATIM from M62's spec and no threshold is changed -- if you are diffing the two, the only intended differences are `arms` and this description. M62's file is not touched by M64.",
+  "n": 30,
+  "seeds": [0, 1, 2],
+  "iso": 160,
+  "roles": {
+    "instrument": "binary-independent arithmetic. If one of these fails the HARNESS changed, and no verdict about any merge can be issued.",
+    "decision": "the claim under test. Must PASS for CERTIFY.",
+    "power": "an invocation that is supposed to score at or below `selector_ceiling`. Discipline 419: a battery whose failing arms have all vanished certifies nothing."
+  },
+  "tolerances": {
+    "ladder_rel": 0.01,
+    "selector_abs": 0.005,
+    "selector_ceiling": 1.05,
+    "estimator_rel": 0.02,
+    "efficiency_band": [0.98, 1.02],
+    "focus_guard_n_eff_over_n": 0.95
+  },
+  "arms": [
+    {
+      "name": "A0-ladder",
+      "kind": "python-mean-ladder",
+      "role": "instrument",
+      "k": [1, 30],
+      "expect": "sqrt_k",
+      "criterion": "ladder_rel",
+      "required": true,
+      "note": "two rungs only; the full ladder is graded by M62's own run and is not re-litigated here."
+    },
+    {
+      "name": "SELECTOR-argmax-baseline",
+      "kind": "cli",
+      "role": "power",
+      "argv": ["argmax-baseline", "{burst}", "--flat-roi", "{roi}", "--out", "{out}"],
+      "expect": "le_one",
+      "criterion": "selector_ceiling",
+      "required": false,
+      "note": "M64 PR7. This is the invocation that RETAINS the semantics of M62's `SELECTOR-shipped` arm, which measured `stack` and now measures the estimator because M64 renamed the entry point. M62 pre-registered that transfer as NO-POWER rather than FAIL; this arm is where the lost control went. 0.7690 at a8eddc0 under the old name."
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "spec_version": "1.1",
+  "description": "M62's sqrt(N) acceptance battery, in data. Nothing here names a binary, a gate or a subcommand -- those live in `argv`, so a different merge is tested by editing this file or passing --spec, never by editing code.",
+  "n": 30,
+  "seeds": [0, 1, 2],
+  "iso": 160,
+  "roles": {
+    "instrument": "binary-independent arithmetic. If one of these fails the HARNESS changed, and no verdict about any merge can be issued.",
+    "decision": "the claim under test. Must PASS for CERTIFY.",
+    "power": "an invocation that is supposed to score at or below `selector_ceiling`. Discipline 419: a battery whose failing arms have all vanished certifies nothing. At least ONE power arm must run and score low, or the verdict is CANNOT-CERTIFY. A power arm that scores HIGH is not a failure of the merge -- it may mean that entry point was deliberately converted to an estimator -- it is a loss of the control, and is reported as NO-POWER."
+  },
+  "tolerances": {
+    "ladder_rel": 0.01,
+    "selector_abs": 0.005,
+    "selector_ceiling": 1.05,
+    "estimator_rel": 0.02,
+    "efficiency_band": [0.98, 1.02],
+    "focus_guard_n_eff_over_n": 0.95
+  },
+  "arms": [
+    {
+      "name": "A0-ladder",
+      "kind": "python-mean-ladder",
+      "role": "instrument",
+      "k": [1, 2, 3, 5, 10, 20, 30],
+      "expect": "sqrt_k",
+      "criterion": "ladder_rel",
+      "required": true,
+      "note": "arithmetic. Calibrates the instrument across the range; independent of any binary."
+    },
+    {
+      "name": "B1a-const-selector",
+      "kind": "python-const-selector",
+      "role": "instrument",
+      "expect": "one",
+      "criterion": "selector_abs",
+      "required": true,
+      "note": "copy frame 0 everywhere. The zero point."
+    },
+    {
+      "name": "B1b-random-selector",
+      "kind": "python-random-selector",
+      "role": "instrument",
+      "expect": "one",
+      "criterion": "selector_abs",
+      "required": true,
+      "note": "full winner histogram, no noise coupling (rule 11's placebo)."
+    },
+    {
+      "name": "DEFAULT",
+      "kind": "cli",
+      "role": "decision",
+      "argv": ["merge", "{burst}", "--flat-roi", "{roi}", "--out", "{out}"],
+      "expect": "sqrt_n",
+      "criterion": "estimator_rel",
+      "required": true,
+      "determinism": true,
+      "note": "NO tuning flags. This is the arm that decides whether the estimating merge is the DEFAULT path. If the binary refuses this invocation the arm is UNSUPPORTED, which is itself a result."
+    },
+    {
+      "name": "SELECTOR-shipped",
+      "kind": "cli",
+      "role": "power",
+      "argv": ["stack", "{burst}", "--flat-roi", "{roi}", "--out", "{out}"],
+      "expect": "le_one",
+      "criterion": "selector_ceiling",
+      "required": false,
+      "note": "the shipped unregularised argmax; 0.7690 at a8eddc0. NOT required, and deliberately so: if `stack` is the entry point that gets converted to an estimator, this arm SHOULD stop scoring low, and auto-rejecting on that would be pre-committing to reject the change the battery exists to judge. Scoring high here is recorded as NO-POWER, not FAIL."
+    },
+    {
+      "name": "SELECTOR-same-binary",
+      "kind": "cli",
+      "role": "power",
+      "argv": ["merge", "{burst}", "--gate", "0", "--flat-roi", "{roi}", "--out", "{out}"],
+      "expect": "le_one",
+      "criterion": "selector_ceiling",
+      "required": false,
+      "note": "same binary, one parameter, n_eff == 1; 0.9768 at a8eddc0. Not required: a merge that removes --gate legitimately cannot offer it, and the loss of this control must then be reported."
+    },
+    {
+      "name": "ESTIMATOR-explicit",
+      "kind": "cli",
+      "role": "reference",
+      "argv": ["merge", "{burst}", "--gate", "8", "--flat-roi", "{roi}", "--out", "{out}"],
+      "expect": "sqrt_n",
+      "criterion": "estimator_rel",
+      "required": false,
+      "note": "M62's headline invocation, 5.4777 at a8eddc0, kept for continuity. Not required: it may cease to exist."
+    }
+  ]
+}

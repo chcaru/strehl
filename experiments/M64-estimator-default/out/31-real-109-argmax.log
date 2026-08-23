@@ -1,0 +1,97 @@
+strehl argmax-baseline -- naive per-pixel argmax (NOT THE DEFAULT; a negative control)
+camera          : ILCE-7CM2
+iso             : 160
+levels          : black 512, white 15360
+white balance   : R 2.8613  G 1.0000  B 1.4824 (green-normalised)
+noise model     : PROVENANCE=Profile -- camera profile at ISO 160. Trustworthy for ranking.
+                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+                  SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+                  camera's own white level, which checks one relation and is not a PTC; the
+                  PTC now exists and the relation survives it at true gain steps -- the ISO 160
+                  control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+                  READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+                  camera MODEL and nothing here was fitted from this stack. Below the profile's
+                  base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+                  is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+                  -- the corpus holds no ISO 64 or 80 capture).
+planes          : 3516 x 2344 per CFA plane (active 7032 x 4688 halved)
+frames          : 22 from D:\personal\macro\109MSDCF
+workers         : 11 chunks of <= 2 frames (16 allowed by the 6144 MB budget, 32 by CPU, model M8)
+working set     : 321 MB/worker buffers, >= 3.53 GB peak (LOWER BOUND -- buffers only)
+predicted peak  : 4.43 GB (MEASURED model, M8: + 39 MB/worker decoder scratch, + 4 x 115 MB reduce tree, + 15 MB floor; +/-8.4% out of sample)
+
+--- throughput (MEASURED) ---
+wall clock      : 0.961 s  (+0.097 s prologue frame)
+per frame       : 43.7 ms
+throughput      : 870.2 MB/s over 836.4 MB of ARW
+  decode        : 5.640 s summed across workers (256.4 ms/frame)
+  focus + fold  : 3.536 s summed across workers (160.7 ms/frame)
+in-flight frames: 11 peak, bound 11 (never O(N))
+
+--- winner distribution ---
+  frame   0 :   1.44%  #
+  frame   1 :   0.72%  #
+  frame   2 :   0.26%  
+  frame   3 :   0.22%  
+  frame   4 :   0.71%  #
+  frame   5 :   0.07%  
+  frame   6 :   1.99%  ##
+  frame   7 :  20.06%  ################
+  frame   8 :  15.18%  ############
+  frame   9 :  26.23%  #####################
+  frame  10 :  20.49%  ################
+  frame  11 :   2.67%  ##
+  frame  12 :   4.36%  ###
+  frame  13 :   2.83%  ##
+  frame  14 :   0.16%  
+  frame  15 :   0.31%  
+  frame  16 :   0.07%  
+  frame  17 :   0.24%  
+  frame  18 :   0.09%  
+  frame  19 :   0.16%  
+  frame  20 :   0.45%  
+  frame  21 :   1.27%  #
+
+--- argmax defect (MEASURED) ---
+index speckle   : 1.010% of pixels differ by more than 2 from their 3x3 median index
+                  (depth is piecewise smooth, so this is argmax electing noise; 0.13 s to compute)
+
+--- flat-ROI noise control (MEASURED) ---
+roi             : x 2272 y 1344 w 256 h 256 in plane coordinates (65536 px)
+stacked green   : sigma   30.114 DN   mean   2018.68 DN   (argmax over 22 frames)
+single frame 11 : sigma   28.201 DN   mean   2020.29 DN   (no stacking at all)
+model predicts  : sigma   19.267 DN for one green-luma sample at that level
+                  that is a TEMPORAL per-sample sigma; the two above are SPATIAL sds
+                  of noise plus whatever scene structure the ROI still has, so they
+                  are not the same quantity and are not expected to match.
+
+stacked hp sd   :   24.911 DN   (argmax over 22 frames)
+reference hp sd : median   20.372 DN over 22 frames   min   19.510 (frame 21)   max   24.506 (frame 10)
+                  NO SINGLE REFERENCE FRAME. Fact 441: holding the merge fixed and sweeping which
+                  frame supplies the denominator moved the old published ratio over a 1.60x range,
+                  so the whole distribution is carried. This stack's own spread is 1.2561x.
+                  high pass is x - box9(x) on the ROI's valid interior, the kernel behind fact 469;
+                  white noise of sd s comes out at s * 0.993808 (DERIVED: sqrt(1 - 1/81)), so the
+                  sd above reads against the calibrated model rather than in arbitrary units.
+                  STRUCTURE FLOOR: median hp sd is 1.0640x the model's per-sample sigma.
+                  Rule 10 -- that is a SPATIAL sd over a TEMPORAL sigma, so it is a one-sided
+                  reading, not an equality: 1.0000x means noise-dominated and the excess is
+                  residual scene. IT IS ALSO THE FACTOR BY WHICH EVERY RATIO BELOW UNDER-REPORTS A
+                  LARGE EXPLOSION, so these ratios are LOWER BOUNDS. The legacy raw ratio's own
+                  floor on this ROI is raw sd / sigma, printed above, and it is the 6.3x of fact 469.
+HP RATIO        : 1.223x vs the median frame   [1.016x .. 1.277x] over every frame
+                  against frame 11 alone -- the frame the old convention privileged --
+                  the same statistic reads 1.079x.
+                  ABOVE 1.0 MEANS THE STACK IS NOISIER THAN ONE UNSTACKED FRAME.
+
+LEGACY RAW RATIO: 1.068x  -- DO NOT READ AS NOISE.
+                  Two RAW spatial sds. Fact 469: on a real flat ROI ~99% of that
+                  variance is residual scene, and this ratio under-reported a planted
+                  noise explosion by 6.3x. Printed only so older reports remain
+                  comparable. The HP RATIO above is the acceptance number.
+winners in roi  : 6 distinct frames, median 9
+
+wrote           : C:\Users\chris\AppData\Local\Temp\m64-argmax.tif (3516 x 2344, 16-bit RGB, linear, binned from one 2x2 quad per pixel -- NOT demosaiced)
+write           : 0.133 s

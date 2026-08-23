@@ -1,0 +1,51 @@
+{
+  "source_file": "D:\\personal\\macro\\109MSDCF\\DSC00020.ARW",
+  "stack": "109MSDCF",
+  "stack_frames": 22,
+  "frame_index_in_stack": 11,
+  "sensor_shape_visible": [
+    4688,
+    7028
+  ],
+  "libraw_black_mean": 512.0,
+  "libraw_white": 16383,
+  "rggb_phase_dy_dx": [
+    0,
+    0
+  ],
+  "raw_pattern": [
+    [
+      0,
+      1
+    ],
+    [
+      3,
+      2
+    ]
+  ],
+  "crop": {
+    "y0": 1024,
+    "x0": 4096,
+    "size": 2048
+  },
+  "crop_stats": {
+    "min": 524.0,
+    "max": 2731.0,
+    "p999": 2621.0,
+    "mean_green_signal_dn": 1238.4790511131287,
+    "texture_hp_sd_dn": 174.80531141320006
+  },
+  "plane_means_dn": {
+    "R": 982.1522302627563,
+    "G1": 1750.8151502609253,
+    "G2": 1750.142951965332,
+    "B": 1357.720965385437
+  },
+  "plane_signal_dn": {
+    "R": 470.15223026275635,
+    "G1": 1238.8151502609253,
+    "G2": 1238.142951965332,
+    "B": 845.720965385437
+  },
+  "saturated_px_at_15360": 0
+}

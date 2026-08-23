@@ -1,0 +1,108 @@
+{
+  "overall": "CERTIFY",
+  "reason": "power supplied by SELECTOR-argmax-baseline",
+  "blocking": [],
+  "power_ok": [
+    "SELECTOR-argmax-baseline"
+  ],
+  "power_lost": [],
+  "determinism": {},
+  "focus_guard": "run src/11-focus-guard.py separately",
+  "spec": "src\\m64-extra-spec.json",
+  "tag": "m64-extra",
+  "n": 30,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "elapsed_s": 9.915194988250732,
+  "provenance": {
+    "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\release\\strehl.exe",
+    "binary_mtime": "2026-08-23T15:46:49",
+    "binary_sha256": "60646c68679a3ab847b829769506eb6ba2990d85127658dfe023de9cb7661f40",
+    "constants_from": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+    "repo_head": "654b1cd9fc831c2d341f662cddc347918d8e29dd",
+    "crates_dirty": false,
+    "crates_dirty_files": []
+  },
+  "constants": {
+    "gain_divisor": 436.8,
+    "base_iso": 100.0,
+    "read_noise_e_low": 4.2,
+    "read_noise_e_high": 1.2392,
+    "second_base_iso": 400.0,
+    "iso": 160.0,
+    "gain_dn_per_e": 0.3663003663003663,
+    "read_noise_e": 4.2,
+    "read_noise_dn": 1.5384615384615383,
+    "black": 512.0,
+    "white": 15360.0
+  },
+  "tolerances": {
+    "ladder_rel": 0.01,
+    "selector_abs": 0.005,
+    "selector_ceiling": 1.05,
+    "estimator_rel": 0.02,
+    "efficiency_band": [
+      0.98,
+      1.02
+    ],
+    "focus_guard_n_eff_over_n": 0.95
+  },
+  "summary": {
+    "A0-ladder:1": {
+      "arm": "A0-ladder",
+      "k": 1,
+      "expected": 1.0,
+      "criterion": "ladder_rel",
+      "role": "instrument",
+      "required": true,
+      "ratio_mean": 1.0006933061719776,
+      "ratio_sd_between_seeds": 0.001391728529930629,
+      "ratio_per_seed": [
+        0.9996687871560282,
+        1.0022777964808955,
+        1.000133334879009
+      ],
+      "bootstrap_se_seed0": 0.000891175240419872,
+      "verdict": "PASS"
+    },
+    "A0-ladder:30": {
+      "arm": "A0-ladder",
+      "k": 30,
+      "expected": 5.477225575051661,
+      "criterion": "ladder_rel",
+      "role": "instrument",
+      "required": true,
+      "ratio_mean": 5.479128597201973,
+      "ratio_sd_between_seeds": 0.006740543610158966,
+      "ratio_per_seed": [
+        5.486464080033825,
+        5.47771428581118,
+        5.473207425760916
+      ],
+      "bootstrap_se_seed0": 0.004394959175318392,
+      "verdict": "PASS"
+    },
+    "SELECTOR-argmax-baseline": {
+      "arm": "SELECTOR-argmax-baseline",
+      "criterion": "selector_ceiling",
+      "expect": "le_one",
+      "role": "power",
+      "required": false,
+      "cli": {},
+      "out_sha256": "864a04cc6feca5392fe4b59596483815c3c96c5c72eb639fc31cf09efc2f92d5",
+      "note": "M64 PR7. This is the invocation that RETAINS the semantics of M62's `SELECTOR-shipped` arm, which measured `stack` and now measures the estimator because M64 renamed the entry point. M62 pre-registered that transfer as NO-POWER rather than FAIL; this arm is where the lost control went. 0.7690 at a8eddc0 under the old name.",
+      "ratio_mean": 0.769033476561744,
+      "ratio_sd_between_seeds": 0.00021970767934743042,
+      "ratio_per_seed": [
+        0.7692582278612409,
+        0.7688191862202427,
+        0.7690230156037482
+      ],
+      "bootstrap_se_seed0": 0.012049561206462603,
+      "verdict": "POWER-OK"
+    }
+  }
+}
