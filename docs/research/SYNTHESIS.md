@@ -729,8 +729,9 @@ since contributors are not required to be spliceable and only have to emit an `f
 > **Blocks currently reserved for work in flight** (89-139 will stay sparse):
 > M16 facts 90+/discipline 40+, M17 facts 100+/discipline 50+, M18 facts
 > 110+/discipline 60+, M19 facts 120+, M20's verifier facts 130+, **M23 facts
-> 170+/discipline 80+/question 25+**. Facts **140-145 (M20)**, **150-152 (M21)**,
-> **160-162 (M22)** and **180-182 (M24)** are folded below and are all
+> 170+/discipline 80+/question 25+**, **M25 facts 190+/discipline 100+/question
+> 30+**. Facts **140-145 (M20)**, **150-152 (M21)**,
+> **160-162 (M22)**, **180-182 (M24)** and **200-203 (M26)** are folded below and are all
 > **NOT INDEPENDENTLY VERIFIED** — they were measured by the
 > orchestrator, and rule 12 binds their author exactly as it binds any milestone.
 
@@ -828,6 +829,10 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 180 | **Per-frame photometric drift is present across most of the corpus**: peak-to-peak mean level varies **2.88%** (119MSDCF), **6.84%** (112MSDCF), **8.93%** (coffee-bubbles) and **11.70%** (coffee-bean). **`109MSDCF` is the quietest stack at 0.91%** | Establishes the premise of review item R9 as fact rather than speculation. **The stack that shaped most of this project's measurements is the least representative one in the corpus for this defect** — a clean result on 109 says nothing about photometric handling | M24 (MEASURED) — **NOT INDEPENDENTLY VERIFIED**; probe only, stacks subsampled so jitter figures are lower bounds |
 | 181 | **EXIF does not predict the drift, in either direction.** `coffee-bubbles` and `112MSDCF` vary 6.84–8.93% with a **single** distinct `(ExposureTime, ISO, FNumber)` across the whole stack. `coffee-bean` *does* change exposure mid-capture (`4/5 s` → `5/8 s`, 0.356 EV) — but its measured level ratio is **1.0443 against an EXIF-predicted 1.2800**, i.e. the level moved **16% of what EXIF predicts** | **The per-frame gain must be FITTED from the data, never read from metadata.** A model trusting `ExposureTime × ISO` is blind to ~7–9% on two stacks and overcorrects by ~6× on a third. Sharper than R9 as the review stated it. ARGUED: the shortened exposure at near-constant level is the signature of auto-exposure compensating a drifting light; the two exposure groups are also different focus ranges, and that is not separable here | M24 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
 | 182 | **The drift is not a framing artifact.** Focus breathing changes magnification and could move the mean without any exposure change — but a central 600 px ROI moves **at least as much** as the full frame on all three stacks tested (ratios 1.50 / 2.05 / 0.92, correlations **+0.911 / +0.971 / +0.848**), the opposite of what the framing hypothesis predicts | Discharges the rule-17 confound that would otherwise have made fact 180 unreadable. Honest limit: a centred subject blurring in and out moves light across the ROI boundary, so this **bounds** the framing explanation rather than eliminating it | M24 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 200 | **As-shot white balance is a large per-channel gain that varies per stack.** R spans **2.13–2.86**, B spans **1.41–1.88** across the six stacks; both greens are exactly equal on every stack. `daylight_whitebalance` is identical everywhere, so it is the **as-shot** value that varies — the body was on auto WB. `rgb_xyz_matrix` is constant, as a camera-model property should be | **Read WB per stack; never put it in a profile.** No G1/G2 imbalance term is needed for these captures | M26 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 201 | **The noise model is only valid in native per-channel raw DN, and white-balancing first breaks it by up to 2.86×.** Scaling a channel by `m` gives true `σ² = m²(gS + (RN·g)²)`, while applying the model to WB'd values gives `g(mS) + (RN·g)²`. The ratio → **`m`** in the read-limited (shadow) limit, **`√m`** in the shot-limited limit — so red is believed **2.86× quieter than it is, most strongly in the shadows** | **Ordering rule: gate in native raw DN; apply WB and the colour matrix after the merge.** The failure is silent — the gate simply rejects too aggressively, reverting toward the selector the project exists to replace, and it does so hardest exactly where M2 measured the argmax defect. A plugin needing earlier WB must transform the noise model with it, as part of the contract | M26 (DERIVED from fact 200 + the calibrated model) — **NOT INDEPENDENTLY VERIFIED** |
+| 202 | **Saturation is real, per-stack, and absent from four of six stacks.** `coffee-bean` has **1.26%** of pixels ≥ 15360 and `coffee-bubbles` has 62,054 pinned at the 14-bit container max — while `109`, `119`, `112`, `113` contain **zero**, topping out at **39–61%** of the white level. Separately, `rawpy` exposes **two** white levels: `white_level` = **16383** (container) and `camera_white_level_per_channel` = **15360** | Detect saturation; never assume it either way. **The two white levels are both right and are used for different purposes** — the clip mask wants the container max, the noise model's range wants 15360. **Checked and clean:** `noise.rs` already documents and tests this (`usable_white_level_is_not_the_container_maximum`). Second respect (after fact 180) in which **`109`/`119` are the gentlest stacks in the corpus** — a clean result on them is systematically weaker evidence than it looks | M26 (MEASURED) — **NOT INDEPENDENTLY VERIFIED** |
+| 203 | **Clipping defeats discipline 29, and both confidence candidates fail in the same direction.** Cross-frame focus contrast reads **1.0000 — its maximum — on always-clipped pixels** (median; n=616) against 0.5398 never-clipped, at pixels pinned in every frame that carry zero information. Mechanism: **85.9%** of them have `f_min` **exactly 0** (uniformly clipped blob interior in ≥1 frame) vs **0.0000%** of never-clipped, while median `f_max` is **7,598 vs 145.6** — 52× typical — as the blob's edge crosses in another frame | **Mask samples at/above the container max before the focus volume and propagate the mask** — one comparison per sample, closing a maximum-severity hole. Discipline 29 was chosen *because* magnitude fails on fact 73; this is the same class of failure arriving through the quantity picked to prevent it. **The partially-clipped population is a weak effect**: a raw 1.67× elevation collapsed to **1.06–1.09×** under brightness matching, so ~90% was brightness (discipline 70, applied to the orchestrator's own first framing). No brightness-matched control is constructible for the always-clipped group — no unclipped pixel reaches that level by definition | M26 (MEASURED mechanism, DERIVED consequence) — **NOT INDEPENDENTLY VERIFIED**; frames unaligned, 616 px = 0.0075%, green sublattice and R=2 only |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -1082,6 +1087,14 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      carries the information is the *contrast of the peak across the stack*, which correctly reads
      zero there.
 
+     > **QUALIFIED by fact 203 (M26) — this quantity has its own blind spot, and it is the same
+     > shape.** On pixels clipped in every frame the peak contrast reads **1.0000, its maximum**,
+     > because the pixel sits inside a uniformly clipped blob in one frame (`f_min` exactly 0, in
+     > 85.9% of cases) and under the blob's moving edge in another (`f_max` 52× typical). Focus
+     > magnitude fails there too, so **switching between the two candidates does not help; the
+     > input has to be masked.** The item stands as written — it is still right about fact 73 — but
+     > it is not sufficient on its own.
+
 30. **Time a parameter sweep with alternating direction and take the per-setting minimum.** M14
      found a single forward sweep reading **−0.7%** and a reverse sweep **+19%** on the same binary
      and the same settings, and `FocusField::compute` reading **21% slow** purely because it was
@@ -1155,6 +1168,26 @@ So the A/B harness is a **first-class component from commit one**, not a later a
      preserves CFA phase and every spatial statistic while destroying per-pixel correspondence.
      **Pair it with a known-real population as the positive control** (M22 used the dark-derived
      map: 1.91/2.36/16.00×), or the collapse ratio has no scale to be read against.
+
+110. **Write down which domain each calibrated model is valid in, and treat leaving that domain as
+     a breaking operation.** `σ²(S) = g·S + (RN_e·g)²` is valid in *native per-channel raw DN*.
+     White balance is a per-channel gain of up to **2.86×** on this corpus, and applying the model
+     after it understates σ by a factor tending to **m** in the shadows and **√m** in the
+     highlights (fact 201). Nothing errors — the gate simply rejects too aggressively, and hardest
+     in the shadows, which is precisely where the defect being fixed lives. **Every calibrated
+     quantity in this project should carry its domain in its type or its doc comment**, and any
+     plugin that wants to move a value out of that domain must transform the model with it as part
+     of the contract.
+
+111. **A metric that saturates has a second failure mode at its own ceiling, and it is usually the
+     opposite of the one you designed against.** Discipline 29 exists because focus *magnitude*
+     reports high confidence where information is zero (fact 73); the replacement, cross-frame peak
+     contrast, does exactly the same thing on clipped pixels (fact 203), because a ratio
+     `(max−min)/max` attains 1.0 whenever the minimum is degenerate rather than whenever the signal
+     is strong. **Before adopting a normalised metric, ask what makes its denominator large and its
+     numerator's floor zero, and check whether any real input can do both.** In this case the fix
+     was not a better metric but masking the input — three bad pixels' worth of work for a
+     maximum-severity hole.
 
 ---
 
