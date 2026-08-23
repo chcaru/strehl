@@ -116,6 +116,7 @@ Not blocking experiment 3; blocking two things that are currently guesses.
 | Format | **RAW (.ARW).** Noise reduction all off. |
 | Exposure levels | **7 levels**, by shutter speed only, spaced roughly a stop apart, targeting mean raw values of about **500, 1000, 2000, 4000, 7000, 11000, 14000 DN** above black. Overexposing one is fine and useful; clipped frames are simply dropped. |
 | Frames per level | **16.** Change nothing between them. |
+| Teleconverter | **Irrelevant — leave it on.** Gain and PRNU are sensor properties, and the vignetting the TC changes is fitted out by the smooth-surface normalisation below. Just keep it identical across the whole set. |
 | Between levels | Change **only** the shutter speed. Do not move the camera, refocus, or alter the lighting. |
 
 Roughly 112 frames. If that is too many, 8 frames per level at 5 levels is
@@ -155,7 +156,34 @@ measurement.
    If PRNU is at the high end, averaging in lit regions asymptotes just as raw
    dark-frame averaging does, and the merge stage needs flat-field correction
    and not merely bias subtraction. **That is a design-changing possibility that
-   is currently unmeasured in either direction.** The frames above settle it:
-   per-pixel temporal mean divided by the frame mean, over the 16 frames at each
-   level, with the temporal component removed by the same bias correction M4
-   already uses and tests.
+   is currently unmeasured in either direction.**
+
+   **Method correction (found while re-checking this spec; the original recipe
+   was wrong).** This entry previously said to estimate PRNU as the per-pixel
+   temporal mean divided by **the frame mean**. That does not work. Dividing by
+   a single global scalar leaves **vignetting** — a smooth, low-spatial-frequency
+   gain roll-off — entirely intact in the residual, and vignetting across a full
+   frame is typically several percent, an order of magnitude larger than the
+   0.3-1% PRNU being measured. The resulting map's standard deviation would be
+   almost pure vignetting, and would have "confirmed" a large PRNU no matter
+   what the sensor actually does.
+
+   **Correct procedure:** normalise each per-pixel temporal mean by a **smooth
+   low-order surface** fitted to (or a heavily blurred copy of) that same flat,
+   so only pixel-to-pixel structure survives. Then remove the residual temporal
+   noise in quadrature — `sd_PRNU^2 = sd_measured^2 - sigma_temporal^2 / N` —
+   rather than ignoring it. Confirm PRNU by its defining signature: it is
+   **multiplicative**, so `sd_PRNU` must scale **linearly with signal level**
+   across the seven exposure levels. A fixed pattern that does not grow with
+   signal is offset FPN, which M4 already measured, not PRNU.
+
+   **16 frames per level is sufficient** for this. PRNU is fixed, so only the
+   temporal term shrinks, and with ~8.2M plane pixels the standard-deviation
+   estimate is precise to well under 0.05% — the quadrature subtraction, not the
+   frame count, is what has to be right.
+
+   **One capture-side consequence: clean the sensor first.** Dust motes render
+   sharply in a flat field and appear as localised dark blobs. They are spatially
+   clustered, so the smooth-surface normalisation above will *not* remove them,
+   and they would be counted as PRNU. If any remain they must be masked before
+   the statistic is taken.
