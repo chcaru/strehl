@@ -149,11 +149,12 @@ take it as a specification. An independent verifier is auditing the repair now.
 
 ## What I found overnight that you should know about
 
-**Twelve things.** Items 1–6 are in descending order of how much they change the plan. Items
-7–12 landed later and were appended rather than merged into the ordering — **item 7 is the
+**Fourteen things.** Items 1–6 are in descending order of how much they change the plan. Items
+7–14 landed later and were appended rather than merged into the ordering — **item 7 is the
 single most important result of the night** and would sit first if this file were rewritten
-rather than appended to. If you read only one, read 7. If you read two, read 10: it closes
-the external review's central proposal.
+rather than appended to. If you read only one, read 7. If you read two, read 12: a constant
+we shipped was wrong by 2× at the ISO you actually shoot at, and it changes your images.
+Item 10 closes the external review's central proposal.
 
 **1. The pluggability requirement — your #1 structural ask — had a hole, and the design
 could not see it.** The merge's gate is calibrated in units of a constant that belongs to
@@ -425,10 +426,71 @@ are not wrong, the confidence numbers attached to them are.** `--gate 1.0` on an
 has been behaving like roughly `--gate 1.4`, i.e. more conservative than you asked for. M47
 is auditing every published number that used the old value.
 
+> **CORRECTION, an hour later, by measurement. The sentence above in bold is wrong
+> and I am leaving it visible.** I wrote "the merged images are not wrong, the
+> confidence numbers attached to them are." I had not checked. So I checked: I
+> built the merge twice — once at `HEAD`, once with the old marked-ISO gain patched
+> back in — and ran both over `119MSDCF`, your 33-frame ISO-50 stack.
+>
+> **23.68% of the output subpixels change.** Mean difference over the changed set
+> is 67 DN; the largest is 3559 DN out of 65535. The gate decides *which frames get
+> averaged into each pixel*, so moving the noise floor moves the merge itself, not
+> just the number printed beside it.
+>
+> The accurate statement is narrower: your old outputs are not corrupt — they are
+> what `--gate 1.4` would have produced, on a stack you asked for `--gate 1.0` on.
+> More frames were kept separate than you wanted, so they are slightly noisier than
+> they should be, not wrong. But they are **not** the same images.
+>
+> One thing did land exactly as predicted, and it is the reason I now believe the
+> diagnosis: the drift sensitivity moved 0.352 → 0.249 gate units per 1%, a factor
+> of **1.414**. That is √2, which is what `σ² = gS + (RN·g)²` says a 2× gain error
+> must do. Predicted first, measured second. Fact 553.
+
 There is one thing I could not determine and did not guess: **where the boundary is.** ISO 50
 is wrong and ISO 100 is right; nothing in the corpus is shot at ISO 64 or 80, so I clamped at
 100 and said in the code that this is the simplest rule consistent with the evidence rather
 than a measured transition. If you ever shoot a few frames at ISO 64, that closes it.
+
+**13. I folded a report, the report rewrote itself twice afterwards, and then told me
+the wrong thing about what I had folded.**
+No action needed from you. Logging it because it is the second process failure in two
+days and it now has a rule.
+
+Milestone M25 wrote a report. I folded its findings into the decision record. M25 then
+revised that report twice more — and when it came back to say "I corrected something you
+already folded", it described the correction against **its own latest draft**, not against
+the version I had actually folded. It named the wrong clause, in complete good faith. Both
+numbers in the folded row were stale, and its stated conclusion had already been overtaken.
+
+The general shape: *a report cannot tell you what a fold says; only the fold can.* Fixed
+two ways, both cheap — fold only from a committed revision and write that commit id into
+the record's source column, and when any milestone reports a correction, re-read the folded
+row itself before believing the account of it. Rule 31.
+
+**14. A test was told to ignore the one case where we knew the model was wrong.**
+This is the actual reason item 12 survived for weeks after being measured, and it is the
+most useful thing I learned all night.
+
+M25's simulator has a self-test that checks its noise against the real dark frames at six
+ISO settings. ISO 50 was **excluded from the check** — deliberately, with a comment, because
+the model was known to disagree there. That is a completely reasonable-looking decision, and
+it silenced the only test in the project that would have caught a 2× error, in the only test
+gate that ran at ISO 50.
+
+The fix is not "test more", it is "never narrow an assertion's domain to make it pass". A
+disagreement you have decided to tolerate is a *fact about the model*: assert it at the wrong
+value you expect, so the test goes red the day that expectation stops being true — which is
+the day you want to hear about it. Rule 30. The carve-out is gone and that suite is 27/27.
+
+There is a second, subtler one in the same report and it is worth thirty seconds. M25 had
+reported that its simulator's error rate "now matches" reality — 6.6% against a real 4.8%.
+It did not. Two separate defects of opposite sign were cancelling: the simulated scene was 7%
+low in contrast, and the gain bug was making it √2 too quiet. Fix only the noise and the
+number goes to 10.1%, over-producing by 2.1×. **The measurement that agrees with you gets
+audited less than the one that does not**, and that is exactly backwards when two errors can
+cancel. Rule 18 asks what direction a *failure* points; nothing asked what to do when a
+number stops failing. Now something does. Rule 30's sibling, discipline 287.
 
 ## Running while you sleep
 
