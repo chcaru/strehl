@@ -1,0 +1,26 @@
+== group 1: the exactness claim the kernel rests on ==
+  [PASS] f32 accumulation of 49 luma samples is exact: worst |f32 - f64| over 200000 draws = 0e0
+  device: NVIDIA GeForce RTX 5090 (Vulkan), timestamp period 1 ns
+  all pipelines compiled (naga accepted every entry point)
+== group 2: a flat plane has zero focus everywhere, borders included ==
+  [PASS] flat plane -> zero focus (GPU): max GPU focus 0e0 (CPU 0e0)
+== group 3: GPU vs CPU vs f64 truth on structured synthetic data ==
+  [PASS] the parallel f64 reference equals the serial one: 0 of 12288 values differ
+  [PASS] GPU vs CPU agreement: 78.3040% bit-identical, max |dGPU-CPU| 1.526e-5, max rel 2.123e-7
+  [PASS] GPU is no further from f64 truth than the CPU is: RMS vs truth: GPU 4.8309e-6, CPU 4.6604e-6; worst: GPU 1.736e-5, CPU 1.773e-5
+  [PASS] the raw fp32 divide is measurably worse (diagnosis check): raw divide: 32.5928% identical, max |d| 4.005e-5; refined: 78.3040% identical, max |d| 1.526e-5
+== group 4: the ranking properties `focus.rs` tests, re-asserted on the GPU ==
+  [PASS] a sharper edge scores higher than a blurred one: sharp 18.8641 vs soft 5.4459
+  [PASS] the same contrast scores lower at a higher signal level: dark 2.5865 vs bright 0.3372
+== group 5: the fused merge reproduces `Selection`, including ties ==
+  [PASS] every tie goes to the lower frame index: 768 of 768 pixels won by frame 0
+  [PASS] the winning quad is copied from the winning frame: R channel never came from frame 1
+  [PASS] a strictly sharper frame wins: frame 1 won 100.00%
+  [PASS] GPU fused merge == CPU Selection::fold (winner index): 0 differing pixels
+== group 6: fusion is an implementation detail, not a different answer ==
+  [PASS] fused and unfused give identical winner maps: 0 differing pixels
+  [PASS] fused and unfused give bit-identical focus: 0 differing pixels
+== group 7: the null control writes nothing ==
+  [PASS] null kernel leaves memory untouched: selection buffer unchanged after a null dispatch
+
+ALL SELF-TESTS PASSED

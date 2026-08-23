@@ -1,0 +1,41 @@
+decoding 22 frames from C:\dev\macro\test\109MSDCF
+  decoded in 0.597 s (27.1 ms/frame, rayon across files)
+  camera ILCE-7CM2 | active 7032x4688 | plane 3516x2344 | black 512 white 15360 | ISO Some(160.0)
+  packed active area 62.88 MiB/frame, 1.351 GiB for the stack (padding excluded, rule 7)
+device: NVIDIA GeForce RTX 5090 (Vulkan); VRAM attributed to this process None MiB
+
+== per-frame focus field: GPU vs CPU vs an independent f64 reference ==
+frame |  identical |   max |d|  |   max rel  | GPU RMS vs f64 | CPU RMS vs f64
+    0 |  71.86760% |   1.907e-6 |   2.361e-7 |      3.0489e-6 |      3.0489e-6
+    1 |  71.92022% |   1.907e-6 |   2.357e-7 |      3.0561e-6 |      3.0561e-6
+    2 |  72.22075% |   3.815e-6 |   2.363e-7 |      3.1139e-6 |      3.1138e-6
+    3 |  72.28040% |   3.815e-6 |   2.351e-7 |      3.1301e-6 |      3.1301e-6
+    4 |  72.05858% |   3.815e-6 |   2.362e-7 |      3.0823e-6 |      3.0823e-6
+    5 |  71.86780% |   3.815e-6 |   2.352e-7 |      3.0377e-6 |      3.0377e-6
+    6 |  71.94187% |   7.629e-6 |   2.351e-7 |      3.0536e-6 |      3.0536e-6
+    7 |  72.01460% |   7.629e-6 |   2.366e-7 |      3.0643e-6 |      3.0642e-6
+    8 |  71.90122% |   7.629e-6 |   2.351e-7 |      3.0250e-6 |      3.0249e-6
+    9 |  71.96682% |   7.629e-6 |   2.352e-7 |      3.0338e-6 |      3.0337e-6
+   10 |  72.16912% |   7.629e-6 |   2.351e-7 |      3.1110e-6 |      3.1109e-6
+   11 |  71.99886% |   7.629e-6 |   2.351e-7 |      3.0635e-6 |      3.0634e-6
+   12 |  71.85777% |   3.815e-6 |   2.373e-7 |      3.0328e-6 |      3.0327e-6
+   13 |  71.88460% |   7.629e-6 |   2.351e-7 |      3.0566e-6 |      3.0566e-6
+   14 |  71.82862% |   3.815e-6 |   2.363e-7 |      3.0396e-6 |      3.0396e-6
+   15 |  72.07932% |   3.815e-6 |   2.351e-7 |      3.1064e-6 |      3.1064e-6
+   16 |  72.02585% |   3.815e-6 |   2.362e-7 |      3.0930e-6 |      3.0930e-6
+   17 |  71.93970% |   1.907e-6 |   2.369e-7 |      3.0764e-6 |      3.0764e-6
+   18 |  71.75974% |   1.907e-6 |   2.351e-7 |      3.0347e-6 |      3.0347e-6
+   19 |  71.77513% |   1.907e-6 |   2.351e-7 |      3.0464e-6 |      3.0464e-6
+   20 |  71.80725% |   1.907e-6 |   2.351e-7 |      3.0538e-6 |      3.0538e-6
+   21 |  71.76138% |   1.907e-6 |   2.352e-7 |      3.0431e-6 |      3.0431e-6
+
+overall: 71.951236% of 181313088 plane pixels bit-identical; worst relative GPU-CPU difference 2.373e-7
+worst absolute error against the f64 reference: GPU 1.341e-5, CPU 1.341e-5
+
+== the merge: GPU fused argmax vs the CPU `Selection` fold ==
+winner index : 1 of 8241504 differ (0.000012%)
+winning focus: 2295388 of 8241504 differ bitwise (27.851567%)
+winning quad : 1 of 8241504 differ (0.000012%)
+  top-2 focus margin at the disagreeing pixels: n=1   min    0.000  med    0.000  mean    0.000 +/-  0.000  p95    0.000  max    0.000
+  the median winning focus value is 0.9000, so the contested margin is 6.62e-8 of it
+emitted green: 1 of 8241504 pixels differ (0.000012%), largest difference 9.0 DN

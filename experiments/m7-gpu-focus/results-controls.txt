@@ -1,0 +1,44 @@
+decoding 22 frames from C:\dev\macro\test\109MSDCF
+  decoded in 0.608 s (27.6 ms/frame, rayon across files)
+  camera ILCE-7CM2 | active 7032x4688 | plane 3516x2344 | black 512 white 15360 | ISO Some(160.0)
+  packed active area 62.88 MiB/frame, 1.351 GiB for the stack (padding excluded, rule 7)
+device: NVIDIA GeForce RTX 5090 (Vulkan)
+VRAM: Some(2400) MiB used before allocation, Some(5344) MiB after, None MiB attributed to this process
+
+-- NULL control: one dispatch, 110x293 workgroups, zero memory traffic
+   gpu  ms: n=50  min    0.019  med    0.020  mean    0.020 +/-  0.001  p95    0.022  max    0.023
+   wall ms: n=50  min    0.066  med    0.102  mean    0.122 +/-  0.089  p95    0.222  max    0.592
+
+-- D2D control: 16 x copy_buffer_to_buffer of 62.88 MiB
+   gpu ms: n=50  min    1.933  med    1.935  mean    1.943 +/-  0.062  p95    1.935  max    2.375
+   payload 0.982 GiB -> 545.2 GB/s one-way, 1090.4 GB/s counting read+write
+
+-- READ control: every word of 22 frames read once
+   gpu ms: n=50  min    1.126  med    1.129  mean    1.130 +/-  0.003  p95    1.133  max    1.150
+   1.351 GiB read -> 1284.6 GB/s | predicted from the D2D rate 1.330 ms, measured 1.129 ms
+
+-- COPY control: every word of 22 frames read and written
+   gpu ms: n=50  min    1.606  med    1.771  mean    1.772 +/-  0.054  p95    1.898  max    1.943
+   2.702 GiB moved -> 1638.4 GB/s | predicted 2.660 ms, measured 1.771 ms, ratio 0.666
+   CAVEAT: the destination is one 62.88 MiB buffer, which fits in the 5090's 96 MiB L2, 
+   so the write half may never reach DRAM. The read half (1.351 GiB across 22 distinct
+   buffers) cannot be cached, and gives a DRAM-traffic floor of 819.2 GB/s. Use the
+   READ control, not this one, as the bandwidth reference for the focus kernel.
+
+-- H2D control (a): 22 frames uploaded with queue.write_buffer
+   wall ms: n=10  min  237.601  med  249.264  mean  247.323 +/-  5.726  p95  256.314  max  256.314
+   1.351 GiB -> 5.8 GB/s, 11.330 ms per 62.88 MiB frame
+
+-- H2D control (b): the same 22 frames through a mapped staging buffer
+   PCIe copy wall ms: n=10  min    5.636  med    5.795  mean    5.847 +/-  0.184  p95    6.181  max    6.181
+   host memcpy into the mapping, wall ms: n=10  min   52.190  med   54.014  mean   53.523 +/-  0.899  p95   54.764  max   54.764
+   1.351 GiB -> 250.3 GB/s for the buffer-to-buffer copy alone (0.263 ms per 62.88 MiB 
+   frame). That rate is far above PCIe 5.0 x16 (~63 GB/s), so the mapped staging
+   buffer is device-local host-visible (ReBAR): the host memcpy *is* the PCIe
+   transfer, at 26.9 GB/s, and the copy that follows is device-to-device.
+   END TO END through wgpu: 59.8 ms for the stack (24.3 GB/s), against fact 10's 
+   56.9 GB/s H2D measured with CUDA. wgpu exposes no pinned-host + copy-engine path,
+   so this is an API ceiling, not a hardware one.
+
+null-kernel floor (median GPU ms per dispatch): 0.0201
+VRAM attributed to this process at exit: None MiB

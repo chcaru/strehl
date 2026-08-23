@@ -1,0 +1,94 @@
+decoding 105 frames from C:\dev\macro\test\coffee-bean
+  decoded in 2.209 s (21.0 ms/frame, rayon across files)
+  camera ILCE-7CM2 | active 7032x4688 | plane 3516x2344 | black 512 white 15360 | ISO Some(50.0)
+  packed active area 62.88 MiB/frame, 6.447 GiB for the stack (padding excluded, rule 7)
+
+== CPU baseline: green_luma + FocusField::compute + Selection::fold ==
+  per frame, single thread (ms): n=105 min   42.504  med   44.985  mean   45.981 +/-  3.251  p95   50.056  max   64.143
+  serial total for 105 frames      : 4828.0 ms (46.0 ms/frame)
+  rayon, 27 chunks on 32 threads, buffers pre-allocated (ms): n=5   min 2053.637  med 2083.110  mean 2084.147 +/- 23.925  p95 2115.306  max 2115.306
+  best parallel wall clock: 2053.6 ms for 105 frames (19.6 ms/frame)
+  summed CPU time across workers: 56244.0 ms -> 535.7 ms/frame, which is the quantity 
+  fact 21 reports (per-frame CPU time under concurrency, not wall clock)
+
+== GPU ==
+device: NVIDIA GeForce RTX 5090 (Vulkan)
+resident model: 105 frames x 62.88 MiB + 5 x 31.44 MiB selection/focus + 105 x 31.44 MiB volume + 62.88 MiB scratch = 10123 MiB
+  nvidia-smi: Some(2396) MiB used before, Some(19292) MiB after, None MiB ours
+  delta 16896 MiB vs 10123 MiB modelled -- a delta far below the model means the allocation spilled to system RAM (WDDM does not raise OOM)
+
+-- inline controls
+   NULL : one dispatch of 110x293 workgroups, no traffic: n=20  min    0.019  med    0.019  mean    0.020 +/-  0.001  p95    0.022  max    0.022
+   READ : 105 frames read once: n=20  min    5.377  med    5.384  mean    5.450 +/-  0.164  p95    6.008  max    6.008
+          6.447 GiB -> 1285.8 GB/s (the bandwidth ceiling used in the model below)
+
+-- A  fused    (focus+merge, 1 dispatch/frame)
+   cold (first run after pipeline creation): gpu 14.847 ms, wall 15.343 ms
+   warm gpu  ms: n=20  min   14.847  med   14.908  mean   15.011 +/-  0.205  p95   15.392  max   15.392
+   warm wall ms: n=20  min   15.371  med   15.692  mean   15.703 +/-  0.315  p95   16.462  max   16.462
+   1 dispatch(es)/frame; essential traffic 12.895 GiB -> 928.8 GB/s achieved
+
+-- F  fused/raw (variant A with the raw fp32 divide, not div_rn)
+   cold (first run after pipeline creation): gpu 14.899 ms, wall 15.633 ms
+   warm gpu  ms: n=20  min   14.915  med   14.937  mean   15.118 +/-  0.333  p95   15.747  max   15.747
+   warm wall ms: n=20  min   15.493  med   15.719  mean   15.877 +/-  0.376  p95   16.550  max   16.550
+   1 dispatch(es)/frame; essential traffic 12.895 GiB -> 926.9 GB/s achieved
+
+-- B  unfused  (focus -> memory -> merge, 2 dispatches/frame)
+   cold (first run after pipeline creation): gpu 19.260 ms, wall 22.038 ms
+   warm gpu  ms: n=20  min   19.111  med   19.139  mean   19.347 +/-  0.324  p95   19.977  max   19.977
+   warm wall ms: n=20  min   20.073  med   20.524  mean   20.672 +/-  0.433  p95   21.497  max   21.497
+   2 dispatch(es)/frame; essential traffic 19.342 GiB -> 1085.1 GB/s achieved
+
+-- C  volume   (all N focus fields resident, then merged)
+   cold (first run after pipeline creation): gpu 20.390 ms, wall 24.381 ms
+   warm gpu  ms: n=20  min   20.166  med   20.186  mean   20.356 +/-  0.337  p95   21.234  max   21.234
+   warm wall ms: n=20  min   21.132  med   21.477  mean   21.648 +/-  0.478  p95   22.798  max   22.798
+   2 dispatch(es)/frame; essential traffic 19.342 GiB -> 1028.9 GB/s achieved
+
+-- D  fused2   (two measures + merge, 1 dispatch/frame)
+   cold (first run after pipeline creation): gpu 22.510 ms, wall 23.357 ms
+   warm gpu  ms: n=20  min   21.558  med   23.169  mean   22.991 +/-  0.597  p95   23.910  max   23.910
+   warm wall ms: n=20  min   22.287  med   23.759  mean   23.719 +/-  0.614  p95   24.730  max   24.730
+   1 dispatch(es)/frame; essential traffic 12.895 GiB -> 597.6 GB/s achieved
+
+-- E  unfused2 (two measures as two passes + merge, 3 dispatches/frame)
+   cold (first run after pipeline creation): gpu 34.334 ms, wall 37.942 ms
+   warm gpu  ms: n=20  min   33.755  med   33.851  mean   34.138 +/-  0.394  p95   34.732  max   34.732
+   warm wall ms: n=20  min   35.410  med   35.925  mean   36.136 +/-  0.497  p95   36.871  max   36.871
+   3 dispatch(es)/frame; essential traffic 32.237 GiB -> 1022.5 GB/s achieved
+
+-- H2D upload of the whole stack
+   wall ms: n=10  min 1359.352  med 1500.433  mean 1460.821 +/- 57.053  p95 1524.191  max 1524.191
+   6.447 GiB -> 4.6 GB/s
+
+== summary (median warm GPU ms for 105 frames, 20 reps) ==
+A  fused    (focus+merge, 1 dispatch/frame)                gpu   14.908  wall   15.692  cold   14.847    928.8 GB/s
+F  fused/raw (variant A with the raw fp32 divide, not div_rn) gpu   14.937  wall   15.719  cold   14.899    926.9 GB/s
+B  unfused  (focus -> memory -> merge, 2 dispatches/frame) gpu   19.139  wall   20.524  cold   19.260   1085.1 GB/s
+C  volume   (all N focus fields resident, then merged)     gpu   20.186  wall   21.477  cold   20.390   1028.9 GB/s
+D  fused2   (two measures + merge, 1 dispatch/frame)       gpu   23.169  wall   23.759  cold   22.510    597.6 GB/s
+E  unfused2 (two measures as two passes + merge, 3 dispatches/frame) gpu   33.851  wall   35.925  cold   34.334   1022.5 GB/s
+
+== the fusion prize ==
+prize 1, focus+merge     : 4.232 ms (unfused 19.139 - fused 14.908), 22.1% of the unfused path
+prize 1b, vs full volume : 5.278 ms (volume 20.186 - fused 14.908)
+prize 2, two measures    : 10.682 ms (unfused2 33.851 - fused2 23.169), 31.6% of the unfused path
+price of exactness       : -0.029 ms (div_rn 14.908 - raw divide 14.937), -0.20% of variant A
+
+CPU focus+fold for the same 105 frames: 4828.0 ms serial, 2053.6 ms best parallel (27 chunks on 32 threads)
+GPU fused speedup vs serial CPU: 323.9x; vs the best parallel CPU: 137.8x
+
+== bandwidth model for variant A (all DERIVED from the controls) ==
+halo amplification: a 32x8 workgroup loads a 38x14 tile = 532 plane pixels for 256 outputs, i.e. 2.078x
+  tile loads      : 130.8 MiB/frame x 105 = 13.414 GiB
+  selection reads : 2 x 31.4 MiB/frame x 105 = 6.447 GiB
+  total (excluding winner writes) 19.861 GiB
+  at the READ control's rate this is 16.585 ms; add 105 dispatches x the null floor = 2.033 ms
+  predicted 18.618 ms vs measured 14.908 ms -> measured/predicted = 0.801
+  the kernel achieves 1430.5 GB/s of memory-system traffic against a measured read ceiling of 1285.8 GB/s, i.e. 111% of it: BANDWIDTH BOUND.
+
+  the prize itself is one extra round trip of the focus field: 2 x 31.4 MiB x 105 = 6.447 GiB
+  predicted 7.417 ms vs measured 4.232 ms -> 0.571
+
+VRAM attributed to this process at exit: None MiB
