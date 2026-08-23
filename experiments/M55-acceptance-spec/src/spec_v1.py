@@ -42,6 +42,12 @@ TH = dict(
     # The corpus offers only THREE distinct subjects across the six held-out
     # stacks (see RENAMED below).  Six stacks is not six scenes.
     b6_min_subjects=3,
+    # PR35.  Acceptance is stratified by the cell's own distance from the
+    # roll-null, because a pooled pass rate averages two regimes: under the
+    # PINNED parity split, detail cells read |z| 18-35 and flat cells 2-16
+    # (MEASURED, e15).  The weakest third by |z| must meet the same bar as
+    # the whole.  3 strata on 24 cells is 8 per stratum.
+    b6_strata=3,
     # B7 stability
     b7_reps=(1, 2, 4, 8, 16, 32, 64), b7_max_headline_swing=0.05,
     # B8 calibration
@@ -89,7 +95,13 @@ KILL_CONDITIONS = {
        "each subject group: the held-out set contains three stacks of one subject and two of "
        "another, so a pooled fraction can be carried by one scene.  Every cell must declare "
        "its stack and ROI; b6_rollup enforces this and a candidate that cannot supply it "
-       "has not run B6.",
+       "has not run B6.  A cell whose reference reading does not clear B9 is NO-POWER, "
+       "not a failure of the candidate: the input carries no reading, so no verdict about "
+       "the candidate can be drawn from it.  ANY NO-POWER cell, or any cell that does not "
+       "declare z_pass, blocks the battery with CANNOT-ACCEPT -- never ACCEPT, never REJECT. "
+       "The pass fraction must additionally hold within the LOWEST-|z| STRATUM of the "
+       "powered cells, because a pooled rate over cells spanning |z| 2 to 35 averages the "
+       "regime the metric ships into with the one where the answer is easy.",
  "B7": "The headline score moves by more than 0.05 across the REPS sweep with everything else "
        "held fixed; or the null term is within 2 standard errors of zero at the largest REPS "
        "while a ratio against it is quoted.",
@@ -557,10 +569,25 @@ def b6_rollup(cells):
     n = len(cells)
     frac = sum(c["passed"] for c in cells) / n if n else 0.0
     wrong = [c for c in cells if c["wrong_sign"]]
-    reasons = []
+    reasons = []          # the candidate is wrong -> REJECT
+    blocked = []          # the battery cannot judge -> CANNOT-ACCEPT
     undeclared = [i for i, c in enumerate(cells) if "stack" not in c or "roi" not in c]
     if undeclared:
         reasons.append(f"{len(undeclared)} cells do not declare stack and roi")
+    # ---- PR35.  POWER FIRST.  A cell whose reference reading does not clear B9
+    # carries no reading, so `passed` on that cell is a verdict about noise.  It
+    # is NO-POWER, and it BLOCKS: the battery declines to judge rather than
+    # blaming the candidate for the input.  This is strictly tightening -- an
+    # unpowered cell was previously scored `passed = detected and z_pass` = False,
+    # i.e. a failure the 10% budget could absorb, and can now only block.
+    nodecl = [i for i, c in enumerate(cells) if "z_pass" not in c]
+    if nodecl:
+        blocked.append(f"{len(nodecl)} cells do not declare z_pass; B9 was not run on them")
+    nopower = [c for c in cells if "z_pass" in c and not c["z_pass"]]
+    if nopower:
+        where = ", ".join(sorted({f"{c.get('stack','?')}[{c.get('roi','?')}]" for c in nopower})[:6])
+        blocked.append(f"{len(nopower)} of {n} cells are NO-POWER (|z| below "
+                       f"{TH['b9_min_z']} against the roll-null): {where}")
     stacks = sorted({c["stack"] for c in cells if "stack" in c})
     subjects = sorted({SUBJECT_OF.get(st, st) for st in stacks})
     per_stack = {st: sum(1 for c in cells if c.get("stack") == st) for st in stacks}
@@ -580,16 +607,53 @@ def b6_rollup(cells):
     if weak:
         reasons.append(f"subject groups below {100 * need:.0f}%: "
                        + ", ".join(f"{k} {100 * v:.0f}%" for k, v in sorted(weak.items())))
+    # ---- PR35.  Stratify by the cell's own distance from the roll-null.  A
+    # pooled rate over cells spanning |z| 2 to 35 averages the regime the metric
+    # ships into (flat regions of real subjects) with the one where the answer is
+    # easy.  Only POWERED cells are stratified; unpowered ones have already
+    # blocked.  Adding a clause can only remove an ACCEPT, never create one.
+    powered = [c for c in cells if c.get("z_pass") is True]
+    zs = sorted({round(abs(float(c.get("z", 0.0))), 12) for c in powered})
+    stratum = None
+    # Ties make a stratum ill-defined, and the sort must not depend on the order
+    # the caller happened to supply the cells in, so the key carries stack and roi.
+    if len(powered) >= TH["b6_strata"] and len(zs) > 1:
+        k = max(1, len(powered) // TH["b6_strata"])
+        low = sorted(powered, key=lambda c: (abs(float(c.get("z", 0.0))),
+                                             str(c.get("stack", "")),
+                                             str(c.get("roi", ""))))[:k]
+        lf = sum(x["passed"] for x in low) / len(low)
+        stratum = dict(n=len(low), frac_passed=lf,
+                       z_max=float(max(abs(float(x.get("z", 0.0))) for x in low)),
+                       z_min=float(min(abs(float(x.get("z", 0.0))) for x in low)))
+        if lf < need:
+            reasons.append(f"lowest-|z| stratum ({len(low)} cells, |z| <= "
+                           f"{stratum['z_max']:.2f}) passes {100 * lf:.0f}% "
+                           f"(need {100 * need:.0f}%)")
     if frac < need:
         reasons.append(f"{100 * frac:.0f}% of cells pass (need {100 * need:.0f}%)")
     if wrong:
         reasons.append(f"{len(wrong)} cells report the WRONG DIRECTION above the "
                        f"decision threshold")
-    ok = not reasons
-    return dict(passed=ok, n_cells=n, frac_passed=frac, n_wrong_sign=len(wrong),
+    # Three verdicts, not two.  BLOCKED outranks everything: if the battery could
+    # not read some of its own inputs it has no standing to accept OR reject.
+    if blocked:
+        verdict = "CANNOT-ACCEPT"
+    elif reasons:
+        verdict = "REJECT"
+    else:
+        verdict = "ACCEPT"
+    ok = verdict == "ACCEPT"
+    allr = blocked + reasons
+    return dict(passed=ok, verdict=verdict, n_cells=n, frac_passed=frac,
+                n_wrong_sign=len(wrong), n_no_power=len(nopower) + len(nodecl),
+                n_powered=len(powered), frac_powered_passed=(
+                    sum(c["passed"] for c in powered) / len(powered) if powered else 0.0),
+                low_z_stratum=stratum, n_distinct_z=len(zs),
                 n_stacks=len(stacks), n_subjects=len(subjects),
                 subject_frac=sub_frac, cells_per_stack=per_stack,
-                kill=None if ok else "; ".join(reasons))
+                blocked="; ".join(blocked) if blocked else None,
+                kill=None if ok else "; ".join(allr))
 
 
 # --------------------------------------------------------------------------

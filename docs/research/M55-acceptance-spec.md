@@ -233,12 +233,27 @@ the spec itself mandates**, not under abuse.
 
 Named in §4. Each cell: form the parity half-merges `a, b`; the test pair is `blur(a), blur(b)`
 at the reference signal step, so **the true ordering is known**. The cell passes if the
-candidate detects the loss with the correct sign above `decision_threshold` **and** the
-reference reading clears B9's null gate.
+candidate detects the loss with the correct sign above `decision_threshold`. Whether the
+reference reading clears B9's null gate is a **separate, prior** question — see 12.1.
 
+- **Three verdicts, not two** (PR35, 12.1-12.6). A cell whose reference reading does not clear
+  B9 is **`NO-POWER`**: it carries no reading, so it is neither a pass nor a fail. **Any
+  `NO-POWER` cell yields `CANNOT-ACCEPT`** for the whole battery — 100% of submitted cells must
+  be powered, so a candidate cannot improve its rate by being too insensitive to read a cell.
+- **The lowest-`|z|` third of the powered cells must independently clear the same bar.** A
+  pooled rate over cells spanning `|z|` = 2 to 35 averages the regime the metric ships into with
+  the one where the answer is easy. Stratification is by measured `|z|`, not by ROI label,
+  because a label is a guess at power and `|z|` is a measurement of it (12.2).
 - **>= 90% of cells must pass** (`b6_quantile = 0.10` — the 10th-percentile cell must pass, not
   the median). Provenance: my six real cells under the old metric ranged 0.037 to 0.739 (fact
   696); a mean over cells hides failures that cluster in flat ROIs (facts 706, 707).
+  **This pooled clause never binds at the real subject sizes and is dead code — P58, MEASURED.**
+  The per-subject and stratum clauses below and above it are what actually decide. It is left
+  unchanged because re-cutting a threshold after the fact is the tuning this document exists to
+  prevent.
+- **Every subject group must independently clear the same bar** (`bee`, `wrapped-text`,
+  `coffee-bean`). This is the clause that actually binds: at 12, 8 and 4 cells it permits **one**
+  failing cell in the whole battery, and only in `bee` (P58).
 - **Zero cells may report the wrong direction above `decision_threshold`.** 100%, no quantile.
   A metric that is silent on 10% of ROIs is usable with care; one that confidently points the
   wrong way is not.
@@ -270,7 +285,9 @@ Re-run every other battery with each declared constant scaled by **x0.5, x0.9, x
 ### B9 — null discipline. New, and it is the one I would keep if I could keep only one.
 
 **Every real-data reading must be quoted with its roll-null z, and a reading at `|z| < 3.0` is
-not a reading.** The null: 48 rolls of one input by >= 64 px in each axis, which preserves the
+not a reading.** B9 is a test on the **input** — *can anything be measured here?* — where B6 is
+a test on the **candidate**. They are sequential: B9 governs first, and a cell that fails it is
+`NO-POWER`, never a B6 failure (12.1). The null: 48 rolls of one input by >= 64 px in each axis, which preserves the
 marginals, the window and the ring exactly and destroys pixel correspondence.
 
 This is rule 39 made executable and it costs 48 FFT pairs. Its power is measured: on the same
@@ -976,6 +993,42 @@ Numbers are placeholders; the orchestrator assigns them.
   B3 reference signal step of 0.19114, so B3's `split` KILL fires on the non-null arm alone.
   The split choice remains a real nuisance with more leverage than the signal.
 
+- **P56 (MEASURED).** Power is a **joint property of the cell and the candidate**, not a
+  property of the cell. On the identical cell (`112MSDCF` detail, frames 6:68), the identical
+  pinned parity split and the identical roll-null instrument, `sigpow-canonical` reads
+  `z = +34.74` and the band-ratio probe reads `z = +0.63` — a factor of 55 — while their signal
+  steps `d` differ by 8% (0.19114 against 0.17611). **An acceptance battery therefore cannot
+  freeze a list of powered cells**, and stratifying by ROI class is necessary but not
+  sufficient. Discipline 438 one level up.
+- **P57 (MEASURED, against the real pre-amendment code).** The PR35 amendment adding the
+  `NO-POWER` / `CANNOT-ACCEPT` verdict and the lowest-`|z|` stratum clause is **strictly
+  tightening**: over 64 exhaustive configurations of the 24-cell held-out set, **0** are newly
+  accepted, 2 are newly blocked and 62 are unchanged, compared against `b6_rollup` extracted
+  from `git show 54a8305`. `b6_cell`, `b9_null_z`, `b3_leverage` and `b5_sign_range` are
+  byte-identical to that commit and `calibrate.py` never calls `b6_rollup`, so no section 5
+  number can move. Discipline 403 condition 3, satisfied by measurement rather than by argument.
+- **P58 (MEASURED, and it is a defect in my own spec).** B6's advertised headline — ">= 90% of
+  cells must pass" — **never binds**. Over all 2324 placements of 1, 2 or 3 failing cells among
+  the 24 held-out cells, **0** trip the pooled 90% gate without already tripping the per-subject
+  clause. At the real subject sizes (4, 8, 12 cells) the per-subject bar permits at most one
+  failing cell in total and only in `bee`; the pooled bar permits two. Nothing wrong is
+  admitted, but a reader budgeting "we can lose 10% of cells" is budgeting against dead code.
+  Recorded rather than fixed: re-cutting a threshold now is the tuning this document exists to
+  prevent.
+- **P59 (MEASURED).** The `NO-POWER` gate rejects a planted wrong answer that the pre-amendment
+  code **accepts**: 24 cells, 1 unpowered, pooled 95.8%, per-subject 91.7% — old `passed=True`,
+  `kill=None`; new `CANNOT-ACCEPT`, naming `bee-1[0]`. The stratum gate likewise rejects a single
+  failing cell at `|z| = 6.1` in the lowest third (`REJECT`, stratum passes 88%) while
+  **accepting the same single failure at the top of the `|z|` range** — so the clause is about
+  where the failure is, not how many there are. Rule 39: both plants are shown passing the old
+  code first.
+- **P60 (MEASURED, at my own expense).** `e16`'s first run failed 3 of 12 assertions and every
+  failure was a defect in **my plants**, not in the amendment: both were placed in `coffee-bean`
+  (one stack, four cells), where two damaged cells read 50% and the **pre-existing** per-subject
+  clause rejected them before the new clause was reached. **A plant that an older clause already
+  catches has no power over a new one**, and a battery whose plants were never shown to have
+  power is fact 697's failure in different clothing.
+
 ## 9. Proposed disciplines
 
 - **Build the null by permuting the data, not by resampling the statistic's internals.** A roll,
@@ -1045,6 +1098,25 @@ Numbers are placeholders; the orchestrator assigns them.
   an extreme setting of a nuisance must be re-tested at an intermediate setting before it is
   recorded as absent. PR31's detail/flat contrast is real and was invisible at a 31-frame offset.
 
+- **Separate a test on the input from a test on the artefact, and run the input test first.**
+  "Can anything be measured on this cell?" and "did the candidate get it right?" are different
+  questions with different subjects. Fusing them into one boolean makes the artefact carry the
+  blame for an unreadable input, and the failure is invisible because it looks like an ordinary
+  failure.
+- **A battery cannot know at design time which of its own cells will have power, so `NO-POWER`
+  must be a runtime verdict.** Power is a joint property of the input and the thing being
+  tested; a spec that freezes a list of good cells has frozen a guess. Three verdicts, not two.
+- **When excusing a cell, make the excuse cost more than the failure would have.** Dropping an
+  unreadable cell from a denominator rewards insensitivity. Requiring 100% of cells to be
+  readable, and blocking the whole verdict otherwise, points the incentive the other way.
+- **A planted wrong answer must be shown passing the unpatched code before it is quoted as
+  evidence that the patch works.** If an older clause already catches the plant, the plant
+  measures the older clause. This is the difference between a test that passed and a test that
+  could have failed.
+- **When a gate is added to a pass rate, plant the same failure in the region the gate does not
+  cover and show it is still accepted.** Otherwise a clause advertised as targeting *where*
+  failures occur may simply be a stricter count of *how many*.
+
 ## 10. Proposed questions
 
 - Is there any statistic that passes B4's **specificity** clause at 3.7 e- with a threshold small
@@ -1068,8 +1140,16 @@ Numbers are placeholders; the orchestrator assigns them.
 - Is `foam|flat`'s parity `z = +2.18` a property of that ROI, of `foam`, or of low-texture
   regions generally? It is the only real cell measured so far where a **parity** split fails
   this spec's own null gate, and §4's ROI rule states that some held-out ROIs **will** land
-  on flat regions. If a flat held-out ROI cannot clear B9 even under the pinned split, B6 and
-  B9 are in tension on those cells and the spec does not say which wins.
+  on flat regions. **The second half of this question is ANSWERED in section 12** — B9 governs
+  first and such a cell is `NO-POWER` — but the first half stands: nobody knows whether `+2.18`
+  is a property of that ROI, of `foam`, or of low-texture regions generally.
+- **Does `d`'s between-repetition variance grow as `|z|` falls?** If it does, section 12.4's
+  lowest-`|z|` stratum gate is partly penalising cell noise rather than candidate quality.
+  Settled by running B7's `REPS` sweep per cell and correlating `d`'s between-repetition
+  standard deviation against `|z|`. Unmeasured; it is the larger of the two risks I left open.
+- **Should the B6 pooled rate be re-cut now that it is known never to bind (P58)?** Any change
+  must be argued and committed before a candidate is scored, per the rule at the end of
+  section 11.
 
 ---
 
@@ -1083,10 +1163,268 @@ Numbers are placeholders; the orchestrator assigns them.
 5. A declared threat model saying whether it claims safety against generative merges (B1b).
 6. `consumes_calibration`, complete; B8 will perturb every entry by x2.
 7. The full battery output, including the roll-null z of every held-out cell.
+8. The B6 roll-up's `verdict`, `n_no_power`, `n_powered`, `low_z_stratum` and `n_distinct_z`.
+   **A reviewer who does not read `n_distinct_z` will not catch a candidate whose `|z|` is
+   constant**, which is discipline 400's disease inside the gate written to enforce it (12.4).
+9. A property test in (2) asserting that the candidate's `|z|` **varies across cells**. This is
+   not checkable inside `spec_v1.py` without breaking the rule-15-frozen `e14`, so it is placed
+   on the candidate deliberately and in the open.
 
 **Nothing in this file may be relaxed to admit a candidate. If a threshold here is wrong, the
 argument for changing it must be made without reference to any candidate's score, and the
 change must be committed before the candidate is re-run.**
+
+---
+
+## 12. The B6/B9 tension, and acceptance stratified by ROI class
+
+Commissioned after M55b's fold, in response to `foam|flat` parity reading `z = +2.18` (P52).
+Two questions: **which gate governs that cell**, and **whether stratifying acceptance by ROI
+class is sufficient** or whether some cells have no power at all and must be reported as such.
+Pre-registered as **PR35** in the session store *before* any code was written; the amendment it
+authorises is audited against discipline 403 in 12.6. This section closes the last open question
+in section 10.
+
+### 12.1 There was only ever one gate — and the tension underneath it is real anyway
+
+**First, a correction to my own framing.** I reported that `foam|flat` "clears PR31's
+`|z| < 2.0` by 0.18 and fails B9's `|z| >= 3.0`", and that was read — reasonably — as the spec
+returning two verdicts on one input. **PR31's 2.0 is not a gate.** It is the INSIDE/OUTSIDE
+decision rule of the `e12`/`e15` *experiments*, fixed in advance at the value `e12_null.py`
+already used so that the block-4 column would be directly comparable with fact 861's rather than
+merely similar (7.3). B9's 3.0 is the acceptance gate. `+2.18` is *outside the experiment's null
+band* and *below the battery's admissibility bar*; those are two sentences about two different
+questions, and I put a measurement and a gate in one breath and mistook the pair for a
+contradiction. **The spec never returned two verdicts.**
+
+The tension survives the correction in a sharper form, because B6 and B9 genuinely did both
+apply to the same cell, and before this amendment both fed a single boolean.
+
+**What each gate is for** — the brief asked for this and not for which is stricter.
+
+- **B9 is a test on the input.** Its question is *can anything be measured on this cell at all?*
+  Its null is built by permuting the data — rolling one input by >= 64 px — so it asks whether
+  the candidate's reading on a genuine merge pair is distinguishable from its reading on
+  unrelated images. Failing it is a statement about **the cell-and-candidate pair**.
+- **B6 is a test on the candidate.** Its question is *given a cell where something can be
+  measured, does the candidate get the answer right, with the correct sign, above its declared
+  threshold?* Failing it is a statement about **the candidate**.
+
+**They are sequential, not competing: B9 governs first, and its failure must not be recorded as
+a B6 failure.** ARGUED. The defence is the one M55b already established for PR34 and which the
+orchestrator folded as discipline 437 — an ordering test between two readings inside a null is
+not a test. The general form: **a cell that cannot be read cannot inform a verdict about the
+candidate's accuracy, and scoring it as a failure blames the candidate for the input.**
+
+**The defect this exposes in the frozen spec — MEASURED, by reading the code.**
+`spec_v1.b6_cell` computed `passed = detected and z_pass`. An unpowered cell was therefore
+scored as *the candidate got this one wrong* when it means *this cell says nothing*, and the
+10% quantile budget then silently absorbed it. That is a live defect and not a hypothetical:
+section 4's ROI rule places held-out ROIs on flat regions **by construction**, so the spec was
+guaranteed to receive inputs it would mis-blame. It is fact 711's disease — a frozen artefact
+pinned by golden vectors that pin values and not properties — occurring inside the very file
+written to cure it.
+
+**I reject the third option the brief offered, "neither gate should apply to flat-ROI parity
+cells".** Two reasons, neither of which is about strictness. (1) Section 4 forbids choosing an
+ROI on the basis of its result; exempting a *class* of ROI after seeing which class fails is the
+same move at coarser granularity, and it is the move that would let the held-out set be tuned
+after the fact. (2) An exemption is a **silent drop**, and a silent drop is exactly the failure
+mode of 6.5 — it succeeds without saying anything, so nobody re-examines it. The cell must be
+**named**, not skipped. Hence a third verdict.
+
+### 12.2 Stratification is necessary and not sufficient — the observable that decides it
+
+The brief asked me to decide, before writing, whether stratification is enough or whether
+`NO-POWER` is a structural claim about the whole battery. **It is structural, and a measurement
+already in `out/calibrate.log` decides it without a new run.**
+
+On the *identical* cell (`112MSDCF`, detail ROI, frames 6:68), the *identical* pinned parity
+split, and the *identical* roll-null instrument — `out/calibrate.log` lines 68 and 76:
+
+```
+   sigpow-canonical   B6 cell: ref +4.47240e+07  d +0.19114  roll-null z +34.74  detected True
+   band-ratio-PROBE   B6 cell: ref +7.11277e-03  d +0.17611  roll-null z  +0.63  detected True
+```
+
+Same cell, same split, same null: **z = +34.74 against z = +0.63**, a factor of 55, while `d`
+differs by 8%. MEASURED.
+
+**Therefore power is a joint property of the cell and the candidate, not a property of the
+cell.** A spec cannot freeze a list of powered cells, because the list is different for every
+candidate — and it cannot be known before the candidate exists, which is the one thing this
+document is not allowed to wait for. ROI class is assigned *before* the candidate exists, so
+**stratification cannot express this**. It is necessary and not sufficient: `NO-POWER` must be a
+per-cell verdict computed from the candidate's own reading at run time.
+
+**This is discipline 438 one level up.** M55b showed a splitting rule cannot be certified
+globally, because "inside the null" is a joint property of the split and the ROI. The same
+argument applies to the battery's own cells: **an acceptance cell cannot be certified as powered
+globally, because "powered" is a joint property of the cell and the candidate.** That is the
+structural claim, and it is why this is not a patch.
+
+What ROI class *does* predict, under the pinned parity split, is **margin, not presence**: my
+six real cells read `z` = +18 to +35 on detail/centre ROIs and +2.18 to +16 on flat ROIs (7.3).
+So **ROI class tells you which cells are at risk of being unpowered; the candidate's own
+sensitivity tells you whether they are.** Both are needed, which is why 12.4 keeps the
+stratification *and* adds the verdict.
+
+### 12.3 The gaming vector, and why NO-POWER blocks instead of excusing
+
+An unpowered cell must not simply leave the denominator. If it did, **a candidate too
+insensitive to read half the held-out set would raise its own pass rate by being insensitive.**
+That is a loosening, and discipline 403 forbids amending a pre-registered spec in a direction
+that admits something it previously excluded.
+
+The closure: **100% of submitted cells must be powered.** Any `NO-POWER` cell yields a third
+verdict, **`CANNOT-ACCEPT`** — not `ACCEPT` and not `REJECT`. Shrinking the denominator is
+therefore fatal rather than helpful, and the incentive points the right way: a candidate that
+cannot read a held-out cell must either become more sensitive or argue in the open that the cell
+is unreadable by anything, which is a claim B9 can adjudicate against a reference statistic.
+
+`CANNOT-ACCEPT` **outranks `REJECT`** in the implementation: a battery that could not read its
+own inputs has no standing to reject either. That ordering cannot admit anything, because
+neither verdict is a pass — the only cost is diagnostic, and it is paid deliberately so that
+"the battery did not run" is never reported as "the candidate is wrong".
+
+### 12.4 The stratified rule as implemented — and a defect it found in my own spec
+
+`b6_rollup` now separates two lists that were previously one. `reasons` are statements about the
+candidate and produce `REJECT`. `blocked` are statements about the battery's ability to read its
+inputs and produce `CANNOT-ACCEPT`. On top of the existing per-subject clause, acceptance is
+stratified by **the cell's own distance from its roll-null**: the lowest `|z|` third of the
+powered cells must independently clear the same 90% bar as the whole.
+
+Stratifying by measured `|z|` rather than by an ROI label is deliberate, and follows from 12.2.
+An ROI label is a guess at power; `|z|` is a measurement of it. `TH["b6_strata"] = 3`.
+
+Three defensive properties, all of them consequences of things this project has already been
+bitten by:
+
+- The stratum sort key is `(|z|, stack, roi)`, so the verdict and the kill string **cannot
+  depend on the order the caller supplied the cells in**. MEASURED by `e16`: 20 shuffles of a
+  mixed input give an identical verdict and an identical kill string.
+- If every powered cell reports the **same** `|z|`, the stratum is ill-defined and is **skipped
+  and reported** (`low_z_stratum = None`, `n_distinct_z = 1`) rather than applied to an
+  arbitrary third. This was found by re-running the rule-15-frozen `e14`, whose synthetic cells
+  all carry `z = 9.0` — the frozen test caught a defect in the amendment that was written after
+  it, which is the entire argument for freezing it.
+- Only **powered** cells are stratified; unpowered ones have already blocked.
+
+**A defect in my own spec, found by `e16` and reported against my own interest.** The B6
+headline in section 3 — *">= 90% of cells must pass"* — **never binds.** MEASURED: over all
+2324 ways of placing 1, 2 or 3 failing cells among the 24 held-out cells, **0** trip the pooled
+90% gate without already tripping the per-subject clause. With the real subject sizes
+(`coffee-bean` 4 cells, `wrapped-text` 8, `bee` 12) the per-subject 90% bar permits at most one
+failing cell in total, and only in `bee`; the pooled bar permits two. The per-subject clause is
+strictly stronger, so **the number this spec advertises as its acceptance criterion is dead
+code.** It is not wrong — nothing is admitted that should not be — but a reader budgeting
+"we can lose 10% of cells" is budgeting against a clause that cannot fire. I am recording this
+rather than fixing it, because changing a threshold now would be exactly the tuning this
+document exists to prevent; it is P58 and a question for whoever holds the spec after M57's
+candidates are scored.
+
+**Two risks I have not closed, stated because an undisclosed residual risk is worse than a
+disclosed one.**
+
+1. **The stratum gate is evadable by a constant.** A candidate that reports the same `|z|` on
+   every cell has a degenerate stratum, which is skipped, and falls back to pre-amendment
+   behaviour. This is discipline 400 — *a metric returning a CONSTANT passes monotonicity and
+   homogeneity* — reappearing one level up, in the gate written to enforce it. I have **not**
+   blocked it in code, because a `raise` on constant `|z|` would fail the rule-15-frozen `e14`
+   on its first assertion, and rule 15 outranks my preference. The remedy is placed on the
+   candidate instead: B0 must carry a property test that `|z|` varies across cells, and
+   `n_distinct_z` is returned so a reviewer can see it. **A reviewer who does not read
+   `n_distinct_z` will not catch this.**
+2. **I have not measured whether `d`'s between-repetition variance grows as `|z|` falls.** If it
+   does, the lowest-`|z|` stratum gate penalises candidates for cell noise rather than for
+   candidate quality, and the gate is partly measuring the cell. The observable that settles it
+   is cheap and already exists: run B7's `REPS` sweep **per cell** and correlate `d`'s
+   between-repetition standard deviation against `|z|`. Uncorrelated, the gate is clean;
+   growing, a variance-weighted form is needed. Question, not claim.
+
+### 12.5 Convergence with M62 — and the honest ordering
+
+Rule 40 sent me to `M62-sqrt-n.md` and its pre-registration at `b94649c`. The convergence is
+real and I am required to say so.
+
+M62 separates its battery's arms **by role**: `instrument` arms (if these move, nothing can be
+certified), `decision` arms, and `power`/control arms. It rules that a control arm scoring
+*unexpectedly high* is **`NO-POWER`, not `FAIL`** — "it says the control is gone, not that the
+merge is wrong" — and it carries a third top-level verdict, **`CANNOT-CERTIFY`**. It reached
+this because making `SELECTOR-shipped` a required-pass arm "would have auto-rejected the exact
+change the battery exists to judge."
+
+**Same taxonomy, different assignment mechanism, and that difference is the interesting part.**
+M62 assigns `NO-POWER` from **an arm's own score against a ceiling** — an internal, structural
+criterion. I assign it from **a roll-null measurement on the input** — an external, empirical
+one. Both are candidate-dependent and neither can be decided when the spec is written, which is
+the shared structural point: **a battery cannot know in advance which of its own cells or arms
+will have power, so "no power" has to be a runtime verdict rather than a design-time
+classification.** Two milestones reached that from opposite ends — M62 from a √N battery that
+was degenerate for the change it had to judge, I from an acceptance cell that was unreadable
+for the candidate it had to score.
+
+**The ordering, honestly.** I read M62's pre-registration **before** pre-registering PR35,
+because rule 40 required it. So the taxonomy is **not** independently arrived at and I will not
+claim it is. What does predate it is the underlying argument in my own PR34 report — *"an
+ordering test between two null readings is not a test"*, now discipline 437 — which is the same
+claim about power, one level down, and was written and folded before I opened M62's file.
+**Convergent reasoning, sequential reading.**
+
+### 12.6 Amendment audit against discipline 403
+
+Discipline 403 permits amending a pre-registered spec only under three checkable conditions.
+
+1. **A named defect.** `b6_cell`'s `passed = detected and z_pass` scores an unreadable cell as a
+   candidate failure. Named in 12.1, present in the committed code, and reachable by an input
+   section 4 guarantees will occur.
+2. **Pre-registered before the amendment was written.** PR35 was entered in the session store
+   with four observables, including a falsifier I could have failed — *any* configuration newly
+   accepted forbids the amendment outright. Explicitly barred in advance: relaxing `b9_min_z`
+   from 3.0, exempting flat ROIs, and choosing the stratum boundary after seeing results. None
+   was used.
+3. **It can only tighten.** MEASURED, not argued, and measured against the **real
+   pre-amendment code** extracted with `git show 54a8305:.../spec_v1.py` rather than against a
+   paraphrase of it. Exhaustive over 64 configurations (0-3 unpowered x 0-3 failing x damage
+   spread or concentrated x 0-1 wrong-sign):
+
+```
+   configurations tested            64
+   NEWLY ACCEPTED (must be 0)        0
+   newly blocked or rejected         2
+   verdict unchanged                62
+```
+
+**Scope containment, proved structurally rather than asserted.** `b6_cell`, `b9_null_z`,
+`b3_leverage` and `b5_sign_range` are **byte-identical** to `54a8305`; `calibrate.py` — the
+rule-15-frozen source of every number in section 5 — contains **zero** references to
+`b6_rollup`, so no section 5 figure can move. The frozen `e14` still passes **7/7**.
+
+**Rule 39 — the amendment is shown rejecting planted wrong answers, and the plants are shown
+passing the old code first, or they would prove nothing.** Both plants place their damage in
+`bee` (three stacks, twelve cells) where the old code tolerates one bad cell at 11/12 = 91.7%:
+
+| plant | old code | new code |
+|---|---|---|
+| 1 `NO-POWER` cell, pooled 95.8% | `passed=True`, `kill=None` | `CANNOT-ACCEPT`, `bee-1[0]` named |
+| 1 failing cell at `abs(z) = 6.1`, in the lowest `abs(z)` third | `passed=True` | `REJECT`, stratum 8 cells passes 88% |
+| **control:** the same single failure at the **top** of the `abs(z)` range | `passed=True` | `ACCEPT` |
+
+The control is the load-bearing row: it is the same candidate quality and the same number of
+failures, and it is accepted. **The stratum gate is about where the failure is, not how many
+there are** — without that row the clause could be a disguised tightening of the pass rate.
+
+**`e16`'s own first run failed 3 of 12 assertions, and the defect was in my plants.** Both
+planted wrong answers were originally placed in `coffee-bean` — one stack, four cells — where
+two damaged cells read 50% for that subject, so the **pre-existing** per-subject clause rejected
+them before the new clause could be reached. The old code returned `passed=False`, and a plant
+that an older clause already catches proves nothing about a new one. I moved the plants to `bee`
+and made the `|z|` ladder vary within a stack rather than across stacks. **The amendment was not
+touched.** This is the ordinary working of rule 39 and it is recorded because a battery whose
+plants were never shown to have power is fact 697's failure wearing a different hat.
+
+13 of 13 property assertions now hold: `out/e16_pr35_nopower_test.log`.
 
 ---
 
@@ -1105,6 +1443,7 @@ change must be committed before the candidate is re-run.**
 | `src/e13_rename_check.py` | `out/e13_rename_check.log/.json` | EXIF verification of the rename |
 | `src/e14_b6_rollup_test.py` | `out/e14_b6_rollup_test.log` | B6 property tests, incl. a planted wrong answer |
 | `src/e15_block4_null.py` | `out/e15_block4_null.log/.json` | PR34 — question 199, the block-4 null |
+| `src/e16_pr35_nopower_test.py` | `out/e16_pr35_nopower_test.log` | PR35 — tightening proof vs `54a8305`, 2 plants + 1 control |
 
 Every number in this document is quoted verbatim from those logs. `e11_q165.py` contains a
 disclosed defect in its standard error (a division by a possibly-negative half-plane sum,
