@@ -1,0 +1,58 @@
+{
+  "calib_sigma1": {
+    "tenengrad |grad|": {
+      "true_degree": 1,
+      "as_deg1": 0.015453433170363875,
+      "as_deg2": 0.015453433170363875,
+      "ratio": 1.0
+    },
+    "sum-modified-laplacian": {
+      "true_degree": 1,
+      "as_deg1": 0.10052972043224936,
+      "as_deg2": 0.10052972043224936,
+      "ratio": 1.0
+    },
+    "tenengrad-squared": {
+      "true_degree": 2,
+      "as_deg1": 0.020900964822829684,
+      "as_deg2": 0.020900964822829684,
+      "ratio": 1.0
+    },
+    "local variance (3x3)": {
+      "true_degree": 2,
+      "as_deg1": 0.037580901784290736,
+      "as_deg2": 0.037580901784290736,
+      "ratio": 1.0
+    }
+  },
+  "real_sigma": {
+    "tenengrad |grad|": {
+      "true_degree": 1,
+      "sigma": 17.48,
+      "correct": 0.015453433170363884,
+      "misdeclared": 0.0008840636825150959,
+      "error_factor": 0.05720823798627
+    },
+    "sum-modified-laplacian": {
+      "true_degree": 1,
+      "sigma": 17.48,
+      "correct": 0.10052972043224934,
+      "misdeclared": 0.005751128171181316,
+      "error_factor": 0.05720823798627006
+    },
+    "tenengrad-squared": {
+      "true_degree": 2,
+      "sigma": 17.48,
+      "correct": 0.02090096482282968,
+      "misdeclared": 0.3653488651030628,
+      "error_factor": 17.48
+    },
+    "local variance (3x3)": {
+      "true_degree": 2,
+      "sigma": 17.48,
+      "correct": 0.037580901784290716,
+      "misdeclared": 0.6569141631894019,
+      "error_factor": 17.480000000000004
+    }
+  }
+}

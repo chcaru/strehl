@@ -1,0 +1,82 @@
+{
+  "autocovariance_route": [
+    {
+      "operator": "tenengrad |grad| (shipped)",
+      "sd_autocov": 0.01548503387602889
+    },
+    {
+      "operator": "sum-modified-laplacian",
+      "sd_autocov": 0.10252018300731737
+    },
+    {
+      "operator": "ring(1,3)",
+      "sd_autocov": 0.009826775771830228
+    }
+  ],
+  "convention_variants": [
+    {
+      "variant": "laplacian, 1/8 like the Sobel",
+      "sd": 0.012530784793706099,
+      "k": 0.8236351251285723
+    },
+    {
+      "variant": "laplacian / 4 (mean of the 4 diffs)",
+      "sd": 0.025061569587412198,
+      "k": 1.6472702502571446
+    },
+    {
+      "variant": "SML / 2 (mean of the two axes)",
+      "sd": 0.05074812265546393,
+      "k": 3.3356199983872705
+    },
+    {
+      "variant": "SML / 8 like the Sobel",
+      "sd": 0.012687030663865983,
+      "k": 0.8339049995968176
+    },
+    {
+      "variant": "brenner / 2 (per-px difference)",
+      "sd": 0.014991636193618468,
+      "k": 0.9853842640737785
+    },
+    {
+      "variant": "local variance -> its sqrt (an SD)",
+      "sd": 0.01952737910040605,
+      "k": 1.2835138096756966
+    },
+    {
+      "variant": "ring(1,3) x 2",
+      "sd": 0.01966960268018366,
+      "k": 1.2928620139466058
+    }
+  ],
+  "alternative_convention_span": {
+    "k": {
+      "ring(1,3)": 0.646,
+      "tenengrad": 1.007,
+      "tenengrad-sq": 1.367,
+      "brenner": 0.9853842640737785,
+      "local variance(sqrt)": 1.2835138096756966,
+      "laplacian/8": 0.8236351251285723,
+      "SML/8": 0.8339049995968176
+    },
+    "span": 2.1160990712074303
+  },
+  "fact510_paired": {
+    "radius_alone": 1.1193478329746256,
+    "operator_alone": 1.3580584602999366,
+    "joint": 1.5201595516024724,
+    "residual": -1.328148805126994e-05,
+    "residual_sem": 0.00017792642273778365,
+    "per_seed_residual": [
+      -0.0009734918326331776,
+      0.0008013304648006869,
+      0.00015775959752506452,
+      -0.0001829638909085496,
+      -9.631414512289993e-05,
+      0.0002866212099408294,
+      7.230519900880417e-05,
+      -0.0001714985070209174
+    ]
+  }
+}
