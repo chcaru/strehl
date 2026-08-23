@@ -1113,6 +1113,10 @@ since contributors are not required to be spliceable and only have to emit an `f
 | 552 | Gate 1c's simulated multi-peak base rate read **6.6 %** against a real **4.8 %** and was reported as agreement. Two independent defects of opposite sign were cancelling: a **7 %** latent-contrast deficit (fact 551) and a **√2** shot-noise deficit from the ISO-50 gain bug (fact 550). With only the noise fixed the same measurement reads **10.1 %** — a **2.1×** over-production. | **The most dangerous measurement in this corpus is one that agrees.** Rule 18 asks for the direction of a *failure*; nothing asked what to do when a number stopped failing, so the agreement was banked and the interrogation stopped. Two errors that cancel produce a *better-looking* result than either alone, so agreement is evidence only when the routes to it are independent. **This is now discipline 287.** | M25 §5.9 |
 | 553 | **MEASURED end-to-end at HEAD.** Rebuilding the shipped merge with the pre-fix marked-ISO gain and re-running it on `119MSDCF` (33 frames, ISO 50) changes **23.68 %** of output subpixels (5,854,635 of 24,724,512), mean 66.7 DN over the changed set, **max 3559 DN** of 65535. The reported drift sensitivity moves 0.352 → 0.249 gate units per 1 % — a factor of **1.414 = √2**, exactly as the `σ² = gS + (RN·g)²` relation predicts. | **The ISO-50 gain fix is not book-keeping; it changes the image.** The √2 landing on the nose is the strongest single confirmation the diagnosis was right, because it was predicted before it was measured. Every merged ISO-50 output produced before commit `2a4f5c5` differs from what the corrected model produces, on a quarter of its subpixels. | this session, A/B on a detached worktree at `4f51d0c` |
 | 554 | Fact 548 was folded from M25's report while it was **untracked**; the report was then revised twice (`02b4927`, `4f51d0c`). Its own supersession note says the correction "reverses one of its two clauses" of fact 548 — but that describes the *second* draft (6.6 %), not the draft actually folded (28.5 %). Both of fact 548's numbers were stale and its stated implication was obsolete. | **A report cannot describe what a fold says; only the fold can.** A milestone that revises itself after folding writes its supersession note against *its own* latest draft and gets the fold wrong — confidently and in good faith. Fold from a **committed** revision and record the sha in the source column (this fold does), and on any correction **re-read the folded row** rather than trusting the report's account of it. **This is now discipline 290.** | `git log` on `M25-simulator-measured.md`: cdd2da6 → 02b4927 → 4f51d0c |
+| 555 | **M4 §8.1's dark-sigma table is INDEPENDENTLY VERIFIED.** Re-measured from the same 242 darks through a different decoder (`rawpy`, not `strehl-raw`), the estimator `sqrt(mean over pixels of per-pixel temporal variance)` over 20 frames reproduces M4 at **0.9999 at every one of eleven ISOs, total spread 0.0001** across a 6x range. Including the owner's two stabilisation frames gives 1.0004 / spread 0.0057, so M4 also dropped them. | **The first independent check any sensor constant in this project has ever had, and it passes.** M4's method is now fully reconstructed from its outputs rather than trusted: 20 frames, pooled RMS. Every read-noise number downstream inherits that estimator, which is fact 556. | `experiments/m48-noise-floor`, commit `4f7f683` |
+| 556 | The same frames under two other estimators give **0.8873** of M4 (mean over pixels of per-pixel sd, ranging 0.9408 at ISO 50 to 0.8538 at ISO 1600) and **0.8158** (median, 0.9040 to 0.7593). The gap **grows with ISO** and tracks the hot-pixel tail: the mean-median gap runs +4.0% at ISO 100 to +12.5% at ISO 1600. | **Every read-noise constant in this project is a pooled RMS inflated by the hot-pixel tail, and the noise model consumes it as if it described a typical pixel.** The merge gate compares a per-pixel response against a per-pixel predicted sigma, so a tail-inflated scalar desensitises the gate at *every* pixel to cover a defect in a tiny fraction of them — while M22 already builds a hot-pixel map and M29 treats static defects separately. Which statistic the model should predict is question 128. | `experiments/m48-noise-floor`, commit `4f7f683` |
+| 557 | On the verified table and the gain relation the code uses, the high-gain mode's mean implied read noise is **1.2414 e-** (RMS basis) or **1.0772 e-** (typical-pixel basis). The shipped `read_noise_e_high = 1.47` is **+18.4%** and **+36.5%** against those. The shipped model over-predicts measured dark sigma by **12.3% at ISO 400 rising to 22.2% at ISO 1600**. `read_noise_e_low = 4.20` is -2.3% at ISO 100 but +10.4% at ISO 200 and +11.4% at ISO 250. | **A second shipped sensor constant is wrong, measured, and was already reported.** M4 §8.3 published "4.30 → 1.31 e-" against fact 14's 4.20/1.47 and called the high side "11% off"; against the *plateau* rather than the single ISO-400 point it is 18.4%. This is the same failure as the gain defect (fact 550): measured, written down, never reached the code. `read_noise_e_low`'s error is a **shape** error within the mode that no scalar can fix. M48 owns the fix. | `experiments/m48-noise-floor`, commit `4f7f683`; M4 §8.3 |
+| 558 | **The `base_iso` gain fix is confirmed a THIRD time, on a route that did not exist when it was made.** Under the corrected gain, M4's own ISO-50 dark row implies **4.3095 e-** against ISO 100's **4.3003 e-** — agreement to **+0.21%**. M4 published **8.6189 e-** for that row and called it "visibly nonsense … the tell". | **The tell was correct and the correction lands on it.** The three routes are now independent: darks at equal sigma (M4 §8.2), photon transfer on signal (M25 fact 200), and this — a *quantitative* agreement, not merely a consistent sign. Fact 550's diagnosis is as well supported as anything in this corpus. | `experiments/m48-noise-floor`, commit `4f7f683`; M4 §8.3's own table |
 
 ### 4.1 Which of these are architecture, and which are artifacts of one stack
 
@@ -1854,6 +1858,16 @@ draft, not against what was folded, and will be wrong in good faith (fact 554).
 Two defences, both cheap: fold only from a committed sha and put that sha in the
 source column, and on any correction **re-read the folded row itself** instead
 of trusting the report's account of it.
+
+291. **A sensor constant without a stated estimator is not a
+measurement.** M4's dark-sigma table is exactly right and is now verified to 1
+part in 10^4 — but nothing anywhere said *which* statistic it is, and it turns
+out to be the pooled RMS, which is 13% above the mean pixel and 23% above the
+median at high ISO (facts 555, 556). Three constants were fitted to it as
+though it described a typical pixel. This is the failure class §5's preamble
+calls this project's worst: the arithmetic was right and the column heading was
+missing. **Every constant in `profile.rs` must name the statistic it is, the
+frame count, and the exclusion rule — not just its value and its source.**
 
 ---
 255. **Grep a milestone's own artifacts before quoting its number.** Fact 243
@@ -2797,3 +2811,24 @@ structure deficit of fact 551?** The two are linked by argument, not
 measurement. A probe that scales latent contrast alone, holding spectrum and
 noise fixed, answers it in one render — and if contrast does not explain it,
 the noise model at ISO 50 is still wrong somewhere the dark frames cannot see.
+
+128. **Which statistic is the noise model supposed to predict — the pooled RMS,
+the mean pixel, or the median pixel?** They differ by 18% at ISO 100 and 32% at
+ISO 1600 (fact 556), and every sensor constant currently uses the RMS by
+accident rather than by choice. The gate is per-pixel, and hot pixels are
+handled elsewhere (M22, M29), which argues for the typical pixel; conservatism
+argues for the RMS. The honest answer may be that a scalar is the wrong shape
+and the model owes a per-pixel sigma *distribution*. **M48 is deciding this and
+must write the decision where the constants live.**
+
+129. **Is there a constant additive DN-domain noise floor the model omits?**
+**ARGUED, from a fit I have not validated.** `sigma_DN^2 = a*ISO^2 + c` fitted
+on the verified table, anchored on each mode's endpoints, leaves residuals
+within **±1%** across both modes against **±4%** for the best single `RN_e` —
+and the two independently-fitted floors, 0.470 DN (high) and 0.513 DN (low),
+agree to 9%, consistent with one floor near 0.49 DN. 14-bit quantisation alone
+would give 0.289 DN. If real, `sigma^2 = g*S + (RN_e*g)^2` is the wrong shape at
+low signal, which is exactly where the gate does its work. **This is a
+hypothesis formed from an endpoint-anchored two-point fit, which is the weakest
+kind; M48 is trying to kill it with a proper all-ISO fit.** Do not build on it
+until that lands.
