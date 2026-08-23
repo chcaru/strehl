@@ -149,10 +149,11 @@ take it as a specification. An independent verifier is auditing the repair now.
 
 ## What I found overnight that you should know about
 
-**Nine things.** Items 1–6 are in descending order of how much they change the plan. Items
-7–9 landed later and were appended rather than merged into the ordering — **item 7 is the
+**Ten things.** Items 1–6 are in descending order of how much they change the plan. Items
+7–10 landed later and were appended rather than merged into the ordering — **item 7 is the
 single most important result of the night** and would sit first if this file were rewritten
-rather than appended to. If you read only one, read 7.
+rather than appended to. If you read only one, read 7. If you read two, read 10: it closes
+the external review's central proposal.
 
 **1. The pluggability requirement — your #1 structural ask — had a hole, and the design
 could not see it.** The merge's gate is calibrated in units of a constant that belongs to
@@ -319,6 +320,50 @@ M19's text already sitting in the table. The rule is now: **check a fold by cont
 by number**, and report authors should propose facts as `P1, P2, …` and let the fold assign
 real numbers — every absolute block proposed so far has either collided or moved.
 
+**10. The reviewer's headline proposal is now formally dead, and killing it cost us one of
+our own instruments.** The external review's central reframe — *"make the merge itself a
+multi-frame Wiener deconvolution across the focus axis"* — has been run as a six-arm
+experiment against a kill condition committed **before any arm ran**. It is refuted.
+
+The numbers: a guarded focus-axis deconvolution costs **3.5× and 3.9×** the shipped merge's
+noise on your two stacks, against a pre-registered bar of 1.10×. That margin is large enough
+that the verdict holds at *every* possible sharpness result, so the conclusion does not
+depend on measuring sharpness at all. It also throws **64% and 81%** of detail pixels outside
+the range of every input frame — the 2004 paper that invented the technique everyone still
+uses called 30% a defect.
+
+**The positive control passed, which is what makes this worth trusting.** On a synthetic
+image where the blur is exactly the blur being inverted, the deconvolution beats our merge by
+**+11 dB**. So the estimator is implemented correctly and the optics are what refuse it — and
+about 8 of those 11 dB come from the diffraction term, not from the focus axis the reviewer's
+argument was actually about.
+
+**The uncomfortable half.** One of the two metrics scoring that experiment was not measuring
+anything. Every arm reported an identical sharpness figure of `0.4961` — including the
+random-permutation control, which is supposed to fail. It turned out to be the *last grid
+point* of the calculation, returned whenever the real answer is off the end of the scale. A
+bound was published as a measurement, and then divided by itself and reported as a tie. It
+cannot be repaired on this data: 32 configurations were tried and none works, because the
+technique is attenuated by exactly the amount two halves of one photograph have in common,
+which here is 63–98%.
+
+**That refutes something I told you twelve hours ago.** When M19 surveyed the microscopy
+literature I folded its finding that Fourier Ring Correlation "cannot be fooled upward by
+noise amplification" and called it the ground-truth-free instrument we needed. Measured on
+your sensor, it can: it ranks the arm with **295× the noise and 99% of pixels out of range**
+at 0.970, and it reports detail on a *flat* patch that has none. The literature claim is true
+of independent noise and false of common-mode noise, and ours is common-mode. Corrected in
+place.
+
+It also cost us a control: `coffee-bubbles` is **not** a constant-focus stack as the corpus
+claimed — its focus signal spans 235 gate-sigma over 19 frames — so a free sanity check we
+had been counting on does not exist.
+
+M44's own closing line is the one I'd underline: **the verdict survived by margin, not by
+design.** Had the noise cost landed at 1.2× instead of 3.5×, half the kill condition would
+have rested on an instrument with no power, and the honest answer would have been "cannot be
+scored". Facts 460-479.
+
 ## Running while you sleep
 
 **Updated again, later in the night.** M16, M19, M25, M40, M41 and M42 have all landed and
@@ -335,7 +380,7 @@ facts**.
 | **M19** | The microscopy/EDOF deconvolution literature the corpus never surveyed | **LANDED, folded** (facts 400-419). Verdict: keep deconvolution an opt-in plugin. It also found that the estimator the reviewer proposed as our core was **published by Levin et al. in 2009**, error law and all — so we must not claim it |
 | **M25** | The calibrated simulator / digital twin | **LANDED, folded** (facts 540-550). Usable for noise and selection; **blind to the optics**, by its own negative control. See item 8 |
 | **M40** | Auditing my fact-341 repair under rule 24 (re-choose, do not re-compute) | **LANDED, folded** (facts 440-459). **It refuted the repair and the defect report.** See item 7. `merge.rs` is now held by M18, and the revert is handed to it |
-| **M44** | Finishing M41: it stopped one arm short of a scoreable verdict | Dispatched at the end of the night |
+| **M44** | Finishing M41: it stopped one arm short of a scoreable verdict | **LANDED, folded** (facts 460-479). R3 refuted with the positive control passing; the FRC metric withdrawn as a censored constant. See item 10 |
 | **M45** | **Building the plugin crate** — your #1 structural ask, and the first slice of it in code | Dispatched at the end of the night |
 
 **The one I would watch is M45.** It is the first attempt to compile the plugin design
