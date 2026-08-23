@@ -1,16 +1,24 @@
-# M50 — Is this sensor's fixed-pattern noise anisotropic?
+# M50 — Independent verification: is this sensor's fixed-pattern noise anisotropic?
 
 **Status: MEASURED.** Runs against the owner's 242 delivered dark frames
 (`D:\macro-dark-frames`, 11 ISOs × 22 frames, first two dropped as stabilisation
 shots). Source: `experiments/m50-fpn-anisotropy/`, committed at `2bbb60b`.
 
+**Read §1.1 first. This milestone began as a fresh investigation of a question
+that M16 had already closed.** That was an orchestration error, recorded in §6.
+What it became — because M16's facts carry the tag **NOT INDEPENDENTLY
+VERIFIED** and rule 12 says the author never verifies their own work — is the
+independent check those facts were explicitly waiting for. The verdict below
+**confirms M16** by a different method, and **qualifies one of its supporting
+facts**.
+
 ---
 
 ## 1. The question, and why it was worth asking
 
-SYNTHESIS question 20 records an unexplained orientation anomaly in M13 and M15:
-`horizontal` test cells behave unlike `vertical` and `bar` cells, in a way no
-milestone has accounted for. An external review proposed a mechanism:
+SYNTHESIS question 20 records an orientation anomaly in M13 and M15: `horizontal`
+test cells behave unlike `vertical` and `bar` cells. An external review proposed
+a mechanism:
 
 > M4 measured row/column FPN, and Sobel-x/Sobel-y see row-banding
 > asymmetrically — horizontal-band noise is pure vertical gradient. That is a
@@ -19,22 +27,43 @@ milestone has accounted for. An external review proposed a mechanism:
 > confirmed, it removes a directional bias sitting inside *every* window number
 > M13 and M15 produced.
 
-The mechanism is plausible and the stake is high — it would contaminate every
-window measurement the project has made. But **the premise is not what M4 says.**
-
-M4 §5 measured a *plane-level* asymmetry: G2 and B, the bottom row of the RGGB
-quad, carry more FPN than R and G1 at high ISO (ISO 2000: 0.999 and 1.002 against
-0.722 and 0.714). M4 then wrote, explicitly:
+The mechanism is plausible and the stake is high. But **the premise is not what
+M4 says.** M4 §5 measured a *plane-level* asymmetry — G2 and B, the bottom row of
+the RGGB quad, carry more FPN than R and G1 at high ISO — and then wrote,
+explicitly, in the same paragraph the number comes from:
 
 > **ARGUED:** a row-dependent readout path is the obvious explanation, but this
 > experiment cannot distinguish that from a colour-filter-dependent dark current
 > and does not try.
 
-M4 never decomposed FPN into row banding versus column banding. So the review's
-premise is **untested rather than established**, and its own citation says so.
-This milestone tests it.
+M4 never decomposed FPN into row banding versus column banding. Darks are the
+right place to settle it: no scene content to confound the answer.
 
-Darks are the right place: there is no scene content to confound the answer.
+### 1.1 What I did not check first, and should have
+
+**Question 20 is already CLOSED**, by M16, six hours of measurement, facts 90–98.
+M16 refuted the row-FPN mechanism (H3) *and* found the actual cause (H1: the
+corpus textures carry 14–22× more vertical than horizontal gradient energy;
+transposing them transposes the asymmetry exactly). M16 also measured the
+reviewer's literal fix and found it changes the statistic by **0.0 windows**
+(fact 96).
+
+I did not read that before starting. The report and the closed question were both
+sitting in the repository. **That is a real orchestration failure and §6 records
+it as one.**
+
+It is not, however, wasted work, and the reason is written into the corpus.
+Facts 90, 93, 96 and 97 all carry the tag **"NOT INDEPENDENTLY VERIFIED"**, and
+rule 12 — *the author never verifies their own work* — makes that tag a standing
+request. Fact 93's own consequence column says:
+
+> Row-banded FPN is not a mechanism this sensor makes available. **Any future
+> proposal resting on row/column FPN asymmetry must first move this number.**
+
+M50 is an attempt to move that number, by a different estimator, on the full
+frame rather than a 512×512 ROI, at all eleven ISOs, with a validated estimator
+and a placebo. It does not move enough to disturb the verdict. It does move
+enough to qualify the wording — see §5.2.
 
 ---
 
@@ -159,7 +188,7 @@ values are the split spread:
 | 1600 | 0.7037 | +0.0675 ± 0.0366 | +0.0702 ± 0.0032 | 0.096 | +0.032 | 1.067 | +0.033 |
 | 2000 | 0.8643 | +0.0905 ± 0.0443 | +0.0609 ± 0.0039 | 0.105 | +0.041 | 1.086 | +0.038 |
 
-### 5.1 The review's mechanism is refuted, on four independent grounds
+### 5.1 The review's mechanism is refuted, on four independent grounds — confirming M16
 
 1. **There is no row-specific structure.** `sd_row` and `sd_col` are the same
    size. At ISO 200, 250, 640 and 1600 the **column** term is the *larger* of the
@@ -179,22 +208,46 @@ effect that is already ~3% of what the mechanism requires. §3 showed this same
 fix destroying 99.96% of planted banding energy, so the fix is not broken; there
 is simply almost nothing here for it to remove.
 
-**Verdict: the mechanism proposed for question 20 does not exist on this sensor.
-Question 20 remains open, and the row/column-mean subtraction should not be
-built.** The prescription is cheap, which is exactly why it would have been built
-without checking; it would have cost a per-frame pass over every plane, forever,
-to remove 0.009 of an index that runs to ±1.
+**This is the independent verification facts 90/93/96 were tagged as lacking.**
+M16 reached the same verdict from the opposite direction — it measured the fix's
+effect on the *downstream statistic* (0.0 windows, fact 96) and the sensor's
+anisotropy on a 512×512 master-bias ROI (fact 93). M50 measures the sensor
+itself, on full planes, at all eleven ISOs, with temporal noise removed in
+expectation rather than averaged down. **Different estimator, different ROI,
+different decoder, same verdict.**
 
-### 5.2 But a small real anisotropy does exist, and it is not banding
+M16 also settled what M50 cannot: the anomaly's actual cause is texture
+anisotropy in the corpus (facts 90–91), and `WINDOW_RADIUS = 13` survives
+(fact 97). Nothing here disturbs either. **Question 20 stays closed**, and the
+row/column-mean subtraction stays unbuilt.
 
-**MEASURED:** the index is positive at **11 of 11 ISOs**. Under a null of random
-sign that is p ≈ 0.001 two-sided. Typical `Ey/Ex ≈ 1.05`: Sobel-y sees about 5%
-more fixed-pattern energy than Sobel-x.
+### 5.2 M16's fact 93 is very slightly too strong, in a way its own numbers show
 
-**MEASURED:** roughly two-thirds of it **survives** row and column mean removal
-(+0.026 → +0.017). Whatever it is, it is not banding — it lives in the per-pixel
-residual, meaning neighbouring pixels along x are slightly more correlated than
-neighbouring pixels along y *within a single CFA plane*.
+Fact 93 reads: *"The sensor's fixed pattern is **isotropic at every measured
+ISO**: master-bias `gx²/gy²` = 0.968–0.999 across all 11 dark ISO groups."*
+
+**MEASURED, and this qualifies it:** the index is positive at **11 of 11** ISOs.
+Under a null of random sign that is p ≈ 0.001 two-sided. Typical `Ey/Ex ≈ 1.05`:
+Sobel-y sees about 5% more fixed-pattern energy than Sobel-x. It is small, but it
+is not noise.
+
+**M16's own eleven numbers say the same thing and were read as noise.** Every one
+of them is ≤ 0.999 — `gx²/gy²` is `Ex/Ey`, so *every* M16 ISO also has Ey ≥ Ex. A
+range that never once crosses 1.000 in eleven independent measurements is a
+sign-consistent effect, not a band around unity.
+
+**The two measurements agree quantitatively once dilution is accounted for.** In
+M50's units M16's range is +0.0005 to +0.0163, against M50's +0.005 to +0.061.
+M16's statistic is computed on a *master bias*, which still contains
+`sigma_t²/20` of isotropic temporal noise — at ISO 100 that is 25% of the master's
+variance, and isotropic contamination dilutes any anisotropy index by about that
+much. M50's cross-half estimator removes it in expectation. The residual gap is
+consistent with the ROI difference (512×512 against 2344×3514).
+
+**MEASURED:** roughly two-thirds of the effect **survives** row and column mean
+removal (+0.026 → +0.017). Whatever it is, **it is not banding** — it lives in the
+per-pixel residual, meaning neighbouring pixels along x are slightly more
+correlated than neighbouring pixels along y *within a single CFA plane*.
 
 The alternative explanation — that my own operator pair is directionally biased —
 is excluded by §3's isotropic plant, which returns +0.004 through the identical
@@ -205,12 +258,17 @@ would impose more correlation along a row than down a column, which is the right
 sign. M4's unresolved G2/B excess may be the same effect seen a different way.
 Neither is established here.
 
-**This does not resurrect the review's claim.** The direction it guessed is
-right; the mechanism, the magnitude and the fix are all wrong. And whether a 5%
-imbalance in *fixed-pattern* gradient energy matters at all against *scene*
-gradient energy on textured content is a question this experiment does not
-answer — see question 1. It is not licensed to explain question 20 and is not
-offered as such.
+**None of this resurrects the review's claim, and fact 93's consequence column
+stands.** That column says any proposal resting on row/column FPN asymmetry
+"must first move this number". M50 moves it from ~1% to ~5% — and M16's amplitude
+ladder measured that the mechanism does not become detectable until **1774×** the
+sensor's row amplitude. A factor of five against a factor of 1774 changes
+nothing. The direction the review guessed is right; the mechanism, the magnitude
+and the fix are all still wrong.
+
+Whether a 5% imbalance in *fixed-pattern* gradient energy matters at all against
+*scene* gradient energy on textured content is a question this experiment does
+not answer, and M16 measured the downstream answer to be 0.0 windows.
 
 ### 5.3 One alternative explanation eliminated for M48
 
@@ -253,11 +311,28 @@ why §4 exists and why the result of §5 can be believed.
 copying while the buffer is valid. Last night's M4 §8.1 verification stands, and
 §4 re-confirms it a third time.
 
-**3. I nearly did not run this at all,** on the grounds that the review's premise
+**3. I investigated a closed question without checking whether it was closed.**
+This is the worst error in the milestone and it is an orchestration error, not a
+measurement one. M16 closed question 20 six hours of measurement ago, the report
+was in `docs/research/`, the closure was written into SYNTHESIS §10 in full, and
+facts 90–98 were folded. I read M4 to check the review's premise and did not read
+SYNTHESIS to check the question's status. The correct first action on any
+review item is **grep the corpus for the question it claims to answer**, and I
+skipped it because the review's framing implied the question was live.
+
+What made it recoverable is a property of the corpus rather than anything I did:
+M16's facts carry **NOT INDEPENDENTLY VERIFIED**, so an independent measurement
+of the same thing had standing under rule 12 regardless of my reason for making
+it. The work converted from duplication into verification by luck, and the
+qualification in §5.2 is what that luck bought. **The lesson is not "duplication
+is fine"** — had M16's facts been verified already, this would have been six
+hours of nothing.
+
+**4. I nearly did not run this at all,** on the grounds that the review's premise
 was misattributed to M4 and could be dismissed on a reading. That would have been
 wrong twice over: the premise turns out to be refutable by measurement rather
-than merely unsupported, and the measurement found a real (if small and
-differently-shaped) effect that a reading would have missed entirely.
+than merely unsupported, and §5.2's qualification of fact 93 is invisible to any
+amount of reading.
 
 ---
 
@@ -276,11 +351,22 @@ Numbered **locally from 1**; the orchestrator renumbers on fold.
    against +1.004 on planted pure row banding — at most 6% of the mechanism the
    external review proposed. **The proposed row/column-mean subtraction is a
    no-op and must not be built**; it moves the index by 0.009 on a ±1 scale,
-   while the same operation destroys 99.96% of *planted* banding energy.
-4. **MEASURED.** A small anisotropy is nonetheless real: positive at 11 of 11
-   ISOs (p ≈ 0.001), `Ey/Ex ≈ 1.05`, and roughly two-thirds of it survives row
-   and column mean removal — so it is not banding. **ARGUED:** column-parallel
-   shared-ADC readout has the right sign. Unexplained.
+   while the same operation destroys 99.96% of *planted* banding energy. This
+   **independently verifies M16 facts 90/93/96** from the opposite direction —
+   M16 measured the fix's effect on the downstream statistic (0.0 windows), M50
+   measures the sensor itself — and those facts may lose their **NOT
+   INDEPENDENTLY VERIFIED** tag for the row-FPN claim specifically.
+4. **MEASURED, and this QUALIFIES fact 93.** Fact 93 says the fixed pattern is
+   "isotropic at every measured ISO". It is very nearly so, but not exactly: the
+   anisotropy index is positive at **11 of 11** ISOs (p ≈ 0.001), `Ey/Ex ≈ 1.05`,
+   and roughly two-thirds of it survives row and column mean removal — so it is
+   **not banding**. M16's own eleven numbers already showed this and were read as
+   noise: `gx²/gy²` = 0.968–0.999 never once crosses 1.000. The two agree
+   quantitatively once M16's master-bias statistic is corrected for the ~25%
+   isotropic temporal-noise dilution it retains. **Fact 93's consequence column
+   stands unchanged** — M16's ladder puts the mechanism's detection threshold at
+   1774× the sensor's row amplitude, and a factor of 5 does not approach it.
+   **ARGUED:** column-parallel shared-ADC readout has the right sign. Unexplained.
 5. **MEASURED.** M4 §5's sigma_FPN table is independently confirmed by a
    different estimator on a different decoder: mean ratio 1.0043, worst deviation
    1.55%, with a real but unexplained +1.4–1.6% excess at ISO 1600–2000.
@@ -304,9 +390,20 @@ Numbered **locally from 1**; the orchestrator renumbers on fold.
 2. **A ratio is not an anisotropy measure when either term can legitimately be
    zero.** Use a bounded contrast index. Sign errors from a denominator crossing
    zero are not visible in the output — −494.885 looks like a measurement.
-3. **Check what a citation actually says before building on it.** The mechanism
+3. **Check whether a question is already closed before investigating it — grep
+   the corpus, not the prompt.** A review or a prompt that raises a question is
+   not evidence the question is open. M50 re-investigated question 20 six hours
+   of measurement after M16 closed it, with the closure written out in full in
+   SYNTHESIS §10 and eight facts folded. The cost was recovered only because
+   M16's facts carried **NOT INDEPENDENTLY VERIFIED**, which is luck, not method.
+4. **Check what a citation actually says before building on it.** The mechanism
    here was attributed to M4; M4 explicitly declined to make the claim, and said
    so in the same paragraph the number came from.
+5. **An eleven-for-eleven sign is not a band around unity.** Fact 93 reported
+   `gx²/gy²` = 0.968–0.999 as "isotropic". Every value being on the same side of
+   1.000 in eleven independent measurements is a detection (p ≈ 0.001), however
+   small the magnitude. When a range brackets a null hypothesis on one side only,
+   report the sign count beside the range.
 
 ### Questions
 
@@ -322,5 +419,8 @@ Numbered **locally from 1**; the orchestrator renumbers on fold.
    large, or a weak temporal correlation between frames that cross-half
    covariance retains and M4's estimator removes. The second would matter
    elsewhere.
-4. **Question 20 is still open.** Its most concrete proposed mechanism is now
-   dead, and no replacement is offered here.
+4. **Question 20 is CLOSED (M16, facts 90–98) and nothing here reopens it.** The
+   mechanism the review proposed for it was already dead; M50 kills it again by a
+   different route and finds the actual cause unchanged (corpus texture
+   anisotropy). Recorded because M50's first draft wrongly said "question 20
+   remains open" — see §6 error 3.
