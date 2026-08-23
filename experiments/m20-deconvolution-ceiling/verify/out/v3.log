@@ -1,0 +1,77 @@
+==============================================================================
+GATE 4.1 -- is blur-per-step in pixels really aperture-invariant?
+==============================================================================
+  Policy: step the focus axis so each step grows the CoC by 1.0 px.
+ marked   N_eff  step (um obj)  CoC/step (px)  DOF-ish (um)  frames for 600um
+    4.0    12.0         15.360         1.0000        15.360                40
+    5.6    16.8         21.504         1.0000        21.504                28
+    8.0    24.0         30.720         1.0000        30.720                20
+   11.0    33.0         42.240         1.0000        42.240                15
+   16.0    48.0         61.440         1.0000        61.440                10
+  -> step_um is proportional to N_eff and CoC/step is EXACTLY constant.
+     The invariance holds, but it is a CONSEQUENCE OF THE SAMPLING POLICY
+     (step proportional to DOF), not a free-standing property of the optics.
+     Physical content: frames ~ 1/N_eff at fixed depth. That part is real.
+
+==============================================================================
+GATE 4.2 -- the report's table rebuilt (B = 3.0, step 1.0 px, ref f/11 = 41 frames)
+  (T) = fixed total time, (L) = fixed total light, (pf) = fixed per-frame time
+==============================================================================
+ marked   N_eff  frames  sig/fr(T)   MTF@0.25  SNR sel(T)  SNR mf(T) |  SNR sel(L)  SNR mf(L) |  SNR sel(pf)
+    4.0    12.0     113      0.603     0.5969      0.9898     2.0579 |      0.3599     0.7483 |       1.6415
+    5.6    16.8      81      0.714     0.4457      0.6246     1.2985 |      0.3180     0.6611 |       0.8754
+    8.0    24.0      57      0.853     0.2404      0.2819     0.5859 |      0.2050     0.4261 |       0.3305
+   11.0    33.0      41      1.000     0.0453      0.0453     0.0941 |      0.0453     0.0941 |       0.0453
+   16.0    48.0      29      1.206     0.0000      0.0000     0.0000 |      0.0000     0.0000 |       0.0000
+
+  f/11 -> f/5.6 best-frame contrast ratio  = 9.84x   (report 9.6x)
+  f/11 -> f/5.6 matched-filter SNR, time   = 13.80x   (report 13.5x)
+  f/11 -> f/5.6 matched-filter SNR, light  = 7.03x   (report 6.9x)
+  frames ratio                             = 1.98x   (report 2x)
+
+  Matched-filter factor sqrt(sum|H|^2)/max|H| per aperture (should be aperture-invariant):
+    f/4.0   frames 113: 2.0790
+    f/5.6   frames  81: 2.0788
+    f/8.0   frames  57: 2.0784
+    f/11.0  frames  41: 2.0778
+  -> constant across apertures and frame counts, so the sum has converged;
+     the frame-count difference contributes nothing. Report's uniform 2.081 confirmed.
+
+==============================================================================
+GATE 4.3 -- SENSITIVITY TO B.  The report fixes B = 3.0 and never sweeps it.
+  fact 27: B in [2.41, 3.06]; POINT ESTIMATE 2.6-2.9.  B = 3.0 is above the
+  point estimate and just under the hard upper bound.
+==============================================================================
+     B |  MTF f/11  MTF f/5.6 |  contrast x  SNR x (time)  SNR x (light)
+ 2.410 |    0.1774     0.5488 |        3.09          4.34           2.21
+ 2.500 |    0.1541     0.5328 |        3.46          4.85           2.47
+ 2.600 |    0.1293     0.5151 |        3.98          5.59           2.84
+ 2.700 |    0.1059     0.4976 |        4.70          6.59           3.35
+ 2.750 |    0.0948     0.4888 |        5.16          7.23           3.68
+ 2.800 |    0.0840     0.4801 |        5.72          8.02           4.08
+ 2.900 |    0.0637     0.4628 |        7.27         10.19           5.19
+ 3.000 |    0.0453     0.4457 |        9.84         13.80           7.03
+ 3.064 |    0.0346     0.4348 |       12.58         17.64           8.98
+
+  Over fact 27's own POINT-ESTIMATE band (2.6-2.9) the headline is 4.0x-7.3x,
+  not 9.6x.  Over the full bound (2.41-3.06) it is 3.1x-12.7x.
+
+==============================================================================
+GATE 4.4 -- does 'fixed total time' smuggle photons?
+==============================================================================
+  fixed total time      : t_frame ~ N_eff, illum ~ 1/N_eff^2
+  fixed total light     : sum e = const
+  fixed per-frame time  : t_frame const
+
+ marked   N_eff  total light (T)  total light (L)  total time (L)
+    4.0    12.0            7.562            1.000           0.132
+    5.6    16.8            3.858            1.000           0.259
+    8.0    24.0            1.891            1.000           0.529
+   11.0    33.0            1.000            1.000           1.000
+   16.0    48.0            0.473            1.000           2.116
+  -> At fixed total TIME, opening f/11->f/5.6 does collect 3.9x more light.
+     The report's fixed-LIGHT control removes that, and the win is still 6.9x.
+     So no, photons are not smuggled: the claim survives the harsher budget.
+     Note the fixed-light budget implies a 3.9x SHORTER total exposure, which is
+     a strange thing to hold fixed in practice; the honest practical budget is
+     fixed total time, and the honest optics-only number is the contrast ratio.

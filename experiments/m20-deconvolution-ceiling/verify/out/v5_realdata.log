@@ -1,0 +1,64 @@
+============================================================================================
+GATE 3.3a -- CFA PHASE AUDIT (the report asserts [0::2,1::2] is a green plane)
+============================================================================================
+  109MSDCF: raw_pattern [[0, 1], [3, 2]]  color_desc RGBG  visible (4688, 7028)  black [512, 512, 512, 512]
+      [0::2,1::2] -> colour index [1] = 'G'  <-- used by the report
+      [1::2,0::2] -> colour index [3] = 'G'
+      [0::2,0::2] -> colour index [0] = 'R'
+      [1::2,1::2] -> colour index [2] = 'B'
+  119MSDCF: raw_pattern [[0, 1], [3, 2]]  color_desc RGBG  visible (4688, 7028)  black [512, 512, 512, 512]
+      [0::2,1::2] -> colour index [1] = 'G'  <-- used by the report
+      [1::2,0::2] -> colour index [3] = 'G'
+      [0::2,0::2] -> colour index [0] = 'R'
+      [1::2,1::2] -> colour index [2] = 'B'
+
+============================================================================================
+GATE 3.3b -- local-SNR distribution, both green planes, both stacks
+============================================================================================
+--- 109MSDCF ---
+  [109MSDCF G1 [0::2,1::2]] 22 frames, ISO 160 -> g = 0.36630 DN/e-, RN = 4.2 e-
+       plane (2344, 3514), modelled sigma 5.2..29.8 DN, local mean 67..2425 DN
+    percentiles of sigma_local/signal_local at each pixel's BEST frame [G1 [0::2,1::2]]:
+      p5= 0.0884  p10= 0.1784  p25= 0.7007  p50= 1.1122  p75= 1.3105  p90= 1.4743  
+      frac below 0.3440 (report's 0.3440):  15.21%
+      frac below 0.5734 (oracle 0.5734):  21.36%
+  [109MSDCF G2 [1::2,0::2]] 22 frames, ISO 160 -> g = 0.36630 DN/e-, RN = 4.2 e-
+       plane (2344, 3514), modelled sigma 5.2..29.9 DN, local mean 68..2431 DN
+    percentiles of sigma_local/signal_local at each pixel's BEST frame [G2 [1::2,0::2]]:
+      p5= 0.0885  p10= 0.1784  p25= 0.7018  p50= 1.1113  p75= 1.3089  p90= 1.4718  
+      frac below 0.3440 (report's 0.3440):  15.21%
+      frac below 0.5734 (oracle 0.5734):  21.34%
+
+--- 119MSDCF ---
+  [119MSDCF G1 [0::2,1::2]] 33 frames, ISO 50 -> g = 0.11447 DN/e-, RN = 4.2 e-
+       plane (2344, 3514), modelled sigma 3.6..22.9 DN, local mean 108..4585 DN
+    percentiles of sigma_local/signal_local at each pixel's BEST frame [G1 [0::2,1::2]]:
+      p5= 0.0346  p10= 0.0707  p25= 0.2778  p50= 0.4593  p75= 0.5330  p90= 0.5803  
+      frac below 0.3440 (report's 0.3440):  30.72%
+      frac below 0.5734 (oracle 0.5734):  88.25%
+  [119MSDCF G2 [1::2,0::2]] 33 frames, ISO 50 -> g = 0.11447 DN/e-, RN = 4.2 e-
+       plane (2344, 3514), modelled sigma 3.5..22.9 DN, local mean 108..4581 DN
+    percentiles of sigma_local/signal_local at each pixel's BEST frame [G2 [1::2,0::2]]:
+      p5= 0.0347  p10= 0.0706  p25= 0.2780  p50= 0.4587  p75= 0.5320  p90= 0.5788  
+      frac below 0.3440 (report's 0.3440):  30.71%
+      frac below 0.5734 (oracle 0.5734):  88.62%
+
+============================================================================================
+GATE 3.3c -- estimator-bias control: biased vs unbiased local variance, 109 G1
+============================================================================================
+  [109 unbiased=False] 22 frames, ISO 160 -> g = 0.36630 DN/e-, RN = 4.2 e-
+       plane (2344, 3514), modelled sigma 5.2..29.8 DN, local mean 67..2425 DN
+    percentiles of sigma_local/signal_local at each pixel's BEST frame [unbiased=False]:
+      p5= 0.0890  p10= 0.1795  p25= 0.7073  p50= 1.1279  p75= 1.3330  p90= 1.5041  
+      frac below 0.3440 (0.3440):  15.15%
+  [109 unbiased=True] 22 frames, ISO 160 -> g = 0.36630 DN/e-, RN = 4.2 e-
+       plane (2344, 3514), modelled sigma 5.2..29.8 DN, local mean 67..2425 DN
+    percentiles of sigma_local/signal_local at each pixel's BEST frame [unbiased=True]:
+      p5= 0.0884  p10= 0.1784  p25= 0.7007  p50= 1.1122  p75= 1.3105  p90= 1.4743  
+      frac below 0.3440 (0.3440):  15.21%
+
+median sigma_rel summary:
+  109MSDCF G1 [0::2,1::2]: 1.1122
+  109MSDCF G2 [1::2,0::2]: 1.1113
+  119MSDCF G1 [0::2,1::2]: 0.4593
+  119MSDCF G2 [1::2,0::2]: 0.4587

@@ -1,0 +1,80 @@
+================================================================================================
+GATE 3.2 -- data-estimated priors (report section 7).  gua/sel < 1 means deconvolution wins.
+================================================================================================
+  sigma |   oracle  est-sel   est-mf  powerlaw
+  0.010 |    0.865    0.859    0.871     1.069
+  0.020 |    0.925    0.936    0.960     1.043
+  0.030 |    0.954    0.994    1.026     1.038
+  0.050 |    0.978    1.040    1.051     1.042
+
+  implementable (est-sel) crossover sigma = 0.0324   (report: 'sigma ~ 0.03')
+
+================================================================================================
+What is 0.0872?  (0.03 / 0.0872 = 0.3440, the report's mapping constant)
+================================================================================================
+  0.03 / 0.3440                                    = 0.0872
+  global std of latent                             = 0.2540   -> 0.03/x = 0.1181
+  mean local std (W=9) of latent                   = 0.0943   -> 0.03/x = 0.3181
+  median local std (W=9) of latent                 = 0.0872   -> 0.03/x = 0.3440
+  mean local std (W=9) of in-focus blurred frame   = 0.0681   -> 0.03/x = 0.4404
+  median local std of in-focus blurred frame       = 0.0642   -> 0.03/x = 0.4671
+  mean local std (W=27) of latent                  = 0.1318   -> 0.03/x = 0.2277
+  mean |grad| of latent                            = 0.0392   -> 0.03/x = 0.7660
+  None of these is 0.0872 to better than ~10%; the constant is not reproducible
+  from any committed artefact.
+
+================================================================================================
+Is the sigma -> sigma_rel mapping defensible IN PRINCIPLE?  Scale-invariance test.
+================================================================================================
+ plant amp    sigma |  gua/sel (est-sel)  median sigma_rel
+       1.0   0.0300 |             0.9945            0.3707
+       3.0   0.0900 |             0.9945            0.3707
+       0.3   0.0090 |             0.9945            0.3707
+  The whole forward model is linear and the estimator is scale-covariant, so a
+  plant at amplitude a with noise a*sigma is identical to the unit plant at sigma.
+  => sigma_local/signal_local IS the right invariant. The mapping is legitimate
+     in kind; what remains is whether the CONSTANT is measured consistently.
+
+================================================================================================
+THE SOFT NUMBER: 1-D sim window (9 sensor px) vs 2-D CFA window (9 CFA px = 18 sensor px)
+================================================================================================
+  sigma |   W=9 native   W=9 on 2x-decimated    ratio |   W=9 biased  W=18 native
+  0.010 |       0.1400                0.1159    0.828 |       0.1487       0.1213
+  0.030 |       0.3707                0.3117    0.841 |       0.3966       0.3381
+  0.050 |       0.5402                0.4632    0.857 |       0.5837       0.5168
+  Decimating to CFA scale changes the statistic materially -- the report's
+  crossover was calibrated at sensor scale and applied at CFA scale.
+
+================================================================================================
+THE MEASUREMENT THE REPORT DID NOT MAKE: direct PER-PIXEL crossover
+  bin pixels by their own sigma_local/signal_local; find where guarded stops
+  beating selection pixel-by-pixel.  No magic constant anywhere.
+================================================================================================
+
+  prior = est-sel
+       sigma_rel bin       n px   RMSE gua   RMSE sel   gua/sel
+  [ 0.000,  0.050]       1078     0.2106     0.2185    0.9636
+  [ 0.050,  0.100]       9649     0.0582     0.0632    0.9209
+  [ 0.100,  0.170]      10971     0.0556     0.0598    0.9293
+  [ 0.170,  0.250]       9276     0.0619     0.0643    0.9638
+  [ 0.250,  0.340]       8260     0.0687     0.0694    0.9901
+  [ 0.340,  0.450]       9103     0.0667     0.0668    0.9973
+  [ 0.450,  0.600]      11762     0.0843     0.0825    1.0215
+  [ 0.600,  0.800]      16189     0.1218     0.1192    1.0216
+  [ 0.800,  1.100]       9107     0.1356     0.1329    1.0203
+  [ 1.100,  1.500]        611     0.1371     0.1354    1.0121
+  --> per-pixel crossover at sigma_local/signal_local ~ 0.410
+
+  prior = oracle
+       sigma_rel bin       n px   RMSE gua   RMSE sel   gua/sel
+  [ 0.000,  0.050]       1078     0.2118     0.2185    0.9693
+  [ 0.050,  0.100]       9649     0.0585     0.0632    0.9254
+  [ 0.100,  0.170]      10971     0.0552     0.0598    0.9236
+  [ 0.170,  0.250]       9276     0.0609     0.0643    0.9468
+  [ 0.250,  0.340]       8260     0.0668     0.0694    0.9627
+  [ 0.340,  0.450]       9103     0.0639     0.0668    0.9559
+  [ 0.450,  0.600]      11762     0.0801     0.0825    0.9714
+  [ 0.600,  0.800]      16189     0.1191     0.1192    0.9985
+  [ 0.800,  1.100]       9107     0.1336     0.1329    1.0056
+  [ 1.100,  1.500]        611     0.1356     0.1354    1.0011
+  --> per-pixel crossover at sigma_local/signal_local ~ 0.752

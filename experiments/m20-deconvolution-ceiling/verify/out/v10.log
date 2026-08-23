@@ -1,0 +1,34 @@
+========================================================================================
+GATE 4.5 -- WAVELENGTH sensitivity of the aperture headline (B = 3.0, 0.25 cyc/px)
+========================================================================================
+ lambda nm   MTF f/11   MTF f/5.6   contrast x   SNR x (time)
+       450     0.1657      0.5409         3.26           4.57
+       500     0.0998      0.4928         4.94           6.92
+       550     0.0453      0.4457         9.84          13.80
+       600     0.0072      0.3996        55.30          77.51
+       650     0.0000      0.3548          inf            inf
+  Green-only (the measurement plane is the green CFA lattice) argues for ~530-550 nm,
+  but a panchromatic scene spans the whole row.  The headline moves 5.6x - 27x.
+
+========================================================================================
+GATE 4.6 -- FOCUS-STEP sensitivity of the matched-filter factor at 0.25 cyc/px
+  (must be aperture-invariant, so it cancels in the f/5.6 : f/11 ratio -- check)
+========================================================================================
+  step px      K=41      K=81     K=113
+     0.25    4.1090    4.1445    4.1515
+     0.50    2.9309    2.9384    2.9393
+     1.00    2.0778    2.0788    2.0790
+     2.00    1.4699    1.4701    1.4702
+     4.00    1.0395    1.0396    1.0396
+  The factor depends strongly on the step but not on K once K*step is large,
+  so it cancels exactly in an aperture ratio taken at matched blur-per-step.
+  The 13.5x therefore does NOT depend on the step choice; only the 2.08 does.
+
+========================================================================================
+GATE 4.7 -- half-step focus penalty on the 'best frame' (report assumes d = 0)
+========================================================================================
+  step  0.5 px: worst-case best-frame defocus 0.25 px -> extra MTF factor 0.9952
+  step  1.0 px: worst-case best-frame defocus 0.50 px -> extra MTF factor 0.9808
+  step  2.0 px: worst-case best-frame defocus 1.00 px -> extra MTF factor 0.9249
+  Aperture-invariant by construction, so it cancels in the ratio; but it means the
+  absolute best-frame MTF column is an optimistic bound, not the typical pixel.
