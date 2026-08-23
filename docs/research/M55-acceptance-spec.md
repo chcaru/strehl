@@ -371,17 +371,66 @@ electron levels differ and equal signal must not be assumed. **B6-ISO is armed o
 confirms the scene held still**; until then it is a named, dated, unexecuted arm, which is worth
 recording precisely because it was written before the candidates.
 
-### 4.3 A gear fact that arrived late, and what it can and cannot touch
+### 4.3 A gear fact that arrived late, was wrong, and whose correction inverts my own hedge
 
-Every frame in the corpus was shot through a **Breakthrough X4 CPL 67 mm circular polarizer**,
-which was in no earlier brief. A polarizer suppresses specular highlights, so **clipping and
-specular statistics on this corpus are not what a bare lens would give**. For this spec I
-checked which of my constants could be affected and state the result rather than leave it open:
-`b2_gain = 0.117` is a ratio between two merges of the *same* frames, so any fixed transmission
-cancels; `b1_cap_frac = 0.004857` derives from **dark** frames, which have no light path at all.
-Neither is exposed. The exposure of B5's range contract and B6's ROI content **is** — a ROI
-that would clip on a bare lens may not clip here — and that is recorded as a limitation, not
-measured.
+**CORRECTION, 2026-08-23.** This section previously opened *"Every frame in the corpus was shot
+through a Breakthrough X4 CPL 67 mm circular polarizer."* **The universal quantifier was false.**
+The owner disclosed the filter; "every frame" was a generalisation added downstream and I
+repeated it without checking. EXIF capture dates resolve it into a date rule:
+
+```
+   CPL ON,  25 May onward : coffee-bubbles, foam (probable, not confirmed),
+                            wrapped-text-1, wrapped-text-2, bee-1, bee-2, bee-3
+   CPL OFF, to 17 May     : 112MSDCF, 113MSDCF (7 May), 119MSDCF (9 May), 109MSDCF (17 May)
+   UNKNOWN                : coffee-bean (10 May) -- on the off side of the boundary, but the
+                            owner cannot recall.  UNKNOWN, not off.
+```
+
+**The hedge I attached to the false version was applied to the wrong population, which makes it
+worse than no hedge.** I wrote that "the exposure of B5's range contract and B6's ROI content
+**is**" affected, "a ROI that would clip on a bare lens may not clip here". **Every real-data
+number in §5 — B3, B5, the B6 cell, B9 — is measured on `112MSDCF`** (`src/calibrate.py:143`),
+which is on the **CPL-off** side. There was no polarizer in front of any of it. The hedge read
+as caution and was false; a reader would have discounted those numbers for a filter that was
+not there, and nobody re-examines a hedge.
+
+**What survives unchanged, and why:**
+- `b2_gain = 0.117` — a ratio between two merges of the *same* frames. Any fixed transmission
+  cancels. Unaffected under either version of the gear claim.
+- `b1_cap_frac = 0.004857` — derived from **dark** frames. No light path. Unaffected.
+- Every `z`, leverage ratio and verdict in §5 — measured on one CPL-off stack, so the filter
+  cannot have touched them. **Unaffected, and now for the correct reason.**
+
+**What the false universal was concealing, and this is the finding the correction produces.**
+Under "every frame", the development stacks and the held-out stacks were one optical population
+and no mismatch could exist. Under the date rule they are **opposite sides of the boundary**:
+
+```
+   thresholds CALIBRATED on : 112MSDCF, 113MSDCF, foam   -> two CPL-off, one CPL-on
+   thresholds APPLIED to    : bee-1/2/3, wrapped-text-1/2 -> five CPL-on
+                              coffee-bean                 -> UNKNOWN
+```
+**Every threshold in this spec was calibrated on the CPL-off side and will be applied to a
+held-out set that is five-sixths CPL-on.** That is a population mismatch, it was invisible while
+the universal claim stood, and it is not measured here. ARGUED, and named rather than fixed.
+
+**The one constant genuinely exposed to the boundary** is `plant_noise_e = 3.7 e-`, because
+alone among the spec's constants it is derived from an absolute **level** (~250 DN at
+`g = 1.14469 DN/e-`) rather than from a ratio, and a transmission change moves levels. The
+owner's exposures on the CPL-on side are longer, which may compensate, and by how much is
+unmeasured. A candidate whose verdict is sensitive to `plant_noise_e` should say so.
+
+**The correct version of the ROI hedge, now attached to the right population.** The ROI rule is
+fixed fractions of the frame, identical for every stack. A polarizer suppresses speculars, so it
+changes what *content* lands in a fixed ROI — which bears on **B6's held-out cells**, all but one
+of them CPL-on, and not on §5's development numbers at all.
+
+**Nothing else in my work inherited the universal claim, and here is how I checked.** A grep for
+`CPL|polariz|clip|specular|highlight|bare lens|saturat` over `M55-sigpow-verification.md`
+returns 20 matches, **all of them the word "saturates" applied to a decision threshold** —
+metric saturation, not optical saturation. The same grep over this document returns matches in
+this subsection only. No claim about clipping, speculars or the highlight tail exists anywhere
+in either report, so none could inherit it.
 
 **Development stacks, permanently excluded from B6:** `112MSDCF`, `113MSDCF`, `foam`,
 `109MSDCF`, `119MSDCF`, `coffee-bubbles`. All six retain their original names.
@@ -587,6 +636,62 @@ the quantity is definition-dependent, which §7's answer explains: they are all 
 
 ---
 
+### 7.2 What else rests on a contiguous split — three additions to fact 881's audit
+
+Fact 881 audited every SYNTHESIS **fact row** mentioning a contiguous split: nine rows, four
+false positives, three amended, one checked and unaffected. That audit is sound and I am not
+repeating it. Three things sit outside its reach, and the third is the one that matters.
+
+**1. `b6_spec.py`'s golden vectors are CHECKED AND UNAFFECTED — MEASURED by inspection.**
+This was the obvious place for a null reading to be frozen into a Rust test, so I looked.
+`experiments/m46-detail-metric/src/b6_spec.py` builds every one of G1-G8 from **a closed form or
+a documented 32-bit hash mixer** — `hash_field(64, 21)` and friends — explicitly so "a Rust test
+builds it with no shipped data" (its §6). **No golden vector is generated from a half-stack
+split of any kind**, and the file contains no contiguous split at all. Recorded per discipline
+412: this one was examined and held.
+
+**2. My own B3 split-leverage number inherits exactly the defect fact 705 was amended for —
+MEASURED, against my own instrument.** `calibrate.py:161` computes the `split` nuisance leverage
+as `max` over `contiguous` and `block-4`, and `contiguous` is inside the null. So the calibration
+log's `nuisance 'split' has leverage 5.1x the reference signal step` **is not a leverage reading
+in the fact-705 sense** — it is dominated by a term that destroys the measurement rather than
+displacing it. **The gate is unaffected**: `split` is pinned, the KILL fires either way, and a
+choice that destroys the measurement is exactly what B3 exists to catch. **The interpretation of
+the number is affected**, and in the same direction as fact 705's amendment: a 5.1x nuisance
+sounds like something an operator could correct for; one of its three admissible values cannot
+be corrected, only avoided. `block-4`'s null status is unmeasured — SYNTHESIS question 199.
+
+**3. The audit has to be on the OPERATION, not the word — and there is at least one dependant
+the word cannot find. ARGUED, and cheap to settle.**
+`experiments/m31-verification/src/v15-m29-floor.py:26` computes
+
+```
+   a = hp(np.mean(rs[:n//2], axis=0) - 1.0);  b = hp(np.mean(rs[n//2:n], axis=0) - 1.0)
+   pd = ((a - b) / 2.0).std()
+```
+on the first 16 frames of `109MSDCF`. **That is a contiguous half-stack split**, feeding a
+pair-difference noise floor, its `pair exponent +0.2918`, and a flat-field/PRNU budget. The file
+never uses the word "contiguous", so a word-grep over facts or reports cannot reach it; the
+operation is spelled `[:n//2]`.
+
+**The failure mode is inverted from the sigpow case and I want that stated precisely rather than
+alarmingly.** Fact 861's mechanism is about the *inputs*: two contiguous halves of a depth sweep
+see different parts of the subject. For a **cross-power** statistic that drives the reading to
+null — it under-reads shared signal. For a **pair-difference noise** statistic it does the
+opposite: any focus drift between the halves fails to cancel and **inflates** the estimate, so
+the noise floor would be biased *high* and the exponent perturbed. Whether it bites at all
+depends on whether those 16 frames sweep focus, which I have not measured and am not measuring
+here. The settling experiment is one line — re-run with a parity split and compare — and it is
+worth doing before any number from that file is relied on again.
+
+**The generalisable point.** Fact 881 found three live dependants with one grep on a word. A
+grep on the operation — `[:n//2]`, `[:len(x)//2]`, `first half`, `array_split` — reaches code
+that never names what it is doing. **A retracted premise should be audited by its operation, not
+by its vocabulary**, because the vocabulary is what the author chose and the operation is what
+ran.
+
+---
+
 ## 8. Proposed facts
 
 Numbers are placeholders; the orchestrator assigns them.
@@ -661,6 +766,33 @@ Numbers are placeholders; the orchestrator assigns them.
   `wrapped-text-2` at 400. Exposures are not matched (10x the light for 4x the gain), so equal
   electron level must not be assumed. Whether the scene held still between captures is
   **unverified**, so the cross-ISO arm B6-ISO is registered and left disarmed.
+- **P46 (CORRECTION of my own P-series, ARGUED from EXIF dates supplied by the orchestrator).**
+  "Every frame in the corpus was shot through a circular polarizer" is **false**. The CPL is on
+  from 25 May (`coffee-bubbles`, `foam` probable, `wrapped-text-1/2`, `bee-1/2/3`), off to 17 May
+  (`112MSDCF`, `113MSDCF`, `119MSDCF`, `109MSDCF`), and **unknown** for `coffee-bean`. I
+  published the universal version and attached a hedge to it; **the hedge landed on `112MSDCF`,
+  which was shot without the filter.** A hedge applied to the wrong population is not caution.
+- **P47 (ARGUED, and it only exists because P46 was corrected).** This spec's thresholds are
+  calibrated on stacks that are two-thirds **CPL-off** and applied to a held-out set that is
+  five-sixths **CPL-on**. Under the false universal the two populations were identical and the
+  mismatch could not be seen. `plant_noise_e = 3.7 e-` is the one constant exposed, because it
+  is the only one derived from an absolute level rather than a ratio.
+- **P48 (MEASURED by inspection, recorded because it HELD).** `b6_spec.py`'s golden vectors
+  G1-G8 are built from closed forms and a documented 32-bit hash mixer, with no half-stack split
+  anywhere in the file. **The frozen golden vectors did not capture a null reading.** Fact 861's
+  retraction does not reach them.
+- **P49 (MEASURED, against my own instrument).** The `split` nuisance leverage of **5.1x** in
+  `out/calibrate.log` is `max(contiguous, block-4)` and `contiguous` is inside the null, so the
+  number is not a leverage reading in fact 705's sense. **The B3 gate is unaffected and the
+  interpretation is:** one of the three admissible split values does not displace the
+  measurement, it destroys it, and a null is avoidable but not correctable.
+- **P50 (ARGUED, and it names a dependant a word-search cannot reach).**
+  `m31-verification/src/v15-m29-floor.py:26` performs a contiguous half-stack split
+  (`rs[:n//2]` against `rs[n//2:n]`) on 16 frames of `109MSDCF`, feeding a pair-difference noise
+  floor, its `pair exponent +0.2918` and a flat-field/PRNU budget. The file never uses the word.
+  **The failure mode is inverted from the cross-power case:** a focus drift between contiguous
+  halves does not cancel in a difference, so a noise floor would be biased **high**, not null.
+  Unmeasured; settled by one re-run with a parity split.
 
 ## 9. Proposed disciplines
 
@@ -695,6 +827,17 @@ Numbers are placeholders; the orchestrator assigns them.
   must be traceable to a line that enforces it, and the enforcement must be shown rejecting a
   planted violation. Two of this spec's own thresholds sat unenforced until a directory rename
   forced the function open.
+- **Audit a retracted premise by its OPERATION, not by its vocabulary.** A word-grep finds the
+  code whose author named what it was doing. `[:n//2]`, `[:len(x)//2]`, `array_split` and "first
+  half" find the code that did the same thing silently. One such dependant was found here in a
+  file that never uses the retracted term.
+- **A hedge is a claim and carries the same burden of population as a measurement.** Before
+  writing "this number may be affected by X", check that X was present in the data that produced
+  the number. A hedge on the wrong population reads as caution, is false, and is never
+  re-examined precisely because it looks conservative.
+- **A calibration set and a held-out set must be checked for population homogeneity in every
+  known covariate, not only the one under test.** Held-out status protects against tuning; it
+  does not protect against the two sets differing in gear, date or optical path.
 - **An executable spec must be bit-reproducible by a third party, so never serialise a set.**
   Re-running this battery produced output identical in every number and different in three lines,
   purely because a `set` literal's iteration order follows `PYTHONHASHSEED`. Found only because
