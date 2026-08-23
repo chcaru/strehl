@@ -356,8 +356,11 @@ monolithic binary and ship only that binary.
     older mtime. **After any restore, set `LastWriteTime` to `Get-Date`.** Before
     trusting a workspace run that follows an edit, force the rebuild — touch the
     file, set a unique `RUSTFLAGS` cfg, or `cargo clean -p <crate>`. Read the
-    compile lines, not just the test lines. (SYNTHESIS fact 576, disciplines
-    299/300.)
+    compile lines, not just the test lines. **And never use `-q`**: `cargo run -q` and
+    `cargo test -q` suppress the `Compiling` lines, which are exactly the
+    evidence this rule requires. M48 fell into that while checking this rule's
+    own property, caught it, and redid the run before recording anything.
+    (SYNTHESIS fact 576, disciplines 299/300; `-q` from fact 660.)
 
 34. **A plant that supplies its own noise constant cannot detect that constant
     being wrong.** M40's null plant and M41's `noise_constant_check` each draw
