@@ -92,6 +92,60 @@ take it as a specification. An independent verifier is auditing the repair now.
   contributes to fact 43's span dependence. This is the live thread M23 left behind.
 - R5 (blur-equalised edges) is untested and is now the better candidate than R4, because it
   plants nothing and so is immune to the mechanism that killed R4.
+- **Time the load-time calibration in F5.3 option A** (one 512² noise-plane pass per stage).
+  It is asserted to be milliseconds and has never been timed; if it is not cheap, the
+  weaker declare-it design comes back. Cheapest open item in the plugin work.
+- **Run the byte-identity check for fact 503** once M40 releases `merge.rs`. Fact 504 says
+  what the test must assert (a bounded flip count, not equality) so that it does not go red
+  for the wrong reason.
+
+## What I found overnight that you should know about
+
+Three things, in descending order of how much they change the plan.
+
+**1. The pluggability requirement — your #1 structural ask — had a hole, and the design
+could not see it.** The merge's gate is calibrated in units of a constant that belongs to
+the *focus operator*, not to the program. Anyone contributing a focus measure inherits our
+constant and silently rescales the gate. Measured: one such mistake reverts **87.76% of
+pixels to pure selection** — the tool becomes the exact defect it exists to remove — while
+the log, the exit code and the calibration block are identical to a correct run.
+
+I then surveyed seven textbook focus operators. The constant spans **10.4×** across them,
+and the worst case is the sum-modified-Laplacian at 6.68 — which is *the* canonical
+shape-from-focus operator, i.e. the single likeliest thing a contributor would send us. The
+other direction is populated by `ring(1,3)`, which is **our own first shipped operator**.
+
+None of the four property tests in the plugin design catches this. It is confluent,
+sensitive, residue-free, and puts the peak in the right place. It is a missing *contract*,
+not a missing test. `docs/research/E-plugin-architecture.md` §F5 is the amendment.
+
+The fix I landed on is better than the one I started with: **the host should measure the
+plugin at registration rather than ask it to declare anything**, because the constant
+depends on our regulariser, which a plugin cannot know. That makes the fault
+unrepresentable rather than merely detectable, and it makes `--gate` genuinely
+dimensionless. Facts 436-439, 500-504.
+
+**2. I got one of my own numbers wrong four hours after writing it, and the instrument
+caught it rather than a reviewer.** M43 priced the damage using `k = 5.94`, computed as the
+ratio of our two published noise constants. Those two constants are not the same kind of
+quantity — one includes the regulariser and one does not — so the ratio is not a quantity.
+The honest value for that pair is 1.815; I overstated it by 3.27×.
+
+It was caught because the Python instrument was calibrated against **two** targets and
+refuses to print results when either misses. It matched one to 0.20% and missed the other
+by 24.26%, and the single thing the two configurations differ in was the bug. A one-target
+calibration would have been tuned into agreement and everything built on it would have been
+silently wrong by a quarter. That is now discipline 257.
+
+The conclusion survived: the cost table was run at effective gates rather than derived from
+the bad ratio, and the survey supplies a *larger* real `k` than the discredited example. So
+the corrected record prices the seam higher than the mistake did. Both wrong numbers are
+still visible in the documents, marked.
+
+**3. The README was claiming something the project's own measurements refute.** It said the
+estimation work was unbuilt and asserted "never worse than a single frame" — the invariant
+falsified earlier tonight. Rewritten, with the retraction stated in the performance section
+rather than buried.
 
 ## Running while you sleep
 
@@ -109,3 +163,5 @@ their own work and the fact-341 repair above is mine.
 
 M42 is the one I would watch. If 13 is wrong for the operator we just adopted, it is a
 shipped-default defect, and it sits underneath a large fraction of the corpus's numbers.
+
+M16 has started writing its report to disk, so it is close.
