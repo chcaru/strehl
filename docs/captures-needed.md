@@ -834,6 +834,19 @@ request. A burst is the only capture that can arbitrate a *noise level*, and for
 precisely the same reason: with focus held still, every frame-to-frame response
 difference is noise by construction. The two findings are complementary.
 
+**A second, sharper argument, added after M69's amendment.** Every synthetic
+replicate experiment in this corpus freezes a single real frame as its latent.
+But a real frame is `T + eta`, so the frozen latent carries `2 s^2` of gradient
+energy that the true scene does not, and every response-noise number measured
+that way is inflated by it. M69 measured the size of that inflation by planting
+extra frozen realisations and watching the number climb (its facts 39-40): on
+M62's own plant it accounts for roughly a quarter to a half of the excess. **The
+defect-free latent cannot be constructed from one frame at all** -- the only way
+to observe a scene without a frozen noise realisation in it is to average many
+frames at one focus position, which is exactly this capture. Until it exists,
+every replicate study in the corpus carries a bias whose size can be estimated
+but not removed.
+
 ### What to shoot
 
 | | |

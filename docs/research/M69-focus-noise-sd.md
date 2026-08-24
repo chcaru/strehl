@@ -1,28 +1,47 @@
 # M69 — `FOCUS_NOISE_SD` is a zero-signal constant standing in for a texture-dependent quantity
 
-**Verdict: the constant is not 19–21% low. It is not a scale error at all — it is
-a *form* error. `FOCUS_NOISE_SD = 0.015214` was calibrated on a 512×512 plane of
-pure iid Gaussian noise with no signal, no gain, no ISO, no CFA and no texture;
-its own plant size biases it 0.64% low, and that is the largest error in it that
-is a scale error. M66's `rho_REAL = 1.1921` reproduces here digit-for-digit on
-M66's own crop and does **not** generalise: on three further real latents the
-same measurement gives 0.8380, 1.0274 and 1.0246 — the sign is not even
-consistent. Across all 12 stacks the true per-stack response noise sits between
-**0.9285×** and **1.1009×** the shipped constant (median 1.0147×), so as a
-corpus average the shipped number is good to about 1.5%. As a *per-pixel*
-statement it is refuted: on a controlled plant the same operator produces
-`sigma_F` from **0.2805×** to **1.1386×** — a 4.06× span — driven not by
-signal-to-noise but by whether the deterministic gradient *direction* stays
-coherent across the operator's 27×27 window, and within a single real stack the
-p05–p95 span reaches 2.0×. Priced: a uniform recalibration to any corpus-justified
-`rho` moves mean `n_eff` by −2.8%…+3.2% and moves M62's certified `5.431624` by
-at worst **−0.788%**, inside M62's own 1% harness tolerance — the certified
-result survives. It survives *asymmetrically*: because M62's objective saturates
-above gate 4, `rho > 1` costs it +0.37% while `rho = 0.838` would cost it
-−3.63% and break that tolerance. Moving to the per-pixel form is a change 20–50×
-larger than any rescale — it moves `n_eff` by 1.09×–1.72× per stack. The scalar
-should stay a scalar only until the capture that can certify a per-pixel form
-exists, and that capture does not exist.**
+**Verdict: `FOCUS_NOISE_SD` should not be a constant, and that — not its value —
+is the finding. Its value is very nearly right: across all 12 stacks the true
+per-stack response noise sits between **0.9285×** and **1.1009×** the shipped
+number, median 1.0147×, so as a corpus average it is good to about 1.5% and I
+recommend against changing it. Its *form* is refuted. On a controlled plant the
+same operator produces `sigma_F` from **0.2805×** to **1.1386×** — a 4.06× span
+— driven not by signal-to-noise but by whether the deterministic gradient
+*direction* stays coherent across the operator's 27×27 window; within a single
+real stack the p05–p95 span reaches 2.0×; and adopting a per-pixel form would
+move `n_eff` by **1.09×–1.72×** per stack, twenty to fifty times what any rescale
+of the constant can do. The constant was calibrated on a 512×512 plane of pure
+iid Gaussian noise with no signal, no gain, no ISO, no CFA and no texture; its
+own plant size biases it 0.64% low, and that is the largest error in it that is a
+scale error. M66's 19–21% reproduces here on M66's own plant by **both** of
+M66's estimators — 1.1921 spatially, digit-for-digit, and 1.1971 temporally at
+N = 299, inside the pre-registered ±0.02 band — and does **not** generalise: on
+three further real latents the same measurement gives 0.8380, 1.0274 and 1.0246,
+and the sign is not even consistent. A control that could have failed, and did
+not, identifies why: M66's plant freezes one noise realisation into its latent,
+and the derived predictor P2 forecasts the *slope* of that defect to 0.7% of its
+own size. Priced: a uniform recalibration to any corpus-justified `rho` moves
+mean `n_eff` by −2.8%…+3.2%, moves M62's certified `5.431624` by at worst
+**−0.788%** (inside M62's own 1% tolerance), and leaves M64's guard and M65's D1
+standing with **3.24×** and **1.45×** margins. The certified result survives —
+*asymmetrically*, because M62's objective saturates above gate 4, so `rho > 1`
+costs it +0.37% while `rho = 0.838` would cost −3.63% and break it. And the
+replacement carries the same shape of error as the thing it replaces: a
+per-pixel `sigma_F` still has no `N` term (§9.1).**
+
+Pre-registered at **`33f3565`**, before any number in this report existed.
+
+Status: MEASURED unless a fact says otherwise. No file under `crates/` was
+modified; `git show --name-only` on every commit in this milestone shows only
+paths under `experiments/M69-focus-noise-sd/`, `docs/research/M69-focus-noise-sd.md`
+and `docs/captures-needed.md`.
+
+**Amended after its first commit (`02f501b`)** in response to two post-dispatch
+updates: a report that M62 had independently reproduced M66's effect, and M62's
+addendum `e4c1f98` pricing the acceptance battery by algebra. **§3b handles the
+first, and it does not survive contact with the sources.** §8.2 defers to M62 on
+the second and prices the limb M62 left open. §§3b, 8.2, 8.3, 9.1 and facts
+36–47 are new; **nothing in the original was withdrawn.**
 
 Pre-registered at **`33f3565`**, before any number in this report existed.
 
@@ -45,7 +64,7 @@ files under `docs/`). Read in full or in the named part:
 | [`M65-election-gate-measured.md`](M65-election-gate-measured.md) | the circularity — the constant is calibrated on the *regularised* field; `k_sd = 1.2377`; the 17×17 regulariser removes only 19% of response noise because the 27×27 window pre-correlates the samples. |
 | [`M62-sqrt-n.md`](M62-sqrt-n.md) | the certified ladder (gates 0/0.5/1/2/4/8/16 → 0.97682/1.35937/1.96845/3.77637/**5.43162**/5.47768/5.47768), the 1% harness tolerance, `n_eff = 29.539` at gate 4, P17 (G1/G2 temporal correlation `+0.073`), and the finding that a static burst has no interior optimum. |
 | [`M62-ruling-M64.md`](M62-ruling-M64.md) | M62's own ruling that its objective **saturates at gate 8** and cannot be used to choose a gate. This is load-bearing for §8. |
-| [`M62-ruling-M64-addendum.md`](M62-ruling-M64-addendum.md) | the scope of that ruling. |
+| [`M62-ruling-M64-addendum.md`](M62-ruling-M64-addendum.md) | **read after dispatch, and it changed two sections.** Its `CERTIFY-CONDITIONAL` verdict, its ≈8× robustness derivation, its exact σ-invariance of gate 0, its own post-hoc gate sweep, its confession that guard G shares the defect it polices, and — decisively for §3b — its statement *"No re-run … I implemented nothing."* |
 | [`M64-estimator-default.md`](M64-estimator-default.md) | §2.4 — the shipped default path, the seven-stack guard table and the 22.15× spread. |
 | [`M24-photometric-drift-measured.md`](M24-photometric-drift-measured.md) | photometric drift is already measured; K4 below corroborates and does not re-derive it. |
 | [`M43-plugin-calibration-seam.md`](M43-plugin-calibration-seam.md) | the calibration seam whose expressive limit is fact 9. |
@@ -234,6 +253,119 @@ K7 was reaching for, and its arm is A2 plus the §6 predictor.**
 
 ---
 
+## 3b. The "second, independent observation" is neither
+
+After M69 was dispatched it was told that the effect had been independently
+reproduced: *"M62, the project's acceptance authority, reproduced the effect
+independently on its own plant at its own seeds — ρ = 1.2124 at seeds 0 and 1"*,
+and that a refutation must therefore explain **two** independent observations
+rather than one. I checked, because the same brief told me in its own words that
+*"the configuration travels separately from the value and is the first thing
+lost."* It did.
+
+**Fact 36 (MEASURED, sources read).** `rho = 1.2124` (seed 0) and `1.2122`
+(seed 1) is **M66's own fact 9**, at
+[`M66-gate-n-dependence.md`](M66-gate-n-dependence.md):158–163, measured in
+**M66's** arm B on M62's plant, `N = 299` synthetic frames, two seeds. It is not
+M62's measurement. M62's addendum says so itself, in terms:
+
+> **No re-run.** This ruling is derived from M66's committed report, my own
+> committed post-hoc gate sweep at `53c8d47`, and a read-only check of
+> `merge.rs` and `main.rs`. **I implemented nothing.**
+
+and its own Labels section lists *"M66's facts as cited"* under MEASURED — the
+posture of a citation, not a replication. M62's phrase *"measured on my own
+plant"* is accurate and describes the **plant's** provenance: `109MSDCF/DSC00020`
+is M62's certified latent, and M66 borrowed it. Somewhere between that phrase and
+my brief it became a claim about the **measurer**.
+
+**Fact 37 (DERIVED).** So there is **one** observation, made twice by **one**
+milestone with two estimators on **one** plant — a spatial estimator over
+replicates (fact 10 here, 1.1921) and a temporal estimator over N = 299 (fact 9
+there, 1.2124). They are not independent in any sense that matters: same latent,
+same crop, same code, same defect. **A refutation has one thing to explain, not
+two, and §3 already explained it.** I record this without editing SYNTHESIS,
+which is not mine to touch; SYNTHESIS fact 986 currently asserts the independent
+reproduction and the orchestrator should route the correction.
+
+**This does not lower M66's standing and I want that said plainly.** M66 flagged
+K7 as post hoc and refused to rule on it. It was right to. The error is
+downstream of M66 entirely.
+
+### 3b.1 Reproducing M66's *other* estimator anyway — arm A7
+
+The right response to "it has been reproduced twice" is not to argue about
+authorship, so I ran the estimator I had not run.
+
+**Fact 38 (MEASURED).** M66's fact 9 configuration exactly — M62's plant, 2048²
+crop at `(y=1024, x=4096)`, ISO 160, **N = 299** synthetic frames, seeds 0 and 1,
+temporal SD per pixel:
+
+| seed | mean | median | p05 | p95 | `rho` |
+|---|---|---|---|---|---|
+| 0 | 0.018213 | 0.018633 | 0.014131 | 0.020789 | **1.1971** |
+| 1 | 0.018203 | 0.018625 | 0.014110 | 0.020827 | **1.1965** |
+| M66 fact 9 | 0.018446 | 0.018739 | 0.014232 | 0.021563 | 1.2124 |
+
+Deviations **−0.0153** and **−0.0157** against D1's ±0.02 band, so M66's fact 9
+also **reproduces**, though not to the zero digits its fact 10 did. Worth noting
+before anyone reads significance into the 1.3% gap: **M66's own two estimators
+disagree by 1.70% on this one plant** (fact 9 mean 0.018446 against fact 10's
+REAL 0.018137), so the residual here is the same size as M66's internal spread
+and I draw no conclusion from it.
+
+### 3b.2 A control that could have failed
+
+M69's account of both numbers is the frozen-latent defect of fact 14. Until now
+that was algebra checked against P2. Arm A7 made it predict something it could
+get wrong.
+
+**Fact 39 (MEASURED).** Freeze `k` independent noise realisations into the latent
+instead of one — `L_k = L + sum_{i=2..k} eta_i`, so `k = 1` is M66's plant and
+each increment adds exactly the same `2 s^2` of spurious gradient the freeze
+already added once. `k` then indexes the defect in known units. Measured at
+N = 299, seed 0, against P2 — which was built and validated on the completely
+unrelated A3 synthetic sweep and knows nothing of this construction:
+
+| `k` | `rho` measured | P2 predicted | error |
+|---|---|---|---|
+| 1 (M66's plant) | 1.1971 | 1.1830 | −0.0141 |
+| 2 | 1.2428 | 1.2289 | −0.0138 |
+| 3 | 1.2714 | 1.2568 | −0.0146 |
+
+Bars were fixed in the arm's docstring before it ran: level within 0.05 absolute,
+**and separately** the `k=1→3` step within 30% of that step, because a predictor
+anchored at roughly the right level can still get the slope wrong.
+
+* **Level: MET** — worst error 0.0146 against 0.05.
+* **Slope: MET** — measured step **+0.0743**, P2 **+0.0738**, miss **0.0005**
+  against a bar of 0.0223. P2 forecasts the defect's slope to **0.7% of its own
+  size**.
+
+`rho` rises monotonically with `k` exactly as the mechanism requires. Had it been
+flat, or fallen, or had P2 missed the step, M69's account of 1.1921 and 1.1971
+would have collapsed. It did not.
+
+**Fact 40 (MEASURED / DERIVED).** Back-extrapolating to `k = 0` — the defect-free
+plant, which **cannot be built from one real frame**, because the only way to
+observe a latent without a frozen noise realisation in it is to average many
+frames at one focus position, which is the static burst that does not exist:
+
+| method | `rho(0)` |
+|---|---|
+| linear back-step from `k` = 1, 2 (MEASURED) | 1.1514 |
+| quadratic back-step from `k` = 1, 2, 3 (MEASURED) | 1.1343 |
+| P2 on the debiased gradient (DERIVED) | **1.0985** |
+
+The back-steps extrapolate outside their own range on a concave curve, so they
+bracket high; P2 is the better estimate and the ladder bounds it. **The freeze
+accounts for roughly a quarter to a half of M66's excess over 1.0** on this
+latent — `0.1971` of excess, of which `0.046`–`0.099` is artefact. The remainder
+is a real property of this particular crop, and fact 13 shows that crop is
+unrepresentative of the corpus.
+
+---
+
 ## 4. Controls, with their pre-registered consequences
 
 | id | bar | result | verdict |
@@ -248,6 +380,8 @@ K7 was reaching for, and its arm is A2 plus the §6 predictor.**
 | **K6** — the instrument can detect a wrong answer (rule 39) | planted 1.30 reads 1.30 ± 0.01 | recovered **1.3000** | **MET** |
 | **K7** — my Python merge reproduces M62's certified number | 5.4316 ± 0.010 at gate 4 | **not attempted** | **NOT MET** |
 | **K8** (post hoc) — real half-split noise matches the model | ±10% | ratios 2.1847 / 2.4041 / 0.9109 / 1.0953 | **NOT MET** |
+| **K9** (post hoc, arm A7) — the frozen-latent mechanism predicts a *level* | \|P2 − measured\| ≤ 0.05 at `k` = 1, 2, 3 | worst 0.0146 | **MET** |
+| **K10** (post hoc, arm A7) — and predicts the *slope*, which a level-anchored predictor can still get wrong | P2's `k`=1→3 step within 30% of the measured step | measured +0.0743, P2 +0.0738, **miss 0.0005** against a 0.0223 bar | **MET** |
 
 **Fact 15 (MEASURED).** K2 is the control that makes every Python number in this
 report a statement about the shipped binary. Running the full winner election and
@@ -479,6 +613,23 @@ priced by running the shipped merge at rescaled gates; nothing under `crates/`
 was touched.** I built the CLI myself into `target-m69/` (`Compiling strehl-cli`
 observed) and ran a 17-rung gate ladder on all seven M64 guard stacks.
 
+**Fact 41 (MEASURED, source read — M62's linearity claim, checked rather than
+accepted).** M62's addendum derives the same identity and a good deal now rests
+on it, so I was asked to check it against the code independently rather than
+rely on M62's reading. `FOCUS_NOISE_SD` appears **17 times** in `merge.rs`.
+Sixteen are documentation (`:62`, `:200`, `:228`, `:1078`, `:1107`, `:1114`), the
+declaration (`:185`), the calibration test's own assertions (`:1268`, `:1272–3`,
+`:1317`, `:1319`) and test fixtures (`:1630`, `:1640`, `:1653`, `:1728`).
+**Exactly one is on the gate path:**
+
+```
+311: self.threshold * std::f32::consts::SQRT_2 * FOCUS_NOISE_SD
+```
+
+A bare product, no additive term, no second use. **M62's linearity claim is
+CONFIRMED by independent reading**, and fact 28 was derived the same way before
+M62's addendum was available to me.
+
 **Fact 29 (MEASURED).** Recalibrating each stack to its own `rho_true` (fact 13):
 
 | stack | N | `rho_true` | `n_eff@4` | `n_eff/N` | `n_eff@4rho` | `n_eff/N` | change |
@@ -564,6 +715,100 @@ one-sided; the constant's error is scene-dependent and two-sided and about a
 tenth the size. M66's chartered finding survives M69 intact; M66's post-hoc K7
 does not.
 
+### 8.2 The acceptance-battery limb — deferring to M62, which priced it first
+
+M62's addendum `e4c1f98` priced this limb by algebra while M69 was running, and
+asked M69 not to redo it. I am not redoing it. What follows is what M62
+established, cited rather than re-derived, and how it relates to fact 30.
+
+**Fact 42 (DERIVED by M62, cited).** From
+[`M62-ruling-M64-addendum.md`](M62-ruling-M64-addendum.md) §4: the
+estimator-versus-selector verdict is **robust roughly eight-fold**, because even
+at gate 1 — a 4× σ error — `DEFAULT` scores **1.9710** against
+`SELECTOR-same-binary`'s **0.9773**. And the battery's **power arm is exactly
+σ-invariant**, because at gate 0 the tolerance is `0 · sqrt(2) · sigma_F = 0`
+identically for any `sigma_F`. **Neither of those depends on anything M69
+measured, and M69 confirms neither is disturbed by anything it found.**
+
+**Fact 43 (DERIVED).** Fact 30 is a **different quantity** and the two do not
+overlap. M62's ≈8× robustness is about the *verdict* — whether the default path
+estimates or selects. Fact 30 is about the *headline number* `5.431624` against
+its own ±2% window and the harness's 1% tolerance, which M62 is precisely the
+party that withdrew the unconditional form of. The two ladders agree where they
+meet: M62's post-hoc sweep at `53c8d47` reads `0.9773 / 1.3616 / 1.9710 /
+3.7610 / 5.4354 / 5.4849` against the certified ladder's `0.97682 / 1.35937 /
+1.96845 / 3.77637 / 5.43162 / 5.47768` — **0.07% apart at gate 4**. Fact 30
+interpolates the *certified* ladder, because that is the one under certification.
+
+**M62's conditional resolves in M62's favour on M69's evidence.** Its `DEFAULT`
+window tolerates a 2.5% `n_eff` loss; the corpus-justified recalibration costs at
+most 2.8% on one stack (`coffee-bean`, fact 29) and −0.788% on the certified
+objective. **M69's recommendation is that the constant's value not change at
+all** (§9), which resolves the condition without any movement. **M62 remains the
+acceptance authority; this is M69 reporting an input, not M69 ruling.**
+
+### 8.3 The limb neither M62 nor M65 priced — the election comparison
+
+**Fact 44 (MEASURED — the number M65 said it could not reach).** M65's
+circularity is that `FOCUS_NOISE_SD` is calibrated on the **regularised** field,
+so arm X — the arm built to break that circularity by turning the regulariser off
+— is still scored in units derived from it. M65 worked around this with a
+matched-unit arm X′ using `k_sd = 1.2377`, obtained as a **ratio**. Measuring the
+raw field's constant **directly** on the crate's own calibration plant, through
+the pipeline that reproduces the shipped constant to 1.3% (K1):
+
+| field | measured SD | |
+|---|---|---|
+| raw focus field | **1.904436e-2 ± 1.44e-4** | ← the constant a raw-election merge needs |
+| regularised field | 1.541341e-2 ± 1.50e-4 | shipped constant 1.521400e-2 |
+
+`k_sd = 1.23557`, against M65's **1.23770** — **−0.17%**. The regulariser removes
+**19.1%** of the response noise, against M65's 19.2%. **M65's fact 3 reproduces
+independently, and from an absolute measurement rather than a ratio.**
+`FOCUS_NOISE_SD_raw = 0.019044` is the number M65's arm X would need if it were
+ever shipped; it has not existed until now.
+
+**Fact 45 (MEASURED).** M65's D1 is a long way from being overturned. `dev(rho_W)`
+is monotone *decreasing* in the gate (M65 fact 10), so by fact 41's linearity a
+`rho < 1` recalibration moves M65 **toward** the regime where the election field
+is load-bearing. Solving M65's own published rows for the crossing of its 1.332
+bar, by monotone PCHIP in log-gate — no re-run:
+
+| stack | `dev@4` | crossing gate | `rho_crit` | corpus `rho_true` | headroom |
+|---|---|---|---|---|---|
+| 109MSDCF | 1.0827 | 0.5487 | 0.1372 | 0.9901 | 7.22× |
+| 119MSDCF | 1.1076 | 0.8198 | 0.2049 | 0.9664 | 4.72× |
+| 113MSDCF | 1.1793 | 2.7087 | 0.6772 | 1.0097 | **1.49×** |
+| coffee-bubbles | 1.2335 | 2.6630 | 0.6658 | 0.9686 | **1.45×** |
+
+**σ would have to fall by 33% to overturn M65's D1; the corpus says at most 7%.**
+Worst headroom **1.45×**. M65's *"not load-bearing at the shipped gate"* stands
+under every recalibration M69 can justify.
+
+**Fact 46 (MEASURED, and it is a form error in M65's instrument, not a value
+error).** `k_sd` is itself texture-dependent, and far more strongly than the
+regularised field is. Measured on the four real latents (24 replicates each):
+
+| latent | `rho` regularised | `rho` raw | `k_sd` here | vs M65's plant value |
+|---|---|---|---|---|
+| M62 / 109MSDCF | 1.1889 | 2.4017 | **2.0202** | 1.632× |
+| coffee-bean | 0.8357 | 1.3957 | 1.6700 | 1.349× |
+| wrapped-text-1 | 1.0255 | 1.3921 | 1.3575 | 1.097× |
+| bee-1 | 1.0221 | 1.4385 | 1.4073 | 1.137× |
+
+**`k_sd` runs 1.3575–2.0202 on real texture — a 1.488× span — against the single
+plant value 1.2377 M65 used.** The mechanism is fact 19 read twice: the raw field
+keeps the fine-scale structure that drives direction incoherence, and
+regularisation is precisely what removes it, so the raw field's texture
+dependence is the stronger of the two. **The error is in the conservative
+direction for M65 and its conclusion is safe**: a `k_sd` too small makes arm X′'s
+tolerance too tight, `dev` too high, and crossing the bar *more* likely — and M65
+reports X′ never crossed at any gate on any stack (max `dev` 1.2835). A larger
+`k_sd` only lowers that further. **But M65's arm X′ is a single-scalar unit
+conversion between two fields whose ratio is not a scalar, and any future
+milestone converting between them inherits the same form error M69 found in the
+constant itself.**
+
 ---
 
 ## 9. Should it be a constant at all?
@@ -594,6 +839,51 @@ does not.
 value; (b) a milestone chartered to pre-register and test P2 as a per-pixel
 field, with the burst capture of §11 in hand first; (c) the sensor-profile
 agent to see fact 24's 8–27% read-noise over-prediction.**
+
+### 9.1 Auditing the replacement for the defect the corpus is now suspicious of
+
+M62 took M66's finding about the *subject* and applied it to its own
+*instrument*, and found the identical defect: guard G is a fixed 0.95 line
+against a statistic whose null drifts with N, with nothing in G's statement
+mentioning N. Its words: *"my guard has the same shape of error as the thing it
+polices."* The same test must be run on anything M69 proposes, and it does not
+come out clean.
+
+**Fact 47 (DERIVED). P2 has no `N` term, and inherits the defect verbatim.**
+Replacing a scalar `sigma_F` with a per-pixel field does **nothing** about M66's
+headline. The gate compares each frame against `max_j X_j(p)`, whose expected
+value drifts upward with `N` by `c_N` — 1.032 `sigma_F` over the corpus's own
+range, an 18% erosion of gate-4 headroom. A per-pixel `sigma_F` changes the
+denominator of that comparison, not the numerator's `N`-dependence. **A merge
+that adopted P2 and stopped there would have replaced one `N`-blind quantity with
+a better-shaped `N`-blind quantity.** I state this as the first item because it
+is the one I would otherwise have been most tempted to leave out.
+
+Four further undeclared domains, named so that whoever charters the follow-up
+declares them rather than discovering them:
+
+1. **Region size.** P2's anchor is `FOCUS_NOISE_SD`, which fact 7 shows is a
+   spatial-SD statistic on a *finite* region: 512² gives 1.521e-2 and 2048²
+   gives 1.531e-2, thirteen standard errors apart, and the crate itself records
+   192² reading 10% low. **P2 therefore carries an undeclared region-size domain
+   of `≥ 512²` that nothing in its formula mentions.**
+2. **Field.** P2 was built and validated on the **regularised** field only. Fact
+   46 shows the raw field's texture dependence is 1.10×–1.63× stronger, so P2 is
+   **not** transferable to a raw-election merge without re-derivation, and
+   nothing in P2's statement says so.
+3. **Stationarity.** The residual term averages `Var(xi)` over the combined
+   kernel `K²`, which assumes the local gradient statistics are stationary across
+   a 27×27 ⊛ 17×17 support. That assumption is weakest exactly at edges — which
+   is where fact 19's direction-coherence mechanism is strongest and where P2 is
+   most needed.
+4. **ISO, by omission.** P2 is scale-free in noise magnitude: the `sigma`
+   divisor cancels, which is why fact 11's FLAT arm is level-independent to four
+   digits. That is correct behaviour on the shipped chain, but it means **P2
+   cannot see** the 8–27% read-noise over-prediction of fact 24. It inherits the
+   profile's error silently rather than exposing it.
+
+**None of these is a reason to keep the scalar.** They are the domain statement
+the replacement must ship with, which is the thing the scalar never had.
 
 ---
 
@@ -634,6 +924,20 @@ not:
    for recalibrating this constant cannot be pointed at the thing that moves it.
    That is not a circularity in my measurement; it is a circularity in the
    project's ability to act on it.
+7. **One place it stopped biting, after the amendment.** M65's specific
+   circularity — that an arm which turns the regulariser off is still scored in
+   units defined *on* the regularised field — **is now removed, for that arm.**
+   Fact 44 measures the raw field's own constant directly on the crate's plant:
+   `FOCUS_NOISE_SD_raw = 0.019044`. A raw-election merge no longer has to borrow
+   the regularised unit or convert through a scalar. That does not rescue the
+   general case — fact 46 shows the conversion factor is itself texture-dependent
+   across a 1.488× range — but the specific hole M65 named is filled.
+8. **Where the amendment made the circularity worse, not better.** Fact 39's
+   control validates P2's *slope* against a defect measured in units of `2 s^2`,
+   and `s` comes from the same sensor model item 5 flags as 8–27% over-predicted.
+   The slope agreement (0.7% of the step) is therefore a strong test of the
+   *mechanism* and a weak test of the *units*. I did not find a way to separate
+   them without the burst.
 
 ---
 
@@ -661,7 +965,7 @@ Appended to `docs/captures-needed.md`. In priority order:
 
 | decision | pre-registered bar | result |
 |---|---|---|
-| **D1** — is M66's 19–21% reproducible? | within ±0.02 of `rho_REAL = 1.1921` | **REPRODUCED** (Δ = 0.0000) |
+| **D1** — is M66's 19–21% reproducible? | within ±0.02 of `rho_REAL = 1.1921` | **REPRODUCED** (Δ = 0.0000). Amended: M66's *other* estimator, fact 9's temporal `rho = 1.2124`, also reproduces at Δ = −0.0153, inside the same ±0.02 band (fact 38) |
 | **D1b** — is it right *as a claim about real texture*? | real estimate in `[1.15, 1.25]` on a majority of stacks **and** A3 moving `rho` on M62's latent by ≤0.05 | **NOT MET** — 1 of 4 latents, 0 of 12 stacks by `rho_true`; reported as **not supported as a general statement**, corrected number 1.0147 median (fact 13), arm A2 + §6 |
 | **D2** — should it be a constant at all? | refuted if (a) IQR > ±10% of median on a majority, **or** (b) per-stack `rho` spans > 1.10× | **REFUTED via (b)**: 1.186× on the corpus, 4.06× across arms. (a) not satisfied (4 of 12) |
 | **D3** — is the per-pixel form derivable? | parameter-free predictor within median 10% on the known-truth arm | **NOT MET for P1** (errors to −78%, wrong sign); missing term named (fact 19) rather than fitted. P2 (fact 21) achieves 2.01% but is **post hoc** and does not satisfy D3 |
@@ -670,19 +974,36 @@ Appended to `docs/captures-needed.md`. In priority order:
 
 ## 13. What M69 asserts, and what it does not
 
-**Asserts.** The provenance of facts 1–9. The reproduction of fact 10. The
-non-generalisation of facts 12–14. The mechanism of facts 18–20. The corpus
-distribution of fact 13. The pricing of facts 29–32. The read-noise
-over-prediction of fact 24.
+**Asserts.** The provenance of facts 1–9. The reproduction of facts 10 and 38.
+The non-generalisation of facts 12–14. The mechanism of facts 18–20, now with a
+control that could have failed (facts 39–40). The corpus distribution of fact 13.
+The pricing of facts 29–32 and 44–46. The read-noise over-prediction of fact 24.
+That the "second independent observation" of fact 36 is a mis-attribution.
 
 **Does not assert.** That `FOCUS_NOISE_SD` should change value — §9 recommends it
-should not. That P2 is correct — it is post hoc and untested against a
-pre-registration. That M62's certification is in question — fact 30 says it is
-not, on this evidence, and fact 31 states the conditional under which it would
-be, for M62 and not M69 to rule. That fact 24's `rho_dark > 1` is real rather
-than a clipping artefact — fact 25 names the test I did not run.
+should not. That P2 is correct — it is post hoc, untested against a
+pre-registration, and §9.1 lists five domains it does not declare, the first of
+which is the same `N`-blindness M66 proved and M62 confessed. That M62's
+certification is in question — fact 30 says it is not, on this evidence, and fact
+31 states the conditional under which it would be, for M62 and not M69 to rule.
+That M65's D1 is in question — fact 45 says it clears by 1.45×. That fact 24's
+`rho_dark > 1` is real rather than a clipping artefact — fact 25 names the test I
+did not run. That M66 erred: fact 36's error is downstream of M66 entirely, and
+M66 flagged its own K7 as post hoc and declined to rule on it.
+
+**One thing the orchestrator must route, which M69 may not.** SYNTHESIS fact 986
+records that M62 *"independently reproduced M66's post-hoc 19-21% FOCUS_NOISE_SD
+effect on its own plant (rho = 1.2124 at seeds 0 and 1)"*. Fact 36 shows that
+number is M66's own fact 9 and that M62 states it re-ran nothing. **M69 does not
+edit SYNTHESIS.** The correction is the orchestrator's to make, and the reason it
+matters is not bookkeeping: the corpus currently believes a post-hoc result has
+been independently confirmed when it has not been, and that belief is what
+promoted it from flagged anomaly to settled fact before M69 reported.
 
 **Reproduction.** `experiments/M69-focus-noise-sd/` — `PREREGISTRATION.md`
 (committed at `33f3565` before any result existed), `src/*.py`, `out/*.log`,
 `out/*.json`. `src/m69.py` parses every constant out of `crates/` at run time and
-never retypes one.
+never retypes one. The amendment's arms are `src/95-a7-second-observation.py`
+(facts 38–40) and `src/96-a8-m65-election.py` (facts 41, 44–46); both carry their
+bars in their docstrings, fixed before they ran.
+

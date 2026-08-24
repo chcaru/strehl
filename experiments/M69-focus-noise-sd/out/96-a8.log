@@ -1,0 +1,88 @@
+==============================================================================
+M69 arm A8 -- M65's election comparison, priced
+==============================================================================
+  FOCUS_NOISE_SD      0.015214     merge.rs
+  DEFAULT_GATE        4.0            merge.rs
+  REGULARISER_RADIUS  8              merge.rs
+  WINDOW_RADIUS       13             focus.rs
+  SIGMA_EPS           0.001          focus.rs
+  gain_divisor        436.8          profile.rs
+  base_iso            100.0          profile.rs
+  read_noise_e_low    4.2            profile.rs
+  read_noise_e_high   1.2392          profile.rs
+  second_base_iso     400.0          profile.rs
+  black / white       512 / 15360     profile.rs
+==============================================================================
+A8.0 -- checking M62's linearity claim against the code
+==============================================================================
+  merge.rs, the only line that spends the constant:
+    311: self.threshold * std::f32::consts::SQRT_2 * FOCUS_NOISE_SD
+
+  occurrences of FOCUS_NOISE_SD in merge.rs: 17
+    62: //! [`FOCUS_NOISE_SD`] is measured by [`tests::the_focus_noise_constant_is_the
+    185: pub const FOCUS_NOISE_SD: f32 = 0.015_214;
+    200: /// standard deviation of the *difference* is `sqrt(2) * FOCUS_NOISE_SD`.
+    228: /// `threshold` is in units of `FOCUS_NOISE_SD`, which is *defined* as the SD of
+    311: self.threshold * std::f32::consts::SQRT_2 * FOCUS_NOISE_SD
+    1078: /// plain LCG here made [`FOCUS_NOISE_SD`] vary by **1.30x across seeds**
+    1107: /// **The measurement behind [`FOCUS_NOISE_SD`].**
+    1114: /// had to assume away — a factor of 3.2, see [`FOCUS_NOISE_SD`].
+    1268: let deviation = ((mean_sd - FOCUS_NOISE_SD as f64) / sem).abs();
+    1272: standard errors from the declared FOCUS_NOISE_SD \
+    1273: {FOCUS_NOISE_SD:e} (relative SEM {rel_sem:.4}); if the operator or \
+    1317: contrast > 20.0 * FOCUS_NOISE_SD,
+    1319: {FOCUS_NOISE_SD:e}; the gate cannot discriminate"
+    1630: let focus = |k: u16, _: usize| k as f32 * FOCUS_NOISE_SD;
+    1640: let focus = |k: u16, _: usize| -(k as f32) * FOCUS_NOISE_SD;
+    1653: let focus = |k: u16, i: usize| (((i * 7 + k as usize * 3) % 5) as f32) * FOCUS_NOISE_SD;
+    1728: 0 | 2 => 1.0 - 0.5 * FOCUS_NOISE_SD,
+
+  Verdict on M62's claim: tolerance() is a PRODUCT of T, a constant
+  and FOCUS_NOISE_SD, with no additive term and no other use of the
+  constant on the gate path. Scaling the constant by c is arithmetically
+  identical to scaling T by c. M62's linearity claim is CONFIRMED by
+  independent reading. M69 fact 28 was derived the same way.
+==============================================================================
+A8.1 -- the constant a raw-election merge would need
+==============================================================================
+  raw focus field        sd = 1.904436e-02 +- 1.44e-04
+  regularised field      sd = 1.541341e-02 +- 1.50e-04   (shipped constant 1.521400e-02)
+
+  FOCUS_NOISE_SD_raw  = 0.019044   <- the number M65's arm X needs
+  k_sd  = raw / reg   = 1.23557
+  M65 fact 3 k_sd     = 1.23770   delta -0.00213  (-0.17%)
+  regulariser removes 19.1% of the response noise   (M65: 19.2%)
+==============================================================================
+A8.2 -- how far M65's verdict is from being overturned
+==============================================================================
+  M65 fact 10: dev(rho_W) by gate, bar 1.332. Monotone DECREASING
+  in the gate, so a rho < 1 recalibration moves M65 toward the regime
+  where the election field IS load-bearing. Crossing found by monotone
+  PCHIP in log gate on M65's own published rows -- no re-run.
+
+  stack               dev@4  crossing gate  rho_crit  corpus rho  headroom
+  ------------------------------------------------------------------------
+  109MSDCF           1.0827         0.5487    0.1372      0.9901     7.22x
+  119MSDCF           1.1076         0.8198    0.2049      0.9664     4.72x
+  113MSDCF           1.1793         2.7087    0.6772      1.0097     1.49x
+  coffee-bubbles     1.2335         2.6630    0.6658      0.9686     1.45x
+
+  worst headroom 1.45x. The corpus minimum rho_true is 0.9285;
+  the largest rho_crit is 0.6772.
+==============================================================================
+A8.3 -- does the RAW field carry the same texture dependence?
+==============================================================================
+  If the two fields respond to texture differently, a per-pixel sigma_F
+  does not merely rescale M65's comparison -- it moves the arms by
+  different amounts and the matched-unit trick stops working.
+
+  latent             rho reg   rho raw  k_sd here  vs plant
+  ----------------------------------------------------------
+  M62/109MSDCF        1.1889    2.4017     2.0202    1.632x
+  coffee-bean         0.8357    1.3957     1.6700    1.349x
+  wrapped-text-1      1.0255    1.3921     1.3575    1.097x
+  bee-1               1.0221    1.4385     1.4073    1.137x
+
+  k_sd across real latents: 1.3575 to 2.0202  (span 1.488x), plant 1.2377
+
+  wrote out/96-a8.json
