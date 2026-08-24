@@ -462,6 +462,36 @@ def check_s3_hygiene(docs, index_eol):
     return out
 
 
+def check_s7_control_chars(docs):
+    """A C0 control character in the corpus is always a mangled escape, never
+    intent. PowerShell's double-quoted here-string (`@"..."@`) treats a backtick
+    as an escape introducer, so a markdown inline-code span written as
+    `bee-3-cpl` becomes BS + "ee-3-cpl": the backtick and the letter after it
+    are both consumed and replaced by one control byte. `e`/`b`/`f`/`a`/`v`/`r`/
+    `n`/`t`/`0` are all live escapes, and `b`, `e` and `f` open a great many
+    identifiers in this corpus -- bee-3-cpl, foam, experiments/.
+
+    The damage is invisible in a renderer, survives review, and had reached a
+    fact-table row before anything looked (fact 1488). Tab is legal; everything
+    else below 0x20, plus DEL, is not.
+    """
+    out = []
+    for doc in docs:
+        for lineno, line in enumerate(doc.lines, 1):
+            for col, ch in enumerate(line):
+                o = ord(ch)
+                if (o < 0x20 and ch not in "\t") or o == 0x7F:
+                    lo = max(0, col - 30)
+                    out.append(Violation(
+                        doc.rel, lineno, "S7",
+                        "control character 0x%02X at column %d -- almost "
+                        "certainly a PowerShell backtick escape that ate the "
+                        "following letter; restore the letter, do not delete "
+                        "the byte" % (o, col + 1),
+                        line[lo:col] + "<0x%02X>" % o + line[col + 1:col + 31]))
+    return out
+
+
 def check_s4_line_endings(docs, index_eol):
     """Mixed endings inside one file mean two tools wrote it. Harmless to a
     renderer, but it inflates a diff and so hides rule 29's deletion count,
@@ -1488,7 +1518,7 @@ def check_d1_duplicate_content(index):
     return out
 
 
-CHECKS = ["S1", "S2", "S3", "S4", "S5", "S6", "N1", "N2", "N4", "N5", "C1", "C2",
+CHECKS = ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "N1", "N2", "N4", "N5", "C1", "C2",
           "C3", "D1", "A1", "A2", "A4"]
 ADVISORIES = ["N3", "A3", "Q1"]
 
@@ -1588,6 +1618,8 @@ def main(argv=None):
         violations += check_s5_emphasis_balance(index)
     if "S6" in wanted:
         violations += check_s6_pipe_in_code_span(md_docs)
+    if "S7" in wanted:
+        violations += check_s7_control_chars(md_docs + rs_docs)
     if "N1" in wanted:
         violations += check_n1_duplicates(index)
     if "N2" in wanted:
