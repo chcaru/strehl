@@ -349,6 +349,25 @@ struct GradientPower {
     samples: usize,
 }
 
+#[derive(Clone, Copy)]
+struct GradientRoi<'a> {
+    values: &'a [f32],
+    sigma: &'a [f32],
+    width: usize,
+    height: usize,
+}
+
+impl<'a> GradientRoi<'a> {
+    fn new(values: &'a [f32], sigma: &'a [f32], width: usize, height: usize) -> Self {
+        Self {
+            values,
+            sigma,
+            width,
+            height,
+        }
+    }
+}
+
 fn gradient_power_columns(
     v: &[f32],
     sigma: &[f32],
@@ -407,33 +426,44 @@ struct ControlledDetail {
 /// gradient anchors. Each detail half is corrected with the scale fitted on the
 /// opposite flat half. When the detail ROI is the flat ROI, as in M77's null,
 /// no sample is used both to fit and to evaluate its own scale.
-fn cross_fitted_detail(
-    detail: &[f32],
-    detail_sigma: &[f32],
-    detail_w: usize,
-    detail_h: usize,
-    flat: &[f32],
-    flat_sigma: &[f32],
-    flat_w: usize,
-    flat_h: usize,
-) -> Result<ControlledDetail> {
+fn cross_fitted_detail(detail: GradientRoi<'_>, flat: GradientRoi<'_>) -> Result<ControlledDetail> {
     ensure!(
-        detail_w >= 4 && detail_h >= 2 && flat_w >= 4 && flat_h >= 2,
+        detail.width >= 4 && detail.height >= 2 && flat.width >= 4 && flat.height >= 2,
         "the repaired detail invariant needs flat and detail ROIs at least 4x2"
     );
-    let flat_mid = flat_w / 2;
-    let detail_mid = detail_w / 2;
-    let flat_left = gradient_power_columns(flat, flat_sigma, flat_w, flat_h, 0, flat_mid);
-    let flat_right = gradient_power_columns(flat, flat_sigma, flat_w, flat_h, flat_mid, flat_w);
-    let detail_left =
-        gradient_power_columns(detail, detail_sigma, detail_w, detail_h, 0, detail_mid);
-    let detail_right = gradient_power_columns(
-        detail,
-        detail_sigma,
-        detail_w,
-        detail_h,
+    let flat_mid = flat.width / 2;
+    let detail_mid = detail.width / 2;
+    let flat_left = gradient_power_columns(
+        flat.values,
+        flat.sigma,
+        flat.width,
+        flat.height,
+        0,
+        flat_mid,
+    );
+    let flat_right = gradient_power_columns(
+        flat.values,
+        flat.sigma,
+        flat.width,
+        flat.height,
+        flat_mid,
+        flat.width,
+    );
+    let detail_left = gradient_power_columns(
+        detail.values,
+        detail.sigma,
+        detail.width,
+        detail.height,
+        0,
         detail_mid,
-        detail_w,
+    );
+    let detail_right = gradient_power_columns(
+        detail.values,
+        detail.sigma,
+        detail.width,
+        detail.height,
+        detail_mid,
+        detail.width,
     );
     ensure!(
         flat_left.samples > 0
@@ -1463,14 +1493,18 @@ fn report(
         .map(|v| noise.green_luma_sigma(*v))
         .collect();
     let selector_controlled = cross_fitted_detail(
-        &selector.detail.values,
-        &selector_detail_sigma,
-        droi.width,
-        droi.height,
-        &selector.flat.values,
-        &selector_flat_sigma,
-        roi.width,
-        roi.height,
+        GradientRoi::new(
+            &selector.detail.values,
+            &selector_detail_sigma,
+            droi.width,
+            droi.height,
+        ),
+        GradientRoi::new(
+            &selector.flat.values,
+            &selector_flat_sigma,
+            roi.width,
+            roi.height,
+        ),
     )
     .context("building the gate-zero detail reference")?;
     let selector_metrics = detail_metrics(
@@ -1567,14 +1601,8 @@ fn report(
             .map(|(px, py)| e.predicted_sigma(noise, geom.index(px, py), levels.black))
             .collect();
         let controlled = cross_fitted_detail(
-            &merged_detail,
-            &detail_sig,
-            droi.width,
-            droi.height,
-            &merged_flat,
-            &flat_sig,
-            roi.width,
-            roi.height,
+            GradientRoi::new(&merged_detail, &detail_sig, droi.width, droi.height),
+            GradientRoi::new(&merged_flat, &flat_sig, roi.width, roi.height),
         )
         .with_context(|| format!("gate {} detail control", e.gate().threshold))?;
         let m = detail_metrics(&merged_detail, &detail_sig, droi.width, droi.height);
@@ -2731,8 +2759,11 @@ mod tests {
             .map(|(s, n)| *s + n)
             .collect();
         let sigma = vec![model_sd; w * h];
-        cross_fitted_detail(&detail, &sigma, w, h, &flat, &sigma, w, h)
-            .expect("synthetic ROIs are valid")
+        cross_fitted_detail(
+            GradientRoi::new(&detail, &sigma, w, h),
+            GradientRoi::new(&flat, &sigma, w, h),
+        )
+        .expect("synthetic ROIs are valid")
     }
 
     fn harmonic(n: usize) -> f64 {
