@@ -381,6 +381,7 @@ response moves by less than half a tolerance.
 | **NC5** translated election map | every headline has one; nulls 0.98–1.05 with sd 0.003–0.05 | if the null matched the real number, the statistic measures the index map's spatial statistics rather than its registration to the image. |
 | **NC6** planted mutation | sabotage → exit **exactly 101**, correct test named; restore → exit **exactly 0**, 3/3 pass | a green suite is a claim about the instrument, and this is the claim being falsified. **It also found a real defect in my own test** — see below. |
 | **gate-100000 arm** | election boundaries score 1.686 vs 1.048 null with the election disconnected from output | this one **did** kill something: it killed the coincidence statistic as evidence. |
+| **NC7** cache contamination (fact 1446) | §12: marker A2 green with A1 and A3 both red; lavendar's cached sidecar is byte-identical to a fresh solve | if the warp cache had served either arm a foreign registration, every delta in this report would be a cache artefact. |
 | **generality arm** (`lavendar`) | ratio 0.922, −4.5σ | see §8.3. |
 
 **NC6 found a defect in my own instrument.** The first version of
@@ -588,7 +589,10 @@ Numbered `P1…` per rule 28; ORCH assigns corpus numbers.
 * **P16.** A planted-mutation control tests the restore as well as the sabotage. M111's sabotage left a file on disk that its own assertion depended on, so the restored tree was red for a reason unrelated to the restore. Assert the exact expected code on **both** legs and make the assertion independent of filesystem residue.
 * **P17.** An env-var debug export that would move output bytes belongs in a patch beside the experiment, not in the repository. M111's `STREHL_M111_REG_RADIUS` earned its result and shipped as `experiments/M111-waxy-blobs/reg_radius.patch`; the byte-inert state dump shipped as code.
 * **P19.** In a shared tree, commit a new module and its `mod` line in the **same** commit, and check `git log -S '<the mod line>'` before assuming your edit is still uncommitted. M111's `mod dump;` was swept into another milestone's path-scoped commit and left HEAD un-buildable for six commits, which no agent noticed because everyone was building a working tree that still had the file.
-* **P20 — MEASURED.** Fact 1445's election-map statistics do not transfer across stacks and must not be quoted as properties of the map. Re-measured on `dry-erase-marker-head-cpl`, 299 frames, alignment **on** with `STREHL_WARPMAP` pinned: boundary density **9.91% h / 9.03% v** against 1445's 3.33% / 3.34%, median jump **2 frames** against 1445's 1, and **44.1%** single-frame steps against 71.4%. On `lavendar-cpl` the median jump is **20 frames** and single-frame steps fall to **22.5%**. The plane grid is **3520×2344** here, not 1445's 3516×2344 — the grid is a function of the common crop, so a milestone that hard-codes either number will index the wrong pixels. Fact 1445's numbers should be **SCOPED** to its 12-frame `STREHL_ALIGN=0` arm.
+* **P23.** A cache-contamination control needs a **red** arm on the vulnerable code path, not merely a green one on the arm under test. M111's NC7 green (poisoned cache, override set, bytes unmoved) is worth nothing on its own; it is worth something because the same poisoned cache moved the bytes when the override was removed, and moved them to the exact hash the poison produces when read directly. **Ask "which code path did my render actually take" before asking "is my number contaminated"** — the renderer prints it, and on this fleet it split one milestone's arms into an immune 15 and an exposed 2.
+* **P20 — MEASURED.** Fact 1445's election-map statistics do not transfer across stacks and must not be quoted as properties of the map. Re-measured on `dry-erase-marker-head-cpl`, 299 frames, alignment **on** with `STREHL_WARPMAP` pinned: boundary density **9.91% h / 9.03% v** against 1445's 3.33% / 3.34%, median jump **2 frames** against 1445's 1, and **44.1%** single-frame steps against 71.4%. On `lavendar-cpl` the median jump is **20 frames** and single-frame steps fall to **22.5%**. The plane grid is **3520×2344** here, not 1445's 3516×2344 — both solvers' own sidecar headers say so — and the grid follows the common crop, so a milestone that hard-codes either number will index the wrong pixels. Fact 1445's numbers should be **SCOPED** to its 12-frame `STREHL_ALIGN=0` arm.
+* **P21 — MEASURED.** `STREHL_WARPMAP` structurally immunises a render against fact 1446: `merge_cmd.rs`'s `alignment_for` returns to `align_cmd::load_or_solve` — the poisoned function — only when the variable is unset. Measured with a sidecar that passes every identity check and displaces 298 of 299 frames by 2.0 plane px: with the override set, a poisoned cache leaves the render at `DB7BAAD2…`, unchanged; with it unset, the same cache moves the render to `0D41E08B…`, which is *bit-for-bit* what pointing the override at the poison directly produces. The renderer prints which path it took — `sidecar-override` versus `sidecar` — so exposure is readable from any milestone's existing logs without re-running anything.
+* **P22 — MEASURED.** The `lavendar-cpl` cache entry consumed by M111's generality arm is byte-identical (`4D454CCE…`) to a forced fresh solve at the merge's own configuration, header included (`reference 149`, `S3-ba-unit`, `catmull-rom`), and the two render to the same bytes (`F12B14C4…`). Fact 1446's omitted key fields were not exercised on this bracket, so a pre-fix arm is not automatically a contaminated arm — but this can only be established per bracket, by re-solving, not assumed.
 
 ---
 
@@ -610,11 +614,101 @@ Everything is in `experiments/M111-waxy-blobs/`, run in this order:
 | `orch_probe_arms.py` | ORCH's statistic across selection arms (§7) |
 | `nc4_live_nonperturbation.ps1` | NC4 in the tree being committed |
 | `nc6_planted_mutation.ps1` | NC6, exact exit codes 101 then 0 |
+| `cache_control.ps1` + `make_poison.py` | NC7 on `marker`, four arms (§12) |
+| `cache_control_lavendar.ps1` | NC7 on `lavendar`, forced fresh solve (§12) |
 | `reg_radius.patch` | arm E's deliberately unshipped override |
 
 Heavy artifacts are under `C:\dev\strehl-out\M111\` and are not in Git.
 Figures worth looking at: `_STATE-blobB-row2.png`, `_ARMS-blobB.png`,
 `_M111-headline.png`.
+
+---
+
+## 12. NC7 — the cache-contamination control (fact 1446)
+
+Fact 1446: `StackIdentity` keys the frame set but **not `reference` and not
+`resampler`**, so an identical command line can be served bytes solved under a
+different configuration depending on what ran earlier in the tree.
+
+**This milestone is squarely in the window.** M97's fix landed at `69f7b4c`,
+**13:41**. Every M111 measurement arm rendered between **13:12 and 13:32**, on
+the pre-fix binary. The fix does not exonerate anything here and the question
+had to be answered by measurement.
+
+### 12.1 The split, read off the renderer's own logs
+
+`merge_cmd.rs`'s `alignment_for` returns early to
+`align_cmd::load_or_solve` — the function fact 1446 poisons — **only when
+`STREHL_WARPMAP` is unset**. The provenance string in the log distinguishes the
+two paths exactly:
+
+| arms | log line | path taken |
+| --- | --- | --- |
+| all 15 `marker` arms | `alignment: ON (sidecar-override), reference frame 149` | pinned file; `load_or_solve` never called |
+| both `lavendar` arms | `alignment: ON (sidecar), reference frame 149` | **the cache path — exposed** |
+
+So the arm carrying the 97σ finding took a different code path from the arm that
+was exposed. Both were tested anyway, because a log line is a transcript claim
+and ORCH's instruction was to run the control rather than argue from it.
+
+### 12.2 `marker` — four arms, two of which had to be red
+
+ORCH's literal prescription (`align --reference <other frame>` between arms) is
+not run: `strehl align` writes sidecars and `D:\personal\macro` is strictly
+read-only, the same objection M109 recorded. The substitute reproduces fact
+1446's *effect* exactly — a sidecar that passes every identity check strehl
+makes (same stack name, digest, frame count, plane) and places 298 of 299 frames
+2.0 plane px elsewhere, which is precisely what a foreign-`reference` cache entry
+is. `make_poison.py` hard-errors if it rewrites zero frames.
+
+| arm | `STREHL_WARPMAP` | `STREHL_CACHE_DIR` | SHA-256 | provenance |
+| --- | --- | --- | --- | --- |
+| **A0 baseline** | pinned | empty | `DB7BAAD2…` | `sidecar-override ref=149` |
+| **A1 red** | **poison** | empty | `0D41E08B…` | `sidecar-override ref=149` |
+| **A2 green** | pinned | **poisoned** | `DB7BAAD2…` | `sidecar-override ref=149` |
+| **A3 exposure** | **unset** | **poisoned** | `0D41E08B…` | `sidecar ref=149` |
+
+* **A0** reproduces the reported render, so the control is scoring the real thing.
+* **A1** moves the bytes, so the substitution is live — without this, A2's green
+  would mean nothing (discipline 722).
+* **A3** moves the bytes *to exactly A1's hash*. The poisoned cache entry was
+  found, read, and produced bit-for-bit what pointing the override at the same
+  file produces. This is the arm that proves the poison was reachable on the
+  vulnerable path at the filename the pre-fix key computes.
+* **A2** is unmoved with the same poisoned cache sitting there.
+
+**`STREHL_WARPMAP` wins over the cache, and a cache poisoned by fact 1446's
+exact mechanism cannot move M111's marker bytes.** The pinned sidecar is also
+SHA-256 identical (`1864A370…`) to the cache entry it was copied from, so even
+the counterfactual arm that *did* consult the cache would have got the same
+warps.
+
+### 12.3 `lavendar` — the exposed arm, tested by forced re-solve
+
+| arm | `STREHL_CACHE_DIR` | provenance | render SHA-256 | seconds |
+| --- | --- | --- | --- | --- |
+| **L0 cached** | real cache | `ON (sidecar)` | `F12B14C4…` | 110 |
+| **L1 fresh** | empty | **`ON (solved)`** | `F12B14C4…` | 169 |
+
+L1 genuinely re-solved — the log says so and it cost 59 s more — and the sidecar
+it wrote is **byte-identical** to the entry L0 consumed (`4D454CCE…`), header and
+all: `reference 149`, `strategy S3-ba-unit`, `resampler catmull-rom`. The renders
+match. The cached entry *is* a fresh solve at the configuration the merge asks
+for, so the omitted key fields were never exercised.
+
+Liveness for this arm is inherited from A3, which showed that a poisoned entry
+**on this exact code path** changes the output hash. The match is a measurement,
+not a silence.
+
+### 12.4 Verdict
+
+**NC7 PASSES on both stacks. No M111 number is contaminated, and the control
+could have fired: two of its four arms are red by construction and both fired.**
+Neither read-only corpus directory gained a non-`.ARW` file.
+
+One incidental corroboration: both solvers' own headers report
+`plane 3520x2344`, independently confirming P20's grid finding against fact
+1445's 3516×2344.
 
 ---
 
