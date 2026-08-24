@@ -927,7 +927,21 @@ def advisory_q1_quote_provenance(docs):
 # C1 — citation resolution
 # --------------------------------------------------------------------------
 
-KIND_TOKEN = re.compile(r"(?<![-\w])(facts?|disciplines?|questions?|risks?|rules?)\s+(?=\d)", re.I)
+# The gap between the kind word and the number may wrap ONE line -- the corpus is
+# hard-wrapped and 172 real citations sit across a line break -- but it may NOT
+# cross a blank line. Measured 2026-08-24 (experiments/ORCH-drift-check/
+# c1_gap_survey.py): 12832 citations on one line, 172 across one newline, and 20
+# across a blank line of which **20/20 were false positives** -- a `## Facts`
+# heading followed by a list item `1. **MEASURED...`, or M87-occlusion.md:3736's
+# heading ending in the word "question" followed by a paragraph opening "49 986".
+# 19 of the 20 had been passing SILENTLY because a phantom `Facts 1` resolves
+# against fact 1, which exists; only the 20th pointed at a number that did not.
+# Known residual hole, unmeasured and therefore not coded around: a heading
+# followed by a digit-leading line with NO blank line between them would still
+# match. No instance exists in the corpus today.
+KIND_TOKEN = re.compile(
+    r"(?<![-\w])(facts?|disciplines?|questions?|risks?|rules?)"
+    r"(?![^\S\n]*\n[^\S\n]*\n)\s+(?=\d)", re.I)
 CONNECTOR = re.compile(r"\A(\s*(?:,\s*and|,|;|/|&|and|through|to|\u2013|\u2014|-)\s*)(?=\d)")
 MILESTONE_QUALIFIER = re.compile(
     r"\bM\d+[A-Za-z]*(?:-V)?\b(?:\s*\u00a7[\d.]+[a-z]?)?[\s,]*$")
