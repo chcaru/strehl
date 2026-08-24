@@ -28,6 +28,12 @@ correlation of the fixed pattern after warping — is a **30.8× lever** on the 
 measurement available.** Deliverable A ships default-off and byte-identical (§7), so
 nothing has to be decided tonight.
 
+> **AMENDED BY ROUND 2 — read §R2 before reusing anything in this paragraph.** `rho_warp`
+> is now **measured** (§R2.1). It is not a constant but a decaying function of frame
+> separation, and **round 1's `rho_warp` = 1 is retracted**: it overstates merged PRNU σ by
+> **3.3×**. The +285.71% in the paragraph above is quoted at `rho` = 1; the measured value
+> is **+19.04%**. The 30.8× lever survives as a *bound*, but the realised lever is **4.4×**.
+
 **One corpus number is contradicted.** Fact 1065 says the shipped profile gain is 2.16%
 high. My independent measurement says **3.42%** high (§2.2). This milestone's measurement
 disagrees with M71's by 3.6× M71's own quoted 1σ and **the disagreement is not resolved**
@@ -622,6 +628,374 @@ both correctly.
    unmeasured.** They could be uniformly scattered and invisible, or clustered on one edge
    and obvious. §5.2 counts them; it does not look at them.
 
+---
+
+# M90 round 2 — `rho_warp` measured
+
+## R2.0 Status
+
+**`rho_warp` is MEASURED, per resampler, on six real stacks. It is not a constant, and
+that is the finding.** It is a *decaying function of frame separation* `rho(d)`: 0.68 at
+adjacent frames, 0.00 by `d` = 22–32. Any single scalar is a summary of that curve
+weighted by which pairs the merge actually averages.
+
+**Round 1's `rho_warp = 1` quotation must be RETRACTED.** It overstates merged PRNU sigma
+by **3.3×** at the depth the owner shoots. Fact 1194's *30.8× lever* survives as a valid
+**bound**, but the **realised** lever from `rho` = 0 to the measured `rho` is **4.4×**,
+not 30.8×.
+
+**The ruling on wiring is unchanged: do not touch `PlaneNoise::variance`.** Fact 1063
+stands. Nothing here is a default flip and no threshold moved.
+
+**M86's interpolator default is now evidenced: keep Catmull-Rom.** On the PRNU-noise axis
+bilinear is only **10.7%** quieter, which does not come close to paying for the detail
+Catmull-Rom retains and bilinear destroys (M86's own 0.9997 vs M23's 0.372).
+
+---
+
+## R2.1 The central result: `rho_warp` is a curve, not a constant
+
+`rho(d)` — inter-frame correlation of the warped fixed pattern at frame separation `d`,
+Catmull-Rom (the merge default), solver `S3-ba-unit`, `hp` = 8. **MEASURED.**
+
+| stack | frames | `rho(1)` | `rho(2)` | `rho(4)` | `rho(8)` | first `d` with `rho` < 0.01 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 109MSDCF | 22 | 0.3070 | 0.1043 | 0.0269 | −0.0011 | 6 |
+| flat-on-ruler-cpl | 79 | 0.4656 | 0.1846 | 0.0598 | 0.0072 | 8 |
+| foam | 100 | 0.3077 | 0.1091 | 0.0283 | 0.0015 | 6 |
+| coffee-bean | 105 | 0.5914 | 0.2884 | 0.0976 | 0.0214 | 11 |
+| bee-2-cpl | 299 | 0.6038 | 0.3563 | 0.1393 | 0.0400 | 14 |
+| bee-3-cpl | 299 | 0.6801 | 0.4800 | 0.2448 | 0.0885 | 22 |
+
+Two things follow immediately.
+
+**The all-pairs average is the wrong statistic and would have given the wrong ruling.**
+Pooling every pair equally gives `rho` = 0.016–0.081 and `n_prnu` = 12–69, because the
+overwhelming majority of pairs in a deep stack are far apart and contribute exactly
+nothing. But `Estimator::fold` admits the frames whose focus response is within `gate`
+sigmas of the winner's, and for a unimodal through-focus curve **that admitted set is an
+interval in frame index**. The merge therefore sees the *near-pair* end of this curve.
+Integrating `rho(d)` over a contiguous window instead of over all pairs changes the answer
+by **2.7×–3.4×** (§R2.3). Had I stopped at the all-pairs number I would have reported a
+merged PRNU floor 3.4× too optimistic.
+
+**Round 1 reasoned correctly and concluded wrongly.** `m90-prnu.rs` says, in a comment
+written before any of this was measured: *"the merge admits precisely the adjacent frames.
+That argues for the top of the interval, but arguing is not measuring."* The *kind* of
+argument was right — adjacent pairs do dominate — but the *degree* was wrong by ~14×,
+because the admitted window is ~44 frames wide and `rho` is already below 0.01 by `d` = 22.
+
+---
+
+## R2.2 `W`: the within-frame attenuation nobody had recorded
+
+Before any inter-frame question, a resampler wider than nearest is a **lowpass**, and it
+attenuates the fixed pattern *inside a single frame*. Call that `W = Var(e_k)/kappa²`.
+The project had no such quantity, and quoting `rho` without it lets a reader compute the
+floor wrong.
+
+**MEASURED**, pooled over the valid radial bins, 12 runs (6 stacks × 2 solvers):
+
+| resampler | `W` | SD | min | max |
+| --- | ---: | ---: | ---: | ---: |
+| Nearest | **0.9888** | 0.0016 | 0.9869 | 0.9914 |
+| Bilinear | **0.4793** | 0.0097 | 0.4721 | 0.5000 |
+| Catmull-Rom | **0.6816** | 0.0064 | 0.6770 | 0.6956 |
+
+`W` is a genuine per-resampler constant: stable across six stacks, two solvers, and a
+3.75× change in high-pass radius (it moved +0.73% / −3.44% / −1.15%). It is the kernel's
+phase-averaged squared L2 norm, which for a white field is field-independent by
+construction. The half-pixel-phase analytic values are 1.0000 / 0.2500 / 0.4104 and the
+integer-phase values are 1.0 / 1.0 / 1.0; the measured numbers sit between, as they must
+for a real distribution of sub-pixel phases.
+
+**`W_Nearest` ≡ 1 is an identity, and it is the instrument's self-check.** Nearest copies
+one photosite, so for any stationary field under any warp `W_Nearest` must be exactly 1.
+Where it deviates, the field is not stationary there and the ratio is measuring high-pass
+residual rather than PRNU. That gives an objective validity mask — `|W_Nearest − 1| ≤ 0.05`
+— which is an internal identity, **not** a fit to the answer.
+
+---
+
+## R2.3 The blast radius, measured at the measured `rho`
+
+`rho_eff` solves `(1 − rho)/n_eff + rho = F_window`, which is exactly the split
+`predicted_sigma_for` applies. Each stack uses **its own** measured `rho(d)` at **its own**
+`n_eff`. **MEASURED** (`rho(d)`, `n_eff`, and the sweep) / **DERIVED** (`F_window`).
+
+| stack | `n_eff` | `W` | `F_window` | `n_prnu` | `rho_eff` |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| foam | 1.35 | 0.6788 | 0.50281 | 1.99 | **−0.9177** |
+| 109MSDCF | 4.99 | 0.6980 | 0.23197 | 4.31 | 0.0395 |
+| coffee-bean | 22.89 | 0.6789 | 0.10073 | 9.93 | 0.0597 |
+| bee-3-cpl | 44.19 | 0.6780 | 0.09002 | 11.11 | 0.0690 |
+
+Feeding those into round 1's own blast harness (`m90-prnu blast --rho`), against the
+`rho` = 1 column round 1 published:
+
+| stack | `n_eff` | mean Δσ at measured `rho` | median | p99 | mean Δσ at `rho` = 1 | round 1 overstated by |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| foam | 1.35 | **−0.76%** | −0.97% | +1.50% | −0.72% | 1.0× |
+| 109MSDCF | 4.99 | **+1.51%** | +1.63% | +14.03% | +7.79% | 5.2× |
+| coffee-bean | 22.89 | **+32.36%** | +18.29% | +92.12% | +169.09% | 5.2× |
+| bee-3-cpl | 44.19 | **+19.04%** | +19.17% | +41.39% | +131.93% | 6.9× |
+
+Round 1's own limit #1 predicted this collapse and got its magnitude about right: it said
+*"if `rho_warp` is near 0, §5.3's +285.71% collapses toward +12%."* The measured mean is
++19.04% at `n_eff` = 44.
+
+**`rho_eff` is negative at `n_eff` = 1.35, and that is structural, not noise.** Round 1's
+one-parameter form has no `W`, so it cannot represent a measurement in which a single
+frame already carries less than the full pattern variance. **Fact 1194's scalar
+parameterisation is inadequate; the correct form is two-parameter, `(W, rho(d))`.**
+
+---
+
+## R2.4 Per-resampler ruling — this settles M86's open item
+
+`warpmap.rs` documents its own default as only partly evidenced: *"What is **NOT
+MEASURED** is any comparison of the two on real frames at merge time."* This is that
+comparison, on the noise axis. bee-3-cpl, `n_eff` = 44.19. **MEASURED / DERIVED.**
+
+| resampler | `W` | `F_window` | `n_prnu` | merged σ_PRNU, relative |
+| --- | ---: | ---: | ---: | ---: |
+| Nearest | 0.9902 | 0.09684 | 10.33 | 1.0000× |
+| Bilinear | 0.4729 | 0.07177 | 13.93 | **0.8609×** |
+| Catmull-Rom | 0.6780 | 0.09002 | 11.11 | 0.9642× |
+
+**Ruling: keep Catmull-Rom.** Bilinear wins the PRNU axis by 10.7% in sigma. That is a
+real but small gain, and it is bought by destroying sub-pixel detail — the axis on which
+M86/M23 already measured bilinear at `R` = 0.372 against Catmull-Rom's 0.9997. A 10.7%
+noise gain does not pay for that. The useful content of this measurement is the
+**negative** one: the interpolator choice was *not* hiding a large noise penalty, so the
+detail axis is free to decide it, and on that axis the existing default is correct.
+
+---
+
+## R2.5 The bandwidth bar: FAILED, then diagnosed, and I was the one who was wrong
+
+**Registered bar: if `F` moves more than 20% between two high-pass radii, take the
+unidentifiability exit.** It failed — 18/18 comparisons at 27–43%.
+
+My first diagnosis was that the failure was an artefact. **It was, but not only.** Two
+separate things were going on and I had to separate them.
+
+**(a) My own border-contamination bug — found by cross-checking M71, which was right.**
+M71 §5.1 claims `kappa` is flat to 1.0002× over a 16× change of cut scale. Mine moved
+4.25×. `box_mean` is edge-clamped, so within ~R of a plane border it is not the mean of a
+full window and `I/box(I) − 1` retains illumination curvature. That residual is fixed and
+smooth, so it does **not** decorrelate under a warp and it biases `F` **upward**, worse at
+larger R — about 1% of the plane at R = 8 but **17%** at R = 120. My radial validity mask
+did not exclude borders. With an interior margin, `kappa` moves just **1.16× over 15×**,
+and **1.058× over the consumer radii 2–13**. **M71 was right and my measurement was wrong.**
+
+**(b) After the fix, the bandwidth dependence of `F` is real.** On identical point sets
+(fixed 240 px margin at every radius), coffee-bean, Catmull-Rom:
+
+| `hp` | `kappa` (interior) | `F` | `n_prnu` |
+| ---: | ---: | ---: | ---: |
+| 2 | 0.203848% | 0.0209 | 47.77 |
+| 4 | 0.209544% | 0.0261 | 38.27 |
+| **8** | **0.213436%** | **0.0318** | **31.42** |
+| 13 | 0.215535% | 0.0366 | 27.35 |
+| 30 | 0.218049% | 0.0461 | 21.69 |
+| 120 | 0.249511% | 0.1116 | 8.96 |
+
+**`kappa` is flat (1.07× over the whole range) while `F` moves 5.3×.** That is not a
+contradiction, it is the physics: a small low-frequency tail, negligible in *variance*,
+dominates *decorrelation*, because it survives a ~1 px warp while white pixel-scale PRNU
+does not. **This is why `kappa` is a solid constant and `rho_warp` is not.**
+
+**So the bar failed and I am reporting it failed.** But the exit it prescribes is wrong
+for the reason it was written. `F` is not unidentifiable — it is *conditional on naming
+the consumer*, because the consumer's own window sets what counts as signal. There is no
+flat-field correction anywhere in `crates/`, and the windows are:
+`merge::REGULARISER_RADIUS` = 8, `focus::WINDOW_RADIUS` = 13, `FINE_WINDOW_RADIUS` = 2,
+`flat_ratio::HP_BOX_RADIUS` = 4. **Every consumer is narrower than the 30 at which round 1
+and M71 measured `kappa`.** The headline is quoted at `hp` = 8, the merge's own radius.
+
+**And the ruling is robust even where the constant is not:** across the entire range
+`hp` = 2…120, `n_prnu` is 9.0–47.8 (all-pairs) and 2.0–11.1 (windowed) — **never near 1**.
+Round 1's `rho` = 1 is refuted at every bandwidth, including at frame centre, where the
+per-bin data gives `n_prnu` = 23.9 for a 299-frame stack and where the bound should be
+tightest.
+
+---
+
+## R2.6 Registered bars: passed, failed, and the planted defect
+
+| bar | prediction | measured | result |
+| --- | --- | --- | --- |
+| **N1 placebo** | induced cov < 5% of real | 0.0053 / 0.0055 / 0.0055 | **PASS** |
+| **N1′ real-data twin** (unregistered) | — | `rho(d ≥ 32)` = 0.0000 ± 0.001, all 6 stacks | — |
+| **N2 identity null** | `F` = 1 ± 0.01 | 1.0000 / 1.0000 / 1.0000 | **PASS** (weak — algebraically forced) |
+| **N3 decorrelation** | `F` < 2/n = 0.25 | 0.1329 / 0.1322 / 0.1335 | **PASS** |
+| **P1 kernel ladder** | 0.0000 / 0.2500 / 0.3164 ± 0.02, increasing | −0.0093 / 0.2393 / 0.3117 | **PASS** |
+| **Bandwidth 20%** | `F` stable within 20% across radii | 27–43%, 18/18 | **FAILED** (§R2.5) |
+| **P2 retraction test** | retract if `n_prnu` > 0.5·`n_eff` *everywhere* | 1.47 / 0.86 / 0.43 / 0.25 | **DOES NOT FIRE** |
+| **P3 correction sign** | positive at every `n_eff`, monotone in `n_eff` | −0.76% at foam; +32.36% > +19.04% | **FAILED, both clauses** |
+| **N4 planted defect** | registered bar must catch it | N3 3/3 FAIL planted, 0/3 after restore | **PASS** |
+
+Three of these need saying out loud.
+
+**P2 does not fire, and P2 was a badly specified bar.** It tests a ratio against `n_eff`
+when the thing in dispute is whether `n_prnu` equals 1. It fails to fire at coffee-bean
+(0.43) and bee-3-cpl (0.25) purely because those stacks are deep. **I am not retuning it.**
+The retraction of round 1's `rho` = 1 rests on the direct measurement instead: `n_prnu` is
+1.99–11.11 where round 1 asserted exactly 1.00. Both the bar's literal verdict and the
+ground for retraction are recorded here.
+
+**P3 failed on both clauses.** The correction is **negative** at foam (`n_eff` = 1.35,
+−0.76%), because at that depth the gain correction dominates the PRNU term and lowers
+sigma. And it is **not monotone** in `n_eff`: coffee-bean (+32.36% at `n_eff` = 22.89)
+exceeds bee-3-cpl (+19.04% at 44.19). The driver is not `n_eff` alone but the ratio of
+PRNU variance to shot variance, which is set by signal level and ISO — coffee-bean is
+ISO 50, so PRNU dominates a larger share there. **My registered prediction was wrong about
+what the lever arm is.**
+
+**N4: the planted defect was caught, and the restore very nearly fooled me.** The plant
+removed the transform from `merge_pattern`, so the instrument would have been measuring an
+unwarped field. N3 went 3/3 red, and P1 caught it independently. The first restore
+reported *byte-identical: True* and the bars were **still red** — because `shutil.copy2`
+preserves the backup's mtime, cargo saw the restored source as older than the artefact
+built from the planted source, and **silently skipped the rebuild, leaving the planted
+binary live under clean source.** I only caught it by re-running the control separately
+instead of trusting the script's own success message. This is discipline 592 again in a
+new costume: the check that caught it was external to the thing being checked.
+
+---
+
+## R2.7 What did not change
+
+- **No default was flipped.** `PlaneNoise::variance` is untouched; fact 1063's ruling
+  stands and `FOCUS_NOISE_SD` is unaffected.
+- **`cargo test --workspace`: 305 passed, 0 failed.** Including
+  `profile::tests::the_two_errors_cross_at_about_504_dn`, round 1's guard on fact 1064.
+- **Round 1's committed evidence is byte-identical to HEAD** (`git status --porcelain` on
+  the four `rho-*.txt` files returns empty).
+- **The double-counting question against M70 (facts 1086, 1102) is unchanged by round 2.**
+  Round 2 measures how the pattern *averages*, not how large it is; `kappa` itself moved
+  by 1.6% on independent replication. Round 1's answer stands.
+
+---
+
+## R2.8 Candidate facts
+
+**P16.** *MEASURED* — `rho_warp` is not a constant but a decaying function of frame
+separation: for Catmull-Rom on real stacks it is 0.31–0.68 at adjacent frames and falls
+below 0.01 by a separation of 6–22 frames, measured on six stacks spanning 22–299 frames.
+
+**P17.** *MEASURED* — The within-frame attenuation `W` — the fraction of PRNU variance a
+resampler passes in a single gather — is a stable per-resampler constant: Nearest
+0.9888 ± 0.0016, Bilinear 0.4793 ± 0.0097, Catmull-Rom 0.6816 ± 0.0064 over 12 runs, stable
+across six stacks, two solvers and a 3.75× change of high-pass radius.
+
+**P18.** *DERIVED* — Integrating the measured `rho(d)` over a **contiguous** admitted
+window rather than over all pairs changes merged PRNU variance by 2.7×–3.4×, and the
+contiguous form is the correct one because `Estimator::fold` admits frames within `gate`
+sigmas of the winner, which for a unimodal through-focus curve is an interval in frame
+index.
+
+**P19.** *MEASURED* — Round 1's `rho_warp` = 1 overstates merged PRNU sigma by 3.3× at
+`n_eff` = 44.19: the measured mean confidence correction is **+19.04%**, against +131.93%
+quoted at `rho` = 1. Fact 1194's 30.8× lever is a valid bound but the realised lever is
+**4.4×**.
+
+**P20.** *MEASURED* — On the merged-noise axis the interpolator choice is nearly free:
+at `n_eff` = 44.19, bilinear yields merged PRNU sigma 0.8609× and Catmull-Rom 0.9642×
+relative to nearest, so the 10.7% bilinear advantage does not pay for the sub-pixel detail
+it destroys, and M86's Catmull-Rom default is correct — now for a measured reason.
+
+**P21.** *MEASURED* — `kappa` is flat to 1.07× over high-pass radii 2–120 px while `F`
+moves 5.3× over the same range, because a low-frequency tail negligible in variance
+dominates decorrelation; therefore `kappa` is a transferable constant and `rho_warp` is
+only defined relative to a named consumer window.
+
+**P22.** *MEASURED* — `box_mean` is edge-clamped, so `I/box(I) − 1` retains illumination
+curvature within ~R of a plane border, contaminating ~1% of the plane at R = 8 but **17%**
+at R = 120; this fixed, smooth residual does not decorrelate under warp and biases `F`
+upward. An interior margin restores agreement with M71 (`kappa` flat to 1.16× over 15×).
+
+**P23.** *MEASURED, NEGATIVE* — My registered prediction P3 failed on both clauses: the
+confidence correction is **negative** (−0.76%) at `n_eff` = 1.35, and is **not monotone**
+in `n_eff` (+32.36% at `n_eff` = 22.89 against +19.04% at 44.19), because the lever arm is
+the PRNU-to-shot variance ratio set by signal level and ISO, not `n_eff` alone.
+
+**P24.** *DERIVED* — Fact 1194's single-scalar `rho_warp` parameterisation is structurally
+inadequate: solving for the `rho` that reproduces the measurement yields **−0.92** at
+`n_eff` = 1.35, because the form has no `W` term and cannot express a single frame already
+carrying less than full pattern variance. The correct form is two-parameter, `(W, rho(d))`.
+
+**P25.** *MEASURED* — A byte-identical source restore does not imply a restored binary:
+`shutil.copy2` preserves mtime, so cargo skipped the rebuild and left a planted binary live
+under clean source; the planted defect was detected only by re-running the control
+externally rather than trusting the restoring script's own success report.
+
+**P26.** *MEASURED* — At high-pass radius 8 the interior-only `kappa` on green luma is
+0.2134%, implying **0.3048%** per photosite if G1 ⊥ G2, a **1.6%** independent replication
+of fact 1062's 0.3096% from different code, a different estimator and a different flat
+subset.
+
+---
+
+## R2.9 Candidate disciplines
+
+**D-a.** When a statistic averages over pairs, check what the *consumer* averages over
+before quoting the pooled value — the all-pairs `rho` here was 3.4× wrong for a merge that
+admits a contiguous window.
+
+**D-b.** After restoring a planted defect, re-run the control in a separate invocation and
+confirm it is green; a restore script's own "restored" message tests the copy, not the
+build.
+
+---
+
+## R2.10 Limits — what could make this wrong
+
+1. **`rho(d)` is measured with uniform weights over all frames at separation `d`; the
+   merge weights pixels, not frames.** The window integration assumes the admitted set is
+   a contiguous interval of uniform weight. It is contiguous, but the per-pixel admitted
+   *width* varies across the plane, and I integrated at the stack-mean `n_eff` rather than
+   per pixel. A per-pixel integration would spread these numbers.
+2. **The admitted set is contiguous only if the through-focus curve is unimodal.** Where it
+   is not — occlusion boundaries, repeated texture — the admitted set can be split, and
+   split sets sample the low-`rho` tail, so my numbers are conservative there. M87 owns
+   occlusion and I did not measure this.
+3. **`F` is only defined relative to a high-pass radius**, and I chose 8 because it is
+   `REGULARISER_RADIUS`. A consumer at radius 2 sees `F` about 1.5× smaller and one at 13
+   about 1.15× larger. Anyone reusing these numbers must name their window.
+4. **The pattern comes from 360 flats of one illumination geometry**, cropped 3520→3516 px.
+   No scene data enters, so registration is moot, but a PRNU field with different
+   low-frequency content would give a different `rho(d)` while giving nearly the same
+   `kappa` — that is precisely the sensitivity P21 measures.
+5. **Solver sensitivity is up to 22% on `F`** (bee-3-cpl, S3 vs S4-poly4), and I do not know
+   which solver the merge will use, because `merge.rs` is M91's. I ran both as a sensitivity
+   arm rather than picking one.
+6. **Round 1's unresolved 3.6σ gain disagreement is still unresolved** (my 3.42% vs fact
+   1065's 2.16%), and fact 1064's S = 504 DN cancellation point is *derived* from the
+   contested 2.16%, so it must be re-derived before reuse. Round 2 does not touch this.
+7. **`n_eff` values are round 1's**, measured at gate 4 on 60-frame limits, while `rho(d)`
+   is measured over the full 299-frame stacks. If the owner's real gate differs, the window
+   width and therefore `F` move with it.
+
+---
+
+## R2.11 Reproduction
+
+```text
+cargo run --release --example m90-rho --target-dir experiments/M90-prnu/target-m90 -- control
+cargo run --release --example m90-rho --target-dir experiments/M90-prnu/target-m90 -- prnu --flats <DIR> --hp 8
+cargo run --release --example m90-rho --target-dir experiments/M90-prnu/target-m90 -- rho --edges <CSV> --hp 8
+cargo run --release --example m90-rho --target-dir experiments/M90-prnu/target-m90 -- sep --edges <CSV> --hp 8
+cargo run --release --example m90-prnu --target-dir experiments/M90-prnu/target-m90 -- blast --dir <DIR> --limit 60 --gate 4 --rho 0.0690
+python experiments/M90-prnu/window_rho.py
+python experiments/M90-prnu/plant_n4.py
+```
+
+Evidence under `experiments/M90-prnu/out/` with the `rho2-` prefix (round 1's evidence uses
+`rho-` and must not be overwritten — I did exactly that once and restored all four files
+from HEAD via `git show` read as bytes). Pre-registration: `PREREGISTRATION-rho.md`,
+committed `c2692ec` **before any measurement existed**.
 ---
 
 ## 11. Reproduction

@@ -1,0 +1,33 @@
+bandwidth failure, diagnosed bin by bin (only bins BOTH radii admitted)
+
+case                    solver        res            bins    F(30)     F(8)   change
+------------------------------------------------------------------------------------
+109MSDCF            S3-ba-unit    Nearest[0, 1, 2, 3, 4, 5]   0.1443   0.1156  -25.76%
+109MSDCF            S3-ba-unit   Bilinear[0, 1, 2, 3, 4, 5]   0.1120   0.0827  -33.44%
+109MSDCF            S3-ba-unit CatmullRom[0, 1, 2, 3, 4, 5]   0.1324   0.1038  -28.86%
+109MSDCF              S4-poly4    Nearest[0, 1, 2, 3, 4, 5]   0.1467   0.1179  -25.89%
+109MSDCF              S4-poly4   Bilinear[0, 1, 2, 3, 4, 5]   0.1140   0.0847  -33.32%
+109MSDCF              S4-poly4 CatmullRom[0, 1, 2, 3, 4, 5]   0.1351   0.1066  -28.85%
+bee-3-cpl           S3-ba-unit    Nearest [0, 1, 2, 3, 4]   0.0363   0.0254  -31.23%
+bee-3-cpl           S3-ba-unit   Bilinear [0, 1, 2, 3, 4]   0.0308   0.0197  -37.61%
+bee-3-cpl           S3-ba-unit CatmullRom [0, 1, 2, 3, 4]   0.0353   0.0243  -32.61%
+bee-3-cpl             S4-poly4    Nearest[0, 1, 2, 3, 4, 5]   0.0380   0.0278  -28.33%
+bee-3-cpl             S4-poly4   Bilinear[0, 1, 2, 3, 4, 5]   0.0308   0.0204  -35.60%
+bee-3-cpl             S4-poly4 CatmullRom[0, 1, 2, 3, 4, 5]   0.0362   0.0258  -30.14%
+coffee-bean-m86     S3-ba-unit    Nearest[0, 1, 2, 3, 4, 5]   0.0540   0.0385  -31.59%
+coffee-bean-m86     S3-ba-unit   Bilinear[0, 1, 2, 3, 4, 5]   0.0445   0.0287  -39.00%
+coffee-bean-m86     S3-ba-unit CatmullRom[0, 1, 2, 3, 4, 5]   0.0514   0.0358  -33.71%
+coffee-bean-m86       S4-poly4    Nearest[0, 1, 2, 3, 4, 5]   0.0548   0.0393  -31.53%
+coffee-bean-m86       S4-poly4   Bilinear[0, 1, 2, 3, 4, 5]   0.0448   0.0290  -38.93%
+coffee-bean-m86       S4-poly4 CatmullRom[0, 1, 2, 3, 4, 5]   0.0519   0.0363  -33.66%
+
+  common-bin comparisons: 18
+  mean |change|: 32.22%
+  worst |change|: 39.00%
+  over the registered 20% bar: 18/18
+
+W across the two radii (W is a kernel property; it must NOT move):
+   resampler   W(hp=30)    W(hp=8)    change
+     Nearest     0.9876     0.9947    +0.73%
+    Bilinear     0.5025     0.4852    -3.44%
+  CatmullRom     0.6966     0.6886    -1.15%

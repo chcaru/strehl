@@ -1,0 +1,9 @@
+prnu: 360 ARW under D:\personal\macro\flat-fields\flat-fields
+  plane 3520x2344 (8250880 px)
+  25 flats folded (mean 7661 DN)
+  50 flats folded (mean 12028 DN)
+  75 flats folded (mean 4115 DN)
+  100 flats folded (mean 7656 DN)
+  accepted 120 flats: A=60, B=60, high-pass radius 120 px
+  kappa(green luma) = 0.920901% (cross-estimate)
+  cached pattern -> experiments/M90-prnu/out/cache/pattern-hp120.bin (66007056 bytes)

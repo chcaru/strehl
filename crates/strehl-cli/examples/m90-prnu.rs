@@ -997,7 +997,10 @@ fn cmd_blast(dir: &Path, limit: Option<usize>, gate_threshold: f32, tiles: usize
         "{:>10} {:>14} {:>14} {:>14} {:>14}",
         "rho_warp", "mean d sigma", "median", "p99", "max"
     );
-    for rho in [0.0f32, 0.25, 0.5, 0.75, 0.9, 1.0] {
+    let mut sweep: Vec<f32> = vec![0.0, 0.25, 0.5, 0.75, 0.9, 1.0];
+    sweep.extend(RHO_SWEEP.lock().expect("rho sweep").iter().copied());
+    sweep.sort_by(|a, b| a.partial_cmp(b).expect("finite rho"));
+    for rho in sweep {
         let mut rel: Vec<f64> = Vec::with_capacity(px);
         for i in 0..px {
             let b = eb.predicted_sigma(&base_arm.noise, i, black);
@@ -1258,6 +1261,15 @@ fn report_blast(results: &[ArmResult], geom: strehl_core::plane::PlaneGeometry, 
 }
 
 /// The correlation between two admitted frames' fixed pattern at the same output
+/// The `rho_warp` values the sweep reports.
+///
+/// Round 2 measured `rho_warp` (see `M90-prnu-noise-model.md` §R2), so the
+/// sweep is no longer a pure bound: `--rho <v>` adds a measured point to it.
+/// The default list is retained unchanged so every round 1 number in the
+/// corpus can still be reproduced from this binary.
+static RHO_SWEEP: std::sync::Mutex<Vec<f32>> =
+    std::sync::Mutex::new(Vec::new());
+
 /// pixel, after warping. **Unmeasured** (M71 §11). 1.0 is the conservative end:
 /// the pattern does not average down at all. Every headline here is quoted at
 /// this value and the `--rho` sweep shows the whole interval.
@@ -1456,6 +1468,10 @@ fn main() -> Result<()> {
             "--side" => side = args.next().context("--side")?.parse().context("--side")?,
             "--gate" => {
                 gate_threshold = args.next().context("--gate")?.parse().context("--gate")?
+            }
+            "--rho" => {
+                let v: f32 = args.next().context("--rho")?.parse().context("--rho")?;
+                RHO_SWEEP.lock().expect("rho sweep").push(v);
             }
             "--tiles" => tiles = args.next().context("--tiles")?.parse().context("--tiles")?,
             "--hp-radius" => {

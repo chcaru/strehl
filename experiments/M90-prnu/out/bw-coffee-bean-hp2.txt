@@ -1,0 +1,94 @@
+=== rho: coffee-bean | 105 frames | plane 3516x2344 | pattern A=60 B=60 hp=2 px ===
+  cropping pattern 3520x2344 -> 3516x2344 (no scene data enters, so registration is moot)
+  interior margin 240 px (default 2 x hp), so every window is fully interior
+  kappa(green luma) = 0.205753% whole plane, 0.203848% interior only
+
+--- solver S3-ba-unit: 105 frames placed, corner radius 2113 px ---
+  mean adjacent-frame step: centre 0.2828 px, corner 1.1200 px
+
+   resampler         W         F    n_prnu   rho_warp       points
+     Nearest    0.9903    0.0212    47.162     0.0120       353541
+    Bilinear    0.4249    0.0125    79.970     0.0201       353541
+  CatmullRom    0.6498    0.0182    55.043     0.0186       353541
+
+  radially resolved (fraction of corner radius), n_prnu:
+         bin     0.06     0.19     0.31     0.44     0.56     0.69     0.81     0.94
+     Nearest    20.86    22.62    40.09    56.22    69.50    81.93    96.07        -
+    Bilinear    32.95    36.42    66.32    96.88   126.24   152.36   187.97        -
+  CatmullRom    22.59    25.11    45.77    66.82    86.26   105.15   126.16        -
+
+  radially resolved, F (1.000 = no averaging at all):
+     Nearest   0.0479   0.0442   0.0249   0.0178   0.0144   0.0122   0.0104        -
+    Bilinear   0.0304   0.0275   0.0151   0.0103   0.0079   0.0066   0.0053        -
+  CatmullRom   0.0443   0.0398   0.0218   0.0150   0.0116   0.0095   0.0079        -
+
+  radially resolved, W (within-frame attenuation):
+     Nearest   0.9862   1.0106   0.9992   0.9916   0.9830   0.9843   0.9565        -
+    Bilinear   0.4279   0.4354   0.4303   0.4259   0.4209   0.4202   0.4058        -
+  CatmullRom   0.6535   0.6657   0.6576   0.6512   0.6439   0.6429   0.6214        -
+
+  diagnostics: per-bin pattern variance / global, and point census
+   var ratio    0.977    0.951    0.972    0.989    1.017    1.043    1.101      NaN
+      points    13704    41104    68456    85420    71101    61707    12049        0
+     step px    0.335    0.440    0.544    0.649    0.754    0.858    0.963    1.068
+
+  validity mask |W_Nearest - 1| <= 0.05: bins kept = [0.06 0.19 0.31 0.44 0.56 0.69 0.81]
+
+  POOLED OVER VALID BINS ONLY:
+   resampler         W         F    n_prnu   rho_warp       points
+     Nearest    0.9867    0.0240    41.587     0.0150       353541
+    Bilinear    0.4234    0.0144    69.533     0.0247       353541
+  CatmullRom    0.6474    0.0209    47.768     0.0230       353541
+
+  sigma correction vs the two bounds, CatmullRom (the merge default):
+        quantity  F=1 (round 1)       measured          F=1/n
+               F         1.0000         0.0209         0.0095
+          n_prnu          1.000         47.768        105.000
+   sigma_prnu/kS         1.0000         0.1447         0.0976
+  vs round 1 (x)           1.00           0.14           0.10
+  ROUND 1 OVERSTATED THE PRNU SIGMA BY 6.91x ON THIS STACK
+
+--- solver S4-poly4: 105 frames placed, corner radius 2113 px ---
+  mean adjacent-frame step: centre 0.1639 px, corner 1.0725 px
+
+   resampler         W         F    n_prnu   rho_warp       points
+     Nearest    0.9902    0.0215    46.409     0.0124       353618
+    Bilinear    0.4256    0.0128    78.288     0.0207       353618
+  CatmullRom    0.6505    0.0185    54.013     0.0191       353618
+
+  radially resolved (fraction of corner radius), n_prnu:
+         bin     0.06     0.19     0.31     0.44     0.56     0.69     0.81     0.94
+     Nearest    19.61    21.11    39.54    56.61    71.20    84.20   102.82        -
+    Bilinear    32.38    34.22    64.97    95.53   126.57   155.67   196.61        -
+  CatmullRom    22.01    23.74    44.92    65.98    86.73   108.01   132.77        -
+
+  radially resolved, F (1.000 = no averaging at all):
+     Nearest   0.0510   0.0474   0.0253   0.0177   0.0140   0.0119   0.0097        -
+    Bilinear   0.0309   0.0292   0.0154   0.0105   0.0079   0.0064   0.0051        -
+  CatmullRom   0.0454   0.0421   0.0223   0.0152   0.0115   0.0093   0.0075        -
+
+  radially resolved, W (within-frame attenuation):
+     Nearest   0.9863   1.0103   0.9989   0.9922   0.9827   0.9831   0.9585        -
+    Bilinear   0.4248   0.4400   0.4315   0.4265   0.4204   0.4197   0.4089        -
+  CatmullRom   0.6503   0.6699   0.6587   0.6520   0.6436   0.6422   0.6251        -
+
+  diagnostics: per-bin pattern variance / global, and point census
+   var ratio    0.977    0.951    0.972    0.989    1.017    1.043    1.101      NaN
+      points    13704    41104    68456    85420    71108    61777    12049        0
+     step px    0.221    0.334    0.448    0.561    0.675    0.789    0.902    1.016
+
+  validity mask |W_Nearest - 1| <= 0.05: bins kept = [0.06 0.19 0.31 0.44 0.56 0.69 0.81]
+
+  POOLED OVER VALID BINS ONLY:
+   resampler         W         F    n_prnu   rho_warp       points
+     Nearest    0.9868    0.0247    40.448     0.0157       353618
+    Bilinear    0.4241    0.0147    68.046     0.0254       353618
+  CatmullRom    0.6482    0.0214    46.765     0.0237       353618
+
+  sigma correction vs the two bounds, CatmullRom (the merge default):
+        quantity  F=1 (round 1)       measured          F=1/n
+               F         1.0000         0.0214         0.0095
+          n_prnu          1.000         46.765        105.000
+   sigma_prnu/kS         1.0000         0.1462         0.0976
+  vs round 1 (x)           1.00           0.15           0.10
+  ROUND 1 OVERSTATED THE PRNU SIGMA BY 6.84x ON THIS STACK

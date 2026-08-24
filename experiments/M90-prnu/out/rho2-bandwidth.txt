@@ -1,0 +1,27 @@
+registered bandwidth diagnostic: hp = 30 px vs hp = 8 px
+  kappa(green luma): hp=30 -> 0.252937%, hp=8 -> 0.216469%
+
+case                      solver   resampler  F(hp=30)   F(hp=8)    change  bar 20%
+-----------------------------------------------------------------------------------
+109MSDCF              S3-ba-unit     Nearest    0.1421    0.1037   -27.02%     FAIL (bins 6 vs 7)
+109MSDCF              S3-ba-unit    Bilinear    0.1104    0.0731   -33.79%     FAIL (bins 6 vs 7)
+109MSDCF              S3-ba-unit  CatmullRom    0.1303    0.0917   -29.62%     FAIL (bins 6 vs 7)
+109MSDCF                S4-poly4     Nearest    0.1444    0.1056   -26.87%     FAIL (bins 6 vs 7)
+109MSDCF                S4-poly4    Bilinear    0.1123    0.0748   -33.39%     FAIL (bins 6 vs 7)
+109MSDCF                S4-poly4  CatmullRom    0.1329    0.0940   -29.27%     FAIL (bins 6 vs 7)
+bee-3-cpl             S3-ba-unit     Nearest    0.0359    0.0225   -37.33%     FAIL (bins 5 vs 6)
+bee-3-cpl             S3-ba-unit    Bilinear    0.0305    0.0174   -42.95%     FAIL (bins 5 vs 6)
+bee-3-cpl             S3-ba-unit  CatmullRom    0.0349    0.0215   -38.40%     FAIL (bins 5 vs 6)
+bee-3-cpl               S4-poly4     Nearest    0.0374    0.0249   -33.42%     FAIL (bins 6 vs 7)
+bee-3-cpl               S4-poly4    Bilinear    0.0304    0.0182   -40.13%     FAIL (bins 6 vs 7)
+bee-3-cpl               S4-poly4  CatmullRom    0.0356    0.0231   -35.11%     FAIL (bins 6 vs 7)
+coffee-bean-m86       S3-ba-unit     Nearest    0.0531    0.0343   -35.40%     FAIL (bins 6 vs 7)
+coffee-bean-m86       S3-ba-unit    Bilinear    0.0437    0.0254   -41.88%     FAIL (bins 6 vs 7)
+coffee-bean-m86       S3-ba-unit  CatmullRom    0.0505    0.0317   -37.23%     FAIL (bins 6 vs 7)
+coffee-bean-m86         S4-poly4     Nearest    0.0538    0.0348   -35.32%     FAIL (bins 6 vs 7)
+coffee-bean-m86         S4-poly4    Bilinear    0.0440    0.0256   -41.82%     FAIL (bins 6 vs 7)
+coffee-bean-m86         S4-poly4  CatmullRom    0.0509    0.0321   -36.94%     FAIL (bins 6 vs 7)
+
+  comparisons: 18, failing the 20% bar: 18
+  worst move: 42.95% at bee-3-cpl/S3-ba-unit/Bilinear
+  VERDICT: F depends on the filter; take the unidentifiability exit.

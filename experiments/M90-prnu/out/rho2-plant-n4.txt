@@ -1,0 +1,19 @@
+backed up to C:\Users\chris\AppData\Local\Temp\m90-rho.rs.n4-backup
+planted: merge_pattern no longer applies the transform
+
+N3 rows WITH the defect planted:
+  Nearest       1.0000        1.000     FAIL
+  Bilinear       1.0000        1.000     FAIL
+  CatmullRom       1.0000        1.000     FAIL
+
+N3 failures with defect planted: 3 of 3
+
+restored from temp copy; byte-identical: True
+
+N3 rows after restore:
+  Nearest       0.1329        7.527     PASS
+  Bilinear       0.1322        7.566     PASS
+  CatmullRom       0.1335        7.489     PASS
+N3 failures after restore: 0 of 3
+
+N4 PASS: the registered bar caught the planted defect and is green again after restore.
