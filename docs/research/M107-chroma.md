@@ -72,8 +72,8 @@ the shipped render.**
 |---|---|---|---|---|
 | **(a)** | **Lateral / transverse CA** | **REAL — dominant in spatial displacement** | `ε_R = −704.5 ppm` radial magnification error; **1.43 sensel** median displacement at r ≈ 2500 sensel, **→ 0 at the optical centre** | radial model R² = **0.9969**; the same fit on the G1−G2 null gives R² = 0.0524 and **fails to beat its own permutation null** (p = 0.71) |
 | **(b)** | **Axial / longitudinal CA, baked in by the single election** | **REAL — confirmed on 5/5 stacks** | `k_R − k_G` = **−0.67 to −1.07 frames**, `k_B − k_G` = **−0.36 to −0.75 frames**; costs red **8.9–14.7 %** of its gradient energy | null `k_G1 − k_G2` ≤ **0.008 frames** in every stack; signal/null **75× to 231×** |
-| **(c)** | Demosaic / co-siting | **BOUNDED SMALL in the shipped path, and not the cause** | shipped demosaic arm shows the *smallest* per-channel displacement of the three arms (0.08 sensel vs 0.34 for un-demosaiced `linear`, tweezers) | the registered `--binned` control **fired its own contamination clause** and is reported as unusable, not used |
-| **(d)** | Resampler | **NOT A CONTRIBUTOR to (b)** | gathering with the identity instead of the render's own warp moves `k_R − k_G` from −1.0476 to −1.0642, i.e. **1.6 %** | — |
+| **(c)** | Demosaic / co-siting | **BOUNDED SMALL in the shipped path, and not the cause** | shipped demosaic arm shows the *smallest* per-channel displacement of the three arms (0.08 sensel vs 0.34 for un-demosaiced `linear`, tweezers); independently, §12 K6 = 0.918–1.020 against a <0.50 bar for Nyquist-scale dominance | the registered `--binned` control **fired its own contamination clause** and is reported as unusable, not used |
+| **(d)** | Resampler | **NOT A CONTRIBUTOR to (b); and it does not create the fringe at all** | gathering with the identity instead of the render's own warp moves `k_R − k_G` from −1.0476 to −1.0642, i.e. **1.6 %**. §12: blurring the `nearest` arm to the Catmull-Rom arm's luma reproduces its chroma to **ρ7 = 0.985/0.990**, so kernel-**created** chroma is ≤1.5 % of fringe amplitude | §12 K3's invariance band failed its own control at 10× the effect size; superseded by the K7 substitution test |
 
 **On the orchestrator's favoured hypothesis (b): it is real, and the per-channel
 election corollary is sound.** But **my registered bar B3 fails on its sign clause**, and
@@ -694,3 +694,185 @@ Numbered `P1…` per rule 28. All MEASURED unless marked.
 - `M107-fig4-fringe-crops.png` — the fringing at 1:1 with a 100-px scale bar and the
   high-passed channel decomposition.
 - `M107-fig5-axial-summary.png` — per-stack axial offsets and the cost of the shared election.
+- `M107-fig6-kernel-roi-{auto,centre}.png` — **where** §12 measured, with the ROI box on the
+  frame, 1:1 crops of all three kernel arms, and their high-passed chroma at 25× gain.
+- `M107-fig7-kernel-bars.png` — K2, K7 and K5 scored against the bars registered at
+  `bf975e0` / `e96040d`.
+
+---
+
+## 12. Addendum — the ORCH-kernel arms (E8)
+
+Three renders of `bee-3-cpl` arrived after this report was committed at `a16976f`:
+same solve, placements, reference and stack digest, differing **only** in the gather
+kernel, produced by rewriting one `resampler` line in a copied sidecar
+(`experiments/ORCH-drift-check/kernel_ab.ps1`, `d3a49e4`). The orchestrator observes
+**by eye, and explicitly flags as ARGUED**, that the chroma fringing on the bee hairs is
+"markedly stronger" under `nearest`, and reads that as evidence the fringe is pre-existing
+and merely blurred by Catmull-Rom — which would bound candidate (d) small for free. I was
+asked to check that reading, not adopt it, and the falsifier the orchestrator named
+themselves is that `nearest` also aliases, and aliasing on a Bayer-derived image can
+synthesise colour.
+
+Bars **K1–K6** registered in `experiments/M107-chroma/PRE-REGISTRATION-2.md`, committed
+`bf975e0` before a pixel was read. Bar **K7** registered in
+`PRE-REGISTRATION-2-AMENDMENT.md`, committed `e96040d` before K7 was run and labelled
+**POST-HOC relative to K1–K6** because looking at K1–K6 is what suggested it.
+
+### 12.1 One mechanism excluded from source, before measuring
+
+Before registering anything I checked whether `nearest` could manufacture
+*channel-differential* displacement by quantising each CFA plane's sample phase onto its
+own lattice — a third mechanism neither of us had named, and one that would have made the
+fringe kernel-created without any aliasing.
+
+It cannot. `align_cmd.rs::warp_frame_in_place` loops the four CFA sites `(dx, dy)` and
+calls `gather_checked(src, t, geom, resampler, …)` with **the same `t` and the same
+`geom`** on every pass; `warpmap.rs::gather_into` samples at
+`t.apply_at(px as f64, py as f64, cx, cy)`, which depends only on the plane coordinate and
+not on `(dx, dy)`. All four planes therefore land on identical fractional coordinates and
+`sample_nearest`'s `x.round()` quantises **common-mode**. A common-mode geometric shift is
+achromatic by definition. This is a source fact, not a measurement, and it is recorded in
+the pre-registration so it cannot be re-presented as a finding.
+
+### 12.2 The ROI trap, caught by looking
+
+The fringe-weighted ROI selector, run unrestricted, went straight to `(996, 8)` — the top
+edge of the frame, **on the wing**, at r = 2713 px. That is where the highest-contrast fine
+edges are *and* where lateral CA is near maximum, but it is **not bee hair**, which is what
+the orchestrator's claim is about. `M107-fig6-kernel-roi-auto.png` shows this plainly; the
+first version of its chroma panel also rendered the wing's warm cast as a saturated orange
+field, i.e. it showed **subject chromaticity, not fringing** — the identical mistake fig4
+made on first draft.
+
+Both were fixed: the chroma panels now show the σ = 6 px **high-passed** field that the
+statistic actually consumes, and a second ROI restricted to r < 900 px selects `(3100, 1912)`,
+r = 125 px, squarely on the hair mass (`M107-fig6-kernel-roi-centre.png`). **Every K-bar was
+scored on both ROIs and they agree on every verdict.** In `fig6-centre` the three chroma
+panels visibly carry the *same* hair-aligned magenta/green streaks at slightly different
+contrast — the map says what K4 and K7 say numerically.
+
+### 12.3 Results
+
+All figures linear-light, σ = 6 px high-pass, edge mask = top 10 % of `|∇L|` taken from the
+**Catmull-Rom arm only** so the identical pixel set is used for every arm and the mask
+cannot respond to the kernel. `cr = R−G`, `cb = B−G`. Command:
+`python -u e8_kernel.py centre 900` and `python -u e8_kernel.py auto`; scored by
+`python -u e8_score.py` → `C:\dev\strehl-out\M107-chroma\e8-scorecard.txt`.
+
+| bar | centre (hair, r=125) | wing (r=2713) | verdict |
+|---|---|---|---|
+| **K1** validity | bytes ≡ gallery; `r(L)` = 0.9147 | bytes ≡ gallery; 0.8594 | **PASS** |
+| **K2** premise `cr` | 1.0861 | **1.0200** | **NOT CONFIRMED** / **PREMISE FALSE** |
+| **K2** premise `cb` | 1.0677 | 1.1133 | **NOT CONFIRMED** (bar 1.15) |
+| K2 luma reference | 1.0441 | 1.0769 | — |
+| **K3** ρ invariance `cr`/`cb` | 1.0402 / 1.0225 | 0.9471 / 1.0338 | **pre-existing** (band 0.85–1.18) |
+| **K4** `r_chroma/r_luma`, slope | 0.967 / 0.977, +0.96 | 1.075 / 0.981, +0.94 | **same fringe** (bar ≥0.70, slope >0) |
+| **K5** chroma axis-anisotropy | 0.39 / 0.71 | 0.71 / 0.66 | **not aliasing** (bar >1.5) |
+| **K5** *luma* axis-anisotropy | **2.71** | **3.79** | lattice signature present — **in luma only** |
+| **K6** ρ bilinear/nearest | 0.918 / 0.955 | 1.020 / 0.935 | **(c) bounded small** (band 0.70–1.40) |
+| **K7** ρ7 matched-luma | **0.9851 / 0.9901** | **0.9326 / 0.9881** | **pre-existing, merely blurred** |
+| K7 NULL catmull→bilinear | 0.9498 / 0.9732 | 0.9974 / 0.9745 | **PASS** (band 0.90–1.10) |
+| K7 σ\* | 0.4897 px | 0.6106 px | Catmull-Rom's lowpass vs a zero-order hold |
+
+**K7 is the decisive one.** It performs the substitution the orchestrator's reading
+literally asserts: blur `nearest` with a **channel-independent** Gaussian until its luma
+high-pass rms equals Catmull-Rom's (matched to a relative 1.6e-14 by root-find), then
+compare chroma. If the fringe were created by the kernel, chroma would survive the
+luma-matching; it does not. **ρ7 = 0.985 / 0.990 at the hair ROI**, and the headline sits
+*closer to unity than the procedure's own null* (0.950 / 0.973), so the residual 1.5 % is
+smaller than the matching bias itself.
+
+**Controls.** `K3-CTRL` blurs the Catmull-Rom arm by a synthetic channel-independent
+Gaussian and requires ρ to hold; it returned 0.694 at σ = 2.0 px, **outside K3's own band**.
+That failure is why K7 exists. Adding `rms_L` to each control point showed why: the two arms
+differ by only ×0.958 in luma rms, which sits between the σ = 0.25 point (×0.9999 → ρ ×0.9998)
+and the σ = 0.5 point (×0.9643 → ρ ×0.9498). Interpolated, a pure-blur explanation predicts
+ρ_nearest/ρ_catmull ≈ 1.01–1.05; measured 1.0402. K3 was never calibrated against the size of
+the effect it was testing, and an uncalibrated invariance band is an argument, not a
+measurement — this is recorded as a defect in my own bar, not in the data.
+`K3-POWER` shifts **only** the red channel by a known subpixel amount: ρ_cr rises
+monotonically (×1.026 at 0.3 px, ×1.134 at 0.6 px) while ρ_cb stays flat (×1.001, ×1.003).
+The instrument is both **responsive** to chromatic displacement and **specific** to the
+channel that moved.
+
+### 12.4 What this settles, and what it does not
+
+**The orchestrator's conclusion is confirmed. Their premise, as stated, is not.**
+
+- *Confirmed:* the fringe is pre-existing in the data and Catmull-Rom is merely blurring it.
+  K7 = 0.985/0.990, K4 slopes positive with chroma correlating as well as luma does.
+- *Not confirmed:* "markedly stronger" under `nearest`. Chroma rms rises 2.0–11.3 % across
+  the two ROIs and both axes — and **luma rms rises 4.4–7.7 % on the same pixels**. On the
+  wing ROI the R−G fringe rises by 2.0 % against a 7.7 % luma rise, i.e. relative to the
+  edge energy carrying it, the magenta fringe is *weaker* under `nearest`. The eye was not
+  lying, but a good part of what it read as colour was luma acutance plus `nearest`'s very
+  real lattice structure — which K5 finds at anisotropy **2.71–3.79 in luma** and
+  **0.39–0.71 in chroma**. The aliasing signature the orchestrator correctly worried about
+  is present; it is simply not chromatic.
+- *(c) bounded small, independently:* K6 in [0.918, 1.020], nowhere near the <0.50 that
+  Nyquist-scale co-siting would require. Consistent with §5.
+- *(d) bounded, now quantitatively:* any kernel-**created** chroma is ≤1.5 % of the fringe
+  amplitude at the hair ROI and ≤6.7 % at the wing, and both deficits are *negative* — the
+  kernel removes fringe, it does not add it. Calibrating against K3-POWER
+  (0.3 px of pure red shift ⇒ +2.6 % centre, +8.9 % wing), that bounds any kernel-induced
+  **channel-differential displacement** at roughly **≤0.05 px at the centre and ≤0.23 px at
+  the wing** — against the 1.43-sensel median lateral displacement measured in §3.
+- *The sign is preserved across all three kernels* (K6 slopes +0.865 … +0.964, all
+  positive), which was the registered falsifier for (b)'s mechanism as described in §4. It
+  did not fire.
+
+**This addendum cannot revise (a) or (b), and I will not let it be read as corroborating
+them.** Both were measured on raw CFA planes that never entered strehl's gather at all
+(§3, §4), and `e6_payoff.py`'s warp-OFF arm already moved `dR` by 1.6 %. Three renders that
+differ only in a post-election resampling kernel have no reach into which frame a channel
+was elected from. The reach limit was written into the pre-registration before measuring.
+
+**The veil.** The orchestrator cautioned that the occlusion veil and the fringing occupy the
+same pixels. The σ = 6 px high-pass removes it (it is a low-frequency brightness anomaly),
+and the robustness arm confirms this is not a knob: at σ = 3 and σ = 12 the K3 ratios move
+to 1.015/1.013 and 1.054/1.026 (centre), and K2 to 1.112 and 1.079 — every verdict
+unchanged. Had the veil been driving the numbers, a 4× change in high-pass scale would not
+have left them alone.
+
+### 12.5 One observation I am **not** claiming as a measurement
+
+`ρ_cr` — chroma-to-luma ratio on edge pixels — is 0.366 at r = 125 px and 0.876 at
+r = 2713 px, a factor of 2.39. That is the radius dependence §3 attributes to lateral CA,
+and it is reassuring. **But the two ROIs are different subjects** (tan hair vs a warm
+translucent wing), so this comparison confounds radius with subject and is worth exactly
+nothing as evidence. §3's radius result stands on the gated ROI set with a permutation
+null; this is an anecdote consistent with it, recorded here only so that nobody later
+mistakes it for a second independent confirmation. Note also that ρ_cr = 0.366 at r = 125 px
+means the fringe **does not vanish at the frame centre**, which is the qualitative
+signature §4 relies on — but §4 already establishes that properly and does not need this.
+
+### 12.6 Candidate facts from the addendum
+
+- **P13.** strehl's warp gathers all four CFA planes with the same `Similarity` and the
+  same `PlaneGeometry`, so `Resampler::Nearest`'s coordinate rounding is common-mode across
+  R/G1/G2/B and cannot produce channel-differential displacement.
+  (`align_cmd.rs::warp_frame_in_place`, `warpmap.rs::gather_into`.)
+- **P14.** Catmull-Rom's lowpass, relative to a zero-order hold, is equivalent to a
+  channel-independent Gaussian of **σ ≈ 0.49–0.61 px** on `bee-3-cpl`, measured by matching
+  high-pass luma rms. This is a direct, kernel-only number and may interest M85.
+- **P15.** The colour fringing in the shipped render is **not created by the gather kernel**:
+  blurring the `nearest` arm to the Catmull-Rom arm's luma reproduces its chroma to
+  ρ7 = 0.985/0.990 (hair ROI), against a same-procedure null of 0.950/0.973.
+- **P16.** `Resampler::Nearest` *does* leave a CFA-axis-aligned lattice signature above
+  0.7 Nyquist — **anisotropy 2.71–3.79 in luma, 0.39–0.71 in chroma.** A by-eye judgement of
+  "colour fringing" on a `nearest` render is at risk of reading achromatic lattice structure
+  and luma acutance as colour; scoring chroma against luma on the same pixels separates them.
+
+### 12.7 Discipline
+
+- **D4.** When scoring a by-eye claim about *colour*, always report the **luma** statistic on
+  the same pixels beside it. Chroma and luma both rose here; only the pair distinguishes
+  "more fringing" from "more acutance". Twice in this milestone a chroma panel was rendered
+  that showed subject chromaticity rather than fringing until it was high-passed.
+- **D5.** An invariance bar must be calibrated against the magnitude of the effect it is
+  testing. K3's band was set from physics but never checked against the ×0.958 luma
+  separation the two arms actually have; its own control failed at a blur 10× the effect.
+  Reporting `rms_L` at each control point converted a failed control into a calibration
+  curve, and motivated the substitution test (K7) that actually settled the question.
+
