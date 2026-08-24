@@ -43,7 +43,7 @@ def run_test() -> subprocess.CompletedProcess[str]:
             "strehl-cli",
             "--bin",
             "strehl",
-            "selection_noise_null_tracks_one_across_frame_counts",
+            "selection_noise_null_is_not_a_retention_target_across_frame_counts",
         ],
         cwd=ROOT,
         env=env,
@@ -115,13 +115,19 @@ def main() -> None:
         red is not None
         and red.returncode != 0
         and "noise null N=22" in red_output
-        and "STRUCTURE must read 1" in red_output
+        and (
+            "selector target must be NOT-MEASURABLE" in red_output
+            or "STRUCTURE must read 1" in red_output
+        )
         and "Compiling strehl-cli" in red_output
     )
     green_ok = (
         restored_ok
         and green.returncode == 0
-        and "selection_noise_null_tracks_one_across_frame_counts ... ok" in green.stdout
+        and (
+            "selection_noise_null_is_not_a_retention_target_across_frame_counts ... ok"
+            in green.stdout
+        )
         and "Compiling strehl-cli" in green.stdout
     )
     lines.append(f"MEASURED: red control pass={red_ok}")

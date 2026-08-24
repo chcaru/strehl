@@ -1,0 +1,79 @@
+   Compiling strehl-cli v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.53s
+     Running unittests src\main.rs (projects\strehl\experiments\M80-invariant-repair\target-m80-refinement\debug\deps\strehl-159d1b4c243d4b13.exe)
+
+running 25 tests
+test merge_cmd::tests::a_gradient_increase_is_never_scored_as_a_pass ... ok
+test merge_cmd::tests::a_non_monotone_ladder_is_a_bug_and_is_reported_as_one ... ok
+test merge_cmd::tests::a_stack_the_shipped_ladder_cannot_reach_is_refused_not_extrapolated ... ok
+test merge_cmd::tests::a_target_outside_the_ladder_is_refused_rather_than_extrapolated ... ok
+test merge_cmd::tests::degenerate_ladders_and_targets_are_refused ... ok
+test merge_cmd::tests::the_isotropic_column_is_the_analytic_value_on_a_linear_ramp ... ok
+test merge_cmd::tests::log_log_interpolation_is_exact_on_a_power_law ... ok
+test merge_cmd::tests::gradient_noise_moments_match_a_dense_covariance_calculation ... ok
+test merge_cmd::tests::no_single_gate_calibrates_across_the_corpus ... ok
+test merge_cmd::tests::an_unsorted_ladder_solves_the_same_as_a_sorted_one ... ok
+test merge_cmd::tests::solving_at_a_rungs_own_value_returns_that_rungs_gate ... ok
+test merge_cmd::tests::the_m2_convention_column_reproduces_the_independently_identified_definition ... ok
+test merge_cmd::tests::a_solved_gate_reproduces_its_target_when_fed_back ... ok
+test merge_cmd::tests::the_plan_is_bounded_by_memory_and_scales_down_as_accumulators_are_added ... ok
+test merge_cmd::tests::the_speckle_companion_uses_the_same_tolerance_as_the_argmax_baseline ... ok
+test merge_cmd::tests::the_statistics_are_priced_into_the_plan_and_do_not_grow_with_the_stack ... ok
+test merge_cmd::tests::every_frame_is_covered_exactly_once_by_the_chunking ... ok
+test merge_cmd::tests::degenerate_rois_do_not_panic ... ok
+test merge_cmd::tests::the_corrected_column_falls_under_blur_which_is_the_property_it_is_used_for ... ok
+test merge_cmd::tests::the_noise_correction_removes_pure_noise_down_to_sampling_error ... ok
+test merge_cmd::tests::the_correction_leaves_signal_alone_while_removing_added_noise ... ok
+M80 positive plant: clean-to-blur gradient retention=0.369038
+M80 contrast N=22: amplitude=    0.0 q=   -6.6789 se= 25.7998 z=  -0.259 target=NOT-MEASURABLE
+M80 N=22 noise: selector_structure=1.001357 candidate_structure=0.997701 selector_q=+16.009680 selector_se=25.802707 selector_z=+0.620465 retention=NotMeasurable fitted_k=1.395314/1.393632
+M80 contrast N=22: amplitude=    0.5 q=   -5.9035 se= 25.7998 z=  -0.229 target=NOT-MEASURABLE
+M80 contrast N=22: amplitude=    1.0 q=   -3.7959 se= 25.7998 z=  -0.147 target=NOT-MEASURABLE
+M80 N=22 detail: structure=5.950740 clean_retention=1.000332 blur_retention=0.425848
+M80 N=130 noise: selector_structure=1.001411 candidate_structure=1.000482 selector_q=+24.544555 selector_se=38.033241 selector_z=+0.645345 retention=NotMeasurable fitted_k=1.598424/1.595491
+M80 contrast N=22: amplitude=    2.0 q=   +4.4152 se= 25.7998 z=  +0.171 target=NOT-MEASURABLE
+M80 contrast N=22: amplitude=    4.0 q=  +36.8217 se= 25.7998 z=  +1.427 target=NOT-MEASURABLE
+M80 N=299 noise: selector_structure=1.001460 candidate_structure=0.999476 selector_q=+29.269257 selector_se=43.822111 selector_z=+0.667911 retention=NotMeasurable fitted_k=1.684837/1.693345
+test merge_cmd::tests::selection_noise_null_is_not_a_retention_target_across_frame_counts ... ok
+M80 contrast N=22: amplitude=    8.0 q= +165.5723 se= 25.7998 z=  +6.418 target=MEASURABLE
+M80 N=130 detail: structure=5.208819 clean_retention=1.000717 blur_retention=0.449006
+M80 contrast N=22: amplitude=   16.0 q= +678.8228 se= 25.7998 z= +26.311 target=MEASURABLE
+M80 contrast N=22: amplitude=   32.0 q=+2728.3220 se= 25.7998 z=+105.750 target=MEASURABLE
+M80 contrast N=22: amplitude=   64.0 q=+10919.3125 se= 25.7998 z=+423.232 target=MEASURABLE
+M80 N=299 detail: structure=4.940328 clean_retention=0.999482 blur_retention=0.457904
+test merge_cmd::tests::cross_fitted_metric_keeps_detail_and_detects_blur_across_frame_counts ... ok
+M80 contrast N=22: amplitude=  128.0 q=+43669.2623 se= 25.7998 z=+1692.617 target=MEASURABLE
+M80 contrast N=22: amplitude=  200.0 q=+106599.4058 se= 25.7998 z=+4131.784 target=MEASURABLE
+M80 contrast transition N=22: predicted=4.746507 DN first_measurable=8.000000 DN ratio=1.685450
+M80 contrast N=130: amplitude=    0.0 q=  +34.4345 se= 38.0513 z=  +0.905 target=NOT-MEASURABLE
+M80 contrast N=130: amplitude=    0.5 q=  +35.0246 se= 38.0513 z=  +0.920 target=NOT-MEASURABLE
+M80 contrast N=130: amplitude=    1.0 q=  +36.9468 se= 38.0513 z=  +0.971 target=NOT-MEASURABLE
+M80 detectability null N=22: false_answers=16/1000 nominal_alpha=0.010 registered_max=18
+M80 contrast N=130: amplitude=    2.0 q=  +44.7873 se= 38.0513 z=  +1.177 target=NOT-MEASURABLE
+M80 contrast N=130: amplitude=    4.0 q=  +76.4526 se= 38.0513 z=  +2.009 target=NOT-MEASURABLE
+M80 contrast N=130: amplitude=    8.0 q= +203.7205 se= 38.0513 z=  +5.354 target=MEASURABLE
+M80 contrast N=130: amplitude=   16.0 q= +714.0059 se= 38.0513 z= +18.764 target=MEASURABLE
+M80 contrast N=130: amplitude=   32.0 q=+2757.5747 se= 38.0513 z= +72.470 target=MEASURABLE
+M80 contrast N=130: amplitude=   64.0 q=+10936.7045 se= 38.0513 z=+287.420 target=MEASURABLE
+M80 contrast N=130: amplitude=  128.0 q=+43662.9329 se= 38.0513 z=+1147.475 target=MEASURABLE
+M80 contrast N=130: amplitude=  200.0 q=+106566.3898 se= 38.0513 z=+2800.597 target=MEASURABLE
+M80 contrast transition N=130: predicted=5.764350 DN first_measurable=8.000000 DN ratio=1.387841
+M80 contrast N=299: amplitude=    0.0 q=  -30.6460 se= 44.0279 z=  -0.696 target=NOT-MEASURABLE
+M80 contrast N=299: amplitude=    0.5 q=  -30.3750 se= 44.0279 z=  -0.690 target=NOT-MEASURABLE
+M80 contrast N=299: amplitude=    1.0 q=  -28.7720 se= 44.0279 z=  -0.653 target=NOT-MEASURABLE
+M80 contrast N=299: amplitude=    2.0 q=  -21.5698 se= 44.0279 z=  -0.490 target=NOT-MEASURABLE
+M80 contrast N=299: amplitude=    4.0 q=   +8.8189 se= 44.0279 z=  +0.200 target=NOT-MEASURABLE
+M80 contrast N=299: amplitude=    8.0 q= +133.5337 se= 44.0279 z=  +3.033 target=MEASURABLE
+M80 contrast N=299: amplitude=   16.0 q= +638.7128 se= 44.0279 z= +14.507 target=MEASURABLE
+M80 detectability null N=130: false_answers=8/1000 nominal_alpha=0.010 registered_max=18
+M80 contrast N=299: amplitude=   32.0 q=+2672.0689 se= 44.0279 z= +60.690 target=MEASURABLE
+M80 contrast N=299: amplitude=   64.0 q=+10830.7735 se= 44.0279 z=+245.998 target=MEASURABLE
+M80 contrast N=299: amplitude=  128.0 q=+43516.1513 se= 44.0279 z=+988.377 target=MEASURABLE
+M80 contrast N=299: amplitude=  200.0 q=+106373.6514 se= 44.0279 z=+2416.051 target=MEASURABLE
+M80 contrast transition N=299: predicted=6.200540 DN first_measurable=8.000000 DN ratio=1.290210
+test merge_cmd::tests::selector_detectability_has_a_noise_derived_contrast_transition ... ok
+M80 detectability null N=299: false_answers=10/1000 nominal_alpha=0.010 registered_max=18
+test merge_cmd::tests::selector_detectability_false_answers_match_the_registered_noise_model ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 3.03s
+

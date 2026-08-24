@@ -346,6 +346,7 @@ fn detail_metrics(v: &[f32], sigma: &[f32], w: usize, h: usize) -> DetailMetrics
 struct GradientPower {
     raw_sum: f64,
     noise_sum: f64,
+    noise_covariance_square_sum: f64,
     samples: usize,
 }
 
@@ -379,32 +380,51 @@ fn gradient_power_columns(
     assert_eq!(v.len(), w * h);
     assert_eq!(sigma.len(), w * h);
     assert!(x0 < x1 && x1 <= w);
-    let (mut raw_sum, mut noise_sum, mut samples) = (0.0f64, 0.0f64, 0usize);
+    let (mut raw_sum, mut noise_sum, mut noise_covariance_square_sum, mut samples) =
+        (0.0f64, 0.0f64, 0.0f64, 0usize);
     if h < 2 || x1 - x0 < 2 {
         return GradientPower {
             raw_sum,
             noise_sum,
+            noise_covariance_square_sum,
             samples,
         };
     }
+    let mut gradient_degree = vec![0u8; w * h];
     for y in 0..h - 1 {
         for x in x0..x1 - 1 {
             let i = y * w + x;
             let dx = f64::from(v[i + 1] - v[i]);
             let dy = f64::from(v[i + w] - v[i]);
             raw_sum += dx * dx + dy * dy;
-            let (s0, s1, sw) = (
-                f64::from(sigma[i]),
-                f64::from(sigma[i + 1]),
-                f64::from(sigma[i + w]),
+            let (v0, v1, vw) = (
+                f64::from(sigma[i]).powi(2),
+                f64::from(sigma[i + 1]).powi(2),
+                f64::from(sigma[i + w]).powi(2),
             );
-            noise_sum += 2.0 * s0 * s0 + s1 * s1 + sw * sw;
+            let (dx_variance, dy_variance) = (v0 + v1, v0 + vw);
+            noise_sum += dx_variance + dy_variance;
+            noise_covariance_square_sum += dx_variance.powi(2) + dy_variance.powi(2);
+            gradient_degree[i] += 2;
+            gradient_degree[i + 1] += 1;
+            gradient_degree[i + w] += 1;
             samples += 1;
+        }
+    }
+    for y in 0..h {
+        for x in x0..x1 {
+            let i = y * w + x;
+            let degree = f64::from(gradient_degree[i]);
+            if degree >= 2.0 {
+                let variance = f64::from(sigma[i]).powi(2);
+                noise_covariance_square_sum += degree * (degree - 1.0) * variance.powi(2);
+            }
         }
     }
     GradientPower {
         raw_sum,
         noise_sum,
+        noise_covariance_square_sum,
         samples,
     }
 }
@@ -414,6 +434,7 @@ struct ControlledDetail {
     raw_power: f64,
     controlled_noise_power: f64,
     signal_power: f64,
+    signal_standard_error: f64,
     structure: f64,
     inflation_left: f64,
     inflation_right: f64,
@@ -487,6 +508,16 @@ fn cross_fitted_detail(detail: GradientRoi<'_>, flat: GradientRoi<'_>) -> Result
     let raw_sum = detail_left.raw_sum + detail_right.raw_sum;
     let controlled_noise_sum = scale_for_detail_left * detail_left.noise_sum
         + scale_for_detail_right * detail_right.noise_sum;
+    let signal_variance_sum = 2.0
+        * scale_for_detail_left.powi(2)
+        * (detail_left.noise_covariance_square_sum
+            + detail_left.noise_sum.powi(2) * flat_right.noise_covariance_square_sum
+                / flat_right.noise_sum.powi(2))
+        + 2.0
+            * scale_for_detail_right.powi(2)
+            * (detail_right.noise_covariance_square_sum
+                + detail_right.noise_sum.powi(2) * flat_left.noise_covariance_square_sum
+                    / flat_left.noise_sum.powi(2));
     ensure!(
         scale_left.is_finite()
             && scale_right.is_finite()
@@ -494,24 +525,50 @@ fn cross_fitted_detail(detail: GradientRoi<'_>, flat: GradientRoi<'_>) -> Result
             && controlled_noise_sum > 0.0,
         "the flat-control selection-noise scale is not finite and positive"
     );
+    ensure!(
+        signal_variance_sum.is_finite() && signal_variance_sum > 0.0,
+        "the calibrated noise model returned no finite detail-power variance"
+    );
     let raw_power = raw_sum / samples as f64;
     let controlled_noise_power = controlled_noise_sum / samples as f64;
     Ok(ControlledDetail {
         raw_power,
         controlled_noise_power,
         signal_power: raw_power - controlled_noise_power,
+        signal_standard_error: signal_variance_sum.sqrt() / samples as f64,
         structure: (raw_power / controlled_noise_power).sqrt(),
         inflation_left: scale_left.sqrt(),
         inflation_right: scale_right.sqrt(),
     })
 }
 
-fn equal_noise_retention(candidate: ControlledDetail, selector: ControlledDetail) -> f64 {
-    if selector.raw_power <= 0.0 {
-        return f64::NAN;
+const DETAIL_FALSE_ANSWER_RATE: f64 = 0.01;
+const DETAIL_DETECTION_Z: f64 = 2.326_347_874;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+enum DetailRetention {
+    NotMeasurable,
+    Measured(f64),
+}
+
+fn detail_target_is_measurable(detail: ControlledDetail) -> bool {
+    detail.signal_power > DETAIL_DETECTION_Z * detail.signal_standard_error
+}
+
+fn equal_noise_retention(
+    candidate: ControlledDetail,
+    selector: ControlledDetail,
+) -> DetailRetention {
+    if !detail_target_is_measurable(selector) {
+        return DetailRetention::NotMeasurable;
     }
-    ((candidate.signal_power + selector.controlled_noise_power).max(0.0) / selector.raw_power)
-        .sqrt()
+    if selector.raw_power <= 0.0 {
+        return DetailRetention::Measured(f64::NAN);
+    }
+    DetailRetention::Measured(
+        ((candidate.signal_power + selector.controlled_noise_power).max(0.0) / selector.raw_power)
+            .sqrt(),
+    )
 }
 
 /// Merged green over an ROI, black-subtracted, in plane coordinates.
@@ -1513,6 +1570,12 @@ fn report(
         droi.width,
         droi.height,
     );
+    let selector_z = selector_controlled.signal_power / selector_controlled.signal_standard_error;
+    let selector_target = if detail_target_is_measurable(selector_controlled) {
+        "MEASURABLE"
+    } else {
+        "NOT-MEASURABLE"
+    };
 
     eprintln!("--- ACCEPTANCE INVARIANT 2 of 2: detail retention (MEASURED) ---");
     eprintln!(
@@ -1562,21 +1625,30 @@ fn report(
         "                  STRUCTURE = raw / controlled-noise: pure noise reads 1.0x; real detail"
     );
     eprintln!(
-        "                  reads above it. RETENTION compares resolved signal at the SAME selector"
+        "                  reads above it. RETENTION is N/A unless the SELECTOR'S resolved detail"
     );
     eprintln!(
-        "                  noise floor, against the full-stack gate-zero selector -- never one"
+        "                  clears a one-sided model-derived 99% bound (alpha {:.2}). If it does,",
+        DETAIL_FALSE_ANSWER_RATE
     );
     eprintln!(
-        "                  arbitrary frame. The flat scale is re-measured per gate, so its N and"
+        "                  retention compares resolved signal at the SAME selector noise floor,"
     );
+    eprintln!(
+        "                  against the full-stack gate-zero selector -- never one arbitrary frame."
+    );
+    eprintln!("                  The flat scale is re-measured per gate, so its N and");
     eprintln!(
         "                  admission dependence come from this run rather than a transferred bar."
     );
     eprintln!(
-        "selector gate 0 : q {:+10.3} DN^2   STRUCTURE {:7.3}x   raw {:9.4}   \
-         ctrl noise {:9.4}   k(L/R) {:6.3}/{:6.3}   m2 {:8.4}   iso {:8.4}",
+        "selector gate 0 : q {:+10.3} +/- {:8.3} DN^2   z {:+7.3}   target {:14}   \
+         STRUCTURE {:7.3}x   raw {:9.4}   ctrl noise {:9.4}   k(L/R) {:6.3}/{:6.3}   \
+         m2 {:8.4}   iso {:8.4}",
         selector_controlled.signal_power,
+        selector_controlled.signal_standard_error,
+        selector_z,
+        selector_target,
         selector_controlled.structure,
         selector_controlled.raw_power.sqrt(),
         selector_controlled.controlled_noise_power.sqrt(),
@@ -1607,21 +1679,36 @@ fn report(
         .with_context(|| format!("gate {} detail control", e.gate().threshold))?;
         let m = detail_metrics(&merged_detail, &detail_sig, droi.width, droi.height);
         let retention = equal_noise_retention(controlled, selector_controlled);
-        eprintln!(
-            "  {:5.2}   {:+10.3}   {:9.3}x   {:9}   {:9.3}x   {:9.4}   {:9.4}   \
-             {:7.3}  {:7.3}   {:8.4}   {:8.4}",
-            e.gate().threshold,
-            controlled.signal_power,
-            retention,
-            detail_verdict(retention),
-            controlled.structure,
-            controlled.raw_power.sqrt(),
-            controlled.controlled_noise_power.sqrt(),
-            controlled.inflation_left,
-            controlled.inflation_right,
-            m.m2_pooled_abs,
-            m.iso_mean
-        );
+        match retention {
+            DetailRetention::Measured(retention) => eprintln!(
+                "  {:5.2}   {:+10.3}   {:9.3}x   {:9}   {:9.3}x   {:9.4}   {:9.4}   \
+                 {:7.3}  {:7.3}   {:8.4}   {:8.4}",
+                e.gate().threshold,
+                controlled.signal_power,
+                retention,
+                detail_verdict(retention),
+                controlled.structure,
+                controlled.raw_power.sqrt(),
+                controlled.controlled_noise_power.sqrt(),
+                controlled.inflation_left,
+                controlled.inflation_right,
+                m.m2_pooled_abs,
+                m.iso_mean
+            ),
+            DetailRetention::NotMeasurable => eprintln!(
+                "  {:5.2}   {:+10.3}         N/A   NO TARGET   {:9.3}x   {:9.4}   {:9.4}   \
+                 {:7.3}  {:7.3}   {:8.4}   {:8.4}",
+                e.gate().threshold,
+                controlled.signal_power,
+                controlled.structure,
+                controlled.raw_power.sqrt(),
+                controlled.controlled_noise_power.sqrt(),
+                controlled.inflation_left,
+                controlled.inflation_right,
+                m.m2_pooled_abs,
+                m.iso_mean
+            ),
+        }
     }
     eprintln!(
         "                  q is SIGNED resolved gradient power. A negative q means the ROI has no"
@@ -1633,7 +1720,7 @@ fn report(
         "                  before retention. At high STRUCTURE, RETENTION approaches resolved"
     );
     eprintln!(
-        "                  signal amplitude. Near 1.0x it honestly shrinks toward no-effect."
+        "                  signal amplitude. NO TARGET is not a pass: the ratio is not identified."
     );
     eprintln!(
         "                  A rise is INVESTIGATE, not PASS: see the speckle companion below, which"
@@ -2713,17 +2800,21 @@ mod tests {
             .collect()
     }
 
-    fn checker_signal(w: usize, h: usize) -> Vec<f32> {
+    fn checker_signal_at(w: usize, h: usize, amplitude: f32) -> Vec<f32> {
         (0..w * h)
             .map(|i| {
                 let (x, y) = (i % w, i / w);
                 if ((x / 3) + (y / 3)) % 2 == 0 {
-                    200.0
+                    amplitude
                 } else {
-                    -200.0
+                    -amplitude
                 }
             })
             .collect()
+    }
+
+    fn checker_signal(w: usize, h: usize) -> Vec<f32> {
+        checker_signal_at(w, h, 200.0)
     }
 
     fn box_blur_3x3(v: &[f32], w: usize, h: usize) -> Vec<f32> {
@@ -2770,8 +2861,55 @@ mod tests {
         (1..=n).map(|k| 1.0 / k as f64).sum()
     }
 
+    fn measured_retention(retention: DetailRetention, context: &str) -> f64 {
+        match retention {
+            DetailRetention::Measured(value) => value,
+            DetailRetention::NotMeasurable => {
+                panic!("{context}: selector target unexpectedly NOT-MEASURABLE")
+            }
+        }
+    }
+
     #[test]
-    fn selection_noise_null_tracks_one_across_frame_counts() {
+    fn gradient_noise_moments_match_a_dense_covariance_calculation() {
+        let (w, h, x0, x1) = (6usize, 5usize, 1usize, 5usize);
+        let sigma: Vec<f32> = (0..w * h).map(|i| 0.75 + (i % 7) as f32 * 0.2).collect();
+        let power = gradient_power_columns(&vec![0.0; w * h], &sigma, w, h, x0, x1);
+        let mut edges = Vec::new();
+        for y in 0..h - 1 {
+            for x in x0..x1 - 1 {
+                let i = y * w + x;
+                edges.push([(i, -1.0f64), (i + 1, 1.0)]);
+                edges.push([(i, -1.0f64), (i + w, 1.0)]);
+            }
+        }
+        let covariance = |a: &[(usize, f64); 2], b: &[(usize, f64); 2]| {
+            let mut value = 0.0;
+            for (ia, ca) in a {
+                for (ib, cb) in b {
+                    if ia == ib {
+                        value += ca * cb * f64::from(sigma[*ia]).powi(2);
+                    }
+                }
+            }
+            value
+        };
+        let expected_noise = edges.iter().map(|edge| covariance(edge, edge)).sum::<f64>();
+        let expected_covariance_square = edges
+            .iter()
+            .flat_map(|a| edges.iter().map(move |b| covariance(a, b).powi(2)))
+            .sum::<f64>();
+        assert!((power.noise_sum - expected_noise).abs() < 1e-10);
+        assert!(
+            (power.noise_covariance_square_sum - expected_covariance_square).abs() < 1e-9,
+            "{} != {}",
+            power.noise_covariance_square_sum,
+            expected_covariance_square
+        );
+    }
+
+    #[test]
+    fn selection_noise_null_is_not_a_retention_target_across_frame_counts() {
         let (w, h, sd) = (512usize, 512usize, 20.0f32);
         let no_signal = vec![0.0; w * h];
         for (j, n) in [22usize, 130, 299].into_iter().enumerate() {
@@ -2783,11 +2921,23 @@ mod tests {
             let retention = equal_noise_retention(candidate, selector);
             eprintln!(
                 "M80 N={n} noise: selector_structure={:.6} candidate_structure={:.6} \
-                 retention={retention:.6} fitted_k={:.6}/{:.6}",
+                 selector_q={:+.6} selector_se={:.6} selector_z={:+.6} \
+                 retention={retention:?} fitted_k={:.6}/{:.6}",
                 selector.structure,
                 candidate.structure,
+                selector.signal_power,
+                selector.signal_standard_error,
+                selector.signal_power / selector.signal_standard_error,
                 candidate.inflation_left,
                 candidate.inflation_right
+            );
+            assert!(
+                matches!(retention, DetailRetention::NotMeasurable),
+                "noise null N={n}: selector target must be NOT-MEASURABLE, got \
+                 q={:+.6}, se={:.6}, z={:+.6}, retention={retention:?}",
+                selector.signal_power,
+                selector.signal_standard_error,
+                selector.signal_power / selector.signal_standard_error
             );
             assert!(
                 (0.90..=1.10).contains(&candidate.structure),
@@ -2797,12 +2947,101 @@ mod tests {
                 candidate.inflation_left,
                 candidate.inflation_right
             );
+        }
+    }
+
+    #[test]
+    fn selector_detectability_false_answers_match_the_registered_noise_model() {
+        let (w, h, sd) = (64usize, 64usize, 20.0f32);
+        let no_signal = vec![0.0; w * h];
+        for (j, n) in [22usize, 130, 299].into_iter().enumerate() {
+            let inflation = harmonic(n).sqrt() as f32;
+            let false_answers = (0..1_000usize)
+                .filter(|trial| {
+                    let seed = 0xD37E_C700_0000_0000u64 ^ ((j as u64) << 32) ^ (*trial as u64);
+                    detail_target_is_measurable(synthetic_controlled(
+                        &no_signal, w, h, sd, inflation, seed,
+                    ))
+                })
+                .count();
+            eprintln!(
+                "M80 detectability null N={n}: false_answers={false_answers}/1000 \
+                 nominal_alpha={DETAIL_FALSE_ANSWER_RATE:.3} registered_max=18"
+            );
             assert!(
-                (0.90..=1.10).contains(&retention),
-                "noise null N={n}: RETENTION must read 1, got {retention:.6}; \
-                 selector STRUCTURE {:.6}, candidate STRUCTURE {:.6}",
-                selector.structure,
-                candidate.structure
+                false_answers <= 18,
+                "detectability null N={n}: {false_answers}/1000 false measurable targets \
+                 exceeds the registered binomial limit 18"
+            );
+        }
+    }
+
+    #[test]
+    fn selector_detectability_has_a_noise_derived_contrast_transition() {
+        const AMPLITUDES: [f32; 11] =
+            [0.0, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 200.0];
+        let (w, h, sd) = (512usize, 512usize, 20.0f32);
+        let unit_signal = checker_signal_at(w, h, 1.0);
+        let zero_sigma = vec![0.0; w * h];
+        let unit_left = gradient_power_columns(&unit_signal, &zero_sigma, w, h, 0, w / 2);
+        let unit_right = gradient_power_columns(&unit_signal, &zero_sigma, w, h, w / 2, w);
+        let unit_gradient_power = (unit_left.raw_sum + unit_right.raw_sum)
+            / (unit_left.samples + unit_right.samples) as f64;
+
+        for (j, n) in [22usize, 130, 299].into_iter().enumerate() {
+            let inflation = harmonic(n).sqrt() as f32;
+            let seed = 0xC017_A570_0000_0000u64 ^ j as u64;
+            let mut states = Vec::new();
+            let mut predicted_transition = None;
+            for amplitude in AMPLITUDES {
+                let signal = checker_signal_at(w, h, amplitude);
+                let selector = synthetic_controlled(&signal, w, h, sd, inflation, seed);
+                let measurable = detail_target_is_measurable(selector);
+                let predicted = (DETAIL_DETECTION_Z * selector.signal_standard_error
+                    / unit_gradient_power)
+                    .sqrt();
+                predicted_transition.get_or_insert(predicted);
+                states.push((amplitude, measurable));
+                eprintln!(
+                    "M80 contrast N={n}: amplitude={amplitude:7.1} q={:+10.4} \
+                     se={:8.4} z={:+8.3} target={}",
+                    selector.signal_power,
+                    selector.signal_standard_error,
+                    selector.signal_power / selector.signal_standard_error,
+                    if measurable {
+                        "MEASURABLE"
+                    } else {
+                        "NOT-MEASURABLE"
+                    }
+                );
+            }
+            assert!(
+                !states[0].1,
+                "contrast N={n}: zero amplitude was measurable"
+            );
+            assert!(
+                states.last().is_some_and(|(_, measurable)| *measurable),
+                "contrast N={n}: amplitude 200 was not measurable"
+            );
+            let first = states
+                .iter()
+                .position(|(_, measurable)| *measurable)
+                .expect("amplitude 200 must be measurable");
+            assert!(
+                states[first..].iter().all(|(_, measurable)| *measurable),
+                "contrast N={n}: detectability returned to N/A after first answer: {states:?}"
+            );
+            let observed = f64::from(states[first].0);
+            let predicted = predicted_transition.expect("the contrast ladder is non-empty");
+            let ratio = observed / predicted;
+            eprintln!(
+                "M80 contrast transition N={n}: predicted={predicted:.6} DN \
+                 first_measurable={observed:.6} DN ratio={ratio:.6}"
+            );
+            assert!(
+                (0.5..=2.0).contains(&ratio),
+                "contrast N={n}: first measurable {observed:.6} DN is not within one \
+                 factor-two rung of predicted {predicted:.6} DN (ratio {ratio:.6})"
             );
         }
     }
@@ -2830,8 +3069,10 @@ mod tests {
             let selector = synthetic_controlled(&signal, w, h, sd, max_scale, 0x3000 + j as u64);
             let clean = synthetic_controlled(&signal, w, h, sd, averaged_scale, 0x4000 + j as u64);
             let blur = synthetic_controlled(&blurred, w, h, sd, averaged_scale, 0x5000 + j as u64);
-            let clean_retention = equal_noise_retention(clean, selector);
-            let blur_retention = equal_noise_retention(blur, selector);
+            let clean_retention =
+                measured_retention(equal_noise_retention(clean, selector), "clean detail");
+            let blur_retention =
+                measured_retention(equal_noise_retention(blur, selector), "blurred detail");
             eprintln!(
                 "M80 N={n} detail: structure={:.6} clean_retention={clean_retention:.6} \
                  blur_retention={blur_retention:.6}",
