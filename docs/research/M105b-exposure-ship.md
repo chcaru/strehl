@@ -1081,6 +1081,49 @@ record lacks directory, frame count or gate.
 
 ---
 
+### 4.13 Self-audit against discipline 702 (MEASURED)
+
+The 11:34 notice closes with *"worth checking against any harness you have built
+this session that reports through stdout."* Two checks, both run rather than
+reasoned about.
+
+**(a) Encoding — immune, and verified in the failing mode.** All 11 committed
+scripts are pure ASCII, and so is every `.log` they parse, so nothing here can
+emit a character cp1252 cannot encode. Confirmed empirically rather than by
+inspection: `07-clamp-blindspot.py` under `PYTHONIOENCODING=cp1252` with stdout
+**piped** produced `rc=0`, 29 lines, 0 tracebacks — identical to the `utf-8`
+arm. Worth noting that the brief's standing instruction to export
+`PYTHONIOENCODING=utf-8` before every python call would have masked this defect
+for me regardless: **an environment workaround written into a brief can hide a
+tool defect from the very agents positioned to find it.**
+
+**(b) Exit-code contract — one of my own harnesses had the defect.**
+Discipline 702's second half is that a gate must distinguish *tool failure* from
+*subject failure*. Audited:
+
+| harness | before | after |
+|---|---|---|
+| `09-exitcode-trap-v2.ps1` | already 0 / 1 / **2 = INCONCLUSIVE** | unchanged |
+| **`10-freeze-record.ps1`** | **`throw` → 1 and incomplete-record → 1: ambiguous** | 0 / 1 / 2 |
+
+`10-freeze-record.ps1` is a gate — it exits non-zero when a freeze record lacks
+directory, frame count or gate — and until now a missing input file and a
+defective record produced the **same exit code**, which is exactly the ambiguity
+that made the linter's silence unreadable. Fixed with a script-scope `trap`:
+
+* `0` every record complete
+* `1` **SUBJECT** failure, naming each incomplete record
+* `2` **TOOL** failure, stating explicitly that it is *not* a verdict
+
+Both failure arms were exercised under **piped** stdout, in an isolated probe
+directory so no committed artefact was disturbed: tool arm `rc=2`; subject arm
+`rc=1` reporting `fake-render: missing gate`, the precise case the new habit
+exists for; healthy arm `rc=0`. `09` already carried a three-state contract,
+built for §4.11(a) before the discipline was written, which is why its
+INCONCLUSIVE verdict was available to be returned at all.
+
+---
+
 The thing being corrected is a **viewing** transform, and it is worth being
 exact about where it sits, because the project has one hard boundary running
 through this area.
@@ -1503,6 +1546,19 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   3.5 hours earlier. *Implication:* §5.1's fourth defect, previously carried on
   a turn description, is now established by commit timestamp — the code path
   did not exist. Upgrades that item from ARGUED to DERIVED.
+* **P26 (MEASURED).** **THIS MILESTONE'S OWN FREEZE GATE COULD NOT DISTINGUISH
+  TOOL FAILURE FROM SUBJECT FAILURE.** `10-freeze-record.ps1` exited 1 both when
+  its input manifest was missing and when a freeze record was defective — the
+  same ambiguity that made `corpus_lint.py`'s silence unreadable. Now 0 / 1 / 2,
+  with both failure arms exercised under piped stdout. *Implication:* the defect
+  named in discipline 702 was present in a harness written **the same session**,
+  which suggests it is a default rather than an oversight: `throw` and `exit 1`
+  are both the path of least resistance in PowerShell.
+* **P27 (MEASURED).** **THIS MILESTONE'S SCRIPTS ARE ENCODING-IMMUNE.** All 11
+  committed scripts and every `.log` they parse are pure ASCII;
+  `07-clamp-blindspot.py` under `PYTHONIOENCODING=cp1252` with piped stdout gave
+  `rc=0`, 29 lines, 0 tracebacks, identical to the utf-8 arm. *Implication:* the
+  re-runnability promise in §3 survives a verifier whose console is not UTF-8.
 
 ### Disciplines
 
@@ -1610,6 +1666,14 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   correct and will still be missed at 3am. The tool already prints the gate, so
   the enforceable form is "commit the tool's report beside the hash" plus a
   parser. **Prefer a rule a script can check to a rule an agent must recall.**
+* **PD16.** **An environment workaround in a brief can hide the defect it works
+  around from everyone downstream.** This milestone was instructed to export
+  `PYTHONIOENCODING=utf-8` before every python call, and complied, and would
+  therefore never have observed `corpus_lint.py`'s encoding failure however many
+  times it ran the linter. **A standing workaround suppresses the signal for
+  precisely the agents best placed to diagnose it** — so a workaround handed
+  down in a brief should name the defect it is compensating for, or it silently
+  converts a bug into folklore.
 
 ### Questions
 * **PQ1.** What produced `M106`'s `CF266004...`? P3 rules out the source

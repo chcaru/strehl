@@ -21,6 +21,23 @@
 #
 #   powershell -ExecutionPolicy Bypass -File 10-freeze-record.ps1
 
+# Discipline 702: a gate must distinguish TOOL failure from SUBJECT failure, or
+# a broken run and a failing run are the same observation. Before this trap,
+# both a missing manifest (tool could not run) and an incomplete freeze record
+# (subject is defective) exited 1, which is exactly the ambiguity the corpus
+# linter had. Exit codes here are:
+#
+#   0  every freeze record is complete
+#   1  SUBJECT failure -- a record lacks directory, frame count or gate
+#   2  TOOL failure    -- this script could not run at all
+#
+trap {
+    Write-Output ''
+    Write-Output "TOOL FAILURE (exit 2): $($_.Exception.Message)"
+    Write-Output 'This is the script failing, NOT a verdict about the freeze records.'
+    exit 2
+}
+
 $ErrorActionPreference = 'Stop'
 $dataDir = Join-Path $PSScriptRoot 'data'
 $manifest = Join-Path $dataDir '01-render.json'
@@ -143,5 +160,9 @@ $full | Where-Object { $_.sha256 -ne 'RENDER NOT RETAINED' } |
         $_.Group | ForEach-Object { '      {0,-20} {1}' -f '', $_.alignment }
     }
 
-if ($incomplete.Count -gt 0) { exit 1 }
+if ($incomplete.Count -gt 0) {
+    Write-Output ''
+    Write-Output 'SUBJECT FAILURE (exit 1): a freeze record is incomplete.'
+    exit 1
+}
 exit 0
