@@ -388,3 +388,50 @@ times larger there and I have not measured it. I can produce that number within
 minutes of the §6 patch being routed; I have not applied it locally even
 temporarily, because M97 may commit `merge_cmd.rs` while my edit is in the
 tree and would carry it in unknowingly.
+
+---
+
+## 9. Correction to section 6's routing request -- it had already rotted
+
+Section 6 gave the activation patch as `DELETE line 2803` / `DELETE line
+2958`. **Both numbers were stale within hours.** `merge_cmd.rs` has since
+grown to 4125 lines and the two sites are now at **2924** and **3079**. Anyone
+applying section 6 literally would have edited the wrong lines.
+
+Replaced by `experiments/M109-highlights/src/activate_stack_fix.py`, which is
+anchored on unique full lines and hard-errors unless each lands exactly once.
+`--check` verifies without writing; `--apply` patches; `--revert` undoes.
+
+**The guard caught a defect in my own anchors, which is the point of having
+it.** My first anchor set used the bare line `    let dev = image_out::Develop
+{ matrix, srgb };`. The two sites differ only in indentation -- 4 spaces in the
+early binding, 8 in the binned branch -- so the 4-space anchor is a **substring
+of the 8-space line** and matched BOTH. `--check` reported
+`expected 1 occurrence(s), found 2` and refused. A naive
+`replace(old, new, 1)` would have silently patched the wrong site. Fixed by
+anchoring on the preceding newline, so the indentation is load-bearing. The
+guard itself was then shown to fire on a deliberate miss.
+
+Two corrections to what section 6 claimed:
+
+1. **The early binding must be DELETED, not shadowed.** Verified by
+   enumerating every reader of `dev` from line 2900 on: they are the demosaic
+   write (3042), a `caveat()` (3047), and the binned branch's own shadowed
+   binding and its two uses (3079-3087). **Nothing reads the early binding
+   between where it is bound and `if demosaic {`**, so shadowing it would
+   leave an unused variable, and this workspace builds clippy with
+   `-D warnings`.
+2. **The binned branch needs its own edit.** It re-binds `dev` at 3079, so
+   the inserted block does not reach it. Section 6 said "delete both, insert
+   one"; that is right in effect but the binned site needs a REPLACEMENT rather
+   than a deletion, because `eg` is already bound there and the surrounding
+   code reads the new binding immediately.
+
+The byte-frozen path is still untouchable by construction, now verified by
+reading rather than by argument: it calls `write_rgb16` at 3119 and never
+constructs a `Develop` at all.
+
+**I have not applied it, even temporarily.** `merge_cmd.rs` is DIRTY as I
+write this -- `git diff --numstat` reports 31 uncommitted insertions from M97.
+A temporary local edit would be carried into M97's next commit without M97
+knowing. This is the routing request, not a patch I can land.
