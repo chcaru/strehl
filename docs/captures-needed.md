@@ -1395,3 +1395,62 @@ as the pupil, and the numbers can be read off later. **Rough is useful**: even
 - **The `N_eff` chain, at its root.** `p` currently propagates into diffraction
   cutoff, into the deconvolution ceiling, and into the shooting advice in §17.
 - **The M84/M84b disagreement**, which is otherwise permanent.
+
+## 19. A hard edge at three apertures, one session — REQUESTED, the highest-value ten minutes left
+
+**Status: REQUESTED 2026-08-25. Blocks the last inferred quantity in the optical chain.**
+
+**Why this is now the top optical request, above §18.3.** M88 built a validated
+slanted-edge instrument to measure the diffraction cutoff directly and could not
+use it. The blocker is **identifiability, not precision**. Edge rise obeys
+`rise² = d² + c²`, where `d` is the diffraction blur and `c` is everything else
+(subject softness, residual aberration). One measurement, two unknowns — and on
+every existing capture `c` (~30 µm) is **three times larger** than `d` (7–12 µm),
+so *every* candidate cutoff fits the data exactly. More frames cannot fix this.
+Better fitting cannot fix this. Only a different capture can.
+
+The instrument itself is not the problem: it was validated to **+1.19% ± 1.50%**
+on planted 60–140 cy/mm and reaches **114.6 cy/mm** from a 48.83 cy/mm
+sublattice — above the sensor's 97.66 cy/mm Nyquist, which a grid-sampled power
+spectrum provably cannot do. **It has nothing sharp enough to point at.**
+
+**The gap is corpus-wide, not a milestone's ROI choice.** All 23 stacks were
+surveyed: **no aperture bracket on a fixed subject exists anywhere**. Every
+two-aperture comparison so far has also changed subject, pose or session — M88's
+own two stacks differed by 2.15° in edge angle, 1.91× in contrast, and were shot
+**8 days apart**, which it disclosed against its own passing gate.
+
+### What to shoot
+
+A **genuinely hard edge**: a razor blade, or chrome-on-glass if you have a
+target. Backlit, so the edge is a true step rather than a shadow.
+
+1. Fill at least **800 px** of the frame with the edge.
+2. Tilt it **3–7° from vertical** — not 0°, not 45°. The slant is what
+   supersamples the edge and lets the measurement reach above Nyquist.
+3. Shoot at **f/5.6, f/8 and f/11**.
+4. **Do not touch the rig between the three.** Not focus, not position, not the
+   tripod. This is the entire point of the request: `c` must be *identical*
+   across the three so it cancels in the ratio. Change the aperture and nothing
+   else.
+
+A single frame at each aperture is enough. This is not a stack.
+
+### Why this works when everything so far has not
+
+The three apertures predict edge rises of **13.65 / 11.97 / 10.37 µm** — a **24%
+spread**, measured at ~1.5% precision. That is resolved **16× over**. With `c`
+held fixed by construction, three measurements and two unknowns is
+over-determined, and the cutoff falls out.
+
+### What it unblocks
+
+- **`p` outright.** The inversion is already built and verified to round-trip
+  exactly: `f_c → N_eff → B → p` at M84b's measured `m = 2.7198 ± 0.0051`.
+  M88's phrase for its own state is **"machine built, no fuel."** This is the fuel.
+- **The optical advisor's dominant ±38% uncertainty**, retired in one step.
+- **The 87 vs 106–135 cy/mm question**, which currently has two live answers and
+  decides whether the lens or the sensor limits resolution at working
+  magnification — and therefore whether full-resolution output is worth its cost.
+- **§18.3's bench measurement becomes a cross-check rather than the only route**,
+  which is worth more than either measurement alone.
