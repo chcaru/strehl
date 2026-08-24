@@ -1,0 +1,8 @@
+variant                                  mtime                   mean     p50     p99   clip%
+srgb (what the owner saw)                2026-08-24 04:34:03   0.3907  0.4441  0.5848  0.0000
+exposed (pre-existing, origin unknown)   2026-08-24 04:39:31   0.6270  0.7087  0.9239  0.0000
+EXPOSED (this preview, +1.54 stops)      2026-08-24 06:18:35   0.6403  0.7236  0.9431  0.0198
+
+wrote C:\dev\strehl-out\ORCH-gallery\bee-3-cpl-EXPOSURE-FULL.png
+wrote C:\dev\strehl-out\ORCH-gallery\bee-3-cpl-EXPOSURE-CROP.png
+order, left to right: srgb (what the owner saw) | exposed (pre-existing, origin unknown) | EXPOSED (this preview, +1.54 stops)

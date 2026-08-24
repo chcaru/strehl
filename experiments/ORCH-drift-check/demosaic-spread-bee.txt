@@ -1,0 +1,25 @@
+single frame : DSC00150.ARW
+band         : 0.3-0.48 cyc/px
+residual to span : +0.1301 dex
+
+tile set fixed on the AHD decode: 40 tiles
+
+--- CONTROL ---
+P1 determinism  AHD twice   -3.0058 vs -3.0058   delta 0.000000   PASS
+
+--- ALGORITHMS ---
+LINEAR     -3.2552
+VNG        -3.0523
+PPG        -3.0457
+AHD        -3.0058
+DHT        -2.9438
+AAHD       -2.9033
+
+P2 ordering   lowest is LINEAR   PASS
+
+spread 0.3518 dex  (LINEAR -> AAHD)
+residual to explain 0.1301 dex  = 37.0% of the spread
+
+VERDICT: demosaic choice ALONE spans the residual. It is a
+sufficient explanation, so no further mechanism need be invented
+to account for it. This does NOT prove the residual IS demosaic.

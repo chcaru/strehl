@@ -1,0 +1,18 @@
+reading bee-3-cpl-exposed.tif
+shape (4688, 7032, 3)
+
+--- horizontal seams (rows) ---
+  strongest positions: 1264, 1716, 2632, 2662, 2669, 2746, 2864, 3076, 3158, 3216, 3388, 3422
+  strengths (MAD sigma): 6.3, 6.7, 3.9, 7.3, 4.1, 8.9, 7.7, 5.0, 4.1, 4.5, 3.9, 4.9
+  gaps: [np.int64(452), np.int64(916), np.int64(30), np.int64(7), np.int64(77), np.int64(118), np.int64(212), np.int64(82), np.int64(58), np.int64(172), np.int64(34)]
+  median gap 100 px; 0% of gaps within 5% of it
+  >>> not periodic: these are isolated, not a tiling <<<
+
+--- vertical seams (cols) ---
+  strongest positions: 1814, 4114, 4282, 4508, 4872, 5082, 5140, 5236, 5250, 5320, 5648, 6904
+  strengths (MAD sigma): 8.5, 8.9, 7.4, 6.4, 6.5, 5.6, 5.5, 5.6, 5.9, 8.0, 6.8, 5.9
+  gaps: [np.int64(2300), np.int64(168), np.int64(226), np.int64(364), np.int64(210), np.int64(58), np.int64(96), np.int64(14), np.int64(70), np.int64(328), np.int64(1256)]
+  median gap 210 px; 9% of gaps within 5% of it
+  >>> not periodic: these are isolated, not a tiling <<<
+
+wrote C:\dev\strehl-out\ORCH-gallery\bee-3-cpl-SEAM-100PCT.png  (1400x900, native resolution, no resampling)

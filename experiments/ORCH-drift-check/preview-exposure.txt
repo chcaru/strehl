@@ -1,0 +1,11 @@
+file                                 stops  clipped%  note
+bee-3-cpl-srgb.tif                   +1.54    0.0198  
+coffee-bean-srgb.tif                 -0.18    0.0000  preview pessimistic (highlights already clipped)
+flower-bud-alone-cpl-srgb.tif           --        --  no M100 stop for this stack, skipped
+flowers-cpl-srgb.tif                    --        --  no M100 stop for this stack, skipped
+lavendar-cpl-srgb.tif                   --        --  no M100 stop for this stack, skipped
+leaf-2-cpl-srgb.tif                     --        --  no M100 stop for this stack, skipped
+tweezers-cpl-srgb.tif                   --        --  no M100 stop for this stack, skipped
+
+Wrote -EXPOSED.tif alongside each source. Sources untouched.
+For the DARKENED stacks, judge from the real render, not this.
