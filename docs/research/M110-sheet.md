@@ -496,3 +496,267 @@ Continuing the numbering from §7.
 21. **An assertion across a single arm is vacuous and should say so.** Byte-distinctness with
     one arm passes trivially; where a field is set out-of-band, a lone arm can inherit it from
     an unrelated earlier command with nothing to contradict it.
+
+---
+
+## 10. A two-sided highlight readout, and the magenta question re-answered
+
+ORCH asked for this because of a caveat I attached to my own null in §8.3: the readout had
+headroom in one direction only. That blindness became load-bearing the moment `e9ad010`
+ported a guarded clip onto the **default** render path on the strength of a measurement
+taken on a **different** path, because the only instrument watching the default path could
+not see the direction in which a bad port would fail.
+
+### 10.1 Why the old readout was worse than under-reporting
+
+`neutrality()` selected on **red AND blue** both pinned, then measured green against them.
+Reading the `e9ad010` diff makes the consequence concrete. It applies a saturation ceiling
+to the colour matrix, so the mechanism runs:
+
+- the sensor saturates, raw R = G = B = max;
+- white balance (R ≈ 2.0, B ≈ 1.5, G = 1.0) carries **red and blue past the container max**
+  while green stays pinned at it;
+- the matrix sees red and blue relatively larger than green → **magenta**.
+
+So a ceiling computed **too low** clamps **red and blue down**. In that failure red and blue
+fall *below* the 99% threshold and the old mask **selects nothing**. The instrument does not
+merely under-report a bad port — it goes **silent exactly when the port is worst**, and
+prints `too few blown px to score`.
+
+That is not a prediction. Bar **H2** exercises it: on a planted `+0.10` green overshoot the
+one-sided readout **emitted nothing at all**, its red-AND-blue mask having emptied, while the
+two-sided one recovered `+0.100008`.
+
+### 10.2 The replacement, and its dynamic range
+
+`highlight_stats()` selects **channel-agnostically** — blown in at least one channel — which
+is the physical condition "this is a blown highlight" and survives both failure directions:
+
+| failure | pinned | low | `off` |
+| --- | --- | --- | --- |
+| magenta | R, B | G | **< 0** |
+| green overshoot (bad ceiling) | G | R, B | **> 0** |
+
+Whichever channel is low is the one carrying the signal, so it has the container's full range
+available. The earlier blindness came from *selecting* on red and blue being pinned, which
+forced the comparison baseline to the ceiling itself.
+
+**Plants are applied by LOWERING a channel, never by raising one.** That is not a
+convenience. It is how both real failures arise — magenta leaves green low, a low ceiling
+leaves red and blue low — and lowering has room where raising hits the container. Raising is
+what made the §8.3 sign bar fail.
+
+Alongside `off`, the readout now reports per-channel pinned fractions `c_r`, `c_g`, `c_b` and
+`asym = c_g − (c_r + c_b)/2`. This is the most diagnostic single output: **neutral clipping
+pins all three channels together**, magenta spares green, a low ceiling spares red and blue.
+
+### 10.3 MEASURED — the instrument, in both directions
+
+`neutrality_control.py`, **14/14 registered bars**, bars fixed before running:
+
+| quantity | old (one-sided) | new (two-sided) |
+| --- | --- | --- |
+| plant `−0.10` recovered | `−0.100008` | **`−0.100008`** |
+| plant `+0.10` recovered | **went silent** | **`+0.100008`** |
+| symmetry \|+\| − \|−\| | n/a | **`−0.000000`** |
+| headroom, magenta | `0.00034` | **`0.9542`** |
+| headroom, green | `0.00034` | **`0.8892`** |
+
+Headroom is the 5th percentile of available range: 95% of region pixels have at least this
+much room. The green direction gains a factor of **2615x**. Linearity holds at `±0.02` and
+`±0.05` to within `5e-6`, and an off-mask plant moves the statistic by exactly `0`.
+
+**A registered bar failed first, and diagnosing it produced a result.** P1/P2/P4 initially
+recovered a *constant* offset — `−0.00517` magenta, `+0.00340` green — identical at every
+plant size. Constant with plant size means **bias, not gain error**. The cause: the mask is
+**not invariant under the thing it measures**. Lowering a channel can push a pixel below the
+threshold and out of the population, moving the mean for a reason that is not the neutrality
+of the pixels that remain.
+
+The repair separates the two quantities rather than hiding either. Gain bars run on a mask
+**frozen** on the unplanted tile; new bars **B1/B2** then measure the float-mask systematic
+itself, on the code path that actually ships:
+
+- **B1**: the free mask biases the reading by `−0.00518…−0.00517` (magenta) and
+  `+0.00340…+0.00340` (green).
+- **B2**: that bias varies by `0.000004` across plants from `0.02` to `0.10` — a constant
+  offset, confirmed, not a gain error.
+
+**So the shipping statistic carries a known systematic of about `0.005`, and everything below
+should be read against that floor.**
+
+### 10.4 MEASURED — the default path, at a HEAD containing `e9ad010`
+
+`e9ad010` is an ancestor of HEAD (`git merge-base --is-ancestor` → 0) and landed
+`15:07:57`. Rebuilt at HEAD, binary `8b913a415ffe1d9f…` (`15:35:18`), and re-rendered the
+`default` arm on all four subjects.
+
+| subject | blown % | `off` | one-sided | `c_r` | `c_g` | `c_b` | `asym` |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| bee-3-cpl | 0.819% | `+0.0165` | `+0.0004` | 0.590 | 0.766 | 0.410 | `+0.266` |
+| wrapped-text-1 | 0.601% | `+0.0173` | `+0.0004` | 0.548 | 0.888 | 0.443 | `+0.392` |
+| tweezers-cpl | 1.210% | `+0.0101` | `−0.0034` | 0.632 | 0.767 | 0.761 | `+0.070` |
+| flat-on-ruler-cpl | 1.250% | `+0.0075` | `−0.0004` | 0.782 | 0.871 | 0.850 | `+0.055` |
+
+**No magenta, and no green overshoot.** Every reading is positive, between `+0.0075` and
+`+0.0173` — at or barely above the `0.005` systematic of §10.3, and far below the `0.02`
+threshold in either direction. **The port did not overshoot.**
+
+**And the renders are byte-identical.** The four TIFFs produced by the post-port binary have
+the same sha256 as the pre-port TIFFs they replaced — `e400a63aa9f6ab1f…`,
+`6774f00854452745…`, `a8c07ccdf4fd9947…`, `c461c0a635f4d835…`, `Δoff = +0.00000` on all
+four. **This independently reproduces M97's byte-freeze 5/5 HOLD from an instrument that
+shares nothing with it: the conditional never fires on these stacks.**
+
+**Stated plainly, as ORCH asked: `e9ad010` changes nothing on the path the owner actually
+runs. That is a fact about the product, not a failure of the measurement.**
+
+### 10.5 MEASURED — the positive control that was missing, on real data
+
+A synthetic plant proves the statistic responds to a number I injected. It cannot
+distinguish *"there is no defect here"* from *"the instrument cannot see the defect on this
+path"*. So I rendered the same subjects through **`argmax-baseline`** — `stack.rs`,
+`Command::ArgmaxBaseline`, the path where the defect was actually measured and fixed
+(`3e58676`) before being ported.
+
+Same tile, same raws, same statistic; the only difference is which merge command made the
+pixels:
+
+| subject | default | argmax | swing | def `c_g` | arg `c_g` |
+| --- | --- | --- | --- | --- | --- |
+| bee-3-cpl | `+0.0165` | `+0.0036` | `−0.0129` | 0.766 | 0.180 |
+| wrapped-text-1 | `+0.0173` | `+0.0171` | `−0.0002` | 0.888 | 0.870 |
+| **tweezers-cpl** | `+0.0101` | **`−0.0271`** | **`−0.0372`** | 0.767 | **0.495** |
+| flat-on-ruler-cpl | `+0.0075` | `+0.0030` | `−0.0045` | 0.871 | 0.834 |
+
+**`tweezers-cpl` reads magenta on the argmax path and neutral on the default path.** The
+signature is textbook: green pinned on only **49.5%** of the blown region against red's
+**81.0%**, `asym = −0.2288`, and the *one-sided* readout agrees at `−0.0197`. The swing of
+`−0.0372` is **7.2x** the `0.005` systematic.
+
+**This is what the §8.3 null was missing.** The instrument can see magenta on real pixels —
+it just did — so the default-path null is a statement about the default path, not about the
+readout. The two paths genuinely disagree about highlights on this subject.
+
+I will not over-claim what that means. `3e58676` is in HEAD, so the argmax path is nominally
+fixed and still reads `−0.0271`; that is **13x smaller than M109's `−0.10`** and I cannot
+separate a residual defect from scene colour without a build at `3e58676^`, which needs a
+checkout I must not perform in a shared tree. **What is established is the contrast, not its
+cause.**
+
+### 10.6 A defect in my own instrument, found by its own control
+
+The control at §10.4 nearly passed on bad evidence. I compared the before/after binaries out
+of the two snapshot files and got **`binaries identical: True`** — because both snapshots ran
+`provenance()` *after* the rebuild, so each recorded the *current* binary rather than the one
+that made its TIFF. Byte-identity between renders by the same binary is trivial and proves
+nothing; the control said so and refused the result.
+
+The underlying gap: **`render_arm()` recorded no binary at all.** Provenance existed per
+*run*, so a preserved arm could not say what produced it. That is **P10 — my own finding —
+biting the instrument built to prevent P10**, and it is the second time in this milestone
+that per-run provenance has been wrong where per-artefact provenance was needed.
+`render_arm()` now stamps `binary_sha256`, `binary_mtime` and `rendered_utc` into **each arm
+result**.
+
+The consequence for §10.4 is honest and worth stating: the pre-port TIFFs' binary
+(`680cd59c379ed9c6…`, built `13:51:49`, before `e9ad010` at `15:07:57`) is documented in
+§8.3 of this report, **not** in a per-arm record, because the field did not exist when they
+were rendered. The byte-identity result rests on that committed text. From now on it will
+not need to.
+
+### 10.7 Harness changes
+
+- `highlight_stats(win, region=None)` — the two-sided readout, with an optional frozen mask
+  so gain and population shift can be measured apart.
+- `neutrality()` retained and marked one-sided, so §8.3's numbers stay comparable **and its
+  silence under a green plant stays reproducible**.
+- `sheet.py survey` and the `figure` clipped-tile stamp now report `off`, per-channel pinned
+  fractions and `asym`, colour-coded for both failure directions.
+- `sheet.py render --arm NAME` — a deliberate single-arm run records
+  `comparison_guarded: false` and `deliberate_single_arm: true` without being logged as a
+  failure, preserves the arms it did not run, and marks them `stale` with the HEAD they are
+  stale against. The fact-1446 duplicate check now compares only arms rendered in the same
+  run, since a stale arm's hash came from another binary and agreeing with it says nothing.
+- `highlight_snapshot.py before|after|diff` — before/after with hashes and provenance.
+- `argmax_control.py`, `compare_paths.py` — the real-data positive control of §10.5.
+
+### 10.8 What I could not verify
+
+1. **I did not verify my own work.** §10 needs a verifier like the rest of this report.
+2. **I cannot attribute the argmax/default contrast to any single commit.** The two paths
+   differ in far more than highlight handling — per-pixel election against a ~55-frame
+   average — so `−0.0372` is a difference between *paths*, not a measurement of `e9ad010`
+   or `3e58676`.
+3. **`−0.0271` on tweezers/argmax is unexplained.** It may be a residual defect after
+   `3e58676`, or scene colour. Separating them needs a build at `3e58676^`.
+4. **Byte-identity in §10.4 spans more than `e9ad010`.** Other agents' commits landed
+   between the two binaries, so what is shown is that the default render is unchanged
+   *across that whole interval*, which is a stronger claim in one sense and a less
+   attributable one in another.
+5. **The `0.005` systematic is measured on one tile** (bee-3-cpl `clipped`). I did not
+   re-measure it per subject.
+
+---
+
+## 11. For ORCH — further facts and disciplines
+
+Continuing the numbering from §9.
+
+**Facts**
+
+22. **MEASURED: the one-sided highlight readout does not under-report a green overshoot, it
+    goes SILENT.** On a planted `+0.10` it emitted nothing at all — its red-AND-blue mask
+    empties, because the failure it must detect is precisely one that pulls red and blue
+    below the mask threshold. **An instrument that falls quiet exactly when the fault is
+    worst is more dangerous than one that reads low**, because silence is indistinguishable
+    from "no data" and invites re-running rather than alarm.
+23. **MEASURED: the two-sided readout recovers `−0.100008` and `+0.100008` from planted
+    `∓0.10`, symmetric to `−0.000000`, with headroom `0.9542` (magenta) and `0.8892`
+    (green)** against the old `0.00034` — a **2615x** gain in the blind direction. 14/14
+    registered bars.
+24. **MEASURED: the shipping statistic carries a constant systematic of `≈0.005`**
+    (`−0.00518` magenta, `+0.00340` green), because the blown-pixel mask is not invariant
+    under the thing it measures — lowering a channel pushes pixels out of the population.
+    It is a bias, not a gain error: constant to `0.000004` across plants from `0.02` to
+    `0.10`. **Read every highlight number in this report against that floor.**
+25. **MEASURED: `e9ad010` changes nothing on the default render path.** At binary
+    `8b913a415ffe1d9f…` built from a HEAD containing it, all four subjects read neutral
+    (`+0.0075` to `+0.0173`, no magenta and no green overshoot) and **all four TIFFs are
+    byte-identical to their pre-port renders**. This reproduces M97's byte-freeze 5/5 HOLD
+    from an unrelated instrument: **the conditional never fires on these stacks.**
+26. **MEASURED: `tweezers-cpl` reads magenta `−0.0271` on `argmax-baseline` and neutral
+    `+0.0101` on the default path — same tile, same raws, same statistic, a swing of
+    `−0.0372` (7.2x the systematic).** Green is pinned on 49.5% of the blown region there
+    against red's 81.0%, `asym = −0.2288`, and the one-sided readout independently agrees at
+    `−0.0197`. **The instrument can see magenta on real pixels, so the default-path null is a
+    fact about the default path and not about the readout.**
+27. **MEASURED: the magenta residual on the argmax path is `13x` smaller than M109's
+    `−0.10`**, at a HEAD that already contains `3e58676`. Whether this is a residual defect
+    or scene colour is **not** established and needs a build at `3e58676^`.
+
+**Disciplines**
+
+28. **An instrument's failure mode must not be silence.** Before trusting a null, ask what
+    the instrument does when the fault is *worst*, not merely when it is present. A mask
+    defined on the same channels the fault suppresses will empty precisely then.
+29. **Plant a synthetic fault by LOWERING a channel, never by raising one.** Raising hits the
+    container ceiling and the recovered value measures the headroom rather than the plant.
+    Lowering also matches how both real failures arise.
+30. **A synthetic plant cannot validate a null; only a neighbouring real path can.** A plant
+    proves the statistic responds to an injected number. It cannot separate "no defect here"
+    from "blind on this path". Render the code path where the defect is *known* to have
+    existed, with the same subject and the same statistic.
+31. **When a control returns a constant offset independent of the planted magnitude, it is a
+    bias and the population moved.** Check whether the selection criterion is invariant under
+    the quantity being measured; usually it is not. Freeze the mask to measure gain, then
+    measure the float-mask systematic separately and report it — do not choose one.
+32. **Provenance belongs to the artefact, not the run** — restated because it recurred.
+    Recording the binary at run level means a partial re-run stamps every preserved artefact
+    with the last binary to execute, and a later before/after comparison silently compares a
+    binary against itself. **The control that catches this must assert the two binaries
+    DIFFER**, because byte-identity from one binary is trivially true.
+33. **Preserved artefacts from an earlier run must be marked stale, and cross-run assertions
+    must exclude them.** A hash from another binary neither agrees nor disagrees usefully
+    with one from this run.
+
