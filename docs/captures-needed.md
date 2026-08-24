@@ -1516,3 +1516,57 @@ permanent term in every colour result this project will ever produce.
 **What it buys.** A measured white point, which turns the colour pipeline from
 "the matrix is correct" into "the output is correct" -- and a characterisation
 of your polariser that transfers to every future capture.
+
+## 21. A straight edge inside a real bracket -- REQUESTED, and it decides whether the alignment verdict is about your photographs
+
+**Status:** requested 2026-08 by the orchestrator on M88b's behalf. M88b built
+the instrument and correctly declined to file this itself.
+
+**Why this is not section 19.** Section 19 asks for a razor blade on its own, to
+measure the optics. This asks for a straight edge **inside an ordinary deep
+bracket of a real subject**, to measure whether *alignment* improved the
+photograph. They are different captures and neither substitutes for the other.
+
+**The problem, stated plainly.** M88b built a paired A/B instrument that reads a
+10-90 edge rise off the merged image, nulled it properly -- determinism, a +/-9%
+photometric gain and a planted 3 px shift all read **exactly 0.0000 um** -- and
+established a floor of **0.6699 um**, which is sensitive enough to detect 2-4
+merge pixels. M86's alignment moves 11.56 px, well inside that.
+
+**Then it could not point the instrument at your bees.** `bee-2-cpl` yields
+**zero** usable ROIs. `bee-3-cpl` yields two, and **both fail the null** -- 11.5
+and 71.1 um against a 1.0 um bar. The three ROIs that do pass come from `M95`,
+`RU1` and `TW5`. **None of them is a bee.**
+
+So when the project reports whether alignment helped, that verdict will be
+measured on other subjects and **extrapolated across subject to yours.** That is
+exactly the kind of transfer this corpus keeps catching and refusing.
+
+### What to shoot
+
+**One ordinary deep bracket, shot exactly the way you normally shoot an insect**
+-- same magnification, same aperture, same step, same depth -- with **one
+straight, high-contrast, matte edge placed in the scene.**
+
+The edge must be:
+
+1. **Straight** over at least a few hundred pixels.
+2. **Tilted 1.2 to 9 degrees** off vertical or horizontal. Not aligned to the
+   pixel grid, and not diagonal. A slight, deliberate cant is the whole trick --
+   it is what lets many pixel rows each sample the edge at a slightly different
+   sub-pixel offset.
+3. **High contrast and matte.** A razor blade, a black anodised edge, a chip of
+   matte black card, the edge of an IC package. Avoid anything glossy; a specular
+   highlight running along the edge defeats it.
+4. **At a depth inside the bracket**, so it comes into focus in some frames.
+   Roughly the same distance as the subject.
+
+It does **not** need to be near the subject, or attractive, or in the final
+composition. The corner of the frame is fine. The bracket does not have to be a
+good photograph.
+
+**What it buys.** The alignment verdict stops extrapolating across subject and
+becomes a measurement on your own gear, your own working distance and your own
+subject class -- which is the only form in which it answers the question you
+actually asked.
+
