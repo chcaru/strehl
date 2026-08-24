@@ -1,0 +1,66 @@
+[
+  {
+    "stack": "bee-3-cpl",
+    "frames": 299,
+    "magnification": 1.180246913580247,
+    "ncc": 0.9776475429534912,
+    "railed": false,
+    "edge_centre": 1.9492156505584717
+  },
+  {
+    "stack": "couch-fibers-cpl",
+    "frames": 299,
+    "magnification": 1.2033950617283953,
+    "ncc": 0.8968456387519836,
+    "railed": false,
+    "edge_centre": 1.3952515125274658
+  },
+  {
+    "stack": "dry-erase-marker-head-cpl",
+    "frames": 299,
+    "magnification": 1.238888888888889,
+    "ncc": 0.9810841679573059,
+    "railed": false,
+    "edge_centre": 72.24007415771484
+  },
+  {
+    "stack": "lavendar-cpl",
+    "frames": 299,
+    "magnification": 1.2188271604938272,
+    "ncc": 0.8434364199638367,
+    "railed": false,
+    "edge_centre": 0.01140475645661354
+  },
+  {
+    "stack": "wrapped-text-1",
+    "frames": 130,
+    "magnification": 1.0768518518518517,
+    "ncc": 0.9246660470962524,
+    "railed": false,
+    "edge_centre": 1.1641017198562622
+  },
+  {
+    "stack": "flat-on-ruler-cpl",
+    "frames": 79,
+    "magnification": 1.0506172839506172,
+    "ncc": 0.979547917842865,
+    "railed": false,
+    "edge_centre": 1.6034573316574097
+  },
+  {
+    "stack": "leaf-2-cpl",
+    "frames": 182,
+    "magnification": 1.1046296296296296,
+    "ncc": 0.9737207889556885,
+    "railed": false,
+    "edge_centre": 0.20969486236572266
+  },
+  {
+    "stack": "tweezers-cpl",
+    "frames": 100,
+    "magnification": 1.0691358024691358,
+    "ncc": 0.9929739236831665,
+    "railed": false,
+    "edge_centre": 1.3074196577072144
+  }
+]

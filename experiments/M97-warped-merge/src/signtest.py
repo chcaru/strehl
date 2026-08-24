@@ -25,6 +25,7 @@ test therefore does not have to resolve.
 """
 
 import json
+import os
 import struct
 import sys
 
@@ -32,7 +33,7 @@ import numpy as np
 import rawpy
 from scipy.ndimage import map_coordinates
 
-STACK = r"D:\personal\macro\bee-3-cpl"
+STACK = os.environ.get("M97_STACK", r"D:\personal\macro\bee-3-cpl")
 DOWN = 4
 
 
@@ -121,7 +122,21 @@ def best_scale(a: np.ndarray, b_raw: np.ndarray, lo=0.70, hi=1.15, n=51, refine=
 
 def main(argv: list[str]) -> int:
     sidecar, out_json, last = argv[1], argv[2], int(argv[3])
+    # Optional gain applied to every placement before gathering. This does NOT
+    # touch the estimator; it is a scalar correction at the consumption point,
+    # used to ask what the image would look like if the solve's gain were right.
+    #
+    # Scale composes multiplicatively along a chain of frames, so an estimator
+    # that attenuates each pairwise log-scale by a constant produces a global
+    # solve whose log-scale is attenuated by that same constant. The correction
+    # is therefore applied in the log: a' = exp(g * ln a). Translation composes
+    # additively, so it is scaled linearly.
+    gain = float(argv[4]) if len(argv) > 4 else 1.0
     header, rows = parse(sidecar)
+    if gain != 1.0:
+        rows = {k: (np.exp(gain * np.log(a)), gain * b) for k, (a, b) in rows.items()}
+        print(f"GAIN {gain:.4f} applied to every placement (log-scale, linear b)")
+
     plane_w = float(header["plane"].split("x")[0])
     ref = int(header["reference"])
     import os

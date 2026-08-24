@@ -1,0 +1,33 @@
+{
+  "sidecar": "C:\\dev\\strehl-out\\M97b\\warpmap-marker-g1.txt",
+  "last": 298,
+  "reference": 0,
+  "a0": 1.0,
+  "aN": 0.952143127093459,
+  "arms": {
+    "SELF": {
+      "scale": 0.9999699999999999,
+      "ncc": 0.9999999989695983,
+      "railed": false,
+      "corner_plane_px": 0.06333567714979346
+    },
+    "RAW": {
+      "scale": 0.79999,
+      "ncc": 0.9978857448184986,
+      "railed": false,
+      "corner_plane_px": 422.2589595564694
+    },
+    "AS-IS": {
+      "scale": 0.8665,
+      "ncc": 0.9987092792761844,
+      "railed": false,
+      "corner_plane_px": 281.84376331577744
+    },
+    "INVERTED": {
+      "scale": 0.7257399999999999,
+      "ncc": 0.9953527659738167,
+      "railed": false,
+      "corner_plane_px": 579.0147605017614
+    }
+  }
+}
