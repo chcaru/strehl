@@ -1,0 +1,21 @@
+=== sharpness ===
+  image 7032x4688, green channel, Tenengrad
+
+  annulus (norm r)      before          after     ratio
+  0.000-0.121      2934614.4      3000286.6    1.0224
+  0.121-0.241      2215766.6      2205239.8    0.9952
+  0.241-0.362      2226204.1      2207343.8    0.9915
+  0.362-0.483      2357670.3      2382521.8    1.0105
+  0.483-0.604      2644977.2      2548252.1    0.9634
+  0.604-0.724      1642435.1      1623914.6    0.9887
+  0.724-0.845      1115708.9      1070849.8    0.9598
+  0.845-0.966      1130848.8      1101616.1    0.9741
+
+  WHOLE FRAME             2056097.5      2027054.0    0.9859
+
+  innermost annulus ratio : 1.0224
+  outermost annulus ratio : 0.9741
+  outer / inner           : 0.9528
+  slope of ratio on radius: -0.0562 per unit normalised radius
+
+  VERDICT: NO improvement. The claim is refuted on this stack.

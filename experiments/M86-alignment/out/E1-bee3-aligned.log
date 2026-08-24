@@ -1,0 +1,94 @@
+strehl stack -- regularised winner + noise-gated average (THE DEFAULT PATH, an estimator)
+camera          : ILCE-7CM2
+iso             : 100
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 100. Trustworthy for ranking.
+                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+                  SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+                  camera's own white level, which checks one relation and is not a PTC; the
+                  PTC now exists and the relation survives it at true gain steps -- the ISO 160
+                  control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+                  READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+                  camera MODEL and nothing here was fitted from this stack. Below the profile's
+                  base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+                  is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+                  -- the corpus holds no ISO 64 or 80 capture).
+regulariser     : 17x17 box on the focus field (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)
+focus noise sd  : 0.015214 on the regularised field, MEASURED in-crate (facts 310-313)
+gates           : 2.00  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)
+planes          : 3516 x 2344 per CFA plane
+frames          : 299 from D:\personal\macro\bee-3-cpl
+workers         : 13 chunks of <= 23 frames (13 allowed by the 6144 MB budget, 32 by CPU)
+working set     : 321 MB/worker pass 1, 469 MB/worker pass 2 (buffers only, a LOWER BOUND)
+alignment      : ON (solved), reference frame 149, 299 placed / 0 refused
+  held-out err  : 13.578 px   cycle floor: 2.908 px
+  resampler     : CatmullRom   solve took 40.8 s
+  NOTE          : 13.578 px is above M86's T_usable of 4.0 px -- a large improvement on no registration, but not a precise solve.
+
+--- pass one: regularised winner field (MEASURED) ---
+wall clock      : 27.595 s  (92.3 ms/frame)
+  decode        : 33.642 s summed across workers (112.5 ms/frame)
+  focus + reg   : 300.484 s summed across workers (1005.0 ms/frame)
+
+--- pass two: gated average (MEASURED) ---
+wall clock      : 27.186 s  (90.9 ms/frame, 1 accumulators)
+  decode        : 31.137 s summed across workers (104.1 ms/frame)
+  field + gate  : 308.212 s summed across workers (1030.8 ms/frame)
+total           : 54.781 s  (+0.219 s prologue), 206.4 MB/s over 11308.2 MB
+in-flight frames: 13 peak, bound 13 (never O(N))
+
+--- gate calibration (MEASURED) ---
+                  n_eff is frames averaged per pixel. Fact 212 measured nwide = 3 at full
+                  sampling density -- frames within 50% of PEAK HEIGHT, which is a different
+                  rule from this NOISE gate, so 3 is a target to land near, not to match.
+  gate   tol(DN-norm)     mean n_eff   n_eff=1 %   boundary %   pred sigma gain (model)
+   2.00      0.043032        9.206      56.28%        4.29%         0.7421x
+
+gate solve      : not requested. Pass --target-n-eff 3 to solve the ladder for a
+                  gate, which is what fact 324 says you should be setting.
+
+
+--- CLIPPING CENSUS (MEASURED) ---
+container max   : 16383 DN. NOT the usable white level (15360) -- these are
+                  two different numbers for two different purposes and both are right:
+                  15360 bounds the noise model's calibrated range, 16383 is what
+                  "this sample is pinned" means. Do not unify them.
+ever clipped    : 0.0000% of pixels (0 of 8241504) clipped in at least one frame
+always clipped  : 0.0000% of pixels (0 of 8241504) pinned in EVERY frame
+                  No pixel is pinned in every frame, so the maximum-severity case
+                  M26 measured on coffee-bubbles does not arise on this stack.
+                  NOTE 109MSDCF and 119MSDCF are two of the four stacks with NO
+                  saturation, and 109 is also the quietest photometrically (M24).
+                  A clean result on them is systematically weaker evidence than it
+                  looks.
+
+--- PHOTOMETRIC DRIFT SENSITIVITY (DERIVED from a MEASURED response) ---
+winner response : median 5.1614, p10 0.6044, p90 64.2686  (regularised, DN-normalised)
+gate unit       : 0.021516  = sqrt(2) * FOCUS_NOISE_SD, the SD of a difference
+sensitivity     : 1.199 gate units per 1% of per-frame level drift (median pixel),
+                  0.140 at p10 and 14.935 at p90. Shot-limited; in read-noise-
+                  dominated shadow it is 2x this.
+corpus (M24)    : 109MSDCF drifts 0.91% -> 1.09 gate units. 119MSDCF 2.88% -> 3.45.
+                  coffee-bean 11.70% -> 14.03. coffee-bubbles 8.93% -> 10.71.
+                  109MSDCF is the QUIETEST stack in the corpus and is the one most
+                  of this project's numbers were measured on, so a clean 109 result
+                  is NOT evidence that photometric variation is handled.
+STATUS          : NO per-frame gain term is fitted or applied. This merge assumes
+                  constant photometry across the stack. The number above is the size
+                  of that assumption, not a correction for it. Do NOT read gain from
+                  EXIF to fix it: M24 measured two stacks drifting 6.84% and 8.93%
+                  with CONSTANT EXIF, and coffee-bean moving only 16% of what its
+                  EXIF change predicts (1.0443 measured vs 1.2800). Fit it.
+
+flat ROI        : not requested. Pass --flat-roi X,Y,W,H for the noise invariant.
+colour          : camera RGB -> sRGB (BT.709 primaries, D65 white)
+                  characterisation: decoder color_matrix[D65]
+                  XYZ->cam rows: [0.7460 -0.2365 -0.0588] [-0.5687 1.3442 0.2474] [-0.0624 0.1156 0.6584]
+                  implied daylight WB R 2.6266 B 1.3878, against as-shot R 2.5693 B 1.5684
+                  Order: black, as-shot WB, demosaic, matrix, clamp, sRGB curve.
+
+wrote           : C:\dev\strehl-out\M86-align\bee-3-ALIGNED.tif (7032 x 4688, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.

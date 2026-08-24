@@ -1026,3 +1026,230 @@ All three were run locally against a temporary copy of these registrations —
 16 warpmap tests passed, clippy exited 0, `align --help` exited 0, and every
 W1–W6 gate in §14.3 was produced by that build's `strehl align`. I then removed
 the registrations and confirmed both shared files byte-clean. **NOT run**: `strehl align --help`specifically, though the subcommand itself was exercised throughout.
+
+## 15. M86c -- wiring alignment into `strehl stack`
+
+### 15.1 VERDICT
+
+**Yes. `strehl stack` now aligns, and it is ON by default.**
+
+Reproduce, on the owner's own capture:
+
+```
+strehl stack D:\personal\macro\bee-3-cpl --gate 2 --srgb --demosaic ^
+  -o C:\dev\strehl-out\M86-align\bee-3-ALIGNED.tif
+set STREHL_ALIGN=0
+strehl stack D:\personal\macro\bee-3-cpl --gate 2 --srgb --demosaic ^
+  -o C:\dev\strehl-out\M86-align\bee-3-UNALIGNED.tif
+```
+
+The one-line way to turn it off is `STREHL_ALIGN=0` (also `off`, `false`, `no`).
+A third value, `STREHL_ALIGN=zoom`, renders the null control described in 15.4.
+
+MEASURED on `bee-3-cpl`, 299 frames: reference frame 149, **299 placed / 0
+refused**, held-out 13.578 px, cycle floor 2.908 px, first solve 40.8 s, and
+0.0 s on every later run because the sidecar is cached beside the capture.
+
+That held-out figure is **not** M86's `E*` = 11.562 px and must not be quoted as
+it. The merge uses `DEFAULT_SPANS` = `[1,2,4,8,16,32,64,96,128]`, a different
+edge set from the one M86 measured `E*` on. Same estimator, different graph.
+
+**But see 15.4 before concluding the render is better. It is registered; I could
+not show it is sharper, and I now think the metric I reached for cannot see this
+defect at all.**
+
+### 15.2 What was wired, and where
+
+Alignment is solved **once** in `merge_cmd::run` and applied in `field_for`, at
+the single point where a frame is decoded. Both merge passes and the output
+therefore inherit registration with **no change to `merge.rs`**, which is
+contended. A **refused** frame `bail!`s rather than being silently treated as
+identity -- warpmap's whole design premise (14.2) is that those are different
+states, and it would be absurd to launder them back together at the consumer.
+
+### 15.3 The defect I shipped, and the control that caught it -- MEASURED
+
+The first end-to-end aligned render was **broken, and I did not notice from
+looking at the numbers**. `warp_frame_in_place` filled uncovered destination
+pixels with the black level. A placement pulls the destination corner from
+outside the source frame whenever the frame is far from the reference, so:
+
+| region | fraction black, first aligned render |
+| --- | --- |
+| whole frame | **9.544%** |
+| outer annulus 0.750-0.875 | 30.1% |
+| outer annulus 0.875-1.000 | **63.2%** |
+
+Two consequences, and the second is the instructive one:
+
+1. The render was visibly blemished. Black wedges. Not shippable.
+2. **It made the image appear to get sharper.** My first radial Tenengrad
+   comparison read 1.4565x whole-frame and 9.2x at the outer annulus. Those
+   numbers are **artefacts and are withdrawn**: the boundary between image and
+   fill is itself an enormous gradient, and Tenengrad was measuring the fill,
+   not detail. The inner annuli -- the ones with no fill -- read about 0.90,
+   which is the resampler cost and is the honest signal in that run.
+
+This is the third instance in M86 of the same failure shape (1, 14.4): a
+statistic computed on a quantity the estimator itself had damaged. I only found
+it because I distrusted a result that was better than I expected.
+
+**The fix** is `align_cmd::fit_to_cover`: compose every placement with a uniform
+scale `k <= 1` about the plane centre so the reference grid maps strictly inside
+*every* source frame. MEASURED on `bee-3-cpl`, `k` = **0.9315**, i.e. 6.9% of
+the width is given up.
+
+| region | black before fix | black after fix | unaligned baseline |
+| --- | --- | --- | --- |
+| whole frame | 9.544% | **0.001%** | 0.001% |
+| outer annulus 0.875-1.000 | 63.2% | **0.000000** | 0.000000 |
+
+The 262 surviving dark pixels are at x 1366..6909, y 2043..3527 -- interior, not
+edge -- and the unaligned render has the same ones. They are dark scene content.
+
+**The cost is real and I am not hiding it:** the field of view shrinks by `k`,
+and because the output keeps its pixel dimensions the result is upsampled by
+1/0.9315 = 1.0735. Cropping the output instead would keep every pixel real, but
+changes the image dimensions and would disturb the byte-frozen measurement path.
+That trade is follow-up work, named in 15.7.
+
+### 15.4 Is the aligned render actually sharper? NO, not by this metric -- MEASURED
+
+I built the control that could fail, and **it failed**.
+
+Comparing an aligned render against an unaligned one is not a fair test: they
+have different fields of view and different sampling density, and the upsample
+alone moves gradient energy. So `STREHL_ALIGN=zoom` renders a **zoom-only
+null** -- identical resampling cost, identical field of view, *relative
+registration discarded*. Anything that survives between it and the real thing is
+registration and nothing else.
+
+First, the wiring is demonstrably live (MEASURED):
+
+| pair | pixels differing | mean abs difference (of 65535) |
+| --- | --- | --- |
+| aligned vs zoom-only null | 99.668% | 1795.8 |
+| aligned vs unaligned | 99.974% | 3684.6 |
+
+Registration changes essentially the whole image. And yet, radial Tenengrad,
+aligned against that matched null:
+
+| annulus (norm r) | ratio aligned / null |
+| --- | --- |
+| 0.000-0.121 | 1.0224 |
+| 0.483-0.604 | 0.9634 |
+| 0.845-0.966 | 0.9741 |
+| **whole frame** | **0.9859** |
+
+slope of ratio on radius **-0.0562**, i.e. very slightly *worse* outward, which
+is the opposite sign to the one misregistration predicts.
+
+**Honest reading, ARGUED.** I do not think this shows registration is worthless.
+I think it shows **Tenengrad cannot see this defect**, for a specific and
+checkable reason: in a focus stack each output pixel is drawn from a frame that
+is *in focus there*. Misregistration does not rob that pixel of sharpness; it
+takes it from the **wrong scene point**. The failure mode is geometric --
+displacement, broken continuity, seams between frames -- and seams *add*
+gradient energy. A gradient-energy metric is therefore insensitive to this
+defect and can be inverted by it.
+
+Two independent things corroborate that reading rather than the "alignment does
+nothing" reading:
+
+- M85's fact 1196 measured facet sharpness moving 0.985x across a **61x** change
+  in frames averaged per pixel. A quantity that barely moves under a 61x change
+  in averaging is not a quantity that can be expected to resolve registration.
+  My 0.9859 and their 0.985 are the same non-signal.
+- M86's own drift numbers are geometric, not photometric: 232.7 px on this very
+  stack (1). A 232.7 px displacement that leaves gradient energy unchanged is
+  exactly what "each pixel is sharp, in the wrong place" predicts.
+
+**I am not claiming a sharpness win. I did not measure one.** What is MEASURED
+is that the drift exists, that it is now corrected, and that the correction is
+applied to the whole image.
+
+**The experiment that would settle it (not run, named per 13's answer (c)):**
+render `flat-on-ruler-cpl` -- a flat, ruled plane, zero tilt, so a global
+similarity is valid on it -- aligned and zoom-null, then measure **graduation
+spacing uniformity and line straightness** across the field. Those are
+correctness invariants with a known answer, immune to the gradient-energy
+problem. Unregistered stacking must show spacing that varies with radius. This
+is a geometry metric, which is what the defect actually is.
+
+### 15.5 Gate W8 -- the Bayer-phase warp is correct -- MEASURED
+
+The merge warps raw CFA data, so one similarity must register all four CFA
+phases, each gathered separately so interpolation never mixes colours.
+
+| arm | result | bar |
+| --- | --- | --- |
+| identity warp is bit-exact | **0 differing of 32.6M interior samples** | 0 |
+| plant a known similarity, undo it | **0.1739** | <= 0.25 |
+| control: apply the warp again instead of undoing | **1.5217** | must FAIL |
+
+The third arm is the one that matters: it is the transposed/inverted-warp trap,
+and it fires.
+
+### 15.6 Two claims in the dispatch that are wrong -- verified at source
+
+Both were checked in the tree, not reasoned about.
+
+1. **"Get `strehl stack` to apply the warps ... `stack.rs`"** -- `strehl stack`
+   does **not** dispatch to `stack.rs`. `main.rs` routes `Command::Stack` to
+   `merge_cmd::run`. `stack.rs` is reached by `strehl argmax-baseline` and its
+   own banner calls it "NOT THE DEFAULT; a negative control". The grep that
+   found "zero matches for warp|transform|similarity|gather|align" in
+   `stack.rs` was searching the negative control. The wiring site is
+   `merge_cmd.rs`, and that is where it went.
+2. **"`m86-align.rs` is red under `cargo fmt --check` and clippy, a `Cx` field
+   mismatch around line 1415"** -- it is not. `cargo clippy --release -p
+   strehl-cli -- -D warnings` exits 0 and the file appears in no fmt diff. Line
+   1415 is a valid nested `format!`. The workspace redness belongs to
+   `m89-robust.rs`, `m90-prnu.rs`, `m90-rho.rs`, `m93-election.rs` and
+   `robust.rs`. I have not touched them; they are not mine.
+
+### 15.7 Follow-up work this leaves open
+
+- **Crop instead of upsample.** `fit_to_cover` keeps the output dimensions and
+  pays 1.0735x interpolation. Cropping to the covered rectangle keeps every
+  pixel real. It needs the output path, which is M93's.
+- **A geometry metric.** 15.4 is the priority: until the ruler test is run,
+  "the render is better" is unmeasured.
+- **The estimator.** Still 13.578 px against a 2.908 px cycle floor on this
+  edge set, and `T_usable` is 4.0 px. Out of scope by instruction, and correctly
+  so -- 232.7 px to 13.6 px is the large win; 13.6 to 4 is the next one.
+- `align_cmd::run` still duplicates the solve body rather than calling
+  `solve_map`. Deliberately not refactored tonight: that code is gate-verified
+  and churning it to save duplication would have risked the deliverable.
+
+### 15.8 `bee-2-cpl`, the owner's second stack -- MEASURED
+
+299 frames, ISO 400, same subject as `bee-3-cpl`. M86 measured its drift at
+299.2 px, the largest in the corpus (1).
+
+| quantity | `bee-3-cpl` | `bee-2-cpl` |
+| --- | --- | --- |
+| placed / refused | 299 / 0 | 299 / 0 |
+| reference frame | 149 | 149 |
+| cycle floor | 2.908 px | 1.783 px |
+| held-out error | 13.578 px (from sidecar) | **NOT MEASURED** |
+| fit-to-cover `k` | 0.9315 | **0.9044** |
+| field of view given up | 6.9% | 9.6% |
+| solve time | 40.8 s | 40.8 s |
+
+The larger crop on `bee-2-cpl` is the expected consequence of its larger drift,
+and is a weak independent corroboration of M86's drift ordering: the stack M86
+measured as drifting more requires more of the frame to be given up before every
+frame covers every pixel. DERIVED, not an independent measurement -- both come
+from the same placements.
+
+**The held-out gap is a real limitation and it is now loud.** Freshly solving
+inside the merge uses `DEFAULT_SPANS`, whose surviving edge set did not supply
+enough long-span edges (M10's protocol: span >= 40, at least 12 surviving) to
+run the held-out estimate on this stack. `bee-3-cpl` reports 13.578 px only
+because it loaded a sidecar written earlier by `strehl align` with a richer span
+set. So the merge can produce a registration it **cannot certify**, which is
+precisely the state 14.2's design constraint 1 exists to prevent. It now prints
+an explicit WARNING in that case rather than quietly showing a blank. Fixing it
+properly means giving the in-merge solve a richer ladder, which costs solve time;
+that is follow-up, not tonight.

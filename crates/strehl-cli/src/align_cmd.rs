@@ -23,8 +23,8 @@ use anyhow::{Context, Result, bail};
 use rayon::prelude::*;
 use strehl_core::align::{
     AlignConfig, AlignEdge, AlignFrame, AlignPyramid, GlobalOptions, PlaneRef, Resampler,
-    Similarity, Weighting, align_pair, cycle_consistency, edge_errors, solve_global, tile_grid,
-    total_drift,
+    Similarity, SimilarityParams, Weighting, align_pair, cycle_consistency, edge_errors,
+    solve_global, tile_grid, total_drift,
 };
 use strehl_core::plane::{PlaneGeometry, green_luma};
 use strehl_core::warpmap::{FrameWarp, Provenance, StackIdentity, WarpMap};
@@ -36,6 +36,12 @@ use strehl_core::warpmap::{FrameWarp, Provenance, StackIdentity, WarpMap};
 /// worst failure mode available. Matching is on the directory name, which is
 /// crude but is the identity the operator actually types.
 const TILTED_SUBJECTS: &[&str] = &["highly-angled-ruler-mm-cpl"];
+
+/// The edge ladder used when the merge solves its own alignment.
+///
+/// Kept identical to `AlignArgs::spans`' default so that a sidecar written by
+/// `strehl align` and one solved inside the merge are the same product.
+pub const DEFAULT_SPANS: [usize; 9] = [1, 2, 4, 8, 16, 32, 64, 96, 128];
 
 #[derive(Debug, clap::Args)]
 pub struct AlignArgs {
@@ -95,6 +101,14 @@ pub struct AlignArgs {
     /// cannot answer this.
     #[arg(long)]
     pub resampler_cost: bool,
+
+    /// Gate W8: verify `warp_frame_in_place` on a real decoded frame.
+    ///
+    /// Checks the Bayer-phase indexing that the merge depends on, which the
+    /// sidecar's own W2 gate cannot reach because W2 works on an already
+    /// extracted plane.
+    #[arg(long)]
+    pub verify_warp: bool,
 }
 
 impl AlignArgs {
@@ -259,6 +273,10 @@ pub fn run(args: &AlignArgs) -> Result<()> {
 
     if args.resampler_cost {
         return run_resampler_cost(args);
+    }
+
+    if args.verify_warp {
+        return run_verify_warp(args, resampler);
     }
 
     if let Some(sidecar) = &args.check {
@@ -722,4 +740,606 @@ fn run_resampler_cost(args: &AlignArgs) -> Result<()> {
         println!("  {name:<14} {e:>16.4e} {:>9.4}", e / base);
     }
     Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// merge-facing API
+// ---------------------------------------------------------------------------
+//
+// M86 measured that every bracket in the corpus drifts far past `T_usable`:
+// 232.7 px corner-to-corner on `bee-3-cpl` and 299.2 px on `bee-2-cpl`. The
+// merge combined those frames with no geometric registration at all, so this
+// is the path that closes that gap. Everything below exists to be called from
+// `merge_cmd`, and nothing below is allowed to fabricate a transform: a frame
+// the solve refused is reported as refused, never silently given identity.
+
+/// Environment switch for the merge's registration, which is **on** by default.
+///
+/// Set `STREHL_ALIGN=0` to turn it off. It is an environment variable rather
+/// than a flag because the subcommand definition in `main.rs` is owned by
+/// another agent tonight; a flag is the better long-term home and the patch for
+/// it is in the M86 report.
+pub const ALIGN_ENV: &str = "STREHL_ALIGN";
+
+/// Is registration enabled?
+///
+/// Anything other than `0`, `off`, `false` or `no` leaves it on.
+pub fn align_enabled() -> bool {
+    match std::env::var(ALIGN_ENV) {
+        Ok(v) => !matches!(
+            v.trim().to_ascii_lowercase().as_str(),
+            "0" | "off" | "false" | "no"
+        ),
+        Err(_) => true,
+    }
+}
+
+/// Is this directory one a global similarity cannot describe?
+pub fn is_tilted_subject(dir: &Path) -> bool {
+    let name = dir
+        .file_name()
+        .map(|s| s.to_string_lossy().to_ascii_lowercase())
+        .unwrap_or_default();
+    TILTED_SUBJECTS.iter().any(|t| name.contains(t))
+}
+
+/// The default sidecar location for a bracket.
+pub fn sidecar_path(dir: &Path) -> PathBuf {
+    dir.join("warpmap.txt")
+}
+
+/// Reference frame for a merge-side solve: the **middle** frame.
+///
+/// The reference is the frame everything else is resampled onto, so the
+/// uncovered border grows with distance from it. Referencing frame 0 makes the
+/// last frame carry the whole drift; referencing the middle halves the worst
+/// case. On `bee-3-cpl`'s measured 186.7 px of end-to-end drift that is the
+/// difference between a ~187 px border and a ~93 px one.
+pub fn merge_reference(n: usize) -> usize {
+    n / 2
+}
+
+/// Solve a bracket and return its warp map, without writing anything.
+///
+/// This is the body `run` uses, factored so the merge can call it. `spans` is
+/// the edge ladder; `reference` is the frame placements are expressed against.
+pub fn solve_map(
+    dir: &Path,
+    paths: &[PathBuf],
+    reference: usize,
+    spans: &[usize],
+    threads: usize,
+    resampler: Resampler,
+    verbose: bool,
+) -> Result<WarpMap> {
+    let n = paths.len();
+    if reference >= n {
+        bail!("reference {reference} is out of range for {n} frames");
+    }
+    let name = dir
+        .file_name()
+        .map(|s| s.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    let identity = StackIdentity::from_paths(&name, paths)?;
+    if verbose {
+        println!("stack {name}: {n} frames, digest {:016x}", identity.digest);
+    }
+
+    let t0 = std::time::Instant::now();
+    let st = decode_stack(paths, threads)?;
+    if verbose {
+        println!(
+            "  decoded {n} frames in {:.1} s, plane {}x{}",
+            t0.elapsed().as_secs_f64(),
+            st.geom.width,
+            st.geom.height
+        );
+    }
+
+    let cfg = AlignConfig::deep();
+    let mut pairs: Vec<(usize, usize)> = Vec::new();
+    for &s in spans {
+        for i in 0..n.saturating_sub(s) {
+            pairs.push((i, i + s));
+        }
+    }
+    pairs.sort_unstable();
+    pairs.dedup();
+
+    let t1 = std::time::Instant::now();
+    let edges = measure_edges(&st, &pairs, &cfg, threads)?;
+    if verbose {
+        println!(
+            "  measured {}/{} edges in {:.1} s ({:.1}% refused)",
+            edges.len(),
+            pairs.len(),
+            t1.elapsed().as_secs_f64(),
+            100.0 * (pairs.len() - edges.len()) as f64 / pairs.len() as f64
+        );
+    }
+
+    let floor = cycle_floor(&edges, st.geom);
+    let mut opts = GlobalOptions::new(st.geom);
+    opts.weighting = Weighting::Unit;
+    let placements = solve_global(&edges, n, &opts)
+        .context("the global system is not full rank; the edge ladder is too sparse")?;
+    let heldout = heldout_error(&edges, n, &opts, st.geom);
+
+    let warps: Vec<FrameWarp> = placements
+        .iter()
+        .enumerate()
+        .map(|(k, t)| match t {
+            Some(t) => FrameWarp::Placed(rebase(*t, placements[reference])),
+            None => FrameWarp::Refused(format!(
+                "frame {k} is not connected to the solved component by any measured edge"
+            )),
+        })
+        .collect();
+
+    Ok(WarpMap::new(
+        Provenance {
+            stack: identity,
+            strategy: "S3-ba-unit".into(),
+            heldout_px: heldout,
+            cycle_floor_px: floor,
+            reference,
+            note: format!("strehl align, M86b, spans {spans:?}"),
+        },
+        st.geom,
+        resampler,
+        warps,
+    ))
+}
+
+/// Load the sidecar beside a bracket, or solve one and cache it.
+///
+/// Returns `Ok(None)` when registration is switched off or the subject is one a
+/// global similarity cannot describe — both are *deliberate* refusals to
+/// register, distinct from a failure. An existing sidecar whose identity does
+/// not match the bracket is **not** silently reused; it is re-solved, because a
+/// warp map from another stack is worse than none.
+pub fn load_or_solve(
+    dir: &Path,
+    paths: &[PathBuf],
+    threads: usize,
+) -> Result<Option<(WarpMap, &'static str)>> {
+    if !align_enabled() {
+        return Ok(None);
+    }
+    if is_tilted_subject(dir) {
+        eprintln!(
+            "alignment      : REFUSED -- {} is a tilted subject; a global similarity \
+             cannot describe it (M86). Merging unregistered.",
+            dir.display()
+        );
+        return Ok(None);
+    }
+
+    let name = dir
+        .file_name()
+        .map(|s| s.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    let identity = StackIdentity::from_paths(&name, paths)?;
+    let side = sidecar_path(dir);
+
+    if side.exists() {
+        match WarpMap::load(&side) {
+            Ok(map) => match map.check_stack(&identity) {
+                Ok(()) if map.len() == paths.len() => return Ok(Some((map, "sidecar"))),
+                Ok(()) => eprintln!(
+                    "alignment      : sidecar has {} frames but the bracket has {}; re-solving",
+                    map.len(),
+                    paths.len()
+                ),
+                Err(e) => eprintln!("alignment      : sidecar rejected ({e}); re-solving"),
+            },
+            Err(e) => eprintln!("alignment      : sidecar unreadable ({e}); re-solving"),
+        }
+    }
+
+    let spans = DEFAULT_SPANS.to_vec();
+    let map = solve_map(
+        dir,
+        paths,
+        merge_reference(paths.len()),
+        &spans,
+        threads,
+        Resampler::CatmullRom,
+        false,
+    )?;
+    // Best effort: a read-only capture directory must not fail the merge.
+    if let Err(e) = map.save(&side) {
+        eprintln!("alignment      : could not cache sidecar ({e}); continuing");
+    }
+    Ok(Some((map, "solved")))
+}
+
+/// Apply [`fit_to_cover`] and report what it cost, or explain why it could not.
+///
+/// Split out so both the merge and any future consumer take the same decision
+/// rather than each deciding for itself what to do about uncovered pixels.
+///
+/// If `STREHL_ALIGN=zoom` this additionally replaces every placement with the
+/// *same* global zoom, discarding all relative registration. That is the null
+/// control for the sharpness comparison: it pays the identical resampling cost
+/// and yields the identical field of view, so any difference that survives
+/// between it and the real thing is registration and nothing else. Without it
+/// an aligned render is measured against an unaligned one at a different
+/// sampling density, and the upsample alone moves gradient energy.
+pub fn cover_or_explain(map: WarpMap) -> (WarpMap, Option<f64>) {
+    // Catmull-Rom reads one sample before and two after, so the grid must stay
+    // that far inside the source or the interpolator's support leaves it.
+    let (fitted, k) = match fit_to_cover(&map, 3.0) {
+        Some((fitted, k)) => (fitted, Some(k)),
+        None => (map, None),
+    };
+    let zoom_only = std::env::var(ALIGN_ENV)
+        .map(|v| v.trim().eq_ignore_ascii_case("zoom"))
+        .unwrap_or(false);
+    if !zoom_only {
+        return (fitted, k);
+    }
+    let Some(k) = k else { return (fitted, None) };
+    let s = Similarity::from_params(SimilarityParams {
+        ax: 0.0,
+        ay: 0.0,
+        g: k - 1.0,
+        rot: 0.0,
+    });
+    let warps: Vec<FrameWarp> = fitted
+        .warps()
+        .iter()
+        .map(|f| match f {
+            FrameWarp::Placed(_) => FrameWarp::Placed(s),
+            FrameWarp::Refused(why) => FrameWarp::Refused(why.clone()),
+        })
+        .collect();
+    let mut prov = fitted.provenance().clone();
+    prov.note = format!("{} | ZOOM-ONLY NULL: registration discarded", prov.note);
+    prov.strategy = format!("{} [zoom-only null]", prov.strategy);
+    (
+        WarpMap::new(prov, fitted.geometry(), fitted.resampler(), warps),
+        Some(k),
+    )
+}
+
+/// Reusable buffers for [`warp_frame_in_place`], so a merge does not allocate
+/// four planes per frame.
+pub struct WarpScratch {
+    src: Vec<f32>,
+    dst: Vec<f32>,
+    cover: Vec<bool>,
+}
+
+impl WarpScratch {
+    pub fn new(geom: PlaneGeometry) -> Self {
+        let px = geom.pixels();
+        Self {
+            src: vec![0.0; px],
+            dst: vec![0.0; px],
+            cover: vec![false; px],
+        }
+    }
+}
+
+/// Resample a decoded frame onto the reference grid, in place.
+///
+/// # Why this works on the quad grid
+///
+/// The alignment plane is the **2x2 quad grid**: plane pixel `(px, py)` is
+/// sensor quad `(2px, 2py)`, exactly as [`green_luma`] reads it. All four CFA
+/// phases therefore live on that same grid, so **one** similarity registers all
+/// four — each phase is gathered separately so that no interpolation ever mixes
+/// two colours, which is the bug that would show up as colour fringing.
+///
+/// Uncovered destination pixels are set to the black level rather than left
+/// holding unregistered data. They are the border the warp pulls in from
+/// outside the source frame; `align.rs` documents why clamping is not an
+/// option.
+///
+/// Returns the fraction of the plane that was covered.
+pub fn warp_frame_in_place(
+    frame: &mut strehl_raw::Frame,
+    t: Similarity,
+    geom: PlaneGeometry,
+    resampler: Resampler,
+    scratch: &mut WarpScratch,
+) -> Result<f64> {
+    let (gw, gh) = (geom.width, geom.height);
+    if frame.active.width / 2 != gw || frame.active.height / 2 != gh {
+        bail!(
+            "frame {} has quad geometry {}x{}, but the warp map was fitted on {gw}x{gh}",
+            frame.path.display(),
+            frame.active.width / 2,
+            frame.active.height / 2
+        );
+    }
+    let black = frame.levels.black;
+    let black_dn = black.round().clamp(0.0, u16::MAX as f32) as u16;
+    let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
+    let mut covered_total = 0usize;
+
+    for dy in 0..2usize {
+        for dx in 0..2usize {
+            for py in 0..gh {
+                let row = (ay + 2 * py + dy) * stride + ax + dx;
+                let out = &mut scratch.src[py * gw..(py + 1) * gw];
+                for (px, o) in out.iter_mut().enumerate() {
+                    *o = frame.data[row + 2 * px] as f32;
+                }
+            }
+            let src = PlaneRef::from_geometry(&scratch.src, geom)
+                .context("warp source plane does not match the bracket geometry")?;
+            covered_total += strehl_core::warpmap::gather_checked(
+                src,
+                t,
+                geom,
+                resampler,
+                &mut scratch.dst,
+                &mut scratch.cover,
+            )?;
+            for py in 0..gh {
+                let row = (ay + 2 * py + dy) * stride + ax + dx;
+                let lo = py * gw;
+                for px in 0..gw {
+                    let v = scratch.dst[lo + px];
+                    frame.data[row + 2 * px] = if scratch.cover[lo + px] {
+                        // Round, then clamp to the container. The source is
+                        // u16 and the interpolator can overshoot on an edge.
+                        v.round().clamp(0.0, u16::MAX as f32) as u16
+                    } else {
+                        black_dn
+                    };
+                }
+            }
+        }
+    }
+    Ok(covered_total as f64 / (4 * geom.pixels()) as f64)
+}
+
+/// Gate W8 -- `warp_frame_in_place` on a real decoded frame.
+///
+/// The merge's registration rests on two things the sidecar's own W2 gate
+/// cannot see, because W2 operates on an already-extracted plane:
+///
+///   1. **The Bayer phase indexing.** Each of the four CFA phases must be
+///      gathered on the quad grid and written back to the same phase. Getting
+///      a phase wrong swaps colour channels; getting the row stride wrong
+///      shears the image. Both are silent in a round trip.
+///   2. **The direction of the transform**, again.
+///
+/// The decisive probe is that an **identity** placement must be a bit-exact
+/// no-op over the interior. Catmull-Rom at integer coordinates has weights
+/// exactly `(0, 1, 0, 0)`, so any indexing error at all produces a non-zero
+/// difference. A test that merely "looked close" would pass with a transposed
+/// index on a smooth image; this one cannot.
+fn run_verify_warp(args: &AlignArgs, resampler: Resampler) -> Result<()> {
+    let paths = list_frames(&args.dir)?;
+    let raw = strehl_raw::decode(&paths[0])
+        .with_context(|| format!("decoding {}", paths[0].display()))?;
+    let geom = PlaneGeometry {
+        width: raw.active.width / 2,
+        height: raw.active.height / 2,
+    };
+    println!("M86b GATE W8 -- warp_frame_in_place on a real frame");
+    println!("  {}", paths[0].display());
+    println!("  quad plane {}x{}\n", geom.width, geom.height);
+
+    let original = raw.data.clone();
+    let mut scratch = WarpScratch::new(geom);
+
+    // --- W8a: identity is a bit-exact no-op over the interior --------------
+    let mut f = raw;
+    let cov = warp_frame_in_place(&mut f, Similarity::IDENTITY, geom, resampler, &mut scratch)?;
+    let margin = 8usize;
+    let (mut diff, mut checked) = (0usize, 0usize);
+    for dy in 0..2 {
+        for dx in 0..2 {
+            for py in margin..geom.height - margin {
+                let row = (f.active.y + 2 * py + dy) * f.stride + f.active.x + dx;
+                for px in margin..geom.width - margin {
+                    let i = row + 2 * px;
+                    checked += 1;
+                    if f.data[i] != original[i] {
+                        diff += 1;
+                    }
+                }
+            }
+        }
+    }
+    println!("  W8a identity no-op");
+    println!("    coverage        {:.4}", cov);
+    println!("    interior samples {checked}, differing {diff}");
+    let a_pass = diff == 0;
+    println!("    {}", if a_pass { "PASS" } else { "FAIL" });
+
+    // --- W8b: a planted scale is undone by its exact inverse ---------------
+    //
+    // Planting s and undoing with 1/s. Note the inverse must be exact: M86
+    // measured that using -(s-1) instead of 1/s-1 is off by 0.83 plane px at
+    // s = 1.01 on this rig, which is larger than the effect being measured.
+    let s = 1.01f64;
+    let plant = Similarity::from_params(SimilarityParams {
+        ax: 0.0,
+        ay: 0.0,
+        g: s - 1.0,
+        rot: 0.0,
+    });
+    let undo = plant.invert().context("planted similarity is singular")?;
+
+    let mut f2 = strehl_raw::decode(&paths[0])?;
+    warp_frame_in_place(&mut f2, plant, geom, resampler, &mut scratch)?;
+    let damage = quad_mad(&f2.data, &original, &f2, geom, 64);
+    warp_frame_in_place(&mut f2, undo, geom, resampler, &mut scratch)?;
+    let residual = quad_mad(&f2.data, &original, &f2, geom, 64);
+    let ratio = residual / damage.max(1e-12);
+    println!("\n  W8b plant s={s} then undo with 1/s");
+    println!("    damage   {damage:.4} DN");
+    println!("    residual {residual:.4} DN");
+    println!("    ratio    {ratio:.4}   (bar <= 0.25)");
+    let b_pass = ratio <= 0.25;
+    println!("    {}", if b_pass { "PASS" } else { "FAIL" });
+
+    // --- W8c: control -- undoing in the WRONG direction must NOT pass ------
+    //
+    // The classic silent bug: applying the placement again instead of its
+    // inverse. On a smooth image this still "looks like an image", which is
+    // exactly why it needs a control rather than an eyeball.
+    let mut f3 = strehl_raw::decode(&paths[0])?;
+    warp_frame_in_place(&mut f3, plant, geom, resampler, &mut scratch)?;
+    warp_frame_in_place(&mut f3, plant, geom, resampler, &mut scratch)?;
+    let c_res = quad_mad(&f3.data, &original, &f3, geom, 64);
+    let c_ratio = c_res / damage.max(1e-12);
+    println!("\n  W8c CONTROL -- undo by re-applying the placement, not its inverse");
+    println!("    residual {c_res:.4} DN   ratio {c_ratio:.4}   (must be >= 0.9)");
+    let c_pass = c_ratio >= 0.9;
+    println!(
+        "    {}",
+        if c_pass {
+            "PASS (control correctly fails the gate)"
+        } else {
+            "FAIL -- the gate cannot tell a wrong warp from a right one"
+        }
+    );
+
+    println!(
+        "\n  GATE W8: {}",
+        if a_pass && b_pass && c_pass {
+            "PASS"
+        } else {
+            "FAIL"
+        }
+    );
+    if a_pass && b_pass && c_pass {
+        Ok(())
+    } else {
+        bail!("gate W8 failed")
+    }
+}
+
+/// Median absolute difference over all four CFA phases, ignoring a margin.
+fn quad_mad(
+    a: &[u16],
+    b: &[u16],
+    f: &strehl_raw::Frame,
+    geom: PlaneGeometry,
+    margin: usize,
+) -> f64 {
+    let mut v: Vec<f32> = Vec::new();
+    for dy in 0..2 {
+        for dx in 0..2 {
+            for py in (margin..geom.height - margin).step_by(3) {
+                let row = (f.active.y + 2 * py + dy) * f.stride + f.active.x + dx;
+                for px in (margin..geom.width - margin).step_by(3) {
+                    let i = row + 2 * px;
+                    v.push((a[i] as f32 - b[i] as f32).abs());
+                }
+            }
+        }
+    }
+    if v.is_empty() {
+        return 0.0;
+    }
+    v.sort_by(|p, q| p.partial_cmp(q).unwrap());
+    v[v.len() / 2] as f64
+}
+
+/// Shrink the reference grid until **every** placed frame covers all of it.
+///
+/// # The defect this fixes
+///
+/// A placement pulls the destination corner from outside the source frame
+/// whenever the frame is far from the reference. `gather_checked` correctly
+/// refuses to invent those samples, and `warp_frame_in_place` writes the black
+/// level there. Measured on `bee-3-cpl`: that left **9.5% of the rendered
+/// frame black**, 63% of the outermost annulus, and it wrecked the render --
+/// the merge has no way to know those samples are absent, so they compete in
+/// the election and win wherever nothing else is sharp.
+///
+/// It also silently invalidates any sharpness statistic computed on the
+/// result, because the boundary between image and fill is itself an enormous
+/// gradient. That is how this was found.
+///
+/// # What it does
+///
+/// Composes every placement with a uniform scale `k <= 1` about the plane
+/// centre, so the reference grid maps strictly inside every source frame:
+/// `t' = S_k . t`. The destination therefore shows the region **all** frames
+/// observed, which is the only region a stack of them can honestly describe.
+///
+/// The cost is real and is not hidden: the field of view shrinks by `k`, and
+/// because the output keeps its pixel dimensions the result is upsampled by
+/// `1/k`. The alternative -- cropping the output -- keeps every pixel real but
+/// changes the image dimensions, which would break the byte-frozen measurement
+/// path. That trade is recorded in the M86 report as follow-up work.
+///
+/// Returns the scale applied, or `None` if no frame is placed.
+pub fn fit_to_cover(map: &WarpMap, margin: f64) -> Option<(WarpMap, f64)> {
+    let geom = map.geometry();
+    let (w, h) = (geom.width as f64, geom.height as f64);
+    let (cx, cy) = (w * 0.5, h * 0.5);
+    let placed: Vec<Similarity> = map.warps().iter().filter_map(|f| f.placed()).collect();
+    if placed.is_empty() {
+        return None;
+    }
+
+    // A similarity maps a rectangle to a rectangle, so the extreme points of
+    // the warped grid are the images of its four corners. Checking those is
+    // exact, not a sample.
+    let corners = [
+        (0.0, 0.0),
+        (w - 1.0, 0.0),
+        (0.0, h - 1.0),
+        (w - 1.0, h - 1.0),
+    ];
+    let covers = |k: f64| -> bool {
+        let s = Similarity::from_params(SimilarityParams {
+            ax: 0.0,
+            ay: 0.0,
+            g: k - 1.0,
+            rot: 0.0,
+        });
+        placed.iter().all(|t| {
+            let tp = s.then(*t);
+            corners.iter().all(|&(x, y)| {
+                let (sx, sy) = tp.apply_at(x, y, cx, cy);
+                sx >= margin && sy >= margin && sx <= w - 1.0 - margin && sy <= h - 1.0 - margin
+            })
+        })
+    };
+
+    if covers(1.0) {
+        return Some((map.clone(), 1.0));
+    }
+    // Bisection. `covers` is monotone in k: shrinking the grid can only pull
+    // its image further inside every source frame.
+    let (mut lo, mut hi) = (0.0f64, 1.0f64);
+    for _ in 0..60 {
+        let mid = 0.5 * (lo + hi);
+        if covers(mid) {
+            lo = mid;
+        } else {
+            hi = mid;
+        }
+    }
+    if lo <= 0.0 {
+        return None;
+    }
+    let s = Similarity::from_params(SimilarityParams {
+        ax: 0.0,
+        ay: 0.0,
+        g: lo - 1.0,
+        rot: 0.0,
+    });
+    let warps: Vec<FrameWarp> = map
+        .warps()
+        .iter()
+        .map(|f| match f {
+            FrameWarp::Placed(t) => FrameWarp::Placed(s.then(*t)),
+            FrameWarp::Refused(why) => FrameWarp::Refused(why.clone()),
+        })
+        .collect();
+    let mut prov = map.provenance().clone();
+    prov.note = format!("{} | fit-to-cover k={lo:.6}", prov.note);
+    Some((WarpMap::new(prov, geom, map.resampler(), warps), lo))
 }

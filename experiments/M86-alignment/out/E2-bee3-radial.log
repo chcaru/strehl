@@ -1,0 +1,23 @@
+=== bee-3-cpl, 299 frames, gate 2 ===
+  image 7032x4688, green channel, Tenengrad
+
+  annulus (norm r)      before          after     ratio
+  0.000-0.121      3691734.5      3344504.4    0.9059
+  0.121-0.241      2669780.9      2356123.7    0.8825
+  0.241-0.362      2797082.4      2484823.0    0.8884
+  0.362-0.483      3187194.6      2870266.1    0.9006
+  0.483-0.604      2706112.5      2436408.9    0.9003
+  0.604-0.724      1654637.2      3589481.2    2.1693
+  0.724-0.845      1399389.6      5748760.3    4.1080
+  0.845-0.966      1141965.1     10528130.1    9.2193
+
+  WHOLE FRAME             2369315.2      3450891.3    1.4565
+
+  innermost annulus ratio : 0.9059
+  outermost annulus ratio : 9.2193
+  outer / inner           : 10.1765
+  slope of ratio on radius: +7.7071 per unit normalised radius
+
+  VERDICT: gain GROWS with radius -- the signature of a corrected
+           scale error about a centre of expansion. Consistent with
+           misregistration having been the cause.

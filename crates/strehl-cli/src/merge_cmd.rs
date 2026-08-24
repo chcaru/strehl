@@ -54,9 +54,11 @@ use strehl_core::through_focus::{
     FLAG_SCALE_DISAGREEMENT, PEAK_SEPARATION, STATS_RADIUS, ThroughFocus, do_not_trust_mask,
     shuffled_indices,
 };
+use strehl_core::warpmap::{FrameWarp, WarpMap};
 use strehl_core::{CfaPlane, Error};
 use strehl_raw::Frame;
 
+use crate::align_cmd::{self, WarpScratch};
 use crate::image_out;
 use crate::stack::{
     MEMORY_BUDGET_BYTES, Roi, flat_roi_stats, mean_and_sigma, provenance_line, report_hp_reference,
@@ -795,6 +797,14 @@ struct Ctx<'a> {
     noise: &'a NoiseModel,
     live: &'a AtomicUsize,
     peak_live: &'a AtomicUsize,
+    /// The bracket's solved geometry, or `None` when merging unregistered.
+    ///
+    /// M86 measured that these stacks drift 232.7 px (bee-3-cpl) and 299.2 px
+    /// (bee-2-cpl) corner-to-corner, so an unregistered merge is combining
+    /// frames that do not describe the same scene points. When this is `Some`,
+    /// every frame is resampled onto the reference grid before anything reads
+    /// it.
+    warps: Option<&'a WarpMap>,
 }
 
 /// Per-worker scratch, allocated once per chunk and reused across frames.
@@ -810,10 +820,13 @@ struct Scratch {
     fine: Vec<f32>,
     /// Per-pixel clip flags for the frame currently in `luma`.
     clipped: Vec<bool>,
+    /// Buffers for resampling a frame onto the reference grid. Allocated only
+    /// when the merge is registering.
+    warp: Option<WarpScratch>,
 }
 
 impl Scratch {
-    fn new(geom: PlaneGeometry, fine: bool) -> Self {
+    fn new_with_warp(geom: PlaneGeometry, fine: bool, warp: bool) -> Self {
         let px = geom.pixels();
         Self {
             luma: vec![0.0; px],
@@ -822,6 +835,7 @@ impl Scratch {
             reg: vec![0.0; px],
             fine: if fine { vec![0.0; px] } else { Vec::new() },
             clipped: vec![false; px],
+            warp: warp.then(|| WarpScratch::new(geom)),
         }
     }
 }
@@ -878,6 +892,40 @@ impl Ctx<'_> {
                 self.levels.white
             );
         }
+        // Registration happens here, before anything reads a pixel, so that
+        // every downstream stage -- focus field, gate, estimator, output --
+        // sees frames that describe the same scene points. Doing it here also
+        // means the two passes cannot disagree about geometry.
+        let mut frame = frame;
+        if let Some(map) = self.warps {
+            match map.warp(index as usize) {
+                Ok(FrameWarp::Placed(t)) => {
+                    let scratch_warp = scratch
+                        .warp
+                        .as_mut()
+                        .expect("warp scratch is allocated whenever the merge is registering");
+                    if let Err(e) = align_cmd::warp_frame_in_place(
+                        &mut frame,
+                        *t,
+                        self.geom,
+                        map.resampler(),
+                        scratch_warp,
+                    ) {
+                        self.live.fetch_sub(1, Ordering::Relaxed);
+                        return Err(e);
+                    }
+                }
+                Ok(FrameWarp::Refused(why)) => {
+                    self.live.fetch_sub(1, Ordering::Relaxed);
+                    bail!("frame {index} was refused by the alignment solve: {why}");
+                }
+                Err(e) => {
+                    self.live.fetch_sub(1, Ordering::Relaxed);
+                    return Err(e.into());
+                }
+            }
+        }
+        let frame = frame;
         green_luma_with_clip(
             &frame,
             self.levels.black,
@@ -1085,16 +1133,99 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         opts.dir.display()
     );
     eprintln!("{}", plan.describe());
+
+    // ---- alignment --------------------------------------------------------
+    //
+    // Solved (or loaded) before either pass, because both passes must see the
+    // same geometry. M86 fact: every bracket in this corpus drifts far past
+    // T_usable, so this is on by default; `STREHL_ALIGN=0` turns it off.
+    let t_align = Instant::now();
+    let alignment = align_cmd::load_or_solve(&opts.dir, &paths, 0)?;
+    let alignment = alignment.map(|(m, how)| {
+        let (m, k) = align_cmd::cover_or_explain(m);
+        (m, how, k)
+    });
+    match &alignment {
+        Some((map, how, k)) => {
+            let p = map.provenance();
+            eprintln!(
+                "alignment      : ON ({how}), reference frame {}, {} placed / {} refused",
+                p.reference,
+                map.placed_count(),
+                map.refused_count()
+            );
+            if p.strategy.contains("zoom-only null") {
+                eprintln!(
+                    "  *** ZOOM-ONLY NULL CONTROL: relative registration has been DISCARDED. \
+                     This render pays the resampling cost and has the aligned field of view \
+                     but is NOT aligned. It exists to be compared against. ***"
+                );
+            }
+            eprintln!(
+                "  held-out err  : {}   cycle floor: {}",
+                p.heldout_px
+                    .map(|e| format!("{e:.3} px"))
+                    .unwrap_or("NOT MEASURED".into()),
+                p.cycle_floor_px
+                    .map(|f| format!("{f:.3} px"))
+                    .unwrap_or("NOT MEASURED".into()),
+            );
+            eprintln!(
+                "  resampler     : {:?}   solve took {:.1} s",
+                map.resampler(),
+                t_align.elapsed().as_secs_f64()
+            );
+            match k {
+                Some(k) if *k >= 0.999_999 => {
+                    eprintln!("  coverage      : every frame covers the whole grid; no crop needed")
+                }
+                Some(k) => eprintln!(
+                    "  coverage      : field of view scaled to {:.4} so that EVERY frame covers \
+                     every pixel ({:.1}% of width dropped, then upsampled to keep the output \
+                     dimensions). Without this the render is part black.",
+                    k,
+                    100.0 * (1.0 - k)
+                ),
+                None => eprintln!(
+                    "  coverage      : WARNING -- could not fit a fully covered grid; the render \
+                     may contain black regions where no frame reaches."
+                ),
+            }
+            if p.heldout_px.is_none() {
+                eprintln!(
+                    "  WARNING       : this solve could not certify itself. The held-out \
+                     protocol needs long-span edges (M10: span >= 40, >= 12 surviving) and \
+                     this stack's edge set did not supply them, so the registration below \
+                     is UNVERIFIED. Run `strehl align` with a richer span set to get a \
+                     sidecar that carries an error bar."
+                );
+            }
+            if let Some(e) = p.heldout_px
+                && e > 4.0
+            {
+                eprintln!(
+                    "  NOTE          : {e:.3} px is above M86's T_usable of 4.0 px -- a large \
+                     improvement on no registration, but not a precise solve."
+                );
+            }
+        }
+        None => eprintln!(
+            "alignment      : OFF -- frames are combined unregistered. M86 measured \
+             232.7 px of drift on bee-3-cpl; expect softness that grows with radius."
+        ),
+    }
     eprintln!();
 
     let live = AtomicUsize::new(0);
     let peak_live = AtomicUsize::new(0);
+    let warps = alignment.as_ref().map(|(m, _, _)| m);
     let ctx = Ctx {
         geom,
         levels,
         noise: &noise,
         live: &live,
         peak_live: &peak_live,
+        warps,
     };
 
     // ---- pass one: regularised winner field -------------------------------
@@ -1106,7 +1237,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             let first_index = (ci * plan.chunk_len) as u16;
             let mut stats = FocusStats::new(geom);
             let mut clip = ClipCensus::new(geom);
-            let mut scratch = Scratch::new(geom, false);
+            let mut scratch = Scratch::new_with_warp(geom, false, warps.is_some());
             let mut flat = None;
             let mut flat_frames: Vec<(u16, FrameFlat)> = Vec::with_capacity(chunk.len());
             let mut t = Timings::default();
@@ -1196,7 +1327,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             let mut tf = opts.stats.then(|| ThroughFocus::new(&p1.stats));
             let mut placebo = (opts.stats && opts.stats_placebo)
                 .then(|| ThroughFocus::new_permuted(&p1.stats, &perm));
-            let mut scratch = Scratch::new(geom, opts.stats);
+            let mut scratch = Scratch::new_with_warp(geom, opts.stats, warps.is_some());
             let mut t = Timings::default();
 
             for (offset, path) in chunk.iter().enumerate() {

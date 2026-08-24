@@ -1,0 +1,20 @@
+M86b GATE W8 -- warp_frame_in_place on a real frame
+  D:\personal\macro\bee-3-cpl\DSC00001.ARW
+  quad plane 3516x2344
+
+  W8a identity no-op
+    coverage        0.9972
+    interior samples 32592000, differing 0
+    PASS
+
+  W8b plant s=1.01 then undo with 1/s
+    damage   23.0000 DN
+    residual 4.0000 DN
+    ratio    0.1739   (bar <= 0.25)
+    PASS
+
+  W8c CONTROL -- undo by re-applying the placement, not its inverse
+    residual 35.0000 DN   ratio 1.5217   (must be >= 0.9)
+    PASS (control correctly fails the gate)
+
+  GATE W8: PASS
