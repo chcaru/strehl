@@ -377,8 +377,8 @@ MEASURED, `rbar` on NC1 against the matched `A1 ×2` arm at the identical cells
 and level: `+0.07488` vs `+0.01068` (`112MSDCF`), `+0.36058` vs `+0.00166`
 (`109MSDCF`), `+0.02414` vs `+0.00348` (`wrapped-text-1`). **The correlation
 estimator responds to injected common mode with the right sign on all three
-stacks and by a factor of 7–217×.** It detected `rbar = +0.361` where the
-injected coupling was maximal.
+stacks, by factors of 7.0×, 217× and 6.9×.** It detected `rbar = +0.361` where
+the injected coupling was maximal.
 
 DERIVED: NC1 is a *calibrated* positive control for the correlation estimator
 and a *weak* control for `alpha`, because the injected common term is only a
