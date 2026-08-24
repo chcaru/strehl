@@ -469,6 +469,15 @@ recommendation.
    changes at once — colour matrix, sRGB curve, `COSITE_SHIFT` — on n = 4 ROIs. **I am
    not claiming a defect in M95's correction.** Isolating this needs an arm with the
    matrix disabled, which does not exist as a flag.
+   **Narrowed in §12.6:** `COSITE_SHIFT` has since been audited against `resample_shift`'s
+   gather semantics — sign, magnitude and the negative-`floor` branch all correct — so it is
+   **eliminated** as a cause and the confound is now matrix + curve only. `write_binned`'s
+   doc also confirms the no-flag `linear` arm is byte-frozen and therefore *not* co-sited,
+   which is why `linear` extrapolates cleanly while `binned` does not. The residual 2×
+   remains unexplained; the transfer curve is the more plausible of the two survivors (a
+   tone curve applied before an edge centroid is measured can move the apparent per-channel
+   edge position when channels sit at different levels) but **that is a conjecture I have
+   not measured and am not claiming.**
 
 3. **Blue's lateral magnitude is not established.** `ε_B = +68.4 ppm` beats its
    permutation null (p = 0.0005) but R² = 0.659 and the implied optical centre falls
@@ -847,7 +856,77 @@ mistakes it for a second independent confirmation. Note also that ρ_cr = 0.366 
 means the fringe **does not vanish at the frame centre**, which is the qualitative
 signature §4 relies on — but §4 already establishes that properly and does not need this.
 
-### 12.6 Candidate facts from the addendum
+### 12.6 `COSITE_SHIFT` audited, not assumed — and the `--binned` open item narrowed
+
+The orchestrator asked, correctly, that `COSITE_SHIFT` be read and its sign convention
+justified before the `--binned` arm is trusted, on the grounds that a control with an
+uninspected correction inside it is not a control. §7/B4 previously recorded that I had
+*double-counted* the correction; that fix assumed the correction itself was right. This
+section discharges the assumption.
+
+**`resample_shift` is a gather**, verified from the loop body and not from the parameter
+name: `out[i] = Σ_k w_k · src[i + floor(d) + k − 1]` with `w = keys_weights(d − floor(d))`,
+i.e. `out[i] ≈ src[i + d]`.
+
+Geometry, relative to the quad centre in binned px: red at **−0.25**, blue at **+0.25**,
+green's two sites straddling the centre at **0** — so `red_in[i] = Scene(i − 0.25)` and
+`blue_in[i] = Scene(i + 0.25)`.
+
+- Red: code passes `+d`. `red_out[i] = red_in[i + 0.25] = Scene(i)`. ✔
+- Blue: code passes `−d`. `blue_out[i] = blue_in[i − 0.25] = Scene(i)`. ✔
+- **Negative branch**, which is where a sign error would actually hide: `taps(−0.25)` gives
+  `base = floor(−0.25) = −1`, `frac = 0.75`, taps at `x−2 … x+1`, interpolating at
+  `x − 1 + 0.75 = x − 0.25`. ✔
+
+**Sign and magnitude are both correct**, and 0.25 is forced geometry (half a quad on each
+axis), not a tuning parameter. I can convince myself of the convention, so I am not
+invoking the "say so rather than work around it" escape.
+
+**Which narrows §8 item 2.** The `--binned` arm reads ≈2× high against the model, and I had
+listed three possible causes — the colour matrix, the sRGB transfer curve, and
+`COSITE_SHIFT`. The third is now eliminated. Two further source facts make the arm
+ladder auditable:
+
+- `write_binned`'s doc states outright: *"This is not the path that produces the corpus's
+  linear TIFFs. That one lives in its callers and is byte-frozen."* So the no-flag `linear`
+  arm is **not** co-sited (it cannot be, or its frozen bytes would have moved), while the
+  `--srgb --binned` arm **is**. My E4 offsets table gives uncorrected offsets to `linear`
+  and corrected offsets to `binned` — which is now confirmed correct for both arms rather
+  than for one.
+- That also explains why `linear` extrapolates cleanly (1.07×, 1.29×) while `binned` does
+  not: `linear` changes one thing, `binned` changes three.
+
+**The residual 2× is still unexplained**, now confounded by matrix and curve only. The
+transfer curve is the more plausible of the two — a nonlinear tone curve applied *before*
+an edge centroid is measured can shift the apparent per-channel edge position when the
+channels sit at different levels — but I have not measured that and I am not claiming it.
+It stays in §8.
+
+### 12.7 On testing (c) via `--binned` first
+
+The suggested ordering — test (c) with `--binned` before spending effort on (a) — was run
+as E4 and is reported in §7/B4. It is worth recording *why* it did not become the primary
+evidence: **`--binned` is not a one-variable control.** Against the shipped `--srgb`
+demosaic render it changes the demosaic, the sampling lattice, the co-siting, the resolution
+and (in the `--srgb --binned` form) nothing else — but against the `linear` arm it also adds
+the matrix and the curve. That is why the registered contamination clause was written
+before the arm was run, and why it fired at 0.328 binned px against a 0.15 threshold.
+
+(c) is therefore bounded by two routes that need no binned arm at all:
+- the shipped demosaic arm shows the **smallest** per-channel displacement of the three
+  arms (0.0845 sensel vs 0.3368 for un-demosaiced `linear`) — Malvar-He-Cutler is
+  *reducing* the measured channel offset relative to no interpolation at all, which is the
+  opposite of what "demosaic is the fringe source" predicts;
+- §12's K6, which varies **only** the gather kernel within the demosaic path and reads
+  0.918–1.020 against a <0.50 bar for Nyquist-scale dominance.
+
+Malvar-He-Cutler's known edge fringing is real and I am not disputing the literature; the
+measurement says it is not the *dominant* term in these renders, and §4's axial result —
+measured on raw CFA planes with no demosaic in the path at all — is untouched by it either
+way.
+
+
+### 12.8 Candidate facts from the addendum
 
 - **P13.** strehl's warp gathers all four CFA planes with the same `Similarity` and the
   same `PlaneGeometry`, so `Resampler::Nearest`'s coordinate rounding is common-mode across
@@ -863,8 +942,17 @@ signature §4 relies on — but §4 already establishes that properly and does n
   0.7 Nyquist — **anisotropy 2.71–3.79 in luma, 0.39–0.71 in chroma.** A by-eye judgement of
   "colour fringing" on a `nearest` render is at risk of reading achromatic lattice structure
   and luma acutance as colour; scoring chroma against luma on the same pixels separates them.
+- **P17.** `COSITE_SHIFT = 0.25` in `image_out.rs` is **correct in sign and magnitude**,
+  verified against `resample_shift`'s gather semantics (`out[i] ≈ src[i + d]`) including the
+  `floor` behaviour on the negative branch. Red is at −0.25 binned px from the quad centre
+  and is shifted `+d`; blue at +0.25 and shifted `−d`. Audited, not assumed.
+- **P18.** The no-flag `linear` output path is **byte-frozen and therefore not co-sited**;
+  only `write_binned` (`--srgb --binned`) applies `COSITE_SHIFT`. Stated in `write_binned`'s
+  own doc comment: *"This is not the path that produces the corpus's linear TIFFs."* Any arm
+  ladder that treats the two binned-resolution outputs as differing only in colour handling
+  is wrong.
 
-### 12.7 Discipline
+### 12.9 Discipline
 
 - **D4.** When scoring a by-eye claim about *colour*, always report the **luma** statistic on
   the same pixels beside it. Chroma and luma both rose here; only the pair distinguishes
