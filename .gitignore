@@ -1,5 +1,13 @@
 # Build artifacts -- unanchored, so nested crates under experiments/ match too
 target/
+# ...but `target/` matches only that exact name, and concurrent milestones each
+# need their own CARGO_TARGET_DIR to avoid lock contention, so they invent
+# names like `target-m77/` and `.cargo-target-orch/`. Four such directories
+# were carrying 2.5 GB while matching none of the rules above. Same lesson as
+# the *.npy rule below: ignore by SHAPE, not by the locations someone
+# remembered.
+target-*/
+.cargo-target*/
 **/*.rs.bk
 *.pdb
 
