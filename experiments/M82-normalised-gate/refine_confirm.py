@@ -11,7 +11,7 @@ def main() -> None:
     confirm = json.loads((M.HERE / "confirm-results.json").read_text(encoding="utf-8"))
     ladder = json.loads((M.HERE / "ladder-results.json").read_text(encoding="utf-8"))
     entries = []
-    for stack in M.STACKS:
+    for stack in M.ORIGINAL_STACKS:
         for request in M.REQUESTS:
             key = f"{request:.2f}"
             target = confirm["stacks"][stack]["targets"][key]

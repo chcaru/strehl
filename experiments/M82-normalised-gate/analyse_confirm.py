@@ -93,7 +93,7 @@ def main() -> None:
         "binary": binary,
         "stacks": {},
     }
-    for stack in M.STACKS:
+    for stack in M.ORIGINAL_STACKS:
         path = M.HERE / f"confirm-{stack}.log"
         lines = path.read_text(encoding="utf-8-sig").splitlines()
         if (

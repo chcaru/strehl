@@ -18,6 +18,7 @@ PAD = 32
 
 REQUESTS = (0.90, 0.70, 0.50)
 PRIMARY_REQUEST = 0.70
+CONFIRM_TOLERANCE = 0.005
 LADDER_GATES = (
     0.0,
     0.25,
@@ -78,6 +79,25 @@ STACKS = {
         "sharp_detail": (32, 1800, 512, 512),
     },
     "bee-1": {
+        "directory": "bee-1-cpl",
+        "n": 299,
+        "iso": 100.0,
+        "flat": (2720, 1568, 256, 256),
+        "detail": (1952, 672, 256, 256),
+        "sharp_flat": (2592, 1440, 512, 512),
+        "sharp_detail": (1824, 544, 512, 512),
+    },
+    "bee-2": {
+        "directory": "bee-2-cpl",
+        "n": 299,
+        "iso": 400.0,
+        "flat": (2720, 1568, 256, 256),
+        "detail": (1952, 672, 256, 256),
+        "sharp_flat": (2592, 1440, 512, 512),
+        "sharp_detail": (1824, 544, 512, 512),
+    },
+    "bee-3": {
+        "directory": "bee-3-cpl",
         "n": 299,
         "iso": 100.0,
         "flat": (2720, 1568, 256, 256),
@@ -87,8 +107,17 @@ STACKS = {
     },
 }
 
+ORIGINAL_STACKS = (
+    "wrapped-text-1",
+    "wrapped-text-2",
+    "109MSDCF",
+    "coffee-bean",
+    "foam",
+    "bee-1",
+)
 FIVE = ("wrapped-text-1", "109MSDCF", "coffee-bean", "foam", "bee-1")
 SIBLINGS = ("wrapped-text-1", "wrapped-text-2")
+BEE_SIBLINGS = ("bee-1", "bee-2", "bee-3")
 
 
 def sha256(path: Path) -> str:
@@ -147,9 +176,10 @@ def constants() -> dict[str, float | int]:
 
 
 def stack_files(stack: str) -> list[Path]:
+    directory = str(STACKS[stack].get("directory", stack))
     files = sorted(
         path
-        for path in (CORPUS / stack).iterdir()
+        for path in (CORPUS / directory).iterdir()
         if path.suffix.upper() == ".ARW"
     )
     expected = int(STACKS[stack]["n"])

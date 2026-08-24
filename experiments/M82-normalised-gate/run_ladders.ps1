@@ -6,6 +6,7 @@ $Record = Get-Content -Raw (Join-Path $Here "binary.json") | ConvertFrom-Json
 $Binary = $Record.binary
 $Gates = @("0", "0.25", "0.5", "1", "2", "4", "8", "16", "24", "32", "40", "48", "64", "96", "128")
 $Stacks = @("wrapped-text-1", "wrapped-text-2", "109MSDCF", "coffee-bean", "foam", "bee-1")
+$Directories = @{ "bee-1" = "bee-1-cpl" }
 
 Push-Location $Repo
 try {
@@ -15,7 +16,8 @@ try {
         throw "private binary hash differs from binary.json"
     }
     foreach ($Stack in $Stacks) {
-        $InputDir = "D:\personal\macro\$Stack"
+        $Directory = if ($Directories.ContainsKey($Stack)) { $Directories[$Stack] } else { $Stack }
+        $InputDir = "D:\personal\macro\$Directory"
         $Invocation = "& '$Binary' stack '$InputDir' --gate $($Gates -join ' ')"
         $Started = [DateTime]::UtcNow.ToString("o")
         $Saved = $ErrorActionPreference

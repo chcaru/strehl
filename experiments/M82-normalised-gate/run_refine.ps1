@@ -13,6 +13,7 @@ $Rois = @{
     "foam" = @{ Flat = "1312,288,256,256"; Detail = "160,1952,256,256" }
     "bee-1" = @{ Flat = "2720,1568,256,256"; Detail = "1952,672,256,256" }
 }
+$Directories = @{ "bee-1" = "bee-1-cpl" }
 
 Push-Location $Repo
 try {
@@ -28,7 +29,8 @@ try {
         $Gate = ([double]$Entry.gate).ToString("0.000000000", [Globalization.CultureInfo]::InvariantCulture)
         $Flat = $Rois[$Stack].Flat
         $Detail = $Rois[$Stack].Detail
-        $InputDir = "D:\personal\macro\$Stack"
+        $Directory = if ($Directories.ContainsKey($Stack)) { $Directories[$Stack] } else { $Stack }
+        $InputDir = "D:\personal\macro\$Directory"
         $Invocation = "& '$Binary' stack '$InputDir' --gate $Gate --flat-roi $Flat --detail-roi $Detail"
         $Started = [DateTime]::UtcNow.ToString("o")
         $Saved = $ErrorActionPreference

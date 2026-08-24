@@ -2,18 +2,22 @@
 
 from __future__ import annotations
 
+import argparse
 import subprocess
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 SOURCE = HERE / "m82lib.py"
-LOG = HERE / "mutation-control.log"
 OLD = b"admitted = gap <= tolerance  # M82_CORE_ADMISSION"
 PLANTED = b"admitted = gap >= tolerance  # M82_CORE_ADMISSION"
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--log", default="mutation-control.log")
+    args = parser.parse_args()
+    log = HERE / args.log
     original = SOURCE.read_bytes()
     records = []
     try:
@@ -46,7 +50,7 @@ def main() -> None:
     finally:
         SOURCE.write_bytes(original)
         records.append(f"RESTORED={SOURCE.read_bytes() == original}")
-        LOG.write_text("\n".join(records) + "\n", encoding="utf-8")
+        log.write_text("\n".join(records) + "\n", encoding="utf-8")
     if SOURCE.read_bytes() != original:
         raise RuntimeError("analysis source was not restored byte-for-byte")
     print("mutation control: planted, read back, rejected, and restored")

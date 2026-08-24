@@ -156,9 +156,13 @@ def process_region(data: dict, gates: dict[str, float], original_roi=None) -> di
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--stack", choices=tuple(M.STACKS), required=True)
+    parser.add_argument("--confirm-results", default="confirm-results.json")
+    parser.add_argument("--output-prefix", default="sharpness")
     args = parser.parse_args()
     stack = args.stack
-    confirm = json.loads((M.HERE / "confirm-results.json").read_text(encoding="utf-8"))
+    confirm = json.loads(
+        (M.HERE / args.confirm_results).read_text(encoding="utf-8")
+    )
     gates = {
         f"{request:.2f}": confirm["stacks"][stack]["targets"][f"{request:.2f}"][
             "solved_gate"
@@ -205,7 +209,7 @@ def main() -> None:
     del detail_data
     gc.collect()
 
-    path = M.HERE / f"sharpness-{stack}.json"
+    path = M.HERE / f"{args.output_prefix}-{stack}.json"
     path.write_text(json.dumps(output, indent=2) + "\n", encoding="utf-8")
     for request in gates:
         d = detail["dsig"][request]

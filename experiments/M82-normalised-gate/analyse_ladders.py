@@ -75,7 +75,7 @@ def main() -> None:
         "binary": binary,
         "stacks": {},
     }
-    for stack in M.STACKS:
+    for stack in M.ORIGINAL_STACKS:
         path = M.HERE / f"ladder-{stack}.log"
         rows = parse_ladder(path, stack, binary)
         solves = {f"{request:.2f}": M.solve_gate(rows, request) for request in M.REQUESTS}

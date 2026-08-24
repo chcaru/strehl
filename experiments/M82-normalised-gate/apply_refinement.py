@@ -83,7 +83,7 @@ def main() -> None:
             f"achieved={achieved:.4f} error={absolute_error:.4f} "
             f"pass={target['confirmed']}"
         )
-    for stack in M.STACKS:
+    for stack in M.ORIGINAL_STACKS:
         result["stacks"][stack]["all_confirmed"] = all(
             row["confirmed"]
             for row in result["stacks"][stack]["targets"].values()

@@ -146,7 +146,7 @@ def main() -> None:
     raw_validations_all = True
     curve_controls_all = True
     primary_rows = {}
-    for stack in M.STACKS:
+    for stack in M.ORIGINAL_STACKS:
         sharp_path = M.HERE / f"sharpness-{stack}.json"
         sharp = json.loads(sharp_path.read_text(encoding="utf-8"))
         stack_out = {
@@ -238,7 +238,7 @@ def main() -> None:
             ]["singleton_percent"]
             for request in M.REQUESTS
         }
-        for stack in M.STACKS
+        for stack in M.ORIGINAL_STACKS
     }
     output["singletons"] = singleton_exposure
     output["single_frame_floor_claimed"] = False
