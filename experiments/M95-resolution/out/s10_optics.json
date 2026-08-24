@@ -1,0 +1,35 @@
+{
+ "pitch_um": 5.1081388730791115,
+ "nyquist_sensor": 97.88300835654597,
+ "nyquist_binned": 48.941504178272986,
+ "rows": [
+  {
+   "m": 0.0,
+   "n_eff": 5.6,
+   "cutoff_cy_mm": 324.6753246753247,
+   "mtf_at_binned_nyquist": 0.8088014284435753,
+   "mtf_at_sensor_nyquist": 0.6220409120927209
+  },
+  {
+   "m": 0.5,
+   "n_eff": 8.399999999999999,
+   "cutoff_cy_mm": 216.4502164502165,
+   "mtf_at_binned_nyquist": 0.7145803989010403,
+   "mtf_at_sensor_nyquist": 0.44449204665703324
+  },
+  {
+   "m": 1.0,
+   "n_eff": 11.2,
+   "cutoff_cy_mm": 162.33766233766235,
+   "mtf_at_binned_nyquist": 0.6220409120927209,
+   "mtf_at_sensor_nyquist": 0.2817468218064593
+  },
+  {
+   "m": 2.0,
+   "n_eff": 16.799999999999997,
+   "cutoff_cy_mm": 108.22510822510824,
+   "mtf_at_binned_nyquist": 0.44449204665703324,
+   "mtf_at_sensor_nyquist": 0.03494859309244991
+  }
+ ]
+}

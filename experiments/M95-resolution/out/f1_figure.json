@@ -1,0 +1,38 @@
+{
+ "registration_offset": [
+  0,
+  0
+ ],
+ "crops": [
+  {
+   "crop": 1,
+   "y": 128,
+   "x": 640,
+   "destroyed_top_octave_pct": 29.184206041761033,
+   "path": "C:\\dev\\strehl-out\\M95-resolution\\M95-resolution-C1.png"
+  },
+  {
+   "crop": 2,
+   "y": 1280,
+   "x": 384,
+   "destroyed_top_octave_pct": 21.10927196420769,
+   "path": "C:\\dev\\strehl-out\\M95-resolution\\M95-resolution-C2.png"
+  },
+  {
+   "crop": 3,
+   "y": 384,
+   "x": 2432,
+   "destroyed_top_octave_pct": 10.69160964550495,
+   "path": "C:\\dev\\strehl-out\\M95-resolution\\M95-resolution-C3.png"
+  },
+  {
+   "crop": 4,
+   "y": 768,
+   "x": 1664,
+   "destroyed_top_octave_pct": 19.342871290464764,
+   "path": "C:\\dev\\strehl-out\\M95-resolution\\M95-resolution-C4.png"
+  }
+ ],
+ "binned_mp": 8.241504,
+ "demosaic_mp": 32.966016
+}

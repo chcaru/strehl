@@ -1,0 +1,40 @@
+{
+ "rows": [
+  {
+   "fmax": 0.12,
+   "above_nyquist": false,
+   "recovered": 0.5000000000000011
+  },
+  {
+   "fmax": 0.2,
+   "above_nyquist": false,
+   "recovered": 0.5000000000000011
+  },
+  {
+   "fmax": 0.25,
+   "above_nyquist": false,
+   "recovered": 0.5000000000000011
+  },
+  {
+   "fmax": 0.3,
+   "above_nyquist": true,
+   "recovered": 0.5000000000000011
+  },
+  {
+   "fmax": 0.35,
+   "above_nyquist": true,
+   "recovered": 0.5000000000000011
+  },
+  {
+   "fmax": 0.45,
+   "above_nyquist": true,
+   "recovered": 0.5000000000000011
+  },
+  {
+   "fmax": 0.5,
+   "above_nyquist": true,
+   "recovered": 0.5000000000000011
+  }
+ ],
+ "explained": false
+}
