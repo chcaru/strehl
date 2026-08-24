@@ -1,0 +1,21 @@
+{
+  "R1": true,
+  "R2": true,
+  "R3": true,
+  "R4": true,
+  "ref_default": "3",
+  "ref_flag": "0",
+  "announced_default": "reference frame 3 (middle, default)",
+  "announced_flag": "reference frame 0 (--reference)",
+  "rc": [
+    0,
+    0,
+    1
+  ],
+  "displacement": {
+    "max_dx_ref3": 4.8652,
+    "max_dx_ref0": 6.3751,
+    "ratio": 1.3103469538765107,
+    "n": 6
+  }
+}

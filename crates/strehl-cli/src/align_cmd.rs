@@ -56,9 +56,15 @@ pub struct AlignArgs {
     #[arg(long)]
     pub out: Option<PathBuf>,
 
-    /// Frame the placements are relative to.
-    #[arg(long, default_value_t = 0)]
-    pub reference: usize,
+    /// Frame the placements are relative to. Defaults to the **middle** frame,
+    /// which is what the automatic merge-side solve uses.
+    ///
+    /// This used to default to 0, so an operator who aligned by hand got a
+    /// strictly worse registration than one who let the merge solve for
+    /// itself: referencing frame 0 makes the last frame carry the whole drift.
+    /// See [`merge_reference`] for the measured cost.
+    #[arg(long)]
+    pub reference: Option<usize>,
 
     /// Frame separations to measure edges at.
     ///
@@ -298,17 +304,23 @@ pub fn run(args: &AlignArgs) -> Result<()> {
         .file_name()
         .map(|s| s.to_string_lossy().into_owned())
         .unwrap_or_default();
-    if args.reference >= n {
-        bail!(
-            "--reference {} is out of range for {n} frames",
-            args.reference
-        );
+    let reference = args.reference.unwrap_or_else(|| merge_reference(n));
+    if reference >= n {
+        bail!("--reference {reference} is out of range for {n} frames");
     }
 
     // Identity is taken from the file listing, before anything is decoded, so
     // that a sidecar can be checked against a bracket cheaply.
     let identity = StackIdentity::from_paths(&name, &paths)?;
     println!("stack {name}: {n} frames, digest {:016x}", identity.digest);
+    println!(
+        "  reference frame {reference}{}",
+        if args.reference.is_some() {
+            " (--reference)"
+        } else {
+            " (middle, default)"
+        }
+    );
 
     let t0 = std::time::Instant::now();
     let st = decode_stack(&paths, args.threads)?;
@@ -355,7 +367,7 @@ pub fn run(args: &AlignArgs) -> Result<()> {
         .iter()
         .enumerate()
         .map(|(k, t)| match t {
-            Some(t) => FrameWarp::Placed(rebase(*t, placements[args.reference])),
+            Some(t) => FrameWarp::Placed(rebase(*t, placements[reference])),
             None => FrameWarp::Refused(format!(
                 "frame {k} is not connected to the solved component by any measured edge"
             )),
@@ -368,7 +380,7 @@ pub fn run(args: &AlignArgs) -> Result<()> {
             strategy: "S3-ba-unit".into(),
             heldout_px: heldout,
             cycle_floor_px: floor,
-            reference: args.reference,
+            reference,
             note: format!("strehl align, M86b, spans {:?}", args.spans),
         },
         st.geom,

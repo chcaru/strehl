@@ -983,3 +983,70 @@ high-contrast radial or slanted-edge chart at the working magnification, same
 lens and teleconverter) would let the optical fringe be measured and corrected
 directly, which is the remedy the left-hand row above calls for. `bee-3-cpl`
 cannot supply it — only 0.0345% of it exceeds 200 DN local contrast.
+
+---
+
+## 17. Fact 1370 fixed — `align --reference` no longer defaults to a worse answer
+
+`align_cmd.rs` came free: M110 committed its `STREHL_SMOOTH` work at `79264b6`,
+so the file I had been holding back from is clean and I took the fix rather
+than handing it back.
+
+**The trap, confirmed verbatim in the source before touching it.**
+`AlignArgs::reference` carried `#[arg(long, default_value_t = 0)]` while the
+automatic merge-side path calls `merge_reference(n) = n / 2`. The doc comment
+on `merge_reference` already explains why the middle is right — the uncovered
+border grows with distance from the reference, and on `bee-3-cpl`'s 186.7 px of
+end-to-end drift that is a ~187 px border against a ~93 px one. So an operator
+following rule 45 and invoking `align` by hand got a **strictly worse
+registration than one who did nothing**, silently.
+
+The fix is `Option<usize>` resolved against `merge_reference(n)` once the frame
+count is known, since clap cannot see `n` at parse time. The resolved value is
+now **announced**, because a dynamic default that is not printed is its own
+small trap.
+
+### 17.1 Bars, registered before the run
+
+`experiments/M95-kernel/src/k14_reference.py`, output in `out/k14_reference.{json,txt}`.
+`--out` and `STREHL_CACHE_DIR` both point into `C:\dev\strehl-out\M95-ref`, so
+the capture library and the shared cache are untouched.
+
+| bar | result | | |
+| --- | --- | --- | --- |
+| **R1** default is the middle | `reference frame 3 (middle, default)`, sidecar `reference 3` | rc 0 | **PASS** |
+| **R2** *power* — the flag still works | `reference frame 0 (--reference)`, sidecar `reference 0` | rc 0 | **PASS** |
+| **R3** range guard survives | `Error: --reference 6 is out of range for 6 frames` | rc 1 | **PASS** |
+| **R4** the change is not cosmetic | the two sidecars differ | | **PASS** |
+
+**R2 is the control that could have failed and matters most.** R1 alone is
+satisfied by a build that ignores `--reference` entirely — which would replace
+one silent trap with a worse one. R3 matters because the guard was re-plumbed
+to read the resolved value rather than the raw argument, so it was genuinely at
+risk.
+
+### 17.2 R4 passed for the wrong reason first, and I caught it
+
+R4's first diagnostic printed `0/1 frame rows differ`: my row filter looked for
+lines starting with `frame`, and sidecar placement rows start with the frame
+*index*. So R4 was passing on a whole-file comparison that the `reference N`
+metadata line alone would have satisfied. A bar that passes for a reason other
+than the one it was written for is not evidence, so the diagnostic was fixed to
+read the quantity the reference choice actually controls:
+
+> worst-case `|dx|` over placed frames: **reference 3 → 4.8652 px**,
+> **reference 0 → 6.3751 px**. The old default cost **1.3103×** the worst-case
+> displacement.
+
+That ratio is measured on a 6-frame bracket, where consecutive-frame drift is
+small and asymmetric; it **understates** the full-bracket case the
+`merge_reference` comment describes. It is quoted as what it is.
+
+`cargo test -p strehl-cli --bin strehl`: **62 passed, 0 failed.**
+
+### 17.3 Scope
+
+This changes the *default* of a flag, so a caller passing `--reference`
+explicitly is unaffected, and the merge-side automatic path never read this
+argument at all. Sidecars already written keep whatever reference they were
+written with — the field is stored and parsed, not inferred.
