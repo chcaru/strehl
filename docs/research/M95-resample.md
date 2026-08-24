@@ -317,9 +317,16 @@ reading of 0.9998 independently reproduces my nearest control.
 
 ---
 
-## 9. Verbatim patch — for M86, who owns these files
+## 9. Verbatim patch — for whoever owns `align.rs`
 
-I have **not** applied any of this. All three files are M86's.
+I have **not** applied any of this, and I did not edit any file under `crates/`.
+
+**Route this carefully: `align.rs` has uncommitted work in the tree right now that is not
+M86's.** `git diff crates/strehl-core/src/align.rs` shows 326 insertions adding an
+iterative re-seeding stage whose own doc comments cite **M103** ("on `bee-3-cpl` M103
+measured it costing between 20% and 89% of the true scale"). The brief assigned this file
+to M86. Two milestones are in it. **Arbitrate before applying, or a `pub enum` arm gets
+silently lost the way a `pub mod` line did earlier.**
 
 The patch was compiled and executed standalone with `rustc` — see
 `experiments/M95-resample/src/m95_lanczos_check.rs` — because the workspace does not
