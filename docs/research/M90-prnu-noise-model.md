@@ -63,7 +63,7 @@ no code and no intermediate with M71:
 | --- | --- | --- | --- |
 | `g` green, ISO 100 (DN/e⁻) | **0.221113 ± 0.000142** | 0.224103 | **−1.33%** |
 | `g` vs shipped 0.228938 | **−3.42%** | −2.16% | contradicts fact 1065 |
-| `κ` per-level mean | **0.3096% ± 0.0146%** | 0.3096% ± 0.0159% | **0.00%** |
+| `κ` per-level mean (n = 76) | **0.3096% ± 0.0146%** | 0.3096% ± 0.0159% | **0.00%** |
 | `κ` S²-weighted fit | 0.2911% | — | −6.0% |
 
 **κ replicates to four significant figures** against a from-scratch estimator on a
@@ -405,6 +405,13 @@ revision `206c80b5`.
 
 Both hashes are **byte-identical after the change**. `cargo test --workspace`: **289
 passed, 0 failed**; no pre-existing test broke.
+
+**Re-verified at the end of the milestone**, after four sibling milestones had committed
+into the same working tree: both blobs still hash to the values above
+(fnv1a64 `36821ece6e6fbe0c` and `f3477529886859b6`; reference stack 109MSDCF, 22 frames,
+mean `n_eff` 4.986550, σ gain 0.491569, gate 4.0), and the suite still reports 289 passed,
+0 failed. The default path is bit-identical *as shipped tonight*, not merely as of the
+moment the change was made.
 
 Three design decisions made the identity achievable:
 
