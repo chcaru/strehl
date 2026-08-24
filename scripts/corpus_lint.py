@@ -1401,8 +1401,81 @@ def check_c3_experiment_dir_attribution(root):
     return out
 
 
+def check_d1_duplicate_content(index):
+    """Two fact numbers for one measurement is worse than none, because a later
+    reader counts them as independent corroboration.
+
+    N1 catches a repeated fact *number*. It cannot see the failure that actually
+    happened: M82 reported across several turns, its final report restated a
+    finding already folded from an earlier turn, and the same measurement was
+    folded twice under two numbers (facts 1141 and 1160, discipline 585). A
+    final report is *supposed* to be self-contained, so restatement is correct
+    behaviour by the agent and a trap for whoever folds it.
+
+    The signature is shared rare numerals. A measurement's distinctive constants
+    -- `18.424`, `97.41`, `1.026` -- are effectively a fingerprint; prose is not.
+    So: extract numeric tokens that are specific enough to be evidence, keep the
+    ones that are globally rare, and flag any pair of facts sharing several.
+
+    Deliberately linked rows are exempt. This corpus amends in place rather than
+    deleting, so a refutation or a superseding row is *expected* to restate the
+    numbers it is correcting, and saying so in the text is the convention that
+    makes it legible.
+    """
+    out = []
+    # a token is evidence-grade if it carries real precision: a decimal with at
+    # least two fractional digits, or an integer of four or more digits.
+    tok_re = re.compile(r"(?<![\w.])(\d+\.\d{2,}|\d{4,})(?![\w.])")
+
+    claims = {}
+    for num, line in index.fact_rows_all:
+        row = index.syn.lines[line - 1]
+        parts = re.split(r"(?<!\\)\|", row)
+        if len(parts) < 4:
+            continue
+        toks = set(tok_re.findall(parts[2]))
+        if toks:
+            claims[num] = (line, toks, set(int(m) for m in
+                                           re.findall(r"\b(\d{1,4})\b", row)))
+
+    freq = {}
+    for _num, (_line, toks, _refs) in claims.items():
+        for t in toks:
+            freq[t] = freq.get(t, 0) + 1
+    # a token shared by many facts is a unit or a bar, not a fingerprint
+    RARE = 3
+    SHARED = 3
+    for num, (line, toks, refs) in claims.items():
+        rare = {t for t in toks if freq[t] <= RARE}
+        if len(rare) < SHARED:
+            continue
+        for other, (oline, otoks, _orefs) in claims.items():
+            if other >= num:
+                continue
+            # disclosure is pair-scoped: the later row must name the earlier
+            # fact's number. A blanket keyword is not enough, and an exempt row
+            # stays visible as a *target* -- the first version of this check
+            # dropped exempt rows from the comparison set entirely and a planted
+            # duplicate of the already-amended fact 1141 sailed straight through.
+            if other in refs:
+                continue
+            common = rare & {t for t in otoks if freq[t] <= RARE}
+            if len(common) >= SHARED:
+                out.append(Violation(
+                    SYNTHESIS, line, "D1",
+                    "fact %d shares %d rare numerals with fact %d (line %d): %s. "
+                    "If these are one measurement folded twice, mark the later row "
+                    "as a duplicate and move any new material into the earlier one "
+                    "(discipline 585). If the restatement is deliberate, name the "
+                    "earlier fact's number in the row -- that is the disclosure."
+                    % (num, len(common), other, oline,
+                       ", ".join(sorted(common)[:6])),
+                    index.syn.lines[line - 1]))
+    return out
+
+
 CHECKS = ["S1", "S2", "S3", "S4", "S5", "S6", "N1", "N2", "N4", "N5", "C1", "C2",
-          "C3", "A1", "A2", "A4"]
+          "C3", "D1", "A1", "A2", "A4"]
 ADVISORIES = ["N3", "A3", "Q1"]
 
 
@@ -1500,6 +1573,8 @@ def main(argv=None):
         violations += check_c2_report_paths(md_docs, root)
     if "C3" in wanted:
         violations += check_c3_experiment_dir_attribution(root)
+    if "D1" in wanted:
+        violations += check_d1_duplicate_content(index)
     if "A1" in wanted:
         violations += check_a1_question_status(md_docs + rs_docs, index)
     if "A2" in wanted:
