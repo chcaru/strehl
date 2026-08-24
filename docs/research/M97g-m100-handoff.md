@@ -87,6 +87,44 @@ because the incomplete fixture was carried by the control script written to
 adjudicate the freeze.** An instrument that omits a binding parameter does not
 report "unknown"; it reports a confident wrong answer that reproduces.
 
+### 2.1 The cell F record, to amended rule 47
+
+| binding | value |
+|---|---|
+| stack directory | `D:\personal\macro\bee-3-cpl` (absolute) |
+| `--limit` | `60` (frames 0..59 of 299) |
+| `--gate` | **not passed** — `DEFAULT_GATE = 4.0`, `merge.rs:297` |
+| `--srgb` / `--demosaic` / `--exposure` | none passed |
+| `STREHL_ALIGN` | **unset** (alignment ON, sidecar path) |
+| `STREHL_WARPMAP` | **unset** |
+| `STREHL_CACHE_DIR` | `C:\dev\strehl-out\M97\cache` |
+| `STREHL_FIX_HALO` / `_DELTA` | **unset** |
+| `STREHL_CAPTURES` / `STREHL_FREEZE_REQUIRE` | **unset** |
+| threads | not pinned; 32 logical processors |
+| output | **49 449 626 bytes**, 3516x2344 16-bit RGB |
+| SHA-256 | `54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2` |
+| HEAD at render | `c4d678d` (11:38:38) |
+
+Two honest caveats on the last two rows, both of which the rule should absorb.
+
+**"The commit SHA I measured at" is not well defined in a shared tree.** The
+binary is a build of the *working tree*, not of a commit, and seven other agents
+commit into this tree continuously — HEAD moved from `c4d678d` to `63d24ca`
+while I was writing this section, without my binary changing. The SHA above is
+HEAD at render time with my own crate paths verified clean; it is not a promise
+that a checkout of `c4d678d` reproduces the byte count, because a rebuild would
+pick up whatever else had landed.
+
+**Rule 47 under-enumerates the environment.** It names three variables. The
+binary reads **seven**: `STREHL_ALIGN`, `STREHL_WARPMAP`, `STREHL_FIX_HALO`,
+`STREHL_FIX_HALO_DELTA`, `STREHL_CACHE_DIR`, `STREHL_CAPTURES`,
+`STREHL_FREEZE_REQUIRE`. At least one of the four it omits moves pixels:
+`STREHL_CACHE_DIR` selects which sidecar `strehl stack` reads, and §5 measures
+two renders of an identical command line differing only in cache contents
+(`DB43E708…` against `ADF81E01…`). A record naming only the three listed
+variables is still unreproducible. The enumeration should be generated from the
+source rather than written in prose.
+
 ---
 
 ## 3. Round-trip identity — and a probe of mine that was half dead
@@ -134,7 +172,58 @@ reads `54A5E20F…7E7A2`.
 
 ---
 
-## 5. Status / Verified / Not verified / Notes
+## 5. The shared sidecar cache can be repointed silently
+
+Three separate claims reached me tonight that a stale sidecar *silently*
+contaminates a render. All three measure as **loud refusals**, and the one real
+silent path is none of them.
+
+**Refused, every time** (`src/mismatch.ps1`, 79-frame sidecar forced onto other
+brackets via `STREHL_WARPMAP`):
+
+| bracket | rc | outcome |
+|---|---:|---|
+| 79 frames | 0 | `ON (sidecar-override), reference frame 0, 79 placed / 0 refused` |
+| 20 frames | **1** | hard error, **no output file**, both digests named |
+| 40 frames | **1** | hard error, **no output file**, both digests named |
+
+`check_stack` compares a **digest of the frame paths**, not a count, so a
+different subset of the same size cannot pass. And `load_or_solve`'s count guard
+(`sidecar has N frames but the bracket has M; re-solving`) entered the tree in
+**`885e9f7` — the same commit that wired alignment in**, by `git log -S`. The
+guard and the feature shipped together, so no build in this tree can read a
+sidecar without also checking it. Truncated files are rejected too (M97b §13.2,
+8/8 rungs).
+
+**Accepted silently** (`src/poison.ps1`). Neither guard covers the *solve
+configuration*. `strehl align` without `--out` writes to exactly the cache entry
+`strehl stack` later reads (`align_cmd.rs:380`), and the cache key hashes the
+canonical **capture path**, not the frame set — so every solve of one directory
+collides on one file:
+
+| cache state | identical `stack` command line reports | SHA-256 |
+|---|---|---|
+| after `align --limit 79` | `ON (sidecar), reference frame 0` | `DB43E708…` |
+| after `align --limit 79 --reference 40` | `ON (sidecar), reference frame 40` | `ADF81E01…` |
+
+Same directory, same `--limit`, no environment override anywhere, **different
+pixels, no warning**. The plant fires, so the effect is not inert. `--resampler`
+sits in the same blind spot — the field M95 attributes 59% of the high-band loss
+to.
+
+**This also corrects my own claim of an hour earlier.** I said the hashed cache
+key made the re-solve thrash impossible. It does not: the key is the capture
+path, so `--limit 40` and the full bracket still overwrite each other. My M97f
+relocate protected the read-only corpus and did **not** stop the churn.
+
+The fix belongs in `align_cmd.rs` (not mine): fold reference and resampler into
+`StackIdentity`, or into the cache filename. Bars for whoever takes it — the
+mismatch arm must stay rc=1; the config arm must move from silent-accept to
+refused.
+
+---
+
+## 6. Status / Verified / Not verified / Notes
 
 ### Status
 **DONE.** Nothing applied from §4.1/§4.2 because both were already in; §4.3
@@ -196,6 +285,36 @@ applied and verified.
   premise that the exposure feature was unshipped, after it was applied in
   `925d03d`. Checking `git log -- <file>` before writing a brief costs one
   command.
+- **Q6 (MEASURED).** `strehl align` without `--out` repoints the shared cache
+  entry `strehl stack` reads. An **identical** `stack` command line, with no
+  environment override, renders `DB43E708…` or `ADF81E01…` depending only on
+  whether an unrelated `align --reference 40` ran first, and **prints no
+  warning**. `StackIdentity` covers the frame set, not the solve configuration.
+- **Q7 (MEASURED + DERIVED).** Three separate reports of *silent* sidecar
+  contamination — torn files, wrong-subset files, short files — all measure as
+  **loud refusals**: rc=1, no output file, both digests named. The count guard
+  entered the tree in `885e9f7`, the same commit that wired alignment in
+  (`git log -S`), so **no build here can read a sidecar without checking it**.
+  DERIVED from that: a `bee-3-cpl` render could not have merged 40 frames while
+  believing it had 299; the worst case was a wasted re-solve.
+- **Q8 (MEASURED).** Rule 47 enumerates three environment variables; the binary
+  reads **seven** (`git grep -oh "STREHL_[A-Z_]*"`). At least one omitted
+  variable, `STREHL_CACHE_DIR`, moves pixels by Q6. A prose enumeration of an
+  environment contract drifts from the source it describes; generate it.
+- **Q9 (MEASURED, method).** The reported `$LASTEXITCODE`-after-truncation trap
+  does **not** reproduce on PowerShell 5.1.26100.9168 — tested against a
+  20 000-line producer and against `strehl.exe` failing for real, with `-First`,
+  `-Last`, `Select-String` and `Out-String`. My first two probes returned a
+  uniform "no trap" **and were invalid**: every arm failed, so `$LASTEXITCODE`
+  was already `1` on entry and a stale read is indistinguishable from a correct
+  one. Only seeding the variable to a known-wrong value before each arm makes
+  the probe connected. Discipline 598 applies to exit codes.
+- **Q10 (MEASURED, method).** Re-running a *fixed* linter that now reports zero
+  violations cannot verify the fix: the reporter loop never executes, and the
+  summary's em dash is encodable in cp1252 anyway. A separate plant printing
+  `Δ → ≤ −` through both code paths is required, and does discriminate —
+  pre-fix arm prints 0 violations with a `UnicodeEncodeError`, post-fix arm
+  prints 1 and the summary, **both exiting 1**.
 
 ### Notes
 The corpus-write fix `2f11005` requested of "the agent holding `align_cmd.rs`"
