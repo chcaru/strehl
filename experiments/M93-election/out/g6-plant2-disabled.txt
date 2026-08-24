@@ -1,0 +1,58 @@
+stack           : D:\personal\macro\foam
+frames          : 60   gate 4   photonorm false
+plane           : 3516 x 2344
+iso / black     : Some(1000.0) / 512
+green var model : var(L) = 1.144689*L + 4.0243   (extracted from NoiseModel)
+operator        : w=5 p=2   6*r = [1.0, -4.0, 6.0, -4.0, 1.0]   sum r^2 = 1.9444
+  pass1 frame 0/60 (0.1s)
+  pass1 frame 25/60 (9.0s)
+  pass1 frame 50/60 (18.2s)
+
+discrepant samples: 0.481689% of 461524224 scored (|z| > 8)
+
+--- G0: faithfulness of arm 0 to the shipped election ---
+G0 election     : 8241504/8241504 pixels (100.000000%) match FocusStats::best_index exactly
+
+--- G1/G4b: what each arm changes, and what it costs (MEASURED) ---
+arm 0 ungated     changed  0.000000%  fallback  0.000000%  speckle 2.25887e-4 (  +0.00%)  mean response 9.51904 (+0.000000%)
+arm H hard gate   changed  0.000000%  fallback  0.000000%  speckle 2.25887e-4 (  +0.00%)  mean response 9.51904 (+0.000000%)
+arm S soft demote changed  0.000000%  fallback  0.000000%  speckle 2.25887e-4 (  +0.00%)  mean response 9.51904 (+0.000000%)
+arm G5 shuffled-z changed  5.706228%  fallback  0.000000%  speckle 1.37525e-3 (+508.82%)  mean response 9.47526 (-0.459912%)
+
+--- G2: election-change rate by absolute detail-SNR bin ---
+SNR bin >=              0.0        0.5        1.0        2.0        4.0        8.0       16.0       32.0       64.0      128.0
+n                    0.00e0     0.00e0     2.54e5     2.14e6     2.69e6     1.84e6     8.87e5     3.97e5     4.27e4     0.00e0
+H hard gate               -          -     0.00e0     0.00e0     0.00e0     0.00e0     0.00e0     0.00e0     0.00e0          -
+S soft demote             -          -     0.00e0     0.00e0     0.00e0     0.00e0     0.00e0     0.00e0     0.00e0          -
+G5 shuffled-z             -          -    4.48e-2    5.29e-2    5.79e-2    6.03e-2    6.05e-2    5.88e-2    5.87e-2          -
+
+tolerance       : 0.086063   (Gate::new(4).tolerance())
+  pass2 frame 0/60 (0.2s)
+  pass2 frame 25/60 (5.2s)
+  pass2 frame 50/60 (11.1s)
+
+--- G4a: hot winners (elected frame's own |z| > 8) ---
+arm 0 ungated         391971 pixels (4.756062%)   +0.000% vs arm 0
+arm H hard gate       391971 pixels (4.756062%)   +0.000% vs arm 0
+arm S soft demote     391971 pixels (4.756062%)   +0.000% vs arm 0
+arm G5 shuffled-z     385980 pixels (4.683368%)   -1.528% vs arm 0
+
+--- G4c: split-half disagreement H, in sigmas (MEASURED) ---
+Pure noise gives E[H] = sqrt(2/pi) = 0.7979.
+`adm` is the mean number of frames admitted to the average per pixel. It is
+reported because the gate lowers the tolerance band centre, which admits more
+frames, which lowers H by smoothing alone. `dH/dadm` normalises the benefit by
+that increase; compare each arm against the G5 shuffled-z placebo, which raises
+`adm` the same way with no spatial contamination information.
+arm 0 ungated     H 4.82822 ( +0.000%)  med 2.11947  p99 43.4355  p999 85.0957  adm   2.23 (+0.000%)  dH/dadm     NaN  H|changed 0.0000 ( 0.00% px)
+arm H hard gate   H 4.82822 ( +0.000%)  med 2.11947  p99 43.4355  p999 85.0957  adm   2.23 (+0.000%)  dH/dadm     NaN  H|changed 0.0000 ( 0.00% px)
+        invariant: H is bit-identical to arm 0 at all 8241504 pixels whose
+        half-election band centres are unchanged -- 0 violations (PASS)
+arm S soft demote H 4.82822 ( +0.000%)  med 2.11947  p99 43.4355  p999 85.0957  adm   2.23 (+0.000%)  dH/dadm     NaN  H|changed 0.0000 ( 0.00% px)
+        invariant: H is bit-identical to arm 0 at all 8241504 pixels whose
+        half-election band centres are unchanged -- 0 violations (PASS)
+arm G5 shuffled-z H 4.72149 ( -2.211%)  med 2.08472  p99 42.3648  p999 83.7384  adm   2.37 (+6.529%)  dH/dadm  -0.339  H|changed 3.6454 ( 7.98% px)
+        invariant: H is bit-identical to arm 0 at all 7583689 pixels whose
+        half-election band centres are unchanged -- 0 violations (PASS)
+
+JSON {"stack":"foam","n":60,"iso":Some(1000.0),"g0":1.00000000,"changed":[0.0, 0.0, 0.0, 0.05706227892384691],"speckle":[0.0002258867421615235, 0.0002258867421615235, 0.0002258867421615235, 0.001375248062283014],"hotwin":[391971, 391971, 391971, 385980],"fallbacks":[0, 0, 0, 0],"hmean":[4.8282161922886795, 4.8282161922886795, 4.8282161922886795, 4.7214865856274315],"adm":[2.228615917677162, 2.228615917677162, 2.228615917677162, 2.374126858398661],"resp":[9.519042296457405, 9.519042296457405, 9.519042296457405, 9.475263043949163]}

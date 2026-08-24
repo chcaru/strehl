@@ -74,7 +74,7 @@ const SUBS: usize = 2;
 fn loo_residual_kernel(w: usize, p: usize) -> Vec<f64> {
     assert!(w >= 3 && w % 2 == 1, "window must be odd and at least 3");
     let h = (w - 1) / 2;
-    assert!(p + 1 <= w - 1, "order {p} needs {} neighbours", p + 1);
+    assert!(p < w - 1, "order {p} needs {} neighbours", p + 1);
     let xs: Vec<f64> = (0..w)
         .filter(|&j| j != h)
         .map(|j| j as f64 - h as f64)
@@ -102,12 +102,13 @@ fn loo_residual_kernel(w: usize, p: usize) -> Vec<f64> {
         for v in a[col].iter_mut() {
             *v /= d;
         }
-        for row in 0..m {
+        let pivot = a[col].clone();
+        for (row, arow) in a.iter_mut().enumerate() {
             if row != col {
-                let f = a[row][col];
+                let f = arow[col];
                 if f != 0.0 {
-                    for k in col..=m {
-                        a[row][k] -= f * a[col][k];
+                    for (t, p) in arow.iter_mut().zip(&pivot).skip(col) {
+                        *t -= f * p;
                     }
                 }
             }
@@ -174,17 +175,36 @@ impl AffineVar {
     }
 }
 
+/// `z` for pixel `i` from the ring, with an optional per-slot photometric gain.
+///
+/// `ring` holds luma **already multiplied** by the per-slot gain `cs`. Fact 608
+/// binds here: the noise model must see unscaled DN, so the variance carries the
+/// scale rather than the level being un-scaled before the lookup. For
+/// `L' = c * L`, `var(L') = c^2 (a*L + b) = a*c*L' + b*c^2`, which is what the
+/// denominator below evaluates. With every `c = 1` this reduces exactly to
+/// `a * sum(r^2 * L) + b * sum(r^2)`.
 #[inline]
-fn z_at(ring: &[Vec<f32>], slots: &[usize], op: &Op, av: &AffineVar, i: usize) -> f32 {
+fn z_at(
+    ring: &[Vec<f32>],
+    slots: &[usize],
+    cs: &[f32],
+    op: &Op,
+    av: &AffineVar,
+    i: usize,
+) -> f32 {
     let mut num = 0.0f32;
     let mut vs = 0.0f32;
     for (j, &s) in slots.iter().enumerate() {
         let l = ring[s][i];
+        let c = cs[j];
         num += op.r[j] * l;
-        vs += op.r2[j] * l;
+        vs += op.r2[j] * (av.a * c * l + av.b * c * c);
     }
-    num / (av.a * vs + av.b * op.r2_sum).sqrt()
+    num / vs.sqrt()
 }
+
+/// The all-ones gain vector: the un-normalised path.
+const UNIT_C: [f32; W] = [1.0; W];
 
 /// Slot list for the window centred on frame `c` in a ring of depth `W`.
 fn slots_for(c: usize) -> Vec<usize> {
@@ -284,8 +304,8 @@ fn box_mean(src: &[f32], geom: PlaneGeometry, rad: usize, scratch: &mut [f32], d
     for y in 0..h {
         let row = &src[y * w..(y + 1) * w];
         let mut acc = row[0] * rad as f32;
-        for x in 0..=rad.min(w - 1) {
-            acc += row[x];
+        for v in row.iter().take(rad.min(w - 1) + 1) {
+            acc += *v;
         }
         for x in 0..w {
             scratch[y * w + x] = acc * inv;
@@ -446,7 +466,7 @@ fn percentile(sorted: &[f32], q: f64) -> f32 {
 // ---------------------------------------------------------------------------
 
 #[allow(clippy::too_many_lines, clippy::needless_range_loop)]
-fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
+fn gate_run(dir: &Path, limit: Option<usize>, gate: f32, photonorm: bool) -> Result<()> {
     let ld = Loader::open(dir, limit)?;
     let geom = ld.geom;
     let px = geom.pixels();
@@ -455,7 +475,7 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
     let n = ld.n();
 
     println!("stack           : {}", dir.display());
-    println!("frames          : {n}   gate {gate}");
+    println!("frames          : {n}   gate {gate}   photonorm {photonorm}");
     println!("plane           : {} x {}", geom.width, geom.height);
     println!("iso / black     : {:?} / {}", ld.iso, ld.black as i32);
     println!(
@@ -481,6 +501,8 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
     let mut boxsc = vec![0.0f32; px];
     let mut reg = vec![0.0f32; px];
     let mut lring: Vec<Vec<f32>> = (0..W).map(|_| vec![0.0f32; px]).collect();
+    let mut cring: Vec<f32> = vec![1.0; n];
+    let mut ref_level: Option<f64> = None;
     let mut rring: Vec<Vec<f32>> = (0..W).map(|_| vec![0.0f32; px]).collect();
     let mut p = ld.blank();
 
@@ -509,7 +531,25 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
         field.compute(&p.luma, &ld.noise);
         regularise(field.values(), geom, &mut boxsc, &mut reg);
         ref_stats.fold(f as u16, &reg)?;
-        lring[f % W].copy_from_slice(&p.luma);
+        // Per-frame gain, fitted to the first frame's mean level. This is a
+        // deliberately crude stand-in for M91's per-frame photometric fit; it
+        // exists only to measure how much of the gate's firing is explained by
+        // level drift, not to compete with M91.
+        let cf = if photonorm {
+            let s: f64 = p.luma.iter().map(|&v| f64::from(v)) .sum::<f64>() / px as f64;
+            let r0 = *ref_level.get_or_insert(s);
+            if s.abs() < 1e-9 { 1.0 } else { (r0 / s) as f32 }
+        } else {
+            1.0
+        };
+        cring[f] = cf;
+        if photonorm {
+            for (dst, &v) in lring[f % W].iter_mut().zip(p.luma.iter()) {
+                *dst = cf * v;
+            }
+        } else {
+            lring[f % W].copy_from_slice(&p.luma);
+        }
         rring[f % W].copy_from_slice(&reg);
 
         // The leading H frames have no centred window. They enter every arm
@@ -531,8 +571,9 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
         if f >= W - 1 {
             let c = f - H;
             let slots = slots_for(c);
+            let cs: Vec<f32> = (0..W).map(|j| cring[c + j - H]).collect();
             for i in 0..px {
-                let z = z_at(&lring, &slots, &op, &av, i);
+                let z = z_at(&lring, &slots, &cs, &op, &av, i);
                 zbuf[i] = z;
                 if z.abs() > HOT_Z {
                     hot_samples += 1;
@@ -597,7 +638,7 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
     println!("\n--- G1/G4b: what each arm changes, and what it costs (MEASURED) ---");
     let spk0 = speckle(&wins[0], geom);
     let ung: f64 = wresp[0].iter().map(|&v| v as f64).sum();
-    let mut changed = vec![0u64; ARMS];
+    let mut changed = [0u64; ARMS];
     let mut spk = vec![0.0f64; ARMS];
     for a in 0..ARMS {
         changed[a] = wins[a]
@@ -673,7 +714,14 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
         ld.load(f, &mut p)?;
         field.compute(&p.luma, &ld.noise);
         regularise(field.values(), geom, &mut boxsc, &mut reg);
-        lring[f % W].copy_from_slice(&p.luma);
+        if photonorm {
+            let cf = cring[f];
+            for (dst, &v) in lring[f % W].iter_mut().zip(p.luma.iter()) {
+                *dst = cf * v;
+            }
+        } else {
+            lring[f % W].copy_from_slice(&p.luma);
+        }
         let s = f % SUBS;
         for a in 0..ARMS {
             let k = s * ARMS + a;
@@ -687,8 +735,9 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
         if f >= W - 1 {
             let c = f - H;
             let slots = slots_for(c);
+            let cs: Vec<f32> = (0..W).map(|j| cring[c + j - H]).collect();
             for i in 0..px {
-                zbuf[i] = z_at(&lring, &slots, &op, &av, i);
+                zbuf[i] = z_at(&lring, &slots, &cs, &op, &av, i);
             }
             for a in 0..ARMS {
                 for i in 0..px {
@@ -721,11 +770,25 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
 
     println!("\n--- G4c: split-half disagreement H, in sigmas (MEASURED) ---");
     println!("Pure noise gives E[H] = sqrt(2/pi) = 0.7979.");
+    println!(
+        "`adm` is the mean number of frames admitted to the average per pixel. It is\n\
+         reported because the gate lowers the tolerance band centre, which admits more\n\
+         frames, which lowers H by smoothing alone. `dH/dadm` normalises the benefit by\n\
+         that increase; compare each arm against the G5 shuffled-z placebo, which raises\n\
+         `adm` the same way with no spatial contamination information."
+    );
     let mut h0mean = 1.0f64;
     let mut hmeans = vec![0.0f64; ARMS];
+    let mut admeans = vec![0.0f64; ARMS];
+    let mut h0px: Vec<f32> = vec![f32::NAN; px];
     for a in 0..ARMS {
         let mut hs: Vec<f32> = Vec::with_capacity(px);
         let mut sum = 0.0f64;
+        let mut adm = 0.0f64;
+        let mut diff_sum = 0.0f64;
+        let mut diff_n = 0u64;
+        let mut same_n = 0u64;
+        let mut violations = 0u64;
         for i in 0..px {
             let (e, o) = (&acc[a], &acc[ARMS + a]);
             if e.n[i] == 0 || o.n[i] == 0 {
@@ -738,7 +801,21 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
                 .green_luma_sigma(((ev + ov) * 0.5 - ld.black).max(0.0))
                 .max(1e-6);
             let h = (ev - ov).abs() / sig;
-            sum += h as f64;
+            sum += f64::from(h);
+            adm += f64::from(e.n[i] + o.n[i]);
+            if a == 0 {
+                h0px[i] = h;
+            } else if hresp[a][i] == hresp[0][i] && hresp[ARMS + a][i] == hresp[ARMS][i] {
+                // Both half-election band centres are identical to arm 0's, so
+                // the admitted sets are identical and H must be bit-identical.
+                same_n += 1;
+                if h.to_bits() != h0px[i].to_bits() {
+                    violations += 1;
+                }
+            } else {
+                diff_sum += f64::from(h);
+                diff_n += 1;
+            }
             hs.push(h);
         }
         hs.sort_by(|x, y| x.partial_cmp(y).unwrap_or(std::cmp::Ordering::Equal));
@@ -747,20 +824,37 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
             h0mean = mean;
         }
         hmeans[a] = mean;
+        admeans[a] = adm / hs.len() as f64;
+        let dh = 100.0 * (mean / h0mean - 1.0);
+        let dadm = 100.0 * (admeans[a] / admeans[0] - 1.0);
         println!(
-            "arm {} H mean {:.5}  median {:.5}  p99 {:.4}  p999 {:.4}   {:+.4}% on mean",
+            "arm {} H {:.5} ({:+7.3}%)  med {:.5}  p99 {:>7.4}  p999 {:>7.4}  \
+             adm {:>6.2} ({:+6.3}%)  dH/dadm {:>7.3}  H|changed {:.4} ({:>5.2}% px)",
             ARM_NAMES[a],
             mean,
+            dh,
             percentile(&hs, 0.5),
             percentile(&hs, 0.99),
             percentile(&hs, 0.999),
-            100.0 * (mean / h0mean - 1.0)
+            admeans[a],
+            dadm,
+            if dadm.abs() < 1e-6 { f64::NAN } else { dh / dadm },
+            diff_sum / diff_n.max(1) as f64,
+            100.0 * diff_n as f64 / hs.len() as f64
         );
+        if a > 0 {
+            println!(
+                "        invariant: H is bit-identical to arm 0 at all {same_n} pixels whose\n\
+                 \x20       half-election band centres are unchanged -- {violations} violations ({})",
+                if violations == 0 { "PASS" } else { "FAIL - instrument bug" }
+            );
+            assert_eq!(violations, 0, "H invariant violated on arm {a}");
+        }
     }
 
     println!(
         "\nJSON {{\"stack\":\"{}\",\"n\":{n},\"iso\":{:?},\"g0\":{:.8},\"changed\":{:?},\
-         \"speckle\":{:?},\"hotwin\":{:?},\"fallbacks\":{:?},\"hmean\":{:?},\"resp\":{:?}}}",
+         \"speckle\":{:?},\"hotwin\":{:?},\"fallbacks\":{:?},\"hmean\":{:?},\"adm\":{:?},\"resp\":{:?}}}",
         dir.file_name().unwrap_or_default().to_string_lossy(),
         ld.iso,
         matched as f64 / px as f64,
@@ -771,6 +865,7 @@ fn gate_run(dir: &Path, limit: Option<usize>, gate: f32) -> Result<()> {
         hotwin,
         (0..ARMS).map(|a| whole[a].fallbacks()).collect::<Vec<_>>(),
         hmeans,
+        admeans,
         (0..ARMS)
             .map(|a| wresp[a].iter().map(|&v| v as f64).sum::<f64>() / px as f64)
             .collect::<Vec<_>>()
@@ -981,7 +1076,7 @@ fn synth_run(dir: &Path, nframes: usize, crop: usize) -> Result<()> {
                 let slots: Vec<usize> = (0..W).map(|j| c + j - H).collect();
                 let mut zb = vec![0.0f32; px];
                 for i in 0..px {
-                    let z = z_at(&blurred, &slots, &op, &av, i);
+                    let z = z_at(&blurred, &slots, &UNIT_C, &op, &av, i);
                     zb[i] = z;
                     z2sum += f64::from(z * z);
                     z2n += 1;
@@ -1089,6 +1184,7 @@ fn main() -> Result<()> {
     let mut gate = DEFAULT_GATE;
     let mut nframes = 41usize;
     let mut crop = 1024usize;
+    let mut photonorm = false;
     let mut i = 1usize;
     if i < args.len() && !args[i].starts_with("--") {
         dir = PathBuf::from(&args[i]);
@@ -1105,12 +1201,13 @@ fn main() -> Result<()> {
             "--gate" => gate = val()?.parse()?,
             "--frames" => nframes = val()?.parse()?,
             "--crop" => crop = val()?.parse()?,
+            "--photonorm" => photonorm = true,
             other => bail!("unknown flag {other}"),
         }
         i += 1;
     }
     match mode.as_str() {
-        "gate" => gate_run(&dir, limit, gate),
+        "gate" => gate_run(&dir, limit, gate, photonorm),
         "synth" => synth_run(&dir, nframes, crop),
         _ => {
             eprintln!("unknown mode {mode}");

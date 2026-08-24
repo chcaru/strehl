@@ -1,0 +1,62 @@
+Reference detail distribution = flowers-cpl (the measured-cleanest stack).
+
+stack               n     iso  |z|>8 %  raw fire %  norm fire %  x placebo     dH %
+-----------------------------------------------------------------------------------
+flowers-cpl       176   100.0   0.0003      0.1823       0.1824        1.0    -1.06
+lead-1-cpl        123   100.0   0.7509     24.2807      13.2407       72.6   -25.25
+foam              100  1000.0   0.2852     12.2608       0.8227        4.5   -24.46
+coffee-bean       105    50.0   0.3632     20.1539       6.8814       37.7   -30.91
+coffee-bean+pn    105    50.0   0.2838     16.9779       0.6434        3.5   -30.36
+
+flowers-cpl      invariant: 0 violations (PASS) 0 violations (PASS) 0 violations (PASS)
+lead-1-cpl       invariant: 0 violations (PASS) 0 violations (PASS) 0 violations (PASS)
+foam             invariant: 0 violations (PASS) 0 violations (PASS) 0 violations (PASS)
+coffee-bean      invariant: 0 violations (PASS) 0 violations (PASS) 0 violations (PASS)
+coffee-bean+pn   invariant: 0 violations (PASS) 0 violations (PASS) 0 violations (PASS)
+
+Per-arm summary, all stacks (MEASURED):
+stack           arm   changed %   resp %  speckle %    hot %  dHmean %   dp99 %  dp999 %   dadm %
+-------------------------------------------------------------------------------------------------
+flowers-cpl     0        0.0000    0.000       0.00   0.0162      0.00     0.00     0.00    0.000
+flowers-cpl     H        0.0803   -0.019       0.17   0.0000     -0.68    -2.46    -3.84    0.003
+flowers-cpl     S        0.1823   -0.038       0.72   0.0000     -1.06    -3.87    -3.91    0.007
+flowers-cpl     G5       0.0142   -0.001       1.16   0.0162     -0.00    -0.01     0.00    0.001
+lead-1-cpl      0        0.0000    0.000       0.00   8.0793      0.00     0.00     0.00    0.000
+lead-1-cpl      H       18.0798   -2.885     201.10   0.0000    -21.50   -36.50   -33.69    4.350
+lead-1-cpl      S       24.2807   -3.831     326.29   0.0000    -25.25   -39.18   -36.05    5.901
+lead-1-cpl      G5       5.9303   -0.728     357.60   7.5421     -2.34    -2.27    -1.39    1.345
+foam            0        0.0000    0.000       0.00   4.7822      0.00     0.00     0.00    0.000
+foam            H        9.1155   -1.403     274.58   0.0000    -22.03   -37.99   -34.65   11.497
+foam            S       12.2608   -1.808     429.15   0.0000    -24.46   -38.67   -34.76   14.708
+foam            G5       5.6989   -0.459     485.17   4.7096     -2.20    -2.46    -1.58    6.513
+coffee-bean     0        0.0000    0.000       0.00   6.6138      0.00     0.00     0.00    0.000
+coffee-bean     H       14.2792   -3.278     183.48   0.0000    -27.75   -39.29   -34.46    1.174
+coffee-bean     S       20.1539   -4.112     318.34   0.0000    -30.91   -39.77   -33.04    1.511
+coffee-bean     G5       6.0874   -0.674     374.09   6.2699     -4.01    -3.99    -3.06    0.343
+coffee-bean+pn  0        0.0000    0.000       0.00   6.3131      0.00     0.00     0.00    0.000
+coffee-bean+pn  H       12.7042   -3.194       8.03   0.0000    -27.20   -39.05   -34.86    1.077
+coffee-bean+pn  S       16.9779   -4.009      14.70   0.0000    -30.36   -39.66   -33.44    1.338
+coffee-bean+pn  G5       1.7966   -0.223     123.79   6.2443     -1.03    -0.89    -0.66    0.112
+
+Benefit normalised by the admitted-frame increase it buys. The gate lowers the
+tolerance band centre, which admits more frames, which lowers H by smoothing
+alone. G5 (shuffled z) raises `adm` the same way with no spatial contamination
+information, so it bounds how much of the benefit that artefact can explain.
+stack             S dH/dadm  G5 dH/dadm   ratio  S dH/dchg  G5 dH/dchg   ratio
+------------------------------------------------------------------------------
+flowers-cpl        -152.000      -2.000   76.00     -5.837      -0.140   41.56
+lead-1-cpl           -4.279      -1.738    2.46     -1.040      -0.394    2.64
+foam                 -1.663      -0.338    4.92     -1.995      -0.386    5.16
+coffee-bean         -20.455     -11.682    1.75     -1.534      -0.658    2.33
+coffee-bean+pn      -22.687      -9.170    2.47     -1.788      -0.572    3.13
+
+Speckle generated per point of election changed (lower = more spatially
+coherent). The G5 column is the placebo: a z field with the same marginal
+distribution but no spatial correspondence to the image.
+stack                arm S    arm G5  ratio G5/S
+------------------------------------------------
+flowers-cpl           3.95     81.45       20.62
+lead-1-cpl           13.44     60.30        4.49
+foam                 35.00     85.13        2.43
+coffee-bean          15.80     61.45        3.89
+coffee-bean+pn        0.87     68.90       79.58

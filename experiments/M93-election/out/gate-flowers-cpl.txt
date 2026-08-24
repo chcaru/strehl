@@ -1,0 +1,68 @@
+stack           : D:\personal\macro\flowers-cpl
+frames          : 176   gate 4   photonorm false
+plane           : 3520 x 2344
+iso / black     : Some(100.0) / 512
+green var model : var(L) = 0.114469*L + 0.4623   (extracted from NoiseModel)
+operator        : w=5 p=2   6*r = [1.0, -4.0, 6.0, -4.0, 1.0]   sum r^2 = 1.9444
+  pass1 frame 0/176 (0.2s)
+  pass1 frame 25/176 (10.9s)
+  pass1 frame 50/176 (22.3s)
+  pass1 frame 75/176 (33.2s)
+  pass1 frame 100/176 (43.5s)
+  pass1 frame 125/176 (54.0s)
+  pass1 frame 150/176 (64.1s)
+  pass1 frame 175/176 (74.8s)
+
+discrepant samples: 0.000317% of 1419151360 scored (|z| > 8)
+
+--- G0: faithfulness of arm 0 to the shipped election ---
+G0 election     : 8250880/8250880 pixels (100.000000%) match FocusStats::best_index exactly
+
+--- G1/G4b: what each arm changes, and what it costs (MEASURED) ---
+arm 0 ungated     changed  0.000000%  fallback  0.000000%  speckle 2.68159e-3 (  +0.00%)  mean response 1.19328 (+0.000000%)
+arm H hard gate   changed  0.080258%  fallback  0.000000%  speckle 2.68608e-3 (  +0.17%)  mean response 1.19305 (-0.019303%)
+arm S soft demote changed  0.182296%  fallback  0.000000%  speckle 2.70076e-3 (  +0.72%)  mean response 1.19283 (-0.038335%)
+arm G5 shuffled-z changed  0.014241%  fallback  0.000000%  speckle 2.71278e-3 (  +1.16%)  mean response 1.19328 (-0.000544%)
+
+--- G2: election-change rate by absolute detail-SNR bin ---
+SNR bin >=              0.0        0.5        1.0        2.0        4.0        8.0       16.0       32.0       64.0      128.0
+n                    0.00e0     1.08e3     6.82e6     1.13e6     2.68e5     3.37e4     1.27e3     0.00e0     0.00e0     0.00e0
+H hard gate               -     0.00e0    1.13e-5    1.11e-3    1.17e-2    6.23e-2    5.03e-2          -          -          -
+S soft demote             -     0.00e0    8.79e-5    3.42e-3    2.59e-2    1.05e-1    8.56e-2          -          -          -
+G5 shuffled-z             -     0.00e0    1.23e-4    2.07e-4    3.39e-4    3.85e-4     0.00e0          -          -          -
+
+tolerance       : 0.086063   (Gate::new(4).tolerance())
+  pass2 frame 0/176 (0.2s)
+  pass2 frame 25/176 (6.9s)
+  pass2 frame 50/176 (13.8s)
+  pass2 frame 75/176 (20.6s)
+  pass2 frame 100/176 (27.4s)
+  pass2 frame 125/176 (33.9s)
+  pass2 frame 150/176 (40.6s)
+  pass2 frame 175/176 (47.3s)
+
+--- G4a: hot winners (elected frame's own |z| > 8) ---
+arm 0 ungated           1338 pixels (0.016216%)   +0.000% vs arm 0
+arm H hard gate            0 pixels (0.000000%)   -100.000% vs arm 0
+arm S soft demote          0 pixels (0.000000%)   -100.000% vs arm 0
+arm G5 shuffled-z       1337 pixels (0.016204%)   -0.075% vs arm 0
+
+--- G4c: split-half disagreement H, in sigmas (MEASURED) ---
+Pure noise gives E[H] = sqrt(2/pi) = 0.7979.
+`adm` is the mean number of frames admitted to the average per pixel. It is
+reported because the gate lowers the tolerance band centre, which admits more
+frames, which lowers H by smoothing alone. `dH/dadm` normalises the benefit by
+that increase; compare each arm against the G5 shuffled-z placebo, which raises
+`adm` the same way with no spatial contamination information.
+arm 0 ungated     H 1.24057 ( +0.000%)  med 0.68654  p99  9.0098  p999 21.8467  adm  46.07 (+0.000%)  dH/dadm     NaN  H|changed 0.0000 ( 0.00% px)
+arm H hard gate   H 1.23211 ( -0.682%)  med 0.68634  p99  8.7878  p999 21.0084  adm  46.08 (+0.003%)  dH/dadm -198.839  H|changed 4.5231 ( 0.12% px)
+        invariant: H is bit-identical to arm 0 at all 8240904 pixels whose
+        half-election band centres are unchanged -- 0 violations (PASS)
+arm S soft demote H 1.22738 ( -1.064%)  med 0.68608  p99  8.6612  p999 20.9916  adm  46.08 (+0.007%)  dH/dadm -145.753  H|changed 3.7997 ( 0.26% px)
+        invariant: H is bit-identical to arm 0 at all 8229798 pixels whose
+        half-election band centres are unchanged -- 0 violations (PASS)
+arm G5 shuffled-z H 1.24054 ( -0.002%)  med 0.68652  p99  9.0093  p999 21.8467  adm  46.08 (+0.001%)  dH/dadm  -1.765  H|changed 1.2091 ( 0.03% px)
+        invariant: H is bit-identical to arm 0 at all 8248729 pixels whose
+        half-election band centres are unchanged -- 0 violations (PASS)
+
+JSON {"stack":"flowers-cpl","n":176,"iso":Some(100.0),"g0":1.00000000,"changed":[0.0, 0.0008025810580204778, 0.001822957066397766, 0.00014240905212534907],"speckle":[0.0026815853468486334, 0.0026860760980857747, 0.0027007620683477773, 0.0027127778621985066],"hotwin":[1338, 0, 0, 1337],"fallbacks":[0, 0, 0, 0],"hmean":[1.2405688935161618, 1.2321082210427514, 1.227375120853824, 1.2405405992304925],"adm":[46.07453944306547, 46.07611975934688, 46.07790138748837, 46.07513489470214],"resp":[1.1932847028165614, 1.193054368951379, 1.1928272614711384, 1.1932782084951923]}
