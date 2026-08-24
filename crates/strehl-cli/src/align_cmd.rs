@@ -1249,6 +1249,10 @@ pub fn warp_frame_in_place(
     let black_dn = black.round().clamp(0.0, u16::MAX as f32) as u16;
     let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
     let mut covered_total = 0usize;
+    // Lateral-CA profile, if the operator named one. `None` => `compose` returns
+    // `t` untouched => this loop is bit-for-bit what it was before the switch
+    // existed. Resolved once per frame, outside the plane loop.
+    let ca = strehl_core::optics::active_profile()?;
 
     for dy in 0..2usize {
         for dx in 0..2usize {
@@ -1261,9 +1265,18 @@ pub fn warp_frame_in_place(
             }
             let src = PlaneRef::from_geometry(&scratch.src, geom)
                 .context("warp source plane does not match the bracket geometry")?;
+            // Each deinterleaved plane is a SINGLE CFA site, so the channel is
+            // known from (dx,dy) and there is no per-pixel branching: one
+            // composed Similarity per plane, doing alignment and CA correction
+            // in the same gather. With `ca == None` this is exactly `t`.
+            let t_site = strehl_core::optics::OpticalProfile::compose(
+                ca,
+                strehl_core::optics::cfa_site_channel(dx, dy),
+                t,
+            );
             covered_total += strehl_core::warpmap::gather_checked(
                 src,
-                t,
+                t_site,
                 geom,
                 resampler,
                 &mut scratch.dst,

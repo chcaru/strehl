@@ -376,6 +376,15 @@ pub const A7C2_FE100GM_2XTC_X4CPL_RADIAL: OpticalProfile = OpticalProfile {
     ..A7C2_FE100GM_2XTC_X4CPL
 };
 
+/// The environment variable that selects a lateral-CA profile.
+///
+/// Named here so the string lives in exactly one place: a switch whose name is
+/// spelled independently in the code and in a harness's argv is a switch that
+/// will eventually be set and not read, which is the failure this whole module
+/// was already guilty of once (fact 1449 — 287 passing tests and zero
+/// consumers).
+pub const CA_ENV: &str = "STREHL_FIX_CA";
+
 /// Why a CA profile was refused. Refusing loudly is the point: silently applying
 /// the wrong optical profile is worse than applying none.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -402,6 +411,8 @@ impl core::fmt::Display for CaConfigError {
         }
     }
 }
+
+impl std::error::Error for CaConfigError {}
 
 /// Resolve the lateral-CA profile from the `STREHL_FIX_CA` setting.
 ///
@@ -432,7 +443,9 @@ impl core::fmt::Display for CaConfigError {
 ///
 /// Takes the value as an argument rather than reading the environment, so it is
 /// testable without mutating global process state from parallel test threads.
-pub fn profile_from_setting(value: Option<&str>) -> Result<Option<&'static OpticalProfile>, CaConfigError> {
+pub fn profile_from_setting(
+    value: Option<&str>,
+) -> Result<Option<&'static OpticalProfile>, CaConfigError> {
     let raw = match value {
         None => return Ok(None),
         Some(v) => v.trim(),
@@ -445,6 +458,22 @@ pub fn profile_from_setting(value: Option<&str>) -> Result<Option<&'static Optic
         return Ok(Some(&A7C2_FE100GM_2XTC_X4CPL_RADIAL));
     }
     Err(CaConfigError::UnknownProfile { key: raw.to_string() })
+}
+
+/// [`profile_from_setting`] applied to [`CA_ENV`] in the process environment.
+///
+/// This is the entry point the render path calls. It is deliberately a plain
+/// function rather than a cached `OnceLock`: the cost is one `getenv` and one
+/// string compare per frame, which is nothing next to a four-plane gather, and
+/// a cache here would make the switch un-testable within a process and would
+/// silently ignore an environment change between stacks.
+///
+/// An unreadable/typo'd value is an `Err`, not a `None`. A typo that silently
+/// disables the correction is indistinguishable from the correction not
+/// working, which is the exact failure mode this whole milestone is trying to
+/// escape.
+pub fn active_profile() -> Result<Option<&'static OpticalProfile>, CaConfigError> {
+    profile_from_setting(std::env::var(CA_ENV).ok().as_deref())
 }
 
 #[cfg(test)]

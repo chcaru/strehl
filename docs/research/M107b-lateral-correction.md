@@ -1158,3 +1158,219 @@ additions worth making explicit:
   domain in the shipped record and lock it with a test** rather than clamping. A
   declaration lets a consumer decide; an unvalidated clamp is a new behaviour introduced
   at the moment of least evidence.
+
+---
+
+## 18. Wiring the correction to a rendered pixel
+
+Fact 1449 was correct and damning: 287 passing tests, zero consumers. `STREHL_FIX_CA`
+set a variable nothing read. This section wires it, and every number below is from a real
+299-frame render of `bee-3-cpl`.
+
+### 18.1 The one file I took outside my lane, and why
+
+**There is no in-lane path to a rendered pixel.** I checked all three candidates:
+
+- `warpmap.rs:487 gather_frame` is a thin wrapper over `gather_checked` — still one plane,
+  still no channel, and **the merge does not call it**.
+- `gather_checked` cannot resolve the channel itself: it receives one plane and one
+  `Similarity` and has no way to know which CFA site it is looking at.
+- The merge's actual path is `merge_cmd.rs:968` -> `align_cmd::warp_frame_in_place`, and
+  `merge_cmd.rs` is M97's and forbidden.
+
+So the change had to land in **`crates/strehl-cli/src/align_cmd.rs`**, which was not on my
+permitted list. I took it, and here is the reasoning I would want challenged:
+
+- The orchestrator granted "whatever minimal CLI surface the switch needs" and forbade
+  `merge_cmd.rs` and `align.rs` by name. `align_cmd.rs` was named in neither.
+- **`git status` showed `align_cmd.rs` clean.** No agent had uncommitted work in it, so a
+  path-scoped commit of that one file could not destroy anyone's work. The dirty files in
+  `crates/` were all M97's (`merge_cmd.rs`, `robust.rs`, two examples) and I touched none.
+- The change is **two statements** and does not alter any signature, which is what keeps
+  `merge_cmd.rs` untouched.
+
+If that was the wrong call, it reverts cleanly and independently.
+
+### 18.2 What was added
+
+In `optics.rs` (my lane): `CA_ENV` (the env-var name, so the string exists once),
+`active_profile()` (reads it and returns `Result`), and `impl std::error::Error for
+CaConfigError` so the CLI can `?` it.
+
+`active_profile()` is deliberately **not** a cached `OnceLock`: the cost is one `getenv`
+per frame against a four-plane gather, and a cache would make the switch untestable
+within a process and would silently ignore a change between stacks.
+
+In `align_cmd.rs`, inside the loop that already exists (§16):
+
+```rust
+let ca = strehl_core::optics::active_profile()?;          // hoisted, once per frame
+...
+let t_site = strehl_core::optics::OpticalProfile::compose(
+    ca, strehl_core::optics::cfa_site_channel(dx, dy), t);
+```
+
+The orchestrator's reading of the geometry was right in the way that matters and slightly
+off in the letter: frames are **not** carried as four planes — `warp_frame_in_place`
+deinterleaves an interleaved mosaic into a half-resolution scratch plane per site. But the
+consequence is exactly as described: **each plane presented to the gather is a single CFA
+site**, so the channel is known from `(dx,dy)` and there is **no per-pixel branching**.
+One composed `Similarity` per plane, alignment and CA correction in the same gather, no
+second resample. (The plane-vs-sensel error in §17.4 was in an experiment script's
+normaliser and is unrelated to this.)
+
+### 18.3 The switch
+
+```
+STREHL_FIX_CA=a7c2-fe100gm-2xtc-x4cpl
+```
+
+Measured behaviour of every form, one render each:
+
+| `STREHL_FIX_CA` | exit | result |
+|---|---|---|
+| unset | 0 | default path |
+| `0` | 0 | byte-identical to unset |
+| `off` | 0 | byte-identical to unset |
+| `a7c2-fe100gm-2xtc-x4cpl` | 0 | correction applied |
+| `a7c2-fe100gm-2xtc-x4cpl-TYPO` | **1** | `Error: unknown lateral-CA profile ...; known profiles: a7c2-fe100gm-2xtc-x4cpl` |
+
+`1`/`true`/`on` are still refused, for the reason in §15: they cannot say *which lens*, and
+the wrong profile **adds** red fringing.
+
+### 18.4 The null, which is stronger than the one I was asked for
+
+I was asked for a byte-identical null on a real stack. What the run produced is a
+**cross-binary** null:
+
+```
+wired binary, CA off : E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112
+pre-wiring binary    : E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112
+```
+
+The second file is `C:\dev\strehl-out\ORCH-kernel\bee-3-cpl-catmull-rom.tif`, rendered
+earlier tonight by a **different binary at a different commit**. Full SHA-256 equality.
+The default path did not move a single byte across the wiring, a rebuild and an
+intervening commit — a much better guarantee than an A/A inside one binary, which could
+not have detected a rebuild-induced change.
+
+Bars N1–N4 (registered in `r7_wiring_ab.ps1` before the run) all pass: `off1 == off2`,
+`unset == 0 == off`, `on != off`, typo arm exits **exactly 1**.
+
+### 18.5 The cache key — answering loudly, as asked
+
+**`STREHL_FIX_CA` is NOT in `StackIdentity`.** The struct is
+`{ name, digest, frames }` (`warpmap.rs:194-201`), where `digest` is FNV-1a over
+`(file name, file size)` per frame. It covers the frame set and nothing else — not
+`reference`, not `resampler`, and not the CA setting.
+
+**But it does not corrupt this A/B, and the reason is structural rather than lucky.**
+`StackIdentity` guards the **warpmap sidecar**, which stores *placements*. The CA
+correction is applied at **gather time**, downstream of the sidecar, so a sidecar cache
+hit still re-gathers every pixel. That is why I solved **one** sidecar and reused it
+across all five arms: `reference` and the solve are held fixed by construction, and the
+only free variable is the env var.
+
+The empirical confirmation is in the hashes: with an identical command line and an
+identical sidecar, `off` and `on` differ, and `off` reproduces exactly across
+non-adjacent runs with the `on` arm in between. **If the CA setting were being folded into
+a cached artefact, `off2` would have returned the `on` bytes. It did not.**
+
+Caveat for whoever drives the sheet: because the switch is an env var and not argv, **it
+will not appear in a recorded command line.** A harness that logs argv only will record
+two arms that look identical. Log the environment or wrap the switch in a flag.
+
+### 18.6 The by-eye read, which is the answer to the question I was actually asked
+
+Crops at 1:1, no post-processing, window chosen automatically at the highest
+edge-chroma density (`r = 0.651`), written to
+`C:\dev\strehl-out\M107-chroma\r7\crop_off_vs_on.png`.
+
+**It is visibly better, and by more than I expected.** In the CA-off arm the spicules
+against the bright background carry vivid cyan-blue fringing along one side and warm
+orange along the other; several hairs at the bottom of the window are outlined in cyan.
+In the CA-on arm those cyan outlines are largely gone and the hairs read as neutral dark
+brown. Some warm edges remain.
+
+**And this corrects an expectation in the brief.** I was asked to expect "at most a partial
+fix" because `eps_b` is `None` and the fringes are red/cyan pairs. That reasoning does not
+hold, and the render shows why: **a red/cyan fringe pair *is* red misregistration.** Cyan
+is the absence of red. A radial scale error in red produces a red edge on one side of a
+feature and a cyan edge on the other, and correcting red's magnification removes **both
+sides at once**. `eps_b = None` is a real limitation, but it bites on **blue/yellow**
+fringing, not on the red/cyan pairs M110 and the orchestrator both described.
+
+The metric agrees and — importantly — agrees in the two-sided shape the orchestrator
+registered:
+
+| arm | edge chroma | flat chroma | ratio |
+|---|---|---|---|
+| off | 0.075809 | 0.034028 | 2.228 |
+| on | 0.068407 | 0.034015 | 2.011 |
+| change | **-9.76%** | **-0.04%** | |
+
+**Edge chroma falls 9.76%; flat chroma moves 0.04%, which is noise.** This is not a global
+chroma suppressor — it cannot be, since its only term is a radial scale on red's sampling
+grid. That is the discriminator the orchestrator asked for, and it passes.
+
+Per-channel mean `|on - off|` is **R 540 DN, G 50, B 54**: red moved an order of magnitude
+more than green or blue, which is what a red-only correction should do, and the residual
+G/B movement is downstream demosaic coupling rather than a second correction.
+
+### 18.7 The corner, past the declared support
+
+`support_r_max = 0.788` and the crop set includes a window at **`r = 0.945`**. Honest
+answer: **nothing bad happens, and nothing much happens.** The corner of `bee-3-cpl` is
+defocused background with one small speck in it, which shifts slightly and shows no
+tearing, no colour inversion and no visible artefact.
+
+That is not evidence the extrapolation is safe. It is the support finding restated: this
+subject has nothing in its corners to test with, which is precisely why P31 says
+UNDECIDABLE beyond `r = 0.79` and why the §24 capture matters. **A corner that looks fine
+because it is empty is not a corner that has been checked.**
+
+### Candidate facts
+
+- **P33.** The lateral-CA correction is **wired and reaches rendered pixels**:
+  `align_cmd.rs::warp_frame_in_place` composes a per-CFA-site `Similarity` inside the
+  four-plane loop that already existed, adding **no second resample** and no per-pixel
+  branching. Switch: `STREHL_FIX_CA=a7c2-fe100gm-2xtc-x4cpl`. MEASURED (299-frame
+  `bee-3-cpl` render; bars N1-N4 registered before the run, all pass).
+- **P34.** The default path is **byte-identical across the wiring**: the wired binary with
+  the switch off reproduces a pre-wiring binary's render at a different commit to a full
+  SHA-256 match (`E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112`).
+  MEASURED (cross-binary, not A/A).
+- **P35.** The correction reduces edge chroma **9.76%** while moving flat chroma **-0.04%**
+  on `bee-3-cpl`, and is structurally incapable of global chroma suppression. Per-channel
+  mean displacement R 540 DN vs G 50 / B 54 confirms only red moved. **Visibly better at
+  1:1**: cyan outlines on the spicules largely disappear. MEASURED.
+- **P36.** **A red/cyan fringe pair is red misregistration, so `eps_b = None` does not
+  halve the fix for it.** Cyan is the absence of red; a radial scale error in red makes a
+  red edge on one side and a cyan edge on the other, and correcting red removes both. The
+  unmeasured blue coefficient bites on **blue/yellow** fringing instead. MEASURED
+  (by eye + the 9.76% edge-chroma fall from a red-only term).
+- **P37.** `STREHL_FIX_CA` is **not** in `StackIdentity` (`{name, digest, frames}`,
+  `warpmap.rs:194`), but it cannot corrupt an A/B: the correction is applied at gather
+  time, downstream of the sidecar the identity guards, so a cache hit still re-gathers.
+  Confirmed empirically — `off2` reproduced `off1` exactly with the `on` arm between them.
+  **However the switch is an env var, so it does not appear in a recorded argv**, and a
+  harness logging command lines alone will record two arms that look identical. MEASURED.
+
+### Disciplines
+
+- **D24.** A cross-binary null beats an A/A null. Rendering the default path with the new
+  binary and hashing it against a file produced by the **old** binary tests the rebuild,
+  the intervening commits and the wiring at once; an A/A inside one binary tests none of
+  them.
+- **D25.** **When the on-switch is an environment variable, it is invisible to any harness
+  that records argv.** Either promote it to a flag or record the environment; two arms
+  that differ only in an unlogged env var are indistinguishable in the record from two
+  arms that were never different.
+- **D26.** Check `git status` before taking a file outside your lane. "Is anyone editing
+  it?" is answerable in one command, and a clean file plus a path-scoped commit makes an
+  out-of-lane change reversible instead of destructive.
+- **D27.** A colour-fringe pair names its own cause. Red/cyan is the red channel
+  misregistered; blue/yellow is blue. Reading the pair before assuming a correction is
+  partial would have saved the brief's expectation of "at most a partial fix".
+- **D28.** An artefact-free corner in a subject with an empty corner is not evidence.
+  Separate "looked and saw nothing wrong" from "there was something there to look at".
