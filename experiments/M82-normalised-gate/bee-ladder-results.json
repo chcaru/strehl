@@ -1,0 +1,634 @@
+{
+  "requests": [
+    0.9,
+    0.7,
+    0.5
+  ],
+  "primary_request": 0.7,
+  "binary": {
+    "bytes": 8278016,
+    "commit": "79468b971bbf3e7657c86def2ea1b0ddbef78c99",
+    "rustflags": "--cfg m82_private_build",
+    "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)",
+    "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+    "sha256": "2f1ea8904240acca98937f4755354302b53a061c8791d677b721137e45c58a74",
+    "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M82-normalised-gate\\target-m82\\release\\strehl.exe"
+  },
+  "stacks": {
+    "bee-1": {
+      "directory": "bee-1-cpl",
+      "n": 299,
+      "iso": 100.0,
+      "cli_iso": 100.0,
+      "cli_frames_path": "D:\\personal\\macro\\bee-1-cpl",
+      "log_sha256": "335865a4c26d520067e253f3bb02f881deb0a3cc8f7555a06544f4cf9dde369c",
+      "rows": [
+        {
+          "gate": 0.0,
+          "tolerance": 0.0,
+          "mean_n_eff": 1.0,
+          "singleton_percent": 100.0,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 1.0
+        },
+        {
+          "gate": 0.25,
+          "tolerance": 0.005379,
+          "mean_n_eff": 1.467,
+          "singleton_percent": 75.21,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.9064
+        },
+        {
+          "gate": 0.5,
+          "tolerance": 0.010758,
+          "mean_n_eff": 2.294,
+          "singleton_percent": 62.42,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.8277
+        },
+        {
+          "gate": 1.0,
+          "tolerance": 0.021516,
+          "mean_n_eff": 5.86,
+          "singleton_percent": 51.02,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.7191
+        },
+        {
+          "gate": 2.0,
+          "tolerance": 0.043032,
+          "mean_n_eff": 26.127,
+          "singleton_percent": 41.22,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.6191
+        },
+        {
+          "gate": 4.0,
+          "tolerance": 0.086063,
+          "mean_n_eff": 70.146,
+          "singleton_percent": 30.73,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.5448
+        },
+        {
+          "gate": 8.0,
+          "tolerance": 0.172127,
+          "mean_n_eff": 85.424,
+          "singleton_percent": 18.44,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.4718
+        },
+        {
+          "gate": 16.0,
+          "tolerance": 0.344254,
+          "mean_n_eff": 97.559,
+          "singleton_percent": 7.86,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.3931
+        },
+        {
+          "gate": 24.0,
+          "tolerance": 0.51638,
+          "mean_n_eff": 104.681,
+          "singleton_percent": 4.1,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.3476
+        },
+        {
+          "gate": 32.0,
+          "tolerance": 0.688507,
+          "mean_n_eff": 113.015,
+          "singleton_percent": 2.44,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.3154
+        },
+        {
+          "gate": 40.0,
+          "tolerance": 0.860634,
+          "mean_n_eff": 122.662,
+          "singleton_percent": 1.53,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.2904
+        },
+        {
+          "gate": 48.0,
+          "tolerance": 1.032761,
+          "mean_n_eff": 131.814,
+          "singleton_percent": 0.98,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.2704
+        },
+        {
+          "gate": 64.0,
+          "tolerance": 1.377014,
+          "mean_n_eff": 144.963,
+          "singleton_percent": 0.45,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.241
+        },
+        {
+          "gate": 96.0,
+          "tolerance": 2.065521,
+          "mean_n_eff": 157.887,
+          "singleton_percent": 0.17,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.204
+        },
+        {
+          "gate": 128.0,
+          "tolerance": 2.754028,
+          "mean_n_eff": 168.376,
+          "singleton_percent": 0.11,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.1785
+        }
+      ],
+      "solves": {
+        "0.90": {
+          "request": 0.9,
+          "gate": 0.2638908683028886,
+          "bracket": [
+            {
+              "gate": 0.25,
+              "tolerance": 0.005379,
+              "mean_n_eff": 1.467,
+              "singleton_percent": 75.21,
+              "boundary_percent": 1.74,
+              "predicted_sigma_gain": 0.9064
+            },
+            {
+              "gate": 0.5,
+              "tolerance": 0.010758,
+              "mean_n_eff": 2.294,
+              "singleton_percent": 62.42,
+              "boundary_percent": 1.74,
+              "predicted_sigma_gain": 0.8277
+            }
+          ],
+          "reconstructed_gain": 0.9,
+          "relative_error": 0.0
+        },
+        "0.70": {
+          "request": 0.7,
+          "gate": 1.1327163068811335,
+          "bracket": [
+            {
+              "gate": 1.0,
+              "tolerance": 0.021516,
+              "mean_n_eff": 5.86,
+              "singleton_percent": 51.02,
+              "boundary_percent": 1.74,
+              "predicted_sigma_gain": 0.7191
+            },
+            {
+              "gate": 2.0,
+              "tolerance": 0.043032,
+              "mean_n_eff": 26.127,
+              "singleton_percent": 41.22,
+              "boundary_percent": 1.74,
+              "predicted_sigma_gain": 0.6191
+            }
+          ],
+          "reconstructed_gain": 0.7000000000000001,
+          "relative_error": 2.220446049250313e-16
+        },
+        "0.50": {
+          "request": 0.5,
+          "gate": 6.048059691596426,
+          "bracket": [
+            {
+              "gate": 4.0,
+              "tolerance": 0.086063,
+              "mean_n_eff": 70.146,
+              "singleton_percent": 30.73,
+              "boundary_percent": 1.74,
+              "predicted_sigma_gain": 0.5448
+            },
+            {
+              "gate": 8.0,
+              "tolerance": 0.172127,
+              "mean_n_eff": 85.424,
+              "singleton_percent": 18.44,
+              "boundary_percent": 1.74,
+              "predicted_sigma_gain": 0.4718
+            }
+          ],
+          "reconstructed_gain": 0.5000000000000001,
+          "relative_error": 2.220446049250313e-16
+        }
+      },
+      "sigma_monotone": true
+    },
+    "bee-2": {
+      "directory": "bee-2-cpl",
+      "n": 299,
+      "iso": 400.0,
+      "cli_iso": 400.0,
+      "cli_frames_path": "D:\\personal\\macro\\bee-2-cpl",
+      "log_sha256": "73183e35017054d3e19076d2e40628aaf011f2a9ea0a783491cc5579d6b8d31c",
+      "rows": [
+        {
+          "gate": 0.0,
+          "tolerance": 0.0,
+          "mean_n_eff": 1.0,
+          "singleton_percent": 100.0,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 1.0
+        },
+        {
+          "gate": 0.25,
+          "tolerance": 0.005379,
+          "mean_n_eff": 1.459,
+          "singleton_percent": 75.78,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.9086
+        },
+        {
+          "gate": 0.5,
+          "tolerance": 0.010758,
+          "mean_n_eff": 2.311,
+          "singleton_percent": 62.69,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.8301
+        },
+        {
+          "gate": 1.0,
+          "tolerance": 0.021516,
+          "mean_n_eff": 6.242,
+          "singleton_percent": 49.8,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.7193
+        },
+        {
+          "gate": 2.0,
+          "tolerance": 0.043032,
+          "mean_n_eff": 29.843,
+          "singleton_percent": 37.29,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.6125
+        },
+        {
+          "gate": 4.0,
+          "tolerance": 0.086063,
+          "mean_n_eff": 74.222,
+          "singleton_percent": 23.83,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.5259
+        },
+        {
+          "gate": 8.0,
+          "tolerance": 0.172127,
+          "mean_n_eff": 85.486,
+          "singleton_percent": 11.04,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.439
+        },
+        {
+          "gate": 16.0,
+          "tolerance": 0.344254,
+          "mean_n_eff": 102.142,
+          "singleton_percent": 2.91,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.3483
+        },
+        {
+          "gate": 24.0,
+          "tolerance": 0.51638,
+          "mean_n_eff": 120.784,
+          "singleton_percent": 0.9,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.2965
+        },
+        {
+          "gate": 32.0,
+          "tolerance": 0.688507,
+          "mean_n_eff": 133.508,
+          "singleton_percent": 0.36,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.2633
+        },
+        {
+          "gate": 40.0,
+          "tolerance": 0.860634,
+          "mean_n_eff": 141.572,
+          "singleton_percent": 0.18,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.2398
+        },
+        {
+          "gate": 48.0,
+          "tolerance": 1.032761,
+          "mean_n_eff": 147.966,
+          "singleton_percent": 0.1,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.2216
+        },
+        {
+          "gate": 64.0,
+          "tolerance": 1.377014,
+          "mean_n_eff": 160.166,
+          "singleton_percent": 0.03,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.1932
+        },
+        {
+          "gate": 96.0,
+          "tolerance": 2.065521,
+          "mean_n_eff": 184.633,
+          "singleton_percent": 0.01,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.1536
+        },
+        {
+          "gate": 128.0,
+          "tolerance": 2.754028,
+          "mean_n_eff": 209.044,
+          "singleton_percent": 0.0,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.1263
+        }
+      ],
+      "solves": {
+        "0.90": {
+          "request": 0.9,
+          "gate": 0.2689200466678591,
+          "bracket": [
+            {
+              "gate": 0.25,
+              "tolerance": 0.005379,
+              "mean_n_eff": 1.459,
+              "singleton_percent": 75.78,
+              "boundary_percent": 0.92,
+              "predicted_sigma_gain": 0.9086
+            },
+            {
+              "gate": 0.5,
+              "tolerance": 0.010758,
+              "mean_n_eff": 2.311,
+              "singleton_percent": 62.69,
+              "boundary_percent": 0.92,
+              "predicted_sigma_gain": 0.8301
+            }
+          ],
+          "reconstructed_gain": 0.9,
+          "relative_error": 0.0
+        },
+        "0.70": {
+          "request": 0.7,
+          "gate": 1.1244480689218197,
+          "bracket": [
+            {
+              "gate": 1.0,
+              "tolerance": 0.021516,
+              "mean_n_eff": 6.242,
+              "singleton_percent": 49.8,
+              "boundary_percent": 0.92,
+              "predicted_sigma_gain": 0.7193
+            },
+            {
+              "gate": 2.0,
+              "tolerance": 0.043032,
+              "mean_n_eff": 29.843,
+              "singleton_percent": 37.29,
+              "boundary_percent": 0.92,
+              "predicted_sigma_gain": 0.6125
+            }
+          ],
+          "reconstructed_gain": 0.7,
+          "relative_error": 0.0
+        },
+        "0.50": {
+          "request": 0.5,
+          "gate": 4.855506929264471,
+          "bracket": [
+            {
+              "gate": 4.0,
+              "tolerance": 0.086063,
+              "mean_n_eff": 74.222,
+              "singleton_percent": 23.83,
+              "boundary_percent": 0.92,
+              "predicted_sigma_gain": 0.5259
+            },
+            {
+              "gate": 8.0,
+              "tolerance": 0.172127,
+              "mean_n_eff": 85.486,
+              "singleton_percent": 11.04,
+              "boundary_percent": 0.92,
+              "predicted_sigma_gain": 0.439
+            }
+          ],
+          "reconstructed_gain": 0.5,
+          "relative_error": 0.0
+        }
+      },
+      "sigma_monotone": true
+    },
+    "bee-3": {
+      "directory": "bee-3-cpl",
+      "n": 299,
+      "iso": 100.0,
+      "cli_iso": 100.0,
+      "cli_frames_path": "D:\\personal\\macro\\bee-3-cpl",
+      "log_sha256": "8a09e3f135646ba86791751649b36359d5fd98a114e90046129dcb901372aea0",
+      "rows": [
+        {
+          "gate": 0.0,
+          "tolerance": 0.0,
+          "mean_n_eff": 1.0,
+          "singleton_percent": 100.0,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 1.0
+        },
+        {
+          "gate": 0.25,
+          "tolerance": 0.005379,
+          "mean_n_eff": 1.404,
+          "singleton_percent": 78.45,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.9188
+        },
+        {
+          "gate": 0.5,
+          "tolerance": 0.010758,
+          "mean_n_eff": 2.125,
+          "singleton_percent": 67.1,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.85
+        },
+        {
+          "gate": 1.0,
+          "tolerance": 0.021516,
+          "mean_n_eff": 5.244,
+          "singleton_percent": 56.62,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.7549
+        },
+        {
+          "gate": 2.0,
+          "tolerance": 0.043032,
+          "mean_n_eff": 23.043,
+          "singleton_percent": 46.57,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.6655
+        },
+        {
+          "gate": 4.0,
+          "tolerance": 0.086063,
+          "mean_n_eff": 60.86,
+          "singleton_percent": 35.02,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.5938
+        },
+        {
+          "gate": 8.0,
+          "tolerance": 0.172127,
+          "mean_n_eff": 72.551,
+          "singleton_percent": 21.83,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.5193
+        },
+        {
+          "gate": 16.0,
+          "tolerance": 0.344254,
+          "mean_n_eff": 82.211,
+          "singleton_percent": 9.66,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.4351
+        },
+        {
+          "gate": 24.0,
+          "tolerance": 0.51638,
+          "mean_n_eff": 88.463,
+          "singleton_percent": 4.61,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.3845
+        },
+        {
+          "gate": 32.0,
+          "tolerance": 0.688507,
+          "mean_n_eff": 95.338,
+          "singleton_percent": 2.3,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.3487
+        },
+        {
+          "gate": 40.0,
+          "tolerance": 0.860634,
+          "mean_n_eff": 103.924,
+          "singleton_percent": 1.2,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.3208
+        },
+        {
+          "gate": 48.0,
+          "tolerance": 1.032761,
+          "mean_n_eff": 112.785,
+          "singleton_percent": 0.66,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.2984
+        },
+        {
+          "gate": 64.0,
+          "tolerance": 1.377014,
+          "mean_n_eff": 127.541,
+          "singleton_percent": 0.24,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.2645
+        },
+        {
+          "gate": 96.0,
+          "tolerance": 2.065521,
+          "mean_n_eff": 144.683,
+          "singleton_percent": 0.04,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.2221
+        },
+        {
+          "gate": 128.0,
+          "tolerance": 2.754028,
+          "mean_n_eff": 156.783,
+          "singleton_percent": 0.01,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.1941
+        }
+      ],
+      "solves": {
+        "0.90": {
+          "request": 0.9,
+          "gate": 0.3005379791411166,
+          "bracket": [
+            {
+              "gate": 0.25,
+              "tolerance": 0.005379,
+              "mean_n_eff": 1.404,
+              "singleton_percent": 78.45,
+              "boundary_percent": 1.38,
+              "predicted_sigma_gain": 0.9188
+            },
+            {
+              "gate": 0.5,
+              "tolerance": 0.010758,
+              "mean_n_eff": 2.125,
+              "singleton_percent": 67.1,
+              "boundary_percent": 1.38,
+              "predicted_sigma_gain": 0.85
+            }
+          ],
+          "reconstructed_gain": 0.9,
+          "relative_error": 0.0
+        },
+        "0.70": {
+          "request": 0.7,
+          "gate": 1.5146913904952701,
+          "bracket": [
+            {
+              "gate": 1.0,
+              "tolerance": 0.021516,
+              "mean_n_eff": 5.244,
+              "singleton_percent": 56.62,
+              "boundary_percent": 1.38,
+              "predicted_sigma_gain": 0.7549
+            },
+            {
+              "gate": 2.0,
+              "tolerance": 0.043032,
+              "mean_n_eff": 23.043,
+              "singleton_percent": 46.57,
+              "boundary_percent": 1.38,
+              "predicted_sigma_gain": 0.6655
+            }
+          ],
+          "reconstructed_gain": 0.7,
+          "relative_error": 0.0
+        },
+        "0.50": {
+          "request": 0.5,
+          "gate": 9.279771634486922,
+          "bracket": [
+            {
+              "gate": 8.0,
+              "tolerance": 0.172127,
+              "mean_n_eff": 72.551,
+              "singleton_percent": 21.83,
+              "boundary_percent": 1.38,
+              "predicted_sigma_gain": 0.5193
+            },
+            {
+              "gate": 16.0,
+              "tolerance": 0.344254,
+              "mean_n_eff": 82.211,
+              "singleton_percent": 9.66,
+              "boundary_percent": 1.38,
+              "predicted_sigma_gain": 0.4351
+            }
+          ],
+          "reconstructed_gain": 0.5000000000000001,
+          "relative_error": 2.220446049250313e-16
+        }
+      },
+      "sigma_monotone": true
+    }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "source": {
+    "m70_commit": "d882b0c",
+    "m70_s04_sha256": "356a553e9b119288e3f26a7395e1e2487f7c4344915a1c70fcf3d1d756503860",
+    "m70_s05_sha256": "792d93bc9ad027d53ba4e04e4478ebf39ca4e9c6b40735b5d161ef8681decfd8",
+    "m70_s10_sha256": "55deb53725294475ed94a7d079042a5216dde9ec8db2f7a60e09995b14b15061",
+    "m70lib_sha256": "16d14ee9f947aec944a53d3125de8206193e248b764cd5c9bd04ad103b416a61",
+    "m70_output_json_sha256": "d091945bda60ae672dcb53056a7459306a55dda424e30d3c2c211ee406b9bf9c",
+    "m70_output_log_sha256": "f82fadacdc20432d6785ebed9aee666b887143c21a7f7d72c1acfc4fd5b10152"
+  },
+  "registered": {
+    "windows": [
+      1,
+      2,
+      3,
+      5,
+      10,
+      20
+    ],
+    "physics_windows": [
+      1,
+      2,
+      3,
+      5,
+      10
+    ],
+    "identity_relative_bar": 0.001,
+    "physics_span_bar": 1.05,
+    "minimum_textured_patches": 16
+  },
+  "stacks": {
+    "bee-1": {
+      "stack": "bee-1",
+      "directory": "bee-1-cpl",
+      "frames": 299,
+      "first": "DSC00001.ARW",
+      "last": "DSC00299.ARW",
+      "iso": 100.0,
+      "textured_patches": 16,
+      "response": {
+        "1": 1.0,
+        "2": 1.1823396280009701,
+        "3": 1.2908733037032019,
+        "5": 1.371983146592899,
+        "10": 1.5057879492553805,
+        "20": 1.381272926049748
+      },
+      "prior_response": {
+        "1": 1.0,
+        "2": 1.1823396280009701,
+        "3": 1.2908733037032019,
+        "5": 1.371983146592899,
+        "10": 1.5057879492553805,
+        "20": 1.381272926049748
+      },
+      "identity_relative_error": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "5": 0.0,
+        "10": 0.0,
+        "20": 0.0
+      },
+      "identity_max_relative_error": 0.0,
+      "identity_pass": true,
+      "npz_sha256": "352369996f5b3d7c6b775a707e9b5ea4f544c5826ec6adcfe97bc6d60d1365c2",
+      "measurement_log_sha256": "0cd68254d801530f6a1c7c6326927400ca09d010db0049a03e7d6ca42437e638",
+      "filename_manifest_sha256": "eb2a03a260dc80c6dd8ea85160f9e122f2b77b5f926ca912cc3ceb0bd9f2f400"
+    },
+    "bee-2": {
+      "stack": "bee-2",
+      "directory": "bee-2-cpl",
+      "frames": 299,
+      "first": "DSC00001.ARW",
+      "last": "DSC00299.ARW",
+      "iso": 400.0,
+      "textured_patches": 18,
+      "response": {
+        "1": 1.0,
+        "2": 1.181535196653778,
+        "3": 1.3024460784445,
+        "5": 1.444175033153516,
+        "10": 1.670942531844795,
+        "20": 1.7579683613478707
+      },
+      "prior_response": {
+        "1": 1.0,
+        "2": 1.181535196653778,
+        "3": 1.3024460784445,
+        "5": 1.444175033153516,
+        "10": 1.670942531844795,
+        "20": 1.7579683613478707
+      },
+      "identity_relative_error": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "5": 0.0,
+        "10": 0.0,
+        "20": 0.0
+      },
+      "identity_max_relative_error": 0.0,
+      "identity_pass": true,
+      "npz_sha256": "8fc3b2ba6f4801dce46eeb65b9846ab232ef68a12de5e78ef78aaeea1f167860",
+      "measurement_log_sha256": "be2f96e560c8ded57de449c18b81f1d66b885a66a389dafaf5f6a8e1e26b9619",
+      "filename_manifest_sha256": "eb2a03a260dc80c6dd8ea85160f9e122f2b77b5f926ca912cc3ceb0bd9f2f400"
+    },
+    "bee-3": {
+      "stack": "bee-3",
+      "directory": "bee-3-cpl",
+      "frames": 299,
+      "first": "DSC00001.ARW",
+      "last": "DSC00299.ARW",
+      "iso": 100.0,
+      "textured_patches": 19,
+      "response": {
+        "1": 1.0,
+        "2": 1.2070064075243179,
+        "3": 1.3384820519794765,
+        "5": 1.435487287254236,
+        "10": 1.5647587164958316,
+        "20": 1.6368569617683895
+      },
+      "prior_response": {
+        "1": 1.0,
+        "2": 1.2070064075243179,
+        "3": 1.3384820519794765,
+        "5": 1.435487287254236,
+        "10": 1.5647587164958316,
+        "20": 1.6368569617683895
+      },
+      "identity_relative_error": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "5": 0.0,
+        "10": 0.0,
+        "20": 0.0
+      },
+      "identity_max_relative_error": 0.0,
+      "identity_pass": true,
+      "npz_sha256": "0e3cb5947608e8e237134217ef001870745bd4fab98bdbfce4e244cc86d1068d",
+      "measurement_log_sha256": "6b96ec26ad36c15b5b25b30a1283c9a35d939a3518a1f15486ecea309ca406d4",
+      "filename_manifest_sha256": "eb2a03a260dc80c6dd8ea85160f9e122f2b77b5f926ca912cc3ceb0bd9f2f400"
+    }
+  },
+  "spans": {
+    "1": 1.0,
+    "2": 1.0215577250196837,
+    "3": 1.0368810387043381,
+    "5": 1.0526186394781116,
+    "10": 1.109679840824257,
+    "20": 1.2727161505839546
+  },
+  "peak_windows": {
+    "bee-1": 10,
+    "bee-2": 10,
+    "bee-3": 10
+  },
+  "controls": {
+    "identity_pass": true,
+    "texture_pass": true,
+    "same_peak_pass": true,
+    "span_pass": false
+  },
+  "p34_equivalent": false,
+  "disposition": "PREMISE_NOT_ESTABLISHED"
+}

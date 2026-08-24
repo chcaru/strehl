@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 
@@ -44,6 +45,7 @@ def load_current(stack: str) -> dict:
 
 def one_stack(stack: str, prior: dict) -> dict:
     data = load_current(stack)
+    manifest = ("\n".join(data["frames"]) + "\n").encode("utf-8")
     signal, nvar = A5.signal(data)
     textured, _ = A5.classify(data, signal, nvar)
     indices = [index for index, keep in enumerate(textured) if keep]
@@ -72,8 +74,13 @@ def one_stack(stack: str, prior: dict) -> dict:
         "response": response,
         "prior_response": prior_response,
         "identity_relative_error": relative_error,
+        "identity_max_relative_error": max(relative_error.values()),
         "identity_pass": max(relative_error.values()) <= IDENTITY_RELATIVE_BAR,
         "npz_sha256": M.sha256(M.HERE / f"bee-physics-{stack}.npz"),
+        "measurement_log_sha256": M.sha256(
+            M.HERE / f"bee-physics-{stack}.log"
+        ),
+        "filename_manifest_sha256": hashlib.sha256(manifest).hexdigest(),
     }
 
 
@@ -123,6 +130,12 @@ def main() -> None:
             "m70_s05_sha256": M.sha256(M70_SRC / "s05_analyse.py"),
             "m70_s10_sha256": M.sha256(M70_SRC / "s10_architecture.py"),
             "m70lib_sha256": M.sha256(M70_SRC / "m70lib.py"),
+            "m70_output_json_sha256": M.sha256(
+                M70_ROOT / "out" / "s10_architecture.json"
+            ),
+            "m70_output_log_sha256": M.sha256(
+                M70_ROOT / "out" / "s10_architecture.log"
+            ),
         },
         "registered": {
             "windows": list(WINDOWS),

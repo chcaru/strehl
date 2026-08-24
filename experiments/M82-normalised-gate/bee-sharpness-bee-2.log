@@ -1,0 +1,35 @@
+python=C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe
+STACK=bee-2
+DIRECTORY=bee-2-cpl
+m82lib_sha256=748fa208ca820b1f43799b55778399eea4191784d087c5d2ef1b734f2aa439be
+started_utc=2026-08-24T06:40:08.7887544Z
+bee-2: FLAT FIRST
+bee-2 region (2592, 1440, 512, 512): 1/299 (0.4s)
+bee-2 region (2592, 1440, 512, 512): 29/299 (14.0s)
+bee-2 region (2592, 1440, 512, 512): 58/299 (29.0s)
+bee-2 region (2592, 1440, 512, 512): 87/299 (44.3s)
+bee-2 region (2592, 1440, 512, 512): 116/299 (56.8s)
+bee-2 region (2592, 1440, 512, 512): 145/299 (68.8s)
+bee-2 region (2592, 1440, 512, 512): 174/299 (80.5s)
+bee-2 region (2592, 1440, 512, 512): 203/299 (92.2s)
+bee-2 region (2592, 1440, 512, 512): 232/299 (103.9s)
+bee-2 region (2592, 1440, 512, 512): 261/299 (115.6s)
+bee-2 region (2592, 1440, 512, 512): 290/299 (127.4s)
+bee-2: DETAIL
+bee-2 region (1824, 544, 512, 512): 1/299 (0.4s)
+bee-2 region (1824, 544, 512, 512): 29/299 (11.0s)
+bee-2 region (1824, 544, 512, 512): 58/299 (22.0s)
+bee-2 region (1824, 544, 512, 512): 87/299 (33.0s)
+bee-2 region (1824, 544, 512, 512): 116/299 (44.0s)
+bee-2 region (1824, 544, 512, 512): 145/299 (55.0s)
+bee-2 region (1824, 544, 512, 512): 174/299 (65.9s)
+bee-2 region (1824, 544, 512, 512): 203/299 (76.9s)
+bee-2 region (1824, 544, 512, 512): 232/299 (87.9s)
+bee-2 region (1824, 544, 512, 512): 261/299 (99.0s)
+bee-2 region (1824, 544, 512, 512): 290/299 (109.9s)
+bee-2 S=0.90: dsig=-0.02994283284323644 corrected_se=0.009167563265452393 raw_rms=147.808077
+bee-2 S=0.70: dsig=-0.028619217413252955 corrected_se=0.03284850909362612 raw_rms=146.796500
+bee-2 S=0.50: dsig=0.08198066408178183 corrected_se=0.018995676310756885 raw_rms=143.239896
+bee-2: flat contamination max=3.117344 pass=False pins(flat/detail)=0/0
+exit=0
+finished_utc=2026-08-24T06:44:19.1938631Z

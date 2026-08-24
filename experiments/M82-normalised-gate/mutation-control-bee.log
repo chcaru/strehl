@@ -1,0 +1,14 @@
+PLANTED_READBACK=PASS bytes=admitted = gap >= tolerance  # M82_CORE_ADMISSION
+COMMAND=C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe m82lib.py --self-test-only
+EXIT=1
+M82_SELF_TEST_COUNT=4
+
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\M82-normalised-gate\m82lib.py", line 427, in <module>
+    self_tests()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\M82-normalised-gate\m82lib.py", line 409, in self_tests
+    assert narrow.tolist() == [True, False, False]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+RESTORED=True

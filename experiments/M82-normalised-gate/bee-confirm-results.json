@@ -1,0 +1,300 @@
+{
+  "confirmation_tolerance_absolute": 0.005,
+  "binary": {
+    "bytes": 8278016,
+    "commit": "79468b971bbf3e7657c86def2ea1b0ddbef78c99",
+    "rustflags": "--cfg m82_private_build",
+    "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)",
+    "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+    "sha256": "2f1ea8904240acca98937f4755354302b53a061c8791d677b721137e45c58a74",
+    "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M82-normalised-gate\\target-m82\\release\\strehl.exe"
+  },
+  "stacks": {
+    "bee-1": {
+      "directory": "bee-1-cpl",
+      "frames": 299,
+      "log_sha256": "57351dc06f941bacbf9aea6ddddc2e10bf719950387dae56b62ecbce74f90c1b",
+      "selector_m80": {
+        "q_signal_power_dn2": 644139.588,
+        "signal_standard_error": 21.457,
+        "z": 30019.585,
+        "target": "MEASURABLE"
+      },
+      "targets": {
+        "0.90": {
+          "request": 0.9,
+          "solved_gate": 0.2638908683028886,
+          "printed_gate": 0.26,
+          "mean_n_eff": 1.502,
+          "n_eff_over_n": 0.0050234113712374585,
+          "singleton_percent": 74.26,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.9015,
+          "absolute_error": 0.0014999999999999458,
+          "confirmed": true,
+          "flat_hp_sd_dn": 44.27,
+          "flat_hp_ratio": 2.147,
+          "flat_hp_ratio_range": [
+            2.104,
+            2.317
+          ],
+          "m80": {
+            "printed_gate": 0.26,
+            "q_signal_power_dn2": 644457.314,
+            "retention": 1.0,
+            "detail_verdict": "ok",
+            "structure": 22.967,
+            "raw_rms": 803.543,
+            "controlled_noise_rms": 34.987
+          }
+        },
+        "0.70": {
+          "request": 0.7,
+          "solved_gate": 1.1327163068811335,
+          "printed_gate": 1.13,
+          "mean_n_eff": 7.427,
+          "n_eff_over_n": 0.02483946488294314,
+          "singleton_percent": 49.24,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.6992,
+          "absolute_error": 0.0007999999999999119,
+          "confirmed": true,
+          "flat_hp_sd_dn": 21.953,
+          "flat_hp_ratio": 1.065,
+          "flat_hp_ratio_range": [
+            1.043,
+            1.149
+          ],
+          "m80": {
+            "printed_gate": 1.13,
+            "q_signal_power_dn2": 643040.953,
+            "retention": 0.999,
+            "detail_verdict": "ok",
+            "structure": 17.566,
+            "raw_rms": 803.2009,
+            "controlled_noise_rms": 45.725
+          }
+        },
+        "0.50": {
+          "request": 0.5,
+          "solved_gate": 6.048059691596426,
+          "printed_gate": 6.05,
+          "mean_n_eff": 80.14,
+          "n_eff_over_n": 0.2680267558528428,
+          "singleton_percent": 23.52,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.5023,
+          "absolute_error": 0.0022999999999999687,
+          "confirmed": true,
+          "flat_hp_sd_dn": 11.779,
+          "flat_hp_ratio": 0.571,
+          "flat_hp_ratio_range": [
+            0.56,
+            0.616
+          ],
+          "m80": {
+            "printed_gate": 6.05,
+            "q_signal_power_dn2": 631412.074,
+            "retention": 0.99,
+            "detail_verdict": "ok",
+            "structure": 7.559,
+            "raw_rms": 801.661,
+            "controlled_noise_rms": 106.0576
+          }
+        }
+      },
+      "all_confirmed": true
+    },
+    "bee-2": {
+      "directory": "bee-2-cpl",
+      "frames": 299,
+      "log_sha256": "369fa8240f49548ae82bf840f1ca463f8c9617d988c9af653e47d5e708457cd3",
+      "selector_m80": {
+        "q_signal_power_dn2": -5518.444,
+        "signal_standard_error": 348.885,
+        "z": -15.817,
+        "target": "NOT-MEASURABLE"
+      },
+      "targets": {
+        "0.90": {
+          "request": 0.9,
+          "solved_gate": 0.2689200466678591,
+          "printed_gate": 0.27,
+          "mean_n_eff": 1.508,
+          "n_eff_over_n": 0.005043478260869565,
+          "singleton_percent": 74.49,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.9021,
+          "absolute_error": 0.0020999999999999908,
+          "confirmed": true,
+          "flat_hp_sd_dn": 232.374,
+          "flat_hp_ratio": 6.414,
+          "flat_hp_ratio_range": [
+            2.194,
+            9.9
+          ],
+          "m80": {
+            "printed_gate": 0.27,
+            "q_signal_power_dn2": -6559.629,
+            "retention": null,
+            "detail_verdict": "NO TARGET",
+            "structure": 0.877,
+            "raw_rms": 147.623,
+            "controlled_noise_rms": 168.381
+          }
+        },
+        "0.70": {
+          "request": 0.7,
+          "solved_gate": 1.1244480689218197,
+          "printed_gate": 1.12,
+          "mean_n_eff": 7.917,
+          "n_eff_over_n": 0.02647826086956522,
+          "singleton_percent": 47.74,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.6997,
+          "absolute_error": 0.00029999999999996696,
+          "confirmed": true,
+          "flat_hp_sd_dn": 224.215,
+          "flat_hp_ratio": 6.189,
+          "flat_hp_ratio_range": [
+            2.117,
+            9.553
+          ],
+          "m80": {
+            "printed_gate": 1.12,
+            "q_signal_power_dn2": -9520.813,
+            "retention": null,
+            "detail_verdict": "NO TARGET",
+            "structure": 0.832,
+            "raw_rms": 146.5964,
+            "controlled_noise_rms": 176.1003
+          }
+        },
+        "0.50": {
+          "request": 0.5,
+          "solved_gate": 4.855506929264471,
+          "printed_gate": 4.86,
+          "mean_n_eff": 78.141,
+          "n_eff_over_n": 0.26134113712374585,
+          "singleton_percent": 20.0,
+          "boundary_percent": 0.92,
+          "predicted_sigma_gain": 0.5022,
+          "absolute_error": 0.0021999999999999797,
+          "confirmed": true,
+          "flat_hp_sd_dn": 203.937,
+          "flat_hp_ratio": 5.629,
+          "flat_hp_ratio_range": [
+            1.926,
+            8.689
+          ],
+          "m80": {
+            "printed_gate": 4.86,
+            "q_signal_power_dn2": -13542.669,
+            "retention": null,
+            "detail_verdict": "NO TARGET",
+            "structure": 0.776,
+            "raw_rms": 143.0406,
+            "controlled_noise_rms": 184.3998
+          }
+        }
+      },
+      "all_confirmed": true
+    },
+    "bee-3": {
+      "directory": "bee-3-cpl",
+      "frames": 299,
+      "log_sha256": "664c5afef24209bcc4ce97e9dd37d92ce2596d2faf4006767f667ef1963c8851",
+      "selector_m80": {
+        "q_signal_power_dn2": -1781.25,
+        "signal_standard_error": 279.429,
+        "z": -6.375,
+        "target": "NOT-MEASURABLE"
+      },
+      "targets": {
+        "0.90": {
+          "request": 0.9,
+          "solved_gate": 0.3005379791411166,
+          "printed_gate": 0.3,
+          "mean_n_eff": 1.519,
+          "n_eff_over_n": 0.005080267558528428,
+          "singleton_percent": 75.55,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.9037,
+          "absolute_error": 0.0036999999999999256,
+          "confirmed": true,
+          "flat_hp_sd_dn": 204.795,
+          "flat_hp_ratio": 10.622,
+          "flat_hp_ratio_range": [
+            2.364,
+            14.629
+          ],
+          "m80": {
+            "printed_gate": 0.3,
+            "q_signal_power_dn2": -4015.333,
+            "retention": null,
+            "detail_verdict": "NO TARGET",
+            "structure": 0.914,
+            "raw_rms": 142.4175,
+            "controlled_noise_rms": 155.8784
+          }
+        },
+        "0.70": {
+          "request": 0.7,
+          "solved_gate": 1.5146913904952701,
+          "printed_gate": 1.51,
+          "mean_n_eff": 12.265,
+          "n_eff_over_n": 0.04102006688963211,
+          "singleton_percent": 50.73,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.6987,
+          "absolute_error": 0.0012999999999999678,
+          "confirmed": true,
+          "flat_hp_sd_dn": 199.996,
+          "flat_hp_ratio": 10.373,
+          "flat_hp_ratio_range": [
+            2.308,
+            14.286
+          ],
+          "m80": {
+            "printed_gate": 1.51,
+            "q_signal_power_dn2": -7518.125,
+            "retention": null,
+            "detail_verdict": "NO TARGET",
+            "structure": 0.853,
+            "raw_rms": 141.8611,
+            "controlled_noise_rms": 166.2609
+          }
+        },
+        "0.50": {
+          "request": 0.5,
+          "solved_gate": 9.279771634486922,
+          "printed_gate": 9.28,
+          "mean_n_eff": 74.635,
+          "n_eff_over_n": 0.24961538461538463,
+          "singleton_percent": 18.96,
+          "boundary_percent": 1.38,
+          "predicted_sigma_gain": 0.5019,
+          "absolute_error": 0.0019000000000000128,
+          "confirmed": true,
+          "flat_hp_sd_dn": 183.145,
+          "flat_hp_ratio": 9.499,
+          "flat_hp_ratio_range": [
+            2.114,
+            13.082
+          ],
+          "m80": {
+            "printed_gate": 9.28,
+            "q_signal_power_dn2": -11558.462,
+            "retention": null,
+            "detail_verdict": "NO TARGET",
+            "structure": 0.789,
+            "raw_rms": 138.0187,
+            "controlled_noise_rms": 174.9504
+          }
+        }
+      },
+      "all_confirmed": true
+    }
+  },
+  "all_confirmed": true
+}

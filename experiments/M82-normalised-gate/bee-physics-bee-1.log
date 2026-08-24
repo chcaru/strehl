@@ -1,0 +1,8 @@
+python=C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe
+STACK=bee-1
+started_utc=2026-08-24T06:26:21.8062629Z
+logical_stack=bee-1 directory=bee-1-cpl frames=299 first=DSC00001.ARW last=DSC00299.ARW
+  bee-1-cpl        K= 299 patches=24    25.3s (0.08 s/frame) -> tfs-bee-1-cpl-m82.npz
+output=bee-physics-bee-1.npz sha256=352369996f5b3d7c6b775a707e9b5ea4f544c5826ec6adcfe97bc6d60d1365c2
+exit=0
+finished_utc=2026-08-24T06:26:47.2866475Z
