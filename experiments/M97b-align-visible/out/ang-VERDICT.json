@@ -1,0 +1,48 @@
+{
+ "controls": {
+  "placebo": true,
+  "shift_gain": 1.0,
+  "bend_recovery": {
+   "2.0 px on ALIGNED": 0.5229823044918592,
+   "4.0 px on ALIGNED": 1.2131725967885936,
+   "4.0 px on ZOOMNULL": 1.063964258104127
+  },
+  "direction": true,
+  "overall": true
+ },
+ "pairing": {
+  "k": 0,
+  "n": 14,
+  "resid_px": 4.3340440109519935,
+  "scale": 0.9957580529913439,
+  "offset": 6.190479782199344,
+  "median_dist_px": 11.86127973192788,
+  "pitch_px": 102.43505297178945
+ },
+ "S1": {
+  "rms_aligned": 1.692858576992419,
+  "rms_null": 1.457076659961583,
+  "paired_median_diff": -0.10041534898996257,
+  "n_aligned_better": 6,
+  "n": 14,
+  "sign_p": 0.79052734375,
+  "wilcoxon_p": 0.5830078125,
+  "boot_ci": [
+   -0.2483123820729506,
+   0.17280550384045545
+  ],
+  "significant": false,
+  "pass": false
+ },
+ "S2": {
+  "aligned": 3.6017385058539304,
+  "null": 2.9184509251240343,
+  "pass": false
+ },
+ "S3": {
+  "aligned_frac": 0.03240114406922655,
+  "null_frac": 0.012666375841871651,
+  "pitch_px": 102.43505297178945,
+  "pass": false
+ }
+}

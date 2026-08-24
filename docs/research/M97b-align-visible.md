@@ -10,6 +10,15 @@ M86 or I expected, and it is reproducible.
 > previous null in this project is a measurement of an under-correction, not a
 > measurement of alignment.
 
+> **Second headline (MEASURED, §11).** Against the millimetre ruler — an
+> external ground truth that owes nothing to any metric this project invented —
+> **`--force-tilted` costs image quality**: on the stack the solver refuses, it
+> makes tick spacing **2.56× less regular**, while on the stack the solver
+> accepts, alignment makes it **18% more regular**. The refusal check is
+> vindicated by measurement. And **M86 §15.4's straight-edge test cannot settle
+> the question on either existing ruler capture**, because a straight edge only
+> discriminates if the edge runs through depth, and neither ruler has one.
+
 ---
 
 ## 1. Why the old instruments could not see it, and it is not what we thought
@@ -493,7 +502,157 @@ way, and it is why §10.1 uses boxes rather than annuli.
 
 ---
 
-## 11. Status / Changes / Verified / Not verified / Notes
+## 11. The ruler: an external ground truth, and what it actually settles
+
+M86 §15.4 named the straightness of a physically straight edge as the test that
+would settle whether alignment improves the render. Two ruler captures exist:
+`highly-angled-ruler-mm-cpl` (299 frames) and `flat-on-ruler-cpl` (79). Bars
+were pre-registered in `PREREG3.md` before measuring, and amended — with the
+amendment recording that I had by then seen the aligned arm's number and not
+the null's, which makes that amendment weaker than the original and it is
+marked so.
+
+### 11.1 The solver refuses the decisive stack, by design
+
+`strehl align` refuses `highly-angled-ruler-mm-cpl` outright:
+
+> *its subject is not normal to the optical axis, so focus change moves
+> different parts of the frame by different amounts and no single similarity
+> describes it. The sidecar would be confidently wrong. Pass `--force-tilted`
+> to override.*
+
+**The steep angle that makes the ruler decisive as a *target* is exactly what
+makes a global similarity the wrong *model*.** Forcing it does not measure "does
+alignment improve the render"; it measures "does the similarity model, applied
+where the project says it does not hold, still straighten a line that is
+straight by construction". That is a real question, and the refusal is on trial
+with it — so I ran it forced, and ran the accepted flat stack beside it as the
+discriminating arm.
+
+The solve diagnostics alone already separate the two (MEASURED, from the align
+logs) — on **near-identical total drift**:
+
+| stack | frames | total drift | held-out error | cycle floor | accepted? |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `flat-on-ruler-cpl` | 79 | 111.054 px | 11.081 px | **0.799 px** | yes |
+| `highly-angled-ruler-mm-cpl` | 299 | 109.631 px | 29.359 px | **21.602 px** | **no — forced** |
+
+**27× worse cycle-consistency on the same drift.** The refusal is not a
+heuristic being cautious; the solve it refuses is internally incoherent, and
+says so in its own diagnostics before any image is rendered.
+
+### 11.2 The instrument, and the two defects its plants caught
+
+`src/angstraight.py` tracks each engraved graduation to sub-pixel precision
+(depth-weighted centroid, robust line fit) and reports two ground-truthed
+quantities: **S**, straightness *along* one graduation, and **G**, the residual
+of tick centres about the exact 3-DOF projective-in-index law that equal world
+spacing must obey.
+
+Graduations, not the ruler's outer silhouette: there are 12–14 of them, so the
+result is a distribution over independent straight lines; they are black-on-white
+engravings rather than the exact locus of the occlusion halo (fact 1236); and on
+the tilted ruler one graduation spans ~1600 rows.
+
+**The plants caught two defects that would have produced a confidently wrong
+number**, and both are recorded because they are the same class:
+
+1. `HALF_WIN=9` gave a **19 px window for a 30 px tick** — the centroid was
+   pinned by where the window fell, not by where the tick was. A planted 2.0 px
+   bend recovered at **18%**. `BG_MED=61` centred inside a 30 px tick is 49%
+   dark, so the "bright background" was itself dragged dark: depth p99 **7534**
+   against **10383** at 301 px, a third of the contrast discarded. Both are now
+   **derived from the measured pitch** (`autosize`), not typed in — because the
+   flat ruler's pitch is 5× larger and hand-tuning a second set of constants
+   would have been the same defect twice.
+2. Tick pairing between arms scored candidates by the residual of a fitted
+   linear map, and silently chose a **four-graduation slip with a scale of
+   1.113**. It was caught only because the arms had already been measured to
+   agree on pitch to **0.29%**, which 1.113 flatly contradicts. The criterion is
+   now positional distance, where a one-tick error costs a whole pitch.
+
+**Controls (MEASURED, both stacks, all passing).** Placebo bit-identical to six
+decimals. Planted +3.0 px translation recovered at gain **1.0000** with the
+straightness residual **unchanged** — exactly right, since a translation is
+absorbed by the fit's intercept. Bend recovery **52–121%** (angled) and
+**85–117%** (flat) against the *post-fit* expectation. Direction correct on both
+arms of both stacks. A planted one-graduation slip is detected as `k=-1`.
+
+> A half-sine bend is mostly DC, and a line fit's intercept absorbs that mean
+> legitimately. Scoring recovery against `amp/√2` makes an honest instrument
+> look 44% blind; `expected_bend_rms` computes the achievable residual over the
+> rows actually used.
+
+### 11.3 The result
+
+| | **flat-on (accepted)** | | **angled (forced)** | |
+| --- | ---: | ---: | ---: | ---: |
+| | aligned | null | aligned | null |
+| **S** straightness RMS (px) | 5.331 | 5.029 | 1.693 | 1.457 |
+| — ticks aligned wins | 3/12 | | 6/14 | |
+| — sign test *p* | 0.146 | | 0.791 | |
+| — bootstrap 95% CI (px) | [−0.299, +0.039] | | [−0.248, +0.173] | |
+| **S2** step statistic (px) | 6.104 | 5.975 | 3.602 | 2.919 |
+| **G** spacing residual, % of 1 mm | **0.283** | 0.344 | **3.240** | 1.267 |
+| G ratio aligned ÷ null | **0.82 — better** | | **2.56 — worse** | |
+
+**S1 is a NULL on both stacks**, and this is the more honest reading than the
+pre-registered bar's verdict. It fails as written (`rms_aligned ≥ rms_null` on
+both), but 3/12 and 6/14 with sign-test *p* of 0.15 and 0.79 and bootstrap
+intervals straddling zero are not a defeat; they are an instrument reporting no
+difference. **I am recording the pre-registered FAIL and the statistical null
+together rather than choosing whichever suits.**
+
+**G discriminates, and it changes sign between the two stacks.** Where the
+solver accepts the stack, alignment makes the millimetre spacing **18% more
+regular**. Where it refuses and is forced, alignment makes it **2.6× worse**.
+Same instrument, same controls, same treatments, opposite answers.
+
+### 11.4 Why S sees nothing and G sees everything (ARGUED, from a MEASURED dissociation)
+
+A single graduation runs *across* the ruler's width, which is very nearly an
+iso-depth line; depth varies *along* the ruler, across graduations. So one tick
+is elected from nearly one frame and its own straightness is nearly blind to
+inter-frame registration **by construction**. The direction that runs through
+depth is the across-graduation direction — which is G.
+
+That is not argued from geometry alone: S and G come from the **same ticks, the
+same tracker, the same rows**, and only their direction differs. The direction
+through depth sees a 2.6× effect; the direction at constant depth sees nothing,
+twice. Absent an elected-frame index map — `strehl stack` cannot emit one — this
+stays ARGUED, but the dissociation is measured.
+
+**So M86 §15.4's test does not settle the question on these captures, and the
+reason is geometric, not instrumental.** A straight edge only discriminates if
+the edge itself runs through depth. Neither ruler provides one: the flat ruler
+has no depth, and the angled ruler's straight edges lie at constant depth.
+
+### 11.5 What this does and does not license
+
+- **MEASURED:** forcing the similarity model onto a stack the solver refuses
+  degrades the render's measurable geometry — 2.56× on spacing regularity and
+  23% on the step statistic. **`--force-tilted` costs image quality, and the
+  refusal check is vindicated by measurement rather than by argument.**
+- **MEASURED:** on a stack the solver accepts, alignment improves spacing
+  regularity by 18% and degrades nothing.
+- **NOT licensed:** any general claim that alignment does or does not improve a
+  deep bracket of a real subject. The flat stack is nearly insensitive to
+  registration by construction, and the deep stack is one the solver refuses.
+- **The capture the project needs does not exist**: a **deep** bracket of a
+  **fronto-parallel** target carrying **straight edges that run through depth**
+  — e.g. a ruler stood at a modest angle, or a straight edge oriented so its
+  length spans the focus range. That is a photograph the owner can take in
+  minutes and it would settle §15.4 properly.
+- **G is biased against the aligned arm on a tilted target**, and I state it
+  against my own adverse result: breathing displacement is smooth in depth and
+  therefore in tick index, so the 3-DOF projective model partly absorbs it,
+  while per-frame warp *error* is not smooth and is not absorbed. The flat
+  stack's result runs the other way, so the bias is not decisive — but it is
+  real and the 2.56× should be read as an upper bound.
+
+---
+
+## 12. Status / Changes / Verified / Not verified / Notes
 
 ### Status
 **DONE.** The instrument exists, is plant-validated, and answers the question.
@@ -504,6 +663,10 @@ way, and it is why §10.1 uses boxes rather than annuli.
   `src/sheet.py`, `src/owner_sbs.py`, `src/mech1.py`, `src/bands.py`,
   `src/peaks.py`, `src/width.py`, `src/wingbox.py`, `src/render.ps1`, logs and
   JSON.
+- **§11 (the ruler):** `PREREG3.md` (+ amendment 1), `src/ruler.ps1`,
+  `src/flatruler.ps1`, `src/angthumb.py`, `src/angcrop.py`, `src/angprobe.py`,
+  `src/angstraight.py`, `src/angrun.ps1`, `src/angfull.ps1`,
+  `src/bothrulers.ps1`, `src/angverdict.py`, logs and JSON.
 - `experiments/M97-warped-merge/src/signtest.py` — one line: `STACK` now reads
   `M97_STACK` from the environment, defaulting to the previous hard-coded
   bee-3 path, so prior results reproduce byte-identically.
@@ -536,6 +699,20 @@ way, and it is why §10.1 uses boxes rather than annuli.
   leg-spines box fails its direction plant (1.0392), and the radial
   stratification is equally non-monotone on a uniform-blur plant that has no
   radial dependence.
+- **§11, the ruler.** Both stacks rendered in both arms (4 × 198 MB TIFFs,
+  `corpus clean`, stray-sidecar count 11 → 11 on every run). Instrument
+  controls on **both** stacks: placebo bit-identical to six decimals,
+  translation gain **1.0000** with residual unchanged, bend recovery 52–121%
+  (angled) / 85–117% (flat) against the post-fit expectation, direction correct
+  on all four arms, planted one-graduation slip detected as `k=-1`.
+- **§11 tick correspondence verified before any pairing was used**: `k=0`,
+  14/14 and 12/12 paired, median offset 11.6% and 9.0% of a pitch.
+- **I opened these renders too.** §11's tick-width and texture differences were
+  seen at 1:1 in `angcrop-*.png` before any number was computed.
+- **Two further plants caught two further errors in §11's own instrument** — a
+  window narrower than the tick it measured (18% plant recovery), and a
+  tick-pairing criterion that slipped four graduations at a fabricated scale of
+  1.113. Both are described in §11.2 rather than quietly fixed.
 
 ### Not verified
 - **The 19–32% win is measured on one stack.** It should be repeated on
@@ -563,6 +740,61 @@ way, and it is why §10.1 uses boxes rather than annuli.
   `crates/strehl-cli/src/merge_cmd/halo.rs` (M87, `52c6a52`). Test code only;
   not mine and not touched.
 - Whether `WarpMap::load` rejects the torn sidecar I observed in M97.
+- **§11's S/G dissociation is ARGUED.** I could not measure the elected-frame
+  index along versus across a graduation, because `strehl stack` has no option
+  to emit an elected-frame map. The dissociation itself is measured; the
+  iso-depth explanation for it is not.
+- **§11's `G` is biased against the aligned arm on a tilted target** (§11.5,
+  last bullet). I state the direction of my own adverse result's bias; I did
+  not quantify it.
+- **The flat stack's 18% `G` win is a single number, not a distribution**, and
+  it is small: 0.283% against 0.344% of a millimetre. Unlike S it carries no
+  per-tick sign test, so I cannot put a *p*-value on it.
+- **§11's two arms of the flat stack differ in magnification by 3.14%**
+  (546.56 against 529.93 px/mm). This is consistent with the aligned arm
+  mapping to frame 0's geometry while the null keeps the elected frames'
+  geometry, but I did not verify that explanation. `G` normalises by each arm's
+  own pitch, so the comparison is unaffected.
+- **Absolute straightness numbers in §11 are not registration error.** The
+  ruler's manufacturing straightness and the lens's distortion enter both arms
+  equally. Only the paired difference is quoted as a claim.
+
+### Candidate facts (rule 28)
+
+- **P1 (MEASURED).** `strehl align` refuses `highly-angled-ruler-mm-cpl` as a
+  tilted subject; forced with `--force-tilted` it solves 299/299 with a
+  **cycle-consistency floor of 21.602 px** against **0.799 px** on the accepted
+  `flat-on-ruler-cpl`, at near-identical total drift (109.631 vs 111.054 px).
+  The refusal check identifies an internally incoherent solve, 27× worse by the
+  solver's own diagnostic.
+- **P2 (MEASURED).** Forcing that refused solve into the render degrades
+  measurable output geometry: millimetre-spacing residual **3.240% of pitch
+  against the null's 1.267%** (2.56× worse), step statistic 3.602 against 2.919.
+  On the accepted stack the same instrument reads **0.283% against 0.344%** —
+  18% better. **`--force-tilted` costs image quality.**
+- **P3 (MEASURED).** Straightness *along* a single graduation is a null on both
+  ruler stacks — 3/12 (*p*=0.146) and 6/14 (*p*=0.791), bootstrap CIs straddling
+  zero — while spacing regularity *across* graduations, from the same ticks and
+  the same tracker, shows a 2.56× effect. **A straight-edge straightness test
+  only discriminates if the edge runs through depth.** M86 §15.4's test does not
+  settle the question on either existing ruler capture.
+- **P4 (DERIVED, actionable).** The capture that would settle §15.4 does not
+  exist: a **deep** bracket of a target whose **straight edges run through the
+  focus range**. Neither a flat-on ruler (no depth) nor a steeply angled one
+  (straight edges at constant depth) provides it.
+- **P5 (MEASURED, method).** A tracking window narrower than the feature it
+  measures is silently near-blind: a 19 px window on a 30 px tick recovered
+  **18%** of a planted 2.0 px bend. Derive window sizes from measured feature
+  geometry, not by hand.
+- **P6 (MEASURED, method).** Matching periodic features between two arms by
+  best-fitting-linear-map residual admits whole-period slips: it chose a
+  four-graduation slip at a fabricated scale of **1.113** against a measured
+  pitch agreement of **0.29%**. Match by positional distance, where a one-period
+  error costs a whole period.
+- **P7 (DERIVED, method).** A half-sine plant is mostly DC and a straight-line
+  fit absorbs its mean legitimately, so the achievable post-fit residual is
+  `0.3078·amp`, not `amp/√2`. Scoring against `amp/√2` makes an honest
+  instrument look 44% blind.
 
 ### Notes
 **Corpus pollution has grown from 8 to 11 stray `warpmap.txt` files** under

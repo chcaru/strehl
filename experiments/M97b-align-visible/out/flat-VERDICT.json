@@ -1,0 +1,48 @@
+{
+ "controls": {
+  "placebo": true,
+  "shift_gain": 0.9999999999998485,
+  "bend_recovery": {
+   "2.0 px on ALIGNED": 0.849609615168099,
+   "4.0 px on ALIGNED": 0.8722743709452369,
+   "4.0 px on ZOOMNULL": 1.1693290370965626
+  },
+  "direction": true,
+  "overall": true
+ },
+ "pairing": {
+  "k": 0,
+  "n": 12,
+  "resid_px": 2.940587918050405,
+  "scale": 0.9693045104225522,
+  "offset": 93.55065528291408,
+  "median_dist_px": 49.196459158498556,
+  "pitch_px": 546.556489724172
+ },
+ "S1": {
+  "rms_aligned": 5.330904422411789,
+  "rms_null": 5.028825293922434,
+  "paired_median_diff": -0.19055096213807232,
+  "n_aligned_better": 3,
+  "n": 12,
+  "sign_p": 0.14599609375,
+  "wilcoxon_p": 0.09228515625,
+  "boot_ci": [
+   -0.2986293700367231,
+   0.03938233518262013
+  ],
+  "significant": false,
+  "pass": false
+ },
+ "S2": {
+  "aligned": 6.103980914796239,
+  "null": 5.975232221185323,
+  "pass": false
+ },
+ "S3": {
+  "aligned_frac": 0.002834734150282373,
+  "null_frac": 0.0034377615994004595,
+  "pitch_px": 546.556489724172,
+  "pass": true
+ }
+}

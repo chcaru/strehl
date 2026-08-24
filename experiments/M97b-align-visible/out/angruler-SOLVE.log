@@ -1,0 +1,12 @@
+warning: highly-angled-ruler-mm-cpl is a tilted subject and a global similarity is the wrong model for it; --force-tilted was given, so continuing
+stack highly-angled-ruler-mm-cpl: 299 frames, digest 87ef7743c43435b5
+  decoded 299 frames in 12.2 s, plane 3520x2344
+  measured 2322/2340 edges in 40.6 s (0.8% refused)
+
+  placed 299/299 frames, refused 0
+  total corner drift frame 0 -> 298: 109.631 plane px
+  held-out corner error (median): 29.359 plane px
+  cycle-consistency floor: 21.602 plane px
+  wrote C:\dev\strehl-out\M97\warpmap-angruler.txt
+
+  NOTE: held-out error 29.359 px is above M86's T_usable of 4.0 px. The sidecar is still a large improvement on no registration at all, but it is not a precise solve.
