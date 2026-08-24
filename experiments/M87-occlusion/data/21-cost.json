@@ -1,0 +1,84 @@
+{
+ "bee": {
+  "F0_ISO": 0.0680424463788235,
+  "n_prof": 6103,
+  "local-d20": {
+   "ISO": 0.013200628282476035,
+   "ISO_ci": [
+    0.008325356743745871,
+    0.021175352484603095
+   ],
+   "delta_pct": 80.59942141265456,
+   "moved_frac_of_treated": 0.6791843478913966,
+   "focus_retention_median": 0.4754408597946167,
+   "focus_retention_p05": 0.20198149979114532,
+   "max_abs_delta_outside_treated": 0.0,
+   "profiles_worse_frac": 0.1394396198590857,
+   "profiles_better_frac": 0.7316074061936753
+  },
+  "local-d40": {
+   "ISO": 0.008265601204865858,
+   "ISO_ci": [
+    0.0026367904130578214,
+    0.01868368172335021
+   ],
+   "delta_pct": 87.8522868521695,
+   "moved_frac_of_treated": 0.820904169997264,
+   "focus_retention_median": 0.387961745262146,
+   "focus_retention_p05": 0.1477026790380478,
+   "max_abs_delta_outside_treated": 0.0,
+   "profiles_worse_frac": 0.18138620350647222,
+   "profiles_better_frac": 0.7268556447648697
+  },
+  "local-d80": {
+   "ISO": 0.0,
+   "ISO_ci": [
+    0.0,
+    0.002708441449288613
+   ],
+   "delta_pct": 100.0,
+   "moved_frac_of_treated": 0.9603600800416302,
+   "focus_retention_median": 0.2686684727668762,
+   "focus_retention_p05": 0.10170598328113556,
+   "max_abs_delta_outside_treated": 0.0,
+   "profiles_worse_frac": 0.144682942815009,
+   "profiles_better_frac": 0.7973127969850893
+  }
+ },
+ "control_nonoccluding_disc": {
+  "px": 25445,
+  "local-d20": {
+   "moved_frac_of_treated": 0.7387703359391506,
+   "focus_retention_median": 0.4361894428730011,
+   "focus_retention_p05": 0.19792672991752625
+  },
+  "local-d40": {
+   "moved_frac_of_treated": 0.8541305725755335,
+   "focus_retention_median": 0.3561830520629883,
+   "focus_retention_p05": 0.13554973900318146
+  },
+  "local-d80": {
+   "moved_frac_of_treated": 0.9332347348404817,
+   "focus_retention_median": 0.28134918212890625,
+   "focus_retention_p05": 0.12746024131774902
+  }
+ },
+ "flower": {
+  "F0_ISO": 0.08154822649240878,
+  "n_prof": 2768,
+  "local-d40": {
+   "ISO": 0.012549680808919994,
+   "delta_pct": 84.61072502896403,
+   "max_abs_delta_outside_treated": 0.0,
+   "profiles_worse_frac": 0.02348265895953757,
+   "profiles_better_frac": 0.9403901734104047
+  },
+  "local-d80": {
+   "ISO": 0.003337433005475454,
+   "delta_pct": 95.90741190945933,
+   "max_abs_delta_outside_treated": 0.0,
+   "profiles_worse_frac": 0.04732658959537572,
+   "profiles_better_frac": 0.9309971098265896
+  }
+ }
+}
