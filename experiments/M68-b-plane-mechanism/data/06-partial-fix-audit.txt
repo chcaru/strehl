@@ -1,0 +1,53 @@
+k = 0.8396   alpha ratio = 0.85208   sigma ratio = 0.92308   m = 1.09943
+
+=== Q1 sign robustness ===
+  The partial fix under-predicts iff k < sigma_B/sigma_G, i.e. iff
+  the alpha ratio exceeds k^2 = 0.70493 - which is exactly the
+  {P2,P3,P4} band that C3 excluded. Same statement, twice.
+
+  worst case over the whole instrument:
+    arm none: min sigma_B/sigma_G over 11 ISOs = 0.90347 (ISO 400), margin over k = +7.6%
+    arm   r6: min sigma_B/sigma_G over 11 ISOs = 0.89882 (ISO 400), margin over k = +7.1%
+    lowest of 04's 32 row bands: sigma ratio 0.90449, margin over k = +7.7%
+
+  Does it inherit the withdrawn f?  NO. f is an INTERPRETATION
+  (where in the chain), withdrawn by D1 because it assumed spatial
+  uniformity. The alpha ratio is the MEASUREMENT: E4 showed it is
+  arm-independent and E5 that 0/32 bands reach either hypothesis band.
+  m = 1.09943 is DERIVED from sigma/k, not an independent input, so
+  the partial fix's error is simply X/0.92308 - 1 for whatever X is
+  written into the gain slot. The 0.9231 is mine; the 0.8396 is M61's,
+  and I did NOT re-measure it (D2 closed the pedestal failure mode only).
+
+=== Q2a across ISO, dark frames (rho = 1) ===
+  ISO  sigma_B/sigma_G  shipped err  partial err
+   50          0.91298        +9.5%        -8.0%
+  100          0.91166        +9.7%        -7.9%
+  200          0.90978        +9.9%        -7.7%
+  250          0.91011        +9.9%        -7.7%
+  400          0.90347       +10.7%        -7.1%
+  500          0.91316        +9.5%        -8.1%
+  640          0.91181        +9.7%        -7.9%
+  800          0.91705        +9.0%        -8.4%
+ 1000          0.92030        +8.7%        -8.8%
+ 1600          0.92631        +8.0%        -9.4%
+ 2000          0.92704        +7.9%        -9.4%
+  shipped spans +7.9% .. +10.7%;  partial spans -9.4% .. -7.1%
+  Both are material at EVERY ISO. Neither vanishes anywhere in the sweep.
+
+=== Q2b across signal level: rho = read share of the true variance ===
+   rho  shipped var  partial var  shipped sig  partial sig   |partial|<|shipped|?
+  0.00      1.19104      1.00000       +9.13%       +0.00%                   True
+  0.10      1.18930      0.98273       +9.05%       -0.87%                   True
+  0.25      1.18668      0.95683       +8.93%       -2.18%                   True
+  0.50      1.18232      0.91365       +8.73%       -4.41%                   True
+  0.75      1.17796      0.87048       +8.53%       -6.70%                   True
+  0.90      1.17534      0.84457       +8.41%       -8.10%                   True
+  1.00      1.17360      0.82730       +8.33%       -9.04%                  False
+
+  The partial fix makes the SHOT term exactly right (it is a pure
+  gain error) and leaves the READ term under-predicted by
+  -9.0% in sigma. So its error is strictly SMALLER in
+  magnitude than the shipped model's at every rho < 1, and roughly
+  equal at rho = 1. What changes is the SIGN: shipped errs
+  conservative everywhere, partial errs over-confident everywhere.
