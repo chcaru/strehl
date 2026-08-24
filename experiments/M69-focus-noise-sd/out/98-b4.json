@@ -1,0 +1,133 @@
+{
+  "arith_sites": [
+    "through_focus.rs:616",
+    "through_focus.rs:1091",
+    "through_focus.rs:1229",
+    "merge_cmd.rs:1707"
+  ],
+  "z_inflation": {
+    "coffee-bubbles": {
+      "z_inflation_p05": 1.0159557655012543,
+      "z_inflation_p95": 0.25491161151181324,
+      "spread": 3.985521724474965
+    },
+    "109MSDCF": {
+      "z_inflation_p05": 1.121268636710153,
+      "z_inflation_p95": 0.596452780034981,
+      "spread": 1.879895063351691
+    },
+    "119MSDCF": {
+      "z_inflation_p05": 1.1422087240346344,
+      "z_inflation_p95": 0.5654737073972085,
+      "spread": 2.019914823789158
+    },
+    "113MSDCF": {
+      "z_inflation_p05": 1.1341019569978081,
+      "z_inflation_p95": 0.5957036511823692,
+      "spread": 1.903802259305967
+    },
+    "112MSDCF": {
+      "z_inflation_p05": 1.0928662357631866,
+      "z_inflation_p95": 0.5640145570669863,
+      "spread": 1.9376560800954472
+    },
+    "foam": {
+      "z_inflation_p05": 1.0829863704072742,
+      "z_inflation_p95": 0.3913881322341482,
+      "spread": 2.7670393688876005
+    },
+    "coffee-bean": {
+      "z_inflation_p05": 1.2458337803354849,
+      "z_inflation_p95": 0.6907474283707931,
+      "spread": 1.803602487922288
+    },
+    "wrapped-text-2": {
+      "z_inflation_p05": 1.0642360866152465,
+      "z_inflation_p95": 0.5191215225177872,
+      "spread": 2.0500712077079823
+    },
+    "wrapped-text-1": {
+      "z_inflation_p05": 1.2065613066308016,
+      "z_inflation_p95": 0.6722266174265691,
+      "spread": 1.7948728529224012
+    },
+    "bee-1": {
+      "z_inflation_p05": 1.1782861972102747,
+      "z_inflation_p95": 0.6781634164687164,
+      "spread": 1.7374664698750069
+    },
+    "bee-2": {
+      "z_inflation_p05": 1.1279804402786786,
+      "z_inflation_p95": 0.662166428693407,
+      "spread": 1.7034696888883663
+    },
+    "bee-3": {
+      "z_inflation_p05": 1.2007353960216363,
+      "z_inflation_p95": 0.6850637591081172,
+      "spread": 1.7527352455264464
+    }
+  },
+  "fpr": {
+    "coffee-bubbles": {
+      "within_stack": 3.985521724474965,
+      "fpr_ratio_hi": 7.279394002424911,
+      "fpr_ratio_lo": 3.349181704098959e-07
+    },
+    "109MSDCF": {
+      "within_stack": 1.879895063351691,
+      "fpr_ratio_hi": 3.7368375526675117,
+      "fpr_ratio_lo": 0.040467850084527565
+    },
+    "119MSDCF": {
+      "within_stack": 2.0199148237891578,
+      "fpr_ratio_hi": 4.099986193921868,
+      "fpr_ratio_lo": 0.022203343079285384
+    },
+    "113MSDCF": {
+      "within_stack": 1.9038022593059667,
+      "fpr_ratio_hi": 3.800601967918446,
+      "fpr_ratio_lo": 0.036590334397555845
+    },
+    "112MSDCF": {
+      "within_stack": 1.9376560800954472,
+      "fpr_ratio_hi": 3.889648527205075,
+      "fpr_ratio_lo": 0.031687137450188724
+    },
+    "foam": {
+      "within_stack": 2.767039368887601,
+      "fpr_ratio_hi": 5.66234815554315,
+      "fpr_ratio_lo": 0.0005899511101902298
+    },
+    "coffee-bean": {
+      "within_stack": 1.803602487922288,
+      "fpr_ratio_hi": 3.528448736485389,
+      "fpr_ratio_lo": 0.055538884277129816
+    },
+    "wrapped-text-2": {
+      "within_stack": 2.0500712077079823,
+      "fpr_ratio_hi": 4.174985538333846,
+      "fpr_ratio_lo": 0.019446982412007572
+    },
+    "wrapped-text-1": {
+      "within_stack": 1.7948728529224014,
+      "fpr_ratio_hi": 3.504127059698801,
+      "fpr_ratio_lo": 0.05756048254417698
+    },
+    "bee-1": {
+      "within_stack": 1.737466469875007,
+      "fpr_ratio_hi": 3.341750118111771,
+      "fpr_ratio_lo": 0.0726420888669672
+    },
+    "bee-2": {
+      "within_stack": 1.703469688888366,
+      "fpr_ratio_hi": 3.243604440460909,
+      "fpr_ratio_lo": 0.08321203384965496
+    },
+    "bee-3": {
+      "within_stack": 1.7527352455264462,
+      "fpr_ratio_hi": 3.3853507518049204,
+      "fpr_ratio_lo": 0.06831002945250045
+    }
+  },
+  "n_doc_found": true
+}

@@ -38,6 +38,20 @@ the second and prices the limb M62 left open. §§3b, 8.2, 8.3, 9.1 and facts
 
 Pre-registered at **`33f3565`**, before any number in this report existed.
 
+**Extended by Part II (§§14–16), commissioned after Part I was folded** and
+pre-registered separately at **`c545588`**. Part I asked whether the *coarse*
+constant should be a constant; Part II asks the same question of the *fine* one,
+`FINE_FOCUS_NOISE_SD`, whose **scale** is settled by facts 500/580/753 but whose
+**form** had never been checked. **It passes: `D = 1.371×` against the coarse
+field's `4.062×`, inside the pre-registered `<1.5` bar — the first constant in
+this project to survive a form check.** M63 (**not** `M60-bimodality.md`, which
+does not exist) is **immune**, and the site that spends the constant,
+`bimodality_sigma_cut`, had already anticipated and structurally prevented the
+`N`-dependence defect M66 proved and M62 confessed — **a counter-finding to the
+corpus's new suspicion of bare constants, recorded as one in §14.5.** Part II
+also corrects Part I's §9.1 item 4 against my own prediction (fact 65), and rules
+the gate's `<=` tie **not a defect** (§14.7).
+
 Status: MEASURED unless a fact says otherwise. No file under `crates/` was
 modified; `git show --name-only` on every commit in this milestone shows only
 paths under `experiments/M69-focus-noise-sd/`, `docs/research/M69-focus-noise-sd.md`
@@ -1025,4 +1039,463 @@ promoted it from flagged anomaly to settled fact before M69 reported.
 never retypes one. The amendment's arms are `src/95-a7-second-observation.py`
 (facts 38–40) and `src/96-a8-m65-election.py` (facts 41, 44–46); both carry their
 bars in their docstrings, fixed before they ran.
+
+---
+---
+
+# Part II — the fine field's *form*
+
+**Commissioned separately, after Part I was folded.** Facts 500 / 580 / 753 settle
+`FINE_FOCUS_NOISE_SD`'s **scale** — it is correct as consumed. Nobody had asked
+about its **form**. Part I's 4.06× texture dependence was measured on the
+**coarse, regularised** operator; the fine field is deliberately unregularised
+(`strehl-plugin/src/field.rs:19`), and the direction-coherence mechanism of fact
+19 has no obvious reason to stop at a change of window radius.
+
+Pre-registered at **`c545588`**, before any number in Part II existed:
+`experiments/M69-focus-noise-sd/PREREGISTRATION-2.md`, carrying arms B1–B4,
+decision rules E1–E4 with their bars, controls K11–K14 with their consequences,
+and the mechanism stated **without a sign**.
+
+**Headline: the fine field is TIGHT — `D = 1.371×` against the coarse field's
+`4.062×`, inside the pre-registered `<1.5` bar. It is the first constant in this
+project to survive a form check.** M63 — the bimodality milestone, and it is
+**M63**, not the `M60-bimodality.md` I was pointed at, which does not exist — was
+**never at risk**, because it does not consume the constant at all. **And the one
+site that does consume it on the statistics path, `bimodality_sigma_cut`, had
+already anticipated the exact `N`-dependence defect M66 proved and M62 confessed,
+and structurally prevented it.** That is a counter-finding, and §14.6 states it as
+one: the corpus's new suspicion of bare constants is correct as a prior and wrong
+about this site.
+
+**The tightness has a limb, and it is not small.** Plant-level tightness is
+measured on a *homogeneous* plant. A real image is not one texture scale, and
+**within a single stack the fine field's response SD spans 1.70× to 3.99×
+(median 1.89×)**. §14.5 refuses to let the headline stand without it.
+
+---
+
+## 14. Reading the two fields against each other
+
+Both fields come from **one** Sobel magnitude, box-meaned twice at two radii
+(`focus.rs:239–259`, `compute_with_fine`):
+
+| | operator | window | normaliser | regulariser | constant |
+|---|---|---|---|---|---|
+| selection | Sobel `\|∇\|` | `WINDOW_RADIUS` 13 → 27×27 | `/σ(L)` | box r=8 → 17×17 | `FOCUS_NOISE_SD` 0.015214 |
+| fine | Sobel `\|∇\|` | `FINE_WINDOW_RADIUS` 2 → 5×5 | `/σ(L)` | **none** | `FINE_FOCUS_NOISE_SD` 0.090400 |
+
+They differ in **two** things at once, not one, so B2 crosses them into a 2×2 —
+`{coarse, fine} × {regularised, bare}` — of which only two cells ship. The two
+off-diagonal cells exist solely to separate the levers.
+
+**Fact 48 (MEASURED).** All four cells reproduce their independent anchors on the
+crate's own calibration plant (12 seeds, 512², σ≡1 — the configuration
+`merge.rs:1197` and `through_focus.rs:1052` calibrate in):
+
+| cell | measured SD | anchor | Δ | control |
+|---|---|---|---|---|
+| coarse+reg | 1.527211e−02 | 0.015214 (`merge.rs`) | **+0.38%** | K12 MET |
+| coarse+bare | 1.887278e−02 | 0.018847 (fact 528) | **+0.14%** | — |
+| fine+reg | 2.756120e−02 | 0.027613 (fact 500) | **−0.19%** | K13 MET |
+| fine+bare | 9.061650e−02 | 0.090400 (`through_focus.rs`) | **+0.24%** | K11 MET |
+
+K14, the bare/reg ratio, reads **1.2358** against M45's **1.2390** — **−0.26%**,
+MET. Bonus, unregistered: `fine+bare / fine+reg = 3.2878` against the ratio
+`through_focus.rs:1121` states, **3.273** — **+0.45%**. Four anchors from four
+different milestones, reproduced by one script that retypes none of them.
+
+**The power caveat, stated because the controls are not as strong as they look.**
+Relative SEM in these cells is 0.8–1.1%, so a *true* 2% error sits at only ~2.5
+SEM. K11–K14 passing means these cells are not grossly wrong; it does not mean
+they are pinned to 0.2%. This also disposes of an apparent conflict with Part I:
+arm A8.1 read **0.019044** in the coarse+bare cell against B1's **0.018873**, a
+gap of **0.83 SEM** — seed-to-seed sampling, and nothing to fix in either.
+
+---
+
+### 14.1 E1 — the fine field is TIGHT
+
+Observable, fixed in advance: `D = max(ρ) / min(ρ)` over texture scale ℓ ∈
+{2,4,8,16} at z=40, where ρ is the measured response SD in units of that cell's
+own constant. `D = 1` is a constant that holds; large `D` is a constant that
+drifts with texture.
+
+**Fact 49 (MEASURED).** The four cells, same plant, same seeds, same ℓ grid:
+
+| cell | ℓ=2 | ℓ=4 | ℓ=8 | ℓ=16 | **D** |
+|---|---|---|---|---|---|
+| coarse+reg *(ships)* | 1.1343 | 0.7397 | 0.4501 | 0.2792 | **4.062×** |
+| coarse+bare | 1.1587 | 0.7993 | 0.5575 | 0.4415 | 2.625× |
+| fine+reg | 1.1489 | 0.7714 | 0.5058 | 0.3754 | 3.061× |
+| fine+bare *(ships)* | 1.2652 | 1.0626 | 0.9602 | 0.9227 | **1.371×** |
+
+**`D_fine+bare = 1.371×`, against the registered bar `TIGHT < 1.5`. E1 = TIGHT.**
+On the full grid (all ℓ, all z > 0) the four read 4.078 / 2.625 / 3.061 / **1.374**
+— the verdict does not depend on the sub-grid.
+
+**A free replication falls out of the control cell.** `D_coarse+reg = 4.062×`
+reproduces Part I's fact 18 (`4.06`) **exactly**, from a script written for a
+different question five days later. The 2×2 was built to isolate two levers; that
+it lands on fact 18 to three digits is evidence the harness is measuring what fact
+18 measured.
+
+**Fact 50 (MEASURED).** Both levers reduce dispersion, and they compound:
+
+| lever | from → to | factor |
+|---|---|---|
+| radius (27×27 → 5×5), bare | 2.625× → 1.371× | ×0.522 |
+| radius (27×27 → 5×5), regularised | 4.062× → 3.061× | ×0.753 |
+| regulariser off, coarse | 4.062× → 2.625× | ×0.646 |
+| regulariser off, fine | 3.061× → 1.371× | ×0.448 |
+
+**It is not monotone in total support width, and that is the interesting part.**
+The bare coarse field integrates 29×29 and reaches `D = 2.625`; the regularised
+fine field integrates 23×23 — *less* — and reaches `D = 3.061`, which is worse.
+Support width alone does not order these cells.
+
+**Fact 51 (DERIVED).** The mechanism, and it is visible in the source rather than
+inferred from the numbers. The **window** averages `\|∇\|` *before* the `/σ(L)`
+normalisation; the **regulariser** averages `\|∇\|/σ` *after* it. Averaging before
+normalisation combines raw gradient magnitudes, whose noise is signal-dependent
+and whose neighbours are correlated by the Sobel kernel's own support.
+Averaging *after* combines quantities already divided by a local σ that is itself
+estimated from the same neighbourhood — so the regulariser correlates the
+numerator with the denominator over a 17×17 box, and that coupling is what varies
+with texture scale. **The regulariser is the stronger disperser per unit width,
+and it is the lever the shipped selection field pulls and the shipped fine field
+does not.** That, not the window radius, is why the fine field is tight.
+
+**Fact 52 (MEASURED).** The two shipped cells sit on opposite sides of their own
+constants. Coarse+reg's ρ runs **0.2792–1.1343**, mostly *below* 1 — the constant
+acts as a near-ceiling and real texture is quieter than the plant. Fine+bare's ρ
+runs **0.9227–1.2652**, mostly *above* 1 — the constant is central-to-low. **The
+two constants are therefore wrong in opposite directions**, which is worth stating
+because it means no single global rescale of "the noise scale" could fix both.
+
+**Fact 53 (MEASURED).** An apparent contradiction with Part I's arm A8.3, which
+is not one. A8.3 found `k_sd` (the bare/regularised ratio) spanning **1.36–2.02**
+across real latents; B2 gives `k_sd` = 1.1587/1.1343 = **1.022** at ℓ=2 and
+0.4415/0.2792 = **1.581** at ℓ=16, a span of **1.55×**, consistent with A8.3's
+1.488×. Both statements are true simultaneously: `k_sd` is not a constant either,
+and M65's **1.2377** is its value at one particular texture mix. Recorded because
+it *reads* as a conflict and a later reader would otherwise have to re-derive it.
+
+---
+
+### 14.2 E3 — the corpus, both fields
+
+Method as Part I arm A2: one real frame per stack as latent (`files[len//2]`,
+central 2048 crop), noise injected from the shipped profile, 32 replicates.
+
+**Fact 54 (MEASURED).** Across 12 real stacks:
+
+| field | ρ_obs span | ρ_true span | median ρ_true |
+|---|---|---|---|
+| fine | 1.612× | **1.593×** | 1.1643 |
+| coarse | 2.138× | **2.104×** | 1.0307 |
+
+Every fine ρ_true is ≥ 1.043 (min `coffee-bean` 1.0430, max `coffee-bubbles`
+1.6616) — the fine constant is **low on every stack in the corpus**, never high.
+By contrast the coarse field straddles 1 (0.8116–1.7074). **The fine field is
+tighter than the coarse field on real data too, by 1.32× on span** — consistent
+with E1, from an independent route.
+
+**Fact 55 (MEASURED).** **The limb that stops the headline from being the whole
+story.** E1's plant is homogeneous — one ℓ per realisation. A real image is a
+mixture, and *within a single stack* the fine field's per-pixel response SD spans
+p95/p05 of **1.703× to 3.986×**, median **1.892×**. The coarse field's is
+1.818–3.678×, median 2.218×. **Plant-level tightness does not imply per-pixel
+tightness, and the ratio between them is roughly the whole effect.** The fine
+field's constant is a good global scalar and a poor per-pixel one. Anything that
+compares a *pixel* against it inherits the 1.9× (§14.4); anything that compares a
+*stack* against it does not.
+
+**Fact 56 (MEASURED).** B3's coarse ρ_true span (**2.104×**) conflicts with my own
+committed fact 13 (**1.186×**), and the conflict is real but not a bug in either.
+`80-corpus-rho.py` (fact 13) evaluates the **P2 predictor**; B3 **measures**
+replicate SD directly. Both use the identical central-2048 crop, so region is not
+the difference. Arm B5's control **K15** settles it: P2 re-evaluated on the same
+three frames reproduces the committed `80-corpus-rho.json` ρ_obs column to a worst
+error of **0.00%** (bar 1%, **MET**). **Neither run is buggy; they are two
+estimators of the same quantity disagreeing, and §14.7 is about why.**
+
+---
+
+### 14.3 E4 — M63 is immune, and rule 40 stops the arm here
+
+**Fact 57 (MEASURED).** **There is no `M60-bimodality.md` under `docs/research/`.**
+(Stated without forming the path, because the citation linter's C2 check correctly
+fires on it — a report cannot cite a file in order to say the file is absent.) The
+bimodality milestone is **M63**
+([`docs/research/M63-bimodality.md`](M63-bimodality.md), 2056 lines); the collision
+is with its *experiment directory*, `experiments/M60-bimodality/`. M63 §17.5
+already records "M6 is a name collision". Flagged because C2 now fails on
+`docs/research/` citations that do not resolve, and because this was the third
+specific relayed to me that did not survive checking.
+
+**Fact 58 (MEASURED).** **M63 does not consume `FINE_FOCUS_NOISE_SD` at all.** It
+builds its own **per-pixel Monte-Carlo** `σ_f(k,x)`, forms
+`z = prom / sqrt(σ_f(k₂)² + σ_f(k_d)²)`, and calibrates its threshold `z*` **per
+cell against that cell's own noise-only null** (§2.2, §2.3). A grep of
+`experiments/M60-bimodality/` for the constant returns only coincidental numeric
+matches (`0.09048390937885759`, a band-entropy value) in `data/*.json` — **no
+source file consumes it.** M63 §16 states *"cargo is not required — no Rust was
+built or changed."*
+
+**E4 = IMMUNE. Rule 40: M63 already built the control that bounds this, and it
+built it per-pixel, which is stronger than anything I would have added.** M63 §4.3
+validates its own denominator at `σ_emp/σ_pred = 0.96` over 25 cells (range
+0.87–1.01). **The conclusions M60/M63 drew do not move**, and the orchestrator's
+concern — that a bimodality detector might have a drifting null — is correct as a
+worry and does not apply to this detector. I stopped the arm here rather than
+re-measuring what §4.3 already establishes.
+
+---
+
+### 14.4 Where the constant *is* spent, priced
+
+**Fact 59 (MEASURED).** `FINE_FOCUS_NOISE_SD` has **exactly four arithmetic
+sites** in the workspace: `through_focus.rs:616` (`bimodality_sigma` — the only
+consumer on the statistics path), `through_focus.rs:1091` and `:1229` (both
+tests), and `merge_cmd.rs:1707` (a `--stats` print). **One site matters.**
+
+**Fact 60 (DERIVED).** `bimodality_sigma(i) = (far_val[i] − floor[i]) / (√2 ·
+FINE_FOCUS_NOISE_SD)`. The numerator is a **per-pixel** difference of fine
+responses; the denominator is a **global constant**. If the true per-pixel SD is
+`ρ(p)` times the constant, **the reported z is inflated by exactly `1/ρ(p)`.**
+Priced on the corpus:
+
+| stack | ρ_obs | z inflation at p05 | at p95 | ratio |
+|---|---|---|---|---|
+| coffee-bubbles | 1.7494 | 1.016 | 0.255 | **3.986×** |
+| foam | 1.4794 | 1.083 | 0.391 | 2.767× |
+| wrapped-text-2 | 1.3492 | 1.064 | 0.519 | 2.050× |
+| 119MSDCF | 1.2688 | 1.142 | 0.565 | 2.020× |
+| 112MSDCF | 1.2836 | 1.093 | 0.564 | 1.938× |
+| 113MSDCF | 1.2297 | 1.134 | 0.596 | 1.904× |
+| 109MSDCF | 1.2430 | 1.121 | 0.596 | 1.880× |
+| coffee-bean | 1.0856 | 1.246 | 0.691 | 1.804× |
+| wrapped-text-1 | 1.1429 | 1.207 | 0.672 | 1.795× |
+| bee-3 | 1.1213 | 1.201 | 0.685 | 1.753× |
+| bee-1 | 1.1392 | 1.178 | 0.678 | 1.737× |
+| bee-2 | 1.1797 | 1.128 | 0.662 | 1.703× |
+
+**Within one stack, the same reported z means between 0.255 and 1.246 true σ
+depending only on where the pixel is.** That is the §14.5 limb landing on the one
+place the constant is spent.
+
+**Fact 61 (DERIVED).** Does the shipped placebo cut absorb it? **Split, and the
+split is the answer.** `merge_cmd.rs` sets `bimodal_cut` = p99 of a **permutation
+placebo** population and flags `b >= cut`. (a) **Stack-level** dispersion:
+**absorbed, by construction** — a cut re-derived per stack from that stack's own
+placebo sees that stack's ρ and rescales with it. (b) **Within-image** dispersion:
+**not absorbed** — the cut is a single scalar over all pixels, and fact 60's
+1.70–3.99× is exactly the part a single scalar cannot follow. I computed Gaussian
+false-positive ratios for (b) and then **declined to publish them as anything but
+illustration**: the true null is a multiplicity tail over `n−3` frames
+(`through_focus.rs:731`), not a Gaussian tail, and M63 §2.3 registered the same
+refusal for the same reason.
+
+---
+
+### 14.5 The counter-finding — this site got it right
+
+**Fact 62 (MEASURED).** `bimodality_sigma_cut` **has no default in the crate, on
+purpose**, and the doc comment at `through_focus.rs:724–745` says so in terms that
+name the exact defect the corpus is now hunting:
+
+> `/// has **no default in this crate on purpose**. The distribution of` … `the
+> same cut. Calibrate it against the permutation placebo` …
+
+It names the **order statistic**, states the **`N`-dependence** explicitly, and
+**mandates per-stack calibration against the permutation placebo**.
+
+**This is the counterexample, and it should be recorded as one.** M66 proved
+`Gate::tolerance()` is a fixed line against a statistic whose null drifts with
+`N`. M62 confessed guard G has *"the same shape of error as the thing it
+polices."* The brief put it to me that *"the corpus is now suspicious of bare
+constants"* and that `FINE_FOCUS_NOISE_SD` is one. **The constant is bare; the
+threshold that is actually compared is not, and the threshold is what decides
+anything.** This site anticipated the failure mode and structurally prevented it —
+by refusing to ship a default at all, which is the strongest available form of
+prevention because it cannot be silently inherited.
+
+**The generalisable discipline is not "distrust bare constants".** It is: *find
+the place the constant is compared, and ask whether the **comparison** carries the
+dependence.* A bare constant in a **denominator** whose **threshold** is calibrated
+per stack is safe at stack level. A bare constant in a **tolerance** that is
+compared directly, as in `Gate::tolerance()`, is not. Same shape of constant,
+opposite verdicts, and only reading the consumption site distinguishes them.
+
+---
+
+### 14.6 B5/B6 — an unstated domain limit in my own Part I predictor
+
+**Fact 63 (MEASURED, POST HOC).** P2 — Part I's post-hoc per-pixel predictor —
+tracks the directly-measured chain to a median of **1.006** across the corpus,
+with **10 of 12 stacks inside ±3.6%**. Two fail: **coffee-bubbles at 1.591** and
+**foam at 1.335**. Those are **exactly the corpus's only two ISO-1000 stacks** — a
+perfect association at n = 2. They are also both fine, self-similar bubble/foam
+texture. **ISO is confounded with scene and B5 cannot separate them.**
+
+Part I §9.1 item 4 predicted analytically that P2, being scale-free in noise
+magnitude, *"cannot see"* fact 24's read-noise over-prediction. B5 looked like the
+measurement of that blind spot. **B6 was run to check, and it refutes the
+reading.**
+
+**Fact 64 (MEASURED).** Holding the **scene fixed** and sweeping the **declared
+ISO** across 50–3200, using the model consistently for injection, σ-normalisation
+and P2 at every step:
+
+| scene | native ISO | meas/P2 at ISO 50 | at ISO 1000 | at ISO 3200 | swing |
+|---|---|---|---|---|---|
+| bee-1 | 100 | 0.964 | **0.990** | 1.006 | 1.044× |
+| coffee-bean | 50 | 0.978 | **0.986** | 1.001 | 1.024× |
+| coffee-bubbles | 1000 | 1.552 | 1.591 | 1.638 | 1.056× |
+
+**The reading rule, fixed in the script's docstring before it ran, resolves to the
+second branch: the driver is the SCENE.** A low-ISO scene driven to declared ISO
+1000 stays at **0.990** and **0.986** — inside B5's good band (0.96–1.03), nowhere
+near the 1.335/1.591 the real ISO-1000 stacks show. `coffee-bubbles` stays bad at
+**1.552** even at the lowest declared ISO. **The ratio is essentially flat in ISO
+on every scene (swings 1.02–1.06× over a 64× ISO range) and its level is set by
+the texture.**
+
+**Fact 65 (DERIVED).** So §9.1 item 4 needs correcting by measurement, and the
+correction cuts both ways. P2 is **not** perfectly scale-free — it does move with
+ISO (bee-1: 1.0538 → 1.0045, −4.7% over 50→3200). But **the measured chain moves
+with it**, which is why the *ratio* barely moves. **The ISO limb of §9.1 item 4 is
+real and is 12–30× too small to explain B5's failures. P2's true undeclared domain
+limit is texture, not ISO** — and that is the same axis as fact 19's mechanism,
+which is at least self-consistent. **This is a correction to Part I, from Part II,
+against my own prediction, and it is recorded as one.**
+
+*The asymmetry was declared in advance and is honoured:* raising declared ISO on a
+low-ISO latent is clean (it adds noise the model knows about); lowering it on
+`coffee-bubbles` is **confounded**, because the latent already contains ISO-1000
+noise that cannot be removed. **No conclusion above rests on the lowering arm** —
+the two clean raising arms carry it.
+
+**Fact 66 (MEASURED).** A control on the sweep itself: ISO 50 and ISO 100 give
+**bit-identical** results in all three scenes. That is not an artefact — it is
+`profile.rs:205`, `gain_dn_per_e = iso.max(base_iso) / gain_divisor`, the
+extended/pull-ISO floor, which `profile.rs:444–457` defends with a test *and a
+placebo assertion*. **The sweep is consuming the shipped model correctly**, which
+is the only thing this observation is offered as.
+
+**What B6 cannot do, named rather than glossed.** It sweeps a *declared* ISO over
+a *frozen* latent. It cannot rule on whether real captures at ISO 1000 differ from
+low-ISO captures in ways the profile does not model. That needs a capture that
+does not exist, and §14.8 records it.
+
+---
+
+### 14.7 The `<=` tie in the gate — located, and it is deliberate
+
+Routed to me as an unruled M66 defect. **I located it myself rather than trusting
+the description, which was the right instruction: the description was incomplete.**
+
+**Fact 67 (MEASURED).** The site is `merge.rs:320`, `best - focus <=
+self.tolerance()`. The decisive context is 426 lines away at **`merge.rs:746`**:
+
+> `let admitted = winner \|\| self.gate.admits(...)`
+
+**The winner is admitted by a separate short-circuit.** Therefore `<=` versus `<`
+does *not* control whether the winning frame survives — it exists **purely to
+admit non-winner exact ties.** Any framing of this as "the gate might drop the
+winner" is wrong, and M66's 0–3 px / 515,094 blast radius is measuring the second
+of two distinct sub-cases the corpus has been conflating:
+
+- **(a)** `best − focus` exactly equalling a **nonzero** tolerance — an `f32`
+  coincidence. This is M66's 0–3 pixels.
+- **(b)** `best == focus` **exactly** — a *genuine* tie, entirely reachable on
+  quantised raw data in flat regions, and **the whole content of `admits` at gate
+  0**, where `tolerance()` is identically 0.
+
+**Fact 68 (ARGUED).** **Admitting ties is correct, and it is deliberate rather
+than accidental.** The crate's own tests say so at `merge.rs:1326–1344`: the test
+`a_zero_threshold_admits_only_the_winner` **asserts `gate.admits(1.0, 1.0)` is
+true**, and its neighbour explicitly declines to test the boundary because
+*"testing the boundary itself would be testing f32 cancellation rather than the
+gate."* Two frames the operator cannot distinguish carry **equal evidence**;
+averaging them reduces variance at no bias cost. `<` would discard one of two
+equally-supported measurements — **the selector-correct choice in exactly the case
+where an estimator gains most.** For sub-case (b) at gate 0, `<` would admit
+*nothing at all* and the merge would degenerate.
+
+**Recommendation: rule it NOT A DEFECT and close it.** One documentation nit, and
+it is genuinely minor: the test name says *"admits only the winner"* when the test
+body also asserts an exact non-winner tie is admitted. The name understates what
+the test pins.
+
+---
+
+### 14.8 Captures owed by Part II
+
+Added to `docs/captures-needed.md` rather than asserted here:
+
+**One static scene captured at several ISOs** (e.g. 100 / 400 / 1000 / 3200,
+identical framing, focus untouched). B6 sweeps a *declared* ISO over a frozen
+latent, which tests the model's arithmetic but not the sensor's behaviour. Real
+captures across ISO on **one fixed texture** would separate ISO from scene at the
+capture level rather than the model level, and would let fact 24's read-noise
+over-prediction be tested on the focus response instead of on darks. **This is
+"not measured", not "not measurable"** — it is one afternoon with a tripod.
+
+---
+
+## 15. Part II — pre-registered decisions, in their own words
+
+| decision | pre-registered bar | result |
+|---|---|---|
+| **E1** — does the fine field carry the coarse field's texture dependence? | TIGHT if `D < 1.5`; SAME-ORDER if `D >= 3.0`; INTERMEDIATE between | **TIGHT** — `D = 1.371×` against coarse+reg's `4.062×` (fact 49) |
+| **E2** — which lever, radius or regulariser? | decomposition reported whichever way it falls | **Both, compounding**; regulariser is the stronger disperser per unit width, and the ordering is **not monotone in support width** (facts 50–51) |
+| **E3** — does it hold on the real corpus? | report span both fields, same method as fact 13 | **HOLDS at stack level** — fine 1.593× vs coarse 2.104×; **but within-stack p95/p05 is 1.703–3.986×** (facts 54–55) |
+| **E4** — does any M63 conclusion move? | move if the bimodality null is denominated in the constant | **IMMUNE — no conclusion moves.** M63 builds its own per-pixel σ_f and calibrates z* per cell; it does not consume the constant (fact 58). Rule 40: stopped here |
+| **K11–K14** — four-cell calibration | each within 2% of an independent anchor | **ALL MET** (+0.24 / +0.38 / −0.19 / −0.26%), with a stated power caveat (fact 48) |
+| **K15** — is the fact 13 / B3 conflict a bug? | P2 must reproduce the committed column within 1% | **MET at 0.00%** — neither run is buggy; two estimators disagree (fact 56) |
+
+**Nothing in Part II was withdrawn, and one thing in Part I was corrected by it:**
+§9.1 item 4's ISO reading, by fact 65, against my own analytic prediction.
+
+---
+
+## 16. What Part II asserts, and what it does not
+
+**Asserts.** That the fine field is tight at plant level (fact 49) and tighter
+than the coarse field on real data (fact 54). That the mechanism is the
+regulariser's post-normalisation coupling rather than window radius (facts 50–51).
+That the within-stack limb is 1.70–3.99× and is not absorbed by the shipped cut
+(facts 55, 60–61). That M63 is immune (fact 58). That `bimodality_sigma_cut`
+already handles the `N`-dependence correctly (fact 62). That the gate's `<=` is
+deliberate and estimator-correct (facts 67–68).
+
+**Does not assert.** That `FINE_FOCUS_NOISE_SD` should change — **it should not**;
+facts 500/580/753 settle its scale and fact 62 shows the site that spends it is
+protected. That the within-stack limb is currently *causing* a wrong result — fact
+61 shows the per-stack placebo absorbs the stack-level part, and I declined to
+publish a Gaussian FPR for the rest because the true null is a multiplicity tail I
+did not characterise. That P2 is validated — fact 63 is post hoc, and fact 65
+narrows rather than removes its undeclared domain. That B6 settles real ISO
+behaviour — fact 66's sweep is over a frozen latent, and §14.8 names the capture
+that would.
+
+**The circularity, in Part II's own terms.** It bites in a different place than in
+Part I and it does not vanish. B1 calibrates each cell against anchors
+(`FOCUS_NOISE_SD`, `FINE_FOCUS_NOISE_SD`, facts 500 and 528) that were themselves
+produced by this same operator on this same plant — so the four Δ values verify
+**self-consistency**, not external correctness. **Where it does not bite:** `D` is
+a **ratio of ρ values within one cell**, so the constant divides out of the
+numerator and denominator identically. **E1's verdict is invariant to the value of
+the constant it is expressed in** — it would read 1.371× if the constant were
+doubled. That is the whole reason `D` was chosen as the observable in advance, and
+it is why E1 survives a circularity that Part I's absolute numbers do not.
+
+**Reproduction.** `PREREGISTRATION-2.md` (committed `c545588`, before any Part II
+number existed), `src/97-b-fine-field.py` (facts 48–56),
+`src/98-b4-pricing.py` (facts 59–62), `src/99-b5-p2-vs-measured.py` (facts 56, 63),
+`src/9a-b6-iso-or-scene.py` (facts 64–66), and `out/*.log`, `out/*.json`. **No
+Rust was built and nothing under `crates/` was modified — Part II needed no code
+change, which is the expected shape of a measurement milestone.**
 

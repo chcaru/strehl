@@ -1,0 +1,56 @@
+==============================================================================
+M69 arm B6 -- ISO or scene?  (POST HOC, confound removal)
+==============================================================================
+  FOCUS_NOISE_SD      0.015214     merge.rs
+  DEFAULT_GATE        4.0            merge.rs
+  REGULARISER_RADIUS  8              merge.rs
+  WINDOW_RADIUS       13             focus.rs
+  SIGMA_EPS           0.001          focus.rs
+  gain_divisor        436.8          profile.rs
+  base_iso            100.0          profile.rs
+  read_noise_e_low    4.2            profile.rs
+  read_noise_e_high   1.2392          profile.rs
+  second_base_iso     400.0          profile.rs
+  black / white       512 / 15360     profile.rs
+
+  --- bee-1  (native ISO 100;  B5 meas/P2 = 0.964)
+      clean: raising ISO adds noise the model knows about
+         ISO        P2   MEASURED   meas/P2  native?
+          50    1.0538     1.0154     0.964         
+         100    1.0538     1.0154     0.964 <-- native
+         200    1.0371     1.0043     0.968         
+         400    1.0227     0.9991     0.977         
+        1000    1.0105     1.0000     0.990         
+        3200    1.0045     1.0103     1.006         
+
+  --- coffee-bean  (native ISO 50;  B5 meas/P2 = 0.978)
+      clean: raising ISO adds noise the model knows about
+         ISO        P2   MEASURED   meas/P2  native?
+          50    0.8569     0.8378     0.978 <-- native
+         100    0.8569     0.8378     0.978         
+         200    0.8665     0.8458     0.976         
+         400    0.8819     0.8629     0.978         
+        1000    0.9107     0.8984     0.986         
+        3200    0.9496     0.9507     1.001         
+
+  --- coffee-bubbles  (native ISO 1000;  B5 meas/P2 = 1.591)
+      CONFOUNDED below its native ISO -- see docstring
+         ISO        P2   MEASURED   meas/P2  native?
+          50    1.1795     1.8303     1.552         
+         100    1.1795     1.8303     1.552         
+         200    1.1711     1.8139     1.549         
+         400    1.1573     1.8152     1.569         
+        1000    1.1263     1.7916     1.591 <-- native
+        3200    1.0776     1.7650     1.638         
+==============================================================================
+B6 -- the reading rule applied
+==============================================================================
+  bee-1            ISO   50 -> 3200  meas/P2 0.964 -> 1.006   swing 1.044x
+  coffee-bean      ISO   50 -> 3200  meas/P2 0.978 -> 1.001   swing 1.024x
+  coffee-bubbles   ISO   50 -> 3200  meas/P2 1.552 -> 1.638   swing 1.056x
+
+  Clean (raising) arms only:
+    bee-1            at declared ISO 1000: meas/P2 = 0.990   (B5's ISO-1000 stacks: 1.335 foam, 1.591 coffee-bubbles; B5's good band 0.96-1.03)
+    coffee-bean      at declared ISO 1000: meas/P2 = 0.986   (B5's ISO-1000 stacks: 1.335 foam, 1.591 coffee-bubbles; B5's good band 0.96-1.03)
+
+  wrote out/9a-b6.json

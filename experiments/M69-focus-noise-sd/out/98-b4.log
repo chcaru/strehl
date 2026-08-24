@@ -1,0 +1,107 @@
+==============================================================================
+M69 arm B4 -- pricing the fine field's dispersion  (DERIVED throughout)
+==============================================================================
+  E1 verdict carried in from B2: TIGHT   D_fine+bare = 1.371x
+==============================================================================
+B4.0 -- the consumption sites, read from source
+==============================================================================
+  Every line in crates/ that spends FINE_FOCUS_NOISE_SD arithmetically:
+
+    through_focus.rs:153   [ DECL] pub const FINE_FOCUS_NOISE_SD: f32 = 0.090_400;
+    through_focus.rs:616   [ARITH] .map(|v| v / (std::f32::consts::SQRT_2 * FINE_FOCUS_NOISE_SD))
+    through_focus.rs:1091  [ARITH] let deviation = ((mean_sd - FINE_FOCUS_NOISE_SD as f64) / sem).abs();
+    through_focus.rs:1229  [ARITH] (bare - f64::from(FINE_FOCUS_NOISE_SD)).abs() / f64::from(FINE_FOCUS_NOISE_SD) < 0.02,
+    merge_cmd.rs:1707  [ARITH] mean / (std::f64::consts::SQRT_2 * FINE_FOCUS_NOISE_SD as f64)
+
+  arithmetic sites: 4 -> ['through_focus.rs:616', 'through_focus.rs:1091', 'through_focus.rs:1229', 'merge_cmd.rs:1707']
+
+  And the cut that is compared against it:
+    through_focus.rs:737   bimodality_sigma_cut: f32,
+    through_focus.rs:745   .is_some_and(|b| b >= bimodality_sigma_cut)
+==============================================================================
+B4.1 -- what the dispersion does to the z-score bimodality_sigma reports
+==============================================================================
+  bimodality_sigma(i) = (far_val[i] - floor[i]) / (sqrt(2) * FINE_FOCUS_NOISE_SD).
+  The numerator is a per-pixel difference of fine responses; the denominator
+  is a global constant. If the true per-pixel SD is rho(p) * the constant,
+  the reported z is inflated by exactly 1/rho(p).
+
+  stack             rho_obs     p05     p95 |  z inflation at p05    at p95   ratio
+  ------------------------------------------------------------------------------
+  coffee-bubbles     1.7494  0.9843  3.9229 |               1.016     0.255   3.986x
+  109MSDCF           1.2430  0.8918  1.6766 |               1.121     0.596   1.880x
+  119MSDCF           1.2688  0.8755  1.7684 |               1.142     0.565   2.020x
+  113MSDCF           1.2297  0.8818  1.6787 |               1.134     0.596   1.904x
+  112MSDCF           1.2836  0.9150  1.7730 |               1.093     0.564   1.938x
+  foam               1.4794  0.9234  2.5550 |               1.083     0.391   2.767x
+  coffee-bean        1.0856  0.8027  1.4477 |               1.246     0.691   1.804x
+  wrapped-text-2     1.3492  0.9396  1.9263 |               1.064     0.519   2.050x
+  wrapped-text-1     1.1429  0.8288  1.4876 |               1.207     0.672   1.795x
+  bee-1              1.1392  0.8487  1.4746 |               1.178     0.678   1.737x
+  bee-2              1.1797  0.8865  1.5102 |               1.128     0.662   1.703x
+  bee-3              1.1213  0.8328  1.4597 |               1.201     0.685   1.753x
+
+  Within a single stack the same reported z means between 0.255
+  and 1.246 true sigma depending only on where the pixel is.
+  Worst within-stack spread 3.986x, best 1.703x.
+==============================================================================
+B4.2 -- does the per-stack placebo cut absorb it?
+==============================================================================
+  merge_cmd.rs sets bimodal_cut = p99 of the PLACEBO population, one scalar
+  for the whole image, and flags pixels with b >= cut. The placebo is a
+  frame-permutation of the SAME pixels, so it carries the same per-pixel
+  rho(p). Two questions, and they have different answers.
+
+  (a) Does it absorb the STACK-level dispersion?  YES, by construction:
+      corpus rho_obs spans 1.612x across stacks, and a cut
+      re-derived per stack from that stack's own placebo sees the stack's
+      own scale. The stack-level limb of this defect is already handled.
+
+  (b) Does it absorb the WITHIN-image dispersion?  NO. The cut is a single
+      scalar over pixels. Under a global p99 cut the per-pixel false-positive
+      rate is not 1% everywhere; it is concentrated in the high-rho tail.
+
+  stack             p95/p05     implied FPR ratio, p95 pixel vs p05 pixel
+  ------------------------------------------------------------------------
+  coffee-bubbles      3.986                   7.3x  vs           0.000x
+  109MSDCF            1.880                   3.7x  vs           0.040x
+  119MSDCF            2.020                   4.1x  vs           0.022x
+  113MSDCF            1.904                   3.8x  vs           0.037x
+  112MSDCF            1.938                   3.9x  vs           0.032x
+  foam                2.767                   5.7x  vs           0.001x
+  coffee-bean         1.804                   3.5x  vs           0.056x
+  wrapped-text-2      2.050                   4.2x  vs           0.019x
+  wrapped-text-1      1.795                   3.5x  vs           0.058x
+  bee-1               1.737                   3.3x  vs           0.073x
+  bee-2               1.703                   3.2x  vs           0.083x
+  bee-3               1.753                   3.4x  vs           0.068x
+
+  ILLUSTRATION ONLY, and labelled so: bimodality_sigma's null is a
+  multiplicity tail over n-3 frames, not a Gaussian tail (through_focus.rs:731
+  says so, and M63 section 2.3 registered the same point and refused to quote
+  a sigma-count for exactly this reason). The Gaussian numbers above are a
+  scale illustration of a real effect, NOT a false-positive rate.
+==============================================================================
+B4.3 -- the N term: does this site carry M66's defect?
+==============================================================================
+  through_focus.rs, the doc comment on `confidence`, quoted verbatim:
+
+    /// `bimodality_sigma_cut` is in units of a *difference* of fine responses and
+    /// has **no default in this crate on purpose**. The distribution of
+    /// [`bimodality_sigma`](Self::bimodality_sigma) depends on the frame count
+    /// through an order statistic — it is a max over `n - 3` frames minus a min
+    /// over `n` — so a cut transferred between stacks of different depth is not
+    /// the same cut. Calibrate it against the permutation placebo
+    /// ([`new_permuted`](Self::new_permuted)) on the stack in hand.
+
+  Read against M66's finding and M62's confession:
+    M66  : Gate::tolerance() = T * sqrt(2) * FOCUS_NOISE_SD  -- NO N term,
+           against max_j X_j whose expectation grows with N.
+    M62  : guard G is a fixed 0.95 line against a statistic whose null
+           drifts with N, with nothing in its statement mentioning N.
+    HERE : the constant is equally N-free, but the THRESHOLD is not a
+           constant at all. The crate refuses to ship a default, names the
+           order statistic explicitly, and mandates per-stack calibration
+           against a permutation placebo.
+
+  wrote out/98-b4.json

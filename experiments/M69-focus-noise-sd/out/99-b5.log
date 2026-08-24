@@ -1,0 +1,44 @@
+==============================================================================
+M69 arm B5 -- P2 the PREDICTOR against the MEASURED chain (POST HOC)
+==============================================================================
+  FOCUS_NOISE_SD      0.015214     merge.rs
+  DEFAULT_GATE        4.0            merge.rs
+  REGULARISER_RADIUS  8              merge.rs
+  WINDOW_RADIUS       13             focus.rs
+  SIGMA_EPS           0.001          focus.rs
+  gain_divisor        436.8          profile.rs
+  base_iso            100.0          profile.rs
+  read_noise_e_low    4.2            profile.rs
+  read_noise_e_high   1.2392          profile.rs
+  second_base_iso     400.0          profile.rs
+  black / white       512 / 15360     profile.rs
+
+  Identical central 2048x2048 crop, coarse (shipped) field, rho_obs only.
+  No debias is applied anywhere in this table, so the debias cannot
+  contribute to any difference in it.
+
+  stack              ISO   P2 mid    P2 x3  MEASURED  meas/P2  fact 13 P2x3
+  --------------------------------------------------------------------------
+  coffee-bubbles    1000   1.1263   1.0304    1.7916    1.591        1.0304
+  109MSDCF           160   1.1161   1.0713    1.1202    1.004        1.0713
+  119MSDCF            50   1.0954   1.0141    1.1108    1.014        1.0141
+  113MSDCF           500   1.0494   1.0677    1.0652    1.015        1.0677
+  112MSDCF           500   1.1048   1.1469    1.1341    1.026        1.1469
+  foam              1000   0.9432   1.1098    1.2587    1.335        1.1098
+  coffee-bean         50   0.8569   0.9388    0.8378    0.978        0.9388
+  wrapped-text-2     400   1.2307   1.1861    1.2401    1.008        1.1861
+  wrapped-text-1     100   1.0520   1.1053    1.0223    0.972        1.1053
+  bee-1              100   1.0538   1.0815    1.0154    0.964        1.0815
+  bee-2              400   1.1337   1.2002    1.1063    0.976        1.2002
+  bee-3              100   1.0001   1.1238    0.9727    0.973        1.1238
+
+  P2 predicted  : min 0.8569  max 1.2307  span 1.436x
+  MEASURED      : min 0.8378  max 1.7916  span 2.138x
+  meas / P2     : min 0.964  max 1.591  median 1.006  span 1.651x
+
+  K15 CONTROL -- P2 on the same three frames reproduces the committed
+  80-corpus-rho.json rho_obs column: worst |error| 0.00%  bar 1%  -> MET
+  If this is MET, the 2.104x-vs-1.186x gap is NOT a bug in either run;
+  it is two different estimators of the same quantity disagreeing.
+
+  wrote out/99-b5.json

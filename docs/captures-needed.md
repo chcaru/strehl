@@ -973,7 +973,57 @@ because of framing.**
 
 ---
 
-## 14. What is NOT needed, so you do not waste a session
+## 14. One scene at several ISOs -- REQUESTED, one tripod afternoon, separates two axes the corpus welds together
+
+**Status:** requested 2026-08 by M69 Part II, which needed it and could not
+synthesise it.
+
+**What to shoot.** **One** static scene -- tripod, focus untouched, framing
+identical -- captured at **ISO 100, 400, 1000 and 3200**, roughly 8-10 frames at
+each. Exposure compensated by shutter so the rendered brightness matches across
+ISOs. Texture should be ordinary macro subject matter, not a chart. Any subject
+already in the corpus is ideal, because it makes the comparison direct.
+
+### Why the corpus cannot answer it
+
+**ISO is perfectly confounded with scene in the existing 12 stacks.** M69 fact 63
+found its per-pixel noise predictor P2 tracks the directly-measured response to
+within +-3.6% on 10 of 12 stacks and fails on exactly two -- `coffee-bubbles`
+(1.591x) and `foam` (1.335x). **Those are the corpus's only two ISO-1000 stacks.**
+They are *also* the corpus's only two fine, self-similar bubble/foam textures. At
+n = 2 with a perfect association, the corpus cannot say which axis is
+responsible.
+
+M69 ran arm B6 to break the confound synthetically -- fixed scene, swept
+*declared* ISO through the shipped noise model -- and it points clearly at texture
+(fact 64: a low-ISO scene driven to declared ISO 1000 stays at 0.990 and 0.986,
+nowhere near 1.59). **But B6 sweeps a declared ISO over a frozen latent. It tests
+the model's arithmetic, not the sensor's behaviour**, and it cannot see any real
+ISO-dependent effect the profile does not already model. That distinction is the
+whole reason this capture is owed rather than assumed away.
+
+### What it unblocks
+
+1. **Separates ISO from texture at the capture level**, which settles the domain
+   statement M69 owes for P2 (its section 9.1 item 4, corrected by fact 65).
+2. **Tests fact 24's 8-27% read-noise over-prediction on the focus response
+   rather than on darks.** Fact 24 is measured on dark frames; whether that error
+   propagates into `sigma_F` at the ISOs the corpus actually shoots is currently
+   unknown, and this is the only capture that would show it.
+3. It is **"not measured", not "not measurable"** -- one afternoon with a tripod,
+   and no equipment the owner does not already have.
+
+**One trap, and it is the same one as section 11.** Set each ISO explicitly. Do
+not let the body reach an ISO by auto or by a pull/push route; `profile.rs:205`
+floors gain at `base_iso`, so an extended ISO below 100 is *not* a distinct
+measurement (M69 fact 66) and would waste a quarter of the session.
+
+See [`docs/research/M69-focus-noise-sd.md`](research/M69-focus-noise-sd.md)
+section 14.6 and facts 63-66.
+
+---
+
+## 15. What is NOT needed, so you do not waste a session
 
 - **Another ordinary focus stack of a new subject.** The corpus has 12 stacks and
   1,568 frames. More of the same adds subjects, not information; every item above
