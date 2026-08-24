@@ -31,6 +31,26 @@ textured static burst; because that capture does not exist, this instrument was
 never eligible to become a production calibration path even if the unit
 hypothesis had survived.
 
+**FOLLOW-UP VERDICT — ARGUED: M80'S RISK BUDGET IS A VALID ABSTENTION
+TEMPLATE, NOT YET A VALID MERGE GATE.** The existing gate is already
+algebraically a normal-quantile rule under a fixed-pair Gaussian
+approximation. That approximation does not describe a winner selected as the
+maximum of N responses, and an alpha budget for rejecting a true tie does not
+price the opposite error: admitting a defocused frame. A shippable
+probabilistic gate still needs a selected-winner null, a spatially valid
+response standard error, and a truth-linked non-inferiority margin. M80
+explicitly leaves its analogous product margin unclaimed. M81 therefore does
+not rename the failed threshold, add `--gate-alpha`, or ship an adaptive arm
+merely because it adapts.
+
+**FOLLOW-UP BUILD STATUS — MEASURED: STRICT CLIPPY IS GREEN.** The transient
+M81-owned blocker was `clippy::too_many_arguments` on the experimental
+`CalibrationScratch::compute` in `main.rs`: eight arguments against Clippy's
+default limit of seven. Commit `bcde55e` removed that failed calibration path
+when M81 restored the production source for NO SHIP. A fresh
+workspace/all-targets run at commit `76b7f76` exits zero, so no speculative
+source edit is made.
+
 ## M81 §1 — The redirection, and whether M81 agrees
 
 **ARGUED.** M81 agrees with the redirection as a falsification. Testing whether
@@ -292,6 +312,9 @@ control in M80 §§5–6.
 | **M81's own fact 10** | Across all five M77 stacks, corrected common-target constants span 49.538× primary, 49.543× B3, and 50.490× P2. | MEASURED/DERIVED | `unit-results.json` |
 | **M81's own fact 11** | Corrected-unit gate 4 beats shipped raw gate 4 on 0/5: three rows are unreadable under the registered flat control, and both readable rows fail Q. | MEASURED | `unit-arms-results.json` |
 | **M81's own fact 12** | Every corrected-unit candidate retains unpriced singleton exposure, from 3.93% on `109MSDCF` to 82.11% on `wrapped-text-1`; the everywhere single-frame floor remains unproved. | MEASURED/ARGUED | `unit-arms-results.json` |
+| **M81's own fact 13** | Under a preselected independent-pair Gaussian approximation, the shipped gate threshold is already a z-like risk number; its actual reference is a maximum selected over N, so a per-comparison alpha does not transfer. | DERIVED/ARGUED | M81 §12.2; `merge.rs` |
+| **M81's own fact 14** | A false-rejection budget for tied focus responses does not bound defocus admitted by a low-power test. A risk-based gate additionally requires a selected-winner null, a local response standard error, and a truth-linked non-inferiority margin. | ARGUED | M81 §12.2–§12.3; M80 §§8–9 |
+| **M81's own fact 15** | The transient `main.rs` blocker was an eight-argument `CalibrationScratch::compute`; removing the failed experimental path at `bcde55e` cleared it, and strict workspace/all-targets Clippy passes at `76b7f76`. | MEASURED | `risk-budget-main-clippy.log`, `risk-budget-current-clippy.log` |
 
 ## M81 §11 — Reproduction and final disposition
 
@@ -335,3 +358,116 @@ passes; and corpus lint checks 107 Markdown files and 30 Rust files and reports
 `OK — no violations`. Exact outputs are preserved in `unit-*-tests.log`,
 `unit-clippy.log`, `unit-fmt.log`, `unit-python-checks.log`,
 `unit-toolchain.log`, and `unit-corpus-lint.log`.
+
+## M81 §12 — M80 risk-budget and lint follow-up
+
+### M81 §12.1 — What M80's alpha establishes
+
+**DERIVED/ARGUED.** M80's own §4 derives the null variance of its signed
+cross-fitted detail power and allows the acceptance instrument to answer only
+when
+
+\[
+Q_0 > 2.326347874\,\operatorname{SE}(Q_0).
+\]
+
+M80 identifies `2.326347874` as the one-sided standard-normal 99% quantile and
+pre-registers M80 alpha = 0.01 as the sole policy choice. The statistic has a
+defined noise null; the remaining DN threshold follows from the calibrated
+gradient covariance, ROI geometry, and invocation rather than tuning.
+
+**MEASURED/DERIVED.** M80's own §5 validates that decision on 1,000 synthetic
+null draws at each of M80 N = 22, M80 N = 130, and M80 N = 299: it reports 16,
+8, and 10 false answers against its frozen ceiling of 18. All three tested
+depths first answer on the discrete contrast ladder at M80's 8-DN rung. That
+does not establish one exact portable 8-DN boundary: M80's continuously
+derived crossings are 4.746507, 5.764350, and 6.200540 DN, and M80 accepts the
+observations within a pre-registered factor-of-two rung. The result validates
+the refusal rule over those synthetic configurations, not a universal
+real-scene DN constant.
+
+**ARGUED.** M81 adopts the design principle where it fits: an instrument
+should abstain unless a declared false-answer budget permits it to answer.
+That is why M81 respects M80's `NO TARGET` state and does not treat a
+detail-free region as zero detail. M81's paired arm also does not use M80's
+`DETAIL_COLLAPSE_FLOOR = 0.90` as acceptance evidence. M80's own §8 leaves
+that product tolerance unclaimed; M81 instead used its separately
+pre-registered D and Q ratios.
+
+### M81 §12.2 — Why alpha alone does not define admission
+
+**DERIVED.** The shipped rule is
+
+\[
+\widehat F_{\max}-\widehat F_i
+ \le T\sqrt{2}\,\mathtt{FOCUS\_NOISE\_SD}.
+\]
+
+If the two responses were independent, Gaussian, equally noisy, and chosen
+before observing them, setting \(T=z_{1-\alpha}\) would expose a one-sided
+false-rejection rate for a truly tied pair. In that restricted model the
+current `T` is already the proposed risk coordinate; replacing shipped
+`DEFAULT_GATE = 4.0` with an alpha spelling changes no admission geometry.
+
+**ARGUED.** The shipped comparison does not meet that model. The reference is
+the observed maximum over M81 N = 22–299 frames. Its selection offset and tail
+therefore depend on N and on the joint response distribution; `merge.rs`
+already records this winner's curse. M69 further shows that the response-noise
+scale changes with texture, while M81's own fact 8 measures within-stack
+patch-mean spans of 1.281–1.695×. M81's own facts 9–11 then show that a scalar
+unit correction neither restores portability nor beats the control. A
+per-comparison normal quantile cannot repair an unmeasured local standard error
+or a selected maximum.
+
+**ARGUED.** More fundamentally, this is the wrong error budget for the product
+decision. The rule above admits a frame when it fails to demonstrate that the
+frame is worse. Alpha can bound exclusion of a genuinely tied frame under a
+calibrated null; it cannot bound admission of a defocused frame when the test
+has low power. Turning non-rejection into evidence of equivalence requires a
+non-inferiority margin: the largest true response or reconstruction loss that
+may safely enter the mean. Noise determines the uncertainty around that
+margin, but it cannot choose the margin. M80's own §§8–9 draw the same boundary
+for the repaired instrument: the noise-derived refusal rule does not select
+its unclaimed product floor and does not choose an operating gate.
+
+### M81 §12.3 — What would make a risk gate testable
+
+**ARGUED.** A later risk-gate milestone can become decidable by
+pre-registering all of:
+
+1. a local response standard-error and covariance estimator validated on
+   M69's requested textured static burst;
+2. the selected-winner distribution over the registered stack-depth range,
+   including a simultaneous rather than preselected-pair error budget;
+3. a non-inferiority margin tied to truth-referenced reconstruction or
+   resolution loss; and
+4. separate observable costs for false admission and false exclusion, so the
+   blur-bias/noise-variance trade is explicit.
+
+**ARGUED.** An N-aware multiple-comparison correction could address part of
+item 2, but it would not supply items 1, 3, or 4. Shipping one now would merely
+replace an exposed gate constant with an exposed alpha plus a hidden,
+unmeasured equivalence margin. The corrected-unit candidate already
+demonstrates that adaptation by itself is not acceptance: it adapts on every
+stack and records M81's own fact 11's 0/5 result against shipped gate 4.
+
+### M81 §12.4 — The `main.rs` blocker
+
+**MEASURED.** `risk-budget-main-clippy.log` reconstructs M81 commit `885247c`,
+where the parked spectral calibration still existed. Strict
+`cargo clippy --workspace --all-targets -- -D warnings` identifies
+`CalibrationScratch::compute` at historical `main.rs:366` as an
+eight-argument function against Clippy's seven-argument limit. That historical
+snapshot also predates M80's repair and therefore contains M80's separate
+then-live `merge_cmd.rs` warning; it is not attributed to M81.
+
+**MEASURED.** M81's NO SHIP commit `bcde55e` removed
+`CalibrationScratch`, `calibrate-gate`, and the experimental core module rather
+than preserving a product path that failed its registered controls. M80's own
+§7 subsequently reports strict Clippy passing. The fresh evidence in
+`risk-budget-current-clippy.log` records commit `76b7f76`, the exact
+workspace/all-targets command, and exit 0. `crates/strehl-cli/src/main.rs`
+therefore needs no further change and remains byte-unchanged in this follow-up.
+
+**MEASURED.** `risk-budget-corpus-lint.log` records all repository corpus
+checks reporting `OK — no violations` after this amendment.

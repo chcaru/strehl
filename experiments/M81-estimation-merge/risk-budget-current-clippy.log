@@ -1,0 +1,4 @@
+CURRENT_COMMIT=76b7f76ba24ffc71d7645f78ae1ad5ac3453aedf
+COMMAND=cargo clippy --workspace --all-targets -- -D warnings
+EXIT=0
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
