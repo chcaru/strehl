@@ -23,6 +23,7 @@ written. One registered assumption was **falsified**, and it is reported as fals
 | **A1** is a constant axial offset the right model? | **INDETERMINATE on depth; ADEQUATE on radius — and scored on 3 stacks, not the 5 registered** |
 | registered optical-centre assumption | **FALSIFIED — and the reason matters more than the fix** |
 | **the shipped sign** | **WAS INVERTED. Caught in a render-domain preview, after 9/9 green unit tests. See §12** |
+| **independent verification** | **4 defects found; 3 fixed, 1 recorded. Its mutation matrix found a hole mine missed. See §13** |
 
 > **Read §12 first.** The unit I committed at `d551488` applied its correction in the wrong
 > direction: it made the aberration **7.2 % worse** on a real render instead of removing it.
@@ -371,12 +372,22 @@ same pixels:
 | direction | radial chroma slope | vs uncorrected |
 |---|---|---|
 | uncorrected | 141.1 ppm | — |
-| **as shipped at `d551488`** | 151.3 ppm | **7.2 % WORSE** |
-| **inverted (as now shipped)** | −8.1 ppm | **94.3 % removed** |
+| **as shipped at `d551488`** (`q = p/(1+eps)`) | 151.3 ppm | **7.2 % WORSE** |
+| radial flipped, old translation form (`q = s(p−t)`) | −8.1 ppm | 94.3 % removed |
+| **as now shipped** (`q = s·p + t`, radial + fitted translation) | 17.3 ppm | **87.7 % removed** |
+| **radial only, translation ablated** | **0.6 ppm** | **99.6 % removed** |
 
-94.3 % in the render domain is consistent with L3's 97.1 % in the fit domain, which is the
-independent check that the repaired direction is the right one rather than merely the
-better of two.
+**Attribution correction, from independent verification.** An earlier draft of this table
+and of fact P23 attributed **−8.1 ppm / 94.3 %** to "the corrected direction as now
+shipped". It is not: that arm comes from `p5_sign_diagnostic.py`, which flipped the *radial*
+scale while keeping the *old* translation form `q = s(p − t)`. The convention `optics.rs`
+actually implements measures **17.3 ppm / 87.7 %**, and the radial term on its own measures
+**0.6 ppm / 99.6 %** (§12.1). The commit message of `4fa5b9f` carries the same
+misattribution and is corrected here rather than rewritten.
+
+All three corrected arms are far from the 7.2 %-worse defect, so the direction finding is
+unaffected — but the consistency argument against L3's 97.1 % should be made with **99.6 %
+(radial only)**, not with 94.3 %, and §12.1 is why.
 
 ### Why the convention is `1 + eps`, derived rather than tried
 
@@ -459,9 +470,10 @@ untouched by construction. Only red is corrected. The unit remains **unwired**: 
 ### Candidate facts
 
 - **P23.** The lateral-CA correction shipped at `d551488` had a **globally inverted sign**;
-  measured on `bee-3-cpl` it made radial chroma **7.2 % worse** (141.1 → 151.3 ppm), while
-  the corrected direction removes **94.3 %** (141.1 → −8.1 ppm), consistent with L3's 97.1 %
-  in the fit domain. MEASURED (`p1_preview`, `p5_sign_diagnostic`).
+  measured on `bee-3-cpl` it made radial chroma **7.2 % worse** (141.1 → 151.3 ppm). The
+  corrected direction, **radial term only**, removes **99.6 %** (141.1 → 0.6 ppm),
+  consistent with L3's 97.1 % in the fit domain. MEASURED (`p1_preview`,
+  `p5_sign_diagnostic`).
 - **P24.** The defect survived **9/9 green unit tests and independent mutation testing**,
   because L1/L5/L6 are sign-symmetric, the one directional test asserted against a helper
   built from the same convention, three tests hardcoded the implementation's expression, and
@@ -525,3 +537,100 @@ gradient pixels), in-sample. The radial coefficient's out-of-sample behaviour is
 **split** (0.950 one direction, 0.541 the other). Whether the translation term is harmful on
 the other four stacks is **not measured**, and a wiring commit should measure it before
 relying on this recommendation.
+
+---
+
+## 13. Independent verification, and what it found
+
+Rule 47: I may not verify my own work. §12's repair was verified independently. The verifier
+**re-derived the pull convention from `warpmap.rs` rather than accepting mine**, reproduced
+all five ppm figures exactly, confirmed `p6`'s restore was byte-identical, and confirmed the
+unit has no caller. It also found four defects. Three are fixed here; one is recorded.
+
+### 13.1 The hole its mutation matrix found, which mine did not
+
+The verifier ran 16 mutants across axes I had not. **Three survived with 281 passed, 0
+failed:**
+
+| mutant | result |
+|---|---|
+| `translation` both signs flipped | **SURVIVED** |
+| `translation` scaled 10x | **SURVIVED** |
+| `translation` axes swapped | **SURVIVED** |
+
+Every test that touched translation **re-read `p.translation` and recomputed its own
+expectation from it**, so the suite was self-consistent for any non-zero pair. The
+*direction of the code path* was pinned; the *value and sign of the datum* were not.
+
+This is the same defect class as §12, one level up. §12 was tests that restated the
+implementation's **expression**. This is tests that restated the profile's **data**. In both
+cases the suite was green because it had agreed to whatever the code said.
+
+**Fixed** by `the_shipped_coefficients_match_the_fit_they_claim`, which asserts the literal
+fitted numbers — `eps_r = -704.5 ppm`, `t = (+0.6294, -0.4240)` plane px — including signs,
+and asserts the components are far enough apart (48 %) that an axis swap cannot pass.
+`p6_sign_mutation.py` gained a bar **M5** that replays all three survivors and requires each
+to be killed **by that specific test**, not incidentally by another:
+
+```
+M5  translation-datum mutants (all three survived verification)
+    sign flip        EXIT=101  killed by the_shipped_coefficients_match_the_fit_they_claim: yes  PASS
+    x10 magnitude    EXIT=101  killed by the_shipped_coefficients_match_the_fit_they_claim: yes  PASS
+    axis swap        EXIT=101  killed by the_shipped_coefficients_match_the_fit_they_claim: yes  PASS
+```
+
+282 passed, 0 failed, `EXIT=0` clean; `EXIT=101` on every mutant.
+
+### 13.2 The stale doc comment
+
+`compose`'s **public rustdoc still specified the refuted convention** — `q' = (q - t)/(1 +
+eps)`, `s = 1/(1 + eps)` — 37 lines above an inline comment saying the opposite. No runtime
+effect, and my own tests could not see it, but `cargo doc` is how the next agent learns this
+function, and it would have taught them the defect. **Fixed**, and the old formula is kept
+named in the doc so the next reader knows which one was wrong.
+
+### 13.3 The precondition that was documented only inside the stale paragraph
+
+`compose` scales about the **coordinate origin**, not the plane centre; `z` must already be
+plane-centre-relative. That requirement existed *only* in the paragraph that was refuted, so
+fixing §13.2 would have deleted it. Harmless while unwired, but a wiring commit feeding
+absolute warpmap coordinates would introduce a uniform red offset of order `eps ×
+half_diagonal ≈ 1.5 sensels`. **Now stated explicitly in the doc as a precondition on the
+wiring commit.** No test pins it; recorded as a gap.
+
+### 13.4 The misattributed number
+
+Corrected in §12's table and in fact P23. See the attribution note there.
+
+### 13.5 Gaps the verifier named that I have NOT closed
+
+- **The pull convention is not provable by the unit suite.** Both new tests *encode* it. The
+  only independent evidence is the render-domain measurement — one stack, one metric,
+  in-sample. Stated, not fixed.
+- **Translation direction is covered by one assertion**, in
+  `translation_composes_exactly_and_round_trips`. Neither §12 test exercises it; both zero
+  the translation. §13.1 pins the datum, not the path.
+- **No test pins the centre-relative precondition** (§13.3).
+- The verifier ran `strehl-core --lib` and the M107 P-series only — not the CLI crate tests.
+
+### Candidate facts
+
+- **P26.** A test suite can pin a code path's *direction* while leaving the *datum* it
+  operates on completely unconstrained: three mutations of the shipped `translation`
+  constant (sign flip, 10x, axis swap) each left **281 passed, 0 failed**, because every
+  test re-read the constant and recomputed its expectation from it. MEASURED (independent
+  verification, 16-mutant matrix).
+
+### Disciplines
+
+- **D12.** **Pin measured constants against their source of truth, not against themselves.**
+  A test that reads a constant and derives its expectation from it is green for every
+  possible value of that constant. Assert the literal fitted number, its sign, and enough
+  structure to defeat a permutation of its components.
+- **D13.** **Delete a refuted comment by rewriting it, not by removing it** — check first
+  whether it is the only place a still-valid precondition is written down. `compose`'s
+  centre-relative requirement lived exclusively inside the paragraph that was wrong.
+- **D14.** **A mutation matrix proves only what its axes span.** Mine mutated the scale;
+  the verifier's mutated the data, the channel dispatch, the early return and the alignment
+  term, and only that wider matrix found the hole. Ask an independent party to choose the
+  axes, because the author's blind spot chooses the author's mutants.

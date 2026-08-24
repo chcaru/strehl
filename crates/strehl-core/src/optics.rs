@@ -190,13 +190,35 @@ impl OpticalProfile {
     /// it in the wrong frame would leave an error proportional to the alignment
     /// translation, which is not small.
     ///
-    /// # Exactness
+    /// # Direction, and the coordinate frame it assumes
     ///
-    /// This is exact, not a linearisation. The measured displacement of a
-    /// channel is `d(q) = eps*q + t` in plane coordinates about the plane
-    /// centre, so the corrected sample point is `q' = (q - t) / (1 + eps)`.
-    /// Composed with `q = a*z + b` that is `a' = s*a`, `b' = s*(b - t)` with
-    /// `s = 1/(1 + eps)` — both closed forms, and a single similarity.
+    /// **Every transform in this crate is a PULL** (`warpmap.rs:14-30`):
+    /// `dst(p) = src(T(p))`, so `T` maps the pixel you *want* to the pixel you
+    /// must *sample*. A channel imaged at magnification `(1 + eps)` records a
+    /// scene point `u` at `(1 + eps) u`, so the pull must sample there:
+    ///
+    /// ```text
+    /// s = 1 + eps          NOT 1 / (1 + eps)
+    /// ```
+    ///
+    /// The measured displacement model is `observed = (1 + eps) * truth + t`
+    /// (`e10_transfer.py::fit3` / `predict`), so the translation is **added
+    /// after the scale**: composed with `q = a*z + b` this is `a' = s*a`,
+    /// `b' = s*b + t`. Both closed forms, and a single similarity — the
+    /// correction rides the gather's existing interpolation and adds no second
+    /// resampling pass.
+    ///
+    /// **This function scales about the coordinate ORIGIN, not about the plane
+    /// centre.** `z` must already be plane-centre-relative. Feeding it absolute
+    /// warpmap coordinates would introduce a uniform red offset of order
+    /// `eps * half_diagonal` ~ 1.5 sensels. Nothing in this crate calls
+    /// `compose` yet; a wiring commit must satisfy that precondition.
+    ///
+    /// An earlier version of this doc comment specified `q' = (q - t) / (1 +
+    /// eps)` with `s = 1/(1 + eps)`. That was the inverted convention, and the
+    /// code implemented it: measured on a real render it made the aberration
+    /// **7.2 % worse**. It is kept named here because `cargo doc` is how the
+    /// next agent will learn this function.
     ///
     /// With no profile, or a channel with no coefficient, or a profile whose
     /// terms are all zero, the input is returned **bit-for-bit unchanged** — the
@@ -648,6 +670,51 @@ mod tests {
             observed.re,
             observed.im
         );
+    }
+
+    /// The measured datum itself, pinned — not just the code path that uses it.
+    ///
+    /// Independent verification mutated the shipped `translation` constant three
+    /// ways — flipped both signs, scaled it 10x, swapped its axes — and **all
+    /// three survived with 281 tests passing.** Every test that touched
+    /// translation re-read `p.translation` and recomputed its own expectation
+    /// from it, so the suite was self-consistent for any non-zero pair. The
+    /// *direction of the code path* was pinned; the *value and sign of the
+    /// datum* were not. Given that this term was inverted alongside the radial
+    /// one, nothing here would have caught it had it stayed inverted.
+    ///
+    /// So this test asserts the literal numbers against their source of truth:
+    /// `e10_transfer.py`'s 3-parameter fit, `eps = -704.5273607382725e-6` and
+    /// `t = (0.6294433, -0.4240211)` plane px. A profile that drifts from the
+    /// fit it claims to record is not a profile.
+    #[test]
+    fn the_shipped_coefficients_match_the_fit_they_claim() {
+        let p = &A7C2_FE100GM_2XTC_X4CPL;
+
+        // eps_R, in ppm, as fitted. Sign is load-bearing: red is imaged SMALL.
+        assert!(p.eps_r < 0.0, "red is under-magnified; eps_r must be negative");
+        assert!(
+            (p.eps_r * 1e6 + 704.5).abs() < 0.05,
+            "eps_r is {} ppm; the fit says -704.5 ppm",
+            p.eps_r * 1e6
+        );
+
+        // The translation, both components, sign and magnitude.
+        let (tx, ty) = p.translation;
+        assert!(
+            tx > 0.0 && ty < 0.0,
+            "fitted translation is (+x, -y), got ({tx}, {ty})"
+        );
+        assert!((tx - 0.6294).abs() < 5e-5, "tx is {tx}; the fit says +0.6294 plane px");
+        assert!((ty + 0.4240).abs() < 5e-5, "ty is {ty}; the fit says -0.4240 plane px");
+        // An axis swap must not pass: the two components differ by 48 %.
+        assert!(
+            (tx.abs() - ty.abs()).abs() > 0.15,
+            "the components are too close to discriminate an axis swap"
+        );
+
+        // Blue was never measured. Absence is not a measured zero.
+        assert!(p.eps_b.is_none(), "eps_b must stay None until blue is measured");
     }
 
     /// The translation must be documented as unattributed. If a future edit
