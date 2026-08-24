@@ -223,7 +223,52 @@ refused.
 
 ---
 
-## 6. Status / Verified / Not verified / Notes
+## 6. The exit-code trap: the rule survives, the mechanism and the consequence do not
+
+The rule — **never read `$LASTEXITCODE` after a pipeline containing `-First`** —
+is correct and I have adopted it. Three things stated alongside it are not.
+
+All cells below are 5 reps, each pre-cleared to a value that is not the answer
+(`src/racetest.ps1`, `racetest2.ps1`, `racetest3.ps1`).
+
+| producer | filter | true code | observed |
+|---|---|---|---|
+| `cmd /c` builtin loop, 50–20 000 lines | `-First 3` | 1 | `1` — **immune, 40/40 reps** |
+| python `.exe`, 200 lines | none | 1 | `1` |
+| python `.exe`, 200 lines | `-First 3` | 1 | `-1` (4/5) |
+| python `.exe`, 200 lines | none | **0** | `0` |
+| python `.exe`, 200 lines | `-First 3` | **0** | **`-1`** (4/5) |
+| python `.exe`, 200 lines, 10 ms/line | `-First 3` | **0** | **`-1`** (5/5) |
+| python `.exe`, 20 000 lines | `-Last 3` | 1 | `1` |
+
+**1. The corrupted value is `-1`, not `0`.** PowerShell *kills* the child when
+`Select-Object -First` throws `StopUpstreamCommandsException`, and `-1` is the
+exit code of a killed process. The program never returned it.
+
+**2. It is not volume-dependent, it is producer-dependent.** A `cmd` builtin
+loop is immune at every size I tried, from 50 to 20 000 lines, on stdout and
+through `2>&1`. A real `.exe` traps at 200. This is why two careful probes of
+the same shell version disagreed: mine used `cmd /c`, and `cmd` is not exposed.
+It *is* a race — `[1 -1 -1 -1 -1]` in one cell — but the race is over process
+teardown, not over how many lines were produced.
+
+**3. The dangerous direction is the opposite of the one broadcast.** The claim
+was that this produces false negatives only, because "a truncation artifact
+cannot invent a nonzero". It can, and does: **a command whose true exit code is
+`0` reads `-1`**, 4/5 without a delay and 5/5 with one. So a gate written
+`if ($code -ne 0) { throw }` around a truncated pipeline **fails a command that
+succeeded**. Truncation turns green red, not red green.
+
+That direction is worse than it sounds in this project, because a phantom
+failure does not sit quietly — it gets investigated, and tonight several
+milestone-hours went into defects that had not happened.
+
+The failing arm also reads `-1`, so a `-ne 0` gate stays red on real failures —
+correctly, but by accident rather than by measurement.
+
+---
+
+## 7. Status / Verified / Not verified / Notes
 
 ### Status
 **DONE.** Nothing applied from §4.1/§4.2 because both were already in; §4.3
@@ -301,14 +346,22 @@ applied and verified.
   reads **seven** (`git grep -oh "STREHL_[A-Z_]*"`). At least one omitted
   variable, `STREHL_CACHE_DIR`, moves pixels by Q6. A prose enumeration of an
   environment contract drifts from the source it describes; generate it.
-- **Q9 (MEASURED, method).** The reported `$LASTEXITCODE`-after-truncation trap
-  does **not** reproduce on PowerShell 5.1.26100.9168 — tested against a
-  20 000-line producer and against `strehl.exe` failing for real, with `-First`,
-  `-Last`, `Select-String` and `Out-String`. My first two probes returned a
-  uniform "no trap" **and were invalid**: every arm failed, so `$LASTEXITCODE`
-  was already `1` on entry and a stale read is indistinguishable from a correct
-  one. Only seeding the variable to a known-wrong value before each arm makes
-  the probe connected. Discipline 598 applies to exit codes.
+- **Q9 (MEASURED, method).** The `$LASTEXITCODE`-after-truncation trap is
+  **producer-dependent, not volume-dependent**. A `cmd` builtin loop is immune
+  from 50 to 20 000 lines, on stdout and through `2>&1`, 40/40 reps; a real
+  `.exe` traps at 200 lines. The corrupted value is **`-1`** — PowerShell kills
+  the child on `StopUpstreamCommandsException` — not `0`. Two careful probes of
+  the same shell version disagreed for exactly this reason.
+- **Q9b (MEASURED).** Truncation **can invent a nonzero**. A command whose true
+  exit code is `0` reads `-1` through `-First 3`, 4/5 reps without a delay and
+  5/5 with one. So the hazard runs green→red: a gate written
+  `if ($code -ne 0) { throw }` fails a command that succeeded. The stated
+  consequence — "produces false negatives only" — is backwards.
+- **Q9c (MEASURED, method).** A naive A/B of this trap returns a false negative
+  because `$LASTEXITCODE` retains the previous command's value; every arm must
+  be pre-cleared to a value that is not the answer. My first two probes returned
+  "no trap" for this reason and I nearly filed it. Discipline 598 applies to
+  exit codes.
 - **Q10 (MEASURED, method).** Re-running a *fixed* linter that now reports zero
   violations cannot verify the fix: the reporter loop never executes, and the
   summary's em dash is encodable in cp1252 anyway. A separate plant printing
