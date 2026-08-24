@@ -1,0 +1,18 @@
+strehl stack -- regularised winner + noise-gated average (THE DEFAULT PATH, an estimator)
+                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+regulariser     : 17x17 box on the focus field (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)
+gates           : 4.00  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)
+frames          : 60 from C:\dev\strehl-out\M105\iso60
+alignment      : ON (solved), reference frame 30, 60 placed / 0 refused
+  WARNING       : this solve could not certify itself. The held-out protocol needs long-span edges (M10: span >= 40, >= 12 surviving) and this stack's edge set did not supply them, so the registration below is UNVERIFIED. Run `strehl align` with a richer span set to get a sidecar that carries an error bar.
+--- pass two: gated average (MEASURED) ---
+  field + gate  : 86.441 s summed across workers (1440.7 ms/frame)
+--- gate calibration (MEASURED) ---
+                  rule from this NOISE gate, so 3 is a target to land near, not to match.
+  gate   tol(DN-norm)     mean n_eff   n_eff=1 %   boundary %   pred sigma gain (model)
+gate solve      : not requested. Pass --target-n-eff 3 to solve the ladder for a
+                  gate, which is what fact 324 says you should be setting.
+gate unit       : 0.021516  = sqrt(2) * FOCUS_NOISE_SD, the SD of a difference
+sensitivity     : 0.151 gate units per 1% of per-frame level drift (median pixel),
+corpus (M24)    : 109MSDCF drifts 0.91% -> 0.14 gate units. 119MSDCF 2.88% -> 0.44.
+wrote           : C:\dev\strehl-out\M105\v5c-A-cold.tif (3516 x 2344, 16-bit RGB, linear camera-native RGB, binned from one 2x2 quad per pixel)

@@ -1,0 +1,65 @@
+{
+  "arms": [
+    {
+      "arm": "A-cold",
+      "exit": 0,
+      "sha256": "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+      "sidecar_existed_before": false,
+      "alignment": [
+        "alignment      : ON (solved), reference frame 30, 60 placed / 0 refused"
+      ],
+      "sidecar_after": true
+    },
+    {
+      "arm": "B-warm",
+      "exit": 0,
+      "sha256": "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+      "sidecar_existed_before": true,
+      "alignment": [
+        "alignment      : ON (sidecar), reference frame 30, 60 placed / 0 refused"
+      ],
+      "sidecar_after": true
+    },
+    {
+      "arm": "C-cold2",
+      "exit": 0,
+      "sha256": "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+      "sidecar_existed_before": false,
+      "alignment": [
+        "alignment      : ON (solved), reference frame 30, 60 placed / 0 refused"
+      ],
+      "sidecar_after": true
+    },
+    {
+      "arm": "D-stale-src",
+      "exit": 0,
+      "sha256": "A7C532EC29CD3C6878D986ABFCA965640B62ECCB470B831933E92AACE6DF8136",
+      "sidecar_existed_before": null,
+      "alignment": [
+        "alignment      : ON (solved), reference frame 15, 30 placed / 0 refused"
+      ],
+      "sidecar_after": true
+    },
+    {
+      "arm": "D-stale",
+      "exit": 0,
+      "sha256": "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+      "sidecar_existed_before": true,
+      "alignment": [
+        "alignment      : sidecar rejected (this warp map was fitted on stack \"iso60\" (digest 4d9a2441fffe4c05, 30 frames) but was applied to \"iso60\" (digest 56d8292576b3fd13, 60 frames)); re-solving",
+        "alignment      : ON (solved), reference frame 30, 60 placed / 0 refused"
+      ],
+      "sidecar_after": true
+    }
+  ],
+  "verdict": {
+    "A_cold": "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+    "B_warm": "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+    "C_cold2": "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+    "D_stale": "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+    "determinism_control_A_eq_C": true,
+    "claim_A_eq_B": true,
+    "corroborating_D_eq_A": true,
+    "VERDICT": "HAZARD REFUTED: sidecar state does not move the measurement render"
+  }
+}

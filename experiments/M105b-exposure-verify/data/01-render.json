@@ -1,0 +1,42 @@
+﻿[
+    {
+        "name":  "v5a-linear-60",
+        "args":  "--limit 60",
+        "exit":  0,
+        "seconds":  22.4,
+        "sha256":  "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+        "exposure":  ""
+    },
+    {
+        "name":  "v2-auto-299",
+        "args":  "--srgb --auto-exposure",
+        "exit":  0,
+        "seconds":  97.9,
+        "sha256":  "E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112",
+        "exposure":  "exposure        : +1.54 stops (gain 2.908x), chosen from the image"
+    },
+    {
+        "name":  "v4-plain-299",
+        "args":  "--srgb",
+        "exit":  0,
+        "seconds":  59.3,
+        "sha256":  "A559616F85CFAF41FF0A9F8C3067C9B8D80F5C52041F56D141CB793A0182CD00",
+        "exposure":  "exposure        : none -- this is a FAITHFUL render of the capture, which is not the same"
+    },
+    {
+        "name":  "v4-exp0-299",
+        "args":  "--srgb --exposure 0",
+        "exit":  0,
+        "seconds":  57.9,
+        "sha256":  "A559616F85CFAF41FF0A9F8C3067C9B8D80F5C52041F56D141CB793A0182CD00",
+        "exposure":  "exposure        : none -- this is a FAITHFUL render of the capture, which is not the same"
+    },
+    {
+        "name":  "v4-exp1-299",
+        "args":  "--srgb --exposure=1.00",
+        "exit":  0,
+        "seconds":  58.9,
+        "sha256":  "A4FABFEBD9664691333AA4161CC2E2D3B165B95DBEB0CB8F0D04FDF6AB19988F",
+        "exposure":  "exposure        : +1.00 stops (gain 2.000x), as asked"
+    }
+]

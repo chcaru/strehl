@@ -1,0 +1,22 @@
+strehl.exe : strehl stack -- regularised winner + noise-gated average (THE DEFAULT PATH, an estimator)
+At C:\dev\blog\death-of-software\projects\strehl\experiments\M105b-exposure-verify\01-render.ps1:25 char:5
+    + FullyQualifiedErrorId : NativeCommandError
+                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+regulariser     : 17x17 box on the focus field (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)
+gates           : 4.00  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)
+frames          : 299 from D:\personal\macro\bee-3-cpl
+alignment      : ON (sidecar), reference frame 149, 299 placed / 0 refused
+--- pass two: gated average (MEASURED) ---
+  field + gate  : 350.475 s summed across workers (1172.2 ms/frame)
+--- gate calibration (MEASURED) ---
+                  rule from this NOISE gate, so 3 is a target to land near, not to match.
+  gate   tol(DN-norm)     mean n_eff   n_eff=1 %   boundary %   pred sigma gain (model)
+gate solve      : not requested. Pass --target-n-eff 3 to solve the ladder for a
+                  gate, which is what fact 324 says you should be setting.
+gate unit       : 0.021516  = sqrt(2) * FOCUS_NOISE_SD, the SD of a difference
+sensitivity     : 0.968 gate units per 1% of per-frame level drift (median pixel),
+corpus (M24)    : 109MSDCF drifts 0.91% -> 0.88 gate units. 119MSDCF 2.88% -> 2.79.
+exposure        : none -- this is a FAITHFUL render of the capture, which is not the same
+                  thing as a flattering one. --auto-exposure would choose +1.54 stops (gain 2.908x).
+                  Nothing was applied. Pass --exposure=1.54 or --auto-exposure to apply it.
+wrote           : C:\dev\strehl-out\M105\v4-plain-299.tif (7032 x 4688, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB 

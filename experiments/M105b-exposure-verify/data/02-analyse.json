@@ -1,0 +1,30 @@
+{
+  "V4_positive_control": {
+    "n_pixels_total": 98898048,
+    "n_pixels_used": 98895452,
+    "frac_used": 0.9999737507458185,
+    "ratio_median": 1.9999999670497712,
+    "ratio_p25": 1.9999552696653224,
+    "ratio_p75": 2.000044669665543,
+    "ratio_iqr": 8.940000022050754e-05,
+    "ratio_mean": 1.9999999666441204,
+    "expected": 2.0,
+    "median_rel_error": 1.647511438385152e-08,
+    "V4_positive_pass": true,
+    "placebo_note": "see 01-render.json: v4-plain-299 and v4-exp0-299 SHA-256"
+  },
+  "V6_tail": [
+    {
+      "stack": "bee-3-cpl",
+      "p99_5": 0.30423587522953316,
+      "p99_9": 0.31081430394738285,
+      "p99_99": 0.36918175405549725,
+      "max": 0.69374051636977,
+      "p9999_over_p999": 1.1877888159162562,
+      "max_over_p999": 2.2320096197606527,
+      "p999_over_p995": 1.0216227909114484,
+      "n_above_p999": 32967,
+      "V6_specular_substantiated": true
+    }
+  ]
+}
