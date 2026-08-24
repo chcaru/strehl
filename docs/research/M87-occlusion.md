@@ -1791,6 +1791,10 @@ namespaced `M87`.
 | P46 | **§15's negative survives the withdrawal, restated without any residual estimate.** The solve applies **70.97 px p-p** of in-ROI drift at `ROI_LEG` centre (sidecar, §15.4). The drift ladder (§15.5, single-depth plant, no occlusion) reads ISO **0.06448** at just **30 px p-p** — **94.8%** of the real bee halo's 0.06805. So alignment removed **2.37x more drift than the amount that manufactures 95% of the entire observed halo**, and the halo moved **6.6%** with overlapping CIs. | The refutation needs only the drift *applied* and the ladder, both measured directly. It is now **independent of `E*`, of the residual, and of the true drift span** — the three quantities that turned out to be wrong or unknowable tonight. Stronger than the original form. | DERIVED from MEASURED inputs |
 | P47 | **The orchestrator's `bee3-zoomnull` is registered as an M87 control, and M87 had already run its twin.** §15.2 arm **Uw** — FOV- and resampler-matched, registration discarded — reads ISO **0.06844** against unaligned **0.06805** and aligned **0.06356**. The orchestrator's independent visual check of `bee-3-ALIGNED.tif` vs `bee3-zoomnull.tif` at 100% finds the silhouette halo present and unchanged in both. | **Two constructions of the same null, by two agents, agree**: discarding registration does not move the halo, and resampling alone does not move the metric (0.06844 vs 0.06805). This is the placebo that separates a geometry fix from an occlusion fix, and the halo fails it as a geometry defect. | MEASURED |
 | P48 | **C-ZOOMNULL passes: the shipped correction is an occlusion fix, not a geometry fix.** With registration fully discarded (`STREHL_ALIGN=0`, gate 2) the correction cuts the halo metric **82.8%** (0.06878 -> 0.01186), against **72.9%** on the aligned render — **ratio 1.135**, inside the ±33% band. | Satisfies the orchestrator's decisive placebo: a fix whose benefit depended on alignment would be repairing geometry. This one does not. **Separately corroborates §15 at a second gate**: alignment alone moves the halo 0.06878 -> 0.06406, a **6.9%** removal, against §15.2's **6.6%** measured at gate 0 on different renders. | MEASURED |
+| P49 | **THE PHOTOMETRIC SHARE OF THE HALO IS ZERO OR NEGATIVE AT EVERY CORRECTION STRENGTH.** Re-running the election on gain-normalised frames (`src/53`, lambda sweep of the per-frame gain, `ROI_LEG`, 6103 profiles) gives ISO **0.06804 / 0.06979 / 0.07120 / 0.07225 / 0.07379** at lambda = 0 / 0.25 / 0.5 / 0.75 / 1.0 — **monotone increasing**. Best lambda is **0**, the uncorrected shipped election. | **Per-frame photometric normalisation will not fix the halo**, and a single-point test could not have shown this: the ladder excludes a gentler correction helping. M99 is worth shipping for other reasons, but the halo should not be attributed to photometry. Protects M87's occlusion attribution from being explained away. | MEASURED |
+| P50 | **M96's disconnected population and the orchestrator's enrichment both replicate on `ROI_LEG`, independently implemented.** Re-measured, not inherited: **27.083%** disconnected (M96 whole-frame: 25.247%), mean gap **64.51** frames. Gain normalisation re-elects **31.515%** of disconnected pixels against **3.580%** of connected — **enrichment 8.80x**, inside ORCH's 2.82-32.68x range — with a correctly specified label-shuffle null at **0.989x**. Median frame move among movers: **73** disconnected against **2** connected. | The mechanism ORCH describes is **real and reproduced**: photometric drift does attack precisely the disconnected population. **P49 is therefore the sharper result** — the mechanism fires, moves those pixels a long way, and still does not reduce the halo. Firing on the right population is not the same as fixing the defect. | MEASURED |
+| P51 | **The halo metric cross-validates across two independent implementations.** A pure-Python re-election from the cached 299-frame cube gives ISO **0.06804** on `ROI_LEG`; §15.2's arm U, produced by the shipped Rust binary, gives **0.06805**. | Agreement to 1 part in 6800 between a Rust merge and a NumPy re-implementation of the documented focus formula. The metric and the harness are not encoding an artefact of either code path. | MEASURED |
+| P52 | **My illumination probe disagrees in SIGN with the reported early-frame brightness bias.** Far-background pixels (>60 px from the subject, 29.19% of `ROI_LEG`) give an early-decile level bias of **−3.18%** against the reported **+5.31%**, with total p-p 17.83% and 31-frame-smoothed p-p 12.36%. | Two probes of the same stack disagree on direction. Mine is deliberately restricted to far background because a whole-crop median tracks the subject sweeping through focus — measured at 20.75%, which is why it was rejected. **M99 should confirm which probe its normalisation is built on** before shipping a correction whose sign is in dispute. | MEASURED |
 
 ### Capture request
 
@@ -1968,4 +1972,94 @@ drift**. Every §16 number should be read as "with the solve applied as shipped"
 not "registered". Since the halo is measured not to respond to registration at
 all (§20.2, and the orchestrator's null), this does not affect the halo
 conclusions — but it will matter to any future sharpness claim on those files.
+
+
+## 21. The photometric decomposition: the mechanism is real, the share is zero
+
+**Asked by the orchestrator** on the strength of M96's disconnected competitive
+set and facts 1262-1266: separate the halo into a photometric share and an
+optical share, so the result cannot be attributed away later.
+
+**Answer: the photometric share is zero or negative. The optical share is all of it.**
+
+### 21.1 The question my own §5 never asked
+
+`src/05-photometry.py` renormalised **the estimate** and left the selection
+untouched — its own comment says so. So it could not see the effect that
+matters here, which is a gain bias changing **who wins**. `src/52` and `src/53`
+apply the gain **before** the focus field is computed.
+
+**Why the test can express the failure (DERIVED, and checked before running).**
+The field is `box(sobel(L),13) / max(sigma(L),eps)` with
+`sigma ~ sqrt(0.5(gL + rn^2))`. Under a per-frame gain `a` the numerator scales
+by `a` and, shot-noise dominated, `sigma` by `sqrt(a)`, so the field scales by
+**`sqrt(a)`**. A 5% level bias moves the response ~2.5%, which is large against
+`t*sqrt(2)*FOCUS_NOISE_SD`. **A scale-invariant focus measure would have made
+this test vacuous. This one is not**, so the plant can express the failure.
+
+### 21.2 The mechanism reproduces
+
+M96's definition is used verbatim and cited, not re-derived. Re-measured on
+`ROI_LEG` rather than inherited from M96's whole-frame figure:
+
+| quantity | this ROI | for reference |
+|---|---|---|
+| disconnected competitive set | **27.083%** | M96 whole-frame 25.247% |
+| mean gap | **64.51** frames | M96 29.12 |
+| re-election under gain normalisation, disconnected | **31.515%** | — |
+| re-election, connected | **3.580%** | — |
+| **enrichment** | **8.80x** | ORCH 2.82-32.68x, median 16.87x |
+| label-shuffle null | **0.989x** | must be ~1.00 |
+| median frame move, disconnected / connected | **73 / 2** | ORCH 35,60,46,5 / 1 |
+
+**The orchestrator's mechanism is real and it reproduces on my ROI with my own
+implementation.** Photometric drift does attack exactly the disconnected
+population, and it moves those pixels a very long way.
+
+### 21.3 And it does not reduce the halo
+
+| lambda (gain strength) | ISO | 95% CI |
+|---|---|---|
+| **0.00** (shipped election) | **0.06804** | [0.05981, 0.07982] |
+| 0.25 | 0.06979 | [0.05929, 0.08271] |
+| 0.50 | 0.07120 | [0.05963, 0.08494] |
+| 0.75 | 0.07225 | [0.06025, 0.08661] |
+| 1.00 (full correction) | 0.07379 | [0.06144, 0.08771] |
+
+**Monotone increasing. The best correction strength is none.** A single-point
+test at lambda = 1 would have shown -8.4% and left open that a gentler
+correction helps; the ladder closes that.
+
+**This is the sharper form of the result.** The mechanism fires on the right
+population, moves a third of it a median of 73 frames, and the halo does not
+improve. **Firing on the right pixels is not the same as fixing the defect** —
+which is discipline 604 again, from the opposite direction.
+
+### 21.4 Two instrument defects I hit and fixed, disclosed
+
+1. **My first label-shuffle control read 2.724x where the null is 1.00.** It
+   compared the shuffled-positive rate against the **true** connected rate
+   instead of recomputing both arms under the shuffled labels. Mis-specified
+   control, not a finding. Corrected it reads **0.989x**.
+2. **My first illumination probe was a whole-crop median**, which gives a 20.75%
+   spread — 3.9x the reported 5.31% — because the subject sweeps through focus
+   and the median tracks real scene content. Normalising by it would have
+   removed signal. Replaced with far-background pixels only (>60 px from the
+   subject), where defocus preserves the mean.
+
+### 21.5 A sign disagreement for M99
+
+My far-background probe gives an early-decile bias of **−3.18%**; the
+orchestrator reports **+5.31%**. **The signs are opposite.** Total p-p 17.83%,
+31-frame-smoothed 12.36%. I am not adjudicating this — different probes on
+different regions — but M99 should confirm which probe its normalisation is
+built on, because a correction applied with the wrong sign doubles the error it
+was meant to remove.
+
+### 21.6 Cross-validation that fell out of it
+
+The pure-Python re-election reproduces the shipped Rust binary's halo:
+**0.06804** against §15.2 arm U's **0.06805**, agreement to 1 part in 6800,
+through completely independent code. The metric is not an artefact of either
+implementation.
 

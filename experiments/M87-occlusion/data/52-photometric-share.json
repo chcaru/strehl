@@ -1,0 +1,24 @@
+{
+ "level_spread_pct": 17.826451578835602,
+ "reelected_pct": 11.14569234528912,
+ "disconnected_pct_this_roi": 27.082863373185955,
+ "mean_gap": 64.51075865898521,
+ "reelect_disc_pct": 31.515495939473865,
+ "reelect_conn_pct": 3.5799453453298615,
+ "enrichment": 8.803345554028278,
+ "shuffle_control": 0.9886567919749503,
+ "median_dk_disc": 73.0,
+ "median_dk_conn": 2.0,
+ "ISO_raw": 0.0680424463788235,
+ "ci_raw": [
+  0.059809133253642885,
+  0.07981932492315844
+ ],
+ "ISO_norm": 0.07379016224370516,
+ "ci_norm": [
+  0.06143526762595115,
+  0.08771419631165135
+ ],
+ "photometric_share_pct": -8.447250460222255,
+ "n_profiles": 6103
+}
