@@ -24,6 +24,7 @@ pub mod photometric;
 pub mod plane;
 pub mod profile;
 pub mod robust;
+pub mod softgate;
 pub mod stack;
 pub mod through_focus;
 pub mod warpmap;
