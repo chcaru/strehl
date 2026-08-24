@@ -59,6 +59,30 @@ also unreadable. The conditional bee result is therefore
 were assumed, is `NOT ESTABLISHED`. Neither result changes the original
 `NO SHIP / NOT ESTABLISHED` decision.
 
+**MATCHED-ISO CONTROL VERDICT — MEASURED/ARGUED: NOT ESTABLISHED; IT DOES
+NOT ISOLATE NOISE FROM CONTENT FOR THIS QUESTION.** M61 had already
+owner-verified `bee-2-cpl` / `bee-3-cpl` as the one genuine matched bee pair
+and measured its green conversion-gain ratio within 1.22% of the ISO ratio.
+The new full EXIF census nevertheless refutes the stronger pointer that the
+299-frame captures differ only by ISO: only 265 paired focus tags agree, and
+`ISO × exposure` differs by more than 1% on 151 frames, by as much as 20%.
+First-frame gross registration selects zero translation and reaches
+`r = 0.989985`, but the frozen fine-structure test and its within-frame
+green-plane capability control both fail. Exact content is therefore not
+established.
+
+**MATCHED-ISO MAP VERDICT — MEASURED/ARGUED: NOT ESTABLISHED BECAUSE THE
+INSTRUMENT CANNOT REPEAT ITS OWN STACK.** At requested `S = 0.70`, the two
+admission-count maps have Spearman `ρ = 0.0288`, but even/odd maps from
+`bee-2` and `bee-3` themselves reach only 0.0492 and 0.0313, far below the
+frozen 0.50 capability line. A planted tile permutation moves cross-ISO
+Spearman by only 0.0333 against the required 0.20. The numerical cross-ISO
+sign is unreadable, not a noise-model diagnosis. Both scalar profile branches
+are measurement-backed within 5.32%, but they are relations and mode fits,
+not exact per-ISO rows; known spatial terms remain absent. The two sharpness
+prices and both M80 companions already abstain. M82 therefore still ships no
+solver or preset and makes no single-frame-floor claim.
+
 ## M82 §1 — The source question and the corrections carried into it
 
 **MEASURED.** `crates/strehl-core/src/merge.rs` is the authority for the
@@ -558,7 +582,164 @@ physical sibling control. A future three-capture control must first meet a
 frozen comparability rule, then use a sharpness instrument with resolving
 power below the effect it prices.
 
-## M82 §14 — Candidate facts
+## M82 §14 — The matched-ISO premise is weaker than the pointer
+
+**MEASURED.** `PREREGISTRATION-BEE-ISO.md` was committed as `1a388a3`
+before M82 ran ExifTool on the current directories, decoded the first frames,
+or computed a spatial admission comparison. It explicitly discloses the
+already-visible gates, achieved gains, admission aggregates, and unreadable
+sharpness prices. The original five-stack, wrapped-text, and bee-triple
+decisions remain independent.
+
+**MEASURED correction to the extension pointer.** M61 had already used this
+exact pair. M61 fact 31 records the owner's confirmation that `bee-2` /
+`bee-3` alone share subject, angle, and depth; `bee-1` and the wrapped-text
+pair are void as matched captures. Its green conversion-gain ratio is 4.0486
+against the ISO ratio 4.000, +1.22%. M61 fact 17 says framing held but lighting
+stability remained circumstantial. The present arm is new only in testing the
+merge's spatial admissions.
+
+**MEASURED.** ExifTool 13.58 returned 299 rows with empty stderr from each
+current bee directory under the exact requested command. ISO and f-number are
+internally constant, and all three have nine distinct `FocusDistance2` tags.
+The start values in the pointer are correct.
+
+| Class | stack | ISO / f-number | exposure schedule | focus-tag range |
+| --- | --- | --- | --- | --- |
+| MEASURED | `bee-1-cpl` | 100 / 5.6 | 0.5, 0.4, then 0.3 s | 0.2707–0.3000 m |
+| MEASURED | `bee-2-cpl` | 400 / 5.6 | 1/20 s on frames 1–151; 1/25 on 152–299 | 0.2771–0.3091 m |
+| MEASURED | `bee-3-cpl` | 100 / 5.6 | 1/5 s on frames 1–148; 1/6 on 149–299 | 0.2771–0.3091 m |
+
+**MEASURED correction to “only ISO differs.”** The two pair members start at
+the same tag and share the same nine-value range, but their filename-paired
+focus sequences are equal on only **265/299** frames. The first mismatch is
+frame 7, the last is 292, and the largest tag difference is 0.0047 m.
+`ISO × exposure` is equal on frames 1–148, differs by 20% on frames 149–151,
+and differs by 4% on frames 152–299. Thus **151/299** rows miss the frozen 1%
+line. M61 fact 16's one exposure entry correctly describes frame 0; it does
+not describe the full capture.
+
+**ARGUED.** Nine tags over 299 frames are too coarse to prove that the
+physical actuator schedules differ. The source result is narrower: exact
+frame-for-frame focus and exposure matching is not established, so this
+capture cannot receive the promised “only noise changed” status. Exposure
+must of course change to hold DN level while ISO changes; the additional
+out-of-lockstep exposure change is the unregistered part.
+
+**MEASURED.** The frozen first-frame registration gives:
+
+| Class | arm | shift applied to `bee-3` | raw Pearson | high-pass Pearson | affine residual / spatial SD | framing bar |
+| --- | --- | --- | ---: | ---: | ---: | --- |
+| MEASURED | real pair | 0, 0 green px | 0.989985 | 0.238946 | 0.141176 | fail |
+| MEASURED | reversed 8×8 tile control | +92, −44 green px | 0.397348 | 0.004851 | 0.917668 | fail as planted |
+
+**MEASURED.** The real pair passes the residual and translation limbs and misses raw
+correlation 0.99 by 0.000015, but misses the registered 0.90 fine-structure
+line decisively. More importantly, the same-frame G1/G2 high-pass sanity
+correlations are only 0.0953 and 0.2943 against 0.95. The destructive control
+changes the bytes, fails the common bar, and restores exactly.
+
+**MEASURED/ARGUED.** Zero displacement and near-0.99 raw correlation support
+the owner's gross-framing statement. The failed green-plane capability check
+means this one noisy frame cannot establish identical fine content. Under the
+frozen rule the result is `FRAMING NOT ESTABLISHED`, not “framing moved.”
+Together with the EXIF failure, the matched-pair premise does not clear.
+
+## M82 §15 — What the ISO pair can and cannot test
+
+**MEASURED.** `CameraProfile` covers both ISOs, but not as exact per-ISO table
+rows. It uses `max(ISO, 100)/436.8` for gain, 4.20 e⁻ read noise below ISO
+400, and the seven-ISO relative-LS fit 1.2392 e⁻ at and above ISO 400.
+Direct source measurements bound the values used here:
+
+| Class | ISO | quantity | profile | direct source value | profile / source − 1 |
+| --- | ---: | --- | ---: | ---: | ---: |
+| MEASURED/DERIVED | 100 | green gain, DN/e⁻ | 0.228938 | M71 P5: 0.224103 | +2.16% |
+| MEASURED/DERIVED | 100 | read noise, e⁻ | 4.2000 | M48 table: 4.3000 | −2.33% |
+| MEASURED/DERIVED | 400 | green gain, DN/e⁻ | 0.915751 | M61 fact 12: 0.899725 | +1.78% |
+| MEASURED/DERIVED | 400 | read noise, e⁻ | 1.2392 | M48 table: 1.3088 | −5.32% |
+
+**MEASURED/ARGUED.** M61 fact 31 independently measures the paired green gain ratio to +1.22% of
+the ISO ratio. The scalar denominator is therefore
+`MEASUREMENT-BACKED` under the frozen 10% rule, with maximum discrepancy
+5.32%. That is not a claim that it is exact: M71's PRNU, spatial green
+correlation, and the measured per-pixel sigma spread are absent.
+
+**MEASURED correction in source documentation.** `profile.rs` still says all
+ISO ≥400 gain is extrapolation and that a high-mode PTC has not run. M61
+subsequently ran a clean ISO-400 arm and PTCs at ISO 500 and 1000. The code's
+numeric relation survived that evidence; the prose predates it. M82 records
+the stale comment and does not modify a production file owned by concurrent
+work.
+
+**DERIVED from the shipped source.** With current
+`selection_inflation(n) = 1`, the coordinate used throughout M82 reduces
+exactly to
+
+```text
+S(T) = mean_pixels(1 / sqrt(n_eff(T))).
+```
+
+The absolute single-frame sensor sigma cancels from each ratio after admission.
+Consequently matching `S` cannot itself validate the gain or read-noise
+calibration; it validates an admission-count outcome. The profile still
+matters before that point because `FocusField` divides DN-domain contrast by
+predicted sigma.
+
+**ARGUED correction to the proposed gate test.** Equal raw gates are therefore
+not expected on matched DN content. Lower-noise ISO-100 contrast is taller in
+sigma units and needs a larger threshold to admit the same physical
+neighbours. The already-visible `bee-3/bee-2` gate ratios — 1.118×, 1.347×,
+and 1.911× at requests 0.90, 0.70, and 0.50 — are not by themselves a
+noise-model failure. The meaningful new observable is whether the spatial
+admission pattern repeats after each stack reaches the same outcome.
+
+## M82 §16 — Spatial admission does not clear its capability control
+
+**MEASURED.** The independent M82 implementation retained 512² admission
+count maps in the frozen detail ROI at the exact committed gates, then compared
+the central 448² after the zero-shift registration and 32-pixel guard. It
+reproduces every pre-existing local mean and singleton percentage exactly.
+For within-stack repeatability, it separately elected and counted filename-even
+and filename-odd frames.
+
+| Class | request | cross-ISO Spearman | exact count agreement | cross singleton XOR | within Spearman `bee-2` / `bee-3` | within singleton XOR `bee-2` / `bee-3` |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| MEASURED | 0.90 | 0.0103 | 92.92% | 7.07% | 0.0122 / 0.0179 | 2.94% / 1.72% |
+| MEASURED | **0.70** | **0.0288** | **73.37%** | **26.16%** | **0.0492 / 0.0313** | **11.14% / 8.25%** |
+| MEASURED | 0.50 | 0.1148 | 37.78% | 44.26% | 0.1485 / 0.1263 | 33.63% / 35.72% |
+
+**MEASURED/ARGUED.** All six within-stack correlations miss the 0.50
+capability line, including both primary controls. The high exact agreement at
+0.90 is the degenerate result of 95.38% and 96.94% singleton exposure, not a
+stable spatial pattern. At 0.70 the cross-ISO singleton XOR exceeds the
+larger within-stack value by 15.02 percentage points, but the instrument fails
+before that sign may be interpreted.
+
+**MEASURED.** Two different destructive controls give the honest disposition.
+The byte-level source mutation changes `gap <= tolerance` to `gap >=
+tolerance`, is verified by read-back, makes the selector assertion exit 1,
+and byte-restores exactly. That proves the computation can reject a wrong
+admission rule. The registered map permutation is harsher on the proposed
+spatial claim: it moves cross-ISO Spearman from 0.0288 to −0.0045, a drop of
+only **0.0333** against the required 0.20. Because the real map has almost no
+repeatable rank structure, the planted wrong map cannot move it enough. The
+map arm is `NOT ESTABLISHED — INSTRUMENT INCAPABLE`.
+
+**MEASURED.** The existing sharpness arm cannot rescue the pair. At primary
+request 0.70, `bee-2` and `bee-3` return −0.02862 ± 0.03285 px and
+−0.01658 ± 0.04954 px; both are below the frozen 0.343 px null. Both
+transferred flat preconditions fail and both M80 companions return
+`N/A / NO TARGET`. Whole-plane singleton exposure is 47.74% and 50.73%;
+local detail singleton exposure is 81.64% and 85.30%.
+
+**ARGUED decision.** This pair establishes neither a portable price nor a
+scalar noise-model defect. Its scalar calibration is independently supported,
+but its exact capture premise and both new spatial instruments fail their
+registered prerequisites. M82 remains `NO SHIP / NOT ESTABLISHED`; no preset,
+automatic solver, actual-noise floor, or production change follows.
+
+## M82 §17 — Candidate facts
 
 | M82 namespace | Claim | Label | Evidence |
 | --- | --- | --- | --- |
@@ -578,8 +759,13 @@ power below the effect it prices.
 | **M82 P14** | The three bee primary centres are +0.02073, -0.02862, and -0.01658 px; all are below the frozen 0.343 px null and unreadable. Even assuming comparability, bee price portability is NOT ESTABLISHED. | MEASURED/ARGUED | `bee-sharpness-*.json`; `bee-results.json` |
 | **M82 P15** | At the bee primary points, whole-plane singleton exposure is 47.74%–50.73% and local detail singleton exposure is 81.64%–91.28%; no actual single-frame floor is established. | MEASURED/ARGUED | `bee-confirm-results.json`; `bee-results.json` |
 | **M82 P16** | M82's amendment incorrectly called local ignored M70 NPZ intermediates committed. The durable prior targets are M70's tracked `s10_architecture.json` and log; M82's tracked current-path aggregates reproduce them exactly. | MEASURED | `git ls-files`; `.gitignore`; M70 `s10_architecture.*`; M82 §10 |
+| **M82 P17** | The full EXIF census confirms 299 frames, fixed ISO/f/5.6, and nine focus tags in each matched-pair member, but only 265/299 filename-paired focus tags agree and 151/299 `ISO × exposure` rows differ by more than 1%, with maximum 20%. Exact frame-for-frame matching is not established. | MEASURED/ARGUED | `exif-*bee-[23]*`; `bee-iso-preconditions.json`; M82 §14 |
+| **M82 P18** | First-frame gross registration selects zero translation and raw Pearson 0.989985, but fine-structure Pearson is 0.238946 and the within-frame green sanity controls are 0.0953/0.2943. The destructive tile control fails as planted; gross framing is supported but identical fine content is NOT ESTABLISHED. | MEASURED/ARGUED | `bee-iso-preconditions.json`; M82 §14 |
+| **M82 P19** | The shipped ISO-100/400 scalar profile is backed by direct gain and read-noise measurements within 5.32%; M61's genuine matched-pair green gain ratio is 1.22% from the ISO ratio. The profile is nevertheless a gain relation plus mode fits, not exact per-ISO rows, and omits measured spatial terms. | MEASURED/DERIVED | M48 read-noise table; M61 facts 12/31; M71 P5; `bee-iso-preconditions.json` |
+| **M82 P20** | The primary spatial admission test is incapable: within-stack even/odd Spearman is 0.0492/0.0313 against 0.50, cross-ISO is 0.0288, and a tile-permuted map drops it only 0.0333 against 0.20. No numerical map sign is promoted. | MEASURED/ARGUED | `bee-iso-admission.json`; `mutation-control-iso.log`; M82 §16 |
+| **M82 P21** | With `selection_inflation = 1`, M82's coordinate is exactly `mean(1/sqrt(n_eff))`; sensor sigma cancels after admission. Equal raw gates are not a noise-model test, and the matched-ISO arm establishes neither a noise-model defect nor a portable sharpness price. The product verdict remains NO SHIP / NOT ESTABLISHED. | DERIVED/ARGUED from MEASURED | `merge.rs`; `profile.rs`; `bee-iso-results.json`; M82 §§15–16 |
 
-## M82 §15 — Reproduction, hashes and disposition
+## M82 §18 — Reproduction, hashes and disposition
 
 **MEASURED.** Original durable evidence is committed under
 `experiments/M82-normalised-gate/`:
@@ -607,6 +793,14 @@ aggregate; three sharpness logs and JSON files; `bee-results.json`; and
 `mutation-control-bee.log`. The regenerated `bee-physics-bee-*.npz` files are
 ignored local intermediates, matching M70's repository convention, and are
 not durable evidence.
+
+**MEASURED.** The matched-ISO amendment adds
+`PREREGISTRATION-BEE-ISO.md`; exact and filename-bearing ExifTool stdout,
+empty stderr, and command records for all three bees; the registration/profile
+audit in `analyse_bee_iso_pair.py` and `bee-iso-preconditions.json`; the
+admission-map source, log, and aggregate; the byte-mutation source and log;
+and the validated decision aggregate `bee-iso-results.json`. No decoded RAW
+plane or admission-map binary is committed.
 
 **MEASURED.** From the repository root, with Python encoding set before every
 Python process, the measurement order is:
@@ -645,10 +839,30 @@ python .\experiments\M82-normalised-gate\refine_bee_confirm.py
 python .\experiments\M82-normalised-gate\decide_bee.py
 ```
 
+**MEASURED.** With the matched-ISO amendment already committed, the final arm
+ran in this order; each ExifTool command was repeated for `bee-1-cpl`,
+`bee-2-cpl`, and `bee-3-cpl`, with stdout and stderr preserved under the names
+listed above:
+
+```powershell
+$env:PYTHONIOENCODING = 'utf-8'
+$ExifTool = 'C:\Users\chris\AppData\Local\Programs\ExifTool\ExifTool.exe'
+& $ExifTool -T -ISO -FNumber -FocusDistance2 -r -ext ARW `
+  D:\personal\macro\bee-2-cpl
+& $ExifTool -T -FileName -ISO -FNumber -ExposureTime -FocusDistance2 `
+  -r -ext ARW D:\personal\macro\bee-2-cpl
+python .\experiments\M82-normalised-gate\analyse_bee_iso_pair.py
+python .\experiments\M82-normalised-gate\mutation_control_iso.py
+python -X faulthandler `
+  .\experiments\M82-normalised-gate\bee_iso_admission.py
+python .\experiments\M82-normalised-gate\decide_bee_iso.py
+```
+
 **MEASURED.** Toolchain and library versions are Rust
 `1.98.0 (88d9e12ae 2026-08-18)`, Cargo
 `1.98.0 (797e8a9bc 2026-08-05)`, Python 3.12.10, NumPy 2.4.4, and SciPy
-1.17.1.
+1.17.1. The matched-ISO arm additionally records ExifTool 13.58, rawpy
+0.27.0, and LibRaw 0.22.1.
 
 **MEASURED.** Core hashes below are of worktree bytes in the recorded Windows
 checkout:
@@ -673,6 +887,15 @@ checkout:
 | MEASURED | M70 tracked `s10_architecture.log` | `f82fadacdc20432d6785ebed9aee666b887143c21a7f7d72c1acfc4fd5b10152` |
 | MEASURED | M77 five-stack ROI source | `0eae7a12aa959f9617fd4a1a09c85d17e58ed4a966fe7ab2af8a400132fc4290` |
 | MEASURED | M77 sibling ROI source | `80b0bf0b07eb1d52ce3eb9efa57ec4d38b0e0db3c44e50a0a9f772da9661c748` |
+| MEASURED | `PREREGISTRATION-BEE-ISO.md` | `a45e8f98e20c0d97dff860077208f69dfe243ba882663fc0ab71e23464699a4e` |
+| MEASURED | `analyse_bee_iso_pair.py` | `cdaa7b4aeea48dcaca517cffed5a1b2727f423e0f047aa2560b23d6293e00c18` |
+| MEASURED | `bee_iso_admission.py` | `562b4a35d34f26072de8683a965553c9f325e3d0e280c781efb6dad3b8036215` |
+| MEASURED | `mutation_control_iso.py` | `bf6870b88e23e4fe9d79e8d1fd48b4ee5964ee7157f8ddc5ae62337e3753c7a6` |
+| MEASURED | `decide_bee_iso.py` | `04964d32568e44f55c9a2d95c9870419b2c9de333dd9876e5ce460f8298a3711` |
+| MEASURED | `bee-iso-preconditions.json` | `2a8443d4c5d9c7a19280a59535d4e5797cd11ba2786329a16b09fd262d93b598` |
+| MEASURED | `bee-iso-admission.json` | `02d5d7fe264583738c7c3062e5ecd74d19a500746fd175209eebc64c06f10b74` |
+| MEASURED | `bee-iso-results.json` | `759bedecaf3689cd2989644796c68fd83a34de6f53d8ab2b93102ae19c85ec16` |
+| MEASURED | `mutation-control-iso.log` | `b936e0f061e35c94c2798f3056986a9cb18bb9a1dc304e3fa152c0e57309cc5f` |
 
 **MEASURED.** The release build log contains fresh `Compiling strehl-core` and
 `Compiling strehl-cli` lines and exits 0. The unmutated source tests pass 4/4,
@@ -682,6 +905,22 @@ parse, and the executable re-hashes to its recorded value. Original
 evidence-time corpus lint checked 109 Markdown files and 30 Rust files; the
 final amendment rerun also reports `OK — no violations`.
 
+**MEASURED.** The matched-ISO extension's four Python sources compile, the
+new admission self-test passes 3/3 after the planted comparison is restored,
+all three new JSON artifacts parse, and the private executable re-hashes to
+the value above. The decision script reproduces its JSON byte-for-byte across
+two runs even while the shared branch head moves. The pre-evidence
+corpus-lint invocation read its exit code
+and reported one live-tree S3 violation in concurrent
+`crates/strehl-cli/src/image_out.rs` (two terminal newlines); no M82 path was
+named. M82 did not edit or commit that file.
+
+**MEASURED correction.** The first committed decision script embedded the
+shared tree's live `HEAD`, so a validation rerun changed the JSON despite
+unchanged evidence. Commit `ac961ef` replaces that volatile field with the
+fixed preregistration commit. Two reruns then hash identically. No measured
+value or verdict changed.
+
 **MEASURED.** Evidence commit `543534e` contains exactly the 33 M82 result
 artifacts. Amendment commit `1c2caee`, harness commit `0601788`, and bee
 evidence commit `4ea2f1b` were each audited with `git show --name-only`;
@@ -689,3 +928,9 @@ the latter two contain exactly 23 and 22 M82 paths. No file under `crates/`,
 `docs/research/SYNTHESIS.md`, `AGENTS.md`, or the M83 literature audit was
 modified. The private target directory and NPZ intermediates remain
 untracked, no generated executable is committed, and nothing was pushed.
+
+**MEASURED.** Matched-ISO preregistration commit `1a388a3` contains exactly
+one M82 path. Evidence commit `ec65bb1` contains exactly 27 M82 paths and was
+audited with `git show --name-only`; deterministic-provenance fix `ac961ef`
+contains exactly the decision source and JSON. They modify no crate,
+synthesis, allocation-ledger, or M83 file. Nothing was pushed.
