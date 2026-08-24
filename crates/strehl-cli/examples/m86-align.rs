@@ -256,10 +256,20 @@ fn train_sets(rows: &[Row], test_keys: &[(usize, usize)]) -> Vec<(String, Vec<Al
 /// all of them rather than only the winner is that the ruling picks the best
 /// *full-coverage, non-tree* row from data, and a family with only one member
 /// cannot be ruled on.
+/// M10's poly ladder. Kept exactly as published so the G0 protocol still
+/// produces its 136 candidate rows and reproduces M10's winner.
+const POLY_DEFAULT: &[usize] = &[2, 4, 6];
+
+/// The ladder that answers M84b's question. Degree 1 forces the per-frame
+/// log-scale increment to be *constant*, which is what a uniform focus step
+/// implies; every higher degree is free to let it drift.
+const POLY_UNIFORMITY: &[usize] = &[1, 2, 3, 4, 6];
+
 fn strategies(
     train: &[AlignEdge],
     n: usize,
     geom: PlaneGeometry,
+    poly_degrees: &[usize],
 ) -> Vec<(String, Vec<Option<Similarity>>)> {
     let mut out: Vec<(String, Vec<Option<Similarity>>)> = Vec::new();
     out.push(("S0-fixed".into(), solve_fixed(train, n)));
@@ -281,7 +291,7 @@ fn strategies(
             out.push((name.into(), g));
         }
     }
-    for d in [2usize, 4, 6] {
+    for &d in poly_degrees {
         let mut opts = PolyOptions::new(geom);
         opts.degree = d;
         opts.translation = TranslationModel::Poly(d);
@@ -438,6 +448,7 @@ fn run_protocol(
     min_used: usize,
     geom: PlaneGeometry,
     verbose: bool,
+    poly_degrees: &[usize],
 ) -> Result<(Vec<Candidate>, usize)> {
     let test: Vec<Row> = rows
         .iter()
@@ -481,7 +492,7 @@ fn run_protocol(
                 "strategy", "cover", "n", "median", "p90", "max", "scale", "trans"
             );
         }
-        for (sname, g) in strategies(&train, n, geom) {
+        for (sname, g) in strategies(&train, n, geom, poly_degrees) {
             let s = score(&g, &test, geom);
             let cover = g.iter().filter(|x| x.is_some()).count();
             if s.is_empty() {
@@ -682,7 +693,7 @@ fn cmd_solve_csv(args: &[String]) -> Result<()> {
     println!("{}", "=".repeat(92));
 
     let t0 = std::time::Instant::now();
-    let (cands, _ntest) = run_protocol(&rows, n, min_span, min_used, geom, true)?;
+    let (cands, _ntest) = run_protocol(&rows, n, min_span, min_used, geom, true, POLY_DEFAULT)?;
     let solve_ms = t0.elapsed().as_secs_f64() * 1e3;
 
     println!("\n{}", "=".repeat(92));
@@ -1058,12 +1069,16 @@ fn cmd_heldout(args: &[String]) -> Result<()> {
     let mut n = 0usize;
     let mut min_span = 40usize;
     let mut min_used = 12usize;
+    // Off by default: adding degrees changes the candidate row count, and G0's
+    // reproduction of M10 depends on that count being exactly M10's.
+    let mut uniformity = false;
     let mut it = args.iter();
     while let Some(a) = it.next() {
         match a.as_str() {
             "--n" => n = it.next().context("--n")?.parse()?,
             "--min-span" => min_span = it.next().context("--min-span")?.parse()?,
             "--min-used" => min_used = it.next().context("--min-used")?.parse()?,
+            "--uniformity" => uniformity = true,
             other if other.starts_with("--") => bail!("unknown flag {other}"),
             other => path = Some(PathBuf::from(other)),
         }
@@ -1097,7 +1112,12 @@ fn cmd_heldout(args: &[String]) -> Result<()> {
     println!("{}", "=".repeat(92));
 
     let t0 = std::time::Instant::now();
-    let (cands, _) = run_protocol(&rows, n, min_span, min_used, geom, true)?;
+    let ladder = if uniformity {
+        POLY_UNIFORMITY
+    } else {
+        POLY_DEFAULT
+    };
+    let (cands, _) = run_protocol(&rows, n, min_span, min_used, geom, true, ladder)?;
     let ms = t0.elapsed().as_secs_f64() * 1e3;
 
     println!("\n{}", "=".repeat(92));
