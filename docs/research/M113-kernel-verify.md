@@ -26,6 +26,7 @@ ringing.
 | 6 | corroborating in-crate −0.2894 dex | **confirmed exactly** |
 | 7 | metric figure −0.2360 dex | end-to-end, single-frame, cache-exposed in principle |
 | 8 | fact 1374, `nearest` resolves hairs | **supported by eye**, with an aliasing caveat |
+| 9 | provenance of the arms | **no sidecar at all** — a single frame, synthetic phases; and the "corrected" +0.1160 sits on M112's refuted 8-frame sidecar |
 
 ## 2. Cache contamination (fact 1446) — answered first, as asked
 
@@ -93,8 +94,10 @@ make: catmull-rom −2.9355, lanczos3 −2.8362, **gain +0.0994 dex**.
 
 **The end-to-end answer is +0.083 to +0.099 dex, not +0.1343.** That is 26–38%
 below the claim. It is also below the author's own corrected +0.1160
-(`M95-dose.md` P90, self-labelled a 15.8% over-estimate) — so the correction was
-in the right direction and still did not go far enough.
+(`M95-dose.md` P90, self-labelled a 15.8% over-estimate). **I withdraw the
+endorsement of +0.1160 that an earlier draft of this report carried**: §10 shows
+that figure has the same provenance defect M112 found under the "9.4x"
+denominator, and it is not a sound replacement for +0.1343.
 
 Two things the spread shows. The central-half readings are stable across a 64x
 range of tile areas, so **+0.085 is robust**; the whole-frame readings are not,
@@ -255,13 +258,120 @@ what it is — the cost of one Catmull-Rom gather against no gather, not a kerne
 comparison. Between kernels this instrument reads lanczos3 0.7544, i.e.
 **+0.1670 dex**, a third and larger number again.
 
-Not tested: any stack other than `bee-3-cpl`; the interaction with M87's halo
+Not tested: the interaction with M87's halo
 work, which `M95-resample.md` requires before shipping and which fact 1420 drops
 along with that report's actual recommendation (**the cubic B-spline, not
 Lanczos-3**). Fact 1420 also describes a blocker that no longer exists —
 Lanczos-3 landed at `843f6e1`.
 
-## 10. Facts and disciplines for the orchestrator
+## 10. Provenance of the arms — there is no sidecar
+
+The orchestrator asked, after M112 refuted the "9.4x" denominator as an 8-frame
+quarantined measurement, what frame set, reference index and `stack-digest` fact
+1420's own arms were measured on. The answer is not "the wrong stack". It is
+**no stack**.
+
+`experiments/M95-resample/src/x3_kernel.py`, the sole source of +0.1343 /
+−0.0663 / −0.2006, imports `IMAGES, TILE, band_ratio, load_luma, pick_tiles`
+from `x2_pairs` and runs on `IMAGES["B0"]` — `single-noalign.tif`, which
+`x2_pairs.py` documents as *"strehl 1 frame, NO resample"*, k=1.0. Sub-pixel
+phases are then applied **in NumPy**. So:
+
+| quantity | frames | reference | stack-digest |
+| --- | --- | --- | --- |
+| +0.1343 / −0.0663 / −0.2006 (fact 1420 headline) | **1, unaligned** | none | **none** |
+| +0.1160 ("the correction", quoted in `align.rs:2752`) | **8** | **4** | **165a1ff35968c615** |
+| 0.0143 (the 9.4x denominator, per M112) | **8** | **4** | **165a1ff35968c615** |
+| **+0.0830 / +0.0994 (this report, §3.2)** | **299** | **149** | **8d023c0fe355d109** |
+
+The middle two rows are the same sidecar. `experiments/M95-dose/src/y2_combined.py`
+declares a primary `MAP` at `D:\personal\macro\bee-3-cpl\warpmap.txt` and a
+fallback `MAP_ALT`; `Test-Path` on the primary returns **False**, so the fallback
+ran, and the script's own recorded output says so:
+
+```
+experiments/M95-dose/out/y2_combined.json
+  warpmap  = C:\dev\strehl-out\ORCH-quarantine-sidecars\bee-3-cpl--warpmap.txt
+  n_placed = 8
+```
+
+That sidecar's header reads `stack-digest 165a1ff35968c615`, `frames 8`,
+`reference 4`, `heldout-px none`. **This is M112's `bee8`** — the same
+quarantined sidecar whose `fix_recovery_dex` M112 showed becomes −0.0030 on the
+shipped solve. `M95-dose.md:195` concedes the 8-frame limit but scopes the
+caveat to the COMP column only, while P88 presents +0.1160 as measured "on the
+real warps". Both KERN and TODAY are warp arms, so the caveat does cover
++0.1160; the report does not apply it there.
+
+**Not one published figure in fact 1420 was measured on the solve the owner
+renders.** The +0.0830 in §3.2 is, so far, the only one that was.
+
+## 11. Stack-independence — the gain is flat, and that is not the good news
+
+M112 handed over a prediction it did not test: the coverage fix's recovery
+ranges **−0.0330 to +0.1516** across nine stacks, so if the kernel gain is a
+real property of the kernel it should be far flatter. It is —
+`experiments/M113-kernel-verify/src/k9_stacks.py`, one un-resampled frame from
+each of the same nine captures, 117 geometrically-chosen 256 px tiles each,
+seven sub-pixel phases, pure NumPy and therefore immune to fact 1446 by
+construction:
+
+```
+bee-3-cpl  +0.1428   flat-on-ruler-cpl  +0.1428   tweezers-cpl     +0.1428
+leaf-2-cpl +0.1430   foam               +0.1433   lavendar-cpl     +0.1427
+flowers-cpl +0.1426  lead-1-cpl         +0.1430   flower-bud-alone +0.1425
+
+mean +0.1428   sd 0.0002   range 0.0008 dex   CV 0.002
+```
+
+Phase-0 null read 0.00000 dex for both kernels on all nine, so both interpolate
+and the table is not an artefact of the harness.
+
+The range is **0.4% of the spread M112 measured for the coverage fix over the
+same nine captures**. On the orchestrator's discriminator — *"stack-independence
+is exactly what a ringing artefact would not show"* — this is a clean pass, and
+it agrees with §5's extrema census and §5's crops: **the gain is not ringing.**
+
+But nine subjects — a bee, foam, a steel ruler, a leaf, tweezers, lavender —
+cannot agree to four decimal places about anything real, so I treated the
+agreement itself as the next hypothesis to kill (`k10_blind.py`). The
+instrument's reading is a power-weighted average of the kernel's |H(f)|² over
+two fixed bands, so if |H|² varies slowly the photograph cancels out:
+
+```
+closed form, flat spectrum, NO IMAGE AT ALL   +0.1464   (cr -0.2445, l3 -0.0980)
+white noise, no photograph                    +0.1466
+1/f^2 noise, no photograph                    +0.1408
+gaussian blobs, no photograph                 +0.1167
+nine real photographs                         +0.1428
+```
+
+My pre-registered bar was a spread below 0.02 dex across all five arms. The
+spread is **0.0299 — the bar FAILED**, and I report it failed. The failure is
+carried entirely by the artificial blob field, which is band-limited and has
+almost no power in the scoring band; across the four arms with realistic spectra
+the spread is **0.0058 dex**.
+
+The substantive reading survives the failed bar. **A closed form with no image
+at all lands within 0.0036 dex of nine photographs — the photographs move the
+answer by 2.5%.** Fact 1420's headline is, to 97.5%, a restatement of the two
+kernels' transfer functions over two fixed bands. It could have been computed
+from the coefficients with no camera, no capture and no stack.
+
+That reframes the provenance question in §10 rather than answering it. The arms
+having no sidecar does not make +0.1343 *wrong* — but it does mean the figure is
+a **kernel datasheet number, not a corpus measurement**, and it cannot be
+evidence about what any render gains. What the shipped pipeline actually
+delivers is §3.2's **+0.0830**: the datasheet figure overstates delivery by
+**72%**.
+
+Edge density (`k11_density.py`, after repairing a first attempt that read
+0.0000 on seven of nine — another dead instrument, cf. §5) varies **9.6x** across
+the nine, from 0.00441 on tweezers to 0.04225 on leaf-2, while the gain varies
+**0.57%**. The rank correlation is positive (+0.77) but the amplitude it
+explains is 0.0008 dex. Edge density does not drive this number.
+
+## 12. Facts and disciplines for the orchestrator
 
 1. **MEASURED.** The Lanczos-3 gain over Catmull-Rom on the shipped 299-frame
    `bee-3-cpl` merge is **+0.0830 dex (sem 0.0023, n=117)**, stable at +0.0824
@@ -333,3 +443,34 @@ Lanczos-3 landed at `843f6e1`.
     **entirely** from cache state. Until M97's `solve_config_key` lands, every
     merge in the corpus has an unpinned kernel, and no record says which one it
     used except the sidecar that happened to be on disk.
+21. **MEASURED.** Fact 1420's arms have **no sidecar, no frame set and no
+    `stack-digest`**. `x3_kernel.py` runs on `single-noalign.tif` — one
+    unaligned frame — with sub-pixel phases applied in NumPy. The orchestrator's
+    question "which solve were they measured on" has the answer "none".
+22. **MEASURED.** The "corrected" **+0.1160**, which `M95-dose.md` P88 presents
+    as measured "on the real warps" and which `align.rs:2752` quotes in its own
+    doc-comment, was measured on the **8-frame, reference-4 quarantined sidecar
+    `165a1ff35968c615`** — the same sidecar M112 refuted under the 9.4x
+    denominator. `y2_combined.json` records `n_placed = 8` and the quarantine
+    path. **This corrects fact 20 of my own previous report**, which recommended
+    +0.1160 as the sound replacement figure. It is not one.
+23. **MEASURED.** Across M112's nine stacks the synthetic kernel gain is
+    **+0.1428 dex, sd 0.0002, range 0.0008** — **0.4%** of the spread of the
+    coverage fix over the same nine (0.1846). By the orchestrator's own
+    discriminator the gain is **not a ringing artefact**, which agrees with the
+    extrema census (0.9924x / 1.0039x) and with the crops.
+24. **MEASURED.** That instrument is **97.5% image-blind**. A closed form over a
+    flat power spectrum, with no image at all, reads **+0.1464** against
+    **+0.1428** for nine photographs; white noise reads +0.1466. Fact 1420's
+    headline is a kernel datasheet number, not a corpus measurement.
+25. **MEASURED.** Edge density varies **9.6x** across the nine captures
+    (0.00441–0.04225) while the gain varies **0.57%**.
+26. **DISCIPLINE.** **A correction needs its own provenance check.** M95's
+    +0.1160 was published as the fix for +0.1343 and inherits the same defect
+    class M112 found beneath the denominator. Fixing a number's arithmetic does
+    not fix the stack it was measured on.
+27. **DISCIPLINE.** When independent subjects agree to four decimal places,
+    **that is the finding, and it is usually that the instrument cannot see
+    them.** Run the closed form with no image; if it reproduces the measurement,
+    the measurement was never about the data. Pre-register the bar and report it
+    failed when it fails — mine did, on an arm I chose badly.
