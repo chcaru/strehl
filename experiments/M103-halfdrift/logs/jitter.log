@@ -1,0 +1,24 @@
+solve C:\dev\strehl-out\M103\wm-baseline-r149.txt: 299 frames, contiguous=True
+truth ladder: 39 rungs, j 0..298
+
+CONTROLS  (all in plane px at the corner radius)
+                                       median      p90      p99       max  >=0.5px    >=1px
+  A PLACEBO  linear track              0.0000   0.0000   0.0000    0.0000    0.000    0.000
+  C SPECIFICITY real curvature, smooth   0.0044   0.0059   0.0060    0.0060    0.000    0.000
+     (quartic fit to the ladder, residual at the 39 rungs: median 1.916 px, max 9.228 px)
+     DERIVED ceiling from C1's 46.1 px chord departure: 0.0092 px
+  B POSITIVE +-0.5 px alternating      2.0000   2.0057   2.0060    2.0060    1.000    1.000
+     expected 4A = 2.00 px, recovered 2.0000 px (100.0%)
+  -> controls PASS   (A ok, B ok, C ok)
+
+R2  SECOND DIFFERENCE OF THE SOLVE  (truth-free, fit-free, gauge-free)
+                                       median      p90      p99       max  >=0.5px    >=1px
+  the shipped solve, all frames        0.4829   1.0772   2.1533    9.7069    0.478    0.138
+    near reference (|j-149| <= 50)     0.4464   0.9873   1.6542    1.7045    0.396    0.099
+    far from reference (> 100)         0.6259   1.1971   2.8392    9.7069    0.656    0.198
+
+R1  FIRST DIFFERENCE OF THE ERROR  e(j) = s(j) - t_hat(j)
+                                       median      p90      p99       max  >=0.5px    >=1px
+  truth fit degree 3 (resid 2.46 px)   0.5560   1.5405   2.2494    8.9838    0.540    0.279
+  truth fit degree 4 (resid 1.92 px)   0.5624   1.4945   2.1825    8.7791    0.540    0.279
+  truth fit degree 6 (resid 2.07 px)   0.5669   1.4990   2.0635    8.1075    0.560    0.282

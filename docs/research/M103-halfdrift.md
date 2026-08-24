@@ -1677,3 +1677,149 @@ their docstrings, because §17.6 is worth more to the corpus than a tidy directo
 *shipped* crop — at 1:1 and look at the left third. If the hard-bounded grey lobe
 is not there, P29 is wrong and everything in §17.2 onward falls.
 
+---
+
+## 18. Is `e(j)` smooth or jittery? — jittery, by ~110×
+
+The orchestrator asked for one number rather than a fix, because fact 1393
+measured `n_eff = 1` wherever there is detail: a detailed output pixel takes
+exactly **one** frame, so a placement error there cannot blur it, only displace
+it. What then matters is not the magnitude of `e(j)` but `|de/dj|` — the
+disagreement between frames that neighbouring pixels elect.
+
+**This is the only number in this milestone that needs no gauge.** §16.2
+established that per-frame placement is meaningless without one, the same track
+reading 98.2 px at frame 0 and 37.5 px at rung 144. A whole-graph constant offset
+cancels in a first difference and twice over in a second, so everything below is
+gauge-invariant. That is a property of the question, not a virtue of the
+instrument.
+
+### 18.1 Two routes, because one of them needs no truth data
+
+**R1**, as asked: `de(j) = ds(j) − dt(j)`. The truth ladder exists at 39 of 299
+rungs, so `dt` comes from a smooth fit — a modelling choice, reported at three
+polynomial orders with its residual.
+
+**R2**: the second difference of the solve alone, `s(j+1) − 2s(j) + s(j−1)`.
+Truth-free, fit-free, parameter-free, and available at 297 interior frames rather
+than 39. **R2 is the trustworthy one**; R1 is reported because it was what was
+asked and because agreement between them is worth more than either alone.
+
+**Why curvature cannot contaminate R2 — DERIVED, and then measured.** C1 measured
+the real track departing its own chord by 46.1 plane px at `j = 200`. For a
+smooth arc, a departure `d` over `N` frames implies a second difference near
+`8d/N² = 8 × 46.1 / 200² =` **0.0092 px**. Control C below plants exactly that
+curvature and measures **0.0044 px median, 0.0060 max** — inside the derived
+ceiling. Two orders of magnitude of headroom, established rather than assumed.
+
+### 18.2 Controls
+
+| control | expectation | measured | verdict |
+|---|---|---|---|
+| **A placebo** — a purely linear track | exactly 0 | `0.0000` | PASS |
+| **C specificity** — smooth track, **real** breathing curvature | ≪ jitter | `0.0044` med, `0.0060` max | PASS |
+| **B positive** — planted ±0.5 px alternating | `4A = 2.00 px` | `2.0000 px`, **100.0%** | PASS |
+
+Control C is the one that matters, and it is the analogue of the natural-smooth
+plant that finally made `waxy.py` honest. Without it, an instrument that reports
+curvature as jitter would answer this question backwards, and confidently — on a
+track that C1 has already measured to be strongly curved.
+
+### 18.3 The answer
+
+**R2 — the shipped solve, truth-free, gauge-free** (plane px at corner radius):
+
+| set | median | p90 | p99 | max | ≥0.5 px | ≥1 px |
+|---|---:|---:|---:|---:|---:|---:|
+| **all frames** | **0.4829** | **1.0772** | 2.1533 | 9.7069 | 47.8% | **13.8%** |
+| near reference (\|j−149\| ≤ 50) | 0.4464 | 0.9873 | 1.6542 | 1.7045 | 39.6% | 9.9% |
+| far from reference (> 100) | 0.6259 | 1.1971 | 2.8392 | **9.7069** | 65.6% | 19.8% |
+
+**R1 — first difference of the error**, insensitive to fit order:
+
+| truth fit | median | p90 | p99 | max | ≥1 px |
+|---|---:|---:|---:|---:|---:|
+| degree 3 (resid 2.46 px) | 0.5560 | 1.5405 | 2.2494 | 8.9838 | 27.9% |
+| degree 4 (resid 1.92 px) | 0.5624 | 1.4945 | 2.1825 | 8.7791 | 27.9% |
+| degree 6 (resid 2.07 px) | 0.5669 | 1.4990 | 2.0635 | 8.1075 | 28.2% |
+
+**MEASURED: the track is jittery.** Against the orchestrator's stated threshold —
+smooth means an increment much below 1 px, jittery means at or above it — the
+median sits at 0.48–0.57 px, the p90 exceeds 1 px on both routes, and between
+**13.8% (R2) and 28% (R1)** of adjacent frame pairs disagree by a plane pixel or
+more. The median is **~110× control C's 0.0044 px**, which is what a genuinely
+smooth track with this stack's real curvature reads.
+
+**The most useful framing, DERIVED.** The mean frame-to-frame breathing increment
+on this stack is `−0.517e−3` in ln, which is `0.517e−3 × 2112.9 =` **1.09 plane px
+per frame**. The median jitter of 0.4829 px is therefore **44.2% of the true
+inter-frame step**. Adjacent frames' relative placement is uncertain by nearly
+half of the actual motion between them.
+
+**It is worse where the spans are starved.** Far from the reference the median
+rises 0.4464 → 0.6259 px and the maximum rises 1.70 → 9.71 px, a 5.7× worsening
+of the worst case. §16.5's inverted-U response predicts exactly this: the long
+baselines that carry the far frames are the ones whose response collapses to
+0.102.
+
+### 18.4 What this means, and what it does not
+
+**DERIVED, and it follows directly from fact 1393.** At `n_eff = 1` a detailed
+pixel cannot be blurred by a placement error. But two *adjacent* detailed pixels
+electing frames `j` and `j+1` inherit those frames' placements, and those differ
+by a median 0.48 px and by ≥1 px one time in seven. The output is then a mosaic
+of individually sharp patches drawn from inconsistently placed sources. The
+signature is **local geometric incoherence** — edges that step, features that
+shear across an election boundary — and not softness.
+
+**ARGUED.** This is a candidate mechanism for the waxy blobs of §17, and it
+explains a detail §17 could not: the blobs have *hard, closed boundaries*. An
+election boundary between two frames whose placements disagree by ≥1 px is a
+step, and §17.3 measured the artefact as piecewise-flat rather than merely soft,
+with a 97.4× separation from optical softness. Two independent measurements now
+point at the election boundary.
+
+**What this does NOT establish.** It does not show the jitter is visible; §17's
+instrument and the orchestrator's `anisotropy.py` both work on renders and could
+test that, and neither has been pointed at this. It does not show the jitter is
+larger than the resampler's own contribution. And it does not identify a cause —
+peak-locking in the sub-pixel NCC is the obvious suspect given §16.5, but that is
+a hypothesis and this section did not test it.
+
+**No corrective was built,** per instruction. Nothing new enters the solver.
+
+### 18.5 Candidate facts
+
+- **P35** (MEASURED) On `bee-3-cpl`, the shipped solve's frame-to-frame placement
+  increment has median **0.4829 plane px**, p90 **1.0772 px**, max **9.7069 px**,
+  with **13.8%** of adjacent pairs disagreeing by ≥1 px. Truth-free, fit-free and
+  gauge-invariant (second difference of the solved track).
+- **P36** (MEASURED) The same statistic on a synthetic track carrying this stack's
+  *real* breathing curvature reads **0.0044 px** — so the measured jitter is
+  ~110× what curvature alone can produce, and curvature is not being mistaken for
+  jitter.
+- **P37** (DERIVED) The mean true inter-frame step is 1.09 plane px, so the median
+  jitter is **44.2% of the actual motion between adjacent frames**.
+- **P38** (MEASURED) Jitter is worse far from the reference: median 0.4464 →
+  0.6259 px and max 1.7045 → 9.7069 px comparing `|j−149| ≤ 50` against `> 100`,
+  consistent with §16.5's collapse of long-baseline response to 0.102.
+- **P39** (DERIVED) A smooth arc departing its chord by `d` over `N` frames has a
+  second difference near `8d/N²`. With C1's 46.1 px at `j=200` this bounds
+  curvature's contribution at 0.0092 px, which is what makes a truth-free jitter
+  measurement trustworthy on a curved track.
+
+### 18.6 Reproducing this section
+
+```powershell
+$env:PYTHONIOENCODING='utf-8'
+cd experiments\M103-halfdrift
+python src\jitter.py data\truth-dense.json `
+                     C:\dev\strehl-out\M103\wm-baseline-r149.txt `
+                     data\jitter.json
+```
+
+Runs in seconds and exits non-zero if any of the three controls fails. The solve
+is the shipped `deep()` configuration gauged at reference 149; the gauge is
+recorded for provenance only, since §18 is gauge-invariant by construction.
+
+
