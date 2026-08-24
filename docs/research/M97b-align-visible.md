@@ -1033,7 +1033,9 @@ quietly.
   proves `sidecar_path`'s does not. I scanned only for `*.txt`.
 - I did not remove the existing stray `D:\personal\macro\coffee-bean\warpmap.txt`.
   The corpus is read-only, and deleting from it is a write; that call is the
-  orchestrator's.
+  orchestrator's. It was removed by someone else during this session, so the
+  final corpus scan reads 0 — **that zero is not evidence for my fix**, and bar
+  A's 1 → 1 with 0 new is the number that is.
 - **§11's S/G dissociation is ARGUED.** I could not measure the elected-frame
   index along versus across a graduation, because `strehl stack` has no option
   to emit an elected-frame map. The dissociation itself is measured; the
@@ -1150,8 +1152,11 @@ one appeared at `coffee-bean`, which is what established the violation was still
 live rather than historical. `sidecar_path` now hashes the canonical capture
 path into a cache root outside the corpus, `strehl align`'s default writes to
 the same entry `strehl stack` reads, and both writers go through a
-write-then-rename. The one remaining stray is `coffee-bean`'s; I left it, since
-deleting from a read-only corpus is itself a write.
+write-then-rename. The one stray remaining when I wrote §13.1 was
+`coffee-bean`'s; I left it, since deleting from a read-only corpus is itself a
+write. It was gone by the time I committed — removed by someone else — so the
+corpus currently scans **clean at 0 stray `*.txt`**, and the point of the fix is
+that it now stays that way without anyone sweeping.
 The original verbatim patch is in `docs/research/M97-warped-merge.md` §11; what
 landed differs from it in hashing the *canonical* path rather than the leaf.
 
