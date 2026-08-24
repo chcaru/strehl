@@ -1,0 +1,187 @@
+{
+  "judged": [
+    {
+      "file": "bee3-full.tif",
+      "mtime": "2026-08-23T23:37:47",
+      "width": 3516,
+      "height": 2344,
+      "megapixels": 8.24,
+      "channels": 3,
+      "dtype": "uint16",
+      "is_half_of_full_capture": true,
+      "linear_channel_means": [
+        0.156946,
+        0.159005,
+        0.157229
+      ],
+      "green_over_red": 1.0131,
+      "green_over_blue": 1.0113,
+      "luma_p99_9_linear": 0.319049,
+      "stops_below_target_0_90": 1.496
+    },
+    {
+      "file": "lavendar.tif",
+      "mtime": "2026-08-23T23:38:59",
+      "width": 3520,
+      "height": 2344,
+      "megapixels": 8.25,
+      "channels": 3,
+      "dtype": "uint16",
+      "is_half_of_full_capture": false,
+      "linear_channel_means": [
+        0.165779,
+        0.169001,
+        0.16295
+      ],
+      "green_over_red": 1.0194,
+      "green_over_blue": 1.0371,
+      "luma_p99_9_linear": 0.331898,
+      "stops_below_target_0_90": 1.439
+    },
+    {
+      "file": "marker.tif",
+      "mtime": "2026-08-23T23:39:17",
+      "width": 3520,
+      "height": 2344,
+      "megapixels": 8.25,
+      "channels": 3,
+      "dtype": "uint16",
+      "is_half_of_full_capture": false,
+      "linear_channel_means": [
+        0.33776,
+        0.332361,
+        0.330135
+      ],
+      "green_over_red": 0.984,
+      "green_over_blue": 1.0067,
+      "luma_p99_9_linear": 1.0,
+      "stops_below_target_0_90": -0.152
+    }
+  ],
+  "control_2347": [
+    {
+      "file": "bee3-g0.tif",
+      "mtime": "2026-08-23T23:47:05",
+      "width": 3516,
+      "height": 2344,
+      "megapixels": 8.24,
+      "channels": 3,
+      "dtype": "uint16",
+      "is_half_of_full_capture": true,
+      "linear_channel_means": [
+        0.157482,
+        0.159529,
+        0.157722
+      ],
+      "green_over_red": 1.013,
+      "green_over_blue": 1.0115,
+      "luma_p99_9_linear": 0.329058,
+      "stops_below_target_0_90": 1.452
+    },
+    {
+      "file": "bee3-g1.tif",
+      "mtime": "2026-08-23T23:47:25",
+      "width": 3516,
+      "height": 2344,
+      "megapixels": 8.24,
+      "channels": 3,
+      "dtype": "uint16",
+      "is_half_of_full_capture": true,
+      "linear_channel_means": [
+        0.157263,
+        0.159313,
+        0.157514
+      ],
+      "green_over_red": 1.013,
+      "green_over_blue": 1.0114,
+      "luma_p99_9_linear": 0.323388,
+      "stops_below_target_0_90": 1.477
+    }
+  ],
+  "placebo_gallery": [
+    {
+      "file": "bee-3-cpl-exposed.tif",
+      "mtime": "2026-08-24T04:39:31",
+      "width": 7032,
+      "height": 4688,
+      "megapixels": 32.97,
+      "channels": 3,
+      "dtype": "uint16",
+      "is_half_of_full_capture": false,
+      "linear_channel_means": [
+        0.410755,
+        0.418007,
+        0.405602
+      ],
+      "green_over_red": 1.0177,
+      "green_over_blue": 1.0306,
+      "luma_p99_9_linear": 0.862692,
+      "stops_below_target_0_90": 0.061
+    },
+    {
+      "file": "bee-3-cpl-srgb.tif",
+      "mtime": "2026-08-24T04:34:03",
+      "width": 7032,
+      "height": 4688,
+      "megapixels": 32.97,
+      "channels": 3,
+      "dtype": "uint16",
+      "is_half_of_full_capture": false,
+      "linear_channel_means": [
+        0.147991,
+        0.150606,
+        0.146132
+      ],
+      "green_over_red": 1.0177,
+      "green_over_blue": 1.0306,
+      "luma_p99_9_linear": 0.310812,
+      "stops_below_target_0_90": 1.534
+    },
+    {
+      "file": "coffee-bean-exposed.tif",
+      "mtime": "2026-08-24T04:39:51",
+      "width": 7032,
+      "height": 4688,
+      "megapixels": 32.97,
+      "channels": 3,
+      "dtype": "uint16",
+      "is_half_of_full_capture": false,
+      "linear_channel_means": [
+        0.41059,
+        0.405407,
+        0.388964
+      ],
+      "green_over_red": 0.9874,
+      "green_over_blue": 1.0423,
+      "luma_p99_9_linear": 0.915373,
+      "stops_below_target_0_90": -0.024
+    }
+  ],
+  "readings": {
+    "BINNING": "REFUTED",
+    "FLAT_TONE": "REFUTED",
+    "GREY_CAST": "REFUTED",
+    "CONTROL_still_half_res": "PASS",
+    "PLACEBO_gallery_not_dark": "FAIL"
+  },
+  "readings_corrected": {
+    "_disclosure": "Specified AFTER seeing the pre-registered arms fire. Read the source comment above before trusting these.",
+    "BINNING": "CONFIRMED",
+    "BINNING_exact_for_bee3": "CONFIRMED against a MEASURED full-res render of the same stack",
+    "FLAT_TONE": "CONFIRMED for 2 of 3 judged files",
+    "GREY_CAST": "NO EVIDENCE -- instrument cannot discriminate; see disclosure",
+    "PLACEBO_exposed_not_dark": "PASS",
+    "CONTROL_still_half_res": "PASS"
+  },
+  "EXTERNAL_CHECK": {
+    "what": "independent numpy recomputation of the exposure deficit",
+    "file": "bee-3-cpl-srgb.tif",
+    "resolution": "7032x4688",
+    "numpy_stops_below_0_90": 1.534,
+    "shipped_chooser_prints": 1.54,
+    "M100_published": 1.54,
+    "delta_stops": 0.006,
+    "quantum_stops": 0.01,
+    "reading": "AGREES within the 1/100-stop quantum"
+  }
+}

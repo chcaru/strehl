@@ -127,6 +127,56 @@ the merge since M100 measured (M97's warp, M99's photometric term, M103's
 alignment repair, M95's resolution fix), so M100's published choices are
 predictions about a binary that no longer exists, and they can fail.
 
+### 0.5 The brief was corrected mid-flight, and the correction carries a fifth error
+
+At **10:07**, after this work was measured and committed, the orchestrator
+retracted one sentence of the brief — *"I consider it the most likely single
+largest contributor to his complaint"* — having established (fact 1344,
+discipline 667) that the owner's verdict was passed on
+`C:\dev\strehl-out\*.png` from **2026-08-23 23:37–23:39**, not on the gallery,
+and that those renders carried **five** defects at once. **That retraction is
+correct and I have measured it independently in §4.8.** It does not touch any
+bar in this report, because no bar was about the owner's opinion.
+
+The correction also lists what *"does not change"*, and one item does:
+
+> *"**`strehl stack --srgb` emits a render 1.5–3.7 stops dark.** Still true,
+> still fact 1293 for the magnitude, still **fact 1339** for the fact that the
+> correction is absent from the binary."*
+
+MEASURED. Fact 1339's corrected headline reads **"THE MEASURED EXPOSURE
+CORRECTION IS NOT WIRED TO THE COMMAND LINE"**, and fact 1346 reads
+**"SHIPPED, TESTED AND UNWIRED, AND M100's PATCH FOR THE WIRING HAS BEEN
+SITTING UNAPPLIED"**. Both were true when written and **both are now stale**:
+
+```
+$ git log -1 --format='%h %ad%n%s' --date=iso 925d03d
+925d03d 2026-08-24 08:19:50 -0700
+M100: apply the exposure patch I let sit for hours, and prove it inert
+
+$ git show --stat 925d03d
+ crates/strehl-cli/src/main.rs      |  65 +++++
+ crates/strehl-cli/src/merge_cmd.rs | 143 +++++++++-
+
+$ git merge-base --is-ancestor 925d03d HEAD   # exit 0
+$ rg 'auto_exposure' crates/strehl-cli/src/main.rs
+main.rs:182  auto_exposure: bool,
+main.rs:418  auto_exposure,
+main.rs:438  auto_exposure,
+```
+
+The wiring landed at **08:19:50**; the correction re-asserting its absence was
+sent at **10:07**, 108 minutes later. Every render in §4 was produced by
+driving those flags, so the claim is refuted by the existence of this report's
+own results. **Facts 1339 and 1346 need amending in place**, exactly as 1341
+was.
+
+This is the fifth error found in this brief and its correction, and it is the
+same shape as the first: **a row that was true when written, re-cited later as
+though rows do not decay.** Fact 1339 has already been corrected once, in
+place, for a different reason. Its *headline* was fixed and its *tense* was
+not.
+
 ---
 
 ## 1. Pre-registered bars
@@ -250,7 +300,13 @@ a number for that the corpus did not.
 | **V5c** sidecar-state hazard *(unregistered, added mid-run)* | **REFUTED by its own control** -- I predicted the freeze was sidecar-dependent and it is not |
 | **V6** is `p99.9` riding a specular? | **SUBSTANTIATED in premise, REFUTED in consequence** -- the tail is real and `p99.9` is not on it |
 
-Two findings that are not about exposure:
+**Added after the 10:07 correction to the brief** (§0.5, §4.8): an independent
+numpy recomputation of the exposure deficit from the tool's own emitted file
+gives **1.534 stops**, against the shipped chooser's **+1.54** -- **0.006
+apart, inside the quantum**. V2 therefore no longer rests on agreement with a
+prior report's printed number.
+
+Three findings that are not about exposure:
 
 * **The byte-freeze is intact at HEAD** (§4.4), which contradicts the premise
   `M106` was dispatched on. I hand it three ruled-out mechanisms.
@@ -525,6 +581,74 @@ rather than deleted so the reversal stays auditable. **This is rule 13 in a new
 costume: the stimulus could not express the effect, and the null looked like
 evidence.**
 
+### 4.8 The artefacts the owner judged, measured directly (MEASURED)
+
+The 10:07 correction asks for a paragraph on what this correction does *not*
+fix. I do not republish another agent's measurement as mine (§4.6 is where I
+nearly did), so I measured the judged files myself:
+`05-judged-artefacts.py`, arms pre-registered in its docstring.
+
+| file | written | pixels | MP | G/R | G/B | luma p99.9 | stops below 0.90 |
+|---|---|---|---|---|---|---|---|
+| `bee3-full.tif` | 23:37:47 | **3516x2344** | 8.24 | 1.0131 | 1.0113 | 0.3190 | **+1.496** |
+| `lavendar.tif` | 23:38:59 | 3520x2344 | 8.25 | 1.0194 | 1.0371 | 0.3319 | **+1.439** |
+| `marker.tif` | 23:39:17 | 3520x2344 | 8.25 | 0.9840 | 1.0067 | **1.0000** | **−0.152** |
+| *control* `bee3-g0.tif` | 23:47:05 | 3516x2344 | 8.24 | — | — | 0.3291 | +1.452 |
+| *control* `bee3-g1.tif` | 23:47:25 | 3516x2344 | 8.24 | — | — | 0.3234 | +1.477 |
+| *placebo* `bee-3-cpl-srgb.tif` | 04:34 | **7032x4688** | 32.97 | 1.0177 | 1.0306 | 0.3108 | **+1.534** |
+| *placebo* `bee-3-cpl-exposed.tif` | 04:39 | 7032x4688 | 32.97 | 1.0177 | 1.0306 | 0.8627 | +0.061 |
+| *placebo* `coffee-bean-exposed.tif` | 04:39 | 7032x4688 | 32.97 | 0.9874 | 1.0423 | 0.9154 | **−0.024** |
+
+**Binning: CONFIRMED, and confirmed the strong way.** `bee3-full.tif` is
+3516x2344; the gallery's `bee-3-cpl-srgb.tif` — the *same stack*, rendered
+full-resolution — is 7032x4688. **3516 x 2 = 7032 and 2344 x 2 = 4688
+exactly.** The halving is established against a *measured* render of the same
+capture, not against an asserted sensor size.
+
+**Flat tone: CONFIRMED for 2 of 3, and the third is the interesting one.**
+`bee3-full` and `lavendar` sit ~1.5 stops under. **`marker.tif` reads p99.9 =
+1.0000 — it is clipping, not dark**, and `captures-needed.md` §22 independently
+gives `dry-erase-marker-head-cpl` −0.00 stops of headroom and **3.6726%**
+clipped. So **one of the three images the owner was shown was over, not
+under.** That is the two-sidedness the brief insisted on, present in the very
+artefact the complaint was about, and it is why a brightener would have been
+the wrong build.
+
+**An unplanned external check on V2, worth more than the arm that produced it.**
+My placebo was mis-specified — I assumed every TIF under `ORCH-gallery/` had
+been through the Python post-process, and the directory holds both `-srgb`
+(raw tool output) and `-exposed` variants, so the arm swept in the uncorrected
+files and read FAIL by construction. The accident is productive:
+`bee-3-cpl-srgb.tif` is the tool's own `--srgb` output with **no** exposure
+applied, and numpy puts it **1.534 stops** below 0.90. The shipped chooser
+prints **+1.54**. **Delta 0.006 stops, inside the 1/100-stop quantum.** V2 no
+longer rests on agreement with a prior report's printed number; it rests on an
+independent recomputation from the emitted file, in a different language, by an
+operator who did not write the chooser. Per rule 34 the statistic is specified
+from BT.709 luminance coefficients and `numpy.percentile(method=
+"inverted_cdf")`, neither taken from `color.rs`.
+
+**Grey cast: NO EVIDENCE, and my instrument is the reason.** I predicted that
+"no colour management" would present as *missing white balance* — R and B
+depressed relative to G by roughly the `cam_wb` ratios [2631, 1024, 1606]. The
+judged files read G/R = 1.013 and G/B = 1.011, i.e. balanced. But the
+**colour-managed** gallery render reads G/R = **1.0177**, which is no
+different. Global channel means cannot discriminate a grey cast from correct
+balance, so this arm returns nothing. **I am not claiming fact 1344 is refuted
+on this point; I am saying I could not see it.** A saturation statistic would
+be the right instrument and I did not build one.
+
+**Three of five pre-registered readings fired for reasons that were not the
+hypothesis, and I am flagging that loudly rather than quietly retuning.**
+`BINNING` compared all three judged files against *one* stack's full size;
+`GREY_CAST` used a statistic with no discriminating power; `PLACEBO` was
+mis-scoped. The original block is kept verbatim in
+`05-judged-artefacts.json` as `readings`, the corrected block sits beside it
+as `readings_corrected` and is explicitly stamped *"Specified AFTER seeing the
+pre-registered arms fire."* The determinism-style control — the 23:47 files
+still reading half-resolution ten minutes later — **passed as registered**,
+which is the only reason I trust the corrected block at all.
+
 ---
 
 ## 5. Where this correction lies
@@ -559,12 +683,54 @@ than assumed:
    point, no per-channel term. So a render that has had it applied is still a
    faithful render of the capture, differing by a number the tool prints.
 
-**What it does not correct.** Fact 1257: 19 of 23 delivered stacks are
-under-exposed at **capture**, median +2.01 stops. This is a display gain applied
-after the photons were not collected; it recovers the *appearance* and none of
-the shot noise. Fact 1257's own implication -- that recovering the median at
-capture would collect 4.04x the photons -- is untouched by anything here and
-remains the larger lever.
+### 5.1 What this correction does not fix — required by the 10:07 correction
+
+**Exposure was one of five defects in the images the owner judged, and nothing
+in this report ranks the five.** Fact 1344 establishes, and §4.8 confirms by
+direct measurement, that the verdict *"those stacks don't look too good yet"*
+was passed on `C:\dev\strehl-out\*.png` of 2026-08-23 23:37–23:39. Those
+renders carried, simultaneously:
+
+1. **Binning to half linear resolution** — MEASURED here: 3516x2344 against
+   the same stack's 7032x4688, exactly half per axis. M95 has since fixed it.
+2. **No colour management** (the grey cast). Present per the session record;
+   **my instrument could not see it** (§4.8) and I do not confirm it.
+3. **Flat tone / underexposure** — MEASURED here at **+1.496** stops on
+   `bee3-full.tif`. This one, and only this one, is what M100's correction
+   addresses. On the third judged file it is **−0.152**, the wrong way.
+4. **No alignment.** Per the session record; M97/M103's work is on this and is
+   not yet shipped.
+5. **The halo** tracing every leg, claw and antenna — fact 1342's three
+   components, unexplained and unfixed.
+
+So the honest statement of scope is: **this milestone's subject is one of five,
+it is the only one of the five already shipped and tested, and its share of the
+owner's dissatisfaction is unknown and unmeasured by me.** The retracted
+sentence claimed it was the largest contributor. I have no evidence for that
+ranking and I am not supplying any; §4.8 establishes only *presence* and
+*magnitude*, not *rank*.
+
+**And it must not be confused with the capture-side deficit, which it resembles
+numerically and does not touch.** `docs/captures-needed.md` §22 measures
+**+1.69 stops** of unused sensor headroom on `bee-3-cpl` with 0.0000% clipped;
+this milestone's display correction on the same stack is **+1.54**. They are
+0.15 stops apart and they are *not the same quantity*, though the first largely
+causes the second:
+
+| | what it is | what it buys | SNR |
+|---|---|---|---|
+| §22, capture | expose 1.69 stops brighter at the sensor | **3.23x more photons** | **x1.80** (sqrt of the photon ratio) |
+| here, display | multiply the render by 2^1.54 | the same photons, presented correctly | **x1.00 — exactly none** |
+
+DERIVED, from Poisson statistics and not from any strehl constant: digital gain
+scales signal and shot noise by the same factor, so it moves SNR by 1.00; a
+longer exposure scales the signal by *g* and the shot noise by sqrt(*g*), so it
+moves SNR by sqrt(*g*). **A gain of +1.54 stops recovers appearance and
+recovers no information whatsoever.** Fact 1257's median +2.01 stops across 23
+stacks — 4.04x the photons, ~2.0x the SNR — is a strictly larger and strictly
+different lever, it is a request already made to the owner, and **no software
+in this repository can substitute for it.** Nothing in this report should be
+read as recovering any part of it.
 
 ---
 
@@ -575,6 +741,9 @@ remains the larger lever.
    percentile print the same number. MEASURED mitigation: the *gain* is also
    printed and reads `2.908x`; `2^1.54 = 2.9079`. But this bar cannot
    distinguish "unchanged" from "changed by less than half a quantum".
+   **Partly retired after the 10:07 correction:** §4.8's numpy recomputation
+   reads the underlying quantity as **1.534** in continuous units, so the
+   agreement is no longer only visible through the quantum.
 2. **V4's positive control tests placement, not calibration** (rule 34). It
    proves the gain multiplies in linear light before the curve. It says nothing
    about whether `AUTO_EXPOSURE_TARGET = 0.90` is the right target -- that is
@@ -599,6 +768,18 @@ remains the larger lever.
 7. **The prior state of `bee-3-cpl\warpmap.txt` is gone** and I am the reason.
    §4.5 shows this cannot have moved any render's bytes, but the argument is
    from a control on a copy, not from the destroyed file itself.
+8. **Three of §4.8's five pre-registered arms fired for reasons that were not
+   the hypothesis**, and their corrected replacements were specified *after*
+   seeing the originals fire. Both blocks are committed and the corrected one
+   is stamped as post-hoc inside the JSON. Weight §4.8's binning and tone
+   results on the raw numbers a verifier can re-read — 3516x2344 against a
+   measured 7032x4688; `p99.9` of 0.3190, 0.3319, 1.0000 — and not on my
+   readings of them. The grey-cast arm is NO EVIDENCE and should not be counted
+   in either direction.
+9. **§4.8 measures three files from one evening.** It establishes that the
+   judged artefacts were binned and mostly dark. It does **not** establish
+   which of the five defects drove the verdict, and I make no such claim; see
+   PQ4.
 
 ---
 
@@ -732,6 +913,50 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   *Implication:* the renders the owner judges are produced by an unversioned
   script, not by the tested binary path, so a defect in either would not show up
   as a disagreement.
+* **P8 (MEASURED).** **FACTS 1339 AND 1346 WENT STALE AT 08:19:50 AND WERE
+  RE-CITED AS CURRENT AT 10:07.** `925d03d` (*"M100: apply the exposure patch I
+  let sit for hours, and prove it inert"*, 2026-08-24 08:19:50 -0700, ancestor
+  of HEAD) added 65 lines to `main.rs` and 143 to `merge_cmd.rs`, including
+  `auto_exposure` at `main.rs:182`, `:418`, `:438`. Fact 1339's corrected
+  headline still reads *"IS NOT WIRED TO THE COMMAND LINE"* and 1346 still
+  reads *"UNWIRED [...] SITTING UNAPPLIED"*. Every render in this report was
+  produced by driving those flags. *Implication:* **both rows need amending in
+  place.** Fact 1339 had already been corrected once, for a different reason --
+  its headline was fixed and its **tense** was not.
+* **P9 (MEASURED).** **AN INDEPENDENT RECOMPUTATION OF THE EXPOSURE DEFICIT
+  AGREES WITH THE SHIPPED CHOOSER TO 0.006 STOPS.** numpy on the tool's own
+  uncorrected `--srgb` output for `bee-3-cpl` (`bee-3-cpl-srgb.tif`,
+  7032x4688), using BT.709 luminance coefficients and
+  `numpy.percentile(method="inverted_cdf")`, puts luma `p99.9` at **0.310812**,
+  i.e. **1.534 stops** below 0.90. The shipped chooser prints **+1.54**; M100
+  published **+1.54**. *Implication:* the chooser's number is now confirmed
+  from the emitted file, in a different language, by an operator who did not
+  write it -- not merely reproduced from a prior report. Per rule 34 neither
+  constant comes from `color.rs`.
+* **P10 (MEASURED).** **THE IMAGES THE OWNER JUDGED WERE BINNED, AND ONE OF THE
+  THREE WAS OVER-EXPOSED, NOT UNDER.** Direct measurement of the 23:37-23:39
+  artefacts: `bee3-full.tif` is **3516x2344**, exactly half per axis of the
+  *same stack's* measured 7032x4688 full-resolution render -- binning confirmed
+  against a render rather than an asserted sensor size. Tone: `bee3-full`
+  **+1.496** stops under, `lavendar` **+1.439** under, **`marker` at luma
+  p99.9 = 1.0000, i.e. clipping, −0.152** -- corroborated by
+  `captures-needed.md` §22, which gives `dry-erase-marker-head-cpl` −0.00 stops
+  of headroom and **3.6726%** clipped. *Implication:* corroborates fact 1344 on
+  binning and tone from an independent instrument, and shows **the
+  two-sidedness of the correction is present in the judged set itself** -- a
+  brightener would have made one of the three images the complaint was about
+  worse. The grey-cast component of 1344 is **not** confirmed here; see PD8.
+* **P11 (DERIVED).** **THE DISPLAY CORRECTION BUYS EXACTLY ZERO SNR, AND THE
+  CAPTURE-SIDE REQUEST BUYS 1.80x ON THE SAME STACK.** `bee-3-cpl` has
+  **+1.69 stops** of unused sensor headroom (`captures-needed.md` §22, 0.0000%
+  clipped) and takes a **+1.54 stop** display gain here -- 0.15 apart, and the
+  first largely causes the second. But digital gain scales signal and shot
+  noise by the same factor (SNR x1.00), while a longer exposure scales signal
+  by *g* and shot noise by sqrt(*g*) (**x1.80** at 2^1.69 = 3.23x photons).
+  Derived from Poisson statistics, not from any strehl constant.
+  *Implication:* **the two are numerically similar and informationally
+  unrelated.** No report should describe the shipped gain as recovering any
+  part of fact 1257's +2.01 median.
 
 ### Disciplines
 
@@ -775,6 +1000,24 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   to exist. Mine threw on iteration two; the same bug against a stack whose
   name collides with a subdirectory would have read frames from the wrong
   place and reported a number.
+* **PD7.** **A fact row can be corrected in its headline and left stale in its
+  tense.** Fact 1339 was amended in place once — its false claim struck, an
+  accurate grep left standing — and was then re-cited **108 minutes after the
+  code it describes had changed**, by the same author, as an item on a list of
+  things that *"do not change"*. Disciplines 637 and 667 both say *establish
+  what you are reasoning from*; this is that lesson for **corpus rows rather
+  than images**. **When a row asserts the absence of code, amend it with the
+  commit that would falsify it.** A corrected row reads as verified, which
+  makes it the easiest kind to over-trust.
+* **PD8.** **Before running a plant, name the observation that would look
+  identical under the null.** My grey-cast arm compared global channel means,
+  predicting R and B depressed by the `cam_wb` ratios [2631, 1024, 1606]. The
+  colour-**managed** gallery render reads G/R = 1.0177; the *un*managed judged
+  render reads 1.0131. The statistic has no discriminating power, and I learned
+  that only because a mis-scoped placebo happened to sweep in the managed file.
+  **A placebo whose reading is indistinguishable from the signal's has not
+  failed — it has diagnosed a blind instrument.** Report the arm as NO
+  EVIDENCE, not as a refutation.
 
 ### Questions
 
@@ -787,6 +1030,14 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   argument against and one cheaper alternative.
 * **PQ3.** Does P6's tail result hold on `bee-1-cpl` and `bee-2-cpl`? One
   insect is not a population, and both stacks were available.
+* **PQ4.** Of the five defects in the judged renders (P10, fact 1344), what is
+  the actual rank order? Two have been fixed or shipped (binning, exposure),
+  one is in flight (alignment), one is unexplained (the halo) and one I could
+  not measure (colour management). **The project has now attributed the owner's
+  complaint to a single cause three times and been wrong three times** (facts
+  1324, 1341, and the sentence retracted at 10:07). The next attempt should
+  probably be a render with the five toggled independently, not a fourth
+  argument from a single artefact.
 
 ---
 
