@@ -190,22 +190,40 @@ def main() -> int:
         fit = m72c.jackknife_fit(g, md, y)
         up = fit["alpha_low"] * m72c.gain(100.0) ** 2
         frac = up / (up + fit["delta"])
-        varfits[plane] = frac
+        varfits[plane] = (frac, fit)
         print(f"  {plane:>6} {fit['alpha_low']:11.5f} {fit['alpha_high']:11.5f} "
               f"{fit['delta']:11.6f} {frac:14.4f}")
+        print(f"  {'':>6} {'+/-' + format(fit['alpha_low_se'], '.5f'):>11} "
+              f"{'+/-' + format(fit['alpha_high_se'], '.5f'):>11} "
+              f"{'+/-' + format(fit['delta_se'], '.6f'):>11}")
     covy = np.array([q["arms"]["k6"]["pairs"]["G1-G2"]["cov"] for q in groups])
     cfit = m72c.jackknife_fit(g, md, covy)
     cup = cfit["alpha_low"] * m72c.gain(100.0) ** 2
     cfrac = cup / (cup + cfit["delta"])
     print(f"  {'cov':>6} {cfit['alpha_low']:11.5f} {cfit['alpha_high']:11.5f} "
           f"{cfit['delta']:11.6f} {cfrac:14.4f}")
-    gmean = 0.5 * (varfits["G1"] + varfits["G2"])
+    gmean = 0.5 * (varfits["G1"][0] + varfits["G2"][0])
+    ga = 0.5 * (varfits["G1"][1]["alpha_low"] + varfits["G2"][1]["alpha_low"])
+    gd = 0.5 * (varfits["G1"][1]["delta"] + varfits["G2"][1]["delta"])
     print(f"""
   Green variance upstream fraction at base ISO {gmean:.4f}
   Green covariance upstream fraction at base ISO {cfrac:.4f}
   The covariance is {'MORE' if cfrac > gmean else 'LESS'} upstream-weighted than the variance.
   Falling rho with ISO therefore means the covariance is generated
   relatively further DOWN the chain than the noise it correlates.
+
+  INCIDENTAL, not pre-registered, routed and not adjudicated here.
+  M68 measured the B plane at 0.84x the greens' apparent conversion gain and
+  could not tell a true gain difference from a pre-ADC scale.  A dark-frame
+  variance fit splits into a term that scales with gain^2 and one that does
+  not, so it carries information a PTC ratio cannot:
+      alpha_B / alpha_green = {varfits['B'][1]['alpha_low'] / ga:.4f}
+      delta_B / delta_green = {varfits['B'][1]['delta'] / gd:.4f}
+  A single scale s applied to everything upstream of the ADC predicts
+  alpha_B/alpha_green = s^2 = {0.8396 ** 2:.4f} and delta_B/delta_green = 1
+  (quantisation is added after the scale and cannot be scaled by it).
+  Neither prediction is met.  I am not adjudicating this; M71 owns the
+  photon-transfer cross-check and this is its evidence, not mine.
 """)
 
     print("=" * 78)

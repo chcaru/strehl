@@ -1,0 +1,84 @@
+==============================================================================
+118MSDCF  ISO 100
+==============================================================================
+
+  A1  Vbar over the masked window = 0.822354 DN^2
+      predicted rho(0,0) = Vbar/(Vbar - 1/12) = 1.11276188
+      measured  rho(0,0)                      = 1.11276188
+      difference -2.22e-16   tol 0.0001
+      A1: PASS
+
+  A2  01's pooled_moments, unmodified, on the identical crop
+      G1-G2  matched-set +0.091361   04 field +0.091329   diff -0.000032
+      R-B    matched-set +0.010734   04 field +0.010756   diff +0.000022
+      worst |field - matched| 0.000032   tol 0.002
+      A2: PASS
+
+  A3  pixel set, a measurement rather than a gate
+      mean temporal var: crop 0.82235   full plane 1.00335   ratio 0.81961
+      G1-G2  crop +0.091361   full plane +0.082608   crop/full 1.1060   pairs 1397483
+      R-B    crop +0.010734   full plane +0.009635   crop/full 1.1140   pairs 1401615
+==============================================================================
+121MSDCF  ISO 1600
+==============================================================================
+
+  A1  Vbar over the masked window = 11.932807 DN^2
+      predicted rho(0,0) = Vbar/(Vbar - 1/12) = 1.00703266
+      measured  rho(0,0)                      = 1.00703266
+      difference +0.00e+00   tol 0.0001
+      A1: PASS
+
+  A2  01's pooled_moments, unmodified, on the identical crop
+      G1-G2  matched-set +0.042337   04 field +0.042331   diff -0.000006
+      R-B    matched-set +0.005056   04 field +0.005052   diff -0.000004
+      worst |field - matched| 0.000006   tol 0.002
+      A2: PASS
+
+  A3  pixel set, a measurement rather than a gate
+      mean temporal var: crop 11.93281   full plane 18.59529   ratio 0.64171
+      G1-G2  crop +0.042337   full plane +0.034023   crop/full 1.2444   pairs 1330461
+      R-B    crop +0.005056   full plane +0.003803   crop/full 1.3296   pairs 1335100
+
+==============================================================================
+C5 support -- the VARIANCE's own alpha/delta split, per plane
+==============================================================================
+
+  var(ISO) = alpha G^2 + delta, same fit 02 applies to cov.
+
+   plane   alpha_low  alpha_high       delta  upstream frac
+       R    13.26354     1.36580    0.311228         0.6908
+          +/-0.33890  +/-0.02150 +/-0.056438
+      G1    13.43518     1.38144    0.315379         0.6907
+          +/-0.41432  +/-0.01671 +/-0.046503
+      G2    13.35833     1.38078    0.305989         0.6959
+          +/-0.33439  +/-0.00544 +/-0.023506
+       B    11.27719     1.18288    0.185341         0.7613
+          +/-0.19723  +/-0.01387 +/-0.040550
+     cov     0.58127     0.03710    0.091977         0.2488
+
+  Green variance upstream fraction at base ISO 0.6933
+  Green covariance upstream fraction at base ISO 0.2488
+  The covariance is LESS upstream-weighted than the variance.
+  Falling rho with ISO therefore means the covariance is generated
+  relatively further DOWN the chain than the noise it correlates.
+
+  INCIDENTAL, not pre-registered, routed and not adjudicated here.
+  M68 measured the B plane at 0.84x the greens' apparent conversion gain and
+  could not tell a true gain difference from a pre-ADC scale.  A dark-frame
+  variance fit splits into a term that scales with gain^2 and one that does
+  not, so it carries information a PTC ratio cannot:
+      alpha_B / alpha_green = 0.8418
+      delta_B / delta_green = 0.5966
+  A single scale s applied to everything upstream of the ADC predicts
+  alpha_B/alpha_green = s^2 = 0.7049 and delta_B/delta_green = 1
+  (quantisation is added after the scale and cannot be scaled by it).
+  Neither prediction is met.  I am not adjudicating this; M71 owns the
+  photon-transfer cross-check and this is its evidence, not mine.
+
+==============================================================================
+VERDICT: A1 and A2 PASS.
+F1 and F2 are reported as FAILED AS WRITTEN, with the
+mis-specification named in each case: F1 asked for a zero-lag
+value that Sheppard's correction guarantees exceeds 1, and F2
+compared two different pixel sets. F3 and F4 STAND.
+==============================================================================

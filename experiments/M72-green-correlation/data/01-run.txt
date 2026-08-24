@@ -1,0 +1,25 @@
+M72 sweep over 11 groups
+  118MSDCF  ISO   100  frames (20, 4688, 7028)
+      G1-G2 rho_shep +0.08261  perm -0.00659  disp +0.00899
+  119MSDCF  ISO   400  frames (20, 4688, 7028)
+      G1-G2 rho_shep +0.06760  perm -0.00301  disp +0.00554
+  120MSDCF  ISO   800  frames (20, 4688, 7028)
+      G1-G2 rho_shep +0.05384  perm -0.00094  disp +0.00605
+  121MSDCF  ISO  1600  frames (20, 4688, 7028)
+      G1-G2 rho_shep +0.03402  perm -0.00045  disp +0.00597
+  122MSDCF  ISO    50  frames (20, 4688, 7028)
+      G1-G2 rho_shep +0.08210  perm -0.00349  disp +0.00824
+  123MSDCF  ISO   200  frames (20, 4688, 7028)
+      G1-G2 rho_shep +0.06987  perm -0.00335  disp +0.00838
+  124MSDCF  ISO   640  frames (20, 4688, 7028)
+      G1-G2 rho_shep +0.05976  perm -0.00190  disp +0.00589
+  125MSDCF  ISO   500  frames (20, 4688, 7028)
+      G1-G2 rho_shep +0.06296  perm -0.00380  disp +0.00563
+  126MSDCF  ISO   250  frames (20, 4688, 7028)
+      G1-G2 rho_shep +0.06465  perm -0.00346  disp +0.00960
+  127MSDCF  ISO  1000  frames (20, 4688, 7028)
+      G1-G2 rho_shep +0.04640  perm -0.00192  disp +0.00546
+  128MSDCF  ISO  2000  frames (20, 4688, 7028)
+      G1-G2 rho_shep +0.02799  perm -0.00118  disp +0.00606
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M72-green-correlation\data\01-green-correlation.json
