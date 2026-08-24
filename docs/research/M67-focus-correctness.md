@@ -19,11 +19,15 @@ therefore has power, and the answer is not an artefact of set size.
 **Three things must be read next to that number or it is misleading.**
 
 1. **It is an idealised-PSF upper bound, produced by a suite that M25 proved is
-   blind to the PSF.** The forward model hands a contrast operator a symmetric,
-   monotone through-focus response *by construction*; M25 §6.2 measured that
-   `coffee-bean`'s real through-focus curve "is asymmetric and falls faster than
-   any simulated one", and M25's Gate 2 NC-B removed diffraction **entirely**
-   and passed every gate. This was named in the pre-registration before any run.
+   blind to the PSF.** The forward model hands a contrast operator a unimodal,
+   monotone-in-`|F−k|` through-focus response *by construction*; M25's Gate 2
+   NC-B removed diffraction **entirely** and passed every gate, and fact 544
+   generalises it — "focus-merge noise statistics are not evidence about the
+   PSF". **The bound's direction rests on measured multimodality** (facts 150
+   and 967: 4.38× enrichment at depth steps, 78.3 % of occluding-edge band
+   pixels, AUC 1.000), **which this plant deliberately excludes.** §7.3 corrects
+   this report's first-committed claim that real through-focus curves are
+   *measured* asymmetric: they are not, and that citation is withdrawn.
 2. **`H` alone is not a sufficient statistic, and three of ten swept cells prove
    it.** In the low-SNR and steep-spectrum cells the gate admits 24.5–24.9 of 25
    frames; `H` reads 0.99968–1.00000 and so does the random null — the metric
@@ -442,27 +446,43 @@ shipped code paths scored by one external ruler. The mirrored-truth control
 
 ### 7.2 The circularity I could not remove
 
-**Fact 19 (ARGUED, registered in advance).** The forward model blurs each depth
-band with `defocus(|F−k|·coc) ⊛ diffraction(N_eff, λ)`. That PSF is **symmetric
-in `k` about `F` and monotone in `|F−k|`**, so a contrast-based focus operator
-is handed a monotone unimodal through-focus response **by construction**. Real
-optics are not that: M25 §6.2 measured `coffee-bean`'s real through-focus curve
-as "asymmetric and falls faster than any simulated one", and M25 §6.3 lists
-spherical aberration, coma, astigmatism, field curvature, longitudinal chromatic
-aberration and PRNU as **not modelled at all**.
+**Fact 19 (ARGUED, registered in advance; **its supporting citation is
+CORRECTED below** — see §7.3).** The forward model blurs each depth band with
+`defocus(|F−k|·coc) ⊛ diffraction(N_eff, λ)`. That PSF is **symmetric in `k`
+about `F` and monotone in `|F−k|`**, so a contrast-based focus operator is
+handed a **unimodal, monotone-in-`|F−k|`** through-focus response **by
+construction**. M25 §6.3 lists spherical aberration, coma, astigmatism, field
+curvature, longitudinal chromatic aberration and PRNU as **not modelled at
+all**.
 
 **The consequence was registered before any run and is honoured now: every
 accuracy number in this report is an UPPER BOUND on real-capture accuracy, and
 every failure number is a LOWER BOUND on real-capture failure.** The 99.955 %
 is the ceiling, not the estimate.
 
+**Fact 19a (MEASURED, and this is what actually carries the bound's
+direction).** The unmodelled effect whose direction is not in doubt is
+**multimodality**, and the project has measured it twice. Fact 150: multi-peaked
+through-focus curves are enriched **4.38×** at depth steps on `coffee-bean`
+(19.4 % vs 4.4 %) against a frame-permutation placebo reading **1.01×**. Fact
+967: **78.3 %** of band pixels at hand-labelled occluding edges clear a per-cell
+noise floor, median `z` **14.52**, **AUC 1.000** against controls. A second peak
+can only put admissible-looking evidence at the wrong `k`; it cannot help.
+**And this milestone's plant excludes exactly that mechanism** — §9 records that
+M25's Gate 1c FAILs, so the occluding-edge cells were left out by M25's own
+verdict. **The one measured mechanism that would lower `H` is the one the plant
+does not contain.** That is the sharpest statement of the bound available and it
+does not rest on asymmetry.
+
 **Fact 20 (ARGUED, registered in advance).** M25's own validation suite is blind
 to the component this milestone's observable depends on. Gate 2's NC-B removed
 diffraction **entirely** — a 4.52× amplitude change over 0.30–0.48 cyc/px — and
-**passed every gate**. M25's headline says in terms: do not use it to score
-deconvolution, PSF estimation or EDoF. `H` is not a deconvolution score, but it
-is squarely downstream of the PSF and is **not in M25's validated set**.
-Everything in §4 inherits an unvalidated optical component.
+**passed every gate**. Fact 544 puts it generally: *"Focus-merge noise
+statistics are not evidence about the PSF."* M25's headline says in terms: do
+not use it to score deconvolution, PSF estimation or EDoF. `H` is not a
+deconvolution score, but it is squarely downstream of the PSF and is **not in
+M25's validated set**. Everything in §4 inherits an unvalidated optical
+component.
 
 **Fact 21 (ARGUED).** The noise model is shared. The plant is exposed through
 the simulator's `g = max(ISO,100)/436.8`, `RN = 4.20 e⁻` chain; the focus
@@ -477,6 +497,49 @@ because neither is used below ISO 400.
 every number produced on a plant. Facts 2–6 (the controls), 12–14 (the power
 failures) and 22–24 (§8) are not, because they are statements about the
 instrument and about what exists, not about the merge's optical performance.
+
+### 7.3 Correction: I overstated the asymmetry, and it is an inference
+
+**Written after the fold, in answer to a direct question about where the
+asymmetry measurement comes from and how strong it is. It corrects this report's
+own §7.2 as first committed.**
+
+**Fact 25 (MEASURED — an audit of the corpus, not of the merge). No corpus fact
+establishes that real through-focus curves are asymmetric.** As first committed,
+Fact 19 said "real through-focus curves are **measured** asymmetric (M25 §6.2)".
+That is wrong, and the label was mine. What the corpus actually contains:
+
+| source | what it says | strength |
+| --- | --- | --- |
+| M25 **§6.2**, "Known inaccuracies" | "on `coffee-bean` the fitted `coc` runs to the grid edge (12.0 px/frame) with RMS shape error 0.17–0.19; the real curve is asymmetric and falls faster than any simulated one" | **weak inference.** One stack. A *fit residual*, not a shape measurement. The fit **saturated its grid** — 12.0 px/frame is the grid edge, which is the regime in which a residual's shape is least interpretable. |
+| M25 **question 33** | "Is the real defocus growth non-linear in frame index, **or is the subject's depth range doing the work?**" | **M25 names the confound itself and leaves it open.** |
+| M25 **Gate 1c** | the gate that fit ran under is the one M25 **FAILED**: base rate 10.1 % vs a real 4.8 %, and with ground truth the enrichment has **the wrong sign, 0.23× against a real 4.38×** | the asymmetry remark is a by-product of the **one gate M25 disowned**. |
+| SYNTHESIS **question 114** | still lists the through-focus curve *shape* as a **candidate** for a PSF-sensitive gate that does not exist | open question, not fact. |
+| Fact **544** | "Focus-merge noise statistics are not evidence about the PSF" — no current gate is sensitive to it | confirms nothing has measured this. |
+| Fact **274** (M33) | **"The through-focus response has heavier shoulders than a Gaussian"** — Gaussian σ fitted on the decimation ladder gives **1.68 / 2.04 / 2.45** dense frames from the ×2 / ×4 / ×6 arms, where a true Gaussian gives one number | **the only real measured shape deviation** — but it is **kurtosis, not skew**, so it does *not* establish asymmetry. Flagged in SYNTHESIS as **NOT INDEPENDENTLY VERIFIED**: one stack, one aperture, one magnification. |
+| Fact **471** | the through-focus curve self-calibrates blur growth to `s = 1.1856` on `109MSDCF` (FWHM **10 measured / 9 modelled**) and `s = 0.6017` on `119MSDCF` (**17 / 17**) | FWHM is a **symmetric** summary and it *agrees* with the model on two stacks. Neither confirms nor refutes skew. |
+
+**Fact 26 (ARGUED). The asymmetry, even if real, does not have an obvious
+sign for this milestone's observable, which is a second reason not to lean on
+it.** A curve that "falls faster" is a *sharper* curve, and a sharper
+through-focus peak makes the correct frame **easier** to identify, not harder.
+Asymmetry that preserves unimodality could plausibly raise `H` rather than lower
+it. **The bound's direction therefore rests on Fact 19a's multimodality and on
+Fact 21's noise-model mismatch, both of whose signs are unambiguous, and not on
+asymmetry at all.** Fact 19 as written was doing rhetorical work its citation
+could not support; the bound survives the correction because it never needed
+that citation.
+
+**For M70, which is measuring real through-focus spectral content now:** the
+asymmetry is **unmeasured and worth measuring**, and nothing in this report or
+in M25 forecloses it. The three things to know before starting are (a) fact 274
+already measured a *symmetric* shape deviation and any skew estimator should
+report both moments so the two are not confused; (b) M25 question 33's confound
+is live — depth range and defocus-rate non-linearity are not separable on
+`coffee-bean` alone, so a second stack with a different depth range is the
+minimum; and (c) fact 471's FWHM agreement on two stacks means the deviation, if
+present, is in the *tails* rather than the core, so an estimator that only fits
+near the peak will not see it.
 
 ---
 
@@ -631,10 +694,15 @@ Plants (`*.frames.u16`, `*.truth.f32`) are gitignored; `plants/*.meta.txt`,
 | 14a | **The blind regime is outside the real corpus.** M64 PR3 measured `n_eff/N` on all seven corpus stacks at 0.014–0.3011; every no-power cell here is 0.978–0.998. On the set-size axis the powered result covers the real operating regime. It transfers nothing optical. | DERIVED |
 | 14 | In those cells the admitted set's centre is up to **8.34 frames** from the truth while `H = 1.000`. **`H` must never be quoted without `n_eff/N`.** | MEASURED |
 | 17 | `ArgmaxBaseline`'s miss CDF: exact **35.7 %**, ±1 **84.3 %**, ±2 **98.6 %**. M32's "which frame is best is nearly certain" holds at ±2 frames and fails at exact index. | MEASURED |
-| 19 | **Every accuracy number here is an upper bound and every failure number a lower bound**, because the forward model's PSF is symmetric and monotone in `|F−k|` by construction while real through-focus curves are measured asymmetric (M25 §6.2). Registered before any run. | ARGUED |
+| 19 | **Every accuracy number here is an upper bound and every failure number a lower bound**, because the forward model's PSF is unimodal and monotone in `\|F−k\|` by construction. Registered before any run. **Its original citation to a measured asymmetry is withdrawn — see fact 25.** | ARGUED |
+| 19a | **The bound's direction rests on measured multimodality, not on asymmetry.** Facts 150 and 967 measured it (4.38× enrichment at depth steps, placebo 1.01×; 78.3 % of occluding-edge band pixels, AUC 1.000) — and **this plant excludes exactly that mechanism**, because M25's Gate 1c FAILs. | MEASURED |
+| 25 | **No corpus fact establishes that real through-focus curves are asymmetric**, and this report said one did. M25 §6.2's remark is a fit residual on one stack from a fit that saturated its grid, inside the one gate M25 FAILED, with M25's own question 33 naming the confound. The only measured shape deviation is fact 274's **heavier-than-Gaussian shoulders** — kurtosis, not skew, one stack, NOT INDEPENDENTLY VERIFIED. Fact 471's FWHM *agrees* with the model on two stacks. | MEASURED (corpus audit) |
+| 26 | **Asymmetry has no obvious sign for `H` even if real**: a curve that "falls faster" is sharper, and a sharper peak makes the correct frame easier to find. Leaning on it was a rhetorical error, and the bound survives without it. | ARGUED |
 | 20 | The observable is downstream of the PSF, and **M25's suite is blind to the PSF** — Gate 2 NC-B removed diffraction entirely and passed everything. This result sits outside M25's validated set. | ARGUED |
 | 23 | **Leave-one-out frame subsetting is vacuous against a hard-gated merge**: `if !admitted { continue; }` makes removing a non-admitted frame a bit-exact no-op. | DERIVED |
 | 24 | **`wrapped-text-1/-2` supports a real-capture structural falsification test that has never been run** — a bottle's curvature forces the in-focus index field to be smooth, unimodal circumferentially and constant axially. It can falsify but not measure accuracy, and its premise (fact 834's geometry) is itself unverified. | MEASURED |
+| 27 | **That test is a charter limit, not a dead test, and its axial arm needs no geometry fit.** For a surface of revolution with its axis in the image plane, `k*(x,y)` is independent of `y` at fixed `x` whatever the radius — per-pixel falsifiable, with a text-shaped residual as the failure signature. `m65-election.rs` already carries the whole real-stack loader; `merge.rs` needs no change; no owed capture blocks it. | ARGUED |
+| 28 | **It is blind to the failure this milestone actually found.** §5's degenerate cells had `devmax` 8.25–8.34 frames with `H ≈ 1` — a large error that is *smooth*. The axial arm cannot see a bias constant in `y`; only the fitted-curvature arm can. A milestone running the axial arm alone and reporting a pass has not tested that mode. | ARGUED |
 | 22 | **Per-pixel focus correctness is not measurable on the existing corpus.** The capture that would change that is `captures-needed.md` §8's tilted planar target, requested and still owed. | MEASURED |
 
 ---
@@ -662,13 +730,84 @@ ten about the exact index.
    that converts `H` from a simulated number into a measured one. Cheap, owed,
    and now has a second milestone depending on it.
 2. **Run the `wrapped-text` structural falsification** (Fact 24) as its own
-   pre-registered milestone, with the bottle's geometry fitted first so the
-   premise is measured rather than asserted. It cannot produce an accuracy
-   number, and that must be in its pre-registration, not discovered later.
+   pre-registered milestone. **This is a charter limit, not a dead test** — see
+   §13.1 for the design, the cost and exactly what it can and cannot falsify.
 3. **`H` is not safe to ship as a diagnostic on its own** (Fact 14). Any future
    use of it must carry `n_eff/N` and the matched-null margin beside it, or it
    will certify a merge that admits everything.
-4. **The PSF remains the project's largest unvalidated component.** M25 §6.2's
-   asymmetric real through-focus curve is the measurement that would let this
-   milestone's ceiling be converted into an estimate. Until then, 99.955 % is a
-   ceiling and this report says so in its first paragraph.
+4. **The PSF remains the project's largest unvalidated component.** Fact 544
+   says no gate in the suite is sensitive to it, and §7.3 records that the shape
+   deviation the project half-believes it has measured — asymmetry — is an
+   inference from a single fit residual inside M25's failed Gate 1c. **M70 is
+   positioned to settle it.** Until something does, 99.955 % is a ceiling and
+   this report says so in its first paragraph.
+
+### 13.1 The `wrapped-text` structural test: costed, and what it can kill
+
+**This section answers a direct question put after the fold: are Fact 24's three
+reasons "out of charter" or "this test will not work"? Answer: reason 1 is
+charter, reasons 2 and 3 are design constraints that belong in the next
+milestone's pre-registration. The test works. It should be dispatched.**
+
+**Fact 27 (ARGUED). The strong prediction is two-axis, and one axis needs no
+geometry fit at all.** `wrapped-text-1` (130 frames, ISO 100) and
+`wrapped-text-2` (120, ISO 400) are text on a **cylinder**. For a surface of
+revolution with its axis in the image plane:
+
+- **P1 — circumferential.** Across the bottle, depth is
+  `z(x) = z₀ − √(R² − (x−x_c)²)`, so the in-focus frame index `k*(x)` is
+  **unimodal with exactly one interior extremum**, at the nearest ridge. This is
+  the prediction that needs the geometry, and it is the one fact 847's lesson
+  applies to: fit `R` and `x_c` from the silhouette or the label's known
+  physical width, **never from the index map itself**, which would be circular.
+- **P2 — axial.** Along the bottle's axis, depth is **constant**, so
+  `k*(x, y)` is **independent of y at fixed x**. **P2 requires no fit and no
+  `R`** — it holds for any surface of revolution however shaped, given only the
+  axis direction, which is measurable from the silhouette or the text baseline.
+
+P2 is the better instrument. It is **per-pixel falsifiable** — the residual of
+the estimated index about its column mean is an error map with a null (the
+estimator's own repeatability across the two stacks) — and it is **not
+satisfiable by accident**, because the glyph pattern that drives local contrast
+is not aligned with the cylinder axis. A merge admitting frames for
+contrast-texture reasons rather than focus reasons would put structure in the
+residual **shaped like the text**, and that is a signature, not a scalar.
+
+**Fact 28 (ARGUED). It carries a quantitative prediction transferred from this
+milestone, so it is not merely a smoothness check.** §6 measured, on the plant,
+mean `|win − k*|` of **0.71747** for the estimating election against **0.81473**
+for `ArgmaxBaseline` — the estimator's index field is ~12 % tighter. If the
+axial residual of `E` is **not** smaller than that of `A` by a comparable
+factor on a real capture, the simulator's ordering does not transfer, and
+**that is a real-capture refutation of a result this report asserts.** The arms
+are already built: `Command::Stack` and `Command::ArgmaxBaseline`.
+
+**Cost: one milestone, no new capture, and the loader already exists.**
+`crates/strehl-cli/examples/m65-election.rs` already carries the entire
+real-stack path this needs — `std::fs::read_dir` filtered on `ARW`,
+`strehl_raw::decode`, geometry/level checks, and **both** the raw and
+regularised `FocusStats` winner fields tracked with `merge_cmd.rs`'s exact
+tie-break. The new work is the scoring layer: accumulate the admitted-set centre
+alongside the winner index, then reduce to column means and residuals. That is
+the same shape as this milestone's `Score`. **No change to
+`crates/strehl-core/src/merge.rs` is required**, and no owed capture blocks it.
+
+**What it can falsify.** That the merge's admitted set is centred on a
+physically constrained depth **on a real capture, through real optics**. That is
+the regime this milestone's simulator result explicitly cannot reach (§7.2), so
+a failure there would be information no plant can supply.
+
+**What it cannot do, and this must be in its pre-registration up front.**
+
+1. **It cannot produce an accuracy number.** There is no per-pixel truth. A pass
+   is *self-consistency with an assumed geometry*, not correctness, and the
+   report must say so in its headline rather than discover it in review.
+2. **It is blind to smooth error, which is the failure this milestone actually
+   found.** §5's degenerate cells had `devmax` **8.25–8.34 frames** with `H ≈ 1`
+   and `ρ` still 0.69–0.90 — a *large* error that is *smooth*. P2 cannot see a
+   bias constant in `y`; only P1, with a fitted `R`, can. **A milestone that
+   runs P2 alone and reports a pass has not tested the mode that broke here.**
+3. **Its premise is currently a description, not a measurement.** Fact 834 calls
+   the curvature "known, smooth, convex" — nobody fitted it. Fact 847 records
+   the project already being wrong once by inferring subject geometry. The
+   geometry fit is step one of the milestone, not an assumption of it.
