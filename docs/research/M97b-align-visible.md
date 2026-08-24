@@ -912,7 +912,36 @@ of harm as deleting a sidecar out from under a running render.
 
 ---
 
-### 13.4 What I did not fix
+### 13.4 The runtime output now says what the held-out score cannot see
+
+Fact 1295's user-visible consequence is not the `232.7 px` string — that prints
+only in the alignment-**OFF** branch, where the frames genuinely are
+unregistered, and it remains correct. It is the line above it: the merge
+reports a held-out error and, if it is under 4.0 px, reports **nothing at all**,
+which reads as certification. My own fact says why that is wrong — `E*` is a
+*pairwise* residual and is blind to a gain shared by every edge, which is how
+11.56 px coexisted with 54.3% of the drift applied.
+
+So a `CAVEAT` now prints whenever a solve carries a held-out score, **including
+when the number looks good**, since that is the case where the false confidence
+is strongest. Phrased as a property of the statistic rather than as "this solve
+is short", so it stays true after M103 fixes the estimator.
+
+Verified on the branch it is for, with a control:
+
+| arm | sidecar | printed |
+|---|---|---|
+| held-out 11.081 px | `warpmap-flatruler.txt` | NOTE **and CAVEAT** |
+| held-out NOT MEASURED | `coffee-bubbles` cache entry | WARNING, **no CAVEAT** |
+
+The byte-freeze was re-measured after the change and still reads
+`54A5E20F…7E7A2` — it is stderr, not pixels.
+
+*(An aside worth keeping: the first attempt at the control accidentally passed a
+sidecar solved on a different frame set, and `check_stack` rejected it. The
+wrong-stack guard works on real input, not only in its unit test.)*
+
+### 13.5 What I did not fix
 
 Defect 2, the abort on a single refused frame, should become a drop-with-warning
 and I have **not** written it. It touches the fold and `n_eff` path in

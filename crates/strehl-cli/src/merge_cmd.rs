@@ -1286,6 +1286,19 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                      improvement on no registration, but not a precise solve."
                 );
             }
+            if p.heldout_px.is_some() {
+                // Printed whenever a solve certifies itself, INCLUDING when the
+                // number looks good. M97 fact 1295: the held-out score is a
+                // *pairwise* residual, so it is blind to a gain shared by every
+                // edge -- an 11.56 px E* coexisted with only 54.3% of the drift
+                // being applied. A small E* is the case where this caveat
+                // matters most, because it is the one that reads as success.
+                eprintln!(
+                    "  CAVEAT        : the held-out score is a pairwise residual and cannot \
+                     detect a scale error common to every edge, so it bounds relative \
+                     placement, not absolute magnification (M97, fact 1295)."
+                );
+            }
         }
         None => eprintln!(
             "alignment      : OFF -- frames are combined unregistered. M86 measured \
