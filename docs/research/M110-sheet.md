@@ -760,3 +760,145 @@ Continuing the numbering from §9.
     must exclude them.** A hash from another binary neither agrees nor disagrees usefully
     with one from this run.
 
+---
+
+## 12. Applying ORCH's two fleet corrections
+
+### 12.1 Rule 47 — re-audited under deliberate priming
+
+The corrected mechanism is that `$LASTEXITCODE` is **not updated** after a truncated
+pipeline, so it retains the *previous* command's code and a plausible-looking value is not
+evidence the read was live. Re-auditing every gate in this milestone:
+
+**No gate here was ever read through a truncated pipeline.** Two commands were truncated
+(`... | Select-Object -Last 3` on the control run, `-Last 6` on the build), but neither was
+followed by an exit-code read — both were judged on a **literal** printed by the program
+(`14/14 bars passed`, ``Finished `release` profile``), which is what discipline 20 of
+M110-track-jitter §3.1 requires and is immune to this entirely.
+
+Re-run anyway, with the shell **primed by a deliberate failure** so that a live read is
+provable rather than merely plausible:
+
+| gate | primed | read | live? |
+| --- | --- | --- | --- |
+| `neutrality_control.py` | `1` | **`0`** | yes — could not have inherited |
+| `scripts/corpus_lint.py` | `1` | **`0`** | yes |
+| `ctrlchar_scan.py --selftest` | `1` | **`0`** | yes |
+
+**No number in this report is invalidated.**
+
+### 12.2 The here-string hazard — measured, not relayed, and it is less detectable than stated
+
+`herestring_probe.ps1` writes the same six-backtick line through `@"..."@` and `@'...'@` and
+dumps the bytes. **On PowerShell 5.1.26100.9168:**
+
+| span | double-quoted result | bytes |
+| --- | --- | --- |
+| `` `bee-3-cpl` `` | `\x08ee-3-cpl` | `08 65 65 2D…` |
+| `` `experiments/` `` | `experiments/` | **no control char** |
+| `` `foam` `` | `\x0coam` | `0C 6F 61 6D` |
+
+Single-quoted preserved **all 6** backticks and produced **0** control characters, confirming
+the prescribed fix.
+
+Two things follow that the fleet advice does not cover:
+
+1. **The corruption is shell-version dependent.** `` `e `` became an escape in PowerShell 6,
+   so on 5.1 the backtick is dropped and the `e` **survives** — `` `experiments/` `` came out
+   as intact text. The same script therefore corrupts differently on 5.1 and 7.x. The 0x1B
+   found in `M105b-exposure-ship.md` could only have been written under 7.x. **A scan that
+   passes on one shell does not clear text authored on the other.**
+2. **A control-character scan catches at most a third of the damage.** Of the six backticks,
+   **zero survived**, but only **two** left a control character. The other four were deleted
+   **with no forensic trace at all** — a markdown code span silently downgraded to plain
+   text. **`corpus_lint` S7 cannot see this class**, because there is no control character to
+   find, and it is the *more* common outcome.
+
+`ctrlchar_scan.py` covers both classes, plus the gap S7 has by construction: it scans **git
+commit message bodies**, which are neither markdown nor Rust and which is exactly where both
+of tonight's M110 messages were built — in `@"..."@`, the hazardous form.
+
+**For the silent class it counts backticks per **paragraph** and matches runs by CommonMark's
+rule.**
+
+**Result: 2 commit messages and 14 text files, clean** — for control characters and for
+unmatched backtick runs alike.
+
+**Its negative control fired three times before it passed**, and every failure was found by
+**real corpus text, not by the control** — the control passed at 6/6 and again at 8/8 while
+the check was still wrong:
+
+- The **plant was wrong.** It deleted *both* ends of a span, leaving an **even** count and no
+  signal. Deleting exactly one backtick made it fire. This is the standing rule that a
+  positive control's plant must actually produce the quantity being detected.
+- **Counting per line** flagged two real lines in `M110-track-jitter.md` where a code span
+  legitimately **wraps across a line break**. Fixed by counting per paragraph.
+- **Counting raw backticks** flagged two paragraphs of *this* report, because markdown's own
+  way of writing a literal backtick — the ``  `e  `` form — makes a paragraph's raw count
+  odd while being perfectly well formed.
+- **Pairing runs by length** flagged the same two paragraphs again, because the inner single
+  backtick of ``  `e  `` was counted as its own run instead of being consumed as span
+  content. Fixed by CommonMark's actual rule: a run of N backticks is closed by the next run
+  of exactly N, and everything between is content.
+
+`--selftest` is now **9/9**: green → RED on plant → green on byte-identical restore, the
+silent class shown invisible to the control-character scan and visible to the backtick
+check, no false positive on a wrapped span, on the ``  `e  `` literal form, or on the exact
+§12.2 paragraph shape that defeated the two previous versions — and it still fires on a
+double-backtick span that has genuinely lost a delimiter.
+
+**The lesson is about the control, not the check.** A synthetic self-test that passes does
+not validate a check against real prose; the corpus is a better adversary than any plant I
+wrote, and it found every one of these.
+
+---
+
+## 13. For ORCH — further facts and disciplines
+
+Continuing from §11.
+
+**Facts**
+
+34. **MEASURED (PowerShell 5.1.26100.9168): the here-string hazard is shell-version
+    dependent.** `` `b `` and `` `f `` fire (0x08, 0x0C) but `` `e `` does **not**, because it
+    became an escape only in PowerShell 6 — `` `experiments/` `` survived intact on 5.1. The
+    same script corrupts differently on 5.1 and 7.x, and the 0x1B in
+    `M105b-exposure-ship.md:1312` could only have been written under 7.x. **A scan that
+    passes on one shell does not clear text authored on the other.**
+35. **MEASURED: a control-character scan catches at most a third of the damage.** Of six
+    backticks written through `@"..."@`, **zero survived**, but only **two** left a control
+    character; the other four were deleted with **no forensic trace**, silently downgrading a
+    markdown code span to plain text. **corpus_lint S7 cannot detect this class by
+    construction**, and it is the more common outcome. Single-quoted `@'...'@` preserved all
+    six and produced zero control characters.
+36. **MEASURED: no M110 artefact is affected.** Both M110 commit messages — built in
+    `@"..."@`, the hazardous form — and all 14 text files scan clean for control characters
+    **and** for unbalanced backticks.
+37. **MEASURED: all three M110 gates are live reads.** Primed with a deliberate exit 1, each
+    returned 0, so none inherited a stale code. No gate in this milestone was ever read
+    through a truncated pipeline; the two truncated commands were judged on printed
+    literals. **No number in this report is invalidated by the rule-47 correction.**
+
+**Disciplines**
+
+38. **A control-character check is a partial defence against here-string damage, not a
+    complete one.** The silent-deletion class leaves nothing to find. Check that backtick
+    runs pair up as well — **per paragraph, by CommonMark's rule** (a run of N closes with
+    the next run of N, everything between is content), because code spans wrap across line
+    breaks and ``  `e  `` legitimately makes a raw count odd.
+39. **Scan commit message bodies too.** They are neither markdown nor Rust, so no corpus
+    check covers them, and they are frequently built in exactly the shell construct that
+    causes the damage. Read them as **bytes** via `git log --format=%B` through
+    `subprocess`, never through a PowerShell redirect, which re-encodes the stream.
+40. **Prove an exit-code read is live by priming the shell with a deliberate failure.** Under
+    the corrected rule-47 mechanism a plausible code is not evidence of a live read; a `0`
+    obtained after priming with `1` could not have been inherited. Cheap, and it converts an
+    assumption into a measurement.
+41. **A passing self-test does not validate a text check; run it against the real corpus.**
+    This scanner's synthetic control passed at 6/6 and again at 8/8 while the check was still
+    wrong, and **real prose caught every one of the three defects** — wrapped spans, the
+    ``  `e  `` literal form, and inner backticks needing to be consumed as span content. Add
+    each real counter-example to the control as it is found, so the control grows toward the
+    corpus instead of staying where it was written.
+
+
