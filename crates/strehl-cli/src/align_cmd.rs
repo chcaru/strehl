@@ -342,6 +342,7 @@ pub fn run(args: &AlignArgs) -> Result<()> {
     let floor = cycle_floor(&edges, st.geom);
     let mut opts = GlobalOptions::new(st.geom);
     opts.weighting = Weighting::Unit;
+    apply_smooth_env(&mut opts);
     let placements = solve_global(&edges, n, &opts)
         .context("the global system is not full rank; the edge ladder is too sparse")?;
 
@@ -456,6 +457,44 @@ fn cycle_floor(edges: &[AlignEdge], geom: PlaneGeometry) -> Option<f64> {
 /// in training. Reporting that number in the sidecar would tell a consumer the
 /// solve was four times better than it is, which defeats the reason the
 /// sidecar carries an error at all.
+/// Read the M110 track-smoothness prior from the environment.
+///
+/// Off by default: `STREHL_SMOOTH` unset reproduces the free solve bit-exactly,
+/// because `GlobalOptions::smooth` stays at 0.0 and the penalty block is gated
+/// on `smooth > 0.0`. `STREHL_SMOOTH_HUBER` sets the robust threshold in plane
+/// px and defaults to 1.0, which is fact 1435's measured p90 second difference
+/// -- so the prior stays quadratic on the noise it is meant to suppress and
+/// goes linear on the rare real step (a bumped tripod), which then survives.
+///
+/// It is an env var and not a default because M110 measured the win on the
+/// solve but could not show it in a render; see `docs/research/M110-track-jitter.md`.
+fn apply_smooth_env(opts: &mut GlobalOptions) {
+    let Ok(v) = std::env::var("STREHL_SMOOTH") else {
+        return;
+    };
+    let Ok(lambda) = v.trim().parse::<f64>() else {
+        eprintln!("STREHL_SMOOTH={v:?} is not a number; ignoring");
+        return;
+    };
+    if !(lambda.is_finite() && lambda > 0.0) {
+        return;
+    }
+    opts.smooth = lambda;
+    opts.smooth_huber_px = match std::env::var("STREHL_SMOOTH_HUBER") {
+        Ok(h) if h.trim().eq_ignore_ascii_case("off") => None,
+        Ok(h) => h
+            .trim()
+            .parse::<f64>()
+            .ok()
+            .filter(|x| x.is_finite() && *x > 0.0),
+        Err(_) => Some(1.0),
+    };
+    eprintln!(
+        "align: track prior on, lambda={lambda} huber={:?} px",
+        opts.smooth_huber_px
+    );
+}
+
 fn heldout_error(
     edges: &[AlignEdge],
     n: usize,
@@ -903,6 +942,7 @@ pub fn solve_map(
     let floor = cycle_floor(&edges, st.geom);
     let mut opts = GlobalOptions::new(st.geom);
     opts.weighting = Weighting::Unit;
+    apply_smooth_env(&mut opts);
     let placements = solve_global(&edges, n, &opts)
         .context("the global system is not full rank; the edge ladder is too sparse")?;
     let heldout = heldout_error(&edges, n, &opts, st.geom);

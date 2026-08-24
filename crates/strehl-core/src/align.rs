@@ -1765,6 +1765,20 @@ pub struct GlobalOptions {
     /// also makes the system full rank across frames no edge reaches, which is
     /// why coverage is reported unconditionally when it is on.
     pub smooth: f64,
+    /// Huber threshold for the *smoothness prior*, in plane px of second
+    /// difference. `None` leaves the prior purely quadratic.
+    ///
+    /// A quadratic prior treats a genuine discontinuity -- a bumped tripod, a
+    /// subject lurch -- as an enormous residual and spends unbounded effort
+    /// flattening it, smearing one real step across its whole neighbourhood.
+    /// With a threshold set, a second difference larger than it is re-weighted
+    /// down by `thr / r` in the next IRLS pass, so the prior stays quadratic on
+    /// the estimation noise it is meant to suppress and goes linear on the rare
+    /// real step, which then survives.
+    ///
+    /// This shares `irls_iters` with the edge re-weighting; it is a no-op when
+    /// `smooth` is zero, so it cannot change a non-smoothed solve.
+    pub smooth_huber_px: Option<f64>,
     pub geometry: PlaneGeometry,
 }
 
@@ -1775,6 +1789,7 @@ impl GlobalOptions {
             irls_iters: 3,
             huber_px: 3.0,
             smooth: 0.0,
+            smooth_huber_px: None,
             geometry,
         }
     }
@@ -2043,6 +2058,10 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
 
     let mut weights: std::collections::HashMap<(usize, usize), f64> =
         std::collections::HashMap::new();
+    // Per-interior-frame IRLS weight on the smoothness prior. All ones means a
+    // purely quadratic prior, which is what `smooth_huber_px: None` leaves it
+    // as, so this cannot perturb an existing solve.
+    let mut pen_w: Vec<f64> = vec![1.0; n];
     let mut placement: Placement = vec![None; n];
     let passes = opts.irls_iters.max(1);
 
@@ -2086,14 +2105,15 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
         }
 
         if opts.smooth > 0.0 && n >= 3 {
-            for k in 1..n - 1 {
+            for (k, &pw) in pen_w.iter().enumerate().take(n - 1).skip(1) {
+                let sw = pw.sqrt();
                 let stencil = [(k - 1, 1.0), (k, -2.0), (k + 1, 1.0)];
                 let mut cols = Vec::with_capacity(3);
                 let mut rhs = Cx::ZERO;
                 for (kk, c) in stencil {
                     push_coeff(&mut cols, &mut rhs, &col_of, kk, Cx::real(c), Cx::ONE);
                 }
-                let w = opts.smooth * rho;
+                let w = opts.smooth * rho * sw;
                 sys_a.push(
                     cols.into_iter().map(|(c, v)| (c, v.scale(w))).collect(),
                     rhs.scale(w),
@@ -2104,7 +2124,7 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
                 for (kk, c) in stencil {
                     push_coeff(&mut cols, &mut rhs, &col_of, kk, Cx::real(c), Cx::ZERO);
                 }
-                let w = opts.smooth;
+                let w = opts.smooth * sw;
                 sys_b.push(
                     cols.into_iter().map(|(c, v)| (c, v.scale(w))).collect(),
                     rhs.scale(w),
@@ -2147,6 +2167,31 @@ pub fn solve_global(edges: &[AlignEdge], n: usize, opts: &GlobalOptions) -> Opti
                 opts.huber_px / r
             };
             weights.insert((e.i, e.j), w);
+        }
+
+        // Re-weight the smoothness prior itself. The residual is the second
+        // difference measured in the same metric the least squares minimises --
+        // `sqrt(rho^2 |d2 a|^2 + |d2 b|^2)`, i.e. `corner_err_rms` of the
+        // stencil -- so the threshold is in plane px and directly comparable to
+        // `huber_px`. Frames whose second difference exceeds it carry a real
+        // step, not estimation noise, and get their prior row relaxed instead
+        // of enforced.
+        if let Some(thr) = opts.smooth_huber_px
+            && opts.smooth > 0.0
+            && n >= 3
+            && thr > 0.0
+        {
+            for k in 1..n - 1 {
+                let (Some(p), Some(c), Some(q)) =
+                    (placement[k - 1], placement[k], placement[k + 1])
+                else {
+                    continue;
+                };
+                let d2a = p.a - c.a.scale(2.0) + q.a;
+                let d2b = p.b - c.b.scale(2.0) + q.b;
+                let r = (rho * rho * d2a.norm_sq() + d2b.norm_sq()).sqrt();
+                pen_w[k] = if r <= thr { 1.0 } else { thr / r };
+            }
         }
     }
 

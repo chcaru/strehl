@@ -381,17 +381,13 @@ fn heldout_se(
 // solver options
 // ---------------------------------------------------------------------------
 
-/// Set the robust-penalty threshold, when the core supports one.
-///
-/// STAGE 1 (this body): the core does **not** have the field yet, so asking for
-/// it is an error rather than a silent no-op. Stage 1 exists to produce the
-/// pre-change `lambda = 0` track that B1a compares against; it must be built
-/// from an `align.rs` I have not touched.
-fn apply_smooth_huber(_o: &mut GlobalOptions, a: &Args) -> Result<()> {
-    match a.get("smooth-huber") {
-        None | Some("none") => Ok(()),
-        Some(v) => bail!("--smooth-huber={v} needs the patched align.rs (stage 2)"),
-    }
+/// Set the robust-penalty threshold. STAGE 2: the core has the field.
+fn apply_smooth_huber(o: &mut GlobalOptions, a: &Args) -> Result<()> {
+    o.smooth_huber_px = match a.get("smooth-huber") {
+        None | Some("none") => None,
+        Some(v) => Some(v.parse()?),
+    };
+    Ok(())
 }
 
 fn opts_from(a: &Args, geom: PlaneGeometry) -> Result<GlobalOptions> {
@@ -495,6 +491,75 @@ fn cmd_solve(a: &Args) -> Result<()> {
 
 /// Bit-exact comparison of two track files. `--expect equal|differ` decides the
 /// exit code, so this is a gate rather than a print statement.
+/// B2, done as a *paired* comparison.
+///
+/// The unpaired bootstrap SE of the held-out median answers "how well is this
+/// median pinned down", which is the wrong question: both arms are scored on
+/// the *same* test edges, so the run-to-run part of the noise is common and
+/// cancels. This resamples the test edges once and reads both arms on each
+/// resample, so the SE is the SE of the difference.
+fn cmd_paired(a: &Args) -> Result<()> {
+    const MIN_SPAN: usize = 40;
+    const MIN_USED: usize = 12;
+    let geom = geom_from(a)?;
+    let only = a.usizes("only-spans")?;
+    let loaded = load_edges(&PathBuf::from(a.req("edges")?), &only)?;
+    let (edges, n) = (loaded.edges, a.usize_or("n", loaded.n)?);
+    let is_test = |e: &AlignEdge| e.j - e.i >= MIN_SPAN && e.used >= MIN_USED;
+    let test: Vec<AlignEdge> = edges.iter().filter(|e| is_test(e)).copied().collect();
+    let train: Vec<AlignEdge> = edges.iter().filter(|e| !is_test(e)).copied().collect();
+    println!("train {} edges, test {} edges", train.len(), test.len());
+
+    let lams = a.f64s("lambdas")?;
+    let base = lams.first().copied().unwrap_or(0.0);
+    let mut per_lambda: Vec<(f64, Vec<f64>)> = Vec::new();
+    for &lam in &lams {
+        let mut o = opts_from(a, geom)?;
+        o.smooth = lam;
+        apply_smooth_huber(&mut o, a)?;
+        let g = solve_global(&train, n, &o).context("train solve failed")?;
+        let errs: Vec<f64> = edge_errors(&g, &test, geom).iter().map(|x| x.err).collect();
+        per_lambda.push((lam, errs));
+    }
+
+    let m = test.len();
+    let reps: usize = a.usize_or("reps", 4000)?;
+    let mut seed: u64 = 0x9E37_79B9_7F4A_7C15;
+    let mut idx = vec![0usize; m];
+    // One resample, read by every arm: that is what makes it paired.
+    let mut diffs: Vec<Vec<f64>> = vec![Vec::with_capacity(reps); per_lambda.len()];
+    for _ in 0..reps {
+        for slot in idx.iter_mut() {
+            seed = seed.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            *slot = ((seed >> 33) as usize) % m;
+        }
+        let med = |errs: &[f64]| -> f64 {
+            let mut v: Vec<f64> = idx.iter().map(|&k| errs[k]).collect();
+            v.sort_by(|x, y| x.partial_cmp(y).unwrap());
+            v[v.len() / 2]
+        };
+        let b = med(&per_lambda[0].1);
+        for (k, (_, errs)) in per_lambda.iter().enumerate() {
+            diffs[k].push(med(errs) - b);
+        }
+    }
+
+    println!("  lambda    heldout      delta     se(d)        z");
+    for (k, (lam, errs)) in per_lambda.iter().enumerate() {
+        let mut v = errs.clone();
+        v.sort_by(|x, y| x.partial_cmp(y).unwrap());
+        let point = v[v.len() / 2];
+        let d = &diffs[k];
+        let mean: f64 = d.iter().sum::<f64>() / d.len() as f64;
+        let var: f64 = d.iter().map(|x| (x - mean) * (x - mean)).sum::<f64>() / (d.len() - 1) as f64;
+        let se = var.sqrt();
+        let z = if se > 0.0 { mean / se } else { 0.0 };
+        println!("{lam:>8}  {point:9.4}  {mean:9.4}  {se:8.4}  {z:7.2}");
+    }
+    println!("  (delta is vs lambda = {base}; negative delta = better)");
+    Ok(())
+}
+
 fn cmd_cmp(a: &Args) -> Result<()> {
     let x = read_track(&PathBuf::from(a.req("a")?))?;
     let y = read_track(&PathBuf::from(a.req("b")?))?;
@@ -769,15 +834,21 @@ fn cmd_plant(a: &Args) -> Result<()> {
             .collect();
         match kind.as_str() {
             "jitter" => {
-                let mut acc = 0.0;
-                let mut cnt = 0.0;
-                for j in 0..n {
-                    if let Some(v) = t[j] {
-                        acc += if j % 2 == 0 { v } else { -v };
-                        cnt += 1.0;
+                // Project onto the alternating mode via the SECOND DIFFERENCE,
+                // not via `sum (-1)^j t_j`. The naive projection is not
+                // trend-immune: over an odd frame count `sum_j (-1)^j j` is
+                // 149, not 0, so a linear carrier leaks in at ~0.498 of its
+                // per-frame slope and swamps the plant. `d2` annihilates
+                // constant and linear exactly, and a pure `+/-d` alternation
+                // has `|d2| = 4d`, so the amplitude is `median|d2| * rho / 4`.
+                // What survives is the carrier's own curvature, ~0.004 px.
+                let mut d2 = Vec::with_capacity(n.saturating_sub(2));
+                for j in 1..n.saturating_sub(1) {
+                    if let (Some(p), Some(c), Some(q)) = (t[j - 1], t[j], t[j + 1]) {
+                        d2.push((p - 2.0 * c + q).abs() * rho);
                     }
                 }
-                let rec = (acc / cnt).abs() * rho;
+                let rec = quantile(&mut d2.clone(), 0.5) / 4.0;
                 let ratio = rec / amp_px;
                 let hp = h_pred(l);
                 let rel = (ratio - hp) / hp;
@@ -952,6 +1023,7 @@ fn main() -> Result<()> {
     let a = Args::parse(it);
     match cmd.as_str() {
         "solve" => cmd_solve(&a),
+        "paired" => cmd_paired(&a),
         "sweep" => cmd_sweep(&a),
         "plant" => cmd_plant(&a),
         "cmp" => cmd_cmp(&a),

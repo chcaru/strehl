@@ -1,0 +1,14 @@
+{
+ "global_shift_px": [
+  -0.5712,
+  -0.0013
+ ],
+ "centre_highband_BA": 1.00256,
+ "centre_lapvar_BA": 1.00094,
+ "whole_lapvar_BA": 0.99613,
+ "grad_p99_BA": 1.00029,
+ "crop_xy": [
+  6300,
+  2450
+ ]
+}
