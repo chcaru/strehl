@@ -1,0 +1,156 @@
+{
+ "FLAT placebo": {
+  "spread": 0,
+  "iso_merge": 0.0305979759442635,
+  "iso_truth": 0.008565637520492997,
+  "capability": false,
+  "band_px": 12768,
+  "base_rmse_pct": 4.129743913907591,
+  "base_rmse2_pct": 3.4617415249053436,
+  "truth_floor_pct": 0.03755065114129178,
+  "kf_scalar": 39,
+  "kf_map_min": 40.0,
+  "kf_map_max": 40.0,
+  "c_A": 0.28,
+  "c_B": 0.2,
+  "arms": {
+   "A shipped scalar k_F": {
+    "rmse_pct": 1.8225012807227468,
+    "improve_pct": 55.86890328513654,
+    "rmse2_pct": 1.7538191368213794,
+    "improve2_pct": 49.33708585104905,
+    "iso": 0.0038738561167899754,
+    "suppress_pct": 87.33950205122557
+   },
+   "B oracle k_F map": {
+    "rmse_pct": 2.4215047556301497,
+    "improve_pct": 41.3642878078872,
+    "rmse2_pct": 2.104454721120213,
+    "improve2_pct": 39.20820760360621,
+    "iso": 0.0037773238048738333,
+    "suppress_pct": 87.65498799085759
+   },
+   "C oracle c": {
+    "rmse_pct": 1.8225012807227468,
+    "improve_pct": 55.86890328513654,
+    "rmse2_pct": 1.7538191368213794,
+    "improve2_pct": 49.33708585104905,
+    "iso": 0.0038738561167899754,
+    "suppress_pct": 87.33950205122557
+   },
+   "D oracle matte+kF+c": {
+    "rmse_pct": 1.8183522491877873,
+    "improve_pct": 55.96937032671233,
+    "rmse2_pct": 1.7501072825618944,
+    "improve2_pct": 49.444310906206425,
+    "iso": 0.0038713743215574303,
+    "suppress_pct": 87.34761302966763
+   },
+   "E oracle alpha": {
+    "rmse_pct": 1.818550931536536,
+    "improve_pct": 55.96455931777593,
+    "rmse2_pct": 1.7516612012124584,
+    "improve2_pct": 49.39942255624198,
+    "iso": 0.003958180981637638,
+    "suppress_pct": 87.06391236842673
+   },
+   "X BROKEN 1-alpha": {
+    "rmse_pct": 66.9919649190806,
+    "improve_pct": -1522.1820605746075,
+    "rmse2_pct": 67.35947071888255,
+    "improve2_pct": -1845.8261177002346,
+    "iso": 0.11172991789070412,
+    "suppress_pct": -265.15460399808313
+   }
+  },
+  "N3_broken_worse": true,
+  "C_DE_gap": 8.596527865220002e-05,
+  "A_improve": 55.86890328513654,
+  "B_improve": 41.3642878078872,
+  "E_improve": 55.96455931777593
+ },
+ "DEPTH-SPREAD": {
+  "spread": 60,
+  "iso_merge": 0.032736653152677264,
+  "iso_truth": 0.008565637520492997,
+  "capability": false,
+  "band_px": 12768,
+  "base_rmse_pct": 4.527144843164365,
+  "base_rmse2_pct": 4.028661988985748,
+  "truth_floor_pct": 0.03755065114129178,
+  "kf_scalar": 69,
+  "kf_map_min": 10.0,
+  "kf_map_max": 70.0,
+  "c_A": 0.2,
+  "c_B": 0.28,
+  "arms": {
+   "A shipped scalar k_F": {
+    "rmse_pct": 12.676943457719906,
+    "improve_pct": -180.02071718251074,
+    "rmse2_pct": 9.441298135832128,
+    "improve2_pct": -134.35319621364062,
+    "iso": 0.002791591607277044,
+    "suppress_pct": 91.47258091944337
+   },
+   "B oracle k_F map": {
+    "rmse_pct": 1.827013176561793,
+    "improve_pct": 59.64314728475188,
+    "rmse2_pct": 1.7585145664869875,
+    "improve2_pct": 56.34991043441424,
+    "iso": 0.005157739715191678,
+    "suppress_pct": 84.24475559203624
+   },
+   "C oracle c": {
+    "rmse_pct": 12.86771153085476,
+    "improve_pct": -184.23458883326867,
+    "rmse2_pct": 9.578128923498056,
+    "improve2_pct": -137.7496287771076,
+    "iso": 0.002673150694795734,
+    "suppress_pct": 91.83438000723932
+   },
+   "D oracle matte+kF+c": {
+    "rmse_pct": 1.7835615457680778,
+    "improve_pct": 60.602949374126695,
+    "rmse2_pct": 1.7339764431839304,
+    "improve2_pct": 56.95899909387845,
+    "iso": 0.004399245276413721,
+    "suppress_pct": 86.56171339233576
+   },
+   "E oracle alpha": {
+    "rmse_pct": 1.7836639099468063,
+    "improve_pct": 60.600688254099055,
+    "rmse2_pct": 1.734487581350374,
+    "improve2_pct": 56.946311552261875,
+    "iso": 0.004525196863496506,
+    "suppress_pct": 86.17697159696844
+   },
+   "X BROKEN 1-alpha": {
+    "rmse_pct": 67.06149629838649,
+    "improve_pct": -1381.319874261238,
+    "rmse2_pct": 68.1102021766721,
+    "improve2_pct": -1590.640772615909,
+    "iso": 0.10976607129689321,
+    "suppress_pct": -235.30022383462966
+   }
+  },
+  "N3_broken_worse": true,
+  "C_DE_gap": 3.731178791500235e-05,
+  "A_improve": -180.02071718251074,
+  "B_improve": 59.64314728475188,
+  "E_improve": 60.600688254099055
+ },
+ "verdict": {
+  "N1_rel_gap": 0.0017121516087615473,
+  "N1_pass": true,
+  "N2_ratio_EB": 1.016054501027178,
+  "N2_ratio_EA": -0.3366317455154906,
+  "N2_pass": false,
+  "flat_A": 55.86890328513654,
+  "flat_B": 41.3642878078872,
+  "flat_E": 55.96455931777593,
+  "spread_A": -180.02071718251074,
+  "spread_B": 59.64314728475188,
+  "spread_E": 60.600688254099055,
+  "amendment": "N2 judged E vs B, not E vs A: section 5.2 shows the -28.2% is the per-pixel k_F arm"
+ }
+}

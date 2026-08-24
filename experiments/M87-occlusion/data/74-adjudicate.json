@@ -1,0 +1,47 @@
+{
+ "FLAT placebo": {
+  "floor_pct": 1.7997873909186268,
+  "base_pct": 4.129743913907591,
+  "headroom": 2.3299565229889643,
+  "captured": {
+   "A shipped scalar k_F": 0.9902513675341109,
+   "B oracle k_F map": 0.7331635339212431,
+   "C oracle c": 0.9902513675341109,
+   "D oracle matte+kF+c": 0.9920321009915907,
+   "E oracle alpha": 0.9919468280061129,
+   "X BROKEN 1-alpha": -26.979997431252823
+  }
+ },
+ "DEPTH-SPREAD": {
+  "floor_pct": 1.7998684633745696,
+  "base_pct": 4.527144843164365,
+  "headroom": 2.727276379789795,
+  "captured": {
+   "A shipped scalar k_F": -2.9882554899638327,
+   "B oracle k_F map": 0.9900469518277003,
+   "C oracle c": -3.058203689768048,
+   "D oracle matte+kF+c": 1.0059791951147061,
+   "E oracle alpha": 1.0059416616327723,
+   "X BROKEN 1-alpha": -22.92923149213134
+  }
+ },
+ "verdict": {
+  "depth_spread_captured": {
+   "A": -2.9882554899638327,
+   "B": 0.9900469518277003,
+   "E": 1.0059416616327723
+  },
+  "flat_captured": {
+   "A shipped scalar k_F": 0.9902513675341109,
+   "B oracle k_F map": 0.7331635339212431,
+   "C oracle c": 0.9902513675341109,
+   "D oracle matte+kF+c": 0.9920321009915907,
+   "E oracle alpha": 0.9919468280061129,
+   "X BROKEN 1-alpha": -26.979997431252823
+  },
+  "model_alive": true,
+  "propagation_points": 3.978302441791533,
+  "oracle_headroom_left": 0.015894709805072016,
+  "note": "step 72's registered N2 rule compared E against B and cannot distinguish 'both stalled' from 'both at the floor'; this is the floor-relative re-adjudication"
+ }
+}

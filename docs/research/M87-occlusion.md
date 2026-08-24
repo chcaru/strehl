@@ -89,6 +89,37 @@ such).
 > is none — and it explains at once why a baseline-difference halo metric reads
 > **+0.280%** on that image while the artifact is unmistakable to the eye.
 >
+> **Is the two-layer model dead? NO — and §13's −28.2% refuted a *propagation*,
+> not the model. (§26.2, §74.)** On a depth-spread plant with known truth,
+> scored on band RMSE against the unveiled background rather than on any
+> suppression number, the two-component fit handed the **true `alpha_k` cube**
+> captures **+100.59%** of the available headroom — 1.7837% against a merge at
+> 4.5271% and a single-frame noise floor of 1.7999%. **The fit is not the
+> limiter.** What is: a **global scalar `k_F` captures −298.83%**, making the
+> band 2.8× *worse* than the uncorrected merge, while a **per-pixel `k_F` map
+> captures +99.00%** — a **397.83 point** swing, and the whole distance from
+> catastrophe to the floor. Once `k_F` is per-pixel, oracle alpha adds
+> **+1.59 points** and oracle `c` adds **0.00**. On the flat placebo, where the
+> occluder is at one depth, the per-pixel map instead **costs 25.71 points**, so
+> it must be gated on measured depth variation rather than applied everywhere.
+> The external reviewer's proposal is **live**. Left open and not claimed: the
+> plant reaches +99.00% where the real bee reached −28.2%, so a third limiter
+> exists that the plant does not contain.
+>
+> **Is the veil one mechanism or two? TWO, and the owner's argued split is
+> confirmed. (§26.4.)** (a) An **election** artifact with two signs — `E(d)`'s
+> positive box (+0.14393 at d = 13) and negative shelf (−0.07961 at d = 92) are
+> both boundary-registered, and rolling the elected-index field leaves **39.1%**
+> of the box and only **7.7%** of the shelf. (b) A **real frame-borne veil** in
+> every observation, invisible to `E` by construction: on the ensemble at fixed
+> distance, level falls with local occluder coverage at an observable
+> **+2.852%** of level, against a rolled-coverage null of 7.5% and a positive
+> control recovering **100.6%** of a planted 3%. The shelf is **2.8× the
+> frame-borne veil**, so the correction targets the dominant term — but roughly
+> **2.9% of veil is unreachable by any selector**, because it is in every frame.
+> That residue is precisely what a two-layer reconstruction removes, which is
+> the same answer arriving twice.
+>
 > **Is the owner's "no selector can be correct there" right?**
 > **YES, and it is now measured on ground truth rather than argued.** On a
 > synthetic two-layer scene with a known answer, the frame in which the
@@ -1865,6 +1896,14 @@ namespaced `M87`.
 | P80 | **`E*`-free drift verdict, and a registered claim withdrawn.** A tile-wise phase correlation recovers a planted (13, -21) translation exactly and a planted 1.010 magnification as **0.00901 (R-squared 0.9904)**, yet returns **0 of 24 tiles non-zero** between frame 0 and frame 298 of the unaligned raw cube. But registered bar J1 required 80% plant recovery on all five frame pairs and one pair gave **15 of 24**, so **the claim "no image motion in ROI_LEG" is withdrawn as registered.** | Recorded as a withdrawal because the bar was registered before running. The residual evidence — four sweep-spanning pairs at 23 or 24 of 24 tiles at exactly zero, the failing pair being the one with the least expected motion — is suggestive and not established. **§15 does not depend on it**: the band reads +0.2282 unaligned and +0.2651 after applying 70.97 px of warpmap, so it survives either alignment or a deliberate 71 px misregistration. | MEASURED |
 | P81 | **The bee rim is a two-layer mixture in linear light, with a small chromatic residue that is 9x the noise floor.** On `ship-before-linear.tif`, chromaticity `(r, b)`: deep subject (0.358601, 0.300083), halo band (0.322687, 0.343316), far background (0.318767, 0.346940). The band lies **91.38%** along the segment with a perpendicular offset of **0.01039** against a `C-CHROMA-NULL` of **0.00113**. Registered bar passed. The scalar convex bound holds too, the band 22.05% below far background. | Bounds M107's demosaic candidate on this subject: the veil is overwhelmingly a two-layer blend, and the resolvable 1.04% off-segment residue is the only room a chromatic mechanism has. **Also a correction of my own §64 arm**, which passed on `bee3-full.tif` — a file `C-LINEAR-2` then measured as gamma-encoded (R-squared 0.9612, quadratic worth 63.8% of range, **92x** the curvature of the linear twin). Convexity is a claim about linear light. | MEASURED |
 | P82 | **A positive control on identical content does not validate an estimator that must work across a change.** §66's D1 planted a shift on frame 0 and matched it against frame 0; it passed and was worth nothing. Re-run as frame 0 against frame 298 (G1), the same estimator still recovered the plant exactly — but only the second version was evidence. | General: **a control must be able to fail in the way the instrument actually fails.** Applies to any planted-signal check where the real task involves a domain change the plant does not reproduce. | DERIVED from MEASURED |
+| P83 | **The two-component fit is NOT the limiter, and the two-layer model is not refuted.** On a depth-spread plant with known truth, handing the fit the **true `alpha_k` cube** captures **+100.59%** of the available headroom — band RMSE 1.7837% against a merge at 4.5271% and a far-field single-frame noise floor of 1.7999%. It exceeds 100% because the intercept is estimated across 121 frames and is therefore quieter than any one of them. | Answers the orchestrator's Q1. The external reviewer's two-layer bimodal-unmixing proposal is **still live**; §13's −28.2% is not a refutation of the model. | MEASURED |
+| P84 | **`k_F` propagation is the entire difference between catastrophe and the floor, and its sign depends on whether the occluder spans depth.** Depth-spread plant: a global scalar `k_F` captures **−298.83%** of the headroom — 12.6769% band RMSE, **2.8x worse than the uncorrected merge** — while a per-pixel `k_F` map captures **+99.00%**. That is a **+397.83 point** swing. On the flat placebo, where the occluder is at one depth, the same substitution **costs −25.71 points** (+99.03% to +73.32%). | The propagation is load-bearing and **conditionally** so. Per-pixel `k_F` must be gated on measured depth variation, not applied unconditionally: on a single-depth occluder the estimated map is noise and makes the reconstruction worse. Reproduces §5.1 vs §5.2's real-data ordering (+3.7% vs −28.2%) with the sign of the catastrophe. | MEASURED |
+| P85 | **Once `k_F` is per-pixel there is nothing left in the alpha model.** Oracle alpha minus per-pixel-`k_F` alpha is **+1.59 points** of headroom on the depth-spread plant (100.59% against 99.00%), and oracle `c` alone buys **0.00 points** (arms A and C identical to four decimals on the flat plant, and both catastrophic on the depth-spread one). | Effort spent refining `sigma_k = c\|k − k_F\|`, the blur constant, or the matte is spent on 1.59 points. **Effort spent resolving `k_F` per pixel is worth 397.83.** Also: on real captures per-pixel `k_F` reached only −28.2% while on the plant it reaches +99.00%, so a **third limiter exists that the plant does not contain** — naming it is the next experiment and is not claimed here. | MEASURED |
+| P86 | **A decision rule that compares two arms to each other cannot tell "both stalled" from "both perfect".** Registered bar N2 read "if oracle arm E improves at least 2x more than arm B, the fit is not the limiter". It measured **E/B = 1.02x** and fired *"THE FIT IS THE CEILING: step 13 refutes the MODEL"* — the opposite of the truth, **because B had already reached the floor**. | General, and it is a defect in my own preregistration. **Score arms against an achievable floor, not against each other**: `captured = (RMSE_merge − RMSE_arm) / (RMSE_merge − RMSE_floor)`. A ratio between two arms is only interpretable once you know where the ceiling is. The registered output is left standing in §72's stdout and JSON; §74 is the correction, handled the way §15.4 was. | DERIVED from MEASURED |
+| P87 | **Fidelity against truth does what suppression could not: it rejects destruction.** The registered broken arm (`alpha` to `1 − alpha`) captures **−2698.00%** of the headroom on the flat plant and **−2292.92%** on the depth-spread one. Bar X4 measured three of four deliberately broken unmixings *improving* the halo metric by 77–85%. | The paired fidelity term the orchestrator asked to be registered before building **works as intended**. Caveat, stated because it limits the claim: on these plants the broken arm also fails the suppression metric (−265.2% and −235.3%), so the plant does **not** reproduce X4's dissociation — it shows the fidelity metric is sound, not that the two metrics disagree here. | MEASURED |
+| P88 | **The veil is TWO mechanisms, and the orchestrator's argued split is confirmed.** (a) An **election** artifact with two signs: `E(d)`'s positive box (peak +0.14393 at d = 13) and negative shelf (trough −0.07961 at d = 92) are both boundary-registered — rolling the elected-index field by (317, 511) leaves **39.1%** of the box and only **7.7%** of the shelf. (b) A **real frame-borne veil** present in every observation: on the ensemble, at fixed distance, level falls with local occluder coverage at **+0.534 per unit coverage** (r = 128), an observable amplitude of **+2.852%** of level against a rolled-coverage null of −0.0398 (7.5% of the reading) and a positive control recovering **100.6%** of a planted 3%. | The two are **0.358** apart in size, so the shelf is 2.8x the frame-borne veil — the correction is aimed at the dominant term, but a **~2.9% veil remains that no selector-side fix can reach**, because it is in every frame. That residue is what unmixing, and only unmixing, could remove, which links Q2 back to P83. | MEASURED |
+| P89 | **`E(d)` is provably and measurably blind to anything present in every frame, which is why (b) needed a second instrument.** A fixed per-pixel gain scales every `k` at a pixel by the same constant, so `argmax_k` is **exactly** unchanged; `E` then reads **1.67%** of a planted −3% annulus. **My first version of that control reported 56.65%** because it built the planted baseline as `prof(mean_k frame_k)` while the true `E` uses `mean_k prof(frame_k)` — median and mean do not commute. | Fifth self-caught instrument defect in this milestone, and the first where the *control* was wrong and the *claim* was right. **When a control contradicts an analytic argument, check the control against the argument's own algebra before abandoning the argument.** The repaired version carries a bin-constancy check (max deviation **0.0001 DN**) proving the plant is exactly multiplicative within a distance bin. | MEASURED |
+| P90 | **The premise of the orchestrator's Q1, and of my own preregistration, was wrong at source.** `13-unmix.py:98` is a global scalar `k_F`, and I registered a ladder on the belief that this produced the −28.2%. §5.2 of this report says otherwise: the global scalar produced **+3.7%** and **−28.2% is already the per-pixel `k_F` arm** (median band R-squared 0.200, coverage 19.8%). | Amended before any arm number was read, and both readings reported. **A line of code being wrong does not make it the line that produced the number** — the arm that shipped a result must be identified from the result's own provenance, not from the most suspicious code nearby. | DERIVED |
 
 ### Capture request
 
@@ -3012,3 +3051,241 @@ results I would keep if I could keep only two are that **the election removes
 74.76% of the veil that every observation carries**, which is the mechanism, and
 that **a registered statistic can be placed on the wrong window and only a
 picture will tell you**, which is the method.
+
+
+---
+
+## 26. The two mechanism questions: is the model dead, and is the veil one thing or two?
+
+The orchestrator asked two questions and explicitly excluded a third: **do not
+re-verify my own correction.** Nothing below scores the shipped fix.
+
+**Q1.** My header rules out three explanations for the halo — not the gate
+(present at `--gate 0`), not misregistration (6.6% observed against 91.7%
+predicted), not two depths at the edge (§13's unmix reached −28.2% against a
+−50% bar). Three kills and no surviving mechanism. An external reviewer named
+two-layer bimodal unmixing as the headline unbuilt idea in this project, so the
+question is whether −28.2% refuted the **model** or one **implementation**.
+
+**Q2.** In the uncorrected render there is a bright soft veil at the silhouette
+and a darker band standing off from it. The orchestrator has **argued** these
+are two things and never measured it.
+
+### 26.1 The premise I was given, and the one I gave myself, were both wrong
+
+`13-unmix.py:98` reads `kF = int(np.bincount(argbest[mask]).argmax())` — a single
+global scalar for the whole foreground. I registered an ablation ladder on the
+belief that this scalar produced the −28.2%. Then I read §5.2 of this report at
+source. **It does not.** The global scalar produced **+3.7%**; the −28.2% is
+*already* the per-pixel `k_F` arm. My preregistration compared the oracle against
+the wrong baseline, and I amended it to compare against the per-pixel arm —
+recorded in the script header, before any arm number existed, with the original
+comparison still reported. P90.
+
+A second premise had to be repaired before anything could be measured. The plant
+in `16-plant.py` puts its foreground at **one depth**, `KF = 40`. On that plant a
+global scalar `k_F` is *correct by construction*, so the failure mode I wanted to
+test **cannot occur there**. Running the ladder on it would have returned "no
+effect" for entirely the wrong reason — the fifth control-with-absent-geometry
+of this milestone, and this time caught before running rather than after. §72
+therefore builds a **depth-spread** variant, the foreground split into six
+horizontal stripes each at its own sharp frame, blurred separately and summed —
+exact, because Gaussian filtering is linear and the stripes partition the matte —
+and keeps the original flat plant as the **placebo where the ablation must show
+nothing**.
+
+Two incidental equivalence checks fell out and both passed. The rebuilt flat
+plant reproduces `16-plant.json` to five significant figures (truth ISO 0.008566
+against 0.00857, merge ISO 0.030598 against 0.03060), and its merge band RMSE
+over d in [2, 40] reads **3.4617%** against §4.2's **0.0346** — an independent
+reproduction of the load-bearing table's merge row. Arms D and E, which differ
+only in whether `alpha` is modelled from true inputs or taken from the plant's
+own generator, agree to **0.0%** on both plants, so the ladder's machinery is
+exact.
+
+`C-CAP` **failed as registered** on both plants (truth ISO 0.00857 against a
+≤ 0.005 bar). That is not new: §4.1 already discloses this plant missing the
+truth floor and passing on separation instead. The failure reproduces a known,
+disclosed state rather than revealing a new one.
+
+### 26.2 Q1 answered: the fit reaches the floor; the propagation is everything
+
+Scored on **band RMSE against the known unveiled background** — fidelity, never
+suppression, because bar X4 measured three of four deliberately broken unmixings
+*improving* the halo metric by 77–85%. The treated band is identical across all
+arms by construction.
+
+**MEASURED**, depth-spread plant, headroom = merge RMSE 4.5271% down to the
+far-field single-frame noise floor 1.7999%:
+
+| arm | what is oracle | band RMSE | headroom captured |
+| --- | --- | --- | --- |
+| A shipped | nothing; **global scalar `k_F`** | 12.6769% | **−298.83%** |
+| B | per-pixel **`k_F` map** | 1.8270% | **+99.00%** |
+| C | blur constant `c` only | 12.8677% | −305.82% |
+| D | matte, `k_F` and `c` | 1.7836% | +100.60% |
+| E | the **true `alpha_k` cube** | 1.7837% | **+100.59%** |
+| X | *registered broken arm*, `alpha` to `1 − alpha` | 67.0615% | **−2292.92%** |
+
+And the placebo, where the occluder is at one depth:
+
+| arm | band RMSE | headroom captured |
+| --- | --- | --- |
+| A shipped, global scalar `k_F` | 1.8225% | **+99.03%** |
+| B per-pixel `k_F` map | 2.4215% | **+73.32%** |
+| E oracle alpha | 1.8186% | +99.19% |
+| X *registered broken arm* | 66.9920% | **−2698.00%** |
+
+**The two-component fit is not the limiter.** Handed the true `alpha_k` cube it
+captures **100.59%** of the available headroom — it exceeds 100% because the
+intercept is estimated across 121 frames and is quieter than any single one.
+**The two-layer model is not refuted, and the reviewer's proposal is still
+live.** P83.
+
+**`k_F` propagation is the entire difference between catastrophe and the floor.**
+Global scalar against per-pixel map is a **+397.83 point** swing on a
+depth-spread occluder, where the scalar is not merely insufficient but makes the
+band **2.8x worse than the uncorrected merge**. On the flat placebo the same
+substitution **costs 25.71 points**. So per-pixel `k_F` is not an unconditional
+improvement: on a single-depth occluder the map estimated from the winner field
+is noise. P84.
+
+**Once `k_F` is per-pixel, the alpha model has nothing left in it** — oracle
+alpha buys **+1.59 points** over the per-pixel arm, and oracle `c` alone buys
+**0.00** (arms A and C agree to four decimals). Refining `sigma_k = c|k − k_F|`
+is worth 1.59 points; resolving `k_F` is worth 397.83. P85.
+
+The honest residue, and I am not claiming to have identified it: on the plant
+per-pixel `k_F` reaches **+99.00%**, and on the real bee the same idea reached
+**−28.2%**. A third limiter exists that the plant does not contain. §5.2's ranked
+candidates — semi-transparent hair fringe, non-constant `F(x)`, no alignment —
+are still the candidates, and naming it is an experiment, not a conclusion.
+
+### 26.3 My own registered rule fired the wrong answer
+
+Bar N2 said: *if oracle arm E improves at least 2x more than arm B, the fit is
+not the limiter.* It measured **E/B = 1.02x** and printed
+
+> `N2 -> THE FIT IS THE CEILING: step 13 refutes the MODEL`
+
+which is the opposite of the truth. The rule compares two arms **to each other**,
+and "E is no better than B" is equally consistent with both stalling and both
+being finished. Here B had **already reached the floor**. A rule that reads
+"already perfect" as "refuted" is a defect in the rule.
+
+The correction is `74-adjudicate.py`, which rescores every arm as the fraction of
+headroom captured against the far-field noise floor. **The registered output is
+left standing** in §72's stdout and JSON rather than repaired in place, the same
+handling §15.4 got when fact 1295 invalidated it. P86.
+
+The general form: **score arms against an achievable floor, not against each
+other.** A ratio between two arms is uninterpretable until you know where the
+ceiling is.
+
+### 26.4 Q2 answered: two mechanisms, and only one of them is the election's fault
+
+The instrument that found the shelf cannot test what the shelf is.
+`E(d) = [image(d) − mean_k frame_k(d)] / far` is a difference against the
+ensemble of the very frames the election chooses from, so **anything present in
+every frame cancels out of it**. A fixed per-pixel gain scales every `k` at a
+pixel by the same constant, leaving `argmax_k` **exactly** unchanged, and both
+the merge and the ensemble move together. So `E` measures only what the
+*election* does, and the hypothesis "there is something real out there" is
+precisely the one it cannot address.
+
+`C-E-BLIND` measures this instead of asserting it: a −3% annulus planted into all
+299 frames over d in [30, 70], disjoint from the far window so the normaliser is
+untouched, moves `E` by **1.67%** of the plant. A bin-constancy check confirms
+the plant is exactly multiplicative within a distance bin (max deviation
+**0.0001 DN**).
+
+**The first version of that control read 56.65% and declared my argument wrong.**
+It was the control that was wrong: it built the planted baseline as the profile
+*of the mean image* while the true `E` uses the mean *of the profiles*, and
+median and mean do not commute. Fifth self-caught instrument defect of this
+milestone, and the first where the control was wrong and the claim was right.
+P89.
+
+**(a) The election component, and it is one mechanism with two signs.** Rolling
+the elected-index field by (317, 511) — which preserves the marginal
+distribution of elected depths exactly, verified, with only 0.377% of pixels
+keeping their index — collapses both features:
+
+| feature | `E` true | `E` rolled | survives |
+| --- | --- | --- | --- |
+| positive box, d = 13 | +0.14393 | +0.05627 | 39.1% |
+| negative shelf, d = 92 | −0.07961 | +0.00613 | **7.7%** |
+
+Both are boundary-registered election behaviour. The shelf is if anything *more*
+registered than the box. The box's 39.1% residue is the elected-depth
+distribution alone, against §71's uniformly-random election at +0.01444 — so
+about three fifths of the bright band is boundary registration and two fifths is
+which depths get elected at all.
+
+**(b) A real frame-borne veil, which the election cannot be blamed for.** A
+second instrument, on the **ensemble** rather than the merge: at fixed distance,
+regress level on **local occluder coverage**. Holding distance fixed removes the
+radial profile, which is the confound that defeated three earlier baselines here.
+
+**MEASURED**, median over d in [40, 120]:
+
+| coverage radius | within-bin coverage sd | slope, per unit coverage | rolled-coverage null | planted 3% recovered | observable amplitude |
+| --- | --- | --- | --- | --- | --- |
+| 48 px | 0.0075 | +1.36462 | −0.04396 (3.2%) | 101.6% | +1.029% |
+| **128 px** | 0.0534 | +0.53420 | −0.03981 (7.5%) | **100.6%** | **+2.852%** |
+
+Both radii agree in sign and both recover a planted coverage-proportional 3%
+gain to within 2%. The observable amplitude is the slope times the coverage
+variation that **actually exists** at these distances, not the slope
+extrapolated to full coverage, which is far outside the data.
+
+`C-V-NULL` **failed the threshold I registered** (|null| ≤ 0.005) and passes a
+scale-free restatement (|null| ≤ 10% of the reading, at 7.5%). The registered
+number was written for a ratio-scaled instrument and does not transfer to a
+slope-scaled one — I rebuilt the instrument mid-experiment because the original
+split each distance bin at its median coverage, and median coverage over the
+valid background is **0.0049**, so it was separating near-zero from near-zero.
+**The rescaling is legitimate; treating the old absolute threshold as satisfied
+would not be, so both readings are reported and the amendment is marked
+post-hoc**, exactly as `X1-LINEAR`'s curvature clause was.
+
+**The verdict: two mechanisms, and the orchestrator's argued split is
+confirmed.** The election-created shelf is **7.961%** of level; the frame-borne
+veil is **2.852%**. Ratio **0.358**. So the correction is aimed at the dominant
+term — but a **real veil of roughly 2.9% remains that no selector-side fix can
+reach**, because it is in every observation. P88.
+
+That is the link back to Q1. The residue that selection can never remove is
+exactly what a two-layer reconstruction removes, and §26.2 measures that the
+reconstruction reaches the noise floor when its `k_F` is resolved.
+
+### 26.5 What bar X4 asked for, and whether it works
+
+The orchestrator required a fidelity term registered alongside any suppression
+number, because three of four deliberately broken unmixings improved the halo
+metric by 77–85%. The registered broken arm captures **−2698%** and **−2293%**
+of the headroom on the two plants. **Fidelity against truth rejects
+destruction.**
+
+The limit of that claim, stated because it is a limit: on these plants the broken
+arm also fails the *suppression* metric (−265.2% and −235.3%). The plant does not
+reproduce X4's dissociation, so this shows the fidelity instrument is sound — not
+that the two metrics disagree here.
+
+### 26.6 What §26 broke of its own
+
+Registered and **failed**: `C-CAP` on both plants (reproducing a disclosed known
+state), N2's decision rule (fired the wrong answer and is corrected in §74, not
+repaired in place), `C-V-NULL`'s absolute threshold (instrument rescaled
+mid-experiment; both readings reported, amendment marked post-hoc), and the first
+`C-E-BLIND`, which was wrong where the claim was right.
+
+Registered and **passed**: N1's placebo (0.2% gap where the ablation must show
+nothing), N3's broken arm on both plants, `C-DE`'s machinery check at 0.0% on
+both plants, `C-ROLL`'s marginal preservation, the repaired `C-E-BLIND` at 1.67%,
+and `C-V-POS` at 100.6%.
+
+Two premises were corrected before they could do damage — the orchestrator's and
+mine about which arm produced −28.2%, and my own about whether the plant could
+express the failure it was built to test. Both were caught by reading the source
+rather than the summary.
