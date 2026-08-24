@@ -392,7 +392,10 @@ pub fn run(args: &AlignArgs) -> Result<()> {
     // are read-only corpus, and this way an explicit `strehl align` populates
     // exactly the entry `strehl stack` will later look for. `--out` still puts
     // the sidecar anywhere the caller asks.
-    let out = args.out.clone().unwrap_or_else(|| sidecar_path(&args.dir));
+    let out = args
+        .out
+        .clone()
+        .unwrap_or_else(|| sidecar_path(&args.dir, solve_config_key(reference, &args.spans, resampler)));
     save_atomic(&map, &out)?;
 
     println!(
@@ -850,20 +853,71 @@ pub fn is_tilted_subject(dir: &Path) -> bool {
 /// `strehl stack`, and eleven strays accumulated under `D:\personal\macro` in
 /// one night.
 ///
-/// The cache key is the **canonical** capture path, so two brackets that share
-/// a leaf name cannot collide; `check_stack` remains the real guard against
-/// consuming the wrong stack's warps.
-pub fn sidecar_path(dir: &Path) -> PathBuf {
+/// The cache key is the **canonical** capture path together with `config`, a
+/// digest of every input that can change the warps — see [`solve_config_key`].
+/// `check_stack` remains the real guard against consuming the wrong stack's
+/// warps; the key is what stops the *right* stack's differently-configured
+/// warps from occupying the entry.
+pub fn sidecar_path(dir: &Path, config: u64) -> PathBuf {
     let mut hasher = DefaultHasher::new();
     std::fs::canonicalize(dir)
         .unwrap_or_else(|_| dir.to_path_buf())
         .hash(&mut hasher);
+    config.hash(&mut hasher);
     let key = hasher.finish();
     let leaf = dir
         .file_name()
         .map(|s| s.to_string_lossy().into_owned())
         .unwrap_or_else(|| "stack".to_string());
     cache_root().join(format!("{leaf}-{key:016x}.warpmap.txt"))
+}
+
+/// Environment variables [`solve_map`] reads through [`apply_smooth_env`].
+///
+/// These are arguments to the solve in every sense except syntax, so they
+/// belong in the cache key. **Extending `apply_smooth_env` without adding its
+/// variable here reopens the defect [`solve_config_key`] exists to close.**
+const SOLVE_ENV: [&str; 2] = ["STREHL_SMOOTH", "STREHL_SMOOTH_HUBER"];
+
+/// Digest of every input to [`solve_map`] that can change the warps it returns.
+///
+/// **Why this exists.** The cache key used to be the capture path alone, so two
+/// solves of one bracket with different configurations occupied a single entry.
+/// M97 measured the consequence: run `strehl align --reference 40`, then an
+/// *identical* `strehl stack` command line, and the render moved between two
+/// distinct hashes depending only on whether the align had happened first. It
+/// was silent, because `check_stack` compares the **frame set** and a
+/// differently-*configured* solve of the same frames passes it.
+///
+/// That made it a validity defect under every A/B comparison in the project,
+/// not one milestone's problem: any measurement could be reading a cache entry
+/// some other process had configured. It landed on `resampler` in particular,
+/// the field M95 attributes 59% of high-band loss to.
+///
+/// The rule this encodes: **anything the solve reads must be in the key**,
+/// arguments and environment alike.
+fn solve_config_key(reference: usize, spans: &[usize], resampler: Resampler) -> u64 {
+    let mut h = DefaultHasher::new();
+    reference.hash(&mut h);
+    spans.hash(&mut h);
+    // `Resampler` is not `Hash`; its `Debug` is one token per variant and adding
+    // a variant changes it, which is exactly the property needed here.
+    format!("{resampler:?}").hash(&mut h);
+    for var in SOLVE_ENV {
+        std::env::var(var).ok().hash(&mut h);
+    }
+    h.finish()
+}
+
+/// The configuration the merge solves with, and therefore the only one it may
+/// read from cache. Returned as one value so the lookup and the solve cannot
+/// drift apart.
+fn merge_config(n: usize) -> (usize, Vec<usize>, Resampler) {
+    (
+        merge_reference(n),
+        DEFAULT_SPANS.to_vec(),
+        Resampler::CatmullRom,
+    )
 }
 
 /// Root of the warp-map cache: `%LOCALAPPDATA%\strehl\warpmaps` on Windows,
@@ -1014,31 +1068,46 @@ pub fn load_or_solve(
         .map(|s| s.to_string_lossy().into_owned())
         .unwrap_or_default();
     let identity = StackIdentity::from_paths(&name, paths)?;
-    let side = sidecar_path(dir);
+    let (want_ref, spans, want_resampler) = merge_config(paths.len());
+    let side = sidecar_path(dir, solve_config_key(want_ref, &spans, want_resampler));
 
     if side.exists() {
         match WarpMap::load(&side) {
             Ok(map) => match map.check_stack(&identity) {
-                Ok(()) if map.len() == paths.len() => return Ok(Some((map, "sidecar"))),
-                Ok(()) => eprintln!(
+                Ok(()) if map.len() != paths.len() => eprintln!(
                     "alignment      : sidecar has {} frames but the bracket has {}; re-solving",
                     map.len(),
                     paths.len()
                 ),
+                // Defence in depth behind the cache key. The key already
+                // separates configurations, so reaching either of these means a
+                // stale, hand-edited or hash-colliding file is sitting on this
+                // entry -- and using it would silently render a registration
+                // nobody asked for, which is the defect the key closes.
+                Ok(()) if map.provenance().reference != want_ref => eprintln!(
+                    "alignment      : sidecar was solved against reference {} but this merge \
+                     uses {want_ref}; re-solving",
+                    map.provenance().reference
+                ),
+                Ok(()) if map.resampler() != want_resampler => eprintln!(
+                    "alignment      : sidecar was solved with resampler {:?} but this merge \
+                     uses {want_resampler:?}; re-solving",
+                    map.resampler()
+                ),
+                Ok(()) => return Ok(Some((map, "sidecar"))),
                 Err(e) => eprintln!("alignment      : sidecar rejected ({e}); re-solving"),
             },
             Err(e) => eprintln!("alignment      : sidecar unreadable ({e}); re-solving"),
         }
     }
 
-    let spans = DEFAULT_SPANS.to_vec();
     let map = solve_map(
         dir,
         paths,
-        merge_reference(paths.len()),
+        want_ref,
         &spans,
         threads,
-        Resampler::CatmullRom,
+        want_resampler,
         false,
     )?;
     // Best effort: a read-only capture directory must not fail the merge.
@@ -1478,7 +1547,7 @@ mod tests {
     fn sidecar_never_lands_inside_the_capture_directory() {
         let dir = std::env::temp_dir().join("m97-sidecar-scope-test");
         std::fs::create_dir_all(&dir).unwrap();
-        let side = sidecar_path(&dir);
+        let side = sidecar_path(&dir, 0);
         assert!(
             !side.starts_with(&dir),
             "sidecar {} is inside the capture directory {}",
@@ -1498,8 +1567,65 @@ mod tests {
         let b = root.join("b").join("bee-3-cpl");
         std::fs::create_dir_all(&a).unwrap();
         std::fs::create_dir_all(&b).unwrap();
-        assert_ne!(sidecar_path(&a), sidecar_path(&b));
+        assert_ne!(sidecar_path(&a, 0), sidecar_path(&b, 0));
         let _ = std::fs::remove_dir_all(&root);
+    }
+
+    /// The defect this pins, MEASURED by M97 before the fix: `strehl align
+    /// --reference 40` and a plain `strehl stack` shared one cache entry, so an
+    /// identical stack command line rendered `DB43E708...` or `ADF81E01...`
+    /// depending only on whether the align had run first. `check_stack` cannot
+    /// catch it -- it compares the frame set, and both solves cover the same
+    /// frames.
+    #[test]
+    fn different_solve_configurations_get_different_cache_entries() {
+        let dir = std::env::temp_dir().join("m97-solve-config-key");
+        std::fs::create_dir_all(&dir).unwrap();
+        let spans = DEFAULT_SPANS.to_vec();
+
+        let base = solve_config_key(20, &spans, Resampler::CatmullRom);
+        for (label, other) in [
+            ("reference", solve_config_key(40, &spans, Resampler::CatmullRom)),
+            ("resampler", solve_config_key(20, &spans, Resampler::Bilinear)),
+            ("spans", solve_config_key(20, &[1, 2], Resampler::CatmullRom)),
+        ] {
+            assert_ne!(base, other, "{label} does not change the cache key");
+            assert_ne!(
+                sidecar_path(&dir, base),
+                sidecar_path(&dir, other),
+                "{label} does not change the cache entry"
+            );
+        }
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// `apply_smooth_env` reads the environment *inside* the solve, so those
+    /// variables are solve inputs and must key the cache. M110 added
+    /// `STREHL_SMOOTH` an hour before this test was written, which is exactly
+    /// how an unkeyed input gets in.
+    ///
+    /// Serialised with the other env-mutating test in this module by running
+    /// both under one `#[test]`, since Rust runs tests in threads that share
+    /// one environment.
+    #[test]
+    fn the_solve_environment_keys_the_cache() {
+        let spans = DEFAULT_SPANS.to_vec();
+        for var in SOLVE_ENV {
+            // SAFETY: single-threaded within this test; see the doc comment.
+            unsafe { std::env::remove_var(var) };
+        }
+        let clean = solve_config_key(20, &spans, Resampler::CatmullRom);
+        for var in SOLVE_ENV {
+            unsafe { std::env::set_var(var, "1.0") };
+            let dirty = solve_config_key(20, &spans, Resampler::CatmullRom);
+            unsafe { std::env::remove_var(var) };
+            assert_ne!(clean, dirty, "{var} does not change the cache key");
+        }
+        assert_eq!(
+            clean,
+            solve_config_key(20, &spans, Resampler::CatmullRom),
+            "the key did not return to its unset value"
+        );
     }
 
     /// A rename is only atomic within a volume, so the temporary must be a
