@@ -838,3 +838,148 @@ still writes `<stackdir>/warpmap.txt`. The source is fixed; the binaries in
 seven `target-*` directories are not necessarily rebuilt. That, rather than
 current `main`, is the remaining route by which a file could reappear in the
 capture library.
+
+---
+
+## 16. What each kernel does to the chromatic fringing
+
+The orchestrator's third message made this a hard precondition for any default
+change: `nearest` was seen to amplify chromatic fringing on the hairs, so a
+statement about my kernel's effect on fringing is owed before Lanczos-3 could
+be defaulted. Two instruments were built. **The first failed its own power bar
+and is reported as a failure**; the second passes on controls that are
+structural rather than chosen, and it answers the question in a way that
+changes what the by-eye observation means.
+
+### 16.1 The instrument that failed — K12, and it is reported, not patched
+
+`experiments/M95-kernel/src/k12_fringe.py`. It measured surviving lateral
+chromatic aberration as the RMS chroma gradient at edges, and validated itself
+by planting a known R-vs-G displacement. Bars registered in the docstring
+before the run: **C-POWER requires the planted fringe to move the statistic by
+at least +0.10 dex.**
+
+| plant | statistic | base | planted | dex | verdict |
+| --- | --- | --- | --- | --- | --- |
+| 0.5 px | F | 495.1464 | 503.8205 | +0.0075 | fail |
+| 0.5 px | Fn | 0.8901 | 0.9312 | +0.0196 | fail |
+| 1.0 px | F | 495.1464 | 524.5432 | +0.0250 | fail |
+| 1.0 px | Fn | 0.8901 | 1.0214 | +0.0598 | fail |
+
+`C-NULL` passed at max |diff| = 0.000000, so the instrument is deterministic;
+it is simply not sensitive enough. **ARM VOID. The bar was not moved and no
+kernel number from K12 is quoted anywhere.**
+
+Two disclosures, because both errors were mine. The first version of C-POWER
+put only the planted arm through an extra Catmull-Rom gather, so the plant
+carried a blur the baseline did not, and that blur partially cancelled the very
+fringe being planted; the arms are now resample-matched. Adding the matched
+plant and a normalised statistic `Fn` moved the best reading from +0.0075 to
++0.0598 — a factor of eight, and still short.
+
+The diagnosis is worth keeping because it generalises: **at a strong edge,
+R − G has a large gradient whether or not the channels are displaced.** A
+coloured edge is not a fringe. The planted signal therefore sat on a baseline
+roughly seventeen times larger, and no amount of care in the plant fixes a
+statistic whose denominator contains the answer. The response was monotonic
+across the ladder (495.15 → 503.82 → 524.54), which is what says the metric is
+sound and merely swamped rather than broken.
+
+### 16.2 The decidable question, and why it is a different one
+
+Kernels cannot create lateral chromatic aberration. The same geometric
+displacement is applied to every channel, so no interpolator introduces a
+differential channel shift. What a negative-lobe kernel *can* create is
+**ringing** — and ringing becomes a *colour* fringe exactly when the channels
+overshoot by different amounts.
+
+So K13 (`src/k13_chroma_ring.py`) measures **differential chroma overshoot**:
+
+> `o_X(i)` is how far channel X's interpolated value at output pixel `i` falls
+> outside the range of the two source samples bracketing it — the same
+> definition §2 used for luma, where Catmull-Rom's 6.2500% was re-derived
+> algebraically as exactly 1/16. `DCO` is the RMS over edge pixels of
+> `sqrt((o_R − o_G)² + (o_B − o_G)²)`.
+
+Differential, so ringing that is equal in all three channels contributes
+nothing. Only overshoot that differs *between* channels counts, and that is
+precisely a kernel-generated colour fringe. Demosaic-free binned quads,
+3514 × 2344, 24 tiles of 512 px, five phases, edge mask the top 1% of |grad G|
+computed on the **source** and held fixed across kernels so no kernel can
+select its own favourable population.
+
+### 16.3 The controls are structural, which is the point
+
+Registered before the run:
+
+- **S1** `nearest` and `bilinear` are monotone: their output is a convex
+  combination of the two bracketing samples and **cannot** leave that range.
+  Both must read **exactly** 0.000000. This is a positive control that could
+  have failed and cannot be met by choosing a threshold.
+- **S2** Catmull-Rom and Lanczos-3 both have negative lobes and must read > 0.
+- **S3** predicted ordering `DCO(lanczos3) > DCO(catmull-rom)`, from the luma
+  overshoot ratio 11.1413 / 6.2500 = **1.7826×**.
+
+| kernel | DCO (DN) | sd | band | Δ band vs cr | DCO vs cr |
+| --- | --- | --- | --- | --- | --- |
+| nearest | **0.000000** | 0.000000 | −2.3668 | **+0.4135** | 0.0000× |
+| bilinear | **0.000000** | 0.000000 | −3.1206 | **−0.3404** | 0.0000× |
+| catmull-rom | 2.480280 | 1.905828 | −2.7803 | +0.0000 | 1.0000× |
+| lanczos3 | 4.852171 | 3.685417 | −2.5117 | +0.2685 | **1.9563×** |
+
+**S1 PASS** at exactly zero for both. **S2 PASS. S3 PASS** at 1.9563×, close to
+the 1.7826× predicted from luma alone. Paired across all 120 tile-phase
+samples: **Lanczos-3 exceeds Catmull-Rom on 120/120 = 100.00%**, bootstrap 95%
+CI on the ratio **[1.9045, 2.0104]**.
+
+**The row that shows DCO is not a restatement of sharpness:** the two kernels
+reading *exactly zero* sit at **opposite ends** of the sharpness range —
+nearest +0.4135 dex sharper than the default, bilinear −0.3404 dex softer.
+A metric that merely renamed sharpness could not do that. This matters here
+specifically, because twice tonight a high-frequency scalar preferred an image
+inspection rejected, and the standing objection is that a sharpness metric and
+a ringing artifact are the same signal. In DCO they are demonstrably not.
+
+### 16.4 The answer to the question that was asked
+
+**What Lanczos-3 does to the chromatic fringing: it creates 1.9563× the
+colour fringe Catmull-Rom creates, and buys +0.2685 dex of band sharpness for
+it — 8.8328 DN of new colour fringe per dex.** That fringe is *manufactured by
+the kernel*; it is not in the sensor data.
+
+**And this reinterprets the by-eye observation rather than contradicting it.**
+`nearest` was seen to amplify chromatic fringing on the hairs. Its DCO is
+exactly zero, and provably so. Therefore the fringing seen under `nearest` is
+**not created by `nearest`** — it is lateral CA already present in the data,
+made visible because a zero-order hold applies no low-pass at all. Catmull-Rom
+was not removing that fringe as a virtue; it was blurring it along with the
+hairs the owner wants. Two different fringes have been conflated under one
+name, and they call for opposite remedies:
+
+| | source | remedy |
+| --- | --- | --- |
+| fringe seen under `nearest` | optics — lateral CA in the capture | a CA correction, not a blurrier kernel |
+| fringe created by `lanczos3` | the interpolator's negative lobes | a kernel with smaller negative lobes |
+
+Blurring the image to hide an optical defect is the trade the pipeline is
+currently making by default, and it is the trade the owner is complaining
+about.
+
+### 16.5 What this does to my default recommendation — it weakens it
+
+I will not fold this into the Lanczos-3 case. §5 already declined to ship the
+B-spline; §7 recommended Lanczos-3 with reservations. **This arm is evidence
+against my own recommendation** and it is stated that way: a doubling of
+manufactured colour fringe, 120/120 paired, is a real cost on a subject that is
+wall-to-wall occluding edges. My position remains that the default stays
+Catmull-Rom until the ringing evidence is judged by eye at 100%, and this
+result makes me less rather than more confident that Lanczos-3 is the answer.
+The kernel that would win on this evidence is one with a **smaller negative
+lobe than Catmull-Rom's** — sharper than bilinear, gentler than Lanczos-3 —
+and I have not measured one.
+
+**Capture request, for the orchestrator to file:** a lateral-CA target (a
+high-contrast radial or slanted-edge chart at the working magnification, same
+lens and teleconverter) would let the optical fringe be measured and corrected
+directly, which is the remedy the left-hand row above calls for. `bee-3-cpl`
+cannot supply it — only 0.0345% of it exceeds 200 DN local contrast.

@@ -1,0 +1,27 @@
+================================================================================
+K12  chromatic fringing per resampling kernel
+================================================================================
+frame      : DSC00150.ARW  (middle of 299)
+tiles      : 24 x 256px, edge mask = top 1% of |grad G|
+phases     : [0.27, 0.5, 0.73] px, scale 1.0 (pure sub-pixel shift, no zoom)
+binned RGB : 3514 x 2344 per channel (one sensor quad per pixel)
+
+--- CONTROLS ---
+  C-NULL   same kernel twice, max |diff| = 0.000000   PASS
+
+  C-POWER  planted lateral CA, matched resample history on both arms.
+           DISCLOSURE: the first version of this control shifted only the
+           planted arm, giving it one extra gather; it failed at +0.0075 dex.
+           The plant is now matched and a normalised statistic was added.
+           The BAR IS UNCHANGED at >= +0.10 dex. The statistic that passes
+           is the one reported; if neither passes, the arm is VOID.
+    plant  stat       base    planted       dex  verdict
+      0.5     F   495.1464   503.8205   +0.0075  fail
+      0.5    Fn     0.8901     0.9312   +0.0196  fail
+      1.0     F   495.1464   524.5432   +0.0250  fail
+      1.0    Fn     0.8901     1.0214   +0.0598  fail
+
+  statistic selected by C-POWER: NONE -- ARM VOID
+
+  ARM VOID -- controls failed; no kernel number may be quoted.
+  Reporting this as a failed instrument, not as a null about kernels.

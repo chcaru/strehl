@@ -1,0 +1,12 @@
+backed up 53119 bytes to C:\Users\chris\AppData\Local\Temp\M95-kernel.md.s16.bak
+
+baseline (unmutated): rc=0  GREEN
+  CAUGHT  DCO lanczos3         rc=1  BAD lines=1
+  CAUGHT  bootstrap CI         rc=1  BAD lines=1
+  CAUGHT  void declaration     rc=1  BAD lines=1
+  CAUGHT  S1 exact zero        rc=1  BAD lines=1
+
+restored byte-identical: True
+post-restore verify: rc=0  GREEN
+
+negative control: 4/4 planted defects caught

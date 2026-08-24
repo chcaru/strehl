@@ -1,0 +1,28 @@
+==================================================================================
+K13  differential chroma overshoot -- the colour fringe the kernel creates
+==================================================================================
+frame   : DSC00150.ARW
+kernels : ['nearest', 'bilinear', 'catmull-rom', 'lanczos3']
+phases  : [0.13, 0.27, 0.5, 0.73, 0.87]   tiles: 24 x 512px, edge mask top 1%
+binned  : 3514 x 2344 per channel, demosaic-free quads
+
+--- RESULTS ---
+  kernel             DCO (DN)         sd       band
+  nearest            0.000000   0.000000    -2.3668
+  bilinear           0.000000   0.000000    -3.1206
+  catmull-rom        2.480280   1.905828    -2.7803
+  lanczos3           4.852171   3.685417    -2.5117
+
+  paired: lanczos3 > catmull-rom on 120/120 samples (100.00%), ratio 95% CI [1.9045, 2.0104]
+
+--- CONTROLS ---
+  S1 monotone kernels read EXACTLY zero : nearest=0.000000 bilinear=0.000000   PASS
+  S2 negative-lobe kernels read > 0     : cr=2.480280 lz=4.852171   PASS
+  S3 lanczos3 > catmull-rom             : ratio 1.9563x   PASS
+
+--- HEADLINE FOR THE DEFAULT DECISION ---
+  Lanczos-3 creates 1.956x the differential chroma overshoot of Catmull-Rom.
+  Its luma overshoot ratio (K22, algebraic) is 11.1413 / 6.2500 = 1.7826x.
+  Nearest and bilinear cannot create ANY colour fringe of this kind: exactly 0.
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-kernel\out\k13_chroma_ring.json

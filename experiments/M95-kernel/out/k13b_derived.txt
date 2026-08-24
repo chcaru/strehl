@@ -1,0 +1,21 @@
+==================================================================================
+K13b  derived: band sharpness relative to the shipped default, vs colour cost
+==================================================================================
+  kernel           d band vs cr        DCO    DCO vs cr
+  nearest               +0.4135   0.000000       0.0000x
+  bilinear              -0.3404   0.000000       0.0000x
+  catmull-rom           +0.0000   2.480280       1.0000x
+  lanczos3              +0.2685   4.852171       1.9563x
+
+  Lanczos-3 buys +0.2685 dex of band sharpness over Catmull-Rom
+  and pays 1.9563x its differential chroma overshoot.
+  Cost per unit gain: 8.8328 DN of new
+  colour fringe per dex of band sharpness.
+
+  Nearest is +0.4135 dex sharper than Catmull-Rom
+  at DCO exactly 0.000000; bilinear is -0.3404 dex
+  softer, also at exactly 0.000000. Monotone kernels sit at both
+  ends of the sharpness range while creating zero colour fringe, which is
+  what shows DCO is not a restatement of sharpness.
+
+  paired: 120/120 = 100.00%, 95% CI [1.9045, 2.0104]

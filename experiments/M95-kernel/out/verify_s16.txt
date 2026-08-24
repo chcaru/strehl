@@ -1,0 +1,49 @@
+==============================================================================
+verify M95-kernel.md section 16  (PRESENT / DISCRIMINATE)
+==============================================================================
+  OK   DCO nearest                  '0.000000'  present=True disc=True
+  OK   band nearest                  '−2.3668'  present=True disc=True
+  OK   dband nearest                 '+0.4135'  present=True disc=True
+  OK   DCO bilinear                 '0.000000'  present=True disc=True
+  OK   band bilinear                 '−3.1206'  present=True disc=True
+  OK   dband bilinear                '−0.3404'  present=True disc=True
+  OK   DCO catmull-rom              '2.480280'  present=True disc=True
+  OK   band catmull-rom              '−2.7803'  present=True disc=True
+  OK   dband catmull-rom             '+0.0000'  present=True disc=True
+  OK   DCO lanczos3                 '4.852171'  present=True disc=True
+  OK   band lanczos3                 '−2.5117'  present=True disc=True
+  OK   dband lanczos3                '+0.2685'  present=True disc=True
+  OK   ratio lz/cr                    '1.9563'  present=True disc=True
+  OK   paired wins                   '120/120'  present=True disc=True
+  OK   paired pct                     '100.00'  present=True disc=True
+  OK   ci lo                          '1.9045'  present=True disc=True
+  OK   ci hi                          '2.0104'  present=True disc=True
+  OK   tiles                              '24'  present=True disc=True
+  OK   tile size                         '512'  present=True disc=True
+  OK   edge pct                           '1%'  present=True disc=True
+------------------------------------------------------------------------------
+  OK   S1 exact-zero holds in the JSON as a float, not a string
+  OK   S3 ordering holds in the JSON
+  OK   the two zero-DCO kernels bracket the default in sharpness
+  OK   K12 declared void                  'ARM VOID'
+  OK   K12 bar not moved                  'The bar was not moved'
+  OK   K12 plant defect owned             'resample-matched'
+  OK   K12 diagnosis                      'A coloured edge is not a fringe'
+  OK   K12 monotone response              '495.15 → 503.82 → 524.54'
+  OK   K12 best reading                   '+0.0598'
+  OK   kernels cannot create CA           'cannot create lateral chromatic aberration'
+  OK   DCO defined differentially         'differs *between* channels'
+  OK   mask fixed on source               'held fixed across kernels'
+  OK   S1 is falsifiable                  'could have failed'
+  OK   S3 predicted from luma             '1.7826'
+  OK   not a sharpness restatement        'opposite ends'
+  OK   cost per dex                       '8.8328'
+  OK   fringe reinterpreted               'not created by `nearest`'
+  OK   two fringes distinguished          'call for opposite remedies'
+  OK   evidence against own case          'evidence against my own recommendation'
+  OK   default unchanged                  'default stays Catmull-Rom'
+  OK   capture request                    'lateral-CA target'
+  OK   bee contrast figure                '0.0345%'
+==============================================================================
+verdict: GREEN
+==============================================================================
