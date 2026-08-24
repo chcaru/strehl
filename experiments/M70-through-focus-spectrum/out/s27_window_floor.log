@@ -1,0 +1,54 @@
+============================================================================================
+s27  WINDOW FLOOR OF THE SPECTRAL n_eff ESTIMATOR   (PREREGISTRATION-D, fc85d50)
+============================================================================================
+
+[V17] bins per band -- PRE-REGISTERED analytic area vs ACTUAL discrete
+      occupancy. The analytic form was the registered one and it is WRONG:
+      a band narrower than the 1/tile grid spacing can hold ZERO grid
+      points however large its area, which is what returns nan.
+   window  tile  analytic b3  act b3_mid  act b4_mid  act b5_mid
+      256   128        643.4           7           6          10
+      128    64        160.8           3           3           5
+       64    32         40.2           1           2           2
+       32    16         10.1           1           1           1
+       16     8          2.5           1           0           1
+
+[W3] REAL, nested crops about one centre -- content fixed, window varies
+   window             wrapped-text-1             wrapped-text-2
+      256        3.906 x1.000   PASS        3.425 x1.000   PASS
+      128        3.682 x0.943   PASS        3.500 x1.022   PASS
+       64        3.759 x0.962   PASS        3.656 x1.067   PASS
+       32        3.862 x0.989   PASS        4.693 x1.370   FAIL
+       16          nan x  nan  UNDEF          nan x  nan  UNDEF
+
+[V15] calibrating the plant to the stack its latent came from
+  the FIRST s27 run used an arbitrary 0.55 px/frame ladder and gave
+  n_eff_true = 1.456 against a real 3.906  ->  V15 FIRED.
+  calibrated blur step: 0.1717 px/frame  (corpus measured range
+  0.6017-1.1856 px/frame, section 19.2)
+
+[plant] latent = real patch, wrapped-text-1 frame 65, 256 GQ, ISO 100, K=41
+
+[W1/W2] PLANT with a real latent, and the NULL as a DISTRIBUTION
+        (W2 on a single draw is meaningless: n_eff on pure noise is a
+         ratio of noise to noise. 40 trials per window.)
+   window  act b3     true  measured  hat/true  null med        null p05..p95     W1     W2
+      256       7    3.906     4.000     1.024     0.290        -2.544..2.957   PASS   FAIL
+      128       3    3.845     3.793     0.987    -0.107        -2.887..1.963   PASS   PASS
+       64       1    3.879     3.223     0.831    -0.724        -3.060..2.740   FAIL   FAIL
+       32       1    4.810     4.529     0.942    -0.290        -3.971..3.302   PASS   FAIL
+       16       1      nan       nan       nan       nan             nan..nan  UNDEF  UNDEF
+
+[V16] which term dominates -- discretisation (noiseless) or noise?
+   window  noiseless/256   noise term         dominant
+      256          1.000        1.024            noise
+      128          0.984        0.987   discretisation
+       64          0.993        0.831            noise
+       32          1.231        0.942   discretisation
+       16      UNDEFINED    UNDEFINED                -
+
+[VERDICT] smallest window meeting W1, W2 and W3 on both stacks:
+  windows passing all three: [128]
+  -> recommended floor: 128 GQ samples = 255 sensor px, Welch tile 64
+
+wrote out/s27_window_floor.json

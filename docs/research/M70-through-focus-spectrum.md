@@ -42,6 +42,19 @@ drawn from it is FALSE, and the gap between the two is measured at 1.110×.**
 > split) — the opposite of M69's mechanism.** The verdict is unchanged and the
 > band edge is **not load-bearing at 1.54%**.
 
+> **Fifth addendum, §22 (2026-08-23), after M77's gate sweep.** **(a)** §21.6's
+> *"it is one line"* **was unearned and is withdrawn** — I measured a window in
+> frames, never a threshold; restated as a direction plus per-stack calibration.
+> **(b)** The spectral count has a local form down to **255 sensor px (Welch tile
+> 64)** and no further, limited by **discrete bin occupancy**, not noise — but the
+> limitation that matters more is that the estimator is **worst on flat regions**,
+> which is exactly where M77's fact 40 made its observation. **(c)** One
+> substantive objection: `T*` treats my count as an *optimal admission target*,
+> and I measured it as a *count of informative frames*. New measurement: my
+> frame-domain ladder shows the two stacks agree to **4.7%**, so **fact 39's
+> 3.31× does not originate in the optics**. Three pre-registered guards fired and
+> are reported in §22.5.
+
 Milestone type: measurement. **No Rust was written and nothing under `crates/**`
 was edited** — M67 and M69 are live there. `SYNTHESIS.md`, `AGENTS.md` and
 `crates/**` were read-only. Everything M70 produced lives in
@@ -2312,3 +2325,217 @@ delivered with a lint violation quoted at `M70:775`; the violation was fixed fou
 commits earlier in `7e135b7` and the quoted line now holds prose. **Running the
 gate cost one command and prevented an edit to a correct line** — and the same
 run showed the repository's actual remaining violation was in a different file.
+
+---
+
+## 22. Addendum (2026-08-23): M77's gate sweep — is §21.6 qualified?
+
+**Asked by the orchestrator after M77 measured a spatial gate sweep on the same
+two stacks.** Three questions: (a) does §21.6 presume a single global gate,
+(b) does my spectral `n_eff` have a spatially-local form, (c) is anything in
+M77's method wrong or reading my result in a way I did not intend.
+
+**Short answers: (a) yes, and the repair is the one proposed. (b) yes down to a
+measured floor, but with a limitation that matters more than the floor. (c) one
+substantive disagreement, one units objection, and one place my quantity is
+being used for a purpose I did not measure it for.**
+
+### 22.1 (a) Yes — §21.6 presumes a single global setting, and it should not
+
+**ARGUED, and I agree with the qualification.** §21.6 quoted §18's *"the gate
+constant is the bigger lever and it is **one line**"* and promoted it. **"One
+line" is a claim about a single global constant** and it is not supported by
+anything I measured. What I actually measured was a *window in frame index*
+(±2 on both stacks), never a threshold. **The step from "widen the admitted set"
+to "change one constant" was mine, and it was unearned.**
+
+**Restated, as the orchestrator proposes:**
+
+> **Direction:** the admitted set at the shipped default is far too narrow —
+> **+2.81 to +4.49 dB** sits between it and the best equal average (§21.4).
+> **Procedure:** the gate must take its target from the stack in hand.
+> **Not a constant:** no single `DEFAULT_GATE` can deliver a target `n_eff`.
+
+### 22.2 But my data localises where M77's 3.31× lives, and it is not the optics
+
+**M77 fact 39 is that matching a 2.4%-stable spectral count costs gate values
+3.31× apart.** M77 §20 already suspects this is attributable to its side, since
+every `T` is a multiple of `FOCUS_NOISE_SD` and M69 measured that varying 4.06×.
+**I can put a number on the other half of that suspicion. MEASURED / DERIVED.**
+
+My equal-average window ladder, referenced to the ±1 average
+(`out/s10_architecture.log`) — the focus-axis response in units of *frames*,
+touching no gate constant and no noise constant:
+
+| window | `wrapped-text-1` | `wrapped-text-2` | ratio |
+| ---: | ---: | ---: | ---: |
+| ±1 | 1.0000 | 1.0000 | 1.0000 |
+| **±2 (argmax on both)** | **1.1288** | **1.0984** | **1.0277** |
+| ±3 | 1.1227 | 1.0830 | 1.0367 |
+| ±5 | 1.0233 | 0.9778 | 1.0465 |
+| ±10 | 0.8490 | 0.8162 | 1.0402 |
+
+**The two stacks' focus-axis response agrees to within 4.7% at every rung, both
+peak at the same rung, and their spectral counts agree to 2.4%.** The optics and
+the focus sampling are, to this instrument, the same on both stacks.
+
+**DERIVED: a 3.31× dispersion therefore cannot be coming from the through-focus
+physics, because the through-focus physics is measurably common to ~5%.** It
+enters when the common response is expressed in gate-threshold units. **That is
+M77's own reading, and my ladder is independent evidence for it** — I hold the
+frame-domain measurement and M77 holds the threshold-domain one, and only the
+latter disperses.
+
+**This does not rescue a global constant.** It relocates the problem: the gate's
+*unit* drifts, so a fixed `T` means different admission on different stacks even
+when the optics agree. **That is an argument for per-stack calibration on
+stronger grounds than fact 39 alone** — the target is stable, the unit is not.
+
+### 22.3 (b) The local form exists, with a measured floor — pre-registered in D
+
+Registered in `PREREGISTRATION-D.md`, committed **`fc85d50` before `s27` ran**.
+**Nested crops about one centre**, so content is held fixed and only the window
+changes — which `s12` could not do, because it rescaled its patch grid and moved
+window and content together.
+
+**MEASURED. `out/s27_window_floor.log`.**
+
+| window (GQ) | sensor px | Welch tile | discrete bins, mid bands | plant `hat/true` | null median | real ratio, both stacks |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 256 | 511 | 128 | 7 / 6 / 10 | 1.024 | 0.290 | 1.000 / 1.000 |
+| **128** | **255** | **64** | **3 / 3 / 5** | **0.987** | **−0.107** | **0.943 / 1.022** |
+| 64 | 127 | 32 | 1 / 2 / 2 | 0.831 | −0.724 | 0.962 / 1.067 |
+| 32 | 63 | 16 | 1 / 1 / 1 | 0.942 | −0.290 | 0.989 / **1.370** |
+| 16 | 31 | 8 | 1 / **0** / 1 | UNDEFINED | UNDEFINED | UNDEFINED |
+
+**Pre-registered verdict: the floor is 128 GQ samples = 255 sensor px, Welch
+tile 64.** It is the only window below 256 meeting W1, W2 and W3.
+
+**The mechanism is discrete bin occupancy, not noise.** At tile 64 each mid band
+holds 3–5 discrete radial frequencies, so a band average is an average. **At
+tile 32 and below every mid band holds one or two, and band averaging stops
+being averaging** — which is why `hat/true` goes non-monotonic (0.831 at 64,
+0.942 at 32) rather than degrading smoothly. **Do not read the 0.942 at window
+32 as recovery**: V16 shows the noiseless discretisation term alone is **+23.1%**
+there, and two large errors of opposite sign are cancelling.
+
+### 22.4 The limitation that matters more than the floor
+
+**MEASURED, and it is the answer the merge design actually needs.** The null —
+40 trials of pure noise per window, no signal — has a median near zero but a
+**p05–p95 spanning −2.5 to +3.0 at *every* window, including 256.** The real
+signal value is ~3.9. **On a patch with no texture, a single-patch `n_eff` can
+read anything from −3 to +3, which is most of the dynamic range of the answer.**
+
+**So the estimator is at its worst precisely where M77's fact 40 made its
+observation.** Fact 40 is about a **flat ROI** freezing while the frame keeps
+admitting. **My spectral `n_eff` cannot serve as the calibration target in a flat
+ROI** — not because the window is too small, but because there is no texture to
+carry band-limited signal, and the statistic is a ratio of noise to noise there.
+
+**What makes M70's corpus numbers trustworthy is not the window size — it is
+averaging over 24 textured patches.** The published 4.148 is a median over
+patches selected as textured. **A per-tile deployment would meet both problems at
+once: smaller windows *and* tiles that land on flat regions.** The floor of 255
+sensor px answers only the first.
+
+**Honest summary for the merge design: use `n_eff` per-tile only on tiles that
+pass a texture test, at ≥255 sensor px, and treat flat tiles as having no
+measurable target rather than a target of zero.**
+
+### 22.5 Three pre-registered guards fired, and a correction to my own `s12`
+
+**Reported faithfully, per rule 2 and M65's standard.**
+
+* **V15 FIRED.** The plant's first blur ladder (0.55 px/frame, chosen by hand)
+  gave `n_eff_true` **1.456** against the real **3.906** — unrepresentative, and
+  W1's ratio would have been meaningless. Repaired by calibrating the ladder to
+  the stack its latent came from: **0.1717 px/frame**. **That is well below the
+  corpus's measured blur-growth range of 0.6017–1.1856 px/frame (§19.2)** — an
+  unruled discrepancy I flag rather than explain, since those rates were measured
+  per *focus step* on stacks with different step densities.
+* **W2's operationalisation was wrong and I changed it.** The first run tested
+  the null on **one draw** and "failed" at every window including 256, where P5
+  established the estimator is null-safe. `n_eff` on pure noise is a ratio of
+  noise to noise; the statistic is a **distribution**. Re-run over 40 trials.
+  **The single-draw result was an artefact of my test, not of the estimator.**
+* **V17's registered form was wrong.** I registered an *analytic annulus area*
+  (643 bins at tile 128). The operative quantity is **discrete radial-grid
+  occupancy** (7 bins). At tile 8 the analytic form says `b3_mid` holds 2.5 bins
+  while the grid holds **one**, and `b4_mid` holds **zero** — which is what
+  actually returns `nan`. **The registered criterion overstated resolution by
+  ~90× and would have licensed a window that cannot represent the band.**
+* **A correction to `s12`.** `s12`'s VOID-condition-4 ratio for `wrapped-text-1`
+  at half window was **0.839**. With content held fixed it is **0.943**.
+  **Roughly two thirds of what `s12` recorded as a window effect was its patch
+  grid landing on different content.** `s12`'s conclusion (the 256 numbers stand)
+  is unaffected and is now better supported.
+
+### 22.6 (c) Where I disagree with M77, and where my quantity is being misused
+
+**M77's method is careful and its §20 already concedes the direction that hurts
+it. Three things I would add, in decreasing order of how much they matter.**
+
+**1. My `n_eff` is a count, not a prescription — and it is being used as an
+admission target. ARGUED, and this is the one I most want on the record.**
+`mid_n_eff` counts how many frames carry mid-band signal above the noise floor.
+**It is not a statement that admitting that many frames is optimal.** Optimal
+combination weights frames continuously by amplitude; a hard count is a different
+object. My own §21.4 puts the best *equal average* at **±2, i.e. 5 frames**,
+against a count of ~4 — close enough to be a reasonable heuristic, **but I never
+measured that `n_eff` is the right admission target, and `T*` is defined as the
+gate that hits it.** **If `n_eff` is the wrong target, `T*` is precisely
+calibrated to the wrong number**, and its 3.31× dispersion would be dispersion in
+a target that should not be hit.
+
+**2. `T*` equates two quantities with different natural scales. ARGUED.** M77
+interpolates its **frame-average, spatial, all-frequency** `n_eff` onto my
+**per-patch, textured-only, mid-band** count. §21.5 already said the ratio of
+these two should be read as order-of-magnitude, not calibrated. **`T*` = 38.534
+carries five significant figures on a comparison that supports about one.** The
+*direction* (both far above 4.0) is robust; the *value* is not.
+
+**3. M77's fact 40 undercuts fact 39's target. ARGUED, and M77 may not have
+noticed the tension.** Fact 40 measures that a flat ROI stops admitting while
+the frame average is still climbing — **so the frame average is not a sufficient
+statistic for admission.** But `T*` is defined by matching that same frame
+average. **A target that fact 40 shows is spatially ill-defined is being matched
+to five figures in fact 39.** I do not think this changes fact 39's headline —
+the dispersion is real and my §22.2 ladder supports it living in the gate's unit
+— but the two facts should not be read as independent.
+
+**What I do not dispute.** The sweep itself, the circularity M77 names in §10 and
+§20, the X3 null firing, and M77's own judgement that a disagreement between its
+ladder and my count is attributable to its side at least as readily as to mine.
+**Fact 39's qualification of §21.6 is correct and I have adopted it in §22.1.**
+
+### 22.7 Candidate facts from §22
+
+| # | Proposed fact | Label | Source |
+| --- | --- | --- | --- |
+| **P34** | **The two stacks whose gate targets differ 3.31× have focus-axis responses agreeing to within 4.7%.** M70's equal-average window ladder, in units of frames and touching no gate or noise constant, reads 1.0277–1.0465 between `wrapped-text-1` and `wrapped-text-2` at every rung ±1…±10, both peak at ±2, and their spectral counts agree to 2.4%. **M77 fact 39's dispersion therefore does not originate in the through-focus physics**; it enters when a common response is expressed in gate-threshold units, which M69 measured varying 4.06× | DERIVED (from MEASURED inputs) | `out/s10_architecture.log`; `M77-gate-sweep.md` fact 39 |
+| **P35** | **M70's spectral `n_eff` has a local form down to 255 sensor px (128 GQ samples, Welch tile 64) and no further, and the limit is discrete bin occupancy rather than noise.** At tile 64 each mid band holds 3–5 discrete radial frequencies; at tile 32 and below each holds 1–2 and band averaging stops averaging; at tile 8 `b4_mid` holds **zero** and the statistic is undefined. Plant `hat/true` = 0.987 at the floor, and the noiseless discretisation term alone is **+23.1%** one rung below it | MEASURED | `out/s27_window_floor.log`; `PREREGISTRATION-D.md` (`fc85d50`) |
+| **P36** | **The estimator is worst exactly where M77 fact 40 made its observation: on flat regions.** With no texture the null's `n_eff` has p05–p95 spanning **−2.5 to +3.0 at every window including 256**, against a real signal value of ~3.9. **M70's published per-stack counts are trustworthy because they are medians over 24 textured patches, not because of the window size.** A per-tile deployment meets small windows *and* untextured tiles simultaneously; flat tiles should be treated as having **no measurable target**, not a target of zero | MEASURED | `out/s27_window_floor.log`, null arm, 40 trials/window |
+| **P37** | **About two thirds of `s12`'s recorded window effect was content, not window.** `s12`'s half-window ratio on `wrapped-text-1` was **0.839** with the patch grid rescaled; with content held fixed by nested crops it is **0.943**. `s12`'s conclusion is unaffected and better supported | MEASURED | `out/s27_window_floor.log` vs `out/s12_patchsize.log` |
+
+### 22.8 Disciplines from §22
+
+**D-t. A statistic that is a ratio of two noisy quantities must be nulled as a
+distribution, never as a draw.** `s27`'s first run tested `n_eff` on one noise
+realisation and failed its own null at a window where the estimator was already
+established as null-safe. **The failure was the test's.** Forty trials moved the
+median to −0.107 and revealed the thing that actually matters — a p05–p95 span
+of five units.
+
+**D-u. Register the resolution limit in the units the instrument actually uses.**
+V17 was registered as an analytic annulus area and overstated usable resolution
+by ~90× against discrete grid occupancy. **An analytic bin count is a property of
+the band; the estimator sees a grid.** The registered criterion would have
+licensed a window that cannot represent the band at all.
+
+**D-v. When two milestones' quantities are matched by interpolation, one of them
+is being used for a purpose it was not measured for — name which.** `T*` is the
+gate that hits M70's `n_eff`. M70 measured `n_eff` as a *count of informative
+frames*, never as an *optimal admission target*. **The calibration is only as
+good as that unstated identification**, and it should be stated by whoever
+performs the match.
