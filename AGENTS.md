@@ -114,7 +114,8 @@ monolithic binary and ship only that binary.
 
    **Do this instead.** Measure a sparse multiscale set of **direct** pairwise
    fits (a span ladder such as 1,2,3,4,6,8,12,16,24,32,48,64 plus every frame-0
-   pair), composing nothing. **Discard spans 1-2 from the solve.** Then run one
+   pair), composing nothing. **Discard spans 1-2 from the solve — BUT SEE THE
+   AMENDMENT BELOW; this instruction is measured harmful per frame.** Then run one
    global linear least squares for per-frame `(log a, theta, tx, ty)` with Huber
    IRLS — `unit` weighting on deep stacks, `invvar` on shallow ones. This places
    105/105 frames at **6.76 plane px** held-out, and 0.58-0.67 px on shallow
@@ -140,6 +141,42 @@ monolithic binary and ship only that binary.
    `docs/research/M10-deep-alignment-measured.md`,
    `docs/research/M12-shrinkage-measured.md` and
    `docs/research/M3-alignment-measured.md`.
+
+   ---
+
+   **AMENDMENT (M103, commit `1111be9`) — EVERY NUMBER ABOVE IS END-TO-END, AND
+   THE MERGE DOES NOT CONSUME AN END-TO-END QUANTITY.** 6.76 px, 13.578 px,
+   13.92 px, 40.3 px and every acceptance bar this rule was built on score the
+   composition from first frame to last: **one frame pair out of 299.** The merge
+   gathers **each frame at its own `a_k`**, so *per-frame placement* is what it
+   reads. Scored both ways on 39 rungs of an independent RAW ladder in the merge's
+   own gauge, the two are **nearly independent**: `deep()` as shipped is
+   end-to-end **150.3 px** / per-frame **36.4 px**, while `iterated_wide()` is
+   end-to-end **2.9 px** / per-frame **37.5 px**. **A fifty-fold improvement in
+   the headline bought nothing where it counts** (fact 1407).
+
+   Consequences, binding:
+
+   - **"Discard spans 1-2" takes max per-frame placement error to 628.1 px**
+     (fact 1408). Short edges are biased *and* load-bearing; both are measured.
+     The discard remains the default **only** because no calibrated replacement
+     has shipped — it is a known-harmful stopgap, not a result. Prefer
+     calibrating short edges (per-edge self-measured response, blur
+     equalisation) over discarding them.
+   - **Report every placement number with its gauge.** The same track reads
+     **98.2 px** referenced to frame 0 and **37.5 px** referenced to rung 144 —
+     a 2.6x swing from the reference choice alone. A bare "px" for an alignment
+     solve is not a number (discipline 698).
+   - **The per-span scale response is an inverted U that never reaches 1.0 at
+     any baseline**: 0.130 at span 1, 0.659 at span 32, 0.102 at span 192
+     (fact 1409). Long edges are not a trustworthy reference either.
+   - **Any synthetic plant for alignment work must carry the measured
+     curvature.** `bee-3-cpl`'s track departs its own straight chord by
+     **46.1 plane px** at j=200, accelerating; a linear plant does not transfer
+     (fact 1410).
+   - **Before accepting any future alignment bar, name the consumer and check
+     the bar measures its input** (discipline 699). Four bars across four
+     milestones missed this.
 7. **Never compute statistics over the full decoded buffer.** `rawler` returns
    7168x5120 for the A7C II but fills only the 7032x4688 active area. The rest
    is synthetic zeros, not black level.
