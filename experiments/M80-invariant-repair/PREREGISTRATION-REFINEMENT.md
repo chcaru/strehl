@@ -88,14 +88,15 @@ Both directions must pass on both stacks.
 
 **ARGUED — D2, false-answer calibration.** For each synthetic stack depth
 `N = 22`, `N = 130`, and `N = 299`, run 1,000 independent zero-signal
-selector/control pairs under the registered Gaussian noise model. At nominal
+selector/control pairs on 64×64 ROIs under the registered Gaussian noise model.
+At nominal
 \(\alpha=0.01\), the exact binomial 99th-percentile acceptance count is 18
 false answers out of 1,000
 (\(P_{\mathrm{Binom}(1000,0.01)}[K\le18]=0.993095\)). Each depth must produce
 at most 18 `MEASURABLE` answers. The three depths are judged separately.
 
 **ARGUED — D3, decreasing-contrast transition.** Use the existing deterministic
-three-pixel checkerboard, but set its signed amplitude in DN to
+512×512 three-pixel checkerboard, but set its signed amplitude in DN to
 `0, 0.5, 1, 2, 4, 8, 16, 32, 64, 128, 200`. Use the same noise realisation at
 every contrast within a depth, at synthetic selection inflation for
 `N = 22`, `N = 130`, and `N = 299`.
