@@ -316,6 +316,12 @@ filtering, per rule 46.
 * **No writes to the library.** After the sidecar row ran, `D:\personal\macro`
   contained **0** warpmap files. See §4.3 for the ones that appeared from other
   processes.
+* **The warp fixture is CRLF-safe.** Git will check it out with CRLF line
+  endings on Windows, so I rendered against a CRLF copy (3 207 B vs 3 171 B)
+  rather than reasoning about `WarpMap::load`. Same hash,
+  `119936E6…D709`, `alignment : ON (sidecar-override), reference frame 10,
+  20 placed / 0 refused`, and still 0 warpmaps in the library afterwards.
+  (`warpmap.rs:650` does `raw.trim()`, which is why.)
 * `cargo clippy --release -p strehl-cli --test byte-freeze -- -D warnings` →
   clean, exit 0. (The workspace-wide `--all-targets` form fails on many
   pre-existing errors in `examples/` and `strehl-core`; that is not mine and I
