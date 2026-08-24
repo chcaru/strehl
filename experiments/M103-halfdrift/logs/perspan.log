@@ -1,0 +1,26 @@
+CONTROLS
+  PLACEBO  all multipliers 1.0 -> mean 36.418 px vs the committed shipped sidecar 36.418 px, |d| = 0.000e+00 -> PASS
+  POSITIVE every edge shrunk by a known 0.6: the per-span fit recovers 0.6000 (closed form 0.6000) -> PASS
+  -> controls PASS
+
+Per-span response r(s) of the SHIPPED estimator, fitted against the
+independent RAW ladder (slope of measured log-scale on true log-scale):
+    span       r(s)
+       1     0.1295
+       2     0.1842
+       4     0.2317
+       8     0.3337
+      16     0.5450
+      32     0.6586
+      64     0.5161
+      96     0.4196
+     128     0.2382
+     192     0.1018
+
+  arm                                    mean      max      rms
+  shipped, untouched                     36.4    139.7     54.1
+  shipped + best SCALAR gain (1.459)     22.5
+  shipped + per-span 1/r(s)              31.6    105.5     38.4
+  NEGATIVE per-SHUFFLED-span 1/r         46.9    354.1     74.7
+
+wrote data\perspan.json

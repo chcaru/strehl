@@ -1,0 +1,59 @@
+C5  truth instrument controls
+      SELF-0       self          -> 1.00000  err -0.00000  ok
+      SELF-149     self          -> 1.00000  err -0.00000  ok
+      PLANT-0.98   planted 0.980 -> 0.97948  err -0.00052  ok
+      PLANT-0.94   planted 0.940 -> 0.93843  err -0.00157  ok
+      PLANT-0.9    planted 0.900 -> 0.89965  err -0.00035  ok
+      PLANT-0.86   planted 0.860 -> 0.85860  err -0.00140  ok
+      -> PASS
+
+C1  linearity of the TRUE track (line through (0,0) and (298, -0.154154))
+          j    ln_truth   ln_linear        dev    dev_px     ncc
+          0   -0.000000   -0.000000  -0.000000      -0.0  1.0000
+         24   -0.008627   -0.012415  +0.003788      +8.0  0.9987
+         48   -0.018556   -0.024830  +0.006274     +13.3  0.9958
+         72   -0.025738   -0.037245  +0.011507     +24.3  0.9905
+         96   -0.028991   -0.049660  +0.020669     +43.7  0.9817
+        120   -0.040796   -0.062075  +0.021279     +45.0  0.9768
+        144   -0.054604   -0.074491  +0.019886     +42.0  0.9731
+        168   -0.065723   -0.086906  +0.021182     +44.8  0.9703
+        192   -0.077832   -0.099321  +0.021489     +45.4  0.9698
+        216   -0.092384   -0.111736  +0.019352     +40.9  0.9707
+        240   -0.108270   -0.124151  +0.015881     +33.6  0.9752
+        264   -0.128299   -0.136566  +0.008267     +17.5  0.9811
+        288   -0.146489   -0.148981  +0.002492      +5.3  0.9859
+        298   -0.154154   -0.154154  +0.000000      +0.0  0.9877
+      max |deviation from linear| = 46.1 plane px at j=200
+      -> MATERIALLY CURVED (threshold 10 plane px)
+      NCC across the curved region: 0.9696 - 0.9970 (no confidence collapse => curvature is not the instrument)
+
+     read 299 frames from wm-baseline-r0.txt, 299 from wm-iww-r0.txt
+
+C2  per-frame recovery r(j) = ln_solve(j) / ln_truth(j)
+          j    ln_truth   shipped  corrected
+         48   -0.018556    1.0242     3.3046
+         72   -0.025738    1.0490     2.9627
+         96   -0.028991    1.1462     3.0686
+        120   -0.040796    0.9508     2.4903
+        144   -0.054604    0.8671     2.1740
+        168   -0.065723    0.8576     1.9956
+        192   -0.077832    0.8276     1.7862
+        216   -0.092384    0.7661     1.6235
+        240   -0.108270    0.6869     1.4449
+        264   -0.128299    0.6012     1.2469
+        288   -0.146489    0.5439     1.1041
+        298   -0.154154    0.5239     1.0544
+
+      shipped    mean r = 0.8371  CV = 21.8%  range [0.5239, 1.1610]
+                 -> PER-FRAME SOLVE REQUIRED
+
+      corrected  mean r = 2.1167  CV = 37.1%  range [1.0544, 3.8214]
+                 -> PER-FRAME SOLVE REQUIRED
+
+C3  PLACEBO truth vs truth: mean r = 1.000000000000, CV = 0.00e+00 -> PASS
+C4a POSITIVE uniform x0.543: mean r = 0.543000, CV = 3.46e-17 -> PASS
+     (proves C2 returns 'uniform' when that is true, so a large CV
+      on the real solve is a finding, not a property of the metric)
+C4b POSITIVE shaped r=0.4+0.3j/298: CV = 14.25% against closed-form 14.25% -> PASS
+
+wrote data\curvature.json

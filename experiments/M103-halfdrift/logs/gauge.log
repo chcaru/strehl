@@ -1,0 +1,27 @@
+CONTROLS
+  PLACEBO  truth vs truth, gauged at 144: max 0.000e+00 px -> PASS
+  POSITIVE planted +0.02 ln on frames 1..298:
+           gauged at 0   -> 42.3 px (closed form 42.3) -> PASS
+           gauged at 144 -> 2.932e-14 px on frames 1..298   -> PASS
+           (so a whole-graph offset IS a gauge artefact, by construction)
+  -> controls PASS
+
+Per-frame placement error, plane px at the corner, 39 rungs.
+`spread` is max-minus-min and is GAUGE-INVARIANT: it is the part of the
+error no choice of reference frame can remove.
+
+  arm                      | gauge 0    mean   max | gauge 144  mean   max | gauge 298  mean   max |   spread
+  SHIPPED                  |            39.4  155.1 |            36.4  139.7 |           118.6  169.2 |    169.2
+  IWW-all                  |            98.2  138.3 |            37.5  135.4 |            81.4  120.5 |    138.3
+  IWW-nofan                |            99.5  139.4 |            37.5  136.8 |            82.1  121.2 |    139.4
+  IWW-noovershoot          |            61.3   91.2 |            36.7  135.4 |            98.8  136.0 |    136.0
+  IWW-nofan-noovershoot    |            49.2   73.7 |            36.3  136.5 |           100.3  137.8 |    137.8
+  IWW-no12                 |            70.2  628.1 |            49.1  539.2 |           560.6  653.6 |    653.6
+  IWW-rule6                |            61.1  628.1 |            49.3  551.7 |           572.7  672.1 |    672.1
+  PLACEBO-drop1pct         |            97.3  137.9 |            37.8  134.8 |            80.9  120.6 |    137.9
+
+SANITY  spread must be identical in every gauge (it is a difference of
+        differences). Max deviation across gauges, per arm:
+        2.274e-13 px -> PASS
+
+wrote data\gauge.json

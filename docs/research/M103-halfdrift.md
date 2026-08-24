@@ -17,6 +17,14 @@ re-run from committed scripts; §14 gives the commands in order.
 
 ## 1. Summary
 
+> **RETRACTED IN PART — read §16 before acting on anything below.** The
+> end-to-end numbers in this summary are correct and reproduce. What is withdrawn
+> is their *meaning*. §16 measures that end-to-end residual and **per-frame
+> placement** — what the merge actually consumes — are nearly independent: the
+> same fix moves the first 150.3 → 2.9 px and the second 36.4 → 37.5 px. The fix
+> should **not** be adopted as a default (§15.3 is withdrawn), and the acceptance
+> bar used by M86, M97, M97b and this milestone scores one frame pair out of 299.
+
 **MEASURED.** The shipped solve recovers **52.4%** of the true log-scale drift on
 `bee-3-cpl`. The corrected solve recovers **105.4%**. On the absolute end-to-end
 check the residual misregistration falls from **150.3 plane px to 2.9 plane px**,
@@ -901,8 +909,12 @@ focus-stack registration". It is M78's R5 (facts 1097-1099). Per-edge
 metacalibration is M23's R4 (facts 170-178). Fact 45's causal reading is withdrawn
 by fact 174. See §3.
 
-**15.3 — `align_cmd.rs` (M97 owns; M103 must not edit).** Two changes, together
-worth 0.524 -> 1.054 MEASURED:
+**15.3 — `align_cmd.rs` (M97 owns; M103 must not edit). WITHDRAWN by §16.6 —
+DO NOT APPLY.** Left in place because it was published and routed. Measured
+afterwards: discarding spans 1-2 takes max per-frame placement error from 139.7
+px to **628.1 px**; the prescribed frame-0 anchor fan is a 1.3 px no-op against a
+0.8 px placebo; and `iterated_wide()` does not improve per-frame placement. The
+original text follows, refuted.
 
 > `DEFAULT_SPANS` is `[1, 2, 4, 8, 16, 32, 64, 96, 128]`. Rule 6 says "**Discard
 > spans 1-2 from the solve**" and prescribes "a span ladder ... **plus every
@@ -1053,3 +1065,326 @@ bristles are resolved" against a bin whose median was 0.9898. Suggested wording:
 > shown.** If the crops were chosen by the same statistic being reported, the
 > agreement is circular. Choose crops at random within the annulus, or at fixed
 > coordinates, and report the median tile alongside the mean.
+
+
+## 16. Second arm — the bar was wrong, and my own fix does not survive it
+
+**This section retracts §15.3's recommendation and, with it, the operational
+value of §8's B3 pass.** The code in `align.rs` is unchanged and was never on the
+default path (B6), so nothing has to be reverted; what has to be withdrawn is the
+advice to adopt it.
+
+The orchestrator dispatched a second arm with a direct instruction — *"Ship the
+gain correction. That is the deliverable. Not a further characterisation of the
+shortfall"* — on the strength of M97b's arm ladder, and with one precondition:
+test whether the real breathing track is curved before multiplying by 1/0.543,
+because M102 planted a *linear* track and recovered 96.96% of it, which may be
+circular. I tested the precondition. It fired, and then it kept firing.
+
+### 16.1 The precondition fired: the track is curved (C1)
+
+**MEASURED** (`src/curvature.py`, against `data/truth-dense.json`, a 39-rung RAW
+ladder with no strehl code in its measurement path). The true breathing track
+departs from its own straight chord by **46.1 plane px at j=200**, against a
+pre-registered threshold of 10 px. The rate accelerates monotonically:
+0.00030/frame over j=0–96, 0.00051 over 96–192, 0.00072 over 192–298. NCC holds
+at 0.9696–0.9970 across the curved region, so this is not a confidence collapse,
+and the truth instrument's own controls pass (SELF 1.00000; planted cases within
+0.0016).
+
+The orchestrator's hypothesis is confirmed: **M102's synthetic plant is linear
+and the real track is not, so its 96.96% recovery does not transfer to real
+captures.** Reported as the orchestrator asked, having been ARGUED by them and
+now MEASURED here.
+
+### 16.2 The finding that actually matters: end-to-end and per-frame are nearly independent
+
+Every bar this project has used on the solve is **end-to-end** — frame 0 against
+frame 298. M97's `signtest.py`, M86's span, M97b's "drift removed" column, and my
+own B3 are all one number out of 299.
+
+But the merge does not gather frames end to end. It gathers each frame at its own
+`a_k`. So I scored the tracks **per frame**, on all 39 rungs of the independent
+ladder, in the gauge the merge actually uses — `bee-3-cpl/warpmap.txt` says
+`reference 149`, so the operative gauge is mid-stack, and rung 144 is the nearest
+measured one (`src/gauge.py`, `src/placement.py`).
+
+| solve | end-to-end residual | per-frame placement, mean |
+|---|---:|---:|
+| `deep()`, as shipped | 150.3 px | **36.4 px** |
+| `iterated_wide()`, M103's fix | 2.9 px | **37.5 px** |
+
+**MEASURED. A fifty-fold improvement in the headline number bought nothing where
+it counts.** That is the whole of §9's null, explained: the render did not change
+because the placements the render depends on did not change.
+
+`gauge.py`'s controls: placebo (truth against truth) 0.000e+00 px; positive
+control (a planted constant offset of +0.02 ln) reads 42.3 px against a closed
+form of 42.3 px gauged at frame 0 and 2.9e-14 px gauged at 144, which is the
+script's own claim demonstrated on a case with a known answer; sanity check that
+the gauge-invariant spread is identical across gauges to 2.3e-13 px.
+
+Gauge matters enormously here and it is not a technicality. Gauged at **frame 0**
+my fix reads 98.2 px against the shipped solve's 39.4 px — two and a half times
+worse. Gauged at **144** the two are level. The difference is a single constant
+offset between frame 0 and the other 298 frames, which costs one frame in 299
+when the merge references mid-stack and costs all 298 when it references frame 0.
+Anyone quoting a placement number must say which gauge it is in. §15.4's
+recommendation to move the reference to the end of the sweep now carries this
+extra cost and should be re-priced before it is taken.
+
+### 16.3 What I got wrong about my own fix, and how it was caught
+
+I found the offset first and reached for a mechanism: `iterated_wide` was run with
+a frame-0 anchor fan (`--anchor-from 0 --anchor-stride 8`), frame 0 is a terminal
+node with no counterbalancing edges, and §6 of this report had already flagged the
+long spans as over-shooting at 1.25–1.33 on 10–15 surviving tiles. Endpoint
+leverage. It was a good story and the sidecar looked like its smoking gun: the
+solve puts **22.1% of the entire 298-frame drift into the single step from frame 0
+to frame 1**, −34.0e−3 against a mean increment of −0.517e−3, which is physically
+impossible for a focus stack.
+
+**The story is wrong.** `src/edgeset.py` re-solves the *same committed edge
+measurements* through the real solver with controlled edge sets, so any difference
+is attributable to the edge set alone. Dropping the anchor fan moves mean
+placement error from 98.2 px to 99.5 px — a 1.3 px move against a placebo (drop a
+deterministic 1% of non-frame-0 edges) of 0.8 px. **The fan is not the cause.**
+The wiring control passes exactly: the unfiltered re-solve reproduces the
+published `wm-iww-r0.txt` to 0.000e+00.
+
+What *is* a cause, partly, is the over-shooting long spans: dropping spans
+192/256/298 takes 98.2 px to 61.3 px, and dropping fan and long spans together
+reaches 49.2 px (gauge 0). None of it survives re-gauging — at rung 144 every
+variant lands between 36.3 and 37.5 px, indistinguishable from the shipped 36.4.
+
+I am recording the refuted hypothesis rather than deleting it because it was
+about to be published as a mechanism.
+
+### 16.4 The instruction was right in direction and wrong in magnitude (S1)
+
+**MEASURED** (`src/gaingauge.py`), per-frame placement error on the shipped solve,
+gauge 144:
+
+| gain applied to the shipped solve | mean placement error |
+|---|---:|
+| 1.000 (untouched) | 36.4 px |
+| **1.842** (the 1/0.543 the orchestrator specified) | **25.6 px** |
+| 1.459 (the per-frame optimum) | **22.5 px** |
+
+**The gain correction is real and worth 30–38% of per-frame placement error.** The
+orchestrator's instruction is vindicated on the axis that matters, which no
+previous measurement had checked. The endpoint-derived 1.842 overshoots the
+per-frame optimum of 1.459, because the shipped solve's shortfall is worst exactly
+at the endpoint where that gain was fitted, so it over-corrects the interior — but
+it still captures most of the available win.
+
+Controls: placebo (gain 1.000) reproduces `gauge.py`'s 36.4 px; positive control
+(a synthetic track built as truth×0.543) is nulled to 0.017 px by a sweep that
+finds 1.8420 against a closed form of 1.8416; **negative control** (a pure shape
+error, the track pulled half-way to its own straight chord, which preserves both
+endpoints) is *not* nulled — 8.1 px in, 8.0 px out at a best gain of 1.007. That
+last one is the discriminating control and it is what separates "a gain does not
+help here" from "this instrument cannot see a gain helping".
+
+**But it cannot ship as a constant, and that is measured, not argued.** M97
+measured 54.3% recovery on `bee-3-cpl`; M97b measured 33.3% on
+`dry-erase-marker-head-cpl`. Those imply gains of 1.84 and 3.00 — a 63% spread
+across the only two stacks the corpus has measured. Shipping 1.84 leaves
+`dry-erase` a third under-corrected; shipping 3.00 over-corrects `bee-3-cpl` by
+63%. This is rule 6's "do not fit a shrinkage correction" and fact 52's refuted
+cross-scene transfer, arriving from a new direction.
+
+### 16.5 Per-span is not the answer either (and my negative control had to be fixed)
+
+If the attenuation were a function of baseline, the correction would be per-span
+and could be self-measured. **MEASURED** (`src/perspan.py`) — the shipped
+estimator's response, fitted as the slope of measured log-scale on true
+log-scale, is not monotone in span and never reaches 1.0:
+
+| span | 1 | 2 | 4 | 8 | 16 | 32 | 64 | 96 | 128 | 192 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| r(s) | 0.130 | 0.184 | 0.232 | 0.334 | 0.545 | **0.659** | 0.516 | 0.420 | 0.238 | 0.102 |
+
+An inverted U. Short baselines lose to peak-locking (§5.3), long ones to capture
+starvation (§5.2), and the best span still recovers only 66%. Applying 1/r(s) per
+span and re-solving:
+
+| arm | mean | max | rms |
+|---|---:|---:|---:|
+| shipped, untouched | 36.4 | 139.7 | 54.1 |
+| shipped + best scalar gain | **22.5** | — | — |
+| shipped + per-span 1/r(s) | 31.6 | 105.5 | 38.4 |
+| negative control, groups mixed | 46.9 | 354.1 | 74.7 |
+
+**One scalar beats the per-span correction.** Over-correcting a span whose
+response is 0.130 means multiplying it by 7.7, and the global least squares pays
+for the injected noise. The span structure is real — the negative control, which
+keeps the same number of groups but fills each with a mixture of baselines, is
+*worse* than doing nothing — but exploiting it naively costs more than it earns.
+
+**A control that could not fail, caught.** The first version of that negative
+control permuted the span *labels*. That is a bijection on the grouping: the
+groups are identical and only renamed, so it returned a byte-identical result by
+construction. It was caught because it matched the treatment arm to four
+significant figures. The fix assigns each edge a pseudo-random group from its
+endpoints, preserving the degrees of freedom while destroying the span structure.
+Recorded per the house rule about nulls passing while the instrument is blind:
+this one would have passed while being incapable of failing.
+
+### 16.6 Rule 6's span advice is measurably harmful on this stack
+
+**MEASURED** (`edgeset.py`). Rule 6 says "discard spans 1–2 from the solve", and
+§15.3 of this report recommended exactly that. Doing it takes max per-frame
+placement error from 139.7 px to **628.1 px**; adding the prescribed frame-0
+anchor fan on top does not help (551.7 px), and dropping spans 1–2 together with
+the fan and the over-shooting long spans leaves the graph unable to place every
+frame at all. Short edges are badly attenuated *and* load-bearing for local
+connectivity. **§15.3 is withdrawn.**
+
+### 16.7 What I am not shipping, and why
+
+Nothing new goes into `align.rs` beyond a measured warning on
+`iterated_wide()`'s docstring, because:
+
+- the fix I already landed does not improve per-frame placement (37.5 vs 36.4 px)
+  and it *blocks* the gain correction, which reads 70.0 px when the 1.84 gain is
+  applied to it because it has already absorbed the endpoint shortfall;
+- the gain correction that does work is a scene-fitted scalar, which rule 6 bans
+  and which the corpus's own two measurements (1.84 and 3.00) show is not
+  transferable;
+- and the self-measured route that would make it shippable is not built. The
+  probe's existing `plant` command synthesises a moving frame from a *single real
+  frame*, so it carries no defocus difference and measures a response of ~1 by
+  construction — it is B2's placebo, not the correction. A response measured on
+  the **actual pair**, by planting ±δ on frame k of the real (j,k) edge and
+  re-measuring, is the missing instrument. It is the brief's candidate fix 1,
+  restricted to the form fact 52 does not refute, and §16.4 now prices it: it has
+  up to 38% of per-frame placement error to recover on `bee-3-cpl`.
+
+I may not verify my own work, and I am not going to hand over an unverified
+second fix on the same night the first one failed its real bar.
+
+### 16.8 Candidate facts
+
+- **P18 (MEASURED).** `bee-3-cpl`'s breathing track departs from linear by 46.1
+  plane px at j=200, with a monotonically accelerating rate (0.00030 → 0.00072 per
+  frame). The track is curved, not a straight ramp.
+- **P19 (DERIVED, from P18).** M102's 96.96% recovery of planted drift was
+  measured against a *linear* plant and does not transfer to real captures. Its
+  own §6–§7 flagged the missing capture; P18 supplies it.
+- **P20 (MEASURED).** End-to-end alignment residual and per-frame placement error
+  are nearly independent. `iterated_wide` moves the first 150.3 → 2.9 px and the
+  second 36.4 → 37.5 px on the same stack, same solve, same ladder.
+- **P21 (DERIVED, from P20).** Every published acceptance bar on the strehl solve
+  — M97's `signtest.py`, M86's span, M97b's "drift removed", and M103's own B3 —
+  scores one frame pair out of 299 and is blind to where the other 297 land. This
+  is discipline 621's warning about relative scores, one level up: an *absolute*
+  score can still be absolutely the wrong quantity.
+- **P22 (MEASURED).** A per-frame placement number is meaningless without its
+  gauge. `iterated_wide` reads 98.2 px gauged at frame 0 and 37.5 px gauged at
+  rung 144, a difference of one constant offset.
+- **P23 (MEASURED).** A scalar gain on the shipped solve is worth 36.4 → 25.6 px
+  of per-frame placement error at the orchestrator's 1.842, and 22.5 px at the
+  per-frame optimum of 1.459. The gain correction works; the endpoint-fitted value
+  overshoots.
+- **P24 (MEASURED).** The required gain is stack-dependent: 1.84 on `bee-3-cpl`
+  (M97's 54.3%) against 3.00 on `dry-erase-marker-head-cpl` (M97b's 33.3%). No
+  single constant serves both.
+- **P25 (MEASURED).** The shipped estimator's per-span response on `bee-3-cpl` is
+  an inverted U — 0.130 at span 1, peaking at 0.659 at span 32, falling to 0.102
+  at span 192 — and never reaches 1.0 at any baseline.
+- **P26 (MEASURED).** Correcting per span is *worse* than one scalar (31.6 px vs
+  22.5 px), although the span structure is real (a matched-degrees-of-freedom
+  control with mixed baselines reads 46.9 px, worse than the untouched 36.4 px).
+- **P27 (MEASURED).** Discarding spans 1–2, as rule 6 directs and as §15.3 of this
+  report recommended, takes max per-frame placement error from 139.7 px to 628.1
+  px on `bee-3-cpl`; combined with the other prescribed changes the graph cannot
+  place every frame.
+- **P28 (MEASURED, negative).** The frame-0 anchor fan is not the cause of
+  `iterated_wide`'s frame-0 offset: removing all 29 fan edges moves mean placement
+  error by 1.3 px against a 0.8 px placebo.
+
+### 16.9 Reproducing this section
+
+```powershell
+$env:PYTHONIOENCODING='utf-8'
+cd experiments\M103-halfdrift
+
+# C1/C2 -- is the track curved, and is the shortfall uniform?
+python src\curvature.py                    # data\curvature.json
+
+# per-frame placement, and the ceiling on any scalar gain
+python src\placement.py data\truth-dense.json `
+    C:\dev\strehl-out\M103\wm-baseline-r0.txt `
+    C:\dev\strehl-out\M103\wm-iww-r0.txt data\placement.json
+
+# which edges cause the frame-0 offset  (re-solves, ~2 min)
+python src\edgeset.py data\IWW-edges.csv data\truth-dense.json data\edgeset.json
+
+# the gauge question -- run AFTER edgeset.py, it reads its sidecars
+python src\gauge.py data\truth-dense.json data\edgeset.json data\gauge.json
+
+# the shipping decision
+python src\gaingauge.py data\truth-dense.json data\gaingauge.json
+
+# scalar versus per-span  (re-solves, ~2 min)
+python src\perspan.py data\A-deep-edges.csv data\truth-dense.json data\perspan.json
+```
+
+Every script prints its own controls before its result and exits non-zero if they
+fail. Sidecars and filtered edge sets are written under `C:\dev\strehl-out\M103\`
+only, temp-then-rename, per M97's torn-read hazard; nothing is written beside the
+captures.
+
+### 16.10 Routed to the orchestrator (additions to §15)
+
+**16.10a — §15.1's ledger row is now wrong.** Replace with:
+
+> `M103` — the alignment solve recovers half the drift. Found the cause (coarse
+> capture starvation plus peak-locking in the sub-pixel NCC) and closed it in
+> `align.rs`, taking end-to-end residual on `bee-3-cpl` from 150.3 to 2.9 plane
+> px. Then measured that end-to-end residual and **per-frame placement** are
+> nearly independent (36.4 → 37.5 px for the same fix), which retracts the fix's
+> operational value, explains three separate render nulls, and invalidates the
+> acceptance bar used by M86, M97, M97b and M103 alike. Priced the scalar gain
+> correction on the axis that matters — 36.4 → 25.6 px at 1.842 — and measured
+> that it cannot ship as a constant (1.84 on `bee-3-cpl`, 3.00 on
+> `dry-erase-marker-head-cpl`). Also found `signtest.py` cannot measure a residual
+> above 1.0. `docs/research/M103-halfdrift.md`.
+
+**16.10b — §15.3 is WITHDRAWN.** Do not apply it. Measured in §16.6: discarding
+spans 1–2 takes max per-frame placement error to 628.1 px, the frame-0 anchor fan
+is a 1.3 px no-op against a 0.8 px placebo, and `iterated_wide()` should not
+become the default.
+
+**16.10c — for M97b.** M97b's GAINED arm is, as far as this report can tell,
+endpoint-gauged: "89.5% drift removed" is a frame-0-against-frame-N number. §16.2
+measures that such a number is nearly independent of per-frame placement. That
+does **not** refute M97b's 19–32% sharpness win, which was measured on a render
+with a seam control that ran against the result — and §16.4 independently supports
+a real gain being available. But the two should be reconciled: M97b's GAINED track
+should be scored per frame against a dense ladder on `dry-erase-marker-head-cpl`,
+in the gauge that stack's merge uses. If it reads level with ALIGNED there, the
+sharpness win has a different cause than placement and needs one.
+
+**16.10d — for M102.** §16.1 confirms the circularity M102 flagged in its own §7.
+The real track on `bee-3-cpl` is curved by 46.1 plane px from its chord. A linear
+plant against a linear model measures arithmetic. Suggest M102's simulator take
+the measured track shape from `experiments/M103-halfdrift/data/truth-dense.json`.
+
+**16.10e — a discipline candidate.** Suggested wording:
+
+> **Score the solve where the merge reads it.** A registration solve is consumed
+> per frame, so an end-to-end residual between the two extreme frames is one
+> sample out of N and can be driven to zero while every interior placement stays
+> exactly as wrong as it was. Before accepting any alignment bar, state the frame
+> set it scores and the gauge it scores in — a whole-graph offset is free in one
+> gauge and costs every frame in another.
+
+**16.10f — a second discipline candidate, from §16.5.** Suggested wording:
+
+> **A control that relabels is not a control.** Permuting the labels of a
+> grouping is a bijection: the groups are unchanged and the "shuffled" arm
+> reproduces the treatment arm exactly, by construction. If a negative control
+> returns the treatment result to several significant figures, suspect that it
+> cannot fail before concluding the effect is spurious.

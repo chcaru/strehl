@@ -1,0 +1,20 @@
+CONTROLS (gauge rung 144, the nearest measured rung to `reference 149`)
+  PLACEBO  gain 1.000 on the shipped track -> mean 36.4 px (gauge.py reported 36.4) -> PASS
+  POSITIVE truth x0.543 -> sweep finds gain 1.8420 (closed form 1.8416), residual 0.017 px -> PASS
+  NEGATIVE a pure shape error (half-way to the straight chord): mean 8.1 px,
+           best gain 1.007 leaves 8.0 px -> PASS (gain cannot fix shape)
+  -> controls PASS
+
+Per-frame placement error vs the independent RAW ladder, plane px, 39 rungs,
+in the merge's operative gauge. `gain 1.84` is the correction I was told to ship.
+
+  arm                       gain 1.00  gain 1.84  gain best |   best g    worth
+  SHIPPED                        36.4       25.6       22.5 |    1.459    38.3%
+  M103 iterated_wide             37.5       70.0       34.6 |    0.719     7.6%
+  IWW-nofan-noovershoot          36.3       58.3       35.3 |    0.821     2.8%
+
+Read: the gain that minimises per-frame placement is near 1.0, and the
+gain of 1.84 that minimises the END-TO-END residual makes per-frame
+placement WORSE on every arm.
+
+wrote data\gaingauge.json

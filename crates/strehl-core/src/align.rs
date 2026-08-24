@@ -690,6 +690,34 @@ impl AlignConfig {
     /// [`AlignConfig::iterated`] with the deeper coarse ladder of
     /// [`AlignConfig::wide`], for stacks whose end-to-end drift exceeds what a
     /// single 1/8 coarse level can capture.
+    ///
+    /// # Do not adopt this as a default on the strength of an end-to-end number
+    ///
+    /// M103's first arm reported that this config takes `bee-3-cpl`'s
+    /// **end-to-end** residual from 150.3 plane px to 2.9, and recommended it
+    /// become the default. **That recommendation is withdrawn**, by M103's own
+    /// later measurement, and the reason generalises well past this function.
+    ///
+    /// The merge does not gather frames end to end. It gathers each frame at its
+    /// own `a_k`, so what reaches the photograph is *per-frame placement*, and
+    /// the two are very nearly independent. Scored against an independent RAW
+    /// ladder of 39 rungs, in the gauge the merge actually uses (`reference
+    /// 149`), mean per-frame placement error on `bee-3-cpl` is:
+    ///
+    /// | config | end-to-end residual | per-frame placement |
+    /// |---|---:|---:|
+    /// | [`AlignConfig::deep`], as shipped | 150.3 px | 36.4 px |
+    /// | this one | 2.9 px | 37.5 px |
+    ///
+    /// A fifty-fold improvement in the headline number bought nothing where it
+    /// counts, and three separate instruments then agreed the render did not
+    /// change. Worse, this config *absorbs* the end-to-end shortfall, so the
+    /// scalar gain correction that is worth 38% of per-frame placement error on
+    /// the shipped solve makes this one **worse** (37.5 -> 70.0 px at 1.84).
+    ///
+    /// The iteration and tile warping are real and are measured to work; it is
+    /// the *bar* that was wrong. Anyone changing a default here should score it
+    /// per frame, not end to end. See `docs/research/M103-halfdrift.md` Section 16.
     pub fn iterated_wide() -> Self {
         Self {
             fine_iters: 8,

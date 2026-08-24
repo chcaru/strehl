@@ -1,0 +1,22 @@
+edges 2520, truth rungs 39, R_PLANE 2112.9 px
+anchor-fan edges (i==0, span not in ladder): 29 of 2520
+
+Per-frame placement error against the independent RAW ladder, plane px.
+  abs   = as gauged at frame 0, what the merge actually applies
+  shape = after removing the best constant offset (the non-gauge error)
+
+  variant                   edges abs_mean  abs_max shp_mean  shp_max    offset
+  IWW-all                    2520     98.2    138.3     29.5    108.3    -108.3
+  IWW-nofan                  2491     99.5    139.4     29.5    109.3    -109.3
+  IWW-no12                   1925     70.2    628.1     41.1    564.3     -63.8
+  IWW-noovershoot            2369     61.3     91.2     29.1    113.2     -68.5
+  IWW-nofan-noovershoot      2340     49.2     73.7     28.8    113.9     -49.8
+  IWW-rule6                  1896     61.1    628.1     40.8    575.9     -52.3
+  IWW-clean                  1745   (no score)
+  PLACEBO-drop1pct           2496     97.3    137.9     29.6    107.7    -107.7
+  SHIPPED (reference)           -     39.4    155.1     36.4    137.9      17.2
+
+WIRING  IWW-all vs committed wm-iww-r0.txt: max |dln| = 0.000e+00 -> PASS
+PLACEBO drop 1% of non-frame-0 edges moves abs_mean by 0.8 px
+
+wrote data\edgeset.json
