@@ -33,6 +33,12 @@
           "why": "max luma p99.9"
         },
         {
+          "role": "clipped",
+          "x": 5320,
+          "y": 560,
+          "why": "max fraction of pixels with red AND blue >= 99% full scale"
+        },
+        {
           "role": "smooth",
           "x": 6440,
           "y": 280,
@@ -48,7 +54,13 @@
       "shape": [
         7032,
         4688
-      ]
+      ],
+      "scouted_from": {
+        "tif": "C:\\dev\\strehl-out\\M110-sheet\\bee-3-cpl\\default.tif",
+        "sha256": "e400a63aa9f6ab1f1957940d7bd9d4965d67e01f6f0e1a0a7abc30d8e7f17112",
+        "limit": null,
+        "recrop": true
+      }
     },
     {
       "name": "wrapped-text-1",
@@ -75,6 +87,12 @@
           "why": "max luma p99.9"
         },
         {
+          "role": "clipped",
+          "x": 5600,
+          "y": 2240,
+          "why": "max fraction of pixels with red AND blue >= 99% full scale"
+        },
+        {
           "role": "smooth",
           "x": 0,
           "y": 2520,
@@ -90,7 +108,119 @@
       "shape": [
         7032,
         4688
-      ]
+      ],
+      "scouted_from": {
+        "tif": "C:\\dev\\strehl-out\\M110-sheet\\wrapped-text-1\\default.tif",
+        "sha256": "6774f008544527457bea1a0318e451639b66a46db28b86149c127fb1a6d65180",
+        "limit": null,
+        "recrop": true
+      }
+    },
+    {
+      "name": "tweezers-cpl",
+      "dir": "D:\\personal\\macro\\tweezers-cpl",
+      "why": "polished metal: the subject most likely to contain genuinely blown, physically-neutral speculars, which is where M109's magenta clipping shows and where lateral CA is loudest",
+      "exposure": "--exposure=1.13",
+      "crops": [
+        {
+          "role": "detail",
+          "x": 6440,
+          "y": 1680,
+          "why": "max mean |gradient|"
+        },
+        {
+          "role": "silhouette",
+          "x": 1680,
+          "y": 1680,
+          "why": "max luma p95-p05"
+        },
+        {
+          "role": "specular",
+          "x": 1120,
+          "y": 1120,
+          "why": "max luma p99.9"
+        },
+        {
+          "role": "clipped",
+          "x": 1120,
+          "y": 1680,
+          "why": "max fraction of pixels with red AND blue >= 99% full scale"
+        },
+        {
+          "role": "smooth",
+          "x": 2800,
+          "y": 0,
+          "why": "min |gradient| above p20 brightness"
+        },
+        {
+          "role": "corner",
+          "x": 6432,
+          "y": 4080,
+          "why": "geometric corner, 48px inset; radial max for lateral CA"
+        }
+      ],
+      "shape": [
+        7040,
+        4688
+      ],
+      "scouted_from": {
+        "tif": "C:\\dev\\strehl-out\\M110-sheet\\tweezers-cpl\\default.tif",
+        "sha256": "a8c07ccdf4fd9947189b57bd32d03adfec8687d52e8c23176f6acf28cb1ae5c7",
+        "limit": null
+      }
+    },
+    {
+      "name": "flat-on-ruler-cpl",
+      "dir": "D:\\personal\\macro\\flat-on-ruler-cpl",
+      "why": "printed graduations filling the frame to the corners: content out at high radius, where M107's CA fit is extrapolated beyond its supported r = 0.788",
+      "exposure": "--exposure=1.96",
+      "crops": [
+        {
+          "role": "detail",
+          "x": 5040,
+          "y": 0,
+          "why": "max mean |gradient|"
+        },
+        {
+          "role": "silhouette",
+          "x": 6160,
+          "y": 3920,
+          "why": "max luma p95-p05"
+        },
+        {
+          "role": "specular",
+          "x": 4480,
+          "y": 0,
+          "why": "max luma p99.9"
+        },
+        {
+          "role": "clipped",
+          "x": 5880,
+          "y": 1960,
+          "why": "max fraction of pixels with red AND blue >= 99% full scale"
+        },
+        {
+          "role": "smooth",
+          "x": 280,
+          "y": 3920,
+          "why": "min |gradient| above p20 brightness"
+        },
+        {
+          "role": "corner",
+          "x": 48,
+          "y": 48,
+          "why": "geometric corner, 48px inset; radial max for lateral CA"
+        }
+      ],
+      "shape": [
+        7040,
+        4688
+      ],
+      "scouted_from": {
+        "tif": "C:\\dev\\strehl-out\\M110-sheet\\flat-on-ruler-cpl\\default.tif",
+        "sha256": "c461c0a635f4d835c5cc5fd5372edf2283130712032c1dd3759d989927827751",
+        "limit": null
+      }
     }
   ]
 }

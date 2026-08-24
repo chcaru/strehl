@@ -75,15 +75,39 @@ BINARY = REPO / ".cargo-target-m110" / "release" / "strehl.exe"
 # The arms matrix. Adding an arm is adding a dict: `env` and the extra flags for
 # each stage. Kept as data so M107's CA and M97's merge wiring drop in without
 # touching any logic below.
+#
+# TO ARM A PENDING ARM: fill in `align` / `merge` / `env` with the EXACT string
+# its owning milestone reports, then set `enabled: True`. Nothing else changes.
+#
+# `enabled: False` exists because a guessed flag is worse than a missing arm.
+# `OpticalProfile` currently has zero consumers outside its own file, so
+# `STREHL_FIX_CA=1` sets a variable no render path reads: an invented CA arm
+# would render bytes identical to the default and the sheet would report
+# "the correction does not help". A silent no-op is a false negative wearing
+# the costume of a result, so pending arms are skipped loudly instead.
 ARMS: list[dict] = [
-    {"name": "default", "align": [], "merge": [], "env": {},
+    {"name": "default", "align": [], "merge": [], "env": {}, "enabled": True,
      "note": "shipped default (catmull-rom)"},
     {"name": "lanczos3", "align": ["--resampler", "lanczos3"], "merge": [], "env": {},
-     "note": "M95 kernel, landed switchable at 843f6e1"},
+     "enabled": True,
+     "note": "M95 kernel, landed switchable at 843f6e1. Set on the ALIGN stage because "
+             "`strehl stack` has no --resampler flag at all: a merge's kernel comes "
+             "entirely from whichever sidecar it reads."},
+    {"name": "ca", "align": [], "merge": [], "env": {}, "enabled": False,
+     "note": "PENDING M107's exact argv/env -- do not guess. Note eps_b is None: the fit "
+             "is red-only while real fringes are red/cyan pairs, so expect a partial fix "
+             "and do not let the sheet imply otherwise."},
+    {"name": "ca+lanczos3", "align": ["--resampler", "lanczos3"], "merge": [], "env": {},
+     "enabled": False,
+     "note": "PENDING M107. The actual candidate configuration and the only arm that "
+             "answers the owner's question: sharpening makes fringes more conspicuous, "
+             "so neither CA nor lanczos3 alone settles it."},
 ]
 
 CROP = 560          # 1:1 window, in output pixels
-ROLES = ["detail", "silhouette", "specular", "smooth", "corner"]
+ROLES = ["detail", "silhouette", "specular", "clipped", "smooth", "corner"]
+FULL = 65535        # 16-bit sRGB TIFF full scale
+HOT = 0.99 * FULL   # "genuinely blown", not merely bright
 
 
 # --------------------------------------------------------------------------
@@ -194,13 +218,26 @@ def render_arm(sub: dict, arm: dict, limit: int | None, exposure_flag: str | Non
             recorded = ln.split(None, 1)[1].strip()
             break
 
+    # `strehl stack` has no --resampler flag: the merge's kernel is set entirely
+    # by whichever sidecar it reads. That makes the kernel field ONE-SIDED --
+    # an arm can silently inherit a kernel from an unrelated earlier command and
+    # nothing in its own log would say so. Assert the sidecar records what this
+    # arm actually asked for, rather than trusting that it must.
+    want = "catmull-rom"
+    if "--resampler" in arm["align"]:
+        want = arm["align"][arm["align"].index("--resampler") + 1]
+    ok_res = recorded == want
+
     return {
-        "ok": True,
+        "ok": ok_res,
         "note": arm["note"],
         "align": a,
         "merge": m,
         "sidecar": str(sidecar),
         "sidecar_resampler": recorded,
+        "resampler_wanted": want,
+        "resampler_ok": ok_res,
+        "stage": None if ok_res else "resampler",
         "tif": str(tif),
         "tif_sha256": sha256_file(tif),
         "tif_bytes": tif.stat().st_size,
@@ -251,9 +288,11 @@ def cmd_scout(args) -> int:
             sub["exposure"] = f"--exposure={stops}"
             print(f"  pinned exposure: {sub['exposure']}")
 
-        img = load8(Path(res["tif"]))
-        sub["shape"] = [int(img.shape[1]), int(img.shape[0])]
-        sub["crops"] = scout_crops(img)
+        raw = load_raw(Path(res["tif"]))
+        sub["shape"] = [int(raw.shape[1]), int(raw.shape[0])]
+        sub["crops"] = scout_crops(raw)
+        sub["scouted_from"] = {"tif": res["tif"], "sha256": res["tif_sha256"],
+                               "limit": args.limit}
         for c in sub["crops"]:
             print(f"  {c['role']:<11} @ ({c['x']},{c['y']})  {c['why']}")
         save_subjects(cfg)
@@ -261,14 +300,42 @@ def cmd_scout(args) -> int:
     return 0
 
 
-def scout_crops(img: np.ndarray) -> list[dict]:
+def cmd_recrop(args) -> int:
+    """Re-choose crops from the default arm ALREADY on disk, without re-rendering.
+
+    For when the role list changes and a fresh render would be pure cost. It is
+    honest only because it records the sha256 of the TIFF it read, so a crop set
+    can always be traced to the exact bytes it was chosen on -- the P10 lesson
+    applied to configuration rather than to output.
+    """
+    cfg = load_subjects()
+    for sub in pick(cfg, args.subject):
+        tif = OUT_ROOT / sub["name"] / "default.tif"
+        if not tif.exists():
+            print(f"skip {sub['name']}: no {tif}")
+            continue
+        print(f"\n=== recropping {sub['name']} from {tif.name} ===")
+        raw = load_raw(tif)
+        sub["shape"] = [int(raw.shape[1]), int(raw.shape[0])]
+        sub["crops"] = scout_crops(raw)
+        sub["scouted_from"] = {"tif": str(tif), "sha256": sha256_file(tif),
+                               "limit": None, "recrop": True}
+        for c in sub["crops"]:
+            print(f"  {c['role']:<11} @ ({c['x']},{c['y']})  {c['why']}")
+        save_subjects(cfg)
+    print(f"\nwrote {SUBJECTS_PATH}")
+    return 0
+
+
+def scout_crops(raw: np.ndarray) -> list[dict]:
+    img = to8(raw)
     h, w = img.shape[:2]
     g = img[:, :, 1].astype(np.float32)
     step = CROP // 2
     ys = list(range(0, h - CROP, step))
     xs = list(range(0, w - CROP, step))
 
-    grad, spread, hi, bright = {}, {}, {}, {}
+    grad, spread, hi, bright, blown = {}, {}, {}, {}, {}
     for y in ys:
         for x in xs:
             t = g[y:y + CROP:3, x:x + CROP:3]
@@ -277,6 +344,7 @@ def scout_crops(img: np.ndarray) -> list[dict]:
             spread[(y, x)] = float(np.percentile(t, 95) - np.percentile(t, 5))
             hi[(y, x)] = float(np.percentile(t, 99.9))
             bright[(y, x)] = float(t.mean())
+            blown[(y, x)] = neutrality(raw[y:y + CROP:3, x:x + CROP:3])[0]
 
     out = []
     used: list[tuple[int, int]] = []
@@ -297,6 +365,21 @@ def scout_crops(img: np.ndarray) -> list[dict]:
     take("detail", sorted(grad, key=grad.get, reverse=True), "max mean |gradient|")
     take("silhouette", sorted(spread, key=spread.get, reverse=True), "max luma p95-p05")
     take("specular", sorted(hi, key=hi.get, reverse=True), "max luma p99.9")
+
+    # The magenta-clipping site. Selected on the PHYSICAL condition -- the most
+    # genuinely blown pixels -- not on how magenta the tile looks. Selecting on
+    # the defect's appearance would choose the window where the defect is
+    # loudest, which is choosing the answer; selecting on blown-ness picks the
+    # place where the render is obliged to be neutral and is therefore a fair
+    # test both before and after the fix. Falls back to the next-brightest tile
+    # if this subject has nothing genuinely clipped, and says so.
+    if max(blown.values(), default=0.0) > 0.0:
+        take("clipped", sorted(blown, key=blown.get, reverse=True),
+             "max fraction of pixels with red AND blue >= 99% full scale")
+    else:
+        take("clipped", sorted(hi, key=hi.get, reverse=True),
+             "NO GENUINELY CLIPPED PIXELS in this subject; fell back to max luma p99.9")
+
     floor = np.percentile(list(bright.values()), 20)
     smooth_rank = sorted([c for c in grad if bright[c] >= floor], key=grad.get)
     take("smooth", smooth_rank or sorted(grad, key=grad.get), "min |gradient| above p20 brightness")
@@ -313,24 +396,46 @@ def scout_crops(img: np.ndarray) -> list[dict]:
 def cmd_render(args) -> int:
     cfg = load_subjects()
     OUT_ROOT.mkdir(parents=True, exist_ok=True)
-    man = provenance()
+    prov = provenance()
+
+    # Merge into any existing manifest rather than replacing it, so re-running
+    # ONE subject does not silently delete the others' entries and leave
+    # `figure` skipping them. Provenance is recorded PER SUBJECT because a
+    # partial re-run happens under a different binary than the rest -- which is
+    # the P10 hazard exactly, and a single global block would paper over it.
+    mp = OUT_ROOT / "manifest.json"
+    man = json.loads(mp.read_text(encoding="utf-8")) if mp.exists() else {}
+    man.update(prov)
     man["crop_px"] = CROP
     man["limit"] = args.limit
-    man["arms"] = [{"name": a["name"], "note": a["note"],
+    man["arms"] = [{"name": a["name"], "note": a["note"], "enabled": a.get("enabled", True),
                     "align": a["align"], "merge": a["merge"], "env": a["env"]} for a in ARMS]
-    man["subjects"] = {}
+    man.setdefault("subjects", {})
     failures = []
 
     for sub in pick(cfg, args.subject):
-        print(f"\n=== rendering {sub['name']} ({len(ARMS)} arms) ===")
-        entry = {"dir": sub["dir"], "exposure": sub.get("exposure"), "arms": {}}
+        print(f"\n=== rendering {sub['name']} ({sum(1 for a in ARMS if a.get('enabled', True))} "
+              f"of {len(ARMS)} arms enabled) ===")
+        entry = {"dir": sub["dir"], "exposure": sub.get("exposure"), "arms": {},
+                 "provenance": prov, "limit": args.limit}
         for arm in ARMS:
-            print(f"  {arm['name']:<10} ...", end="", flush=True)
+            if not arm.get("enabled", True):
+                print(f"  {arm['name']:<12} .. PENDING, skipped (not run, not a no-op arm)")
+                entry["arms"][arm["name"]] = {"ok": False, "pending": True,
+                                              "note": arm["note"]}
+                continue
+            print(f"  {arm['name']:<12} ...", end="", flush=True)
             res = render_arm(sub, arm, args.limit, sub.get("exposure"))
             entry["arms"][arm["name"]] = res
             if not res["ok"]:
-                print(f" FAILED at {res['stage']} (exit {res[res['stage']]['exit']})")
-                print("   " + "\n   ".join(res[res["stage"]]["stderr_tail"][-8:]))
+                st = res.get("stage") or "?"
+                if st == "resampler":
+                    print(f" FAILED: sidecar records resampler "
+                          f"{res['sidecar_resampler']!r}, arm asked for "
+                          f"{res['resampler_wanted']!r}")
+                else:
+                    print(f" FAILED at {st} (exit {res[st]['exit']})")
+                    print("   " + "\n   ".join(res[st]["stderr_tail"][-8:]))
                 failures.append(f"{sub['name']}/{arm['name']}")
             else:
                 print(f" ok  {res['seconds']}s  sha {res['tif_sha256'][:12]}"
@@ -348,10 +453,21 @@ def cmd_render(args) -> int:
             failures.append(f"{sub['name']} duplicate arm bytes {dupes}")
         else:
             print(f"  arms byte-distinct: OK ({len(good)} arms)")
+
+        # `strehl stack` has no --resampler flag, so a merge's kernel comes only
+        # from the sidecar it reads. With ONE arm there is nothing to disagree
+        # with it: a lone arm can inherit a kernel from an unrelated earlier
+        # command and the byte-distinctness assertion above is vacuous. Say so
+        # rather than let a one-armed run look as guarded as a two-armed one.
+        entry["arms_run"] = len(good)
+        entry["comparison_guarded"] = len(good) >= 2
+        if len(good) < 2:
+            print(f"  *** ONLY {len(good)} ARM RAN: byte-distinctness is vacuous and the "
+                  f"kernel is unguarded ***")
+            failures.append(f"{sub['name']} unguarded: {len(good)} arm(s)")
         man["subjects"][sub["name"]] = entry
 
     man["failures"] = failures
-    mp = OUT_ROOT / "manifest.json"
     mp.write_text(json.dumps(man, indent=2) + "\n", encoding="utf-8")
     print(f"\nwrote {mp}")
     return 1 if failures else 0
@@ -360,12 +476,40 @@ def cmd_render(args) -> int:
 # --------------------------------------------------------------------------
 # figure
 # --------------------------------------------------------------------------
+def load_raw(p: Path) -> np.ndarray:
+    """The TIFF as written. 16-bit for --srgb output; needed unshifted because
+    clipping lives in the top 1% and >>8 cannot tell 65280 from 65535."""
+    return tifffile.imread(p)
+
+
+def to8(a: np.ndarray) -> np.ndarray:
+    return (a >> 8).astype(np.uint8) if a.dtype == np.uint16 else a.astype(np.uint8)
+
+
 def load8(p: Path) -> np.ndarray:
     """16-bit -> 8-bit by the high byte, as sheet3.py does. No tone change."""
-    a = tifffile.imread(p)
-    if a.dtype == np.uint16:
-        return (a >> 8).astype(np.uint8)
-    return a.astype(np.uint8)
+    return to8(load_raw(p))
+
+
+def neutrality(win: np.ndarray) -> tuple[float, float | None]:
+    """Blown fraction, and the green offset on blown pixels.
+
+    A blown highlight is physically neutral: nothing in the scene is brighter
+    than the clip point in two channels and coloured in the third. So on pixels
+    where red AND blue are both clipped, mean (G - (R+B)/2) / full-scale should
+    be ~0. M109 measured green pinned ~0.10 BELOW red and blue, which renders
+    those highlights magenta. This reads that number straight off the tile, so
+    the before/after is quantitative and not merely "looks less pink".
+    """
+    if win.dtype != np.uint16:
+        return 0.0, None
+    r, g, b = (win[:, :, i].astype(np.float32) for i in range(3))
+    blown = (r >= HOT) & (b >= HOT)
+    frac = float(blown.mean())
+    if int(blown.sum()) < 64:
+        return frac, None
+    off = float(((g[blown] - 0.5 * (r[blown] + b[blown])) / FULL).mean())
+    return frac, off
 
 
 def font(size: int):
@@ -392,11 +536,19 @@ def cmd_figure(args) -> int:
         if len(arms) < 2:
             print(f"skip {name}: fewer than two good arms")
             continue
-        imgs = {a["name"]: load8(Path(entry["arms"][a["name"]]["tif"])) for a in arms}
+        imgs, neut = {}, {}
         crops = sub["crops"]
+        clip = next((c for c in crops if c["role"] == "clipped"), None)
+        for a in arms:
+            raw = load_raw(Path(entry["arms"][a["name"]]["tif"]))
+            if clip:
+                neut[a["name"]] = neutrality(
+                    raw[clip["y"]:clip["y"] + CROP, clip["x"]:clip["x"] + CROP])
+            imgs[a["name"]] = to8(raw)
+            del raw
 
         for scale, tag in ((1, "100"), (2, "200")):
-            pad, lab, hdr = 10, 30, 96
+            pad, lab, hdr = 10, 46, 96
             cw = CROP * scale
             W = pad + len(arms) * (cw + pad)
             H = hdr + len(crops) * (lab + cw + pad) + 34
@@ -407,14 +559,15 @@ def cmd_figure(args) -> int:
                              + (f", magnified x{scale} NEAREST (real pixels)" if scale > 1 else "")
                              + "   NO resize / NO sharpening / NO tone change",
                    fill=(240, 240, 245), font=f_hdr)
-            d.text((pad, 32), f"HEAD {man['git_head'][:12]}"
-                              f"{'  DIRTY' if man['git_dirty'] else ''}"
-                              f"   strehl.exe sha256 {man['binary']['sha256'][:16]}"
-                              f"   built {man['binary']['mtime']}",
+            pv = entry.get("provenance", man)
+            d.text((pad, 32), f"HEAD {pv['git_head'][:12]}"
+                              f"{'  DIRTY' if pv['git_dirty'] else ''}"
+                              f"   strehl.exe sha256 {pv['binary']['sha256'][:16]}"
+                              f"   built {pv['binary']['mtime']}",
                    fill=(150, 200, 150), font=f_lab)
-            d.text((pad, 50), f"rendered {man['generated_local']}"
+            d.text((pad, 50), f"rendered {pv['generated_local']}"
                               f"   exposure {entry.get('exposure') or 'auto'}"
-                              f"   limit {man.get('limit') or 'none (full stack)'}"
+                              f"   limit {entry.get('limit') or 'none (full stack)'}"
                               f"   crop {CROP}px",
                    fill=(150, 200, 150), font=f_lab)
             d.text((pad, 68), "Crop coordinates are frozen in subjects.json and identical "
@@ -433,11 +586,22 @@ def cmd_figure(args) -> int:
                         im = im.resize((cw, cw), Image.NEAREST)
                     canvas.paste(im, (x, y + lab))
                     sha = entry["arms"][arm]["tif_sha256"][:8]
-                    d.text((x, y + 6),
+                    d.text((x, y + 4),
                            f"{c['role']}  @({c['x']},{c['y']})  |  {arm}"
                            + ("   <- SHIPPED DEFAULT" if arm == "default" else "")
                            + f"   [{sha}]",
                            fill=(245, 220, 120), font=f_lab)
+                    sub2, col2 = c.get("why", ""), (150, 150, 160)
+                    if c["role"] == "clipped" and arm in neut:
+                        frac, off = neut[arm]
+                        if off is None:
+                            sub2 = f"blown {frac * 100:.2f}% of tile -- too few to score"
+                        else:
+                            # neutral blown highlight => 0.000; M109 measured ~-0.10
+                            sub2 = (f"blown {frac * 100:.2f}% of tile   "
+                                    f"green offset {off:+.4f}  (neutral = 0.0000)")
+                            col2 = (250, 140, 200) if off < -0.02 else (140, 230, 160)
+                    d.text((x, y + 24), sub2, fill=col2, font=f_lab)
                     d.rectangle([x - 1, y + lab - 1, x + cw, y + lab + cw],
                                 outline=(90, 90, 95))
                     x += cw + pad
@@ -449,17 +613,52 @@ def cmd_figure(args) -> int:
     return 0
 
 
+def cmd_survey(args) -> int:
+    """Per subject, read the frozen `clipped` tile off the default arm on disk.
+
+    Answers the question the crop site exists to serve: which subjects can
+    actually demonstrate M109's magenta clipping, and which are already neutral
+    there. A subject reading ~0 cannot show the fix working -- not because the
+    fix is absent but because there was nothing to fix in that window.
+    Green offset is one-sided: see neutrality_control.py bar H1.
+    """
+    cfg = load_subjects()
+    print(f"{'subject':<20} {'blown%':>8} {'green offset':>14}   verdict")
+    for sub in pick(cfg, args.subject):
+        tif = OUT_ROOT / sub["name"] / "default.tif"
+        clip = next((c for c in sub.get("crops", []) if c["role"] == "clipped"), None)
+        if not tif.exists() or not clip:
+            print(f"{sub['name']:<20} {'-':>8} {'-':>14}   no default.tif or no clipped crop")
+            continue
+        raw = load_raw(tif)
+        frac, off = neutrality(raw[clip["y"]:clip["y"] + CROP, clip["x"]:clip["x"] + CROP])
+        del raw
+        if off is None:
+            verdict = "too few blown px to score"
+            offs = "-"
+        else:
+            offs = f"{off:+.4f}"
+            verdict = ("MAGENTA - can show M109's fix" if off < -0.02
+                       else "already neutral - cannot show the fix")
+        print(f"{sub['name']:<20} {frac * 100:>7.3f}% {offs:>14}   {verdict}")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
-    for nm in ("scout", "render", "figure", "all"):
+    for nm in ("scout", "recrop", "render", "figure", "all", "survey"):
         p = sp.add_parser(nm)
         p.add_argument("--subject", action="append")
-        if nm != "figure":
+        if nm in ("scout", "render", "all"):
             p.add_argument("--limit", type=int, default=None)
     args = ap.parse_args()
 
+    if args.cmd == "recrop":
+        return cmd_recrop(args)
+    if args.cmd == "survey":
+        return cmd_survey(args)
     if not BINARY.exists():
         sys.exit(f"missing binary: {BINARY}")
 
