@@ -1280,3 +1280,36 @@ are all silent on it -- a merge that admits a fixed wrong set scores identically
 admits the right set. A milestone is running on it now. If it reports that per-pixel focus
 correctness is not measurable on real captures with what exists today, **that becomes a
 capture request**, and it would move ahead of the flat fields in priority.
+
+**53. ACTION, 30 SECONDS OF SHOOTING, AND IT NOW BLOCKS THINGS.** The static repeat burst
+(`captures-needed.md` §12) has been on the list as "cheapest item, highest value" for a while.
+It has been promoted: a milestone just established that the quantity it would measure -- the
+focus operator's response noise, the constant every admission gate in the merge is denominated
+in -- **is not measurable from a focus sweep at all.** Not merely unmeasured. Macro depth of
+field is one to two frames wide by design, so the per-pixel focus curve is a narrow spike that
+no averaging window wide enough to beat the noise can follow. The milestone's own control
+voided its own best attempt. **Nothing in the twelve stacks can substitute for it at any
+effort.**
+
+What to shoot: tripod, subject that does not move, **do not touch focus**, ~30 frames back to
+back, working aperture and a normal exposure. That is the whole ask. Then, if you are willing,
+**shoot it twice more with the light changed** -- diffuse, then raking -- same subject, same
+focus, so the texture's spatial pattern is held and only its contrast moves (§12b). The reason
+for the second and third is that the operator's noise turns out to vary by **4x** depending on
+the local image structure, and one contrast level cannot separate structure from amplitude.
+
+**54. FYI -- an unexamined constant turned up in the shipped code.** `FINE_FOCUS_NOISE_SD =
+0.090_400` in `through_focus.rs`. It is 5.9x the constant a whole milestone was chartered to
+examine, and it appears **nowhere in any research report** -- it has never been calibrated in
+the open or questioned. Found only because that milestone read the crate instead of the
+corpus. Routed to a future milestone; no action from you.
+
+**55. FYI, PROCESS -- I have made five relay errors this session and agents caught all five.**
+The record is corrected at source each time and each correction is recorded with the mechanism.
+The pattern is one thing: **I substituted my own summary for the source.** Twice this cycle I
+recorded the opposite of what a report said in plain words -- once inventing an independent
+replication out of a sentence that credited someone else, once telling a milestone that a
+capture had been delivered when the report I was citing said it did not exist. Both were caught
+by the agents reading the sources themselves. I have made it mechanical: **before a claim about
+another milestone enters a brief or the record, open that report at the line.** Recording this
+here because you should know the failure rate of your orchestrator, not just its output.
