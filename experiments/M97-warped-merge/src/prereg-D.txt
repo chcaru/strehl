@@ -1,0 +1,61 @@
+M97 DEFECT 2 -- PRE-REGISTERED FALSIFICATION BARS
+Written BEFORE any measurement of the built binary. Edits to merge_cmd.rs
+were complete at the time of writing; no run had been performed.
+
+SUBJECT
+  A frame the alignment solve REFUSED (could not place) currently aborts the
+  entire render via bail! in Ctx::field_for (merge_cmd.rs). One unplaceable
+  frame kills a 299-frame stack. The fix drops refused frames from all three
+  merge passes and continues.
+
+PRIOR MEASUREMENT (already taken, motivates the honesty caveat below)
+  Every real sidecar on disk reads refused-lines = 0:
+    warpmap-bee-3-cpl.txt, warpmap-foam.txt, warpmap-109MSDCF.txt
+  Real runs report "299 placed / 0 refused" and "22 placed / 0 refused".
+  => This fix is expected to change ZERO pixels on real data. It is
+     robustness (a crash becomes graceful degradation), NOT image quality.
+     The bars below must therefore include a byte-freeze null AND a plant,
+     or "no pixels changed" is indistinguishable from "the code never ran".
+
+BARS
+
+D1  NULL / byte-freeze. With alignment as normally resolved (no refusals),
+    the merged output must be BIT-IDENTICAL to the recorded frozen bytes.
+    PASS = `cargo test --release -p strehl-cli --test byte-freeze` all pass.
+    A null on its own proves nothing; D1b must fire.
+
+D1b PLANT for D1. The same stack run against a sidecar carrying refusals must
+    produce a DIFFERENT hash from D1's. If the two hashes are equal, the
+    comparison is disconnected and D1 is vacuous.
+    PASS = hash(refusal run) != hash(clean run).
+
+D2  THE FIX. `strehl stack` with STREHL_WARPMAP pointed at a sidecar with 8
+    refused frames must EXIT 0 and write an image.
+    PASS = exact exit code 0 (recorded literally, not via `-ne 0`) and the
+    output file exists with nonzero length.
+
+D2b RED CONTROL on the same wiring. The three `is_refused` skips are removed
+    from a working copy (source saved to $env:TEMP first and restored from
+    that copy -- never `git checkout --`). Each mutation is anchored on a
+    unique full-line string and hard-errors if it does not land.
+    PASS = the mutated build FAILS on D2's input with the refusal bail!,
+    and the restored build passes D2 again.
+
+D3  ACCOUNTING. With 8 of N frames refused, both frame-count assertions
+    ("pass one folded X, expected Y" / "pass two folded ...") must NOT fire.
+    These are live ensure!s, so a silent miscount cannot pass.
+    PASS = no such error in stderr; stderr names the dropped frames.
+
+D4  ALL-REFUSED. A sidecar refusing every frame must exit nonzero with
+    "refused all N frames; there is nothing to merge" -- not a panic, not an
+    empty/garbage image.
+    PASS = exact nonzero exit code and that message present.
+
+EXIT-CODE HYGIENE (rule 47)
+  Capture output to a variable, read $LASTEXITCODE immediately, THEN filter.
+  Never read $LASTEXITCODE after a pipeline containing -First.
+  Record literal exit codes, never the predicate `-ne 0`.
+
+NAMED FAILURE INPUT
+  If D1 fails (frozen bytes move) the fix is WRONG and must be reverted:
+  dropping zero frames must be a no-op on data with zero refusals.

@@ -62,6 +62,7 @@ use strehl_raw::Frame;
 use crate::align_cmd::{self, WarpScratch};
 use crate::image_out;
 
+pub(crate) mod dump;
 pub(crate) mod halo;
 use crate::stack::{
     MEMORY_BUDGET_BYTES, Roi, flat_roi_stats, mean_and_sigma, provenance_line, report_hp_reference,
@@ -875,6 +876,23 @@ impl Ctx<'_> {
     /// Decode one frame and produce its regularised focus field into
     /// `scratch.reg`.
     ///
+    /// Did the alignment solve refuse to place this frame?
+    ///
+    /// A refused frame is **not** a frame with an identity warp. The solve
+    /// could not connect it to the rest of the bracket, so its geometry is
+    /// unknown; folding it unregistered would put a mis-registered frame into
+    /// the election, which is the defect alignment exists to remove.
+    ///
+    /// Every pass must ask this and skip identically, or pass two would gate
+    /// against a winner field pass one built from a different set of frames.
+    fn is_refused(&self, index: u16) -> bool {
+        self.warps.is_some_and(|m| {
+            m.warps()
+                .get(index as usize)
+                .is_some_and(|w| w.is_refused())
+        })
+    }
+
     /// Both passes go through here, which is the point: pass two's gate is only
     /// meaningful if the field it compares was produced by the same arithmetic
     /// that elected the winner in pass one.
@@ -935,7 +953,13 @@ impl Ctx<'_> {
                 }
                 Ok(FrameWarp::Refused(why)) => {
                     self.live.fetch_sub(1, Ordering::Relaxed);
-                    bail!("frame {index} was refused by the alignment solve: {why}");
+                    // Unreachable: every caller skips refused frames via
+                    // `is_refused`. Kept so a new pass that forgets to skip
+                    // fails loudly instead of merging unknown geometry.
+                    bail!(
+                        "frame {index} was refused by the alignment solve ({why}) but \
+                         reached field_for; a merge pass is missing its is_refused skip"
+                    );
                 }
                 Err(e) => {
                     self.live.fetch_sub(1, Ordering::Relaxed);
@@ -1405,6 +1429,36 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         warps,
     };
 
+    // A refused frame is dropped, not merged unregistered. Counted once here so
+    // every pass agrees on the denominator; skipping is done per pass via
+    // `Ctx::is_refused`.
+    let refused: Vec<u16> = (0..paths.len() as u16).filter(|i| ctx.is_refused(*i)).collect();
+    let expected = paths.len() - refused.len();
+    if !refused.is_empty() {
+        let shown: Vec<String> = refused.iter().take(8).map(|i| i.to_string()).collect();
+        eprintln!(
+            "alignment      : DROPPING {} of {} frames the solve could not place: {}{}",
+            refused.len(),
+            paths.len(),
+            shown.join(", "),
+            if refused.len() > shown.len() {
+                format!(", +{} more", refused.len() - shown.len())
+            } else {
+                String::new()
+            }
+        );
+        eprintln!(
+            "                 Their geometry is unknown, so merging them would put \
+             mis-registered frames into the election."
+        );
+        eprintln!();
+    }
+    ensure!(
+        expected > 0,
+        "the alignment solve refused all {} frames; there is nothing to merge",
+        paths.len()
+    );
+
     // ---- pass one: regularised winner field -------------------------------
     let t1 = Instant::now();
     let p1 = paths
@@ -1421,6 +1475,9 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
 
             for (offset, path) in chunk.iter().enumerate() {
                 let index = first_index + offset as u16;
+                if ctx.is_refused(index) {
+                    continue;
+                }
                 let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;
                 if let Some(r) = opts.flat_roi {
                     // Every frame, not only the middle one. The denominator of
@@ -1461,14 +1518,35 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     let pass1_secs = t1.elapsed().as_secs_f64();
 
     ensure!(
-        p1.stats.frames_folded() as usize == paths.len(),
+        p1.stats.frames_folded() as usize == expected,
         "pass one folded {} frames, expected {}",
         p1.stats.frames_folded(),
-        paths.len()
+        expected
     );
 
     if let Some(path) = election_map_path(opts) {
         write_election_map(&path, p1.stats.best_index(), geom)?;
+    }
+    if let Some(dir) = dump::dump_dir() {
+        dump::write_u16(
+            &dir.join("best_index.npy"),
+            geom.width,
+            geom.height,
+            p1.stats.best_index(),
+        )?;
+        dump::write_f32(
+            &dir.join("best_focus.npy"),
+            geom.width,
+            geom.height,
+            p1.stats.best_focus(),
+        )?;
+        eprintln!(
+            "merge state     : wrote best_index.npy + best_focus.npy to {} ({}x{} plane grid)",
+            dir.display(),
+            geom.width,
+            geom.height
+        );
+        eprintln!();
     }
 
     let n = paths.len() as f64;
@@ -1513,6 +1591,9 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
 
             for (offset, path) in chunk.iter().enumerate() {
                 let index = first_index + offset as u16;
+                if ctx.is_refused(index) {
+                    continue;
+                }
                 let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;
                 let t0 = Instant::now();
                 let mut err = None;
@@ -1573,10 +1654,10 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
 
     for e in &p2.est {
         ensure!(
-            e.frames_folded() as usize == paths.len(),
+            e.frames_folded() as usize == expected,
             "pass two folded {} frames, expected {}",
             e.frames_folded(),
-            paths.len()
+            expected
         );
         ensure!(
             e.every_pixel_is_decided(),
@@ -1588,6 +1669,15 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             selector.is_complete(),
             "the gate-zero selector reference did not capture every requested ROI pixel"
         );
+    }
+
+    if let Some(dir) = dump::dump_dir() {
+        for e in &p2.est {
+            let name = format!("n_eff_gate{:.2}.npy", e.gate().threshold);
+            dump::write_u16(&dir.join(&name), geom.width, geom.height, e.n_eff())?;
+            eprintln!("merge state     : wrote {} to {}", name, dir.display());
+        }
+        eprintln!();
     }
 
     eprintln!("--- pass two: gated average (MEASURED) ---");
@@ -1663,6 +1753,9 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 let mut t = Timings::default();
                 for (offset, path) in chunk.iter().enumerate() {
                     let index = first_index + offset as u16;
+                    if ctx.is_refused(index) {
+                        continue;
+                    }
                     let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;
                     acc.fold(&hplan, index, &frame, &scratch.reg);
                     ctx.release(frame);
