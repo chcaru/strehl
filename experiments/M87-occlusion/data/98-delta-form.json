@@ -1,0 +1,29 @@
+{
+ "d_range": [
+  5,
+  60
+ ],
+ "n": 56,
+ "B18": {
+  "c": 473.23178429620094,
+  "rms_const": 148.39638609020486,
+  "k": 0.13984999988112887,
+  "rms_prop": 221.1306660675313,
+  "ratio": 0.6710800845907366,
+  "verdict": "CONSTANT OFFSET"
+ },
+ "controls": {
+  "C_ZERO": true,
+  "C_PLANT_CONST": "CONSTANT OFFSET",
+  "C_PLANT_PROP": "PROPORTIONAL",
+  "all_pass": true
+ },
+ "corrected": {
+  "amp4": 4295.935376475107,
+  "amp0_raw": 3715.6516098864886,
+  "amp0_corr": 4188.88339418269,
+  "r_raw": 0.8832697824455865,
+  "r_corr": 0.9957645421936384,
+  "offset_share_pct": 96.37158407214719
+ }
+}

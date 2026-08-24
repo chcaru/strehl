@@ -91,7 +91,7 @@ def main() -> int:
     chk("band p25 width", f"p25 {t2['thin_w']:.2f}px", D, 1)
     chk("band p75 width", f"p75 {t2['broad_w']:.2f}px", D, 1)
     chk("observations per pixel", f"**{t2['n_thin']:.3f} thin against "
-        f"{t2['n_broad']:.3f} broad**", D, 3)
+        f"{t2['n_broad']:.3f} broad**", D, 4)  # +1: 33.7
     chk("relative gap", f"**{t2['rel']:.4f}**", D, 1)
     chk("T2 verdict", v["T2 observation-count gap"]["verdict"], D, 1)
 
@@ -102,16 +102,16 @@ def main() -> int:
        lo["amax_broad"] - lo["amax_thin"], 1e-7)
     chk("local coverage", f"**{100 * lo['coverage']:.2f}%**", D, 4)
     chk("full coverage", f"**{100 * fu['coverage']:.2f}%**", D, 3)
-    chk("local amax thin", f"**{lo['amax_thin']:.4f}**", D, 2)
-    chk("local amax broad", f"**{lo['amax_broad']:.4f}**", D, 2)
+    chk("local amax thin", f"**{lo['amax_thin']:.4f}**", D, 3)  # +1: 33.7
+    chk("local amax broad", f"**{lo['amax_broad']:.4f}**", D, 3)  # +1: 33.7
     chk("full amax thin", f"{fu['amax_thin']:.4f}", D, 1)
     chk("full amax broad", f"{fu['amax_broad']:.4f}", D, 1)
-    chk("local gate pass thin", f"**{100 * lo['pass_thin']:.2f}%**", D, 4)
+    chk("local gate pass thin", f"**{100 * lo['pass_thin']:.2f}%**", D, 5)  # +1: 33.7
     chk("local sigma cap", f"{lo['cap']:.0f}px (local)", D, 1)
     chk("full sigma cap", f"{fu['cap']:.0f}px", D, 3)
     chk("alpha attenuation", f"**{lo['amax_broad'] / lo['amax_thin']:.1f}"
         f"\u00d7**", D, 2)
-    chk("recorded coverage", f"{100 * v['C-T3-COVER full']['lo']:.1f}%", D, 9)
+    chk("recorded coverage", f"{100 * v['C-T3-COVER full']['lo']:.1f}%", D, 11)  # +2: 33.7, P132
     chk("T3 amax IQR", f"IQR {fu['amax_iqr']:.3f}", D, 2)
 
     print("\n== T4: the re-score ==")
@@ -125,7 +125,7 @@ def main() -> int:
         chk(f"T4/{k} full table row", row, D, 1)
     eq("T4 gap", t4["gap"], t4["thin"]["dISO"] - t4["broad"]["dISO"])
     eq("T4 z", t4["z"], t4["gap"] / t4["null_sd"])
-    chk("gap in points", f"{t4['gap']:.2f} point", D, 4)
+    chk("gap in points", f"{t4['gap']:.2f} point", D, 6)  # +2: 33.7, P132
     chk("null sigma", f"{t4['z']:.1f} null standard deviations", D, 2)
     chk("null mean", f"mean **-{abs(t4['null_mean']):.2f}**", D, 1)
     chk("null p95", f"p95 |gap| **{t4['null_p95']:.2f}**", D, 1)
