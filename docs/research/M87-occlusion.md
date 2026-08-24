@@ -225,6 +225,18 @@ election, and scopes §21's "the photometric share is zero" to the box — ISO's
 null was measured with an instrument that absorbs the effect into its own
 normaliser. §27.
 
+**The photometric step is real, exactly isolated, and supplies a tenth of the
+silhouette step.** Differencing two composites that differ *only* in per-frame
+gain, with the election frozen bit-for-bit, measures it at **6.34 DN of a 63.50
+DN** observed step at the veil peak — **9.98%**, against a registered 25% bar.
+Its sign predicts the rendered step at **48.87%**, below chance, while "the
+pixel nearer the subject is brighter" predicts it at **65.16%**. So the
+orchestrator's mechanism is confirmed as *present* and refuted as *the cause*.
+Four controls pass at slope 1.00, after the first attempt's positive control
+returned **−1.7375** because a `linspace` plant with ρ = +1 **cancels** this
+cube's natural drift at ρ = −0.9289 — a plant must be checked for sign
+agreement with the signal already there. §28.
+
 ## 1. Corrections to the dispatch, loudest first
 
 ### 1.1 Two pointers in the brief are wrong
@@ -1926,6 +1938,14 @@ namespaced `M87`.
 | P95 | **A share-of-change statistic is sign-blind and will name a driver for a change in the wrong direction.** The registered rule attributed **99.6% of the box's change to photometry** — where the change was a **16.24% increase**. | The rule apportions a change without requiring the change to be a *reduction*, so it certified as "driven by" the mechanism the same numbers most cleanly refute. Direction must be tested before attribution; a ratio of two negatives reads positive and says nothing about benefit. | MEASURED |
 | P96 | **Regressing frames on an ensemble reference does not measure exposure in a focus stack; it measures contrast.** The covariance fit reported **109.671% peak-to-peak "gain"** with a 4036 DN offset swing on a 3747 DN level. True per-frame mean level over the same region reads **17.339% p-p**, 6.3× smaller — and that is still an upper bound, containing breathing and defocus spill. | The planted-ramp control recovered the plant to **0.000%** error and was blind to the confound, because a covariance fit recovers a multiplicative plant whether or not it also carries a focus term. A passing positive control bounds sensitivity, not specificity. | MEASURED |
 | P97 | **Between the frames actually elected, exposure drift is 19× too small to build the veil and has the wrong sign.** Elected-frame level at the band is **−0.7424%** against the far field — darker, where the veil is brighter — supplying **5.16%** of the 14.393% box. | Independently, the index-gap prediction fails: pooled within-distance Spearman ρ(excess, `\|Δk\|`) = **−0.0800** against a rolled-gap null of **+0.0713**, negative where a photometric step predicts positive. Two independent arms, both against the mechanism, for the box only. | MEASURED |
+| P98 | **The photometric step at a silhouette is real, and it supplies about a tenth of the rendered step.** Isolated exactly by a paired difference between two composites that differ only in per-frame gain with the election frozen bit-for-bit, it is **6.34 DN of a 63.50 DN** observed step at the veil peak — **9.98%** — and 11.25% band-wide. | Registered bar: under 25% is not the cause. The mechanism exists, is measurable, and is minor. "Real" and "responsible" are separate questions and only an amplitude answers the second; a correlation cannot. | MEASURED |
+| P99 | **Veil geometry beats photometry as a sign predictor, and photometry is below chance.** On the same pairs, the rendered step's sign is predicted by which side lies nearer the subject at **65.16%** at the veil peak (68.87% band-wide) against photometry's **48.87%** (52.38%). | This is the orchestrator's own proposed discriminator — a veiling mechanism has a fixed sign set by which side occludes — and it needs no model fit. Photometry sitting below 50% means the gain difference carries no usable sign information about the veil at all. | MEASURED |
+| P100 | **A positive control can be weaker than the effect it is planted on top of, if it is anti-correlated with it.** This cube's natural drift has Spearman ρ = **−0.9289** against frame index; my planted `linspace` ramp has ρ = **+1.0000**. Their product has a *smaller* spread than the drift alone, so the control returned slope **−1.7375** where 1.0 was required. | The hump-shaped plant, ordered the same way as the drift, returned +0.8123 in the same run — the tell. A plant must be checked for sign agreement with the signal already present, not only for magnitude and ordering. Fixed by planting onto a drift-free base, where cancellation is impossible. | MEASURED |
+| P101 | **A paired difference turns a hopeless regression into an identity.** Regressing the observed adjacent-pixel step on a predicted photometric step gave R² = **0.0014**, because the step is mostly scene structure. Differencing two composites that differ *only* in per-frame gain, with the election frozen, cancels scene, veil and election exactly and gives R² = **0.9681** at slope **+0.9802**. | The estimator is algebraically exact, so `C-EXACT` is a genuine harness check rather than a finding, and both plant shapes recover at slope 1.003 and 1.002 with the shuffled-gain null at +0.0018. Design the contrast so the nuisance cancels; do not fit through it. | DERIVED |
+| P102 | **`bee-3-cpl` independently reproduces M99's drift shape.** Per-frame level peaks at **frame 103** with max/min **1.1894**; M99 measured the hump at frames **103-120** with max/min **1.1818** on different decks with different code. The endpoint ratios differ (1.1316 against 1.0380), so this deck is more strongly ordered end-to-end. | Two milestones, independent regions and independent scripts, agreeing on the location and depth of the hump. It also confirms M99 §12.3's correction of fact 23 at source: the operative property is smooth ordering, not monotonicity. | MEASURED |
+| P103 | **The gap-correlation sign flip is an interaction, and single-factor attribution cannot see it.** Of the 2×2 {all band, M96-disconnected} × {M96 competitive-set gap, 5×5 winner range}, only **one** cell is positive: disconnected × M96 gap at **+0.1662** against a +0.0547 null. Changing population alone gives −0.0045; changing statistic alone gives −0.0221. | §27.7's −0.0800 was measured on the diluted population with the other statistic and is superseded for this question. My script compared swing magnitudes and printed "the sign is carried by the POPULATION", which is the same single-factor error class as the sign-blind share statistic of `P95` — the third time in two sections. | MEASURED |
+| P104 | **M87's halo metric is not a sharpness proxy, so discipline 674 does not reach it.** ISO is a median *level* profile against distance. `P24` is the direct evidence: a Catmull-Rom gather that destroys ~49% of gradient energy moves the halo metric by **+0.6%**. | Audited on the orchestrator's instruction after a Laplacian-energy proxy rated visible polygonal patchwork 2.73× sharper than the correct render. M87's detail-retention and BMF bars are ratios against an untouched reference on identical content, not absolute high-frequency energy, so none is withdrawn. | DERIVED |
+| P105 | **A figure checker that tests presence cannot catch a figure that is wrong in one place and right in another.** Mutating all four instances of a value in §28 turns `verify_s28.py` red; mutating **one of the four** leaves it green. Seven registered controls, including two that mutate the JSON operand with the prose untouched, behave exactly as registered. | This is the checker's known blind spot, measured rather than assumed, and it is why the two operand-mutation controls matter: they prove the harness re-derives from data rather than matching the document against itself. | MEASURED |
 
 ### Capture request
 
@@ -3623,3 +3643,231 @@ across every finite distance.
    and `78`'s clause set below the arithmetic floor. None of the *conclusions*
    moved, because in each case a second instrument or a mechanism test settled
    it. That is the argument for redundancy, not for the rules.
+
+## 28. The photometric step, measured on what is composited: real, and a tenth of it
+
+**Item 3 withdrawn on the orchestrator's instruction** — M99 owns photometric
+normalisation and has measured it. What remains is the hypothesis restated in
+the form that does not run through the election: at a silhouette the winner
+field jumps between two distant frame indices, and if those frames differ
+photometrically the *rendered output* carries a signed step there, independent
+of veiling and independent of the election being correct.
+
+**M99 fact 22 makes that the right framing, and it strengthens §27 rather than
+weakening it.** A gain propagated into the noise model is election-neutral by
+construction — focus response is contrast over sigma, a gain scales both, so the
+ratio is exactly invariant; measured at 0.001% against a 0.43-0.74% null. That
+promotes §27.5's **cell 10** — election frozen bit-for-bit, composite normalised
+— from an artificial control to **the arm that describes a correctly built
+correction**. Cell 11, which re-elects, models an *incorrectly* propagated one
+(M99's own `A3`/`N1` configuration, which moves 18-40% of the plane). So §27's
+headline should be read on cell 10, where the box gets **16.24% worse** and the
+shelf **32.44% better**.
+
+**Answer: the mechanism is real and it supplies 9.98% of the rendered step at
+the veil peak. Its sign predicts the step at 48.87% — below chance — while veil
+geometry predicts it at 65.16%.**
+
+### 28.1 The plant challenge, checked at source, where it had already been corrected
+
+The orchestrator relayed fact 23 as: *any plant must be **monotone** in frame
+index or it understates the effect by ~11×*, and asked whether any of my kills
+used a non-monotone plant. **M99's own §12.3 has already corrected that wording,
+and the correction matters to the answer.** The natural gain that enriched
+20.64×/8.32× is *not* monotone — it is a single smooth hump rising to a maximum
+at frame 103-120 and falling, `max/min = 1.1818`, endpoint ratio only 1.0380.
+M99 restates the operative property as **smoothly ordered (low-frequency) in
+frame index**; the pseudo-random plant under-performed because it was
+*unordered*, not because it was non-monotone.
+
+**On this cube, measured rather than inherited:**
+
+| quantity | `bee-3-cpl` (M87) | M99 §12.3 |
+|---|---|---|
+| level peaks at frame | **103** | 103-120 |
+| max/min | **1.1894** | 1.1818 |
+| endpoint ratio | 1.1316 | 1.0380 |
+| Spearman ρ against frame index | **−0.9289** | — |
+
+Two independent milestones, different decks, different code, the same hump. This
+deck is also strongly ordered end-to-end, which is why §21.5's early-decile bias
+is negative — and M99 §12.3 says so explicitly and independently.
+
+**So my plants satisfy the corrected criterion.** Every plant in §27 is a
+`linspace` ramp, `|ρ| = 1` by construction, maximally ordered. None of the three
+kills used an unordered plant.
+
+### 28.2 But my plant was wrong for a reason neither of us had named
+
+Ordering was not the problem. **Sign was.** The natural drift runs ρ = −0.9289;
+my ramp runs ρ = +1.0000. Multiplying them **cancels**, so `g_real × ramp` has a
+*smaller* spread than `g_real` alone: I planted a control that made the effect
+it was testing for smaller.
+
+| arm in `79` | slope | required |
+|---|---|---|
+| `C-POS-RAMP` planted ±10% ramp | **−1.7375** | ≈ 1 |
+| `C-POS-HUMP` M99's hump shape | +0.8123 | ≈ 1 |
+
+The ramp failed with the **wrong sign**; the hump, ordered the same way as the
+drift, passed in the same run. **I voided `79`'s entire S2 verdict on that
+control.** The fix is to plant onto a **drift-free base** — `luma[k] / g_real[k]`
+with the election frozen — where there is nothing left to cancel against. That
+is `P100`, and it is a plant-design rule I had not seen stated: a positive
+control must be checked for **sign agreement with the signal already present**,
+not only for magnitude and ordering.
+
+### 28.3 The second defect: a regression that was fitting scene structure
+
+`79` regressed the observed step between adjacent background pixels on the
+predicted photometric step and got **R² = 0.0014**. That is not a weak effect,
+it is a hopeless estimator: the step between two adjacent pixels is mostly the
+*scene* changing, and a slope fitted through that is fitting noise.
+
+The repair is a **paired difference**. Two composites that differ *only* in
+per-frame gain, with the election frozen bit-for-bit, contain identical scene
+content, so
+
+```
+D(p,q) = [with(p) - with(q)] - [without(p) - without(q)]
+```
+
+isolates the photometric contribution **exactly**. Scene, veil and election all
+cancel. It is the per-pair form of §27.5's cell 10.
+
+| control | slope | R² | sign agreement | bar |
+|---|---|---|---|---|
+| `C-EXACT` the real drift | **+0.9802** | **0.9681** | 97.94% | 0.90-1.10 ✓ |
+| `C-POS-RAMP` on the drift-free base | +1.0026 | 0.9601 | 94.38% | ✓ |
+| `C-POS-HUMP` on the drift-free base | +1.0017 | 0.9701 | 92.94% | ✓ |
+| `C-NULL` shuffled frame→gain map | +0.0018 | 0.0001 | 55.06% | ±0.25 ✓ |
+
+**All four pass.** R² goes from 0.0014 to 0.9681 on the same data and the same
+question, and both plant shapes now recover at slope 1.00 — so the instrument is
+not keyed to plant shape, which was the failure `79` exhibited.
+
+### 28.4 The amplitude, which is the number that answers the question
+
+49 986 adjacent background pairs in `d ∈ [2,40]` elected different frames
+(14.22% of adjacencies); 13 402 sit at the veil peak.
+
+| region | photometric part | observed step | share |
+|---|---|---|---|
+| whole band `d ∈ [2,40]` | 6.41 DN | 57.00 DN | **11.25%** |
+| **veil peak `d ∈ [8,18]`** | **6.34 DN** | **63.50 DN** | **9.98%** |
+
+Registered bar: under 25% is not the cause. **The photometric step is real,
+exactly measured, and supplies about a tenth of the rendered step.** Note the
+photometric part is essentially *constant* across the band (6.41 against 6.34
+DN) while the observed step rises toward the silhouette — the extra step at the
+veil is not photometric.
+
+### 28.5 The head-to-head, which needs no model at all
+
+The orchestrator's cleanest discriminator: a veiling mechanism has a **fixed
+sign** set by which side occludes; a photometric step's sign is set by `g`.
+Score both predictors on the same pairs.
+
+| region | veil geometry | photometry |
+|---|---|---|
+| whole band | **68.87%** | 52.38% |
+| **veil peak `d ∈ [8,18]`** | **65.16%** | **48.87%** |
+
+**Photometry is below chance at the veil peak.** The gain difference between the
+elected frames carries no usable sign information about the veil. Geometry —
+simply "the pixel nearer the subject is brighter" — carries 65.16%.
+
+### 28.6 The gap correlation, and a sign flip that is an interaction
+
+The orchestrator asked for this on M96's disconnected competitive set, using
+M96's definition verbatim (`t·√2·FOCUS_NOISE_SD`, `gap = (hi − lo + 1) − n > 0`).
+It disagrees with §27.7, which read **−0.0800**. Both factors differ, so both
+were varied:
+
+| population | statistic | pooled ρ | rolled null |
+|---|---|---|---|
+| all band | M96 gap | −0.0221 | −0.1151 |
+| all band | 5×5 winner range | −0.0876 | +0.0423 |
+| **M96 disconnected** | **M96 gap** | **+0.1662** | +0.0547 |
+| M96 disconnected | 5×5 winner range | −0.0045 | −0.0271 |
+
+**Only one cell is positive, and it needs both factors.** Changing population
+alone gives −0.0045; changing statistic alone gives −0.0221. So this is an
+**interaction**, and §27.7's −0.0800 is superseded *for this question* by
++0.1662 on the population the orchestrator specified. The ladder there is
+broadly increasing but **not monotone** — gap `[1,5)` +0.01330, `[5,20)`
+**−0.00410**, `[20,60)` +0.06861, `[60,150)` +0.07841 — where the mechanism
+predicts monotone.
+
+**My script printed "the sign is carried by the POPULATION"**, by comparing
+swing magnitudes and taking the larger. That is single-factor attribution over
+an interaction, and it is the same error class as `P95`'s sign-blind share
+statistic — the third time in two sections that a one-number attribution rule
+has been inadequate here. The 2×2 is what stands; the label does not.
+
+### 28.7 Discipline 674, audited against my own bars
+
+**None is withdrawn, and here is the evidence rather than the assertion.** M87's
+halo metric is a median **level** profile against distance from the subject — it
+contains no gradient or Laplacian term. `P24` is the direct test: a Catmull-Rom
+gather that destroys **~49% of gradient energy** moves the halo metric by
+**+0.6%**. A metric that barely notices a halving of high-frequency energy is
+not a sharpness proxy. The detail-retention and BMF bars in §16 and §23 are
+**ratios against an untouched reference on identical content**, which is what
+674 asks for.
+
+### 28.8 Where this leaves the mechanism
+
+1. **The orchestrator's mechanism is real, measurable and minor.** It exists, it
+   is now isolated exactly rather than argued, and it accounts for ~10% of the
+   rendered step at the silhouette. That is a *confirmation* at an amplitude
+   that does not make it the cause.
+2. **The veil is not it.** Photometry predicts the step's sign below chance
+   where the veil is strongest; geometry predicts it at 65%.
+3. **§26.4's split survives, with §27's amendment.** The box is selection, and a
+   correct photometric correction makes it 16.24% *worse*. The shelf is about a
+   third photometric. Neither is a single mechanism with a sign change.
+4. **The design constraint for the annulus milestone is unchanged and now has a
+   number:** ~10% of the silhouette step will be removed for free once M99's
+   correction ships, and the remaining ~90% is what the annulus has to model.
+
+### 28.9 What verifies this section, and what it cannot see
+
+`verify_s28.py` re-derives **58 figures** from the JSON operands rather than
+re-reading them: every percentage is recomputed from its full-precision
+numerator and denominator, `max/min` and the drift's argmax are recomputed from
+the 299 stored per-frame levels, and the 2×2's swings are recomputed from its
+four cells. It also cross-checks the two runs against each other — `79` and `80`
+must agree to 1e-12 on the drift ρ and on the disconnected-population ρ — and it
+checks **every M99 figure quoted here against `M99-photometric.md` itself**, so a
+misquotation of another milestone fails the build rather than propagating.
+
+It caught three real defects on first run: a `77-decompose.json` schema I had
+assumed rather than read, and — twice — a float32 quotient checked at a 1e-12
+bar. **That is §27.8's own lesson, repeated by me in the harness written to
+enforce it**, four sections after I recorded it. The bar now sits above float32
+epsilon, where the arithmetic actually lives.
+
+`control_s28.py` then plants seven known defects to establish the checker is not
+merely agreeable. Each is anchored on a literal that must be found, and the
+report is restored from a `%TEMP%` copy and confirmed byte-identical by SHA-256.
+
+| control | mutation | result |
+|---|---|---|
+| `N1` | all 4 instances of a T4 figure | RED ✓ |
+| `N2` | **1 of the same 4 instances** | **GREEN — the blind spot** |
+| `N3` | all 3 instances of the drift ρ | RED ✓ |
+| `N4` | both instances of a control slope | RED ✓ |
+| `N5` | all 7 instances of a re-derived share | RED ✓ |
+| `N6` | **the observed-step operand in the JSON**, prose untouched | RED ✓ |
+| `N7` | `controls_ok` flipped to false in the JSON | RED ✓ |
+
+`N3` initially reported **`MUTATION TARGET NOT FOUND`** — the prose uses U+2212,
+not a hyphen, and the checker normalises them while the mutation did not. A bare
+`replace` would have returned a silent green and I would have recorded a control
+that never ran.
+
+`N6` and `N7` are the ones that matter: they corrupt the **operand** and leave
+the document alone, and the harness still goes red. That is the difference
+between re-deriving and pattern-matching a document against itself. `N2` is the
+registered limitation: **presence-checking is instance-blind.**
