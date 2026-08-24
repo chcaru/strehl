@@ -1,0 +1,2 @@
+patch=256 GQ samples (511 sensor px), tile=128, 24 patches/frame, bands=['b1_low', 'b2', 'b3_mid', 'b4_mid', 'b5_mid', 'b6_above_f11_cut']
+  coffee-bubbles   K=  19 patches=24     2.4s (0.12 s/frame) -> tfs-coffee-bubbles.npz

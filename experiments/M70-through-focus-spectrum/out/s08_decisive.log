@@ -1,0 +1,115 @@
+========================================================================================================
+0. THE BAND-POWER ESTIMATOR'S OWN SAMPLING SD (Monte Carlo, 400 noise realisations, 256-sample GQ patch, tile 128)
+========================================================================================================
+  b1_low             0.0250-0.0500 cyc/px   mean  1.0012 sigma^2   sd  0.0678 sigma^2
+  b2                 0.0500-0.1000 cyc/px   mean  0.9981 sigma^2   sd  0.0351 sigma^2
+  b3_mid             0.1000-0.1500 cyc/px   mean  1.0022 sigma^2   sd  0.0261 sigma^2
+  b4_mid             0.1500-0.2000 cyc/px   mean  1.0031 sigma^2   sd  0.0249 sigma^2
+  b5_mid             0.2000-0.2762 cyc/px   mean  1.0005 sigma^2   sd  0.0153 sigma^2
+  b6_above_f11_cut   0.2762-0.3400 cyc/px   mean  1.0012 sigma^2   sd  0.0147 sigma^2
+  (mean ~1.000 confirms m5_lib.welch_psd2's absolute normalisation on this geometry.)
+
+====================================================================================================================
+A. FRAMES CARRYING MID-BAND SIGNAL ABOVE THE NOISE FLOOR (z = 3.0), median over textured patches
+====================================================================================================================
+stack               K     F  cnt_mid   frac     b3     b4     b5  b1_low  lowfrac     b6
+coffee-bubbles     19   8.0      8.2  0.430   12.0    7.5    5.0    19.0    1.000    2.5
+109MSDCF           22  11.0      7.8  0.356   13.0    6.0    4.5    22.0    1.000    0.0
+119MSDCF           33   5.6     33.0  1.000   33.0   33.0   33.0    33.0    1.000   33.0
+113MSDCF           63  11.0     30.0  0.476   41.0   29.0   20.0    63.0    1.000    4.0
+112MSDCF           79  11.0     25.0  0.316   38.0   24.0   13.0    79.0    1.000    0.0
+foam              100   8.0     38.2  0.382   54.0   34.5   26.0   100.0    1.000   17.0
+coffee-bean       105   8.0     57.5  0.548   73.0   48.0   51.5   105.0    1.000   43.5
+wrapped-text-2    120   5.6     13.7  0.114   19.0   13.0    9.0    73.5    0.613    7.0
+wrapped-text-1    130   5.6     37.8  0.291   44.5   25.0   44.0   129.5    0.996   34.0
+bee-1             299   5.6    117.3  0.392  145.5   87.0  119.5   297.5    0.995   81.0
+bee-2             299   5.6     45.2  0.151   54.0   42.5   39.0   213.5    0.714   19.5
+bee-3             299   5.6    143.3  0.479  153.0  117.0  160.0   299.0    1.000  141.0
+
+====================================================================================================================
+B. REAL-DATA RULE-20 DISCHARGE - the near-focus-invariant low band
+====================================================================================================================
+stack               K  low n_eff     /K  low relA1  mid n_eff  ratio
+coffee-bubbles     19       7.86  0.414      0.983       3.48  0.443
+109MSDCF           22      12.38  0.563      0.994       5.31  0.429
+119MSDCF           33      17.40  0.527      0.996       9.90  0.569
+113MSDCF           63      17.46  0.277      0.997       8.37  0.479
+112MSDCF           79      17.51  0.222      0.996       7.03  0.401
+foam              100      11.07  0.111      0.994       6.12  0.553
+coffee-bean       105      10.07  0.096      0.990       5.87  0.583
+wrapped-text-2    120       9.41  0.078      0.990       4.50  0.478
+wrapped-text-1    130       8.30  0.064      0.987       4.73  0.570
+bee-1             299      19.00  0.064      0.994      12.83  0.675
+bee-2             299      17.36  0.058      0.993      15.69  0.904
+bee-3             299      16.71  0.056      0.994      14.05  0.841
+  If the low band returns a large fraction of K on REAL frames while the
+  mid band does not, the estimator is demonstrably able to report a wide
+  through-focus response on real data and is not doing so at mid band.
+
+====================================================================================================================
+C. WHERE THE MATCHED FILTER'S SUM SATURATES - n_eff and gain vs frame window
+====================================================================================================================
+stack               K     +-1     +-2     +-3     +-5    +-10    +-20   +-inf     | gain over the single best frame, sqrt(n_eff)
+coffee-bubbles     19    2.77    3.22    3.33    3.42    3.48    3.48    3.48     |  1.82  1.85  1.87
+109MSDCF           22    2.89    3.93    4.46    4.90    5.21    5.31    5.31     |  2.11  2.21  2.30
+119MSDCF           33    2.92    4.40    5.46    6.83    8.43    9.69    9.90     |  2.34  2.61  3.15
+113MSDCF           63    2.94    4.21    5.17    6.32    7.27    8.14    8.37     |  2.27  2.51  2.89
+112MSDCF           79    2.94    4.26    5.14    5.86    6.75    7.40    7.03     |  2.27  2.42  2.65
+foam              100    2.88    3.83    4.34    4.76    5.93    6.12    6.12     |  2.08  2.18  2.47
+coffee-bean       105    2.91    4.17    4.92    5.56    5.79    5.86    5.87     |  2.22  2.36  2.42
+wrapped-text-2    120    2.90    3.69    3.94    4.04    4.15    4.23    4.50     |  1.98  2.01  2.12
+wrapped-text-1    130    2.87    3.81    4.13    4.27    4.35    4.41    4.73     |  2.03  2.07  2.17
+bee-1             299    2.90    4.13    5.00    6.18    8.04    8.95   12.83     |  2.24  2.49  3.58
+bee-2             299    2.86    3.98    5.02    6.43    9.13   11.96   15.69     |  2.24  2.54  3.96
+bee-3             299    2.93    4.33    5.40    6.66    8.74   10.84   14.05     |  2.32  2.58  3.75
+
+stack               K  gain over averaging the best 3 frames, by window
+coffee-bubbles     19   +-3: 1.107   +-5: 1.127  +-10: 1.134  +-20: 1.136 +-inf: 1.136
+109MSDCF           22   +-3: 1.255   +-5: 1.304  +-10: 1.343  +-20: 1.361 +-inf: 1.361
+119MSDCF           33   +-3: 1.363   +-5: 1.526  +-10: 1.699  +-20: 1.816 +-inf: 1.829
+113MSDCF           63   +-3: 1.326   +-5: 1.460  +-10: 1.572  +-20: 1.655 +-inf: 1.676
+112MSDCF           79   +-3: 1.322   +-5: 1.422  +-10: 1.518  +-20: 1.581 +-inf: 1.505
+foam              100   +-3: 1.237   +-5: 1.289  +-10: 1.424  +-20: 1.451 +-inf: 1.452
+coffee-bean       105   +-3: 1.299   +-5: 1.380  +-10: 1.411  +-20: 1.420 +-inf: 1.421
+wrapped-text-2    120   +-3: 1.171   +-5: 1.187  +-10: 1.198  +-20: 1.214 +-inf: 1.242
+wrapped-text-1    130   +-3: 1.201   +-5: 1.221  +-10: 1.233  +-20: 1.243 +-inf: 1.286
+bee-1             299   +-3: 1.316   +-5: 1.446  +-10: 1.660  +-20: 1.755 +-inf: 2.074
+bee-2             299   +-3: 1.316   +-5: 1.494  +-10: 1.748  +-20: 2.005 +-inf: 2.303
+bee-3             299   +-3: 1.346   +-5: 1.502  +-10: 1.713  +-20: 1.898 +-inf: 2.167
+
+====================================================================================================================
+D. SIGMA SENSITIVITY at the MEASURED model uncertainty (declared post-hoc)
+====================================================================================================================
+  fact 29: floor/photon-transfer-model 0.950-1.093x over n=15.
+  M70's own reproduction on 109MSDCF: 0.977-0.996x over 22 frames.
+ sigma scale  med mid n_eff (inf)   med n_eff (+-5)  med g3 (+-5)  med relA1  med relA2
+        0.75               13.769             6.599         1.498      0.957      0.811
+        0.91               10.715             6.354         1.473      0.956      0.795
+        0.95                9.112             6.115         1.437      0.954      0.783
+        1.00                6.573             5.708         1.401      0.950      0.769
+        1.05                5.036             5.537         1.376      0.949      0.752
+        1.09                4.564             5.359         1.359      0.949      0.743
+        1.25               -1.676             4.867         1.316      0.944      0.705
+
+  Criteria re-scored at each sigma, using the +-5-frame window (which bounds
+  accumulated model error to 11 frames instead of K):
+    sigma x0.75:  A SUPPORTS  (12/12)   B CORE   (core 12, plug 0)   C CORE   (core 9, plug 0)
+    sigma x0.91:  A SUPPORTS  (12/12)   B CORE   (core 12, plug 0)   C CORE   (core 8, plug 0)
+    sigma x0.95:  A SUPPORTS  (12/12)   B CORE   (core 12, plug 0)   C CORE   (core 8, plug 0)
+    sigma x1.00:  A SUPPORTS  (12/12)   B CORE   (core 12, plug 0)   C CORE   (core 8, plug 0)
+    sigma x1.05:  A SUPPORTS  (12/12)   B CORE   (core 11, plug 0)   C CORE   (core 7, plug 2)
+    sigma x1.09:  A SUPPORTS  (12/12)   B CORE   (core 11, plug 1)   C CORE   (core 7, plug 2)
+    sigma x1.25:  A SUPPORTS  (10/12)   B CORE   (core 9, plug 3)   C INDET  (core 6, plug 3)
+
+====================================================================================================================
+E. APERTURE SPLIT - b6 (0.2762-0.3400 cyc/px) is ABOVE the f/11 diffraction
+   cutoff and INSIDE the f/5.6 and f/8 passbands (fact 27/28, B=3)
+====================================================================================================================
+  f/5.6  n=6  predicted cutoff 0.5541 cyc/px (ABOVE the GQ reach 0.3536)
+          mid-band frames above floor   41.5   b6 frames above floor   33.5   n_eff(+-5)  6.30
+  f/8.0  n=3  predicted cutoff 0.3879 cyc/px (ABOVE the GQ reach 0.3536)
+          mid-band frames above floor   38.2   b6 frames above floor   17.0   n_eff(+-5)  4.76
+  f/11.0 n=3  predicted cutoff 0.2821 cyc/px (inside the GQ reach 0.3536)
+          mid-band frames above floor   25.0   b6 frames above floor    0.0   n_eff(+-5)  5.86
+
+wrote out/s08_decisive.json

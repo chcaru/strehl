@@ -1,0 +1,13 @@
+patch=256 GQ samples (511 sensor px), tile=128, 24 patches/frame, bands=['b1_low', 'b2', 'b3_mid', 'b4_mid', 'b5_mid', 'b6_above_f11_cut']
+  coffee-bubbles   K=  19 patches=24     2.5s (0.13 s/frame) -> tfs-coffee-bubbles.npz
+  109MSDCF         K=  22 patches=24     2.6s (0.12 s/frame) -> tfs-109MSDCF.npz
+  119MSDCF         K=  33 patches=24     3.8s (0.12 s/frame) -> tfs-119MSDCF.npz
+  113MSDCF         K=  63 patches=24     7.9s (0.13 s/frame) -> tfs-113MSDCF.npz
+  112MSDCF         K=  79 patches=24    10.0s (0.13 s/frame) -> tfs-112MSDCF.npz
+  foam             K= 100 patches=24    12.8s (0.13 s/frame) -> tfs-foam.npz
+  coffee-bean      K= 105 patches=24    14.0s (0.13 s/frame) -> tfs-coffee-bean.npz
+  wrapped-text-2   K= 120 patches=24    14.9s (0.12 s/frame) -> tfs-wrapped-text-2.npz
+  wrapped-text-1   K= 130 patches=24    16.0s (0.12 s/frame) -> tfs-wrapped-text-1.npz
+  bee-1            K= 299 patches=24    37.3s (0.12 s/frame) -> tfs-bee-1.npz
+  bee-2            K= 299 patches=24    37.5s (0.13 s/frame) -> tfs-bee-2.npz
+  bee-3            K= 299 patches=24    36.3s (0.12 s/frame) -> tfs-bee-3.npz

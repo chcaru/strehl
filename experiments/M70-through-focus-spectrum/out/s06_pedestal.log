@@ -1,0 +1,80 @@
+================================================================================================================
+1. THE RESIDUAL - is it frame-invariant, and does it scale with signal?
+================================================================================================================
+stack               K   ISO   level   sigma2    e_flat  e/sig2     e_ped ped/sig2 cv_tail
+coffee-bubbles     19  1000   200.4    466.8       nan     nan     -1.26  -0.0027   0.737
+109MSDCF           22   160  1570.2    577.5    106.02  0.1836     -2.28  -0.0040   0.569
+119MSDCF           33    50  3210.8    736.0       nan     nan    101.29   0.1376   0.544
+113MSDCF           63   500   242.2    279.3       nan     nan     -8.36  -0.0299   0.969
+112MSDCF           79   500   122.7    142.4      0.86  0.0060     -6.37  -0.0447   0.948
+foam              100  1000   905.9   2081.9       nan     nan    -52.46  -0.0252   0.743
+coffee-bean       105    50  4762.1   1091.1   1104.45  1.0122      4.61   0.0042   0.604
+wrapped-text-2    120   400  2195.4   2011.7       nan     nan    -34.02  -0.0169   1.226
+wrapped-text-1    130   100  1664.6    382.0       nan     nan      3.41   0.0089   0.378
+bee-1             299   100  2200.5    504.7    115.77  0.2294      1.35   0.0027   0.602
+bee-2             299   400  2296.8   2104.6    158.27  0.0752    -30.09  -0.0143   1.001
+bee-3             299   100  2574.1    590.2    113.77  0.1928      3.38   0.0057   0.494
+
+  e_flat  mean residual (P - modelled sigma^2) on FLAT patches, DN^2
+  e_ped   the 5th frame-percentile of the residual on TEXTURED patches, DN^2
+  cv_tail coefficient of variation of S over the least-sharp half of the
+          frames: near 0 means the residual really is frame-invariant.
+
+  log e_flat vs log level: slope +1.83 (R2 0.97) over 6 stacks.
+  slope ~2 would indicate PRNU (fixed-pattern, variance ~ (frac.S)^2);
+  slope ~1 would indicate a gain error in the photon-transfer model;
+  slope ~0 would indicate a read-noise offset.
+
+================================================================================================================
+2. THE PEDESTAL-FREE ESTIMATOR ON THE PLANT - measured bias, known truth
+================================================================================================================
+latent: D:\personal\macro\119MSDCF centre patch, high-band power 1716.1, mean 882.8 DN
+            case     band    truth      raw  ped-free  rec_raw  rec_ped
+          static   b3_mid   41.000   40.107    11.737    0.978    0.286
+          static   b4_mid   41.000   40.134    14.585    0.979    0.356
+          static   b5_mid   41.000   39.723    14.189    0.969    0.346
+     delta 0.125   b3_mid   30.714   30.601    23.302    0.996    0.759
+     delta 0.125   b4_mid   24.625   24.438    21.429    0.992    0.870
+     delta 0.125   b5_mid   18.513   18.461    18.212    0.997    0.984
+      delta 0.25   b3_mid   17.776   17.841    17.471    1.004    0.983
+      delta 0.25   b4_mid   12.759   12.933    12.767    1.014    1.001
+      delta 0.25   b5_mid    9.420    9.540     9.439    1.013    1.002
+       delta 0.5   b3_mid    9.047    9.045     8.916    1.000    0.986
+       delta 0.5   b4_mid    6.452    6.436     6.426    0.998    0.996
+       delta 0.5   b5_mid    4.735    4.817     5.014    1.017    1.059
+       delta 1.0   b3_mid    4.546    4.508     4.514    0.992    0.993
+       delta 1.0   b4_mid    3.234    3.248     3.284    1.004    1.015
+       delta 1.0   b5_mid    2.371    2.427     2.533    1.024    1.069
+       delta 2.0   b3_mid    2.276    2.277     2.288    1.000    1.005
+       delta 2.0   b4_mid    1.618    1.621     1.664    1.002    1.028
+       delta 2.0   b5_mid    1.189    1.236     1.467    1.040    1.234
+
+  The pedestal-free estimator subtracts a low frame-quantile, which on a
+  WIDE true response removes genuine off-peak signal. Its recovery ratio
+  is therefore <= 1 by construction and it is CONSERVATIVE against the
+  deconvolution proposal. The raw estimator is generous. Truth is between.
+
+================================================================================================================
+3. BRACKETED RE-SCORE - raw (generous) and pedestal-free (conservative)
+================================================================================================================
+stack               K  n_eff_raw  n_eff_pf  flat_pf  sqrt_pf  relA1_pf  relA2_pf   g3_pf   b6_pf
+coffee-bubbles     19      2.936     3.002      nan    1.731     0.875     0.454   1.167   4.321
+109MSDCF           22      5.100     5.949    6.255    2.430     0.945     0.742   1.503   9.846
+119MSDCF           33      9.005     6.853      nan    2.615     0.956     0.835   1.604   7.053
+113MSDCF           63      8.128     8.861      nan    2.976     0.969     0.802   1.818  15.768
+112MSDCF           79      7.729     9.868   22.911    3.133     0.969     0.831   1.919  23.016
+foam              100      5.512     5.557      nan    2.357     0.935     0.686   1.460   5.479
+coffee-bean       105      5.433     5.433   37.232    2.330     0.955     0.786   1.421   5.184
+wrapped-text-2    120      4.161     4.624      nan    2.149     0.948     0.612   1.339   8.000
+wrapped-text-1    130      4.156     4.029      nan    2.007     0.929     0.670   1.278   5.252
+bee-1             299     11.728    11.581   96.963    3.403     0.949     0.774   2.051  16.933
+bee-2             299     14.940    17.881   99.992    4.221     0.921     0.747   2.613  41.908
+bee-3             299     12.879    12.325  101.847    3.503     0.959     0.808   2.172  29.514
+
+Criteria, scored at BOTH ends of the bracket
+  raw       (biased UP, generous)    A SUPPORTS  (12/12)   B CORE   (core 12, plug 0)   C CORE   (core 9, plug 0)
+  ped-free  (biased DOWN, strict)    A SUPPORTS  (12/12)   B INDET  (core 0, plug 0)   C CORE   (core 10, plug 0)
+  D  raw       log n_eff vs log K slope +0.329 (R2 0.390), spread 5.09x
+  D  ped-free  log n_eff vs log K slope +0.342 (R2 0.399), spread 5.96x
+
+wrote out/s06_bracket.json

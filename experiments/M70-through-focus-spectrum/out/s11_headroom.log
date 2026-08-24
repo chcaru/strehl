@@ -1,0 +1,53 @@
+================================================================================================================
+HEADROOM: matched filter over the best equal-weight average, windows up to +-10 (stable against the measured +-9% noise-model uncertainty)
+================================================================================================================
+stack               K     F  best avg  at W  best MF  at W  headroom
+  sigma x0.91  headroom: min 1.0423  median 1.1047  max 1.2059   (+10.5% SNR in the mid band)
+coffee-bubbles     19   8.0    1.0197   +-2   1.1456  +-10    1.1235
+109MSDCF           22  11.0    1.2208   +-3   1.3796  +-10    1.1301
+119MSDCF           33   5.6    1.5913  +-10   1.7021  +-10    1.0696
+113MSDCF           63  11.0    1.3909   +-5   1.5825  +-10    1.1378
+112MSDCF           79  11.0    1.3389   +-5   1.5554  +-10    1.1617
+foam              100   8.0    1.1863   +-3   1.4279  +-10    1.2037
+coffee-bean       105   8.0    1.2685   +-5   1.4109  +-10    1.1122
+wrapped-text-2    120   5.6    1.0984   +-2   1.2134  +-10    1.1048
+wrapped-text-1    130   5.6    1.1288   +-2   1.2344  +-10    1.0935
+bee-1             299   5.6    1.5058  +-10   1.6604  +-10    1.1027
+bee-2             299   5.6    1.6709  +-10   1.8049  +-10    1.0802
+bee-3             299   5.6    1.5648  +-10   1.7335  +-10    1.1078
+  sigma x1.00  headroom: min 1.0696  median 1.1100  max 1.2037   (+11.0% SNR in the mid band)
+  sigma x1.09  headroom: min 1.0847  median 1.1245  max 1.3356   (+12.4% SNR in the mid band)
+
+================================================================================================================
+HEADROOM: matched filter over the best equal-weight average, windows up to +-20 (NOT stable; reported, flagged)
+================================================================================================================
+stack               K     F  best avg  at W  best MF  at W  headroom
+  sigma x0.91  headroom: min 1.0515  median 1.1429  max 1.2332   (+14.3% SNR in the mid band)
+coffee-bubbles     19   8.0    1.0197   +-2   1.1482  +-20    1.1260
+109MSDCF           22  11.0    1.2208   +-3   1.4021  +-20    1.1485
+119MSDCF           33   5.6    1.6574  +-20   1.8253  +-20    1.1013
+113MSDCF           63  11.0    1.3909   +-5   1.6825  +-20    1.2097
+112MSDCF           79  11.0    1.3389   +-5   1.6714  +-20    1.2483
+foam              100   8.0    1.1863   +-3   1.4555  +-20    1.2270
+coffee-bean       105   8.0    1.2685   +-5   1.4196  +-20    1.1191
+wrapped-text-2    120   5.6    1.0984   +-2   1.2325  +-20    1.1221
+wrapped-text-1    130   5.6    1.1288   +-2   1.2441  +-20    1.1021
+bee-1             299   5.6    1.5058  +-10   1.7553  +-20    1.1657
+bee-2             299   5.6    1.7580  +-20   2.0456  +-20    1.1636
+bee-3             299   5.6    1.6369  +-20   1.9307  +-20    1.1795
+  sigma x1.00  headroom: min 1.1013  median 1.1561  max 1.2483   (+15.6% SNR in the mid band)
+  sigma x1.09  headroom: min 1.0854  median 1.2016  max 1.3395   (+20.2% SNR in the mid band)
+
+================================================================================================================
+SUMMARY OF THE ARCHITECTURAL PRIZE (mid band, 0.100-0.2762 sensor cyc/px)
+================================================================================================================
+  a wider equal-weight average, over the best window, buys   +30.4% SNR over a 3-frame average
+  a focus-axis matched filter buys, on top of that,          +11.0% SNR
+  in noise-equivalent terms that is a factor 1.1100, i.e. +0.91 dB
+
+  For scale: fact 19 measures the SHIPPED gated mean at 0.534x single-frame
+  noise, a factor of 1.873 (+5.45 dB), in every band it admits.
+  The focus-axis matched filter's mid-band-only prize is +0.91 dB,
+  or 16.6% of what the existing merge already delivers.
+
+wrote out/s11_headroom.json
