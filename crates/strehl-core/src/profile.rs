@@ -61,7 +61,60 @@
 //! enough to build one. **Scoped, not built** — see
 //! `docs/research/M48-read-noise-measured.md`.
 
-use crate::noise::{Levels, NoiseModel, PlaneNoise, Provenance};
+use crate::noise::{Levels, NoiseModel, PlaneNoise, Prnu, Provenance};
+
+/// Which **measured** corrections to apply when building a [`NoiseModel`].
+///
+/// Every field defaults to `false`, and [`Corrections::SHIPPED`] is the default
+/// path: `Corrections::default() == Corrections::SHIPPED`, and building with it
+/// produces a model that is **bit-identical** to
+/// [`CameraProfile::noise_model`]. That identity is the point — it is what makes
+/// this reversible, and `the_shipped_corrections_are_bit_identical_to_the_default_path`
+/// asserts it across the whole container range at every ISO.
+///
+/// See `docs/research/M90-prnu-noise-model.md` for what flipping each flag
+/// costs, measured, and `docs/research/M71-flat-fields.md` for where the
+/// constants come from.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct Corrections {
+    /// Use M71's photon-transfer gain instead of the profile's `gain_divisor`.
+    ///
+    /// **`read_noise_e` is rescaled inversely so that `RN_e * g` — the product
+    /// that was actually measured — is preserved.** See
+    /// [`CameraProfile::measured_gain_divisor`].
+    pub measured_gain: bool,
+    /// Attach M71's measured per-plane PRNU.
+    ///
+    /// Attaching it changes nothing by itself; only the `*_with_fixed_pattern`
+    /// entry points read it. See [`Prnu`].
+    pub prnu: bool,
+}
+
+impl Corrections {
+    /// The default path. Nothing applied.
+    pub const SHIPPED: Corrections = Corrections {
+        measured_gain: false,
+        prnu: false,
+    };
+    /// Gain only — the arm that is **worse than shipped** over most of the
+    /// range, because it removes the error that was cancelling the missing PRNU
+    /// term. Kept as a named constant precisely so that it is measurable rather
+    /// than assumed.
+    pub const GAIN_ONLY: Corrections = Corrections {
+        measured_gain: true,
+        prnu: false,
+    };
+    /// PRNU only.
+    pub const PRNU_ONLY: Corrections = Corrections {
+        measured_gain: false,
+        prnu: true,
+    };
+    /// Both — the model M71's measurements imply.
+    pub const BOTH: Corrections = Corrections {
+        measured_gain: true,
+        prnu: true,
+    };
+}
 
 /// Sensor calibration for one camera model.
 pub struct CameraProfile {
@@ -190,6 +243,30 @@ pub struct CameraProfile {
     /// The dual-gain switch point. Above it read noise *drops*, so this is not
     /// a monotone-in-ISO model. Per body and per firmware.
     pub second_base_iso: f32,
+    /// The gain divisor M71's photon transfer measured, when one exists.
+    ///
+    /// **MEASURED, M71 §6.1 (SYNTHESIS fact 1065).** Green gain
+    /// **0.224103 DN/e-** at ISO 100 by a between-group PTC over 484 flat
+    /// fields, replicated drift-immune within-frame at
+    /// **0.223864 +/- 0.000836** (ratio 0.99893) by an estimator that fails
+    /// differently, and corroborated by fact 29's spectral floor to 3.0%. That
+    /// is **-2.16%** against [`gain_divisor`](Self::gain_divisor)'s implied
+    /// 0.228938, and `100 / 0.224103 = 446.2233`.
+    ///
+    /// **The per-plane values are deliberately not carried here.** M71 measured
+    /// R at -3.50% and **B at -14.85%**, and B's deficit is the still-unruled
+    /// B-plane anomaly that M48c, M61, M68, M71 and M72 have all chased. Baking
+    /// an unruled anomaly into a constant labelled "corrected" would be the
+    /// worse error; the greens are what every load-bearing consumer of this
+    /// model actually reads, since the focus field, the gate and
+    /// `predicted_sigma` are all green-luma.
+    ///
+    /// **Applying this alone makes the model worse**, and that is measured, not
+    /// argued: it removes the error that was cancelling the absent PRNU term.
+    /// See `docs/research/M90-prnu-noise-model.md` §2.
+    pub measured_gain_divisor: Option<f32>,
+    /// The PRNU M71 measured on this body, when one exists.
+    pub measured_prnu: Option<Prnu>,
 }
 
 impl CameraProfile {
@@ -203,6 +280,28 @@ impl CameraProfile {
 
     pub fn gain_dn_per_e(&self, iso: f32) -> f32 {
         iso.max(self.base_iso) / self.gain_divisor
+    }
+
+    /// [`Self::gain_dn_per_e`] under a correction set.
+    ///
+    /// With [`Corrections::SHIPPED`] this is `gain_dn_per_e` evaluated by the
+    /// same expression, in the same order, so it returns the identical `f32`.
+    pub fn gain_dn_per_e_with(&self, iso: f32, c: Corrections) -> f32 {
+        match (c.measured_gain, self.measured_gain_divisor) {
+            (true, Some(d)) => iso.max(self.base_iso) / d,
+            _ => iso.max(self.base_iso) / self.gain_divisor,
+        }
+    }
+
+    /// True when this profile can honour every flag in `c`.
+    ///
+    /// A correction requested but not available for this body is **not** an
+    /// error and **not** silently applied: the model is built without it and
+    /// this reports so, because a caller measuring a correction's effect needs
+    /// to know whether it was applied at all.
+    pub fn supports(&self, c: Corrections) -> bool {
+        (!c.measured_gain || self.measured_gain_divisor.is_some())
+            && (!c.prnu || self.measured_prnu.is_some())
     }
 
     /// Build the injected noise model for one stack.
@@ -219,6 +318,47 @@ impl CameraProfile {
         };
         NoiseModel::new([p; 4], iso, Provenance::Profile)
     }
+
+    /// [`Self::noise_model`] under a correction set.
+    ///
+    /// # The trap this function exists to avoid
+    ///
+    /// `read_noise_e` is **not** an independent measurement. `profile.rs`'s own
+    /// header records that it was fitted to measured dark sigma **in DN**
+    /// through this profile's gain, so the identified quantity is the product
+    /// `RN_e * g`, not either factor — and above [`second_base_iso`] the two are
+    /// explicitly documented as degenerate. Scaling `g` down by 2.16% while
+    /// leaving `RN_e` alone therefore drops the predicted **dark** sigma 2.16%
+    /// below the 44 independently reproduced cells of M4's table, replacing a
+    /// known error at high signal with a new one at low signal.
+    ///
+    /// So the gain correction here scales `read_noise_e` by the inverse ratio
+    /// and the read floor in DN is preserved exactly.
+    /// `the_measured_gain_correction_preserves_the_dark_floor` asserts it, and
+    /// it is asserted **at zero signal**, where it is the only term.
+    pub fn noise_model_with(&self, iso: f32, levels: Levels, c: Corrections) -> NoiseModel {
+        if c == Corrections::SHIPPED {
+            return self.noise_model(iso, levels);
+        }
+        let gain = self.gain_dn_per_e_with(iso, c);
+        let shipped_gain = self.gain_dn_per_e(iso);
+        // Preserve RN_e * g, the product that was measured.
+        let read_noise_e = if gain > 0.0 {
+            self.read_noise_e(iso) * (shipped_gain / gain)
+        } else {
+            self.read_noise_e(iso)
+        };
+        let p = PlaneNoise {
+            gain_dn_per_e: gain,
+            read_noise_e,
+            levels,
+        };
+        let m = NoiseModel::new([p; 4], iso, Provenance::Profile);
+        match (c.prnu, self.measured_prnu) {
+            (true, Some(k)) => m.with_prnu(k),
+            _ => m,
+        }
+    }
 }
 
 /// Sony A7C II. Constants confirmed against M1 where M1 could confirm them:
@@ -231,7 +371,18 @@ const A7C2: CameraProfile = CameraProfile {
     read_noise_e_low: 4.20,
     read_noise_e_high: 1.2392,
     second_base_iso: 400.0,
+    measured_gain_divisor: Some(A7C2_MEASURED_GAIN_DIVISOR),
+    measured_prnu: Some(Prnu::A7C2_MEASURED),
 };
+
+/// `100 / 0.224103`, from M71 §6.1's between-group green photon transfer.
+///
+/// Written as the quotient of the two numbers a reader can look up rather than
+/// as a bare 446.2233, so the derivation is in the source and the constant
+/// cannot drift away from the measurement it encodes.
+pub const A7C2_MEASURED_GREEN_GAIN_DN_PER_E: f32 = 0.224_103;
+/// The divisor implied by [`A7C2_MEASURED_GREEN_GAIN_DN_PER_E`] at ISO 100.
+pub const A7C2_MEASURED_GAIN_DIVISOR: f32 = 100.0 / A7C2_MEASURED_GREEN_GAIN_DN_PER_E;
 
 const PROFILES: [&CameraProfile; 1] = [&A7C2];
 
@@ -261,6 +412,24 @@ pub fn fallback(iso: f32, levels: Levels) -> NoiseModel {
 pub fn noise_model_for(model: &str, iso: Option<f32>, levels: Levels) -> NoiseModel {
     match (by_model(model), iso) {
         (Some(profile), Some(iso)) => profile.noise_model(iso, levels),
+        (_, iso) => fallback(iso.unwrap_or(0.0), levels),
+    }
+}
+
+/// [`noise_model_for`] under a correction set.
+///
+/// The fallback arm is **deliberately never corrected**. Its gain is a guess of
+/// 1.0, so M71's -2.16% and its 0.3096% pattern — both measured on one specific
+/// A7C II sensor — mean nothing against it, and applying them would dress a
+/// guess up as a measurement. `Provenance::Fallback` keeps saying so.
+pub fn noise_model_for_with(
+    model: &str,
+    iso: Option<f32>,
+    levels: Levels,
+    c: Corrections,
+) -> NoiseModel {
+    match (by_model(model), iso) {
+        (Some(profile), Some(iso)) => profile.noise_model_with(iso, levels, c),
         (_, iso) => fallback(iso.unwrap_or(0.0), levels),
     }
 }
@@ -584,5 +753,135 @@ mod tests {
             (measured_step - modelled_step).abs() > 1.0,
             "the discrepancy this test exists to record has gone away"
         );
+    }
+
+    // ---------------------------------------------------------------------
+    // M90 — the opt-in corrections
+    // ---------------------------------------------------------------------
+
+    /// Deliverable A, on the bits. The default path must not move, at any ISO,
+    /// at any signal, on any plane — including through `noise_model_for`, which
+    /// is what the merge actually calls.
+    #[test]
+    fn the_shipped_corrections_are_bit_identical_to_the_default_path() {
+        assert_eq!(Corrections::default(), Corrections::SHIPPED);
+        let p = by_model("ILCE-7CM2").unwrap();
+        for iso in [50.0f32, 100.0, 160.0, 400.0, 800.0, 3200.0, 12800.0] {
+            assert_eq!(
+                p.gain_dn_per_e(iso).to_bits(),
+                p.gain_dn_per_e_with(iso, Corrections::SHIPPED).to_bits()
+            );
+            let a = p.noise_model(iso, levels());
+            let b = p.noise_model_with(iso, levels(), Corrections::SHIPPED);
+            let c = noise_model_for("ILCE-7CM2", Some(iso), levels());
+            let d = noise_model_for_with("ILCE-7CM2", Some(iso), levels(), Corrections::SHIPPED);
+            assert!(b.prnu().is_none(), "SHIPPED must not attach a pattern");
+            assert!(d.prnu().is_none());
+            for s in (0..=15_360).step_by(53) {
+                let s = s as f32;
+                assert_eq!(a.green_luma_sigma(s).to_bits(), b.green_luma_sigma(s).to_bits());
+                assert_eq!(c.green_luma_sigma(s).to_bits(), d.green_luma_sigma(s).to_bits());
+                for pl in CfaPlane::ALL {
+                    assert_eq!(a.variance(pl, s).to_bits(), b.variance(pl, s).to_bits());
+                    assert_eq!(a.sigma(pl, s).to_bits(), b.sigma(pl, s).to_bits());
+                    assert_eq!(c.sigma(pl, s).to_bits(), d.sigma(pl, s).to_bits());
+                }
+            }
+        }
+    }
+
+    /// The trap. A gain-only correction that forgets `read_noise_e` was fitted
+    /// through the *old* gain silently moves the dark floor, and the dark floor
+    /// is the one part of this model that 44 independently reproduced cells of
+    /// M4's table already pin down.
+    #[test]
+    fn the_measured_gain_correction_preserves_the_dark_floor() {
+        let p = by_model("ILCE-7CM2").unwrap();
+        for iso in [100.0f32, 200.0, 400.0, 1600.0, 6400.0] {
+            for c in [
+                Corrections::GAIN_ONLY,
+                Corrections::PRNU_ONLY,
+                Corrections::BOTH,
+            ] {
+                let shipped = p.noise_model(iso, levels());
+                let corrected = p.noise_model_with(iso, levels(), c);
+                let a = shipped.sigma(CfaPlane::G1, 0.0);
+                let b = corrected.sigma(CfaPlane::G1, 0.0);
+                assert!(
+                    (a - b).abs() / a < 1e-5,
+                    "ISO {iso} {c:?}: dark floor moved {a} -> {b}"
+                );
+                // And with the pattern switched on, since it is quadratic and
+                // must contribute nothing at zero.
+                let b2 = corrected.sigma_with_fixed_pattern(CfaPlane::G1, 0.0);
+                assert!((a - b2).abs() / a < 1e-5, "ISO {iso} {c:?}: {a} -> {b2}");
+            }
+        }
+    }
+
+    /// The gain correction is the -2.16% M71 reported, and it is a pure scale in
+    /// ISO rather than something that only holds at base.
+    #[test]
+    fn the_measured_gain_is_2_16_percent_below_the_shipped_one() {
+        let p = by_model("ILCE-7CM2").unwrap();
+        for iso in [100.0f32, 400.0, 1600.0, 12800.0] {
+            let ratio = p.gain_dn_per_e_with(iso, Corrections::GAIN_ONLY) / p.gain_dn_per_e(iso);
+            assert!(
+                (ratio - 0.978_88).abs() < 5e-4,
+                "ISO {iso}: ratio {ratio}, expected 0.97888 (= 436.8 / 446.2233)"
+            );
+        }
+        // The divisor a reader would look up in M71 §6.1.
+        assert!((A7C2_MEASURED_GAIN_DIVISOR - 446.2233).abs() < 0.01);
+    }
+
+    /// Fact 1064's crossover, re-derived from the constants this file carries
+    /// rather than copied from the report: shot-only and shot-plus-pattern cross
+    /// where `(g_shipped - g_measured) * S = (kappa * S)^2`, i.e. at
+    /// `S = (g_s - g_m) / kappa^2`.
+    #[test]
+    fn the_two_errors_cross_at_about_504_dn() {
+        let p = by_model("ILCE-7CM2").unwrap();
+        let shipped = p.noise_model(100.0, levels());
+        let both = p.noise_model_with(100.0, levels(), Corrections::BOTH);
+        let excess = |s: f32| {
+            both.variance_with_fixed_pattern(CfaPlane::G1, s) - shipped.variance(CfaPlane::G1, s)
+        };
+        // Below the crossover the corrected model is the *smaller* one.
+        assert!(excess(100.0) < 0.0, "at S = 100: {}", excess(100.0));
+        // Above it, the larger.
+        assert!(excess(2000.0) > 0.0, "at S = 2000: {}", excess(2000.0));
+        // Bisect for the sign change.
+        let (mut lo, mut hi) = (100.0f32, 2000.0f32);
+        for _ in 0..60 {
+            let mid = 0.5 * (lo + hi);
+            if excess(mid) < 0.0 {
+                lo = mid;
+            } else {
+                hi = mid;
+            }
+        }
+        let crossover = 0.5 * (lo + hi);
+        assert!(
+            (crossover - 504.0).abs() < 15.0,
+            "crossover at {crossover} DN, fact 1064 says 504"
+        );
+    }
+
+    /// A correction the profile cannot honour must be visible, not silent.
+    #[test]
+    fn an_unsupported_correction_is_reported_rather_than_faked() {
+        let p = by_model("ILCE-7CM2").unwrap();
+        assert!(p.supports(Corrections::BOTH));
+        // The fallback body has no measurements, so the corrected call is the
+        // uncorrected one and stays stamped as a guess.
+        let a = noise_model_for("NOT-A-CAMERA", Some(100.0), levels());
+        let b = noise_model_for_with("NOT-A-CAMERA", Some(100.0), levels(), Corrections::BOTH);
+        assert_eq!(b.provenance, Provenance::Fallback);
+        assert!(b.prnu().is_none(), "a guessed gain must not carry M71's kappa");
+        for s in (0..=15_360).step_by(211) {
+            let s = s as f32;
+            assert_eq!(a.sigma(CfaPlane::G1, s).to_bits(), b.sigma(CfaPlane::G1, s).to_bits());
+        }
     }
 }
