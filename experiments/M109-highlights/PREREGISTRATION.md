@@ -278,3 +278,150 @@ three at K together), so D8 should fall, not merely magenta.
 
 Stated plainly so it cannot be repaired later: **I expect to report a partial
 fix, not a clean one.**
+
+## Addendum B10 -- written 2026-08-24, BEFORE writing the radial script
+
+ORCH asks a question I can answer read-only, on artefacts already on disk: **is
+the residual fringe that survives my fix spatially RADIAL?** Lateral chromatic
+aberration is zero at the optical centre and grows with field height. If the
+residual's density rises toward the corners it is M107's object and the two
+fixes compose; if it is flat, M107's fix will not clear it and the two
+milestones are addressing different things.
+
+**Residual fringe** = pixels where the magenta predicate still fires in
+`marker-argmax-e024-after.tif`. Same predicate, imported from `magenta.py`, not
+re-typed (discipline 742).
+
+### The confound I am registering in advance
+
+**Raw area-normalised density is confounded by where the subject is.** Specular
+highlights occur on the marker, not uniformly across the frame. If the marker
+sits centrally, raw density falls toward the corners *for lack of subject*, and
+a genuinely radial effect would read as flat or even anti-radial. So two
+normalisers are reported, and **the eligibility-normalised one is the bar**:
+
+1. **per unit area** -- fringe pixels / all pixels, per annulus.
+2. **per eligible pixel** -- fringe pixels / partially-clipped pixels, per
+   annulus, where partial clipping is ORCH's D8 population (1-2 channels at
+   1.0, not all 3). That is the population mechanically at risk, so it removes
+   the subject's placement from the denominator.
+
+Annuli: 20 equal-width bins in r normalised to the centre-to-corner distance.
+The denominator is the **measured** pixel count per annulus, not an area
+formula, so rectangle clipping at the corners is handled exactly. Annuli whose
+denominator is below 5 000 px are dropped as too noisy.
+
+**Caveat registered, not discovered later:** the optical centre is assumed to be
+the frame centre. This is a stack of aligned frames, so alignment could shift
+the true optical centre by the warp's translation. A shift of a few hundred px
+on a 7040x4688 frame cannot convert a flat profile into a monotonic one, but it
+could weaken a real gradient. This bar can therefore produce a false NOT-RADIAL
+more easily than a false RADIAL.
+
+### Controls -- both required, and neither is optional
+
+A "flat" result is uninterpretable unless the instrument is shown able to read
+non-flat. Per discipline 706 and the null/positive pairing:
+
+- **B10-null**: sample a uniform-random subset of eligible pixels, equal in
+  count to the real fringe population. PREDICT `|rho| < 0.5` and outer/inner
+  ratio in `[0.7, 1.4]`. **If this fails the instrument is biased and no other
+  number in B10 may be quoted.**
+- **B10-pos**: plant a synthetic population drawn with probability proportional
+  to `r`. PREDICT `rho > 0.8` and ratio `> 2.0`. **If this fails the instrument
+  cannot see radial structure and a flat real reading means nothing.**
+
+### The decision rule, fixed now
+
+On the **eligibility-normalised** profile:
+
+- `rho > 0.7` AND ratio `> 2.0` -> **RADIAL**: consistent with lateral CA, expect
+  M107 to clear it, expect the milestones to collide if both run on it.
+- `rho < 0.3` OR ratio `< 1.5` -> **NOT RADIAL**: M107's fix will not clear it.
+- anything else -> **EQUIVOCAL**, reported as such and not resolved by
+  re-analysis.
+
+I am registering the equivocal band deliberately so that a middling result
+cannot be talked into either camp after the fact.
+
+**What this cannot license.** It is a spatial-distribution test, not a mechanism
+test. A RADIAL reading is consistent with lateral CA but does not prove it --
+vignetting-driven exposure falloff and corner-softening both share the
+signature. I will report it as consistent-with, never as identification, and I
+am not coordinating with M107 on it.
+
+## Addendum B11 -- written after B10 FAILED, before writing the diagnostic
+
+**B10 failed as written and is reported as failed.** Both controls failed and
+the instrument disqualified itself (exit 4), so per its own registered
+consequence none of its readings may be quoted. It failed for a reason I did
+not anticipate: on the eligibility denominator only **2 of 20 annuli** cleared
+`MIN_DENOM`, both outer, so Spearman rho was `+1.0000` degenerately on two
+points and outer/inner was `nan` for want of any inner annulus. The null
+control fired on that degeneracy, which is precisely why it was there.
+
+`radial.py` is **left exactly as it is**. It is the registered B10 instrument,
+it behaved correctly, and editing it now would convert a reported failure into
+a silent repair.
+
+**B11 is a different question, not a rescue of B10.** B10 asked *is the
+residual radial*. B11 asks the prior question B10's failure exposed: **does the
+population even span enough field height for "radial" to be measurable?**
+
+- Report, per annulus, with **no minimum-denominator cut**: total pixels,
+  eligible (partial-clip) pixels, residual fringe pixels, and fringe per
+  eligible pixel.
+- **Decidability precondition, fixed now.** The radial question is decidable
+  only if the eligible population has support at both ends: at least 5 000
+  eligible px in some annulus with `mid < 0.50` AND at least 5 000 in some
+  annulus with `mid > 0.85`. If either is absent, the verdict is
+  **UNDECIDABLE-BY-SUPPORT** and no rho or ratio is reported at all.
+- If decidable, require at least 4 surviving annuli before computing rho, and
+  re-run both B10 controls under that constraint.
+
+PREDICT: undecidable. B10's kept-annuli count already suggests the eligible
+population is confined to a narrow band, and I am recording that expectation
+before running so that an undecidable result is not presented as a discovery.
+
+**A negative result here is informative and I am registering what it means in
+advance.** Lateral CA grows monotonically with field height. If the residual
+instead peaks mid-field and collapses at the largest radii *while eligible
+pixels remain present there*, that is evidence against lateral CA. If eligible
+pixels are absent there, the corners are simply untested and I must say so
+rather than reading the collapse as evidence.
+
+## Addendum B12 -- written after B11, before writing the edge-denominator test
+
+B11 returned UNDECIDABLE-BY-SUPPORT as predicted, and in doing so split the
+residual into two spatially disjoint populations:
+
+- **72.5 % clipping-coupled** -- inside the partial-clip population, confined to
+  r 0.52-0.88 with 90 % of it in r 0.75-0.85.
+- **27.5 % NOT clipping-coupled** -- sitting in annuli containing **zero**
+  eligible pixels, spread across r 0.02-0.93.
+
+The second population is the only part that could plausibly be M107's object,
+and unlike the first it **does** span field height, so the radial question is
+decidable on it. B12 asks it, with a denominator that spans the frame.
+
+- **Numerator**: residual fringe pixels NOT in the partial-clip population.
+- **Denominator**: luminance edge pixels -- Sobel gradient magnitude of luma
+  above its 99th percentile, restricted to luma > 0.15. Chromatic aberration
+  acts on high-contrast edges, and edges exist at every field height, so this
+  denominator has the radial lever arm B10's lacked.
+- Same decidability precondition as B11, same >= 4 annuli requirement, and
+  **both B10 controls re-run on this denominator**.
+- Same decision thresholds as B10, unchanged: `rho > 0.7 AND ratio > 2.0` ->
+  RADIAL; `rho < 0.3 OR ratio < 1.5` -> NOT RADIAL; otherwise EQUIVOCAL.
+
+PREDICT: not radial. B11's area-normalised profile for this subset peaks near
+r = 0.125 and falls to near zero beyond r = 0.75, which is the inverse of the
+lateral-CA signature -- but that profile is confounded by subject placement,
+which is exactly what the edge denominator is meant to remove. Recording the
+expectation before the run so a confirmation is not mistaken for a discovery,
+and so a reversal is visible as one.
+
+**Registered in advance: a NOT RADIAL result does not clear M107.** It would say
+that *this* residual is not lateral CA and that M107's fix should not be
+expected to remove it -- which is the composition question ORCH asked. It says
+nothing about whether M107's own defect is real.

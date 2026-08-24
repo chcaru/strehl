@@ -563,3 +563,85 @@ exits **101** with **4** errors -- `optics.rs:459` (hex literal grouping) and
 files this milestone touches, all of which have zero uncommitted delta. The
 unrelated claim on line 430, that this workspace builds clippy with
 `-D warnings`, is separately confirmed at `AGENTS.md:954` and stands.
+
+## 12. Is the residual fringe radial? UNDECIDABLE ON THIS ARTEFACT
+
+ORCH asked a read-only question: does the residual that survives my fix rise
+toward the corners, as lateral CA must, in which case it is M107's object and
+the two milestones collide? Three bars were registered in advance. **The
+question turned out not to be answerable on this subject, and the interesting
+part is why.**
+
+### B10 -- FAILED AS WRITTEN, and is reported failed
+
+Both controls failed and the instrument disqualified itself, exit 4. Per its
+own registered consequence **none of its readings may be quoted**, and I am not
+quoting them.
+
+**It failed for a reason I did not anticipate, which is what a control is
+for.** On the eligibility denominator only **2 of 20** annuli cleared
+`MIN_DENOM`, both outer, so Spearman rho came out `+1.0000` degenerately on two
+points and outer/inner was `nan` for want of any inner annulus. The uniform-
+random null returned `rho = +1.0000` as well -- an instrument that reports
+perfect radial correlation for a population with no radial structure at all.
+Had I run only the real arm I would have read `+1.0000` and called it RADIAL.
+
+`radial.py` is **left exactly as written**. Editing it now would convert a
+reported failure into a silent repair.
+
+### B11 -- UNDECIDABLE-BY-SUPPORT, as predicted before the run
+
+I registered "PREDICT: undecidable" in advance, so this is a confirmation and
+not a discovery. The partial-clip population contains **zero pixels in 11 of 20
+annuli** and **90.1 %** of itself in two adjacent bins at r 0.775-0.825. There
+is no radial lever arm because the population does not sample field height.
+
+It did split the residual into two spatially disjoint parts:
+
+| population | share | where it lives |
+| --- | --- | --- |
+| clipping-coupled | 72.5 % (22 582 px) | r 0.52-0.88, 90 % in r 0.75-0.85 |
+| not clipping-coupled | 27.5 % (8 580 px) | annuli with **zero** eligible px, r 0.02-0.93 |
+
+### B12 -- UNDECIDABLE-BY-SUPPORT AGAIN, from the opposite end
+
+Only the non-coupled 27.5 % could be lateral CA, and it does span field height,
+so B12 asked the question against a denominator that also spans the frame:
+luminance edge pixels, Sobel magnitude above p99 with luma > 0.15.
+
+**It hit the same wall from the other side.** The edge population collapses in
+the outer field:
+
+| r | edge px | | r | edge px |
+| --- | --- | --- | --- | --- |
+| 0.225 | 47 597 | | 0.775 | 572 |
+| 0.475 | 15 356 | | 0.825 | **88** |
+| 0.625 | 10 552 | | 0.925 | 303 |
+
+From 47 597 to 88 -- a factor of 540 -- across annuli of comparable area. No
+annulus beyond r = 0.85 reaches the registered 5 000-pixel support floor, so no
+rho and no ratio was computed. Exit 4.
+
+### The answer
+
+**Two independent denominators, chosen for different reasons, collapse in the
+same place. The outer field of this frame contains neither blown highlights nor
+bright edges** -- it is a macro subject occupying a band, with defocused
+background beyond r = 0.7. The radial question is therefore **undecidable on
+this artefact by any denominator**, not merely by the two I tried.
+
+What this does establish: **the dominant 72.5 % of the residual is
+clipping-coupled and co-located with the blown region, not distributed by field
+height.** Whatever it is, it tracks saturation rather than field position.
+
+What it does not establish: that lateral CA is absent. The corners are untested
+because there is nothing there to fringe -- not because fringing was looked for
+and not found. **A NOT-RADIAL verdict was never reached and must not be
+attributed to me.**
+
+**Consequence for ORCH's composition question.** Whether M109's residual and
+M107's object are the same thing cannot be settled on `dry-erase-marker-head-cpl`.
+It needs a subject with high-contrast content out to the frame corners. I note
+without having looked at M107's work, and without coordinating with it, that
+**any CA measurement made on this same subject faces the identical support
+limit** -- the constraint is a property of the frame, not of either method.

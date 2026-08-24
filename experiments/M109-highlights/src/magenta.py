@@ -24,7 +24,17 @@ import tifffile
 THRESH = 0.06
 
 
-def stats(path: str) -> dict:
+def magenta_mask(f: np.ndarray) -> np.ndarray:
+    """ORCH's predicate on a float HxWx3 render scaled to 0..1.
+
+    Exposed so other M109 scripts import it rather than re-typing the
+    thresholds (discipline 742): a second copy is a second chance to drift.
+    """
+    return ((f[..., 0] - f[..., 1]) > THRESH) & ((f[..., 2] - f[..., 1]) > THRESH)
+
+
+def load(path: str) -> np.ndarray:
+    """Read a 16-bit RGB render as float32 in 0..1, with the shape/dtype guards."""
     a = tifffile.imread(path)
     if a.ndim != 3 or a.shape[2] != 3:
         raise SystemExit(f"{path}: expected HxWx3, got {a.shape}")
@@ -32,11 +42,15 @@ def stats(path: str) -> dict:
         raise SystemExit(f"{path}: expected uint16, got {a.dtype}")
     # float32 is exact for every uint16 value, and halves peak memory on a
     # 33 MP frame against float64.
-    f = a.astype(np.float32) / 65535.0
+    return a.astype(np.float32) / 65535.0
+
+
+def stats(path: str) -> dict:
+    f = load(path)
     r, g, b = f[..., 0], f[..., 1], f[..., 2]
     rg = r - g
     bg = b - g
-    mask = (rg > THRESH) & (bg > THRESH)
+    mask = magenta_mask(f)
     n = mask.size
     hit = int(mask.sum())
     out = {
