@@ -135,6 +135,28 @@ pub struct OpticalProfile {
     pub measured_at: Option<&'static str>,
     /// Schema version of this record.
     pub version: u32,
+    /// The largest **normalised field height** the fit actually observed, where
+    /// `1.0` is the corner (half the full-resolution sensel diagonal).
+    ///
+    /// Lateral CA is zero at the optical centre by construction and grows with
+    /// field height, so a radial coefficient is most load-bearing exactly where
+    /// a macro subject usually has nothing in frame. A high `r_squared` over a
+    /// narrow radial band is entirely consistent with an unconstrained
+    /// extrapolation into the corners, so goodness of fit does **not** answer
+    /// the question this field answers.
+    ///
+    /// On the shipped record this is `Some(0.788)`: the 20 gated ROIs span
+    /// `r = 0.208..0.788` with six of ten annuli populated, so the coefficient
+    /// has a genuine 3.8x radial lever arm — but the corner is a **1.27x linear
+    /// extrapolation** beyond the outermost measured point, and annuli
+    /// `0.80..1.00` are empty. Roughly 21% of the corner correction comes from
+    /// the model's shape rather than from measured points.
+    ///
+    /// `None` means the support was not recorded, which is not the same as
+    /// "measured to the corner". Nothing in this module clamps to this radius —
+    /// it is declared so a consumer can decide, not silently enforced, because
+    /// a clamp is a behavioural change that has not been validated on a render.
+    pub support_r_max: Option<f64>,
     /// Red's radial magnification error relative to green.
     pub eps_r: f64,
     /// Blue's radial magnification error relative to green.
@@ -290,6 +312,10 @@ pub const A7C2_FE100GM_2XTC_X4CPL: OpticalProfile = OpticalProfile {
     // would silently widen the profile's claimed applicability.
     measured_at: None,
     version: 1,
+    // Measured by R6: the 20 gated ROIs span r = 0.208..0.788, six of ten
+    // annuli populated, outer two annuli empty. The corner is a 1.27x linear
+    // extrapolation. Declared, not enforced.
+    support_r_max: Some(0.788),
     eps_r: -704.5e-6,
     eps_b: None,
     // Unattributed: degenerate with an optical-centre offset, and the same order
@@ -781,6 +807,33 @@ mod tests {
             observed.re,
             observed.im
         );
+    }
+
+    /// The shipped profiles must DECLARE their radial support, and it must be
+    /// honest about not reaching the corner.
+    ///
+    /// R6 measured `r = 0.208..0.788` over the 20 gated ROIs, with the outer
+    /// two annuli empty. If someone later widens the fit set, this test fails
+    /// and forces the declaration to be updated with it — which is the point.
+    /// A profile whose support silently drifts out of date is worse than one
+    /// with no support field at all, because it looks checked.
+    #[test]
+    fn the_shipped_profiles_declare_a_support_radius_short_of_the_corner() {
+        for p in [&A7C2_FE100GM_2XTC_X4CPL, &A7C2_FE100GM_2XTC_X4CPL_RADIAL] {
+            let r = p
+                .support_r_max
+                .unwrap_or_else(|| panic!("{} ships without declaring its support", p.key));
+            assert!(
+                (r - 0.788).abs() < 5e-4,
+                "{} declares support {r}, R6 measured 0.788",
+                p.key
+            );
+            assert!(
+                r < 1.0,
+                "{} claims support to the corner; R6 found the outer two annuli empty",
+                p.key
+            );
+        }
     }
 
     /// The RGGB site map, and the blast radius it implies.

@@ -1010,3 +1010,151 @@ cyan, and should treat a cyan improvement as evidence of something other than th
 - **D19.** Writing the boundary of your evidence into a fact is what makes it cheap to
   kill. P27 was wrong, but it was wrong in a way that named its own refutation site — that
   is the difference between an error that costs an hour and one that costs a week.
+
+---
+
+## 17. The radial support of the fit: UNDECIDABLE beyond r = 0.79
+
+The orchestrator asked a question about **support**, not goodness of fit: lateral CA is
+zero at the optical centre by construction and grows with field height, so a radial
+coefficient is most load-bearing exactly where a macro subject usually has nothing in
+frame. A high `R^2` over a narrow radial band is entirely consistent with an
+unconstrained extrapolation into the corners. `R6` (`r6_support.py`) answers it from my
+own data, without reading M109's files or re-deriving its result.
+
+Bars S0–S5 were registered in the script's docstring before the run, including the
+expectation that **S2 would fail**.
+
+### 17.1 The answer
+
+| question | answer |
+|---|---|
+| fitted on | `tweezers-cpl` (12 ROIs) + `bee-3-cpl` (8), 20 gated total |
+| radial span | `r = 0.208 .. 0.788`, median `0.584` |
+| annuli populated | **6 of 10** — counts 3, 1, 1, 7, 4, 4 over `r = 0.20..0.80` |
+| annuli empty | `0.00-0.20` and **`0.80-1.00`** |
+| `r_max` | **0.788**, against a registered bar of `0.85` |
+| verdict | **UNDECIDABLE BEYOND r = 0.79** |
+
+So the orchestrator's instinct was right, and the honest form is the one it named. But
+the finding is **milder than M109's**, and the difference matters:
+
+- **The coefficient itself is well constrained.** Six populated annuli spanning a
+  **3.8x lever arm in r** is real radial structure, not a two-bin artifact. Nothing here
+  resembles a 2-bin Spearman reading `+1.0000` on a null. `eps_r` is supported over
+  `[0.21, 0.79]`.
+- **What is unsupported is the last 21% of the field.** For a pure radial magnification
+  `d = eps*r`, displacement is linear, so the corner is the outermost measured point
+  scaled by `1/0.788 = 1.27x`.
+
+### 17.2 Question 3, answered numerically
+
+*"Does the correction's magnitude at the corners come from measured points, or from the
+model's shape?"*
+
+With `eps_r = -704.5 ppm` and a half-diagonal of `4225.7` sensels:
+
+| field height | red displacement | provenance |
+|---|---|---|
+| `r = 0.788` (outermost measured) | `2.35` sensels | **measured** |
+| `r = 1.000` (corner) | `2.98` sensels | `2.35` measured + `0.63` extrapolated |
+
+**About 79% of the corner correction sits at or below a measured radius; about 21% —
+0.63 sensel — comes from the model's shape alone.** That is the number, and it is a
+weaker claim than "3 output pixels at the corner" implies.
+
+### 17.3 What is shipped as a result
+
+`OpticalProfile` gains `support_r_max: Option<f64>`, set to `Some(0.788)` on both shipped
+records, with the empty outer annuli and the 1.27x factor documented on the field.
+`the_shipped_profiles_declare_a_support_radius_short_of_the_corner` locks it: a profile
+that ships without declaring support, or that claims support to `r = 1.0`, fails.
+
+**Nothing clamps to this radius.** The field is declared, not enforced. Clamping is a
+behavioural change that has not been validated on a render, and inventing one tonight
+would be the same mistake as the sign inversion in §12 — a convention rewritten under
+time pressure with no measurement behind it. The declaration is what lets a consumer
+decide; it is deliberately not a silent policy.
+
+### 17.4 The instrument defect this run contained, and what caught it
+
+The first version of `r6_support.py` normalised by `hypot(3516, 2344)/2` — the half
+diagonal of the half-resolution **CFA plane**. It reported `r_max = 1.575` and printed
+**`VERDICT: SUPPORT ADEQUATE`**.
+
+That verdict was false, and it was false in the flattering direction. A normalised field
+height above `1.0` is geometrically impossible: no point in the frame is further from the
+centre than the half diagonal. `rx`,`ry` are centre-relative **full-resolution sensel**
+coordinates (`common.py:17`), so the normaliser was 2x too small and every radius was
+inflated by 2x — which pushed the outermost ROI clean past the corner and made a starved
+support look complete.
+
+**I did not notice from the verdict.** What flagged it was S5, a control I had written to
+check something else entirely — whether the binning reported where the data is. It failed,
+I looked at why, and the impossible `r_max` was sitting in the output I had already read
+past. The lesson is not "check your units"; it is that **a control aimed at the wrong
+question still catches an instrument that is wrong**, which is an argument for running
+controls that are cheap rather than only the ones that seem pointed.
+
+The rewritten S5 is a proper two-sided pair: a positive control (radii uniform over
+`[0,1]`, `r_max = 0.902`) proving the statistic can say *adequate*, and a negative control
+(radii confined to `[0.20,0.40]`, `r_max = 0.394`) proving it can say *starved*. Both pass,
+so S2's FAIL on the real data is a statement about the data. S0 now asserts the geometry
+directly so this specific defect cannot recur silently.
+
+This did **not** touch `eps_r`. The fit solves `d = eps*(r.n)` with `d` and `r` both in
+sensels, so `eps` is dimensionless and unaffected by the normaliser. Only the support
+statistic was wrong.
+
+One unrelated defect spotted and **not** fixed, because it is the parent milestone's
+file and it is a reporting line rather than a coefficient: `e10_transfer.py:44` sets
+`PLANE_W, PLANE_H = 3516, 2344` and then reports the fitted centre offset as a
+percentage of that half-diagonal at line 118. If the centre is in sensels — and `rx`,`ry`
+are — that percentage is **2x too large**. Flagged for whoever owns it.
+
+### 17.5 What would fix the support
+
+The capture already requested in `docs/captures-needed.md` §24 is the right one, and I
+can now say exactly why in terms of this measurement: the fit needs **populated annuli in
+`r = 0.80..1.00`**, which is precisely what a flat, square-on target with fine detail
+reaching the corners supplies and what a macro subject in a band never will. Two
+additions worth making explicit:
+
+1. **Both annuli, not just the outermost.** `0.80-0.90` and `0.90-1.00` are both empty.
+   A target that only resolves in the extreme corner leaves a gap.
+2. **The blue channel.** `eps_b` is `None` and every ROI here was fitted on red. The same
+   capture supplies blue at no extra cost, and without it cyan fringing stays untouched
+   by construction (§16.4).
+
+### Candidate facts
+
+- **P31.** The `-704.5 ppm` lateral-CA fit has radial support `r = 0.208..0.788` over 20
+  gated ROIs, six of ten annuli populated, **outer two annuli empty**. The coefficient is
+  well constrained over that band (3.8x lever arm) but the corner is a **1.27x linear
+  extrapolation**: `2.35` of the corner's `2.98` sensels are at-or-below a measured
+  radius and **0.63 sensel (21%) comes from the model's shape alone**. The honest form is
+  **UNDECIDABLE beyond r = 0.79**. MEASURED (`r6_support.py`, bars S0–S5 registered
+  before the run, two-sided instrument controls pass).
+- **P32.** A support statistic normalised by the half-resolution **plane** diagonal
+  instead of the full-resolution **sensel** diagonal inflates every field height by 2x and
+  reported `r_max = 1.575` with the verdict `SUPPORT ADEQUATE` — a geometrically
+  impossible radius that read as the flattering answer. Caught by a control written for a
+  different question, not by the verdict line. MEASURED (first run of `r6_support.py`).
+
+### Disciplines
+
+- **D20.** A goodness-of-fit statistic and a support statistic answer different
+  questions, and only one of them constrains an extrapolation. **Report the per-annulus
+  population next to any `R^2` on a radial model** — `R^2 = 0.9969` and "the outer two
+  annuli are empty" are both true here.
+- **D21.** **A normalised coordinate has a legal range, so assert it.** `r > 1.0` is
+  impossible and was sitting in the output above a verdict I believed. Range guards on
+  derived quantities are cheaper than the wrong answer and they fail loudly.
+- **D22.** Run the cheap control even when it is aimed at the wrong question. S5 was
+  written to check the binning and instead caught a 2x unit error; a control that is
+  cheap enough to run without a hypothesis will sometimes catch the thing you had no
+  hypothesis about.
+- **D23.** When support is short of where a model is load-bearing, **declare the valid
+  domain in the shipped record and lock it with a test** rather than clamping. A
+  declaration lets a consumer decide; an unvalidated clamp is a new behaviour introduced
+  at the moment of least evidence.
