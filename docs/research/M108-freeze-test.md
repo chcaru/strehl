@@ -250,6 +250,39 @@ Six named checks. A–C were run in a clean `git archive` scratch tree at
 well; D and E are registry/fixture plants run in the working tree and reverted.
 A and B were re-run against the final two-pass test, not only the first draft.
 
+**Re-verified after the schema change.** The 17-column revision touched the
+parser, the environment builder, the anti-splice key and the failure message, so
+A, B and C were run again from a fresh `git archive` export at `b9ba221`
+(`C:\dev\strehl-out\M108\v2`). A new **Check F** covers the frame-range gate.
+All results below are from those runs unless dated otherwise; the second-round
+numbers are in §8.
+
+| check | what it plants | expected | measured |
+|---|---|---|---|
+| A | `FOCUS_NOISE_SD` `0.015_214 → 0.016_214` | RED, teaching message | exit 101, `4 passed; 1 failed` |
+| B | restore + `LastWriteTime = Get-Date` + rebuild | GREEN | exit 0, `5 passed`, 16.2 s |
+| C1 | `$STREHL_CAPTURES` → nonexistent | SKIP, exit 0 | exit 0, `5 passed`, loud skip banner |
+| C2 | same, plus `STREHL_FREEZE_REQUIRE=1` | hard failure | exit 101 |
+| D | row claims `on-sidecar-override`, runs `align=off` | RED, **no hash compared** | exit 101 |
+| E | a genuinely refused frame in the warp fixture | RED | exit 101, `19 placed / 1 refused` |
+| F | `DSC00016.ARW` copied to `DSC00015.ARW` | RED **before rendering** | exit 101 in 0.2 s |
+
+Check B is the one worth dwelling on, because the hazard reproduced live rather
+than theoretically. `Copy-Item` set the restored file's mtime **backwards**:
+
+```
+mtime before restore : 08/24/2026 12:17:19
+mtime after Copy-Item: 08/24/2026 12:16:57   <-- source mtime preserved
+mtime after touch    : 08/24/2026 12:19:15
+restored sha         : 66F6E4C6...D35582   (matches pre-plant)
+   Compiling strehl-core ... strehl-raw ... strehl-cli
+test result: ok. 5 passed
+```
+
+Without the explicit touch, cargo would have considered the planted artifact
+fresh and the "restored" run would have measured the binary I meant to remove —
+reporting a false green for the wrong reason (rule 33).
+
 ### Check A0 — green before planting
 
 ```
