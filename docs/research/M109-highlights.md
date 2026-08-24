@@ -435,3 +435,73 @@ constructs a `Develop` at all.
 write this -- `git diff --numstat` reports 31 uncommitted insertions from M97.
 A temporary local edit would be carried into M97's next commit without M97
 knowing. This is the routing request, not a patch I can land.
+
+## 10. Cache-contamination control (fact 1446) -- every arm CLEAN
+
+ORCH raised a severity-1 warning: `StackIdentity` keys the frame set but not
+`reference` and not `resampler`, so an identical command line can return bytes
+produced under different inputs depending on what ran earlier. Every A/B in
+this milestone is exactly the shape that corrupts.
+
+**I did not run ORCH's literal control, and I am saying so rather than
+implying I did.** It prescribes running `align --reference <other frame>`
+between arms. `strehl align` has a documented history of dropping
+`warpmap.txt` sidecars into the source directory -- 11 were quarantined -- and
+`D:\personal\macro` is strictly read-only. I substituted a perturbation that
+tests the same dependency without write risk: run each arm with the warpmap
+cache **hidden** (`STREHL_CACHE_DIR` pointed at an empty directory, forcing a
+fresh solve) and again with it **visible** (default, holding a
+`dry-erase-marker-head-cpl` warpmap written at 11:53, before any of my runs).
+
+**The perturbation was genuine, and strehl says so itself.** On the `stack`
+arm the hidden run reported `alignment : ON (solved)`; the visible run
+reported `alignment : ON (sidecar)`, in 111 s against 63 s. Different code
+path, 1.8x different runtime. The `argmax-baseline` arms report no alignment
+stage at all, which is the structural immunity below showing up in the
+instrument rather than in an argument.
+
+**The control poisons itself on re-run, and its own guard caught that.** The
+forced-solve arm *writes* its freshly solved warpmap into the redirect
+directory. On a second run the "hidden" arm therefore reads back its own
+output and reports `(sidecar)`, so both arms take the same path and `A == B`
+becomes vacuous. The first run of `cache_control.ps1` printed
+`CONTROL INERT: both arms reported align=sidecar` for the `stack` arm, which
+is how this was found. Fixed by emptying the redirect directory before every
+hidden arm; the guard is now an error, not a note, so an inert control fails
+loudly instead of reporting a clean result. **Anyone else running a
+cache-visibility control needs this -- a stale redirect directory turns it
+into a control that cannot go red.**
+
+| arm | cache hidden | cache visible | vs. the render I reported |
+| --- | --- | --- | --- |
+| `argmax` AFTER | `4EDD689B...B25E0C` | same | identical |
+| `argmax` BEFORE | `57D935E8...51B876` | same | identical |
+| `stack` AFTER | `DB7BAAD2...A1DDDC` | same | identical |
+| null `109MSDCF` | `4B7779AA...1A011F5` | -- | identical |
+
+**A == B on every arm, and every arm reproduces the exact file the reported
+numbers were computed from.**
+
+The `stack` arm is the one that was at risk by timeline: it is the only
+command I ran that touches `StackIdentity` at all, and the cached marker
+warpmap (11:53) pre-dated my render (12:40). That is now resolved by
+measurement rather than by argument -- **the freshly solved warpmap is
+byte-identical to the cached one**, SHA-256
+`1864A370AE92B377DFF6408ACD06E3FD7088446634B93D50BBEEE4FB95E8F4D0`, 41 027
+bytes. The 11:53 entry was solved under the same reference (149) and the same
+resampler my command implies, so the unkeyed collision never had an
+opportunity to bite.
+
+Read-only corpus re-verified after the control: 0 non-ARW files in the marker
+directory (299 files, all `.ARW`), and nothing under `D:\personal\macro`
+modified in the preceding two hours.
+
+**What this does NOT license.** It is not a refutation of fact 1446. I did not
+vary `reference` or `resampler`, so I did not exercise the collision; I showed
+that *my* session never exercised it either. The bug is real and M97 should
+still fix it. Separately, most of my bars were structurally immune rather than
+luckily clean: `StackIdentity` appears only in `align_cmd.rs` and
+`merge_cmd.rs`, while `stack.rs`, `image_out.rs` and `color.rs` contain zero
+warpmap, cache or `StackIdentity` references -- so `argmax-baseline`, which
+produced B1, B2, B3, B7, B8 and B9, has no cache path to be poisoned through.
+B5 is pure `rawpy` and never invokes strehl at all.
