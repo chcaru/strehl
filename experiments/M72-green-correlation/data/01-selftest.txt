@@ -1,0 +1,24 @@
+M72 selftest -- no corpus contact
+
+  plane geometry, asserted against the layout the report claims:
+    R  offset (0, 0)  ->  [0, 2, 20, 22]
+    G1 offset (0, 1)  ->  [1, 3, 21, 23]
+    G2 offset (1, 0)  ->  [10, 12, 30, 32]
+    B  offset (1, 1)  ->  [11, 13, 31, 33]
+    ok  all six pair classes match the CFA offsets
+
+  derangement:
+    [2, 13, 15, 6, 1, 12, 8, 5, 14, 11, 7, 16, 4, 3, 9, 19, 18, 10, 17, 0]
+    ok  no frame keeps its partner
+
+  C0 synthetic null (identical code path, no correlation exists):
+    cells 537004  var_a 1.08240  var_b 1.08325
+    rho_raw  -0.000655
+    rho_shep -0.000710
+    rho_perm +0.000040
+    ok  all within +/-0.005
+
+  planted recovery through pooled_moments:
+    planted +0.0730  recovered +0.072364  ok
+
+selftest OK
