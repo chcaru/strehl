@@ -1,0 +1,12 @@
+backed up 61066 bytes to C:\Users\chris\AppData\Local\Temp\M95-kernel.md.s18.bak
+
+baseline: rc=0  GREEN
+  CAUGHT  frame count            rc=1  BAD=1
+  CAUGHT  sidecar size           rc=1  BAD=1
+  CAUGHT  median B/frame         rc=1  BAD=1
+  CAUGHT  resampler field share  rc=1  BAD=1
+
+restored byte-identical: True
+post-restore: rc=0  GREEN
+
+negative control: 4/4 planted defects caught

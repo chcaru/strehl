@@ -1050,3 +1050,93 @@ This changes the *default* of a flag, so a caller passing `--reference`
 explicitly is unaffected, and the merge-side automatic path never read this
 argument at all. Sidecars already written keep whatever reference they were
 written with — the field is stored and parsed, not inferred.
+
+---
+
+## 18. The quarantined sidecars — audited, and two of the orchestrator's readings do not hold
+
+Instrument: `experiments/M95-kernel/src/k15_audit.py`, output in
+`out/k15_audit.txt`. Bars A1–A4 registered in the docstring before the run.
+The prompt for this was an orchestrator report that 11 stray sidecars had been
+moved out of the capture library, one of them a **40-frame** solve for
+`bee-3-cpl` that any 299-frame render might have silently picked up.
+
+### 18.1 First, my own claim was the one most likely to be wrong
+
+Section 15.2 says a recursive search of `D:\personal\macro` returned **count =
+0** at ~12:5x. A file with mtime **09:38:52** was then quarantined out of that
+library. Both cannot be right, and one of them is mine, so it was tested first.
+
+**A1/A2 — the probe shape is sound.** Rebuilding section 15's exact command
+against a synthetic tree with a file at the same depth as
+`<library>\<stack>\warpmap.txt`: `-Recurse -Depth 1 -Filter warpmap*.txt`
+returns **1**, and the no-`-Depth` control also returns **1**. The probe was
+not blind.
+
+**And a second, independent instrument agrees.** `k10_resampler_field.py`
+recorded `"legacy_exists": false` in `out/k10_resampler_field.json` — a Python
+`Path.exists()` on `D:\personal\macro\bee-3-cpl\warpmap.txt`, committed at
+`c3bb379`, taken at ~12:40. Two instruments of different kinds both say the
+file was **absent** an hour after its own mtime.
+
+`map.save()` writes a fresh file and stamps the current time. A file that did
+not exist at 12:40 and carries a 09:38:52 mtime was therefore **copied in with
+timestamps preserved, not written in place**. That is a different mechanism
+from the one rule 45 addresses, and it means the library was written to
+**after** `8118dd7` fixed `sidecar_path()`.
+
+### 18.2 The `bee-3-cpl` sidecar holds 8 frames, not 40
+
+Read directly from the quarantined file: `frames 8`, `end 8`, **8 placement
+rows, all placed**, `reference 4`, digest `165a1ff35968c615`.
+
+The orchestrator's own byte count refutes the frame count. Across the
+quarantine, large solves run at a median **137.5 B/frame** (`bee-2-cpl` 40807 B
+/ 299, `lavendar-cpl` 40812 B / 299, `leaf-2-cpl` 25024 B / 182):
+
+> a 40-frame sidecar would weigh about **6000 B**. The file is **1560 B**,
+> which is what **8** frames weigh.
+
+**`reference 4` is `merge_reference(8)`.** So this file was written by the
+merge-side cache path, **not** by `strehl align`, whose reference defaulted to
+0 until §17. It is evidence for a stale pre-`8118dd7` binary, not for the
+`align`-default story.
+
+### 18.3 The 299-vs-8 hazard described cannot occur through that path
+
+`load_or_solve` compares `map.len() == paths.len()` and re-solves on a
+mismatch. §14.3 measured that guard firing: a 5-frame map applied to a 6-frame
+bracket was **refused, rc=1**, with both digests named in the error. A
+299-frame bracket meeting an 8-frame sidecar re-solves; it does not silently
+merge 8.
+
+The hazard that **is** real is the one §14.4 reported and this does not change:
+a sidecar whose count *coincidentally matches*, and the **`resampler` field,
+which is validated by nothing** — mutating that one line moved **53.1412%** of
+output bytes.
+
+### 18.4 Nothing in this milestone is contaminated, and item 2 changes nothing
+
+Three scripts here invoke `strehl.exe`. `k9_sidecar.py` and
+`k10_resampler_field.py` set **`STREHL_WARPMAP`**, whose override path never
+reads `sidecar_path()` and is hard-validated; the runs print
+`alignment : ON (sidecar-override), reference frame 0, 6 placed / 0 refused`
+on a 6-frame bracket — placed equals bracket. `k14_reference.py` scopes both
+`--out` and `STREHL_CACHE_DIR` into `C:\dev\strehl-out\M95-ref` and solves
+fresh.
+
+**Arm 9's attribution numbers never rendered at all** — they are NumPy gathers
+over decoded frames, with no merge and no sidecar in the path.
+
+On the `885e9f7` watershed at `2026-08-24 03:15:23`: every artifact in this
+milestone was measured after **12:27** today, so both arms of every comparison
+sit on the aligned side, and the kernel attribution is paired regardless.
+**No number here needs retaking.**
+
+### 18.5 On recording the whole invocation
+
+Already the practice here, and it is worth confirming rather than promising:
+`k10_resampler_field.py:64` records `stack <dir> --limit 6 --gate 0 --out
+<dst>` in committed source, with `--gate 0` written explicitly even though the
+arm wanted the one-frame case. `k14_reference.py` records `--limit 6`, `--out`
+and the full environment override. I will keep doing it.

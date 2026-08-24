@@ -1,0 +1,32 @@
+==============================================================================
+verify M95-kernel.md section 18  (re-derived from primary sources)
+==============================================================================
+  OK   bee sidecar frames == 8            derived=True present=True disc=True
+  OK   end field == 8                     derived=True present=True disc=True
+  OK   placement rows == 8                derived=True present=True disc=True
+  OK   reference == 4                     derived=True present=True disc=True
+  OK   reference == merge_reference(8)    derived=True present=True disc=True
+  OK   digest quoted                      derived=True present=True disc=True
+  OK   size == 1560 B                     derived=True present=True disc=True
+  OK   size != 40-frame size              derived=True present=True disc=True
+  OK   median B/frame                     derived=True present=True disc=True
+  OK   k10 legacy_exists is false         derived=True present=True disc=True
+  OK   53.1412% re-derived                derived=True present=True disc=True
+  OK   bee-2 size quoted                  derived=True present=True disc=True
+  OK   lavendar size quoted               derived=True present=True disc=True
+------------------------------------------------------------------------------
+  OK   own claim tested first             'the one most likely to be wrong'
+  OK   probe verified sound               'The probe was not blind'
+  OK   second instrument                  'two instruments of different kinds'
+  OK   copied not written                 'copied in with timestamps preserved'
+  OK   frame count corrected              'holds 8 frames, not 40'
+  OK   not the align story                'not** by `strehl align`'
+  OK   guard fires                        'refused, rc=1'
+  OK   real hazard restated               'validated by nothing'
+  OK   override used                      'sidecar-override'
+  OK   arm 9 never rendered               'never rendered at all'
+  OK   watershed cleared                  'No number here needs retaking'
+  OK   gate recorded explicitly           '--gate 0'
+==============================================================================
+verdict: GREEN
+==============================================================================

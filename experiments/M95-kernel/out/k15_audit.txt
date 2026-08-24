@@ -1,0 +1,51 @@
+==============================================================================
+K15  was section 15's 'count = 0' probe blind?
+==============================================================================
+synthetic tree: C:\dev\strehl-out\M95-depthtest\stack-a\warpmap.txt
+  same depth as <library>\<stack>\warpmap.txt
+
+A1  section 15's exact probe shape  -> '1'
+A2  control, -Recurse without -Depth -> '1'
+
+  A2 control (probe can see the planted file at all): PASS
+  A1 VERDICT: the probe is sound; the file post-dates my check.
+
+==============================================================================
+A3  the quarantined bee-3-cpl sidecar, read directly
+==============================================================================
+  bytes           : 1560
+  mtime           : 1787589532.6923862
+  frames field    : 8
+  end field       : 8
+  reference       : 4
+  stack-digest    : 165a1ff35968c615
+  placement rows  : 8  (8 placed)
+
+  orchestrator reported a 40-frame solve; the file holds 8 frames.
+  DISAGREES -- report it
+
+cleaned up C:\dev\strehl-out\M95-depthtest
+
+==============================================================================
+A4  bytes-per-frame across the quarantine, and what 40 frames would weigh
+==============================================================================
+  bee-2-cpl--warpmap.txt                             40807 B  frames  299    136.5 B/frame
+  bee-3-cpl--warpmap.txt                              1560 B  frames    8    195.0 B/frame
+  coffee-bean--warpmap-r2-102010.txt                  1560 B  frames    8    195.0 B/frame
+  coffee-bean--warpmap-r3-1frame-102703.txt            608 B  frames    1    608.0 B/frame
+  coffee-bean--warpmap.txt                            2098 B  frames   12    174.8 B/frame
+  flat-on-ruler-cpl--warpmap-r2-102010.txt            1568 B  frames    8    196.0 B/frame
+  flat-on-ruler-cpl--warpmap.txt                     11107 B  frames   79    140.6 B/frame
+  flower-bud-alone-cpl--warpmap.txt                  28097 B  frames  205    137.1 B/frame
+  flowers-cpl--warpmap.txt                           24155 B  frames  176    137.2 B/frame
+  foam--warpmap.txt                                  13916 B  frames  100    139.2 B/frame
+  lavendar-cpl--warpmap.txt                          40812 B  frames  299    136.5 B/frame
+  lead-1-cpl--warpmap.txt                            17031 B  frames  123    138.5 B/frame
+  leaf-2-cpl--warpmap.txt                            25024 B  frames  182    137.5 B/frame
+  round3-M108-coffee-bean-warpmap.txt                 3171 B  frames   20    158.6 B/frame
+  round4-1033-coffee-bean-warpmap.txt                  608 B  frames    1    608.0 B/frame
+  tweezers-cpl--warpmap.txt                          13918 B  frames  100    139.2 B/frame
+
+  median B/frame on the large solves: 137.5
+  a 40-frame sidecar would therefore weigh about 6000 B, not 1560 B
+  1560 B is consistent with the 8 frames the file actually declares
