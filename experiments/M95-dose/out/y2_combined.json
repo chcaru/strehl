@@ -1,0 +1,47 @@
+{
+  "k_cover": 0.9315,
+  "n_tiles": 40,
+  "n_frames": 8,
+  "warpmap": "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\bee-3-cpl--warpmap.txt",
+  "n_placed": 8,
+  "K12_null": -4.0611613441843276e-05,
+  "K16_null_lanczos": -4.0611613441843276e-05,
+  "TODAY": {
+    "cost_dex": 0.1845095760459981,
+    "sem": 0.004865544296435302,
+    "n": 320,
+    "k": 0.9315,
+    "kernel": "catmull-rom"
+  },
+  "NOK": {
+    "cost_dex": 0.16665480852550893,
+    "sem": 0.006014346158861155,
+    "n": 320,
+    "k": 1.0,
+    "kernel": "catmull-rom"
+  },
+  "KERN": {
+    "cost_dex": 0.06848317656663394,
+    "sem": 0.004887162612249044,
+    "n": 320,
+    "k": 0.9315,
+    "kernel": "lanczos3"
+  },
+  "BOTH": {
+    "cost_dex": 0.05635502672797769,
+    "sem": 0.002134304514620752,
+    "n": 320,
+    "k": 1.0,
+    "kernel": "lanczos3"
+  },
+  "bars": {
+    "recovery_coverage": 0.017854767520489173,
+    "recovery_kernel": 0.11602639947936416,
+    "recovery_both": 0.12815454931802042,
+    "coverage_on_top": 0.01212814983865626,
+    "B17_worth_landing": true,
+    "B18_kernel_is_lever": true,
+    "B19_do_not_bundle": false,
+    "falsifier_kernel_fails": false
+  }
+}

@@ -1,0 +1,26 @@
+kernels available: catmull-rom, lanczos3, lanczos8
+source : single-noalign.tif  7032x4688
+warpmap: C:\dev\strehl-out\ORCH-quarantine-sidecars\bee-3-cpl--warpmap.txt  (8 placed, using 8)
+tiles  : 40
+
+--- CONTROLS ---
+K12 NULL  catmull-rom, identity, k=1   -0.000041 dex  PASS
+K16 NULL  lanczos3, identity, k=1     -0.000041 dex  PASS
+
+--- THE CROSS ---
+arm           k kernel         cost (dex)      sem
+TODAY    0.9315 catmull-rom       +0.1845   0.0049
+NOK      1.0000 catmull-rom       +0.1667   0.0060
+KERN     0.9315 lanczos3          +0.0685   0.0049
+BOTH     1.0000 lanczos3          +0.0564   0.0021
+
+--- REGISTERED BARS ---
+recovery, coverage only   +0.0179 dex
+recovery, kernel only     +0.1160 dex
+recovery, both            +0.1282 dex
+what coverage adds on top of the kernel   +0.0121 dex
+B17 worth landing   (both  >= 0.10)   FIRES
+B18 kernel is lever (kern  >= 0.10)   FIRES
+B19 do not bundle   (extra <  0.01)   does not fire
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-dose\out\y2_combined.json

@@ -1,0 +1,31 @@
+source : single-noalign.tif  7032x4688
+warpmap: C:\dev\strehl-out\ORCH-quarantine-sidecars\bee-3-cpl--warpmap.txt
+warps  : 8 placed, using 8; tiles 40
+enlarge: 1.073537  (coverage k = 0.9315)
+
+--- CONTROLS (pre-registered; no arm prints unless all pass) ---
+K12 NULL      identity warp, k=1      -0.000041 dex  PASS  (n=40)
+K13 RESPONSE  planted sigma=1.0 px    +2.118865 dex  PASS  (n=40)
+K14 SEPARATE  |ADD - NULL|            0.100058 dex  PASS
+
+--- THE SWEEPS ---
+       k   ISO(k) scale alone   COMP(k) as shipped
+  0.8000        +0.1546 +-0.0307        +0.1499 +-0.0122
+  0.9000        +0.1603 +-0.0169        +0.1595 +-0.0065
+  0.9315        +0.1836 +-0.0132        +0.1845 +-0.0049
+  0.9800        +0.1805 +-0.0079        +0.1815 +-0.0026
+  1.0000        -0.0000 +-0.0028        +0.1667 +-0.0060
+  1.0200        +0.1765 +-0.0029        +0.1758 +-0.0011
+  1.1000        +0.1731 +-0.0142        +0.1689 +-0.0045
+  1.2500        +0.0862 +-0.0251        +0.0776 +-0.0091
+
+ADD  second gather at 1.073537 on a gathered tile  +0.1000 +-0.0046 dex   (M104's plant, reproduced)
+
+--- REGISTERED BARS ---
+COMP(0.9315) = +0.1845   COMP(1.0) = +0.1667   recovery = +0.0179 dex (9.7%)
+B13 orchestrator right (recovery >= 0.10)      does not fire
+B14 gather-not-scale   (rec<0.03, ADD>=0.10)   FIRES
+B15 threshold not dose (COMP spread < 0.05)    does not fire   spread=0.1069
+P13 ISO monotone in |k-1| off-lattice?         NOT monotone (flat-ish)
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-dose\out\y1_dose.json
