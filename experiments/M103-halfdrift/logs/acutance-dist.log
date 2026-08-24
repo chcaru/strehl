@@ -1,0 +1,29 @@
+7032x4688  before=bee3-baseline.tiff  after=bee3-m103.tiff
+
+REAL PAIR (shipped -> M103)
+      r/rmax     n  mean_ratio    median    trim80   top1%   top5%
+  0.0-0.2      35      0.9239    0.9174    0.9100   12.5%   39.6%
+  0.2-0.4     101      0.9445    0.9367    0.9600    9.6%   23.5%
+  0.4-0.6     163      1.0810    1.0391    1.2112    3.6%   15.5%
+  0.6-0.8     135      1.1304    1.3501    3.3359   12.5%   39.7%
+  0.8-1.0      52      1.3697    0.9898    1.0626   18.5%   73.6%
+
+PLACEBO (before vs before) -- must be all 1.0000
+      r/rmax     n  mean_ratio    median    trim80   top1%   top5%
+  0.0-0.2      35      1.0000    1.0000    1.0000   12.5%   39.6%
+  0.2-0.4     101      1.0000    1.0000    1.0000    9.6%   23.5%
+  0.4-0.6     163      1.0000    1.0000    1.0000    3.6%   15.5%
+  0.6-0.8     135      1.0000    1.0000    1.0000   12.5%   39.7%
+  0.8-1.0      52      1.0000    1.0000    1.0000   18.5%   73.6%
+
+POSITIVE CONTROL (before vs before sharpened 3% at ALL radii)
+      r/rmax     n  mean_ratio    median    trim80   top1%   top5%
+  0.0-0.2      35      1.0233    1.0226    1.0227   12.5%   39.6%
+  0.2-0.4     101      1.0248    1.0237    1.0236    9.6%   23.5%
+  0.4-0.6     163      1.0219    1.0221    1.0224    3.6%   15.5%
+  0.6-0.8     135      1.0222    1.0270    1.0285   12.5%   39.7%
+  0.8-1.0      52      1.0191    1.0356    1.0326   18.5%   73.6%
+  ^ a broad, genuine sharpening must move the MEDIAN, not just the mean.
+
+PLACEBO max |mean_ratio - 1| = 0.00e+00 -- PASS
+wrote data\acutance-dist.json

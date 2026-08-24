@@ -1,0 +1,21 @@
+controls on bee3-baseline.tiff  (4688, 7032)
+tile set fixed on the untreated frame: 1263 tiles
+
+arm                         A(centre)   A(outer)   d_outer  d_centre
+identity                       0.9607     0.4734    0.0000    0.0000
+radial 1px@corner              0.9255     0.3269   -0.1465   -0.0352
+radial 3px@corner              0.8595     0.0629   -0.4105   -0.1012
+radial 10px@corner             0.5972     0.0116   -0.4618   -0.3636
+isotropic sigma=1.6            0.9668     0.4657   -0.0077    0.0061
+
+SENSITIVITY  10px plant must lower A_outer      : PASS
+DOSE ORDER   A must fall monotonically with dose: PASS
+SPECIFICITY  isotropic plant must NOT move it   : PASS
+BUILT-IN NULL A(centre) ~ 1 untreated           : PASS
+GEOMETRY     at 1px, outer bites harder than centre: PASS
+
+Instrument passes all five. Calibration on this subject:
+    1.0 px radial residual @corner -> A_outer 0.3269
+    3.0 px radial residual @corner -> A_outer 0.0629
+   10.0 px radial residual @corner -> A_outer 0.0116
+    0.0 px (untreated render)          -> A_outer 0.4734

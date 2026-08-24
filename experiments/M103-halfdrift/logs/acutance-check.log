@@ -1,0 +1,36 @@
+7032x4688  before=bee3-baseline.tiff  after=bee3-m103.tiff
+acut_ratio reproduces photo.py's published number.
+G_ratio is the same comparison with the intensity normalisation
+REMOVED. predicted = G_ratio / m_ratio^2 and should track acut_ratio,
+which confirms the decomposition is arithmetically complete.
+
+REAL PAIR (shipped -> M103)
+      r/rmax  tiles  acut_ratio   G_ratio   m_ratio  predicted
+  0.0-0.2       35      0.9239    0.9393    1.0180     0.9065
+  0.2-0.4      101      0.9445    0.8900    0.9800     0.9268
+  0.4-0.6      163      1.0810    0.8851    0.9172     1.0522
+  0.6-0.8      135      1.1304    1.1805    0.9774     1.2356
+  0.8-1.0       52      1.3697    1.0610    0.9815     1.1015
+       whole    486                0.9582    0.9610
+
+PLACEBO (before vs before) -- must be all 1.0000
+      r/rmax  tiles  acut_ratio   G_ratio   m_ratio  predicted
+  0.0-0.2       35      1.0000    1.0000    1.0000     1.0000
+  0.2-0.4      101      1.0000    1.0000    1.0000     1.0000
+  0.4-0.6      163      1.0000    1.0000    1.0000     1.0000
+  0.6-0.8      135      1.0000    1.0000    1.0000     1.0000
+  0.8-1.0       52      1.0000    1.0000    1.0000     1.0000
+       whole    486                1.0000    1.0000
+
+POSITIVE CONTROL (before vs before x0.95, sharpness identical by construction)
+      r/rmax  tiles  acut_ratio   G_ratio   m_ratio  predicted
+  0.0-0.2       35      1.0000    0.9025    0.9500     1.0000
+  0.2-0.4      101      1.0000    0.9025    0.9500     1.0000
+  0.4-0.6      163      1.0000    0.9025    0.9500     1.0000
+  0.6-0.8      135      1.0000    0.9025    0.9500     1.0000
+  0.8-1.0       52      1.0000    0.9025    0.9500     1.0000
+       whole    486                0.9025    0.9500
+  ^ a pure 5% dimming must read G_ratio 1.0000 and acut_ratio ~1.1080 (=1/0.95^2).
+
+PLACEBO max |acut_ratio - 1| = 0.00e+00 -- PASS
+wrote data\acutance-check.json

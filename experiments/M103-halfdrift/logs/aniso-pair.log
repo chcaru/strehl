@@ -1,0 +1,40 @@
+before: bee3-baseline.tiff  (4688, 7032)
+after : bee3-m103.tiff  (4688, 7032)
+global NCC(before, after) = 0.796843
+  (pairing tiles by (ty,tx) requires the two renders to share a
+   canvas and magnification; a value near 1 confirms they do)
+  WARNING: low NCC -- the renders may not share geometry.
+
+tile set pinned on BEFORE: 1263 tiles
+tile set pinned on AFTER : 1263 tiles (1127 shared)
+
+PAIRED (tile set pinned on BEFORE).  A -> 1.0 is correct geometry.
+      r  clust  A_before   A_after    delta  placebo  use?
+   0.05  0.019    0.9416    0.9796  +0.0380   0.9416   yes
+   0.15  0.022    0.9799    1.0175  +0.0375   0.9799   yes
+   0.25  0.013    1.1050    1.1303  +0.0253   1.1050   yes
+   0.35  0.052    0.8820    0.8373  -0.0447   0.8820   yes
+   0.45  0.081    0.6450    0.6634  +0.0184   0.6450   yes
+   0.55  0.221    0.5279    0.5591  +0.0312   0.5279   yes
+   0.65  0.441    0.4087    0.4897  +0.0810   0.4087    NO
+   0.75  0.583    0.5614    0.3933  -0.1681   0.5614    NO
+   0.85  0.383    0.4503    0.4942  +0.0440   0.4503    NO
+
+PLACEBO (before vs before, same tiles): max |dA| = 0.00e+00 -- PASS
+PIN ROBUSTNESS: max change in delta when pinning on the other arm = 0.0298
+UNPAIRED BIAS : max |delta_unpaired - delta_paired| = 0.0161  (this is what the stock __main__ path would have reported)
+BUILT-IN NULL : A_before(centre) = 0.9607, A_after(centre) = 0.9985  (geometry forbids a scale-induced change here)
+
+Residual radial displacement, px AT THE CORNER, by inverting the
+planted dose curve at the same radius (upper bounds, not
+estimates -- subject anisotropy inflates both rows equally, so
+the DIFFERENCE is the defensible quantity):
+      r  px_before   px_after  improvement
+   0.05       0.00       0.00        +0.00
+   0.15       0.00       0.00        +0.00
+   0.25       0.00       0.00        +0.00
+   0.35       0.00       0.41        -0.41
+   0.45       0.00       0.00        +0.00
+   0.55       0.00       0.00        +0.00
+
+wrote data\aniso-pair.json

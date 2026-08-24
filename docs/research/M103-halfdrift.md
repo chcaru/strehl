@@ -3,6 +3,13 @@
 Status: complete. The defect is found, fixed, and measured end to end on the
 owner's stack. The fix ships in `crates/strehl-core/src/align.rs`.
 
+**Revised after first publication.** §9 previously claimed the photograph got
+visibly sharper (+37% acutance at the frame edge). **That claim is retracted**;
+the corrected §9 shows it was carried by five tiles of fifty-two and does not
+survive an orientation-based instrument. The solve results in §1-§8 are
+unaffected — they are measured in plane px on the sidecar and depend on no
+render.
+
 **Every claim below is labelled MEASURED, DERIVED or ARGUED.** Every number can be
 re-run from committed scripts; §14 gives the commands in order.
 
@@ -45,6 +52,18 @@ had to be repaired before the fix could be scored honestly (§6). M97's
 `signtest.py` **cannot report a residual above 1.0**. A correctly solved sidecar
 lands slightly above 1.0. Uncorrected, it scores the fix at a flattering and false
 "0.1 plane px, 100.0% removed".
+
+**The photograph did not measurably get sharper, and an earlier revision of this
+report wrongly claimed it did.** §9 is a retraction. Two instruments now say so:
+the orchestrator's orientation-based `anisotropy.py`, run paired, returns a null
+in which every confidence interval overlaps and the centre moves more than the
+edge; and the median of my own acutance statistic reads **0.9898** at the frame
+edge where its mean read **1.3697**, because five tiles of fifty-two carried
+73.6% of that bin. The residual reaches the render as ~1 px, not 150, because the
+frames that win a pixel are clustered in index. **What the fix buys is correct
+geometry — features landing where they belong — not visible sharpness.** The
+owner's softness complaint is dominated by something else (M95's 8.2 MP of
+information in a 33 MP file is the orchestrator's current candidate).
 
 ---
 
@@ -404,56 +423,191 @@ behaviour.
 
 ---
 
-## 9. The photograph
+## 9. The photograph — RETRACTION, and what actually happened
 
-The stated point of the milestone. Rendered twice through `strehl stack`, same
-bracket, same `--gate 2 --srgb --demosaic`, 299 frames, registration the only
-variable, injected with `STREHL_WARPMAP` so nothing was written beside the capture.
+> **This section previously claimed "+37% acutance at the edge of the frame" and
+> "the prediction holds". I am retracting both.** The claim was published in an
+> earlier revision of this report and in my checkpoint summary. It does not
+> survive the checks below. The measurement was real and reproduces exactly; my
+> reading of it was wrong. The solve results in sections 5-8 are untouched by
+> this — they are measured in plane px on the sidecar and do not depend on any
+> render.
 
-Both renders reported **identical coverage (0.9974)**, so both show the same field
-at the same pixels and the comparison is not confounded by field of view.
+### 9.1 Why this was re-examined
 
-**A falsifiable prediction, registered before the measurement.** Residual
-misregistration under a scale error is `|s-1| * rho` — proportional to distance
-from centre. So a registration improvement **must** be near-zero at the centre and
-largest at the corners. A uniform improvement would refute the attribution.
+The orchestrator built an independent instrument,
+`experiments/ORCH-drift-check/anisotropy.py`, and measured something my acutance
+statistic could not: a residual *scale* error displaces every feature along its
+own radius, so it leaves an **orientation** signature — high-frequency power
+suppressed along the radial direction relative to the tangential — that is zero
+at the centre and grows outward. Diffraction, defocus, demosaic and a soft
+subject share neither property.
 
-MEASURED — acutance (mean squared gradient normalised by mean intensity squared)
-over 486 textured 256x256 tiles:
+Their finding, which reframes this milestone: **the residual reaches the render
+as roughly 1 px, not 150.** The frames that win a given pixel are clustered in
+index, so the merge averages over the displacement spread *within the
+competitive set*, not over the stack's total drift. ARGUED, and I accept it: a
+150 plane px end-to-end drift does not arrive at the output as 150 px of blur.
 
-| r / r_max | tiles | shipped | M103 | ratio |
-|---|---|---|---|---|
-| 0.0 - 0.2 | 35 | 0.00282 | 0.00261 | **0.924x** |
-| 0.2 - 0.4 | 101 | 0.00299 | 0.00283 | 0.944x |
-| 0.4 - 0.6 | 163 | 0.00165 | 0.00178 | 1.081x |
-| 0.6 - 0.8 | 135 | 0.00064 | 0.00072 | 1.130x |
-| 0.8 - 1.0 | 52 | 0.00025 | 0.00034 | **1.370x** |
-| whole frame | 486 | 0.00074 | 0.00077 | 1.043x |
+### 9.2 The instrument passes its controls on my render
 
-**Monotone in radius, +37% at the edge of the frame. The prediction holds.**
+MEASURED. Re-verified on my own `bee3-baseline.tiff` rather than trusted from
+the orchestrator's subject (`logs/aniso-controls-baseline.log`):
 
-**I looked at the images.** At large radius the bee's leg bristles are individually
-resolved and countable in the corrected render and smeared into a mass in the
-shipped one; a second leg that is entirely blurred out in the shipped render is
-sharp in the corrected one. Crops are written to
-`C:\dev\strehl-out\M103\img\crops\` as before/after pairs.
+| control | result |
+|---|---|
+| SENSITIVITY — 10 px plant must lower A_outer | **PASS** (0.4734 -> 0.0116) |
+| DOSE ORDER — monotone with dose | **PASS** (0.4734 / 0.3269 / 0.0629 / 0.0116) |
+| SPECIFICITY — isotropic blur must NOT move it | **PASS** (-0.0077) |
+| BUILT-IN NULL — A(centre) ~ 1 untreated | **PASS** (0.9607) |
+| GEOMETRY — at 1 px outer bites harder than centre | **PASS** |
 
-**The centre is 7.6% *worse*, and I am not hiding it.** MEASURED, and DERIVED
-cause: with reference frame 0, frame 298 is gathered at `a = 0.850` and so is
-**magnified 1.176x** into the output. A mid-stack reference splits that
-magnification. This is a resampling cost of the gauge, not of the registration.
+So the instrument is sensitive, specific, and correctly geometric *on this exact
+render*. Any null it returns here is informative rather than blind.
 
-**But the gauge is now a real decision, and reference 0 wins.** MEASURED coverage:
+### 9.3 Run paired, it returns a null
 
-| reference | shipped solve | M103 solve |
-|---|---|---|
-| 149 (production today) | 0.9315 (6.9% of width dropped) | **0.8561 (14.4% dropped)** |
-| 0 | 0.9974 | **0.9974 (0.3% dropped)** |
+`src/aniso_pair.py` imports the orchestrator's `measure()` unmodified and adds
+pairing via its own `tile_keys` argument. This matters: the instrument's
+docstring is emphatic that the tile selection must not depend on the treatment,
+`controls()` obeys that, but the multi-file path in `__main__` does not — it
+re-derives a 35th-percentile texture threshold per file. My fix adds
+high-frequency power at large radius, which is exactly the condition under which
+an unpaired selection drifts.
 
-DERIVED: coverage is set by `max |a_k|`, and a reference at the end of the sweep
-makes every `a_k <= 1` so every frame maps inward. **With the corrected, larger
-span, a mid-stack reference costs 14.4% of the frame; reference 0 costs 0.3%.**
-Routed to the orchestrator in §15.
+MEASURED (`data/aniso-pair.json`), usable annuli only (angular clustering
+<= 0.30, the orchestrator's own threshold):
+
+| r | clustering | A shipped | A M103 | delta | 95% CIs |
+|---|---|---|---|---|---|
+| 0.05 | 0.019 | 0.9416 | 0.9796 | +0.0380 | overlap |
+| 0.15 | 0.022 | 0.9799 | 1.0175 | +0.0375 | overlap |
+| 0.25 | 0.013 | 1.1050 | 1.1303 | +0.0253 | overlap |
+| 0.35 | 0.052 | 0.8820 | 0.8373 | **-0.0447** | overlap |
+| 0.45 | 0.081 | 0.6450 | 0.6634 | +0.0184 | overlap |
+| 0.55 | 0.221 | 0.5279 | 0.5591 | +0.0312 | overlap |
+
+**Every confidence interval overlaps. One annulus moves backwards.** And the
+deltas are the same size as the method's own sensitivity to arbitrary choices:
+re-pinning the tile set on the other arm moves them by up to **0.0298**, and the
+stock unpaired path disagrees by up to **0.0161**.
+
+**It also fails the discriminating half of the orchestrator's pre-registered P3**
+("A(r) rises toward 1 at large r and is UNCHANGED at r=0"). A(centre) moves
+**+0.0380**, *more* than any outer annulus, at a radius where the geometry
+forbids a scale-induced change. Whatever moved this metric is not the radial
+registration.
+
+Placebo: before vs before on the same tiles, max |dA| = **0.00e+00**, PASS.
+
+Inverting the planted dose curve to px gives **0.00 px before and 0.00 px after**
+at every usable radius — the shipped render's radial residual was already below
+this instrument's detection floor at the radii where the subject is angularly
+clean.
+
+### 9.4 The +37% was five tiles
+
+The acutance number reproduces exactly, so the two measurements genuinely
+disagree and one had to be wrong. MEASURED (`src/acutance_dist.py`,
+`data/acutance-dist.json`) — the same per-tile quantity photo.py averaged, but
+with its distribution shown:
+
+| r / r_max | n | mean (published) | **median** | trimmed 80% | top-5 share |
+|---|---|---|---|---|---|
+| 0.0 - 0.2 | 35 | 0.9239 | 0.9174 | 0.9100 | 39.6% |
+| 0.2 - 0.4 | 101 | 0.9445 | 0.9367 | 0.9600 | 23.5% |
+| 0.4 - 0.6 | 163 | 1.0810 | 1.0391 | 1.2112 | 15.5% |
+| 0.6 - 0.8 | 135 | 1.1304 | 1.3501 | 3.3359 | 39.7% |
+| 0.8 - 1.0 | 52 | **1.3697** | **0.9898** | 1.0626 | **73.6%** |
+
+**At the frame edge the median tile reads 0.9898 — no change — while the mean
+reads 1.3697, because five tiles of fifty-two carry 73.6% of the bin.** The
+`0.6-0.8` bin is equally unstable (trimmed mean 3.34). Acutance carries a `1/m^2`
+normalisation, so a tile's leverage grows without bound as it darkens, and outer
+tiles on this subject are an order of magnitude darker than central ones.
+
+The median is not merely an insensitive statistic. POSITIVE CONTROL: against a
+copy sharpened 3% at *all* radii, the median moves at every radius
+(1.0226 / 1.0237 / 1.0221 / 1.0270 / 1.0356) and tracks the mean. A broad, real
+change moves it. On the real pair, at the edge, it does not.
+PLACEBO: before vs before, max |mean_ratio - 1| = 0.00e+00, PASS.
+
+A separate decomposition (`src/acutance_check.py`) confirms raw gradient energy
+at the edge rises only **1.061x**, and refutes my first guess that brightness
+normalisation was the culprit: a planted 5% dimming reads `acut_ratio` exactly
+**1.0000**, because `1/m^2` correctly cancels a multiplicative level change.
+
+### 9.5 And the crops I looked at were selected by the tail
+
+`photo.py` places its visual crops on "the most textured tiles the *baseline*
+has" at large radius. Those are precisely the tiles that dominate the mean. So
+when I reported that bristles were "individually resolved and countable", I was
+looking at an unrepresentative sample chosen by the same statistic the tail
+controls. **The visual impression was real for those crops and does not
+generalise to the frame.** I withdraw the sentence.
+
+This is the fourth incident this week of a metric and an eye agreeing while both
+were pointed at a selected sample; it belongs with disciplines 611, 615, 616 and
+620.
+
+### 9.6 What the fix does and does not buy
+
+MEASURED, and stated without inflation:
+
+- It does **not** measurably sharpen this photograph. Two independent
+  instruments — one orientation-based and confound-resistant, one the median of
+  my own acutance — both return no significant change at any radius.
+- The centre is genuinely **~8% worse**, and that part *is* broad: median 0.9174
+  agrees with mean 0.9239. DERIVED cause: with reference frame 0, frame 298 is
+  gathered at `a = 0.850` and so is magnified 1.176x into the output, against
+  1.084x under the shipped solve. This is a resampling cost of the gauge, not of
+  the registration, and section 9.7 removes it.
+- It **does** put the geometry right: 150.3 -> 2.9 plane px of residual
+  misregistration (section 8, B3). Features land where they belong. That caps
+  final-render accuracy no matter how sharp the pixels are, and it is a
+  precondition for the resolution work rather than a substitute for it.
+
+ARGUED: the softness the owner is complaining about is dominated by something
+else. The orchestrator's current candidate is M95's finding that the default
+output carries 8.2 MP of information in a 33 MP file. Nothing in this milestone
+should be read as addressing that.
+
+### 9.7 The crop side effect, quantified — and it is avoidable
+
+The orchestrator asked for this explicitly: a solve that applies the *full* drift
+instead of half spans a wider range of scales, and the merge shrinks the field of
+view until every frame covers every output pixel, so a correct solve should
+demand a **larger** crop. It does, and the size of the cost depends entirely on
+the reference frame.
+
+MEASURED — coverage as reported by `strehl stack` itself
+(`logs/img-*.log`), four renders, same bracket:
+
+| reference | shipped solve | M103 solve | extra cost of the fix |
+|---|---|---|---|
+| 149 (production today) | 0.9315 (6.9% of width dropped) | **0.8561 (14.4% dropped)** | **+7.5 points** |
+| 0 | 0.9974 (0.3% dropped) | **0.9974 (0.3% dropped)** | **none** |
+
+DERIVED: coverage is set by `max_k |a_k|`. A reference at the **end** of the
+sweep makes every `a_k <= 1`, so every frame maps inward and nothing is clipped;
+a **mid-stack** reference forces `|a_k| > 1` on one whole half of the stack, and
+the crop is `1 / max |a_k|`, which the corrected larger span makes worse.
+
+**So the side effect is real, it is worth 7.5% of frame width at the reference
+production uses today, and moving the reference to frame 0 removes it entirely.**
+
+This also matters more than it looks, because the dropped field is **upsampled
+back to the output dimensions** — the renderer says so in the same line. At
+reference 149 the corrected solve therefore delivers 14.4% less real resolution
+stretched over the same 33 MP file. ARGUED: that pushes in exactly the wrong
+direction for M95's finding that the output already carries 8.2 MP of
+information in a 33 MP container, so shipping this fix on a mid-stack reference
+would make that defect measurably worse. Reference 0 costs 0.3% and is the
+recommendation. Routed to the orchestrator in §15.
+
+**Both photograph renders in 9.3-9.5 used reference 0 and reported identical
+coverage (0.9974),** so the null result above is not an artefact of one arm
+seeing a different field.
 
 ---
 
@@ -517,11 +671,19 @@ and a pre-registered threshold.
   estimator. A clean two-sided plant reads +0.00001.
 - **P10 (MEASURED).** On `112MSDCF` (rule 6: `1/S_W(1)` = 1.05) the M103 correction
   moves the end-to-end ln-span by 0.47%, a measured no-op.
-- **P11 (MEASURED).** Correcting the solve improves rendered acutance monotonically
-  in radius on `bee-3-cpl`: 0.924x at the centre, 1.370x in the outer bin, 1.043x
-  whole-frame.
+- **P11 (MEASURED, RETRACTED AND REPLACED).** An earlier revision claimed the fix
+  improves rendered acutance monotonically in radius (0.924x centre, 1.370x outer).
+  **The outer figure is a tail artifact.** On the same tiles the *median* per-tile
+  ratio in the outer bin is 0.9898 — no change — while five tiles of fifty-two
+  carry 73.6% of the bin, because acutance's `1/m^2` normalisation gives dark
+  tiles unbounded leverage and outer tiles on this subject are an order of
+  magnitude darker. The centre figure (0.9239 mean, 0.9174 median) *is* broad and
+  real, and is a resampling cost of the reference-0 gauge.
 - **P12 (MEASURED).** Merge coverage is set by `max |a_k|`. With the corrected span,
-  reference 149 costs 14.4% of frame width against 0.3% for reference 0.
+  reference 149 costs 14.4% of frame width against 0.3% for reference 0. The
+  dropped field is upsampled back to full output dimensions, so at reference 149
+  the corrected solve delivers 14.4% less real resolution in the same 33 MP file —
+  ARGUED: directly counterproductive for M95's 8.2 MP-in-33 MP finding.
 - **P13 (ARGUED, candidate).** Mean |frac| of per-tile displacements tracks
   published per-stack shrinkage at Spearman rho = -0.886 over six stacks — a
   measurable property of the edge sets that predicts shrinkage, which rule 6
@@ -530,6 +692,24 @@ and a pre-registered threshold.
   1 and 2 in direct violation of rule 6's "discard spans 1-2 from the solve", and
   contains no frame-0 anchor fan although rule 6 prescribes one. Those are exactly
   the peak-locked edges.
+- **P15 (MEASURED).** Correcting the solve from 50.1% to 99.0% of drift removed
+  produces **no detectable change in rendered radial anisotropy** on `bee-3-cpl`
+  at `--gate 2`. Every annulus confidence interval overlaps; the largest delta
+  (+0.0380) is at r=0.05, where the geometry forbids a scale-induced change; and
+  the deltas are smaller than the measurement's own sensitivity to tile-set choice
+  (0.0298). This is consistent with the orchestrator's finding that the residual
+  reaches the render as ~1 px rather than 150 px.
+- **P16 (MEASURED).** `anisotropy.py`'s `controls()` correctly pins the tile set on
+  the untreated frame, but its multi-file `__main__` path calls `measure()` with
+  `tile_keys=None` per file, re-deriving a texture threshold inside each arm — the
+  exact failure its own docstring documents. On a before/after pair of two
+  different solves this shifts reported deltas by up to 0.0161, comparable to the
+  effects being reported.
+- **P17 (MEASURED).** A visual "before/after" check placed on max-texture tiles is
+  not a random sample: `photo.py` selects outer crops by baseline texture, which
+  are the same tiles that dominate the `1/m^2`-weighted mean. Looking at those
+  crops confirmed an improvement whose median across the bin is 0.9898. Belongs
+  with disciplines 611, 615, 616, 620.
 
 ---
 
@@ -585,6 +765,23 @@ Rule 22 requires naming the rules I could have violated rather than affirming th
   where scale arithmetic predicts 1.908). ~0.7-3% is unexplained. It is in the
   favourable direction and both figures are <= 3 px against a 150 px baseline, but
   it is not understood.
+- **I did not render a gate-0 pair.** The orchestrator's P2 reasoning implies the
+  registration residual should smear *less* at gate 0, where a single frame is
+  elected per pixel and misregistration displaces rather than averages. A gate-0
+  before/after would test whether the small, non-significant anisotropy deltas in
+  §9.3 are smear-related at all. I judged it low value once every gate-2 CI
+  already overlapped — two nulls do not compound into evidence — but it is the
+  obvious next check if anyone wants to push on §9.
+- **I did not measure whether correct geometry improves anything downstream.**
+  §9.6 argues that features landing in the right place caps final-render accuracy
+  regardless of pixel sharpness. That is ARGUED, not measured. The test would be
+  whether a resolution fix (M95's) yields *more* once the geometry is right than
+  it does on the shipped solve — an interaction, and neither milestone can measure
+  it alone.
+- **What would change my mind about §9's null:** an instrument that detects
+  sub-pixel misregistration without relying on orientation, or a subject with
+  clean angular statistics out to r>0.6 where `bee-3-cpl` is contaminated
+  (clustering 0.42-0.62). The null is currently established only over r <= 0.55.
 
 ---
 
@@ -654,6 +851,28 @@ $env:STREHL_WARPMAP="C:\dev\strehl-out\M103\wm-iww-r0.txt"
      -o C:\dev\strehl-out\M103\img\bee3-m103.tiff
 python src\photo.py C:\dev\strehl-out\M103\img\bee3-baseline.tiff `
      C:\dev\strehl-out\M103\img\bee3-m103.tiff C:\dev\strehl-out\M103\img\crops data\photo.json
+
+# §9.2-9.5 the retraction  (~6 min total)
+# The orchestrator's instrument, verified on MY render first. Run it from a
+# directory of mine: it writes anisotropy-controls.json / anisotropy.json
+# relative to the CWD and must not overwrite the orchestrator's copies.
+mkdir aniso -Force; cd aniso
+python ..\..\ORCH-drift-check\anisotropy.py --controls C:\dev\strehl-out\M103\img\bee3-baseline.tiff
+cd ..
+copy aniso\anisotropy-controls.json data\aniso-controls-baseline.json
+
+# Paired before/after. Imports the orchestrator's measure() unmodified and adds
+# the pairing its own tile_keys argument exists for.
+python src\aniso_pair.py C:\dev\strehl-out\M103\img\bee3-baseline.tiff `
+     C:\dev\strehl-out\M103\img\bee3-m103.tiff `
+     aniso\anisotropy-controls.json data\aniso-pair.json
+
+# Why the +37% was wrong. acutance_check splits the statistic into sharpness and
+# brightness factors; acutance_dist shows the distribution behind the bin mean.
+python src\acutance_check.py C:\dev\strehl-out\M103\img\bee3-baseline.tiff `
+     C:\dev\strehl-out\M103\img\bee3-m103.tiff data\acutance-check.json
+python src\acutance_dist.py C:\dev\strehl-out\M103\img\bee3-baseline.tiff `
+     C:\dev\strehl-out\M103\img\bee3-m103.tiff data\acutance-dist.json
 ```
 
 `D:\personal\macro` is read-only and nothing here writes to it. Sidecars are
@@ -783,3 +1002,54 @@ Three consequences for the orchestrator, in order of urgency:
 
 I have not touched these files, and I am not able to fix the write path from
 inside my ownership boundary.
+
+**15.9 — `experiments/ORCH-drift-check/anisotropy.py` (the orchestrator owns).**
+Two notes, in order of importance. The instrument itself is sound: it passed all
+five of its controls unmodified on my render (§9.2), and its verdict on my fix is
+the one this report now carries.
+
+1. **The multi-file `__main__` path does not pair its tile selection**, though
+   `controls()` does and the module docstring is emphatic about why it must:
+
+   > "The selection must not be allowed to depend on the treatment."
+
+   `__main__` calls `measure(y, os.path.basename(p))` per file with
+   `tile_keys=None`, so each file re-derives its own `MIN_POWER_Q` threshold. For
+   a gate ladder — one solve, several gates — this is minor. For a before/after
+   comparison of two *different solves* it is the documented failure mode, and I
+   MEASURED it shifting deltas by up to **0.0161**, which is the same size as the
+   effects being reported. Suggested minimal change:
+
+   > ```python
+   > results, keys0 = [], None
+   > for p in args:
+   >     y = load_luma(p)
+   >     m = measure(y, os.path.basename(p), keys0)
+   >     if keys0 is None:
+   >         keys0 = set(m["keys"])   # pin on the FIRST file, reuse for the rest
+   >     results.append({k: v for k, v in m.items() if k != "keys"})
+   > ```
+
+   `src/aniso_pair.py` in this milestone does exactly this by importing your
+   `measure()` rather than reimplementing it, and additionally reports the
+   unpaired numbers alongside so the two are always comparable.
+
+2. **A caution worth folding into the docstring.** `aniso_px.py` correctly warns
+   that the outer annuli are subject-contaminated on `bee-3-cpl` (clustering
+   0.42-0.62). I confirm that independently: at r=0.75 my paired run reports a
+   delta of **-0.1681**, larger than any usable annulus and in the opposite
+   direction, purely from subject texture. The `CLUST_MAX = 0.30` rule is doing
+   real work and should probably live in `anisotropy.py` itself rather than only
+   in the downstream script, so that a future caller of `measure()` cannot
+   accidentally quote an r>0.6 annulus.
+
+**15.10 — a discipline candidate.** A visual before/after check whose crops are
+selected by maximum texture is not a random sample of the frame; it is a sample
+of the tail that dominates whatever texture-weighted statistic chose it. In this
+milestone that produced a confident, wrong "I looked at the images and the
+bristles are resolved" against a bin whose median was 0.9898. Suggested wording:
+
+> **When a metric and the eye agree, check what selected the tiles the eye was
+> shown.** If the crops were chosen by the same statistic being reported, the
+> agreement is circular. Choose crops at random within the annulus, or at fixed
+> coordinates, and report the median tile alongside the mean.
