@@ -771,6 +771,19 @@ deficit and does not explain M61's −10.7%. `M71/07-structure.py`.
 by S ≈ 5700 DN**. It is a read-noise-domain correlation, not a fixed value at all
 signal levels. Roll controls −0.00044 and −0.00347. `M71/09-controls.py`.
 
+*Sibling corroboration, added after the fact was written.* **M72** landed
+`docs/research/M72-green-plane-correlation.md` in parallel with this report and measures
+ρ = **+0.08261** on 220 dark frames from `D:\macro-dark-frames`, against fact 895's
++0.0730. My two ISO-100 dark values bracket it and all three are mutually consistent, so
+the two milestones **agree on magnitude by independent estimators on different frame
+sets**. They are complementary rather than redundant: M72 establishes the magnitude and
+the mechanism in the dark domain and rules it immaterial; P11 adds the axis M72 could not
+see from darks alone, namely that ρ **decays with signal** and is essentially gone by
+S ≈ 5700 DN. Folding both, the correlation is a read-noise-domain effect of about +0.075
+that does not survive into the photon-dominated regime where this project's gates
+operate. **I have not read M72's method in detail and am not vouching for it** — I am
+recording that the numbers agree.
+
 **P12 (MEASURED).** Sensor dust at **f/5.6**: 2898 pixels = **0.03518%** of a CFA plane
 have a plane-averaged residual below −3% in both CPL states and below −1.5% in ≥3 of 4
 planes; enrichment over chance coincidence **2278×**; roll control 211 (7.3%). Median
