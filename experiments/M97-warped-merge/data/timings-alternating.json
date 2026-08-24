@@ -1,0 +1,32 @@
+[
+    {
+        "mode":  "OFF",
+        "seconds":  29.51,
+        "rc":  0
+    },
+    {
+        "mode":  "ON",
+        "seconds":  63.08,
+        "rc":  0
+    },
+    {
+        "mode":  "ON",
+        "seconds":  55.85,
+        "rc":  0
+    },
+    {
+        "mode":  "OFF",
+        "seconds":  20.39,
+        "rc":  0
+    },
+    {
+        "mode":  "OFF",
+        "seconds":  21.67,
+        "rc":  0
+    },
+    {
+        "mode":  "ON",
+        "seconds":  51.9,
+        "rc":  0
+    }
+]

@@ -1,0 +1,51 @@
+{
+  "ref": "C:\\dev\\strehl-out\\M97\\ruler-ALIGNED.tif",
+  "test": "C:\\dev\\strehl-out\\M97\\ruler-ZOOMNULL.tif",
+  "tile": 256,
+  "n_tiles": 486,
+  "ratio_median_all": 0.995572953539606,
+  "bins": [
+    {
+      "detail_pct": "0-20",
+      "n_tiles": 97,
+      "ref_detail_median": 0.027776487894451623,
+      "ratio_median": 0.9995916768995382,
+      "ratio_mean": 1.003565358455619
+    },
+    {
+      "detail_pct": "20-40",
+      "n_tiles": 97,
+      "ref_detail_median": 0.03749568349904505,
+      "ratio_median": 0.9962621384161583,
+      "ratio_mean": 0.9958808690621788
+    },
+    {
+      "detail_pct": "40-60",
+      "n_tiles": 97,
+      "ref_detail_median": 0.04603695243689352,
+      "ratio_median": 0.9987902026706016,
+      "ratio_mean": 0.9977699671873733
+    },
+    {
+      "detail_pct": "60-80",
+      "n_tiles": 97,
+      "ref_detail_median": 0.06775044183719993,
+      "ratio_median": 0.9940093302797072,
+      "ratio_mean": 0.9905252344998334
+    },
+    {
+      "detail_pct": "80-90",
+      "n_tiles": 49,
+      "ref_detail_median": 0.08875327109593552,
+      "ratio_median": 0.9903641718075372,
+      "ratio_mean": 0.9895722793321899
+    },
+    {
+      "detail_pct": "90-100",
+      "n_tiles": 49,
+      "ref_detail_median": 0.10924013660677602,
+      "ratio_median": 0.9811346261879306,
+      "ratio_mean": 0.9801335465854439
+    }
+  ]
+}

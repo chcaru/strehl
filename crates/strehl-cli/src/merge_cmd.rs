@@ -54,7 +54,7 @@ use strehl_core::through_focus::{
     FLAG_SCALE_DISAGREEMENT, PEAK_SEPARATION, STATS_RADIUS, ThroughFocus, do_not_trust_mask,
     shuffled_indices,
 };
-use strehl_core::warpmap::{FrameWarp, WarpMap};
+use strehl_core::warpmap::{FrameWarp, StackIdentity, WarpMap};
 use strehl_core::{CfaPlane, Error};
 use strehl_raw::Frame;
 
@@ -1001,6 +1001,66 @@ fn map_dim_err(index: u16, e: Error) -> anyhow::Error {
     }
 }
 
+/// Environment override naming the warp sidecar the merge must consume.
+///
+/// [`align_cmd::load_or_solve`] discovers a sidecar *beside the capture* and
+/// caches a fresh solve there on a miss. That is the right behaviour for a
+/// cache, but it cannot serve three things M97 needs:
+///
+///   1. **A sidecar that is not the one the solver would produce.** Every
+///      planted control here — jittered placements, an identity map, a map
+///      belonging to a different bracket — is a file, and the merge has to be
+///      pointable at it.
+///   2. **A read-only corpus.** The caching write lands inside the capture
+///      directory, so merely *rendering* a bracket mutates it. Measured: it
+///      created `warpmap.txt` under two of the owner's captures. When this
+///      variable is set nothing is written anywhere.
+///   3. **Refusal instead of recovery.** `load_or_solve` answers a bad sidecar
+///      by re-solving, which is correct for a cache and wrong for a file the
+///      operator named: silently rendering a *different* registration than the
+///      one requested would make every control here unfalsifiable. Every
+///      failure below is therefore hard.
+pub const WARPMAP_ENV: &str = "STREHL_WARPMAP";
+
+/// Resolve the bracket's registration: an explicitly named sidecar if
+/// [`WARPMAP_ENV`] is set, otherwise the normal discover-or-solve path.
+fn alignment_for(dir: &Path, paths: &[PathBuf]) -> Result<Option<(WarpMap, &'static str)>> {
+    let Some(explicit) = std::env::var_os(WARPMAP_ENV) else {
+        return align_cmd::load_or_solve(dir, paths, 0);
+    };
+    // `STREHL_ALIGN=0` still wins, so an unregistered baseline can be rendered
+    // without first unsetting the override.
+    if !align_cmd::align_enabled() {
+        return Ok(None);
+    }
+    let path = PathBuf::from(explicit);
+    let map = WarpMap::load(&path).with_context(|| {
+        format!(
+            "loading the warp sidecar named by {WARPMAP_ENV}: {}",
+            path.display()
+        )
+    })?;
+    let name = dir
+        .file_name()
+        .map(|s| s.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    let identity = StackIdentity::from_paths(&name, paths)?;
+    map.check_stack(&identity).with_context(|| {
+        format!(
+            "the sidecar named by {WARPMAP_ENV} ({}) was not fitted on this bracket",
+            path.display()
+        )
+    })?;
+    ensure!(
+        map.len() == paths.len(),
+        "the sidecar named by {WARPMAP_ENV} ({}) has {} frames but the bracket has {}",
+        path.display(),
+        map.len(),
+        paths.len()
+    );
+    Ok(Some((map, "sidecar-override")))
+}
+
 pub fn run(opts: &MergeOptions) -> Result<()> {
     ensure!(!opts.gates.is_empty(), "at least one --gate is required");
     ensure!(
@@ -1140,7 +1200,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     // same geometry. M86 fact: every bracket in this corpus drifts far past
     // T_usable, so this is on by default; `STREHL_ALIGN=0` turns it off.
     let t_align = Instant::now();
-    let alignment = align_cmd::load_or_solve(&opts.dir, &paths, 0)?;
+    let alignment = alignment_for(&opts.dir, &paths)?;
     let alignment = alignment.map(|(m, how)| {
         let (m, k) = align_cmd::cover_or_explain(m);
         (m, how, k)

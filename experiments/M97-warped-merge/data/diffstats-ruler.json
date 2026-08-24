@@ -1,0 +1,211 @@
+{
+  "images": [
+    {
+      "label": "UNALIGNED",
+      "path": "C:\\dev\\strehl-out\\M97\\ruler-UNALIGNED.tif",
+      "dtype": "uint8",
+      "shape": [
+        4688,
+        7040,
+        3
+      ],
+      "min": 0,
+      "max": 255,
+      "frac_exact_zero": 9.089939497362705e-08,
+      "frac_below_1pct": 1.0,
+      "n_exact_zero": 3,
+      "total_px": 33003520,
+      "rim_zero_by_radius": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.696839627577235e-07,
+        1.8354753330469991e-06
+      ],
+      "nonfinite_after_float": 0
+    },
+    {
+      "label": "ALIGNED",
+      "path": "C:\\dev\\strehl-out\\M97\\ruler-ALIGNED.tif",
+      "dtype": "uint8",
+      "shape": [
+        4688,
+        7040,
+        3
+      ],
+      "min": 0,
+      "max": 255,
+      "frac_exact_zero": 0.0,
+      "frac_below_1pct": 1.0,
+      "n_exact_zero": 0,
+      "total_px": 33003520,
+      "rim_zero_by_radius": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "nonfinite_after_float": 0
+    },
+    {
+      "label": "ZOOMNULL",
+      "path": "C:\\dev\\strehl-out\\M97\\ruler-ZOOMNULL.tif",
+      "dtype": "uint8",
+      "shape": [
+        4688,
+        7040,
+        3
+      ],
+      "min": 0,
+      "max": 255,
+      "frac_exact_zero": 0.0,
+      "frac_below_1pct": 1.0,
+      "n_exact_zero": 0,
+      "total_px": 33003520,
+      "rim_zero_by_radius": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "nonfinite_after_float": 0
+    },
+    {
+      "label": "IDENTITY",
+      "path": "C:\\dev\\strehl-out\\M97\\ruler-IDENTITY.tif",
+      "dtype": "uint8",
+      "shape": [
+        4688,
+        7040,
+        3
+      ],
+      "min": 0,
+      "max": 255,
+      "frac_exact_zero": 0.0,
+      "frac_below_1pct": 1.0,
+      "n_exact_zero": 0,
+      "total_px": 33003520,
+      "rim_zero_by_radius": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "nonfinite_after_float": 0
+    },
+    {
+      "label": "JITTER6",
+      "path": "C:\\dev\\strehl-out\\M97\\ruler-JITTER6.tif",
+      "dtype": "uint8",
+      "shape": [
+        4688,
+        7040,
+        3
+      ],
+      "min": 0,
+      "max": 255,
+      "frac_exact_zero": 6.756855026372944e-06,
+      "frac_below_1pct": 1.0,
+      "n_exact_zero": 223,
+      "total_px": 33003520,
+      "rim_zero_by_radius": [
+        0.0,
+        4.1165951476869675e-07,
+        7.4097785365391e-07,
+        1.76420982806011e-07,
+        1.509401651230519e-06,
+        1.3061546004774497e-05,
+        1.4832617951674792e-05,
+        4.405140799312798e-05
+      ],
+      "nonfinite_after_float": 0
+    }
+  ],
+  "pairs": [
+    {
+      "a": "UNALIGNED",
+      "b": "ALIGNED",
+      "frac_differing": 0.9649748370274848,
+      "mean_abs_diff": 12.613194531977195,
+      "p99_abs_diff": 58.0
+    },
+    {
+      "a": "UNALIGNED",
+      "b": "ZOOMNULL",
+      "frac_differing": 0.9644309354476936,
+      "mean_abs_diff": 12.108356593478513,
+      "p99_abs_diff": 56.0
+    },
+    {
+      "a": "UNALIGNED",
+      "b": "IDENTITY",
+      "frac_differing": 0.9299743784905368,
+      "mean_abs_diff": 6.815622808314588,
+      "p99_abs_diff": 34.0
+    },
+    {
+      "a": "UNALIGNED",
+      "b": "JITTER6",
+      "frac_differing": 0.9664210767013135,
+      "mean_abs_diff": 13.108315355452994,
+      "p99_abs_diff": 59.0
+    },
+    {
+      "a": "ALIGNED",
+      "b": "ZOOMNULL",
+      "frac_differing": 0.8978408565712587,
+      "mean_abs_diff": 7.36971033190803,
+      "p99_abs_diff": 40.0
+    },
+    {
+      "a": "ALIGNED",
+      "b": "IDENTITY",
+      "frac_differing": 0.964052450566889,
+      "mean_abs_diff": 12.21667312052371,
+      "p99_abs_diff": 57.0
+    },
+    {
+      "a": "ALIGNED",
+      "b": "JITTER6",
+      "frac_differing": 0.958145080686343,
+      "mean_abs_diff": 9.176648026230737,
+      "p99_abs_diff": 40.0
+    },
+    {
+      "a": "ZOOMNULL",
+      "b": "IDENTITY",
+      "frac_differing": 0.9634914498009102,
+      "mean_abs_diff": 11.691647153596545,
+      "p99_abs_diff": 55.0
+    },
+    {
+      "a": "ZOOMNULL",
+      "b": "JITTER6",
+      "frac_differing": 0.9588514699846158,
+      "mean_abs_diff": 9.831194117071957,
+      "p99_abs_diff": 46.0
+    },
+    {
+      "a": "IDENTITY",
+      "b": "JITTER6",
+      "frac_differing": 0.9656093350042663,
+      "mean_abs_diff": 12.74627992206084,
+      "p99_abs_diff": 58.0
+    }
+  ]
+}

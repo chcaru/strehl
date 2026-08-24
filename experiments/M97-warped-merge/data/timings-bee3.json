@@ -1,0 +1,17 @@
+[
+    {
+        "arm":  "BEFORE-unaligned",
+        "seconds":  22.19,
+        "rc":  0
+    },
+    {
+        "arm":  "AFTER-aligned",
+        "seconds":  67.92,
+        "rc":  0
+    },
+    {
+        "arm":  "NULL-zoomonly",
+        "seconds":  69.85,
+        "rc":  0
+    }
+]

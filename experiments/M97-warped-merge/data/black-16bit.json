@@ -1,0 +1,122 @@
+[
+  {
+    "path": "C:\\dev\\strehl-out\\M97\\ruler-UNALIGNED.tif",
+    "shape": [
+      4688,
+      7040,
+      3
+    ],
+    "dtype": "uint16",
+    "max": 65535,
+    "black_frac_pct": 0.0,
+    "black_count": 0,
+    "annulus_black_frac_pct": 0.0,
+    "annulus_black_count": 0,
+    "arm": "r-UNALIGNED"
+  },
+  {
+    "path": "C:\\dev\\strehl-out\\M97\\ruler-ALIGNED.tif",
+    "shape": [
+      4688,
+      7040,
+      3
+    ],
+    "dtype": "uint16",
+    "max": 65535,
+    "black_frac_pct": 0.0,
+    "black_count": 0,
+    "annulus_black_frac_pct": 0.0,
+    "annulus_black_count": 0,
+    "arm": "r-ALIGNED"
+  },
+  {
+    "path": "C:\\dev\\strehl-out\\M97\\ruler-ZOOMNULL.tif",
+    "shape": [
+      4688,
+      7040,
+      3
+    ],
+    "dtype": "uint16",
+    "max": 65535,
+    "black_frac_pct": 0.0,
+    "black_count": 0,
+    "annulus_black_frac_pct": 0.0,
+    "annulus_black_count": 0,
+    "arm": "r-ZOOMNULL"
+  },
+  {
+    "path": "C:\\dev\\strehl-out\\M97\\ruler-IDENTITY.tif",
+    "shape": [
+      4688,
+      7040,
+      3
+    ],
+    "dtype": "uint16",
+    "max": 65535,
+    "black_frac_pct": 0.0,
+    "black_count": 0,
+    "annulus_black_frac_pct": 0.0,
+    "annulus_black_count": 0,
+    "arm": "r-IDENTITY"
+  },
+  {
+    "path": "C:\\dev\\strehl-out\\M97\\ruler-JITTER6.tif",
+    "shape": [
+      4688,
+      7040,
+      3
+    ],
+    "dtype": "uint16",
+    "max": 65535,
+    "black_frac_pct": 0.0,
+    "black_count": 0,
+    "annulus_black_frac_pct": 0.0,
+    "annulus_black_count": 0,
+    "arm": "r-JITTER6"
+  },
+  {
+    "path": "C:\\dev\\strehl-out\\M97-before-after\\bee-3-BEFORE-unaligned.tif",
+    "shape": [
+      4688,
+      7032,
+      3
+    ],
+    "dtype": "uint16",
+    "max": 59402,
+    "black_frac_pct": 0.0,
+    "black_count": 0,
+    "annulus_black_frac_pct": 0.0,
+    "annulus_black_count": 0,
+    "arm": "bee-BEFORE"
+  },
+  {
+    "path": "C:\\dev\\strehl-out\\M97-before-after\\bee-3-AFTER-aligned.tif",
+    "shape": [
+      4688,
+      7032,
+      3
+    ],
+    "dtype": "uint16",
+    "max": 57896,
+    "black_frac_pct": 0.0,
+    "black_count": 0,
+    "annulus_black_frac_pct": 0.0,
+    "annulus_black_count": 0,
+    "arm": "bee-AFTER"
+  },
+  {
+    "path": "C:\\dev\\strehl-out\\M97-before-after\\bee-3-NULL-zoomonly.tif",
+    "shape": [
+      4688,
+      7032,
+      3
+    ],
+    "dtype": "uint16",
+    "max": 58273,
+    "black_frac_pct": 0.0,
+    "black_count": 0,
+    "annulus_black_frac_pct": 0.0,
+    "annulus_black_count": 0,
+    "arm": "bee-NULL"
+  }
+]

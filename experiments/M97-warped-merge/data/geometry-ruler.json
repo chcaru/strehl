@@ -1,0 +1,92 @@
+[
+  {
+    "label": "UNALIGNED",
+    "path": "C:\\dev\\strehl-out\\M97\\ruler-UNALIGNED.tif",
+    "band": [
+      2983,
+      3283
+    ],
+    "columns_used": 5519,
+    "blocks": 96,
+    "S_rms_raw_px": 15.407754152199225,
+    "S_rms_block_px": 9.54807071964788,
+    "S_bow_px": -36.76326786970025,
+    "S_block_ptp_px": 46.89412986592697,
+    "G_ticks": 14,
+    "G_median_spacing_px": 530.6042495402489,
+    "G_rms_px": 3.547524786309458,
+    "G_rms_frac_of_spacing": 0.006685820532691306
+  },
+  {
+    "label": "ALIGNED",
+    "path": "C:\\dev\\strehl-out\\M97\\ruler-ALIGNED.tif",
+    "band": [
+      3009,
+      3309
+    ],
+    "columns_used": 5592,
+    "blocks": 95,
+    "S_rms_raw_px": 15.414132122774603,
+    "S_rms_block_px": 9.831511959626935,
+    "S_bow_px": -35.964586070912375,
+    "S_block_ptp_px": 46.09672409961422,
+    "G_ticks": 14,
+    "G_median_spacing_px": 547.8419240255357,
+    "G_rms_px": 18.902252677536655,
+    "G_rms_frac_of_spacing": 0.034503114582109994
+  },
+  {
+    "label": "ZOOMNULL",
+    "path": "C:\\dev\\strehl-out\\M97\\ruler-ZOOMNULL.tif",
+    "band": [
+      3007,
+      3307
+    ],
+    "columns_used": 5621,
+    "blocks": 95,
+    "S_rms_raw_px": 15.124189627622716,
+    "S_rms_block_px": 9.793858293565975,
+    "S_bow_px": -46.14101852642377,
+    "S_block_ptp_px": 47.39689565625304,
+    "G_ticks": 16,
+    "G_median_spacing_px": 545.5324131067046,
+    "G_rms_px": 178.209936028336,
+    "G_rms_frac_of_spacing": 0.3266715812786703
+  },
+  {
+    "label": "JITTER6",
+    "path": "C:\\dev\\strehl-out\\M97\\ruler-JITTER6.tif",
+    "band": [
+      3022,
+      3322
+    ],
+    "columns_used": 5594,
+    "blocks": 95,
+    "S_rms_raw_px": 19.907551172151557,
+    "S_rms_block_px": 14.084178998184942,
+    "S_bow_px": -46.4338087265166,
+    "S_block_ptp_px": 75.17528066822706,
+    "G_ticks": 18,
+    "G_median_spacing_px": 538.7980569378888,
+    "G_rms_px": 208.66310262130324,
+    "G_rms_frac_of_spacing": 0.38727515798253404
+  },
+  {
+    "label": "IDENTITY",
+    "path": "C:\\dev\\strehl-out\\M97\\ruler-IDENTITY.tif",
+    "band": [
+      2985,
+      3285
+    ],
+    "columns_used": 5536,
+    "blocks": 95,
+    "S_rms_raw_px": 15.305417177549955,
+    "S_rms_block_px": 10.06569723854246,
+    "S_bow_px": -43.83826629709608,
+    "S_block_ptp_px": 53.362781623480714,
+    "G_ticks": 14,
+    "G_median_spacing_px": 531.7457869576997,
+    "G_rms_px": 4.346405710569621,
+    "G_rms_frac_of_spacing": 0.008173841367765038
+  }
+]

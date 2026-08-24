@@ -1,0 +1,27 @@
+[
+    {
+        "arm":  "UNALIGNED",
+        "seconds":  5.34,
+        "rc":  0
+    },
+    {
+        "arm":  "ALIGNED",
+        "seconds":  16.41,
+        "rc":  0
+    },
+    {
+        "arm":  "ZOOMNULL",
+        "seconds":  26.54,
+        "rc":  0
+    },
+    {
+        "arm":  "JITTER6",
+        "seconds":  19.17,
+        "rc":  0
+    },
+    {
+        "arm":  "IDENTITY",
+        "seconds":  24.61,
+        "rc":  0
+    }
+]
