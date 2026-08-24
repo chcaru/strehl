@@ -40,6 +40,26 @@
 //! where they already were, and because the *binned linear* path must keep
 //! emitting exactly the bytes it emitted before this module grew (M85). See
 //! `docs/research/M85-output-correctness.md`.
+//!
+//! # Chroma co-siting on the binned path
+//!
+//! The binned render collapses each 2x2 RGGB quad to one pixel, but the four
+//! CFA sites are not in the same place. Taking the quad centre as the origin
+//! and one *binned* pixel as the unit, red sits at `(-0.25, -0.25)`, blue at
+//! `(+0.25, +0.25)`, and green — the mean of two samples on opposite corners —
+//! lands on the centre exactly. Writing all three into one pixel as though they
+//! were co-sited leaves red and blue **half a binned pixel apart on the
+//! diagonal**, which is a colour fringe on every luminance edge in the frame.
+//!
+//! [`write_binned`] therefore resamples red by `(+0.25, +0.25)` and blue by
+//! `(-0.25, -0.25)` onto green's grid before development. Green is not touched.
+//! Measured in `docs/research/M95-chroma-cositing.md`: the correction removes
+//! 89-97% of the misregistration and 51-60% of the chroma error at edges.
+//!
+//! This does **not** touch the byte-frozen measurement path. Both callers reach
+//! [`write_binned`] only inside `if let Some(m) = matrix`, so it is the
+//! "for looking at" render; the measurement path writes through
+//! [`write_rgb16`] and never enters this function.
 
 use std::fs::File;
 use std::io::BufWriter;
@@ -170,11 +190,92 @@ pub fn write_demosaiced(
     write_rgb16(path, width as u32, height as u32, &rgb)
 }
 
+/// Distance from the quad centre to the red and blue CFA sites, in binned
+/// pixels. Red is at `-COSITE_SHIFT` on both axes and blue at `+COSITE_SHIFT`,
+/// so each is resampled by the negation of its own offset.
+///
+/// This is geometry, not a tuning parameter: a 2x2 quad is one binned pixel
+/// wide, and its corners are half of that from its centre on each axis.
+const COSITE_SHIFT: f32 = 0.25;
+
+/// Keys cubic-convolution weights for a fractional offset `t` in `[0, 1)`.
+///
+/// Keys, "Cubic convolution interpolation for digital image processing",
+/// IEEE ASSP-29(6), 1981. `a = -1/2` is the choice that makes the interpolant
+/// agree with the Taylor expansion of the sampled function to third order,
+/// which is why it is the standard one and why it reproduces polynomials up to
+/// degree two exactly. It is used here in preference to bilinear because this
+/// correction must not cost more sharpness than the misregistration it removes,
+/// and a bilinear kernel at `t = 0.25` is measurably wider.
+///
+/// The weights sum to one for every `t`, so a constant plane is invariant, and
+/// at `t = 0` they are exactly `[0, 1, 0, 0]` — the identity.
+#[inline]
+fn keys_weights(t: f32) -> [f32; 4] {
+    const A: f32 = -0.5;
+    let (t2, t3) = (t * t, t * t * t);
+    [
+        A * (t3 - 2.0 * t2 + t),
+        (A + 2.0) * t3 - (A + 3.0) * t2 + 1.0,
+        -(A + 2.0) * t3 + (2.0 * A + 3.0) * t2 - A * t,
+        -A * (t3 - t2),
+    ]
+}
+
+/// Resample `src` at coordinates `(y + dy, x + dx)` with a separable Keys
+/// kernel, clamping at the borders.
+///
+/// Separable because the kernel is: two 4-tap passes cost 8 multiplies per
+/// pixel against 16 for the direct 2-D form, and the result is identical.
+fn resample_shift(src: &[f32], width: usize, height: usize, dy: f32, dx: f32) -> Vec<f32> {
+    debug_assert_eq!(src.len(), width * height);
+    let taps = |d: f32| {
+        let base = d.floor();
+        (base as isize, keys_weights(d - base))
+    };
+
+    let (x0, wx) = taps(dx);
+    let mut tmp = vec![0.0f32; width * height];
+    tmp.par_chunks_mut(width)
+        .zip(src.par_chunks(width))
+        .for_each(|(dst, row)| {
+            let last = width as isize - 1;
+            for (x, out) in dst.iter_mut().enumerate() {
+                let mut acc = 0.0f32;
+                for (k, w) in wx.iter().enumerate() {
+                    let j = (x as isize + x0 + k as isize - 1).clamp(0, last) as usize;
+                    acc += w * row[j];
+                }
+                *out = acc;
+            }
+        });
+
+    let (y0, wy) = taps(dy);
+    let mut out = vec![0.0f32; width * height];
+    out.par_chunks_mut(width).enumerate().for_each(|(y, dst)| {
+        let last = height as isize - 1;
+        for (k, w) in wy.iter().enumerate() {
+            let yy = (y as isize + y0 + k as isize - 1).clamp(0, last) as usize;
+            let row = &tmp[yy * width..yy * width + width];
+            for (out, s) in dst.iter_mut().zip(row.iter()) {
+                *out += w * s;
+            }
+        }
+    });
+    out
+}
+
 /// Develop a binned quad grid — one output pixel per 2x2 sensor quad — and
 /// write it.
 ///
 /// `rgb_lin` is `width * height * 3` interleaved camera-RGB samples, already
 /// black-subtracted, white balanced and divided by the level range.
+///
+/// Red and blue are co-sited onto green's grid first — see the module header
+/// for the geometry and the measurement. That happens **in linear light and
+/// before the matrix**, because it is a correction of where the sensor sampled
+/// and the matrix mixes channels: co-siting afterwards would be resampling a
+/// blend of three already-misregistered planes.
 ///
 /// **This is not the path that produces the corpus's linear TIFFs.** That one
 /// lives in its callers and is byte-frozen; this is the same binning with a
@@ -186,14 +287,28 @@ pub fn write_binned(
     rgb_lin: &[f32],
     dev: &Develop,
 ) -> Result<()> {
-    assert_eq!(rgb_lin.len(), width * height * 3);
-    let mut rgb = vec![0u16; width * height * 3];
-    let (src, _) = rgb_lin.as_chunks::<3>();
-    let (dst, _) = rgb.as_chunks_mut::<3>();
-    for (s, d) in src.iter().zip(dst.iter_mut()) {
-        *d = develop_pixel(*s, dev);
-    }
+    let rgb = develop_binned(width, height, rgb_lin, dev);
     write_rgb16(path, width as u32, height as u32, &rgb)
+}
+
+/// The in-memory half of [`write_binned`]: co-site, develop, quantise.
+///
+/// Split out so the correction can be tested on values rather than on a file.
+fn develop_binned(width: usize, height: usize, rgb_lin: &[f32], dev: &Develop) -> Vec<u16> {
+    assert_eq!(rgb_lin.len(), width * height * 3);
+    let (src, _) = rgb_lin.as_chunks::<3>();
+
+    let plane = |c: usize| src.iter().map(|p| p[c]).collect::<Vec<f32>>();
+    let d = COSITE_SHIFT;
+    let red = resample_shift(&plane(0), width, height, d, d);
+    let blue = resample_shift(&plane(2), width, height, -d, -d);
+
+    let mut rgb = vec![0u16; width * height * 3];
+    let (dst, _) = rgb.as_chunks_mut::<3>();
+    dst.par_iter_mut().enumerate().for_each(|(i, out)| {
+        *out = develop_pixel([red[i], src[i][1], blue[i]], dev);
+    });
+    rgb
 }
 
 #[cfg(test)]
@@ -326,5 +441,130 @@ mod tests {
         assert!(std::fs::metadata(&path).unwrap().len() > 0);
         let _ = std::fs::remove_file(&path);
         let _ = std::fs::remove_dir(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // M95: chroma co-siting on the binned path.
+    // `docs/research/M95-chroma-cositing.md`
+    // ------------------------------------------------------------------
+
+    /// The kernel's two structural properties, both of which the correction
+    /// leans on: it sums to one, so a flat field cannot move; and at `t = 0` it
+    /// is the identity, so a zero shift is exactly a no-op.
+    ///
+    /// The second property is why there is no "same blur, no shift" control for
+    /// this operation — the blur is inseparable from the shift. The Python
+    /// control that tried to build one (N3) returned digits identical to the
+    /// uncorrected image and was retired for exactly this reason.
+    #[test]
+    fn the_keys_kernel_partitions_unity_and_is_the_identity_at_zero() {
+        for i in 0..=100 {
+            let t = i as f32 / 100.0;
+            let w = keys_weights(t);
+            let sum: f32 = w.iter().sum();
+            assert!((sum - 1.0).abs() < 1e-6, "weights at t={t} sum to {sum}");
+        }
+        assert_eq!(keys_weights(0.0), [0.0, 1.0, 0.0, 0.0]);
+    }
+
+    /// The resample reproduces, exactly, the polynomials a third-order accurate
+    /// interpolant is required to reproduce.
+    ///
+    /// This is the truth-by-construction test: the expected value is `f(x + d)`
+    /// evaluated in closed form, not another implementation of the same idea.
+    /// Borders are excluded because they are clamped, which is a deliberate
+    /// choice and not an interpolation.
+    #[test]
+    fn the_cosite_resample_reproduces_low_order_polynomials_exactly() {
+        let (w, h) = (16usize, 12usize);
+        for (name, f) in [
+            ("linear", (|x: f32, y: f32| 0.5 * x - 0.25 * y + 3.0) as fn(f32, f32) -> f32),
+            ("quadratic", |x: f32, y: f32| 0.1 * x * x + 0.05 * y * y - 0.2 * x * y),
+        ] {
+            let src: Vec<f32> = (0..h)
+                .flat_map(|y| (0..w).map(move |x| f(x as f32, y as f32)))
+                .collect();
+            for (dy, dx) in [(0.25f32, 0.25f32), (-0.25, -0.25)] {
+                let out = resample_shift(&src, w, h, dy, dx);
+                for y in 2..h - 2 {
+                    for x in 2..w - 2 {
+                        let want = f(x as f32 + dx, y as f32 + dy);
+                        let got = out[y * w + x];
+                        assert!(
+                            (got - want).abs() < 1e-3,
+                            "{name} at ({x},{y}) shift ({dy},{dx}): got {got}, want {want}"
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    /// A constant plane is invariant, borders included.
+    ///
+    /// The border check is the point: clamping is the one place the kernel is
+    /// not doing arithmetic on real neighbours, and a partition-of-unity kernel
+    /// against clamped-but-equal samples must still return the constant.
+    #[test]
+    fn a_constant_plane_is_invariant_including_at_the_clamped_borders() {
+        let (w, h) = (9usize, 7usize);
+        let src = vec![0.375f32; w * h];
+        for (dy, dx) in [(0.25f32, 0.25f32), (-0.25, -0.25)] {
+            for v in resample_shift(&src, w, h, dy, dx) {
+                assert!((v - 0.375).abs() < 1e-6, "constant moved to {v}");
+            }
+        }
+    }
+
+    /// Green is bit-identical through the binned path, and red and blue move in
+    /// opposite directions by a known amount.
+    ///
+    /// This is the shipping-path form of the two controls that carry the
+    /// measured result. **Green** is the null: it is not resampled, so every
+    /// green sample must survive as the exact `u16` the uncorrected path would
+    /// have written. A correction that improved the picture by blurring
+    /// everything would fail here.
+    ///
+    /// **Red minus blue** is the direction control. On a field where red and
+    /// blue are the same linear ramp of slope `s` in `x`, red is read at
+    /// `x + 0.25` and blue at `x - 0.25`, so their developed difference must be
+    /// `0.5 * s` — signed, so a correction applied backwards fails.
+    #[test]
+    fn the_binned_path_leaves_green_untouched_and_separates_red_from_blue() {
+        let (w, h) = (24usize, 8usize);
+        let dev = Develop::default(); // identity, so u16 = value * 65535
+        let slope = 0.02f32;
+        let mut lin = vec![0.0f32; w * h * 3];
+        {
+            let (px, _) = lin.as_chunks_mut::<3>();
+            for (i, p) in px.iter_mut().enumerate() {
+                let x = (i % w) as f32;
+                let ramp = 0.2 + slope * x;
+                // Green is deliberately a *different*, non-flat field, so that
+                // "green survived" cannot be satisfied by it being constant.
+                *p = [ramp, 0.9 - 0.01 * x, ramp];
+            }
+        }
+
+        let out = develop_binned(w, h, &lin, &dev);
+        let (px, _) = lin.as_chunks::<3>();
+        let (got, _) = out.as_chunks::<3>();
+
+        for (i, p) in px.iter().enumerate() {
+            let want = develop_pixel([0.0, p[1], 0.0], &dev)[1];
+            assert_eq!(got[i][1], want, "green moved at pixel {i}");
+        }
+
+        let want = (0.5 * slope * u16::MAX as f32).round() as i32;
+        for y in 0..h {
+            for x in 3..w - 3 {
+                let p = got[y * w + x];
+                let diff = p[0] as i32 - p[2] as i32;
+                assert!(
+                    (diff - want).abs() <= 2,
+                    "red-blue separation at ({x},{y}) is {diff}, want {want}"
+                );
+            }
+        }
     }
 }

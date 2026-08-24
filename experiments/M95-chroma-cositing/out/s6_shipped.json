@@ -1,0 +1,34 @@
+{
+  "N5_null": {
+    "B": 7.185490947038924e-17,
+    "G": 4.241457104005821e-17,
+    "R": 4.329746615647961e-17,
+    "pass": true
+  },
+  "after": {
+    "chroma_rms_DN": 210.8969800100255,
+    "chroma_rms_edge_DN": 419.49042924981245,
+    "reg_B": 0.03102940885703799,
+    "reg_G": 0.008420513677224156,
+    "reg_R": 0.04895729766077423
+  },
+  "before": {
+    "chroma_rms_DN": 537.8237297233369,
+    "chroma_rms_edge_DN": 1286.1740460709552,
+    "reg_B": 0.4556840229769961,
+    "reg_G": 0.07637670468939389,
+    "reg_R": 0.581752657598993
+  },
+  "crop": {
+    "green_grad_DN_per_px": 1629.6219349152586,
+    "size": 220,
+    "x": 290,
+    "y": 1640
+  },
+  "did_anything_happen": {
+    "max_dB_DN": 13842,
+    "max_dR_DN": 17119,
+    "pass": true
+  },
+  "figure": "C:\\dev\\strehl-out\\M95-chroma-cositing\\M95-chroma-cositing-before-after.png"
+}

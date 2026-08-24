@@ -1,0 +1,52 @@
+{
+  "C11": {
+    "mean_ratio": 0.31125202374145966,
+    "pass": true,
+    "rows": [
+      {
+        "chroma_fixed": 0.05151111263652718,
+        "chroma_shipped": 0.16570771236852366,
+        "ratio": 0.3108552516974567,
+        "seed": 21
+      },
+      {
+        "chroma_fixed": 0.05172402070421574,
+        "chroma_shipped": 0.1661493535729855,
+        "ratio": 0.3113103938830228,
+        "seed": 22
+      },
+      {
+        "chroma_fixed": 0.05173890891036802,
+        "chroma_shipped": 0.1659879820906162,
+        "ratio": 0.3117027405160134,
+        "seed": 23
+      },
+      {
+        "chroma_fixed": 0.05174822408779101,
+        "chroma_shipped": 0.16631087534423056,
+        "ratio": 0.3111535789868368,
+        "seed": 24
+      },
+      {
+        "chroma_fixed": 0.051790662895998846,
+        "chroma_shipped": 0.16640203745255228,
+        "ratio": 0.3112381536239686,
+        "seed": 25
+      }
+    ]
+  },
+  "N3_retired": "vacuous: Keys at t=0 is the identity kernel, so a zero-shift resample is a no-op and the control returned digits identical to as-shipped. Replaced by N4.",
+  "N4": {
+    "pass": true,
+    "rows": {
+      "frame-183": {
+        "green_after_shift": 0.3196226233239109,
+        "green_before": 0.005972515097188226
+      },
+      "merged-gate0": {
+        "green_after_shift": 0.3311555322626413,
+        "green_before": 0.004966866470426097
+      }
+    }
+  }
+}

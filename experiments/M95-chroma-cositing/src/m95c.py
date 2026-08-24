@@ -151,6 +151,84 @@ def phase_ramp_shift(a, b, fmax=0.25, hp_sigma=4.0, wmin_frac=0.02):
     return dy, dx, rms
 
 
+def coherence(a, b, fmax=0.25, hp_sigma=4.0, smooth=5):
+    """Magnitude-squared coherence between two crops over the fit band.
+
+    A phase fit on an incoherent pair returns a number with no meaning: the
+    phase of a cross-spectrum whose magnitude is noise is uniform on
+    [-pi, pi], and least squares will happily fit a plane to it. This is the
+    gate that keeps such ROIs out. Defocused regions of a single frame from a
+    focus stack are the specific hazard -- they are bright and have plenty of
+    high-frequency *noise*, so a detail threshold alone lets them through.
+
+    THE SMOOTHING IS NOT OPTIONAL, and getting this wrong is how the first
+    version of this function failed its own control (C9). Without averaging,
+
+        |conj(A) B| / (|A| |B|)  ==  1
+
+    identically, in every bin, for every input including independent noise --
+    it is |A||B| over |A||B|. Coherence only carries information once the
+    cross- and auto-spectra are averaged over an ensemble or, as here, over a
+    neighbourhood of frequency bins: then an incoherent pair's cross-spectrum
+    cancels toward zero while its auto-spectra stay positive.
+    """
+    from scipy.ndimage import uniform_filter
+
+    h, w = a.shape
+    win = hann2(h, w)
+    af = np.fft.fft2(highpass(a.astype(np.float64), hp_sigma) * win)
+    bf = np.fft.fft2(highpass(b.astype(np.float64), hp_sigma) * win)
+
+    sxy = np.conj(af) * bf
+    sxx = (np.abs(af) ** 2).astype(np.float64)
+    syy = (np.abs(bf) ** 2).astype(np.float64)
+    # `wrap` because FFT bin indices are periodic.
+    k = dict(size=smooth, mode="wrap")
+    sxy_s = uniform_filter(sxy.real, **k) + 1j * uniform_filter(sxy.imag, **k)
+    sxx_s = uniform_filter(sxx, **k)
+    syy_s = uniform_filter(syy, **k)
+
+    gamma2 = (np.abs(sxy_s) ** 2) / (sxx_s * syy_s + 1e-30)
+
+    fy = np.fft.fftfreq(h)[:, None] * np.ones((1, w))
+    fx = np.fft.fftfreq(w)[None, :] * np.ones((h, 1))
+    rad = np.sqrt(fy**2 + fx**2)
+    keep = (rad > 0) & (rad <= fmax)
+    wgt = np.sqrt(sxx_s[keep] * syy_s[keep])
+    return float(np.average(gamma2[keep], weights=wgt))
+
+
+def phase_ramp_shift_robust(a, b, fmax=0.25, hp_sigma=4.0, coarse_up=20):
+    """Two-stage shift estimate: coarse de-ramp, then the phase fit.
+
+    WHY THIS EXISTS. `phase_ramp_shift` assumes the phase ramp does not wrap
+    inside the fit band, which holds only while `|d| * fmax < 0.5`. At
+    `fmax = 0.25` that is `|d| < 2` px. Lateral chromatic aberration at the
+    corner of a 2x-teleconverted frame is not guaranteed to stay under that,
+    and a wrapped bin is fitted as if it were real -- it does not announce
+    itself.
+
+    So: get a coarse estimate first with an independent algorithm, remove it
+    with an exact phase ramp, fit the small remainder, and add the two back.
+    The remainder is by construction sub-pixel, so the fit is inside its valid
+    range whatever the true displacement was.
+
+    Returns `(dy, dx, rms, coarse_dy, coarse_dx)`.
+    """
+    from skimage.registration import phase_cross_correlation
+
+    win = hann2(*a.shape)
+    ah = highpass(a.astype(np.float64), hp_sigma) * win
+    bh = highpass(b.astype(np.float64), hp_sigma) * win
+    sk, _e, _p = phase_cross_correlation(ah, bh, upsample_factor=coarse_up)
+    cdy, cdx = -float(sk[0]), -float(sk[1])
+
+    # Undo the coarse shift on `b`, leaving a sub-pixel remainder to fit.
+    b_dr = shift_by(b.astype(np.float64), -cdy, -cdx)
+    rdy, rdx, rms = phase_ramp_shift(a, b_dr, fmax=fmax, hp_sigma=hp_sigma)
+    return cdy + rdy, cdx + rdx, rms, cdy, cdx
+
+
 def load_tif(path):
     import tifffile
 
