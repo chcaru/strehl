@@ -24,6 +24,25 @@ such).
 
 ## 0. VERDICT
 
+> **SHIPPED, AND OFF BY DEFAULT — and by the end of the night that stopped
+> being a cautious choice and became the only defensible one. (§16.)** The halo
+> correction is real code in the product: `crates/strehl-cli/src/merge_cmd/halo.rs`,
+> a third pass reached from `strehl stack` / `strehl merge` by
+> `STREHL_FIX_HALO=1`, at `delta = 40` frames and a 40 px yoke. With it off,
+> passes one and two are untouched and **the default output is byte-for-byte
+> unchanged**. **Is it on by default? NO.** On the full frame it cuts the halo
+> metric **72.9%** (ISO 0.06406 → 0.01734, non-overlapping CIs) and **visibly
+> destroys the bee's abdomen hair fringe**, replacing it with a milky scalloped
+> band worse than the halo it removed (§16.9,
+> `34-SHIP-side-by-side-halo.png`). **The metric and the eye disagree and the
+> eye is right**: flattening the near-edge profile satisfies my metric whether
+> the veil was removed or the neighbourhood was destroyed. On ground truth the
+> same setting raises RMSE **+254.6%**, and on a region with **no occlusion at
+> all** it raises RMSE **+558.4%** while still "improving" the metric 63.9%. A
+> fine-detail control does pass, exactly and non-vacuously: the highest-gradient
+> untouched window carries **1.66×** the corrected region's gradient energy and
+> differs by **0 DN**. **Do not default this on.**
+>
 > **Is the halo a misregistration artifact? NO, and the negative is
 > quantitative.** **(§15, registered `a66ca28` before measuring.)** The
 > orchestrator's hypothesis was given every chance. Its mechanism is **real**:
@@ -1353,3 +1372,412 @@ Owner crops: `20-REGISTRATION-unaligned.png`, `21-REGISTRATION-aligned.png`,
 `22-REGISTRATION-side-by-side.png` (content-matched, same display levels), and
 `23-PLANT-*`, `24-PLANT-truth-vs-merge.png` for the plant.
 
+
+## 16. Shipping decision: the halo fix is real code, and it is OFF by default
+
+> **READ 16.9 FIRST.** On the full-frame, aligned, gated render the correction is
+> a **visible regression**: it erases the abdomen hairs and replaces them with a
+> milky scalloped blob that is more objectionable than the halo it removed. The
+> halo metric improves 72.9% on that same image. **The metric and the eye
+> disagree, and the eye is right.** Everything below stands, but this is the
+> headline: do not turn this on by default, and do not judge it by my metric.
+
+The orchestrator viewed `10-BEE-AFTER-F1-local-d40.png` directly, confirmed the
+white rim on the leg edges is gone, and ordered the fix promoted from prototype
+to shipped code tonight, with permission to default it off if the evidence says
+so. **The evidence says so, far more emphatically than when that order was
+given.** This section is the decision, its defence, and the control that was
+asked for.
+
+### 16.1 The plain answers
+
+| Question | Answer |
+| --- | --- |
+| Is the halo correction in the shipped binary? | **Yes** — `crates/strehl-cli/src/merge_cmd/halo.rs`, reached from `strehl stack` / `strehl merge`. |
+| Is it ON by default? | **NO.** |
+| How do I turn it on? | `$env:STREHL_FIX_HALO='1'` |
+| Which `d`? | **`delta = 40` frames**, yoke 40 px. Override with `STREHL_FIX_HALO_DELTA`. |
+| Does the default output change? | **No, not by one bit.** Passes one and two are untouched; the correction is a third pass that does not run unless asked for. |
+
+### 16.2 Why it is not the default, in one table
+
+This is the same ground-truth measurement as §6.3, re-read from
+`data/22-plant-truth.json` at source before writing this section. **MEASURED.**
+
+| plant scene | halo metric ISO | RMSE against known truth, in the band |
+| --- | --- | --- |
+| occluding edge, uncorrected | 0.03060 | 0.03462 |
+| occluding edge, `local-d40` | 0.00618 (**-79.8%**) | 0.12276 (**+254.6%**) |
+| **non-occluding control**, uncorrected | 0.01367 | 0.01807 |
+| **non-occluding control**, `local-d40` | 0.00493 (**-63.9%**) | 0.11900 (**+558.4%**) |
+
+Read the bottom two rows. On a region built to contain **no occlusion at all**,
+the correction still "improves" the halo metric by 63.9% while multiplying the
+error against truth by 6.6x. The original brief named this failure in advance:
+*"A fix that improves a region with no defect is detecting something other than
+what you think."* That is exactly what this is. It keys on **silhouettes**, not
+on **occlusions**, and it cannot tell them apart — at the bee's real occluding
+edge it moves 82.1% of treated pixels, and at a *planted, non-occluding* disc in
+the bee's own background it moves 85.4%, which is **more**.
+
+So the correction is cosmetic. It removes the thing that makes the picture look
+stacked, and it pays for that by making the picture less like the scene. A user
+may legitimately want that trade. They should not be given it silently, and a
+default is silent.
+
+### 16.3 Picking `d`, and defending it
+
+The full ladder, **MEASURED**, from `data/20-local-partition.json` and
+`data/21-cost.json`. `moved` is the fraction of treated pixels whose value
+changed; `retention` is the median fraction of the original focus response the
+treated pixels keep, so **lower retention is more damage**.
+
+| `delta` | bee halo | flower halo | moved, real edge | moved, non-occluding control | retention | profiles made worse |
+| --- | --- | --- | --- | --- | --- | --- |
+| 20 | -80.6% | *not measured* | 67.9% | 73.9% | 0.475 | 13.9% |
+| **40** | **-87.9%** | **-84.6%** | **82.1%** | **85.4%** | **0.388** | **18.1%** (bee), 2.3% (flower) |
+| 80 | -100.0% | -95.9% | 96.0% | 93.3% | 0.269 | 14.5% (bee), 4.7% (flower) |
+
+`delta = 40` is shipped for three reasons, in order of weight:
+
+1. **It is the only value measured on both real stacks.** `d20` was never run on
+   the flower. Shipping a default whose evidence is one capture is how this
+   project generated several of its sixteen recorded errors.
+2. **`d80` costs the most detail.** Retention falls to 0.269, and hairs and claws
+   are narrower than the 40 px yoke, so their two flanking bands overlap and the
+   whole neighbourhood is forbidden its own focus frames. That is visible as
+   softening in `10-BEE-AFTER-F1-local-d80.png`. `d80`'s extra 12 points of halo
+   removal are bought with structure.
+3. **`d20` under-treats without buying safety.** It still fires on the
+   non-occluding control at 73.9%, so it is no more depth-selective — it is just
+   weaker.
+
+**Honest caveat:** none of these three is *good*. `d40` is the least-bad point on
+a ladder every rung of which raises error against truth.
+
+### 16.4 The fine-detail control the orchestrator asked for
+
+The request was a control on a region of genuine fine detail — eye facets or
+hairs — showing the correction does not touch it. **The honest answer is split,
+and one half of it is a failure.**
+
+**Interior fine detail: untouched exactly. MEASURED.**
+`max_abs_delta_outside_treated = 0.0` DN at `d20`, `d40` and `d80` alike, on both
+the bee and the flower (`data/21-cost.json`). Not "small" — **exactly zero**. The
+treated set is background pixels within 40 px of the silhouette, so the bee's eye
+facets, being interior subject pixels inside the mask, are never candidates. This
+is structural rather than empirical, and it is pinned in the shipped code by the
+unit test `an_untreated_pixel_is_never_overridden`.
+
+**Silhouette-adjacent fine detail: damaged, and I could not make this pass.**
+Hairs on the abdomen margin are *at* the silhouette, so they are inside the yoke
+by construction. At `d40` the treated pixels retain a median 0.388 of their
+original focus response, and 18.1% of bee boundary profiles are made worse rather
+than better. §6.3 predicted this before it was measured and the measurement
+agrees with the prediction.
+
+I did not tune the yoke until this control passed. A yoke small enough to spare
+the hairs is smaller than the halo, and would not remove the thing being shipped.
+**That is the real reason this is not a default**, stated as plainly as I can:
+the correction cannot currently distinguish a hair from a halo, because both are
+thin bright structure adjacent to a silhouette.
+
+### 16.5 What the code does, and what it deliberately does not do
+
+`merge_cmd/halo.rs` is the §6 `F1 local` prototype ported exactly:
+
+1. Otsu threshold on the merged green luma; mask = darker than `tau`, closed and
+   opened with a radius-3 disc, components under 2000 px dropped.
+2. Exact Felzenszwalb-Huttenlocher squared EDT with source indices.
+3. `k_F` per treated pixel = the 15x15 median-filtered winner index of its
+   **nearest foreground pixel** — a per-pixel map, not a global constant.
+4. Treated set = background pixels with EDT distance <= 40 px.
+5. Re-elect from frames with `|k - k_F| >= 40`, using the same regularised field
+   that elected the pass-one winner.
+
+**The per-pixel map is not a refinement, it is the whole algorithm.** A global
+`k_F` removes only 1.2% of the flower's halo, because the flower's subject spans
+248 of 299 frames p10-p90 and no single frame is "the foreground". Any future
+port must carry the per-pixel map.
+
+Three things it deliberately does not do, each a known cost rather than an
+oversight:
+
+- **It does not average.** Treated pixels are re-elected, so inside the yoke the
+  gate's noise averaging is lost and the band is noisier. Every M87 measurement
+  was made at gate 0, where that is equally true of the uncorrected image, so the
+  numbers above are like-for-like; against a **gated** merge this is an extra,
+  **unmeasured** cost. ARGUED.
+- **It assumes the subject is darker than its background.** True of both stacks
+  measured and of the case the halo is worst in. On a bright subject against a
+  dark background the mask selects the background instead. Not papered over with
+  an unmeasured heuristic.
+- **It never invents a pixel.** Where every frame falls inside the forbidden
+  band, the pixel keeps its uncorrected value and the run prints how many did.
+
+### 16.6 Verification performed
+
+- `cargo test -p strehl-cli --bins halo` — **6 passed, 0 failed.**
+- **Negative control, and it failed as designed.** Two defects were planted: the
+  EDT's second column sweep was disabled, and the band comparison was moved from
+  `>=` to `>`. Result: **3 passed, 3 failed** — exactly the three EDT and band
+  tests, with the unrelated three still green. The tests are live instruments,
+  not decoration. The file was then restored from a `$env:TEMP` copy, verified
+  byte-identical by `Get-FileHash` against the source tree, **touched** so cargo
+  could not serve a stale object, and re-run: **6 passed, 0 failed.**
+- `edt_matches_brute_force_on_a_scattered_mask` compares the linear-time
+  transform against an O(n^2) brute-force nearest-seed search over every pixel,
+  and asserts **exact** equality, not a tolerance.
+
+**Where it was verified, and why that is not the shared tree.** The workspace
+does not currently compile: `crates/strehl-core/src/color.rs` is mid-edit by M93
+and fails with `the trait bound f32: Eq is not satisfied`. That file is forbidden
+to me and I did not touch it. Verification therefore ran against
+`git archive HEAD` exported to a private directory with my two files overlaid, so
+the core it built against is the **committed** core. `merge_cmd.rs` carries no
+foreign edits — `git diff --stat HEAD` shows 98 insertions and 10 deletions, all
+mine — so the overlay is exact. **The halo code has not yet been compiled against
+M93's in-flight `color.rs`, and that check remains outstanding.**
+
+### 16.7 The exact command that renders the before/after
+
+```powershell
+$env:PATH = "$env:USERPROFILE\.cargo\bin;$env:PATH"
+$EXE = 'C:\dev\strehl-target-m87v\release\strehl.exe'
+$OUT = 'C:\dev\strehl-out\M87-before-after'
+# skips the align solve; the sidecar validates its own StackIdentity
+$env:STREHL_WARPMAP = 'experiments\M87-occlusion\cache\align\bee3-warpmap.txt'
+
+# BEFORE -- the shipped default, unchanged
+Remove-Item Env:STREHL_FIX_HALO -ErrorAction SilentlyContinue
+& $EXE merge D:\personal\macro\bee-3-cpl --out "$OUT\30-SHIP-BEFORE-default.tif" --srgb --demosaic --gate 2
+
+# AFTER -- the correction on
+$env:STREHL_FIX_HALO = '1'
+& $EXE merge D:\personal\macro\bee-3-cpl --out "$OUT\31-SHIP-AFTER-fixhalo.tif" --srgb --demosaic --gate 2
+```
+
+The only difference between the two lines is the environment variable.
+
+### 16.8 What was cut, and what it would take to finish
+
+Cut tonight, in the interest of shipping something true rather than something
+large:
+
+- **No `--fix-halo` flag.** `main.rs` owns the subcommand definition and is
+  forbidden. The switch is an environment variable, following the exact
+  precedent `align_cmd.rs` set for `STREHL_ALIGN` for the same reason. The
+  verbatim flag patch is in §17.
+- **Not promoted into `strehl-core`.** It lives in the CLI crate, declared by
+  `pub(crate) mod halo;` inside the allowed `merge_cmd.rs`, so **no shared
+  registration point was touched** — neither a `pub mod` line in
+  `strehl-core/src/lib.rs` nor a subcommand arm in `main.rs`. The promotion patch
+  is in §17.
+- **No gate-aware substitution.** See §16.5.
+- **No `strehl stack` path.** The correction is wired into the merge/estimator
+  path, which is what renders the images the owner looks at.
+
+### 16.9 The full-frame result, and why I am telling you not to enable it
+
+Everything in §6 and §16.1-§16.8 was measured on **ROI crops of an unaligned,
+gate-0 merge**. The shipped binary renders something different: the **full
+frame**, **aligned** (M86c, on by default), and **gate 2**. I rendered both arms
+through the shipped binary and looked at the result. It does not survive.
+
+**What the metric says. MEASURED.** On the byte-frozen linear pair, over 5714
+valid boundary profiles in `ROI_LEG`:
+
+| arm | halo metric ISO | 95% CI |
+| --- | --- | --- |
+| `STREHL_FIX_HALO` unset (default) | 0.06406 | [0.05755, 0.07162] |
+| `STREHL_FIX_HALO=1` | 0.01734 | [0.01284, 0.02243] |
+
+A **72.9% reduction**, with non-overlapping intervals. By the instrument this
+milestone was built around, the correction works on the shipped output.
+
+**What the picture says. MEASURED, by looking.**
+`34-SHIP-side-by-side-halo.png` is a 700x1100 crop at 100%, cut automatically at
+the location of the strongest correction in the frame. In the corrected half the
+bright rim is gone. So is the fringe of pale hairs along the left flank of the
+leg: they have been replaced by a smooth, milky, **scalloped** band that follows
+the silhouette. It is larger, softer and more conspicuous than the halo it
+replaced. **It looks worse.**
+
+**Both statements are true, and that is the finding.** The halo metric measures
+the radial brightness excursion of the background profile as it approaches the
+silhouette. Smearing the near-edge background into a flat milky band drives that
+excursion to nearly zero. The metric cannot tell "the veil was removed" from
+"the neighbourhood was destroyed", because both flatten the profile. §6 already
+recorded that the correction raises RMSE against ground truth 254.6% while
+cutting the metric 79.8%; §16.9 is what that number looks like at 100% on the
+owner's own photograph.
+
+**This is a metric-gaming failure, and my metric is the one being gamed.** It is
+the exact defect the brief warned about from the other direction: *"without a
+metric that provably responds to the halo, nothing downstream is verifiable."*
+The metric does provably respond to the halo (§2, §3). It is simply not
+**sufficient** — responding to the halo does not make it safe to optimise
+against. I did not discover this until I rendered the full frame and looked,
+which is an argument for looking earlier rather than an argument about the
+algorithm.
+
+**Why the crops looked good and the full frame does not.** Two differences, both
+mine, neither controlled for at the time:
+
+1. **Scale.** The prototype ran on a 700x1100 ROI crop where Otsu cleanly
+   separates one dark leg from bright background. On the full frame the mask
+   takes in the whole subject at 45.31% of pixels, and the yoke around that much
+   longer, more convoluted perimeter covers **13.0%** of the image. The Rust and
+   Python masks agree — 45.31% against 45.31%, computed by independent implementations — so this
+   is not a port defect. The algorithm is doing exactly what it did before, over
+   a boundary of a completely different character.
+2. **Structure at the boundary.** The leg crops in `09`/`10` cut across a smooth
+   chitin edge. The strongest-correction site on the full frame is a hair fringe,
+   which is thin bright structure adjacent to a silhouette — precisely the case
+   §16.4 predicted the correction cannot distinguish from a halo. The prediction
+   was right and I under-weighted it.
+
+**Consequence for the order I was given.** The instruction was to ship this and,
+if the evidence supported it, default it on. It does not. The correct product
+decision is the one already taken in §16.1 — shipped, off, honestly documented —
+and §16.9 converts that from a cautious reading of a plant into a direct
+observation of the owner's own image. **A default-on version of this would have
+been visible to the owner as damage in the morning.**
+
+**What would have to change before this is worth enabling.** The correction needs
+a foreground-boundary term that distinguishes *thin bright structure attached to
+the subject* from *background veiled by the subject*. That is a matting problem,
+not a focus problem, and it is not tonight's work. The metric needs a companion
+that is sensitive to structure destruction — the ground-truth RMSE of §6.3 is
+that companion on a plant, and on real data there is no such number yet, which is
+the single largest hole M87 leaves behind.
+
+### 16.10 The fine-detail control, on the shipped binary
+
+§16.4 answered this on the prototype. Here it is on the actual shipped output,
+which is what was asked for.
+
+The control region was **not chosen by me**. It is the 600x800 window, on a
+100 px grid over the whole 7032x4688 frame, with the highest mean gradient among
+all windows the correction left **completely** unchanged — so it cannot have been
+picked to flatter the result. It landed at `y 1500..2100, x 3500..4300`.
+
+| quantity | value |
+| --- | --- |
+| max abs difference, before vs after | **0 DN** of 65535 |
+| pixels changed | **0.0000%** |
+| mean abs gradient in the control | **687.9** |
+| mean abs gradient in the corrected halo crop | 415.6 |
+
+The control carries **1.66x more fine detail than the region being corrected**,
+so it is not a vacuous region that changed nothing because there was nothing
+there. Interior detail is untouched **exactly**, not approximately, because the
+treated set is background pixels within 40 px of the silhouette and interior
+subject pixels are inside the mask. `35-SHIP-BEFORE-detail.png` and
+`36-SHIP-AFTER-detail.png` are byte-identical crops.
+
+**This control passes, and it is narrower than it sounds.** It proves the
+correction cannot reach into the middle of the subject. It says nothing about
+structure *at* the silhouette, which §16.9 shows is destroyed.
+
+### 16.11 Whole-frame effect of the shipped correction
+
+MEASURED, on the 16-bit sRGB demosaiced pair:
+
+| quantity | value |
+| --- | --- |
+| pixels changed | 13.666% of 33.0 M |
+| max abs difference | 41887 DN = **63.9%** of full scale |
+| subject fraction from the Otsu mask | 45.31% (Rust) / 45.31% (Python, independent) |
+| treated pixels | 1072910 = 13.018% of the plane grid |
+| treated pixels that found an allowed frame | 1072910 of 1072910; none fell back |
+| pass-three cost | 26.9 s on 299 frames, one extra decode pass |
+
+**A note on an error I made and caught.** My first reading of this pair reported
+`max |delta| = 163 of 65535`, i.e. 0.25%, and I nearly reported the correction as
+having almost no effect. PIL silently converts 16-bit RGB TIFFs to 8-bit on read,
+so the true figure was 163 of **255**. Re-read with `tifffile` the maximum is
+41887 of 65535. **Every number in §16.9-§16.11 is from `tifffile`, not PIL.** Any
+future measurement in this corpus that reads a `strehl` TIFF through PIL is
+quantised to 8 bits and should be re-checked.
+
+## 17. Verbatim patches for the shared registration points
+
+Both are **optional**; the code ships and runs without either. Neither file was
+edited by me.
+
+### 17.1 `crates/strehl-cli/src/main.rs` — a real flag
+
+Add to the `Stack` variant's field list:
+
+```rust
+    /// Remove the occlusion halo: the bright rim a selection stacker leaves
+    /// where a dark subject meets a bright out-of-focus background.
+    ///
+    /// COSMETIC, NOT A FIDELITY FIX, and off unless you ask for it. On a
+    /// synthetic scene with known truth it removes 79.8% of the halo and
+    /// raises RMSE against that truth by 254.6%. It keys on SILHOUETTES,
+    /// not occlusions: on a region containing no occlusion at all it still
+    /// moves 85.4% of the pixels it treats. It cannot distinguish a hair
+    /// from a halo, so thin structure at the subject outline is softened.
+    /// Interior detail is untouched exactly -- 0.0 DN, structurally.
+    ///
+    /// Use it when you want the picture to stop looking stacked. Do not
+    /// measure anything on the result. See docs/research/M87-occlusion.md.
+    #[arg(long)]
+    fix_halo: bool,
+```
+
+and in the `Commands::Stack { .. }` arm, before `stack::run(&opts)`:
+
+```rust
+    // The module reads the environment, so a flag sets it. One source of
+    // truth for the switch, and `STREHL_FIX_HALO` keeps working.
+    if fix_halo {
+        // SAFETY: single-threaded, before any worker is spawned.
+        unsafe { std::env::set_var(merge_cmd::halo::FIX_ENV, "1") };
+    }
+```
+
+This requires `pub(crate) mod halo;` in `merge_cmd.rs` to become `pub mod halo;`
+(one word, in a file I own).
+
+### 17.2 `crates/strehl-core/src/lib.rs` — optional promotion
+
+Only if the algorithm is moved into the core crate. Add, in alphabetical order
+between `focus` and `merge`:
+
+```rust
+pub mod halo;
+```
+
+There is no reason to do this tonight. The correction consumes an `Estimator`
+and a winner field and produces an override of the output; it is a rendering
+decision, and the CLI crate is where rendering decisions live.
+
+## 18. Candidate facts — delta only
+
+Self-contained, and additional to §9 (`P1`-`P19`) and §15 (`P20`-`P26`). Numbers
+namespaced `M87`.
+
+| id | claim | significance | label |
+| --- | --- | --- | --- |
+| P27 | The halo correction ships in `strehl` as a third pass reached by `STREHL_FIX_HALO=1`, **off by default**, at `delta = 40` frames and a 40 px yoke. With it off, passes one and two are untouched and the default output is byte-for-byte unchanged. | The corpus's frozen numbers cannot move, so the feature carries no regression risk to any prior measurement. | MEASURED |
+| P28 | Against a synthetic two-layer scene with known truth, the shipped correction at `delta = 40` cuts the halo metric 79.8% (ISO 0.03060 to 0.00618) and **raises RMSE against truth 254.6%** (0.03462 to 0.12276). | It is a cosmetic filter that makes the image measurably more wrong. This is the whole reason it is not a default. | MEASURED |
+| P29 | On a control region built to contain **no occlusion**, the same correction still cuts the halo metric 63.9% and raises RMSE against truth **558.4%** (0.01807 to 0.11900). | The detector keys on silhouettes, not occlusions. It "fixes" regions with no defect, which is the placebo failure the brief warned about. | MEASURED |
+| P30 | The correction moves 82.1% of treated pixels at the bee's real occluding edge and **85.4%** at a planted non-occluding disc in the same image's background — i.e. slightly **more** where there is nothing to fix. | Independent confirmation of P29 on real data rather than a plant. Rules out depth-selectivity as an explanation for why it looks better. | MEASURED |
+| P31 | Outside the treated set the correction changes **exactly 0.0 DN** at `delta` 20, 40 and 80, on both real stacks. Interior fine detail (eye facets) is inside the foreground mask and is therefore never a candidate. | The fine-detail guard is structural, not statistical, and is pinned by a unit test. It is the one safety claim here that is unconditional. | MEASURED |
+| P32 | Silhouette-adjacent fine detail **is** damaged: at `delta = 40` treated pixels retain a median 0.388 of their original focus response and 18.1% of bee boundary profiles are made worse. Hairs are thinner than the 40 px yoke. | The correction cannot distinguish a hair from a halo. Any future attempt to default it on must solve this first. | MEASURED |
+| P33 | The `delta` ladder on real data: 20 gives -80.6% halo at 0.475 retention, 40 gives -87.9% (bee) and -84.6% (flower) at 0.388, 80 gives -100.0% and -95.9% at 0.269. Only `delta = 40` was measured on **both** stacks. | Records the evidence behind the shipped default and shows the halo/detail trade is monotone with no free lunch on the ladder. | MEASURED |
+| P34 | A global `k_F` removes only 1.2% of the flower's halo against 84.6% for the per-pixel map, because that subject spans 248 of 299 frames p10-p90. | Any port of this algorithm must carry a per-pixel foreground depth map; the scalar simplification silently fails on deep subjects. | MEASURED |
+| P35 | Planting two defects in the shipped module (EDT second sweep disabled; band `>=` to `>`) turned exactly 3 of 6 unit tests red, and restoring from a `$env:TEMP` copy plus an mtime touch returned 6 of 6 green. | The tests are demonstrated instruments rather than decoration, per the corpus discipline on negative controls. | MEASURED |
+| P36 | The workspace did not compile during M87's shipping window: `crates/strehl-core/src/color.rs` fails with `the trait bound f32: Eq is not satisfied` under M93's in-flight edit. The halo code was verified against `git archive HEAD` with the two new files overlaid. | The halo module is **not yet** compiled against M93's `color.rs`; that check is outstanding and should be repeated once M93 lands. | MEASURED |
+| P37 | On the **full frame** the shipped correction cuts the halo metric 72.9% (ISO 0.06406 to 0.01734, non-overlapping CIs) while **visibly destroying** the abdomen hair fringe, replacing it with a milky scalloped band more objectionable than the halo. | The halo metric is necessary but **not sufficient**: flattening the near-edge profile satisfies it whether the veil was removed or the neighbourhood was destroyed. Anything optimised against this metric alone must be looked at. | MEASURED |
+| P38 | The prototype's crops were ROI crops of an **unaligned gate-0** merge; the shipped binary renders the **full frame, aligned, gate 2**. At that scale the Otsu mask takes 45.31% of pixels and the yoke covers 13.018%, against a small isolated leg edge at crop scale. | A result validated on a crop did not transfer to the full frame. Crop-scale validation is not evidence about the product's output. | MEASURED |
+| P39 | Fine-detail control on the shipped binary: the highest-gradient 600x800 window that the correction left completely unchanged carries **1.66x more** gradient energy than the corrected region and differs by **0 DN**. | Interior detail is structurally unreachable, so the correction's damage is confined to the silhouette. It is a real but narrow safety guarantee. | MEASURED |
+| P40 | PIL silently converts `strehl`'s 16-bit RGB TIFFs to 8-bit on read. The same before/after pair reads `max delta = 163` through PIL and `41887 / 65535` through `tifffile`. | Any measurement in this corpus taken on a `strehl` TIFF via PIL is quantised to 8 bits. Nearly caused M87 to report the correction as having no effect. | MEASURED |
+
+### Capture request
+
+None. Every measurement in §16-§18 reuses `bee-3-cpl`,
+`flower-bud-with-background-fern-cpl` and synthetic plants already in the tree.

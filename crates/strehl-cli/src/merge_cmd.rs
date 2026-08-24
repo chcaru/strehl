@@ -60,6 +60,8 @@ use strehl_raw::Frame;
 
 use crate::align_cmd::{self, WarpScratch};
 use crate::image_out;
+
+pub(crate) mod halo;
 use crate::stack::{
     MEMORY_BUDGET_BYTES, Roi, flat_roi_stats, mean_and_sigma, provenance_line, report_hp_reference,
     roi_green, srgb_encode,
@@ -1503,9 +1505,82 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         report_statistics(opts, &p2, &p1.clip, geom, levels, &noise, &perm)?;
     }
 
+    // ---- pass three: the M87 occlusion-halo correction --------------------
+    //
+    // A THIRD pass, and only when asked for. Passes one and two are untouched,
+    // so with the correction off the merge is byte-for-byte what it was and the
+    // corpus's frozen numbers cannot move. See `halo` for why it is off by
+    // default: it is cosmetic, and against ground truth it makes the image
+    // measurably more wrong.
+    let halo_fix = if halo::enabled() && opts.out.is_some() {
+        let est = &p2.est[0];
+        let t3 = Instant::now();
+        let luma: Vec<f32> = (0..geom.pixels())
+            .map(|i| (est.green_mean(i) - levels.black).max(0.0))
+            .collect();
+        let hplan = halo::Plan::build(&luma, p1.stats.best_index(), geom, halo::delta_in_use());
+        drop(luma);
+        eprintln!("--- pass three: occlusion-halo correction (M87, COSMETIC) ---");
+        eprintln!(
+            "halo fix        : ON ({}=1). delta {} frames, yoke {:.0} px.",
+            halo::FIX_ENV,
+            hplan.delta,
+            halo::YOKE
+        );
+        eprintln!(
+            "                  subject {:.2}% of pixels at Otsu tau {:.0} DN; {} treated ({:.3}%).",
+            100.0 * hplan.foreground_px as f64 / geom.pixels() as f64,
+            hplan.tau,
+            hplan.treated_len(),
+            100.0 * hplan.treated_len() as f64 / geom.pixels() as f64
+        );
+        let pass = paths
+            .par_chunks(plan.chunk_len)
+            .enumerate()
+            .map(|(ci, chunk)| -> Result<halo::Pass> {
+                let first_index = (ci * plan.chunk_len) as u16;
+                let mut acc = halo::Pass::new(&hplan);
+                let mut scratch = Scratch::new_with_warp(geom, false, warps.is_some());
+                let mut t = Timings::default();
+                for (offset, path) in chunk.iter().enumerate() {
+                    let index = first_index + offset as u16;
+                    let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;
+                    acc.fold(&hplan, index, &frame, &scratch.reg);
+                    ctx.release(frame);
+                }
+                Ok(acc)
+            })
+            .reduce_with(|a, b| match (a, b) {
+                (Ok(mut a), Ok(b)) => {
+                    a.absorb(&b);
+                    Ok(a)
+                }
+                (Err(e), _) | (Ok(_), Err(e)) => Err(e),
+            })
+            .expect("at least one chunk")?;
+        let fix = pass.finish(&hplan);
+        eprintln!(
+            "                  {} of {} treated pixels re-elected; {} kept their original value \
+             because every frame was inside the forbidden band.",
+            fix.treated - fix.undecided,
+            fix.treated,
+            fix.undecided
+        );
+        eprintln!(
+            "                  This is NOT a fidelity improvement. On a synthetic scene with known \
+             truth it cuts the halo metric 79.8% and raises RMSE against truth 254.6%."
+        );
+        eprintln!("wall clock      : {:.3} s", t3.elapsed().as_secs_f64());
+        eprintln!();
+        Some(fix)
+    } else {
+        None
+    };
+
     if let Some(path) = &opts.out {
         write_merged(
             &p2.est[0],
+            halo_fix.as_ref(),
             levels,
             wb,
             xyz_to_cam.as_ref(),
@@ -2624,8 +2699,10 @@ const TOP_K_LAST: usize = strehl_core::through_focus::TOP_K - 1;
 /// reproducible from the command line alone.
 const PLACEBO_SEED: u64 = 0x4D31_385E;
 
+#[allow(clippy::too_many_arguments)]
 fn write_merged(
     est: &Estimator,
+    halo: Option<&halo::Fix>,
     levels: Levels,
     wb: Option<[f32; 3]>,
     xyz_to_cam: Option<&([[f32; 3]; 3], String)>,
@@ -2635,6 +2712,17 @@ fn write_merged(
 ) -> Result<()> {
     let geom = est.geometry();
     let n = geom.pixels();
+    // The only place the halo correction can reach. Untreated pixels fall
+    // straight through to the estimator, so `halo = None` and "treated nothing"
+    // produce the identical file.
+    let val = |p: CfaPlane, i: usize| match halo {
+        Some(h) => h.value(est, p, i),
+        None => est.value(p, i),
+    };
+    let gmean = |i: usize| match halo {
+        Some(h) => h.green_mean(est, i),
+        None => est.green_mean(i),
+    };
     let range = levels.range();
     ensure!(range > 0.0, "white level is not above black level");
     let gains = wb.unwrap_or([1.0, 1.0, 1.0]);
@@ -2701,10 +2789,10 @@ fn write_merged(
                 let i = py * geom.width + px;
                 // RGGB, matching `CfaPlane::rggb_at`: R G1 on the even row,
                 // G2 B on the odd one.
-                top[px * 2] = norm(est.value(CfaPlane::R, i), gains[0]);
-                top[px * 2 + 1] = norm(est.value(CfaPlane::G1, i), gains[1]);
-                bot[px * 2] = norm(est.value(CfaPlane::G2, i), gains[1]);
-                bot[px * 2 + 1] = norm(est.value(CfaPlane::B, i), gains[2]);
+                top[px * 2] = norm(val(CfaPlane::R, i), gains[0]);
+                top[px * 2 + 1] = norm(val(CfaPlane::G1, i), gains[1]);
+                bot[px * 2] = norm(val(CfaPlane::G2, i), gains[1]);
+                bot[px * 2 + 1] = norm(val(CfaPlane::B, i), gains[2]);
             }
         }
         image_out::write_demosaiced(path, mw, mh, &mosaic, &dev)?;
@@ -2728,9 +2816,9 @@ fn write_merged(
         let mut lin = vec![0.0f32; n * 3];
         let (pixels, _) = lin.as_chunks_mut::<3>();
         for (i, px) in pixels.iter_mut().enumerate() {
-            px[0] = norm(est.value(CfaPlane::R, i), gains[0]);
-            px[1] = norm(est.green_mean(i), gains[1]);
-            px[2] = norm(est.value(CfaPlane::B, i), gains[2]);
+            px[0] = norm(val(CfaPlane::R, i), gains[0]);
+            px[1] = norm(gmean(i), gains[1]);
+            px[2] = norm(val(CfaPlane::B, i), gains[2]);
         }
         let dev = image_out::Develop {
             matrix: Some(m),
@@ -2767,9 +2855,9 @@ fn write_merged(
     let mut rgb = vec![0u16; n * 3];
     let (pixels, _) = rgb.as_chunks_mut::<3>();
     for (i, px) in pixels.iter_mut().enumerate() {
-        px[0] = encode(est.value(CfaPlane::R, i), gains[0]);
-        px[1] = encode(est.green_mean(i), gains[1]);
-        px[2] = encode(est.value(CfaPlane::B, i), gains[2]);
+        px[0] = encode(val(CfaPlane::R, i), gains[0]);
+        px[1] = encode(gmean(i), gains[1]);
+        px[2] = encode(val(CfaPlane::B, i), gains[2]);
     }
     image_out::write_rgb16(path, geom.width as u32, geom.height as u32, &rgb)?;
     eprintln!();
