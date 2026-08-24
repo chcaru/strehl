@@ -217,7 +217,98 @@ registration alone.
 
 ---
 
-## 8. Status / Changes / Verified / Not verified / Notes
+## 8. What the owner will actually see, having opened it
+
+The metric in §5 is matched-content, band-limited and masked. That is what makes
+it trustworthy and it is also what makes it abstract. So I rendered the two arms
+the owner would care about at full resolution through the real binary — `strehl
+stack 'D:\personal\macro\dry-erase-marker-head-cpl' --gate 2 --srgb --demosaic`
+— as `marker-TODAY-shipped.tif` (alignment exactly as it ships) and
+`marker-POSSIBLE-gaincorrected.tif`, and I opened them.
+
+### The viewer had to be built carefully, and it lied twice first
+
+A fixed-coordinate crop is invalid here for the reason in §1: these two renders
+differ in field of view. **MEASURED: `marker-POSSIBLE`'s subject is 1.1278x the
+size of `marker-TODAY`'s** (NCC 0.9419, 8x block-mean scale ladder), so the same
+pixel coordinates are different parts of the marker. `src/owner_sbs.py`
+therefore takes a 474 px crop from the corrected render for every 420 px crop
+from the shipped one and Lanczos-downsamples it to match. **That resampling is
+deliberately a handicap applied to the corrected side** — it can only make the
+render I expect to win look softer than it is.
+
+Two defects in this viewer, caught before its output was believed:
+
+1. **The scale was applied inverted.** The ladder returns *the magnification to
+   apply to B*; I read it as *B's magnification*. The first run took a
+   **smaller** crop from the corrected render and **upscaled** it — blurring the
+   treatment arm and handicapping the wrong side. Caught by noticing 0.8867
+   meant the opposite of what I had printed.
+2. **The first content lock lost the lock.** A single full-resolution NCC search
+   scored 0.9244 on the self-control (should be 1.0000) and 0.22–0.49 on the
+   treatment, and it walked *away* from a centre crop that had visibly matched.
+   On macro texture the full-resolution signal is dominated by the fine detail
+   that genuinely differs between arms. Replaced with a coarse 4x block-mean
+   structural pass plus a fine full-resolution pass, integer shifts only.
+
+**Controls on the final viewer (MEASURED):**
+
+| control | result |
+| --- | --- |
+| self vs self, scale | 0.9995 (truth 1.0) |
+| self vs self, lock | 1.0000 / 1.0000 / 1.0000, exact coordinates recovered |
+| **plant: starting guess displaced (+90, −110) px** | **still recovers the exact truth, 1.0000 on all three panels** |
+
+The plant matters: a self-control that starts 1 px from the answer does not
+demonstrate a ±158 px search range. The planted one does.
+
+### What I saw
+
+`C:\dev\strehl-out\M97-before-after\SBS-marker-TODAY-vs-POSSIBLE.png`, three
+1:1 panels, shipped on the left, gain-corrected on the right.
+
+- **Centre.** Well locked — the same distinctive hooked fibre appears in both.
+  The two are very close. The corrected render is *marginally* crisper in fibre
+  separation; the shipped render is very slightly mushier. **This is a marginal
+  call at 1:1, and it is exactly where §5 predicts the smallest difference,
+  because the scale error is zero at the centre of rotation.**
+- **Lower-right.** Well locked, and here the difference is visible without
+  hunting for it: the corrected render separates individual fibres over the
+  bright marker body where the shipped render renders them as a flatter, softer
+  mass. **But the corrected render also shows waxy, smeared blobs in the bright
+  low-texture region at the bottom** that the shipped render does not. I do not
+  know their cause; they are a real artefact and I am not going to omit them
+  because they are inconvenient.
+- **Upper-left.** Lock NCC 0.2253 and the panels still show different scene
+  content — a bright fibre highlight appears in one and not the other.
+  **This panel is not a valid comparison and I am not drawing a conclusion from
+  it.**
+
+### The honest verdict
+
+**MEASURED/ARGUED: the improvement is real and it is visible, but at 1:1 it is
+modest, not transformative, and it is accompanied by at least one new
+artefact.** The 19–32% of §5 is a matched-content, band-limited number; the
+eye's impression of a full-resolution photograph is not the same quantity and I
+will not claim the metric's magnitude as a visual claim.
+
+Two caveats that bound this section, stated rather than buried:
+
+- The treatment lock NCCs are 0.23–0.49 against 1.0000 on the self-control.
+  **The two renders genuinely disagree in fine detail**, which is the expected
+  consequence of their electing different frames — but it also means these
+  panels are approximately, not exactly, the same scene. §5's metric, which
+  registers before comparing, remains the decisive measurement; this section is
+  corroboration by eye, not a replacement for it.
+- **The 1.1278x field-of-view ratio measured here disagrees with the 1.1949x
+  implied by §5's ratios** (1.25852 / 1.05329). I have not resolved it. The two
+  are measured on different products — full-resolution demosaiced sRGB here,
+  binned linear there — so they are not required to agree, but the gap is 6% and
+  I flag it rather than assume it away.
+
+---
+
+## 9. Status / Changes / Verified / Not verified / Notes
 
 ### Status
 **DONE.** The instrument exists, is plant-validated, and answers the question.
@@ -225,7 +316,7 @@ registration alone.
 ### Changes
 - `experiments/M97b-align-visible/**` — `PREREG.md`, `src/scout.py`,
   `src/matched.py`, `src/radial4.py` (reported but inadmissible),
-  `src/sheet.py`, `src/render.ps1`, logs and JSON.
+  `src/sheet.py`, `src/owner_sbs.py`, `src/render.ps1`, logs and JSON.
 - `experiments/M97-warped-merge/src/signtest.py` — one line: `STACK` now reads
   `M97_STACK` from the environment, defaulting to the previous hard-coded
   bee-3 path, so prior results reproduce byte-identically.
@@ -243,6 +334,11 @@ registration alone.
 - Q4 boundary plant: 186624 blackened rim px move the masked metric 0.0000%.
 - `k = 1 − 3/1172 = 0.997440` against three reported 0.9974.
 - `cargo clippy --release -p strehl-cli --bins` rc=0.
+- Owner side-by-side viewer: self-control 0.9995 scale / 1.0000 lock with exact
+  coordinates, and a **planted (+90, −110) px displacement of the starting guess
+  still recovers the exact truth at 1.0000 on all three panels**.
+- **I opened the renders.** §8 describes what is in them, including an artefact
+  that runs against my own conclusion.
 
 ### Not verified
 - **The 19–32% win is measured on one stack.** It should be repeated on
@@ -251,8 +347,11 @@ registration alone.
 - Gain 4.5498 is `ln(0.79999)/ln(0.95214)`, **per-stack and empirical**. It is a
   probe that proves the solve is short, **not a fix**. The fix belongs in M86's
   estimator.
-- Whether the win is *visible* to the owner at normal viewing size, as opposed
-  to measurable. Renders are at `C:\dev\strehl-out\M97-before-after\`.
+- Whether the win is *visible* at normal viewing size, as opposed to at 1:1.
+  §8 is a 1:1 judgement; I did not assess a fit-to-screen view.
+- The cause of the waxy smearing §8 found in the corrected render's bright
+  low-texture region. It is real; I did not diagnose it.
+- Why the field-of-view ratio reads 1.1278 in §8 and 1.1949 in §5.
 - `cargo clippy --bins --tests` fails: 3 errors in
   `crates/strehl-cli/src/merge_cmd/halo.rs` (M87, `52c6a52`). Test code only;
   not mine and not touched.
