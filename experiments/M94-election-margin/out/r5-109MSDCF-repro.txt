@@ -1,0 +1,135 @@
+=== M94 election margin =========================================
+stack           : D:\personal\macro\109MSDCF
+label           : 109MSDCF
+frames          : 22
+plane           : 3516 x 2344
+iso / black     : Some(160.0) / 512
+focus volume    : 0.73 GB resident (22 frames x 33.0 MB)
+  decoded 1/22
+  decoded 22/22
+
+--- F1 faithfulness (bar: exactly 100.000000%) ---
+  winner index  : 100.000000%  (8241504 of 8241504 pixels)
+  winner value  : 100.000000%  (f32 bit-identical)
+  F1            : PASS
+
+--- scope: 7985600 interior pixels of 8241504 (96.89%), border 22 px excluded ---
+
+--- rho(t): furthest competitive frame, in frames and as a fraction of N ---
+    t = c * sqrt(2) * FOCUS_NOISE_SD; c = 4.0 is DEFAULT_GATE
+  c=0.5  tol 0.010758  n_eff   1.413  rho med     0 ( 0.000 N)  p90     2  p99     3  gap>0  7.959%  mean gap 1.39
+  c=1    tol 0.021516  n_eff   1.884  rho med     1 ( 0.045 N)  p90     2  p99     4  gap>0 11.468%  mean gap 1.43
+  c=2    tol 0.043032  n_eff   2.887  rho med     2 ( 0.091 N)  p90     3  p99     7  gap>0 11.737%  mean gap 1.60
+  c=4    tol 0.086063  n_eff   4.969  rho med     3 ( 0.136 N)  p90     4  p99    12  gap>0 13.001%  mean gap 1.87
+  c=8    tol 0.172127  n_eff  10.421  rho med     5 ( 0.227 N)  p90    12  p99    14  gap>0 27.485%  mean gap 2.07
+
+--- margin m_d = R_win - max R_k over |k - k_win| >= d ---
+    q_d = m_d / (R_win - R_min): fraction of the pixel's OWN through-focus range
+    s_d = m_d / FOCUS_NOISE_SD: the shipped constant, reported for reference only
+  d=0   n=  7985600  q med  0.00000  q0.01=0.00000  q0.10=0.00000  q0.25=0.00000  q0.50=0.00000  q0.75=0.00000  q0.90=0.00000  q0.99=0.00000
+        s_d med    0.0000   frac(m_d < 1 sigma_F) 100.000%   frac(m_d < gate tol) 100.000%
+  d=1   n=  7985600  q med  0.05013  q0.01=0.00080  q0.10=0.00820  q0.25=0.02178  q0.50=0.05013  q0.75=0.09600  q0.90=0.14885  q0.99=0.24666
+        s_d med    1.1457   frac(m_d < 1 sigma_F) 44.914%   frac(m_d < gate tol) 95.314%
+  d=2   n=  7985600  q med  0.12571  q0.01=0.00312  q0.10=0.02831  q0.25=0.06449  q0.50=0.12571  q0.75=0.20728  q0.90=0.28033  q0.99=0.38905
+        s_d med    2.7949   frac(m_d < 1 sigma_F) 16.483%   frac(m_d < gate tol) 84.942%
+  d=4   n=  7985600  q med  0.44732  q0.01=0.03894  q0.10=0.18886  q0.25=0.30556  q0.50=0.44732  q0.75=0.55656  q0.90=0.62274  q0.99=0.71029
+        s_d med    8.5317   frac(m_d < 1 sigma_F)  0.863%   frac(m_d < gate tol) 20.143%
+  d=8   n=  7985600  q med  0.76543  q0.01=0.12626  q0.10=0.50830  q0.25=0.67180  q0.50=0.76543  q0.75=0.82176  q0.90=0.86018  q0.99=0.91270
+        s_d med   13.2475   frac(m_d < 1 sigma_F)  0.248%   frac(m_d < gate tol)  3.660%
+  d=16  n=   336294  q med  0.80782  q0.01=0.38610  q0.10=0.65366  q0.25=0.73506  q0.50=0.80782  q0.75=0.88683  q0.90=0.93453  q0.99=0.99349
+        s_d med   47.9004   frac(m_d < 1 sigma_F)  0.075%   frac(m_d < gate tol)  1.001%
+  d=32  (no pixel has a rival at this distance)
+
+--- sigma_R_hat: frame-axis 4th-difference scale, analytic null, no fitted constant ---
+    UPPER BOUND on the response noise (it also absorbs motion and under-sampling),
+    hence a LOWER bound on the margin in noise units. Context only; carries no headline.
+  sigma_R_hat    q0.01=0.008474  q0.10=0.012313  q0.25=0.015091  q0.50=0.018743  q0.75=0.023803  q0.90=0.038734  q0.99=0.139613
+  median sigma_R_hat / FOCUS_NOISE_SD = 1.2320   (n windows = 18)
+
+--- B4: q_8 by detail decile ---
+    axis A (independent): local sd of ONE frame's luma over a 33x33 window.
+    axis B (CIRCULAR, reported labelled): the winner's own focus response R_win.
+  A independent luma sd    0.7450 0.7907 0.7992 0.7993 0.7974 0.7970 0.7915 0.7290 0.6274 0.5654
+  B CIRCULAR R_win         0.7235 0.7779 0.7926 0.8021 0.8099 0.8157 0.7940 0.6947 0.6145 0.6125
+
+--- B5: elected-index speckle (M2 3.1's definition, |k - median3x3| > 2) ---
+    Descriptive only, against endpoints measured on this same stack.
+    M93 P6/D-b: speckle as a BAR ON AN INTERVENTION measures churn, not correctness.
+  real election        : 0.0214%
+  N1 i.i.d. from own histogram : 13.0616%
+  N2 uniform random    : 66.2011%
+  B5 = real / iid      : 0.0016
+
+--- pre-registered bars ---
+  B1 median rho / N   :    0.13636   -> INTERMEDIATE
+  B2 frac gap > 0 (%) :   13.00059   -> INTERMEDIATE
+  B3 median q_8       :    0.76543   -> DECISIVE
+  B4 q_8 decile ratio (top/bottom, independent axis) : 0.7590   (no bar; registered prediction >= 3x)
+  B5 speckle / iid    :    0.00164   -> DECISIVE
+  F1 : PASS
+
+=== PAIRED PLACEBO: frame axis permuted (N3, same volume) =========
+
+--- scope: 7985600 interior pixels of 8241504 (96.89%), border 22 px excluded ---
+
+--- rho(t): furthest competitive frame, in frames and as a fraction of N ---
+    t = c * sqrt(2) * FOCUS_NOISE_SD; c = 4.0 is DEFAULT_GATE
+  c=0.5  tol 0.010758  n_eff   1.413  rho med     0 ( 0.000 N)  p90     9  p99    16  gap>0 33.218%  mean gap 6.57
+  c=1    tol 0.021516  n_eff   1.884  rho med     3 ( 0.136 N)  p90    12  p99    16  gap>0 58.091%  mean gap 7.14
+  c=2    tol 0.043032  n_eff   2.887  rho med     7 ( 0.318 N)  p90    16  p99    18  gap>0 84.436%  mean gap 8.44
+  c=4    tol 0.086063  n_eff   4.969  rho med    12 ( 0.545 N)  p90    16  p99    18  gap>0 95.170%  mean gap 10.50
+  c=8    tol 0.172127  n_eff  10.421  rho med    16 ( 0.727 N)  p90    18  p99    20  gap>0 92.786%  mean gap 9.40
+
+--- margin m_d = R_win - max R_k over |k - k_win| >= d ---
+    q_d = m_d / (R_win - R_min): fraction of the pixel's OWN through-focus range
+    s_d = m_d / FOCUS_NOISE_SD: the shipped constant, reported for reference only
+  d=0   n=  7985600  q med  0.00000  q0.01=0.00000  q0.10=0.00000  q0.25=0.00000  q0.50=0.00000  q0.75=0.00000  q0.90=0.00000  q0.99=0.00000
+        s_d med    0.0000   frac(m_d < 1 sigma_F) 100.000%   frac(m_d < gate tol) 100.000%
+  d=1   n=  7985600  q med  0.05013  q0.01=0.00080  q0.10=0.00820  q0.25=0.02178  q0.50=0.05013  q0.75=0.09600  q0.90=0.14885  q0.99=0.24666
+        s_d med    1.1457   frac(m_d < 1 sigma_F) 44.914%   frac(m_d < gate tol) 95.314%
+  d=2   n=  7985600  q med  0.05059  q0.01=0.00081  q0.10=0.00835  q0.25=0.02207  q0.50=0.05059  q0.75=0.09664  q0.90=0.14951  q0.99=0.24745
+        s_d med    1.1558   frac(m_d < 1 sigma_F) 44.567%   frac(m_d < gate tol) 95.276%
+  d=4   n=  7985600  q med  0.06644  q0.01=0.00107  q0.10=0.01085  q0.25=0.02853  q0.50=0.06644  q0.75=0.12753  q0.90=0.19724  q0.99=0.33460
+        s_d med    1.4978   frac(m_d < 1 sigma_F) 36.151%   frac(m_d < gate tol) 92.098%
+  d=8   n=  7985600  q med  0.12742  q0.01=0.00281  q0.10=0.02662  q0.25=0.06311  q0.50=0.12742  q0.75=0.21925  q0.90=0.31091  q0.99=0.45153
+        s_d med    2.8748   frac(m_d < 1 sigma_F) 17.140%   frac(m_d < gate tol) 82.035%
+  d=16  n=  5353954  q med  0.33473  q0.01=0.00864  q0.10=0.08603  q0.25=0.18680  q0.50=0.33473  q0.75=0.50548  q0.90=0.69268  q0.99=0.85325
+        s_d med    6.6351   frac(m_d < 1 sigma_F)  4.748%   frac(m_d < gate tol) 40.139%
+  d=32  (no pixel has a rival at this distance)
+
+--- sigma_R_hat: frame-axis 4th-difference scale, analytic null, no fitted constant ---
+    UPPER BOUND on the response noise (it also absorbs motion and under-sampling),
+    hence a LOWER bound on the margin in noise units. Context only; carries no headline.
+  sigma_R_hat    q0.01=0.029765  q0.10=0.055225  q0.25=0.065455  q0.50=0.077866  q0.75=0.132919  q0.90=0.536617  q0.99=1.854852
+  median sigma_R_hat / FOCUS_NOISE_SD = 5.1181   (n windows = 18)
+
+--- B4: q_8 by detail decile ---
+    axis A (independent): local sd of ONE frame's luma over a 33x33 window.
+    axis B (CIRCULAR, reported labelled): the winner's own focus response R_win.
+
+--- B5: elected-index speckle (M2 3.1's definition, |k - median3x3| > 2) ---
+    Descriptive only, against endpoints measured on this same stack.
+    M93 P6/D-b: speckle as a BAR ON AN INTERVENTION measures churn, not correctness.
+  real election        : 0.3962%
+  N1 i.i.d. from own histogram : 62.8086%
+  N2 uniform random    : 66.2011%
+  B5 = real / iid      : 0.0063
+
+--- pre-registered bars ---
+  B1 median rho / N   :    0.54545   -> NEARLY ARBITRARY
+  B2 frac gap > 0 (%) :   95.16974   -> NEARLY ARBITRARY
+  B3 median q_8       :    0.12742   -> DECISIVE
+  B4 q_8 decile ratio (top/bottom, independent axis) : NaN   (no bar; registered prediction >= 3x)
+  B5 speckle / iid    :    0.00631   -> DECISIVE
+  F1 : PASS
+
+=== PAIRED real vs permuted, same pixels, same multiset ===========
+    null: win rate 50.000%, and identical `arbitrary` fractions.
+    `arbitrary` = m_d below the permuted arm's OWN median m_d, a
+    per-stack floor that needs no FOCUS_NOISE_SD.
+  d=0   n=  7985600  real-wins   0.000%  ties 100.000%  w/(w+l)   0.000%  | arbitrary: real 100.000%  permuted 100.000%
+  d=1   n=  7985600  real-wins   0.000%  ties 100.000%  w/(w+l)   0.000%  | arbitrary: real  50.000%  permuted  50.000%
+  d=2   n=  7985600  real-wins  76.887%  ties  21.746%  w/(w+l)  98.253%  | arbitrary: real  19.303%  permuted  50.000%
+  d=4   n=  7985600  real-wins  98.284%  ties   1.451%  w/(w+l)  99.731%  | arbitrary: real   1.486%  permuted  50.000%
+  d=8   n=  7985600  real-wins  99.295%  ties   0.203%  w/(w+l)  99.496%  | arbitrary: real   0.904%  permuted  50.000%
+  d=16  n=   103153  real-wins  98.300%  ties   0.000%  w/(w+l)  98.300%  | arbitrary: real   0.325%  permuted  50.000%

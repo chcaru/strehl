@@ -1,0 +1,21 @@
+--- N = 22 frames, 200000 pixels, i.i.d. normal (order is pure noise) ---
+  d=1   n=  200000  wins        0  losses        0  ties   200000  w/(w+l)   0.000%
+  d=2   n=  200000  wins    17361  losses    17235  ties   165404  w/(w+l)  50.182%
+  d=4   n=  200000  wins    39141  losses    38973  ties   121886  w/(w+l)  50.108%
+  d=8   n=  200000  wins    72251  losses    71514  ties    56235  w/(w+l)  50.256%
+  d=16  n=   54231  wins    24267  losses    25631  ties     4333  w/(w+l)  48.633%
+
+--- N = 100 frames, 200000 pixels, i.i.d. normal (order is pure noise) ---
+  d=1   n=  200000  wins        0  losses        0  ties   200000  w/(w+l)   0.000%
+  d=2   n=  200000  wins     3918  losses     3838  ties   192244  w/(w+l)  50.516%
+  d=4   n=  200000  wins    11203  losses    11216  ties   177581  w/(w+l)  49.971%
+  d=8   n=  200000  wins    24223  losses    24265  ties   151512  w/(w+l)  49.957%
+  d=16  n=  200000  wins    43837  losses    44058  ties   112105  w/(w+l)  49.874%
+
+--- N = 299 frames, 200000 pixels, i.i.d. normal (order is pure noise) ---
+  d=1   n=  200000  wins        0  losses        0  ties   200000  w/(w+l)   0.000%
+  d=2   n=  200000  wins     1324  losses     1282  ties   197394  w/(w+l)  50.806%
+  d=4   n=  200000  wins     3875  losses     3835  ties   192290  w/(w+l)  50.259%
+  d=8   n=  200000  wins     8813  losses     8726  ties   182461  w/(w+l)  50.248%
+  d=16  n=  200000  wins    17939  losses    18057  ties   164004  w/(w+l)  49.836%
+

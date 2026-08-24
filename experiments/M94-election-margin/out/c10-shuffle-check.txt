@@ -1,0 +1,8 @@
+N=  22  armA fixed   1  meandisp    6.364   armB fixed   1  meandisp    6.909   | uniform expectation: fixed 1.0, meandisp    7.318
+N=  33  armA fixed   1  meandisp   12.121   armB fixed   0  meandisp   11.515   | uniform expectation: fixed 1.0, meandisp   10.990
+N=  79  armA fixed   1  meandisp   29.544   armB fixed   1  meandisp   24.278   | uniform expectation: fixed 1.0, meandisp   26.329
+N= 100  armA fixed   1  meandisp   33.120   armB fixed   0  meandisp   34.800   | uniform expectation: fixed 1.0, meandisp   33.330
+N= 299  armA fixed   3  meandisp   92.167   armB fixed   0  meandisp   99.505   | uniform expectation: fixed 1.0, meandisp   99.666
+
+reference spread of mean displacement over 4000 uniform shuffles (n=22):
+  p01 5.000  p50 7.364  p99 9.545

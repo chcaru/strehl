@@ -1,0 +1,8 @@
+seed=11 mode=null  
+seed=11 mode=real    d=8   n=  7985600  real-wins  98.325%  ties   1.068%  w/(w+l)  99.387%  | arbitrary: real   0.491%  permuted  50.000%
+seed=22 mode=null  
+seed=22 mode=real    d=8   n=  7985600  real-wins  99.430%  ties   0.279%  w/(w+l)  99.709%  | arbitrary: real   0.393%  permuted  50.000%
+seed=33 mode=null  
+seed=33 mode=real    d=8   n=  7985600  real-wins  99.479%  ties   0.191%  w/(w+l)  99.669%  | arbitrary: real   0.459%  permuted  50.000%
+seed=44 mode=null  
+seed=44 mode=real    d=8   n=  7985600  real-wins  99.136%  ties   0.285%  w/(w+l)  99.419%  | arbitrary: real   1.064%  permuted  50.000%

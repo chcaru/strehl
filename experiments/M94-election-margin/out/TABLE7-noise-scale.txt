@@ -1,0 +1,17 @@
+TABLE 7 -- sigma_R_hat (M89 4th-difference, analytic null, NO fitted constant)
+FOCUS_NOISE_SD (shipped) = 0.015214
+
+stack               N   q50 real   /const   q50 perm    /const  perm/real   win
+109MSDCF           22   0.018743   1.2320   0.077866    5.1181       4.15    18
+119MSDCF           33   0.017847   1.1731   0.164994   10.8449       9.24    29
+112MSDCF           79   0.017427   1.1455   0.364250   23.9418      20.90    75
+foam              100   0.030010   1.9726   1.731181  113.7887      57.69    96
+coffee-bean       105   0.028516   1.8743   1.829728  120.2661      64.16   101
+wrapped-text-1    130   0.024210   1.5913   0.703622   46.2483      29.06   126
+bee-3-cpl         299   0.015930   1.0471   0.568089   37.3399      35.66   295
+
+REAL  ratio to shipped constant: min 1.0471  max 1.9726
+PERM  ratio to shipped constant: min 5.1181  max 120.2661
+Every real stack lies within [1.05x, 1.97x] of the shipped constant.
+The permuted arm is the power control: the same estimator on the same pixels with the frame axis destroyed.
+summary.json cross-check: None

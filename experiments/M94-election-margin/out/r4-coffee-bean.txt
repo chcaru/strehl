@@ -1,0 +1,145 @@
+=== M94 election margin =========================================
+stack           : D:\personal\macro\coffee-bean
+label           : coffee-bean
+frames          : 105
+plane           : 3516 x 2344
+iso / black     : Some(50.0) / 512
+focus volume    : 3.46 GB resident (105 frames x 33.0 MB)
+  decoded 1/105
+  decoded 26/105
+  decoded 51/105
+  decoded 76/105
+  decoded 101/105
+  decoded 105/105
+
+--- F1 faithfulness (bar: exactly 100.000000%) ---
+  winner index  : 100.000000%  (8241504 of 8241504 pixels)
+  winner value  : 100.000000%  (f32 bit-identical)
+  F1            : PASS
+
+--- scope: 7985600 interior pixels of 8241504 (96.89%), border 22 px excluded ---
+
+--- rho(t): furthest competitive frame, in frames and as a fraction of N ---
+    t = c * sqrt(2) * FOCUS_NOISE_SD; c = 4.0 is DEFAULT_GATE
+  c=0.5  tol 0.010758  n_eff   1.857  rho med     0 ( 0.000 N)  p90    52  p99    91  gap>0 24.154%  mean gap 46.89
+  c=1    tol 0.021516  n_eff   4.034  rho med     0 ( 0.000 N)  p90    71  p99    98  gap>0 30.123%  mean gap 61.55
+  c=2    tol 0.043032  n_eff  14.225  rho med     0 ( 0.000 N)  p90    84  p99   102  gap>0 31.594%  mean gap 52.54
+  c=4    tol 0.086063  n_eff  31.002  rho med     0 ( 0.000 N)  p90    89  p99   104  gap>0 23.289%  mean gap 10.87
+  c=8    tol 0.172127  n_eff  33.456  rho med     1 ( 0.010 N)  p90    92  p99   104  gap>0  9.754%  mean gap 14.22
+
+--- margin m_d = R_win - max R_k over |k - k_win| >= d ---
+    q_d = m_d / (R_win - R_min): fraction of the pixel's OWN through-focus range
+    s_d = m_d / FOCUS_NOISE_SD: the shipped constant, reported for reference only
+  d=0   n=  7985600  q med  0.00000  q0.01=0.00000  q0.10=0.00000  q0.25=0.00000  q0.50=0.00000  q0.75=0.00000  q0.90=0.00000  q0.99=0.00000
+        s_d med    0.0000   frac(m_d < 1 sigma_F) 100.000%   frac(m_d < gate tol) 100.000%
+  d=1   n=  7985600  q med  0.03375  q0.01=0.00040  q0.10=0.00443  q0.25=0.01337  q0.50=0.03375  q0.75=0.06037  q0.90=0.09785  q0.99=0.22872
+        s_d med    9.3797   frac(m_d < 1 sigma_F) 31.072%   frac(m_d < gate tol) 44.131%
+  d=2   n=  7985600  q med  0.15001  q0.01=0.00086  q0.10=0.01116  q0.25=0.05882  q0.50=0.15001  q0.75=0.20288  q0.90=0.24661  q0.99=0.36047
+        s_d med   71.8596   frac(m_d < 1 sigma_F) 28.163%   frac(m_d < gate tol) 35.346%
+  d=4   n=  7985600  q med  0.45026  q0.01=0.00112  q0.10=0.01487  q0.25=0.07878  q0.50=0.45026  q0.75=0.55129  q0.90=0.60083  q0.99=0.65624
+        s_d med  222.0112   frac(m_d < 1 sigma_F) 26.695%   frac(m_d < gate tol) 33.255%
+  d=8   n=  7985600  q med  0.73573  q0.01=0.00131  q0.10=0.01914  q0.25=0.10346  q0.50=0.73573  q0.75=0.82149  q0.90=0.85322  q0.99=0.88524
+        s_d med  361.7956   frac(m_d < 1 sigma_F) 25.458%   frac(m_d < gate tol) 31.711%
+  d=16  n=  7985600  q med  0.86314  q0.01=0.00160  q0.10=0.02319  q0.25=0.14482  q0.50=0.86314  q0.75=0.93965  q0.90=0.95601  q0.99=0.97115
+        s_d med  421.5712   frac(m_d < 1 sigma_F) 23.768%   frac(m_d < gate tol) 31.356%
+  d=32  n=  7985600  q med  0.93720  q0.01=0.00228  q0.10=0.03277  q0.25=0.20222  q0.50=0.93720  q0.75=0.98234  q0.90=0.98859  q0.99=0.99406
+        s_d med  453.1230   frac(m_d < 1 sigma_F) 20.236%   frac(m_d < gate tol) 31.159%
+
+--- sigma_R_hat: frame-axis 4th-difference scale, analytic null, no fitted constant ---
+    UPPER BOUND on the response noise (it also absorbs motion and under-sampling),
+    hence a LOWER bound on the margin in noise units. Context only; carries no headline.
+  sigma_R_hat    q0.01=0.012107  q0.10=0.015162  q0.25=0.017753  q0.50=0.028516  q0.75=0.055191  q0.90=0.076350  q0.99=0.102177
+  median sigma_R_hat / FOCUS_NOISE_SD = 1.8743   (n windows = 101)
+
+--- B4: q_8 by detail decile ---
+    axis A (independent): local sd of ONE frame's luma over a 33x33 window.
+    axis B (CIRCULAR, reported labelled): the winner's own focus response R_win.
+  A independent luma sd    0.2078 0.0696 0.0389 0.3149 0.8088 0.8008 0.7914 0.8112 0.7974 0.7286
+  B CIRCULAR R_win         0.0489 0.0259 0.0695 0.4636 0.7966 0.7740 0.7596 0.8108 0.8369 0.8387
+
+--- B5: elected-index speckle (M2 3.1's definition, |k - median3x3| > 2) ---
+    Descriptive only, against endpoints measured on this same stack.
+    M93 P6/D-b: speckle as a BAR ON AN INTERVENTION measures churn, not correctness.
+  real election        : 0.4162%
+  N1 i.i.d. from own histogram : 80.0804%
+  N2 uniform random    : 84.1283%
+  B5 = real / iid      : 0.0052
+
+--- pre-registered bars ---
+  B1 median rho / N   :    0.00000   -> DECISIVE
+  B2 frac gap > 0 (%) :   23.28901   -> INTERMEDIATE
+  B3 median q_8       :    0.73573   -> DECISIVE
+  B4 q_8 decile ratio (top/bottom, independent axis) : 3.5057   (no bar; registered prediction >= 3x)
+  B5 speckle / iid    :    0.00520   -> DECISIVE
+  F1 : PASS
+
+--- renders -> C:\dev\strehl-out\M94-election-margin\coffee-bean ---
+  wrote elected-index, elected-index-null-iid, confusion-radius, margin-q8 (+ 1:1 crops)
+
+=== PAIRED PLACEBO: frame axis permuted (N3, same volume) =========
+
+--- scope: 7985600 interior pixels of 8241504 (96.89%), border 22 px excluded ---
+
+--- rho(t): furthest competitive frame, in frames and as a fraction of N ---
+    t = c * sqrt(2) * FOCUS_NOISE_SD; c = 4.0 is DEFAULT_GATE
+  c=0.5  tol 0.010758  n_eff   1.857  rho med     0 ( 0.000 N)  p90    61  p99    94  gap>0 26.450%  mean gap 54.96
+  c=1    tol 0.021516  n_eff   4.034  rho med     0 ( 0.000 N)  p90    78  p99    98  gap>0 33.961%  mean gap 67.07
+  c=2    tol 0.043032  n_eff  14.225  rho med     0 ( 0.000 N)  p90    87  p99   102  gap>0 38.197%  mean gap 53.95
+  c=4    tol 0.086063  n_eff  31.002  rho med     0 ( 0.000 N)  p90    89  p99   103  gap>0 34.581%  mean gap 22.52
+  c=8    tol 0.172127  n_eff  33.456  rho med     8 ( 0.076 N)  p90    90  p99   103  gap>0 28.528%  mean gap 33.12
+
+--- margin m_d = R_win - max R_k over |k - k_win| >= d ---
+    q_d = m_d / (R_win - R_min): fraction of the pixel's OWN through-focus range
+    s_d = m_d / FOCUS_NOISE_SD: the shipped constant, reported for reference only
+  d=0   n=  7985600  q med  0.00000  q0.01=0.00000  q0.10=0.00000  q0.25=0.00000  q0.50=0.00000  q0.75=0.00000  q0.90=0.00000  q0.99=0.00000
+        s_d med    0.0000   frac(m_d < 1 sigma_F) 100.000%   frac(m_d < gate tol) 100.000%
+  d=1   n=  7985600  q med  0.03375  q0.01=0.00040  q0.10=0.00443  q0.25=0.01337  q0.50=0.03375  q0.75=0.06037  q0.90=0.09785  q0.99=0.22872
+        s_d med    9.3797   frac(m_d < 1 sigma_F) 31.072%   frac(m_d < gate tol) 44.131%
+  d=2   n=  7985600  q med  0.03454  q0.01=0.00041  q0.10=0.00458  q0.25=0.01376  q0.50=0.03454  q0.75=0.06182  q0.90=0.10553  q0.99=0.24502
+        s_d med   10.1648   frac(m_d < 1 sigma_F) 30.681%   frac(m_d < gate tol) 43.324%
+  d=4   n=  7985600  q med  0.03588  q0.01=0.00043  q0.10=0.00475  q0.25=0.01423  q0.50=0.03588  q0.75=0.06503  q0.90=0.11480  q0.99=0.24667
+        s_d med   10.4949   frac(m_d < 1 sigma_F) 30.415%   frac(m_d < gate tol) 43.077%
+  d=8   n=  7985600  q med  0.03907  q0.01=0.00047  q0.10=0.00518  q0.25=0.01534  q0.50=0.03907  q0.75=0.07385  q0.90=0.13676  q0.99=0.26420
+        s_d med   11.2888   frac(m_d < 1 sigma_F) 29.846%   frac(m_d < gate tol) 42.519%
+  d=16  n=  7985600  q med  0.04763  q0.01=0.00056  q0.10=0.00611  q0.25=0.01835  q0.50=0.04763  q0.75=0.09925  q0.90=0.19821  q0.99=0.42472
+        s_d med   13.8907   frac(m_d < 1 sigma_F) 28.143%   frac(m_d < gate tol) 40.741%
+  d=32  n=  7985600  q med  0.08224  q0.01=0.00090  q0.10=0.00962  q0.25=0.02947  q0.50=0.08224  q0.75=0.18439  q0.90=0.32984  q0.99=0.63098
+        s_d med   22.9624   frac(m_d < 1 sigma_F) 25.066%   frac(m_d < gate tol) 37.672%
+
+--- sigma_R_hat: frame-axis 4th-difference scale, analytic null, no fitted constant ---
+    UPPER BOUND on the response noise (it also absorbs motion and under-sampling),
+    hence a LOWER bound on the margin in noise units. Context only; carries no headline.
+  sigma_R_hat    q0.01=0.013983  q0.10=0.017276  q0.25=0.058145  q0.50=1.829728  q0.75=3.850284  q0.90=5.382592  q0.99=7.615350
+  median sigma_R_hat / FOCUS_NOISE_SD = 120.2661   (n windows = 101)
+
+--- B4: q_8 by detail decile ---
+    axis A (independent): local sd of ONE frame's luma over a 33x33 window.
+    axis B (CIRCULAR, reported labelled): the winner's own focus response R_win.
+
+--- B5: elected-index speckle (M2 3.1's definition, |k - median3x3| > 2) ---
+    Descriptive only, against endpoints measured on this same stack.
+    M93 P6/D-b: speckle as a BAR ON AN INTERVENTION measures churn, not correctness.
+  real election        : 0.7959%
+  N1 i.i.d. from own histogram : 83.1927%
+  N2 uniform random    : 84.1283%
+  B5 = real / iid      : 0.0096
+
+--- pre-registered bars ---
+  B1 median rho / N   :    0.00000   -> DECISIVE
+  B2 frac gap > 0 (%) :   34.58077   -> NEARLY ARBITRARY
+  B3 median q_8       :    0.03907   -> INTERMEDIATE
+  B4 q_8 decile ratio (top/bottom, independent axis) : NaN   (no bar; registered prediction >= 3x)
+  B5 speckle / iid    :    0.00957   -> DECISIVE
+  F1 : PASS
+
+=== PAIRED real vs permuted, same pixels, same multiset ===========
+    null: win rate 50.000%, and identical `arbitrary` fractions.
+    `arbitrary` = m_d below the permuted arm's OWN median m_d, a
+    per-stack floor that needs no FOCUS_NOISE_SD.
+  d=0   n=  7985600  real-wins   0.000%  ties 100.000%  w/(w+l)   0.000%  | arbitrary: real 100.000%  permuted 100.000%
+  d=1   n=  7985600  real-wins   0.000%  ties 100.000%  w/(w+l)   0.000%  | arbitrary: real  50.000%  permuted  50.000%
+  d=2   n=  7985600  real-wins  66.813%  ties  32.466%  w/(w+l)  98.933%  | arbitrary: real  37.068%  permuted  50.000%
+  d=4   n=  7985600  real-wins  72.998%  ties  25.478%  w/(w+l)  97.955%  | arbitrary: real  34.748%  permuted  50.000%
+  d=8   n=  7985600  real-wins  76.366%  ties  20.638%  w/(w+l)  96.226%  | arbitrary: real  33.036%  permuted  50.000%
+  d=16  n=  7985600  real-wins  80.013%  ties  14.697%  w/(w+l)  93.798%  | arbitrary: real  32.585%  permuted  50.000%
+  d=32  n=  7985600  real-wins  83.681%  ties   8.075%  w/(w+l)  91.032%  | arbitrary: real  33.042%  permuted  50.000%
