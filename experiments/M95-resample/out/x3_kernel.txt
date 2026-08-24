@@ -1,0 +1,36 @@
+40 tiles, same selection as x2 (sharpest by gradient on B0)
+
+B0 baseline mean log10(hi/lo) = -2.9963
+
+kernel        phase-avg  worst phase  phase (0,0)   (dex vs B0)
+catmullrom      -0.2006      -0.3897      +0.0000
+mitchell        -0.3738      -0.5309      -0.2008
+lanczos2        -0.1963      -0.3897      +0.0000
+lanczos3        -0.0663      -0.1244      +0.0000
+bspline         -0.0951      -0.1725      +0.0000
+
+--- identity-phase control ---
+  A shift of (0,0) must cost ~0 for every INTERPOLATING kernel (they all pass
+  through the samples). A non-zero value there is an implementation bug.
+  catmullrom   +0.000000  ok
+  mitchell     -0.200830  *** NON-ZERO AT IDENTITY ***
+  lanczos2     +0.000000  ok
+  lanczos3     +0.000000  ok
+  bspline      +0.000000  ok
+
+--- ordering control (Mitchell must be worse than Catmull-Rom) ---
+  mitchell -0.3738 < catmullrom -0.2006 : PASS
+
+--- does strehl's gather behave like a Catmull-Rom? ---
+  independent Catmull-Rom, phase-averaged : -0.2006 dex
+  strehl B0 -> B1 measured in x2          : -0.2851 dex
+  difference                              : -0.0845 dex
+
+--- what a kernel change would buy ---
+  lanczos2     vs catmullrom : +0.0043 dex  (1.010x power, 1.005x amplitude)
+  lanczos3     vs catmullrom : +0.1343 dex  (1.362x power, 1.167x amplitude)
+  bspline      vs catmullrom : +0.1055 dex  (1.275x power, 1.129x amplitude)
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-resample\out\x3_kernel.json
+
+x3_kernel exit=0

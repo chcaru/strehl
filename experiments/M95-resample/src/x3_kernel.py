@@ -49,6 +49,16 @@ def w_mitchell(t):
     return np.where(a < 1.0, p, np.where(a < 2.0, q, 0.0))
 
 
+def w_lanczos2(t):
+    """Windowed sinc, a=2. Four taps and support 2.0 -- the same reach as Catmull-Rom,
+    which is what makes it interesting: it costs no extra border where lanczos3 does."""
+    t = np.asarray(t, dtype=np.float64)
+    a = np.abs(t)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        v = np.sinc(t) * np.sinc(t / 2.0)
+    return np.where(a < 2.0, v, 0.0)
+
+
 def w_lanczos3(t):
     t = np.asarray(t, dtype=np.float64)
     a = np.abs(t)
@@ -60,6 +70,7 @@ def w_lanczos3(t):
 KERNELS = {
     "catmullrom": (w_catmullrom, 2),
     "mitchell": (w_mitchell, 2),
+    "lanczos2": (w_lanczos2, 2),
     "lanczos3": (w_lanczos3, 3),
 }
 
@@ -131,7 +142,7 @@ def main():
 
     results = {}
     print(f"{'kernel':12s} {'phase-avg':>10s} {'worst phase':>12s} {'phase (0,0)':>12s}   (dex vs B0)")
-    for name in ["catmullrom", "mitchell", "lanczos3", "bspline"]:
+    for name in ["catmullrom", "mitchell", "lanczos2", "lanczos3", "bspline"]:
         per_phase = []
         for dy, dx in phases:
             vals = []
@@ -171,7 +182,7 @@ def main():
     print(f"  difference                              : {measured - cr:+.4f} dex")
 
     print("\n--- what a kernel change would buy ---")
-    for name in ["lanczos3", "bspline"]:
+    for name in ["lanczos2", "lanczos3", "bspline"]:
         gain = results[name]["phase_avg"] - cr
         print(f"  {name:12s} vs catmullrom : {gain:+.4f} dex  "
               f"({10**abs(gain):.3f}x power, {10**(abs(gain)/2):.3f}x amplitude)")

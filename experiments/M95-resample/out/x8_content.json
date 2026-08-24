@@ -1,0 +1,26 @@
+{
+ "noise-free detail (1/f)": {
+  "catmullrom": 0.0,
+  "mitchell": -0.17224852696941473,
+  "lanczos2": 0.00450648281594046,
+  "lanczos3": 0.13322041533832363,
+  "bspline": 0.10581089864086812
+ },
+ "noise-free detail (flat spectrum)": {
+  "catmullrom": 0.0,
+  "mitchell": -0.1767789262810987,
+  "lanczos2": 0.005017527479933059,
+  "lanczos3": 0.13655755954118537,
+  "bspline": 0.11051154184815551
+ },
+ "pure white noise": {
+  "catmullrom": 0.0,
+  "mitchell": -0.17685452962544893,
+  "lanczos2": 0.005022461327603894,
+  "lanczos3": 0.13681285132764726,
+  "bspline": 0.1107934033800379
+ },
+ "lanczos3_spread_dex": 0.003592435989323628,
+ "content_independent": true,
+ "kernel_separation_dex": 0.3108242696943728
+}

@@ -1,0 +1,36 @@
+==========================================================================
+B27 -- ringing on a clean 1000 DN step, half-pixel phase
+==========================================================================
+  harness check: Catmull-Rom = 6.2500% = 1/16 exactly  OK
+
+  kernel        overshoot %  undershoot %  reach px   vs C-R
+  catmullrom         6.2500        6.2500         3    1.00x
+  mitchell           3.4722        3.4722         3    0.56x
+  lanczos2           6.2500        6.2500         3    1.00x
+  lanczos3          11.1413       11.1413         5    1.78x
+  bspline           10.0481       10.0481         9    1.61x
+
+==========================================================================
+B28 -- the flat-region control: is the gain detail or amplified noise?
+==========================================================================
+  detail tiles: mean gradient variance    141815.34
+  flat tiles  : mean gradient variance      4911.76
+  separation  : 28.9x
+
+  kernel        detail dex   flat dex  gain vs C-R (detail)    (flat)
+  catmullrom       -0.2006    -0.1992               +0.0000   +0.0000
+  mitchell         -0.3738    -0.3737               -0.1732   -0.1745
+  lanczos2         -0.1963    -0.1949               +0.0043   +0.0043
+  lanczos3         -0.0663    -0.0623               +0.1343   +0.1368
+  bspline          -0.0951    -0.0927               +0.1055   +0.1064
+
+  -- power control: can the flat-region statistic move at all? --
+     A null on flat tiles is worth nothing unless a planted blur shows there.
+     planted sigma=0.5 px blur on the flat tiles: -0.5910 dex
+     planted sigma=1.0 px blur on the flat tiles: -2.1055 dex
+     flat-region metric responds to a planted blur: PASS
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-resample\out\x7_ladder.json
+END OF X7 -- reaching this line is part of the contract
+
+x7_ladder exit=0

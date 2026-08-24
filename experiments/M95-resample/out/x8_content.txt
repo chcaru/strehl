@@ -1,0 +1,30 @@
+==============================================================================
+POST-HOC: does the dex gain need noise in the scene to appear?
+==============================================================================
+  band_ratio bands: hi 0.30-0.48 cyc/px, lo 0.02-0.10 cyc/px; 288x288 fields
+
+  scene                                catmullrom   mitchell   lanczos2   lanczos3    bspline
+  noise-free detail (1/f)                 +0.0000    -0.1722    +0.0045    +0.1332    +0.1058
+  noise-free detail (flat spectrum)       +0.0000    -0.1768    +0.0050    +0.1366    +0.1105
+  pure white noise                        +0.0000    -0.1769    +0.0050    +0.1368    +0.1108
+
+  (values are dex gain vs catmullrom, phase-averaged over 7 non-zero phases)
+
+  lanczos3 gain across scene types: +0.1332 .. +0.1368  spread 0.0036 dex
+  -> the gain does NOT depend on scene content: it is the kernel's transfer
+     function, and it appears in full on a scene with no noise process in it.
+     Reading (a) 'the number is noise amplification' is WRONG as a general claim.
+     Reading (b) holds, with the rider that on noise-dominated ground the
+     recovered high-band energy IS noise, because a linear kernel cannot choose.
+
+  -- power control: this comparison must be able to separate scenes at all --
+     If every scene type read the same for a kernel that is genuinely different,
+     the harness would be insensitive to content by construction.
+     mitchell across scenes : -0.1769 .. -0.1722
+     lanczos2 across scenes : +0.0045 .. +0.0050
+     mitchell vs lanczos3 separation: 0.3108 dex  PASS (harness distinguishes kernels)
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-resample\out\x8_content.json
+END OF X8 -- reaching this line is part of the contract
+
+x8_content exit=0
