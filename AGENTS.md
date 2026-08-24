@@ -678,10 +678,20 @@ monolithic binary and ship only that binary.
       and `-First 99` all read `1`. **`-First 3` on a FIVE-line command also
       loses it**, so there is no "small output is safe" case and no volume
       threshold to reason about. Truncation is the whole condition.
-    - **The corrupted value is host-dependent: `0` under the agent shell, `-1`
-      under `powershell -File`.** So a gate written the natural way,
-      `if ($code -ne 0) { fail }`, **catches `-1` and silently passes `0`.** The
-      value is unusable; it is not "zero".
+    - **The corrupted value is EDITION-dependent, not switch-dependent: `0`
+      under PowerShell 7 (`pwsh`, and the agent shell), `-1` under Windows
+      PowerShell 5.1 (`powershell.exe`, whether `-File` or `-Command`).**
+      Measured 3/3 corrupted arms in each of four hosts on this box
+      (`powershell.exe` is 5.1.26100.9168, `pwsh.exe` is 7.6.5). **Never gate on
+      "nonzero" in either direction; assert the exact expected code.**
+      `if ($code -ne 0) { fail }` silently passes the `0` under PS 7, and
+      `if ($code -ne 0) { pass }` -- the natural shape of a **red control** --
+      **silently passes the `-1` under 5.1, 3/3.** The value is unusable; it is
+      not "zero", and it is not reliably "the wrong sign".
+      **5.1 is the worst host available: PS 7 prints
+      `The process tried to write to a nonexistent pipe.` on stderr for every
+      truncated write (16 lines in the probe), and 5.1 printed 0 such lines.**
+      Silent corruption *and* a value that passes the naive gate.
     - **`-Last N` and `Out-String` are safe** -- `-Last` must drain the stream to
       know its tail, so it cannot short-circuit.
 
@@ -691,7 +701,14 @@ monolithic binary and ship only that binary.
     $out  = & $exe stack ... 2>&1
     $code = $LASTEXITCODE
     $out | Select-String "wrote|Error" | Select-Object -First 5
-    if ($code -ne 0) { throw "FAILED with exit $code" }
+    if ($code -ne 0) { throw "FAILED with exit $code" }   # fail-direction only
+    ```
+
+    For a **red control**, where you expect a specific nonzero code, the
+    `-ne 0` shape is unsafe (see the edition bullet). Assert the exact value:
+
+    ```powershell
+    if ($code -ne 101) { throw "expected 101, got $code" }
     ```
 
     **If you are testing this trap rather than avoiding it, pre-clear
@@ -705,12 +722,21 @@ monolithic binary and ship only that binary.
     confound is hypothetical: between them they produced two wrong mechanisms
     for this defect.** ORCH's first probe reported 7/7 arms safe, and M104c's
     un-pre-cleared 50-line arm produced a "race, not a count" theory that a
-    pre-cleared re-run refuted 5/5. Both confounds produce false negatives only,
-    so a PASS taken from an observed *nonzero* code is safe -- but any claim
-    that some pipeline shape *preserves* exit codes is worthless without the
-    pre-clear and the warm-up.
-    (SYNTHESIS facts 1427, 1428, 1429, 1437; disciplines 709, 710, 717.
-    Harnesses: `experiments/ORCH-drift-check/exit_code_trap{2,3}.ps1`.)
+    pre-cleared re-run refuted 5/5. **Both confounds produce false negatives in
+    the value, but that does NOT make a nonzero reading safe.** An earlier
+    version of this addendum said it did; that clause was wrong and is
+    retracted. Under 5.1 the corruption *is* nonzero (`-1`), so a red control
+    written as `if ($code -ne 0) { pass }` is manufactured green by the very
+    artifact it is meant to detect -- measured 3/3, on the very edition the old
+    bullet named while calling the reading safe. (AGENTS.md does not itself
+    invoke `powershell.exe`; the exposure is any agent scratch script that does,
+    and several exist.) **The only reading that survives every host is an
+    assertion on the exact expected code**, and any claim that some pipeline
+    shape *preserves* exit codes remains worthless without the pre-clear and
+    the warm-up.
+    (SYNTHESIS facts 1427, 1428, 1429, 1437, 1443; disciplines 709, 710, 717,
+    724. Harnesses: `experiments/ORCH-drift-check/exit_code_trap{2,3}.ps1`,
+    `exit_code_host.ps1` + `producer_n.cmd` for the cross-edition table.)
 
 ### Milestone allocation ledger (rule 41 -- written at DISPATCH, not at report time)
 
