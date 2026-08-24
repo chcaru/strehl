@@ -1570,6 +1570,26 @@ becomes a measurement on your own gear, your own working distance and your own
 subject class -- which is the only form in which it answers the question you
 actually asked.
 
+**A second instrument now waits on this same capture, which raises its
+priority.** M104c built an ISO-12233 slanted-edge MTF estimator and validated it
+to **+0.03% and +0.36%** against analytic Gaussians, with a positive control at
++0.33% and a two-crop null at +0.00%. It then found it had nothing to point at:
+on `flat-on-ruler-cpl`, **83 of 103** high-contrast vertical candidates sit
+within **+/-1 degree** of vertical, median **+0.01 degree**, because the ruler
+was placed square to the sensor. Contrast was never the limitation -- the best
+edge measured **4555 DN, 60% of the frame's p1-p99 range**. This is the *second*
+validated edge instrument in the project with no fuel; M88's cutoff estimator
+(section 19) was the first.
+
+So this one bracket feeds three consumers at once: M88b's alignment edge-rise,
+M104c's MTF50, and section 19's cutoff work if the edge is also shot on its own.
+**The tilt is the entire requirement, and it is free** -- the same blade laid
+down at a deliberate slight cant instead of square costs nothing and unblocks
+all three. A capture shot square is not a weaker version of this; it yields
+**zero** usable ROIs, and the near-zero-degree readings such an instrument
+returns (0.005-0.018 c/px) are aliasing artefacts that must never be quoted as
+sharpness.
+
 ## 22. Expose to the right -- REQUESTED, costs nothing, worth more than any algorithm here
 
 **This is the highest-value change available to this project and it is not a
