@@ -300,7 +300,11 @@ fitted constants. On a locked-down static stack it MEASURED **0.9897**, i.e.
 within **1.03%** of a number nobody tuned. It is flat in detail to **1.173x**
 across the full detail range, where M60's merge-time statistic varied **5.11x**
 (M60 F5); defocus leakage into it is bounded at **<=0.04%** of `z^2` by a
-registered scaling test. Applied to the owner's 23 real stacks it separates them
+registered scaling test; and it survives M90's finding tonight that the noise
+model is 11-17% over-confident, because that missing variance is fixed-pattern
+and this operator annihilates fixed pattern exactly — a prediction made from the
+kernel algebra and then confirmed against M90's independent measurement (§3.2).
+Applied to the owner's 23 real stacks it separates them
 over a **2,486x** range in outlier rate, and the ordering is not the one the
 brief assumed: **`foam` is 94.4x the null but only the 4th worst stack, and
 `lead-1-cpl` is 248.6x with 29.1% of its pixels contaminated.**
@@ -481,6 +485,55 @@ that organic subjects imply motion.
 
 `coffee-bean` was the intended *secondary* null and read **3.26** — worse than
 `foam`. §4.2 shows why, and it is not a failure of the metric.
+
+### 3.2 Cross-check against M90, landed tonight: why this null works at all
+
+M90 (`docs/research/M90-prnu-noise-model.md`, committed while this milestone was
+running) measures that **the shipped noise model is over-confident by -11.45% at
+`S = 8000` DN and -16.90% at `S = 13230` DN**, because it omits a PRNU term
+`(kappa*S)^2` with `kappa = 0.3096%`.
+
+**That should have wrecked my null.** My `z` divides by that same
+under-predicted sigma. If the missing variance were temporal — i.e. varying
+frame to frame like shot noise — then `mean z^2` on a static stack would read
+
+```
+z^2 = 1 + (kappa*S)^2 / (g*S + rn^2)
+```
+
+which for this stack's measured model `var(L) = 0.114469*L + 0.4623` (ISO 100)
+is a **rising** function of level. Against the three populated level bins:
+
+| level bin (DN) | predicted **if PRNU were temporal** | MEASURED | shortfall |
+|---|---|---|---|
+| 512-1024 | 1.064 | **1.184** | +11.3% |
+| 1024-2048 | 1.128 | **0.986** | -12.6% |
+| 2048-4096 | **1.257** | **0.967** | **-23.1%** |
+
+**The prediction rises 1.064 -> 1.257 across the bins; the measurement falls
+1.184 -> 0.967. The trend runs the opposite way, and at the brightest bin the
+measurement is 23.1% below it.** Extrapolated to the levels M90 probes, a
+temporal PRNU would put `z^2` at **1.67** (S=8000) and **2.11** (S=13230) — the
+latter would breach bar A1 outright.
+
+DERIVED: **the variance M90 found missing is fixed-pattern, not temporal, and
+this operator annihilates it exactly** — which is P7's prediction, arrived at
+from the kernel algebra, now confirmed against an independent measurement made
+by a different milestone on different data with a different instrument. Two
+consequences worth carrying:
+
+1. **It explains why the analytic null lands at 0.9897 despite a model M90
+   proves is defective by 11-17%.** The defect lives in a term my numerator
+   cannot see. This is not luck, and it is the reason a temporal statistic can
+   be trusted on this camera before the noise model is fixed.
+2. **It is independent corroboration of M90's central attribution.** M90 argues
+   the excess is PRNU (fixed pattern); if any material share of it were
+   temporal, my null would have read high in exactly the level-dependent way
+   tabulated above, and it does not.
+
+**This also sharpens §3's open question in M90's favour**: the ~1% deflation I
+attributed to common-mode correlation cannot be a PRNU artefact, since PRNU
+cancels. It remains common-mode or a small model scale error, as stated.
 
 ---
 
@@ -999,6 +1052,18 @@ absolute fact numbers from a milestone). Each is self-contained.
   absent from the survey's outlier population and corroborates M22's finding
   that they are nearly harmless; it is also a genuine blind spot for
   sensor-coordinate dust.
+- **P7a** (MEASURED, cross-check on M90) M90 measures the shipped noise model to
+  be over-confident by **-11.45% at S=8000 DN** and **-16.90% at S=13230 DN**
+  due to an omitted PRNU term. Were that missing variance *temporal*, the null
+  stack's `z^2` would rise with level as `1 + (kappa*S)^2/(gS + rn^2)` —
+  predicting **1.064 / 1.128 / 1.257** across its three populated level bins.
+  It MEASURED **1.184 / 0.986 / 0.967**: the trend runs the **opposite**
+  direction and the brightest bin falls **23.1% below** the prediction.
+- **P7b** (DERIVED, from P7a) **The variance M90 found missing from the noise
+  model is fixed-pattern, not temporal** — independently corroborating M90's
+  attribution from a different milestone, instrument and statistic — and this is
+  why a noise-normalised *temporal* statistic achieves an analytic null on this
+  camera **despite** the model being defective by 11-17% at high signal.
 
 **The contamination survey**
 
@@ -1168,10 +1233,12 @@ absolute fact numbers from a milestone). Each is self-contained.
    than as "harm proven". A metric built on a known-clean reference merge, which
    this corpus does not have, would settle it.
 4. **The null's 1.03% deviation is degenerate** (P6). I cannot separate ~1%
-   frame-to-frame common-mode from a ~0.5% scale error in the noise model. If it
-   is the latter, every `z` in this report is uniformly ~0.5% off — which changes
-   no ordering and no conclusion, but does mean the analytic 1.000 is agreeing
-   with me slightly by luck.
+   frame-to-frame common-mode from a ~0.5% scale error in the noise model. §3.2
+   rules *out* one candidate — it cannot be PRNU, which cancels — but the
+   remaining two are not separable by anything I measured. If it is a scale
+   error, every `z` in this report is uniformly ~0.5% off, which changes no
+   ordering and no conclusion, but does mean the analytic 1.000 is agreeing with
+   me slightly by luck.
 5. **Clipping is not modelled** (P27). `foam` has 1.20% of pixels with a censored
    green sample. A clipped value is not a noisy value, its residual is not
    Gaussian, and some part of `foam`'s tail is certainly censoring rather than
