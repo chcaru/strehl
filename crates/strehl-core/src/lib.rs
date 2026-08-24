@@ -23,6 +23,7 @@ pub mod plane;
 pub mod profile;
 pub mod stack;
 pub mod through_focus;
+pub mod warpmap;
 
 /// Which plane of a 2x2 colour filter array a sample belongs to.
 ///

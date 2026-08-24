@@ -1,5 +1,6 @@
 //! `strehl` command line.
 
+mod align_cmd;
 mod image_out;
 mod merge_cmd;
 mod stack;
@@ -23,6 +24,14 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Solve a bracket's inter-frame geometry and write a warp sidecar.
+    ///
+    /// Focus breathing changes magnification frame to frame, so a deep bracket
+    /// is not registered as captured. This fits a similarity ladder over the
+    /// stack and writes it to disk with its own provenance and held-out error,
+    /// for the merge to gather through.
+    Align(align_cmd::AlignArgs),
+
     /// Decode a directory of RAW files and report what was found.
     ///
     /// This exists to make the sensor's real geometry and levels visible before
@@ -278,6 +287,7 @@ fn main() -> Result<()> {
         .init();
 
     match Cli::parse().command {
+        Command::Align(args) => align_cmd::run(&args),
         Command::Probe { dir, limit } => probe(&dir, limit),
         Command::ArgmaxBaseline {
             dir,
