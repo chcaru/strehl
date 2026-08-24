@@ -1,0 +1,29 @@
+==============================================================================
+K17b  which solve does k = 0.9315 belong to?
+==============================================================================
+  margin 3.0 px, bisection 60 iterations, same as fit_to_cover
+
+          k     1/k   fr  ref   over@1  tight  file
+   0.997438  1.0026  299    0      3.4    yes  warpmap-bee-3-cpl.txt
+   0.931464  1.0736  299  149    127.0    yes  bee-3-cpl-catmull-rom-warpmap.txt
+   0.931464  1.0736  299  149    127.0    yes  bee-3-cpl-nearest-warpmap.txt
+   0.931464  1.0736  299  149    127.0    yes  bee-3-cpl-bilinear-warpmap.txt
+   0.931464  1.0736  299  149    127.0    yes  bee-3-cpl-warpmap.txt
+   0.931464  1.0736  299  149    127.0    yes  warpmap-corpus-snapshot.txt
+   0.931464  1.0736  299  149    127.0    yes  bee-3-cpl-warpmap.txt
+   0.990429  1.0097    8    4     16.9    yes  bee-3-cpl--warpmap.txt
+   0.972688  1.0281   60   30     48.8    yes  bee-3-cpl-ea1d38ea5c9523c5.warpmap.txt
+   0.990429  1.0097    8    4     16.9    yes  bee-3-cpl-ea1d38ea5c9523c5.warpmap.txt
+
+  over@1 = plane px the worst corner falls outside the source at k=1.
+  tight  = covered at k and NOT covered at k+1e-6 (bracket is exact).
+
+--- does any available solve give 0.9315? ---
+  |k - 0.9315| = 0.000036   k = 0.931464   bee-3-cpl-bilinear-warpmap.txt
+  |k - 0.9315| = 0.000036   k = 0.931464   bee-3-cpl-catmull-rom-warpmap.txt
+  |k - 0.9315| = 0.000036   k = 0.931464   bee-3-cpl-nearest-warpmap.txt
+  -> the printed 0.9315 belongs to that solve.
+
+--- what crop would 0.9315 require? ---
+  k=0.931500 crops 120.4 plane px per side (6.85% of width)
+  k=0.997438 crops 4.5 plane px per side (0.26% of width)

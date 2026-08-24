@@ -1,0 +1,66 @@
+========================================================================
+verify section 20 -- crop-instead-of-upsample
+========================================================================
+
+-- the arms, from k17_crop.json --
+  ok   NOW cost: +0.1813
+  ok   FIX cost: +0.1855
+  ok   SNAP cost: -0.0003
+  ok   NOW step: 0.9332
+  ok   FIX step: 1.0019
+  ok   recovery: -0.0042
+  ok   n per arm: 960
+
+-- controls --
+  ok   K0 derived k: 0.931464
+  ok   K1 null: -0.000041
+  ok   K3 positive: +0.220899
+  ok   K6 cover alone: +0.183640
+
+-- phase (P1/P2) --
+  ok   SNAP near-int: 100.00%
+  ok   NOW near-int: 9.99%
+  ok   FIX near-int: 10.01%
+  ok   SNAP near-int restated in prose: 100.00%
+
+-- R5 --
+  ok   ref0 k: 0.997438
+  ok   ref0 cost: +0.1975
+  ok   ref0 step: 0.9514
+  ok   R5 difference: 0.0162
+
+-- verdicts must match the JSON, not the prose --
+  ok   B2-DEAD fires
+  ok   P2 refuted
+  ok   R5 not a lever
+
+-- derived arithmetic, recomputed here --
+  ok   1/k: 1.0736
+  ok   view at 1:1: 107.36%
+  ok   crop percent: 6.85%
+
+-- the pinned sidecar really is what the report says --
+  ok   sidecar sha256: AA2DE54A47BC4AEE19DE117ED606F949D6BFB11E78D2D250EEC6796D96CB7B71
+  ok   sidecar frames 299
+  ok   sidecar reference 149
+  ok   sidecar stack-digest 8d023c0fe355d109
+
+-- source claims, re-read from the working tree --
+  ok   srgb implies demosaic: crates/strehl-cli/src/main.rs contains it
+  ok   geom from frame 0: crates/strehl-cli/src/merge_cmd.rs contains it
+  ok   frozen branch can be srgb: crates/strehl-cli/src/merge_cmd.rs contains it
+  ok   fit_to_cover keeps geom: crates/strehl-cli/src/align_cmd.rs contains it
+  ok   x8 guard landed: experiments/M95-coverage/src/x8_fix.py contains it
+
+-- the bars were registered before the run, in a prior commit --
+  ok   PRE-REGISTRATION.md last touched 1024ddca72b7b912abfb55820d2459cd4f22fbff 2026-08-24 09:33:53 -0700
+  ok   committed bar: cost(FIX) < cost(NOW) − 0.10 dex
+  ok   committed bar: cost(FIX) > cost(NOW) − 0.03 dex
+
+-- k17b diagnostic agrees --
+  ok   kdiag: 0.931464
+  ok   kdiag: 0.997438
+  ok   kdiag: the printed 0.9315 belongs to that solve
+
+========================================================================
+40 checks passed, 0 failed  ->  GREEN

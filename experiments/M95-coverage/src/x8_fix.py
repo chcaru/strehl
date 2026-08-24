@@ -111,6 +111,17 @@ def main():
         sys.exit("missing inputs")
     img = M.load_luma(B0)
     plane, rows, src = read_warps()
+    # The fallback above now resolves to an EIGHT-frame solve under a different
+    # stack digest: the shipped 299-frame sidecar was quarantined and a later,
+    # unrelated solve took its place under the same name. Re-running this arm
+    # would silently measure 8 frames and print a plausible number. Refuse.
+    # M95 section 20.1; k17_crop.py supersedes this arm on a pinned sidecar.
+    if len(rows) != 299:
+        sys.exit(
+            f"REFUSING TO MEASURE: {src} holds {len(rows)} placed frames, not the "
+            f"299 this arm was measured on. Use experiments/M95-kernel/src/"
+            f"k17_crop.py, which pins its own sidecar."
+        )
     tiles = M.pick_tiles(img)
     idx = np.linspace(0, len(rows) - 1, NFRAMES).round().astype(int)
     warps = [rows[i] for i in idx]

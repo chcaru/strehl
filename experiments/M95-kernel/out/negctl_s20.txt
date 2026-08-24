@@ -1,0 +1,13 @@
+backed up 76635 bytes to C:\Users\chris\AppData\Local\Temp\M95-kernel.md.s20.bak
+
+baseline: rc=0  GREEN
+  CAUGHT  NOW cost last digit                           rc=1  BAD=1
+  CAUGHT  FIX cost last digit                           rc=1  BAD=1
+  CAUGHT  SNAP near-integer, the P1 power control       rc=1  BAD=1
+  CAUGHT  R5 verdict flipped against the JSON           rc=1  BAD=1
+  CAUGHT  derived 1:1 view arithmetic                   rc=1  BAD=1
+
+restored byte-identical: True
+post-restore: rc=0  GREEN
+
+negative control: 5/5 planted defects caught

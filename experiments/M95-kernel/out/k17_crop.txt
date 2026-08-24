@@ -1,0 +1,47 @@
+========================================================================
+K17  crop-instead-of-upsample, re-priced on a pinned solve
+========================================================================
+  base image      : single-noalign.tif  7032x4688
+  sidecar         : C:\dev\strehl-out\M95-crop\bee-3-cpl-ref149.warpmap.txt
+  stack digest    : 8d023c0fe355d109   reference frame: 149
+  placed frames   : 299  (plane 3516x2344)
+  frames sampled  : 24      tiles: 40
+
+--- K0 DERIVE: k re-derived from the placements, not read off ---
+  fit_to_cover bisection, margin 3.0  ->  k = 0.931464
+  tool printed                              k = 0.931500
+  |difference| 0.000036   bar < 0.001   PASS
+  field of view kept 93.15%, upsampled by 1/k = 1.0736x
+
+--- CONTROLS ---
+  K1 NULL   identity warp, no coverage  -0.000041 dex  bar |x|<0.005  PASS
+  K3 POS    planted sigma=0.30 px blur  +0.220899 dex  bar >=0.15     PASS
+  K6 COVER  identity warp, coverage on  +0.183640 dex  (the coverage scale acting alone)
+
+--- THE ARMS ---
+  arm    cost (dex)     sem     n     step  near-int  what
+  NOW       +0.1813  0.0031   960   0.9332     9.99%  coverage scale folded in, output 7032x4688
+  FIX       +0.1855  0.0017   960   1.0019    10.01%  no coverage scale, output ~6548x4366
+  SNAP      -0.0003  0.0005   960   1.0000   100.00%  integer translation, unit scale (floor)
+
+--- B2 (bars registered in M95-coverage/PRE-REGISTRATION.md) ---
+  cost(NOW) +0.1813   cost(FIX) +0.1855
+  the crop recovers -0.0042 dex
+  B2-SHIPS  recovery > +0.10 dex  ->  DOES NOT SHIP
+  B2-DEAD   recovery < +0.03 dex  ->  DEAD
+
+--- P1/P2: does removing the scale restore pass-through? ---
+  uniform phase would give                10.00%
+  P1 POWER  SNAP near-integer    100.00%  bar >=95%  PASS
+            NOW  near-integer      9.99%
+            FIX  near-integer     10.01%
+  P2 CLAIM  'no output pixel is ever a pass-through' -> REFUTED
+
+--- R5: is the reference frame a resampling lever? ---
+  reference 149  k 0.931464  crop 6.85%  cost +0.1813 dex  step 0.9332
+  reference   0  k 0.997438  crop 0.26%  cost +0.1975 dex  step 0.9514
+  difference -0.0162 dex   bar |x|<0.03 -> not a lever   =>  NOT A LEVER
+  scope: this prices the GATHER only. It does not say which
+  reference registers more accurately, which needs its own arm.
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-kernel\out\k17_crop.json

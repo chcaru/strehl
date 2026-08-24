@@ -1235,3 +1235,207 @@ solve. §18 measured it directly: `frames 8`, `end 8`, **8 placement rows**,
 frames would weigh about 6000 B. It is an 8-frame solve, and `reference 4` is
 `merge_reference(8)`, meaning the merge-side cache wrote it rather than
 `strehl align`.
+
+## 20. Crop-instead-of-upsample — already priced, and dead against bars set before it was asked
+
+The orchestrator has re-raised, as facts 1400/1402 and "the cheapest real
+sharpness gain on the table", the proposal that `fit_to_cover` stop stretching
+the coverage-cropped field back to sensor dimensions and emit the cropped
+region at native sampling instead.
+
+M95 arm 5 already priced exactly this proposal, against bars registered in
+`experiments/M95-coverage/PRE-REGISTRATION.md` before that arm ran and long
+before this request existed. Those bars are reused here verbatim, because
+inventing new ones after the fact is moving the goalposts:
+
+  B2-SHIPS  the crop ships if  cost(FIX) < cost(NOW) - 0.10 dex
+  B2-DEAD   the crop is dead if cost(FIX) > cost(NOW) - 0.03 dex
+
+The numbers below were printed by `experiments/M95-kernel/src/k17_crop.py` in
+this session. Arm 5's own outputs are not cited: a number recalled from an
+earlier artifact is not a measurement.
+
+### 20.1 Why it had to be re-run, not cited
+
+`x8_fix.py` reads `D:\personal\macro\bee-3-cpl\warpmap.txt`, falling back to
+the quarantined copy. **That original has been quarantined and the fallback now
+resolves to an EIGHT-frame solve under a different stack digest**
+(`165a1ff35968c615`, not `8d023c0fe355d109`). Re-running arm 5 today would read
+8 frames where it originally read 299, and would print a plausible number.
+`k17_crop.py` therefore pins its own sidecar and hard-errors on the wrong frame
+count, digest **or reference frame**.
+
+### 20.2 The K0 control fired, and the reason is the finding
+
+The first run of `k17_crop.py` **failed** its K0 control: bisection returned
+k = 0.997438 against the tool's printed 0.9315. Rather than adjust the bar, I
+ran `k17b_kdiag.py` over every available `bee-3-cpl` solve:
+
+| solve | frames | reference | k | 1/k | crop |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `M95-pin/...warpmap-bee-3-cpl.txt` | 299 | 0 | 0.997438 | 1.0026 | 0.26% |
+| `ORCH-kernel` catmull-rom / nearest / bilinear | 299 | 149 | 0.931464 | 1.0736 | 6.85% |
+| `ORCH-gallery3`, `M106` snapshot, `M107-chroma` | 299 | 149 | 0.931464 | 1.0736 | 6.85% |
+| quarantined `bee-3-cpl--warpmap.txt` | 8 | 4 | 0.990429 | 1.0097 | 0.96% |
+| `M97`/`M113` cache entries | 60 / 8 | 30 / 4 | 0.972688 / 0.990429 | | |
+
+Six independent `reference 149` solves give **k = 0.931464**, agreeing with the
+tool's printed 0.9315 to **3.6e-5**. The re-implementation was right; the
+sidecar was unrepresentative. Every derived k was checked to be a tight
+bracket — covered at k, not covered at k + 1e-6.
+
+**The finding: k is a function of the reference frame.** A reference at the end
+of the focus bracket needs a 0.26% crop; a reference in the middle needs 6.85%,
+a **26x** difference. The merge's automatic path uses `merge_reference(n) = n/2`,
+so the shipped render is the 6.85% one. This also explains the k = 0.9974 that
+arm 4 saw and never accounted for.
+
+### 20.3 The measurement
+
+Pinned sidecar `C:\dev\strehl-out\M95-crop\bee-3-cpl-ref149.warpmap.txt`,
+sha256 `AA2DE54A47BC4AEE19DE117ED606F949D6BFB11E78D2D250EEC6796D96CB7B71`,
+299 frames, reference 149, digest `8d023c0fe355d109`. Base image
+`single-noalign.tif` 7032x4688. 40 tiles x 24 frames = 960 pairs per arm.
+
+Controls first, because a null without them is not a claim about the world:
+
+| control | reading | bar | |
+| --- | ---: | --- | --- |
+| K0 DERIVE k vs the tool | 0.931464 vs 0.931500 | \|d\| < 0.001 | PASS |
+| K1 NULL identity warp, no coverage | -0.000041 dex | \|x\| < 0.005 | PASS |
+| K3 POSITIVE planted sigma=0.30 px | +0.220899 dex | >= 0.15 | PASS |
+| K6 the coverage scale acting alone | +0.183640 dex | — | — |
+
+The arms:
+
+| arm | cost (dex) | sem | n | mean step | near-integer | what |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| NOW | +0.1813 | 0.0031 | 960 | 0.9332 | 9.99% | coverage scale folded in, 7032x4688 |
+| FIX | +0.1855 | 0.0017 | 960 | 1.0019 | 10.01% | no coverage scale, ~6548x4366 |
+| SNAP | -0.0003 | 0.0005 | 960 | 1.0000 | 100.00% | integer translation, unit scale |
+
+**The crop recovers -0.0042 dex. It is very slightly worse. B2-DEAD fires.**
+
+### 20.4 The composition argument is refuted by measurement
+
+The request argues: *"a global non-integer scale means no output pixel is ever a
+pass-through, so the resampler kernel is applied continuously to every pixel"*,
+and that this is what makes the -0.2360 dex kernel result bite.
+
+Registered before running: the claim is SUPPORTED if removing the scale puts
+>= 50% of sample positions within 0.05 px of an integer, REFUTED if < 15%.
+Uniform phase gives 10%.
+
+- **P1 POWER (mandatory, discipline 595).** SNAP is integer by construction and
+  reads **100.00%**. The phase metric can see pass-through when it exists.
+- NOW reads **9.99%**. FIX reads **10.01%**.
+
+**REFUTED.** Removing the coverage scale changes the pass-through fraction by
+**0.02 percentage points**. The scale is not what destroys pass-through — the
+per-frame registration translation already has, and it survives the crop. This
+is the same conclusion arm 5's phase model reached, now measured directly on
+the quantity the argument is about rather than inferred from cost.
+
+SNAP is the geometry floor: with every translation rounded to an integer and
+unit scale, the gather costs **-0.0003 dex**, i.e. nothing. **The entire
++0.18 dex is sub-pixel phase**, and no crop reaches it.
+
+### 20.5 The reference frame is not a resampling lever either (R5)
+
+Registered before running: the reference frame is a lever if the NOW arm costs
+at least 0.03 dex less on the reference-0 solve. It prices the gather only.
+
+| reference | k | crop | cost (dex) | mean step |
+| ---: | ---: | ---: | ---: | ---: |
+| 149 | 0.931464 | 6.85% | +0.1813 | 0.9332 |
+| 0 | 0.997438 | 0.26% | +0.1975 | 0.9514 |
+
+**NOT A LEVER**, and note the direction: the solve with the **26x smaller crop
+resamples 0.0162 dex more expensively**, because its per-frame relative scales
+are all one-sided. Crop size and resampling cost are decoupled, which is an
+independent confirmation of the phase model from a direction arm 5 never tested.
+
+### 20.6 The scoping claim, checked from source
+
+I was asked to confirm from source rather than from the summary. It does not
+hold as stated, in two ways.
+
+**There is no separate `--srgb` output to crop.** `main.rs` sets
+`demosaic: demosaic || (srgb && !binned)`, so `--srgb` implies `--demosaic`
+unless `--binned` is given. Verified against the shipped binary: `strehl stack
+--srgb` on `coffee-bean` wrote `7032 x 4688 ... Malvar-He-Cutler demosaic`.
+
+**And the byte-frozen branch is not the linear branch — it is reached by
+elimination.** `write_merged` dispatches: demosaic first, then
+`if matrix.is_some() || !applied.is_identity()`, then the frozen arithmetic.
+That last branch contains `let v = if srgb { srgb_encode(v) } else { v };`, so
+it **can** run with `srgb = true` — whenever there is no usable camera
+characterisation and no exposure. `--srgb` is a flag that selects a branch by
+interacting with two other conditions, not a separate path.
+
+**The blocker is real but differently shaped.** The crop cannot be a write-branch
+decision at all. Output dimensions come from `let geom = first.geometry();` in
+`merge_cmd.rs` — decoded from frame 0, before any warp map exists — and that
+`geom` feeds the scratch buffers, the estimator, the election and all three
+encoders. `fit_to_cover` cannot change it: it returns
+`WarpMap::new(prov, geom, map.resampler(), warps)`, the same geometry it was
+given. It changes the *mapping*, never the *grid*. Cropping means changing the
+grid at its single upstream source, which every branch including the frozen one
+reads.
+
+That is survivable — an opt-in flag defaulting to off leaves the frozen bytes
+untouched, which is how this codebase already keeps `--srgb` off the frozen
+path. But it is not the narrow write-path change the request assumed, and by
+20.3 it buys no sharpness.
+
+### 20.7 What the crop is actually worth
+
+My metric compares at matched **object** frequency, deliberately: `m95cov`'s own
+docstring records that a fixed band across arms of different sampling density
+"is a units error that penalises the magnified arm". So it answers *is
+information lost*, and the answer is no — the crop recovers -0.0042 dex.
+
+It does not answer *what does the owner see at 100%*, and there the crop has a
+real, non-sharpness benefit worth stating plainly: a 7032x4688 file carrying
+6548x4366 of real sampling shows, at 1:1, a **107.36%** view of the data
+(1/k = 1.0736). Cropping would show the same field of view with 7.36% more
+scene detail per screen pixel, in a smaller file. That is an honesty-of-pixel-count
+fix with a presentation benefit, and it is worth doing on those grounds.
+
+**It is not a sharpness recovery and must not be sold as one.** It buys
+-0.0042 dex, against -0.2360 dex for the kernel. I would rank it below the
+kernel work and below anything that attacks sub-pixel phase, which SNAP shows
+is where the entire +0.18 dex lives.
+
+### 20.8 A defect I own
+
+`x8_fix.py`'s fallback to the quarantined sidecar is a live trap in my own
+committed experiment: re-running it today reads 8 frames and prints a plausible
+wrong number. Guarded in this commit — it now hard-errors unless it sees 299
+placed frames — rather than left as a silent hazard.
+
+### 20.9 Verification, and a hole the negative control found
+
+`experiments/M95-kernel/src/verify_s20.py` re-derives every claim above from
+the artifact that produced it — the k17 JSON, the k17b output, the pinned
+sidecar's own bytes, and the four source files read out of the working tree —
+never from this report's prose. It also re-reads the pre-registered bars out of
+the committed blob at HEAD, so "the bars predate the run" is checked rather than
+asserted. GREEN on 40 checks.
+
+`negctl_s20.py` plants five defects and requires a RED on each. **Its first run
+caught only 4 of 5**, and the miss was a defect in the verifier, not the report:
+the check for the SNAP pass-through figure used the same string as both the
+value and its anchor, so mutating the table left the identical figure in the
+prose of 20.4 for the anchor to find, and the check passed on a report that had
+become wrong.
+
+Fixed structurally rather than case by case: `num()` now **refuses to run** a
+check whose anchor overlaps its own token, and requires every anchor to be
+unique in the section. That surfaced a second latent problem immediately — one
+anchor did occur twice — which would otherwise have sat there reading green.
+Re-run: 5/5 caught, restore byte-identical, post-restore GREEN.
+
+This is the third time in this milestone that a weak anchor produced a green
+check on a claim it was not actually testing. The rule that survives: an anchor
+must be a *neighbour* of the value, never the value itself.
