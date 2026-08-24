@@ -1,0 +1,12 @@
+==============================================================================
+M66 step 2 - regularised focus cubes, one decode per stack
+==============================================================================
+  coffee-bubbles  N= 19  ISO  1000  plane 2344x3514  d4 586x879  full=yes  [18s]
+  119MSDCF        N= 33  ISO    50  plane 2344x3514  d4 586x879  full=no   [30s]
+  113MSDCF        N= 63  ISO   500  plane 2344x3514  d4 586x879  full=no   [56s]
+  112MSDCF        N= 79  ISO   500  plane 2344x3514  d4 586x879  full=no   [70s]
+  foam            N=100  ISO  1000  plane 2344x3514  d4 586x879  full=no   [90s]
+  coffee-bean     N=105  ISO    50  plane 2344x3514  d4 586x879  full=no   [87s]
+  bee-1           N=299  ISO   100  plane 2344x3514  d4 586x879  full=no   [284s]
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M66-gate-n-dependence\out\02-fields.json

@@ -1,0 +1,130 @@
+{
+  "109MSDCF": {
+    "stack": "109MSDCF",
+    "dir": "D:\\personal\\macro\\109MSDCF",
+    "frames": 22,
+    "iso": 160.0,
+    "plane_shape": [
+      2344,
+      3514
+    ],
+    "d4_shape": [
+      586,
+      879
+    ],
+    "kept_full": true,
+    "seconds": 22.456029891967773
+  },
+  "coffee-bubbles": {
+    "stack": "coffee-bubbles",
+    "dir": "D:\\personal\\macro\\coffee-bubbles",
+    "frames": 19,
+    "iso": 1000.0,
+    "plane_shape": [
+      2344,
+      3514
+    ],
+    "d4_shape": [
+      586,
+      879
+    ],
+    "kept_full": true,
+    "seconds": 17.551193714141846
+  },
+  "119MSDCF": {
+    "stack": "119MSDCF",
+    "dir": "D:\\personal\\macro\\119MSDCF",
+    "frames": 33,
+    "iso": 50.0,
+    "plane_shape": [
+      2344,
+      3514
+    ],
+    "d4_shape": [
+      586,
+      879
+    ],
+    "kept_full": false,
+    "seconds": 29.840346097946167
+  },
+  "113MSDCF": {
+    "stack": "113MSDCF",
+    "dir": "D:\\personal\\macro\\113MSDCF",
+    "frames": 63,
+    "iso": 500.0,
+    "plane_shape": [
+      2344,
+      3514
+    ],
+    "d4_shape": [
+      586,
+      879
+    ],
+    "kept_full": false,
+    "seconds": 56.03658699989319
+  },
+  "112MSDCF": {
+    "stack": "112MSDCF",
+    "dir": "D:\\personal\\macro\\112MSDCF",
+    "frames": 79,
+    "iso": 500.0,
+    "plane_shape": [
+      2344,
+      3514
+    ],
+    "d4_shape": [
+      586,
+      879
+    ],
+    "kept_full": false,
+    "seconds": 69.8666353225708
+  },
+  "foam": {
+    "stack": "foam",
+    "dir": "D:\\personal\\macro\\foam",
+    "frames": 100,
+    "iso": 1000.0,
+    "plane_shape": [
+      2344,
+      3514
+    ],
+    "d4_shape": [
+      586,
+      879
+    ],
+    "kept_full": false,
+    "seconds": 90.32316756248474
+  },
+  "coffee-bean": {
+    "stack": "coffee-bean",
+    "dir": "D:\\personal\\macro\\coffee-bean",
+    "frames": 105,
+    "iso": 50.0,
+    "plane_shape": [
+      2344,
+      3514
+    ],
+    "d4_shape": [
+      586,
+      879
+    ],
+    "kept_full": false,
+    "seconds": 87.11096739768982
+  },
+  "bee-1": {
+    "stack": "bee-1",
+    "dir": "D:\\personal\\macro\\bee-1",
+    "frames": 299,
+    "iso": 100.0,
+    "plane_shape": [
+      2344,
+      3514
+    ],
+    "d4_shape": [
+      586,
+      879
+    ],
+    "kept_full": false,
+    "seconds": 283.5096344947815
+  }
+}

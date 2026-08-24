@@ -1,0 +1,17 @@
+==============================================================================
+M66 control K4 - loader check against M4 section 8.1
+==============================================================================
+  FOCUS_NOISE_SD     0.015214   (merge.rs)
+  DEFAULT_GATE       4.0          (merge.rs)
+  WINDOW_RADIUS      13            (focus.rs)
+  REGULARISER_RADIUS 8            (merge.rs)
+  gain_divisor       436.8        (profile.rs)
+  read_noise_e_low   4.2          (profile.rs)
+  read_noise_e_high  1.2392        (profile.rs)
+  black / white      512 / 15360   (profile.rs)
+
+  118MSDCF ISO 100: R 1.0048 (M4 1.0048, -0.00%)  G1 1.0042 (M4 1.0042, -0.00%)  G2 1.0104 (M4 1.0105, -0.01%)  B 0.9184 (M4 0.9185, -0.01%)
+  119MSDCF ISO 400: R 1.2130 (M4 1.2130, -0.00%)  G1 1.2266 (M4 1.2266, -0.00%)  G2 1.2402 (M4 1.2403, -0.01%)  B 1.1145 (M4 1.1146, -0.01%)
+
+  worst deviation from M4 section 8.1: 0.01%
+  K4 PASS.

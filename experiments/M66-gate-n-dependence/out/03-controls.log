@@ -1,0 +1,52 @@
+==============================================================================
+K1 / K2 / K3 - on the 4x-decimated cube, full N and two subsets
+==============================================================================
+  stack              N      K1 g0    K2 g1000    max gap   K2p g1e5    g4 mine     g4 M64     ratio
+  foam             100   1.000000    0.966800    73.4803   1.000000     1.3583     1.3590    0.9995
+  113MSDCF          63   1.000002    1.000000    17.2832   1.000000     8.5902     8.5810    1.0011
+  119MSDCF          33   1.000006    0.999994    25.8222   1.000000     4.7238     4.7230    1.0002
+  112MSDCF          79   1.000002    1.000000    12.7346   1.000000    12.0499    12.0370    1.0011
+  coffee-bubbles    19   1.000002    0.998359    40.5967   1.000000     3.5297     3.5290    1.0002
+  109MSDCF          22   1.000006    1.000000    11.9584   1.000000     4.9865     4.9870    0.9999
+  coffee-bean      105   1.000002    0.845746    67.6086   1.000000    31.6436    31.6140    1.0009
+  bee-1            299   1.000000    0.988388   120.3671   1.000000    70.2012        nan       nan
+==============================================================================
+K1' - exact f32 ties at the winner, which `admits` takes by design
+==============================================================================
+  stack              pixels   tied px   excess admissions      per px
+  foam               515094         0                   0   0.000e+00
+  113MSDCF           515094         1                   1   1.941e-06
+  119MSDCF           515094         3                   3   5.824e-06
+  112MSDCF           515094         1                   1   1.941e-06
+  coffee-bubbles     515094         1                   1   1.941e-06
+  109MSDCF           515094         3                   3   5.824e-06
+  coffee-bean        515094         1                   1   1.941e-06
+  bee-1              515094         0                   0   0.000e+00
+==============================================================================
+K5 - 4x-decimated grid against full resolution, every gate
+==============================================================================
+  stack             gate    full-res   decimated     ratio
+  109MSDCF           0.0     1.00000     1.00001   1.00000
+  109MSDCF           0.5     1.41356     1.41298   0.99959
+  109MSDCF           1.0     1.88442     1.88404   0.99980
+  109MSDCF           2.0     2.89111     2.89002   0.99962
+  109MSDCF           4.0     4.98667     4.98646   0.99996
+  109MSDCF           8.0    10.46896    10.47133   1.00023
+  coffee-bubbles     0.0     1.00000     1.00000   1.00000
+  coffee-bubbles     0.5     1.23814     1.23813   0.99999
+  coffee-bubbles     1.0     1.50391     1.50412   1.00014
+  coffee-bubbles     2.0     2.10915     2.10969   1.00026
+  coffee-bubbles     4.0     3.52896     3.52970   1.00021
+  coffee-bubbles     8.0     6.47292     6.47373   1.00012
+==============================================================================
+VERDICT
+==============================================================================
+  K1  NOT MET as pre-registered. Worst excess over 1.000000 = 5.824e-06
+      (17 of the 40 K1 cells are above 1.0.)
+  K2  NOT MET as pre-registered. Worst n_eff/N at gate 1000 = 0.845746
+      Cause: gate 1000 is a tolerance of 21.5 response units and the measured max gap reaches 120.4.
+  K1' post-hoc: the excess is exact f32 ties, counted above.
+  K2' post-hoc at gate 1e5: PASS
+  K3  PASS   K5  PASS   K2' PASS
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M66-gate-n-dependence\out\03-controls.json
