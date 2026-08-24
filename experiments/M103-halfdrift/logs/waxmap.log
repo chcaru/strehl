@@ -1,0 +1,22 @@
+loading
+  shipped (4688, 7040, 3)  corrected (4688, 7040, 3)
+
+CONTROLS
+  POSITIVE planted smooth blob, hard edge, area 0.00273 of frame:
+           detector rises 0.00136 -> 0.00351 (delta 0.00215) -> PASS
+  SPECIFICITY planted honest defocus (Gaussian sigma 14, feathered, 4x the area):
+           detector moves +0.00000, against +0.00215 for the hard-edged blob -> PASS
+           (so it is measuring a BOUNDED region, not just smoothness)
+  -> controls PASS
+
+Whole-frame waxy fraction (bright, textureless, hard-bounded):
+  arm               whole inner r<0.5 outer r>0.8
+  shipped         0.00136    0.00072    0.00116
+  corrected       0.00124    0.00052    0.00099
+
+H1 (election) predicts the artefact in BOTH arms, localised, interior.
+H2 (coverage) predicts a GLOBAL effect, worst at the periphery.
+  corrected outer/inner = 1.92  (H2 needs this >> 1)
+  corrected/shipped whole = 0.91  (H1 needs both arms non-zero)
+
+wrote C:\dev\strehl-out\M103\blobs\waxmap.json

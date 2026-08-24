@@ -1350,7 +1350,10 @@ captures.
 > correction on the axis that matters — 36.4 → 25.6 px at 1.842 — and measured
 > that it cannot ship as a constant (1.84 on `bee-3-cpl`, 3.00 on
 > `dry-erase-marker-head-cpl`). Also found `signtest.py` cannot measure a residual
-> above 1.0. `docs/research/M103-halfdrift.md`.
+> above 1.0. Then cleared the blob gate: the waxy blobs M97b attributed to the
+> gain correction are **already in the shipped render** (1:1, no resampling), and
+> in the region judged disqualifying the shipped arm measures 21% *more*
+> piecewise-flat than the corrected one. `docs/research/M103-halfdrift.md`.
 
 **16.10b — §15.3 is WITHDRAWN.** Do not apply it. Measured in §16.6: discarding
 spans 1–2 takes max per-frame placement error to 628.1 px, the frame-0 anchor fan
@@ -1388,3 +1391,281 @@ the measured track shape from `experiments/M103-halfdrift/data/truth-dense.json`
 > reproduces the treatment arm exactly, by construction. If a negative control
 > returns the treatment result to several significant figures, suspect that it
 > cannot fail before concluding the effect is spurious.
+
+---
+
+## 17. The waxy blobs — the shipping gate
+
+The orchestrator opened M97b's side-by-side themselves, judged the waxy blobs in
+the bright low-texture region **disqualifying as shipped**, and added a gate: the
+gain correction must not ship until the blobs are either diagnosed and fixed, or
+shown to be an artefact of M97b's viewer. They offered three mechanisms —
+(1) election mottle where the focus statistic has no signal, (2) coverage running
+out as the corrected warp pushes further, (3) M97b's Lanczos downsample, applied
+to the corrected side only — and ordered hypothesis 3 killed first because it is
+one command.
+
+The answer turns out to be none of the three, and it is a better answer than any
+of them: **the blobs are already in the render that ships today.**
+
+### 17.1 Hypothesis 3 is dead (MEASURED)
+
+`src/blobs.py` crops the same scene region from the corrected TIF twice: once at
+1:1 with no resampling of any kind, and once through M97b's exact viewer path
+(474 px crop, Lanczos to 420 px). It carries a SELF control — the PNG it writes is
+compared byte-for-byte against the pixels it read — and a positive control that
+measures what Lanczos ringing on a known smooth ramp is actually worth.
+
+- The blobs are **plainly present in the 1:1 crop with zero resampling**: a smooth
+  grey lobe with a hard, curved, *closed* boundary. A separable 1-D kernel cannot
+  synthesise a closed curved boundary that was not already in the data.
+- Lanczos 474→420 on a synthetic smooth ramp produces **0.288 DN** of banding out
+  of 255 — roughly one part in 900, and around two orders of magnitude below the
+  step across a blob edge.
+
+The viewer is exonerated. The artefact is in the pixels.
+
+### 17.2 The blobs are in the SHIPPED render too (MEASURED)
+
+This is the finding that decides the gate, and it needed no instrument at all —
+only opening the other file, which is the step that had not been taken.
+
+`src/crop2.py` takes a matched pair of 1:1 crops, one from each arm, over the
+bright low-texture area at the bottom of M97b's lower-right panel. The corrected
+arm's origin is refined by NCC search rather than assumed, because the predicted
+mapping is exact at the frame centre and drifts with radius — which is not
+incidental, it is this milestone's own defect showing up in my crop arithmetic.
+The lock is reported so a bad one is visible, in the manner of M97b's honest
+0.2253.
+
+- Target region locks at **NCC 0.8242**, mean 165.2 vs 155.3 DN, sd 38.1 vs 37.9.
+  A genuinely matched pair.
+- Opened at 1:1: **the shipped render carries the same class of artefact** —
+  smooth grey lobes with hard closed boundaries, and hard-edged tonal contours
+  through the bright region.
+
+The orchestrator's reading of the shipped side as "duller but *natural*" is, on
+the evidence of the file itself, mistaken. So is M97b's §8 description of the
+blobs as an artefact "that the shipped render does not have". Both were made by
+comparing two panels; neither was made by interrogating the shipped panel alone.
+
+### 17.3 The controlled measurement says the shipped arm is the waxier one
+
+`src/waxy.py`, scoped to the NCC-0.8242 pair. The statistic is **not** smoothness
+— an out-of-focus background is smooth and looks right. It is *piecewise*-flatness:
+
+```
+flatness = median over structured px of  sigma(31 px) / (sigma(5 px) + 0.5)
+```
+
+This carries a physical guarantee the earlier attempts lacked. Defocus, diffraction
+and demosaic are all low-pass: they attenuate the 5 px and 31 px windows together,
+so the ratio stays bounded. Only piecewise-constant content drives sigma(5) to the
+quantisation floor while sigma(31) stays high, because only a step has energy at
+large scale and none at small. The election can produce one; no optical process can.
+
+Controls, all three passing:
+
+| control | reads | verdict |
+|---|---|---|
+| PLACEBO shipped vs itself | `+0.000000` | PASS |
+| POSITIVE hard-edged constant patch, 10.1% of crop | `+0.2004` | PASS |
+| NEGATIVE **natural** blurred patch, same area, feathered | `−0.0021` | PASS |
+| separation piecewise-flat / optically-soft | **97.4×** | — |
+
+The negative control is the one that matters and the one my three earlier
+detectors did not have. Without it, an instrument that fires on both waxiness and
+softness would convict the gain correction merely for changing what is in frame.
+
+**Whole matched crop** — shipped `3.6053`, corrected `3.2118`. But this readout is
+confounded: `sigma(5)` differs between arms (0.977 vs 1.155 whole-crop), and the
+corrected arm is genuinely sharper in the textured fibres (M97b, MEASURED), which
+raises `sigma(5)` and mechanically depresses the ratio for a reason unrelated to
+waxiness. Median and p90 move in opposite directions (`7.4837` → `7.5435`), which
+is the signature of exactly that split.
+
+**Restricted to the bright low-texture subset**, where the artefact lives and
+where there is little fine texture to sharpen — positive control `+0.5476`,
+natural control `+0.0006`, separation **959.5×**:
+
+| arm | flatness | sigma(5) | sigma(31) | px |
+|---|---:|---:|---:|---:|
+| shipped | **3.7324** | 1.876 | 8.422 | 50 927 |
+| corrected | **3.0837** | 1.895 | 7.326 | 46 148 |
+
+`sigma(5)` is now matched to within 1% — the sharpness confound is gone — and the
+whole difference sits in `sigma(31)`. **The shipped render is 21% more
+piecewise-flat than the corrected one in the region judged disqualifying**, a gap
+larger in magnitude than the positive control's own move.
+
+### 17.4 I do not get to keep both readings
+
+Twenty minutes before running `waxy.py` I looked at the same matched pair and
+wrote that the lobes were "larger and harder-edged in the corrected arm". The
+controlled statistic says the opposite, with a working positive control, a
+working natural-smooth negative control, and a matched `sigma(5)`. **I withdraw
+the eye-read.** It was made on two crops of unequal pixel size (640 vs 722 for the
+same scene extent), where the larger one presents every feature 12.8% bigger, and
+that alone will make lobes look larger. The measurement stands and the impression
+does not.
+
+I record this because it is the same error, in the same direction, that produced
+the gate: a side-by-side invites you to attribute to the *treatment* whatever you
+notice in the *treated panel*, when the honest question is what the control panel
+looks like when examined on its own terms.
+
+### 17.5 What this says about mechanisms 1 and 2
+
+**Hypothesis 2 (coverage) is not supported.** ARGUED. Coverage failure is a
+boundary phenomenon by geometry — `gather_checked` writes `NaN` where a frame does
+not reach, and that region is an annulus at the frame edge. The blob examined here
+sits well interior, and the artefact appears in the *shipped* arm, whose warp is
+the shorter of the two and therefore has the more generous coverage. A mechanism
+that predicts "worse when you warp further" cannot explain "worse in the arm that
+warps less".
+
+**Hypothesis 1 (election mottle) survives and is the natural reading.** DERIVED.
+The election is a property of the merge, not of the solve. Fact 73 records that
+the box mean of the gradient magnitude is blind on monotone content, so in a
+bright low-texture region the focus statistic is choosing between frames on noise.
+Adjacent cells then elect frames at different depths, and the seam between two
+differently-defocused frames is a step — piecewise-flat, hard-bounded, exactly
+what §17.3 measures and what §17.1 shows at 1:1. On that account the gain
+correction does not *create* the blobs; it perturbs the warp, so it changes *which*
+frame wins in every low-signal cell, and the blobs **move**. In a side-by-side,
+relocated blobs read as new ones, because the eye is offered no view of the
+control panel by itself.
+
+I have not proved hypothesis 1. Proving it wants an elected-frame-index debug map
+out of the merge, and `merge_cmd.rs` is contended — see §17.8.
+
+### 17.6 Four instrument-control failures, recorded because they were caught
+
+Three whole-frame waxiness detectors failed before `waxy.py` passed. Every one was
+caught by its own positive control, and every one failed for a *plant* reason
+rather than a statistic reason:
+
+1. `blobs.py` — `to8()` right-shifted by 8 on data that was already `uint8`,
+   producing black frames. The tell was `smooth_frac = 1.0000` on all three panels.
+2. `waxmap.py` — the positive plant was `median + 40` in a *dark* region and never
+   crossed the brightness threshold; 3% of planted area recovered. Then a per-cell
+   edge test that only fired on a blob's perimeter, and block-*mean* gradient
+   pooling that diluted a 140 DN step across 16 px of a 256 px cell to ~8.75 DN.
+   Once passing, its whole-frame verdict still disagreed with what is plainly
+   visible at 1:1, so **its numbers are not quoted here.**
+3. `waxsweep.py` — planted a bright fill at a fixed 175 DN on a subject whose p95
+   brightness cut is **253 DN**. The planted pixels never entered the bright set;
+   the control read exactly `+0.000000`.
+4. `waxy.py` — the first bright-subset positive control filled at the *local
+   median*, below the p75 cut, and read `−0.0033`. Fixed by filling at p85.
+
+Failures 3 and 4 are the same mistake twice: **a plant specified in absolute units
+against a distribution I had not looked at.** The general form is worth stating.
+
+> **A plant must be specified against the distribution it is planted into.** Choosing
+> a level, a size or a contrast from intuition rather than from the data risks
+> planting outside the selector the instrument uses, which returns a clean null
+> that is indistinguishable from a null result. Take plant parameters from
+> percentiles of the actual array, and print the selector's thresholds next to
+> the plant's value so a mismatch is visible in the log.
+
+Failure 2 also generalises, and it is why the whole-frame route was abandoned:
+
+> **An absolute threshold tuned against an intuition is not calibrated.** If a
+> detector passes its controls but disagrees with direct observation at a location
+> you can point to, the controls have established sensitivity to the *plant*, not
+> to the artefact. Scope the measurement to a region where the artefact is known
+> to be visible before trusting a whole-frame aggregate.
+
+### 17.7 Candidate facts
+
+- **P29** (MEASURED) The waxy blobs M97b reported in the gain-corrected render are
+  present in the **shipped** render as well, at 1:1 with no resampling, on
+  `dry-erase-marker-head-cpl`. They are not created by the gain correction.
+- **P30** (MEASURED) In a matched crop locked at NCC 0.8242 over the bright
+  low-texture region, restricted to that region and with `sigma(5)` matched to
+  within 1%, the shipped render measures `flatness` 3.7324 against the corrected
+  render's 3.0837 — the **shipped** arm is 21% more piecewise-flat.
+- **P31** (MEASURED) Lanczos 474→420, the resample in M97b's viewer, produces
+  0.288 DN of banding out of 255 on a smooth ramp. It cannot account for the
+  artefact, and hypothesis 3 is refuted.
+- **P32** (DERIVED) `sigma(31)/sigma(5)` separates piecewise-flat content from
+  optically-soft content by 97.4× on real render data, because every optical
+  degradation is low-pass and attenuates both windows together while a step
+  populates only the large one. A useful primitive for any future "is this an
+  artefact or is it just out of focus" question.
+- **P33** (ARGUED) A side-by-side systematically over-attributes to the treatment:
+  an artefact present in both arms but *relocated* by the treatment is read as new,
+  because the control panel is never examined on its own terms. Two independent
+  readers (M97b §8, and the orchestrator) and this milestone's own first eye-read
+  all made this error on the same image.
+- **P34** (MEASURED, cheap) The two arms' crops of the same scene extent differ in
+  pixel size by 1.1278×. Comparing them without placing both on a common scene grid
+  makes every feature in the corrected arm look 12.8% larger, which is enough on
+  its own to make lobes read as "bigger".
+
+### 17.8 Routed to the orchestrator
+
+**17.8a — the gate is answered, and the answer is not one of the three.** The
+blobs are neither the viewer (§17.1, refuted) nor a consequence of warping further
+(§17.5, unsupported). They are already in production. The correct statement to the
+owner is not "the gain correction melts highlights" but "the merge's election
+mottles bright low-texture regions, today, in the render he already has, and the
+gain correction moves the mottle without measurably worsening it — by the one
+controlled measurement available, it slightly improves it."
+
+**17.8b — this removes the blob objection to shipping, but §16 still stands
+against shipping.** I am not reversing §16.7. The gain correction should not ship
+as a constant, for the reason measured there and unchanged by this section: 1.842
+on `bee-3-cpl` against 3.00 on `dry-erase-marker-head-cpl`, and per-frame
+placement that a scalar cannot fix. The blob gate was a second, independent
+objection; it is the one I can now clear. **Clearing it does not clear the first.**
+
+**17.8c — a patch I cannot write, for whoever owns `merge_cmd.rs`.** Hypothesis 1
+is testable in one run with a debug output that writes the *elected frame index*
+per pixel as a 16-bit image, alongside the merge. The prediction is specific and
+falsifiable: inside a blob the index map is piecewise constant with the same
+boundaries as the visible lobe, and the index difference across that boundary is
+large; in the textured fibres it is fine-grained and locally continuous. M96's
+disconnected-competitive-set statistic (25.247% on `bee-3-cpl`) is the aggregate
+form of the same measurement and could be reported per region. If the index map
+does not show lobe-shaped plateaus, hypothesis 1 dies too and the artefact wants a
+new explanation.
+
+**17.8d — for M97b.** §8's statement that the blobs are an artefact "that the
+shipped render does not have" is refuted by P29. M97b's §8 is otherwise the model
+this section tried to follow — it built a viewer, caught two defects in it before
+believing its output, and volunteered an inconvenient artefact. The correction is
+to the comparison, not to the honesty.
+
+### 17.9 Reproducing this section
+
+```powershell
+$env:PYTHONIOENCODING='utf-8'
+cd experiments\M103-halfdrift
+
+# hypothesis 3: 1:1 versus M97b's exact Lanczos path, plus the ramp control
+python src\blobs.py C:\dev\strehl-out\M97-before-after\marker-TODAY-shipped.tif `
+                    C:\dev\strehl-out\M97-before-after\marker-POSSIBLE-gaincorrected.tif `
+                    C:\dev\strehl-out\M103\blobs
+
+# the matched pair, NCC-locked, no resampling of either arm  (~5 min, 190 MB TIFs)
+python src\crop2.py C:\dev\strehl-out\M97-before-after\marker-TODAY-shipped.tif `
+                    C:\dev\strehl-out\M97-before-after\marker-POSSIBLE-gaincorrected.tif `
+                    C:\dev\strehl-out\M103\blobs
+
+# the decision: piecewise-flatness with a natural-smooth negative control
+python src\waxy.py C:\dev\strehl-out\M103\blobs\target-brightlowtexture_SHIP_640px.png `
+                   C:\dev\strehl-out\M103\blobs\target-brightlowtexture_CORR_722px.png `
+                   data\waxy.json
+```
+
+`waxy.py` exits non-zero if any control fails. The two failed detectors
+(`waxmap.py`, `waxsweep.py`) are committed unrepaired, with their failure modes in
+their docstrings, because §17.6 is worth more to the corpus than a tidy directory.
+
+**The one thing a verifier should do that no script does:** open
+`C:\dev\strehl-out\M103\blobs\target-brightlowtexture_SHIP_640px.png` — the
+*shipped* crop — at 1:1 and look at the left third. If the hard-bounded grey lobe
+is not there, P29 is wrong and everything in §17.2 onward falls.
+

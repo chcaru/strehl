@@ -1,0 +1,44 @@
+{
+ "controls": {
+  "placebo": 0.0,
+  "positive": 0.2004026809481756,
+  "negative": -0.0020572590131733293,
+  "pass": true
+ },
+ "shipped": {
+  "flatness": 3.605332826983931,
+  "flatness_p90": 7.483706464600789,
+  "structured_px": 204800,
+  "s5_median_dn": 2.192350336975335,
+  "s31_median_dn": 9.298462087681138,
+  "mean_dn": 165.182783203125
+ },
+ "corrected": {
+  "flatness": 3.2118400211765503,
+  "flatness_p90": 7.543515458018337,
+  "structured_px": 204800,
+  "s5_median_dn": 2.1850400454017627,
+  "s31_median_dn": 8.819848500689695,
+  "mean_dn": 155.20196533203125
+ },
+ "bright": {
+  "shipped": {
+   "flatness": 3.732384282361592,
+   "flatness_p90": 6.720023123970424,
+   "structured_px": 50927,
+   "s5_median_dn": 1.876166303947909,
+   "s31_median_dn": 8.42180212239645,
+   "mean_dn": 165.182783203125
+  },
+  "corrected": {
+   "flatness": 3.0836530521213996,
+   "flatness_p90": 6.0231247967405155,
+   "structured_px": 46148,
+   "s5_median_dn": 1.894835085162014,
+   "s31_median_dn": 7.325575866846387,
+   "mean_dn": 155.20196533203125
+  },
+  "positive": 0.5475812473256334,
+  "negative": 0.0005707078315406733
+ }
+}

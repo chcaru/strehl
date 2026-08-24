@@ -1,0 +1,7 @@
+shipped (4688, 7040, 3)  corrected (4688, 7040, 3)
+  target-brightlowtexture    ship(3430,5100,640) corr(3738,5471,722)  lock NCC 0.8242  self ok/ok
+      mean DN  ship 165.2  corr 155.3   |   sd DN  ship 38.1  corr 37.9
+  control-centre             ship(2344,3660,640) corr(2432,3847,722)  lock NCC 0.2707  self ok/ok
+      mean DN  ship 61.9  corr 61.7   |   sd DN  ship 19.0  corr 18.7
+
+wrote to C:\dev\strehl-out\M103\blobs

@@ -1,0 +1,21 @@
+common scene grid: shipped (640, 640)  corrected (640, 640)
+
+CONTROLS
+  PLACEBO  shipped vs itself           delta +0.000000  -> PASS
+  POSITIVE piecewise-flat patch (0.101 of crop)  3.6053 -> 3.8057  delta +0.2004  -> PASS
+  NEGATIVE natural blurred patch, same area  3.6053 -> 3.6033  delta -0.0021  -> PASS
+           (separation piecewise-flat/optically-soft = 97.4x)
+  -> controls PASS
+
+MEASUREMENT  (region locked at NCC 0.8242 by crop2.py)
+  arm         flatness   p90     sigma5   sigma31   mean DN
+  shipped      3.6053   7.4837   2.192    9.298     165.2
+  corrected    3.2118   7.5435   2.185    8.820     155.2
+  corrected/shipped = 0.8909   (positive control moves +0.2004)
+
+BRIGHT LOW-TEXTURE SUBSET  (local mean above the crop's p75)
+  controls: positive +0.5476  natural +0.0006  separation 959.5x -> PASS
+  arm         flatness   p90     sigma5   sigma31   px
+  shipped      3.7324   6.7200   1.876    8.422    50927
+  corrected    3.0837   6.0231   1.895    7.326    46148
+  corrected/shipped = 0.8262

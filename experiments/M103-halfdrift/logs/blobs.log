@@ -1,0 +1,18 @@
+loading (188 MB each, ~30 s)
+  marker-TODAY-shipped.tif                     (4688, 7040, 3) uint8
+  marker-POSSIBLE-gaincorrected.tif            (4688, 7040, 3) uint8
+  upper-left   ship(1593,2112) corr(1496,1931)  self-control PASS
+  centre       ship(2344,3660) corr(2343,3677)  self-control PASS
+  lower-right  ship(3094,5068) corr(3189,5265)  self-control PASS
+
+POSITIVE  Lanczos 474->420 on a KNOWN smooth ramp + noise:
+          residual banding amplitude 0.288 DN (of 255)
+
+Smoothness of the region M97b called blobby (fraction of pixels with
+local sigma < 2 DN, 9x9 window; and the same restricted to bright pixels):
+  panel         ship smth  corr smth |   ship brt   corr brt
+  upper-left       0.1124     0.2559 |     0.0000     0.0806
+  centre           0.0292     0.0506 |     0.0000     0.0000
+  lower-right      0.3718     0.3089 |     0.0218     0.0000
+
+wrote C:\dev\strehl-out\M103\blobs\blobs.json
