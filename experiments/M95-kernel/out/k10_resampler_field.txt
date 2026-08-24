@@ -1,0 +1,29 @@
+==============================================================================
+K10  is the accepted resampler field honoured on the read path?
+==============================================================================
+  side-6-cr.txt  exists=True
+  side-6-lz.txt  exists=True
+
+--- H4c  POWER / DETERMINISM CONTROL (runs first) ---
+  same sidecar, run A : f049786afc3d56c0098fcc8d521a354c  49449626 B
+  same sidecar, run B : f049786afc3d56c0098fcc8d521a354c  49449626 B
+  H4c = PASS  (byte-identical: True)
+
+--- H4  TREATMENT: catmull-rom sidecar vs lanczos3-mutated sidecar ---
+  catmull-rom sidecar : f049786afc3d56c0098fcc8d521a354c  49449626 B
+  lanczos3    sidecar : 9f309ca9f8dc236fea154219c351ab8f  49449626 B
+  H4 = HONOURED
+  differing bytes     : 26278128 / 49449626  = 53.1412%
+  => a stale cache entry silently changes WHICH KERNEL gathers your pixels,
+     and the announcement line is identical in both cases.
+
+--- closing state ---
+  shared cache unchanged over the whole run: True
+  D:\personal\macro\bee-3-cpl\warpmap.txt exists: False
+
+==============================================================================
+H4c determinism control : PASS
+H4  resampler field     : HONOURED
+==============================================================================
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-kernel\out\k10_resampler_field.json

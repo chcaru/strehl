@@ -1,0 +1,28 @@
+==========================================================================
+verify M95-kernel.md section 14  (PRESENT / DISCRIMINATE)
+==========================================================================
+  OK   differing bytes                    '26 278 128'  present=True discriminates=True
+  OK   compared bytes                     '49 449 626'  present=True discriminates=True
+  OK   differing pct                        '53.1412%'  present=True discriminates=True
+  OK   sha catmull-rom                      'f049786a'  present=True discriminates=True
+  OK   sha lanczos3                         '9f309ca9'  present=True discriminates=True
+  OK   bytes                              '49 449 626'  present=True discriminates=True
+  OK   legacy count                                '0'  present=True discriminates=True
+  OK   cache bytes bee-3-cpl-ea                '1 292'  present=True discriminates=True
+  OK   cache bytes dry-erase-ma               '41 027'  present=True discriminates=True
+  OK   cache bytes lavendar-cpl               '40 812'  present=True discriminates=True
+--------------------------------------------------------------------------
+  OK   premise refuted stated       'does not exist'
+  OK   commit named                 '8118dd7'
+  OK   STREHL_CACHE_DIR named       'STREHL_CACHE_DIR'
+  OK   power control reported       'refused, rc=1'
+  OK   determinism control reported 'PASS'
+  OK   hazard is resampler          'resampler'
+  OK   owns the consequence         'unguarded field easier to vary'
+  OK   did not fix                  'reporting rather than fixing'
+  OK   merge_cmd untouched          'contended'
+  OK   not the writer               'not the agent writing that file'
+  OK   residual disclosed           'honest residual'
+==========================================================================
+verdict: GREEN -- every number transcribed from the JSON
+==========================================================================

@@ -1,0 +1,53 @@
+==============================================================================
+K9  shared-sidecar hazard
+==============================================================================
+exe        : C:\dev\blog\death-of-software\projects\strehl\target-m95\release\strehl.exe  exists=True
+stack dir  : D:\personal\macro\bee-3-cpl  exists=True
+cache root : C:\Users\chris\AppData\Local\strehl\warpmaps  exists=True
+
+--- H0  where does the default sidecar go? ---
+  D:\personal\macro\bee-3-cpl\warpmap.txt  exists=False
+  any <stack>/warpmap.txt under D:\personal\macro : 0
+  shared cache entries: 3
+    bee-3-cpl-ea1d38ea5c9523c5.warpmap.txt  1292B  sha=2db2dd633b3cd9b3
+    dry-erase-marker-head-cpl-57fff568a7ede183.warpmap.txt  41027B  sha=1864a370ae92b377
+    lavendar-cpl-47e596c1cc69bdfc.warpmap.txt  40812B  sha=4d454cceaec2479f
+
+--- H1  does --out protect the shared cache? ---
+  align --limit 6 --out ...  rc=0  wrote=True
+  shared cache byte-identical after the run: True
+  H1 = PASS
+  my sidecar header: {'frames': '6', 'reference': '0', 'resampler': 'catmull-rom', 'stack': None, 'digest': None}
+
+--- H3  POWER CONTROL: solve a different bracket, apply it here ---
+  align --limit 5 --out ...  rc=0  wrote=True
+  5-frame header: {'frames': '5', 'reference': '0', 'resampler': 'catmull-rom', 'stack': None, 'digest': None}
+  applying the 5-frame sidecar to the 6-frame bracket: rc=1 refused=True
+    | frames          : 6 from D:\personal\macro\bee-3-cpl
+    | workers         : 6 chunks of <= 1 frames (6 allowed by the 6144 MB budget, 32 by CPU)
+    | working set     : 321 MB/worker pass 1, 469 MB/worker pass 2 (buffers only, a LOWER BOUND)
+    | Error: the sidecar named by STREHL_WARPMAP (C:\dev\strehl-out\M95-kernel\k9\side-5-cr.txt) was not fitted on this bracket
+    | Caused by:
+    | this warp map was fitted on stack "bee-3-cpl" (digest 0a23bab801e24617, 5 frames) but was applied to "bee-3-cpl" (digest 216b68743acc6a1c, 6 frames)
+  H3 = PASS  (the loader can say otherwise)
+
+--- H2  is the resampler field validated? ---
+  mutated header: {'frames': '6', 'reference': '0', 'resampler': 'lanczos3', 'stack': None, 'digest': None}
+  baseline  (catmull-rom sidecar): rc=0
+    | alignment      : ON (sidecar-override), reference frame 0, 6 placed / 0 refused
+  mutated   (lanczos3   sidecar): rc=0
+    | alignment      : ON (sidecar-override), reference frame 0, 6 placed / 0 refused
+  H2 = HAZARD-CONFIRMED
+
+--- closing state ---
+  shared cache unchanged over the WHOLE run: True
+  D:\personal\macro\bee-3-cpl\warpmap.txt exists: False
+
+==============================================================================
+H0 premise refuted (default is NOT in the capture dir): True
+H1 --out protects the shared cache               : PASS
+H3 power control, loader refuses a foreign map   : PASS
+H2 resampler field                               : HAZARD-CONFIRMED
+==============================================================================
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-kernel\out\k9_sidecar.json

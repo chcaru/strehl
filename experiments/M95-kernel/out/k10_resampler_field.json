@@ -1,0 +1,21 @@
+{
+  "H4c": {
+    "verdict": "PASS",
+    "sha_a": "f049786afc3d56c0098fcc8d521a354cbdbf70d9695bdaf4f9f9336e02ca44e7",
+    "sha_b": "f049786afc3d56c0098fcc8d521a354cbdbf70d9695bdaf4f9f9336e02ca44e7",
+    "bytes": 49449626
+  },
+  "H4": {
+    "verdict": "HONOURED",
+    "sha_catmull_rom": "f049786afc3d56c0098fcc8d521a354cbdbf70d9695bdaf4f9f9336e02ca44e7",
+    "sha_lanczos3": "9f309ca9f8dc236fea154219c351ab8fe893e78c42a24c1b6c7a52a1d6d036dd",
+    "bytes": 49449626,
+    "differing_bytes": 26278128,
+    "compared_bytes": 49449626,
+    "differing_frac": 0.531412067707044
+  },
+  "closing": {
+    "cache_unchanged": true,
+    "legacy_exists": false
+  }
+}

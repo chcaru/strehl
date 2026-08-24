@@ -1,0 +1,58 @@
+{
+  "sidecar_path": "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\bee-3-cpl--warpmap.txt",
+  "sidecar_header": {
+    "stack-name": "bee-3-cpl",
+    "stack-digest": "165a1ff35968c615",
+    "frames": "8",
+    "plane": "3516x2344",
+    "reference": "4",
+    "resampler": "catmull-rom"
+  },
+  "sidecar_placed": 8,
+  "shared_default_exists": false,
+  "reported_gain": 0.116,
+  "bar": 0.02,
+  "nulls": {
+    "SIDECAR": 0.0,
+    "GRID": 0.0,
+    "RANDOM": 0.0,
+    "NOZOOM": 0.0
+  },
+  "arms": {
+    "SIDECAR": {
+      "gain": 0.11602639947936418,
+      "se": 0.00015793207033422914,
+      "n": 320,
+      "cr": 0.1845095760459981,
+      "lz": 0.06848317656663394,
+      "phases": 8
+    },
+    "GRID": {
+      "gain": 0.11618930505460666,
+      "se": 9.075210813364695e-05,
+      "n": 1000,
+      "cr": 0.18452601076412703,
+      "lz": 0.06833670570952036,
+      "phases": 25
+    },
+    "RANDOM": {
+      "gain": 0.11604739498265224,
+      "se": 9.131099540093397e-05,
+      "n": 960,
+      "cr": 0.1842208996838928,
+      "lz": 0.06817350470124053,
+      "phases": 24
+    },
+    "NOZOOM": {
+      "gain": 0.11670065300304945,
+      "se": 0.002411023667981839,
+      "n": 960,
+      "cr": 0.1755352444532431,
+      "lz": 0.058834591450193645,
+      "phases": 24
+    }
+  },
+  "worst_dev": 0.0007006530030494451,
+  "pass": true,
+  "schema": "m95-k8-1"
+}

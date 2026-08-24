@@ -1,0 +1,29 @@
+K8 -- is the kernel gain a hostage to the shared sidecar?
+
+REGISTERED BAR (before this run): every arm within +/-0.02 dex of +0.1160
+
+SIDECAR ACTUALLY RESOLVED
+  path      C:\dev\strehl-out\ORCH-quarantine-sidecars\bee-3-cpl--warpmap.txt
+  declares  frames=8 reference=4 resampler=catmull-rom digest=165a1ff35968c615
+  placed    8 rows
+  shared default D:\personal\macro\bee-3-cpl\warpmap.txt exists: False
+
+base single-noalign.tif (4688, 7032)  40 tiles
+
+K25 NULL -- same kernel both sides, must be exactly 0
+  SIDECAR   +0.000000 dex   PASS
+  GRID      +0.000000 dex   PASS
+  RANDOM    +0.000000 dex   PASS
+  NOZOOM    +0.000000 dex   PASS
+
+GAIN BY POPULATION
+  SIDECAR   phases   8  n  320  cr +0.1845  lz +0.0685  gain +0.1160 +/- 0.0002   |d| 0.0000  PASS
+  GRID      phases  25  n 1000  cr +0.1845  lz +0.0683  gain +0.1162 +/- 0.0001   |d| 0.0002  PASS
+  RANDOM    phases  24  n  960  cr +0.1842  lz +0.0682  gain +0.1160 +/- 0.0001   |d| 0.0000  PASS
+  NOZOOM    phases  24  n  960  cr +0.1755  lz +0.0588  gain +0.1167 +/- 0.0024   |d| 0.0007  PASS
+
+  worst deviation from +0.1160: 0.0007 dex   bar 0.02
+  K25 null clean on all populations: True
+
+POPULATION-INDEPENDENT -- the sidecar's state does not reach the headline
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-kernel\out\k8_population.json

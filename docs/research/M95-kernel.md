@@ -563,3 +563,180 @@ binary, not merely in the source.
   here is limited by `bee-3-cpl` having 0.0345% of its plane above 200 DN local
   contrast, and the default decision needs a population where the artifact can
   actually appear.
+
+---
+
+## 14. The shared-sidecar hazard — measured, and the premise has moved
+
+The orchestrator broadcast that `strehl align` writes its sidecar to
+`<stackdir>/warpmap.txt` inside the read-only capture library, and that seven
+live agents have been silently redefining each other's renders through it. I
+tested the claim rather than adopting it. Instruments:
+`experiments/M95-kernel/src/k9_sidecar.py` and `k10_resampler_field.py`; raw
+output in `out/k9_sidecar.{json,txt}` and `out/k10_resampler_field.{json,txt}`.
+Every bar below was written into the script docstring before the run.
+
+### 14.1 The corpus write is already fixed (H0)
+
+**The premise is out of date.** `sidecar_path()` no longer returns
+`<stackdir>/warpmap.txt`. `align_cmd.rs:805-817` returns
+`cache_root()/<leaf>-<key:016x>.warpmap.txt`, and `cache_root()`
+(`align_cmd.rs:820-831`) resolves `$STREHL_CACHE_DIR`, else
+`%LOCALAPPDATA%\strehl\warpmaps`. This landed at **`8118dd7`**, *"M97f: fix the
+read-only corpus write, and measure that torn sidecars are rejected"*.
+
+Measured now: `D:\personal\macro\bee-3-cpl\warpmap.txt` **does not exist**, and
+a glob for `*/warpmap.txt` across the whole library returns **0 files**. The
+capture library is clean.
+
+### 14.2 The hazard did not go away — it relocated (H1)
+
+The three live cache entries at the time of the run:
+
+| entry | bytes | frames | reference | resampler |
+| --- | --- | --- | --- | --- |
+| `bee-3-cpl-ea1d38ea5c9523c5` | 1 292 | **6** | 3 | catmull-rom |
+| `dry-erase-marker-head-cpl-57fff568a7ede183` | 41 027 | 299 | 149 | catmull-rom |
+| `lavendar-cpl-47e596c1cc69bdfc` | 40 812 | 299 | 149 | catmull-rom |
+
+`bee-3-cpl` is at **6 frames** — the same oscillation the orchestrator
+described (299 -> 60 -> 2), now happening in `%LOCALAPPDATA%` instead of the
+capture directory. Seven agents still share one file per stack.
+
+**`--out` protects the shared cache (H1 = PASS):** an `align --limit 6 --out
+<my scratch>` left all three entries byte-identical by SHA-256, and the shared
+cache was still byte-identical at the end of the whole run.
+
+**But `--out` does not protect a *reader*, and that is the part the broadcast
+gets wrong.** `strehl stack` calls `align_cmd::load_or_solve`, which reads
+`sidecar_path(dir)` — the shared entry — no matter what any agent passed to
+`align --out`. The isolation primitive that covers **both** directions is
+**`$STREHL_CACHE_DIR`**, which `cache_root()` honours ahead of `%LOCALAPPDATA%`.
+Recommended standing rule, stronger than the one broadcast:
+
+```
+$env:STREHL_CACHE_DIR = "C:\dev\strehl-out\<MILESTONE>\warpmaps"
+```
+
+### 14.3 The two guards the orchestrator asked for already exist and already fire (H3)
+
+It offered to assign *"the tool should refuse a sidecar whose frame count or
+stack digest disagrees with the bracket"*. **Both are already implemented and
+enforced on the default path.** `load_or_solve` (`align_cmd.rs:967-980`) checks
+`map.check_stack(&identity)` and `map.len() == paths.len()`, and `check_stack`
+(`warpmap.rs:419-420`) delegates to `StackIdentity::check` (`warpmap.rs:256`).
+
+Power control, run **before** the treatment so a dead loader could not be
+mistaken for a clean result: a genuinely different bracket (`--limit 5`)
+applied to the 6-frame bracket was **refused, rc=1**:
+
+```
+Error: the sidecar named by STREHL_WARPMAP (...\side-5-cr.txt) was not fitted on this bracket
+Caused by: this warp map was fitted on stack "bee-3-cpl" (digest 0a23bab801e24617, 5 frames)
+           but was applied to "bee-3-cpl" (digest 216b68743acc6a1c, 6 frames)
+```
+
+So the loader **can** say otherwise, and M99's *"truncated sidecars are silently
+accepted by short runs"* is not what this code does. What actually happens is
+duller and still bad: a `--limit 40` run legitimately matches a 40-frame entry,
+because the digest is computed over the 40 files you passed. Each individual
+run is correct; the *cache thrashes*, and every mismatched run pays a full
+silent re-solve.
+
+### 14.4 The field that is NOT guarded is `resampler` — and it is the one I just shipped (H2, H4)
+
+`StackIdentity::check` compares **digest and frame count only**. Nothing
+compares `resampler`. Mutating one line of a sidecar, `resampler catmull-rom`
+-> `resampler lanczos3`, and applying it to the bracket it was actually fitted
+on:
+
+| sidecar | rc | announcement line |
+| --- | --- | --- |
+| catmull-rom | 0 | `alignment      : ON (sidecar-override), reference frame 0, 6 placed / 0 refused` |
+| lanczos3 | 0 | `alignment      : ON (sidecar-override), reference frame 0, 6 placed / 0 refused` |
+
+**Accepted, and the two announcements are byte-identical.** The operator gets
+no signal whatever.
+
+That is only a hazard if the field is honoured on the read path, so K10 tested
+it, determinism control first:
+
+| check | result |
+| --- | --- |
+| H4c determinism: same sidecar rendered twice | **PASS** — byte-identical, `f049786a…`, 49 449 626 B |
+| H4 treatment: catmull-rom vs lanczos3 sidecar | **HONOURED** — `f049786a…` vs `9f309ca9…` |
+| differing bytes | **26 278 128 / 49 449 626 = 53.1412%** |
+
+**A stale cache entry silently changes which kernel gathers every pixel, moving
+53.1412% of the output bytes, while announcing itself identically.**
+
+This matters more than a generic staleness bug because of what this milestone
+just measured and landed. The kernel is worth **+0.1160 dex** on the 0.30–0.48
+cyc/px band — **59% of the high-band loss**, the largest single sharpness
+number on the table — and arm 9 shipped `--resampler`, the flag that writes
+this field. **I have made an unguarded field easier to vary.** If one agent
+caches a `lanczos3` solve for a bracket, every later render of that same
+bracket by any agent silently gathers with Lanczos-3, and any sharpness number
+taken from it is drawn from a different pipeline than the one its author
+believes they are measuring.
+
+### 14.5 The fix I recommend, and I hold the file
+
+`align_cmd.rs` is assigned to me. **I am reporting rather than fixing, per your
+instruction.** The change is small: `StackIdentity::check` is the wrong place —
+it identifies a *stack*, not a *solve* — so the comparison belongs next to the
+existing `map.len()` check in `load_or_solve`, where a mismatch already
+re-solves rather than failing. Treat a resampler mismatch exactly as the frame
+count is treated:
+
+```rust
+Ok(()) if map.len() == paths.len() && map.resampler() == want_resampler => {
+    return Ok(Some((map, "sidecar")));
+}
+```
+
+…with the `eprintln!` naming both kernels. That keeps cache semantics (re-solve
+on a miss, never consume the wrong thing) and costs nothing when they agree.
+Two caveats I cannot resolve from my side: the merge has no `--resampler` of
+its own, so `want_resampler` has to come from somewhere — the honest default is
+`Resampler::CatmullRom`, matching the solve `load_or_solve` would produce — and
+the `STREHL_WARPMAP` path in `merge_cmd.rs:1060` deliberately hard-fails
+instead of re-solving, so it needs the same comparison as an `ensure!`.
+**`merge_cmd.rs` is contended (M97), so I have not touched it.**
+
+Separately: the announcement line should print the resampler. It currently
+prints reference frame and placed/refused counts, which is exactly the
+information that was already guarded, and omits the one field that is not.
+
+### 14.6 What this does and does not invalidate in my own work
+
+**I was not the agent writing that file.** No `warpmap*.txt` exists anywhere
+under `D:\personal\macro`; my only two `strehl align` invocations before tonight
+targeted `C:\nonexistent-dir-m95` and failed on the directory (`Test-Path` =
+False, nothing created); and a grep of all my committed code for
+`D:\personal|D:\macro|write_text|write_bytes|std::fs::write|File::create`
+returns only **read-only** path constants at `k5_port.py:38` and
+`k8_population.py:74`. Every write goes to `experiments/M95-kernel/out/`,
+`C:\dev\strehl-out\M95-kernel\`, or `$env:TEMP`. Tonight's K9/K10 runs used
+`--out` and `STREHL_WARPMAP` throughout and left the shared cache
+byte-identical, asserted at the end of both scripts.
+
+**Nothing I have reported is invalidated.** Arm 9's B23 ringing, K22 step, B24
+election, the crops and the B22 taps never read a sidecar at all — B24 uses
+synthetic per-frame phases `frac(0.37i)`/`frac(0.61i)`, a choice registered in
+ADDENDUM 2 precisely to avoid common-mode bias. Only the B22 dex gain read one,
+and it read the **quarantined 8-frame copy**, not the shared file. `k8_population.py`
+then re-measured that gain across four populations — including one with **no
+sidecar and no coverage zoom at all** — and found the worst deviation
+**0.0007 dex against a 0.02 bar registered before the run**, with the K25 null
+exactly 0.000000 on all four. The cr/lz *levels* move with the population
+(0.1845 -> 0.1755) while the paired *difference* does not, so the instrument is
+demonstrably responsive to geometry and the paired design is what makes it
+immune.
+
+**One honest residual.** Arm 8's ISO/COMP dose-ladder *values* were taken
+through sidecar warps and were not individually re-run under a different
+population; only the structural claim was cross-checked, via NOZOOM's
+`cr = +0.1755` at scale exactly 1.0 reproducing `COMP(1.0) = +0.1667` on a
+sidecar-free population, differing by 0.0088 dex. The conclusion survives; the
+values are mildly population-dependent. Say the word and I will re-take them.
