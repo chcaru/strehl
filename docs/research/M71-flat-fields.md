@@ -8,12 +8,22 @@ is *measured* and bounded at **0.09–0.14% of the PRNU variance**, i.e. it move
 less than 0.07%.
 
 **The ruling is nevertheless: do not add `+ (κ·S)²` to `PlaneNoise::variance`.**
-Not because the term is wrong, but because that struct is the shared normaliser for
-three consumers that need PRNU with three different signs, and the standing warning
-about partial corrections applies to all three. The term belongs at
-`Estimator::predicted_sigma` alone, and adding it to the shared model would silently
-loosen the disagreement gate by up to 1.34× and silently invalidate the *measured*
-constant `FOCUS_NOISE_SD`. Details in §8.
+Not because the term is wrong or because a partial correction is harmful — **that
+premise was retracted mid-milestone and I withdraw my use of it** (§8.3) — but because
+that struct is the shared normaliser for three consumers, two of which have thresholds
+calibrated against today's σ. The term belongs at `Estimator::predicted_sigma` alone.
+Adding it to the shared model would loosen the disagreement gate by up to 1.34× and
+invalidate the *measured* constant `FOCUS_NOISE_SD`. **This is a coupling requirement,
+not a prohibition** — independently the same conclusion M68 reached in its corrected
+fact 41. Details in §8.
+
+**The sharper finding, added after the retraction (§8.3): the shipped model is already
+over-confident, and the missing PRNU term is why.** The 2.16%-high profile gain and the
+absent κ cancel at **S ≈ 504 DN** per photosite; above that the model **under-predicts**
+σ, reaching **−12.8%** at S = 8000. **Adding κ alone never flips the sign at any signal
+level** — worst case +0.0000% over S ∈ [0, 20000] — so by M68's corrected criterion it
+is a good change even though incomplete. The conclusion holds under every gain
+assumption tested, including the one that would rescue the shipped model.
 
 Six numbers, all MEASURED:
 
@@ -26,7 +36,17 @@ Six numbers, all MEASURED:
 | CPL spatial non-uniformity | **none above a time-matched placebo** (0.373% vs 0.526%) | placebo *larger* than the effect |
 | dust, f/5.6 | 2898 px = **0.035%** of a plane, median −3.4% | enrichment 2278×, roll control 7.3% |
 
-And three things I got wrong and the controls caught: §9.
+**Two results the retraction sent me back for, both bearing on other milestones'
+numbers** (§8.4, §8.5): M68's open item — *"PRNU leakage into M61's tile variances
+remains unchecked by me"* — is **closed**, and M61 is cleared: biasing its slope 1%
+would need a **48%** frame-to-frame illumination change. And M61's own ISO-100 stack at
+tile 32 reads **0.8699**, matching my independent flat-field B/green ratio to
+**0.99993**. Separately, B's noise turns out to be **~60× more spatially correlated than
+green's** and **1463× above** what read noise predicts — real, reproducible, and
+**unruled**.
+
+And three things I got wrong and the controls caught: §9. **Plus one pre-registered
+criterion in the follow-up, T1, which failed and is recorded as failed** (§8.5).
 
 ---
 
@@ -34,7 +54,12 @@ And three things I got wrong and the controls caught: §9.
 
 `AGENTS.md` in full. `docs/captures-needed.md` §4 in full. `SYNTHESIS.md` §1–§3 and
 §5 in full, fact table sampled, with facts 27, 29, 61–64, 230–234, 895, 921, 925, 958
-extracted. `M68-b-plane-mechanism.md` for the house form and the standing warning.
+extracted. `M68-b-plane-mechanism.md` for the house form and the standing warning —
+and **re-read at commit `11c91b5`**, its facts 39–41, after the orchestrator retracted
+the warning my brief closed with. I read the correction **at the commit rather than the
+summary of it**, on the orchestrator's own instruction that the quantity had been
+mis-transmitted twice. `M61-ptc-high-iso-measured.md` §4.7 and its estimator definition
+(L158–189), read *after* the retraction pointed at its inherited 0.8396 (§8.4).
 `M5-diffraction-measured.md` for the spectral machinery (facts 27/29) — specifically
 its §2.5 trap, that a boxcar window's sinc sidelobes inflate a noise floor 1.6–1.8×
 and can fake a knee. Every spectrum in §5 below is Hann-windowed because of it.
@@ -632,21 +657,78 @@ regions and not at all in dark ones**, while the threshold it is compared agains
 not move. **The result is a signal-dependent tightening of focus selection that nobody
 chose and no test would catch.**
 
-### 8.3 The standing warning, discharged
+### 8.3 The standing warning, as amended by M68's own retraction
 
-M68 established that a partial correction can be worse than none: scaling the B gain
-alone moved the error from +8.3% conservative to −9.0% over-confident.
+**This section was rewritten after the orchestrator retracted the warning my brief
+closed with.** The brief instructed me to check whether adding κ alone is "worse than
+none," citing M68's B-plane result. **M68 has since withdrawn that claim on its own
+initiative** (`M68-b-plane-mechanism.md` at `11c91b5`, its facts 39–41). I read the
+correction at the commit rather than the summary of it, per the orchestrator's own
+instruction, and the amended question I was given is sharper and better:
 
-**The same character is present here, and it is worse than M68's because it is
-silent.** Adding `(κS)²` to `PlaneNoise::variance`:
+> *Does adding it alone flip the sign of the residual error from conservative to
+> over-confident anywhere, and if so at what signal levels? State the regime, not just
+> the magnitude.*
 
-- makes `predicted_sigma` **more correct** (it is currently a floor, by its own
-  admission) — conservative direction, safe;
-- makes `disagreement` **less correct wherever `ρ_warp > 0`** — the gate moves from
-  conservative to permissive, over-confident direction, **unsafe**;
-- makes the focus field **incoherent with its own measured constant** — no direction,
-  just wrong, and the test at `merge.rs:1488` that guards `predicted_sigma`'s routing
-  would not fire.
+**The answer is no, and the reason is more interesting than the question.**
+`11-regime-and-m61.py`. Sign convention: `err = predicted σ / true σ − 1`, so
+**positive is conservative** and **negative is over-confident**.
+
+| S (DN) | shipped model | shipped + κ | regime of the shipped model |
+| --- | --- | --- | --- |
+| 50 | +0.89% | +0.99% | conservative |
+| 200 | +0.63% | +1.04% | conservative |
+| **504** | **+0.00%** | +1.04% | **crossover** |
+| 1000 | −1.02% | +1.03% | **OVER-CONFIDENT** |
+| 2000 | −2.99% | +0.99% | OVER-CONFIDENT |
+| 8000 | −12.75% | +0.80% | OVER-CONFIDENT |
+| 15000 | −21.11% | +0.66% | OVER-CONFIDENT |
+
+**MEASURED/DERIVED — candidate fact P19. The shipped noise model is already
+over-confident, and PRNU is the reason.** Because the profile gain is 2.16% *high*
+no PRNU at all, the two errors cancel at **S = 504 DN per photosite (1009 DN for green
+luma)** and the model is **over-confident above it** — reaching **−12.8%** per
+photosite and **−6.6%** on green luma at S = 8000. The inflated gain buys conservatism
+only in the shadows; across most of the working range the missing PRNU term dominates
+and the model under-predicts.
+
+**DERIVED — candidate fact P20. Adding κ alone cannot flip the sign, at any signal level.** The
+residual of `shipped + κ` against truth is `(g_profile − g_measured)·S`, which is
+positive for all `S` whenever the profile gain exceeds the measured one. Swept over
+S ∈ [0, 20000] at 0.1 DN resolution the worst case is **+0.0000%** — it never goes
+negative. **Adding κ alone moves the model from over-confident to uniformly
+conservative and shrinks the error magnitude everywhere above 504 DN.** By M68's
+corrected criterion, this is a good change even though it is incomplete.
+
+This is **robust to the one input a sceptic would attack**, my gain measurement:
+
+| assumed truth | crossover, photosite | crossover, green luma |
+| --- | --- | --- |
+| profile gain exactly right | **0 DN** — over-confident *everywhere* | 0 DN |
+| M71 measured (2.16% high) | 504 DN | 1009 DN |
+| fact 29 implied (5.0% high) | 1194 DN | 2388 DN |
+
+**Every case leaves the shipped model over-confident across most of the working
+range.** If my gain measurement is wrong in the direction that would rescue the shipped
+model, the model gets *worse*, not better.
+
+**So the ruling's basis changes, and the ruling does not.** I am no longer declining
+the term because a partial fix is harmful — that premise is withdrawn and I withdraw my
+use of it. I am declining to put it in **`PlaneNoise::variance` specifically**, because
+that struct is a *shared normaliser* and two of its three consumers have **thresholds
+that were calibrated against the current σ**:
+
+- `predicted_sigma` — PRNU belongs, improves it, **safe**;
+- `disagreement` — inflating the denominator loosens the gate by up to **1.34×** at
+  S = 8000, and the gate's tuning is denominated in today's σ;
+- `focus.rs` — `FOCUS_NOISE_SD = 0.015214` was **measured from pure white noise with no
+  PRNU**, so raising σ by 15.9% at S = 8000 and 0% at S = 0 silently retunes focus
+  selection as a function of brightness.
+
+**That is a coupling requirement, not a prohibition — the same conclusion M68 reached
+in its corrected fact 41, arrived at independently and on a different plane.** The
+constants and the model must move together. The recommendation below is unchanged, and
+was already written in the coupling form.
 
 **Recommended change, in order:**
 
@@ -664,12 +746,137 @@ silent.** Adding `(κS)²` to `PlaneNoise::variance`:
    here (§6.1, §6.3) and by fact 29's spectral floor (§6.2). That is a separate,
    smaller change and it is inside the ±10% gate. Not recommended for this milestone.
 
+### 8.4 The inherited constant M68 flagged, now checked
+
+M68's fact 39 volunteers a provenance caveat unasked, and the orchestrator asked me to
+copy the practice:
+
+> *"`m` is **derived** from σ/k, not an independent input … **The honest provenance
+> caveat is different from the one asked about**: 0.9231 is mine and survives §6;
+> **0.8396 is M61's and I did not re-measure it.** D2 closed the pedestal failure mode
+> for it and nothing else — **PRNU leakage into M61's tile variances remains unchecked
+> by me**."*
+
+I measured PRNU per plane and per-plane gain, so I can check both halves of that. Two
+findings, in opposite directions.
+
+**(a) The PRNU-leakage concern is structurally void, and I can bound it.** M61's
+estimator (M61-E1, its report L158–181) is a **temporal adjacent-frame difference**,
+`d = F_k − F_{k+1}`, `v = var(d)/2` per 8×8 tile. A fixed multiplicative pattern
+cancels *identically* in `d` at equal level; M61 chose that estimator explicitly
+"because PRNU/DSNU and every fixed pattern cancel exactly." With a fractional
+photometric drift `ε` between adjacent frames the surviving PRNU term has variance
+`(εSκ)²`, so the slope bias is `ε²·S·κ²/(2g)`:
+
+| adjacent-frame drift ε | slope bias at S = 2000 DN |
+| --- | --- |
+| 0.1% | 0.000004% |
+| 1% | 0.00043% |
+| 10% | 0.043% |
+
+**DERIVED — candidate fact P21. Biasing M61's slope by 1% would require a 48% frame-to-frame
+illumination change.** M68's open item is closed: **PRNU cannot account for any part of
+M61's ratio.** M61 picked the right estimator and its choice is vindicated by an
+independent measurement of the quantity it was defending against.
+
+**(b) My own g(B)/g(green) = 0.8699 is robust, and the tension with 0.8396 is real.**
+Before pointing at anyone else's number I tested mine against its own post-hoc
+exclusions (§12 records that I dropped three high-signal B levels). Refitting under 11
+different level-inclusion rules:
+
+| | spread of g | as % of value |
+| --- | --- | --- |
+| B, 11 exclusion rules | 0.001421 | **0.73%** |
+| **G1, same treatment (control)** | 0.000200 | **0.09%** |
+
+B is 8× less stable than green — worth saying — but the resulting ratio spans only
+**0.8698 … 0.8761**, which is **entirely outside** M61's 0.8396 ± 0.0112. **My
+exclusions cannot reach M61's value.** The tension survives.
+
+**(c) And then M61's own table resolves it.** M61 §4.7 tests the tile-correlation
+failure mode by growing the tile:
+
+| stack | ISO | tile 8 | tile 16 | tile 32 |
+| --- | --- | --- | --- | --- |
+| `109MSDCF` | 160 | 0.8283 | 0.8464 | 0.8377 |
+| `112MSDCF` | 500 | 0.8407 | 0.8517 | 0.8466 |
+| **`bee-3`** | **100** | 0.8408 | 0.8607 | **0.8699** |
+| `foam` | 1000 | 0.8376 | 0.8529 | 0.8558 |
+
+**MEASURED — candidate fact P22. `bee-3` is the only ISO-100 stack in that table, and at tile 32 it
+reads 0.8699 — my independent flat-field value to four significant figures
+(ratio 0.99993).** My estimator uses per-pixel *temporal* variance on a defocused
+uniform field: no tiles, no subject, no inter-frame warp, so it is immune to the tile
+bias M61 was bounding. The single ISO-matched comparison available agrees with me
+exactly, and M61's tile-8 primary does not.
+
+**I state the weakness of this myself.** One matching row out of four is weak evidence
+on its own; three other rows at tile 32 read 0.8377/0.8466/0.8558 and do not match. It
+is worth reporting because it is *the only ISO-matched row*, not because four-figure
+agreement on one row is proof. **It does not overturn M61's headline** — M61's fact 29
+conclusion that correlation "cannot supply the missing 16%" is **correct and I confirm
+it**. What it suggests is that M61's tile-8 primary carries a residual few-percent
+correlation bias that its own tile-32 column already reveals, and that the pooled
+0.8396 is therefore a slight underestimate.
+
+### 8.5 An unexpected finding, hunted rather than kept
+
+Testing (c) required measuring the per-plane noise autocorrelation, which
+`07-structure.py` had done only for the greens. Extending it to all four planes
+(`12-ipc-tile-bias.py`) produced something I did not go looking for:
+
+| plane | r(0,1) | r(1,0) | Σ over lags |
+| --- | --- | --- | --- |
+| R | +0.00087 | +0.00146 | +0.011 |
+| G1 | +0.00060 | +0.00167 | +0.014 |
+| G2 | +0.00064 | +0.00078 | +0.009 |
+| **B** | **+0.03115** | **+0.10181** | **+0.715** |
+
+**B's in-plane noise correlation is ~60× the greens', and strongly anisotropic.**
+Correlated noise has *lower per-pixel variance*, which a PTC reads as low gain — so the
+seductive reading is that this is the mechanism behind the 0.84× B deficit that M61,
+M68 and M48c have all chased. **My first duty was to try to destroy it**
+(`13-b-correlation-kill.py`, three tests pre-registered in the file header before
+running).
+
+- **T1 stability — FAILED as pre-registered.** I pre-registered "< 2× across pairs"; the
+  observed swing is **2.5×**. Recorded as failed. The sub-structure is that the darkest
+  group (1/250 s) is the sole low outlier and the other **eight pairs span 1.35×**, but
+  the criterion as written failed and I am not reinterpreting it.
+- **T2 darks — survives.** In 22 ISO-100 darks B reads +0.0763 against the flats'
+  +0.0908. But **all** planes are correlated in the dark (G1 +0.0553), so B is only
+  **1.38×** green there, not 60×.
+- **T3 spatial scale — survives.** B keeps **91%** of r(1,0) through a 15 px high-pass,
+  while R/G1/G2 go *negative* — the correct signature for white noise. B's structure is
+  at the per-pixel scale, not smooth illumination.
+
+The decisive number is the dilution test. If the correlation were read-noise row
+structure it would dilute as photons take over, by `var_dark/var_flat`:
+
+| plane | predicted r(1,0) in flats | observed | excess |
+| --- | --- | --- | --- |
+| G1 | 0.000032 | 0.001666 | 51× |
+| **B** | **0.000070** | **0.101814** | **1463×** |
+
+**MEASURED — candidate fact P23. B carries a large signal-proportional correlated-noise component that
+green does not.** Green's correlation dilutes roughly as read noise should; B's does
+not, by three orders of magnitude.
+
+**And I refute the tempting conclusion myself.** For a mean-preserving linear filter,
+`Σ_lags r = 1/Σh² − 1`, so B's +0.715 implies a variance factor of **0.583** — and the
+ACF has not decayed by lag 3, so the true implied factor is *lower*. That **overshoots**
+the observed 0.84 badly. **A pure in-camera spatial filter on B is not the explanation**,
+however well it fits the qualitative story. Something correlates B's noise and it is
+real, reproducible and in the dark as well as the light, but it is not a simple filter,
+it is **outside my charter**, and it is **not settleable from flat fields**. Recorded
+**unruled** in §12 and handed on.
+
 ---
 
 ## 9. Errors, and what caught them
 
-Three, all caught by controls rather than by the estimates, in the spirit of facts
-61–64.
+Four. The first three were caught by controls rather than by the estimates, in the
+spirit of facts 61–64; the fourth was caught by a `NaN` I nearly ignored.
 
 **(1) PR-4c's premise was wrong.** I pre-registered that the two-green difference
 cancels paper at any focus. It cancels paper only where paper is smooth on a 2-px
@@ -705,6 +912,20 @@ signal and reaches ≤0.0016 by S ≈ 5700. It is *not* a fixed +0.073 at all le
 normalised flats sit ~10× above a pure-read prediction, and since §7.4 shows the
 illumination structure a spatial-mean normalisation cannot remove, **those are quoted
 as upper bounds, not as a measured signal-domain correlation.**
+
+**(4) In the follow-up, I ran the B-correlation kill tests on clipped data and drew the
+opposite conclusion for twenty minutes.** The first pass of `13-b-correlation-kill.py`
+sampled exposure groups including 1/5 s, where the greens are 100% pinned at the white
+level. Zero variance produced `NaN` correlations, pinned structure produced a spurious
+G1 r(1,0) of **+0.669**, and the resulting "63× swing" made T1 look catastrophically
+unstable and the whole B finding look like an illumination artefact. **I wrote the
+verdict "filter hypothesis REFUTED" into the script before noticing the NaNs.** Adding
+a clipping guard (`max < 15000`) inverted T1 to a 2.5× swing and T2 from "refuted" to
+"survives". **Caught by the NaNs being visible in the printed table** — had the code
+silently dropped them I would have shipped the wrong sign. The lesson is narrow and
+mechanical: *this milestone already had a clipping rule in `03-ptc.py` — "any clipped
+pixel voids the group" — and the follow-up script simply failed to inherit it.* The
+final T1 still fails as pre-registered and is reported as failing.
 
 ---
 
@@ -754,7 +975,11 @@ variance is 0.950 in implied gain, against 0.9789 here — **3.0% apart, both be
 **P8 (MEASURED).** The B plane's PTC gain at ISO 100 is **0.194934 ± 0.001165 DN/e⁻**,
 14 clean levels, **0.8699× the green mean**. Fact 921 says 0.8396 ± 0.0112, so the two
 differ by **+3.6%, ≈2.7σ**. Same phenomenon, different ISO and method, **mild tension —
-not a refutation**. `M71/03-ptc.py`.
+not a refutation**. **Substantially resolved after the retraction, in §8.4:** my value
+is robust to its own exclusions (0.73% spread across 11 rules, against a 0.09% green
+control) and **M61's own ISO-100 stack at tile 32 reads 0.8699**, matching mine to
+0.99993. The tension is most likely a residual tile-correlation bias in M61's tile-8
+primary, not a disagreement about the sensor. `M71/03-ptc.py`, `M71/11-regime-and-m61.py`.
 
 **P9 (MEASURED).** Per-plane PRNU: **R 0.3102%, green 0.3096%, B 0.2528%** (B is
 0.823× green). R and B are optical-corrected point estimates, not exact cancellations;
@@ -837,6 +1062,72 @@ cross-plane noise correlation that is not there. (§9(3).)
 
 ---
 
+### Facts added after the orchestrator's retraction (§8.3–§8.5)
+
+**P19 (MEASURED/DERIVED). The shipped noise model is already over-confident above
+S ≈ 504 DN, and the missing PRNU term is why.** The 2.16%-high profile gain (§6.1) and
+the absent `(κS)²` cancel at **504 DN per green photosite** and **1009 DN on green
+luma**; above that the model *under-predicts* σ, reaching **−12.8%** per photosite and
+**−6.6%** on green luma at S = 8000, and **−21.1%** at 15000. Robust to the gain
+assumption: if the profile gain were exactly right the crossover is at **0 DN** — over-
+confident everywhere — and under fact 29's implied 5% it is 1194 DN. **Every case leaves
+the model over-confident across most of the working range.** `M71/11-regime-and-m61.py`.
+
+**P20 (DERIVED). Adding κ alone cannot flip the residual error's sign at any signal
+level.** The residual of shipped-plus-κ against truth is `(g_profile − g_measured)·S`,
+positive for all S whenever the profile gain exceeds the measured one. Swept over
+S ∈ [0, 20000]: worst case **+0.0000%**, never negative. Adding κ alone moves the model
+from over-confident to uniformly conservative *and* shrinks the error magnitude
+everywhere above the crossover. **By M68's corrected fact 40/41 criterion this is a good
+change even though it is incomplete.** `M71/11-regime-and-m61.py`.
+
+**P21 (DERIVED, closes an item M68 left open). PRNU cannot bias M61's PTC.** M61-E1 is
+a temporal adjacent-frame difference (`v = var(d)/2`), in which a fixed multiplicative
+pattern cancels identically. With fractional inter-frame drift ε the slope bias is
+`ε²·S·κ²/(2g)`; at S = 2000 DN and my measured κ that is **0.00043% at ε = 1%**, and
+**biasing the slope by 1% would require ε = 48%**. M68 fact 39's *"PRNU leakage into
+M61's tile variances remains unchecked by me"* is now checked: **the failure mode is
+structurally void and M61's estimator choice is vindicated.** `M71/11-regime-and-m61.py`.
+
+**P22 (MEASURED). My B/green gain ratio is robust, and M61's own ISO-100 row agrees with
+it.** Refitting g(B) under 11 level-inclusion rules moves it **0.73%** (green control:
+**0.09%**), and the ratio spans 0.8698–0.8761 — **entirely outside** fact 921's
+0.8396 ± 0.0112, so my post-hoc exclusions cannot reach M61's value. But M61's §4.7
+tile-size table contains one ISO-100 stack, `bee-3`, which at tile 32 reads **0.8699** —
+my independent flat-field value to **0.99993**. My estimator uses per-pixel temporal
+variance with no tiles, so it is immune to the bias M61 was bounding. **M61's fact 29
+conclusion stands and I confirm it; what this adds is that its tile-8 primary carries a
+residual few-percent bias its own tile-32 column already shows.** *Weakness stated: one
+matching row of four; it is the only ISO-matched one, which is why it is reported, not
+proof.* `M71/11-regime-and-m61.py`, `M71/12-ipc-tile-bias.py`.
+
+**P23 (MEASURED, mechanism UNRULED). The B plane's noise is ~60× more spatially
+correlated than the greens', and it scales with signal.** In-plane nearest-neighbour
+correlation: B **+0.1018** (vertical) and **+0.0312** (horizontal) against G1's +0.0017
+and +0.0006; summed over lags, B **+0.715** against G1 **+0.014**. It survives a 15 px
+high-pass with **91%** retained (the greens go negative, the correct white-noise
+signature) and it is present in ISO-100 darks, where however **all** planes are
+correlated and B is only 1.38× green. Decisively, against a read-noise-dilution
+prediction B runs **1463×** high where green runs 51×. **A pure mean-preserving filter is
+refuted by the ACF sum rule** — B's +0.715 implies a variance factor of 0.583, which
+overshoots the observed 0.84 — so the correlation is real but its mechanism is not a
+simple filter. **Outside my charter, not settleable from flat fields, handed on
+unruled.** Pre-registered stability criterion T1 **FAILED** (2.5× against a "< 2×" gate)
+and is recorded as failed. `M71/12-ipc-tile-bias.py`, `M71/13-b-correlation-kill.py`.
+
+**Proposed discipline D3.** **Every quantity carries an unstated domain of validity
+until its source is read.** This milestone's brief closed with a warning derived from
+M68 that was correct in its regime (ρ = 1, dark frames) and false generalised across
+signal levels; the orchestrator notes it is the second such case this week, after M62
+caught a number relayed without its configuration. In both cases **the value was right
+and the scope was not**. The cheap defence is the one that worked here: when a cited
+result is load-bearing for a decision, **read it at its commit, not in summary** — I
+was instructed to and it changed my §8.3 conclusion. The corollary for authors is
+M68's own practice in its fact 39: **state which of your constants you measured and
+which you inherited**, unprompted. §8.4 exists only because M68 did that.
+
+---
+
 ## 11. What I deliberately did not measure
 
 - **`ρ_warp`** — the fraction of PRNU that survives the stack warp correlated. This is
@@ -877,13 +1168,32 @@ cross-plane noise correlation that is not there. (§9(3).)
    files are `Sony Uncompressed 14-bit RAW`), and not simple blooming (B/R mean ratio
    constant to +0.27%). The three affected points are excluded from §6.1 and the
    exclusion is **post-hoc**. Mechanism unknown. **Unruled.**
-4. **The 2.7σ tension between P8 (0.8699) and fact 921 (0.8396 ± 0.0112).** Different
-   ISO, different method, same direction. **Unruled** — I am not confident enough to
-   propose amending fact 921 from a single ISO.
+4. **The 2.7σ tension between P8 (0.8699) and fact 921 (0.8396 ± 0.0112).**
+   **Substantially resolved after the retraction — see P22 and §8.4.** My value is
+   robust to its own exclusions and M61's own ISO-100 stack at tile 32 reads 0.8699,
+   matching mine to 0.99993. I still do not propose amending fact 921 from a single
+   ISO-matched row, but the tension now has a candidate cause — residual tile-
+   correlation bias in M61's tile-8 primary — rather than being bare. **Partially
+   ruled; the amendment to fact 921 remains unruled.**
 5. **The additive FPN implied by κ's 12% decline with signal** (§4.3): 0.767 DN per
    plane, **2.0× the 0.381 DN dark FPN** measured on mechanical-shutter darks. Possibly
    the same electronic-shutter question as (2). **Unruled.**
-6. **Capture design, for `captures-needed.md`.** Three things this session could not
+6. **B's spatially correlated noise (P23), the largest thing I found outside my
+   charter.** B's in-plane nearest-neighbour noise correlation is +0.102 vertical
+   against green's +0.002 — 60× — it survives high-passing, it is present in the dark,
+   and it runs 1463× above a read-noise-dilution prediction while green runs 51×. A
+   pure mean-preserving filter is refuted by the ACF sum rule (implies 0.583, observed
+   0.84). **This bears directly on the B-plane deficit that M61, M68 and M48c have all
+   chased, and on M61's fact 57 that the 0.84× is "applied before quantisation" — a
+   scale does not correlate noise, so whatever applies it is doing something else too.**
+   I could not settle it from flat fields and did not try to force it. **Unruled, and
+   the single most promising lead I am handing on.**
+7. **Read-noise-domain spatial correlation in every plane.** In ISO-100 darks all four
+   planes carry nearest-neighbour correlation of +0.055 (G1) to +0.076 (B), ~30× the
+   photon-dominated flats. Any tile-based variance estimator is biased low at low
+   signal by this, including M61's at its darkest bins. I did not quantify the
+   resulting bias on any published number. **Unruled.**
+8. **Capture design, for `captures-needed.md`.** Three things this session could not
    answer that a re-shoot could: (a) **interleave the CPL states** — ABAB, not AAAABBBB
    — because a 142 s filter change makes transmission unrecoverable and the placebo
    larger than the effect; (b) **shoot flats at the working magnification**, since
@@ -909,6 +1219,10 @@ python src\07-structure.py          # scale, spectrum, dust, IPC
 python src\08-cpl-illum.py          # within-frame PTC, CPL, PR-8
 python src\09-controls.py           # the three controls of section 9
 python src\10-rb.py                 # per-plane kappa
+# --- added after the orchestrator retracted the closing warning ---
+python src\11-regime-and-m61.py     # sec 8.3 regime, sec 8.4 M61 check (no new pixels)
+python src\12-ipc-tile-bias.py      # per-plane noise ACF and tile-size bias
+python src\13-b-correlation-kill.py # three kill tests on the B correlation (~6 min)
 ```
 
 Inputs are read-only: `D:\personal\macro\flat-fields` (484 ARW),
