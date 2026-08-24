@@ -1,0 +1,55 @@
+
+==============================================================================
+G1  IS 'R AND B ARE FLAT' TRUE IN BOTH GAIN MODES?
+==============================================================================
+K5 was pre-registered on alpha_high (M68's estimator). This scopes it.
+
+ plane       mode  frac trend        r   3*N_grad   moves?
+     R  alpha_low     -0.0396   -0.870    0.02397      YES
+     R alpha_high     -0.0054   -0.144    0.02044       no
+    G1  alpha_low     +0.0808   +0.974    0.04643      YES
+    G1 alpha_high     +0.0678   +0.850    0.04499      YES
+    G2  alpha_low     +0.0824   +0.965    0.04291      YES
+    G2 alpha_high     +0.0715   +0.862    0.04395      YES
+     B  alpha_low     -0.0419   -0.831    0.02656      YES
+     B alpha_high     -0.0062   -0.124    0.02604       no
+
+SCOPED: 'R and B are flat' holds for alpha_high, the estimator K5
+was pre-registered on, and is FALSE for alpha_low. R and B carry a
+real DOWNWARD low-gain-mode trend opposite in sign to the greens'.
+
+==============================================================================
+G2  CROSS-CHECK OF M68 FACT 992  (alpha_B/alpha_G2 = 0.85235 +/- 0.00316)
+==============================================================================
+A single multiplicative pre-ADC scale s predicts the SAME ratio s^2 in
+both gain modes. A mode difference says the B scale is not one factor.
+
+ plane    alpha_low        se   alpha_high        se      delta
+     R     13.26711   0.33918      1.36607   0.02171    0.31077
+    G1     13.44024   0.41163      1.38218   0.01703    0.31453
+    G2     13.35864   0.33560      1.38087   0.00523    0.30660
+     B     11.29677   0.19608      1.18609   0.01406    0.18238
+
+     ratio   alpha_low   alpha_high   low/high
+      B/G2     0.84565      0.85894    0.98453
+      B/G1     0.84052      0.85813    0.97948
+      R/G1     0.98712      0.98834    0.99876
+      R/G2     0.99315      0.98928    1.00391
+       R/B     1.17442      1.15175    1.01968
+     G2/G1     0.99393      0.99905    0.99487
+
+  M68 fact 992 (alpha_high, its own pipeline): 0.85235 +/- 0.00316
+  M75 alpha_high, independent pipeline:        0.85894  (delta +0.00659 = 2.1 of M68's quoted sigma)
+  M75 alpha_low:                               0.84565
+  low/high disagreement: 0.98453  (-1.55%)
+
+==============================================================================
+G3  R/B AS A SUBLATTICE-HOMOGENEITY NULL
+==============================================================================
+NULL FOR: is the (row+col)-parity sublattice internally homogeneous.
+NOT a null for independence, and NOT a null for gain against green.
+  R/B alpha_low  1.17442   alpha_high 1.15175
+  G2/G1 alpha_low 0.99393   alpha_high 0.99905
+  R and B are NOT equal to each other the way the two greens are:
+  the parity sublattice is homogeneous in its ROW PROFILE (F1: R/B
+  column and row trends both inside the floor) but not in its LEVEL.
