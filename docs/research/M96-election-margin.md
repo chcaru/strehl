@@ -110,20 +110,49 @@ Six hits, one of them a live sibling I was told about only after measuring.
 | `M2-*.md` §3.1 | Elected-index speckle with two nulls: **34.381%** real, **53.496%** i.i.d., **66.174%** uniform | Measured on the **ring-difference** operator, which the project has since **retired**. Not the shipped regularised Tenengrad. |
 | `M7-*.md` §3.1, §3.4 | A top-2 margin, at **one hand-picked pixel** | `n=1`. No distribution, no null. |
 | `M65-*.md` | **56.70%** winner churn under an intervention | Churn measures *sensitivity to a change*, not whether the un-intervened election is determined. |
-| `M93-merge-vs-frame-sharpness.md` | A spatial-coherence bar that failed in the wrong direction | See §0.1 — I initially attributed this to the wrong M93 document. |
+| `M95-merge-vs-frame-sharpness.md` (was `M93-merge-vs-frame-sharpness.md`) | A spatial-coherence bar that failed in the wrong direction | See §0.1 — I initially attributed M93's result to this document. It was renumbered to M95 at `45ba18b` while I was writing. |
 | **`M93-election-gate.md` (`9a17d64`)** | **A live sibling building the fix my diagnostic tests the precondition for** | §0.1. |
 
 **The hole.** `merge.rs`'s own `Gate::admits` doc-comment names it: *"No corpus row
-publishes a regularised Tenengrad speckle."* TABLE 5 supplies that row. And no
-corpus row published a **margin distribution** on any operator, on any stack, at
-any `n > 1`.
+publishes a regularised Tenengrad speckle."* **And so, far more explicitly, does
+`M14-tenengrad-implemented.md` §6.4 — which I missed on my first pass and found
+only while verifying citations after the renumber.** M14 §6.4 lays out the whole
+grid and issues a standing instruction:
+
+| operator | regulariser | speckle | source |
+| --- | --- | --- | --- |
+| ring difference | none | 34.381% | M2 §3.1 (plane) |
+| ring difference | 17×17 | 0.868% | M2 §3.1 / fact 23 (plane) |
+| Tenengrad-w13 | **none** | 1.010% | M14 §7.2 (**256² ROI**) |
+| **Tenengrad** | **17×17** | **TABLE 5** | **M96 (7 stacks, full interior plane)** |
+
+> *"the two are not additive and nobody has measured them together … **Do not
+> quote a combined figure until someone measures one.**"* — M14 §6.4
+
+**TABLE 5 is that measurement**, and M96's speckle definition is M2 §3.1's
+verbatim — *"fraction of plane pixels whose winning frame index differs by more
+than 2 from the median of their 3×3 neighbourhood"* — so the M2 rows are directly
+comparable. **M14's 1.010% is not**: it is a 256×256 flat ROI, not a plane.
+No corpus row published a **margin distribution** on any operator, on any stack,
+at any `n > 1`.
+
+**Rule-40 disclosure, and it is the second miss in this milestone.** My original
+search attributed this gap only to a doc-comment in `merge.rs`. The gap is named
+far more precisely in M14 §6.4, together with an explicit instruction not to quote
+a combined figure until it was measured, and I did not find that until after I had
+committed the report once. Had I found it first I would have registered TABLE 5 as
+the primary deliverable it turns out to be, rather than as descriptive context.
+Combined with §0.1's misattribution of M93's coherence result, **two of this
+milestone's rule-40 conclusions were wrong on first pass and both were corrected
+only by re-checking citations against source.**
 
 ### 0.1 Deconfliction with M93, and three things it changes
 
 The orchestrator disclosed after I had finished measuring that
 **`docs/research/M93-election-gate.md` is committed at `9a17d64` and its author is
 live.** My own rule-40 search had found *a* M93 coherence failure but attributed
-it to `M93-merge-vs-frame-sharpness.md`; the result actually lives in
+it to what was then `M93-merge-vs-frame-sharpness.md` (renumbered to
+`M95-merge-vs-frame-sharpness.md` at `45ba18b`); the result actually lives in
 `M93-election-gate.md` §7.2 / `P6` / `D-b`. **I read `M93-election-gate.md` in
 full before writing this section.** The boundary holds and I agree with it: M93
 changes *which frames may compete*; M96 measures *how decisively the argmax wins*
@@ -417,10 +446,15 @@ precisely the population where averaging across the gate mixes two depths.
 | wrapped-text-1 | 0.0033% | 81.5875% | 85.0282% | 0.00004 |
 | bee-3-cpl | 0.4639% | 85.6939% | 87.2011% | 0.00541 |
 
-This fills the hole `Gate::admits`' doc-comment names, and it is **not**
-comparable to M2 §3.1's 34.381% — that was the retired ring-difference operator.
+This is the combined figure M14 §6.4 asked for and told the project not to guess
+at (§0). Definition is M2 §3.1's verbatim, so the ring rows are comparable: the
+shipped operator plus regulariser reaches **0.0214%** on `109MSDCF` against
+**34.381%** for the unregularised ring and **0.868%** for the regularised ring.
+M14's Tenengrad-without-regulariser **1.010%** is a 256² ROI and is **not**
+comparable to a plane figure.
+
 **Report it as description, not as evidence about the election**, for the reason
-in §4/B5.
+in §4/B5 — the regulariser manufactures most of this.
 
 ---
 
@@ -770,13 +804,18 @@ Discipline 590 says every fitted constant here has failed to transfer; this one
 survives a first independent check. *Label:* MEASURED, M96 §2.2.
 
 **P6** — *claim:* The corpus's first **regularised-Tenengrad** elected-index
-speckle row: real **0.0033%–0.4639%**, i.i.d. null **13.0616%–85.6939%**, uniform
-null **66.2011%–87.2011%**, over 7 stacks. *Significance:* fills the hole
-`merge.rs`'s own `Gate::admits` doc-comment names ("No corpus row publishes a
-regularised Tenengrad speckle"), and supersedes M2 §3.1's 34.381%, which was
-measured on the **retired** ring-difference operator and is not comparable.
-Publish it as description, not as evidence about the election, per `P3`.
-*Label:* MEASURED, M96 §3.5.
+speckle, closing a gap `M14-tenengrad-implemented.md` §6.4 named explicitly and
+placed under a standing instruction — *"nobody has measured them together … Do
+not quote a combined figure until someone measures one."* Measured on 7 stacks,
+full interior plane, using M2 §3.1's definition verbatim (`|k − median3×3| > 2`):
+real **0.0033%–0.4639%**, i.i.d. null **13.0616%–85.6939%**, uniform null
+**66.2011%–87.2011%**. The corpus previously had only the three corners of the
+grid: ring/unregularised **34.381%**, ring/regularised **0.868%** (M2 §3.1), and
+Tenengrad/unregularised **1.010%** (M14 §7.2, and that one is a 256² ROI, not a
+plane, so it is not directly comparable). *Significance:* fills a gap the corpus
+had explicitly fenced off and supersedes M2 §3.1's 34.381% as the operative
+number for the shipped pipeline. Publish it as description, **not** as evidence
+about the election, per `P3`. *Label:* MEASURED, M96 §3.5, §0.
 
 **P7** — *claim:* Fact 1199's pedestal defect also affected the **affine** arm of
 `m60-disagreement.rs`, which fact 1199 did not name. The correct pivot is
