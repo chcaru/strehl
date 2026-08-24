@@ -125,3 +125,79 @@ demosaic, no white balance, no colour matrix, no resample, no 2x2 bin, no
 alignment. Only the discarded metric-v1 work (steps 01–03, 06–07) ever read a
 rendered TIFF. This is verified, not assumed, and it is registered here before
 the polarity result is known so it cannot be read as a convenient excuse.
+
+---
+
+# A3.8 POST-HOC — what happened when this was run
+
+**Everything above this line is a registration. Everything below it is
+post-hoc and is not.** Sections A3.1–A3.7 were committed in `4e04877` before
+any polarity measurement existed.
+
+## A3.8.1 The plant passed, and the pass is weaker than it looks
+
+All four plant arms passed N1, N2 and N3 (step 24; §14.2 of the report). But
+**the plant is generated as `alpha*F + (1-alpha)*B`**, so a residual carrying
+`sign(F - B)` is close to a restatement of how it was built. I registered N2
+and N3 to be stronger than a sign test and they are, but they are still tests
+of a model against a scene built from that model.
+
+What the plant does establish, and it is not trivial, is the part registered
+as the fourth possible outcome in A3.6: **selection lands in the veiled band**
+rather than escaping to `k_F` where the error would be ~0. Measured `E(d)` is
+**indistinguishable from zero out to `d ≈ 15 px`** (near-band RMS 0.0022 and
+0.0035, i.e. 7.0% and 2.8% of the respective peaks) and only then excurses,
+with 19/19 and 36/36 consecutive samples carrying the peak's sign — visible in
+`13-POLARITY-curves.png`. That outcome was available and did not occur.
+
+I first wrote this as "exactly 0". It is not; it is at the noise level. The
+sign-run statistic replaces the overstatement.
+
+## A3.8.2 Three constructions of the real-data test failed. All three faults were mine
+
+| step | construction | fault |
+| --- | --- | --- |
+| 27 | 64-px normals, sites labelled from step 26 | **Stale labels.** Sites were re-segmented in a padded box and the segmentation moved: `REV_A` measured contrast **0.16** (near *darker*), `NORM_A` **1.25** (near *brighter*). Two of four sites were the opposite of their label. The script printed *"SIGN FLIPS ON REAL DATA. N1 PASSES"* while its own per-site line read **1/4**. Also: 64-px normals run off into other anatomy (\|E\| reached **0.45 of level** against 0.009 on the plant), no validity gate, and one site elected `k_near = 9` of 299 — a sweep-end noise election. |
+| 28 | depth-gated bands, reference = band at EDT 25–45 | **The reference sat inside the veil.** The plant's foreground blur sigma at `k_B` is `\|k_B-k_F\|*SCALE = 14 px`, so the veil reaches ~3σ = 42 px. The tell was printed and I nearly missed it: the far-field term came back as **exactly `-E_est`** in both arms, which is what you get when the veiled term is identically zero and the whole statistic is the contaminated reference, negated. Several real sites showed far-terms of **−2.0**, i.e. 200% of level. |
+| 30/31 | correct construction, automatic layer masks | **The layer finder is unreliable on real anatomy.** Percentile-based near/far inside a box called `ROI_LEG` *reversed* at contrast 1.06 with `k_near = 59`, when `ROI_LEG` is a dark leg on a bright card whose subject sits at `k ≈ 125`. With the known Otsu mask the same site measures contrast **0.27**, `k_near = 147`. |
+
+Steps 27 and 28 are **discarded in full**. They are committed, with their
+faults documented in their own docstrings, because the corrections are the
+useful part.
+
+## A3.8.3 A tautology I shipped into step 25 and caught in step 26
+
+Step 25 segmented "the subject" with Otsu on merged luma and then reported
+*"foreground brighter than background in **0.0%** of boundary tiles"*. On
+`bee-3-cpl` the subject **is** the dark side, so every boundary that
+segmentation can find is dark-on-bright **by construction**. The number is not
+a fact about the scene; it is a restatement of the segmentation.
+
+Re-running the identical data with a **depth-based** boundary finder — which
+never looks at brightness — gives **71.7%** (307/428 tiles) with the near layer
+brighter. Same capture, same merge, opposite headline.
+
+## A3.8.4 The registered admission bar was applied with the wrong statistic first
+
+A3.5 registered `|Δk| ≥ 20` frames. Step 23 implemented it as *median elected
+frame of the Otsu-bright region minus that of the Otsu-dark region* and it
+disqualified `ROI_LEG` at **+10** — my own registered occluding boundary. That
+is a failure of the statistic: both regions are large and heterogeneous, so
+their medians say nothing about a step **across** a boundary. The
+boundary-local form (`k_in` on EDT 3–15, `k_out` on EDT 30–60) gives median
+`|Δk| = 30`, p90 51, max 94 across 121 tiles. **The bar is unchanged; only the
+estimator of the quantity it gates on was replaced.**
+
+## A3.8.5 Deviations from the registration
+
+- **A3.5's real-data arm could not be completed.** No reversed-polarity
+  occluding boundary in `bee-3-cpl` survives to a state where the estimator can
+  certify itself. Reported as inconclusive in §14.4, not as a pass or a fail.
+- **The short-range tail gate (step 31) was built and then REJECTED by its own
+  validation**, because on a dark background gate-0 selection biases the far
+  field upward and the plant's *ground truth* tail is +0.06135 — a real
+  contamination, not an estimator fault. It was not used to certify anything.
+- **N2 and N3 were evaluated on the plant only.** On real data there is no
+  known `alpha`, so a zero-free-parameter forward model does not exist. Only
+  N1 was ever available there, and it was not answerable.
+

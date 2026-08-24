@@ -1,0 +1,49 @@
+=== 1. rebase visual reference onto M85's render ===
+  full-2-after: (1758, 1172) -> (293, 195)  (out/23-full-2-after-prev.png)
+  full-1-before: (1758, 1172) -> (293, 195)  (out/23-full-1-before-prev.png)
+
+=== 2. scout candidate boundaries on the green lattice ===
+  stack: 299 frames
+    ROI_LEG 0/299
+    ROI_LEG 60/299
+    ROI_LEG 120/299
+    ROI_LEG 180/299
+    ROI_LEG 240/299
+  ROI_LEG: box (1200, 1900, 300, 1400) -> (700, 1100)
+    thorax_hairs 0/299
+    thorax_hairs 60/299
+    thorax_hairs 120/299
+    thorax_hairs 180/299
+    thorax_hairs 240/299
+  thorax_hairs: box (900, 1400, 1500, 2100) -> (500, 600)
+    abdomen_left 0/299
+    abdomen_left 60/299
+    abdomen_left 120/299
+    abdomen_left 180/299
+    abdomen_left 240/299
+  abdomen_left: box (1150, 1650, 900, 1500) -> (500, 600)
+    head_eye 0/299
+    head_eye 60/299
+    head_eye 120/299
+    head_eye 180/299
+    head_eye 240/299
+  head_eye: box (700, 1150, 1450, 1950) -> (450, 500)
+    wing_margin 0/299
+    wing_margin 60/299
+    wing_margin 120/299
+    wing_margin 180/299
+    wing_margin 240/299
+  wing_margin: box (600, 1100, 1900, 2500) -> (500, 600)
+  ROI_LEG        bright   3107.5 @k= 172.0 | dark    508.0 @k= 162.0 | depth sep   +10.0 frames | bright frac 0.624
+  thorax_hairs   bright   1534.0 @k= 101.0 | dark    820.0 @k= 104.0 | depth sep    -3.0 frames | bright frac 0.239
+  abdomen_left   bright   3078.5 @k= 187.0 | dark    694.0 @k= 172.0 | depth sep   +15.0 frames | bright frac 0.468
+  head_eye       bright   1108.5 @k= 114.0 | dark    480.0 @k= 116.0 | depth sep    -2.0 frames | bright frac 0.341
+  wing_margin    bright    826.0 @k=  98.0 | dark    389.0 @k= 103.0 | depth sep    -5.0 frames | bright frac 0.453
+
+  -> data/23-scout.json
+
+INTERPRETATION GUIDE (not a result):
+  a usable reversed-polarity OCCLUDING boundary needs BOTH
+   (a) bright side is the near/foreground layer, and
+   (b) |depth_sep_frames| large -- the two sides at different focus.
+  |depth_sep| ~ 0 means a reflectance edge at one depth = PLACEBO.

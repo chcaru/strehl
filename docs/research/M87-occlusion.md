@@ -75,6 +75,32 @@ such).
 > raises band RMSE **+558.4%**. It cannot tell an occluding edge from any other
 > mask edge.
 >
+> **Does the artifact reverse sign when contrast polarity reverses?**
+> **(§14, registered `4e04877` before measuring.)** **On ground truth, yes,
+> decisively: −0.0721 for a dark foreground and +0.2784 for a bright one**, same
+> geometry, same depths, levels swapped rather than rescaled. It passes a
+> zero-free-parameter magnitude test (ratio 0.86–1.27) and a shape test
+> (r = 0.51–0.89) in all four arms, and **the flip survives with the
+> signal-dependent noise gate replaced by a constant** — so it is not a gate
+> artifact. But the plant is *generated* from the two-layer equation, so this is
+> a weaker result than it appears; what it genuinely establishes is that
+> **selection lands inside the veiled band** rather than escaping to the
+> foreground's frame.
+> **On real captures the test is INCONCLUSIVE — not failed.** `bee-3-cpl`
+> contains no reversed-polarity occlusion with a background large enough
+> (~150 px) for the estimator to satisfy its own far-field self-check:
+> **0 of 5 sites pass**, and so does 0 of 1 at the cleanest known-mask site,
+> after correcting a measured **15.40%-of-mean** photometric drift that by
+> itself moved one tail from −0.129 to +0.010. §14.5 specifies the one capture
+> that settles it.
+>
+> **Two things this closes anyway.** The artifact is measured **on native Bayer
+> green sites**, upstream of demosaic, white balance, colour matrix, resampling
+> and binning — so **none of those is the cause**. And the shipped
+> signal-dependent focus normaliser **suppresses the artifact 3.74× at
+> bright-foreground boundaries** while barely touching dark ones, so **M90's
+> noise-model fix should be expected to make this halo more visible, not less.**
+>
 > **Bottom line.** The artifact is real, it is made by the selector, the physics
 > the owner proposed is the correct physics, the correct fix is reconstruction,
 > and **the project does not yet have a working reconstruction for real
@@ -595,6 +621,12 @@ be folded into it rather than beside it.
 | **P11** | **`bee-3-cpl` drifts 18.09% in level across its sweep** (green luma, fixed far set; 3087.2 DN at k=298, 3704.5 DN at k=103), and a per-pixel selector imports that as a background level patchwork | An output defect for the output/colour milestone. **Not** the occlusion halo: predicted band step **+77.1 DN** vs observed **−539.8 DN**, and normalising by L(k) with selection bit-identical leaves the rim intact | M87 (MEASURED) |
 | **P12** | **A per-pixel merge's background is non-monotone everywhere, not only at edges.** Occlusion-halo placebos on regions with no occluding edge read **0.01269** and **0.00622** against an edge value of 0.06804 — about **one fifth** of the edge amplitude, from the level patchwork of P11 | Any edge-referenced metric on this merge has a floor of ~0.01, and a bar below that is unattainable until frame-level photometric normalisation ships | M87 (MEASURED) |
 | **P13** | **The occlusion halo does not need a rich occluded scene.** The same subject with and without a background fern scores **0.06313** [0.04211, 0.09633] and **0.08155** [0.06598, 0.09617] — **1.29×, CIs overlapping** | Independently echoes `M63.`'s decisive control (fact 968a) one level up: one background surface at a different depth is enough, because the seam is in the selector. **Also: this A/B pair cannot serve as ground truth** — different framing, pose, and frame-0 level 3093 vs 2087 DN | M87 (MEASURED) |
+| **P14** | **The occlusion halo reverses sign with contrast polarity, on ground truth.** Same plant, same geometry, same depths, same noise, the two luminance levels **swapped**: signed error against truth is **−0.0721** (dark foreground) and **+0.2784** (bright foreground), each at its own peak `d`, with mean tails at `d = 90–120` of +1.1e-4 and −6.7e-4 (RMS 0.0017, 0.0051) | The two-layer veil is the correct **mechanism**, not only the correct **description**. A polarity-independent artifact would have been an overshoot from the focus operator's support instead. Confirms P3's predicted sign | M87 (MEASURED, synthetic ground truth) |
+| **P15** | **The veiled band starts where selection stops electing the foreground's frame.** Measured `E(d)` is **statistically indistinguishable from zero out to `d ≈ 15 px`** (near-band RMS 0.0022 and 0.0035 = 7.0% and 2.8% of the respective peaks), then excurses with the sign of `F − B` over `d = 16–35` and `d = 20–56` — **19/19 and 36/36 consecutive samples share the peak's sign** — then falls back under threshold | Near-edge pixels are *unveiled but blurred*; the error lives further out, where the background wins the election and is veiled. **An occlusion stage must treat an annulus, not a rim** — a fix applied at `d < 15` is treating the one place with no photometric error | M87 (MEASURED) |
+| **P16** | **The signal-dependent focus normaliser suppresses the artifact asymmetrically by polarity.** Replacing `green_luma_sigma` with a scene-constant divisor, all else identical, changes signed error from **+0.00853 → +0.03194** for a bright foreground (**3.74×**) but only **−0.00508 → −0.00423** for a dark one (0.83×) | **Cross-milestone, actionable now:** fact 1064's over-confident noise model (−12.8% at S = 8000) is currently *masking* the occlusion halo at bright-foreground boundaries. **M90's fix should be expected to make this artifact more visible there, not less** | M87 (MEASURED on the plant; transfer ARGUED — the operator is the shipped one) |
+| **P17** | **A luminance-segmented boundary census cannot measure contrast polarity.** Otsu-segmenting the subject then counting boundary tiles gives *"foreground brighter in **0.0%**"*; a depth-segmented census on identical data gives **71.7%** (307/428) | The 0.0% is a restatement of the segmentation, not a fact about the scene. **Any polarity, occlusion or layer-order census must be segmented on depth**, never on brightness | M87 (MEASURED) — a methods trap, cheap to repeat |
+| **P18** | **`bee-3-cpl` cannot answer the polarity question, and the reason is geometric.** Its reversed-polarity occlusions are pale hairs over small dark structures whose far layers are tens of px across; the estimator needs `E(d) → 0` at large `d` to certify itself, and **0 of 5 sites** pass that gate (tails −1.10 to +0.09 of level against a 0.02 bar) | The falsifier needs a **purpose-built capture**: a bright subject on a dark background with a large, clean, textured background area. One stack settles it. Specified in §14.5 | M87 (MEASURED) |
+| **P19** | **The sweep drifts 15.40% peak-to-peak *of the sweep mean* on a bare-card anchor patch** (min 4025.3, max 4697.2 DN over 299 frames; the same span is 16.69% if referenced to the minimum), and correcting a reference frame for it moves a real site's far-field residual from **−0.129 to +0.010 of level** | Independent corroboration of P11 on a different region with a different estimator. **Any measurement that differences the merge against a single frame must drift-correct first**, or it will read a photometric offset as structure | M87 (MEASURED) |
 
 ---
 
@@ -658,6 +690,22 @@ Ordered by measured contribution.
 5. **Acceptance is ground truth, never the halo metric** (P5). The gate for
    shipping is band RMSE against a synthetic two-layer scene, plus the
    non-occluding control of §4.3 showing **no** improvement.
+6. **Treat an annulus, not a rim** (P15). Measured `E(d)` is indistinguishable
+   from zero out to `d ≈ 15 px` on the plant: those pixels elect the
+   foreground's own frame and are unveiled. Applying the model there costs
+   accuracy and buys nothing. The inner radius should be derived per site from
+   where the elected frame stops tracking `k_F`, not from a fixed EDT
+   threshold.
+7. **Expect the artifact to grow when M90 lands** (P16). The shipped
+   signal-dependent normaliser suppresses the signed error **3.74×** at
+   bright-foreground boundaries; correcting fact 1064's over-confidence removes
+   part of that accidental suppression. Any acceptance threshold calibrated
+   against today's merge will be too loose afterwards. **Re-baseline after
+   M90, do not port the number.**
+8. **Segment layers on depth, never on brightness** (P17). The census that
+   feeds any occlusion stage must derive near/far from the elected-frame field.
+   Luminance segmentation gave 0.0% where depth segmentation gave 71.7% on
+   identical data.
 
 ### 10.4 Cheapest partial win, not measured here
 
@@ -715,7 +763,12 @@ the rank chosen from the *far field's own* distribution rather than the median.
    "ship". (b) A mode partition variant that leaves band RMSE flat on the plant
    would rescue F1. (c) A capture of a **bright** subject on a **dark**
    background showing a *bright* rim would refute P3's mechanism outright — that
-   is the cheapest falsifier available and it needs one stack.
+   is the cheapest falsifier available and it needs one stack. **§14.5 now
+   specifies that capture precisely**, after §14 established that no existing
+   stack can supply it.
+7. **The polarity confirmation is on a plant generated from the model it
+   tests** (§14.3). It cannot refute the two-layer model. The real-data arm that
+   could is inconclusive for a geometric reason, not a physical one.
 
 ---
 
@@ -736,6 +789,22 @@ python src\21-cost.py             # cost, false positives, crops
 python src\22-plant-truth.py      # ground-truth judgement + failing control
 ```
 
+The polarity falsifier (§14), registered in `PREREG-ADDENDUM-3-polarity.md`:
+
+```
+python src\24-polarity-plant.py   # N1/N2/N3 on ground truth, both normalisers
+python src\26-depth-polarity.py   # polarity-blind, depth-segmented boundary census
+python src\29-real-polarity-v3.py # the validated estimator; plant + real sites
+python src\30-drift-and-control.py# 15.40% drift, per-pixel correction, placebo
+python src\31-known-mask.py       # known-mask positive control; "not measurable"
+python src\32-polarity-figures.py # 12-POLARITY-*.png, 13-POLARITY-curves.png
+```
+
+`src/23`, `src/25`, `src/27` and `src/28` are **committed but discarded** —
+their faults are documented in their own docstrings and in `A3.8` of the
+addendum. `src/25` in particular reports a **tautological 0.0%** that `src/26`
+overturns to 71.7% on identical data; it is kept as the worked example.
+
 `src/04` caches two ~1 GB `.npy` cubes under `cache/`; steps 11–21 memmap them.
 Owner-facing crops and a `README.txt` explaining them are in
 `C:\dev\strehl-out\M87-before-after\`. The read-only corpora were opened
@@ -743,3 +812,225 @@ read-only throughout: **MEASURED**, `Get-ChildItem -Force -Recurse` over
 `D:\personal\macro`, `C:\dev\macro` and `D:\macro-dark-frames` finds **0**
 entries with a write time later than this milestone's first committed file
 (`PREREGISTRATION.md`, 2026-08-24 00:11:03).
+
+---
+
+## 14. The polarity falsifier
+
+Registered in `PREREG-ADDENDUM-3-polarity.md`, committed **`4e04877`, before any
+polarity measurement existed**. Post-hoc disclosures are in that file's §A3.8,
+which is labelled post-hoc and is not part of the registration.
+
+### 14.1 What was asked, and how it was sharpened
+
+The orchestrator proposed that the two-layer model makes a **signed** prediction:
+the artifact should carry `sign(F − B)` and **reverse** when contrast polarity
+reverses. Offered explicitly as a hypothesis, and treated as one.
+
+A sign test alone is weak — a coin passes it half the time — so the registration
+added two stronger tests that could fail with the sign still right:
+
+- **N2 (magnitude):** `|E|` within 2× of a **zero-free-parameter** forward model
+  `median_j[ α_k̂(d)·(F̄ − B_j(d)) ]` built from the plant's *known* `α`.
+- **N3 (shape):** Pearson `r ≥ 0.5` between measured `E(d)` and that forward model.
+
+It also registered a **fourth outcome the hypothesis did not contain**: `E ≈ 0`
+in the veiled band, which would make the halo a *resolution* seam rather than a
+*photometric* veil. That outcome was available and did not occur.
+
+### 14.2 On ground truth: N1, N2 and N3 all pass, in all four arms
+
+Levels **swapped, not rescaled**, so both scenes hold the same two luminance
+levels and near-identical global signal statistics.
+
+| focus normaliser | arm | measured `E` | forward `E` | ratio \|E\|/\|E_fwd\| | Pearson `r` | N1 | N2 | N3 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| signal-dependent (shipped) | dark FG / bright BG | **−0.00508** [−0.00654, −0.00389] | −0.00419 | 1.211 | +0.787 | PASS | PASS | PASS |
+| signal-dependent (shipped) | bright FG / dark BG | **+0.00853** [+0.00753, +0.01072] | +0.00988 | 0.863 | +0.509 | PASS | PASS | PASS |
+| constant sigma (control C-sig) | dark FG / bright BG | **−0.00423** [−0.00564, −0.00339] | −0.00333 | 1.269 | +0.742 | PASS | PASS | PASS |
+| constant sigma (control C-sig) | bright FG / dark BG | **+0.03194** [+0.03133, +0.03608] | +0.03215 | 0.993 | +0.892 | PASS | PASS | PASS |
+
+All **MEASURED**, 287 profiles per arm, 95% CI by block bootstrap over
+contiguous 32-row blocks (adjacent profiles share pixels).
+
+**The flip survives the constant-sigma control**, so it is not an artifact of
+the signal-dependent noise gate — the alternative the orchestrator correctly
+flagged, and the one fact 1064 would predict.
+
+A second, sharper measurement on the same scenes with the final estimator
+(step 29), reading the whole curve rather than a band:
+
+| arm | truth peak | estimator peak | at `d` | mean tail (d = 90–120) | tail RMS |
+| --- | --- | --- | --- | --- | --- |
+| dark FG / bright BG | **−0.07212** | −0.07166 | 17 px | +0.00022 | 0.0017 |
+| bright FG / dark BG | **+0.27841** | +0.27890 | 33 px | −0.00012 | 0.0051 |
+
+The truth-free estimator reproduces ground-truth signed error to within
+**0.6%** and **0.2%**. The validity gate reads the **mean** tail, because that
+is the quantity the two-layer model constrains to zero; the RMS is quoted so
+the mean is not mistaken for a precision. See `13-POLARITY-curves.png` and
+`12-POLARITY-side-by-side.png`.
+
+### 14.3 Why this is weaker evidence than it looks — and what it does establish
+
+**ARGUED, and it is the honest reading.** The plant is *generated* as
+`α·F + (1−α)·B`. A residual carrying `sign(F − B)` is therefore close to a
+restatement of how it was built. **The plant cannot refute the two-layer
+model, because it is the two-layer model.** This is the same trap the project
+hit at facts 567/568/603 and the one the dispatch warned about, arriving from a
+new direction: not a plant that cannot express the effect, but a plant that
+cannot *fail* to.
+
+What it genuinely establishes is the non-obvious half:
+
+- **MEASURED.** `E(d)` is **statistically indistinguishable from zero out to
+  `d ≈ 15 px`** — near-band (d = 2–15) RMS **0.0022** and **0.0035**, which is
+  **7.0%** and **2.8%** of the respective peaks — then excurses, then falls back
+  under threshold. The excursion is **19/19** and **36/36** consecutive samples
+  carrying the peak's sign, over `d = 16–35` and `d = 20–56` respectively.
+  Selection **lands in the veiled band** rather than escaping to `k_F`, where
+  α = 0 and the error would vanish. That was the registered fourth outcome and
+  it did not happen.
+- **Correction to my own first draft of this section.** I initially wrote that
+  `E(d)` is *exactly* 0.000 in the near band. It is not; it is at the noise
+  level. The corrected statement is above and the sign-run statistic replaces
+  the overstatement with something checkable.
+- **DERIVED.** So the near-edge pixels are *unveiled but blurred*, and the
+  photometric error lives in an **annulus** further out. A fix applied at the
+  rim is treating the one place with no photometric error. This is P15 and it
+  changes where any occlusion stage must act.
+
+### 14.4 On real data: INCONCLUSIVE, and the reason is geometric
+
+**This is the load-bearing negative of this section.**
+
+Three constructions of a real-data estimator failed, for three distinct
+diagnosed reasons (all mine; §A3.8.2). The final construction is validated to
+sub-percent on ground truth and carries a **physically required self-check**:
+the two-layer model says `E(d) → 0` far from the boundary, so a site whose
+curve does not return is contaminated and cannot be certified.
+
+| site set | n | pass the tail gate (\|mean E(90–120)\| < 0.02) |
+| --- | --- | --- |
+| plant, both polarities | 2 | **2/2** (tails 2.2e-4, 1.2e-4) |
+| `bee-3-cpl`, depth-selected sites, **no drift correction** | 5 | **0/5** (tails −1.10, −0.61, −0.20, −0.045, +0.087) |
+| `bee-3-cpl`, same sites, **drift-corrected**, automatic masks | 4 | **2/4** (+0.010, −0.019 pass; −0.212, −0.272 fail) |
+| `bee-3-cpl` `ROI_LEG`, **known Otsu leg mask**, drift-corrected | 1 | **0/1** (tail −0.096) |
+
+**MEASURED. The 2/4 row is the one that must not be read as a success**, and it
+is the reason the known-mask row exists. Both passing sites fail on inspection:
+
+- `ROI_LEG` passed at +0.010 with an **automatic** near/far split that measured
+  contrast **1.06** and `k_near = 59` — i.e. it called a dark leg on a bright
+  card "reversed". Re-run with the **known** leg mask the same site measures
+  contrast **0.27**, `k_near = 147` (correct), and its tail is **−0.096**:
+  INVALID. The pass was an artifact of a wrong mask.
+- The other passing site measured contrast **0.43** once given enough
+  background to work with — it is a **normal**-polarity boundary, not a
+  reversed one, so it cannot serve the test either way.
+
+**MEASURED.** Two candidate causes of the tail failures were tested, and the
+first is now largely excluded:
+
+- **Photometric drift is real and was a major contributor.** **15.40%
+  peak-to-peak of the sweep mean** (min 4025.3, max 4697.2 DN; 16.69% if
+  referenced to the minimum instead) on a bare-card anchor patch outside every
+  analysis box. Correcting a reference frame per pixel by
+  `s[argbest]/s[k_near]` moved one site's tail from **−0.12903 to +0.01025**.
+  (P19.)
+- **It is not sufficient.** With the *correct* leg mask, `ROI_LEG` still fails
+  at **−0.096** after correction. What remains is unattributed: candidates are
+  the card's large-scale illumination gradient (diagnosed in §2 as the cause of
+  metric v1's failure, not itself quantified in DN), residual selection
+  inflation, and the absence of alignment.
+
+**MEASURED.** And the reversed-polarity arm cannot be run at all on this
+capture. Genuine reversed-polarity occlusions do exist — pale hair over dark
+leg or eye, 307/428 depth-boundary tiles with the near layer brighter — but
+their far layers are **tens of pixels across**. Widening the box to obtain a
+far field swallows the bright card and the site stops being reversed: all three
+top candidates re-measured at contrast **0.43 / 0.83 / 0.87**, i.e. normal.
+Narrowing it leaves no room for an anchor: **0 of 2 measurable**.
+
+**MEASURED, and it is a control working.** The short-range tail gate built in
+step 31 was **rejected by its own validation**: on the small-scale plant the
+*ground truth* tail is **+0.06135** for the bright-foreground arm, because
+gate-0 selection takes a per-pixel max over a noisy field and biases a dark
+background upward. The merge genuinely differs from truth in the far field
+there. The gate refused to certify contaminated data and was not used to
+certify anything.
+
+> **VERDICT on the polarity falsifier.**
+> **On ground truth the two-layer model passes a signed test it could have
+> failed, including a zero-free-parameter magnitude and shape test, and the
+> pass survives the noise-gate control. On real captures the test is
+> INCONCLUSIVE — not failed, not passed — because `bee-3-cpl` contains no
+> reversed-polarity occlusion with enough spatial extent for the estimator to
+> certify itself, and because even the cleanest normal-polarity site does not
+> satisfy the model's own far-field requirement after a measured **15.40% of
+> mean** photometric drift is corrected for.**
+>
+> **This does not change the report's operative conclusions.** §5 already
+> measured that two-layer unmixing fails on real captures (+3.7% / −28.2%
+> against a −50% bar), and §6 already measured that the cheap remedy is
+> cosmetic. The polarity work strengthens the *mechanism* and leaves the
+> *engineering* verdict exactly where it was: **do not build the two-layer
+> reconstruction into Rust yet.**
+
+### 14.5 The capture that would settle it, specified
+
+**ARGUED, from measured constraints.** §12 already named "a bright subject on
+a dark background" as the cheapest falsifier of P3. The polarity work sharpens
+it into a specification, and it is now the single highest-value capture for
+this line of work:
+
+1. **A bright subject on a dark background** — reversed polarity, which this
+   corpus does not currently contain in usable form.
+2. **The background must be large and clean** — at least ~150 px of
+   uninterrupted background beyond the silhouette on the green lattice, so
+   `E(d)` can be shown to return to zero. This is the constraint `bee-3-cpl`
+   fails, and it is the reason the arm could not be run.
+3. **The background must be textured**, or it has no focus peak of its own,
+   no seam, and no halo — the plant's own design tension, measured in §4.
+4. **A clean depth separation**, `|Δk| ≥ 30` frames between subject and
+   background.
+5. Same session, same lighting as a normal-polarity control if possible.
+
+**Predicted result if the two-layer model is right:** a **dark** annulus
+outside the bright subject, peaking at `d` of order the foreground's blur
+radius at the background's focus frame, returning to zero beyond it. **If the
+annulus is bright instead, the veil is refuted as the dominant cause** and the
+artifact is an overshoot from the focus operator's support.
+
+I am not editing `docs/captures-needed.md` (owner's file, rule respected).
+
+### 14.6 Corrections to the hypothesis as offered
+
+- **MEASURED. "`bee-3-cpl` has both [polarities]" is not usable as stated.**
+  The two boundaries named — pale thorax hairs against the darker body, and the
+  dark eye against pale hairs — are **reflectance edges at a single depth**:
+  boundary-local depth separation **−3.0** and **−2.0** frames respectively
+  (wing margin −5.0). Those are the *placebo* for this milestone, not a
+  polarity test. Reversed-polarity *occlusions* do exist elsewhere in the frame,
+  but not with usable geometry (§14.4).
+- **Pointer. "discipline 572"** in the dispatch does not say what it was cited
+  for. SYNTHESIS discipline 572 is the Jensen-inequality noise-gain defect
+  (`1/sqrt(E[n])` vs `E[1/sqrt(n)]`). The *instruction* — treat a hypothesis as
+  a hypothesis — stands on its own; only the citation is wrong. Same class as
+  the M60/M63 and M6 pointer errors in §1.
+- **MEASURED. The concern that M85's render fix invalidates my spatial
+  statistics does not apply.** Every surviving number in this report is
+  computed from `m87lib.read_planes` — the **native Bayer green sites**,
+  black-subtracted — not from a rendered image. No demosaic, no white balance,
+  no colour matrix, no resample, no 2×2 bin, no alignment. Only the *discarded*
+  metric-v1 work (steps 01–03, 06–07) ever read a rendered TIFF. This also
+  **eliminates demosaic, colour matrix, white balance and resampling as causes
+  outright**, since the artifact is fully present upstream of all of them —
+  four of the alternative explanations the orchestrator listed, closed with
+  evidence already in hand.
+- **Visual reference rebased.** `out/23-full-2-after-prev.png` (local, gitignored
+  with every other PNG) is a downsample of M85's `full-2-after.png`. The
+  qualitative description in the dispatch — a bright scalloped aura following
+  the contour, giving a cut-out quality — is consistent with what I measure at
+  normal polarity, but it remains an unmeasured visual impression and nothing
+  in this report rests on it.

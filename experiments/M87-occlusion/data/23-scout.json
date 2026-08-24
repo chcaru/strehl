@@ -1,0 +1,87 @@
+[
+  {
+    "tag": "ROI_LEG",
+    "box": [
+      1200,
+      1900,
+      300,
+      1400
+    ],
+    "tau": 1878.119140625,
+    "bright_level": 3107.5,
+    "dark_level": 508.0,
+    "contrast": 6.1171259842519685,
+    "bright_median_k": 172.0,
+    "dark_median_k": 162.0,
+    "depth_sep_frames": 10.0,
+    "bright_frac": 0.6240467532467533
+  },
+  {
+    "tag": "thorax_hairs",
+    "box": [
+      900,
+      1400,
+      1500,
+      2100
+    ],
+    "tau": 1227.4091796875,
+    "bright_level": 1534.0,
+    "dark_level": 820.0,
+    "contrast": 1.8707317073170733,
+    "bright_median_k": 101.0,
+    "dark_median_k": 104.0,
+    "depth_sep_frames": -3.0,
+    "bright_frac": 0.23854333333333333
+  },
+  {
+    "tag": "abdomen_left",
+    "box": [
+      1150,
+      1650,
+      900,
+      1500
+    ],
+    "tau": 1840.64111328125,
+    "bright_level": 3078.5,
+    "dark_level": 694.0,
+    "contrast": 4.435878962536023,
+    "bright_median_k": 187.0,
+    "dark_median_k": 172.0,
+    "depth_sep_frames": 15.0,
+    "bright_frac": 0.46764
+  },
+  {
+    "tag": "head_eye",
+    "box": [
+      700,
+      1150,
+      1450,
+      1950
+    ],
+    "tau": 865.970703125,
+    "bright_level": 1108.5,
+    "dark_level": 480.0,
+    "contrast": 2.309375,
+    "bright_median_k": 114.0,
+    "dark_median_k": 116.0,
+    "depth_sep_frames": -2.0,
+    "bright_frac": 0.341
+  },
+  {
+    "tag": "wing_margin",
+    "box": [
+      600,
+      1100,
+      1900,
+      2500
+    ],
+    "tau": 632.46923828125,
+    "bright_level": 826.0,
+    "dark_level": 389.0,
+    "contrast": 2.1233933161953726,
+    "bright_median_k": 98.0,
+    "dark_median_k": 103.0,
+    "depth_sep_frames": -5.0,
+    "bright_frac": 0.45338333333333336
+  }
+]

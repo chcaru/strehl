@@ -1,0 +1,35 @@
+=== PART A: validate the depth-gated estimator on the plant ===
+  P_plus  dark-FG/bright-BG: E_true +0.00909  E_est +0.01025  far-field term -0.01025  sign AGREE
+  P_minus bright-FG/dark-BG: E_true -0.17698  E_est -0.17531  far-field term +0.17531  sign AGREE
+  => estimator VALIDATED
+
+=== PART B: site selection from cached full-frame merge ===
+  22 non-overlapping candidate sites
+  18 sites survive geometry gates; 15 distinct reference frames to decode
+
+=== PART C: 15 measured sites ===
+            site     dk   contr   polarity      E_est   far-term   pass
+   1536, 1344     53    2.03   reversed   -0.06419   -0.08690   fail
+   1968, 1776    135    1.38   reversed   -0.06086   -0.32272   fail
+   1008, 1008     96    1.12   reversed   +0.02576   -0.17701   PASS
+   1584, 1056     94    1.08   reversed   -0.01026   -0.06175   fail
+   1104,  720     81    1.05   reversed   -0.46873   +0.43491   fail
+    240, 2256     37    0.96     normal   +0.05634   -0.05634   fail
+   1536, 1776     70    0.96     normal   +0.12171   -0.00824   fail
+    240, 1968    105    0.86     normal   -0.01330   -0.00972   PASS
+   1248, 2928     65    0.85     normal   -0.00510   -0.18783   PASS
+   2016, 2544    115    0.83     normal   -0.02093   -0.12605   PASS
+    144, 1728     52    0.78     normal   -0.01515   -0.00926   PASS
+   1344, 3408    233    0.74     normal   +0.32058   -0.02818   fail
+   1296, 1248     95    0.43     normal   -0.00516   +0.02979   PASS
+   1248, 1008    137    0.36     normal   +0.20794   -2.01182   fail
+   1344, 3168    149    0.25     normal   +0.60633   -1.88597   fail
+
+================ VERDICT (measured polarity) ================
+   reversed: n= 5  median E -0.06086  IQR [-0.06419, -0.01026]  E>0 in 1/5
+     normal: n=10  median E +0.02562  IQR [-0.01127, +0.18638]  E>0 in 5/10
+  Mann-Whitney U on E between polarities: p = 0.03996
+  medians DIFFER IN SIGN
+  sites matching predicted sign: 6/15 (40%; chance = 50%)
+
+  -> data/28-real-polarity.json

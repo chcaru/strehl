@@ -1,0 +1,27 @@
+=== PART A: plant, with the reference range past the blur reach ===
+    plant blur reach at k_B ~ 3*|kB-kF|*SCALE = 42 px
+  P_plus  dark-FG/bright-BG
+    truth   : peak -0.07212 at d= 17  tail +0.00011  valid
+    estimate: peak -0.07166 at d= 17  tail +0.00022  valid
+    expected sign - -> truth PASS, estimate PASS
+  P_minus bright-FG/dark-BG
+    truth   : peak +0.27841 at d= 33  tail -0.00067  valid
+    estimate: peak +0.27890 at d= 33  tail -0.00012  valid
+    expected sign + -> truth PASS, estimate PASS
+  => estimator VALIDATED on the plant
+
+=== PART B: bee-3-cpl sites ===
+  12 sites pass geometry; 11 reference decodes
+
+=== PART C: 5 sites measured, 0 pass the tail-return validity gate (|E(90..120)| < 0.02) ===
+           site    dk  contr  polarity      peak    d      tail  valid  pass
+   1968, 1776   131   1.89  reversed  -0.64196   58  -1.10485     NO  fail
+   1248, 2928    76   0.97    normal  -0.27961    6  -0.20370     NO  PASS
+    288, 1920    86   0.73    normal  +0.08984   26  -0.04468     NO  fail
+   1344, 3408   205   0.71    normal  -0.34626   60  -0.61275     NO  PASS
+    576, 2496    47   0.19    normal  +0.12338   43  +0.08682     NO  fail
+
+================ VERDICT (valid sites, measured polarity) ================
+  Only 0 sites survive the validity gate. UNDERPOWERED -- no verdict.
+
+  -> data/29-real-polarity.json

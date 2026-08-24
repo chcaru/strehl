@@ -1,0 +1,71 @@
+{
+  "short_gate": [
+    {
+      "tag": "P_plus  dark-FG/bright-BG",
+      "expected_sign": -1.0,
+      "est": {
+        "peak": -0.022096372493358964,
+        "peak_d": 9,
+        "tail": -0.00011789436421542543,
+        "level": 2249.63916015625,
+        "valid": true,
+        "n_far": 158313
+      },
+      "truth": {
+        "peak": -0.02142562630931058,
+        "peak_d": 9,
+        "tail": -0.0001124600373446598,
+        "level": 2249.63916015625,
+        "valid": true,
+        "n_far": 158313
+      },
+      "ok": true
+    },
+    {
+      "tag": "P_minus bright-FG/dark-BG",
+      "expected_sign": 1.0,
+      "est": {
+        "peak": 0.31687608936678585,
+        "peak_d": 33,
+        "tail": 0.06132641416831749,
+        "level": 255.7834930419922,
+        "valid": false,
+        "n_far": 158313
+      },
+      "truth": {
+        "peak": 0.3163886078858438,
+        "peak_d": 33,
+        "tail": 0.06135438422085654,
+        "level": 255.7834930419922,
+        "valid": false,
+        "n_far": 158313
+      },
+      "ok": true
+    }
+  ],
+  "short_gate_ok": false,
+  "sites": [
+    {
+      "tag": "ROI_LEG(known mask)",
+      "polarity": "normal",
+      "expected_sign": -1.0,
+      "contrast": 0.27235549260471803,
+      "peak": -0.0745147185707196,
+      "peak_d": 84,
+      "tail": -0.09607391203163076,
+      "level": 3123.2083665112045,
+      "valid": false,
+      "n_far": 559610
+    },
+    {
+      "tag": "REV y=2064 x=1920",
+      "polarity": "reversed",
+      "measurable": false
+    },
+    {
+      "tag": "REV y=1248 x=2928",
+      "polarity": "reversed",
+      "measurable": false
+    }
+  ]
+}

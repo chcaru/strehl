@@ -1,0 +1,47 @@
+=== PART A: validate the truth-free estimator on the plant ===
+  P_plus  dark-FG/bright-BG: E_true -0.00526  E_est -0.00544  ratio +1.033  r +0.995  sign AGREE
+  P_minus bright-FG/dark-BG: E_true +0.00836  E_est +0.00911  ratio +1.090  r +0.997  sign AGREE
+  => estimator VALIDATED (sign agrees in 2/2 arms)
+
+=== PART B: the falsifier on bee-3-cpl ===
+    REV_A 0/299 0s
+    REV_A 80/299 33s
+    REV_A 160/299 72s
+    REV_A 240/299 119s
+  REV_A hair-over-leg
+    dk  122.0 frames | near   296.0 / far  1827.5 | contrast  0.16 | k_near 156 | 306 profiles
+    E_est -0.27647 of level  95% CI [-0.63057, -0.02868]
+    predicted sign - -> PASS
+    REV_B 0/299 1s
+    REV_B 80/299 50s
+    REV_B 160/299 95s
+    REV_B 240/299 141s
+  REV_B hair-over-dark
+    dk   88.0 frames | near  2234.5 / far  1469.5 | contrast  1.52 | k_near 141 | 386 profiles
+    E_est -0.33572 of level  95% CI [-0.42590, -0.24010]
+    predicted sign + -> FAIL
+    NORM_A 0/299 1s
+    NORM_A 80/299 46s
+    NORM_A 160/299 91s
+    NORM_A 240/299 137s
+  NORM_A leg-on-card
+    dk  161.0 frames | near  1910.0 / far  1527.5 | contrast  1.25 | k_near 66 | 143 profiles
+    E_est -0.11400 of level  95% CI [-3.23061, +0.21625]
+    predicted sign + -> FAIL
+    NORM_B 0/299 1s
+    NORM_B 80/299 46s
+    NORM_B 160/299 90s
+    NORM_B 240/299 137s
+  NORM_B leg-on-card
+    dk  110.0 frames | near  2711.2 / far  2971.0 | contrast  0.91 | k_near 9 | 198 profiles
+    E_est +0.44982 of level  95% CI [+0.37399, +0.56487]
+    predicted sign - -> FAIL
+
+================ REGISTERED VERDICT (real data) ================
+  reversed polarity (near BRIGHTER): E_est median -0.30610
+  normal   polarity (near DARKER  ): E_est median +0.16791
+  => SIGN FLIPS ON REAL DATA. N1 PASSES. The artifact carries sign(F-B).
+     Veiling SURVIVES a test it could have failed.
+  per-site: 1/4 sites match their predicted sign
+
+  -> data/27-real-polarity.json

@@ -1,0 +1,4 @@
+  Pplus: wrote 12-POLARITY-Pplus-error.png
+  Pminus: wrote 12-POLARITY-Pminus-error.png
+  wrote 12-POLARITY-side-by-side.png
+  wrote 13-POLARITY-curves.png

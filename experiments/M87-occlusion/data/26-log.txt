@@ -1,0 +1,87 @@
+
+=== bee3 ===
+  cached: bee3
+  bee3: 428 depth-discontinuity tiles (|dk| >= 20 of 299 frames)
+    dk: median 108.0  p90 215.3  max 292.0
+    NEAR layer brighter (reversed polarity): 307/428 = 71.7%
+    strongest reversed-polarity occlusions:
+      y= 1248 x=  960 dk= 128.0 near  2199.5 / far   925.8 contrast  2.38 conf 0.90
+      y= 1248 x= 1008 dk= 143.0 near  2417.5 / far  1324.2 contrast  1.83 conf 0.92
+      y= 1296 x= 1104 dk= 115.0 near  1977.0 / far  1127.0 contrast  1.75 conf 0.84
+      y= 1296 x= 1056 dk=  94.0 near  2049.5 / far  1017.0 contrast  2.02 conf 0.84
+      y= 1968 x= 1776 dk= 123.0 near  3052.5 / far  2146.0 contrast  1.42 conf 0.92
+      y= 2064 x= 1920 dk=  74.0 near  1259.5 / far   560.0 contrast  2.25 conf 0.95
+      y= 2016 x=    0 dk= 193.0 near  3252.5 / far  2586.5 contrast  1.26 conf 0.42
+      y= 1920 x= 2976 dk= 267.0 near  3638.5 / far  2995.0 contrast  1.21 conf 0.47
+      y= 1920 x= 3024 dk= 151.0 near  3627.0 / far  2997.0 contrast  1.21 conf 0.29
+      y= 1872 x=    0 dk= 225.0 near  3468.0 / far  2881.5 contrast  1.20 conf 0.42
+    strongest normal-polarity occlusions:
+      y= 1344 x= 3216 dk= 134.0 near   172.5 / far  1753.5 contrast  0.10 conf 1.00
+      y= 1344 x= 3264 dk= 158.0 near   172.5 / far  1318.0 contrast  0.13 conf 1.00
+      y= 1728 x= 2688 dk=  61.0 near   270.0 / far  3223.0 contrast  0.08 conf 0.94
+      y= 1344 x= 3168 dk= 134.0 near   293.0 / far  1432.0 contrast  0.20 conf 0.87
+      y= 1680 x= 2736 dk=  59.0 near   226.8 / far  2181.2 contrast  0.10 conf 0.94
+
+=== flower-fern ===
+  flower-fern: 299 frames, green lattice 2344x3514
+    0/299  2s
+    60/299  48s
+    120/299  86s
+    180/299  131s
+    240/299  177s
+    done in 221s
+  flower-fern: 872 depth-discontinuity tiles (|dk| >= 20 of 299 frames)
+    dk: median 236.0  p90 273.0  max 298.0
+    NEAR layer brighter (reversed polarity): 19/872 = 2.2%
+    strongest reversed-polarity occlusions:
+      y= 1536 x= 2016 dk=  94.0 near  1843.5 / far  1291.5 contrast  1.43 conf 0.86
+      y= 1632 x= 1584 dk= 137.0 near  3642.0 / far  3534.2 contrast  1.03 conf 0.29
+      y= 2160 x= 1248 dk= 282.0 near  3425.8 / far  3363.5 contrast  1.02 conf 0.36
+      y= 1344 x= 3216 dk= 114.0 near  3376.8 / far  3344.8 contrast  1.01 conf 0.26
+      y=   48 x= 3312 dk=  96.0 near  3430.5 / far  3305.0 contrast  1.04 conf 0.25
+      y= 1440 x= 2640 dk=  83.0 near   906.0 / far   842.8 contrast  1.08 conf 1.00
+      y= 1968 x= 3264 dk=  63.0 near  2900.5 / far  2818.8 contrast  1.03 conf 0.25
+      y=  720 x= 2928 dk=  41.0 near  1148.0 / far   784.0 contrast  1.46 conf 0.98
+      y=  528 x= 2688 dk=  35.0 near   889.0 / far   630.0 contrast  1.41 conf 1.00
+      y= 2208 x=  768 dk=  45.0 near  2724.5 / far  2682.5 contrast  1.02 conf 0.90
+    strongest normal-polarity occlusions:
+      y= 1296 x=  240 dk= 191.0 near  1869.8 / far  3459.0 contrast  0.54 conf 0.54
+      y= 1392 x=  144 dk= 177.0 near  2048.0 / far  3285.2 contrast  0.62 conf 0.73
+      y= 1968 x=  144 dk= 237.0 near  2258.0 / far  3582.0 contrast  0.63 conf 0.80
+      y= 1296 x=   96 dk= 270.0 near  2472.0 / far  3896.0 contrast  0.63 conf 0.80
+      y= 1152 x=  288 dk= 157.0 near  2137.2 / far  3350.5 contrast  0.64 conf 0.78
+
+=== flower-alone ===
+  flower-alone: 205 frames, green lattice 2344x3514
+    0/205  1s
+    60/205  44s
+    120/205  83s
+    180/205  131s
+    done in 151s
+  flower-alone: 1574 depth-discontinuity tiles (|dk| >= 20 of 205 frames)
+    dk: median 164.0  p90 189.0  max 204.0
+    NEAR layer brighter (reversed polarity): 18/1574 = 1.1%
+    strongest reversed-polarity occlusions:
+      y=  480 x= 1056 dk= 149.0 near  4922.0 / far  4873.5 contrast  1.01 conf 0.34
+      y= 1296 x=   48 dk= 112.0 near  4384.8 / far  4347.8 contrast  1.01 conf 0.36
+      y= 2256 x= 2736 dk=  81.0 near  4054.5 / far  3891.8 contrast  1.04 conf 0.31
+      y= 1440 x= 1248 dk=  30.0 near  3380.8 / far  1447.5 contrast  2.34 conf 0.87
+      y= 1344 x= 1248 dk=  24.0 near  3351.5 / far  1386.5 contrast  2.42 conf 0.88
+      y=  816 x= 1104 dk=  27.0 near  2973.5 / far  1413.0 contrast  2.10 conf 0.98
+      y=  720 x= 1152 dk=  49.0 near  3008.5 / far  2664.2 contrast  1.13 conf 0.80
+      y= 2160 x= 1248 dk=  40.0 near  3459.5 / far  2979.5 contrast  1.16 conf 0.96
+      y=  912 x= 2208 dk=  30.6 near  3407.5 / far  2447.0 contrast  1.39 conf 0.97
+      y=  672 x= 1200 dk=  34.0 near  3236.2 / far  2650.8 contrast  1.22 conf 0.99
+    strongest normal-polarity occlusions:
+      y=  864 x= 2064 dk=  66.0 near   468.0 / far  1141.0 contrast  0.41 conf 0.85
+      y=  768 x= 1968 dk=  88.0 near   849.5 / far  1522.2 contrast  0.56 conf 0.98
+      y=  384 x= 1872 dk= 113.0 near  3448.0 / far  4647.0 contrast  0.74 conf 0.62
+      y=  432 x= 1872 dk=  99.0 near  3060.8 / far  4629.5 contrast  0.66 conf 0.77
+      y=  240 x= 2448 dk= 191.0 near  4114.8 / far  5075.0 contrast  0.81 conf 0.87
+
+  -> data/26-depth-boundaries.json
+
+================ POLARITY AVAILABILITY ================
+  bee3: 307/428 reversed-polarity tiles, 25 with contrast > 1.3
+  flower-fern: 19/872 reversed-polarity tiles, 7 with contrast > 1.3
+  flower-alone: 18/1574 reversed-polarity tiles, 8 with contrast > 1.3

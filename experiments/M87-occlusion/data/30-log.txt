@@ -1,0 +1,34 @@
+green lattice 2344x3514
+drift anchor box (60, 320, 3174, 3434)
+    drift 0/299 0s
+    drift 60/299 33s
+    drift 120/299 66s
+    drift 180/299 100s
+    drift 240/299 136s
+  drift over sweep: min 4025.3 max 4697.2 DN, peak-to-peak 15.40% of mean
+
+=== POSITIVE CONTROL: ROI_LEG (registered clean site) ===
+  ROI_LEG  dk=141 k_near=59 near=2600 far=2459 contrast=1.06 -> reversed (model predicts NEGATIVE peak)
+          raw: peak -0.21081 at d=  4  tail -0.12903  tail fail  sign fail
+    corrected: peak -0.03224 at d=  6  tail +0.01025  VALID  sign fail
+
+=== reversed-polarity candidates, HALF=300 ===
+  3 reversed candidates after thinning
+  REV y=1248 x=960  dk=118 k_near=152 near=1269 far=2936 contrast=0.43 -> normal (model predicts POSITIVE peak)
+          raw: peak -0.19356 at d= 60  tail -0.08521  tail fail  sign PASS
+    corrected: peak -0.15024 at d= 11  tail -0.01861  VALID  sign PASS
+  REV y=2064 x=1920  dk=120 k_near=113 near=1222 far=1479 contrast=0.83 -> normal (model predicts POSITIVE peak)
+          raw: peak -0.54645 at d= 60  tail -0.30305  tail fail  sign PASS
+    corrected: peak -0.37635 at d= 60  tail -0.21178  tail fail  sign PASS
+  REV y=1248 x=2928  dk=109 k_near=74 near=1494 far=1725 contrast=0.87 -> normal (model predicts POSITIVE peak)
+          raw: peak -0.85392 at d= 35  tail -0.36325  tail fail  sign PASS
+    corrected: peak -0.75892 at d= 35  tail -0.27230  tail fail  sign PASS
+
+================ VERDICT ================
+  positive control ROI_LEG (corrected): tail +0.01025 -> PASSES the validity gate
+  => peak -0.03224 at d=6, predicted sign +: FAIL
+  sites passing validity after drift correction: 2/4
+                   ROI_LEG   reversed  peak -0.03224  fail
+          REV y=1248 x=960     normal  peak -0.15024  PASS
+
+  -> data/30-control.json

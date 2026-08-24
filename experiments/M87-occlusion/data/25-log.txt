@@ -1,0 +1,32 @@
+=== full-frame streaming merge (gate 0, green lattice) ===
+  bee3: 299 frames, green lattice 2344x3514
+    0/299  3s
+    40/299  56s
+    80/299  92s
+    120/299  130s
+    160/299  171s
+    200/299  211s
+    240/299  250s
+    280/299  322s
+    done in 344s
+
+=== boundary classification ===
+  subject is the dark side; 41.0% of frame
+  121 boundary tiles with enough support
+  |dk| : median 30.0  p90 51.0  max 94.0 frames
+  foreground brighter than background in 0.0% of boundary tiles
+  tiles passing the |dk|>=20 occlusion bar: 67 (55.4%)
+  ... of which foreground is BRIGHTER (reversed polarity): 0
+  top NORMAL-polarity occluding tiles (dark FG / bright BG):
+    y= 1024 x=  704  dk=  +94.0  in  1233.5 / out  2737.0  contrast 0.45
+    y= 1600 x= 1024  dk=  +74.0  in   562.5 / out  3017.5  contrast 0.19
+    y= 1408 x= 1024  dk=  +72.0  in   558.8 / out  3278.5  contrast 0.17
+    y= 1984 x= 1856  dk=  +69.0  in  1575.5 / out  2786.0  contrast 0.57
+    y= 1728 x= 1344  dk=  +68.0  in   263.8 / out  2410.0  contrast 0.11
+    y= 1984 x= 1920  dk=  +65.0  in  1208.2 / out  2993.0  contrast 0.40
+    y= 1792 x= 1280  dk=  +61.0  in   556.5 / out  2564.0  contrast 0.22
+    y= 1344 x= 3008  dk=  +58.0  in   351.2 / out  3078.5  contrast 0.11
+
+  subject median k = 125.0, far background median k = 137.0
+  => LOWER k is NEARER in this sweep
+  -> out/25-sel-prev.png, out/25-argbest-prev.png, data/25-boundaries.json

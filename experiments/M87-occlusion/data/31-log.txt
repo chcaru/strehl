@@ -1,0 +1,35 @@
+=== PART A: validate the SHORT-RANGE gate on a small-scale plant ===
+    small plant blur reach ~ 15 px; tail gate at d in [40,60]
+  P_plus  dark-FG/bright-BG: truth peak -0.02143 (tail -0.00011)  est peak -0.02210 (tail -0.00012)  expect - -> PASS
+  P_minus bright-FG/dark-BG: truth peak +0.31639 (tail +0.06135)  est peak +0.31688 (tail +0.06133)  expect + -> PASS
+  => short gate REJECTED
+     P_minus bright-FG/dark-BG: tail +0.06133 exceeds 0.02. NOTE the TRUTH tail is +0.06135 -- i.e. the merge genuinely differs from truth in the far field, so this is a real contamination, not an estimator fault.
+     Cause: on a DARK background, gate-0 selection takes the max of a
+     noisy field per pixel, which biases the far field upward (selection
+     inflation).  The gate correctly refuses to certify it.  Part C sites
+     are therefore reported but NOT certifiable on the short range.
+
+=== PART B: positive control, ROI_LEG with the KNOWN Otsu mask ===
+  leg mask 26.6% of ROI, k_near=147, near=739 far=2713 contrast=0.27 -> normal polarity
+          raw: peak -0.09989 at d= 84  tail -0.10877  tail fail  sign PASS
+    corrected: peak -0.07451 at d= 84  tail -0.09607  tail fail  sign PASS
+
+=== PART C: reversed-polarity sites, joint level+depth masks ===
+  3 candidates
+  y=1248 x=960: masks too small (near 9093, far 0) -- SKIP
+  y=2064 x=1920: far layer too small for a [40,60] anchor -- NOT MEASURABLE
+  y=1248 x=2928: far layer too small for a [40,60] anchor -- NOT MEASURABLE
+
+================ VERDICT ================
+  POSITIVE CONTROL ROI_LEG (dark FG / bright BG, normal polarity):
+    peak -0.07451 at d=84, tail -0.09607, INVALID
+    model predicts NEGATIVE: NOT CONFIRMED
+  REVERSED-POLARITY sites: 2 attempted, 0 measurable, 0 valid AND still reversed after masking
+  => bee-3-cpl CANNOT support the reversed-polarity arm.
+     Its reversed-polarity occlusions are pale hairs over small
+     dark structures; those far layers are too small to establish
+     the far-field zero the estimator needs to certify itself.
+     The falsifier needs a PURPOSE-BUILT capture: a BRIGHT subject
+     on a DARK background, with a large clean background area.
+
+  -> data/31-known-mask.json

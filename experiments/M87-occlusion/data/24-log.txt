@@ -1,0 +1,48 @@
+
+--- P_plus  dark-FG/bright-BG [signal-dependent] : F=0.081 B=0.750 (F-B)<0 ---
+  profiles           : 287
+  E  (measured, band): -0.00508 of level  95% CI [-0.00654, -0.00389]
+  Ef (forward,  band): -0.00419 of level
+  |E|/|Ef|           : 1.211
+  Pearson r (shape)  : +0.787
+  N1 sign      : PASS (expected -, got -)
+  N2 magnitude : PASS
+  N3 shape     : PASS
+
+--- P_minus bright-FG/dark-BG [signal-dependent] : F=0.756 B=0.080 (F-B)>0 ---
+  profiles           : 287
+  E  (measured, band): +0.00853 of level  95% CI [+0.00753, +0.01072]
+  Ef (forward,  band): +0.00988 of level
+  |E|/|Ef|           : 0.863
+  Pearson r (shape)  : +0.509
+  N1 sign      : PASS (expected +, got +)
+  N2 magnitude : PASS
+  N3 shape     : PASS
+
+--- P_plus  dark-FG/bright-BG [constant-sigma] : F=0.081 B=0.750 (F-B)<0 ---
+  profiles           : 287
+  E  (measured, band): -0.00423 of level  95% CI [-0.00564, -0.00339]
+  Ef (forward,  band): -0.00333 of level
+  |E|/|Ef|           : 1.269
+  Pearson r (shape)  : +0.742
+  N1 sign      : PASS (expected -, got -)
+  N2 magnitude : PASS
+  N3 shape     : PASS
+
+--- P_minus bright-FG/dark-BG [constant-sigma] : F=0.756 B=0.080 (F-B)>0 ---
+  profiles           : 287
+  E  (measured, band): +0.03194 of level  95% CI [+0.03133, +0.03608]
+  Ef (forward,  band): +0.03215 of level
+  |E|/|Ef|           : 0.993
+  Pearson r (shape)  : +0.892
+  N1 sign      : PASS (expected +, got +)
+  N2 magnitude : PASS
+  N3 shape     : PASS
+
+================ REGISTERED VERDICT ================
+  [signal-dependent] E: -0.00508  /  +0.00853   -> sign FLIPS
+  [constant-sigma] E: -0.00423  /  +0.03194   -> sign FLIPS
+  wrote out/24-Pplus-*.png (error map stretched +-10% of level, mid grey = 0)
+  wrote out/24-Pminus-*.png (error map stretched +-10% of level, mid grey = 0)
+
+  -> data/24-polarity.json
