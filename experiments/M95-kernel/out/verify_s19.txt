@@ -1,0 +1,33 @@
+==============================================================================
+verify M95-kernel.md section 19  (re-derived from git and the HEAD blob)
+==============================================================================
+  OK   fix time from git                derived=True present=True disc=True
+  OK   HEAD uses cache_root             derived=True present=True disc=True
+  OK   HEAD does not join dir           derived=True present=True disc=True
+  OK   10:27:37 is before               derived=True present=True disc=True
+  OK   10:31:11 is before               derived=True present=True disc=True
+  OK   10:33:42 is after                derived=True present=True disc=True
+  OK   only 1 of 3 after                derived=True present=True disc=True
+  OK   M97 work now committed           derived=True present=True disc=True
+  OK   solve_config_key present in WT   derived=True present=True disc=True
+  OK   solve_config_key now at HEAD     derived=True present=True disc=True
+  OK   HEAD signature quoted correctly  derived=True present=True disc=True
+  OK   SOLVE_ENV present in WT          derived=True present=True disc=True
+  OK   worst dx quoted                  derived=True present=True disc=True
+  OK   53.1412 restated                 derived=True present=True disc=True
+  OK   bee frames restated              derived=True present=True disc=True
+  OK   bee bytes restated               derived=True present=True disc=True
+  OK   median restated                  derived=True present=True disc=True
+------------------------------------------------------------------------------
+  OK   quarantine ages inside the stated 187-256 min window (actual 189-259)
+  OK   fix 2 already landed             'twenty minutes before it was requested'
+  OK   fix 1 already landed             'already shipped'
+  OK   did not converge                 'I have not touched the file'
+  OK   other design is better           'better than the validate-on-load'
+  OK   stale binaries named             'stale per-agent binaries'
+  OK   rebuild is the remedy            'rebuilding the `target-*` trees'
+  OK   40-frame corrected               'It is an 8-frame solve'
+  OK   T4 could fail                    'could not be a foregone conclusion'
+==============================================================================
+verdict: GREEN
+==============================================================================

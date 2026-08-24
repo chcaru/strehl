@@ -1140,3 +1140,98 @@ Already the practice here, and it is worth confirming rather than promising:
 <dst>` in committed source, with `--gate 0` written explicitly even though the
 arm wanted the one-frame case. `k14_reference.py` records `--limit 6`, `--out`
 and the full environment override. I will keep doing it.
+
+---
+
+## 19. Both requested fixes were already landed, and the escalation rests on pre-fix evidence
+
+Instrument: `experiments/M95-kernel/src/k16_timeline.py`, output in
+`out/k16_timeline.txt`. Bars T1–T4 registered before the run, T4 written
+specifically so T2 could not be a foregone conclusion.
+
+### 19.1 Fix 2 landed at `19f1be0`, twenty minutes before it was requested
+
+`--reference` is `Option<usize>` resolved against `merge_reference(n)`, with the
+resolved value announced. Bars in §17: R1 default is the middle, R2 the flag is
+still honoured, R3 the range guard survives, R4 the change is not cosmetic
+(worst |dx| **6.3751 → 4.8652 px**). `cargo test -p strehl-cli --bin strehl`:
+**62 passed, 0 failed.** Nothing further is needed.
+
+### 19.2 Fix 1's default location landed at `8118dd7`, and it is the design asked for
+
+Read from the HEAD blob as bytes, not through a shell redirect:
+
+```
+pub fn sidecar_path(dir: &Path, config: u64) -> PathBuf {   // canonical path + config
+    ...
+    cache_root().join(format!("{leaf}-{key:016x}.warpmap.txt"))
+}
+fn cache_root() -> PathBuf {                          // STREHL_CACHE_DIR, then
+    ...  LOCALAPPDATA / XDG_CACHE_HOME  ... .join("strehl").join("warpmaps")
+}
+```
+
+**T2 PASS:** `sidecar_path` at HEAD resolves under `cache_root()` and contains
+no `dir.join(...)`. The caching benefit is kept, `--out` still overrides, and
+`STREHL_CACHE_DIR` gives each agent a private root. That is
+`%LOCALAPPDATA%\strehl\warpmaps\<leaf>-<canonical-path-hash>.warpmap.txt` —
+the per-user, identity-keyed location requested, already shipped.
+
+### 19.3 The remaining piece is in flight by another agent — I did not converge on it
+
+The third point, that a reused sidecar must reject a **mismatched configuration**,
+is right and is exactly the hole §14.4 measured at **53.1412%** of output bytes.
+It is also **already implemented, and landed at `69f7b4c` while this section was
+being written**: `solve_config_key(reference, spans, resampler)`, a
+`SOLVE_ENV` list folding `STREHL_SMOOTH`/`STREHL_SMOOTH_HUBER` into the digest,
+`merge_config(n)`, and a two-argument `sidecar_path(dir, config)`. The comments
+cite M97.
+
+I saw it first as 139 uncommitted insertions in the working tree and left it
+alone; M97 committed it minutes later. **That design is better than the
+validate-on-load I would have written.** Putting the configuration in the *key*
+means differently-configured solves cannot occupy one entry at all, so there is
+no mismatch left to detect. I have not touched the file. Two agents in one
+function is the failure mode this whole instruction sequence exists to prevent.
+
+*This paragraph originally said the work was uncommitted. `verify_s19.py`
+failed on that claim — it re-derives the fact from `git status` and the HEAD
+blob rather than from my prose — and the text was corrected to match the world
+rather than the check relaxed.*
+
+### 19.4 The returning files do not indict current source
+
+The escalation cites `coffee-bean/warpmap.txt` returning at **10:27:37**,
+**10:31:11** and **10:33:42**, concluding that a convention announced is not
+enforced and needs code. But the code landed at **10:32:43**.
+
+| cited time | vs the fix | |
+| --- | --- | --- |
+| 10:27:37 | **−306 s** | before the fix |
+| 10:31:11 | **−92 s** | before the fix |
+| 10:33:42 | **+59 s** | after, by under a minute |
+
+**T4 PASS, 1 of 3 post-dates the fix.** Two of the three are explained by the
+old code outright. The third trails the commit by **59 seconds**, which a
+process already running on an already-built binary explains and a fresh
+invocation of fixed source does not.
+
+Read from disk, every quarantined `coffee-bean` file is **187 to 256 minutes
+old**; the newest artifact in the quarantine is `round4-1033` at 10:33:42. None
+of them is recent. "The file returns within minutes" and "just now" describe a
+population roughly three hours old.
+
+**So the remaining route is stale per-agent binaries built before `8118dd7`** —
+the residual §15 flagged as prediction and §18 confirmed by evidence. No further
+source change reaches them, because they are compiled artifacts. What closes it
+is rebuilding the `target-*` trees, which is an operational step and not a
+patch. I would broadcast that rather than another convention.
+
+### 19.5 One correction carried forward
+
+This message repeats that the quarantined `bee-3-cpl` sidecar held a **40-frame**
+solve. §18 measured it directly: `frames 8`, `end 8`, **8 placement rows**,
+`reference 4`, **1560 B** against a corpus median of **137.5 B/frame**, so 40
+frames would weigh about 6000 B. It is an 8-frame solve, and `reference 4` is
+`merge_reference(8)`, meaning the merge-side cache wrote it rather than
+`strehl align`.

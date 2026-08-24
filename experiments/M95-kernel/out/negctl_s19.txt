@@ -1,0 +1,12 @@
+backed up 65813 bytes to C:\Users\chris\AppData\Local\Temp\M95-kernel.md.s19.bak
+
+baseline: rc=0  GREEN
+  CAUGHT  fix commit time    rc=1  BAD=1
+  CAUGHT  first delta        rc=1  BAD=1
+  CAUGHT  third delta        rc=1  BAD=1
+  CAUGHT  M97 commit id      rc=1  BAD=1
+
+restored byte-identical: True
+post-restore: rc=0  GREEN
+
+negative control: 4/4 planted defects caught

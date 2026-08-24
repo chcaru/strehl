@@ -1,0 +1,30 @@
+==============================================================================
+K16  are the returning sidecars explained by current source?
+==============================================================================
+
+T1  fix 8118dd7 landed : 2026-08-24 10:32:43 -0700
+    subject             : M97f: fix the read-only corpus write, and measure that torn sidecars are rejected
+
+T2  HEAD sidecar_path uses cache_root() : True
+    HEAD sidecar_path joins the stack dir: False
+    T2 PASS -- current source cannot write into the stack dir
+
+T3  the three cited coffee-bean timestamps
+    10:27:37      -306 s vs the fix   BEFORE the fix
+    10:31:11       -92 s vs the fix   BEFORE the fix
+    10:33:42       +59 s vs the fix   AFTER the fix
+
+T4  control: not all three post-date the fix -> PASS
+    1/3 post-date it
+
+--- quarantined coffee-bean files, mtimes read from disk ---
+    coffee-bean--warpmap-r2-102010.txt             10:17:17  frames   8     203 min old
+    coffee-bean--warpmap-r3-1frame-102703.txt      10:24:00  frames   1     197 min old
+    coffee-bean--warpmap.txt                       09:24:21  frames  12     256 min old
+    round3-M108-coffee-bean-warpmap.txt            10:31:11  frames  20     189 min old
+    round4-1033-coffee-bean-warpmap.txt            10:33:42  frames   1     187 min old
+
+--- CONCLUSION ---
+    Current source is clean and at least one cited file predates the fix.
+    The remaining route is STALE PER-AGENT BINARIES built before 8118dd7.
+    No further source change stops those; the target-*/ trees must be rebuilt.
