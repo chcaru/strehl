@@ -17,15 +17,40 @@ much it trusts its own answer.
 The name is the Strehl ratio: how close a real optical system comes to the
 diffraction-limited ideal.
 
-> **Status: the estimation merge is built and runs.** `strehl merge` implements
-> the thesis end to end on real RAW files: a 17x17-regularised winner field in
-> pass one, a noise-gated average in pass two, with `n_eff`, boundary flags and
-> per-pixel confidence as outputs. `strehl stack` is still the **naive per-pixel
-> argmax baseline**, kept deliberately as the reference artifact every quality
-> claim is measured against. Not yet built: alignment into the merge,
-> deconvolution, outlier rejection, occlusion modelling. The research corpus is
-> in [`docs/research/`](docs/research/), and
+> **Status: the estimation merge is the default path and runs end to end.**
+> `strehl stack` implements the thesis on real RAW files: a 17x17-regularised
+> winner field in pass one, a noise-gated average in pass two, with `n_eff`,
+> boundary flags and per-pixel confidence as outputs. The naive per-pixel argmax
+> now lives at `strehl argmax-baseline`, kept deliberately as the reference
+> artifact every quality claim is measured against.
+>
+> **Measured end to end on the reference rig:** 299 frames of 33 MP Sony ARW to
+> a 7032 x 4688 16-bit sRGB TIFF in **23.1 s** — decode, focus, elect, merge,
+> demosaic and write (Ryzen 9 9950X3D, warm cache).
+>
+> **Not yet built:** alignment into the merge, deconvolution, outlier rejection,
+> occlusion modelling. Those four are what the current output's visible defects
+> come from — most obviously a cutout halo along the subject silhouette. The
+> research corpus is in [`docs/research/`](docs/research/), and
 > [`SYNTHESIS.md`](docs/research/SYNTHESIS.md) is the decision record.
+
+## Quickstart
+
+```console
+$ cargo build --release -p strehl-cli
+
+# Look at what the decoder found before stacking anything.
+$ strehl probe <DIR>
+
+# Stack, and render something you can actually look at.
+$ strehl stack <DIR> --gate 2 --srgb --demosaic -o out.tif
+```
+
+`--srgb` applies the camera's colour matrix and the sRGB transfer curve;
+`--demosaic` emits at full sensor resolution. **Neither is on by default**,
+because the default output is the binned linear camera-native file that every
+number in the corpus was measured on. Use the flags to look, drop them to
+measure.
 
 ## What is actually different
 
@@ -57,7 +82,7 @@ low-detail region, against a single unstacked frame:
 | 1.0 | 1.884 | **0.973x** | first gate that beats one frame |
 | 2.0 | 2.891 | 0.890x | |
 | 4.0 | 4.987 | 0.788x | |
-| — | — | 1.253x | the argmax baseline `strehl stack` ships |
+| — | — | 1.253x | the argmax `strehl argmax-baseline` ships |
 | — | *N* | 0.534x | a plain mean — the floor, and it destroys 58% of detail |
 
 Read the first row carefully, because it is the whole argument. **At `n_eff` = 1
@@ -92,19 +117,20 @@ and decode alone is 1.78 s cold, 0.91 s warm. See
 
 ```
 strehl probe <DIR> [--limit N]     # sensor geometry, levels, ISO, white balance
-strehl merge <DIR> [--out <PATH>]  # THE THESIS: noise-gated estimation
-                   [--gate T...] [--target-n-eff N] [--limit N] [--srgb]
+strehl stack <DIR> [--out <PATH>]  # THE THESIS: noise-gated estimation
+                   [--gate T...] [--target-n-eff N] [--limit N]
+                   [--srgb] [--demosaic]
                    [--flat-roi X,Y,W,H] [--detail-roi X,Y,W,H]
                    [--stats] [--stats-placebo] [--confidence-tail Q]
-strehl stack <DIR> --out <PATH>    # the naive argmax baseline, for comparison
-                   [--limit N] [--srgb]
-                   [--index-map <PATH>] [--flat-roi X,Y,W,H]
+strehl argmax-baseline <DIR> --out <PATH>   # the naive argmax, for comparison
+                   [--srgb] [--index-map <PATH>] [--flat-roi X,Y,W,H]
+                   [--memory-model <MODEL>]
 ```
 
-### `merge` — the estimation path
+### `stack` — the estimation path
 
 ```console
-$ strehl merge C:\dev\macro\test\109MSDCF --target-n-eff 3 --out merged.tif \
+$ strehl stack C:\dev\macro\test\109MSDCF --target-n-eff 3 --out merged.tif \
       --flat-roi 2272,1344,256,256 --detail-roi <X,Y,W,H>
 ```
 
@@ -128,14 +154,15 @@ is *depleted* at the selection scale. Fixed 60 B/px, constant in frame count. It
 costs 494 MB per worker and **cannot change the merged image** — that is
 asserted by byte-identical hash, not by argument.
 
-### `stack` — the baseline it has to beat
+### `argmax-baseline` — the baseline it has to beat
 
 ```console
-$ strehl stack C:\dev\macro\test\109MSDCF --out baseline.tif \
+$ strehl argmax-baseline C:\dev\macro\test\109MSDCF --out baseline.tif \
       --index-map baseline-index.tif --flat-roi 2272,1344,256,256
 ```
 
-`stack` streams the directory's RAW frames through a bounded rayon fold — it
+`argmax-baseline` streams the directory's RAW frames through a bounded rayon
+fold — it
 never materialises the focus volume, so peak memory is O(threads), not
 O(frames) — computes a noise-normalised bandpass focus measure per CFA plane,
 and takes the per-pixel argmax. It does **not** align, denoise, regularise the
