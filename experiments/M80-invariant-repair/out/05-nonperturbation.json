@@ -1,0 +1,17 @@
+{
+  "without_observer": {
+    "label": "no-roi",
+    "exit": 0,
+    "seconds": 2.4973265000153333,
+    "bytes": 49449626,
+    "sha256": "48dfb69c00f0107f71adeec1c76820e16c6c4d18c0ad0c0544b88fa5a7fd4c49"
+  },
+  "with_observer": {
+    "label": "with-roi",
+    "exit": 0,
+    "seconds": 2.5260570999234915,
+    "bytes": 49449626,
+    "sha256": "48dfb69c00f0107f71adeec1c76820e16c6c4d18c0ad0c0544b88fa5a7fd4c49"
+  },
+  "identical": true
+}

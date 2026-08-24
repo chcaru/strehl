@@ -1,0 +1,104 @@
+{
+  "binary": "experiments\\M80-invariant-repair\\target-m80\\release\\strehl.exe",
+  "binary_sha256": "ef52ae761d175deede3be8b4636c3b2dcff4ad0c62baf588835766378b377a2a",
+  "ladder": [
+    0,
+    2,
+    4,
+    8,
+    16,
+    24,
+    32,
+    40,
+    48,
+    64,
+    96,
+    128
+  ],
+  "runs": [
+    {
+      "stack": "wrapped-text-1",
+      "arm": "B2",
+      "flat_roi": {
+        "x": 32,
+        "y": 1056,
+        "w": 256,
+        "h": 256,
+        "contam_max": 1.2436535470070456
+      },
+      "detail_roi": {
+        "x": 32,
+        "y": 1056,
+        "w": 256,
+        "h": 256,
+        "contam_max": 1.2436535470070456
+      },
+      "exit": 0,
+      "seconds": 36.75020449992735,
+      "log": "experiments\\M80-invariant-repair\\out\\03-B2-wrapped-text-1.log"
+    },
+    {
+      "stack": "wrapped-text-1",
+      "arm": "B1",
+      "flat_roi": {
+        "x": 32,
+        "y": 1056,
+        "w": 256,
+        "h": 256,
+        "contam_max": 1.2436535470070456
+      },
+      "detail_roi": {
+        "x": 2208,
+        "y": 672,
+        "w": 256,
+        "h": 256,
+        "cg_max": 134.81880220051093
+      },
+      "exit": 0,
+      "seconds": 40.913776799920015,
+      "log": "experiments\\M80-invariant-repair\\out\\03-B1-wrapped-text-1.log"
+    },
+    {
+      "stack": "wrapped-text-2",
+      "arm": "B2",
+      "flat_roi": {
+        "x": 32,
+        "y": 672,
+        "w": 256,
+        "h": 256,
+        "contam_max": 1.067951074871118
+      },
+      "detail_roi": {
+        "x": 32,
+        "y": 672,
+        "w": 256,
+        "h": 256,
+        "contam_max": 1.067951074871118
+      },
+      "exit": 0,
+      "seconds": 45.27913989999797,
+      "log": "experiments\\M80-invariant-repair\\out\\03-B2-wrapped-text-2.log"
+    },
+    {
+      "stack": "wrapped-text-2",
+      "arm": "B1",
+      "flat_roi": {
+        "x": 32,
+        "y": 672,
+        "w": 256,
+        "h": 256,
+        "contam_max": 1.067951074871118
+      },
+      "detail_roi": {
+        "x": 3104,
+        "y": 160,
+        "w": 256,
+        "h": 256,
+        "cg_max": 173.24072932186377
+      },
+      "exit": 0,
+      "seconds": 30.648746600025333,
+      "log": "experiments\\M80-invariant-repair\\out\\03-B1-wrapped-text-2.log"
+    }
+  ]
+}

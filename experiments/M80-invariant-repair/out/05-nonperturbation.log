@@ -1,0 +1,3 @@
+MEASURED: no ROI exit=0 seconds=2.497 bytes=49449626 sha256=48dfb69c00f0107f71adeec1c76820e16c6c4d18c0ad0c0544b88fa5a7fd4c49
+MEASURED: with ROI exit=0 seconds=2.526 bytes=49449626 sha256=48dfb69c00f0107f71adeec1c76820e16c6c4d18c0ad0c0544b88fa5a7fd4c49
+MEASURED: byte-identical=True

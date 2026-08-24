@@ -1,0 +1,553 @@
+{
+  "wrapped-text-1": {
+    "N1": {
+      "selector_structure": true,
+      "gate0_structure": true,
+      "gate4_structure": true,
+      "gate4_retention": true
+    },
+    "P2": {
+      "gate0_structure": true,
+      "gate4_structure": true
+    },
+    "pass": true,
+    "arms": {
+      "B2": {
+        "selector": {
+          "q_signal_power": 8.021,
+          "structure": 1.002,
+          "inflation_left": 1.951,
+          "inflation_right": 2.165
+        },
+        "rows": {
+          "0.00": {
+            "q_signal_power": 8.021,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.002,
+            "raw_rms": 50.9996,
+            "controlled_noise_rms": 50.9209,
+            "inflation_left": 1.951,
+            "inflation_right": 2.165
+          },
+          "2.00": {
+            "q_signal_power": 13.887,
+            "retention": 1.001,
+            "verdict": "ok",
+            "structure": 1.003,
+            "raw_rms": 49.2643,
+            "controlled_noise_rms": 49.1231,
+            "inflation_left": 1.975,
+            "inflation_right": 2.184
+          },
+          "4.00": {
+            "q_signal_power": 25.299,
+            "retention": 1.003,
+            "verdict": "ok",
+            "structure": 1.006,
+            "raw_rms": 46.7975,
+            "controlled_noise_rms": 46.5264,
+            "inflation_left": 1.976,
+            "inflation_right": 2.204
+          },
+          "8.00": {
+            "q_signal_power": 17.437,
+            "retention": 1.002,
+            "verdict": "ok",
+            "structure": 1.005,
+            "raw_rms": 41.6991,
+            "controlled_noise_rms": 41.4895,
+            "inflation_left": 2.002,
+            "inflation_right": 2.25
+          },
+          "16.00": {
+            "q_signal_power": 24.622,
+            "retention": 1.003,
+            "verdict": "ok",
+            "structure": 1.012,
+            "raw_rms": 32.2127,
+            "controlled_noise_rms": 31.8283,
+            "inflation_left": 1.984,
+            "inflation_right": 2.234
+          },
+          "24.00": {
+            "q_signal_power": 8.811,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.006,
+            "raw_rms": 27.5194,
+            "controlled_noise_rms": 27.3588,
+            "inflation_left": 1.946,
+            "inflation_right": 2.153
+          },
+          "32.00": {
+            "q_signal_power": 11.093,
+            "retention": 1.001,
+            "verdict": "ok",
+            "structure": 1.009,
+            "raw_rms": 24.6429,
+            "controlled_noise_rms": 24.4168,
+            "inflation_left": 1.932,
+            "inflation_right": 2.139
+          },
+          "40.00": {
+            "q_signal_power": 7.299,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.008,
+            "raw_rms": 21.6045,
+            "controlled_noise_rms": 21.4349,
+            "inflation_left": 1.913,
+            "inflation_right": 2.087
+          },
+          "48.00": {
+            "q_signal_power": 2.326,
+            "retention": 0.999,
+            "verdict": "ok",
+            "structure": 1.003,
+            "raw_rms": 18.8634,
+            "controlled_noise_rms": 18.8017,
+            "inflation_left": 1.988,
+            "inflation_right": 2.027
+          },
+          "64.00": {
+            "q_signal_power": -19.832,
+            "retention": 0.995,
+            "verdict": "ok",
+            "structure": 0.914,
+            "raw_rms": 10.0036,
+            "controlled_noise_rms": 10.95,
+            "inflation_left": 2.708,
+            "inflation_right": 2.249
+          },
+          "96.00": {
+            "q_signal_power": 0.004,
+            "retention": 0.998,
+            "verdict": "ok",
+            "structure": 1.0,
+            "raw_rms": 6.6282,
+            "controlled_noise_rms": 6.6278,
+            "inflation_left": 3.082,
+            "inflation_right": 3.09
+          },
+          "128.00": {
+            "q_signal_power": 0.004,
+            "retention": 0.998,
+            "verdict": "ok",
+            "structure": 1.0,
+            "raw_rms": 6.6282,
+            "controlled_noise_rms": 6.6278,
+            "inflation_left": 3.082,
+            "inflation_right": 3.09
+          }
+        }
+      },
+      "B1": {
+        "selector": {
+          "q_signal_power": 36617.218,
+          "structure": 3.499,
+          "inflation_left": 1.951,
+          "inflation_right": 2.165
+        },
+        "rows": {
+          "0.00": {
+            "q_signal_power": 36617.218,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 3.499,
+            "raw_rms": 199.6837,
+            "controlled_noise_rms": 57.0646,
+            "inflation_left": 1.951,
+            "inflation_right": 2.165
+          },
+          "2.00": {
+            "q_signal_power": 36445.197,
+            "retention": 0.998,
+            "verdict": "ok",
+            "structure": 3.503,
+            "raw_rms": 199.1977,
+            "controlled_noise_rms": 56.873,
+            "inflation_left": 1.975,
+            "inflation_right": 2.184
+          },
+          "4.00": {
+            "q_signal_power": 36303.373,
+            "retention": 0.996,
+            "verdict": "ok",
+            "structure": 3.522,
+            "raw_rms": 198.7139,
+            "controlled_noise_rms": 56.4256,
+            "inflation_left": 1.976,
+            "inflation_right": 2.204
+          },
+          "8.00": {
+            "q_signal_power": 35951.565,
+            "retention": 0.992,
+            "verdict": "ok",
+            "structure": 3.541,
+            "raw_rms": 197.6524,
+            "controlled_noise_rms": 55.8114,
+            "inflation_left": 2.002,
+            "inflation_right": 2.25
+          },
+          "16.00": {
+            "q_signal_power": 35200.059,
+            "retention": 0.982,
+            "verdict": "ok",
+            "structure": 3.742,
+            "raw_rms": 194.6978,
+            "controlled_noise_rms": 52.0306,
+            "inflation_left": 1.984,
+            "inflation_right": 2.234
+          },
+          "24.00": {
+            "q_signal_power": 34374.189,
+            "retention": 0.971,
+            "verdict": "ok",
+            "structure": 4.069,
+            "raw_rms": 191.2681,
+            "controlled_noise_rms": 47.003,
+            "inflation_left": 1.946,
+            "inflation_right": 2.153
+          },
+          "32.00": {
+            "q_signal_power": 32936.039,
+            "retention": 0.953,
+            "verdict": "ok",
+            "structure": 4.346,
+            "raw_rms": 186.4863,
+            "controlled_noise_rms": 42.9079,
+            "inflation_left": 1.932,
+            "inflation_right": 2.139
+          },
+          "40.00": {
+            "q_signal_power": 31699.173,
+            "retention": 0.936,
+            "verdict": "ok",
+            "structure": 4.634,
+            "raw_rms": 182.3398,
+            "controlled_noise_rms": 39.3525,
+            "inflation_left": 1.913,
+            "inflation_right": 2.087
+          },
+          "48.00": {
+            "q_signal_power": 30506.771,
+            "retention": 0.92,
+            "verdict": "ok",
+            "structure": 4.796,
+            "raw_rms": 178.5871,
+            "controlled_noise_rms": 37.237,
+            "inflation_left": 1.988,
+            "inflation_right": 2.027
+          },
+          "64.00": {
+            "q_signal_power": 27004.608,
+            "retention": 0.871,
+            "verdict": "COLLAPSE",
+            "structure": 4.13,
+            "raw_rms": 169.3712,
+            "controlled_noise_rms": 41.0121,
+            "inflation_left": 2.708,
+            "inflation_right": 2.249
+          },
+          "96.00": {
+            "q_signal_power": 22531.917,
+            "retention": 0.804,
+            "verdict": "COLLAPSE",
+            "structure": 3.444,
+            "raw_rms": 156.8661,
+            "controlled_noise_rms": 45.5528,
+            "inflation_left": 3.082,
+            "inflation_right": 3.09
+          },
+          "128.00": {
+            "q_signal_power": 18337.489,
+            "retention": 0.736,
+            "verdict": "COLLAPSE",
+            "structure": 3.517,
+            "raw_rms": 141.2464,
+            "controlled_noise_rms": 40.163,
+            "inflation_left": 3.082,
+            "inflation_right": 3.09
+          }
+        }
+      }
+    }
+  },
+  "wrapped-text-2": {
+    "N1": {
+      "selector_structure": true,
+      "gate0_structure": true,
+      "gate4_structure": true,
+      "gate4_retention": true
+    },
+    "P2": {
+      "gate0_structure": true,
+      "gate4_structure": true
+    },
+    "pass": true,
+    "arms": {
+      "B2": {
+        "selector": {
+          "q_signal_power": 4.293,
+          "structure": 1.0,
+          "inflation_left": 1.337,
+          "inflation_right": 1.369
+        },
+        "rows": {
+          "0.00": {
+            "q_signal_power": 4.293,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.0,
+            "raw_rms": 75.4884,
+            "controlled_noise_rms": 75.46,
+            "inflation_left": 1.337,
+            "inflation_right": 1.369
+          },
+          "2.00": {
+            "q_signal_power": 2.955,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.0,
+            "raw_rms": 63.3366,
+            "controlled_noise_rms": 63.3133,
+            "inflation_left": 1.386,
+            "inflation_right": 1.424
+          },
+          "4.00": {
+            "q_signal_power": -0.011,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.0,
+            "raw_rms": 54.3778,
+            "controlled_noise_rms": 54.378,
+            "inflation_left": 1.42,
+            "inflation_right": 1.463
+          },
+          "8.00": {
+            "q_signal_power": 4.497,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.001,
+            "raw_rms": 43.1029,
+            "controlled_noise_rms": 43.0507,
+            "inflation_left": 1.408,
+            "inflation_right": 1.459
+          },
+          "16.00": {
+            "q_signal_power": 3.359,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.002,
+            "raw_rms": 31.0794,
+            "controlled_noise_rms": 31.0253,
+            "inflation_left": 1.366,
+            "inflation_right": 1.403
+          },
+          "24.00": {
+            "q_signal_power": -1.972,
+            "retention": 0.999,
+            "verdict": "ok",
+            "structure": 0.997,
+            "raw_rms": 18.3254,
+            "controlled_noise_rms": 18.3791,
+            "inflation_left": 1.505,
+            "inflation_right": 1.483
+          },
+          "32.00": {
+            "q_signal_power": -3.072,
+            "retention": 0.999,
+            "verdict": "ok",
+            "structure": 0.987,
+            "raw_rms": 10.909,
+            "controlled_noise_rms": 11.0489,
+            "inflation_left": 2.011,
+            "inflation_right": 1.878
+          },
+          "40.00": {
+            "q_signal_power": 0.043,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.0,
+            "raw_rms": 10.3298,
+            "controlled_noise_rms": 10.3277,
+            "inflation_left": 2.022,
+            "inflation_right": 2.048
+          },
+          "48.00": {
+            "q_signal_power": 0.043,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.0,
+            "raw_rms": 10.3299,
+            "controlled_noise_rms": 10.3278,
+            "inflation_left": 2.022,
+            "inflation_right": 2.048
+          },
+          "64.00": {
+            "q_signal_power": 0.043,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.0,
+            "raw_rms": 10.3299,
+            "controlled_noise_rms": 10.3278,
+            "inflation_left": 2.022,
+            "inflation_right": 2.048
+          },
+          "96.00": {
+            "q_signal_power": 0.043,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.0,
+            "raw_rms": 10.3299,
+            "controlled_noise_rms": 10.3278,
+            "inflation_left": 2.022,
+            "inflation_right": 2.048
+          },
+          "128.00": {
+            "q_signal_power": 0.043,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 1.0,
+            "raw_rms": 10.3299,
+            "controlled_noise_rms": 10.3278,
+            "inflation_left": 2.022,
+            "inflation_right": 2.048
+          }
+        }
+      },
+      "B1": {
+        "selector": {
+          "q_signal_power": 64584.146,
+          "structure": 3.306,
+          "inflation_left": 1.337,
+          "inflation_right": 1.369
+        },
+        "rows": {
+          "0.00": {
+            "q_signal_power": 64584.146,
+            "retention": 1.0,
+            "verdict": "ok",
+            "structure": 3.306,
+            "raw_rms": 266.6245,
+            "controlled_noise_rms": 80.6502,
+            "inflation_left": 1.337,
+            "inflation_right": 1.369
+          },
+          "2.00": {
+            "q_signal_power": 62169.797,
+            "retention": 0.983,
+            "verdict": "ok",
+            "structure": 3.226,
+            "raw_rms": 262.2574,
+            "controlled_noise_rms": 81.2967,
+            "inflation_left": 1.386,
+            "inflation_right": 1.424
+          },
+          "4.00": {
+            "q_signal_power": 60379.314,
+            "retention": 0.97,
+            "verdict": "ok",
+            "structure": 3.201,
+            "raw_rms": 258.6706,
+            "controlled_noise_rms": 80.8155,
+            "inflation_left": 1.42,
+            "inflation_right": 1.463
+          },
+          "8.00": {
+            "q_signal_power": 57469.703,
+            "retention": 0.949,
+            "verdict": "ok",
+            "structure": 3.347,
+            "raw_rms": 251.2009,
+            "controlled_noise_rms": 75.048,
+            "inflation_left": 1.408,
+            "inflation_right": 1.459
+          },
+          "16.00": {
+            "q_signal_power": 50286.306,
+            "retention": 0.894,
+            "verdict": "COLLAPSE",
+            "structure": 3.785,
+            "raw_rms": 232.5093,
+            "controlled_noise_rms": 61.4352,
+            "inflation_left": 1.366,
+            "inflation_right": 1.403
+          },
+          "24.00": {
+            "q_signal_power": 43128.455,
+            "retention": 0.836,
+            "verdict": "COLLAPSE",
+            "structure": 3.683,
+            "raw_rms": 215.7799,
+            "controlled_noise_rms": 58.5875,
+            "inflation_left": 1.505,
+            "inflation_right": 1.483
+          },
+          "32.00": {
+            "q_signal_power": 35592.078,
+            "retention": 0.77,
+            "verdict": "COLLAPSE",
+            "structure": 2.905,
+            "raw_rms": 200.9384,
+            "controlled_noise_rms": 69.1677,
+            "inflation_left": 2.011,
+            "inflation_right": 1.878
+          },
+          "40.00": {
+            "q_signal_power": 32110.682,
+            "retention": 0.737,
+            "verdict": "COLLAPSE",
+            "structure": 2.82,
+            "raw_rms": 191.6441,
+            "controlled_noise_rms": 67.9469,
+            "inflation_left": 2.022,
+            "inflation_right": 2.048
+          },
+          "48.00": {
+            "q_signal_power": 29089.845,
+            "retention": 0.708,
+            "verdict": "COLLAPSE",
+            "structure": 2.832,
+            "raw_rms": 182.3007,
+            "controlled_noise_rms": 64.3716,
+            "inflation_left": 2.022,
+            "inflation_right": 2.048
+          },
+          "64.00": {
+            "q_signal_power": 23678.441,
+            "retention": 0.652,
+            "verdict": "COLLAPSE",
+            "structure": 2.865,
+            "raw_rms": 164.2038,
+            "controlled_noise_rms": 57.3101,
+            "inflation_left": 2.022,
+            "inflation_right": 2.048
+          },
+          "96.00": {
+            "q_signal_power": 16870.5,
+            "retention": 0.573,
+            "verdict": "COLLAPSE",
+            "structure": 3.024,
+            "raw_rms": 137.6316,
+            "controlled_noise_rms": 45.5186,
+            "inflation_left": 2.022,
+            "inflation_right": 2.048
+          },
+          "128.00": {
+            "q_signal_power": 10623.344,
+            "retention": 0.491,
+            "verdict": "COLLAPSE",
+            "structure": 3.378,
+            "raw_rms": 107.9059,
+            "controlled_noise_rms": 31.9426,
+            "inflation_left": 2.022,
+            "inflation_right": 2.048
+          }
+        }
+      }
+    }
+  },
+  "all_pass": true
+}
