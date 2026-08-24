@@ -1,0 +1,49 @@
+==========================================================================================================================
+PEAK-FRAME BAND SNR  =  (best frame's band power - sigma^2) / sigma^2
+  median over textured patches. This is |H|^2|L|^2 / sigma^2, NOT an MTF.
+  A value near 0 means the band carries no signal in ANY frame of the stack.
+==========================================================================================================================
+stack               K     F        b1        b2        b3        b4        b5        b6
+coffee-bubbles     19   8.0     97.92     30.76      8.39      2.53      0.63      0.13
+109MSDCF           22  11.0     21.59      4.22      1.28      0.41      0.08      0.04
+119MSDCF           33   5.6     66.84      9.80      2.72      1.34      0.65      0.34
+113MSDCF           63  11.0    665.21     97.81     19.30      4.45      0.81      0.09
+112MSDCF           79  11.0    341.75     51.72      9.57      2.18      0.38      0.04
+foam              100   8.0  26848.07   3391.76    438.21     95.91     20.46      4.58
+coffee-bean       105   8.0  15962.82   4701.63   1172.33    349.94     87.24     16.70
+wrapped-text-2    120   5.6    101.95     62.90     24.34      9.22      2.63      0.64
+wrapped-text-1    130   5.6    555.32    192.78     58.36     19.87      6.16      1.71
+bee-1             299   5.6   3870.39    559.90    140.65     37.41      9.05      1.65
+bee-2             299   5.6    911.83    122.94     17.84      4.36      0.92      0.21
+bee-3             299   5.6   2783.58    324.01     45.78     11.56      2.64      0.57
+
+==========================================================================================================================
+THE SAME, GROUPED BY MARKED APERTURE (median of stack medians)
+  fact 27 puts the f/11 cutoff at 0.2762 cyc/px, which is the b5/b6 boundary.
+==========================================================================================================================
+aperture     n        b1        b2        b3        b4        b5        b6   b6/b5
+f/5.6         6    733.57    157.86     35.06     10.39      2.63      0.60    0.230
+f/8.0         3  15962.82   3391.76    438.21     95.91     20.46      4.58    0.224
+f/11.0        3    341.75     51.72      9.57      2.18      0.38      0.04    0.114
+
+  The b6/b5 ratio is the one number here that is close to MTF-like, because
+  the two bands are adjacent and the scene spectrum changes little across them.
+  It compares the band just above the f/11 cutoff with the band just below it.
+
+==========================================================================================================================
+FALL FROM b3_mid TO b5_mid - the product of scene spectrum and MTF, not the MTF
+==========================================================================================================================
+coffee-bubbles   f/8.0   b3      8.39 -> b5      0.63   ratio  0.0752
+109MSDCF         f/11.0  b3      1.28 -> b5      0.08   ratio  0.0657
+119MSDCF         f/5.6   b3      2.72 -> b5      0.65   ratio  0.2387
+113MSDCF         f/11.0  b3     19.30 -> b5      0.81   ratio  0.0418
+112MSDCF         f/11.0  b3      9.57 -> b5      0.38   ratio  0.0400
+foam             f/8.0   b3    438.21 -> b5     20.46   ratio  0.0467
+coffee-bean      f/8.0   b3   1172.33 -> b5     87.24   ratio  0.0744
+wrapped-text-2   f/5.6   b3     24.34 -> b5      2.63   ratio  0.1079
+wrapped-text-1   f/5.6   b3     58.36 -> b5      6.16   ratio  0.1056
+bee-1            f/5.6   b3    140.65 -> b5      9.05   ratio  0.0643
+bee-2            f/5.6   b3     17.84 -> b5      0.92   ratio  0.0515
+bee-3            f/5.6   b3     45.78 -> b5      2.64   ratio  0.0577
+
+wrote out/s13_bandsnr.json

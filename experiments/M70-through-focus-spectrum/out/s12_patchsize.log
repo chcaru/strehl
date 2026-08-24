@@ -1,0 +1,23 @@
+patch=128 GQ samples (255 sensor px), tile=64, 24 patches/frame
+  coffee-bubbles   K=  19 patches=24     2.2s (0.12 s/frame) -> tfs-coffee-bubbles-p128.npz
+  109MSDCF         K=  22 patches=24     2.3s (0.10 s/frame) -> tfs-109MSDCF-p128.npz
+  wrapped-text-1   K= 130 patches=24    10.5s (0.08 s/frame) -> tfs-wrapped-text-1-p128.npz
+  bee-3            K= 299 patches=24    23.2s (0.08 s/frame) -> tfs-bee-3-p128.npz
+
+============================================================================================================
+VOID CONDITION 4 - stack-median mid-band statistics at 256 vs 128 GQ samples
+============================================================================================================
+stack               K     F | tex256 tex128 | n_eff(all) 256      128   ratio | n_eff(+-5) 256      128   ratio | relA1 256     128
+coffee-bubbles     19   8.0 |     24     24 |          2.891    2.731   0.945 |          3.416    3.330   0.975 |     0.879   0.874
+109MSDCF           22  11.0 |     22     24 |          4.799    5.147   1.073 |          4.896    4.866   0.994 |     0.944   0.952
+wrapped-text-1    130   5.6 |     24     24 |          4.148    3.480   0.839 |          4.270    3.552   0.832 |     0.931   0.899
+bee-3             299   5.6 |     19     19 |         12.874   11.928   0.926 |          6.659    5.833   0.876 |     0.963   0.955
+
+  n_eff(all)  ratio 128/256: min 0.839  median 0.936  max 1.073
+  n_eff(+-5)  ratio 128/256: min 0.832  median 0.925  max 0.994
+  |d rel_amp_1|              max 0.0320
+
+  Pre-registered trigger: any stack-median n_eff changing by > 1.50x.
+  Largest change observed: 1.202x  ->  PASSES; the 256-sample numbers stand
+
+wrote out/s12_patchsize.json
