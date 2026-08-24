@@ -1,0 +1,47 @@
+{
+ "rows": [
+  {
+   "factor": 0.5,
+   "kind": "binary-exact",
+   "max_dE_all": 0.0,
+   "max_dE_box_shelf": 0.0
+  },
+  {
+   "factor": 2.0,
+   "kind": "binary-exact",
+   "max_dE_all": 0.0,
+   "max_dE_box_shelf": 0.0
+  },
+  {
+   "factor": 4.0,
+   "kind": "binary-exact",
+   "max_dE_all": 0.0,
+   "max_dE_box_shelf": 0.0
+  },
+  {
+   "factor": 1.37,
+   "kind": "not representable",
+   "max_dE_all": 9.586433608044231e-08,
+   "max_dE_box_shelf": 2.7675548380790005e-09
+  },
+  {
+   "factor": 1.1,
+   "kind": "not representable",
+   "max_dE_all": 8.148897442938896e-08,
+   "max_dE_box_shelf": 2.4060183886898123e-08
+  },
+  {
+   "factor": 3.7,
+   "kind": "not representable",
+   "max_dE_all": 4.8985422267111556e-08,
+   "max_dE_box_shelf": 1.712602565318022e-08
+  }
+ ],
+ "eps32": 1.1920928955078125e-07,
+ "floor": 1.7157421656388163e-08,
+ "exact_all_zero": true,
+ "inexact_below_1e8": false,
+ "diagnosis": "INCONCLUSIVE: exact factors are clean but inexact ones move E by more than the float32 floor.",
+ "E_box": 0.143926884566151,
+ "E_shelf": -0.07961130402829332
+}

@@ -210,6 +210,21 @@ such).
 
 ---
 
+**Is the veil a photometric step between elected frames?** For the bright veil,
+**NO**, and correcting exposure makes it worse: with the winner field held
+bit-for-bit fixed, per-frame level normalisation moves the box from +0.14393 to
+**+0.16731 — 16.24% larger** — while a deliberately planted ±10% per-frame ramp
+is removed at **89.0%**, so the instrument can see the mechanism and finds none
+here. Drift between the frames actually elected is **−0.7424%**, a **19×**
+shortfall against the 14.393% box and the wrong sign. **For the dark stand-off
+shelf, YES, in part**: photometry alone with the election frozen removes
+**32.44%** of it, while a shuffled normaliser that corrects nothing makes it
+**55.7% deeper**. This corrects §26.4, which attributed both features to the
+election, and scopes §21's "the photometric share is zero" to the box — ISO's
+`D_FAR = (48, 96)` baseline window **contains** the shelf at `d = 92`, so §21's
+null was measured with an instrument that absorbs the effect into its own
+normaliser. §27.
+
 ## 1. Corrections to the dispatch, loudest first
 
 ### 1.1 Two pointers in the brief are wrong
@@ -1904,6 +1919,13 @@ namespaced `M87`.
 | P88 | **The veil is TWO mechanisms, and the orchestrator's argued split is confirmed.** (a) An **election** artifact with two signs: `E(d)`'s positive box (peak +0.14393 at d = 13) and negative shelf (trough −0.07961 at d = 92) are both boundary-registered — rolling the elected-index field by (317, 511) leaves **39.1%** of the box and only **7.7%** of the shelf. (b) A **real frame-borne veil** present in every observation: on the ensemble, at fixed distance, level falls with local occluder coverage at **+0.534 per unit coverage** (r = 128), an observable amplitude of **+2.852%** of level against a rolled-coverage null of −0.0398 (7.5% of the reading) and a positive control recovering **100.6%** of a planted 3%. | The two are **0.358** apart in size, so the shelf is 2.8x the frame-borne veil — the correction is aimed at the dominant term, but a **~2.9% veil remains that no selector-side fix can reach**, because it is in every frame. That residue is what unmixing, and only unmixing, could remove, which links Q2 back to P83. | MEASURED |
 | P89 | **`E(d)` is provably and measurably blind to anything present in every frame, which is why (b) needed a second instrument.** A fixed per-pixel gain scales every `k` at a pixel by the same constant, so `argmax_k` is **exactly** unchanged; `E` then reads **1.67%** of a planted −3% annulus. **My first version of that control reported 56.65%** because it built the planted baseline as `prof(mean_k frame_k)` while the true `E` uses `mean_k prof(frame_k)` — median and mean do not commute. | Fifth self-caught instrument defect in this milestone, and the first where the *control* was wrong and the *claim* was right. **When a control contradicts an analytic argument, check the control against the argument's own algebra before abandoning the argument.** The repaired version carries a bin-constancy check (max deviation **0.0001 DN**) proving the plant is exactly multiplicative within a distance bin. | MEASURED |
 | P90 | **The premise of the orchestrator's Q1, and of my own preregistration, was wrong at source.** `13-unmix.py:98` is a global scalar `k_F`, and I registered a ladder on the belief that this produced the −28.2%. §5.2 of this report says otherwise: the global scalar produced **+3.7%** and **−28.2% is already the per-pixel `k_F` arm** (median band R-squared 0.200, coverage 19.8%). | Amended before any arm number was read, and both readings reported. **A line of code being wrong does not make it the line that produced the number** — the arm that shipped a result must be identified from the result's own provenance, not from the most suspicious code nearby. | DERIVED |
+| P91 | **The bright veil is NOT a photometric step between elected frames, and correcting exposure makes it worse.** Holding the election *exactly* fixed and changing only what is composited, per-frame level normalisation moves the box from **+0.14393 to +0.16731 — 16.24% larger**, and the wrong way. Gain+offset normalisation with re-election leaves it at **102.22%**. | The registered positive control passes, which is what makes the null readable: a planted ±10% per-frame ramp moves the box **+0.02908** and normalisation removes **89.0%** of that movement. The instrument can remove a photometric step of exactly the proposed kind; it finds none in the box. | MEASURED |
+| P92 | **The dark stand-off shelf IS substantially photometric, and this corrects §21 and §26.4.** With the election held *bit-for-bit* fixed, level normalisation alone removes **32.4%** of the shelf (−0.07961 → −0.05379). The election-alone cell moves it the other way, a **−15.7%** share (deeper, −0.08433). Both together remove 37.8%, interaction +29.9%. | §26.4 called both features "boundary-registered election behaviour". That over-attributes the shelf: a third of it survives the election being held constant and is carried by the frames' own levels. The orchestrator's photometric-step mechanism is real here, at the location and sign it predicted. | MEASURED |
+| P93 | **A metric's baseline window can contain the very feature a null result is claimed about.** §21 concluded "the photometric share is zero" from ISO, whose `D_NEAR = (1, 24)` reads the box and whose `D_FAR = (48, 96)` is a *linear baseline fit* — and the shelf's trough sits at **d = 92, inside that fit window**. | ISO does not merely under-weight the shelf, it **absorbs the shelf into its own baseline**, so no shelf effect can register as signal. §21's headline is true of the box and structurally unmeasurable for the shelf. Check what a metric's normaliser spans before reporting a null over it. | DERIVED |
+| P94 | **A rigid translation cannot discriminate two mechanisms that are both boundary-registered.** §26.4's roll control preserves *every* local winner-field index gradient exactly, merely relocated, so a photometric-step artifact collapses under the roll identically to a veiling artifact. | The roll separates boundary-registered from boundary-independent, which is what it was built for. §26.4 used it to separate two boundary-registered causes, which it cannot do. A control's discriminating power is a property of the transform, not of the hypothesis it is aimed at. | DERIVED |
+| P95 | **A share-of-change statistic is sign-blind and will name a driver for a change in the wrong direction.** The registered rule attributed **99.6% of the box's change to photometry** — where the change was a **16.24% increase**. | The rule apportions a change without requiring the change to be a *reduction*, so it certified as "driven by" the mechanism the same numbers most cleanly refute. Direction must be tested before attribution; a ratio of two negatives reads positive and says nothing about benefit. | MEASURED |
+| P96 | **Regressing frames on an ensemble reference does not measure exposure in a focus stack; it measures contrast.** The covariance fit reported **109.671% peak-to-peak "gain"** with a 4036 DN offset swing on a 3747 DN level. True per-frame mean level over the same region reads **17.339% p-p**, 6.3× smaller — and that is still an upper bound, containing breathing and defocus spill. | The planted-ramp control recovered the plant to **0.000%** error and was blind to the confound, because a covariance fit recovers a multiplicative plant whether or not it also carries a focus term. A passing positive control bounds sensitivity, not specificity. | MEASURED |
+| P97 | **Between the frames actually elected, exposure drift is 19× too small to build the veil and has the wrong sign.** Elected-frame level at the band is **−0.7424%** against the far field — darker, where the veil is brighter — supplying **5.16%** of the 14.393% box. | Independently, the index-gap prediction fails: pooled within-distance Spearman ρ(excess, `\|Δk\|`) = **−0.0800** against a rolled-gap null of **+0.0713**, negative where a photometric step predicts positive. Two independent arms, both against the mechanism, for the box only. | MEASURED |
 
 ### Capture request
 
@@ -3289,3 +3311,315 @@ Two premises were corrected before they could do damage — the orchestrator's a
 mine about which arm produced −28.2%, and my own about whether the plant could
 express the failure it was built to test. Both were caught by reading the source
 rather than the summary.
+
+## 27. The photometric-step hypothesis: refuted for the veil, confirmed for the shelf
+
+**Asked by the orchestrator**, off the back of a `flowers-cpl` measurement:
+`--gate 0` renders hard-edged polygonal patchwork in a smooth defocused petal,
+because adjacent low-texture pixels elect frames that disagree photometrically
+and every winner-field boundary becomes a visible step. Applied to a silhouette,
+where the winner field must jump between two frame indices far apart on the
+focus axis, that predicts a **signed** step — bright on one side, dark on the
+other — which would make §26.4's "two mechanisms" a **single mechanism with a
+sign change**. Three measurements were offered; the orchestrator asked me either
+to name the measurement that already excludes this, or to take the third.
+
+**Answer, and it splits: the mechanism is REFUTED for the bright veil and
+CONFIRMED for the dark shelf. The orchestrator is right that my kills did not
+exclude it, and right about the shelf specifically. §26.4 and §21 are both
+corrected below.**
+
+### 27.1 First, the concession: none of my three kills excludes this
+
+I am not going to defend the kills. The orchestrator's reading of them is
+correct and one of my published sentences is weaker than I wrote it.
+
+§26.4 concluded that both the box and the shelf are "boundary-registered
+election behaviour", on the strength of `W1`: rolling the elected-index field by
+(317, 511) leaves 39.1% of the box and 7.7% of the shelf. **That control cannot
+discriminate the hypothesis under test.** A roll is a **rigid translation**, so
+it preserves every local index gradient `\|k_left − k_right\|` *exactly* — the
+steps still exist afterwards, in the same number and the same magnitude, merely
+relocated off the silhouette. A photometric-step artifact is therefore *also*
+boundary-registered and *also* collapses under the roll. `W1` separates
+boundary-registered from boundary-independent, which is what it was built for.
+§26.4 used it to separate two boundary-registered *causes*, which it cannot do.
+That is `P94`, and it is a defect in my reasoning, not in the control.
+
+The same goes for the other two. "Not the gate" is consistent with a
+photometric step, which is present at `--gate 0`. "Not misregistration" is
+consistent with it, since alignment cannot fix a photometric step between
+correctly registered frames. The orchestrator anticipated both.
+
+**One thing is already excluded and it is worth naming precisely.** The
+frame-borne component `V` (+2.852% of level, §26.4) is measured on the
+**ensemble mean**, which elects nothing. No property of the election can appear
+there. So `V` is safe; the box and the shelf were both live.
+
+### 27.2 What was registered, before anything was run
+
+`src/75-photometric.py`, `src/76-photometric-audit.py`, `src/77-decompose.py`
+and `src/78-invariance.py` each carry their preregistration in the module
+docstring. In outline:
+
+| id | test | registered decision |
+|---|---|---|
+| D1 | drift magnitude, and the spread between the frames *actually elected* | below 25% of the box means drift cannot account for it |
+| C-D1-POS | plant a ±4% per-frame ramp | must recover to within 10% relative |
+| D2 | veil amplitude against local winner-field index gap | mechanism predicts positive ρ; rolled-gap null |
+| D3 | normalise gain and offset, **re-elect**, re-merge, recompute `E(d)` | ≥75% survival refutes; ≤25% confirms |
+| C-D3-POS | plant a ±10% ramp | must (a) move `E` detectably and (b) be ≥50% removed by normalisation |
+| A1 | true exposure = per-frame **mean level** (blur conserves the mean) | the number I quote |
+| A3 | **level-only**, focus-neutral normalisation | same 75%/25% thresholds |
+| A4 | shuffled normaliser: perturbs the election, corrects nothing | ≥50% of the fitted arm's effect means perturbation |
+| B1/B2 | 2×2 holding election and composite fixed one at a time | share >0.60 names the driver |
+| C-ID | cell 00 must reproduce the cached `E(d)` | hard abort |
+| C-INV | global rescale of every frame must leave `E` unchanged | ≤1e-9 |
+
+`C-D3-POS` is the arm that makes the rest readable, and it exists because bar
+`X4` already caught this milestone shipping a suppression number with no
+fidelity term. A null from a normaliser never shown to remove a *known* step is
+worth nothing.
+
+### 27.3 There is real drift, and my first instrument mismeasured it by 6.3×
+
+`75`'s D1 fitted a per-frame gain and offset by regressing each frame on the
+ensemble reference over `d ≥ 140`, and reported:
+
+| quantity | `75`'s covariance fit | `76`'s mean level |
+|---|---|---|
+| peak-to-peak | **109.671%** | **17.339%** |
+| offset swing | 4036.31 DN on a 3747 DN level | — |
+| standard deviation | 0.27496 in gain | 5.034% of level |
+
+**No camera drifts by 110% across a focus sweep.** That regression measures
+**contrast**, not exposure: a frame whose background is defocused has its
+structure smoothed away, so its covariance with a sharp reference collapses and
+the fitted gain reads low. In a focus stack, at any radius, the background's
+focus is exactly what is changing. Convolution conserves the mean, so per-frame
+**mean level** is the estimator that is neutral to defocus, and it reads
+**17.339% p-p** — and that is still an *upper* bound, because it also contains
+focus breathing and foreground blur spill.
+
+**The corroboration I did not plan.** §21.5's far-background probe, cut at
+`> 60` px rather than `≥ 140` px and written for a different purpose, reported
+total peak-to-peak of **17.83%**. Two independent regions, two independent
+scripts, 17.34% against 17.83%. The level estimator reproduces; the covariance
+one does not.
+
+**`C-D1-POS` passed and was blind to this.** A planted ±4% ramp was recovered
+with a maximum relative error of **0.000%** — because a covariance fit recovers
+a multiplicative plant perfectly whether or not it *also* carries a focus term.
+The control bounded the estimator's **sensitivity** and said nothing about its
+**specificity**. That is `P96`, and it is the same shape as `P82`.
+
+**My registered A2 rule did not catch it either.** A2 was to declare the fit
+confounded if `|ρ(g, focus)| > |ρ(g, level)|`. Measured: **ρ(g, level) =
++0.7485** against **ρ(g, focus) = +0.7084**. By the letter the fit is
+level-driven and the 109.671% "stands" — which is wrong, and it is wrong because
+in a focus stack level and focus co-vary, so the rule is comparing two
+near-equal correlations and cannot resolve them. **A1's direct measurement is
+what refutes the number, not A2.** I report the rule as under-powered and the
+figure as withdrawn.
+
+### 27.4 The box: three arms and a passing positive control, all against the mechanism
+
+**Arm one — is there enough drift to do the job?** The most a photometric step
+can deliver is the brightness difference between the frames *actually elected*.
+
+| quantity | value |
+|---|---|
+| elected-frame level, band `d ∈ [2,22]` | 0.98670 of the sweep mean |
+| elected-frame level, far field `d ∈ [80,120]` | 0.99409 |
+| **excess at the band** | **−0.7424%** |
+| `E`'s box amplitude | +14.393% |
+| **share of the box that drift can supply** | **5.16%, a 19× shortfall** |
+
+It is not merely too small. **It is the wrong sign** — the frames elected at the
+band are *darker* than those elected far away, in a band that is *brighter*.
+
+**Arm two — normalise and re-elect, the orchestrator's measurement (3).**
+
+| arm | box at `d = 13` | survives | election agreement |
+|---|---|---|---|
+| shipped merge | +0.14393 | — | — |
+| gain + offset normalised | +0.14713 | **102.22%** | 70.329% |
+| **level-only, focus-neutral** | **+0.16741** | **116.32%** | 89.292% |
+
+Not only does the box survive explicit per-frame photometric normalisation, the
+focus-neutral version of it makes the box **16.3% larger**. Correcting exposure
+makes this artifact worse.
+
+**Arm three — the positive control, which is what licenses reading arms one and
+two as nulls.** Planting a ±10% per-frame ramp — several times the true drift —
+and re-electing:
+
+| quantity | value |
+|---|---|
+| box with the planted ramp | +0.17301 |
+| **movement caused by the plant** | **+0.02908** (detectable ✓) |
+| box after normalising the planted cube | +0.14713 |
+| **planted movement removed by normalisation** | **+0.02588 = 89.0%** (≥50% ✓) |
+
+**The instrument demonstrably removes a photometric step of exactly the proposed
+kind. It finds none in the box.** Registered verdict: **refuted**, at 102.22%
+against a 75% bar.
+
+### 27.5 The 2×2: hold one factor at a time
+
+Normalising frames does two things at once — it changes what is composited and
+it changes what the election picks (10.708% of pixels moved even under the
+gentle level-only arm). Only the first is the orchestrator's mechanism. `77`
+runs all four cells: elect from {original, normalised} × composite from
+{original, normalised}.
+
+| cell | elect | composite | box `d=13` | shelf `d=92` |
+|---|---|---|---|---|
+| 00 | original | original | +0.14393 | −0.07961 |
+| 10 | original | **normalised** | **+0.16731** | **−0.05379** |
+| 01 | **normalised** | original | +0.14400 | −0.08433 |
+| 11 | normalised | normalised | +0.16741 | −0.04949 |
+
+Cell 10 is the clean statement of the mechanism: the winner field is **fixed
+bit-for-bit** and only the pixel values change.
+
+- **Box.** Photometry alone moves it from +0.14393 to +0.16731, a **16.24%
+  increase**. Election alone moves it by **+0.05%** of its own value — nothing.
+  The box is inert to both, and made worse by the one under test.
+- **Shelf.** Photometry alone removes **32.44%** of it. Election alone makes it
+  **5.93% deeper**. Together they remove 37.84%, with a +29.9% interaction.
+
+**My registered share statistic named the wrong winner for the box and I am
+reporting it as a defect.** B1/B3 computes `(E00 − E10) / (E00 − E11)`; for the
+box that is `(−0.02338)/(−0.02348) = +99.6%`, and the script duly printed
+`driver: PHOTOMETRY (ORCH's mechanism)` — for a change that is a 16.24%
+**increase**. The rule apportions a change without ever asking whether the
+change is a *reduction*, so a ratio of two negatives reads positive and
+certifies the mechanism its own operands most cleanly refute. That is `P95`. The
+verdict line in `77`'s output is wrong as printed and the cell values above are
+what stand.
+
+### 27.6 The shelf: the orchestrator is right, and this corrects §21 and §26.4
+
+Three arms agree, and they are not the same arm restated:
+
+| arm | shelf at `d = 92` | survives | election agreement |
+|---|---|---|---|
+| shipped merge | −0.07961 | — | — |
+| gain + offset normalised, re-elected | −0.03642 | 45.74% | 70.329% |
+| level-only normalised, re-elected | −0.04949 | 62.16% | 89.292% |
+| **photometry alone, election frozen** | **−0.05379** | **67.56%** | **100%** |
+| shuffled normaliser (corrects nothing) | −0.12395 | **155.69%** | 35.089% |
+
+The last row is the control that settles it. `A4` divides frame `k` by the
+fitted gain of a *randomly permuted* frame — the same magnitude of disturbance,
+correcting nothing. It perturbs the election far harder (35.089% agreement
+against 70.329%) and it moves the shelf **the other way**, making it 55.7%
+**deeper**. Perturbation deepens; correction shallows. Opposite signs.
+
+**My registered A4 rule was written for the wrong failure mode.** It tested
+*magnitude* — "if the shuffled arm reproduces ≥50% of the fitted arm's
+reduction, the effect is perturbation" — on the assumption that perturbation
+would push the same direction. It computed −102.6% and returned "photometric",
+which is the right answer reached by a rule that could not have distinguished
+the interesting case. **The sign is what settles it, and I did not register the
+sign.**
+
+**This corrects §26.4.** I wrote that both features are boundary-registered
+election behaviour. That over-attributes the shelf: **a third of the shelf
+survives the election being held bit-for-bit constant** and is carried by the
+frames' own levels. The orchestrator's mechanism is real, at the location it
+predicted, with the sign it predicted.
+
+**And it corrects §21, which is the more serious of the two.** §21 concluded
+"the photometric share is zero or negative; the optical share is all of it",
+from a λ-ladder on the ISO halo metric. That conclusion is sound for the box and
+**structurally unmeasurable for the shelf**, because of what ISO is:
+`m87lib.halo_from_profile` takes its peak over `D_NEAR = (1, 24)` — the box —
+after subtracting a **linear baseline fitted over `D_FAR = (48, 96)`**. The
+shelf's trough is at **`d = 92`, inside that fit window**. ISO does not
+under-weight the shelf; **it absorbs the shelf into its own baseline**, where a
+shelf effect tilts the normaliser instead of registering as signal. `D_MAX = 96`
+means the standard profile does not even reach past the shelf. §21's null was
+measured with an instrument that cannot express the effect. That is `P93`, and
+it is the reason this result went eighteen sections unfound.
+
+### 27.7 The index-gap prediction, with distance partialled out
+
+The orchestrator's measurement (2): a photometric step should grow with
+`\|k_left − k_right\|`; veiling need not.
+
+| statistic | value |
+|---|---|
+| Spearman ρ(excess, gap) over the whole band | **−0.1180** |
+| rolled-gap null | +0.0660 |
+| **pooled within-distance ρ** | **−0.0800** |
+| rolled-gap null, pooled | +0.0713 |
+
+The raw correlation is confounded, because inside `d ∈ [2,22]` both the excess
+and the gap vary with `d` — which is why the null read +0.0660 rather than zero.
+Recomputing Spearman **within each 1 px distance bin** and pooling by count
+removes distance as a driver, and the answer is unchanged in sign: **−0.0800
+against a +0.0713 null**. Negative where the mechanism predicts positive. This
+agrees in direction with §65's finding that `\|Δk\|` acts as a **threshold, not
+a gradient**, and it is now measured on raw amplitude rather than on a rank
+statistic that a per-frame gain could itself disturb.
+
+### 27.8 `C-INV` failed as registered, and the diagnosis is arithmetic
+
+`E` is a ratio to the far-field level, so multiplying every frame by a constant
+must leave it exactly unchanged. `77` measured **2.768e-09** against a
+registered **1e-9** bar. **The bar failed.** `78` diagnoses it rather than waves
+at it, on the principle that a leak cannot know whether a scale factor is
+binary-exact:
+
+| factor | representable in binary? | max `\|dE\|` over all `d` | at box and shelf |
+|---|---|---|---|
+| ×0.5 | yes | **0.000e+00** | **0.000e+00** |
+| ×2.0 | yes | **0.000e+00** | **0.000e+00** |
+| ×4.0 | yes | **0.000e+00** | **0.000e+00** |
+| ×1.37 | no | 9.586e-08 | 2.768e-09 |
+| ×1.1 | no | 8.149e-08 | 2.406e-08 |
+| ×3.7 | no | 4.899e-08 | 1.713e-08 |
+
+**Every binary-exact factor reproduces `E` bit-for-bit.** Only factors that
+round move it, and they move it by float32 epsilon (1.192e-07 relative, an
+absolute floor of ~1.716e-08 on these values). `E` is invariant; the 1e-9
+threshold was registered **below the arithmetic's own resolution**. The worst
+deviation across every factor is 2.406e-08 against the smallest effect §27
+reports (0.02348) — a factor of **9.8 × 10⁵**.
+
+`78`'s own auxiliary clause also failed, and for the same reason: it required
+inexact factors to stay under 1e-8 while the same script computes the float32
+floor at 1.716e-08. I registered two thresholds below the noise floor. The
+*mechanism* test — exact versus inexact — is what carries the diagnosis, and it
+carries it cleanly.
+
+`C-ID` passed exactly: cell 00 reproduces `76`'s baseline `E(d)` at **0.000e+00**
+across every finite distance.
+
+### 27.9 What this changes
+
+1. **The bright veil is not a photometric step.** Refuted by three arms with a
+   passing positive control, and exposure correction makes it *worse*. §26.4's
+   attribution of the box to selection stands, now on a control that can
+   actually discriminate.
+2. **The dark shelf is at least a third photometric.** §26.4's attribution of it
+   to the election is corrected, and §21's "photometric share is zero" is scoped
+   to the box.
+3. **The orchestrator's "single mechanism with a sign change" is half right, and
+   it is the half I had wrong.** The two features are still two mechanisms — but
+   not the two I named. The box is a selection artifact that photometry cannot
+   touch. The shelf is a genuine composite of both.
+4. **A correction that normalises per-frame level before the merge would help the
+   shelf and hurt the veil.** That is a real design constraint on the annulus
+   milestone: the two features must be treated separately, and any single global
+   fix trades one against the other. It also means `--auto-exposure` and any
+   per-frame photometric normalisation shipped elsewhere in the pipeline should
+   expect to *increase* the measured near-edge halo while improving the far
+   band, which is worth saying before someone reads that as a regression.
+5. **Four registered rules failed or under-performed in one section** — A2
+   under-powered, A4 written for the wrong failure mode, B1/B3 sign-blind, C-INV
+   and `78`'s clause set below the arithmetic floor. None of the *conclusions*
+   moved, because in each case a second instrument or a mechanism test settled
+   it. That is the argument for redundancy, not for the rules.
