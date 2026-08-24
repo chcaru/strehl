@@ -58,6 +58,56 @@ const OCTAVE_MIN: u64 = 10_000;
 /// the data and every bucket is populated by construction.
 const DETAIL_BUCKETS: usize = 10;
 
+/// The offset that pivots a **signal-domain** gain about the black pedestal.
+///
+/// `Estimator::fold_censored_probing_photometry` applies `L' = L*scale +
+/// offset` inside `Estimator::fold_inner`, and the `L` it applies it to is
+/// **black-inclusive raw DN**, read straight off the quad source
+/// (`merge.rs`, `let v = row[2 * px + ox];`). `Estimator::disagreement`
+/// subtracts black only at read time. Every gain in this file, by contrast, is
+/// fitted on `pipe.luma`, which `green_luma_with_clip` has *already*
+/// black-subtracted — a buffer the estimator never sees.
+///
+/// So a gain `c` meaning "multiply the signal by `c`" must be applied as
+///
+/// ```text
+/// L' = black + c*(L - black) = c*L + black*(1 - c)
+/// ```
+///
+/// and passing `offset = 0.0` instead scales the pedestal too, over-correcting
+/// the signal by `1 + black/signal` — up to **3.664x** on `112MSDCF`, worth
+/// **+22.24 points** of excess-disagreement reduction (SYNTHESIS fact 1199,
+/// measured by `m91-photometry.rs`'s C9 arm on a second implementation of the
+/// merge's averaging stage).
+///
+/// The defect is *not* the mechanism behind M60's negative gain-only results:
+/// fact 1200 records that corrected, `foam` and `coffee-bean` get **worse**, and
+/// M60 F3 stands. Fixing the pivot does not reopen that.
+#[inline]
+fn pedestal_pivot_offset(black: f32, scale: f32) -> f32 {
+    black * (1.0 - scale)
+}
+
+/// Rule 20/35: the input that makes this FAIL exists and is the shipped
+/// historical value — `offset = 0.0`, which leaves `black*scale` where `black`
+/// belongs and so fails for every `scale != 1`.
+///
+/// Asserted per frame at the call site rather than once, because `scale` is
+/// per-frame and a fit that silently returned 1.0 for every frame would make a
+/// single check vacuous.
+fn assert_pivot_preserves_the_pedestal(black: f32, scale: f32, offset: f32) {
+    let pedestal_out = black * scale + offset;
+    // Independently written: where the pedestal must land is `black`, a
+    // quantity that never passed through `pedestal_pivot_offset`.
+    let err = (pedestal_out - black).abs();
+    assert!(
+        err <= 1e-3 * black.max(1.0),
+        "photometric correction moves the black pedestal: black {black} * scale \
+         {scale} + offset {offset} = {pedestal_out}, want {black} (error {err}). \
+         `Estimator::fold_inner` accumulates black-inclusive raw DN; see fact 1199."
+    );
+}
+
 struct Pipeline {
     geom: PlaneGeometry,
     noise: NoiseModel,
@@ -104,6 +154,11 @@ fn main() -> Result<()> {
     let mut dir: Option<PathBuf> = None;
     let mut gates: Vec<f32> = Vec::new();
     let mut limit: Option<usize> = None;
+    // Fact 1199's defect, kept reachable behind a flag rather than deleted, so
+    // `M60-prior-art-and-the-rival-explanations.md` §4.2's published gain column
+    // stays reproducible from the instrument that produced it. Default OFF: the
+    // correct pivot is the default and the defect is the opt-in.
+    let mut zero_pivot = false;
     // A3's fixed absolute threshold: 109MSDCF's p99 chi2 at gate 1.0, measured
     // before this arm was written and not re-chosen afterwards.
     let mut threshold = 13.811f64;
@@ -130,10 +185,13 @@ fn main() -> Result<()> {
                         .context("--limit value")?,
                 );
             }
+            "--zero-pivot" => zero_pivot = true,
             other => dir = Some(PathBuf::from(other)),
         }
     }
-    let dir = dir.context("usage: m60-disagreement <DIR> [--gate G].. [--limit N]")?;
+    let dir = dir.context(
+        "usage: m60-disagreement <DIR> [--gate G].. [--limit N] [--reach C] [--zero-pivot]",
+    )?;
     if gates.is_empty() {
         // The shipped default ladder, so the headline number is the one the
         // product would produce rather than one chosen for this milestone.
@@ -169,6 +227,14 @@ fn main() -> Result<()> {
     println!("frames          : {}", paths.len());
     println!("plane           : {} x {}", geom.width, geom.height);
     println!("iso / black     : {iso:?} / {black}");
+    println!(
+        "photometric pivot: {}",
+        if zero_pivot {
+            "ZERO (fact 1199's defect, restored by --zero-pivot to reproduce M60b \u{a7}4.2)"
+        } else {
+            "BLACK PEDESTAL (correct; see `pedestal_pivot_offset`)"
+        }
+    );
     println!(
         "gates           : {}",
         gates
@@ -290,6 +356,35 @@ fn main() -> Result<()> {
             (s, (sr - s * sl) / n)
         };
         fits.push((s as f32, c as f32));
+        // The pivot, per frame. `Estimator::fold_inner` accumulates
+        // black-inclusive raw DN, so a gain fitted on the black-subtracted
+        // `pipe.luma` must be applied about `black`, not about zero. The
+        // one-parameter arm's offset is therefore `black*(1-c)`; the affine
+        // arm's is that plus its own fitted signal-domain offset. See
+        // `pedestal_pivot_offset` and SYNTHESIS fact 1199.
+        let (gain_offset, affine_offset) = if zero_pivot {
+            (0.0f32, c as f32)
+        } else {
+            (
+                pedestal_pivot_offset(black, scale[index]),
+                pedestal_pivot_offset(black, s as f32) + c as f32,
+            )
+        };
+        if zero_pivot {
+            // Rule 30: a tolerated disagreement is asserted at its expected
+            // wrong value, never carved out of the assertion. This arm is
+            // *known* to move the pedestal, and by exactly how much.
+            let moved = (black * scale[index] + gain_offset) - black;
+            let want = black * (scale[index] - 1.0);
+            assert!(
+                (moved - want).abs() <= 1e-3 * black.max(1.0),
+                "the zero-pivot arm must move the pedestal by exactly \
+                 black*(scale-1) = {want}, got {moved}"
+            );
+        } else {
+            assert_pivot_preserves_the_pedestal(black, scale[index], gain_offset);
+            assert_pivot_preserves_the_pedestal(black, s as f32, affine_offset - c as f32);
+        }
         for e in &mut ests {
             e.fold_censored(index as u16, &frame, &pipe.reg, CONTAINER_MAX_DN)?;
         }
@@ -300,9 +395,7 @@ fn main() -> Result<()> {
                 &pipe.reg,
                 CONTAINER_MAX_DN,
                 scale[index],
-                // `green_luma_with_clip` subtracts black, so the luma the
-                // accumulator sees is already signal and the offset is zero.
-                0.0,
+                gain_offset,
             )?;
         }
         for e in &mut affine {
@@ -312,7 +405,7 @@ fn main() -> Result<()> {
                 &pipe.reg,
                 CONTAINER_MAX_DN,
                 s as f32,
-                c as f32,
+                affine_offset,
             )?;
         }
         for e in &mut offs {
@@ -541,4 +634,68 @@ fn report(
         e.allocated_bytes() as f64 / 1e6
     );
     println!();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The pivot is defined by what it does to the pedestal and to the signal,
+    /// and both are checked against expressions written without reference to
+    /// `pedestal_pivot_offset`'s body.
+    #[test]
+    fn the_pivot_fixes_the_pedestal_and_scales_only_the_signal() {
+        let black = 512.0f32;
+        for &c in &[0.90f32, 0.9618, 1.0, 1.0243, 1.10] {
+            let off = pedestal_pivot_offset(black, c);
+            // Pedestal in, pedestal out.
+            assert!((black * c + off - black).abs() <= 1e-3, "scale {c}");
+            // Signal in, signal scaled by exactly `c` -- computed here as
+            // `black + c*S` rather than via the offset, so the assertion has an
+            // independent term (rule 35).
+            for &s in &[1.0f32, 100.0, 1392.0, 8000.0] {
+                let got = (black + s) * c + off;
+                let want = black + c * s;
+                assert!(
+                    (got - want).abs() <= 1e-3 * want.abs().max(1.0),
+                    "scale {c} signal {s}"
+                );
+            }
+        }
+    }
+
+    /// Rule 20: the input that makes the guard FAIL exists, and it is the
+    /// value this file shipped before fact 1199. Without this the guard is
+    /// arithmetic, not evidence.
+    #[test]
+    fn the_shipped_zero_offset_fails_the_guard() {
+        let black = 512.0f32;
+        let c = 0.9618f32;
+        let caught = std::panic::catch_unwind(|| {
+            assert_pivot_preserves_the_pedestal(black, c, 0.0);
+        });
+        assert!(
+            caught.is_err(),
+            "offset = 0.0 must be rejected at scale {c}"
+        );
+        // ... and it must be accepted at scale exactly 1, where the two pivots
+        // coincide, so the guard is not simply always-red.
+        assert_pivot_preserves_the_pedestal(black, 1.0, 0.0);
+    }
+
+    /// The over-correction factor fact 1199 prices, re-derived here from the
+    /// definition rather than quoted: the zero-pivot arm's deviation from raw
+    /// signal is `1 + black/signal` times the correct one.
+    #[test]
+    fn the_zero_pivot_over_corrects_by_one_plus_black_over_signal() {
+        let black = 512.0f64;
+        let c = 0.90f64;
+        // `112MSDCF`'s ratio in fact 1199's table is 3.664x.
+        let signal = black / (3.664 - 1.0);
+        let raw = black + signal;
+        let correct_dev = (black + c * signal) - raw;
+        let zero_dev = c * raw - raw;
+        let ratio = zero_dev / correct_dev;
+        assert!((ratio - 3.664).abs() < 5e-3, "ratio {ratio}");
+    }
 }

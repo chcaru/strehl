@@ -1,0 +1,27 @@
+    Finished `release` profile [optimized] target(s) in 0.13s
+     Running `target-m94\release\examples\m60-disagreement.exe D:\personal\macro\109MSDCF --gate 4.0 --zero-pivot`
+stack           : D:\personal\macro\109MSDCF
+frames          : 22
+plane           : 3516 x 2344
+iso / black     : Some(160.0) / 512
+photometric pivot: ZERO (fact 1199's defect, restored by --zero-pivot to reproduce M60b §4.2)
+gates           : 4
+photometric ptp : 0.910%  (per-frame mean signal, 1391.1..1403.8 DN above black)
+A4 affine fit   : s in 0.9886..1.0034, c in -4.98..11.19 DN
+
+--- admitted-frame disagreement (MEASURED) ---
+chi2 = s^2(admitted luma) / sigma_pred^2.  E[chi2] = 1 under 'the admitted frames differ only by sensor noise', for every n >= 2.
+
+gate     4   tol 0.086063
+  exposure      : 95.38% of pixels have n_eff >= 2   (4.62% are n_eff = 1, where chi2 is undefined and no mask can act)
+  mean chi2     : 2.4442   quantiles  p0.010=0.033  p0.250=0.649  p0.500=1.197  p0.750=2.057  p0.950=5.184  p0.990=25.344  p0.999=146.267
+  A1b photometric: mean chi2 2.4007 after removing a per-frame scalar gain (3.0% of the excess over 1.0 removed)
+  A4  affine     : mean chi2 2.3668 after removing a per-frame gain AND offset (5.4% of the excess over 1.0 removed)
+  A4b offset only: mean chi2 2.4457 after removing a per-frame offset, s == 1 (-0.1% of the excess over 1.0 removed)
+  by n_eff      :  n=2 5.915 (6.0%)  n=3 3.611 (10.4%)  n=4 2.011 (23.5%)  n=5 1.908 (24.2%)  n=6 1.974 (14.9%)  n=7+ 2.278 (16.4%)
+  detail range  : winner focus response 0.601 .. 16.692 (deciles below)
+  by detail     :  >=0.60 1.239  >=0.74 1.408  >=0.76 1.443  >=0.78 1.458  >=0.79 1.469  >=0.81 1.477  >=0.83 1.503  >=0.88 1.672  >=1.14 2.806  >=2.45 9.967
+  A3 reach      : 1.6847% of ALL pixels are measurable AND chi2 > 13.811 (1.77% of measurable)
+  by octave     :  [ 0.5] 1.442 n=6001065  [   1] 2.364 n=947311  [   2] 5.345 n=412645  [   4] 12.333 n=425822  [   8] 11.651 n=73918
+  memory        : 337.9 MB for this estimator
+
