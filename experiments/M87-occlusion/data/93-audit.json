@@ -1,0 +1,15 @@
+{
+ "watershed": "2026-08-24T03:15:23-07:00",
+ "watershed_commit": "885e9f7",
+ "pre_align_data_files": 27,
+ "align_share_of_halo_pct": 6.862844189363607,
+ "unaligned_delta_pct": 82.75653438928975,
+ "aligned_delta_pct": 72.93287068931788,
+ "ratio": 1.1346945980204053,
+ "limit_flags_in_m87": 0,
+ "binary_sha24": "d2488939cbaca3e13051263f",
+ "default_gate": 4.0,
+ "scripts_total": 106,
+ "scripts_measurement": 91,
+ "scripts_invoking_binary": 0
+}

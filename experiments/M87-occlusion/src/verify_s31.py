@@ -28,10 +28,12 @@ doc = DOC.read_bytes().decode("utf-8")
 # make the exact-count discipline meaningless: "4.6%" appears 19 times in the
 # corpus, so an exact count there tests nothing about section 31.
 _i = doc.index("## 31. The wild veil")
+_j = doc.index("## 32. Two hazards")
+assert _j > _i, "section 32 does not follow section 31"
 _facts = [l for l in doc.split("\r\n")
           if re.match(r"\| P1(1[89]|2[0-3]) \|", l)]
 assert len(_facts) == 6, f"expected 6 new fact rows, found {len(_facts)}"
-mine = doc[_i:] + "\r\n" + "\r\n".join(_facts)
+mine = doc[_i:_j] + "\r\n" + "\r\n".join(_facts)
 flat = re.sub(r"\s+", " ", mine)
 
 

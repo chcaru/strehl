@@ -1986,6 +1986,9 @@ namespaced `M87`.
 | P121 | **The photometric step at election boundaries is below 1.00 DN per adjacent frame, and a coffee-bean-grade drift is excluded.** Median high-pass on election-index boundaries is **27.0 DN** against 26.0 DN off them — enrichment **1.04×**, rot180 null **0.93×**. Planting a MONOTONE per-frame ramp (M99 fact 23) calibrates that: 1 DN/frame reads 1.115×, 10 reads 1.269×, 100 reads 1.692×. M24’s worst corpus stack (coffee-bean, 11.70% end to end) is 20.0 DN/frame and would read **1.37×**. | **My registered bar was mis-set and I am withdrawing what it said.** “Enrichment ≥ 1.5× means detected” needs a plant of **100 DN/frame** = **58.5%** drift across the bracket, five times the largest drift anyone in this corpus has measured; a bar that only fires at 5× the largest known effect is not a test. The response CURVE is the result, not the threshold I hung on it. At 27.0 DN the step is **0.233** of one output code, so it is invisible in the figure regardless. | MEASURED |
 | P122 | **The rendered gate overturned my own scalars on the flagship image.** The shipped correction scored leakage **0.000** into the subject (interior median and p99 both 0.0 DN) and a **96.3%** veil reduction (4133 → 153 DN). The 100% crop then showed the hair tips truncated to stubs against a hard stair-stepped edge. Re-measured on a population defined from the reference render — thin dark structure in near background — tip contrast falls **6316 → 3739 DN**, ratio **0.5919**, with **33.1%** of tip pixels dropping below half the selection threshold. | The scalar was blind for a reason that generalises: **0 of 39 274** hair-tip pixels lie inside the segmented subject mask, so 100% of the damaged population is invisible to a leakage test that only looks for spill INTO the subject. Near a silhouette the hairs ARE the background pixels. Same hole as the +72.9% episode. Controls C-INT (subject interior, untouched) and C-NULL (after replaced by before) both return **1.0000** exactly, so the estimator is sound and the erasure is real. The correction stays OFF, now for a measured reason on `bee-3-cpl` rather than an impression. | MEASURED |
 | P123 | **Reproduce another agent’s artefact byte-for-byte before analysing it.** Re-rendering `bee-3-cpl` at the shipped default with `STREHL_WARPMAP` pinned to my own reference-149 sidecar produced a file **SHA-256 identical** to the orchestrator’s `bee-3-cpl.tif` (`e400a63aa9f6ab1f1957940d`), so the `--index-map` and `--n-eff-map` written in the same run are the election and `n_eff` fields OF THAT EXACT FIGURE. | Every claim in §31 about what the figure shows is therefore anchored to the figure rather than to a similar render, and the assertion is in the script so it cannot drift. This is the cheap move that converts “I looked at a render like yours” into evidence, and it cost one hash. | MEASURED |
+| P124 | **No M87 render took the 40-frame `bee-3-cpl` sidecar: every render with recorded provenance placed the full 299-frame bracket.** The quarantined file (1560 bytes, a 40-frame solve) is refused by `load_or_solve`'s frame-count guard on any full-bracket run; the trap needs `--limit N` meeting an N-frame sidecar, and `--limit` appears **0** times in M87's 91 measurement scripts. | The evidence is the `alignment:` placed count, not the script tree: **0** of 106 scripts invoke the binary, so every render was hand-run and a flag count over the Python tree cannot speak to renders. My first draft rested on exactly that mistake and the verifier refused it. | MEASURED |
+| P125 | **The M86c alignment watershed moves 100% of the render's pixels but only 6.86% of the halo.** Unregistered ISO **0.06878** against aligned **0.06406** on `ROI_LEG`. The correction removes **82.76%** unaligned and **72.93%** aligned, ratio **1.135**. | 27 of M87's data files were written before `885e9f7` (2026-08-24 03:15:23) and so describe an unaligned merge. This bounds what that can have cost: the halo survives registration almost intact, which is why no pre-watershed verdict in this milestone changes. It is also the same operand pair as `P48`, read here for a different question. | MEASURED |
+| P126 | **A hash recorded beside the words “the shipped default” is not a record.** §31.1's provenance block named the gate only in prose; it now carries the invocation, the resolved `DEFAULT_GATE` = **4.0** with its source, and the binary's SHA-256. | M106 spent 1.9 hours attributing a regression that had not happened, because three milestones froze three different invocations and none recorded the command. `byte-freeze.rs:855` already says `DEFAULT_GATE` “is 4.0 today and was not always”. My own most recent hash had the identical hole, written hours after I had read the warning. | MEASURED |
 
 ### Capture request
 
@@ -4266,6 +4269,12 @@ Re-rendered from `D:\personal\macro\bee-3-cpl` at the shipped default with
 is SHA-256 **identical** to the orchestrator’s file:
 
 ```
+strehl stack D:\personal\macro\bee-3-cpl --srgb --auto-exposure \
+    --index-map ... --n-eff-map ...        # no --gate flag was passed
+gate           : 4.0  (resolved DEFAULT_GATE, `merge.rs:297`; recorded
+                 explicitly because a default is not a record --
+                 `byte-freeze.rs:855` notes it “was not always” 4.0)
+binary         : sha256 d2488939cbaca3e13051263f  (frozen into my own scratch)
 alignment      : ON (sidecar-override), reference frame 149, 299 placed / 0 refused
 mean n_eff     : 55.321      n_eff = 1: 38.77%      exposure: +1.54 stops
 sha256(mine) == sha256(ORCH-gallery3/bee-3-cpl.tif) == e400a63aa9f6ab1f1957940d
@@ -4440,3 +4449,96 @@ Corrected to 211× in `P119` and §31.3. It is a small number and it changes no
 conclusion, but it is precisely the failure this milestone exists to catch — a
 figure derived from a compressed rendering of the data rather than from the
 data — and it survived my own reading of the draft.
+
+## 32. Two hazards audited against this milestone
+
+The orchestrator quarantined 11 stray sidecars out of the capture library and
+filed M106's attribution of the alignment watershed, and asked whether either
+re-scopes numbers I have reported. Neither does, and both answers are
+measurements rather than reassurances.
+
+### 32.1 The 40-frame sidecar could not have reached M87
+
+`bee-3-cpl\warpmap.txt` held a **40-frame** solve for a **299-frame**
+bracket. The trap is not that guard failing — it works — but that a
+`--limit 40` run meets a 40-frame sidecar and accepts a solve made from a
+different subset at a different reference. So the question is whether any M87
+render was short-bracketed.
+
+**The recorded `alignment:` lines answer it directly.** That line prints the
+placed count, and a `--limit 40` run cannot print 299. Every render in this
+milestone whose provenance I kept prints a full bracket — §30.2's
+arm A2 and §31.1's figure render both read `299 placed / 0 refused`. For
+those renders the stale sidecar demonstrably did not apply, whatever was
+sitting in the library at the time.
+
+For the renders where I kept no provenance line, the argument is the guard
+rather than a record: a full-bracket invocation meets a 40-frame sidecar,
+the frame count disagrees, `load_or_solve` re-solves, and the stale file is
+refused. The trap needs `--limit N` to meet a sidecar of exactly N frames,
+and `--limit` appears **0** times in the 91 measurement scripts
+here. §30 separately retook the one render exposed to the *align*
+default and found it byte-identical to a pinned-sidecar render, 0 DN, which
+settled that one by hash rather than by argument (`P124`).
+
+I hold no claim that needs retaking on this account.
+
+**A correction to my own first draft of this section,** because it is the
+kind that reads as evidence and is not. I first wrote that `--limit` "appears
+0 times across all 30 M87 scripts" and rested the finding on it. There are
+**106** scripts, not 30 — and, more to the point,
+**0** of them invoke the binary. Every render here was hand-run
+from PowerShell, so a count over the Python tree is a true statement about a
+population that does not contain the thing being claimed. My own verifier
+caught it by re-counting from disk instead of reading the number I had
+recorded, which is the entire reason it re-counts.
+### 32.2 The watershed moves every pixel and 6.86% of the halo
+
+`885e9f7` at 2026-08-24 03:15:23 moves 100.0000% of pixels at RMS 3594 DN.
+**27 of M87's data files predate it**, written between 00:13 and 03:00, and
+they include the metric's own definition and the −28.2% unmix. So the
+question is fair, and it has an operand already on the table.
+
+`51-zoomnull.json` renders `ROI_LEG` both ways on the same binary:
+
+| arm | halo ISO before | correction removes |
+| --- | --- | --- |
+| unregistered (`STREHL_ALIGN=0`) | **0.06878** | **82.76%** |
+| aligned (shipped default) | **0.06406** | **72.93%** |
+
+Alignment removes **6.86%** of the halo. The artifact is 93.1% intact
+without registration, and the correction's benefit agrees across the two to a
+ratio of **1.135**, inside the ±33% band I registered. A number
+measured on an unaligned merge and a number measured on an aligned one are
+therefore in the same magnitude class for every halo quantity M87 reports,
+which is why no pre-watershed verdict here flips (`P125`).
+
+That is a bound, not an identity. It says the watershed cannot have
+manufactured or hidden this artifact; it does not license quoting a
+pre-watershed figure to three decimal places against a post-watershed one.
+Where §31 needed precision it re-rendered rather than reached back.
+
+### 32.3 My own hash had the defect M106 paid for
+
+The orchestrator asked that every recorded hash carry its entire invocation,
+explicitly including `--gate` even when it is the default. §31.1 —
+written hours after I had read the sidecar warnings — recorded its
+SHA-256 beside the words “at the shipped default” and nothing more.
+That is precisely the record M106 could not use: `byte-freeze.rs:855` already
+states `DEFAULT_GATE` “is 4.0 today and was not always”.
+
+Repaired in place. §31.1 now carries the command, `gate 4.0` with
+`merge.rs:297` beside it, and the binary's SHA-256 (`P126`).
+
+The general form, and the reason it keeps recurring: **a default is a value
+that is resolved elsewhere and may move, so naming it by reference records
+the resolution rather than the value.** “The shipped default” is a
+pointer. A byte-freeze is a claim about bytes, and a pointer does not pin
+bytes.
+
+### 32.4 Verification
+
+`verify_s32.py` re-derives every figure here from `51-zoomnull.json` and
+`93-audit.json`, re-hashes the frozen binary, and re-counts `--limit` across
+the M87 script tree rather than trusting the recorded zero.
+
