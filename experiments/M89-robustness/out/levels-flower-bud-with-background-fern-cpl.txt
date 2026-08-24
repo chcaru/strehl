@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\flower-bud-with-background-fern-cpl
+frames          : 120   usable pixels 8250880 (100.00%)
+mean level      : 2258.30 DN above black
+photometric p-p : 15.4939%   (max 1.079574 / min 0.924635 of the stack mean)
+4th-difference  : rms 0.000223  peak 0.000550   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"flower-bud-with-background-fern-cpl","n":120,"mean_level":2258.3044,"pp":0.154939,"d4_rms":2.229884e-4,"d4_peak":5.501390e-4}

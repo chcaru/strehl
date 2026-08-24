@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\coffee-bean
+frames          : 105   usable pixels 7456723 (90.48%)
+mean level      : 6011.01 DN above black
+photometric p-p : 12.3433%   (max 1.099225 / min 0.975792 of the stack mean)
+4th-difference  : rms 0.006896  peak 0.030353   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"coffee-bean","n":105,"mean_level":6011.0106,"pp":0.123433,"d4_rms":6.896386e-3,"d4_peak":3.035266e-2}

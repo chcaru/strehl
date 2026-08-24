@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\tweezers-cpl
+frames          : 100   usable pixels 8250344 (99.99%)
+mean level      : 2536.21 DN above black
+photometric p-p : 13.7682%   (max 1.072189 / min 0.934507 of the stack mean)
+4th-difference  : rms 0.000211  peak 0.000536   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"tweezers-cpl","n":100,"mean_level":2536.2096,"pp":0.137682,"d4_rms":2.111086e-4,"d4_peak":5.356085e-4}

@@ -279,6 +279,18 @@ struct Planes {
 
 impl Loader {
     fn open(dir: &Path, limit: Option<usize>) -> Result<Self> {
+        Self::open_every(dir, limit, 1)
+    }
+
+    /// Open a stack taking every `every`-th frame.
+    ///
+    /// This exists for one diagnostic and it is the strongest one available
+    /// here. Defocus is smooth in frame index, so a fourth difference of it
+    /// scales as `h^4` in the focus step: subsampling by two must multiply any
+    /// *defocus leakage* by `2^4 = 16` in `z`, and so by **256** in `z^2 - 1`.
+    /// A discrete disturbance obeys no such law. The prediction is large,
+    /// signed and made in advance, which is what makes the answer worth having.
+    fn open_every(dir: &Path, limit: Option<usize>, every: usize) -> Result<Self> {
         let mut paths: Vec<PathBuf> = std::fs::read_dir(dir)
             .with_context(|| format!("reading {}", dir.display()))?
             .filter_map(|e| e.ok().map(|e| e.path()))
@@ -287,6 +299,9 @@ impl Loader {
         paths.sort();
         if let Some(n) = limit {
             paths.truncate(n);
+        }
+        if every > 1 {
+            paths = paths.into_iter().step_by(every).collect();
         }
         if paths.len() < WMAX {
             bail!(
@@ -387,9 +402,10 @@ fn box_mean(src: &[f32], geom: PlaneGeometry, rad: usize, scratch: &mut [f32], d
 /// Strided on purpose. A max over *every* frame would let a compact transient
 /// raise the very bucket it is then scored in (rule 17); a max over every
 /// `stride`-th frame, box-averaged over 9x9 plane pixels, cannot.
-fn detail_axis(ld: &Loader, stride: usize) -> Result<(Vec<f32>, usize)> {
+fn detail_axis(ld: &Loader, stride: usize) -> Result<(Vec<f32>, Vec<f32>, usize)> {
     let px = ld.geom.pixels();
     let mut detail = vec![0.0f32; px];
+    let mut level = vec![0.0f32; px];
     let mut p = ld.blank();
     let mut grad = vec![0.0f32; px];
     let mut sc = vec![0.0f32; px];
@@ -404,10 +420,59 @@ fn detail_axis(ld: &Loader, stride: usize) -> Result<(Vec<f32>, usize)> {
                 *d = b;
             }
         }
+        box_mean(&p.luma, ld.geom, DETAIL_RADIUS, &mut sc, &mut bl);
+        for (l, &b) in level.iter_mut().zip(&bl) {
+            *l += b;
+        }
         used += 1;
     }
-    Ok((detail, used))
+    let inv = 1.0 / used as f32;
+    for l in &mut level {
+        *l *= inv;
+    }
+    Ok((detail, level, used))
 }
+
+/// Fixed, absolute bin edges for the cross-stack detail axis.
+///
+/// The per-stack decile strata answer "within this stack, does the statistic
+/// track detail?". They cannot answer "is `foam` worse than the null at the
+/// *same* detail?", because decile 9 of one stack is not decile 9 of another.
+/// These edges are absolute and, being in units of the predicted noise sigma at
+/// the local signal level, they are comparable across ISO and exposure --
+/// which raw DN gradient is not.
+const SNR_EDGES: [f32; 10] = [0.0, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0];
+
+/// Local gradient magnitude expressed in sigmas of the calibrated noise model.
+fn detail_snr(detail: &[f32], level: &[f32], model: &NoiseModel) -> Vec<f32> {
+    detail
+        .iter()
+        .zip(level)
+        .map(|(&d, &l)| {
+            let s = model.green_luma_sigma(l.max(0.0));
+            if s > 0.0 { d / s } else { 0.0 }
+        })
+        .collect()
+}
+
+/// Fixed signal-level bins, DN above black.
+///
+/// This axis is the mechanism discriminator, and it is the one axis that can
+/// tell three otherwise identical inflations apart. Write the per-frame level as
+/// `L_f = a_f * S + e_f`. A residual operator with `sum r = 0` annihilates `S`
+/// and leaves `S * sum(r_j a_j) + sum(r_j e_j)`. Divided by the predicted
+/// variance `~ g*S` at high signal, that gives
+///
+/// * **photometric drift** (`a_f` varying): `z^2 - 1` grows **linearly in S**,
+///   because the numerator is proportional to `S` and the denominator to `S`
+///   only under the square root;
+/// * **a gain error** in the model: `z^2` is **flat in S** at high signal;
+/// * **a read-noise error**: `z^2 - 1` decays as **1/S**.
+///
+/// So the shape of this row names the cause without a second capture.
+const LEVEL_EDGES: [f32; 10] = [
+    0.0, 32.0, 64.0, 128.0, 256.0, 512.0, 1024.0, 2048.0, 4096.0, 8192.0,
+];
 
 // ---------------------------------------------------------------------------
 // Strata
@@ -500,6 +565,8 @@ impl Cell {
 struct OpStats {
     all: Cell,
     by_detail: Vec<Cell>,
+    by_snr: Vec<Cell>,
+    by_level: Vec<Cell>,
     by_radius: Vec<Cell>,
     by_frame: BTreeMap<usize, Cell>,
     /// Per-pixel `Σ 1[|z| > 8]`, primary operator only. The map that localises
@@ -513,6 +580,8 @@ impl OpStats {
         Self {
             all: Cell::default(),
             by_detail: vec![Cell::default(); STRATA],
+            by_snr: vec![Cell::default(); SNR_EDGES.len()],
+            by_level: vec![Cell::default(); LEVEL_EDGES.len()],
             by_radius: vec![Cell::default(); STRATA],
             by_frame: BTreeMap::new(),
             hits: if keep_maps { vec![0; px] } else { Vec::new() },
@@ -526,8 +595,8 @@ impl OpStats {
 // ---------------------------------------------------------------------------
 
 #[allow(clippy::too_many_lines)]
-fn survey(dir: &Path, limit: Option<usize>, stride: usize, sweep: bool) -> Result<()> {
-    let ld = Loader::open(dir, limit)?;
+fn survey(dir: &Path, limit: Option<usize>, stride: usize, sweep: bool, every: usize) -> Result<()> {
+    let ld = Loader::open_every(dir, limit, every)?;
     let geom = ld.geom;
     let px = geom.pixels();
     let av = AffineVar::from(&ld.noise);
@@ -540,17 +609,34 @@ fn survey(dir: &Path, limit: Option<usize>, stride: usize, sweep: bool) -> Resul
         av.a, av.b
     );
 
-    let (detail, used) = detail_axis(&ld, stride)?;
+    let (detail, level, used) = detail_axis(&ld, stride)?;
     println!(
         "detail axis     : max of box{} |grad| over {used} frames (stride {stride})",
         2 * DETAIL_RADIUS + 1
     );
+    let snr = detail_snr(&detail, &level, &ld.noise);
     let dedges = strata_edges(&detail, STRATA);
     let rmap = radius_map(geom);
     let redges = strata_edges(&rmap, STRATA);
     let dstrat = strata_map(&detail, &dedges);
     let rstrat = strata_map(&rmap, &redges);
+    let sstrat = strata_map(&snr, &SNR_EDGES);
+    let lstrat = strata_map(&level, &LEVEL_EDGES);
+    drop(level);
+    let mut snr_n = vec![0u64; SNR_EDGES.len()];
+    for &s in &sstrat {
+        snr_n[s as usize] += 1;
+    }
+    println!(
+        "detail SNR bins : {}",
+        snr_n
+            .iter()
+            .map(|n| format!("{:.4}", *n as f64 / px as f64))
+            .collect::<Vec<_>>()
+            .join(" ")
+    );
     drop(rmap);
+    drop(snr);
 
     let ops: Vec<Op> = OPERATORS
         .iter()
@@ -583,6 +669,8 @@ fn survey(dir: &Path, limit: Option<usize>, stride: usize, sweep: bool) -> Resul
                 st.all.push(z);
                 fcell.push(z);
                 st.by_detail[dstrat[i] as usize].push(z);
+                st.by_snr[sstrat[i] as usize].push(z);
+                st.by_level[lstrat[i] as usize].push(z);
                 st.by_radius[rstrat[i] as usize].push(z);
                 if st.keep_maps && z.abs() > TAILS[2] {
                     st.hits[i] += 1;
@@ -635,6 +723,26 @@ fn survey(dir: &Path, limit: Option<usize>, stride: usize, sweep: bool) -> Resul
         print!("{:<10} >8sig by det  :", op.label());
         for c in &st.by_detail {
             print!(" {:8.2e}", c.tail(2));
+        }
+        println!();
+        print!("{:<10} z^2 by SNR    :", op.label());
+        for c in &st.by_snr {
+            print!(" {:8.3}", c.mean_z2());
+        }
+        println!();
+        print!("{:<10} >8sig by SNR  :", op.label());
+        for c in &st.by_snr {
+            print!(" {:8.2e}", c.tail(2));
+        }
+        println!();
+        print!("{:<10} z^2 by level  :", op.label());
+        for c in &st.by_level {
+            print!(" {:8.3}", c.mean_z2());
+        }
+        println!();
+        print!("{:<10} n   by level  :", op.label());
+        for c in &st.by_level {
+            print!(" {:8.2e}", c.n as f64);
         }
         println!();
     }
@@ -706,7 +814,9 @@ fn survey(dir: &Path, limit: Option<usize>, stride: usize, sweep: bool) -> Resul
          \"tail5\":{:.6e},\"tail8\":{:.6e},\"tail12\":{:.6e},\"pixels_flagged\":{:.6},\
          \"detail_hi_lo\":{:.4},\"radial_out_in\":{:.4},\"worst_frame\":{},\"worst_frame_frac\":{:.6e},\
          \"median_frame_frac\":{:.6e},\"worst_tile\":{:.6},\"p99_tile\":{:.6},\
-         \"z2_by_detail\":[{}],\"tail8_by_detail\":[{}],\"sweep\":[{}]}}",
+         \"z2_by_detail\":[{}],\"tail8_by_detail\":[{}],\"n_by_snr\":[{}],\
+         \"z2_by_snr\":[{}],\"tail8_by_snr\":[{}],\"n_by_level\":[{}],\"z2_by_level\":[{}],\
+         \"sweep\":[{}]}}",
         dir.file_name().unwrap_or_default().to_string_lossy(),
         ld.n(),
         ld.iso,
@@ -731,6 +841,31 @@ fn survey(dir: &Path, limit: Option<usize>, stride: usize, sweep: bool) -> Resul
         st.by_detail
             .iter()
             .map(|c| format!("{:.6e}", c.tail(2)))
+            .collect::<Vec<_>>()
+            .join(","),
+        st.by_snr
+            .iter()
+            .map(|c| c.n.to_string())
+            .collect::<Vec<_>>()
+            .join(","),
+        st.by_snr
+            .iter()
+            .map(|c| format!("{:.4}", c.mean_z2()))
+            .collect::<Vec<_>>()
+            .join(","),
+        st.by_snr
+            .iter()
+            .map(|c| format!("{:.6e}", c.tail(2)))
+            .collect::<Vec<_>>()
+            .join(","),
+        st.by_level
+            .iter()
+            .map(|c| c.n.to_string())
+            .collect::<Vec<_>>()
+            .join(","),
+        st.by_level
+            .iter()
+            .map(|c| format!("{:.4}", c.mean_z2()))
             .collect::<Vec<_>>()
             .join(","),
         ops.iter()
@@ -872,7 +1007,7 @@ fn plant_run(dir: &Path, limit: Option<usize>) -> Result<()> {
     let av = AffineVar::from(&ld.noise);
     let op = Op::new(PRIMARY.0, PRIMARY.1);
     let size = 128usize;
-    let (detail, _) = detail_axis(&ld, 8)?;
+    let (detail, _, _) = detail_axis(&ld, 8)?;
 
     // Choose the tile from the detail axis, not by eye. Rule 13: a plant on a
     // flat region is mathematically incapable of expressing a *displacement*
@@ -963,6 +1098,93 @@ fn plant_run(dir: &Path, limit: Option<usize>) -> Result<()> {
         dir.file_name().unwrap_or_default().to_string_lossy(),
         ld.n(),
         json.join(",")
+    );
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// levels -- the independent route to the photometric number
+// ---------------------------------------------------------------------------
+
+/// Per-frame global mean level, and the fourth difference of it.
+///
+/// This exists to check the survey's *inference* against a direct measurement
+/// (rule 12: the author does not get to verify their own work). The survey can
+/// only say "the inflation grows with signal level, which is what a
+/// multiplicative per-frame fluctuation would do, and here is the implied
+/// amplitude". This mode measures that amplitude a second way, from the frame
+/// means alone, touching none of the survey's machinery: no residual kernel
+/// applied to pixels, no noise model, no strata. If the two disagree, the
+/// inference was wrong.
+///
+/// The mean is taken over the pixels that are neither near black nor near the
+/// container maximum in **every** frame, so a subject drifting into or out of
+/// clipping cannot masquerade as a gain change.
+fn levels_run(dir: &Path, limit: Option<usize>) -> Result<()> {
+    let ld = Loader::open(dir, limit)?;
+    let geom = ld.geom;
+    let px = geom.pixels();
+    let n = ld.n();
+    let mut p = ld.blank();
+
+    let mut usable = vec![true; px];
+    let mut sums = vec![0.0f64; n];
+    for f in 0..n {
+        drop(ld.load(f, &mut p)?);
+        for ((u, &l), &c) in usable.iter_mut().zip(&p.luma).zip(&p.clipped) {
+            *u &= !c && l > 16.0;
+        }
+    }
+    let keep = usable.iter().filter(|u| **u).count();
+    for (f, s) in sums.iter_mut().enumerate() {
+        drop(ld.load(f, &mut p)?);
+        let mut t = 0.0f64;
+        for (v, u) in p.luma.iter().zip(&usable) {
+            if *u {
+                t += f64::from(*v);
+            }
+        }
+        *s = t / keep as f64;
+    }
+
+    let grand = sums.iter().sum::<f64>() / n as f64;
+    let a: Vec<f64> = sums.iter().map(|s| s / grand).collect();
+    let (lo, hi) = a
+        .iter()
+        .fold((f64::MAX, f64::MIN), |(l, h), &v| (l.min(v), h.max(v)));
+
+    // The same residual kernel the survey uses, applied to the frame means
+    // rather than to pixels.
+    let op = Op::new(PRIMARY.0, PRIMARY.1);
+    let mut d4: Vec<f64> = Vec::new();
+    for c in op.h..n - op.h {
+        let mut acc = 0.0f64;
+        for (j, r) in op.r.iter().enumerate() {
+            acc += f64::from(*r) * a[c - op.h + j];
+        }
+        d4.push(acc);
+    }
+    let rms = (d4.iter().map(|v| v * v).sum::<f64>() / d4.len() as f64).sqrt();
+    let peak = d4.iter().fold(0.0f64, |m, v| m.max(v.abs()));
+
+    println!("stack           : {}", dir.display());
+    println!("frames          : {n}   usable pixels {keep} ({:.2}%)", 100.0 * keep as f64 / px as f64);
+    println!("mean level      : {grand:.2} DN above black");
+    println!(
+        "photometric p-p : {:.4}%   (max {:.6} / min {:.6} of the stack mean)",
+        100.0 * (hi - lo),
+        hi,
+        lo
+    );
+    println!(
+        "4th-difference  : rms {rms:.6}  peak {peak:.6}   (operator {} applied to frame means)",
+        op.label()
+    );
+    println!(
+        "JSON {{\"stack\":\"{}\",\"n\":{n},\"mean_level\":{grand:.4},\"pp\":{:.6},\
+         \"d4_rms\":{rms:.6e},\"d4_peak\":{peak:.6e}}}",
+        dir.file_name().unwrap_or_default().to_string_lossy(),
+        hi - lo
     );
     Ok(())
 }
@@ -1459,18 +1681,21 @@ fn main() -> Result<()> {
     let mut stride = 8usize;
     let mut gate = DEFAULT_GATE;
     let mut sweep = false;
+    let mut every = 1usize;
     while let Some(a) = args.next() {
         match a.as_str() {
             "--limit" => limit = Some(args.next().context("--limit")?.parse()?),
             "--stride" => stride = args.next().context("--stride")?.parse()?,
             "--gate" => gate = args.next().context("--gate")?.parse()?,
+            "--every" => every = args.next().context("--every")?.parse()?,
             "--sweep" => sweep = true,
             other => dir = Some(PathBuf::from(other)),
         }
     }
     let dir = dir.context("a stack directory is required")?;
     match mode.as_str() {
-        "survey" => survey(&dir, limit, stride, sweep),
+        "survey" => survey(&dir, limit, stride, sweep, every),
+        "levels" => levels_run(&dir, limit),
         "plant" => plant_run(&dir, limit),
         "mask" => mask_run(&dir, limit, gate),
         other => bail!("unknown mode {other}"),

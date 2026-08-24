@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\leaf-2-cpl
+frames          : 120   usable pixels 8250880 (100.00%)
+mean level      : 586.98 DN above black
+photometric p-p : 6.2458%   (max 1.031554 / min 0.969096 of the stack mean)
+4th-difference  : rms 0.000480  peak 0.001192   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"leaf-2-cpl","n":120,"mean_level":586.9802,"pp":0.062458,"d4_rms":4.796370e-4,"d4_peak":1.192467e-3}

@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\lavendar-cpl
+frames          : 120   usable pixels 8250873 (100.00%)
+mean level      : 2258.85 DN above black
+photometric p-p : 12.4573%   (max 1.065329 / min 0.940755 of the stack mean)
+4th-difference  : rms 0.000249  peak 0.000622   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"lavendar-cpl","n":120,"mean_level":2258.8492,"pp":0.124573,"d4_rms":2.488146e-4,"d4_peak":6.223241e-4}

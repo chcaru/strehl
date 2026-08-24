@@ -1,0 +1,34 @@
+stack           : D:\personal\macro\highly-angled-ruler-mm-cpl
+frames          : 120   gate 4   tolerance 0.086063
+operator        : w=5 p=2   mask ramp |z| 4..8 sigma   election eligible w>=0.5
+  pass1 frame 0/120 (0.2s)
+  pass1 frame 50/120 (11.0s)
+  pass1 frame 100/120 (21.3s)
+
+--- B0: faithfulness of this file's merge to the shipped one ---
+B0a election    : 8250880/8250880 pixels (100.000000%) match FocusStats::best_index exactly
+election shift  : masking the election changes the winner at 0.1634% of pixels (104896 frame-samples were ruled ineligible)
+  pass2 frame 0/120 (26.3s)
+  pass2 frame 50/120 (41.7s)
+  pass2 frame 100/120 (56.3s)
+B0b n_eff       : 8250880/8250880 pixels (100.000000%) match Estimator::n_eff exactly
+B0c green value : max |delta| 0.000488 DN, rms 0.000089 DN vs Estimator::green_mean (both f32 accumulations, so a small residue is float order, not logic)
+clipping        : 0.0000% of pixels had at least one green at the container max (this file does not model censoring; B0 is against Estimator::fold)
+
+--- B1/B2/B3: what the mask costs (MEASURED) ---
+arm 0 (off             ) weight removed 0.000000% of admitted   fallbacks 0 (0.000000% of px)   min total weight 1.000
+arm 1 (average only    ) weight removed 0.003563% of admitted   fallbacks 11985 (0.145257% of px)   min total weight 1.000
+arm 2 (election+average) weight removed 0.004561% of admitted   fallbacks 4755 (0.057630% of px)   min total weight 1.000
+arm 1 vs arm 0 : merged green moved rms 0.307118 sigma, max 72.590 sigma, 0.3644% of pixels moved > 0.01 sigma
+arm 2 vs arm 0 : merged green moved rms 0.607357 sigma, max 254.115 sigma, 0.4306% of pixels moved > 0.01 sigma
+hot winners     : arm0 4752 pixels (0.05759%), arm2 0 (0.00000%)  [elected winner's own |z| > 8]
+hot admitted    : arm0 8184 samples, arm1 8184 (down-weighted), arm2 12268
+
+--- B4: split-half disagreement H, in sigmas (MEASURED) ---
+Pure noise gives E[H] = sqrt(2/pi) = 0.7979. Contamination inflates it.
+arm 0  H mean 1.27848  median 0.93885  p99 7.4832  p999 20.3396  max 122.64  frac H>5 1.98367e-2
+arm 1  H mean 1.27579  median 0.93852  p99 7.3874  p999 20.3341  max 122.64  frac H>5 1.94996e-2
+arm 2  H mean 1.27557  median 0.93841  p99 7.3481  p999 20.5298  max 122.64  frac H>5 1.93537e-2
+B4 change       : arm1 -0.2101% on mean H, -0.0272% on p999 H;  arm2 -0.2270% on mean H, +0.9351% on p999 H
+
+JSON {"stack":"highly-angled-ruler-mm-cpl","n":120,"gate":4,"b0a":1.00000000,"b0b":1.00000000,"b0c_max":0.000488,"election_shift":0.001634,"removed_arm1":0.00003563,"removed_arm2":0.00004561,"fallbacks_arm2":4755,"hot_winner_arm0":4752,"hot_winner_arm2":0,"h_mean":[1.278477,1.275791,1.275575],"h_p999":[20.3396,20.3341,20.5298],"rms_move_arm1":0.30711813,"rms_move_arm2":0.60735724}

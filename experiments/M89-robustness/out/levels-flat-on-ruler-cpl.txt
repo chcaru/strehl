@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\flat-on-ruler-cpl
+frames          : 79   usable pixels 8250874 (100.00%)
+mean level      : 1255.41 DN above black
+photometric p-p : 5.9356%   (max 1.032676 / min 0.973321 of the stack mean)
+4th-difference  : rms 0.000276  peak 0.000756   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"flat-on-ruler-cpl","n":79,"mean_level":1255.4073,"pp":0.059356,"d4_rms":2.755632e-4,"d4_peak":7.559147e-4}

@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\lead-1-cpl
+frames          : 120   usable pixels 8250880 (100.00%)
+mean level      : 407.82 DN above black
+photometric p-p : 2.0177%   (max 1.009034 / min 0.988857 of the stack mean)
+4th-difference  : rms 0.000790  peak 0.002654   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"lead-1-cpl","n":120,"mean_level":407.8192,"pp":0.020177,"d4_rms":7.902617e-4,"d4_peak":2.654016e-3}

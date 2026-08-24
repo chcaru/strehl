@@ -1,0 +1,39 @@
+stack           : D:\personal\macro\flower-bud-alone-cpl
+frames          : 205
+plane           : 3520 x 2344
+iso / black     : Some(100.0) / 512
+green var model : var(L) = 0.114469*L + 0.4623   (extracted from NoiseModel, verified affine)
+detail axis     : max of box9 |grad| over 26 frames (stride 8)
+detail SNR bins : 0.0000 0.7394 0.0850 0.0915 0.0569 0.0208 0.0064 0.0000 0.0000 0.0000
+  .. frame 0/205 (0.1s)
+  .. frame 50/205 (10.2s)
+  .. frame 100/205 (19.5s)
+  .. frame 150/205 (34.9s)
+  .. frame 200/205 (48.4s)
+
+--- A1/A2/A3: the operator sweep (MEASURED) ---
+E[z^2] = 1 exactly under 'static scene, locally order-p in f, independent sensor noise'.
+operator     mean z^2  detail hi/lo   radial o/i       >3sig       >5sig       >8sig
+w=5 p=2        1.0048         1.319        0.931    3.283e-3    1.710e-4    3.713e-5
+
+w=5 p=2    z^2 by detail :    0.960    0.973    0.974    0.975    0.975    0.976    0.976    0.977    0.995    1.267
+w=5 p=2    z^2 by radius :    1.046    1.069    1.014    1.021    1.004    0.982    0.980    0.979    0.980    0.973
+w=5 p=2    >8sig by det  :  1.20e-8   0.00e0   0.00e0   0.00e0   0.00e0   0.00e0   0.00e0  3.07e-8  5.59e-7  3.70e-4
+w=5 p=2    z^2 by SNR    :      NaN    0.975    0.969    1.001    1.116    1.511    2.382    1.776      NaN      NaN
+w=5 p=2    >8sig by SNR  :      NaN   0.00e0  1.42e-8  7.44e-7  2.09e-5  5.47e-4  3.85e-3  2.20e-3      NaN      NaN
+
+--- primary operator w=5 p=2 : localisation (MEASURED) ---
+samples         : 1658426880   mean z^2 1.0048   >3sig 3.2832e-3  >5sig 1.7099e-4  >8sig 3.7129e-5  >12sig 6.3005e-6
+pixels flagged  : 0.3568% of the frame at |z|>8 in >=1 frame, 0.2211% in >=2 frames
+worst frames    : (frame, frac|z|>8, mean z^2); median frame frac 5.0904e-6
+   frame  120   5.0528e-4       1.193   99.3x the median frame
+   frame  119   4.0493e-4       1.159   79.5x the median frame
+   frame  110   3.5996e-4       1.133   70.7x the median frame
+   frame  109   3.2845e-4       1.125   64.5x the median frame
+   frame   98   3.0785e-4       1.087   60.5x the median frame
+   frame   95   2.4640e-4       1.080   48.4x the median frame
+   frame   99   2.3610e-4       1.069   46.4x the median frame
+   frame  121   2.0677e-4       1.089   40.6x the median frame
+spatial (64px tiles, n=2035) : worst 0.2029 p99 0.0813 p90 0.0022 median 0.0000
+
+JSON {"stack":"flower-bud-alone-cpl","n":205,"iso":Some(100.0),"mean_z2":1.004835,"tail3":3.283243e-3,"tail5":1.709940e-4,"tail8":3.712856e-5,"tail12":6.300549e-6,"pixels_flagged":0.003568,"detail_hi_lo":1.3194,"radial_out_in":0.9311,"worst_frame":120,"worst_frame_frac":5.052794e-4,"median_frame_frac":5.090366e-6,"worst_tile":0.202881,"p99_tile":0.081299,"z2_by_detail":[0.9600,0.9732,0.9740,0.9746,0.9754,0.9759,0.9764,0.9774,0.9946,1.2667],"tail8_by_detail":[1.199490e-8,0.000000e0,0.000000e0,0.000000e0,0.000000e0,0.000000e0,0.000000e0,3.065339e-8,5.588075e-7,3.698081e-4],"n_by_snr":[0,1226308035,140900397,151818918,94368294,34477731,10537626,15879,0,0],"z2_by_snr":[NaN,0.9747,0.9692,1.0013,1.1164,1.5109,2.3825,1.7758,NaN,NaN],"tail8_by_snr":[NaN,0.000000e0,1.419442e-8,7.443078e-7,2.089685e-5,5.473678e-4,3.851057e-3,2.204169e-3,NaN,NaN],"sweep":[{"w":5,"p":2,"mean_z2":1.0048,"detail_hi_lo":1.3194,"radial_out_in":0.9311,"tail8":3.7129e-5}]}

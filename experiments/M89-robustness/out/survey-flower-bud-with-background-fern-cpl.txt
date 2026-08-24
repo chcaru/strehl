@@ -1,0 +1,40 @@
+stack           : D:\personal\macro\flower-bud-with-background-fern-cpl
+frames          : 299
+plane           : 3520 x 2344
+iso / black     : Some(100.0) / 512
+green var model : var(L) = 0.114469*L + 0.4623   (extracted from NoiseModel, verified affine)
+detail axis     : max of box9 |grad| over 38 frames (stride 8)
+detail SNR bins : 0.0000 0.5504 0.1076 0.1203 0.1207 0.0806 0.0197 0.0008 0.0000 0.0000
+  .. frame 0/299 (0.1s)
+  .. frame 50/299 (13.0s)
+  .. frame 100/299 (25.5s)
+  .. frame 150/299 (37.3s)
+  .. frame 200/299 (47.7s)
+  .. frame 250/299 (58.4s)
+
+--- A1/A2/A3: the operator sweep (MEASURED) ---
+E[z^2] = 1 exactly under 'static scene, locally order-p in f, independent sensor noise'.
+operator     mean z^2  detail hi/lo   radial o/i       >3sig       >5sig       >8sig
+w=5 p=2        1.0149         1.320        0.949    3.587e-3    3.204e-4    8.174e-5
+
+w=5 p=2    z^2 by detail :    0.966    0.970    0.971    0.973    0.973    0.973    0.978    1.003    1.065    1.275
+w=5 p=2    z^2 by radius :    1.024    1.041    1.027    1.036    1.033    1.041    1.008    0.990    0.977    0.971
+w=5 p=2    >8sig by det  :  4.90e-8  4.07e-9  4.08e-9  4.09e-9  3.29e-8  7.94e-8  1.31e-6  1.33e-5  9.16e-5  7.07e-4
+w=5 p=2    z^2 by SNR    :      NaN    0.972    0.971    0.993    1.059    1.211    1.480    2.045    7.142      NaN
+w=5 p=2    >8sig by SNR  :      NaN 7.47e-10  2.06e-7  6.58e-6  7.98e-5  4.64e-4  1.57e-3  3.67e-3  1.29e-2      NaN
+
+--- primary operator w=5 p=2 : localisation (MEASURED) ---
+samples         : 2434009600   mean z^2 1.0149   >3sig 3.5870e-3  >5sig 3.2038e-4  >8sig 8.1740e-5  >12sig 1.9327e-5
+pixels flagged  : 1.3964% of the frame at |z|>8 in >=1 frame, 0.6893% in >=2 frames
+worst frames    : (frame, frac|z|>8, mean z^2); median frame frac 1.3090e-5
+   frame   40   9.9250e-4       1.330   75.8x the median frame
+   frame   35   9.2657e-4       1.326   70.8x the median frame
+   frame   92   7.5022e-4       1.237   57.3x the median frame
+   frame   91   7.4865e-4       1.208   57.2x the median frame
+   frame   96   7.1495e-4       1.265   54.6x the median frame
+   frame   90   6.8017e-4       1.212   52.0x the median frame
+   frame   36   6.5448e-4       1.242   50.0x the median frame
+   frame   31   6.0357e-4       1.205   46.1x the median frame
+spatial (64px tiles, n=2035) : worst 0.3621 p99 0.1526 p90 0.0503 median 0.0000
+
+JSON {"stack":"flower-bud-with-background-fern-cpl","n":299,"iso":Some(100.0),"mean_z2":1.014926,"tail3":3.587028e-3,"tail5":3.203825e-4,"tail8":8.174002e-5,"tail12":1.932655e-5,"pixels_flagged":0.013964,"detail_hi_lo":1.3201,"radial_out_in":0.9487,"worst_frame":40,"worst_frame_frac":9.925002e-4,"median_frame_frac":1.308951e-5,"worst_tile":0.362061,"p99_tile":0.152588,"z2_by_detail":[0.9656,0.9698,0.9713,0.9730,0.9734,0.9731,0.9785,1.0034,1.0654,1.2747],"tail8_by_detail":[4.895345e-8,4.069507e-9,4.077550e-9,4.087191e-9,3.285675e-8,7.942139e-8,1.313278e-6,1.329956e-5,9.157484e-5,7.065312e-4],"n_by_snr":[0,1339575235,261783590,292782190,293776930,196218660,47918030,1942280,12685,0],"z2_by_snr":[NaN,0.9715,0.9714,0.9930,1.0595,1.2112,1.4803,2.0445,7.1421,NaN],"tail8_by_snr":[NaN,7.465053e-10,2.062773e-7,6.581684e-6,7.979524e-5,4.636868e-4,1.570515e-3,3.669914e-3,1.292866e-2,NaN],"sweep":[{"w":5,"p":2,"mean_z2":1.0149,"detail_hi_lo":1.3201,"radial_out_in":0.9487,"tail8":8.1740e-5}]}

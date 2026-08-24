@@ -1,0 +1,40 @@
+stack           : D:\personal\macro\couch-fibers-cpl
+frames          : 299
+plane           : 3520 x 2344
+iso / black     : Some(400.0) / 512
+green var model : var(L) = 0.457875*L + 0.6439   (extracted from NoiseModel, verified affine)
+detail axis     : max of box9 |grad| over 38 frames (stride 8)
+detail SNR bins : 0.0000 0.0639 0.4482 0.3824 0.0971 0.0080 0.0003 0.0000 0.0000 0.0000
+  .. frame 0/299 (0.1s)
+  .. frame 50/299 (8.7s)
+  .. frame 100/299 (17.8s)
+  .. frame 150/299 (27.7s)
+  .. frame 200/299 (37.2s)
+  .. frame 250/299 (46.6s)
+
+--- A1/A2/A3: the operator sweep (MEASURED) ---
+E[z^2] = 1 exactly under 'static scene, locally order-p in f, independent sensor noise'.
+operator     mean z^2  detail hi/lo   radial o/i       >3sig       >5sig       >8sig
+w=5 p=2        1.0018         1.085        1.008    3.048e-3    8.983e-5    1.802e-5
+
+w=5 p=2    z^2 by detail :    0.984    0.986    0.987    0.990    0.992    0.995    0.998    1.004    1.015    1.067
+w=5 p=2    z^2 by radius :    1.000    0.999    0.994    0.997    0.998    1.002    1.006    1.008    1.006    1.008
+w=5 p=2    >8sig by det  :  4.58e-8  1.36e-7  3.13e-7  7.61e-7  1.38e-6  2.17e-6  3.81e-6  8.22e-6  1.85e-5  1.44e-4
+w=5 p=2    z^2 by SNR    :      NaN    0.983    0.988    1.003    1.052    1.212    1.796    4.113      NaN      NaN
+w=5 p=2    >8sig by SNR  :      NaN  3.22e-8  6.04e-7  8.06e-6  8.60e-5  6.47e-4  3.05e-3  8.82e-3      NaN      NaN
+
+--- primary operator w=5 p=2 : localisation (MEASURED) ---
+samples         : 2434009600   mean z^2 1.0018   >3sig 3.0476e-3  >5sig 8.9832e-5  >8sig 1.8023e-5  >12sig 4.2144e-6
+pixels flagged  : 0.3300% of the frame at |z|>8 in >=1 frame, 0.1600% in >=2 frames
+worst frames    : (frame, frac|z|>8, mean z^2); median frame frac 6.0600e-6
+   frame   76   7.7761e-4       1.386   128.3x the median frame
+   frame   75   5.9933e-4       1.324   98.9x the median frame
+   frame   77   1.2181e-4       1.076   20.1x the median frame
+   frame   85   1.0726e-4       1.054   17.7x the median frame
+   frame  146   9.8777e-5       1.083   16.3x the median frame
+   frame   56   9.2354e-5       1.037   15.2x the median frame
+   frame  129   8.8718e-5       1.067   14.6x the median frame
+   frame   86   8.4718e-5       1.050   14.0x the median frame
+spatial (64px tiles, n=2035) : worst 0.0952 p99 0.0361 p90 0.0090 median 0.0007
+
+JSON {"stack":"couch-fibers-cpl","n":299,"iso":Some(400.0),"mean_z2":1.001784,"tail3":3.047589e-3,"tail5":8.983202e-5,"tail8":1.802294e-5,"tail12":4.214445e-6,"pixels_flagged":0.003300,"detail_hi_lo":1.0847,"radial_out_in":1.0076,"worst_frame":76,"worst_frame_frac":7.776140e-4,"median_frame_frac":6.059960e-6,"worst_tile":0.095215,"p99_tile":0.036133,"z2_by_detail":[0.9838,0.9860,0.9875,0.9896,0.9918,0.9945,0.9980,1.0039,1.0150,1.0672],"tail8_by_detail":[4.575338e-8,1.355959e-7,3.133073e-7,7.613546e-7,1.378597e-6,2.167961e-6,3.811817e-6,8.216131e-6,1.848213e-5,1.443863e-4],"n_by_snr":[0,155465590,1091012660,930866010,236264025,19559385,815970,25960,0,0],"z2_by_snr":[NaN,0.9830,0.9883,1.0028,1.0516,1.2125,1.7963,4.1131,NaN,NaN],"tail8_by_snr":[NaN,3.216146e-8,6.040260e-7,8.062385e-6,8.602664e-5,6.469017e-4,3.054034e-3,8.821263e-3,NaN,NaN],"sweep":[{"w":5,"p":2,"mean_z2":1.0018,"detail_hi_lo":1.0847,"radial_out_in":1.0076,"tail8":1.8023e-5}]}

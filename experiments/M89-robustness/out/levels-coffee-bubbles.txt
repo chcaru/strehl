@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\coffee-bubbles
+frames          : 19   usable pixels 8199872 (99.49%)
+mean level      : 292.31 DN above black
+photometric p-p : 15.7118%   (max 1.088264 / min 0.931146 of the stack mean)
+4th-difference  : rms 0.018369  peak 0.032302   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"coffee-bubbles","n":19,"mean_level":292.3125,"pp":0.157118,"d4_rms":1.836926e-2,"d4_peak":3.230176e-2}

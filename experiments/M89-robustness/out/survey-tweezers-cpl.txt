@@ -1,0 +1,36 @@
+stack           : D:\personal\macro\tweezers-cpl
+frames          : 100
+plane           : 3520 x 2344
+iso / black     : Some(100.0) / 512
+green var model : var(L) = 0.114469*L + 0.4623   (extracted from NoiseModel, verified affine)
+detail axis     : max of box9 |grad| over 13 frames (stride 8)
+detail SNR bins : 0.0000 0.3697 0.0955 0.0273 0.0945 0.2863 0.1215 0.0048 0.0003 0.0000
+  .. frame 0/100 (0.1s)
+  .. frame 50/100 (9.4s)
+
+--- A1/A2/A3: the operator sweep (MEASURED) ---
+E[z^2] = 1 exactly under 'static scene, locally order-p in f, independent sensor noise'.
+operator     mean z^2  detail hi/lo   radial o/i       >3sig       >5sig       >8sig
+w=5 p=2        1.7222         3.698        0.621    1.920e-2    6.673e-3    2.280e-3
+
+w=5 p=2    z^2 by detail :    0.965    0.977    0.977    0.978    1.038    1.915    2.137    2.246    2.422    3.567
+w=5 p=2    z^2 by radius :    1.865    1.839    1.953    2.037    1.938    1.798    1.617    1.610    1.406    1.158
+w=5 p=2    >8sig by det  :  3.79e-8  2.40e-7  1.14e-7  3.54e-7  9.82e-5  2.67e-3  3.43e-3  3.89e-3  4.55e-3  8.16e-3
+w=5 p=2    z^2 by SNR    :      NaN    0.973    0.979    1.059    1.760    2.207    3.196    9.260   25.606   35.759
+w=5 p=2    >8sig by SNR  :      NaN   0.00e0  1.19e-7  8.53e-5  1.97e-3  3.69e-3  7.50e-3  2.22e-2  4.96e-2  6.83e-2
+
+--- primary operator w=5 p=2 : localisation (MEASURED) ---
+samples         : 792084480   mean z^2 1.7222   >3sig 1.9196e-2  >5sig 6.6729e-3  >8sig 2.2800e-3  >12sig 6.8736e-4
+pixels flagged  : 11.1993% of the frame at |z|>8 in >=1 frame, 6.5754% in >=2 frames
+worst frames    : (frame, frac|z|>8, mean z^2); median frame frac 1.7804e-4
+   frame   40   2.4354e-2       8.177   136.8x the median frame
+   frame   41   2.2585e-2       7.648   126.9x the median frame
+   frame   35   1.7588e-2       5.618   98.8x the median frame
+   frame   34   1.6377e-2       5.426   92.0x the median frame
+   frame   28   1.1468e-2       3.920   64.4x the median frame
+   frame   42   9.4238e-3       4.022   52.9x the median frame
+   frame   36   8.5182e-3       3.983   47.8x the median frame
+   frame   43   6.9034e-3       3.217   38.8x the median frame
+spatial (64px tiles, n=2035) : worst 0.7878 p99 0.6326 p90 0.3252 median 0.0264
+
+JSON {"stack":"tweezers-cpl","n":100,"iso":Some(100.0),"mean_z2":1.722164,"tail3":1.919599e-2,"tail5":6.672860e-3,"tail8":2.280009e-3,"tail12":6.873572e-4,"pixels_flagged":0.111993,"detail_hi_lo":3.6976,"radial_out_in":0.6208,"worst_frame":40,"worst_frame_frac":2.435413e-2,"median_frame_frac":1.780416e-4,"worst_tile":0.787842,"p99_tile":0.632568,"z2_by_detail":[0.9647,0.9770,0.9768,0.9779,1.0379,1.9148,2.1371,2.2457,2.4222,3.5671],"tail8_by_detail":[3.792103e-8,2.395752e-7,1.135829e-7,3.537901e-7,9.821208e-5,2.666249e-3,3.434343e-3,3.887453e-3,4.551465e-3,8.161639e-3],"n_by_snr":[0,292860480,75643200,21598656,74882976,226777248,96219456,3833280,262464,6720],"z2_by_snr":[NaN,0.9731,0.9790,1.0587,1.7596,2.2069,3.1958,9.2596,25.6064,35.7589],"tail8_by_snr":[NaN,0.000000e0,1.189796e-7,8.528308e-5,1.969874e-3,3.689378e-3,7.496987e-3,2.219953e-2,4.960680e-2,6.830357e-2],"sweep":[{"w":5,"p":2,"mean_z2":1.7222,"detail_hi_lo":3.6976,"radial_out_in":0.6208,"tail8":2.2800e-3}]}

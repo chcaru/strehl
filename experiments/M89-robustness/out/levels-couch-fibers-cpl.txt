@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\couch-fibers-cpl
+frames          : 120   usable pixels 8250880 (100.00%)
+mean level      : 1785.95 DN above black
+photometric p-p : 10.0290%   (max 1.033736 / min 0.933446 of the stack mean)
+4th-difference  : rms 0.000787  peak 0.007020   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"couch-fibers-cpl","n":120,"mean_level":1785.9476,"pp":0.100290,"d4_rms":7.873268e-4,"d4_peak":7.019672e-3}

@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\bee-2-cpl
+frames          : 120   usable pixels 8241504 (100.00%)
+mean level      : 2464.35 DN above black
+photometric p-p : 4.9144%   (max 1.037716 / min 0.988572 of the stack mean)
+4th-difference  : rms 0.002826  peak 0.010405   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"bee-2-cpl","n":120,"mean_level":2464.3534,"pp":0.049144,"d4_rms":2.826060e-3,"d4_peak":1.040491e-2}

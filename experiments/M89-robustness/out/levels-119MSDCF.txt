@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\119MSDCF
+frames          : 33   usable pixels 8241504 (100.00%)
+mean level      : 2869.89 DN above black
+photometric p-p : 2.8798%   (max 1.012819 / min 0.984021 of the stack mean)
+4th-difference  : rms 0.002299  peak 0.008122   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"119MSDCF","n":33,"mean_level":2869.8920,"pp":0.028798,"d4_rms":2.299171e-3,"d4_peak":8.122243e-3}

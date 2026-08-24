@@ -1,0 +1,34 @@
+stack           : D:\personal\macro\flowers-cpl
+frames          : 120   gate 4   tolerance 0.086063
+operator        : w=5 p=2   mask ramp |z| 4..8 sigma   election eligible w>=0.5
+  pass1 frame 0/120 (0.2s)
+  pass1 frame 50/120 (8.8s)
+  pass1 frame 100/120 (17.0s)
+
+--- B0: faithfulness of this file's merge to the shipped one ---
+B0a election    : 8250880/8250880 pixels (100.000000%) match FocusStats::best_index exactly
+election shift  : masking the election changes the winner at 0.0787% of pixels (25666 frame-samples were ruled ineligible)
+  pass2 frame 0/120 (21.2s)
+  pass2 frame 50/120 (33.7s)
+  pass2 frame 100/120 (45.8s)
+B0b n_eff       : 8250880/8250880 pixels (100.000000%) match Estimator::n_eff exactly
+B0c green value : max |delta| 0.000488 DN, rms 0.000091 DN vs Estimator::green_mean (both f32 accumulations, so a small residue is float order, not logic)
+clipping        : 0.0000% of pixels had at least one green at the container max (this file does not model censoring; B0 is against Estimator::fold)
+
+--- B1/B2/B3: what the mask costs (MEASURED) ---
+arm 0 (off             ) weight removed 0.000000% of admitted   fallbacks 0 (0.000000% of px)   min total weight 1.000
+arm 1 (average only    ) weight removed 0.003895% of admitted   fallbacks 11185 (0.135561% of px)   min total weight 1.000
+arm 2 (election+average) weight removed 0.004667% of admitted   fallbacks 6640 (0.080476% of px)   min total weight 1.000
+arm 1 vs arm 0 : merged green moved rms 0.126646 sigma, max 41.755 sigma, 0.1582% of pixels moved > 0.01 sigma
+arm 2 vs arm 0 : merged green moved rms 0.352089 sigma, max 76.924 sigma, 0.2132% of pixels moved > 0.01 sigma
+hot winners     : arm0 1323 pixels (0.01603%), arm2 0 (0.00000%)  [elected winner's own |z| > 8]
+hot admitted    : arm0 1717 samples, arm1 1717 (down-weighted), arm2 2426
+
+--- B4: split-half disagreement H, in sigmas (MEASURED) ---
+Pure noise gives E[H] = sqrt(2/pi) = 0.7979. Contamination inflates it.
+arm 0  H mean 2.30327  median 1.31625  p99 17.1826  p999 35.3415  max 108.15  frac H>5 1.01065e-1
+arm 1  H mean 2.30250  median 1.31602  p99 17.1809  p999 35.3413  max 108.15  frac H>5 1.00963e-1
+arm 2  H mean 2.29997  median 1.31551  p99 17.1723  p999 35.4493  max 108.15  frac H>5 1.00638e-1
+B4 change       : arm1 -0.0332% on mean H, -0.0004% on p999 H;  arm2 -0.1433% on mean H, +0.3050% on p999 H
+
+JSON {"stack":"flowers-cpl","n":120,"gate":4,"b0a":1.00000000,"b0b":1.00000000,"b0c_max":0.000488,"election_shift":0.000787,"removed_arm1":0.00003895,"removed_arm2":0.00004667,"fallbacks_arm2":6640,"hot_winner_arm0":1323,"hot_winner_arm2":0,"h_mean":[2.303269,2.302505,2.299969],"h_p999":[35.3415,35.3413,35.4493],"rms_move_arm1":0.12664648,"rms_move_arm2":0.35208865}

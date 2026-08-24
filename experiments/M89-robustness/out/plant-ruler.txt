@@ -1,0 +1,28 @@
+stack           : D:\personal\macro\highly-angled-ruler-mm-cpl
+frames          : 120   operator w=5 p=2
+detailed tile   : (1792, 1472) mean box|grad| 84.47
+flat tile       : (3264, 320) mean box|grad| 7.28   <- rule 9's flat control
+
+roi     morphology    s     tile>8sig     bkgd>8sig at-frame>8sig
+detail  Transient     0     8.3450e-4     3.1497e-5     6.1035e-4
+detail  Transient     1     1.2339e-3     3.1497e-5     2.4231e-2
+detail  Transient     2     2.3914e-3     3.1497e-5     9.3262e-2
+detail  Transient     4     4.4792e-3     3.1497e-5     1.5686e-1
+detail  Transient     8     6.8549e-3     3.1497e-5     2.3907e-1
+detail  Transient    16     1.2725e-2     3.1497e-5     5.1617e-1
+detail  Transient    32     1.6829e-2     3.1497e-5     6.3794e-1
+detail  Step          0     8.3450e-4     3.1497e-5     6.1035e-4
+detail  Step          4     2.7881e-3     3.1497e-5     8.5266e-2
+detail  Step         16     6.7086e-3     3.1497e-5     2.2968e-1
+detail  Ramp          4     8.5607e-4     3.1497e-5     6.1035e-4
+detail  Ramp         16     2.3230e-3     3.1497e-5     6.1035e-4
+detail  Ramp         64     6.8354e-3     3.1497e-5      0.0000e0
+flat    Transient     0      0.0000e0     3.3157e-5      0.0000e0
+flat    Transient     1      0.0000e0     3.3157e-5      0.0000e0
+flat    Transient     2      0.0000e0     3.3157e-5      0.0000e0
+flat    Transient     4      0.0000e0     3.3157e-5      0.0000e0
+flat    Transient     8      0.0000e0     3.3157e-5      0.0000e0
+flat    Transient    16      0.0000e0     3.3157e-5      0.0000e0
+flat    Transient    32      0.0000e0     3.3157e-5      0.0000e0
+
+JSON {"stack":"highly-angled-ruler-mm-cpl","n":120,"at":60,"rows":[{"roi":"detail","morph":"Transient","s":0,"tile":8.344979e-4,"bkgd":3.149702e-5,"at_frame":6.103516e-4},{"roi":"detail","morph":"Transient","s":1,"tile":1.233857e-3,"bkgd":3.149702e-5,"at_frame":2.423096e-2},{"roi":"detail","morph":"Transient","s":2,"tile":2.391421e-3,"bkgd":3.149702e-5,"at_frame":9.326172e-2},{"roi":"detail","morph":"Transient","s":4,"tile":4.479244e-3,"bkgd":3.149702e-5,"at_frame":1.568604e-1},{"roi":"detail","morph":"Transient","s":8,"tile":6.854879e-3,"bkgd":3.149702e-5,"at_frame":2.390747e-1},{"roi":"detail","morph":"Transient","s":16,"tile":1.272530e-2,"bkgd":3.149702e-5,"at_frame":5.161743e-1},{"roi":"detail","morph":"Transient","s":32,"tile":1.682939e-2,"bkgd":3.149702e-5,"at_frame":6.379395e-1},{"roi":"detail","morph":"Step","s":0,"tile":8.344979e-4,"bkgd":3.149702e-5,"at_frame":6.103516e-4},{"roi":"detail","morph":"Step","s":4,"tile":2.788149e-3,"bkgd":3.149702e-5,"at_frame":8.526611e-2},{"roi":"detail","morph":"Step","s":16,"tile":6.708606e-3,"bkgd":3.149702e-5,"at_frame":2.296753e-1},{"roi":"detail","morph":"Ramp","s":4,"tile":8.560707e-4,"bkgd":3.149702e-5,"at_frame":6.103516e-4},{"roi":"detail","morph":"Ramp","s":16,"tile":2.323019e-3,"bkgd":3.149702e-5,"at_frame":6.103516e-4},{"roi":"detail","morph":"Ramp","s":64,"tile":6.835411e-3,"bkgd":3.149702e-5,"at_frame":0.000000e0},{"roi":"flat","morph":"Transient","s":0,"tile":0.000000e0,"bkgd":3.315740e-5,"at_frame":0.000000e0},{"roi":"flat","morph":"Transient","s":1,"tile":0.000000e0,"bkgd":3.315740e-5,"at_frame":0.000000e0},{"roi":"flat","morph":"Transient","s":2,"tile":0.000000e0,"bkgd":3.315740e-5,"at_frame":0.000000e0},{"roi":"flat","morph":"Transient","s":4,"tile":0.000000e0,"bkgd":3.315740e-5,"at_frame":0.000000e0},{"roi":"flat","morph":"Transient","s":8,"tile":0.000000e0,"bkgd":3.315740e-5,"at_frame":0.000000e0},{"roi":"flat","morph":"Transient","s":16,"tile":0.000000e0,"bkgd":3.315740e-5,"at_frame":0.000000e0},{"roi":"flat","morph":"Transient","s":32,"tile":0.000000e0,"bkgd":3.315740e-5,"at_frame":0.000000e0}]}

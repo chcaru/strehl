@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\flowers-cpl
+frames          : 120   usable pixels 8250880 (100.00%)
+mean level      : 1677.29 DN above black
+photometric p-p : 12.3226%   (max 1.062179 / min 0.938953 of the stack mean)
+4th-difference  : rms 0.000215  peak 0.000740   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"flowers-cpl","n":120,"mean_level":1677.2878,"pp":0.123226,"d4_rms":2.149593e-4,"d4_peak":7.400190e-4}

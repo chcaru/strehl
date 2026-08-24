@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\dry-erase-marker-head-cpl
+frames          : 120   usable pixels 7744074 (93.86%)
+mean level      : 3859.51 DN above black
+photometric p-p : 20.2986%   (max 1.103315 / min 0.900328 of the stack mean)
+4th-difference  : rms 0.000165  peak 0.000484   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"dry-erase-marker-head-cpl","n":120,"mean_level":3859.5082,"pp":0.202986,"d4_rms":1.649291e-4,"d4_peak":4.839562e-4}

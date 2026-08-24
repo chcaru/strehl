@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\wrapped-text-2
+frames          : 120   usable pixels 8241504 (100.00%)
+mean level      : 1781.83 DN above black
+photometric p-p : 7.4079%   (max 1.052406 / min 0.978327 of the stack mean)
+4th-difference  : rms 0.002594  peak 0.016452   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"wrapped-text-2","n":120,"mean_level":1781.8264,"pp":0.074079,"d4_rms":2.593607e-3,"d4_peak":1.645243e-2}

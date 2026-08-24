@@ -1,0 +1,65 @@
+stack           : D:\personal\macro\coffee-bubbles
+frames          : 19
+plane           : 3516 x 2344
+iso / black     : Some(1000.0) / 512
+green var model : var(L) = 1.144689*L + 4.0243   (extracted from NoiseModel, verified affine)
+detail axis     : max of box9 |grad| over 3 frames (stride 8)
+detail SNR bins : 0.0009 0.6797 0.1859 0.0590 0.0254 0.0239 0.0231 0.0020 0.0000 0.0000
+  .. frame 0/19 (0.1s)
+
+--- A1/A2/A3: the operator sweep (MEASURED) ---
+E[z^2] = 1 exactly under 'static scene, locally order-p in f, independent sensor noise'.
+operator     mean z^2  detail hi/lo   radial o/i       >3sig       >5sig       >8sig
+w=5 p=0        4.2676        25.920        0.118    4.218e-2    1.762e-2    8.541e-3
+w=5 p=2        2.0617         8.167        0.225    2.383e-2    7.555e-3    2.857e-3
+w=7 p=2        2.6654        12.691        0.210    2.951e-2    1.030e-2    4.420e-3
+w=9 p=2        3.9096        22.210        0.151    4.008e-2    1.573e-2    7.409e-3
+w=9 p=4        2.4193        10.685        0.233    2.745e-2    9.205e-3    3.798e-3
+w=13 p=4       4.3826        26.026        0.139    4.440e-2    1.809e-2    8.727e-3
+
+w=5 p=0    z^2 by detail :    1.153    1.180    1.204    1.230    1.269    1.330    1.428    1.630    2.379   29.892
+w=5 p=0    z^2 by radius :   14.888    4.064    2.365    1.489    5.155    4.629    3.831    2.598    1.901    1.752
+w=5 p=0    >8sig by det  :  7.39e-5  9.40e-5  1.10e-4  1.12e-4  1.18e-4  1.38e-4  1.97e-4  3.67e-4  1.77e-3  8.25e-2
+w=5 p=0    z^2 by SNR    :    1.145    1.249    1.759    3.554    7.798   21.490   76.782  194.496      NaN      NaN
+w=5 p=0    >8sig by SNR  :  6.27e-5  1.16e-4  5.26e-4  5.27e-3  2.17e-2  6.64e-2  2.22e-1  3.89e-1      NaN      NaN
+w=5 p=2    z^2 by detail :    1.144    1.164    1.179    1.192    1.207    1.228    1.261    1.328    1.580    9.341
+w=5 p=2    z^2 by radius :    5.962    2.025    1.496    1.246    1.991    2.006    1.729    1.462    1.357    1.342
+w=5 p=2    >8sig by det  :  6.02e-5  6.72e-5  7.79e-5  7.67e-5  7.20e-5  7.43e-5  9.79e-5  1.47e-4  5.35e-4  2.74e-2
+w=5 p=2    z^2 by SNR    :    1.134    1.193    1.367    1.971    3.009    6.277   23.256   56.702      NaN      NaN
+w=5 p=2    >8sig by SNR  :  4.48e-5  7.40e-5  1.76e-4  1.46e-3  4.57e-3  1.39e-2  8.09e-2  1.83e-1      NaN      NaN
+w=7 p=2    z^2 by detail :    1.153    1.175    1.193    1.213    1.237    1.274    1.336    1.474    1.980   14.629
+w=7 p=2    z^2 by radius :    7.437    2.486    1.724    1.360    3.140    2.969    2.472    1.885    1.621    1.559
+w=7 p=2    >8sig by det  :  7.16e-5  8.96e-5  1.06e-4  9.92e-5  9.83e-5  1.06e-4  1.33e-4  2.40e-4  1.10e-3  4.22e-2
+w=7 p=2    z^2 by SNR    :    1.150    1.220    1.556    2.714    4.692    9.862   35.475  103.904      NaN      NaN
+w=7 p=2    >8sig by SNR  :  6.21e-5  9.71e-5  3.28e-4  3.11e-3  1.13e-2  2.79e-2  1.13e-1  2.64e-1      NaN      NaN
+w=9 p=2    z^2 by detail :    1.171    1.197    1.219    1.247    1.282    1.341    1.443    1.674    2.536   26.002
+w=9 p=2    z^2 by radius :   12.147    3.613    2.227    1.536    5.035    4.486    3.696    2.544    1.976    1.833
+w=9 p=2    >8sig by det  :  8.65e-5  1.07e-4  1.25e-4  1.25e-4  1.19e-4  1.36e-4  1.77e-4  3.59e-4  1.90e-3  7.10e-2
+w=9 p=2    z^2 by SNR    :    1.162    1.263    1.816    3.805    7.559   17.331   64.209  196.095      NaN      NaN
+w=9 p=2    >8sig by SNR  :  7.33e-5  1.20e-4  5.29e-4  5.62e-3  2.21e-2  5.19e-2  1.85e-1  3.98e-1      NaN      NaN
+w=9 p=4    z^2 by detail :    1.153    1.176    1.192    1.211    1.229    1.260    1.314    1.441    1.899   12.324
+w=9 p=4    z^2 by radius :    6.493    2.251    1.628    1.338    2.780    2.651    2.217    1.770    1.553    1.512
+w=9 p=4    >8sig by det  :  7.14e-5  9.00e-5  1.03e-4  1.03e-4  8.75e-5  9.00e-5  1.13e-4  2.14e-4  9.51e-4  3.62e-2
+w=9 p=4    z^2 by SNR    :    1.147    1.214    1.514    2.542    4.128    7.957   29.615   89.741      NaN      NaN
+w=9 p=4    >8sig by SNR  :  4.89e-5  9.11e-5  2.86e-4  2.56e-3  9.00e-3  2.14e-2  9.80e-2  2.59e-1      NaN      NaN
+w=13 p=4   z^2 by detail :    1.168    1.198    1.219    1.245    1.278    1.344    1.462    1.742    2.798   30.391
+w=13 p=4   z^2 by radius :   14.061    3.967    2.394    1.609    5.853    5.037    4.081    2.784    2.085    1.953
+w=13 p=4   >8sig by det  :  9.86e-5  1.20e-4  1.32e-4  1.10e-4  9.35e-5  1.16e-4  1.59e-4  3.96e-4  2.27e-3  8.38e-2
+w=13 p=4   z^2 by SNR    :    1.144    1.263    1.910    4.322    8.559   18.871   75.974  240.839      NaN      NaN
+w=13 p=4   >8sig by SNR  :  5.76e-5  1.13e-4  5.85e-4  6.61e-3  2.60e-2  5.84e-2  2.22e-1  4.70e-1      NaN      NaN
+
+--- primary operator w=5 p=2 : localisation (MEASURED) ---
+samples         : 123622560   mean z^2 2.0617   >3sig 2.3827e-2  >5sig 7.5549e-3  >8sig 2.8567e-3  >12sig 1.0829e-3
+pixels flagged  : 1.7394% of the frame at |z|>8 in >=1 frame, 1.1811% in >=2 frames
+worst frames    : (frame, frac|z|>8, mean z^2); median frame frac 2.5818e-3
+   frame    6   7.6416e-3       3.702   3.0x the median frame
+   frame    7   5.2257e-3       2.821   2.0x the median frame
+   frame    5   5.0514e-3       2.696   2.0x the median frame
+   frame    2   3.3525e-3       1.967   1.3x the median frame
+   frame    3   3.0639e-3       1.941   1.2x the median frame
+   frame    9   2.7540e-3       2.096   1.1x the median frame
+   frame    8   2.7012e-3       2.129   1.0x the median frame
+   frame   11   2.5818e-3       1.929   1.0x the median frame
+spatial (64px tiles, n=2035) : worst 0.5642 p99 0.2732 p90 0.0422 median 0.0012
+
+JSON {"stack":"coffee-bubbles","n":19,"iso":Some(1000.0),"mean_z2":2.061730,"tail3":2.382728e-2,"tail5":7.554932e-3,"tail8":2.856712e-3,"tail12":1.082869e-3,"pixels_flagged":0.017394,"detail_hi_lo":8.1672,"radial_out_in":0.2250,"worst_frame":6,"worst_frame_frac":7.641566e-3,"median_frame_frac":2.581810e-3,"worst_tile":0.564209,"p99_tile":0.273193,"z2_by_detail":[1.1437,1.1635,1.1786,1.1917,1.2066,1.2282,1.2612,1.3278,1.5803,9.3410],"tail8_by_detail":[6.018096e-5,6.715190e-5,7.790435e-5,7.669727e-5,7.198891e-5,7.433962e-5,9.791434e-5,1.472212e-4,5.345049e-4,2.737877e-2],"n_by_snr":[111555,84024420,22983195,7293585,3145950,2955135,2858640,250080,0,0],"z2_by_snr":[1.1335,1.1934,1.3671,1.9712,3.0094,6.2767,23.2560,56.7020,NaN,NaN],"tail8_by_snr":[4.482094e-5,7.401420e-5,1.763027e-4,1.457994e-3,4.568413e-3,1.388092e-2,8.085698e-2,1.827855e-1,NaN,NaN],"sweep":[{"w":5,"p":0,"mean_z2":4.2676,"detail_hi_lo":25.9198,"radial_out_in":0.1177,"tail8":8.5411e-3},{"w":5,"p":2,"mean_z2":2.0617,"detail_hi_lo":8.1672,"radial_out_in":0.2250,"tail8":2.8567e-3},{"w":7,"p":2,"mean_z2":2.6654,"detail_hi_lo":12.6911,"radial_out_in":0.2096,"tail8":4.4202e-3},{"w":9,"p":2,"mean_z2":3.9096,"detail_hi_lo":22.2099,"radial_out_in":0.1509,"tail8":7.4090e-3},{"w":9,"p":4,"mean_z2":2.4193,"detail_hi_lo":10.6845,"radial_out_in":0.2329,"tail8":3.7982e-3},{"w":13,"p":4,"mean_z2":4.3826,"detail_hi_lo":26.0263,"radial_out_in":0.1389,"tail8":8.7274e-3}]}

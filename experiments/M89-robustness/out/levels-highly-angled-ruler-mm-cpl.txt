@@ -1,0 +1,6 @@
+stack           : D:\personal\macro\highly-angled-ruler-mm-cpl
+frames          : 120   usable pixels 8250880 (100.00%)
+mean level      : 1521.33 DN above black
+photometric p-p : 14.6169%   (max 1.076755 / min 0.930586 of the stack mean)
+4th-difference  : rms 0.000214  peak 0.000582   (operator w=5 p=2 applied to frame means)
+JSON {"stack":"highly-angled-ruler-mm-cpl","n":120,"mean_level":1521.3265,"pp":0.146169,"d4_rms":2.137463e-4,"d4_peak":5.821607e-4}
