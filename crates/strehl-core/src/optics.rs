@@ -567,7 +567,7 @@ mod tests {
         let p = &A7C2_FE100GM_2XTC_X4CPL;
         let s = 1.0 + p.eps_r;
         let (tx, ty) = p.translation;
-        let mut rng = Rng(0xC0FFEE_1107);
+        let mut rng = Rng(0x00C0_FFEE_1107);
         let mut worst = 0.0f64;
 
         for _ in 0..20_000 {
