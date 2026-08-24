@@ -1,0 +1,56 @@
+M97 --n-eff-map -- PRE-REGISTERED FALSIFICATION BARS
+Written BEFORE the code. Mirrors the b27904a election-map bars.
+
+SUBJECT
+  Export Estimator::n_eff() -- frames admitted per pixel -- as a 16-bit
+  single-channel TIFF on the plane grid, behind --n-eff-map <PATH> and
+  STREHL_DUMP_NEFF=<PATH>. Debug output. Must not perturb the render.
+
+BARS
+
+E1  NULL / no perturbation. The merged image must be BYTE-IDENTICAL across
+    three runs: (a) no map, (b) --n-eff-map, (c) STREHL_DUMP_NEFF.
+    PASS = all three SHA256 equal.
+
+E1b PLANT for E1. A run that SHOULD differ must differ, or E1 is vacuous --
+    three equal hashes prove nothing if the hash cannot move. Same binary,
+    same wiring, --gate 2 instead of 4.
+    PASS = gate-2 hash != gate-4 hash.
+
+E2  BOTH MECHANISMS. Flag and env var each write a file, and the two maps are
+    byte-identical to each other. Flag wins when both are set.
+    PASS = sha(flag map) == sha(env map); with both set, the flag's path is
+    the one written and the resolved path is PRINTED (rule 47: an unprinted
+    env var is the input that makes a frozen hash unreproducible).
+
+E3  CONNECTED, not merely present. The mean of the exported map must equal
+    the `mean n_eff` scalar the run already prints from an INDEPENDENT
+    computation. A file that exists is not an observation; this is the check
+    that the bytes are the field and not a constant or a stale buffer.
+    PASS = |mean(map) - printed mean n_eff| < 0.01, and the map holds more
+    than one distinct value.
+
+E3b PLANT for E3. Repeat E3 at a second gate. If the map were disconnected
+    from the estimator, it could not track the printed scalar at BOTH gates.
+    PASS = both gates match their own printed scalar, AND the two means
+    differ from each other.
+
+E4  RANGE / SATURATION. u16 caps n_eff at 65535. Every value must lie in
+    [1, frames_folded]; a 0 means no frame was admitted (an impossible state
+    for a decided pixel) and anything above frames_folded means corruption.
+    PASS = the export hard-errors rather than writing such a map. Whether
+    this fires on real data is NOT expected -- record it as unexercised if
+    so, rather than claiming it verified.
+
+E5  AMBIGUITY REFUSED. n_eff is per-gate. With several --gate values the map
+    would silently be gate[0]'s.
+    PASS = --n-eff-map with >1 gate is refused before any frame is read,
+    with a message naming the count. Mirrors --out's existing rule.
+
+NAMED FAILURE INPUT
+  If E1 fails, the export is perturbing the render and must not ship at all:
+  an instrument that changes its subject is not an instrument.
+
+EXIT-CODE HYGIENE (rule 47)
+  Capture to a variable, read $LASTEXITCODE immediately, filter afterwards.
+  Never read it after a pipeline containing -First. Record literal codes.

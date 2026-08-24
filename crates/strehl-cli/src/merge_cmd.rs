@@ -102,6 +102,12 @@ pub struct MergeOptions {
     ///
     /// See [`write_election_map`] for the grid and the index convention.
     pub index_map: Option<PathBuf>,
+    /// Also write the **n_eff map**: the per-pixel count of frames averaged
+    /// into that pixel, as a single-channel 16-bit TIFF. Debug output; `None`
+    /// costs nothing and never touches the merged image.
+    ///
+    /// See [`write_n_eff_map`] for the grid and the value convention.
+    pub n_eff_map: Option<PathBuf>,
     /// Solve the ladder for the gate that achieves this mean `n_eff`.
     ///
     /// **This, not `gates`, is the parameter the project intends to ship.**
@@ -1183,12 +1189,100 @@ fn write_election_map(path: &Path, best: &[u16], geom: PlaneGeometry) -> Result<
     Ok(())
 }
 
+/// The environment variable that asks for an n_eff map without a flag.
+const NEFF_ENV: &str = "STREHL_DUMP_NEFF";
+
+/// Where to write the n_eff map, if anywhere: `--n-eff-map` wins, then
+/// [`NEFF_ENV`]. Same precedence and same printing rule as
+/// [`election_map_path`], so the two maps behave identically.
+fn n_eff_map_path(opts: &MergeOptions) -> Option<PathBuf> {
+    if let Some(p) = &opts.n_eff_map {
+        return Some(p.clone());
+    }
+    let raw = std::env::var(NEFF_ENV).ok()?;
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        eprintln!("{NEFF_ENV} is set but empty; not writing an n_eff map");
+        return None;
+    }
+    Some(PathBuf::from(trimmed))
+}
+
+/// Write the per-pixel `n_eff` field as a single-channel 16-bit TIFF.
+///
+/// **Grid.** The **plane** grid, identical to [`write_election_map`]'s: half
+/// sensor resolution, one value per 2x2 CFA quad. The two maps are therefore
+/// the same size and overlay pixel-for-pixel with no resampling, which is the
+/// point — one says *which* frame won, this says *how many* frames the noise
+/// gate could not separate from it.
+///
+/// **Values.** A literal frame count, starting at **1**: the winner is always
+/// within tolerance of itself, so no decided pixel can read 0. The ceiling is
+/// the u16 one, **65535**, which this refuses to saturate against — a value
+/// outside `1..=frames` is rejected rather than written, because a clamped
+/// count read as a real one would understate averaging exactly where averaging
+/// was heaviest. In practice the range is `1..=frames_folded` and far below the
+/// ceiling, so autoscale before looking at it.
+///
+/// **This is debug output and it does not touch the merged image.** It reads
+/// state pass two has already finished computing.
+///
+/// What it is for: `n_eff` is the project's headline quality number and is
+/// reported only as a scalar mean, yet the gate that reaches `n_eff = 3` spans
+/// 0.7618 to 21.9934 across the corpus — a factor of 28.9 — so that mean is
+/// averaging over structure nobody can currently see. It also tests a specific
+/// hypothesis about the "waxy blob" artefact: that the gate admits frames on a
+/// focus-measure test while validity actually requires PSF similarity, so in
+/// smooth defocused regions it averages frames whose PSFs differ and produces
+/// extra blur. That predicts n_eff high and near-constant inside a blob with a
+/// jump at its boundary, which this map either shows or refutes.
+fn write_n_eff_map(path: &Path, n_eff: &[u16], frames: u32, geom: PlaneGeometry) -> Result<()> {
+    ensure!(
+        n_eff.len() == geom.pixels(),
+        "n_eff field is {} long but the plane grid is {}x{}",
+        n_eff.len(),
+        geom.width,
+        geom.height
+    );
+    let hi = n_eff.iter().copied().max().unwrap_or(0);
+    let lo = n_eff.iter().copied().min().unwrap_or(0);
+    ensure!(
+        lo >= 1,
+        "some pixels averaged 0 frames; the n_eff map would be meaningless"
+    );
+    ensure!(
+        u32::from(hi) <= frames,
+        "n_eff reaches {hi} but only {frames} frames were folded; the field is not a frame count"
+    );
+    image_out::write_gray16(path, geom.width as u32, geom.height as u32, n_eff)?;
+    let mean = n_eff.iter().map(|&v| f64::from(v)).sum::<f64>() / n_eff.len() as f64;
+    eprintln!(
+        "n_eff map       : wrote {} ({}x{} u16 plane grid, counts {lo}..{hi}, mean {mean:.3})",
+        path.display(),
+        geom.width,
+        geom.height
+    );
+    eprintln!();
+    Ok(())
+}
+
 pub fn run(opts: &MergeOptions) -> Result<()> {
     ensure!(!opts.gates.is_empty(), "at least one --gate is required");
     ensure!(
         opts.gates.iter().all(|g| g.is_finite() && *g >= 0.0),
         "gate thresholds must be finite and non-negative"
     );
+    // n_eff is per-gate, so with several gates the map would silently be
+    // gate[0]'s. Refused here, before a frame is read, for the same reason
+    // --out refuses: a debug map labelled with the wrong gate is worse than no
+    // map, because it looks like evidence.
+    if n_eff_map_path(opts).is_some() {
+        ensure!(
+            opts.gates.len() == 1,
+            "--n-eff-map writes one map but {} gates were given; n_eff is per-gate, so pick one",
+            opts.gates.len()
+        );
+    }
     if opts.out.is_some() {
         ensure!(
             opts.gates.len() == 1,
@@ -1663,6 +1757,12 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             e.every_pixel_is_decided(),
             "some pixel admitted no frame at all; the winner is supposed to be unconditional"
         );
+    }
+    if let Some(path) = n_eff_map_path(opts) {
+        // gates.len() == 1 was enforced before any frame was read, so est[0]
+        // is unambiguously the gate this map belongs to.
+        let est = &p2.est[0];
+        write_n_eff_map(&path, est.n_eff(), est.frames_folded(), geom)?;
     }
     if let Some(selector) = &p2.selector {
         ensure!(

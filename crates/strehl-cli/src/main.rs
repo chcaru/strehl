@@ -243,6 +243,30 @@ enum Command {
         #[arg(long, value_name = "PATH")]
         index_map: Option<PathBuf>,
 
+        /// Also write the n_eff map: a 16-bit grayscale TIFF holding the number
+        /// of frames averaged into each pixel.
+        ///
+        /// DEBUG OUTPUT. It does not change the merged image by a byte -- it
+        /// reads state pass two has already finished.
+        ///
+        /// The twin of --index-map, on the same PLANE grid at half sensor
+        /// resolution, so the two overlay pixel-for-pixel with no resampling:
+        /// one says WHICH frame won, this says HOW MANY were indistinguishable
+        /// from it. Values are literal frame counts starting at 1, so autoscale
+        /// it to look at it.
+        ///
+        /// n_eff is already this project's headline quality number, reported as
+        /// a scalar mean -- but the gate that reaches n_eff = 3 varies 0.7618 to
+        /// 21.9934 across the corpus, a factor of 28.9, so a mean over a field
+        /// that varies that much between scenes is hiding its own structure.
+        /// This is where that structure becomes visible.
+        ///
+        /// Requires exactly one --gate, because n_eff is per-gate.
+        /// `STREHL_DUMP_NEFF=<path>` does the same for a harness that cannot
+        /// edit the command line; this flag wins.
+        #[arg(long, value_name = "PATH")]
+        n_eff_map: Option<PathBuf>,
+
         /// Report which gate would achieve this mean n_eff. A CALIBRATION AID,
         /// NOT A SECOND KNOB.
         ///
@@ -454,6 +478,7 @@ fn main() -> Result<()> {
             flat_roi,
             detail_roi,
             index_map,
+            n_eff_map,
             target_n_eff,
             stats,
             stats_placebo,
@@ -475,6 +500,7 @@ fn main() -> Result<()> {
             flat_roi,
             detail_roi,
             index_map,
+            n_eff_map,
             target_n_eff,
             stats,
             stats_placebo,
