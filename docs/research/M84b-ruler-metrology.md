@@ -74,13 +74,24 @@ the direction is on record.
 
 **What I received, and exactly when.** I have not read
 `docs/research/M84-ruler-metrology.md`, nor any file under `experiments/M84-ruler-metrology/`,
-nor any of the sibling's numbers. **One bit did reach me.** The orchestrator's C3 placeholder
-occupying this filename stated that *"`M84` has reported a complete negative verdict"*. I
-read that at **00:21 PDT** while opening the file in order to overwrite it. **Every number in
-this report was already final:** the last measurement artefact,
-`out/17-depthmap.json`, was written at **00:16:05 PDT**, and `out/15-closure.json` at
-00:13:10. **Nothing was changed after 00:21.** The only addition after that moment is §8's
-cross-check arithmetic, which reads M5 and SYNTHESIS and does not touch the sibling.
+nor any of the sibling's numbers. **Two things did reach me, and both are recorded here with
+timestamps.**
+
+**(a) One bit, from the orchestrator's own placeholder.** The C3 placeholder occupying this
+filename stated that *"`M84` has reported a complete negative verdict"*. I read that at
+**00:21 PDT** while opening the file in order to overwrite it. **Every number in this report
+was already final:** the last measurement artefact, `out/17-depthmap.json`, was written at
+**00:16:05 PDT**, and `out/15-closure.json` at 00:13:10. **Nothing was changed after 00:21.**
+The only addition after that moment is §8's cross-check arithmetic, which reads M5 and
+SYNTHESIS and does not touch the sibling.
+
+**(b) Three commit subject lines, from `git log`, at 00:33 PDT** — after both of my commits had
+landed. Verifying that my own commits had touched no M84-stem path, `git log -- <M84 paths>`
+returned `f6ee015 Preregister M84 ruler metrology`, `23e35c3 Complete M84 ruler metrology` and
+`423be86 Disclose M84 sibling result exposure`. **Subject lines only. No diff, no body, no
+method, no number was displayed or read**, and I did not open any of the three. I record it
+because the arrangement is worth more than my convenience: `423be86` also tells me the sibling
+has disclosed exposure in the other direction, which I have likewise not read.
 
 **I did not tune toward or away from agreement.** I do not know M84's method, its ROIs, its
 pitch decision, or any figure it reports — only the one-word direction of its verdict, which
