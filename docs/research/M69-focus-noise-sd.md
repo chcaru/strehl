@@ -29,13 +29,6 @@ costs it +0.37% while `rho = 0.838` would cost −3.63% and break it. And the
 replacement carries the same shape of error as the thing it replaces: a
 per-pixel `sigma_F` still has no `N` term (§9.1).**
 
-Pre-registered at **`33f3565`**, before any number in this report existed.
-
-Status: MEASURED unless a fact says otherwise. No file under `crates/` was
-modified; `git show --name-only` on every commit in this milestone shows only
-paths under `experiments/M69-focus-noise-sd/`, `docs/research/M69-focus-noise-sd.md`
-and `docs/captures-needed.md`.
-
 **Amended after its first commit (`02f501b`)** in response to two post-dispatch
 updates: a report that M62 had independently reproduced M66's effect, and M62's
 addendum `e4c1f98` pricing the acceptance battery by algebra. **§3b handles the
