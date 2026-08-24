@@ -422,3 +422,142 @@ one, and the *largest* enlargement in the corpus has the *smallest* cost.
 Fact 1402 was wrong for exactly this reason and it is an easy error to repeat —
 the size of a geometric change carries almost no information about the size of
 its quality effect.
+
+---
+
+## 9. Addendum — the fact 1420 recalibration, answered after the fact
+
+The orchestrator sent fact 1420 (`lanczos3 −0.0663` against `catmull-rom
+−0.2006`, gain **+0.1343 dex**, *"9.4× the rescale fix"*) as a pre-measurement
+recalibration, inviting a lower bar. **It arrived after Phase 0 had already
+resolved.** Four consequences, all checked at HEAD `9fbfe7d`.
+
+### 9.1 The bar is NOT revised, and the recalibration does not reach the verdict
+
+Revising a registered bar before seeing data is legitimate; **I have seen the
+data, so for me it is not.** `PRE-REGISTRATION.md` stands byte-unchanged at
+`386ee63`. It does not matter, for an arithmetic reason:
+
+| bar | source | met by −0.0030 dex? |
+| --- | --- | --- |
+| +0.10 dex | my registered ship bar | no |
+| +0.03 dex | my registered DEAD line | no |
+| +0.0143 dex | `+0.1343 / 9.4`, the bar fact 1420's decomposition implies | no |
+| any positive number | — | **no — the measured recovery is negative** |
+
+**No defensible bar admits a negative recovery as a go.** The suggested
+recalibration would have moved a bar the result does not approach from either
+direction.
+
+### 9.2 Fact 1420's "9.4×" inherits fact 1419's provenance defect
+
+`0.1343 / 0.0143 = 9.392 ≈ 9.4`, and the only `0.0143` in the corpus is
+`x8_fix.json`'s `fix_recovery_dex: 0.014336059321134825` — **the file §4 shows
+was measured on the 8-frame / reference-4 sidecar.** So fact 1420's multiplier
+is `kernel gain ÷ (8-frame rescale recovery)`.
+
+On the shipped 299-frame solve the denominator is **−0.0030 dex**, and a ratio
+against a negative denominator is not a multiplier at all. **Fact 1420's
+conclusion is unchanged and strengthened — the kernel's dominance is
+*understated* by "9.4×", not overstated** — but the number should be stated as
+a comparison of two measured gains (`+0.1343` against `−0.0030`) rather than as
+a ratio. Same shape as the §4 finding, one fact downstream.
+
+### 9.3 `align_cmd.rs` did change — before my measurement, not after
+
+The orchestrator warned the file had changed under me and that a changed default
+reference would change the warps, hence `k`, hence my arms. Checked:
+
+- The fact-1370 fix is `19f1be0`, and `git merge-base --is-ancestor 19f1be0
+  7f32e74` returns **true** — it landed **before** my Phase 0 commit, as did
+  `843f6e1` (Lanczos-3, already switchable), `79264b6` (M110) and `69f7b4c`
+  (M97's cache key). `git diff 7f32e74..HEAD -- align_cmd.rs` is **empty**.
+- **Every sidecar I measured already uses the post-fix reference.**
+  `merge_reference(n) = n / 2` (`align_cmd.rs:945`), and all nine sidecars carry
+  `reference == N // 2` exactly: 299→149, 79→39, 100→50, 182→91, 100→50,
+  299→149, 176→88, 123→61, 205→102. They were written by the **automatic**
+  path, which always used `merge_reference`; the bug was only in the *manual*
+  subcommand's default. My arms were on the fixed configuration all along.
+- **`k` re-measured at HEAD across all nine stacks: identical to Phase 0b to
+  `0.00e+00`.** `bee-3-cpl` = `0.931464`, gate against 0.9315 PASS.
+
+### 9.4 Fact 1287 against fact 1420 — the reconciliation, which is the real result
+
+The orchestrator guessed that the rescale is correctly blamed as a *cause*
+(1287) while the kernel is the *fix* that helps (1420), because removing the
+scale leaves the warp's own non-integer phase. **That guess is MEASURED
+correct, and the measurement sharpens it into something more useful.**
+
+The evidence, all from §2–§3:
+
+| arm | reading | what it establishes |
+| --- | --- | --- |
+| `SNAP` integer offsets, unit scale | **−0.0003** | the gather is **free** when phase is integral — the cost has one currency |
+| `REFONLY` reference frame alone | **+0.1836 → −0.0000** | where the warp is *otherwise* integral, the scale **alone** costs the **full** price |
+| `flower-bud-alone-cpl` near-identity warps | **+0.1516 recovered** | the same, at stack scale |
+| `NULLQ` `k = 0.9974` vs `0.9315` | **+0.1851 vs +0.1836** | the price does not scale with `\|1−k\|` — **threshold, not dose** |
+| `bee-3-cpl` `NOW → FIX` | **+0.1824 → +0.1854** | with 99.7% of frames already non-integral, removing the scale recovers nothing |
+
+**The rescale is a *sufficient* cause of the full gather cost, and on the
+owner's stack it is not the *marginal* one.** The effect saturates: once any
+source of non-integer phase is present the full price is paid, and a second
+source costs nothing more. On 99.7% of `bee-3-cpl`'s frames the scale and the
+frame's own displacement are **redundant** causes of the same saturated
+threshold.
+
+Two things follow, and they dissolve the tension without either fact being
+wrong.
+
+**DERIVED — fact 1287's 64.2% is not a share that can be removed.** A
+saturating threshold cannot be apportioned into additive percentage shares:
+*each* of "remove the scale" and "remove the warp" returns most of the deficit
+in isolation, so the shares sum to far more than 100%. That is the signature of
+**redundant causation**, not of a decomposition error. 1287 is defensible as
+*attribution* and not as *budget*, and the 64.2% should not be read as
+recoverable by anyone.
+
+**ARGUED — the kernel is the lever because it is the only term acting on the
+*price* rather than on a *cause*.** The scale and the warp determine **whether**
+you resample; the kernel determines **what resampling costs**. You cannot make
+299 hand-held frames land on integer offsets, so non-integer phase is
+irreducible — which leaves its price as the only remaining lever. Fact 1420 is
+the lever not merely because it is bigger, but because it is the **only fix of
+the three that operates on a term that cannot be removed.**
+
+**Falsifiable prediction handed over, not tested here:** if this is right, the
+kernel gain should be **roughly stack-independent** (every stack resamples),
+whereas the crop's recovery is **wildly stack-dependent** (−0.0330 to +0.1516,
+§3) because it depends on whether the warps were already integral. M95's P77
+already reports its gain as *"phase-averaged"*, which is consistent but is not
+the per-stack test. Running fact 1420's arm across §3's nine stacks would
+settle it in one pass and would confirm or break this reconciliation.
+
+### 9.5 Additional candidates from this addendum
+
+**P8 — MEASURED.** Fact 1420's *"9.4×"* is `0.1343 / 0.0143`, and that `0.0143`
+is fact 1419's 8-frame / reference-4 figure. Against the shipped 299-frame
+solve the denominator is **−0.0030 dex**, so the ratio is undefined in sign and
+the kernel's dominance is **understated**. Conclusion unchanged; state it as
+`+0.1343` against `−0.0030`, not as a multiplier.
+
+**P9 — MEASURED.** All nine corpus sidecars already carry
+`reference == merge_reference(N) == N // 2`, so the fact-1370 default-reference
+fix (`19f1be0`) changes **no** existing sidecar and no measurement resting on
+one. `k` re-measured at HEAD `9fbfe7d` is identical to Phase 0b at `0.00e+00`
+on all nine.
+
+**P10 — DERIVED from P1/P2/P3.** The rescale is a **sufficient but redundant**
+cause of the gather's cost on deep stacks: alone it costs the full `+0.1836 dex`
+(`REFONLY`), yet removing it recovers `−0.0030` because the warps are already
+non-integral. Facts 1287 and 1420 are therefore **both defensible and not in
+conflict** — 1287 names a cause, 1420 names the only removable term — but
+1287's **64.2% is an attribution, not a budget, and is not recoverable.**
+
+**D5 — A saturating threshold cannot be apportioned into percentage shares, and
+any fact that does so is quoting a counterfactual, not a budget.** Under
+redundant causation the shares sum past 100%, so *"X accounts for 64.2% of the
+deficit"* and *"removing X recovers nothing"* are both true at once. Before
+folding any percentage-of-deficit claim, ask whether the underlying effect is
+additive; if it is a threshold, record the counterfactual **and** the marginal
+recovery, because only the second one is a fix.
+
