@@ -148,6 +148,18 @@ such).
 > and **the project does not yet have a working reconstruction for real
 > captures.** The best-looking crops in `C:\dev\strehl-out\M87-before-after\`
 > are the ones I am telling you not to ship.
+>
+> **Added in §24, on `flower-bud-alone-cpl`.** The two-layer model survived a
+> test that could have killed it: the veil peaks **10.2% below** the far
+> background, so it never breaches the convex bound, and my own visual reading
+> that it looked *brighter* was wrong. The rim is nevertheless real at
+> **+18.97%** against the background beside it, versus a **+0.42%** measured
+> bias floor. The "detached white islands" are **not** an election bug —
+> 86.3% by count are the veil severed by hair-thin foreground, and **76.6% by
+> area is white card seen through genuine holes in the plant and is not a
+> defect at all**. The scalloping has **no characteristic lengthscale**
+> (`depth(r) ∝ r^0.933`), and the two pre-registered pipeline scales it appeared
+> to confirm were both **my own instrument parameters**.
 
 ---
 
@@ -1814,6 +1826,16 @@ namespaced `M87`.
 | P57 | **A truth-free fidelity bar for artifact removal: Blur-Matched Fidelity.** Race the candidate against a Gaussian blur bisected to suppress the **same** named coarse band, then compare on a named fine band: `BMF = fine(candidate)/fine(blur)`. Validated on the real 4688x7032 shipped pair — exactly **1.000000** in both bands where the correction changes nothing, and **0.9058** in the fine band at the site where it visibly destroys hairs. | X4 proved a suppression number cannot certify a reconstruction, and ORCH's "fidelity against truth" cannot bind on a real subject, where no truth exists. This binds without truth, is quiet on a no-op, and fires on known damage. **The general form: certify an artifact removal against the maximally destructive intervention achieving equal suppression.** | MEASURED |
 | P58 | **The shipped halo correction is NOT TARGETED: it removes fine structure harder than it removes the veil.** On the real full frame at the strongest-correction site, the FINE band (DoG 1–3 px) falls to **0.905812** while the COARSE band (DoG 8–32 px) falls only to **0.914575** — registered bar V3 **FAILED**. | Turns §16.9's visual finding into a number and gives the annulus milestone its objective: **drive COARSE down and hold FINE at 1**. A correction that takes more fine structure than veil is mis-aimed regardless of how good its halo number looks. | MEASURED |
 | P59 | **My registered prediction that the correction is "no better than a blur" was WRONG: BMF = 4.43.** At matched coarse-band suppression a Gaussian blur retains only **20.5%** of the fine band; the correction retains **90.6%**. I predicted BMF ≤ 1.05 before running. | **§16.9's implication of blur-grade destruction is withdrawn.** The correction is genuinely structured, merely insufficiently selective — a different and far more fixable defect than the one I reported. Recorded because a registered prediction that fails is worth more than one quietly dropped. | MEASURED (prediction refuted) |
+| P60 | **The detached pale islands in `flower-bud-alone-cpl` are not an election pathology.** The elected frame index inside them has a local 9×9 standard deviation of **0.50 frames**, against **0.42** in deep subject and **28.09 in the open white background**. | Fact 73's texture-free blind spot is real on this stack, but it lives in the **background**, not in the islands. The islands elect as coherently as the subject does. | MEASURED |
+| P61 | **All three decidable islands sit at the depth of the surface around them, not the background's** — within 0–3 frames of the surrounding subject ring against 7–34 frames from the nearest background. Controls on matched geometry pass in both directions: untouched discs read SUBJECT **97.3%** (37 decidable), discs with the elected index overwritten by the local background read BACKGROUND **100.0%** (35 decidable). | Rules out the election importing a distant background into the subject's interior. The instrument is demonstrated able to return either answer before the verdict is read. | MEASURED |
+| P62 | **The islands are two populations with opposite implications.** By count, **86.3%** rejoin the background under a closing of ρ ≤ 8 binned px — the veil band severed by hair-thin foreground — while a registered broken arm of matched-area discs in deep subject rejoins at **0.0%** (3.4% at ρ = 40). By area, **76.6%** sits 30–250 px from any background and is white card seen through **genuine holes in the plant**; one island holds 74% of all island area at d2bg = 192 px. | A veil correction should reach most islands and must **not** touch most island area. A metric averaging the two would be dominated by the population that is already correct. | MEASURED |
+| P63 | **The veil boundary has no characteristic lengthscale.** Cut depth follows `depth(r) ∝ r^0.933` over 1–44 binned px, and the apparent knee tracks the ladder's endpoint — 5.47, 8.60, 11.70, 14.31 at endpoints 12, 22, 31, 44, a drift of **161.5%**. The resolution control passes independently (binned vs 2× render agree to 7.2% on the knee, 3.4% on the plateau), so the curve is physical and scale-free. | No pipeline stage's neighbourhood size is recoverable from the scalloping. The lobes are self-similar over the whole measured range. | MEASURED |
+| P64 | **Two pre-registered candidate lengthscales were hit, and both hits were the instrument's own parameters.** A veil-band granulometry returned 2r = 42 px, exactly 2 × (`WINDOW_RADIUS` 13 + `REGULARISER_RADIUS` 8) — but halving `NEAR_VEIL` from 40 to 20 halved the answer, 20.16 to 10.66. A background granulometry returned 28.6 px, within 10% of 2 × `WINDOW_RADIUS` — but it was the ladder endpoint. | **Pre-registration made the artifacts more convincing, not less**: a dense candidate list guarantees an instrument-driven answer lands near a candidate. A registered prediction needs a companion control that varies the instrument's own parameter, not only the data. | MEASURED |
+| P65 | **The veil does not breach the two-layer convex bound.** Deep subject 334, far background 4398, rim peak **3951 at d = −7 binned px** — 447 *below* the background, z = −62.8. A convex composite cannot exceed both layers, so an overshoot would have falsified the two-layer model; none is present. | The two-layer composite survives a test that could have killed it, on the strongest real halo case in the corpus. My own visual reading of the crops, which said the rim looked brighter than the background, was wrong. | MEASURED |
+| P66 | **The rim is real against the background beside it: +18.97% above the local plateau, versus +0.42% for a registered invented boundary in open background — 45.6× the bias floor.** Scanning ~120 distance bins for a maximum is itself biased and manufactured an apparent +1.8% overshoot at z = 29.7 where there is no edge at all. | Establishes both the halo's amplitude on real data and the floor below which any profile-peak claim is the estimator. Any overshoot under ~2% measured this way is not reportable. | MEASURED |
+| P67 | **The correctable rim is ~20 binned px wide and sits inside a ~150 px depression that may not be ours.** The background recovers to 90% of its open level only at **135 binned px** and 95% at **150 px**. A bud in front of a lit card plausibly shadows the card; that cannot be separated from a wide veil without a single-frame comparison. It is not vignetting, which darkens pixels far from centre and so far from the subject, against the observed sign. | Sizes the annulus at ~20 binned px rather than 150, and flags a large slow component that a halo metric would credit a fix for removing without it being a stacking defect at all. | MEASURED |
+| P68 | **`flower-bud-alone-cpl` is not clipped anywhere.** On the per-channel maximum that `gallery.py` budgets, both the raw and the exposure-boosted TIFF read **0.0000%** at full scale and **0.0000%** at or above 0.99; the gain is set by the p99.9 target and never reaches the 0.5% clip budget. Background FINE-band rms is 0.002363 against the subject's 0.007493. | The "near-clipping white field" hazard does not exist on this stack and a normalised contrast measure reads it. The real hazard is dilution: the background is 78.67% of the frame at 3.2× less fine-band energy, so a whole-frame band average — but not the in-region BMF bar of §23 — would be swamped by it. | MEASURED |
+| P69 | **The judged gallery crop comes from `-exposed.tif`, not `-srgb.tif`** (`gallery.py:135-147` writes `-100pct.png` from the exposure-boosted array). My first pass measured the raw file. | Fact 1324's failure mode, reproduced: the convenient image is not the judged one. Any corpus measurement of gallery output must state which of the two TIFFs it read. | MEASURED |
 
 ### Capture request
 
@@ -2345,4 +2367,233 @@ ORCH's instinct is right and mine was wrong.
 Success for the annulus milestone, stated so it cannot be gamed: **V1 exact,
 V2 ≥ 0.98, V3 PASS, V4 ≥ 4.4** — hold fine structure while taking more of the
 veil than the current correction does, and stay well clear of blur.
+
+## 24. `flower-bud-alone-cpl`: the islands are two things, and neither is an election bug
+
+ORCH dispatched this stack as "the best halo test case in the corpus", described
+four features of `flower-bud-alone-cpl-100pct.png`, and asked four questions. I
+opened the render first and confirmed all four features by eye — a thick pale
+band wrapping the silhouette, a lobed rather than smooth boundary, hard-edged
+pale blobs inside the subject, and a mushy green surface. Then I measured them,
+and **three of the four descriptions do not survive measurement**, including one
+of mine.
+
+Scripts `57-islands.py`, `58-island-depth.py`, `59-lengthscale.py`,
+`60-islands-2pop.py`, `61-overshoot.py`; data in `experiments/M87-occlusion/data/`.
+
+### 24.1 I measured the wrong image first, exactly as ORCH warned
+
+`gallery.py:135-147` writes `-100pct.png` — the judged crop — from `out`, the
+**exposure-boosted** array, and saves that same array as `-exposed.tif`.
+`-srgb.tif` is the raw stack before the boost. My first pass read `-srgb.tif`.
+That is fact 1324's failure exactly: scoring on the convenient image rather than
+the one somebody looked at. Both arms are reported below.
+
+### 24.2 Ask 2 — the islands. Two populations, and one of them is not a defect
+
+The question was whether the detached pale islands share the veil's mechanism, on
+the reasoning that a two-layer composite cannot occur where the background is out
+of reach, so islands might instead be fact 73's blind spot: a texture-free cell
+electing an arbitrary winner.
+
+**The blind spot is real and it is in the white card, not in the islands.** The
+local spread of the elected frame index, taken as the standard deviation in a
+9×9 window, is **28.09 frames in the open background** against **0.50 in the
+islands** and **0.42 in deep subject**. The islands elect coherently. It is the
+featureless background that elects at random, which is the blind spot behaving
+exactly as fact 73 says it should — in the region nobody was worried about.
+
+`57`'s first attempt at the depth question compared each region's median elected
+index against **global** medians. That test is invalid and I should have caught
+it before running: the elected index *is* depth, so it is a function of position,
+and a subject spanning 4000 px spans many frames. `58` replaces it with a local
+test — island against its own surrounding subject ring and its own nearest
+background — and adds the decidability gate that the local test needs, because
+where the neighbouring subject and background elect the same frame **no** depth
+test can separate them and the question is empty rather than hard.
+
+| island | area (binned px) | d2bg | elected | ring subject | near background | verdict |
+| --- | --- | --- | --- | --- | --- | --- |
+| 12 | 130 | 3 | 140 | 141 | 110 | SUBJECT |
+| 31 | 114 | 7 | 143 | 146 | 136 | SUBJECT |
+| 35 | 114 | 3 | 137 | 137 | 103 | SUBJECT |
+
+Three of the nine islands above 100 binned px are decidable at a separation of
+≥10 frames, and **all three sit at the depth of the surface immediately around
+them**, within 0–3 frames, against 7–34 frames from the local background. The
+controls pass in both directions on matched geometry: discs left alone read
+SUBJECT **97.3%** of the time (37 decidable of 56), and the same discs with the
+elected index overwritten by the local background's read BACKGROUND **100.0%**
+(35 of 58). The instrument can return either answer and it returns SUBJECT.
+
+My first pair of controls **failed**, and correctly: I planted the positive-arm
+discs in far background, where by construction no subject ring exists, so nothing
+was classifiable and it scored 0 of 0. That is the same mis-specification as the
+`SHUF` area control in §22 — a control whose geometry cannot express the effect
+it is meant to detect.
+
+So islands are not the election importing a distant background. They split
+geometrically instead, by distance to the nearest background pixel:
+
+| population | islands | % of island area | closing ρ ≤ 8 bridges | reading |
+| --- | --- | --- | --- | --- |
+| shallow, d2bg < 30 px | 160 | 23.4% | yes | the veil band, severed by thin filaments |
+| deep, d2bg ≥ 30 px | 15 | 76.6% | no | genuine gaps through the plant |
+
+A closing of radius ρ fills dark gaps narrower than 2ρ. At **ρ = 8 binned px,
+86.3% of islands rejoin the background component**, while the registered broken
+arm — matched-area discs planted in deep subject — rejoins at **0.0%**, rising
+only to 3.4% at ρ = 40. The closing is not absorbing everything, so the 86.3%
+means what it says: most islands are a contiguous bright band cut into pieces by
+hair-thin foreground structure, and **a veil correction will reach them**.
+
+The deep population is different and it is **not a defect at all**. One island
+holds 10,134 of the 13,644 binned px of island area — 74% of it — at d2bg = 192
+binned px. Its crop
+(`C:\dev\strehl-out\M87-islands\island-0032-a10134-BACKGROUND.png`) shows white
+card seen **through a hole in the plant**, with in-focus filaments crossing it.
+The background reaches there because there is a gap. ORCH's phrase "in places
+the background cannot physically reach" is false for **76.6% of island area**.
+
+**So the answer to the ask is: two mechanisms, but the split is not the one
+proposed.** By count, most islands are severed veil and a veil fix reaches them.
+By area, most are real background through real holes and a veil fix must **not**
+touch them. A metric averaging both would be dominated by the population that is
+already correct.
+
+Registered bar **B1 — that d2bg is bimodal — FAILED**: the 8–30 px trough holds
+23.4% of islands against my ≤15% bar. It is bimodal in **area** and unimodal in
+**count**, and I am recording the bar I registered rather than switching to the
+measure that passes.
+
+### 24.3 Ask 3 — the scallop lengthscale. There is not one, and I produced two false hits finding that out
+
+ORCH's reasoning was that whatever sets the lobe scale — focus window,
+regulariser neighbourhood, tile size — is identifiable from the render. It is
+not, and the two things that looked like identifications were both my own
+instrument parameters.
+
+**False hit one.** `57` ran a granulometry on the veil *band*, defined as bright
+pixels within `NEAR_VEIL = 40` px of the subject. Retention collapsed from 93.5%
+at r = 16 to 30% at r = 21, and 2r = 42 px is exactly the pre-registered
+candidate 2 × (`WINDOW_RADIUS` 13 + `REGULARISER_RADIUS` 8). It is not a lobe
+scale: no disc of radius 21 fits inside a band 40 px thick. Halving the parameter
+halves the answer — **half-loss r = 20.16 at `NEAR_VEIL` 40 and 10.66 at 20** —
+so the measurement returned `NEAR_VEIL`/2 and nothing else.
+
+**False hit two.** Measuring instead on the whole background component, with no
+imposed thickness, gave a knee at **14.31 binned px**, a lobe width of 28.6 px,
+within 10% of 2 × `WINDOW_RADIUS`. It passed the resolution control — the binned
+and 2× render curves overlay to **7.2%** on the knee and **3.4%** on the plateau,
+so the curve itself is physical. But the knee is defined against a plateau, and
+`depth(r)` never plateaus:
+
+| ladder ends at r | knee | knee / endpoint |
+| --- | --- | --- |
+| 12 | 5.47 | 0.456 |
+| 22 | 8.60 | 0.391 |
+| 31 | 11.70 | 0.377 |
+| 44 | 14.31 | 0.325 |
+
+**161.5% drift, and `depth(r) ∝ r^0.933`.** A power law has no characteristic
+scale. The knee is wherever I stopped the ladder.
+
+The reportable result is therefore a **negative**: the veil boundary has **no
+characteristic lengthscale over 1–44 binned px (2–88 render px)**, so no stage's
+neighbourhood size can be read off the render this way, and the scalloping is
+scale-free over the whole measured range.
+
+The transferable lesson is sharper than the result. **Both false hits were
+pre-registered candidates.** Registration did not protect me — it made the
+artifacts *more* convincing, because the candidate list was dense enough that any
+instrument-parameter-driven answer would land near one of them. What caught both
+was varying the instrument's own parameter and watching the answer follow it. A
+pre-registered prediction needs a companion control on the instrument, not only
+on the data.
+
+### 24.4 The rim is real, but it does not breach the two-layer bound
+
+The crops of islands 35 and 74 look as though the pale band is **brighter** than
+the open background beside it. If that were true my whole model would be wrong: a
+convex combination of two layers cannot exceed both of them, so an overshoot
+would falsify the two-layer composite as the mechanism.
+
+Measured on the signed distance to the silhouette, it is not true. Deep subject
+sits at 334, the far background at 4398, and the rim peaks at **3951 at d = −7
+binned px** — **447 below** the far background, z = −62.8. **Verdict O1: the
+profile stays inside the convex hull, the two-layer model survives, and my visual
+read was wrong.**
+
+The registered broken arm earns its place here. An invented boundary drawn in
+open background, where there is no edge at all, produced an apparent overshoot of
+**+1.8%** at z = 29.7, purely because scanning ~120 distance bins for a maximum
+is a biased estimator. Any overshoot claim below about 2% would have been my
+estimator talking.
+
+The rim is nevertheless real, because the eye does not compare against the far
+field — it compares against the background next to it, and the profile is
+non-monotone:
+
+| reference | plateau | rim peak | at d | lift |
+| --- | --- | --- | --- | --- |
+| silhouette | 3321 | 3951 | −7 | **+18.97%** |
+| invented boundary (broken arm) | 4324 | 4342 | −8 | +0.42% |
+
+**+18.97% against a +0.42% bias floor — 45.6×.** So there is a genuine bright
+annulus peaking 7 binned px outside the silhouette, sitting on top of a much
+broader depression in which the background does not recover to 90% of its open
+level until **135 binned px** and 95% until **150 px**.
+
+I am **not** claiming the broad component is occlusion. A bud in front of a lit
+card plausibly shadows the card near itself, and I cannot separate a real cast
+shadow from a wide veil without a single-frame comparison. What I can say is that
+it is not vignetting: vignetting darkens pixels *far* from centre, hence far from
+the subject, and would work against the observed sign.
+
+**For the annulus milestone this is the design number.** The correctable rim is
+narrow — roughly d ∈ [−20, 0] binned px — and sits inside a 150 px feature that
+may not be ours to correct. This is consistent with the earlier finding that
+selection lands in the veiled band, and it sharpens it: the annulus is ~20 binned
+px, not 150.
+
+### 24.5 Ask 4 — the instrument in a white field. The premise is false
+
+ORCH's caution was that a large near-clipping white background is where a
+normalised contrast measure misbehaves. **Nothing is clipped.** On the
+per-channel maximum, which is what `gallery.py:119` budgets, both TIFFs read
+**0.0000% at or above full scale and 0.0000% at or above 0.99**. `gallery.py`
+targets p99.9 at 0.92 in linear light and bisects the gain down whenever clipping
+would exceed 0.5%; on this stack the target gain never reached the budget.
+
+The band energies are not degenerate either:
+
+| arm | Otsu τ | FINE rms bg | FINE rms subject | COARSE rms bg | COARSE rms subject |
+| --- | --- | --- | --- | --- | --- |
+| `-srgb` | 0.3891 | 0.001532 | 0.004852 | 0.007755 | 0.019428 |
+| `-exposed` (judged) | 0.6310 | 0.002363 | 0.007493 | 0.011968 | 0.029989 |
+
+The background carries real fine-band energy, so no ratio goes to 0/0. There
+**is** a dilution hazard, but it is the one discipline 643 already names: the
+background is 78.67% of the frame and carries 3.2× less fine-band energy than the
+subject, so a whole-frame band average is dominated by area. The BMF bar of §23
+is computed in named bands over a stated region and is unaffected; a band-average
+version of it would not be.
+
+### 24.6 Corrections to the dispatch
+
+1. **"roughly as bright as the white background"** — islands sit at a median
+   2869 against the background's 4320 in binned merge units, **66%**, and the
+   rim peak is 10.2% *below* the far background.
+2. **"in places the background cannot physically reach"** — false for **76.6%**
+   of island area, which is background seen through genuine holes in the plant.
+3. **"a large near-clipping white field"** — **0.0000%** of pixels are clipped
+   on either TIFF.
+4. **"the crop coordinates are recoverable from `gallery.py`'s `detail_peak`"** —
+   true, but the array it crops is `-exposed.tif`, not `-srgb.tif`. I read the
+   wrong one first.
+
+None of these change the dispatch's conclusion that this stack is the strongest
+halo test case available. It is. The veil is present, it is measurable at 45.6×
+its own bias floor, and it now has a width.
+
 

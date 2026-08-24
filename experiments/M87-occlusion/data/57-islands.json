@@ -1,0 +1,192 @@
+{
+ "appearance": {
+  "shape": [
+   4688,
+   7040,
+   3
+  ],
+  "tau": 25497.046875,
+  "clip_frac": 3.029979832454235e-08,
+  "fracs": {
+   "bright": 0.786684299129305,
+   "bg": 0.7847110550632175,
+   "island": 0.001973244066087496,
+   "veil": 0.0187416069558641,
+   "bg_far": 0.7034843859079274,
+   "subj": 0.1763917606364412
+  },
+  "n_islands": 329,
+  "n_islands_ge100": 35,
+  "median_island_area": 219.0,
+  "max_island_area": 47063.0
+ },
+ "granulometry_veil": [
+  {
+   "r": 2,
+   "kept": 0.9971465016757229,
+   "removed_rate": 0.0014267491621385298
+  },
+  {
+   "r": 4,
+   "kept": 0.9895204667773576,
+   "removed_rate": 0.0019065087245913326
+  },
+  {
+   "r": 6,
+   "kept": 0.9785720868045508,
+   "removed_rate": 0.0018247299954678071
+  },
+  {
+   "r": 8,
+   "kept": 0.9684142794552971,
+   "removed_rate": 0.0012697259186567056
+  },
+  {
+   "r": 10,
+   "kept": 0.9567949636158755,
+   "removed_rate": 0.0011619315839421663
+  },
+  {
+   "r": 13,
+   "kept": 0.9445435130201976,
+   "removed_rate": 0.0009424192765906072
+  },
+  {
+   "r": 16,
+   "kept": 0.934791500616776,
+   "removed_rate": 0.0006095007752138504
+  },
+  {
+   "r": 21,
+   "kept": 0.30661769104292536,
+   "removed_rate": 0.029913038551135744
+  },
+  {
+   "r": 27,
+   "kept": 0.03670585039908559,
+   "removed_rate": 0.009996734838660733
+  },
+  {
+   "r": 34,
+   "kept": 0.007328559718950624,
+   "removed_rate": 0.0008640379611804402
+  },
+  {
+   "r": 43,
+   "kept": 0.0,
+   "removed_rate": 0.00017043162137094474
+  },
+  {
+   "r": 55,
+   "kept": 0.0,
+   "removed_rate": 0.0
+  }
+ ],
+ "bbox": [
+  450,
+  4688,
+  1419,
+  5327
+ ],
+ "veil_lobe_peak_r": 21,
+ "veil_half_radius": 21,
+ "mechanism": {
+  "island": {
+   "n": 13644,
+   "median_idx": 117.0,
+   "p10_idx": 83.0,
+   "p90_idx": 141.0,
+   "median_incoherence": 0.49509310722351074
+  },
+  "veil": {
+   "n": 291136,
+   "median_idx": 83.0,
+   "p10_idx": 35.0,
+   "p90_idx": 139.0,
+   "median_incoherence": 3.0986387729644775
+  },
+  "bg_far": {
+   "n": 5125145,
+   "median_idx": 134.0,
+   "p10_idx": 36.0,
+   "p90_idx": 193.0,
+   "median_incoherence": 28.088083267211914
+  },
+  "subj": {
+   "n": 1303091,
+   "median_idx": 55.0,
+   "p10_idx": 29.0,
+   "p90_idx": 133.0,
+   "median_incoherence": 0.41568079590797424
+  }
+ },
+ "P_A_island_elects_like_background": true,
+ "P_B_island_election_incoherent": false,
+ "d_island_bg": 17.0,
+ "d_subj_bg": 79.0,
+ "P_A_SUPERSEDED": "global reference invalid; see 58-island-depth.py",
+ "granulometry_veil_binned": [
+  {
+   "r": 2,
+   "kept": 0.9943050670477028,
+   "removed_rate": 0.0028474664761485857
+  },
+  {
+   "r": 4,
+   "kept": 0.983863211694878,
+   "removed_rate": 0.002610463838206206
+  },
+  {
+   "r": 6,
+   "kept": 0.971820729830732,
+   "removed_rate": 0.0020070803106910042
+  },
+  {
+   "r": 8,
+   "kept": 0.9625158001758628,
+   "removed_rate": 0.001163116206858647
+  },
+  {
+   "r": 10,
+   "kept": 0.9547702791822379,
+   "removed_rate": 0.0007745520993624911
+  },
+  {
+   "r": 13,
+   "kept": 0.9455477852275226,
+   "removed_rate": 0.0007094226119011773
+  },
+  {
+   "r": 16,
+   "kept": 0.9348139701033195,
+   "removed_rate": 0.0006708634452626955
+  },
+  {
+   "r": 21,
+   "kept": 0.2986301934491097,
+   "removed_rate": 0.03029446555496237
+  },
+  {
+   "r": 27,
+   "kept": 0.008126786106836667,
+   "removed_rate": 0.010759385457121224
+  },
+  {
+   "r": 34,
+   "kept": 0.0,
+   "removed_rate": 0.00023902312078931374
+  },
+  {
+   "r": 43,
+   "kept": 0.0,
+   "removed_rate": 0.0
+  },
+  {
+   "r": 55,
+   "kept": 0.0,
+   "removed_rate": 0.0
+  }
+ ],
+ "veil_lobe_peak_r_binned": 21,
+ "veil_half_radius_binned": 21
+}
