@@ -1588,6 +1588,16 @@ large:
 
 ### 16.9 The full-frame result, and why I am telling you not to enable it
 
+> ⚠ **PARTIALLY WITHDRAWN by §23.3 / P59.** The conclusion — *do not enable
+> this by default* — **stands**, on the strengthened evidence of registered bar
+> V3, which the correction FAILS: it removes fine structure (0.9058) harder than
+> it removes the veil (0.9146). But this section's implication that the result
+> is **blur-grade destruction** was too harsh and is withdrawn. Measured against
+> a Gaussian blur matched to the same halo suppression, the correction retains
+> **90.6%** of the fine band where the blur retains **20.5%** — **BMF = 4.43**.
+> I had predicted ≤ 1.05 and registered that prediction before measuring. The
+> defect is insufficient *selectivity*, not destruction.
+
 Everything in §6 and §16.1-§16.8 was measured on **ROI crops of an unaligned,
 gate-0 merge**. The shipped binary renders something different: the **full
 frame**, **aligned** (M86c, on by default), and **gate 2**. I rendered both arms
@@ -1801,6 +1811,9 @@ namespaced `M87`.
 | P54 | **The far-background probe is an unbiased estimator of a planted signed gain.** `src/54`, a signed ramp materialised into the real 299-frame `bee-3-cpl` cube at amplitudes −8/−4/0/+4/+8%, recovered per frame as `ratio_k = lev_planted[k]/lev_base[k]` against the planted `plant_gain[k]`: **slope 1.000000** at every amplitude, **max relative error 1.8e−07** (float32 rounding), sign correct on every arm. The early-decile summary recovers at slope **1.000000**, residual ≤ 6.8e−06 pp. | Answers the dispatch directly: a planted +4% comes back as +4%, so the probe's sign is sound and its magnitude is not diluted. Note the test proves **sign and linearity only** — a global multiply scales every region alike, so it deliberately cannot discriminate regions. That needs P55. | MEASURED |
 | P55 | **On a defocus-only null, an illumination estimator's STATISTIC dominates its REGION by ~99×.** Blurring one real frame at sigma = 0/1/2/4/8/16, max drift: whole-crop **median 2.942%** against whole-crop **mean 0.030%** — identical pixels, **98.8×** apart. Region, holding the statistic at mean, moves far less: far background **0.206%** vs a same-area contiguous block **0.041%**, **5.0×**. Subject-only reads **8.474%**. | **Independent corroboration of M99's central design decision** — flux as a mean above black rather than a patch median — reached on a different region with a different statistic from M99's own 18.2% vs 8.7%. Anyone building a photometric probe should spend their care on mean-vs-median before agonising over the region. | MEASURED |
 | P56 | **M87's own far-background region is NOT the best available, and its area control failed.** A contiguous same-area block drifts **0.041%** under defocus against far background's **0.206%** — the far-background mask hugs the subject at 60 px and so has a long perimeter adjacent to high contrast, and flux leaks across that perimeter under blur. A registered `SHUF` control (same area, scattered) also beat it at 0.042%, because a uniform scatter estimates the **global mean**, which blur conserves — so `SHUF` was mis-specified as an area control and `BLOCK` replaced it. | Reported against my own instrument. The far-background probe is sound in sign and linearity (P54) and far better than median- or subject-based probes (P55), but **compactness beats subject-avoidance** for blur invariance. A future probe should prefer a compact low-detail patch. | MEASURED |
+| P57 | **A truth-free fidelity bar for artifact removal: Blur-Matched Fidelity.** Race the candidate against a Gaussian blur bisected to suppress the **same** named coarse band, then compare on a named fine band: `BMF = fine(candidate)/fine(blur)`. Validated on the real 4688x7032 shipped pair — exactly **1.000000** in both bands where the correction changes nothing, and **0.9058** in the fine band at the site where it visibly destroys hairs. | X4 proved a suppression number cannot certify a reconstruction, and ORCH's "fidelity against truth" cannot bind on a real subject, where no truth exists. This binds without truth, is quiet on a no-op, and fires on known damage. **The general form: certify an artifact removal against the maximally destructive intervention achieving equal suppression.** | MEASURED |
+| P58 | **The shipped halo correction is NOT TARGETED: it removes fine structure harder than it removes the veil.** On the real full frame at the strongest-correction site, the FINE band (DoG 1–3 px) falls to **0.905812** while the COARSE band (DoG 8–32 px) falls only to **0.914575** — registered bar V3 **FAILED**. | Turns §16.9's visual finding into a number and gives the annulus milestone its objective: **drive COARSE down and hold FINE at 1**. A correction that takes more fine structure than veil is mis-aimed regardless of how good its halo number looks. | MEASURED |
+| P59 | **My registered prediction that the correction is "no better than a blur" was WRONG: BMF = 4.43.** At matched coarse-band suppression a Gaussian blur retains only **20.5%** of the fine band; the correction retains **90.6%**. I predicted BMF ≤ 1.05 before running. | **§16.9's implication of blur-grade destruction is withdrawn.** The correction is genuinely structured, merely insufficiently selective — a different and far more fixable defect than the one I reported. Recorded because a registered prediction that fails is worth more than one quietly dropped. | MEASURED (prediction refuted) |
 
 ### Capture request
 
@@ -2227,4 +2240,109 @@ sign error would have shown up as the ladder improving in the other direction;
 it does not improve in either.
 
 What it changes is the dispatch: **M99 should be unblocked.**
+
+## 23. The bar for the annulus milestone, built and validated first
+
+**ORCH's next dispatch is the matting-based annulus reconstruction, and says
+"the bar is the part I care about most."** I agree, so I built the bar before
+arguing about the algorithm. §23.4 is where I disagree with how the bar was
+specified; §23.1–§23.3 are the measurements that earn the disagreement.
+
+### 23.1 Why a truth-based fidelity term cannot bind here
+
+The bar as dispatched is "a fidelity term measured against truth", with §6.3's
+band RMSE named as its shape. That instrument is real and it works — on the
+**synthetic** two-layer scene it separated the working reconstruction
+(3.46% → 1.82%, the far-field floor) from the cosmetic mode partition
+(**+254.6%**).
+
+But the synthetic scene is **where the last attempt already passed**. It failed
+on the real bee, and on the real bee **there is no truth**: you cannot
+photograph what is behind an opaque subject. That was recorded as a caution when
+the flower-bud A/B was delivered and it still holds. A bar that binds only where
+the previous attempt succeeded cannot catch the next failure — which is the
+exact shape of the miss in §16.9, where crop-scale evidence did not transfer to
+the full frame.
+
+So the real-data bar has to be **truth-free**, and this section builds one.
+
+### 23.2 Blur-Matched Fidelity, and the bands it is stated in
+
+The halo is a **broad veil** (d ≈ 15–40 px). The hair fringe is **fine
+structure** (1–4 px). A band-separated comparison can tell "removed the veil"
+from "removed the hairs" — but only if it is never band-averaged, which is
+discipline 643 and ORCH's explicit warning. Two named bands, never combined:
+
+| band | difference-of-Gaussians | structure |
+| --- | --- | --- |
+| **FINE** | sigma 1.0 − 3.0 | ~2–6 px: hairs, facets |
+| **COARSE** | sigma 8.0 − 32.0 | ~16–64 px: the halo veil |
+
+X4 proved suppression cannot certify anything, so the instrument races the
+candidate against **the maximally destructive intervention that achieves the
+same suppression**: a Gaussian blur, bisected until its COARSE ratio matches the
+candidate's exactly, then compared on FINE.
+
+```
+BMF = fine_ratio(candidate) / fine_ratio(coarse-matched blur)
+```
+
+`BMF > 1` means the halo suppression was bought more cheaply than destruction
+buys it. `BMF ≤ 1` means the candidate is no better than a blur.
+
+### 23.3 Validated on the real full frame, on the known-bad transformation
+
+`src/56-bmf.py`, on the shipped pair `30-SHIP-BEFORE-default.tif` /
+`31-SHIP-AFTER-fixhalo.tif` at 4688x7032x3, read with **tifffile, never PIL**
+(P40). Bars V1–V4 were written into the script's docstring **before it was
+run**, V4 included, as a registered broken arm rather than an afterthought.
+
+| region | changed | max delta | FINE ratio | COARSE ratio |
+| --- | --- | --- | --- | --- |
+| **NO-OP** y1500..2100 x3500..4300 | 0.00% | 0 | **1.000000** | **1.000000** |
+| **DAMAGE** y866..1566 x1050..2150 | 12.42% | 11632 | **0.905812** | **0.914575** |
+
+| bar | result | what it establishes |
+| --- | --- | --- |
+| **V1** ratios exactly 1.0 where nothing changed | **PASS** | the metric manufactures no signal |
+| **V2** FINE < 0.95 at the damage site | **PASS** (0.9058) | it **sees the damage I saw by eye** |
+| **V3** COARSE falls further than FINE | **FAIL** (0.9146 vs 0.9058) | the correction is **not targeted** |
+| **V4** BMF > 1.05 against a coarse-matched blur | **PASS** (**4.43**) | it is far better than destruction |
+
+**V3 is the important failure.** The shipped correction removes **fine structure
+harder than it removes the veil** — 9.42% of the FINE band against 8.54% of the
+COARSE band. That is §16.9's visual finding turned into a number, and it is the
+precise design target for the annulus version: **drive COARSE down and hold FINE
+at 1.**
+
+**My registered V4 prediction was WRONG, and it matters.** I predicted
+`BMF ≤ 1.05` — that the correction would prove no better than a blur, because
+the render looks like a milky scalloped band. It scores **4.43**: at matched
+halo suppression, a Gaussian blur keeps only **20.5%** of the fine band while
+the correction keeps **90.6%**. **§16.9's implication that this is blur-grade
+destruction was too harsh** and I withdraw that reading. The correction is doing
+something genuinely structured; it is simply not *selective* enough, which is a
+different and more fixable defect.
+
+### 23.4 What I would change about the dispatch
+
+**I accept the milestone.** I had intended to argue for gating the existing
+correction on M96's disconnected set instead, on the grounds that it is cheaper
+and targets the default-ON blocker directly. **My own evidence kills that
+argument**: the abdomen hair fringe is a semi-transparent mat *at the
+silhouette* (§16 line 503), so it is genuinely an occluding boundary and would
+be genuinely *disconnected*. A disconnected-set gate would correctly flag it and
+correct it, and destroy it exactly as now. Gating cannot fix a matting problem.
+ORCH's instinct is right and mine was wrong.
+
+**What I would change is the bar.** Register **both**:
+
+1. the synthetic band RMSE against truth, as dispatched — necessary, and it is
+   what caught the cosmetic mode partition at +254.6%; and
+2. **the V1–V4 set above on the real full frame** — because it is the only one
+   of the two that can bind where the fix actually failed.
+
+Success for the annulus milestone, stated so it cannot be gamed: **V1 exact,
+V2 ≥ 0.98, V3 PASS, V4 ≥ 4.4** — hold fine structure while taking more of the
+veil than the current correction does, and stay well clear of blur.
 
