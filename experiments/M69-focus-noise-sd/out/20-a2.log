@@ -1,0 +1,64 @@
+==============================================================================
+M69 arm A2 -- replication of M66 control K7
+==============================================================================
+  FOCUS_NOISE_SD      0.015214     merge.rs
+  DEFAULT_GATE        4.0            merge.rs
+  REGULARISER_RADIUS  8              merge.rs
+  WINDOW_RADIUS       13             focus.rs
+  SIGMA_EPS           0.001          focus.rs
+  gain_divisor        436.8          profile.rs
+  base_iso            100.0          profile.rs
+  read_noise_e_low    4.2            profile.rs
+  read_noise_e_high   1.2392          profile.rs
+  second_base_iso     400.0          profile.rs
+  black / white       512 / 15360     profile.rs
+==============================================================================
+M69 / K1b -- temporal estimator on the crate's zero-signal plant
+==============================================================================
+  temporal SD mean over 4 x 48 reps = 1.526134e-02   rho = 1.0031
+  K1b |rho - 1| = 0.0031  bar 0.02  ->  MET
+==============================================================================
+A2.1 -- M62's exact plant (M66's K7 numbers)
+==============================================================================
+
+  M62: DSC00020.ARW  ISO 160  crop (1024,4096)
+    latent raw mean   1460.2 DN   green luma sigma 13.823 DN   E|grad|^2 2827.3447   noise floor 2s^2   85.1039   debiased (nu/s)^2   64.445  nu/s  8.028
+  arm                       SD mean     SD med       p05       p95  IQR/med      rho
+  ----------------------------------------------------------------------------
+  M62/FLAT                 0.015242   0.015222  0.013014  0.017539   0.1203   1.0018
+  M62/SMOOTH               0.016263   0.016379  0.012406  0.019726   0.1688   1.0690
+  M62/REAL                 0.018137   0.018306  0.013679  0.021888   0.1784   1.1921
+
+  M66 reported   FLAT 1.0018   SMOOTH 1.0690   REAL 1.1921
+  M69 measures   FLAT 1.0018   SMOOTH 1.0690   REAL 1.1921
+
+  D1 |rho_REAL - 1.1921| = 0.0000  bar 0.02  ->  REPRODUCED
+==============================================================================
+A2.2 -- the same measurement on three further latents
+==============================================================================
+
+  coffee-bean: DSC00068.ARW  ISO 50  crop (1320,2490)
+    latent raw mean   1609.2 DN   green luma sigma 12.543 DN   E|grad|^2 2703.5209   noise floor 2s^2   61.8000   debiased (nu/s)^2   85.493  nu/s  9.246
+  arm                       SD mean     SD med       p05       p95  IQR/med      rho
+  ----------------------------------------------------------------------------
+  coffee-bean/FLAT         0.015322   0.015296  0.012162  0.018574   0.1712   1.0071
+  coffee-bean/SMOOTH       0.011154   0.011134  0.006336  0.015957   0.3566   0.7331
+  coffee-bean/REAL         0.012749   0.012775  0.007495  0.017943   0.3400   0.8380
+
+  wrapped-text-1: DSC00066.ARW  ISO 100  crop (1320,2490)
+    latent raw mean   1728.0 DN   green luma sigma 13.508 DN   E|grad|^2  212.4683   noise floor 2s^2   70.6510   debiased (nu/s)^2    4.015  nu/s  2.004
+  arm                       SD mean     SD med       p05       p95  IQR/med      rho
+  ----------------------------------------------------------------------------
+  wrapped-text-1/FLAT      0.015322   0.015296  0.012162  0.018574   0.1712   1.0071
+  wrapped-text-1/SMOOTH    0.013569   0.014929  0.004919  0.019461   0.4584   0.8919
+  wrapped-text-1/REAL      0.015630   0.017079  0.005917  0.022074   0.4284   1.0274
+
+  bee-1: DSC00150.ARW  ISO 100  crop (1320,2490)
+    latent raw mean   1106.7 DN   green luma sigma  9.188 DN   E|grad|^2  321.4103   noise floor 2s^2   33.9663   debiased (nu/s)^2   16.925  nu/s  4.114
+  arm                       SD mean     SD med       p05       p95  IQR/med      rho
+  ----------------------------------------------------------------------------
+  bee-1/FLAT               0.015324   0.015298  0.012163  0.018576   0.1712   1.0072
+  bee-1/SMOOTH             0.013510   0.013722  0.007829  0.018337   0.3107   0.8880
+  bee-1/REAL               0.015589   0.015789  0.009532  0.020764   0.2848   1.0246
+
+  wrote out/20-a2.json

@@ -1,0 +1,33 @@
+==============================================================================
+M69 -- per-stack rho from P2
+==============================================================================
+  FOCUS_NOISE_SD      0.015214     merge.rs
+  DEFAULT_GATE        4.0            merge.rs
+  REGULARISER_RADIUS  8              merge.rs
+  WINDOW_RADIUS       13             focus.rs
+  SIGMA_EPS           0.001          focus.rs
+  gain_divisor        436.8          profile.rs
+  base_iso            100.0          profile.rs
+  read_noise_e_low    4.2            profile.rs
+  read_noise_e_high   1.2392          profile.rs
+  second_base_iso     400.0          profile.rs
+  black / white       512 / 15360     profile.rs
+
+  stack               N   ISO   med z   rho_obs  rho_true      p05      p95  IQR/med
+  ----------------------------------------------------------------------------------
+  coffee-bubbles     19  1000    1.93    1.0304    0.9686   0.6539   1.1330   0.2305
+  109MSDCF           22   160    1.10    1.0713    0.9901   0.6412   1.1354   0.1382
+  119MSDCF           33    50    1.91    1.0141    0.9664   0.5730   1.1963   0.2170
+  113MSDCF           63   500    1.32    1.0677    1.0097   0.7722   1.1244   0.1060
+  112MSDCF           79   500    0.70    1.1469    1.0562   0.9144   1.1392   0.0285
+  foam              100  1000    1.40    1.1098    1.0263   0.7978   1.0997   0.0606
+  coffee-bean       105    50    2.06    0.9388    0.9285   0.5820   1.0892   0.2232
+  wrapped-text-2    120   400    0.75    1.1861    1.1009   0.9798   1.4113   0.0343
+  wrapped-text-1    130   100    0.53    1.1053    1.0047   0.5523   1.1022   0.0349
+  bee-1             299   100    0.76    1.0815    1.0196   0.7520   1.0934   0.0504
+  bee-2             299   400    0.16    1.2002    1.0631   1.0184   1.0952   0.0171
+  bee-3             299   100    0.46    1.1238    1.0343   0.8169   1.0941   0.0252
+
+  rho_true across the corpus: min 0.9285  max 1.1009  span 1.186x  median 1.0147
+
+  wrote out/80-corpus-rho.json

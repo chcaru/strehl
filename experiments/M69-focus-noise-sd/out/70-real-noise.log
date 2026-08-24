@@ -1,0 +1,47 @@
+==============================================================================
+M69 -- real-noise arms: green half-split (K8) and dark frames (A4)
+==============================================================================
+  FOCUS_NOISE_SD      0.015214     merge.rs
+  DEFAULT_GATE        4.0            merge.rs
+  REGULARISER_RADIUS  8              merge.rs
+  WINDOW_RADIUS       13             focus.rs
+  SIGMA_EPS           0.001          focus.rs
+  gain_divisor        436.8          profile.rs
+  base_iso            100.0          profile.rs
+  read_noise_e_low    4.2            profile.rs
+  read_noise_e_high   1.2392          profile.rs
+  second_base_iso     400.0          profile.rs
+  black / white       512 / 15360     profile.rs
+==============================================================================
+A2b / K8 -- green half-split on real texture
+==============================================================================
+  sd is per-half response scatter: RMS(X_G1 - X_G2) / sqrt(2).
+
+  M62              ISO  160   half-split 0.038033  matched-synthetic 0.017409   fixed-pattern excess +0.033815
+                   P2 at half scale 0.017293  P2 at luma scale 0.017998   -> rho transported 2.6018  (synthetic-only 1.1909)
+  coffee-bean      ISO   50   half-split 0.031831  matched-synthetic 0.013240   fixed-pattern excess +0.028946
+                   P2 at half scale 0.013182  P2 at luma scale 0.013037   -> rho transported 2.0691  (synthetic-only 0.8607)
+  wrapped-text-1   ISO  100   half-split 0.014460  matched-synthetic 0.015875   fixed-pattern excess -0.006551
+                   P2 at half scale 0.015433  P2 at luma scale 0.016005   -> rho transported 0.9857  (synthetic-only 1.0821)
+  bee-1            ISO  100   half-split 0.017284  matched-synthetic 0.015780   fixed-pattern excess +0.007053
+                   P2 at half scale 0.015781  P2 at luma scale 0.016033   -> rho transported 1.1542  (synthetic-only 1.0538)
+
+  K8 real/synthetic ratio [2.1847, 2.4041, 0.9109, 1.0953]   bar +-10%  ->  NOT MET
+==============================================================================
+A4 -- dark frames: read-noise model and the zero-signal plant
+==============================================================================
+  group          ISO  used  emp read DN  model RN*g   ratio  rho_dark  clipped %
+  ------------------------------------------------------------------------------
+  118MSDCF       100    20       0.8870      0.9615  0.9225    1.1383      33.5%
+  119MSDCF       400    20       0.9947      1.1348  0.8766    1.1294      35.7%
+  120MSDCF       800    20       1.7252      2.2696  0.7601    1.0930      42.5%
+  121MSDCF      1600    20       3.3162      4.5392  0.7306    1.0554      43.0%
+  122MSDCF        50    20       0.8870      0.9615  0.9225    1.1227      34.3%
+  123MSDCF       200    20       1.4681      1.9231  0.7634    1.0190      28.1%
+  124MSDCF       640    20       1.4244      1.8157  0.7845    1.0664      31.8%
+  125MSDCF       500    20       1.1821      1.4185  0.8333    1.1307      37.7%
+  126MSDCF       250    20       1.7918      2.4038  0.7454    1.0579      36.7%
+  127MSDCF      1000    20       2.1398      2.8370  0.7543    1.0897      43.8%
+  128MSDCF      2000    20       4.1852      5.6740  0.7376    1.0488      47.6%
+
+  wrote out/70-real-noise.json

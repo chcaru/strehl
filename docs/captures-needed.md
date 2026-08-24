@@ -797,12 +797,42 @@ its frames and the shape of the correction becomes visible.
 or push. Set ISO 160 explicitly. The whole point is the analogue gain at that specific
 setting, and an ISO the body reaches by a different route is a different measurement.
 
+**M69 corroboration (2026-08).** M69 re-measured read noise on the delivered darks
+across 11 ISO groups and found the shipped model over-predicts it by **8-27%** at
+every ISO measured -- empirical read noise runs 0.73x-0.92x the model's `RN*g`, and
+the deficit grows with ISO (0.9225 at ISO 50 and 100, 0.7306 at ISO 1600). ISO 160
+is still the gap, it is still the ISO of M62's own certified plant, and the
+discrepancy this would resolve is now known to be larger than "not expected to be a
+large error" assumed. See
+[`docs/research/M69-focus-noise-sd.md`](research/M69-focus-noise-sd.md) fact 24.
+
 
 ## 12. Static repeat burst -- REQUESTED, 30 seconds, highest value per unit effort
 
 **Status:** requested 2026-08, in response to the owner asking what else would
 help. **Nothing in the corpus can substitute for it and nothing else on this list
 is as cheap.**
+
+**M69 corroboration (2026-08, urgency raised).** M69 was chartered on the
+understanding that this burst had been delivered. It has not. M69 established
+that the quantity `FOCUS_NOISE_SD` measures -- the response noise of the focus
+operator -- **is not measurable at all from a focus sweep**, at any effort, by
+any estimator of the family tried: macro depth of field is one to two frames
+wide by design, so a per-pixel through-focus curve is a narrow peak that no
+smoothing window wide enough to average down the noise can follow. M69's arm A5
+was voided by its own pre-registered control for exactly this reason. This is the
+difference between *not measured* and *not measurable*, and it now blocks a
+shipped constant that every gate, every published `n_eff`, `DEFAULT_GATE = 4.0`
+and the certified acceptance result are denominated in. See
+[`docs/research/M69-focus-noise-sd.md`](research/M69-focus-noise-sd.md) facts
+26-27.
+
+**One clarification, because the two claims look contradictory.** M62 found that
+a static burst has **no focus variation and therefore no interior optimum**, so a
+burst cannot arbitrate a *gate*. That is correct and it does not weaken this
+request. A burst is the only capture that can arbitrate a *noise level*, and for
+precisely the same reason: with focus held still, every frame-to-frame response
+difference is noise by construction. The two findings are complementary.
 
 ### What to shoot
 
@@ -854,6 +884,39 @@ That gives four things at once, none of which the project currently has:
 **The ISO 400 repeat, if taken, straddles the dual-gain boundary on a fixed
 scene** -- the same instrument as `bee-2`/`bee-3` (fact 847) but with focus held
 constant too, which removes the last confound from question 184's split.
+
+### 12b. A second contrast level on the same static burst -- REQUESTED by M69
+
+**Cost: 30 more frames, same session, same setup, one thing changed.**
+
+If §12 is shot, shoot it **twice more on the same subject at two clearly
+different contrast levels** -- easiest by changing the light (diffuse versus
+raking) rather than the subject, so the texture's *spatial* statistics are held
+and only its *amplitude* moves. Focus untouched throughout, as above.
+
+**Why one contrast level is not enough.** M69 measured that the focus operator's
+response noise does not vary with signal-to-noise the way the shipped model
+assumes. It varies by **4.06x** on a controlled plant -- from `0.28x` to `1.14x`
+the shipped constant -- driven by whether the deterministic gradient *direction*
+stays coherent across the operator's 27x27 window, not by contrast. A burst at
+one contrast level measures a point; two levels on the same texture separate the
+two candidate mechanisms M69 could not separate:
+
+- **direction coherence** (M69 fact 19, DERIVED) predicts response noise barely
+  moves between the two contrast levels, because the texture's geometry is
+  unchanged;
+- **rectification of a noisy gradient** (the pointwise model M69 refuted, and the
+  one the shipped constant implicitly assumes) predicts it rises with contrast
+  toward a fixed ceiling.
+
+They differ by a factor of about three on this capture and by nothing at all on a
+single-contrast burst. **This is the capture that decides whether the shipped
+scalar can be replaced by a derived per-pixel field**, which M69 fact 32 prices as
+a 1.09x-1.72x change in `n_eff` -- 20 to 50 times larger than correcting the
+constant's value.
+
+**One trap.** Change the light, not the exposure. Re-exposing to compensate
+restores the amplitude and measures nothing.
 
 ---
 

@@ -1,0 +1,40 @@
+==============================================================================
+M69 arm A5 -- response noise on real stacks, no synthetic noise
+==============================================================================
+  FOCUS_NOISE_SD      0.015214     merge.rs
+  DEFAULT_GATE        4.0            merge.rs
+  REGULARISER_RADIUS  8              merge.rs
+  WINDOW_RADIUS       13             focus.rs
+  SIGMA_EPS           0.001          focus.rs
+  gain_divisor        436.8          profile.rs
+  base_iso            100.0          profile.rs
+  read_noise_e_low    4.2            profile.rs
+  read_noise_e_high   1.2392          profile.rs
+  second_base_iso     400.0          profile.rs
+  black / white       512 / 15360     profile.rs
+
+  crop 2816 raw px, decimation 4, tau_max 6, SG window 11 order 3, centre leverage 0.2075
+==============================================================================
+A5 -- wrapped-text-1
+==============================================================================
+    frame grid (341, 341), 0.7s for frame 0
+    130 frames in 110s   ISO 100
+    K4 photometric: frame-to-frame relative level SD 0.2061%, full span 1.3052%
+    K3 recovery of a planted sigma_F: structure-function 5.2447 (NOT MET), Savitzky-Golay 1.9822 (NOT MET)   bar +-5%
+  arm                       SD mean     SD med       p05       p95  IQR/med      rho
+  ----------------------------------------------------------------------------
+  wrapped-text-1/structure   0.293252   0.255924  0.176267  0.582746   0.3697  19.2751
+  wrapped-text-1/savgol    0.184069   0.158200  0.110814  0.369677   0.3661  12.0987
+==============================================================================
+A5 -- 109MSDCF
+==============================================================================
+    frame grid (341, 341), 0.9s for frame 0
+    22 frames in 18s   ISO 160
+    K4 photometric: frame-to-frame relative level SD 0.3328%, full span 1.0246%
+    K3 recovery of a planted sigma_F: structure-function 4.4621 (NOT MET), Savitzky-Golay 0.9574 (MET)   bar +-5%
+  arm                       SD mean     SD med       p05       p95  IQR/med      rho
+  ----------------------------------------------------------------------------
+  109MSDCF/structure       0.061109   0.031780  0.017363  0.256410   0.6372   4.0166
+  109MSDCF/savgol          0.035301   0.022345  0.013331  0.122514   0.5051   2.3203
+
+  wrote out/50-a5-wrapped-text-1-109MSDCF.json

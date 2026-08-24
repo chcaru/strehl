@@ -1,0 +1,40 @@
+==============================================================================
+M69 arm A5 -- response noise on real stacks, no synthetic noise
+==============================================================================
+  FOCUS_NOISE_SD      0.015214     merge.rs
+  DEFAULT_GATE        4.0            merge.rs
+  REGULARISER_RADIUS  8              merge.rs
+  WINDOW_RADIUS       13             focus.rs
+  SIGMA_EPS           0.001          focus.rs
+  gain_divisor        436.8          profile.rs
+  base_iso            100.0          profile.rs
+  read_noise_e_low    4.2            profile.rs
+  read_noise_e_high   1.2392          profile.rs
+  second_base_iso     400.0          profile.rs
+  black / white       512 / 15360     profile.rs
+
+  crop 2816 raw px, decimation 4, tau_max 6, SG window 11 order 3, centre leverage 0.2075
+==============================================================================
+A5 -- coffee-bean
+==============================================================================
+    frame grid (341, 341), 0.7s for frame 0
+    105 frames in 90s   ISO 50
+    K4 photometric: frame-to-frame relative level SD 0.9292%, full span 14.3013%
+    K3 recovery of a planted sigma_F: structure-function 25.9329 (NOT MET), Savitzky-Golay 5.9991 (NOT MET)   bar +-5%
+  arm                       SD mean     SD med       p05       p95  IQR/med      rho
+  ----------------------------------------------------------------------------
+  coffee-bean/structure    1.105363   1.150625  0.323807  1.725817   0.4593  72.6543
+  coffee-bean/savgol       0.543708   0.568077  0.132833  0.870617   0.5009  35.7373
+==============================================================================
+A5 -- foam
+==============================================================================
+    frame grid (341, 341), 0.9s for frame 0
+    100 frames in 87s   ISO 1000
+    K4 photometric: frame-to-frame relative level SD 0.5678%, full span 11.3038%
+    K3 recovery of a planted sigma_F: structure-function 8.6573 (NOT MET), Savitzky-Golay 2.1044 (NOT MET)   bar +-5%
+  arm                       SD mean     SD med       p05       p95  IQR/med      rho
+  ----------------------------------------------------------------------------
+  foam/structure           0.330694   0.261526  0.081787  0.796843   1.0603  21.7361
+  foam/savgol              0.152734   0.123552  0.039655  0.361019   0.9749  10.0391
+
+  wrote out/50-a5-coffee-bean-foam.json

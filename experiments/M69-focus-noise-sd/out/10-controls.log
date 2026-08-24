@@ -1,0 +1,43 @@
+==============================================================================
+M69 / K0 -- structural constants of the Sobel stencil
+==============================================================================
+  FOCUS_NOISE_SD      0.015214     merge.rs
+  DEFAULT_GATE        4.0            merge.rs
+  REGULARISER_RADIUS  8              merge.rs
+  WINDOW_RADIUS       13             focus.rs
+  SIGMA_EPS           0.001          focus.rs
+  gain_divisor        436.8          profile.rs
+  base_iso            100.0          profile.rs
+  read_noise_e_low    4.2            profile.rs
+  read_noise_e_high   1.2392          profile.rs
+  second_base_iso     400.0          profile.rs
+  black / white       512 / 15360     profile.rs
+
+  Sobel component SD  measured gx 0.433257  gy 0.433312   predicted 0.125*sqrt(12) = 0.433013
+  corr(gx, gy)        +0.000511  (predicted 0)
+  |grad| mean         0.543046   Rayleigh prediction s*sqrt(pi/2) = 0.542701
+  |grad| SD           0.283851   Rayleigh prediction s*sqrt(2-pi/2) = 0.283682
+
+  Rice ceiling r(inf) = 1/sqrt(2-pi/2) = 1.5264
+  (the largest per-sample noise inflation this mechanism can produce)
+==============================================================================
+M69 / K1 -- crate plant through the M69 pipeline
+==============================================================================
+  crate FOCUS_NOISE_SD = 0.015214
+  K1 crate plant (512^2, 12)   sd = 1.541341e-02 +- 1.50e-04   rho = 1.0131
+
+  K1  |rho - 1| = 0.0131  bar 0.02   ->  MET
+==============================================================================
+M69 / K6 -- planted scale 1.30 must read back as 1.30
+==============================================================================
+  K6 luma noise x1.30          sd = 2.003733e-02 +- 1.95e-04   rho = 1.3170
+
+  K6  recovered scale = 1.3000  planted 1.30  bar +-0.01  ->  MET
+==============================================================================
+M69 / K5 -- A3 plant at nu/s = 0
+==============================================================================
+  A3 plant z=0            sd = 1.521949e-02   rho = 1.0004
+
+  K5  |rho - 1| = 0.0004  bar 0.02   ->  MET
+
+  wrote out/10-controls.json

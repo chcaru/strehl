@@ -1,0 +1,42 @@
+==============================================================================
+M69 control K2 -- Python field vs the shipped binary
+==============================================================================
+  FOCUS_NOISE_SD      0.015214     merge.rs
+  DEFAULT_GATE        4.0            merge.rs
+  REGULARISER_RADIUS  8              merge.rs
+  WINDOW_RADIUS       13             focus.rs
+  SIGMA_EPS           0.001          focus.rs
+  gain_divisor        436.8          profile.rs
+  base_iso            100.0          profile.rs
+  read_noise_e_low    4.2            profile.rs
+  read_noise_e_high   1.2392          profile.rs
+  second_base_iso     400.0          profile.rs
+  black / white       512 / 15360     profile.rs
+==============================================================================
+K2 -- 109MSDCF
+==============================================================================
+    pass one: 22 frames, 31s, plane (2344, 3514)
+    pass two done, 63s total
+
+    gate   tolerance  shipped n_eff   M69 n_eff       rel
+  --------------------------------------------------------
+    0.50    0.010758          1.414       1.414  -0.031%
+    1.00    0.021516          1.884       1.884  +0.022%
+    2.00    0.043032          2.891       2.891  +0.004%
+    4.00    0.086063          4.987       4.987  -0.007%
+==============================================================================
+K2 -- coffee-bubbles
+==============================================================================
+    pass one: 19 frames, 28s, plane (2344, 3514)
+    pass two done, 55s total
+
+    gate   tolerance  shipped n_eff   M69 n_eff       rel
+  --------------------------------------------------------
+    0.50    0.010758          1.238       1.238  +0.011%
+    1.00    0.021516          1.504       1.504  -0.006%
+    2.00    0.043032          2.109       2.109  +0.007%
+    4.00    0.086063          3.529       3.529  -0.001%
+
+  K2 worst |relative deviation| = 0.031%   bar 0.2%  ->  MET
+
+  wrote out/15-k2.json
