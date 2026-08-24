@@ -1,0 +1,250 @@
+{
+ "dark_groups": [
+  {
+   "dir": "118MSDCF",
+   "n": 22,
+   "iso": 100.0,
+   "exposure": "1/100",
+   "datetime_first": "2026:08:22 14:47:03",
+   "datetime_third": "2026:08:22 14:47:04",
+   "same_iso_first_vs_third": true,
+   "gain_dn_per_e": 0.22893772893772893,
+   "read_noise_e": 4.2,
+   "sigma_dn_at_zero": 0.9615384615384616
+  },
+  {
+   "dir": "119MSDCF",
+   "n": 22,
+   "iso": 400.0,
+   "exposure": "1/100",
+   "datetime_first": "2026:08:22 14:47:25",
+   "datetime_third": "2026:08:22 14:47:26",
+   "same_iso_first_vs_third": true,
+   "gain_dn_per_e": 0.9157509157509157,
+   "read_noise_e": 1.2392,
+   "sigma_dn_at_zero": 1.1347985347985348
+  },
+  {
+   "dir": "120MSDCF",
+   "n": 22,
+   "iso": 800.0,
+   "exposure": "1/100",
+   "datetime_first": "2026:08:22 14:47:42",
+   "datetime_third": "2026:08:22 14:47:43",
+   "same_iso_first_vs_third": true,
+   "gain_dn_per_e": 1.8315018315018314,
+   "read_noise_e": 1.2392,
+   "sigma_dn_at_zero": 2.2695970695970695
+  },
+  {
+   "dir": "121MSDCF",
+   "n": 22,
+   "iso": 1600.0,
+   "exposure": "1/100",
+   "datetime_first": "2026:08:22 14:48:04",
+   "datetime_third": "2026:08:22 14:48:05",
+   "same_iso_first_vs_third": true,
+   "gain_dn_per_e": 3.663003663003663,
+   "read_noise_e": 1.2392,
+   "sigma_dn_at_zero": 4.539194139194139
+  },
+  {
+   "dir": "122MSDCF",
+   "n": 22,
+   "iso": 50.0,
+   "exposure": "1/100",
+   "datetime_first": "2026:08:22 14:48:22",
+   "datetime_third": "2026:08:22 14:48:23",
+   "same_iso_first_vs_third": true,
+   "gain_dn_per_e": 0.22893772893772893,
+   "read_noise_e": 4.2,
+   "sigma_dn_at_zero": 0.9615384615384616
+  },
+  {
+   "dir": "123MSDCF",
+   "n": 22,
+   "iso": 200.0,
+   "exposure": "1/100",
+   "datetime_first": "2026:08:22 14:48:38",
+   "datetime_third": "2026:08:22 14:48:39",
+   "same_iso_first_vs_third": true,
+   "gain_dn_per_e": 0.45787545787545786,
+   "read_noise_e": 4.2,
+   "sigma_dn_at_zero": 1.9230769230769231
+  },
+  {
+   "dir": "124MSDCF",
+   "n": 22,
+   "iso": 640.0,
+   "exposure": "1/100",
+   "datetime_first": "2026:08:22 14:48:56",
+   "datetime_third": "2026:08:22 14:48:57",
+   "same_iso_first_vs_third": true,
+   "gain_dn_per_e": 1.465201465201465,
+   "read_noise_e": 1.2392,
+   "sigma_dn_at_zero": 1.8156776556776557
+  },
+  {
+   "dir": "125MSDCF",
+   "n": 22,
+   "iso": 500.0,
+   "exposure": "1/100",
+   "datetime_first": "2026:08:22 14:49:11",
+   "datetime_third": "2026:08:22 14:49:12",
+   "same_iso_first_vs_third": true,
+   "gain_dn_per_e": 1.1446886446886446,
+   "read_noise_e": 1.2392,
+   "sigma_dn_at_zero": 1.4184981684981686
+  },
+  {
+   "dir": "126MSDCF",
+   "n": 22,
+   "iso": 250.0,
+   "exposure": "1/100",
+   "datetime_first": "2026:08:22 14:49:42",
+   "datetime_third": "2026:08:22 14:49:43",
+   "same_iso_first_vs_third": true,
+   "gain_dn_per_e": 0.5723443223443223,
+   "read_noise_e": 4.2,
+   "sigma_dn_at_zero": 2.4038461538461537
+  },
+  {
+   "dir": "127MSDCF",
+   "n": 22,
+   "iso": 1000.0,
+   "exposure": "1/100",
+   "datetime_first": "2026:08:22 14:49:58",
+   "datetime_third": "2026:08:22 14:49:59",
+   "same_iso_first_vs_third": true,
+   "gain_dn_per_e": 2.2893772893772892,
+   "read_noise_e": 1.2392,
+   "sigma_dn_at_zero": 2.836996336996337
+  },
+  {
+   "dir": "128MSDCF",
+   "n": 22,
+   "iso": 2000.0,
+   "exposure": "1/100",
+   "datetime_first": "2026:08:22 14:50:15",
+   "datetime_third": "2026:08:22 14:50:16",
+   "same_iso_first_vs_third": true,
+   "gain_dn_per_e": 4.5787545787545785,
+   "read_noise_e": 1.2392,
+   "sigma_dn_at_zero": 5.673992673992674
+  }
+ ],
+ "dark_frame": {
+  "raw_image_visible_shape": [
+   4688,
+   7028
+  ],
+  "raw_image_shape": [
+   5120,
+   7168
+  ],
+  "raw_pattern": [
+   [
+    0,
+    1
+   ],
+   [
+    3,
+    2
+   ]
+  ],
+  "black_level_per_channel": [
+   512,
+   512,
+   512,
+   512
+  ],
+  "white_level": 16383,
+  "camera_whitebalance": [
+   2429.0,
+   1024.0,
+   1721.0,
+   1024.0
+  ],
+  "colour_desc": "RGBG",
+  "plane_shape": [
+   2344,
+   3514
+  ],
+  "mean_dn": 512.2578126062303,
+  "p99_dn": 514.0
+ },
+ "stacks": {
+  "bee-3-cpl": {
+   "frames": 299,
+   "iso": "100",
+   "exposure": "1/5",
+   "fnumber": "28/5",
+   "datetime": "2026:08:23 11:58:28",
+   "gain_dn_per_e": 0.22893772893772893,
+   "read_noise_e": 4.2,
+   "sigma_dn_at_zero": 0.9615384615384616,
+   "sigma_dn_at_1000": 15.161209884133479,
+   "raw_image_visible_shape": [
+    4688,
+    7028
+   ],
+   "plane_shape": [
+    2344,
+    3514
+   ],
+   "mean_dn": 2357.10791015625,
+   "p999_dn": 5415.0,
+   "black_level_per_channel": [
+    512,
+    512,
+    512,
+    512
+   ],
+   "white_level": 16383
+  },
+  "bee-2-cpl": {
+   "frames": 299,
+   "iso": "400",
+   "exposure": "1/20",
+   "fnumber": "28/5",
+   "datetime": "2026:08:23 11:54:44",
+   "gain_dn_per_e": 0.9157509157509157,
+   "read_noise_e": 1.2392,
+   "sigma_dn_at_zero": 1.1347985347985348,
+   "sigma_dn_at_1000": 30.282646573004424
+  },
+  "coffee-bubbles": {
+   "frames": 19,
+   "iso": "1000",
+   "exposure": "5/2",
+   "fnumber": "8",
+   "datetime": "2026:05:25 16:18:29",
+   "gain_dn_per_e": 2.2893772893772892,
+   "read_noise_e": 1.2392,
+   "sigma_dn_at_zero": 2.836996336996337,
+   "sigma_dn_at_1000": 47.931470221488304
+  },
+  "109MSDCF": {
+   "frames": 22,
+   "iso": "160",
+   "exposure": "13/10",
+   "fnumber": "11",
+   "datetime": "2026:05:17 16:26:38",
+   "gain_dn_per_e": 0.3663003663003663,
+   "read_noise_e": 4.2,
+   "sigma_dn_at_zero": 1.5384615384615383,
+   "sigma_dn_at_1000": 19.20070910684529
+  },
+  "foam": {
+   "frames": 100,
+   "iso": "1000",
+   "exposure": "2",
+   "fnumber": "8",
+   "datetime": "2026:05:25 16:25:55",
+   "gain_dn_per_e": 2.2893772893772892,
+   "read_noise_e": 1.2392,
+   "sigma_dn_at_zero": 2.836996336996337,
+   "sigma_dn_at_1000": 47.931470221488304
+  }
+ }
+}

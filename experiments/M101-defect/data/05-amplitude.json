@@ -1,0 +1,677 @@
+{
+ "cuts_e": [
+  0.5,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  8,
+  10,
+  12,
+  16,
+  20,
+  25,
+  30,
+  40,
+  60,
+  100
+ ],
+ "bar": 0.8,
+ "sweep": {
+  "R": [
+   {
+    "cut_e": 0.5,
+    "cut_sigma": 3.53,
+    "n_full": 1008686,
+    "n_A": 1032694,
+    "n_B": 1029318,
+    "jaccard": 0.50032,
+    "jaccard_placebo": 0.06641801
+   },
+   {
+    "cut_e": 1,
+    "cut_sigma": 7.06,
+    "n_full": 82680,
+    "n_A": 117921,
+    "n_B": 112787,
+    "jaccard": 0.12781,
+    "jaccard_placebo": 0.0069924
+   },
+   {
+    "cut_e": 2,
+    "cut_sigma": 14.12,
+    "n_full": 1606,
+    "n_A": 3301,
+    "n_B": 3325,
+    "jaccard": 0.08748,
+    "jaccard_placebo": 0.00015094
+   },
+   {
+    "cut_e": 3,
+    "cut_sigma": 21.18,
+    "n_full": 184,
+    "n_A": 547,
+    "n_B": 547,
+    "jaccard": 0.06732,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 4,
+    "cut_sigma": 28.23,
+    "n_full": 40,
+    "n_A": 139,
+    "n_B": 121,
+    "jaccard": 0.07884,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 5,
+    "cut_sigma": 35.29,
+    "n_full": 13,
+    "n_A": 27,
+    "n_B": 39,
+    "jaccard": 0.2,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 6,
+    "cut_sigma": 42.35,
+    "n_full": 5,
+    "n_A": 10,
+    "n_B": 15,
+    "jaccard": 0.25,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 8,
+    "cut_sigma": 56.47,
+    "n_full": 4,
+    "n_A": 4,
+    "n_B": 4,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 10,
+    "cut_sigma": 70.59,
+    "n_full": 4,
+    "n_A": 4,
+    "n_B": 4,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 12,
+    "cut_sigma": 84.7,
+    "n_full": 3,
+    "n_A": 3,
+    "n_B": 3,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 16,
+    "cut_sigma": 112.94,
+    "n_full": 3,
+    "n_A": 3,
+    "n_B": 3,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 20,
+    "cut_sigma": 141.17,
+    "n_full": 2,
+    "n_A": 2,
+    "n_B": 2,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 25,
+    "cut_sigma": 176.46,
+    "n_full": 2,
+    "n_A": 2,
+    "n_B": 2,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 30,
+    "cut_sigma": 211.76,
+    "n_full": 1,
+    "n_A": 1,
+    "n_B": 1,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 40,
+    "cut_sigma": 282.34,
+    "n_full": 1,
+    "n_A": 1,
+    "n_B": 1,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 60,
+    "cut_sigma": 423.51,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 100,
+    "cut_sigma": 705.85,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   }
+  ],
+  "G1": [
+   {
+    "cut_e": 0.5,
+    "cut_sigma": 3.34,
+    "n_full": 1002303,
+    "n_A": 1065650,
+    "n_B": 1003300,
+    "jaccard": 0.48766,
+    "jaccard_placebo": 0.06693049
+   },
+   {
+    "cut_e": 1,
+    "cut_sigma": 6.68,
+    "n_full": 84681,
+    "n_A": 128156,
+    "n_B": 110252,
+    "jaccard": 0.13013,
+    "jaccard_placebo": 0.00734781
+   },
+   {
+    "cut_e": 2,
+    "cut_sigma": 13.36,
+    "n_full": 1581,
+    "n_A": 3507,
+    "n_B": 3394,
+    "jaccard": 0.08014,
+    "jaccard_placebo": 0.00014493
+   },
+   {
+    "cut_e": 3,
+    "cut_sigma": 20.03,
+    "n_full": 198,
+    "n_A": 571,
+    "n_B": 585,
+    "jaccard": 0.06152,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 4,
+    "cut_sigma": 26.71,
+    "n_full": 27,
+    "n_A": 115,
+    "n_B": 129,
+    "jaccard": 0.07018,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 5,
+    "cut_sigma": 33.39,
+    "n_full": 10,
+    "n_A": 31,
+    "n_B": 31,
+    "jaccard": 0.12727,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 6,
+    "cut_sigma": 40.07,
+    "n_full": 4,
+    "n_A": 9,
+    "n_B": 8,
+    "jaccard": 0.21429,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 8,
+    "cut_sigma": 53.42,
+    "n_full": 2,
+    "n_A": 1,
+    "n_B": 1,
+    "jaccard": 0.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 10,
+    "cut_sigma": 66.78,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 12,
+    "cut_sigma": 80.13,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 16,
+    "cut_sigma": 106.84,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 20,
+    "cut_sigma": 133.56,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 25,
+    "cut_sigma": 166.94,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 30,
+    "cut_sigma": 200.33,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 40,
+    "cut_sigma": 267.11,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 60,
+    "cut_sigma": 400.67,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 100,
+    "cut_sigma": 667.78,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   }
+  ],
+  "G2": [
+   {
+    "cut_e": 0.5,
+    "cut_sigma": 3.53,
+    "n_full": 920512,
+    "n_A": 977267,
+    "n_B": 950352,
+    "jaccard": 0.51367,
+    "jaccard_placebo": 0.06209058
+   },
+   {
+    "cut_e": 1,
+    "cut_sigma": 7.06,
+    "n_full": 139171,
+    "n_A": 175117,
+    "n_B": 161207,
+    "jaccard": 0.26369,
+    "jaccard_placebo": 0.01013365
+   },
+   {
+    "cut_e": 2,
+    "cut_sigma": 14.12,
+    "n_full": 20104,
+    "n_A": 22351,
+    "n_B": 21950,
+    "jaccard": 0.43699,
+    "jaccard_placebo": 0.00167319
+   },
+   {
+    "cut_e": 3,
+    "cut_sigma": 21.17,
+    "n_full": 8043,
+    "n_A": 9217,
+    "n_B": 9144,
+    "jaccard": 0.39521,
+    "jaccard_placebo": 0.00049041
+   },
+   {
+    "cut_e": 4,
+    "cut_sigma": 28.23,
+    "n_full": 3164,
+    "n_A": 3907,
+    "n_B": 3820,
+    "jaccard": 0.33708,
+    "jaccard_placebo": 0.0003884
+   },
+   {
+    "cut_e": 5,
+    "cut_sigma": 35.29,
+    "n_full": 1247,
+    "n_A": 1683,
+    "n_B": 1588,
+    "jaccard": 0.28174,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 6,
+    "cut_sigma": 42.35,
+    "n_full": 472,
+    "n_A": 696,
+    "n_B": 690,
+    "jaccard": 0.2331,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 8,
+    "cut_sigma": 56.46,
+    "n_full": 69,
+    "n_A": 122,
+    "n_B": 119,
+    "jaccard": 0.14218,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 10,
+    "cut_sigma": 70.58,
+    "n_full": 9,
+    "n_A": 28,
+    "n_B": 22,
+    "jaccard": 0.11111,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 12,
+    "cut_sigma": 84.69,
+    "n_full": 0,
+    "n_A": 5,
+    "n_B": 3,
+    "jaccard": 0.14286,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 16,
+    "cut_sigma": 112.92,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 20,
+    "cut_sigma": 141.15,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 25,
+    "cut_sigma": 176.44,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 30,
+    "cut_sigma": 211.73,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 40,
+    "cut_sigma": 282.31,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 60,
+    "cut_sigma": 423.46,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   },
+   {
+    "cut_e": 100,
+    "cut_sigma": 705.77,
+    "n_full": 0,
+    "n_A": 0,
+    "n_B": 0,
+    "jaccard": NaN,
+    "jaccard_placebo": NaN
+   }
+  ],
+  "B": [
+   {
+    "cut_e": 0.5,
+    "cut_sigma": 3.19,
+    "n_full": 797970,
+    "n_A": 831368,
+    "n_B": 843721,
+    "jaccard": 0.47582,
+    "jaccard_placebo": 0.05401161
+   },
+   {
+    "cut_e": 1,
+    "cut_sigma": 6.37,
+    "n_full": 85193,
+    "n_A": 105449,
+    "n_B": 105480,
+    "jaccard": 0.27439,
+    "jaccard_placebo": 0.00639347
+   },
+   {
+    "cut_e": 2,
+    "cut_sigma": 12.75,
+    "n_full": 14352,
+    "n_A": 15823,
+    "n_B": 15979,
+    "jaccard": 0.4203,
+    "jaccard_placebo": 0.00103875
+   },
+   {
+    "cut_e": 3,
+    "cut_sigma": 19.12,
+    "n_full": 5290,
+    "n_A": 6089,
+    "n_B": 6073,
+    "jaccard": 0.37766,
+    "jaccard_placebo": 0.00074056
+   },
+   {
+    "cut_e": 4,
+    "cut_sigma": 25.5,
+    "n_full": 2015,
+    "n_A": 2365,
+    "n_B": 2476,
+    "jaccard": 0.31764,
+    "jaccard_placebo": 0.00020661
+   },
+   {
+    "cut_e": 5,
+    "cut_sigma": 31.87,
+    "n_full": 753,
+    "n_A": 988,
+    "n_B": 1023,
+    "jaccard": 0.25845,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 6,
+    "cut_sigma": 38.25,
+    "n_full": 285,
+    "n_A": 397,
+    "n_B": 431,
+    "jaccard": 0.19481,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 8,
+    "cut_sigma": 51.0,
+    "n_full": 36,
+    "n_A": 56,
+    "n_B": 57,
+    "jaccard": 0.14141,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 10,
+    "cut_sigma": 63.75,
+    "n_full": 6,
+    "n_A": 10,
+    "n_B": 12,
+    "jaccard": 0.375,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 12,
+    "cut_sigma": 76.5,
+    "n_full": 5,
+    "n_A": 5,
+    "n_B": 7,
+    "jaccard": 0.5,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 16,
+    "cut_sigma": 102.0,
+    "n_full": 3,
+    "n_A": 3,
+    "n_B": 4,
+    "jaccard": 0.75,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 20,
+    "cut_sigma": 127.49,
+    "n_full": 3,
+    "n_A": 3,
+    "n_B": 3,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 25,
+    "cut_sigma": 159.37,
+    "n_full": 3,
+    "n_A": 3,
+    "n_B": 3,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 30,
+    "cut_sigma": 191.24,
+    "n_full": 2,
+    "n_A": 3,
+    "n_B": 2,
+    "jaccard": 0.66667,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 40,
+    "cut_sigma": 254.99,
+    "n_full": 2,
+    "n_A": 2,
+    "n_B": 2,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 60,
+    "cut_sigma": 382.48,
+    "n_full": 2,
+    "n_A": 2,
+    "n_B": 2,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   },
+   {
+    "cut_e": 100,
+    "cut_sigma": 637.47,
+    "n_full": 2,
+    "n_A": 2,
+    "n_B": 2,
+    "jaccard": 1.0,
+    "jaccard_placebo": 0.0
+   }
+  ]
+ },
+ "noise_floor": {
+  "R": {
+   "robust_sigma_e": 0.1417,
+   "p50_e": -0.0219
+  },
+  "G1": {
+   "robust_sigma_e": 0.1498,
+   "p50_e": -0.0273
+  },
+  "G2": {
+   "robust_sigma_e": 0.1417,
+   "p50_e": -0.017
+  },
+  "B": {
+   "robust_sigma_e": 0.1569,
+   "p50_e": -0.0136
+  }
+ },
+ "cut_meeting_bar": {
+  "R": 8,
+  "G1": null,
+  "G2": null,
+  "B": 20
+ },
+ "c_star_e": 20,
+ "final_counts": {
+  "R": 2,
+  "G1": 0,
+  "G2": 0,
+  "B": 3,
+  "TOTAL": 5
+ },
+ "frac_of_sensor": 1.5175766946839653e-07
+}

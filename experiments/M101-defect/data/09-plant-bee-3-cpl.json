@@ -1,0 +1,114 @@
+{
+ "stack": "bee-3-cpl",
+ "n_planted": 320,
+ "n_frames": 299,
+ "sigma_luma_median_dn": 17.0545,
+ "uniform_chance": 0.0033444816053511705,
+ "ladder": [
+  {
+   "plane_amplitude_dn": 2.0,
+   "luma_amplitude_dn": 1.0,
+   "n_sites": 40,
+   "elected_px_mean_planted": 0.95,
+   "elected_px_mean_same_sites_unplanted": 0.925,
+   "rate_planted": 0.003177257525083612,
+   "rate_same_sites_unplanted": 0.003093645484949833,
+   "enrichment": 1.027027027027027,
+   "predicted_dfocus": 0.00017035685567912584,
+   "predicted_dfocus_in_focus_noise_sd": 0.011197374502374513
+  },
+  {
+   "plane_amplitude_dn": 5.0,
+   "luma_amplitude_dn": 2.5,
+   "n_sites": 40,
+   "elected_px_mean_planted": 0.975,
+   "elected_px_mean_same_sites_unplanted": 0.975,
+   "rate_planted": 0.003260869565217391,
+   "rate_same_sites_unplanted": 0.003260869565217391,
+   "enrichment": 1.0,
+   "predicted_dfocus": 0.0004258921391978146,
+   "predicted_dfocus_in_focus_noise_sd": 0.027993436255936283
+  },
+  {
+   "plane_amplitude_dn": 10.0,
+   "luma_amplitude_dn": 5.0,
+   "n_sites": 40,
+   "elected_px_mean_planted": 1.025,
+   "elected_px_mean_same_sites_unplanted": 1.025,
+   "rate_planted": 0.00342809364548495,
+   "rate_same_sites_unplanted": 0.00342809364548495,
+   "enrichment": 1.0,
+   "predicted_dfocus": 0.0008517842783956292,
+   "predicted_dfocus_in_focus_noise_sd": 0.055986872511872565
+  },
+  {
+   "plane_amplitude_dn": 25.0,
+   "luma_amplitude_dn": 12.5,
+   "n_sites": 40,
+   "elected_px_mean_planted": 0.975,
+   "elected_px_mean_same_sites_unplanted": 1.0,
+   "rate_planted": 0.003260869565217391,
+   "rate_same_sites_unplanted": 0.0033444816053511705,
+   "enrichment": 0.975,
+   "predicted_dfocus": 0.002129460695989073,
+   "predicted_dfocus_in_focus_noise_sd": 0.1399671812796814
+  },
+  {
+   "plane_amplitude_dn": 50.0,
+   "luma_amplitude_dn": 25.0,
+   "n_sites": 40,
+   "elected_px_mean_planted": 1.1,
+   "elected_px_mean_same_sites_unplanted": 1.15,
+   "rate_planted": 0.0036789297658862876,
+   "rate_same_sites_unplanted": 0.0038461538461538464,
+   "enrichment": 0.9565217391304347,
+   "predicted_dfocus": 0.004258921391978146,
+   "predicted_dfocus_in_focus_noise_sd": 0.2799343625593628
+  },
+  {
+   "plane_amplitude_dn": 100.0,
+   "luma_amplitude_dn": 50.0,
+   "n_sites": 40,
+   "elected_px_mean_planted": 0.925,
+   "elected_px_mean_same_sites_unplanted": 0.875,
+   "rate_planted": 0.003093645484949833,
+   "rate_same_sites_unplanted": 0.002926421404682274,
+   "enrichment": 1.0571428571428572,
+   "predicted_dfocus": 0.008517842783956292,
+   "predicted_dfocus_in_focus_noise_sd": 0.5598687251187257
+  },
+  {
+   "plane_amplitude_dn": 250.0,
+   "luma_amplitude_dn": 125.0,
+   "n_sites": 40,
+   "elected_px_mean_planted": 1.225,
+   "elected_px_mean_same_sites_unplanted": 1.025,
+   "rate_planted": 0.004096989966555184,
+   "rate_same_sites_unplanted": 0.00342809364548495,
+   "enrichment": 1.1951219512195121,
+   "predicted_dfocus": 0.02129460695989073,
+   "predicted_dfocus_in_focus_noise_sd": 1.3996718127968142
+  },
+  {
+   "plane_amplitude_dn": 500.0,
+   "luma_amplitude_dn": 250.0,
+   "n_sites": 40,
+   "elected_px_mean_planted": 1.325,
+   "elected_px_mean_same_sites_unplanted": 0.925,
+   "rate_planted": 0.004431438127090301,
+   "rate_same_sites_unplanted": 0.003093645484949833,
+   "enrichment": 1.4324324324324325,
+   "predicted_dfocus": 0.04258921391978146,
+   "predicted_dfocus_in_focus_noise_sd": 2.7993436255936284
+  }
+ ],
+ "unplanted_control_in_planted_run": {
+  "n_sites": 320,
+  "rate": 0.00342809364548495,
+  "elected_px_mean": 1.025
+ },
+ "placebo_arm_integrity": {
+  "note": "discipline 615: the plant must not perturb the mechanism it measures through. These two agree only if planting 320 pixels left the rest of the election alone.",
+  "winner_map_disagreement_frac": 0.002062366286541874
+ }
+}

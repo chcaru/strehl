@@ -1,0 +1,222 @@
+{
+ "shapes": {
+  "R": [
+   2344,
+   3514
+  ],
+  "G1": [
+   2344,
+   3514
+  ],
+  "G2": [
+   2344,
+   3514
+  ],
+  "B": [
+   2344,
+   3514
+  ]
+ },
+ "planes": {
+  "robust": {
+   "R": {
+    "n_defect": 111,
+    "n_always_11of11": 3,
+    "n_half_A": 119,
+    "n_half_B": 130,
+    "jaccard_split_half": 0.13182,
+    "jaccard_placebo": 0.0,
+    "jaccard_chance_analytic": 0.47791165,
+    "n_low_mode": 68,
+    "n_high_mode": 541,
+    "low_contained_in_high": 0.16176,
+    "high_contained_in_low": 0.02033,
+    "n_cold": 42
+   },
+   "G1": {
+    "n_defect": 124,
+    "n_always_11of11": 0,
+    "n_half_A": 123,
+    "n_half_B": 115,
+    "jaccard_split_half": 0.12796,
+    "jaccard_placebo": 0.0,
+    "jaccard_chance_analytic": 0.51680672,
+    "n_low_mode": 80,
+    "n_high_mode": 523,
+    "low_contained_in_high": 0.05,
+    "high_contained_in_low": 0.00765,
+    "n_cold": 48
+   },
+   "G2": {
+    "n_defect": 8149,
+    "n_always_11of11": 294,
+    "n_half_A": 4156,
+    "n_half_B": 4535,
+    "jaccard_split_half": 0.35163,
+    "jaccard_placebo": 0.00023018,
+    "jaccard_chance_analytic": 0.47819583,
+    "n_low_mode": 3018,
+    "n_high_mode": 12071,
+    "low_contained_in_high": 0.83201,
+    "high_contained_in_low": 0.20802,
+    "n_cold": 25
+   },
+   "B": {
+    "n_defect": 6220,
+    "n_always_11of11": 164,
+    "n_half_A": 3787,
+    "n_half_B": 3696,
+    "jaccard_split_half": 0.342,
+    "jaccard_placebo": 0.00026734,
+    "jaccard_chance_analytic": 0.50608045,
+    "n_low_mode": 1903,
+    "n_high_mode": 9706,
+    "low_contained_in_high": 0.85391,
+    "high_contained_in_low": 0.16742,
+    "n_cold": 27
+   },
+   "TOTAL": {
+    "n_defect": 14604,
+    "frac_of_sensor": 0.00044325380098329256
+   }
+  },
+  "model": {
+   "R": {
+    "n_defect": 410,
+    "n_always_11of11": 3,
+    "n_half_A": 176,
+    "n_half_B": 176,
+    "jaccard_split_half": 0.11392,
+    "jaccard_placebo": 0.0,
+    "jaccard_chance_analytic": 0.5,
+    "n_low_mode": 478,
+    "n_high_mode": 986,
+    "low_contained_in_high": 0.12134,
+    "high_contained_in_low": 0.05882
+   },
+   "G1": {
+    "n_defect": 421,
+    "n_always_11of11": 0,
+    "n_half_A": 190,
+    "n_half_B": 198,
+    "jaccard_split_half": 0.10227,
+    "jaccard_placebo": 0.0,
+    "jaccard_chance_analytic": 0.48969072,
+    "n_low_mode": 451,
+    "n_high_mode": 991,
+    "low_contained_in_high": 0.07761,
+    "high_contained_in_low": 0.03532
+   },
+   "G2": {
+    "n_defect": 12153,
+    "n_always_11of11": 771,
+    "n_half_A": 5280,
+    "n_half_B": 5178,
+    "jaccard_split_half": 0.3766,
+    "jaccard_placebo": 9.563e-05,
+    "jaccard_chance_analytic": 0.50487665,
+    "n_low_mode": 7713,
+    "n_high_mode": 15113,
+    "low_contained_in_high": 0.73357,
+    "high_contained_in_low": 0.37438
+   },
+   "B": {
+    "n_defect": 8227,
+    "n_always_11of11": 428,
+    "n_half_A": 3261,
+    "n_half_B": 3239,
+    "jaccard_split_half": 0.3536,
+    "jaccard_placebo": 0.00046175,
+    "jaccard_chance_analytic": 0.50169231,
+    "n_low_mode": 4842,
+    "n_high_mode": 10829,
+    "low_contained_in_high": 0.75176,
+    "high_contained_in_low": 0.33613
+   },
+   "TOTAL": {
+    "n_defect": 21211,
+    "frac_of_sensor": 0.0006437863854188318
+   }
+  }
+ },
+ "external": {
+  "R": {
+   "m48c_shape": [
+    2344,
+    3514
+   ],
+   "mine_shape": [
+    2344,
+    3514
+   ],
+   "m48c_n": 101,
+   "mine_n": 111,
+   "overlap_shape": [
+    2344,
+    3514
+   ],
+   "jaccard": 0.79661,
+   "mine_recovered_frac": 0.84685,
+   "m48c_recovered_frac": 0.93069
+  },
+  "G1": {
+   "m48c_shape": [
+    2344,
+    3514
+   ],
+   "mine_shape": [
+    2344,
+    3514
+   ],
+   "m48c_n": 98,
+   "mine_n": 124,
+   "overlap_shape": [
+    2344,
+    3514
+   ],
+   "jaccard": 0.7619,
+   "mine_recovered_frac": 0.77419,
+   "m48c_recovered_frac": 0.97959
+  },
+  "G2": {
+   "m48c_shape": [
+    2344,
+    3514
+   ],
+   "mine_shape": [
+    2344,
+    3514
+   ],
+   "m48c_n": 7765,
+   "mine_n": 8149,
+   "overlap_shape": [
+    2344,
+    3514
+   ],
+   "jaccard": 0.89723,
+   "mine_recovered_frac": 0.92355,
+   "m48c_recovered_frac": 0.96922
+  },
+  "B": {
+   "m48c_shape": [
+    2344,
+    3514
+   ],
+   "mine_shape": [
+    2344,
+    3514
+   ],
+   "m48c_n": 5686,
+   "mine_n": 6220,
+   "overlap_shape": [
+    2344,
+    3514
+   ],
+   "jaccard": 0.90405,
+   "mine_recovered_frac": 0.90884,
+   "m48c_recovered_frac": 0.9942
+  },
+  "TOTAL_m48c": 13650,
+  "TOTAL_mine": 14604
+ }
+}
