@@ -960,6 +960,17 @@ design. A capture that isolates one turns the halo from an anecdote into a
 measurable quantity with a known correct answer -- the background is genuinely
 visible in some frames, so the truth is recoverable.
 
+**13d. Leave the subject's silhouette in frame.** Not a new capture -- a framing
+rule for any of the above. M73 could check whether the stacker admits the right
+frames along one axis of a cylindrical subject, but its check was blind to any
+error that is constant along that axis. The arm that would have closed the blind
+spot needs the subject's **outline against the background**, and every stack in
+the corpus is framed tight enough to crop it away. Backing off far enough to keep
+even a sliver of background around the subject costs nothing and makes the
+geometry of the subject measurable from the image instead of assumed. **The one
+failure mode that milestone named in advance is the one it could not test, purely
+because of framing.**
+
 ---
 
 ## 14. What is NOT needed, so you do not waste a session
