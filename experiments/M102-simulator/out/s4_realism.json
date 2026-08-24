@@ -1,0 +1,83 @@
+{
+  "sensor": {
+    "stack": "bee-3-cpl",
+    "iso": 100,
+    "gain_dn_per_e": 0.22893772893772893,
+    "read_noise_e": 4.2,
+    "source": "sensor_for() / EXIF"
+  },
+  "N1_synth": {
+    "n": 32,
+    "ratio_median": 1.0638025743181694,
+    "ratio_min": 1.0054453295918158,
+    "ratio_max": 1.147031327424212,
+    "bar_0.90_1.10": true,
+    "per_frame": [
+      {
+        "frame": 0,
+        "mean_dn": 4307.0,
+        "measured": 29.651999999999997,
+        "predicted": 29.49140955484663,
+        "ratio": 1.0054453295918158
+      },
+      {
+        "frame": 1,
+        "mean_dn": 4297.0,
+        "measured": 29.651999999999997,
+        "predicted": 29.45256967129221,
+        "ratio": 1.0067712369729889
+      },
+      {
+        "frame": 2,
+        "mean_dn": 4282.0,
+        "measured": 29.651999999999997,
+        "predicted": 29.394213619490756,
+        "ratio": 1.0087699703025328
+      },
+      {
+        "frame": 3,
+        "mean_dn": 4273.0,
+        "measured": 31.1346,
+        "predicted": 29.35914431225502,
+        "ratio": 1.0604736864556326
+      }
+    ]
+  },
+  "N2_synth": {
+    "halfwidth_frames": 3.0,
+    "n_px": 44139,
+    "frames": 32,
+    "halfwidth_frac_of_stack": 0.09375
+  },
+  "N3_synth": {
+    "disconnected_frac": 0.005233467001971046,
+    "mean_gap_frames": 12.943722943722944
+  },
+  "real": {
+    "frames_total": 299,
+    "frames_used": 38,
+    "stride": 8,
+    "roi_cfa_px": 384,
+    "N1_ratio_median": 0.9946383344113685,
+    "N2_halfwidth_frames": 1.0,
+    "N2_halfwidth_frac_of_stack": 0.02631578947368421,
+    "N3_disconnected_frac": 0.03683810763888889,
+    "N3_mean_gap_frames": 10.144329896907216,
+    "N2_dense_halfwidth_frames": 23.0,
+    "N2_dense_window_frames": 64,
+    "N2_dense_halfwidth_frac_of_stack": 0.07692307692307693
+  },
+  "N2_bar": {
+    "basis": "dense stride-1 real window, frac of full stack",
+    "synth_frac": 0.09375,
+    "real_frac": 0.07692307692307693,
+    "width_frac_ratio_synth_over_real": 1.21875,
+    "bar_factor_2": true,
+    "strided_ratio_superseded": 3.5625
+  },
+  "N3_bar": {
+    "synth_frac": 0.005233467001971046,
+    "bar_nonzero_and_lt_0.60": true,
+    "m96_real_reference_fact_1263": 0.25247
+  }
+}

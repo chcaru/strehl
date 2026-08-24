@@ -1,0 +1,53 @@
+{
+  "tag": "warp32",
+  "plant": "warp",
+  "seed": 7,
+  "breathing": false,
+  "extra_tag": false,
+  "shape": [
+    256,
+    256
+  ],
+  "textured": {
+    "n": 44643,
+    "median_abs": 0.0625,
+    "median_signed": 0.0,
+    "frac_within_2": 0.8348453284949489,
+    "p90_abs": 2.4375
+  },
+  "smooth": {
+    "n": 2545,
+    "median_abs": 0.0,
+    "median_signed": 0.0,
+    "frac_within_2": 0.8039292730844794,
+    "p90_abs": 13.0
+  },
+  "occ": {
+    "n": 3720,
+    "median_abs": 0.0,
+    "median_signed": 0.0,
+    "frac_within_2": 0.5373655913978495,
+    "p90_abs": 23.0
+  },
+  "plane": {
+    "n": 24592,
+    "median_abs": 1.0208333333333321,
+    "median_signed": -0.6875,
+    "frac_within_2": 0.7364590110605075,
+    "p90_abs": 2.4375
+  },
+  "fg": {
+    "n": 6776,
+    "median_abs": 0.0,
+    "median_signed": 0.0,
+    "frac_within_2": 0.9298996458087367,
+    "p90_abs": 0.0
+  },
+  "bars": {
+    "R1_median_abs_le_1": true,
+    "R2_frac_within2_ge_0.90": false,
+    "R3_abs_median_signed_le_1": true,
+    "ALL_GREEN": false
+  },
+  "index_map_sha": "c1cf62e74a676834"
+}

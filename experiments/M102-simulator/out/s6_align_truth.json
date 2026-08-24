@@ -1,0 +1,22 @@
+{
+  "stack": "br1024",
+  "frames": 16,
+  "plane": [
+    512,
+    512
+  ],
+  "corner_radius_plane_px": 361.3315651863258,
+  "scale_first_last": [
+    1.0,
+    1.055063890203502
+  ],
+  "planted_corner_drift_plane_px": 19.89632163247941,
+  "measured_corner_drift_plane_px": 19.292,
+  "recovery_ratio": 0.969626464446931,
+  "shortfall_plane_px": 0.6043216324794081,
+  "source_facts": {
+    "drift_px": 232.7,
+    "half_diag_px": 4226.0,
+    "facts": "1177, 1254"
+  }
+}
