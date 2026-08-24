@@ -282,6 +282,68 @@ Read-only. Nothing is written under `D:\personal\macro` or `D:\macro-dark-frames
 | C7 | a merge whose election is genuinely gain-invariant would show 0% winner change under the naive ordering too; `focus.rs:309`'s test says it is not |
 | C8 | any accumulator that is not the shipped merge — e.g. one that forgets the censoring rule, which changes only saturated pixels and would otherwise pass unnoticed |
 
+---
+
+## 5b. ADDENDUM — C9, registered after reading `merge.rs:777` and before running any arm
+
+*Added while writing the example, after §0–§5 were committed at `065ab3b` and
+before a single number had been read. It is here rather than in §3 so the order
+is visible.*
+
+**What I found by reading.** `Estimator::fold_inner` builds the probe's luma from
+`row[2 * px + ox]`, which is `Frame::active_row` — the **raw u16 sensor sample,
+black included**. `Estimator::disagreement` confirms it by subtracting black only
+at read time: `green_luma_sigma((mean - black_dn) as f32)`. So the probe's `L` in
+`L' = L * luma_scale + luma_offset` is black-inclusive DN.
+
+`m60-disagreement.rs:302-305` passes `scale[index], 0.0` under the comment
+*"`green_luma_with_clip` subtracts black, so the luma the accumulator sees is
+already signal and the offset is zero."* That comment is about `pipe.luma`, a
+different buffer, used only for the focus field. **The estimator never sees
+`pipe.luma`.** So M60's gain arms multiplied the **black pedestal** by a gain
+fitted on black-subtracted signal.
+
+**Why this could matter, in arithmetic done before the run.** The physically
+correct gain-only correction is `black + c*(L - black)`, i.e.
+`luma_scale = c`, `luma_offset = black * (1 - c)`. Passing `luma_offset = 0`
+instead applies a correction larger than intended by the factor
+`raw_mean / signal_mean = 1 + black / signal_mean`:
+
+| stack | black | mean signal (M60b §4.3) | over-correction factor |
+|---|---:|---:|---:|
+| `109MSDCF` | 512 | ~1397 DN | **1.37x** |
+| `foam` | 512 | ~862 DN | **1.59x** |
+| `coffee-bubbles` | 512 | ~340 DN | **2.51x** |
+
+**C9, and its prediction fixed now.** Run the gain arm both ways — M60's
+`luma_offset = 0` and the pedestal-correct `luma_offset = black*(1-c)` — on the
+identical admitted set.
+
+* **Registered prediction:** the pedestal-correct arm removes strictly more
+  excess than M60's arm on **every** stack, and the gap is **ordered by
+  `black / mean_signal`**, so it must be largest on `coffee-bubbles` and
+  smallest on `109MSDCF`.
+* **C9 is MET, and M60's F3 and G7 are partly refuted**, if the pedestal-correct
+  arm turns M60's negative reductions (−22.5% on `coffee-bubbles`, −2.4% on
+  `foam`) **positive**.
+* **C9 FAILS and M60's F3 stands** if the two arms agree to within 2 percentage
+  points of excess removed, or if the pedestal arm is also negative.
+* Rule 20 — the input that fails it: a stack whose black pedestal is negligible
+  against its signal would show no gap at all. `109MSDCF` at `512/1397` is the
+  corpus's closest approach to that and is registered as the low-effect case
+  **before** the run, so a flat result there is a prediction met and not an
+  excuse.
+* **A4b (offset-only) is unaffected by this** and I say so before measuring: an
+  additive offset commutes with the pedestal, so M60's A4b numbers need no
+  correction. If my A4b reproduces M60's 0.3% / 7.6% / 5.0% while my gain arm
+  does not reproduce its 7.1% / −22.5% / −2.4%, that pattern is itself the
+  signature of the defect and is registered as the confirming observation.
+
+**Binding on everything else in this file:** the image path of C3 uses the
+pedestal-correct form, `black + c*(L − black) + o`, throughout.
+
+---
+
 ## 6. Ownership
 
 Writes only to `crates/strehl-cli/examples/m91-photometry.rs`,
