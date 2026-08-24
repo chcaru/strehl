@@ -343,10 +343,14 @@ const REGISTRY_FILE: &str = "crates/strehl-cli/tests/byte-freezes.tsv";
 const HEADER: &[&str] = &[
     "id",
     "stack",
+    "frames",
     "limit",
     "gate",
     "srgb",
-    "align",
+    "env_align",
+    "env_warpmap",
+    "env_fix_halo",
+    "env_cache_dir",
     "alignment_mode",
     "sha256",
     "bytes",
@@ -362,10 +366,14 @@ const HEADER: &[&str] = &[
 struct Freeze {
     id: String,
     stack: String,
+    frames: String,
     limit: String,
     gate: String,
     srgb: bool,
-    align: Align,
+    env_align: String,
+    env_warpmap: String,
+    env_fix_halo: String,
+    env_cache_dir: String,
     alignment_mode: String,
     sha256: String,
     bytes: u64,
@@ -378,13 +386,15 @@ struct Freeze {
     line: usize,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-enum Align {
-    /// `STREHL_ALIGN=0`.
-    Off,
-    /// `STREHL_WARPMAP=tests/data/<fixture>`.
-    Sidecar(String),
-}
+/// The literal recorded when a variable is deliberately not set.
+///
+/// There is no empty field and no absent column. Rule 47's whole point is that
+/// a reader cannot tell a default from an omission, so "not set" is spelled out
+/// and is a value like any other.
+const UNSET: &str = "unset";
+
+/// The literal recorded for a path the harness itself supplies at run time.
+const SCRATCH: &str = "scratch";
 
 /// Environment variables that change what `strehl stack` emits.
 ///
@@ -392,6 +402,11 @@ enum Align {
 /// the ambient environment of whoever runs the test cannot quietly render a
 /// different pipeline than the row describes. This is the same defect as the
 /// missing `--gate`, one layer down: an unrecorded input.
+///
+/// Rule 47 as amended requires that the environment be recorded beside the hash
+/// and not merely controlled. The first four have their own registry column;
+/// `STREHL_FIX_HALO_DELTA` is only read when `STREHL_FIX_HALO` is set, so it is
+/// covered by that column's value and by this list's clearing.
 const RENDER_ENV: &[&str] = &[
     "STREHL_ALIGN",
     "STREHL_WARPMAP",
@@ -427,24 +442,49 @@ impl Freeze {
 
     /// The environment this row freezes, as `(name, value)` pairs applied after
     /// every entry of [`RENDER_ENV`] has been removed.
-    fn env(&self) -> Vec<(String, String)> {
-        match &self.align {
-            Align::Off => vec![("STREHL_ALIGN".to_string(), "0".to_string())],
-            Align::Sidecar(f) => vec![(
-                "STREHL_WARPMAP".to_string(),
-                Self::fixture_dir().join(f).display().to_string(),
-            )],
-        }
+    ///
+    /// Built from the recorded columns, exactly as [`Freeze::argv`] is built
+    /// from the recorded flags. This is the point of the whole file: the thing
+    /// that is *recorded* and the thing that is *executed* are the same object,
+    /// so the record cannot be incomplete. An earlier draft of rule 47 bound
+    /// only the CLI flags, and within two hours a freeze was found that
+    /// reproduces exactly but only under `STREHL_ALIGN=0` -- a value that
+    /// appeared nowhere in its record.
+    ///
+    /// `scratch` is a run-time path the harness supplies; every other value is
+    /// taken from the row verbatim.
+    fn env(&self, scratch: &Path) -> Vec<(String, String)> {
+        let mut v = Vec::new();
+        let mut put = |k: &str, recorded: &str, resolve: &dyn Fn(&str) -> String| {
+            if recorded != UNSET {
+                v.push((k.to_string(), resolve(recorded)));
+            }
+        };
+        put("STREHL_ALIGN", &self.env_align, &|s| s.to_string());
+        put("STREHL_WARPMAP", &self.env_warpmap, &|s| {
+            Self::fixture_dir().join(s).display().to_string()
+        });
+        put("STREHL_FIX_HALO", &self.env_fix_halo, &|s| s.to_string());
+        put("STREHL_CACHE_DIR", &self.env_cache_dir, &|s| {
+            if s == SCRATCH {
+                scratch.join("cache").display().to_string()
+            } else {
+                s.to_string()
+            }
+        });
+        v
     }
 
     /// A copy-pasteable reproduction, for the failure message. This is what a
     /// milestone report should paste beside a hash.
     fn command(&self, stack_dir: &Path, out: &Path) -> String {
+        let scratch = Path::new("<scratch>");
         let mut s = String::new();
+        let _ = writeln!(s, "  # frames: {}", self.frames);
         for name in RENDER_ENV {
             let _ = writeln!(s, "  Remove-Item Env:{name} -ErrorAction SilentlyContinue");
         }
-        for (k, v) in self.env() {
+        for (k, v) in self.env(scratch) {
             let _ = writeln!(s, "  $env:{k} = \"{v}\"");
         }
         let _ = write!(s, "  strehl.exe");
@@ -483,33 +523,64 @@ fn parse_registry() -> Vec<Freeze> {
             f.len(),
             HEADER.len()
         );
-        let align = match f[5] {
-            "off" => Align::Off,
-            s if s.starts_with("sidecar:") => Align::Sidecar(s["sidecar:".len()..].to_string()),
-            "solve" => panic!(
-                "\n{REGISTRY_FILE}:{line}: align = `solve` is not admissible.\n\n\
+        // The rejection lives on the ENVIRONMENT COMBINATION rather than on a
+        // mode label, because the combination is the true cause: alignment on
+        // (`STREHL_ALIGN` unset) with no override (`STREHL_WARPMAP` unset) is a
+        // solving row however it is spelled.
+        let align_on = f[6] == UNSET;
+        let no_override = f[7] == UNSET;
+        if align_on && no_override {
+            panic!(
+                "\n{REGISTRY_FILE}:{line}: env_align = `unset` with env_warpmap = `unset` is \
+                 a SOLVING row, and solving rows are not admissible.\n\n\
                  A solving row freezes the aligner's SOLVER as well as the merge, and the \
                  solver was under active rewrite by two milestones on the day these rows \
                  were measured. A freeze that moves every week is a freeze that gets \
                  deleted, which leaves you with nothing.\n\n\
-                 Until `fea1a72` there was a harder objection too: `align_cmd::sidecar_path` \
+                 There is a sharper objection, measured rather than assumed. A solving row \
+                 does not solve every time: `align_cmd::load_or_solve` first looks for a \
+                 CACHED sidecar and reuses it whenever `check_stack` passes and the frame \
+                 count matches (`align_cmd.rs:967-980`). `StackIdentity::from_paths` \
+                 digests filenames and file lengths only (`warpmap.rs:238`), never \
+                 contents, so a cached sidecar whose placements have been altered passes \
+                 both tests. I swapped two placements inside one and the render moved from \
+                 119936E6... to 8065EA8D... at exit 0, reporting `20 placed / 0 refused`. \
+                 Every guard in this file except the alignment-mode token stayed green. A \
+                 solving row would therefore have reported a MOVED FREEZE for a renderer \
+                 that had not changed -- a fourth false break, from the same root cause as \
+                 the first three.\n\n\
+                 Until `dccaea8` there was a harder objection still: `align_cmd::sidecar_path` \
                  resolved to `<stackdir>/warpmap.txt`, so every run of this test would have \
                  written into the READ-ONLY capture library. Thirteen stray sidecars \
                  accumulated there in one night that way (SYNTHESIS facts 1384, 1385), one \
-                 of them a 40-frame solve sitting under a 299-frame bracket. That was \
-                 repaired at `dccaea8`; a solving row must still set `$STREHL_CACHE_DIR` to \
-                 a scratch path, because the shared cache is shared.\n\n\
-                 Use `align = sidecar:<fixture>` to freeze an aligned pipeline against a \
-                 committed warp map, or `align = off` to freeze the unregistered merge.\n\n\
+                 of them a 40-frame solve sitting under a 299-frame bracket.\n\n\
+                 Set env_align = `0` to freeze the unregistered merge, or env_warpmap = \
+                 `<fixture file under tests/data>` to freeze an aligned pipeline against a \
+                 COMMITTED warp map.\n\n\
                  When the solver settles, this restriction should be REVISITED, not \
                  inherited -- a solving row is the only one that would cover the solver.\n"
-            ),
-            other => panic!(
-                "\n{REGISTRY_FILE}:{line}: align = `{other}` is not a mode. \
-                 Use `off` or `sidecar:<fixture file under tests/data>`.\n"
-            ),
-        };
-        let srgb = match f[4] {
+            );
+        }
+        if !align_on && !no_override {
+            panic!(
+                "\n{REGISTRY_FILE}:{line}: env_align = `{}` and env_warpmap = `{}` are both \
+                 set.\n\n\
+                 With alignment switched off the override is never read, so this row \
+                 records an input that cannot affect its hash. That is the decorative \
+                 record rule 47 exists to stop: the next reader cannot tell which of the \
+                 two actually produced the bytes.\n",
+                f[6], f[7]
+            );
+        }
+        if !align_on && f[6] != "0" {
+            panic!(
+                "\n{REGISTRY_FILE}:{line}: env_align = `{}`; use `0` (off) or `unset` (on). \
+                 An empty field is not a value -- see the `unset` convention at the top of \
+                 the registry.\n",
+                f[6]
+            );
+        }
+        let srgb = match f[5] {
             "yes" => true,
             "no" => false,
             other => panic!("\n{REGISTRY_FILE}:{line}: srgb = `{other}`; use `yes` or `no`.\n"),
@@ -517,22 +588,26 @@ fn parse_registry() -> Vec<Freeze> {
         rows.push(Freeze {
             id: f[0].to_string(),
             stack: f[1].to_string(),
-            limit: f[2].to_string(),
-            gate: f[3].to_string(),
+            frames: f[2].to_string(),
+            limit: f[3].to_string(),
+            gate: f[4].to_string(),
             srgb,
-            align,
-            alignment_mode: f[6].to_string(),
-            sha256: f[7].to_string(),
-            bytes: f[8].parse().unwrap_or_else(|e| {
+            env_align: f[6].to_string(),
+            env_warpmap: f[7].to_string(),
+            env_fix_halo: f[8].to_string(),
+            env_cache_dir: f[9].to_string(),
+            alignment_mode: f[10].to_string(),
+            sha256: f[11].to_string(),
+            bytes: f[12].parse().unwrap_or_else(|e| {
                 panic!(
                     "\n{REGISTRY_FILE}:{line}: bytes = `{}` is not a number ({e}).\n",
-                    f[8]
+                    f[12]
                 )
             }),
-            workers: f[9].to_string(),
-            baselined_at: f[10].to_string(),
-            baselined_on: f[11].to_string(),
-            why: f[12].to_string(),
+            workers: f[13].to_string(),
+            baselined_at: f[14].to_string(),
+            baselined_on: f[15].to_string(),
+            why: f[16].to_string(),
             line,
         });
     }
@@ -653,6 +728,44 @@ fn the_hasher_reproduces_the_published_test_vectors() {
     );
 }
 
+/// The mode parser, against lines `strehl stack` really emitted.
+///
+/// Worth its own test because the mode token is the FIRST gate: if it misreads,
+/// every later check is comparing hashes from a pipeline nobody chose. The four
+/// strings below are copied verbatim out of render logs measured at `fea1a72`,
+/// not composed for the test -- a parser test written against invented input
+/// tests the author's memory of the format rather than the format.
+#[test]
+fn the_alignment_parser_names_every_mode_the_tool_can_report() {
+    let off = "alignment      : OFF -- frames are combined unregistered. M86 measured \
+               232.7 px of drift on bee-3-cpl; expect softness that grows with radius.";
+    let solved = "alignment      : ON (solved), reference frame 10, 20 placed / 0 refused";
+    let over = "alignment      : ON (sidecar-override), reference frame 10, 20 placed / 0 refused";
+    let cache = "alignment      : ON (sidecar), reference frame 10, 20 placed / 0 refused";
+
+    assert_eq!(alignment_mode(off), "off");
+    assert_eq!(alignment_mode(solved), "on-solved");
+    assert_eq!(alignment_mode(over), "on-sidecar-override");
+
+    // The prefix trap. `ON (sidecar)` is a prefix of `ON (sidecar-override)`, so
+    // testing them in the wrong order silently reports every OVERRIDDEN run as a
+    // CACHE HIT. That would turn the one signal that distinguishes isolated
+    // registration from ambient registration into a permanent false alarm --
+    // and a permanent false alarm is how this check gets deleted.
+    assert_eq!(alignment_mode(cache), "on-sidecar-cache");
+    assert_ne!(alignment_mode(over), "on-sidecar-cache");
+
+    // A reworded or absent line must read as MISSING and never as a mode. The
+    // isolation gate treats MISSING as a failure precisely so that a silent
+    // rewording shows up as "this check has gone blind" rather than as a pass.
+    assert!(alignment_mode("workers        : 10 chunks of <= 2 frames").starts_with("MISSING"));
+    assert!(alignment_mode("alignment      : ON (magic)").starts_with("MISSING"));
+
+    // The counts on the same line, which the placement gate reads.
+    assert_eq!(placement(over), Some((20, 0)));
+    assert_eq!(placement(off), None);
+}
+
 /// Rule 47, mechanically. Every row must record a complete invocation, with the
 /// gate **by value** -- `default` is rejected, because that is exactly the
 /// record that cannot be told apart from an omission, and `DEFAULT_GATE` has
@@ -721,21 +834,25 @@ fn every_registry_row_records_a_complete_invocation() {
             "\n{at}: gate must be finite and non-negative.\n"
         );
 
-        let expected_mode = match &r.align {
-            Align::Off => "off",
-            Align::Sidecar(_) => "on-sidecar-override",
+        let expected_mode = if r.env_align == "0" {
+            "off"
+        } else {
+            "on-sidecar-override"
         };
         assert_eq!(
             r.alignment_mode, expected_mode,
-            "\n{at}: align = `{:?}` must report alignment_mode `{expected_mode}`, \
-             not `{}`. These two columns are the SETTING and the OBSERVATION; the \
-             test asserts the observation, which is how a silent flip of the \
-             alignment default gets caught (that is what M86c did).\n",
-            r.align, r.alignment_mode
+            "\n{at}: env_align = `{}` / env_warpmap = `{}` must report alignment_mode \
+             `{expected_mode}`, not `{}`. These columns are the SETTING and the \
+             OBSERVATION; the test asserts the observation, which is how a silent flip \
+             of the alignment default gets caught (that is what M86c did).\n\n\
+             Note that `on-sidecar-cache` is not among the admissible values here, and \
+             cannot be: it means the render was registered by a file the harness did not \
+             put there. It is a legal OBSERVATION and an illegal RECORD.\n",
+            r.env_align, r.env_warpmap, r.alignment_mode
         );
 
-        if let Align::Sidecar(f) = &r.align {
-            let p = Freeze::fixture_dir().join(f);
+        if r.env_warpmap != UNSET {
+            let p = Freeze::fixture_dir().join(&r.env_warpmap);
             assert!(
                 p.is_file(),
                 "\n{at}: the warp fixture `{}` does not exist.\n\
@@ -747,6 +864,28 @@ fn every_registry_row_records_a_complete_invocation() {
                 p.display()
             );
         }
+
+        assert!(
+            r.env_cache_dir == SCRATCH,
+            "\n{at}: env_cache_dir = `{}`; the only admissible value is `{SCRATCH}`.\n\n\
+             $STREHL_CACHE_DIR is where `align` caches solved sidecars, and it defaults \
+             to a SHARED per-user directory. A freeze that reads it is a freeze that \
+             depends on whatever another agent last solved on this machine. `{SCRATCH}` \
+             means the harness supplies an empty per-run directory, so the row's own \
+             mode is the only thing that can register it.\n",
+            r.env_cache_dir
+        );
+
+        assert!(
+            !r.frames.is_empty() && r.frames.contains("..") && !r.frames.contains(' '),
+            "\n{at}: frames = `{}` must name the range --limit selects, as \
+             `FIRST..LAST` (for example `DSC00016..DSC00035`).\n\n\
+             `--limit 20` is not reproducible without knowing WHICH twenty. The flag \
+             takes a prefix of the directory in name order, so the range moves the \
+             moment a frame is added, removed or renamed -- and the hash moves with it, \
+             for a reason that has nothing to do with the renderer.\n",
+            r.frames
+        );
 
         assert!(
             r.sha256.len() == 64
@@ -808,10 +947,13 @@ fn every_registry_row_records_a_complete_invocation() {
 #[test]
 fn no_two_rows_freeze_the_same_invocation() {
     let rows = parse_registry();
+    // The key is the WHOLE rule-47 record: the flags and the environment. An
+    // earlier version keyed on flags plus an alignment mode enum, which would
+    // have let two rows differing only in, say, STREHL_FIX_HALO collide.
     let key = |r: &Freeze| {
         format!(
-            "{}|{}|{}|{}|{:?}",
-            r.stack, r.limit, r.gate, r.srgb, r.align
+            "{}|{}|{}|{}|{}|{}|{}|{}",
+            r.stack, r.frames, r.limit, r.gate, r.srgb, r.env_align, r.env_warpmap, r.env_fix_halo
         )
     };
     let mut seen: Vec<(String, String)> = Vec::new();
@@ -868,12 +1010,32 @@ fn alignment_mode(log: &str) -> String {
         else {
             continue;
         };
+        // `ON (sidecar-override)` must be tested before `ON (sidecar)`, which is
+        // a prefix of it. Getting that order wrong would report every overridden
+        // run as a cache hit -- and since the cache-hit token is the poisoning
+        // signature below, that would be an alarm nobody could act on.
         let token = if rest.starts_with("OFF") {
             "off"
         } else if rest.starts_with("ON (solved)") {
             "on-solved"
         } else if rest.starts_with("ON (sidecar-override)") {
             "on-sidecar-override"
+        } else if rest.starts_with("ON (sidecar)") {
+            // A CACHED sidecar was loaded from `$STREHL_CACHE_DIR`. No row may
+            // record this: it means the render was registered by a file this
+            // test did not put there and cannot see. It is a distinct token
+            // rather than a fall-through to MISSING because it is the ONE
+            // observable difference between a fresh solve and a poisoned one,
+            // and a reader who sees `MISSING` learns nothing while a reader who
+            // sees `on-sidecar-cache` has the diagnosis.
+            //
+            // Measured, not theorised: swapping two placements inside a cached
+            // sidecar (leaving its frame count and stack digest valid, which
+            // `StackIdentity` cannot see past -- `warpmap.rs:238`) moved a
+            // render from 119936E6... to 8065EA8D... at exit 0, with
+            // `20 placed / 0 refused` and every ordinary guard green. The only
+            // thing that changed on stderr was this token.
+            "on-sidecar-cache"
         } else {
             continue;
         };
@@ -1040,11 +1202,7 @@ fn render(r: &Freeze, stack_dir: &Path, pass: u32) -> Rendered {
     for name in RENDER_ENV {
         cmd.env_remove(name);
     }
-    // Nothing this test runs may cache into the capture library, and the shared
-    // user cache is another agent's mutable state. Both are pointed at scratch
-    // as a belt-and-braces second line behind the row's own mode.
-    cmd.env("STREHL_CACHE_DIR", scratch.join("cache"));
-    for (k, v) in r.env() {
+    for (k, v) in r.env(&scratch) {
         cmd.env(k, v);
     }
     let output = cmd
@@ -1152,19 +1310,37 @@ fn check_pipeline(r: &Freeze, g: &Rendered, stack_dir: &Path, out: &Path) {
          \x20 * A sidecar the tool discovered by itself. The capture library is\n\
          \x20   read-only and must contain none; the warning printed at the top of\n\
          \x20   this test lists any it found.\n\
-         \x20 * The row is simply wrong about the mode. Fix the row.\n\n\
+         \x20 * The row is simply wrong about the mode. Fix the row.\n\
+         {cache}\n\
          Command that was run:\n{cmd}\n",
         id = r.id,
         pass = g.pass,
         want = r.alignment_mode,
         got = g.mode,
         n = RENDER_ENV.len(),
+        cache = if g.mode == "on-sidecar-cache" {
+            "\n\
+             THIS PARTICULAR MISMATCH IS THE DANGEROUS ONE. `on-sidecar-cache` means\n\
+             the render was registered by a CACHED sidecar under $STREHL_CACHE_DIR --\n\
+             a file this harness did not write and cannot inspect. The row sets that\n\
+             variable to a fresh empty directory precisely so this cannot happen, so\n\
+             seeing it means the isolation itself has failed.\n\n\
+             Do not re-baseline against it. `StackIdentity::from_paths` digests\n\
+             filenames and file LENGTHS only (`warpmap.rs:238`), never contents, so a\n\
+             cache entry whose placements have been altered passes every check the\n\
+             tool makes. Measured at fea1a72: swapping two placements inside one moved\n\
+             this bracket's render from 119936E6... to 8065EA8D... at exit 0, still\n\
+             reporting `20 placed / 0 refused`. A hash frozen against a cache hit is a\n\
+             hash frozen against ambient state.\n"
+        } else {
+            ""
+        },
         cmd = r.command(stack_dir, out)
     );
 
-    // `align = off` places nothing, so there is no count to check; the mode
+    // Alignment off places nothing, so there is no count to check; the mode
     // assertion above is the whole of the isolation check for those rows.
-    if r.align == Align::Off {
+    if r.env_align == "0" {
         return;
     }
 
@@ -1247,6 +1423,8 @@ fn the_frozen_renders_still_produce_their_recorded_bytes() {
             r.stack
         );
 
+        check_frame_range(r, &stack_dir);
+
         // TWO passes, in two SEPARATE PROCESSES, before either hash is trusted.
         //
         // This separates two failures that a single render conflates. If the two
@@ -1292,6 +1470,79 @@ fn the_frozen_renders_still_produce_their_recorded_bytes() {
             moved_report(r, &stack_dir, &a.out, &a.hash, a.bytes, &a.mode, &a.workers)
         );
     }
+}
+
+/// The fourth gate: `--limit N` must select the frames the row says it selects.
+///
+/// Checked against the directory **before** anything is rendered, because a
+/// changed frame range moves the hash for a reason that has nothing to do with
+/// the renderer, and that is the most expensive kind of false break: it looks
+/// exactly like a regression. `--limit` takes a prefix in name order, so adding
+/// one file to the front of a bracket silently reframes every freeze on it.
+///
+/// This is the one gate whose expected value is RECORDED rather than derived --
+/// it has to be, since the whole point is to detect the directory changing under
+/// the record. It is therefore also the one gate a careless re-baseline can
+/// silence, which is why the failure message insists on an explanation.
+fn check_frame_range(r: &Freeze, stack_dir: &Path) {
+    let limit: usize = r.limit.parse().expect("limit was validated at parse time");
+    let mut names: Vec<String> = std::fs::read_dir(stack_dir)
+        .unwrap_or_else(|e| panic!("reading `{}`: {e}", stack_dir.display()))
+        .filter_map(|e| e.ok())
+        .map(|e| e.file_name().to_string_lossy().into_owned())
+        .filter(|n| n.to_ascii_lowercase().ends_with(".arw"))
+        .collect();
+    names.sort();
+
+    let bar = "=".repeat(78);
+    assert!(
+        names.len() >= limit,
+        "\n\n{bar}\n\
+         FRAME RANGE: `{id}` wants {limit} frames and `{dir}` holds {have}\n\
+         {bar}\n\n\
+         The bracket has lost frames, or this is not the bracket the row was\n\
+         measured against. Either way the freeze cannot be evaluated -- rendering\n\
+         fewer frames would produce a different image and report it as a moved hash.\n",
+        id = r.id,
+        dir = stack_dir.display(),
+        have = names.len()
+    );
+
+    let stem = |n: &str| {
+        n.rsplit_once('.')
+            .map_or(n.to_string(), |(s, _)| s.to_string())
+    };
+    let got = format!("{}..{}", stem(&names[0]), stem(&names[limit - 1]));
+    assert!(
+        got == r.frames,
+        "\n\n{bar}\n\
+         FRAME RANGE MOVED: `{id}`\n\
+         {bar}\n\n\
+         \x20 registry says : {want}\n\
+         \x20 directory has : {got}\n\
+         \x20 stack         : {dir}\n\
+         \x20 --limit       : {limit}   (a PREFIX in name order, not a selection)\n\n\
+         NOTHING HAS BEEN RENDERED. This is deliberate: the hash below would have\n\
+         moved, and it would have looked like a renderer regression when in fact the\n\
+         INPUT changed. That confusion is the whole reason this column exists.\n\n\
+         What to do:\n\n\
+         \x20 * If a frame was ADDED to or REMOVED from the bracket, the capture\n\
+         \x20   library is supposed to be immutable (AGENTS.md rule 45) and somebody\n\
+         \x20   has modified the owner's data. Investigate that FIRST; do not\n\
+         \x20   re-baseline over it.\n\n\
+         \x20 * If a NON-frame file was added or removed, only this check is affected\n\
+         \x20   and the hash is fine -- but the registry still has to be corrected.\n\n\
+         \x20 * If the bracket legitimately changed, the freeze is measuring a\n\
+         \x20   different subject and must be RE-BASELINED, with `frames` and `why`\n\
+         \x20   both rewritten. A `why` that does not mention the reframing is worse\n\
+         \x20   than no `why` at all.\n\n\
+         \x20 * Row is at {file}:{line}.\n",
+        id = r.id,
+        want = r.frames,
+        dir = stack_dir.display(),
+        file = REGISTRY_FILE,
+        line = r.line
+    );
 }
 
 /// The two passes disagreed with each other. This is not a moved freeze.

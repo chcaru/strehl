@@ -1,13 +1,20 @@
 # THE BYTE-FREEZE REGISTRY.  Data, not prose.  Read by tests/byte-freeze.rs.
 #
-# AGENTS.md rule 47: record the WHOLE invocation beside every hash, including
-# the flags you left at their default.  A hash without its command is not a weak
-# record, it is not a record at all.  The test does not merely *check* the rows
-# against a command written somewhere else -- it BUILDS the command out of the
-# row, so the hash and the invocation cannot drift apart, and one milestone's
-# flag can never be spliced onto another milestone's command.  That splice is
-# fact 1379: it cost a 1.9-hour investigation into a regression that had not
-# happened.
+# AGENTS.md rule 47: record the WHOLE invocation beside every hash -- the flags
+# you left at their default AND the environment you ran it in.  A hash without
+# its command is not a weak record, it is not a record at all.  The test does not
+# merely *check* the rows against a command written somewhere else -- it BUILDS
+# the command and the environment out of the row, so the hash and the invocation
+# cannot drift apart, and one milestone's flag can never be spliced onto another
+# milestone's command.  That splice is fact 1379: it cost a 1.9-hour
+# investigation into a regression that had not happened.
+#
+# The environment columns are not theoretical rigour.  An earlier draft of rule
+# 47 bound only "directory, --limit and --gate by value" -- all CLI flags -- and
+# within two hours a freeze was found that reproduces EXACTLY but only under
+# STREHL_ALIGN=0, a value that appeared nowhere in its record.  Three false
+# breaks in one session came from this one root cause: `bee-3-cpl` lost --gate,
+# `coffee-bean` lost STREHL_ALIGN.
 #
 # TAB-separated.  Blank lines and lines beginning with `#` are ignored.  The
 # header row is checked verbatim, so renaming or reordering a column fails loudly
@@ -16,19 +23,49 @@
 # COLUMNS
 #   id              kebab-case, unique.  Names the invocation, not the milestone.
 #   stack           leaf directory under the capture library (see `capture_library`
-#                   in byte-freeze.rs; $STREHL_CAPTURES overrides).
+#                   in byte-freeze.rs; $STREHL_CAPTURES overrides).  A leaf, never
+#                   a path: the library root is machine-local and belongs in an
+#                   environment variable, not in a frozen record.
+#   frames          FIRST..LAST that --limit actually selects, VERIFIED against the
+#                   directory before anything is rendered.  "limit 20" is not
+#                   reproducible without knowing which twenty: --limit takes a
+#                   PREFIX in name order, so one file added to the front of a
+#                   bracket reframes every freeze on it and the hash moves for a
+#                   reason that has nothing to do with the renderer.
 #   limit           --limit, always explicit.
 #   gate            --gate, always explicit AND ALWAYS BY VALUE.  `default` is a
 #                   rejected value: DEFAULT_GATE moved once already and the
 #                   absence of this one flag is the whole of fact 1379.
 #   srgb            yes|no -- whether --srgb is passed.
-#   align           off       => STREHL_ALIGN=0, no sidecar is read or written
-#                   sidecar:F => STREHL_WARPMAP=tests/data/F, nothing is written
-#                   `solve` is REJECTED by the validator on purpose; see the
-#                   module docs of byte-freeze.rs for why.
-#   alignment_mode  what the tool must REPORT on stderr for this row.  Asserted.
-#                   A silent flip of this field is exactly what M86c did.
-#   sha256          uppercase hex, 64 chars.
+#
+#   -- the environment.  `unset` is a VALUE, spelled out, never an empty field:
+#      the defect rule 47 names is that a reader cannot tell a default from an
+#      omission.  Every variable in RENDER_ENV is removed before these are
+#      applied, so the ambient environment of whoever runs the test cannot
+#      quietly render a different pipeline than the row describes.
+#
+#   env_align       STREHL_ALIGN.  `0` = registration off.  `unset` = on.
+#   env_warpmap     STREHL_WARPMAP.  A fixture file under tests/data, or `unset`.
+#                   Setting it makes the row read a COMMITTED warp map and write
+#                   nothing anywhere (merge_cmd.rs:1035).
+#                   env_align=unset with env_warpmap=unset is a SOLVING row and is
+#                   rejected by the parser, with the measurement, on sight.
+#   env_fix_halo    STREHL_FIX_HALO, by value or `unset`.  (STREHL_FIX_HALO_DELTA
+#                   is only read when this is set, and is cleared with it.)
+#   env_cache_dir   STREHL_CACHE_DIR.  Must be `scratch`: the harness supplies an
+#                   empty per-run directory.  The real default is a SHARED per-user
+#                   cache, and a freeze that reads it is a freeze that depends on
+#                   whatever another agent last solved on this machine.
+#
+#   alignment_mode  what the tool must REPORT on stderr for this row.  ASSERTED,
+#                   before any hash is compared.  This column is the OBSERVATION;
+#                   env_align/env_warpmap are the SETTING.  A silent flip of this
+#                   field is exactly what M86c did.
+#                   `on-sidecar-cache` is a legal observation and an ILLEGAL
+#                   record -- see the parser.
+#   sha256          uppercase hex, 64 chars.  Never truncated: the corpus already
+#                   carries a freeze recorded as `D99F5D82...76CA`, which no
+#                   machine can check.
 #   bytes           expected file size.
 #   workers         the chunking the baseline was measured under.  REPORTED, NOT
 #                   ASSERTED -- it is a property of the measuring host (RAM and
@@ -40,11 +77,11 @@
 #                   the column that would have prevented fact 1379.  It is checked
 #                   for length and for placeholders; when you re-baseline a row,
 #                   REWRITE IT.  A `why` describing the previous re-baseline is
-#                   worse than an empty one.
+#                   worse than an empty one, because it reads as current.
 #
 # ADDING A ROW: freezing everything is the same as freezing nothing.  See
 # docs/research/M108-freeze-test.md section 5 for what earns a row and what
 # does not.
-id	stack	limit	gate	srgb	align	alignment_mode	sha256	bytes	workers	baselined_at	baselined_on	why
-coffee-bean-20-gate2-unaligned	coffee-bean	20	2.0	no	off	off	D99F5D82337AA2F093202D12677FBD1DE6D78A94761C0DE250020085271C76CA	49449626	10 chunks of <= 2 frames	fea1a72	2026-08-24	NOT A NEW BASELINE -- a re-record of an existing one. This hash is the D99F5D82...76CA of SYNTHESIS fact 1323 (M95's co-siting freeze, verified by ORCH at 56bd846); M108 re-measured it at fea1a72 and it reproduces exactly, so the fourth freeze in the corpus is alive, not stale. Alignment is OFF because that is the only invocation hermetic at EVERY commit: when this was measured at fea1a72, align_cmd::load_or_solve still cached a solved sidecar into the read-only capture library (repaired at dccaea8), and align_enabled() short-circuits before any path is computed. Covers decode, focus, regulariser, gate, merge and the byte-frozen encoder of merge_cmd.rs.
-coffee-bean-20-gate2-sidecar	coffee-bean	20	2.0	no	sidecar:coffee-bean-20.warpmap.txt	on-sidecar-override	119936E656CD4E844F8345F23D8196B6B282C883C4B828318BADC6E222BAD709	49449626	10 chunks of <= 2 frames	fea1a72	2026-08-24	NEW FREEZE, nothing prior to re-baseline -- no milestone had ever frozen an aligned invocation. Exists to give the unaligned row a partner: the two differ only in registration, so which of them moves says whether a change is in the merge core or in warp application. Registration comes from a COMMITTED fixture rather than a solve, which makes the row hermetic (STREHL_WARPMAP writes nothing anywhere, merge_cmd.rs:1035) and independent of the aligner solver, whose code was in flight when this was measured. The blind spot that buys is named in docs/research/M108-freeze-test.md section 4.
+id	stack	frames	limit	gate	srgb	env_align	env_warpmap	env_fix_halo	env_cache_dir	alignment_mode	sha256	bytes	workers	baselined_at	baselined_on	why
+coffee-bean-20-gate2-unaligned	coffee-bean	DSC00016..DSC00035	20	2.0	no	0	unset	unset	scratch	off	D99F5D82337AA2F093202D12677FBD1DE6D78A94761C0DE250020085271C76CA	49449626	10 chunks of <= 2 frames	fea1a72	2026-08-24	NOT A NEW BASELINE -- a re-record of an existing one. This is the D99F5D82...76CA of SYNTHESIS fact 1323 (M95's co-siting freeze), which M108 re-measured at fea1a72 and an independent verifier re-measured at 56bd846 and 14b39dd; all four agree, so the fourth freeze in the corpus is ALIVE, not stale. M95's record omitted STREHL_ALIGN=0 and the hash reproduces only with it -- under default alignment the same command gives 119936E6..., which is the row below. That omission is fact 1389 and is why this table has environment columns at all. Registration is OFF because that is the only invocation with ZERO sidecar dependency: align_enabled() short-circuits before any cache path is computed, so no shared state can reach it. Covers decode, focus, regulariser, gate, merge and the byte-frozen encoder of merge_cmd.rs. Covers NOTHING in the alignment path -- that is the row below, and the trade is deliberate.
+coffee-bean-20-gate2-sidecar	coffee-bean	DSC00016..DSC00035	20	2.0	no	unset	coffee-bean-20.warpmap.txt	unset	scratch	on-sidecar-override	119936E656CD4E844F8345F23D8196B6B282C883C4B828318BADC6E222BAD709	49449626	10 chunks of <= 2 frames	fea1a72	2026-08-24	NEW FREEZE, nothing prior to re-baseline -- no milestone had ever frozen an aligned invocation. Exists to give the unaligned row a partner: the two differ only in registration, so which of them moves says whether a change is in the merge core or in warp application. Registration comes from a COMMITTED fixture rather than a solve, and the fixture is not arbitrary -- it is byte-identical (EF745413...E93B3) to what the solver caches when it solves this bracket fresh, measured at fea1a72, so this row freezes the live registration while depending on none of the state that produces it. CAVEAT THAT MUST NOT BE PAPERED OVER: every aligned run of this bracket prints "this solve could not certify itself ... the registration below is UNVERIFIED". The tool attributes that to insufficient long-span edges; neither M108 nor the verifier confirmed that attribution independently, and it should not be assumed. So this hash pins a registration the tool itself declines to certify. That is still worth freezing -- an unverified value that is CONSTANT still detects change, which is this test's actual job -- but a reader must know they are inheriting the caveat, not a clean bill of health.

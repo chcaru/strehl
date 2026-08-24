@@ -12,17 +12,27 @@ milestone:
 
 | file | size | what it is |
 |---|---|---|
-| `byte-freezes.tsv` | 4 742 B, 50 lines | the registry. Data, not prose. 13 columns, 2 rows. |
-| `byte-freeze.rs` | 60 723 B, 1 453 lines | four tests that read the registry and check it. |
+| `byte-freezes.tsv` | 8 312 B, 87 lines | the registry. Data, not prose. 17 columns, 2 rows. |
+| `byte-freeze.rs` | 74 694 B, 1 708 lines | five tests that read the registry and check it. |
 | `data/coffee-bean-20.warpmap.txt` | 3 171 B | committed warp fixture, sha `EF745413…93B3`. |
 
-`cargo test -p strehl-cli --test byte-freeze` — 4 tests, **17.0 s** in release
+`cargo test -p strehl-cli --test byte-freeze` — 5 tests, **16.7 s** in release
 on the reference rig, both freezes holding, each reproduced twice in separate
 processes.
 
-Three gates run before any hash is compared — isolation, placement and
-determinism (§1.3) — because a hash from the wrong pipeline is not weak
+Four gates run before any hash is compared — frame range, isolation, placement
+and determinism (§1.3) — because a hash from the wrong pipeline is not weak
 evidence, it is evidence about something else.
+
+**Revision, after ORCH's amendment of rule 47.** The registry originally had
+13 columns and bound only the command line. Rule 47 was amended mid-milestone to
+bind the *environment* as well, after a freeze was found that reproduces exactly
+but only under `STREHL_ALIGN=0` — a value that appeared nowhere in its record.
+The schema now carries `env_align`, `env_warpmap`, `env_fix_halo`,
+`env_cache_dir` and `frames`, and the test **builds the environment out of those
+columns** exactly as it already built the argv out of the flag columns. §8
+records the measurements that drove the revision, including one that changes the
+recommendation in §5.
 
 ---
 
@@ -657,6 +667,32 @@ is to matter:
 12. **A deleted row fails nothing.** If someone removes a row, the suite goes
     green with less coverage. The header check catches *reshaping*, not
     *shrinking*.
+13. **The frame-range gate is the one recorded, not derived, expectation.** It
+    must be, since its job is to detect the directory changing under the record
+    — but that makes it the one gate a careless re-baseline can silence by
+    editing a column. It also only sees `*.arw` at the top level of the stack
+    directory: a frame swapped for a *different file of the same name* is
+    invisible to it, since nothing hashes the inputs. That would show up as a
+    moved render hash with no explanation, which is the worst diagnostic shape
+    this instrument can produce.
+14. **`env_cache_dir = scratch` protects the rows, not the tool.** No row can
+    read the shared sidecar cache, which is why §8.3's poisoning cannot reach
+    them. But the *hazard itself is unfixed*: any ordinary `strehl stack` run by
+    a human still consults that cache, and still accepts an altered entry
+    silently. This test does not defend the tool against that; it only declines
+    to build on it. The real repair is content-addressing in
+    `StackIdentity::from_paths` (`warpmap.rs:238`), and it belongs to whoever
+    owns the aligner.
+15. **The `on-sidecar-cache` runtime branch is defensive only.** Every row is
+    pinned to a scratch cache, so reaching that branch requires the harness's
+    own isolation to have failed. It is a tripwire, not coverage — recorded here
+    the same way the placement gate is, because an untested branch counted as
+    coverage is exactly this milestone's own subject matter.
+16. **Both rows are one bracket on one machine.** Everything §8 measures about
+    dirty libraries, directory-independence and determinism was measured on the
+    reference rig. `workers` is reported precisely because cross-host chunking
+    is unmeasured, and a second machine is the cheapest experiment nobody has
+    run yet.
 
 ---
 
@@ -680,8 +716,16 @@ is small. My recommendation:
 **Freeze later, not now:**
 
 3. **A solving row**, once the aligner's solver stops moving. It is the only
-   row that would cover the solver, and `dccaea8` removed the objection that
-   made it unsafe. It must set `$STREHL_CACHE_DIR` to a scratch path.
+   row that would cover the solver. **Two objections, and only one of them has
+   been repaired.** `dccaea8` removed the first — a solving row no longer writes
+   into the read-only capture library. The second is worse and was measured
+   after this section was first written: a "solving" row *does not solve every
+   time*. It reads `$STREHL_CACHE_DIR` first, and a cache entry with altered
+   placements is accepted silently, because `StackIdentity` digests filenames
+   and lengths and never contents. §8.3 has the numbers: a poisoned cache moved
+   the render to `8065EA8D…` at exit 0 with `20 placed / 0 refused`. So a
+   solving row must set `$STREHL_CACHE_DIR` to a **fresh empty** scratch path
+   every run — not merely a private one — or it freezes ambient state.
 4. **One deep render** (the 299-frame bracket the corpus numbers were measured
    on), *if* someone is willing to pay ~55 s and mark it `#[ignore]`-by-default
    with an explicit opt-in. The shallow row catches nearly everything the deep
@@ -690,16 +734,37 @@ is small. My recommendation:
 
 **Do not freeze:**
 
-5. **The `--srgb` / viewing path.** Deliberately in flux — M95 is actively
+5. **The default aligned invocation** — `coffee-bean --limit 20 --gate 2.0`
+   with nothing set. This is the sharpest recommendation in this section and it
+   is the one I changed my mind about. It is a tempting row: it needs no
+   fixture, it exercises the real solver, and it renders the same
+   `119936E6…` as row 2, so it looks free. It is not free. It depends on the
+   shared sidecar cache, and §8.3 shows that dependency turning a render into a
+   different image at exit 0 with every ordinary guard green. Freezing it would
+   have manufactured a **fourth false break from the same root cause as the
+   first three**, inside the instrument built to stop them. Row 2 buys the same
+   coverage at the same hash from a committed fixture, with none of the
+   exposure. The parser rejects this row on sight, and carries the measurement
+   in its panic message so the next person meets the evidence and not the rule.
+6. **The `--srgb` / viewing path.** Deliberately in flux — M95 is actively
    testing demosaic ladders and rescale fixes. A freeze there would go red
    weekly for intended reasons, and the third person to hit it deletes the file.
    Freeze it when the viewing pipeline is declared settled, not before.
-6. **Any invocation whose hash nobody cites.** A freeze earns its row by being
+7. **Any invocation whose hash nobody cites.** A freeze earns its row by being
    load-bearing for a claim somewhere in the corpus. A hash that supports no
    argument is maintenance with no return.
-7. **More than one row per pipeline.** Two rows that always move together carry
+8. **More than one row per pipeline.** Two rows that always move together carry
    one row's information and two rows' cost. The pair above is justified
    precisely because they can move *independently*.
+
+**The general rule these cases share.** A freeze may only depend on inputs the
+harness can *enumerate and control*: the flags, the environment, committed
+fixtures, and the frames themselves. The moment a row depends on state some
+other process can write — a shared cache, a sidecar in a shared directory, a
+machine-wide default — it stops being a measurement of the renderer and becomes
+a measurement of the machine. That is the test for whether an invocation
+deserves a row, and it is a sharper one than "is this pipeline important",
+because the most important pipeline in the project fails it.
 
 The TSV's comment header points here, so the rule travels with the data.
 
@@ -787,3 +852,235 @@ meant to remove (rule 33). Read the `Compiling` lines.
 Do not delete the test and do not `#[ignore]` it. Fixing the row is a two-line
 edit and it leaves a record of who moved what; deleting the test leaves nothing,
 which is the state this milestone was commissioned to end.
+
+---
+
+## 8. Second round — the environment clause, and the poisoned cache
+
+Rule 47 was amended after this milestone's first commit, and ORCH forwarded an
+independent verifier's measurement of the same fixture. Both obliged changes.
+This section records **my own measurements**, not a citation of theirs: ORCH
+asked for two independent records rather than one plus a reference, and where I
+agree with the verifier I say so having measured it myself.
+
+### 8.1 The `ON (solved)` ambiguity — checked, and it is not ambiguous
+
+I was worried that the verifier's *default aligned* runs might have consumed a
+stray sidecar rather than solving fresh, which would have made `119936E6…` a
+number about ambient state. **It does not.** `align_cmd::load_or_solve` returns
+the token `"sidecar"` on a cache hit (`align_cmd.rs:970`) and `"solved"` only
+after actually solving, and the two print as visibly different lines:
+
+```
+alignment      : ON (solved), reference frame 10, 20 placed / 0 refused
+alignment      : ON (sidecar), reference frame 10, 20 placed / 0 refused
+```
+
+So the verifier's table is sound as recorded. But the check paid for itself
+twice over, because it exposed a hole in my own parser: `alignment_mode()` knew
+`OFF`, `ON (solved)` and `ON (sidecar-override)` and would have reported
+`ON (sidecar)` — the cache hit, the one genuinely dangerous mode — as
+`MISSING`. That is a *safe* failure, but an uninformative one. The token is now
+named `on-sidecar-cache`, it is a legal observation and an illegal record, and
+the isolation message has a branch that explains it specifically.
+
+The prefix trap is real and worth naming: `ON (sidecar)` is a prefix of
+`ON (sidecar-override)`, so testing them in the wrong order reports every
+correctly-overridden run as a cache hit. `the_alignment_parser_names_every_mode_the_tool_can_report`
+pins the ordering against four log lines copied verbatim out of measured runs.
+
+### 8.2 The dirty-library experiment
+
+ORCH's instruction was *"assume it is dirty and assert your way out of it."* I
+built a stack that is dirty on purpose: 20 ARWs copied out of `coffee-bean` into
+`C:\dev\strehl-out\M108\dirty-lib\coffee-bean`, plus a **real quarantined
+stray** — `round4-1033-coffee-bean-warpmap.txt`, 608 B, `frames 1` — dropped in
+beside them.
+
+| # | invocation | reported mode | sha256 | matches registry |
+|---|---|---|---|---|
+| A | `STREHL_ALIGN=0` | `OFF` | `D99F5D82…76CA` | **yes** |
+| B | `STREHL_WARPMAP=<fixture>` | `ON (sidecar-override)`, 20/0 | `119936E6…D709` | **yes** |
+| C | default aligned, cold cache | `ON (solved)`, 20/0 | `119936E6…D709` | — |
+
+All 49 449 626 B, all exit 0, and the stray's mtime was unchanged afterwards.
+Three things follow.
+
+**The two frozen rows are immune to a dirty directory, measured rather than
+argued.** Both reproduced exactly with a stray sitting in the same directory.
+
+**The hashes are directory-independent.** These renders came from `C:\dev\…`,
+not `D:\personal\macro`, and agree to the byte with the originals. That
+independently corroborates the verifier's forensic caution — `StackIdentity` is
+directory-independent, so a quarantined sidecar cannot be attributed to the
+agent that wrote it from its contents.
+
+**My committed fixture is not an arbitrary artifact.** Run C wrote its solved
+sidecar to `$STREHL_CACHE_DIR`, and that file hashes
+`EF74541395DB1BA606067BCF04947909BD6A9C5BE530FE8AAD21578B5C1E93B3` — *byte-identical
+to the fixture committed at `tests/data/coffee-bean-20.warpmap.txt`*. Row 2
+therefore freezes the live registration while depending on none of the state
+that produces it, which is the strongest form of the trade §1.4 describes.
+
+### 8.3 The poisoned cache — why the default aligned invocation must never be a row
+
+I then altered the cached sidecar from run C: swapped the placements of frames 0
+and 19, leaving the frame count, the stack name and the stack digest all valid.
+
+| # | invocation | reported mode | sha256 | moved? |
+|---|---|---|---|---|
+| D | default aligned, **poisoned** cache | `ON (sidecar)`, 20/0 | `8065EA8D…3084` | **YES** |
+| E | `STREHL_ALIGN=0`, poisoned cache present | `OFF` | `D99F5D82…76CA` | no |
+| F | `STREHL_WARPMAP=<fixture>`, poisoned cache | `ON (sidecar-override)`, 20/0 | `119936E6…D709` | no |
+
+Run D **exited 0**, reported `20 placed / 0 refused`, and rendered a different
+image. `load_or_solve` accepted the poisoned file because `check_stack` passed
+and `map.len() == paths.len()`; `StackIdentity::from_paths` digests filenames
+and file lengths only (`warpmap.rs:238`), never contents. Every guard in this
+test except the alignment-mode token would have been green.
+
+This is the concrete answer to the verifier's point 1. Its table lists the
+default aligned invocation as a candidate row, and **that row must not exist.**
+Had I frozen it, run D would have reported a *moved freeze* for a renderer that
+had not changed — a **fourth false break, from the same root cause as the first
+three**, and this time inside the instrument built to stop them. The parser now
+rejects such a row on sight (`env_align = unset` with `env_warpmap = unset`),
+with this measurement in the panic message so the next person meets the evidence
+rather than the rule.
+
+The registry gets the *coverage* of the aligned pipeline from row 2 instead, at
+the same hash, with none of the exposure. `env_cache_dir` is constrained to
+`scratch` so no row can ever read the shared per-user cache.
+
+### 8.4 The frame range — a new gate
+
+`--limit 20` takes a **prefix in name order**, so it is not reproducible without
+knowing which twenty. Measured independently: `coffee-bean` holds 105 frames,
+`DSC00016`–`DSC00120`, and `--limit 20` selects `DSC00016`–`DSC00035`. That
+agrees with the verifier.
+
+This is now a recorded column *and* a gate that runs before anything is
+rendered. **Check F**: copying `DSC00016.ARW` to `DSC00015.ARW` in the scratch
+library:
+
+```
+EXIT=101   elapsed=0.2s
+
+FRAME RANGE MOVED: `coffee-bean-20-gate2-unaligned`
+
+  registry says : DSC00016..DSC00035
+  directory has : DSC00015..DSC00034
+  stack         : C:\dev\strehl-out\M108\dirty-lib\coffee-bean
+  --limit       : 20   (a PREFIX in name order, not a selection)
+
+NOTHING HAS BEEN RENDERED. This is deliberate: the hash below would have
+moved, and it would have looked like a renderer regression when in fact the
+INPUT changed. That confusion is the whole reason this column exists.
+  ...
+  * Row is at crates/strehl-cli/tests/byte-freezes.tsv:86.
+```
+
+Removing the planted frame returned the suite to `5 passed` in 16.7 s.
+
+This gate is worth its weight because of the failure it prevents rather than the
+one it detects: a reframed bracket produces a moved hash that looks *exactly*
+like a regression, and someone would have spent an evening bisecting the
+renderer. It fires in 0.2 s and renders nothing.
+
+It is also, deliberately noted, the **only** gate whose expected value is
+recorded rather than derived — it has to be, since the point is to detect the
+directory changing under the record — and therefore the only one a careless
+re-baseline can silence.
+
+### 8.5 The `UNVERIFIED` warning, recorded and not papered over
+
+Every aligned run of this bracket prints:
+
+> `WARNING: this solve could not certify itself … the registration below is UNVERIFIED`
+
+I reproduce it, and row 2's `why` now says so in as many words: **this hash pins
+a registration the tool itself declines to certify.** That is still worth
+freezing — an unverified value that is *constant* still detects change, which is
+this test's actual job — but a reader must know they are inheriting the caveat
+rather than a clean bill of health. The tool attributes the failure to
+insufficient long-span edges; **I did not confirm that attribution and it should
+not be assumed.** It belongs to whoever owns the solver.
+
+Nothing in row 1 is affected: with `STREHL_ALIGN=0` there is no solve.
+
+### 8.6 The canary, in a dirty library
+
+Run under `STREHL_CAPTURES=<dirty-lib>` with the stray in place, the whole suite
+passed while printing:
+
+```
+WARNING: the read-only capture library contains 1 stray sidecar file(s):
+  C:\dev\strehl-out\M108\dirty-lib\coffee-bean\warpmap.txt
+...
+freeze `coffee-bean-20-gate2-unaligned` HOLDS: D99F5D82... -- reproduced twice
+freeze `coffee-bean-20-gate2-sidecar`   HOLDS: 119936E6... -- reproduced twice
+test result: ok. 5 passed
+```
+
+**Noticed but not derailed** is the intended behaviour and I am glad to have
+seen it rather than assumed it. A stray is a hygiene problem for the library's
+owner; it is not evidence about the renderer, so it must not be able to turn
+this test red. If it *could*, the test would inherit exactly the shared-state
+fragility it exists to eliminate — and would be deleted within a fortnight.
+
+### 8.7 What changed in the schema
+
+| was | now | why |
+|---|---|---|
+| — | `frames` | `--limit N` is not reproducible without knowing which N. Verified against the directory, §8.4. |
+| `align` (one mode column) | `env_align`, `env_warpmap`, `env_fix_halo`, `env_cache_dir` | rule 47 as amended binds the environment. The row is now the literal environment, not a label that implies one. |
+| `solve` rejected as a mode | `env_align=unset` + `env_warpmap=unset` rejected as a combination | the combination is the true cause; the label was a proxy for it. The panic now carries §8.3's measurement. |
+| — | `env_cache_dir` must be `scratch` | §8.3. The default is a shared per-user cache and a freeze that reads it is a freeze on ambient state. |
+
+`unset` is spelled out as a value and empty fields are rejected, because the
+defect rule 47 names is precisely that a reader cannot tell a default from an
+omission.
+
+The anti-splice key in `no_two_rows_freeze_the_same_invocation` now hashes the
+whole rule-47 record — flags *and* environment. Previously two rows differing
+only in, say, `STREHL_FIX_HALO` would have collided.
+
+### 8.8 A correction to my own first round
+
+I added an assertion rejecting `alignment_mode = on-sidecar-cache` in the row
+validator and then found it was **unreachable**: the preceding equality check
+against the derived expected mode already fails on any such value. I removed it
+rather than leave a check that cannot run, and moved the diagnosis to the place
+the token can genuinely be observed — the runtime isolation gate. A dead
+assertion in a test whose subject is *"an untested freeze is an unverified
+freeze"* would have been the milestone's own defect in miniature.
+
+The `on-sidecar-cache` branch of that runtime gate is, honestly, **defensive
+only**: since every row is pinned to `env_cache_dir = scratch`, reaching it
+requires the harness's own isolation to have failed. Same category as the
+placement gate in §1.3, and recorded the same way rather than counted as
+coverage. What *is* directly tested is the parser
+(`the_alignment_parser_names_every_mode_the_tool_can_report`), against log lines
+copied verbatim from the runs in §8.2–8.3.
+
+### 8.9 On the meta-point
+
+ORCH observed that rule 45 was broadcast to seven agents and two more sidecars
+appeared within minutes, and drew the parallel: *a convention announced is not a
+convention enforced.* §6 already argued that. §8.3 sharpens it in a way I did
+not expect — **the enforcement layer can inherit the disease it treats.** A
+freeze test that reads shared mutable state is not a weaker test, it is a
+*generator* of false alarms with the authority of CI behind them. That is worse
+than the prose it replaces, because prose does not page anyone at 2 a.m.
+
+The narrower mechanism I would propose instead of a deny-write ACL on the whole
+drive (which would fail confusingly the next time the owner copies captures in):
+**deny-write on `*.warpmap.txt` and `warpmap.txt` specifically**, via a `DENY`
+ACE scoped to a file-name pattern, or failing that a scheduled sweep that moves
+strays to quarantine and appends to a log. `align` already treats an unwritable
+cache as a soft failure — it warns and continues with the solve it just computed
+— so the cost of denying the write is a re-solve, not a broken tool. That is a
+verified fact from ORCH's own reading of the source, and it means the safe
+option is available. It costs correctness nothing and it costs speed only where
+speed was being bought with someone else's data.
+
