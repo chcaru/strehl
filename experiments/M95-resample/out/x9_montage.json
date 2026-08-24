@@ -1,0 +1,137 @@
+{
+  "regions": [
+    {
+      "name": "AUTO boundary  step 31602 DN",
+      "x": 1354,
+      "y": 2458,
+      "w": 620,
+      "h": 460
+    },
+    {
+      "name": "AUTO texture   hi-band 2.0e+09",
+      "x": 1354,
+      "y": 666,
+      "w": 620,
+      "h": 460
+    },
+    {
+      "name": "HAND thorax hair, in focus",
+      "x": 760,
+      "y": 3180,
+      "w": 620,
+      "h": 460
+    },
+    {
+      "name": "HAND leg + claw",
+      "x": 1500,
+      "y": 3760,
+      "w": 620,
+      "h": 460
+    }
+  ],
+  "stats": {
+    "catmull-rom|AUTO boundary  step 31602 DN": {
+      "max_step_DN": 31601.610800000002,
+      "range_DN": 46794.21987260027,
+      "hi_band": 1208910051.7040594
+    },
+    "catmull-rom|AUTO texture   hi-band 2.0e+09": {
+      "max_step_DN": 13522.891600000003,
+      "range_DN": 46623.094362400014,
+      "hi_band": 1595940360.9540534
+    },
+    "catmull-rom|HAND thorax hair, in focus": {
+      "max_step_DN": 17580.091200000003,
+      "range_DN": 43911.2284736,
+      "hi_band": 1176749824.5553513
+    },
+    "catmull-rom|HAND leg + claw": {
+      "max_step_DN": 15136.768199999999,
+      "range_DN": 40430.09807000004,
+      "hi_band": 618420035.4760933
+    },
+    "lanczos2|AUTO boundary  step 31602 DN": {
+      "max_step_DN": 31607.475599999998,
+      "range_DN": 46770.04218460022,
+      "hi_band": 1213056358.5452394
+    },
+    "lanczos2|AUTO texture   hi-band 2.0e+09": {
+      "max_step_DN": 13494.890599999992,
+      "range_DN": 46620.94092440001,
+      "hi_band": 1584206828.2141662
+    },
+    "lanczos2|HAND thorax hair, in focus": {
+      "max_step_DN": 17629.143399999997,
+      "range_DN": 43931.619560800005,
+      "hi_band": 1203426491.0057201
+    },
+    "lanczos2|HAND leg + claw": {
+      "max_step_DN": 15166.190599999998,
+      "range_DN": 40433.5226346,
+      "hi_band": 634380313.443373
+    },
+    "lanczos3|AUTO boundary  step 31602 DN": {
+      "max_step_DN": 37292.82979999999,
+      "range_DN": 47017.59085500035,
+      "hi_band": 1618456916.0647557
+    },
+    "lanczos3|AUTO texture   hi-band 2.0e+09": {
+      "max_step_DN": 12719.425799999997,
+      "range_DN": 46647.731157400005,
+      "hi_band": 1743883760.730328
+    },
+    "lanczos3|HAND thorax hair, in focus": {
+      "max_step_DN": 19338.9704,
+      "range_DN": 43972.208717999994,
+      "hi_band": 1665308523.2093217
+    },
+    "lanczos3|HAND leg + claw": {
+      "max_step_DN": 14533.671199999997,
+      "range_DN": 40546.47352740001,
+      "hi_band": 679256819.4163829
+    }
+  },
+  "diffs": {
+    "lanczos2|AUTO boundary  step 31602 DN": [
+      46.52058087891538,
+      5851,
+      95.09198223468911
+    ],
+    "lanczos3|AUTO boundary  step 31602 DN": [
+      145.17661640953716,
+      27697,
+      99.18069191210847
+    ],
+    "lanczos2|AUTO texture   hi-band 2.0e+09": [
+      42.31890603085554,
+      7658,
+      96.2466105656849
+    ],
+    "lanczos3|AUTO texture   hi-band 2.0e+09": [
+      124.9593618513324,
+      10624,
+      99.38908368396447
+    ],
+    "lanczos2|HAND thorax hair, in focus": [
+      48.24954651706405,
+      17410,
+      91.88055165965405
+    ],
+    "lanczos3|HAND thorax hair, in focus": [
+      149.7035098176718,
+      16308,
+      99.22206638616176
+    ],
+    "lanczos2|HAND leg + claw": [
+      30.304532491818605,
+      6436,
+      89.73188405797102
+    ],
+    "lanczos3|HAND leg + claw": [
+      100.98319775596073,
+      19385,
+      98.81136044880785
+    ]
+  },
+  "montage_sha256": "3975bd3b64f25bda8067ceb34db1687dd9ae61fc5f12528f23db0b8f519d73b1"
+}

@@ -1,0 +1,36 @@
+commit SHA at render time : 394407f6f003c0fcad18cb6ab8626d5fd58c8aa7
+STREHL_ALIGN              : (unset -- alignment is on by default; log says 'ON')
+STREHL_FIX_HALO           : (unset)
+STREHL_WARPMAP            : per arm, below (own scratch, never the capture library)
+
+kernel              bytes  sha256 (first 16)  resampler   field+gate (summed across workers)
+catmull-rom     197797874  E400A63AA9F6AB1F   CatmullRom  330.606 s summed across workers (1105.7 ms/frame)
+lanczos2        197797874  CE1710CED111C419   Lanczos2    1386.041 s summed across workers (4635.6 ms/frame)
+lanczos3        197797874  DC6555BCDAE0FC4B   Lanczos3    2292.288 s summed across workers (7666.5 ms/frame)
+
+catmull-rom:
+  STREHL_WARPMAP = C:\dev\strehl-out\M95-montage\catmull-rom.warpmap.txt
+  invocation     = strehl stack D:\personal\macro\bee-3-cpl --srgb --exposure 1.54 --gate 4.0 -o C:\dev\strehl-out\M95-montage\bee3-catmull-rom.tif
+  alignment      = ON (sidecar-override), reference frame 149, 299 placed / 0 refused
+  threads        = 13
+  output         = 7032 x 4688, 197797874 bytes, sha256 E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112
+lanczos2:
+  STREHL_WARPMAP = C:\dev\strehl-out\M95-montage\lanczos2.warpmap.txt
+  invocation     = strehl stack D:\personal\macro\bee-3-cpl --srgb --exposure 1.54 --gate 4.0 -o C:\dev\strehl-out\M95-montage\bee3-lanczos2.tif
+  alignment      = ON (sidecar-override), reference frame 149, 299 placed / 0 refused
+  threads        = 13
+  output         = 7032 x 4688, 197797874 bytes, sha256 CE1710CED111C419AA02960963B2FD7C422FCABA7DDA0A5F5C2E6F1CE7C03983
+lanczos3:
+  STREHL_WARPMAP = C:\dev\strehl-out\M95-montage\lanczos3.warpmap.txt
+  invocation     = strehl stack D:\personal\macro\bee-3-cpl --srgb --exposure 1.54 --gate 4.0 -o C:\dev\strehl-out\M95-montage\bee3-lanczos3.tif
+  alignment      = ON (sidecar-override), reference frame 149, 299 placed / 0 refused
+  threads        = 13
+  output         = 7032 x 4688, 197797874 bytes, sha256 DC6555BCDAE0FC4B334DE31AD130A0C644068647FA77F5FDD94F3271044B26A9
+
+all three renders are byte-distinct: the sidecar's resampler line reaches the gather.
+
+gather cost, relative to catmull-rom (tool's own summed-across-workers timer):
+  catmull-rom      330.6 s    1.00x
+  lanczos2        1386.0 s    4.19x
+  lanczos3        2292.3 s    6.93x
+END OF RULE 47 RECORD

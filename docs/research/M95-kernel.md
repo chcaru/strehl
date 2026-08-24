@@ -1742,3 +1742,368 @@ which is how I could attribute it in one step. Before the fix both causes
 printed nothing and exited 1, so the earlier exit 1 I saw in §21.1 remains
 unattributable — a concurrent writer is now *confirmed to be a mechanism that
 exists*, which is not the same as evidence that it was the cause that time.
+
+## 22. The four-point ladder, the owner's montage, and three instruments that failed their own controls
+
+The orchestrator asked for four things: land the new kernel switchable with the
+default unchanged; price Mitchell-Netravali and Lanczos-2, the two intermediates
+nobody had measured; score ringing with a registered metric and a flat-region
+control; and render a montage for the owner to judge by eye. This section is all
+four, plus the three instruments that broke along the way. Two of the three
+breakages were caught by controls I had registered against myself, and one of
+those controls caught a design flaw in an instrument before its result reached
+this report.
+
+Every number in this section was printed by code run in this session. Nothing is
+recalled from an earlier note.
+
+### 22.1 Step 1 was already shipped, and Mitchell was already retired
+
+Before building anything I re-derived the state of the tree rather than trusting
+the brief. Two things did not match it.
+
+`Resampler::Lanczos3` had already landed switchable with the default unchanged,
+at commit `843f6e1`, "M95 arm 9: Lanczos-3 lands switchable, default unchanged
+at catmull-rom". Step 1 was done.
+
+Mitchell-Netravali had already been retired in `align.rs:3552`, on the ground
+that with `B != 0` the Keys/Mitchell kernel is not interpolating. The
+orchestrator's hypothesis was that Mitchell might recover most of the sharpness
+at a fraction of the ringing, and so dissolve the trade. It does not, and the
+reason is structural rather than a matter of degree: a non-interpolating kernel
+does not reproduce a sample it lands exactly on, so it blurs an image even where
+nothing has moved.
+
+So the genuinely new kernel was Lanczos-2, which landed at `ac95e1b` with the
+default unchanged, together with a test asserting that it has Catmull-Rom's 2.0
+px support **and** that Lanczos-3 refuses a border position Lanczos-2 accepts.
+That second assertion exists so the support claim cannot be vacuous.
+
+### 22.2 The ladder, against bars committed before the kernel entered any script
+
+B25 to B29 were committed at `42a0c7c`, 15:04:14, before `lanczos2` appeared in
+any measurement script. That commit is the evidence that what follows was not
+reverse-engineered from a result.
+
+**B25, the identity-phase gate. Disqualifying.** A resampler asked for the pixel
+it is already sitting on must return it.
+
+| kernel | identity dex | verdict |
+|---|---|---|
+| catmull-rom | +0.000000 | PASS |
+| **mitchell** | **-0.200830** | **FAIL, not interpolating** |
+| lanczos2 | +0.000000 | PASS |
+| lanczos3 | +0.000000 | PASS |
+| bspline | +0.000000 | PASS |
+
+Mitchell loses 0.2008 dex of high-band amplitude at zero phase shift. That is
+the whole of the orchestrator's hypothesis, answered: the trade does not
+dissolve, because the kernel that was supposed to dissolve it fails a bar that
+has nothing to do with the trade.
+
+**B26, phase-averaged sharpness**, 40 tiles by 7 phases, against Catmull-Rom:
+
+| kernel | phase-avg dex | gain vs C-R | effective support |
+|---|---|---|---|
+| catmull-rom | -0.2006 | — | 2.0 px |
+| mitchell | -0.3738 | -0.1732 | 2.0 px |
+| lanczos2 | -0.1963 | **+0.0043** | 2.0 px |
+| bspline | -0.0951 | +0.1055 | 2.0 px, IIR prefilter |
+| lanczos3 | -0.0663 | **+0.1343** | 3.0 px |
+
+**B27, ringing on a clean 1000 DN step at half-pixel phase.** The harness is
+verified analytically: Catmull-Rom must read 6.2500%, exactly 1/16, and it does,
+which is what makes the other rows readable.
+
+| kernel | overshoot % | reach px | vs C-R |
+|---|---|---|---|
+| catmull-rom | 6.2500 | 3 | 1.00x |
+| mitchell | 3.4722 | 3 | 0.56x |
+| lanczos2 | **6.2500** | 3 | **1.00x** |
+| bspline | 10.0481 | 9 | 1.61x |
+| lanczos3 | 11.1413 | 5 | **1.78x** |
+
+**B28 fired, and B29 passed.** B28 required the flat-region gain to be reported
+beside the detail-region gain. For Lanczos-3 they are +0.1368 flat against
++0.1343 detail: the same number. B29, the ordering control, put Mitchell below
+Catmull-Rom as required (-0.3738 against -0.2006), so B26 is readable.
+
+### 22.3 The lever is effective support width, not kernel family
+
+Read the two tables together and the ladder is monotone in support, not in
+family. Lanczos-2 has Catmull-Rom's 2.0 px support, and it lands on Catmull-Rom's
+sharpness to within 0.0043 dex **and on its ringing figure exactly**, 6.2500%
+against 6.2500%. Two kernels from different families with the same support are
+the same kernel to within measurement. Lanczos-3, at 3.0 px, is where the
+sharpness is. B-spline reaches +0.1055 dex on four taps because its IIR prefilter
+is effectively global, which is the same lever reached a different way.
+
+That is the transferable result of this milestone. Choosing a kernel is choosing
+a support width; the family name is close to decoration.
+
+### 22.4 The 9.902x ringing figure is stale, and it is still being quoted
+
+The case against Lanczos-3 as default has been carried by a figure of 9.9x the
+ringing of Catmull-Rom. That number is retired in this report already, and B27
+re-derives the real one this session: **1.78x on a true discontinuity**, reach 5
+px against 3. Section 22.7 measures it again on real edges, where it is weaker
+still. Anyone still deciding against Lanczos-3 on the strength of 9.9x is
+deciding on a number that no longer exists.
+
+### 22.5 The montage, and the rule 47 record
+
+Three arms on the owner's 299-frame `bee-3-cpl`, from one solve, with the kernel
+as the only variable. The base sidecar is the orchestrator's own verified
+299-frame solve, copied into my scratch and rewritten on the single
+`resampler` line, with a hard error if that anchor failed to land exactly once.
+
+- commit SHA at render time: `adff9c8b7818624ba24cd5d21ffd108630e3055d`
+- `STREHL_ALIGN` unset, `STREHL_FIX_HALO` unset, `STREHL_WARPMAP` per arm into
+  `C:\dev\strehl-out\M95-montage\`, never the capture library
+- threads 13, output 7032 x 4688, 197 797 874 bytes per arm
+- every arm logged `ON (sidecar-override), reference frame 149, 299 placed / 0 refused`
+- invocation, identical but for the output path:
+  `strehl stack D:\personal\macro\bee-3-cpl --srgb --exposure 1.54 --gate 4.0 -o <out>.tif`
+- `--gate 4.0` is the default value, passed explicitly and recorded, per the
+  habit the orchestrator asked for after the M106 freeze attribution
+
+| arm | sha256 | gather, summed across workers |
+|---|---|---|
+| catmull-rom | `E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112` | 330.606 s |
+| lanczos2 | `CE1710CED111C419AA02960963B2FD7C422FCABA7DDA0A5F5C2E6F1CE7C03983` | 1386.041 s |
+| lanczos3 | `DC6555BCDAE0FC4B334DE31AD130A0C644068647FA77F5FDD94F3271044B26A9` | 2292.288 s |
+
+The catmull-rom arm reproduces `E400A63A..7112`, which is the hash the
+orchestrator's own gate ablation produced. All three arms therefore sit on a
+baseline that has been confirmed twice by different agents.
+
+**The cost, with the honesty the measurement requires.** I re-ran the
+catmull-rom arm unchanged. It reproduced its output **bit for bit**, and its
+gather timer read **411.261 s** against the first run's **330.606 s**. That is
+**+24% on an identical invocation**, from contention with the other agents on
+this machine. So the cost ratios are a range, not a point:
+
+| arm | vs C-R at 330.6 s | vs C-R at 411.3 s |
+|---|---|---|
+| lanczos2 | 4.19x | 3.37x |
+| lanczos3 | 6.93x | 5.57x |
+
+Lanczos-2 costs between three and four times Catmull-Rom for **+0.0043 dex**.
+It has the same support and therefore the same tap count, so the cost is the
+transcendental sinc evaluation, not the window. That is the clearest verdict in
+this section: Lanczos-2 is an option, not a default, and my pre-registered bar
+said "below +0.02 dex is not worth a default change" before I knew the number.
+
+### 22.6 The PIL truncation defect, caught in session
+
+The first montage build read the renders with PIL and printed
+`(4688, 7032, 3) uint8`. The tool had written 16-bit RGB. I read the TIFF IFD by
+hand, without a library: `BitsPerSample (16, 16, 16)`, and
+`7032 * 4688 * 3 * 2 = 197 796 096` against a 197 797 874 byte file. PIL has no
+16-bit RGB mode and hands back `mode='RGB'` truncated to 8 bits, `max=255`;
+`tifffile` returns `uint16`, `max=65535`.
+
+Every per-crop number that first run printed measured 8-bit quantisation rather
+than the kernel, and its region selection picked a defocused background tile
+with a 10 DN range and called it texture. None of it was reported. The rebuilt
+script asserts the dtype and exits rather than measuring the wrong thing.
+
+I checked the other harnesses for the same defect. `k4_png.py` reads 8-bit BMPs
+for display and derives no numbers; `f1_figure.py` uses PIL only to draw. The
+registered sharpness instrument reads raw frames through rawpy and never touched
+a TIFF. So the blast radius was one unreported run.
+
+**Worth passing on: `ORCH-drift-check/kernel_crops.py`, which produced the
+earlier by-eye kernel comparison, reads the same 16-bit TIFFs through PIL.** Its
+`to8()` has a `uint16` branch that can never have fired. That comparison was
+deliberately visual and computed no sharpness number, so its conclusions stand,
+but any number taken from that script in future would be quantisation.
+
+### 22.7 Ringing on real edges: three bars failed, and one of the failures was the point
+
+**Arm 12, registered at `85ee287` before the script existed.** The instrument was
+`excess(p) = max(0, A(p) - localmax_C(p), localmin_C(p) - A(p))` over the 3x3
+neighbourhood of the shipping default, binned by the default's local gradient
+into FLAT, MID and EDGE deciles. R1 required Lanczos-3's EDGE excess to be at
+least 3x its FLAT excess; R3 planted a +2000 DN ring on EDGE pixels and required
+80% recovery.
+
+| arm | FLAT mean excess | MID | EDGE | n EDGE px |
+|---|---|---|---|---|
+| lanczos2 | 0.60 DN | 0.97 | 0.48 | 3 323 301 |
+| lanczos3 | 30.46 DN | 15.54 | 6.68 | 3 323 301 |
+
+R1 read **0.22x** against a bar of 3.0x: FAIL. R2 passed at 0.071. **R3
+recovered 144.1 DN of a planted 2000 DN, 7.2%: FAIL.**
+
+R3's failure is the most useful result in this section, because it makes R1
+unreadable. The diagnosis is arithmetic, not statistical. `excess` can only
+report an overshoot larger than the local headroom `localmax_C - C`, and at an
+edge pixel the 3x3 window already contains the far side of the step, so the
+headroom is the height of the step. **The instrument is blind precisely where it
+was aimed.** R1's FAIL is a statement about that blind spot and not about
+Lanczos-3, and without R3 I would have reported it as evidence that Lanczos-3
+does not ring.
+
+I have to own the other half of that. The plant I registered was arithmetically
+close to impossible to recover, and I did not see it when I wrote the bar. A
+control that cannot pass is no more a control than one that cannot fail.
+
+**Arm 12b, registered at `35c40c2` before its script existed.** ADDENDUM 4's
+bars were left exactly as written; their verdicts stand above. The corrected
+instrument measures the same exact `excess`, but only on pixels where the
+headroom is small and stated, so absorption cannot hide the effect:
+
+- SENSITIVE: `localmax_C - C < 200 DN` and `C - localmin_C < 200 DN`
+- NEAR: SENSITIVE, within 2 px of a top-decile-gradient pixel, not itself one
+- FAR: SENSITIVE, more than 8 px from any such pixel
+
+The same selection is applied to both bins, so NEAR against FAR is like-for-like.
+
+| arm | NEAR mean excess | FAR mean excess | NEAR/FAR | n NEAR | n FAR |
+|---|---|---|---|---|---|
+| lanczos2 | 1.33 DN | 0.65 DN | 2.05x | 11 124 | 9 829 407 |
+| lanczos3 | 37.34 DN | 28.63 DN | **1.30x** | 11 124 | 9 829 407 |
+
+**R6, the power control, passed: 1874.4 DN recovered of 2000 planted, 93.7%.**
+The instrument is alive.
+
+**R4 failed, on a live instrument: 1.30x against a bar of 3.0x.** Lanczos-3's
+overshoot is not concentrated near edges. By the bar I registered before
+measuring, **this is not ringing and I will not call it ringing.**
+
+**R5 passed decisively: 0.036**, so Lanczos-2's real-edge behaviour is 28x
+quieter than Lanczos-3's and B27's synthetic prediction transfers.
+
+What Lanczos-3 actually does is push pixels outside the default's local range
+**everywhere**, by 28.63 DN of 65535 in locally flat regions and 37.34 DN near
+edges. That is 0.04% to 0.06% of full scale, and it is amplification of whatever
+is present rather than an edge artefact. It is the same finding as B28 reached
+from the spectral side, and the same finding as the post-hoc scene probe, which
+recovered the Lanczos-3 gain in full on synthetic scenes with no noise process
+in them at all: +0.1332 on 1/f detail, +0.1366 on a flat spectrum, +0.1368 on
+pure white noise, a spread of 0.0036 dex against a kernel separation of 0.3108
+dex. `band_ratio` after a resample measures the kernel's transfer function. A
+linear kernel cannot choose what to amplify, so on noise-dominated ground the
+recovered high-band energy is noise.
+
+### 22.8 The montage, and what the owner is actually choosing between
+
+`C:\dev\strehl-out\M95-montage\M95-kernel-montage.png`, 3760 x 3934,
+sha256 `3975bd3b64f25bda8067ceb34db1687dd9ae61fc5f12528f23db0b8f519d73b1`.
+
+Four regions at 1:1, magnified 2x by nearest neighbour so the reader is looking
+at real pixels. Two regions are chosen from the data by a stated criterion and
+two are the hand-picked regions from the earlier by-eye comparison, carried
+unchanged. The automatic regions are selected **on the catmull-rom arm only**,
+the shipping default, so the selection cannot favour the challenger.
+
+The selection criterion for the texture region was changed once, and the change
+is disclosed: the first version maximised high-band *share*, which is maximised
+by flat noisy regions because the denominator collapses, and it duly chose
+defocused background. Absolute high-band power cannot be gamed that way. No
+pass/fail bar moved.
+
+Per-crop difference from the default, in 16-bit DN of 65535:
+
+| region | lanczos2 mean, max | lanczos3 mean, max |
+|---|---|---|
+| auto boundary, 31 602 DN step | 46.5, 5 851 | 145.2, 27 697 |
+| auto texture | 42.3, 7 658 | 125.0, 10 624 |
+| hand thorax hair, in focus | 48.2, 17 410 | 149.7, 16 308 |
+| hand leg and claw | 30.3, 6 436 | 101.0, 19 385 |
+
+On the boundary crop the largest single-pixel step is 31 602 DN for the default,
+**31 607 for Lanczos-2**, and **37 293 for Lanczos-3**. Lanczos-2 changes the
+strongest edge in the frame by five parts in thirty thousand.
+
+Mitchell is deliberately absent from the montage. It fails B25 and is not
+shipped, and putting it in front of the eye would invite a judgement on a kernel
+that is disqualified on a ground the eye cannot see.
+
+**A metric I retired rather than rescue.** The montage script also computed a
+crop-level band-power number. Its power control planted blurs at sigma 0.35 and
+0.7 px and required both to move it by at least 0.05 dex. Sigma 0.7 moved it
+-0.5374 dex; **sigma 0.35 moved it -0.0263 dex and failed.** I did not relax the
+bar. The metric is retired, still printed but labelled, and it adjudicates
+nothing here: its measured floor is 6.1x the +0.0043 dex Lanczos-2 effect it
+would have had to resolve. The montage's conclusions rest on the exact per-pixel
+DN comparison, which is a byte difference and needs no power control, and on the
+owner's eye.
+
+### 22.9 Predictions of mine that the measurements refuted
+
+- I expected Lanczos-3's NEAR excess to be of order 100 to 400 DN. It is
+  **37.34 DN**, well below my range.
+- I expected R4 to pass with a large margin. It **failed at 1.30x**, on an
+  instrument proven live at 93.7% recovery. Lanczos-3 does not ring in any
+  edge-localised sense on this data.
+- I expected R3 to pass. It failed at 7.2%, and on inspection it could hardly
+  have done otherwise. That is a defect in my pre-registration, not only in the
+  instrument.
+- I registered before rendering that Lanczos-2 would be visually
+  indistinguishable from Catmull-Rom. At preview scale it is. The owner's
+  judgement at 100% is the test that matters, and if they can see a difference
+  then B26's +0.0043 dex is wrong.
+
+### 22.10 What I would ship, and what I will not decide
+
+I will not move the default on my own measurement, and I am not able to verify
+my own work here.
+
+The evidence, stated so someone else can disagree with it: Lanczos-3 buys
+**+0.1343 dex**, 1.363x high-band amplitude, for between 5.6x and 6.9x the
+gather cost; it does not ring in an edge-localised way on real data; what it
+does instead is amplify everything present, noise included, by about 0.05% of
+full scale. Lanczos-2 buys **+0.0043 dex** for between 3.4x and 4.2x the cost
+and should ship as an option and nothing more. B-spline is the unpriced
+candidate worth a look next: **+0.1055 dex**, 79% of Lanczos-3's gain, on four
+taps and 2.0 px of support with no extra border, though its ring reach of 9 px
+is the widest measured and it has never been rendered on a real stack.
+
+The question the montage puts to the owner is not "is Lanczos-3 sharper". It
+measurably is. It is whether 1.363x high-band amplitude on a subject this
+noise-limited reads as detail or as grain, and that is a judgement about the
+photograph rather than about the kernel.
+
+
+### 22.11 The gate on this section, and what its control found in me
+
+`verify_s22.py` is the gate: 57 checks, GREEN. It reconstructs both results
+tables cell by cell from the JSON the measurement scripts wrote, hashes all
+three renders and the montage off disk and requires those digests to appear in
+the prose, and asserts the pre-registration commits are cited. Its exit contract
+is three-valued, because after `e3c01aa` a tool failure and a subject failure are
+different observations and a gate that cannot tell them apart makes a green run
+and a broken run the same: 0 verified, 1 a claim failed, 2 the verifier itself
+broke.
+
+`negctl_s22.py` is the control: **7 of 7 planted defects caught, tool arm PASS
+(a planted exception exits 2, not 0 and not 1), power arm PASS**, and the report
+restored byte-identical after every arm. The power arm appends one byte to the
+montage on disk and requires the gate to notice, so the hash checks are shown to
+be live rather than vacuously green.
+
+Three defects in my own instruments surfaced here rather than in the report, and
+they are the reason this section has a control at all.
+
+**The gate caught me miscounting.** I asserted a figure appeared three times in
+this section. It appears five. The assertion was descriptive rather than
+load-bearing, but a count I wrote from memory was wrong on the first try, which
+is the whole argument for making the machine print it.
+
+**The control caught a weak check.** The first run reported `MISSED` on the R4
+ratio: I had planted a wrong value in the results table, and the gate stayed
+green because its check required the correct value to appear merely *somewhere*,
+and the prose still carried a second copy. A value stated in more than one place
+needs its occurrence count asserted, not its presence. Both results tables are
+now reconstructed verbatim from the artifacts instead, which checks every cell
+at once and is immune to the short-token collision that had a two-decimal value
+matching three unrelated places in this section.
+
+**The control's own anchor guard fired.** One planted anchor was written as a
+sentence and the sentence wraps across a line in the file, so it matched zero
+times. The script hard-errors on a miss rather than proceeding, which is the
+only reason that did not become a silently green run proving nothing. Same
+failure as the CRLF miss in section 21, and the same fix: anchor on a single
+line, never on prose that the formatter is free to re-wrap.
