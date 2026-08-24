@@ -1501,6 +1501,21 @@ def collect_files(root):
 
 
 def main(argv=None):
+    # The corpus is full of Greek, arrows and dashes, and this script's own
+    # contract is that "every violation is printed". On Windows the default
+    # console encoding is cp1252, which cannot encode U+0394 and friends, so
+    # `print(v.render())` raised UnicodeEncodeError *mid-loop*: the header had
+    # already printed, the violation list was truncated to nothing, the FAIL
+    # summary never printed, and the traceback read like a broken tool rather
+    # than a failing corpus. The exit code was 1 either way, so no caller could
+    # tell the two apart. Never let the reporter's encoding decide which
+    # violations exist. (SYNTHESIS discipline 702.)
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="backslashreplace")
+        except (AttributeError, ValueError, OSError):
+            pass
+
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--root", default=".", help="repository root (default: .)")
     ap.add_argument("--advisory", action="store_true",
