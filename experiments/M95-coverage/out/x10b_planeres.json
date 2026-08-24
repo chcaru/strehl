@@ -1,0 +1,17 @@
+{
+  "n_tiles": 40,
+  "K1_null_full": 6.879864966073401e-05,
+  "K1_null_planes": 6.879864966072847e-05,
+  "K4_integer_plane_shift": -0.0005023847087619882,
+  "K7_equivalence_gaps": [
+    0.02210409707812338,
+    0.06915131635828545,
+    0.09602428112462597
+  ],
+  "controls": {
+    "K1_full": true,
+    "K1_planes": true,
+    "K4": true,
+    "K7": false
+  }
+}

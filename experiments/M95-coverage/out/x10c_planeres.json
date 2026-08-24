@@ -1,0 +1,37 @@
+{
+  "n_tiles": 40,
+  "K1_null_full": 6.879864966073401e-05,
+  "K1_null_planes": 6.879864966072847e-05,
+  "K4_integer_plane_shift": -0.0005023847087619882,
+  "K3_planted_sigma0p30": 0.22089899860981044,
+  "K7_penalty_by_kernel": {
+    "catmull-rom": -0.0572299647805487,
+    "lanczos8": 0.01921363827243827
+  },
+  "K7_structural": true,
+  "controls": {
+    "K1_full": true,
+    "K1_planes": true,
+    "K4": true,
+    "K3": true,
+    "K7": true
+  },
+  "arms": {
+    "0.9974": {
+      "full": 0.18459005677124818,
+      "planes": 0.12736009199069948,
+      "sem_full": 0.01574845510326046,
+      "sem_planes": 0.014236800133032572
+    },
+    "0.9315": {
+      "full": 0.1852477779580493,
+      "planes": 0.27292633843305136,
+      "sem_full": 0.013145973146002191,
+      "sem_planes": 0.013233907551675441
+    }
+  },
+  "e2e_gap_dex": 0.10050994322875184,
+  "plane_penalty_dex": -0.0572299647805487,
+  "penalty_share_of_gap": -0.5693960511976244,
+  "planeres_vs_e2e_dex": 0.15773990800930054
+}

@@ -1,0 +1,12 @@
+{
+  "cut": 0.22,
+  "plane_nyquist": 0.25,
+  "n_tiles": 40,
+  "p_raw": 135774543.41624364,
+  "p_lowpassed": 10.722738746553274,
+  "suppression": 12662300.800706081,
+  "full_band_power": 499.3662884850208,
+  "plane_band_power": 204.6398594196744,
+  "plane_over_full": 0.40979910766606115,
+  "verdict": "metric inadmissible for plane-vs-mosaic; P56 stays ARGUED"
+}
