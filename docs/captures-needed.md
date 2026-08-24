@@ -1043,3 +1043,85 @@ section 14.6 and facts 63-66.
 - **Anything requiring a focus rail.** Deferred permanently, per section 2.
 - **Higher-resolution or more careful versions of existing stacks.** Nothing on
   this list is blocked by capture quality.
+
+
+## 16. DELIVERED 2026-08-23 evening -- twelve new stacks, and three outstanding requests are closed
+
+**Status:** delivered without being itemised. The owner shot these overnight and
+renamed several older folders to record the polariser. **Read this section before
+citing any capture path written before 2026-08-23.**
+
+### 16.1 A breaking rename -- old paths are dead
+
+**MEASURED.** Folders shot with the circular polariser now carry a `-cpl` suffix.
+**`D:\personal\macro\bee-1` no longer exists; it is `bee-1-cpl`.** Verified at
+the filesystem. `bee-1` is one of the five stacks M77, M81 and M82 are all
+denominated in, so **any script, log or JSON written before this date that names
+`bee-1` is now broken**, and any run that silently skipped it is void rather than
+merely incomplete. `109MSDCF`, `112MSDCF`, `113MSDCF`, `119MSDCF`, `coffee-bean`,
+`coffee-bubbles`, `foam`, `wrapped-text-1` and `wrapped-text-2` are unchanged.
+
+### 16.2 What arrived
+
+**MEASURED via `exiftool`.** All twelve are **f/5.6 marked** at **200 mm** -- the
+100 mm macro with the 2x teleconverter -- and each is internally uniform in ISO
+and aperture.
+
+| Stack | Frames | ISO | Why it matters |
+| --- | ---: | ---: | --- |
+| `bee-2-cpl` | 299 | **400** | With `bee-3-cpl`, a **controlled ISO pair on matched content** |
+| `bee-3-cpl` | 299 | **100** | Same subject, same 0.2771 m start, same aperture as `bee-2-cpl` |
+| `highly-angled-ruler-mm-cpl` | 299 | 100 | **A millimetre ruler at a steep angle -- analytic depth ramp with a metric scale** |
+| `flat-on-ruler-cpl` | 79 | 100 | The same ruler flat-on; the zero-tilt control for the above |
+| `flower-bud-alone-cpl` | 205 | 100 | With the next row, an **occlusion pair**: the same subject with and without a background |
+| `flower-bud-with-background-fern-cpl` | 299 | 100 | Adds a defocused fern behind the bud |
+| `dry-erase-marker-head-cpl` | 299 | 100 | Manufactured subject, hard edges |
+| `couch-fibers-cpl` | 299 | 400 | Dense fine fibre texture |
+| `leaf-2-cpl` | 182 | 400 | Natural texture |
+| `lavendar-cpl` | 299 | 200 | Natural subject at a third ISO |
+| `flowers-cpl` | 176 | 100 | Natural subject |
+| `lead-1-cpl` | 123 | 100 | Pencil lead, fine parallel structure |
+| `tweezers-cpl` | 100 | 100 | Specular metal |
+
+### 16.3 Three standing requests are now closed, and one is not
+
+- **Section 8, tilted planar target -- CLOSED, and better than asked.**
+  `highly-angled-ruler-mm-cpl` supplies an analytic depth ramp **and** a metric
+  scale in the same frame, with `flat-on-ruler-cpl` as the zero-tilt control.
+  A ruler gives ground-truth depth *and* a physical length reference, so the
+  focus axis can be calibrated in microns without trusting EXIF or a lens model.
+- **Section 14, one scene at several ISOs -- CLOSED for the noise question.**
+  `bee-2-cpl` (ISO 400) against `bee-3-cpl` (ISO 100) holds subject, distance,
+  aperture and frame count fixed and varies only ISO. **This is the strongest
+  control the corpus has ever had for anything denominated in sigma**: a
+  correctly noise-denominated quantity must be invariant across it, and if it
+  is not, the defect is in the sensor model rather than in the algorithm.
+  The wider ISO ladder across `lavendar-cpl` (200) and the ISO-400 stacks is a
+  bonus but is *not* matched content and must not be read as one.
+- **Occluding-edge cells -- CLOSED as a comparison pair.** `flower-bud-alone-cpl`
+  and `flower-bud-with-background-fern-cpl` differ by the presence of a
+  defocused background. **This is not ground truth for what lies behind the
+  occluder** -- the bud is opaque and the alone-version shows a different
+  background, not the true one -- but it is a controlled A/B for whether a
+  merge's behaviour at the silhouette changes when a background is introduced.
+- **Section 12, the static repeat burst -- STILL OPEN.** None of these is a
+  static burst: every one is a focus sweep. Two milestones have now failed to
+  calibrate the gate from focus-sweep data and both named this capture as the
+  minimum for what remains. It is thirty seconds on a tripod with nothing
+  moving. **It is still the highest value per unit effort on this list.**
+
+### 16.4 Cautions before anyone uses these
+
+- **MEASURED.** `bee-1-cpl` starts at **0.2707 m** while `bee-2-cpl` and
+  `bee-3-cpl` start at **0.2771 m**. The three bee stacks are **not** three
+  interchangeable siblings; the clean matched pair is **2 against 3**.
+- **ARGUED.** Matching EXIF focus distance is not matching content. Anyone
+  treating `bee-2-cpl`/`bee-3-cpl` as a matched pair must **verify the framing
+  directly** and report what they found.
+- **ARGUED.** ISO 400 against ISO 100 may cross a conversion-gain mode on this
+  body. Check the shipped `CameraProfile` carries **measured** values at both
+  ISOs, not interpolated ones, before denominating anything in sigma.
+- **ARGUED.** These are all f/5.6 marked at 2x teleconversion, so the effective
+  aperture is far slower than the marked figure and section 0's diffraction
+  arithmetic applies with the teleconverter's magnification included. Nothing
+  here has been checked for diffraction-limited detail before use.
