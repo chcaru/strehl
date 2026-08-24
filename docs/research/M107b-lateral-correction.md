@@ -20,7 +20,7 @@ written. One registered assumption was **falsified**, and it is reported as fals
 | **L4** out-of-sample transfer | **SPLIT: one direction PASSES (0.950), one FAILS (0.541)** |
 | **L5** green untouched | **PASS** — exact no-op, asserted bitwise |
 | **L6** exact composition, no second interpolation | **PASS** — worst relative error <= 1e-12 |
-| **A1** is a constant axial offset the right model? | **INDETERMINATE on depth; ADEQUATE on radius** |
+| **A1** is a constant axial offset the right model? | **INDETERMINATE on depth; ADEQUATE on radius — and scored on 3 stacks, not the 5 registered** |
 | registered optical-centre assumption | **FALSIFIED — and the reason matters more than the fix** |
 
 **The correction is free.** L6 confirms a radial magnification composes *exactly* into the
@@ -133,9 +133,18 @@ profile cannot let it grow unnoticed.
 
 ## 4. A1 — the axial middle option, and the concern I was asked to kill
 
-> Registered: `R^2 < 0.10` on both regressions in all stacks -> constant offset **adequate**;
-> `R^2 >= 0.30` **with consistent sign** -> **wrong model**; between -> **indeterminate, not
-> resolved post hoc**.
+> Registered, verbatim: *"A constant offset is adequate if `R^2 < 0.10` on both regressions
+> in **all 5 stacks**. A constant offset is the WRONG MODEL if `R^2 >= 0.30` on either
+> regression with a consistent sign across stacks. Between 0.10 and 0.30 I report it as
+> indeterminate and do not resolve it post hoc."*
+
+**Deviation, disclosed: I scored A1 on 3 stacks, not the 5 the bar names.** The parent
+milestone persisted argmax volumes for only 3 (`e3_*.npz`); the two no-CPL controls were
+never saved. So 5 was **not achievable from existing data**, and I did not re-render to
+reach it. **An earlier draft of this section silently dropped the "5" from the quoted bar.
+That was caught in independent verification, not by me, and it is exactly the quiet
+narrowing the pre-registration exists to prevent.** The consequence is real: A1's verdict
+could move if the two unmeasured stacks behaved differently.
 
 Scored against the `G1−G2` null floor, as registered, because `k_R − k_G` and `k_G` share a
 term and regressing one on the other induces a spurious slope through shared noise alone.
@@ -264,7 +273,8 @@ the −0.2360 dex the composition avoids.
    is more ROIs, not a different method.
 4. **The cost of the middle option in wall clock** — needs instrumentation inside a
    contended file (§7).
-5. **A1 on depth** — indeterminate, and left indeterminate.
+5. **A1 on depth** — indeterminate, and left indeterminate. **And scored on 3 of the 5
+   stacks its bar names**, because only 3 argmax volumes were ever persisted (§4).
 6. **Whether the correction improves a real render.** Everything here is measured in the fit
    domain on unresampled CFA data. **No corrected image has been produced**, because
    producing one requires wiring into the gather. That is the next milestone's job and the
