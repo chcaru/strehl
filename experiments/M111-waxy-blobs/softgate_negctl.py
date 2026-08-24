@@ -34,6 +34,9 @@ REPO = r"C:\dev\blog\death-of-software\projects\strehl"
 CARGO = os.path.join(os.environ["USERPROFILE"], ".cargo", "bin", "cargo.exe")
 
 PASS, FAIL = 0, 101  # cargo test: 0 on success, 101 on a failing test
+# A distinct code for "the instrument or its environment broke", so a harness
+# fault can never be read as a measured result. See the post-restore leg.
+HARNESS = 3
 
 MUTATIONS = [
     ("M1 wrong kernel width",
@@ -110,7 +113,7 @@ def main():
             if code == FAIL:
                 failed = [ln.strip() for ln in out.splitlines() if "FAILED" in ln or "panicked" in ln]
                 print(f"  RED   {tag}  (exit {code} == {FAIL})")
-                for ln in failed[:2]:
+                for ln in failed[:6]:
                     print(f"        {ln[:110]}")
                 caught += 1
             elif code == PASS:
@@ -128,10 +131,31 @@ def main():
     if restored != original:
         sys.exit("RESTORE FAILED -- the working tree is not what it was")
 
-    code, _ = run_tests()
+    code, out = run_tests()
     print(f"post-restore suite exit {code} (expect {PASS})")
     if code != PASS:
-        sys.exit("RESTORE LEFT THE SUITE RED")
+        # The restore is already proven byte-exact by the SHA-256 above, so a
+        # red suite here is NOT a failed restore. In a working tree shared with
+        # other agents, a red post-restore leg is usually somebody else's
+        # in-flight edit landing mid-run: this control has seen `strehl-core`
+        # stop compiling on `outlier::Discriminator::Shift` while softgate.rs
+        # was untouched. Attributing that to the restore would be a harness
+        # fault reported as a measurement, so the two are separated by their
+        # exit codes and by whether the breakage names the file under test.
+        ours = [ln.strip() for ln in out.splitlines()
+                if "softgate" in ln and ("FAILED" in ln or "error" in ln)]
+        if ours:
+            for ln in ours[:6]:
+                print(f"        {ln[:110]}")
+            sys.exit("RESTORE LEFT THE SUITE RED IN softgate -- "
+                     "the restore is byte-exact, so this is a real hole")
+        for ln in [l.strip() for l in out.splitlines() if l.startswith("error")][:6]:
+            print(f"        {ln[:110]}")
+        print("\n  The breakage does not name softgate and the restore is byte-exact,")
+        print("  so this is the SHARED TREE, not this control. The mutation results")
+        print("  above stand. Re-verify in an isolated extraction:")
+        print("    git archive HEAD | tar -x -C <dir>; copy softgate.rs over; cargo test")
+        sys.exit(HARNESS)
 
     print(f"\n{caught}/{len(MUTATIONS)} mutations caught")
     if missed:

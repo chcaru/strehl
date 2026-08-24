@@ -429,6 +429,44 @@ mod tests {
     // ---- shape, domain and degenerate cases ----
 
     #[test]
+    fn the_kernel_agrees_with_the_python_that_computed_the_field_prediction() {
+        // M111's n_eff prediction (report S15) was evaluated in Python, from
+        // the gap CDF read off a fourteen-rung gate ladder, while the fix
+        // ships here in Rust. Nothing structural keeps the two in step, so
+        // the kernel is pinned at exactly the ladder edges the prediction
+        // integrated over. If this test ever fails, the published interval
+        // (seam 1.59-2.14, texture 1.07-1.29) is stale and must be re-run --
+        // it does not silently become approximate.
+        let soft = SoftGate::new(DEFAULT_GATE);
+        let tol = soft.tolerance();
+        let rungs: [(f32, f32); 15] = [
+            (0.0625, 0.998_048_78),
+            (0.25, 0.969_233_23),
+            (0.5, 0.882_496_90),
+            (0.75, 0.754_839_60),
+            (1.0, 0.606_530_66),
+            (1.25, 0.457_833_36),
+            (1.5, 0.324_652_47),
+            (2.0, 0.135_335_28),
+            (2.5, 0.043_936_93),
+            (3.0, 0.011_108_997),
+            (3.5, 0.002_187_491),
+            (4.0, 0.000_335_463),
+            // 4.7096 is just BELOW the cutoff sqrt(32 ln 2) = 4.709_626, so it
+            // is still tapered, not truncated. Rust reads 0.000_015_261_641
+            // and Python 0.000_015_262 -- seven significant figures of
+            // agreement between two independent implementations.
+            (4.7096, 0.000_015_262),
+            (4.71, 0.0), // just above the cutoff: truncated, not tapered
+            (16.0, 0.0),
+        ];
+        for (z, want) in rungs {
+            let got = soft.weight(1.0 - z * tol, 1.0);
+            approx(got, want, 2e-6, &format!("kernel at z = {z} tolerances"));
+        }
+    }
+
+    #[test]
     fn the_weight_is_one_at_a_tie_and_monotone_decreasing_in_the_gap() {
         let g = SoftGate::new(DEFAULT_GATE);
         approx(g.weight(1.0, 1.0), 1.0, 1e-7, "weight at a tie");

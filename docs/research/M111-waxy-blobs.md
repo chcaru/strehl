@@ -645,6 +645,18 @@ Numbered `P1…` per rule 28; ORCH assigns corpus numbers.
 * **P24 — MEASURED. This retracts P2 and supersedes it.** M111's own +97.4σ is an artefact of its instrument, found by M111 in self-audit. Two independent defects: the null standard deviation was estimated from **three** translations (re-running the identical mask with 64 gives null sd 0.021 against 0.003, and the same effect reads **+11.6σ**); and the `flat` mask was a percentile of the arm under test. With the flat population held at the same 40% of the plane but chosen by an arm that cannot be conditioned on the outcome, the low-`n_eff` statistic falls to **0.904 (+1.2σ, rank p = 0.31)** on the gate-100000 mean arm and **0.989 (+0.5σ, p = 0.65)** on the single-frame control. Partitioning shows why: flat-in-render ∧ flat-in-control scores 1.428 (+10.4σ) and flat-in-control ∧ *not* flat-in-render scores **0.954 (−0.2σ)** — every cell that fires contains the render-flatness condition. **The claim that the visible defect is a luma step printed at election seams is withdrawn.** `experiments/M111-waxy-blobs/recheck.py`, `decompose.py`.
 * **P25 — MEASURED. This is what survives of M111's headline.** With "the subject has no texture here" defined on the **single-frame control alone** (flattest 40%, 9×9 local sd ≤ 99.9 DN) and never on the render, the shipped render carries **6.1×** the local variation of that single frame in those regions (466.1 DN against 75.9 DN; the gate-100000 mean arm reads 62.6). A single frame is the noisiest thing available, so this is not explained by having averaged fewer frames. But the same seam detector on the same control-defined mask is **null** — whole plane 0.839 against a 0.911 ± 0.101 null (−0.7σ, p = 0.63), `blobB` interior 1.123 (+1.9σ, p = 0.046, one positive cell in five tests). **The excess structure is real and mask-independent; its attribution to election seams is not.** `experiments/M111-waxy-blobs/blob_interior.py`.
 * **P26 — MEASURED.** ORCH's H7 (smooth regions admit the whole bracket, and averaging heterogeneous PSFs is an extra blur) is refuted on three of its four predictions, including the one it nominated as its discriminator. **P1** — blob plateaus are *smaller* than typical, not larger: `blobB` **33.2 px** area-weighted equivalent diameter against a control-chosen matched no-blob region's **30.0 px** and a whole-plane **92.5 px**, and `blobA`, which is not a defect, has the largest cells at 42.1 px. **P3** — `n_eff` inside the blobs is **median 2.0** and **mean 1.77**, against a plane mean of 81.9; it is low, not high. **P4** — tightening the gate makes the artifact monotonically *worse*, not better, with flat pixels electing 97.30% at gate 0.25 against 14.77% at the shipped 4.0. **P2 survives**: `blobB` seams jump a median of 3 frames with 17.9% jumping ≥ 10, against the matched control's 1 and 7.5%. H7 also shares H2's premise, which §2 measured false — winner response medians 4.305 and 2.961 against a 0.4777 noise ceiling. `experiments/M111-waxy-blobs/h7_orch.py`.
+* **P32 — MEASURED.** The soft admission gate is built, opt-in and byte-inert. `crates/strehl-core/src/softgate.rs` implements `w = exp(−½((best − focus)/tol)²)` with `tolerance()` **bit-identical** to `Gate::tolerance()` (`threshold · √2 · FOCUS_NOISE_SD`, asserted across nine thresholds), `n_eff` as the **Kish** estimator `(Σw)²/Σw²` — the exact generalisation, since it returns the integer count on 0/1 weights — and a tail truncated at `WEIGHT_FLOOR = 1/65536`, i.e. `√(32 ln 2) = 4.7096` tolerances, derived rather than chosen. **18 tests green; a 5-mutation negative control catches 5/5** at exit exactly 101 with a SHA-256-verified byte-exact restore. **NC8:** the tree with the module and the tree with `softgate.rs` deleted and its `mod` line removed both render `DB7BAAD2…`, which is also M111's `a7bd05a` reference and ORCH's `marker-HEAD-8f46f04.tif`; `git grep softgate` outside the module returns only the `mod` line. The default path is byte-identical because nothing calls it, so **no byte-freeze breaks, no `DEFAULT_GATE` re-solve is forced, and fact 19's 0.534× keeps its scope.**
+* **P33 — MEASURED. The fix's own falsifiable prediction holds.** With masks taken from the **single-frame control alone** (flattest 40% / sharpest 10% by 9×9 local sd, never from a render), the soft/boolean `n_eff` ratio is **1.59–2.14** in the flat-and-elected population — the seams — and **1.07–1.29** in texture. **The intervals are disjoint**, and both populations have boolean `n_eff` = 1.0, so the separation is entirely in the numerator and not an artefact of a differing denominator. Where the boolean gate already averages ≥ 64 frames the ratio is 0.77–1.37, i.e. the soft weight changes least where the merge was already doing the right thing. `experiments/M111-waxy-blobs/softgate_prediction.py`.
+* **P34 — MEASURED.** A boolean `n_eff` map at gate *g* **is the per-pixel response-gap CDF** sampled at *g*, so a gate ladder evaluates **any** monotone kernel by Stieltjes summation with rigorous two-sided bounds — lower edge for the upper bound, upper edge for the lower — and **no new instrument is needed** to price a proposed weighting before building it. Validated against a known truth: a top-hat at one gate-4 tolerance reconstructs the gate-4 map with `max |diff| = 0` on the lower bound, and its upper-bound slack is **exactly** the gate-4→gate-5 count (`max |diff| = 0`, up to 296 frames). This prices `--photometric`-style proposals against existing dumps for the cost of a ladder.
+* **P35 — MEASURED.** `through_focus.rs` already ships a posterior over frame-of-best-focus on the **identical calibrated temperature** as the merge gate — `temperature() = √2 · FOCUS_NOISE_SD` (line 313), with a doc comment stating the commensurability with `Gate::tolerance` deliberately — but on a **different kernel**: `through_focus.rs:371-373` computes `exp(−gap/T)`, **exponential**, while M111's `softgate.rs` computes `exp(−gap²/2T²)`, **Gaussian**. The codebase therefore now weights one z-axis three ways at one temperature: **top-hat** (`merge.rs`, shipping, decides bytes), **exponential** (`through_focus.rs`, diagnostic, `--stats` only), **Gaussian** (`softgate.rs`, opt-in, unreachable). The Gaussian is what a normal gap of sd `T` implies, which is what `FOCUS_NOISE_SD` was calibrated to describe; the exponential is heavier-tailed and admits far frames more readily — the direction that made `--gate 1e5` destroy the photograph. **That is an argument, not a measurement: both should be priced against the same ladder (P34) before either is integrated.**
+
+**Disciplines**
+
+* **P36.** **A bound that overlaps is not a refutation — it is an unresolved instrument, and a verdict with two outcomes cannot tell you which you have.** M111's first `n_eff` ladder sampled nothing between z = 1 and z = 4, exactly where the Gaussian falls 0.607 → 0.0003, so one bin spanned a factor of 1800 in weight and bounded nothing: seam 0.96–4.87 against texture 1.00–2.59. The verdict code called that **FAILED** and would have killed a live fix on a null detection from a blind probe. Give any bounded statistic **three** verdicts — separated, separated the other way, and *overlapping* — and when refining, check that the new interval **nests inside** the old one, which is the only cheap proof that refinement did not change the estimand.
+* **P37.** **Never index a ladder, a sweep or an arm list by position.** M111's `boolean = maps[2]` was correct for a six-rung ladder where position 2 was gate 4.0; inserting two rungs silently moved it to the gate-2 map, with no error, no shape change and no failed assertion, corrupting both the ratio's denominator and the population definition that ratio described. Look the arm up **by its value**, and hard-error if it is not present exactly once.
+* **P38.** **When a prediction is computed in one language and the fix ships in another, pin the shared function at the exact points the prediction used.** M111's `n_eff` interval was integrated in Python over fourteen ladder edges while the kernel ships in Rust; nothing structural keeps them in step. The cross-language test agrees to seven significant figures and is load-bearing — the wrong-kernel-width mutation trips it — and if it ever fails the published interval is **stale, not approximate**.
+* **P39.** **In a working tree shared with other agents, a negative control's post-restore green leg can be turned red by somebody else's in-flight edit, and the control will report its own restore as failed.** M111's control restored `softgate.rs` byte-exactly — SHA-256 verified — and then read the suite red because another milestone's uncommitted work had stopped `strehl-core` compiling on `outlier::Discriminator::Shift`. Separate the two: assert the restore by **hash**, decide restore-failure by whether the breakage **names the file under test**, and give the environment case a **distinct exit code** so a harness fault can never be read as a measured hole. Verify the real answer in a `git archive HEAD` extraction with only the file under test overlaid — M111's 18/18 was confirmed that way while the live tree would not build.
+* **P40.** **A control's assertion can be wrong in the direction of being too strong, and the fix is to pin the discrepancy exactly rather than loosen the check.** M111's top-hat ground truth demanded that *both* Stieltjes bounds reconstruct the gate-4 map and failed at 296 frames. The lower bound was exact; the upper bound legitimately over-counts one bin, because a top-hat is discontinuous on a ladder edge and is the loosest possible case for edge-evaluated bounds. Asserting `upper − lower == the gate-4→gate-5 count` exactly is strictly stronger than the assertion that failed, and it passes.
 
 ---
 
@@ -669,6 +681,14 @@ Everything is in `experiments/M111-waxy-blobs/`, run in this order:
 | `cache_control.ps1` + `make_poison.py` | NC7 on `marker`, four arms (§12) |
 | `cache_control_lavendar.ps1` | NC7 on `lavendar`, forced fresh solve (§12) |
 | `reg_radius.patch` | arm E's deliberately unshipped override |
+| `recheck.py` | the self-audit's 64-translation null and matched-population masks (§13.1, §13.2) |
+| `decompose.py` | the circularity-versus-dilution partition (§13.2) |
+| `blob_interior.py` | what survives with no render-derived mask (§13.3) |
+| `h7_orch.py` | ORCH's H7, predictions P1-P4 (§14) |
+| `softgate_negctl.py` | the module's 5-mutation control, 5/5 (§15.1) |
+| `nc8_byte_inert.ps1` | NC8, the two-arm byte-identity proof that the module is opt-in (§15.2) |
+| `refine_ladder.ps1` | the eight extra gate rungs the `n_eff` bound needed (§15.3) |
+| `softgate_prediction.py` | the `n_eff` prediction and **both** its negative arms (§15.3, §15.4). Run `test`, `control-tophat` and `control-swap`; all three must pass. |
 
 Heavy artifacts are under `C:\dev\strehl-out\M111\` and are not in Git.
 Figures worth looking at: `_STATE-blobB-row2.png`, `_ARMS-blobB.png`,
@@ -944,3 +964,255 @@ from it. (b) The plane grid is **3520x2344** for this bracket, not fact 1445's
 P2 surviving is worth keeping. It says blob seams are genuinely large index
 jumps, which is a real property of the map — but P1, P3 and P4 between them say
 that property is not what the eye is reacting to.
+
+---
+
+## 15. The soft admission gate — built, opt-in, byte-inert, and its prediction tested
+
+Commissioned after S8.2 and S13. This section is the deliverable: a module, a
+falsifiable prediction tested before any image was rendered, an exact
+integration specification I did **not** apply, and one finding I did not expect.
+
+### 15.1 What was built
+
+`crates/strehl-core/src/softgate.rs`, new, owned by nobody else, plus the one
+`pub mod softgate;` line in `lib.rs`. Both went in a **single** commit, because
+S10's P19 says a new module is two artefacts and committing only the tracked
+one leaves `HEAD` un-buildable.
+
+The weight is
+
+```
+w(focus, best) = exp( -0.5 * ((best - focus) / tolerance)^2 )
+```
+
+with `tolerance()` **bit-identical** to `Gate::tolerance()` —
+`threshold * SQRT_2 * FOCUS_NOISE_SD`, asserted equal across nine thresholds by
+`the_tolerance_is_bit_identical_to_the_boolean_gates`. That identity is the
+constraint M81's rejected route broke, and it is the reason a soft weight can be
+dropped in without re-deriving `FOCUS_NOISE_SD`'s meaning.
+
+Three details are not cosmetic:
+
+* **`n_eff` is Kish, `(sum w)^2 / sum w^2`, not `sum w`.** These agree on 0/1
+  weights, so every test I had written passed under either. I found the hole by
+  asking what the boolean estimator would have to reduce to, not by running a
+  mutation — and then planted the mutation to prove the test now holds it.
+* **The tail is truncated where a frame can no longer move a `u16`**, at
+  `WEIGHT_FLOOR = 1/65536`, giving `cutoff_tolerances() = sqrt(32 ln 2) =
+  4.7096`. Derived, not a magic number.
+* **A frame scoring *above* the winner is not penalised.** The Gaussian is
+  symmetric and would otherwise down-weight a better frame; `weight` returns 1.0
+  for a non-positive gap, matching `admits`. NaN earns 0.0, also matching.
+
+**Tests: 18, all green.** **Negative control: 5 planted mutations, 5/5 caught**,
+each at exit exactly 101, restore verified byte-exact by SHA-256
+(`F6E238AC8EBD5A27...`), post-restore suite green.
+
+### 15.2 It is opt-in, and that is measured, not asserted
+
+**NC8.** Arm S is the tree with the module present; arm N deletes `softgate.rs`
+and removes the `mod` line. Both render
+`DB7BAAD2FDC5BF74309B132D0DDEB1A681609037312E76923C2B22703BA1DDDC` — which is
+also this milestone's original `a7bd05a` reference hash and ORCH's
+`marker-HEAD-8f46f04.tif`. `git grep softgate` outside the module returns only
+the `mod` line, so the code is statically unreachable from any render path. The
+default is byte-identical because nothing calls it yet.
+
+That is the whole point of the shape ORCH asked for: no `stack`/`merge`
+byte-freeze breaks, no `DEFAULT_GATE` re-solve is forced, and fact 19's 0.534x
+keeps its meaning, because the boolean gate is still the default.
+
+### 15.3 The `n_eff` prediction — HELD, and the instrument was shown to be live
+
+ORCH asked for a falsifiable pre-render prediction: a soft weight should raise
+`n_eff` **at seams** without raising it **in texture**.
+
+**No new instrument was needed.** The boolean `n_eff` map at gate `g` counts the
+frames whose response gap is within `g` tolerances of the winner — so it *is*
+the per-pixel gap CDF sampled at `g`. A gate ladder therefore yields any
+kernel-weighted sum by Stieltjes summation, and because the Gaussian is monotone
+decreasing, evaluating each bin at its lower edge is a rigorous **upper** bound
+and at its upper edge a rigorous **lower** bound.
+
+Masks are taken from the **single-frame control only** — flattest 40% and
+sharpest 10% by 9x9 local sd — never from any render, per S13's P28 and
+discipline 752.
+
+| population | boolean `n_eff` | soft `n_eff` bounds | ratio |
+| --- | --- | --- | --- |
+| flat, and the merge **elected** (the seams) | 1.0 | 1.59 - 2.14 | **1.59 - 2.14** |
+| flat, and the merge already averaged >= 64 | 284.0 | 217.63 - 388.97 | 0.77 - 1.37 |
+| **textured** | 1.0 | 1.07 - 1.29 | **1.07 - 1.29** |
+| whole inner plane | 2.0 | 2.49 - 4.04 | 1.25 - 2.02 |
+
+**The seam and texture intervals are disjoint: 1.59 > 1.29.** Both populations
+have boolean `n_eff` = 1.0, so the separation is entirely in the numerator and
+cannot be an artefact of a differing denominator. The prediction **HELD**.
+
+**First run said the opposite, and it was my instrument.** A six-rung ladder
+sampled nothing between z = 1 and z = 4 — exactly where the Gaussian falls from
+0.607 to 0.0003 — and one bin spanning a factor of 1800 in weight bounded
+nothing: seam 0.96 - 4.87 against texture 1.00 - 2.59, overlapping. My verdict
+code called that **FAILED**. It was not a refutation, it was an unresolvable
+instrument, and reporting it would have killed a live fix on a null detection
+from a blind probe. Eight more rungs (gates 2, 3, 5, 6, 8, 10, 12, 14) resolved
+it, and the refined intervals **nest inside** the coarse ones — the check that
+refining the ladder did not change the estimand. The verdict logic now has three
+outcomes, not two, and names overlap as the ladder's resolution.
+
+**A second defect in the same script, found the same way.** `boolean = maps[2]`
+was a *positional* index, correct for the six-rung ladder where position 2 was
+gate 4.0. Inserting gates 2 and 3 silently moved it to the **gate-2** map, with
+no error and no shape change, corrupting both the ratio's denominator and the
+seam population's own definition. It is looked up by gate **value** now, with a
+hard error if the ladder does not contain gate 4.0 exactly once.
+
+### 15.4 The controls that could have killed 15.3
+
+Two arms, both required to pass, both wired into the same script so they cannot
+drift from what they test.
+
+**`control-tophat` — discipline 751 exactly.** Replace the Gaussian with the
+boolean gate's own top-hat and leave the masks, the bins, the Kish estimator and
+the verdict logic standing. The mechanism under test is the kernel's *shape*, so
+this disables it and nothing else. Result: ratio **1.00 - 1.00** in texture,
+**1.00 - 2.00** at seams, verdict **UNRESOLVED**, and soft `n_eff` exceeds
+boolean on **0.00%** of the plane against 20.98% for the Gaussian. The
+separation is caused by the kernel and not by the bookkeeping.
+
+This arm also carries a **known ground truth**, which is the only reason to
+trust the Stieltjes arithmetic at all: a top-hat at one gate-4 tolerance *is*
+the gate-4 map, so the lower bound must reconstruct it exactly. It does —
+`max |diff| = 0` — and the upper bound's excess is **exactly** the gate-4 to
+gate-5 count, `max |diff| = 0`, up to 296 frames. The bin counts are right.
+
+My first version of that assertion demanded **both** bounds reconstruct exactly
+and failed at 296. The assertion was wrong, not the measurement: the top-hat is
+discontinuous on a ladder edge, which is the loosest possible case for
+edge-evaluated bounds. I pinned the slack exactly rather than loosening the
+check.
+
+**`control-swap` — the verdict logic is wired to the populations it names.**
+Exchange the flat and textured masks and the verdict must invert. It does:
+**REFUTED (disjoint, wrong order)**. So the script can report a refutation; a
+HELD is not the only thing it can say.
+
+### 15.5 The prediction was computed in Python and the fix ships in Rust
+
+Nothing structural keeps those two in step, and the field numbers above are
+worthless if they drift. `the_kernel_agrees_with_the_python_that_computed_the_field_prediction`
+pins the Rust kernel at the **fifteen exact ladder edges the prediction
+integrated over**. The two independent implementations agree to seven
+significant figures at the tightest rung — Rust `0.000_015_261_641`, Python
+`0.000_015_262` at z = 4.7096, which sits just *below* the cutoff 4.709_640 and
+is therefore tapered, not truncated. The mutation control confirms the test is
+load-bearing: M1 (wrong kernel width) trips it.
+
+If that test ever fails, the published interval in 15.3 is **stale**, not
+approximate.
+
+### 15.6 The integration point — specified, NOT applied
+
+`merge.rs` is M97's lane and I have not touched it; `git status` confirms it and
+`merge_cmd.rs` are clean of me. This is the hand-off.
+
+All line numbers are `Estimator::fold_inner`, `crates/strehl-core/src/merge.rs`.
+
+| # | line | current | replacement |
+| --- | --- | --- | --- |
+| 1 | 746 | `let admitted = winner \|\| self.gate.admits(regularised[i], self.best_focus[i]);` | `let w = self.soft.weight(regularised[i], self.best_focus[i]);`<br>`let w = if winner { w.max(1.0) } else { w };`<br>`let admitted = w > 0.0;` |
+| 2 | 765 | `self.sum[s][i] += v as f32;` | `self.sum[s][i] += w * v as f32;` |
+| 3 | 782 | `self.luma_sum[i] += luma;` | `self.luma_sum[i] += f64::from(w) * luma;` |
+| 4 | 785 | `self.n[i] += 1;` | `self.wsum[i] += w;  self.wsq[i] += w * w;` |
+| 5 | 824-826 (`absorb`) | `self.n[i] += other.n[i];` | `self.wsum[i] += other.wsum[i];  self.wsq[i] += other.wsq[i];` |
+| 6 | 932 | `self.sum[s][i] / n as f32` | `self.sum[s][i] / self.wsum[i]` |
+| 7 | 536 (`n_eff`) | returns `&self.n` | `self.wsum[i] * self.wsum[i] / self.wsq[i]` |
+
+Two new `Vec<f32>` fields, `wsum` and `wsq`, sized like `n`, allocated where `n`
+is and reduced in `absorb` alongside it. `self.soft: SoftGate` is constructed
+from the same threshold the `Gate` is.
+
+Four things a reviewer should check, because they are where this breaks:
+
+* **The winner must be pinned to weight 1.0** (row 1). Its gap is zero so the
+  Gaussian already returns 1.0, but `max` makes the invariant explicit rather
+  than dependent on `best_focus[i]` being exactly the winner's response.
+* **Row 3 is easy to miss.** `disagreement()` at line 882 divides
+  `luma_sum` by `n`; if `luma_sum` becomes weighted and its divisor does not,
+  the noise diagnostic silently changes meaning. Either weight both or leave
+  both alone.
+* **`n_eff()` returns `&[u16]` today.** Row 7 changes its type, which is a
+  ripple beyond `merge.rs`. The cheap alternative is a second accessor and
+  leaving `n_eff` as the boolean count.
+* **This is gated on the flag, and the boolean path must remain the default**,
+  or every byte-freeze in the corpus breaks at once.
+
+### 15.7 Is it a posterior? Yes — and the codebase already has one
+
+ORCH asked whether the construction is naturally a posterior over
+frame-of-best-focus. It is: `posterior()` normalises the weights to sum to one,
+`entropy()` reads 0 when one frame wins and `ln n` when all tie, and the
+threshold acts as a **temperature** — all three are tests.
+
+**But the more useful answer is that I built the third kernel over the same
+axis, and I did not know it until after the module was written.**
+`through_focus.rs` already ships a posterior on the **identical temperature
+scale**. Its `temperature()` at line 313 is `SQRT_2 * FOCUS_NOISE_SD` — the same
+expression as my `tolerance()` at threshold 1 — and its own doc comment says it
+matches `Gate::tolerance` at threshold 1 "so the soft posterior and the hard
+gate are on one scale by construction". It has `posterior_perplexity()`,
+explicitly commensurable with `Estimator::n_eff`.
+
+The kernels differ. `through_focus.rs:371-373` computes `u = (regularised -
+anchor) / t; e = u.exp()` — that is **`exp(-gap/T)`, exponential**. Mine is
+**`exp(-0.5 (gap/T)^2)`, Gaussian**. So the merge now has three weightings of
+one z-axis at one calibrated temperature:
+
+| kernel | where | status |
+| --- | --- | --- |
+| top-hat | `merge.rs` `Gate::admits` | **shipping**, decides output bytes |
+| exponential `exp(-gap/T)` | `through_focus.rs` fold | diagnostic only, built under `--stats` |
+| Gaussian `exp(-gap^2/2T^2)` | `softgate.rs` | new, opt-in, unreachable |
+
+**I am not claiming the Gaussian is the right one.** A Gaussian is what you get
+if the response gap is normal with sd `T`, which is exactly what
+`FOCUS_NOISE_SD` was calibrated to describe, so it is the choice the existing
+noise model implies. The exponential is heavier-tailed and admits far-off frames
+more readily — the direction that made `--gate 1e5` destroy the photograph. That
+is an argument, not a measurement, and **whoever integrates this should price
+both against the same ladder before choosing.** The machinery in 15.3 evaluates
+any monotone kernel with a one-line change.
+
+This is adjacent to the pattern fact 1442 records. The instrument was not
+duplicated — the export I needed existed and I checked before writing code — but
+the *concept* was, twice, by two milestones, in one file neither had read. The
+scale being identical by explicit design and the kernels differing silently is
+the part worth folding.
+
+### 15.8 The boundary of the design space, measured
+
+Both alternatives are dead ends and both were measured, not argued:
+
+* **Opening the gate removes the defect and the photograph together.** At
+  `--gate 100000` flat pixels electing falls 14.77% -> 0.00%, and
+  plateau-interior sd falls **153.5 -> 74.2**. S4.4.
+* **Rescaling the tolerance by local response is M81's route and it failed 0/5
+  stacks.** It did not preserve `FOCUS_NOISE_SD`'s unit. The soft gate does, by
+  construction and by test.
+* **Tightening the gate makes it monotonically worse**, not better — 97.30% of
+  flat pixels elect at gate 0.25. S14 P4.
+
+The soft weight is the only direction left that does not move the default.
+
+### 15.9 What I did not do
+
+* I did not edit `merge.rs`, `merge_cmd.rs`, or any file another agent owns.
+* I did not move `DEFAULT_GATE`, re-solve it, or restate fact 19.
+* I did not render an image with the soft gate on — it is unreachable by
+  construction, which is what makes 15.2 provable. **The prediction in 15.3 is
+  therefore a prediction, not a result**, and the first render through the soft
+  path is the arm that can still falsify it.
+* I did not verify any of this myself beyond the controls stated. `softgate.rs`
+  is written to be verifiable independently: 18 tests, a 5/5 mutation control,
+  and a three-arm field script with two negative arms.
