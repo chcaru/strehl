@@ -648,11 +648,23 @@ Declared as departures, per the pre-registration's own terms.
    `n_eff` is inferred from each ROI's own noise floor, with the bias direction
    stated in §5.2.
 
-7. **Discipline 605, cited in the dispatch, does not exist in `SYNTHESIS.md`.**
-   The substance the dispatch attributes to it — that whole-frame gradient-energy
-   sharpness is measured-blind on this rig — is carried by **fact 1235** and
-   **discipline 603/606**, and was honoured: no Tenengrad-style metric appears
-   anywhere in this milestone.
+7. **CORRECTED — I reported discipline 605 as absent; it exists and is
+   RETRACTED, which is the opposite finding.** It is at `SYNTHESIS.md:3077`,
+   struck through, **retracted via fact 1250**, and cited as live corpus in fact
+   1273. A strikethrough defeated my search. My follow-on claim — that "the
+   substance is carried by **fact 1235**" — was **wrong twice**: fact 1235 is
+   *itself* retracted by 1250, for the same reason (the premise was a **1.25%
+   magnification artefact**, and scale-matched, the metric and the eye agree).
+   **The distinction is not bookkeeping.** An *absent* discipline invites the
+   next milestone to re-derive the claim from scratch; a *retracted* one
+   forecloses it **and records why**. Folded as **discipline 633**.
+
+   The live prohibition on whole-frame gradient-energy sharpness rests on
+   **fact 1273** — its third independent death, on a different metric and a
+   different subject, with signs inconsistent *between* subjects — not on 605 or
+   1235. **My conduct was unaffected: no gradient-energy metric appears anywhere
+   in this milestone.** Only the corpus claim was wrong, and it is corrected
+   here rather than left for a reader to trip over.
 
 ---
 
@@ -762,9 +774,16 @@ Numbered `P1…` per rule 28. Every claim labelled.
   (rule 13), not for lack of validity, and passes on `bee-3-cpl` (0.1296 refined,
   0.0638 on the floor metric).
 
-- **P15 — MEASURED.** Discipline **605** as cited in this milestone's dispatch
-  does not exist in `SYNTHESIS.md`. The substance is carried by fact 1235 and
-  disciplines 603/606.
+- **P15 — WITHDRAWN BY ITS AUTHOR.** I claimed discipline 605 does not exist in
+  `SYNTHESIS.md`. **It exists at `SYNTHESIS.md:3077`, struck through and
+  RETRACTED via fact 1250**, and is cited as live corpus in fact 1273. A
+  strikethrough defeated my search. The fallback I offered — that the substance
+  is carried by fact 1235 — is wrong for the same reason: **1235 is itself
+  retracted by 1250.** The live prohibition rests on **fact 1273**.
+  **"Retracted" and "absent" are opposite findings**: absent invites the next
+  milestone to re-derive the claim, retracted forecloses it and says why.
+  Folded by the orchestrator as **discipline 633**. No measurement in this
+  milestone depended on it.
 
 ---
 
