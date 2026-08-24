@@ -1,0 +1,125 @@
+{
+ "T1": {
+  "frame0": 0.29813862278932673,
+  "framehi": 0.0018125339357741234,
+  "boundary": 0.29995115672510086,
+  "p10": 1.0,
+  "p25": 1.4142135381698608,
+  "median": 3.0,
+  "p75": 6.7082037925720215,
+  "p90": 12.369317054748535,
+  "frac": {
+   "le1": 0.24321527552456482,
+   "le2": 0.39265679971521633,
+   "le4": 0.5951586775984591,
+   "le8": 0.794914542675326,
+   "le16": 0.942065837232879
+  },
+  "n_components": 42408,
+  "largest_share": 0.35453708309274745,
+  "speckle": 0.04148354190396956
+ },
+ "T2": {
+  "n_thin": 38.0,
+  "n_broad": 38.0,
+  "rel": 0.0,
+  "thin_w": 11.335938453674316,
+  "broad_w": 30.820411682128906
+ },
+ "T3": {
+  "full": {
+   "cap": 238.4,
+   "coverage": 1.0,
+   "pass_thin": 1.0,
+   "pass_broad": 1.0,
+   "ratio": 1.0,
+   "amax_iqr": 0.12421846389770508,
+   "amax_sep": 0.04924267530441284,
+   "amax_thin": 0.41366061568260193,
+   "amax_broad": 0.46290329098701477
+  },
+  "local": {
+   "cap": 40.0,
+   "coverage": 0.9761629448295701,
+   "pass_thin": 0.9051389640859051,
+   "pass_broad": 1.0,
+   "ratio": 0.9051389640859051,
+   "amax_iqr": 0.20689886808395386,
+   "amax_sep": 0.1816895604133606,
+   "amax_thin": 0.16271734237670898,
+   "amax_broad": 0.3444069027900696
+  }
+ },
+ "T4": {
+  "all": {
+   "n": 6103,
+   "F0": 0.0680424463788235,
+   "fixed": 0.04888372989506973,
+   "dISO": -28.15700713799798,
+   "abs": -0.01915871648375378
+  },
+  "thin": {
+   "n": 1526,
+   "F0": 0.04396027220136589,
+   "fixed": 0.03911918477377363,
+   "dISO": -11.012414585189589,
+   "abs": -0.004841087427592261
+  },
+  "broad": {
+   "n": 1526,
+   "F0": 0.0922869555850867,
+   "fixed": 0.0620198913993415,
+   "dISO": -32.796687239118626,
+   "abs": -0.030267064185745207
+  },
+  "gap": 21.784272653929037,
+  "null_mean": -1.0051649653115868,
+  "null_sd": 2.976205395007742,
+  "null_p95": 6.438459924472293,
+  "n_null": 20,
+  "z": 7.319478921202738,
+  "all_ok": true,
+  "null_ok": true,
+  "repro": 0.0029928620020207575,
+  "thin_w_max": 13.191951274871826,
+  "broad_w_min": 34.60488700866699
+ },
+ "verdicts": {
+  "T1 median half-width": {
+   "value": 3.0,
+   "lo": 1.5,
+   "hi": 4.0,
+   "verdict": "MIXED"
+  },
+  "T2 observation-count gap": {
+   "value": 0.0,
+   "lo": 0.05,
+   "hi": 0.25,
+   "verdict": "pixel-count starvation REFUTED"
+  },
+  "C-T3-COVER full": {
+   "value": 1.0,
+   "lo": 0.198,
+   "hi": 0.6,
+   "verdict": "DEGENERATE: the alpha gate is non-binding, so it cannot be what rejects anything"
+  },
+  "T3 gate pass ratio thin/broad (full)": {
+   "verdict": "VOID -- coverage control says DEGENERATE: the alpha gate is non-binding, so it cannot be what rejects anything"
+  },
+  "C-T3-COVER local": {
+   "value": 0.9761629448295701,
+   "lo": 0.198,
+   "hi": 0.6,
+   "verdict": "DEGENERATE: the alpha gate is non-binding, so it cannot be what rejects anything"
+  },
+  "T3 gate pass ratio thin/broad (local)": {
+   "verdict": "VOID -- coverage control says DEGENERATE: the alpha gate is non-binding, so it cannot be what rejects anything"
+  },
+  "T4 thin minus broad (points)": {
+   "value": 21.784272653929037,
+   "lo": -10.0,
+   "hi": 10.0,
+   "verdict": "the unmix does WORSE on thin contours (ORCH's prediction)"
+  }
+ }
+}

@@ -141,7 +141,7 @@ such).
 > **Does unmixing remove it?**
 > **On synthetic data, yes, and correctly: −78.8% halo AND band RMSE 3.46% →
 > 1.82% of level, which is the far-field noise floor.** It reconstructs.
-> **On the real bee, no: +3.7% with a global depth, −28.2% with a per-pixel
+> **On the real bee, no: −3.74% with a global depth, −28.2% with a per-pixel
 > one, against a registered −50% bar. FAILED.**
 >
 > **What actually removes it on real data, and at what cost?**
@@ -236,6 +236,26 @@ Four controls pass at slope 1.00, after the first attempt's positive control
 returned **−1.7375** because a `linspace` plant with ρ = +1 **cancels** this
 cube's natural drift at ρ = −0.9289 — a plant must be checked for sign
 agreement with the signal already there. §28.
+
+**Is the shortfall a support problem? The prediction holds; the explanation
+does not.** Re-scored on the same cached output, the shipped per-pixel unmix
+captures −11.01% on the thinnest quartile of boundary points against
+−32.80% on the broadest — a **21.78 point** gap at **7.3** null standard
+deviations, and scoring all points reproduces the shipped −28.16% to **0.003
+points**. So the unmix really does work far worse on thin structures. But
+starvation is refuted three ways: the fit regresses across the **frame axis at
+each pixel independently**, so there is no spatial support to starve; measured
+observations per band pixel are **38.000 thin against 38.000 broad**; and the
+recorded arms run the wrong way, since the arm with **more** coverage scored
+better. The variant that could have worked — thin structures attenuating
+lpha below the admission gate — is **real but non-operative**: alpha does
+attenuate **2.1×** (0.1627 against 0.3444), yet the gate still admits **90.51%**
+of thin pixels and **97.62%** of the band, so the R² term sets coverage and the
+alpha gate rejects almost nothing. Two corrections against myself: §5.1's
+global-depth arm is **−3.74%**, a small *improvement*, not the **+3.7%**
+*regression* this report stated in eight places, and my own C-T3-COVER was a
+two-branch bar that scored a degenerate 100% as PASS — discipline 676, one hour
+after being handed it. §29.
 
 ## 1. Corrections to the dispatch, loudest first
 
@@ -544,7 +564,9 @@ rule to the arm that was, on ISO alone, winning.
 
 ### 5.1 F2 as registered — global depth
 
-**MEASURED**, `bee-3-cpl` `ROI_LEG`: ISO **0.06550** (+3.7%, *worse*), median
+**MEASURED**, `bee-3-cpl` `ROI_LEG`: ISO **0.06550** (**−3.74%** — a small
+*improvement*; this read "+3.7%, *worse*" until §29.5 and `P110` corrected the sign
+against the JSON), median
 R² **0.131** over the band, coverage **12.5%** of band pixels at the R² ≥ 0.5
 admission gate. Registered bar was −50%. **FAILED.**
 
@@ -570,7 +592,7 @@ background by nearest subject pixel, bin into 10 depth bins, build `α_k` per bi
 | 0.4 | 0.173 | 0.164 | 0.04890 | **−28.1%** |
 | 0.8 | 0.200 | 0.198 | 0.04888 | **−28.2%** |
 
-**DERIVED.** Per-pixel depth turns a +3.7% into a −28.2% and lifts explained
+**DERIVED.** Per-pixel depth turns a −3.74% into a −28.2% and lifts explained
 variance from 0.131 to 0.200. So *part* of the step-5.1 negative was a
 depth-resolution failure, and a global `k_F` is the wrong object for an occluder
 that spans depth. But it still misses the −50% bar, and — per §4.4 — an ISO
@@ -743,7 +765,7 @@ be folded into it rather than beside it.
 | **P5** | **A halo metric cannot certify a reconstruction.** On a plant with known ground truth, three of four deliberately broken unmixings still improved ISO by 77–85%, including one wrong by **six orders of magnitude** in RMSE | Never optimise a reconstruction against a halo metric, and never certify an occlusion arm on it. Every arm needs a ground-truth control | M87 (MEASURED) — **the most transferable result here** |
 | **P6** | **The mode-partition remedy is cosmetic and damaging.** On ground truth it removes **79.8%** of the halo while raising band RMSE **3.46% → 12.28% of level (+254.6%)**; on a non-occluding control it removes **63.9%** while raising band RMSE **+558.4%** | Fact 412's remedy works on the artifact and not on the picture. If it ships, it ships labelled cosmetic. **This partially retires fact 412's "try the cheap remedy first" as a *quality* recommendation** — it is a good diagnostic and a bad fix | M87 (MEASURED) |
 | **P7** | **Two-layer unmixing is correct where it can be checked.** On the same plant it removes **78.8%** of the halo and takes band RMSE **3.46% → 1.82%**, the far-field noise floor (0.0180) | The owner's model is the right physics and the right target. It is the only arm measured to make the picture more correct | M87 (MEASURED) |
-| **P8** | **But it does not yet work on real captures.** `bee-3-cpl` `ROI_LEG`: **+3.7%** with a global depth (median band R² 0.131, coverage 12.5%); **−28.2%** with a per-pixel depth (R² 0.200, coverage 19.8%), against a registered −50% bar | Depth resolution is worth ~30 points and is necessary; it is not sufficient. Ranked remaining causes: semi-transparent hair fringe, non-constant F(x), no alignment | M87 (MEASURED) |
+| **P8** | **But it does not yet work on real captures.** `bee-3-cpl` `ROI_LEG`: **−3.74%** with a global depth (median band R² 0.131, coverage 12.5%; this row read **+3.7%**, the wrong sign, until `P110`); **−28.2%** with a per-pixel depth (R² 0.200, coverage 19.8%), against a registered −50% bar | Depth resolution is worth **24.4 points** (`P110` corrected this from ~30) and is necessary; it is not sufficient. Ranked remaining causes: semi-transparent hair fringe, non-constant F(x), no alignment | M87 (MEASURED) |
 | **P9** | **Median R² does not discriminate a working unmixing from a failing one.** The plant, where RMSE is 1.71%, has median band R² **0.058** — *lower* than the bee's **0.131**, where the arm fails | Do not gate admission on R². The quantity that matters is the intercept, and on real data nothing checks it. **A model-fit statistic is not a correctness statistic** | M87 (MEASURED) |
 | **P10** | **A global foreground focus frame is the wrong object whenever the occluder spans depth.** Mode partition scores **−63.4%** on a subject spanning 79 frames and **−1.2%** on one spanning 248; per-pixel depth takes both to **−87.9%** and **−84.6%** | Any occlusion-aware stage must carry a per-pixel foreground depth map, not a scalar. Applies identically to both arms | M87 (MEASURED, two scenes, no refitting) |
 | **P11** | **`bee-3-cpl` drifts 18.09% in level across its sweep** (green luma, fixed far set; 3087.2 DN at k=298, 3704.5 DN at k=103), and a per-pixel selector imports that as a background level patchwork | An output defect for the output/colour milestone. **Not** the occlusion halo: predicted band step **+77.1 DN** vs observed **−539.8 DN**, and normalising by L(k) with selection bit-identical leaves the rim intact | M87 (MEASURED) |
@@ -800,7 +822,7 @@ Ordered by measured contribution.
 
 1. **Per-pixel foreground depth is mandatory** (P10). Take `k_F` from the merge's
    own argmax field inside the mask, median-filter, propagate outward by
-   `distance_transform_edt(return_indices=True)` equivalent. Worth ~30 points of
+   `distance_transform_edt(return_indices=True)` equivalent. Worth ~24 points of
    halo reduction on its own.
 2. **Model `α_k(x) = blur(matte, c·|k − k_F(x)|)`** and solve, per pixel, the
    two-parameter least squares `I_k = a₀ + b·α_k` over k. `a₀` is the unveiled
@@ -1099,7 +1121,7 @@ certify anything.
 > mean** photometric drift is corrected for.**
 >
 > **This does not change the report's operative conclusions.** §5 already
-> measured that two-layer unmixing fails on real captures (+3.7% / −28.2%
+> measured that two-layer unmixing fails on real captures (−3.74% / −28.2%
 > against a −50% bar), and §6 already measured that the cheap remedy is
 > cosmetic. The polarity work strengthens the *mechanism* and leaves the
 > *engineering* verdict exactly where it was: **do not build the two-layer
@@ -1924,13 +1946,13 @@ namespaced `M87`.
 | P81 | **The bee rim is a two-layer mixture in linear light, with a small chromatic residue that is 9x the noise floor.** On `ship-before-linear.tif`, chromaticity `(r, b)`: deep subject (0.358601, 0.300083), halo band (0.322687, 0.343316), far background (0.318767, 0.346940). The band lies **91.38%** along the segment with a perpendicular offset of **0.01039** against a `C-CHROMA-NULL` of **0.00113**. Registered bar passed. The scalar convex bound holds too, the band 22.05% below far background. | Bounds M107's demosaic candidate on this subject: the veil is overwhelmingly a two-layer blend, and the resolvable 1.04% off-segment residue is the only room a chromatic mechanism has. **Also a correction of my own §64 arm**, which passed on `bee3-full.tif` — a file `C-LINEAR-2` then measured as gamma-encoded (R-squared 0.9612, quadratic worth 63.8% of range, **92x** the curvature of the linear twin). Convexity is a claim about linear light. | MEASURED |
 | P82 | **A positive control on identical content does not validate an estimator that must work across a change.** §66's D1 planted a shift on frame 0 and matched it against frame 0; it passed and was worth nothing. Re-run as frame 0 against frame 298 (G1), the same estimator still recovered the plant exactly — but only the second version was evidence. | General: **a control must be able to fail in the way the instrument actually fails.** Applies to any planted-signal check where the real task involves a domain change the plant does not reproduce. | DERIVED from MEASURED |
 | P83 | **The two-component fit is NOT the limiter, and the two-layer model is not refuted.** On a depth-spread plant with known truth, handing the fit the **true `alpha_k` cube** captures **+100.59%** of the available headroom — band RMSE 1.7837% against a merge at 4.5271% and a far-field single-frame noise floor of 1.7999%. It exceeds 100% because the intercept is estimated across 121 frames and is therefore quieter than any one of them. | Answers the orchestrator's Q1. The external reviewer's two-layer bimodal-unmixing proposal is **still live**; §13's −28.2% is not a refutation of the model. | MEASURED |
-| P84 | **`k_F` propagation is the entire difference between catastrophe and the floor, and its sign depends on whether the occluder spans depth.** Depth-spread plant: a global scalar `k_F` captures **−298.83%** of the headroom — 12.6769% band RMSE, **2.8x worse than the uncorrected merge** — while a per-pixel `k_F` map captures **+99.00%**. That is a **+397.83 point** swing. On the flat placebo, where the occluder is at one depth, the same substitution **costs −25.71 points** (+99.03% to +73.32%). | The propagation is load-bearing and **conditionally** so. Per-pixel `k_F` must be gated on measured depth variation, not applied unconditionally: on a single-depth occluder the estimated map is noise and makes the reconstruction worse. Reproduces §5.1 vs §5.2's real-data ordering (+3.7% vs −28.2%) with the sign of the catastrophe. | MEASURED |
+| P84 | **`k_F` propagation is the entire difference between catastrophe and the floor, and its sign depends on whether the occluder spans depth.** Depth-spread plant: a global scalar `k_F` captures **−298.83%** of the headroom — 12.6769% band RMSE, **2.8x worse than the uncorrected merge** — while a per-pixel `k_F` map captures **+99.00%**. That is a **+397.83 point** swing. On the flat placebo, where the occluder is at one depth, the same substitution **costs −25.71 points** (+99.03% to +73.32%). | The propagation is load-bearing and **conditionally** so. Per-pixel `k_F` must be gated on measured depth variation, not applied unconditionally: on a single-depth occluder the estimated map is noise and makes the reconstruction worse. Reproduces §5.1 vs §5.2's real-data ordering (−3.74% vs −28.2%) with the sign of the catastrophe. | MEASURED |
 | P85 | **Once `k_F` is per-pixel there is nothing left in the alpha model.** Oracle alpha minus per-pixel-`k_F` alpha is **+1.59 points** of headroom on the depth-spread plant (100.59% against 99.00%), and oracle `c` alone buys **0.00 points** (arms A and C identical to four decimals on the flat plant, and both catastrophic on the depth-spread one). | Effort spent refining `sigma_k = c\|k − k_F\|`, the blur constant, or the matte is spent on 1.59 points. **Effort spent resolving `k_F` per pixel is worth 397.83.** Also: on real captures per-pixel `k_F` reached only −28.2% while on the plant it reaches +99.00%, so a **third limiter exists that the plant does not contain** — naming it is the next experiment and is not claimed here. | MEASURED |
 | P86 | **A decision rule that compares two arms to each other cannot tell "both stalled" from "both perfect".** Registered bar N2 read "if oracle arm E improves at least 2x more than arm B, the fit is not the limiter". It measured **E/B = 1.02x** and fired *"THE FIT IS THE CEILING: step 13 refutes the MODEL"* — the opposite of the truth, **because B had already reached the floor**. | General, and it is a defect in my own preregistration. **Score arms against an achievable floor, not against each other**: `captured = (RMSE_merge − RMSE_arm) / (RMSE_merge − RMSE_floor)`. A ratio between two arms is only interpretable once you know where the ceiling is. The registered output is left standing in §72's stdout and JSON; §74 is the correction, handled the way §15.4 was. | DERIVED from MEASURED |
 | P87 | **Fidelity against truth does what suppression could not: it rejects destruction.** The registered broken arm (`alpha` to `1 − alpha`) captures **−2698.00%** of the headroom on the flat plant and **−2292.92%** on the depth-spread one. Bar X4 measured three of four deliberately broken unmixings *improving* the halo metric by 77–85%. | The paired fidelity term the orchestrator asked to be registered before building **works as intended**. Caveat, stated because it limits the claim: on these plants the broken arm also fails the suppression metric (−265.2% and −235.3%), so the plant does **not** reproduce X4's dissociation — it shows the fidelity metric is sound, not that the two metrics disagree here. | MEASURED |
 | P88 | **The veil is TWO mechanisms, and the orchestrator's argued split is confirmed.** (a) An **election** artifact with two signs: `E(d)`'s positive box (peak +0.14393 at d = 13) and negative shelf (trough −0.07961 at d = 92) are both boundary-registered — rolling the elected-index field by (317, 511) leaves **39.1%** of the box and only **7.7%** of the shelf. (b) A **real frame-borne veil** present in every observation: on the ensemble, at fixed distance, level falls with local occluder coverage at **+0.534 per unit coverage** (r = 128), an observable amplitude of **+2.852%** of level against a rolled-coverage null of −0.0398 (7.5% of the reading) and a positive control recovering **100.6%** of a planted 3%. | The two are **0.358** apart in size, so the shelf is 2.8x the frame-borne veil — the correction is aimed at the dominant term, but a **~2.9% veil remains that no selector-side fix can reach**, because it is in every frame. That residue is what unmixing, and only unmixing, could remove, which links Q2 back to P83. | MEASURED |
 | P89 | **`E(d)` is provably and measurably blind to anything present in every frame, which is why (b) needed a second instrument.** A fixed per-pixel gain scales every `k` at a pixel by the same constant, so `argmax_k` is **exactly** unchanged; `E` then reads **1.67%** of a planted −3% annulus. **My first version of that control reported 56.65%** because it built the planted baseline as `prof(mean_k frame_k)` while the true `E` uses `mean_k prof(frame_k)` — median and mean do not commute. | Fifth self-caught instrument defect in this milestone, and the first where the *control* was wrong and the *claim* was right. **When a control contradicts an analytic argument, check the control against the argument's own algebra before abandoning the argument.** The repaired version carries a bin-constancy check (max deviation **0.0001 DN**) proving the plant is exactly multiplicative within a distance bin. | MEASURED |
-| P90 | **The premise of the orchestrator's Q1, and of my own preregistration, was wrong at source.** `13-unmix.py:98` is a global scalar `k_F`, and I registered a ladder on the belief that this produced the −28.2%. §5.2 of this report says otherwise: the global scalar produced **+3.7%** and **−28.2% is already the per-pixel `k_F` arm** (median band R-squared 0.200, coverage 19.8%). | Amended before any arm number was read, and both readings reported. **A line of code being wrong does not make it the line that produced the number** — the arm that shipped a result must be identified from the result's own provenance, not from the most suspicious code nearby. | DERIVED |
+| P90 | **The premise of the orchestrator's Q1, and of my own preregistration, was wrong at source.** `13-unmix.py:98` is a global scalar `k_F`, and I registered a ladder on the belief that this produced the −28.2%. §5.2 of this report says otherwise: the global scalar produced **−3.74%** and **−28.2% is already the per-pixel `k_F` arm** (median band R-squared 0.200, coverage 19.8%). | Amended before any arm number was read, and both readings reported. **A line of code being wrong does not make it the line that produced the number** — the arm that shipped a result must be identified from the result's own provenance, not from the most suspicious code nearby. | DERIVED |
 | P91 | **The bright veil is NOT a photometric step between elected frames, and correcting exposure makes it worse.** Holding the election *exactly* fixed and changing only what is composited, per-frame level normalisation moves the box from **+0.14393 to +0.16731 — 16.24% larger**, and the wrong way. Gain+offset normalisation with re-election leaves it at **102.22%**. | The registered positive control passes, which is what makes the null readable: a planted ±10% per-frame ramp moves the box **+0.02908** and normalisation removes **89.0%** of that movement. The instrument can remove a photometric step of exactly the proposed kind; it finds none in the box. | MEASURED |
 | P92 | **The dark stand-off shelf IS substantially photometric, and this corrects §21 and §26.4.** With the election held *bit-for-bit* fixed, level normalisation alone removes **32.4%** of the shelf (−0.07961 → −0.05379). The election-alone cell moves it the other way, a **−15.7%** share (deeper, −0.08433). Both together remove 37.8%, interaction +29.9%. | §26.4 called both features "boundary-registered election behaviour". That over-attributes the shelf: a third of it survives the election being held constant and is carried by the frames' own levels. The orchestrator's photometric-step mechanism is real here, at the location and sign it predicted. | MEASURED |
 | P93 | **A metric's baseline window can contain the very feature a null result is claimed about.** §21 concluded "the photometric share is zero" from ISO, whose `D_NEAR = (1, 24)` reads the box and whose `D_FAR = (48, 96)` is a *linear baseline fit* — and the shelf's trough sits at **d = 92, inside that fit window**. | ISO does not merely under-weight the shelf, it **absorbs the shelf into its own baseline**, so no shelf effect can register as signal. §21's headline is true of the box and structurally unmeasurable for the shelf. Check what a metric's normaliser spans before reporting a null over it. | DERIVED |
@@ -1946,6 +1968,14 @@ namespaced `M87`.
 | P103 | **The gap-correlation sign flip is an interaction, and single-factor attribution cannot see it.** Of the 2×2 {all band, M96-disconnected} × {M96 competitive-set gap, 5×5 winner range}, only **one** cell is positive: disconnected × M96 gap at **+0.1662** against a +0.0547 null. Changing population alone gives −0.0045; changing statistic alone gives −0.0221. | §27.7's −0.0800 was measured on the diluted population with the other statistic and is superseded for this question. My script compared swing magnitudes and printed "the sign is carried by the POPULATION", which is the same single-factor error class as the sign-blind share statistic of `P95` — the third time in two sections. | MEASURED |
 | P104 | **M87's halo metric is not a sharpness proxy, so discipline 674 does not reach it.** ISO is a median *level* profile against distance. `P24` is the direct evidence: a Catmull-Rom gather that destroys ~49% of gradient energy moves the halo metric by **+0.6%**. | Audited on the orchestrator's instruction after a Laplacian-energy proxy rated visible polygonal patchwork 2.73× sharper than the correct render. M87's detail-retention and BMF bars are ratios against an untouched reference on identical content, not absolute high-frequency energy, so none is withdrawn. | DERIVED |
 | P105 | **A figure checker that tests presence cannot catch a figure that is wrong in one place and right in another.** Mutating all four instances of a value in §28 turns `verify_s28.py` red; mutating **one of the four** leaves it green. Seven registered controls, including two that mutate the JSON operand with the prose untouched, behave exactly as registered. | This is the checker's known blind spot, measured rather than assumed, and it is why the two operand-mutation controls matter: they prove the harness re-derives from data rather than matching the document against itself. | MEASURED |
+| P106 | **The unmix really does work far worse on thin structures — the orchestrator's prediction is confirmed.** Re-scored on the same cached output, the shipped per-pixel arm captures **−11.01%** on the thinnest quartile of boundary points against **−32.80%** on the broadest — a **21.78 point** gap at **7.3** null standard deviations (20 shuffles, p95 \|gap\| 6.44). Scoring all points reproduces the shipped −28.16% to **0.003 points**. | One pooled number concealed a 3x difference between two halves of its own population. This is the strongest structure-dependence measured in M87 and it says where a correction must be aimed. | MEASURED |
+| P107 | **But the support explanation is refuted three ways.** (1) `fit()` regresses across the **frame axis at each pixel independently** — there is no spatial neighbourhood to starve. (2) Measured finite observations per band pixel: **38.000 thin against 38.000 broad**. (3) The recorded arms run the wrong way: the per-pixel arm treated **19.8%** of the band against the global arm's 12.5% and did **better**. | More coverage, better result, is the opposite of starvation. A per-pixel through-focus regression has the same n frames on a one-pixel contour as in the middle of a region, so contour geometry cannot starve it by pixel count. The effect of `P106` is real; this explanation of it is not. | MEASURED |
+| P108 | **The alpha-attenuation mechanism is real but non-operative, because the gate it would act through is non-binding.** At local blur (σ ≤ 40px) thin structures do attenuate alpha as predicted — median `amax` **0.1627** against **0.3444**, a 2.1x difference — yet the admission gate still passes **90.51%** of thin band pixels and 100.00% of broad. Alpha-gate-only coverage of the band is **97.62%** (100.00% at the shipped σ ≤ 238px) against a recorded **19.8%**. | So the `amax`/`amax − amin` gate rejects almost nothing, and the coverage limit is set by the **R² ≥ 0.5** term instead. A mechanism can be directionally correct and still explain nothing if the valve it operates is already wide open. | MEASURED |
+| P109 | **The boundary population is a connected network of ribbons, not thin contours, and the map inverts the reading.** Verified on `argmax-index.tif`: frame 0 **29.8139%**, frame 175 **0.1813%**, boundary **29.9951%**. Median half-width **3.00 px**; 24.32% at ≤1px but 79.49% at ≤8px and p90 **12.37 px**. Of 42 408 components the largest holds **35.45%** of the population and only **4.15%** is speckle. | Rendered by width, the smooth petal-tracing arcs are the **widest** part of the population (≥16px across) while the thinnest part is diffuse speckle that traces nothing. The coherent occlusion contours are wide, which is a further reason a per-pixel fit is not starved on them. | MEASURED |
+| P110 | **A sign error in this report: §5.1's `+3.7%, worse` is a small improvement, not a regression.** `13-unmix.json` and `17-perpixel.json` share a **bit-identical** `F0` of 0.0680424463788235 and the same convention, and the global-`k_F` arm scores 0.06549822 = **−3.74%**. So per-pixel depth is worth **24.42 points** (−3.74 to −28.16), not the ~30 stated. | Found while locating which script produced −28.2%. No conclusion overturns — −3.74% still fails the registered −50% bar and §5.1 still reads FAILED — but a load-bearing figure carried the wrong sign into `P8`, §26.2 and a report to the orchestrator. Corrected in place with the original wording shown. | MEASURED |
+| P111 | **I failed discipline 676 inside the script written to honour it.** My `C-T3-COVER` control read "coverage ≥ 19.8% means the reconstruction is a superset, PASS". It measured **100.00%** and printed PASS. A gate passing everything is not a valid gate reconstruction, it is a degenerate one, and the two-branch bar had no way to say so. | Rewritten with three branches — broken below 19.8%, plausible to 60%, **degenerate** above — which is what voided T3 and forced the honest reading in `P108`. One hour after being handed the discipline, in the file that cites it. | MEASURED |
+| P112 | **When two subsets return an identical statistic, audit the partition before the statistic.** T2/T3 first partitioned band pixels by the interior EDT at the nearest foreground pixel — but the nearest foreground pixel to a background pixel always lies **on the boundary**, where that EDT is ≈1. Both quartile thresholds came back **1.0** and the two subsets returned `amax` medians equal to four decimals. | I first diagnosed the spread of the *statistic* (`amax` IQR 0.124, non-constant) and concluded coincidence. The defect was in the *partition variable*, whose p25 and p75 were the same number and were sitting in the JSON. Repaired by propagating the boundary-point widths, after which the same comparison separates 0.1627 against 0.3444. | MEASURED |
+| P113 | **The instance-blindness registered in §28.9 is closed.** erify_s29.py asserts an **exact occurrence count** for every figure, not presence, so control_s29.py N2 — which mutates exactly one of three copies of a figure — goes **RED**, where the equivalent §28 control stayed GREEN. 9 of 9 controls behave as registered. | Two of them (N3, N4) move a JSON operand with the prose untouched, which is what distinguishes re-derivation from pattern-matching. The cost is that the checker must be told how many times each figure is legitimately quoted, which is itself a check on the prose. | MEASURED |
 
 ### Capture request
 
@@ -3118,7 +3148,7 @@ are two things and never measured it.
 `13-unmix.py:98` reads `kF = int(np.bincount(argbest[mask]).argmax())` — a single
 global scalar for the whole foreground. I registered an ablation ladder on the
 belief that this scalar produced the −28.2%. Then I read §5.2 of this report at
-source. **It does not.** The global scalar produced **+3.7%**; the −28.2% is
+source. **It does not.** The global scalar produced **−3.74%**; the −28.2% is
 *already* the per-pixel `k_F` arm. My preregistration compared the oracle against
 the wrong baseline, and I amended it to compare against the per-pixel arm —
 recorded in the script header, before any arm number existed, with the original
@@ -3871,3 +3901,188 @@ that never ran.
 the document alone, and the harness still goes red. That is the difference
 between re-deriving and pattern-matching a document against itself. `N2` is the
 registered limitation: **presence-checking is instance-blind.**
+
+## 29. Is the shortfall a support problem? The prediction holds; the explanation does not
+
+The orchestrator's facts 1360-1362: on `flowers-cpl` the boundary-elected
+pixels render as thin curved ribbons tracing petal edges, so *"a fit whose
+support assumes a broad region will be starved of pixels on most of the
+population, and the shortfall would be a support problem, not a model problem"*.
+Requested test: re-score the unmix restricted to contour pixels.
+
+**Answer: the prediction is confirmed and the explanation is refuted.** The
+unmix does work far worse on thin structures — **−11.01%** against **−32.80%**,
+a 21.78 point gap at 7.3 null standard deviations — but not because anything is
+starved.
+
+### 29.1 What the operand says about "contours"
+
+**Verified at source** on `argmax-index.tif` (2344×3520, uint16, frames 0-175):
+frame 0 **29.8139%**, frame 175 **0.1813%**, boundary **29.9951%**. The
+orchestrator's message quotes 29.81% and 0.18% and both are exact. *(Fact 1361
+states 33.74% for the same stack; the index map gives 29.9951%. Worth
+reconciling — it may be a different field, since `--index-map` exists only on
+`argmax-baseline` and reads the naive argmax, not the regularised winner
+field.)*
+
+| statistic | value |
+|---|---|
+| median half-width | **3.00 px** |
+| p10 / p25 / p75 / p90 | 1.00 / 1.41 / 6.71 / **12.37** px |
+| at half-width ≤ 1px | 24.32% |
+| at half-width ≤ 2px | 39.27% |
+| at half-width ≤ 8px | **79.49%** |
+| components | 42 408, largest holding **35.45%** |
+| in components < 50px (speckle) | **4.15%** |
+
+Registered bar: median ≤ 1.5px is thin contours, ≥ 4.0px is broad. It measured
+**3.00 px — MIXED.** And the population is not a scatter of contours: a single
+connected component holds over a third of it, with only 4.15% speckle.
+
+**Then I took the orchestrator's own discipline 677 and rendered it by width**
+(`81-flowers-width.png`, yellow ≤2px, blue ≥8px). **The map inverts the
+reading.** The smooth sweeping arcs that trace the petal outlines — the feature
+that reads as "ribbons tracing petal edges" — are the **blue** ones, ≥16px
+across. The yellow, genuinely thin population is diffuse speckle scattered
+through the petal interiors, tracing nothing. So the coherent occlusion contours
+are the *wide* part of the population. P109.
+
+### 29.2 The support hypothesis, refuted three ways
+
+**First, structurally, and it is visible in the source.** `13-unmix.py:fit()`
+and `17-perpixel-depth.py` accumulate `s1, sa, saa, si, sai, sii` **over the
+frame axis at each pixel independently**. There is no patch, no window, no
+neighbourhood. The support of the estimator at a pixel is **n frames**, and a
+one-pixel-wide contour has exactly the same n frames as the middle of a broad
+region.
+
+**Second, measured.** Finite observations per band pixel, partitioned by the
+width of the structure the pixel's nearest boundary point sits on (p25 11.34px,
+p75 30.82px): **38.000 thin against 38.000 broad**, relative gap **0.0000**.
+
+**Third, the recorded arms already run the wrong way.** The global-`k_F` arm
+treated **12.5%** of the band; the per-pixel arm treated **19.8%** and scored
+better. **More coverage, better result** — the opposite of what starvation
+predicts. Registered bar: a relative observation-count gap below 0.05 refutes
+starvation, above 0.25 confirms it. It measured 0.0000 — **pixel-count
+starvation REFUTED**. P107.
+
+### 29.3 The variant that could have worked, and why it does not
+
+Geometry does enter the model, just not through pixel count: `alpha_k =
+blur_{sigma_k}(matte)`, and a thin structure blurred by a large sigma loses
+amplitude far faster than a broad one. If alpha never rises, the admission gate
+`amax >= 0.05 & (amax − amin) >= 0.05` rejects the pixel. That is the
+orchestrator's hypothesis in the form this estimator can actually express.
+
+**The attenuation is real. The gate is not.**
+
+| sigma cap | alpha-gate coverage | median `amax` thin | broad | gate pass thin | broad |
+|---|---|---|---|---|---|
+| ≤ 40px (local) | **97.62%** | **0.1627** | **0.3444** | **90.51%** | 100.00% |
+| ≤ 238px (shipped `c` = 0.8) | **100.00%** | 0.4137 | 0.4629 | 100.00% | 100.00% |
+
+Thin structures do attenuate alpha by **2.1×**, exactly as the mechanism
+requires. But the gate still admits **90.51%** of them, and admits **97.62%** of
+the band overall against a recorded coverage of **19.8%** — so the alpha gate
+rejects almost nothing and **the R² ≥ 0.5 term is what sets coverage**. At the
+shipped `c` the situation is worse still: sigma reaches **238px** on a 744×1144
+ROI, the blur saturates toward a global constant, and alpha carries barely any
+geometry at all. A mechanism can be directionally right and still explain
+nothing if the valve it operates is already open. P108.
+
+### 29.4 The re-score, which is the part that holds
+
+Boundary points split at the quartiles of their local half-width — thin ≤
+**13.19 px**, broad ≥ **34.60 px**.
+
+| population | n | F0 ISO | fixed ISO | ΔISO | absolute |
+|---|---|---|---|---|---|
+| all points (`C-T4-ALL`) | 6103 | 0.06804 | 0.04888 | **−28.16%** | −0.01916 |
+| **thin quartile** | 1526 | 0.04396 | 0.03912 | **−11.01%** | −0.00484 |
+| **broad quartile** | 1526 | 0.09229 | 0.06202 | **−32.80%** | −0.03027 |
+
+`C-T4-ALL` reproduces the shipped figure to **0.003 points**. `C-T4-NULL`, 20
+shuffles of the width labels, gives mean **−1.01** and p95 |gap| **6.44** points
+against a registered ±10 bar. The observed **21.78 point** gap is **7.3 null
+standard deviations**. P106.
+
+**The limit of this evidence, stated plainly.** The bee's *thin* quartile is
+half-width ≤ 13.19px — **limbs, 26px across**. `flowers-cpl`'s median is 3px
+half-width. So this measures limb scale and says nothing directly about the
+flowers regime a factor of four thinner; extrapolating across that gap is not
+measured. `flowers-cpl` has no matte, no unveiled truth and no cached fit here,
+so testing it is a new experiment, not a re-score.
+
+### 29.5 Two disciplines, audited — and I failed one of them in this file
+
+**Discipline 676, and I broke it while citing it.** `C-T3-COVER` was registered
+two-branch: *coverage ≥ 19.8% means the alpha gate is a superset of the recorded
+gate, PASS*. It measured **100.00%** and printed **PASS**. A gate that passes
+every pixel is not a valid superset, it is degenerate, and a two-branch bar had
+no way to say so. Rewritten with three branches — broken / plausible /
+**degenerate** — which is what voided T3 and produced §29.3's honest reading
+instead of a false refutation. One hour after being handed the discipline. P111.
+
+**Discipline 677 generalises past regions, and §29.4 is the demonstration.** My
+ISO metric is *not* region-averaged — it is a profile along boundary normals, so
+it is not blind in the way region averages are. But it **pools over all boundary
+points**, and pooling over a boundary hides a contour/bulk split exactly as an
+area average hides a contour. One number, **−28.16%**, concealed **−11.01%** and
+**−32.80%**. The rule that survives is stronger than the one about maps:
+*before believing a pooled statistic, partition it by the geometry it is pooled
+over.*
+
+**And a third, which is mine.** T2 and T3 first partitioned band pixels by the
+interior EDT at the nearest foreground pixel — but the nearest foreground pixel
+to a background pixel always lies **on the boundary**, where that EDT is ≈1.
+Both quartile thresholds came back **1.0**, and the two subsets duly returned
+`amax` medians identical to four decimals. I diagnosed the spread of the
+*statistic* first, found `amax` genuinely varies (IQR 0.124), and concluded
+coincidence. The defect was in the **partition variable**, whose p25 and p75
+were the same number and were sitting in the JSON I had already written. P112.
+
+### 29.6 What this leaves for the mechanism
+
+1. **The reviewer's two-layer proposal stays live**, and §26.2 remains the
+   reason: handed the true `alpha_k` cube the fit captures **+100.59%** of the
+   headroom. Nothing here touches that.
+2. **§26.2's unidentified third limiter is now partly located.** It is
+   **structure-scale dependent**: the same estimator captures −32.80% on bulk
+   and −11.01% on limbs. That is a sharper description than "semi-transparent
+   hair fringe, non-constant `F(x)`, no alignment", and it is measured.
+3. **The next experiment is not a re-score.** It is whether per-pixel `k_F` is
+   *estimable* on thin structures at all — the winner field there is what the
+   orchestrator calls structurally undefined, and `k_F` is the term §26.2
+   measured as worth 397.83 points.
+
+### 29.7 Verification, and the section 28 blind spot is closed
+
+erify_s29.py re-derives every figure in this section from
+81-contour-support.json and, for the sign repair, from 13-unmix.json and
+17-perpixel.json. It re-computes each quotient rather than reading it back:
+all three dISO values, the gap, the null sigma, the gate pass ratio, the alpha
+separation and the corrected global arm. **67 checks, 0 failures.**
+
+It also does the one thing the section 28 harness could not. Every figure is
+required to appear an **exact number of times**, not merely to be present.
+control_s29.py N2 mutates **exactly one of three** copies of the boundary
+share and the verifier goes **RED** — the defect class that §28.9 registered as
+an open blind spot, where the equivalent control stayed GREEN. P113.
+
+| control | plants | expected | got |
+|---|---|---|---|
+| N0-NOOP | nothing | GREEN | GREEN |
+| N1-ALL | all 3 copies of a figure | RED | RED |
+| N2-ONE-OF-3 | **one** of 3 copies | RED | **RED** |
+| N3-JSON-FIXED | a JSON operand, prose untouched | RED | RED |
+| N4-JSON-SD | a JSON operand, prose untouched | RED | RED |
+| N5-SIGN-BACK | one repaired site regressed | RED | RED |
+| N6-ROW-CELL | one cell of one table row | RED | RED |
+| N7-VERDICT | the registered verdict word | RED | RED |
+| N8-ATTENUATION | a derived ratio | RED | RED |
+
+**9/9 behave as registered.** N3 and N4 move the JSON with the prose untouched,
+so the verifier is re-deriving and not pattern-matching. Both files are backed
+up to %TEMP% and restored with a SHA-256 identity check.
+
