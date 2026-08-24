@@ -1,0 +1,34 @@
+[
+ {
+  "stack": "wrapped-text-1",
+  "K": 130,
+  "gate_n_eff": 1.238,
+  "spectral_n_eff": 4.148,
+  "ratio": 3.3505654281098542,
+  "gate_gain": 1.1126544836560899,
+  "w1_avg_gain": 1.6523764704207091,
+  "best_avg_gain": 1.8652025598108966,
+  "best_W": 2,
+  "mf_all_gain": 2.0366639388961545,
+  "widen_x": 1.6763537892571974,
+  "then_mf_x": 1.0919264120582386,
+  "total_x": 1.8304549784438442,
+  "share_of_gap_from_widening": 0.8144376357699598
+ },
+ {
+  "stack": "wrapped-text-2",
+  "K": 120,
+  "gate_n_eff": 1.766,
+  "spectral_n_eff": 4.05,
+  "ratio": 2.293318233295583,
+  "gate_gain": 1.328909327230417,
+  "w1_avg_gain": 1.6720063795731563,
+  "best_avg_gain": 1.836531807323155,
+  "best_W": 2,
+  "mf_all_gain": 2.0124611797498106,
+  "widen_x": 1.381984285677846,
+  "then_mf_x": 1.0957943509201087,
+  "total_x": 1.5143705733061454,
+  "share_of_gap_from_widening": 0.7426246863669138
+ }
+]

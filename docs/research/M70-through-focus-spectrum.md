@@ -2127,3 +2127,188 @@ at +0.907 on 12/12.** The transfer question is cheaper to measure than to argue.
 the header width. **Closing that took nine lines and confirmed 32 tables clean.**
 Complying with a check treats the symptom; the check itself is the artefact worth
 improving.
+
+---
+
+## 21. Addendum: does M70 discriminate M73's two readings?
+
+**Added after M73 measured admission on two real captures.** It does discriminate
+them, from numbers already committed — **so no new arm was registered, because
+none was run.** `src/s26_m73_discrimination.py` **collects no new data**: it
+re-reads `out/s07_unclipped.log`, `out/s10_architecture.log` and
+`out/s23_multimodality.log`, and combines them with M73's measured admission.
+Every input is cited to a line in a committed log.
+
+### 21.1 Why my measurement bears on it at all
+
+M73 measured, at the shipped `DEFAULT_GATE = 4.0`, on real captures
+(`M73-cylinder-invariant.md:490`): `wrapped-text-1` admits **1.238 of 130**
+frames, `wrapped-text-2` **1.766 of 120**, the admitted set a singleton at
+**81.4%** and **58.7%** of scored pixels. It recorded two readings and said the
+corpus could not choose:
+
+* **(a)** the gate is too tight and is discarding informative frames;
+* **(b)** the collapse is **correct** — only one frame carries the pixel, so
+  there is genuinely nothing to average.
+
+**ARGUED, and it is the whole reason I can answer.** **Reading (b) is not a claim
+about the gate. It is a claim about the signal** — that the through-focus
+response supports about one frame's worth of information. A claim about the
+signal is falsifiable **without touching the gate**, by a gate-free count of how
+many frames carry mid-band signal. **`mid_n_eff` is exactly that count**, and I
+measured it on both of M73's stacks before M73 reported.
+
+**The two stacks are `wrapped-text-1` (130 frames) and `wrapped-text-2` (120) —
+both in my corpus.** This is a same-stack comparison, not a cross-subject one.
+
+### 21.2 The confound check, run first
+
+A patch straddling two depths shows a high `n_eff` for a reason that is
+**multimodality, not recoverable single-surface signal** — §19.8's finding, and
+the trap that would void this comparison. **MEASURED (`out/s23_multimodality.log`):**
+
+| stack | % unimodal patches | mean lobes |
+| --- | ---: | ---: |
+| `wrapped-text-1` | **100.0%** | 1.00 |
+| `wrapped-text-2` | **98.6%** | 1.01 |
+
+**These are the two cleanest stacks in the corpus on that axis** — the only two
+above 98%. M73 chose them for unrelated reasons (its cylinder geometry). **The
+confound that would have ruined this comparison is absent by luck, and I would
+not have been able to run it on nine of the twelve stacks.**
+
+### 21.3 Reading (b) is refuted on these two stacks
+
+**MEASURED.** Gate-free mid-band `n_eff`, unclipped estimator
+(`out/s07_unclipped.log:60–61`), against M73's admission:
+
+| stack | K | gate `n_eff` (M73) | spectral `n_eff` (M70) | ratio |
+| --- | ---: | ---: | ---: | ---: |
+| `wrapped-text-1` | 130 | 1.238 | **4.148** | **3.35×** |
+| `wrapped-text-2` | 120 | 1.766 | **4.050** | **2.29×** |
+
+**The signal on these subjects supports about four frames of mid-band
+information, and the gate admits between one and two.** Reading (b) — "there is
+genuinely nothing to average" — **is false here.** There is 2.29–3.35× more than
+is being taken.
+
+**The estimator is null-safe against the one artefact that could manufacture
+this.** P5: the *clipped* form of this statistic rectifies noise into apparent
+signal, inflating as `0.4K/√(2 ln K)` — at K=130 that is **16.7**, four times
+the value reported. The **unclipped** statistic used here returns **−0.16 to
++0.08 on pure noise**. A spurious 4.1 is not available to it.
+
+### 21.4 Reading (a) holds — but its proposed mechanism does not
+
+The brief sharpened (a) into a specific form: *the gate is not too tight in its
+**threshold**, it is too coarse in its **domain**, and a per-frequency estimator
+keeps information a per-pixel gate cannot.* **That sharpening is measurably
+wrong, and it is wrong in the direction that costs the proposal its headline.**
+
+**DERIVED**, everything referenced to the best single frame so the gate, the
+equal average and the matched filter sit on one axis:
+
+| stack | gate (ships) | ±1 avg | best equal avg | at W | matched filter, all frames |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `wrapped-text-1` | 1.113 | 1.652 | 1.865 | ±2 | **2.037** |
+| `wrapped-text-2` | 1.329 | 1.672 | 1.837 | ±2 | **2.012** |
+
+Decomposing the gap M73 found:
+
+| stack | widen the gate | *then* add the matched filter | total | widening's share |
+| --- | ---: | ---: | ---: | ---: |
+| `wrapped-text-1` | **+4.49 dB** (1.676×) | +0.76 dB (1.092×) | 1.830× | **81.4%** |
+| `wrapped-text-2` | **+2.81 dB** (1.382×) | +0.79 dB (1.096×) | 1.514× | **74.3%** |
+
+**74–81% of the gap is closed by a threshold change. The matched filter — the
+domain change — is worth 0.76–0.79 dB of it.** So the answer to the sharpened
+form of (a) is: **it is the threshold, not the domain.** A per-pixel gate at the
+right width keeps almost everything a per-frequency estimator would.
+
+**This is the third independent route to the same verdict**, and it arrives from
+a direction I did not construct: §10's collinearity (0.9959, rank-1), §19.8's
+mis-specified `H_k`, and now M73's own gap decomposing 4:1 against the filter.
+
+**An independent reproduction I did not plan.** The "then MF" column reads
+**1.092 and 1.096**. My corpus headroom median, measured on all twelve stacks by
+a different script months of analysis earlier, is **1.1100**. **Two stacks chosen
+by another milestone for unrelated reasons reproduce the headline to within
+1.5%.**
+
+### 21.5 What this comparison cannot support
+
+**Rule 4 — this ladder contains an argmax over a noisy response.** "Best equal
+average" is `max_W` over the widening ladder. **Said, not buried.** It is not
+fragile here: for `wrapped-text-1` the neighbours are ±2 = 1.1288 and ±3 =
+1.1227, a 0.5% difference, so the pick barely matters — but it is an argmax and
+the number should be read as such.
+
+**The two `n_eff` are not the same quantity, and I am dividing them.** Mine is
+**mid-band (0.100–0.2762 cyc/px), per-patch, on textured patches**; M73's is a
+**spatial, per-pixel** admission count over all frequencies on scored pixels.
+Patches are larger than pixels. **The ratio 3.35× is a comparison of a spectral
+count to a spatial count and should be read as an order-of-magnitude statement,
+not a calibrated one.** What survives the mismatch is the *sign and scale*: one
+is ~4, the other is ~1.2–1.8, and no plausible reconciliation of granularity
+turns 4.1 into 1.2.
+
+**My gate figure is generous to the gate.** `√(gate n_eff)` assumes every
+admitted frame sits at full peak amplitude. Real admitted frames off the peak
+carry less. **So the gap is if anything wider than 4.49 dB, which is conservative
+against the reading I am reporting as supported.**
+
+**Two stacks, one subject class.** Both are wrapped text at f/5.6. **I have not
+shown this generalises**, and §19.8 says nine of twelve corpus stacks carry
+enough multimodality that the same measurement would not be readable on them
+without the unimodal restriction §19.6 flagged as post hoc.
+
+### 21.6 What it does to the verdict
+
+**Nothing. The verdict is PLUGIN, unchanged — and §18's aside is promoted.**
+§18 already said *"the gate constant is the bigger lever and it is one line."*
+**M73 has now measured the lever's length on real captures, and it is +2.81 to
++4.49 dB** — far larger than the +0.91 dB the whole focus-axis architecture
+question is worth. **I recorded that recommendation before M73 reported and it
+is the same recommendation; what has changed is that it is now the most valuable
+thing in this report.**
+
+**One thing I got wrong and am correcting.** §18 priced the matched filter
+against a gate at **W=3**, mapped from M67's simulated `n_eff = 6.84` (P16).
+**M73 measures the real gate at `n_eff` = 1.238–1.766, i.e. W≈0–1, not W=3.** So
+**P16's window mapping describes M67's simulator, not the rig.** The 2.38%
+headline in §18 is the MF's value *against a gate that admitted seven frames* —
+a gate that does not exist on these captures. **Against the gate that actually
+ships, the MF is worth 1.092–1.096×.** That is *larger* than 2.38% and still
+**an order of magnitude below the gate-width term beside it.**
+
+### 21.7 Candidate facts from §21
+
+| # | Proposed fact | Label | Source |
+| --- | --- | --- | --- |
+| **P30** | **On the two real stacks where M73 measured the shipped gate collapsing to a near-singleton, the signal carries ~4 frames of mid-band information — so "there is nothing to average" is false there.** Gate-free unclipped mid-band `n_eff` is **4.148** (`wrapped-text-1`, K=130) and **4.050** (`wrapped-text-2`, K=120) against M73's admitted **1.238** and **1.766** — ratios **3.35×** and **2.29×**. Measured on patches that are **100.0%** and **98.6% unimodal**, the two cleanest in the corpus, so the §19.8 two-depth confound is absent. The unclipped estimator returns −0.16..+0.08 on pure noise | MEASURED | `out/s07_unclipped.log:60–61`; `out/s23_multimodality.log`; `M73-cylinder-invariant.md:490` |
+| **P31** | **The gap M73 found is a gate-threshold gap, not a gate-domain gap: widening closes 74–81% of it and the matched filter closes the rest.** Referenced to the best single frame, widening to ±2 is worth **+4.49 dB** and **+2.81 dB**, after which the matched filter adds **+0.76** and **+0.79 dB**. **This refutes the specific sharpened form of the "gate is too coarse in its domain" reading** — a per-pixel gate at the right width keeps nearly everything a per-frequency estimator would | DERIVED (from MEASURED inputs) | `out/s26_m73_discrimination.log` §3–4 |
+| **P32** | **M70's corpus headroom median reproduces on two stacks selected by another milestone for unrelated reasons.** The matched filter's residual value over the best equal average is **1.092** and **1.096** on M73's two stacks, against the twelve-stack headroom median of **1.1100** measured independently — agreement to **1.5%** | DERIVED (from MEASURED inputs) | `out/s26_m73_discrimination.log` §3; `out/s11_headroom.json` |
+| **P33** | **P16's window mapping describes M67's simulator, not the rig.** P16 mapped M67's simulated `n_eff = 6.84` and `D(A) = 1.733` onto a gate width of W=3. M73's real-capture measurement puts the shipped gate at `n_eff` = **1.238–1.766**, i.e. **W≈0–1**. §18's 2.38% therefore prices the matched filter against a seven-frame gate that does not exist on these captures; against the shipped gate it is **1.092–1.096×** | DERIVED | §18.2, P16; `M73-cylinder-invariant.md:490` |
+
+### 21.8 Disciplines from §21
+
+**D-q. A claim that a collapse is "correct" is a claim about the signal, and is
+falsifiable without touching the mechanism that collapsed.** M73 could not choose
+between "the gate is too tight" and "there is nothing to average" **because both
+are statements about the gate's output.** Re-reading the second as a statement
+about the *input* made it answerable from data already on disk, by a milestone
+that had measured it for another purpose entirely. **When two readings of a
+mechanism's output are tied, look for the one that is secretly a claim about the
+mechanism's input.**
+
+**D-r. Before an architecture is adopted to close a measured gap, decompose the
+gap against the cheapest parameter change that also closes it.** Here the split
+is **4:1 against the architecture**, and the parameter change is one constant on
+one line. **The gap being real is not evidence that the proposed thing closes
+it** — both readings of M73 were consistent with a real gap.
+
+**D-s. Verify a reported gate failure at HEAD before acting on it.** §21 was
+delivered with a lint violation quoted at `M70:775`; the violation was fixed four
+commits earlier in `7e135b7` and the quoted line now holds prose. **Running the
+gate cost one command and prevented an edit to a correct line** — and the same
+run showed the repository's actual remaining violation was in a different file.

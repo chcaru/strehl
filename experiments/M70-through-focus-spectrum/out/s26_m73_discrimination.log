@@ -1,0 +1,36 @@
+==============================================================================
+s26  M73 readings (a) vs (b), decided from already-committed numbers
+==============================================================================
+
+[1] THE CONFOUND CHECK, FIRST - is a patch-level n_eff even readable
+    on these two stacks?  A patch straddling two depths would show a
+    high n_eff for a reason that is multimodality, not recoverable
+    single-surface signal (this milestone's own section 19.8).
+               stack  % unimodal  mean lobes
+      wrapped-text-1      100.0%        1.00
+      wrapped-text-2       98.6%        1.01
+    -> These are the two CLEANEST stacks in the corpus on that axis.
+       The two-depth confound is absent here, so n_eff is readable.
+
+[2] THE DISCRIMINATION.  Reading (b) says the signal supports ~1
+    frame.  mid_n_eff is a gate-free count of how many frames carry
+    mid-band signal, so it tests (b) directly.
+               stack    K  gate n_eff  spectral   ratio
+      wrapped-text-1  130       1.238     4.148   3.35x
+      wrapped-text-2  120       1.766     4.050   2.29x
+
+[3] THE LADDER, everything referenced to the BEST SINGLE FRAME.
+    gate      = sqrt(gate n_eff)          [what ships today]
+    +-1 avg   = (1+2*relA1)/sqrt(3)       [3-frame equal average]
+    best avg  = +-1 avg * max_W wider(W)  [best equal average]
+    MF(all)   = sqrt(spectral n_eff)      [matched filter, all frames]
+
+               stack    gate  +-1 avg  best avg  (at W)  MF(all) |   widen  then MF   total
+      wrapped-text-1   1.113    1.652     1.865     +-2    2.037 |  1.676x   1.092x  1.830x
+      wrapped-text-2   1.329    1.672     1.837     +-2    2.012 |  1.382x   1.096x  1.514x
+
+[4] WHAT SHARE OF THE GAP M73 FOUND IS GATE WIDTH, NOT THE FILTER?
+      wrapped-text-1  widening +4.49 dB   then MF +0.76 dB   -> widening is  81.4% of the gap
+      wrapped-text-2  widening +2.81 dB   then MF +0.79 dB   -> widening is  74.3% of the gap
+
+wrote out/s26_m73_discrimination.json
