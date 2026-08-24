@@ -1,0 +1,102 @@
+{
+  "ISO": [
+    {
+      "value": "100",
+      "count": 299
+    }
+  ],
+  "FNumber": [
+    {
+      "value": "5.6",
+      "count": 299
+    }
+  ],
+  "Focal": [
+    {
+      "value": "200.0 mm",
+      "count": 299
+    }
+  ],
+  "Lens": [
+    {
+      "value": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter",
+      "count": 299
+    }
+  ],
+  "FocusPosition2": [
+    {
+      "value": "56",
+      "count": 13
+    },
+    {
+      "value": "57",
+      "count": 40
+    },
+    {
+      "value": "58",
+      "count": 40
+    },
+    {
+      "value": "59",
+      "count": 41
+    },
+    {
+      "value": "60",
+      "count": 40
+    },
+    {
+      "value": "61",
+      "count": 40
+    },
+    {
+      "value": "62",
+      "count": 40
+    },
+    {
+      "value": "63",
+      "count": 41
+    },
+    {
+      "value": "64",
+      "count": 4
+    }
+  ],
+  "FocusDistance2": [
+    {
+      "value": "0.2707 m",
+      "count": 13
+    },
+    {
+      "value": "0.2738 m",
+      "count": 40
+    },
+    {
+      "value": "0.2771 m",
+      "count": 40
+    },
+    {
+      "value": "0.2805 m",
+      "count": 41
+    },
+    {
+      "value": "0.2841 m",
+      "count": 40
+    },
+    {
+      "value": "0.2878 m",
+      "count": 40
+    },
+    {
+      "value": "0.2917 m",
+      "count": 40
+    },
+    {
+      "value": "0.2958 m",
+      "count": 41
+    },
+    {
+      "value": "0.3 m",
+      "count": 4
+    }
+  ]
+}

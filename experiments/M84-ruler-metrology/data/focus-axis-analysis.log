@@ -1,0 +1,14 @@
+focus-axis frame=000
+focus-axis frame=025
+focus-axis frame=050
+focus-axis frame=075
+focus-axis frame=100
+focus-axis frame=125
+focus-axis frame=150
+focus-axis frame=175
+focus-axis frame=200
+focus-axis frame=225
+focus-axis frame=250
+focus-axis frame=275
+focus-axis frame=298
+FOCUS_AXIS accepted=0/13 frames_per_graduation=None drift=None

@@ -1,0 +1,56 @@
+{
+  "checks": {
+    "centre_depth_mm": {
+      "absolute_error": 1.3571366253017914e-10,
+      "expected": 120.0,
+      "measured": 119.99999999986429,
+      "pass": true,
+      "relative_error": 1.1309471877514927e-12,
+      "tolerance": 0.02
+    },
+    "focus_step_um_per_frame": {
+      "absolute_error": 1.88570936643373e-10,
+      "expected": 40.0,
+      "measured": 40.00000000018857,
+      "pass": true,
+      "relative_error": 4.714273416084325e-12,
+      "tolerance": 0.02
+    },
+    "magnification": {
+      "absolute_error": 4.730660307927792e-13,
+      "expected": 0.41829666666666665,
+      "measured": 0.4182966666671397,
+      "pass": true,
+      "relative_error": 1.1309342590811447e-12,
+      "tolerance": 0.0001
+    },
+    "pitch_mm": {
+      "absolute_error": 1.1308731728831845e-12,
+      "expected": 1.0,
+      "measured": 1.0000000000011309,
+      "pass": true,
+      "relative_error": 1.1308731728831845e-12,
+      "tolerance": 0.001
+    },
+    "tilt_deg": {
+      "absolute_error": 1.702531449154776e-10,
+      "expected": 38.54334055063316,
+      "measured": 38.543340550803414,
+      "pass": true,
+      "relative_error": 4.417187054449042e-12,
+      "tolerance": 0.01
+    }
+  },
+  "declared_pitch_check": {
+    "absolute_error": 1.1308731728831845e-12,
+    "declared": 1.0,
+    "independently_recovered": 1.0000000000011309,
+    "pass": true,
+    "tolerance": 0.001
+  },
+  "declared_pitch_mm": 1.0,
+  "fixture_schema": "M84-synthetic-metric-plane-v1",
+  "pass": true,
+  "reprojection_rms_px": 3.9419675908690653e-10,
+  "test_count": 5
+}

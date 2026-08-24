@@ -1,0 +1,8 @@
+METRIC_FIXTURE_TESTS=5
+METRIC_FIXTURE_REPROJECTION_RMS_PX=3.94196759087e-10
+pitch_mm measured=1 expected=1 tolerance=0.001 pass=True
+centre_depth_mm measured=120 expected=120 tolerance=0.02 pass=True
+tilt_deg measured=38.5433405508 expected=38.5433405506 tolerance=0.01 pass=True
+magnification measured=0.418296666667 expected=0.418296666667 tolerance=0.0001 pass=True
+focus_step_um_per_frame measured=40.0000000002 expected=40 tolerance=0.02 pass=True
+METRIC_FIXTURE_PASS

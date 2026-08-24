@@ -1,0 +1,451 @@
+{
+  "camera": {
+    "focal_px": 9800.0,
+    "principal_point_px": [
+      3514.0,
+      2344.0
+    ],
+    "sensor_pitch_um": 5.122
+  },
+  "declared_pitch_mm": 1.0,
+  "focus_samples": [
+    {
+      "best_focus_frame": 303.915368831,
+      "ordinal": -10
+    },
+    {
+      "best_focus_frame": 288.523831948,
+      "ordinal": -9
+    },
+    {
+      "best_focus_frame": 273.132295065,
+      "ordinal": -8
+    },
+    {
+      "best_focus_frame": 257.740758182,
+      "ordinal": -7
+    },
+    {
+      "best_focus_frame": 242.349221299,
+      "ordinal": -6
+    },
+    {
+      "best_focus_frame": 226.957684416,
+      "ordinal": -5
+    },
+    {
+      "best_focus_frame": 211.566147533,
+      "ordinal": -4
+    },
+    {
+      "best_focus_frame": 196.174610649,
+      "ordinal": -3
+    },
+    {
+      "best_focus_frame": 180.783073766,
+      "ordinal": -2
+    },
+    {
+      "best_focus_frame": 165.391536883,
+      "ordinal": -1
+    },
+    {
+      "best_focus_frame": 150.0,
+      "ordinal": 0
+    },
+    {
+      "best_focus_frame": 134.608463117,
+      "ordinal": 1
+    },
+    {
+      "best_focus_frame": 119.216926234,
+      "ordinal": 2
+    },
+    {
+      "best_focus_frame": 103.825389351,
+      "ordinal": 3
+    },
+    {
+      "best_focus_frame": 88.433852467,
+      "ordinal": 4
+    },
+    {
+      "best_focus_frame": 73.042315584,
+      "ordinal": 5
+    },
+    {
+      "best_focus_frame": 57.650778701,
+      "ordinal": 6
+    },
+    {
+      "best_focus_frame": 42.259241818,
+      "ordinal": 7
+    },
+    {
+      "best_focus_frame": 26.867704935,
+      "ordinal": 8
+    },
+    {
+      "best_focus_frame": 11.476168052,
+      "ordinal": 9
+    },
+    {
+      "best_focus_frame": -3.915368831,
+      "ordinal": 10
+    }
+  ],
+  "independent_truth": {
+    "centre_depth_mm": 120.0,
+    "focus_step_um_per_frame": 40.0,
+    "magnification": 0.41829666666666665,
+    "pitch_mm": 1.0,
+    "tilt_deg": 38.54334055063316
+  },
+  "intersections": [
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        2876.609040301,
+        2034.649258351
+      ],
+      "ordinal": -10
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        2926.964863891,
+        2651.47256104
+      ],
+      "ordinal": -10
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        2935.176272745,
+        2033.127524735
+      ],
+      "ordinal": -9
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        2985.420970034,
+        2652.975827859
+      ],
+      "ordinal": -9
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        2994.322552154,
+        2031.590745927
+      ],
+      "ordinal": -8
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3044.451481036,
+        2654.493866168
+      ],
+      "ordinal": -8
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3054.056508638,
+        2030.038697695
+      ],
+      "ordinal": -7
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3104.064905076,
+        2656.026894764
+      ],
+      "ordinal": -7
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3114.386944663,
+        2028.471151325
+      ],
+      "ordinal": -6
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3164.269919199,
+        2657.575136788
+      ],
+      "ordinal": -6
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3175.32283937,
+        2026.887873517
+      ],
+      "ordinal": -5
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3225.075373526,
+        2659.138819831
+      ],
+      "ordinal": -5
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3236.873353036,
+        2025.288626262
+      ],
+      "ordinal": -4
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3286.490295595,
+        2660.718176046
+      ],
+      "ordinal": -4
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3299.047831658,
+        2023.673166725
+      ],
+      "ordinal": -3
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3348.523894821,
+        2662.313442265
+      ],
+      "ordinal": -3
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3361.85581169,
+        2022.041247125
+      ],
+      "ordinal": -2
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3411.185567108,
+        2663.924860114
+      ],
+      "ordinal": -2
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3425.307024917,
+        2020.392614602
+      ],
+      "ordinal": -1
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3474.484899588,
+        2665.552676136
+      ],
+      "ordinal": -1
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3489.41140348,
+        2018.727011094
+      ],
+      "ordinal": 0
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3538.431675516,
+        2667.197141921
+      ],
+      "ordinal": 0
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3554.179085062,
+        2017.044173197
+      ],
+      "ordinal": 1
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3603.035879303,
+        2668.858514228
+      ],
+      "ordinal": 1
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3619.620418228,
+        2015.343832026
+      ],
+      "ordinal": 2
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3668.307701721,
+        2670.537055126
+      ],
+      "ordinal": 2
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3685.745967944,
+        2013.625713077
+      ],
+      "ordinal": 3
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3734.257545257,
+        2672.233032126
+      ],
+      "ordinal": 3
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3752.566521257,
+        2011.889536072
+      ],
+      "ordinal": 4
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3800.896029641,
+        2673.946718327
+      ],
+      "ordinal": 4
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3820.093093164,
+        2010.135014812
+      ],
+      "ordinal": 5
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3868.233997547,
+        2675.678392561
+      ],
+      "ordinal": 5
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3888.336932664,
+        2008.361857018
+      ],
+      "ordinal": 6
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        3936.282520476,
+        2677.428339545
+      ],
+      "ordinal": 6
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        3957.309529008,
+        2006.569764169
+      ],
+      "ordinal": 7
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        4005.052904821,
+        2679.196850035
+      ],
+      "ordinal": 7
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        4027.022618142,
+        2004.758431333
+      ],
+      "ordinal": 8
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        4074.556698132,
+        2680.984220991
+      ],
+      "ordinal": 8
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        4097.48818937,
+        2002.927546997
+      ],
+      "ordinal": 9
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        4144.80569558,
+        2682.790755738
+      ],
+      "ordinal": 9
+    },
+    {
+      "boundary_sign": -1,
+      "image_px": [
+        4168.718492225,
+        2001.076792883
+      ],
+      "ordinal": 10
+    },
+    {
+      "boundary_sign": 1,
+      "image_px": [
+        4215.811946628,
+        2684.616764144
+      ],
+      "ordinal": 10
+    }
+  ],
+  "reported_standard_error": {
+    "centre_depth_mm": 0.02,
+    "focus_step_um_per_frame": 0.02,
+    "magnification": 0.0001,
+    "pitch_mm": 0.001,
+    "tilt_deg": 0.01
+  },
+  "schema": "M84-synthetic-metric-plane-v1",
+  "width_in_pitch_units": 8.0
+}

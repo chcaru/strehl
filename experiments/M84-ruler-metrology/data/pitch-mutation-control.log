@@ -1,0 +1,25 @@
+ORIGINAL_SHA256=a19b588daab14b181ee4d9032b0e479c85105d3c3495f6059ec8f2343073df04
+ORIGINAL_MATCH_COUNT=1
+PLANTED_READBACK=PASS declared_pitch_mm=1.1
+COMMAND=C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe experiments\M84-ruler-metrology\src\selftest_metric_fixture.py experiments\M84-ruler-metrology\fixture\metric-plane.json
+EXIT=1
+STDOUT_BEGIN
+METRIC_FIXTURE_TESTS=5
+METRIC_FIXTURE_REPROJECTION_RMS_PX=3.94149280035e-10
+pitch_mm measured=1 expected=1 tolerance=0.001 pass=True
+centre_depth_mm measured=132 expected=120 tolerance=0.02 pass=False
+tilt_deg measured=38.5433405508 expected=38.5433405506 tolerance=0.01 pass=True
+magnification measured=0.38026969697 expected=0.418296666667 tolerance=0.0001 pass=False
+focus_step_um_per_frame measured=44.0000000002 expected=40 tolerance=0.02 pass=False
+PITCH_SCALE_ERROR: synthetic metric calibration rejected
+  declared_pitch_mm: declared=1.1 recovered=1 error=0.0999999999989 tolerance=0.001
+  centre_depth_mm: measured=132 expected=120 error=11.9999999999 tolerance=0.02
+  magnification: measured=0.38026969697 expected=0.418296666667 error=0.0380269696965 tolerance=0.0001
+  focus_step_um_per_frame: measured=44.0000000002 expected=40 error=4.00000000021 tolerance=0.02
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+RESTORED_SHA256=a19b588daab14b181ee4d9032b0e479c85105d3c3495f6059ec8f2343073df04
+RESTORED_BYTE_FOR_BYTE=True

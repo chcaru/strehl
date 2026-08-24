@@ -1,0 +1,14 @@
+tilted frame=000 global=0.060135633
+tilted frame=025 global=0.062821344
+tilted frame=050 global=0.063390717
+tilted frame=075 global=0.064802498
+tilted frame=100 global=0.068742625
+tilted frame=125 global=0.066374123
+tilted frame=150 global=0.064801492
+tilted frame=175 global=0.066317499
+tilted frame=200 global=0.066708654
+tilted frame=225 global=0.067532331
+tilted frame=250 global=0.065673418
+tilted frame=275 global=0.065526053
+tilted frame=298 global=0.066675700
+TILTED_DIAGNOSTIC readable=0.077095 largest_component=0.013586 lines=1375 depth_map_emitted=False

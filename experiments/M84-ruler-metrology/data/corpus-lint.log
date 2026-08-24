@@ -1,0 +1,8 @@
+corpus_lint: 110 markdown file(s), 30 rust file(s); 937 facts, 405 disciplines, 138 questions, 11 risks, 42 rules
+corpus_lint: checks run: A1 A2 A4 C1 C2 C3 N1 N2 N4 N5 S1 S2 S3 S4 S5 S6
+
+experiments/M84b-ruler-metrology:0: [C3] experiment directory is named for M84b, but the report owning the subject 'ruler-metrology' is M84 — a milestone number encoded in a path that no citation check validates (fact 1049)
+      experiments/M84b-ruler-metrology
+
+corpus_lint: FAIL — 1 violation(s): C3=1
+EXIT_CODE=1
