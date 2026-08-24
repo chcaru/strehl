@@ -83,9 +83,11 @@ enum Command {
     /// project's corpus was measured on. It is byte-frozen.
     ///
     /// Pass --srgb for something to LOOK AT: it applies the camera's colour
-    /// matrix and the sRGB transfer curve. Pass --demosaic for full sensor
-    /// resolution. Do not measure either file. See
-    /// docs/research/M85-output-correctness.md.
+    /// matrix and the sRGB transfer curve, and since M95 it emits at full
+    /// sensor resolution by default because binning destroys 10-32 % of
+    /// top-octave green power outright. Pass --binned to get the old
+    /// half-resolution viewing render back. Do not measure either file. See
+    /// docs/research/M85-output-correctness.md and M95-resolution.md.
     #[command(alias = "merge")]
     Stack {
         /// Directory containing RAW files.
@@ -106,8 +108,17 @@ enum Command {
         /// instead of binning each 2x2 quad to one pixel. Doubles linear
         /// resolution; the extra samples are real, the colour at each is
         /// interpolated. Do not measure resolution on it.
+        ///
+        /// This is ON BY DEFAULT whenever --srgb is given, because binning
+        /// destroys 10-32 % of top-octave green power outright (M95). Pass it
+        /// explicitly to force full resolution WITHOUT --srgb.
         #[arg(long)]
         demosaic: bool,
+        /// Opt out: bin each 2x2 quad to one pixel in the --srgb render, as
+        /// strehl did before M95. Halves linear resolution. Has no effect on
+        /// the byte-frozen measurement output, which is always binned.
+        #[arg(long)]
+        binned: bool,
         /// The one knob: how much averaging, in units of the focus noise.
         ///
         /// A frame is averaged in where its regularised focus response is within
@@ -317,6 +328,7 @@ fn main() -> Result<()> {
             limit,
             srgb,
             demosaic,
+            binned,
             gates,
             flat_roi,
             detail_roi,
@@ -329,7 +341,12 @@ fn main() -> Result<()> {
             out,
             limit,
             srgb,
-            demosaic,
+            // M95: --srgb is the "for looking at" path, and binning it throws
+            // away half the linear resolution of the capture. Full resolution
+            // is the default there unless --binned asks for the old behaviour.
+            // The measurement path passes neither flag, so this is false for it
+            // and the byte-frozen output is untouched.
+            demosaic: demosaic || (srgb && !binned),
             gates,
             flat_roi,
             detail_roi,
