@@ -543,6 +543,31 @@ monolithic binary and ship only that binary.
     cost, and it is why a *confident* wrong brief is far worse than a vague one.
     (SYNTHESIS facts 1157, 1165; disciplines 578, 581.)
 
+44. **Fold the delta, never the document -- and an exemption must suppress the
+    *report*, never remove the *target*.** A milestone that reports over several
+    turns ends by writing a final report that restates its earlier findings.
+    Folding that report wholesale re-enters material already in the corpus under
+    fresh numbers. This is not a tidiness problem: **a duplicated row reads as
+    independent corroboration.** Fact 1162 asserted that fact 1140 was *"an
+    independent milestone hitting the identical wall"* -- same milestone, same
+    instrument, the same 18 abstaining rows. A corpus that manufactures its own
+    replications is worse than one that is merely repetitive. Four of M82's
+    twelve final-report facts were already present; the fold that caught one by
+    hand missed three. **Before folding a final report, diff it against the rows
+    that milestone already has, and fold only what is new.** `corpus_lint`
+    check `D1` now enforces a floor: it fingerprints each fact by its rare
+    numerals and flags pairs sharing three or more. It is a floor, not a
+    guarantee -- one of the four duplicates shares only two rare tokens and was
+    found by a widened manual sweep. **Never delete a duplicate; mark it in
+    place**, so the fact numbers other rows cite stay resolvable. And the
+    check's own first version failed its planted control: it exempted any row
+    carrying a disclosure keyword by dropping it from the comparison set
+    entirely, which made every already-amended row permanently unflaggable as
+    the *target* of a later duplicate. The exemption is now pair-scoped -- the
+    later row must name the earlier fact's number. **Whenever you write an
+    exemption into a check, plant the case it must still catch.**
+    (SYNTHESIS facts 1172, 1175; disciplines 585, 586.)
+
 ### Milestone allocation ledger (rule 41 -- written at DISPATCH, not at report time)
 
 A milestone number is an identifier. Allocate here **before** the agent starts, and
