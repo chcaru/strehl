@@ -813,9 +813,38 @@ def advisory_q1_quote_provenance(docs):
         and were abandoned as unusable. Discipline 493 stands: a negative or
         universal claim cites nothing, and the machine is blind to it.
 
-    Promote to a blocking check only once the residual is zero; until then a
-    RED gate here would block five agents for a defect that is the
-    orchestrator's alone.
+    THE RESIDUAL IS NOW FULLY ADJUDICATED: 8 at first run, 5 after repair.
+
+    Two further false-positive mechanisms were found by hand-checking all eight
+    against their sources, and both are recorded rather than coded around:
+
+      - NEAREST-MILESTONE MISATTRIBUTION. Fact 775 names M48 and M54 in one
+        row; the regex bound the quote to M48 because M48 appears first, but
+        the prose attributes it to M54. A row naming two milestones can bind a
+        quote to the wrong one.
+      - QUOTING A RETRACTION. All five survivors quote a claim that the SAME
+        fact retracts -- facts 986, 994, 996 and 1021 (twice). That is
+        quotation used as evidence of an error, which is the opposite of
+        misattribution, and A4 already carries the same exclusion for reported
+        speech.
+
+    Three rows were genuine and were repaired at source (775, 856, 887): all
+    three put the orchestrator's OWN summary inside quotation marks and
+    attributed it to a milestone. Fact 856 was the worst of them and is the
+    reason this advisory earned its keep -- it attributed the phrase "every
+    frame in the corpus" to M53, when M53 wrote "for the whole corpus" and had
+    already marked its own claim REFUTED. `M54-clip-mask-measured.md:589`
+    records who actually said it: the orchestrator, in a broadcast M54 names as
+    "that universal quantifier". See fact 1053.
+
+    Promotion to blocking therefore needs the retraction exclusion stated as a
+    RULE. It is NOT coded here, because the only obvious implementation is a
+    lexical retraction-marker matcher, and lexical matchers on this corpus were
+    measured firing on 28% and 65% of all rows. Widening an exclusion until the
+    number reaches zero is the failure A4's docstring warns about; a documented,
+    adjudicated residual of 5 is the honest state. Until that rule exists, a RED
+    gate here would block five agents for a defect that is the orchestrator's
+    alone.
     """
     reports = {}
     for d in docs:

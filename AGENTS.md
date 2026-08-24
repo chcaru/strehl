@@ -433,7 +433,15 @@ monolithic binary and ship only that binary.
     table, not just the rows this fold added** — three rows had been rendering
     without their provenance column for several commits because absolute-value
     bars were written unescaped. Escape as `\|`, and subtract escaped pipes
-    before comparing. (SYNTHESIS facts 679, 693 and 694.)
+    before comparing. (SYNTHESIS facts 679, 693 and 694.) **Both tables in
+    SYNTHESIS carry FOUR columns — `| n | claim | implication | source |`. The
+    disciplines table is not `| n | rule |`.** Read a neighbouring row and count
+    its cells before writing a new one; the orchestrator assumed the two-column
+    shape from memory and `S1` caught both rows on the next run. That is the
+    same substitute-the-summary-for-the-source defect as facts 1040 and 1053,
+    and it is the cheapest possible instance of it: the machine found it in
+    seconds, which is the argument for gating every fold rather than trusting
+    the author's recollection of a format they have written a thousand rows in.
 
 38. **Cite by symbol and by content, never by line number alone, and never
     quote a figure without first reading the row it comes from end to end.**
