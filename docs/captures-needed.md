@@ -827,6 +827,18 @@ and the certified acceptance result are denominated in. See
 [`docs/research/M69-focus-noise-sd.md`](research/M69-focus-noise-sd.md) facts
 26-27.
 
+**M81 corroboration (2026-08, and it is now the only route left).** M81 tested the
+last hypothesis that could have avoided this capture: that the gate's dispersion
+across stacks was a miscalibrated *unit*, repairable by estimating
+`FOCUS_NOISE_SD` per stack from the focus sweep itself. **Refuted, and the
+correction made things worse** -- the sibling-stack gate span moved from 3.254x to
+3.629x, past its pre-registered 2x line, and the five-stack span is 49.538x, with
+three independent estimators agreeing. See
+[`docs/research/M81-estimation-merge.md`](research/M81-estimation-merge.md) facts
+9-10. **Two milestones have now failed to calibrate the gate from focus-sweep data,
+and M81's closing sentence names this burst as the minimum capture for the
+remaining route.** It costs thirty seconds.
+
 **One clarification, because the two claims look contradictory.** M62 found that
 a static burst has **no focus variation and therefore no interior optimum**, so a
 burst cannot arbitrate a *gate*. That is correct and it does not weaken this
