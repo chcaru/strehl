@@ -1194,3 +1194,179 @@ physics for the gate. Do **not** claim it fixes the election, and do **not**
 adopt `A3` on the strength of `lavendar-cpl` alone. Open a separate milestone for
 the election bias whose first job is the sharpness comparison between `A2` and
 `A3` on at least three decks.
+
+---
+
+## 11. Phase F — the depth-boundary evaluation, pre-registered
+
+The orchestrator, folding M96's facts 1262–1266, asked M99 to evaluate the
+photometric correction on **depth and occlusion boundaries** rather than flat
+background, on the reasoning that a disconnected competitive set turns a small
+brightness bias into a wrong-*depth* election. It reported 16.87x enrichment of
+re-election on disconnected pixels, and asked that the mask be M96's, that the
+bar be about wrong-depth pixels, and that the numbers be re-measured inside
+strehl rather than inherited.
+
+All four asks are honoured. The bars below were fixed **before** the full-deck
+runs and are not edited afterwards.
+
+### 11.0 Pre-registration
+
+Mask, M96's definition, re-implemented against the shipped `FocusField` and
+`regularise` (`t = c*sqrt(2)*FOCUS_NOISE_SD`, `c = DEFAULT_GATE = 4.0`;
+competitive set `{k : R_win - R_k <= t}`; `gap = (hi - lo + 1) - n > 0`).
+
+**PR-8 — does the mask reproduce?** The disconnected fraction measured inside
+strehl is reported next to M96's 25.247%. No bar: M96 warned its figure is
+implementation- and stack-specific, and I am not entitled to expect agreement.
+Reported for calibration only.
+
+**PR-9 — is re-election enriched on disconnected pixels?**
+`enrich = P(re-elect | disconnected) / P(re-elect | connected)`.
+* **ENRICHED** if `enrich >= 2.0` on both decks.
+* **NOT ENRICHED** if `enrich <= 1.25` on either deck.
+* Void unless the label-shuffle control reads within `[0.9, 1.1]`.
+
+**PR-10 — does the correction reduce wrong-depth pixels?** A pixel is *moved
+across a gap* if its elected index changes AND the old and new indices fall on
+opposite sides of a gap in its own competitive set.
+* **REDUCES** if the correction moves at least 1% of disconnected pixels across
+  a gap toward the winner's cluster, with the shuffle control near 1.0.
+* **NO EFFECT** if it moves fewer than 0.05% of disconnected pixels at all.
+
+**PR-11 — the honest limit, stated in advance.** Moving a pixel across a gap is
+*not* evidence of moving it to the **correct** side. Fragility is symmetric. I
+have no ground truth and no sharpness instrument, so PR-10 can establish
+*movement* and cannot establish *correctness*. Any claim that the correction
+fixes wrong-depth pixels requires an instrument M99 does not have, and I will
+not make it.
+
+### 11.1 Method
+
+Pass 3 was added to `crates/strehl-cli/examples/m99-photometric.rs`. For every
+decided pixel it recomputes, from the shipped `FocusField` responses of all 299
+frames, the competitive set at `t = DEFAULT_GATE * sqrt(2) * FOCUS_NOISE_SD`
+(`4.0 * 1.414214 * 0.015214 = 0.086063`), both constants read from
+`strehl_core::merge` rather than re-declared. It records `lo`, `hi`, `n` and
+`gap`, then for each arm splits the re-elected population by `gap > 0`.
+
+The **label-shuffle control** permutes the disconnected/connected labels while
+holding the re-election map fixed, and recomputes the enrichment. It must read
+~1.0; anything else means the enrichment statistic is reading population size
+rather than population identity.
+
+**A correction I am obliged to record.** I first ran pass 3 at `--limit 60` and
+measured 29.033% disconnected with **mean gap 4.69 frames** and A3 enrichment of
+**0.49x** — depleted, and flatly contradicting the orchestrator. That result was
+an artifact of truncating a 299-frame deck to 60: the gap structure is measured
+in frame indices, so truncation compresses it and destroys exactly the long-range
+separation the statistic exists to detect. At full depth the mean gap is 96.09
+(lavendar) and 53.12 (bee-2) frames, and the sign of the result reverses. **The
+60-frame number is void and is not a result.** I report it because I nearly sent
+it, and the guard that caught it was the rule that a smoke test is never a
+measurement.
+
+### 11.2 Results — MEASURED, two decks, 299 frames each
+
+```
+deck            disconnected px    frac      mean gap
+lavendar-cpl    4702447/8250880   56.993%    96.09 frames
+bee-2-cpl       2332357/8241504   28.300%    53.12 frames
+M96 (bee-3-cpl, its own Python)   25.247%    29.12 frames
+```
+
+`bee-2-cpl` at 28.300% sits close to M96's 25.247% on a different deck through a
+different implementation. **PR-8: the mask reproduces.** `lavendar-cpl` is twice
+that, which is consistent with it being the deck with the largest photometric
+drift (1.3617x) and the deepest, flattest subject.
+
+Enrichment of re-election on disconnected pixels:
+
+```
+                                lavendar-cpl                bee-2-cpl
+arm                        %disc   %conn  enrich shuf   %disc  %conn enrich shuf
+A2 background gain (built) 0.001%  0.000%  24.90  1.14  0.001% 0.000%  8.61  1.12
+N1 constant, noise held    0.455%  0.396%   1.15  0.99  1.294% 0.519%  2.49  1.00
+A3 natural gain, noise held 67.93%  3.292%  20.64  1.00  49.14% 5.908%  8.32  1.00
+A4 planted ramp, noise held 66.19% 36.096%   1.83  1.00  65.66% 40.079% 1.64  1.00
+```
+
+Median `|dk|` for A3, disconnected vs connected: **125 / 2** (lavendar) and
+**127 / 1** (bee-2).
+
+### 11.3 Verdicts
+
+**PR-9: ENRICHED. The orchestrator is right, and I was wrong at 60 frames.**
+A3 enriches 20.64x and 8.32x, both above the 2.0 bar, on both decks, with the
+label-shuffle control at 1.00x on both. Measured through strehl's shipped focus
+field, gate constant and regulariser, on two decks M96 and the orchestrator never
+touched. The orchestrator's 16.87x from an independent Python implementation on
+bee-3-cpl is bracketed by my 8.32x and 20.64x. **Fact 1262-1266's mechanism
+survives contact with the real election.**
+
+**PR-10: NO EFFECT.** The correction M99 actually built (A2) re-elects **0.001%**
+of disconnected pixels on both decks — 34 px of 4.70M, 22 px of 2.33M — against a
+0.05% floor. Its shuffle control reads 1.14x and 1.12x, outside the registered
+`[0.9, 1.1]` validity band, so even the apparent 24.90x/8.61x enrichment is void;
+at 22-34 pixels it is counting noise. **The depth-boundary benefit the
+orchestrator asked me to demonstrate does not exist for this correction, and no
+choice of evaluation region can create it.** This is Phase E's invariance result
+observed from a second direction: a gain that propagates into the noise model
+cannot move the election anywhere, boundary or not.
+
+**PR-11 stands undischarged.** A3 moves 49-68% of disconnected pixels a median of
+125-127 frames. I have no ground truth, so I cannot say a single one of them
+moved to the *correct* side of its gap. Fragility is symmetric.
+
+### 11.4 A new result: enrichment is a signature of monotonicity, not of size
+
+**MEASURED.** A3's gain (the natural drift, monotone in frame index) enriches
+20.64x and 8.32x. A4's gain (my planted ramp, pseudo-random in frame index, and
+comparable in magnitude) enriches **1.83x and 1.64x** — while re-electing *more*
+pixels overall (53.25% vs 40.13% on lavendar). Same statistic, same pixels, same
+noise handling, an order of magnitude apart in enrichment.
+
+**ARGUED.** A disconnected competitive set has two clusters at different depths.
+A *monotone* bias tilts the whole stack one way, so it systematically favours
+whichever cluster lies earlier, and the loser flips across the gap. A bias that is
+random in frame index has no preferred end, so it perturbs both clusters alike and
+churns mostly within them. Enrichment therefore measures the **order structure**
+of the gain, not its amplitude.
+
+Two consequences. First, it sharpens the orchestrator's mechanism: the danger is
+not brightness variation, it is brightness variation *correlated with depth* —
+which is precisely what focus breathing and a monotone AE ramp produce. Second,
+my Phase D plant, which I made pseudo-random to break collinearity with the drift
+so the SSC statistic could not be fooled, is **conservative** for this statistic:
+it under-states enrichment by ~11x. That was the right trade for Phase D and the
+wrong shape for Phase F, and a future milestone testing election effects should
+plant a *monotone* ramp and accept the collinearity.
+
+### 11.5 Facts 20-23
+
+20. **MEASURED** — M96's disconnected-competitive-set structure reproduces inside
+    strehl's shipped election: **28.300%** of decided pixels on `bee-2-cpl` and
+    **56.993%** on `lavendar-cpl`, against M96's 25.247% on `bee-3-cpl` through an
+    independent Python implementation. Mean gaps 53.12 and 96.09 frames.
+    *(`experiments/M99-photometric/out/phaseF-*.log`, pass 3 using
+    `DEFAULT_GATE` and `FOCUS_NOISE_SD` read from `strehl_core::merge`.)*
+
+21. **MEASURED** — Re-election under an un-propagated per-frame gain is enriched
+    **20.64x** (lavendar-cpl) and **8.32x** (bee-2-cpl) on disconnected pixels,
+    label-shuffle control **1.00x** on both; median `|dk|` disconnected vs
+    connected is **125/2** and **127/1**. The orchestrator's 16.87x is bracketed.
+    Its mechanism is confirmed against the shipped election, not just a model of it.
+
+22. **MEASURED** — The photometric correction M99 built moves **0.001%** of
+    disconnected pixels on both decks (34 px of 4.70M; 22 px of 2.33M), with the
+    shuffle control outside its validity band. **The correction has no
+    depth-boundary election effect**, which is Phase E's invariance seen from a
+    second direction and is not repairable by changing the evaluation region.
+
+23. **MEASURED + ARGUED** — Enrichment tracks the **frame-order structure** of a
+    gain, not its magnitude: a monotone gain enriches 20.64x/8.32x while a
+    pseudo-random gain of comparable size and *larger* total churn enriches
+    1.83x/1.64x. The hazard is brightness variation correlated with depth, not
+    brightness variation as such. Plants for election experiments must therefore be
+    monotone; M99's deliberately non-monotone Phase D plant under-states this
+    effect by ~11x and is conservative here.

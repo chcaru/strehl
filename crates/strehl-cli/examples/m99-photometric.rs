@@ -54,7 +54,7 @@ use anyhow::{Context, Result, bail};
 use strehl_core::align::PlaneRef;
 use strehl_core::clip::CONTAINER_MAX_DN;
 use strehl_core::focus::FocusField;
-use strehl_core::merge::{FocusStats, regularise};
+use strehl_core::merge::{DEFAULT_GATE, FOCUS_NOISE_SD, FocusStats, regularise};
 use strehl_core::noise::NoiseModel;
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma_with_clip};
 use strehl_core::profile;
@@ -689,7 +689,147 @@ fn main() -> Result<()> {
         arm_seconds[1] - arm_seconds[0]
     );
 
-    // Relative level of each frame, the regressor SSC uses. gain = ref/level,
+    // ---- pass 3: M96's competitive-set structure ---------------------------
+    //
+    // Added at the orchestrator's request after M96 localised the population
+    // that matters: pixels whose competitive set is *disconnected*, where the
+    // runner-up sits across a gap at a different depth rather than next door.
+    // Definitions are M96's, re-implemented here against the shipped
+    // `FocusField` / `regularise` rather than inherited from its Python:
+    //
+    //   t    = c * sqrt(2) * FOCUS_NOISE_SD,  c = DEFAULT_GATE
+    //   set  = { k : R_win - R_k <= t }
+    //   gap  = (hi - lo + 1) - n(t)  > 0  =>  DISCONNECTED
+    //
+    // M96's own caution applies in reverse too: its 25.247% is a whole-frame
+    // figure on `bee-3-cpl` from its own implementation, and nothing here is
+    // expected to reproduce it exactly.
+    let t_gate = DEFAULT_GATE * std::f32::consts::SQRT_2 * FOCUS_NOISE_SD;
+    let a0_best = arms[0].best.clone();
+    let mut cs_lo = vec![u16::MAX; px];
+    let mut cs_hi = vec![0u16; px];
+    let mut cs_n = vec![0u32; px];
+    let t3 = std::time::Instant::now();
+    for (k, p) in paths.iter().enumerate() {
+        let frame = strehl_raw::decode(p).with_context(|| format!("decoding {}", p.display()))?;
+        green_luma_with_clip(&frame, levels.black, CONTAINER_MAX_DN, &mut luma, &mut clipped);
+        drop(frame);
+        let src = PlaneRef::new(&luma, geom.width, geom.height).context("luma plane geometry")?;
+        strehl_core::warpmap::gather_frame(&map, k, src, &mut warped, &mut cover)?;
+        for (v, &c) in warped.iter_mut().zip(cover.iter()) {
+            if !c {
+                *v = 0.0;
+            }
+        }
+        field.compute(&warped, &base_noise);
+        regularise(field.values(), geom, &mut boxsc, &mut reg);
+        for i in 0..px {
+            if a0_best[i].is_finite() && a0_best[i] - reg[i] <= t_gate {
+                cs_n[i] += 1;
+                if (k as u16) < cs_lo[i] {
+                    cs_lo[i] = k as u16;
+                }
+                if (k as u16) > cs_hi[i] {
+                    cs_hi[i] = k as u16;
+                }
+            }
+        }
+        if k % 100 == 0 {
+            println!("  pass 3: frame {k}/{n}  {:.1} s", t3.elapsed().as_secs_f64());
+        }
+    }
+    let disconnected: Vec<bool> = (0..px)
+        .map(|i| {
+            decided[i]
+                && cs_n[i] > 0
+                && (u32::from(cs_hi[i] - cs_lo[i]) + 1).saturating_sub(cs_n[i]) > 0
+        })
+        .collect();
+    let n_disc = disconnected.iter().filter(|b| **b).count();
+    let mut gaps: Vec<u32> = (0..px)
+        .filter(|&i| disconnected[i])
+        .map(|i| (u32::from(cs_hi[i] - cs_lo[i]) + 1) - cs_n[i])
+        .collect();
+    gaps.sort_unstable();
+    let mean_gap = if gaps.is_empty() {
+        0.0
+    } else {
+        gaps.iter().map(|&g| f64::from(g)).sum::<f64>() / gaps.len() as f64
+    };
+    println!(
+        "\n--- M96 competitive-set structure (re-measured inside strehl) ---\n\
+         threshold t = {t_gate:.6} = {DEFAULT_GATE} * sqrt(2) * {FOCUS_NOISE_SD}\n\
+         disconnected: {n_disc} of {covered} decided px ({:.3}%), mean gap {mean_gap:.2} frames",
+        100.0 * n_disc as f64 / covered as f64
+    );
+
+    // Enrichment: do re-elections concentrate on the disconnected population?
+    // The control shuffles the disconnected *labels* across decided pixels,
+    // holding both the label count and the re-election map fixed, so it
+    // destroys only the association under test.
+    println!(
+        "\n{:<32}{:>10}{:>10}{:>10}{:>12}{:>12}",
+        "arm", "%disc", "%conn", "enrich", "shuffled", "med |dk| d/c"
+    );
+    let mut rng: u64 = 0x5eed_1234_9e37_79b9;
+    let mut shuffled = disconnected.clone();
+    for i in (1..px).rev() {
+        rng ^= rng << 13;
+        rng ^= rng >> 7;
+        rng ^= rng << 17;
+        let j = (rng % (i as u64 + 1)) as usize;
+        shuffled.swap(i, j);
+    }
+    for arm in arms.iter().skip(1) {
+        let elect = arm.stats.best_index();
+        let (mut nd, mut rd, mut nc, mut rc, mut sd_, mut sc) = (0u64, 0u64, 0u64, 0u64, 0u64, 0u64);
+        let (mut dkd, mut dkc) = (Vec::new(), Vec::new());
+        for i in 0..px {
+            if !decided[i] {
+                continue;
+            }
+            let moved = elect[i] != base_elect[i];
+            let d = u32::from(elect[i].abs_diff(base_elect[i]));
+            if disconnected[i] {
+                nd += 1;
+                if moved {
+                    rd += 1;
+                    dkd.push(d);
+                }
+            } else {
+                nc += 1;
+                if moved {
+                    rc += 1;
+                    dkc.push(d);
+                }
+            }
+            if shuffled[i] {
+                sd_ += 1;
+                if moved {
+                    sc += 1;
+                }
+            }
+        }
+        let pd = rd as f64 / nd.max(1) as f64;
+        let pc = rc as f64 / nc.max(1) as f64;
+        let ps = sc as f64 / sd_.max(1) as f64;
+        let overall = (rd + rc) as f64 / (nd + nc).max(1) as f64;
+        dkd.sort_unstable();
+        dkc.sort_unstable();
+        let md = if dkd.is_empty() { 0 } else { dkd[dkd.len() / 2] };
+        let mc = if dkc.is_empty() { 0 } else { dkc[dkc.len() / 2] };
+        println!(
+            "{:<32}{:>9.3}%{:>9.3}%{:>9.2}x{:>11.2}x{:>7} / {:<4}",
+            arm.name,
+            100.0 * pd,
+            100.0 * pc,
+            if pc > 0.0 { pd / pc } else { f64::NAN },
+            if overall > 0.0 { ps / overall } else { f64::NAN },
+            md,
+            mc
+        );
+    }
+
     // so the level is its reciprocal. The **background** ladder is the primary
     // regressor: the defect under test is a brightness step in the background
     // between elected regions, so the quantity to test for is the background's
