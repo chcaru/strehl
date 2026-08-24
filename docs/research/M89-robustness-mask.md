@@ -256,6 +256,37 @@ noise model.
 milestone opens either for writing. All output lands in
 `experiments/M89-robustness/out/`.
 
+### 0.8 Added mid-run: the `h^4` discriminator (registered before it was run)
+
+Added after the corpus survey and before the run that tests it. Three stacks
+came back inflated whose subjects are inanimate — `lead-1-cpl`, `flat-on-ruler-cpl`
+and, in part, `tweezers-cpl` — with the inflation spread across *every* frame and
+*most* tiles rather than concentrated. That is the signature of the one failure
+mode that would void Deliverable A: **defocus leaking through the operator**
+because the stack's focus step is too coarse for the window to be locally
+quadratic.
+
+A6 is therefore added as a bar. Defocus is smooth in frame index, so a fourth
+difference of it scales as `h^4` in the focus step `h`. Subsampling the frame
+list by `k` multiplies `h` by `k`, and therefore multiplies
+
+* `z` by `k^4`, and so
+* `z^2 - 1` by `k^8` — **256x at `k = 2`, 6561x at `k = 3`** —
+
+for any inflation that is defocus leakage. A discrete disturbance obeys no such
+law: subsampling by `k` keeps roughly `1/k` of the contaminated frames and does
+not amplify each one, so `z^2 - 1` should stay the same order or fall.
+
+**A6 registered, on the null stack.** Subsampling the null by `k = 2` must leave
+`mean z^2` below **2.0**. If the null's tiny apparent excess were defocus
+leakage, `k = 2` would multiply it by 256 and this would fail loudly. Passing it
+bounds the leakage at `k = 1` to `1/256` of whatever `k = 2` shows.
+
+**Registered diagnostic prediction, to be falsified.** I predict `lead-1-cpl`
+and `flat-on-ruler-cpl` *are* defocus leakage and will show the `k^8` law, while
+`foam` is *not* and will not. If `lead-1-cpl` fails to scale, my reading of it is
+wrong and the report must say so.
+
 ---
 
 ## 1. Verdict
