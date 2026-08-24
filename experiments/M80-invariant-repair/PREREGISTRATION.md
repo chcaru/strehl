@@ -155,4 +155,3 @@ the controls pass, `0.90` finally denotes a 10% equal-noise amplitude loss
 rather than a ratio to an arbitrary middle frame. Whether 10% is the right
 product tolerance remains separate; M80 may fix the comparison site, but it
 will not tune the value from M80's results.
-
