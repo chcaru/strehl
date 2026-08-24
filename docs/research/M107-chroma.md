@@ -121,10 +121,10 @@ python e3_controls.py n2b ; python e3_n2b_check.py
 
 | control | bar, registered in advance | result | |
 |---|---|---|---|
-| **N1** gather-crop null | `max|ΔF|/max(F) ≤ 1e-3` and `max|Δ| ≤ 1 DN` | **0.024 DN**, **1.10e-6** relative | **PASS** |
+| **N1** gather-crop null | `max\|ΔF\|/max(F) ≤ 1e-3` and `max\|Δ\| ≤ 1 DN` | **0.024 DN**, **1.10e-6** relative | **PASS** |
 | **N2a** bookkeeping null | all three medians exactly 0 | `dR = dB = null = +0.0000` | **PASS** |
 | **N2b** label-swap power | signal and null must **exchange places** | see below | **PASS** |
-| **N3** SNR-bias null | `|median| ≤ 0.15 frames` | **−0.0034 frames** | **PASS** |
+| **N3** SNR-bias null | `\|median\| ≤ 0.15 frames` | **−0.0034 frames** | **PASS** |
 
 **N1** discharges a claim the code was already making: `gather_planes`'s docstring
 asserted the bbox-crop optimisation was equal to the uncropped path. It had never been
@@ -177,7 +177,7 @@ applied unchanged: every plane `w_abs ∈ [0.4, 8.0]` sensel, every plane `rms/a
 width 8, rms/amp 13, green-null 0, blow-up 0). Both are reported so the gate's effect is
 visible rather than hidden:
 
-| | n | `|dR|` | `|dB|` | `|G1−G2|` NULL |
+| | n | `\|dR\|` | `\|dB\|` | `\|G1−G2\|` NULL |
 |---|---|---|---|---|
 | ungated | 41 | 1.4700 | 0.3566 | 0.0375 |
 | **gated** | **20** | **1.4274** | **0.2472** | **0.0135** |
