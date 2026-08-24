@@ -385,6 +385,73 @@ inter-frame placement disagreement than fact 1393 suggests. **M110 does not
 distinguish these**, and the blob hypothesis is neither confirmed nor refuted —
 only shown not to be fixed by this.
 
+### 8.1 Cache-contamination control (fact 1446)
+
+Fact 1446 reports that `StackIdentity` omits `reference` and `resampler`, so a
+cached sidecar can hand an arm bytes produced under inputs it did not ask for.
+B6 is exactly the class of comparison this corrupts, so I ran the control ORCH
+prescribed. Harness: `experiments/M110-track-jitter/cache_control.ps1`.
+
+**Scope first (MEASURED).** Only B6 is exposed. B0–B5 run in
+`experiments/M110-track-jitter/probe`, which reads its inputs solely through
+`std::fs::read_to_string` on committed text — M103's edge CSV and my own track
+dumps. It never calls `WarpMap::load` or `StackIdentity::from_paths`, never
+decodes a RAW, and consults no cache. **Those bars cannot be contaminated by
+this defect.**
+
+**The control, run on the full 299-frame stack:**
+
+| step | command | exit | output sha256 (first 16) |
+|---|---|---|---|
+| 1 | `merge` arm B, `STREHL_WARPMAP=wm-B.json` | 0 | `834FB50773BEA993` |
+| 2 | `align --reference 40` (**same frame set**) | 0 | — |
+| 3 | `merge` arm B, byte-identical to step 1 | 0 | `834FB50773BEA993` |
+
+**PASS — step 1 == step 3, byte-for-byte.** The intervening command changed
+`reference` on an *identical* frame set, which is precisely the collision fact
+1446 describes. Both arms logged `alignment : ON (sidecar-override), reference
+frame 0, 299 placed / 0 refused`. The capture library held at **0** non-ARW
+files before and after.
+
+**Why the arm is immune, confirmed in code.** `alignment_for`
+(`merge_cmd.rs:1046`) returns `load_or_solve` **only** when `STREHL_WARPMAP` is
+unset; when set it loads the named path and uses `check_stack` as a *guard*, not
+a *selector*. B6 named its sidecar explicitly, so no cache lookup occurs.
+
+**And the two arms never differed in the unkeyed fields anyway.** Both sidecars
+self-report `reference 0` and `resampler catmull-rom`; their `heldout-px` fields
+decode to **13.5776** and **13.3529**, matching the probe exactly. Their
+`stack-digest` is **identical** (`8d023c0fe355d109`) — a direct demonstration of
+fact 1446's defect in my own data: the digest cannot tell these two sidecars
+apart. It did not matter here only because selection was explicit.
+
+**P10 (MEASURED) — a separate reproducibility hazard, not a cache one.** Step 1
+did **not** reproduce the archived `B-prior.tif` (`89C2025A…` vs `834FB507…`).
+The cause is not the cache: `strehl.exe` was rebuilt at **13:06:35**, eight
+minutes *after* the B6 renders at **12:57:32** and **12:58:35**, and the merge
+path has since changed under me — `merge_cmd.rs` is currently uncommitted-modified
+by another agent, `merge_cmd/dump.rs` is new, and the re-run prints an M97 caveat
+line absent from the original. **In a shared working tree, an archived render
+stops being reproducible because other milestones mutate the render path.** This
+is distinct from fact 1446 and is reported to ORCH as such.
+
+**B6 re-tested on a contemporaneous pair.** B6's claim is *relative*, and the
+original arms were rendered back-to-back on one binary with nothing in between
+— the clean protocol. I nonetheless re-rendered **both** arms on the current
+binary and recomputed shift-invariant scalars
+(`experiments/M110-track-jitter/recheck_b6.py`):
+
+| quantity | original (12:57/12:58) | re-run (current binary) |
+|---|---|---|
+| arms byte-distinct | yes | yes |
+| centre high-band, B vs A | +0.26% | **+0.031%** |
+| whole-frame high-band, B vs A | -0.39% | **+0.172%** |
+
+**The conclusion is reproduced and slightly strengthened**: the difference is
+*smaller* than originally measured, and remains ~190x and ~590x below fact
+1436's known -33.0% resample cost. B6's verdict — **invisible** — stands. (The
+two rows use different high-band operators, so compare verdicts, not digits.)
+
 ---
 
 ## 9. Recommendation: **ship behind a flag, off by default**
@@ -438,6 +505,27 @@ edge set — and the span-starved regime is exactly where the prior should domin
 10. **Another agent's uncommitted `optics.rs` broke the shared tree mid-run.** I
     waited rather than touching it. If that file changes `strehl-core`'s
     behaviour, my product-path numbers (§8) may need re-running.
+11. **The archived B6 TIFFs are no longer reproducible** (P10) — the binary was
+    rebuilt 8 minutes after them and the merge path has since changed. The
+    *conclusion* was re-tested on a contemporaneous pair and holds (§8.1), but
+    the specific archived bytes cannot be regenerated. A byte-frozen render in a
+    shared tree has a shelf life measured in minutes.
+12. **ORCH's note that `cargo clippy -D warnings` fails at `align.rs:2108`
+    (`pen_w`) is a misattribution — it is not M110's.** Measured:
+    `cargo clippy --release -p strehl-core --all-targets -- -D warnings` exits
+    **101** with exactly four errors, none in `align.rs`:
+
+    | location | lint |
+    |---|---|
+    | `strehl-core/src/optics.rs:416:27` | hex literal not grouped evenly |
+    | `strehl-core/src/robust.rs:409:17` | useless use of `vec!` |
+    | `strehl-core/src/robust.rs:451:17` | useless use of `vec!` |
+    | `strehl-core/src/robust.rs:464:17` | useless use of `vec!` |
+
+    `robust.rs` was last committed by **M93** and is currently
+    uncommitted-modified by a live agent; `optics.rs` is not M110's either.
+    M110's `align.rs` work is **committed** (`79264b6`), not uncommitted, and
+    draws **no clippy diagnostic at all**. I did not fix these — not my lane.
 
 ---
 
