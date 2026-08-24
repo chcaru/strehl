@@ -1,0 +1,20 @@
+============================================================================================
+M86 G1 - RUST ESTIMATOR vs A REFERENCE EDGE TABLE
+  reference : ..\m10-deep-align\data\coffee-bean-edges.csv  (cfg m10)
+  measured  : C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\coffee-bean-m86-edges.csv
+  plane     : 3516x2344 px, rho 2112.9 px
+============================================================================================
+  shared pairs        : 1601
+  agree on ok/no-fit  : 1601/1601 (100.0%)
+  both fitted         : 1461
+  corner difference   : median 0.0000 px, p90 0.0000 px, max 0.0000 px
+
+   span band       n     median        p90
+         1-4     410     0.0000     0.0000
+        5-16     579     0.0000     0.0000
+       17-32     248     0.0000     0.0000
+       33-64     202     0.0000     0.0000
+      65-max      22     0.0000     0.0000
+
+  GATE G1: median 0.0000 px vs bar 0.19 px; 1601 shared (need 200); status agreement 100.0% (need 95.0%)
+  GATE G1: PASS

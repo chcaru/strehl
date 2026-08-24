@@ -1,0 +1,28 @@
+============================================================================================
+M86 EDGE MEASUREMENT - 109MSDCF
+  frames : 22 from C:\dev\macro\test\109MSDCF
+  threads: 32
+============================================================================================
+  decoded 22 frames in 0.7 s (33 ms/frame wall, 32 threads)
+  plane  : 3516x2344 px (from the decoder's active area), black 512 DN, rho 2112.9 px
+  memory : 0.68 GiB of green planes held
+  ladder : spans [1, 2, 3, 4, 6, 8, 10, 12, 14, 16, 18, 20] -> 150 pairs, margin 96 px
+
+  measured 150 pairs in 2.0 s (13.6 ms/pair wall, 436.4 ms/pair core-time)
+  150 fitted, 0 refused (0.0%)
+
+    span   pairs      ok   med rms  med used   med |g|
+       1      21      21     0.419        80   0.00062
+       2      20      20     0.383        76   0.00173
+       3      19      19     0.358        70   0.00263
+       4      18      18     0.503        72   0.00353
+       6      16      16     0.544        67   0.00526
+       8      14      14     0.648        66   0.00702
+      10      12      12     0.762        66   0.00888
+      12      10      10     0.752        61   0.01070
+      14       8       8     0.749        62   0.01251
+      16       6       6     1.019        64   0.01422
+      18       4       4     1.043        62   0.01592
+      20       2       2     1.187        63   0.01778
+
+  wrote 150 rows to C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\109MSDCF-edges.csv

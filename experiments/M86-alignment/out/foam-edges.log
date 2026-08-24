@@ -1,0 +1,27 @@
+============================================================================================
+M86 EDGE MEASUREMENT - foam
+  frames : 100 from D:\personal\macro\foam
+  threads: 32
+============================================================================================
+  decoded 100 frames in 3.1 s (31 ms/frame wall, 32 threads)
+  plane  : 3516x2344 px (from the decoder's active area), black 512 DN, rho 2112.9 px
+  memory : 3.07 GiB of green planes held
+  ladder : spans [1, 2, 4, 8, 16, 24, 32, 40, 48, 64, 80] -> 781 pairs, margin 96 px
+
+  measured 781 pairs in 9.5 s (12.1 ms/pair wall, 387.9 ms/pair core-time)
+  595 fitted, 186 refused (23.8%)
+
+    span   pairs      ok   med rms  med used   med |g|
+       1      99      98     0.302        95   0.00092
+       2      98      97     0.630        95   0.00184
+       4      96      95     1.458        95   0.00365
+       8      92      91     3.207        85   0.00711
+      16      84      74     3.805        34   0.01480
+      24      76      36     3.231        24   0.02295
+      32      68      23     3.240        57   0.02983
+      40      60      24     3.187        50   0.03707
+      48      52      25     3.610        46   0.04425
+      64      36      21     3.871        45   0.05829
+      80      20      11     4.017        43   0.07105
+
+  wrote 781 rows to C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\foam-edges.csv

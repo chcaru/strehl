@@ -1,0 +1,14 @@
+============================================================================================
+M86 EDGE MEASUREMENT - coffee-bean
+  frames : 105 from C:\dev\macro\test\coffee-bean
+  threads: 32
+============================================================================================
+  decoded 105 frames in 3.4 s (32 ms/frame wall, 32 threads)
+  plane  : 3516x2344 px (from the decoder's active area), black 512 DN, rho 2112.9 px
+  memory : 3.22 GiB of green planes held
+  pairs  : 1601 taken from ..\m10-deep-align\data\coffee-bean-edges.csv
+  ladder : spans [1, 2, 4, 8, 16, 32, 64, 96] -> 1601 pairs, margin 96 px
+
+  measured 1601 pairs in 20.4 s (12.8 ms/pair wall, 408.4 ms/pair core-time)
+  1461 fitted, 140 refused (8.7%)
+

@@ -1,0 +1,25 @@
+============================================================================================
+M86 TOTAL FIELD DRIFT ACROSS THE BRACKET
+  edges  : C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\109MSDCF-edges.csv
+  graph  : 22 frames, 150 usable edges, cycle rank 129, 1 component(s)
+  plane  : 3516x2344 px, rho 2112.9 px
+============================================================================================
+
+  cycle consistency of the RAW edges (440 triples, no solver):
+    median 0.421 px, p90 1.256 px, max 2.769 px  (scale 0.292, trans 0.114)
+    this is the floor: no solver can predict an edge better than the
+    edges agree with each other.
+
+  S3-ba-unit: 22/22 frames placed
+    total corner drift frame 0 -> 21: 39.714 plane px
+    scale at the last frame: -0.01849 (-39.066 plane px at the corner)
+    scale track roughness |d2g|*rho: median 0.1064 px, p90 0.2202 px, max 0.3153 px
+    steps against the overall direction: 0/21 (0% -- 0% is perfectly monotonic)
+    in-sample residual vs all edges: median 0.228 px, p90 0.697 px, max 1.615 px
+
+  S6-ba-smooth: 22/22 frames placed
+    total corner drift frame 0 -> 21: 39.714 plane px
+    scale at the last frame: -0.01849 (-39.066 plane px at the corner)
+    scale track roughness |d2g|*rho: median 0.1064 px, p90 0.2202 px, max 0.3152 px
+    steps against the overall direction: 0/21 (0% -- 0% is perfectly monotonic)
+    in-sample residual vs all edges: median 0.228 px, p90 0.697 px, max 1.615 px

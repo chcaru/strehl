@@ -1,0 +1,30 @@
+============================================================================================
+M86 EDGE MEASUREMENT - bee-2-cpl
+  frames : 299 from D:\personal\macro\bee-2-cpl
+  threads: 32
+============================================================================================
+  decoded 299 frames in 8.5 s (28 ms/frame wall, 32 threads)
+  plane  : 3516x2344 px (from the decoder's active area), black 512 DN, rho 2112.9 px
+  memory : 9.18 GiB of green planes held
+  ladder : spans [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 128] -> 3587 pairs, margin 96 px
+
+  measured 3587 pairs in 49.3 s (13.7 ms/pair wall, 439.8 ms/pair core-time)
+  1883 fitted, 1704 refused (47.5%)
+
+    span   pairs      ok   med rms  med used   med |g|
+       1     298     298     0.442        57   0.00016
+       2     297     297     1.195        59   0.00063
+       4     295     295     2.989        62   0.00157
+       8     291     291     3.953        45   0.00349
+      16     283     281     4.282        19   0.00764
+      24     275     222     4.332        12   0.01112
+      32     267     127     4.427        10   0.01473
+      40     259      46     4.517         9   0.01848
+      48     251      20     4.343         8   0.01956
+      56     243       3     4.279         9   0.01959
+      64     235       3     4.512         8   0.02702
+      80     219       0         -         -         -
+      96     203       0         -         -         -
+     128     171       0         -         -         -
+
+  wrote 3587 rows to C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\bee-2-cpl-edges.csv

@@ -1,0 +1,28 @@
+============================================================================================
+M86 EDGE MEASUREMENT - flat-on-ruler-cpl
+  frames : 79 from D:\personal\macro\flat-on-ruler-cpl
+  threads: 32
+============================================================================================
+  decoded 79 frames in 1.3 s (17 ms/frame wall, 32 threads)
+  plane  : 3520x2344 px (from the decoder's active area), black 512 DN, rho 2114.5 px
+  memory : 2.43 GiB of green planes held
+  ladder : spans [1, 2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64] -> 677 pairs, margin 96 px
+
+  measured 677 pairs in 9.4 s (13.9 ms/pair wall, 445.4 ms/pair core-time)
+  672 fitted, 5 refused (0.7%)
+
+    span   pairs      ok   med rms  med used   med |g|
+       1      78      78     0.348        92   0.00066
+       2      77      77     0.642        93   0.00146
+       4      75      75     1.384        93   0.00305
+       8      71      71     2.762        83   0.00572
+      12      67      67     2.987        56   0.00810
+      16      63      63     3.256        42   0.01020
+      20      59      59     3.347        33   0.01263
+      24      55      55     3.492        30   0.01494
+      32      47      47     3.379        23   0.01981
+      40      39      39     3.273        17   0.02428
+      48      31      31     3.639        16   0.02876
+      64      15      10     3.191         9   0.03900
+
+  wrote 677 rows to C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\flat-on-ruler-cpl-edges.csv

@@ -1,0 +1,30 @@
+  out\bee-3-cpl-edges.csv
+  2866 fitted edges, 299 frames, plane 3516x2344, rho 2112.85 px
+
+  Per-frame log-scale rate implied by each span band, from DIRECT
+  pairwise fits only -- no solver, no chaining. One physical
+  breathing rate would make the 'rate/frame' column flat.
+
+    span      n        med g   rate/frame  implied 0->end   corner px
+       1    298    -0.000059   -5.914e-05         -0.0176       -37.2
+       2    297    -0.000159   -7.928e-05         -0.0236       -49.9
+       4    295    -0.000562   -1.404e-04         -0.0418       -88.4
+       8    291    -0.002066   -2.582e-04         -0.0769      -162.6
+      16    282    -0.006533   -4.083e-04         -0.1217      -257.1
+      24    261    -0.010061   -4.192e-04         -0.1249      -264.0
+      32    222    -0.014124   -4.414e-04         -0.1315      -277.9
+      40    206    -0.017221   -4.305e-04         -0.1283      -271.1
+      48    176    -0.019682   -4.100e-04         -0.1222      -258.2
+      56    147    -0.019839   -3.543e-04         -0.1056      -223.1
+      64    128    -0.021124   -3.301e-04         -0.0984      -207.8
+      80    115    -0.022070   -2.759e-04         -0.0822      -173.7
+      96    102    -0.019994   -2.083e-04         -0.0621      -131.1
+     128     46    -0.015644   -1.222e-04         -0.0364       -77.0
+
+  peak |rate| at span 32: -4.414e-04 per frame
+  -> upper bound on total drift: 277.9 corner px
+
+  Short spans read LOW because the scale signal (g*rho) is below the
+  fit's own rms. Long spans read LOW because the pairs that still
+  correlate at that defocus baseline are a biased survivor set.
+  The peak is the least-biased direct estimate available.

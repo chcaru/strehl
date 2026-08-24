@@ -1,0 +1,209 @@
+============================================================================================
+M86 HELD-OUT PREDICTION OF TRUSTWORTHY LONG EDGES
+  edges  : C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\foam-edges.csv  (781 rows, 595 ok)
+  frames : 100
+  plane  : 3516x2344 px, rho 2112.9 px
+  test   : span >= 24, used >= 12
+  all errors are plane px at the worst plane corner
+============================================================================================
+  test set: 126 edges, median 51 tiles, median rms 3.47 px, spans 24-80
+
+  train = chain (span 1): 98 edges, cycle rank 0, components 2  TREE
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    1/100     0        -       -       -
+             S1-hops1    1/100     0        -       -       -
+             S2-hops8    1/100     0        -       -       -
+            S2-hops16    1/100     0        -       -       -
+            S2-hops32    1/100     0        -       -       -
+         S3-ba-invvar    1/100     0        -       -       -
+           S3-ba-unit    1/100     0        -       -       -
+          S3-ba-count    1/100     0        -       -       -
+             S4-poly2  100/100   126    7.371   11.673   79.530    1.583    5.533
+             S4-poly4  100/100   126    5.484    8.050   86.643    0.993    4.276
+             S4-poly6  100/100   126    2.639    6.913   84.712    1.103    1.664
+           S5-centre4  100/100   126    6.749   11.724   80.430    0.993    5.636
+         S6-ba-smooth  100/100   126    1.882    6.203   86.484    1.167    0.955
+
+  train = span <= 2: 195 edges, cycle rank 97, components 2
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    1/100     0        -       -       -
+             S1-hops1    1/100     0        -       -       -
+             S2-hops8    1/100     0        -       -       -
+            S2-hops16    1/100     0        -       -       -
+            S2-hops32    1/100     0        -       -       -
+         S3-ba-invvar    1/100     0        -       -       -
+           S3-ba-unit    1/100     0        -       -       -
+          S3-ba-count    1/100     0        -       -       -
+             S4-poly2  100/100   126    5.964   10.256   78.079    1.272    4.625
+             S4-poly4  100/100   126    4.739    7.280   84.699    0.834    3.749
+             S4-poly6  100/100   126    2.511    6.474   83.640    0.897    1.565
+           S5-centre4  100/100   126    6.216   11.005   79.821    0.834    5.136
+         S6-ba-smooth  100/100   126    1.890    5.792   86.161    1.001    1.067
+
+  train = span <= 4: 290 edges, cycle rank 192, components 2
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    1/100     0        -       -       -
+             S1-hops1    1/100     0        -       -       -
+             S2-hops8    1/100     0        -       -       -
+            S2-hops16    1/100     0        -       -       -
+            S2-hops32    1/100     0        -       -       -
+         S3-ba-invvar    1/100     0        -       -       -
+           S3-ba-unit    1/100     0        -       -       -
+          S3-ba-count    1/100     0        -       -       -
+             S4-poly2  100/100   126    4.589    8.969   75.911    0.966    3.372
+             S4-poly4  100/100   126    3.922    6.845   81.632    0.954    2.961
+             S4-poly6  100/100   126    2.539    6.064   81.887    1.007    1.569
+           S5-centre4  100/100   126    5.453    9.820   78.936    0.954    4.348
+         S6-ba-smooth  100/100   126    2.019    5.371   85.302    1.017    1.138
+
+  train = span <= 8: 381 edges, cycle rank 283, components 2
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    1/100     0        -       -       -
+             S1-hops1    1/100     0        -       -       -
+             S2-hops8    1/100     0        -       -       -
+            S2-hops16    1/100     0        -       -       -
+            S2-hops32    1/100     0        -       -       -
+         S3-ba-invvar    1/100     0        -       -       -
+           S3-ba-unit    1/100     0        -       -       -
+          S3-ba-count    1/100     0        -       -       -
+             S4-poly2  100/100   126    3.259    7.421   71.997    1.027    2.044
+             S4-poly4  100/100   126    3.351    6.396   76.620    1.297    2.196
+             S4-poly6  100/100   126    2.826    5.972   78.382    1.375    1.548
+           S5-centre4  100/100   126    4.713    8.632   77.236    1.297    3.455
+         S6-ba-smooth  100/100   126    2.525    5.607   91.258    1.324    1.248
+
+  train = span <= 16: 455 edges, cycle rank 356, components 1
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    2/100     0        -       -       -
+             S1-hops1    1/100     0        -       -       -
+             S2-hops8    1/100     0        -       -       -
+            S2-hops16  100/100   126    2.334    5.776   15.424    1.476    0.968
+            S2-hops32  100/100   126    2.334    5.776   15.424    1.476    0.968
+         S3-ba-invvar  100/100   126    1.959    5.072   15.777    0.976    1.033
+           S3-ba-unit  100/100   126    2.343    4.873   15.567    1.389    0.813
+          S3-ba-count  100/100   126    2.569    5.011   16.095    1.381    0.995
+             S4-poly2  100/100   126    2.587    8.907   68.789    1.229    1.675
+             S4-poly4  100/100   126    2.471    9.040   66.835    1.472    0.846
+             S4-poly6  100/100   126    2.436    8.559   65.843    1.413    0.949
+           S5-centre4  100/100   126    3.587    7.104   75.191    1.472    2.091
+         S6-ba-smooth  100/100   126    2.343    4.873   15.567    1.389    0.817
+
+  train = span <= 32: 462 edges, cycle rank 363, components 1
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    2/100     0        -       -       -
+             S1-hops1    1/100     0        -       -       -
+             S2-hops8    1/100     0        -       -       -
+            S2-hops16  100/100   126    2.334    5.776   15.424    1.476    0.968
+            S2-hops32  100/100   126    4.042    6.562   15.424    2.046    1.637
+         S3-ba-invvar  100/100   126    1.964    5.029   15.764    0.978    1.024
+           S3-ba-unit  100/100   126    2.393    4.915   15.297    1.501    0.833
+          S3-ba-count  100/100   126    2.551    4.944   16.019    1.390    0.971
+             S4-poly2  100/100   126    2.510    8.449   69.358    1.338    1.298
+             S4-poly4  100/100   126    2.644    8.519   67.138    1.597    0.805
+             S4-poly6  100/100   126    2.639    8.271   65.968    1.570    0.865
+           S5-centre4  100/100   126    3.731    7.637   75.103    1.597    2.172
+         S6-ba-smooth  100/100   126    2.393    4.915   15.296    1.501    0.831
+
+  train = span <= 32, >= 8: 172 edges, cycle rank 80, components 8
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    2/100     0        -       -       -
+             S2-hops8    1/100     0        -       -       -
+            S2-hops16   13/100    17    2.169    6.622    9.348    1.371    1.244
+            S2-hops32   13/100    17    2.169    6.622    9.348    1.371    1.244
+         S3-ba-invvar   13/100    17    2.590    6.102    9.392    1.314    1.085
+           S3-ba-unit   13/100    17    2.644    5.418    8.621    1.283    0.880
+          S3-ba-count   13/100    17    2.535    5.897    9.214    1.539    1.031
+             S4-poly2  100/100   126    2.657    8.817   68.857    1.387    1.479
+             S4-poly4  100/100   126    2.919    9.362   64.910    1.648    1.068
+             S4-poly6  100/100   126    2.676    7.784   61.590    1.526    1.026
+           S5-centre4  100/100   126    3.937    8.137   74.746    1.648    2.374
+         S6-ba-smooth  100/100   126    2.662    5.480   14.724    1.678    0.977
+
+  train = span <= 32, >= 12: 81 edges, cycle rank 3, components 22
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    2/100     0        -       -       -
+            S2-hops16    6/100     4    3.269    4.078    4.091    1.866    0.999
+            S2-hops32    6/100     4    3.269    4.078    4.091    1.866    0.999
+         S3-ba-invvar    6/100     4    3.269    4.078    4.091    1.866    0.999
+           S3-ba-unit    6/100     4    3.269    4.078    4.091    1.866    0.999
+          S3-ba-count    6/100     4    3.269    4.078    4.091    1.866    0.999
+             S4-poly2  100/100   126    3.236    9.171   68.670    1.522    1.812
+             S4-poly4  100/100   126    3.384   10.188   60.461    1.579    1.652
+             S4-poly6  100/100   126    3.141    9.177   49.613    1.418    1.431
+           S5-centre4  100/100   126    4.620    8.881   74.594    1.579    3.017
+         S6-ba-smooth  100/100   126    4.340    9.764   16.764    2.462    1.876
+
+  train = span >= 16: 88 edges, cycle rank 8, components 20
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    3/100     1   30.208   30.208   30.208   16.917   13.322
+            S2-hops16    6/100     4    3.269    4.078    4.091    1.866    0.999
+            S2-hops32    6/100     4    3.269    4.078    4.091    1.866    0.999
+         S3-ba-invvar    6/100     4    3.593    4.406    4.645    2.240    1.455
+           S3-ba-unit    6/100     4   15.808   19.613   20.314    9.341    6.559
+          S3-ba-count    6/100     4    4.284    4.817    4.972    2.386    1.846
+             S4-poly2  100/100   126    7.990   13.580   65.613    1.695    6.510
+             S4-poly4  100/100   126    4.605   17.336   51.598    1.503    3.026
+             S4-poly6  100/100   126    4.477   12.808   44.761    1.463    3.516
+           S5-centre4  100/100   126    7.985   15.193   72.304    1.503    6.558
+         S6-ba-smooth  100/100   126    5.146   14.590   20.123    3.092    2.240
+
+  train = span >= 24: 14 edges, cycle rank 0, components 86  TREE
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    2/100     0        -       -       -
+            S2-hops32    1/100     0        -       -       -
+         S3-ba-invvar    2/100     0        -       -       -
+           S3-ba-unit    2/100     0        -       -       -
+          S3-ba-count    2/100     0        -       -       -
+             S4-poly2  100/100   126   10.469   17.761   65.094    1.998    8.556
+             S4-poly4  100/100   126   13.793   35.541   76.845    3.512   10.401
+             S4-poly6  100/100   126   10.435   27.185   82.209    3.278    7.245
+           S5-centre4  100/100   126   12.164   21.306   79.745    3.512    9.013
+         S6-ba-smooth  100/100   126   12.995   28.514   86.646    4.429    8.672
+
+  train = span >= 32: 9 edges, cycle rank 0, components 91  TREE
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    2/100     0        -       -       -
+            S2-hops32    1/100     0        -       -       -
+         S3-ba-invvar    2/100     0        -       -       -
+           S3-ba-unit    2/100     0        -       -       -
+          S3-ba-count    2/100     0        -       -       -
+             S4-poly2  100/100   126   12.350   19.430   61.016    1.835   10.461
+             S4-poly4  100/100   126   16.461   36.976   80.537    4.315   11.831
+             S4-poly6  100/100   126   16.697   44.916   75.362    5.396   12.974
+           S5-centre4  100/100   126   13.800   22.908   77.904    4.315   10.081
+         S6-ba-smooth  100/100   126   31.106   74.329   92.785    7.832   25.787
+
+  train = all measurable: 469 edges, cycle rank 370, components 1
+             strategy    cover     n   median      p90      max    scale    trans
+             S0-fixed    3/100     1   30.208   30.208   30.208   16.917   13.322
+             S1-hops1    1/100     0        -       -       -
+             S2-hops8    1/100     0        -       -       -
+            S2-hops16  100/100   126    2.334    5.776   15.424    1.476    0.968
+            S2-hops32  100/100   126    4.042    6.562   15.424    2.046    1.637
+         S3-ba-invvar  100/100   126    1.964    5.002   15.753    0.978    1.022
+           S3-ba-unit  100/100   126    2.379    4.705   19.151    1.366    0.873
+          S3-ba-count  100/100   126    2.549    4.912   19.531    1.371    0.956
+             S4-poly2  100/100   126    6.583   12.192   66.319    1.352    5.368
+             S4-poly4  100/100   126    4.501   12.469   60.812    1.466    3.125
+             S4-poly6  100/100   126    4.907   11.836   58.082    1.361    3.670
+           S5-centre4  100/100   126    6.670   12.884   72.624    1.466    5.134
+         S6-ba-smooth  100/100   126    2.380    4.707   18.931    1.366    0.873
+
+============================================================================================
+PREREGISTERED DECISION RULE - applied mechanically
+  T_solved 1 px   T_usable 4 px   T_chain 12.5 px
+  full-coverage strategies only; tree training graphs excluded
+============================================================================================
+  ruling   126 test edges predicted, top span 80
+    best full-coverage row : S6-ba-smooth trained on 'span <= 2'
+    E* registered (span 80 ) :   2.698 px over   9 edges  -> cell B/C/D
+    E* robust (span >= 48)  :   1.838 px over  51 edges  -> cell B/C/D
+    all test spans         : median 1.890 px, p90 5.792 px, max 86.161 px
+    slope on test span     : -0.0678 +- 0.0412 px/frame   significantly > 0: no
+    runners-up by robust E*:
+         S3-ba-invvar on 'span <= 16': 1.996 px
+         S3-ba-invvar on 'all measurable': 2.014 px
+         S3-ba-invvar on 'span <= 32': 2.022 px
+         S6-ba-smooth on 'span <= 4': 2.066 px
+
+  whole protocol: 43 ms over 92 candidate rows

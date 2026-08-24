@@ -1,0 +1,25 @@
+============================================================================================
+M86 TOTAL FIELD DRIFT ACROSS THE BRACKET
+  edges  : C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\foam-edges.csv
+  graph  : 100 frames, 595 usable edges, cycle rank 496, 1 component(s)
+  plane  : 3516x2344 px, rho 2112.9 px
+============================================================================================
+
+  cycle consistency of the RAW edges (696 triples, no solver):
+    median 1.635 px, p90 5.791 px, max 29.678 px  (scale 0.808, trans 0.574)
+    this is the floor: no solver can predict an edge better than the
+    edges agree with each other.
+
+  S3-ba-unit: 100/100 frames placed
+    total corner drift frame 0 -> 99: 224.461 plane px
+    scale at the last frame: -0.08612 (-181.968 plane px at the corner)
+    scale track roughness |d2g|*rho: median 0.1478 px, p90 0.3944 px, max 1.0558 px
+    steps against the overall direction: 0/99 (0% -- 0% is perfectly monotonic)
+    in-sample residual vs all edges: median 0.782 px, p90 2.475 px, max 28.786 px
+
+  S6-ba-smooth: 100/100 frames placed
+    total corner drift frame 0 -> 99: 224.420 plane px
+    scale at the last frame: -0.08612 (-181.957 plane px at the corner)
+    scale track roughness |d2g|*rho: median 0.1476 px, p90 0.3942 px, max 1.0675 px
+    steps against the overall direction: 0/99 (0% -- 0% is perfectly monotonic)
+    in-sample residual vs all edges: median 0.782 px, p90 2.475 px, max 28.845 px

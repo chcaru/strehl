@@ -1,0 +1,25 @@
+============================================================================================
+M86 TOTAL FIELD DRIFT ACROSS THE BRACKET
+  edges  : C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\flat-on-ruler-cpl-edges.csv
+  graph  : 79 frames, 672 usable edges, cycle rank 594, 1 component(s)
+  plane  : 3520x2344 px, rho 2114.5 px
+============================================================================================
+
+  cycle consistency of the RAW edges (1692 triples, no solver):
+    median 3.372 px, p90 9.271 px, max 19.366 px  (scale 1.990, trans 1.241)
+    this is the floor: no solver can predict an edge better than the
+    edges agree with each other.
+
+  S3-ba-unit: 79/79 frames placed
+    total corner drift frame 0 -> 78: 108.810 plane px
+    scale at the last frame: -0.04804 (-101.571 plane px at the corner)
+    scale track roughness |d2g|*rho: median 0.1034 px, p90 0.2633 px, max 0.6164 px
+    steps against the overall direction: 0/78 (0% -- 0% is perfectly monotonic)
+    in-sample residual vs all edges: median 1.754 px, p90 4.754 px, max 14.792 px
+
+  S6-ba-smooth: 79/79 frames placed
+    total corner drift frame 0 -> 78: 108.810 plane px
+    scale at the last frame: -0.04804 (-101.571 plane px at the corner)
+    scale track roughness |d2g|*rho: median 0.1033 px, p90 0.2632 px, max 0.6163 px
+    steps against the overall direction: 0/78 (0% -- 0% is perfectly monotonic)
+    in-sample residual vs all edges: median 1.754 px, p90 4.754 px, max 14.792 px

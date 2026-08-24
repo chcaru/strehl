@@ -1,0 +1,42 @@
+============================================================================================
+M86 C2 - PLANTED WARP ON REAL FRAMES, AND THE DEFOCUS-ASYMMETRY GAIN
+  stack     : D:\personal\macro\bee-3-cpl (299 frames)
+  bases     : [40, 100, 160, 220]
+  gaps      : [0]
+  scales    : [1.00002, 1.00005, 1.0001, 1.0002, 1.0005, 1.001, 1.002, 1.005, 1.01]
+  plane     : 3516x2344 px, rho 2112.9 px
+  resampler : CatmullRom
+  4 frames decoded; the plant is applied to an in-memory copy, and
+  no capture file is opened for writing.
+============================================================================================
+
+  `gather_into(p, t, ..)` fills output pixel q from source `t(q)`, so the
+  warped frame is the source warped by t^-1. The expected increment is
+  therefore 1/s - 1, built with the EXACT inverse: at s = 1.02 the
+  difference between -(s-1) and 1/s-1 is 0.83 plane px, which is larger
+  than the whole effect being measured.
+
+  Recovered gain = (measured increment) / (1/s - 1). Unity means the
+  estimator's scale response is undistorted by the defocus gap.
+
+    gap      n     median        MAD        min        max median err px
+      0     36     0.9922     0.0379     0.2638     1.0192        0.166
+
+  Same fits, grouped by PLANT SIZE instead. Corner motion is the
+  quantity a correlation peak-locks on, so attenuation of small
+  displacements shows up here and is invisible in the table above.
+
+   plant s - 1    corner px      n     median        MAD
+       2.00e-5        0.042      4     0.2945     0.0341
+       5.00e-5        0.106      4     0.3011     0.0255
+       1.00e-4        0.211      4     0.3135     0.0163
+       2.00e-4        0.422      4     0.3955     0.0165
+       5.00e-4        1.056      4     1.0107     0.0030
+       1.00e-3        2.111      4     1.0146     0.0047
+       2.00e-3        4.217      4     0.9922     0.0005
+       5.00e-3       10.512      4     1.0039     0.0004
+       1.00e-2       20.919      4     0.9989     0.0002
+
+  GATE C2 (gap 0, zero defocus difference): worst |gain - 1| = 0.7362(registered bar: <= 0.02)
+  GATE C2: FAIL
+Error: C2 failed: the estimator does not recover a planted scale on real frames
