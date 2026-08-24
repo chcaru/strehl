@@ -1,0 +1,254 @@
+{
+  "gate": {
+    "bee-3-cpl": {
+      "k_port": 0.9314644677027704,
+      "k_expected": 0.9315,
+      "tol": 0.0001,
+      "pass": true,
+      "source": "fact 1289/1400: tool printout + ruler photograph"
+    },
+    "flat-on-ruler-cpl": {
+      "k_port": 0.9707978782277352,
+      "k_expected": 0.970813,
+      "tol": 0.002,
+      "pass": true,
+      "source": "M104 P1: 1/k = 1.030078"
+    }
+  },
+  "stacks": {
+    "bee-3-cpl": {
+      "sidecar": "C:\\dev\\strehl-out\\M106\\warpmap-corpus-snapshot.txt",
+      "frames": "299",
+      "reference": "149",
+      "plane": [
+        3516,
+        2344
+      ],
+      "k": 0.9314644677027704,
+      "enlargement_pct": 7.357825732875867,
+      "frac_frames_integer_phase_under_FIX": 0.0033444816053511705,
+      "NOW": {
+        "cost_dex": 0.18237308896326823,
+        "sem": 0.00086277943276216,
+        "n": 11960,
+        "step": 0.9327858574758995
+      },
+      "FIX": {
+        "cost_dex": 0.18540185295826161,
+        "sem": 0.0004621012077563085,
+        "n": 11960,
+        "step": 1.001418615329888
+      },
+      "recovery_dex": -0.003028763994993383,
+      "verdict": "DEAD"
+    },
+    "flat-on-ruler-cpl": {
+      "sidecar": "C:\\dev\\strehl-out\\M97\\warpmap-ruler.txt",
+      "frames": "79",
+      "reference": "39",
+      "plane": [
+        3520,
+        2344
+      ],
+      "k": 0.9707978782277352,
+      "enlargement_pct": 3.008053728503768,
+      "frac_frames_integer_phase_under_FIX": 0.012658227848101266,
+      "NOW": {
+        "cost_dex": 0.19553586700903203,
+        "sem": 0.000977548848481687,
+        "n": 3160,
+        "step": 0.9702621363648228
+      },
+      "FIX": {
+        "cost_dex": 0.179990390738723,
+        "sem": 0.0009733970485537695,
+        "n": 3160,
+        "step": 0.999448142734005
+      },
+      "recovery_dex": 0.015545476270309028,
+      "verdict": "DEAD"
+    },
+    "tweezers-cpl": {
+      "sidecar": "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\tweezers-cpl--warpmap.txt",
+      "frames": "100",
+      "reference": "50",
+      "plane": [
+        3520,
+        2344
+      ],
+      "k": 0.972609928367447,
+      "enlargement_pct": 2.81614148012328,
+      "frac_frames_integer_phase_under_FIX": 0.01,
+      "NOW": {
+        "cost_dex": 0.19409467580475862,
+        "sem": 0.0009592374974720781,
+        "n": 4000,
+        "step": 0.9712666666545188
+      },
+      "FIX": {
+        "cost_dex": 0.17911452137160494,
+        "sem": 0.0008244519299572049,
+        "n": 4000,
+        "step": 0.9986189101367875
+      },
+      "recovery_dex": 0.014980154433153675,
+      "verdict": "DEAD"
+    },
+    "leaf-2-cpl": {
+      "sidecar": "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\leaf-2-cpl--warpmap.txt",
+      "frames": "182",
+      "reference": "91",
+      "plane": [
+        3520,
+        2344
+      ],
+      "k": 0.9344099072636737,
+      "enlargement_pct": 7.019413238928562,
+      "frac_frames_integer_phase_under_FIX": 0.005494505494505495,
+      "NOW": {
+        "cost_dex": 0.18321014451639633,
+        "sem": 0.001036088967975409,
+        "n": 7280,
+        "step": 0.9358894245663056
+      },
+      "FIX": {
+        "cost_dex": 0.18737315801621715,
+        "sem": 0.0006376410301443817,
+        "n": 7280,
+        "step": 1.0015833707360453
+      },
+      "recovery_dex": -0.004163013499820817,
+      "verdict": "DEAD"
+    },
+    "foam": {
+      "sidecar": "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\foam--warpmap.txt",
+      "frames": "100",
+      "reference": "50",
+      "plane": [
+        3516,
+        2344
+      ],
+      "k": 0.8760855889167498,
+      "enlargement_pct": 14.144098778803805,
+      "frac_frames_integer_phase_under_FIX": 0.01,
+      "NOW": {
+        "cost_dex": 0.15420154434020397,
+        "sem": 0.0019085143903328013,
+        "n": 4000,
+        "step": 0.8780717985438814
+      },
+      "FIX": {
+        "cost_dex": 0.18718478008910952,
+        "sem": 0.0008248344792475341,
+        "n": 4000,
+        "step": 1.0022671410787474
+      },
+      "recovery_dex": -0.03298323574890555,
+      "verdict": "DEAD"
+    },
+    "lavendar-cpl": {
+      "sidecar": "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\lavendar-cpl--warpmap.txt",
+      "frames": "299",
+      "reference": "149",
+      "plane": [
+        3520,
+        2344
+      ],
+      "k": 0.9386481293995135,
+      "enlargement_pct": 6.536194840097909,
+      "frac_frames_integer_phase_under_FIX": 0.0033444816053511705,
+      "NOW": {
+        "cost_dex": 0.19073470082592303,
+        "sem": 0.0006408830868564014,
+        "n": 11960,
+        "step": 0.9417322328225751
+      },
+      "FIX": {
+        "cost_dex": 0.17873422938744207,
+        "sem": 0.0005550886285526922,
+        "n": 11960,
+        "step": 1.0032856864318629
+      },
+      "recovery_dex": 0.012000471438480959,
+      "verdict": "DEAD"
+    },
+    "flowers-cpl": {
+      "sidecar": "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\flowers-cpl--warpmap.txt",
+      "frames": "176",
+      "reference": "88",
+      "plane": [
+        3520,
+        2344
+      ],
+      "k": 0.9367716591097507,
+      "enlargement_pct": 6.7496001053594545,
+      "frac_frames_integer_phase_under_FIX": 0.005681818181818182,
+      "NOW": {
+        "cost_dex": 0.18141472698089195,
+        "sem": 0.0009554015930897737,
+        "n": 7040,
+        "step": 0.9380363296846811
+      },
+      "FIX": {
+        "cost_dex": 0.1862861733756983,
+        "sem": 0.0005998083943710677,
+        "n": 7040,
+        "step": 1.0013500307813883
+      },
+      "recovery_dex": -0.004871446394806356,
+      "verdict": "DEAD"
+    },
+    "lead-1-cpl": {
+      "sidecar": "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\lead-1-cpl--warpmap.txt",
+      "frames": "123",
+      "reference": "61",
+      "plane": [
+        3520,
+        2344
+      ],
+      "k": 0.9564135614038668,
+      "enlargement_pct": 4.557279440094408,
+      "frac_frames_integer_phase_under_FIX": 0.008130081300813009,
+      "NOW": {
+        "cost_dex": 0.19233407856047516,
+        "sem": 0.0009726865001743685,
+        "n": 4920,
+        "step": 0.9556699056478135
+      },
+      "FIX": {
+        "cost_dex": 0.183842044852869,
+        "sem": 0.0007304336377218904,
+        "n": 4920,
+        "step": 0.9992224537730713
+      },
+      "recovery_dex": 0.00849203370760615,
+      "verdict": "DEAD"
+    },
+    "flower-bud-alone-cpl": {
+      "sidecar": "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\flower-bud-alone-cpl--warpmap.txt",
+      "frames": "205",
+      "reference": "102",
+      "plane": [
+        3520,
+        2344
+      ],
+      "k": 0.9970026575544778,
+      "enlargement_pct": 0.30063535165234523,
+      "frac_frames_integer_phase_under_FIX": 0.17073170731707318,
+      "NOW": {
+        "cost_dex": 0.17859158381722856,
+        "sem": 0.0009386673903370404,
+        "n": 8200,
+        "step": 0.9970022901173942
+      },
+      "FIX": {
+        "cost_dex": 0.02696229561049816,
+        "sem": 0.00045918710270683046,
+        "n": 8200,
+        "step": 0.9999996314582708
+      },
+      "recovery_dex": 0.1516292882067304,
+      "verdict": "SHIPS"
+    }
+  }
+}
