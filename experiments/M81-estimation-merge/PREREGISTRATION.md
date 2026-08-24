@@ -62,11 +62,18 @@ separately **256** and is not the spectral tile.
 The measurement invocation, with `<T*>` replaced only after calibration, is:
 
 ```powershell
+strehl calibrate-gate D:\personal\macro\<stack> `
+  --analysis-width 7028 --analysis-height 4688
+
 strehl stack D:\personal\macro\<stack> `
   --gate 4 <T*> `
   --flat-roi <flat-x,y,w,h> `
   --detail-roi <detail-x,y,w,h>
 ```
+
+`calibrate-gate` uses its default **6 workers**, matching M70; no `--limit` is
+passed. The explicit analysis bounds are M70's rawler/LibRaw intersection, not
+the rawler active area's extra four columns.
 
 The private evidence binary is built with Rust 1.98.0 MSVC and a private
 `CARGO_TARGET_DIR`; its commit, size, SHA-256 and complete invocation are
