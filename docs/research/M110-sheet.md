@@ -1,7 +1,9 @@
 # M110-sheet — a reproducible comparison-sheet harness
 
-**Status:** delivered. Harness committed at `66ba510`; sheets produced tonight against
-`HEAD 5e4fbc4b74b2`.
+**Status:** delivered, and readied for the standby run. Harness committed at `66ba510`,
+readiness pass at `c11e0e7`; sheets produced against `HEAD 5e4fbc4b74b2`. §8 covers the
+second dispatch — the blown-highlight crop site, the pending CA arms, two further subjects,
+and the controls on the new readout.
 
 **Scope.** This is not a milestone with a hypothesis. ORCH asked for an instrument: a
 one-command way to render the owner's real stacks under a named arms matrix and emit
@@ -25,13 +27,17 @@ python sheet.py all
 ```
 
 Subcommands run separately when you want them to: `scout` (pins exposure and crop
-coordinates), `render` (all arms, all subjects, writes the manifest), `figure` (builds the
-PNGs). `--subject <name>` restricts; `--limit N` renders a short stack for a smoke test.
+coordinates), `render` (all enabled arms, all subjects, writes the manifest), `figure` (builds
+the PNGs), `recrop` (re-choose crops from bytes already on disk, no re-render), `survey`
+(which subjects can currently demonstrate the magenta-clipping fix). `--subject <name>`
+restricts; `--limit N` renders a short stack for a smoke test.
 
-Adding an arm is adding a dict to `ARMS` in `sheet.py`:
+Adding an arm is adding a dict to `ARMS` in `sheet.py`; **arming a pending one is filling in
+its flags and flipping one boolean:**
 
 ```python
-{"name": "ca-corrected", "align": [], "merge": ["--some-flag"], "env": {}, "note": "..."}
+{"name": "ca", "align": [], "merge": ["--some-flag"], "env": {}, "enabled": True,
+ "note": "..."}
 ```
 
 `align`, `merge` and `env` are applied per stage, so M107's CA work and M97's merge wiring
@@ -273,3 +279,220 @@ I do not own `SYNTHESIS.md`. Numbered for folding, not for pasting.
 11. **Do not compare a kernel-level number with an end-to-end one.** Ringing measured on a
     resampling kernel and ringing seen in a merged render are different quantities, because
     the merge elects a single frame per pixel rather than convolving.
+
+---
+
+## 8. Readiness pass — the standby configuration
+
+Second dispatch: get the harness able to render the morning's answer in one command, without
+running the expensive matrix while `HEAD` moves. All of this is configuration and controls;
+**no arm matrix was run.** No `crates/` file was touched.
+
+### 8.1 The blown-highlight crop site
+
+`clipped` is now a sixth role. It is selected on the **physical condition** — the tile with
+the greatest fraction of pixels where **red *and* blue both sit at or above 99% of full
+scale** — and explicitly *not* on how magenta the tile looks. Selecting on the defect's
+appearance would pick the window where the defect is loudest, which is choosing the answer.
+Selecting on blown-ness picks the place where the render is *obliged* to be neutral, which
+is a fair test both before and after a fix. If a subject has nothing genuinely clipped the
+role falls back to the brightest tile and the artefact says so.
+
+Every `clipped` tile is stamped with its blown fraction and its **green offset**, mean
+`(G − (R+B)/2)` over blown pixels in full-scale units. A neutral blown highlight reads
+`0.0000`; M109 measured green pinned ~`−0.10`. So the before/after is a number on the sheet,
+not an impression.
+
+### 8.2 MEASURED — the readout is controlled, and it is one-sided
+
+`neutrality_control.py`, **7/7 bars**, bars registered before running:
+
+| bar | result |
+| --- | --- |
+| N1 null | recomputes `+0.000442`, exactly the printed value |
+| P2 linearity −0.02 | recovered `−0.020005` |
+| P2 linearity −0.05 | recovered `−0.050004` |
+| P1 positive −0.10 | recovered `−0.100008` |
+| S1 sign | `−0.040009` from a −0.10 baseline: moved **positive** by +0.06 |
+| H1 headroom | mean green headroom `0.00034`, **96.7%** of blown px already at full scale |
+| M1 mask | moved `+0.000000000` when planting off-mask |
+
+**H1 exists because an earlier version of S1 failed.** It planted `+0.06` directly and
+recovered `+0.000344`. That is not sign-blindness: on a genuinely blown pixel green is
+*already* at the ceiling, so a positive plant has nowhere to go. I measured the ceiling
+rather than loosening the bar, and the recovered `+0.000344` matches the measured mean
+headroom `0.00034` to within a part in ten thousand — the diagnosis is confirmed, not
+asserted.
+
+**MEASURED: the green-offset readout is one-sided by construction.** It measures green
+*deficit* (magenta) faithfully — a planted `−0.10` returns to within `1e-5` — and is
+**structurally blind to green excess**, because green has 0.034% headroom at the clip point.
+Consequence worth stating plainly: **if M97's fix overshoots into green, this sheet will
+under-report it.** A by-eye check of the clipped tile remains necessary and the number is
+not a substitute for it.
+
+### 8.3 MEASURED — none of the four subjects currently shows the magenta defect
+
+`python sheet.py survey`, read off the frozen `clipped` tile of each full-stack default arm,
+binary sha256 `680cd59c379ed9c6…` built `2026-08-24T13:51:49`:
+
+| subject | blown % of tile | green offset |
+| --- | --- | --- |
+| bee-3-cpl | 0.176% | `+0.0004` |
+| wrapped-text-1 | 0.181% | `+0.0004` |
+| tweezers-cpl | 0.555% | `−0.0034` |
+| flat-on-ruler-cpl | 0.856% | `−0.0004` |
+
+Every one is neutral within `0.0034`, **about 29x smaller than the `−0.10` M109 reported.**
+
+I tested the obvious alternative — that the defect lives in a pixel population my mask does
+not select — by profiling the whole frame against highlight brightness rather than only the
+clipped tile:
+
+| min(R,B) bin | tweezers-cpl | flat-on-ruler-cpl |
+| --- | --- | --- |
+| [0.60, 0.75) | `+0.0057` | `−0.0002` |
+| [0.75, 0.85) | `+0.0037` | `+0.0028` |
+| [0.85, 0.90) | `+0.0042` | `+0.0176` |
+| [0.90, 0.95) | `+0.0049` | `+0.0226` |
+| [0.95, 0.98) | `+0.0066` | `+0.0133` |
+| [0.98, 0.99) | `+0.0028` | `+0.0047` |
+| [0.99, 1.01) | `−0.0012` | `−0.0002` |
+
+**No brightness bin, on either subject, is anywhere near `−0.10`.** Individual pixels reach
+`−0.3092` and `−0.2861`, but isolated pixels at that level are as consistent with genuinely
+magenta content as with a defect.
+
+**I am not claiming M109 is wrong, and this must not be read that way.** My binary was built
+at 13:51:49 and M97 was landing the fix afterwards, so the most likely explanations are that
+M109 measured under different flags — I render `--srgb` with a pinned `--exposure`, and
+`--srgb` implies `--demosaic` — or on a subject or exposure where it manifests. **The
+actionable point is narrower and it is for ORCH: on these four subjects at these exposures,
+the clipped site currently has nothing to show, so a before/after here may legitimately look
+like no change.** `python sheet.py survey` re-answers this in one command once M97 lands,
+and that is the check to run before putting a magenta claim in front of the owner.
+
+### 8.4 The missing kernel control is a product defect
+
+`strehl stack` has **no `--resampler` flag at all**. A merge's kernel is set *entirely* by
+whichever sidecar the cache hands it. The harness already drives this correctly, by setting
+the kernel on the `align` stage and naming the sidecar explicitly, and I have not added the
+flag — that file is not mine.
+
+**ARGUED: this is a product defect independent of which kernel wins.** A user who has read
+that Lanczos-3 recovers real detail has no supported way to ask for it from the command that
+produces their picture; the only route is to run `align` separately and know that `stack`
+silently consumes the sidecar. Whichever kernel becomes the default, a user-facing control on
+the command that renders the image is the difference between a switchable feature and an
+implementation detail.
+
+It also **upgrades the byte-distinctness assertion from prudent to mandatory**, and the
+reason is that the exposure is **one-sided**: a lone arm can silently inherit a kernel from
+an unrelated earlier command, and with no second arm to disagree with it nothing in its own
+log would say so. Two changes follow, both landed:
+
+- `render_arm` now **asserts** the sidecar records the kernel the arm asked for, and fails
+  the arm if it does not.
+- A run producing **fewer than two arms is flagged as unguarded**, because byte-distinctness
+  across one arm is vacuous and reads as a pass.
+
+### 8.5 Subjects, arms, and two harness fixes
+
+**Two subjects added**, chosen on the axes that matter here rather than on convenience:
+`tweezers-cpl` (100 frames; polished metal, the subject most likely to hold genuinely blown
+neutral speculars, and where lateral CA is loudest) and `flat-on-ruler-cpl` (79 frames;
+printed graduations filling the frame to the corners, so there is content out at the radius
+where **M107's fit is extrapolated past its supported r = 0.788**). Both scouted at full
+stack; neither needed the no-clipping fallback.
+
+**Two arms added as data-only slots**, `ca` and `ca+lanczos3`, both `enabled: False`. They are
+skipped loudly rather than guessed. `OpticalProfile` has zero consumers outside its own file,
+so an invented flag would render bytes identical to the default and the sheet would report
+*"the correction does not help"* — a silent no-op wearing the costume of a result, and the
+exact false negative the fact-1446 guard exists to catch. **Arming them is filling in
+`align`/`merge`/`env` with M107's exact string and flipping one boolean; nothing else
+changes.** `ca+lanczos3` is present because it is the actual candidate configuration: the two
+interact, since sharpening makes fringes more conspicuous, so neither alone answers the
+owner's question.
+
+**eps_b is None.** M107 fitted red only and every ROI was red, while real fringes are
+red/cyan pairs. The sheet must not imply a full correction, and the `ca` arm's note carries
+that caveat inline so it travels with the configuration rather than living only here.
+
+Two defects in my own harness, found and fixed while readying it:
+
+1. **A partial `render` replaced the whole manifest**, so re-rendering one subject silently
+   deleted the others' entries and `figure` then skipped them. It now merges.
+2. **Provenance was global.** A partial re-run happens under a *different binary* than the
+   rest — which is P10 exactly — and one shared block would have stamped every sheet with the
+   last binary to run. Provenance is now recorded **per subject** and the figure stamps the
+   subject's own.
+
+Also added: `recrop` (re-choose crops from bytes already on disk, recording their sha256, for
+when the role list changes and a fresh render would be pure cost) and `survey` (§8.3).
+
+### 8.6 Corrections to my own earlier text
+
+**The kernel gain figure I should quote from here on is `+0.083` to `+0.099` dex end-to-end
+through the shipped merge, not `+0.1343`.** I did not quote a gain figure in §1–§7, so nothing
+above needs amending, but the adjusted number is recorded here so this report does not become
+a source for the stale one.
+
+**My §4 reasoning was independently confirmed.** M113, which did not coordinate with me,
+measured excess-extrema ratios of `0.9924`, `0.9938`, `1.0039`, `1.0048` — **1.00x, not
+9.902x** — and supplied the mechanism I did not have: mean `n_eff` is **55.3**, so each output
+pixel averages ~55 independently-warped frames at ~55 different sub-pixel phases. **Ringing is
+phase-dependent and averages down; passband gain is not and does not.** That is why a
+single-frame half-pixel-phase number does not transfer to a merge. I drew the
+distinction in §4 without the mechanism; the mechanism is M113's.
+
+---
+
+## 9. For ORCH — further facts and disciplines
+
+Continuing the numbering from §7.
+
+**Facts**
+
+12. **MEASURED: the blown-highlight green offset is neutral within `0.0034` on all four
+    subjects** — bee-3-cpl `+0.0004`, wrapped-text-1 `+0.0004`, tweezers-cpl `−0.0034`,
+    flat-on-ruler-cpl `−0.0004`, at their frozen `clipped` tiles under binary
+    `680cd59c379ed9c6…`. **About 29x smaller than M109's `−0.10`.** A whole-frame profile
+    against highlight brightness finds no bin between 0.60 and clipping worse than `+0.0226`
+    on either new subject, so the defect is not merely in a pixel population the mask misses.
+    Most likely a difference in flags or subject, **not** evidence against M109 — but on these
+    subjects the crop site currently has nothing to show.
+13. **MEASURED: the green-offset readout is one-sided by construction.** Green has mean
+    `0.00034` headroom on blown pixels and **96.7%** are already at full scale, so it measures
+    magenta faithfully (planted `−0.10` recovered to `−0.100008`) and is **blind to green
+    excess**. If a highlight fix overshoots into green, a sheet using this number will
+    under-report it.
+14. **MEASURED: `neutrality_control.py` passes 7/7 registered bars**, including recovery of a
+    planted `−0.10` to within `1e-5`, correct sign discrimination from a planted baseline, and
+    exactly zero movement when the plant is placed off-mask.
+15. **ARGUED: the absence of a `--resampler` flag on `strehl stack` is a product defect
+    independent of which kernel wins.** The kernel is set entirely by whichever sidecar the
+    merge consumes, so a user has no supported way to ask the command that renders their
+    picture for the kernel they want.
+
+**Disciplines**
+
+16. **Choose a defect-demonstration crop on the physical condition that makes the defect
+    possible, never on the defect's appearance.** Selecting the window where the artefact
+    looks worst is choosing the answer; selecting where the render is *obliged* to be correct
+    is fair before and after the fix.
+17. **Before a sheet claims to demonstrate a fix, measure that the defect is present in the
+    chosen window.** A before/after on a window that was already correct shows nothing, and
+    reads to a viewer as the fix having failed.
+18. **A pending arm must be skipped loudly, never approximated with a guessed flag.** If the
+    feature has no consumer, the guessed arm renders bytes identical to the control and the
+    comparison reports "no effect" — a false negative indistinguishable from a result.
+19. **When a control fails, measure the ceiling before loosening the bar.** The failing sign
+    bar here was the instrument meeting a clip limit, and measuring that limit turned a
+    failed bar into a stated bound on what the sheet can be trusted to show.
+20. **Record provenance per artefact, not per run.** In a shared tree a partial re-run happens
+    under a different binary than the rest, and one global provenance block silently stamps
+    every artefact with the last binary to execute.
+21. **An assertion across a single arm is vacuous and should say so.** Byte-distinctness with
+    one arm passes trivially; where a field is set out-of-band, a lone arm can inherit it from
+    an unrelated earlier command with nothing to contradict it.
