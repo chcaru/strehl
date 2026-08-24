@@ -868,3 +868,85 @@ one domain and above 99 % in the other.
 So M110's instrument would have found these pixels. **The reason its four
 subjects read neutral is that none of them is this subject.** Subject choice, not
 selector blindness, and it means the two results do not conflict at all.
+
+## 16. B15 -- why 0.5060 % survives. H-merge SUPPORTED; my own quantitative bar FAILED.
+
+ORCH's fourth hypothesis -- the merge averaging clipped with unclipped frames --
+is the one specific to strehl, and it is **supported**. Read-only, 75 of 299
+frames of `dry-erase-marker-head-cpl`, green sensels only.
+
+**Definition.** `f` = fraction of sampled frames in which a green sensel is
+pinned at `CONTAINER_MAX_DN`, over the 848,807 sensels pinned in at least one
+frame (**10.31 %** of the green plane).
+
+| | count | share |
+|---|---|---|
+| `f == 1` -- pinned in **every** frame | 178,402 | **21.02 %** |
+| `0 < f < 1` -- pinned in **some** | 670,405 | **78.98 %** |
+
+mean `f` = 0.6464, median 0.6667.
+
+**Nearly four fifths of the saturated population is pinned only part of the
+time.** For those sensels the merged value is a blend of pinned and unpinned
+samples and therefore lands **strictly below** the ceiling, so a guard written as
+`v_c >= ceil_c` never fires -- while green remains suppressed relative to red and
+blue. That is the residual magenta.
+
+**The guard asks a per-frame question of a post-merge value.** That is the defect
+in my fix, and it is not a threshold that needs tuning.
+
+### My registered quantitative bar FAILED, and I am not rewriting it
+
+B15 predicted in advance that if H-merge were the whole story, the `f == 1` share
+would be **comparable to the ~74.7 % of the defect the clip cleared**.
+
+**Measured 21.02 % against a predicted ~74.7 %.** That is not a near miss and it
+is in the wrong direction. By the criterion I registered before looking, H-merge
+is therefore **a mechanism, not the only mechanism** -- the weaker claim.
+
+**The most likely reason is a denominator error of mine**, and it is a real
+limitation rather than a rescue: I computed `f` over *all* sampled frames, but
+the merge is focus-gated and averages `n_eff` ~ 55 **contributing** frames per
+pixel, not 299. The frames contributing to a pixel are the ones in focus there,
+which are plausibly the ones where a specular highlight is pinned. `f` over the
+correct denominator would be **higher** than 0.6464. I have not measured it,
+because doing so needs the gate's per-pixel frame set, and I am not going to
+assert a number I did not compute.
+
+### An unregistered observation that matters
+
+The pinned population grows monotonically across the sweep -- **178,987 sensels
+in `DSC00001` to 816,158 in `DSC00281`, a 4.6x increase.** Whether a given sensel
+is clipped is thus strongly frame-dependent across the stack. Whatever its cause
+(defocus spreading the specular highlight, or illumination drift), it is exactly
+the condition that makes a post-merge equality test fail, and it was not
+something I predicted.
+
+### What this implies for the fix -- and it reopens ORCH's original sentence
+
+ORCH's opening brief said the gap was that **"nothing carries the consequence
+into the colour path."** My fix addressed that only where the *merged* value
+happens to remain pinned. For 78.98 % of the population the consequence is
+destroyed by averaging **before** the colour path can see it.
+
+So the correct fix is not a better threshold, it is **carrying per-frame clip
+state through the merge** -- and `clip.rs` already computes exactly that for the
+focus path via `ClipCensus`. Its own doctrine, that a clipped sample is not a
+focus measurement, extends without strain: a clipped sample is not a **colour**
+measurement either.
+
+Three candidates, in the order I would try them:
+
+1. **Propagate a per-pixel clipped count through the merge** and trigger the
+   existing clip on it. Precise, and it cannot move an unclipped pixel, so the
+   byte-identical null survives by construction.
+2. **Exclude pinned samples from the colour merge** where unpinned ones exist.
+   Most principled, closest to `clip.rs`'s stated doctrine, largest behavioural
+   change.
+3. **Lower the trigger** toward `Levels::white`. Cheapest and I already measured
+   it on argmax (0.0944 % -> 0.0260 %), but it touched 6.56 % of the frame, and
+   B15 now suggests why: 10.31 % of the green plane is pinned somewhere in the
+   stack, so a low trigger reaches far beyond the defect. **I still decline it**
+   for the reason in section 5, now with a mechanism attached.
+
+I have implemented none of these and claim no measurement of any.
