@@ -184,16 +184,48 @@ error would be a 10 % depth-scale error and a 0 % tilt error.
 
 **SYNTHESIS fact 1147 (MEASURED)** establishes that `F-camera-lens-optics.md:66`'s *"Owner
 uses SEL20TC"* is **false** — the converter is a **2× Viltrox**, and the SEL20TC is not
-compatible with this lens. **The 2.8× ceiling survives** (any true 2× gives 1.4 × 2, and EXIF
-confirms an electronically communicating 2×), so the refutation of P = 0.5 mm stands. I
-therefore cite **the ceiling**, never the converter model. My pre-compaction notes named the
-SEL20TC when describing the rig match to M5's stack; that naming was wrong and is corrected
-here. The rig match itself is unaffected: both stacks report `LensModel: FE 100mm F2.8 Macro
-GM OSS + 2X Teleconverter`.
+compatible with this lens. **The ceiling survives, and I cite it on its two sound legs rather
+than on the converter model:**
+
+- **(a)** max native magnification **1.4×**, *"Not 1:1"*, **VERIFIED** at
+  `F-camera-lens-optics.md:13`; and
+- **(b)** an **EXIF-confirmed true 2× multiplier** — `LensModel: FE 100mm F2.8 Macro GM OSS +
+  2X Teleconverter`, `LensSpec: FE 200mm F5.6 Macro OSS`, `FocalLength: 200.0 mm` — i.e.
+  exactly 2× the native 100 mm f/2.8, from a converter that communicates electronically.
+
+**1.4 × 2 = 2.8 holds for any true 2× regardless of brand**, so the refutation of P = 0.5 mm
+(which would demand m = 5.44) stands on measurement rather than on a false citation. My
+pre-compaction notes named the SEL20TC when describing the rig match to M5's stack; **that
+naming was wrong and is corrected here.** The rig match itself is unaffected: both M84b stacks
+and M5's `109MSDCF` report the same generic `+ 2X Teleconverter` string.
 
 Fact 1147 also establishes, independently, that **`MaxApertureValue == FNumber == 5.6`**, so
 both M84b stacks were shot **wide open**. The dispatch's "f/5.6 marked" is right, and there
 was no faster option available.
+
+### 4.2 Dependence audit: which of my claims route through `p`, and which do not
+
+The corpus's `p = 1.0` assumption carries a flagged ±38 %, the dominant uncertainty in the
+optical advisor, and a teleconverter changes the exit pupil. **The dependence is therefore
+audited explicitly rather than left implicit.**
+
+| Claim | Routes through | Depends on `p`? |
+| --- | --- | --- |
+| Pitch P = 1.000 mm; the 5.44× refutation | magnification ceiling only | **No** |
+| θ_flat, θ_ang, m, f_eff, Z₀ (§5) | graduation geometry only | **No** |
+| Depth per graduation, the depth map, its σ and mask (§7) | P and θ_ang only | **No** |
+| µm/frame and its 1.53× drift (§6) | depth scale and focus peaks | **No** |
+| p ∈ [1.31, 1.94] and the exclusion of p = 1 (§8.3) | m and M5's measured B | **No — it *measures* p** |
+| Airy, f_c, MTF at Nyquist (§8.4) | `N_eff = N·B` | **No — B is measured** |
+| Depth of field 18.7–23.8 µm (§8.6) | `N_eff = N·B` | **No — B is measured** |
+
+**No claim in this report assumes `p`, including the diffraction ones.** Everything that needs
+`N_eff` takes it from **M5's measured B**, and `B ≡ N_eff/N` is precisely the quantity M5
+measured from the cutoff frequency and the marked N, with no `p` and no `m` as input. The
+±38 % on `p` is therefore **not in my error budget at all** — and the direction of inference
+runs the other way: §8.3 *derives a bound on `p`* from my measured m and M5's measured B, and
+§8.4 shows that fact 1149's diffraction headline fails precisely **because** it assumed
+`p = 1` where a measured `N_eff` was available.
 
 ---
 
@@ -664,7 +696,8 @@ and it is why the two-view design in §5.1 is load-bearing.
 ## 11. Disclosed deviations from the pre-registration
 
 1. **§0a, the stem collision** — see §1 and SYNTHESIS fact 1146.
-2. **Hard 5σ rejection added.** §4.2 registered Huber IRLS with no hard rejection. One angled
+2. **Hard 5σ rejection added.** The **pre-registration's** §4.2 registered Huber IRLS with no
+   hard rejection. One angled
    detection (the 14th, at the far end) sits 22 robust σ off while the other thirteen lie
    within ±0.53 px. A 5σ hard rejection is applied and **both fits are reported** in
    `out/15-closure.json`.
@@ -706,6 +739,8 @@ I do not edit `SYNTHESIS.md`, `AGENTS.md` or `docs/captures-needed.md`. Proposed
 | **P13** | **Every registered bar passed while a coordinate-frame bug inflated the tilt by 3.12° and the depth scale by 1.06 %.** The 0.27 px residual was excellent *in the wrong frame*. Found only by a control that independently re-implemented the estimator. **Bars measure precision; only independent re-implementation measures correctness.** | MEASURED | M84b §9 |
 | **P14** | **Depth is not affine in image coordinates under perspective — inverse depth is.** `captures-needed.md` §8 and the M84/M84b briefs state the affine form. At this target's 4.5× foreshortening the graduation pitch runs 58.0 → 44.5 quad px across 13 mm, so the error is material. | DERIVED | M84b §5.1 |
 | **P15** | **The stack under-samples its own depth of field.** DoF = 18.7–23.8 µm at c = 1 sensor px using M5's measured B, against a 42.20 µm mean step — **1.8–2.3× under-sampled**. Marginal at c = 1 quad px. The conclusion is conventional in c and must be quoted with that dependence. | DERIVED | M84b §8.6 |
+| **P16** | **The 2.8× ceiling is sound but its corpus citation is not, and the correct citation has two legs**: the **VERIFIED** 1.4× native figure (`F-camera-lens-optics.md:13`) and an **EXIF-confirmed true 2× multiplier** (`LensSpec: FE 200mm F5.6 Macro OSS` = exactly 2× the native 100 mm f/2.8). It does **not** rest on the SEL20TC that `:66` names and the owner does not have. M84b's refutation of a 0.5 mm pitch rests on the two sound legs. | MEASURED | M84b §4.1 + SYNTHESIS fact 1147 |
+| **P17** | **No M84b claim assumes pupil magnification `p`, including the diffraction ones.** Everything needing `N_eff` takes it from **M5's measured B**, and `B ≡ N_eff/N` is what M5 measured from the cutoff and the marked N with no `p` and no `m` input. The advisor's ±38 % on `p` is absent from M84b's error budget, and the inference runs the other way — M84b *bounds* `p`. **Fact 1149's diffraction headline fails precisely because it assumed `p = 1` where a measured `N_eff` was available.** | DERIVED | M84b §4.2, §8.3–§8.4 |
 
 ---
 
