@@ -1,0 +1,64 @@
+# M111 arm E, the experimental regulariser-radius override. NOT SHIPPED.
+#
+# `sweep_radius.ps1` needs `REGULARISER_RADIUS` to take values the shipped
+# constant cannot, so it can ask whether the merge regulariser MAKES the waxy
+# plateaus or only sets their scale. The answer was that it only sets their
+# scale (plateau equivalent diameter 54.0 px at radius 0 against 60.3 px at the
+# shipped radius 8 and 86.7 px at radius 32), so the override earned its keep
+# and then had to stay out of the repository, for two reasons:
+#
+#   * it moves output bytes, and an ambient environment variable that moves
+#     output bytes is exactly the hazard `crates/strehl-cli/tests/byte-freezes.tsv`
+#     exists to prevent;
+#   * `FOCUS_NOISE_SD` is *defined* as the SD of the response under THIS
+#     regulariser (crates/strehl-core/src/merge.rs), so every radius other than
+#     8 runs a gate whose unit is wrong by construction. A sweep can hold that
+#     in its head. A shipped flag would hand it to a user who cannot.
+#
+# Apply with:  git apply experiments/M111-waxy-blobs/reg_radius.patch
+# and build into a scratch CARGO_TARGET_DIR, never over a shipping binary.
+
+diff --git a/crates/strehl-cli/src/merge_cmd.rs b/crates/strehl-cli/src/merge_cmd.rs
+index 1fb46de..5896c90 100644
+--- a/crates/strehl-cli/src/merge_cmd.rs
++++ b/crates/strehl-cli/src/merge_cmd.rs
+@@ -966,12 +966,32 @@ impl Ctx<'_> {
+                 &mut scratch.fine,
+             );
+         }
+-        regularise(
+-            scratch.field.values(),
+-            self.geom,
+-            &mut scratch.box_scratch,
+-            &mut scratch.reg,
+-        );
++        // M111 EXPERIMENTAL PATH -- NOT SHIPPED. `STREHL_M111_REG_RADIUS`
++        // replaces the merge regulariser's radius so that H1 (the regulariser
++        // manufactures the waxy plateaus) can be tested against radii the
++        // shipped constant cannot reach. It moves output bytes, which is why it
++        // lives in a patch beside the experiment and not in the repository:
++        // an ambient env var that moves bytes is a byte-freeze hazard, and
++        // `FOCUS_NOISE_SD` is calibrated at radius 8 so every other radius runs
++        // an uncalibrated gate by construction.
++        match std::env::var("STREHL_M111_REG_RADIUS")
++            .ok()
++            .map(|s| s.trim().parse::<usize>().expect("STREHL_M111_REG_RADIUS must be an integer"))
++        {
++            Some(r) => strehl_core::boxfilter::box_mean(
++                scratch.field.values(),
++                self.geom,
++                r,
++                &mut scratch.box_scratch,
++                &mut scratch.reg,
++            ),
++            None => regularise(
++                scratch.field.values(),
++                self.geom,
++                &mut scratch.box_scratch,
++                &mut scratch.reg,
++            ),
++        }
+         t.work += t0.elapsed().as_secs_f64();
+         Ok(frame)
+     }
+
