@@ -1,0 +1,191 @@
+M75 criteria.  11 ISO groups: [50, 100, 200, 250, 400, 500, 640, 800, 1000, 1600, 2000]
+T = 20 frames per group, 32 bands, primary arm k6
+estimators: E_alpha=fit_alpha_delta[alpha_high], E_rho=rho_from[sheppard], E_trend=OLS slope*32, E_defect=defect_flags
+
+==============================================================================
+K0  NOISE FLOOR  (N_grad, band-label shuffle, adversarial)
+==============================================================================
+BAND: a trend counts as real only if |trend| > 3 * N_grad sd.
+VOID CONDITION: alpha-arm N_grad sd > 0.0220 means the instrument
+cannot resolve M68's own -0.0659 effect.
+
+ statistic      trend        r   N_grad sd       3sd   real?
+      B/G2    -0.0663   -0.931     0.01281   0.03842     yes
+      B/G1    -0.0630   -0.954     0.01116   0.03349     yes
+      R/G1    -0.0716   -0.936     0.01382   0.04145     yes
+      R/G2    -0.0754   -0.986     0.01387   0.04162     yes
+     G2/G1    +0.0037   +0.134     0.00496   0.01489      NO
+       R/B    +0.0008   +0.025     0.00585   0.01755      NO
+
+K0 alpha arm: worst N_grad sd on the two signal ratios 0.01382 vs void threshold 0.022
+K0 VERDICT: MET -- gradient arm proceeds
+
+==============================================================================
+A1  ADVERSARIAL: does E_alpha manufacture a gradient from a pure scale?
+==============================================================================
+Motivation: G2/G1 flat is a CONFIRMING control comparing planes with
+EQUAL alpha; the signal ratios compare planes with alpha ratio 0.85.
+A bias that cancels at 1.00 but not 0.85 would make the control flat
+and the signal sloped with no physical gradient (discipline 496).
+BAND: |trend| < 0.022 on planted ratio 0.85, no gradient,
+      real per-band surviving pixel count n = 256235
+  planted mean 0.84984  trend +0.00018  r +0.043  spread 0.00556
+A1 VERDICT: MET -- estimator clean at the ratio that matters
+
+==============================================================================
+A2  ADVERSARIAL: does a row-dependent defect density manufacture both?
+==============================================================================
+Discipline 497: plant against the bias that FLATTERS. H1 is flattered
+by anything giving both statistics a common row profile.
+
+per-band surviving fraction under E_defect k=6, by plane:
+    R  frac 0.98564..0.99935  trend +0.00001  r +0.001
+   G1  frac 0.98561..0.99936  trend +0.00006  r +0.005
+   G2  frac 0.98519..0.99898  trend -0.00000  r -0.000
+    B  frac 0.98540..0.99915  trend +0.00004  r +0.004
+
+arm stability of the alpha-ratio trend (band: move < 0.0220):
+   none  B/G2 -0.0624  R/G1 -0.0638  G2/G1 +0.0038
+     k3  B/G2 -0.0738  R/G1 -0.0812  G2/G1 +0.0038
+     k6  B/G2 -0.0663  R/G1 -0.0716  G2/G1 +0.0037
+     k9  B/G2 -0.0638  R/G1 -0.0651  G2/G1 +0.0048
+  worst movement across arms: 0.01742
+
+arm stability of the rho band trend (band: move < 3 * N_grad sd):
+   none  R-G1 +0.00027  G2-B +0.00207  R-G2 +0.00060  G1-B +0.00150  G1-G2 +0.00044  R-B -0.00031
+     k3  R-G1 +0.00038  G2-B +0.00218  R-G2 +0.00058  G1-B +0.00195  G1-G2 +0.00026  R-B -0.00033
+     k6  R-G1 +0.00031  G2-B +0.00199  R-G2 +0.00062  G1-B +0.00164  G1-G2 +0.00033  R-B -0.00036
+     k9  R-G1 +0.00028  G2-B +0.00196  R-G2 +0.00060  G1-B +0.00153  G1-G2 +0.00033  R-B -0.00032
+  worst rho movement / its own 3-sigma floor: 0.25
+A2 VERDICT: MET -- arm-independent, shared-profile test interpretable
+
+==============================================================================
+K1  REPRODUCTION of M68 E1  (E_alpha, E_trend, 32 row bands, arm k6)
+==============================================================================
+BAND: R/G1 within +/-0.02 of -0.0659, B/G2 within +/-0.02 of -0.0625, both |r| > 0.70
+  R/G1  M68 -0.0659  M75 -0.0716  delta -0.0057  r -0.936
+  B/G2  M68 -0.0625  M75 -0.0663  delta -0.0038  r -0.931
+  G2/G1 M68 +0.0028  M75 +0.0037  (N_gain control)
+K1 VERDICT: MET -- M68 E1 independently reproduced
+
+==============================================================================
+K5  WHICH PLANES ACTUALLY MOVE  (O1: ABSOLUTE alpha per band)
+==============================================================================
+A ratio measures only a DIFFERENCE of slopes (pre-reg section 1.1).
+BAND: a plane moves if its normalised trend exceeds its 3-sigma floor.
+
+ plane  alpha_high  norm trend        r   3*N_grad   moves?
+     R     1.36610    -0.00543   -0.144    0.01946       no
+    G1     1.38220    +0.06777   +0.850    0.04214      YES
+    G2     1.38089    +0.07151   +0.862    0.04393      YES
+     B     1.18612    -0.00619   -0.124    0.02661       no
+
+same for alpha_low and for delta (supporting, not gated):
+   alpha_low  R -0.0396  G1 +0.0808  G2 +0.0824  B -0.0419
+       delta  R +0.0184  G1 -0.0301  G2 -0.0373  B +0.0144
+K5 VERDICT: H5 HOLDS -- the GREENS move, R and B do not. M68's description of its own finding is inverted.
+
+==============================================================================
+K2  GROUPING  (does each statistic select the same bipartition?)
+==============================================================================
+N.B. the greens are a GAIN null, NOT an independence null (SYNTHESIS fact 1034);
+N_gain is used in the alpha arm only and appears nowhere in the rho arm.
+
+alpha arm -- normalised absolute band trend per plane:
+    R -0.00543
+   G1 +0.06777
+   G2 +0.07151
+    B -0.00619
+
+rho arm -- pooled rho per pair (whole sensor, primary arm):
+    R-G1 (     row) rho -0.00067
+    G2-B (     row) rho +0.05277
+    R-G2 (  column) rho +0.01081
+    G1-B (  column) rho +0.05638
+   G1-G2 (diagonal) rho +0.04107
+     R-B (diagonal) rho +0.00433
+
+  alpha arm best bipartition: ('B', 'R') | ('G1', 'G2')  (separation +0.07171)
+  rho   arm best bipartition: ('G2', 'R') | ('B', 'G1')  (separation +0.00922)
+  R sits with B under alpha? yes
+  R sits with B under rho?   no
+K2 VERDICT: partitions DIFFER -- H1 loses its simplest form, K3 becomes decisive
+
+==============================================================================
+K3  DECISIVE: SHARED SPATIAL SIGNATURE
+==============================================================================
+BAND (a): rho(R-B) band trend must exceed 3 * its N_grad floor.
+BAND (b): |corr across 32 bands| > 0.7 between the
+          covariance profile of the implicated pair and the
+          alpha-ratio profile of the same planes.
+
+  pair   rho trend        r   3*N_grad   real?  perm trend
+  R-G1    +0.00031   +0.335    0.00051      NO    +0.00016
+  G2-B    +0.00199   +0.315    0.00336      NO    +0.00016
+  R-G2    +0.00062   +0.610    0.00057     yes    -0.00010
+  G1-B    +0.00164   +0.290    0.00314      NO    -0.00025
+ G1-G2    +0.00033   +0.235    0.00073      NO    -0.00000
+   R-B    -0.00036   -0.322    0.00065      NO    -0.00003
+
+  cross-statistic band correlation, rho(R-B) vs mean(R/G1, B/G2) alpha profile: +0.3039
+  full cross-statistic matrix (rho profile vs alpha-ratio profile):
+              B/G2     B/G1     R/G1     R/G2    G2/G1      R/B
+     R-G1   -0.358   -0.376   -0.324   -0.335   +0.028   +0.124
+     G2-B   -0.503   -0.483   -0.241   -0.300   +0.162   +0.635
+     R-G2   -0.593   -0.590   -0.597   -0.646   +0.132   -0.040
+     G1-B   -0.444   -0.462   -0.247   -0.264   +0.046   +0.565
+    G1-G2   -0.180   -0.232   -0.228   -0.191   -0.107   +0.003
+      R-B   +0.271   +0.323   +0.307   +0.276   +0.090   -0.031
+
+==============================================================================
+K4  POWER  (guard against concluding H2 from a weak test)
+==============================================================================
+BAND: N_grad sd of the K3(b) band correlation must be < 0.233
+      so that 0.70 is resolvable at 3 sigma.
+  N_grad sd of the band correlation: 0.1899  (3 sigma = 0.5698)
+K4 VERDICT: MET -- a null in K3 is interpretable as evidence for H2
+
+K3 VERDICT: NEITHER MET -- TWO PHENOMENA
+   (a) rho(R-B) trend real: False   (b) |corr| > 0.7: False
+
+==============================================================================
+O4  UPSTREAM / DOWNSTREAM location of any band-resolved covariance
+==============================================================================
+M72 P1/P2: |d|=1 pairs are upstream (scale with G^2), |d|>=sqrt(2)
+are downstream (flat in DN). The alpha gradient is upstream BY
+CONSTRUCTION, since alpha is the G^2 coefficient. Discipline 473:
+locate by where the noise is GENERATED, not where signal is scaled.
+
+  pair     class   cov@ISO50  cov@ISO2000     ratio  G^2 ratio  upstream f
+  R-G1       row    -0.00091      -0.0155    17.123    400.000      0.0404
+  G2-B       row     0.05054       1.3533    26.776    400.000      0.0646
+  R-G2    column     0.00897       0.3155    35.190    400.000      0.0857
+  G1-B    column     0.05446       1.4369    26.386    400.000      0.0636
+ G1-G2  diagonal     0.07584       0.8188    10.796    400.000      0.0246
+   R-B  diagonal     0.00814       0.0936    11.499    400.000      0.0263
+
+==============================================================================
+O5  COLUMN BANDS  (a row-only effect and a row+column effect differ)
+==============================================================================
+ statistic   row trend   col trend    col r
+      B/G2     -0.0663     -0.0169   -0.591
+      R/G1     -0.0716     -0.0242   -0.700
+     G2/G1     +0.0037     -0.0006   -0.022
+      R-G1    +0.00031    -0.00535   -0.968
+      G2-B    +0.00199    -0.00083   -0.461
+      R-G2    +0.00062    -0.00459   -0.969
+      G1-B    +0.00164    -0.00061   -0.408
+     G1-G2    +0.00033    +0.02240   +0.942
+       R-B    -0.00036    +0.00145   +0.772
+
+==============================================================================
+SUMMARY
+==============================================================================
+  K0: MET
+  A1: MET
+  A2: MET
+  K1: MET
+  K4: MET
+  K2: DIFFER
+  K3: NEITHER MET -- TWO PHENOMENA
+  K5: H5 HOLDS -- the GREENS move, R and B do not. M68's description of its own finding is inverted.

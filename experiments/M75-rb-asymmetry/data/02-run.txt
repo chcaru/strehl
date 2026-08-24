@@ -1,0 +1,13 @@
+11 groups under D:\macro-dark-frames
+  118MSDCF     ISO   100  decode   2.5s  analyse  16.4s  planes [2344, 3514]
+  119MSDCF     ISO   400  decode   3.3s  analyse  15.0s  planes [2344, 3514]
+  120MSDCF     ISO   800  decode   3.1s  analyse  17.8s  planes [2344, 3514]
+  121MSDCF     ISO  1600  decode   3.1s  analyse  15.8s  planes [2344, 3514]
+  122MSDCF     ISO    50  decode   3.2s  analyse  15.1s  planes [2344, 3514]
+  123MSDCF     ISO   200  decode   3.2s  analyse  15.1s  planes [2344, 3514]
+  124MSDCF     ISO   640  decode   3.1s  analyse  14.9s  planes [2344, 3514]
+  125MSDCF     ISO   500  decode   3.1s  analyse  16.1s  planes [2344, 3514]
+  126MSDCF     ISO   250  decode   4.5s  analyse  32.0s  planes [2344, 3514]
+  127MSDCF     ISO  1000  decode   5.5s  analyse  21.5s  planes [2344, 3514]
+  128MSDCF     ISO  2000  decode   3.2s  analyse  18.0s  planes [2344, 3514]
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M75-rb-asymmetry\data\02-band-sweep.json with 11 groups

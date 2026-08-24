@@ -1,0 +1,26 @@
+M75 pre-registration self-test -- planted data only, no dark frames.
+numpy 2.4.4
+
+=== derivation check: a ratio measures a DIFFERENCE of slopes ===
+  (i)  m_B<0, m_G=0  ratio trend -0.0640  absolute plane trends B -0.0640 G +0.0000
+  (ii) m_B=0, m_G>0  ratio trend -0.0602  absolute plane trends B +0.0000 G +0.0640
+  (iii) both<0       ratio trend -0.0682  absolute plane trends B -0.1280 G -0.0640
+  (iv) both>0        ratio trend -0.0569  absolute plane trends B +0.0640 G +0.1280
+  All four give the SAME ratio trend from DIFFERENT physics. O1 is
+  the observable that separates them; M68 did not have it.
+
+=== N_grad estimator sanity: trend of pure noise, 32 bands ===
+  sd=0.001: one draw trend +0.00086, N_grad floor 0.00058
+  sd=0.01: one draw trend +0.00672, N_grad floor 0.00621
+  N_grad floor scales with the per-band scatter, as it must.
+
+=== A1 rehearsal: planted alpha ratio 0.85, NO gradient ===
+  Band: |trend| < 0.0220 (one third of M68's -0.0659).
+  npix/band=  2000  mean 0.85018  trend -0.00546  r -0.229  spread 0.03481  [PASS]
+  npix/band= 20000  mean 0.84994  trend +0.00077  r +0.091  spread 0.01194  [PASS]
+  A negative control on the control: plant a REAL gradient and check
+  the same estimator recovers it, so that A1 passing is not merely
+  the estimator being insensitive.
+  planted gradient -0.0650: recovered -0.06657, r -0.993  [PASS]
+
+Pre-registration self-test complete.  No dark frame was read.
