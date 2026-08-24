@@ -898,6 +898,37 @@ fn workers_line(log: &str) -> String {
         .unwrap_or_else(|| "unknown".to_string())
 }
 
+/// The `N placed / M refused` counts on the `alignment` line.
+///
+/// **Derived, never recorded.** `placed` must equal `--limit` and `refused`
+/// must be zero, and both of those come from the row's own `limit` rather than
+/// from a column somebody could re-baseline. A recorded count can be edited by
+/// the same hand that edits a hash; a derived one cannot.
+///
+/// This is the check that catches a sidecar solved over a *different subset* of
+/// the bracket. `load_or_solve` compares `map.len() == paths.len()` and
+/// re-solves on a mismatch, so an 8-frame sidecar under a `--limit 20` run is
+/// caught -- but `StackIdentity::from_paths` digests only filename and file
+/// length (`warpmap.rs:238`), never content, so an 8-frame sidecar under a
+/// `--limit 8` run is accepted **silently** even though it may have come from a
+/// different reference frame, a different subset or a different resampler. The
+/// count is the only thing on the tool's own output that can see that.
+fn placement(log: &str) -> Option<(usize, usize)> {
+    let line = log.lines().rev().find(|l| {
+        l.split_once(':')
+            .is_some_and(|(k, _)| k.trim_start().starts_with("alignment"))
+            && l.contains("placed")
+    })?;
+    let toks: Vec<&str> = line.split_whitespace().collect();
+    let grab = |word: &str| -> Option<usize> {
+        toks.iter()
+            .position(|t| *t == word)
+            .and_then(|i| i.checked_sub(1))
+            .and_then(|i| toks[i].parse().ok())
+    };
+    Some((grab("placed")?, grab("refused")?))
+}
+
 fn hash_file(p: &Path) -> (String, u64) {
     use std::io::Read;
     let mut f = std::fs::File::open(p)
@@ -929,6 +960,268 @@ fn entry_names(dir: &Path) -> BTreeSet<String> {
         .unwrap_or_default()
 }
 
+/// One render, with everything the checks downstream need to read.
+struct Rendered {
+    pass: u32,
+    hash: String,
+    bytes: u64,
+    mode: String,
+    workers: String,
+    placement: Option<(usize, usize)>,
+    scratch: PathBuf,
+    out: PathBuf,
+}
+
+/// A canary on the shared resource, deliberately **not** an assertion.
+///
+/// The capture library is read-only and several agents share this machine. A
+/// stray sidecar there is a real problem, but it is not necessarily *this*
+/// runner's problem, and turning someone else's mistake into your red teaches
+/// you to ignore reds. So this prints and names names. What IS asserted is that
+/// this test's own renders add nothing -- see the hermeticity check in `render`.
+fn report_strays(lib: &Path) {
+    let mut strays = Vec::new();
+    if let Ok(top) = std::fs::read_dir(lib) {
+        for stack in top.filter_map(|e| e.ok()) {
+            let dir = stack.path();
+            if !dir.is_dir() {
+                continue;
+            }
+            if let Ok(inner) = std::fs::read_dir(&dir) {
+                for f in inner.filter_map(|e| e.ok()) {
+                    let name = f.file_name().to_string_lossy().into_owned();
+                    if name.contains("warpmap") {
+                        strays.push(f.path().display().to_string());
+                    }
+                }
+            }
+        }
+    }
+    if strays.is_empty() {
+        return;
+    }
+    println!(
+        "\n\
+         ------------------------------------------------------------------------------\n\
+         WARNING: the read-only capture library contains {} stray sidecar file(s):\n\
+         {}\n\n\
+         Nothing in this test wrote them -- every row here runs with STREHL_ALIGN=0 or\n\
+         STREHL_WARPMAP, neither of which writes anywhere. Some other process did, and\n\
+         AGENTS.md rule 45 says nothing may. They should be quarantined out, not left.\n\n\
+         This is a WARNING and not a failure because another agent's write is not\n\
+         evidence about this test. It is printed because eleven of these accumulated in\n\
+         one night before anybody looked.\n\
+         ------------------------------------------------------------------------------\n",
+        strays.len(),
+        strays
+            .iter()
+            .map(|s| format!("  {s}"))
+            .collect::<Vec<_>>()
+            .join("\n")
+    );
+}
+
+/// Run the row's own command once, in its own process, and read back everything
+/// the gates need.
+fn render(r: &Freeze, stack_dir: &Path, pass: u32) -> Rendered {
+    let scratch = std::env::temp_dir().join(format!(
+        "strehl-freeze-{}-{}-p{pass}",
+        std::process::id(),
+        r.id
+    ));
+    let _ = std::fs::remove_dir_all(&scratch);
+    std::fs::create_dir_all(&scratch).expect("creating the scratch directory");
+    let out = scratch.join("render.tif");
+
+    let before = entry_names(stack_dir);
+
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_strehl"));
+    cmd.args(r.argv(stack_dir, &out));
+    for name in RENDER_ENV {
+        cmd.env_remove(name);
+    }
+    // Nothing this test runs may cache into the capture library, and the shared
+    // user cache is another agent's mutable state. Both are pointed at scratch
+    // as a belt-and-braces second line behind the row's own mode.
+    cmd.env("STREHL_CACHE_DIR", scratch.join("cache"));
+    for (k, v) in r.env() {
+        cmd.env(k, v);
+    }
+    let output = cmd
+        .output()
+        .unwrap_or_else(|e| panic!("running `{}`: {e}", env!("CARGO_BIN_EXE_strehl")));
+    let log = String::from_utf8_lossy(&output.stderr).into_owned();
+
+    let after = entry_names(stack_dir);
+    assert_eq!(
+        before,
+        after,
+        "\n\nHERMETICITY FAILURE for `{}` (pass {pass}).\n\
+         The capture directory `{}` gained or lost an entry while this render ran.\n\
+         Added: {:?}\n\
+         That library is the owner's irreplaceable data and is strictly read-only\n\
+         (AGENTS.md rule 45). Nothing here may write to it. If a sidecar appeared,\n\
+         the alignment mode of this row is no longer hermetic and the row must be\n\
+         changed, not the assertion.\n\
+         (Several agents share this machine; if another process created the file,\n\
+         this still needs a human, because the library is supposed to be clean.)\n",
+        r.id,
+        stack_dir.display(),
+        after.difference(&before).collect::<Vec<_>>()
+    );
+
+    assert!(
+        output.status.success(),
+        "\n\nThe frozen render for `{}` FAILED TO RUN (exit {:?}, pass {pass}).\n\
+         This is not a moved hash -- the command did not complete.\n\n\
+         What the tool reported about registration before it stopped:\n\
+         \x20 alignment : {mode}\n\
+         \x20 placement : {place}\n\
+         If the placement count is short of `--limit {limit}`, that IS the diagnosis:\n\
+         the warp map and the bracket disagree, and `merge_cmd.rs:932` refuses to\n\
+         merge a frame the solve refused rather than quietly giving it identity.\n\n\
+         Command:\n{}\n\nLog:\n{log}\n",
+        r.id,
+        output.status.code(),
+        r.command(stack_dir, &out),
+        mode = alignment_mode(&log),
+        place = match placement(&log) {
+            Some((p, f)) => format!("{p} placed / {f} refused"),
+            None => "not reported".to_string(),
+        },
+        limit = r.limit
+    );
+
+    let (hash, bytes) = hash_file(&out);
+    Rendered {
+        pass,
+        hash,
+        bytes,
+        mode: alignment_mode(&log),
+        workers: workers_line(&log),
+        placement: placement(&log),
+        scratch,
+        out,
+    }
+}
+
+/// The two gates that must pass **before** any hash is compared.
+///
+/// A hash is only evidence about the pipeline the row describes. If the tool
+/// did not actually run that pipeline, comparing hashes is not a weak check --
+/// it is a check of something else entirely, and it will be green or red for
+/// reasons that have nothing to do with the freeze.
+///
+/// **On the placement gate, honestly.** As the code stands, `placed == limit &&
+/// refused == 0` is *implied by the run succeeding*: `load_or_solve` requires
+/// `map.len() == paths.len()`, every entry is either placed or refused, and
+/// `merge_cmd.rs:932` bails on a refused frame rather than giving it identity.
+/// I planted a refused frame in a copy of the fixture and measured exactly that
+/// -- `19 placed / 1 refused`, then exit 1. So today this assertion cannot fail
+/// where the exit-code check would not have failed first, and pretending
+/// otherwise would be the same overclaim this milestone exists to stop.
+///
+/// It is kept because it is a **tripwire on that guarantee**, not a duplicate of
+/// it. "Warn and skip the bad frame instead of failing the whole render" is an
+/// obvious, well-meant change for somebody to make; the moment it lands, the
+/// exit code stops carrying this information and a short placement becomes
+/// silent. This assertion is what would notice, and it costs one line.
+fn check_pipeline(r: &Freeze, g: &Rendered, stack_dir: &Path, out: &Path) {
+    let bar = "=".repeat(78);
+
+    assert!(
+        g.mode == r.alignment_mode,
+        "\n\n{bar}\n\
+         ENVIRONMENT NOT ISOLATED: `{id}` (pass {pass})\n\
+         {bar}\n\n\
+         This row freezes a specific pipeline, and `strehl stack` reported a\n\
+         different one on its own output. NO HASH WAS COMPARED, because a hash from\n\
+         the wrong pipeline is not weak evidence -- it is evidence about something\n\
+         else.\n\n\
+         \x20 registry says the tool must report : {want}\n\
+         \x20 the tool actually reported         : {got}\n\n\
+         The `alignment` line is the tool's own statement about which pipeline it\n\
+         ran. `MISSING` means no such line was found at all, which means either the\n\
+         binary is older than the alignment wiring or the line has been reworded --\n\
+         and in the second case this check has gone blind and must be repaired, not\n\
+         removed.\n\n\
+         WHAT USUALLY CAUSES THIS\n\
+         \x20 * An ambient STREHL_ALIGN / STREHL_WARPMAP in the shell. This test\n\
+         \x20   removes all of {n} render variables before applying the row's own,\n\
+         \x20   so if that is the cause, the removal list is now incomplete.\n\
+         \x20 * A sidecar the tool discovered by itself. The capture library is\n\
+         \x20   read-only and must contain none; the warning printed at the top of\n\
+         \x20   this test lists any it found.\n\
+         \x20 * The row is simply wrong about the mode. Fix the row.\n\n\
+         Command that was run:\n{cmd}\n",
+        id = r.id,
+        pass = g.pass,
+        want = r.alignment_mode,
+        got = g.mode,
+        n = RENDER_ENV.len(),
+        cmd = r.command(stack_dir, out)
+    );
+
+    // `align = off` places nothing, so there is no count to check; the mode
+    // assertion above is the whole of the isolation check for those rows.
+    if r.align == Align::Off {
+        return;
+    }
+
+    let limit: usize = r.limit.parse().expect("limit was validated at parse time");
+    let Some((placed, refused)) = g.placement else {
+        panic!(
+            "\n\n{bar}\n\
+             PLACEMENT COUNT UNREADABLE: `{id}` (pass {pass})\n\
+             {bar}\n\n\
+             This row aligns from a sidecar, so `strehl stack` should have reported\n\
+             `N placed / M refused` on its `alignment` line and did not. That count is\n\
+             the only signal on the tool's output that the warp map covers the frames\n\
+             actually being merged.\n\n\
+             It matters because `StackIdentity::from_paths` digests filename and file\n\
+             LENGTH only (`warpmap.rs:238`), never content: a sidecar solved from a\n\
+             different reference frame, a different subset or a different resampler is\n\
+             accepted silently as long as the frame COUNT matches. Without this line\n\
+             that acceptance is invisible.\n\n\
+             Repair this parser -- do not delete the check.\n\n\
+             Command that was run:\n{cmd}\n",
+            id = r.id,
+            pass = g.pass,
+            cmd = r.command(stack_dir, out)
+        )
+    };
+
+    assert!(
+        placed == limit && refused == 0,
+        "\n\n{bar}\n\
+         PLACEMENT DOES NOT MATCH THE BRACKET: `{id}` (pass {pass})\n\
+         {bar}\n\n\
+         \x20 --limit says frames to merge : {limit}\n\
+         \x20 the tool placed              : {placed}\n\
+         \x20 the tool refused             : {refused}\n\n\
+         Both numbers are DERIVED from the row, not recorded in it, precisely so\n\
+         that they cannot be re-baselined into agreement with a bad sidecar.\n\n\
+         Every frame in the bracket must be placed and none refused, or the render\n\
+         is not the render this row froze. A partial placement means the warp map\n\
+         and the bracket disagree -- and that disagreement is exactly the failure\n\
+         `StackIdentity` cannot see, because it digests filename and file length\n\
+         only (`warpmap.rs:238`) and never content. A 40-frame solve was found\n\
+         sitting under a 299-frame bracket on the flagship stack.\n\n\
+         IF YOU ARE READING THIS, SOMETHING CHANGED IN THE TOOL. On the code as\n\
+         measured, a refused frame makes `merge_cmd.rs:932` bail and the run exits\n\
+         non-zero, so this assertion should be unreachable -- see its doc comment.\n\
+         Reaching it means the refusal is no longer fatal, which means the exit\n\
+         code no longer carries this information and this check is now the only\n\
+         thing that sees it. Do not relax it.\n\n\
+         Check the fixture `tests/data/` this row names, and check that nothing\n\
+         wrote a sidecar into the capture directory underneath the run.\n\n\
+         Command that was run:\n{cmd}\n",
+        id = r.id,
+        pass = g.pass,
+        cmd = r.command(stack_dir, out)
+    );
+}
+
 #[test]
 fn the_frozen_renders_still_produce_their_recorded_bytes() {
     let rows = parse_registry();
@@ -939,6 +1232,8 @@ fn the_frozen_renders_still_produce_their_recorded_bytes() {
             return;
         }
     };
+
+    report_strays(&lib);
 
     for r in &rows {
         let stack_dir = lib.join(&r.stack);
@@ -952,86 +1247,111 @@ fn the_frozen_renders_still_produce_their_recorded_bytes() {
             r.stack
         );
 
-        let scratch =
-            std::env::temp_dir().join(format!("strehl-freeze-{}-{}", std::process::id(), r.id));
-        let _ = std::fs::remove_dir_all(&scratch);
-        std::fs::create_dir_all(&scratch).expect("creating the scratch directory");
-        let out = scratch.join("render.tif");
-
-        let before = entry_names(&stack_dir);
-
-        let mut cmd = Command::new(env!("CARGO_BIN_EXE_strehl"));
-        cmd.args(r.argv(&stack_dir, &out));
-        for name in RENDER_ENV {
-            cmd.env_remove(name);
-        }
-        // Nothing this test runs may cache into the capture library, and the
-        // shared user cache is another agent's mutable state. Both are pointed
-        // at scratch as a belt-and-braces second line behind the row's own mode.
-        cmd.env("STREHL_CACHE_DIR", scratch.join("cache"));
-        for (k, v) in r.env() {
-            cmd.env(k, v);
-        }
-        let output = cmd
-            .output()
-            .unwrap_or_else(|e| panic!("running `{}`: {e}", env!("CARGO_BIN_EXE_strehl")));
-        let log = String::from_utf8_lossy(&output.stderr).into_owned();
-
-        let after = entry_names(&stack_dir);
-        assert_eq!(
-            before,
-            after,
-            "\n\nHERMETICITY FAILURE for `{}`.\n\
-             The capture directory `{}` gained or lost an entry while this render ran.\n\
-             Added: {:?}\n\
-             That library is the owner's irreplaceable data and is strictly read-only\n\
-             (AGENTS.md rule 45). Nothing here may write to it. If a sidecar appeared,\n\
-             the alignment mode of this row is no longer hermetic and the row must be\n\
-             changed, not the assertion.\n\
-             (Several agents share this machine; if another process created the file,\n\
-             this still needs a human, because the library is supposed to be clean.)\n",
-            r.id,
-            stack_dir.display(),
-            after.difference(&before).collect::<Vec<_>>()
-        );
+        // TWO passes, in two SEPARATE PROCESSES, before either hash is trusted.
+        //
+        // This separates two failures that a single render conflates. If the two
+        // passes disagree with each other, the pipeline is not deterministic
+        // under the conditions being frozen, and no hash here means anything --
+        // that is a more serious finding than a moved freeze and it gets its own
+        // message. If they agree with each other but not with the registry, the
+        // pipeline is deterministic and something moved, which is the ordinary
+        // case this test exists for.
+        let a = render(r, &stack_dir, 1);
+        check_pipeline(r, &a, &stack_dir, &a.out);
+        let b = render(r, &stack_dir, 2);
+        check_pipeline(r, &b, &stack_dir, &b.out);
 
         assert!(
-            output.status.success(),
-            "\n\nThe frozen render for `{}` FAILED TO RUN (exit {:?}).\n\
-             This is not a moved hash -- the command did not complete.\n\n\
-             Command:\n{}\n\nLog:\n{log}\n",
-            r.id,
-            output.status.code(),
-            r.command(&stack_dir, &out)
+            a.hash == b.hash && a.bytes == b.bytes,
+            "{}",
+            nondeterminism_report(r, &stack_dir, &a, &b)
         );
 
-        let (got_hash, got_bytes) = hash_file(&out);
-        let got_mode = alignment_mode(&log);
-        let got_workers = workers_line(&log);
-
-        if got_hash == r.sha256 && got_bytes == r.bytes && got_mode == r.alignment_mode {
+        if a.hash == r.sha256 && a.bytes == r.bytes {
             println!(
-                "freeze `{}` HOLDS: {} ({} bytes, alignment {}, {})",
-                r.id, r.sha256, r.bytes, got_mode, got_workers
+                "freeze `{}` HOLDS: {} ({} bytes, alignment {}, {}{}) -- reproduced twice",
+                r.id,
+                r.sha256,
+                r.bytes,
+                a.mode,
+                a.workers,
+                match a.placement {
+                    Some((p, f)) => format!(", {p} placed / {f} refused"),
+                    None => String::new(),
+                }
             );
-            let _ = std::fs::remove_dir_all(&scratch);
+            let _ = std::fs::remove_dir_all(&a.scratch);
+            let _ = std::fs::remove_dir_all(&b.scratch);
             continue;
         }
 
-        // Keep the artifact: the first thing anyone will want is to diff it.
+        // Keep pass 1's artifact: the first thing anyone will want is to diff it.
+        let _ = std::fs::remove_dir_all(&b.scratch);
         panic!(
             "{}",
-            moved_report(
-                r,
-                &stack_dir,
-                &out,
-                &got_hash,
-                got_bytes,
-                &got_mode,
-                &got_workers
-            )
+            moved_report(r, &stack_dir, &a.out, &a.hash, a.bytes, &a.mode, &a.workers)
         );
     }
+}
+
+/// The two passes disagreed with each other. This is not a moved freeze.
+fn nondeterminism_report(r: &Freeze, stack_dir: &Path, a: &Rendered, b: &Rendered) -> String {
+    let bar = "=".repeat(78);
+    format!(
+        "\n\n{bar}\n\
+         NOT DETERMINISTIC: `{id}` rendered twice and produced two different files\n\
+         {bar}\n\n\
+         \x20 pass 1 sha256 : {ah}  ({ab} bytes)\n\
+         \x20 pass 2 sha256 : {bh}  ({bb} bytes)\n\
+         \x20 registry says : {rh}  ({rb} bytes)\n\n\
+         Two runs of the SAME command, in two separate processes, on the same\n\
+         inputs, disagreed. **Do not re-baseline anything.** A freeze on a\n\
+         non-deterministic pipeline is not a weak freeze; it is a coin toss that\n\
+         will be red for one person in two and get deleted by the third.\n\n\
+         This is a more important finding than a moved hash and it should be\n\
+         reported as one. Likely causes, roughly in order:\n\n\
+         \x20 * A reduction whose order depends on thread scheduling. The merge\n\
+         \x20   reduces in a chunk tree and f32 addition is not associative, so an\n\
+         \x20   order that varies run to run varies the low bits. Try pinning\n\
+         \x20   RAYON_NUM_THREADS and see whether the disagreement disappears --\n\
+         \x20   if it does, that is the answer.\n\
+         \x20 * Something in the render reading wall-clock time, a process id, a\n\
+         \x20   hash-map iteration order, or an uninitialised buffer.\n\
+         \x20 * Something MUTATING UNDERNEATH THE RUN. The capture library is\n\
+         \x20   read-only and shared; if another process wrote a sidecar or touched\n\
+         \x20   a frame between the two passes, the two passes did not have the\n\
+         \x20   same inputs. The hermeticity check in this test compares entry\n\
+         \x20   NAMES, so a rewritten file with an unchanged name passes it.\n\
+         \x20   Check that first if the library is not quiet.\n\n\
+         \x20 pass 1 alignment : {am} ({aw}){ap}\n\
+         \x20 pass 2 alignment : {bm} ({bw}){bp}\n\n\
+         Both renders were kept:\n\
+         \x20 {ao}\n\
+         \x20 {bo}\n\n\
+         Command (identical for both passes, generated from the registry row):\n{cmd}\n",
+        id = r.id,
+        ah = a.hash,
+        ab = a.bytes,
+        bh = b.hash,
+        bb = b.bytes,
+        rh = r.sha256,
+        rb = r.bytes,
+        am = a.mode,
+        aw = a.workers,
+        bm = b.mode,
+        bw = b.workers,
+        ap = match a.placement {
+            Some((p, f)) => format!(", {p} placed / {f} refused"),
+            None => String::new(),
+        },
+        bp = match b.placement {
+            Some((p, f)) => format!(", {p} placed / {f} refused"),
+            None => String::new(),
+        },
+        ao = a.out.display(),
+        bo = b.out.display(),
+        cmd = r.command(stack_dir, &a.out)
+    )
 }
 
 /// The message a stranger hits in CI. It has to answer "what moved", "was it

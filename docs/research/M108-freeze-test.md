@@ -13,11 +13,16 @@ milestone:
 | file | size | what it is |
 |---|---|---|
 | `byte-freezes.tsv` | 4 742 B, 50 lines | the registry. Data, not prose. 13 columns, 2 rows. |
-| `byte-freeze.rs` | 45 564 B, 1 133 lines | four tests that read the registry and check it. |
+| `byte-freeze.rs` | 60 723 B, 1 453 lines | four tests that read the registry and check it. |
 | `data/coffee-bean-20.warpmap.txt` | 3 171 B | committed warp fixture, sha `EF745413…93B3`. |
 
-`cargo test -p strehl-cli --test byte-freeze` — 4 tests, **8.5 s** in release
-on the reference rig, both freezes holding.
+`cargo test -p strehl-cli --test byte-freeze` — 4 tests, **17.0 s** in release
+on the reference rig, both freezes holding, each reproduced twice in separate
+processes.
+
+Three gates run before any hash is compared — isolation, placement and
+determinism (§1.3) — because a hash from the wrong pipeline is not weak
+evidence, it is evidence about something else.
 
 ---
 
@@ -79,13 +84,15 @@ alignment wiring that broke M85's freeze — and a single row cannot express it.
 Deliberately asymmetric, because a freeze that fires on noise gets deleted:
 
 * **Asserted:** sha256; byte count; the coarse alignment mode token
-  (`off` / `on-solved` / `on-sidecar-override`) parsed from stderr; the stack
-  directory's entry-*name* set before and after the render.
+  (`off` / `on-solved` / `on-sidecar-override`) parsed from stderr; the placed
+  and refused counts for aligned rows; agreement between two independent
+  renders; the stack directory's entry-*name* set before and after each render.
 * **Reported only:** the `workers … : N chunks of <= M frames` fingerprint.
   That is a property of the measuring host (RAM and core count), the merge
   reduces in a chunk tree, and f32 addition is not associative — so on a
   different machine it is the **first suspect** when a hash moves, but it is
-  not itself a defect.
+  not itself a defect. Also reported, never asserted: any stray sidecar found
+    in the capture library (§1.7).
 
 The alignment mode is asserted at a coarse token, not the full log line,
 because the full line carries prose that later milestones will reword. A freeze
@@ -93,9 +100,75 @@ that fires on a reworded sentence teaches its readers to ignore it.
 
 Entry *names* are compared, not mtimes: several agents share this machine, and
 another process rewriting a file it owns is not evidence about this test —
-whereas a **new file appearing** is (see §4.3).
+whereas a **new file appearing** is (see §3.3).
 
-### 1.3 Hermeticity — the crux
+### 1.3 Three gates run *before* any hash is compared
+
+A hash is only evidence about the pipeline the row describes. If the tool did
+not run that pipeline, comparing hashes is not a weak check — it is a check of
+something else, and it will be green or red for reasons unrelated to the
+freeze. So the hash comparison is the *last* thing that happens.
+
+**Gate 1 — isolation, read from the tool's own output.** `strehl stack` prints
+an `alignment :` line stating which pipeline it ran. The row records what that
+line must say, and a mismatch fails with `ENVIRONMENT NOT ISOLATED` and
+**no hash comparison at all**. `MISSING` — no such line found — is also a
+failure, with a message saying the check has gone blind and must be repaired
+rather than removed.
+
+This gate is not hypothetical. Under the previous single-gate design, a run
+that lost its `STREHL_WARPMAP` would have rendered `D99F5D82…` — a hash that
+*is* in the registry, for the other row — and been reported as a moved freeze.
+Verified as Check D (§2.4).
+
+**Gate 2 — placement.** The same line carries `N placed / M refused`. For
+aligned rows the test requires `placed == --limit` and `refused == 0`, both
+**derived from the row rather than recorded in it**, so they cannot be
+re-baselined into agreement with a bad sidecar by the same hand that edits a
+hash.
+
+This matters because `StackIdentity::from_paths` digests filename and file
+**length** only (`warpmap.rs:238`), never content. `load_or_solve` does compare
+`map.len() == paths.len()`, so an 8-frame sidecar under a `--limit 20` run is
+caught — but an 8-frame sidecar under a `--limit 8` run is accepted **silently**
+even if it came from a different reference frame, a different subset or a
+different resampler.
+
+**I must be precise about what this gate currently buys, because overclaiming
+is the failure this milestone exists to stop.** I planted a refused frame in a
+copy of the fixture and measured what actually happens: the tool reports
+`19 placed / 1 refused` and then **exits 1**, because `merge_cmd.rs:932` bails
+on a refused frame rather than giving it identity. So on today's code
+`placed == limit && refused == 0` is *implied by the run succeeding* and cannot
+fail where the exit-code check would not have failed first.
+
+It is kept anyway, as a **tripwire on that guarantee**. "Warn and skip the bad
+frame instead of failing the whole render" is an obvious, well-meant change for
+somebody to make; the moment it lands, the exit code stops carrying this
+information and a short placement goes silent. This assertion is what would
+notice, it costs one line, and both the code comment and the failure message
+say so explicitly rather than implying a strength the check does not yet have.
+The run-failure message was also changed to print the placement line, because
+in the planted case that line *is* the diagnosis (Check E, §2.5).
+
+**Gate 3 — determinism.** Every row is rendered **twice, in two separate
+processes**, and the two must agree with each other before either is compared
+to the registry. This splits two failures a single render conflates:
+
+* the two passes disagree → `NOT DETERMINISTIC`, a distinct and louder message
+  that says *do not re-baseline anything*, because a freeze on a
+  non-deterministic pipeline is a coin toss that will be red for one person in
+  two and deleted by the third;
+* the two passes agree but differ from the registry → the ordinary
+  `BYTE-FREEZE MOVED`, which is what the test is for.
+
+**Measured result: both rows reproduce byte-identically across two separate
+processes.** Suite time roughly doubles, 8.5 s → 17.0 s, which is the whole
+cost. Verified in the planted case too: the byte-moving change produced two
+*mutually agreeing* wrong hashes and was correctly reported as moved rather
+than as nondeterminism (§2.2).
+
+### 1.4 Hermeticity — the crux
 
 The capture library is read-only and irreplaceable. Every row runs in one of
 exactly two modes, both of which write nothing near the captures:
@@ -125,7 +198,7 @@ change output (`STREHL_ALIGN`, `STREHL_WARPMAP`, `STREHL_CACHE_DIR`,
 `STREHL_FIX_HALO`, `STREHL_FIX_HALO_DELTA`) and then applies only the row's own
 settings, so an inherited shell variable cannot silently rebase a hash.
 
-### 1.4 Skip, and the CI switch
+### 1.5 Skip, and the CI switch
 
 The render arm needs `D:\personal\macro`, which is one machine's local data.
 Without it the test **skips loudly and exits 0** — a test that fails on a fresh
@@ -135,7 +208,7 @@ should set. The other three tests need no capture library, no binary and no RAW
 decode, so a fresh clone still checks that every row records a complete,
 unambiguous, non-defaulted invocation.
 
-### 1.5 No new dependency
+### 1.6 No new dependency
 
 SHA-256 is implemented inline (FIPS 180-4, ~120 lines) rather than adding a
 crate to the workspace for a test. `the_hasher_reproduces_the_published_test_vectors`
@@ -145,12 +218,27 @@ which made `finish`'s padding loop oscillate 0,1,0,1 forever. The symptom was a
 test harness burning ~553 s of CPU with no output. The NIST vectors caught it;
 the reason is now written into the code at the fix site.
 
+### 1.7 A canary on the shared library, deliberately not an assertion
+
+Before any render, the test scans the capture library for files whose name
+contains `warpmap` and **prints** any it finds, with full paths. It does not
+fail. A stray sidecar there is a real problem, but it is usually *another
+agent's* write, and turning someone else's mistake into your red is how you
+teach people to ignore reds. What *is* asserted is that this test's own renders
+add nothing — the entry-name comparison in `render`.
+
+Eleven of these accumulated in one night before anybody looked. A line of
+output at the top of a test that already runs is close to free, and it is the
+difference between finding out in seconds and finding out by eye.
+
 ---
 
-## 2. The three verification checks
+## 2. Verification
 
-Run in a clean `git archive HEAD` scratch tree at `fea1a72`
-(`C:\dev\strehl-out\M108\head-clean`), which is rule 31 discharged as well.
+Six named checks. A–C were run in a clean `git archive` scratch tree at
+`fea1a72` (`C:\dev\strehl-out\M108\head-clean`), which discharges rule 31 as
+well; D and E are registry/fixture plants run in the working tree and reverted.
+A and B were re-run against the final two-pass test, not only the first draft.
 
 ### Check A0 — green before planting
 
@@ -168,6 +256,11 @@ test result: ok. 4 passed; 0 failed
 Planted in the **scratch copy only**, never in the shared tree:
 `crates/strehl-core/src/merge.rs:185`, `FOCUS_NOISE_SD: f32` `0.015_214` →
 `0.016_214`. Original sha `66F6E4C6…5582`, planted sha `19FD4257…A1A0`.
+
+Note what the two-pass gate does here: both passes produced
+`810A41A0…438D`, **agreed with each other**, and were therefore reported as a
+*moved* freeze rather than as nondeterminism. That discrimination is the point
+of gate 3, and this is it working.
 
 ```
    Compiling strehl-core v0.0.0 (...)
@@ -249,18 +342,18 @@ Then, with a `Compiling` line confirming the rebuild actually happened:
 
 ```
    Compiling strehl-core v0.0.0 (...)
-    Finished `release` profile [optimized] target(s) in 34.47s
+    Finished `release` profile [optimized] target(s) in 36.09s
 
 running 4 tests
 test every_registry_row_records_a_complete_invocation ... ok
 test no_two_rows_freeze_the_same_invocation ... ok
 test the_frozen_renders_still_produce_their_recorded_bytes ...
-freeze `coffee-bean-20-gate2-unaligned` HOLDS: D99F5D82…76CA (49449626 bytes, alignment off, 10 chunks of <= 2 frames)
-freeze `coffee-bean-20-gate2-sidecar` HOLDS: 119936E6…D709 (49449626 bytes, alignment on-sidecar-override, 10 chunks of <= 2 frames)
+freeze `coffee-bean-20-gate2-unaligned` HOLDS: D99F5D82…76CA (49449626 bytes, alignment off, 10 chunks of <= 2 frames) -- reproduced twice
+freeze `coffee-bean-20-gate2-sidecar` HOLDS: 119936E6…D709 (49449626 bytes, alignment on-sidecar-override, 10 chunks of <= 2 frames, 20 placed / 0 refused) -- reproduced twice
 ok
 test the_hasher_reproduces_the_published_test_vectors ... ok
 
-test result: ok. 4 passed; 0 failed; finished in 8.22s
+test result: ok. 4 passed; 0 failed; finished in 17.32s
 EXIT=0
 ```
 
@@ -304,17 +397,108 @@ EXIT=101
 Exit codes were read with `$out = & $exe …; $code = $LASTEXITCODE` before any
 filtering, per rule 46.
 
+### Check D — the isolation gate, expect RED with no hash compared
+
+Planted in the registry: the sidecar row's `align` column changed to `off`
+while its `alignment_mode` still claims `on-sidecar-override`. This is the
+contamination shape exactly — the tool runs a pipeline other than the one the
+row describes.
+
+**This control is worth reading twice.** The `off` render produces
+`D99F5D82…76CA`, which *is* a hash in this registry — the other row's. Under a
+design where the hash is the only check, this run would have been reported as a
+moved freeze, and the reader would have gone looking for a code change that
+did not exist. That is a small-scale reproduction of SYNTHESIS fact 1379.
+
+```
+==============================================================================
+ENVIRONMENT NOT ISOLATED: `coffee-bean-20-gate2-sidecar` (pass 1)
+==============================================================================
+
+This row freezes a specific pipeline, and `strehl stack` reported a
+different one on its own output. NO HASH WAS COMPARED, because a hash from
+the wrong pipeline is not weak evidence -- it is evidence about something
+else.
+
+  registry says the tool must report : on-sidecar-override
+  the tool actually reported         : off
+
+The `alignment` line is the tool's own statement about which pipeline it
+ran. `MISSING` means no such line was found at all, which means either the
+binary is older than the alignment wiring or the line has been reworded --
+and in the second case this check has gone blind and must be repaired, not
+removed.
+
+WHAT USUALLY CAUSES THIS
+  * An ambient STREHL_ALIGN / STREHL_WARPMAP in the shell. This test
+    removes all of 5 render variables before applying the row's own,
+    so if that is the cause, the removal list is now incomplete.
+  * A sidecar the tool discovered by itself. The capture library is
+    read-only and must contain none; the warning printed at the top of
+    this test lists any it found.
+  * The row is simply wrong about the mode. Fix the row.
+
+Command that was run:
+  ... $env:STREHL_ALIGN = "0" ...
+
+test result: FAILED. 0 passed; 1 failed
+EXIT=101
+```
+
+The unaligned row in the same run reported `HOLDS … reproduced twice`, so the
+failure is scoped to the contaminated row and not a blanket red.
+
+Registry restored from backup and verified byte-identical
+(`9F331BE0…14CD`), with `git status` showing the file unmodified.
+
+### Check E — the placement gate, with a real artifact
+
+Rather than test the assertion's plumbing, I built the fault: a copy of the
+committed fixture with frame 7 rewritten from `7 placed …` to
+`7 refused control-plant-M108`, and a registry row pointed at it. The frame
+*count* still matches, which is the case `StackIdentity` cannot see.
+
+```
+The frozen render for `coffee-bean-20-gate2-sidecar` FAILED TO RUN (exit Some(1), pass 1).
+This is not a moved hash -- the command did not complete.
+
+What the tool reported about registration before it stopped:
+  alignment : on-sidecar-override
+  placement : 19 placed / 1 refused
+If the placement count is short of `--limit 20`, that IS the diagnosis:
+the warp map and the bracket disagree, and `merge_cmd.rs:932` refuses to
+merge a frame the solve refused rather than quietly giving it identity.
+...
+Error: frame 7 was refused by the alignment solve: control-plant-M108
+
+test result: FAILED. 0 passed; 1 failed
+EXIT=101
+```
+
+**And this is the honest result:** the render exits 1, so the failure is caught
+by the exit-code check and the placement assertion is never reached. I have
+recorded that in §1.3 and in the code rather than claiming a live check I do
+not have. What the control *does* establish is that the diagnosis reaches the
+reader — `19 placed / 1 refused` against `--limit 20` is printed at the top of
+the message, which it was not before this control was run.
+
+Planted fixture deleted; `tests/data/` verified to contain only
+`coffee-bean-20.warpmap.txt`.
+
 ### Supporting measurements
 
-* **Determinism.** The hash is invariant across `RAYON_NUM_THREADS` = 2, 4, 8,
-  and **identical in debug and release** (debug run 26.1 s).
+* **Determinism, gate 3.** Every row is rendered twice in separate processes on
+  every run. Both rows agree with themselves: `-- reproduced twice` on each.
+  Suite cost 8.5 s → 17.0 s.
+* **Determinism, wider.** The hash is invariant across `RAYON_NUM_THREADS` =
+  2, 4, 8, and **identical in debug and release** (debug run 26.1 s).
 * **Reproducibility at a committed revision.** Both hashes are identical in the
   clean `fea1a72` scratch tree and in the shared dirty working tree, so neither
   baseline is contaminated by the uncommitted diffs that were present
   (`robust.rs` +15 pure-`cargo fmt`, `align_cmd.rs` +161, `align.rs` +28 — the
   latter two have since landed at `dccaea8`).
 * **No writes to the library.** After the sidecar row ran, `D:\personal\macro`
-  contained **0** warpmap files. See §4.3 for the ones that appeared from other
+  contained **0** warpmap files. See §3.3 for the ones that appeared from other
   processes.
 * **The warp fixture is CRLF-safe.** Git will check it out with CRLF line
   endings on Windows, so I rendered against a CRLF copy (3 207 B vs 3 171 B)
@@ -399,9 +583,18 @@ M106 is that lesson.
   3 171 B). Quarantined to
   `…\ORCH-quarantine-sidecars\round4-1033-coffee-bean-warpmap.txt`, sha
   `1869EEBB…C907`. Library re-verified: **0 warpmaps**.
+* Independently, the orchestrator observed two more strays at 10:17:17
+  (`coffee-bean`, 1 560 B, an 8-frame solve with reference 4) and 10:17:38
+  (`flat-on-ruler-cpl`, 8 frames) — minutes after quarantining eleven. **The
+  8-frame `coffee-bean` one is the dangerous shape**: under a `--limit 8` run
+  it would have been accepted silently, because `StackIdentity::from_paths`
+  digests filename and file length only. That is the case gate 2 was added for,
+  and it is the reason the aligned row uses a committed fixture rather than
+  whatever happens to be lying in the capture directory.
 * My finished test suite ran at 10:56 and wrote **nothing** — the 10:33:42
   mtime survived it untouched, which is the cleanest available evidence that
-  the `STREHL_WARPMAP` mode is hermetic.
+  the `STREHL_WARPMAP` mode is hermetic. Every run since has re-verified
+  **0 warpmaps** in the library afterwards.
 
 ---
 
@@ -431,22 +624,39 @@ is to matter:
    that the first hypothesis rather than a mystery, but I did **not** measure a
    second host, and I do not know whether the chunking actually moves the
    bytes. This is the blind spot most likely to produce a confusing red.
-5. **A hash proves sameness, not correctness.** Both rows would stay green
+5. **Gate 3 catches only nondeterminism that shows up within seconds.** Two
+   consecutive renders on one machine will not expose a race that needs a
+   different core count, a cold cache, or a loaded machine to appear. Agreement
+   twice is evidence, not proof.
+6. **The placement gate is presently redundant with the exit code.** Measured,
+   not assumed (§1.3, Check E). It is a tripwire for a future change, not a
+   live check today, and it should not be counted as coverage until
+   `merge_cmd.rs:932` stops being fatal.
+7. **The isolation gate trusts a string.** It reads the tool's own
+   `alignment :` line. A binary that reports `sidecar-override` while doing
+   something else would pass. That is a much narrower hole than having no check
+   — the tool would have to lie rather than merely be misconfigured — but it is
+   a hole, and if the line is ever reworded the gate reports `MISSING` and must
+   be repaired rather than deleted.
+8. **A hash proves sameness, not correctness.** Both rows would stay green
    through a change that is wrong but deterministic. The freeze is an alarm on
    *movement*; it has no opinion about quality. Nothing here replaces the
    measured bars.
-6. **The registry can be re-baselined dishonestly.** Nothing stops someone
+9. **The registry can be re-baselined dishonestly.** Nothing stops someone
    pasting the new hash and leaving the `why` column stale. The test checks that
    `why` is long enough and free of placeholders — it cannot check that it is
    true. This is the residual risk, and it is why the failure message spends a
    paragraph on the `why` column specifically.
-7. **The source comment at `merge_cmd.rs:2958` is still prose.** Nothing
-   mechanically ties a code comment to a registry row. §3.2's replacement text
-   points at the registry instead of a report, which is better, but it is still
-   a human promise.
-8. **A deleted row fails nothing.** If someone removes a row, the suite goes
-   green with less coverage. The header check catches *reshaping*, not
-   *shrinking*.
+10. **The stray-sidecar scan is one level deep and name-based.** It looks at
+    `<library>/<stack>/*warpmap*`. A sidecar nested deeper, or named something
+    else, is invisible to it. It is a canary, not an audit.
+11. **The source comment at `merge_cmd.rs:2958` is still prose.** Nothing
+    mechanically ties a code comment to a registry row. §3.2's replacement text
+    points at the registry instead of a report, which is better, but it is still
+    a human promise.
+12. **A deleted row fails nothing.** If someone removes a row, the suite goes
+    green with less coverage. The header check catches *reshaping*, not
+    *shrinking*.
 
 ---
 
@@ -495,7 +705,66 @@ The TSV's comment header points here, so the rule travels with the data.
 
 ---
 
-## 6. How to re-baseline (the short version)
+## 6. Enforcement: the other half of the problem
+
+This section answers a question the orchestrator put to me directly, and it is
+the same question as the rest of the milestone.
+
+**The observation.** Rule 45 was broadcast to seven agents, and two more stray
+sidecars appeared in the read-only capture library within minutes — one of them
+in `coffee-bean`, the stack this test freezes. Whether or not those writes began
+before the broadcast landed, the shape is the point: **a convention announced is
+not a convention enforced.** Prose in `AGENTS.md` did not stop the writes,
+exactly as prose in a milestone report did not stop M85's freeze going stale for
+weeks. This test is the enforcement layer for the second problem. The first
+needs its own.
+
+**The one verified fact that bears on it.** `align`'s sidecar cache is a *soft*
+failure: it warns `could not cache sidecar (…); continuing` and proceeds with
+the solve it just computed. So a genuinely read-only capture directory does not
+break the tool — it only forces a re-solve, which is slower and correct. A
+deny-write ACL is therefore viable on the merits.
+
+**But I do not recommend the ACL as the primary mechanism**, for the reason
+already identified: the owner copies new captures onto that drive, and a
+deny-write ACL fails confusingly the next time he does. An enforcement that
+punishes the legitimate user more reliably than the illegitimate one gets turned
+off, which is the same failure mode as a test that goes red too often.
+
+Narrower mechanisms, in the order I would apply them:
+
+1. **Code, not convention — already landed, and this is the real fix.**
+   `sidecar_path` no longer resolves to `<stackdir>/warpmap.txt`; at `dccaea8`
+   it resolves under `cache_root()`. And `align_cmd.rs` carries a **unit test**
+   asserting the sidecar path is not inside the capture directory, so a
+   refactor that reintroduces the old behaviour fails CI. That is the enforcement
+   layer, it is the same shape as this milestone's, and it exists. The strays
+   observed tonight are explained by agents running binaries built from *before*
+   that landed — which is itself the argument for landing enforcement early
+   rather than announcing it.
+2. **A detector, because enforcement can be bypassed by an old binary.** The
+   canary in §1.7 prints any stray it finds on every test run. That is cheap and
+   already in. A standalone scheduled check over the whole library would be
+   better still: it would have found eleven strays in seconds rather than by
+   eye, and it does not depend on which binary anyone is running.
+3. **A read-only assertion in the tool itself**, if 1 and 2 prove insufficient:
+   have `strehl` refuse to create any file underneath a directory it read
+   captures from, with an error naming rule 45. This is narrower than an ACL
+   because it constrains the program rather than the filesystem, so the owner
+   copying captures in is unaffected.
+4. **The ACL last**, and only scoped to a directory the owner does not write to
+   directly.
+
+The general lesson, which is this milestone's lesson: **the enforcement layer
+belongs as close to the mechanism as it can get.** A rule in `AGENTS.md` is the
+weakest form, a detector is stronger, a test is stronger still, and code that
+cannot express the mistake is strongest. M85's freeze was defended by prose and
+went stale; rule 45 was defended by prose and was breached within minutes. Both
+are now defended by tests, and that is the only reason either is trustworthy.
+
+---
+
+## 7. How to re-baseline (the short version)
 
 You will need this more often than you will need anything else in this
 document, because **most moves here will be intended**.
