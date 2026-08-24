@@ -513,3 +513,53 @@ luckily clean: `StackIdentity` appears only in `align_cmd.rs` and
 warpmap, cache or `StackIdentity` references -- so `argmax-baseline`, which
 produced B1, B2, B3, B7, B8 and B9, has no cache path to be poisoned through.
 B5 is pure `rawpy` and never invokes strehl at all.
+
+## 11. Standing by to measure `strehl stack` (patch routed, not landed)
+
+ORCH routed section 6's patch to M97. As of this revision M97 has committed
+its in-flight work -- `merge_cmd.rs` is clean at `8e5eb6e` -- and the patch is
+**not yet applied**: `saturation_ceiling` and `with_ceiling` occur **0 times**
+in that file. I have still not touched it.
+
+**I authored the patch, so what follows will be a measurement and not a
+verification.** ORCH is treating M110's independent 1:1 sheet, which includes a
+specular-highlight crop, as the independent read. I am the wrong party to
+certify my own fix and am not attempting to.
+
+`experiments/M109-highlights/src/measure_stack.ps1` is written and armed. It
+**refuses to run** unless the patch is present, so it cannot quietly measure
+the unpatched path and report the resulting null as a finding; demonstrated
+just now, exiting 2 with
+`merge_cmd.rs does not contain the section 6 patch yet`.
+
+**Both arms will be built from one tree, and this is not the obvious choice.**
+The convenient "before" is the binary already sitting in `C:\dev\strehl-out\M109`.
+That would be **confounded**: `optics.rs` (+73) and `robust.rs` (+12) are
+currently dirty with another agent's in-flight work, so a rebuild after M97
+lands would differ from the stored binary by *their* changes as well as by the
+patch, and a moved pixel could not be attributed. Instead both binaries are
+built from the same tree at the same moment, differing only in whether
+`color::saturation_ceiling` returns a real ceiling or `+inf` -- the B3 control
+mechanism, already shown able to go red, in **my own** file. The restore path
+copies to `$env:TEMP` and back rather than using `git checkout --`, then
+**touches** the file, because `Copy-Item` preserves mtime and cargo would
+otherwise reuse the stale build.
+
+`montage.py` was parameterised rather than duplicated, so both montages place
+their crop by the same predicate-driven rule -- a second script would be a
+second opportunity to aim at a flattering ROI. The refactor was checked
+byte-neutral: run with defaults it reproduces the committed artefacts exactly,
+`575045B5...0BD851B9` and `C38167BD...A20E6834`.
+
+**On the clippy attribution.** ORCH asked me to drop its `align.rs:2108` /
+`pen_w` attribution from this report. **It was never recorded here** -- it
+appeared only in a chat message, so it has not propagated into the corpus;
+grep for `2108`, `pen_w` and `M110` across this file and
+`experiments/M109-highlights/` returns nothing. Rather than swap one unverified
+attribution for another I measured it: `cargo clippy --all-targets -- -D warnings`
+exits **101** with **4** errors -- `optics.rs:459` (hex literal grouping) and
+`robust.rs:409`, `:451`, `:464` (`useless use of vec!`) -- and **zero in
+`align.rs`**, reproducing ORCH's corrected figure exactly. None are in the four
+files this milestone touches, all of which have zero uncommitted delta. The
+unrelated claim on line 430, that this workspace builds clippy with
+`-D warnings`, is separately confirmed at `AGENTS.md:954` and stands.

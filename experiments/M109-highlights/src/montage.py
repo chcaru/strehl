@@ -15,6 +15,8 @@ the SAME exposure (-0.24 stops). The only difference between them is whether
 exposure-matched control: the change cannot be mistaken for a brightness change.
 """
 
+import argparse
+
 import numpy as np
 import tifffile
 import cv2
@@ -25,6 +27,22 @@ AFTER = rf"{OUT}\marker-argmax-e024-after.tif"
 FRAME = r"D:\personal\macro\dry-erase-marker-head-cpl\DSC00150.ARW"
 
 CROP = 520  # side of the 1:1 crop, in output pixels
+
+
+def parse_args() -> argparse.Namespace:
+    """Defaults reproduce the committed argmax montage byte-for-byte.
+
+    The `stack` arm reuses this script rather than getting its own, so that both
+    montages place their crop by the SAME predicate-driven rule. A second script
+    would be a second chance to aim at a flattering ROI.
+    """
+    p = argparse.ArgumentParser()
+    p.add_argument("--before", default=BEFORE)
+    p.add_argument("--after", default=AFTER)
+    p.add_argument("--tag", default="", help="suffix for the output filenames")
+    p.add_argument("--cmd", default="argmax-baseline --srgb --exposure=-0.24",
+                   help="invocation shown in the panel subtitle")
+    return p.parse_args()
 
 
 def magenta(x: np.ndarray) -> np.ndarray:
@@ -43,8 +61,9 @@ def to8(x: np.ndarray) -> np.ndarray:
 
 
 def main() -> None:
-    b = tifffile.imread(BEFORE).astype(np.float32) / 65535.0
-    a = tifffile.imread(AFTER).astype(np.float32) / 65535.0
+    args = parse_args()
+    b = tifffile.imread(args.before).astype(np.float32) / 65535.0
+    a = tifffile.imread(args.after).astype(np.float32) / 65535.0
 
     # Let the predicate place the crop: largest connected magenta component in
     # the before render, restricted to the pixels the fix actually cleared, so
@@ -81,7 +100,7 @@ def main() -> None:
 
     panels = [
         label(cb[..., ::-1], "BEFORE  ceiling disabled (negative control)",
-              f"magenta {100 * mb.mean():.2f}% of crop   argmax-baseline --srgb --exposure=-0.24"),
+              f"magenta {100 * mb.mean():.2f}% of crop   {args.cmd}"),
         label(ca[..., ::-1], "AFTER  highlight ceiling on",
               f"magenta {100 * ma.mean():.2f}% of crop   same binary, same frames, same exposure"),
         label(cl[..., ::-1], "LibRaw (rawpy), single frame DSC00150.ARW",
@@ -89,7 +108,7 @@ def main() -> None:
     ]
     gap = np.full((panels[0].shape[0], 8, 3), 40, np.uint8)
     montage = np.hstack([panels[0], gap, panels[1], gap, panels[2]])
-    path = rf"{OUT}\M109-highlights-montage-100pct.png"
+    path = rf"{OUT}\M109-highlights-montage-100pct{args.tag}.png"
     cv2.imwrite(path, montage)
     print(f"wrote {path}  {montage.shape[1]}x{montage.shape[0]}")
 
@@ -102,7 +121,7 @@ def main() -> None:
         np.full((small(b).shape[0] + 58, 8, 3), 40, np.uint8),
         label(small(a)[..., ::-1], "AFTER  whole frame (1/6 scale)", "same everything but the ceiling"),
     ])
-    path2 = rf"{OUT}\M109-highlights-wholeframe.png"
+    path2 = rf"{OUT}\M109-highlights-wholeframe{args.tag}.png"
     cv2.imwrite(path2, ov)
     print(f"wrote {path2}  {ov.shape[1]}x{ov.shape[0]}")
 
