@@ -1,0 +1,68 @@
+K7  band vs truth Nyquist
+    band 0.3-0.48 cyc/px, truth Nyquist 0.5 cyc/px
+    strictly below Nyquist: True
+
+truth AHD (2344, 3514, 3), 400 tiles of 64x64
+
+K1  NULL -- feed the truth in as the demosaic output
+    power 0.000e+00  signal 2.261e-09  alpha 1.0000000018  artifact_share 0.000e+00
+    PASS: True  (signal tol 1e-06, was 1e-09 -- see F6)
+
+K2  determinism -- MHC twice
+    bitwise identical: True
+
+K3  POSITIVE dose -- blur the truth before mosaicking, score vs unblurred truth
+    sigma 0.0  signal -0.1586  power +0.0047
+    sigma 0.5  signal -0.5430  power -0.3286
+    sigma 1.0  signal -2.0437  power -1.2128
+    sigma 2.0  signal -3.9387  power -2.0869
+    signal falls monotonically: True
+
+K4  POSITIVE dose -- add in-band power that is NOT in the scene
+    dose 0.00  artifact -0.4993  signal -0.1586  artifact_share 0.3134
+    dose 0.25  artifact -0.0435  signal -0.1571  artifact_share 0.5650
+    dose 0.50  artifact +0.4270  signal -0.1538  artifact_share 0.7920
+    dose 1.00  artifact +0.9890  signal -0.1420  artifact_share 0.9311
+    artifact rises monotonically: True
+    signal stays flat (<0.02 dex): True
+
+==========================================================================
+THE LADDER -- truth AHD
+==========================================================================
+    MHC       power +0.0047  signal -0.1586  artifact -0.4993  artifact_share 0.3134
+    BILINEAR  power -0.4802  signal -0.6950  artifact -0.8890  artifact_share 0.3901
+    NEAREST   power +0.5784  signal -0.4980  artifact +0.5403  artifact_share 0.9161
+
+K5  SPECIFICITY -- rebuild the truth from a different decoder
+  truth VNG
+    MHC       power +0.0096  signal -0.1545  artifact -0.4925  artifact_share 0.3147
+    BILINEAR  power -0.4706  signal -0.6828  artifact -0.8835  artifact_share 0.3864
+    NEAREST   power +0.6119  signal -0.4816  artifact +0.5753  artifact_share 0.9194
+  truth LINEAR
+    MHC       power +0.1258  signal -0.1785  artifact -0.1720  artifact_share 0.5037
+    BILINEAR  power -0.3805  signal -0.6382  artifact -0.7296  artifact_share 0.4476
+    NEAREST   power +0.7460  signal -0.4437  artifact +0.7170  artifact_share 0.9354
+    signal ranking AHD    : MHC > NEAREST > BILINEAR
+    signal ranking VNG    : MHC > NEAREST > BILINEAR
+    signal ranking LINEAR : MHC > NEAREST > BILINEAR
+    ranking preserved across truths: True
+    MHC signal moves at most +0.0198 dex across truths
+
+==========================================================================
+PRE-REGISTERED BARS
+==========================================================================
+B1  is top-octave power monotone in demosaic quality?
+    NEAREST power  +0.5784  vs MHC power  +0.0047   louder: True
+    NEAREST signal -0.4980  vs MHC signal -0.1586   worse : True
+    B1 FIRED (power is NOT a quality ranking): True
+
+B2  how much detail is the shipped MHC losing vs a perfect demosaic?
+    MHC signal deficit vs ceiling: +0.1586 dex
+    > 0.10 dex (real headroom)  : True
+    < 0.03 dex (negligible)     : False
+
+per-channel MHC
+    luma  power +0.0047  signal -0.1586  artifact -0.4993  artifact_share 0.3134
+    R     power -0.0407  signal -0.4881  artifact -0.2325  artifact_share 0.6430
+    G     power -0.0498  signal -0.2127  artifact -0.5547  artifact_share 0.3127
+    B     power -0.0322  signal -0.3874  artifact -0.2851  artifact_share 0.5586

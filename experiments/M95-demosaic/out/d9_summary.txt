@@ -1,0 +1,96 @@
+==========================================================================
+K6  port certification -- Python MHC vs the shipped Rust
+==========================================================================
+  random-256x256   mhc       max|rust-py| 3.576e-07  OK
+  random-256x256   bilinear  max|rust-py| 5.960e-08  OK
+  random-129x131   mhc       max|rust-py| 3.576e-07  OK
+  random-129x131   bilinear  max|rust-py| 5.960e-08  OK
+  checker-64x64    mhc       max|rust-py| 0.000e+00  OK
+  checker-64x64    bilinear  max|rust-py| 0.000e+00  OK
+  ramp-64x64       mhc       max|rust-py| 2.384e-07  OK
+  ramp-64x64       bilinear  max|rust-py| 1.192e-07  OK
+  worst over 8 cases      : 3.576e-07   (tolerance 1e-06)
+  planted one-tap defect      : 1.249e-01  detected True
+  CERTIFIED                   : True
+
+==========================================================================
+CONTROLS
+==========================================================================
+  K1 NULL      power 0.000e+00  signal 2.261e-09  alpha 1.0000000018  share 0.000e+00
+               pass True  (tol 1e-06, originally 1e-09 -- see F6)
+  K2 determinism bitwise identical : True
+  K3 POSITIVE blur dose
+     sigma 0.0  signal -0.1586  power +0.0047
+     sigma 0.5  signal -0.5430  power -0.3286
+     sigma 1.0  signal -2.0437  power -1.2128
+     sigma 2.0  signal -3.9387  power -2.0869
+     monotone : True
+  K4 POSITIVE uncorrelated in-band power
+     dose 0.00  artifact -0.4993  signal -0.1586  share 0.3134
+     dose 0.25  artifact -0.0435  signal -0.1571  share 0.5650
+     dose 0.50  artifact +0.4270  signal -0.1538  share 0.7920
+     dose 1.00  artifact +0.9890  signal -0.1420  share 0.9311
+     artifact monotone True   signal flat True
+  K7 band 0.3-0.48 cyc/px below truth Nyquist 0.5 : True
+
+==========================================================================
+THE LADDER  truth AHD, 400 tiles of 64x64, band 0.3-0.48 cyc/px
+==========================================================================
+  arm            power    signal  artifact  artifact_share
+  MHC          +0.0047   -0.1586   -0.4993          0.3134
+  BILINEAR     -0.4802   -0.6950   -0.8890          0.3901
+  NEAREST      +0.5784   -0.4980   +0.5403          0.9161
+
+  per-channel, MHC
+  luma         +0.0047   -0.1586   -0.4993          0.3134
+  R            -0.0407   -0.4881   -0.2325          0.6430
+  G            -0.0498   -0.2127   -0.5547          0.3127
+  B            -0.0322   -0.3874   -0.2851          0.5586
+
+==========================================================================
+K5  SPECIFICITY -- does the truth's own decoder decide the answer?
+==========================================================================
+  signal ranking, truth AHD    : MHC > NEAREST > BILINEAR
+  signal ranking, truth VNG    : MHC > NEAREST > BILINEAR
+  signal ranking, truth LINEAR : MHC > NEAREST > BILINEAR
+  ranking preserved across all three truths : True
+  MHC signal moves at most                 : +0.0198 dex
+    truth VNG     MHC power +0.0096  signal -0.1545  share 0.3147
+    truth LINEAR  MHC power +0.1258  signal -0.1785  share 0.5037
+
+==========================================================================
+PRE-REGISTERED BARS
+==========================================================================
+  B1  is top-octave power monotone in demosaic quality?
+      NEAREST is louder than MHC by +0.5737 dex
+      NEAREST carries less detail  by -0.3394 dex
+      B1 FIRED (power does NOT rank quality) : True
+      for scale, the orchestrator's whole six-algorithm ladder spans 0.3518 dex
+
+  B2  how much detail is the shipped MHC losing vs a PERFECT demosaic?
+      MHC signal deficit vs ceiling : +0.1586 dex
+      > 0.10 real headroom          : True
+      < 0.03 negligible             : False
+      MHC's own artifact share      : 0.3134
+      MHC total power vs truth      : +0.0047 dex
+
+==========================================================================
+D3  how hard does the REAL capture drive the demosaic?
+==========================================================================
+  real sensor grid  alias/tested band ratio : 0.15447  (-0.8111 dex)
+  synthetic truth   alias/tested band ratio : 0.04813  (-1.3176 dex)
+  synthetic ladder drives the demosaic      : 0.31x as hard as the real capture
+  my hypothesis was that this would exceed 1.0 (synthetic overstates).
+  It is below 1.0, so the synthetic ladder UNDERSTATES the real drive.
+
+==========================================================================
+HEADLINE
+==========================================================================
+  Ranking demosaics by top-octave power is not ranking them by quality.
+  NEAREST beats MHC on power by +0.5737 dex while
+  carrying 0.3394 dex LESS real detail, and 91.6% of what it emits
+  is not in the scene at all.
+  MHC matches the truth's total band power to +0.0047 dex -- it would
+  score as essentially ideal on that metric -- yet 31.3% of that power is
+  fabricated and it carries 0.1586 dex less true detail than a perfect
+  demosaic would.

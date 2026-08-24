@@ -1,0 +1,47 @@
+{
+  "source": "D:\\personal\\macro\\bee-3-cpl\\DSC00150.ARW",
+  "truths": {
+    "AHD": {
+      "decode_shape": [
+        4688,
+        7028,
+        3
+      ],
+      "truth_shape": [
+        2344,
+        3514,
+        3
+      ],
+      "mean": 0.15212301909923553,
+      "path": "C:\\dev\\strehl-out\\M95-demosaic\\scratch\\truth_AHD.npy"
+    },
+    "VNG": {
+      "decode_shape": [
+        4688,
+        7028,
+        3
+      ],
+      "truth_shape": [
+        2344,
+        3514,
+        3
+      ],
+      "mean": 0.15212588012218475,
+      "path": "C:\\dev\\strehl-out\\M95-demosaic\\scratch\\truth_VNG.npy"
+    },
+    "LINEAR": {
+      "decode_shape": [
+        4688,
+        7028,
+        3
+      ],
+      "truth_shape": [
+        2344,
+        3514,
+        3
+      ],
+      "mean": 0.15212160348892212,
+      "path": "C:\\dev\\strehl-out\\M95-demosaic\\scratch\\truth_LINEAR.npy"
+    }
+  }
+}
