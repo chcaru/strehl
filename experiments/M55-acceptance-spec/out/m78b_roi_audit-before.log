@@ -1,0 +1,36 @@
+M78b B6 ROI GEOMETRY AUDIT
+MEASURED: rawpy header sizes only; pixel decode calls = 0
+MEASURED: registry=legacy; ROIs=[(458, 750, 512, 512), (1374, 750, 512, 512), (916, 1501, 512, 512), (916, 2402, 512, 512)]
+MEASURED: coffee-bean: files=105, raw_visible=(4688, 7028), quad=(2344, 3514)
+  MEASURED: roi0=(458, 750, 512, 512): native quad[x=426..1002,y=718..1294] raw_extent=(2588, 2004) VALID; swap=(750, 458, 512, 512) quad[x=718..1294,y=426..1002] raw_extent=(2004, 2588) VALID; both=True
+  MEASURED: roi1=(1374, 750, 512, 512): native quad[x=1342..1918,y=718..1294] raw_extent=(2588, 3836) VALID; swap=(750, 1374, 512, 512) quad[x=718..1294,y=1342..1918] raw_extent=(3836, 2588) VALID; both=True
+  MEASURED: roi2=(916, 1501, 512, 512): native quad[x=884..1460,y=1469..2045] raw_extent=(4090, 2920) VALID; swap=(1501, 916, 512, 512) quad[x=1469..2045,y=884..1460] raw_extent=(2920, 4090) VALID; both=True
+  MEASURED: roi3=(916, 2402, 512, 512): native quad[x=884..1460,y=2370..2946] raw_extent=(5892, 2920) INVALID; swap=(2402, 916, 512, 512) quad[x=2370..2946,y=884..1460] raw_extent=(2920, 5892) VALID; both=False
+MEASURED: wrapped-text-1: files=130, raw_visible=(4688, 7028), quad=(2344, 3514)
+  MEASURED: roi0=(458, 750, 512, 512): native quad[x=426..1002,y=718..1294] raw_extent=(2588, 2004) VALID; swap=(750, 458, 512, 512) quad[x=718..1294,y=426..1002] raw_extent=(2004, 2588) VALID; both=True
+  MEASURED: roi1=(1374, 750, 512, 512): native quad[x=1342..1918,y=718..1294] raw_extent=(2588, 3836) VALID; swap=(750, 1374, 512, 512) quad[x=718..1294,y=1342..1918] raw_extent=(3836, 2588) VALID; both=True
+  MEASURED: roi2=(916, 1501, 512, 512): native quad[x=884..1460,y=1469..2045] raw_extent=(4090, 2920) VALID; swap=(1501, 916, 512, 512) quad[x=1469..2045,y=884..1460] raw_extent=(2920, 4090) VALID; both=True
+  MEASURED: roi3=(916, 2402, 512, 512): native quad[x=884..1460,y=2370..2946] raw_extent=(5892, 2920) INVALID; swap=(2402, 916, 512, 512) quad[x=2370..2946,y=884..1460] raw_extent=(2920, 5892) VALID; both=False
+MEASURED: wrapped-text-2: files=120, raw_visible=(4688, 7028), quad=(2344, 3514)
+  MEASURED: roi0=(458, 750, 512, 512): native quad[x=426..1002,y=718..1294] raw_extent=(2588, 2004) VALID; swap=(750, 458, 512, 512) quad[x=718..1294,y=426..1002] raw_extent=(2004, 2588) VALID; both=True
+  MEASURED: roi1=(1374, 750, 512, 512): native quad[x=1342..1918,y=718..1294] raw_extent=(2588, 3836) VALID; swap=(750, 1374, 512, 512) quad[x=718..1294,y=1342..1918] raw_extent=(3836, 2588) VALID; both=True
+  MEASURED: roi2=(916, 1501, 512, 512): native quad[x=884..1460,y=1469..2045] raw_extent=(4090, 2920) VALID; swap=(1501, 916, 512, 512) quad[x=1469..2045,y=884..1460] raw_extent=(2920, 4090) VALID; both=True
+  MEASURED: roi3=(916, 2402, 512, 512): native quad[x=884..1460,y=2370..2946] raw_extent=(5892, 2920) INVALID; swap=(2402, 916, 512, 512) quad[x=2370..2946,y=884..1460] raw_extent=(2920, 5892) VALID; both=False
+MEASURED: bee-1: files=299, raw_visible=(4688, 7028), quad=(2344, 3514)
+  MEASURED: roi0=(458, 750, 512, 512): native quad[x=426..1002,y=718..1294] raw_extent=(2588, 2004) VALID; swap=(750, 458, 512, 512) quad[x=718..1294,y=426..1002] raw_extent=(2004, 2588) VALID; both=True
+  MEASURED: roi1=(1374, 750, 512, 512): native quad[x=1342..1918,y=718..1294] raw_extent=(2588, 3836) VALID; swap=(750, 1374, 512, 512) quad[x=718..1294,y=1342..1918] raw_extent=(3836, 2588) VALID; both=True
+  MEASURED: roi2=(916, 1501, 512, 512): native quad[x=884..1460,y=1469..2045] raw_extent=(4090, 2920) VALID; swap=(1501, 916, 512, 512) quad[x=1469..2045,y=884..1460] raw_extent=(2920, 4090) VALID; both=True
+  MEASURED: roi3=(916, 2402, 512, 512): native quad[x=884..1460,y=2370..2946] raw_extent=(5892, 2920) INVALID; swap=(2402, 916, 512, 512) quad[x=2370..2946,y=884..1460] raw_extent=(2920, 5892) VALID; both=False
+MEASURED: bee-2: files=299, raw_visible=(4688, 7028), quad=(2344, 3514)
+  MEASURED: roi0=(458, 750, 512, 512): native quad[x=426..1002,y=718..1294] raw_extent=(2588, 2004) VALID; swap=(750, 458, 512, 512) quad[x=718..1294,y=426..1002] raw_extent=(2004, 2588) VALID; both=True
+  MEASURED: roi1=(1374, 750, 512, 512): native quad[x=1342..1918,y=718..1294] raw_extent=(2588, 3836) VALID; swap=(750, 1374, 512, 512) quad[x=718..1294,y=1342..1918] raw_extent=(3836, 2588) VALID; both=True
+  MEASURED: roi2=(916, 1501, 512, 512): native quad[x=884..1460,y=1469..2045] raw_extent=(4090, 2920) VALID; swap=(1501, 916, 512, 512) quad[x=1469..2045,y=884..1460] raw_extent=(2920, 4090) VALID; both=True
+  MEASURED: roi3=(916, 2402, 512, 512): native quad[x=884..1460,y=2370..2946] raw_extent=(5892, 2920) INVALID; swap=(2402, 916, 512, 512) quad[x=2370..2946,y=884..1460] raw_extent=(2920, 5892) VALID; both=False
+MEASURED: bee-3: files=299, raw_visible=(4688, 7028), quad=(2344, 3514)
+  MEASURED: roi0=(458, 750, 512, 512): native quad[x=426..1002,y=718..1294] raw_extent=(2588, 2004) VALID; swap=(750, 458, 512, 512) quad[x=718..1294,y=426..1002] raw_extent=(2004, 2588) VALID; both=True
+  MEASURED: roi1=(1374, 750, 512, 512): native quad[x=1342..1918,y=718..1294] raw_extent=(2588, 3836) VALID; swap=(750, 1374, 512, 512) quad[x=718..1294,y=1342..1918] raw_extent=(3836, 2588) VALID; both=True
+  MEASURED: roi2=(916, 1501, 512, 512): native quad[x=884..1460,y=1469..2045] raw_extent=(4090, 2920) VALID; swap=(1501, 916, 512, 512) quad[x=1469..2045,y=884..1460] raw_extent=(2920, 4090) VALID; both=True
+  MEASURED: roi3=(916, 2402, 512, 512): native quad[x=884..1460,y=2370..2946] raw_extent=(5892, 2920) INVALID; swap=(2402, 916, 512, 512) quad[x=2370..2946,y=884..1460] raw_extent=(2920, 5892) VALID; both=False
+MEASURED: per-ROI summary={0: {'native_valid_stacks': 6, 'transposed_valid_stacks': 6, 'both_valid_stacks': 6}, 1: {'native_valid_stacks': 6, 'transposed_valid_stacks': 6, 'both_valid_stacks': 6}, 2: {'native_valid_stacks': 6, 'transposed_valid_stacks': 6, 'both_valid_stacks': 6}, 3: {'native_valid_stacks': 0, 'transposed_valid_stacks': 6, 'both_valid_stacks': 0}}
+MEASURED: legacy constants (width=2344, height=3514); actual quad (height=2344, width=3514); width/height transposition=True
+DERIVED: row/column-transposition hypothesis=CONFIRMED
