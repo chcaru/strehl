@@ -564,7 +564,7 @@ mod tests {
     #[test]
     fn otsu_splits_a_clean_two_class_histogram() {
         let mut a = vec![10.0f32; 500];
-        a.extend(std::iter::repeat(90.0f32).take(500));
+        a.extend(std::iter::repeat_n(90.0f32, 500));
         let t = otsu(&a);
         assert!(t > 10.0 && t < 90.0, "threshold {t} did not separate");
     }
