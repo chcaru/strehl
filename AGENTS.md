@@ -669,14 +669,15 @@ monolithic binary and ship only that binary.
     **Addendum -- do not read `$LASTEXITCODE` after a pipeline containing
     `Select-Object -First`.** This is part of the environment clause because it
     silently falsifies the pass/fail status of a command you already ran
-    correctly. `-First N` short-circuits its upstream on the Nth object, and if
-    that lands while the native process is still alive, the reported status is
-    garbage. Three things measured, all of which contradict the obvious guesses:
-    - **It is a race, not a count.** 50 lines through
-      `Select-String | Select-Object -First 3` reported the true `1`; 200 lines
-      through the same shape did not. **Do not reason about whether your command
-      is "big enough" to be exposed** -- the answer also flips between stdout
-      and stderr. Treat the rule as unconditional.
+    correctly. Three things measured, all of which contradict the obvious
+    guesses:
+    - **It is deterministic on QUOTA.** `-First N` loses the exit code whenever
+      **`N <= the number of objects produced`**, and preserves it when `N`
+      exceeds them. Measured 5/5 in each direction: on a 50-line command,
+      `-First 3`, `-First 49` and `-First 50` all read `0`, while `-First 51`
+      and `-First 99` all read `1`. **`-First 3` on a FIVE-line command also
+      loses it**, so there is no "small output is safe" case and no volume
+      threshold to reason about. Truncation is the whole condition.
     - **The corrupted value is host-dependent: `0` under the agent shell, `-1`
       under `powershell -File`.** So a gate written the natural way,
       `if ($code -ne 0) { fail }`, **catches `-1` and silently passes `0`.** The
@@ -696,11 +697,13 @@ monolithic binary and ship only that binary.
     **If you are testing this trap rather than avoiding it, pre-clear
     `$LASTEXITCODE` first** (`cmd /c exit 0`, then assert it took). It is ambient
     state that survives across commands, so on a probe whose true code is `1` a
-    stale `1` is indistinguishable from a correct read. ORCH's first probe
-    reported 7/7 arms safe for exactly this reason. The confound produces false
-    negatives only, so a PASS taken from an observed *nonzero* code is safe --
-    but any claim that some pipeline shape *preserves* exit codes is worthless
-    without the pre-clear.
+    stale `1` is indistinguishable from a correct read. **This confound is not
+    hypothetical: it produced two wrong mechanisms for this very defect.** ORCH's
+    first probe reported 7/7 arms safe, and M104c's un-pre-cleared 50-line arm
+    produced a "race, not a count" theory that a pre-cleared re-run refuted 5/5.
+    The confound produces false negatives only, so a PASS taken from an observed
+    *nonzero* code is safe -- but any claim that some pipeline shape *preserves*
+    exit codes is worthless without the pre-clear.
     (SYNTHESIS facts 1427, 1428, 1429; disciplines 709, 710. Harness:
     `experiments/ORCH-drift-check/exit_code_trap.ps1`.)
 
