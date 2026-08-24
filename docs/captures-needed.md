@@ -1311,3 +1311,87 @@ empirical leg on either side — it is arithmetic against arithmetic.
   advisor should say "take the converter off" instead.
 - **Gives the capture advisor its first real recommendation to make**, with a
   measured basis rather than a modelled one.
+
+---
+
+## 18. What M84b needs to finish pinning the rig — REQUESTED, three items, in value order
+
+**Added by the orchestrator 2026-08-24 from `M84b-ruler-metrology.md` §13.** M84b
+produced the project's first physical ground truth from the ruler stacks —
+**m = 2.7198 ± 0.0051**, a depth map at **8.28 µm** median uncertainty, and the
+finding that the focus step **drifts 1.53× across a bracket**. It also stated
+plainly what limits it, and none of the three limits is diffraction. **The
+binding limit is framing.** These three captures remove them.
+
+### 18.1 A frame-filling diagonal ruler — HIGHEST VALUE, one bracket, ten minutes
+
+**The problem.** M84b had only **13 usable graduations** in frame. Every
+uncertainty it quotes is dominated by that, not by optics, not by noise, and not
+by the method. More graduations is a direct, linear reduction in the error on
+every number it produced.
+
+| Parameter | Value |
+| --- | --- |
+| Subject | The same millimetre ruler |
+| Framing | **Diagonally across the frame, corner to corner**, so the graduations run the full image diagonal rather than a short horizontal span |
+| Angle | Same steep tilt as before, roughly 60–80° to the sensor plane |
+| Aperture | f/5.6 — wide open, unchanged, and now known to be the right choice (§17.3) |
+| Frames | A normal deep bracket, same step as usual |
+| Also shoot | The same framing **flat-on** as a zero-tilt control |
+
+**Why the diagonal specifically.** The diagonal is 1.20× the long edge and about
+1.80× the short edge, so it buys the most graduations available without moving
+the tripod or changing magnification. It also **decorrelates the tilt axis from
+the sensor's row and column axes**, which matters because row/column
+fixed-pattern noise is anisotropic (M16) and a ruler laid along a sensor axis
+confounds the two.
+
+### 18.2 A second angled stack at a different working distance — settles a real disagreement
+
+**The problem.** Two independent milestones measured the same ruler and reached
+**opposite verdicts on whether it can serve as ground truth at all** (fact
+1156). That disagreement is recorded unresolved rather than reconciled, and it
+cannot be settled from the existing captures because both agents analysed the
+same two stacks.
+
+A second angled stack at a **different magnification** — say a noticeably closer
+or further working distance — gives an independent realisation. It also tests
+whether the **1.53× focus-step drift** is a property of the lens's focus
+mechanism (in which case it will reproduce, and can be modelled and calibrated
+out once, permanently) or a property of that particular bracket (in which case
+it must be estimated per stack). **That distinction changes what the aligner has
+to do**, so it is worth a bracket.
+
+### 18.3 A pupil-diameter bench measurement — pins `p` outright, no stack needed
+
+**The problem.** Pupil magnification `p` is currently only *bracketed*, at
+**[1.31, 1.94]**, inferred from M5's measured bellows factor against M84b's
+measured magnification. It was assumed to be 1.0 until tonight, and that
+assumption was **wrong by enough to reverse a shooting recommendation** in §17.3
+and to nearly ship a false acceptance test to another milestone. Pinning it
+removes an inferred quantity from a load-bearing chain.
+
+**This is not a photograph.** It is two measurements with a ruler:
+
+1. Set the lens to the working configuration — **teleconverter fitted**, focus
+   at the macro end where the stacks are shot, aperture wide open at f/5.6.
+2. Look into the **front** of the lens and measure the apparent diameter of the
+   aperture opening. That is the **entrance pupil**.
+3. Look into the **back** (with the teleconverter attached, so the rear of the
+   TC) and measure the apparent diameter of the same opening. That is the
+   **exit pupil**.
+4. `p = exit pupil diameter / entrance pupil diameter`.
+
+Photograph both with a ruler laid flat against the barrel and in the same plane
+as the pupil, and the numbers can be read off later. **Rough is useful**: even
+±10% collapses the current ±19% bracket and, more importantly, it is an
+*independent* route to `p` rather than another inference from the same chain.
+
+### What all three unblock
+
+- **Every micron-scale number in the project.** The depth map, the focus-axis
+  calibration, the truth-linked estimator loss M81 named as one of only two
+  remaining routes to a constant that has now defeated three milestones.
+- **The `N_eff` chain, at its root.** `p` currently propagates into diffraction
+  cutoff, into the deconvolution ceiling, and into the shooting advice in §17.
+- **The M84/M84b disagreement**, which is otherwise permanent.
