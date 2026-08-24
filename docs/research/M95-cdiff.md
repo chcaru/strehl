@@ -503,3 +503,26 @@ routes to this kernel agree.
 - **What would falsify §7:** Lanczos-3 failing the identity-phase control in Rust,
   or its ringing measuring below Catmull-Rom's — either would mean the Python
   kernels I measured are not the kernel the patch implements.
+
+## 11. Verification of this report
+
+Every number above is printed by code run in this session and is checked back
+against the JSON that instrument wrote.
+
+- `experiments/M95-cdiff/src/verify_report.py` — **36/36 anchors present,
+  36/36 discriminating**, 11 facts / 11 status labels. The discriminate pass
+  perturbs one digit of each anchor and requires the perturbed string to be
+  absent, so an anchor that matched some other row of the document is caught.
+  Arm 6 needed this: a bare `| p | s | a |` row silently matched the
+  per-channel table instead of the ladder it claimed to check.
+- `experiments/M95-cdiff/src/verify_negative_control.py` — **green → red, red,
+  red → green**. It plants three defects: a wrong number in the report, a wrong
+  number in the source JSON, and a stripped fact label. Each mutation is
+  anchored on an exact full-line string and a miss is a hard error rather than
+  a pass, because arm 5's F5 reported green for the wrong reason when its
+  anchor never landed.
+- `x3_kernel.json` re-ran **byte-identical** to the copy committed in arm 4, so
+  §6 is reproducible rather than merely repeated.
+- `crates/strehl-cli/examples/m95-lanczos.rs` re-run this session: 4/4 controls,
+  C4 discriminating at 0.6466 vs 0.4488.
+- `python scripts\corpus_lint.py` — OK, no violations.
