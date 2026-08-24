@@ -1,18 +1,29 @@
 # M86 — Deep-stack alignment: a measured module
 
-Milestone: M86
+Milestone: M86, extended by M86b
 Owner: M86
 Status: complete
 Scope: `crates/strehl-core/src/align.rs`, `crates/strehl-cli/examples/m86-align.rs`,
-`experiments/M86-alignment/`
+`experiments/M86-alignment/`; **M86b** adds
+`crates/strehl-core/src/warpmap.rs` and `crates/strehl-cli/src/align_cmd.rs`
 Pre-registration: `experiments/M86-alignment/PREREGISTRATION.md` (commit `5205732`,
-written and committed **before** any measurement in this milestone)
+written and committed **before** any measurement in this milestone) and
+`experiments/M86-alignment/PREREGISTRATION-warpmap.md` (commit `0756cec`, likewise
+before any M86b implementation)
 
 Every number below is labelled **MEASURED** (I ran it and read the output),
 **DERIVED** (arithmetic or logic on measured numbers), or **ARGUED** (reasoning I
 believe but did not measure). Numbers taken from other milestones are namespaced
 to their milestone. Raw logs for every measurement are in
 `experiments/M86-alignment/out/`.
+
+**Two claims in this report were later overturned by its own author.** §6.3's
+peak-locking knee is retracted (see the correction there and fact P22) and §9's
+"NOT MEASURED" resampler note is now measured. Both corrections are M86b's and
+both are marked in place rather than deleted.
+
+**The sidecar that carries these warps to the merge is §14.** The two
+registration patches the orchestrator must apply are §14.9.
 
 ---
 
@@ -309,11 +320,41 @@ the true scale; above ~1 px it is unity to within 1.5%. The knee is sharp,
 between 0.42 px and 1.06 px.** The MAD is tiny (0.0002–0.034) and four
 independent base frames agree, so this is a **reproducible systematic
 attenuation, not noise** — and it occurs with **no defocus difference at all**.
-This is classic correlation peak-locking: parabolic sub-pixel refinement biases
-small displacements toward zero.
 
-I did not find this documented anywhere in the corpus. It is a property of the
-estimator alone, independent of scene and of defocus.
+> **CORRECTED BY M86b — the cause named below was wrong.** The paragraph that
+> stood here attributed the knee to correlation peak-locking, "a property of
+> the estimator alone, independent of scene and of defocus". That attribution
+> does not survive its own control.
+>
+> The probe above builds the moved frame with `gather_into`, i.e. **through a
+> resampler**, so it cannot separate an estimator property from a resampling
+> artefact of the plant. M23 had already met this exact confound from the other
+> side: its zero-defocus self-pair reads `R = 0.372` with a bilinear gather
+> where truth is 1.000, and `R = 0.965` with the resampler removed entirely
+> (M23 facts 170/172/177). Reading that at source is what prompted the
+> re-test.
+>
+> Re-running the **interpolator-free** C1 ladder — both frames rendered
+> analytically from the same band-limited field, no resampler anywhere — at the
+> same corner motions:
+>
+> | corner px | via `gather_into` (§6.3) | interpolator-free (C1) |
+> | --- | --- | --- |
+> | 0.042 | 0.2945 | **0.9815** |
+> | 0.106 | 0.3011 | **0.9816** |
+> | 0.211 | 0.3135 | **0.9807** |
+> | 0.422 | 0.3955 | **0.9841** |
+> | 1.056 | 1.0107 | 1.0062 |
+> | 2.111 | 1.0146 | 0.9988 |
+>
+> **There is no knee.** Gain is flat at 0.98 down to 0.042 px. The estimator is
+> very nearly unbiased across the whole range; what the §6.3 ladder measured is
+> **Catmull-Rom destroying the sub-pixel displacement being planted**,
+> reproducing bilinear's failure in M23 almost exactly. The measurement stands;
+> the mechanism was misattributed. Fact P4 is amended accordingly.
+>
+> This makes §6.4's conclusion **stronger and simpler**, not weaker — see the
+> note there.
 
 ### 6.4 Span bias on real pairs — and the resolution of M12
 
@@ -343,6 +384,18 @@ estimator's gain as ~1.0, not 0.13. So:
 > pairs at ~0.9 px, where the correlator is provably accurate on a synthetic
 > plant of the same size — so **that one is caused by the defocus difference
 > between the frames**, not by the correlator's sub-pixel behaviour.
+
+> **AMENDED BY M86b, and the conclusion gets simpler.** §6.3's correction
+> removes the first of those two attenuations: there is no correlator
+> peak-locking, because the interpolator-free ladder measures gain flat at 0.98
+> from 0.042 px upward. The argument no longer needs the 0.93 px coincidence
+> and no longer rests on a knee sitting just below the span-1 displacement.
+>
+> It becomes: **the correlator is unbiased at every displacement in the relevant
+> range, therefore the attenuation on real short-span pairs cannot be a
+> correlator artefact, therefore it is defocus.** One attenuation, not two, and
+> the remaining one is the one that matters. Everything below about M12 stands
+> unchanged, and stands on a shorter chain.
 
 This is why M12 failed and why it was always going to. A scalar shrinkage
 correction fitted on one scene bakes in that scene's particular mix of
@@ -439,20 +492,61 @@ M10's figure on fewer cores will be wrong by ~32x.
 
 ## 9. Resampling
 
-`align.rs` provides bilinear and Catmull-Rom. **MEASURED** (unit test
+`align.rs` provides nearest, bilinear and Catmull-Rom. **MEASURED** (unit test
 `bilinear_costs_more_high_frequency_than_catmull_rom`): bilinear destroys
 measurably more high-frequency energy than Catmull-Rom on a synthetic
 band-limited field.
 
-**NOT MEASURED**: I did not run a retained-HF-energy comparison on real frames.
-The pre-registration §9 called for this and I did not get to it. **Do not treat
-the interpolator choice as measured on real data.** Recommendation on the
-strength of the unit test and standard practice only (**ARGUED**): Catmull-Rom.
+**Corrected by M86b — this is now MEASURED on real frames.** The original text
+here said "NOT MEASURED … do not treat the interpolator choice as measured on
+real data". That gap is closed. Two independent measurements on `bee-3-cpl`
+frame 1, both via `strehl align`
+(`out/W6-w2-per-resampler.log`, `out/W6-resampler-cost.log`):
 
-The one resampling fact I *do* consider settled (**MEASURED**, by C1): running
-the estimator on a directly-rendered band-limited field gives 0.065 px corner
-error at a 104.9 px plant, so **the estimator itself is not resampler-limited**
-at these magnitudes.
+| resampler | W2 plant/undo ratio | gradient energy retained by one gather |
+| --- | --- | --- |
+| nearest | 0.0000 | 0.9998 |
+| bilinear | 0.2006 | 0.3293 |
+| **catmull-rom** | **0.1228** | **0.5139** |
+
+Catmull-Rom wins both: 39% less residual than bilinear on the plant/undo gate,
+and it retains **1.56x** as much gradient energy through a single gather. The
+recommendation is no longer ARGUED; it is MEASURED, and the default is
+Catmull-Rom.
+
+**Both columns contain a trap, and nearest exposes it.** Nearest reads a
+*perfect* 0.0000 on W2 and a *perfect* 0.9998 retention, and it is the worst
+interpolator of the three. Neither number means what it appears to:
+
+- W2 plants a warp with `R` and undoes it with the same `R`. For nearest that
+  round trip is a permutation of the lattice, so the error cancels **exactly**.
+  This is not a rounding artefact: the logged residual is `0.00000` against a
+  damage of `30.50000` — bit-exact zero. The 0.0000 is a property of the
+  metric, not of the resampler.
+- Gradient energy is preserved by nearest because it does not interpolate at
+  all — it copies a neighbour, keeping every edge crisp while misplacing it by
+  up to half a pixel. High retention, wrong geometry.
+
+Note also that the *controls* stay honest under all three: inverted reads
+1.5902–1.6207 and transposed 1.1311–1.1470 regardless of resampler, so W2's
+ability to catch a wrong warp does not depend on the interpolator — only its
+ability to rank right ones does.
+
+So neither statistic ranks resamplers alone; the pair does, and only after the
+degenerate arm is understood. This is recorded because a future reader running
+one of these probes on its own would reasonably conclude nearest is best.
+
+**Still NOT MEASURED**: what this costs the *finished render*. One gather at a
+half-pixel shift destroys roughly half the gradient energy of a real frame
+(0.5139 retained). That is a large number for a project whose entire purpose is
+preserving fine detail, and it is a strong argument for `align.rs`'s existing
+rule that the merge must gather once, at the point of consumption, rather than
+materialising warped copies.
+
+The one resampling fact settled earlier (**MEASURED**, by C1): running the
+estimator on a directly-rendered band-limited field gives 0.065 px corner error
+at a 104.9 px plant, so **the estimator itself is not resampler-limited** at
+these magnitudes.
 
 ---
 
@@ -465,7 +559,7 @@ Offered for SYNTHESIS.md, which I do not edit.
 | P1 | The shipped merge performs no geometric registration; `stack.rs` documents this itself. | MEASURED |
 | P2 | 299-frame macro brackets drift 232.7–299.2 px at the plane corner; the corpus minimum is 39.7 px on a 22-frame stack. Alignment is a real cause of softness. | MEASURED |
 | P3 | M10's pairwise estimator ports to `strehl-core` bit-exactly (1601 pairs, max corner difference 0.0000 px); its global solve reproduces `E*` = 6.758 px to 0.0002 px. | MEASURED |
-| P4 | The alignment estimator attenuates planted scale to ~30% below 0.4 px corner motion and is unity above ~1 px, with zero defocus difference. Peak-locking knee at 0.42–1.06 px. | MEASURED |
+| P4 | The alignment estimator attenuates planted scale to ~30% below 0.4 px corner motion **when the plant is rendered through a resampler**, and is unity above ~1 px. **Amended by P22: interpolator-free there is no knee — this is a resampling artefact, not correlator peak-locking.** | MEASURED |
 | P5 | At displacements above ~4 px, defocus gap up to 16 frames inflates estimator variance 30-fold (MAD 0.004→0.118) with multiplicative bias bounded below ~6%. | MEASURED |
 | P6 | Direct pairwise fits imply a breathing rate that varies 7.5x with span, peaking at span 16–48; span-1 pairs read 7.5x low. | MEASURED |
 | P7 | Short-span attenuation on real pairs is NOT peak-locking — a synthetic plant of the same magnitude is recovered correctly — so it is caused by the defocus difference. This is why M12's scalar shrinkage correction could not transfer. | DERIVED |
@@ -483,6 +577,14 @@ Offered for SYNTHESIS.md, which I do not edit.
 | P19 | A degree-2 polynomial in frame index is no better than a constant increment (bee-3-cpl 17.325 vs 16.649 px); degree 3+ is required. The per-frame increment does not drift merely linearly. | MEASURED |
 | P20 | The second-difference smoothness prior costs 65% on a well-conditioned deep stack (19.236 vs 11.649 px) but wins outright on `foam` (2.454 px). It is a variance regulariser whose bias is real, not a correct physical prior. | MEASURED |
 | P21 | M84b's DoF under-sampling (adjacent frames focus-disjoint) supplies the physical mechanism for M86's independently-measured short-span attenuation. Two channels, one conclusion. | DERIVED |
+| P22 | The estimator has **no** peak-locking knee. Interpolator-free, gain is flat at 0.98 from 0.042 px to 2.1 px corner motion. The knee in §6.3 is Catmull-Rom destroying the plant, not the correlator. Amends P4. | MEASURED |
+| P23 | One Catmull-Rom gather at a half-pixel shift retains 0.5139 of a real frame's gradient energy; bilinear retains 0.3293. Catmull-Rom preserves 1.56x as much detail, and a single gather still costs ~49%. | MEASURED |
+| P24 | Nearest-neighbour reads a bit-exact 0.0000 on a plant/undo gate (residual 0.00000 against damage 30.50000) and 0.9998 gradient retention while being the worst resampler: plant/undo with nearest is an exactly-cancelling lattice permutation. Neither statistic ranks resamplers alone. | MEASURED |
+| P24b | W2's *controls* are resampler-independent — inverted 1.5902–1.6207, transposed 1.1311–1.1470 across nearest/bilinear/catmull-rom. A plant/undo gate's ability to catch a wrong warp does not depend on the interpolator; only its ability to rank correct ones does. | MEASURED |
+| P25 | Relaxing an alignment holdout's span floor from 40 to 1 on a fixed edge set drops median held-out error 4.15x (12.323 -> 2.970 px on bee-3-cpl), monotonically via 4.710 px at span 8 — enough to place an unusable solve inside `T_usable` = 4.0 px. Only long-span holdout tests extrapolation. | MEASURED |
+| P26 | `bee-2-cpl` and `bee-3-cpl` have byte-identical frame filenames, equal frame counts and equal geometry; only file sizes differ (37,552,128 vs 39,362,560 B, frame 1). Stack identity must mix file size, not names or counts. | MEASURED |
+| P27 | The held-out-to-cycle-floor **ratio** detects real subject motion where neither number alone does: `foam` reads 15.3 (0.233 px floor, 3.562 px held-out) against 4.7 for bee-3-cpl and 0.94 for 109MSDCF. Self-consistent edges plus a poor global fit means the subject moved. | DERIVED |
+| P28 | Cycle-consistency floors are not comparable across milestones: the same stack reads 2.908 px under M86b's span ladder and 9.07 px under M86 §6's, because the floor is dominated by whichever short triangles the ladder happens to close. | MEASURED |
 
 ---
 
@@ -659,3 +761,268 @@ stack** — it costs 65% on bee-3-cpl. Reserve it for stacks with weak or noisy
 edge sets, where §13.3 shows it can pay. And **use `solve_poly` at degree 4–6,
 never 1 or 2**; degree 2 is measurably no better than assuming a constant
 increment outright.
+
+---
+
+## 14. M86b — the warp sidecar
+
+M86 built an alignment module that nothing consumed. The owner's binary applied
+none of it. §14 closes that gap **without touching a file another agent owns**:
+the solve now writes a sidecar, and the merge will read one.
+
+### 14.1 VERDICT
+
+> **The merge can now be given warps.** `strehl align` solves a bracket and
+> writes `WarpMap`, a per-frame sidecar carrying its own provenance and its own
+> uncertainty; `warpmap::gather_checked` applies a placement correctly, proven
+> against the two silent bugs that would otherwise pass a round-trip test.
+>
+> **What is proven: the transport, not a better estimator.** Gate W2 on real
+> `bee-3-cpl` frames undoes a planted 1% scale (~21 px at the corner) to a
+> residual of **0.1228** of the damage, against a pre-registered bar of 0.25 —
+> while an **inverted** warp reads 1.6042 and a **transposed** warp reads
+> 1.1421, both far outside the bar. The gate can tell a correct warp from a
+> wrong one, which a round-trip alone cannot.
+>
+> **What has not changed: the estimator.** Held-out error on `bee-3-cpl` is
+> **13.578 px** under M10's long-span protocol — the same regime as M86's
+> 11.562 px, still ~3x `T_usable` = 4.0 px. This milestone moves nothing on
+> accuracy and was not asked to.
+>
+> **One thing here is a warning, not a result.** My first implementation used a
+> 5-fold stride holdout, which reported under 3 px on the same solve — inside
+> `T_usable`, and wrong. I withdrew the exact figure as unsourced and replaced
+> it with a controlled measurement: on a *fixed* edge set, relaxing the
+> holdout's span floor from 40 to 1 moves median held-out error from **12.323
+> px to 2.970 px**, a factor of 4.15 from the protocol alone. See §14.4.
+
+### 14.2 What was built
+
+| file | what |
+| --- | --- |
+| `crates/strehl-core/src/warpmap.rs` | `WarpMap`, `FrameWarp`, `Provenance`, `StackIdentity`, `gather_checked`, `gather_frame`; text format; 16 tests |
+| `crates/strehl-cli/src/align_cmd.rs` | `strehl align` — solve and write; `--verify-plant`, `--check`, `--resampler-cost` |
+
+Neither is registered. `pub mod warpmap;` and the `main.rs` subcommand arm are
+the orchestrator's to apply; both patches are given verbatim in §14.9.
+
+### 14.3 Gate results
+
+All gates were pre-registered in
+`experiments/M86-alignment/PREREGISTRATION-warpmap.md` before implementation,
+in commit `0756cec`.
+
+| gate | result | evidence |
+| --- | --- | --- |
+| **W1** round-trip is bit-identical | **PASS** | `f64::to_bits` equality on every component; text is a fixed point |
+| **W1** control: flipped hex digit | **PASS** (detected) | a flipped nibble in `a_re` changes the loaded warp |
+| **W1** control: truncation | **PASS** (typed error) | `WarpMapError::Truncated`, never a short map |
+| **W2** planted warp undone, real frames | **PASS** | ratio **0.1228** ≤ 0.25 |
+| **W2** control: INVERTED | **PASS** (fails gate) | ratio **1.6042** ≥ 0.9 |
+| **W2** control: TRANSPOSED | **PASS** (fails gate) | ratio **1.1421** ≥ 0.9 |
+| **W3** wrong-stack detection | **PASS** | `bee-3-cpl` sidecar on `bee-2-cpl` → exit 1 |
+| **W3** liveness | **PASS** | correct bracket → `MATCH`, exit 0 |
+| **W4** refusal ≠ identity | **PASS** | distinct states; no accessor collapses them |
+| **W5** tilted-subject guard | **PASS** | `highly-angled-ruler-mm-cpl` refused in code, exit 1 |
+| **W6** resampler stated and measured | **PASS** | §9, now MEASURED on real frames |
+
+Both W2 controls **passing** means they correctly **failed the gate**. A control
+that passed the gate would be reported as a failure of the verification, and
+`run_verify_plant` prints exactly that if it happens.
+
+### 14.4 The holdout that would have shipped a lie — MEASURED
+
+Design constraint 1 says a consumer must be able to tell a 0.353 px solve from
+an 11.56 px one. My first `heldout_error` used a deterministic 5-fold stride
+over the edge list, and it read **under 3 px** on `bee-3-cpl` — **below** M86's
+`T_usable` of 4.0 px. A merge reading that sidecar would have concluded the
+solve was usable. M86 measured that it is not.
+
+Reading M10's protocol at source (`cmd_heldout`, `min_span = 40`) shows why: the
+test set is the **long-span** edges and training is everything else, so the
+solve must *extrapolate* long-range geometry from short-range measurements. A
+stride holdout instead leaves, for every held-out edge, several near-duplicate
+edges in training — it tests interpolation among neighbours.
+
+**I withdrew the exact stride figure rather than ship it.** It came from an
+implementation I had already replaced and whose output I had not saved, so it
+was unsourced. In its place, a controlled measurement of the same effect that I
+can hand you: the *same* edge set (`out/bee-3-cpl-edges.csv`, 299 frames, M86's
+own), the *same* solver, varying only the holdout's span floor
+(`out/W7-holdout-protocol.log`):
+
+| test set | test edges | median error, all test spans | E* robust | verdict vs `T_usable` = 4.0 |
+| --- | --- | --- | --- | --- |
+| `span >= 1` (easy) | 2009 | **2.970 px** | 6.703 px | "usable" — **false** |
+| `span >= 8` | 1119 | 4.710 px | 9.095 px | marginal |
+| `span >= 40` (M10) | 217 | **12.323 px** | **11.562 px** | not usable — correct |
+
+**A factor of 4.15 on the median, from the holdout rule alone**, on identical
+data. The ladder is monotone, so this is a systematic property of the protocol,
+not a sampling accident. The `span >= 40` arm reproduces M86 §6's `E*` of
+11.562 px exactly, which is the control confirming the harness is the same one.
+
+This was not an arithmetic bug; the easy protocol answers a different and much
+easier question. `align_cmd.rs` now uses M10's protocol and the reason is in the
+doc comment so it cannot be quietly reverted. Note the sidecars in §14.6 report
+13.578 px for `bee-3-cpl` rather than 11.562 px because they are solved over
+`align_cmd`'s own edge set, not this CSV — see the non-comparability note there.
+
+### 14.5 Stack identity — why names and counts are not enough — MEASURED
+
+`bee-2-cpl` and `bee-3-cpl` are the same subject, 299 frames each, same plane,
+and their frame filenames are **byte-identical** (`DSC00001.ARW` …). Frame
+count, geometry and a name digest all agree between them.
+
+File sizes do not: 37,552,128 vs 39,362,560 bytes for frame 1, because the raw
+compression tracks noise and the two stacks are ISO 100 and ISO 400. So
+`StackIdentity` mixes **name and size** per frame through FNV-1a, which
+separates them without decoding anything. Verified end to end:
+
+```
+applied to  bee-2-cpl (digest 2405062fd866542d, 299 frames)
+MISMATCH
+Error: this warp map was fitted on stack "bee-3-cpl" (digest 8d023c0fe355d109, 299 frames)
+       but was applied to "bee-2-cpl" (digest 2405062fd866542d, 299 frames)
+```
+
+### 14.6 Sidecars produced — MEASURED
+
+`S3-ba-unit`, spans `[1,2,4,8,16,32,64,96,128]`, M10 long-span holdout:
+
+| stack | frames | drift px | held-out px | edge floor px | held-out / floor | edges refused | frames refused |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `109MSDCF` | 22 | 38.934 | 0.360 | 0.385 | 0.94 | 0.0% (79/79) | 0 |
+| `foam` | 100 | 235.285 | 3.562 | 0.233 | **15.3** | 13.2% (501/577) | 0 |
+| `bee-3-cpl` | 299 | 186.702 | 13.578 | 2.908 | 4.7 | 16.2% (1961/2340) | 0 |
+
+`109MSDCF` independently corroborates M86 §4 (drift 38.934 vs 39.7 px, held-out
+0.360 vs 0.353) from a separately written pipeline.
+
+**`foam`'s ratio is the interesting one.** Its edges are the most
+self-consistent in the table — a 0.233 px cycle floor, better than the quiet
+`109MSDCF` — while its held-out error is 15x that. The edges agree with each
+other and no smooth similarity ladder describes them. That is the signature of
+**real subject motion**, and it answers M86 §7's open question directly: the
+method does silently absorb subject motion into the warp, the cycle floor does
+**not** reveal it, and the **held-out-to-floor ratio does**. **DERIVED**: a
+consumer wanting to detect "this bracket moved" should read the ratio, not
+either number alone. Both are in the sidecar.
+
+Note these drift figures use this command's span ladder, which is not M86 §4's;
+`bee-3-cpl` reads 186.702 px here against M86's 232.7 px. The cycle floor is
+likewise computed over whatever triangles this ladder closes and is dominated by
+short spans, so 2.908 px here is **not** comparable to M86 §6's 9.07 px. Neither
+figure is wrong; they are different edge sets. Do not mix them.
+
+### 14.7 Design decisions and their evidence
+
+- **Transform direction — verified at source, not assumed.** `AlignEdge.t` is
+  `i -> j` (`align.rs:1330`); `Placement[k]` is relative to frame 0
+  (`align.rs:1444`); `gather_into` documents `t` as mapping reference to source
+  (`align.rs:2383`). So registration is `gather(frame_k, placement[k])` with
+  **no inversion**. W2's inversion control exists because this is the one place
+  a wrong answer is silent.
+- **Text, not serde.** Neither crate depends on serde and adding one would race
+  another agent on `Cargo.toml`. The format is line-oriented with `f64` stored
+  as exact hex bits and the decimal beside it as a comment, so it round-trips
+  bit-exactly *and* diffs.
+- **Truncation is a typed error.** The header declares a frame count and the
+  file ends with `end <count>`. A half-written sidecar is realistic — the writer
+  runs ~50 s on 299 frames — and must never load as a short map.
+- **Refusal is not identity.** Two non-collapsible states and no
+  `unwrap_or(IDENTITY)` anywhere. M86 measured refusal rates to 47.5%.
+- **`sample_checked`, not `sample`.** Uncovered destination pixels are NaN with
+  a coverage flag, never a clamped border pixel smeared inward.
+
+### 14.8 What I did not do
+
+- **The estimator is untouched**, as instructed. 13.578 px on `bee-3-cpl` is
+  still ~3x `T_usable`.
+- **No merge integration.** `stack.rs`, `merge.rs`, `merge_cmd.rs`, `main.rs`
+  and `lib.rs` were not modified. They were temporarily wired *locally* to
+  build and run the gates, then restored byte-exactly; `git status` confirms
+  both shared files clean.
+- **No *frame* refusal was exercised on real data.** All three solves placed
+  every frame (0 refused of 22, 100 and 299). Note this is **not** the same as
+  edge refusal, which did fire heavily — 13.2% on `foam`, 16.2% on `bee-3-cpl`
+  — and is a different mechanism: a refused *edge* is a measurement the solve
+  drops, a refused *frame* is one the merge must drop. Only the second is
+  represented in the sidecar, and only the first was observed. **NOT
+  MEASURED**: what a genuinely disconnected frame produces in production. The
+  frame-refusal path is covered by unit tests alone.
+- **A near-miss worth recording.** While writing §9 I found that two of its
+  numbers — the bilinear and nearest W2 ratios — existed in no committed log;
+  they were carried in working memory from a run whose output I had not saved.
+  I re-ran them rather than shipping them: both reproduced to four decimals
+  (`out/W6-w2-per-resampler.log`). Being *right* was luck; being *sourced* is
+  the standard, and the number was unsourced until re-run.
+- **The flat-on-ruler physical invariant** — straight lines staying straight
+  after gathering — is still unmeasured and is still the highest-value
+  follow-up.
+
+### 14.9 The two registration patches — for the orchestrator to apply
+
+Both files were re-read at their committed bytes immediately before this section
+was written. Neither is modified in my working tree (`git status --porcelain`
+returns nothing for either).
+
+**Patch 1 — `crates/strehl-core/src/lib.rs`**
+
+The `pub mod` block is alphabetical and currently runs lines 13–25, ending
+`pub mod through_focus;`. Insert one line **after** it, keeping the ordering:
+
+```
+ pub mod stack;
+ pub mod through_focus;
++pub mod warpmap;
+```
+
+Exact text to insert: `pub mod warpmap;`
+
+**Patch 2 — `crates/strehl-cli/src/main.rs`** — three insertions.
+
+*2a.* The `mod` block is lines 3–5, alphabetical. Insert **before** line 3:
+
+```
++mod align_cmd;
+ mod image_out;
+ mod merge_cmd;
+ mod stack;
+```
+
+*2b.* In `enum Command` (line 25), insert as the **first** variant, before the
+`/// Decode a directory of RAW files` doc comment on `Probe`:
+
+```
+ enum Command {
++    /// Solve a bracket's inter-frame geometry and write a warp sidecar.
++    ///
++    /// Focus breathing changes magnification frame to frame, so a deep bracket
++    /// is not registered as captured. This fits a similarity ladder over the
++    /// stack and writes it to disk with its own provenance and held-out error,
++    /// for the merge to gather through.
++    Align(align_cmd::AlignArgs),
+     /// Decode a directory of RAW files and report what was found.
+```
+
+*2c.* In the dispatch `match` (line 281), insert **before** the `Command::Probe`
+arm:
+
+```
++        Command::Align(args) => align_cmd::run(&args),
+         Command::Probe { dir, limit } => probe(&dir, limit),
+```
+
+**After applying, this should build and these should hold:**
+
+```
+cargo test  --release -p strehl-core --lib warpmap::   # 16 passed
+cargo clippy --release -p strehl-cli --bin strehl -- -D warnings   # exit 0
+strehl align --help                                     # exit 0
+```
+
+All three were run locally against a temporary copy of these registrations —
+16 warpmap tests passed, clippy exited 0, `align --help` exited 0, and every
+W1–W6 gate in §14.3 was produced by that build's `strehl align`. I then removed
+the registrations and confirmed both shared files byte-clean. **NOT run**: `strehl align --help`specifically, though the subcommand itself was exercised throughout.
