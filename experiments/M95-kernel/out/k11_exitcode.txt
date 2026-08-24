@@ -1,0 +1,36 @@
+======================================================================================
+K11  does a truncated pipeline falsify $LASTEXITCODE?
+======================================================================================
+
+--- pwsh (7.x)   version 7.6.5 ---
+  arm                                true  read  secs  truncated  verdict
+  fast exit1  no pipeline               1     1   0.3  n/a        correct
+  fast exit1  | Select-String           1     1   0.3  n/a        correct
+  fast exit1  | -First 3 of 10          1  None   0.3  n/a        wrong (None)
+  fast exit1  | -First 99               1     1   0.3  n/a        correct
+  fast exit1  | -Last 3                 1     1   0.3  n/a        correct
+  slow exit1  no pipeline               1     1   6.3  no         correct
+  slow exit1  | -First 3 of 10          1  None   2.1  yes        wrong (None)
+  slow exit1  | -First 99               1     1   6.3  no         correct
+  slow exit0  no pipeline               0     0   6.3  no         correct
+  slow exit0  | -First 3 of 10          0  None   2.1  yes        wrong (None)
+
+--- powershell (5.1)   version 5.1.26100.9168 ---
+  arm                                true  read  secs  truncated  verdict
+  fast exit1  no pipeline               1     1   0.2  n/a        correct
+  fast exit1  | Select-String           1     1   0.2  n/a        correct
+  fast exit1  | -First 3 of 10          1     1   0.2  n/a        correct
+  fast exit1  | -First 99               1     1   0.2  n/a        correct
+  fast exit1  | -Last 3                 1     1   0.2  n/a        correct
+  slow exit1  no pipeline               1     1   6.2  no         correct
+  slow exit1  | -First 3 of 10          1    -1   1.4  yes        wrong (-1)
+  slow exit1  | -First 99               1     1   6.2  no         correct
+  slow exit0  no pipeline               0     0   6.2  no         correct
+  slow exit0  | -First 3 of 10          0    -1   1.4  yes        wrong (-1)
+
+======================================================================================
+VERDICT: NO-FALSE-GREEN -- no arm read 0 for a probe whose true code was 1.
+  A failing command was never read as success on either shell tested.
+======================================================================================
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-kernel\out\k11_exitcode.json

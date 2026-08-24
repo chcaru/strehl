@@ -740,3 +740,101 @@ population; only the structural claim was cross-checked, via NOZOOM's
 `cr = +0.1755` at scale exactly 1.0 reproducing `COMP(1.0) = +0.1667` on a
 sidecar-free population, differing by 0.0088 dex. The conclusion survives; the
 values are mildly population-dependent. Say the word and I will re-take them.
+
+---
+
+## 15. Two orchestrator corrections, re-tested
+
+Instruments: `experiments/M95-kernel/src/k11_exitcode.py` (+ the two probes it
+drives), raw output in `out/k11_exitcode.{json,txt}`. Bars in the docstring,
+written before the run.
+
+### 15.1 The truncated-pipeline exit code — the remedy is right, the mechanism is not
+
+The report was that `... | Select-String ... | Select-Object -First N` makes
+`$LASTEXITCODE` read **0** after a command whose true code is 1, and that this
+"turns a red control green". A false green is the dangerous direction, so the
+bar was: **CONFIRM-FALSE-GREEN** if any arm reads 0 for a probe whose true code
+is 1, **NO-FALSE-GREEN** otherwise.
+
+Two probes separate the candidate triggers: a *fast* one that has already
+exited when the consumer stops the pipeline, and a *slow* one streaming over
+~6 s so truncation stops it mid-run. Wall-clock is the positive control that
+truncation actually happened — a truncated arm must finish in ~1–2 s against
+~6 s or it proves nothing. Shells: **pwsh 7.6.5** and Windows PowerShell
+**5.1.26100.9168**.
+
+| shell | arm | true | read | secs | truncated |
+| --- | --- | --- | --- | --- | --- |
+| pwsh 7.6.5 | slow exit1, no pipeline | 1 | 1 | 6.3 | no |
+| pwsh 7.6.5 | slow exit1, `-First 3 of 10` | 1 | **none emitted** | 2.1 | yes |
+| pwsh 7.6.5 | slow exit0, `-First 3 of 10` | 0 | **none emitted** | 2.1 | yes |
+| pwsh 7.6.5 | slow exit1, `-First 99` | 1 | 1 | 6.3 | no |
+| powershell 5.1 | slow exit1, `-First 3 of 10` | 1 | **-1** | 1.4 | yes |
+| powershell 5.1 | slow exit0, `-First 3 of 10` | 0 | **-1** | 1.4 | yes |
+| powershell 5.1 | fast exit1, `-First 3 of 10` | 1 | 1 | 0.1 | n/a |
+
+**Verdict: NO-FALSE-GREEN.** Across 20 arms on two shells, **no arm read 0 for
+a probe whose true exit code was 1.** A failing command was never read as
+success. The remedy — capture first, then filter — is right, and I have adopted
+it; the stated mechanism is not what these shells do. What they actually do:
+
+1. **Windows PowerShell 5.1 returns `-1`** when truncation kills a *still
+   running* process — wrong for both a true 1 and a true 0. It is wrong in both
+   directions, but it is **nonzero**, so a gate written `if ($code -ne 0)
+   { throw }` **fails closed**. That is a false *red*, the safe direction.
+2. **pwsh 7.6.5 emitted no exit code at all** in the truncated arms: the
+   pipeline stop aborted the remaining statements in the command, so the
+   `Write-Output $LASTEXITCODE` after it never ran. **This is the hazard worth
+   broadcasting** — not a gate that reads the wrong value, but a gate that
+   **never executes**, which is how a check gets silently skipped.
+3. **Truncation only bites a process that is still running.** Every fast-probe
+   arm is correct on both shells, including the truncating one.
+
+The half of the report that reproduces exactly is the one about **output**:
+the `-First 3` arms saw 3 of 10 lines, so truncation does hide the diagnosis.
+
+**Audit of my own gates — none of them is affected.** Every pass/fail
+determination in this milestone was made by `subprocess.run(...).returncode`
+inside Python (`k8`, `k9`, `k10`, `k11`, the negative controls), which is immune
+to PowerShell pipeline semantics by construction. The two shell-side checks:
+`verify_s14.py` was read through `| Tee-Object | Select-Object -Last 6`, and
+`-Last` must consume the whole stream so it cannot truncate upstream — it
+demonstrably read `exit=1` while the report was RED and `exit=0` once it was
+GREEN, which is the discrimination in situ. `corpus_lint` was re-run this
+session capture-first: **exit 0, 1235 facts, no violations**.
+
+### 15.2 The sidecar location — re-measured, and the `frames 40` file is M98's scratch
+
+Re-checked at 12:5x, after the correction:
+
+- `Get-ChildItem D:\personal\macro -Recurse -Depth 1 -Filter warpmap*.txt` →
+  **count = 0**. There is still no sidecar anywhere in the capture library.
+- The shared cache entry `bee-3-cpl-ea1d38ea5c9523c5.warpmap.txt` reads
+  **frames 6, reference 3**, mtime **10:39:03** — unchanged across ~2.5 h, so
+  nothing has re-solved it.
+
+The file reading **`frames 40, reference 20`** is
+`C:\dev\strehl-out\M98\frames\112MSDCF-A\warpmap.txt` — M98's private scratch
+copy of a *different* bracket (`112MSDCF`, not `bee-3-cpl`). M98's own
+`bee-3-cpl-A` scratch reads `frames 150, reference 75`. Those are copies of
+frames into scratch directories, where a sidecar beside the frames is that
+run's own business and harms nobody.
+
+`sidecar_path()` (`align_cmd.rs:805-817`) returns
+`cache_root()/<leaf>-<key:016x>.warpmap.txt`, and `cache_root()`
+(`:820-831`) resolves `$STREHL_CACHE_DIR` first. **`STREHL_WARPMAP` and
+`STREHL_CACHE_DIR` are complementary, not alternatives:** `STREHL_WARPMAP`
+pins one file for one command and validates it hard, which is what a *control*
+needs; `STREHL_CACHE_DIR` relocates the whole read-and-write cache, which is
+what an *agent* needs so its ordinary renders neither read nor poison a shared
+entry. M97 is already doing the latter —
+`C:\dev\strehl-out\M97\cache\bee-3-cpl-ea1d38ea5c9523c5.warpmap.txt` carries
+the same canonical-path hash as the shared entry under a private root, which is
+the mechanism working as designed.
+
+**One residual worth a line:** a stale per-agent binary built before `8118dd7`
+still writes `<stackdir>/warpmap.txt`. The source is fixed; the binaries in
+seven `target-*` directories are not necessarily rebuilt. That, rather than
+current `main`, is the remaining route by which a file could reappear in the
+capture library.

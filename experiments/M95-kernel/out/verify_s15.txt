@@ -1,0 +1,35 @@
+==============================================================================
+verify M95-kernel.md section 15  (PRESENT / DISCRIMINATE)
+==============================================================================
+  OK   version pwsh (7.x)                      '7.6.5'  present=True disc=True
+  OK   version powershell (5.1)           '5.1.26100.9168'  present=True disc=True
+  OK   total arms                                 '20'  present=True disc=True
+  OK   verdict                            'NO-FALSE-GREEN'  present=True disc=True
+  OK   pwsh slow exit1  no pipelin secs          '6.3'  present=True disc=True
+  OK   pwsh slow exit1  | -First 3 secs          '2.1'  present=True disc=True
+  OK   pwsh slow exit0  | -First 3 secs          '2.1'  present=True disc=True
+  OK   pwsh slow exit1  | -First 9 secs          '6.3'  present=True disc=True
+  OK   powe slow exit1  | -First 3 secs          '1.4'  present=True disc=True
+  OK   powe slow exit1  | -First 3 code           '-1'  present=True disc=True
+  OK   powe slow exit0  | -First 3 secs          '1.4'  present=True disc=True
+  OK   powe slow exit0  | -First 3 code           '-1'  present=True disc=True
+  OK   powe fast exit1  | -First 3 secs          '0.1'  present=True disc=True
+------------------------------------------------------------------------------
+  OK   headline verdict stated            'NO-FALSE-GREEN'
+  OK   remedy endorsed                    'capture first, then filter'
+  OK   5.1 fails closed                   'fails closed'
+  OK   7.x real hazard named              'never executes'
+  OK   truncation control                 'must finish in ~1'
+  OK   output half confirmed              '3 of 10 lines'
+  OK   own gates audited                  'subprocess.run'
+  OK   corpus_lint recheck                '1235 facts'
+  OK   library still clean                'count = 0'
+  OK   frames-40 file identified          '112MSDCF-A'
+  OK   cache entry unchanged              '10:39:03'
+  OK   complementary not alternatives     'complementary, not alternatives'
+  OK   stale binary residual              '8118dd7'
+------------------------------------------------------------------------------
+  OK   headline holds in the JSON: no true-1 arm read 0  (0 violations)
+==============================================================================
+verdict: GREEN
+==============================================================================

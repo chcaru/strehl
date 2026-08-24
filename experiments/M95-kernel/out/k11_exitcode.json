@@ -1,0 +1,176 @@
+{
+  "shells": {
+    "pwsh (7.x)": {
+      "version": "7.6.5",
+      "rows": [
+        {
+          "arm": "fast exit1  no pipeline",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 0.32,
+          "truncated": "n/a",
+          "verdict": "correct"
+        },
+        {
+          "arm": "fast exit1  | Select-String",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 0.3,
+          "truncated": "n/a",
+          "verdict": "correct"
+        },
+        {
+          "arm": "fast exit1  | -First 3 of 10",
+          "true_code": 1,
+          "read_code": null,
+          "seconds": 0.29,
+          "truncated": "n/a",
+          "verdict": "wrong (None)"
+        },
+        {
+          "arm": "fast exit1  | -First 99",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 0.3,
+          "truncated": "n/a",
+          "verdict": "correct"
+        },
+        {
+          "arm": "fast exit1  | -Last 3",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 0.28,
+          "truncated": "n/a",
+          "verdict": "correct"
+        },
+        {
+          "arm": "slow exit1  no pipeline",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 6.33,
+          "truncated": "no",
+          "verdict": "correct"
+        },
+        {
+          "arm": "slow exit1  | -First 3 of 10",
+          "true_code": 1,
+          "read_code": null,
+          "seconds": 2.08,
+          "truncated": "yes",
+          "verdict": "wrong (None)"
+        },
+        {
+          "arm": "slow exit1  | -First 99",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 6.31,
+          "truncated": "no",
+          "verdict": "correct"
+        },
+        {
+          "arm": "slow exit0  no pipeline",
+          "true_code": 0,
+          "read_code": 0,
+          "seconds": 6.32,
+          "truncated": "no",
+          "verdict": "correct"
+        },
+        {
+          "arm": "slow exit0  | -First 3 of 10",
+          "true_code": 0,
+          "read_code": null,
+          "seconds": 2.06,
+          "truncated": "yes",
+          "verdict": "wrong (None)"
+        }
+      ]
+    },
+    "powershell (5.1)": {
+      "version": "5.1.26100.9168",
+      "rows": [
+        {
+          "arm": "fast exit1  no pipeline",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 0.18,
+          "truncated": "n/a",
+          "verdict": "correct"
+        },
+        {
+          "arm": "fast exit1  | Select-String",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 0.16,
+          "truncated": "n/a",
+          "verdict": "correct"
+        },
+        {
+          "arm": "fast exit1  | -First 3 of 10",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 0.15,
+          "truncated": "n/a",
+          "verdict": "correct"
+        },
+        {
+          "arm": "fast exit1  | -First 99",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 0.18,
+          "truncated": "n/a",
+          "verdict": "correct"
+        },
+        {
+          "arm": "fast exit1  | -Last 3",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 0.17,
+          "truncated": "n/a",
+          "verdict": "correct"
+        },
+        {
+          "arm": "slow exit1  no pipeline",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 6.17,
+          "truncated": "no",
+          "verdict": "correct"
+        },
+        {
+          "arm": "slow exit1  | -First 3 of 10",
+          "true_code": 1,
+          "read_code": -1,
+          "seconds": 1.37,
+          "truncated": "yes",
+          "verdict": "wrong (-1)"
+        },
+        {
+          "arm": "slow exit1  | -First 99",
+          "true_code": 1,
+          "read_code": 1,
+          "seconds": 6.17,
+          "truncated": "no",
+          "verdict": "correct"
+        },
+        {
+          "arm": "slow exit0  no pipeline",
+          "true_code": 0,
+          "read_code": 0,
+          "seconds": 6.17,
+          "truncated": "no",
+          "verdict": "correct"
+        },
+        {
+          "arm": "slow exit0  | -First 3 of 10",
+          "true_code": 0,
+          "read_code": -1,
+          "seconds": 1.35,
+          "truncated": "yes",
+          "verdict": "wrong (-1)"
+        }
+      ]
+    }
+  },
+  "false_green": [],
+  "verdict": "NO-FALSE-GREEN"
+}
