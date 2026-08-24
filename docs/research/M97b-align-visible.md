@@ -869,7 +869,50 @@ one. `save_atomic` writes to `.{name}.{pid}.tmp` **in the destination
 directory** — a rename is only atomic within a volume — and removes the
 temporary if the rename fails.
 
-### 13.3 What I did not fix
+### 13.3 The fix is in HEAD; it is not in the binaries
+The corpus now scans clean at **0** strays — the eleven were swept by someone
+else. But a source fix reaches an agent only when that agent **rebuilds**, and
+the relocate landed at 10:32. Of the 13 `strehl.exe` builds in this tree, **10
+predate it**:
+
+```
+strehl-target-m85   02:10   .cargo-target-m91    01:25   target       08-23 15:46
+strehl-target-m87v  05:01   .cargo-target-m100   04:49   target-m95   06:33
+strehl-target-m87   06:43   .cargo-target-m98    06:35
+.cargo-target-verify 10:11  .cargo-target-m103   07:58
+```
+
+Timestamps only suggest that; a paired run measures it. On a **scratch copy** of
+10 frames under `C:\dev\strehl-out\M97\` — never on the corpus, since
+deliberately polluting it to prove a point is the thing being fixed
+(`src/stalecheck.ps1`):
+
+| arm | binary | wrote to | strays left in the capture dir |
+|---|---|---|---:|
+| stale | `.cargo-target-m103`, 07:58 | `<capture-dir>\warpmap.txt`, 1831 b | **1** |
+| fixed | `strehl-target-m97`, 10:44 | `<cache>\coffee-bubbles-65bfec….warpmap.txt` | **0** |
+
+Both arms report a cycle-consistency floor of **0.140** — identical, so the two
+binaries ran the same solve and the only thing that differs is *where* it wrote.
+That is the internal control that makes this a clean attribution rather than
+two runs that happened to differ.
+
+**This explains fact 1390 mechanically.** Cleanup did not lower the stray rate
+because the sweep and the source of the strays are independent: sweeping removes
+files while ten already-compiled binaries keep recreating them. `coffee-bean`
+returning three times during a twenty-minute check, once *after* a sweep, is
+what that looks like from outside.
+
+**No code change can fix an already-compiled binary.** The remedy is
+operational — every agent holding a pre-10:32 build must rebuild before its next
+`align` or `stack` run — and fact 1385 already measured that a broadcast does
+not enforce. I am reporting the exposure rather than acting on it: deleting
+other agents' binaries would break a live measurement, which is the same class
+of harm as deleting a sidecar out from under a running render.
+
+---
+
+### 13.4 What I did not fix
 
 Defect 2, the abort on a single refused frame, should become a drop-with-warning
 and I have **not** written it. It touches the fold and `n_eff` path in
@@ -986,6 +1029,10 @@ quietly.
 - **§13. `WarpMap::load` rejects every rung of an 8-step truncation ladder**
   (10/25/50/75/90/95/99% and a mid-line cut) on a real 79-frame sidecar, with
   the untouched copy loading at 79 frames and the empty file failing.
+- **§13.3. Stale binaries still pollute (MEASURED, paired, on scratch frames).**
+  A 07:58 build writes `warpmap.txt` into the capture directory; my 10:44 build
+  writes to the cache and leaves 0. Same 10 frames, identical 0.140 cycle floor,
+  so the solve is the same and only the destination differs.
 
 ### Not verified
 - **§12's 1.0306 is conditional on a model §12.3 falsifies.** It is the one
@@ -1143,6 +1190,15 @@ quietly.
   somewhere else** — here, a 3037-byte sidecar in the cache ending `end 19`.
   Same shape as discipline 598, applied to a filesystem side effect rather than
   to a metric.
+- **P17 (MEASURED).** **A source fix does not reach a running swarm.** The
+  relocate landed at 10:32; **10 of the 13 `strehl.exe` builds in this tree
+  predate it**, and a paired run on scratch frames shows a 07:58 binary still
+  writes `<capture-dir>\warpmap.txt` (1831 b) where the 10:44 binary writes to
+  the cache — with an identical 0.140 cycle floor proving both ran the same
+  solve. **This is the mechanism behind fact 1390**: sweeping cannot lower a
+  stray rate that ten compiled binaries keep replenishing. The remedy is
+  operational — rebuild — and fact 1385 already measured that broadcasting does
+  not enforce.
 
 ### Notes
 **The corpus write is fixed at the source** (§13.1). Pollution had grown 8 → 11
