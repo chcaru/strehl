@@ -288,8 +288,9 @@ def main() -> int:
             cells.append(f"{100 * err:+8.3f}%")
         print(f"    {r['iso']:5.0f} {cov:10.6f}  " + "  ".join(c.rjust(9) for c in cells))
     print(f"\n  worst |sigma error| anywhere in the table: {100 * worst_err:.3f} %")
-    print(f"  M69's FOCUS_NOISE_SD error on real texture: {100 * M69_FOCUS_NOISE_SD_ERROR:.0f} %")
-    thresh = m72.C6_MATERIAL_FRACTION * M69_FOCUS_NOISE_SD_ERROR
+    print(f"  M69's FOCUS_NOISE_SD error on real texture: "
+          f"{100 * m72.M69_FOCUS_NOISE_SD_ERROR:.0f} %")
+    thresh = m72.C6_MATERIAL_FRACTION * m72.M69_FOCUS_NOISE_SD_ERROR
     print(f"  pre-registered materiality threshold: {100 * thresh:.2f} %")
     verdicts["C6"] = ("IMMATERIAL IN PRACTICE" if worst_err < thresh
                       else "MATERIAL")
