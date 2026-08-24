@@ -1,0 +1,51 @@
+single frame : DSC00150.ARW  (149 of 299)
+render       : bee-3-cpl-g0.tif
+
+raw decode (4688, 7028), render (4688, 7032)
+NOTE: dimensions differ; tiles are mapped through the coverage scale anyway.
+selected 40 sharpest tiles of the single frame
+
+40 of them land inside the render
+
+   freq       FULL     BINNED      MERGE   which anchor
+  0.205     0.0053     0.0030     0.0047   FULL
+  0.215     0.0046     0.0023     0.0036   FULL
+  0.225     0.0039     0.0018     0.0028   FULL
+  0.235     0.0034     0.0014     0.0022   FULL
+  0.245     0.0030     0.0011     0.0018   FULL
+  0.255     0.0027     0.0008     0.0015   FULL
+  0.265     0.0024     0.0006     0.0012   FULL
+  0.275     0.0021     0.0005     0.0011   FULL
+  0.285     0.0019     0.0003     0.0010   FULL
+  0.295     0.0017     0.0003     0.0009   FULL
+  0.305     0.0016     0.0002     0.0008   FULL
+  0.315     0.0015     0.0001     0.0007   FULL
+  0.325     0.0014     0.0001     0.0006   FULL
+  0.335     0.0013     0.0001     0.0006   FULL
+  0.345     0.0012     0.0000     0.0005   FULL
+  0.355     0.0011     0.0000     0.0005   FULL
+  0.365     0.0011     0.0000     0.0005   FULL
+  0.375     0.0011     0.0000     0.0004   FULL
+  0.385     0.0010     0.0000     0.0004   FULL
+  0.395     0.0010     0.0000     0.0004   FULL
+  0.405     0.0009     0.0000     0.0004   FULL
+  0.415     0.0009     0.0000     0.0004   FULL
+  0.425     0.0009     0.0000     0.0003   FULL
+  0.435     0.0008     0.0000     0.0003   FULL
+  0.445     0.0007     0.0000     0.0003   FULL
+  0.455     0.0007     0.0000     0.0003   FULL
+  0.465     0.0007     0.0000     0.0003   FULL
+  0.475     0.0006     0.0000     0.0003   FULL
+  0.485     0.0006     0.0000     0.0003   FULL
+  0.495     0.0006     0.0000     0.0003   FULL
+
+mean log10 power in 0.3-0.48 cyc/px:
+  FULL   -3.0058
+  BINNED -5.6621
+  MERGE  -3.3751
+
+anchor separation 2.6563 dex -- the test can resolve them.
+On the scale 0 = BINNED, 1 = FULL, the merge sits at 0.861.
+
+VERDICT: the merge tracks the FULL anchor. It is NOT binned, and
+tonight's leading explanation for the softness is wrong.
