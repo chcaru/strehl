@@ -635,8 +635,12 @@ cargo run --release --example m90-prnu --target-dir experiments/M90-prnu/target-
 cargo run --release --example m90-prnu --target-dir experiments/M90-prnu/target-m90 -- selftest
 ```
 
-Raw outputs are preserved under `experiments/M90-prnu/out/`. Pre-registration and baseline
-hashes are in `experiments/M90-prnu/PREREGISTRATION.md` §6.
+Raw outputs are preserved under `experiments/M90-prnu/out/` and are committed. The
+identity blobs themselves are 173 MB and gitignored; their SHA-256 chain — baseline →
+after → plant → restored → end-of-night, annotated with what each row proves — is in
+`experiments/M90-prnu/out/identity-hashes.txt`. Pre-registration and baseline hashes are
+in `experiments/M90-prnu/PREREGISTRATION.md` §6.
 
 Commits: `d057947` (pre-registration, before any result), `cc67c7b` (Deliverable A),
-`6602e52` (the instrument).
+`6602e52` (the instrument), `56e68e2` (this report), `e709a9d` (end-of-night
+re-verification), `6ac517c` (the raw evidence and the hash ledger).
