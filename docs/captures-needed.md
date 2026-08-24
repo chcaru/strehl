@@ -857,6 +857,27 @@ three independent estimators agreeing. See
 and M81's closing sentence names this burst as the minimum capture for the
 remaining route.** It costs thirty seconds.
 
+**M91 corroboration (2026-08, a third milestone, arriving from an unrelated
+direction).** M91 was chartered on photometric drift, not on noise, and it
+reached this same capture by its own route. It needed to know whether the
+per-frame brightness drift is spatially **uniform** across the frame or varies
+across it, because that single unknown decides whether a global per-frame gain
+recovers **100.0%** of the drift or **13.42%** of it -- measured on plants, and
+the reason its verdict is NO SHIP rather than "ship gain-only". It built two
+instruments to answer it from the existing stacks and **retired both**: handed a
+disturbance uniform by construction, they failed to detect it on 6 of 6 stacks.
+The mechanism is the same one M69 hit: **on a focus stack, block-level variation
+is dominated by defocus**, so no block-domain statistic can separate a
+photometric gradient from the focus sweep. See
+[`docs/research/M91-photometry.md`](research/M91-photometry.md) `P6`, `P7`.
+
+**Three milestones, three unrelated charters, one capture.** M69 needed it for
+response noise, M81 for the gate, M91 for photometric structure. Each
+independently found that the quantity it wanted **cannot be estimated from a
+focus sweep at all**, because a focus sweep varies the one thing that has to be
+held still. That is not three requests for convenience; it is the same
+structural limit met three times.
+
 **One clarification, because the two claims look contradictory.** M62 found that
 a static burst has **no focus variation and therefore no interior optimum**, so a
 burst cannot arbitrate a *gate*. That is correct and it does not weaken this
@@ -1454,3 +1475,44 @@ over-determined, and the cutoff falls out.
   magnification — and therefore whether full-resolution output is worth its cost.
 - **§18.3's bench measurement becomes a cross-check rather than the only route**,
   which is worth more than either measurement alone.
+
+## 20. A grey reference in the frame -- REQUESTED, adds ~20 seconds to any session
+
+**Status:** requested 2026-08 by the orchestrator on M85's behalf. M85 built the
+colour pipeline and explicitly declined to file this itself, because
+`captures-needed.md` is outside its ownership.
+
+**Why.** M85 shipped camera-to-sRGB conversion using the camera's own
+characterisation matrix, cross-checked against a second independent database. The
+transform is right. **What cannot be checked is the light.** The rendered
+background on `bee-3-cpl` carries an **~8% cyan cast**, and there are three
+candidate causes that this corpus cannot separate:
+
+1. the illuminant was not D65,
+2. the **circular polariser** has a non-neutral transmission spectrum, or
+3. optical brighteners in the subject or backdrop.
+
+**M85 makes no colour-accuracy claim, and cannot, until one of these is ruled
+out.** That is the correct position and it is why this is a capture request
+rather than a bug.
+
+### What to shoot
+
+Anything neutral and matte, **in the frame, under the same light as the
+subject**. A proper grey card is ideal; a **white plastic lens cap, a sheet of
+copier paper, or the unprinted back of a business card** all work and all beat
+nothing. It does not need to be in focus.
+
+1. Set up a stack exactly as you normally would.
+2. Put the neutral object at the edge of the frame, lit by the same light.
+3. Shoot **one frame** with it there. Remove it. Shoot the stack as usual.
+
+**The CPL matters here and is worth one extra frame.** If you can, shoot that
+one reference frame **twice -- once with the polariser on and once with it off**,
+nothing else changed. That single pair separates cause 2 from causes 1 and 3 by
+subtraction, and the CPL is in your standard optical path, so its spectrum is a
+permanent term in every colour result this project will ever produce.
+
+**What it buys.** A measured white point, which turns the colour pipeline from
+"the matrix is correct" into "the output is correct" -- and a characterisation
+of your polariser that transfers to every future capture.
