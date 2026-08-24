@@ -127,6 +127,11 @@ pub struct RobustElection {
     /// Best gated score, and the frame that produced it.
     best: Vec<f32>,
     idx: Vec<u16>,
+    /// The **raw** response at the elected frame. For [`Arm::Soft`] the score is
+    /// `weight * response`, so the score is not the response, and pass two's
+    /// admission band `best - focus <= tolerance` must be centred on the
+    /// response or the band width silently changes with the weight.
+    best_resp: Vec<f32>,
     /// Best ungated response, and the frame that produced it. The fallback.
     fb_best: Vec<f32>,
     fb_idx: Vec<u16>,
@@ -141,6 +146,7 @@ impl RobustElection {
             pixels,
             best: vec![f32::NEG_INFINITY; pixels],
             idx: vec![NO_FRAME; pixels],
+            best_resp: vec![f32::NEG_INFINITY; pixels],
             fb_best: vec![f32::NEG_INFINITY; pixels],
             fb_idx: vec![NO_FRAME; pixels],
             frames: 0,
@@ -204,6 +210,7 @@ impl RobustElection {
             let s = self.arm.score(r, w);
             if Self::beats(s, frame_index, self.best[i], self.idx[i]) {
                 self.best[i] = s;
+                self.best_resp[i] = r;
                 self.idx[i] = frame_index;
             }
         }
@@ -226,6 +233,7 @@ impl RobustElection {
         for i in 0..self.pixels {
             if Self::beats(other.best[i], other.idx[i], self.best[i], self.idx[i]) {
                 self.best[i] = other.best[i];
+                self.best_resp[i] = other.best_resp[i];
                 self.idx[i] = other.idx[i];
             }
             if Self::beats(
@@ -254,6 +262,24 @@ impl RobustElection {
                     self.fb_idx[i]
                 } else {
                     self.idx[i]
+                }
+            })
+            .collect()
+    }
+
+    /// The raw focus response at the elected frame, with the ungated fallback
+    /// already applied.
+    ///
+    /// This is the centre of pass two's admission band, and the quantity to
+    /// compare against [`RobustElection::ungated_best`] to measure what the gate
+    /// costs in sharpness.
+    pub fn winner_response(&self) -> Vec<f32> {
+        (0..self.pixels)
+            .map(|i| {
+                if self.idx[i] == NO_FRAME {
+                    self.fb_best[i]
+                } else {
+                    self.best_resp[i]
                 }
             })
             .collect()
@@ -412,6 +438,34 @@ mod tests {
     }
 
     #[test]
+    fn winner_response_is_the_raw_response_not_the_soft_score() {
+        // Frame 1 wins under Soft with score 0.25 * 100 = 25, but the admission
+        // band in pass two must be centred on 100, not 25, or the band width
+        // changes with the weight.
+        let r = vec![vec![1.0], vec![100.0], vec![1.0]];
+        let z = vec![vec![0.0], vec![6.0], vec![0.0]];
+        let mut e = RobustElection::new(1, Arm::Soft);
+        for (f, (rf, zf)) in r.iter().zip(&z).enumerate() {
+            e.fold(f as u16, rf, zf).unwrap();
+        }
+        assert_eq!(e.winners(), vec![1]);
+        assert_eq!(e.winner_response(), vec![100.0], "must be R, not w*R");
+        assert_eq!(e.ungated_best(), &[100.0]);
+    }
+
+    #[test]
+    fn winner_response_falls_back_with_the_winner() {
+        let r = vec![vec![4.0], vec![9.0], vec![7.0]];
+        let z = vec![vec![99.0], vec![99.0], vec![99.0]];
+        let mut e = RobustElection::new(1, Arm::Hard);
+        for (f, (rf, zf)) in r.iter().zip(&z).enumerate() {
+            e.fold(f as u16, rf, zf).unwrap();
+        }
+        assert_eq!(e.winners(), vec![1]);
+        assert_eq!(e.winner_response(), vec![9.0]);
+    }
+
+    #[test]
     fn the_fold_is_associative_under_absorb_at_every_cut() {
         let r = vec![
             vec![1.0, 5.0, 2.0],
@@ -429,6 +483,13 @@ mod tests {
         ];
         for arm in [Arm::Ungated, Arm::Hard, Arm::Soft] {
             let whole = run(arm, 3, &r, &z);
+            let whole_resp = {
+                let mut e = RobustElection::new(3, arm);
+                for f in 0..r.len() {
+                    e.fold(f as u16, &r[f], &z[f]).unwrap();
+                }
+                e.winner_response()
+            };
             for cut in 1..r.len() {
                 let mut a = RobustElection::new(3, arm);
                 let mut b = RobustElection::new(3, arm);
@@ -440,6 +501,11 @@ mod tests {
                 }
                 a.absorb(&b).unwrap();
                 assert_eq!(whole, a.winners(), "{arm:?} cut {cut}");
+                assert_eq!(
+                    whole_resp,
+                    a.winner_response(),
+                    "{arm:?} cut {cut}: best_resp did not survive absorb"
+                );
                 assert_eq!(a.frames_folded(), r.len() as u32);
             }
         }
