@@ -1,0 +1,52 @@
+[
+ {
+  "box": "wing-venation",
+  "x": 1506,
+  "y": 502,
+  "ncc": 0.9516238262357442,
+  "ncc_displaced": 0.5801781835863119,
+  "placebo": 1.0,
+  "direction_plant": 0.9079092917758951,
+  "treatment": 1.0295250182525242
+ },
+ {
+  "box": "thorax-hair",
+  "x": 4018,
+  "y": 1506,
+  "ncc": 0.5303080529229961,
+  "ncc_displaced": 0.22216354376870126,
+  "placebo": 1.0,
+  "direction_plant": 0.8546249035789646,
+  "treatment": 1.0010754941530233
+ },
+ {
+  "box": "leg-spines",
+  "x": 1255,
+  "y": 2812,
+  "ncc": 0.9313949129005071,
+  "ncc_displaced": 0.5364060000262717,
+  "placebo": 1.0,
+  "direction_plant": 1.0391944163277005,
+  "treatment": 1.1115603913263632
+ },
+ {
+  "box": "head-eye",
+  "x": 4520,
+  "y": 3264,
+  "ncc": 0.5189047135107129,
+  "ncc_displaced": 0.37598317203495196,
+  "placebo": 1.0,
+  "direction_plant": 0.8205185937963939,
+  "treatment": 0.8736967741871162
+ },
+ {
+  "box": "CENTRE-CONTROL (drift ~0 here by construction)",
+  "x": 3196,
+  "y": 2024,
+  "ncc": 0.8216555801049704,
+  "ncc_displaced": 0.08960157084933555,
+  "placebo": 1.0,
+  "direction_plant": 0.9398260993392505,
+  "treatment": 1.0074303813879641
+ }
+]

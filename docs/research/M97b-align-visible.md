@@ -308,15 +308,202 @@ Two caveats that bound this section, stated rather than buried:
 
 ---
 
-## 9. Status / Changes / Verified / Not verified / Notes
+## 9. Why every gradient metric ranks the sharper image lower
+
+The orchestrator supplied the thing this milestone was missing: a **visual
+ground truth**. They opened co-located crops of `bee-3-ALIGNED.tif` against
+`bee3-zoomnull.tif` and reported the aligned render clearly sharper.
+**I opened `crop-wing-venation.png` myself before writing PREREG2 and I
+independently confirm it** — the aligned render resolves the membrane bristles
+as distinct dark strokes and separates the lower-left hair mass into individual
+hairs; the null smears both and its vein boundaries are softer.
+
+Whole-frame Tenengrad ranks that pair **0.9847** on the green plane (the
+orchestrator got 0.9790 on an RGB mean; M86 got 0.9859 on a third weighting —
+three implementations, same verdict). The metric is anti-correlated with
+visible quality. Bars and the failing values were pre-registered in
+`PREREG2.md` before any of what follows was run.
+
+### 9.1 The doubling mechanism is falsified, and I said so in advance
+
+The orchestrator's ARGUED mechanism was edge doubling: a doubled edge has two
+gradients where a correct one has one, so misregistration manufactures gradient
+energy. **PREREG2 records my disagreement and my predicted number before the
+measurement**, because Tenengrad sums the *square* of the gradient and squaring
+is convex — spreading a fixed rise across more pixels must lower the sum.
+
+`src/mech1.py`, synthetic, truth not in dispute (MEASURED):
+
+| case | Tenengrad | vs single | peak &#124;∇&#124; |
+| --- | ---: | ---: | ---: |
+| single step | 7812.50 | 1.0000 | 1000.0 |
+| **doubled (two half-steps 6 px apart)** | 3906.25 | **0.5000** | 500.0 |
+| blurred σ=2 | 2654.95 | 0.3398 | 375.5 |
+| seam (elected-frame switch) | 6451.69 | 0.8258 | — |
+| flat | 0.00 | 0.0000 | — |
+| flat + noise sd=1 / 4 / 16 | 3.94 / 63.96 / 1015.57 | 0.0005 / 0.0082 / 0.1300 | — |
+
+**Doubling halves Tenengrad, at exactly my predicted 0.5000. The mechanism is
+FALSIFIED.** A seam lowers it too. From a flat baseline the *only* thing
+measured to raise gradient energy is noise. The `flat` row reads exactly
+`0.000`, which discipline 598 says to distrust — the three noise plants on the
+same wiring prove that probe is connected.
+
+Integrated `|∇|` across the profile is **conserved** under doubling (1000.0 vs
+1000.0), so it cannot separate them either. Only the **peak** falls.
+
+### 9.2 Where the null's excess energy actually lives
+
+`src/bands.py`. Octave bands and structure strata, on a classification derived
+from the mean of the two arms so no pixel is binned differently in one arm than
+the other. **Placebo reads exactly 1.0000 in every band and every stratum**;
+blur plants move in both directions with the expected scale profile.
+
+| band | 1 px | 2 px | 4 px | 8 px | 16 px | 32 px |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| aligned / null | 0.9937 | 0.9836 | 0.9974 | **1.0071** | **1.0075** | **1.0300** |
+
+**R3 PASSES: the ratio crosses 1.0 between bands.** The null wins at 1–4 px;
+the aligned render wins at 8–32 px. A metric whose sign depends on scale is not
+measuring one quantity.
+
+Stratified by local structure, aligned/null is **0.6303** in the flattest
+quartile (8.27 M pixels), against 0.9710 / 0.9799 / 0.9875 in the other three.
+**In the quartile of the frame with no detail to sharpen, the null carries 59%
+more gradient energy than the aligned render.** That is not sharpness. It is
+structure dragged to where it does not belong.
+
+### 9.3 The peak does not save it either
+
+`src/peaks.py`. Every percentile of `|∇|`, all three controls passing
+(placebo 1.0000 exact; blur plant 1.19–1.58; direction plant 0.61–0.80):
+
+| | p50 | p90 | p99 | p99.9 | p99.99 | top 0.01% |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| aligned / null | 0.9836 | 0.9961 | 0.9928 | 0.9875 | 0.9485 | **0.9446** |
+
+**Pre-registered bar: > 1.00. Every percentile FAILS, and it gets worse the
+higher you go.** The null holds the strongest gradients in the frame. Combined
+with §9.1's seam row that is the tell: an abrupt switch between elected frames
+displaced by hundreds of pixels is a step larger than any real scene edge.
+
+**MEASURED conclusion, and it generalises beyond this pair: gradient energy
+cannot distinguish detail from displaced structure or from a seam, at any
+spatial scale and at any percentile. For focus stacks it is not a weak
+sharpness metric, it is the wrong kind of quantity.** The orchestrator's
+instinct that misregistration manufactures gradient energy is right; the
+mechanism is not doubling but displacement and seams.
+
+---
+
+## 10. The instrument that ranks them correctly: edge width
+
+`src/width.py`. Width is a **distance, not an energy**, so structure displaced
+elsewhere cannot contribute to it, and it is what the eye actually reported.
+
+Edges are located on the mean of the two arms (so the same edges are examined
+in both) but each arm's profile is re-centred on its own 50% crossing before
+measurement — this is PREREG2's named risk handled: the null is a composite of
+frames at different scales, its features sit at an average position matching
+nothing, and a ~12 px apparent displacement is visible between the panels.
+Width is a shape property and is compared as one. Both arms are sampled by the
+same interpolator at the same offsets.
+
+**Whole frame, 6827 paired edges (MEASURED):**
+
+| | value | pre-registered bar | |
+| --- | ---: | --- | --- |
+| **treatment, null/aligned width** | **1.0179** | > 1.00 | **PASS** |
+| placebo, self vs self | 1.0000 | 1.000 ± 0.005 | PASS |
+| direction plant, blurred(aligned) vs null | 0.9456 | < 1.00 | PASS |
+| blur plant σ=1.0 | 1.0725 | > 1.30 | **FAIL as written** |
+
+**I am not going to quietly restate a bar I failed.** The >1.30 figure was
+specified for an *energy* metric, where σ=1 removes a third of the gradient
+energy. Widths add in quadrature. So I measured the whole ladder against that
+prediction rather than asserting it:
+
+| σ | quadrature prediction | measured | measured/predicted |
+| ---: | ---: | ---: | ---: |
+| 0.5 | 1.0275 | 1.0156 | 0.9885 |
+| 1.0 | 1.1058 | 1.0725 | 0.9699 |
+| 2.0 | 1.3751 | 1.2528 | 0.9111 |
+| 4.0 | 2.1362 | 1.6312 | 0.7636 |
+
+**MEASURED: the metric tracks the quadrature prediction to within 3% at the
+scale that matters and rolls off at large σ as the ±8 px profile window
+saturates.** The bar was mis-specified, not the metric broken — but that is a
+judgement about my own pre-registration and the orchestrator should weigh it as
+such.
+
+### 10.1 The metric agrees with the eye where the eye looked
+
+`src/wingbox.py`, the same instrument unchanged, inside each 640×640 box, crop
+origins recomputed from `ORCH-drift-check/crops.py`'s own arithmetic rather
+than retyped. Co-location is verified per box by NCC **and the verification
+carries its own plant** — a box displaced 60 px must score clearly lower.
+
+| box | co-loc NCC (displaced plant) | placebo | direction plant | **treatment** |
+| --- | ---: | ---: | ---: | ---: |
+| **wing-venation** | 0.9516 (0.5802) | 1.0000 | 0.9079 | **1.0295** |
+| thorax-hair | 0.5303 (0.2222) | 1.0000 | 0.8546 | 1.0011 |
+| leg-spines | 0.9314 (0.5364) | 1.0000 | **1.0392 FAIL** | ~~1.1116~~ |
+| head-eye | 0.5189 (0.3760) | 1.0000 | 0.8205 | **0.8737** |
+| **CENTRE-CONTROL** | 0.8217 (0.0896) | 1.0000 | 0.9398 | **1.0074** |
+
+Reading this honestly, item by item:
+
+- **wing-venation reads 1.0295 — the crop where two people independently saw
+  the aligned render as sharper.** The metric agrees with the eye at the place
+  the eye judged, and reads more strongly there than whole-frame.
+- **The centre control reads 1.0074, i.e. essentially nothing** — and residual
+  misregistration is zero at the centre of the similarity *by construction*.
+  The image supplies its own placebo region and the metric respects it. This is
+  the strongest internal validation in the milestone.
+- **The orchestrator was right to distrust their own leg-spines 1.1288.** My
+  re-derivation gives the largest treatment number of any box, 1.1116 — **and
+  its direction plant reads 1.0392, above 1.0.** Blurring the aligned render
+  *still* makes it measure sharper there. That box is measuring something other
+  than sharpness, so **1.1116 is inadmissible and I am striking it**, by an
+  independent mechanism from the one they suspected.
+- **head-eye reads 0.8737 — the null measures sharper — and I am not hiding
+  it.** Two caveats bound it rather than dismiss it: co-location NCC is 0.5189
+  against a displaced-plant 0.3760, a margin of only 0.14, so these boxes are
+  poorly co-located; and clean paired edges collapse from 668 in the placebo to
+  301 in the treatment.
+- **That collapse is a bias, and it runs against the treatment.** Only edges
+  yielding a clean single transition in *both* arms are kept. Smearing destroys
+  profile cleanliness, so the edges the null damages most are preferentially
+  discarded. The reported effect is a **lower bound**.
+
+### 10.2 Radius does not work as a stratifier here, and I can prove why
+
+Residual misregistration is proportional to radius, so a registration effect
+should grow with radius. Whole-frame quartiles read **1.0100 / 1.0285 / 1.0297
+/ 1.0068** — it rises then falls.
+
+**Before concluding anything from that, look at the same stratification applied
+to the uniform-blur direction plant, which has no radial dependence at all:
+0.9277 / 0.9479 / 0.9645 / 0.9474.** Equally non-monotone. **MEASURED: the
+radial breakdown carries structure that is not registration** — different radii
+hold different subject matter, and on `bee-3` the outer band is background and
+out-of-focus wing tip where there is nothing to sharpen. This is the same
+content confound that made `radial4.py` inadmissible in §5, caught the same
+way, and it is why §10.1 uses boxes rather than annuli.
+
+---
+
+## 11. Status / Changes / Verified / Not verified / Notes
 
 ### Status
 **DONE.** The instrument exists, is plant-validated, and answers the question.
 
 ### Changes
-- `experiments/M97b-align-visible/**` — `PREREG.md`, `src/scout.py`,
+- `experiments/M97b-align-visible/**` — `PREREG.md`, `PREREG2.md`, `src/scout.py`,
   `src/matched.py`, `src/radial4.py` (reported but inadmissible),
-  `src/sheet.py`, `src/owner_sbs.py`, `src/render.ps1`, logs and JSON.
+  `src/sheet.py`, `src/owner_sbs.py`, `src/mech1.py`, `src/bands.py`,
+  `src/peaks.py`, `src/width.py`, `src/wingbox.py`, `src/render.ps1`, logs and
+  JSON.
 - `experiments/M97-warped-merge/src/signtest.py` — one line: `STACK` now reads
   `M97_STACK` from the environment, defaulting to the previous hard-coded
   bee-3 path, so prior results reproduce byte-identically.
@@ -339,6 +526,16 @@ Two caveats that bound this section, stated rather than buried:
   still recovers the exact truth at 1.0000 on all three panels**.
 - **I opened the renders.** §8 describes what is in them, including an artefact
   that runs against my own conclusion.
+- **§9–10, the reassigned milestone.** Doubling falsified at exactly the
+  predicted 0.5000. Bands cross 1.0 (0.9836 at 2 px, 1.0300 at 32 px) with a
+  placebo exact in every band and stratum. Every percentile of `|∇|` fails its
+  bar with all three controls passing. Edge width passes at 1.0179 whole-frame,
+  1.0295 at the wing crop the eye judged, and **1.0074 at the centre where
+  drift is zero by construction**.
+- **Two plants caught two errors that would otherwise have been reported**: the
+  leg-spines box fails its direction plant (1.0392), and the radial
+  stratification is equally non-monotone on a uniform-blur plant that has no
+  radial dependence.
 
 ### Not verified
 - **The 19–32% win is measured on one stack.** It should be repeated on
@@ -352,6 +549,16 @@ Two caveats that bound this section, stated rather than buried:
 - The cause of the waxy smearing §8 found in the corrected render's bright
   low-texture region. It is real; I did not diagnose it.
 - Why the field-of-view ratio reads 1.1278 in §8 and 1.1949 in §5.
+- **The blur plant in §10 failed its pre-registered >1.30 bar (1.0725).** I
+  argue from the quadrature ladder that the bar was mis-specified for a width
+  metric, and the ladder supports that, but it is my own pre-registration I am
+  reinterpreting after the fact and it should be weighed as such.
+- Whether `head-eye`'s 0.8737 is a real region where the null is sharper or an
+  artefact of that box's weak co-location (NCC 0.5189 against a 0.3760
+  displaced plant). It needs a properly co-located replacement box.
+- The edge-width numbers are **whole-frame medians over `bee-3`**, the subject
+  §3 shows is the worst in the corpus for this question. The marker head was
+  not re-measured with the width metric for lack of time.
 - `cargo clippy --bins --tests` fails: 3 errors in
   `crates/strehl-cli/src/merge_cmd/halo.rs` (M87, `52c6a52`). Test code only;
   not mine and not touched.

@@ -1,0 +1,35 @@
+{
+ "single": {
+  "tenengrad": 7812.5,
+  "peak_grad": 1000.0,
+  "integrated_grad_across_profile": 1000.0,
+  "total_rise": 1000.0
+ },
+ "doubled": {
+  "tenengrad": 3906.25,
+  "peak_grad": 500.0,
+  "integrated_grad_across_profile": 1000.0,
+  "total_rise": 1000.0
+ },
+ "blurred_sigma2": {
+  "tenengrad": 2654.9542152277363,
+  "peak_grad": 375.5104067495354,
+  "integrated_grad_across_profile": 1400.2626760676278,
+  "total_rise": 599.7373239323725
+ },
+ "flat": {
+  "tenengrad": 0.0
+ },
+ "flat_plus_noise_sd1": {
+  "tenengrad": 3.942020557105085
+ },
+ "flat_plus_noise_sd4": {
+  "tenengrad": 63.960402309162056
+ },
+ "flat_plus_noise_sd16": {
+  "tenengrad": 1015.5721394276173
+ },
+ "seam": {
+  "tenengrad": 6451.690344865252
+ }
+}
