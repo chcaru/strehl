@@ -50,6 +50,26 @@ photograph has none — which is why this needs a *flat, repeating subject that
 fills the frame corner to corner*, under full-spectrum light, rather than another
 beautiful bee.
 
+**Overnight this stopped being a theoretical gap and became the whole question.**
+I pulled the two 1:1 crops of `bee-3-cpl` where the fringing is unmistakable —
+the hairs and the wing edge — and worked out where they actually sit in the
+frame. On the 7032 × 4688 render they are at **r = 0.879** and **r = 0.822**.
+Both are **past 0.788**, so both are being corrected by extrapolated model shape
+rather than by anything measured. The one crop comfortably inside the fitted
+zone, at r = 0.62, is a low-contrast patch where the fringing is barely visible
+anyway.
+
+So the position tonight is: **the defect you can see is living in the region the
+correction was never fitted on.** That leaves three possibilities — the
+extrapolation is fine, it under-corrects, or it overshoots and *reverses* the
+fringe colour — and nothing in the current data can tell them apart. There is a
+hint it may be the third: the author's own registered check wanted 90% of pixels
+to keep their colour sign and got 75.1%, printing `RECOLOURED, NOT REMOVED`. That
+is being checked independently now.
+
+**Ten minutes of a flat corner-to-corner subject decides it.** It is the only
+request on this list that unblocks a fix which is otherwise stuck guessing.
+
 **Already delivered, nothing needed:** dark frames (§1), flat fields (§4,
 delivered 2026-08-23), and the twelve labelled stacks in §16.
 
