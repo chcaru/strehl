@@ -1,0 +1,44 @@
+MEASURED: backup bytes=125776 sha256=84d835b0db65361266b7becf79ea843755f6d281920dbed1d0a230dfe8efd4c1
+MEASURED: planted bytes sha256=8598e5f050cdcd31d5e87234880b14e14d009891194b718c5f39899f3c9b8e72 marker_count=1 exact_fragment_count=1 exact_match=True
+MEASURED: planted cargo exit=101
+--- planted cargo output ---
+   Compiling strehl-core v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core)
+   Compiling strehl-raw v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-raw)
+   Compiling strehl-cli v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.31s
+     Running unittests src\main.rs (experiments\M80-invariant-repair\target-m80-control\debug\deps\strehl-159d1b4c243d4b13.exe)
+
+running 1 test
+test merge_cmd::tests::selection_noise_null_tracks_one_across_frame_counts ... FAILED
+
+failures:
+
+---- merge_cmd::tests::selection_noise_null_tracks_one_across_frame_counts stdout ----
+M80 N=22 noise: selector_structure=1.922230 candidate_structure=1.391267 retention=0.723778 fitted_k=1.395314/1.393632
+
+thread 'merge_cmd::tests::selection_noise_null_tracks_one_across_frame_counts' (110472) panicked at crates\strehl-cli\src\merge_cmd.rs:2761:13:
+noise null N=22: STRUCTURE must read 1, got 1.391267; fitted k=1.3953/1.3936, planted inflation=1.3935
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    merge_cmd::tests::selection_noise_null_tracks_one_across_frame_counts
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 41 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p strehl-cli --bin strehl`
+--- end planted cargo output ---
+MEASURED: restored bytes sha256=84d835b0db65361266b7becf79ea843755f6d281920dbed1d0a230dfe8efd4c1 exact_match=True backup_removed=True
+MEASURED: restored cargo exit=0
+--- restored cargo output ---
+   Compiling strehl-cli v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.41s
+     Running unittests src\main.rs (experiments\M80-invariant-repair\target-m80-control\debug\deps\strehl-159d1b4c243d4b13.exe)
+
+running 1 test
+test merge_cmd::tests::selection_noise_null_tracks_one_across_frame_counts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 41 filtered out; finished in 0.12s
+--- end restored cargo output ---
+MEASURED: red control pass=True
+MEASURED: restored green pass=True

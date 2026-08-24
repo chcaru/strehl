@@ -1,0 +1,19 @@
+   Compiling strehl-core v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core)
+   Compiling strehl-raw v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-raw)
+   Compiling strehl-cli v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.50s
+     Running unittests src\main.rs (projects\strehl\experiments\M80-invariant-repair\target-m80\debug\deps\strehl-159d1b4c243d4b13.exe)
+
+running 2 tests
+M80 N=22 noise: selector_structure=1.001357 candidate_structure=0.997701 retention=0.997434 fitted_k=1.395314/1.393632
+M80 positive plant: clean-to-blur gradient retention=0.369038
+M80 N=130 noise: selector_structure=1.001411 candidate_structure=1.000482 retention=0.998817 fitted_k=1.598424/1.595491
+M80 N=22 detail: structure=5.950740 clean_retention=1.000332 blur_retention=0.425848
+M80 N=299 noise: selector_structure=1.001460 candidate_structure=0.999476 retention=0.998303 fitted_k=1.684837/1.693345
+test merge_cmd::tests::selection_noise_null_tracks_one_across_frame_counts ... ok
+M80 N=130 detail: structure=5.208819 clean_retention=1.000717 blur_retention=0.449006
+M80 N=299 detail: structure=4.940328 clean_retention=0.999482 blur_retention=0.457904
+test merge_cmd::tests::cross_fitted_metric_keeps_detail_and_detects_blur_across_frame_counts ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 40 filtered out; finished in 0.23s
+

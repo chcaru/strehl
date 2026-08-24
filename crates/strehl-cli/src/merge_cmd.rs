@@ -281,8 +281,11 @@ fn report_target_solve(est: &[Estimator], target: Option<f64>) {
 /// per-pixel `sigma`, the noise contribution at pixel `i` is exactly
 /// `2*sigma_i^2 + sigma_{i+1}^2 + sigma_{i+w}^2`, so
 /// `corrected_rms = sqrt(max(0, raw_rms^2 - noise_rms^2))` removes it using the
-/// calibrated model rather than an assumption. That is the number invariant 2
-/// is judged on.
+/// calibrated model rather than an assumption. M77 showed why that subtraction
+/// is insufficient after selection: model sigma does not include max-over-N
+/// inflation. Invariant 2 now uses [`cross_fitted_detail`]; this field remains
+/// for component tests and historical columns only.
+#[cfg_attr(not(test), allow(dead_code))]
 struct DetailMetrics {
     /// `mean(0.5*(|dx| + |dy|))` — fact 24's convention, for comparability.
     m2_pooled_abs: f64,
@@ -292,7 +295,7 @@ struct DetailMetrics {
     raw_rms: f64,
     /// The model's prediction for what the noise alone contributes to it.
     noise_rms: f64,
-    /// `sqrt(max(0, raw_rms^2 - noise_rms^2))` — the headline.
+    /// Model-only correction, not the post-selection acceptance headline.
     corrected_rms: f64,
 }
 
@@ -339,6 +342,148 @@ fn detail_metrics(v: &[f32], sigma: &[f32], w: usize, h: usize) -> DetailMetrics
     }
 }
 
+#[derive(Clone, Copy, Debug)]
+struct GradientPower {
+    raw_sum: f64,
+    noise_sum: f64,
+    samples: usize,
+}
+
+fn gradient_power_columns(
+    v: &[f32],
+    sigma: &[f32],
+    w: usize,
+    h: usize,
+    x0: usize,
+    x1: usize,
+) -> GradientPower {
+    assert_eq!(v.len(), w * h);
+    assert_eq!(sigma.len(), w * h);
+    assert!(x0 < x1 && x1 <= w);
+    let (mut raw_sum, mut noise_sum, mut samples) = (0.0f64, 0.0f64, 0usize);
+    if h < 2 || x1 - x0 < 2 {
+        return GradientPower {
+            raw_sum,
+            noise_sum,
+            samples,
+        };
+    }
+    for y in 0..h - 1 {
+        for x in x0..x1 - 1 {
+            let i = y * w + x;
+            let dx = f64::from(v[i + 1] - v[i]);
+            let dy = f64::from(v[i + w] - v[i]);
+            raw_sum += dx * dx + dy * dy;
+            let (s0, s1, sw) = (
+                f64::from(sigma[i]),
+                f64::from(sigma[i + 1]),
+                f64::from(sigma[i + w]),
+            );
+            noise_sum += 2.0 * s0 * s0 + s1 * s1 + sw * sw;
+            samples += 1;
+        }
+    }
+    GradientPower {
+        raw_sum,
+        noise_sum,
+        samples,
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+struct ControlledDetail {
+    raw_power: f64,
+    controlled_noise_power: f64,
+    signal_power: f64,
+    structure: f64,
+    inflation_left: f64,
+    inflation_right: f64,
+}
+
+/// Remove selection-conditioned gradient noise with a contemporaneous flat
+/// control rather than a constant transferred between stack lengths.
+///
+/// The flat and detail regions are split into disjoint left/right sets of
+/// gradient anchors. Each detail half is corrected with the scale fitted on the
+/// opposite flat half. When the detail ROI is the flat ROI, as in M77's null,
+/// no sample is used both to fit and to evaluate its own scale.
+fn cross_fitted_detail(
+    detail: &[f32],
+    detail_sigma: &[f32],
+    detail_w: usize,
+    detail_h: usize,
+    flat: &[f32],
+    flat_sigma: &[f32],
+    flat_w: usize,
+    flat_h: usize,
+) -> Result<ControlledDetail> {
+    ensure!(
+        detail_w >= 4 && detail_h >= 2 && flat_w >= 4 && flat_h >= 2,
+        "the repaired detail invariant needs flat and detail ROIs at least 4x2"
+    );
+    let flat_mid = flat_w / 2;
+    let detail_mid = detail_w / 2;
+    let flat_left = gradient_power_columns(flat, flat_sigma, flat_w, flat_h, 0, flat_mid);
+    let flat_right = gradient_power_columns(flat, flat_sigma, flat_w, flat_h, flat_mid, flat_w);
+    let detail_left =
+        gradient_power_columns(detail, detail_sigma, detail_w, detail_h, 0, detail_mid);
+    let detail_right = gradient_power_columns(
+        detail,
+        detail_sigma,
+        detail_w,
+        detail_h,
+        detail_mid,
+        detail_w,
+    );
+    ensure!(
+        flat_left.samples > 0
+            && flat_right.samples > 0
+            && detail_left.samples > 0
+            && detail_right.samples > 0,
+        "the repaired detail invariant has no gradient samples in one ROI half"
+    );
+    ensure!(
+        flat_left.noise_sum > 0.0
+            && flat_right.noise_sum > 0.0
+            && detail_left.noise_sum > 0.0
+            && detail_right.noise_sum > 0.0,
+        "the calibrated noise model returned zero gradient power"
+    );
+
+    let scale_left = flat_left.raw_sum / flat_left.noise_sum;
+    let scale_right = flat_right.raw_sum / flat_right.noise_sum;
+    let (scale_for_detail_left, scale_for_detail_right) = (scale_right, scale_left); // M80_CROSS_FITTED_SCALES
+    let samples = detail_left.samples + detail_right.samples;
+    let raw_sum = detail_left.raw_sum + detail_right.raw_sum;
+    let controlled_noise_sum = scale_for_detail_left * detail_left.noise_sum
+        + scale_for_detail_right * detail_right.noise_sum;
+    ensure!(
+        scale_left.is_finite()
+            && scale_right.is_finite()
+            && controlled_noise_sum.is_finite()
+            && controlled_noise_sum > 0.0,
+        "the flat-control selection-noise scale is not finite and positive"
+    );
+    let raw_power = raw_sum / samples as f64;
+    let controlled_noise_power = controlled_noise_sum / samples as f64;
+    Ok(ControlledDetail {
+        raw_power,
+        controlled_noise_power,
+        signal_power: raw_power - controlled_noise_power,
+        structure: (raw_power / controlled_noise_power).sqrt(),
+        inflation_left: scale_left.sqrt(),
+        inflation_right: scale_right.sqrt(),
+    })
+}
+
+fn equal_noise_retention(candidate: ControlledDetail, selector: ControlledDetail) -> f64 {
+    if selector.raw_power <= 0.0 {
+        return f64::NAN;
+    }
+    ((candidate.signal_power + selector.controlled_noise_power).max(0.0) / selector.raw_power)
+        .sqrt()
+}
+
 /// Merged green over an ROI, black-subtracted, in plane coordinates.
 ///
 /// Deliberately the same shape as [`roi_green`] so the two sides of the detail
@@ -353,6 +498,101 @@ fn roi_green_merged(est: &Estimator, roi: Roi, geom: PlaneGeometry, black: f32) 
     out
 }
 
+struct SelectedRoi {
+    roi: Roi,
+    values: Vec<f32>,
+    seen: Vec<bool>,
+}
+
+impl SelectedRoi {
+    fn new(roi: Roi) -> Self {
+        Self {
+            roi,
+            values: vec![0.0; roi.width * roi.height],
+            seen: vec![false; roi.width * roi.height],
+        }
+    }
+
+    fn fold(
+        &mut self,
+        frame: &Frame,
+        frame_index: u16,
+        best_index: &[u16],
+        geom: PlaneGeometry,
+        black: f32,
+    ) {
+        let values = roi_green(frame, self.roi, black);
+        for y in 0..self.roi.height {
+            for x in 0..self.roi.width {
+                let local = y * self.roi.width + x;
+                let global = geom.index(self.roi.x + x, self.roi.y + y);
+                if best_index[global] == frame_index {
+                    assert!(
+                        !self.seen[local],
+                        "selector ROI pixel {local} was supplied by two frames"
+                    );
+                    self.values[local] = values[local];
+                    self.seen[local] = true;
+                }
+            }
+        }
+    }
+
+    fn absorb(&mut self, other: &Self) {
+        assert_eq!(self.roi, other.roi);
+        for i in 0..self.values.len() {
+            if other.seen[i] {
+                assert!(
+                    !self.seen[i],
+                    "selector ROI pixel {i} occurred in two worker chunks"
+                );
+                self.values[i] = other.values[i];
+                self.seen[i] = true;
+            }
+        }
+    }
+
+    fn is_complete(&self) -> bool {
+        self.seen.iter().all(|v| *v)
+    }
+}
+
+struct SelectorRois {
+    flat: SelectedRoi,
+    detail: SelectedRoi,
+}
+
+impl SelectorRois {
+    fn new(flat: Roi, detail: Roi) -> Self {
+        Self {
+            flat: SelectedRoi::new(flat),
+            detail: SelectedRoi::new(detail),
+        }
+    }
+
+    fn fold(
+        &mut self,
+        frame: &Frame,
+        frame_index: u16,
+        best_index: &[u16],
+        geom: PlaneGeometry,
+        black: f32,
+    ) {
+        self.flat.fold(frame, frame_index, best_index, geom, black);
+        self.detail
+            .fold(frame, frame_index, best_index, geom, black);
+    }
+
+    fn absorb(&mut self, other: &Self) {
+        self.flat.absorb(&other.flat);
+        self.detail.absorb(&other.detail);
+    }
+
+    fn is_complete(&self) -> bool {
+        self.flat.is_complete() && self.detail.is_complete()
+    }
+}
+
 struct Plan {
     workers: usize,
     chunks: usize,
@@ -360,6 +600,7 @@ struct Plan {
     pass1_bytes: usize,
     pass2_bytes: usize,
     stats_bytes: usize,
+    roi_bytes: usize,
 }
 
 /// Per-worker bytes in pass one: `FocusStats` (f32 focus + u16 index) plus the
@@ -382,6 +623,7 @@ impl Plan {
         frame_bytes: usize,
         gates: usize,
         gathers: usize,
+        roi_bytes: usize,
     ) -> Self {
         let px = geom.pixels();
         let pass1_bytes = px * PASS1_PER_PX + frame_bytes;
@@ -395,8 +637,10 @@ impl Plan {
         } else {
             0
         };
-        let pass2_bytes =
-            px * (PASS2_SCRATCH_PER_PX + gates * ESTIMATOR_PER_PX) + stats_bytes + frame_bytes;
+        let pass2_bytes = px * (PASS2_SCRATCH_PER_PX + gates * ESTIMATOR_PER_PX)
+            + stats_bytes
+            + roi_bytes
+            + frame_bytes;
         // The binding pass is whichever needs more per worker, so that one
         // worker count is safe for both and the two passes chunk identically.
         let per_worker = pass1_bytes.max(pass2_bytes);
@@ -413,6 +657,7 @@ impl Plan {
             pass1_bytes,
             pass2_bytes,
             stats_bytes,
+            roi_bytes,
         }
     }
 
@@ -436,6 +681,12 @@ impl Plan {
                 "\n  of which stats: {:.0} MB/worker of through-focus sufficient statistics, \
                  CONSTANT in the frame count",
                 self.stats_bytes as f64 / 1e6
+            ));
+        }
+        if self.roi_bytes > 0 {
+            s.push_str(&format!(
+                "\n  of which detail control: {:.1} MB/worker, CONSTANT in the frame count",
+                self.roi_bytes as f64 / 1e6
             ));
         }
         s
@@ -578,7 +829,6 @@ struct Pass1 {
     /// decoded it. `flat` now feeds the LEGACY raw ratio only; the noise
     /// invariant references `flat_frames` instead.
     flat: Option<Vec<f32>>,
-    detail: Option<Vec<f32>>,
     /// `(frame index, flat-ROI moments)` for **every** frame. Three `f64` per
     /// frame, so it is constant in the ROI size and irrelevant to the ratchet.
     /// Fact 441: one privileged denominator moves the published ratio 1.60x, so
@@ -589,6 +839,9 @@ struct Pass1 {
 
 struct Pass2 {
     est: Vec<Estimator>,
+    /// A compact gate-zero reference over only the two requested ROIs. It is
+    /// read from the completed pass-one winner map and never touches `est`.
+    selector: Option<SelectorRois>,
     /// The through-focus sufficient statistics, and their permutation placebo.
     /// Both `None` unless `--stats` was passed.
     tf: Option<ThroughFocus>,
@@ -662,6 +915,16 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         }
     }
 
+    let roi_bytes = match (opts.flat_roi, opts.detail_roi) {
+        (Some(flat), Some(detail)) => {
+            let flat_px = flat.width * flat.height;
+            let detail_px = detail.width * detail.height;
+            // One f32 value plus a conservative byte for `Vec<bool>` per
+            // captured pixel, and one temporary f32 extraction buffer.
+            5 * (flat_px + detail_px) + 4 * flat_px.max(detail_px)
+        }
+        _ => 0,
+    };
     let plan = Plan::new(
         paths.len(),
         geom,
@@ -672,6 +935,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         } else {
             0
         },
+        roi_bytes,
     );
 
     // The placebo permutation. Fixed, auditable and reproducible.
@@ -744,7 +1008,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             let mut stats = FocusStats::new(geom);
             let mut clip = ClipCensus::new(geom);
             let mut scratch = Scratch::new(geom, false);
-            let (mut flat, mut detail) = (None, None);
+            let mut flat = None;
             let mut flat_frames: Vec<(u16, FrameFlat)> = Vec::with_capacity(chunk.len());
             let mut t = Timings::default();
 
@@ -760,9 +1024,6 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                         flat = Some(g);
                     }
                 }
-                if index == middle {
-                    detail = opts.detail_roi.map(|r| roi_green(&frame, r, levels.black));
-                }
                 ctx.release(frame);
                 stats
                     .fold(index, &scratch.reg)
@@ -774,7 +1035,6 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 stats,
                 clip,
                 flat,
-                detail,
                 flat_frames,
                 t,
             })
@@ -784,7 +1044,6 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 a.stats.absorb(&b.stats).map_err(|e| map_dim_err(0, e))?;
                 a.clip.absorb(&b.clip).map_err(|e| map_dim_err(0, e))?;
                 a.flat = a.flat.or(b.flat);
-                a.detail = a.detail.or(b.detail);
                 a.flat_frames.extend(b.flat_frames);
                 a.t.add(b.t);
                 Ok(a)
@@ -831,6 +1090,10 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 .iter()
                 .map(|g| Estimator::new(&p1.stats, Gate::new(*g)))
                 .collect();
+            let mut selector = match (opts.flat_roi, opts.detail_roi) {
+                (Some(flat), Some(detail)) => Some(SelectorRois::new(flat, detail)),
+                _ => None,
+            };
             let mut tf = opts.stats.then(|| ThroughFocus::new(&p1.stats));
             let mut placebo = (opts.stats && opts.stats_placebo)
                 .then(|| ThroughFocus::new_permuted(&p1.stats, &perm));
@@ -848,6 +1111,11 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                         break;
                     }
                 }
+                if err.is_none()
+                    && let Some(selector) = selector.as_mut()
+                {
+                    selector.fold(&frame, index, p1.stats.best_index(), geom, levels.black);
+                }
                 ctx.release(frame);
                 if let Some(e) = err {
                     return Err(e);
@@ -864,6 +1132,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             }
             Ok(Pass2 {
                 est,
+                selector,
                 tf,
                 placebo,
                 t,
@@ -873,6 +1142,9 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             (Ok(mut a), Ok(b)) => {
                 for (x, y) in a.est.iter_mut().zip(b.est.iter()) {
                     x.absorb(y).map_err(|e| map_dim_err(0, e))?;
+                }
+                if let (Some(x), Some(y)) = (a.selector.as_mut(), b.selector.as_ref()) {
+                    x.absorb(y);
                 }
                 if let (Some(x), Some(y)) = (a.tf.as_mut(), b.tf.as_ref()) {
                     x.absorb(y).map_err(|e| map_dim_err(0, e))?;
@@ -898,6 +1170,12 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         ensure!(
             e.every_pixel_is_decided(),
             "some pixel admitted no frame at all; the winner is supposed to be unconditional"
+        );
+    }
+    if let Some(selector) = &p2.selector {
+        ensure!(
+            selector.is_complete(),
+            "the gate-zero selector reference did not capture every requested ROI pixel"
         );
     }
 
@@ -1168,22 +1446,38 @@ fn report(
         );
         return Ok(());
     };
-    let single_detail = p1
-        .detail
+    let selector = p2
+        .selector
         .as_ref()
-        .context("the middle frame's detail ROI was never captured")?;
-    // The single frame's own predicted sigma, from the same calibrated model
-    // the merged side uses. Both sides are model-predicted, so the correction
-    // cannot favour one of them by construction.
-    let single_sigma_map: Vec<f32> = single_detail
+        .context("the gate-zero selector ROIs were not captured")?;
+    let selector_flat_sigma: Vec<f32> = selector
+        .flat
+        .values
         .iter()
         .map(|v| noise.green_luma_sigma(*v))
         .collect();
-    let base = detail_metrics(single_detail, &single_sigma_map, droi.width, droi.height);
-    ensure!(
-        base.corrected_rms > 0.0,
-        "the detail ROI has no signal gradient above the noise model in the middle frame; \
-         it is not a detail region"
+    let selector_detail_sigma: Vec<f32> = selector
+        .detail
+        .values
+        .iter()
+        .map(|v| noise.green_luma_sigma(*v))
+        .collect();
+    let selector_controlled = cross_fitted_detail(
+        &selector.detail.values,
+        &selector_detail_sigma,
+        droi.width,
+        droi.height,
+        &selector.flat.values,
+        &selector_flat_sigma,
+        roi.width,
+        roi.height,
+    )
+    .context("building the gate-zero detail reference")?;
+    let selector_metrics = detail_metrics(
+        &selector.detail.values,
+        &selector_detail_sigma,
+        droi.width,
+        droi.height,
     );
 
     eprintln!("--- ACCEPTANCE INVARIANT 2 of 2: detail retention (MEASURED) ---");
@@ -1219,60 +1513,100 @@ fn report(
         "                  truth. A mean-gradient test scores both of those as wins. It must not."
     );
     eprintln!(
-        "                  MEAN |GRAD| IS ALSO CONFOUNDED BY NOISE and that confound has the same"
+        "                  MEAN |GRAD| IS ALSO CONFOUNDED BY NOISE and selection conditions that"
     );
     eprintln!(
-        "                  sign as the effect: cutting sigma cuts gradient with zero blur, so"
+        "                  noise on a max over N. A model sigma knows neither the max nor N."
     );
     eprintln!(
-        "                  an uncorrected reading charges the merge for doing its job. `corrected`"
+        "                  Each row therefore MEASURES its inflation on the flat ROI, separately"
     );
     eprintln!(
-        "                  is sqrt(raw^2 - model^2), the only column judged. `m2` is fact 24's"
-    );
-    eprintln!("                  convention (M38 §1), reported so that comparison is legitimate.");
-    eprintln!(
-        "single frame {middle:<3}: corrected {:8.4}   raw rms {:8.4}   model noise {:8.4}   \
-         m2 {:8.4}   iso {:8.4}",
-        base.corrected_rms, base.raw_rms, base.noise_rms, base.m2_pooled_abs, base.iso_mean
+        "                  in the left/right halves, and applies the OPPOSITE half's scale to detail."
     );
     eprintln!(
-        "  gate     corrected     RETENTION   VERDICT      raw rms   model noise         m2        \
-         iso"
+        "                  STRUCTURE = raw / controlled-noise: pure noise reads 1.0x; real detail"
+    );
+    eprintln!(
+        "                  reads above it. RETENTION compares resolved signal at the SAME selector"
+    );
+    eprintln!(
+        "                  noise floor, against the full-stack gate-zero selector -- never one"
+    );
+    eprintln!(
+        "                  arbitrary frame. The flat scale is re-measured per gate, so its N and"
+    );
+    eprintln!(
+        "                  admission dependence come from this run rather than a transferred bar."
+    );
+    eprintln!(
+        "selector gate 0 : q {:+10.3} DN^2   STRUCTURE {:7.3}x   raw {:9.4}   \
+         ctrl noise {:9.4}   k(L/R) {:6.3}/{:6.3}   m2 {:8.4}   iso {:8.4}",
+        selector_controlled.signal_power,
+        selector_controlled.structure,
+        selector_controlled.raw_power.sqrt(),
+        selector_controlled.controlled_noise_power.sqrt(),
+        selector_controlled.inflation_left,
+        selector_controlled.inflation_right,
+        selector_metrics.m2_pooled_abs,
+        selector_metrics.iso_mean
+    );
+    eprintln!(
+        "  gate     q signal    RETENTION   VERDICT    STRUCTURE     raw rms  ctrl noise   \
+         k left  k right         m2        iso"
     );
     for e in &p2.est {
-        let merged = roi_green_merged(e, droi, geom, levels.black);
-        let sig: Vec<f32> = (droi.y..droi.y + droi.height)
+        let merged_detail = roi_green_merged(e, droi, geom, levels.black);
+        let detail_sig: Vec<f32> = (droi.y..droi.y + droi.height)
             .flat_map(|py| (droi.x..droi.x + droi.width).map(move |px| (px, py)))
             .map(|(px, py)| e.predicted_sigma(noise, geom.index(px, py), levels.black))
             .collect();
-        let m = detail_metrics(&merged, &sig, droi.width, droi.height);
-        let retention = m.corrected_rms / base.corrected_rms;
+        let merged_flat = roi_green_merged(e, roi, geom, levels.black);
+        let flat_sig: Vec<f32> = (roi.y..roi.y + roi.height)
+            .flat_map(|py| (roi.x..roi.x + roi.width).map(move |px| (px, py)))
+            .map(|(px, py)| e.predicted_sigma(noise, geom.index(px, py), levels.black))
+            .collect();
+        let controlled = cross_fitted_detail(
+            &merged_detail,
+            &detail_sig,
+            droi.width,
+            droi.height,
+            &merged_flat,
+            &flat_sig,
+            roi.width,
+            roi.height,
+        )
+        .with_context(|| format!("gate {} detail control", e.gate().threshold))?;
+        let m = detail_metrics(&merged_detail, &detail_sig, droi.width, droi.height);
+        let retention = equal_noise_retention(controlled, selector_controlled);
         eprintln!(
-            "  {:5.2}   {:9.4}   {:9.3}x   {:9}   {:10.4}   {:11.4}   {:8.4}   {:8.4}",
+            "  {:5.2}   {:+10.3}   {:9.3}x   {:9}   {:9.3}x   {:9.4}   {:9.4}   \
+             {:7.3}  {:7.3}   {:8.4}   {:8.4}",
             e.gate().threshold,
-            m.corrected_rms,
+            controlled.signal_power,
             retention,
             detail_verdict(retention),
-            m.raw_rms,
-            m.noise_rms,
+            controlled.structure,
+            controlled.raw_power.sqrt(),
+            controlled.controlled_noise_power.sqrt(),
+            controlled.inflation_left,
+            controlled.inflation_right,
             m.m2_pooled_abs,
             m.iso_mean
         );
     }
     eprintln!(
-        "                  The reference is ONE frame of the bracket, so much of this ROI is out"
+        "                  q is SIGNED resolved gradient power. A negative q means the ROI has no"
     );
     eprintln!(
-        "                  of focus in it and retention ABOVE 1.0 is expected -- that is the stack"
+        "                  resolved detail above the cross-fitted flat control; it is not clamped"
     );
     eprintln!(
-        "                  finding focus the reference does not have. The failure this catches is"
+        "                  before retention. At high STRUCTURE, RETENTION approaches resolved"
     );
     eprintln!(
-        "                  CORRECTED retention falling as the gate opens, which is fact 24's"
+        "                  signal amplitude. Near 1.0x it honestly shrinks toward no-effect."
     );
-    eprintln!("                  collapse arriving and cannot be explained away as noise removal.");
     eprintln!(
         "                  A rise is INVESTIGATE, not PASS: see the speckle companion below, which"
     );
@@ -1481,7 +1815,7 @@ fn report_photometric_sensitivity(best_focus: &[f32]) {
     eprintln!("                  EXIF change predicts (1.0443 measured vs 1.2800). Fit it.");
 }
 
-/// One-sided reading of a corrected-retention ratio.
+/// One-sided reading of an equal-noise retention ratio.
 ///
 /// **Deliberately never returns "PASS" for a value above 1.** The orchestrator
 /// MEASURED (calibrated 1-D optics simulation, 25 frames, oracle depth, 2026-08)
@@ -1504,31 +1838,30 @@ fn detail_verdict(retention: f64) -> &'static str {
     }
 }
 
-/// Corrected retention below this is fact 24's collapse.
+/// Equal-noise retention below this is fact 24's collapse.
 ///
-/// Registered at 0.90 because fact 24's measured collapse is **-58% and -53%**
-/// (retention 0.42x and 0.47x) and the orchestrator's simulation independently
-/// reproduces a plain mean at -49% to -51%. A 10% floor sits an order of
-/// magnitude above the noise on this metric while leaving a wide margin below
-/// the failure it is aimed at, so it cannot fire on ordinary gate-to-gate drift
-/// (MEASURED tonight: 0.2% on 109MSDCF, 0.6% on 119MSDCF across gate 0 to 2.0).
+/// The reference is now the full-stack gate-zero selector, with candidate and
+/// reference compared at the same measured noise floor. At high structure,
+/// 0.90 therefore means a 10% resolved-gradient amplitude loss instead of a
+/// ratio to an arbitrarily defocused middle frame. The value is deliberately
+/// not tuned here: it still sits well above fact 24's measured 53-58% collapse
+/// and the simulated plain mean's 49-51%, but whether 10% is the right product
+/// tolerance is a separate decision.
 const DETAIL_COLLAPSE_FLOOR: f64 = 0.90;
 
-/// Corrected retention above this is a flag to investigate, never a pass.
+/// Equal-noise retention above this is a flag to investigate, never a pass.
 ///
-/// Set at 1.50 rather than 1.00 because the reference is one frame of a focus
-/// bracket and much of a detail ROI is genuinely out of focus in it, so
-/// retention above 1 is the *expected* reading — 1.257x and 1.027x tonight. A
-/// merge finding 50% more corrected gradient than the sharpest thing in the
-/// reference frame is more likely to be ringing than to be focus.
+/// The selector reference has already searched the full bracket for focus. A
+/// merge carrying 50% more resolved gradient than that reference is therefore
+/// a reason to inspect ringing or manufactured texture, never evidence of
+/// quality from this one-sided statistic.
 const DETAIL_RISE_FLAG: f64 = 1.50;
 
 // Pinned at compile time rather than in a test, because these are relationships
 // between constants and a build that violates one should not link.
 //
-// The rise flag must sit above 1.0: retention above 1 is EXPECTED here, because
-// the reference is one frame of a focus bracket and much of a detail ROI is out
-// of focus in it (1.257x and 1.027x MEASURED tonight).
+// The rise flag sits above identity so small measurement scatter is not itself
+// labelled as manufactured detail.
 const _: () = assert!(DETAIL_RISE_FLAG > 1.0);
 // The collapse floor must sit above the -49% a plain mean produces in the
 // orchestrator's simulation and the -58%/-53% fact 24 measured, or it cannot
@@ -2335,6 +2668,174 @@ mod tests {
         assert!((a - b).abs() < 1e-12, "{a} != {b}");
     }
 
+    fn gaussian_noise(len: usize, sd: f32, mut state: u64) -> Vec<f32> {
+        let mut uniform = || {
+            state = state.wrapping_add(0x9E37_79B9_7F4A_7C15);
+            let mut z = state;
+            z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
+            z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
+            ((z ^ (z >> 31)) >> 11) as f64 / (1u64 << 53) as f64
+        };
+        (0..len)
+            .map(|_| {
+                let (u1, u2) = (uniform().max(1e-12), uniform());
+                (f64::from(sd) * (-2.0 * u1.ln()).sqrt() * (std::f64::consts::TAU * u2).cos())
+                    as f32
+            })
+            .collect()
+    }
+
+    fn checker_signal(w: usize, h: usize) -> Vec<f32> {
+        (0..w * h)
+            .map(|i| {
+                let (x, y) = (i % w, i / w);
+                if ((x / 3) + (y / 3)) % 2 == 0 {
+                    200.0
+                } else {
+                    -200.0
+                }
+            })
+            .collect()
+    }
+
+    fn box_blur_3x3(v: &[f32], w: usize, h: usize) -> Vec<f32> {
+        let mut out = vec![0.0; v.len()];
+        for y in 0..h {
+            for x in 0..w {
+                let mut sum = 0.0;
+                for dy in [h - 1, 0, 1] {
+                    for dx in [w - 1, 0, 1] {
+                        sum += v[((y + dy) % h) * w + (x + dx) % w];
+                    }
+                }
+                out[y * w + x] = sum / 9.0;
+            }
+        }
+        out
+    }
+
+    fn synthetic_controlled(
+        signal: &[f32],
+        w: usize,
+        h: usize,
+        model_sd: f32,
+        inflation: f32,
+        seed: u64,
+    ) -> ControlledDetail {
+        let actual_sd = model_sd * inflation;
+        let flat = gaussian_noise(w * h, actual_sd, seed);
+        let detail_noise = gaussian_noise(w * h, actual_sd, seed ^ 0xD1B5_4A32_D192_ED03);
+        let detail: Vec<f32> = signal
+            .iter()
+            .zip(detail_noise)
+            .map(|(s, n)| *s + n)
+            .collect();
+        let sigma = vec![model_sd; w * h];
+        cross_fitted_detail(&detail, &sigma, w, h, &flat, &sigma, w, h)
+            .expect("synthetic ROIs are valid")
+    }
+
+    fn harmonic(n: usize) -> f64 {
+        (1..=n).map(|k| 1.0 / k as f64).sum()
+    }
+
+    #[test]
+    fn selection_noise_null_tracks_one_across_frame_counts() {
+        let (w, h, sd) = (512usize, 512usize, 20.0f32);
+        let no_signal = vec![0.0; w * h];
+        for (j, n) in [22usize, 130, 299].into_iter().enumerate() {
+            let max_scale = harmonic(n).sqrt() as f32;
+            let averaged_scale = (1.0 + 0.35 * (harmonic(n) - 1.0)).sqrt() as f32;
+            let selector = synthetic_controlled(&no_signal, w, h, sd, max_scale, 0x1000 + j as u64);
+            let candidate =
+                synthetic_controlled(&no_signal, w, h, sd, averaged_scale, 0x2000 + j as u64);
+            let retention = equal_noise_retention(candidate, selector);
+            eprintln!(
+                "M80 N={n} noise: selector_structure={:.6} candidate_structure={:.6} \
+                 retention={retention:.6} fitted_k={:.6}/{:.6}",
+                selector.structure,
+                candidate.structure,
+                candidate.inflation_left,
+                candidate.inflation_right
+            );
+            assert!(
+                (0.90..=1.10).contains(&candidate.structure),
+                "noise null N={n}: STRUCTURE must read 1, got {:.6}; fitted k={:.4}/{:.4}, \
+                 planted inflation={averaged_scale:.4}",
+                candidate.structure,
+                candidate.inflation_left,
+                candidate.inflation_right
+            );
+            assert!(
+                (0.90..=1.10).contains(&retention),
+                "noise null N={n}: RETENTION must read 1, got {retention:.6}; \
+                 selector STRUCTURE {:.6}, candidate STRUCTURE {:.6}",
+                selector.structure,
+                candidate.structure
+            );
+        }
+    }
+
+    #[test]
+    fn cross_fitted_metric_keeps_detail_and_detects_blur_across_frame_counts() {
+        let (w, h, sd) = (512usize, 512usize, 20.0f32);
+        let signal = checker_signal(w, h);
+        let blurred = box_blur_3x3(&signal, w, h);
+        let zero = vec![0.0; w * h];
+        let clean_metric = detail_metrics(&signal, &zero, w, h);
+        let blur_metric = detail_metrics(&blurred, &zero, w, h);
+        let planted_retention = blur_metric.raw_rms / clean_metric.raw_rms;
+        eprintln!("M80 positive plant: clean-to-blur gradient retention={planted_retention:.6}");
+        assert!(
+            planted_retention <= 0.75,
+            "positive control cannot express failure: 3x3 blur retained \
+             {planted_retention:.6} of gradient amplitude"
+        );
+
+        let mut clean_retentions = Vec::new();
+        for (j, n) in [22usize, 130, 299].into_iter().enumerate() {
+            let max_scale = harmonic(n).sqrt() as f32;
+            let averaged_scale = (1.0 + 0.35 * (harmonic(n) - 1.0)).sqrt() as f32;
+            let selector = synthetic_controlled(&signal, w, h, sd, max_scale, 0x3000 + j as u64);
+            let clean = synthetic_controlled(&signal, w, h, sd, averaged_scale, 0x4000 + j as u64);
+            let blur = synthetic_controlled(&blurred, w, h, sd, averaged_scale, 0x5000 + j as u64);
+            let clean_retention = equal_noise_retention(clean, selector);
+            let blur_retention = equal_noise_retention(blur, selector);
+            eprintln!(
+                "M80 N={n} detail: structure={:.6} clean_retention={clean_retention:.6} \
+                 blur_retention={blur_retention:.6}",
+                clean.structure
+            );
+            assert!(
+                clean.structure >= 3.0,
+                "detail control N={n}: STRUCTURE was {:.6}",
+                clean.structure
+            );
+            assert!(
+                (0.95..=1.05).contains(&clean_retention),
+                "detail control N={n}: unchanged signal retained {clean_retention:.6}"
+            );
+            assert!(
+                blur_retention <= 0.80,
+                "detail control N={n}: planted blur retained {blur_retention:.6}"
+            );
+            clean_retentions.push(clean_retention);
+        }
+        let lo = clean_retentions
+            .iter()
+            .copied()
+            .fold(f64::INFINITY, f64::min);
+        let hi = clean_retentions
+            .iter()
+            .copied()
+            .fold(f64::NEG_INFINITY, f64::max);
+        assert!(
+            hi - lo <= 0.05,
+            "unchanged detail moved {:.6} across N: {clean_retentions:?}",
+            hi - lo
+        );
+    }
+
     #[test]
     fn the_isotropic_column_is_the_analytic_value_on_a_linear_ramp() {
         // A ramp of slope s in x and t in y has |grad| = sqrt(s^2 + t^2)
@@ -2359,10 +2860,10 @@ mod tests {
 
     #[test]
     fn the_corrected_column_falls_under_blur_which_is_the_property_it_is_used_for() {
-        // Invariant 2 only means something if the CORRECTED quantity detects
-        // the collapse fact 24 measured. Correcting for noise must not have
-        // made the metric blind to real blur. Noise is zero here so the
-        // correction is inert and the fall is entirely optical.
+        // The model-only component still has to detect the collapse fact 24
+        // measured. The shipping invariant wraps this power in a cross-fitted
+        // selection correction; noise is zero here so both forms reduce to the
+        // same optical fall.
         let (w, h) = (64usize, 64usize);
         let sharp: Vec<f32> = (0..w * h)
             .map(|i| {
@@ -2417,10 +2918,9 @@ mod tests {
 
     #[test]
     fn the_noise_correction_removes_pure_noise_down_to_sampling_error() {
-        // The property that makes invariant 2 defensible: on a field that is
-        // ONLY noise, corrected_rms must collapse toward zero while raw_rms
-        // does not. If this fails, the metric is charging the merge for noise
-        // reduction, which is the confound the correction exists to remove.
+        // This pins ordinary, unselected noise subtraction only. M77 showed
+        // that it says nothing about selected noise; the cross-fitted tests
+        // above cover that separate term.
         let (w, h) = (256usize, 256usize);
         let sd = 20.0f32;
         let mut rng = 0x2545_F491_4F6C_DD1Du64;
@@ -2456,9 +2956,9 @@ mod tests {
 
     #[test]
     fn the_correction_leaves_signal_alone_while_removing_added_noise() {
-        // The decisive pairing: the same signal measured clean and measured
-        // with noise added must give the SAME corrected value, while the
-        // uncorrected value rises. That is the confound, isolated.
+        // The same unselected signal measured clean and with noise added must
+        // give the same model-corrected value. Selection is deliberately absent
+        // here and covered by the M80 controls above.
         let (w, h) = (256usize, 256usize);
         let signal: Vec<f32> = (0..w * h)
             .map(|i| {
@@ -2536,9 +3036,9 @@ mod tests {
         assert_eq!(detail_verdict(0.51), "COLLAPSE");
         assert_eq!(detail_verdict(0.49), "COLLAPSE");
 
-        // Tonight's real readings, both stacks, gate 0 through 2.0.
-        for r in [1.257, 1.254, 1.027, 1.021] {
-            assert_eq!(detail_verdict(r), "ok", "real reading {r} must not flag");
+        // Identity and small measurement scatter are not verdicts.
+        for r in [1.0, 1.02, 1.10] {
+            assert_eq!(detail_verdict(r), "ok", "near-identity reading {r} flagged");
         }
 
         // And the direction that matters: a large rise is NOT a pass.
@@ -2565,8 +3065,10 @@ mod tests {
     fn the_plan_is_bounded_by_memory_and_scales_down_as_accumulators_are_added() {
         let geom = PlaneGeometry::from_active(4688, 7028);
         let frame_bytes = 66_000_000;
-        let one = Plan::new(105, geom, frame_bytes, 1, 0);
-        let eight = Plan::new(105, geom, frame_bytes, 8, 0);
+        let one = Plan::new(105, geom, frame_bytes, 1, 0, 0);
+        let eight = Plan::new(105, geom, frame_bytes, 8, 0, 0);
+        let roi_bytes = 3_000_000;
+        let with_detail_control = Plan::new(105, geom, frame_bytes, 1, 0, roi_bytes);
         assert!(
             eight.workers <= one.workers,
             "more accumulators must not license more workers: {} vs {}",
@@ -2574,6 +3076,13 @@ mod tests {
             one.workers
         );
         assert!(eight.workers >= 1);
+        assert_eq!(with_detail_control.roi_bytes, roi_bytes);
+        assert_eq!(
+            with_detail_control.pass2_bytes - one.pass2_bytes,
+            roi_bytes,
+            "the compact selector ROIs must be priced into pass two"
+        );
+        assert!(with_detail_control.workers <= one.workers);
         // The budget is the thing that has to hold, in both passes.
         for p in [&one, &eight] {
             assert!(
@@ -2593,9 +3102,9 @@ mod tests {
     fn the_statistics_are_priced_into_the_plan_and_do_not_grow_with_the_stack() {
         let geom = PlaneGeometry::from_active(4688, 7028);
         let frame_bytes = 66_000_000;
-        let off = Plan::new(105, geom, frame_bytes, 1, 0);
-        let on = Plan::new(105, geom, frame_bytes, 1, 1);
-        let with_placebo = Plan::new(105, geom, frame_bytes, 1, 2);
+        let off = Plan::new(105, geom, frame_bytes, 1, 0, 0);
+        let on = Plan::new(105, geom, frame_bytes, 1, 1, 0);
+        let with_placebo = Plan::new(105, geom, frame_bytes, 1, 2, 0);
 
         assert_eq!(off.stats_bytes, 0, "off must cost nothing");
         assert!(
@@ -2615,7 +3124,7 @@ mod tests {
 
         // Constant in the frame count: the whole point of the seam decision.
         for frames in [22usize, 33, 105, 400] {
-            let p = Plan::new(frames, geom, frame_bytes, 1, 1);
+            let p = Plan::new(frames, geom, frame_bytes, 1, 1, 0);
             assert_eq!(
                 p.stats_bytes, on.stats_bytes,
                 "{frames} frames changed the statistics footprint; it is supposed \
@@ -2645,7 +3154,7 @@ mod tests {
     fn every_frame_is_covered_exactly_once_by_the_chunking() {
         let geom = PlaneGeometry::from_active(4688, 7028);
         for frames in [1usize, 2, 7, 22, 33, 63, 79, 105] {
-            let plan = Plan::new(frames, geom, 66_000_000, 3, 0);
+            let plan = Plan::new(frames, geom, 66_000_000, 3, 0, 0);
             let mut seen = vec![0u32; frames];
             for ci in 0..plan.chunks {
                 let start = ci * plan.chunk_len;

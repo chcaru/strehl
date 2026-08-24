@@ -1,0 +1,29 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.11s
+     Running unittests src\main.rs (projects\strehl\experiments\M80-invariant-repair\target-m80\debug\deps\strehl-159d1b4c243d4b13.exe)
+
+running 22 tests
+test merge_cmd::tests::a_gradient_increase_is_never_scored_as_a_pass ... ok
+test merge_cmd::tests::a_non_monotone_ladder_is_a_bug_and_is_reported_as_one ... ok
+test merge_cmd::tests::degenerate_ladders_and_targets_are_refused ... ok
+test merge_cmd::tests::a_target_outside_the_ladder_is_refused_rather_than_extrapolated ... ok
+test merge_cmd::tests::a_solved_gate_reproduces_its_target_when_fed_back ... ok
+test merge_cmd::tests::an_unsorted_ladder_solves_the_same_as_a_sorted_one ... ok
+test merge_cmd::tests::degenerate_rois_do_not_panic ... ok
+test merge_cmd::tests::every_frame_is_covered_exactly_once_by_the_chunking ... ok
+test merge_cmd::tests::the_statistics_are_priced_into_the_plan_and_do_not_grow_with_the_stack ... ok
+test merge_cmd::tests::no_single_gate_calibrates_across_the_corpus ... ok
+test merge_cmd::tests::a_stack_the_shipped_ladder_cannot_reach_is_refused_not_extrapolated ... ok
+test merge_cmd::tests::solving_at_a_rungs_own_value_returns_that_rungs_gate ... ok
+test merge_cmd::tests::the_m2_convention_column_reproduces_the_independently_identified_definition ... ok
+test merge_cmd::tests::the_plan_is_bounded_by_memory_and_scales_down_as_accumulators_are_added ... ok
+test merge_cmd::tests::log_log_interpolation_is_exact_on_a_power_law ... ok
+test merge_cmd::tests::the_isotropic_column_is_the_analytic_value_on_a_linear_ramp ... ok
+test merge_cmd::tests::the_speckle_companion_uses_the_same_tolerance_as_the_argmax_baseline ... ok
+test merge_cmd::tests::the_corrected_column_falls_under_blur_which_is_the_property_it_is_used_for ... ok
+test merge_cmd::tests::the_noise_correction_removes_pure_noise_down_to_sampling_error ... ok
+test merge_cmd::tests::the_correction_leaves_signal_alone_while_removing_added_noise ... ok
+test merge_cmd::tests::selection_noise_null_tracks_one_across_frame_counts ... ok
+test merge_cmd::tests::cross_fitted_metric_keeps_detail_and_detects_blur_across_frame_counts ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 0.23s
+
