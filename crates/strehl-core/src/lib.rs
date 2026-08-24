@@ -19,6 +19,7 @@ pub mod flat_ratio;
 pub mod focus;
 pub mod merge;
 pub mod noise;
+pub mod photometric;
 pub mod plane;
 pub mod profile;
 pub mod robust;
