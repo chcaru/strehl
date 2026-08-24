@@ -26,4 +26,3 @@ test merge_cmd::tests::selection_noise_null_tracks_one_across_frame_counts ... o
 test merge_cmd::tests::cross_fitted_metric_keeps_detail_and_detects_blur_across_frame_counts ... ok
 
 test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 0.23s
-
