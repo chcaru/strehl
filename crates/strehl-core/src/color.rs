@@ -275,6 +275,381 @@ pub fn srgb_encode(v: f32) -> f32 {
     }
 }
 
+// ---------------------------------------------------------------------------
+// Exposure. Viewing path only: it sits in the module header's order between
+// the colour matrix and the clamp, and the reason is documented on
+// `AppliedExposure`.
+// ---------------------------------------------------------------------------
+
+/// Relative luminance of a **linear sRGB** triple, `Y` of CIE XYZ.
+///
+/// **DERIVED, not a new constant.** The weights are row 1 of
+/// [`SRGB_TO_XYZ_D65`] — the row that produces `Y` — so this cannot drift away
+/// from the primaries the rest of the module is built on. There is deliberately
+/// no `0.2126 / 0.7152 / 0.0722` literal anywhere in this file;
+/// [`tests::luminance_is_the_y_row_of_the_published_matrix`] asserts the
+/// agreement.
+///
+/// Negative channels are floored at zero first. A negative channel is a
+/// **gamut excursion** — [`camera_to_srgb`] has negative off-diagonal terms and
+/// a saturated camera green legitimately lands at `B < 0` — and it is not
+/// negative light. Letting it into the sum would let a saturated colour reduce
+/// the luminance it is actually contributing, and the exposure rule below would
+/// then brighten *because* the scene got more colourful.
+#[inline]
+pub fn luminance(v: [f32; 3]) -> f32 {
+    let w = SRGB_TO_XYZ_D65[1];
+    (w[0] * f64::from(v[0].max(0.0))
+        + w[1] * f64::from(v[1].max(0.0))
+        + w[2] * f64::from(v[2].max(0.0))) as f32
+}
+
+/// Luminance of a white-balanced **camera RGB** triple, as it will be displayed.
+///
+/// `matrix` is [`camera_to_srgb`]'s, or `None` when the pipeline is emitting
+/// camera-native RGB because the body has no characterisation. In the `None`
+/// case the camera triple is what lands in the file and is what a viewer will
+/// read as sRGB, so weighting it with the sRGB luma row is the *consistent*
+/// choice — not a correct one, because camera-native RGB has no defined
+/// luminance, and the `--srgb`-without-a-matrix path already prints that it is
+/// not a render of what the sensor saw.
+#[inline]
+pub fn display_luminance(cam_rgb: [f32; 3], matrix: Option<&[[f32; 3]; 3]>) -> f32 {
+    match matrix {
+        Some(m) => luminance(apply(m, cam_rgb)),
+        None => luminance(cam_rgb),
+    }
+}
+
+/// The **nearest-rank** index for a percentile of `len` sorted samples.
+///
+/// `ceil(p/100 * len) - 1`, clamped into range: the smallest index whose value
+/// at least `p` percent of the sample is at or below. Nearest-rank rather than
+/// an interpolating definition because the answer is then always a value that
+/// actually occurs in the image, which is what makes
+/// [`percentile_in_place`] a `select_nth_unstable` and therefore linear time
+/// and *exactly* reproducible — the k-th order statistic is a property of the
+/// multiset, so it does not depend on the sort algorithm at all.
+///
+/// **The rank is computed in integers, not floats.** `99.9` is not
+/// representable in binary, and `(99.9 / 100.0 * 1000.0).ceil()` is `1000` and
+/// not `999` — one rank off the textbook answer, silently. The percentile is
+/// therefore rounded to basis points (hundredths of a percent, which covers
+/// every value this pipeline uses) and the ceiling division is exact.
+///
+/// `None` for an empty sample. The definition is
+/// `numpy.percentile(method="inverted_cdf")`, which is what lets the Python
+/// cross-checks in `experiments/M100-exposure/` agree with this to the bit.
+#[inline]
+pub fn nearest_rank_index(len: usize, percentile: f64) -> Option<usize> {
+    if len == 0 || !percentile.is_finite() {
+        return None;
+    }
+    /// Basis points in 100%, i.e. the integer scale the rank is computed on.
+    const SCALE: u128 = 1_000_000;
+    let bp = (percentile.clamp(0.0, 100.0) * (SCALE as f64 / 100.0)).round() as u128;
+    let rank = (len as u128 * bp).div_ceil(SCALE) as usize;
+    Some(rank.saturating_sub(1).min(len - 1))
+}
+
+/// The `percentile`-th value of `xs`, by [`nearest_rank_index`].
+///
+/// Reorders `xs`. Non-finite samples are ordered by `f32::total_cmp`, which
+/// puts `NaN` above every number — so a `NaN` in the image can only ever *lower*
+/// the measured percentile by one rank, never raise it, and cannot become the
+/// answer unless the image is essentially all `NaN`. That is the conservative
+/// direction for an exposure rule: it underestimates the brightness, so it
+/// underestimates the gain.
+pub fn percentile_in_place(xs: &mut [f32], percentile: f64) -> Option<f32> {
+    let k = nearest_rank_index(xs.len(), percentile)?;
+    let (_, nth, _) = xs.select_nth_unstable_by(k, f32::total_cmp);
+    Some(*nth)
+}
+
+/// The percentile of linear luminance the shipped auto rule places on target.
+///
+/// **MEASURED, not chosen by taste.** `docs/research/M100-exposure.md` §3
+/// sweeps seven percentiles against five targets on seven corpus stacks, on
+/// two candidate statistics. p99.9 of a 3516x2344 binned image is 8241 samples
+/// above the threshold, which is robust to hot pixels and to a small specular,
+/// and it is the highest percentile in the sweep that still leaves enough gain
+/// to clear the effectiveness bar.
+pub const AUTO_EXPOSURE_PERCENTILE: f64 = 99.9;
+
+/// Where [`AUTO_EXPOSURE_PERCENTILE`] is placed, in linear light.
+///
+/// Below 1.0 on purpose: the percentile is not the brightest thing in the
+/// scene, and the samples above it — speculars on chitin, the blown edge of a
+/// backlit hair — are *supposed* to clip. The margin is what keeps the number
+/// of them small.
+///
+/// **MEASURED, and the margin is not cosmetic.** On `bee-3-cpl` the background
+/// is a large flat field, so its pixels cross 65535 together rather than one at
+/// a time: raising this target from 0.90 to 0.95 takes that stack from 0.0422%
+/// of pixels clipped to 0.7663%, an 18x jump for 0.07 stops (§3). 0.90 sits on
+/// the safe side of that cliff with a 5x margin on the pre-registered ceiling.
+pub const AUTO_EXPOSURE_TARGET: f32 = 0.90;
+
+/// Hard bound on the automatic gain, in stops, each way.
+///
+/// **ARGUED, and it is a guard rail rather than a calibration.** A frame that
+/// is nearly black — a dark frame, a failed capture, a lens cap — has a
+/// luminance percentile near zero and would otherwise ask for an unbounded
+/// gain. Nothing in the corpus comes near this bound (MEASURED, §3), so it does
+/// not shape any shipped render; it exists so that a pathological input
+/// produces a bounded wrong answer instead of an infinite one.
+pub const AUTO_EXPOSURE_MAX_STOPS: f32 = 6.0;
+
+/// The precision the automatic choice is reported at, and therefore **rounded
+/// to**: steps per stop, so 100 is two decimal places.
+///
+/// The contract is that `--auto-exposure` prints a number the user can hand
+/// back to `--exposure` and get the *same file*. That is only true if the
+/// applied value is exactly the printed value, so the choice is quantised here
+/// rather than only at the `{:.2}` in the report. 1/100 stop is a 0.69% gain
+/// step.
+///
+/// The round trip is exact and not merely close: the quantisation divides an
+/// integer by 100 in `f32`, and `"1.57".parse::<f32>()` rounds the same
+/// rational — both are correctly rounded, so they are the same `f32`. It has to
+/// be a *division*; multiplying by `0.01f32` would not be, because `0.01` is
+/// not representable.
+/// [`tests::the_printed_choice_reproduces_the_gain_through_a_string`] asserts
+/// it through an actual `format!` and `parse`.
+pub const AUTO_EXPOSURE_STEPS_PER_STOP: f32 = 100.0;
+
+/// The exposure the user asked for, before any image has been looked at.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Exposure {
+    /// Nothing. **The caller must not multiply at all** — see
+    /// [`AppliedExposure::is_identity`].
+    None,
+    /// An explicit gain of `2^stops`.
+    Stops(f32),
+    /// Choose from the image, with [`choose_exposure`].
+    Auto,
+}
+
+/// Why an exposure request was refused.
+#[derive(Debug, Clone, Copy, PartialEq, thiserror::Error)]
+pub enum ExposureError {
+    /// Exposure is a *viewing* control and the linear output is the
+    /// measurement output. Brightening it would corrupt a measurement while
+    /// looking like a favour.
+    #[error(
+        "--exposure and --auto-exposure are viewing controls and need --srgb; the default output \
+         is the linear measurement file and must not be rescaled"
+    )]
+    NeedsSrgb,
+    /// Both an explicit and an automatic exposure were asked for.
+    #[error("--exposure and --auto-exposure both set an exposure; pass one or the other")]
+    Both,
+    /// `NaN`, an infinity, or a value outside +/- [`AUTO_EXPOSURE_MAX_STOPS`].
+    #[error("--exposure must be a finite number of stops within +/-{max}")]
+    OutOfRange {
+        /// [`AUTO_EXPOSURE_MAX_STOPS`], so the message carries its own bound.
+        max: f32,
+    },
+}
+
+impl Exposure {
+    /// Validate a command line into an [`Exposure`].
+    ///
+    /// Three refusals, and each one is a decision:
+    ///
+    /// 1. **Without `--srgb`, refuse.** Not "ignore": the linear file is what
+    ///    every corpus number was measured on, and a user who believes they
+    ///    brightened it has a corrupted measurement and no way to know.
+    /// 2. **Both flags at once, refuse.** There is no sensible composition —
+    ///    "automatic, then plus a bit" is a different feature and it is not
+    ///    this one.
+    /// 3. **`--exposure 0` becomes [`Exposure::None`].** Structural, not
+    ///    arithmetic: a gain of exactly `1.0` would also be bit-exact, but
+    ///    normalising here means the no-op request does not even reach the
+    ///    multiply, so `--exposure 0` and no flag at all are the *same code
+    ///    path* and cannot drift apart.
+    pub fn resolve(srgb: bool, stops: f32, auto: bool) -> Result<Self, ExposureError> {
+        let asked = auto || stops != 0.0;
+        if asked && !srgb {
+            return Err(ExposureError::NeedsSrgb);
+        }
+        if auto && stops != 0.0 {
+            return Err(ExposureError::Both);
+        }
+        if auto {
+            return Ok(Exposure::Auto);
+        }
+        if stops == 0.0 {
+            return Ok(Exposure::None);
+        }
+        if !stops.is_finite() || stops.abs() > AUTO_EXPOSURE_MAX_STOPS {
+            return Err(ExposureError::OutOfRange {
+                max: AUTO_EXPOSURE_MAX_STOPS,
+            });
+        }
+        Ok(Exposure::Stops(stops))
+    }
+}
+
+/// The gain that will actually be applied, and where it came from.
+///
+/// # Where in the order this multiplies, and why
+///
+/// **In linear light, before the clamp, and therefore before
+/// [`srgb_encode`].** Two halves:
+///
+/// *Before the curve.* The sRGB transfer function is not homogeneous —
+/// `f(g*x) != g*f(x)` — so a gain applied to encoded values is not an exposure
+/// at all. Worse, it is not even a *neutral* operation: because the curve's
+/// slope varies with level, scaling encoded R, G and B by one number moves them
+/// by different amounts in linear light, so it shifts the colour of every
+/// non-neutral pixel and crushes or blows the ends. Exposure is a photon count
+/// times a constant, and photon counts live before the curve.
+///
+/// *Where relative to the matrix — and why the implementation is free to choose.*
+/// [`camera_to_srgb`] is a **linear** operator, so `M(g*v) = g*M(v)`: applying
+/// the gain in camera RGB and applying it in linear sRGB are the *same
+/// transform*, differing only in float rounding. So is the demosaic, which is a
+/// fixed FIR filter. The pipeline therefore folds the gain into the
+/// normalisation multiply the writer already performs, which keeps the
+/// byte-frozen linear branch textually untouched — and that equivalence is not
+/// assumed, it is asserted in
+/// [`tests::the_gain_commutes_with_the_colour_matrix`].
+///
+/// What is *not* free is the **clamp**. The gain must land before it, so that a
+/// negative exposure can pull a value back down from above 1.0 rather than
+/// scaling a value that has already been flattened to 1.0. Clamp-then-gain
+/// would make `--exposure` a one-way street.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct AppliedExposure {
+    /// Stops. Positive brightens.
+    pub stops: f32,
+    /// `true` if [`choose_exposure`] picked it rather than the user.
+    pub automatic: bool,
+}
+
+impl AppliedExposure {
+    /// No exposure adjustment at all.
+    pub const IDENTITY: Self = Self {
+        stops: 0.0,
+        automatic: false,
+    };
+
+    /// The linear gain, `2^stops`.
+    ///
+    /// Exactly `1.0` at zero stops, on every IEEE-754 target, because
+    /// `exp2(0) = 1` is required to be exact — and `x * 1.0 == x` bit-for-bit
+    /// for every finite `x`. That is what makes an exposure of zero free of
+    /// consequence even where the multiply *is* executed.
+    #[inline]
+    pub fn gain(self) -> f32 {
+        self.stops.exp2()
+    }
+
+    /// `true` when the caller may skip the multiply entirely.
+    #[inline]
+    pub fn is_identity(self) -> bool {
+        self.stops == 0.0
+    }
+
+    /// The token to hand back to `--exposure` to reproduce this render.
+    ///
+    /// `--exposure=-1.5` and not `--exposure -1.5`, because a leading `-` in
+    /// the value position is an unknown flag to any argument parser worth
+    /// using. The `=` form is unambiguous and is what a user should copy.
+    pub fn reproduce_flag(self) -> String {
+        format!("--exposure={:.2}", self.stops)
+    }
+}
+
+impl core::fmt::Display for AppliedExposure {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{:+.2} stops (gain {:.3}x)", self.stops, self.gain())
+    }
+}
+
+/// Choose an exposure from linear-sRGB luminance samples, with the shipped rule.
+///
+/// `luma` is reordered. `None` when there is nothing to go on — an empty image,
+/// or one whose luminance percentile is not positive, where a gain is not
+/// defined and the honest answer is to leave the render alone.
+///
+/// # The rule
+///
+/// Put [`AUTO_EXPOSURE_PERCENTILE`] of linear luminance at
+/// [`AUTO_EXPOSURE_TARGET`], i.e. `stops = log2(target / Y_p)`, bounded by
+/// [`AUTO_EXPOSURE_MAX_STOPS`] and quantised to
+/// [`AUTO_EXPOSURE_STEPS_PER_STOP`].
+///
+/// **Why luminance and not the maximum channel.** Clipping is per-channel, so
+/// the obvious rule is to place a percentile of `max(R,G,B)`. MEASURED (§3):
+/// across the same seven stacks, luminance dominates it — at matched worst-case
+/// clipping, luminance delivers a brighter render, because a max-channel rule
+/// pays for the most saturated colour in the scene everywhere. Luminance at
+/// target 0.90 clips at worst 0.0995% and reaches p99.9 = 0.8905 at worst;
+/// max-channel at target 0.95 clips at worst 0.0764% and reaches only 0.8826.
+///
+/// # What it is and is not
+///
+/// It is **exposure only** — one scalar gain in linear light. It is not a tone
+/// curve, not a black point, not a highlight roll-off and not per-channel. That
+/// restraint is the point: it is the operation a raw converter's exposure
+/// slider performs, so a render that has had it applied is still a faithful
+/// render of the capture, differing from the un-exposed one by a number the
+/// tool prints.
+///
+/// It is a **gain estimator**, and the test of a gain estimator is whether it
+/// recovers a planted gain: scale the input by `2^k` and the answer must move
+/// by exactly `-k`. It does, to the quantum
+/// ([`tests::a_planted_gain_is_recovered_exactly`]).
+///
+/// # It can darken, and that is not a bug
+///
+/// Two corpus stacks are already correctly exposed and carry genuinely blown
+/// highlights: `coffee-bean` has 1.4215% of its pixels at 65535 and `foam`
+/// 0.7553%, with no exposure applied at all. This rule gives them −0.14 and
+/// −0.09 stops and takes both to **0.0000%** (MEASURED, §3). An auto-exposure
+/// that could only brighten would leave those blown.
+pub fn choose_exposure(luma: &mut [f32]) -> Option<AppliedExposure> {
+    exposure_stops_for(
+        luma,
+        AUTO_EXPOSURE_PERCENTILE,
+        AUTO_EXPOSURE_TARGET,
+        AUTO_EXPOSURE_MAX_STOPS,
+    )
+    .map(|stops| AppliedExposure {
+        stops,
+        automatic: true,
+    })
+}
+
+/// [`choose_exposure`]'s rule with its parameters exposed, for the sweep that
+/// chose them and for the tests that falsify it.
+///
+/// Kept public so that `docs/research/M100-exposure.md` §3's numbers can be
+/// regenerated against the shipped code rather than against a reimplementation
+/// of it.
+pub fn exposure_stops_for(
+    luma: &mut [f32],
+    percentile: f64,
+    target: f32,
+    max_stops: f32,
+) -> Option<f32> {
+    let y = percentile_in_place(luma, percentile)?;
+    if !y.is_finite() || y <= 0.0 || !target.is_finite() || target <= 0.0 {
+        return None;
+    }
+    let stops = (f64::from(target) / f64::from(y)).log2();
+    if !stops.is_finite() {
+        return None;
+    }
+    let bounded = (stops as f32).clamp(-max_stops.abs(), max_stops.abs());
+    // Quantise to the precision the choice is *reported* at, so that the
+    // report reproduces the file. See `AUTO_EXPOSURE_STEPS_PER_STOP`.
+    let steps = f64::from(bounded) * f64::from(AUTO_EXPOSURE_STEPS_PER_STOP);
+    Some(steps.round() as f32 / AUTO_EXPOSURE_STEPS_PER_STOP)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -670,5 +1045,393 @@ mod tests {
             "branch disagreement {d} is larger than the standard's"
         );
         assert!(d > 0.0, "the branches were expected to disagree slightly");
+    }
+
+    // -----------------------------------------------------------------
+    // Exposure (M100). The bars these correspond to are pre-registered in
+    // `docs/research/M100-exposure.md` §1 and are named in each test.
+    // -----------------------------------------------------------------
+
+    /// The luma weights are the published matrix's `Y` row, not a second copy
+    /// of them.
+    ///
+    /// This is the independent term for [`luminance`]: if someone pastes
+    /// `0.2126 / 0.7152 / 0.0722` in, or transposes the matrix, this fails. It
+    /// also pins the property that makes the rule interpretable — sRGB white
+    /// has luminance exactly 1.
+    #[test]
+    fn luminance_is_the_y_row_of_the_published_matrix() {
+        let w = SRGB_TO_XYZ_D65[1];
+        assert!((f64::from(luminance([1.0, 0.0, 0.0])) - w[0]).abs() < 1e-6);
+        assert!((f64::from(luminance([0.0, 1.0, 0.0])) - w[1]).abs() < 1e-6);
+        assert!((f64::from(luminance([0.0, 0.0, 1.0])) - w[2]).abs() < 1e-6);
+        assert!(
+            (luminance([1.0, 1.0, 1.0]) - 1.0).abs() < 1e-6,
+            "sRGB white must have luminance 1"
+        );
+        // Green carries most of it, blue almost none. A transposed row would
+        // not have this shape.
+        assert!(w[1] > 0.7 && w[2] < 0.08);
+    }
+
+    /// A gamut excursion is not negative light.
+    ///
+    /// [`camera_to_srgb`] genuinely produces negative channels for saturated
+    /// camera colours (asserted in `image_out`'s tests on the same fixture).
+    /// If those entered the luminance sum, a more saturated scene would read as
+    /// *darker* and the auto rule would brighten it for being colourful.
+    #[test]
+    fn luminance_floors_out_of_gamut_channels_rather_than_subtracting_them() {
+        let m = camera_to_srgb(A7C2_XYZ_TO_CAM).expect("invertible");
+        let saturated_green = [0.2f32, 1.0, 0.15];
+        let lin = apply(&m, saturated_green);
+        assert!(
+            lin[0] < 0.0 && lin[2] < 0.0,
+            "fixture is not out of gamut: {lin:?}"
+        );
+        let y = display_luminance(saturated_green, Some(&m));
+        assert!(y > 0.0, "an out-of-gamut green read as non-positive: {y}");
+        // Explicitly: it equals the green term alone, the negatives dropped.
+        let want = SRGB_TO_XYZ_D65[1][1] * f64::from(lin[1]);
+        assert!((f64::from(y) - want).abs() < 1e-6, "{y} vs {want}");
+        // With no matrix, camera RGB is passed through unweighted by anything
+        // but the sRGB row.
+        assert!((display_luminance([0.5, 0.5, 0.5], None) - 0.5).abs() < 1e-6);
+    }
+
+    /// Nearest rank is the textbook definition, checked by hand.
+    #[test]
+    fn the_percentile_index_is_the_textbook_nearest_rank() {
+        assert_eq!(nearest_rank_index(0, 50.0), None);
+        // 10 samples: p10 -> rank 1 -> index 0; p100 -> rank 10 -> index 9.
+        assert_eq!(nearest_rank_index(10, 0.0), Some(0));
+        assert_eq!(nearest_rank_index(10, 10.0), Some(0));
+        assert_eq!(nearest_rank_index(10, 10.1), Some(1));
+        assert_eq!(nearest_rank_index(10, 50.0), Some(4));
+        assert_eq!(nearest_rank_index(10, 99.9), Some(9));
+        assert_eq!(nearest_rank_index(10, 100.0), Some(9));
+        // 1000 samples, the sizes the rule actually runs at. These two are the
+        // cases float arithmetic gets wrong: 99.9/100*1000 ceils to 1000.
+        assert_eq!(nearest_rank_index(1000, 99.5), Some(994));
+        assert_eq!(nearest_rank_index(1000, 99.9), Some(998));
+        assert_eq!(nearest_rank_index(10_000, 99.9), Some(9989));
+        assert_eq!(nearest_rank_index(8_241_504, 99.5), Some(8_200_296));
+    }
+
+    /// The percentile is an order statistic of the multiset, so it does not
+    /// depend on the input order — which is what makes it deterministic
+    /// regardless of what `select_nth_unstable` does internally.
+    #[test]
+    fn the_percentile_is_an_order_statistic_and_ignores_input_order() {
+        let base: Vec<f32> = (0..1000).map(|i| i as f32 / 999.0).collect();
+        let want = base[994];
+        // Strides coprime to 1000, so `i * stride % 1000` is a genuine
+        // permutation and not a resampling. Asserted below, because a stride
+        // sharing a factor with 1000 would silently make this test vacuous.
+        for stride in [7usize, 11, 13, 17, 19] {
+            let mut xs: Vec<f32> = (0..1000).map(|i| base[(i * stride) % 1000]).collect();
+            let mut seen = vec![false; 1000];
+            for i in 0..1000 {
+                seen[(i * stride) % 1000] = true;
+            }
+            assert!(seen.iter().all(|s| *s), "stride {stride} is not a permutation");
+            let got = percentile_in_place(&mut xs, 99.5).expect("non-empty");
+            assert_eq!(
+                got.to_bits(),
+                want.to_bits(),
+                "stride {stride} changed the answer"
+            );
+        }
+        assert_eq!(percentile_in_place(&mut [], 50.0), None);
+    }
+
+    /// `NaN` can only lower the reading, never become it. Stated in the doc and
+    /// asserted here because the failure direction matters: an exposure rule
+    /// that reads `NaN` as "very bright" would darken the image to nothing.
+    #[test]
+    fn a_nan_sample_cannot_become_the_percentile() {
+        let mut xs: Vec<f32> = (0..100).map(|i| i as f32 / 99.0).collect();
+        xs[3] = f32::NAN;
+        let got = percentile_in_place(&mut xs, 99.0).expect("non-empty");
+        assert!(got.is_finite(), "a NaN was returned as the percentile");
+        assert!(got <= 1.0);
+    }
+
+    /// **Bar B5, the negative control.** Plant a known gain; the rule must give
+    /// it back with the opposite sign, exactly.
+    ///
+    /// A rule that cannot recover a planted gain cannot be trusted to find a
+    /// real one. The tolerance is the reporting quantum and nothing more.
+    #[test]
+    fn a_planted_gain_is_recovered_exactly() {
+        // A plausible luminance histogram: a dark subject and a bright
+        // background, so the high percentile lands on the background.
+        let base: Vec<f32> = (0..10_000)
+            .map(|i| if i % 5 == 0 { 0.30 } else { 0.02 })
+            .collect();
+        let mut work = base.clone();
+        let ref_stops = choose_exposure(&mut work).expect("a positive percentile").stops;
+
+        for k in [-1.0f32, -0.5, 0.5, 1.0, 2.0] {
+            let g = k.exp2();
+            let mut planted: Vec<f32> = base.iter().map(|y| y * g).collect();
+            let got = choose_exposure(&mut planted).expect("still positive").stops;
+            let moved = got - ref_stops;
+            assert!(
+                (moved - -k).abs() <= 1.0 / AUTO_EXPOSURE_STEPS_PER_STOP + 1e-6,
+                "planting {k:+} stops moved the choice by {moved:+}, not {:+}",
+                -k
+            );
+        }
+    }
+
+    /// ...and the render it produces is invariant to the planted gain, to
+    /// within the quantum. The second half of bar B5: recovering the number is
+    /// only useful if applying it undoes the plant.
+    #[test]
+    fn recovering_a_planted_gain_restores_the_developed_pixels() {
+        let base: Vec<f32> = (0..10_000)
+            .map(|i| if i % 5 == 0 { 0.30 } else { 0.02 })
+            .collect();
+        let develop = |y: f32, e: AppliedExposure| -> u16 {
+            let v = (y * e.gain()).clamp(0.0, 1.0);
+            (srgb_encode(v) * f32::from(u16::MAX) + 0.5) as u16
+        };
+        let mut work = base.clone();
+        let e0 = choose_exposure(&mut work).expect("positive");
+
+        for k in [-1.0f32, -0.5, 0.5, 1.0] {
+            let g = k.exp2();
+            let mut planted: Vec<f32> = base.iter().map(|y| y * g).collect();
+            let ek = choose_exposure(&mut planted).expect("positive");
+            let worst = base
+                .iter()
+                .map(|y| develop(*y, e0).abs_diff(develop(*y * g, ek)))
+                .max()
+                .expect("non-empty");
+            assert!(
+                worst <= 64,
+                "planting {k:+} stops left a {worst}-code difference after recovery"
+            );
+        }
+    }
+
+    /// The rule does what it says: the chosen gain puts the percentile on the
+    /// target, to within the quantum.
+    #[test]
+    fn the_chosen_gain_puts_the_percentile_on_the_target() {
+        for level in [0.02f32, 0.1, 0.296, 0.5, 0.85, 0.99] {
+            let mut xs = vec![level; 1000];
+            let e = choose_exposure(&mut xs).expect("positive");
+            let landed = level * e.gain();
+            assert!(
+                (landed - AUTO_EXPOSURE_TARGET).abs() < 0.01,
+                "level {level} landed at {landed}, not {AUTO_EXPOSURE_TARGET}"
+            );
+            assert!(e.automatic, "an automatic choice must say so");
+        }
+    }
+
+    /// The gain must not run away on a degenerate image, and it must not bind
+    /// on an ordinary one.
+    #[test]
+    fn a_black_image_gets_a_bounded_answer_and_an_empty_one_gets_none() {
+        let mut black = vec![1e-9f32; 1000];
+        let e = choose_exposure(&mut black).expect("positive but tiny");
+        assert_eq!(e.stops, AUTO_EXPOSURE_MAX_STOPS, "the guard rail did not hold");
+
+        let mut zero = vec![0.0f32; 1000];
+        assert_eq!(choose_exposure(&mut zero), None, "zero luminance has no gain");
+        let mut empty: Vec<f32> = Vec::new();
+        assert_eq!(choose_exposure(&mut empty), None);
+
+        // ...and the bound is far outside where real stacks sit, so it shapes
+        // nothing that ships. bee-3-cpl's background is 0.296 linear (MEASURED,
+        // docs/research/M100-exposure.md §0).
+        let mut real = vec![0.296f32; 1000];
+        let e = choose_exposure(&mut real).expect("positive");
+        assert!(
+            e.stops.abs() < AUTO_EXPOSURE_MAX_STOPS - 3.0,
+            "a real background asked for {} stops, uncomfortably near the bound",
+            e.stops
+        );
+    }
+
+    /// **Bar B2, structurally.** Zero stops is not "a gain of one", it is *no
+    /// exposure request at all*, so the multiply is never reached.
+    #[test]
+    fn zero_stops_normalises_to_no_exposure_at_all() {
+        assert_eq!(Exposure::resolve(true, 0.0, false), Ok(Exposure::None));
+        assert_eq!(Exposure::resolve(true, -0.0, false), Ok(Exposure::None));
+        assert!(AppliedExposure::IDENTITY.is_identity());
+        // And even where the multiply *is* executed, it is exact.
+        assert_eq!(AppliedExposure::IDENTITY.gain().to_bits(), 1.0f32.to_bits());
+        for v in [0.0f32, 1e-30, 0.003_130_8, 0.296, 0.5734, 1.0, 3.7] {
+            assert_eq!((v * AppliedExposure::IDENTITY.gain()).to_bits(), v.to_bits());
+        }
+    }
+
+    /// **Bar B7.** Exposure without `--srgb` is refused, not ignored.
+    ///
+    /// The linear file is the measurement file. A user who believes they
+    /// brightened it and did not has a corrupted measurement and no signal that
+    /// anything went wrong, which is strictly worse than an error.
+    #[test]
+    fn exposure_is_refused_on_the_measurement_output() {
+        assert_eq!(
+            Exposure::resolve(false, 1.57, false),
+            Err(ExposureError::NeedsSrgb)
+        );
+        assert_eq!(
+            Exposure::resolve(false, 0.0, true),
+            Err(ExposureError::NeedsSrgb)
+        );
+        // ...but not asking for one is fine without --srgb, obviously.
+        assert_eq!(Exposure::resolve(false, 0.0, false), Ok(Exposure::None));
+        // Two sources of truth for one number is a refusal, not a composition.
+        assert_eq!(
+            Exposure::resolve(true, 1.0, true),
+            Err(ExposureError::Both)
+        );
+        // Finite and bounded.
+        assert!(matches!(
+            Exposure::resolve(true, f32::NAN, false),
+            Err(ExposureError::OutOfRange { .. })
+        ));
+        assert!(matches!(
+            Exposure::resolve(true, 99.0, false),
+            Err(ExposureError::OutOfRange { .. })
+        ));
+        assert_eq!(
+            Exposure::resolve(true, 1.57, false),
+            Ok(Exposure::Stops(1.57))
+        );
+        assert_eq!(Exposure::resolve(true, 0.0, true), Ok(Exposure::Auto));
+        // The message has to name the flag that fixes it.
+        assert!(ExposureError::NeedsSrgb.to_string().contains("--srgb"));
+    }
+
+    /// **Bar B6, at the unit level.** What is printed is what is applied, to
+    /// the bit, through an actual `format!` and `parse`.
+    ///
+    /// This is the whole justification for quantising the automatic choice. If
+    /// it ever fails, `--auto-exposure`'s report becomes decoration and the
+    /// user cannot reproduce their own render.
+    #[test]
+    fn the_printed_choice_reproduces_the_gain_through_a_string() {
+        for level in [0.02f32, 0.05, 0.1, 0.296, 0.4, 0.5734, 0.7, 0.85, 0.95] {
+            let mut xs = vec![level; 1000];
+            let e = choose_exposure(&mut xs).expect("positive");
+            let printed = format!("{:.2}", e.stops);
+            let parsed: f32 = printed.parse().expect("we just printed it");
+            assert_eq!(
+                parsed.to_bits(),
+                e.stops.to_bits(),
+                "level {level}: printed {printed}, which parses to a different f32"
+            );
+            // ...and the flag string a user copies carries that same number.
+            let flag = e.reproduce_flag();
+            let (name, value) = flag.split_once('=').expect("an = form");
+            assert_eq!(name, "--exposure");
+            assert_eq!(
+                value.parse::<f32>().expect("a number").to_bits(),
+                e.stops.to_bits()
+            );
+        }
+    }
+
+    /// The gain commutes with the colour matrix, which is what licenses the
+    /// pipeline folding it into the normalisation multiply instead of inserting
+    /// a step between the matrix and the clamp.
+    ///
+    /// `camera_to_srgb` is linear, so `M(g*v) = g*M(v)` exactly in exact
+    /// arithmetic and to float rounding here. If a future edit made the
+    /// "matrix" affine — a black-point offset, say — this fails, and it should,
+    /// because the fold would then be wrong.
+    #[test]
+    fn the_gain_commutes_with_the_colour_matrix() {
+        let m = camera_to_srgb(A7C2_XYZ_TO_CAM).expect("invertible");
+        for stops in [-2.0f32, -0.5, 0.37, 1.57, 3.0] {
+            let g = AppliedExposure {
+                stops,
+                automatic: false,
+            }
+            .gain();
+            for v in [[0.1f32, 0.2, 0.3], [0.296, 0.296, 0.296], [0.9, 0.4, 0.05]] {
+                let before = apply(&m, [v[0] * g, v[1] * g, v[2] * g]);
+                let after = apply(&m, v).map(|x| x * g);
+                for c in 0..3 {
+                    let d = (before[c] - after[c]).abs();
+                    assert!(
+                        d <= 1e-6 * after[c].abs().max(1.0),
+                        "stops {stops}, channel {c}: {before:?} vs {after:?}"
+                    );
+                }
+            }
+        }
+    }
+
+    /// Exposure is a gain in linear light, and doing it after the curve would
+    /// be a different — and colour-shifting — operation.
+    ///
+    /// This is the assertion behind the sentence in `AppliedExposure`'s doc
+    /// comment. It plants the wrong ordering and shows it moves a *neutral*
+    /// pixel's ratios apart, which is the failure a reader should be able to
+    /// see rather than take on trust.
+    #[test]
+    fn a_gain_after_the_curve_is_not_an_exposure() {
+        let g = 2.0f32; // +1 stop
+        let lin = [0.05f32, 0.20, 0.40];
+
+        // Right: gain, clamp, encode.
+        let right: Vec<f32> = lin
+            .iter()
+            .map(|v| srgb_encode((v * g).clamp(0.0, 1.0)))
+            .collect();
+        // Wrong: encode, then gain.
+        let wrong: Vec<f32> = lin.iter().map(|v| (srgb_encode(*v) * g).min(1.0)).collect();
+
+        // The two disagree, and they disagree by different amounts at
+        // different levels -- which is exactly why the wrong one shifts colour
+        // rather than merely mis-scaling brightness.
+        let err: Vec<f32> = right
+            .iter()
+            .zip(&wrong)
+            .map(|(r, w)| (r - w).abs())
+            .collect();
+        assert!(
+            err.iter().all(|e| *e > 0.02),
+            "the two orderings agreed somewhere they should not: {err:?}"
+        );
+        let spread = err
+            .iter()
+            .cloned()
+            .fold(f32::MIN, f32::max)
+            - err.iter().cloned().fold(f32::MAX, f32::min);
+        assert!(
+            spread > 0.05,
+            "post-curve gain was a uniform error, so this test proves nothing: {err:?}"
+        );
+    }
+
+    /// The exposure step is not a tone curve: it is one multiply, so it cannot
+    /// change the *ratio* of any two pixels that both stay inside the clamp.
+    ///
+    /// This is the honesty property of the whole feature. A render that has had
+    /// `--exposure` applied is still a faithful render of the capture; only the
+    /// scale changed, and the tool printed the scale.
+    #[test]
+    fn exposure_preserves_every_ratio_it_does_not_clip() {
+        let g = AppliedExposure {
+            stops: 1.57,
+            automatic: true,
+        }
+        .gain();
+        let a = 0.11f32;
+        let b = 0.29f32;
+        let before = a / b;
+        let after = (a * g) / (b * g);
+        assert!((before - after).abs() < 1e-6);
+        assert!(a * g < 1.0 && b * g < 1.0, "the fixture clipped");
     }
 }
