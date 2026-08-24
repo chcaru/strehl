@@ -248,7 +248,7 @@ each pixel independently**, so there is no spatial support to starve; measured
 observations per band pixel are **38.000 thin against 38.000 broad**; and the
 recorded arms run the wrong way, since the arm with **more** coverage scored
 better. The variant that could have worked — thin structures attenuating
-lpha below the admission gate — is **real but non-operative**: alpha does
+alpha below the admission gate — is **real but non-operative**: alpha does
 attenuate **2.1×** (0.1627 against 0.3444), yet the gate still admits **90.51%**
 of thin pixels and **97.62%** of the band, so the R² term sets coverage and the
 alpha gate rejects almost nothing. Two corrections against myself: §5.1's
@@ -1975,7 +1975,11 @@ namespaced `M87`.
 | P110 | **A sign error in this report: §5.1's `+3.7%, worse` is a small improvement, not a regression.** `13-unmix.json` and `17-perpixel.json` share a **bit-identical** `F0` of 0.0680424463788235 and the same convention, and the global-`k_F` arm scores 0.06549822 = **−3.74%**. So per-pixel depth is worth **24.42 points** (−3.74 to −28.16), not the ~30 stated. | Found while locating which script produced −28.2%. No conclusion overturns — −3.74% still fails the registered −50% bar and §5.1 still reads FAILED — but a load-bearing figure carried the wrong sign into `P8`, §26.2 and a report to the orchestrator. Corrected in place with the original wording shown. | MEASURED |
 | P111 | **I failed discipline 676 inside the script written to honour it.** My `C-T3-COVER` control read "coverage ≥ 19.8% means the reconstruction is a superset, PASS". It measured **100.00%** and printed PASS. A gate passing everything is not a valid gate reconstruction, it is a degenerate one, and the two-branch bar had no way to say so. | Rewritten with three branches — broken below 19.8%, plausible to 60%, **degenerate** above — which is what voided T3 and forced the honest reading in `P108`. One hour after being handed the discipline, in the file that cites it. | MEASURED |
 | P112 | **When two subsets return an identical statistic, audit the partition before the statistic.** T2/T3 first partitioned band pixels by the interior EDT at the nearest foreground pixel — but the nearest foreground pixel to a background pixel always lies **on the boundary**, where that EDT is ≈1. Both quartile thresholds came back **1.0** and the two subsets returned `amax` medians equal to four decimals. | I first diagnosed the spread of the *statistic* (`amax` IQR 0.124, non-constant) and concluded coincidence. The defect was in the *partition variable*, whose p25 and p75 were the same number and were sitting in the JSON. Repaired by propagating the boundary-point widths, after which the same comparison separates 0.1627 against 0.3444. | MEASURED |
-| P113 | **The instance-blindness registered in §28.9 is closed.** erify_s29.py asserts an **exact occurrence count** for every figure, not presence, so control_s29.py N2 — which mutates exactly one of three copies of a figure — goes **RED**, where the equivalent §28 control stayed GREEN. 9 of 9 controls behave as registered. | Two of them (N3, N4) move a JSON operand with the prose untouched, which is what distinguishes re-derivation from pattern-matching. The cost is that the checker must be told how many times each figure is legitimately quoted, which is itself a check on the prose. | MEASURED |
+| P113 | **The instance-blindness registered in §28.9 is closed.** `verify_s29.py` asserts an **exact occurrence count** for every figure, not presence, so control_s29.py N2 — which mutates exactly one of three copies of a figure — goes **RED**, where the equivalent §28 control stayed GREEN. 9 of 9 controls behave as registered. | Two of them (N3, N4) move a JSON operand with the prose untouched, which is what distinguishes re-derivation from pattern-matching. The cost is that the checker must be told how many times each figure is legitimately quoted, which is itself a check on the prose. | MEASURED |
+| P114 | **The sidecar contamination I declared against myself did not occur, and §15.2's −6.6% is clean.** `A-aligned.tif` was rendered 03:43 with `STREHL_ALIGN=1` and no named sidecar, inside the window (03:15 → 10:32) when `strehl` still defaulted its sidecar into the read-only capture library. Re-rendered now with `STREHL_WARPMAP` pinned to a sidecar I solved into my own scratch at the merge's default reference (149 of 299), the output is **SHA-256 identical** to the original (`e5d6182fff887119e8fc5a12`, max absolute difference 0 DN over 8 241 504 px × 3). Arm U reproduces byte-identically too (`895e458dd8f4722de0dac57d`). | The registration arm A used was the correct 299-frame reference-149 solve after all. **P20 and P46 are restored from provisional to clean**, and now carry the provenance line the original run did not keep: `alignment: ON (sidecar-override), reference frame 149, 299 placed / 0 refused`, solve 0.0 s. A hash equality settles this where an argument could not. | MEASURED |
+| P115 | **The `$LASTEXITCODE` truncation trap is a STALE READ, not a zero.** On pwsh 7.6.5 a truncating `Select-Object -First N` stage on a native command leaves `$LASTEXITCODE` **unmodified**, so it reports whatever the previous command left: primed with a success, a truncated **failing** run reads **0** (false green); primed with a failure, a truncated **succeeding** run reads **1** (false red). Windows PowerShell 5.1 returns **−1** in both. Truncating also stops the upstream: 0.3 s against 6.1 s untruncated. | The orchestrator reported this as "reads 0 when there are more than N matches". Measured, the count is not the trigger and 0 is not the value — the gate inherits an unrelated command's status, so **the same script can read green or red depending on what ran before it**. That is worse than a fixed wrong answer because it is not reproducible. `-Last N` drains the stream and preserves the true code, but still hides the diagnosis. | MEASURED |
+| P116 | **This report was committed carrying three stray C0 control characters, and it is not the only file.** BEL (U+0007) at §5 and VT (U+000B) twice — in the **P113 fact row** and in §29.7 — where code spans for *alpha* and *verify_s29.py* were written. A PowerShell here-string of the `@"..."@` form treats the backtick as an escape character, so a backtick followed by *v* becomes U+000B and the closing backtick-before-space collapses to a space. A sweep of `docs/research/*.md` found **4 more of the same class** in `M105b-exposure-ship.md` (ESC, BS×2, FF). | The corpus linter does not check for control characters, so these survived `corpus_lint.py`, `tblcheck.py` and a 67-check verifier. **Any agent appending prose through a PowerShell here-string is silently corrupting code spans**, and it is invisible in a rendered diff. Write the appender to a `.py` file instead. | MEASURED |
+| P117 | **At HEAD the merge does not read `<stackdir>/warpmap.txt`, and the capture library holds no sidecar.** `align_cmd.rs:861-873` `sidecar_path()` returns `cache_root()/{leaf}-{key:016x}.warpmap.txt` under `%LOCALAPPDATA%\strehl\warpmaps`; every other mention of `warpmap.txt` in the file at HEAD is a doc comment saying it is *deliberately not* that path, or a test fixture. `Get-ChildItem D:\personal\macro -Filter warpmap*.txt -Recurse` returns **0**, before and after two fresh renders. | Reconciles a disagreement rather than winning it: my own binary at `C:\dev\strehl-target-m87v` (built 05:01) **still documents** `--out` as defaulting to `<dir>/warpmap.txt`, so a report of the old behaviour is a report of a pre-`8118dd7` (10:32) build, not an error. The `STREHL_WARPMAP` prescription is correct and adopted regardless: it is hard-validated and never caches. | MEASURED |
 
 ### Capture request
 
@@ -4058,7 +4062,7 @@ were the same number and were sitting in the JSON I had already written. P112.
 
 ### 29.7 Verification, and the section 28 blind spot is closed
 
-erify_s29.py re-derives every figure in this section from
+`verify_s29.py` re-derives every figure in this section from
 81-contour-support.json and, for the sign repair, from 13-unmix.json and
 17-perpixel.json. It re-computes each quotient rather than reading it back:
 all three dISO values, the gap, the null sigma, the gate pass ratio, the alpha
@@ -4086,3 +4090,154 @@ an open blind spot, where the equivalent control stayed GREEN. P113.
 so the verifier is re-deriving and not pattern-matching. Both files are backed
 up to %TEMP% and restored with a SHA-256 identity check.
 
+
+## 30. The sidecar alert: the risk was real, the contamination was not
+
+I declared one of my own numbers contaminated. This section retakes it and
+finds it was never contaminated — by a hash equality rather than an argument.
+
+### 30.1 What was declared, and why
+
+`strehl align` once defaulted its warp sidecar to `<stackdir>/warpmap.txt`,
+inside the shared read-only capture library, with seven agents live in the
+tree. The default moved to a per-config cache at `8118dd7` (10:32). §15.2's
+arm A was rendered at **03:43:56**, inside that window, with `STREHL_ALIGN=1`
+and no named sidecar — and I kept no `alignment:` provenance line. So the
+registration it used was unprovable, and P20/P46's **−6.6%** was provisional.
+
+Exactly one render in this milestone was exposed. §16's before/after pair
+(05:07, 05:09) and the C-ZOOMNULL pair (06:44, 06:46) all pinned
+`STREHL_WARPMAP` explicitly, which `merge_cmd.rs` hard-validates and never
+caches. Arm U discards registration outright, so no sidecar is consulted.
+
+### 30.2 The retake, on a named sidecar
+
+Solved into my own scratch, at the reference the merge would pick itself
+(149 of 299), never into the capture library:
+
+```
+strehl align D:\personal\macro\bee-3-cpl --reference 149 \
+    --out C:\dev\strehl-out\M87-bee\bee3-ref149.warpmap.txt
+  stack bee-3-cpl: 299 frames, digest 8d023c0fe355d109
+  placed 299/299 frames, refused 0
+  held-out corner error (median): 13.578 plane px   cycle floor: 2.908 px
+```
+
+Both arms were then re-rendered with `STREHL_WARPMAP` pinned to that file, on
+the same binary, same `--gate 0`, same ROI, same metric — and this time the
+provenance line was kept:
+
+| arm | `alignment:` line as printed |
+|---|---|
+| U2 | `OFF -- frames are combined unregistered` |
+| A2 | `ON (sidecar-override), reference frame 149, 299 placed / 0 refused`, solve **0.0 s** |
+
+`solve 0.0 s` is the load: the binary took the named sidecar rather than
+re-solving. `D:\personal\macro` held **0** `warpmap*.txt` before and after.
+
+### 30.3 The result
+
+**C-BINARY** (validity gate, registered first): the unregistered arm must
+reproduce, or nothing downstream is comparable. It reproduces **byte for
+byte** — max |U2 − U| = **0 DN**, SHA-256 `895e458dd8f4722de0dac57d`.
+
+Then the finding:
+
+| pair | max abs diff | SHA-256 (first 24) |
+|---|---|---|
+| A (03:43, unprovable) vs A2 (pinned ref 149) | **0 DN** | `e5d6182fff887119e8fc5a12` |
+| U (03:42, `ALIGN=0`) vs U2 | **0 DN** | `895e458dd8f4722de0dac57d` |
+
+The render made with no named sidecar and the render made with an explicitly
+named, hard-validated, 299-frame reference-149 sidecar are **the same file**.
+Arm A used the correct solve. The declared contamination did not occur.
+
+Scoring confirms it downstream. Re-running §15's pre-registered path on the
+retaken renders reproduces `35-registration.json` to 16 significant figures —
+ISO_U **0.0722684422027054** (n = 6600, `d*` = 16), ISO_A **0.06642480705112791**
+(n = 6380, `d*` = 18), reduction **8.086%**, CIs overlapping, verdict **R1-C**
+— including the derived `roi_A` = (1182, 1915, 202, 1354) and scale 1.0473871678.
+
+One clarification for the reader, because these two numbers have confused me
+once already: §15.2's table reports **script 36**, which adds the `C-resample`
+control and scores all three arms on a matched crop (U **0.06805**, Uw
+**0.06844**, A **0.06356**, total **−6.595%**, decomposed +0.579% resample and
+−7.174% registration). **Script 35** is the pre-registered R1 without that
+control (**−8.086%**). Both are in the tree, both are right, and they answer
+slightly different questions. Since A2 is byte-identical to A, script 36's
+result transfers unchanged by construction and does not need re-running.
+
+**Verdict CONFIRM**: the retake moved the reduction by **1.49 points** against
+a registered ±5.0-point bar, and the R1 class is unchanged. **P20 and P46 are
+clean.**
+
+### 30.4 The exit-code trap, measured rather than inherited
+
+The orchestrator reported that a truncating `Select-Object -First N` stage
+makes a failing
+command read `$LASTEXITCODE = 0` when there are more than N matches. Rule 12
+applies to their measurements as to mine, so I measured it. The conclusion
+holds and **the stated mechanism does not**:
+
+| arm (pwsh 7.6.5) | true code | reads |
+|---|---|---|
+| primed by a success, then a truncated **failing** run | 1 | **0** — false green |
+| primed by a failure, then a truncated **succeeding** run | 0 | **1** — false red |
+| same, Windows PowerShell 5.1 | 1 / 0 | **−1** / 0 |
+
+`$LASTEXITCODE` is not *set* to zero; it is **not updated at all**, so the gate
+inherits an unrelated command's status. The match count is not the trigger —
+truncation is, and it also stops the upstream (0.3 s against 6.1 s). My first
+probe appeared to refute the whole thing by reading a correct `1`, which was
+itself a stale read primed by the previous arm; the priming arms are what
+separate them.
+
+**My own gates are not exposed, and I checked rather than assumed.**
+`control_s29.py:111-114` reads `subprocess.run(...).returncode` inside Python,
+never through a shell pipeline, and `verify_s29.py`'s verdict is a printed
+count read from a full capture. Both re-run under the capture-then-filter
+pattern: **67 checks / 0 failures**, **9/9 controls as registered**.
+
+### 30.5 A defect this file was carrying
+
+Reading the P113 row for this section showed it beginning "… is closed."
+followed by "erify_s29.py" — a missing *v*. It was a raw **U+000B**, written
+by a PowerShell here-string that consumed a backtick-*v* pair as an escape.
+Three such characters were in the committed file (BEL at §5, VT at the P113
+row and at §29.7); a sweep of `docs/research/*.md` found four more of the
+same class in another milestone's report. `corpus_lint.py`, `tblcheck.py` and
+a 67-check verifier all passed over them, because none of them look. Repaired
+by `src/ctrlfix2.py` on bytes, preserving all 4088 CRLF endings, three lines
+changed.
+
+
+### 30.6 Verification
+
+`src/verify_s30.py` re-derives every figure in this section from an operand
+that is not the prose: the SHA-256 of the four render files, and the JSON
+written by `83-arm-a-retake.py`, `35-registration.py` and
+`36-registration-controls.py`. Occurrence counts are asserted exactly, not by
+presence. It also enforces the one guard nothing else in this toolchain
+provides — zero stray C0 control characters in the report.
+
+**51 checks, 0 failures.**
+
+`src/control_s30.py` plants a known defect for each and requires RED:
+
+| control | what it corrupts | expected | got |
+|---|---|---|---|
+| N0-NOOP | nothing | GREEN | GREEN |
+| N1-HASH-1-OF-2 | one of two copies of the hash | RED | RED |
+| N2-JSON-ISO | a JSON operand, prose untouched | RED | RED |
+| N3-JSON-VERDICT | the JSON verdict word | RED | RED |
+| N4-CTRLCHAR | plants a U+000B as a here-string would | RED | RED |
+| N5-MOVED | the re-derived shift | RED | RED |
+| N6-N-U | a profile count | RED | RED |
+| N7-S36 | the script-36 decomposition | RED | RED |
+
+**8/8 behave as registered.** N1 corrupts exactly one of two copies, which a
+presence check would pass. N2 and N3 move a JSON operand with the prose
+untouched, which is what separates re-derivation from pattern-matching. N4 is
+the control that matters most here, because the defect it plants is the one
+this report was already carrying and no linter caught. Exit codes are read
+through `subprocess.run().returncode` inside Python, never a shell pipeline.

@@ -1,0 +1,47 @@
+{
+ "bars": {
+  "C_BINARY": 0.02,
+  "CONFIRM_POINTS": 5.0,
+  "DELTA_ORIGINAL": -6.6
+ },
+ "C_BINARY": {
+  "max_abs_dn": 0.0,
+  "ISO_U_frozen": 0.0722684422027054,
+  "ISO_U2": 0.0722684422027054,
+  "rel": 0.0,
+  "verdict": "PASS"
+ },
+ "ISO_U_frozen_vs_report": {
+  "measured": 0.0722684422027054,
+  "report": 0.06805,
+  "agrees": false
+ },
+ "scale_A2_over_U2": 1.0473871678075815,
+ "roi_A2": [
+  1182,
+  1915,
+  202,
+  1354
+ ],
+ "retake": {
+  "ISO_U2": 0.0722684422027054,
+  "ISO_U2_ci": [
+   0.06283622121895735,
+   0.08398509142147784
+  ],
+  "n_U2": 6600,
+  "ISO_A2": 0.06642480705112791,
+  "ISO_A2_ci": [
+   0.05765553648988076,
+   0.07402953239189827
+  ],
+  "n_A2": 6380,
+  "d_star_A2": 18.0,
+  "delta_pct": -8.086012336043861,
+  "ci_disjoint": false,
+  "class": "R1-C",
+  "class_original": "R1-C",
+  "moved_points": 1.4860123360438617,
+  "verdict": "CONFIRM"
+ }
+}
