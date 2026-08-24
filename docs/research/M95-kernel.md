@@ -525,6 +525,22 @@ Two pre-existing `rustfmt` diffs in `align_cmd.rs` are **not mine**:
 `experiments/M95-kernel/src/k2_fmt_baseline.py` reads the HEAD blobs as bytes
 and shows the same two diffs at HEAD, before my two added lines.
 
+### End-to-end acceptance, from the command line
+
+Every measurement above runs through library calls. This is the check that the
+shipped binary actually exposes the kernel, with its own negative control:
+
+| invocation | result |
+| --- | --- |
+| `strehl align --help` | `--resampler <RESAMPLER>` … `[default: catmull-rom]` |
+| `strehl align --resampler lanczos3 <missing dir>` | fails on the **directory**, so the kernel parsed |
+| `strehl align --resampler bogus-kernel <missing dir>` | `Error: unknown resampler "bogus-kernel"` |
+
+The pair matters more than either half. The first alone would also pass if the
+parser silently accepted anything; the second shows it does not. And the
+`--help` line confirms the default is still `catmull-rom` in the shipped
+binary, not merely in the source.
+
 ## 13. For the orchestrator
 
 - **Landed and switchable, default unchanged.** `--resampler lanczos3` on
