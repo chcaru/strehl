@@ -253,3 +253,58 @@ I will not add Mitchell to the shipped `Resampler` enum in order to measure it.
 It is priced in the measurement harness only. Shipping a kernel I expect to fail
 its own gate, so that it can be measured, would put a knowingly lossy option in
 front of an operator.
+
+---
+
+# ADDENDUM 4 — arm 12: ringing on a real occluding edge
+
+Registered before `x9_ringing.py` was written, and committed before it was run.
+
+B27 measured ringing on a synthetic 1000 DN step and is harness-verified
+(Catmull-Rom = 6.2500% = 1/16 exactly). The orchestrator asked for ringing
+scored on real occluding edges, with a flat-region control, on the same
+instrument across kernels. This is that instrument.
+
+## The instrument
+
+For each challenger arm A against the shipping default C (catmull-rom), on the
+299-frame `bee-3-cpl` render where the kernel is the only variable:
+
+`excess(p) = max(0, A(p) - localmax_C(p), localmin_C(p) - A(p))`
+
+where localmax/localmin are taken over the 3x3 neighbourhood of C centred on p,
+inclusive of the centre. `excess` is the amount by which the challenger leaves
+the range the default render holds locally. That is overshoot, in DN, with no
+model and no fitted parameter. It is exact: it compares bytes.
+
+Pixels are binned by the local gradient magnitude of C into FLAT (lowest
+decile), MID, and EDGE (top decile).
+
+## Bars
+
+**R1 — is it ringing at all?** Genuine ringing is an edge phenomenon.
+Lanczos-3's mean excess in the EDGE bin must exceed its mean excess in the FLAT
+bin by at least 3x. **If the excess is spread evenly across bins it is not
+ringing, it is a gain or noise difference, and I must report it as such and not
+call it ringing.** This is the rule 9 flat-region control and it is the arm most
+likely to embarrass me.
+
+**R2 — does the synthetic result hold on real data?** B27 says Lanczos-2 rings
+identically to Catmull-Rom (6.2500%, 1.00x). On real edges Lanczos-2's EDGE
+excess must therefore be below one third of Lanczos-3's. **If Lanczos-2 rings
+comparably to Lanczos-3 on real edges, B27 does not transfer and I must say the
+synthetic step misled me.**
+
+**R3 — is the instrument alive?** A planted overshoot of known amplitude must be
+recovered. I will take the catmull-rom arm, add a synthetic ring of +2000 DN to
+the pixels immediately adjacent to strong edges, and require the instrument to
+report a mean EDGE excess within 20% of the planted amount. **If it cannot
+recover a ring it was handed, it cannot be trusted to find one it was not.**
+
+## What I expect, so that being wrong is visible
+
+I expect R1 to pass with a large margin, R2 to pass, and R3 to pass. I expect
+Lanczos-3's mean EDGE excess to be a few hundred DN of 65535 — visible on a
+gradient by eye at 1:1 but not obviously objectionable. If Lanczos-3's excess
+turns out to be under 50 DN, its ringing is not a real objection to shipping it
+as the default and I will say so.
