@@ -1,0 +1,84 @@
+
+==============================================================================
+F1  COLUMN-ARM NOISE FLOORS  (O5 reported trends with no floor)
+==============================================================================
+ statistic   col trend        r   3*N_grad       perm   real?
+      B/G2     -0.0169   -0.591    0.01549                yes
+      R/G1     -0.0242   -0.700    0.01908                yes
+       R/B     -0.0048   -0.177    0.01435                 NO
+     G2/G1     -0.0006   -0.022    0.01458                 NO
+      R-G1    -0.00535   -0.968    0.00300   -0.00008     yes
+      G2-B    -0.00083   -0.461    0.00100   +0.00041      NO
+      R-G2    -0.00459   -0.969    0.00255   -0.00024     yes
+      G1-B    -0.00061   -0.408    0.00080   +0.00028      NO
+     G1-G2    +0.02240   +0.942    0.01281   -0.00168     yes
+       R-B    +0.00145   +0.772    0.00107   -0.00015     yes
+
+==============================================================================
+F2  ROW vs COLUMN ORGANISATION  (discipline 473)
+==============================================================================
+Each trend divided by its OWN N_grad floor, so the two axes are
+comparable despite different per-band pixel counts.
+
+ statistic   row/floor   col/floor   organised by
+      B/G2         5.0         3.3           both
+      R/G1         5.0         3.7           both
+     G2/G1         0.8         0.1        neither
+   alpha_R         0.8         0.5        neither
+  alpha_G1         4.5         1.5            row
+  alpha_G2         4.8         1.4            row
+   alpha_B         0.7         0.1        neither
+      R-G1         2.0         5.2         column
+      G2-B         1.7         2.6        neither
+      R-G2         3.3         5.7           both
+      G1-B         1.6         2.2        neither
+     G1-G2         1.3         5.2         column
+       R-B         1.6         4.3         column
+
+==============================================================================
+F3  ADDITIVE vs MULTIPLICATIVE  (the test K5 opens)
+==============================================================================
+ADDITIVE (e.g. dark-current shot noise): d(alpha_low) = d(alpha_high)
+                                          in ABSOLUTE e^2.
+MULTIPLICATIVE (a row-dependent per-plane analog scale, the same class
+  of object as M68's B-plane 0.84x): equal in FRACTION.
+
+ plane     a_low    a_high      d_low     d_high  abs ratio  frac_low  frac_high  frac ratio
+     R   13.2673    1.3661    -0.5256    -0.0074      70.84   -0.0396    -0.0054        7.29
+    G1   13.4401    1.3822    +1.0862    +0.0937      11.60   +0.0808    +0.0678        1.19
+    G2   13.3585    1.3809    +1.1009    +0.0987      11.15   +0.0824    +0.0715        1.15
+     B   11.2970    1.1861    -0.4731    -0.0073      64.46   -0.0419    -0.0062        6.77
+
+verdict per plane (greens are the ones carrying the gradient):
+  G1: MULTIPLICATIVE -- a row-dependent per-plane analog scale
+  G2: MULTIPLICATIVE -- a row-dependent per-plane analog scale
+
+==============================================================================
+F4  DIRECT DARK-CURRENT CHECK  (independent of F3)
+==============================================================================
+If the gradient is dark-current shot noise, the rise in alpha (e^2)
+equals the rise in mean dark signal (e), since var_e = mean_e.
+
+ plane  d_alpha_high  d_alpha_low   d_dark_e   dark r      shape
+     R       -0.0074      -0.5256    +0.0290   +0.458   U-shaped
+    G1       +0.0937      +1.0862    +0.0425   +0.601   U-shaped
+    G2       +0.0987      +1.1009    +0.0469   +0.611   U-shaped
+     B       -0.0073      -0.4731    +0.0253   +0.401   U-shaped
+
+green alpha_high row profile (normalised), 32 bands, top to bottom:
+   G1 0.988 0.993 0.979 0.981 0.985 0.984 0.971 1.000 0.986 1.001 0.992 1.012 1.011 1.027 1.031 1.053
+   G2 0.991 0.983 0.979 0.976 0.969 0.986 0.987 0.990 0.997 1.001 1.006 1.013 1.017 1.020 1.023 1.050
+    R 1.025 1.018 1.008 0.995 0.989 0.998 0.995 0.990 1.002 0.990 0.995 1.001 0.999 0.997 1.000 1.014
+    B 1.037 1.029 1.010 1.000 0.992 0.983 0.979 0.994 0.989 0.997 0.983 0.983 0.992 1.002 1.004 1.013
+
+==============================================================================
+F5  UPSTREAM SHARE AT BOTH ENDS  (O4 quoted only the low-ISO share)
+==============================================================================
+G^2 ratio ISO 50 -> 2000: 400.0
+   pair     class   f @ISO50   f @ISO2000
+   R-G1       row     0.0404       0.9440
+   G2-B       row     0.0646       0.9651
+   R-G2    column     0.0857       0.9740
+   G1-B    column     0.0636       0.9645
+  G1-G2  diagonal     0.0246       0.9096
+    R-B  diagonal     0.0263       0.9153
