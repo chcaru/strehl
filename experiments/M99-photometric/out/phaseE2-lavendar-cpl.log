@@ -1,0 +1,60 @@
+stack           : D:\personal\macro\lavendar-cpl
+frames          : 299   reference 149   plane 3520x2344
+plant amplitude : +0.200 peak-to-peak, per-frame gain, pseudo-random in k
+background      : smoothest 40% of the reference frame
+background mask : 1585735 of 8250880 px (19.2%), reference focus <= 0.56075 and luma >= 2826
+  pass 1: frame 0/299  0.7 s
+  pass 1: frame 50/299  13.9 s
+  pass 1: frame 100/299  27.9 s
+  pass 1: frame 150/299  41.8 s
+  pass 1: frame 200/299  56.6 s
+  pass 1: frame 250/299  71.1 s
+  pass 1 done in 84.8 s
+whole-frame map : span 1.3604 (+0.4440 stops), 0 refused, gains 0.8601 .. 1.1701
+background map  : span 1.3617 (+0.4454 stops), 0 refused, gains 0.8630 .. 1.1752
+planted map     : span 1.6087  (the plant alone would be 1.2210)
+  pass 2: frame 0/299  1.0 s
+  pass 2: frame 50/299  56.3 s
+  pass 2: frame 100/299  124.6 s
+  pass 2: frame 150/299  196.7 s
+  pass 2: frame 200/299  280.9 s
+  pass 2: frame 250/299  352.2 s
+  pass 2 done in 400.0 s
+
+--- re-election vs A0 (strehl's own election, whole plane) ---
+arm                             re-elected           % median |dk|    p95 |dk|
+A1 whole-frame gain                     43       0.00%          29         141
+A2 background gain                      34       0.00%          25         129
+P0 planted                              43       0.00%          25         115
+P1 planted + corr                       45       0.00%          44         144
+N0 constant gain                         0       0.00%           0           0
+N1 constant, noise unscaled          35449       0.43%           3         128
+A3 natural gain, noise unscaled     3311014      40.13%         122         224
+A4 planted ramp, noise unscaled     4393418      53.25%          19         134
+
+NULL N0 (constant gain 2, noise model scaled)   : 0 pixels re-elected  -> PASS (exactly zero)
+NULL N1 (constant gain 2, noise model NOT scaled): 35449 pixels re-elected  (0.430% of covered)
+  -> N1 is the cost of omitting `scale_noise_model`: a gain that carries
+     no per-frame information still moves the election, because the read
+     floor (RN*g)^2 does not scale with the data.
+cost            : per-arm merge seconds [33.1, 32.8, 33.4, 33.5, 33.4, 33.6, 33.5, 33.6, 33.9]  (A1 - A0 = -0.37 s over 299 frames)
+plant regressor : corr(ramp, background level) = -0.0395  (why the ramp must be residualised)
+
+--- Phase D: does the correction improve the photograph? ---
+arm                        SSC  null sd       z   SSC_wf   SSC_pl      BSC bg sd/mean  bdy pairs
+A0 shipped              1.0768   0.0580    18.6   1.0631  -0.1015   5.1276    0.34158     300074
+A1 whole-frame gain    -0.0178   0.0485    -0.4  -0.0160  -0.0771   1.4741    0.33223     300072
+A2 background gain     -0.0045   0.0485    -0.1  -0.0027  -0.0772   1.4436    0.33221     300072
+P0 planted              0.8990   0.0510    17.6   1.0029   0.8119   8.0196    0.34457     300072
+P1 planted + corr      -0.0361   0.0376    -1.0  -0.0027  -0.0772   1.4436    0.33221     300073
+N0 constant gain        1.0768   0.0580    18.6   1.0631  -0.1015   5.1276    0.34158     300074
+N1 constant, noise unscaled   1.0769   0.0587    18.3   1.0632  -0.1021   5.2761    0.34166     296182
+A3 natural gain, noise unscaled  -0.0345   0.0476    -0.7  -0.0306  -0.0583   1.2640    0.33382     306501
+A4 planted ramp, noise unscaled   0.8863   0.0682    13.0   1.0146   0.6561   7.3492    0.34301     243971
+
+--- pre-registered bars ---
+PR-6 plant visible : SSC_pl(A0) =  -0.1015 -> SSC_pl(P0) =   0.8119   (the ramp alone, natural drift projected out)  -> METRIC SEES THE PLANT
+PR-6 plant removed : SSC_pl(P0) =   0.8119 -> SSC_pl(P1) =  -0.0772  -> REMOVED
+PR-6 defect present: SSC(A0) =   1.0768, permutation null sd 0.0580, z = 18.6  -> DEFECT IS REAL IN THE RENDER
+PR-6 improvement   : A1 whole-frame gain  SSC   1.0768 ->  -0.0178   BSC 5.1276 -> 1.4741   bg sd/mean -2.74%  -> IMPROVED
+PR-6 improvement   : A2 background gain   SSC   1.0768 ->  -0.0045   BSC 5.1276 -> 1.4436   bg sd/mean -2.75%  -> IMPROVED

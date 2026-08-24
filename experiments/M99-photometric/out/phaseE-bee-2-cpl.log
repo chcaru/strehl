@@ -1,0 +1,56 @@
+stack           : D:\personal\macro\bee-2-cpl
+frames          : 299   reference 149   plane 3516x2344
+plant amplitude : +0.200 peak-to-peak, per-frame gain, pseudo-random in k
+background      : smoothest 40% of the reference frame
+background mask : 2176142 of 8241504 px (26.4%), reference focus <= 0.57807 and luma >= 3106
+  pass 1: frame 0/299  0.7 s
+  pass 1: frame 50/299  15.1 s
+  pass 1: frame 100/299  37.1 s
+  pass 1: frame 150/299  57.0 s
+  pass 1: frame 200/299  75.6 s
+  pass 1: frame 250/299  95.4 s
+  pass 1 done in 114.5 s
+whole-frame map : span 1.1204 (+0.1640 stops), 0 refused, gains 0.9569 .. 1.0721
+background map  : span 1.1815 (+0.2406 stops), 0 refused, gains 0.9450 .. 1.1165
+planted map     : span 1.3921  (the plant alone would be 1.2210)
+  pass 2: frame 0/299  1.7 s
+  pass 2: frame 50/299  54.8 s
+  pass 2: frame 100/299  101.5 s
+  pass 2: frame 150/299  175.2 s
+  pass 2: frame 200/299  304.6 s
+  pass 2: frame 250/299  392.1 s
+  pass 2 done in 445.4 s
+
+--- re-election vs A0 (strehl's own election, whole plane) ---
+arm                             re-elected           % median |dk|    p95 |dk|
+A1 whole-frame gain                     24       0.00%           9         149
+A2 background gain                      22       0.00%           8          50
+P0 planted                              24       0.00%           7          89
+P1 planted + corr                       25       0.00%           8          40
+N0 constant gain                         0       0.00%           0           0
+N1 constant, noise unscaled          60867       0.74%           2           5
+
+NULL N0 (constant gain 2, noise model scaled)   : 0 pixels re-elected  -> PASS (exactly zero)
+NULL N1 (constant gain 2, noise model NOT scaled): 60867 pixels re-elected  (0.739% of covered)
+  -> N1 is the cost of omitting `scale_noise_model`: a gain that carries
+     no per-frame information still moves the election, because the read
+     floor (RN*g)^2 does not scale with the data.
+cost            : per-arm merge seconds [42.7, 43.5, 44.3, 43.9, 43.6, 43.8, 43.8]  (A1 - A0 = +0.73 s over 299 frames)
+plant regressor : corr(ramp, background level) = +0.0239  (why the ramp must be residualised)
+
+--- Phase D: does the correction improve the photograph? ---
+arm                        SSC  null sd       z   SSC_wf   SSC_pl      BSC bg sd/mean  bdy pairs
+A0 shipped              1.2613   0.0485    26.0   1.8463  -0.0445   0.8216    0.52576     494586
+A1 whole-frame gain     0.4208   0.0139    30.2   0.5909  -0.0097   0.5300    0.52356     494578
+A2 background gain     -0.0261   0.0036    -7.2  -0.0399   0.0008   0.4631    0.52279     494580
+P0 planted              0.7141   0.0610    11.7   1.4876   0.6749   2.2894    0.52916     494584
+P1 planted + corr      -0.0035   0.0020    -1.7  -0.0398   0.0008   0.4631    0.52279     494576
+N0 constant gain        1.2613   0.0485    26.0   1.8463  -0.0445   0.8216    0.52576     494586
+N1 constant, noise unscaled   1.2615   0.0495    25.5   1.8468  -0.0453   0.9217    0.52576     485259
+
+--- pre-registered bars ---
+PR-6 plant visible : SSC_pl(A0) =  -0.0445 -> SSC_pl(P0) =   0.6749   (the ramp alone, natural drift projected out)  -> METRIC SEES THE PLANT
+PR-6 plant removed : SSC_pl(P0) =   0.6749 -> SSC_pl(P1) =   0.0008  -> REMOVED
+PR-6 defect present: SSC(A0) =   1.2613, permutation null sd 0.0485, z = 26.0  -> DEFECT IS REAL IN THE RENDER
+PR-6 improvement   : A1 whole-frame gain  SSC   1.2613 ->   0.4208   BSC 0.8216 -> 0.5300   bg sd/mean -0.42%  -> NOT IMPROVED
+PR-6 improvement   : A2 background gain   SSC   1.2613 ->  -0.0261   BSC 0.8216 -> 0.4631   bg sd/mean -0.56%  -> IMPROVED

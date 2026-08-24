@@ -90,6 +90,10 @@ struct Arm {
     name: &'static str,
     gain: Box<dyn Fn(usize) -> f32>,
     plant: bool,
+    /// Whether this arm propagates the gain into the noise model. Always true
+    /// except for the deliberately-broken null `N1`, which exists to measure
+    /// what omitting it costs the *election*.
+    scale_noise: bool,
     stats: FocusStats,
     out: Vec<f32>,
     best: Vec<f32>,
@@ -517,20 +521,44 @@ fn main() -> Result<()> {
         f64::from(plant_hi / plant_lo)
     );
 
-    // ---- pass 2: five arms, one decode ------------------------------------
+    // ---- pass 2: seven arms, one decode ------------------------------------
+    //
+    // Arms N0 and N1 are the orchestrator's registered null: a gain that is the
+    // *same* on every frame carries no per-frame information, so it must not be
+    // able to change which frame wins. N0 propagates the gain into the noise
+    // model and is asserted to re-elect **exactly zero** pixels. N1 is N0 with
+    // the noise propagation deliberately omitted; it is the measurement of what
+    // that omission costs, and it is the reason `scale_noise_model` exists.
+    let null_gain: f32 = std::env::var("M99_NULL_GAIN").ok().and_then(|v| v.parse().ok()).unwrap_or(1.1);
     let mut arms: Vec<Arm> = Vec::new();
     let gp: Vec<f32> = map_plain.gains().to_vec();
     let gb: Vec<f32> = map_bg.gains().to_vec();
     let gq: Vec<f32> = map_plant.gains().to_vec();
-    arms.push(Arm { name: "A0 shipped", gain: Box::new(|_| 1.0), plant: false,
+    arms.push(Arm { name: "A0 shipped", gain: Box::new(|_| 1.0), plant: false, scale_noise: true,
         stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
-    arms.push(Arm { name: "A1 whole-frame gain", gain: Box::new(move |k| gp[k]), plant: false,
+    arms.push(Arm { name: "A1 whole-frame gain", gain: Box::new(move |k| gp[k]), plant: false, scale_noise: true,
         stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
-    arms.push(Arm { name: "A2 background gain", gain: Box::new(move |k| gb[k]), plant: false,
+    arms.push(Arm { name: "A2 background gain", gain: Box::new(move |k| gb[k]), plant: false, scale_noise: true,
         stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
-    arms.push(Arm { name: "P0 planted", gain: Box::new(|_| 1.0), plant: true,
+    arms.push(Arm { name: "P0 planted", gain: Box::new(|_| 1.0), plant: true, scale_noise: true,
         stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
-    arms.push(Arm { name: "P1 planted + corr", gain: Box::new(move |k| gq[k]), plant: true,
+    arms.push(Arm { name: "P1 planted + corr", gain: Box::new(move |k| gq[k]), plant: true, scale_noise: true,
+        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
+    arms.push(Arm { name: "N0 constant gain", gain: Box::new(move |_| null_gain), plant: false, scale_noise: true,
+        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
+    arms.push(Arm { name: "N1 constant, noise unscaled", gain: Box::new(move |_| null_gain), plant: false, scale_noise: false,
+        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
+    // A3 and A4 isolate the orchestrator's election-bias mechanism. Scaling the
+    // data *and* the noise model leaves focus = contrast/sigma exactly
+    // invariant, which is why A1/A2 are election-neutral. These two arms scale
+    // the data only, which is the configuration the shipped pipeline actually
+    // presents: frames that genuinely differ in brightness, read against one
+    // shared noise model. A3 removes the deck's own drift that way; A4 injects
+    // a known ramp that way, as the calibration.
+    let gb3: Vec<f32> = map_bg.gains().to_vec();
+    arms.push(Arm { name: "A3 natural gain, noise unscaled", gain: Box::new(move |k| gb3[k]), plant: false, scale_noise: false,
+        stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
+    arms.push(Arm { name: "A4 planted ramp, noise unscaled", gain: Box::new(|_| 1.0), plant: true, scale_noise: false,
         stats: FocusStats::new(geom), out: vec![0.0; px], best: vec![f32::NEG_INFINITY; px] });
 
     let t1 = std::time::Instant::now();
@@ -555,7 +583,7 @@ fn main() -> Result<()> {
             // The noise model must see the gain. `scale_noise_model` is the
             // whole point of the module: without it the gate believes the
             // brightened frames are quieter than they are.
-            let nm: NoiseModel = if g == 1.0 {
+            let nm: NoiseModel = if g == 1.0 || !arm.scale_noise {
                 base_noise.clone()
             } else {
                 scale_noise_model(&base_noise, g)
@@ -577,6 +605,84 @@ fn main() -> Result<()> {
     }
     let pass2 = t1.elapsed().as_secs_f64();
     println!("  pass 2 done in {pass2:.1} s");
+
+    // ---- re-election: does the gain change *which frame wins*? -------------
+    //
+    // This is the endpoint the orchestrator asked for, measured with strehl's
+    // own `FocusField` / `regularise` / `FocusStats` rather than a
+    // reimplementation of the focus formula, and over the whole plane rather
+    // than four 512x512 ROIs.
+    println!("\n--- re-election vs A0 (strehl's own election, whole plane) ---");
+    println!(
+        "{:<30}{:>12}{:>12}{:>12}{:>12}",
+        "arm", "re-elected", "%", "median |dk|", "p95 |dk|"
+    );
+    let base_elect: Vec<u16> = arms[0].stats.best_index().to_vec();
+    // A pixel counts only if the shipped arm actually elected something finite
+    // there — pixels outside every frame's coverage have no election to change.
+    let decided: Vec<bool> = arms[0].best.iter().map(|b| b.is_finite()).collect();
+    let covered = decided.iter().filter(|b| **b).count();
+    let mut null_moved = [usize::MAX; 2];
+    for arm in arms.iter().skip(1) {
+        let elect = arm.stats.best_index();
+        let mut dk: Vec<u32> = Vec::new();
+        for i in 0..px {
+            if !decided[i] {
+                continue;
+            }
+            let d = elect[i].abs_diff(base_elect[i]);
+            if d != 0 {
+                dk.push(u32::from(d));
+            }
+        }
+        let moved = dk.len();
+        dk.sort_unstable();
+        let med = if moved == 0 { 0 } else { dk[moved / 2] };
+        let p95 = if moved == 0 { 0 } else { dk[(moved * 95) / 100] };
+        println!(
+            "{:<30}{:>12}{:>11.2}%{:>12}{:>12}",
+            arm.name,
+            moved,
+            100.0 * moved as f64 / covered as f64,
+            med,
+            p95
+        );
+        if arm.name.starts_with("N0") {
+            null_moved[0] = moved;
+        }
+        if arm.name.starts_with("N1") {
+            null_moved[1] = moved;
+        }
+    }
+
+    // The registered null, asserted exactly. A constant gain carries no
+    // per-frame information; if it re-elects even one pixel, the correction is
+    // doing something it has no right to do and the run must fail loudly rather
+    // than report a soft pass.
+    println!(
+        "\nNULL N0 (constant gain {null_gain}, noise model scaled)   : {} pixels re-elected  -> {}",
+        null_moved[0],
+        if null_moved[0] == 0 { "PASS (exactly zero)" } else { "FAIL" }
+    );
+    println!(
+        "NULL N1 (constant gain {null_gain}, noise model NOT scaled): {} pixels re-elected  ({:.3}% of covered)",
+        null_moved[1],
+        100.0 * null_moved[1] as f64 / covered as f64
+    );
+    println!(
+        "  -> N1 is the cost of omitting `scale_noise_model`: a gain that carries"
+    );
+    println!(
+        "     no per-frame information still moves the election, because the read"
+    );
+    println!("     floor (RN*g)^2 does not scale with the data.");
+    if null_moved[0] != 0 {
+        anyhow::bail!(
+            "registered null violated: a constant gain re-elected {} pixels",
+            null_moved[0]
+        );
+    }
+
     println!(
         "cost            : per-arm merge seconds {:?}  (A1 - A0 = {:+.2} s over {n} frames)",
         arm_seconds.iter().map(|s| (s * 10.0).round() / 10.0).collect::<Vec<_>>(),

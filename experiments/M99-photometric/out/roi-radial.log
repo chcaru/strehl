@@ -1,0 +1,37 @@
+plane shape 3514x2344, geometric centre (1757, 1172)
+plane order in m93_crops.npy: ['ROI-LOWDRIFT', 'ROI-MIDDRIFT', 'ROI-HIGHDRIFT', 'ROI-FLAT']
+
+plane ROI                cx     cy   r_geom  drift/step   detail  bright drift
+    0 ROI-LOWDRIFT      832    320   1257.6      0.4025    19973        1.0776
+    1 ROI-MIDDRIFT     2368    320   1048.4      0.7823    23451        1.1865
+    2 ROI-HIGHDRIFT    2624    576   1052.1      0.8759    21672        1.4585
+    3 ROI-FLAT         2368   1344    634.7      0.8927     2037        1.0523
+
+--- test 1: equal radius must imply equal drift ---
+  ROI-HIGHDRIFT  vs ROI-FLAT      : radius proxy  1.88% apart, brightness drift  38.60% apart
+  -> worst pair ROI-HIGHDRIFT / ROI-FLAT: 1.88% in radius, 38.60% in brightness
+
+--- test 2: drift must be monotone in radius ---
+  ordered by measured drift/step (radius proxy):
+    ROI-LOWDRIFT   drift/step 0.4025  ->  brightness 1.0776
+    ROI-MIDDRIFT   drift/step 0.7823  ->  brightness 1.1865
+    ROI-HIGHDRIFT  drift/step 0.8759  ->  brightness 1.4585
+    ROI-FLAT       drift/step 0.8927  ->  brightness 1.0523
+  monotone increasing? False
+  largest radius proxy is ROI-FLAT (0.8927)
+  smallest brightness drift is ROI-FLAT (1.0523)
+  -> the outermost ROI has the SMALLEST drift: anti-monotone, refuted
+
+--- test 3: which ROI is actually background? ---
+  lowest detail : ROI-FLAT       score     2037  brightness drift 1.0523
+  highest detail: ROI-MIDDRIFT   score    23451  brightness drift 1.1865
+  detail ratio  : 11.5x
+  Only the low-detail ROI plausibly measures background rather than
+  subject sweeping through focus. It has the smallest drift of the four.
+
+--- the focus advantage, re-derived from M99's scene-coordinate levels ---
+  orchestrator's sensor-coordinate bee-3   R = 1.1091  ->  sqrt(R) - 1 =  5.31%
+  M99 scene-fixed bee-3-cpl                R = 1.1818  ->  sqrt(R) - 1 =  8.71%
+  M99 low-detail flux span bee-3-cpl       R = 1.1848  ->  sqrt(R) - 1 =  8.85%
+  M99 low-detail flux span bee-2-cpl       R = 1.1815  ->  sqrt(R) - 1 =  8.70%
+  M99 low-detail flux span lavendar-cpl    R = 1.3617  ->  sqrt(R) - 1 = 16.69%

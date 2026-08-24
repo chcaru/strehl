@@ -958,6 +958,38 @@ mod tests {
     }
 
     #[test]
+    fn scaling_the_data_and_the_model_together_leaves_contrast_over_sigma_invariant() {
+        // The consequence that governs the *election*, not just the tint.
+        //
+        // strehl's focus response is a contrast divided by a sigma. Scaling a
+        // frame by `c` scales the contrast by `c`, and `scale_plane_noise`
+        // scales the sigma by `c` too, so the ratio is unchanged and the frame's
+        // focus score is exactly what it was. A photometric correction applied
+        // with correct noise propagation is therefore **election-neutral by
+        // construction**: it changes what the winning frame *looks like*, not
+        // which frame wins.
+        //
+        // Measured consequence, `phaseE-*.log`: over 299 frames of real data the
+        // per-frame correction re-elects 34 and 22 pixels out of 8.2 million.
+        // Omitting the propagation re-elects 35 449 and 60 867 — three orders of
+        // magnitude more — from a gain carrying no per-frame information at all.
+        let p = plane(0.229, 1.47);
+        for &c in &[0.5f32, 0.8, 0.95, 1.0, 1.2, 1.7, 2.0] {
+            let s = scale_plane_noise(p, c);
+            for step in 1..=64 {
+                let sig = step as f32 * 232.0;
+                let before = sig / p.variance(sig).sqrt();
+                let after = (sig * c) / s.variance(sig * c).sqrt();
+                let rel = (after - before).abs() / before;
+                assert!(
+                    rel < 1e-5,
+                    "gain {c}, signal {sig}: snr {before} -> {after}, rel {rel}"
+                );
+            }
+        }
+    }
+
+    #[test]
     fn the_read_floor_scales_with_the_data_and_the_electrons_do_not() {
         // The neighbouring rule in profile::Corrections is the opposite one and
         // this asserts the difference on purpose: there the data is unchanged

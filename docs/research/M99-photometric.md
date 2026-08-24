@@ -979,7 +979,25 @@ Each is one sentence, with its evidence and its label.
     drift, and on `lavendar-cpl` it had `corr = +0.9999` with it, so both the raw
     and the residualised score were meaningless. A same-form plant with a
     **pseudo-random sequence** is orthogonal by construction (`corr` = -0.04 and
-    +0.02) and is detected at 0.81 and 0.67 and removed to -0.08 and 0.00 (§7.5).
+    +0.02), is detected at 0.81 and 0.67, and is removed to -0.08 and 0.00 (§7.5).
+16. **MEASURED** — The photometric correction, applied with correct noise
+    propagation, is **election-neutral**: it re-elects 34 and 22 pixels of 8.2M
+    on two 299-frame decks, because focus is contrast over sigma and both scale
+    together. Siting it before the focus measure does not change this (§10.2).
+17. **MEASURED** — The election bias is nonetheless **real and large**:
+    normalising the data while holding the shared noise model re-elects 40.13%
+    and 18.14% of the plane, median move 122 and 115 frames out of 299, with a
+    planted same-form ramp moving 47–53% as the positive control (§10.3).
+18. **MEASURED** — The registered null holds **exactly** (`0` pixels) for an
+    exactly-representable gain, and has an f32 floor around 1e-5 of pixels for
+    one that is not; omitting noise propagation breaks it by 0.43% and 0.74%,
+    three orders of magnitude above the floor (§10.1).
+19. **MEASURED** — The ROI drift spread is **not radial**: using M95's own
+    `drift_per_step_px` as the radius proxy, `ROI-HIGHDRIFT` and `ROI-FLAT` sit
+    1.88% apart in radius and 38.60% apart in brightness drift, and the
+    outermost ROI has the *smallest* drift. The only low-detail ROI — the one
+    plausibly measuring background — has the smallest drift of the four
+    (`50_roi_radial.py`).
 
 ### 9.2 What I could not resolve
 
@@ -1036,3 +1054,143 @@ Stated plainly, as invited.
 6. **The brief's own risk register framing — "no per-frame photometric term at
    all" — is correct, and the fix is worth doing.** That part I agree with, and
    fact 10 and fact 11 are the evidence the register did not have.
+
+---
+
+## 10. Phase E — the election, after the orchestrator's challenge
+
+Added after the orchestrator measured, independently, that photometric drift
+changes *which frame wins*, not merely how the winner looks. That claim is
+**correct and understated**. Its prescription, however, does not follow from it,
+and the reason is worth the section.
+
+Instrument: the same harness, extended to compare each arm's
+`FocusStats::best_index()` against the shipped arm's, over the whole plane, with
+strehl's own `FocusField` / `regularise` / `FocusStats` rather than a
+reimplementation of the focus formula. Two new arms isolate the mechanism.
+
+### 10.1 The registered null, and the exact form it holds in
+
+The orchestrator asked for a null: a gain applied equally to every frame carries
+no per-frame information and must re-elect **exactly zero** pixels, asserted at
+equality rather than tolerance. Registered as arm `N0`, and it holds — with one
+caveat that had to be measured to be found.
+
+MEASURED, `lavendar-cpl`, 299 frames:
+
+| null gain | re-elected | note |
+| --- | --- | --- |
+| `c = 2.0` (exactly representable in binary) | **0** | PASS at exact equality |
+| `c = 1.1` (not representable) | 45 of 8.2M (5.5e-6) | f32 tie-breaking |
+
+DERIVED: the null is exact only for gains that are exactly representable. For
+other gains there is an irreducible floor around 1e-5 of pixels, because
+`sum(c*x)` and `c*sum(x)` differ in the last f32 ulp inside the Sobel and box
+sums, and a flat background is a near-tie plateau where an ulp decides between
+distant frames. The bar is therefore **exact for `c = 2.0`**, and the harness
+runs it that way. `array_equal` on an arbitrary gain would fail for reasons that
+have nothing to do with photometry.
+
+### 10.2 The correction as built is election-neutral, and that is not a bug
+
+MEASURED, re-election against the shipped arm, 299 frames, whole plane:
+
+| arm | `lavendar-cpl` | `bee-2-cpl` |
+| --- | --- | --- |
+| `A1` whole-frame gain | 43 px (0.0005%) | 24 px (0.0003%) |
+| `A2` low-detail gain | **34 px (0.0004%)** | **22 px (0.0003%)** |
+| `N1` constant gain, noise **not** propagated | 35 449 px (0.43%) | 60 867 px (0.74%) |
+
+The orchestrator predicted 1.4–6.9%. The measured figure for the correction is
+**0.0004%** — four orders of magnitude smaller — and the instrument is not blind,
+because `N1` moves 0.43% in the same run.
+
+DERIVED, and now a unit test
+(`scaling_the_data_and_the_model_together_leaves_contrast_over_sigma_invariant`):
+strehl's focus response is a contrast divided by a sigma. Scaling a frame by `c`
+scales the contrast by `c`, and correct noise propagation scales the sigma by
+`c` as well, so the **ratio is exactly unchanged**. A photometric correction
+applied with the propagation the orchestrator's own fact 13 requires is
+**election-neutral by construction**. It fixes the tint and leaves the election
+exactly as it found it.
+
+So "normalise before the focus measure" is necessary but **not sufficient**, and
+siting alone does not achieve it. My harness already normalised before
+`field.compute`; that is why §7's numbers were measured with the election free
+to move, and it moved by 34 pixels.
+
+### 10.3 The election bias is real, and much larger than reported
+
+Two arms scale the **data only**, holding the shared noise model — which is the
+configuration the shipped pipeline actually presents, since frames genuinely
+differ in brightness and are read against one `profile::noise_model_for`.
+
+MEASURED, 299 frames, both decks:
+
+| deck | arm | re-elected | % | median abs(dk) | SSC | BSC |
+| --- | --- | --- | --- | --- | --- | --- |
+| `lavendar-cpl` | `A0` shipped | — | — | — | 1.0768 | 5.1276 |
+| `lavendar-cpl` | `A3` drift removed, noise held | **3 311 014** | **40.13%** | **122** | -0.0345 | 1.2640 |
+| `lavendar-cpl` | `A4` planted ramp, noise held | 4 393 418 | 53.25% | 19 | 0.8863 | 7.3492 |
+| `bee-2-cpl` | `A0` shipped | — | — | — | 1.2613 | 0.8216 |
+| `bee-2-cpl` | `A3` drift removed, noise held | **1 495 309** | **18.14%** | **115** | -0.1105 | 0.5908 |
+| `bee-2-cpl` | `A4` planted ramp, noise held | 3 899 764 | 47.32% | 2 | 0.9918 | 2.4860 |
+
+**18–40% of the plane elects a different frame**, and the median move is **115
+to 122 frames out of 299** — around 40% of the stack, not adjacent-frame jitter.
+`A4` is the positive control: a *planted* 20% ramp of the same form moves 47–53%,
+so the instrument responds to a known defect at the right order.
+
+The orchestrator's mechanism is therefore confirmed and its magnitude was
+understated by a factor of three to six. Its `sqrt(g)` figure was understated
+too: re-derived from M99's scene-coordinate levels rather than the confounded
+sensor-coordinate 1.1091, the focus advantage is **8.71%** on `bee-3-cpl` and
+**16.69%** on `lavendar-cpl`, not 5.31% (`50_roi_radial.py`).
+
+### 10.4 The conflict this exposes, which M99 does not have standing to resolve
+
+The two requirements pull in opposite directions through the same object:
+
+* The **gate** is calibrated in units of focus noise and needs each frame's
+  *true* noise. That means propagating the gain — and that makes focus
+  invariant, so the election does not move (`A1`, `A2`).
+* Removing the **election bias** requires the focus denominator to be *common*
+  across frames, so that a brighter frame does not score better merely for being
+  brighter. That means **not** propagating — and 40% of the plane re-elects
+  (`A3`).
+
+`merge_cmd.rs` passes one `NoiseModel` to `field.compute`, which serves both, so
+one choice must currently serve two purposes that want different answers.
+
+DERIVED: the honest framing is that the brighter frame's advantage is **partly
+real**. A frame that collected more photons genuinely has better shot-noise SNR
+and genuinely measures focus more precisely. Whether the election should reward
+that — sharpness is the estimand, SNR is the confidence in it — is a question
+about what `focus.rs` is *for*, not a photometric question. Deciding it belongs
+with whoever owns `focus.rs` and `merge.rs`.
+
+What M99 can say, MEASURED: **`A3` is not uniformly better than `A2`, and the
+second deck reverses the preference.** I nearly recommended it on one deck; the
+replication is the reason I do not.
+
+| deck | `A2` SSC | `A3` SSC | `A2` BSC | `A3` BSC | better |
+| --- | --- | --- | --- | --- | --- |
+| `lavendar-cpl` | -0.0045 | -0.0345 | 1.4436 | **1.2640** | `A3` on BSC |
+| `bee-2-cpl` | **-0.0261** | -0.1105 (z = -22.1) | **0.4631** | 0.5908 | `A2` on both |
+
+On `bee-2-cpl` the election-bias arm **over-corrects**: `SSC = -0.1105` at
+z = -22.1 is significantly past zero, meaning the output now carries the level
+with the *opposite* sign. So removing the election bias is not free, and on an
+auto-exposure deck it costs accuracy on the statistic the milestone was
+pre-registered against.
+
+Beyond that I have no sharpness instrument, so I **cannot** show whether the
+18–40% that re-elect receive *sharper* data or merely different data. That test
+needs M95's instrument and it is the next thing to run.
+
+**Recommendation, explicitly scoped:** land `photometric.rs` with propagation on,
+because the tint result stands on its own and the propagation rule is correct
+physics for the gate. Do **not** claim it fixes the election, and do **not**
+adopt `A3` on the strength of `lavendar-cpl` alone. Open a separate milestone for
+the election bias whose first job is the sharpness comparison between `A2` and
+`A3` on at least three decks.
