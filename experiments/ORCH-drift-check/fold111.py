@@ -94,7 +94,7 @@ NEW_FACTS = [
         "**early-terminating** pipeline element. Under adversarial priming on pwsh 7.6.5, "
         "`Select-Object -First` reproduces **both** directions (primed 0 + failing(3) reads "
         "**0**; primed 7 + succeeding(0) reads **7**), while `Select-String`, `Out-String "
-        "-Stream`, and `Select-String | ForEach-Object` **all read the true code** -- they "
+        "-Stream`, and `Select-String \\| ForEach-Object` **all read the true code** -- they "
         "drain the stream, so the process is reaped. The correct fleet instruction is "
         "*re-run any gate whose pipeline contained `Select-Object -First`*, not *any "
         "truncated pipeline*.",
