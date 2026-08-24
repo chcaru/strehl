@@ -211,15 +211,36 @@ impl OpticalProfile {
         if eps == 0.0 && tx == 0.0 && ty == 0.0 {
             return t;
         }
-        // Correcting a channel imaged at (1 + eps) means sampling it at
-        // 1 / (1 + eps) -- not at (1 - eps), which is only its first-order
-        // approximation and would leave eps^2 of the error behind.
-        let s = 1.0 / (1.0 + eps);
+        // THE DIRECTION, AND WHY IT IS WRITTEN OUT.
+        //
+        // `warpmap` documents its transforms as **pulls**: a destination
+        // coordinate maps to a source coordinate, `dst(p) = src(T(p))`, with no
+        // inversion anywhere. That module also warns that inverting is the most
+        // likely bug in a consumer of it, and that it is silent. It was.
+        //
+        // A channel imaged at magnification (1 + eps) records the scene point u
+        // at x = (1 + eps) * u, i.e. `src(x) = scene(x / (1 + eps))`. Wanting
+        // `dst(p) = scene(p)` forces `T(p) / (1 + eps) = p`, so
+        //
+        //     s = 1 + eps
+        //
+        // NOT 1 / (1 + eps). This shipped inverted, and applying it to a real
+        // render made the measured aberration 7.2% WORSE while the corrected
+        // direction removed 94.3% of it (M107b P5). Every unit test here passed
+        // both ways, because round-trip, composition and no-op are all
+        // sign-symmetric; see `a_planted_magnification_is_actually_undone`,
+        // which is the test that can tell the two apart.
+        let s = 1.0 + eps;
         // Real scalar times complex, written out rather than via Cx::mul, so no
         // cross term multiplies a zero into a signed zero.
+        //
+        // The translation is ADDED after the scale, not subtracted before it,
+        // because the measured model is `observed = (1 + eps) * truth + t` and
+        // the pull must land on `observed`. Composing with an alignment `a z + b`
+        // gives `s*a*z + (s*b + t)` — still a Similarity, so L6 is unaffected.
         Similarity {
             a: Cx::new(t.a.re * s, t.a.im * s),
-            b: Cx::new((t.b.re - tx) * s, (t.b.im - ty) * s),
+            b: Cx::new(t.b.re * s + tx, t.b.im * s + ty),
         }
     }
 
@@ -411,7 +432,7 @@ mod tests {
     #[test]
     fn l6_composition_is_exact() {
         let p = &A7C2_FE100GM_2XTC_X4CPL;
-        let s = 1.0 / (1.0 + p.eps_r);
+        let s = 1.0 + p.eps_r;
         let (tx, ty) = p.translation;
         let mut rng = Rng(0xC0FFEE_1107);
         let mut worst = 0.0f64;
@@ -430,9 +451,9 @@ mod tests {
 
             // Route A: one transform.
             let a = composed.apply(z);
-            // Route B: align, then undo the measured displacement separately.
+            // Route B: align, then apply the measured displacement separately.
             let q = t.apply(z);
-            let b = Cx::new((q.re - tx) * s, (q.im - ty) * s);
+            let b = Cx::new(q.re * s + tx, q.im * s + ty);
 
             let scale = (b.re.abs() + b.im.abs()).max(1.0);
             let err = ((a.re - b.re).abs() + (a.im - b.im).abs()) / scale;
@@ -462,40 +483,42 @@ mod tests {
             ..A7C2_FE100GM_2XTC_X4CPL
         };
 
-        // Red is imaged small (negative eps), so correction must magnify it:
-        // the sampling scale must be > 1.
-        let s = 1.0 / (1.0 + p.eps_r);
+        // Red is imaged SMALL (negative eps). Under the pull convention the
+        // transform returns the SOURCE coordinate to sample, so magnifying the
+        // output means sampling nearer the centre: the scale must be < 1.
+        let s = 1.0 + p.eps_r;
         assert!(p.eps_r < 0.0);
-        assert!(s > 1.0, "correcting an under-magnified channel must magnify");
+        assert!(
+            s < 1.0,
+            "under a pull, magnifying an under-magnified channel samples inward"
+        );
 
-        // A point at the half-diagonal, corrected, must move radially outward.
-        //
-        // Note which quantity is which. `displacement_at` reports the
-        // *aberration*, `eps * r`, linear in radius because that is the physical
-        // model. The *correction* shift is `-eps * r / (1 + eps)`, because
-        // undoing a magnification of `(1 + eps)` is a reciprocal, not a
-        // negation. They differ at second order -- here by 0.0010 sensel, or
-        // 0.07% -- and the test asserts the exact form rather than papering
-        // over the gap with a loose tolerance.
+        // THE NON-CIRCULAR CLAUSE. Everything above restates the implementation.
+        // This states the PHYSICS: a scene feature at radius u is recorded by an
+        // (1 + eps)-magnified channel at radius (1 + eps) * u, so the corrected
+        // image, asked for radius u, must sample exactly there.
         let r = 2112.9;
         let t = Similarity::IDENTITY;
         let composed = OpticalProfile::compose(Some(p), Channel::Red, t);
         let moved = composed.apply(Cx::new(r, 0.0));
-        let shift = moved.re - r;
-
-        let aberration = -p.displacement_at(Channel::Red, r);
-        let exact_shift = -p.eps_r * r / (1.0 + p.eps_r);
-        assert!(shift > 0.0, "corrected red must move outward, moved {shift}");
+        let where_the_aberration_put_it = (1.0 + p.eps_r) * r;
         assert!(
-            (shift - exact_shift).abs() < 1e-9,
-            "corner shift {shift} disagrees with the exact reciprocal {exact_shift}"
+            (moved.re - where_the_aberration_put_it).abs() < 1e-9,
+            "correction samples {} but the aberration put the feature at {}",
+            moved.re,
+            where_the_aberration_put_it
         );
-        // The second-order gap is real but negligible at this coefficient. Pin
-        // it, so that a future stronger profile cannot let it grow unnoticed.
-        let second_order = (shift - aberration).abs();
+
+        // The sample point moves inward by exactly the aberration.
+        let shift = moved.re - r;
         assert!(
-            second_order < 1.5e-3,
-            "reciprocal-vs-linear gap grew to {second_order} sensel"
+            shift < 0.0,
+            "corrected red must sample inward under a pull, moved {shift}"
+        );
+        let aberration = -p.displacement_at(Channel::Red, r);
+        assert!(
+            (shift + aberration).abs() < 1e-9,
+            "sample shift {shift} is not minus the aberration {aberration}"
         );
         // The published corner figure, in sensels. Two CFA plane px per sensel
         // is *not* applied here: the fit is in plane px and so is this.
@@ -505,24 +528,84 @@ mod tests {
         );
     }
 
-    /// Reciprocal, not first-order. `1/(1+e)` and `1-e` differ at `e^2`, which
-    /// is negligible here but would not be for a stronger coefficient, and the
-    /// exact form costs nothing.
+    /// The test that could have caught the inverted sign, and did not exist.
+    ///
+    /// Every other test here is sign-symmetric: round-trip, composition and the
+    /// bitwise no-op all hold for `+eps` and `-eps` alike. This one plants a
+    /// known magnification in a synthetic channel, corrects it, and asserts the
+    /// feature lands back where the scene put it. Applying the correction the
+    /// wrong way round doubles the error instead of removing it, so the wrong
+    /// sign cannot pass.
     #[test]
-    fn correction_is_reciprocal_not_linearised() {
+    fn a_planted_magnification_is_actually_undone() {
+        let planted = 2.0e-3;
+        let p = OpticalProfile {
+            eps_r: planted,
+            eps_b: None,
+            translation: (0.0, 0.0),
+            ..A7C2_FE100GM_2XTC_X4CPL
+        };
+        let composed = OpticalProfile::compose(Some(&p), Channel::Red, Similarity::IDENTITY);
+
+        for &u in &[1.0, 137.5, 900.0, 2112.9] {
+            for &(dx, dy) in &[(1.0, 0.0), (0.0, 1.0), (0.6, -0.8)] {
+                // Where an (1 + planted)-magnified channel records the feature.
+                let rec = Cx::new((1.0 + planted) * u * dx, (1.0 + planted) * u * dy);
+                // Asking the corrected image for the scene position must sample
+                // exactly the recorded position.
+                let asked = composed.apply(Cx::new(u * dx, u * dy));
+                let err = ((asked.re - rec.re).powi(2) + (asked.im - rec.im).powi(2)).sqrt();
+                assert!(err < 1e-9, "u={u} dir=({dx},{dy}): residual {err}");
+
+                // And the inverted convention must NOT pass, or this test is
+                // as vacuous as the ones it exists to backstop.
+                let wrong = Cx::new(u * dx / (1.0 + planted), u * dy / (1.0 + planted));
+                let wrong_err =
+                    ((wrong.re - rec.re).powi(2) + (wrong.im - rec.im).powi(2)).sqrt();
+                if u > 1.0 {
+                    assert!(
+                        wrong_err > 1e-6,
+                        "u={u}: the inverted convention is indistinguishable here"
+                    );
+                }
+            }
+        }
+    }
+
+    /// The pull direction, tested at a coefficient large enough that the two
+    /// conventions cannot be confused for one another.
+    ///
+    /// At `eps = 0.05`, `1 + eps` and `1 / (1 + eps)` differ by 4.8% — 47.6 px
+    /// at r = 1000. The old code shipped the reciprocal, and this test as it was
+    /// originally written asserted the reciprocal too, because it asked the
+    /// correction to map an ABERRATED coordinate to a true one. A pull does the
+    /// opposite: it maps the coordinate you WANT to the coordinate you must
+    /// SAMPLE. Getting that backwards is the whole of the defect.
+    #[test]
+    fn the_pull_maps_wanted_to_sampled_not_the_reverse() {
         let strong = OpticalProfile {
             eps_r: 0.05,
             translation: (0.0, 0.0),
             ..A7C2_FE100GM_2XTC_X4CPL
         };
         let composed = OpticalProfile::compose(Some(&strong), Channel::Red, Similarity::IDENTITY);
-        // Applying the aberration then the correction must return the point.
         let r = 1000.0;
-        let aberrated = r * (1.0 + strong.eps_r);
-        let restored = composed.apply(Cx::new(aberrated, 0.0)).re;
+        let sampled = composed.apply(Cx::new(r, 0.0)).re;
+
+        // Asking for r must sample where the aberration recorded r.
+        let recorded = r * (1.0 + strong.eps_r);
         assert!(
-            (restored - r).abs() < 1e-9,
-            "round trip left {} px", restored - r
+            (sampled - recorded).abs() < 1e-9,
+            "asked for {r}, sampled {sampled}, aberration recorded it at {recorded}"
+        );
+
+        // The reciprocal convention is 47.6 px away here, so a regression to it
+        // cannot hide inside a tolerance.
+        let reciprocal = r / (1.0 + strong.eps_r);
+        assert!(
+            (sampled - reciprocal).abs() > 40.0,
+            "the two conventions are only {} px apart; this test cannot discriminate",
+            (sampled - reciprocal).abs()
         );
     }
 
@@ -533,7 +616,7 @@ mod tests {
     fn translation_composes_exactly_and_round_trips() {
         let p = &A7C2_FE100GM_2XTC_X4CPL;
         let (tx, ty) = p.translation;
-        let s = 1.0 / (1.0 + p.eps_r);
+        let s = 1.0 + p.eps_r;
         let t = Similarity::from_params(SimilarityParams {
             ax: 12.5,
             ay: -7.25,
@@ -543,25 +626,27 @@ mod tests {
         let composed = OpticalProfile::compose(Some(p), Channel::Red, t);
         let z = Cx::new(811.0, -455.0);
         let q = t.apply(z);
-        let expect = Cx::new((q.re - tx) * s, (q.im - ty) * s);
+        let expect = Cx::new(q.re * s + tx, q.im * s + ty);
         let got = composed.apply(z);
         assert!((got.re - expect.re).abs() < 1e-9);
         assert!((got.im - expect.im).abs() < 1e-9);
 
-        // Round trip through the full measured displacement model,
-        // d(q) = eps*q + t.
+        // The full measured displacement model, `observed = (1+eps)*truth + t`.
+        // The pull, asked for the true position, must sample the observed one.
         let corrected = OpticalProfile::compose(Some(p), Channel::Red, Similarity::IDENTITY);
         let truth = Cx::new(640.0, -320.0);
         let observed = Cx::new(
             truth.re * (1.0 + p.eps_r) + tx,
             truth.im * (1.0 + p.eps_r) + ty,
         );
-        let back = corrected.apply(observed);
+        let sampled = corrected.apply(truth);
         assert!(
-            (back.re - truth.re).abs() < 1e-9 && (back.im - truth.im).abs() < 1e-9,
-            "round trip left ({}, {}) px",
-            back.re - truth.re,
-            back.im - truth.im
+            (sampled.re - observed.re).abs() < 1e-9 && (sampled.im - observed.im).abs() < 1e-9,
+            "asked for truth, sampled ({}, {}), model says ({}, {})",
+            sampled.re,
+            sampled.im,
+            observed.re,
+            observed.im
         );
     }
 

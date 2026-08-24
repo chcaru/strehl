@@ -22,6 +22,13 @@ written. One registered assumption was **falsified**, and it is reported as fals
 | **L6** exact composition, no second interpolation | **PASS** — worst relative error <= 1e-12 |
 | **A1** is a constant axial offset the right model? | **INDETERMINATE on depth; ADEQUATE on radius — and scored on 3 stacks, not the 5 registered** |
 | registered optical-centre assumption | **FALSIFIED — and the reason matters more than the fix** |
+| **the shipped sign** | **WAS INVERTED. Caught in a render-domain preview, after 9/9 green unit tests. See §12** |
+
+> **Read §12 first.** The unit I committed at `d551488` applied its correction in the wrong
+> direction: it made the aberration **7.2 % worse** on a real render instead of removing it.
+> Nine unit tests passed on it, and every one of them was structurally incapable of
+> catching it. The coefficients were right; only the application direction was wrong. It is
+> repaired, and the repair is now backstopped by a test that is shown to fail on the defect.
 
 **The correction is free.** L6 confirms a radial magnification composes *exactly* into the
 `Similarity` the gather already applies, so it rides the existing interpolation and adds no
@@ -125,9 +132,15 @@ absence is not a measured zero.
 > *<= 1e-12 relative.* Falsifier: > 1e-9 → stop and report.
 
 Worst relative error over 20 000 randomised transforms and points: **<= 1e-12**. The
-correction is a closed form, not a linearisation — `1/(1+eps)`, not `1−eps`. The
-reciprocal-vs-linear gap is pinned by its own test at 0.0010 plane px so a future stronger
-profile cannot let it grow unnoticed.
+correction composes into the existing alignment `Similarity` exactly, so it rides the
+1.0735x upsample's interpolation and adds no second resampling pass.
+
+**Correction, post-verification: this section originally read "the correction is a closed
+form, not a linearisation — `1/(1+eps)`, not `1−eps`", and pinned a 0.0010 plane px
+"reciprocal-vs-linear gap".** That was the inverted convention described in §12. The scale
+is `1 + eps` exactly; there is no reciprocal and no second-order gap to pin. **L6 itself
+was unaffected by the error** — it asserts that two routes agree, and they agreed just as
+exactly while both were wrong. That is the point of §7.
 
 ---
 
@@ -338,3 +351,136 @@ Scripts: `e9_centre.py`, `e10_transfer.py`, `e11_axial.py`, `fig8_a1.py` under
   numerical artefacts.
 - **D7.** A model term that improves the fit is not thereby explained. The centre term earns
   its 5.37× and is *still* unattributed. Ship the term; do not ship the story.
+
+---
+
+## 12. The inverted correction sign
+
+### What happened
+
+`d551488` shipped `compose()` with `let s = 1.0 / (1.0 + eps)`. The correct scale under
+this codebase's transform convention is `s = 1.0 + eps`. The unit therefore applied its
+correction in **exactly the wrong direction**, doubling the aberration instead of removing
+it.
+
+I did not find this from the tests. I found it by running a render-domain preview on
+`bee-3-cpl` — the owner's original complaint — and watching a **registered falsifier fire**.
+The post-hoc sign diagnostic (`p5_sign_diagnostic.py`) then measured both directions on the
+same pixels:
+
+| direction | radial chroma slope | vs uncorrected |
+|---|---|---|
+| uncorrected | 141.1 ppm | — |
+| **as shipped at `d551488`** | 151.3 ppm | **7.2 % WORSE** |
+| **inverted (as now shipped)** | −8.1 ppm | **94.3 % removed** |
+
+94.3 % in the render domain is consistent with L3's 97.1 % in the fit domain, which is the
+independent check that the repaired direction is the right one rather than merely the
+better of two.
+
+### Why the convention is `1 + eps`, derived rather than tried
+
+`warpmap.rs:14-30` documents every transform in this project as a **pull**: `dst(p) =
+src(T(p))`. `T` maps the pixel you *want* to the pixel you must *sample*. A channel imaged
+at magnification `(1 + eps)` records a scene point `u` at `x = (1 + eps) u`, so
+`src(x) = scene(x / (1 + eps))`. Requiring `dst(p) = scene(p)` gives `T(p) / (1 + eps) = p`,
+hence `T(p) = (1 + eps) p`.
+
+That module's own doc comment warns, in terms: inverting it "is the single most likely bug
+in a consumer of this module and it is silent." It was right, and I was the consumer.
+
+**The translation term was inverted in the same way and by the same reasoning.** `compose`
+computed `b' = (b − t) · s`; the fit's model (`e10_transfer.py::predict`) is
+`observed = (1 + eps)·truth + t`, so the pull requires `b' = s·b + t`. The corrected form is
+also *simpler*, and still exactly composable — L6 is unaffected.
+
+### Why nine green tests could not have caught it
+
+This is the part worth folding.
+
+- **L1** (zero correction is bitwise identity), **L5** (green untouched) and **L6** (exact
+  composition) are **sign-symmetric**. Every one of them holds identically for `+eps` and
+  `−eps`. They cannot express a direction, so they cannot fail on one.
+- `correction_opposes_the_aberration` *did* test direction — but asserted against
+  `displacement_at()`, which is built from the same convention as the code under test.
+  **Circular.** It agreed with the implementation because it was derived from it.
+- Three tests **hardcoded the implementation's own expression**, `1.0 / (1.0 + p.eps_r)`.
+  A test that restates the code cannot disagree with it.
+- The independent verifier's mutation testing did not catch it either: it mutated
+  `1/(1+eps)` to `1−eps`, and **both are the same wrong direction**. A mutation that stays
+  inside the defect's own convention cannot reveal it.
+
+**A unit suite can be 9-for-9 green, survive independent mutation testing, and still ship a
+global sign inversion.**
+
+### The repair, and proof the repair is testable
+
+Two new tests, both phrased in **physical** terms rather than in terms of the
+implementation's `s`:
+
+- `a_planted_magnification_is_actually_undone` — plants a known `+2.0e-3` magnification,
+  then asserts that asking the corrected image for scene radius `u` samples exactly where
+  an `(1+eps)`-magnified channel recorded it, over 4 radii × 3 directions. It additionally
+  asserts the inverted convention is **>1e-6 away**, so the test cannot quietly become
+  vacuous.
+- `the_pull_maps_wanted_to_sampled_not_the_reverse` — the same claim at `eps = 0.05`, where
+  the two conventions are **47.6 px apart** at `r = 1000` and cannot hide in a tolerance.
+
+`p6_sign_mutation.py` plants the old convention back into `compose` and asserts the suite
+turns red **and names which tests turn red**, so a mutation caught only by an unrelated test
+does not read as a pass. Bars registered in its docstring before the run:
+
+| bar | claim | result |
+|---|---|---|
+| M1 | mutated crate exits **exactly 101** | `EXIT=101` **PASS** |
+| M2 | `a_planted_magnification_is_actually_undone` goes red | RED **PASS** |
+| M3 | `the_pull_maps_wanted_to_sampled_not_the_reverse` goes red | RED **PASS** |
+| M4 | restored crate exits **exactly 0** with 281 tests | `EXIT=0`, 281 passed **PASS** |
+
+5 of 281 tests go red on the mutation. Exit codes are asserted against the **exact** expected
+value, never `-ne 0` (rule 47 as amended).
+
+### An instrument defect found inside the mutation harness
+
+M4 failed on the harness's first run: the restored, byte-identical file still produced the
+mutant's failures. `shutil.copy2` **preserves the backup's mtime**, which is older than the
+artifacts cargo built from the mutant, so cargo considered the restore up to date and
+re-ran the mutant binary. Read naively, that is a clean tree reporting 5 failures.
+
+Fixed with `os.utime(SRC, None)` after restore. **A mutate-then-restore harness must stamp
+the restored file, or the clean arm reports a false red.**
+
+### Scope of the repair
+
+`eps_b` remains **`None`** — blue was never measured — so cyan/blue-side fringing is
+untouched by construction. Only red is corrected. The unit remains **unwired**: nothing in
+`merge_cmd.rs` calls it, per the file constraint.
+
+### Candidate facts
+
+- **P23.** The lateral-CA correction shipped at `d551488` had a **globally inverted sign**;
+  measured on `bee-3-cpl` it made radial chroma **7.2 % worse** (141.1 → 151.3 ppm), while
+  the corrected direction removes **94.3 %** (141.1 → −8.1 ppm), consistent with L3's 97.1 %
+  in the fit domain. MEASURED (`p1_preview`, `p5_sign_diagnostic`).
+- **P24.** The defect survived **9/9 green unit tests and independent mutation testing**,
+  because L1/L5/L6 are sign-symmetric, the one directional test asserted against a helper
+  built from the same convention, three tests hardcoded the implementation's expression, and
+  the verifier's mutation (`1/(1+eps)` → `1−eps`) stayed inside the wrong convention.
+  MEASURED.
+
+### Disciplines
+
+- **D8.** **A sign error cannot be caught by a sign-symmetric test, and most invariance
+  tests are sign-symmetric.** Round-trip, composition-exactness and zero-is-identity all
+  hold for `+eps` and `−eps` alike. At least one test must state the claim in **physical**
+  terms — where the feature is, not what the scale variable equals — and must assert that
+  the opposite convention is measurably far away.
+- **D9.** **A test that restates the implementation's expression is not a test.** Three
+  tests here contained `1.0 / (1.0 + p.eps_r)` copied from the code. They tracked the defect
+  into production.
+- **D10.** **Mutation testing only proves what its mutants span.** Mutating within the
+  defect's own convention (`1/(1+eps)` → `1−eps`) cannot reveal that the convention is
+  wrong. Mutate **across** the axis you are worried about.
+- **D11.** In a mutate-then-restore harness, **stamp the restored file's mtime**.
+  `shutil.copy2` restores the old mtime and the build system reuses the mutant's artifacts,
+  producing a false red on the clean arm.
