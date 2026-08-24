@@ -1,0 +1,75 @@
+==========================================================================
+CONTROLS  (predictions registered in ../PRE-REGISTRATION.md)
+==========================================================================
+
+K8  CONSTANT   (exact)
+    MHC              err 0.000e+00   PASS
+    CDIFF            err 0.000e+00   PASS
+    BILINEAR         err 0.000e+00   PASS
+    NEAREST          err 0.000e+00   PASS
+    CDIFF_BADNORM    err 0.000e+00   PASS  <- broken variant
+    CDIFF_BADPARITY  err 0.000e+00   PASS  <- broken variant
+
+K9  LINEARITY  (linear)
+    MHC              err 9.689e-08   PASS
+    CDIFF            err 1.700e-07   PASS
+    BILINEAR         err 1.414e-07   PASS
+    NEAREST          err 0.000e+00   PASS
+    CDIFF_BADNORM    err 1.078e-07   PASS  <- broken variant
+    CDIFF_BADPARITY  err 1.020e-07   PASS  <- broken variant
+
+K10 SHIFT(2,2)  (invariant)
+    MHC              err 0.000e+00   PASS
+    CDIFF            err 0.000e+00   PASS
+    BILINEAR         err 0.000e+00   PASS
+    NEAREST          err 0.000e+00   PASS
+    CDIFF_BADNORM    err 0.000e+00   PASS  <- broken variant
+    CDIFF_BADPARITY  err 0.000e+00   PASS  <- broken variant
+
+K11 KNOWNSAMP  (post-hoc, A1.2)
+    MHC              err 0.000e+00   PASS
+    CDIFF            err 5.960e-08   PASS
+    BILINEAR         err 0.000e+00   PASS
+    NEAREST          err 0.000e+00   PASS
+    CDIFF_BADNORM    err 1.603e-01   FAIL  <- broken variant
+    CDIFF_BADPARITY  err 6.549e-01   FAIL  <- broken variant
+
+  discrimination:
+    K8   MHC+CDIFF pass True   arms it rejects: NONE -- non-discriminating
+    K9   MHC+CDIFF pass True   arms it rejects: NONE -- non-discriminating
+    K10  MHC+CDIFF pass True   arms it rejects: NONE -- non-discriminating
+    K11  MHC+CDIFF pass True   arms it rejects: ['CDIFF_BADNORM', 'CDIFF_BADPARITY']
+
+==========================================================================
+THE LADDER   truth AHD 3514x2344, 400 tiles of 64x64, band 0.3-0.48 cyc/px
+==========================================================================
+  arm                  power    signal  artifact    share
+  MHC                +0.0047   -0.1586   -0.4993   0.3134
+  CDIFF              +0.0110   -0.1462   -0.5064   0.3038
+  BILINEAR           -0.4802   -0.6950   -0.8890   0.3901
+  NEAREST            +0.5784   -0.4980   +0.5403   0.9161
+  CDIFF_BADNORM      +0.0149   -0.1444   -0.4979   0.3071  <- broken
+  CDIFF_BADPARITY    +0.4465   -0.1504   +0.3198   0.7470  <- broken
+
+  per channel
+  arm       ch       power    signal  artifact    share
+  MHC       R      -0.0407   -0.4881   -0.2325   0.6430
+  MHC       G      -0.0498   -0.2127   -0.5547   0.3127
+  MHC       B      -0.0322   -0.3874   -0.2851   0.5586
+  CDIFF     R      -0.0602   -0.4446   -0.2913   0.5874
+  CDIFF     G      -0.0498   -0.2127   -0.5547   0.3127
+  CDIFF     B      -0.0366   -0.3288   -0.3468   0.4896
+
+==========================================================================
+PRE-REGISTERED BARS
+==========================================================================
+  CDIFF luma signal gain over MHC   : +0.0124 dex
+  CDIFF artifact-share change       : -0.0096
+  per-channel signal gain           : R +0.0435  G +0.0000  B +0.0586
+
+  B7 SHIP  gain >= 0.03 AND dshare <= 0.02      : False
+  B8 DEAD  gain < 0.01                          : False
+  B9 NO CHANNEL REGRESSION  worst >= -0.005     : True   (worst +0.0000)
+  -> registered middle band: real but below the ship bar.
+
+  VERDICT : BELOW BAR

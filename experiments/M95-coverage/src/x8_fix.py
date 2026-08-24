@@ -36,6 +36,11 @@ import m95cov as M
 
 B0 = Path(r"C:\dev\strehl-out\M95-resample\single-noalign.tif")
 MAP = Path(r"D:\personal\macro\bee-3-cpl\warpmap.txt")
+# The orchestrator quarantined the shipped sidecars after this arm first ran.
+# The quarantined copy is the same file, moved; prefer the original when it is
+# present so the provenance is unchanged, and fall back so the arm stays
+# re-runnable. Which one was used is printed.
+MAP_ALT = Path(r"C:\dev\strehl-out\ORCH-quarantine-sidecars\bee-3-cpl--warpmap.txt")
 OUT = Path(__file__).resolve().parents[1] / "out" / "x8_fix.json"
 
 K_COVER = 0.9315
@@ -47,9 +52,10 @@ def f64(h):
 
 
 def read_warps():
+    src = MAP if MAP.exists() else MAP_ALT
     rows = []
     plane = None
-    for line in MAP.read_text(encoding="utf-8").splitlines():
+    for line in src.read_text(encoding="utf-8").splitlines():
         s = line.strip()
         if s.startswith("plane "):
             plane = tuple(int(v) for v in s.split()[1].split("x"))
@@ -59,7 +65,7 @@ def read_warps():
             p = s.split()
             if len(p) >= 6 and p[1] == "placed":
                 rows.append((int(p[0]), f64(p[2]), f64(p[3]), f64(p[4]), f64(p[5])))
-    return plane, rows
+    return plane, rows, src
 
 
 def arm(img, tiles, warps, use_cover, snap=False):
@@ -101,14 +107,15 @@ def arm(img, tiles, warps, use_cover, snap=False):
 
 
 def main():
-    if not B0.exists() or not MAP.exists():
+    if not B0.exists() or not (MAP.exists() or MAP_ALT.exists()):
         sys.exit("missing inputs")
     img = M.load_luma(B0)
-    plane, rows = read_warps()
+    plane, rows, src = read_warps()
     tiles = M.pick_tiles(img)
     idx = np.linspace(0, len(rows) - 1, NFRAMES).round().astype(int)
     warps = [rows[i] for i in idx]
     print(f"source : {B0.name}  {img.shape[1]}x{img.shape[0]}")
+    print(f"warpmap: {src}")
     print(f"warps  : {len(rows)} placed frames, plane {plane[0]}x{plane[1]}, "
           f"sampling {NFRAMES} of them")
     print(f"tiles  : {len(tiles)}\n")

@@ -1,0 +1,48 @@
+==========================================================================
+K11  KNOWN-SAMPLE PRESERVATION   (hard gate, registered in A1.3)
+==========================================================================
+    MHC              err 0.000e+00   PASS
+    CDIFF            err 5.960e-08   PASS
+    CDIFF2           err 0.000e+00   PASS
+    CDIFF2_BADNORM   err 0.000e+00   PASS  <- broken variant
+    discrimination: rejects NONE -- non-discriminating
+
+==========================================================================
+K9  LINEARITY   (the licence and noise argument depends on it)
+==========================================================================
+    MHC              err 9.689e-08   PASS
+    CDIFF            err 1.700e-07   PASS
+    CDIFF2           err 1.496e-07   PASS
+
+==========================================================================
+LADDER   truth AHD, 400 tiles of 64x64, band 0.3-0.48 cyc/px
+==========================================================================
+  arm       ch       power    signal  artifact    share
+  MHC       Y      +0.0047   -0.1586   -0.4993   0.3134
+  MHC       R      -0.0407   -0.4881   -0.2325   0.6430
+  MHC       G      -0.0498   -0.2127   -0.5547   0.3127
+  MHC       B      -0.0322   -0.3874   -0.2851   0.5586
+
+  CDIFF     Y      +0.0110   -0.1462   -0.5064   0.3038
+  CDIFF     R      -0.0602   -0.4446   -0.2913   0.5874
+  CDIFF     G      -0.0498   -0.2127   -0.5547   0.3127
+  CDIFF     B      -0.0366   -0.3288   -0.3468   0.4896
+
+  CDIFF2    Y      +0.1112   -0.0911   -0.3178   0.3724
+  CDIFF2    R      +0.0052   -0.4038   -0.2094   0.6101
+  CDIFF2    G      +0.0556   -0.1599   -0.3521   0.3912
+  CDIFF2    B      +0.0416   -0.2904   -0.2305   0.5344
+
+==========================================================================
+PRE-REGISTERED BARS  (A1.3)
+==========================================================================
+  CDIFF  luma signal gain over MHC : +0.0124 dex
+  CDIFF2 luma signal gain over MHC : +0.0675 dex
+  CDIFF2 artifact-share change     : +0.0590
+  CDIFF2 per-channel signal gain   : R +0.0842  G +0.0528  B +0.0970
+
+  B10 SHIP  gain >= 0.03 AND dshare <= 0.02   : False
+  B11 NO CHANNEL REGRESSION  worst >= -0.005  : True   (worst +0.0528)
+  B12 GREEN MUST MOVE  G gain > 0.005         : True   (G +0.0528)
+
+  VERDICT : DO NOT SHIP
