@@ -1,0 +1,16 @@
+PowerShell 5.1.26100.9168 (Desktop)
+subject exits 1 in every arm; big = 200000 lines, small = 5 lines
+
+A truth (no pipeline)    $LASTEXITCODE = 1   correct
+C big + truncated        $LASTEXITCODE = -1   WRONG -- reads success
+D big + no truncation    $LASTEXITCODE = 1   correct
+E Out-File (01-render)   $LASTEXITCODE = 1   correct
+G small + truncated      $LASTEXITCODE = -1   WRONG -- reads success
+
+Positive control FIRED and negative control HELD, so this
+instrument sees the trap and attributes it to truncation.
+
+VERDICT: 01-render.ps1's gate is SOUND. Out-File consumes the
+entire pipeline, so no short-circuit is ever raised and the
+upstream always runs to completion. Confirmed here against the
+same subject that defeats arm C. No bar in this report is affected.

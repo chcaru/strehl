@@ -1,0 +1,11 @@
+PowerShell 7.6.5 (Core)
+subject exits 1 in every arm; big = 200000 lines, small = 5 lines
+
+A truth (no pipeline)    $LASTEXITCODE = 1    correct
+C big + truncated        $LASTEXITCODE = 1    correct
+D big + no truncation    $LASTEXITCODE = 1    correct
+E Out-File (01-render)   $LASTEXITCODE = 1    correct
+G small + truncated      $LASTEXITCODE = 1    correct
+
+POSITIVE CONTROL DID NOT FIRE -- instrument is blind.
+VERDICT: INCONCLUSIVE.

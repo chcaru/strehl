@@ -910,6 +910,87 @@ next briefing.**
 
 ---
 
+### 4.11 Two corrections from the orchestrator, audited (MEASURED)
+
+#### (a) The `$LASTEXITCODE` trap — my gate is sound, and the trap is not what it says
+
+This milestone has exactly **one** exit-code gate, `01-render.ps1:26`:
+
+```powershell
+& $Exe @args 2>&1 | Out-File -FilePath $log -Encoding utf8
+$code = $LASTEXITCODE
+```
+
+`Out-File` consumes the whole pipeline, so no `StopUpstreamCommandsException`
+is ever raised. That is an argument, and an argument about an instrument is
+exactly what the notice was burned by, so it was measured instead
+(`09-exitcode-trap-v2.ps1`, five arms, positive **and** negative control).
+
+**The first attempt failed honestly and is preserved.** With a 5-line subject
+the positive control **did not fire** — the truncated arm read the correct code
+— so the script returned `INCONCLUSIVE` (exit 2) rather than a clean bill of
+health. A blind instrument returning a null is the failure mode of disciplines
+611/615/616, and the guard caught it.
+
+Under a 200,000-line subject the control fires. All arms exit 1 in truth:
+
+| context | small+trunc | big+trunc | big, no trunc | **`Out-File` (mine)** |
+|---|---|---|---|---|
+| PS 5.1 Desktop, `-File` | **−1** | **−1** | 1 | **1 correct** |
+| PS 7.6.5 Core, `-File -NoProfile` | 1 | 1 | 1 | **1 correct** |
+| PS 7.6.5 Core, interactive | — | **0** | 1 | — |
+
+**VERDICT: no bar in this report is affected.** The verdict rests on the PS 5.1
+row, where the positive control fired *and* the negative control held, so the
+instrument both saw the trap and attributed it to truncation.
+
+**Two corrections to the notice, both measured.**
+
+1. **The sentinel is not always 0.** Under PS 5.1 it is **−1**. This matters
+   operationally: the recommended `if ($code -ne 0) { throw }` **does still
+   fire** on −1, so under 5.1 the standard idiom is not fooled. Only the PS 7
+   interactive case produced a genuine false green. **Telling agents the
+   symptom is "reads 0" invites `-eq 0`-shaped checks that miss −1.** The safe
+   instruction is the one about pipeline shape, not about the value.
+2. **It is a race, not a consequence of truncation.** The identical script
+   fired on both subjects under 5.1, on **neither** under 7.6.5 via `-File`,
+   and on the big subject only when run interactively under 7.6.5. The trap
+   needs the upstream to still be **running** when the pipe is torn down; a
+   process that has already exited has already recorded its code. **The same
+   line can pass and fail on different inputs**, which is worse than a
+   deterministic bug and is a reason to prefer the shape fix everywhere rather
+   than audit case by case.
+
+#### (b) The sidecar mechanism — the danger is still misplaced, for the third time
+
+Moving to `STREHL_WARPMAP` is right, and is §4.10's P17. But the newly stated
+danger — *"a `--limit N` run finds a sidecar that happens to have N frames,
+accepts it, and silently uses a solve made from a different subset with a
+different reference frame"* — **cannot happen.** MEASURED at source:
+
+* `raw_paths` (`main.rs:451`) does `paths.sort()` **then** `paths.truncate(n)`.
+  `--limit N` is therefore a **deterministic sorted prefix**, so two
+  `--limit 40` runs on one directory select the *same* 40 files.
+* The identity is built from that truncated list (`merge_cmd.rs:1096` feeds
+  `paths` to both the solve and `StackIdentity::from_paths`), so the digest
+  covers exactly the frames used. A 40-frame sidecar accepted by a 40-frame run
+  **is** a solve over the same subset.
+* The reference frame is deterministic `floor(n/2)` — measured across all 18
+  renders in §4.10 — so a fixed subset implies a fixed reference.
+
+**The gap is a different field, and it is recorded in the file while going
+unchecked.** `warpmap.rs:305/336` stores the resampler in provenance, with the
+doc comment *"The resampler the solve was validated with."* `check_stack` is
+one line — `self.provenance.stack.check(stack)` — comparing **only** name,
+digest and frame count. **So the resampler is written into the sidecar and
+never validated against the run consuming it.**
+
+Three accounts of this hazard have now been given, and each located the danger
+in **frame selection**, which is guarded, rather than in **solve parameters**,
+which are not. The guard is not weak; **it is guarding the wrong noun.**
+
+---
+
 The thing being corrected is a **viewing** transform, and it is worth being
 exact about where it sits, because the project has one hard boundary running
 through this area.
@@ -1274,6 +1355,35 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   its sidecar. *Implication:* the two controls compose — `align --out
   <scratch>` to create a private map, `STREHL_WARPMAP` to consume it without
   writing — and **neither alone covers the observed incidents.**
+* **P18 (MEASURED).** **THIS MILESTONE'S ONE EXIT-CODE GATE IS SOUND.**
+  `01-render.ps1:26` pipes into `Out-File`, which consumes the whole pipeline,
+  so the short-circuit that defeats `Select-Object -First N` is never raised.
+  Verified against the same 200,000-line subject that defeats the positive
+  control, under both PowerShell 5.1 and 7.6.5. *Implication:* no bar in this
+  report read a failing render as successful.
+* **P19 (MEASURED).** **THE TRUNCATED-PIPELINE SENTINEL IS NOT ALWAYS 0.**
+  Under PowerShell 5.1 Desktop a truncated pipeline over a command that truly
+  exited 1 leaves `$LASTEXITCODE` at **−1**; under 7.6.5 Core the same shape
+  yields **0**. *Implication:* the recommended `if ($code -ne 0) { throw }`
+  still fires on −1, so only the value-0 case is a true false green. Advice
+  phrased as "it reads 0" invites `-eq 0` checks that miss the −1 case.
+* **P20 (MEASURED).** **THE TRAP IS A RACE, NOT A PROPERTY OF TRUNCATION.**
+  One script fired on a 5-line and a 200,000-line subject under PS 5.1, on
+  neither under PS 7.6.5 via `-File -NoProfile`, and on the large subject only
+  when run interactively under 7.6.5. The upstream must still be **running**
+  when the pipe is torn down; a process that has already exited has already
+  recorded its code. *Implication:* the same line passes and fails on different
+  inputs, so the shape fix should be applied unconditionally rather than
+  case-audited.
+* **P21 (MEASURED).** **A `--limit N` RUN CANNOT INHERIT A SOLVE OVER A
+  DIFFERENT SUBSET.** `raw_paths` (`main.rs:451`) sorts and *then* truncates,
+  so `--limit N` is a deterministic sorted prefix, and the digest is computed
+  over that truncated list. Reference frame is deterministic `floor(n/2)` (18
+  renders). *Implication:* the frame-selection hazard described three times is
+  guarded. **What is not guarded is the resampler**, which `warpmap.rs:336`
+  stores in provenance as *"the resampler the solve was validated with"* and
+  which `check_stack` — a single call to `provenance.stack.check` — never
+  compares. **The field is recorded in the file and ignored by the validator.**
 
 ### Disciplines
 
@@ -1356,9 +1466,21 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   the one case it *does* catch. What it silently accepts is the same frames
   solved with different parameters. **When you audit a guard, enumerate what it
   does not compare; the hazard lives there, not in the case it names.**
+* **PD12.** **When an instrument is cleared, name the condition under which its
+  control fired.** The first run of `09-exitcode-trap` cleared this
+  milestone's exit-code gate while its positive control was silent — a verdict
+  and a blind instrument are indistinguishable from the verdict alone. The
+  script was written to return `INCONCLUSIVE` in that case, and did. **A pass
+  is only as strong as the demonstration that the test could have failed**, and
+  that demonstration belongs beside the pass, not in the author's memory.
+* **PD13.** **Advice about a defect should name the shape that causes it, not
+  the value it produced on the reporter's machine.** The same truncated
+  pipeline yields `−1` on PowerShell 5.1 and `0` on 7.6.5, and only the latter
+  is a false green. Guidance phrased around the observed value propagates a
+  check that misses the other. **Describe the mechanism; let each agent measure
+  their own symptom.**
 
 ### Questions
-
 * **PQ1.** What produced `M106`'s `CF266004...`? P3 rules out the source
   tree at `519203f`, P4 rules out sidecar state, P5 rules out
   `STREHL_ALIGN=off`. Remaining candidates: a differently-built binary, a
