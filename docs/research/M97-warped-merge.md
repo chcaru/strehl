@@ -639,6 +639,141 @@ live**, and `STREHL_WARPMAP` is the only way to render without it.
 
 ---
 
+## 11a. Does correcting the gain reach the photograph? Rendered, and looked at
+
+§7 established by measurement that the sidecar applies **54.3%** of the drift
+that is present, leaving **150.2 plane px** of residual where M86's own
+`T_usable` is 4.0 px, and that a scalar gain of **1.9083** applied in the log
+takes the residual to **3.3 px (98.9% removed)**. That was measured on my own
+gather. This section asks the only question that matters: **does it reach the
+image the owner opens?**
+
+The probe needs no Rust change. `experiments/M97-warped-merge/src/regain.py`
+rewrites a sidecar with `a' = exp(g·ln a)`, `b' = g·b`, copying every non-record
+line verbatim so the `stack-digest` survives and `check_stack` still passes. It
+is then fed to the shipped binary through `STREHL_WARPMAP`.
+
+**The control comes first.** A gain of 1.0 must be a byte-level no-op:
+
+- MEASURED: `regain.py <src> <dst> 1.0` reproduces scale span **0.922414**,
+  identical to the source sidecar, and `signtest.py` on it returns **0.92887** —
+  exactly the as-shipped number from §7. The rewriter is transparent.
+- MEASURED: `regain.py <src> <dst> 1.9083` yields a sidecar reading **603.07
+  sensor px** of corner drift, against the orchestrator's independently measured
+  **603 px**. The rewriter is also correct where it is supposed to act.
+
+Both renders: `--gate 2 --srgb --demosaic`, 299 frames, same machine.
+
+| arm | n_eff | n_eff=1 | boundary | cover k | time |
+|---|---:|---:|---:|---:|---:|
+| GAIN 1.0 (as shipped) | 17.792 | 49.90% | 1.28% | 0.9974 | 60.15 s |
+| GAIN 1.9083 (corrected) | 15.516 | 54.05% | 0.96% | 0.9974 | 57.55 s |
+
+### `cover k = 0.9974` on both is correct, and I nearly reported it as a bug
+
+It reads like the identity value, and §9a measured `k = 0.9315` on bee-3. I held
+the result until I could explain it. **DERIVED, and it is a property of the
+reference choice, not a defect:** this sidecar's reference is frame 0, so every
+placement has `|a| ≤ 1`. The gather is a pull, `dst(z) = src(a·z)`, so `a ≤ 1`
+samples *inward* — strictly inside the source bounds — and no destination pixel
+is ever uncovered. The `k = 0.9315` figure came from the reference-149 sidecar,
+where frames on the far side of the reference have `|a| > 1` and genuinely do
+run off the edge.
+
+Two consequences worth stating: **the orchestrator's "coverage is a quarter of
+the image" warning is real but is a function of which frame is the reference**,
+and choosing an endpoint reference costs nothing in coverage — which also means
+these two renders are a **perfectly matched pair**, identical in resampling,
+crop and output scale, differing in registration alone.
+
+### `n_eff` falls, and that is the gate working
+
+MEASURED: 17.792 → 15.516, a 12.8% fall, with the fraction of single-frame
+pixels rising 49.90% → 54.05%. My earlier instinct was that better registration
+should admit *more* agreeing frames. ARGUED, and I now think the opposite is
+right: under misregistration a given output pixel is fed a different scene point
+by every frame, so the through-focus response is smeared and many frames look
+indistinguishable from the winner. Correct registration sharpens that response,
+so fewer frames qualify. **A high `n_eff` under misregistration is spurious
+averaging, not signal**, which retires the "`n_eff` is the payoff" reading I was
+heading toward in §5.
+
+### The radial test I designed, and why I threw it out
+
+A scale error is zero at the centre and grows linearly with radius, so a
+treatment that is registration and nothing else must sharpen the corners and
+leave the centre alone. That is a spatial control *inside a single pair of
+images*, and I built it (`src/radial.py`). Its self-null is clean
+(gain-1.0 against itself: ratio 1.0000 in every band, corner−centre `+0.0000`).
+
+**MEASURED, and it is inert on this subject.** Median tile gradient energy falls
+from **767661** in the centre band to **4135** in the corner band — the bee is
+central and the corners are empty background, so the treatment region contains
+no subject to sharpen. The metric also flagged a **2.6% green-mean difference**
+between the arms, which follows from the `n_eff` change above and confounds any
+gradient comparison. I am reporting the design and its failure rather than its
+number, because a metric whose treatment region is empty cannot produce evidence
+either way. Reported corner−centre was `−0.0489`; **I do not interpret it.**
+
+### So I looked. Native resolution, side by side
+
+`src/sbs.py` builds 1:1 crops of both renders at the same pixel coordinates in
+three radius bands, picking the highest-detail tile in each. Everything below is
+me looking at
+`C:\dev\strehl-out\M97-before-after\SBS-gain1p0-vs-gain1p9083.png` and
+`SBS-OWNER-unaligned-vs-corrected.png`. Earlier tonight I claimed a sharpness
+win from memory that a true side-by-side then destroyed (§8), so this is
+deliberately cautious.
+
+**Gain 1.0 vs gain 1.9083** — centre band: I cannot tell them apart, which is
+what a scale correction must do at zero radius. Mid band: marginal; the granular
+patch on the leg is slightly better defined on the corrected side, but not
+enough to call alone. Outer band: **the corrected render is visibly better** —
+the bristle cluster is more defined, with better micro-contrast and less haze.
+That is the radial signature the design predicted.
+
+**Unaligned vs gain-corrected** — the owner's actual before/after. The outer
+band lands on the wing, which is the best sharpness target on this subject
+(high-contrast micro-hairs on a bright membrane). Centre: indistinguishable.
+Mid: marginal. Wing: a slight edge to the corrected render on the vein edges and
+the micro-hairs. **Not dramatic.**
+
+**The honest conclusion, and it is a negative result. MEASURED (geometry),
+ARGUED (visual):** taking end-to-end misregistration from 150.2 plane px to
+3.3 px — a 98.9% reduction, from 37x M86's usability threshold to under it —
+does **not** transform this photograph. It produces a real but subtle
+improvement, concentrated at large radius exactly as theory requires, and it
+costs 2.58x (§5, P7). This is consistent with, and independently corroborates,
+M86c's §15.4 inability to show a sharpness win.
+
+**One caveat I will not paper over:** the crops are taken at fixed pixel
+coordinates, and changing the registration moves content through those
+coordinates. So this is not a strict same-scene-point A/B, and part of what I am
+comparing is "what happens to be at that address" in each render. A rigorous
+version would register the two outputs to each other before cropping. I did not
+build it; it is the first thing I would do with more time.
+
+**Why the image is stubborn is the interesting question, and I did not answer
+it.** The merge elects a per-pixel winner from the sharpest frame; a plausible
+reading (ARGUED, untested) is that misregistration mostly changes *which* frame
+wins rather than corrupting the winner's data, so the output degrades far more
+gracefully than a 150 px number suggests. If that is right, the quality ceiling
+the owner is hitting is not registration at all, and the next milestone should
+be looking somewhere else. **I flag this as the most valuable open question
+this milestone produced.**
+
+### The gain is a probe, not a fix
+
+**1.9083 is `ln(0.85714)/ln(0.92241)`, measured on bee-3-cpl frames 0 and 298
+alone.** It is per-stack and empirical. It must not be shipped as a constant.
+Its only status is as evidence that the residual is a *common multiplicative
+gain error in the solve*, which `E*` is structurally blind to (§7), and that
+correcting it is worth 45x in geometric residual. **The fix belongs in M86's
+estimator, not at my consumption point**, and `signtest.py` gives that milestone
+a sharp four-minute end-to-end test.
+
+---
+
 ## 12. Status / Changes / Verified / Not verified / Notes
 
 ### Status
@@ -680,13 +815,32 @@ independent drift measurement — **found why alignment does not pay.**
 - Detail metric **disqualified** by its own plant (worse registration reads
   +5.6% better).
 - `n_eff` +3.0% aligned vs matched null.
-- The bee-3 renders, **opened and looked at, side by side**.
+- **Gain probe (§11a)**: the `regain.py` rewriter is a byte-level no-op at gain
+  1.0 (0.922414 reproduced; `signtest.py` returns the as-shipped 0.92887), and
+  reads 603.07 sensor px at gain 1.9083 against the orchestrator's 603 px. The
+  corrected sidecar takes residual **150.2 → 3.3 plane px, 98.9% removed**,
+  under M86's `T_usable` of 4.0 px.
+- **`cover k = 0.9974` on both gain renders explained, not waved through**: a
+  reference-0 sidecar has every `|a| ≤ 1`, so a pull gather samples strictly
+  inward and nothing is uncovered. The §9a `k = 0.9315` came from a
+  reference-149 sidecar. Held the result until I could explain it.
+- The bee-3 renders, **opened and looked at, side by side**, at 1:1 in three
+  radius bands.
 
 ### Not verified
 
 - P6 **FAILS the pre-registered bar**: refused frames abort the render.
 - Whether `WarpMap::load` rejects the torn sidecar I observed.
-- Whether fixing the solve's gain would deliver a *visible* win.
+- ~~Whether fixing the solve's gain would deliver a *visible* win.~~ **Now
+  measured (§11a): it does not deliver a dramatic one.** It gives a real but
+  subtle improvement concentrated at large radius. What I did **not** verify is
+  *why* the image is so insensitive to a 45x geometric correction — that is the
+  most valuable question this milestone produced and it is open.
+- My side-by-side crops are at fixed pixel coordinates, so registration moves
+  content through them; this is not a strict same-scene-point A/B (§11a).
+- The radial sharpness test is **inert on this subject** (corners are empty
+  background, 767661 → 4135 in gradient energy); its self-null is clean but its
+  treatment number means nothing and I do not interpret it.
 - The `a` > 1 branch of my gather instrument (§7.3).
 - The §11 patch is **uncompiled**.
 
