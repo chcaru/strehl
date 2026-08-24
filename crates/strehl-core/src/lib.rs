@@ -21,6 +21,7 @@ pub mod merge;
 pub mod noise;
 pub mod plane;
 pub mod profile;
+pub mod robust;
 pub mod stack;
 pub mod through_focus;
 pub mod warpmap;
