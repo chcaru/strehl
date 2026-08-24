@@ -1,0 +1,7 @@
+stack D:\personal\macro\112MSDCF : 79 frames
+config AlignConfig { coarse_factors: [8], coarse_tile: 32, coarse_grid: (8, 6), coarse_radius: 10, fine_tile: 128, fine_grid: (12, 8), fine_radius: 6, margin: 96, min_contrast: 4.0, min_peak: 0.5, min_tiles: 8, outlier_mads: 3.0, fine_iters: 1, warp_tiles: false }
+decoded in 2.0 s, plane 3516x2344
+441 pairs
+pyramids in 0.1 s
+measured in 6.1 s
+wrote data\B4-112-deep.csv

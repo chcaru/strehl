@@ -1,0 +1,19 @@
+# Standalone probe for M103. Deliberately OUTSIDE the strehl workspace (its own
+# empty `[workspace]` table) so that adding it cannot touch the shared root
+# `Cargo.toml` while other milestones are live in this tree.
+[package]
+name = "m103probe"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+strehl-core = { path = "../../../crates/strehl-core" }
+strehl-raw = { path = "../../../crates/strehl-raw" }
+anyhow = "1.0"
+rayon = "1.12"
+
+[profile.release]
+opt-level = 3

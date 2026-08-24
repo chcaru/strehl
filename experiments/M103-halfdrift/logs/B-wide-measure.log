@@ -1,0 +1,7 @@
+stack D:\personal\macro\bee-3-cpl : 299 frames
+config AlignConfig { coarse_factors: [32, 16, 8], coarse_tile: 32, coarse_grid: (8, 6), coarse_radius: 12, fine_tile: 128, fine_grid: (12, 8), fine_radius: 12, margin: 96, min_contrast: 4.0, min_peak: 0.5, min_tiles: 8, outlier_mads: 3.0 }
+decoded in 9.9 s, plane 3516x2344
+2520 pairs
+pyramids in 1.0 s
+measured in 185.6 s
+wrote data\B-wide-edges.csv

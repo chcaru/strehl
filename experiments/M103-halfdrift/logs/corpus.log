@@ -1,0 +1,19 @@
+stack           1/S_W(1)          source  |frac| mean  tiles
+bee-3-cpl           6.13  M103 (1/0.163)       0.0761     90
+coffee-bean         3.26          rule 6       0.1414     96
+119MSDCF            2.20          rule 6       0.1100     96
+109MSDCF            1.32          rule 6       0.2054     77
+112MSDCF            1.05          rule 6       0.1912     88
+113MSDCF            1.03          rule 6       0.2168     92
+
+Spearman rho(1/S_W(1), |frac| mean) = -0.8857  over n=6
+PREDICTION: rho < 0 (more integer-piling <-> more shrinkage).  HOLDS
+
+Reading: uniform fractional parts would be 0.2500. Every stack is
+below that, so some locking is always present; what varies is how
+much, and it varies with the scene exactly as rule 6 says shrinkage
+does. n=6 with one pair each is thin, and the two rank inversions
+are between stacks whose shrinkage differs little (3.26 vs 2.20,
+1.32 vs 1.05). This is offered as a candidate mechanism for a
+relationship rule 6 currently records as unpredictable, not as a
+settled law.

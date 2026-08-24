@@ -1,0 +1,33 @@
+{
+  "sidecar": "C:\\dev\\strehl-out\\M103\\wm-iww-r0.txt",
+  "last": 298,
+  "reference": 0,
+  "a0": 1.0,
+  "aN": 0.8499813577612219,
+  "arms": {
+    "SELF": {
+      "scale": 0.9999699999999999,
+      "ncc": 0.9999999988778837,
+      "railed": false,
+      "corner_plane_px": 0.06333567714979346
+    },
+    "RAW": {
+      "scale": 0.85714,
+      "ncc": 0.987716307504523,
+      "railed": false,
+      "corner_plane_px": 301.6044945864567
+    },
+    "AS-IS": {
+      "scale": 0.9999699999999999,
+      "ncc": 0.9864980644605558,
+      "railed": false,
+      "corner_plane_px": 0.06333567714979346
+    },
+    "INVERTED": {
+      "scale": 0.7248399999999999,
+      "ncc": 0.9863427285208839,
+      "railed": false,
+      "corner_plane_px": 580.91483081625
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+ "rows": [
+  {
+   "planted": 0.8,
+   "two_sided": 0.7999916666666667,
+   "m97": 0.79999,
+   "clipped": false
+  },
+  {
+   "planted": 0.86,
+   "two_sided": 0.8600083333333334,
+   "m97": 0.8600199999999999,
+   "clipped": false
+  },
+  {
+   "planted": 0.94,
+   "two_sided": 0.9399583333333333,
+   "m97": 0.9400299999999999,
+   "clipped": false
+  },
+  {
+   "planted": 0.98,
+   "two_sided": 0.9800416666666667,
+   "m97": 0.9799899999999999,
+   "clipped": false
+  },
+  {
+   "planted": 1.0,
+   "two_sided": 0.9999750000000001,
+   "m97": 0.9999699999999999,
+   "clipped": false
+  },
+  {
+   "planted": 1.02,
+   "two_sided": 1.0200166666666666,
+   "m97": 1.00681,
+   "clipped": false
+  },
+  {
+   "planted": 1.06,
+   "two_sided": 1.0599916666666667,
+   "m97": 1.01383,
+   "clipped": false
+  },
+  {
+   "planted": 1.12,
+   "two_sided": 1.1200083333333335,
+   "m97": 1.02094,
+   "clipped": false
+  },
+  {
+   "planted": 1.2,
+   "two_sided": 1.1999583333333332,
+   "m97": 0.9999699999999999,
+   "clipped": true
+  }
+ ],
+ "worst_two_sided": 4.166666666671759e-05,
+ "worst_m97_above": 0.20003000000000004,
+ "ok": true
+}

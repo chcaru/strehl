@@ -1,0 +1,12 @@
+=== data\T-112-0-1.csv ===
+tiles ok 88   mean peak 0.9406
+  fit    ax  +1.1015  ay  +0.1275  g -5.666362e-04  rot +6.935214e-05
+  scale  0.99943337   ln -5.667944e-04   rms 1.0275 px
+  radial slope (g by projection) -5.666362e-04
+  |frac| mean 0.1912  (uniform would be 0.2500)
+  frac histogram   4  11  12  16  30  22  30  26  16   9
+     lever bin   n  radial px    implied g
+    204-  741  22    -0.3027  -5.8564e-04
+    741- 1102  22    -0.6714  -7.0763e-04
+   1102- 1435  23    -0.7688  -6.0352e-04
+   1435- 1891  23    -0.8073  -4.8507e-04

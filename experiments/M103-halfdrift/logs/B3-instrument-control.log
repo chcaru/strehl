@@ -1,0 +1,20 @@
+working 878x586
+plant is gather(img,min(1,s)) vs gather(img,min(1,1/s)): both sides
+resampled, both gather args <= 1, true ratio exactly s.
+
+ planted  two-sided       err |  M97 best_scale       err  clipped
+   0.800    0.79999  -0.00001 |         0.79999  -0.00001    False
+   0.860    0.86001  +0.00001 |         0.86002  +0.00002    False
+   0.940    0.93996  -0.00004 |         0.94003  +0.00003    False
+   0.980    0.98004  +0.00004 |         0.97999  -0.00001    False
+   1.000    0.99998  -0.00002 |         0.99997  -0.00003    False
+   1.020    1.02002  +0.00002 |         1.00681  -0.01319    False
+   1.060    1.05999  -0.00001 |         1.01383  -0.04617    False
+   1.120    1.12001  +0.00001 |         1.02094  -0.09906    False
+   1.200    1.19996  -0.00004 |         0.99997  -0.20003     True
+
+two-sided worst |err| over the whole range : 0.00004 (0.1 plane px)
+M97 search worst |err| above 1.005         : 0.20003 (422.3 plane px)
+M97 search clipped on 1 of 4 plants above 1.0
+
+TWO-SIDED INSTRUMENT OK (bar: worst |err| < 0.004 over 0.80..1.20)

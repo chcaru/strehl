@@ -1,0 +1,18 @@
+7032x4688  before=bee3-baseline.tiff  after=bee3-m103.tiff
+486 textured tiles of 256x256
+
+      r/rmax  tiles      before       after  after/before
+ 0.00-0.20       35     0.00282     0.00261       0.9239x
+ 0.20-0.40      101     0.00299     0.00283       0.9445x
+ 0.40-0.60      163     0.00165     0.00178       1.0810x
+ 0.60-0.80      135     0.00064     0.00072       1.1304x
+ 0.80-1.01       52     0.00025     0.00034       1.3697x
+
+whole frame: 0.00074 -> 0.00077  (1.0433x)
+centre bin 0.9239x vs outer bin 1.3697x  -> gradient +0.4458
+PREDICTION: outer > inner if the gain is registration. HOLDS
+wrote C:\dev\strehl-out\M103\img\crops\centre.png  (left=before  right=after)
+wrote C:\dev\strehl-out\M103\img\crops\mid-1.png  (left=before  right=after)
+wrote C:\dev\strehl-out\M103\img\crops\mid-2.png  (left=before  right=after)
+wrote C:\dev\strehl-out\M103\img\crops\outer-1.png  (left=before  right=after)
+wrote C:\dev\strehl-out\M103\img\crops\outer-2.png  (left=before  right=after)

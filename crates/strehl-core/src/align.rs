@@ -572,6 +572,45 @@ pub struct AlignConfig {
     pub min_tiles: usize,
     /// MAD outlier cut, in MADs above the median residual.
     pub outlier_mads: f32,
+    /// How many times each stage may re-seed itself from its own fit and
+    /// re-search.
+    ///
+    /// `1` is the single-pass estimator M3 published, reproduced bit for bit.
+    ///
+    /// A stage searches `±radius` about the offset its *seed* predicts, so a
+    /// tile is only measurable where the seed is already nearly right. The
+    /// residual a wrong seed leaves at a tile grows with that tile's lever arm,
+    /// `|residual| ~ |dg| * |u|`, so the tiles that fall outside the window
+    /// first are the **corner** tiles — exactly the tiles that carry the scale
+    /// signal. The survivors are the low-lever central tiles, whose
+    /// displacements the seed already predicts, so the refit cannot move far
+    /// from the seed. That is a self-confirming loop, and on `bee-3-cpl` M103
+    /// measured it costing between 20% and 89% of the true scale, worsening
+    /// monotonically with baseline.
+    ///
+    /// Re-seeding breaks the loop: each pass places the window closer to the
+    /// truth, so border-refused tiles return and the lever arm recovers. Passes
+    /// stop early once the fit stops moving, so a pair whose seed was already
+    /// good costs one pass and is unchanged.
+    pub fine_iters: usize,
+    /// Resample each moving tile through the current seed before correlating,
+    /// so the two tiles are compared at matched scale and rotation.
+    ///
+    /// [`ncc_tile`] searches **translations only**. Under a scale difference
+    /// `s` a tile of side `t` is stretched by `t*(1-s)` across its own width,
+    /// and no translation can undo that: at the 14.3% end-to-end scale of
+    /// `bee-3-cpl` a 128 px tile is mismatched by 18.3 px, which no search
+    /// window can recover because the defect is *inside* the tile. Widening the
+    /// window makes this worse, not better — M103 measured the wide config
+    /// over-shooting to 1.27 of truth at span 256 while the default under-shot
+    /// to 0.11.
+    ///
+    /// Warping the moving tile through the seed removes the mismatch by
+    /// construction, leaving a genuine translation for the search to find. The
+    /// cost is one bilinear resample of a `(tile + 2*radius)^2` patch per tile
+    /// per pass, against the `(2*radius+1)^2 * tile^2` multiply-adds the
+    /// correlation already spends — under 1%.
+    pub warp_tiles: bool,
 }
 
 impl AlignConfig {
@@ -590,6 +629,8 @@ impl AlignConfig {
             min_peak: 0.5,
             min_tiles: 8,
             outlier_mads: 3.0,
+            fine_iters: 1,
+            warp_tiles: false,
         }
     }
 
@@ -624,7 +665,46 @@ impl AlignConfig {
     pub fn with_margin(self, margin: usize) -> Self {
         Self { margin, ..self }
     }
+
+    /// [`AlignConfig::deep`] with the two capture defects M103 measured closed:
+    /// the stage re-seeds itself until it stops moving, and each moving tile is
+    /// warped through the current seed before correlating.
+    ///
+    /// Both are off by default because turning them on changes every number the
+    /// estimator has ever produced. See [`AlignConfig::fine_iters`] and
+    /// [`AlignConfig::warp_tiles`] for what each one is for, and
+    /// `docs/research/M103-halfdrift.md` for the measurements that set them.
+    ///
+    /// `fine_iters` is 8 because that is where `bee-3-cpl`'s longest baseline
+    /// converged with margin, not because 8 is a round number; passes stop as
+    /// soon as the corner moves less than [`FINE_CONVERGE_PX`], so short
+    /// baselines pay for one or two.
+    pub fn iterated() -> Self {
+        Self {
+            fine_iters: 8,
+            warp_tiles: true,
+            ..Self::deep()
+        }
+    }
+
+    /// [`AlignConfig::iterated`] with the deeper coarse ladder of
+    /// [`AlignConfig::wide`], for stacks whose end-to-end drift exceeds what a
+    /// single 1/8 coarse level can capture.
+    pub fn iterated_wide() -> Self {
+        Self {
+            fine_iters: 8,
+            warp_tiles: true,
+            ..Self::wide()
+        }
+    }
 }
+
+/// Corner movement, plane px, below which an iterated stage stops re-seeding.
+///
+/// Well under the ~0.1 px the subpixel parabola is worth, so stopping here
+/// costs nothing measurable, and small enough that a pair still drifting is not
+/// mistaken for a converged one.
+pub const FINE_CONVERGE_PX: f64 = 0.02;
 
 /// Why one tile produced no displacement.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -821,6 +901,189 @@ pub fn ncc_tile(
     }
 }
 
+/// Bilinear sample of `plane` at a fractional coordinate, refusing rather than
+/// clamping outside it.
+///
+/// [`sample_bilinear`] clamps, which is right for a renderer and wrong here: a
+/// clamped sample is a fabricated correlation peak, and because a warped tile
+/// leaves the plane at the *corners* first, the fabrication would land
+/// preferentially on the high-lever tiles this whole mechanism turns on.
+#[inline]
+fn sample_bilinear_strict(plane: PlaneRef<'_>, x: f64, y: f64) -> Option<f32> {
+    let x0 = x.floor();
+    let y0 = y.floor();
+    if x0 < 0.0 || y0 < 0.0 {
+        return None;
+    }
+    let (ix, iy) = (x0 as usize, y0 as usize);
+    if ix + 1 >= plane.width || iy + 1 >= plane.height {
+        return None;
+    }
+    let (fx, fy) = ((x - x0) as f32, (y - y0) as f32);
+    let r0 = iy * plane.width + ix;
+    let r1 = r0 + plane.width;
+    let a = plane.data[r0];
+    let b = plane.data[r0 + 1];
+    let c = plane.data[r1];
+    let d = plane.data[r1 + 1];
+    let top = a + (b - a) * fx;
+    let bot = c + (d - c) * fx;
+    Some(top + (bot - top) * fy)
+}
+
+/// [`ncc_tile`], but the moving tile is first resampled through `warp` so that
+/// only the *residual* translation is searched.
+///
+/// # Why this exists
+///
+/// [`ncc_tile`] slices an axis-aligned window out of the moving plane and slides
+/// it. That is only a valid model of the pair when the two frames differ by a
+/// translation. Under a scale difference the moving tile is a *stretched* copy
+/// of the reference tile, and the stretch across one tile of side `t` is
+/// `t*|1-s|` — 18.3 plane px for the 128 px tile and 14.3% end-to-end scale of
+/// `bee-3-cpl`. No translation removes that. The correlation peak is broadened
+/// and pulled toward whichever part of the tile happens to dominate, the peak
+/// height falls below `min_peak`, and the tile is either refused or believed at
+/// a biased offset.
+///
+/// Sampling the moving plane along the reference tile's *warped* grid removes
+/// the stretch by construction. What is left is a real translation, which is
+/// what the search is entitled to assume.
+///
+/// # Coordinates
+///
+/// The patch is built on the reference tile's own lattice, extended by `radius`
+/// on every side, so search offset `(i, j)` is a shift in *reference* px. The
+/// same offset in moving px is `a * (i, j)`, and that is what is composed into
+/// the returned displacement — dropping the `a` would re-introduce a scale
+/// error of `|1-s|` times the residual.
+pub fn ncc_tile_warped(
+    reference: PlaneRef<'_>,
+    moving: PlaneRef<'_>,
+    probe: TileProbe,
+    warp: SimilarityParams,
+    cfg: &AlignConfig,
+) -> TileMeasurement {
+    let TileProbe {
+        tx,
+        ty,
+        size: ts,
+        predicted: (px, py),
+        radius,
+    } = probe;
+    if ts == 0 || tx + ts > reference.width || ty + ts > reference.height {
+        return TileMeasurement::failed(TileStatus::Oob, f32::NAN);
+    }
+
+    let mut a = vec![0f32; ts * ts];
+    let mut mean = 0f32;
+    for y in 0..ts {
+        let row = (ty + y) * reference.width + tx;
+        for x in 0..ts {
+            let v = reference.data[row + x];
+            a[y * ts + x] = v;
+            mean += v;
+        }
+    }
+    mean /= (ts * ts) as f32;
+    let mut sa = 0f32;
+    for v in a.iter_mut() {
+        *v -= mean;
+        sa += *v * *v;
+    }
+    let contrast = sa / (ts * ts) as f32;
+    if contrast <= cfg.min_contrast {
+        return TileMeasurement::failed(TileStatus::LowContrast, contrast);
+    }
+
+    // Where this tile's centre lands under the seed, and the linear part that
+    // carries the tile's own lattice with it.
+    let half = ts as f64 * 0.5;
+    let mcx = tx as f64 + half + px as f64;
+    let mcy = ty as f64 + half + py as f64;
+    let (ar, ai) = (1.0 + warp.g, warp.rot);
+
+    // Build the warped patch once, on the reference lattice extended by
+    // `radius` each way, so the translation search below needs no resampling.
+    let r = radius as usize;
+    let np = ts + 2 * r;
+    let mut patch = vec![0f32; np * np];
+    for q in 0..np {
+        let vy = q as f64 - r as f64 - half;
+        for p in 0..np {
+            let vx = p as f64 - r as f64 - half;
+            let sx = mcx + ar * vx - ai * vy;
+            let sy = mcy + ai * vx + ar * vy;
+            match sample_bilinear_strict(moving, sx, sy) {
+                Some(v) => patch[q * np + p] = v,
+                None => return TileMeasurement::failed(TileStatus::Oob, contrast),
+            }
+        }
+    }
+
+    let n = (2 * radius + 1) as usize;
+    let mut scores = vec![f32::NEG_INFINITY; n * n];
+    let (mut best, mut bi, mut bj) = (f32::NEG_INFINITY, 0usize, 0usize);
+    for jj in 0..n {
+        for ii in 0..n {
+            let mut mb = 0f32;
+            for y in 0..ts {
+                let row = (y + jj) * np + ii;
+                for x in 0..ts {
+                    mb += patch[row + x];
+                }
+            }
+            mb /= (ts * ts) as f32;
+            let (mut num, mut sb) = (0f32, 0f32);
+            for y in 0..ts {
+                let row = (y + jj) * np + ii;
+                for x in 0..ts {
+                    let bv = patch[row + x] - mb;
+                    num += a[y * ts + x] * bv;
+                    sb += bv * bv;
+                }
+            }
+            if sb <= 1e-6 {
+                continue;
+            }
+            let s = num / (sa * sb).sqrt();
+            scores[jj * n + ii] = s;
+            if s > best {
+                best = s;
+                bi = ii;
+                bj = jj;
+            }
+        }
+    }
+
+    if !best.is_finite() {
+        return TileMeasurement::failed(TileStatus::Oob, contrast);
+    }
+    if best < cfg.min_peak {
+        let mut m = TileMeasurement::failed(TileStatus::LowPeak, contrast);
+        m.peak = best;
+        return m;
+    }
+    if bi == 0 || bj == 0 || bi == n - 1 || bj == n - 1 {
+        let mut m = TileMeasurement::failed(TileStatus::Border, contrast);
+        m.peak = best;
+        return m;
+    }
+    let sc = |i: usize, j: usize| scores[j * n + i];
+    let ox = parabola(sc(bi - 1, bj), sc(bi, bj), sc(bi + 1, bj));
+    let oy = parabola(sc(bi, bj - 1), sc(bi, bj), sc(bi, bj + 1));
+    // Residual in reference px, then carried into moving px through `a`.
+    let rx = (bi as i32 - radius) as f64 + ox as f64;
+    let ry = (bj as i32 - radius) as f64 + oy as f64;
+    TileMeasurement {
+        status: TileStatus::Ok,
+        contrast,
+        dx: (px as f64 + ar * rx - ai * ry) as f32,
+        dy: (py as f64 + ai * rx + ar * ry) as f32,
+        peak: best,
+    }
+}
+
 /// 4x4 Gauss-Jordan with partial pivoting. `None` if the system is singular.
 fn solve4(mut m: [[f64; 5]; 4]) -> Option<[f64; 4]> {
     for c in 0..4 {
@@ -1008,18 +1271,20 @@ pub fn fit_stage(
             Some(s) => predicted_displacement(s, mx - cx, my - cy),
             None => (0.0, 0.0),
         };
-        let m = ncc_tile(
-            reference,
-            moving,
-            TileProbe {
-                tx,
-                ty,
-                size: tile,
-                predicted: (px as f32, py as f32),
-                radius,
-            },
-            cfg,
-        );
+        let tp = TileProbe {
+            tx,
+            ty,
+            size: tile,
+            predicted: (px as f32, py as f32),
+            radius,
+        };
+        // Warping needs a seed to warp through. With no seed the two paths are
+        // the same computation, so the plain one runs and the single-pass
+        // estimator is reproduced exactly.
+        let m = match (cfg.warp_tiles, seed) {
+            (true, Some(s)) => ncc_tile_warped(reference, moving, tp, s, cfg),
+            _ => ncc_tile(reference, moving, tp, cfg),
+        };
         match m.status {
             TileStatus::Ok => {
                 obs.push(Observation {
@@ -1098,6 +1363,53 @@ pub fn fit_stage(
     })
 }
 
+/// [`fit_stage`], re-seeded from its own fit until the fit stops moving.
+///
+/// One pass is one Newton step from the seed, and it inherits the seed's blind
+/// spot: tiles whose true offset the seed misses by more than `radius` are
+/// refused, and because the miss grows with lever arm those are the corner
+/// tiles the scale rests on. Re-seeding walks the window onto the truth, so
+/// each pass recovers lever arm the last one censored.
+///
+/// Passes stop when the plane corner moves less than [`FINE_CONVERGE_PX`], and
+/// a pass that *fails* leaves the previous fit standing rather than discarding
+/// a good answer for a worse one.
+fn fit_stage_iterated(
+    reference: PlaneRef<'_>,
+    moving: PlaneRef<'_>,
+    tile: usize,
+    spots: &[(usize, usize)],
+    radius: i32,
+    seed: Option<SimilarityParams>,
+    cfg: &AlignConfig,
+) -> Result<StageFit, AlignFailure> {
+    let mut best = fit_stage(reference, moving, tile, spots, radius, seed, cfg)?;
+    let hw = reference.width as f64 * 0.5;
+    let hh = reference.height as f64 * 0.5;
+    for _ in 1..cfg.fine_iters.max(1) {
+        let prev = best.fit;
+        let next = match fit_stage(reference, moving, tile, spots, radius, Some(prev), cfg) {
+            Ok(n) => n,
+            Err(_) => break,
+        };
+        let (dg, dr) = (next.fit.g - prev.g, next.fit.rot - prev.rot);
+        let (dx, dy) = (next.fit.ax - prev.ax, next.fit.ay - prev.ay);
+        let moved = [(-hw, -hh), (hw, -hh), (-hw, hh), (hw, hh)]
+            .into_iter()
+            .map(|(ux, uy)| {
+                let ex = dx + dg * ux - dr * uy;
+                let ey = dy + dr * ux + dg * uy;
+                (ex * ex + ey * ey).sqrt()
+            })
+            .fold(0.0f64, f64::max);
+        best = next;
+        if moved < FINE_CONVERGE_PX {
+            break;
+        }
+    }
+    Ok(best)
+}
+
 /// Coarse-to-fine similarity fit of `moving` against `reference`.
 ///
 /// The coarse ladder exists **only** to bring the fine search into capture
@@ -1130,7 +1442,7 @@ pub fn align_pair(
             ay: s.ay / *f as f64,
             ..s
         });
-        let st = fit_stage(
+        let st = fit_stage_iterated(
             rc,
             mc,
             cfg.coarse_tile,
@@ -1146,7 +1458,7 @@ pub fn align_pair(
             ..st.fit
         });
     }
-    fit_stage(
+    fit_stage_iterated(
         reference.plane,
         moving.plane,
         cfg.fine_tile,

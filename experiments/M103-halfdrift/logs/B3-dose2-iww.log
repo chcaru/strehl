@@ -1,0 +1,15 @@
+sidecar wm-iww-r0.txt  reference 0  working 878x586 (4.0 plane px/px)
+|a_0| = 1.000000  |a_298| = 0.849981  ln span = -0.162541
+RAW  0.85719  ncc 0.9877  railed=False   (301.5 plane px of drift)
+
+  gain     |a_N|   residual  plane px  removed     ncc  railed
+ 0.850  0.870960    0.98708      27.3    91.0%  0.9869   False
+ 0.900  0.863910    0.99315      14.5    95.2%  0.9868   False
+ 0.950  0.856917    0.99835       3.5    98.8%  0.9867   False
+ 0.980  0.852749    0.99933       1.4    99.5%  0.9866   False
+ 1.000  0.849981    1.00138       2.9    99.0%  0.9865   False
+ 1.050  0.843102    1.00832      17.6    94.2%  0.9862   False
+ 1.100  0.836277    1.01666      35.2    88.3%  0.9860   False
+ 1.200  0.822794    1.03388      71.5    76.3%  0.9854   False
+
+minimum residual 1.4 plane px at gain 0.980 (99.5% of the drift removed)

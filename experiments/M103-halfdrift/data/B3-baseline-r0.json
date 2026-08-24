@@ -1,0 +1,33 @@
+{
+  "sidecar": "C:\\dev\\strehl-out\\M103\\wm-baseline-r0.txt",
+  "last": 298,
+  "reference": 0,
+  "a0": 1.0,
+  "aN": 0.9224144157949812,
+  "arms": {
+    "SELF": {
+      "scale": 0.9999699999999999,
+      "ncc": 0.9999999988778837,
+      "railed": false,
+      "corner_plane_px": 0.06333567714979346
+    },
+    "RAW": {
+      "scale": 0.85714,
+      "ncc": 0.987716307504523,
+      "railed": false,
+      "corner_plane_px": 301.6044945864567
+    },
+    "AS-IS": {
+      "scale": 0.92887,
+      "ncc": 0.9872486775483451,
+      "railed": false,
+      "corner_plane_px": 150.1688905217323
+    },
+    "INVERTED": {
+      "scale": 0.7881099999999999,
+      "ncc": 0.9874260068445783,
+      "railed": false,
+      "corner_plane_px": 447.33988770771634
+    }
+  }
+}

@@ -1,0 +1,8 @@
+sidecar wm-iww-r0.txt  reference 0  gain 1.0000
+|a_0| = 1.000000  |a_298| = 0.849981  span = 0.849981
+RAW        0.85719    301.5 plane px  ncc 0.9877
+SELF       0.99998      0.1 plane px
+AS-IS      1.00138      2.9 plane px  ncc 0.9865
+
+predicted from the sidecar alone : 1.00848
+MEASURED residual                : 1.00138  (2.9 plane px, 99.0% of the drift removed)

@@ -1,0 +1,8 @@
+sidecar wm-baseline-r0.txt  reference 0  gain 1.0000
+|a_0| = 1.000000  |a_298| = 0.922414  span = 0.922414
+RAW        0.85719    301.5 plane px  ncc 0.9877
+SELF       0.99998      0.1 plane px
+AS-IS      0.92880    150.3 plane px  ncc 0.9872
+
+predicted from the sidecar alone : 0.92929
+MEASURED residual                : 0.92880  (150.3 plane px, 50.1% of the drift removed)

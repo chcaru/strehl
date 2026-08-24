@@ -1,0 +1,15 @@
+sidecar wm-baseline-r0.txt  reference 0  working 878x586 (4.0 plane px/px)
+|a_0| = 1.000000  |a_298| = 0.922414  ln span = -0.080761
+RAW  0.85719  ncc 0.9877  railed=False   (301.5 plane px of drift)
+
+  gain     |a_N|   residual  plane px  removed     ncc  railed
+ 1.000  0.922414    0.92880     150.3    50.1%  0.9872   False
+ 1.400  0.893093    0.96238      79.4    73.7%  0.9868   False
+ 1.700  0.871715    0.98697      27.5    90.9%  0.9865   False
+ 1.800  0.864703    0.99315      14.5    95.2%  0.9863   False
+ 1.908  0.857194    0.99846       3.3    98.9%  0.9861   False
+ 2.000  0.850848    1.00073       1.5    99.5%  0.9859   False
+ 2.200  0.837216    1.01471      31.1    89.7%  0.9852   False
+ 2.500  0.817175    1.04028      85.0    71.8%  0.9840   False
+
+minimum residual 1.5 plane px at gain 2.000 (99.5% of the drift removed)

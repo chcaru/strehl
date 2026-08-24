@@ -1,0 +1,20 @@
+sidecar reference frame 149; plane 3516x2344; working 878x586 (4.0 plane px/px)
+|a_0| = 1.050368   |a_298| = 0.968875   ratio = 0.922414
+PLANT  0.940 -> 0.93841  (err -0.00159)  ncc 1.0000  railed=False
+PLANT  0.860 -> 0.85858  (err -0.00142)  ncc 1.0000  railed=False
+GATHER ROUND-TRIP a=1.08 -> residual 0.94408 ( 118.1 plane px)  ncc 0.9959  FAIL
+GATHER ROUND-TRIP a=0.92 -> residual 0.99655 (   7.3 plane px)  ncc 1.0000  OK
+
+arm            scale  |s-1| plane px      ncc  railed
+SELF         0.99997             0.1   1.0000   False
+RAW          0.85714           301.6   0.9877   False
+AS-IS        0.94138           123.8   0.9821   False
+INVERTED     0.79351           435.9   0.9860   False
+
+RAW drift                 301.6 plane px  (true scale span 0.85714)
+sidecar's scale span   0.92241  -- it applies 54.3% of the span that is there
+predicted residual     0.92924 from the sidecar alone
+MEASURED residual      0.94138  (123.8 plane px, 59.0% of the drift removed)
+inverted-sign arm         435.9 plane px (1.45x the raw drift)
+
+SIGN IS CORRECT AS SHIPPED
