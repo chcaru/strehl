@@ -3,7 +3,7 @@
 **Verdict: fact 1149 is REFUTED. M88's own measurement of the cutoff is
 UNIDENTIFIED, and the pre-registered model-form bar FAILED.**
 
-Three separate findings, which should not be collapsed into one.
+Four separate findings, which should not be collapsed into one.
 
 **1. Fact 1149's number is refuted by the corpus, not by M88.** Its
 `f_c = 86.3 cy/mm` requires `p = 1`. Fact 1152 **excludes `p = 1` by
@@ -23,9 +23,11 @@ one bar that could fire, fired against the model.** The corpus cannot measure
 this: every usable edge in it is dominated by a blur that does not change with
 aperture. That is a measured statement, not a shrug. The ISO-12233-style
 instrument built here was validated to `+1.19% +/- 1.50%` on planted cutoffs
-from 60 to 140 cy/mm, then pointed at the *same physical subject* photographed
+from 60 to 140 cy/mm, then pointed at the same physical subject photographed
 at f/11 and at f/5.6. Diffraction says the f/11 edge must be **1.964x** wider.
-It is **1.025x**.
+It is **1.025x**. The stronger and cleaner form of this is single-aperture and
+needs no pairing: at f/5.6 alone the measured 31.70 um rise is **2.25x** the
+14.11 um a diffraction-limited system would give.
 
 Finding 3 is independent of finding 1 by construction: the pre-registered
 Bar 3 is a *ratio* at two apertures and is free of both `m` and `p`, so the
