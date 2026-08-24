@@ -1561,6 +1561,19 @@ fn cmd_field(args: &[String]) -> Result<()> {
     let mut worst_ratio_err = 0.0f64;
     for &(g, ax, ay) in &[
         (0.0, 0.0, 0.0),
+        // Small rungs, added after M23's zero-defocus self-pair control was
+        // read at source: it measured a BILINEAR resampler reading R = 0.372
+        // where truth is 1.000, and R = 0.965 with the resampler removed. M86
+        // 6.3's knee was measured through `gather_into`, i.e. through a
+        // resampler, so it cannot distinguish an estimator property from a
+        // resampling artefact of the plant itself. This ladder is rendered
+        // analytically at the warped coordinates and touches no resampler, so
+        // it separates the two.
+        (0.00002, 0.0, 0.0),
+        (0.00005, 0.0, 0.0),
+        (0.0001, 0.0, 0.0),
+        (0.0002, 0.0, 0.0),
+        (0.0005, 0.0, 0.0),
         (0.001, 0.0, 0.0),
         (0.002, 3.0, -2.0),
         (0.005, 0.0, 0.0),

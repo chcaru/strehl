@@ -1,0 +1,8 @@
+M86b -- cost of ONE gather at a half-pixel shift
+  D:\personal\macro\bee-3-cpl
+  baseline gradient energy 9.8367e9
+
+  resampler       gradient energy   retained
+  nearest                9.8346e9    0.9998
+  bilinear               3.2395e9    0.3293
+  catmull-rom            5.0553e9    0.5139

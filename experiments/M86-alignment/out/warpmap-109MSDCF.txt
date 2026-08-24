@@ -1,0 +1,38 @@
+strehl-warpmap 1
+# a warp sidecar: per-frame placements, reference -> frame.
+# `a_re a_im b_re b_im` are f64 bit patterns; the trailing
+# decimals are a human aid and are NOT parsed.
+stack-name 109MSDCF
+stack-digest b70554b8cfd9b93e
+frames 22
+plane 3516x2344
+reference 0
+strategy S3-ba-unit
+resampler catmull-rom
+heldout-px 3fd7079dada0e6b1 # 0.3598
+cycle-floor-px 3fd8a5ca58480e28 # 0.3851
+note strehl align, M86b, spans [1, 2, 4, 8, 16, 32, 64, 96, 128]
+# idx state a_re a_im b_re b_im | scale-1, rot, dx, dy
+0 placed 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000 # g=+0.000000e0 rot=+0.000000e0 dx=+0.0000 dy=+0.0000
+1 placed 3feff97b919f3e1c bedf774764c6b833 3fca64d59ec6e974 bfd3f6d2c0b5cf4f # g=-7.955700e-4 rot=-7.502063e-6 dx=+0.2062 dy=-0.3119
+2 placed 3feff245f66f9bf6 bef9843abc5fcc97 3fbee367c0763653 3f95145a31b9ef0e # g=-1.675624e-3 rot=-2.433445e-5 dx=+0.1207 dy=+0.0206
+3 placed 3fefea71c7d8a4b0 bf0425c83732a6d6 3fcce726e2ca117e 3f6d233fe18e08bd # g=-2.631292e-3 rot=-3.842847e-5 dx=+0.2258 dy=+0.0036
+4 placed 3fefe2fe07f4a9eb befafc6710cff03c 3fc9b2ec4238ff94 bfc8e941ace778e3 # g=-3.540978e-3 rot=-2.573581e-5 dx=+0.2008 dy=-0.1946
+5 placed 3fefdbfa851c88a5 bf085f572a3d5c27 3fcd2b1b5d91b4ab bfac19acca30be70 # g=-4.397144e-3 rot=-4.648671e-5 dx=+0.2279 dy=-0.0549
+6 placed 3fefd3b6416cffb5 bf03c43acdc1fd6c 3f9de1d64aa9905b bfa641f63ca67b03 # g=-5.406258e-3 rot=-3.770165e-5 dx=+0.0292 dy=-0.0435
+7 placed 3fefcbff08339e1f bf059ff2838f720f 3fc3100929e3d55e bfcc5e8a98323baa # g=-6.348118e-3 rot=-4.124602e-5 dx=+0.1489 dy=-0.2216
+8 placed 3fefc43e5072601f bf07643c6a6cc7ed 3fa1b2643ec04b87 bfcc1bdb5f885d28 # g=-7.294505e-3 rot=-4.461583e-5 dx=+0.0346 dy=-0.2196
+9 placed 3fefbd5fad48776c beff25ffadacbcb9 3f83e3334cb9598a bfd5ddcaabe1621f # g=-8.133089e-3 rot=-2.970546e-5 dx=+0.0097 dy=-0.3417
+10 placed 3fefb5d9d8ce08c9 bef9977198f393a0 bfc287ac6c62381b bfcbe730a18fd598 # g=-9.051396e-3 rot=-2.440603e-5 dx=-0.1448 dy=-0.2180
+11 placed 3fefae8fe47a1e16 bf00400cb020a569 3fca6088bcba142f bfe2d4856a88d2bf # g=-9.941152e-3 rot=-3.099478e-5 dx=+0.2061 dy=-0.5884
+12 placed 3fefa773a5b33838 bef061d8a3553715 bfa4c332c38d284e bfe3aeeaa5a5c11b # g=-1.080911e-2 rot=-1.562329e-5 dx=-0.0406 dy=-0.6151
+13 placed 3fefa0ea75f2e9d9 3eeca9a59ffa751b bf9b8eed1046a4be bfe582d3fc1af797 # g=-1.160695e-2 rot=+1.366743e-5 dx=-0.0269 dy=-0.6722
+14 placed 3fef993be750443c 3ee9df9461194a60 bfba9ff1c02a2291 bfe2c8318a02d90c # g=-1.254468e-2 rot=+1.233738e-5 dx=-0.1040 dy=-0.5869
+15 placed 3fef922f18dd52eb 3eda4cb5ba4084d1 bfbf2ea0e98eedc9 bfe1b59fb6509479 # g=-1.340528e-2 rot=+6.270325e-6 dx=-0.1218 dy=-0.5534
+16 placed 3fef8b7e528d7ed5 3eec202a88acf33e bfb9cc78a934beb7 bfe936dc4c28f1b1 # g=-1.422199e-2 rot=+1.341135e-5 dx=-0.1008 dy=-0.7879
+17 placed 3fef84a254d1bce0 3f0496cd515b64c0 bfbcb31345d584f1 bff51a034c49f5ca # g=-1.505931e-2 rot=+3.927054e-5 dx=-0.1121 dy=-1.3189
+18 placed 3fef7d0041910e0a 3ef73d2aafd96779 bfac5999720ba850 bff22e73374df6d1 # g=-1.599109e-2 rot=+2.216237e-5 dx=-0.0554 dy=-1.1363
+19 placed 3fef770c7c39cd89 3f01f875782cd286 bf7e1367839ee536 bfeb8fbb17a2b360 # g=-1.671768e-2 rot=+3.427609e-5 dx=-0.0073 dy=-0.8613
+20 placed 3fef711c9809209f 3f00ec987cd5e0b7 bfad69403390eff5 bff34a3af476775d # g=-1.744242e-2 rot=+3.228035e-5 dx=-0.0574 dy=-1.2056
+21 placed 3fef6b290851aebf 3f05c39a58d9b72c bfb777508ba32875 bfead86f94a49ccc # g=-1.816891e-2 rot=+4.151168e-5 dx=-0.0917 dy=-0.8389
+end 22

@@ -1,0 +1,8 @@
+M86b GATE W2 -- planted warp undone, on REAL frames
+  D:\personal\macro\bee-3-cpl
+  resampler CatmullRom
+  gate (correct placement)   ratio   0.1228  (damage 29.18469, residual 3.58527)  OK
+  control: INVERTED          ratio   1.6042  (damage 29.18469, residual 46.81836)  OK
+  control: TRANSPOSED        ratio   1.1421  (damage 29.18469, residual 33.33167)  OK
+
+  GATE W2 (real frames): PASS

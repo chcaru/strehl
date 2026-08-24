@@ -1,0 +1,9 @@
+stack foam: 100 frames, digest 8cb3dc98fff98cfa
+  decoded 100 frames in 4.4 s, plane 3516x2344
+  measured 501/577 edges in 7.6 s (13.2% refused)
+
+  placed 100/100 frames, refused 0
+  total corner drift frame 0 -> 99: 235.285 plane px
+  held-out corner error (median): 3.562 plane px
+  cycle-consistency floor: 0.233 plane px
+  wrote experiments\M86-alignment\out\warpmap-foam.txt

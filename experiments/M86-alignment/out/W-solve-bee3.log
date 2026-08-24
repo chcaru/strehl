@@ -1,0 +1,11 @@
+stack bee-3-cpl: 299 frames, digest 8d023c0fe355d109
+  decoded 299 frames in 9.4 s, plane 3516x2344
+  measured 1961/2340 edges in 34.3 s (16.2% refused)
+
+  placed 299/299 frames, refused 0
+  total corner drift frame 0 -> 298: 186.702 plane px
+  held-out corner error (median): 13.578 plane px
+  cycle-consistency floor: 2.908 plane px
+  wrote experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+
+  NOTE: held-out error 13.578 px is above M86's T_usable of 4.0 px. The sidecar is still a large improvement on no registration at all, but it is not a precise solve.

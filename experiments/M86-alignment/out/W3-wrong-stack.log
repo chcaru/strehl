@@ -1,0 +1,12 @@
+sidecar experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  fitted on   bee-3-cpl (digest 8d023c0fe355d109, 299 frames)
+  strategy    S3-ba-unit
+  reference   frame 0
+  resampler   CatmullRom
+  held-out    13.578 plane px  (above M86 T_usable = 4.0 px)
+  edge floor  2.908 plane px
+  placed      299/299, refused 0
+
+  applied to  bee-2-cpl (digest 2405062fd866542d, 299 frames)
+  MISMATCH
+Error: this warp map was fitted on stack "bee-3-cpl" (digest 8d023c0fe355d109, 299 frames) but was applied to "bee-2-cpl" (digest 2405062fd866542d, 299 frames)
