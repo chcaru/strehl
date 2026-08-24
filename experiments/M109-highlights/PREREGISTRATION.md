@@ -225,3 +225,56 @@ byte-identically without being touched** — `camera_to_srgb` changes return typ
 defaults to `+inf` = "this caller stated no ceiling" = today's behaviour exactly. Activating it on
 `strehl stack` is then 3 lines, given in the report for ORCH to route. Until they land, B1-stack is
 BLOCKED and the shipped default keeps the defect. I will not edit that file.
+
+---
+
+## Addendum B7-B9 -- written 2026-08-24, BEFORE running ORCH's control battery
+
+ORCH supplied a LibRaw single-frame control (`cca4157`): D1 magenta 0.0061%,
+D8 partial-clip 1.6941%, against strehl's 2.0017% / 2.1585%; a 328x excess.
+Registered here before I run anything against it.
+
+**Confound I am registering in advance.** The control uses `no_auto_bright=True`
+(exposure gain 1.0) and a single frame; strehl's 2.0017% was measured on 299
+frames at `--exposure=-0.24` (gain 0.8467). I have already measured that
+exposure ALONE moves argmax-baseline from 0.0349% to 0.3378% -- 9.7x, same code
+path, same frames. The 328x therefore mixes at least three variables. It is not
+wrong, but it is not yet attributable.
+
+### B7 -- exposure-invariance signature (the sharp test)
+
+A pipeline that clips channels together is exposure-INVARIANT in magenta
+fraction: scaling a neutral triple keeps it neutral. A pipeline that does not is
+exposure-DEPENDENT, because the pinned channel cannot follow the others down.
+
+- PREDICT: LibRaw control magenta stays within 2x across gain 1.0 -> 0.8467.
+- PREDICT: strehl BEFORE varies by >5x across the same two gains. (Already
+  measured at 9.7x; recorded here so the pair is registered, not fitted.)
+- PREDICT: strehl AFTER varies by <2x, i.e. it acquires LibRaw's invariance.
+- FAILS IF: after-fix spread stays above 3x, which would mean the fix reduces
+  magenta without removing its cause.
+
+This is a mechanism-level bar. It can fail even if B1's magnitude bar passes.
+
+### B8 -- D8 partial-clip must fall
+
+The fix converts partial clipping (1-2 channels at 1.0) into full clipping (all
+three at K together), so D8 should fall, not merely magenta.
+
+- PREDICT: D8 falls after the fix at matched exposure.
+- PREDICT: it lands at or below the control's 1.6941%.
+- FAILS IF: D8 is unchanged or rises. Unchanged D8 with reduced D1 would mean I
+  am recolouring clipped pixels rather than clipping them together, and the
+  ceiling is not doing what I claim.
+
+### B9 -- D1 against the control, exposure-matched
+
+- PREDICT: after-fix does NOT reach 0.0061%. I have already measured a 28%
+  residual of partially-pinned fringe pixels that a hard threshold cannot reach.
+- PREDICT: after-fix lands in 0.03%-0.10% at -0.24 stops, i.e. 5x-16x the
+  control, and I will report it as a PARTIAL fix, per ORCH's point 2.
+- FAILS IF: it lands above 0.10% (worse than predicted) or below 0.03% (better
+  than predicted -- which would mean my residual-fringe analysis is wrong).
+
+Stated plainly so it cannot be repaired later: **I expect to report a partial
+fix, not a clean one.**

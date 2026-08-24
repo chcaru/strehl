@@ -277,3 +277,114 @@ same binary at `-0.24` reads 0.3378 %. The headline 2.002 % is therefore partly 
 exposure, and any future comparison must hold exposure fixed. This is why `argmax-baseline` gained
 `--exposure` / `--auto-exposure` in this milestone: without it the baseline could only be compared
 with `stack` at a different gain, which M104c already established is a thumb on the scale.
+
+---
+
+## 8. Against ORCH's LibRaw control (B7-B9)
+
+ORCH supplied the control this milestone lacked: a single unstacked LibRaw
+frame of the same scene, D1 magenta 0.0061%, D8 partial-clip 1.6941%
+(`cca4157`). Bars registered in PREREGISTRATION.md's addendum before any of
+the runs below.
+
+**Reproduction first.** Running ORCH's own script and importing ORCH's own
+`d1_magenta` / `d8_partial_clip` rather than reimplementing them:
+control 0.0061% / 1.6941% and unfixed `stack` 2.0017% / 2.1585%, both to four
+decimals. Independent instrument, same numbers.
+
+### The confound I registered, and its refutation
+
+I registered in advance that the 328x mixes exposure with the defect: ORCH's
+control is `no_auto_bright=True` (gain 1.0) while the 2.0017% was measured at
+`-0.24` stops (gain 0.8467), and I had already measured a 9.7x swing from
+exposure alone. So I built an exposure-matched control.
+
+**The concern was refuted, and in the direction that strengthens ORCH's claim.**
+
+| pipeline | gain 1.0 | gain 0.8467 | ratio |
+|---|---|---|---|
+| LibRaw control | 0.0052 % | 0.0036 % | **1.44x** |
+| strehl BEFORE | 0.0349 % | 0.3378 % | **9.68x** |
+| strehl AFTER | 0.0346 % | 0.0944 % | **2.73x** |
+
+Exposure-matching **lowers** the control (0.0061% -> 0.0036%), so the excess for
+the unfixed stack grows from ORCH's 328x to **556x**. I expected matching to
+close the gap; it widened it. MEASURED.
+
+The reason is the finding, not the arithmetic: **a pipeline that clips channels
+together is exposure-invariant in magenta, and one that does not is not.** The
+exposure dependence is not a confound to be controlled away -- it is a symptom.
+That makes ORCH's un-matched comparison sound despite the mismatch.
+
+### B7 exposure-invariance -- PASS, PASS, MISSED
+
+- LibRaw within 2x: **1.44x PASS**
+- strehl BEFORE above 5x: **9.68x PASS**
+- strehl AFTER below 2x: **2.73x -- prediction MISSED**
+
+Reported as written. The fix cuts exposure-dependence 9.68x -> 2.73x, a 3.5x
+improvement, but does not reach LibRaw's invariance. My registered failure
+condition was ">3x", so the failure clause did not fire either: **I left a gap
+between the 2x prediction and the 3x failure line, and the result landed in
+it.** That is a defect in my bar-writing, recorded rather than repaired.
+
+### B8 partial-clip must fall -- PASS
+
+At matched exposure D8 falls **1.7517% -> 0.4126%**, crossing ORCH's 0.5% bar
+from FIRED to **clear**, and landing below the control's 1.6941%. Both clauses
+pass. This is the mechanism check: the fix converts partial clipping into full
+clipping, so a fall in D8 is what "the ceiling is doing what I claim" looks
+like. Had D1 fallen while D8 held still, I would have been recolouring clipped
+pixels rather than clipping them together.
+
+At gain 1.0 D8 barely moves (5.4228% -> 5.1511%), and that is predicted by the
+arithmetic: `K = 1.0689 x eg`, so at eg=1 the ceiling sits **above** 1.0 and
+blown pixels still clamp at the output. Below eg = 0.9355 the ceiling drops
+under 1.0 and they stop clamping entirely. The fix's effect on D8 is therefore
+exposure-dependent by construction, which is worth knowing before anyone quotes
+a single D8 number.
+
+### B9 D1 against the matched control -- PASS on magnitude, FAIL on ratio
+
+- Predicted 0.03%-0.10% at -0.24 stops: measured **0.0944% -- inside, PASS**
+- Predicted 5x-16x the control: measured **26x -- FAIL as written**
+
+The ratio failed for a reason I did not anticipate: I anchored it to ORCH's
+0.0061%, and the correctly matched control is 0.0036%. **As predicted in
+advance, this is a PARTIAL fix.** On the path I can reach, the excess over the
+matched control falls from 93.8x to 26.2x.
+
+### The precise localisation: the surviving channel is INVERTED
+
+ORCH's "not which pixels clip, but what happens to them" is confirmed and
+sharpened. Among partial-clipped pixels, which channel is pinned at 1.0 and
+which is left lowest:
+
+| render | R at 1.0 | G at 1.0 | B at 1.0 | lowest channel |
+|---|---|---|---|---|
+| LibRaw control, gain 1.0 | 0.0 % | 55.7 % | 99.6 % | **R 99.9 %** |
+| strehl `stack` -0.24, unfixed | 91.5 % | **0.0 %** | 99.8 % | **G 99.1 %** |
+
+In LibRaw, red is the deficit channel in 99.9% of clipped pixels and red is
+**never** pinned -- a warm highlight leaning cyan, which is what an
+over-exposed tungsten-lit white actually does. In strehl, red and blue are both
+pinned and **green is the deficit in 99.1%**. Green is the channel that
+physically cannot rise. This is the magenta signature at population scale, and
+it is an inversion of the control, not a difference of degree.
+
+After the fix the residual population shrinks 578,126 -> 136,189 (-76%) but its
+composition is unchanged (G lowest in 98.0%) -- consistent with section 4's
+finding that the blob clears and the fringe, which is made of partially pinned
+pixels below the threshold, does not.
+
+### What this does NOT license
+
+`argmax-baseline` at -0.24 reads 0.3378% where `stack` at the same exposure
+and scene reads 2.0017% -- **5.9x more**, on a code path my fix does reach
+versus one it does not. So my before/after on argmax **does not support a
+predicted after-number for `stack`**. The mechanism is identical and the fix
+is the same three lines of arithmetic, but the population it acts on is six
+times larger there and I have not measured it. I can produce that number within
+minutes of the §6 patch being routed; I have not applied it locally even
+temporarily, because M97 may commit `merge_cmd.rs` while my edit is in the
+tree and would carry it in unknowingly.
