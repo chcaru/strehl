@@ -1646,3 +1646,117 @@ captures, and about what the shipped product can show.
 - M100 is adding `--exposure` / `--auto-exposure` to the **viewing** render so
   existing captures at least *display* correctly. That is a presentation fix
   and it does not recover the photons; only re-shooting does.
+
+## 23. Bracket coverage -- a DIAGNOSTIC you can already run, not a request
+
+Nothing to shoot for this one. It is here because the tool has started
+answering a question about your photographs that nobody was reading -- and
+because the answer turned out to be about the *subject*, not about your
+technique. One of your stacks reads far worse than the others on it, and the
+reason is not what it looks like.
+
+### The number
+
+`strehl stack <DIR> --gate 2` already prints a `boundary %` column. It is the
+fraction of output pixels whose elected frame sits at the **first or last rung
+of the bracket** -- the structural signal for *no frame in this stack is in
+focus here*. Measured at `e47cf81`, full resolution, prediction registered
+before the run:
+
+| stack | frames | `boundary %` | how it looks |
+| --- | --- | --- | --- |
+| `flowers-cpl` | 176 | **33.74%** | featureless waxy blob at 100% |
+| `bee-3-cpl` | 299 | 1.00% | good |
+| `leaf-2-cpl` | 182 | 0.12% | good |
+
+**281x separation between the stack that looks broken and the stack that looks
+right**, on a number that was already on screen. The random-election floor is
+of order `2/N`, about **1.1%** on a 176-frame stack, so 33.74% is roughly **30x
+above** what chance would produce.
+
+### What it is not
+
+It is **not** the merge's fault, and this was checked rather than assumed.
+`--gate 0` is pure selection -- verified at mean `n_eff` 1.000 with 100.00% of
+pixels taking exactly one frame -- and it contains **no real detail either**, so
+no single frame ever held the detail (fact 1358). Saturation is ruled out on the
+linear render, where clipping is unambiguous: maximum **0.6002** of full scale,
+**0.000%** of the crop within 1% of maximum. The capture is the cause.
+
+### What to do
+
+**Nothing, as it turns out — and this is the part I got wrong first.** My initial
+reading of this section told you to re-shoot with a wider sweep. That advice was
+wrong and has been withdrawn. See below.
+
+### What it actually is: occlusion, not coverage
+
+The frame-0/frame-last split is lopsided by **165x**: 29.81% of pixels elect
+frame **0**, only 0.18% elect frame 175. Neither "under-bracketed" nor "distant
+backdrop" predicts that, so I tested a third idea -- that the naive argmax breaks
+ties toward the lowest index in flat regions. **That is refuted, and in the
+opposite direction:** frame-0 election runs at 6.39% in the lowest-contrast
+decile and **49.98%** in the highest, a 7.8x concentration in *high*-contrast
+pixels, with a shuffled-map null control reading 1.01x.
+
+Then I looked at the map (`C:\dev\strehl-out\ORCH-flowers\boundary-map.png`),
+and the answer was immediate and was in none of the numbers:
+
+> **The boundary pixels are thin curved ribbons tracing the petal edges.**
+> They are not a region of the scene. They are *contours*.
+
+That is the occlusion population. At an overlapping petal edge the pixel is a
+two-layer composite of a near petal and whatever lies behind it, **no frame
+contains a clean measurement of it**, the focus response has no interior
+optimum, and the election runs to the end of the range. It lands on frame 0
+because that is where the search bottoms out, not because anything is in focus
+there.
+
+This independently reproduces, on a different stack and by a different method,
+M96's finding that pixels with disconnected competitive sets form *"thin
+contours lying exactly along depth and occlusion boundaries"*.
+
+**So `flowers-cpl` is not badly shot. It is geometrically hard.** A flower of
+overlapping petals has enormously more occluding edge per unit area than a bee
+or a leaf, which is exactly why it reads 33.74% where `leaf-2-cpl` reads 0.12%.
+Shooting a wider bracket would not have moved it, because the missing
+information is not at either end of the sweep -- it is not in any frame.
+
+### What this changes
+
+- **`boundary %` is closer to an occlusion detector than a coverage statistic.**
+  It should not be read as a verdict on your bracketing, and this section no
+  longer does.
+- **Subject choice is a real variable.** Deeply interleaved, self-occluding
+  subjects are the hard case for *every* stacker, this one included. That is
+  worth knowing before you blame a render.
+- **It hands the occlusion work a large, visible, real-photograph test
+  population**, which it did not previously have.
+- Genuine bracket-coverage failure would look different: boundary pixels filling
+  a contiguous *region* rather than tracing contours, and concentrated in the
+  low-contrast decile rather than the high one. Both are now measurable, so the
+  distinction can be made rather than guessed.
+
+### The methodological note, because it cost me two wrong answers
+
+The decile ratio came back at **0.13x** and my pre-registered bar read that as
+*"independent of contrast -- hypothesis (1) survives"*. **The bar was one-sided
+and I had written it assuming the effect could only run one way**, so it
+reported a 7.8x dependence as a null. The number was not merely uninformative,
+it was actively misleading, and the picture overruled it in about one second.
+Second time in one night that a number lost to an image; see fact 1359, where a
+Laplacian sharpness metric rated a visible mosaic artifact 2.73x sharper than
+the correct render.
+
+### Related
+
+- Fact 1357: the 281x separation and the prediction registered before it.
+- Fact 1358: the `--gate 0` control that exonerates the merge.
+- **Fact 1360: the boundary population is occlusion contours** -- the 165x
+  frame-0/frame-last asymmetry, the 7.8x concentration in high-contrast pixels
+  with a 1.01x null, and the map that settled it.
+- **Fact 1361: this section's original advice, withdrawn.**
+- Fact 1362: the one-sided bar that reported a 7.8x effect as a null.
+- Fact 1359: a Laplacian sharpness metric rated selection **2.73x sharper** than
+  the correct render on this same crop, because selection's excess energy is
+  visible polygonal patchwork. Do not judge these stacks by a sharpness number.
