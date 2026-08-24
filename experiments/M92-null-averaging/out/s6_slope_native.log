@@ -1,0 +1,104 @@
+==============================================================================
+M92 S6 -- slope-native exponent, from the matrices S2/S3 already wrote.
+  alpha_px   : primary, mean of per-ROI px, RMS about 0
+  alpha_b    : SLOPE-NATIVE, mean of per-ROI OLS slopes, RMS about 0
+  alpha_sqrt : the pre-registered variant, sqrt(|mean slope|)
+  DERIVED prediction under independence: alpha_b ~ 0.5,
+  alpha_px ~ 0.5, alpha_sqrt ~ 0.25 = alpha_b / 2.
+==============================================================================
+                              matrix  ROIs  alpha_px   alpha_b  alpha_sqrt   a_b/2   ratio
+                109MSDCF_A2_disjoint    24    0.1180    0.1147      0.0102  0.0573   0.177
+                 109MSDCF_A2_overlap    24    0.1109    0.1276      0.0330  0.0638   0.517
+               109MSDCF_SYN_disjoint    24    0.3747    0.3664      0.1362  0.1832   0.744
+                109MSDCF_SYN_overlap    24    0.2832    0.2802      0.1318  0.1401   0.941
+                112MSDCF_A2_disjoint    24    0.2538    0.3439      0.0795  0.1720   0.462
+                 112MSDCF_A2_overlap    24    0.2695    0.2648      0.1271  0.1324   0.960
+               112MSDCF_SYN_disjoint    24    0.4836    0.4822      0.2038  0.2411   0.845
+                112MSDCF_SYN_overlap    24    0.3135    0.3214      0.1484  0.1607   0.923
+          wrapped-text-1_A2_disjoint    24    0.1591    0.2268      0.0707  0.1134   0.623
+           wrapped-text-1_A2_overlap    24    0.1479    0.1693      0.0597  0.0846   0.706
+         wrapped-text-1_SYN_disjoint    24    0.5052    0.4975      0.2305  0.2488   0.927
+          wrapped-text-1_SYN_overlap    24    0.3113    0.3121      0.1459  0.1560   0.935
+                       109MSDCF_A1_1    24    0.4960    0.4675      0.2009  0.2338   0.859
+                       109MSDCF_A1_2    24    0.4140    0.3927      0.1539  0.1964   0.783
+                       109MSDCF_A1_3    24    0.5367    0.5018      0.1998  0.2509   0.796
+                      109MSDCF_A1f_2    24       nan       nan      0.1589     nan     nan
+                       112MSDCF_A1_1    24    0.4734    0.4720      0.2003  0.2360   0.849
+                       112MSDCF_A1_2    24    0.4792    0.4930      0.2082  0.2465   0.845
+                       112MSDCF_A1_3    24    0.4997    0.4869      0.2061  0.2435   0.846
+                 wrapped-text-1_A1_1    24    0.4966    0.4896      0.2227  0.2448   0.910
+                 wrapped-text-1_A1_2    24    0.4832    0.4810      0.2225  0.2405   0.925
+                 wrapped-text-1_A1_3    24    0.4730    0.4665      0.2135  0.2333   0.915
+                wrapped-text-1_A1f_2    24    0.4801    0.4727      0.2122  0.2364   0.898
+
+  across 23 matrices:  alpha_b  median nan  range nan..nan
+                             alpha_px median nan  range nan..nan
+    alpha_sqrt / (alpha_b/2): median nan  range nan..nan   (1.000 = the variant is pure arithmetic)
+
+==============================================================================
+  CROSS-ROI CORRELATION, two estimators and a draw-level bootstrap.
+  `all-finite` drops any ROI with a single NaN and so selects ROIs;
+  `pairwise` keeps every ROI and uses joint-finite draws per pair.
+  The interval is a 1000-sample bootstrap over DRAWS (pairs share
+  ROIs, so an across-pair standard error would overstate precision).
+==============================================================================
+                              matrix   NaN%  r all-fin  npair  r pairwise  npair            boot 95% CI
+                109MSDCF_A2_disjoint   38.7   +0.65921      1    +0.24858    271  [+0.54144,+0.74762]
+                 109MSDCF_A2_overlap   46.2       +nan      0    +0.15406    276  [    +nan,    +nan]
+               109MSDCF_SYN_disjoint    3.3   -0.00030    136    +0.00055    276  [-0.01437,+0.01485]
+                109MSDCF_SYN_overlap    4.7   +0.14204     28    +0.09400    276  [+0.08704,+0.19593]
+                112MSDCF_A2_disjoint    2.1   +0.17779    210    +0.20644    276  [+0.14360,+0.21695]
+                 112MSDCF_A2_overlap    0.0   +0.14154    276    +0.14154    276  [+0.10215,+0.18308]
+               112MSDCF_SYN_disjoint    0.0   +0.00599    276    +0.00599    276  [-0.00540,+0.01871]
+                112MSDCF_SYN_overlap    0.0   +0.10630    276    +0.10630    276  [+0.07812,+0.13528]
+          wrapped-text-1_A2_disjoint    0.4   +0.44604    253    +0.45530    276  [+0.37362,+0.50953]
+           wrapped-text-1_A2_overlap    0.0   +0.35173    253    +0.35817    276  [+0.29176,+0.41390]
+         wrapped-text-1_SYN_disjoint    0.0   -0.00227    276    -0.00227    276  [-0.01214,+0.00715]
+          wrapped-text-1_SYN_overlap    0.0   +0.10028    276    +0.10028    276  [+0.07048,+0.13357]
+                       109MSDCF_A1_1    0.4   -0.01577    253    -0.01346    276  [-0.02329,-0.00817]
+                       109MSDCF_A1_2    3.7   -0.00531    120    +0.00166    276  [-0.01982,+0.01240]
+                       109MSDCF_A1_3   17.9   -0.02080     45    -0.00010    275  [-0.03990,+0.00595]
+                      109MSDCF_A1f_2   29.7   -0.02451     21    -0.00578    241  [-0.05180,+0.00632]
+                       112MSDCF_A1_1    0.0   +0.00302    276    +0.00302    276  [-0.00730,+0.01391]
+                       112MSDCF_A1_2    0.0   +0.01068    276    +0.01068    276  [-0.00160,+0.02400]
+                       112MSDCF_A1_3    0.0   -0.00483    276    -0.00483    276  [-0.01334,+0.00475]
+                 wrapped-text-1_A1_1    0.0   +0.00017    276    +0.00017    276  [-0.00883,+0.01031]
+                 wrapped-text-1_A1_2    0.0   +0.00348    276    +0.00348    276  [-0.00886,+0.01659]
+                 wrapped-text-1_A1_3    0.0   +0.00582    276    +0.00582    276  [-0.00432,+0.01734]
+                wrapped-text-1_A1f_2    0.0   +0.00124    276    +0.00124    276  [-0.00920,+0.01222]
+
+  pairwise rbar across 23 matrices: median +0.00582, range -0.01346..+0.45530   (material common mode is rbar >= 0.10)
+
+==============================================================================
+  WHAT IS THE COMMON MODE?  Removing the per-draw mean across ROIs.
+  If the coupling is a single per-draw global scalar -- one noise
+  realisation that is simply louder on some draws than others --
+  then subtracting mean_j d[j,r] from every d[i,r] must restore
+  alpha to ~0.5 and rbar to ~ -1/(m-1).  If a spatially structured
+  component survives, alpha stays depressed and that structure is
+  the real obstacle.
+==============================================================================
+                              matrix    alpha  a demean      rbar  r demean  -1/(m-1)  global %
+                109MSDCF_A2_disjoint   0.1180    6.6009  +0.24858  -0.05823  -0.04348     35.97
+                 109MSDCF_A2_overlap   0.1109    6.6556  +0.15406  -0.05721  -0.04348     28.50
+               109MSDCF_SYN_disjoint   0.3747    6.8021  +0.00055  -0.03798  -0.04348      4.36
+                109MSDCF_SYN_overlap   0.2832    6.7445  +0.09400  -0.04537  -0.04348     12.83
+                112MSDCF_A2_disjoint   0.2538    6.7340  +0.20644  -0.02527  -0.04348     22.70
+                 112MSDCF_A2_overlap   0.2695    6.6986  +0.14154  -0.04110  -0.04348     17.80
+               112MSDCF_SYN_disjoint   0.4836    6.8008  +0.00599  -0.03817  -0.04348      4.71
+                112MSDCF_SYN_overlap   0.3135    6.7211  +0.10630  -0.04092  -0.04348     13.60
+          wrapped-text-1_A2_disjoint   0.1591    6.6541  +0.45530  -0.03187  -0.04348     45.47
+           wrapped-text-1_A2_overlap   0.1479    6.6463  +0.35817  -0.03758  -0.04348     37.91
+         wrapped-text-1_SYN_disjoint   0.5052    6.7901  -0.00227  -0.03982  -0.04348      4.00
+          wrapped-text-1_SYN_overlap   0.3113    6.7328  +0.10028  -0.04165  -0.04348     13.79
+                       109MSDCF_A1_1   0.4960    6.7760  -0.01346  -0.03560  -0.04348      3.27
+                       109MSDCF_A1_2   0.4140    6.7984  +0.00166  -0.03966  -0.04348      4.42
+                       109MSDCF_A1_3   0.5367    7.0641  -0.00010  -0.05453  -0.04348      4.26
+                      109MSDCF_A1f_2      nan       nan  -0.00578  -0.07492  -0.04348      4.50
+                       112MSDCF_A1_1   0.4734    6.8043  +0.00302  -0.03898  -0.04348      5.04
+                       112MSDCF_A1_2   0.4792    6.8008  +0.01068  -0.03756  -0.04348      5.00
+                       112MSDCF_A1_3   0.4997    6.8389  -0.00483  -0.03737  -0.04348      3.92
+                 wrapped-text-1_A1_1   0.4966    6.7873  +0.00017  -0.03969  -0.04348      4.32
+                 wrapped-text-1_A1_2   0.4832    6.7936  +0.00348  -0.03930  -0.04348      4.55
+                 wrapped-text-1_A1_3   0.4730    6.7993  +0.00582  -0.04063  -0.04348      4.91
+                wrapped-text-1_A1f_2   0.4801    6.7823  +0.00124  -0.03824  -0.04348      4.45

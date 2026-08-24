@@ -1,0 +1,39 @@
+==============================================================================
+M92 S1 -- build half-merge cells.  PREREGISTRATION sections 1, 3, 8.
+==============================================================================
+grid disjoint : 24 ROIs, padded footprints disjoint = True
+grid overlap  : 24 ROIs, padded footprints disjoint = False
+
+==============================================================================
+112MSDCF: 62 frames, EXIF ISO 500, g = 1.14469 DN/e-, read noise 1.2392 e-
+  LOADER CONTROL vs m57lib.load_cube: max |cube diff| = 0.000e+00 DN, max |half-merge diff| = 0.000e+00 DN (10s)
+    decoded 20/62 (9s)
+    decoded 40/62 (17s)
+    decoded 60/62 (26s)
+  decoded 62 frames in 27s, plane (2344, 3514), 2.04 GB
+  disjoint : 24 cells in 26s   n_eff(0.50) 4.66-6.71   n_eff(0.99) 1.45-2.08   hp_sd 15.273-61.225
+  overlap  : 24 cells in 26s   n_eff(0.50) 5.17-6.25   n_eff(0.99) 1.53-2.08   hp_sd 21.838-39.644
+  M57 cell 112MSDCF/flat @ (2747,32): level 105.3 DN  n_eff 4.773  sigma_merged ISO500 3.5829 DN  ISO500 3.5829 DN  ratio 1.0000x
+  M57 cell 112MSDCF/detail @ (1671,1373): level 244.4 DN  n_eff 5.348  sigma_merged ISO500 5.1325 DN  ISO500 5.1325 DN  ratio 1.0000x
+
+==============================================================================
+109MSDCF: 22 frames, EXIF ISO 160, g = 0.36630 DN/e-, read noise 4.2000 e-
+    decoded 20/22 (9s)
+  decoded 22 frames in 9s, plane (2344, 3514), 0.72 GB
+  disjoint : 24 cells in 15s   n_eff(0.50) 3.24-6.09   n_eff(0.99) 1.09-1.63   hp_sd 13.011-51.679
+  overlap  : 24 cells in 15s   n_eff(0.50) 3.16-3.98   n_eff(0.99) 1.13-1.28   hp_sd 12.871-21.183
+  M57 cell 109MSDCF/centre @ (916,1501): level 453.1 DN  n_eff 7.169  sigma_merged ISO500 6.0259 DN  ISO160 3.4263 DN  ratio 1.7587x
+
+==============================================================================
+wrapped-text-1: 130 frames, EXIF ISO 100, g = 0.22894 DN/e-, read noise 4.2000 e-
+    decoded 20/130 (9s)
+    decoded 40/130 (17s)
+    decoded 60/130 (25s)
+    decoded 80/130 (34s)
+    decoded 100/130 (43s)
+    decoded 120/130 (51s)
+  decoded 130 frames in 55s, plane (2344, 3514), 4.28 GB
+  disjoint : 24 cells in 47s   n_eff(0.50) 1.74-4.96   n_eff(0.99) 1.01-1.46   hp_sd 31.154-127.307
+  overlap  : 24 cells in 46s   n_eff(0.50) 2.12-3.49   n_eff(0.99) 1.02-1.13   hp_sd 33.210-55.770
+
+wrote out/s1_cells.json  (277s)

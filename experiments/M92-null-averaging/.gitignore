@@ -1,0 +1,6 @@
+# Cached half-merges and per-draw dsig matrices. Hundreds of MB of derived
+# binaries, regenerable from `src/s1_build_cells.py` and the S2/S3 arms.
+# AGENTS rule 20: generated heavy artefacts never enter Git, including LFS.
+out/cache/
+__pycache__/
+*.pyc
