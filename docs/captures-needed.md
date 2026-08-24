@@ -40,8 +40,13 @@ not exist yet.** Measured, not guessed:
   of the 2.98-sensel correction sit at or below a measured radius; **the remaining
   0.63 is the model's shape, not data.**
 - **Every fitted region was red.** The blue coefficient is not estimated as zero —
-  it is **not estimated at all**. Real fringes have a warm edge *and* a cool edge,
-  so at present at most half of each fringe can be corrected.
+  it is **not estimated at all**. **This is less damaging than I first wrote here,
+  and the correction is worth stating carefully:** the red/cyan fringes you can
+  see are *red misregistration*, because cyan is simply the absence of red. A
+  radial scale error in red puts a red edge on one side of a boundary and a cyan
+  edge on the other, so **correcting red alone removes both**. The missing blue
+  coefficient does not halve that fix — it bites on **blue/yellow** fringing,
+  which is a separate defect.
 
 Both of your best subjects (`tweezers-cpl`, `bee-3-cpl`) are macro subjects in a
 band with defocused background past r ~ 0.7. **Their corners are not measured
@@ -130,9 +135,12 @@ settles this, and three further things that only a real capture can reach:
    finding that can be an artifact of a single subject's structure.
 3. **Blue is still not estimated at all** — not by the original fit, and not by
    me: **0 of 10 rings** cleared my noise floor, so I have no claim in either
-   direction. Real fringes have a warm edge *and* a cool edge. At present at most
-   half of each fringe can be corrected, and no amount of reprocessing changes
-   that.
+   direction. **Correcting an earlier version of this note:** this does *not*
+   mean only half of each fringe can be fixed. The red/cyan fringing in your
+   renders is red misregistration — cyan is the absence of red — so the red
+   coefficient addresses both sides of it. What the missing blue coefficient
+   leaves untouched is **blue/yellow** fringing, a distinct defect. §24 is still
+   the capture that would measure it.
 
 And a fourth reason that emerged from my own failure tonight: **the first metric
 I built for this measured scene hue instead of chromatic aberration.** It
