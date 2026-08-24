@@ -1374,3 +1374,125 @@ because it is empty is not a corner that has been checked.**
   partial would have saved the brief's expectation of "at most a partial fix".
 - **D28.** An artefact-free corner in a subject with an empty corner is not evidence.
   Separate "looked and saw nothing wrong" from "there was something there to look at".
+
+## 19. The cache-key answer, and what the fringe measurement actually says
+
+Two deliverables the orchestrator asked for by name. One of them is an answer it
+did not expect, and one of them revises a claim I made myself in §18.
+
+### 19.1 The cache key: `STREHL_FIX_CA` must NOT be added to `SOLVE_ENV`
+
+The orchestrator's instruction was: *"Check it, state the answer explicitly, and
+if it is not in the key, add it."* It is not in the key. **I am not adding it,
+and I believe adding it would be a defect.**
+
+`SOLVE_ENV` is `["STREHL_SMOOTH", "STREHL_SMOOTH_HUBER"]`, and
+`solve_config_key` hashes the reference, the spans, the resampler debug string
+and each `SOLVE_ENV` variable into the sidecar path. The contract is stated in
+its own doc comment: **anything *the solve* reads must be in the key.** So the
+question is not "does the render read `STREHL_FIX_CA`" -- it plainly does -- but
+**does the solve?**
+
+It does not. `active_profile()` is read at exactly one site,
+`warp_frame_in_place` in `align_cmd.rs`. Its callers are:
+
+| caller | what it is |
+| --- | --- |
+| `merge_cmd.rs:968` | the merge -- the only production consumer |
+| `align_cmd.rs:1337/1375/1377/1393/1394` | the W8 gate: tests and a demo |
+
+`solve_map` is not among them. The solve estimates warps from the decoded
+frames; it never calls the gather, so no CA setting can change the `WarpMap` it
+produces. Adding `CA_ENV` to `SOLVE_ENV` would therefore change the sidecar path
+for a variable that provably cannot change the sidecar's contents -- forcing a
+full re-solve on every CA toggle, for an identical result.
+
+**The trap the orchestrator described is real but lands on the other side.** Its
+fear was that a CA-ON run would silently load a warp map solved with CA OFF and
+so measure a null. That is exactly what my A/B did -- one sidecar, solved with
+`STREHL_FIX_CA` unset, reused unchanged by all five arms -- and the ON arm still
+rendered to a **different hash** (`E9580E8A…` vs `E400A63A…`). A shared,
+CA-unaware sidecar is not merely harmless here; **the A/B is only clean because
+of it**, since it holds the solve fixed and leaves the gather as the one free
+variable. This is the opposite of the resampler defect at facts 1469/1476, where
+the resampler *is* read by the solve.
+
+**Caveat I cannot discharge from my lane.** This rests on `warp_frame_in_place`
+being the only site that reads `active_profile()`, which is true today because I
+wrote both. It is an invariant maintained by nothing but that fact. **The right
+guard is a tripwire test asserting `solve_config_key` is invariant to `CA_ENV`
+with a comment naming the reason**, so that whoever later makes the solve
+CA-aware is forced to update `SOLVE_ENV`. I have not added it: `align_cmd.rs`
+was handed to M109 and re-taking it to add a test would re-block a running
+agent. It is a one-function patch and I recommend it be routed.
+
+### 19.2 R9/R9b: better where it matters, with a cost where it does not
+
+§18 reported my by-eye read as *"better, not merely different"*. That read was
+made at 1:1 on the spicule crops and I stand by what it describes, but it was an
+eye on the strong fringes only. **The aggregate does not support the confidence I
+attached to it, and I am revising it down.**
+
+I registered four bars (`r9_fringe_width.py`) before measuring, on the same
+299-frame `bee-3-cpl` arms. Edge mask taken from the **off** arm only, so both
+arms are scored on identical pixels; chroma threshold absolute and identical, so
+the statistic measures extent rather than amplitude.
+
+| bar | off | on | change |
+| --- | --- | --- | --- |
+| W1 fringe area (px over threshold, ≤3px from an edge) | 823 393 | 739 383 | **−10.20%** |
+| W2 chroma-weighted width | 1.3752 px | 1.4233 px | **+3.50%** |
+| W3 mean \|R−Y\| near edges | 0.041477 | 0.032909 | **−20.66%** |
+| W4 control: mean \|B−Y\| (no coefficient) | 0.060045 | 0.058624 | −2.37% |
+
+**W3's registered bar was ">90% of falling pixels keep their sign". It failed at
+75.1%**, with a 25.14% sign-flip rate, and the script's own pre-registered
+verdict line printed `RECOLOURED, NOT REMOVED`. I report that as it stands.
+
+R9b then asked the one question that bar cannot answer: *where* do the flips
+happen? Its Q1 bar also failed (flipped pixels started at 0.0226 vs preserved at
+0.0379, a ratio of 1.67× against a bar of 2×). But the decile decomposition is
+unambiguous and monotone:
+
+| decile of \|R−Y\|_off | mean change | flip rate |
+| --- | --- | --- |
+| 1 (0.00000–0.00632) | **+583%** | 44.7% |
+| 4 (0.01934–0.02634) | +15% | 26.8% |
+| 5 (0.02634–0.03392) | −3.5% | 23.9% |
+| 7 (0.04253–0.05274) | −24% | 19.4% |
+| 10 (0.08638–0.38582) | **−54.08%** | 14.1% |
+
+**The correction removes fringes and adds faint chroma to near-neutral pixels.**
+Where there is an actual fringe -- the top decile, `|R−Y| ≥ 0.086` -- the
+deviation falls by **54%** and only 14% of pixels flip sign. Where there was
+essentially no chroma to begin with, a sub-pixel red shift on textured detail
+manufactures a little. That is the honest cost of moving one channel and it is
+not an artifact of the metric.
+
+It also explains W2. The +3.50% "widening" is a **selection effect on a shrinking
+set**: as the strongest, closest-to-edge fringe pixels drop below the absolute
+threshold, the mean distance of the survivors rises. W2 conditions on a
+population W1 has just changed, so it cannot be read as a widening. **That is a
+defect in my own bar, not a finding** -- W2 should have been computed on a fixed
+pixel set, and I did not see it until the decile profile forced the question.
+
+W4 bounds the instrument usefully: blue has no coefficient, and moved −2.37%
+against red's −20.66%, an order of magnitude smaller. The effect is red-specific,
+as the mechanism requires.
+
+**So the answer to "better, worse, or merely different" is: better, and not
+merely different -- but the aggregate improvement (−20.7%) is roughly a third of
+the improvement at the fringes themselves (−54%), because the near-neutral
+population moves the other way.** A comparison sheet cropped to high-contrast
+edges will overstate the correction; a whole-frame chroma average will understate
+it. Both numbers should travel together.
+
+### 19.3 `HEAD` builds
+
+Per fact 1475, checked against the commit and not the working tree, in an
+isolated `git worktree` at `93f10a5` so that no agent's uncommitted files
+participate:
+
+```
+cargo check --workspace --all-targets   ->  EXIT=0
+```
