@@ -16,7 +16,7 @@
 | linear binned TIFF | SHA-256 `41974F2A…F699` | SHA-256 `41974F2A…F699` — **identical** |
 
 Three things in the dispatch's framing were wrong, and one of them mattered a
-lot. They are argued in §2, §3 and §6.
+lot. They are argued in §2, §3, §6 and §7.
 
 - **The architecture change the brief asked for was already built.** The merge
   has estimated all four CFA sites at full resolution since M18. Only the
@@ -25,6 +25,14 @@ lot. They are argued in §2, §3 and §6.
   field is not the one carrying the data; `color_matrix` is. A pipeline reading
   only the obvious field would have emitted camera-native RGB forever.
 - **No colour-accuracy claim is possible from this corpus**, and none is made.
+- **The optical cutoff is not where the arithmetic put it.** Real contrast is
+  measurable to ≈74 cy/mm, not 86.3 — which bounds the corpus's dominant
+  uncertainty at `p ≥ 0.82` and excludes the bottom quarter of its interval.
+
+**The resolution gain is stated as a recovered band, never as megapixels**: the
+binned path had Nyquist 48.8 cy/mm and the optics deliver measurable contrast
+to ≈74 cy/mm, so full-resolution output recovers ~0.6 of an octave of real
+detail with MTF falling throughout it.
 
 ---
 
@@ -144,7 +152,7 @@ camera_to_srgb =  [ 1.636062  -0.448619  -0.187443 ]
 **This is not CAT02 or any chromatic adaptation transform.** Adaptation is done
 by von Kries scaling in camera space — that is what the as-shot WB *is*. This
 is the standard raw-developer approximation and its residual error is discussed
-in §7.
+in §8.
 
 ## 4. MEASURED — the required proof: the measurement path is unchanged
 
@@ -321,7 +329,125 @@ correct behaviour: box replication is broadband. The control was wrong, not the
 result. Recorded because rule 20 is about controls that can fail, and this one
 failed by being unsound.
 
-## 7. The colour claim that is NOT being made
+## 7. MEASURED — the optical cutoff, and what the spectrum actually says
+
+The orchestrator supplied a diffraction budget (m ≈ 2.762, N marked 5.6 wide
+open with the TC, p = 1) predicting `f_c = 86.3 cy/mm` against a sensor Nyquist
+of 97.7 and a binned Nyquist of 48.8. **I re-derived all of it independently
+and it reproduces exactly**: N_eff 21.067, Airy diameter 28.27 µm = 5.52 sensor
+px, f_c 86.30, 88.4% of Nyquist, and the binned→cutoff gap is 0.82 octaves.
+
+Above a true cutoff the diffraction MTF is *identically zero*, so the spectrum
+there is artifact and noise only. That makes the cutoff **measurable from the
+merged output itself**, at the cost of one FFT and no new capture.
+
+### Method and its traps
+
+Linear light only (the sRGB curve would fold harmonics into the band under
+test); green channel (the physically sampled one); Hann window; ROIs rejected
+if they contain a clipped pixel (clipping makes harmonics); **and the image
+border excluded** — the first version of this script picked y = 0 and would
+have measured the demosaic's own mirror border rather than the optics. Median
+of six unclipped 512×512 ROIs. Control: the binned output upsampled bicubic
+2×, which **cannot contain anything real above 48.8 cy/mm**, so whatever it
+shows there is the interpolation's own signature.
+
+### Result 1 — the prize is real, and here is its size
+
+| band | full-res | bicubic control | ratio |
+|---|---:|---:|---:|
+| 10 – 48.8 cy/mm | 1.79e-2 | 1.57e-2 | 1.14× |
+| **48.8 – 86.3 cy/mm** | **7.24e-5** | 1.34e-5 | **5.4×** |
+
+Median over the six ROIs: **3.70×**, range 2.84–5.41×. The control validates
+the method — its energy above 48.8 collapses by nine orders of magnitude
+(2.1e-6 at 49 cy/mm → 3.3e-10 above 86). **Directive (a) is confirmed
+quantitatively: the binned path was discarding real optical detail across
+0.82 octaves.**
+
+### Result 2 — the measured cutoff is NOT 86.3, and that beats the arithmetic
+
+The spectrum falls monotonically and then **flattens into a plateau at a median
+of 74.3 cy/mm** (range 69.7–80.9 over six ROIs). A band-limited optical image
+keeps falling toward its cutoff; a flat plateau is a floor, not optics. So real
+optical contrast is detectable up to **≈74 cy/mm** and is masked above that.
+
+This is a lower bound on `f_c`, and it **constrains the corpus's flagged
+dominant uncertainty**. Detecting real contrast at `f_obs` requires
+`N_eff ≤ 1/(λ·f_obs)`, hence `p ≥ m/(N_eff_max/N − 1)`:
+
+| f_obs | N_eff max | implied p |
+|---:|---:|---:|
+| 69.7 (most conservative ROI) | 26.09 | **p ≥ 0.755** |
+| 74.3 (median) | 24.47 | **p ≥ 0.820** |
+| 80.9 (best ROI) | 22.47 | **p ≥ 0.917** |
+
+**The bottom quarter of the flagged ±38% interval on `p` is excluded by
+measurement.** `p = 0.62` would put `f_c` at 59.5 cy/mm, and there is
+unambiguous falling optical signal well above that. No upper bound follows —
+aberrations wide open behind a 2× teleconverter can kill contrast before the
+diffraction limit, so signal dying at 74 does not prove `f_c = 74`.
+
+### Result 3 — the falsifier fires, and the reason is not the demosaic
+
+Energy above 86.3 cy/mm is **6.5e-6, about 25 000× the bicubic control**. By
+the letter of the proposed falsifier, that is a fail. But the falsifier as
+stated **cannot distinguish three causes**, and the distinction is the whole
+question:
+
+1. **Sensor noise** — ruled out. The plateau in detailed ROIs sits **25–40×
+   above the flat-region noise floor of the same frame**, while photon-noise
+   scaling predicts **0.87×** (the detail ROIs are *darker*). The floor scales
+   with local detail, not with brightness, so it is not sensor noise.
+2. **The demosaic** — measured in isolation and largely exonerated; see below.
+3. **The merge's per-quad selection** — the remaining candidate. Adjacent quads
+   may elect different source frames; in detailed regions that puts a seam at
+   quad granularity, which is broadband and detail-correlated. In flat regions
+   all frames agree, so seams produce nothing — exactly the observed pattern.
+   **ARGUED, not isolated by this milestone.** It is a real follow-up and it
+   belongs to whoever owns `merge.rs`.
+
+### The permanent invariant, in the codebase
+
+`it_does_not_manufacture_energy_above_the_scenes_band_limit` isolates the
+demosaic on a synthetic scene band-limited **by construction** below the
+red/blue lattice Nyquist (`N/4`), so nothing is aliased by the mosaic and a
+perfect demosaic would return the scene exactly. Probes sit where the period-2
+CFA carrier lands. MEASURED:
+
+| arm | super-band amplitude |
+|---|---:|
+| raw mosaic (POSITIVE CONTROL, must fire) | 0.1500 |
+| Malvar-He-Cutler | **0.002463** |
+| suppression | **61×** |
+
+MHC leaves 4.1% of one scene component, 0.25% of full scale. **The demosaic is
+not the main source of the real image's super-cutoff floor.**
+
+**A fixture that could not fire, caught by its own guard.** The first version
+used near-neutral channel gains (1.00/0.95/1.05). The control measured 0.00075
+and did not fire — a nearly neutral scene barely modulates the CFA, so there
+was no carrier to suppress and the bar above it would have been vacuous. The
+rule-36 guard failed the test rather than letting it pass silently. Gains are
+now 1.0/0.8/1.2.
+
+### One structural fact worth recording
+
+On an RGGB grid, red and blue are sampled at pitch `2d` — their Nyquist is
+**48.8 cy/mm**, exactly the binned Nyquist. Green sits on a quincunx and
+reaches 97.7 on-axis. **The entire prize band 48.8–86.3 cy/mm is therefore a
+band where green is adequately sampled and red and blue are not.** Luminance
+detail recovered there is real; chroma detail there is *inferred* from green by
+the colour-difference rule. That is a correct and honest description of what
+full-resolution output does and does not give you.
+
+### Wording, per directive (b)
+
+No megapixel claim is made anywhere in this report or in the CLI's output. The
+honest statement is a recovered band — **48.8 → ~74 cy/mm measured, ~86 cy/mm
+predicted ceiling** — with MTF falling throughout it.
+
+## 8. The colour claim that is NOT being made
 
 **There is no grey card in any frame of this corpus, the scene was shot through
 a circular polariser, and the light was uncontrolled. No colour-accuracy claim
@@ -360,7 +486,7 @@ Distinguishing them needs a grey card in frame. That is a capture request, and
 it is **not** filed here because `docs/captures-needed.md` is outside M85's
 ownership — it needs filing by whoever owns that file.
 
-## 8. MEASURED — the control that was made to fail
+## 9. MEASURED — the control that was made to fail
 
 Rule 20: a colour transform that cannot be shown to be doing anything is not
 verified.
@@ -398,24 +524,30 @@ test exists. Stating it is rule 20's actual requirement.
 to `C0CBAE2F…6037`; rebuilt; re-run; output SHA-256 `2A072C3E…9DB5` identical
 to the pre-plant control. **Byte-planted and byte-restored.**
 
-## 9. Deliverable
+## 10. Deliverable
 
 `C:\dev\strehl-out\M85-before-after\` — same crop, three panels each:
 
 - `claw-0-side-by-side.png`, `eye-0-side-by-side.png` — before / colour /
   colour + resolution, captioned so they cannot be mixed up later.
 - `full-1-before.png`, `full-2-after.png` — whole frame.
+- **`spectrum-optical-cutoff.png`** — the §7 acceptance test: full-resolution
+  vs the bicubic control vs the noise floor, with the binned Nyquist, the
+  predicted cutoff and the measured plateau onset marked. The control's
+  nine-order collapse above 48.8 cy/mm is what makes the blue curve's
+  continuation meaningful.
 
-## 10. Verification performed
+## 11. Verification performed
 
 | gate | result |
 |---|---|
 | `cargo build --release -p strehl-cli` | clean |
-| `cargo test -p strehl-core -p strehl-raw -p strehl-cli --lib --bins` | **238 passed, 0 failed, 1 ignored** |
+| `cargo test -p strehl-core -p strehl-raw -p strehl-cli --lib --bins` | **253 passed, 0 failed, 1 ignored** |
 | `strehl-raw` `--ignored` real-capture matrix test | passed |
 | `cargo clippy -p strehl-core -p strehl-raw --all-targets -- -D warnings` | clean |
 | `cargo clippy -p strehl-cli --bins --tests -- -D warnings` | clean |
 | `cargo fmt --check` | clean **on every file M85 owns** |
+| binned linear SHA-256, re-proved after the §7 work | `41974F2A…F699`, unchanged |
 
 **Two failures that are not M85's**, reported rather than touched, per the
 ownership rule: `crates/strehl-cli/examples/m86-align.rs` has `rustfmt` diffs
@@ -423,7 +555,35 @@ and does not compile against M86's in-flight `crates/strehl-core/src/align.rs`
 (`Cx` field mismatch at `m86-align.rs:1415`). That file belongs to M86. No
 alignment code appeared in any M85-owned file.
 
-## 11. Candidate facts
+A third, also not M85's: **`crates/strehl-core/src/noise.rs` and `profile.rs`
+are `rustfmt`-dirty** as of M90's commit `cc67c7b`. They matter here only
+because `rustfmt` walks the module tree from `lib.rs`, so a naive
+`rustfmt --check` on an M85 file reports them. M85 did not touch either.
+
+### DISCLOSURE — a line-level sweep in `lib.rs`, and what it teaches
+
+**M85's commit `e59f1b0` contains one line that is not M85's: `pub mod align;`
+in `crates/strehl-core/src/lib.rs`.**
+
+M86 committed `align.rs` itself in `938c0d1` but left its module declaration
+uncommitted in the shared working tree. `git commit -- <paths>` commits the
+*full working-tree content* of each named path, so M85's edit to the same file
+carried M86's line in with it.
+
+**Rule 42 protects you from another agent's *files*. It does not protect you
+from another agent's uncommitted *lines inside a file you both must edit*.**
+The rule's own remedy applies — disclose, do not rewrite history, because a
+reset would destroy live work. The effect here is benign and arguably
+corrective: `align.rs` had been committed but undeclared, so it was not being
+compiled at all; it now is, and its tests pass. But the mechanism would have
+been just as silent had it been harmful.
+
+`lib.rs` and `main.rs` are shared registration points by construction, so this
+is structural, not a slip. The only reliable mitigations are to commit a
+registration line the moment you add it, or to make registration additive in
+separate files.
+
+## 12. Candidate facts
 
 Numbered `P1…` per the rule-28 corollary; these are proposals, not corpus
 numbers. **SYNTHESIS.md was not edited.**
@@ -443,10 +603,17 @@ numbers. **SYNTHESIS.md was not edited.**
 | **P11** | Malvar-He-Cutler beats bilinear by **+5.54 dB** on a luminance-dominant synthetic scene (reproducing the paper's ~5.5 dB claim on a different fixture) but is **5.29 dB worse** than bilinear when the three channels carry independent mid-frequency content. The advantage **inverts**, it does not merely shrink. | MEASURED |
 | **P12** | The linear binned TIFF is byte-identical before and after M85: SHA-256 `41974F2A…F699`, 49 449 626 bytes. The corpus's ~1138 facts remain valid. | MEASURED |
 | **P13** | The rendered background on `bee-3-cpl` carries an ≈8% cyan cast (R/G 0.9159, B/G 1.0665) because the camera-native background is already 5% off neutral and the matrix amplifies residual chroma ≈1.6×. Cause undetermined among illuminant mismatch, CPL transmission, and a non-neutral card. **No colour-accuracy claim is made.** | MEASURED (effect) + UNVERIFIED (cause) |
+| **P14** | In the band 48.8–86.3 cy/mm the full-resolution output holds **median 3.70×** (range 2.84–5.41×) the green power of the binned output upsampled bicubic 2×, which can hold nothing real there. The binned path was discarding real optical detail across **0.82 octaves**. | MEASURED |
+| **P15** | The merged green spectrum falls monotonically and flattens into a floor at **median 74.3 cy/mm** (range 69.7–80.9 over six ROIs). Real optical contrast is detectable to ≈74 cy/mm, not to the predicted 86.3. | MEASURED |
+| **P16** | Detecting falling optical signal at 74.3 cy/mm requires `N_eff ≤ 24.47`, hence **pupil magnification `p ≥ 0.82`** at m = 2.762, N = 5.6. This excludes the bottom ~26% of the corpus's flagged ±38% interval on `p`. No upper bound follows. | DERIVED from MEASURED |
+| **P17** | The super-cutoff floor in detailed ROIs sits **25–40× above the flat-region noise floor of the same frame**, while photon-noise scaling predicts 0.87×. It scales with local detail, not brightness, so it is **not sensor noise**. | MEASURED |
+| **P18** | On a synthetic scene band-limited below the red/blue lattice Nyquist, Malvar-He-Cutler leaves **0.002463** of super-band amplitude against the raw mosaic's **0.1500** — **61× suppression**, 0.25% of full scale. The demosaic is not the main source of P17's floor; the merge's per-quad selection seams are the remaining candidate. | MEASURED (P18a) + ARGUED (cause) |
+| **P19** | On an RGGB grid red and blue have Nyquist 48.8 cy/mm — identical to the binned Nyquist — while green's quincunx reaches 97.7 on-axis. The whole prize band 48.8–86.3 cy/mm is therefore one where **green is adequately sampled and red and blue are not**: luminance detail recovered there is real, chroma detail is inferred. | DERIVED |
+| **P20** | `git commit -- <paths>` scopes a commit to *files*, not to *lines*: it commits each named path's full working-tree content, so a concurrent agent's uncommitted edit to a **shared registration file** lands in your commit. MEASURED: `e59f1b0` carries M86's `pub mod align;`. Rule 42 is necessary and, for shared files like `lib.rs` and `main.rs`, **not sufficient**. | MEASURED |
 
-## 12. What M85 did not do
+## 13. What M85 did not do
 
-- **No colour-accuracy claim.** §7. It needs a grey card in frame.
+- **No colour-accuracy claim.** §8. It needs a grey card in frame.
 - **`argmax-baseline` got the matrix but not `--demosaic`.** `Selection` exposes
   all four planes, so it is cheap, but the baseline exists to be *free of
   interpolation artifacts* — giving it a demosaic would blunt the thing it is
@@ -457,3 +624,12 @@ numbers. **SYNTHESIS.md was not edited.**
 - **No highlight reconstruction.** The matrix's negative off-diagonals clip
   saturated colours to gamut, and §3 says where. Recovering them needs
   per-channel clipping logic that M26 mapped and nobody has built.
+- **The super-cutoff floor was not attributed.** §7 rules out sensor noise and
+  largely exonerates the demosaic (61× carrier suppression), leaving the
+  merge's per-quad selection seams as the standing candidate. Isolating it
+  needs `merge.rs`, which M85 does not own and deliberately did not touch.
+- **The analysis scripts live in scratch**, at `C:\dev\strehl-out\M85-work\`
+  (`spectrum.py`, `spectrum_plot.py`, `resolution.py`, `resolution2.py`,
+  `verify.py`, `crops2.py`), not in `experiments/`. M85's ownership explicitly
+  excludes `experiments/`, so they were not filed there; they should be moved
+  in by whoever owns that tree if the corpus wants them reproducible.

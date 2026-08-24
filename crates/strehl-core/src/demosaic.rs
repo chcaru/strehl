@@ -675,6 +675,170 @@ mod tests {
         );
     }
 
+    /// **The optical-cutoff invariant: a demosaic must not manufacture energy
+    /// above the scene's band limit.**
+    ///
+    /// M85's dispatch supplied a piece of ground truth that cost no capture:
+    /// a lens has a hard diffraction cutoff `f_c = 1/(lambda*N_eff)`, above
+    /// which the MTF is *identically zero*, not merely small. So any energy in
+    /// a rendered image above `f_c` was put there by the pipeline, not by the
+    /// optics. That is a falsifier a "sharper-looking" demosaic cannot dodge.
+    ///
+    /// Testing it on a real capture cannot separate three causes -- sensor
+    /// noise, merge seams, and the demosaic -- so this test isolates the
+    /// demosaic. The scene is band-limited **by construction** to well below
+    /// every channel's sampling limit, so a perfect demosaic would return it
+    /// exactly and *all* super-band energy is manufactured.
+    ///
+    /// Lattice geometry sets the bar. On an RGGB grid of pitch `d`, red and
+    /// blue are sampled at `2d`, so their Nyquist is **half** the full grid's;
+    /// green sits on a quincunx and reaches the full grid's Nyquist on-axis.
+    /// The scene here stays below the *red/blue* limit (`N/4` cycles), which is
+    /// the strictest, so nothing is aliased by the mosaic itself.
+    ///
+    /// The probe frequencies are not arbitrary: they are exactly where the CFA
+    /// pattern's own period-2 modulation folds each scene component, i.e.
+    /// `(N/2 +/- kx, ky)`. That is where a demosaic that has failed to suppress
+    /// the mosaic carrier will show up.
+    ///
+    /// Rule 20 -- the test ships with a **positive control that must fire**:
+    /// the un-demosaiced mosaic, which is the same data with the carrier left
+    /// in. MEASURED: the raw mosaic carries 0.1500 of super-band amplitude,
+    /// Malvar-He-Cutler 0.002463 -- a suppression of **61x**, leaving 4.1% of a
+    /// scene component's amplitude and 0.25% of full scale. If the control ever
+    /// stops failing, the measurement has gone dead and the pass above it means
+    /// nothing.
+    ///
+    /// An earlier version of this fixture used near-neutral channel gains
+    /// (1.00/0.95/1.05). The control measured 0.00075 and **could not fire** --
+    /// a nearly neutral scene barely modulates the CFA, so there was no carrier
+    /// to suppress and the bar would have been vacuous. The rule-36 guard below
+    /// caught that; the gains are now 1.0/0.8/1.2.
+    #[test]
+    fn it_does_not_manufacture_energy_above_the_scenes_band_limit() {
+        let n = 128usize;
+
+        // Scene: a sum of cosines, every one strictly inside the red/blue
+        // Nyquist radius of n/4 = 32 bins. Channels are proportional, which is
+        // the constant-chromaticity regime this algorithm is built for.
+        let comps: [(i32, i32); 5] = [(12, 0), (0, 16), (18, 14), (24, 8), (10, 26)];
+        for &(kx, ky) in &comps {
+            let r = f64::from(kx * kx + ky * ky).sqrt();
+            assert!(
+                r < (n / 4) as f64,
+                "scene component ({kx},{ky}) at radius {r} is aliased by the \
+                 red/blue lattice, so the test would measure the mosaic and \
+                 not the demosaic"
+            );
+        }
+
+        let mut truth = vec![0.0f32; n * n * 3];
+        for y in 0..n {
+            for x in 0..n {
+                let mut s = 0.0f64;
+                for &(kx, ky) in &comps {
+                    let ph = std::f64::consts::TAU
+                        * (f64::from(kx) * x as f64 + f64::from(ky) * y as f64)
+                        / n as f64;
+                    s += 0.06 * ph.cos();
+                }
+                let i = 3 * (y * n + x);
+                truth[i] = ((0.5 + s) * 1.0) as f32;
+                truth[i + 1] = ((0.5 + s) * 0.8) as f32;
+                truth[i + 2] = ((0.5 + s) * 1.2) as f32;
+            }
+        }
+
+        let data = mosaic_of(&truth, n, n);
+        let m = Mosaic {
+            data: &data,
+            width: n,
+            height: n,
+        };
+        let out = run(&m);
+
+        // Positive control: the mosaic itself, carrier and all.
+        let mut raw = vec![0.0f32; n * n * 3];
+        for y in 0..n {
+            for x in 0..n {
+                let v = data[y * n + x];
+                for c in 0..3 {
+                    raw[3 * (y * n + x) + c] = v;
+                }
+            }
+        }
+
+        // Hann-windowed projection onto one Fourier component. The window
+        // tapers the mirrored border to zero, so the border cannot leak into
+        // the band under test -- which is the whole measurement.
+        let amplitude_at = |img: &[f32], chan: usize, kx: i32, ky: i32| -> f64 {
+            let w: Vec<f64> = (0..n)
+                .map(|i| 0.5 - 0.5 * (std::f64::consts::TAU * i as f64 / n as f64).cos())
+                .collect();
+            let (mut re, mut im, mut norm) = (0.0f64, 0.0f64, 0.0f64);
+            for y in 0..n {
+                for x in 0..n {
+                    let ww = w[y] * w[x];
+                    let v = f64::from(img[3 * (y * n + x) + chan]) * ww;
+                    let ph = std::f64::consts::TAU
+                        * (f64::from(kx) * x as f64 + f64::from(ky) * y as f64)
+                        / n as f64;
+                    re += v * ph.cos();
+                    im -= v * ph.sin();
+                    norm += ww;
+                }
+            }
+            2.0 * re.hypot(im) / norm
+        };
+
+        // Where the period-2 CFA carrier lands: the carrier itself at Nyquist,
+        // and its sidebands around each scene component.
+        let probes: [(i32, i32); 8] = [
+            (64, 0),
+            (0, 64),
+            (64, 64),
+            (52, 0),
+            (0, 48),
+            (46, 14),
+            (40, 8),
+            (54, 26),
+        ];
+        let worst = |img: &[f32]| -> f64 {
+            let mut w = 0.0f64;
+            for &(kx, ky) in &probes {
+                for c in 0..3 {
+                    w = w.max(amplitude_at(img, c, kx, ky));
+                }
+            }
+            w
+        };
+
+        let mhc = worst(&out);
+        let control = worst(&raw);
+
+        // Rule 36: the fixture must actually contain the thing being measured.
+        assert!(
+            control > 0.05,
+            "the positive control did not fire: the mosaic carrier measured \
+             only {control}, so this fixture cannot detect manufactured energy \
+             and the bar below is vacuous"
+        );
+        assert!(
+            mhc < control / 50.0,
+            "Malvar-He-Cutler left {mhc} of super-band amplitude against the \
+             raw mosaic's {control}; it is not suppressing the CFA carrier"
+        );
+        // The absolute bar, MEASURED at 0.002463. Scene components have
+        // amplitude 0.06, so this is 4.1% of one component and 0.25% of full
+        // scale. Rule 30: the tolerated disagreement is asserted at its
+        // expected wrong value, not at zero.
+        assert!(
+            mhc < 0.003,
+            "manufactured super-band amplitude {mhc} exceeds the measured bar \
+             (control was {control})"
+        );
+    }
+
     /// The mirror border rule must preserve CFA parity, or every edge stencil
     /// is reading the wrong colour.
     #[test]
