@@ -1,0 +1,443 @@
+{
+  "base": {
+    "path": "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif",
+    "shape": [
+      7032,
+      4688
+    ],
+    "sha256": "d1de6c0882ded7a9e6fbfe0528e42335c83f9f88042f478c01b8556427e0af14"
+  },
+  "roi": {
+    "n_tiles": 40,
+    "tile": 256,
+    "pad": 384,
+    "tiles": [
+      [
+        2176,
+        1664
+      ],
+      [
+        640,
+        5248
+      ],
+      [
+        3456,
+        896
+      ],
+      [
+        2432,
+        1152
+      ],
+      [
+        1664,
+        5760
+      ],
+      [
+        384,
+        4736
+      ],
+      [
+        640,
+        4992
+      ],
+      [
+        384,
+        4480
+      ],
+      [
+        2176,
+        1408
+      ],
+      [
+        1408,
+        5504
+      ],
+      [
+        1408,
+        5760
+      ],
+      [
+        1152,
+        5248
+      ],
+      [
+        2944,
+        1408
+      ],
+      [
+        3200,
+        1152
+      ],
+      [
+        1152,
+        5504
+      ],
+      [
+        384,
+        4992
+      ],
+      [
+        2944,
+        896
+      ],
+      [
+        896,
+        5248
+      ],
+      [
+        3200,
+        640
+      ],
+      [
+        3712,
+        640
+      ],
+      [
+        640,
+        4736
+      ],
+      [
+        2432,
+        1408
+      ],
+      [
+        896,
+        5504
+      ],
+      [
+        2432,
+        5760
+      ],
+      [
+        1664,
+        5504
+      ],
+      [
+        3200,
+        1408
+      ],
+      [
+        896,
+        4992
+      ],
+      [
+        3200,
+        5504
+      ],
+      [
+        3200,
+        896
+      ],
+      [
+        2944,
+        1152
+      ],
+      [
+        896,
+        4736
+      ],
+      [
+        640,
+        1920
+      ],
+      [
+        1920,
+        1408
+      ],
+      [
+        2688,
+        1664
+      ],
+      [
+        2432,
+        896
+      ],
+      [
+        3712,
+        3712
+      ],
+      [
+        384,
+        4224
+      ],
+      [
+        384,
+        3968
+      ],
+      [
+        384,
+        5248
+      ],
+      [
+        2688,
+        1408
+      ]
+    ]
+  },
+  "band": {
+    "high_cyc_px": [
+      0.3,
+      0.48
+    ],
+    "low_cyc_px": [
+      0.02,
+      0.1
+    ],
+    "band_matched": true
+  },
+  "C0_arithmetic": {
+    "experiments/M95-coverage/src/x8_fix.py": {
+      "matches_head": true,
+      "sha256_disk": "3e228596f19111045de880d07cff14ddfba0a71803812d2490d75fcc1cb81053"
+    },
+    "experiments/M95-coverage/src/m95cov.py": {
+      "matches_head": true,
+      "sha256_disk": "4aae9064ad89c7846492c00ea1fc60a1965cec3a6ab7550bf84634c9e021ec1d"
+    }
+  },
+  "sidecars": {
+    "bee299": {
+      "stack-name": "bee-3-cpl",
+      "stack-digest": "8d023c0fe355d109",
+      "frames": "299",
+      "reference": "149",
+      "strategy": "S3-ba-unit",
+      "resampler": "catmull-rom",
+      "sha256": "4b56096d45128083daf110176432c2f5202d366fd6b5fe8c749112ab65475721",
+      "path": "C:\\dev\\strehl-out\\M106\\warpmap-corpus-snapshot.txt"
+    },
+    "bee299b": {
+      "stack-name": "bee-3-cpl",
+      "stack-digest": "8d023c0fe355d109",
+      "frames": "299",
+      "reference": "149",
+      "strategy": "S3-ba-unit",
+      "resampler": "catmull-rom",
+      "sha256": "4b56096d45128083daf110176432c2f5202d366fd6b5fe8c749112ab65475721",
+      "path": "C:\\dev\\strehl-out\\ORCH-gallery3\\bee-3-cpl-warpmap.txt"
+    },
+    "bee8": {
+      "stack-name": "bee-3-cpl",
+      "stack-digest": "165a1ff35968c615",
+      "frames": "8",
+      "reference": "4",
+      "strategy": "S3-ba-unit",
+      "resampler": "catmull-rom",
+      "sha256": "3158adef1b2328252b68deb53dbed53f0a495079f85c73a2cde0eaafa6fe28be",
+      "path": "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\bee-3-cpl--warpmap.txt"
+    }
+  },
+  "arms": {
+    "K1_identity_nocover": {
+      "cost_dex": -4.0611613441843276e-05,
+      "sem": 0.00280769343147167,
+      "n": 40,
+      "mean_step": 1.0
+    },
+    "K4_integer_shift": {
+      "cost_dex": -0.0001259329659338948,
+      "sem": 0.002307577368798259,
+      "n": 40,
+      "mean_step": 1.0
+    },
+    "bee299": {
+      "NOW": {
+        "cost_dex": 0.18133608953999233,
+        "sem": 0.0030736735559081458,
+        "n": 960,
+        "mean_step": 0.9332701845849278,
+        "what": "real warp + coverage k=0.9315"
+      },
+      "FIX": {
+        "cost_dex": 0.1854992795751689,
+        "sem": 0.001678299988768909,
+        "n": 960,
+        "mean_step": 1.0019003591894018,
+        "what": "real warp, coverage removed (k=1)"
+      },
+      "SNAP": {
+        "cost_dex": -0.0002718708591169741,
+        "sem": 0.0005290201612025704,
+        "n": 960,
+        "mean_step": 1.0,
+        "what": "integer translation, unit scale"
+      },
+      "NOW_all": {
+        "cost_dex": 0.18238281347093238,
+        "sem": 0.0008625764298384866,
+        "n": 11960,
+        "mean_step": 0.9328214401797907
+      },
+      "FIX_all": {
+        "cost_dex": 0.18540185295826161,
+        "sem": 0.0004621012077563085,
+        "n": 11960,
+        "mean_step": 1.001418615329888
+      },
+      "REFONLY_NOW": {
+        "cost_dex": 0.18356843844417914,
+        "sem": 0.013159207856057608,
+        "n": 40,
+        "mean_step": 0.9315
+      },
+      "REFONLY_FIX": {
+        "cost_dex": -4.061161344217634e-05,
+        "sem": 0.002807693431472397,
+        "n": 40,
+        "mean_step": 0.9999999999999998
+      },
+      "reference_warp": {
+        "idx": 149,
+        "a_re": 0.9999999999999999,
+        "a_im": -8.673617379884035e-19,
+        "b_re": 0.0,
+        "b_im": -2.220446049250313e-16
+      },
+      "recovery_dex": -0.004163190035176567,
+      "recovery_dex_all": -0.0030190394873292337,
+      "recovery_dex_reference_frame": 0.18360905005762132,
+      "ships_bar_0p10": false,
+      "dead_bar_0p03": true
+    },
+    "bee299b": {
+      "NOW": {
+        "cost_dex": 0.18133608953999233,
+        "sem": 0.0030736735559081458,
+        "n": 960,
+        "mean_step": 0.9332701845849278,
+        "what": "real warp + coverage k=0.9315"
+      },
+      "FIX": {
+        "cost_dex": 0.1854992795751689,
+        "sem": 0.001678299988768909,
+        "n": 960,
+        "mean_step": 1.0019003591894018,
+        "what": "real warp, coverage removed (k=1)"
+      },
+      "SNAP": {
+        "cost_dex": -0.0002718708591169741,
+        "sem": 0.0005290201612025704,
+        "n": 960,
+        "mean_step": 1.0,
+        "what": "integer translation, unit scale"
+      },
+      "NOW_all": {
+        "cost_dex": 0.18238281347093238,
+        "sem": 0.0008625764298384866,
+        "n": 11960,
+        "mean_step": 0.9328214401797907
+      },
+      "FIX_all": {
+        "cost_dex": 0.18540185295826161,
+        "sem": 0.0004621012077563085,
+        "n": 11960,
+        "mean_step": 1.001418615329888
+      },
+      "REFONLY_NOW": {
+        "cost_dex": 0.18356843844417914,
+        "sem": 0.013159207856057608,
+        "n": 40,
+        "mean_step": 0.9315
+      },
+      "REFONLY_FIX": {
+        "cost_dex": -4.061161344217634e-05,
+        "sem": 0.002807693431472397,
+        "n": 40,
+        "mean_step": 0.9999999999999998
+      },
+      "reference_warp": {
+        "idx": 149,
+        "a_re": 0.9999999999999999,
+        "a_im": -8.673617379884035e-19,
+        "b_re": 0.0,
+        "b_im": -2.220446049250313e-16
+      },
+      "recovery_dex": -0.004163190035176567,
+      "recovery_dex_all": -0.0030190394873292337,
+      "recovery_dex_reference_frame": 0.18360905005762132,
+      "ships_bar_0p10": false,
+      "dead_bar_0p03": true
+    },
+    "bee8": {
+      "NOW": {
+        "cost_dex": 0.18442431789217784,
+        "sem": 0.002806624757854913,
+        "n": 960,
+        "mean_step": 0.9323224344882013,
+        "what": "real warp + coverage k=0.9315"
+      },
+      "FIX": {
+        "cost_dex": 0.170088258571043,
+        "sem": 0.00352137932574696,
+        "n": 960,
+        "mean_step": 1.0008829141043494,
+        "what": "real warp, coverage removed (k=1)"
+      },
+      "SNAP": {
+        "cost_dex": -0.00016154827560171877,
+        "sem": 0.0005456260695861058,
+        "n": 960,
+        "mean_step": 1.0,
+        "what": "integer translation, unit scale"
+      },
+      "NOW_all": {
+        "cost_dex": 0.1845095760459981,
+        "sem": 0.004865544296435302,
+        "n": 320,
+        "mean_step": 0.9323481936338254
+      },
+      "FIX_all": {
+        "cost_dex": 0.16665480852550893,
+        "sem": 0.006014346158861155,
+        "n": 320,
+        "mean_step": 1.0009105675081327
+      },
+      "REFONLY_NOW": {
+        "cost_dex": 0.18356843844417958,
+        "sem": 0.01315920785605678,
+        "n": 40,
+        "mean_step": 0.9315
+      },
+      "REFONLY_FIX": {
+        "cost_dex": -4.0611613441843276e-05,
+        "sem": 0.00280769343147167,
+        "n": 40,
+        "mean_step": 1.0
+      },
+      "reference_warp": {
+        "idx": 4,
+        "a_re": 1.0,
+        "a_im": -2.168404344971009e-19,
+        "b_re": 0.0,
+        "b_im": 0.0
+      },
+      "recovery_dex": 0.014336059321134825,
+      "recovery_dex_all": 0.017854767520489173,
+      "recovery_dex_reference_frame": 0.18360905005762143,
+      "ships_bar_0p10": false,
+      "dead_bar_0p03": true
+    },
+    "NULLQ": {
+      "k=0.9974": {
+        "cost_dex": 0.18507053186167388,
+        "sem": 0.015365188770726321,
+        "n": 40,
+        "mean_step": 0.9974000000000001
+      },
+      "k=0.9315": {
+        "cost_dex": 0.18356843844417958,
+        "sem": 0.01315920785605678,
+        "n": 40,
+        "mean_step": 0.9315
+      },
+      "k=1.0": {
+        "cost_dex": -4.0611613441843276e-05,
+        "sem": 0.00280769343147167,
+        "n": 40,
+        "mean_step": 1.0
+      },
+      "brief_null_difference_dex": 0.18511114347511573,
+      "brief_null_fires": true
+    }
+  }
+}
