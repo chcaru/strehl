@@ -1,0 +1,17 @@
+==============================================================================
+M77 -- selector cost vs bracket length (POST HOC)
+==============================================================================
+  binary C:\dev\blog\death-of-software\projects\strehl\experiments\M77-gate-sweep\target-m77\release\strehl.exe
+  stack coffee-bean  flat ROI 32,288,256,256  (fixed)   only --limit varies
+
+      N  gate     n_eff   HP RATIO
+     10     0     1.000      1.099
+     10     4     6.671      0.510
+     25     0     1.000      1.534
+     25     4    12.464      0.460
+     52     0     1.000      4.195
+     52     4    20.770      0.446
+    105     0     1.000      5.170
+    105     4    31.614      0.434
+
+  gate 0 is pure selection (n_eff == 1 by construction at every N).

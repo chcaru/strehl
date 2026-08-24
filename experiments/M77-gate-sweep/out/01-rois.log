@@ -1,0 +1,42 @@
+==============================================================================
+M77 arm G0 -- ROI selection (input frames only)
+==============================================================================
+  tile 256  stride 128  edge 32  >= 12 frames
+  HP_BOX_SIDE 9  HP_NOISE_GAIN 0.993808   (parsed from crates/, not retyped)
+
+  --- wrapped-text-1  ISO 100  plane 3514x2344  400 tiles x 15 frames
+      FLAT   x32,y1056  contam(max over frames) = 1.2437   [K1 bar < 1.10 -> NOT MET]
+             corpus's published flat ROIs, for scale: 1.2756x and 1.3490x (flat_ratio.rs)
+      DETAIL x2208,y672  cg(max over frames)  = 134.8188
+      K2 detail/flat cg = 36.05x  [bar >= 3x -> MET]
+      K5 even/odd stability: flat NOT MET   detail NOT MET
+
+  --- 109MSDCF  ISO 160  plane 3514x2344  400 tiles x 22 frames
+      FLAT   x1440,y416  contam(max over frames) = 1.1399   [K1 bar < 1.10 -> NOT MET]
+             corpus's published flat ROIs, for scale: 1.2756x and 1.3490x (flat_ratio.rs)
+      DETAIL x1952,y1056  cg(max over frames)  = 106.2499
+      K2 detail/flat cg = 18.28x  [bar >= 3x -> MET]
+      K5 even/odd stability: flat MET   detail MET
+
+  --- coffee-bean  ISO 50  plane 3514x2344  400 tiles x 15 frames
+      FLAT   x32,y288  contam(max over frames) = 1.0907   [K1 bar < 1.10 -> MET]
+             corpus's published flat ROIs, for scale: 1.2756x and 1.3490x (flat_ratio.rs)
+      DETAIL x1184,y416  cg(max over frames)  = 805.6509
+      K2 detail/flat cg = 44.36x  [bar >= 3x -> MET]
+      K5 even/odd stability: flat MET   detail NOT MET
+
+  --- foam  ISO 1000  plane 3514x2344  400 tiles x 15 frames
+      FLAT   x288,y928  contam(max over frames) = 14.1384   [K1 bar < 1.10 -> NOT MET]
+             corpus's published flat ROIs, for scale: 1.2756x and 1.3490x (flat_ratio.rs)
+      DETAIL x160,y1952  cg(max over frames)  = 998.7403
+      K2 detail/flat cg = 3.02x  [bar >= 3x -> MET]
+      K5 even/odd stability: flat NOT MET   detail NOT MET
+
+  --- bee-1  ISO 100  plane 3514x2344  400 tiles x 15 frames
+      FLAT   x2720,y1568  contam(max over frames) = 1.0587   [K1 bar < 1.10 -> MET]
+             corpus's published flat ROIs, for scale: 1.2756x and 1.3490x (flat_ratio.rs)
+      DETAIL x1952,y800  cg(max over frames)  = 249.1981
+      K2 detail/flat cg = 19.41x  [bar >= 3x -> MET]
+      K5 even/odd stability: flat MET   detail NOT MET
+
+  wrote out/01-rois.json

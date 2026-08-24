@@ -1,0 +1,36 @@
+==============================================================================
+M77 arm G0' -- ROI selection over ALL frames (DECLARED DEVIATION)
+==============================================================================
+  tile 256  stride 128  edge 32  ALL frames
+
+  --- wrapped-text-1  ISO 100  400 tiles x 130 frames  (163s, 1.26s/frame)
+      FLAT   x32,y1312  contam(max over ALL frames) = 2.6339  [K1 bar < 1.10 -> NOT MET]   temporal spread 2.609x
+      DETAIL x2208,y672  cg(max over ALL frames)  = 134.8188
+      K2 detail/flat cg = 30.99x  [bar >= 3x -> MET]
+      K5 even/odd: flat MET   detail MET
+
+  --- 109MSDCF  ISO 160  400 tiles x 22 frames  (25s, 1.16s/frame)
+      FLAT   x1440,y416  contam(max over ALL frames) = 1.1399  [K1 bar < 1.10 -> NOT MET]   temporal spread 1.148x
+      DETAIL x1952,y1056  cg(max over ALL frames)  = 106.2499
+      K2 detail/flat cg = 18.28x  [bar >= 3x -> MET]
+      K5 even/odd: flat MET   detail MET
+
+  --- coffee-bean  ISO 50  400 tiles x 105 frames  (136s, 1.29s/frame)
+      FLAT   x32,y416  contam(max over ALL frames) = 1.0968  [K1 bar < 1.10 -> MET]   temporal spread 1.022x
+      DETAIL x1312,y416  cg(max over ALL frames)  = 852.9767
+      K2 detail/flat cg = 45.57x  [bar >= 3x -> MET]
+      K5 even/odd: flat NOT MET   detail NOT MET
+
+  --- foam  ISO 1000  400 tiles x 100 frames  (129s, 1.29s/frame)
+      FLAT   x1312,y288  contam(max over ALL frames) = 15.8769  [K1 bar < 1.10 -> NOT MET]   temporal spread 15.807x
+      DETAIL x160,y1952  cg(max over ALL frames)  = 1035.6684
+      K2 detail/flat cg = 2.33x  [bar >= 3x -> NOT MET]
+      K5 even/odd: flat MET   detail MET
+
+  --- bee-1  ISO 100  400 tiles x 299 frames  (459s, 1.53s/frame)
+      FLAT   x2720,y1568  contam(max over ALL frames) = 1.0666  [K1 bar < 1.10 -> MET]   temporal spread 1.026x
+      DETAIL x1952,y672  cg(max over ALL frames)  = 765.4421
+      K2 detail/flat cg = 53.61x  [bar >= 3x -> MET]
+      K5 even/odd: flat MET   detail MET
+
+  wrote out/01b-rois.json

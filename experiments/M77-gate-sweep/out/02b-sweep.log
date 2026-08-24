@@ -1,0 +1,90 @@
+==============================================================================
+M77 arms G1/G2 -- gate sweep through the shipped CLI
+==============================================================================
+  binary  C:\dev\blog\death-of-software\projects\strehl\experiments\M77-gate-sweep\target-m77\release\strehl.exe
+          8256000 bytes, mtime 2026-08-23 19:21:05
+  DEFAULT_GATE          4            merge.rs
+  FOCUS_NOISE_SD        0.015214     merge.rs
+  HP_BOX_SIDE           9            flat_ratio.rs
+  HP_NOISE_GAIN         0.993808     derived sqrt(1-1/w^2)
+  DETAIL_COLLAPSE_FLOOR 0.9          merge_cmd.rs
+  DETAIL_RISE_FLAG      1.5          merge_cmd.rs
+  black                 512          profile.rs
+  ROIs from 01b-rois.json  ->  02b-sweep.json   [arm G0' -- DECLARED DEVIATION, post hoc]
+
+  --- wrapped-text-1
+    stack D:\personal\macro\wrapped-text-1 --gate 0 1 2 4 8 16 32 64 --flat-roi 32,1312,256,256 --detail-roi 2208,672,256,256
+    28.8s  -> out/02b-wrapped-text-1.log
+      K3 gate-0 n_eff = 1.000 [MET]   HP RATIO = 2.6410x [bar 0.90-1.10 -> NOT MET]
+      K4 n_eff monotone [MET]  1.000 -> 12.119
+        gate     n_eff   n_eff/N  HP RATIO   RETENT      eff
+           0     1.000    0.0077    2.6410    7.626   2.6410
+           1     1.062    0.0082    2.6070    7.616   2.6866
+           2     1.122    0.0086    2.5680    7.609   2.7201
+           4     1.238    0.0095    2.4820    7.592   2.7616
+           8     1.469    0.0113    2.3020    7.555   2.7901
+          16     1.963    0.0151    1.9520    7.448   2.7349
+          32     3.222    0.0248    1.4690    7.145   2.6368
+          64    12.119    0.0932    0.3610    6.497   1.2567
+
+  --- 109MSDCF
+    stack D:\personal\macro\109MSDCF --gate 0 1 2 4 8 16 32 64 --flat-roi 1440,416,256,256 --detail-roi 1952,1056,256,256
+    9.1s  -> out/02b-109MSDCF.log
+      K3 gate-0 n_eff = 1.000 [MET]   HP RATIO = 1.1340x [bar 0.90-1.10 -> NOT MET]
+      K4 n_eff monotone [MET]  1.000 -> 20.995
+        gate     n_eff   n_eff/N  HP RATIO   RETENT      eff
+           0     1.000    0.0455    1.1340    1.123   1.1340
+           1     1.884    0.0856    0.9130    1.118   1.2532
+           2     2.891    0.1314    0.7490    1.116   1.2735
+           4     4.987    0.2267    0.5420    1.114   1.2104
+           8    10.469    0.4759    0.3510    1.105   1.1357
+          16    18.657    0.8480    0.3350    1.085   1.4470
+          32    20.024    0.9102    0.3320    1.044   1.4856
+          64    20.995    0.9543    0.3320    0.977   1.5212
+
+  --- coffee-bean
+    stack D:\personal\macro\coffee-bean --gate 0 1 2 4 8 16 32 64 --flat-roi 32,416,256,256 --detail-roi 1312,416,256,256
+    18.2s  -> out/02b-coffee-bean.log
+      K3 gate-0 n_eff = 1.000 [MET]   HP RATIO = 5.2200x [bar 0.90-1.10 -> NOT MET]
+      K4 n_eff monotone [MET]  1.000 -> 40.024
+        gate     n_eff   n_eff/N  HP RATIO   RETENT      eff
+           0     1.000    0.0095    5.2200   40.828   5.2200
+           1     4.072    0.0388    1.7170   40.809   3.4648
+           2    14.386    0.1370    0.6720   40.786   2.5488
+           4    31.614    0.3011    0.4320   40.728   2.4290
+           8    34.171    0.3254    0.4290   40.646   2.5078
+          16    35.581    0.3389    0.4290   40.492   2.5590
+          32    37.233    0.3546    0.4290   40.147   2.6177
+          64    40.024    0.3812    0.4290   39.301   2.7140
+
+  --- foam
+    stack D:\personal\macro\foam --gate 0 1 2 4 8 16 32 64 --flat-roi 1312,288,256,256 --detail-roi 160,1952,256,256
+    20.4s  -> out/02b-foam.log
+      K3 gate-0 n_eff = 1.000 [MET]   HP RATIO = 18.6830x [bar 0.90-1.10 -> NOT MET]
+      K4 n_eff monotone [MET]  1.000 -> 7.468
+        gate     n_eff   n_eff/N  HP RATIO   RETENT      eff
+           0     1.000    0.0100   18.6830    3.770  18.6830
+           1     1.087    0.0109   18.6720    3.737  19.4673
+           2     1.177    0.0118   18.6610    3.714  20.2453
+           4     1.359    0.0136   18.6580    3.670  21.7508
+           8     1.727    0.0173   18.5740    3.614  24.4091
+          16     2.452    0.0245   18.3690    3.543  28.7638
+          32     3.903    0.0390   17.9880    3.436  35.5371
+          64     7.468    0.0747   17.2170    3.200  47.0500
+
+  --- bee-1
+    stack D:\personal\macro\bee-1 --gate 0 1 2 4 8 16 32 64 --flat-roi 2720,1568,256,256 --detail-roi 1952,672,256,256
+    49.7s  -> out/02b-bee-1.log
+      K3 gate-0 n_eff = 1.000 [MET]   HP RATIO = 3.4340x [bar 0.90-1.10 -> NOT MET]
+      K4 n_eff monotone [MET]  1.000 -> 144.963
+        gate     n_eff   n_eff/N  HP RATIO   RETENT      eff
+           0     1.000    0.0033    3.4340  148.728   3.4340
+           1     5.860    0.0196    1.1920  148.686   2.8855
+           2    26.127    0.0874    0.6570  148.650   3.3582
+           4    70.146    0.2346    0.5760  148.541   4.8242
+           8    85.424    0.2857    0.5700  148.354   5.2682
+          16    97.559    0.3263    0.6050  148.087   5.9757
+          32   113.015    0.3780    0.4350  147.595   4.6244
+          64   144.963    0.4848    0.3580  146.720   4.3103
+
+  wrote out/02b-sweep.json

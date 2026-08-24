@@ -1,0 +1,41 @@
+==============================================================================
+M77 cross-check -- Python ROI statistic vs the shipped Rust
+==============================================================================
+
+  --- wrapped-text-1  ROI x32,y1312
+                    CLI (Rust)    M77 (Python)       ratio
+      median            12.442          12.441     0.99995
+      min               12.187          12.187     0.99997
+      max               32.468          32.468     0.99999
+      frames               130             130
+
+  --- 109MSDCF  ROI x1440,y416
+                    CLI (Rust)    M77 (Python)       ratio
+      median             9.491           9.453     0.99602
+      min                9.139           9.139     0.99996
+      max               10.521          10.521     0.99997
+      frames                22              22
+
+  --- coffee-bean  ROI x32,y416
+                    CLI (Rust)    M77 (Python)       ratio
+      median            24.248          24.248     1.00001
+      min               23.562          23.562     1.00002
+      max               26.270          26.270     1.00000
+      frames               105             105
+
+  --- foam  ROI x1312,y288
+                    CLI (Rust)    M77 (Python)       ratio
+      median            37.110          37.003     0.99713
+      min               28.903          28.903     1.00000
+      max              438.922         438.922     1.00000
+      frames               100             100
+
+  --- bee-1  ROI x2720,y1568
+                    CLI (Rust)    M77 (Python)       ratio
+      median            20.620          20.620     0.99999
+      min               19.110          19.110     0.99998
+      max               21.040          21.040     1.00001
+      frames               299             299
+
+  median-hp-sd agreement across five stacks: 0.99602 .. 1.00001   (1.00000 = exact)
+  wrote out/04-crosscheck.json

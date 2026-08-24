@@ -1,0 +1,167 @@
+{
+  "wrapped-text-1": {
+    "iso": 100.0,
+    "plane": [
+      2344,
+      3514
+    ],
+    "n_tiles": 400,
+    "n_frames": 130,
+    "flat_roi": {
+      "x": 32,
+      "y": 1312,
+      "w": 256,
+      "h": 256,
+      "contam_max": 2.6338869665063966,
+      "temporal_spread": 2.609051938046842
+    },
+    "detail_roi": {
+      "x": 2208,
+      "y": 672,
+      "w": 256,
+      "h": 256,
+      "cg_max": 134.818802200511
+    },
+    "k1_met": false,
+    "k2_ratio": 30.990347120992705,
+    "k2_met": true,
+    "k5_flat_met": true,
+    "k5_detail_met": true,
+    "contam_range": [
+      2.6338869665063966,
+      9.303257141485624
+    ]
+  },
+  "109MSDCF": {
+    "iso": 160.0,
+    "plane": [
+      2344,
+      3514
+    ],
+    "n_tiles": 400,
+    "n_frames": 22,
+    "flat_roi": {
+      "x": 1440,
+      "y": 416,
+      "w": 256,
+      "h": 256,
+      "contam_max": 1.1398942110137265,
+      "temporal_spread": 1.148226038911665
+    },
+    "detail_roi": {
+      "x": 1952,
+      "y": 1056,
+      "w": 256,
+      "h": 256,
+      "cg_max": 106.24988866537228
+    },
+    "k1_met": false,
+    "k2_ratio": 18.277248728107885,
+    "k2_met": true,
+    "k5_flat_met": true,
+    "k5_detail_met": true,
+    "contam_range": [
+      1.1398942110137265,
+      10.068089825199412
+    ]
+  },
+  "coffee-bean": {
+    "iso": 50.0,
+    "plane": [
+      2344,
+      3514
+    ],
+    "n_tiles": 400,
+    "n_frames": 105,
+    "flat_roi": {
+      "x": 32,
+      "y": 416,
+      "w": 256,
+      "h": 256,
+      "contam_max": 1.0968355648512351,
+      "temporal_spread": 1.0219310145905893
+    },
+    "detail_roi": {
+      "x": 1312,
+      "y": 416,
+      "w": 256,
+      "h": 256,
+      "cg_max": 852.9767378976227
+    },
+    "k1_met": true,
+    "k2_ratio": 45.57020128266588,
+    "k2_met": true,
+    "k5_flat_met": false,
+    "k5_detail_met": false,
+    "contam_range": [
+      1.0968355648512351,
+      46.380262660834966
+    ]
+  },
+  "foam": {
+    "iso": 1000.0,
+    "plane": [
+      2344,
+      3514
+    ],
+    "n_tiles": 400,
+    "n_frames": 100,
+    "flat_roi": {
+      "x": 1312,
+      "y": 288,
+      "w": 256,
+      "h": 256,
+      "contam_max": 15.876900515461388,
+      "temporal_spread": 15.806876474844636
+    },
+    "detail_roi": {
+      "x": 160,
+      "y": 1952,
+      "w": 256,
+      "h": 256,
+      "cg_max": 1035.668378018437
+    },
+    "k1_met": false,
+    "k2_ratio": 2.332658678925108,
+    "k2_met": false,
+    "k5_flat_met": true,
+    "k5_detail_met": true,
+    "contam_range": [
+      15.876900515461388,
+      29.688912334134436
+    ]
+  },
+  "bee-1": {
+    "iso": 100.0,
+    "plane": [
+      2344,
+      3514
+    ],
+    "n_tiles": 400,
+    "n_frames": 299,
+    "flat_roi": {
+      "x": 2720,
+      "y": 1568,
+      "w": 256,
+      "h": 256,
+      "contam_max": 1.0666177884715153,
+      "temporal_spread": 1.0261278409626042
+    },
+    "detail_roi": {
+      "x": 1952,
+      "y": 672,
+      "w": 256,
+      "h": 256,
+      "cg_max": 765.4421405159256
+    },
+    "k1_met": true,
+    "k2_ratio": 53.60585755245271,
+    "k2_met": true,
+    "k5_flat_met": true,
+    "k5_detail_met": true,
+    "contam_range": [
+      1.0666177884715153,
+      87.83110984885752
+    ]
+  }
+}
