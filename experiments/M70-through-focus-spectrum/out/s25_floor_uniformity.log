@@ -1,0 +1,71 @@
+
+======================================================================================================================
+ARM A - is my SPECTRAL noise floor spatially uniform within a stack?
+======================================================================================================================
+  Per patch: measured floor (band b6, 0.2762-0.34 cyc/px, above the f/11
+  cutoff and structure-free by fact 27) divided by the MODELLED photon-
+  transfer variance at that patch's own level. A perfect model on a
+  uniform floor gives 1.000 everywhere.
+
+stack              median     p05     p95  p05-p95 span     min     max  full span
+coffee-bubbles      1.009   0.999   1.497         1.498   0.995   1.536      1.544
+109MSDCF            1.008   0.897   1.022         1.138   0.896   1.027      1.146
+119MSDCF            1.125   1.011   1.161         1.149   1.006   1.164      1.157
+113MSDCF            0.986   0.970   1.013         1.045   0.968   1.018      1.051
+112MSDCF            0.967   0.954   0.989         1.037   0.952   0.996      1.046
+foam                0.998   0.996   1.005         1.009   0.994   1.008      1.014
+coffee-bean         1.160   1.018   1.469         1.443   0.999   1.474      1.476
+wrapped-text-2      1.011   1.005   1.028         1.023   1.003   1.032      1.029
+wrapped-text-1      1.032   0.998   1.059         1.061   0.972   1.062      1.092
+bee-1               1.070   0.973   1.141         1.173   0.969   1.145      1.182
+bee-2               1.018   0.984   1.050         1.067   0.978   1.051      1.075
+bee-3               1.081   0.972   1.142         1.175   0.959   1.150      1.198
+
+  corpus median within-stack p05-p95 span : 1.102x
+  worst stack                             : 1.498x
+  M69's sigma_F within a real stack       : 2.000x
+  M69's sigma_F on its controlled plant   : 4.060x
+
+======================================================================================================================
+ARM B - if it varies, is it TEXTURE-driven (M69's mechanism)?
+======================================================================================================================
+  M69's driver is gradient-DIRECTION coherence, a texture property. The
+  analogue here: does a patch's floor ratio track how much STRUCTURE the
+  patch carries? Structure proxy = peak mid-band signal power.
+
+stack             corr(texture, floor ratio)   corr(level, ratio)
+coffee-bubbles                        +0.839               +0.826
+109MSDCF                              +0.231               +0.906
+119MSDCF                              -0.036               +0.869
+113MSDCF                              +0.607               +0.867
+112MSDCF                              +0.600               +0.822
+foam                                  +0.060               +0.119
+coffee-bean                           -0.620               +0.997
+wrapped-text-2                        +0.866               +0.908
+wrapped-text-1                        +0.347               +0.960
+bee-1                                 -0.655               +0.991
+bee-2                                 -0.258               +0.994
+bee-3                                 -0.225               +0.992
+
+  median corr(texture, floor ratio) : +0.146   (7/12 positive)
+  median corr(level,   floor ratio) : +0.907   (12/12 positive)
+
+======================================================================================================================
+ARM C - does the band edge change the verdict? Four band definitions.
+======================================================================================================================
+  The headline is the matched filter's gain over an EQUAL AVERAGE of the
+  SAME frames at the shipped gate's width (W=3, seven frames; section 18.2).
+  If moving the boundary between 'recoverable band' and 'noise floor'
+  changed that number materially, the band edge would be load-bearing.
+
+band definition                            MF / equal avg, W=3  vs shipped
+b3 only (0.100-0.150)                                   1.0181            
+b3+b4 (0.100-0.200)                                     1.0243            
+b3+b4+b5 = SHIPPED MID (0.100-0.2762)                   1.0293     1.0000x
+b3..b6 PAST THE CUTOFF (0.100-0.340)                    1.0338     1.0044x
+
+  span across all four band definitions: 1.0154x
+  the report's headline at W=3 is 1.0238; the whole architectural
+  prize (P1) is 1.1100. Band-edge choice moves the gain by 1.54%.
+
+wrote out/s25_floor_uniformity.json

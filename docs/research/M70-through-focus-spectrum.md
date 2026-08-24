@@ -29,6 +29,19 @@ drawn from it is FALSE, and the gap between the two is measured at 1.110×.**
 > subject's depth range — which answers M25's open question 33** and
 > **reinforces PLUGIN by a second, independent route** (§19.8).
 
+> **Third addendum, §20.** Two items. **(a)** `corpus_lint` [S1] failed the
+> repository on a **render defect in this file** — P5's `H_k` modulus bars
+> silently discarded two of its own cells. Fixed, and **all 36 tables re-audited
+> with a check stricter than S1**, which cannot see a malformed row that
+> coincidentally matches its header width. **(b)** M69 reported on
+> `FOCUS_NOISE_SD`. Read at source, **M69 makes no claim about any spectral band
+> edge**, and its `sigma_F` is a spatial-gradient operator's response noise, not
+> a spectrum's — but its conditional deserved a measurement, so §20.3 supplies
+> one: **my floor's within-stack spread is 1.102× against M69's 2.000×, and its
+> residual tracks level (+0.907, 12/12 stacks) rather than texture (+0.146, signs
+> split) — the opposite of M69's mechanism.** The verdict is unchanged and the
+> band edge is **not load-bearing at 1.54%**.
+
 Milestone type: measurement. **No Rust was written and nothing under `crates/**`
 was edited** — M67 and M69 are live there. `SYNTHESIS.md`, `AGENTS.md` and
 `crates/**` were read-only. Everything M70 produced lives in
@@ -1926,3 +1939,191 @@ check.** Lobe count and `R10_50` reproduce across the three bee shoots (1.262×,
 1.107×) while `A₅₀` changes sign on the identical data. **That contrast is what
 licenses reading §16's null as a null rather than as blindness**, and it cost one
 extra column.
+
+---
+
+## 20. Addendum: M69's refutation, a render defect of mine, and a citation trap
+
+**Added after the repo linter failed the corpus on a defect in this file, and
+after M69 reported on `FOCUS_NOISE_SD`.** Two unrelated items; the second is the
+substantive one.
+
+### 20.1 The render defect: two cells of P5 were being discarded
+
+`corpus_lint` [S1] failed the whole repository on one violation and it was mine.
+**P5's row carried `` `|H_k|` `` as a bare code span.** A literal pipe splits a
+Markdown table cell **even inside backticks**, so the row had 7 unescaped pipes
+against a 5-pipe header and the renderer **discarded its last two cells — the
+`MEASURED` label and the source path.** A reader saw a truncated row with no
+indication that anything was missing, and nothing in the source looked wrong.
+Escaped as `\|H_k\|`. **`corpus_lint` now reports no M70 violation.**
+
+**I audited all 32 tables in this report, with a check stricter than S1.** S1
+compares a row's pipe count against its header's, so **it passes any row that is
+malformed *and* coincidentally matches the header width** — a silent failure the
+check cannot see. The second check flags every pipe that is not a *structural*
+cell separator (a pipe at a trimmed line edge, or one with whitespace on both
+sides). **Result: 0 count mismatches and 0 content pipes across all 32 tables.**
+Script committed at `experiments/M70-through-focus-spectrum/src/audit_tables.py`.
+
+**This is the second instance of this defect class in a day** — M67 had it first,
+and M67's response was to write the check that caught me. **The escalation is the
+right one and I have extended it rather than only complied with it:** the
+header-vs-row check has a known blind spot, the blind spot is cheap to close, and
+a report whose subject matter is spectral (`|H|`, `|A₅₀|`, `|ΣH|`) is unusually
+exposed to it.
+
+### 20.2 M69, read at source: what it says, and what it does not
+
+The brief relayed that M69's result *"bears directly on fact 27, your anchor —
+the f/11 diffraction knee at `f_sig = 0.2762 cyc/px`"*. **I read
+`docs/research/M69-focus-noise-sd.md` rather than the relay, as instructed, and
+the citation does not resolve to that claim.**
+
+**MEASURED (audit of M69's text).** M69 contains **zero** occurrences of
+`0.2762`, `diffraction`, `knee`, `f_sig`, `MTF`, `Nyquist` or `bellows`. **It
+makes no claim about any spectral band edge anywhere in 1,501 lines.**
+
+**The quantity M69 refutes is not the quantity I use.** M69's `sigma_F` is the
+response noise of a **spatial gradient operator** — its §143 defines it as *"3×3
+Sobel scaled by `0.125` → `box_mean` radius 13 (a 27×27 window)"*. Mine is the
+**noise floor of a band-power spectrum**, from the photon-transfer model in
+`profile.rs`. Different operator, different domain, different units.
+
+**And here is how I think the relay went wrong, because it is a trap and not
+carelessness. ARGUED.** **M69 numbers its own facts 1–47+, and its internal facts
+27 and 29 collide with SYNTHESIS facts 27 and 29** — which are precisely my two
+anchors. M69's fact 27 (line 622) is *"A5 failed… this is 'not measurable', not
+'not measured'"*; its fact 29 (line 666) is *"Recalibrating each stack to its own
+`rho_true`"*. **Searching M69 for "fact 27" returns a hit, and the hit is not the
+fact the searcher meant.** A resolving citation is not a verified claim — and
+this is the sharpest form of that failure, because the citation resolves *inside
+the right document* to *the wrong object*.
+
+**`FOCUS_NOISE_SD` appears nowhere in M70's code as a value.** It occurs twice in
+`src/`, both times inside a printed section heading noting that M69 is live on
+it. Every noise scale in this milestone comes from the photon-transfer model.
+**§14 said this before M69 reported and it is unchanged.**
+
+### 20.3 But the conditional deserved a measurement, so I made one
+
+The relay's conditional is fair regardless of whether its citation resolves:
+
+> *"If any part of your spectral analysis assumes a spatially uniform
+> response-noise floor, that assumption is now measured false."*
+
+**It does not assume one** — `signal()` evaluates the photon-transfer variance
+**per frame and per patch, at that patch's own `w²`-weighted level**, so the
+floor is already signal-dependent and spatially varying. But *signal-dependent*
+is not *correct*, so I measured the residual.
+
+**Arm A — how non-uniform is my floor, in M69's own statistic? MEASURED.**
+Per patch, the **measured** floor (band `b6`, 0.2762–0.34 cyc/px — above the
+cutoff and structure-free by fact 27) divided by the **modelled** variance. A
+perfect model on a uniform floor gives 1.000 everywhere.
+
+| | within-stack p05–p95 span |
+| --- | ---: |
+| **M70 spectral floor, corpus median** | **1.102×** |
+| M70 spectral floor, worst stack (`coffee-bubbles`) | 1.498× |
+| **M69 `sigma_F` within a real stack** | **2.000×** |
+| M69 `sigma_F` on its controlled plant | 4.060× |
+
+**My floor is not uniform, and it is not the 2.0×–4.06× M69 found.** Per-stack
+medians run 0.967–1.160, i.e. the model is right to about ±16% patch-to-patch
+and better than ±6% on eight of twelve stacks.
+
+**Arm B — and the residual is driven by the opposite mechanism. MEASURED, and
+this is the substantive finding of §20.**
+
+| driver | median correlation with per-patch floor ratio | sign agreement |
+| --- | ---: | ---: |
+| **patch level** | **+0.907** | **12/12 positive** |
+| patch texture (peak mid-band signal) | +0.146 | 7/12 — **signs split** |
+
+**M69's mechanism is explicitly *not* signal-to-noise** — it is gradient-
+*direction* coherence, a texture property. **In my domain the residual tracks
+level at +0.907 on every stack, and texture not at all.** So the specific defect
+M69 refuted does not appear here.
+
+**What does appear is a level-dependent departure I had already found and
+reported.** §13's `e_flat ∝ level^1.83` (R² 0.97), flagged there as PRNU or
+residual texture and **undecidable without darks and flats**. §20.3 Arm B is the
+same object measured a second way, and it **raises that item's priority**: it is
+now the largest known error in my noise floor, it is systematic, and M71 is live
+on flat fields. **UNRULED, and it was unruled before M69 reported.**
+
+**Arm C — does the band edge matter to the verdict? MEASURED. No.**
+The floor sets the boundary between "recoverable band" and "noise". Recomputing
+the headline — matched filter over an equal average of the *same* frames at the
+shipped gate's width, W=3 — under four band definitions:
+
+| band definition | MF ÷ equal average, W=3 |
+| --- | ---: |
+| `b3` only, 0.100–0.150 cyc/px | 1.0181 |
+| `b3`+`b4`, 0.100–0.200 | 1.0243 |
+| **`b3`+`b4`+`b5`, 0.100–0.2762 — the shipped mid band** | **1.0293** |
+| `b3`…`b6`, 0.100–**0.340** — *past the cutoff, into the band fact 27 calls pure noise* | 1.0338 |
+
+**Full span across all four: 1.0154×, i.e. 1.54%.** For scale, the architectural
+prize is **1.1100** (P1) and the verdict turns on **2.38% against +5.45 dB**
+(§18). **Even extending the band 23% past the diffraction cutoff — deliberately
+including frequencies fact 27 says carry no signal — moves the gain by 0.44%.**
+
+**A second robustness datum, reported because it is a discrepancy in my own
+numbers.** §18's headline at W=3 is **1.0238** (corpus median of per-stack
+medians); Arm C's pooled aggregation gives **1.0293** for the same band. **The
+0.54% difference is the aggregation choice, and it is smaller than the
+band-edge span it sits inside.** Recorded rather than reconciled away.
+
+### 20.4 What §20 changes, and what it does not
+
+**Nothing in §0–§19 moves. MEASURED basis, ARGUED conclusion.** The verdict is
+**PLUGIN**, unchanged. The band edge is not load-bearing at 1.54%; the floor's
+spatial residual is 1.102× not 2.0×, and is level-driven not texture-driven.
+
+**What I would want checked if I am wrong.** My Arm A statistic uses band `b6`
+as a structure-free floor **because fact 27 says it is above the cutoff** — and
+**§13.2 records that fact 27's `0.2762` did not reproduce** from M5's own
+committed driver, which returns **0.2375**. **If the true cutoff is 0.2375, then
+`b5` (0.200–0.2762) is partly above it and `b6` is cleanly above it — which makes
+Arm A conservative, not wrong**, since contamination by real signal would inflate
+the measured floor and *increase* the apparent non-uniformity I am reporting as
+small. But it is the one place §20 leans on the number §13.2 could not reproduce,
+and it should be read with that in hand.
+
+**What §20 cannot see.** It measures the floor **above** the cutoff and assumes
+the model's *form* carries down into the mid band. A floor whose non-uniformity
+is frequency-dependent would not show up. Measuring that needs the known-spectrum
+target already requested as §14 item 2.
+
+### 20.5 Candidate facts from §20
+
+| # | Proposed fact | Label | Source |
+| --- | --- | --- | --- |
+| **P26** | **The spectral band-power noise floor is substantially more spatially uniform than the focus operator's response noise, and its residual is driven by the opposite mechanism.** Per-patch measured floor ÷ modelled photon-transfer variance has a within-stack p05–p95 span of **1.102× (corpus median), 1.498× worst**, against M69's **2.000×** for `sigma_F` within a real stack and 4.060× on its plant. The residual correlates with patch **level** at **+0.907 (12/12 stacks positive)** and with patch **texture** at +0.146 (7/12, signs split) — **M69's driver is gradient-direction coherence, explicitly not SNR, so that defect does not transfer to the spectral domain** | MEASURED | `out/s25_floor_uniformity.log` arms A, B |
+| **P27** | **M70's verdict is insensitive to where the recoverable-band boundary is placed.** The matched filter's gain over an equal average of the same frames at the shipped gate's width moves **1.0181 → 1.0338 (span 1.54%)** as the mid band is varied from 0.100–0.150 cyc/px to 0.100–0.340 — the last **23% past the f/11 diffraction cutoff, into the band fact 27 says is pure noise**. The architectural prize is 1.1100 and the verdict turns on 2.38% against +5.45 dB | MEASURED | `out/s25_floor_uniformity.log` arm C |
+| **P28** | **M69 makes no claim about any spectral band edge, and its internal fact numbering collides with SYNTHESIS's at exactly the two facts that anchor M70.** `M69-focus-noise-sd.md` contains zero occurrences of `0.2762`, `diffraction`, `knee`, `f_sig`, `MTF`, `Nyquist` or `bellows` in 1,501 lines; its `sigma_F` is the response noise of a 3×3 Sobel with `box_mean` radius 13 (line 143), not of a spectrum. **Its own facts 27 and 29 collide with SYNTHESIS facts 27 and 29** — the diffraction cutoff and the spectral floor — so a search for "fact 27" inside M69 returns a hit that is not the fact sought | MEASURED (audit) | `M69-focus-noise-sd.md` lines 143, 622, 666; `out/s25_floor_uniformity.log` preamble |
+| **P29** | **A Markdown table cell is split by a literal `\|` even inside a backtick code span, and the repo's [S1] check cannot see a malformed row whose pipe count coincidentally matches its header.** M70's P5 row silently discarded two cells — its label and its source — for four commits. A stricter check that flags every non-structural pipe (not at a trimmed line edge, not whitespace-delimited on both sides) finds 0 defects across this report's 32 tables after the fix | MEASURED | `src/audit_tables.py`; `corpus_lint` [S1] |
+
+### 20.6 Disciplines from §20
+
+**D-n. A citation that resolves inside the right document can still resolve to
+the wrong object, because milestone reports number their own facts.** M69's facts
+27 and 29 collide with SYNTHESIS's 27 and 29 — **and SYNTHESIS's 27 and 29 are
+the two this milestone is anchored on.** Searching a report for "fact 27" is not
+a check; **reading the sentence and confirming it is about the quantity you mean
+is the check.** This is the corpus's "a resolving citation is not a verified
+claim" sharpened by one turn.
+
+**D-o. When a neighbouring milestone refutes the *form* of a constant, ask
+whether its mechanism exists in your domain before assuming it transfers.** M69's
+driver is gradient-direction coherence. **The analogue cost one correlation per
+stack and answered NO at +0.146 with split signs, while finding the real driver
+at +0.907 on 12/12.** The transfer question is cheaper to measure than to argue.
+
+**D-p. Extend a check that caught you, if its blind spot is cheap to close.** The
+[S1] header-vs-row check cannot see a malformed row that coincidentally matches
+the header width. **Closing that took nine lines and confirmed 32 tables clean.**
+Complying with a check treats the symptom; the check itself is the artefact worth
+improving.
