@@ -1,0 +1,36 @@
+  merged render: 10 ROIs with a comb
+  single frame in focus at 2 of those ROIs
+seed: 2 ROIs located on the demosaic-free binned decode
+
+read-only assertion: PASS
+
+UNAVAILABLE in this LibRaw build:
+  LMMSE: Demosaic algorithm LMMSE requires GPL2 demosaic pack
+  AMAZE: Demosaic algorithm AMAZE requires GPL3 demosaic pack
+  VCD: Demosaic algorithm VCD requires GPL2 demosaic pack
+  MODIFIED_AHD: Demosaic algorithm MODIFIED_AHD requires GPL2 demosaic pack
+  VCD_MODIFIED_AHD: Demosaic algorithm VCD_MODIFIED_AHD requires GPL2 demosaic p
+  AFD: Demosaic algorithm AFD requires GPL2 demosaic pack
+
+arm                    n     R_sig   R_alias      Phi   dR_sig     dPhi          X
+MHC-strehl             2   -4.3302   -4.7179   0.3877   0.0000   0.0000  2.319e+00
+LINEAR                 2   -4.4480   -4.9733   0.5253  -0.1179   0.1376  2.416e+00
+VNG                    2   -4.3853   -4.7878   0.4025  -0.0552   0.0148  2.359e+00
+PPG                    2   -4.3764   -4.7818   0.4053  -0.0463   0.0176  2.303e+00
+AHD                    2   -4.3634   -4.7492   0.3859  -0.0332  -0.0018  2.375e+00
+DHT                    2   -4.3131   -4.6787   0.3656   0.0171  -0.0221  2.364e+00
+AAHD                   2   -4.3051   -4.6191   0.3140   0.0250  -0.0737  2.351e+00
+DCB                    2   -4.3947   -4.8824   0.4877  -0.0645   0.1000  2.272e+00
+
+D5 INERT: 2 live ROIs, bar >= 8 -> FAIL (no evidence; nothing below is admissible)
+
+arm                     dR_sig      SE      dPhi      SE  verdict
+LINEAR                 -0.1179  0.0799    0.1376  0.0801  no win (D1 unmet)
+VNG                    -0.0552  0.0881    0.0148  0.0895  no win (D1 unmet)
+PPG                    -0.0463  0.0873    0.0176  0.0883  no win (D1 unmet)
+AHD                    -0.0332  0.0820   -0.0018  0.0824  no win (D1 unmet)
+DHT                     0.0171  0.0781   -0.0221  0.0788  no win (D1 unmet)
+AAHD                    0.0250  0.0787   -0.0737  0.0789  REAL WIN (D1)
+DCB                    -0.0645  0.0824    0.1000  0.0831  no win (D1 unmet)
+
+CUT control: R_alias - R_sig on MHC = -0.3877 dex (PASS; bar < -0.30)

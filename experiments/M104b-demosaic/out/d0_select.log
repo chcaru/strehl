@@ -1,0 +1,23 @@
+  DSC00001.ARW  live= 0  mod=0
+  DSC00005.ARW  live= 2  mod=1.29077
+  DSC00009.ARW  live= 1  mod=3.62232
+  DSC00013.ARW  live= 0  mod=0
+  DSC00017.ARW  live= 3  mod=0.900283
+  DSC00021.ARW  live= 2  mod=2.43416
+  DSC00025.ARW  live= 2  mod=4.90883
+  DSC00029.ARW  live= 2  mod=6.66419
+  DSC00033.ARW  live= 0  mod=0
+  DSC00037.ARW  live= 1  mod=2.94738
+  DSC00041.ARW  live= 2  mod=4.86333
+  DSC00045.ARW  live= 1  mod=6.04395
+  DSC00049.ARW  live= 1  mod=6.7434
+  DSC00053.ARW  live= 3  mod=5.00181
+  DSC00057.ARW  live= 3  mod=4.3518
+  DSC00061.ARW  live= 1  mod=3.33095
+  DSC00065.ARW  live= 1  mod=2.13268
+  DSC00069.ARW  live= 0  mod=0
+  DSC00073.ARW  live= 2  mod=1.27706
+  DSC00077.ARW  live= 4  mod=1.23198
+read-only assertion: PASS
+
+SELECTED DSC00049.ARW  mod=6.7434  live=1

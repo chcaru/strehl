@@ -181,3 +181,132 @@ completely acceptable outcome and I will not manufacture a lever.**
 - **The merge is held out.** Arms are decoded from **one frame**, so the
   demosaic is the only stage that differs. Mixing in a 299-frame merge would
   confound demosaic quality with noise averaging.
+
+---
+
+## 5. Result — MEASURED
+
+Frame `DSC00049.ARW` of `flat-on-ruler-cpl`, 15 live ROIs, 384 px, paired per
+ROI. Shipped arm is `strehl stack --demosaic --gate 0` with `STREHL_ALIGN=0`,
+so **no `fit_to_cover` resample contaminates the comparison**. Raw output:
+`experiments/M104b-demosaic/out/d1_arms_384.log`.
+
+### 5.1 Controls — all four pass, and the negative control went red exactly
+
+| control | value | bar | verdict |
+|---|---|---|---|
+| **NCD** planted unsharp, amount `0.500000`, radius 1.0 px | `ΔR_sig +0.2054` (**49.52σ**), `ΔΦ −0.1263` (**31.14σ**) | must be caught by **D2** | **RED, as required** |
+| **PLD** placebo, same algorithm decoded twice | worst deviation **`0.000e+00`** | `< 1e-12` | PASS |
+| **CUT** band split vs the diffraction knee | `R_alias − R_sig = −0.7740` dex | `< −0.30` | PASS |
+| **D5** INERT | 15 live ROIs | `≥ 8` | PASS |
+
+**NCD is the load-bearing one.** A planted sharpener raises `R_sig` by more
+than any real algorithm managed and is still classified **MANUFACTURED**,
+because it raises `R_alias` faster. The discriminator does the job it was
+registered to do.
+
+### 5.2 Every algorithm fails D1
+
+| arm | `ΔR_sig` dex | σ | `ΔΦ` dex | σ | verdict |
+|---|---|---|---|---|---|
+| `AAHD` | **+0.0190** | 7.07 | **−0.0626** | 13.21 | no win (D1 unmet) |
+| `DHT` | +0.0131 | 3.27 | −0.0252 | 6.73 | no win (D1 unmet) |
+| `AHD` | −0.0217 | 3.22 | +0.0132 | 2.33 | no win |
+| `PPG` | −0.0341 | 3.49 | +0.0300 | 4.42 | no win |
+| `VNG` | −0.0477 | 7.08 | −0.0314 | 2.26 | no win |
+| `DCB` | −0.0511 | 4.99 | +0.1447 | 10.59 | no win |
+| `LINEAR` | −0.1192 | 17.16 | +0.1733 | 12.88 | no win |
+
+**This is the outcome §3 registered in advance as "MHC is already the right
+choice."** No algorithm clears `ΔR_sig ≥ +0.02` dex.
+
+**`AAHD` misses by 0.0010 dex and I am reporting that as a miss, not rounding
+it to a pass.** The conclusion does not rest on where the bar sits: had `AAHD`
+cleared D1, its `Φ` falls **13.21σ**, so **D2 would have classified it
+MANUFACTURED**. The two independent bars agree.
+
+### 5.3 The 0.3518 dex spread is mostly artefact
+
+The orchestrator's framing was that MHC *"sits mid-pack in a 0.3518 dex spread
+… a spread larger than the entire deficit."* Measured as **real detail below
+the diffraction cutoff**, the best available gain over MHC is **+0.0190 dex** —
+**5.4% of that spread**. Registered prediction (c) said "less than half"; the
+true figure is **less than a twentieth**.
+
+The rest of the spread is `R_alias`: power above `0.2762` cyc/px, where **the
+lens cannot deliver signal**, so it is aliasing and invention. Ranking
+demosaics on band power ranks that.
+
+### 5.4 The registered predictions
+
+- **(a) CONFIRMED.** `LINEAR` loses real detail: `−0.1192` dex at **17.16σ**.
+- **(b) CONFIRMED.** Adaptive algorithms trigger the D2 pattern: `AAHD`
+  `ΔΦ −0.0626` (13.21σ), `DHT` `−0.0252` (6.73σ), `VNG` `−0.0314`.
+- **(c) CONFIRMED, and by a wider margin than registered.** 5.4%, not <50%.
+- **(d) CONFIRMED.** Every adaptive arm carries **more** false colour on a grey
+  ruler than MHC: `X` rises from `0.8288` to `0.9217` (`AAHD`), `0.9056`
+  (`DHT`), `0.9004` (`AHD`).
+- **(e) NOT SCORED.** The combined claim needs M95's fix, which has not landed.
+
+### 5.5 The licence gate, now measured rather than argued
+
+§1.2 predicted the algorithms that beat MHC sit behind GPL implementations.
+LibRaw refused **six of thirteen** at the door:
+
+```
+LMMSE, VCD, MODIFIED_AHD, VCD_MODIFIED_AHD, AFD  -> "requires GPL2 demosaic pack"
+AMAZE                                            -> "requires GPL3 demosaic pack"
+```
+
+`AMAZE` and `LMMSE` are exactly the algorithms `demosaic.rs:47` names as
+beating MHC. **They could not be measured here and could not lawfully be read
+if they had been.**
+
+---
+
+## 6. Verdict
+
+**NO LEVER. Do not spend engineering on the demosaic.** MEASURED: no
+available algorithm delivers `≥ 0.02` dex of real sub-cutoff detail over the
+shipped Malvar-He-Cutler on this subject; the best candidate manufactures
+detail at 13.21σ and adds false colour to a grey ruler. The 0.3518 dex spread
+that motivated the question is **5.4% real and the rest artefact**.
+
+**The softness is not here.** M104 measured the resample at `+0.1623` dex on
+this same ruler, **8.5× larger than the best demosaic gain**, and 97.0% of it
+is one removable operation. That remains the fix worth making.
+
+### What would overturn this
+
+A demosaic that raises `R_sig` by `≥ 0.02` dex **without** lowering `Φ`. None
+of the seven tested does. This was measured on **one flat, grey, periodic
+subject**; it does not transfer to `bee-3-cpl` without re-measurement, and the
+zipper artefacts `demosaic.rs` concedes MHC suffers live on **high-frequency
+diagonal** edges that a ruler at a shallow angle under-represents.
+
+---
+
+## 7. Instrument defects found and disclosed
+
+Three of my own, all caught by controls or by a bar failing, all fixed before
+the numbers in §5:
+
+1. **Seed lookup by the wrong key type.** `seed_combs` returns a dict keyed by
+   **integer ROI index**; I looked up by `(x, y)` tuple, so every lookup
+   returned `None` and every frame scored zero live ROIs. My first diagnosis —
+   "the seed frame is out of focus" — was **wrong**, and the real cause was a
+   type mismatch that produced a plausible-looking null.
+2. **Seeding a focus bracket from a single frame.** A single exposure is sharp
+   only in a band, so `find_comb` locked onto coarse structure at `f0 ≈ 0.016`
+   cyc/px instead of the ruler's `0.140` binned. Both arms then agreed to three
+   decimals **on the wrong feature** — the arms were fine and the seed was not.
+   Repaired by taking the frequency from the 79-frame merge, which is in focus
+   everywhere, while liveness stays on the demosaic-free binned decode.
+3. **A per-arm INERT gate on a paired design**, which let every candidate
+   choose its own ROI sample, and **an unpaired SE on paired data**. The
+   second is the worse one: carrying the ROI-to-ROI spread of "how much ruler
+   is in this crop" into the error bar inflated SEs to `~0.18` dex, an order
+   of magnitude above the effects, and **declared every arm inconclusive by
+   construction**. Differencing per ROI first cuts the SEs to `0.003–0.014`
+   dex. A defect that returns "no significant difference" is the most
+   comfortable kind to leave in and the easiest to miss.
