@@ -1,0 +1,33 @@
+{
+  "n_phases": 64,
+  "tap_max_dw": {
+    "nearest": 0.0,
+    "bilinear": 0.0,
+    "catmull-rom": 4.8405723873656825e-14,
+    "lanczos3": 2.968618539878065e-08
+  },
+  "unnorm_sum_half": 0.9942985488101415,
+  "unnorm_worst_phase": 0.5,
+  "unnorm_worst_sum": 0.9942985488101415,
+  "step_overshoot": {
+    "catmull-rom": 0.0625,
+    "lanczos3": 0.11141304347826086
+  },
+  "catmull_rom_closed_form": 0.0625,
+  "rust_step_catmull_rom": 0.0625,
+  "gain": 0.11602639947936416,
+  "arm8_gain": 0.116,
+  "arms": {
+    "catmull-rom": [
+      0.1845095760459981,
+      0.004865544296435302,
+      320
+    ],
+    "lanczos3": [
+      0.06848317656663394,
+      0.004887162612249044,
+      320
+    ]
+  },
+  "schema": "m95-k5-1"
+}

@@ -1,0 +1,14 @@
+B22 -- the shipped kernel, checked against algebra and against arm 8
+     taps probed at 64 phases across the unit interval
+
+1. tap agreement -- Python textbook vs weights probed out of the binary
+   nearest      support 0.5  max |dw| 0.000e+00
+   bilinear     support 1.0  max |dw| 0.000e+00
+   catmull-rom  support 2.0  max |dw| 4.841e-14
+   lanczos3     support 3.0  max |dw| 2.969e-08
+
+1b. normalisation control -- unnormalised weight sum on a constant plane
+   sum at f=0.5      0.9942985   gain error -0.5701%
+   worst over 63 phases: f=0.5000  sum 0.9942985   gain error -0.5701%
+   separable 2-D gather squares it: 0.9886296   gain error -1.1370%
+

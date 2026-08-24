@@ -1,0 +1,89 @@
+
+M95 arm 9 -- kernel ringing and election
+  D:\personal\macro\bee-3-cpl
+  299 frames
+
+B23 ringing -- DSC00150.ARW on 1536x1536 G1, half-pixel shift, overshoot in DN
+  gradient thresholds: p99 85.4 DN  p99.9 204.7 DN
+
+  contrast gate >=     0 DN   population   2356225 px (99.8698% of plane)
+    kernel          mean DN   p99.9 DN     max DN   mean/contr
+    nearest          0.0000     0.0000     0.0000     0.00000%
+    bilinear         0.0000     0.0000     0.0000     0.00000%
+    catmull-rom      0.0121     2.2148    33.2539     0.37440%
+    lanczos3         0.1098     7.4146    76.8477     2.05179%
+
+  contrast gate >=    50 DN   population     92039 px (3.9011% of plane)
+    kernel          mean DN   p99.9 DN     max DN   mean/contr
+    nearest          0.0000     0.0000     0.0000     0.00000%
+    bilinear         0.0000     0.0000     0.0000     0.00000%
+    catmull-rom      0.0010     0.0000    27.3203     0.00154%
+    lanczos3         0.0177     6.1832    76.8477     0.02422%
+
+  contrast gate >=   100 DN   population      7455 px (0.3160% of plane)
+    kernel          mean DN   p99.9 DN     max DN   mean/contr
+    nearest          0.0000     0.0000     0.0000     0.00000%
+    bilinear         0.0000     0.0000     0.0000     0.00000%
+    catmull-rom      0.0002     0.0000     1.6992     0.00020%
+    lanczos3         0.0567    19.6244    34.1569     0.04337%
+
+  contrast gate >=   200 DN   population       813 px (0.0345% of plane)
+    kernel          mean DN   p99.9 DN     max DN   mean/contr
+    nearest          0.0000     0.0000     0.0000     0.00000%
+    bilinear         0.0000     0.0000     0.0000     0.00000%
+    catmull-rom      0.0000     0.0000     0.0000     0.00000%
+    lanczos3         0.0570    10.3584    25.0261     0.02454%
+
+  contrast gate >=   400 DN   population        42 px (0.0018% of plane)
+    kernel          mean DN   p99.9 DN     max DN   mean/contr
+    nearest          0.0000     0.0000     0.0000     0.00000%
+    bilinear         0.0000     0.0000     0.0000     0.00000%
+    catmull-rom      0.0000     0.0000     0.0000     0.00000%
+    lanczos3         0.0000     0.0000     0.0000     0.00000%
+
+  spatial extent -- mean overshoot (DN) vs Chebyshev distance from a TOP edge (1987 px seed)
+  kernel              d=0        d=1        d=2        d=3        d=4        d=5        d=6
+  nearest         0.000e0    0.000e0    0.000e0    0.000e0    0.000e0    0.000e0    0.000e0
+  bilinear        0.000e0    0.000e0    0.000e0    0.000e0    0.000e0    0.000e0    0.000e0
+  catmull-rom     0.000e0   1.447e-1   6.709e-2   3.091e-2   2.649e-2   3.261e-2   2.291e-2
+  lanczos3       1.572e-1   6.154e-1   2.389e-1   1.841e-1   1.613e-1   1.664e-1   1.382e-1
+
+  K22 power -- synthetic step of 1000 DN, half-pixel shift
+  kernel         overshoot DN    % of step    ring px
+  nearest              0.0000      0.0000%          0
+  bilinear             0.0000      0.0000%          0
+  catmull-rom         62.5000      6.2500%          2
+  lanczos3           111.4132     11.1413%          3
+
+B22 port check -- tap weights read back out of the shipped kernel
+  nearest      support 0.5  taps  2  sum at f=0.5 1.0000000000
+  bilinear     support 1.0  taps  2  sum at f=0.5 1.0000000000
+  catmull-rom  support 2.0  taps  4  sum at f=0.5 1.0000000000
+  lanczos3     support 3.0  taps  6  sum at f=0.5 1.0000000410
+
+B24 election -- 16 frames, every 18th, 1024x1024 quad crop
+  ILCE-7CM2  iso Some(100.0)  black 512.0
+
+  comparison                                    winners moved       of N
+  K23 null    catmull-rom vs itself                 0.000000%     921600
+  K24 power   catmull-rom vs sigma=1.0 planted      1.532444%
+  B24         catmull-rom vs lanczos3               0.673720%
+  reference   catmull-rom vs bilinear               1.132487%
+
+  separation K24/K23 = infx
+  planted frame 8 wins 5.4532% of the crop; K24 moved 28.1% of what was reachable
+  median relative margin where lanczos3 disagreed: 0.007684  (0 = an exact tie)
+  median relative margin over all live pixels:      0.427391   ratio 55.6x
+  win share by frame: 0.003 0.000 0.000 0.000 0.003 0.171 0.384 0.166 0.055 0.055 0.107 0.021 0.021 0.008 0.003 0.005
+
+100% crops -- 3 windows of 192x192, all kernels
+  crop1-x640-y1120.bmp  panels: original | nearest | bilinear | catmull-rom | lanczos3
+  crop2-x64-y64.bmp  panels: original | nearest | bilinear | catmull-rom | lanczos3
+  crop3-x352-y928.bmp  panels: original | nearest | bilinear | catmull-rom | lanczos3
+  x640   y1120  zoom+diff  p99.9|d|   12.50 DN  amp  8.80x   RMS diff: edge   4.242 DN  flat   3.040 DN  ratio  1.40x
+  x64    y64    zoom+diff  p99.9|d|   20.50 DN  amp  5.37x   RMS diff: edge   6.775 DN  flat   1.757 DN  ratio  3.86x
+  x352   y928   zoom+diff  p99.9|d|   21.50 DN  amp  5.12x   RMS diff: edge   7.445 DN  flat   2.319 DN  ratio  3.21x
+  worst-overshoot-6x.bmp  lanczos3 peak overshoot 18.38 DN at x214 y231 (contrast 123.0 DN)
+
+wrote experiments\M95-kernel\out\k3_kernel.json
+

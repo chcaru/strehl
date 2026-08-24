@@ -1,0 +1,12 @@
+negative control for verify_report.py
+
+  baseline                                       rc=0  GREEN
+  D1 report number changed (K22 step)            rc=1  RED (good)
+  D2 source JSON changed (B24 flip rate)         rc=1  RED (good)
+  D3 fact label stripped (P97)                   rc=1  RED (good)
+  restored                                       rc=0  GREEN
+  byte-identical restore verified for both files
+
+  3/3 planted defects detected
+
+CONTROL PASSED -- the verifier discriminates

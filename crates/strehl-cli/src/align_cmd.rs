@@ -146,6 +146,7 @@ impl AlignArgs {
             "nearest" => Resampler::Nearest,
             "bilinear" => Resampler::Bilinear,
             "catmull-rom" => Resampler::CatmullRom,
+            "lanczos3" => Resampler::Lanczos3,
             other => bail!("unknown resampler {other:?}"),
         })
     }
@@ -731,6 +732,7 @@ fn run_resampler_cost(args: &AlignArgs) -> Result<()> {
         ("nearest", Resampler::Nearest),
         ("bilinear", Resampler::Bilinear),
         ("catmull-rom", Resampler::CatmullRom),
+        ("lanczos3", Resampler::Lanczos3),
     ] {
         let t = Similarity::from_params(strehl_core::align::SimilarityParams {
             ax: 0.5,

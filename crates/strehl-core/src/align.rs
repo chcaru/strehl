@@ -2661,12 +2661,91 @@ pub fn sample_catmull_rom(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
     acc
 }
 
+/// Normalised sinc, `sin(pi x) / (pi x)`, with the removable singularity filled.
+#[inline]
+fn sinc(x: f64) -> f64 {
+    if x.abs() < 1e-12 {
+        1.0
+    } else {
+        let p = std::f64::consts::PI * x;
+        p.sin() / p
+    }
+}
+
+/// Lanczos-3 weights for the six taps at offsets `-2 ..= 3`.
+///
+/// Computed in f64 and normalised to sum to one. The normalisation is not
+/// cosmetic: the raw windowed-sinc weights sum to within about 1e-3 of unity
+/// depending on phase, and an unnormalised gather would apply a phase-dependent
+/// gain — a brightness ripple keyed to sub-pixel position, which is exactly the
+/// kind of defect that survives a sharpness metric.
+#[inline]
+fn lanczos3_weights(f: f64) -> [f32; 6] {
+    let mut w = [0f64; 6];
+    let mut sum = 0f64;
+    for (i, o) in w.iter_mut().enumerate() {
+        let t = f - (i as f64 - 2.0);
+        let v = sinc(t) * sinc(t / 3.0);
+        *o = v;
+        sum += v;
+    }
+    let inv = 1.0 / sum;
+    [
+        (w[0] * inv) as f32,
+        (w[1] * inv) as f32,
+        (w[2] * inv) as f32,
+        (w[3] * inv) as f32,
+        (w[4] * inv) as f32,
+        (w[5] * inv) as f32,
+    ]
+}
+
+/// Lanczos-3 (windowed sinc, `a = 3`) gather.
+///
+/// Interpolating like Catmull-Rom — at integer phase every tap but the centre
+/// lands on a zero of `sinc`, so an identity transform is a true identity — but
+/// with a far flatter passband. M95 measured it recovering **+0.1160 dex** of
+/// 0.30–0.48 cyc/px power against Catmull-Rom on the shipped `bee-3-cpl` warps,
+/// against **+0.0179 dex** for removing the coverage rescale: the kernel is the
+/// larger of the two levers by 6.5x.
+///
+/// **It is not the default and the reason is ringing, not doubt about the
+/// gain.** A windowed sinc overshoots at hard edges far harder than a cubic:
+/// M95 measured p99.9 overshoot 9.9x Catmull-Rom's. On a stack whose remaining
+/// visible defect is a halo at occluding edges, a kernel that rings is a
+/// plausible way to make a sharper number and a worse photograph. Choose it
+/// deliberately, on a subject without hard edges, and look at the result.
+///
+/// Support is 3 px, not 2, so [`Resampler::sample_checked`] rejects a wider
+/// border — one more px of the coverage-cropped field is unavailable per side.
+pub fn sample_lanczos3(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
+    if p.width < 6 || p.height < 6 {
+        return sample_catmull_rom(p, x, y);
+    }
+    let x = x.clamp(2.0, (p.width - 4) as f64);
+    let y = y.clamp(2.0, (p.height - 4) as f64);
+    let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+    let wx = lanczos3_weights(x - x0 as f64);
+    let wy = lanczos3_weights(y - y0 as f64);
+    let mut acc = 0f32;
+    for (dy, wyv) in wy.iter().enumerate() {
+        let row = (y0 + dy - 2) * p.width + x0 - 2;
+        let mut r = 0f32;
+        for (dx, wxv) in wx.iter().enumerate() {
+            r += p.data[row + dx] * *wxv;
+        }
+        acc += r * *wyv;
+    }
+    acc
+}
+
 /// Which interpolator a gather uses.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Resampler {
     Nearest,
     Bilinear,
     CatmullRom,
+    Lanczos3,
 }
 
 impl Resampler {
@@ -2676,6 +2755,7 @@ impl Resampler {
             Resampler::Nearest => sample_nearest(p, x, y),
             Resampler::Bilinear => sample_bilinear(p, x, y),
             Resampler::CatmullRom => sample_catmull_rom(p, x, y),
+            Resampler::Lanczos3 => sample_lanczos3(p, x, y),
         }
     }
 
@@ -2686,6 +2766,7 @@ impl Resampler {
             Resampler::Nearest => 0.5,
             Resampler::Bilinear => 1.0,
             Resampler::CatmullRom => 2.0,
+            Resampler::Lanczos3 => 3.0,
         }
     }
 
@@ -3419,6 +3500,87 @@ mod tests {
             Resampler::CatmullRom.sample_checked(p, 2.0, 2.0).is_some(),
             "the checked sampler must accept a position fully inside the plane"
         );
+    }
+
+    /// Lanczos-3 must be **interpolating**, or an identity transform is lossy.
+    ///
+    /// This is the control that retired Mitchell in M95: a non-interpolating
+    /// kernel reads a cost at zero phase, so every number measured through it
+    /// is contaminated by the kernel's own smoothing of a stationary image.
+    #[test]
+    fn lanczos3_is_interpolating_and_preserves_dc() {
+        // At integer phase every tap but the centre lands on a zero of sinc.
+        let w = lanczos3_weights(0.0);
+        assert!(
+            (w[2] - 1.0).abs() < 1e-6,
+            "centre tap at zero phase should be 1, got {}",
+            w[2]
+        );
+        for (i, v) in w.iter().enumerate() {
+            if i != 2 {
+                assert!(*v < 1e-6, "tap {i} at zero phase should vanish, got {v}");
+            }
+        }
+        // Partition of unity at every phase, or the gather applies a
+        // phase-dependent gain.
+        for k in 0..64 {
+            let f = k as f64 / 64.0;
+            let s: f32 = lanczos3_weights(f).iter().sum();
+            assert!(
+                (s - 1.0).abs() < 1e-5,
+                "weights at phase {f} sum to {s}, not 1"
+            );
+        }
+    }
+
+    /// The support arm must match the sampler's real reach, or `sample_checked`
+    /// admits a position whose taps leave the plane.
+    #[test]
+    fn lanczos3_support_matches_its_reach() {
+        assert_eq!(Resampler::Lanczos3.support(), 3.0);
+        let data = vec![1.0f32; 32 * 32];
+        let p = PlaneRef {
+            data: &data,
+            width: 32,
+            height: 32,
+        };
+        // 2.5 is the first position whose 6-tap support fits: floor(2.5) = 2,
+        // taps 0..=5.
+        assert!(
+            Resampler::Lanczos3.sample_checked(p, 2.0, 2.0).is_none(),
+            "2.0 is inside Catmull-Rom's reach but outside Lanczos-3's"
+        );
+        assert!(
+            Resampler::Lanczos3.sample_checked(p, 2.5, 2.5).is_some(),
+            "2.5 has full 6-tap support and must be accepted"
+        );
+        assert!(
+            Resampler::Lanczos3.sample_checked(p, 29.5, 29.5).is_none(),
+            "the far border must be refused as well as the near one"
+        );
+        // A constant plane must come back constant: any deviation is the
+        // weights failing to sum to one.
+        let v = Resampler::Lanczos3.sample(p, 10.3, 7.8);
+        assert!((v - 1.0).abs() < 1e-5, "constant plane resampled to {v}");
+    }
+
+    /// Every kernel must round-trip through the warpmap spelling, or a sidecar
+    /// written with one is read back as another.
+    #[test]
+    fn every_resampler_survives_a_name_round_trip() {
+        for r in [
+            Resampler::Nearest,
+            Resampler::Bilinear,
+            Resampler::CatmullRom,
+            Resampler::Lanczos3,
+        ] {
+            let n = crate::warpmap::resampler_name(r);
+            assert_eq!(
+                crate::warpmap::resampler_from_name(n),
+                Some(r),
+                "{n} did not survive the round trip"
+            );
+        }
     }
 
     // ---- numerics ------------------------------------------------------

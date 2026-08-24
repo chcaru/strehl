@@ -1,0 +1,79 @@
+=== B23 ringing, contrast-gate ladder, overshoot in DN ===
+  frame DSC00150.ARW  crop 1536x1536 DN
+  p99 gradient 85.42 DN   p99.9 204.71 DN
+   gate        pop     pop% |     nearest mean/max |    bilinear mean/max | catmull-rom mean/max |    lanczos3 mean/max
+      0    2356225 100.0000% |   0.0000/0.0000   |   0.0000/0.0000   |   0.0121/33.2539  |   0.1098/76.8477 
+     50      92039  3.9062% |   0.0000/0.0000   |   0.0000/0.0000   |   0.0010/27.3203  |   0.0177/76.8477 
+    100       7455  0.3164% |   0.0000/0.0000   |   0.0000/0.0000   |   0.0002/1.6992   |   0.0567/34.1569 
+    200        813  0.0345% |   0.0000/0.0000   |   0.0000/0.0000   |   0.0000/0.0000   |   0.0570/25.0261 
+    400         42  0.0018% |   0.0000/0.0000   |   0.0000/0.0000   |   0.0000/0.0000   |   0.0000/0.0000  
+
+  ratio lanczos3 / catmull-rom, mean overshoot, per gate:
+    gate     0  cr 0.0121  lz 0.1098  ratio 9.06x
+    gate    50  cr 0.0010  lz 0.0177  ratio 18.57x
+    gate   100  cr 0.0002  lz 0.0567  ratio 244.54x
+    gate   200  cr 0.0000  lz 0.0570  ratio inf
+    gate   400  cr 0.0000  lz 0.0000  ratio 0/0
+
+=== K22 power: synthetic 1000 DN step, half-pixel shift ===
+  nearest      overshoot     0.0000 DN    0.0000% of step  reach 0 px
+  bilinear     overshoot     0.0000 DN    0.0000% of step  reach 0 px
+  catmull-rom  overshoot    62.5000 DN    6.2500% of step  reach 2 px
+  lanczos3     overshoot   111.4132 DN   11.1413% of step  reach 3 px
+
+=== spatial extent: mean overshoot DN vs Chebyshev distance from a gated edge ===
+  kernel           d=0     d=1     d=2     d=3     d=4     d=5     d=6
+  nearest       0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000
+  bilinear      0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000
+  catmull-rom   0.0000  0.1447  0.0671  0.0309  0.0265  0.0326  0.0229
+  lanczos3      0.1572  0.6154  0.2389  0.1841  0.1613  0.1664  0.1382
+
+=== B24 election ===
+  16 frames, stride 18, 1024x1024 quad crop, 921600 px compared
+  camera ILCE-7CM2 ISO 100
+  K23 null  catmull-rom vs itself            0.000000% of winners moved
+  K24 power vs sigma=1.0 planted on fr 8     1.532444%
+  B24       catmull-rom vs lanczos3          0.673720%
+  ref       catmull-rom vs bilinear          1.132487%
+  planted frame's own win share                5.4532%
+  K24 as a share of what was reachable        28.1016%
+  median rel margin where lanczos3 flipped 0.007684
+  median rel margin, all live pixels       0.427391
+  separation                               55.6x
+  win share by frame: 0.003 0.000 0.000 0.000 0.003 0.171 0.384 0.166 0.055 0.055 0.107 0.021 0.021 0.008 0.003 0.005
+
+=== crops, lanczos3 minus catmull-rom (DN) ===
+  window 192x192  panels original, nearest, bilinear, catmull-rom, lanczos3
+  x640   y1120  p99.9|d|   12.50  RMS edge   4.242  RMS flat   3.040  edge/flat 1.40x
+  x64    y64    p99.9|d|   20.50  RMS edge   6.775  RMS flat   1.757  edge/flat 3.86x
+  x352   y928   p99.9|d|   21.50  RMS edge   7.445  RMS flat   2.319  edge/flat 3.21x
+  worst gated overshoot 18.38 DN at x214 y231, local contrast 123.0 DN
+
+=== B22 port, 64 phases ===
+  phases probed 64
+  nearest      support 0.5  taps 2  offsets 0..1  max |dw| vs textbook 0.000e+00
+  bilinear     support 1.0  taps 2  offsets 0..1  max |dw| vs textbook 0.000e+00
+  catmull-rom  support 2.0  taps 4  offsets -1..2  max |dw| vs textbook 4.841e-14
+  lanczos3     support 3.0  taps 6  offsets -2..3  max |dw| vs textbook 2.969e-08
+  step overshoot, python: catmull-rom 6.2500%  lanczos3 11.1413%
+  catmull-rom closed form 1/16 = 6.2500%
+  gather cost catmull-rom +0.1845 +/- 0.0049 dex  n 320
+  gather cost lanczos3    +0.0685 +/- 0.0049 dex  n 320
+  kernel gain +0.1160 dex   arm 8 +0.1160 dex   |d| 0.0000
+
+=== B20 b-spline prefilter radius ===
+  z = -0.2679491924   decay 1/|z| = 3.7321 per unit R
+  exact IIR reference truncated at k = 24
+  R=  2  taps   4  max |w - exact| 1.146258e+03
+  R=  3  taps   6  max |w - exact| 3.199900e+02
+  R=  4  taps   8  max |w - exact| 9.075231e+01
+  R=  5  taps  10  max |w - exact| 2.437043e+01
+  R=  6  taps  12  max |w - exact| 6.794062e+00
+  R=  7  taps  14  max |w - exact| 1.843929e+00
+  R=  8  taps  16  max |w - exact| 5.058880e-01
+  R=  9  taps  18  max |w - exact| 1.365147e-01
+  R= 10  taps  20  max |w - exact| 3.710337e-02
+  R= 11  taps  22  max |w - exact| 9.979257e-03
+  R= 12  taps  24  max |w - exact| 2.675412e-03
+  B21 interpolation error at integer taps 2.220e-16  PASS
+  B20  ->  NOT MET at any R tested   (R_chosen None)

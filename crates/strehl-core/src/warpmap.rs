@@ -530,19 +530,21 @@ fn hex_f64(s: &str, key: &str) -> Result<f64, WarpMapError> {
         })
 }
 
-fn resampler_name(r: Resampler) -> &'static str {
+pub(crate) fn resampler_name(r: Resampler) -> &'static str {
     match r {
         Resampler::Nearest => "nearest",
         Resampler::Bilinear => "bilinear",
         Resampler::CatmullRom => "catmull-rom",
+        Resampler::Lanczos3 => "lanczos3",
     }
 }
 
-fn resampler_from_name(s: &str) -> Option<Resampler> {
+pub(crate) fn resampler_from_name(s: &str) -> Option<Resampler> {
     match s {
         "nearest" => Some(Resampler::Nearest),
         "bilinear" => Some(Resampler::Bilinear),
         "catmull-rom" => Some(Resampler::CatmullRom),
+        "lanczos3" => Some(Resampler::Lanczos3),
         _ => None,
     }
 }

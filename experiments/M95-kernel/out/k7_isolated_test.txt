@@ -1,0 +1,17 @@
+copied workspace sources -> C:\Users\chris\AppData\Local\Temp\m95-isolated
+restored crates/strehl-core/src/color.rs in the copy from HEAD: 70337 dirty bytes -> 63659 committed bytes
+live tree untouched: True
+  align.rs       copied verbatim from the working tree: True
+  warpmap.rs     copied verbatim from the working tree: True
+
+running: cargo test --release -p strehl-core
+
+test result: ok. 265 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+lanczos3 tests specifically:
+  test align::tests::lanczos3_is_interpolating_and_preserves_dc ... ok
+  test align::tests::lanczos3_support_matches_its_reach ... ok
+  test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 263 filtered out; finished in 0.00s
+
+ISOLATED TESTS PASS  (rc 0, 0)

@@ -1,0 +1,18 @@
+source: single-noalign.tif  tiles 8
+
+B21 interpolating at integer phase  max|w - delta| = 2.220e-16  PASS
+
+  R  taps   max abs err vs exact IIR  bar 1e-4
+  2     4                  1.146e+03  
+  3     6                  3.200e+02  
+  4     8                  9.075e+01  
+  5    10                  2.437e+01  
+  6    12                  6.794e+00  
+  7    14                  1.844e+00  
+  8    16                  5.059e-01  
+  9    18                  1.365e-01  
+ 10    20                  3.710e-02  
+ 11    22                  9.979e-03  
+ 12    24                  2.675e-03  
+
+B20 FAILS at every R <= 12 -- the B-spline does not ship.

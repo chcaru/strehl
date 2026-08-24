@@ -1,0 +1,122 @@
+PASS 1 -- PRESENT and DISCRIMINATE, report vs JSON
+
+  claim                                                 value  PRESENT  DISCRIM
+  B23 p99 gradient DN                                   85.42      yes      yes
+  B23 p99.9 gradient DN                                204.71      yes      yes
+  B23 gate 0 population                             2 356 225      yes      yes
+  B23 gate 0 cr mean                                   0.0121      yes      yes
+  B23 gate 0 cr max                                   33.2539      yes      yes
+  B23 gate 0 lz mean                                   0.1098      yes      yes
+  B23 gate 0 lz max                                   76.8477      yes      yes
+  B23 gate 50 population                               92 039      yes      yes
+  B23 gate 50 cr mean                                  0.0010      yes      yes
+  B23 gate 50 cr max                                  27.3203      yes      yes
+  B23 gate 50 lz mean                                  0.0177      yes      yes
+  B23 gate 50 lz max                                  76.8477      yes      yes
+  B23 gate 100 population                               7 455      yes      yes
+  B23 gate 100 cr mean                                 0.0002      yes      yes
+  B23 gate 100 cr max                                  1.6992      yes      yes
+  B23 gate 100 lz mean                                 0.0567      yes      yes
+  B23 gate 100 lz max                                 34.1569      yes      yes
+  B23 gate 200 population                                 813      yes      yes
+  B23 gate 200 cr mean                                 0.0000      yes      yes
+  B23 gate 200 cr max                                  0.0000      yes      yes
+  B23 gate 200 lz mean                                 0.0570      yes      yes
+  B23 gate 200 lz max                                 25.0261      yes      yes
+  B23 gate 400 population                                  42      yes      yes
+  B23 gate 400 cr mean                                 0.0000      yes      yes
+  B23 gate 400 cr max                                  0.0000      yes      yes
+  B23 gate 400 lz mean                                 0.0000      yes      yes
+  B23 gate 400 lz max                                  0.0000      yes      yes
+  K22 catmull-rom overshoot DN                        62.5000      yes      yes
+  K22 catmull-rom pct of step                          6.2500      yes      yes
+  K22 lanczos3 overshoot DN                          111.4132      yes      yes
+  K22 lanczos3 pct of step                            11.1413      yes      yes
+  radial catmull-rom d=0                               0.0000      yes      yes
+  radial catmull-rom d=1                               0.1447      yes      yes
+  radial catmull-rom d=2                               0.0671      yes      yes
+  radial catmull-rom d=3                               0.0309      yes      yes
+  radial catmull-rom d=4                               0.0265      yes      yes
+  radial catmull-rom d=5                               0.0326      yes      yes
+  radial catmull-rom d=6                               0.0229      yes      yes
+  radial lanczos3 d=0                                  0.1572      yes      yes
+  radial lanczos3 d=1                                  0.6154      yes      yes
+  radial lanczos3 d=2                                  0.2389      yes      yes
+  radial lanczos3 d=3                                  0.1841      yes      yes
+  radial lanczos3 d=4                                  0.1613      yes      yes
+  radial lanczos3 d=5                                  0.1664      yes      yes
+  radial lanczos3 d=6                                  0.1382      yes      yes
+  B24 pixels compared                                 921 600      yes      yes
+  K23 null pct                                       0.000000      yes      yes
+  K24 power pct                                      1.532444      yes      yes
+  B24 lanczos3 pct                                   0.673720      yes      yes
+  B24 ref bilinear pct                               1.132487      yes      yes
+  K24 planted win share pct                            5.4532      yes      yes
+  K24 share of reachable pct                          28.1016      yes      yes
+  B24 median margin at flip                          0.007684      yes      yes
+  B24 median margin overall                          0.427391      yes      yes
+  B24 separation                                         55.6      yes      yes
+  crop x640 y1120 p99.9                                 12.50      yes      yes
+  crop x640 y1120 RMS edge                              4.242      yes      yes
+  crop x640 y1120 RMS flat                              3.040      yes      yes
+  crop x640 y1120 edge/flat                              1.40      yes      yes
+  crop x64 y64 p99.9                                    20.50      yes      yes
+  crop x64 y64 RMS edge                                 6.775      yes      yes
+  crop x64 y64 RMS flat                                 1.757      yes      yes
+  crop x64 y64 edge/flat                                 3.86      yes      yes
+  crop x352 y928 p99.9                                  21.50      yes      yes
+  crop x352 y928 RMS edge                               7.445      yes      yes
+  crop x352 y928 RMS flat                               2.319      yes      yes
+  crop x352 y928 edge/flat                               3.21      yes      yes
+  worst gated overshoot DN                              18.38      yes      yes
+  worst gated local contrast                            123.0      yes      yes
+  B22 phases probed                                        64      yes      yes
+  B22 catmull-rom tap error                         4.841e-14      yes      yes
+  B22 lanczos3 tap error                            2.969e-08      yes      yes
+  B22 nearest support                                     0.5      yes      yes
+  B22 bilinear support                                    1.0      yes      yes
+  B22 catmull-rom support                                 2.0      yes      yes
+  B22 lanczos3 support                                    3.0      yes      yes
+  B22 catmull-rom gather cost                          0.1845      yes      yes
+  B22 lanczos3 gather cost                             0.0685      yes      yes
+  B22 tile-warp n                                         320      yes      yes
+  B22 kernel gain                                      0.1160      yes      yes
+  B22 arm8 gain                                        0.1160      yes      yes
+  normalisation sum at f=0.5                        0.9942985      yes      yes
+  normalisation gain error pct                         0.5701      yes      yes
+  normalisation 2-D squared                         0.9886296      yes      yes
+  normalisation 2-D pct                                1.1370      yes      yes
+  B20 z                                          0.2679491924      yes      yes
+  B20 decay per unit R                                 3.7321      yes      yes
+  B20 R=8 error                                  5.058880e-01      yes      yes
+  B20 R=9 error                                  1.365147e-01      yes      yes
+  B20 R=10 error                                 3.710337e-02      yes      yes
+  B20 R=11 error                                 9.979257e-03      yes      yes
+  B20 R=12 error                                 2.675412e-03      yes      yes
+  B21 b-spline interp error                         2.220e-16      yes      yes
+
+  93/93 numeric claims verified
+
+PASS 2 -- structural claims
+
+  fact label P95                               yes
+  fact label P96                               yes
+  fact label P97                               yes
+  fact label P98                               yes
+  fact label P99                               yes
+  fact label P100                              yes
+  fact label P101                              yes
+  fact label P102                              yes
+  fact label P103                              yes
+  default stated unchanged                     yes
+  K24 failure disclosed                        yes
+  arm 7 correction disclosed                   yes
+  eye-refutes-metric disclosed                 yes
+  b-spline non-ship disclosed                  yes
+  corpus_lint disclosure                       yes
+  merge_cmd untouched stated                   yes
+  pre-registration deviation disclosed         yes
+
+  17/17 structural claims verified
+
+GREEN
