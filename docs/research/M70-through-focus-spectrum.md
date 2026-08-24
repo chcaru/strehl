@@ -16,6 +16,19 @@ drawn from it is FALSE, and the gap between the two is measured at 1.110×.**
 > The addendum is appended rather than woven in, so that what was known when each
 > criterion was written stays legible.
 
+> **Second addendum, §19, added after the owner's third turn.** That turn
+> **retracted** the claim that sent §16 after asymmetry — no corpus fact
+> establishes it — and rescoped the question to *"are real through-focus curves
+> symmetric, and where does their shape depart from a Gaussian?"* §19 answers the
+> second half under a third pre-registration (`PREREGISTRATION-C.md`, committed
+> `6a831fa` *before* the corpus run), and **opens by retracting a misreading of my
+> own in §16.7** (§19.1). Its results: the pre-registered criteria return
+> **INDETERMINATE**; on patches where the question is well posed the curve is
+> **not distinguishable from a Gaussian** (two independent captures agreeing to
+> 0.0099); and the apparent departure elsewhere is **multimodality — the
+> subject's depth range — which answers M25's open question 33** and
+> **reinforces PLUGIN by a second, independent route** (§19.8).
+
 Milestone type: measurement. **No Rust was written and nothing under `crates/**`
 was edited** — M67 and M69 are live there. `SYNTHESIS.md`, `AGENTS.md` and
 `crates/**` were read-only. Everything M70 produced lives in
@@ -772,8 +785,11 @@ content collision, not number collision. **P13–P18 are addendum facts (§16–
 P13, P14 and P15 bear directly on existing facts 274, 471, 1006 and 19 and must
 be checked against them for contradiction, not just for duplication. P13 is the
 positive measurement fact 1006 explicitly lacks — 1006 establishes an absence of
-evidence, P13 supplies the evidence — and it is corroborated by fact 471's own
-published half-widths (§16.7).**
+evidence, P13 supplies the evidence. **A claim that fact 471's published
+half-widths corroborated P13 stood here and in §16.7 and is RETRACTED — it was
+a misreading of `10/9` as near/far when it is measured/modelled (§19.1). P13
+stands on its own measurement; it never needed the corroboration.** P19–P24 are
+the §19 facts and bear on facts 274 and 471 and on M25's open question 33.**
 
 | # | Proposed fact | Label | Source |
 | --- | --- | --- | --- |
@@ -984,8 +1000,26 @@ settle it in an afternoon.
    from K=22 to K=130 — and should shoot the **same scene twice**, because
    non-reproduction across repeat captures is what carried §16.5 and a single
    stack could not have.
+7. **A dense capture of a SHALLOW subject (added by §19).** This is the arm the
+   corpus does not have and it now blocks two questions. **Every stack with
+   K ≥ 100 here is a deep subject**, so depth range and focus-step density are
+   confounded corpus-wide (§19.9 item 5). That is why M67's named
+   `109MSDCF`-versus-`coffee-bean` pairing cannot be run (§19.7(b)) and why
+   §19.4(b)'s resolving-power ceiling bites: a shallow subject shot at ≥100 frames
+   would give **wide unimodal curves** — `w50` ≥ 3.6 frames, the threshold at which
+   a Gaussian and a sech² finally separate — and would settle the tail-shape
+   question that §19 can only bound. **One capture, and it unlocks both.**
 
 **Deliberately not measured.**
+
+* **Whether the through-focus tails are mildly heavy.** §19.4(b) measures that
+  this corpus **cannot** answer it: below `w50` = 3.6 frames a Gaussian and a
+  sech² differ by less than the pre-registered bar, and 10/12 stacks are below.
+  I stopped at the bound rather than reporting a number the instrument cannot
+  support. Next item 7 is the capture that would.
+* **Whether multi-lobed curves imply two depths.** §19.5 measures that a
+  two-depth scene *produces* multimodality. **The converse is M63's question and
+  M63 refuted it five ways.** I did not re-open it and §19.8 says so explicitly.
 
 * **Whether a deconvolution would produce a better image.** M41 measured that and
   refuted it, and re-running it would be manufactured work. M70's charter was the
@@ -1266,14 +1300,29 @@ because a reader who notices the same pattern deserves to know it was checked.
 
 ### 16.7 What §16 concludes
 
-**Independent corroboration, from a fact I did not use as an input.** SYNTHESIS
-fact 1006 — folded while this addendum was being written — records fact 471's
-through-focus FWHM half-widths as **(10/9) and (17/17)** on two stacks. Converted
-to this addendum's statistic those are `|A₅₀|` = **0.053** and **0.000**. My
-corpus median is **0.0404** with a range of 0.0096–0.0773. **A different
-milestone, a different statistic and different stacks land inside my range and
-next to my median.** This was not a designed check — fact 471's numbers were
-published before M70 existed — which is what makes it worth reporting.
+> **RETRACTION, added with §19.** The paragraph that stood here claimed
+> independent corroboration from fact 471, and **it was a misreading of my own.**
+> It is struck and replaced. **The §16 conclusion does not depend on it** —
+> corroboration is what is withdrawn, not the measurement. See §19.1.
+
+~~*Independent corroboration, from a fact I did not use as an input. SYNTHESIS
+fact 1006 records fact 471's through-focus FWHM half-widths as (10/9) and
+(17/17) on two stacks. Converted to this addendum's statistic those are
+|A50| = 0.053 and 0.000, landing inside my range and next to my median.*~~
+
+**Read at source (`M67-focus-correctness.md:520`), `10/9` is FWHM *measured*
+versus FWHM *modelled* — a model-agreement check — not near-side versus far-side
+half-widths. It is not an asymmetry measurement and cannot be converted into
+one.** M67 says so in the same table row: *"FWHM is a **symmetric** summary and
+it *agrees* with the model on two stacks. Neither confirms nor refutes skew."* I
+took the numbers from fact 1006's compressed rendering and did not open the
+source. **§19.1 records this as a defect of mine and what it cost.**
+
+**What fact 471 does carry, used correctly.** Its real content is two **measured
+blur-growth rates** — `s = 0.6017 px/frame` on `119MSDCF` and `1.1856` on
+`109MSDCF`. §19 uses them to prove the shape plant covers the real regime rather
+than assuming it, which is the use the misreading displaced.
+
 
 **Where this leaves fact 1006.** Fact 1006 establishes that *no corpus fact
 establishes asymmetry* and concludes that "the live hypothesis is now closer to
@@ -1431,3 +1480,449 @@ to 0.0041 of exact rank-1. **The lever is the gate constant at
 `crates/strehl-core/src/merge.rs:297`, not the merge architecture** — §0.4's
 split of the ±5 gain into ~30 points of reach and ~8 points of weighting is
 unaffected by this correction, since both terms were measured at the same widths.
+
+---
+
+## 19. Addendum: where the through-focus shape departs from a Gaussian
+
+**Added after the owner's third turn, which RETRACTED the claim that sent §16
+after asymmetry** and rescoped the question to *"are real through-focus curves
+symmetric, and where does their shape depart from a Gaussian?"* §16 answered the
+first half. This answers the second, which §16 explicitly could not (§16.4:
+excess kurtosis is not a shape statistic on this corpus). Pre-registered in
+`experiments/M70-through-focus-spectrum/PREREGISTRATION-C.md`, committed
+`6a831fa`, **before `s21` read any real stack.**
+
+### 19.1 A defect of mine, found first, reported first
+
+**The owner's meta-lesson — "a resolving citation is not a verified claim" — is
+one I violated in §16.7, in the paragraph congratulating itself on independent
+corroboration.**
+
+§16.7 as committed claimed fact 471's `(10/9)` and `(17/17)` corroborated my
+symmetry result, converting them to `|A₅₀|` = 0.053 and 0.000 and observing that
+they landed next to my corpus median of 0.0404. **Read at source — I opened
+`M67-focus-correctness.md:520` while preparing this section — `10/9` is FWHM
+*measured* versus FWHM *modelled*.** A model-agreement check. Not near-side
+versus far-side. M67 annotates it in the same row: *"FWHM is a **symmetric**
+summary and it *agrees* with the model on two stacks. Neither confirms nor
+refutes skew."*
+
+I took the pair from SYNTHESIS fact 1006's compressed rendering — where "fact
+471's FWHM (10/9, 17/17) is symmetric and agrees on two stacks" reads naturally
+as two half-widths — and I did not open the source. **The citation resolved. The
+fact existed. It was not the quantity I used it as.** That is the third instance
+this week and the first committed by an agent rather than caught in one.
+
+**What it cost, stated exactly:**
+
+* **Nothing load-bearing.** §16's conclusion rests on 12 stacks, 6 controls and a
+  non-reproduction across three repeat captures. Corroboration is what is
+  withdrawn. §16.7 and §11's preamble are struck and corrected in place.
+* **One real thing was displaced.** Fact 471's actual content is two **measured
+  blur-growth rates**, `s = 0.6017 px/frame` on `119MSDCF` and `1.1856` on
+  `109MSDCF`. Those are exactly what a defocus plant needs to be checked against.
+  §19.2 uses them that way. **The misreading cost me the correct use of the fact
+  for a week.**
+* **A near-miss on the arithmetic, worth recording.** Had `10/9` *been* near/far
+  half-widths, my conversion `|A| = 0.053` would have been right, and it landed
+  next to my median. **A wrong reading that produces a plausible number is the
+  hardest kind to catch** — the agreement felt like confirmation and functioned
+  as camouflage. Facts 61–64 record four plants that were subtly wrong; this is
+  the same failure mode applied to a citation.
+
+**Also, and much smaller, in the brief I was given:** the relay described
+`109MSDCF` as "~1.5 px/frame". Fact 471 says **1.1856**. The pairing argument is
+unaffected — the point is that it is 10× below `coffee-bean`'s grid edge — and I
+use 1.1856 throughout.
+
+### 19.2 The instrument, and why kurtosis had to be replaced
+
+§16.4 established that excess kurtosis `g2` **cannot** answer the shape question
+here: on a plant symmetric *by construction* it ran **−0.63 … +6.13** purely as
+focus-step density varied. It measures curve width relative to the moment window.
+
+The replacement is a statistic that is invariant to curve width **by
+construction**. For a curve with peak at `k*`, let `w(f)` be the half-width at
+fraction `f` of peak, averaged over near and far sides:
+
+```
+    R10_50 = w(0.10) / w(0.50)        primary
+    R25_50 = w(0.25) / w(0.50)        secondary
+```
+
+For a Gaussian, `w(f) = σ·√(−2 ln f)` and **σ cancels exactly**:
+
+| ratio | Gaussian value |
+| --- | --- |
+| `R25_50` | `√(ln4/ln2)` = **1.414214** |
+| `R10_50` | `√(ln10/ln2)` = **1.822616** |
+
+No free parameter. Four properties, each **measured in `s20`, not assumed:**
+
+| property | measurement | why it matters |
+| --- | --- | --- |
+| **unbiased** | reproduces the Gaussian value to **0.034%** | MEASURED |
+| **scale-free** | over a **10.5× range of curve width** the same Gaussian spans **1.0121×**, sd **0.0090** | **the confound that killed `g2` (pooled sd 4.77) cannot reach it** — MEASURED |
+| **discriminates tail weight** | boxcar 0.562×, triangle 0.988×, Gaussian 1.000×, sech² 1.134×, Lorentzian 1.646× | it responds to the thing it names — MEASURED |
+| **cannot invent a reading** | NULL-NOISE (flat latent, calibrated noise, no curve): **144/144 draws UNDEFINED** | unlike `A₅₀`, which returned a spurious ±0.077 on noise, this refuses to report — MEASURED |
+
+**It is a tail statistic, which is M67's instruction (c).** It is read at 0.10 of
+peak. **No parabola and no Gaussian is fitted near the peak anywhere in M70** —
+that was true of §16 and remains true here, so the region fact 471 implies any
+deviation lives in is not excluded by construction.
+
+**It is blind to asymmetry by construction** — it averages near and far. That is
+deliberate: asymmetry is §16's question. **The two statistics are therefore
+independent by design, which is M67's instruction (a):** skew and kurtosis cannot
+be confused here because they are measured by different estimators reported in
+different sections. §16.4 went further and showed the kurtosis estimator does not
+measure what its name says.
+
+**The physical comparator, built from fact 471 used correctly.** A real-texture
+defocus ladder was run at δ ∈ {0.25, 0.50, **0.6017**, 1.0, **1.1856**, 2.0}
+px/step — a sweep **containing both of fact 471's measured real rates and
+bracketing them 4.8× on either side.** It reads `R10_50` = **1.729–1.837, median
+1.766**, moving only **1.062×** across the whole 8× sweep. **A genuine defocus
+curve on real texture is very slightly sub-Gaussian, and the plant is known to
+cover the real regime rather than assumed to** (rule 3, and the discipline facts
+61–64 exist to enforce).
+
+### 19.3 Criteria H / I / J, as they fell: INDETERMINATE
+
+Bar **±0.11** on `R10_50`, fixed in advance as *the physical plant's full span
+across an 8× range of focus-step density* — an effect must exceed everything step
+density alone can do to a curve that is Gaussian-ish by construction. Headline
+population: the **seven POWERED stacks** (K ≥ 100) from §16.5's table.
+
+| criterion | requirement | result | |
+| --- | --- | --- | --- |
+| **H** GAUSSIAN | median within ±0.11 of 1.8226 **and** ≥6/7 stacks | median **2.1803** (+0.3577), **3/7** | **NOT MET** |
+| **I** HEAVIER (fact 274's direction) | median ≥ 1.9326 **and** ≥6/7 stacks | median **PASSES**, but **4/7** | **NOT MET** |
+| **J** LIGHTER | median ≤ 1.7126 **and** ≥6/7 | median FAILS, **0/7** | **NOT MET** |
+
+**VERDICT: INDETERMINATE.** Criterion I's median cleared its bar and its stack
+count did not — **4 of 7 against a requirement of 6.** Reported as it fell. §16's
+Criterion E missed by one stack and was reported failed; this misses by two and
+is reported the same way. **A milestone that reinterprets its bar after seeing
+the count has no bar.**
+
+| stack | K | w50 | `R25/50` | `R10/50` | vs Gaussian | undef | powered |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | :---: |
+| coffee-bubbles | 19 | 1.61 | 1.4202 | 1.8857 | +0.0631 | 1.4% | – |
+| 109MSDCF | 22 | 2.25 | 1.4398 | 1.9741 | +0.1515 | 22.7% | – |
+| 119MSDCF | 33 | 3.28 | 1.5326 | 2.2905 | +0.4679 | 54.2% | – |
+| 113MSDCF | 63 | 3.14 | 1.4150 | 2.1035 | +0.2809 | 0.0% | – |
+| 112MSDCF | 79 | 2.95 | 1.4469 | 2.0490 | +0.2264 | 0.0% | – |
+| foam | 100 | 2.19 | 1.4789 | 2.1803 | +0.3577 | 0.0% | **YES** |
+| coffee-bean | 105 | 2.38 | 1.4157 | 1.8161 | −0.0065 | 20.8% | **YES** |
+| wrapped-text-2 | 120 | 1.96 | 1.4244 | 1.8546 | +0.0320 | 0.0% | **YES** |
+| wrapped-text-1 | 130 | 1.99 | 1.4188 | 1.8444 | +0.0218 | 0.0% | **YES** |
+| bee-1 | 299 | 2.86 | 1.7887 | **2.6514** | +0.8288 | 6.2% | **YES** |
+| bee-2 | 299 | 3.57 | 1.5552 | **2.4345** | +0.6119 | 1.9% | **YES** |
+| bee-3 | 299 | 3.46 | 1.5469 | **2.6959** | +0.8733 | 8.8% | **YES** |
+
+**VOID conditions.** VOID 11 (censoring): does not fire, 0/7 powered stacks above
+50% undefined. **VOID 13 (reversal must be exact): does not fire — worst
+deviation 4.4 × 10⁻¹⁶** across four stacks, an exact reproduction of §16's VOID 6
+result on a different statistic. VOID 12 (shuffle null within the bar on a
+majority): does not fire, 3/7. **VOID 14 (σ dependence): does not fire** — across
+σ ∈ {0.91, 1.00, 1.09, 1.25}× the powered median moves 2.1909 → 2.1172, span
+**0.0736**, inside the bar. **This reading survives whatever M69 concludes about
+`FOCUS_NOISE_SD`**, as §16's did and §6's `n_eff` did not.
+
+### 19.4 Is that reading the optics, or my instrument? (`s22`)
+
+`PREREGISTRATION-C` §2 declared in advance that *"a super-Gaussian finding must
+be checked against per-stack `w50`"*, because the estimator's known
+discretisation bias runs **positive** at narrow curve widths — the same direction
+as the finding. That check is `s22`, and it is why the finding survives.
+
+**(a) The bias does not explain it. MEASURED.** A *true Gaussian sampled at each
+stack's own measured `w50`* reads between **1.8094 and 1.8778** — instrument bias
+of **−0.0133 … +0.0552**. The corpus excess over a **same-width** Gaussian is
+median **+0.2459**, range −0.0254 … **+0.8609**. The bees' excess is **15–36×
+the largest instrument bias.** The reading is real.
+
+**(b) But the resolving power is the real limit, and it is the important number
+here. MEASURED.** Separation between a Gaussian and a **sech²** — the mildest
+real heavy-tailed family — with both sampled at the same `w50`:
+
+| `w50` frames | 1.6 | 2.5 | **3.6** | 5.0 | 8.0 | 13.0 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| separation | **+0.006** | **+0.055** | +0.142 | +0.199 | +0.224 | +0.233 |
+| exceeds the 0.11 bar? | no | no | **YES** | YES | YES | YES |
+
+**Every corpus stack has `w50` between 1.61 and 3.57 frames. Ten of twelve are
+below 3.6.** So **this corpus cannot distinguish a Gaussian through-focus curve
+from a mildly heavy-tailed one at the pre-registered bar** — not because the
+instrument is poor but because **the curves are three frames wide at half-maximum
+and you cannot characterise a tail with three samples.** That is a property of
+the corpus's focus-step density, and it is the honest ceiling on this question.
+
+**(c) The structureless floor is K-dependent and approaches Gaussian from below.
+MEASURED.** Pure noise, no curve, 400 draws: median `R10_50` = **1.5806** (K=19),
+1.6444 (K=33), 1.6809 (K=105), **1.7800** (K=299). Pooled floor 1.6627, **0.1599
+below the Gaussian value — outside the bar.** But at **K=299 the floor is 0.0426
+from Gaussian, inside it.** So on the long stacks *"reads Gaussian"* is not
+separable from *"reads nothing"*; on the short stacks it is. **Criterion H was
+therefore interpretable on 5 of 12 stacks and not on the rest, and I did not know
+that when I wrote it.** It is the same class of defect as §4's Criterion B being
+unsatisfiable by construction — pre-registration bounds the analyst, not the
+instrument.
+
+### 19.5 The mechanism: it is not tail weight, it is multimodality (`s23`)
+
+A reading of 2.65 is far past any smooth unimodal family the estimator could
+mistake for a Gaussian. That points somewhere specific:
+
+> **`w(0.10)` is inflated by MULTIMODALITY.** A patch spanning two depths has a
+> second lobe. At 0.50 of peak the half-width sees only the primary lobe; at 0.10
+> it reaches across the valley into the secondary one, and the ratio jumps. **The
+> curve is not heavy-tailed. It is two curves.**
+
+**Arm A — the plant, with the PSF Gaussian by construction. MEASURED.** Two
+Gaussian lobes of identical symmetric width `w50 = 2.9` (matching the bee
+stacks), separation swept 0 → 24 frames. `R10_50` reaches **3.8247**. **The bee
+stacks read 2.43–2.70. A symmetric Gaussian PSF over two depths fully accounts
+for the entire observed excess**, with the PSF contributing nothing, because in
+this plant the PSF *is* a Gaussian.
+
+**Arm B — the lobes are there in the real curves. MEASURED.** Local maxima above
+0.10 of peak in the smoothed curve:
+
+| stack | `R10_50` | mean lobes | % multi-lobed |
+| --- | ---: | ---: | ---: |
+| wrapped-text-1 | 1.8444 | **1.00** | **0.0%** |
+| wrapped-text-2 | 1.8546 | **1.01** | **1.4%** |
+| coffee-bubbles | 1.8857 | 1.06 | 2.8% |
+| coffee-bean | 1.8161 | 4.85 | 25.0% |
+| 109MSDCF | 1.9741 | 1.62 | 36.4% |
+| 112MSDCF | 2.0490 | 2.12 | 68.1% |
+| 113MSDCF | 2.1035 | 2.28 | 70.8% |
+| foam | 2.1803 | 1.76 | 61.1% |
+| 119MSDCF | 2.2905 | 2.31 | 50.0% |
+| bee-2 | 2.4345 | **9.15** | 85.2% |
+| bee-1 | 2.6514 | 7.52 | 83.3% |
+| bee-3 | 2.6959 | **9.49** | 80.7% |
+
+**Arm C — the association. MEASURED.** `corr(% multi-lobed, R10_50)` = **+0.834
+Pearson, +0.867 Spearman**, n=12. `corr(mean lobes, R10_50)` = +0.806 / +0.720.
+Near-Gaussian stacks average **1.98** lobes; heavy stacks average **4.95** — a
+**2.50×** ratio.
+
+**Arm D — and unlike asymmetry, it reproduces. MEASURED.** The three bee captures
+— same rig, same subject, three separate shoots — return lobe counts spreading
+**1.262×** and `R10_50` spreading **1.107×**. **§16.7's `A₅₀` on those same three
+captures changed sign (+0.042 / −0.036 / −0.070).** Same instrument, same data,
+same three files: **the statistic that reflects a real property reproduces, and
+the one that did not, did not.** That is the strongest internal validation in
+this report, and it strengthens §16's null rather than weakening it — the
+non-reproduction there was not the instrument being blind.
+
+### 19.6 POST HOC: the shape, where the question is well posed (`s24`)
+
+> **This subsection is POST HOC and is not covered by `PREREGISTRATION-C`. The
+> pre-registered verdict is INDETERMINATE (§19.3) and it stands unaltered.** This
+> does not rescue the criteria; it explains them. It is reported the way §13.5's
+> ISO hypothesis was — formed after seeing the data, labelled, and unruled.
+
+On a multi-lobed patch, *"the shape of the through-focus curve"* is not a
+question about the PSF at all. Restricting to patches whose smoothed curve has
+exactly one local maximum above 0.10 of peak — s23's rule, applied unchanged —
+**the departure disappears: pooled median `R10_50` = 1.8686, +0.0460 from
+Gaussian, inside the ±0.11 bar**, n = 416 patches.
+
+**The cleanest case needs no restriction at all, and it is the result.**
+`wrapped-text-1` is **100.0% unimodal** and `wrapped-text-2` is **98.6%** — the
+restriction removes nothing, so no selection can bite. They are **two independent
+captures of one subject**, which is the reproduction test §16.7 used to refute
+asymmetry, run here on shape:
+
+| | `R25/50` (Gaussian 1.4142) | `R10/50` (Gaussian 1.8226) |
+| --- | ---: | ---: |
+| wrapped-text-1 | 1.4188 (**+0.0046**) | 1.8444 (**+0.0218**) |
+| wrapped-text-2 | 1.4243 (**+0.0101**) | 1.8543 (**+0.0317**) |
+| agreement between captures | **0.0055** | **0.0099** |
+
+**Both ratios are simultaneously Gaussian, on two independent captures, agreeing
+with each other an order of magnitude inside the bar.** `coffee-bubbles` (97.2%
+unimodal, K=19, different subject, different session, different aperture) reads
+1.8863 — also inside.
+
+**Negative control, and it is the one that makes this reportable. MEASURED.**
+Does the unimodal restriction itself manufacture a Gaussian? Applied to synthetic
+curves of known non-Gaussian shape, the largest shift it causes is **0.0028**,
+and **a Lorentzian survives it reading 2.7263** — nowhere near Gaussian. **The
+restriction does not force the answer.**
+
+**Symmetry on the same subset, reported separately per M67's instruction (a).**
+Median `|A₅₀|` on unimodal patches = **0.0535** (§16 on all patches: 0.0404),
+signs **5 positive / 7 negative**. **§16's conclusion is unchanged.** The bees
+move most (bee-2 to −0.2337) on **8 surviving patches of 54** — that is the
+restriction's cost, not a signal, and it is why the pooled figure is the one to
+read.
+
+### 19.7 M67's three instructions, discharged
+
+**(a) Report both moments separately, so kurtosis is not read as skew. DONE, and
+further than asked.** Skew is §16 (`A₅₀`, `g1`), shape is §19 (`R10_50`), and
+they are computed by estimators that are independent by construction — §19.2's
+statistic is blind to asymmetry, §16's is blind to width. **§16.4 went past the
+instruction and showed the corpus's kurtosis statistic is not a tail statistic at
+all**, so fact 274's trap is not merely avoided, it is disarmed.
+
+**(b) The named pairing cannot be run on this instrument, and I am reporting that
+rather than producing a reading from it.** `109MSDCF` (K=22) has **no power on
+either statistic**:
+
+| stack | K | `A₅₀` z (§16.5) | `R10_50` shuffle sd | `R10_50` z | undefined |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| **109MSDCF** | 22 | **0.1** | **0.2210** | **0.1** | 22.7% |
+| coffee-bean | 105 | 39.2 | 0.0032 | 5.1 | 20.8% |
+
+**Its shuffle null sd of 0.2210 is twice the entire pre-registered bar.** Any
+number I quoted from it would be noise. This was registered in `PREREGISTRATION-C`
+§6 in advance, precisely so that a null on `109MSDCF` could not later be dressed
+as a finding.
+
+**But the purpose behind the instruction is discharged by another route, and this
+is the larger result.** M25's **question 33** asks: *"Is the real defocus growth
+non-linear in frame index, or is the subject's depth range doing the work?"*
+**§19.5 answers it: the subject's depth range is doing the work**, established
+three independent ways — a Gaussian-by-construction PSF over two depths reaching
+3.82; `corr(% multi-lobed, R10_50)` = +0.834 on real curves; and the departure
+vanishing under a restriction that provably does not force the answer. **The
+pairing was one way to separate that confound. It is not the only way, and the
+corpus supports a different one.**
+
+**What would fix the pairing:** a dense capture (≥100 frames) of a **shallow**
+subject — the arm the corpus lacks. Every K ≥ 100 stack here is a deep subject,
+so **depth and step density are confounded across the whole corpus**, which
+§19.9 records as a limitation of the corpus rather than of this milestone.
+
+**(c) Measure the tails explicitly or state that you did not. DONE.** **No
+parabola and no Gaussian was fitted near the peak anywhere in M70.** The
+statistic *is* a 0.10-of-peak reading, and §19.4(b) reports exactly how far into
+the tail it can see: **not far enough**, below `w50` = 3.6 frames, to separate a
+Gaussian from a sech². **The tails were measured, and the measurement's answer is
+partly that the corpus cannot resolve them.**
+
+**And M67's fact 26, which I was told not to assume away.** Fact 26 argues a
+faster-falling curve is a *sharper* peak, so asymmetry's sign is not obviously
+adverse. **§16 found no asymmetry to have a sign, so the question did not arise —
+but the framing was live while measuring and no "bad news" reading was applied to
+any result.** §19 supplies the analogous point for shape: the corpus's departure
+from Gaussian is **multimodality**, and multimodality is unambiguously adverse
+for a matched filter (§19.8) while being nothing at all to the PSF.
+
+### 19.8 What §19 does to the architectural verdict
+
+**It reinforces PLUGIN, by a second and independent route. ARGUED, on MEASURED
+inputs.**
+
+The reviewer's estimator needs a family `H_k` — one point-spread function per
+frame per pixel. §19.6 says that family is **Gaussian and symmetric** where the
+question is well posed, which makes the filter *simpler* than feared: good news
+for whoever builds it, and a strengthening of M67's simulator on top of §16's.
+
+But §19.5 says something harder. **On this corpus, 0% to 85% of patches per stack
+are multi-lobed — median 50%, and 80–85% on the three deepest stacks.** A patch
+with two lobes is looking at two surfaces. **A single `H_k` per pixel is
+mis-specified there, no matter how good the deconvolution is**, because there is
+no single depth to deconvolve to. The proposal's mechanism assumes one
+through-focus response per pixel and **the majority of this corpus does not have
+one.**
+
+That is not fatal to deconvolution — it is fatal to deconvolution *as the core of
+the merge*. **A merge that must be correct on every pixel of every stack cannot
+rest on a model that is mis-specified on half of them.** A plugin, invoked where
+the operator knows the subject is shallow, is exactly the right shape for it.
+**§0's verdict of PLUGIN was decided on 2.38% of headroom; §19 says the model
+underneath the proposal is also mis-specified on the median patch.** Two
+independent reasons, and they were measured in different sections against
+different pre-registrations.
+
+**Note the tension with the reviewer's own second-ranked proposal, and it is
+worth the owner's attention.** M63 killed occlusion unmixing by refuting the
+inference from through-focus bimodality to two depths. §19.5 finds bimodality
+again, from the other side — and it too does **not** claim two depths. `s23`'s
+plant demonstrates that a two-depth *scene* produces multi-lobed curves; it does
+**not** demonstrate that multi-lobed curves imply a two-depth scene. **That
+inference is the one M63 refuted five ways and I am not making it.** What §19.5
+establishes is the direction M63 left intact: curve multimodality is sufficient
+to inflate `R10_50`, and the corpus has it.
+
+### 19.9 What §19 cannot see
+
+1. **Modulus only.** As throughout M70. A defocus PSF departs from Gaussian in
+   **phase** first, and phase is invisible to every measurement here. §19.6 is a
+   statement about the through-focus power envelope, not about the PSF.
+2. **It cannot exclude a mild heavy tail.** §19.4(b) is explicit: below `w50` =
+   3.6 frames a Gaussian and a sech² differ by less than the bar, and 10/12
+   stacks are below. **"Not distinguishable from Gaussian" is the claim.
+   "Proven Gaussian" is not.** Lorentzian-scale departures are excluded; sech²-
+   scale ones are not.
+3. **The unimodal restriction is post hoc and severe on the stacks that most need
+   it** — 8 of 48, 8 of 54, 11 of 57 patches survive on the bees. The pooled
+   figure and the two wrapped-text stacks (where it removes nothing) are the
+   trustworthy readings; the restricted bee figures are not.
+4. **Lobe counting is threshold-dependent.** A lobe is a local maximum above 0.10
+   of peak after `[1,2,1]` smoothing. A different threshold gives different
+   counts. The *association* (+0.834) is what is claimed, not the absolute counts.
+5. **Depth and step density are confounded across the corpus** (§19.7). Every
+   dense stack is a deep subject. No measurement here separates them, and the
+   capture that would is named.
+6. **`coffee-bean` is an anomaly I have not explained. UNRULED.** It has mean 4.85
+   lobes yet reads 1.8161 — near-Gaussian — and only 25.0% of its patches are
+   multi-lobed. The mean is dragged by a minority of heavily multi-lobed patches
+   while the median patch is unimodal. **The mean lobe count is the wrong summary
+   and I have reported it anyway** because it is what `s23` computed; the % column
+   is the one that carries the correlation. Flagging rather than quietly
+   substituting.
+7. **The `f/5.6` scoping of §2 applies unchanged.** 75.3% of corpus frames are
+   f/5.6, so this is primarily an f/5.6 result.
+
+### 19.10 Candidate facts from §19
+
+| # | Proposed fact | Label | Source |
+| --- | --- | --- | --- |
+| **P19** | **The real through-focus modulus curve is not distinguishable from a Gaussian on patches where the curve is unimodal.** Half-width ratios `w(0.10)/w(0.50)` and `w(0.25)/w(0.50)` read **1.8444 / 1.4188** on `wrapped-text-1` (100.0% unimodal, no restriction applied) and **1.8543 / 1.4243** on `wrapped-text-2` (98.6%), against Gaussian values 1.822616 and 1.414214 — **both ratios simultaneously Gaussian on two independent captures of one subject, agreeing with each other to 0.0099 and 0.0055.** Pooled over all unimodal patches corpus-wide, median `R10_50` = **1.8686** (+0.046), n = 416. The estimator reproduces an exact Gaussian to 0.034% and a Lorentzian to 2.7263, and the unimodal restriction shifts a known Lorentzian by only 0.0028 | MEASURED | `out/s24_unimodal.log`, `out/s20_shape_controls.log` |
+| **P20** | **Apparent heavy tails in real through-focus curves are MULTIMODALITY, not tail weight — the subject's depth range, answering M25's open question 33.** `corr(% multi-lobed patches, R10_50)` = **+0.834 Pearson / +0.867 Spearman**, n = 12 stacks; mean lobes 1.00 on `wrapped-text-1` versus 9.49 on `bee-3`. A plant whose PSF is a **Gaussian by construction**, over two depths, reaches `R10_50` = **3.8247** — beyond the bees' measured 2.43–2.70 — so scene depth alone fully accounts for the observed excess. **This does not license the inference from bimodality to two depths, which M63 refuted** | MEASURED | `out/s23_multimodality.log` |
+| **P21** | **This corpus cannot resolve through-focus tail shape, because its curves are ~3 frames wide at half-maximum.** A Gaussian and a sech² sampled at the same `w50` separate by **+0.006 at `w50` = 1.6** and **+0.055 at 2.5**, exceeding a 0.11 bar only at **`w50` ≥ 3.6 frames**; all 12 stacks have `w50` ∈ [1.61, 3.57] and **10 of 12 are below 3.6**. The structureless floor is K-dependent — median `R10_50` = 1.5806 (K=19) rising to **1.7800** (K=299) — so on the longest stacks "reads Gaussian" is **not separable** from "reads nothing" | MEASURED | `out/s22_estimator_floor.log` |
+| **P22** | **Excess kurtosis `g2` is superseded as a through-focus shape statistic by the half-width ratio `w(0.10)/w(0.50)`, which is scale-free by construction.** Over a **10.5× range of curve width** the same Gaussian returns ratios spanning **1.0121×** (sd 0.0090); `g2` on a plant symmetric by construction spanned **−0.63 … +6.13** (pooled sd 4.77) over a 4× density range (§16.4). The ratio discriminates tail weight — boxcar 0.562×, triangle 0.988×, Gaussian 1.000×, sech² 1.134×, Lorentzian 1.646× — and returns **UNDEFINED on 144/144 noise-only draws** rather than a spurious value | MEASURED | `out/s20_shape_controls.log` |
+| **P23** | **Fact 471's `(10/9)` and `(17/17)` are FWHM measured-versus-modelled, not near-versus-far half-widths, and cannot be converted into an asymmetry index.** Its usable content is two **measured blur-growth rates**, `s = 0.6017 px/frame` on `119MSDCF` and `1.1856` on `109MSDCF`. **M70 §16.7 as first committed made this conversion and is retracted in §19.1.** Cited here so the misreading is recorded against the fact rather than only against the report that made it | MEASURED (audit) | `M67-focus-correctness.md:520`; retraction §19.1 |
+| **P24** | **The reviewer's proposed estimator is mis-specified on the median patch of this corpus.** A matched filter over the focus axis assumes one through-focus response per pixel; **0%–85% of patches per stack are multi-lobed (median ~50%, and 80–85% on the three deepest stacks)**, and a multi-lobed patch is looking at more than one surface. This is independent of, and additional to, P1/P2's finding that the filter's headroom is 2.38% at the shipped gate's width | MEASURED (rates); ARGUED (inference to mis-specification) | `out/s23_multimodality.log`; §19.8 |
+| **P25** | **`109MSDCF` cannot support a through-focus shape or asymmetry measurement on this instrument.** K = 22; shuffle-null sd **0.0766** on `A₅₀` (z = 0.1) and **0.2210** on `R10_50` (z = 0.1) — the latter **twice the entire pre-registered bar**. M67's named pairing of `109MSDCF` against `coffee-bean` therefore **cannot be run as specified**; the confound it targets is separated in §19.5 by a different route | MEASURED | `out/s21_shape_corpus.log`, `out/s16_null_band.log` |
+
+### 19.11 Disciplines from §19
+
+**D-i. A statistic must be shown scale-free before it is used on a corpus with a
+15× range in the scale.** `g2` failed this and was pre-registered NOT TESTABLE;
+`R10_50` was made to pass it (1.0121× over 10.5×) *before* the criteria were
+written. **The check costs one control run and it is the difference between a
+result and a retraction.**
+
+**D-j. When a plant's parameter has been measured in the corpus, sweep the plant
+through the measured value and say so.** Fact 471's `0.6017` and `1.1856` px/frame
+are *in* §19.2's δ sweep, bracketed 4.8× either side. **A plant whose relationship
+to real texture is unexamined is the failure mode facts 61–64 record four times;
+a plant swept through a published measurement of the same quantity is not.**
+
+**D-k. A wrong reading that produces a plausible number is the hardest to catch.**
+§19.1: converting `10/9` to `|A| = 0.053` landed next to my measured median of
+0.0404, and **the agreement functioned as camouflage.** Corroboration that feels
+confirming deserves the source check *more* than a claim that surprises, not less.
+
+**D-l. Ask what a statistic returns when there is no signal, and how that varies
+with K.** `R10_50`'s structureless floor climbs 1.58 → 1.78 with K and passes
+*inside* the bar at K=299 — so a pre-registered criterion was interpretable on
+five stacks and not on seven, **and nothing in the pre-registration revealed
+that.** Pre-registration bounds the analyst; only a null run bounds the
+instrument.
+
+**D-m. Two statistics on the same three repeat captures is a free validity
+check.** Lobe count and `R10_50` reproduce across the three bee shoots (1.262×,
+1.107×) while `A₅₀` changes sign on the identical data. **That contrast is what
+licenses reading §16's null as a null rather than as blindness**, and it cost one
+extra column.
