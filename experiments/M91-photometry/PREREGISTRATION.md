@@ -344,6 +344,165 @@ pedestal-correct form, `black + c*(L − black) + o`, throughout.
 
 ---
 
+---
+
+## 5c. ADDENDUM — C3a has no power as registered, and C3a-hard replaces it
+
+*Written after the `fit` arm ran on all six stacks and **before** any planted arm
+ran. The order matters and is stated so it can be checked: no planted number
+existed when this was written.*
+
+**The defect in my own pre-registration.** C3a plants a spatially **uniform**
+per-frame gain `gamma_k` and corrects with `F1`, whose fit is the ratio of
+whole-image means. A uniform plant multiplies the whole-image mean by exactly
+`gamma_k`, so `c_hat_k = 1 / gamma_k` **exactly**, and then
+
+```
+correct_dn(black + (d - black) * gamma_k, black, 1/gamma_k, 0) = d
+```
+
+identically, to f64 rounding. `R = 1` is therefore **algebra, not evidence**.
+This is AGENTS rule 35 — a test whose subject and object are the same value has
+no power — and I got it wrong when I wrote §3. Recording it rather than quietly
+replacing it.
+
+**What C3a is still worth, and it is not nothing.** The identity above holds
+only if the pedestal pivot, the correction's direction and fact 608's ordering
+are all right. It is a **plumbing control**: it cannot say the correction helps,
+but it goes red when the correction is built wrong. C5 is the demonstration —
+the negative control breaks exactly this arm. C3a is therefore reported as a
+control and **never as evidence of benefit**, and `R = 1.000` will be presented
+as "the arithmetic closes", not as a result.
+
+**C3a-hard, registered now, with power.** Plant a per-frame gain that is
+**spatially non-uniform**, which is the disturbance a single global gain
+genuinely cannot absorb and the one M24 §5's second clause is about:
+
+```
+g_k(x) = 1 + (gamma_k - 1) * (1 + a * (2x/W - 1)),    a = 0.5
+```
+
+so the drift depth runs from half its nominal value at the left edge to one and
+a half times it at the right, while the whole-image mean of `g_k` stays
+`gamma_k`. `a = 0.5` and `gamma_k` from the same seeded ladder are fixed here,
+before the run.
+
+* `E_uncorr_hard`, `E_corr_hard` and `R_hard = 1 - E_corr/E_uncorr` are computed
+  exactly as in C3a, global scale removed, election frozen.
+* **`R_hard >= 0.50`**: a single global gain removes most of the damage a
+  realistically non-uniform drift does. The functional form is adequate.
+* **`0 < R_hard < 0.50`**: partially adequate; the residual is the price of the
+  global form.
+* **`R_hard <= 0`**: a global gain makes a non-uniform drift *worse*. Global
+  correction is contraindicated and that is a publishable negative.
+* Reported beside it, and **the number that actually decides materiality**:
+  `f1sig` of the *uncorrected* non-uniform plant against the merged pixel's own
+  `predicted_sigma`. If a 11.7% drift with a 50% spatial ramp cannot move the
+  merged picture above its own noise, nothing weaker can.
+* Rule 20 — the input that fails it: `a = 0` reduces C3a-hard to C3a and must
+  give `R_hard = 1`. That degenerate case is run as its own check.
+
+---
+
+## 5d. POST-HOC, DISCLOSED — least-squares shrinkage in the C1 ladders
+
+**This is not a pre-registered criterion and is not used to decide C1.** It is
+recorded because it changes how C1's number should be read, and hiding it would
+be worse than admitting the order it was found in.
+
+The `fit` arm's ladders show the least-squares forms `F2`, `F3` and `F6`
+producing gains biased **downward**: on `foam`, `F2` fits every one of 100
+frames in `0.814..0.947`, entirely below 1, against a drift whose true gains
+must straddle 1 because they are defined about the grand mean. The reference
+`R_b` is an average over frames and is smoother than any single frame, so
+minimising `sum_b (R_b - c L_kb)^2` shrinks `c` toward the reference — ordinary
+regression attenuation.
+
+**Direction of the bias, which is the reason this does not rescue the affine
+form.** Held-out residual RMS *rewards* shrinkage, and the two-parameter form
+has more freedom to shrink than the one-parameter form. C1's criterion is
+therefore biased **in favour of** the offset term, and C1 fails anyway on 4 of 6
+stacks with the other 2 void under C1b. The negative verdict is conservative
+under this bias, not threatened by it.
+
+**The diagnostic, stated so it can be reused and so its post-hoc status is
+permanent:** a photometric gain ladder fitted about the grand mean must straddle
+1. A ladder lying wholly on one side is measuring shrinkage, not gain. This is
+offered as a candidate discipline, not as a criterion this milestone decided
+anything with.
+
+---
+
+## 5e. ADDENDUM — C10, the decomposition C2 failed to deliver; and two disclosed instrument defects
+
+*Written after `fit`, `chi2`, `image` and the three planted arms had run, and
+before `C10`, `C5` or `C7` had run. Every number quoted below already existed
+when this was written; every number C10 produces did not.*
+
+### The two defects my own controls found, recorded before they are reported
+
+1. **C2 is void on all six stacks by its own mandatory power control.** The
+   planted uniform ladder of ptp 11.7% raised `U` to 1.72 / 2.49 / 0.27 / 0.56 /
+   0.30 / 0.48, never to the registered 3.0. `U`'s denominator
+   `median_k(sd_b r_{k,b})` is dominated by defocus on a focus stack, so `U`
+   cannot read "uniform" even when the drift *is* uniform by construction. The
+   statistic is underpowered and M24 §5's second clause is **NOT ESTABLISHED**
+   by it. C10 exists because of this.
+2. **C3a's registered comparison target was wrong.** It compared the corrected
+   planted merge against `M0`, the *uncorrected* unplanted merge, so it charged
+   the correction for removing the stack's own native drift. The placebo caught
+   it: at `gamma == 1` it reported `E_corr = 26.58985 DN`, which is exactly
+   C3b's independently computed corrected-vs-`M0` RMS. The right reference is
+   the corrected *unplanted* merge, and with that the placebo reads
+   `E_uncorr = 1.3e-4 DN` and `E_corr = 0.0 DN`. **The registered wording of
+   C3a-placebo therefore FAILED and is reported as failed**; the fix is an
+   instrument correction the control forced, not a bar moved after seeing data.
+
+### C10 — how much of the drift is a single global gain?
+
+Per block `b` and frame `k`, from pass one's block means, `y_{k,b} = R_b /
+L_{k,b}` normalised so `mean_k y_{k,b} = 1`. The single global ladder is
+`g_k = mean_b y_{k,b}`, normalised the same way.
+
+```
+EV  =  1  -  sum_{k,b} (y_{k,b} - g_k)^2  /  sum_{k,b} (y_{k,b} - 1)^2
+```
+
+the fraction of block-ladder variance a **single global gain per frame**
+explains.
+
+* **`EV >= 0.50`**: the drift is predominantly global; a per-frame scalar is the
+  right functional form and M24 §5's second clause resolves to "uniform".
+* **`EV < 0.20`**: the drift is predominantly spatial; a per-frame scalar is the
+  **wrong** functional form, and applying one can add disagreement rather than
+  remove it. That would explain the measured negative chi2 reductions on `foam`
+  and `coffee-bubbles` without appeal to anything else.
+* `[0.20, 0.50)` is mixed and will be reported as mixed, not rounded.
+
+**C10-power (mandatory, and the thing C2 lacked).** Recompute `EV` with a known
+uniform ladder of ptp 11.7% planted on top of the real data. **`EV_planted`
+must exceed 0.90.** If it does not, `EV` cannot see globality and C10 is void
+exactly as C2 was.
+
+**C10-null (mandatory).** Recompute `EV` with the real drift *divided out*
+frame by frame, leaving only whatever spatial structure remains. `EV_null` must
+fall to near zero; a large `EV_null` would mean `EV` is reading something that
+is not the drift.
+
+**Disclosed confound, stated before the run.** Defocus moves `y_{k,b}` and is
+not global, so it deflates `EV`. A **high** `EV` is therefore strong evidence of
+globality; a **low** `EV` is ambiguous between spatially varying photometry and
+defocus contamination, and the report must say so rather than claim
+non-uniformity outright. C10-power calibrates how much deflation there is:
+`1 - EV_planted` on a plant that is uniform by construction is the deflation
+floor.
+
+**Rule 20 — the input that fails it:** a stack whose lamp is perfectly stable in
+shape and varies only in output gives `EV -> 1`. The C10-power arm constructs
+exactly that input and requires it.
+
+---
+
 ## 6. Ownership
 
 Writes only to `crates/strehl-cli/examples/m91-photometry.rs`,
