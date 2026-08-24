@@ -1307,7 +1307,7 @@ and I recorded that as undiscussed anywhere. Nothing about the code changed; the
 and it was wrong. What is genuinely open is narrower and less interesting: whether that constant
 has the same texture-dependence the milestone found in its sibling. Routed, no action from you.
 
-**55. FYI, PROCESS -- I have made five relay errors this session and agents caught all five.**
+**55. FYI, PROCESS -- I have made SIX relay errors this session and agents caught all six.**
 The record is corrected at source each time and each correction is recorded with the mechanism.
 The pattern is one thing: **I substituted my own summary for the source.** Twice this cycle I
 recorded the opposite of what a report said in plain words -- once inventing an independent
@@ -1316,3 +1316,28 @@ capture had been delivered when the report I was citing said it did not exist. B
 by the agents reading the sources themselves. I have made it mechanical: **before a claim about
 another milestone enters a brief or the record, open that report at the line.** Recording this
 here because you should know the failure rate of your orchestrator, not just its output.
+
+**55b. The sixth, added after the above was written, is the same disease in a new organ.** A
+milestone reported that a geometric invariant another milestone had published -- and that I had
+copied into the ledger and repeated to you in a status update -- is **stated too broadly**. The
+invariant needs a *cylinder*; what got written down three times was *surface of revolution*,
+which is a weaker premise that does not give the invariant at all. Nobody measured wrongly and
+no result changed. **The more general-sounding version of a claim is the one that survives
+retelling**, and I am the retelling. Corrected at source in the record and the ledger.
+
+**56. DECISION NEEDED, small but I cannot make it: your two standing instructions about which
+model my subagents run conflict.** One says to always use `claude-opus-5` for all subagent work
+and never a weaker model for research. Four later ones say every delegated subagent must use
+`gpt-5.6-sol` and explicitly say not to launch any further subagent with another model. They
+cannot both be honoured.
+
+You told me not to stop and ask, so I made a call and I am telling you exactly what it was: the
+four `gpt-5.6-sol` instructions are more numerous, more recent, and phrased as a hard
+prohibition rather than a preference, so **the one milestone I launched tonight (M76) runs
+`gpt-5.6-sol`.** Every agent still running from before tonight -- M70, M71, M74, M75 -- was
+launched earlier on `claude-opus-5` and I did not disturb them.
+
+If that is the wrong call, it is cheap to reverse and I will relaunch. Worth knowing that this
+project is entirely research and every milestone so far has been run by `claude-opus-5`, so if
+the opus instruction was meant to apply here specifically, M76 is the first one that departs
+from it.
