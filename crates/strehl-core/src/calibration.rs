@@ -732,6 +732,11 @@ mod tests {
         let mut a = SpectralAccumulator::new(config);
         a.observations = (0..41).map(|k| observation(k, 50.0)).collect();
         let t = a.target(1.0).unwrap();
+        eprintln!(
+            "M81 spectral static plant: n_eff={:.9}, n_eff/N={:.9}",
+            t.n_eff,
+            t.n_eff / 41.0
+        );
         assert_eq!(t.textured_patches, SPECTRAL_PATCHES);
         assert!((t.n_eff / 41.0 - 1.0).abs() < 1e-12, "{t:?}");
     }
@@ -740,21 +745,57 @@ mod tests {
     fn summing_before_clipping_returns_zero_on_the_noise_plant() {
         let config = SpectralConfig::new(1024, 1024).unwrap();
         let mut a = SpectralAccumulator::new(config);
+        let mut state = 0x4D81_0000_0000_0001u64;
+        let mut uniform = || {
+            state = state.wrapping_add(0x9E37_79B9_7F4A_7C15);
+            let mut z = state;
+            z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
+            z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
+            ((z ^ (z >> 31)) >> 11) as f64 / (1u64 << 53) as f64
+        };
         a.observations = (0..41)
-            .map(|k| observation(k, if k % 2 == 0 { -1.0 } else { 1.0 }))
+            .map(|frame_index| {
+                let mut power = [[0.0; BANDS.len()]; SPECTRAL_PATCHES];
+                for patch in &mut power {
+                    patch[0] = 110.0;
+                    for value in &mut patch[1..] {
+                        let fluctuation = (0..12).map(|_| uniform()).sum::<f64>() - 6.0;
+                        *value = 10.0 + fluctuation;
+                    }
+                }
+                SpectrumObservation {
+                    frame_index,
+                    power,
+                    noise_variance: [10.0; SPECTRAL_PATCHES],
+                }
+            })
             .collect();
         let t = a.target(1.0).unwrap();
+        eprintln!("M81 spectral noise plant: n_eff={:.9}", t.n_eff);
         assert!(t.n_eff.abs() <= 1.0, "{t:?}");
 
-        let signal: Vec<f64> = (0..41)
-            .map(|k| if k % 2 == 0 { -1.0 } else { 1.0 })
-            .collect();
-        let clipped = signal.iter().map(|s| s.max(0.0)).sum::<f64>()
-            / signal.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+        let mut clipped_bands = Vec::new();
+        for band in MID_BANDS {
+            let mut clipped_patches = Vec::new();
+            for patch in 0..SPECTRAL_PATCHES {
+                let signal: Vec<f64> = a
+                    .observations
+                    .iter()
+                    .map(|o| o.power[patch][band] - o.noise_variance[patch])
+                    .collect();
+                clipped_patches.push(
+                    signal.iter().map(|s| s.max(0.0)).sum::<f64>()
+                        / signal.iter().copied().fold(f64::NEG_INFINITY, f64::max),
+                );
+            }
+            clipped_bands.push(median(&mut clipped_patches).unwrap());
+        }
+        let clipped = clipped_bands.iter().sum::<f64>() / clipped_bands.len() as f64;
         assert!(
-            clipped > 10.0,
+            clipped > 5.0,
             "the planted clip did not manufacture a false frame count: {clipped}"
         );
+        eprintln!("M81 spectral clipped mutation target: n_eff={clipped:.9}");
     }
 
     #[test]
