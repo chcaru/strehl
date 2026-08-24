@@ -467,6 +467,11 @@ untouched by construction. Only red is corrected. The unit remains **unwired**: 
   built from the same convention, three tests hardcoded the implementation's expression, and
   the verifier's mutation (`1/(1+eps)` → `1−eps`) stayed inside the wrong convention.
   MEASURED.
+- **P25.** Of the fitted lateral model, only the **radial** term earns its place: on
+  `bee-3-cpl` the radial term alone removes **99.6 %** of the R−G radial slope
+  (141.1 → 0.6 ppm), while adding the fitted, unattributed **translation** term leaves
+  **17.3 ppm** — 12x the residual. The translation term should be recorded, not applied.
+  MEASURED (`p1_preview`, `M107_NO_TRANS=1`); one stack, in-sample. See §12.1.
 
 ### Disciplines
 
@@ -484,3 +489,39 @@ untouched by construction. Only red is corrected. The unit remains **unwired**: 
 - **D11.** In a mutate-then-restore harness, **stamp the restored file's mtime**.
   `shutil.copy2` restores the old mtime and the build system reuses the mutant's artifacts,
   producing a false red on the clean arm.
+
+### 12.1 The translation term makes it WORSE, and should not be applied
+
+Re-running the corrected preview with the translation term ablated
+(`M107_NO_TRANS=1`) separates the two halves of the fitted model:
+
+| applied | R−G radial slope | reduction |
+|---|---|---|
+| nothing (uncorrected) | 141.1 ppm | — |
+| as shipped at `d551488` (inverted) | 151.3 ppm | **−7.2 %, i.e. worse** |
+| **radial only, corrected sign** | **0.6 ppm** | **99.6 %** |
+| radial + fitted translation, corrected sign | 17.3 ppm | 87.7 % |
+
+**The radial term alone removes essentially all of it. Adding the fitted translation puts
+back 12x the residual.** In both arms blue is untouched (`eps_b = None`, B−G moved 0.00 %)
+and the `eps = 0` null is bitwise identical.
+
+This is consistent with what the parent milestone already said about that term and did not
+resolve: the translation is **degenerate with an optical-centre offset** (`d = eps(r·n) −
+(eps·c)·n`), its measured magnitude (0.629, −0.424) plane px is close to the ~0.5 px/axis
+CFA co-siting offset, and read as decentring it would be 51 % of the half-diagonal, which is
+not plausible. It was shipped as an explicitly **unattributed** field. The render-domain
+measurement now says it is not merely unattributed but **harmful**.
+
+**Recommendation for the wiring commit, which I am not making tonight:** apply the radial
+term only, and treat `translation` as recorded provenance rather than as something to apply.
+I have deliberately **not** re-engineered `optics.rs` to enforce that. The code faithfully
+implements the model that was fitted, the unit is unwired so nothing consumes it, and
+rewriting a transform convention a second time under time pressure is precisely how the
+inverted sign got in. **This is a measurement and a recommendation, not a change.**
+
+**Bounded, honestly:** one stack (`bee-3-cpl`), one metric (radial R−G slope on the top-1 %
+gradient pixels), in-sample. The radial coefficient's out-of-sample behaviour is L4, which
+**split** (0.950 one direction, 0.541 the other). Whether the translation term is harmful on
+the other four stacks is **not measured**, and a wiring commit should measure it before
+relying on this recommendation.

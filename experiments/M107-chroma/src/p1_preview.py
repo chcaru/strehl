@@ -60,14 +60,28 @@ OUT_DIR = r"C:\dev\strehl-out\M107-chroma\preview"
 # plane px and must be doubled.
 EPS_R = -704.5273607382725e-6
 EPS_B = None                      # never measured -- absent, not zero
+import os
+
 TRANS_PLANE = (0.6294433, -0.4240211)
+# Ablation switch. The translation term is explicitly UNATTRIBUTED (it is
+# degenerate with an optical-centre offset), so being able to zero it and
+# re-measure is part of reporting it honestly, not a debugging convenience.
+if os.environ.get("M107_NO_TRANS") == "1":
+    TRANS_PLANE = (0.0, 0.0)
 
 GRAD_PCT = 99.0
 MIN_GRAD = 1e-4
 
 
 def apply_radial(chan, eps, trans_render):
-    """Sample `chan` at q = s*(p - t), s = 1/(1+eps), p relative to image centre.
+    """Sample `chan` at q = s*p + t, s = 1 + eps, p relative to image centre.
+
+    This mirrors the REPAIRED `optics.rs::compose`. The original version of this
+    script used `s = 1/(1+eps)` and `q = s*(p - t)`, which is the inverted
+    convention the P1 preview caught: it made the aberration 7.2 % worse. Under
+    warpmap.rs's pull convention (`dst(p) = src(T(p))`) a channel imaged at
+    magnification `(1+eps)` records scene point u at `(1+eps)u`, so the pull must
+    sample there.
 
     Returns the input array UNCHANGED (same object) when eps is None or 0.0, so
     the no-op is bitwise by construction rather than by luck (bar P3).
@@ -75,13 +89,13 @@ def apply_radial(chan, eps, trans_render):
     if eps is None or eps == 0.0:
         return chan
     h, w = chan.shape
-    s = 1.0 / (1.0 + eps)
+    s = 1.0 + eps
     cy, cx = (h - 1) / 2.0, (w - 1) / 2.0
     ty, tx = trans_render[1], trans_render[0]
     yy = (np.arange(h, dtype=np.float64) - cy)[:, None]
     xx = (np.arange(w, dtype=np.float64) - cx)[None, :]
-    qy = s * (yy - ty) + cy
-    qx = s * (xx - tx) + cx
+    qy = s * yy + ty + cy
+    qx = s * xx + tx + cx
     y0 = np.clip(np.floor(qy), 0, h - 2).astype(np.int32)
     x0 = np.clip(np.floor(qx), 0, w - 2).astype(np.int32)
     fy = (qy - y0).astype(np.float32)
