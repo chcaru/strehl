@@ -1,0 +1,4 @@
+corpus_lint: 107 markdown file(s), 30 rust file(s); 918 facts, 390 disciplines, 138 questions, 11 risks, 42 rules
+corpus_lint: checks run: A1 A2 A4 C1 C2 C3 N1 N2 N4 N5 S1 S2 S3 S4 S5 S6
+
+corpus_lint: OK — no violations

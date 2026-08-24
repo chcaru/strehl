@@ -1,0 +1,23 @@
+{
+  "gates": [
+    "0",
+    "0.25",
+    "0.5",
+    "1",
+    "2",
+    "4",
+    "8",
+    "16",
+    "24",
+    "32",
+    "40",
+    "48",
+    "64",
+    "96",
+    "128"
+  ],
+  "bytes": 8278016,
+  "sha256": "925a83fa70205dc4cd23f78c03ddeb16c6e0ebb9eb1ce3268bdf5ac9cce4a2cd",
+  "commit": "97dc93d9a2417085bf40fa8ac576a3eccdb381bc",
+  "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M81-estimation-merge\\target-unit\\release\\strehl.exe"
+}

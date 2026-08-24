@@ -1,0 +1,158 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling anyhow v1.0.104
+   Compiling thiserror v2.0.20
+   Compiling syn v3.0.3
+   Compiling thiserror-impl v2.0.20
+   Compiling strehl-core v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.91s
+     Running unittests src\lib.rs (experiments\M81-estimation-merge\target-unit\debug\deps\strehl_core-66b0ede29e9ca8ee.exe)
+
+running 138 tests
+test clip::tests::a_dimension_mismatch_is_an_error_not_a_panic ... ok
+test boxfilter::tests::radius_zero_is_the_identity ... ok
+test boxfilter::tests::window_wider_than_the_plane_degenerates_to_the_global_mean ... ok
+test boxfilter::tests::a_constant_plane_stays_constant_including_at_the_border ... ok
+test flat_ratio::tests::an_roi_smaller_than_the_box_has_no_high_pass_statistic ... ok
+test flat_ratio::tests::a_reference_refuses_to_be_built_from_nothing_or_from_a_zero ... ok
+test clip::tests::absorb_matches_folding_the_same_frames_in_one_census ... ok
+test flat_ratio::tests::the_reference_is_the_whole_frame_distribution_not_one_frame ... ok
+test flat_ratio::tests::the_shipped_gain_constant_equals_its_closed_form ... ok
+test clip::tests::the_container_maximum_is_not_the_usable_white_level ... ok
+test flat_ratio::tests::the_residual_keeps_only_the_valid_interior ... ok
+test boxfilter::tests::running_sums_match_the_naive_gather ... ok
+test merge::tests::a_mismatched_frame_is_rejected_rather_than_silently_cropped ... ok
+test merge::tests::a_censored_winner_reports_the_bound_instead_of_a_diluted_mean ... ok
+test clip::tests::an_empty_census_makes_no_claims ... ok
+test merge::tests::a_noiseless_pair_reads_its_squared_separation_over_twice_the_variance ... ok
+test focus::tests::a_flat_plane_has_zero_focus_everywhere_including_the_border ... ok
+test merge::tests::a_non_finite_response_is_never_admitted ... ok
+test focus::tests::focus_is_finite_and_non_negative_at_zero_signal ... ok
+test flat_ratio::tests::a_constant_field_and_a_plane_ramp_both_high_pass_to_zero ... ok
+test merge::tests::a_censored_contributor_is_flagged_but_never_silently_changes_the_mean ... ok
+test clip::tests::a_pixel_clipped_in_every_frame_is_always_clipped ... ok
+test focus::tests::normalisation_penalises_the_same_contrast_at_a_higher_signal_level ... ok
+test merge::tests::a_zero_threshold_admits_only_the_winner ... ok
+test focus::tests::resolved_texture_scores_higher_than_the_same_texture_blurred ... ok
+test merge::tests::a_wide_gate_admits_every_frame_and_a_zero_gate_admits_only_the_winner ... ok
+test merge::tests::a_negative_threshold_is_rejected_rather_than_silently_inverting_the_gate - should panic ... ok
+test merge::tests::censoring_is_a_bit_exact_no_op_when_nothing_reaches_the_container ... ok
+test merge::tests::censored_estimators_reduce_by_union_of_their_flags ... ok
+test flat_ratio::tests::a_dc_offset_does_not_move_the_high_pass_sd ... ok
+test merge::tests::disagreement_is_none_wherever_no_second_frame_was_admitted ... ok
+test merge::tests::disagreement_absorbs_additively_and_matches_a_sequential_fold ... ok
+test merge::tests::disagreement_is_quadratic_in_the_spread_at_a_fixed_signal_level ... ok
+test merge::tests::disagreement_recovers_the_sample_variance_of_the_admitted_frames ... ok
+test merge::tests::mixing_the_two_folds_in_one_estimator_is_refused - should panic ... ok
+test merge::tests::pass_one_elects_the_highest_response_and_is_order_independent ... ok
+test merge::tests::pass_one_rejects_a_mismatched_field ... ok
+test merge::tests::pass_one_absorb_matches_a_single_sequential_fold ... ok
+test merge::tests::averaging_beats_one_frame_and_selection_does_not ... ok
+test merge::tests::reading_disagreement_off_an_untracked_estimator_is_refused - should panic ... ok
+test merge::tests::pass_two_is_order_independent_and_absorb_matches_a_sequential_fold ... ok
+test merge::tests::reducing_estimators_from_different_winner_fields_is_refused ... ok
+test merge::tests::the_bracket_boundary_flag_fires_only_at_the_ends_of_the_stack ... ok
+test merge::tests::the_acceptance_set_widens_monotonically_with_the_threshold ... ok
+test merge::tests::the_gate_admits_within_its_tolerance_and_not_beyond ... ok
+test merge::tests::the_photometric_probe_moves_the_statistic_and_leaves_the_image_alone ... ok
+test merge::tests::the_selection_penalty_is_absent_until_it_is_measured ... ok
+test focus::tests::a_per_frame_gain_scales_the_normalised_response_by_its_square_root ... ok
+test merge::tests::the_same_spread_reads_smaller_where_the_signal_is_brighter ... ok
+test merge::tests::tracking_disagreement_cannot_change_the_merged_image ... ok
+test noise::tests::fallback_provenance_is_flagged_untrustworthy ... ok
+test merge::tests::with_one_frame_clearly_sharpest_the_estimator_degenerates_to_a_selector ... ok
+test merge::tests::the_regulariser_preserves_a_real_depth_edge ... ok
+test merge::tests::with_frames_that_agree_the_estimator_averages_them ... ok
+test noise::tests::green_luma_sigma_is_the_averaging_of_two_independent_greens ... ok
+test noise::tests::negative_signal_clamps_rather_than_producing_negative_variance ... ok
+test noise::tests::shot_noise_dominates_read_noise_in_the_midtones ... ok
+test noise::tests::usable_white_level_is_not_the_container_maximum ... ok
+test noise::tests::variance_is_affine_in_signal ... ok
+test plane::tests::green_luma_averages_both_greens_after_black_subtraction ... ok
+test plane::tests::green_luma_clamps_below_black_rather_than_going_negative ... ok
+test merge::tests::the_regulariser_dilutes_a_focus_spike_by_its_area_and_no_more ... ok
+test plane::tests::odd_active_dimensions_drop_the_partial_quad ... ok
+test plane::tests::plane_geometry_is_the_a7c2_active_area_halved ... ok
+test plane::tests::plane_index_is_row_major ... ok
+test plane::tests::rggb_offsets_match_the_mosaic_helper ... ok
+test merge::tests::the_reported_noise_gain_is_the_mean_of_gains_not_the_gain_of_the_mean ... ok
+test plane::tests::sensor_coords_walk_the_quad_at_twice_the_plane_pitch ... ok
+test plane::tests::the_clip_mask_reports_clipping_without_altering_the_luma ... ok
+test profile::tests::a_missing_iso_falls_back_rather_than_assuming_base_iso ... ok
+test profile::tests::an_unknown_body_falls_back_visibly ... ok
+test profile::tests::every_profile_bases_its_gain_at_or_below_its_second_base ... ok
+test profile::tests::extended_iso_reads_out_at_base_gain ... ok
+test profile::tests::gain_follows_the_iso_relation ... ok
+test profile::tests::the_gain_relation_is_still_continuous_across_the_dual_gain_switch ... ok
+test profile::tests::the_iso_50_and_iso_100_darks_imply_the_same_read_noise ... ok
+test profile::tests::the_model_is_checked_against_measured_dark_sigma_at_every_iso ... ok
+test profile::tests::the_reference_body_resolves_to_a_profile ... ok
+test profile::tests::the_second_base_iso_lowers_read_noise ... ok
+test stack::tests::a_depth_edge_is_not_counted_as_speckle ... ok
+test stack::tests::a_mismatched_frame_is_rejected_rather_than_silently_cropped ... ok
+test stack::tests::a_smooth_index_map_has_no_speckle ... ok
+test stack::tests::absorbing_an_empty_selection_changes_nothing ... ok
+test profile::tests::the_high_mode_read_noise_is_the_relative_least_squares_optimum ... ok
+test stack::tests::an_isolated_wrong_winner_counts_as_speckle ... ok
+test stack::tests::the_winner_is_the_frame_with_the_highest_focus ... ok
+test stack::tests::every_pixel_is_decided_after_one_frame ... ok
+test stack::tests::ties_go_to_the_first_frame_in_either_fold_direction ... ok
+test flat_ratio::tests::frame_flat_reports_all_three_numbers_together ... ok
+test stack::tests::the_border_convention_is_clamped_with_an_upper_median ... ok
+test tests::rail_capture_is_not_claimed_as_supported ... ok
+test tests::rggb_plane_assignment_matches_the_mosaic ... ok
+test through_focus::tests::a_flat_curve_has_no_concave_fit_rather_than_a_fabricated_peak ... ok
+test through_focus::tests::a_mismatched_field_is_rejected_rather_than_silently_cropped ... ok
+test through_focus::tests::a_peak_at_the_bracket_boundary_has_no_triple_and_says_so ... ok
+test stack::tests::the_fold_is_order_independent ... ok
+test through_focus::tests::bimodality_fires_on_two_layers_and_not_on_one ... ok
+test through_focus::tests::a_scale_disagreement_between_the_two_fields_is_reported ... ok
+test focus::tests::centre_tap_fraction_and_read_extent_are_what_m13_specified ... ok
+test through_focus::tests::bimodality_is_an_upper_bound_on_true_prominence ... ok
+test focus::tests::the_running_sum_agrees_with_a_naive_gather_of_the_same_operator ... ok
+test through_focus::tests::perplexity_is_one_when_decided_and_the_frame_count_when_it_is_not ... ok
+test through_focus::tests::predicted_sigma_is_the_calibrated_model_with_no_selection_penalty_yet ... ok
+test through_focus::tests::perplexity_rises_with_the_width_of_the_acceptance_set ... ok
+test through_focus::tests::reducing_gathers_from_different_winner_fields_is_refused ... ok
+test through_focus::tests::shuffle_destroys_adjacency_which_a_rotation_does_not ... ok
+test through_focus::tests::the_bimodality_flag_follows_its_cut ... ok
+test stack::tests::alternating_columns_saturate_the_metric_but_a_checkerboard_hides_from_it ... ok
+test through_focus::tests::the_log_fit_beats_a_linear_fit_on_peak_height ... ok
+test through_focus::tests::the_parabola_recovers_a_planted_sub_frame_offset ... ok
+test through_focus::tests::the_scale_disagreement_screen_ignores_off_by_one_and_catches_off_by_two ... ok
+test through_focus::tests::the_stats_radius_is_the_fine_window_radius ... ok
+test stack::tests::absorb_is_associative_over_every_contiguous_partition ... ok
+test through_focus::tests::the_placebo_reads_higher_than_the_real_curve_on_a_unimodal_stack ... ok
+test through_focus::tests::the_permutation_placebo_preserves_the_response_multiset ... ok
+test through_focus::tests::the_sub_frame_deficit_is_a_bounded_fraction_that_rises_with_the_offset ... ok
+test through_focus::tests::the_top_k_list_cannot_contain_a_frame_twice ... ok
+test through_focus::tests::the_gather_is_order_independent_and_absorb_matches_a_sequential_fold ... ok
+test through_focus::tests::the_statistics_match_a_full_focus_volume_with_no_third_pass ... ok
+test through_focus::tests::the_confidence_channels_disagree_about_which_pixels_are_bad ... ok
+test flat_ratio::tests::a_gainless_implementation_would_fail_the_gain_test_at_side_three ... ok
+test through_focus::tests::gathering_statistics_cannot_move_the_selection_field ... ok
+test flat_ratio::tests::the_raw_sd_is_structure_dominated_where_the_high_pass_sd_is_not ... ok
+test through_focus::tests::the_bimodality_screen_has_a_measured_noise_floor_that_is_not_zero ... ok
+test flat_ratio::tests::structure_contamination_is_one_on_pure_noise_and_above_one_with_structure ... ok
+test merge::tests::real_focus_contrast_is_far_larger_than_the_noise_scale ... ok
+test flat_ratio::tests::the_high_pass_ratio_catches_a_planted_explosion_the_raw_ratio_misses ... ok
+test focus::tests::tenengrad_picks_the_correct_frame_far_more_often_than_the_ring_did ... ok
+test through_focus::tests::statistics_memory_is_constant_in_the_frame_count ... ok
+test focus::tests::tenengrad_elects_less_of_the_pixels_own_noise_than_the_ring_did ... ok
+test merge::tests::memory_is_bounded_and_independent_of_the_frame_count ... ok
+test flat_ratio::tests::white_noise_comes_out_at_sigma_times_the_derived_gain ... ok
+test clip::tests::the_census_memory_is_two_bytes_per_pixel_and_constant_in_frames ... ok
+test merge::tests::the_default_path_reaches_the_arithmetic_limit_on_a_static_burst ... ok
+test merge::tests::the_burst_fixture_can_fail_below_the_default_gate ... ok
+test merge::tests::the_focus_noise_constant_is_the_measured_one ... ok
+test through_focus::tests::the_fine_focus_noise_constant_is_the_measured_one ... ok
+test through_focus::tests::the_fine_scale_is_much_noisier_than_the_selection_scale ... ok
+
+test result: ok. 138 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.95s
+
+   Doc-tests strehl_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

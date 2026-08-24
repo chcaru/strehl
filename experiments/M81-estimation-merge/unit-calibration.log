@@ -1,0 +1,14 @@
+M81_UNIT_COMMIT=178cfb1cd92e3ea7da9a7f84e9cffe2b3892c1a8
+M81_UNIT_CONFIG patch_gq=256 sensor_px=511 welch_tile=128 texture_gate=10.0 nrep=32 workers=6
+==============================================================================
+M69 / K1b -- temporal estimator on the crate's zero-signal plant
+==============================================================================
+  temporal SD mean over 4 x 48 reps = 1.526134e-02   rho = 1.0031
+  K1b |rho - 1| = 0.0031  bar 0.02  ->  MET
+M81_UNIT stack=wrapped-text-1 N=130 textured=24 flat=0 rho=0.936807470 patch_span=1.612783 scalar_pass=1
+M81_UNIT stack=wrapped-text-2 N=120 textured=24 flat=0 rho=1.044503245 patch_span=1.523764 scalar_pass=1
+M81_UNIT stack=109MSDCF N=22 textured=22 flat=2 rho=1.115147547 patch_span=1.281077 scalar_pass=1
+M81_UNIT stack=coffee-bean N=105 textured=16 flat=8 rho=0.865784027 patch_span=1.589579 scalar_pass=1
+M81_UNIT stack=foam N=100 textured=24 flat=0 rho=1.196133029 patch_span=1.526105 scalar_pass=1
+M81_UNIT stack=bee-1 N=299 textured=16 flat=8 rho=0.932787430 patch_span=1.694730 scalar_pass=1
+M81_UNIT_WROTE=unit-calibration.json

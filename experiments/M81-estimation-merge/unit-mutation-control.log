@@ -1,0 +1,16 @@
+PLANTED_READBACK=PASS bytes=return raw_gate * rho
+COMMAND=C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe analyse_unit.py --self-test-only
+EXIT=1
+UNIT_TEST_COUNT=2
+
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\analyse_unit.py", line 328, in <module>
+    main()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\analyse_unit.py", line 220, in main
+    self_tests()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\analyse_unit.py", line 163, in self_tests
+    assert span(constants) <= 1.0 + 1e-12, constants
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [1.0, 4.0, 16.0]
+
+RESTORED=True

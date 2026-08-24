@@ -1,0 +1,103 @@
+commit=97dc93d9a2417085bf40fa8ac576a3eccdb381bc
+binary=C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\target-unit\release\strehl.exe
+sha256=925a83fa70205dc4cd23f78c03ddeb16c6e0ebb9eb1ce3268bdf5ac9cce4a2cd
+STACK=foam
+INVOCATION=& 'C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\target-unit\release\strehl.exe' stack 'D:\personal\macro\foam' --gate 0 0.25 0.5 1 2 4 8 16 24 32 40 48 64 96 128
+started_utc=2026-08-24T04:44:44.8366196Z
+strehl stack -- regularised winner + noise-gated average (THE DEFAULT PATH, an estimator)
+camera          : ILCE-7CM2
+iso             : 1000
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 1000. Trustworthy for ranking.
+                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+                  SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+                  camera's own white level, which checks one relation and is not a PTC; the
+                  PTC now exists and the relation survives it at true gain steps -- the ISO 160
+                  control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+                  READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+                  camera MODEL and nothing here was fitted from this stack. Below the profile's
+                  base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+                  is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+                  -- the corpus holds no ISO 64 or 80 capture).
+regulariser     : 17x17 box on the focus field (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)
+focus noise sd  : 0.015214 on the regularised field, MEASURED in-crate (facts 310-313)
+gates           : 0.00, 0.25, 0.50, 1.00, 2.00, 4.00, 8.00, 16.00, 24.00, 32.00, 40.00, 48.00, 64.00, 96.00, 128.00  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)
+planes          : 3516 x 2344 per CFA plane
+frames          : 100 from D:\personal\macro\foam
+workers         : 1 chunks of <= 100 frames (1 allowed by the 6144 MB budget, 32 by CPU)
+working set     : 321 MB/worker pass 1, 3238 MB/worker pass 2 (buffers only, a LOWER BOUND)
+
+--- pass one: regularised winner field (MEASURED) ---
+wall clock      : 10.560 s  (105.6 ms/frame)
+  decode        : 4.789 s summed across workers (47.9 ms/frame)
+  focus + reg   : 4.993 s summed across workers (49.9 ms/frame)
+
+--- pass two: gated average (MEASURED) ---
+wall clock      : 22.490 s  (224.9 ms/frame, 15 accumulators)
+  decode        : 5.134 s summed across workers (51.3 ms/frame)
+  field + gate  : 17.279 s summed across workers (172.8 ms/frame)
+total           : 33.049 s  (+0.100 s prologue), 126.5 MB/s over 4179.2 MB
+in-flight frames: 1 peak, bound 1 (never O(N))
+
+--- gate calibration (MEASURED) ---
+                  n_eff is frames averaged per pixel. Fact 212 measured nwide = 3 at full
+                  sampling density -- frames within 50% of PEAK HEIGHT, which is a different
+                  rule from this NOISE gate, so 3 is a target to land near, not to match.
+  gate   tol(DN-norm)     mean n_eff   n_eff=1 %   boundary %   pred sigma gain (model)
+   0.00      0.000000        1.000     100.00%        0.00%         1.0000x
+   0.25      0.005379        1.021      97.89%        0.00%         0.9938x
+   0.50      0.010758        1.043      95.83%        0.00%         0.9876x
+   1.00      0.021516        1.087      91.80%        0.00%         0.9754x
+   2.00      0.043032        1.177      84.25%        0.00%         0.9517x
+   4.00      0.086063        1.359      71.07%        0.00%         0.9079x
+   8.00      0.172127        1.727      50.98%        0.00%         0.8339x
+  16.00      0.344254        2.452      27.37%        0.00%         0.7272x
+  24.00      0.516380        3.171      15.37%        0.00%         0.6541x
+  32.00      0.688507        3.903       8.80%        0.00%         0.6003x
+  40.00      0.860634        4.674       5.06%        0.00%         0.5586x
+  48.00      1.032761        5.514       2.93%        0.00%         0.5252x
+  64.00      1.377014        7.468       1.04%        0.00%         0.4736x
+  96.00      2.065521       12.673       0.17%        0.00%         0.4022x
+  128.00      2.754028       19.280       0.03%        0.00%         0.3516x
+
+gate solve      : not requested. Pass --target-n-eff 3 to solve the ladder for a
+                  gate, which is what fact 324 says you should be setting.
+
+
+--- CLIPPING CENSUS (MEASURED) ---
+container max   : 16383 DN. NOT the usable white level (15360) -- these are
+                  two different numbers for two different purposes and both are right:
+                  15360 bounds the noise model's calibrated range, 16383 is what
+                  "this sample is pinned" means. Do not unify them.
+ever clipped    : 1.1983% of pixels (98760 of 8241504) clipped in at least one frame
+always clipped  : 0.0000% of pixels (0 of 8241504) pinned in EVERY frame
+                  No pixel is pinned in every frame, so the maximum-severity case
+                  M26 measured on coffee-bubbles does not arise on this stack.
+                  NOTE 109MSDCF and 119MSDCF are two of the four stacks with NO
+                  saturation, and 109 is also the quietest photometrically (M24).
+                  A clean result on them is systematically weaker evidence than it
+                  looks.
+
+--- PHOTOMETRIC DRIFT SENSITIVITY (DERIVED from a MEASURED response) ---
+winner response : median 7.6148, p10 3.6040, p90 18.5440  (regularised, DN-normalised)
+gate unit       : 0.021516  = sqrt(2) * FOCUS_NOISE_SD, the SD of a difference
+sensitivity     : 1.770 gate units per 1% of per-frame level drift (median pixel),
+                  0.838 at p10 and 4.309 at p90. Shot-limited; in read-noise-
+                  dominated shadow it is 2x this.
+corpus (M24)    : 109MSDCF drifts 0.91% -> 1.61 gate units. 119MSDCF 2.88% -> 5.10.
+                  coffee-bean 11.70% -> 20.70. coffee-bubbles 8.93% -> 15.80.
+                  109MSDCF is the QUIETEST stack in the corpus and is the one most
+                  of this project's numbers were measured on, so a clean 109 result
+                  is NOT evidence that photometric variation is handled.
+STATUS          : NO per-frame gain term is fitted or applied. This merge assumes
+                  constant photometry across the stack. The number above is the size
+                  of that assumption, not a correction for it. Do NOT read gain from
+                  EXIF to fix it: M24 measured two stacks drifting 6.84% and 8.93%
+                  with CONSTANT EXIF, and coffee-bean moving only 16% of what its
+                  EXIF change predicts (1.0443 measured vs 1.2800). Fit it.
+
+flat ROI        : not requested. Pass --flat-roi X,Y,W,H for the noise invariant.
+exit=0
+finished_utc=2026-08-24T04:45:19.3384334Z

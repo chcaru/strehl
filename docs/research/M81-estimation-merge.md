@@ -1,303 +1,337 @@
 # M81 — estimation merge
 
-**VERDICT — MEASURED: NO SHIP.** The stack-calibrated gate failed the
-pre-registered spectral model-sensitivity control on **3/5 stacks**. In the
-paired comparison with the shipped `DEFAULT_GATE = 4.0`, it passed **0/5**:
-three stacks had invalid stack-specific M80 controls, and each of the two
-readable stacks lost the registered detail-to-residual comparison. All five
-candidate outputs also retained singleton pixels whose selection penalty is
-not priced by the per-pixel sigma model. The automatic gate is therefore
-removed from the production CLI and core API; the default remains unchanged.
+**VERDICT — MEASURED/ARGUED: NO SHIP; THE FOCUS-NOISE UNIT HYPOTHESIS IS
+REFUTED.** On the two `wrapped-text` sibling stacks whose through-focus
+responses M70 P34 measures agreeing within 4.7%, a fresh common-target ladder
+requires raw gates 37.5 and 11.5, a 3.25× span. M81's primary
+texture-qualified `FOCUS_NOISE_SD` correction changes those to 40.0 and 11.0
+corrected units, a **3.63× span**, beyond the pre-registered 2× falsification
+line and farther apart than before correction. Across all five required M77
+stacks, the corrected constants span **49.54×**. M69's two published
+stack-level estimators independently give sibling spans **4.09×** and
+**3.57×** and five-stack spans **49.54×** and **50.49×**. The result does not
+depend on which of the three estimators is used.
 
-**ARCHITECTURAL DECISION — ARGUED and IMPLEMENTED: multiple passes, no focus
-volume.** M81 used one decode to measure M70's global spectral target and elect
-the regularised winner, a second decode to measure the admission-threshold
-distribution, and the existing stacker's two decodes to run a paired gate
-sweep. The experiment therefore performed **four actual decodes**, not two.
-Its per-pixel state is fixed in stack depth; it retains no
-`width × height × frames` focus volume. The small spectral record is
-`O(24N)`, while the image-sized state is `O(workers × pixels)`.
+**VERDICT — MEASURED/ARGUED: THE CORRECTED GATE ALSO FAILS THE PRODUCT
+CONTROL.** Re-expressing shipped corrected-unit gate 4 as raw gate `4*rho`
+beats the shipped raw gate 4 on **0/5** required stacks. M77's registered flat
+control makes three comparisons unreadable; the two readable stacks both miss
+the pre-registered detail-to-residual bar. Every candidate leaves unpriced
+singleton selection exposure, from **3.93% to 82.11%**, so the requested
+"never worse than a single frame" floor is not established anywhere.
 
-## M81 §1 — Source findings and the mechanism actually tested
+**ARCHITECTURAL DECISION — ARGUED and IMPLEMENTED IN THE EXPERIMENT:
+multiple passes, no focus volume.** The production merge remains its existing
+two-pass design: pass one elects the 17×17-regularised winner and pass two
+folds every admitted RAW sample into the arithmetic mean. The unit experiment
+uses M70's compact full-stack texture record, then one middle RAW frame and
+32 synthetic replicates per accepted 512×512 tile, folded with Welford state.
+Its memory is fixed in stack depth. M69 says real response noise requires a
+textured static burst; because that capture does not exist, this instrument was
+never eligible to become a production calibration path even if the unit
+hypothesis had survived.
 
-**MEASURED.** M2 §3.2.3, the source of SYNTHESIS fact 19, measured an
-**unweighted mean of all 22 frames** at **0.534×** the noise of frame 11 on
-`109MSDCF`; it did not measure a noise-gated mean at 0.534×. The same table
-measured argmax at 1.253×, a shifted-winner-map placebo at 0.981×, and a
-17×17-regularised argmax at 1.075×. The source therefore establishes the noise
-value of averaging and the cost of noise-coupled selection, but **0.534× is not
-a measured operating point of the shipped gate**.
+## M81 §1 — The redirection, and whether M81 agrees
 
-**MEASURED.** M15 §5.1, the source of SYNTHESIS fact 84, measured the w13
-absolute reconstruction error over 30 synthetic cells falling from
-**24.79 DN at regulariser width 1 to 15.99 DN at width 17**, a **35.5%**
-reduction. M15 also records the scope: this is absolute reconstruction error on
-its registered cell corpus, not a five-stack estimate of the full merge.
+**ARGUED.** M81 agrees with the redirection as a falsification. Testing whether
+the unit restores one portable constant is simpler and better identified than
+assuming that M70's informative-frame count is the count a hard gate should
+admit. M70 §22.6 explicitly withdraws that identification: its spectral
+`n_eff` is an information count, not a measured admission optimum.
 
-**MEASURED.** Source history shows that commit `e848b56` had already built both
-mechanisms before M81: the 17×17 regularised winner field and the noise-gated
-arithmetic mean. M81 did not claim to build them a second time. It built and
-tested the missing composition: a gate-free spectral target followed by a
-spatial admission solve, then those existing mechanisms at the solved gate.
+**ARGUED.** M81 disagrees with one premise, not with the experiment. M69's
+4.062× result is not a measured per-stack scalar dispersion. M69 fact 18
+measures it across correlation lengths on a controlled texture plant. M69
+fact 17's P2-derived stack scalars span 1.186×, while M69 fact 56's direct
+synthetic-replicate stack scalars span 2.104× and explicitly conflict with the
+P2 values. M69 §6 then says true response noise on moving-focus real data is
+not identifiable without a textured static burst. The correction therefore
+tests a strong hypothesis with imperfect scalar estimators; it does not
+pretend M69 already supplied the missing real calibration.
 
-**MEASURED.** M77's own fact 39 measured gates of 38.534 and 11.642 to match
-spectral counts of 4.148 and 4.050 on the sibling `wrapped-text` stacks, a
-3.31× gate difference for a 2.4% count difference. M77's own fact 40 measured a
-flat ROI freezing while frame-average admission continued to rise. Those
-source results reject a portable constant and also warn that a frame-average
-target cannot describe local admission.
+**MEASURED.** M70 P34 is the decisive clean control. `wrapped-text-1` and
+`wrapped-text-2` agree within 4.7% on M70's gate-free equal-average
+through-focus ladder, and their spectral counts agree within 2.4%. M70 P35
+places the local spectral floor at 255 sensor pixels. M70 P36 measures flat
+tiles as unusable nulls rather than zero targets. M70 P37 shows why a global
+moving-patch response must not be silently read as local physics.
 
-**MEASURED/ARGUED.** M70 §22 supplied the requested late answer. M70's local
-form is measured only down to **128 GQ samples / 255 sensor pixels** with Welch
-tile 64; its pure-noise null spans approximately −2.5 to +3.0 even at the
-largest window. M70 §22.6 also states that spectral `n_eff` is a count of
-informative frames, **not a measured optimal hard-admission target**. M81
-therefore retained M70's global 24-textured-patch instrument and treated
-`spectral count = mean spatial admission` as the hypothesis under test, not as
-an established identity. No local gate was invented.
+**MEASURED.** M69's source also predicts that a scalar correction is small
+relative to the gate disparity. Its Part-I P2 values on the six stacks used
+here are 0.9285–1.1009; its Part-II direct B3 values are 0.8116–1.2281. Neither
+source contains a per-stack correction remotely as large as the raw
+common-target gate spread.
 
-## M81 §2 — Pre-registration and provenance
+## M81 §2 — What was already built
 
-**MEASURED.** `experiments/M81-estimation-merge/PREREGISTRATION.md` was
-committed at `0bf6e46` before any M81 arm ran. Commit `ff8c166`, also before
-measurement, fixed the exact calibration invocation and 7028×4688 analysis
-bounds. It registered:
+**MEASURED.** M2 §3.2.3, the source of SYNTHESIS fact 19, measures the
+unweighted mean of all 22 `109MSDCF` frames at **0.534×** the noise of frame
+11. It does not measure a noise-gated operating point at 0.534×. The same
+source measures argmax at 1.253×, its shifted-winner placebo at 0.981×, and a
+17×17-regularised selector at 1.075×.
 
-- **ARGUED.** Gate 4 as the control and the solved `T*` as the candidate.
-- **ARGUED.** Per-stack acceptance of
-  `Q(T*) / Q(4) >= 1.01`, `D(T*) / D(4) >= 0.98`, and a fresh target hit within
-  1%.
-- **ARGUED.** A mandatory **5/5** result, with any failed control or unreadable
-  stack forcing no ship.
-- **ARGUED.** The exact five subjects, N values, 256-plane-pixel ROIs,
-  M70 spectral geometry, default worker count 6, and every non-default flag.
-- **ARGUED.** A three-seed, truth-referenced single-frame floor, plus a gate-zero
-  selector required to fail it.
+**MEASURED.** M15 §5.1, the source of SYNTHESIS fact 84, measures absolute
+reconstruction error falling from 24.79 DN without spatial support to 15.99 DN
+at regulariser width 17 over its 30 registered synthetic cells, a 35.5%
+reduction.
 
-**MEASURED.** The final evidence executable was built from experimental commit
-`4b00dd820de38ed5dc4844d906ada64c833c3699` with Rust/Cargo 1.98.0 MSVC and a
-private `CARGO_TARGET_DIR`. It is 8,424,448 bytes with SHA-256
-`e16fa0d2a4100ba9c534129e781ab869bc93bdf53ff7bc1d7504b7e7ab0aed82`.
-`binary.json` and every paired-arm log name that executable and hash.
+**MEASURED.** Commit `e848b56` had already put both mechanisms in the shipped
+path before M81: the 17×17 regularised winner field and the noise-gated
+arithmetic mean. M81 did not duplicate them. It tested whether either proposed
+automatic gate calibration made those existing mechanisms acceptable.
 
-## M81 §3 — Implementation
+## M81 §3 — Frozen design and provenance
 
-**MEASURED/ARGUED.** The experimental core instrument reproduced M70's
-configuration exactly: 24 fixed 256×256 GQ patches; 128×128 Welch tiles at 50%
-overlap; periodic Hann; the registered low and three mid bands; texture
-threshold 10; and `sum(S) / max(S)` with no per-frame clipping. A pure-Rust
-radix-2 two-dimensional FFT avoided adding a dependency.
+**MEASURED.** The original spectral arm was pre-registered at commits
+`0bf6e46` and `ff8c166`, measured, parked, and reported NO SHIP at `bcde55e`.
+After M70 §22 arrived, the corrected unit arm was separately frozen in
+`PREREGISTRATION-UNIT.md` at commit `ea8e4ad` before its new calibration,
+ladder, or paired result ran.
 
-**MEASURED/ARGUED.** Calibration pass one folded the regularised best focus
-field and 24 small spectral records per frame. Pass two converted each
-frame/pixel focus gap into the gate needed to admit it and folded that value
-into a mergeable histogram. The histogram discards 14 low `f32` bits, retaining
-the exponent and nine mantissa bits for approximately 0.2% relative threshold
-resolution. Its memory is fixed in N.
+**MEASURED.** The amendment disclosed that the qualitative direction was not
+blind: M69's published `rho` values, M77's coarse ladders, and the parked M81
+solve already existed. It therefore fixed a fresh diagnostic target,
+`mean n_eff = 4.000`, rather than reusing M70's count, and made no optimality
+claim for that target.
 
-**MEASURED/ARGUED.** Gate zero admits the tie-broken elected winner and no
-other exact-focus ties. An early implementation admitted every tied response,
-so the gate-zero control read slightly above one. M81 repaired both the runtime
-admission rule and histogram semantics, then added a tie-specific regression
-test. The final five-stack controls read exactly 1.000000000 at gate zero and
-exactly N beyond the widest finite gap.
+**ARGUED.** The binary decision was fixed at corrected sibling and five-stack
+spans no larger than 2×. The exact ladder was gates
+`0, 0.25, 0.5, 1, 2, 4, 8, 16, 24, 32, 40, 48, 64, 96, 128`; the solve used
+log-gate/log-`n_eff` interpolation between positive bracketing rungs and
+forbade extrapolation.
 
-**ARGUED.** Conceptually the calibrated production path needs three visits:
-measure target/winner, solve admission, and estimate. The isolated experiment
-used four because `calibrate-gate` and `stack` were separate commands and M81
-did not modify M80-owned `merge_cmd.rs`. Reusing calibration pass one's winner
-would remove one decode, but the failed estimator does not justify that
-integration work.
+**MEASURED.** The six-stack ladder and five paired runs used a private release
+binary built from commit
+`97dc93d9a2417085bf40fa8ac576a3eccdb381bc`. It is 8,278,016 bytes with
+SHA-256
+`925a83fa70205dc4cd23f78c03ddeb16c6e0ebb9eb1ce3268bdf5ac9cce4a2cd`.
+Every run log repeats the commit and hash. The merge has no `--tile` flag.
+The only non-default ladder flag was `--gate`; paired runs additionally named
+the frozen 256-plane-pixel flat and detail ROIs.
 
-## M81 §4 — Spectral and gate controls
+**MEASURED.** The texture-calibration log names repository baseline
+`178cfb1cd92e3ea7da9a7f84e9cffe2b3892c1a8`. The only intervening change before
+the binary's `97dc93d` baseline normalised an M80 evidence log; the core,
+`main.rs`, and `merge_cmd.rs` trees are byte-identical between the two commits.
 
-**MEASURED.** A fresh Python implementation decoded all five RAW stacks and
-recomputed M70's corrected estimator; no old `.npz` target was reused. Rust
-agreed within 0.0000841% relative on every nominal target, against the
-pre-registered 2% bar.
+| Class | Stack / subject | N | paired flat ROI | paired detail ROI |
+| --- | --- | ---: | --- | --- |
+| MEASURED | `wrapped-text-1` / wrapped label text | 130 | `32,1312,256,256` | `2208,672,256,256` |
+| MEASURED | `wrapped-text-2` / wrapped label text | 120 | portability only | portability only |
+| MEASURED | `109MSDCF` / acrylic paint | 22 | `1440,416,256,256` | `1952,1056,256,256` |
+| MEASURED | `coffee-bean` / coffee bean | 105 | `32,416,256,256` | `1312,416,256,256` |
+| MEASURED | `foam` / coffee foam | 100 | `1312,288,256,256` | `160,1952,256,256` |
+| MEASURED | `bee-1` / bee anatomy | 299 | `2720,1568,256,256` | `1952,672,256,256` |
 
-| Class | Stack | N | Python/Rust relative error | `n_spec` nominal | `T*` | realised mean `n_eff` | fresh G2 relative error |
-| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| MEASURED | `wrapped-text-1` | 130 | 8.230e-8 | 4.147660 | 38.749996 | 4.148225 | 8.197e-5 |
-| MEASURED | `109MSDCF` | 22 | 8.403e-7 | 4.798517 | 3.828125 | 4.798460 | 1.078e-4 |
-| MEASURED | `coffee-bean` | 105 | 1.396e-9 | 5.432140 | 1.191406 | 5.434702 | 5.265e-4 |
-| MEASURED | `foam` | 100 | 2.912e-8 | 5.499487 | 47.874996 | 5.500630 | 2.752e-4 |
-| MEASURED | `bee-1` | 299 | 2.533e-8 | 11.719199 | 1.406250 | 11.723698 | 4.096e-4 |
+## M81 §4 — Texture-qualified response-noise calibration
 
-**MEASURED.** S1, S2, S3, S5, G1, G2, G3, and G4 passed. The N=41 static
-spectral plant returned exactly 41.000000; the independent-noise plant returned
-−0.071319. Every solve was measured, bracketed, monotone, and within 1% of its
-target.
+**ARGUED/MEASURED.** The primary estimator applies M69 B3's synthetic-replicate
+response measurement only to M70-qualified texture. It reads M70's exact 24
+fixed patches, each 256 green-quincunx samples or 511 sensor pixels, with Welch
+`--tile` **128**, periodic Hann, 50% overlap, and low-band
+`peak signal / median model variance >= 10`. A passing centre contributes a
+512×512 raw tile from the middle frame; a flat centre contributes nothing.
 
-**MEASURED.** Fatal control S4 failed on 3/5 stacks. The table applies M70's
-measured photon-transfer variance multipliers, 0.950 and 1.093; the registered
-bar was full target span divided by nominal target no greater than 0.20.
+**ARGUED/MEASURED.** Each accepted tile receives 32 deterministic
+photon-transfer-model noise replicates. The independent Python operator is
+green luma, 3×3 Sobel, 27×27 box, noise normalisation, and the shipped 17×17
+regulariser. Welford state retains no replicate cube. M69 B3's frozen-latent
+debias is applied, and the stack scalar is the median accepted-patch mean.
 
-| Class | Stack | `n_spec` at 0.950× | nominal | `n_spec` at 1.093× | span / nominal | S4 |
-| --- | --- | ---: | ---: | ---: | ---: | --- |
-| MEASURED | `wrapped-text-1` | 4.726371 | 4.147660 | 3.429687 | 0.312630 | **FAIL** |
-| MEASURED | `109MSDCF` | 7.690965 | 4.798517 | −6.125e31 | 1.276e31 | **FAIL** |
-| MEASURED | `coffee-bean` | 5.522381 | 5.432140 | 5.389715 | 0.024422 | pass |
-| MEASURED | `foam` | 5.591419 | 5.499487 | 5.327484 | 0.047993 | pass |
-| MEASURED | `bee-1` | 13.069878 | 11.719199 | 9.256310 | 0.325412 | **FAIL** |
+**MEASURED.** The zero-signal temporal control returns `rho = 1.003112`,
+inside the pre-registered `[0.98, 1.02]` interval. Every stack has at least 16
+textured patches, and every within-stack patch-mean span is below the
+pre-registered 2× scalar-readability line.
 
-**MEASURED/ARGUED.** The `109MSDCF` denominator approaches zero in one mid
-band at 1.093× variance, producing the enormous negative target. This is not a
-Rust numerical discrepancy: the fresh Python reference reproduces it. It is
-the instability M70 warned an unclipped accumulated noise subtraction can
-exhibit. A self-calibration dominated by the known model uncertainty is not
-calibrated, so S4 alone forces no ship.
+| Class | Stack | N | textured / flat patches | primary `rho` | patch min–max | patch span | calibration |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| MEASURED | `wrapped-text-1` | 130 | 24 / 0 | 0.936807 | 0.738264–1.190659 | 1.612783× | pass |
+| MEASURED | `wrapped-text-2` | 120 | 24 / 0 | 1.044503 | 0.898421–1.368982 | 1.523764× | pass |
+| MEASURED | `109MSDCF` | 22 | 22 / 2 | 1.115148 | 0.939996–1.204208 | 1.281077× | pass |
+| MEASURED | `coffee-bean` | 105 | 16 / 8 | 0.865784 | 0.722109–1.147850 | 1.589579× | pass |
+| MEASURED | `foam` | 100 | 24 / 0 | 1.196133 | 1.027628–1.568268 | 1.526105× | pass |
+| MEASURED | `bee-1` | 299 | 16 / 8 | 0.932787 | 0.653345–1.107243 | 1.694730× | pass |
 
-## M81 §5 — Paired gate-4 comparison on all five stacks
+**ARGUED.** Passing these controls makes the scalar falsification readable; it
+does not turn modeled synthetic noise into real measured response noise.
+M69 fact 56 shows B3 and P2 disagree, and M69 §6 names the absent static burst
+as the needed measurement.
 
-**DERIVED.** For each arm, `D = sqrt(q_signal_power)` from M80's repaired
-cross-fitted detail instrument, `H` is M77 invariant 1's flat-ROI high-pass SD,
-and `Q = D/H`. The ratios below are candidate `T*` divided by gate-4 control.
-The shipped, argmax-biased pre-M80 `RETENTION` was not used.
+## M81 §5 — Fresh common-target ladder: primary verdict
 
-**MEASURED/ARGUED.** M80 §5 validates its global noise null and detail positive
-control, while M80 §9 requires a stack's flat control to be flat. M81 therefore
-applied M77's pre-registered G0' flat-contamination control as a stack-specific
-precondition. `wrapped-text-1`, `109MSDCF`, and `foam` fail it; `foam` also has
-detail `STRUCTURE` below M80's positive-control floor in both arms. Their
-numbers are reported but not accepted as readable evidence.
+**MEASURED/DERIVED.** All six 15-rung admission ladders are non-decreasing and
+bracket mean `n_eff = 4.000`. The solver's power-law plant recovers its known
+gate within 0.1%, and substituting every solved gate back into its measured
+interpolation segment recovers the target within 1%. Values below carry more
+digits only to reproduce that interpolation; the CLI prints `n_eff` to three
+decimals and the comparison does not support five-significant-figure physics.
 
-| Class | Stack | N | gate 4 mean `n_eff` | `T*` mean `n_eff` | D ratio | H ratio | Q ratio | M77 flat contamination | M80-readable | Registered verdict |
-| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- |
-| MEASURED | `wrapped-text-1` | 130 | 1.238 | 4.148 | 0.933770 | 0.502833 | 1.857017 | 2.6339× | no | **UNREADABLE**; D also fails |
-| MEASURED | `109MSDCF` | 22 | 4.987 | 4.798 | 1.000196 | 1.028199 | 0.972765 | 1.1399× | no | **UNREADABLE**; Q also fails |
-| MEASURED | `coffee-bean` | 105 | 31.614 | 5.435 | 1.006680 | 3.259977 | 0.308800 | 1.0968× | yes | **FAIL Q** |
-| MEASURED | `foam` | 100 | 1.359 | 5.501 | 0.515710 | 0.945476 | 0.545449 | 15.8769× | no | **UNREADABLE**; D and Q also fail |
-| MEASURED | `bee-1` | 299 | 70.146 | 11.724 | 1.005490 | 1.513470 | 0.664361 | 1.0666× | yes | **FAIL Q** |
+| Class | Stack | N | raw gate at mean `n_eff = 4` | primary `T/rho` | M69 B3 `T/rho` | M69 P2 `T/rho` |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| MEASURED/DERIVED | `wrapped-text-1` | 130 | 37.518 | 40.049 | 39.921 | 37.342 |
+| MEASURED/DERIVED | `wrapped-text-2` | 120 | 11.528 | 11.037 | 9.763 | 10.472 |
+| MEASURED/DERIVED | `109MSDCF` | 22 | 3.022 | 2.710 | 2.880 | 3.052 |
+| MEASURED/DERIVED | `coffee-bean` | 105 | 0.984 | 1.137 | 1.213 | 1.060 |
+| MEASURED/DERIVED | `foam` | 100 | 32.987 | 27.578 | 26.861 | 32.143 |
+| MEASURED/DERIVED | `bee-1` | 299 | 0.754 | 0.808 | 0.806 | 0.740 |
 
-**MEASURED.** M77's copied stability controls pass for both ROIs on
-`wrapped-text-1`, `109MSDCF`, `foam`, and `bee-1`; both fail on `coffee-bean`.
-Its detail-positive control passes on four stacks and fails on `foam`. These
-qualifications are recorded in `arms-results.json` rather than silently
-discarded.
+**MEASURED/DERIVED.** Before correction, the sibling gates span 3.254×. The
+primary correction worsens that to **3.629×**; source B3 gives **4.089×** and
+source P2 gives **3.566×**. All exceed the frozen 2× line, so U1 refutes the
+unit hypothesis on the pair for which M70 supplies the common-physics control.
 
-**MEASURED.** The paired result is **0/5**. Even if the three invalid
-stack-specific M80 preconditions were ignored post hoc, every row misses at
-least one numerical acceptance clause. The two readable rows are especially
-direct: calibrating down from gate 4 to 1.191 on `coffee-bean` increases flat
-residual 3.260×, and calibrating down to 1.406 on `bee-1` increases it 1.513×,
-without a compensating 1% increase in `Q`.
+**MEASURED/DERIVED.** Across the five mandatory M77 stacks, raw target gates
+span 49.752×. Primary, source B3, and source P2 corrected constants span
+**49.538×**, **49.543×**, and **50.490×**, respectively. U2 also fails by more
+than an order of magnitude. The correction changes the unit but does not
+explain the admission geometry.
 
-## M81 §6 — The single-frame floor
+**ARGUED.** This result rejects a **per-stack scalar** repair. It does not
+establish which non-scalar mechanism is sufficient. M69's own within-stack
+texture dependence and M77's within-image non-uniform admission are compatible
+with a local unit, but M70 P36 says flat regions supply no spectral calibration
+target and the available corpus supplies no real static-noise measurement.
+M81 therefore records the need and does not build a local profile.
 
-**MEASURED.** The pre-registered Rust test used three fixed seeds, known latent
-truth, 16 scored 16×16 blocks per seed, and a static N=41 burst whose calibrated
-target is all frames. Candidate RMS stayed below pooled single-frame RMS in
-every block. Gate zero was the planted selector failure:
+## M81 §6 — Shipped gate 4 versus corrected-unit gate 4
 
-| Class | Seed | Candidate worst / single-frame RMS | Selector worst / single-frame RMS | Selector blocks worse than one frame |
-| --- | --- | ---: | ---: | ---: |
-| MEASURED | `0x4d36340000000001` | 0.319751× | 1.124191× | 7/16 |
-| MEASURED | `0xd3014db97f4a7c14` | 0.294348× | 1.055965× | 7/16 |
-| MEASURED | `0x9c837e32d192ed02` | 0.301695× | 1.080274× | 9/16 |
+**DERIVED.** `Gate::tolerance` is linear in `FOCUS_NOISE_SD`; corrected-unit
+gate 4 is therefore emulated without production changes by raw gate `4*rho`.
+The five candidate gates are 3.747, 4.461, 3.463, 4.785, and 3.731 in table
+order below.
 
-**MEASURED.** The same test asserts, for every plant pixel, `n >= 1` and
-reported predicted sigma no larger than the model's single-frame sigma. The
-negative control proves that the truth-referenced branch can reject a selector.
+**MEASURED/DERIVED.** `D = sqrt(q_signal_power)` uses M80's final cross-fitted
+resolved-detail statistic, `H` is the flat-ROI high-pass SD, and `Q = D/H`.
+Every selector detail target is measurable under M80's final one-sided
+control. M77's independently registered flat-contamination precondition fails
+on `wrapped-text-1`, `109MSDCF`, and `foam`, so those rows remain unreadable
+rather than being promoted from their numerical signs.
 
-**MEASURED/ARGUED.** The real candidates nevertheless retain singleton pixels
-on every stack: **5.20%** on `wrapped-text-1`, **4.92%** on `109MSDCF`,
-**63.64%** on `coffee-bean`, **2.95%** on `foam`, and **46.19%** on `bee-1`.
-At a singleton, the current predicted sigma is a single-sample noise value and
-does not include the max-over-N selection penalty. M80 repaired a regional
-detail-comparison statistic, not this per-pixel uncertainty model. Therefore
-the requested everywhere floor is not established on any real stack, and the
-pre-registered rule makes all five exposures fatal.
+| Class | Stack | N | candidate gate | control / candidate mean `n_eff` | D ratio | H ratio | Q ratio | M77 flat precondition | candidate singleton | verdict |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | --- |
+| MEASURED | `wrapped-text-1` | 130 | 3.747 | 1.238 / 1.224 | 1.000419 | 1.003562 | 0.996868 | fail | 82.11% | **UNREADABLE** |
+| MEASURED | `109MSDCF` | 22 | 4.461 | 4.987 / 5.500 | 0.998514 | 0.935434 | 1.067435 | fail | 3.93% | **UNREADABLE** |
+| MEASURED | `coffee-bean` | 105 | 3.463 | 31.614 / 29.608 | 1.000692 | 1.020718 | 0.980380 | pass | 56.55% | **FAIL Q** |
+| MEASURED | `foam` | 100 | 4.785 | 1.359 / 1.431 | 0.983929 | 0.998973 | 0.984941 | fail | 66.53% | **UNREADABLE** |
+| MEASURED | `bee-1` | 299 | 3.731 | 70.146 / 67.434 | 1.000548 | 1.001347 | 0.999203 | pass | 31.87% | **FAIL Q** |
 
-## M81 §7 — Controls made to fail
+**MEASURED.** The paired result is **0/5**. `109MSDCF` is the only numerical
+row to clear both `D >= 0.98` and `Q >= 1.01`, but its flat control fails and
+the row is unreadable. The two readable rows both preserve D and lose Q. No
+post-hoc relaxation converts this into the required 5/5 win.
 
-**MEASURED.** A Python harness replaced the exact unclipped-sum source bytes
-with per-frame clipping, read the planted bytes back, and ran one fully
-qualified exact Rust test. The mutation changed the independent-noise result
-from −0.071319 to **7.446821**, failed S3, and exited 101. A second byte-exact
-mutation reversed histogram accumulation; the bracketed solve failed and
-exited 101. Both files were restored byte-for-byte.
+## M81 §7 — The single-frame floor
 
-**MEASURED.** The harness's first version used a shortened Cargo filter with
-`--exact`; Cargo selected zero tests and exited zero. M81 rejected that result,
-changed the harness to require the complete test path and the literal
-`running 1 test`, and reran both controls. This is recorded because it
-reproduced the exact silent-control failure the brief warned about.
+**MEASURED.** Candidate model-predicted sigma gains are 0.9444, 0.4698,
+0.6724, 0.8920, and 0.5518 across the five stacks, all no larger than the
+single-frame model value. The estimator structurally admits its elected winner
+at every pixel, and the existing core test
+`averaging_beats_one_frame_and_selection_does_not` checks the two branches.
 
-**MEASURED.** The first real gate-zero control also failed: exact non-winning
-focus ties made mean admission slightly exceed one. That failure was retained
-until the tie semantics and regression test were repaired; the five final
-gate-zero values are exact.
+**MEASURED/ARGUED.** That model is deliberately incomplete at `n = 1`.
+`merge.rs` records the reopened gap: singleton selection is correlated with
+the same noise that elected it, while `SELECTION_INFLATION` has no surviving
+measured price. The unit candidate leaves singleton exposure on **5/5** stacks:
+82.11%, 3.93%, 56.55%, 66.53%, and 31.87%. The requested everywhere floor is
+therefore **not established**, which independently forces no ship.
 
-## M81 §8 — Interpretation and boundaries
+**MEASURED.** M81's earlier truth-referenced static-burst test proved its
+parked high-admission candidate below pooled single-frame RMS on all 48 scored
+blocks and made its gate-zero selector fail on 23/48. That is a valid
+instrument control preserved in `floor.log`, not evidence for these five
+new scalar-unit candidates; M81 does not transfer the result.
 
-**ARGUED.** M77 correctly established that a universal gate constant cannot
-produce a universal admission target. M81 does not overturn that result. It
-shows that the particular replacement tested here is not ready: the M70 count
-is model-unstable on 3/5 stacks, is not a measured hard-admission optimum, and
-is global while M77 measured admission to be spatially non-uniform.
+## M81 §8 — The parked spectral-count arm
 
-**ARGUED.** The failed composition does not justify returning to raw argmax.
-The existing 17×17 winner regulariser and gated arithmetic mean remain the
-production estimator. M81 removes only automatic spectral calibration and
-leaves explicit gate 4 as the control/default established before this
-milestone.
+**MEASURED.** Before M70 §22, M81 implemented the dispatched
+`spectral n_eff -> mean admission` composition. Rust reproduced a fresh Python
+M70 estimator within 8.403e-7 relative on all five stacks and solved a
+gate with fixed-in-N memory.
 
-**ARGUED.** A future attempt needs a target tied to the estimator's actual
-loss, not merely an information count. The remaining gap could require
-continuous focus-axis weighting and a calibrated singleton selection term.
-Those findings do not license M81 to build multi-frame deconvolution, a
-depth-posterior object, occlusion unmixing, or an outlier mask.
+**MEASURED.** Its pre-registered photon-transfer sensitivity control failed on
+3/5 stacks, its gate-4 paired arm passed 0/5, and every real candidate retained
+singleton exposure. Commit `bcde55e` removed its production integration and
+recorded NO SHIP. M70 §22 later supplied the more fundamental objection: the
+target identity itself had never been measured.
 
-## M81 §9 — Candidate facts
+**ARGUED.** The implementation remains useful evidence that a global spectral
+measurement and spatial admission histogram can be computed without a focus
+volume. It is not a fallback product arm and none of its target values choose
+the corrected-unit experiment.
+
+## M81 §9 — Controls made to fail
+
+**MEASURED.** The corrected-unit algebra plant uses
+`rho = [0.5, 1, 2]`, raw target gates `[2, 4, 8]`, and must recover constants
+`[4, 4, 4]` by division. `unit_mutation_control.py` constructs the exact byte
+mutation from division to multiplication, writes it, verifies the planted
+bytes by read-back, and invokes exactly two declared self-tests. The mutation
+produces `[1, 4, 16]`, exits nonzero, and the harness restores the source
+byte-for-byte.
+
+**MEASURED.** The zero-signal temporal calibration control was also capable of
+failure and read `rho = 1.003112` against its ±2% bar. All ladder processes and
+all paired processes exited zero, and every log records the frozen binary
+hash. M80 independently validates the detail statistic's noise null,
+detectability transition, retained-detail control, and byte-planted negative
+control in M80 §§5–6.
+
+## M81 §10 — Candidate facts
 
 | M81 namespace | Claim | Label | Evidence |
 | --- | --- | --- | --- |
-| **M81's own fact 1** | The exact M70 spectral estimator is implementable in Rust without a focus volume; Rust reproduces fresh Python within 8.403e-7 relative on all five stacks. | MEASURED | `reference.json`, `calibration-results.json` |
-| **M81's own fact 2** | The proposed calibration is not robust to the already-measured photon-transfer uncertainty: S4 fails on `wrapped-text-1`, `109MSDCF`, and `bee-1`, passing only 2/5. | MEASURED | `calibration.log`, `calibration-results.json` |
-| **M81's own fact 3** | The calibrated merge beats gate 4 on 0/5 registered stacks: three comparisons are unreadable under M80's stack-specific flat precondition, and the two readable comparisons fail Q. | MEASURED | `arms-*.log`, `arms-results.json`, M80 §9 |
-| **M81's own fact 4** | Every real candidate retains unpriced singleton selection exposure, from 2.95% on `foam` to 63.64% on `coffee-bean`; the everywhere single-frame floor is therefore unproved on 5/5. | MEASURED/ARGUED | `arms-results.json`, M81 §6 |
-| **M81's own fact 5** | SYNTHESIS fact 19's source value 0.534× belongs to the unweighted mean of all 22 frames, not to a measured noise-gated operating point. | MEASURED | M2 §3.2.3 |
-| **M81's own fact 6** | M70's spectral count can be a global calibration heuristic but is not yet a calibrated admission target: M70 explicitly measured a count, and the M81 composition fails both model sensitivity and paired acceptance. | MEASURED/ARGUED | M70 §22.6; M81 §§4–5 |
+| **M81's own fact 1** | The exact M70 spectral estimator is implementable in Rust without a focus volume; its parked implementation reproduced fresh Python within 8.403e-7 relative on all five original stacks. | MEASURED | `reference.json`, `calibration-results.json` |
+| **M81's own fact 2** | The parked spectral calibration is not robust to measured photon-transfer uncertainty: its registered sensitivity control failed on `wrapped-text-1`, `109MSDCF`, and `bee-1`. | MEASURED | `calibration-results.json` |
+| **M81's own fact 3** | The parked spectral candidate beat gate 4 on 0/5 registered stacks. | MEASURED | `arms-results.json` |
+| **M81's own fact 4** | The parked spectral candidates left unpriced singleton exposure from 2.95% to 63.64%, so their everywhere floor was unproved. | MEASURED/ARGUED | `arms-results.json` |
+| **M81's own fact 5** | SYNTHESIS fact 19's source value 0.534× is the unweighted mean of all 22 frames, not a measured noise-gated operating point. | MEASURED | M2 §3.2.3 |
+| **M81's own fact 6** | M70's spectral count is not a measured optimal hard-admission target; M81's attempted composition also failed model sensitivity and paired acceptance. | MEASURED/ARGUED | M70 §22.6; M81 §8 |
+| **M81's own fact 7** | M69's 4.062× result is a controlled texture-form sweep, not a per-stack scalar spread; M69's competing stack-level estimators span 1.186× and 2.104×. | MEASURED | M69 facts 17, 18, and 56 |
+| **M81's own fact 8** | The texture-qualified unit calibration is readable on all six stacks: 16–24 accepted 511-sensor-pixel patches per stack, flat control `rho = 1.003112`, and patch-mean spans 1.281–1.695×. | MEASURED | `unit-calibration.json` |
+| **M81's own fact 9** | Per-stack `FOCUS_NOISE_SD` correction does not restore a sibling constant: corrected `wrapped-text-1/2` spans are 3.629× primary, 4.089× B3, and 3.566× P2 against the frozen 2× line. | MEASURED/DERIVED | `unit-results.json` |
+| **M81's own fact 10** | Across all five M77 stacks, corrected common-target constants span 49.538× primary, 49.543× B3, and 50.490× P2. | MEASURED/DERIVED | `unit-results.json` |
+| **M81's own fact 11** | Corrected-unit gate 4 beats shipped raw gate 4 on 0/5: three rows are unreadable under the registered flat control, and both readable rows fail Q. | MEASURED | `unit-arms-results.json` |
+| **M81's own fact 12** | Every corrected-unit candidate retains unpriced singleton exposure, from 3.93% on `109MSDCF` to 82.11% on `wrapped-text-1`; the everywhere single-frame floor remains unproved. | MEASURED/ARGUED | `unit-arms-results.json` |
 
-## M81 §10 — Reproduction and evidence
+## M81 §11 — Reproduction and final disposition
 
 **MEASURED.** Durable evidence is under
 `experiments/M81-estimation-merge/`:
 
-- **MEASURED.** Frozen design: `PREREGISTRATION.md`.
-- **MEASURED.** Fresh independent spectral implementation and values:
-  `reference.py`, `reference.json`.
-- **MEASURED.** Private binary provenance: `build.log`, `binary.json`.
-- **MEASURED.** Five-stack calibration:
-  `calibration.log`, `calibration-results.json`,
-  `analyse_calibration.py`.
-- **MEASURED.** Five paired arms:
-  `arms-*.log`, `arms-results.json`, `analyse_arms.py`.
-- **MEASURED.** Byte-confirmed red controls:
-  `mutation_controls.py`, `mutation-controls.log`.
-- **MEASURED.** Spectral and single-frame plants:
-  `spectral-plants.log`, `floor.log`.
+- **MEASURED.** Frozen designs: `PREREGISTRATION.md` and
+  `PREREGISTRATION-UNIT.md`.
+- **MEASURED.** Texture calibration: `unit_calibration.py`,
+  `unit-calibration.log`, and `unit-calibration.json`.
+- **MEASURED.** Six fresh ladders: `run_unit_ladders.ps1`,
+  `unit-ladder-*.log`, `analyse_unit.py`, and `unit-results.json`.
+- **MEASURED.** Five paired arms: `run_unit_arms.ps1`,
+  `unit-arms-*.log`, `analyse_unit_arms.py`, and
+  `unit-arms-results.json`.
+- **MEASURED.** Frozen executable provenance: `unit-build.log` and
+  `unit-binary.json`.
+- **MEASURED.** Negative control: `unit_mutation_control.py` and
+  `unit-mutation-control.log`.
+- **MEASURED.** Parked-arm evidence remains in the same directory under its
+  original names.
 
-**MEASURED.** The calibration and floor test code is preserved at experimental
-commit `4b00dd8`; it is deliberately absent from the final production tree
-because the registered no-ship condition fired.
+**MEASURED.** M81 makes no production change. It does not modify M80-owned
+`crates/strehl-cli/src/merge_cmd.rs`, does not change `DEFAULT_GATE`, and does
+not add multi-frame deconvolution, a depth posterior, occlusion unmixing, or an
+outlier mask.
 
-## M81 §11 — Final disposition and checks
+**ARGUED.** The scalar unit hypothesis was the right redirection and the result
+is useful precisely because it failed cleanly. The next evidence must identify
+the spatially local response-noise unit on real texture or choose a gate by a
+truth-linked estimator loss. M69's requested textured static burst is the
+minimum capture for the former. M81 does not infer either solution from the
+negative.
 
-**MEASURED.** `crates/strehl-cli/src/main.rs`,
-`crates/strehl-core/src/lib.rs`, and `crates/strehl-core/src/merge.rs` are
-byte-equivalent to their state immediately before M81 implementation commit
-`885247c`; `crates/strehl-core/src/calibration.rs` is removed. M81 never edited
-M80-owned `crates/strehl-cli/src/merge_cmd.rs`.
-
-**MEASURED.** On the restored production tree:
-
-- **MEASURED.** `cargo fmt --all --check` passed.
-- **MEASURED.** All **138** `strehl-core` tests passed.
-- **MEASURED.** All **22** `merge_cmd::tests` passed.
-- **MEASURED.** `cargo clippy --workspace --all-targets -- -D warnings` passed.
-- **MEASURED.** All four M81 Python programs compiled, and both result
-  analysers reproduced the tables above.
-- **MEASURED.** `python scripts\corpus_lint.py` checked 107 Markdown files and
-  30 Rust files and reported `OK — no violations`.
+**MEASURED.** Rust and Cargo are 1.98.0 MSVC. All **138** `strehl-core` tests
+and all **25** selected `merge_cmd::tests` pass. Strict
+`cargo clippy --workspace --all-targets -- -D warnings` and
+`cargo fmt --all --check` pass. All four new Python programs compile; both
+reducers reproduce byte-identical JSON; the byte-restoring negative control
+passes; and corpus lint checks 107 Markdown files and 30 Rust files and reports
+`OK — no violations`. Exact outputs are preserved in `unit-*-tests.log`,
+`unit-clippy.log`, `unit-fmt.log`, `unit-python-checks.log`,
+`unit-toolchain.log`, and `unit-corpus-lint.log`.

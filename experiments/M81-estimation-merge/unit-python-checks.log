@@ -1,0 +1,21 @@
+PY_COMPILE=PASS
+UNIT_TEST_COUNT=2
+UNIT_SELF_TESTS=2/2 PASS
+wrapped-text-1   T4= 37.517990 rho=0.936807 C= 40.048774
+wrapped-text-2   T4= 11.528358 rho=1.044503 C= 11.037168
+109MSDCF         T4=  3.022016 rho=1.115148 C=  2.709970
+coffee-bean      T4=  0.984235 rho=0.865784 C=  1.136814
+foam             T4= 32.987321 rho=1.196133 C= 27.578304
+bee-1            T4=  0.754107 rho=0.932787 C=  0.808444
+U1 sibling span=3.628537 pass=False
+U2 five-stack span=49.538063 pass=False
+UNIT HYPOTHESIS: REFUTED
+wrapped-text-1   D=1.000419 H=1.003562 Q=0.996868 readable=False singleton=82.11% verdict=unreadable
+109MSDCF         D=0.998514 H=0.935434 Q=1.067435 readable=False singleton=3.93% verdict=unreadable
+coffee-bean      D=1.000692 H=1.020718 Q=0.980380 readable=True singleton=56.55% verdict=fail
+foam             D=0.983929 H=0.998973 Q=0.984941 readable=False singleton=66.53% verdict=unreadable
+bee-1            D=1.000548 H=1.001347 Q=0.999203 readable=True singleton=31.87% verdict=fail
+paired acceptance: 0/5; single-frame floor=False
+unit mutation control: planted, read back, rejected, and restored
+DETERMINISTIC=experiments\M81-estimation-merge\unit-results.json sha256=6a89e42a437083370c631b3dc116db4c2ad8da99e597d9f7feb2027073154b70
+DETERMINISTIC=experiments\M81-estimation-merge\unit-arms-results.json sha256=fb482e3a7aa0624246480f022ea6068efd35654748467951f7ac0017c2459bfa

@@ -1,0 +1,216 @@
+   Compiling once_cell v1.21.4
+   Compiling serde_core v1.0.229
+   Compiling pin-project-lite v0.2.17
+   Compiling crossbeam-utils v0.8.22
+   Compiling equivalent v1.0.2
+   Compiling crossbeam-epoch v0.9.20
+   Compiling autocfg v1.5.1
+   Compiling crossbeam-deque v0.8.7
+   Compiling rayon-core v1.13.0
+   Compiling hashbrown v0.17.1
+   Compiling either v1.18.0
+   Compiling windows-link v0.2.1
+   Compiling cfg-if v1.0.4
+   Compiling serde v1.0.229
+   Compiling winnow v0.7.15
+   Compiling toml_write v0.1.2
+   Compiling crc32fast v1.5.1
+   Compiling winnow v1.0.4
+   Compiling toml_datetime v1.1.1+spec-1.1.0
+   Compiling zerocopy v0.8.56
+   Compiling alloc-no-stdlib v2.0.4
+   Compiling memchr v2.8.3
+   Compiling target-features v0.1.6
+   Compiling rustversion v1.0.23
+   Compiling foldhash v0.2.0
+   Compiling getrandom v0.4.3
+   Compiling allocator-api2 v0.2.21
+   Compiling bytemuck v1.25.2
+   Compiling zune-core v0.5.3
+   Compiling semver v1.0.28
+   Compiling syn v2.0.119
+   Compiling syn v3.0.3
+   Compiling windows-sys v0.61.2
+   Compiling lazy_static v1.5.0
+   Compiling utf8parse v0.2.2
+   Compiling tracing-core v0.1.36
+   Compiling alloc-stdlib v0.2.4
+   Compiling rustc_version v0.4.1
+   Compiling glob v0.3.4
+   Compiling anstyle v1.0.14
+   Compiling pxfm v0.1.30
+   Compiling once_cell_polyfill v1.70.2
+   Compiling rle-decode-fast v1.0.3
+   Compiling log v0.4.34
+   Compiling anstyle-parse v1.0.0
+   Compiling zune-jpeg v0.5.15
+   Compiling hashbrown v0.16.1
+   Compiling brotli-decompressor v5.0.3
+   Compiling weezl v0.1.12
+   Compiling rustc-demangle v0.1.28
+   Compiling num-traits v0.2.19
+   Compiling dary_heap v0.3.9
+   Compiling indexmap v2.14.0
+   Compiling simd-adler32 v0.3.10
+   Compiling byteorder-lite v0.1.0
+   Compiling no_std_io2 v0.9.4
+   Compiling colorchoice v1.0.5
+   Compiling adler2 v2.0.1
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling adler32 v1.2.0
+   Compiling regex-syntax v0.8.11
+   Compiling itertools v0.14.0
+   Compiling md5 v0.8.1
+   Compiling memmap2 v0.9.11
+   Compiling miniz_oxide v0.8.9
+   Compiling backtrace v0.3.76
+   Compiling bitstream-io v4.10.0
+   Compiling heck v0.5.0
+   Compiling strsim v0.11.1
+   Compiling hex v0.4.3
+   Compiling byteorder v1.5.0
+   Compiling clap_lex v1.1.0
+   Compiling tracing-log v0.2.0
+   Compiling sharded-slab v0.1.7
+   Compiling thread_local v1.1.10
+   Compiling fax v0.2.7
+   Compiling anstyle-query v1.1.5
+   Compiling toml_parser v1.1.3+spec-1.1.0
+   Compiling libflate_lz77 v2.3.0
+   Compiling anstyle-wincon v3.0.11
+   Compiling flate2 v1.1.9
+   Compiling nu-ansi-term v0.50.3
+   Compiling smallvec v1.15.2
+   Compiling quick-error v2.0.1
+   Compiling libflate v2.3.1
+   Compiling anstream v1.0.0
+   Compiling toml_edit v0.25.13+spec-1.1.0
+   Compiling clap_builder v4.6.6
+   Compiling rayon v1.12.0
+   Compiling num-integer v0.1.47
+   Compiling num-complex v0.4.6
+   Compiling chrono v0.4.45
+   Compiling regex-automata v0.4.18
+   Compiling num-bigint v0.4.8
+   Compiling num-iter v0.1.46
+   Compiling proc-macro-crate v3.5.0
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.20
+   Compiling clap_derive v4.6.4
+   Compiling uuid v1.25.0
+   Compiling moxcms v0.8.1
+   Compiling num-rational v0.4.2
+   Compiling serde_spanned v0.6.9
+   Compiling toml_datetime v0.6.11
+   Compiling toml_edit v0.22.27
+   Compiling thiserror v2.0.20
+   Compiling num v0.4.3
+   Compiling strehl-core v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core)
+   Compiling matchers v0.2.0
+   Compiling tracing-attributes v0.1.31
+   Compiling zerocopy-derive v0.8.56
+   Compiling num_enum_derive v0.7.6
+   Compiling multiversion-macros v0.8.0
+   Compiling enumn v0.1.14
+   Compiling clap v4.6.6
+   Compiling num_enum v0.7.6
+   Compiling multiversion v0.8.0
+   Compiling tracing v0.1.44
+   Compiling jxl-bitstream v1.1.0
+   Compiling jxl-grid v0.6.2
+   Compiling jxl-threadpool v1.0.0
+   Compiling tracing-subscriber v0.3.23
+   Compiling toml v0.8.23
+   Compiling jxl-oxide-common v1.0.0
+   Compiling jxl-coding v1.0.1
+   Compiling jxl-image v0.13.0
+   Compiling jxl-modular v0.11.3
+   Compiling jxl-color v0.11.0
+   Compiling image v0.25.10
+   Compiling rawler v0.7.2
+   Compiling jxl-vardct v0.11.1
+   Compiling jxl-frame v0.13.3
+   Compiling jxl-render v0.12.4
+   Compiling jxl-jbr v0.2.1
+   Compiling half v2.7.1
+   Compiling tiff v0.11.3
+   Compiling jxl-oxide v0.12.6
+   Compiling strehl-raw v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-raw)
+   Compiling strehl-cli v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.84s
+     Running unittests src\main.rs (experiments\M81-estimation-merge\target-unit\debug\deps\strehl-159d1b4c243d4b13.exe)
+
+running 25 tests
+test merge_cmd::tests::a_gradient_increase_is_never_scored_as_a_pass ... ok
+test merge_cmd::tests::a_non_monotone_ladder_is_a_bug_and_is_reported_as_one ... ok
+test merge_cmd::tests::an_unsorted_ladder_solves_the_same_as_a_sorted_one ... ok
+test merge_cmd::tests::a_solved_gate_reproduces_its_target_when_fed_back ... ok
+test merge_cmd::tests::gradient_noise_moments_match_a_dense_covariance_calculation ... ok
+test merge_cmd::tests::the_m2_convention_column_reproduces_the_independently_identified_definition ... ok
+test merge_cmd::tests::degenerate_rois_do_not_panic ... ok
+test merge_cmd::tests::every_frame_is_covered_exactly_once_by_the_chunking ... ok
+test merge_cmd::tests::a_stack_the_shipped_ladder_cannot_reach_is_refused_not_extrapolated ... ok
+test merge_cmd::tests::a_target_outside_the_ladder_is_refused_rather_than_extrapolated ... ok
+test merge_cmd::tests::no_single_gate_calibrates_across_the_corpus ... ok
+test merge_cmd::tests::log_log_interpolation_is_exact_on_a_power_law ... ok
+test merge_cmd::tests::solving_at_a_rungs_own_value_returns_that_rungs_gate ... ok
+test merge_cmd::tests::degenerate_ladders_and_targets_are_refused ... ok
+test merge_cmd::tests::the_plan_is_bounded_by_memory_and_scales_down_as_accumulators_are_added ... ok
+test merge_cmd::tests::the_speckle_companion_uses_the_same_tolerance_as_the_argmax_baseline ... ok
+test merge_cmd::tests::the_statistics_are_priced_into_the_plan_and_do_not_grow_with_the_stack ... ok
+test merge_cmd::tests::the_isotropic_column_is_the_analytic_value_on_a_linear_ramp ... ok
+test merge_cmd::tests::the_corrected_column_falls_under_blur_which_is_the_property_it_is_used_for ... ok
+test merge_cmd::tests::the_noise_correction_removes_pure_noise_down_to_sampling_error ... ok
+test merge_cmd::tests::the_correction_leaves_signal_alone_while_removing_added_noise ... ok
+M80 positive plant: clean-to-blur gradient retention=0.369038
+M80 contrast N=22: amplitude=    0.0 q=   -6.6789 se= 25.7998 z=  -0.259 target=NOT-MEASURABLE
+M80 N=22 noise: selector_structure=1.001357 candidate_structure=0.997701 selector_q=+16.009680 selector_se=25.802707 selector_z=+0.620465 retention=NotMeasurable fitted_k=1.395314/1.393632
+M80 contrast N=22: amplitude=    0.5 q=   -5.9035 se= 25.7998 z=  -0.229 target=NOT-MEASURABLE
+M80 contrast N=22: amplitude=    1.0 q=   -3.7959 se= 25.7998 z=  -0.147 target=NOT-MEASURABLE
+M80 N=22 detail: structure=5.950740 clean_retention=1.000332 blur_retention=0.425848
+M80 N=130 noise: selector_structure=1.001411 candidate_structure=1.000482 selector_q=+24.544555 selector_se=38.033241 selector_z=+0.645345 retention=NotMeasurable fitted_k=1.598424/1.595491
+M80 contrast N=22: amplitude=    2.0 q=   +4.4152 se= 25.7998 z=  +0.171 target=NOT-MEASURABLE
+M80 contrast N=22: amplitude=    4.0 q=  +36.8217 se= 25.7998 z=  +1.427 target=NOT-MEASURABLE
+M80 N=299 noise: selector_structure=1.001460 candidate_structure=0.999476 selector_q=+29.269257 selector_se=43.822111 selector_z=+0.667911 retention=NotMeasurable fitted_k=1.684837/1.693345
+test merge_cmd::tests::selection_noise_null_is_not_a_retention_target_across_frame_counts ... ok
+M80 contrast N=22: amplitude=    8.0 q= +165.5723 se= 25.7998 z=  +6.418 target=MEASURABLE
+M80 N=130 detail: structure=5.208819 clean_retention=1.000717 blur_retention=0.449006
+M80 contrast N=22: amplitude=   16.0 q= +678.8228 se= 25.7998 z= +26.311 target=MEASURABLE
+M80 contrast N=22: amplitude=   32.0 q=+2728.3220 se= 25.7998 z=+105.750 target=MEASURABLE
+M80 contrast N=22: amplitude=   64.0 q=+10919.3125 se= 25.7998 z=+423.232 target=MEASURABLE
+M80 N=299 detail: structure=4.940328 clean_retention=0.999482 blur_retention=0.457904
+test merge_cmd::tests::cross_fitted_metric_keeps_detail_and_detects_blur_across_frame_counts ... ok
+M80 contrast N=22: amplitude=  128.0 q=+43669.2623 se= 25.7998 z=+1692.617 target=MEASURABLE
+M80 contrast N=22: amplitude=  200.0 q=+106599.4058 se= 25.7998 z=+4131.784 target=MEASURABLE
+M80 contrast transition N=22: predicted=4.746507 DN first_measurable=8.000000 DN ratio=1.685450
+M80 contrast N=130: amplitude=    0.0 q=  +34.4345 se= 38.0513 z=  +0.905 target=NOT-MEASURABLE
+M80 contrast N=130: amplitude=    0.5 q=  +35.0246 se= 38.0513 z=  +0.920 target=NOT-MEASURABLE
+M80 contrast N=130: amplitude=    1.0 q=  +36.9468 se= 38.0513 z=  +0.971 target=NOT-MEASURABLE
+M80 detectability null N=22: false_answers=16/1000 nominal_alpha=0.010 registered_max=18
+M80 contrast N=130: amplitude=    2.0 q=  +44.7873 se= 38.0513 z=  +1.177 target=NOT-MEASURABLE
+M80 contrast N=130: amplitude=    4.0 q=  +76.4526 se= 38.0513 z=  +2.009 target=NOT-MEASURABLE
+M80 contrast N=130: amplitude=    8.0 q= +203.7205 se= 38.0513 z=  +5.354 target=MEASURABLE
+M80 contrast N=130: amplitude=   16.0 q= +714.0059 se= 38.0513 z= +18.764 target=MEASURABLE
+M80 contrast N=130: amplitude=   32.0 q=+2757.5747 se= 38.0513 z= +72.470 target=MEASURABLE
+M80 contrast N=130: amplitude=   64.0 q=+10936.7045 se= 38.0513 z=+287.420 target=MEASURABLE
+M80 contrast N=130: amplitude=  128.0 q=+43662.9329 se= 38.0513 z=+1147.475 target=MEASURABLE
+M80 contrast N=130: amplitude=  200.0 q=+106566.3898 se= 38.0513 z=+2800.597 target=MEASURABLE
+M80 contrast transition N=130: predicted=5.764350 DN first_measurable=8.000000 DN ratio=1.387841
+M80 contrast N=299: amplitude=    0.0 q=  -30.6460 se= 44.0279 z=  -0.696 target=NOT-MEASURABLE
+M80 contrast N=299: amplitude=    0.5 q=  -30.3750 se= 44.0279 z=  -0.690 target=NOT-MEASURABLE
+M80 contrast N=299: amplitude=    1.0 q=  -28.7720 se= 44.0279 z=  -0.653 target=NOT-MEASURABLE
+M80 contrast N=299: amplitude=    2.0 q=  -21.5698 se= 44.0279 z=  -0.490 target=NOT-MEASURABLE
+M80 contrast N=299: amplitude=    4.0 q=   +8.8189 se= 44.0279 z=  +0.200 target=NOT-MEASURABLE
+M80 contrast N=299: amplitude=    8.0 q= +133.5337 se= 44.0279 z=  +3.033 target=MEASURABLE
+M80 detectability null N=130: false_answers=8/1000 nominal_alpha=0.010 registered_max=18
+M80 contrast N=299: amplitude=   16.0 q= +638.7128 se= 44.0279 z= +14.507 target=MEASURABLE
+M80 contrast N=299: amplitude=   32.0 q=+2672.0689 se= 44.0279 z= +60.690 target=MEASURABLE
+M80 contrast N=299: amplitude=   64.0 q=+10830.7735 se= 44.0279 z=+245.998 target=MEASURABLE
+M80 contrast N=299: amplitude=  128.0 q=+43516.1513 se= 44.0279 z=+988.377 target=MEASURABLE
+M80 contrast N=299: amplitude=  200.0 q=+106373.6514 se= 44.0279 z=+2416.051 target=MEASURABLE
+M80 contrast transition N=299: predicted=6.200540 DN first_measurable=8.000000 DN ratio=1.290210
+test merge_cmd::tests::selector_detectability_has_a_noise_derived_contrast_transition ... ok
+M80 detectability null N=299: false_answers=10/1000 nominal_alpha=0.010 registered_max=18
+test merge_cmd::tests::selector_detectability_false_answers_match_the_registered_noise_model ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 3.06s
