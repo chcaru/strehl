@@ -1257,11 +1257,18 @@ tool prints itself, §15.4 would have reported in-ROI drift as 157 px.
 | in-ROI drift, same region | **63.04 px p-p** | my mask-centroid track |
 | worst-corner drift | 186.71 px p-p | warp sidecar |
 | held-out corner error after solve | 13.58 px | `strehl align` |
-| → scaled to `ROI_LEG` radius (984/2113) | **6.32 px** (~12.6 px p-p) | DERIVED |
+| → scaled to `ROI_LEG` radius (984/2113) | ~~6.32 px (\~12.6 px p-p)~~ **WITHDRAWN** | see §20 |
 
 **Two independent instruments agree on the drift to 12.6%**, which is what
-licenses using either. The residual lands in the ladder's flat region, giving
-the **91.7%** predicted removal against the **6.6%** measured.
+licenses using either.
+
+> **⚠ The residual estimate on the last row, and the 91.7% prediction derived
+> from it, are WITHDRAWN. See §20.** Both were built on `E*`, the aligner's
+> held-out corner error, and fact 1295 (M97) has since measured that `E*` is
+> **structurally blind** to a common multiplicative gain error — which is the
+> error actually present. The true post-solve residual is **150.2 plane px**,
+> not \~12.6 px. **§15's conclusion survives on an argument that never used
+> `E*` at all**, restated in §20.2.
 
 **Where this could still be wrong.** `E*` is a median over the top-span quartile
 at the *worst corner*; scaling it by radius assumes the residual is
@@ -1777,9 +1784,12 @@ namespaced `M87`.
 | P39 | Fine-detail control on the shipped binary: the highest-gradient 600x800 window that the correction left completely unchanged carries **1.66x more** gradient energy than the corrected region and differs by **0 DN**. | Interior detail is structurally unreachable, so the correction's damage is confined to the silhouette. It is a real but narrow safety guarantee. | MEASURED |
 | P40 | PIL silently converts `strehl`'s 16-bit RGB TIFFs to 8-bit on read. The same before/after pair reads `max delta = 163` through PIL and `41887 / 65535` through `tifffile`. | Any measurement in this corpus taken on a `strehl` TIFF via PIL is quantised to 8 bits. Nearly caused M87 to report the correction as having no effect. | MEASURED |
 | P41 | **The registration confound was already separated, and the shipped `d` is clean of it.** Alignment is **already in the merge and ON by default** (`merge_cmd.rs:1199-1283`, `main.rs:71`); it is not pending work. Both shipped renders in §16 set `STREHL_WARPMAP` to a fitted sidecar, so BEFORE and AFTER were **both aligned**. | `d = 40` was **not** tuned against a render whose halo might be misregistration. The concern that a halo repair would bake in a compensation for an alignment bug does not apply to this parameter. | MEASURED |
-| P42 | **Three drift figures for `bee-3-cpl` disagree, and the aligner's own fitted warps sit between them.** Decoding the 299 placed warps (`z' = a z + b`, f64 bit patterns) gives scale `\|a\| = 0.92241` at frame 298 (a **7.76%** shrink) and a **maximum corner displacement of 351.4 px** in the binned 3516x2344 plane = **702.8 px** at full sensor. `main.rs:72` states 232.7 px; the orchestrator measured 603 px full-sensor at scale 0.85715. Under a matched half-diagonal convention the fitted warps give 327.9 px full against the orchestrator's 603 px, a factor **1.84**. | Someone is wrong about the magnification sweep by roughly 2x, and `main.rs` and the orchestrator err in **opposite directions** from the shipped aligner. This is M86/M97's to adjudicate, not M87's, but it should not stay unresolved: it is the number the aligner is judged by. | MEASURED |
+| P42 | **M87's drift audit independently corroborates M97's half-drift finding, from the other end.** Decoding the 299 placed warps gives scale `\|a\| = 0.922414` — which is **fact 1295's sidecar span 0.92241 to six digits**, reached by a different route (f64 sidecar decode + corner displacement, not a gathered render). The orchestrator's 0.85715 is fact 1295's **true** span 0.85714. The **1.84x** I reported as a disagreement is `(1-0.85714)/(1-0.92241)` = **exactly the reciprocal of the solve's 54.3% application rate**. | The two figures were never in conflict: one is the drift that *exists*, the other the drift the solve *applies*. **I mislabelled a real defect as a bookkeeping dispute.** The corroboration is worth keeping because it is instrument-independent: M97 measured the shortfall by rendering, M87 by decoding, and they agree. | MEASURED |
 | P43 | **M87's registration negative is robust to P42.** The verdict rests on the measured alignment switch (ISO 0.06805 -> 0.06356, **6.6%** removal, overlapping CIs) and not on any drift magnitude. A *larger* true drift strengthens the drift hypothesis' prediction that alignment should remove the halo, so P42 can only make the observed 6.6% **more** discrepant, never less. | The 2x drift disagreement cannot rescue the registration hypothesis. No re-measurement after M97 is required before accepting §15. | DERIVED |
 | P44 | **The lint failure reported against this file did not exist at `HEAD`.** The quoted S6 row (`ratio \|E\|/\|E_fwd\|`, line 886 not 845) has been escaped since commit `c24e347`, two commits before the shipping commit. `scripts/corpus_lint.py` exits **0**, and an independently written table checker agrees at **0 S6 / 0 S1 over 30 tables** — after a positive control in which a planted unescaped span and a planted extra cell both fired. | A stale lint result was attributed to a milestone by file. Attribution by file is sound only against a current run; re-run before attributing. | MEASURED |
+| P45 | **§15.4's post-alignment residual, and the 91.7% prediction built on it, are WITHDRAWN.** Both derived from `E*` = 13.58 px, the aligner's held-out corner error. Fact 1295 measures that `E*` is **structurally blind to a common multiplicative gain error**, which is the error present; the true residual is **150.2 plane px**, ~12x my estimate. | A milestone's own prediction arm was invalidated by a sibling's instrument audit. **The conclusion did not depend on it** — see P46 — but the report said it did, which overstated the evidence. Withdrawn in place rather than quietly repaired. | MEASURED (M97, fact 1295) |
+| P46 | **§15's negative survives the withdrawal, restated without any residual estimate.** The solve applies **70.97 px p-p** of in-ROI drift at `ROI_LEG` centre (sidecar, §15.4). The drift ladder (§15.5, single-depth plant, no occlusion) reads ISO **0.06448** at just **30 px p-p** — **94.8%** of the real bee halo's 0.06805. So alignment removed **2.37x more drift than the amount that manufactures 95% of the entire observed halo**, and the halo moved **6.6%** with overlapping CIs. | The refutation needs only the drift *applied* and the ladder, both measured directly. It is now **independent of `E*`, of the residual, and of the true drift span** — the three quantities that turned out to be wrong or unknowable tonight. Stronger than the original form. | DERIVED from MEASURED inputs |
+| P47 | **The orchestrator's `bee3-zoomnull` is registered as an M87 control, and M87 had already run its twin.** §15.2 arm **Uw** — FOV- and resampler-matched, registration discarded — reads ISO **0.06844** against unaligned **0.06805** and aligned **0.06356**. The orchestrator's independent visual check of `bee-3-ALIGNED.tif` vs `bee3-zoomnull.tif` at 100% finds the silhouette halo present and unchanged in both. | **Two constructions of the same null, by two agents, agree**: discarding registration does not move the halo, and resampling alone does not move the metric (0.06844 vs 0.06805). This is the placebo that separates a geometry fix from an occlusion fix, and the halo fails it as a geometry defect. | MEASURED |
 
 ### Capture request
 
@@ -1857,3 +1867,90 @@ confirmed byte-identical with `Get-FileHash`, **`LastWriteTime` was then set to
 `Get-Date`**, and the control was proven by **re-running it** (3 passed /
 3 failed while planted; 6 passed after restore), never by diffing source.
 Discipline 600's trap was avoided rather than survived by luck.
+
+
+## 20. The half-drift finding lands on §15, and §15 survives it
+
+**M97 fact 1295, folded 2026-08-24:** the alignment solve applies only **54.3%**
+of the drift present — true span 0.85714, sidecar span 0.92241 — and `E*`, the
+held-out pairwise residual, **cannot detect this**, because a pairwise residual
+is blind to a common multiplicative gain error.
+
+### 20.1 What it breaks in my report
+
+§15.4 estimated the post-alignment residual inside `ROI_LEG` by taking
+`strehl align`'s own `E*` = 13.58 px and scaling it by radius, giving \~12.6 px
+p-p, and concluded the residual "lands in the ladder's flat region", predicting
+**91.7%** halo removal. **That chain is invalid.** It rests entirely on `E*`,
+and `E*` is now measured to be blind to the dominant error. The true residual is
+**150.2 plane px**. The row and the 91.7% figure are struck in place (§15.4).
+
+I record this as an instrument failure of the kind §15.6 already disclosed one
+of, and not as a near-miss: **the report asserted a 92%-vs-6.6% contrast whose
+larger number was unsupported.**
+
+### 20.2 What it does not break, and why
+
+The refutation can be stated using only quantities that were measured directly,
+with **no residual and no true-span estimate**:
+
+| quantity | value | source |
+|---|---|---|
+| in-ROI drift the solve **applies**, `ROI_LEG` centre | **70.97 px p-p** | §15.4, warp sidecar |
+| ladder ISO at **30 px p-p** planted drift, no occlusion | **0.06448** | §15.5 |
+| the real bee-leg halo | **0.06805** | §15.2 arm U |
+| 30 px p-p as a fraction of the real halo | **94.8%** | DERIVED |
+| halo change when those 70.97 px are removed | **6.6%**, CIs overlapping | §15.2 |
+
+**Alignment removed 2.37x more drift than the amount the ladder says
+manufactures 95% of the entire observed halo, and the halo did not move.**
+
+This form is *stronger* than the original, because it is independent of `E*`, of
+the residual, and of the true drift span — the three quantities that were wrong
+or unknown tonight. It needs only the drift actually applied and the plant's own
+transfer curve.
+
+**Corroborated independently.** The orchestrator compared
+`bee-3-ALIGNED.tif` against its FOV- and resampler-matched
+`bee3-zoomnull.tif` at 100% on the leg boundary and found the halo present and
+essentially unchanged in both. That is §15.2's arm **Uw** built by a second
+agent from different code, and it agrees.
+
+### 20.3 The zoomnull, registered as a standing control
+
+Per the orchestrator's instruction, the FOV/resampler-matched null with
+registration discarded is now a **named M87 control**:
+
+> **C-ZOOMNULL.** Any candidate occlusion fix must change the halo metric by
+> approximately the same amount with `STREHL_ALIGN=1` as with `STREHL_ALIGN=0`.
+> A fix whose benefit depends strongly on alignment is repairing geometry, not
+> occlusion, and must be rejected as an occlusion fix.
+
+**The shipped correction has not been run through C-ZOOMNULL.** It is cheap
+(one extra merge at `STREHL_ALIGN=0` plus one metric evaluation) and it is the
+first thing the next milestone should do. Recorded as an open item rather than
+claimed.
+
+### 20.4 Discipline 604, against my own metric
+
+604 warns that agreement on a value is not agreement on a mechanism, and the
+orchestrator adds that whole-frame gradient energy is measured-blind to at least
+one real geometric defect. **M87's metric is not whole-frame gradient energy** —
+it is a radial brightness-excursion profile taken along boundary normals — so
+that specific blindness does not apply.
+
+But the warning lands anyway, and §16.9 is the proof: **the metric improved
+72.9% while the photograph got visibly worse**, because flattening the near-edge
+profile satisfies it whether the veil was removed or the hair fringe was
+destroyed. That is 604's disease found independently inside M87, and it is why
+the shipped correction is **OFF by default**. A companion metric sensitive to
+*structure destruction* remains the largest hole this milestone leaves behind.
+
+### 20.5 A note on what "aligned" now means for §16
+
+The §16 renders are aligned, but fact 1295 means they still carry **~46% of the
+drift**. Every §16 number should be read as "with the solve applied as shipped",
+not "registered". Since the halo is measured not to respond to registration at
+all (§20.2, and the orchestrator's null), this does not affect the halo
+conclusions — but it will matter to any future sharpness claim on those files.
+
