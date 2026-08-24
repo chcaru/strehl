@@ -1,0 +1,101 @@
+
+=== python src\e14_b6_rollup_test.py ===
+==============================================================================
+M55b -- b6_rollup property test (no corpus data read)
+==============================================================================
+   PASS  complete, all pass -> PASS
+   PASS  planted: pooled 91.7% >= 90%, subject 'wrapped-text' 75% -> must KILL
+          kill: subject groups below 90%: wrapped-text 75%
+   PASS  24 cells from one stack -> KILL
+          kill: 1 stacks (need 6); 1 distinct subjects (need 3)
+   PASS  cells that do not declare stack -> KILL
+          kill: 24 cells do not declare stack and roi; 0 stacks (need 6); 0 distinct subjects (need 3)
+   PASS  one stack with only 3 ROIs -> KILL
+          kill: stacks with fewer than 4 ROIs: {'bee-2': 3}
+   PASS  one wrong-sign cell -> KILL
+          kill: 1 cells report the WRONG DIRECTION above the decision threshold
+   PASS  6 stack-slots but only 2 subjects -> KILL
+          kill: 5 stacks (need 6); 2 distinct subjects (need 3)
+
+   -> 7/7 property assertions hold
+exit=0
+
+=== python src\e16_pr35_nopower_test.py ===
+==============================================================================
+M55b E16 -- PR35: NO-POWER, CANNOT-ACCEPT and the low-|z| stratum
+==============================================================================
+  old code from git 54a8305, new code from the working tree.
+  No corpus data is read.
+
+  OBSERVABLE 2 -- strict tightening, exhaustive over 64 configurations
+  falsifier: ANY configuration ACCEPTed by the new code that the old rejected
+     configurations tested            64
+     NEWLY ACCEPTED (must be 0)       0
+     newly blocked or rejected        2
+     verdict unchanged                62
+        unpowered=0 fail=1 one_subject=True wrong=0          -> REJECT
+        unpowered=1 fail=0 one_subject=True wrong=0          -> CANNOT-ACCEPT
+
+  OBSERVABLE 3 -- planted wrong answer: 1 NO-POWER cell in `bee`, pooled 95.8%
+     old code: passed=True  pooled 95.8%  kill=None
+     new code: verdict=CANNOT-ACCEPT  n_no_power=1  powered 23  blocked=1 of 24 cells are NO-POWER (|z| below 3.0 against the roll-null): bee-1[0]
+
+  OBSERVABLE 4 -- planted wrong answer: 90%+ overall, failures in the
+                  lowest-|z| third.  Must not be ACCEPTed.
+     the single failing cell is bee-1[0] at |z| = 6.1; its subject `bee` reads 11/12 = 91.7%
+     pooled 95.8% (gate 90%)   lowest stratum: 8 cells, |z| <= 8.9, 88% pass
+     old code: passed=True   new code: verdict=REJECT
+     new kill: lowest-|z| stratum (8 cells, |z| <= 8.90) passes 88% (need 90%)
+     control: the SAME one failure at the TOP of the |z| range -> ACCEPT
+
+  ADDITIONAL PROPERTIES
+     0 of 2324 failure placements (1, 2 or 3 failing cells) trip the pooled 90% gate WITHOUT tripping the per-subject gate
+
+   PASS  OBS2: no configuration is newly ACCEPTed (strictly tightening)
+   PASS  OBS2: the amendment is not inert -- it blocks at least one case the old code accepted
+   PASS  OBS3: the planted answer PASSES the old code (the test has power)
+   PASS  OBS3: the planted answer is CANNOT-ACCEPT under the new code
+          1 of 24 cells are NO-POWER (|z| below 3.0 against the roll-null): bee-1[0]
+   PASS  OBS3: CANNOT-ACCEPT is not REJECT and not ACCEPT
+   PASS  OBS4: the stratum plant PASSES the old code (the test has power)
+   PASS  OBS4: the stratum plant is REJECTed by the new code
+          lowest-|z| stratum (8 cells, |z| <= 8.90) passes 88% (need 90%)
+   PASS  OBS4 control: the same single failure in the HIGHEST stratum -> ACCEPT, so the stratum gate is about WHERE the failure is, not how many there are
+   PASS  a cell that does not declare z_pass blocks (B9 was not run)
+          24 cells do not declare z_pass; B9 was not run on them
+   PASS  a complete, powered, all-passing set is still ACCEPTed (the battery is passable)
+   PASS  the verdict and the kill string do not depend on the order the cells are supplied in (20 shuffles)
+   PASS  the pooled 90% gate is never the binding constraint at these subject sizes -- the per-subject clause is strictly stronger
+          0 placements
+   PASS  with every |z| identical the stratum is DEGENERATE and is skipped, not silently applied to an arbitrary third
+
+   -> 13/13 property assertions hold
+exit=0
+
+=== python src\e18_m76_constant_z_test.py ===
+==============================================================================
+M76 E18 -- constant-|z| normative-wrapper property test
+original frozen source: c37010c317a4526822ce502848bcd574b66d1816
+old constant=ACCEPT  primitive constant=ACCEPT  normative constant=CANNOT-ACCEPT
+normative varied=ACCEPT  normative planted=REJECT
+  PASS registered constant fixture passed
+  PASS frozen primitive still passes it
+  PASS normative wrapper blocks it
+  PASS distinct-z fixture remains passable
+  PASS ordinary B6 failure still rejects
+  PASS b6_rollup source unchanged
+  PASS b6_rollup bytecode unchanged
+  -> 7/7 assertions hold
+exit=0
+
+=== python src\e20_m78b_roi_bounds_test.py ===
+M78b B6 ROI BOUNDS PROPERTY TEST
+MEASURED: no corpus data read
+   PASS: normative fractions produce repaired registry
+   PASS: four repaired ROIs pass real geometry
+   PASS: legacy fourth ROI is rejected with exact bounds
+   PASS: transposed real geometry is rejected
+   PASS: incomplete registry is rejected
+   PASS: odd raw geometry is rejected
+MEASURED: assertions=6 passed=6 failed=0
+exit=0

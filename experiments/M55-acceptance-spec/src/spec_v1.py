@@ -525,22 +525,83 @@ SUBJECT_OF = {"coffee-bean": "coffee-bean",
               "wrapped-text-1": "wrapped-text", "wrapped-text-2": "wrapped-text",
               "bee-1": "bee", "bee-2": "bee", "bee-3": "bee"}
 DEV_STACKS = ("112MSDCF", "113MSDCF", "foam", "109MSDCF", "119MSDCF", "coffee-bubbles")
-QUAD_W, QUAD_H = 2344, 3514
+QUAD_HEIGHT, QUAD_WIDTH = 2344, 3514
 ROI_FRACTIONS = ((0.25, 0.25), (0.75, 0.25), (0.50, 0.50), (0.50, 0.80))
+B6_ROI_SIDE = 512
+B6_ROI_PAD = 32
 B6_FRAMES = 64
 B6_SPLIT = "parity"
 
 
-def roi_rule(side=512, pad=32):
+def roi_rule(side=B6_ROI_SIDE, pad=B6_ROI_PAD):
     """ROIs by rule, not by choice.  Four per stack, same for every stack."""
     out = []
     for (fx, fy) in ROI_FRACTIONS:
-        x = int(round(fx * (QUAD_W - side)))
-        y = int(round(fy * (QUAD_H - side)))
-        x = min(max(x, pad), QUAD_W - side - pad)
-        y = min(max(y, pad), QUAD_H - side - pad)
+        x = int(round(fx * (QUAD_WIDTH - side)))
+        y = int(round(fy * (QUAD_HEIGHT - side)))
+        x = min(max(x, pad), QUAD_WIDTH - side - pad)
+        y = min(max(y, pad), QUAD_HEIGHT - side - pad)
         out.append((x, y, side, side))
     return out
+
+
+def roi_padded_bounds(roi, pad=B6_ROI_PAD):
+    """Return `(x0, y0, x1, y1)` on the green quad plane."""
+    x, y, width, height = roi
+    return x - pad, y - pad, x + width + pad, y + height + pad
+
+
+def validate_roi_registry(rois, visible_raw_shape, stack, pad=B6_ROI_PAD):
+    """Validate every registered ROI against one stack's real header geometry.
+
+    `visible_raw_shape` is `(height, width)` from `RawPy.sizes`; this function
+    consumes no pixels.
+    """
+    if len(rois) != len(ROI_FRACTIONS):
+        raise ValueError(
+            f"B6 ROI registry violation: stack={stack} registered_rois={len(rois)}, "
+            f"required_rois={len(ROI_FRACTIONS)}")
+    raw_height, raw_width = map(int, visible_raw_shape)
+    if raw_height % 2 or raw_width % 2:
+        raise ValueError(
+            f"B6 raw geometry violation: stack={stack} visible_raw_shape="
+            f"{(raw_height, raw_width)} is not even in both dimensions")
+    quad_shape = raw_height // 2, raw_width // 2
+    expected = QUAD_HEIGHT, QUAD_WIDTH
+    if quad_shape != expected:
+        raise ValueError(
+            f"B6 raw geometry violation: stack={stack} visible_raw_shape="
+            f"{(raw_height, raw_width)} gives quad_shape={quad_shape}, "
+            f"registered_quad_shape={expected}")
+
+    checked = []
+    for index, roi in enumerate(rois):
+        if len(roi) != 4 or any(not isinstance(value, int) for value in roi):
+            raise ValueError(
+                f"B6 ROI registry violation: stack={stack} roi_index={index} "
+                f"roi={tuple(roi)} must contain four integers")
+        if roi[2] <= 0 or roi[3] <= 0:
+            raise ValueError(
+                f"B6 ROI registry violation: stack={stack} roi_index={index} "
+                f"roi={tuple(roi)} has non-positive dimensions")
+        x0, y0, x1, y1 = roi_padded_bounds(roi, pad)
+        valid = x0 >= 0 and y0 >= 0 and x1 <= quad_shape[1] and y1 <= quad_shape[0]
+        required_raw_extent = 2 * y1, 2 * x1
+        if not valid:
+            raise ValueError(
+                f"B6 ROI bounds violation: stack={stack} roi_index={index} "
+                f"roi={tuple(roi)} pad={pad} padded_quad_bounds="
+                f"(x0={x0}, y0={y0}, x1={x1}, y1={y1}) "
+                f"required_raw_extent={required_raw_extent} "
+                f"visible_raw_shape={(raw_height, raw_width)}")
+        checked.append(dict(
+            stack=stack, roi_index=index, roi=list(roi), pad=pad,
+            padded_quad_bounds=[x0, y0, x1, y1],
+            required_raw_extent=list(required_raw_extent),
+            visible_raw_shape=[raw_height, raw_width],
+            quad_shape=list(quad_shape),
+        ))
+    return checked
 
 
 def b6_cell(cand, a, b, sd=None):

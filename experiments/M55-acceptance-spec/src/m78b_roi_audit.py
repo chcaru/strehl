@@ -148,13 +148,16 @@ def main() -> int:
     legacy_constants_swapped = (
         LEGACY_QUAD_WIDTH == quad_shape[0] and LEGACY_QUAD_HEIGHT == quad_shape[1]
     )
-    verdict = (
-        "CONFIRMED"
-        if legacy_constants_swapped
-        and all(row["transposed"]["valid"] for row in records)
-        and any(not row["native"]["valid"] for row in records)
-        else "REFUTED"
-    )
+    if args.registry == "legacy":
+        verdict = (
+            "CONFIRMED"
+            if legacy_constants_swapped
+            and all(row["transposed"]["valid"] for row in records)
+            and any(not row["native"]["valid"] for row in records)
+            else "REFUTED"
+        )
+    else:
+        verdict = "NOT_APPLICABLE_REPAIRED_REGISTRY"
     print(f"MEASURED: per-ROI summary={by_roi}")
     print(
         "MEASURED: legacy constants "

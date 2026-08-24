@@ -1,0 +1,17 @@
+==============================================================================
+M55b -- held-out substrate registration (EXIF, counts, and geometry)
+==============================================================================
+   stack            ARW      raw visible   ROI     ISO   exposure       f  lens                          
+   coffee-bean      105     (4688, 7028)  4/4      50        4/5       8  FE 100mm F2.8 Macro GM OSS + 2
+   wrapped-text-1   130     (4688, 7028)  4/4     100       1/15    28/5  FE 100mm F2.8 Macro GM OSS + 2
+   wrapped-text-2   120     (4688, 7028)  4/4     400       1/40    28/5  FE 100mm F2.8 Macro GM OSS + 2
+   bee-1            299     (4688, 7028)  4/4     100        1/2    28/5  FE 100mm F2.8 Macro GM OSS + 2
+   bee-2            299     (4688, 7028)  4/4     400       1/20    28/5  FE 100mm F2.8 Macro GM OSS + 2
+   bee-3            299     (4688, 7028)  4/4     100        1/5    28/5  FE 100mm F2.8 Macro GM OSS + 2
+
+   ROIs, by rule, identical for every stack: [(750, 458, 512, 512), (2252, 458, 512, 512), (1501, 916, 512, 512), (1501, 1466, 512, 512)]
+   ROI bounds checks: 24/24
+   frames used per stack: first 64; split: parity
+   -> substrate VALID
+   No pixel of any held-out stack was decoded by this file.
+   Wrote out\m78b_heldout_geometry.json

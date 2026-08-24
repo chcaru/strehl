@@ -1,0 +1,914 @@
+{
+  "stacks": {
+    "coffee-bean": {
+      "n": 105,
+      "first": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "4/5",
+        "EXIF FNumber": "8",
+        "EXIF ISOSpeedRatings": "50",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "last": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "5/8",
+        "EXIF FNumber": "8",
+        "EXIF ISOSpeedRatings": "50",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "enough": true,
+      "visible_raw_shapes": [
+        [
+          4688,
+          7028
+        ]
+      ],
+      "quad_shape": [
+        2344,
+        3514
+      ],
+      "roi_checks": [
+        {
+          "stack": "coffee-bean",
+          "roi_index": 0,
+          "roi": [
+            750,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            718,
+            426,
+            1294,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            2588
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "coffee-bean",
+          "roi_index": 1,
+          "roi": [
+            2252,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            2220,
+            426,
+            2796,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            5592
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "coffee-bean",
+          "roi_index": 2,
+          "roi": [
+            1501,
+            916,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            884,
+            2045,
+            1460
+          ],
+          "required_raw_extent": [
+            2920,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "coffee-bean",
+          "roi_index": 3,
+          "roi": [
+            1501,
+            1466,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            1434,
+            2045,
+            2010
+          ],
+          "required_raw_extent": [
+            4020,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        }
+      ],
+      "error": null
+    },
+    "wrapped-text-1": {
+      "n": 130,
+      "first": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "1/15",
+        "EXIF FNumber": "28/5",
+        "EXIF ISOSpeedRatings": "100",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "last": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "1/20",
+        "EXIF FNumber": "28/5",
+        "EXIF ISOSpeedRatings": "100",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "enough": true,
+      "visible_raw_shapes": [
+        [
+          4688,
+          7028
+        ]
+      ],
+      "quad_shape": [
+        2344,
+        3514
+      ],
+      "roi_checks": [
+        {
+          "stack": "wrapped-text-1",
+          "roi_index": 0,
+          "roi": [
+            750,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            718,
+            426,
+            1294,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            2588
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "wrapped-text-1",
+          "roi_index": 1,
+          "roi": [
+            2252,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            2220,
+            426,
+            2796,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            5592
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "wrapped-text-1",
+          "roi_index": 2,
+          "roi": [
+            1501,
+            916,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            884,
+            2045,
+            1460
+          ],
+          "required_raw_extent": [
+            2920,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "wrapped-text-1",
+          "roi_index": 3,
+          "roi": [
+            1501,
+            1466,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            1434,
+            2045,
+            2010
+          ],
+          "required_raw_extent": [
+            4020,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        }
+      ],
+      "error": null
+    },
+    "wrapped-text-2": {
+      "n": 120,
+      "first": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "1/40",
+        "EXIF FNumber": "28/5",
+        "EXIF ISOSpeedRatings": "400",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "last": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "1/40",
+        "EXIF FNumber": "28/5",
+        "EXIF ISOSpeedRatings": "400",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "enough": true,
+      "visible_raw_shapes": [
+        [
+          4688,
+          7028
+        ]
+      ],
+      "quad_shape": [
+        2344,
+        3514
+      ],
+      "roi_checks": [
+        {
+          "stack": "wrapped-text-2",
+          "roi_index": 0,
+          "roi": [
+            750,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            718,
+            426,
+            1294,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            2588
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "wrapped-text-2",
+          "roi_index": 1,
+          "roi": [
+            2252,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            2220,
+            426,
+            2796,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            5592
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "wrapped-text-2",
+          "roi_index": 2,
+          "roi": [
+            1501,
+            916,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            884,
+            2045,
+            1460
+          ],
+          "required_raw_extent": [
+            2920,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "wrapped-text-2",
+          "roi_index": 3,
+          "roi": [
+            1501,
+            1466,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            1434,
+            2045,
+            2010
+          ],
+          "required_raw_extent": [
+            4020,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        }
+      ],
+      "error": null
+    },
+    "bee-1": {
+      "n": 299,
+      "first": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "1/2",
+        "EXIF FNumber": "28/5",
+        "EXIF ISOSpeedRatings": "100",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "last": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "1/3",
+        "EXIF FNumber": "28/5",
+        "EXIF ISOSpeedRatings": "100",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "enough": true,
+      "visible_raw_shapes": [
+        [
+          4688,
+          7028
+        ]
+      ],
+      "quad_shape": [
+        2344,
+        3514
+      ],
+      "roi_checks": [
+        {
+          "stack": "bee-1",
+          "roi_index": 0,
+          "roi": [
+            750,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            718,
+            426,
+            1294,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            2588
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "bee-1",
+          "roi_index": 1,
+          "roi": [
+            2252,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            2220,
+            426,
+            2796,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            5592
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "bee-1",
+          "roi_index": 2,
+          "roi": [
+            1501,
+            916,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            884,
+            2045,
+            1460
+          ],
+          "required_raw_extent": [
+            2920,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "bee-1",
+          "roi_index": 3,
+          "roi": [
+            1501,
+            1466,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            1434,
+            2045,
+            2010
+          ],
+          "required_raw_extent": [
+            4020,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        }
+      ],
+      "error": null
+    },
+    "bee-2": {
+      "n": 299,
+      "first": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "1/20",
+        "EXIF FNumber": "28/5",
+        "EXIF ISOSpeedRatings": "400",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "last": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "1/25",
+        "EXIF FNumber": "28/5",
+        "EXIF ISOSpeedRatings": "400",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "enough": true,
+      "visible_raw_shapes": [
+        [
+          4688,
+          7028
+        ]
+      ],
+      "quad_shape": [
+        2344,
+        3514
+      ],
+      "roi_checks": [
+        {
+          "stack": "bee-2",
+          "roi_index": 0,
+          "roi": [
+            750,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            718,
+            426,
+            1294,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            2588
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "bee-2",
+          "roi_index": 1,
+          "roi": [
+            2252,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            2220,
+            426,
+            2796,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            5592
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "bee-2",
+          "roi_index": 2,
+          "roi": [
+            1501,
+            916,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            884,
+            2045,
+            1460
+          ],
+          "required_raw_extent": [
+            2920,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "bee-2",
+          "roi_index": 3,
+          "roi": [
+            1501,
+            1466,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            1434,
+            2045,
+            2010
+          ],
+          "required_raw_extent": [
+            4020,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        }
+      ],
+      "error": null
+    },
+    "bee-3": {
+      "n": 299,
+      "first": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "1/5",
+        "EXIF FNumber": "28/5",
+        "EXIF ISOSpeedRatings": "100",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "last": {
+        "Image Model": "ILCE-7CM2",
+        "EXIF ExposureTime": "1/6",
+        "EXIF FNumber": "28/5",
+        "EXIF ISOSpeedRatings": "100",
+        "EXIF LensModel": "FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"
+      },
+      "enough": true,
+      "visible_raw_shapes": [
+        [
+          4688,
+          7028
+        ]
+      ],
+      "quad_shape": [
+        2344,
+        3514
+      ],
+      "roi_checks": [
+        {
+          "stack": "bee-3",
+          "roi_index": 0,
+          "roi": [
+            750,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            718,
+            426,
+            1294,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            2588
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "bee-3",
+          "roi_index": 1,
+          "roi": [
+            2252,
+            458,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            2220,
+            426,
+            2796,
+            1002
+          ],
+          "required_raw_extent": [
+            2004,
+            5592
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "bee-3",
+          "roi_index": 2,
+          "roi": [
+            1501,
+            916,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            884,
+            2045,
+            1460
+          ],
+          "required_raw_extent": [
+            2920,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        },
+        {
+          "stack": "bee-3",
+          "roi_index": 3,
+          "roi": [
+            1501,
+            1466,
+            512,
+            512
+          ],
+          "pad": 32,
+          "padded_quad_bounds": [
+            1469,
+            1434,
+            2045,
+            2010
+          ],
+          "required_raw_extent": [
+            4020,
+            4090
+          ],
+          "visible_raw_shape": [
+            4688,
+            7028
+          ],
+          "quad_shape": [
+            2344,
+            3514
+          ]
+        }
+      ],
+      "error": null
+    }
+  },
+  "rois": [
+    [
+      750,
+      458,
+      512,
+      512
+    ],
+    [
+      2252,
+      458,
+      512,
+      512
+    ],
+    [
+      1501,
+      916,
+      512,
+      512
+    ],
+    [
+      1501,
+      1466,
+      512,
+      512
+    ]
+  ],
+  "roi_bounds_checks_passed": 24,
+  "valid": true
+}
