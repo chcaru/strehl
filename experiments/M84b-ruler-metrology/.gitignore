@@ -1,0 +1,8 @@
+# The decode cache is local scratch: two q4 float blobs (371 MB) plus their
+# metadata sidecars. The blobs are already excluded by the repository's *.npy
+# rule; the sidecars describe those blobs and are meaningless without them, so
+# the whole directory is ignored rather than leaving them loose in `git status`
+# where another milestone could sweep them into an unrelated commit.
+#
+# Rebuild with: python src\03-build-cache.py
+cache/
