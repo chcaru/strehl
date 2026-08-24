@@ -6,13 +6,13 @@ merge gathers every frame through its registration before merging it.
 **Question as answered:** the wiring landed while I was building it. So: *is the
 shipped registration correct, and does it measurably improve the photograph?*
 
-**Headline (MEASURED):** the wiring is correct — it survives an inverted-warp
-control, an identity placebo, a wrong-stack control and a whole-frame NaN sweep.
-It also **does not measurably improve the photograph**, judged by a metric that
-is demonstrably able to see 18 px of planted misregistration, and it costs
-**2.58x** end-to-end. The most likely mechanism is named in §7 and it is
-testable: the merge was **already** robust to smooth focus-breathing drift, which
-is the only kind of drift these brackets actually have.
+**Headline (MEASURED):** the wiring is correct — right sign, right per-CFA-plane
+handling, and it survives an identity placebo, a wrong-stack control and a
+whole-frame NaN sweep with a recovered plant. **But the solve behind it applies
+only 54.3% of the drift that is actually there**, leaving ~150 plane px of
+residual misregistration where M86's own usability threshold is 4.0 px. That is
+why the photograph does not improve, and it costs **2.58x** to not improve it.
+The estimator's gain, not the wiring, is the bug.
 
 ---
 
@@ -298,29 +298,105 @@ registration in this regime. Two milestones, two instruments, same conclusion.
 
 ---
 
-## 7. The mechanism: the merge was already robust to the drift it actually has
+## 7. The mechanism: the registration is correct, and it under-corrects by half
 
-**DERIVED**, from measurements in hand; the falsifying experiment is named below.
+**This section replaces the mechanism I proposed before the orchestrator's
+independent drift measurement arrived. My earlier hypothesis — that the merge
+was already robust to smooth breathing drift — is superseded. The real
+explanation is simpler and worse.**
 
-The puzzle: the ruler metric sees **18 px of planted jitter** loudly (+4.25 px)
-and **111 px of real unregistered drift** not at all (+0.04 px). A metric that
-sees the small thing and not the large thing is either broken or is telling us
-the two errors are *different in kind*.
+### 7.1 The sign is correct as shipped (MEASURED)
 
-They are. Focus-breathing drift is **smooth and monotone in frame index**:
-consecutive frames are almost perfectly co-registered, and the 111 px (232.7 px
-on bee-3) accumulates only across the *whole* sweep. Planted jitter is
-**non-smooth**: adjacent frames disagree instantly.
+The orchestrator measured, with no strehl code, that the **subject shrinks**
+through `bee-3-cpl`: a feature at radius `r` in frame 0 sits at `0.85715·r` in
+frame 298. M86 §4.2 says the opposite — *"Frame 0 is roughly 10–12% smaller than
+frame 298"* — and a flipped sign would double the drift silently.
 
-`strehl`'s merge is a **noise-gated average**. It admits only frames the
-calibrated noise model cannot distinguish from the elected winner — and the
-frames that matter at any given output pixel are the ones *near that pixel's
-winning focus index*, which are precisely the frames that are **already**
-co-registered under smooth drift. The gate never had to fight breathing; it only
-ever had to fight disagreement, and smooth drift produces very little local
-disagreement.
+I resolved it by gathering, not by reading, in `src/signtest.py`: a green
+sub-lattice extractor, a `map_coordinates` gather and an NCC scale ladder, all
+written here rather than imported, so that a shared bug cannot make two
+measurements agree with each other and with nothing else.
 
-The supporting `n_eff` (bee-3, MEASURED):
+| arm | scale | corner, plane px | NCC |
+|---|---|---|---|
+| SELF (frame 0 vs itself) | 0.99997 | 0.1 | 1.0000 |
+| RAW (frame 0 vs 298) | **0.85714** | 301.6 | 0.9877 |
+| AS-IS (both gathered through the sidecar) | **0.92887** | 150.2 | 0.9872 |
+| **INVERTED** (the plant) | **0.78811** | 447.3 | 0.9874 |
+
+- **RAW = 0.85714 against the orchestrator's 0.85715.** Independent
+  implementation, agreement to five decimal places.
+- **AS-IS moves toward 1.0; INVERTED moves away, to 1.48x the raw drift.** The
+  test can see a sign error, and the shipped sign is not one.
+
+**The sidecar settles it too, without any gather.** Reading `bee-3-cpl`'s map
+directly (`src/sidecar_scale.py`): reference frame 149 carries an exact
+identity, and `|a|` falls **monotonically** 1.050368 → 0.968875 across the
+bracket. The subject shrinks. **M86's sidecar contradicts M86's prose.** This is
+a documentation error in §4.2, not a code error — see Notes.
+
+### 7.2 But it applies only half the drift that is there (MEASURED)
+
+The same test measures the residual, and this is the finding that matters:
+
+```
+RAW drift              301.6 plane px  (true scale span 0.85714)
+sidecar's scale span   0.92241  -- it applies 54.3% of the span that is there
+predicted residual     0.92924 from the sidecar alone
+MEASURED residual      0.92887  (150.2 plane px, 50.2% of the drift removed)
+```
+
+Two independent routes agree. Reading the sidecar's own numbers predicts a
+residual of 0.92924; gathering real frames through it measures **0.92887**.
+Agreement to 4e-4. **The gather does exactly what the sidecar tells it to. The
+sidecar is the thing that is short.**
+
+**After alignment, frames 0 and 298 are still misregistered by ~150 plane px
+(~300 sensor px) at the corner.** M86 quotes `E*` = 11.56 px held-out and the
+sidecar's own header records 13.5776 px. The end-to-end residual is **11–13x
+that**.
+
+The arithmetic is not contradictory, and it is worth being precise about why.
+**`E*` is a held-out *pairwise edge* error, not an end-to-end absolute one.** A
+solve whose every pairwise estimate is attenuated by a common factor is almost
+perfectly self-consistent — every edge agrees with every other — while the
+absolute scale it accumulates is badly short. A pairwise residual cannot see a
+global gain error. M86 anticipated the *direction* of this in its own P8
+(*"unit-weighted global solve underestimates drift by 12–16%"*); the measured
+shortfall is **46%**, three to four times P8's estimate.
+
+**This explains every null in this report.** Registration is not failing to help
+because misregistration does not matter. It is failing to help because after
+registration the frames are *still grossly misregistered* — 150 plane px against
+M86's own usability threshold `T_usable` of 4.0 px. The wiring is correct; the
+solve's gain is not.
+
+### 7.3 Controls for the instrument itself (MEASURED)
+
+| control | result |
+|---|---|
+| plant 0.940 | 0.93841 (err −0.00159) |
+| plant 0.860 | 0.85858 (err −0.00142) |
+| gather round-trip, `a` = 0.92 | residual 0.99655 (**7.3 plane px**) |
+| gather round-trip, `a` = 1.08 | residual 0.94408 (118.1 plane px) — **FAIL** |
+
+The `a` = 0.92 round-trip sits at the operating point — the real placements span
+1.000 → 0.922 on this sidecar — and closes to **7.3 plane px**. That is this
+instrument's noise floor, and the 150.2 px residual is **20x** above it.
+
+The `a` = 1.08 arm fails, and I report the failure rather than dropping it.
+Magnifying by 1.08 and then de-magnifying asks for border data that the first
+step destroyed; it is an information artefact of my synthetic plant, not of the
+gather. **No arm reported above uses that branch** — every placement on this
+sidecar has `|a| <= 1`. It is a stated limit on how far this instrument can be
+pushed.
+
+I also got the round-trip's **direction** wrong on the first attempt, feeding
+`1/p` where the placement is `p`. It returned 0.85399 where `p/(1/p)` predicts
+0.8573 — **the control faithfully reported my error rather than the gather's**,
+which is the entire reason for having it.
+
+### 7.4 `n_eff`, for the record (MEASURED)
 
 | arm | mean `n_eff` | `n_eff=1` % |
 |---|---|---|
@@ -329,22 +405,9 @@ The supporting `n_eff` (bee-3, MEASURED):
 | ZOOMNULL (matched null) | 18.622 | 50.67% |
 
 Against the matched null, registration buys **+3.0% `n_eff`** — real, in the
-right direction, and far too small to see. Against `UNALIGNED` it is a **17%
-loss**, which is the resample's doing, not misregistration's.
-
-If this is right, then registration **converts a large smooth error (232.7 px)
-into a small non-smooth one** — the solver's 11.56 px held-out residual, which
-is scattered, not monotone. The merge is more sensitive to the second kind. That
-would explain every null in this report and in M86c's without either of us
-having mismeasured anything, and it predicts alignment's benefit is close to a
-wash on brackets whose only misregistration is breathing.
-
-**The experiment that would falsify this:** plant a *smooth* ramp of the same
-magnitude as the jitter (~18 px accumulated, monotone in index) and measure `S`.
-The mechanism predicts the smooth ramp reads **near null** while the equal-sized
-scattered jitter reads **+4 px**. If the smooth ramp also reads +4 px, the
-mechanism is wrong and the nulls need another explanation. **I did not run this**
-(§10) and it is the single highest-value follow-up in this report.
+right direction, and far too small to see. Against `UNALIGNED` it is a 17%
+*loss*, which is the resample's doing rather than misregistration's. §7.2 is why
+the gain is only 3%: half the drift is still there.
 
 ---
 
@@ -382,47 +445,120 @@ confident about.
 
 ---
 
-## 9. Two defects in the shipped code
+## 9. Defects in the shipped code
 
-### Defect 1 — rendering a bracket **writes into the read-only corpus** (MEASURED)
+### Defect 1 — rendering a bracket **writes into the read-only corpus**, non-atomically (MEASURED)
 
 `align_cmd::sidecar_path` is `dir.join("warpmap.txt")`, and `load_or_solve`
 caches a fresh solve there on a miss. `D:\personal\macro\` is the owner's
 capture corpus and is read-only by rule.
 
-**Measured:** `D:\personal\macro\bee-2-cpl\warpmap.txt` and
-`bee-3-cpl\warpmap.txt` exist, created 02:58:34 and 03:12:36 tonight, by
-`strehl stack` runs. **Merely rendering a photograph mutates the corpus.**
+**This is worse than I first filed it, and it is spreading during the session.**
+At 03:15 there were two polluting files. At 04:55 there are **eight**, six of
+them created between 04:34 and 04:53 by other milestones' renders:
 
-`align_cmd.rs` is not mine. Verbatim patch in §11.
+```
+D:\personal\macro\bee-2-cpl\warpmap.txt              03:12:36
+D:\personal\macro\lavendar-cpl\warpmap.txt           04:34:44
+D:\personal\macro\flowers-cpl\warpmap.txt            04:35:56
+D:\personal\macro\leaf-2-cpl\warpmap.txt             04:36:51
+D:\personal\macro\flower-bud-alone-cpl\warpmap.txt   04:37:48
+D:\personal\macro\tweezers-cpl\warpmap.txt           04:38:35
+D:\personal\macro\coffee-bean\warpmap.txt            04:39:05
+D:\personal\macro\bee-3-cpl\warpmap.txt              04:53:20
+```
 
-Note the caching itself is *good* — a 7.2 s solve should not be repeated — the
-defect is only the location.
+**And the write is not atomic.** At 04:53:20, while I was reading
+`bee-3-cpl/warpmap.txt`, another agent's render rewrote it. My reader saw a
+**torn file**: `reference 30`, no record for frame 298. Re-reading moments later
+gave the whole file back (`reference 149`, 299 records). **MEASURED**, by
+accident, and it is the more serious half of this defect: with several agents
+live, a concurrent reader — including `strehl stack` itself — can load a
+half-written sidecar. Whether `WarpMap::load` would reject such a file or
+silently render a partial registration is **not verified**; my Python reader
+accepted it and simply lacked a key.
+
+The caching itself is right — a 7 s solve should not be repeated. The **location**
+and the **non-atomicity** are the defects. `align_cmd.rs` is not mine; verbatim
+patch in §11, which moves the cache out of the corpus *and* writes via a
+temporary file plus a rename.
 
 ### Defect 2 — one refused frame destroys the whole render (MEASURED, §5/P6)
 
-Recommendation: **drop refused frames from the merge** rather than aborting, and
-report the drop in the alignment line and in `n_eff`. Abort only if the placed
-count falls below a floor. I have deliberately **not implemented this**: it
-touches the fold/`n_eff` path in `merge.rs`, which M87 and M93 are both live in
-tonight, and a 05:00 refactor of a contended file is how a good night becomes a
-bad merge. Flagging beats breaking.
+Recommendation: **drop refused frames** rather than aborting, and report the
+drop in the alignment line and in `n_eff`. Abort only if the placed count falls
+below a floor. I deliberately have **not** implemented this: it touches the
+fold/`n_eff` path in `merge.rs`, which M87 and M93 are both live in tonight, and
+a 05:00 refactor of a contended file is how a good night becomes a bad merge.
+
+### Defect 3 — the solve applies half the drift it measures (MEASURED, §7.2)
+
+The most consequential of the three, and the reason the feature does not pay.
+Not mine to fix — it is M86's estimator, and the brief was explicit that I
+should not chase it there. Routed in Notes.
+
+---
+
+## 9a. Coverage: what `stack` actually does with the uncovered region
+
+The orchestrator's estimate was that gathering frame 298 at scale 0.857 needs
+samples from outside its own bounds over `1 − 0.857² ≈ 26%` of the destination.
+**That is the right calculation for the drift that is there, but not for the
+drift the sidecar applies.** Because the solve applies only 54.3% of the span
+(§7.2), the realised deficit is about half that.
+
+**MEASURED, and the question is already settled in the shipped code:**
+`fit_to_cover` reports `k = 0.9315` on bee-3-cpl. So `strehl stack` **crops to
+the fully-covered region** — it shrinks the field of view until *every* frame
+covers *every* output pixel — which is `1 − 0.9315² = 13.2%` of the area, then
+**upsamples back to the original output dimensions**. Measured `k` elsewhere:
+0.9044 (bee-2), 0.9708 (ruler), 0.9974 (identity sidecar).
+
+The consequences, stated explicitly because the orchestrator asked which choice
+was made and why:
+
+- **There is no soft, low-`n_eff` margin, and no black rim.** §5/P3 measures
+  0.00000% black over the whole frame in all eight arms, with an 18-pixel plant
+  recovered, so this is a measured null and not a dead probe. Nothing is clamped
+  and no NaN reaches the output.
+- **`n_eff` does not have to be faked up at the edges**, because after the crop
+  there are no partially-covered edges left.
+- **The cost is a full-frame resample.** Output dimensions are preserved, so the
+  delivered image is **upsampled by `1/k` = 1.0735** — a 7.35% enlargement of
+  every pixel in the photograph. **DERIVED:** that is a real sharpness cost paid
+  by every aligned render, and it acts against any registration gain. With the
+  gain reduced to ~3% `n_eff` by §7.2, it is entirely plausible that the
+  upsample cancels what alignment buys. I did not isolate the two, and doing so
+  is a named follow-up.
+- I did not choose this policy — M86c did — but I verified it holds and I think
+  it is the right default. The alternative, emitting a smaller image, silently
+  changes output dimensions between aligned and unaligned runs.
 
 ---
 
 ## 10. Not measured
 
-- **The smooth-ramp plant of §7.** The mechanism is DERIVED, not MEASURED.
+- **Whether `WarpMap::load` rejects a torn sidecar.** I observed a half-written
+  file being read (§9 defect 1) but did not test what `strehl` itself does with
+  one. This should be checked before the next long run.
+- **Isolating the `1/k` upsample from the registration gain** (§9a). Both act on
+  the same render and I did not separate them.
 - **Graduation spacing** as a second geometry metric: the tick-detection
   instrument returned unstable counts across arms (14/14/16/18/14), so it is
-  measuring its own thresholding, not the image. **Reported as instrument
-  failure, not as a result.** No number from it appears in this report.
+  measuring its own thresholding. **Reported as instrument failure, not as a
+  result.** No number from it appears in this report.
 - **Frame-level refusal on real data.** It has never fired on a real bracket;
   every refusal here was planted. M86's 0.0% / 13.2% / 16.2% figures are
   *edge*-level, not frame-level.
+- **The `a` > 1 branch of my gather instrument** (§7.3), which fails a
+  round-trip for reasons I attribute to border information loss but did not
+  prove.
+- **Whether a corrected-gain solve would actually improve the image.** §7.2 says
+  the residual is 150 px; it does not say that fixing it delivers a visible win.
+  That is the experiment the next milestone should run, and it is now a sharp,
+  well-posed one.
 - **Whether registration helps a genuinely non-smooth bracket** — handheld, or
-  wind. Every stack available is a rail sweep. This is the regime where
-  alignment should pay, and there is no capture that tests it.
+  wind. Every stack available is a rail sweep.
 - P3's numbers were first taken through the 8-bit-truncating reader, which
   **manufactured a control that did not exist** (§5/P3). Every arm has been
   re-swept at true 16 bits and the sweep now carries a real plant.
@@ -475,14 +611,23 @@ use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 ```
 
-and the write site made non-fatal, since a cache that cannot be written is not a
-reason to fail a render:
+and the write site made atomic and non-fatal — a cache that cannot be written is
+not a reason to fail a render, and a cache that is written in place can be read
+half-formed by a concurrent process (§9, measured tonight):
 
 ```rust
-    if let Err(e) = std::fs::create_dir_all(path.parent().unwrap_or(Path::new(".")))
-        .map_err(anyhow::Error::from)
-        .and_then(|()| map.save(&path))
-    {
+    let write = || -> Result<()> {
+        let dir = path.parent().unwrap_or(Path::new("."));
+        std::fs::create_dir_all(dir)?;
+        // Write-then-rename: a concurrent reader sees either the old file or
+        // the new one, never a half-written one. M97 measured a torn read of
+        // `bee-3-cpl/warpmap.txt` while a sibling milestone rewrote it.
+        let tmp = path.with_extension(format!("tmp{}", std::process::id()));
+        map.save(&tmp)?;
+        std::fs::rename(&tmp, path)?;
+        Ok(())
+    };
+    if let Err(e) = write() {
         eprintln!("  note          : could not cache the warp map ({e}); it will be re-solved next run");
     }
 ```
@@ -498,75 +643,102 @@ live**, and `STREHL_WARPMAP` is the only way to render without it.
 
 ### Status
 
-**DONE, as a verification with a negative result.** The dispatched work
+**DONE, as a verification that located the real defect.** The dispatched work
 (wiring) was completed by M86c in `885e9f7` before I could land it; I verified it
 independently instead, ran the ground-truth geometry experiment M86c named as
-their top follow-up, priced the feature, found two defects, and disqualified a
-metric I had built and was about to trust.
+their top follow-up, priced the feature, and — with the orchestrator's
+independent drift measurement — **found why alignment does not pay.**
 
-**The registration is correct and I could not show that it improves the
-photograph.**
+**The wiring is correct. The solve applies 54.3% of the drift that is there.**
 
 ### Changes
 
-- `crates/strehl-cli/src/merge_cmd.rs` (+62/-2) — added `WARPMAP_ENV`
+- `crates/strehl-cli/src/merge_cmd.rs` (+62/−2) — added `WARPMAP_ENV`
   (`STREHL_WARPMAP`) and `alignment_for()`, and pointed the call site at it.
   Needed for three things `load_or_solve` cannot do: consume a **planted**
   sidecar, **never write** to the capture directory, and **hard-refuse** a bad
   sidecar rather than silently re-solving a different registration than the one
-  named. `STREHL_ALIGN=0` still wins. No behaviour change when the variable is
-  unset.
-- `experiments/M97-warped-merge/**` — `PREREG.md`, 10 scripts, render logs and
-  JSON for 10 renders.
+  named. `STREHL_ALIGN=0` still wins. No behaviour change when unset.
+- `experiments/M97-warped-merge/**` — `PREREG.md`, 13 scripts, logs and JSON.
 - `docs/research/M97-warped-merge.md` — this report.
 - **No changes** to `merge.rs`, `warpmap.rs`, `align.rs`, `align_cmd.rs`,
   `lib.rs`, `main.rs`, or any other milestone's tree.
 
 ### Verified
 
-- `cargo build --release -p strehl-cli` — clean.
-- P1 responsiveness **PASS** (plant moves `S_block` +4.252 px vs +0.038 px
-  signal; ~110x margin).
-- P2 **NULL** (registration does not straighten the ruler).
-- P3 **PASS** (0.00000% black in 33 MP, whole frame and outer annulus, true
-  16-bit, all 8 arms — with an 18-pixel plant recovered exactly, so the null is
-  measured rather than a dead probe).
-- P4 **PASS** (identity placebo, k = 0.9974).
-- P5 **PASS** (wrong-stack sidecar hard-refused, both digests named).
-- P7 **2.58x** (alternating medians, 3 runs each).
+- `cargo build --release -p strehl-cli`, `cargo fmt`, `cargo clippy --bins
+  --tests -- -D warnings` — all clean. `corpus_lint` rc=0.
+- **Sign correct as shipped**, by gather: AS-IS 0.92887 toward 1.0, INVERTED
+  0.78811 away, at 1.48x raw drift. Independent RAW 0.85714 reproduces the
+  orchestrator's 0.85715 to five decimals.
+- **Residual after alignment 150.2 plane px, 50.2% of drift removed**, predicted
+  0.92924 from the sidecar and measured 0.92887 — two independent routes.
+- Gather round-trip closes to 7.3 plane px at the operating point.
+- P1 responsiveness **PASS** (+4.252 px plant vs +0.038 px signal, ~110x).
+- P2 **NULL**, P3 **PASS** (0.00000% black, 8 arms, 16-bit, 18-px plant
+  recovered), P4 **PASS**, P5 **PASS**, P7 **2.58x**.
 - Detail metric **disqualified** by its own plant (worse registration reads
   +5.6% better).
 - `n_eff` +3.0% aligned vs matched null.
-- `flat-on-ruler-cpl` re-checked after every run: **79 ARW files, no sidecar** —
-  the read-only guarantee held for every render I performed.
-- The output images, **opened and looked at**, side by side.
+- The bee-3 renders, **opened and looked at, side by side**.
 
 ### Not verified
 
-- P6 **FAILS the pre-registered bar**: refused frames abort the render rather
-  than being dropped. Measured, not fixed (§9).
-- The §7 mechanism is **DERIVED**; its falsifying experiment (a smooth ramp
-  plant) was not run.
-- Graduation spacing: **instrument failure**, no number reported.
-- Frame-level refusal has never been exercised on real data by anyone.
+- P6 **FAILS the pre-registered bar**: refused frames abort the render.
+- Whether `WarpMap::load` rejects the torn sidecar I observed.
+- Whether fixing the solve's gain would deliver a *visible* win.
+- The `a` > 1 branch of my gather instrument (§7.3).
 - The §11 patch is **uncompiled**.
 
 ### Notes
 
-- **A number in my dispatch was wrong and I was asked to say so:** "`merge.rs`
-  and `merge_cmd.rs` contain zero references to `warpmap`" was true at writing
-  and false ~20 minutes later. Not the orchestrator's error — a race. But the
-  night's largest quality lever had already been pulled, and it did not move the
-  image.
-- Three instrument defects (§3) plus one in my own timing harness. The Pillow
-  16-bit truncation is the one most likely to bite another milestone: it is
-  silent, and it makes every 16-bit render look like an 8-bit one.
-- **Recommendation for the next milestone.** Alignment is correct, costs 2.58x,
-  and buys ~3% `n_eff` on rail-swept brackets. Before spending more on the
-  solver (M86's 11.56 px against a 9.07 px floor), run the smooth-ramp plant in
-  §7. If it confirms, the honest move is to make alignment **off by default for
-  smooth brackets** and keep it for the non-smooth captures — which do not exist
-  in the corpus yet and should be requested.
-- "Those stacks don't look too good yet" remains **unexplained**. It is not
-  registration. That is worth knowing at 05:00 rather than at the end of another
-  milestone.
+**For routing to M86, three items:**
+
+1. **§4.2's sign is wrong.** *"Frame 0 is roughly 10–12% smaller than frame
+   298"* contradicts M86's own sidecar, which places frame 0 at `|a|` = 1.0504
+   and frame 298 at 0.9689 about reference 149 — the subject **shrinks**. The
+   magnitude in that sentence (10–12%) is just 232.7/2111.2, so only the
+   direction is wrong. Code unaffected.
+2. **The gain shortfall is 46%, not P8's 12–16%** (§7.2). This is the finding
+   that matters and it is squarely M86's estimator, which the brief told me not
+   to chase. It is well-posed now: the sidecar's end-to-end scale span is
+   0.92241 where ground truth is 0.85714.
+3. **`E*` cannot detect this.** A held-out *pairwise* residual is blind to a
+   common multiplicative gain error, so 11.56 px can coexist with a 150 px
+   end-to-end residual. Any future acceptance bar for the solve needs an
+   absolute, end-to-end check — `src/signtest.py` is one and takes ~4 minutes.
+
+**Corrections to the orchestrator's brief, as invited:**
+
+- Your plane-vs-sensor inference was **ARGUED; it is now MEASURED and correct.**
+  M86 L106–107: *"the worst **plane** corner … where 1 plane px = 2 sensor px"*,
+  and L201–202: *"Total corner drift is … in plane px."* So 232.7 is plane px
+  and your 603 sensor px is 301.6 plane px. Your reading was right.
+- **But 232.7 and 301.6 are not the same quantity.** M86's figure is the corner
+  *displacement* of the solved transforms, including translation and rotation;
+  your NCC maximises over translation and reports **scale only**. Like for like,
+  the sidecar's scale-only span is **163.8 plane px** against your 301.6 — so
+  the shortfall is larger than the 232.7-vs-302 comparison suggests, and your
+  measurement is corroborated more strongly than you claimed for it.
+- **Coverage is ~13%, not 26%** (§9a) — because the solve only applies half the
+  span. And `stack` already crops to the fully-covered region (`k` = 0.9315),
+  so there is no low-`n_eff` margin, at the price of a 7.35% full-frame
+  upsample.
+
+**Other:**
+
+- Three instrument defects in §3, one in my timing harness, one in my own
+  round-trip control (§7.3), and one manufactured control (§5/P3). Every one was
+  caught by a plant or by looking at the image. The Pillow 16-bit truncation is
+  the one most likely to bite another milestone.
+- **My earlier "smooth drift" mechanism was wrong** and is withdrawn. It was
+  DERIVED and plausible and it survived until an independent measurement of the
+  ground truth arrived. That is the argument for having asked for one.
+- **Recommendation.** Do not spend the next milestone on the merge. Spend it on
+  the solve's gain: it is a 46% shortfall with a sharp, cheap end-to-end test,
+  and it is the only thing standing between this machinery and the ~20x
+  reduction M86 believed it had. Until then, alignment costs 2.58x and buys 3%.
+- **"Those stacks don't look too good yet" is now partly explained**: not
+  because registration is the wrong lever, but because the registration being
+  applied is half-strength. That is a better answer than the one I had an hour
+  ago, and it came from your measurement, not mine.
