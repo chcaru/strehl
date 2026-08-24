@@ -1,0 +1,54 @@
+====================================================================================================
+ARM A — total repeating multiplicative green power on M71 true flats
+====================================================================================================
+e0.004                     V_flat=1.12519462e-05 k=0.3354% patch range +1.055e-05..+1.218e-05
+e0.008                     V_flat=1.04723234e-05 k=0.3236% patch range +9.823e-06..+1.166e-05
+e0.016666666666666666      V_flat=9.70469971e-06 k=0.3115% patch range +9.106e-06..+1.075e-05
+e0.03333333333333333       V_flat=9.00790715e-06 k=0.3001% patch range +8.485e-06..+1.002e-05
+e0.05                      V_flat=8.61154427e-06 k=0.2935% patch range +8.132e-06..+9.609e-06
+
+pooled V_flat=9.80968414e-06 95% [9.00055141e-06, 1.06539068e-05]
+k_total=0.3132%  M71 kappa=0.3096%
+V_extra=max(V_flat-kappa^2,0)=2.24468145e-07
+F_mult=0.00785 95% [0.00000, 0.03739] of remainder
+
+====================================================================================================
+CONTROLS — fixed-pattern plant, independent null, and shift null
+====================================================================================================
+V_plant=2.85789035e-05; recovered=2.82269370e-05 (0.9877x)
+independent null=+2.65798296e-08, SE=4.592e-08, z=+0.579
+shift null mean=-7.57930339e-09, sd=2.645e-07, unshifted z=109.9
+
+====================================================================================================
+ARM B — additive fixed power from M4 darks
+====================================================================================================
+ISO  50: V_dark=+0.1544471 DN^2 95% [+0.1530740,+0.1557692] M4 total bound=0.1391290
+ISO 100: V_dark=+0.1536629 DN^2 95% [+0.1522865,+0.1550233] M4 total bound=0.1419782
+ISO 200: V_dark=+0.1026690 DN^2 95% [+0.0957392,+0.1095349] M4 total bound=0.1169640
+ISO 400: V_dark=+0.1530071 DN^2 95% [+0.1515780,+0.1545160] M4 total bound=0.1410754
+ISO 500: V_dark=+0.1695351 DN^2 95% [+0.1674961,+0.1717060] M4 total bound=0.1572916
+
+F_add measured=0.0007833; M4-total conservative upper=0.0007210
+dark control: nonnegative 5/5, upper CI <= total FAIL -> FAIL
+
+====================================================================================================
+ARM C — sensor-coordinate repetition across M70 stacks
+====================================================================================================
+same-subject median r=+0.1525; null p95=+0.1790 -> INSENSITIVE
+unrelated median r=+0.0391; null p95=+0.0333 -> REPEATS
+same-subject pairs:
+  113MSDCF|112MSDCF                  +0.9905
+  wrapped-text-2|wrapped-text-1      +0.0180
+  bee-1|bee-2                        +0.0632
+  bee-1|bee-3                        +0.1525
+  bee-2|bee-3                        +0.9651
+
+====================================================================================================
+DECISION AND CONSEQUENCES
+====================================================================================================
+F_sensor point=0.00864; decision interval [0,0.03812]
+VERDICT: INCONCLUSIVE
+post-fixed-term remainder exponent=1.8346, R^2=0.9351 (6/6 positive rows)
+upper-bound sigma movement at S=8000: 1.414% -> M77 NO FLAG
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M76c-floor-remainder\out\result.json

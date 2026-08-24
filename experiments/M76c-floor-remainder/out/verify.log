@@ -1,0 +1,19 @@
+PASS 01: all five flat pairs and 24 patches are present
+PASS 02: V_flat is the unrectified 5 x 24 arithmetic mean
+PASS 03: reported exposure-pair values reproduce from the patch matrix
+PASS 04: registered two-level flat bootstrap reproduces exactly
+PASS 05: multiplicative remainder share reproduces from exact M76b rows
+PASS 06: all three mandatory Arm-A controls pass
+PASS 07: ISO 122MSDCF dark point is its 24-patch mean
+PASS 08: ISO 118MSDCF dark point is its 24-patch mean
+PASS 09: ISO 123MSDCF dark point is its 24-patch mean
+PASS 10: ISO 119MSDCF dark point is its 24-patch mean
+PASS 11: ISO 125MSDCF dark point is its 24-patch mean
+PASS 12: registered dark control fails rather than being silently relaxed
+PASS 13: same-subject median reproduces
+PASS 14: registered scene-sensitivity control fails
+PASS 15: post-fixed-term exponent and R-squared reproduce
+PASS 16: failed mandatory Arm-B control forces the registered verdict
+PASS 17: registered M77 re-denomination threshold does not bind
+
+17/17 checks passed
