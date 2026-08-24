@@ -1298,11 +1298,14 @@ focus, so the texture's spatial pattern is held and only its contrast moves (§1
 for the second and third is that the operator's noise turns out to vary by **4x** depending on
 the local image structure, and one contrast level cannot separate structure from amplitude.
 
-**54. FYI -- an unexamined constant turned up in the shipped code.** `FINE_FOCUS_NOISE_SD =
-0.090_400` in `through_focus.rs`. It is 5.9x the constant a whole milestone was chartered to
-examine, and it appears **nowhere in any research report** -- it has never been calibrated in
-the open or questioned. Found only because that milestone read the crate instead of the
-corpus. Routed to a future milestone; no action from you.
+**54. WITHDRAWN -- I got this wrong and corrected it an hour later.** This item claimed an
+unexamined constant had turned up in the shipped code. It is not unexamined; it is one of the
+most-scrutinised numbers in the project, with six separate findings about it, including one that
+refuted a conclusion built on it and an independent reimplementation that reproduces it to four
+decimal places. A milestone said it was undiscussed *in the part of the corpus it had searched*,
+and I recorded that as undiscussed anywhere. Nothing about the code changed; the claim was mine
+and it was wrong. What is genuinely open is narrower and less interesting: whether that constant
+has the same texture-dependence the milestone found in its sibling. Routed, no action from you.
 
 **55. FYI, PROCESS -- I have made five relay errors this session and agents caught all five.**
 The record is corrected at source each time and each correction is recorded with the mechanism.
