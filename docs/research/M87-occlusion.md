@@ -73,6 +73,22 @@ such).
 > defect irreducible — see the next line — but nothing in any single exposure
 > looks like the rim you see in the output.
 >
+> **What IS the halo, physically? AN ERASED VEIL, NOT ADDED LIGHT. (§25.7,
+> the sharpest statement in this report and the last one found.)** Measured on
+> the image the owner actually judged, in linear raw DN: all 299 single frames
+> are veiled over the 2–22 px band by a mean **−26.47% ± 3.01%** relative to
+> their own far level, the least veiled at **−20.25%**. The merge reads
+> **−6.68%** — the least veiled image in the set, **4.51 single-frame sd** above
+> the best frame, **74.76% of the veil removed**. A uniformly random per-pixel
+> election reads **−25.85%**, inside the single-frame range, so it is not
+> mixture, it is *this* election. **Two-layer physics puts a radial darkening
+> beside every occluding edge in every observation; the election, a max-like
+> operator on brightness in the veiled band, erases three quarters of it; the
+> eye reads a flat band abutting a falling gradient as a glow.** This arrived by
+> a *registered prediction failing* — I predicted a bright overshoot and there
+> is none — and it explains at once why a baseline-difference halo metric reads
+> **+0.280%** on that image while the artifact is unmistakable to the eye.
+>
 > **Is the owner's "no selector can be correct there" right?**
 > **YES, and it is now measured on ground truth rather than argued.** On a
 > synthetic two-layer scene with a known answer, the frame in which the
@@ -1836,6 +1852,19 @@ namespaced `M87`.
 | P67 | **The correctable rim is ~20 binned px wide and sits inside a ~150 px depression that may not be ours.** The background recovers to 90% of its open level only at **135 binned px** and 95% at **150 px**. A bud in front of a lit card plausibly shadows the card; that cannot be separated from a wide veil without a single-frame comparison. It is not vignetting, which darkens pixels far from centre and so far from the subject, against the observed sign. | Sizes the annulus at ~20 binned px rather than 150, and flags a large slow component that a halo metric would credit a fix for removing without it being a stacking defect at all. | MEASURED |
 | P68 | **`flower-bud-alone-cpl` is not clipped anywhere.** On the per-channel maximum that `gallery.py` budgets, both the raw and the exposure-boosted TIFF read **0.0000%** at full scale and **0.0000%** at or above 0.99; the gain is set by the p99.9 target and never reaches the 0.5% clip budget. Background FINE-band rms is 0.002363 against the subject's 0.007493. | The "near-clipping white field" hazard does not exist on this stack and a normalised contrast measure reads it. The real hazard is dilution: the background is 78.67% of the frame at 3.2× less fine-band energy, so a whole-frame band average — but not the in-region BMF bar of §23 — would be swamped by it. | MEASURED |
 | P69 | **The judged gallery crop comes from `-exposed.tif`, not `-srgb.tif`** (`gallery.py:135-147` writes `-100pct.png` from the exposure-boosted array). My first pass measured the raw file. | Fact 1324's failure mode, reproduced: the convenient image is not the judged one. Any corpus measurement of gallery output must state which of the two TIFFs it read. | MEASURED |
+| P70 | **THE HALO IS AN ERASED VEIL, NOT ADDED LIGHT.** In linear raw DN over d in 2 to 22 binned px, every one of the 299 single frames is veiled by a mean **-26.4668% sd 3.0076%** relative to its own far level, the least veiled being frame 155 at **-20.2495%**. The gate-0 merge reads **-6.6810%** — the least veiled image in the set, **4.51 single-frame sd** above the best frame, **74.76%** of the mean veil removed. A uniformly random per-pixel election reads **-25.8547%**, inside the single-frame range. | The mechanism, restated: two-layer physics puts a radial darkening beside every occluding edge in *every* observation, and the election, being a max-like operator on brightness in the veiled band, erases three quarters of it. The eye reads a flat band abutting a falling gradient as a glow. **A per-pixel mixture as such does nothing** — it is this election. | MEASURED |
+| P71 | **A registered prediction can be placed on the wrong window, and only a picture will tell you.** I registered `O`, an overshoot statistic comparing d in 12 to 22 against a 30 to 45 shoulder, and predicted `O(merge) > 0`. It came back **-0.004852**. Plotting the profiles showed the merge has a local maximum near d = 17 and a local minimum near d = 27, so the shoulder sat on the far side of the crossover and the two effects cancelled. | Pre-registration protects against choosing the answer; it does not protect against choosing the window. **Plot a thing you have already tabulated.** The replacement instrument (P72) found a +0.144 band where `O` found -0.005. | MEASURED (prediction refuted) |
+| P72 | **A baseline-free halo metric: reference the frame ensemble, not a far window.** `E(d) = [image(d) - mean_k frame_k(d)] / far_level`. On the judged bee it peaks **+0.14393 at d = 13**, has exactly one sign change (**d = 32**), and troughs **-0.07961 at d = 92**; half-maximum spans **d = 2 to 19**. Single frames peak at **+0.03572 sd 0.03639**, max **+0.10115**; a uniformly random election peaks at **+0.01444**, an order of magnitude below the single-frame floor. | Every earlier halo metric needed a far window standing in for unveiled background, and on this image the profile is **still rising at d = 200**, so every available baseline sits inside the artifact. `E` needs none: each frame is a legitimate observation carrying the same veil, so their mean is what an ordinary image looks like at that distance, and any boundary-blind rule gives `E` near zero by construction. | MEASURED |
+| P73 | **The band is a box, not a bump.** `E(d)` is flat at +0.13 to +0.14 from d = 3 to d = 19, falls to zero by d = 32, and goes negative to -0.08 by d = 92. | Matches the visible artifact exactly: a nearly uniform bright band with a hard lobed outer edge and *darker* background beyond it. A correction shaped as a rim taper is the wrong shape; the profile calls for a plateau with a sharp outer cutoff. | MEASURED |
+| P74 | **The election anomaly and its photometric consequence peak at DIFFERENT distances: dR at d = 6, E at d = 13.** Near the silhouette every frame is heavily veiled, so even the elected sample is dark and `E` is small while the rank statistic is extreme; further out the veil retracts in some frames, so electing the maximum produces a large excess. | A fix keyed on *where the election is wrong* will under-treat *where the brightness error is largest*. These are two annuli, not one, and no design that treats a single radius can address both. | MEASURED |
+| P75 | **The milestone's own frozen band-profile instrument is measured-blind on the image the owner judged**: +0.280% on `bee-3-cpl` `ROI_LEG` against +18.97% for the same statistic on the flower bud, on an artifact that is *more* conspicuous. Three causes: a "background" mixing card, cast shadow, defocused body and pale hair; a depression still deepening at d = 200 so no baseline exists inside the ROI; and a registered `C-BROKEN` control that landed on the subject (bee coverage **37.18%**) and returned **-14.502%**. | **A statistic validated on a compact subject against a uniform card can be blind on a tangled one.** Any halo number in this corpus taken with a far-window baseline should state the subject's coverage fraction and whether the profile flattens inside the ROI. | MEASURED |
+| P76 | **Election brightness rank: a halo statistic with an exact analytic null and no baseline.** `R(p)` is the mid-rank percentile of the *elected* through-focus sample among that pixel's own 299 samples; null 0.5, invariant to any per-pixel monotone transform. On the judged bee it rises 0.5134 at d = 1 to **0.8758 at d = 5**, holds to d = 12 and falls through 0.55 at d = 27. `C-RANDK` returns 0.5 within 0.0176; the fast profiler reproduces the frozen `band_profile` at **max deviation 0**. | Shading, vignetting, the depression, cast shadow and local card/hair mixture all cancel because every pixel is scored only against itself. Rendered, the high-`R` band traces every leg, hair and claw with the visible lobed boundary — the statistic agreeing with the eye on the judged image. | MEASURED |
+| P77 | **A control that failed to return its null became the decomposition.** Rolling the *elected-index field* by (317, 511) preserves the marginal distribution of elected depths, hence any photometric bias, and destroys only their registration with the boundary. So `dR = R_true - R_shuffled` is the occlusion-specific excess **with the photometric share removed by construction**. It peaks **+0.2584 at d = 6** and returns to zero at **d = 21** on bee legs, against the bud's rim peak at **d = 7** measured by an unrelated instrument. `dR(1)` is **negative** (-0.0839). | Cross-class replication of the annulus design constraint, and a reusable trick: shuffling a *label field* rather than the data separates registration-with-geometry from every marginal property at once. `dR(1) < 0` says the anomaly is not at the silhouette. | MEASURED |
+| P78 | **The band gate is a threshold, not a gradient.** Split by the depth step across the nearest boundary: `\|dk\|` under 3 frames gives `dR` **-0.0268** (no band at all), `\|dk\|` at 60 and above gives **+0.3926**, and every bin between is **~0 within 0.07**. The registered monotone-ladder clause failed; the placebo clause passed. | An annulus fix should be **gated** on a large depth step rather than scaled by it, and it has a built-in placebo covering the same-depth boundaries, which is where §14's polarity falsifier showed `bee-3-cpl`'s reflectance edges live. | MEASURED |
+| P79 | **Two more controls died of absent geometry, making four in this milestone.** `L.shifted_mask` invents a boundary "in open background" by translating the mask 512 px, but at **37.18%** subject coverage it lands on the bee. A windowed dark-class centroid could not move because **32.83%** of the window's border is dark class, so a planted 40 px ramp changed it by **-0.19 px**; restricted to the one border-free component above 2000 px it moves **38.02 px** for the same plant. | After §20's planted discs and §24's depth terciles. **Before trusting a control, measure that the geometry it requires exists where you put it** — coverage fraction for a translated mask, border contact for a windowed centroid. All four failures were silent and all four produced plausible numbers. | MEASURED |
+| P80 | **`E*`-free drift verdict, and a registered claim withdrawn.** A tile-wise phase correlation recovers a planted (13, -21) translation exactly and a planted 1.010 magnification as **0.00901 (R-squared 0.9904)**, yet returns **0 of 24 tiles non-zero** between frame 0 and frame 298 of the unaligned raw cube. But registered bar J1 required 80% plant recovery on all five frame pairs and one pair gave **15 of 24**, so **the claim "no image motion in ROI_LEG" is withdrawn as registered.** | Recorded as a withdrawal because the bar was registered before running. The residual evidence — four sweep-spanning pairs at 23 or 24 of 24 tiles at exactly zero, the failing pair being the one with the least expected motion — is suggestive and not established. **§15 does not depend on it**: the band reads +0.2282 unaligned and +0.2651 after applying 70.97 px of warpmap, so it survives either alignment or a deliberate 71 px misregistration. | MEASURED |
+| P81 | **The bee rim is a two-layer mixture in linear light, with a small chromatic residue that is 9x the noise floor.** On `ship-before-linear.tif`, chromaticity `(r, b)`: deep subject (0.358601, 0.300083), halo band (0.322687, 0.343316), far background (0.318767, 0.346940). The band lies **91.38%** along the segment with a perpendicular offset of **0.01039** against a `C-CHROMA-NULL` of **0.00113**. Registered bar passed. The scalar convex bound holds too, the band 22.05% below far background. | Bounds M107's demosaic candidate on this subject: the veil is overwhelmingly a two-layer blend, and the resolvable 1.04% off-segment residue is the only room a chromatic mechanism has. **Also a correction of my own §64 arm**, which passed on `bee3-full.tif` — a file `C-LINEAR-2` then measured as gamma-encoded (R-squared 0.9612, quadratic worth 63.8% of range, **92x** the curvature of the linear twin). Convexity is a claim about linear light. | MEASURED |
+| P82 | **A positive control on identical content does not validate an estimator that must work across a change.** §66's D1 planted a shift on frame 0 and matched it against frame 0; it passed and was worth nothing. Re-run as frame 0 against frame 298 (G1), the same estimator still recovered the plant exactly — but only the second version was evidence. | General: **a control must be able to fail in the way the instrument actually fails.** Applies to any planted-signal check where the real task involves a domain change the plant does not reproduce. | DERIVED from MEASURED |
 
 ### Capture request
 
@@ -2597,3 +2626,389 @@ halo test case available. It is. The veil is present, it is measurable at 45.6×
 its own bias floor, and it now has a width.
 
 
+
+## 25. The judged image: the halo is an erased veil, and the instrument that found it
+
+The orchestrator's second dispatch retracted its own claim that the owner's
+verdict was mostly about exposure, and named the image he actually judged:
+`C:\dev\strehl-out\bee3-full.png`, written 2026-08-23 23:37. I verified that
+at source rather than accepting it — the mtimes are 23:37 for `bee3-full.tif`
+and `bee3-full.png` and 23:38 for `crop-leg-halo.png`, hours before
+`ORCH-gallery` existed, and `62-bee-probe.py` measures the TIFF at
+**(2344, 3516, 3) uint16 = 8.242 MP**, exactly half of 7032x4688 in each
+direction. The retraction stands and the binning claim is independently
+confirmed. Note in passing that the bee merge is 3516 px wide and the flower
+merge 3514; nothing downstream may hardcode either.
+
+This section is the work on that image. It is mostly a record of my own
+instruments failing, because that is what happened: **the halo metric this
+milestone has used since §2 cannot see the artifact in the image the owner
+judged.** Five registered arms failed. What replaced them is better than what
+they measured, and none of it would have been found by an instrument that
+worked.
+
+### 25.1 The frozen instrument is measured-blind on this image
+
+`L.band_profile` takes the median of a value over background pixels at each
+rounded distance from the subject mask, and `L.halo_from_profile` compares a
+near band against a far baseline. On `flower-bud-alone-cpl` that reads the rim
+at **+18.97%** above the local plateau (§24, P66). On `ROI_LEG` of the judged
+bee it reads **+0.280%** — sixty-eight times smaller, on an artifact that is
+*more* conspicuous to the eye, not less.
+
+Three compounding causes, all measured:
+
+1. The "background" in this crop is not one thing. It is open card, cast
+   shadow, the bee's own defocused body seen between limbs, and pale hair
+   brighter than the Otsu threshold. Those populations differ in level by more
+   than the artifact does, so their median is dominated by mixture, not by the
+   halo.
+2. There is no baseline available. `68-breathing.py` H3 measures the linear
+   radial profile out to 200 px and it is **still rising at d = 200**: 10280 DN
+   at d = 1, 13720 at d = 20, 14352 at d = 80, 16659 at d = 200. Every far
+   window inside the ROI sits inside the depression, so the statistic compares
+   band against band.
+3. The registered `C-BROKEN` control was invalid. `L.shifted_mask` translates
+   the mask by (512, 512) to invent a boundary "in open background", but the bee
+   covers **37.18%** of this frame, so the translated mask lands on the bee. It
+   returned a lift of **-14.502%**, larger in magnitude than the real arm. This
+   is the **third** control in this milestone whose required geometry was absent
+   from where I put it, after §20's planted discs and §24's depth terciles, and
+   the fourth arrives in 25.5.
+
+`63-bee-judged.py` records this. Three of its four registered predictions
+failed. I am not repairing that script; it is the evidence that the instrument
+was inadequate.
+
+### 25.2 The replacement: election brightness rank
+
+`64-rank.py` drops the baseline entirely. For each pixel, take its 299
+through-focus samples and ask where the **elected** one falls among them:
+
+```
+R(p) = [ #{k : v_k < v_a} + 0.5 * #{k : v_k = v_a, k != a} ] / (n - 1)
+```
+
+with `a` the elected frame index. `R = 0.5` is the exact analytic null for an
+index chosen independently of brightness. Every pixel is scored only against
+itself, so shading, vignetting, the depression, the cast shadow and any local
+card/hair mixture cancel identically; `R` is invariant to any per-pixel monotone
+transform. It needs no far window and assumes no distance is artifact-free.
+
+Two checks before use. The fast profiler reproduces `L.band_profile` **exactly**
+(max absolute deviation **0** over 96 bins), so the geometry is the frozen
+geometry. `C-RANDK`, a uniformly random index per pixel, returns **0.5 within
+0.0176**.
+
+It works:
+
+| distance d (binned px) | R |
+| --- | --- |
+| 1 | 0.5134 |
+| 5 | 0.8758 |
+| 12 | ~0.87 |
+| 27 | 0.55 |
+
+Rendered as an image (`C:\dev\strehl-out\M87-bee\64-rank-map.png`), the high-`R`
+band traces every leg, hair and claw with the same lobed boundary as the visible
+veil, and sits **outside** the silhouette rather than on it. That is the
+statistic agreeing with the eye on the image the owner judged, which is the
+check §16.9 taught this milestone to run.
+
+### 25.3 The photometric share, and a broken control that turned into the method
+
+`65-decompose.py` answered the orchestrator's decomposition request. Per-frame
+gain normalisation (measured span **16.169%**, first-ten mean 0.97052 against
+last-ten 0.92330, consistent with M99's early-frame bias) removed only **3.1%**
+of the far-field tilt and *raised* the band amplitude 15.6%. Registered arm P1
+**failed**: the tilt is not photometric. That is the third independent line
+agreeing with P49.
+
+The useful accident was `C-SHUF`. Rolling the **elected-index field** by
+(317, 511) was meant to be a broken arm returning the 0.5 null. It did not — it
+ran 0.59 to 0.67. The reason is that the roll preserves the marginal
+distribution of elected depths, hence any photometric bias, and destroys only
+their registration with the boundary. So
+
+```
+dR(d) = R_true(d) - R_shuffled(d)
+```
+
+is **the occlusion-specific excess with the photometric share removed by
+construction**. A control that failed to return its expected null became the
+decomposition the dispatch asked for.
+
+`dR` peaks at **+0.2584 at d = 6** and returns to zero at **d = 21**. §24
+measured the bud's rim peak at **d = 7** with a completely different instrument
+on a completely different subject class. `dR(1)` is **negative** (-0.0839): the
+anomaly is not at the silhouette. This is the annulus design constraint,
+replicated across subject classes.
+
+### 25.4 The placebo is a threshold, not a gradient
+
+`66-repairs.py` D3 split background pixels by the depth step across the nearest
+boundary. Registered as a monotone ladder; it is not one.
+
+| depth step across the boundary | dR |
+| --- | --- |
+| 0 to 3 frames (median 1.6) | -0.0268 |
+| 3 to 60 frames | ~0 within 0.07 |
+| 60 frames and above | +0.3926 |
+
+Where the two sides sit at the same depth there is **no band at all**. Where the
+step is large the band is at full strength. Everything between is flat. The
+registered monotonicity clause failed and the placebo clause passed, and the
+threshold shape is the more useful result: an annulus fix should be gated on
+`|dk| >= 60`, not scaled by it.
+
+`66` also resolved §25.2's one loose end. Far-field `R` was **0.1745**, not the
+0.5 null, and I had recorded that as a failure of arm R1. At **zero** subject
+coverage within 96 px, `R = 0.4966` — the null. "Distance 80 from the mask" does
+not mean "no subject nearby" in a crop full of criss-crossing legs. The deficit
+is the other half of the same mechanism: far from every limb the card's own
+texture wins the election, and in the card-sharp frame every surrounding limb is
+maximally defocused and veils that pixel most.
+
+### 25.5 The drift disagreement, and the fourth dead control
+
+Three instruments disagreed about frame-to-frame motion in `ROI_LEG`: my FFT
+phase correlation said **0 px** across all 299 frames, the aligner's warpmap
+sidecar said **70.97 px** peak-to-peak, and §19's mask centroid said
+**63.04 px**.
+
+**G1 (67) passed.** Estimating frame 0 against frame 298 as-is gives (0, 0);
+with a known (13, -21) planted on frame 298 it gives (-13, +21); the difference
+is exactly the plant. The estimator solves a translation across the entire focus
+sweep to the pixel, so its zero is a measurement. §66's D1 had validated the
+same estimator on *identical content*, which is a control that cannot fail the
+way the instrument fails; G1 replaces it.
+
+**G2 (67) failed its own positive control, and its 188.56 px is void.** Planting
+a 40 px ramp changed the measured excursion by **-0.19 px**. `68` diagnosed it:
+**32.83%** of the analysis window's border is dark class, so the windowed
+centroid is pinned by the window rather than by the subject. That is the fourth
+control this milestone whose required geometry was absent where I put it. The
+repair works — of 1595 dark components exactly one exceeds 2000 px and touches
+no border, and its centroid moved **38.02 px** for a planted 40.
+
+**H1 (68) fired its registered falsifier.** Tiling the ROI 4x6 and correlating
+frame 0 against frame 298, **0 of 24** tiles returned a non-zero shift, while
+`C-SCALE` — a planted 1.010 magnification, which is the focus-breathing
+hypothesis that would reconcile all three instruments — was recovered as
+**0.00901 with R-squared 0.9904**. The cube is unaligned raw
+(`04-through-focus.py` calls `L.read_planes(p, BOX)` at a fixed box), so this is
+a measurement of the raw frames, not of an aligned product.
+
+**J1 (69) then failed, and I withdraw the claim.** I registered that "no image
+motion in `ROI_LEG`" would be established only if, across five frame pairs, at
+least 80% of tiles returned zero as-is *and* at least 80% recovered a planted
+(5, -7). Four pairs passed. The pair 140 against 160 recovered the plant in only
+**15 of 24** tiles and returned two spurious non-zero shifts as-is. The bar was
+registered, it failed, and the claim does not stand as registered. What remains
+is weaker and worth stating exactly: the four pairs that actually span the sweep
+all returned 23 or 24 of 24 tiles at exactly zero, and the failing pair is the
+one with the *smallest* expected motion, failing by spurious locks rather than
+by any coherent shift. That is suggestive and it is not established.
+
+**J2 (69)**, the repaired centroid, gives **9.44 px** peak-to-peak — but it
+could be tracked in only **9 of 299** frames, because the component must stay
+border-free and overlapping. Nine frames is not a sweep. I report it as
+corroborating and not as deciding.
+
+The reason this is a small matter rather than a large one was registered in
+advance as G3. §66's D2 measured the band at **+0.2282 (d = 6)** unaligned and
+**+0.2651 (d = 7)** after applying the warpmap's 70.97 px. Either the true drift
+is ~71 px and the band survived alignment, or it is ~0 and the band survived
+being deliberately misregistered by 71 px. **Both readings exclude drift.**
+
+### 25.6 The chromaticity arm, re-run on data that is actually linear
+
+§64's convexity test passed on `bee3-full.tif`, and `66`'s `C-LINEAR-2` then
+showed that file is not linear: binned medians against linear raw DN give
+R-squared **0.9612** with a quadratic term worth **63.8%** of the fitted range,
+consistent with a gamma encode. A convex blend is convex *in linear light*, so
+that PASS was testing the wrong proposition and does not stand.
+
+`67` re-ran it on `ship-before-linear.tif`, the same merge at the same geometry
+in linear RGB. The registered precondition was R-squared above 0.999 **and**
+curvature below 0.01; it returned **0.992787** and **0.00694**. The curvature
+clause passes with room and the R-squared clause fails. I judge the curvature
+clause load-bearing and the R-squared shortfall to be scatter rather than bend —
+the same test on `bee3-full.tif` gives 92x more curvature — but that judgement
+is post-hoc and I mark it as such.
+
+| population | r | b | linear G |
+| --- | --- | --- | --- |
+| deep subject | 0.358601 | 0.300083 | 1457 |
+| halo band, d in 2 to 20 | 0.322687 | 0.343316 | 12975 |
+| far background | 0.318767 | 0.346940 | 16646 |
+
+The band lies **91.38%** of the way from subject to background along the
+segment, with a perpendicular offset of **0.01039** of segment length against a
+`C-CHROMA-NULL` of **0.00113**. Registered bar: perpendicular below 0.05 and
+below `max(3 x null, 0.05)`. **PASS.** The scalar convex bound also holds, the
+band sitting between the two layers at 22.05% below far background.
+
+The nuance matters for M107. The offset is 1.04% of the segment, which is small
+in absolute terms and **9.2x the measurement floor**. So the bee rim is
+overwhelmingly a two-layer mixture, and there is a small, statistically
+resolvable chromatic residue that a demosaic artifact could inhabit. I am not
+claiming it does.
+
+### 25.7 The registered prediction that was worth more than a pass
+
+`69` asked the question that decides whether this is my defect at all: is the
+near-edge structure in the data, or does the election make it? I registered an
+overshoot statistic `O`, comparing the profile at d in 12 to 22 against the
+shoulder at 30 to 45, normalised by the far level, and predicted `O(merge) > 0`
+and above every single frame.
+
+The first clause **failed**.
+
+| image | O |
+| --- | --- |
+| gate-0 merge | -0.004852 |
+| single frames, mean and sd | -0.112036 and 0.020821 |
+| least-dipped single frame (144) | -0.077058 |
+| most-dipped single frame | -0.158102 |
+| uniformly random per-pixel election | -0.112367 |
+
+Zero of 299 frames are positive. The merge does not add a bump; it **flattens**
+one. And the random election sits dead inside the single-frame range, so a
+per-pixel mixture as such does nothing.
+
+`70` measured the physical quantity `O` was standing in for — how far the band
+sits below unveiled background:
+
+| image | veil depth V over d in 2 to 22 |
+| --- | --- |
+| gate-0 merge | -6.6810% |
+| single frames, mean and sd | -26.4668% and 3.0076% |
+| least veiled single frame (155) | -20.2495% |
+| most veiled single frame (69) | -29.9956% |
+| uniformly random per-pixel election | -25.8547% |
+
+**The merge is the least veiled image in the set, 4.51 single-frame standard
+deviations above the best single frame, and the election removes 74.76% of the
+mean single-frame veil.** `C-RANDV` lands inside the single-frame range.
+Registered bar K1: **PASS**.
+
+So the mechanism claim is restated, and this is the form I want carried:
+
+> **The halo is not the presence of extra light. It is the absence of the
+> veil's darkening.** Two-layer physics puts a radial gradient beside every
+> occluding edge in every observation; the election, being a max-like operator
+> on brightness in the veiled band, erases three quarters of it; the eye reads a
+> flat band abutting a falling gradient, with a hard lobed outer boundary, as a
+> glow.
+
+That reframing came from a registered prediction failing, not from inspecting
+the data first, and it explains every earlier anomaly at once: why the frozen
+band-profile instrument reads +0.280% (there is no bump to find), why the rank
+statistic reads 0.87 (electing near-maximal samples is exactly what flattening
+requires), and why a baseline-difference metric was structurally unable to see
+the artifact.
+
+`70`'s K2 arm failed and its control declared it void: the median elected index
+against distance steps by only **+5.0 frames** over a **51 px** transition, and
+the shuffled field gives **+5.0** over **53 px**. The statistic is dominated by
+the card pixels that elect the card-sharp frame at every distance. That is why
+the *difference* `dR` of 25.3, and not the raw statistic, was necessary.
+
+### 25.8 The instrument this milestone should have had: E(d)
+
+Plotting what I had already tabulated showed `O` was placed wrong. The merge's
+profile has a local maximum near d = 17 and a local minimum near d = 27, so the
+30-to-45 shoulder sits on the far side of the crossover and the two effects
+partly cancel. Registration protects against choosing the answer; it does not
+protect against choosing the wrong window. The figure caught it, which is the
+argument for plotting a thing you have already put in a table.
+
+`71-ensemble-E.py` replaces the baseline with the frame ensemble:
+
+```
+E(d) = [ merge(d) - mean_k frame_k(d) ] / far_level
+```
+
+Each frame is a legitimate observation of the same scene through the same optics
+carrying the same veil, so their mean is what an ordinary image of this scene
+looks like at distance `d`. No far window, no assumption that any distance is
+artifact-free, and an exact structural null: any per-pixel rule that ignores the
+boundary must give `E` near zero.
+
+All four registered arms passed.
+
+| arm | result |
+| --- | --- |
+| L1 shape | peak **+0.14393 at d = 13**, exactly one sign change, crossing at **d = 32**, trough **-0.07961 at d = 92**. PASS |
+| L4 width | half-maximum from **d = 2 to d = 19**, FWHM **18 px** |
+| L2 C-FRAME-E | single frames peak at **+0.03572 sd 0.03639**, max **+0.10115** (frame 166); merge is **1.42x** the most halo-like single frame and **3.0 sd** above the single-frame mean. PASS |
+| L3 C-RANDE | random per-pixel election peaks at **+0.01444**, an order of magnitude below the single-frame floor. Control OK |
+
+`C:\dev\strehl-out\M87-bee\71-E.png` plots it. The band is not a peak, it is a
+**box**: flat at +0.13 to +0.14 from d = 3 to d = 19, then a cliff to zero by
+d = 32, then a negative shelf reaching -0.08 at d = 92. That is the visible
+artifact — a nearly uniform bright band with a hard lobed outer edge and
+darker background beyond it — measured.
+
+Note that L2's ratio is **1.42x**, not the 79x of §2. The two are different
+claims and both are correct: §2's 79x compares an ISO halo metric between the
+merge and the worst single frame, and 1.42x compares the ensemble-referenced
+band amplitude against the *most halo-like* frame in the stack. A modest ratio
+against the strongest frame, with the random election ten times below the
+single-frame floor, is the honest form of "no single frame contains this band".
+
+### 25.9 What this changes for the annulus milestone
+
+The design constraint is now measured on both subject classes with two
+independent statistics, and they do not agree on where to act:
+
+| quantity | bee legs (judged image) | flower bud (§24) |
+| --- | --- | --- |
+| election anomaly dR peak | d = 6 | d = 7 |
+| dR reach | 21 px | ~20 px |
+| brightness excess E peak | d = 13 | not measured |
+| E half-maximum span | d = 2 to 19 | not measured |
+| median inner distance of the subject | 26.08 px | 106.00 px |
+| fraction of a 20 px annulus that is real subject | 40.50% | 9.81% |
+
+Four consequences, in order of how much they constrain the build.
+
+1. **The election anomaly and its photometric consequence peak at different
+   distances — 6 and 13.** A fix keyed on where the election is wrong will
+   under-treat where the brightness error is largest. Near the silhouette every
+   frame is heavily veiled, so even the elected sample is dark and `E` is small
+   while `R` is extreme; further out the veil retracts in some frames, so
+   electing the maximum produces a large excess. Both need treating and they are
+   not the same annulus.
+2. **Gate on the depth step as a threshold at `|dk| >= 60`, not as a scale.**
+   Below 3 frames there is measurably no band at all.
+3. **The geometry does not transfer, and this is the main risk.** A 20 px
+   annulus touches **4.13x** more real subject on a bee leg than on the bud. The
+   fix must demonstrate on the real bee at full frame that the abdomen hair
+   fringe and the eye facets survive, which is exactly where §16.9's version
+   failed.
+4. **The fidelity term must be band-resolved.** Per M104's discipline 643 and
+   §23's `BMF`, a band-averaged fidelity number will dilute precisely the
+   damage worth detecting. `E(d)` is a suppression statistic and by bar X4's
+   lesson it cannot certify a reconstruction on its own; it goes in paired with
+   `BMF`, never alone.
+
+### 25.10 Scoreboard for this section
+
+Registered and **passed**: G1, K1, L1, L2, L3, L4, X1-LINEAR, `C-RANDK`,
+`C-SCALE`, `C-RANDV`, `C-RANDE`, `C-CHROMA-NULL`, D3's placebo clause, and the
+`band_profile` self-check at exactly zero deviation.
+
+Registered and **failed**, stated as registered rather than repaired after the
+fact: `C-BROKEN` (invalid geometry), P1 (the tilt is not photometric), P3 and D3
+(no monotone ladder), R1 and F1 (resolved, and my prediction of the trend
+direction was backwards), G2 (its own positive control was dead), H1's radial
+model, H3's monotonicity, J1 (claim withdrawn), J3's first clause, and K2 (void
+under its own shuffle).
+
+That is five instruments of my own that this section broke or discarded. The two
+results I would keep if I could keep only two are that **the election removes
+74.76% of the veil that every observation carries**, which is the mechanism, and
+that **a registered statistic can be placed on the wrong window and only a
+picture will tell you**, which is the method.
