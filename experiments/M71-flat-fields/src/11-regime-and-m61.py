@@ -178,9 +178,12 @@ def fit_linear_local(S, V, A1, A2, w):
     beta = cov @ (XtW @ V)
     resid = V - X @ beta
     dof = max(len(S) - 2, 1)
-    s2 = float((w * resid ** 2).sum() / dof / np.mean(w))
-    err = np.sqrt(np.diag(cov) * s2 / np.mean(w) * np.mean(w))
-    err = np.sqrt(np.diag(cov * s2))
+    # chi2/dof scaling for WLS: cov = (X'WX)^-1 * (sum w r^2 / dof). An earlier
+    # revision divided by mean(w) as well, which inflated the error bars by
+    # ~500x (0.1246 against 03-ptc.py's published 0.000251). The point
+    # estimates were never affected -- beta does not depend on this line.
+    s2 = float((w * resid ** 2).sum() / dof)
+    err = np.sqrt(np.diag(cov) * s2)
     return beta, err
 
 

@@ -45,8 +45,23 @@ tile 32 reads **0.8699**, matching my independent flat-field B/green ratio to
 green's** and **1463× above** what read noise predicts — real, reproducible, and
 **unruled**.
 
-And three things I got wrong and the controls caught: §9. **Plus one pre-registered
-criterion in the follow-up, T1, which failed and is recorded as failed** (§8.5).
+**Two more from M72's routed evidence** (§8.6). First, the number I was asked for rather
+than allowed to assume: a neighbour-correlated noise floor at **the top of M72's
+measured range and 3× my real amplitude** moves κ by **+0.00011 percentage points** —
+0.035% of κ, **148× below κ's own spread** — while a positive control planting a known
+0.20% pattern recovers it to **0.9998**. `noise.rs:122`'s falsified independence
+assertion **does not touch this measurement.** Second, combining M72's dark-frame α ratio
+with my gain ratio localises the B-plane attenuation: **~⅔ of the ISO-scaling read-noise
+power is upstream of it**, which puts a number on M68's *"partway along the analog
+chain."* **I decline the offset limb on a pre-registered criterion I failed** — my
+intercepts cannot tell 0.5966 from 1.0.
+
+And three things I got wrong and the controls caught: §9 — **now six**, including a
+plant that ran at twice the correlation I asked for and was caught by its own validation
+line, and a wrong error-bar formula in a committed artefact, disclosed rather than
+silently repaired. **Plus one pre-registered criterion in the follow-up, T1, which failed
+and is recorded as failed** (§8.5), and **PR-10c, which failed and cost me a ruling**
+(§8.6.2).
 
 ---
 
@@ -63,6 +78,11 @@ mis-transmitted twice. `M61-ptc-high-iso-measured.md` §4.7 and its estimator de
 `M5-diffraction-measured.md` for the spectral machinery (facts 27/29) — specifically
 its §2.5 trap, that a boxcar window's sinc sidelobes inflate a noise floor 1.6–1.8×
 and can fake a knee. Every spectrum in §5 below is Hann-windowed because of it.
+`M72-green-plane-correlation.md` §9 read **directly at L612–648** for its per-plane α/δ
+fit and its `read_noise_e_high`, after the orchestrator routed them as evidence — *the
+line range I was given, 547–563, points at that report's "Unsettled" list rather than the
+fit table, which is precisely why the instruction was to read the source.*
+`M69-focus-noise-sd.md` for the settled `FOCUS_NOISE_SD` value (§8.6.3).
 `crates/strehl-core/src/{noise,merge,focus,profile}.rs` read, none edited (`crates/`
 is contended).
 
@@ -174,6 +194,26 @@ Outcomes:
 | PR-6 | CPL transmission and flatness | **transmission not measurable; flatness null** |
 | PR-7 | dust map with roll control | **MET** |
 | PR-8 | residual illumination structure | **excess present**, +141% |
+
+**Criteria added in the two follow-up rounds**, each written into its script's docstring
+and evaluated only afterwards. These were **not** in commit `dde2321` — they could not
+be, since the questions arrived later — so they carry the weaker guarantee that the data
+existed when they were written. **I state that rather than presenting them as equivalent
+to the pre-registered block above.** What they do preserve is the binding property: the
+criterion, its threshold and its consequence were fixed before the number was seen, and
+the two that failed cost me the claims they were gating.
+
+| criterion | what it tested | result |
+| --- | --- | --- |
+| T1 | B correlation stable across exposure groups, < 2× | **FAILED**, 2.5× (§8.5) |
+| T2 | B correlation present in darks | **survives** |
+| T3 | B correlation survives a 15 px high-pass | **survives**, 91% retained |
+| PR-9a | correlated-floor plant at r = 0.055 moves κ < 0.01 pp | **MET**, −0.00001 pp |
+| PR-9b | stress plant at r = 0.160, 3× amplitude, < 0.03 pp | **MET**, +0.00011 pp |
+| PR-9c | positive control recovers a planted 0.20% within 5% | **MET**, 0.9998 |
+| PR-10a | `f ∈ [0,1]` ⇒ `c < 0.9175`, else model refuted | **MET**, c = 0.8698 |
+| PR-10b | f from my gain and M61's agree within 0.25 | **MET**, \|Δ\| = 0.114 → I rule |
+| PR-10c | intercepts discriminate δ ratio from unity at 2σ | **FAILED** → I decline (§8.6.2) |
 
 ---
 
@@ -873,10 +913,156 @@ it is **outside my charter**, and it is **not settleable from flat fields**. Rec
 
 ---
 
+## 8.6 The M72 evidence round
+
+Two questions arrived after §8.5, routed by the orchestrator as **evidence, explicitly
+not adjudicated**. One asked for a number I had only argued for; the other offered a
+ruling I was told I could decline.
+
+### 8.6.1 Does a neighbour-correlated noise floor masquerade as PRNU? (MEASURED — no)
+
+M72 measured that `noise.rs:122`'s assertion — that the two green photosites have
+independent read noise — is **false**: every plane correlates with its own neighbours at
+**+0.05 to +0.16** near black. The orchestrator's point was sharp: *"your flats are
+exactly where a neighbour-correlated floor would masquerade as low-frequency PRNU
+structure,"* and *"'probably negligible' is a claim you can now check rather than
+assume."* My §7.3 and P23 work had already found the same effect independently, from the
+other end — so this is a genuine convergence, not a hand-off.
+
+**The structural argument first (ARGUED), so the reader knows what is being tested
+rather than discovering it.** κ² = cov(D_A, D_B)/2 where A and B are **independent**
+20-frame captures. Temporal noise in A is independent of temporal noise in B, so
+`E[cov(noise_A, noise_B)] = 0` **regardless of how that noise is correlated across
+space**. Spatial correlation inflates my estimator's *variance*; it cannot bias its
+*expectation*. But an argument is not a measurement, and facts 61–64 record four
+occasions where a subtly wrong plant nearly produced a false result.
+
+So: a plant, a stress plant, and a positive control, pre-registered before running.
+
+| arm | what is planted | κ shift | pre-registered |
+| --- | --- | --- | --- |
+| **A0** baseline | nothing — the real cached means | κ = **0.3093%** (headline 0.3096%) | — |
+| **A1** floor | independent per-capture noise at the **real** per-mean amplitude, r(1,0) = **0.055** (M72's dark value) | **−0.00001 pp** | PR-9a `< 0.01 pp` **MET** |
+| **A2** stress | **3×** the real amplitude, r(1,0) = **0.160** — the **top** of M72's range | **+0.00011 pp** | PR-9b `< 0.03 pp` **MET** |
+| **A3** control | a **fixed** 0.20% multiplicative pattern, identical in A and B | recovery ratio **0.9998** | PR-9c `within 5%` **MET** |
+
+**The number the orchestrator asked for: +0.00011 percentage points.** A neighbour-
+correlated noise floor at the top of M72's measured range, at three times the amplitude
+my data actually carries, moves κ by **0.035% of its own value** — **148× smaller than
+κ's own ±0.0159 pp spread across signal levels**, and far below every other systematic
+in this report. It is immaterial, and now with a number rather than an assumption.
+
+**A3 is what makes A1 and A2 mean anything.** A null from a dead instrument is worthless;
+the positive control shows the estimator recovers a planted 0.20% pattern to 0.9998 of
+`√(κ₀² + 0.20²)`, so it is demonstrably live in exactly the arm where A1/A2 read zero.
+
+**And the flats are milder than the plant.** §9(3) already measured green's r(1,0)
+falling from **+0.0553 in darks** to **0.002–0.011** across the flats (S = 185 → 5723).
+A1 plants the *dark* value, i.e. **5–27× more correlation than my data actually has**.
+M72's own scoping — confined within ~10 DN of black, 0.16% by 100 DN — is reproduced
+here from the opposite direction, and **at flat-field signal levels it is not merely
+"probably negligible" but measurably so.**
+
+**On the paper-fibre band, which the orchestrator flagged as living in the same place.**
+It does not, and §5.1 already separated them: paper fibre is correlated over **several
+pixels** at this magnification, whereas this floor is a **nearest-neighbour** effect that
+is gone by lag 2. κ is flat to **1.0002×** over a 16× change in the high-pass cut, which
+is the measurement that excludes *both* — a contaminant confined to one spatial band
+cannot leave a scale-invariant κ.
+
+### 8.6.2 M72 fact 32 — I rule on the gain limb and decline the offset limb
+
+M72's per-plane dark fit gives `α_B/α_green = 0.8418` and `δ_B/δ_green = 0.5966`,
+against a single pre-ADC scale's prediction of `s² = 0.7049` and `1`. **Neither is met.**
+M68 had said a photon-transfer *ratio* could not settle where in the chain the B-plane
+attenuation acts. **That is correct in isolation, and it stops being correct once an α
+ratio from darks exists to combine with a gain ratio from light.** I hold the only
+gain-limb measurement taken at signal levels a dark frame cannot reach, and mine is
+independent of M61's.
+
+Let a single factor `c` act at **one** point in the analog chain before the ADC. Then the
+PTC slope ratio is `c`; ISO-scaling read noise generated **upstream** of that point
+scales as `c²`; noise generated **downstream** does not scale at all. With a fraction `f`
+of the green plane's ISO-scaling noise **power** upstream,
+
+```
+α_ratio = f·c² + (1 − f)      ⇒      f = (1 − α_ratio) / (1 − c²)
+```
+
+| input | `c` | `f` |
+| --- | --- | --- |
+| **M71 flats (mine)** | **0.8698 ± 0.0052** | **0.650** [0.627, 0.675] |
+| M61 / fact 921 | 0.8396 ± 0.0112 | 0.536 |
+
+**PR-10a (physicality) MET.** This model is exactly determined — two parameters, two
+observables — so it is unfalsifiable *except* in one place: `f` must lie in [0, 1], which
+requires `c < √α_ratio = 0.9175`. **My measured c = 0.8698 passes with a 5.2% margin**
+(M61's, 8.5%). That is a weak test but it is a real one, and it is the only one this
+construction admits. I state that rather than dressing a localisation as a confirmation.
+
+**PR-10b MET**, so I rule: **|f_M71 − f_M61| = 0.114 ≤ 0.25**, so the localisation does
+not depend on which gain you believe. **Roughly two thirds of the ISO-scaling read-noise
+power sits upstream of the B-plane attenuation point and one third downstream** — the
+attenuation acts *partway along the analog chain*, which is what M68 concluded
+qualitatively, now with a number attached.
+
+**PR-10c FAILED, so I decline the offset limb, as pre-registered.** My PTC intercepts
+give `b_B/b_green = 0.7849 ± 0.3468`, which sits **0.54σ** from M72's 0.5966 and **0.62σ**
+from unity. It discriminates nothing. That is not a surprise — §6.4 already recorded
+those intercepts as negative and unphysical and left them unruled — and **pre-registering
+the criterion is what stops me quietly claiming the offset limb later on a ratio whose
+error bar spans both hypotheses.** `δ_B/δ_green = 0.5966` remains unexplained by any
+single-point model, and it is **not mine to settle**: a post-ADC quantisation term cannot
+be plane-dependent, so whatever δ is absorbing is not quantisation. **Unruled** (§12.9).
+
+**The degeneracy I cannot break — and fact 955 forces it into a sharp fork.** `f` is
+conditional on the two planes having **equal input-referred read noise in electrons**.
+Fact 955 establishes, by three independent tests, that the 0.84× is an **in-camera
+digital scale applied before quantisation**. If that is right then the *entire* analog
+chain — and therefore all ISO-scaling read noise — lies **upstream** of the scale, which
+forces **f = 1** and predicts `α_ratio = c² = 0.7567`. **M72 measures 0.8418.** So:
+
+| branch | requires | consequence |
+| --- | --- | --- |
+| **equal read noise** in electrons | f = 0.650 | scale acts **partway along the analog chain** — contradicts fact 955 |
+| **fact 955 correct** (digital, pre-quantisation) | f = 1 | B's input-referred read noise is **1.0548×** green's |
+
+**These are mutually exclusive, and my flat fields cannot separate them.** What I can do
+is state that the fork exists and that it is forced, because until now the
+`RN_B/RN_green ≠ 1` branch has not been on anyone's list. **I lean, weakly and as
+ARGUED, toward the second branch** — fact 955's three tests are direct and each could
+have failed, and my own P23 independently shows B's noise is *not* green's noise merely
+rescaled (it is 60× more spatially correlated), which is exactly what a plane whose read
+noise genuinely differs would look like. **But that is an argument, not a measurement,
+and the fork is recorded unruled** (§12.10) rather than resolved by preference.
+
+### 8.6.3 Two corpus updates that touch my §8.2, recorded
+
+**`read_noise_e_high`.** M72 independently recovers **1.175 e** against `profile.rs:232`'s
+**1.2392**. The orchestrator was explicit that this is **not** a defect claim, and
+`profile.rs` §98–104 already documents that constant as fitted to darks and degenerate
+with gain there. **I cannot contribute a fourth estimate**: my own PTC intercepts are
+negative, so step 03 clamps `read_noise_e` to 0.0 for every plane (§6.4). Recording the
+non-contribution rather than leaving the impression I checked it.
+
+**`FOCUS_NOISE_SD`.** My §8.2(c) argued that adding κ to the shared struct would
+invalidate this *measured* constant. M69 has since settled its **value** — median
+**1.0147×** across all twelve stacks, span 0.9285–1.1009, **recommending no change** —
+while refuting its **form** (4.06× texture dependence on the coarse operator). **My
+argument is about coherence between the constant and the model beneath it, and it
+survives unchanged**: a constant measured from pure white noise with no PRNU term
+present stops meaning what it measured if PRNU is added underneath it, whether or not
+its numeric value is correct. **If anything M69 strengthens §8.2(c)** — a constant now
+known to be *right* is a constant with more to lose. I confirm my report never relied on
+the retracted "19–21% low" figure; it is not cited anywhere in this document.
+
+---
+
 ## 9. Errors, and what caught them
 
-Four. The first three were caught by controls rather than by the estimates, in the
-spirit of facts 61–64; the fourth was caught by a `NaN` I nearly ignored.
+Six. The first three were caught by controls rather than by the estimates, in the
+spirit of facts 61–64; the fourth was caught by a `NaN` I nearly ignored; the fifth by a
+validation line I had put in the same script for exactly that purpose.
 
 **(1) PR-4c's premise was wrong.** I pre-registered that the two-green difference
 cancels paper at any focus. It cancels paper only where paper is smooth on a 2-px
@@ -926,6 +1112,30 @@ silently dropped them I would have shipped the wrong sign. The lesson is narrow 
 mechanical: *this milestone already had a clipping rule in `03-ptc.py` — "any clipped
 pixel voids the group" — and the follow-up script simply failed to inherit it.* The
 final T1 still fails as pre-registered and is reported as failing.
+
+**(5) My correlated-noise plant ran at twice the correlation I asked it for, and its own
+validation line caught it.** `14-correlated-floor.py` builds a unit-power cross kernel
+and solves for the nearest-neighbour correlation it produces. The lag-(1,0) self-overlap
+of a cross kernel is `h(−1,0)h(0,0) + h(0,0)h(1,0) = 2a`, and I solved `a/(1+4a²)`
+instead — dropping the 2. So the first run planted **r = 0.111 and 0.32** for a requested
+0.055 and 0.16. **Caught by the last line of the script, which draws a test field and
+measures the correlation it actually realised: it printed +0.1109 for a requested
+0.055.** The bug was conservative — the arms were *harder* than advertised and passed
+anyway, which is free headroom above M72's range — but it would have meant **describing a
+test I had not run**, and that is the defect regardless of which way it errs. Fixed, and
+the corrected run realises +0.0557 and +0.160. **The lesson generalises: a plant that
+does not measure what it actually planted is an assumption wearing a control's clothes.**
+
+**(6) A wrong error-bar formula I shipped in §8.4, now fixed — point estimates unaffected.**
+`11-regime-and-m61.py` re-implements step 03's Jensen-corrected WLS so the robustness
+refits need no cache. Its χ²/dof scaling carried a spurious extra `/ mean(w)`; with
+`w = 1/V²` and `V` spanning 30–1500 DN², that inflated every printed `g_err` by ~500×
+(0.1246 against step 03's published 0.000251). **`beta` does not depend on that line at
+all**, so every point estimate, every spread and every conclusion in §8.4 was correct as
+published — but a reader could have taken the printed uncertainties seriously. Corrected,
+the refit now reproduces `03-ptc.json` exactly: B **0.194934 ± 0.001165** against the
+published 0.0011647, G1 **0.224001 ± 0.000251** against 0.000251. **Disclosed rather than
+silently repaired, because it was in a committed artefact.**
 
 ---
 
@@ -1128,6 +1338,74 @@ which you inherited**, unprompted. §8.4 exists only because M68 did that.
 
 ---
 
+### Facts added after the M72 evidence round (§8.6)
+
+**P24 (MEASURED). A neighbour-correlated noise floor does not masquerade as PRNU in this
+estimator — the contamination is +0.00011 percentage points.** Planting independent
+per-capture noise with nearest-neighbour correlation r(1,0) = **0.055** (M72's measured
+dark value) at the real per-mean amplitude moves κ by **−0.00001 pp**; at **3× amplitude
+and r = 0.160**, the top of M72's range, by **+0.00011 pp** — **0.035% of κ, and 148×
+smaller than κ's own ±0.0159 pp spread across signal levels.** A positive control
+planting a fixed 0.20% multiplicative pattern recovers `√(κ₀² + 0.20²)` to **0.9998**, so
+the null comes from a demonstrably live estimator. The reason is structural: κ² =
+cov(D_A, D_B)/2 across **independent** captures, in which temporal noise contributes zero
+in expectation whatever its spatial correlation. **M72's `noise.rs:122` correction is
+therefore immaterial to κ, and to the flat-field regime generally** — green's own r(1,0)
+falls from +0.0553 in darks to 0.002–0.011 by S = 185–5723, so the plant is 5–27× harsher
+than the data. PR-9a/9b/9c all **MET**. `M71/14-correlated-floor.py`.
+
+**P25 (DERIVED, rules the gain limb of fact 1033; the offset limb declined). About two
+thirds of the ISO-scaling read-noise power sits upstream of the B-plane attenuation
+point.** Combining M72's `α_B/α_green = 0.8418` with my independent flat-field gain ratio
+`c = 0.8698 ± 0.0052` through `f = (1 − α_ratio)/(1 − c²)` gives **f = 0.650**
+[0.627, 0.675]; M61's `c = 0.8396` gives **0.536**. Pre-registered PR-10b required these
+to agree within 0.25 in absolute `f` before I would rule — **|Δ| = 0.114, MET**, so the
+localisation does not depend on which gain is believed. **This quantifies M68's
+qualitative conclusion that the attenuation acts *partway along the analog chain*, using
+an observable a photon-transfer ratio alone cannot reach.** The construction is exactly
+determined and its only falsifiable content is PR-10a, `f ∈ [0,1]` ⇒ `c < 0.9175`, which
+my measurement passes with a **5.2%** margin. **Conditional on equal input-referred read
+noise between planes** — and **fact 955 forces that condition into an exclusive fork**:
+if the 0.84× really is a digital scale applied before quantisation, the whole analog
+chain is upstream of it, `f = 1` is forced, `α_ratio` should be `c² = 0.7567`, and
+M72's 0.8418 then requires **`RN_B/RN_green = 1.0548` in electrons**. Either the scale
+acts partway along the analog chain (contradicting fact 955) **or the B plane's
+input-referred read noise is genuinely ~5% higher than green's** — a branch nobody has
+had on the list. My flats cannot separate them; **the fork is recorded unruled** (§12.10).
+`M71/15-m72-gain-limb.py`.
+
+**P26 (MEASURED, a declared non-contribution). My flat fields cannot rule on
+`δ_B/δ_green`, and I decline it as pre-registered.** My PTC intercept ratio is
+**0.7849 ± 0.3468**, sitting **0.54σ** from M72's 0.5966 and **0.62σ** from unity —
+discriminating neither. PR-10c required better than 2σ separation and it **FAILED**;
+recorded as failed rather than reinterpreted. Likewise I cannot add a fourth estimate of
+`read_noise_e_high` (M72's 1.175 e, `profile.rs`'s 1.2392): my intercepts are negative and
+step 03 clamps `read_noise_e` to 0.0 for all four planes. **Both non-contributions are
+recorded so no one credits this milestone with a check it did not perform.**
+`M71/15-m72-gain-limb.py`, §6.4.
+
+**P27 (ARGUED, strengthens P5's ruling). M69 settling `FOCUS_NOISE_SD`'s value does not
+weaken the coupling requirement — it strengthens it.** My §8.2(c) objection to putting
+`(κS)²` in the shared `PlaneNoise::variance` was never that the constant's value is
+wrong; it is that a constant **measured from pure white noise with no PRNU term beneath
+it** stops meaning what it measured if PRNU is inserted underneath. M69's finding that
+its value is right (median 1.0147×, span 0.9285–1.1009, recommend no change) makes it a
+constant with **more** to lose, not less. The retracted "19–21% low" figure is not cited
+anywhere in this report. `M69-focus-noise-sd.md`, §8.2(c), §8.6.3.
+
+**Proposed discipline D4.** **A plant must measure what it actually planted, not what it
+was asked to plant.** `14-correlated-floor.py` requested a nearest-neighbour correlation
+of 0.055 and delivered 0.111, because the kernel solve dropped a factor of 2 — and the
+only reason this is an anecdote rather than a false claim is that the same script drew a
+test field and printed the correlation it had *realised*. The arms passed either way, so
+no conclusion moved; what would have moved is the **description of the test**, and a
+control described wrongly is not a control. Facts 61–64 already record four subtly wrong
+plants. The cheap, mechanical defence is one line per planted quantity: **assert the
+realised amplitude, correlation or pattern against the requested one, and print it next
+to the result.** §9(5).
+
+---
+
 ## 11. What I deliberately did not measure
 
 - **`ρ_warp`** — the fraction of PRNU that survives the stack warp correlated. This is
@@ -1184,7 +1462,7 @@ which you inherited**, unprompted. §8.4 exists only because M68 did that.
    and it runs 1463× above a read-noise-dilution prediction while green runs 51×. A
    pure mean-preserving filter is refuted by the ACF sum rule (implies 0.583, observed
    0.84). **This bears directly on the B-plane deficit that M61, M68 and M48c have all
-   chased, and on M61's fact 57 that the 0.84× is "applied before quantisation" — a
+   chased, and on fact 955 that the 0.84× is "applied before quantisation" — a
    scale does not correlate noise, so whatever applies it is doing something else too.**
    I could not settle it from flat fields and did not try to force it. **Unruled, and
    the single most promising lead I am handing on.**
@@ -1192,7 +1470,11 @@ which you inherited**, unprompted. §8.4 exists only because M68 did that.
    planes carry nearest-neighbour correlation of +0.055 (G1) to +0.076 (B), ~30× the
    photon-dominated flats. Any tile-based variance estimator is biased low at low
    signal by this, including M61's at its darkest bins. I did not quantify the
-   resulting bias on any published number. **Unruled.**
+   resulting bias on any published number. **M72 has since measured the same effect
+   independently across all planes (+0.05 to +0.16) and shown `noise.rs:122`'s
+   independence assertion to be false; P24 establishes it is immaterial to κ
+   (+0.00011 pp) but that is a statement about *my* estimator, not about tile-based
+   ones.** The bias on M61's darkest bins remains **unruled**.
 8. **Capture design, for `captures-needed.md`.** Three things this session could not
    answer that a re-shoot could: (a) **interleave the CPL states** — ABAB, not AAAABBBB
    — because a 142 s filter change makes transmission unrecoverable and the placebo
@@ -1200,6 +1482,24 @@ which you inherited**, unprompted. §8.4 exists only because M68 did that.
    infinity-focus flats cannot serve as a vignetting reference (P16); (c) **shoot flats
    at the working aperture** — f/5.6 understates dust relative to f/8–f/11 (P12). None
    of these compromised the PRNU headline, which is why it survived.
+9. **`δ_B/δ_green = 0.5966` (M72 fact 32), which no single-point model explains.** A
+   post-ADC quantisation term **cannot be plane-dependent** — quantisation is 1/12 DN²
+   whichever plane it lands in — so whatever δ is absorbing in M72's fit is not
+   quantisation. I ruled the gain limb (P25) and **declined this one on a pre-registered
+   criterion I failed**: my PTC intercept ratio, 0.7849 ± 0.3468, sits within 1σ of both
+   0.5966 and 1.0 (P26). It needs an instrument with a trustworthy noise-floor intercept,
+   which mine is not (§12.2). **Unruled, and explicitly not mine.**
+10. **The fork P25 forces: fact 955 and equal per-plane read noise cannot both hold.**
+    Fact 955 says the B plane's 0.84× is an in-camera **digital scale before
+    quantisation**, which puts the entire analog chain upstream of it and forces
+    `f = 1`, hence `α_B/α_green = c² = 0.7567`. **M72 measures 0.8418.** Closing the gap
+    requires either that the scale acts **partway along the analog chain** (contradicting
+    fact 955's three tests) or that **B's input-referred read noise is 1.0548× green's**
+    in electrons — a possibility that has not previously been on the table and that would
+    partly explain why the B plane keeps behaving unlike a rescaled green (P23). **My
+    flat fields cannot separate the branches**; it needs the per-ISO dark series M72
+    holds, re-fitted with `RN_B/RN_green` free. **Unruled, and the second-most promising
+    lead I am handing on after P23** — to which it may well be the same lead.
 
 ---
 
@@ -1223,6 +1523,9 @@ python src\10-rb.py                 # per-plane kappa
 python src\11-regime-and-m61.py     # sec 8.3 regime, sec 8.4 M61 check (no new pixels)
 python src\12-ipc-tile-bias.py      # per-plane noise ACF and tile-size bias
 python src\13-b-correlation-kill.py # three kill tests on the B correlation (~6 min)
+# --- added after the orchestrator routed M72's evidence ---
+python src\14-correlated-floor.py   # sec 8.6.1 plant/stress/positive control (~4 min)
+python src\15-m72-gain-limb.py      # sec 8.6.2 M72 fact 32 cross-check (arithmetic only)
 ```
 
 Inputs are read-only: `D:\personal\macro\flat-fields` (484 ARW),
