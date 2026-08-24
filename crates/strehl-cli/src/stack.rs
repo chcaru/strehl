@@ -197,6 +197,8 @@ pub fn run(opts: &StackOptions) -> Result<()> {
     let camera = first.camera.clone();
     let iso = first.iso;
     let wb = first.wb_gains();
+    // Consumed only by the output path; see `Frame::xyz_to_cam_rgb`.
+    let xyz_to_cam = first.xyz_to_cam_rgb_with_source();
     let frame_bytes = first.allocated_bytes();
     drop(first);
 
@@ -336,7 +338,7 @@ pub fn run(opts: &StackOptions) -> Result<()> {
     eprintln!();
 
     let t_write = Instant::now();
-    write_outputs(&merged.selection, levels, wb, opts)?;
+    write_outputs(&merged.selection, levels, wb, xyz_to_cam.as_ref(), opts)?;
     eprintln!("write           : {:.3} s", t_write.elapsed().as_secs_f64());
 
     Ok(())
@@ -975,6 +977,7 @@ fn write_outputs(
     selection: &Selection,
     levels: Levels,
     wb: Option<[f32; 3]>,
+    xyz_to_cam: Option<&([[f32; 3]; 3], String)>,
     opts: &StackOptions,
 ) -> Result<()> {
     let geom = selection.geometry();
@@ -983,29 +986,82 @@ fn write_outputs(
     ensure!(range > 0.0, "white level is not above black level");
     let gains = wb.unwrap_or([1.0, 1.0, 1.0]);
 
-    let encode = |raw: f32, gain: f32| -> u16 {
-        let v = ((raw - levels.black).max(0.0) * gain / range).min(1.0);
-        let v = if opts.srgb { srgb_encode(v) } else { v };
-        (v * u16::MAX as f32 + 0.5) as u16
+    // As in `merge_cmd::write_merged`: the colour matrix rides with `--srgb`,
+    // and the default linear path stays byte-frozen for the corpus (M85).
+    let matrix = if opts.srgb {
+        xyz_to_cam.and_then(|(m, _)| strehl_core::color::camera_to_srgb(*m))
+    } else {
+        None
     };
+    if opts.srgb {
+        match (matrix, xyz_to_cam) {
+            (Some(_), Some((_, src))) => {
+                eprintln!(
+                    "colour          : camera RGB -> sRGB (BT.709 primaries, D65), from {src}"
+                );
+            }
+            _ => {
+                eprintln!(
+                    "colour          : no usable camera characterisation; emitting CAMERA-NATIVE RGB."
+                );
+            }
+        }
+    }
 
     let r = selection.plane(CfaPlane::R);
     let b = selection.plane(CfaPlane::B);
-    let mut rgb = vec![0u16; n * 3];
-    let (pixels, _) = rgb.as_chunks_mut::<3>();
-    for (i, px) in pixels.iter_mut().enumerate() {
-        px[0] = encode(r[i] as f32, gains[0]);
-        px[1] = encode(selection.green_mean(i), gains[1]);
-        px[2] = encode(b[i] as f32, gains[2]);
+
+    if let Some(m) = matrix {
+        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
+        let mut lin = vec![0.0f32; n * 3];
+        let (pixels, _) = lin.as_chunks_mut::<3>();
+        for (i, px) in pixels.iter_mut().enumerate() {
+            px[0] = norm(r[i] as f32, gains[0]);
+            px[1] = norm(selection.green_mean(i), gains[1]);
+            px[2] = norm(b[i] as f32, gains[2]);
+        }
+        let dev = image_out::Develop {
+            matrix: Some(m),
+            srgb: opts.srgb,
+        };
+        image_out::write_binned(&opts.out, geom.width, geom.height, &lin, &dev)?;
+        eprintln!(
+            "wrote           : {} ({} x {}, 16-bit RGB, {}, binned from one 2x2 quad per pixel -- NOT demosaiced)",
+            opts.out.display(),
+            geom.width,
+            geom.height,
+            dev.caveat()
+        );
+    } else {
+        // ------------------------------------------------------------------
+        // The measurement path. **Byte-frozen.** See the note on the same
+        // branch in `merge_cmd::write_merged`.
+        // ------------------------------------------------------------------
+        let encode = |raw: f32, gain: f32| -> u16 {
+            let v = ((raw - levels.black).max(0.0) * gain / range).min(1.0);
+            let v = if opts.srgb { srgb_encode(v) } else { v };
+            (v * u16::MAX as f32 + 0.5) as u16
+        };
+        let mut rgb = vec![0u16; n * 3];
+        let (pixels, _) = rgb.as_chunks_mut::<3>();
+        for (i, px) in pixels.iter_mut().enumerate() {
+            px[0] = encode(r[i] as f32, gains[0]);
+            px[1] = encode(selection.green_mean(i), gains[1]);
+            px[2] = encode(b[i] as f32, gains[2]);
+        }
+        image_out::write_rgb16(&opts.out, geom.width as u32, geom.height as u32, &rgb)?;
+        eprintln!(
+            "wrote           : {} ({} x {}, 16-bit RGB, {}, binned from one 2x2 quad per pixel -- NOT demosaiced)",
+            opts.out.display(),
+            geom.width,
+            geom.height,
+            if opts.srgb {
+                "camera-native RGB with an sRGB transfer curve"
+            } else {
+                "linear camera-native RGB"
+            }
+        );
     }
-    image_out::write_rgb16(&opts.out, geom.width as u32, geom.height as u32, &rgb)?;
-    eprintln!(
-        "wrote           : {} ({} x {}, 16-bit RGB, {}, binned from one 2x2 quad per pixel -- NOT demosaiced)",
-        opts.out.display(),
-        geom.width,
-        geom.height,
-        if opts.srgb { "sRGB transfer" } else { "linear" }
-    );
 
     if let Some(path) = &opts.index_map {
         ensure!(
@@ -1466,6 +1522,13 @@ mod tests {
             },
             iso: Some(100.0),
             wb_coeffs: [2.0, 1.0, 1.5, f32::NAN],
+            // No characterisation: these fixtures test the geometry and the
+            // merge, and the colour path has its own tests. An empty matrix is
+            // also the honest default -- it is what a body `rawler` does not
+            // know decodes to, and it keeps these tests on the byte-frozen
+            // camera-native path.
+            xyz_to_cam_rgbe: [[0.0; 3]; 4],
+            color_matrices: Vec::new(),
             camera: "synthetic".into(),
             path: PathBuf::from("synthetic"),
         }

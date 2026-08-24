@@ -10,8 +10,11 @@
 //!   pipeline stages consume it. A private per-stage estimate is the exact
 //!   mechanism behind the prior project's measured 2-5x noise defect.
 
+pub mod align;
 pub mod boxfilter;
 pub mod clip;
+pub mod color;
+pub mod demosaic;
 pub mod flat_ratio;
 pub mod focus;
 pub mod merge;

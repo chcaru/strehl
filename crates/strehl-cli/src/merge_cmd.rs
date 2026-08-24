@@ -67,7 +67,15 @@ pub struct MergeOptions {
     pub dir: PathBuf,
     pub out: Option<PathBuf>,
     pub limit: Option<usize>,
+    /// Apply the sRGB transfer curve **and** the camera's colour matrix.
+    /// For looking at, NOT for measuring.
     pub srgb: bool,
+    /// Emit at full sensor resolution, demosaiced, rather than binned 2x2.
+    ///
+    /// Interpolated output. Legitimate to look at and to measure *colour* on;
+    /// not legitimate to measure *resolution* on, because some of the detail
+    /// in it was inferred rather than recorded.
+    pub demosaic: bool,
     /// One or more gate thresholds, in units of the combined focus noise. Every
     /// one is folded in the same pass two.
     pub gates: Vec<f32>,
@@ -978,6 +986,10 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     let camera = first.camera.clone();
     let iso = first.iso;
     let wb = first.wb_gains();
+    // The camera's own characterisation, carried through the merge unused and
+    // consumed only by the output path. `None` for a body `rawler` has no
+    // entry for, which the writer reports rather than papers over.
+    let xyz_to_cam = first.xyz_to_cam_rgb_with_source();
     let frame_bytes = first.allocated_bytes();
     drop(first);
 
@@ -1301,7 +1313,15 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     }
 
     if let Some(path) = &opts.out {
-        write_merged(&p2.est[0], levels, wb, opts.srgb, path)?;
+        write_merged(
+            &p2.est[0],
+            levels,
+            wb,
+            xyz_to_cam.as_ref(),
+            opts.srgb,
+            opts.demosaic,
+            path,
+        )?;
     }
     Ok(())
 }
@@ -2417,7 +2437,9 @@ fn write_merged(
     est: &Estimator,
     levels: Levels,
     wb: Option<[f32; 3]>,
+    xyz_to_cam: Option<&([[f32; 3]; 3], String)>,
     srgb: bool,
+    demosaic: bool,
     path: &Path,
 ) -> Result<()> {
     let geom = est.geometry();
@@ -2426,6 +2448,125 @@ fn write_merged(
     ensure!(range > 0.0, "white level is not above black level");
     let gains = wb.unwrap_or([1.0, 1.0, 1.0]);
 
+    // The colour matrix rides with `--srgb`, and only with `--srgb`. Both are
+    // rendering decisions -- "for looking at, NOT for measuring" -- and keeping
+    // them on one switch is what leaves the default linear path byte-frozen for
+    // the corpus (M85). Without a characterisation there is no matrix and the
+    // output stays camera-native, which the report line below says out loud.
+    let matrix = if srgb {
+        xyz_to_cam.and_then(|(m, _)| strehl_core::color::camera_to_srgb(*m))
+    } else {
+        None
+    };
+    if srgb {
+        match (matrix, xyz_to_cam) {
+            (Some(_), Some((m, src))) => {
+                let neutral = strehl_core::color::neutral_response(*m);
+                eprintln!("colour          : camera RGB -> sRGB (BT.709 primaries, D65 white)");
+                eprintln!("                  characterisation: {src}");
+                eprintln!(
+                    "                  XYZ->cam rows: [{:.4} {:.4} {:.4}] [{:.4} {:.4} {:.4}] [{:.4} {:.4} {:.4}]",
+                    m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2]
+                );
+                eprintln!(
+                    "                  implied daylight WB R {:.4} B {:.4}, against as-shot R {:.4} B {:.4}",
+                    neutral[1] / neutral[0],
+                    neutral[1] / neutral[2],
+                    gains[0],
+                    gains[2]
+                );
+                eprintln!(
+                    "                  Order: black, as-shot WB, {}, matrix, clamp, sRGB curve.",
+                    if demosaic { "demosaic" } else { "2x2 bin" }
+                );
+            }
+            _ => {
+                eprintln!(
+                    "colour          : no usable camera characterisation; emitting CAMERA-NATIVE RGB."
+                );
+                eprintln!(
+                    "                  Expect a colour cast. This is not a render of what the sensor saw."
+                );
+            }
+        }
+    }
+    let dev = image_out::Develop { matrix, srgb };
+
+    if demosaic {
+        // Full resolution. The merge already estimates all four CFA sites of
+        // every quad independently -- `Estimator` carries four accumulators and
+        // reuses one focus decision across them -- so this is pure interleaving
+        // of data that was already there, not an inference. Nothing about the
+        // gate, the fold or the election changes.
+        let (mw, mh) = (geom.width * 2, geom.height * 2);
+        let mut mosaic = vec![0.0f32; mw * mh];
+        // Normalised but deliberately NOT clamped above: the demosaic and the
+        // matrix both need the headroom, and the clamp happens once, after the
+        // matrix, in `image_out`.
+        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
+        for py in 0..geom.height {
+            let (top, bot) = mosaic[py * 2 * mw..].split_at_mut(mw);
+            for px in 0..geom.width {
+                let i = py * geom.width + px;
+                // RGGB, matching `CfaPlane::rggb_at`: R G1 on the even row,
+                // G2 B on the odd one.
+                top[px * 2] = norm(est.value(CfaPlane::R, i), gains[0]);
+                top[px * 2 + 1] = norm(est.value(CfaPlane::G1, i), gains[1]);
+                bot[px * 2] = norm(est.value(CfaPlane::G2, i), gains[1]);
+                bot[px * 2 + 1] = norm(est.value(CfaPlane::B, i), gains[2]);
+            }
+        }
+        image_out::write_demosaiced(path, mw, mh, &mosaic, &dev)?;
+        eprintln!();
+        eprintln!(
+            "wrote           : {} ({mw} x {mh}, 16-bit RGB, {}, Malvar-He-Cutler demosaic)",
+            path.display(),
+            dev.caveat()
+        );
+        eprintln!("                  Full sensor resolution: every CFA site estimated, one focus");
+        eprintln!(
+            "                  decision per quad. Interpolated -- do not measure resolution on it."
+        );
+        return Ok(());
+    }
+
+    if let Some(m) = matrix {
+        // Binned, with colour. Same 2x2 binning as below; the matrix is the
+        // only difference, and the values are left unclamped until after it.
+        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
+        let mut lin = vec![0.0f32; n * 3];
+        let (pixels, _) = lin.as_chunks_mut::<3>();
+        for (i, px) in pixels.iter_mut().enumerate() {
+            px[0] = norm(est.value(CfaPlane::R, i), gains[0]);
+            px[1] = norm(est.green_mean(i), gains[1]);
+            px[2] = norm(est.value(CfaPlane::B, i), gains[2]);
+        }
+        let dev = image_out::Develop {
+            matrix: Some(m),
+            srgb,
+        };
+        image_out::write_binned(path, geom.width, geom.height, &lin, &dev)?;
+        eprintln!();
+        eprintln!(
+            "wrote           : {} ({} x {}, 16-bit RGB, {}, binned from one 2x2 quad per pixel)",
+            path.display(),
+            geom.width,
+            geom.height,
+            dev.caveat()
+        );
+        return Ok(());
+    }
+
+    // ------------------------------------------------------------------
+    // The measurement path. **Byte-frozen.**
+    //
+    // Every quality number in the corpus was measured on the file this branch
+    // writes. The arithmetic below is exactly what shipped before M85 --
+    // clamp before the curve, no matrix, no demosaic -- and
+    // `docs/research/M85-output-correctness.md` carries the SHA-256 proof that
+    // it still emits the identical bytes. Do not refactor it into the helpers
+    // above for tidiness; the tidiness is not worth re-measuring the corpus.
+    // ------------------------------------------------------------------
     let encode = |raw: f32, gain: f32| -> u16 {
         let v = ((raw - levels.black).max(0.0) * gain / range).min(1.0);
         let v = if srgb { srgb_encode(v) } else { v };
@@ -2446,7 +2587,11 @@ fn write_merged(
         path.display(),
         geom.width,
         geom.height,
-        if srgb { "sRGB transfer" } else { "linear" }
+        if srgb {
+            "camera-native RGB with an sRGB transfer curve"
+        } else {
+            "linear camera-native RGB"
+        }
     );
     Ok(())
 }

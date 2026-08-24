@@ -61,11 +61,17 @@ enum Command {
     ///
     /// It does not yet align, deconvolve, reject outliers, or model occlusion.
     ///
-    /// Output is BINNED, NOT DEMOSAICED: each output pixel is one real sensor
-    /// quad, R = R, G = (G1+G2)/2, B = B, at half the sensor's linear
-    /// resolution. Output is LINEAR and will look very dark in an ordinary
-    /// viewer. That is correct: it is what measurement needs. Pass --srgb for
-    /// something to look at, and do not measure that file.
+    /// By DEFAULT the output is BINNED, LINEAR, CAMERA-NATIVE RGB: each output
+    /// pixel is one real sensor quad, R = R, G = (G1+G2)/2, B = B, at half the
+    /// sensor's linear resolution, with white balance but NO colour matrix. It
+    /// will look dark and grey-green in an ordinary viewer. That is correct: it
+    /// is what measurement needs, and it is the file every number in this
+    /// project's corpus was measured on. It is byte-frozen.
+    ///
+    /// Pass --srgb for something to LOOK AT: it applies the camera's colour
+    /// matrix and the sRGB transfer curve. Pass --demosaic for full sensor
+    /// resolution. Do not measure either file. See
+    /// docs/research/M85-output-correctness.md.
     #[command(alias = "merge")]
     Stack {
         /// Directory containing RAW files.
@@ -77,9 +83,17 @@ enum Command {
         /// Stack at most this many frames, in filename order.
         #[arg(short, long)]
         limit: Option<usize>,
-        /// Apply the sRGB transfer curve. For looking at, NOT for measuring.
+        /// Render for viewing: camera colour matrix (to sRGB/BT.709 primaries,
+        /// D65) then the sRGB transfer curve. For looking at, NOT for
+        /// measuring. Changes what pre-M85 --srgb emitted.
         #[arg(long)]
         srgb: bool,
+        /// Emit at full sensor resolution with a Malvar-He-Cutler demosaic
+        /// instead of binning each 2x2 quad to one pixel. Doubles linear
+        /// resolution; the extra samples are real, the colour at each is
+        /// interpolated. Do not measure resolution on it.
+        #[arg(long)]
+        demosaic: bool,
         /// The one knob: how much averaging, in units of the focus noise.
         ///
         /// A frame is averaged in where its regularised focus response is within
@@ -287,6 +301,7 @@ fn main() -> Result<()> {
             out,
             limit,
             srgb,
+            demosaic,
             gates,
             flat_roi,
             detail_roi,
@@ -299,6 +314,7 @@ fn main() -> Result<()> {
             out,
             limit,
             srgb,
+            demosaic,
             gates,
             flat_roi,
             detail_roi,
