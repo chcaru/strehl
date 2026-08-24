@@ -25,14 +25,22 @@ lot. They are argued in §2, §3, §6 and §7.
   field is not the one carrying the data; `color_matrix` is. A pipeline reading
   only the obvious field would have emitted camera-native RGB forever.
 - **No colour-accuracy claim is possible from this corpus**, and none is made.
-- **The optical cutoff is not where the arithmetic put it.** Real contrast is
-  measurable to ≈74 cy/mm, not 86.3 — which bounds the corpus's dominant
-  uncertainty at `p ≥ 0.82` and excludes the bottom quarter of its interval.
+- **The pipeline's own artifact floor is costing real detail.** The merged
+  spectrum flattens at ≈74 cy/mm, but the measured optics still deliver
+  **19–34% MTF** there and nonzero MTF all the way to Nyquist. The plateau is a
+  floor, not the optics running out — **74 → 97.7 cy/mm is being lost to the
+  pipeline**, most likely to per-quad merge seams (ARGUED, §7).
+- **A falsifier I was given has been withdrawn, at source.** The
+  "any energy above 86.3 cy/mm is artifact" test assumed `p = 1`, which M5's
+  measured `B ≤ 3.06` and M84b's `m = 2.7198` exclude. `f_c ≥ 106 cy/mm`, above
+  Nyquist, so there is no dead band inside the sensor's range and the test
+  would have condemned genuine detail. Removed; the surviving invariant is
+  synthetic and assumes no optics at all.
 
 **The resolution gain is stated as a recovered band, never as megapixels**: the
-binned path had Nyquist 48.8 cy/mm and the optics deliver measurable contrast
-to ≈74 cy/mm, so full-resolution output recovers ~0.6 of an octave of real
-detail with MTF falling throughout it.
+binned path had Nyquist 48.8 cy/mm and real optical content runs to the sensor
+Nyquist of 97.7, so full-resolution output opens **a full octave**, of which
+48.8 → ~74 cy/mm is currently above the pipeline's own artifact floor.
 
 ---
 
@@ -329,17 +337,50 @@ correct behaviour: box replication is broadband. The control was wrong, not the
 result. Recorded because rule 20 is about controls that can fail, and this one
 failed by being unsound.
 
-## 7. MEASURED — the optical cutoff, and what the spectrum actually says
+## 7. MEASURED — the recoverable band, and a falsifier withdrawn
 
-The orchestrator supplied a diffraction budget (m ≈ 2.762, N marked 5.6 wide
-open with the TC, p = 1) predicting `f_c = 86.3 cy/mm` against a sensor Nyquist
-of 97.7 and a binned Nyquist of 48.8. **I re-derived all of it independently
-and it reproduces exactly**: N_eff 21.067, Airy diameter 28.27 µm = 5.52 sensor
-px, f_c 86.30, 88.4% of Nyquist, and the binned→cutoff gap is 0.82 octaves.
+### WITHDRAWN: the super-cutoff acceptance test
 
-Above a true cutoff the diffraction MTF is *identically zero*, so the spectrum
-there is artifact and noise only. That makes the cutoff **measurable from the
-merged output itself**, at the cost of one FFT and no new capture.
+M85 was first handed a diffraction budget (m ≈ 2.762, N marked 5.6, **p = 1**)
+predicting `f_c = 86.3 cy/mm` against a sensor Nyquist of 97.7, and a falsifier
+built on it: *any energy above 86.3 cy/mm is artifact, because the diffraction
+MTF is identically zero above cutoff*. I re-derived that arithmetic
+independently and it reproduces exactly — but **the premise `p = 1` is excluded
+by measurement, so the falsifier is void and is withdrawn.**
+
+Verified at source, not taken on report:
+
+- `M5-diffraction-measured.md:32` — "the bellows factor is ~3, not 1", measured
+  from the cutoff directly, with **no `p` and no `m` as inputs**.
+- `M5-diffraction-measured.md:143` — M5's own governing rule, and it sharpens
+  the conclusion: *"because the crossing rule is biased low, every `f_sig` is a
+  **lower** bound on `f_c`, and every `B_max` is an **upper** bound on `B`."*
+- `M84b-…:49` — `m = 2.7198 ± 0.0051 (stat) ± 0.3 % (syst)`, which with M5's
+  `B ∈ [2.41, 3.06]` gives `p ∈ [1.31, 1.94]` and **excludes `p = 1`**.
+
+Because `B ≤ 3.06` is an *upper* bound, `f_c ≥ 106.1 cy/mm` is a **lower**
+bound. The cutoff is above the sensor Nyquist under every value in the measured
+interval, so:
+
+| quantity | as first briefed (p = 1) | corrected (measured B) |
+|---|---:|---:|
+| `N_eff` | 21.07 | **13.50 – 17.14** |
+| `f_c` | 86.3 cy/mm | **≥ 106.1 cy/mm** (106–135) |
+| position vs Nyquist 97.7 | below | **above** |
+| MTF at Nyquist | "exactly zero" | **0.027 – 0.166** |
+
+(I re-derived the MTF column from `(2/π)(arccos s − s√(1−s²))` rather than
+accepting it: 0.1654 at s = 97.66/134.7, 0.0264 at s = 97.66/106.1.)
+
+**There is therefore no diffraction-imposed dead band anywhere inside the
+sensor's range.** The withdrawn test would have condemned genuine optical
+detail between 86.3 and 97.7 cy/mm as demosaic artifact — precisely the content
+this milestone exists to recover. Any "failure" it flagged in that band is
+void, and §7's former "Result 3 — the falsifier fires" is deleted.
+
+Two honest caveats carried forward: `m` rests on M84b's tick measurement, and
+M88 is measuring the cutoff directly to adjudicate 87 against 106–135. Neither
+affects the conclusions below, which need only `f_c > 97.7`.
 
 ### Method and its traps
 
@@ -352,48 +393,54 @@ of six unclipped 512×512 ROIs. Control: the binned output upsampled bicubic
 2×, which **cannot contain anything real above 48.8 cy/mm**, so whatever it
 shows there is the interpolation's own signature.
 
-### Result 1 — the prize is real, and here is its size
+### Result 1 — the prize is a full octave, and it is real
+
+Real optical content now runs all the way to the sampling limit, so the
+recoverable band is **48.8 → 97.7 cy/mm — a full octave**, not the 0.82-octave
+partial band first briefed.
 
 | band | full-res | bicubic control | ratio |
 |---|---:|---:|---:|
 | 10 – 48.8 cy/mm | 1.79e-2 | 1.57e-2 | 1.14× |
-| **48.8 – 86.3 cy/mm** | **7.24e-5** | 1.34e-5 | **5.4×** |
+| **48.8 – 97.7 cy/mm (the prize)** | **7.89e-5** | 1.34e-5 | **5.9×** |
 
-Median over the six ROIs: **3.70×**, range 2.84–5.41×. The control validates
+Median over the six ROIs: **4.07×**, range 3.05–5.89×. The control validates
 the method — its energy above 48.8 collapses by nine orders of magnitude
 (2.1e-6 at 49 cy/mm → 3.3e-10 above 86). **Directive (a) is confirmed
-quantitatively: the binned path was discarding real optical detail across
-0.82 octaves.**
+quantitatively: the binned path was discarding real optical detail across a
+full octave.**
 
-### Result 2 — the measured cutoff is NOT 86.3, and that beats the arithmetic
+### Result 2 — the correction turns my own measurement into a bigger finding
 
 The spectrum falls monotonically and then **flattens into a plateau at a median
 of 74.3 cy/mm** (range 69.7–80.9 over six ROIs). A band-limited optical image
-keeps falling toward its cutoff; a flat plateau is a floor, not optics. So real
-optical contrast is detectable up to **≈74 cy/mm** and is masked above that.
+keeps falling toward its cutoff; a flat plateau is a floor, not optics.
 
-This is a lower bound on `f_c`, and it **constrains the corpus's flagged
-dominant uncertainty**. Detecting real contrast at `f_obs` requires
-`N_eff ≤ 1/(λ·f_obs)`, hence `p ≥ m/(N_eff_max/N − 1)`:
+Under the briefed budget this looked unremarkable — at `f_c = 86.3` the
+diffraction MTF at 74.3 cy/mm is only **0.061**, so the signal was nearly dead
+anyway and a plateau was roughly what optics predicted. **Under the corrected
+budget it is not remotely dead:**
 
-| f_obs | N_eff max | implied p |
-|---:|---:|---:|
-| 69.7 (most conservative ROI) | 26.09 | **p ≥ 0.755** |
-| 74.3 (median) | 24.47 | **p ≥ 0.820** |
-| 80.9 (best ROI) | 22.47 | **p ≥ 0.917** |
+| frequency | MTF at f_c = 106.1 | MTF at f_c = 134.7 | in the output? |
+|---:|---:|---:|---|
+| 48.8 (binned Nyquist) | 0.436 | 0.549 | recovered |
+| 74.3 (measured plateau) | **0.188** | **0.335** | last usable |
+| 97.7 (sensor Nyquist) | 0.027 | 0.166 | **buried in the floor** |
 
-**The bottom quarter of the flagged ±38% interval on `p` is excluded by
-measurement.** `p = 0.62` would put `f_c` at 59.5 cy/mm, and there is
-unambiguous falling optical signal well above that. No upper bound follows —
-aberrations wide open behind a 2× teleconverter can kill contrast before the
-diffraction limit, so signal dying at 74 does not prove `f_c = 74`.
+**The lens is still delivering 19–34% contrast where my output goes flat.** The
+plateau is therefore not the optics running out — it is an artifact floor
+swallowing detail the optics genuinely supply. Measured: the band **74.3 – 97.7
+cy/mm holds 1.68e-5 of energy at an SNR of 26 against sensor noise**, but sits
+on a floor that scales with local detail rather than with brightness. The
+correction converts a curiosity into a quantified loss, and makes the follow-up
+worth someone's milestone.
 
-### Result 3 — the falsifier fires, and the reason is not the demosaic
+My earlier `p ≥ 0.82` (from treating 74.3 as a lower bound on `f_c`) is
+**consistent with M84b's `p ∈ [1.31, 1.94]`, merely far weaker**, and is
+superseded — it also used the superseded `m = 2.762`. It never contradicted the
+correction. It is retained below only as `P16`, marked superseded.
 
-Energy above 86.3 cy/mm is **6.5e-6, about 25 000× the bicubic control**. By
-the letter of the proposed falsifier, that is a fail. But the falsifier as
-stated **cannot distinguish three causes**, and the distinction is the whole
-question:
+### Where the floor comes from — attribution, unchanged by the retraction
 
 1. **Sensor noise** — ruled out. The plateau in detailed ROIs sits **25–40×
    above the flat-region noise floor of the same frame**, while photon-noise
@@ -407,13 +454,16 @@ question:
    **ARGUED, not isolated by this milestone.** It is a real follow-up and it
    belongs to whoever owns `merge.rs`.
 
-### The permanent invariant, in the codebase
+### The permanent invariant — already the replacement falsifier
 
-`it_does_not_manufacture_energy_above_the_scenes_band_limit` isolates the
-demosaic on a synthetic scene band-limited **by construction** below the
-red/blue lattice Nyquist (`N/4`), so nothing is aliased by the mosaic and a
-perfect demosaic would return the scene exactly. Probes sit where the period-2
-CFA carrier lands. MEASURED:
+Directive 3's first suggestion — *"generate a target with a known band limit
+below Nyquist, mosaic it, run your full pipeline, and confirm the output shows
+no significant energy above the planted limit"* — is **exactly what
+`it_does_not_manufacture_energy_above_the_scenes_band_limit` already does**. It
+plants its own limit below the red/blue lattice Nyquist (`N/4`) and **makes no
+optical assumption whatsoever**, so the retraction does not touch it. Only its
+motivating doc comment, which cited the withdrawn dead-band premise, was
+rewritten. The test body is unchanged. MEASURED:
 
 | arm | super-band amplitude |
 |---|---:|
@@ -422,7 +472,7 @@ CFA carrier lands. MEASURED:
 | suppression | **61×** |
 
 MHC leaves 4.1% of one scene component, 0.25% of full scale. **The demosaic is
-not the main source of the real image's super-cutoff floor.**
+not the main source of the real image's artifact floor.**
 
 **A fixture that could not fire, caught by its own guard.** The first version
 used near-neutral channel gains (1.00/0.95/1.05). The control measured 0.00075
@@ -431,21 +481,29 @@ was no carrier to suppress and the bar above it would have been vacuous. The
 rule-36 guard failed the test rather than letting it pass silently. Gains are
 now 1.0/0.8/1.2.
 
-### One structural fact worth recording
+Directive 3's second suggestion — checking for an aliasing signature near
+Nyquist on periodic detail — is **not** done here and is honestly a gap: with
+`f_c` above Nyquist, content between 97.7 and ~135 cy/mm folds back, and this
+milestone did not test for it. Recorded in §13.
+
+### One structural fact worth recording, now more important
 
 On an RGGB grid, red and blue are sampled at pitch `2d` — their Nyquist is
 **48.8 cy/mm**, exactly the binned Nyquist. Green sits on a quincunx and
-reaches 97.7 on-axis. **The entire prize band 48.8–86.3 cy/mm is therefore a
-band where green is adequately sampled and red and blue are not.** Luminance
-detail recovered there is real; chroma detail there is *inferred* from green by
-the colour-difference rule. That is a correct and honest description of what
+reaches 97.7 on-axis. **The entire prize band 48.8–97.7 cy/mm is therefore a
+band where green is adequately sampled and red and blue are not** — and the
+correction widens that band from 0.82 octaves to a full one. Luminance detail
+recovered there is real; chroma detail there is *inferred* from green by the
+colour-difference rule. That is a correct and honest description of what
 full-resolution output does and does not give you.
 
 ### Wording, per directive (b)
 
 No megapixel claim is made anywhere in this report or in the CLI's output. The
-honest statement is a recovered band — **48.8 → ~74 cy/mm measured, ~86 cy/mm
-predicted ceiling** — with MTF falling throughout it.
+honest statement is a recovered band — **48.8 → 97.7 cy/mm available, of which
+48.8 → ~74 cy/mm is measurably above the pipeline's own artifact floor** — with
+MTF falling throughout it. "33 MP of real detail" remains false; here it is
+false because the sampling limit binds, not because the optics do.
 
 ## 8. The colour claim that is NOT being made
 
@@ -531,11 +589,12 @@ to the pre-plant control. **Byte-planted and byte-restored.**
 - `claw-0-side-by-side.png`, `eye-0-side-by-side.png` — before / colour /
   colour + resolution, captioned so they cannot be mixed up later.
 - `full-1-before.png`, `full-2-after.png` — whole frame.
-- **`spectrum-optical-cutoff.png`** — the §7 acceptance test: full-resolution
+- **`spectrum-optical-cutoff.png`** — the §7 evidence: full-resolution
   vs the bicubic control vs the noise floor, with the binned Nyquist, the
-  predicted cutoff and the measured plateau onset marked. The control's
+  sensor Nyquist and the measured floor crossing marked. The control's
   nine-order collapse above 48.8 cy/mm is what makes the blue curve's
-  continuation meaningful.
+  continuation meaningful. (Filename kept for stability; it no longer plots a
+  predicted cutoff, which was withdrawn — see §7.)
 
 ## 11. Verification performed
 
@@ -547,7 +606,7 @@ to the pre-plant control. **Byte-planted and byte-restored.**
 | `cargo clippy -p strehl-core -p strehl-raw --all-targets -- -D warnings` | clean |
 | `cargo clippy -p strehl-cli --bins --tests -- -D warnings` | clean |
 | `cargo fmt --check` | clean **on every file M85 owns** |
-| binned linear SHA-256, re-proved after the §7 work | `41974F2A…F699`, unchanged |
+| binned linear SHA-256, re-proved after the §7 work and again after the §7 retraction | `41974F2A…F699`, 49 449 626 bytes, unchanged — **four independent proofs** |
 
 **Two failures that are not M85's**, reported rather than touched, per the
 ownership rule: `crates/strehl-cli/examples/m86-align.rs` has `rustfmt` diffs
@@ -603,12 +662,12 @@ numbers. **SYNTHESIS.md was not edited.**
 | **P11** | Malvar-He-Cutler beats bilinear by **+5.54 dB** on a luminance-dominant synthetic scene (reproducing the paper's ~5.5 dB claim on a different fixture) but is **5.29 dB worse** than bilinear when the three channels carry independent mid-frequency content. The advantage **inverts**, it does not merely shrink. | MEASURED |
 | **P12** | The linear binned TIFF is byte-identical before and after M85: SHA-256 `41974F2A…F699`, 49 449 626 bytes. The corpus's ~1138 facts remain valid. | MEASURED |
 | **P13** | The rendered background on `bee-3-cpl` carries an ≈8% cyan cast (R/G 0.9159, B/G 1.0665) because the camera-native background is already 5% off neutral and the matrix amplifies residual chroma ≈1.6×. Cause undetermined among illuminant mismatch, CPL transmission, and a non-neutral card. **No colour-accuracy claim is made.** | MEASURED (effect) + UNVERIFIED (cause) |
-| **P14** | In the band 48.8–86.3 cy/mm the full-resolution output holds **median 3.70×** (range 2.84–5.41×) the green power of the binned output upsampled bicubic 2×, which can hold nothing real there. The binned path was discarding real optical detail across **0.82 octaves**. | MEASURED |
-| **P15** | The merged green spectrum falls monotonically and flattens into a floor at **median 74.3 cy/mm** (range 69.7–80.9 over six ROIs). Real optical contrast is detectable to ≈74 cy/mm, not to the predicted 86.3. | MEASURED |
-| **P16** | Detecting falling optical signal at 74.3 cy/mm requires `N_eff ≤ 24.47`, hence **pupil magnification `p ≥ 0.82`** at m = 2.762, N = 5.6. This excludes the bottom ~26% of the corpus's flagged ±38% interval on `p`. No upper bound follows. | DERIVED from MEASURED |
-| **P17** | The super-cutoff floor in detailed ROIs sits **25–40× above the flat-region noise floor of the same frame**, while photon-noise scaling predicts 0.87×. It scales with local detail, not brightness, so it is **not sensor noise**. | MEASURED |
-| **P18** | On a synthetic scene band-limited below the red/blue lattice Nyquist, Malvar-He-Cutler leaves **0.002463** of super-band amplitude against the raw mosaic's **0.1500** — **61× suppression**, 0.25% of full scale. The demosaic is not the main source of P17's floor; the merge's per-quad selection seams are the remaining candidate. | MEASURED (P18a) + ARGUED (cause) |
-| **P19** | On an RGGB grid red and blue have Nyquist 48.8 cy/mm — identical to the binned Nyquist — while green's quincunx reaches 97.7 on-axis. The whole prize band 48.8–86.3 cy/mm is therefore one where **green is adequately sampled and red and blue are not**: luminance detail recovered there is real, chroma detail is inferred. | DERIVED |
+| **P14** | In the band 48.8–97.7 cy/mm the full-resolution output holds **median 4.07×** (range 3.05–5.89×) the green power of the binned output upsampled bicubic 2×, which can hold nothing real there. The binned path was discarding real optical detail across **a full octave**. | MEASURED |
+| **P15** | The merged green spectrum falls monotonically and flattens into a floor at **median 74.3 cy/mm** (range 69.7–80.9 over six ROIs). This is a **floor crossing, not a cutoff** — the measured optics deliver **MTF 0.188–0.335** at 74.3 cy/mm and nonzero MTF to Nyquist, so **74.3 → 97.7 cy/mm of real detail is being lost to the pipeline's own artifact floor**. | MEASURED (crossing) + DERIVED (the loss) |
+| **P16** | **SUPERSEDED, retained for the record.** M85 derived `p ≥ 0.82` from the 74.3 cy/mm crossing at `m = 2.762`. M84b's `p ∈ [1.31, 1.94]` (from M5's measured `B`) supersedes it, and `m = 2.762` is itself superseded by `m = 2.7198 ± 0.0051`. M85's bound was **consistent, merely far weaker**; it never contradicted M84b. | SUPERSEDED |
+| **P17** | The artifact floor in detailed ROIs sits **25–40× above the flat-region noise floor of the same frame**, while photon-noise scaling predicts 0.87×. It scales with local detail, not brightness, so it is **not sensor noise**. | MEASURED |
+| **P18** | On a synthetic scene band-limited **by construction** below the red/blue lattice Nyquist — an invariant that assumes nothing about the optics — Malvar-He-Cutler leaves **0.002463** of super-band amplitude against the raw mosaic's **0.1500**: **61× suppression**, 0.25% of full scale. The demosaic is not the main source of P17's floor; the merge's per-quad selection seams are the remaining candidate. | MEASURED (P18a) + ARGUED (cause) |
+| **P19** | On an RGGB grid red and blue have Nyquist 48.8 cy/mm — identical to the binned Nyquist — while green's quincunx reaches 97.7 on-axis. The whole prize band 48.8–97.7 cy/mm is therefore one where **green is adequately sampled and red and blue are not**: luminance detail recovered there is real, chroma detail is inferred. The measured correction to `f_c` widens this band from 0.82 octaves to a full one. | DERIVED |
 | **P20** | `git commit -- <paths>` scopes a commit to *files*, not to *lines*: it commits each named path's full working-tree content, so a concurrent agent's uncommitted edit to a **shared registration file** lands in your commit. MEASURED: `e59f1b0` carries M86's `pub mod align;`. Rule 42 is necessary and, for shared files like `lib.rs` and `main.rs`, **not sufficient**. | MEASURED |
 
 ## 13. What M85 did not do
@@ -624,10 +683,18 @@ numbers. **SYNTHESIS.md was not edited.**
 - **No highlight reconstruction.** The matrix's negative off-diagonals clip
   saturated colours to gamut, and §3 says where. Recovering them needs
   per-channel clipping logic that M26 mapped and nobody has built.
-- **The super-cutoff floor was not attributed.** §7 rules out sensor noise and
+- **The artifact floor was not attributed.** §7 rules out sensor noise and
   largely exonerates the demosaic (61× carrier suppression), leaving the
   merge's per-quad selection seams as the standing candidate. Isolating it
-  needs `merge.rs`, which M85 does not own and deliberately did not touch.
+  needs `merge.rs`, which M85 does not own and deliberately did not touch. The
+  corrected optical budget raises the stakes: this floor is now known to be
+  eating real detail from ~74 to 97.7 cy/mm, not merely sitting above a dead
+  band.
+- **No aliasing check near Nyquist.** With `f_c ≥ 106 cy/mm` the cutoff is
+  *above* the sampling limit, so content between 97.7 and ~135 cy/mm folds
+  back. Directive 3 named this as the real residual risk and M85 did not test
+  for it: it needs a subject with fine periodic detail, and `bee-3-cpl` has
+  none. **This is the honest gap in §7.**
 - **The analysis scripts live in scratch**, at `C:\dev\strehl-out\M85-work\`
   (`spectrum.py`, `spectrum_plot.py`, `resolution.py`, `resolution2.py`,
   `verify.py`, `crops2.py`), not in `experiments/`. M85's ownership explicitly

@@ -675,31 +675,33 @@ mod tests {
         );
     }
 
-    /// **The optical-cutoff invariant: a demosaic must not manufacture energy
-    /// above the scene's band limit.**
+    /// **A demosaic must not manufacture energy above the scene's band limit.**
     ///
-    /// M85's dispatch supplied a piece of ground truth that cost no capture:
-    /// a lens has a hard diffraction cutoff `f_c = 1/(lambda*N_eff)`, above
-    /// which the MTF is *identically zero*, not merely small. So any energy in
-    /// a rendered image above `f_c` was put there by the pipeline, not by the
-    /// optics. That is a falsifier a "sharper-looking" demosaic cannot dodge.
+    /// M85 was originally handed a different rationale for this test: that the
+    /// lens has a diffraction cutoff *inside* the sensor's range, above which
+    /// the MTF is identically zero, so any energy there is manufactured. **That
+    /// premise was withdrawn and is false for this rig.** M5 measured the
+    /// bellows factor `B <= 3.06` directly from the cutoff and M84b measured
+    /// `m = 2.7198 +/- 0.0051`; together they put `f_c >= 106 cy/mm`, above the
+    /// sensor Nyquist of 97.7. There is no diffraction-imposed dead band inside
+    /// the sensor band, so a super-cutoff test on a real capture would condemn
+    /// genuine detail. Do not reintroduce one.
     ///
-    /// Testing it on a real capture cannot separate three causes -- sensor
-    /// noise, merge seams, and the demosaic -- so this test isolates the
-    /// demosaic. The scene is band-limited **by construction** to well below
-    /// every channel's sampling limit, so a perfect demosaic would return it
-    /// exactly and *all* super-band energy is manufactured.
+    /// What survives is the *constructed* form, which never needed the optics:
+    /// band-limit a synthetic scene **by construction**, then check the
+    /// pipeline does not invent energy above the planted limit. The bound is
+    /// planted, so it is known exactly and cannot be argued with.
     ///
-    /// Lattice geometry sets the bar. On an RGGB grid of pitch `d`, red and
+    /// Lattice geometry sets the limit. On an RGGB grid of pitch `d`, red and
     /// blue are sampled at `2d`, so their Nyquist is **half** the full grid's;
     /// green sits on a quincunx and reaches the full grid's Nyquist on-axis.
     /// The scene here stays below the *red/blue* limit (`N/4` cycles), which is
-    /// the strictest, so nothing is aliased by the mosaic itself.
+    /// the strictest, so nothing is aliased by the mosaic itself and a perfect
+    /// demosaic would return the scene exactly.
     ///
-    /// The probe frequencies are not arbitrary: they are exactly where the CFA
-    /// pattern's own period-2 modulation folds each scene component, i.e.
-    /// `(N/2 +/- kx, ky)`. That is where a demosaic that has failed to suppress
-    /// the mosaic carrier will show up.
+    /// The probe frequencies are not arbitrary: they are the period-2 CFA
+    /// carrier at Nyquist and its sidebands around each scene component. That
+    /// is where a demosaic which has failed to suppress the mosaic will show.
     ///
     /// Rule 20 -- the test ships with a **positive control that must fire**:
     /// the un-demosaiced mosaic, which is the same data with the carrier left
