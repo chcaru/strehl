@@ -1,0 +1,42 @@
+==============================================================================
+M72 step 6 -- upstream fraction of every covariance series
+==============================================================================
+
+  var(ISO) = alpha G^2 + delta.  Upstream fraction = alpha G(100)^2
+  over the total at base ISO.  Green VARIANCE reference = 0.6933.
+
+        series  |Delta|   rho@100  rho@2000   ratio  upstream   group
+          R-G1        1  -0.00190  -0.00055   0.287   -0.1543    zero
+          R-G2        1  +0.00883  +0.01084   1.228    0.9655    flat
+          G2-B        1  +0.05992  +0.05006   0.835    0.6007    flat
+          G1-B        1  +0.06452  +0.05304   0.822    0.5787    flat
+         G1-G2    sqrt2  +0.08261  +0.02799   0.339    0.2488   steep
+           R-B    sqrt2  +0.00964  +0.00345   0.358    0.4852   steep
+         R row        2  +0.07561  +0.02139   0.283    0.1999   steep
+         R col        2  +0.06474  +0.01697   0.262    0.1645   steep
+        G1 row        2  +0.08207  +0.02810   0.342    0.2530   steep
+        G1 col        2  +0.06419  +0.01739   0.271    0.1714   steep
+        G2 row        2  +0.08192  +0.02793   0.341    0.2487   steep
+        G2 col        2  +0.06387  +0.01712   0.268    0.1671   steep
+         B row        2  +0.16242  +0.05290   0.326    0.2250   steep
+         B col        2  +0.08904  +0.03227   0.362    0.2428   steep
+
+  flat  pairs  upstream 0.5787 to 0.9655   n=3
+  steep series upstream 0.1645 to 0.4852   n=10
+  green VARIANCE upstream 0.6933
+
+  P1  every flat pair above every steep series: 0.5787 > 0.4852  PASS
+  P2  Spearman(ISO ratio, upstream fraction) over 13 series = +0.9396  PASS
+
+==============================================================================
+BOTH PRE-REGISTERED PREDICTIONS MET.
+The two ISO signatures are an upstream/downstream split, and it
+is ordered by DISTANCE: the orthogonal nearest neighbours at
+|Delta|=1 carry a covariance generated in the electron domain,
+upstream of the conversion gain; everything at |Delta| >= sqrt(2),
+including BOTH diagonals and every within-plane pair, carries a
+covariance generated downstream of it.
+
+This does NOT name a circuit.  It says where in the chain the
+noise is generated, which is the most the instrument supports.
+==============================================================================
