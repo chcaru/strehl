@@ -468,3 +468,46 @@ serve a cached catmull-rom warp map under a lanczos3 command line.
 
 **What would make me not ship it:** B13-null failing, or B13-red staying green.
 Either one means I cannot tell what the flag does.
+
+---
+
+## B15 -- why does 0.5060 % survive? The merge-dilution hypothesis (REGISTERED BEFORE RUNNING)
+
+Registered 2026-08-24 15:5x, before the script existed and before any frame was
+read. Read-only on `D:\personal\macro`.
+
+**Hypothesis H-merge.** My guard fires on `v_c >= ceil_c`, an equality against
+the container ceiling. But `write_merged` clips the **merged** value, and the
+merge averages ~55 frames per pixel. A pixel whose green is pinned at 16383 in
+*some* frames and unpinned in others averages to something **strictly below**
+the ceiling. The guard therefore never fires on it, while green is still
+suppressed relative to red and blue -- so it stays magenta.
+
+If true, the residual is not a tuning failure. It is the guard asking a
+per-frame question of a post-merge value.
+
+**Sharp, falsifiable prediction.** Let `f` = the fraction of frames in which a
+given sensel's green is pinned at `CONTAINER_MAX_DN`, computed over pixels
+pinned in at least one frame.
+
+| outcome | reading |
+|---|---|
+| a substantial share of pinned pixels have `0 < f < 1` | H-merge **supported** |
+| **>= 95 % of pinned pixels have `f == 1`** | H-merge **DEAD** -- averaging cannot be diluting anything, and ORCH's other three hypotheses take over |
+
+**Bonus quantitative check, stated in advance.** If H-merge is the whole story,
+the share of pinned pixels with `f == 1` should be **comparable to the ~72-75 %
+of the defect the clip actually cleared**, and the `0 < f < 1` share comparable
+to the ~25 % residual. I am recording this before looking. A large mismatch
+means H-merge is *a* mechanism but not the *only* one, which is a different and
+weaker claim than the one I am testing.
+
+**What this cannot show.** It cannot prove the residual pixels are the same
+pixels; frames are warped before merging, so a raw sensel and an output pixel
+are not in perfect correspondence. This is a population-level test and I will
+report it as one.
+
+**Instrument check (discipline 763 applied to myself).** Before believing any
+null here, the script must show it can see pinning at all: it reports the count
+of pixels with `f == 1`, and if that count is **zero** the instrument is not
+finding saturation and no conclusion may be drawn in either direction.
