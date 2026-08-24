@@ -1877,3 +1877,68 @@ CFA mosaic -- that recovery *is* the algorithm under test.
   of their discovery order.
 - Fact 1415: demosaic co-siting and the resampler are bounded small and are *not*
   the fringing you can see.
+
+## 25. A deliberately clipped, strongly saturated subject -- REQUESTED by M109, five minutes, and it decides a choice I refused to guess
+
+### Why you are being asked
+
+M109 fixed the magenta blown highlights in the shipped renderer (fact 1455:
+`strehl stack` was putting **2.0017 %** of the frame into magenta, with green
+pinned **0.10** below red and blue where a blown highlight has to be neutral).
+
+It built two versions of the fix. The conservative one shipped. The aggressive
+one clears substantially more magenta -- **0.0944 % down to 0.0260 %** -- but
+touches **6.56 %** of the frame instead of a fraction of a percent.
+
+It refused to ship the aggressive one, and its reason is the reason for this
+request: on `marker` the aggressive variant changed **zero** strongly-coloured
+pixels, and on `lavendar-cpl` it changed **zero pixels at all**. That looks like
+a clean bill of health and it is not one. **Your existing captures contain almost
+no saturated colour that is also clipped**, so they cannot express the risk, and
+a test set that cannot express a risk will always report it as absent.
+
+The aggressive variant's danger is specific: it would desaturate genuinely
+saturated highlights -- a red so bright it clips is indistinguishable, to the
+trigger, from a blown neutral. Nothing you have shot can tell those apart.
+
+### What to shoot
+
+Something **strongly coloured** and **deliberately overexposed**, so that the
+coloured region itself clips rather than merely being bright.
+
+- A saturated red, orange or magenta subject fills a good part of the frame.
+  Flowers work; so does anything printed in a strong process colour. The
+  Breakthrough X4 CPL on a glossy subject is a good way to get a genuinely
+  saturated specular.
+- Shoot a short exposure bracket of the **same static subject**: correct
+  exposure, then roughly +1, +2 and +3 stops. The over-exposed frames are the
+  point -- you are being asked for clipping on purpose, which is the opposite of
+  section 22's advice, and only for this test.
+- **Single frames are fine. This is not a focus bracket.** Nothing needs to be
+  in focus except the coloured area, and no rail is involved.
+- Repeat once for a **blown neutral** -- a white or grey subject taken well past
+  clipping, ideally in the same session and light.
+
+The pair is what matters: a clipped saturated colour and a clipped neutral, shot
+under the same conditions. The whole question is whether the fix can tell them
+apart.
+
+### What it unblocks
+
+- A decision between M109's conservative and aggressive highlight triggers, made
+  on evidence rather than on which number looks better.
+- A falsification set for **any** future highlight-reconstruction work, which is
+  currently unbuildable from this corpus.
+- The colour-management plan more generally, which will meet the same question
+  the first time it touches gamut.
+
+### Related
+
+- Fact 1455: the defect, the mechanism, and why the clamp was in the wrong place.
+- Fact 1456: auto-exposure amplifies the defect **2.8x** rather than causing it,
+  so exposure has to be pinned before any severity number means anything.
+- Discipline 739: ship the conservative option when the test set cannot falsify
+  the aggressive one, and register the capture that would decide it -- this
+  section is that register.
+- Section 22 asks you to expose to the right and *avoid* clipping. This section
+  deliberately contradicts it, for these frames only.
