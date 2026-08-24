@@ -300,7 +300,9 @@ impl RobustElection {
     /// fired. A large number means the gate is rejecting wholesale and its
     /// output is mostly the ungated election anyway.
     pub fn fallbacks(&self) -> usize {
-        (0..self.pixels).filter(|&i| self.idx[i] == NO_FRAME).count()
+        (0..self.pixels)
+            .filter(|&i| self.idx[i] == NO_FRAME)
+            .count()
     }
 }
 
@@ -369,7 +371,11 @@ mod tests {
         // Frame 1 is sharpest but is 20 sigma discrepant: a moved edge.
         let r = vec![vec![4.0], vec![9.0], vec![7.0]];
         let z = vec![vec![0.0], vec![20.0], vec![0.0]];
-        assert_eq!(run(Arm::Ungated, 1, &r, &z), vec![1], "shipped elects motion");
+        assert_eq!(
+            run(Arm::Ungated, 1, &r, &z),
+            vec![1],
+            "shipped elects motion"
+        );
         assert_eq!(run(Arm::Hard, 1, &r, &z), vec![2]);
         assert_eq!(run(Arm::Soft, 1, &r, &z), vec![2]);
     }
@@ -400,7 +406,7 @@ mod tests {
 
     #[test]
     fn every_frame_ineligible_falls_back_to_the_ungated_winner() {
-        let r = vec![vec![4.0], vec![9.0], vec![7.0]];
+        let r = [vec![4.0], vec![9.0], vec![7.0]];
         let z = vec![vec![99.0], vec![99.0], vec![99.0]];
         let mut e = RobustElection::new(1, Arm::Hard);
         for (f, (rf, zf)) in r.iter().zip(&z).enumerate() {
@@ -442,7 +448,7 @@ mod tests {
         // Frame 1 wins under Soft with score 0.25 * 100 = 25, but the admission
         // band in pass two must be centred on 100, not 25, or the band width
         // changes with the weight.
-        let r = vec![vec![1.0], vec![100.0], vec![1.0]];
+        let r = [vec![1.0], vec![100.0], vec![1.0]];
         let z = vec![vec![0.0], vec![6.0], vec![0.0]];
         let mut e = RobustElection::new(1, Arm::Soft);
         for (f, (rf, zf)) in r.iter().zip(&z).enumerate() {
@@ -455,7 +461,7 @@ mod tests {
 
     #[test]
     fn winner_response_falls_back_with_the_winner() {
-        let r = vec![vec![4.0], vec![9.0], vec![7.0]];
+        let r = [vec![4.0], vec![9.0], vec![7.0]];
         let z = vec![vec![99.0], vec![99.0], vec![99.0]];
         let mut e = RobustElection::new(1, Arm::Hard);
         for (f, (rf, zf)) in r.iter().zip(&z).enumerate() {
@@ -526,7 +532,10 @@ mod tests {
         let mut e = RobustElection::new(3, Arm::Soft);
         assert!(e.fold(0, &[1.0, 2.0], &[0.0, 0.0, 0.0]).is_err());
         assert!(e.fold(0, &[1.0, 2.0, 3.0], &[0.0]).is_err());
-        assert!(e.fold(NO_FRAME, &[1.0, 2.0, 3.0], &[0.0, 0.0, 0.0]).is_err());
+        assert!(
+            e.fold(NO_FRAME, &[1.0, 2.0, 3.0], &[0.0, 0.0, 0.0])
+                .is_err()
+        );
         let other = RobustElection::new(4, Arm::Soft);
         assert!(e.absorb(&other).is_err());
         let wrong_arm = RobustElection::new(3, Arm::Hard);

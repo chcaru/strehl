@@ -92,7 +92,7 @@ fn main() -> Result<()> {
     let full = write_prefix(&src, src.len(), "full")?;
     let full_bad = report("C-full copy", &full, want);
     let empty = write_prefix(&src, 0, "empty")?;
-    let empty_ok = matches!(WarpMap::load(&empty), Ok(_));
+    let empty_ok = WarpMap::load(&empty).is_ok();
     println!(
         "  C-empty        must fail -> {}",
         if empty_ok {
