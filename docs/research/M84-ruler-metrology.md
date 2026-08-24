@@ -3,6 +3,16 @@
 **Status:** complete negative result. The pre-registration is commit `f6ee015`.
 M84 modified only `experiments/M84-ruler-metrology/` and this report.
 
+## Independence disclosure
+
+**MEASURED.** M84 committed its complete methods, artefacts, report, and
+negative verdict as `23e35c3` before receiving any sibling result. After that
+commit, an unsolicited collision notice relayed a sibling claimant's control
+interpretation, anonymous-spacing diagnostics, lens-ceiling pointer, and
+projective-geometry / validity-mask cautions. M84 did not open any sibling
+file, and none of its methods, numbers, uncertainties, or conclusions was
+tuned to that message. The only post-message change is this disclosure.
+
 > ## VERDICT
 >
 > **MEASURED — THIS CAPTURE CANNOT SERVE AS PHYSICAL GROUND TRUTH AT ANY
