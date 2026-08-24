@@ -1790,6 +1790,7 @@ namespaced `M87`.
 | P45 | **§15.4's post-alignment residual, and the 91.7% prediction built on it, are WITHDRAWN.** Both derived from `E*` = 13.58 px, the aligner's held-out corner error. Fact 1295 measures that `E*` is **structurally blind to a common multiplicative gain error**, which is the error present; the true residual is **150.2 plane px**, ~12x my estimate. | A milestone's own prediction arm was invalidated by a sibling's instrument audit. **The conclusion did not depend on it** — see P46 — but the report said it did, which overstated the evidence. Withdrawn in place rather than quietly repaired. | MEASURED (M97, fact 1295) |
 | P46 | **§15's negative survives the withdrawal, restated without any residual estimate.** The solve applies **70.97 px p-p** of in-ROI drift at `ROI_LEG` centre (sidecar, §15.4). The drift ladder (§15.5, single-depth plant, no occlusion) reads ISO **0.06448** at just **30 px p-p** — **94.8%** of the real bee halo's 0.06805. So alignment removed **2.37x more drift than the amount that manufactures 95% of the entire observed halo**, and the halo moved **6.6%** with overlapping CIs. | The refutation needs only the drift *applied* and the ladder, both measured directly. It is now **independent of `E*`, of the residual, and of the true drift span** — the three quantities that turned out to be wrong or unknowable tonight. Stronger than the original form. | DERIVED from MEASURED inputs |
 | P47 | **The orchestrator's `bee3-zoomnull` is registered as an M87 control, and M87 had already run its twin.** §15.2 arm **Uw** — FOV- and resampler-matched, registration discarded — reads ISO **0.06844** against unaligned **0.06805** and aligned **0.06356**. The orchestrator's independent visual check of `bee-3-ALIGNED.tif` vs `bee3-zoomnull.tif` at 100% finds the silhouette halo present and unchanged in both. | **Two constructions of the same null, by two agents, agree**: discarding registration does not move the halo, and resampling alone does not move the metric (0.06844 vs 0.06805). This is the placebo that separates a geometry fix from an occlusion fix, and the halo fails it as a geometry defect. | MEASURED |
+| P48 | **C-ZOOMNULL passes: the shipped correction is an occlusion fix, not a geometry fix.** With registration fully discarded (`STREHL_ALIGN=0`, gate 2) the correction cuts the halo metric **82.8%** (0.06878 -> 0.01186), against **72.9%** on the aligned render — **ratio 1.135**, inside the ±33% band. | Satisfies the orchestrator's decisive placebo: a fix whose benefit depended on alignment would be repairing geometry. This one does not. **Separately corroborates §15 at a second gate**: alignment alone moves the halo 0.06878 -> 0.06406, a **6.9%** removal, against §15.2's **6.6%** measured at gate 0 on different renders. | MEASURED |
 
 ### Capture request
 
@@ -1926,10 +1927,24 @@ registration discarded is now a **named M87 control**:
 > A fix whose benefit depends strongly on alignment is repairing geometry, not
 > occlusion, and must be rejected as an occlusion fix.
 
-**The shipped correction has not been run through C-ZOOMNULL.** It is cheap
-(one extra merge at `STREHL_ALIGN=0` plus one metric evaluation) and it is the
-first thing the next milestone should do. Recorded as an open item rather than
-claimed.
+**RUN, and it PASSES.** `src/51-zoomnull.py`, two fresh gate-2 merges of
+`bee-3-cpl` with `STREHL_ALIGN=0` (and `STREHL_WARPMAP` set, so `merge_cmd.rs`
+returns no alignment **without solving**, and nothing is cached into the owner's
+read-only library — fact 1296):
+
+| arm | subject | ISO before | ISO after | change |
+|---|---|---|---|---|
+| aligned (as shipped) | 45.31% | 0.06406 | 0.01734 | **−72.9%** |
+| **registration discarded** | 42.19% | 0.06878 | 0.01186 | **−82.8%** |
+
+**Ratio 1.135**, inside the ±33% band. The correction's benefit **does not
+depend on registration**, so by the orchestrator's own criterion it is repairing
+occlusion and not geometry.
+
+**A free corroboration of §15 fell out of this.** These are fresh renders at
+**gate 2**, where §15.2's A/B was at **gate 0**. Alignment moves the halo from
+0.06878 to 0.06406, a **6.9%** removal — against §15.2's independently measured
+**6.6%**. Two render pairs, two gate settings, one conclusion.
 
 ### 20.4 Discipline 604, against my own metric
 
