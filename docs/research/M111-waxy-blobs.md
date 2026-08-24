@@ -5,21 +5,20 @@ before any M111 measurement; §2 onward was written after.**
 Author: M111. Not self-verified — see AGENTS.md rule 12.
 
 Dispatched to find the mechanism behind the defect the owner can see, and to
-prove it with controls. The defect and its first instrument are ORCH's blob
-measurement (`experiments/ORCH-drift-check/blob_probe.py`), which was unfolded
-at the time of writing; the nearest folded fact is **1438**, the artefact audit
-whose single-frame control killed 3 of its own 5 findings.
+prove it with controls. The defect and its first instrument are SYNTHESIS fact
+**1444** (ORCH, `experiments/ORCH-drift-check/blob_probe.py`).
 
-*Correction, made after §1 was committed:* the pre-registration cited that
-measurement as "fact 1444". No such fact exists — SYNTHESIS runs to 1441. The
-citation was mine and it was wrong; it is corrected here rather than quietly
-deleted.
+*Note on that citation:* §1 cited 1444 before it was folded — SYNTHESIS ran to
+1441 when the pre-registration was committed. It has since been folded and the
+number resolves. I flag this rather than leave it silent, because a citation
+that happens to resolve later is not the same thing as one that resolved when it
+was written.
 
 Prior work searched before writing this (rule 40): `M54-clip-mask-measured.md`,
 `M65-election-gate-measured.md`, `M77-gate-sweep.md`, `M81-estimation-merge.md`,
 `M82-normalised-gate.md`, `M87-occlusion.md`, `M93-election-gate.md`,
 `M96-election-margin.md`, `M97-warped-merge.md`, `M110-track-jitter.md`, plus
-SYNTHESIS facts 19, 84, 86, 212, 242, 683, 1036, 1103–1107, 1128, 1438.
+SYNTHESIS facts 19, 84, 86, 212, 242, 683, 1036, 1103–1107, 1128, 1438, 1444.
 No committed report asks *why* the merge produces flat hard-edged patches; M110
 is the nearest and asks about alignment jitter at election boundaries.
 
@@ -221,7 +220,7 @@ grid (output coordinates halved, one focus decision per CFA quad):
 
 | plane | dtype | what |
 | --- | --- | --- |
-| `best_index.npy` | `u16` | pass one's elected frame index. Already available as `STREHL_DUMP_ELECTION`; duplicated here so all three planes come from one switch. |
+| `best_index.npy` | `u16` | pass one's elected frame index. Already available as `STREHL_DUMP_ELECTION` (fact 1445, `b27904a`); duplicated here so all three planes come from one switch. |
 | `best_focus.npy` | `f32` | the winner's **regularised response value**. This is the plane that decides whether an election was made on signal or on noise, and nothing before this milestone could see it. |
 | `n_eff_gate*.npy` | `u16` | pass two's per-pixel admitted-frame count, per gate. Fact 1141 says a whole-image mean cannot locate anything; this is the same quantity that can. |
 
@@ -572,21 +571,23 @@ Numbered `P1…` per rule 28; ORCH assigns corpus numbers.
 * **P3 — MEASURED.** `REGULARISER_RADIUS` sets the plateaus' scale and does not create them. Sweeping 0 → 32 moves the plateau equivalent diameter **54.0 → 86.7 px** and the seam density 0.1789 → 0.0598, while the artifact amplitude is flat at **1.213 / 1.239 / 1.203**. At radius 0 — the box removed — the plateaus are still 54.0 px across, because `focus.rs`'s `WINDOW_RADIUS = 13` already smooths the field over 27×27 before the argmax. The merge regulariser contributes **1.12×** of the plateau diameter at its shipped radius. Fact 84 is not implicated.
 * **P4 — MEASURED.** In the elected flat population the winner's response is continuous across the seams it draws: median `|Δ best_focus|` on seam is **0.04023**, **0.467×** the gate's own admission tolerance, while in textured regions it is **0.18823** = **2.187×** tolerance. The merge discards a frame that is within half a tolerance of the winner and paints a hard edge where it changes its mind. `experiments/M111-waxy-blobs/seam_continuity.py`.
 * **P5 — MEASURED.** Opening the gate removes the defect and the photograph together. At `--gate 100000` the flat population that elects falls **14.77% → 0.00%** and the artifact vanishes, but plateau-interior sd falls **153.5 → 74.2** and the subject's texture is gone. At `--gate 0.25`, **97.30%** of flat pixels elect and the seams are at their hardest (1.264).
-* **P6 — MEASURED.** ORCH's `blobA` is not a defect. Its interior gradient ratio is **1.477** in the shipped render against **1.468** in the single-frame control, and the merge elects frames 178–220 there — 28 distinct winners of 299, `n_eff` mean 1.77. It is a real in-focus edge that the stacker correctly sharpened.
-* **P7 — MEASURED.** ORCH's headline 0.094-vs-0.761 decomposes into interior **0.67×** and exterior **5.36×**: most of the ratio-of-ratios is the merge sharpening the surroundings, which is the stacker working, not the merge flattening the interior. Its boundary-hardness number is mask-circular — the mask is the arm under test's own bright quartile, and taking the mask from an independent arm moves the shipped arm's boundary p90 from **1384.04 to 115.42**.
-* **P8 — MEASURED.** A coincidence between an image feature and an election boundary is not evidence that the election drew it. At `--gate 100000` the election has zero influence on the output and election boundaries still score **1.686** against a 1.048 null, because seams sit where responses cross and that is correlated with scene structure.
+* **P6 — MEASURED.** Fact 1444's `blobA` is not a defect. Its interior gradient ratio is **1.477** in the shipped render against **1.468** in the single-frame control, and the merge elects frames 178–220 there — 28 distinct winners of 299, `n_eff` mean 1.77. It is a real in-focus edge that the stacker correctly sharpened. Fact 1444 should be **SCOPED to `blobB`**.
+* **P7 — MEASURED.** Fact 1444's headline 0.094-vs-0.761 decomposes into interior **0.67×** and exterior **5.36×**: most of the ratio-of-ratios is the merge sharpening the surroundings, which is the stacker working, not the merge flattening the interior. Its boundary-hardness number is mask-circular — the mask is the arm under test's own bright quartile, and taking the mask from an independent arm moves the shipped arm's boundary p90 from **1384.04 to 115.42**. Fact 1444's defect is real and independently confirmed here at 97σ; its two numbers are not the evidence for it.
+* **P8 — MEASURED.** A coincidence between an image feature and an election boundary is not evidence that the election drew it. At `--gate 100000` the election has zero influence on the output and election boundaries still score **1.686** against a 1.048 null, because seams sit where responses cross and that is correlated with scene structure. This bears directly on **fact 1445's** second column, which argues that a joint statistic between the render and the election map is immune to fact 1438's single-frame control "because a single frame has no election map at all". That is true and insufficient: the gate-100000 arm *has* an election map, is not a single frame, and is decoupled from the output, and it still produces the coincidence. Fact 1445's shipped instrument and its 23.2× structure factor stand; the immunity claim needs the extra clause.
 * **P9 — MEASURED.** Pooling the visually flat population hides the defect completely: the whole flat population (40.18% of the plane, 9×9 local sd < 300 DN) scores **1.061** against a 0.999 ± 0.071 null. It is two populations — 85% averaging at median `n_eff` 151, 14.77% electing — and only the second carries the artifact.
 * **P10 — MEASURED.** `STREHL_DUMP_MERGE_STATE` is byte-inert: dump-on and dump-off renders are SHA-256 identical in both a pinned `a7bd05a` build and the live tree, and the pinned build reproduces ORCH's `marker-HEAD-8f46f04.tif` exactly at `DB7BAAD2FDC5BF74309B132D0DDEB1A681609037312E76923C2B22703BA1DDDC`.
 * **P11 — MEASURED.** The defect is stack-dependent in the way the mechanism predicts. `marker` has **18.18%** of its plane both visually flat and in the 0.7–5.0 response band; `lavendar` has **2.78%**, and `lavendar`'s detector reads 0.922 (−4.5σ). An in-situ 16 DN plant moves `lavendar` by only +2.8σ against `marker`'s +9.4σ, so this is consistent with absence but does not establish it.
 * **P12 — ARGUED.** A soft admission weight `exp(−½((best − focus)/tol)²)` would blend seams where the frames are tied and preserve the winner where it is genuinely ahead, using the 4.7× separation P4 measures. It keeps `FOCUS_NOISE_SD`'s unit — which M81's texture-qualified correction did not — at the cost of re-solving `DEFAULT_GATE` for the new kernel shape and re-measuring fact 19's 0.534×. Unbuilt and unpriced.
+* **P18 — MEASURED.** `HEAD` did not compile between `e4796e5` and `fc4cbf6`. `e4796e5` ("M97o: drop refused frames instead of aborting the render") committed another agent's `merge_cmd.rs` **together with three uncommitted edits of mine that were live in the shared tree**, including `pub(crate) mod dump;` and two call sites, while `dump.rs` itself was untracked and therefore did not go with them. `git cat-file -e HEAD:crates/strehl-cli/src/merge_cmd/dump.rs` exits **128**; a `git archive HEAD` build fails on the missing module and succeeds at **exit 0** with `dump.rs` committed. **A path-scoped commit is path-scoped, not authorship-scoped** — naming a file you did not fully write commits whatever is in it. Repaired at `fc4cbf6`. A second, independent breakage is live in the tree right now: an uncommitted `main.rs` references `n_eff_map` on `Command::Stack` and `MergeOptions`, which do not have it; that one is not at HEAD and is not mine.
 
 **Disciplines**
 
-* **P13.** When a defect is defined by a mask and the mask is a percentile of the arm under test, the statistic separates the arms by construction. Re-score with the mask taken from a third arm before attributing anything. ORCH's boundary number moved 12× under this check.
-* **P14.** A coincidence between an artefact and an internal state plane needs an arm in which that state plane **cannot** affect the output. Translating the plane is not enough — it destroys correspondence but not the state plane's own correlation with the scene. M111's gate-100000 arm killed its own headline coincidence statistic; the difference image replaced it.
+* **P13.** When a defect is defined by a mask and the mask is a percentile of the arm under test, the statistic separates the arms by construction. Re-score with the mask taken from a third arm before attributing anything. Fact 1444's boundary number moved 12× under this check.
+* **P14.** A coincidence between an artefact and an internal state plane needs an arm in which that state plane **cannot** affect the output. Translating or shuffling the plane is not enough — those destroy correspondence but not the state plane's own correlation with the scene, and "no unstacked frame has this plane" is not a substitute either (fact 1445). M111's gate-100000 arm killed its own headline coincidence statistic; the difference image replaced it.
 * **P15.** Before pooling a population defined by an image property, check whether the merge treated it as one population. M111's flat population is 85% averaged and 15% elected and the pooled test is null at 0.87σ while the split test is 97σ.
 * **P16.** A planted-mutation control tests the restore as well as the sabotage. M111's sabotage left a file on disk that its own assertion depended on, so the restored tree was red for a reason unrelated to the restore. Assert the exact expected code on **both** legs and make the assertion independent of filesystem residue.
 * **P17.** An env-var debug export that would move output bytes belongs in a patch beside the experiment, not in the repository. M111's `STREHL_M111_REG_RADIUS` earned its result and shipped as `experiments/M111-waxy-blobs/reg_radius.patch`; the byte-inert state dump shipped as code.
+* **P19.** In a shared tree, commit a new module and its `mod` line in the **same** commit, and check `git log -S '<the mod line>'` before assuming your edit is still uncommitted. M111's `mod dump;` was swept into another milestone's path-scoped commit and left HEAD un-buildable for six commits, which no agent noticed because everyone was building a working tree that still had the file.
 
 ---
 
