@@ -1,4 +1,4 @@
-"""Downscale M94's rendered TIFFs to PNG previews for visual inspection.
+"""Downscale M96's rendered TIFFs to PNG previews for visual inspection.
 
 The instrument writes full-plane and 1:1-crop TIFFs; this only makes them
 viewable. It reads from C:\\dev\\strehl-out (write-allowed) and writes back
@@ -10,7 +10,7 @@ import sys
 
 from PIL import Image
 
-ROOT = pathlib.Path(r"C:\dev\strehl-out\M94-election-margin")
+ROOT = pathlib.Path(r"C:\dev\strehl-out\M96-election-margin")
 OUT = ROOT / "preview"
 OUT.mkdir(parents=True, exist_ok=True)
 

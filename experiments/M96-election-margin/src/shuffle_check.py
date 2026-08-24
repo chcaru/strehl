@@ -1,4 +1,4 @@
-"""What permutations do M94's two shuffle streams actually produce?
+"""What permutations do M96's two shuffle streams actually produce?
 
 Replicates the instrument's SplitMix64 + Fisher-Yates exactly, in Python, from
 the seeds the binary uses, and asks whether the two arms of the paired null are

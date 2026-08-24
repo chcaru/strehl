@@ -1,13 +1,13 @@
-"""Collect M94's corpus runs into the tables the report quotes.
+"""Collect M96's corpus runs into the tables the report quotes.
 
-Every number in `docs/research/M94-election-margin.md` that is not a raw console
+Every number in `docs/research/M96-election-margin.md` that is not a raw console
 line comes from here, so the report cannot quote a figure no code printed.
 """
 
 import pathlib
 import re
 
-OUT = pathlib.Path("experiments/M94-election-margin/out")
+OUT = pathlib.Path("experiments/M96-election-margin/out")
 
 STACKS = ["109MSDCF", "119MSDCF", "112MSDCF", "foam", "coffee-bean",
           "wrapped-text-1", "bee-3-cpl"]

@@ -1,8 +1,8 @@
-//! M94 — how decisively does the focus election win?
+//! M96 — how decisively does the focus election win?
 //!
 //! Not a product path. This is the instrument for
-//! `docs/research/M94-election-margin.md`, pre-registered at
-//! `experiments/M94-election-margin/PREREGISTRATION.md`.
+//! `docs/research/M96-election-margin.md`, pre-registered at
+//! `experiments/M96-election-margin/PREREGISTRATION.md`.
 //!
 //! It is a **second implementation of the election**, written against the public
 //! `strehl-core` API without editing `merge.rs` — the file is contended, and
@@ -16,8 +16,8 @@
 //! measures that.
 //!
 //! ```text
-//! cargo run --release -p strehl-cli --example m94-election-margin -- <DIR> [flags]
-//! cargo run --release -p strehl-cli --example m94-election-margin -- <DIR> --plant 1.0
+//! cargo run --release -p strehl-cli --example m96-election-margin -- <DIR> [flags]
+//! cargo run --release -p strehl-cli --example m96-election-margin -- <DIR> --plant 1.0
 //! ```
 //!
 //! **Reads only.** It never writes to a stack directory. Renders go where
@@ -654,7 +654,7 @@ fn parse() -> Result<Args> {
     let mut a = Args {
         dir: None,
         limit: None,
-        out: PathBuf::from(r"C:\dev\strehl-out\M94-election-margin"),
+        out: PathBuf::from(r"C:\dev\strehl-out\M96-election-margin"),
         plant: None,
         plant_frames: 60,
         plant_side: 512,
@@ -720,7 +720,7 @@ fn main() -> Result<()> {
     let dir = args
         .dir
         .clone()
-        .context("usage: m94-election-margin <DIR> [--plant DELTA] [--limit N] [--render] ...")?;
+        .context("usage: m96-election-margin <DIR> [--plant DELTA] [--limit N] [--render] ...")?;
 
     let label = if args.tag.is_empty() {
         dir.file_name()
@@ -730,7 +730,7 @@ fn main() -> Result<()> {
         args.tag.clone()
     };
 
-    println!("=== M94 election margin =========================================");
+    println!("=== M96 election margin =========================================");
     println!("stack           : {}", dir.display());
     println!("label           : {label}");
 

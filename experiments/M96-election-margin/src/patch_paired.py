@@ -6,7 +6,7 @@ itself reproducible (AGENTS.md rule 12).
 
 import pathlib
 
-P = pathlib.Path("crates/strehl-cli/examples/m94-election-margin.rs")
+P = pathlib.Path("crates/strehl-cli/examples/m96-election-margin.rs")
 s = P.read_text(encoding="utf-8")
 
 OLD1 = """        let mut rng = Rng::new(args.seeds[0] ^ 0xA5A5_A5A5);

@@ -14,7 +14,7 @@ import json
 import pathlib
 import re
 
-OUT = pathlib.Path("experiments/M94-election-margin/out")
+OUT = pathlib.Path("experiments/M96-election-margin/out")
 FOCUS_NOISE_SD = 0.015214
 
 STACKS = [
@@ -66,7 +66,7 @@ print("The permuted arm is the power control: the same estimator on the same pix
 # Cross-check the constant is what the instrument says it is.
 js = OUT.parent
 found = None
-for cand in pathlib.Path("C:/dev/strehl-out/M94-election-margin").glob("*/summary.json"):
+for cand in pathlib.Path("C:/dev/strehl-out/M96-election-margin").glob("*/summary.json"):
     d = json.loads(cand.read_text(encoding="utf-8"))
     if "focus_noise_sd" in d:
         found = (cand.name, d["focus_noise_sd"])

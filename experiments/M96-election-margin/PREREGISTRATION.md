@@ -1,6 +1,6 @@
-# M94 — pre-registration: how decisively does the focus election win?
+# M96 — pre-registration: how decisively does the focus election win?
 
-**Written and committed before any M94 measurement ran.** Everything measured
+**Written and committed before any M96 measurement ran.** Everything measured
 under this milestone is scored against the bars below. Where a bar is added or
 changed later it will say so, in place, with the reason and the commit.
 
@@ -201,13 +201,13 @@ Stacks: `109MSDCF` (22), `119MSDCF` (33), `112MSDCF` (79), `coffee-bean` (105),
 (`bee-3-cpl`, the stack M85 rendered fact 1196 on). Reduced ladders are
 permitted on the deep stacks for cost; any reduction is stated in the report.
 
-Renders (deliverable 3) go to `C:\dev\strehl-out\M94-election-margin\` only.
+Renders (deliverable 3) go to `C:\dev\strehl-out\M96-election-margin\` only.
 `C:\dev\macro`, `D:\macro-dark-frames` and `D:\personal\macro` are read-only.
 
-Files owned: `crates/strehl-cli/examples/m94-election-margin.rs`,
+Files owned: `crates/strehl-cli/examples/m96-election-margin.rs`,
 `crates/strehl-cli/examples/m60-disagreement.rs` (task 1 only),
-`crates/strehl-cli/examples/m91-photometry.rs`, `docs/research/M94-*.md`,
-`experiments/M94-election-margin/`. `merge.rs`, `align.rs`, `image_out.rs`,
+`crates/strehl-cli/examples/m91-photometry.rs`, `docs/research/M96-*.md`,
+`experiments/M96-election-margin/`. `merge.rs`, `align.rs`, `image_out.rs`,
 `color.rs`, `demosaic.rs`, `m86-align.rs`, `SYNTHESIS.md`, `AGENTS.md` and
 `docs/captures-needed.md` are **not** mine; any change to them is delivered as a
 verbatim patch in the report.

@@ -9,7 +9,7 @@ flattens the through-focus peak continuously.
 import pathlib
 import re
 
-OUT = pathlib.Path("experiments/M94-election-margin/out")
+OUT = pathlib.Path("experiments/M96-election-margin/out")
 
 FILES = [
     ("1.0", "c2-plant-synth-d1.0.txt"),

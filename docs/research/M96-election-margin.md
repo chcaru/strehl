@@ -1,13 +1,21 @@
-# M94 — The focus election is decisive, not a coin flip
+# M96 — The focus election is decisive, not a coin flip
 
 > **NOT INDEPENDENTLY VERIFIED.** Same author as the measurements. Rule 12.
 >
-> Pre-registration: `experiments/M94-election-margin/PREREGISTRATION.md`, committed
+> Pre-registration: `experiments/M96-election-margin/PREREGISTRATION.md`, committed
 > at `cf2c5bd` — **before any Task 2 measurement ran**.
-> Instrument: `crates/strehl-cli/examples/m94-election-margin.rs`.
-> Raw output: `experiments/M94-election-margin/out/`.
-> Renders: `C:\dev\strehl-out\M94-election-margin\`.
+> Instrument: `crates/strehl-cli/examples/m96-election-margin.rs`.
+> Raw output: `experiments/M96-election-margin/out/`.
+> Renders: `C:\dev\strehl-out\M96-election-margin\`.
 > Task 1's fix: `crates/strehl-cli/examples/m60-disagreement.rs`, committed at `cf2c5bd`.
+>
+> **Renumbered M94 → M96 mid-session**, after the measurements were taken. All
+> filenames were renamed with `git mv`. **The raw logs under `out/` were left
+> byte-identical and still print the original `M94` label and output path** — they
+> are the provenance of every number here, and rewriting them would have made them
+> no longer the output the instrument printed. Renderer output moved to
+> `C:\dev\strehl-out\M96-election-margin\`. Renumber script:
+> `experiments/M96-election-margin/src/renumber.py`.
 
 ---
 
@@ -27,6 +35,33 @@ gate from the other side: the combination stage is not choosing badly, and it is
 not averaging badly either. The cause remains upstream, and the two live
 candidates are the ones already measured — uncorrected drift (fact 1177) and
 motion winning the election on merit (facts 1186–1190).
+
+### The answer to the question M96 was actually commissioned for
+
+The orchestrator asked which of two branches my data supports. **It supports the
+second, and not marginally.**
+
+> **The margin is large, the election is well-determined, and M93's targeted
+> frame-rejection gate is exactly the right shape.**
+>
+> The rejected branch was: *if the winner routinely beats the runner-up by less
+> than the noise, the election is substantially arbitrary and removing
+> contaminated frames will not make it decisive.* That branch is **falsified** on
+> every corpus stack. The election is already decisive **among the frames it is
+> given**; it is not a coin flip that a gate would be powerless to improve.
+>
+> **Why this licenses M93 specifically.** A decisive argmax means the response
+> surface has a real peak that the election reliably finds. So when a
+> motion-contaminated frame wins (fact 1189: 4.78% of `foam`'s output pixels), it
+> wins because contamination **raised its response above a genuine peak** — not
+> because the peak was flat and the choice was a toss-up. Removing that frame
+> therefore hands the election back to a well-determined competition, and the
+> runner-up it falls back to is a real winner rather than another arbitrary pick.
+> **That is the precondition M93's gate needs, and it holds.**
+>
+> This is a *precondition*, not a benefit measurement. It does not predict how
+> much M93's gate will improve the image; M93 measured that itself (−25.25% on
+> `lead-1-cpl`, −24.46% on `foam`). It says the gate is not operating on noise.
 
 **Three things I got wrong and am reporting as wrong:**
 
@@ -59,6 +94,7 @@ motion winning the election on merit (facts 1186–1190).
 | Pixels with a **disconnected** competitive set at the shipped gate, `bee-3-cpl` | **25.247%**, mean gap **29.12 frames**, `rho` p90 = **243** of 299 |
 | Elected-index speckle, real vs i.i.d. null | **0.0033%–0.4639%** vs **13.06%–85.69%** — but see retirement (2) above |
 | `sigma_R_hat` (analytic null, no fitted constant) / shipped `FOCUS_NOISE_SD` | **1.047× to 1.973×** on all 7 stacks |
+| **Does M93's frame-rejection gate have a well-determined election to work with?** | **Yes.** See §1. |
 
 ---
 
@@ -66,7 +102,7 @@ motion winning the election on merit (facts 1186–1190).
 
 Searched `docs/research/`, `docs/`, `crates/` for `margin`, `runner-up`, `top-2`,
 `argmax`, `winner`, `speckle`, `index map`, `coherence`, `election`, `churn`.
-Five hits, one of them a live sibling.
+Six hits, one of them a live sibling I was told about only after measuring.
 
 | Where | What it already had | Why it did not answer this |
 | --- | --- | --- |
@@ -74,19 +110,71 @@ Five hits, one of them a live sibling.
 | `M2-*.md` §3.1 | Elected-index speckle with two nulls: **34.381%** real, **53.496%** i.i.d., **66.174%** uniform | Measured on the **ring-difference** operator, which the project has since **retired**. Not the shipped regularised Tenengrad. |
 | `M7-*.md` §3.1, §3.4 | A top-2 margin, at **one hand-picked pixel** | `n=1`. No distribution, no null. |
 | `M65-*.md` | **56.70%** winner churn under an intervention | Churn measures *sensitivity to a change*, not whether the un-intervened election is determined. |
-| `M93-*.md` §7.2, `P6`, `D-b` | A spatial-coherence bar on an intervention that **failed in the wrong direction** (+201% to +429%) | Live sibling milestone. Its failure is a warning about exactly the statistic I registered as B5 — and it was right. |
+| `M93-merge-vs-frame-sharpness.md` | A spatial-coherence bar that failed in the wrong direction | See §0.1 — I initially attributed this to the wrong M93 document. |
+| **`M93-election-gate.md` (`9a17d64`)** | **A live sibling building the fix my diagnostic tests the precondition for** | §0.1. |
 
 **The hole.** `merge.rs`'s own `Gate::admits` doc-comment names it: *"No corpus row
 publishes a regularised Tenengrad speckle."* TABLE 5 supplies that row. And no
 corpus row published a **margin distribution** on any operator, on any stack, at
 any `n > 1`.
 
-**Disclosure, per the brief's request.** My rule-40 search initially missed
-M93 `P6`/`D-b` because I searched `docs/research/*.md` for `margin` and `coherence`
-but M93's bar is phrased as *"index agreement"*. I found it on a second pass
-grepping for `speckle`. It is the single most relevant prior result to my B5, and
-it predicted B5's failure. Had I read it first I would have registered B5
-differently.
+### 0.1 Deconfliction with M93, and three things it changes
+
+The orchestrator disclosed after I had finished measuring that
+**`docs/research/M93-election-gate.md` is committed at `9a17d64` and its author is
+live.** My own rule-40 search had found *a* M93 coherence failure but attributed
+it to `M93-merge-vs-frame-sharpness.md`; the result actually lives in
+`M93-election-gate.md` §7.2 / `P6` / `D-b`. **I read `M93-election-gate.md` in
+full before writing this section.** The boundary holds and I agree with it: M93
+changes *which frames may compete*; M96 measures *how decisively the argmax wins*
+on the pipeline as it ships. I built no frame-rejection stage, did not touch
+`robust.rs`, and did not re-derive fact 1186.
+
+**(a) I am NOT re-deriving fact 1186, and here is the precise difference.** Both
+M93 and I apply the kernel `[1,−4,6,−4,1]/6` along the frame axis, which looks
+like a collision and is not one:
+
+| | fact 1186 / M89 / M93 | M96 `sigma_R_hat` |
+| --- | --- | --- |
+| signal the kernel runs on | **pixel luma** `L(f)` | **focus response** `R_k` |
+| normalisation | `strehl_core::noise` photon-transfer model | **none** |
+| output | dimensionless `z`, analytic null `E[z²]=1` | a **scale in response units** |
+| purpose | flag frames discrepant from their neighbours | bound the response noise **without a fitted constant** |
+
+I make **no contamination claim** and I do not restate 1186's null, leakage bound,
+or any of its numbers. Verified in source: `m96-election-margin.rs` imports
+`FOCUS_NOISE_SD` from `merge`, and its noise-model use is confined to *synthesising*
+the plant (`noise.green_luma_sigma`), never to normalising `sigma_R_hat`.
+
+**(b) M93 §2.3 predicts a hazard that my TABLE 7 avoids, and I can now show the
+hazard is real.** M93 records that on a *synthetic* stack — one base frame blurred
+by a different sigma per frame — the fourth-difference statistic is inflated
+(`z²` ≈ 1.69 against an analytic 1.0), because the base frame's own noise is
+attenuated by a different factor in each frame. **My synthetic plants show exactly
+that inflation**: `sigma_R_hat / FOCUS_NOISE_SD` reads **10.7452** (δ=1.0) and
+**6.5977** (δ=0.02), versus **1.047–1.973** on all seven real stacks. TABLE 7 is
+**real stacks only** and always was; M93 supplies the independent explanation for
+why that was the right restriction. Two milestones reached the same conclusion
+about synthetic frame-axis statistics from opposite directions.
+
+**(c) M93's `P4` makes a DERIVED claim that my B4 measures directly — and my data
+qualifies it.** `P4` states that *"low-detail pixels are elected near-arbitrarily"*
+while high-detail pixels have an unambiguous peak. That is my registered B4
+hypothesis, asserted as DERIVED by a sibling. **Measured (TABLE 6), it is
+directionally right but not monotone and not universal:** the spread across detail
+deciles is large on deep stacks (**20.85×** `coffee-bean`, **7.79×** `bee-3-cpl`
+max/min) but the *lowest* decile is **not** the least decisive on either — the
+minimum sits at decile 2, and on `109MSDCF`, `119MSDCF` and `wrapped-text-1` the
+relationship **inverts** (`d9/d0` = 0.76×, 0.54×, 0.64×). So M93's `P4` should be
+folded as a claim about the *high-detail* end, where both milestones agree, and
+**not** as a general statement that low detail implies arbitrary election.
+
+**(d) What I must not claim as novel.** M93's `P10` already records that a
+faithfulness bar registered at exactly `100.000000%` catches a planted tie-break
+inversion (21 of 8,250,880 px, 2.5 ppm). My F1/F3 pair is the **same control
+design reaching the same conclusion independently** (12 of 8,241,504 px) on the
+same night. I report it as corroboration of `P10`, not as a discovery; it does
+not appear in my candidate facts.
 
 ---
 
@@ -124,7 +212,7 @@ identifies the gain arm. The affine arm at the same call site passed the same
 same quantity with a different instrument (its C9 column). The corrected
 `m60-disagreement.rs` now reproduces it:
 
-| stack | M94 (this session) | M91 C9 |
+| stack | M96 (this session) | M91 C9 |
 | --- | --- | --- |
 | `109MSDCF` gain | +4.4% | +4.41% |
 | `109MSDCF` affine | +6.4% | +6.44% |
@@ -436,8 +524,17 @@ blur radius grows `δ` px per frame off each pixel's own in-focus frame. Lowerin
   regulariser: it correlates neighbouring pixels' response curves, so neighbours
   elect the same index **even when that index is arbitrary**. **Spatial coherence
   of the elected-index map is manufactured by the regulariser and is not evidence
-  about the election.** This qualifies M2 §3.1 and independently corroborates
-  M93's `D-b`.
+  about the election.** This qualifies M2 §3.1.
+
+**This is a *different* failure mode from M93's, and the two together are worth
+more than either.** M93 `D-b` retired speckle **as a bar on an intervention**: it
+scores *change* rather than *correctness*, so it fails in the wrong direction when
+a gate substitutes a better winner (+201% to +429%). M96 retires it **as a bar on
+the un-intervened election**: it cannot detect an arbitrary election at all,
+because the regulariser manufactures the coherence it measures. M93 shows the
+statistic cannot grade a *fix*; M96 shows it cannot grade a *diagnosis*. Note the
+two used different thresholds — M93's is `|k − median3×3| > 5`, mine is `> 2`
+(M2 §3.1's definition) — and it failed at both.
 
 At δ=1.0 the positive control passes cleanly: **B1 = 0.00000, B2 = 0.00274%,
 B3 = 0.92996, B5 = 0.00000, F1 PASS**.
@@ -514,7 +611,7 @@ placebo is required (discipline 596). What focus explains is the real column's
 
 ## 7. Renders
 
-`C:\dev\strehl-out\M94-election-margin\<stack>\` for **all seven** stacks —
+`C:\dev\strehl-out\M96-election-margin\<stack>\` for **all seven** stacks —
 `elected-index`, `elected-index-null-iid`, `confusion-radius`, `margin-q8`, each
 as a full plane and a 1024² 1:1 crop (8 TIFFs), plus `summary.json`. PNG previews
 for five of the seven are in `preview/`, named `<stack>--<map>.png`.
@@ -567,6 +664,16 @@ election is good.
 stack still produces a soft image, and facts 1177 and 1186–1190 describe exactly
 that mechanism.
 
+**Relationship to M93, stated so neither milestone is over-read.** M96 measures
+the election **as it currently ships** — ungated. M93 changes which frames may
+compete. M96 does **not** measure M93's gate, does not validate it, and its
+numbers will change once the gate ships; `P11` is a statement about the
+precondition, not about the outcome. Conversely M93's benefit numbers are not
+evidence about the margin. **Re-running M96's instrument after M93's gate lands is
+the cheap, obvious follow-up** and I recommend it: if the margin *widens* under the
+gate, that is direct confirmation the gate is removing frames that were winning
+spuriously.
+
 ---
 
 ## 9. Requests for the orchestrator
@@ -576,17 +683,28 @@ file — I did not edit it):
 
 > **Frame-axis noise calibration without a focus sweep.** §12 records that the
 > focus operator's response noise cannot be measured from a focus sweep, because
-> macro depth of field is 1–2 frames wide. M94 §2.2 offers a way around it: a
+> macro depth of field is 1–2 frames wide. M96 §2.2 offers a way around it: a
 > **static repeat burst** — 40+ frames, tripod locked, focus untouched, on a
 > textured subject at the working aperture. With focus constant, the entire
 > frame-axis variation of the focus response is noise, so `sigma_R_hat` becomes an
-> unbiased *estimate* rather than the upper bound M94 could only establish
+> unbiased *estimate* rather than the upper bound M96 could only establish
 > (1.047×–1.973× of `FOCUS_NOISE_SD`). That would be the first direct calibration
 > of the constant M69 and M81 both failed to obtain.
 
 **9.2 Patches to non-owned files:** none. Nothing outside my owned set needed to
-change. No `lib.rs` or `main.rs` registration was required — `m94-election-margin`
-is an example, which cargo discovers without a registration point.
+change. No `lib.rs` or `main.rs` registration was required — `m96-election-margin`
+is an example, which cargo discovers without a registration point (verified: no
+`[[example]]` stanza in `crates/strehl-cli/Cargo.toml`).
+
+**9.3 Two premises in the deconfliction brief are stale, measured just now:**
+
+- **`C:\dev\strehl-head` does not exist.** `Test-Path` returns false; there is no
+  such worktree. I did not need it, but nobody else should be told to read from it.
+- **The workspace compiles.** `cargo check -p strehl-cli --bins` returns **rc=0**,
+  and `crates/strehl-cli/src/align_cmd.rs` is **tracked**, not untracked. M86 must
+  have landed since the brief was written. (Note `cargo check -p strehl-cli --lib`
+  fails with *"no library targets found"* — `strehl-cli` is a binary-only crate, so
+  that is the expected error and not a build break.)
 
 ---
 
@@ -601,7 +719,7 @@ all **7** corpus stacks: **0.000% wins, 100.00% ties** at frame-distance `d=1`.
 invariant to the thing it is meant to test; any future margin work must be stated
 at `d ≥ 2`, and Surh et al.'s published "Winner Margin" confidence measure
 (`B-algorithms-sota.md` §2.3) inherits this limitation. *Label:* MEASURED,
-M94 §3.2.
+M96 §3.2.
 
 **P2** — *claim:* The shipped focus election is **decisive, not arbitrary**, on
 every corpus stack. Median margin at frame-distance 8, as a fraction of the
@@ -613,16 +731,19 @@ pixel's own through-focus range, is **0.28985 to 0.81315**, versus **0.02205 to
 the softness investigation. The output is **not** a mosaic of near-random picks;
 softness cannot be explained by an undetermined argmax, and gate tuning was never
 the lever. Corroborates fact 1196 from the selection side as 1196 did from the
-combination side. *Label:* MEASURED, M94 §3.1, §3.2.
+combination side. *Label:* MEASURED, M96 §3.1, §3.2.
 
 **P3** — *claim:* Spatial coherence of the elected-index map is **manufactured by
-the 17×17 regulariser** and is not evidence that the election is well-determined.
-In a planted stack at δ=0.02 where B1 (0.41667), B2 (89.764%) and B3 (0.00130) all
+the 17×17 regulariser** and therefore cannot detect an arbitrary election. In a
+planted stack at δ=0.02 where B1 (0.41667), B2 (89.764%) and B3 (0.00130) all
 read NEARLY ARBITRARY, the speckle bar still read **0.09729**, passing its ≤0.20
-DECISIVE threshold. *Significance:* retires an instrument this project has used
-since M2 and independently corroborates M93's `D-b`. Any milestone reading index
-agreement or index speckle as evidence about election quality is reading the
-smoothing kernel. *Label:* MEASURED, M94 §5.2.
+DECISIVE threshold. *Significance:* this is a **second, independent** failure mode
+of the same statistic M93 `D-b` retired. M93 showed speckle cannot grade an
+*intervention* (it scores change, not correctness); M96 shows it cannot grade the
+*un-intervened election* either (the regulariser supplies the coherence). It
+failed at both thresholds tried — M93's `> 5` frames and M2 §3.1's `> 2`. Any
+milestone reading index agreement or index speckle as evidence about election
+quality is reading the smoothing kernel. *Label:* MEASURED, M96 §5.2.
 
 **P4** — *claim:* On the owner's 299-frame `bee-3-cpl`, **25.247%** of interior
 pixels have a **disconnected** competitive set at the shipped gate (`c=4`): the
@@ -633,7 +754,7 @@ pixels are averaged across two genuinely different depths by a gate that has no
 representation of disconnectedness. This is a **new, specific, localised**
 softness mechanism, distinct from drift (fact 1177) and motion (facts 1186–1190),
 and it is testable: a connectivity constraint on the admitted set would change
-only these pixels. *Label:* MEASURED, M94 §3.4.
+only these pixels. *Label:* MEASURED, M96 §3.4.
 
 **P5** — *claim:* `FOCUS_NOISE_SD = 0.015214` is corroborated to within a factor
 of two by an estimator with an **analytic null and no fitted constant**. M89's
@@ -646,7 +767,7 @@ curvature, so it bounds the constant from **one side only**. *Significance:* the
 first corroboration of a constant that M69 and M81 both failed to calibrate, from
 a method M69's "not measurable from a focus sweep" finding does not block.
 Discipline 590 says every fitted constant here has failed to transfer; this one
-survives a first independent check. *Label:* MEASURED, M94 §2.2.
+survives a first independent check. *Label:* MEASURED, M96 §2.2.
 
 **P6** — *claim:* The corpus's first **regularised-Tenengrad** elected-index
 speckle row: real **0.0033%–0.4639%**, i.i.d. null **13.0616%–85.6939%**, uniform
@@ -655,21 +776,21 @@ null **66.2011%–87.2011%**, over 7 stacks. *Significance:* fills the hole
 regularised Tenengrad speckle"), and supersedes M2 §3.1's 34.381%, which was
 measured on the **retired** ring-difference operator and is not comparable.
 Publish it as description, not as evidence about the election, per `P3`.
-*Label:* MEASURED, M94 §3.5.
+*Label:* MEASURED, M96 §3.5.
 
 **P7** — *claim:* Fact 1199's pedestal defect also affected the **affine** arm of
 `m60-disagreement.rs`, which fact 1199 did not name. The correct pivot is
 `luma_offset = black*(1−c)` in both arms; correcting the affine arm moves
 `109MSDCF` from **+5.4% to +6.4%**. The fix is at the call site and
 `merge.rs` was not modified. *Significance:* completes fact 1199, which as folded
-under-states the defect's extent by one arm. *Label:* MEASURED, M94 §1.
+under-states the defect's extent by one arm. *Label:* MEASURED, M96 §1.
 
 **P8** — *claim:* `m60-disagreement.rs`, pedestal-corrected, reproduces M91's
 independently-measured C9 column from a **different instrument**: +4.4%/+6.4%/
 −0.1%/+3.0% against M91's +4.41%/+6.44%/−0.11%/+3.01%. *Significance:* a
 two-sided cross-instrument agreement on a number that a live defect had been
 corrupting; raises confidence in both M91 §2.3 and the corrected call site.
-*Label:* MEASURED, M94 §1.
+*Label:* MEASURED, M96 §1.
 
 **P9** — *claim:* A single global frame permutation is **not** a pixel-level null:
 it is one draw shared by all 7,985,600 pixels, so its win-rate null has
@@ -679,7 +800,7 @@ itself is unbiased (**50.1%–50.3%**) and both shuffle streams uniform.
 *Significance:* a permutation placebo over a shared draw must have its null band
 **measured over seeds**, never assumed at 50%. A milestone that ran one seed and
 compared to 50% would have reported a 19-point spurious effect. *Label:* MEASURED,
-M94 §5.4.
+M96 §5.4.
 
 **P10** — *claim:* A positive control planted on a **real** image crop can fail
 for a reason that is not an instrument fault. Planting a synthetic focus ramp on a
@@ -689,7 +810,40 @@ undetermined. Replanting on a synthetic band-limited texture, sharp at every pix
 by construction, passed all bars (B1 0.00000, B2 0.00274%, B3 0.92996, B5 0.00000).
 *Significance:* discipline 594's "show it saying otherwise" needs a plant base
 whose ground truth is **known at every pixel**, which a real photograph is not.
-*Label:* MEASURED, M94 §5.3.
+*Label:* MEASURED, M96 §5.3.
+
+**P11** — *claim:* The focus election **is** well-determined enough for
+frame-rejection to be the right shape of fix. The branch "the election is
+substantially arbitrary, so removing contaminated frames cannot make it decisive"
+is falsified on all 7 stacks (`P2`). A decisive argmax means a contaminated frame
+wins by being pushed *above a genuine peak*, not by a flat response surface, so
+rejecting it returns the pixel to a real competition. *Significance:* this is the
+**precondition** M93's election-side gate needs, measured independently of it and
+on the un-gated pipeline. It is not a benefit estimate — M93 measured the benefit
+(−25.25% `lead-1-cpl`, −24.46% `foam`) — it is the evidence that the gate operates
+on signal rather than on noise. *Label:* DERIVED from M96 §3.1–§3.2, M96 §1.
+
+**P12** — *claim:* M93's `P4` — *"low-detail pixels are elected
+near-arbitrarily"* — holds at the **high-detail** end but **not** as a general
+monotone rule. Measured across detail deciles (TABLE 6): spread is large on deep
+stacks (**20.85×** `coffee-bean`, **7.79×** `bee-3-cpl` max/min), but the *lowest*
+decile is not the least decisive on either — the minimum sits at decile 2 — and on
+`109MSDCF`, `119MSDCF` and `wrapped-text-1` the relationship **inverts**
+(`d9/d0` = 0.76×, 0.54×, 0.64×). *Significance:* qualifies a sibling milestone's
+DERIVED claim with direct measurement before it folds. Fold `P4` as a statement
+about high-detail pixels, where both milestones agree; do **not** fold it as "low
+detail implies arbitrary election". *Label:* MEASURED, M96 §4, §0.1(c).
+
+**P13** — *claim:* A frame-axis fourth-difference statistic is **inflated on
+synthetic through-focus stacks** built by blurring one base frame, because the
+base frame's own noise is attenuated differently in each frame. Measured on M96's
+plants: `sigma_R_hat / FOCUS_NOISE_SD` = **10.7452** (δ=1.0) and **6.5977**
+(δ=0.02), against **1.047–1.973** on all seven real stacks. *Significance:*
+independently reproduces M93 §2.3's `z²` ≈ 1.69 artefact on a **different signal**
+(focus response, unnormalised) and from the opposite direction, confirming it is a
+property of synthesis-by-blur rather than of either statistic. Any frame-axis
+noise estimate calibrated on a blur-synthesised stack is biased high by 4–10×.
+*Label:* MEASURED, M96 §0.1(b).
 
 ---
 
@@ -697,16 +851,24 @@ whose ground truth is **known at every pixel**, which a real photograph is not.
 
 | Check | Result |
 | --- | --- |
-| `cargo test --example m94-election-margin` | **5 passed** |
+| `cargo test --example m96-election-margin` | **5 passed** |
 | `cargo test --example m60-disagreement` | **3 passed** |
-| `cargo clippy --example m94-election-margin -- -D warnings` | **rc=0** |
+| `cargo clippy --example m96-election-margin -- -D warnings` | **rc=0** |
 | `cargo clippy --example m60-disagreement -- -D warnings` | **rc=0** |
 | `cargo fmt --check` on both owned files | clean |
 | F1 faithfulness, all 7 real stacks | **100.000000%**, index and value |
 | F1 under F3 plant | **FAIL**, 99.999854% |
 | Post-edit reproduction of `109MSDCF` | bit-identical |
 | `python scripts/corpus_lint.py` | exit 0 |
+| Post-rename rebuild of `m96-election-margin` | tests/clippy/fmt all green |
+| `cargo check -p strehl-cli --bins` (workspace state) | **rc=0** — it compiles |
 
 `cargo clippy --all-targets -p strehl-cli` is red on `m86-align.rs` (M86, in
 flight) and `m89-robust.rs` — both other milestones' files. Not mine, not touched.
 Clippy was therefore scoped to the two examples I own.
+
+**Renumber verification.** After `git mv` and the source rewrite, zero `M94`/`m94`
+strings remain in any tracked source file (`.rs`, `.md`, `.py`) except the
+docstring of `renumber.py`, which documents the rename. The raw logs under `out/`
+retain the original label deliberately (see the header note). The renumber script
+is idempotent: re-running it reports `0 replaced` on every target.

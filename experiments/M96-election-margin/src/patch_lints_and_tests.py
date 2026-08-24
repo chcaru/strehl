@@ -1,4 +1,4 @@
-"""Clear the five clippy lints on the M94 instrument, and add its test module.
+"""Clear the five clippy lints on the M96 instrument, and add its test module.
 
 Each replacement is anchored on a unique full string and the script hard-errors
 if an anchor does not match exactly once, so a silent miss cannot happen
@@ -7,7 +7,7 @@ if an anchor does not match exactly once, so a silent miss cannot happen
 
 import pathlib
 
-P = pathlib.Path("crates/strehl-cli/examples/m94-election-margin.rs")
+P = pathlib.Path("crates/strehl-cli/examples/m96-election-margin.rs")
 s = P.read_text(encoding="utf-8")
 
 EDITS = [
