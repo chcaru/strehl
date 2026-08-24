@@ -181,7 +181,79 @@ Recorded so nobody asks twice.
 ---
 
 
-## 4. Flat fields — SCHEDULED
+## 4. Flat fields — **DELIVERED 2026-08-23**
+### What was actually supplied — read this before using it
+
+`D:\personal\macro\flat-fields`, **484 ARW frames in three directories**, all
+`ILCE-7CM2` + `FE 100mm F2.8 Macro GM OSS + 2X Teleconverter`, **ISO 100, marked f/5.6,
+FocalLength 200 mm** (the body composes the TC — fact 26).
+
+| dir | n | structure | span |
+| --- | --- | --- | --- |
+| `flat-fields/` | **360** | **9 exposures x 40 frames.** 1/250, 1/125, 1/60, 1/30, 1/20, 1/13, 1/10, 1/8, 1/5 s | 16:41:30 -> 16:50:32 (**9m02s**) |
+| `subject-focus-sweep-with-cpl/` | 62 | single exposure 1/5 s, focus swept out-through-out | 16:31:55 -> 16:32:38 |
+| `subject-focus-sweep-no-cpl/` | 62 | single exposure 1/5 s, focus swept out-through-out | 16:51:17 -> 16:51:56 |
+
+**Subject:** two stacked sheets of white A5 printer paper taped to a window. Lens front
+**~9 cm** from the paper, **~28 cm** subject-to-sensor. That is near the composed path's
+minimum focus, so **m is near the 2.0 maximum** and the field is roughly **18 x 12 mm** of paper.
+
+**The owner reports the session as: sweep-with-CPL, then 8 exposure sets of 20 with CPL,
+then the same without, then sweep-no-CPL.** EXIF says **9** exposures x **40** frames, which
+is consistent: **each 40 is 20 CPL + 20 no-CPL at the same shutter speed**, and the owner
+counted 8 rather than 9. **CPL state is NOT recorded in EXIF.** It must be recovered from
+capture time (CPL first) and cross-checked against signal level, since a CPL costs ~1.5-2
+stops and the two halves should separate cleanly at matched shutter speed. **Recovering the
+split is the first task and it is self-validating; do not assume the owner's count of 8.**
+
+### Confounds the owner flagged, and one they did not
+
+1. **Illumination was not stable and the owner said so.** Seattle August overcast, *"some
+   minor patches of blue sky"*, clouds moving slowly, no direct sun, *"possibly varied light
+   over the whole duration"* — over **9 minutes**. Within one 20-frame set at 1 s intervals
+   the drift window is ~20 s; between sets it is minutes. **Global drift is a per-frame
+   scalar and divides out by normalising each frame to its own spatial mean; that
+   normalisation is mandatory before any temporal-variance estimate.** Residual excess
+   variance after normalising is then evidence the drift had *spatial* structure, which is a
+   result in itself, not a nuisance.
+2. **The confound the owner did not flag, and it is the serious one: at m~2 the paper's own
+   fibre texture is resolved, and multiplicative paper texture is exactly what PRNU looks
+   like.** Both are fixed and both scale with signal, so **they are not separable by the
+   photon-transfer argument alone.** Two levers exist in the delivered data:
+   - **Spatial frequency.** PRNU is near-white per pixel; paper fibre structure is
+     correlated over ~10s of microns, which at m~2 is several pixels. The corpus already has
+     validated spectral-domain separation machinery (facts 27, 29).
+   - **Defocus, which is the clean one.** Defocus blurs paper texture and **leaves PRNU
+     untouched.** The two 62-frame sweeps run from out of focus, through focus, and back
+     out, at the same aperture and magnification as the flats — so **the most defocused
+     frames carry the same PRNU with the least paper texture.** That is a direct
+     experimental handle and it is already in the delivered set.
+   **Any PRNU number produced without addressing this is not a PRNU number.**
+3. **Focus position during the 360 flats is unrecorded.** If the paper was left in focus,
+   texture dominates; if left defocused, it does not. **Determine this from the data before
+   trusting any spatial statistic.**
+
+### Unexpected bonus — this may partially satisfy §8
+
+The two focus sweeps are **through-focus series on a planar subject at known magnification**.
+A plane taped to a window and shot handheld-ish will carry **some tilt**, and tilt on a plane
+is **analytic depth**: the through-focus peak should move linearly across the field. That is
+the instrument §8 asks for. **It is not a substitute for a deliberate §8 capture** — the tilt
+is unknown and uncontrolled, and paper is a low-contrast broadband target rather than a
+resolution chart — but it is the first physical target in the corpus with a *known depth
+model*, and it is directly useful to focus-correctness and through-focus work.
+
+### Status of what §4 was blocking
+
+- **PRNU (kappa) for `sigma^2(S) = gS + (RN*g)^2 + (kappa*S)^2`** — unblocked **subject to
+  confound 2 above**.
+- **A second independent photon-transfer curve** across a **50x** signal range at one ISO,
+  to cross-check facts 27/29 — unblocked, this is the cleanest thing in the set.
+- **Illumination/vignetting profile and CPL transmission + any CPL-induced angular
+  non-uniformity** — unblocked, with the drift caveat.
+- **Dust map**, fixed in sensor coordinates — unblocked.
+- **NOT unblocked: PRNU at other ISOs.** Everything here is ISO 100.
+
 
 **Status:** **owner is shooting these in daylight, next opportunity** (agreed
 2026-08-22). Raised by `research/M4-fpn-measured.md` §7 and §8.3. Not blocking
