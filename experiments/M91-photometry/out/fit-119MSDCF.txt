@@ -1,0 +1,35 @@
+== M91 photometry ==
+stack        : D:\personal\macro\119MSDCF
+frames       : 33
+plane        : 3516 x 2344
+iso / black  : Some(50.0) / 512
+gate         : 4
+block        : 32
+arms         : fit
+
+-- pass one -- 5.5s   grand mean signal 2869.89 DN   ptp 2.880%
+blocks       : 110 x 74 = 8140 (4070 even / 4070 odd)
+
+== C1 / C1b : functional form, held-out on odd-parity blocks ==
+form                      heldRMS      c min      c max    |o| max      C1b
+F1-gain-mean-ratio        26.0459    0.98741    1.01646     0.0000       ok
+F2-gain-ls-origin         26.0048    0.98712    1.01611     0.0000       ok
+F3-affine-ls              25.9800    0.98612    1.01489     8.0968       ok
+F4-offset-only            29.6160    1.00000    1.00000    46.9170       ok
+F5-gain-block-median      26.0680    0.98704    1.01471     0.0000       ok
+F6-affine-block-ls        25.9800    0.98612    1.01489     8.0968       ok
+C1: F6 vs F5 held-out RMS reduction = 0.3374%  (bar: >= 5.0%)
+C1: FAILS
+C1-aux: F3 vs F2 held-out RMS reduction = 0.0953%
+C1-aux: F1 held-out RMS 26.0459   F4 held-out RMS 29.6160
+
+== C2 : spatial uniformity ==
+U = sd_k(median_b r) / median_k(sd_b r) = 0.5946   (0.009161 / 0.015407)
+C2: NOT SPATIALLY COHERENT (< 1.5)
+C2-power: planted uniform ladder ptp 11.7% -> U = 2.4850  (bar: >= 3.0)  FAIL
+
+== C10 : is the drift a single global gain? ==
+EV = 0.2220   (>= 0.50 global, < 0.20 spatial, between = mixed)
+C10: MIXED -- reported as mixed, not rounded
+C10-power: planted uniform ptp 11.7% -> EV = 0.8378  (bar: > 0.90)  FAIL   deflation floor 1-EV = 0.1622
+C10-null: real drift divided out -> EV = 0.0015  (must fall toward 0)

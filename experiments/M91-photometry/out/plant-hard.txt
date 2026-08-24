@@ -1,0 +1,33 @@
+== M91 photometry ==
+stack        : D:\personal\macro\119MSDCF
+frames       : 33
+plane        : 3516 x 2344
+iso / black  : Some(50.0) / 512
+gate         : 4
+block        : 32
+arms         : plant
+
+-- pass one -- 5.1s   grand mean signal 2869.89 DN   ptp 2.880%
+blocks       : 110 x 74 = 8140 (4070 even / 4070 odd)
+
+== C3 / C8 : the merged image ==
+plant ladder : ptp 11.7000%  min 0.883000 max 1.000000 seed 91  ramp a = 0.5
+image form   : F1-gain-mean-ratio
+fit recovery : mean(c_hat*g_eff)/mean = 1.000000, sd 9.651e-3, ptp 2.889e-2
+pass two: 5.5s
+C8 identity vs Estimator::green_mean: 0 / 8241504 bits differ (worst 0.000000 DN) -> PASS
+censored pixels excluded from image statistics: 0 (0.0000%)
+reference merge: mean signal 2876.19 DN, mean predicted sigma 8.4159 DN, mean n_eff 4.7230
+
+-- C3b : corrected minus uncorrected, real data --
+corrected W0 (equal)           global scale 1.003274   residual RMS 26.58985 DN   max |d| 90.6493   f1sig 60.3468%
+corrected W1 (fact 608)        global scale 1.003273   residual RMS 26.59169 DN   max |d| 90.6578   f1sig 60.3136%
+corrected W1s (self-weighted)  global scale 1.003340   residual RMS 26.59825 DN   max |d| 147.1918   f1sig 60.8283%
+C3b: f1sig(W0) = 60.3468%  (bar: >= 1.0% on >= 2 of 6 stacks) -> meets bar here
+
+-- C3a-hard : planted recovery, spatially non-uniform ramp --
+planted uncorrected vs M0      global scale 1.059342   residual RMS 71.31168 DN   max |d| 360.9502   f1sig 86.5564%
+planted corrected vs corrected global scale 1.056421   residual RMS 61.74077 DN   max |d| 204.8301   f1sig 80.7118%
+C3a-hard: recovery R = 1 - E_corr/E_uncorr = 0.134212   (bar: >= 0.50)
+C3a-hard: FAILS (positive but under bar)
+C3a-hard: f1sig of the UNCORRECTED plant = 86.5564%  -- the materiality of a 11.70% drift with ramp a = 0.5

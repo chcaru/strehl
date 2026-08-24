@@ -1,0 +1,26 @@
+== M91 photometry ==
+stack        : D:\personal\macro\coffee-bean
+frames       : 105
+plane        : 3516 x 2344
+iso / black  : Some(50.0) / 512
+gate         : 4
+block        : 32
+arms         : chi2
+
+-- pass one -- 14.9s   grand mean signal 6825.11 DN   ptp 12.088%
+blocks       : 110 x 74 = 8140 (4070 even / 4070 odd)
+
+== C6 / C9 : merge-time disagreement, six photometric arms ==
+estimator memory: 1.98 GB total
+pass two: 20.0s
+A0-raw                       mean chi2  186.4389   reduction     0.00%   excess reduction     0.00%
+A1b-m60-gain-zero-pivot      mean chi2   72.2259   reduction    61.26%   excess reduction    61.59%
+C9-gain-black-pivot          mean chi2   73.9439   reduction    60.34%   excess reduction    60.66%
+C9-blockmedian-black-pivot   mean chi2   28.2999   reduction    84.82%   excess reduction    85.28%
+A4-affine-ls-black-pivot     mean chi2   43.6667   reduction    76.58%   excess reduction    76.99%
+A4b-offset-only              mean chi2  156.0597   reduction    16.29%   excess reduction    16.38%
+disagreement exposure (n_eff >= 2): 44.73% of pixels
+C9: predicted over-correction factor 1 + black/signal = 1.075x;  zero-pivot 61.26% vs black-pivot 60.34% reduction, gap -0.92 pp
+A4 fit: slope 0.88722..1.04901, |o| max 426.1628 (2% of grand = 136.5022);  C1b -> VOID
+A4 G6 degeneracy check: chi2 ratio 0.23421, sqrt 0.48396; inside fitted slope range? no / no
+A4 rule 35: its (s,o) minimise sum_i (R_i - s*L_i - o)^2, and mean chi2 is the variance of exactly that residual. Subject and object are the same quantity.

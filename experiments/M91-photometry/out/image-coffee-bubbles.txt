@@ -1,0 +1,24 @@
+== M91 photometry ==
+stack        : D:\personal\macro\coffee-bubbles
+frames       : 19
+plane        : 3516 x 2344
+iso / black  : Some(1000.0) / 512
+gate         : 4
+block        : 32
+arms         : image
+
+-- pass one -- 2.8s   grand mean signal 341.09 DN   ptp 8.909%
+blocks       : 110 x 74 = 8140 (4070 even / 4070 odd)
+
+== C3 / C8 : the merged image ==
+image form   : F1-gain-mean-ratio
+pass two: 2.9s
+C8 identity vs Estimator::green_mean: 0 / 8241504 bits differ (worst 0.000000 DN) -> PASS
+censored pixels excluded from image statistics: 19437 (0.2358%)
+reference merge: mean signal 285.55 DN, mean predicted sigma 11.1500 DN, mean n_eff 3.5289
+
+-- C3b : corrected minus uncorrected, real data --
+corrected W0 (equal)       global scale 0.969263   residual RMS 12.16484 DN   max |d| 1063.6665   f1sig 5.4720%
+corrected W1 (fact 608)    global scale 0.969299   residual RMS 12.16932 DN   max |d| 1063.1426   f1sig 5.5459%
+corrected W1s (self-weighted) global scale 0.974363   residual RMS 18.69546 DN   max |d| 6888.8271   f1sig 7.1832%
+C3b: f1sig(W0) = 5.4720%  (bar: >= 1.0% on >= 2 of 6 stacks) -> meets bar here

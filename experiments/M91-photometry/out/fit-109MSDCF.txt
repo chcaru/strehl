@@ -1,0 +1,35 @@
+== M91 photometry ==
+stack        : D:\personal\macro\109MSDCF
+frames       : 22
+plane        : 3516 x 2344
+iso / black  : Some(160.0) / 512
+gate         : 4
+block        : 32
+arms         : fit
+
+-- pass one -- 3.6s   grand mean signal 1397.39 DN   ptp 0.910%
+blocks       : 110 x 74 = 8140 (4070 even / 4070 odd)
+
+== C1 / C1b : functional form, held-out on odd-parity blocks ==
+form                      heldRMS      c min      c max    |o| max      C1b
+F1-gain-mean-ratio        20.8563    0.99545    1.00447     0.0000       ok
+F2-gain-ls-origin         20.8500    0.99478    1.00409     0.0000       ok
+F3-affine-ls              20.7994    0.99154    1.00410     6.1656       ok
+F4-offset-only            20.9219    1.00000    1.00000     6.4077       ok
+F5-gain-block-median      20.9223    0.99398    1.00390     0.0000       ok
+F6-affine-block-ls        20.7994    0.99154    1.00410     6.1656       ok
+C1: F6 vs F5 held-out RMS reduction = 0.5875%  (bar: >= 5.0%)
+C1: FAILS
+C1-aux: F3 vs F2 held-out RMS reduction = 0.2426%
+C1-aux: F1 held-out RMS 20.8563   F4 held-out RMS 20.9219
+
+== C2 : spatial uniformity ==
+U = sd_k(median_b r) / median_k(sd_b r) = 0.1235   (0.002886 / 0.023369)
+C2: NOT SPATIALLY COHERENT (< 1.5)
+C2-power: planted uniform ladder ptp 11.7% -> U = 1.7213  (bar: >= 3.0)  FAIL
+
+== C10 : is the drift a single global gain? ==
+EV = 0.0136   (>= 0.50 global, < 0.20 spatial, between = mixed)
+C10: PREDOMINANTLY SPATIAL -- a per-frame scalar is the wrong form
+C10-power: planted uniform ptp 11.7% -> EV = 0.6672  (bar: > 0.90)  FAIL   deflation floor 1-EV = 0.3328
+C10-null: real drift divided out -> EV = 0.0021  (must fall toward 0)

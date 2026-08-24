@@ -1,0 +1,26 @@
+== M91 photometry ==
+stack        : D:\personal\macro\foam
+frames       : 100
+plane        : 3516 x 2344
+iso / black  : Some(1000.0) / 512
+gate         : 1
+block        : 32
+arms         : chi2
+
+-- pass one -- 17.8s   grand mean signal 872.55 DN   ptp 10.604%
+blocks       : 110 x 74 = 8140 (4070 even / 4070 odd)
+
+== C6 / C9 : merge-time disagreement, six photometric arms ==
+estimator memory: 1.98 GB total
+pass two: 17.1s
+A0-raw                       mean chi2   23.8430   reduction     0.00%   excess reduction     0.00%
+A1b-m60-gain-zero-pivot      mean chi2   24.3811   reduction    -2.26%   excess reduction    -2.36%
+C9-gain-black-pivot          mean chi2   25.1042   reduction    -5.29%   excess reduction    -5.52%
+C9-blockmedian-black-pivot   mean chi2   28.9233   reduction   -21.31%   excess reduction   -22.24%
+A4-affine-ls-black-pivot     mean chi2    1.4587   reduction    93.88%   excess reduction    97.99%
+A4b-offset-only              mean chi2   22.7002   reduction     4.79%   excess reduction     5.00%
+disagreement exposure (n_eff >= 2): 8.20% of pixels
+C9: predicted over-correction factor 1 + black/signal = 1.587x;  zero-pivot -2.26% vs black-pivot -5.29% reduction, gap -3.03 pp
+A4 fit: slope 0.16047..0.57835, |o| max 741.0521 (2% of grand = 17.4510);  C1b -> VOID
+A4 G6 degeneracy check: chi2 ratio 0.06118, sqrt 0.24735; inside fitted slope range? no / yes
+A4 rule 35: its (s,o) minimise sum_i (R_i - s*L_i - o)^2, and mean chi2 is the variance of exactly that residual. Subject and object are the same quantity.

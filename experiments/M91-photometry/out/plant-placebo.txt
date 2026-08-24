@@ -1,0 +1,35 @@
+== M91 photometry ==
+stack        : D:\personal\macro\119MSDCF
+frames       : 33
+plane        : 3516 x 2344
+iso / black  : Some(50.0) / 512
+gate         : 4
+block        : 32
+arms         : plant
+
+-- pass one -- 8.9s   grand mean signal 2869.89 DN   ptp 2.880%
+blocks       : 110 x 74 = 8140 (4070 even / 4070 odd)
+
+== C3 / C8 : the merged image ==
+plant ladder : ptp 0.0000%  min 1.000000 max 1.000000 seed 91  ramp a = 0
+image form   : F1-gain-mean-ratio
+fit recovery : mean(c_hat*g_eff)/mean = 1.000000, sd 9.651e-3, ptp 2.889e-2
+pass two: 5.4s
+C8 identity vs Estimator::green_mean: 0 / 8241504 bits differ (worst 0.000000 DN) -> PASS
+censored pixels excluded from image statistics: 0 (0.0000%)
+reference merge: mean signal 2876.19 DN, mean predicted sigma 8.4159 DN, mean n_eff 4.7230
+
+-- C3b : corrected minus uncorrected, real data --
+corrected W0 (equal)           global scale 1.003274   residual RMS 26.58985 DN   max |d| 90.6493   f1sig 60.3468%
+corrected W1 (fact 608)        global scale 1.003273   residual RMS 26.59169 DN   max |d| 90.6578   f1sig 60.3136%
+corrected W1s (self-weighted)  global scale 1.003340   residual RMS 26.59825 DN   max |d| 147.1918   f1sig 60.8283%
+C3b: f1sig(W0) = 60.3468%  (bar: >= 1.0% on >= 2 of 6 stacks) -> meets bar here
+
+-- C3a : planted recovery, spatially uniform (plumbing control, see addendum 5c) --
+planted uncorrected vs M0      global scale 1.000000   residual RMS 0.00013 DN   max |d| 0.0005   f1sig 0.0000%
+planted corrected vs corrected global scale 1.000000   residual RMS 0.00000 DN   max |d| 0.0000   f1sig 0.0000%
+C3a: recovery R = 1 - E_corr/E_uncorr = 1.000000   (bar: >= 0.50)
+C3a: MET
+C3a: f1sig of the UNCORRECTED plant = 0.0000%  -- the materiality of a 0.00% drift with ramp a = 0
+C3a: R = 1 here is algebra, not evidence (rule 35). Its job is C5.
+C3a-placebo (gamma == 1): plant machinery no-op E_uncorr 0.00013382 DN (bar < 0.01) -> PASS;  corrected-arm cross-check E_corr 0.00000000 DN (bar < 0.01) -> PASS

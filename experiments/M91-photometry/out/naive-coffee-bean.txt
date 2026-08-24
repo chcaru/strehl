@@ -1,0 +1,17 @@
+== M91 photometry ==
+stack        : D:\personal\macro\coffee-bean
+frames       : 105
+plane        : 3516 x 2344
+iso / black  : Some(50.0) / 512
+gate         : 4
+block        : 32
+arms         : naive
+
+-- pass one -- 26.1s   grand mean signal 6825.11 DN   ptp 12.088%
+blocks       : 110 x 74 = 8140 (4070 even / 4070 odd)
+
+== C7 : the price of inverting fact 608's ordering ==
+response ratio vs sqrt(c): mean measured 1.000451, mean predicted 1.000456, worst frame error 0.0123%
+P-b (bar 10%): MET
+winner changes under the naive ordering: 1240143 / 8241504 = 15.0475%
+mean n_eff: fact-608 ordering 31.6135   naive ordering 31.1215   delta -0.4920

@@ -1,0 +1,26 @@
+== M91 photometry ==
+stack        : D:\personal\macro\coffee-bubbles
+frames       : 19
+plane        : 3516 x 2344
+iso / black  : Some(1000.0) / 512
+gate         : 4
+block        : 32
+arms         : chi2
+
+-- pass one -- 2.9s   grand mean signal 341.09 DN   ptp 8.909%
+blocks       : 110 x 74 = 8140 (4070 even / 4070 odd)
+
+== C6 / C9 : merge-time disagreement, six photometric arms ==
+estimator memory: 1.98 GB total
+pass two: 4.1s
+A0-raw                       mean chi2    2.7122   reduction     0.00%   excess reduction     0.00%
+A1b-m60-gain-zero-pivot      mean chi2    3.0437   reduction   -12.22%   excess reduction   -19.36%
+C9-gain-black-pivot          mean chi2    2.7717   reduction    -2.20%   excess reduction    -3.48%
+C9-blockmedian-black-pivot   mean chi2    2.6850   reduction     1.00%   excess reduction     1.59%
+A4-affine-ls-black-pivot     mean chi2    1.7923   reduction    33.92%   excess reduction    53.72%
+A4b-offset-only              mean chi2    2.6462   reduction     2.43%   excess reduction     3.86%
+disagreement exposure (n_eff >= 2): 83.43% of pixels
+C9: predicted over-correction factor 1 + black/signal = 2.501x;  zero-pivot -12.22% vs black-pivot -2.20% reduction, gap 10.03 pp
+A4 fit: slope 0.81724..0.85354, |o| max 71.5141 (2% of grand = 6.8218);  C1b -> VOID
+A4 G6 degeneracy check: chi2 ratio 0.66084, sqrt 0.81292; inside fitted slope range? no / no
+A4 rule 35: its (s,o) minimise sum_i (R_i - s*L_i - o)^2, and mean chi2 is the variance of exactly that residual. Subject and object are the same quantity.

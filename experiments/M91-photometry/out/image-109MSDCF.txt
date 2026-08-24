@@ -1,0 +1,24 @@
+== M91 photometry ==
+stack        : D:\personal\macro\109MSDCF
+frames       : 22
+plane        : 3516 x 2344
+iso / black  : Some(160.0) / 512
+gate         : 4
+block        : 32
+arms         : image
+
+-- pass one -- 3.3s   grand mean signal 1397.39 DN   ptp 0.910%
+blocks       : 110 x 74 = 8140 (4070 even / 4070 odd)
+
+== C3 / C8 : the merged image ==
+image form   : F1-gain-mean-ratio
+pass two: 3.4s
+C8 identity vs Estimator::green_mean: 0 / 8241504 bits differ (worst 0.000000 DN) -> PASS
+censored pixels excluded from image statistics: 0 (0.0000%)
+reference merge: mean signal 1391.76 DN, mean predicted sigma 7.3633 DN, mean n_eff 4.9865
+
+-- C3b : corrected minus uncorrected, real data --
+corrected W0 (equal)       global scale 0.998776   residual RMS 1.32502 DN   max |d| 11.0251   f1sig 0.0000%
+corrected W1 (fact 608)    global scale 0.998776   residual RMS 1.32438 DN   max |d| 11.0244   f1sig 0.0000%
+corrected W1s (self-weighted) global scale 0.998997   residual RMS 1.93020 DN   max |d| 230.3693   f1sig 0.5956%
+C3b: f1sig(W0) = 0.0000%  (bar: >= 1.0% on >= 2 of 6 stacks) -> below bar here
