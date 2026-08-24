@@ -79,7 +79,7 @@ def main() -> None:
             arms[arm] = parse(path)
         b2 = arms["B2"]
         b1 = arms["B1"]
-        n1_checks = {
+        noise_checks = {
             "selector_not_measurable": b2["selector"]["target"] == "NOT-MEASURABLE",
             "all_retentions_na": all(
                 row["retention"] is None and row["verdict"] == "NO TARGET"
@@ -89,36 +89,36 @@ def main() -> None:
             "gate0_structure": 0.90 <= b2["rows"]["0.00"]["structure"] <= 1.10,
             "gate4_structure": 0.90 <= b2["rows"]["4.00"]["structure"] <= 1.10,
         }
-        p2_checks = {
+        detail_checks = {
             "selector_measurable": b1["selector"]["target"] == "MEASURABLE",
             "gate0_retention_numeric": b1["rows"]["0.00"]["retention"] is not None,
             "gate4_retention_numeric": b1["rows"]["4.00"]["retention"] is not None,
             "gate0_structure": b1["rows"]["0.00"]["structure"] >= 3.0,
             "gate4_structure": b1["rows"]["4.00"]["structure"] >= 3.0,
         }
-        passed = all(n1_checks.values()) and all(p2_checks.values())
+        passed = all(noise_checks.values()) and all(detail_checks.values())
         all_pass &= passed
         result[stack] = {
-            "N1": n1_checks,
-            "P2": p2_checks,
+            "D1_noise": noise_checks,
+            "D1_detail": detail_checks,
             "pass": passed,
             "arms": arms,
         }
         lines.extend(
             [
                 f"{stack}:",
-                "  N1 B2 selector/gate0/gate4 STRUCTURE = "
+                "  D1 B2 selector/gate0/gate4 STRUCTURE = "
                 f"{b2['selector']['structure']:.3f} / "
                 f"{b2['rows']['0.00']['structure']:.3f} / "
                 f"{b2['rows']['4.00']['structure']:.3f}; "
                 f"target={b2['selector']['target']}; gate4 RETENTION=N/A; "
-                f"pass={all(n1_checks.values())}",
-                "  P2 B1 gate0/gate4 STRUCTURE = "
+                f"pass={all(noise_checks.values())}",
+                "  D1 B1 gate0/gate4 STRUCTURE = "
                 f"{b1['rows']['0.00']['structure']:.3f} / "
                 f"{b1['rows']['4.00']['structure']:.3f}; "
                 f"target={b1['selector']['target']}; "
                 f"gate4 RETENTION={b1['rows']['4.00']['retention']:.3f}; "
-                f"pass={all(p2_checks.values())}",
+                f"pass={all(detail_checks.values())}",
                 "  selector q/se/z B2 = "
                 f"{b2['selector']['q_signal_power']:+.3f}/"
                 f"{b2['selector']['signal_standard_error']:.3f}/"

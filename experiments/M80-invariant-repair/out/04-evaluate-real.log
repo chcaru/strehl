@@ -1,9 +1,11 @@
 wrapped-text-1:
-  N1 B2 selector/gate0/gate4 STRUCTURE = 1.002 / 1.002 / 1.006; gate4 RETENTION=1.003; pass=True
-  P2 B1 gate0/gate4 STRUCTURE = 3.499 / 3.522; pass=True
+  D1 B2 selector/gate0/gate4 STRUCTURE = 1.002 / 1.002 / 1.006; target=NOT-MEASURABLE; gate4 RETENTION=N/A; pass=True
+  D1 B1 gate0/gate4 STRUCTURE = 3.499 / 3.522; target=MEASURABLE; gate4 RETENTION=0.996; pass=True
+  selector q/se/z B2 = +8.021/22.842/+0.351
   gate0 measured inflation k(L/R) = 1.951/2.165
 wrapped-text-2:
-  N1 B2 selector/gate0/gate4 STRUCTURE = 1.000 / 1.000 / 1.000; gate4 RETENTION=1.000; pass=True
-  P2 B1 gate0/gate4 STRUCTURE = 3.306 / 3.201; pass=True
+  D1 B2 selector/gate0/gate4 STRUCTURE = 1.000 / 1.000 / 1.000; target=NOT-MEASURABLE; gate4 RETENTION=N/A; pass=True
+  D1 B1 gate0/gate4 STRUCTURE = 3.306 / 3.201; target=MEASURABLE; gate4 RETENTION=0.970; pass=True
+  selector q/se/z B2 = +4.293/49.967/+0.086
   gate0 measured inflation k(L/R) = 1.337/1.369
 all_pass=True

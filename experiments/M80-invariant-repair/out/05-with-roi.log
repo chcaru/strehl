@@ -25,15 +25,15 @@ working set     : 321 MB/worker pass 1, 470 MB/worker pass 2 (buffers only, a LO
   of which detail control: 0.9 MB/worker, CONSTANT in the frame count
 
 --- pass one: regularised winner field (MEASURED) ---
-wall clock      : 0.996 s  (45.3 ms/frame)
-  decode        : 5.535 s summed across workers (251.6 ms/frame)
-  focus + reg   : 3.578 s summed across workers (162.6 ms/frame)
+wall clock      : 0.946 s  (43.0 ms/frame)
+  decode        : 5.704 s summed across workers (259.3 ms/frame)
+  focus + reg   : 2.931 s summed across workers (133.2 ms/frame)
 
 --- pass two: gated average (MEASURED) ---
-wall clock      : 1.031 s  (46.9 ms/frame, 1 accumulators)
-  decode        : 4.440 s summed across workers (201.8 ms/frame)
-  field + gate  : 4.446 s summed across workers (202.1 ms/frame)
-total           : 2.027 s  (+0.100 s prologue), 412.7 MB/s over 836.4 MB
+wall clock      : 0.978 s  (44.4 ms/frame, 1 accumulators)
+  decode        : 4.503 s summed across workers (204.7 ms/frame)
+  field + gate  : 4.076 s summed across workers (185.3 ms/frame)
+total           : 1.924 s  (+0.094 s prologue), 434.8 MB/s over 836.4 MB
 in-flight frames: 11 peak, bound 11 (never O(N))
 
 --- gate calibration (MEASURED) ---
@@ -136,17 +136,19 @@ roi             : x 1952 y 1056 w 256 h 256 in plane coordinates
                   Each row therefore MEASURES its inflation on the flat ROI, separately
                   in the left/right halves, and applies the OPPOSITE half's scale to detail.
                   STRUCTURE = raw / controlled-noise: pure noise reads 1.0x; real detail
-                  reads above it. RETENTION compares resolved signal at the SAME selector
-                  noise floor, against the full-stack gate-zero selector -- never one
-                  arbitrary frame. The flat scale is re-measured per gate, so its N and
+                  reads above it. RETENTION is N/A unless the SELECTOR'S resolved detail
+                  clears a one-sided model-derived 99% bound (alpha 0.01). If it does,
+                  retention compares resolved signal at the SAME selector noise floor,
+                  against the full-stack gate-zero selector -- never one arbitrary frame.
+                  The flat scale is re-measured per gate, so its N and
                   admission dependence come from this run rather than a transferred bar.
-selector gate 0 : q +11043.586 DN^2   STRUCTURE   4.035x   raw  108.4727   ctrl noise   26.8837   k(L/R)  1.069/ 1.057   m2  44.1001   iso  72.3193
+selector gate 0 : q +11043.586 +/-    7.014 DN^2   z +1574.445   target MEASURABLE       STRUCTURE   4.035x   raw  108.4727   ctrl noise   26.8837   k(L/R)  1.069/ 1.057   m2  44.1001   iso  72.3193
   gate     q signal    RETENTION   VERDICT    STRUCTURE     raw rms  ctrl noise   k left  k right         m2        iso
    4.00   +10739.987       0.987x   ok              4.443x    106.3635     23.9418     1.274    1.230    41.2054    68.0146
                   q is SIGNED resolved gradient power. A negative q means the ROI has no
                   resolved detail above the cross-fitted flat control; it is not clamped
                   before retention. At high STRUCTURE, RETENTION approaches resolved
-                  signal amplitude. Near 1.0x it honestly shrinks toward no-effect.
+                  signal amplitude. NO TARGET is not a pass: the ratio is not identified.
                   A rise is INVESTIGATE, not PASS: see the speckle companion below, which
                   is two-sided and shares a cause with manufactured detail.
 

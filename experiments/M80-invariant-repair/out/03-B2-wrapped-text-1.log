@@ -25,15 +25,15 @@ working set     : 321 MB/worker pass 1, 2646 MB/worker pass 2 (buffers only, a L
   of which detail control: 0.9 MB/worker, CONSTANT in the frame count
 
 --- pass one: regularised winner field (MEASURED) ---
-wall clock      : 10.748 s  (82.7 ms/frame)
-  decode        : 8.919 s summed across workers (68.6 ms/frame)
-  focus + reg   : 10.358 s summed across workers (79.7 ms/frame)
+wall clock      : 8.288 s  (63.8 ms/frame)
+  decode        : 6.833 s summed across workers (52.6 ms/frame)
+  focus + reg   : 8.241 s summed across workers (63.4 ms/frame)
 
 --- pass two: gated average (MEASURED) ---
-wall clock      : 24.118 s  (185.5 ms/frame, 12 accumulators)
-  decode        : 8.703 s summed across workers (66.9 ms/frame)
-  field + gate  : 37.021 s summed across workers (284.8 ms/frame)
-total           : 34.866 s  (+0.128 s prologue), 140.3 MB/s over 4893.2 MB
+wall clock      : 18.834 s  (144.9 ms/frame, 12 accumulators)
+  decode        : 7.327 s summed across workers (56.4 ms/frame)
+  field + gate  : 28.137 s summed across workers (216.4 ms/frame)
+total           : 27.122 s  (+0.094 s prologue), 180.4 MB/s over 4893.2 MB
 in-flight frames: 2 peak, bound 2 (never O(N))
 
 --- gate calibration (MEASURED) ---
@@ -169,28 +169,30 @@ roi             : x 32 y 1056 w 256 h 256 in plane coordinates
                   Each row therefore MEASURES its inflation on the flat ROI, separately
                   in the left/right halves, and applies the OPPOSITE half's scale to detail.
                   STRUCTURE = raw / controlled-noise: pure noise reads 1.0x; real detail
-                  reads above it. RETENTION compares resolved signal at the SAME selector
-                  noise floor, against the full-stack gate-zero selector -- never one
-                  arbitrary frame. The flat scale is re-measured per gate, so its N and
+                  reads above it. RETENTION is N/A unless the SELECTOR'S resolved detail
+                  clears a one-sided model-derived 99% bound (alpha 0.01). If it does,
+                  retention compares resolved signal at the SAME selector noise floor,
+                  against the full-stack gate-zero selector -- never one arbitrary frame.
+                  The flat scale is re-measured per gate, so its N and
                   admission dependence come from this run rather than a transferred bar.
-selector gate 0 : q     +8.021 DN^2   STRUCTURE   1.002x   raw   50.9996   ctrl noise   50.9209   k(L/R)  1.951/ 2.165   m2  26.3750   iso  41.1927
+selector gate 0 : q     +8.021 +/-   22.842 DN^2   z  +0.351   target NOT-MEASURABLE   STRUCTURE   1.002x   raw   50.9996   ctrl noise   50.9209   k(L/R)  1.951/ 2.165   m2  26.3750   iso  41.1927
   gate     q signal    RETENTION   VERDICT    STRUCTURE     raw rms  ctrl noise   k left  k right         m2        iso
-   0.00       +8.021       1.000x   ok              1.002x     50.9996     50.9209     1.951    2.165    26.3750    41.1927
-   2.00      +13.887       1.001x   ok              1.003x     49.2643     49.1231     1.975    2.184    25.3540    39.6072
-   4.00      +25.299       1.003x   ok              1.006x     46.7975     46.5264     1.976    2.204    24.0189    37.5473
-   8.00      +17.437       1.002x   ok              1.005x     41.6991     41.4895     2.002    2.250    21.4740    33.6026
-  16.00      +24.622       1.003x   ok              1.012x     32.2127     31.8283     1.984    2.234    16.8842    26.4946
-  24.00       +8.811       1.000x   ok              1.006x     27.5194     27.3588     1.946    2.153    14.6328    22.9904
-  32.00      +11.093       1.001x   ok              1.009x     24.6429     24.4168     1.932    2.139    13.0740    20.5619
-  40.00       +7.299       1.000x   ok              1.008x     21.6045     21.4349     1.913    2.087    11.5175    18.1152
-  48.00       +2.326       0.999x   ok              1.003x     18.8634     18.8017     1.988    2.027     9.9792    15.6928
-  64.00      -19.832       0.995x   ok              0.914x     10.0036     10.9500     2.708    2.249     5.0260     7.8203
-  96.00       +0.004       0.998x   ok              1.000x      6.6282      6.6278     3.082    3.090     3.7353     5.7717
-  128.00       +0.004       0.998x   ok              1.000x      6.6282      6.6278     3.082    3.090     3.7353     5.7717
+   0.00       +8.021         N/A   NO TARGET       1.002x     50.9996     50.9209     1.951    2.165    26.3750    41.1927
+   2.00      +13.887         N/A   NO TARGET       1.003x     49.2643     49.1231     1.975    2.184    25.3540    39.6072
+   4.00      +25.299         N/A   NO TARGET       1.006x     46.7975     46.5264     1.976    2.204    24.0189    37.5473
+   8.00      +17.437         N/A   NO TARGET       1.005x     41.6991     41.4895     2.002    2.250    21.4740    33.6026
+  16.00      +24.622         N/A   NO TARGET       1.012x     32.2127     31.8283     1.984    2.234    16.8842    26.4946
+  24.00       +8.811         N/A   NO TARGET       1.006x     27.5194     27.3588     1.946    2.153    14.6328    22.9904
+  32.00      +11.093         N/A   NO TARGET       1.009x     24.6429     24.4168     1.932    2.139    13.0740    20.5619
+  40.00       +7.299         N/A   NO TARGET       1.008x     21.6045     21.4349     1.913    2.087    11.5175    18.1152
+  48.00       +2.326         N/A   NO TARGET       1.003x     18.8634     18.8017     1.988    2.027     9.9792    15.6928
+  64.00      -19.832         N/A   NO TARGET       0.914x     10.0036     10.9500     2.708    2.249     5.0260     7.8203
+  96.00       +0.004         N/A   NO TARGET       1.000x      6.6282      6.6278     3.082    3.090     3.7353     5.7717
+  128.00       +0.004         N/A   NO TARGET       1.000x      6.6282      6.6278     3.082    3.090     3.7353     5.7717
                   q is SIGNED resolved gradient power. A negative q means the ROI has no
                   resolved detail above the cross-fitted flat control; it is not clamped
                   before retention. At high STRUCTURE, RETENTION approaches resolved
-                  signal amplitude. Near 1.0x it honestly shrinks toward no-effect.
+                  signal amplitude. NO TARGET is not a pass: the ratio is not identified.
                   A rise is INVESTIGATE, not PASS: see the speckle companion below, which
                   is two-sided and shares a cause with manufactured detail.
 

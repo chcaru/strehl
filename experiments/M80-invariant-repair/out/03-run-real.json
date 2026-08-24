@@ -1,6 +1,6 @@
 {
   "binary": "experiments\\M80-invariant-repair\\target-m80\\release\\strehl.exe",
-  "binary_sha256": "ef52ae761d175deede3be8b4636c3b2dcff4ad0c62baf588835766378b377a2a",
+  "binary_sha256": "255201904db7033370cde2613e3ecde16abc757806b8de81bbe348d003b4ea16",
   "ladder": [
     0,
     2,
@@ -34,7 +34,7 @@
         "contam_max": 1.2436535470070456
       },
       "exit": 0,
-      "seconds": 36.75020449992735,
+      "seconds": 28.674109499901533,
       "log": "experiments\\M80-invariant-repair\\out\\03-B2-wrapped-text-1.log"
     },
     {
@@ -55,7 +55,7 @@
         "cg_max": 134.81880220051093
       },
       "exit": 0,
-      "seconds": 40.913776799920015,
+      "seconds": 28.10828980000224,
       "log": "experiments\\M80-invariant-repair\\out\\03-B1-wrapped-text-1.log"
     },
     {
@@ -76,7 +76,7 @@
         "contam_max": 1.067951074871118
       },
       "exit": 0,
-      "seconds": 45.27913989999797,
+      "seconds": 29.69114500004798,
       "log": "experiments\\M80-invariant-repair\\out\\03-B2-wrapped-text-2.log"
     },
     {
@@ -97,7 +97,7 @@
         "cg_max": 173.24072932186377
       },
       "exit": 0,
-      "seconds": 30.648746600025333,
+      "seconds": 28.819356699939817,
       "log": "experiments\\M80-invariant-repair\\out\\03-B1-wrapped-text-2.log"
     }
   ]

@@ -24,15 +24,15 @@ workers         : 11 chunks of <= 2 frames (13 allowed by the 6144 MB budget, 32
 working set     : 321 MB/worker pass 1, 469 MB/worker pass 2 (buffers only, a LOWER BOUND)
 
 --- pass one: regularised winner field (MEASURED) ---
-wall clock      : 0.942 s  (42.8 ms/frame)
-  decode        : 5.847 s summed across workers (265.8 ms/frame)
-  focus + reg   : 3.012 s summed across workers (136.9 ms/frame)
+wall clock      : 0.937 s  (42.6 ms/frame)
+  decode        : 5.912 s summed across workers (268.7 ms/frame)
+  focus + reg   : 2.773 s summed across workers (126.0 ms/frame)
 
 --- pass two: gated average (MEASURED) ---
-wall clock      : 1.091 s  (49.6 ms/frame, 1 accumulators)
-  decode        : 5.064 s summed across workers (230.2 ms/frame)
-  field + gate  : 4.605 s summed across workers (209.3 ms/frame)
-total           : 2.033 s  (+0.095 s prologue), 411.4 MB/s over 836.4 MB
+wall clock      : 1.169 s  (53.1 ms/frame, 1 accumulators)
+  decode        : 5.437 s summed across workers (247.1 ms/frame)
+  field + gate  : 4.937 s summed across workers (224.4 ms/frame)
+total           : 2.106 s  (+0.096 s prologue), 397.1 MB/s over 836.4 MB
 in-flight frames: 11 peak, bound 11 (never O(N))
 
 --- gate calibration (MEASURED) ---

@@ -1,12 +1,16 @@
 {
   "wrapped-text-1": {
-    "N1": {
+    "D1_noise": {
+      "selector_not_measurable": true,
+      "all_retentions_na": true,
       "selector_structure": true,
       "gate0_structure": true,
-      "gate4_structure": true,
-      "gate4_retention": true
+      "gate4_structure": true
     },
-    "P2": {
+    "D1_detail": {
+      "selector_measurable": true,
+      "gate0_retention_numeric": true,
+      "gate4_retention_numeric": true,
       "gate0_structure": true,
       "gate4_structure": true
     },
@@ -15,6 +19,9 @@
       "B2": {
         "selector": {
           "q_signal_power": 8.021,
+          "signal_standard_error": 22.842,
+          "z": 0.351,
+          "target": "NOT-MEASURABLE",
           "structure": 1.002,
           "inflation_left": 1.951,
           "inflation_right": 2.165
@@ -22,8 +29,8 @@
         "rows": {
           "0.00": {
             "q_signal_power": 8.021,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.002,
             "raw_rms": 50.9996,
             "controlled_noise_rms": 50.9209,
@@ -32,8 +39,8 @@
           },
           "2.00": {
             "q_signal_power": 13.887,
-            "retention": 1.001,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.003,
             "raw_rms": 49.2643,
             "controlled_noise_rms": 49.1231,
@@ -42,8 +49,8 @@
           },
           "4.00": {
             "q_signal_power": 25.299,
-            "retention": 1.003,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.006,
             "raw_rms": 46.7975,
             "controlled_noise_rms": 46.5264,
@@ -52,8 +59,8 @@
           },
           "8.00": {
             "q_signal_power": 17.437,
-            "retention": 1.002,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.005,
             "raw_rms": 41.6991,
             "controlled_noise_rms": 41.4895,
@@ -62,8 +69,8 @@
           },
           "16.00": {
             "q_signal_power": 24.622,
-            "retention": 1.003,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.012,
             "raw_rms": 32.2127,
             "controlled_noise_rms": 31.8283,
@@ -72,8 +79,8 @@
           },
           "24.00": {
             "q_signal_power": 8.811,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.006,
             "raw_rms": 27.5194,
             "controlled_noise_rms": 27.3588,
@@ -82,8 +89,8 @@
           },
           "32.00": {
             "q_signal_power": 11.093,
-            "retention": 1.001,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.009,
             "raw_rms": 24.6429,
             "controlled_noise_rms": 24.4168,
@@ -92,8 +99,8 @@
           },
           "40.00": {
             "q_signal_power": 7.299,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.008,
             "raw_rms": 21.6045,
             "controlled_noise_rms": 21.4349,
@@ -102,8 +109,8 @@
           },
           "48.00": {
             "q_signal_power": 2.326,
-            "retention": 0.999,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.003,
             "raw_rms": 18.8634,
             "controlled_noise_rms": 18.8017,
@@ -112,8 +119,8 @@
           },
           "64.00": {
             "q_signal_power": -19.832,
-            "retention": 0.995,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 0.914,
             "raw_rms": 10.0036,
             "controlled_noise_rms": 10.95,
@@ -122,8 +129,8 @@
           },
           "96.00": {
             "q_signal_power": 0.004,
-            "retention": 0.998,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.0,
             "raw_rms": 6.6282,
             "controlled_noise_rms": 6.6278,
@@ -132,8 +139,8 @@
           },
           "128.00": {
             "q_signal_power": 0.004,
-            "retention": 0.998,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.0,
             "raw_rms": 6.6282,
             "controlled_noise_rms": 6.6278,
@@ -145,6 +152,9 @@
       "B1": {
         "selector": {
           "q_signal_power": 36617.218,
+          "signal_standard_error": 30.064,
+          "z": 1217.984,
+          "target": "MEASURABLE",
           "structure": 3.499,
           "inflation_left": 1.951,
           "inflation_right": 2.165
@@ -275,13 +285,17 @@
     }
   },
   "wrapped-text-2": {
-    "N1": {
+    "D1_noise": {
+      "selector_not_measurable": true,
+      "all_retentions_na": true,
       "selector_structure": true,
       "gate0_structure": true,
-      "gate4_structure": true,
-      "gate4_retention": true
+      "gate4_structure": true
     },
-    "P2": {
+    "D1_detail": {
+      "selector_measurable": true,
+      "gate0_retention_numeric": true,
+      "gate4_retention_numeric": true,
       "gate0_structure": true,
       "gate4_structure": true
     },
@@ -290,6 +304,9 @@
       "B2": {
         "selector": {
           "q_signal_power": 4.293,
+          "signal_standard_error": 49.967,
+          "z": 0.086,
+          "target": "NOT-MEASURABLE",
           "structure": 1.0,
           "inflation_left": 1.337,
           "inflation_right": 1.369
@@ -297,8 +314,8 @@
         "rows": {
           "0.00": {
             "q_signal_power": 4.293,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.0,
             "raw_rms": 75.4884,
             "controlled_noise_rms": 75.46,
@@ -307,8 +324,8 @@
           },
           "2.00": {
             "q_signal_power": 2.955,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.0,
             "raw_rms": 63.3366,
             "controlled_noise_rms": 63.3133,
@@ -317,8 +334,8 @@
           },
           "4.00": {
             "q_signal_power": -0.011,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.0,
             "raw_rms": 54.3778,
             "controlled_noise_rms": 54.378,
@@ -327,8 +344,8 @@
           },
           "8.00": {
             "q_signal_power": 4.497,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.001,
             "raw_rms": 43.1029,
             "controlled_noise_rms": 43.0507,
@@ -337,8 +354,8 @@
           },
           "16.00": {
             "q_signal_power": 3.359,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.002,
             "raw_rms": 31.0794,
             "controlled_noise_rms": 31.0253,
@@ -347,8 +364,8 @@
           },
           "24.00": {
             "q_signal_power": -1.972,
-            "retention": 0.999,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 0.997,
             "raw_rms": 18.3254,
             "controlled_noise_rms": 18.3791,
@@ -357,8 +374,8 @@
           },
           "32.00": {
             "q_signal_power": -3.072,
-            "retention": 0.999,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 0.987,
             "raw_rms": 10.909,
             "controlled_noise_rms": 11.0489,
@@ -367,8 +384,8 @@
           },
           "40.00": {
             "q_signal_power": 0.043,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.0,
             "raw_rms": 10.3298,
             "controlled_noise_rms": 10.3277,
@@ -377,8 +394,8 @@
           },
           "48.00": {
             "q_signal_power": 0.043,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.0,
             "raw_rms": 10.3299,
             "controlled_noise_rms": 10.3278,
@@ -387,8 +404,8 @@
           },
           "64.00": {
             "q_signal_power": 0.043,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.0,
             "raw_rms": 10.3299,
             "controlled_noise_rms": 10.3278,
@@ -397,8 +414,8 @@
           },
           "96.00": {
             "q_signal_power": 0.043,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.0,
             "raw_rms": 10.3299,
             "controlled_noise_rms": 10.3278,
@@ -407,8 +424,8 @@
           },
           "128.00": {
             "q_signal_power": 0.043,
-            "retention": 1.0,
-            "verdict": "ok",
+            "retention": null,
+            "verdict": "NO TARGET",
             "structure": 1.0,
             "raw_rms": 10.3299,
             "controlled_noise_rms": 10.3278,
@@ -420,6 +437,9 @@
       "B1": {
         "selector": {
           "q_signal_power": 64584.146,
+          "signal_standard_error": 60.611,
+          "z": 1065.554,
+          "target": "MEASURABLE",
           "structure": 3.306,
           "inflation_left": 1.337,
           "inflation_right": 1.369
