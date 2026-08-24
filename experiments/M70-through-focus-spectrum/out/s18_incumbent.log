@@ -1,0 +1,64 @@
+======================================================================================================================
+1. WHICH WINDOW IS THE SHIPPED GATE? Two independent routes, no free parameter.
+======================================================================================================================
+  M67 measured, on its simulator at K = 25:
+    effective frame count of the gated weighted mean   n_eff = 6.84
+    D(A)/D(E) = 0.4895  ->  selector pick sits 0.848 frames from
+    true focus, admitted set averages 1.733 frames out.
+
+  An EQUAL average over +-W frames has n = 2W+1 and mean |offset| =
+  W(W+1)/(2W+1). Both of M67's numbers land on the same W:
+
+   W  n = 2W+1   vs n_eff 6.84   mean|off|   vs D(A) 1.733
+   1         3          0.439x       0.667          0.385x
+   2         5          0.731x       1.200          0.692x
+   3         7          1.023x       1.714          0.989x
+   5        11          1.608x       2.727          1.574x
+  10        21          3.070x       5.238          3.023x
+  20        41          5.994x      10.244          5.911x
+
+  Closest window on BOTH measures simultaneously: W = +-3 (7 frames)
+    n:          7 vs n_eff 6.84   ->  1.023x
+    mean|off|:  1.7143 vs D(A) 1.733   ->  0.989x
+
+======================================================================================================================
+2. THE PRICE LIST - matched filter over an EQUAL average of the SAME frames
+   (mid band, median over textured patches; measured, s10, 12 stacks)
+======================================================================================================================
+   W  n frames       min    median       max   median dB
+   1         3    1.0011    1.0023    1.0116       0.020
+   2         5    1.0045    1.0117    1.0691       0.101
+   3         7    1.0101    1.0238    1.1489       0.204   <-- the gate, per M67
+   5        11    1.0269    1.0811    1.2843       0.678
+  10        21    1.0747    1.2316    1.4885       1.809
+  20        41    1.1066    1.4150    1.7770       3.015
+
+======================================================================================================================
+3. WHAT THE GATE IS ALREADY HARVESTING - relative mid-band amplitude off peak
+======================================================================================================================
+  median rel_amp at 1 step off peak : 0.9539
+  median rel_amp at 2 steps off peak: 0.7439
+  median rel_amp at 3 steps off peak: 0.6140
+  median rel_amp at 5 steps off peak: 0.3791
+
+  At M67's measured admitted-set defocus of 1.733 frames, linear
+  interpolation gives rel_amp = 0.8000. The frames the gate is
+  already averaging carry ~80% of peak mid-band amplitude.
+  That IS the reviewer's premise, and the shipped gate already harvests it.
+
+======================================================================================================================
+4. THE VERDICT ARITHMETIC, RESTATED AGAINST THE RIGHT INCUMBENT
+======================================================================================================================
+  Against a best-3 equal average (the primary report's comparator):
+      MF buys 1.0023x  (0.23%)
+  Against the gated average AS IT BEHAVES (W = +-3, 7 frames):
+      MF buys 1.0238x  (2.38%),  range 1.0101-1.1489x
+  Bounded above, at ANY window W <= 10, by the measured headroom:
+      min 1.0696x  median 1.1100x  max 1.2037x
+
+  Corpus fact 19, the shipped gated mean: 0.534x single-frame noise
+      = 1.873x SNR = 5.45 dB already banked.
+      The MF's median prize at the gate's own width is 0.204 dB,
+      i.e. 3.7% of what the gate already delivers.
+
+wrote out/s18_incumbent.json

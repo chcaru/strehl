@@ -1,0 +1,47 @@
+======================================================================================================================
+SHUFFLE NULL BAND for the stack-median statistic, 100 reps per stack
+A stack is DISTINGUISHABLE when its intact median falls outside the
+central 95% of its own shuffled null. This is a per-stack power check.
+======================================================================================================================
+stack               K    n   A50 obs        A50 null95  out    g1 obs         g1 null95  out
+coffee-bubbles     19   72   +0.0373   [-0.0599,+0.0455]   no   +0.7584   [-0.1582,+0.1650]  YES
+109MSDCF           22   66   +0.0096   [-0.1332,+0.1275]   no   +0.1405   [-0.1236,+0.1168]  YES
+119MSDCF           33   72   -0.0447   [-0.0986,+0.1299]   no   +0.0434   [-0.0929,+0.0660]   no
+113MSDCF           63   72   -0.0369   [-0.0690,+0.0752]   no   +0.0651   [-0.1173,+0.1460]   no
+112MSDCF           79   69   -0.0389   [-0.0480,+0.0536]   no   -0.0259   [-0.1850,+0.1474]   no
+foam              100   72   +0.0773   [-0.0020,+0.0015]  YES   +0.3742   [-0.2478,+0.1832]  YES
+coffee-bean       105   48   +0.0160   [-0.0006,+0.0007]  YES   +0.0688   [-0.1326,+0.1229]   no
+wrapped-text-2    120   72   +0.0474   [-0.0027,+0.0021]  YES   +0.3540   [-0.2457,+0.2493]  YES
+wrapped-text-1    130   72   -0.0617   [-0.0008,+0.0012]  YES   +0.5704   [-0.1977,+0.1968]  YES
+bee-1             299   48   -0.0358   [-0.0028,+0.0037]  YES   +0.0489   [-0.2844,+0.1160]   no
+bee-2             299   54   +0.0420   [-0.0067,+0.0069]  YES   +0.0395   [-0.1862,+0.1932]   no
+bee-3             299   57   -0.0696   [-0.0039,+0.0053]  YES   -0.0143   [-0.1224,+0.0976]   no
+
+======================================================================================================================
+SUMMARY - stacks whose intact median is outside its own shuffled null
+======================================================================================================================
+  A50: 7/12   foam, coffee-bean, wrapped-text-2, wrapped-text-1, bee-1, bee-2, bee-3
+  A25: 9/12   113MSDCF, 112MSDCF, foam, coffee-bean, wrapped-text-2, wrapped-text-1, bee-1, bee-2, bee-3
+  A10: 6/12   foam, coffee-bean, wrapped-text-2, wrapped-text-1, bee-1, bee-3
+  g1: 5/12   coffee-bubbles, 109MSDCF, foam, wrapped-text-2, wrapped-text-1
+
+  null sd of the stack-median, by stack (the per-stack noise floor):
+stack               K       A50       A25       A10        g1
+coffee-bubbles     19    0.0257    0.0257    0.0305    0.0914
+109MSDCF           22    0.0766    0.0708    0.1128    0.0673
+119MSDCF           33    0.0580    0.0692    0.1408    0.0448
+113MSDCF           63    0.0328    0.0293    0.0347    0.0713
+112MSDCF           79    0.0249    0.0222    0.0186    0.0882
+foam              100    0.0009    0.0039    0.0028    0.1210
+coffee-bean       105    0.0004    0.0010    0.0012    0.0631
+wrapped-text-2    120    0.0013    0.0010    0.0007    0.1290
+wrapped-text-1    130    0.0005    0.0004    0.0003    0.1201
+bee-1             299    0.0018    0.0019    0.0025    0.0938
+bee-2             299    0.0033    0.0036    0.0044    0.0916
+bee-3             299    0.0022    0.0019    0.0024    0.0590
+
+  corr(log K, null sd of median A50) = -0.784
+  A rising null sd at low K means the sparse end of the step-density
+  range has less power, not more symmetry.
+
+wrote out/s16_null_band.json

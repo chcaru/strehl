@@ -1,0 +1,83 @@
+======================================================================================================================
+POST HOC (1) - does the asymmetry SIGN track ISO?
+======================================================================================================================
+stack              ISO    f/    K      A50      A25      A10  powered
+coffee-bubbles    1000   8.0   19  +0.0373  +0.0319  +0.0256       no
+109MSDCF           160  11.0   22  +0.0096  +0.0379  -0.0061       no
+119MSDCF            50   5.6   33  -0.0447  -0.0411  -0.0408       no
+113MSDCF           500  11.0   63  -0.0369  -0.0793  -0.0595       no
+112MSDCF           500  11.0   79  -0.0389  -0.0545  -0.0227       no
+foam              1000   8.0  100  +0.0773  +0.0451  +0.0472      YES
+coffee-bean         50   8.0  105  +0.0160  +0.0809  +0.0891      YES
+wrapped-text-2     400   5.6  120  +0.0474  +0.0384  +0.0320      YES
+wrapped-text-1     100   5.6  130  -0.0617  -0.0330  -0.0105      YES
+bee-1              100   5.6  299  -0.0358  -0.0288  -0.0150      YES
+bee-2              400   5.6  299  +0.0420  +0.0052  -0.0080      YES
+bee-3              100   5.6  299  -0.0696  +0.0804  +0.0481      YES
+
+  A50 / all 12: n=12  corr(log ISO, A50) = +0.577
+      ISO   50: n=2  median -0.0143  signs +1/-1
+      ISO  100: n=3  median -0.0617  signs +0/-3
+      ISO  160: n=1  median +0.0096  signs +1/-0
+      ISO  400: n=2  median +0.0447  signs +2/-0
+      ISO  500: n=2  median -0.0379  signs +0/-2
+      ISO 1000: n=2  median +0.0573  signs +2/-0
+
+  A50 / powered only: n=7  corr(log ISO, A50) = +0.755
+      ISO   50: n=1  median +0.0160  signs +1/-0
+      ISO  100: n=3  median -0.0617  signs +0/-3
+      ISO  400: n=2  median +0.0447  signs +2/-0
+      ISO 1000: n=1  median +0.0773  signs +1/-0
+
+  A25 / all 12: n=12  corr(log ISO, A25) = -0.085
+      ISO   50: n=2  median +0.0199  signs +1/-1
+      ISO  100: n=3  median -0.0288  signs +1/-2
+      ISO  160: n=1  median +0.0379  signs +1/-0
+      ISO  400: n=2  median +0.0218  signs +2/-0
+      ISO  500: n=2  median -0.0669  signs +0/-2
+      ISO 1000: n=2  median +0.0385  signs +2/-0
+
+  A25 / powered only: n=7  corr(log ISO, A25) = -0.031
+      ISO   50: n=1  median +0.0809  signs +1/-0
+      ISO  100: n=3  median -0.0288  signs +1/-2
+      ISO  400: n=2  median +0.0218  signs +2/-0
+      ISO 1000: n=1  median +0.0451  signs +1/-0
+
+  A10 / all 12: n=12  corr(log ISO, A10) = -0.063
+      ISO   50: n=2  median +0.0241  signs +1/-1
+      ISO  100: n=3  median -0.0105  signs +1/-2
+      ISO  160: n=1  median -0.0061  signs +0/-1
+      ISO  400: n=2  median +0.0120  signs +1/-1
+      ISO  500: n=2  median -0.0411  signs +0/-2
+      ISO 1000: n=2  median +0.0364  signs +2/-0
+
+  A10 / powered only: n=7  corr(log ISO, A10) = -0.137
+      ISO   50: n=1  median +0.0891  signs +1/-0
+      ISO  100: n=3  median -0.0105  signs +1/-2
+      ISO  400: n=2  median +0.0120  signs +1/-1
+      ISO 1000: n=1  median +0.0472  signs +1/-0
+
+======================================================================================================================
+POST HOC (2) - LEVEL DRIFT through the sweep (the candidate mechanism)
+  If patch level drifts monotonically, a mis-scaled noise floor biases the
+  curve tails asymmetrically. Slope is per-frame fractional change in the
+  w^2-weighted patch level, median over textured patches.
+======================================================================================================================
+stack              ISO    K  drift %/frame   total %      A50
+coffee-bubbles    1000   19         0.1004      1.91  +0.0373
+109MSDCF           160   22        -0.0128     -0.28  +0.0096
+119MSDCF            50   33         0.0473      1.56  -0.0447
+113MSDCF           500   63        -0.0471     -2.97  -0.0369
+112MSDCF           500   79        -0.0221     -1.75  -0.0389
+foam              1000  100        -0.0205     -2.05  +0.0773
+coffee-bean         50  105        -0.0516     -5.42  +0.0160
+wrapped-text-2     400  120        -0.0092     -1.10  +0.0474
+wrapped-text-1     100  130        -0.0117     -1.52  -0.0617
+bee-1              100  299        -0.0252     -7.55  -0.0358
+bee-2              400  299        -0.0173     -5.17  +0.0420
+bee-3              100  299        -0.0421    -12.58  -0.0696
+
+  corr(drift %/frame, A50)  = +0.198
+  corr(total drift,   A50)  = +0.330
+
+wrote out/s17_iso_drift.json
