@@ -5,6 +5,56 @@ says exactly what to shoot, why, and what it unblocks.
 
 ---
 
+## START HERE — one session, in value order
+
+*This index was added 2026-08-24 overnight. There are now 17 open requests across
+this document and that is not a list anyone can act on over coffee. **Shoot the
+first two and stop** if you only have twenty minutes — everything below them is
+genuinely useful and none of it is blocking a fix that is already written.*
+
+| # | what | time | what it unblocks |
+| --- | --- | --- | --- |
+| **1** | **§24** — flat, repeating, **corner-to-corner** subject at working magnification, shot **normal + red + green + blue** (gels or coloured light), plus **a second set with the 2x teleconverter** | ~10 min | **The dominant visible defect in your photographs.** See below. |
+| **2** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
+| 3 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document |
+| 4 | **§19** — one hard edge at three apertures | ~10 min | The remaining aperture question |
+| 5 | **§20** — a grey card somewhere in the frame | ~20 s | Add it to *any* session from now on; costs nothing |
+| 6 | **§21** — a straight edge inside a real bracket | — | Decides whether the alignment verdict is about optics or arithmetic |
+
+### Why §24 is first, and why it got more specific overnight
+
+Two independent by-eye reads on 1:1 crops of your own stacks — one by an agent
+that had never seen the chromatic-aberration work, one by me — independently
+concluded that **the worst thing in your renders is lateral chromatic
+aberration**: coloured fringes on every bright edge. Not softness, not noise, not
+ringing. The correction for it is written and is being wired into the render path
+tonight.
+
+**But it is fitted on ground that runs out before the corner, and half of it does
+not exist yet.** Measured, not guessed:
+
+- The fit spans **r = 0.208 to r = 0.788** of the frame radius. **Both outer
+  annuli are empty** — `0.80-0.90` *and* `0.90-1.00`. Lateral CA is **zero at the
+  centre by construction and grows with field height**, so the correction is least
+  supported exactly where the aberration is largest. At the corner, 2.35 sensels
+  of the 2.98-sensel correction sit at or below a measured radius; **the remaining
+  0.63 is the model's shape, not data.**
+- **Every fitted region was red.** The blue coefficient is not estimated as zero —
+  it is **not estimated at all**. Real fringes have a warm edge *and* a cool edge,
+  so at present at most half of each fringe can be corrected.
+
+Both of your best subjects (`tweezers-cpl`, `bee-3-cpl`) are macro subjects in a
+band with defocused background past r ~ 0.7. **Their corners are not measured
+clean; they are not measured.** No amount of reprocessing creates signal where the
+photograph has none — which is why this needs a *flat, repeating subject that
+fills the frame corner to corner*, under full-spectrum light, rather than another
+beautiful bee.
+
+**Already delivered, nothing needed:** dark frames (§1), flat fields (§4,
+delivered 2026-08-23), and the twelve labelled stacks in §16.
+
+---
+
 ## 0. Shooting advice — stop shooting at marked f/11
 
 > **AMENDED 2026-08-24 — read §17 before quoting any number in this section.**
