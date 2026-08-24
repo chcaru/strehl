@@ -3047,8 +3047,13 @@ sound; one of its three premises has since been measured false.
    626 give both the ordering rule and the measured route), hot pixels and dust, the
    PRNU term, colour management. The review was right that a SOTA claim dies here, and
    this is the part with the least research risk left in it.
-6. **Deep-alignment metacalibration and blur-equalisation remain open and unrefuted**,
-   and are the right next *research* item once the above is shipped.
+6. **Deep-alignment blur-equalisation (R5) is the one alignment item still open and
+   unrefuted**, and is the right next *research* item once the above is shipped.
+   **Metacalibration (R4) is REFUTED — M23 killed it three ways** (facts 170, 172,
+   177), and this line claimed it was open for several commits after that fold. It is
+   corrected here rather than deleted, because a stale plan line that outlived the
+   milestone which falsified it is the same defect as facts 1040 and 1053: a summary
+   kept in place of its source. No lint check sees prose outside the tables.
 
 **What this ordering deliberately gives up:** it delays visible capability by one
 milestone rather than two, because the second gate no longer exists. It gives up the
@@ -3596,9 +3601,9 @@ decode/compute overlap, learned components, super-resolution, per-channel LCA ex
      correlation peak, not a calibration**. *Testable:* re-measure `coffee-bean` span-1 edges with
      the moving frame pre-shifted by a known integer-plus-half-pixel offset that is then removed
      analytically, and see whether `1/S_48(1)` moves off 3.26. **This is the live thread M23 leaves
-     behind, and it is cheap.**
+     behind, and it is cheap.** **ROUTED to M78** (`f0a0e9b9`) as its Arm B.
 26. **Is R5 (blur-equalised edges) now the better candidate?** It attacks the same defect without
-     planting anything, so it is immune to the mechanism that broke R4. Untested.
+     planting anything, so it is immune to the mechanism that broke R4. **ROUTED to M78** (`f0a0e9b9`) as its Arm A, carrying M23's 6.758 px held-out gate unchanged for comparability. The arm is required to run a zero-defocus self-pair and an interpolator-free control, because it introduces a lowpass into the very path where an unnoticed lowpass destroyed R4.
 101. **What should a strictly detail-free region read under the corrected detail metric, and does **REFUTED AS FRAMED by M40 (fact 454), and the refutation is recorded in fact 430.** On a genuinely detail-free plant the corrected metric reads **-11.63 DN** where truth is 0 -- it crosses zero and lands further from truth than the defect it replaced, and the shipped `max(0,.)` hides it. **The question presumed the corrected metric had a correct answer to converge on; it does not.**
      the flat ROI qualify?** Fact 430 measures −11.5% where 1.0× is the naive expectation, but the
      ROI's single-frame corrected reading is 14.7270 rather than 0, so it is low-detail, not
