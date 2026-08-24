@@ -300,6 +300,17 @@ def check_s1_cell_count(docs):
             if end - start < 2 or not is_delimiter_row(doc.lines[start + 1]):
                 continue
             want = unescaped_pipe_count(doc.lines[start])
+            delim = unescaped_pipe_count(doc.lines[start + 1])
+            if want != delim:
+                out.append(Violation(
+                    doc.rel, start + 1, "S1",
+                    "table HEADER has %d unescaped pipes but its delimiter row "
+                    "(line %d) declares %d: the delimiter is GFM's ground truth, so "
+                    "the header is the corrupted row. A corrupted header is adopted "
+                    "as this check's own standard and silences the whole table — "
+                    "escape absolute-value bars as \\|."
+                    % (want, start + 2, delim), doc.lines[start]))
+                want = delim
             body = [unescaped_pipe_count(doc.lines[i]) for i in range(start + 2, end)]
             modal = max(set(body), key=body.count) if body else want
             for i in range(start, end):
@@ -320,6 +331,42 @@ def check_s1_cell_count(docs):
                         "missing a cell its siblings carry"
                         % (got, modal, start + 1, want),
                         doc.lines[i]))
+    return out
+
+
+def check_s6_pipe_in_code_span(docs):
+    """No table row may carry an unescaped `|` inside a code span.
+
+    Discipline 524: S1 compares a row's pipe count to its header's, so it is
+    blind to a row that is malformed **and** coincidentally lands on the header
+    width — one span leaking a cell while another cell is missing nets to zero.
+    This check tests fact 694's *mechanism* instead of its arithmetic, so the
+    coincidence cannot hide it.
+
+    In GFM a table row is split on `|` **before** inline code is parsed, so a
+    backtick span never protects a bar: `\\|H\\|` is the only correct spelling
+    inside a table. Any unescaped bar between backticks on a table row is
+    therefore a defect regardless of how the counts come out.
+    """
+    span = re.compile(r"`+[^`]*`+")
+    out = []
+    for doc in docs:
+        for start, end in table_blocks(doc):
+            if end - start < 2 or not is_delimiter_row(doc.lines[start + 1]):
+                continue
+            for i in range(start, end):
+                line = doc.lines[i]
+                if is_delimiter_row(line):
+                    continue
+                for m in span.finditer(line):
+                    if re.search(r"(?<!\\)\|", m.group(0)):
+                        out.append(Violation(
+                            doc.rel, i + 1, "S6",
+                            "code span %s on a table row contains an unescaped "
+                            "`|`: the renderer splits the row on it BEFORE parsing "
+                            "the span, so this opens a cell. Write \\| inside tables."
+                            % m.group(0)[:40], line))
+                        break
     return out
 
 
@@ -1354,7 +1401,7 @@ def check_c3_experiment_dir_attribution(root):
     return out
 
 
-CHECKS = ["S1", "S2", "S3", "S4", "S5", "N1", "N2", "N4", "N5", "C1", "C2",
+CHECKS = ["S1", "S2", "S3", "S4", "S5", "S6", "N1", "N2", "N4", "N5", "C1", "C2",
           "C3", "A1", "A2", "A4"]
 ADVISORIES = ["N3", "A3", "Q1"]
 
@@ -1411,7 +1458,20 @@ def main(argv=None):
         agents = Doc(root, SYNTHESIS)  # degrade rather than crash
     index = Index(syn, agents)
 
-    wanted = set(x.upper() for x in (args.only or CHECKS))
+    wanted = set()
+    for spec in (args.only or CHECKS):
+        for name in str(spec).replace(";", ",").split(","):
+            name = name.strip().upper()
+            if name:
+                wanted.add(name)
+    unknown = sorted(wanted - set(CHECKS) - set(ADVISORIES))
+    if unknown:
+        sys.stderr.write(
+            "corpus_lint: unknown check id(s) %s. Known: %s. Refusing to run: an "
+            "unrecognised --only silently selects NO checks and exits 0, which "
+            "reads as a green gate.\n" % (", ".join(unknown),
+                                          " ".join(CHECKS + ADVISORIES)))
+        return 2
     index_eol = git_index_eol(root)
     violations = []
     if "S1" in wanted:
@@ -1424,6 +1484,8 @@ def main(argv=None):
         violations += check_s4_line_endings(md_docs + rs_docs, index_eol)
     if "S5" in wanted:
         violations += check_s5_emphasis_balance(index)
+    if "S6" in wanted:
+        violations += check_s6_pipe_in_code_span(md_docs)
     if "N1" in wanted:
         violations += check_n1_duplicates(index)
     if "N2" in wanted:

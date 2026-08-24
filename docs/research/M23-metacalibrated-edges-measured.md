@@ -289,7 +289,7 @@ tighter arm (`cb-self`, `n = 52`, IQR `[0.353, 0.385]`), and the attribution doe
 **MEASURED** (`m23_conserve.py` → `out/conservation.txt`), `coffee-bean`, window `0..48`,
 `A_48 = −2.4257%` over 15 tiles. Uncorrected `1/S_48(1) = 3.2604`.
 
-| δ | measured `R` | **N1 shuffled `R`** | N2 constant = median | `|R|` floor 0.2 |
+| δ | measured `R` | **N1 shuffled `R`** | N2 constant = median | `\|R\|` floor 0.2 |
 |---|---|---|---|---|
 | 1e-4 | 1.5928 | 1.6550 `[1.5707, 1.7370]` | 1.7163 | 1.5928 |
 | **2e-4** | **1.9095** | **2.0005** `[1.9609, 2.0396]` | 1.9974 | 1.9095 |
