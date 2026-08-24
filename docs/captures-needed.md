@@ -671,6 +671,19 @@ fitted from the data itself. So:
   fitted per-frame focus position must be monotone and smooth — an independent
   check on fact 54's pixel-measured focus index and on the depth-from-breathing
   idea.
+- **It is the only thing that makes per-pixel focus *admission* correctness
+  measurable on real frames.** M67 measured whether the shipped merge admits the
+  frames actually in focus at each pixel — `H` = 99.955 % on a simulated tilted
+  plane — and could not run that measurement on a single real stack, because
+  `H` needs a per-pixel true in-focus index and no corpus stack has one. A plane
+  supplies it without an oracle: fit the three plane parameters from the data,
+  convert to a per-pixel focus index, and `H`, the miss distance and the
+  admitted-set defocus all become real numbers instead of simulated ones. That
+  converts M67's headline from an **idealised-PSF upper bound** into a
+  measurement. See `docs/research/M67-focus-correctness.md` §8.
+  **For this use the two f-stops matter more than usual** — the whole
+  uncertainty in M67's result is optical, and a second aperture is a second
+  through-focus curve to check the merge against.
 
 **One trap.** Fill the frame with the target and nothing else. A visible edge,
 background or mount reintroduces exactly the depth discontinuity the null is

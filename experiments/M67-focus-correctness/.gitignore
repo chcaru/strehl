@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+# Rendered plants are large binary blobs and are reproducible from
+# `src/10-render-plants.py` plus the committed radiometric fit. They never
+# enter Git, not even LFS (repository golden rule 4).
+plants/*.frames.u16
+plants/*.truth.f32

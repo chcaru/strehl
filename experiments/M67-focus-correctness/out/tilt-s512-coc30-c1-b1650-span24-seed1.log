@@ -1,0 +1,79 @@
+=== M67 focus-admission correctness ===
+plant           : C:\dev\blog\death-of-software\projects\strehl\experiments\M67-focus-correctness\plants\tilt-s512-coc30-c1-b1650-span24-seed1
+  plant           : tilt
+  side            : 512
+  plane_w         : 256
+  plane_h         : 256
+  frames          : 25
+  iso             : 160.0
+  black           : 512
+  white           : 15360
+  camera          : ILCE-7CM2
+  coc_px_per_frame: 3.0
+  span_frames     : 24.0
+  beta            : 1.6509617733582467
+  contrast_mult   : 1.0
+  latent_contrast_e: 56.219
+  latent_base_e   : 5515.381
+  seed            : 1
+  supersample     : 2
+  depth_bands     : 49
+  breathing_scale_change: 0.0
+  infocus_band_mean_dn: 2019.3306
+  infocus_band_sd_dn: 21.4377
+  infocus_band_model_noise_dn: 19.262
+  infocus_band_structure_dn: 9.4102
+  infocus_band_snr: 0.4885
+  render_seconds  : 175.8
+plane           : 256 x 256 = 65536 px
+noise model     : Profile
+interior margin : 22 plane px
+null seed       : 1295398826
+truth control   : none
+interior px     : 44944
+truth k* range  : 4 .. 20 over the interior
+
+--- C0: the harness's admitted-set counter is the shipped Estimator's ---
+harness mean n_eff (whole plane) : 24.344802856
+Estimator::mean_n_eff()          : 24.344802856
+C0                               : PASS
+
+--- the election (an INDEX-map quantity), reported separately ---
+E winner == k*   : 0.28422   mean |win - k*| = 1.5747 frames (regularised field)
+A winner == k*   : 0.24851   mean |win - k*| = 2.2121 frames (raw field)
+
+--- the arms, interior only ---
+arm          n_eff         H      miss   defocus   H(closed form)
+A(argmax)    1.000   0.24851    2.2121    2.2356
+E(0.5)       2.275   0.52047    0.6626    1.7776
+Su(0.5)      2.275   0.09423    4.7376    7.1512   0.09101
+Sb(0.5)      2.275   0.09919    6.3703    6.9940   0.09940
+E(1)         4.652   0.75614    0.2755    2.5202
+Su(1)        4.652   0.18732    2.7844    7.1859   0.18607
+Sb(1)        4.652   0.22310    4.9002    6.5874   0.22228
+E(2)        12.601   0.97070    0.0293    4.8279
+Su(2)       12.601   0.50287    0.8456    7.1892   0.50402
+Sb(2)       12.601   0.62456    1.6816    6.1210   0.62672
+E(4)        24.518   1.00000    0.0000    7.1108
+Su(4)       24.518   0.98095    0.0197    7.1818   0.98071
+Sb(4)       24.518   0.99804    0.0041    7.0959   0.99827
+
+--- margins at the shipped default gate 4 ---
+H(E)  - H(Su)   : +0.01905
+H(E)  - H(Sb)   : +0.00196
+H(E)  - H(A)    : +0.75149
+D(Su) / D(E)    : 1.0100
+D(Sb) / D(E)    : 0.9979
+D(A)  / D(E)    : 0.3144
+
+--- miss-distance CDF at the shipped default gate 4 ---
+arm           miss=0       <=1       <=2       <=3
+E(4)         1.00000   1.00000   1.00000   1.00000
+A(argmax)    0.24851   0.60466   0.76885   0.84218
+
+--- structural: is the admitted set's centre monotone in the ramp axis? ---
+E(0.5 ) spearman(col, mean admitted idx) = +0.99709   spearman(col, mean truth) = +1.00000   max |col mean - truth| = 1.6376 frames
+E(1   ) spearman(col, mean admitted idx) = +0.99582   spearman(col, mean truth) = +1.00000   max |col mean - truth| = 2.1064 frames
+E(2   ) spearman(col, mean admitted idx) = +0.96457   spearman(col, mean truth) = +1.00000   max |col mean - truth| = 5.4136 frames
+E(4   ) spearman(col, mean admitted idx) = +0.72668   spearman(col, mean truth) = +1.00000   max |col mean - truth| = 8.2287 frames
+SUMMARY plant=tilt-s512-coc30-c1-b1650-span24-seed1 truth_mirror=false plant=tilt side=512 plane_w=256 plane_h=256 frames=25 iso=160.0 black=512 white=15360 camera=ILCE-7CM2 coc_px_per_frame=3.0 span_frames=24.0 beta=1.6509617733582467 contrast_mult=1.0 latent_contrast_e=56.219 latent_base_e=5515.381 seed=1 supersample=2 depth_bands=49 breathing_scale_change=0.0 infocus_band_mean_dn=2019.3306 infocus_band_sd_dn=21.4377 infocus_band_model_noise_dn=19.262 infocus_band_structure_dn=9.4102 infocus_band_snr=0.4885 render_seconds=175.8 interior_px=44944 H_A=0.248509 M_A=2.212086 D_A=2.235605 winH_E=0.284220 winM_E=1.574671 n_0p5=2.275209 H_E_0p5=0.520470 M_E_0p5=0.662558 D_E_0p5=1.777563 H_Su_0p5=0.094228 D_Su_0p5=7.151248 M_Su_0p5=4.737562 H_Su_exact_0p5=0.091008 H_Sb_0p5=0.099190 D_Sb_0p5=6.993956 M_Sb_0p5=6.370283 H_Sb_exact_0p5=0.099402 rho_0p5=0.997091 devmax_0p5=1.637599 n_1=4.651767 H_E_1=0.756141 M_E_1=0.275454 D_E_1=2.520191 H_Su_1=0.187322 D_Su_1=7.185885 M_Su_1=2.784376 H_Su_exact_1=0.186071 H_Sb_1=0.223100 D_Sb_1=6.587377 M_Sb_1=4.900165 H_Sb_exact_1=0.222282 rho_1=0.995821 devmax_1=2.106440 n_2=12.600525 H_E_2=0.970697 M_E_2=0.029303 D_E_2=4.827929 H_Su_2=0.502870 D_Su_2=7.189241 M_Su_2=0.845608 H_Su_exact_2=0.504021 H_Sb_2=0.624555 D_Sb_2=6.120979 M_Sb_2=1.681626 H_Sb_exact_2=0.626721 rho_2=0.964571 devmax_2=5.413626 n_4=24.517666 H_E_4=1.000000 M_E_4=0.000000 D_E_4=7.110846 H_Su_4=0.980954 D_Su_4=7.181769 M_Su_4=0.019669 H_Su_exact_4=0.980707 H_Sb_4=0.998042 D_Sb_4=7.095898 M_Sb_4=0.004094 H_Sb_exact_4=0.998266 rho_4=0.726682 devmax_4=8.228651
