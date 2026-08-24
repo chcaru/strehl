@@ -248,6 +248,12 @@ impl Pipeline {
     }
 }
 
+/// Gate ladder for arm E. `DEFAULT_GATE` is the shipped value and the only one
+/// any registered decision reads; the rest exist so the report can show what the
+/// gate does as it opens, rather than assert it. `m65-election.rs` swept a
+/// ladder for the same reason.
+const GATE_LADDER: [f32; 7] = [1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0];
+
 /// Per-pixel admitted-set witnesses for one arm.
 ///
 /// `lo`/`hi` are the extreme admitted frame indices and `sum` their total, so
@@ -483,6 +489,7 @@ fn main() -> Result<()> {
     let gate_a = Gate::new(DEFAULT_GATE * k_sd as f32);
     let mut adm_e = Admitted::new(px);
     let mut adm_a = Admitted::new(px);
+    let mut ladder: Vec<Admitted> = GATE_LADDER.iter().map(|_| Admitted::new(px)).collect();
     let mut est_e = Estimator::new(&stats_reg, gate_e);
     let t2 = Instant::now();
     for (index, path) in paths.iter().enumerate() {
@@ -490,6 +497,9 @@ fn main() -> Result<()> {
         let frame = pipe.field_for(path)?;
         adm_e.fold(k, &win_e, &ref_e, &pipe.reg, gate_e);
         adm_a.fold(k, &win_a, &ref_a, &pipe.raw, gate_a);
+        for (slot, &t) in ladder.iter_mut().zip(GATE_LADDER.iter()) {
+            slot.fold(k, &win_e, &ref_e, &pipe.reg, Gate::new(t));
+        }
         est_e.fold(k, &frame, &pipe.reg)?;
         drop(frame);
         if index % 20 == 0 {
@@ -557,13 +567,34 @@ fn main() -> Result<()> {
     dump_u16(&out, "hi_A", &adm_a.hi)?;
     dump_u32(&out, "sum_A", &adm_a.sum)?;
     dump_f32(&out, "meanluma", &mean_luma)?;
+    for (slot, t) in ladder.iter().zip(GATE_LADDER.iter()) {
+        let tag = format!("g{}", *t as u32);
+        dump_u16(&out, &format!("lo_{tag}"), &slot.lo)?;
+        dump_u16(&out, &format!("hi_{tag}"), &slot.hi)?;
+        dump_u16(&out, &format!("nadm_{tag}"), &slot.n)?;
+    }
 
+    // The ladder is a POST-HOC exploratory diagnostic added after the
+    // pre-registration was committed. It reports what the gate does as it opens;
+    // no registered decision reads any gate but `DEFAULT_GATE`.
+    println!();
+    println!("--- gate ladder for arm E (EXPLORATORY, not pre-registered) ---");
+    for (slot, t) in ladder.iter().zip(GATE_LADDER.iter()) {
+        let ne = mean_n(&slot.n);
+        println!(
+            "gate {t:>5}      : n_eff {ne:9.5}   n_eff/N {:.5}",
+            ne / nframes as f64
+        );
+    }
+
+    let iso_json = iso.map_or_else(|| "null".to_string(), |v| format!("{v}"));
     let header = format!(
         "{{\n  \"stack\": {:?},\n  \"frames\": {nframes},\n  \"width\": {},\n  \"height\": {},\n  \
-         \"camera\": {camera:?},\n  \"iso\": {iso:?},\n  \"black\": {},\n  \"white\": {},\n  \
+         \"camera\": {camera:?},\n  \"iso\": {iso_json},\n  \"black\": {},\n  \"white\": {},\n  \
          \"gate_E\": {DEFAULT_GATE},\n  \"gate_A\": {},\n  \"k_sd\": {k_sd},\n  \
          \"focus_noise_sd_measured\": {},\n  \"focus_noise_sd_declared\": {},\n  \
          \"margin\": {},\n  \"mean_n_eff_E\": {harness},\n  \"mean_n_eff_A\": {},\n  \
+         \"gate_ladder\": [{}],\n  \"gate_ladder_n_eff\": [{}],\n  \
          \"win_disagree_frac\": {},\n  \"pass1_s\": {pass1},\n  \"pass2_s\": {pass2}\n}}\n",
         dir.display().to_string(),
         geom.width,
@@ -575,6 +606,16 @@ fn main() -> Result<()> {
         FOCUS_NOISE_SD,
         SUPPORT_RADIUS + REGULARISER_RADIUS,
         mean_n(&adm_a.n),
+        GATE_LADDER
+            .iter()
+            .map(|t| format!("{t}"))
+            .collect::<Vec<_>>()
+            .join(", "),
+        ladder
+            .iter()
+            .map(|s| format!("{}", mean_n(&s.n)))
+            .collect::<Vec<_>>()
+            .join(", "),
         disagree as f64 / px as f64,
     );
     let hpath = out.with_extension("json");

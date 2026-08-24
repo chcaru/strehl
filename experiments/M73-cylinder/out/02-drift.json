@@ -1,0 +1,24 @@
+{
+  "wrapped-text-1": {
+    "first": "DSC00001.ARW",
+    "last": "DSC00130.ARW",
+    "dy_top": 0.004021269831006136,
+    "dx_top": -0.012410792086082936,
+    "dy_bottom": 0.013100084080217244,
+    "dx_bottom": -0.008192227865039635,
+    "band_separation_px": 1544.0,
+    "rotation_deg_total": 0.00015654528851727646,
+    "y_magnification_pct_total": 0.0005880061042235174
+  },
+  "wrapped-text-2": {
+    "first": "DSC00001.ARW",
+    "last": "DSC00120.ARW",
+    "dy_top": -0.044983820511007536,
+    "dx_top": -0.04858071855908035,
+    "dy_bottom": 0.028701064405160487,
+    "dx_bottom": 0.06961148935975764,
+    "band_separation_px": 1544.0,
+    "rotation_deg_total": 0.0043859551069184745,
+    "y_magnification_pct_total": 0.004772337105969431
+  }
+}
