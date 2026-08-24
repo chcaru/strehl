@@ -1,0 +1,26 @@
+deck bee-3-cpl   n=299   reference=149   decile=29 frames
+level[0]=0.210919  level[149]=0.228625  level[298]=0.203201
+endpoint ratio level[0]/level[-1] = 1.0380
+
+-- PR-14: the early-decile bias, M87's statistic, on M87's deck --
+  M99 scene-coord early decile: brightness -6.43%   gain +6.88%
+  M87 far background reported : brightness -3.13%   gain +3.23%
+  the 5.31% figure re-derived : sqrt(1.0380)-1 = +1.88%  <- a FOCUS advantage, not a level bias
+
+-- PR-15: the EXIF arbiter (Program AE, independent of all pixels) --
+  EXIF early decile: brightness -22.03%   gain +28.25%
+  EXIF endpoint ratio exp[0]/exp[-1] = 0.8650
+  scene and EXIF agree in sign: True
+
+-- PR-13: signed-ramp recovery through the shipped estimator rule --
+  estimator: g_k = flux_ref / flux_k   (photometric.rs:390)
+    planted   recovered   err pp   verdict
+      +0.0%      +0.00%    0.000   ok
+      +2.0%      -1.78%    0.001   ok
+      -2.0%      +1.85%    0.002   ok
+      +4.0%      -3.50%    0.002   ok
+      -4.0%      +3.76%    0.003   ok
+      +8.0%      -6.76%    0.003   ok
+      -8.0%      +7.82%    0.009   ok
+
+  PR-13 verdict: SIGN SOUND
