@@ -402,6 +402,14 @@ Replaced by `experiments/M109-highlights/src/activate_stack_fix.py`, which is
 anchored on unique full lines and hard-errors unless each lands exactly once.
 `--check` verifies without writing; `--apply` patches; `--revert` undoes.
 
+**The anchoring has now been vindicated twice.** `merge_cmd.rs` was 4125 lines
+when section 6 was written and is **4287** as of this revision -- M97 has added
+162 lines in between, and its uncommitted delta has grown from 31 insertions to
+100. Every line number in section 6 has therefore rotted a second time, while
+all four anchors still land exactly once (`--check` clean at that size). Line
+numbers into a file another agent is actively editing have a shelf life
+measured in hours.
+
 **The guard caught a defect in my own anchors, which is the point of having
 it.** My first anchor set used the bare line `    let dev = image_out::Develop
 { matrix, srgb };`. The two sites differ only in indentation -- 4 spaces in the
