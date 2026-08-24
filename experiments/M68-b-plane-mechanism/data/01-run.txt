@@ -1,0 +1,38 @@
+folders: ['118MSDCF', '119MSDCF', '120MSDCF', '121MSDCF', '122MSDCF', '123MSDCF', '124MSDCF', '125MSDCF', '126MSDCF', '127MSDCF', '128MSDCF']
+  118MSDCF  ISO   100  22 files, dropping 2, using 20
+  119MSDCF  ISO   400  22 files, dropping 2, using 20
+  120MSDCF  ISO   800  22 files, dropping 2, using 20
+  121MSDCF  ISO  1600  22 files, dropping 2, using 20
+  122MSDCF  ISO    50  22 files, dropping 2, using 20
+  123MSDCF  ISO   200  22 files, dropping 2, using 20
+  124MSDCF  ISO   640  22 files, dropping 2, using 20
+  125MSDCF  ISO   500  22 files, dropping 2, using 20
+  126MSDCF  ISO   250  22 files, dropping 2, using 20
+  127MSDCF  ISO  1000  22 files, dropping 2, using 20
+  128MSDCF  ISO  2000  22 files, dropping 2, using 20
+  decoding 122MSDCF (ISO 50) ...
+  decoding 118MSDCF (ISO 100) ...
+  decoding 123MSDCF (ISO 200) ...
+  decoding 126MSDCF (ISO 250) ...
+  decoding 119MSDCF (ISO 400) ...
+  decoding 125MSDCF (ISO 500) ...
+  decoding 124MSDCF (ISO 640) ...
+  decoding 120MSDCF (ISO 800) ...
+  decoding 127MSDCF (ISO 1000) ...
+  decoding 121MSDCF (ISO 1600) ...
+  decoding 128MSDCF (ISO 2000) ...
+decode complete
+visible geometry (4688, 7028), per plane (2344, 3514), 8236816 px
+  R  recurrence>=3: 9970
+  R  recurrence>=6: 630
+  R  recurrence>=9: 18
+  G1 recurrence>=3: 10036
+  G1 recurrence>=6: 660
+  G1 recurrence>=9: 12
+  G2 recurrence>=3: 27250
+  G2 recurrence>=6: 7695
+  G2 recurrence>=9: 1653
+  B  recurrence>=3: 23236
+  B  recurrence>=6: 6154
+  B  recurrence>=9: 1241
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M68-b-plane-mechanism\data\01-dark-iso-sweep.json

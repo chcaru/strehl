@@ -1,0 +1,73 @@
+=== D2 per-plane dark level (median of the temporal-mean map, +512) ===
+  ISO          R         G1         G2          B
+   50   512.1000   512.1000   512.1000   512.2000
+  100   512.1000   512.1000   512.1000   512.2000
+  200   512.2000   512.2000   512.2500   512.2500
+  250   512.2000   512.1500   512.1500   512.2500
+  400   512.1000   512.1000   512.1000   512.2000
+  500   512.1000   512.1000   512.1500   512.2000
+  640   512.1500   512.2000   512.2500   512.2500
+  800   512.1000   512.1000   512.1000   512.1500
+ 1000   512.1000   512.1000   512.1500   512.1500
+ 1600   512.2000   512.2000   512.1500   512.2000
+ 2000   512.1500   512.0500   512.1000   512.1500
+    R mean over ISOs  512.1364 DN
+   G1 mean over ISOs  512.1273 DN
+   G2 mean over ISOs  512.1455 DN
+    B mean over ISOs  512.2000 DN
+D2 |mean_B - mean_G2| = 0.0545 DN  (threshold 1.0)  -> clear
+
+excluded per plane (recurrence>=6 + border): R 12342, G1 12372, G2 19407, B 17866
+
+=== D3 per-ISO residual of sigma^2 = alpha*G^2 + delta (arm r6) ===
+  ISO         R        G1        G2         B
+   50    +3.61%    +1.86%    +2.08%    +8.97%
+  100    +2.98%    +1.62%    +1.78%    +8.36%
+  200    -0.88%    -1.33%    -1.30%    -1.10%
+  250    +0.16%    +0.45%    +0.42%    -0.07%
+  400    -0.94%    +0.14%    +0.18%    +0.15%
+  500    +2.47%    +1.40%    +1.04%    +1.61%
+  640    -1.64%    -1.39%    -1.58%    -2.69%
+  800    -0.11%    -0.24%    -0.50%    -1.24%
+ 1000    +1.25%    +1.51%    +1.23%    +0.64%
+ 1600    -1.41%    -1.12%    -0.61%    -0.78%
+ 2000    +0.51%    +0.38%    +0.20%    +0.34%
+    R  low-mode residuals: 4 points, 3 positive, max|r| 3.61%
+    R high-mode residuals: 7 points, 3 positive, max|r| 2.47%
+   G1  low-mode residuals: 4 points, 3 positive, max|r| 1.86%
+   G1 high-mode residuals: 7 points, 4 positive, max|r| 1.51%
+   G2  low-mode residuals: 4 points, 3 positive, max|r| 2.08%
+   G2 high-mode residuals: 7 points, 4 positive, max|r| 1.58%
+    B  low-mode residuals: 4 points, 2 positive, max|r| 8.97%
+    B high-mode residuals: 7 points, 4 positive, max|r| 2.69%
+D3 B worst residual 8.97%, single-signed inside a gain mode: False
+
+=== D1 spatial uniformity: alpha_high ratio on a 4x4 block grid ===
+  B/G2:
+     0.8845  0.8761  0.8764  0.8732
+     0.8577  0.8608  0.8567  0.8560
+     0.8473  0.8456  0.8528  0.8257
+     0.8382  0.8368  0.8310  0.8248
+  G2/G1 control:
+     0.9992  1.0006  0.9983  1.0009
+     1.0022  1.0016  0.9980  0.9923
+     0.9972  1.0045  0.9924  1.0062
+     1.0038  0.9924  0.9993  1.0009
+D1 B/G2 block spread 0.0597 (threshold 0.05) -> FAIL - withdraw f;  G2/G1 control spread 0.0139
+       top half mean B/G2 0.8677
+    bottom half mean B/G2 0.8378
+      left half mean B/G2 0.8559
+     right half mean B/G2 0.8496
+
+=== (4) position statistic f, POST-HOC ===
+  B/G2: alpha ratio 0.85235  ->  f = 0.5004 +/- 0.0280(alpha) +/- 0.0319(s)  = 0.500 +/- 0.042
+  B/G1: alpha ratio 0.85181  ->  f = 0.5022 +/- 0.0280(alpha) +/- 0.0320(s)  = 0.502 +/- 0.043
+  B/R: alpha ratio 0.86187  ->  f = 0.4681 +/- 0.0283(alpha) +/- 0.0298(s)  = 0.468 +/- 0.041
+  endpoint predictions: f=1 -> ratio 0.70493, f=0 -> ratio 1.00000
+  f=1/2 -> ratio 0.85246
+
+=== E readout-geometry exclusions (arithmetic on 02's numbers) ===
+   G2/G1 measured  0.9994   row-parity scale       predicts  0.7049   -> EXCLUDED
+     B/R measured  0.8619   row-parity scale       predicts  0.7049   -> EXCLUDED
+    R/G1 measured  0.9883   column-parity scale    predicts  1.4186   -> EXCLUDED
+    B/G2 measured  0.8523   column-parity scale    predicts  0.7049   -> EXCLUDED

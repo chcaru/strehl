@@ -98,8 +98,11 @@ S_PTC, S_ERR = 0.8396, 0.0112
 
 def main() -> int:
     blob = json.loads((HERE / "data" / "01-dark-iso-sweep.json").read_text())
-    isos = sorted(int(k) for k in blob["iso_by_folder"].values())
-    folder_of = {int(v): k for k, v in blob["iso_by_folder"].items()}
+    cache_of = {int(p.stem.split("-iso")[1]): p
+                for p in (HERE / "cache").glob("*MSDCF-iso*.npz")}
+    isos = sorted(cache_of)
+    if isos != sorted(int(i) for i in blob["isos"]):
+        raise RuntimeError(f"cache ISOs {isos} != sweep ISOs {blob['isos']}")
     g = np.maximum(np.array(isos, float), m68.BASE_ISO)
     mode = (np.array(isos) >= 400).astype(int)
 
@@ -109,7 +112,7 @@ def main() -> int:
     print(f"{'ISO':>5s} " + " ".join(f"{p:>10s}" for p in m68.PLANES))
     pedestal = {p: [] for p in m68.PLANES}
     for iso in isos:
-        z = np.load(HERE / "cache" / f"{folder_of[iso]}-iso{iso}.npz")
+        z = np.load(cache_of[iso])
         mean = z["mean"]
         row = []
         for p in m68.PLANES:
@@ -139,7 +142,7 @@ def main() -> int:
     bvar = {p: np.zeros((len(isos), GRID, GRID)) for p in m68.PLANES}
     fvar = {p: np.zeros(len(isos)) for p in m68.PLANES}
     for i, iso in enumerate(isos):
-        z = np.load(HERE / "cache" / f"{folder_of[iso]}-iso{iso}.npz")
+        z = np.load(cache_of[iso])
         var = z["var"]
         for p in m68.PLANES:
             vp = m68.split_plane(var, p).astype(np.float64)
