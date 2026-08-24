@@ -313,11 +313,12 @@ impl Gate {
 
     /// Is a frame with response `focus` admitted against a winner at `best`?
     ///
-    /// A non-finite response is never admitted, because every comparison
-    /// against NaN is false.
+    /// At threshold zero this returns false even for a tie: pass two admits the
+    /// elected winner separately, so this keeps the selector control at exactly
+    /// one frame per pixel. A non-finite response is never admitted.
     #[inline]
     pub fn admits(&self, focus: f32, best: f32) -> bool {
-        best - focus <= self.tolerance()
+        self.threshold > 0.0 && best - focus <= self.tolerance()
     }
 }
 
@@ -1326,7 +1327,7 @@ mod tests {
     #[test]
     fn a_zero_threshold_admits_only_the_winner() {
         let gate = Gate::new(0.0);
-        assert!(gate.admits(1.0, 1.0));
+        assert!(!gate.admits(1.0, 1.0));
         assert!(!gate.admits(1.0 - 1e-6, 1.0));
     }
 
@@ -1633,6 +1634,17 @@ mod tests {
         assert!(wide.n_eff().iter().all(|n| *n == 5));
         let none = run(g, 5, Gate::new(0.0), focus);
         assert!(none.n_eff().iter().all(|n| *n == 1));
+    }
+
+    #[test]
+    fn a_zero_gate_uses_the_elected_winner_when_responses_tie() {
+        let g = geom(4, 4);
+        let none = run(g, 5, Gate::new(0.0), |_, _| 1.0);
+        assert!(none.n_eff().iter().all(|n| *n == 1));
+        assert!(none.best_index().iter().all(|&k| k == 0));
+
+        let positive = run(g, 5, Gate::new(f32::MIN_POSITIVE), |_, _| 1.0);
+        assert!(positive.n_eff().iter().all(|n| *n == 5));
     }
 
     #[test]

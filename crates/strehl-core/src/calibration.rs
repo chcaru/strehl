@@ -591,7 +591,9 @@ impl AdmissionHistogram {
             }
             let required = ((best - focus) / unit).max(0.0);
             if required == 0.0 {
-                self.zero += 1;
+                // A non-winning exact tie is excluded at gate zero and enters
+                // at the first positive gate, matching Gate::admits.
+                self.positive[0] += 1;
             } else if required.is_finite() {
                 let bucket = (required.to_bits() >> HISTOGRAM_SHIFT) as usize;
                 self.positive[bucket] += 1;
