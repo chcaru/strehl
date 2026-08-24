@@ -276,6 +276,22 @@ re-reads.
 
 **All measurement after §4.6 was moved onto isolated full-depth copies of the
 stacks under `C:\`**, once I found the binary writing to `D:`.
+`00-isolate.ps1` rebuilds those copies from the read-only sources so the later
+scripts are re-runnable; it verifies to `iso60` 60, `iso-coffee-bean` 60,
+`iso-foam` 60, `isofull-bee-3-cpl` **299**, `isofull-coffee-bean` **105**,
+`isofull-foam` **100** — an independent confirmation of the frame counts §4.7
+reports, taken from the filesystem rather than from the render logs. It sorts
+by filename because `main.rs`'s `raw_paths` does, so its first *n* are the
+same frames `--limit n` selects.
+
+Writing it caught a bug that would have hit a verifier and not me: PowerShell
+variable names are case-insensitive, so a loop-local `$src` and the root
+`$SRC` are **one variable**, and the first iteration silently rewrote the
+source root to `D:\personal\macro\bee-3-cpl`. It threw on iteration two rather
+than reading the wrong frames, which is luck, not design. Recorded because the
+same shape — a loop clobbering the constant it derives from — reads as a
+missing directory rather than as a wrong answer only when the wrong path
+happens not to exist.
 
 ---
 
@@ -751,6 +767,14 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   `align_cmd.rs:951` performs the sidecar write; `STREHL_WARPMAP`, which
   redirects it, is defined in `merge_cmd.rs:1035`. I went to the write, missed
   the override, and copied 7 GB of frames to isolate myself instead.
+* **PD6.** **PowerShell variable names are case-insensitive, so `$src` and
+  `$SRC` are one variable.** A loop-local name that differs from an outer
+  constant only in case silently overwrites it on the first iteration. This
+  repo's harnesses are PowerShell-heavy and this shape reads as a *missing
+  path* rather than a *wrong answer* only when the clobbered path happens not
+  to exist. Mine threw on iteration two; the same bug against a stack whose
+  name collides with a subdirectory would have read frames from the wrong
+  place and reported a number.
 
 ### Questions
 
