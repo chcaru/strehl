@@ -68,7 +68,12 @@ enum Command {
     /// and noisier, high is cleaner and softer, and the honest price list is
     /// there rather than here.
     ///
-    /// It does not yet align, deconvolve, reject outliers, or model occlusion.
+    /// It ALIGNS BY DEFAULT (M86c): focus breathing changes magnification frame
+    /// to frame, and unregistered deep brackets drift 232.7 px corner-to-corner
+    /// on bee-3-cpl. Set STREHL_ALIGN=0 to disable. Note the field of view
+    /// shrinks ~7-10% so that every frame covers every output pixel.
+    ///
+    /// It does not yet deconvolve, reject outliers, or model occlusion.
     ///
     /// By DEFAULT the output is BINNED, LINEAR, CAMERA-NATIVE RGB: each output
     /// pixel is one real sensor quad, R = R, G = (G1+G2)/2, B = B, at half the
