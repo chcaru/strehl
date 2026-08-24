@@ -1036,6 +1036,7 @@ impl Estimator {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::calibration::AdmissionHistogram;
     use crate::focus::FocusField;
     use crate::noise::{Levels, NoiseModel, PlaneNoise, Provenance};
     use crate::plane::testing::QuadGrid;
@@ -2436,6 +2437,122 @@ mod tests {
             }
         }
         (r, acc / n as f64, single)
+    }
+
+    fn block_rms(
+        values: &[f32],
+        truth: &[f32],
+        frame_luma: &[Vec<f32>],
+        bx: usize,
+        by: usize,
+    ) -> (f64, f64) {
+        const SIDE: usize = 16;
+        let (x0, y0) = (BURST_INSET + bx * SIDE, BURST_INSET + by * SIDE);
+        let (mut merged_sq, mut single_sq) = (0.0f64, 0.0f64);
+        for py in y0..y0 + SIDE {
+            for px in x0..x0 + SIDE {
+                let i = py * BURST_W + px;
+                let dm = f64::from(values[i] - truth[i]);
+                merged_sq += dm * dm;
+                for frame in frame_luma {
+                    let ds = f64::from(frame[i] - truth[i]);
+                    single_sq += ds * ds;
+                }
+            }
+        }
+        let samples = (SIDE * SIDE) as f64;
+        (
+            (merged_sq / samples).sqrt(),
+            (single_sq / (samples * frame_luma.len() as f64)).sqrt(),
+        )
+    }
+
+    /// M81's truth-referenced floor: the calibrated static-burst target is N,
+    /// so solving the measured admission distribution must produce an
+    /// all-frame estimate that beats the pooled single-frame RMS in every
+    /// scored block. The selector is the planted failure.
+    #[test]
+    fn calibrated_merge_is_never_worse_than_one_frame_on_static_bursts() {
+        let seeds = [
+            BURST_SEED,
+            BURST_SEED ^ 0x9E37_79B9_7F4A_7C15,
+            BURST_SEED ^ 0xD1B5_4A32_D192_ED03,
+        ];
+        for seed in seeds {
+            let g = geom(BURST_W, BURST_H);
+            let noise = unit_sigma_model();
+            let mut rng = Rng::new(seed);
+            let frames: Vec<QuadGrid> = (0..BURST_N).map(|_| burst_frame(&mut rng)).collect();
+            let truth: Vec<f32> = (0..g.pixels())
+                .map(|i| burst_latent(i % BURST_W, i / BURST_W))
+                .collect();
+            let mut luma = vec![0.0; g.pixels()];
+            let mut field = FocusField::new(g);
+            let mut scratch = vec![0.0; g.pixels()];
+            let mut regularised = vec![0.0; g.pixels()];
+            let mut fields = Vec::with_capacity(BURST_N as usize);
+            let mut frame_luma = Vec::with_capacity(BURST_N as usize);
+            let mut stats = FocusStats::new(g);
+            for (k, frame) in frames.iter().enumerate() {
+                crate::plane::green_luma(frame, 0.0, &mut luma);
+                frame_luma.push(luma.clone());
+                field.compute(&luma, &noise);
+                regularise(field.values(), g, &mut scratch, &mut regularised);
+                stats.fold(k as u16, &regularised).unwrap();
+                fields.push(regularised.clone());
+            }
+
+            let mut histogram = AdmissionHistogram::new(g);
+            for (k, regularised) in fields.iter().enumerate() {
+                histogram.fold(k as u16, &stats, regularised).unwrap();
+            }
+            let solved = histogram.solve(f64::from(BURST_N)).unwrap();
+            assert_eq!(solved.realised_n_eff, f64::from(BURST_N));
+
+            let mut candidate = Estimator::new(&stats, Gate::new(solved.gate));
+            let mut selector = Estimator::new(&stats, Gate::new(0.0));
+            for (k, frame) in frames.iter().enumerate() {
+                candidate.fold(k as u16, frame, &fields[k]).unwrap();
+                selector.fold(k as u16, frame, &fields[k]).unwrap();
+            }
+            assert!(candidate.n_eff().iter().all(|&n| n >= 1));
+            for i in 0..g.pixels() {
+                let single = noise.green_luma_sigma(candidate.green_mean(i));
+                assert!(candidate.predicted_sigma(&noise, i, 0.0) <= single);
+            }
+
+            let candidate_values: Vec<f32> =
+                (0..g.pixels()).map(|i| candidate.green_mean(i)).collect();
+            let selector_values: Vec<f32> =
+                (0..g.pixels()).map(|i| selector.green_mean(i)).collect();
+            let mut selector_failures = 0;
+            let (mut worst_candidate, mut worst_selector) = (0.0f64, 0.0f64);
+            for by in 0..4 {
+                for bx in 0..4 {
+                    let (candidate_rms, single_rms) =
+                        block_rms(&candidate_values, &truth, &frame_luma, bx, by);
+                    worst_candidate = worst_candidate.max(candidate_rms / single_rms);
+                    assert!(
+                        candidate_rms <= single_rms,
+                        "seed {seed:#x}, block ({bx},{by}): calibrated RMS \
+                         {candidate_rms:.6} exceeded single-frame RMS {single_rms:.6}"
+                    );
+                    let (selector_rms, _) =
+                        block_rms(&selector_values, &truth, &frame_luma, bx, by);
+                    worst_selector = worst_selector.max(selector_rms / single_rms);
+                    selector_failures += usize::from(selector_rms > single_rms);
+                }
+            }
+            assert!(
+                selector_failures > 0,
+                "seed {seed:#x}: gate zero failed no block, so the floor control \
+                 could not reject a selector"
+            );
+            eprintln!(
+                "M81 floor seed={seed:#018x} candidate_worst={worst_candidate:.6}x \
+                 selector_worst={worst_selector:.6}x selector_failed_blocks={selector_failures}/16"
+            );
+        }
     }
 
     /// **The acceptance invariant for the shipped default path (M64).**
