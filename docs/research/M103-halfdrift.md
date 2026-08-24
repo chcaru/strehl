@@ -729,3 +729,57 @@ that clause only:
 > of the edge sets that does, the concentration of per-tile displacement
 > fractional parts (Spearman rho = -0.886, n = 6, one pair per stack -- a
 > candidate, not a settled law).`
+
+**15.8 — URGENT, a live recurrence: solve caches are being written into the
+READ-ONLY corpus right now.** MEASURED, 2026-08-24 08:20. M97 reported this
+hazard tonight and asked that it not recur. It is recurring, from some process
+other than M103.
+
+At 08:20 I enumerated `D:\personal\macro\*\warpmap.txt` and found **eleven**
+sidecars written within the previous six hours, one of them five minutes old:
+
+```
+bee-2-cpl            03:12:36        flowers-cpl          04:35:56
+lavendar-cpl         04:34:44        leaf-2-cpl           04:36:51
+flower-bud-alone-cpl 04:37:48        tweezers-cpl         04:38:35
+coffee-bean          04:39:05        lead-1-cpl           04:55:28
+flat-on-ruler-cpl    04:56:07        foam                 04:57:46
+bee-3-cpl            08:15:27  <-- five minutes before this was written
+```
+
+**They are not mine.** Every M103 sidecar is 299-frame, reference 0 or 149, and
+carries an `M103-` strategy string; all of mine live under
+`C:\dev\strehl-out\M103\`, and every render I ran went through `STREHL_WARPMAP`,
+which by construction writes nothing. The `bee-3-cpl` file currently on disk
+reads:
+
+```
+frames 60
+reference 30
+strategy S3-ba-unit
+```
+
+a 60-frame subset under a bundle-adjust strategy — not a shape M103 ever
+produced.
+
+Three consequences for the orchestrator, in order of urgency:
+
+1. **`D:\personal\macro` is stated READ-ONLY and is being written.** Whichever
+   milestone is running `stack`/`align` without `STREHL_WARPMAP` is triggering
+   the beside-the-capture cache write in the paths I may not edit
+   (`align_cmd.rs` / `lib.rs`). The durable fix is to default that cache
+   somewhere under `C:\dev\strehl-out\` and require an explicit opt-in to write
+   beside a capture.
+2. **`bee-3-cpl/warpmap.txt` no longer describes the owner's full stack.** It is
+   a 60-frame, reference-30 solve sitting at the path a 299-frame consumer will
+   read. Anything that trusts it without checking `frames` is reading a
+   different stack than it thinks. Note the digest guard does **not** catch this:
+   `stack-digest` covers name plus file sizes, not the frame subset.
+3. **The torn-read hazard is live, not historical.** M97 saw a half-written
+   read; with writes landing every few minutes across eleven stacks, any agent
+   reading these paths now can catch one mid-rewrite. Until the write path is
+   changed, readers should copy to a private path first — and writers should
+   write-temp-then-rename, as M103's probe emitter does.
+
+I have not touched these files, and I am not able to fix the write path from
+inside my ownership boundary.
