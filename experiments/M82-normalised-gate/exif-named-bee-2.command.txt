@@ -1,0 +1,3 @@
+named: C:\Users\chris\AppData\Local\Programs\ExifTool\ExifTool.exe -T -FileName -ISO -FNumber -ExposureTime -FocusDistance2 -r -ext ARW D:\personal\macro\bee-2-cpl
+version: 13.58
+exit: 0

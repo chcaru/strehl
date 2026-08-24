@@ -1,0 +1,18 @@
+ORIGINAL_SHA256=562b4a35d34f26072de8683a965553c9f325e3d0e280c781efb6dad3b8036215
+PLANTED_SHA256=2c87473b297a61642614fd0b7a23baf8b039ab3f4ff717fea6ae00e3192eee6e
+PLANTED_READBACK=True
+PLANTED_BYTES=admitted = gap >= tolerance  # M82_ISO_CORE_ADMISSION
+COMMAND=C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe bee_iso_admission.py --self-test-only
+EXIT=1
+STDOUT=
+STDERR=Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\M82-normalised-gate\bee_iso_admission.py", line 373, in <module>
+    main()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\M82-normalised-gate\bee_iso_admission.py", line 218, in main
+    self_test()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\M82-normalised-gate\bee_iso_admission.py", line 204, in self_test
+    raise AssertionError(f"selector count wrong: {selector}")
+AssertionError: selector count wrong: [[3 3]
+ [3 3]]
+RESTORED_SHA256=562b4a35d34f26072de8683a965553c9f325e3d0e280c781efb6dad3b8036215
+RESTORED=True

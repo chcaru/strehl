@@ -1,0 +1,299 @@
+{
+  "exiftool": {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\ExifTool\\ExifTool.exe",
+    "version": "13.58",
+    "exact_command": "exiftool -T -ISO -FNumber -FocusDistance2 -r -ext ARW <dir>"
+  },
+  "exif": {
+    "bee-1": {
+      "rows": 299,
+      "first_filename": "DSC00001.ARW",
+      "last_filename": "DSC00299.ARW",
+      "iso_values": [
+        100.0
+      ],
+      "fnumber_values": [
+        5.6
+      ],
+      "exposure_values": [
+        "0.3",
+        "0.4",
+        "0.5"
+      ],
+      "focus_distance_counts": {
+        "0.2707 m": 13,
+        "0.2738 m": 40,
+        "0.2771 m": 40,
+        "0.2805 m": 41,
+        "0.2841 m": 40,
+        "0.2878 m": 40,
+        "0.2917 m": 40,
+        "0.2958 m": 41,
+        "0.3 m": 4
+      },
+      "focus_distance_distinct": 9,
+      "start_focus_m": 0.2707,
+      "iso_exposure_product": 50.0,
+      "iso_exposure_product_counts": {
+        "30": 70,
+        "40": 166,
+        "50": 63
+      },
+      "exact_requested_output_rows": 299,
+      "exact_and_named_outputs_agree": true,
+      "stderr_bytes": {
+        "exact": 0,
+        "named": 0
+      },
+      "source_hashes": {
+        "exact_stdout": "111644529c3b74687173de9b6d5fed39f89f565e09390ec379febe937219397a",
+        "named_stdout": "d061b110128d5ac46c64856c363bd7315b36830e445ace44f4d24b7d3d3fb177",
+        "exact_command": "77862a458b5e86c78a8d2a43564e840f459086baa95401d770fa04f87f01d74e",
+        "named_command": "eec80fc60c803a5f8d14cdc9d9daef0911577042f1cb6b17b27d84293f6759c7"
+      },
+      "individual_pass": true
+    },
+    "bee-2": {
+      "rows": 299,
+      "first_filename": "DSC00001.ARW",
+      "last_filename": "DSC00299.ARW",
+      "iso_values": [
+        400.0
+      ],
+      "fnumber_values": [
+        5.6
+      ],
+      "exposure_values": [
+        "1/20",
+        "1/25"
+      ],
+      "focus_distance_counts": {
+        "0.2771 m": 11,
+        "0.2805 m": 40,
+        "0.2841 m": 40,
+        "0.2878 m": 40,
+        "0.2917 m": 41,
+        "0.2958 m": 40,
+        "0.3 m": 40,
+        "0.3044 m": 40,
+        "0.3091 m": 7
+      },
+      "focus_distance_distinct": 9,
+      "start_focus_m": 0.2771,
+      "iso_exposure_product": 20.0,
+      "iso_exposure_product_counts": {
+        "16": 148,
+        "20": 151
+      },
+      "exact_requested_output_rows": 299,
+      "exact_and_named_outputs_agree": true,
+      "stderr_bytes": {
+        "exact": 0,
+        "named": 0
+      },
+      "source_hashes": {
+        "exact_stdout": "bd8b4649b4cd0d2dd78b2924ad27cc7423c365c8b9ec628d7ec890a6617bed6e",
+        "named_stdout": "548bf643b4d8a8da66bdc82a181a3410e7b4f6572945a75a101cc495986521e1",
+        "exact_command": "b200b8bb23351f9e68d5a0ff7121019ce6d64d923ba86cd2bd2c073289d32d94",
+        "named_command": "872160c3e83096d5bd2b7a56fb43e8a8b34c321824f85e593e8a12feb6e4f22e"
+      },
+      "individual_pass": true
+    },
+    "bee-3": {
+      "rows": 299,
+      "first_filename": "DSC00001.ARW",
+      "last_filename": "DSC00299.ARW",
+      "iso_values": [
+        100.0
+      ],
+      "fnumber_values": [
+        5.6
+      ],
+      "exposure_values": [
+        "1/5",
+        "1/6"
+      ],
+      "focus_distance_counts": {
+        "0.2771 m": 6,
+        "0.2805 m": 41,
+        "0.2841 m": 40,
+        "0.2878 m": 40,
+        "0.2917 m": 40,
+        "0.2958 m": 41,
+        "0.3 m": 40,
+        "0.3044 m": 40,
+        "0.3091 m": 11
+      },
+      "focus_distance_distinct": 9,
+      "start_focus_m": 0.2771,
+      "iso_exposure_product": 20.0,
+      "iso_exposure_product_counts": {
+        "16.6666667": 151,
+        "20": 148
+      },
+      "exact_requested_output_rows": 299,
+      "exact_and_named_outputs_agree": true,
+      "stderr_bytes": {
+        "exact": 0,
+        "named": 0
+      },
+      "source_hashes": {
+        "exact_stdout": "795a8f03a8bce03c3c2c53ba45906a06ec1960ff5e07c5458ef51176261bc483",
+        "named_stdout": "2f27a52f37c9ad38f6634b1c1c989f13902edfbc3efb7b5cff7a362a4b9b80ab",
+        "exact_command": "3a822a058cb3ad9fa8068ce8f950fa529820e2045622a6c6674029ef2f7138af",
+        "named_command": "407dbbe878c8295a870f8cbfe7a0f14fac94b9d9dd5b1e779916cad71d385dec"
+      },
+      "individual_pass": true
+    }
+  },
+  "pair_exif": {
+    "focus_sequence_exactly_equal": false,
+    "focus_sequence_equal_rows": 265,
+    "focus_sequence_equal_fraction": 0.8862876254180602,
+    "focus_first_mismatch_frame": 7,
+    "focus_last_mismatch_frame": 292,
+    "focus_max_absolute_difference_m": 0.004699999999999982,
+    "start_focus_exactly_equal": true,
+    "iso_exposure_max_relative_difference": 0.20000000000000018,
+    "iso_exposure_rows_outside_1pct": 151,
+    "iso_exposure_first_mismatch_frame": 149,
+    "iso_exposure_sequence_within_1pct": false,
+    "exif_precondition_pass": false
+  },
+  "framing": {
+    "method": {
+      "decoder": "rawpy",
+      "green_plane": [
+        2344,
+        3514
+      ],
+      "black_bee2": 512.0,
+      "black_bee3": 512.0,
+      "block_shape": [
+        586,
+        878
+      ],
+      "highpass_sigma_blocks": 2.0,
+      "first_files": {
+        "bee-2": "DSC00001.ARW",
+        "bee-3": "DSC00001.ARW"
+      }
+    },
+    "real": {
+      "shift_blocks_to_apply_to_bee3": [
+        0,
+        0
+      ],
+      "shift_green_px_to_apply_to_bee3": [
+        0,
+        0
+      ],
+      "raw_pearson": 0.9899845570847255,
+      "highpass_pearson": 0.23894611567654878,
+      "photometric_scale": 0.9931418880231585,
+      "photometric_offset_dn": 9.595260188210261,
+      "affine_residual_over_reference_sd": 0.14117568585377735,
+      "overlap_blocks": [
+        586,
+        878
+      ],
+      "pass": false,
+      "green_plane_sanity_highpass_pearson": {
+        "bee-2": 0.09528649282472193,
+        "bee-3": 0.2942552667571212
+      }
+    },
+    "destructive_control": {
+      "original_sha256": "1dbb800a4e32540f504bbaba47308bd88dfa871d4dd22736e85085986eab91b4",
+      "mutated_sha256": "c613ff8798782aab0a20d80e90c1f5c3772df046ea4c4f0146664b79dc10a1db",
+      "changed_readback": true,
+      "mutated_metrics": {
+        "shift_blocks_to_apply_to_bee3": [
+          23,
+          -11
+        ],
+        "shift_green_px_to_apply_to_bee3": [
+          92,
+          -44
+        ],
+        "raw_pearson": 0.39734843517701224,
+        "highpass_pearson": 0.004851455424367507,
+        "photometric_scale": 0.3940141090156405,
+        "photometric_offset_dn": 1415.8698118617012,
+        "affine_residual_over_reference_sd": 0.9176678265924971,
+        "overlap_blocks": [
+          561,
+          861
+        ],
+        "pass": false
+      },
+      "same_bar_failed": true,
+      "restored_sha256": "1dbb800a4e32540f504bbaba47308bd88dfa871d4dd22736e85085986eab91b4",
+      "byte_restored": true,
+      "pass": true
+    },
+    "framing_precondition_pass": false
+  },
+  "profile_audit": {
+    "camera_model": "ILCE-7CM2",
+    "profile_form": "continuous max(ISO,100)/436.8 gain relation plus one read-noise constant per gain mode; not an exact per-ISO lookup",
+    "constants": {
+      "focus_noise_sd": 0.015214,
+      "window_radius": 13,
+      "regulariser_radius": 8,
+      "sigma_eps": 0.001,
+      "container_max": 16383,
+      "gain_divisor": 436.8,
+      "base_iso": 100.0,
+      "read_noise_low": 4.2,
+      "read_noise_high": 1.2392,
+      "second_base_iso": 400.0,
+      "hp_box_side": 9
+    },
+    "direct_measurement_rows": {
+      "iso100": {
+        "model_gain_dn_per_e": 0.22893772893772893,
+        "direct_green_gain_dn_per_e": 0.224103,
+        "gain_relative_error": 0.021573691283601537,
+        "gain_source": "M71 PTC table / P5",
+        "model_read_noise_e": 4.2,
+        "direct_dark_read_noise_e": 4.3,
+        "read_noise_relative_error": -0.023255813953488302,
+        "read_source": "M48 local fact 11 table"
+      },
+      "iso400": {
+        "model_gain_dn_per_e": 0.9157509157509157,
+        "direct_green_gain_dn_per_e": 0.8997252747252747,
+        "gain_relative_error": -0.01749999999999996,
+        "gain_source": "M61 fact 12 ISO-400 green aggregate",
+        "model_read_noise_e": 1.2392,
+        "direct_dark_read_noise_e": 1.3088,
+        "read_noise_relative_error": -0.053178484107579416,
+        "read_source": "M48 local fact 9 table"
+      }
+    },
+    "m61_matched_pair_green_gain_ratio": 4.0486,
+    "iso_ratio": 4.0,
+    "pair_ratio_relative_error": 0.012150000000000105,
+    "maximum_scalar_relative_error": 0.053178484107579416,
+    "scalar_terms_within_10_percent": true,
+    "classification": "MEASUREMENT-BACKED",
+    "known_omissions": [
+      "M71 PRNU term absent",
+      "spatial green-plane correlation absent",
+      "per-pixel sigma field absent"
+    ],
+    "stale_profile_comment": "profile.rs still says every ISO >=400 is extrapolation and that no high-mode PTC has run; M61 later ran a clean ISO-400 arm",
+    "source_hashes": {
+      "profile.rs": "bb91fd4f68a2db3deb5ed403a4378aaa8c96dded253a09077207193d09f985ba",
+      "M48": "8e4ebe4d8f783c5a57fc07f94948f413e25b4694d98725b220f8d2b2c1a148a7",
+      "M61": "e645944af7e52fe8d95bbef6e4711e10940883dfb661eab6eab148da1de5f5ac",
+      "M71": "0c4711e26f57bfbba0745e331ee04013dc76e9a8ca68e192d690d74e3e58f3df"
+    }
+  },
+  "preconditions": {
+    "exif": false,
+    "framing": false,
+    "profile_scalar_classification": "MEASUREMENT-BACKED"
+  }
+}

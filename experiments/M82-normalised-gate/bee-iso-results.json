@@ -1,0 +1,160 @@
+{
+  "verdict": "NO SHIP / NOT ESTABLISHED",
+  "iso_pair": {
+    "premise": "NOT ESTABLISHED",
+    "exif": {
+      "status": "FAIL",
+      "equal_focus_rows": 265,
+      "total_rows": 299,
+      "equal_focus_fraction": 0.8862876254180602,
+      "maximum_focus_tag_difference_m": 0.004699999999999982,
+      "exposure_rows_outside_1pct": 151,
+      "maximum_iso_exposure_difference": 0.20000000000000018
+    },
+    "framing": {
+      "status": "NOT ESTABLISHED",
+      "shift_green_px": [
+        0,
+        0
+      ],
+      "raw_pearson": 0.9899845570847255,
+      "highpass_pearson": 0.23894611567654878,
+      "affine_residual_over_sd": 0.14117568585377735,
+      "within_frame_green_sanity": {
+        "bee-2": 0.09528649282472193,
+        "bee-3": 0.2942552667571212
+      },
+      "destructive_control_pass": true
+    }
+  },
+  "noise_profile": {
+    "status": "MEASUREMENT-BACKED SCALARS, NOT EXACT PER-ISO ROWS",
+    "maximum_scalar_relative_error": 0.053178484107579416,
+    "pair_gain_ratio_relative_error": 0.012150000000000105,
+    "known_omissions": [
+      "M71 PRNU term absent",
+      "spatial green-plane correlation absent",
+      "per-pixel sigma field absent"
+    ],
+    "stale_profile_comment": "profile.rs still says every ISO >=400 is extrapolation and that no high-mode PTC has run; M61 later ran a clean ISO-400 arm"
+  },
+  "admission_map": {
+    "status": "NOT ESTABLISHED \u2014 INSTRUMENT INCAPABLE",
+    "cross_iso": {
+      "spearman_log1p": 0.028842379554461537,
+      "exact_count_agreement": 0.7337023676658163,
+      "mean_absolute_count_difference": 0.29006895727040816,
+      "singleton_symmetric_difference": 0.26161411830357145,
+      "singleton_jaccard": 0.7305689112843222,
+      "overlap_shape": [
+        448,
+        448
+      ]
+    },
+    "within_bee2": {
+      "spearman_log1p": 0.04924445897102458,
+      "exact_count_agreement": 0.8868084343112245,
+      "mean_absolute_count_difference": 0.11714265784438775,
+      "singleton_symmetric_difference": 0.11139787946428571,
+      "singleton_jaccard": 0.8878573112438619,
+      "overlap_shape": [
+        448,
+        448
+      ]
+    },
+    "within_bee3": {
+      "spearman_log1p": 0.03125906441152777,
+      "exact_count_agreement": 0.916748046875,
+      "mean_absolute_count_difference": 0.08568837691326531,
+      "singleton_symmetric_difference": 0.08248963647959184,
+      "singleton_jaccard": 0.9172402761323476,
+      "overlap_shape": [
+        448,
+        448
+      ]
+    },
+    "registered_bar": {
+      "within_spearman_floor": 0.03125906441152777,
+      "within_singleton_xor_ceiling": 0.11139787946428571,
+      "capable": false,
+      "rho_pass": false,
+      "singleton_pass": false,
+      "co_location_bar_pass": false
+    },
+    "source_mutation_control": "PASS",
+    "map_permutation_control": "FAIL \u2014 real map had only 0.033315 Spearman headroom against the permutation, below 0.20"
+  },
+  "sharpness_price": {
+    "status": "NOT ESTABLISHED",
+    "bee-2": {
+      "px": -0.028619217413252955,
+      "corrected_se_px": 0.03284850909362612,
+      "flat_precondition": "FAIL",
+      "m80": "NO TARGET",
+      "readable": false
+    },
+    "bee-3": {
+      "px": -0.016575721646953794,
+      "corrected_se_px": 0.049539101395792574,
+      "flat_precondition": "FAIL",
+      "m80": "NO TARGET",
+      "readable": false
+    }
+  },
+  "interpretation": {
+    "raw_gate_equality_required": false,
+    "why": "The reported sigma-gain coordinate is mean(1/sqrt(n_eff)); absolute sensor sigma cancels after admission, while the focus field is divided by sigma before admission. Matched lower-noise content should therefore need a larger raw gate.",
+    "noise_model_failure_established": false,
+    "portable_price_established": false,
+    "top_level_verdict_changed": false
+  },
+  "controls": {
+    "exiftool_stderr_empty": true,
+    "framing_tile_mutation": true,
+    "admission_source_byte_mutation": true,
+    "admission_map_tile_mutation": false
+  },
+  "candidate_facts": [
+    {
+      "label": "MEASURED",
+      "claim": "The full EXIF census confirms 299 frames, fixed ISO/f/5.6, and nine focus tags in each pair member, but only 265/299 filename-paired focus tags agree and 151/299 ISO\u00d7exposure rows differ by more than 1% (maximum 20%).",
+      "evidence": "bee-iso-preconditions.json"
+    },
+    {
+      "label": "MEASURED",
+      "claim": "First-frame gross registration selects zero translation and raw r=0.989985, but the frozen fine-structure bar fails (r=0.238946); its within-frame green sanity control also fails, so identical fine content is not established.",
+      "evidence": "bee-iso-preconditions.json"
+    },
+    {
+      "label": "MEASURED/DERIVED",
+      "claim": "The shipped ISO-100/400 scalar profile is backed by direct measurements within 5.32%, and M61's matched-pair gain ratio is 1.22% from the ISO ratio, but the profile is a relation plus mode fits rather than exact per-ISO rows.",
+      "evidence": "bee-iso-preconditions.json; M48; M61; M71"
+    },
+    {
+      "label": "MEASURED",
+      "claim": "The primary admission maps are not a capable spatial co-location instrument: within-stack even/odd Spearman is 0.0492/0.0313, cross-ISO is 0.0288, and the planted tile permutation cannot produce the registered 0.20 drop.",
+      "evidence": "bee-iso-admission.json"
+    },
+    {
+      "label": "DERIVED",
+      "claim": "The ISO-pair arm cannot establish either a noise-model failure or a portable sharpness price; M82 remains NO SHIP / NOT ESTABLISHED.",
+      "evidence": "bee-iso-preconditions.json; bee-iso-admission.json; bee-results.json"
+    }
+  ],
+  "provenance": {
+    "git_head": "875ad9d88638ce2d6a0b8aba0e1fe03b42594437",
+    "python": "3.12.10",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "files": {
+      "PREREGISTRATION-BEE-ISO.md": "a45e8f98e20c0d97dff860077208f69dfe243ba882663fc0ab71e23464699a4e",
+      "analyse_bee_iso_pair.py": "cdaa7b4aeea48dcaca517cffed5a1b2727f423e0f047aa2560b23d6293e00c18",
+      "bee_iso_admission.py": "562b4a35d34f26072de8683a965553c9f325e3d0e280c781efb6dad3b8036215",
+      "mutation_control_iso.py": "bf6870b88e23e4fe9d79e8d1fd48b4ee5964ee7157f8ddc5ae62337e3753c7a6",
+      "mutation-control-iso.log": "b936e0f061e35c94c2798f3056986a9cb18bb9a1dc304e3fa152c0e57309cc5f",
+      "bee-iso-preconditions.json": "2a8443d4c5d9c7a19280a59535d4e5797cd11ba2786329a16b09fd262d93b598",
+      "bee-iso-admission.json": "02d5d7fe264583738c7c3062e5ecd74d19a500746fd175209eebc64c06f10b74",
+      "bee-results.json": "8ceac2cb476c276b0d94d1a25a0f4946e55d190af6d52c0848807ebe3c69e067"
+    }
+  }
+}
