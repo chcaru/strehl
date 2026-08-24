@@ -1,0 +1,40 @@
+{
+ "zones": {
+  "subject interior (>10 px in)": [
+   160241,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "subject edge (<=10 px in)": [
+   62039,
+   0.0,
+   11832.48046875,
+   0.0
+  ],
+  "background near (<=40 px)": [
+   147004,
+   5078.0,
+   14182.0,
+   -5010.0
+  ],
+  "background far (>70 px)": [
+   536802,
+   0.0,
+   2992.0,
+   0.0
+  ]
+ },
+ "leakage": 0.0,
+ "B12": "confined to the background",
+ "amp_before": 4133.30078125,
+ "amp_after": 153.365234375,
+ "reduction_pct": 96.28952155936209,
+ "B13": "the correction works on the real photograph",
+ "hair_crop": [
+  0,
+  450,
+  0,
+  550
+ ]
+}

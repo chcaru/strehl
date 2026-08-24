@@ -57,6 +57,12 @@ def eq(label: str, a: float, b: float, tol: float = 1e-9) -> None:
 
 
 def main() -> int:
+    # Whole-document scope is deliberate here, unlike verify_s30/s31: several
+    # of these checks assert that a corrected figure was propagated OUT of
+    # section 29 into 0, 5.1, P8 and P110, so a section-scoped count cannot
+    # express them. The cost is that a later section citing one of these
+    # figures raises the count; when that happens, name the new site in the
+    # comment beside the number rather than bumping it silently.
     D = flat(REPORT.read_text(encoding="utf-8"))
     d = json.loads((DATA / "81-contour-support.json").read_text(encoding="utf-8"))
     t1, t2, t3, t4 = d["T1"], d["T2"], d["T3"], d["T4"]
@@ -66,7 +72,7 @@ def main() -> int:
     chk("frame 0 share", f"{100 * t1['frame0']:.4f}%", D, 2)
     chk("frame 175 share", f"{100 * t1['framehi']:.4f}%", D, 2)
     chk("boundary share", f"{100 * t1['boundary']:.4f}%", D, 3)
-    chk("median half-width", f"{t1['median']:.2f} px", D, 3)
+    chk("median half-width", f"{t1['median']:.2f} px", D, 4)  # +1: 31.7
     chk("p10 / p25 / p75", f"{t1['p10']:.2f} / {t1['p25']:.2f} / "
         f"{t1['p75']:.2f}", D, 1)
     chk("p90", f"**{t1['p90']:.2f}** px", D, 1)
@@ -125,7 +131,7 @@ def main() -> int:
     chk("null p95", f"p95 |gap| **{t4['null_p95']:.2f}**", D, 1)
     chk("shuffle count", f"{t4['n_null']} shuffles", D, 2)
     chk("reproduction", f"**{t4['repro']:.3f} points**", D, 3)
-    chk("thin quartile width", f"{t4['thin_w_max']:.2f}", D, 2)
+    chk("thin quartile width", f"{t4['thin_w_max']:.2f}", D, 3)  # +1: 31.7
     chk("broad quartile width", f"{t4['broad_w_min']:.2f}", D, 1)
     chk("T4 null bar", f"\u00b1{abs(v['T4 thin minus broad (points)']['hi']):.0f}"
         f" bar", D, 1)

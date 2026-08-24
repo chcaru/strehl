@@ -1,0 +1,19 @@
+{
+ "tips_px": 39274,
+ "near_bg_px": 147004,
+ "inside_px": 114125,
+ "B14_ratio": 0.5919417142868042,
+ "C_INT": 1.0,
+ "C_NULL": 1.0,
+ "gone_frac": 0.3310841778275704,
+ "B14": "thin structure ERASED",
+ "C_INT_pass": true,
+ "C_NULL_pass": true,
+ "tips_in_mask": 0,
+ "zoom": [
+  150,
+  375,
+  250,
+  525
+ ]
+}

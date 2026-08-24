@@ -1,0 +1,18 @@
+{
+ "B8_limit_dn_per_frame": 1.0,
+ "B8_limit_pct_bracket": 0.5846461713523377,
+ "B8_resolution": 0.038461538461538464,
+ "B8_m24_dn": 20.012104026845638,
+ "B8_m24_enrichment": 1.3655010002581311,
+ "B8_m24_excluded": true,
+ "rho": 0.4675857294158323,
+ "grad": 16.4375,
+ "B10_sigma_cross": 74.51787488875003,
+ "B10_n_cross": 12.864244998428845,
+ "B10_ratio": 0.6735206805460128,
+ "B10": "the visible banding IS the cast quantum crossing the n_eff field",
+ "C_SIM_pred": 0.1697825,
+ "C_SIM_meas": 0.178,
+ "C_SIM_err": 0.04616573033707859,
+ "C_SIM_pass": true
+}

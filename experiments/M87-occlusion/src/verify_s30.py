@@ -56,7 +56,14 @@ def sha24(p):
 def main():
     raw = DOC.read_bytes()
     t = raw.decode("utf-8")
-    f = flat(t)
+    # The C0 guard below runs on the whole document; the occurrence counts run
+    # on section 30 plus the fact table only. See the note in verify_s29.py:
+    # a whole-document count is not a statement about one section, and the
+    # habit of bumping it ends in a presence check, which is instance-blind.
+    _i, _j = t.index("## 30."), t.index("## 31.")
+    _facts = [l for l in t.split("\r\n") if re.match(r"\| P\d+ \|", l)]
+    assert _j > _i, "section 31 does not follow section 30"
+    f = flat(t[_i:_j] + "\r\n" + "\r\n".join(_facts))
 
     # ---- the guard nothing else provides -------------------------------
     global checks
