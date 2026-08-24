@@ -1,0 +1,62 @@
+{
+ "repro": {
+  "c1": 2.3013184247133722e-08,
+  "c2": 2.384185791015625e-07,
+  "c3": 0.0,
+  "c4_l3": 0.6466286778450012,
+  "c4_cr": 0.4487713575363159
+ },
+ "C2": {
+  "unnormalised": 0.00570148229598999,
+  "normalised": 2.384185791015625e-07,
+  "ratio": 23913.75
+ },
+ "C3": {
+  "guard": 0.0,
+  "noguard": 7.04186399353579e-17,
+  "landed": 1.5195744042774332e-33
+ },
+ "C4": {
+  "rows": [
+   {
+    "kernel": "catmull-rom",
+    "c4": 0.4487713575363159,
+    "mean_abs_gain_err": 0.530719232010214,
+    "step_excursion": 0.125
+   },
+   {
+    "kernel": "lanczos3 (patch)",
+    "c4": 0.6466286778450012,
+    "mean_abs_gain_err": 0.3556290755146428,
+    "step_excursion": 0.2228260487318039
+   },
+   {
+    "kernel": "lanczos3 (landed f64)",
+    "c4": 0.6466286778450012,
+    "mean_abs_gain_err": 0.35562905433930847,
+    "step_excursion": 0.2228260412812233
+   },
+   {
+    "kernel": "catmull-rom + sharpen a=0.25",
+    "c4": 0.8546888828277588,
+    "mean_abs_gain_err": 0.3023170420998021,
+    "step_excursion": 0.4375
+   },
+   {
+    "kernel": "catmull-rom + sharpen a=0.5",
+    "c4": 1.2606065273284912,
+    "mean_abs_gain_err": 0.4780495982421072,
+    "step_excursion": 0.75
+   },
+   {
+    "kernel": "catmull-rom + sharpen a=1.0",
+    "c4": 2.072442054748535,
+    "mean_abs_gain_err": 1.096712926500722,
+    "step_excursion": 1.375
+   }
+  ]
+ },
+ "shipped_vs_example": {
+  "max_weight_diff": 1.1920928955078125e-07
+ }
+}
