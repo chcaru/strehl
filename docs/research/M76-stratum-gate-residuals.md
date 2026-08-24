@@ -32,9 +32,9 @@ write **M55's spec rule 15** when referring to the freeze.
 
 ### 2.1 Registration identity and prohibition
 
-**REGISTERED.** The registration commit is **`PENDING-FIRST-COMMIT`**. A second,
-report-only commit will replace that token with the first commit's SHA. Both
-commits will precede every Q1 measurement, Q2 code change, and Q3 enumeration.
+**REGISTERED.** The registration commit is
+**`f1da8e5e9a95e2765ca0bd23eccc9b34a4d322a2`**. This report-only identity
+commit also precedes every Q1 measurement, Q2 code change, and Q3 enumeration.
 The git history, not this sentence, is the authority on ordering.
 
 **REGISTERED.** No candidate score or verdict may be consulted to justify the
