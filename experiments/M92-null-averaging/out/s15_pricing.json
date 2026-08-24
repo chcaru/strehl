@@ -1,0 +1,142 @@
+{
+ "rows": [
+  {
+   "site": "m57 noise model on 109MSDCF @ 106.34 DN",
+   "level_dn": 106.34,
+   "wrong": [
+    1.1446886446886446,
+    1.2392
+   ],
+   "right": [
+    0.3663003663003663,
+    4.2
+   ],
+   "sd_wrong": 11.123773079770332,
+   "sd_right": 6.428004733796203,
+   "ratio": 1.730517250755187,
+   "note": ""
+  },
+  {
+   "site": "m57 noise model on 109MSDCF @ 250 DN",
+   "level_dn": 250.0,
+   "wrong": [
+    1.1446886446886446,
+    1.2392
+   ],
+   "right": [
+    0.3663003663003663,
+    4.2
+   ],
+   "sd_wrong": 16.975991818630035,
+   "sd_right": 9.692365835048582,
+   "ratio": 1.7514807125050027,
+   "note": ""
+  },
+  {
+   "site": "m57 noise model on 109MSDCF @ 500 DN",
+   "level_dn": 500.0,
+   "wrong": [
+    1.1446886446886446,
+    1.2392
+   ],
+   "right": [
+    0.3663003663003663,
+    4.2
+   ],
+   "sd_wrong": 23.965735110744152,
+   "sd_right": 13.620464274594628,
+   "ratio": 1.7595387813208312,
+   "note": ""
+  },
+  {
+   "site": "M55 e1 M46 flat ROI",
+   "level_dn": 106.34375,
+   "wrong": [
+    1.1446886446886446,
+    1.47
+   ],
+   "right": [
+    1.1446886446886446,
+    1.2392
+   ],
+   "sd_wrong": 7.891829206875137,
+   "sd_right": 7.865831809562187,
+   "ratio": 1.0033051046529302,
+   "note": "conclusion is a shortfall of 100s-x in VARIANCE"
+  },
+  {
+   "site": "M55 e1 M46 detail ROI",
+   "level_dn": 203.11111,
+   "wrong": [
+    1.1446886446886446,
+    1.47
+   ],
+   "right": [
+    1.1446886446886446,
+    1.2392
+   ],
+   "sd_wrong": 10.84735992372045,
+   "sd_right": 10.828460608072112,
+   "ratio": 1.0017453372489762,
+   "note": "conclusion is a shortfall of 100s-x in VARIANCE"
+  },
+  {
+   "site": "M55 e2 sigma on 112MSDCF",
+   "level_dn": 250.0,
+   "wrong": [
+    1.1446886446886446,
+    1.47
+   ],
+   "right": [
+    1.1446886446886446,
+    1.2392
+   ],
+   "sd_wrong": 12.020890453176255,
+   "sd_right": 12.00383893232065,
+   "ratio": 1.001420505635884,
+   "note": "correcting the sensor use in place would unfreeze the operator"
+  },
+  {
+   "site": "m41 a11 sigma_map on 119MSDCF @ 250 DN",
+   "level_dn": 250.0,
+   "wrong": [
+    0.11446886446886446,
+    4.2
+   ],
+   "right": [
+    0.22893772893772893,
+    4.2
+   ],
+   "sd_wrong": 3.7979175327059536,
+   "sd_right": 5.392540609371894,
+   "ratio": 0.7042909470362474,
+   "note": "injected noise is 1/ratio too SMALL -> every detection claim is anti-conservative, every failure-to-detect claim is conservative and survives"
+  },
+  {
+   "site": "m41 a11 sigma_map on 119MSDCF @ 1200 DN",
+   "level_dn": 1200.0,
+   "wrong": [
+    0.11446886446886446,
+    4.2
+   ],
+   "right": [
+    0.22893772893772893,
+    4.2
+   ],
+   "sd_wrong": 8.294388959287229,
+   "sd_right": 11.739885666783396,
+   "ratio": 0.706513606240239,
+   "note": "injected noise is 1/ratio too SMALL -> every detection claim is anti-conservative, every failure-to-detect claim is conservative and survives"
+  },
+  {
+   "site": "SYNTHESIS fact 130 cap",
+   "level_dn": 4585.0,
+   "cap_old": 22.914425208654002,
+   "cap_new": 32.41302274383715,
+   "ratio": 1.4145248003688022,
+   "fact88_lo_over_cap": 1.3327976332665188,
+   "fact88_hi_over_cap": 1.6382304242234293,
+   "note": "conclusion survives"
+  }
+ ]
+}

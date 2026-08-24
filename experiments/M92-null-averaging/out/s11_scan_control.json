@@ -1,0 +1,41 @@
+{
+ "fixtures": [
+  {
+   "fixture": "F1_plain_wrong_iso",
+   "want": "MISMATCH",
+   "got": "MISMATCH",
+   "passed": true
+  },
+  {
+   "fixture": "F2_plain_right_iso",
+   "want": "MATCH",
+   "got": "MATCH",
+   "passed": true
+  },
+  {
+   "fixture": "F3_tuple_wrong_iso",
+   "want": "MISMATCH",
+   "got": "MISMATCH",
+   "passed": true
+  },
+  {
+   "fixture": "F4_docstring_only",
+   "want": "UNRESOLVED",
+   "got": "UNRESOLVED",
+   "passed": true
+  },
+  {
+   "fixture": "F5_wrong_rn_branch",
+   "want": "MISMATCH",
+   "got": "MISMATCH",
+   "passed": true
+  },
+  {
+   "fixture": "F6_no_constant",
+   "want": null,
+   "got": null,
+   "passed": true
+  }
+ ],
+ "passed": true
+}

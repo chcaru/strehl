@@ -1,0 +1,3354 @@
+[
+  {
+    "file": "experiments/m20-deconvolution-ceiling/src/contrast2.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 3,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m20-deconvolution-ceiling/verify/v5_realdata.py",
+    "stacks": [
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 21,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m20-deconvolution-ceiling/verify/v7_corpus.py",
+    "stacks": [
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 19,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m20-deconvolution-ceiling/verify/v9_framecount.py",
+    "stacks": [
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "113MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 22,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m21-occlusion-bimodality/src/01-first-look.py",
+    "stacks": [
+      "coffee-bubbles",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 3,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m21-occlusion-bimodality/src/02-radius-sweep.py",
+    "stacks": [
+      "coffee-bubbles",
+      "coffee-bean",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 3,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m21-occlusion-bimodality/src/03-permutation-placebo.py",
+    "stacks": [
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 3,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m21-occlusion-bimodality/src/04-intensity-stratified.py",
+    "stacks": [
+      "coffee-bean"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 3,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m22-hot-pixels/src/01-map-from-darks.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 3,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m22-hot-pixels/src/02-chance-and-light-frames.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 4,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m22-hot-pixels/src/03-exposure-and-severe-tail.py",
+    "stacks": [
+      "coffee-bubbles",
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 4,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m22-hot-pixels/src/04-stratified-by-signal.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 4,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m22-hot-pixels/src/04-stratified-by-signal.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN",
+    "value": 4.2,
+    "line": 10,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m22-hot-pixels/src/05-cross-scene.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 4,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m22-hot-pixels/src/06-shift-control.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 4,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m24-photometric-drift/src/01-levels.py",
+    "stacks": [
+      "coffee-bubbles",
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 2,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m24-photometric-drift/src/02-exif-vs-framing.py",
+    "stacks": [
+      "coffee-bubbles",
+      "coffee-bean",
+      "112MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 2,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m24-photometric-drift/src/03-exposure-ratio.py",
+    "stacks": [
+      "coffee-bean"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 2,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m25-simulator/src/11-psd-shaping-check.py",
+    "stacks": [
+      "coffee-bean"
+    ],
+    "name": "iso",
+    "value": 50.0,
+    "line": 86,
+    "expr": "50.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 50",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m25-simulator/src/16-iso50-gain.py",
+    "stacks": [
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 61,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m25-simulator/src/strehl_sim/config.py",
+    "stacks": [],
+    "name": "iso",
+    "value": 160.0,
+    "line": 155,
+    "expr": "160.0",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m25-simulator/src/strehl_sim/stackio.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 30,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m26-colour-clipping/src/03-saturation-census.py",
+    "stacks": [
+      "coffee-bubbles",
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 11,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m26-colour-clipping/src/04-crossframe-spread.py",
+    "stacks": [
+      "coffee-bubbles"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 2,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m26-colour-clipping/src/05-focus-contrast.py",
+    "stacks": [
+      "coffee-bubbles"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 3,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m28-robustness-scale/src/01-scale-sweep.py",
+    "stacks": [
+      "coffee-bubbles",
+      "109MSDCF",
+      "foam"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 47,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m28-robustness-scale/src/02-identity.py",
+    "stacks": [
+      "coffee-bubbles",
+      "109MSDCF",
+      "foam"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 41,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m28-robustness-scale/src/03-confounds.py",
+    "stacks": [
+      "coffee-bubbles",
+      "109MSDCF",
+      "foam"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 43,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m28-robustness-scale/src/04-sensitivity.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 44,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m28-robustness-scale/src/04-sensitivity.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 46,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m29-static-defects/src/01-static.py",
+    "stacks": [
+      "coffee-bubbles",
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 56,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m29-static-defects/src/02-conjunction.py",
+    "stacks": [
+      "coffee-bubbles",
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 62,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m29-static-defects/src/03-atten.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 38,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m29-static-defects/src/04-limit.py",
+    "stacks": [
+      "coffee-bubbles",
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 68,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m29-static-defects/src/05-floor.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 40,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m29-static-defects/src/05-floor.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 44,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m29-static-defects/src/05-floor.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 44,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m29-static-defects/src/06-dilution.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 63,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m30-hdr-cobracket/src/01-dynamic-range.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF",
+      "112MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 51,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m30-hdr-cobracket/src/02-fixed-light.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF",
+      "112MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 51,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m31-verification/src/v01-m28-core.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 8,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m31-verification/src/v01-m28-core.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 43,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m31-verification/src/v02-m28-gain-confound.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 8,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m31-verification/src/v03-m28-radial-matrix.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 8,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m31-verification/src/v04-m28-mechanism.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 7,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m31-verification/src/v05-m28-noisemodel.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 7,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m31-verification/src/v06-m28-model-refit.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "g_dn",
+    "value": 0.3663003663003663,
+    "line": 24,
+    "expr": "160.0 / 436.8",
+    "verdict": "MATCH",
+    "why": "gain matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m31-verification/src/v07-m28-sensitivity.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 7,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m31-verification/src/v08-m30-checks.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF",
+      "112MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 9,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m31-verification/src/v08-m30-checks.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF",
+      "112MSDCF"
+    ],
+    "name": "WHITE",
+    "value": 15360.0,
+    "line": 9,
+    "expr": "15360.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m31-verification/src/v09-m30-argmax-bias.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF",
+      "112MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 9,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m31-verification/src/v09-m30-argmax-bias.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF",
+      "112MSDCF"
+    ],
+    "name": "WHITE",
+    "value": 15360.0,
+    "line": 9,
+    "expr": "15360.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m31-verification/src/v13-m29-peaklock.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 9,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m31-verification/src/v14-m29-atten.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 9,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m31-verification/src/v15-m29-floor.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 9,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m31-verification/src/v15-m29-floor.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 10,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m31-verification/src/v15-m29-floor.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 10,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m31-verification/src/v16-m29-sep1.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 7,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m32-posterior/src/01-build.py",
+    "stacks": [
+      "coffee-bean"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 13,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m32-posterior/src/01-build.py",
+    "stacks": [
+      "coffee-bean"
+    ],
+    "name": "ISO",
+    "value": 50.0,
+    "line": 14,
+    "expr": "50",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 50",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m32-posterior/src/01-build.py",
+    "stacks": [
+      "coffee-bean"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 16,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m32-posterior/src/02-entropy.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 42,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m32-posterior/src/02-entropy.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 42,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m32-posterior/src/03-null.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 32,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m32-posterior/src/03-null.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 32,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m32-posterior/src/04-temperature.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 30,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m32-posterior/src/04-temperature.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 30,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m33-subframe-offset/src/01-build-dense.py",
+    "stacks": [
+      "coffee-bean"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 16,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m34-confidence-vector/src/01-channels.py",
+    "stacks": [],
+    "name": "ISO",
+    "value": 50.0,
+    "line": 48,
+    "expr": "50",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m34-confidence-vector/src/01-channels.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 48,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m34-confidence-vector/src/01-channels.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 48,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m34-confidence-vector/src/01-channels.py",
+    "stacks": [],
+    "name": "WHITE",
+    "value": 14848.0,
+    "line": 49,
+    "expr": "15360 - 512",
+    "verdict": "MISMATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m34-confidence-vector/src/03-controls.py",
+    "stacks": [],
+    "name": "ISO",
+    "value": 50.0,
+    "line": 39,
+    "expr": "50",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m34-confidence-vector/src/03-controls.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 39,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m34-confidence-vector/src/03-controls.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 39,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m35-fit-generality/src/01-build.py",
+    "stacks": [
+      "119MSDCF",
+      "112MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 32,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m36-verification/src/V01-verify-caches.py",
+    "stacks": [
+      "coffee-bean"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 11,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m36-verification/src/V03-ceiling.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 28,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V03-ceiling.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 28,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V04-ceiling-bias.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 31,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V04-ceiling-bias.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 31,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V05-fact281.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 25,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V05-fact281.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 25,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V05b-fact281-mechanism.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 15,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V05b-fact281-mechanism.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 15,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V05c-acceptance-mechanism.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 5,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V05c-acceptance-mechanism.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 5,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V06-other-stacks.py",
+    "stacks": [
+      "119MSDCF",
+      "112MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 17,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m36-verification/src/V09-m32.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 18,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V09-m32.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 18,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V11-sigma-audit.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 22,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V11-sigma-audit.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 22,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V13-arms.py",
+    "stacks": [],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 8,
+    "expr": "50 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m36-verification/src/V13-arms.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 8,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m38-detail-metric/src/01-gradient-conventions.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 32,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m39-verify/src/02-single-frame.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 15,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m39-verify/src/02-single-frame.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 15,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/02-single-frame.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 17,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/03-merge-numpy.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 22,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m39-verify/src/03-merge-numpy.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 22,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/03-merge-numpy.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 22,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/04-sensitivity.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 14,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m39-verify/src/04-sensitivity.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 14,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/04-sensitivity.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 14,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/05-noise-scale.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 22,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m39-verify/src/05-noise-scale.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 22,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/05-noise-scale.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 22,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/06-noise-scale-2.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 17,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m39-verify/src/06-noise-scale-2.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 17,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/06-noise-scale-2.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 17,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/07-save-merged.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 6,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m39-verify/src/07-save-merged.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 6,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/07-save-merged.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 6,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/08-break.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 21,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m39-verify/src/08-break.py",
+    "stacks": [],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 21,
+    "expr": "160.0",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/08-break.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 21,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/09-control.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 20,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m39-verify/src/09-control.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 20,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/09-control.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 20,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/10-claim-d.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 18,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m39-verify/src/10-claim-d.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 18,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m39-verify/src/10-claim-d.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 18,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m40-verify-341/src/01-inflation-estimators.py",
+    "stacks": [
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 67,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m40-verify-341/src/02-dilution.py",
+    "stacks": [
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 44,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m40-verify-341/src/03-null-plant.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 45,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m40-verify-341/src/04-reference.py",
+    "stacks": [
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 41,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m40-verify-341/src/06-reference-sweep.py",
+    "stacks": [
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 42,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m40-verify-341/src/07-fourth-consumer.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 47,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m40-verify-341/src/07-fourth-consumer.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 52,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m41-r3-kill/src/a11_metric_power.py",
+    "stacks": [
+      "119MSDCF"
+    ],
+    "name": "G",
+    "value": 0.11446886446886446,
+    "line": 66,
+    "expr": "0.11446886446886446",
+    "verdict": "MISMATCH",
+    "why": "g=0.11447 but 119MSDCF needs 0.22894",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m41-r3-kill/src/a11_metric_power.py",
+    "stacks": [
+      "119MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 66,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m41-r3-kill/src/a1b_rois.py",
+    "stacks": [
+      "coffee-bubbles",
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 19,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m41-r3-kill/src/a1_rois.py",
+    "stacks": [
+      "coffee-bubbles",
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 16,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m41-r3-kill/src/a3_planted.py",
+    "stacks": [
+      "119MSDCF"
+    ],
+    "name": "rn_e",
+    "value": 4.2,
+    "line": 89,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m41-r3-kill/src/a5_planted.py",
+    "stacks": [
+      "119MSDCF"
+    ],
+    "name": "rn_e",
+    "value": 4.2,
+    "line": 90,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m41-r3-kill/src/m41lib.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 32,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m47-gain-blast-radius/src/01-crossover-fraction.py",
+    "stacks": [
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 27,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m48-noise-floor/src/01-dark-sigma.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 27,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m5-diffraction/m5_lib.py",
+    "stacks": [],
+    "name": "BLACK_LEVEL",
+    "value": 512.0,
+    "line": 36,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m5-diffraction/m5_lib.py",
+    "stacks": [],
+    "name": "WHITE_LEVEL",
+    "value": 15360.0,
+    "line": 37,
+    "expr": "15360",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m5-diffraction/m5_measure.py",
+    "stacks": [],
+    "name": "iso",
+    "value": 0.0,
+    "line": 619,
+    "expr": "0",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m52-gate-cluster/src/05-cross-operator-transfer.py",
+    "stacks": [
+      "109MSDCF",
+      "113MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 45,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m52-gate-cluster/src/06-exactness-probes.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 38,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m52-gate-cluster/src/06-exactness-probes.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 128,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m52-gate-cluster/src/08-real-sigma-cost.py",
+    "stacks": [
+      "coffee-bubbles",
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 30,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m52-gate-cluster/src/10-fact324-current-model.py",
+    "stacks": [
+      "coffee-bubbles",
+      "coffee-bean",
+      "118MSDCF",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 26,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m53-flat-ratio/src/a1_reconcile.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 41,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m53-flat-ratio/src/a2_kernel_sweep.py",
+    "stacks": [
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 37,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m53-flat-ratio/src/a3_dump_rois.py",
+    "stacks": [
+      "119MSDCF",
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 28,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M55-acceptance-spec/src/calibrate.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 30,
+    "expr": "1.14469",
+    "verdict": "MATCH",
+    "why": "gain matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-acceptance-spec/src/calibrate.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 30,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-acceptance-spec/src/e11_q165.py",
+    "stacks": [
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 35,
+    "expr": "1.14469",
+    "verdict": "MISMATCH",
+    "why": "g=1.14469 but foam needs 2.28938",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-acceptance-spec/src/e11_q165.py",
+    "stacks": [
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 35,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-acceptance-spec/src/e12_null.py",
+    "stacks": [
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 30,
+    "expr": "1.14469",
+    "verdict": "MISMATCH",
+    "why": "g=1.14469 but foam needs 2.28938",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-acceptance-spec/src/e12_null.py",
+    "stacks": [
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 30,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-acceptance-spec/src/e17_m76_stratum_variance.py",
+    "stacks": [],
+    "name": "G",
+    "value": 1.14469,
+    "line": 29,
+    "expr": "1.14469",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-acceptance-spec/src/e17_m76_stratum_variance.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 30,
+    "expr": "1.47",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e10_stability.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 25,
+    "expr": "1.14469",
+    "verdict": "MATCH",
+    "why": "gain matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e10_stability.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 25,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e1_dark_rho.py",
+    "stacks": [
+      "118MSDCF",
+      "119MSDCF",
+      "120MSDCF",
+      "121MSDCF",
+      "122MSDCF",
+      "123MSDCF",
+      "124MSDCF",
+      "125MSDCF",
+      "126MSDCF",
+      "127MSDCF",
+      "128MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 40,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e1_dark_rho.py",
+    "stacks": [
+      "118MSDCF",
+      "119MSDCF",
+      "120MSDCF",
+      "121MSDCF",
+      "122MSDCF",
+      "123MSDCF",
+      "124MSDCF",
+      "125MSDCF",
+      "126MSDCF",
+      "127MSDCF",
+      "128MSDCF"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 41,
+    "expr": "1.14469",
+    "verdict": "MISMATCH",
+    "why": "g=1.14469 but 118MSDCF needs 0.22894, 119MSDCF needs 0.22894, 120MSDCF needs 1.83150, 121MSDCF needs 3.66300",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e1_dark_rho.py",
+    "stacks": [
+      "118MSDCF",
+      "119MSDCF",
+      "120MSDCF",
+      "121MSDCF",
+      "122MSDCF",
+      "123MSDCF",
+      "124MSDCF",
+      "125MSDCF",
+      "126MSDCF",
+      "127MSDCF",
+      "128MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 42,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 118MSDCF(ISO 100) needs 4.2, 119MSDCF(ISO 50) needs 4.2, 120MSDCF(ISO 800) needs 1.2392, 121MSDCF(ISO 1600) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e2_real_halfstacks.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 56,
+    "expr": "1.14469",
+    "verdict": "MATCH",
+    "why": "gain matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e2_real_halfstacks.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 56,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e3_decompose.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 46,
+    "expr": "1.14469",
+    "verdict": "MATCH",
+    "why": "gain matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e3_decompose.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 46,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e4_placebo.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 47,
+    "expr": "1.14469",
+    "verdict": "MATCH",
+    "why": "gain matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e4_placebo.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 47,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e6_gate_and_grade.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 46,
+    "expr": "1.14469",
+    "verdict": "MATCH",
+    "why": "gain matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e6_gate_and_grade.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 46,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e7_gain_and_frc.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 29,
+    "expr": "1.14469",
+    "verdict": "MATCH",
+    "why": "gain matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e7_gain_and_frc.py",
+    "stacks": [
+      "112MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 29,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e9_split_contract.py",
+    "stacks": [
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 28,
+    "expr": "1.14469",
+    "verdict": "MISMATCH",
+    "why": "g=1.14469 but foam needs 2.28938",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M55-sigpow-attack/src/e9_split_contract.py",
+    "stacks": [
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 28,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m57-shape-metric/src/s3_real.py",
+    "stacks": [
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 38,
+    "expr": "1.14469",
+    "verdict": "MISMATCH",
+    "why": "g=1.14469 but 109MSDCF needs 0.36630, foam needs 2.28938",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m57-shape-metric/src/s3_real.py",
+    "stacks": [
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 38,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 109MSDCF(ISO 160) needs 4.2, 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m57-shape-metric/src/s5_real_nulls.py",
+    "stacks": [
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 44,
+    "expr": "1.14469",
+    "verdict": "MISMATCH",
+    "why": "g=1.14469 but 109MSDCF needs 0.36630, foam needs 2.28938",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m57-shape-metric/src/s5_real_nulls.py",
+    "stacks": [
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 44,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 109MSDCF(ISO 160) needs 4.2, 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m57-shape-metric/src/s5_real_nulls.py",
+    "stacks": [
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "ISO",
+    "value": 500.0,
+    "line": 46,
+    "expr": "500",
+    "verdict": "MISMATCH",
+    "why": "ISO 500 but 109MSDCF=160, foam=1000",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m57-shape-metric/src/s6_debias.py",
+    "stacks": [
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 27,
+    "expr": "1.14469",
+    "verdict": "MISMATCH",
+    "why": "g=1.14469 but 109MSDCF needs 0.36630, foam needs 2.28938",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m57-shape-metric/src/s6_debias.py",
+    "stacks": [
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 27,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 109MSDCF(ISO 160) needs 4.2, 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m57-shape-metric/src/s6_debias.py",
+    "stacks": [
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "ISO",
+    "value": 500.0,
+    "line": 29,
+    "expr": "500",
+    "verdict": "MISMATCH",
+    "why": "ISO 500 but 109MSDCF=160, foam=1000",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m57-shape-metric/src/s7_bias_or_variance.py",
+    "stacks": [
+      "109MSDCF",
+      "112MSDCF"
+    ],
+    "name": "G",
+    "value": 1.14469,
+    "line": 44,
+    "expr": "1.14469",
+    "verdict": "MISMATCH",
+    "why": "g=1.14469 but 109MSDCF needs 0.36630",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m57-shape-metric/src/s7_bias_or_variance.py",
+    "stacks": [
+      "109MSDCF",
+      "112MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 1.47,
+    "line": 44,
+    "expr": "1.47",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.47 but 109MSDCF(ISO 160) needs 4.2, 112MSDCF(ISO 500) needs 1.2392",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m57-shape-metric/src/s7_bias_or_variance.py",
+    "stacks": [
+      "109MSDCF",
+      "112MSDCF"
+    ],
+    "name": "ISO",
+    "value": 500.0,
+    "line": 44,
+    "expr": "500",
+    "verdict": "MISMATCH",
+    "why": "ISO 500 but 109MSDCF=160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M60-bimodality/src/13-plant.py",
+    "stacks": [],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 37,
+    "expr": "100.0",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M60-bimodality/src/m60lib.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 13,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M60-bimodality/src/m60lib.py",
+    "stacks": [],
+    "name": "WHITE",
+    "value": 15360.0,
+    "line": 14,
+    "expr": "15360.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m61-ptc-high-iso/src/00-corpus-probe.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 31,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m61-ptc-high-iso/src/00-corpus-probe.py",
+    "stacks": [],
+    "name": "WHITE",
+    "value": 15360.0,
+    "line": 32,
+    "expr": "15360",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m61-ptc-high-iso/src/01-difference-probe.py",
+    "stacks": [
+      "coffee-bubbles",
+      "wrapped-text-1",
+      "wrapped-text-2",
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 39,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m61-ptc-high-iso/src/01-difference-probe.py",
+    "stacks": [
+      "coffee-bubbles",
+      "wrapped-text-1",
+      "wrapped-text-2",
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "WHITE",
+    "value": 15360.0,
+    "line": 40,
+    "expr": "15360.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m61-ptc-high-iso/src/02-ptc-ladder.py",
+    "stacks": [
+      "coffee-bubbles",
+      "wrapped-text-1",
+      "wrapped-text-2",
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 248,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m61-ptc-high-iso/src/02-ptc-ladder.py",
+    "stacks": [
+      "coffee-bubbles",
+      "wrapped-text-1",
+      "wrapped-text-2",
+      "coffee-bean",
+      "119MSDCF",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "WHITE",
+    "value": 15360.0,
+    "line": 249,
+    "expr": "15360.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m61-ptc-high-iso/src/03-power-control.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 75,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m61-ptc-high-iso/src/03-power-control.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 4.2,
+    "line": 76,
+    "expr": "4.2",
+    "verdict": "MATCH",
+    "why": "read noise matches all 1 stack(s)",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/m61-ptc-high-iso/src/20-bplane-mechanism.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF",
+      "112MSDCF",
+      "foam"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 116,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m61-ptc-high-iso/src/20-bplane-mechanism.py",
+    "stacks": [
+      "coffee-bean",
+      "109MSDCF",
+      "112MSDCF",
+      "foam"
+    ],
+    "name": "WHITE",
+    "value": 15360.0,
+    "line": 116,
+    "expr": "15360",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/m61-ptc-high-iso/src/21-bplane-mechanism-fix.py",
+    "stacks": [
+      "coffee-bubbles",
+      "coffee-bean",
+      "109MSDCF",
+      "112MSDCF",
+      "113MSDCF",
+      "foam"
+    ],
+    "name": "WHITE",
+    "value": 15360.0,
+    "line": 120,
+    "expr": "15360",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M62-sqrt-n/src/01-pick-latent.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 28,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M62-sqrt-n/src/06-armD.py",
+    "stacks": [
+      "118MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 41,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M62-sqrt-n/src/07-real-burst.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 51,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M62-sqrt-n/src/harness.py",
+    "stacks": [],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 96,
+    "expr": "160.0",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M64-estimator-default/src/01-pick-latent.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 28,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M64-estimator-default/src/harness.py",
+    "stacks": [],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 96,
+    "expr": "160.0",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M66-gate-n-dependence/src/04-burst.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 51,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M67-focus-correctness/src/10-render-plants.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 51,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M70-through-focus-spectrum/src/s02_reproduce_m5.py",
+    "stacks": [
+      "109MSDCF"
+    ],
+    "name": "ISO",
+    "value": 160.0,
+    "line": 35,
+    "expr": "160.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 160",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M71-flat-fields/src/01-preregistration.py",
+    "stacks": [],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 39,
+    "expr": "100.0",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M71-flat-fields/src/01-preregistration.py",
+    "stacks": [],
+    "name": "READ_NOISE_E",
+    "value": 4.2,
+    "line": 41,
+    "expr": "4.2",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M71-flat-fields/src/01-preregistration.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 42,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M71-flat-fields/src/01-preregistration.py",
+    "stacks": [],
+    "name": "WHITE",
+    "value": 15360.0,
+    "line": 43,
+    "expr": "15360",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M71-flat-fields/src/02-decode-flats.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 53,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M71-flat-fields/src/02-decode-flats.py",
+    "stacks": [],
+    "name": "WHITE",
+    "value": 15360.0,
+    "line": 54,
+    "expr": "15360.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M71-flat-fields/src/04-dark-and-linearity.py",
+    "stacks": [
+      "118MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 44,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M71-flat-fields/src/06-sweeps.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 45,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M71-flat-fields/src/07-structure.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 38,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M71-flat-fields/src/08-cpl-illum.py",
+    "stacks": [
+      "118MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 25,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M71-flat-fields/src/09-controls.py",
+    "stacks": [
+      "118MSDCF"
+    ],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 39,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/04-through-focus.py",
+    "stacks": [
+      "bee-3-cpl"
+    ],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 35,
+    "expr": "100.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 100",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/12-window-scaling.py",
+    "stacks": [],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 61,
+    "expr": "100.0",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/18-flower-ab.py",
+    "stacks": [
+      "flower-bud-with-background-fern-cpl",
+      "flower-bud-alone-cpl"
+    ],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 41,
+    "expr": "100.0",
+    "verdict": "MATCH",
+    "why": "all 2 stack(s) are ISO 100",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/23-scout.py",
+    "stacks": [
+      "bee-3-cpl"
+    ],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 48,
+    "expr": "100",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 100",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/25-boundary-scan.py",
+    "stacks": [
+      "bee-3-cpl"
+    ],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 50,
+    "expr": "100",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 100",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/27-real-polarity.py",
+    "stacks": [
+      "bee-3-cpl"
+    ],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 57,
+    "expr": "100",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 100",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/28-real-polarity-v2.py",
+    "stacks": [
+      "bee-3-cpl"
+    ],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 70,
+    "expr": "100",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 100",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/29-real-polarity-v3.py",
+    "stacks": [
+      "bee-3-cpl"
+    ],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 64,
+    "expr": "100",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 100",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/30-drift-and-control.py",
+    "stacks": [
+      "bee-3-cpl"
+    ],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 53,
+    "expr": "100",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 100",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/31-known-mask.py",
+    "stacks": [
+      "bee-3-cpl"
+    ],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 68,
+    "expr": "100",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 100",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/35-registration.py",
+    "stacks": [
+      "bee-3-cpl"
+    ],
+    "name": "ISO",
+    "value": 100.0,
+    "line": 37,
+    "expr": "100.0",
+    "verdict": "MATCH",
+    "why": "all 1 stack(s) are ISO 100",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/m87lib.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 42,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M87-occlusion/src/m87lib.py",
+    "stacks": [],
+    "name": "WHITE",
+    "value": 16383.0,
+    "line": 43,
+    "expr": "16383.0",
+    "verdict": "MISMATCH",
+    "why": "rig constant, AGENTS rig section says 15360",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/m88lib.py",
+    "stacks": [],
+    "name": "BLACK_LEVEL",
+    "value": 512.0,
+    "line": 28,
+    "expr": "512",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s02c_calibrate.py",
+    "stacks": [],
+    "name": "GAIN",
+    "value": 0.22893772893772893,
+    "line": 16,
+    "expr": "100.0 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s02c_calibrate.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 1.2392,
+    "line": 17,
+    "expr": "1.2392",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s02_positive_control.py",
+    "stacks": [],
+    "name": "GAIN_DN_PER_E",
+    "value": 0.22893772893772893,
+    "line": 21,
+    "expr": "100.0 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s02_positive_control.py",
+    "stacks": [],
+    "name": "READ_NOISE_E",
+    "value": 1.2392,
+    "line": 22,
+    "expr": "1.2392",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s03_controls.py",
+    "stacks": [],
+    "name": "GAIN",
+    "value": 0.22893772893772893,
+    "line": 32,
+    "expr": "100.0 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s03_controls.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 1.2392,
+    "line": 33,
+    "expr": "1.2392",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s04_instrument_spec.py",
+    "stacks": [],
+    "name": "GAIN",
+    "value": 0.22893772893772893,
+    "line": 18,
+    "expr": "100.0 / 436.8",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s04_instrument_spec.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 1.2392,
+    "line": 19,
+    "expr": "1.2392",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s09_deramp_control.py",
+    "stacks": [
+      "119MSDCF"
+    ],
+    "name": "GAIN",
+    "value": 0.11446886446886446,
+    "line": 20,
+    "expr": "50.0 / 436.8",
+    "verdict": "MISMATCH",
+    "why": "g=0.11447 but 119MSDCF needs 0.22894",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s09_deramp_control.py",
+    "stacks": [
+      "119MSDCF"
+    ],
+    "name": "RN_E",
+    "value": 1.2392,
+    "line": 21,
+    "expr": "1.2392",
+    "verdict": "MISMATCH",
+    "why": "rn_e=1.2392 but 119MSDCF(ISO 50) needs 4.2",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s13_robustness.py",
+    "stacks": [
+      "119MSDCF"
+    ],
+    "name": "GAIN_DN_PER_E",
+    "value": 0.75,
+    "line": 32,
+    "expr": "0.75",
+    "verdict": "MISMATCH",
+    "why": "g=0.75000 but 119MSDCF needs 0.22894",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88-optical-ceiling/src/s13_robustness.py",
+    "stacks": [
+      "119MSDCF"
+    ],
+    "name": "READ_NOISE_E",
+    "value": 3.0,
+    "line": 33,
+    "expr": "3.0",
+    "verdict": "MISMATCH",
+    "why": "rn_e=3 but 119MSDCF(ISO 50) needs 4.2",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M88b-merge-sharpness/src/b02_graveyard.py",
+    "stacks": [],
+    "name": "GAIN",
+    "value": 0.6,
+    "line": 44,
+    "expr": "0.6",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M95-merge-vs-frame/src/s10_controls.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 28,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M95-merge-vs-frame/src/s10_controls.py",
+    "stacks": [],
+    "name": "GAIN",
+    "value": 0.224103,
+    "line": 30,
+    "expr": "0.224103",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M95-merge-vs-frame/src/s5b_checks.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 90,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M95-merge-vs-frame/src/s5_election.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 35,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/M95-merge-vs-frame/src/s6_spectral.py",
+    "stacks": [],
+    "name": "GAIN_DN_PER_E",
+    "value": 0.224103,
+    "line": 43,
+    "expr": "0.224103",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/M95-merge-vs-frame/src/s6_spectral.py",
+    "stacks": [],
+    "name": "BLACK",
+    "value": 512.0,
+    "line": 45,
+    "expr": "512.0",
+    "verdict": "MATCH",
+    "why": "rig constant, AGENTS rig section says 512",
+    "kind": "rig"
+  },
+  {
+    "file": "experiments/ORCH-drift-check/decide.py",
+    "stacks": [],
+    "name": "GAIN",
+    "value": 0.229,
+    "line": 46,
+    "expr": "0.229",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  },
+  {
+    "file": "experiments/ORCH-drift-check/decide.py",
+    "stacks": [],
+    "name": "RN_E",
+    "value": 3.0,
+    "line": 47,
+    "expr": "3.0",
+    "verdict": "UNRESOLVED",
+    "why": "file names no recognised stack",
+    "kind": "per-stack"
+  }
+]

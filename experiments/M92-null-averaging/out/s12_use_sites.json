@@ -1,0 +1,640 @@
+{
+ "level_dn": 250.0,
+ "rows": [
+  {
+   "file": "experiments/M55-acceptance-spec/src/calibrate.py",
+   "line": 30,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "112MSDCF"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "112MSDCF",
+   "sigma_ratio": 1.001420505635884
+  },
+  {
+   "file": "experiments/M55-acceptance-spec/src/e11_q165.py",
+   "line": 35,
+   "name": "G",
+   "value": 1.14469,
+   "stacks": [
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "foam",
+   "sigma_ratio": 0.7046515014538152
+  },
+  {
+   "file": "experiments/M55-acceptance-spec/src/e11_q165.py",
+   "line": 35,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "foam",
+   "sigma_ratio": 1.0028193420324605
+  },
+  {
+   "file": "experiments/M55-acceptance-spec/src/e12_null.py",
+   "line": 30,
+   "name": "G",
+   "value": 1.14469,
+   "stacks": [
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "foam",
+   "sigma_ratio": 0.7046515014538152
+  },
+  {
+   "file": "experiments/M55-acceptance-spec/src/e12_null.py",
+   "line": 30,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "foam",
+   "sigma_ratio": 1.0028193420324605
+  },
+  {
+   "file": "experiments/M55-sigpow-attack/src/e10_stability.py",
+   "line": 25,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "112MSDCF"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "112MSDCF",
+   "sigma_ratio": 1.001420505635884
+  },
+  {
+   "file": "experiments/M55-sigpow-attack/src/e1_dark_rho.py",
+   "line": 41,
+   "name": "G",
+   "value": 1.14469,
+   "stacks": [
+    "118MSDCF",
+    "119MSDCF",
+    "120MSDCF",
+    "121MSDCF",
+    "122MSDCF",
+    "123MSDCF",
+    "124MSDCF",
+    "125MSDCF",
+    "126MSDCF",
+    "127MSDCF",
+    "128MSDCF"
+   ],
+   "roles": [
+    "SENSOR?"
+   ],
+   "calls": [
+    "sqrt"
+   ],
+   "arith": 5,
+   "worst_stack": "118MSDCF",
+   "sigma_ratio": 2.306067588085423
+  },
+  {
+   "file": "experiments/M55-sigpow-attack/src/e1_dark_rho.py",
+   "line": 42,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "118MSDCF",
+    "119MSDCF",
+    "120MSDCF",
+    "121MSDCF",
+    "122MSDCF",
+    "123MSDCF",
+    "124MSDCF",
+    "125MSDCF",
+    "126MSDCF",
+    "127MSDCF",
+    "128MSDCF"
+   ],
+   "roles": [
+    "SENSOR?"
+   ],
+   "calls": [
+    "sqrt"
+   ],
+   "arith": 4,
+   "worst_stack": "126MSDCF",
+   "sigma_ratio": 0.9828214881828801
+  },
+  {
+   "file": "experiments/M55-sigpow-attack/src/e2_real_halfstacks.py",
+   "line": 56,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "112MSDCF"
+   ],
+   "roles": [
+    "SENSOR?",
+    "OPERATOR"
+   ],
+   "calls": [
+    "float",
+    "focus_fields",
+    "sqrt"
+   ],
+   "arith": 4,
+   "worst_stack": "112MSDCF",
+   "sigma_ratio": 1.001420505635884
+  },
+  {
+   "file": "experiments/M55-sigpow-attack/src/e3_decompose.py",
+   "line": 46,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "112MSDCF"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "112MSDCF",
+   "sigma_ratio": 1.001420505635884
+  },
+  {
+   "file": "experiments/M55-sigpow-attack/src/e4_placebo.py",
+   "line": 47,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "112MSDCF"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "112MSDCF",
+   "sigma_ratio": 1.001420505635884
+  },
+  {
+   "file": "experiments/M55-sigpow-attack/src/e6_gate_and_grade.py",
+   "line": 46,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "112MSDCF"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "112MSDCF",
+   "sigma_ratio": 1.001420505635884
+  },
+  {
+   "file": "experiments/M55-sigpow-attack/src/e7_gain_and_frc.py",
+   "line": 29,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "112MSDCF"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "112MSDCF",
+   "sigma_ratio": 1.001420505635884
+  },
+  {
+   "file": "experiments/M55-sigpow-attack/src/e9_split_contract.py",
+   "line": 28,
+   "name": "G",
+   "value": 1.14469,
+   "stacks": [
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "foam",
+   "sigma_ratio": 0.7046515014538152
+  },
+  {
+   "file": "experiments/M55-sigpow-attack/src/e9_split_contract.py",
+   "line": 28,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "foam",
+   "sigma_ratio": 1.0028193420324605
+  },
+  {
+   "file": "experiments/M88-optical-ceiling/src/s09_deramp_control.py",
+   "line": 20,
+   "name": "GAIN",
+   "value": 0.11446886446886446,
+   "stacks": [
+    "119MSDCF"
+   ],
+   "roles": [
+    "PLANT"
+   ],
+   "calls": [
+    "add_sensor_noise"
+   ],
+   "arith": 0,
+   "worst_stack": "119MSDCF",
+   "sigma_ratio": 0.7042909470362474
+  },
+  {
+   "file": "experiments/M88-optical-ceiling/src/s09_deramp_control.py",
+   "line": 21,
+   "name": "RN_E",
+   "value": 1.2392,
+   "stacks": [
+    "119MSDCF"
+   ],
+   "roles": [
+    "PLANT"
+   ],
+   "calls": [
+    "add_sensor_noise"
+   ],
+   "arith": 0,
+   "worst_stack": "119MSDCF",
+   "sigma_ratio": 0.9927168979883269
+  },
+  {
+   "file": "experiments/M88-optical-ceiling/src/s13_robustness.py",
+   "line": 32,
+   "name": "GAIN_DN_PER_E",
+   "value": 0.75,
+   "stacks": [
+    "119MSDCF"
+   ],
+   "roles": [
+    "PLANT"
+   ],
+   "calls": [
+    "add_sensor_noise"
+   ],
+   "arith": 0,
+   "worst_stack": "119MSDCF",
+   "sigma_ratio": 1.8424253541095108
+  },
+  {
+   "file": "experiments/M88-optical-ceiling/src/s13_robustness.py",
+   "line": 33,
+   "name": "READ_NOISE_E",
+   "value": 3.0,
+   "stacks": [
+    "119MSDCF"
+   ],
+   "roles": [
+    "PLANT"
+   ],
+   "calls": [
+    "add_sensor_noise"
+   ],
+   "arith": 0,
+   "worst_stack": "119MSDCF",
+   "sigma_ratio": 0.9960992374893112
+  },
+  {
+   "file": "experiments/m41-r3-kill/src/a11_metric_power.py",
+   "line": 66,
+   "name": "G",
+   "value": 0.11446886446886446,
+   "stacks": [
+    "119MSDCF"
+   ],
+   "roles": [
+    "SENSOR?"
+   ],
+   "calls": [
+    "maximum",
+    "sqrt"
+   ],
+   "arith": 5,
+   "worst_stack": "119MSDCF",
+   "sigma_ratio": 0.7042909470362474
+  },
+  {
+   "file": "experiments/m57-shape-metric/src/s3_real.py",
+   "line": 38,
+   "name": "G",
+   "value": 1.14469,
+   "stacks": [
+    "109MSDCF",
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "109MSDCF",
+   "sigma_ratio": 1.814473608889056
+  },
+  {
+   "file": "experiments/m57-shape-metric/src/s3_real.py",
+   "line": 38,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "109MSDCF",
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "109MSDCF",
+   "sigma_ratio": 0.9888839273219365
+  },
+  {
+   "file": "experiments/m57-shape-metric/src/s5_real_nulls.py",
+   "line": 44,
+   "name": "G",
+   "value": 1.14469,
+   "stacks": [
+    "109MSDCF",
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "109MSDCF",
+   "sigma_ratio": 1.814473608889056
+  },
+  {
+   "file": "experiments/m57-shape-metric/src/s5_real_nulls.py",
+   "line": 44,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "109MSDCF",
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields",
+    "print"
+   ],
+   "arith": 0,
+   "worst_stack": "109MSDCF",
+   "sigma_ratio": 0.9888839273219365
+  },
+  {
+   "file": "experiments/m57-shape-metric/src/s5_real_nulls.py",
+   "line": 46,
+   "name": "ISO",
+   "value": 500.0,
+   "stacks": [
+    "109MSDCF",
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "SENSOR"
+   ],
+   "calls": [
+    "float",
+    "gain_dn_per_e",
+    "noise_var_dn",
+    "print",
+    "read_noise_e",
+    "sqrt"
+   ],
+   "arith": 0,
+   "worst_stack": "109MSDCF",
+   "sigma_ratio": 1.7514807125050027
+  },
+  {
+   "file": "experiments/m57-shape-metric/src/s6_debias.py",
+   "line": 27,
+   "name": "G",
+   "value": 1.14469,
+   "stacks": [
+    "109MSDCF",
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "109MSDCF",
+   "sigma_ratio": 1.814473608889056
+  },
+  {
+   "file": "experiments/m57-shape-metric/src/s6_debias.py",
+   "line": 27,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "109MSDCF",
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "109MSDCF",
+   "sigma_ratio": 0.9888839273219365
+  },
+  {
+   "file": "experiments/m57-shape-metric/src/s6_debias.py",
+   "line": 29,
+   "name": "ISO",
+   "value": 500.0,
+   "stacks": [
+    "109MSDCF",
+    "112MSDCF",
+    "113MSDCF",
+    "foam"
+   ],
+   "roles": [
+    "SENSOR"
+   ],
+   "calls": [
+    "float",
+    "gain_dn_per_e",
+    "noise_var_dn",
+    "read_noise_e",
+    "sqrt"
+   ],
+   "arith": 0,
+   "worst_stack": "109MSDCF",
+   "sigma_ratio": 1.7514807125050027
+  },
+  {
+   "file": "experiments/m57-shape-metric/src/s7_bias_or_variance.py",
+   "line": 44,
+   "name": "G",
+   "value": 1.14469,
+   "stacks": [
+    "109MSDCF",
+    "112MSDCF"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "109MSDCF",
+   "sigma_ratio": 1.814473608889056
+  },
+  {
+   "file": "experiments/m57-shape-metric/src/s7_bias_or_variance.py",
+   "line": 44,
+   "name": "RN_E",
+   "value": 1.47,
+   "stacks": [
+    "109MSDCF",
+    "112MSDCF"
+   ],
+   "roles": [
+    "OPERATOR"
+   ],
+   "calls": [
+    "focus_fields"
+   ],
+   "arith": 0,
+   "worst_stack": "109MSDCF",
+   "sigma_ratio": 0.9888839273219365
+  },
+  {
+   "file": "experiments/m57-shape-metric/src/s7_bias_or_variance.py",
+   "line": 44,
+   "name": "ISO",
+   "value": 500.0,
+   "stacks": [
+    "109MSDCF",
+    "112MSDCF"
+   ],
+   "roles": [
+    "SENSOR"
+   ],
+   "calls": [
+    "float",
+    "gain_dn_per_e",
+    "noise_var_dn",
+    "read_noise_e",
+    "sqrt"
+   ],
+   "arith": 0,
+   "worst_stack": "109MSDCF",
+   "sigma_ratio": 1.7514807125050027
+  }
+ ]
+}

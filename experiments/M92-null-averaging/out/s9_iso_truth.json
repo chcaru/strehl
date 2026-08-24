@@ -1,0 +1,410 @@
+{
+  "capture|109MSDCF": {
+    "gain_dn_per_e": 0.3663003663003663,
+    "iso": 160,
+    "iso_counts": {
+      "160": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "109MSDCF",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|112MSDCF": {
+    "gain_dn_per_e": 1.1446886446886446,
+    "iso": 500,
+    "iso_counts": {
+      "500": 79
+    },
+    "mixed": false,
+    "n_frames": 79,
+    "name": "112MSDCF",
+    "read_noise_e": 1.2392,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|113MSDCF": {
+    "gain_dn_per_e": 1.1446886446886446,
+    "iso": 500,
+    "iso_counts": {
+      "500": 63
+    },
+    "mixed": false,
+    "n_frames": 63,
+    "name": "113MSDCF",
+    "read_noise_e": 1.2392,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|119MSDCF": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 50,
+    "iso_counts": {
+      "50": 33
+    },
+    "mixed": false,
+    "n_frames": 33,
+    "name": "119MSDCF",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|bee-1-cpl": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 299
+    },
+    "mixed": false,
+    "n_frames": 299,
+    "name": "bee-1-cpl",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|bee-2-cpl": {
+    "gain_dn_per_e": 0.9157509157509157,
+    "iso": 400,
+    "iso_counts": {
+      "400": 299
+    },
+    "mixed": false,
+    "n_frames": 299,
+    "name": "bee-2-cpl",
+    "read_noise_e": 1.2392,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|bee-3-cpl": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 299
+    },
+    "mixed": false,
+    "n_frames": 299,
+    "name": "bee-3-cpl",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|coffee-bean": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 50,
+    "iso_counts": {
+      "50": 105
+    },
+    "mixed": false,
+    "n_frames": 105,
+    "name": "coffee-bean",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|coffee-bubbles": {
+    "gain_dn_per_e": 2.2893772893772892,
+    "iso": 1000,
+    "iso_counts": {
+      "1000": 19
+    },
+    "mixed": false,
+    "n_frames": 19,
+    "name": "coffee-bubbles",
+    "read_noise_e": 1.2392,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|couch-fibers-cpl": {
+    "gain_dn_per_e": 0.9157509157509157,
+    "iso": 400,
+    "iso_counts": {
+      "400": 299
+    },
+    "mixed": false,
+    "n_frames": 299,
+    "name": "couch-fibers-cpl",
+    "read_noise_e": 1.2392,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|dry-erase-marker-head-cpl": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 299
+    },
+    "mixed": false,
+    "n_frames": 299,
+    "name": "dry-erase-marker-head-cpl",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|flat-on-ruler-cpl": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 79
+    },
+    "mixed": false,
+    "n_frames": 79,
+    "name": "flat-on-ruler-cpl",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|flower-bud-alone-cpl": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 205
+    },
+    "mixed": false,
+    "n_frames": 205,
+    "name": "flower-bud-alone-cpl",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|flower-bud-with-background-fern-cpl": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 299
+    },
+    "mixed": false,
+    "n_frames": 299,
+    "name": "flower-bud-with-background-fern-cpl",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|flowers-cpl": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 176
+    },
+    "mixed": false,
+    "n_frames": 176,
+    "name": "flowers-cpl",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|foam": {
+    "gain_dn_per_e": 2.2893772893772892,
+    "iso": 1000,
+    "iso_counts": {
+      "1000": 100
+    },
+    "mixed": false,
+    "n_frames": 100,
+    "name": "foam",
+    "read_noise_e": 1.2392,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|highly-angled-ruler-mm-cpl": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 299
+    },
+    "mixed": false,
+    "n_frames": 299,
+    "name": "highly-angled-ruler-mm-cpl",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|lavendar-cpl": {
+    "gain_dn_per_e": 0.45787545787545786,
+    "iso": 200,
+    "iso_counts": {
+      "200": 299
+    },
+    "mixed": false,
+    "n_frames": 299,
+    "name": "lavendar-cpl",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|lead-1-cpl": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 123
+    },
+    "mixed": false,
+    "n_frames": 123,
+    "name": "lead-1-cpl",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|leaf-2-cpl": {
+    "gain_dn_per_e": 0.9157509157509157,
+    "iso": 400,
+    "iso_counts": {
+      "400": 182
+    },
+    "mixed": false,
+    "n_frames": 182,
+    "name": "leaf-2-cpl",
+    "read_noise_e": 1.2392,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|tweezers-cpl": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 100
+    },
+    "mixed": false,
+    "n_frames": 100,
+    "name": "tweezers-cpl",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|wrapped-text-1": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 130
+    },
+    "mixed": false,
+    "n_frames": 130,
+    "name": "wrapped-text-1",
+    "read_noise_e": 4.2,
+    "root": "D:\\personal\\macro"
+  },
+  "capture|wrapped-text-2": {
+    "gain_dn_per_e": 0.9157509157509157,
+    "iso": 400,
+    "iso_counts": {
+      "400": 120
+    },
+    "mixed": false,
+    "n_frames": 120,
+    "name": "wrapped-text-2",
+    "read_noise_e": 1.2392,
+    "root": "D:\\personal\\macro"
+  },
+  "dark|118MSDCF": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 100,
+    "iso_counts": {
+      "100": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "118MSDCF",
+    "read_noise_e": 4.2,
+    "root": "D:\\macro-dark-frames"
+  },
+  "dark|119MSDCF": {
+    "gain_dn_per_e": 0.9157509157509157,
+    "iso": 400,
+    "iso_counts": {
+      "400": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "119MSDCF",
+    "read_noise_e": 1.2392,
+    "root": "D:\\macro-dark-frames"
+  },
+  "dark|120MSDCF": {
+    "gain_dn_per_e": 1.8315018315018314,
+    "iso": 800,
+    "iso_counts": {
+      "800": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "120MSDCF",
+    "read_noise_e": 1.2392,
+    "root": "D:\\macro-dark-frames"
+  },
+  "dark|121MSDCF": {
+    "gain_dn_per_e": 3.663003663003663,
+    "iso": 1600,
+    "iso_counts": {
+      "1600": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "121MSDCF",
+    "read_noise_e": 1.2392,
+    "root": "D:\\macro-dark-frames"
+  },
+  "dark|122MSDCF": {
+    "gain_dn_per_e": 0.22893772893772893,
+    "iso": 50,
+    "iso_counts": {
+      "50": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "122MSDCF",
+    "read_noise_e": 4.2,
+    "root": "D:\\macro-dark-frames"
+  },
+  "dark|123MSDCF": {
+    "gain_dn_per_e": 0.45787545787545786,
+    "iso": 200,
+    "iso_counts": {
+      "200": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "123MSDCF",
+    "read_noise_e": 4.2,
+    "root": "D:\\macro-dark-frames"
+  },
+  "dark|124MSDCF": {
+    "gain_dn_per_e": 1.465201465201465,
+    "iso": 640,
+    "iso_counts": {
+      "640": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "124MSDCF",
+    "read_noise_e": 1.2392,
+    "root": "D:\\macro-dark-frames"
+  },
+  "dark|125MSDCF": {
+    "gain_dn_per_e": 1.1446886446886446,
+    "iso": 500,
+    "iso_counts": {
+      "500": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "125MSDCF",
+    "read_noise_e": 1.2392,
+    "root": "D:\\macro-dark-frames"
+  },
+  "dark|126MSDCF": {
+    "gain_dn_per_e": 0.5723443223443223,
+    "iso": 250,
+    "iso_counts": {
+      "250": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "126MSDCF",
+    "read_noise_e": 4.2,
+    "root": "D:\\macro-dark-frames"
+  },
+  "dark|127MSDCF": {
+    "gain_dn_per_e": 2.2893772893772892,
+    "iso": 1000,
+    "iso_counts": {
+      "1000": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "127MSDCF",
+    "read_noise_e": 1.2392,
+    "root": "D:\\macro-dark-frames"
+  },
+  "dark|128MSDCF": {
+    "gain_dn_per_e": 4.5787545787545785,
+    "iso": 2000,
+    "iso_counts": {
+      "2000": 22
+    },
+    "mixed": false,
+    "n_frames": 22,
+    "name": "128MSDCF",
+    "read_noise_e": 1.2392,
+    "root": "D:\\macro-dark-frames"
+  }
+}

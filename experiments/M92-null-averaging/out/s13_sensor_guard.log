@@ -1,0 +1,6 @@
+==============================================================================
+M92b S13 -- sensor-constant guard
+  allowlist: ON (3 accepted historical instance(s))
+==============================================================================
+  PASS -- no SENSOR-role constant in the experiment tree is
+  refuted by its own stack's EXIF.

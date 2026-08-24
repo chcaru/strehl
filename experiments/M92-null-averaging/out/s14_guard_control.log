@@ -1,0 +1,21 @@
+==============================================================================
+M92b S14 -- falsifying control for the sensor guard
+  plants land in experiments/M92-null-averaging/control-fixtures/,
+  inside the tree the real guard really walks.
+==============================================================================
+  baseline (no plants, allowlist ON): 0 finding(s) -- expect 0
+  PASS  plant P1_plain           want=RED    got=RED
+  PASS  plant P2_tuple           want=RED    got=RED
+  PASS  plant P3_correct         want=GREEN  got=GREEN
+  PASS  plant P4_operator_only   want=GREEN  got=GREEN
+  PASS  plant P5_uses_helper     want=GREEN  got=GREEN
+  PASS  after cleanup: 0 finding(s) -- expect 0
+
+  helper refusals:
+  PASS  H1_assert_wrong_iso    want=RAISE  got=RAISE
+         109MSDCF: ISO 500 declared, EXIF says 160
+  PASS  H2_ambiguous_name      want=RAISE  got=RAISE
+         '119MSDCF' is ambiguous: capture root has ISO 50, dark root has ISO 400. P
+  PASS  H3_assert_right_iso    want=RETURN got=RETURN
+
+  CONTROL PASSED (10/10 cases)

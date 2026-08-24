@@ -1,0 +1,65 @@
+{
+ "cases": [
+  {
+   "case": "baseline",
+   "want": "GREEN",
+   "got": "GREEN",
+   "passed": true
+  },
+  {
+   "case": "P1_plain",
+   "want": "RED",
+   "got": "RED",
+   "passed": true
+  },
+  {
+   "case": "P2_tuple",
+   "want": "RED",
+   "got": "RED",
+   "passed": true
+  },
+  {
+   "case": "P3_correct",
+   "want": "GREEN",
+   "got": "GREEN",
+   "passed": true
+  },
+  {
+   "case": "P4_operator_only",
+   "want": "GREEN",
+   "got": "GREEN",
+   "passed": true
+  },
+  {
+   "case": "P5_uses_helper",
+   "want": "GREEN",
+   "got": "GREEN",
+   "passed": true
+  },
+  {
+   "case": "after_cleanup",
+   "want": "GREEN",
+   "got": "GREEN",
+   "passed": true
+  },
+  {
+   "case": "H1_assert_wrong_iso",
+   "want": "RAISE",
+   "got": "RAISE",
+   "passed": true
+  },
+  {
+   "case": "H2_ambiguous_name",
+   "want": "RAISE",
+   "got": "RAISE",
+   "passed": true
+  },
+  {
+   "case": "H3_assert_right_iso",
+   "want": "RETURN",
+   "got": "RETURN",
+   "passed": true
+  }
+ ],
+ "passed": true
+}

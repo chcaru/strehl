@@ -1,0 +1,125 @@
+==============================================================================
+M92b S12 -- use-site classification of every per-stack MISMATCH
+==============================================================================
+  OPERATOR = frozen detail operator (rule 15), EXIF does not apply
+  PLANT    = defines a synthetic plant, no truth to disagree with
+  SENSOR   = claims to describe the sensor -> EXIF can refute it
+  LEVEL_DN = 250 DN above black, the regime M57's nulls were run in
+
+------------------------------------------------------------------------------
+  role SENSOR: 3 instance(s)
+------------------------------------------------------------------------------
+  experiments/m57-shape-metric/src/s5_real_nulls.py:46  ISO = 500  
+      calls: float,gain_dn_per_e,noise_var_dn,print,read_noise_e,sqrt   binops: 0
+      worst stack 109MSDCF: modelled sigma is 1.7515x the EXIF-correct value at 250 DN
+  experiments/m57-shape-metric/src/s6_debias.py:29  ISO = 500  
+      calls: float,gain_dn_per_e,noise_var_dn,read_noise_e,sqrt   binops: 0
+      worst stack 109MSDCF: modelled sigma is 1.7515x the EXIF-correct value at 250 DN
+  experiments/m57-shape-metric/src/s7_bias_or_variance.py:44  ISO = 500  
+      calls: float,gain_dn_per_e,noise_var_dn,read_noise_e,sqrt   binops: 0
+      worst stack 109MSDCF: modelled sigma is 1.7515x the EXIF-correct value at 250 DN
+
+------------------------------------------------------------------------------
+  role SENSOR?: 4 instance(s)
+------------------------------------------------------------------------------
+  experiments/M55-sigpow-attack/src/e1_dark_rho.py:41  G = 1.14469  
+      calls: sqrt   binops: 5
+      worst stack 118MSDCF: modelled sigma is 2.3061x the EXIF-correct value at 250 DN
+  experiments/M55-sigpow-attack/src/e1_dark_rho.py:42  RN_E = 1.47  
+      calls: sqrt   binops: 4
+      worst stack 126MSDCF: modelled sigma is 0.9828x the EXIF-correct value at 250 DN
+  experiments/M55-sigpow-attack/src/e2_real_halfstacks.py:56  RN_E = 1.47  +OPERATOR
+      calls: float,focus_fields,sqrt   binops: 4
+      worst stack 112MSDCF: modelled sigma is 1.0014x the EXIF-correct value at 250 DN
+  experiments/m41-r3-kill/src/a11_metric_power.py:66  G = 0.114469  
+      calls: maximum,sqrt   binops: 5
+      worst stack 119MSDCF: modelled sigma is 0.7043x the EXIF-correct value at 250 DN
+
+------------------------------------------------------------------------------
+  role OPERATOR: 20 instance(s)
+------------------------------------------------------------------------------
+  experiments/M55-acceptance-spec/src/calibrate.py:30  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack 112MSDCF: modelled sigma is 1.0014x the EXIF-correct value at 250 DN
+  experiments/M55-acceptance-spec/src/e11_q165.py:35  G = 1.14469  
+      calls: focus_fields   binops: 0
+      worst stack foam: modelled sigma is 0.7047x the EXIF-correct value at 250 DN
+  experiments/M55-acceptance-spec/src/e11_q165.py:35  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack foam: modelled sigma is 1.0028x the EXIF-correct value at 250 DN
+  experiments/M55-acceptance-spec/src/e12_null.py:30  G = 1.14469  
+      calls: focus_fields   binops: 0
+      worst stack foam: modelled sigma is 0.7047x the EXIF-correct value at 250 DN
+  experiments/M55-acceptance-spec/src/e12_null.py:30  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack foam: modelled sigma is 1.0028x the EXIF-correct value at 250 DN
+  experiments/M55-sigpow-attack/src/e10_stability.py:25  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack 112MSDCF: modelled sigma is 1.0014x the EXIF-correct value at 250 DN
+  experiments/M55-sigpow-attack/src/e3_decompose.py:46  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack 112MSDCF: modelled sigma is 1.0014x the EXIF-correct value at 250 DN
+  experiments/M55-sigpow-attack/src/e4_placebo.py:47  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack 112MSDCF: modelled sigma is 1.0014x the EXIF-correct value at 250 DN
+  experiments/M55-sigpow-attack/src/e6_gate_and_grade.py:46  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack 112MSDCF: modelled sigma is 1.0014x the EXIF-correct value at 250 DN
+  experiments/M55-sigpow-attack/src/e7_gain_and_frc.py:29  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack 112MSDCF: modelled sigma is 1.0014x the EXIF-correct value at 250 DN
+  experiments/M55-sigpow-attack/src/e9_split_contract.py:28  G = 1.14469  
+      calls: focus_fields   binops: 0
+      worst stack foam: modelled sigma is 0.7047x the EXIF-correct value at 250 DN
+  experiments/M55-sigpow-attack/src/e9_split_contract.py:28  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack foam: modelled sigma is 1.0028x the EXIF-correct value at 250 DN
+  experiments/m57-shape-metric/src/s3_real.py:38  G = 1.14469  
+      calls: focus_fields   binops: 0
+      worst stack 109MSDCF: modelled sigma is 1.8145x the EXIF-correct value at 250 DN
+  experiments/m57-shape-metric/src/s3_real.py:38  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack 109MSDCF: modelled sigma is 0.9889x the EXIF-correct value at 250 DN
+  experiments/m57-shape-metric/src/s5_real_nulls.py:44  G = 1.14469  
+      calls: focus_fields   binops: 0
+      worst stack 109MSDCF: modelled sigma is 1.8145x the EXIF-correct value at 250 DN
+  experiments/m57-shape-metric/src/s5_real_nulls.py:44  RN_E = 1.47  
+      calls: focus_fields,print   binops: 0
+      worst stack 109MSDCF: modelled sigma is 0.9889x the EXIF-correct value at 250 DN
+  experiments/m57-shape-metric/src/s6_debias.py:27  G = 1.14469  
+      calls: focus_fields   binops: 0
+      worst stack 109MSDCF: modelled sigma is 1.8145x the EXIF-correct value at 250 DN
+  experiments/m57-shape-metric/src/s6_debias.py:27  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack 109MSDCF: modelled sigma is 0.9889x the EXIF-correct value at 250 DN
+  experiments/m57-shape-metric/src/s7_bias_or_variance.py:44  G = 1.14469  
+      calls: focus_fields   binops: 0
+      worst stack 109MSDCF: modelled sigma is 1.8145x the EXIF-correct value at 250 DN
+  experiments/m57-shape-metric/src/s7_bias_or_variance.py:44  RN_E = 1.47  
+      calls: focus_fields   binops: 0
+      worst stack 109MSDCF: modelled sigma is 0.9889x the EXIF-correct value at 250 DN
+
+------------------------------------------------------------------------------
+  role PLANT: 4 instance(s)
+------------------------------------------------------------------------------
+  experiments/M88-optical-ceiling/src/s09_deramp_control.py:20  GAIN = 0.114469  
+      calls: add_sensor_noise   binops: 0
+      worst stack 119MSDCF: modelled sigma is 0.7043x the EXIF-correct value at 250 DN
+  experiments/M88-optical-ceiling/src/s09_deramp_control.py:21  RN_E = 1.2392  
+      calls: add_sensor_noise   binops: 0
+      worst stack 119MSDCF: modelled sigma is 0.9927x the EXIF-correct value at 250 DN
+  experiments/M88-optical-ceiling/src/s13_robustness.py:32  GAIN_DN_PER_E = 0.75  
+      calls: add_sensor_noise   binops: 0
+      worst stack 119MSDCF: modelled sigma is 1.8424x the EXIF-correct value at 250 DN
+  experiments/M88-optical-ceiling/src/s13_robustness.py:33  READ_NOISE_E = 3  
+      calls: add_sensor_noise   binops: 0
+      worst stack 119MSDCF: modelled sigma is 0.9961x the EXIF-correct value at 250 DN
+
+==============================================================================
+  31 MISMATCHes: 7 reach a sensor model, 21 reach the frozen operator.
+  1 instance(s) reach BOTH from the SAME assignment --
+  one variable serving the frozen operator and the sensor model at
+  once. Those cannot be corrected in place: fixing the sensor use
+  silently unfreezes the operator and breaks cross-milestone
+  comparability (rule 15).
+      experiments/M55-sigpow-attack/src/e2_real_halfstacks.py:56  RN_E = 1.47   sigma x1.0014 on 112MSDCF

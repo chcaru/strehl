@@ -1,0 +1,10 @@
+==============================================================================
+M92b S13 -- sensor-constant guard
+  allowlist: OFF (3 accepted historical instance(s))
+==============================================================================
+  FAIL  experiments/m57-shape-metric/src/s5_real_nulls.py:46  ISO = 500
+        ISO 500 but 109MSDCF=160, foam=1000
+  FAIL  experiments/m57-shape-metric/src/s6_debias.py:29  ISO = 500
+        ISO 500 but 109MSDCF=160, foam=1000
+  FAIL  experiments/m57-shape-metric/src/s7_bias_or_variance.py:44  ISO = 500
+        ISO 500 but 109MSDCF=160

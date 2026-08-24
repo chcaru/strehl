@@ -1,0 +1,78 @@
+==============================================================================
+M92b S15 -- exact pricing at each site's own level
+==============================================================================
+
+-- 1. M57 S5/S6/S7: ISO 500 declared, 109MSDCF is ISO 160
+  m57 noise model on 109MSDCF @ 106.34 DN
+      level   106.34 DN   g/rn used (1.14469, 1.2392)  correct (0.36630, 4.2)
+      modelled sd  11.1238 vs   6.4280 DN   ratio 1.7305x  (+73.05%)
+
+  m57 noise model on 109MSDCF @ 250 DN
+      level   250.00 DN   g/rn used (1.14469, 1.2392)  correct (0.36630, 4.2)
+      modelled sd  16.9760 vs   9.6924 DN   ratio 1.7515x  (+75.15%)
+
+  m57 noise model on 109MSDCF @ 500 DN
+      level   500.00 DN   g/rn used (1.14469, 1.2392)  correct (0.36630, 4.2)
+      modelled sd  23.9657 vs  13.6205 DN   ratio 1.7595x  (+75.95%)
+
+-- 2. M55 e1_dark_rho: RN_E 1.47 (pre-M48) on the ISO-500 arm
+   G = 1.14469 is EXACTLY correct for ISO 500. The scanner flagged
+   it only because the file opens darks 118-128 in string literals;
+   the constant is scoped to res['iso'][500]. False positive on G.
+
+  M55 e1 M46 flat ROI
+      level   106.34 DN   g/rn used (1.14469, 1.47)  correct (1.14469, 1.2392)
+      modelled sd   7.8918 vs   7.8658 DN   ratio 1.0033x  (+0.33%)
+      conclusion is a shortfall of 100s-x in VARIANCE
+
+  M55 e1 M46 detail ROI
+      level   203.11 DN   g/rn used (1.14469, 1.47)  correct (1.14469, 1.2392)
+      modelled sd  10.8474 vs  10.8285 DN   ratio 1.0017x  (+0.17%)
+      conclusion is a shortfall of 100s-x in VARIANCE
+
+-- 3. M55 e2_real_halfstacks: the DUAL-ROLE assignment
+   `G, RN_E = 1.14469, 1.47` at line 56 feeds BOTH the longhand
+   sigma at line 160 (sensor model) AND focus_fields at line 165
+   (frozen operator, rule 15). One name, two contracts.
+
+  M55 e2 sigma on 112MSDCF
+      level   250.00 DN   g/rn used (1.14469, 1.47)  correct (1.14469, 1.2392)
+      modelled sd  12.0209 vs  12.0038 DN   ratio 1.0014x  (+0.14%)
+      correcting the sensor use in place would unfreeze the operator
+
+-- 4. m41 a11_metric_power: M25's ISO-50 gain bug on real planes
+   G = 0.11446886 is ISO/436.8; the corrected model is
+   max(ISO,100)/436.8 = 0.22894 because Sony ISO 50 is an extended
+   pull reading out at base-ISO gain (AGENTS M25 row, fixed 2a4f5c5).
+
+  m41 a11 sigma_map on 119MSDCF @ 250 DN
+      level   250.00 DN   g/rn used (0.11447, 4.2)  correct (0.22894, 4.2)
+      modelled sd   3.7979 vs   5.3925 DN   ratio 0.7043x  (-29.57%)
+      injected noise is 1/ratio too SMALL -> every detection claim is anti-conservative, every failure-to-detect claim is conservative and survives
+
+  m41 a11 sigma_map on 119MSDCF @ 1200 DN
+      level  1200.00 DN   g/rn used (0.11447, 4.2)  correct (0.22894, 4.2)
+      modelled sd   8.2944 vs  11.7399 DN   ratio 0.7065x  (-29.35%)
+      injected noise is 1/ratio too SMALL -> every detection claim is anti-conservative, every failure-to-detect claim is conservative and survives
+
+-- 5. SYNTHESIS fact 130's ISO-50 temporal-sigma cap
+   Fact 130 rules fact 88's 43.2-53.1 DN impossible because the
+   model caps temporal sigma at 22.9 DN. That 22.9 was computed
+   with the superseded g = 0.1145.
+
+      level 4585 DN (fact 130's stated ROI-mean ceiling)
+      cap with superseded g = 0.11447 : 22.91 DN   (fact 130 says 22.9)
+      cap with corrected  g = 0.22894 : 32.41 DN
+      fact 88's range 43.2-53.1 DN is still ABOVE the corrected cap by 1.33x-1.64x
+      -> the digits move 1.41x; the CONCLUSION survives. FOOTNOTE.
+
+-- 6. Is m41's fact 478 (the (1-rho) law) exposed?
+   DERIVED: a11 scales both the shared and the independent noise
+   draw by the same sigma_map. A global amplitude scalar therefore
+   multiplies numerator and denominator of the recovery ratio
+   alike and cancels -- the same algebra as facts 617/708, where a
+   linear post-filter scales C and U by |H|^2 and ring FRC cannot
+   move. So the (1-rho) SCALING is invariant to the gain error.
+   The absolute recovery ratios of fact 477 are NOT protected by
+   that argument and were not re-measured here.
+

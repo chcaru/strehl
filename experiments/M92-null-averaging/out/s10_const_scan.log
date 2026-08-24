@@ -1,0 +1,471 @@
+==============================================================================
+M92b S10 -- hard-coded sensor constants across experiments/.
+  ground truth: 34 stacks, EXIF over every frame
+  canonical: g(iso) = max(iso, 100.0)/436.8; rn(iso) = 1.2392 if iso >= 400.0 else 4.2
+==============================================================================
+
+  NAME COLLISION ACROSS CAPTURE ROOTS -- a bare stack name does
+  not identify a stack, and the two resolve to different ISOs:
+    119MSDCF: D:\personal\macro = ISO 50,  D:\macro-dark-frames = ISO 400
+
+  scanned 165 file(s) with at least one constant; 254 instance(s).
+  excluded 193 instance(s) under experiments/M62-sqrt-n/build-head/ -- M62 vendored a whole copy of
+  the repository, so its hits duplicate the originals verbatim.
+
+==============================================================================
+  PER-STACK / MISMATCH: 31 instance(s)
+==============================================================================
+  experiments/M55-acceptance-spec/src/calibrate.py:30  RN_E = 1.47
+      stacks: 112MSDCF
+      -> rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392
+  experiments/M55-acceptance-spec/src/e11_q165.py:35  G = 1.14469
+      stacks: 112MSDCF,113MSDCF,foam
+      -> g=1.14469 but foam needs 2.28938
+  experiments/M55-acceptance-spec/src/e11_q165.py:35  RN_E = 1.47
+      stacks: 112MSDCF,113MSDCF,foam
+      -> rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392
+  experiments/M55-acceptance-spec/src/e12_null.py:30  G = 1.14469
+      stacks: 112MSDCF,113MSDCF,foam
+      -> g=1.14469 but foam needs 2.28938
+  experiments/M55-acceptance-spec/src/e12_null.py:30  RN_E = 1.47
+      stacks: 112MSDCF,113MSDCF,foam
+      -> rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392
+  experiments/M55-sigpow-attack/src/e10_stability.py:25  RN_E = 1.47
+      stacks: 112MSDCF
+      -> rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392
+  experiments/M55-sigpow-attack/src/e1_dark_rho.py:41  G = 1.14469
+      stacks: 118MSDCF,119MSDCF,120MSDCF,121MSDCF,122MSDCF
+      -> g=1.14469 but 118MSDCF needs 0.22894, 119MSDCF needs 0.22894, 120MSDCF needs 1.83150, 121MSDCF needs 3.66300
+  experiments/M55-sigpow-attack/src/e1_dark_rho.py:42  RN_E = 1.47
+      stacks: 118MSDCF,119MSDCF,120MSDCF,121MSDCF,122MSDCF
+      -> rn_e=1.47 but 118MSDCF(ISO 100) needs 4.2, 119MSDCF(ISO 50) needs 4.2, 120MSDCF(ISO 800) needs 1.2392, 121MSDCF(ISO 1600) needs 1.2392
+  experiments/M55-sigpow-attack/src/e2_real_halfstacks.py:56  RN_E = 1.47
+      stacks: 112MSDCF
+      -> rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392
+  experiments/M55-sigpow-attack/src/e3_decompose.py:46  RN_E = 1.47
+      stacks: 112MSDCF
+      -> rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392
+  experiments/M55-sigpow-attack/src/e4_placebo.py:47  RN_E = 1.47
+      stacks: 112MSDCF
+      -> rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392
+  experiments/M55-sigpow-attack/src/e6_gate_and_grade.py:46  RN_E = 1.47
+      stacks: 112MSDCF
+      -> rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392
+  experiments/M55-sigpow-attack/src/e7_gain_and_frc.py:29  RN_E = 1.47
+      stacks: 112MSDCF
+      -> rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392
+  experiments/M55-sigpow-attack/src/e9_split_contract.py:28  G = 1.14469
+      stacks: 112MSDCF,113MSDCF,foam
+      -> g=1.14469 but foam needs 2.28938
+  experiments/M55-sigpow-attack/src/e9_split_contract.py:28  RN_E = 1.47
+      stacks: 112MSDCF,113MSDCF,foam
+      -> rn_e=1.47 but 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392
+  experiments/M88-optical-ceiling/src/s09_deramp_control.py:20  GAIN = 50.0 / 436.8
+      stacks: 119MSDCF
+      -> g=0.11447 but 119MSDCF needs 0.22894
+  experiments/M88-optical-ceiling/src/s09_deramp_control.py:21  RN_E = 1.2392
+      stacks: 119MSDCF
+      -> rn_e=1.2392 but 119MSDCF(ISO 50) needs 4.2
+  experiments/M88-optical-ceiling/src/s13_robustness.py:32  GAIN_DN_PER_E = 0.75
+      stacks: 119MSDCF
+      -> g=0.75000 but 119MSDCF needs 0.22894
+  experiments/M88-optical-ceiling/src/s13_robustness.py:33  READ_NOISE_E = 3.0
+      stacks: 119MSDCF
+      -> rn_e=3 but 119MSDCF(ISO 50) needs 4.2
+  experiments/m41-r3-kill/src/a11_metric_power.py:66  G = 0.11446886446886446
+      stacks: 119MSDCF
+      -> g=0.11447 but 119MSDCF needs 0.22894
+  experiments/m57-shape-metric/src/s3_real.py:38  G = 1.14469
+      stacks: 109MSDCF,112MSDCF,113MSDCF,foam
+      -> g=1.14469 but 109MSDCF needs 0.36630, foam needs 2.28938
+  experiments/m57-shape-metric/src/s3_real.py:38  RN_E = 1.47
+      stacks: 109MSDCF,112MSDCF,113MSDCF,foam
+      -> rn_e=1.47 but 109MSDCF(ISO 160) needs 4.2, 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392
+  experiments/m57-shape-metric/src/s5_real_nulls.py:44  G = 1.14469
+      stacks: 109MSDCF,112MSDCF,113MSDCF,foam
+      -> g=1.14469 but 109MSDCF needs 0.36630, foam needs 2.28938
+  experiments/m57-shape-metric/src/s5_real_nulls.py:44  RN_E = 1.47
+      stacks: 109MSDCF,112MSDCF,113MSDCF,foam
+      -> rn_e=1.47 but 109MSDCF(ISO 160) needs 4.2, 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392
+  experiments/m57-shape-metric/src/s5_real_nulls.py:46  ISO = 500
+      stacks: 109MSDCF,112MSDCF,113MSDCF,foam
+      -> ISO 500 but 109MSDCF=160, foam=1000
+  experiments/m57-shape-metric/src/s6_debias.py:27  G = 1.14469
+      stacks: 109MSDCF,112MSDCF,113MSDCF,foam
+      -> g=1.14469 but 109MSDCF needs 0.36630, foam needs 2.28938
+  experiments/m57-shape-metric/src/s6_debias.py:27  RN_E = 1.47
+      stacks: 109MSDCF,112MSDCF,113MSDCF,foam
+      -> rn_e=1.47 but 109MSDCF(ISO 160) needs 4.2, 112MSDCF(ISO 500) needs 1.2392, 113MSDCF(ISO 500) needs 1.2392, foam(ISO 1000) needs 1.2392
+  experiments/m57-shape-metric/src/s6_debias.py:29  ISO = 500
+      stacks: 109MSDCF,112MSDCF,113MSDCF,foam
+      -> ISO 500 but 109MSDCF=160, foam=1000
+  experiments/m57-shape-metric/src/s7_bias_or_variance.py:44  G = 1.14469
+      stacks: 109MSDCF,112MSDCF
+      -> g=1.14469 but 109MSDCF needs 0.36630
+  experiments/m57-shape-metric/src/s7_bias_or_variance.py:44  RN_E = 1.47
+      stacks: 109MSDCF,112MSDCF
+      -> rn_e=1.47 but 109MSDCF(ISO 160) needs 4.2, 112MSDCF(ISO 500) needs 1.2392
+  experiments/m57-shape-metric/src/s7_bias_or_variance.py:44  ISO = 500
+      stacks: 109MSDCF,112MSDCF
+      -> ISO 500 but 109MSDCF=160
+
+==============================================================================
+  PER-STACK / MATCH: 58 instance(s)
+==============================================================================
+  experiments/M55-acceptance-spec/src/calibrate.py:30  G = 1.14469
+      stacks: 112MSDCF
+      -> gain matches all 1 stack(s)
+  experiments/M55-sigpow-attack/src/e10_stability.py:25  G = 1.14469
+      stacks: 112MSDCF
+      -> gain matches all 1 stack(s)
+  experiments/M55-sigpow-attack/src/e2_real_halfstacks.py:56  G = 1.14469
+      stacks: 112MSDCF
+      -> gain matches all 1 stack(s)
+  experiments/M55-sigpow-attack/src/e3_decompose.py:46  G = 1.14469
+      stacks: 112MSDCF
+      -> gain matches all 1 stack(s)
+  experiments/M55-sigpow-attack/src/e4_placebo.py:47  G = 1.14469
+      stacks: 112MSDCF
+      -> gain matches all 1 stack(s)
+  experiments/M55-sigpow-attack/src/e6_gate_and_grade.py:46  G = 1.14469
+      stacks: 112MSDCF
+      -> gain matches all 1 stack(s)
+  experiments/M55-sigpow-attack/src/e7_gain_and_frc.py:29  G = 1.14469
+      stacks: 112MSDCF
+      -> gain matches all 1 stack(s)
+  experiments/M66-gate-n-dependence/src/04-burst.py:51  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/M67-focus-correctness/src/10-render-plants.py:51  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/M70-through-focus-spectrum/src/s02_reproduce_m5.py:35  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/M87-occlusion/src/04-through-focus.py:35  ISO = 100.0
+      stacks: bee-3-cpl
+      -> all 1 stack(s) are ISO 100
+  experiments/M87-occlusion/src/18-flower-ab.py:41  ISO = 100.0
+      stacks: flower-bud-with-background-fern-cpl,flower-bud-alone-cpl
+      -> all 2 stack(s) are ISO 100
+  experiments/M87-occlusion/src/23-scout.py:48  ISO = 100
+      stacks: bee-3-cpl
+      -> all 1 stack(s) are ISO 100
+  experiments/M87-occlusion/src/25-boundary-scan.py:50  ISO = 100
+      stacks: bee-3-cpl
+      -> all 1 stack(s) are ISO 100
+  experiments/M87-occlusion/src/27-real-polarity.py:57  ISO = 100
+      stacks: bee-3-cpl
+      -> all 1 stack(s) are ISO 100
+  experiments/M87-occlusion/src/28-real-polarity-v2.py:70  ISO = 100
+      stacks: bee-3-cpl
+      -> all 1 stack(s) are ISO 100
+  experiments/M87-occlusion/src/29-real-polarity-v3.py:64  ISO = 100
+      stacks: bee-3-cpl
+      -> all 1 stack(s) are ISO 100
+  experiments/M87-occlusion/src/30-drift-and-control.py:53  ISO = 100
+      stacks: bee-3-cpl
+      -> all 1 stack(s) are ISO 100
+  experiments/M87-occlusion/src/31-known-mask.py:68  ISO = 100
+      stacks: bee-3-cpl
+      -> all 1 stack(s) are ISO 100
+  experiments/M87-occlusion/src/35-registration.py:37  ISO = 100.0
+      stacks: bee-3-cpl
+      -> all 1 stack(s) are ISO 100
+  experiments/m22-hot-pixels/src/04-stratified-by-signal.py:10  RN = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m25-simulator/src/11-psd-shaping-check.py:86  iso = 50.0
+      stacks: coffee-bean
+      -> all 1 stack(s) are ISO 50
+  experiments/m28-robustness-scale/src/04-sensitivity.py:46  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m29-static-defects/src/05-floor.py:44  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m29-static-defects/src/05-floor.py:44  RN_E = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m31-verification/src/v01-m28-core.py:43  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m31-verification/src/v02-m28-gain-confound.py:8  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m31-verification/src/v03-m28-radial-matrix.py:8  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m31-verification/src/v04-m28-mechanism.py:7  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m31-verification/src/v05-m28-noisemodel.py:7  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m31-verification/src/v06-m28-model-refit.py:24  g_dn = 160.0 / 436.8
+      stacks: 109MSDCF
+      -> gain matches all 1 stack(s)
+  experiments/m31-verification/src/v07-m28-sensitivity.py:7  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m31-verification/src/v15-m29-floor.py:10  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m31-verification/src/v15-m29-floor.py:10  RN_E = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m32-posterior/src/01-build.py:14  ISO = 50
+      stacks: coffee-bean
+      -> all 1 stack(s) are ISO 50
+  experiments/m32-posterior/src/01-build.py:16  RN_E = 4.2
+      stacks: coffee-bean
+      -> read noise matches all 1 stack(s)
+  experiments/m39-verify/src/02-single-frame.py:15  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m39-verify/src/02-single-frame.py:17  RN_E = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m39-verify/src/03-merge-numpy.py:22  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m39-verify/src/03-merge-numpy.py:22  RN_E = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m39-verify/src/04-sensitivity.py:14  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m39-verify/src/04-sensitivity.py:14  RN_E = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m39-verify/src/05-noise-scale.py:22  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m39-verify/src/05-noise-scale.py:22  RN_E = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m39-verify/src/06-noise-scale-2.py:17  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m39-verify/src/06-noise-scale-2.py:17  RN_E = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m39-verify/src/07-save-merged.py:6  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m39-verify/src/07-save-merged.py:6  RN_E = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m39-verify/src/09-control.py:20  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m39-verify/src/09-control.py:20  RN_E = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m39-verify/src/10-claim-d.py:18  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m39-verify/src/10-claim-d.py:18  RN_E = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m40-verify-341/src/07-fourth-consumer.py:52  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m41-r3-kill/src/a11_metric_power.py:66  RN_E = 4.2
+      stacks: 119MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m41-r3-kill/src/a3_planted.py:89  rn_e = 4.2
+      stacks: 119MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m41-r3-kill/src/a5_planted.py:90  rn_e = 4.2
+      stacks: 119MSDCF
+      -> read noise matches all 1 stack(s)
+  experiments/m52-gate-cluster/src/06-exactness-probes.py:128  ISO = 160.0
+      stacks: 109MSDCF
+      -> all 1 stack(s) are ISO 160
+  experiments/m61-ptc-high-iso/src/03-power-control.py:76  RN_E = 4.2
+      stacks: 109MSDCF
+      -> read noise matches all 1 stack(s)
+
+==============================================================================
+  PER-STACK / UNRESOLVED: 53 instance(s)
+==============================================================================
+  experiments/M55-acceptance-spec/src/e17_m76_stratum_variance.py:29  G = 1.14469
+      stacks: -
+      -> file names no recognised stack
+  experiments/M55-acceptance-spec/src/e17_m76_stratum_variance.py:30  RN_E = 1.47
+      stacks: -
+      -> file names no recognised stack
+  experiments/M60-bimodality/src/13-plant.py:37  ISO = 100.0
+      stacks: -
+      -> file names no recognised stack
+  experiments/M62-sqrt-n/src/harness.py:96  ISO = 160.0
+      stacks: -
+      -> file names no recognised stack
+  experiments/M64-estimator-default/src/harness.py:96  ISO = 160.0
+      stacks: -
+      -> file names no recognised stack
+  experiments/M71-flat-fields/src/01-preregistration.py:39  ISO = 100.0
+      stacks: -
+      -> file names no recognised stack
+  experiments/M71-flat-fields/src/01-preregistration.py:41  READ_NOISE_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/M87-occlusion/src/12-window-scaling.py:61  ISO = 100.0
+      stacks: -
+      -> file names no recognised stack
+  experiments/M88-optical-ceiling/src/s02_positive_control.py:21  GAIN_DN_PER_E = 100.0 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/M88-optical-ceiling/src/s02_positive_control.py:22  READ_NOISE_E = 1.2392
+      stacks: -
+      -> file names no recognised stack
+  experiments/M88-optical-ceiling/src/s02c_calibrate.py:16  GAIN = 100.0 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/M88-optical-ceiling/src/s02c_calibrate.py:17  RN_E = 1.2392
+      stacks: -
+      -> file names no recognised stack
+  experiments/M88-optical-ceiling/src/s03_controls.py:32  GAIN = 100.0 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/M88-optical-ceiling/src/s03_controls.py:33  RN_E = 1.2392
+      stacks: -
+      -> file names no recognised stack
+  experiments/M88-optical-ceiling/src/s04_instrument_spec.py:18  GAIN = 100.0 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/M88-optical-ceiling/src/s04_instrument_spec.py:19  RN_E = 1.2392
+      stacks: -
+      -> file names no recognised stack
+  experiments/M88b-merge-sharpness/src/b02_graveyard.py:44  GAIN = 0.6
+      stacks: -
+      -> file names no recognised stack
+  experiments/M95-merge-vs-frame/src/s10_controls.py:30  GAIN = 0.224103
+      stacks: -
+      -> file names no recognised stack
+  experiments/M95-merge-vs-frame/src/s6_spectral.py:43  GAIN_DN_PER_E = 0.224103
+      stacks: -
+      -> file names no recognised stack
+  experiments/ORCH-drift-check/decide.py:46  GAIN = 0.229
+      stacks: -
+      -> file names no recognised stack
+  experiments/ORCH-drift-check/decide.py:47  RN_E = 3.0
+      stacks: -
+      -> file names no recognised stack
+  experiments/m25-simulator/src/strehl_sim/config.py:155  iso = 160.0
+      stacks: -
+      -> file names no recognised stack
+  experiments/m32-posterior/src/02-entropy.py:42  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m32-posterior/src/02-entropy.py:42  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m32-posterior/src/03-null.py:32  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m32-posterior/src/03-null.py:32  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m32-posterior/src/04-temperature.py:30  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m32-posterior/src/04-temperature.py:30  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m34-confidence-vector/src/01-channels.py:48  ISO = 50
+      stacks: -
+      -> file names no recognised stack
+  experiments/m34-confidence-vector/src/01-channels.py:48  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m34-confidence-vector/src/01-channels.py:48  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m34-confidence-vector/src/03-controls.py:39  ISO = 50
+      stacks: -
+      -> file names no recognised stack
+  experiments/m34-confidence-vector/src/03-controls.py:39  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m34-confidence-vector/src/03-controls.py:39  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V03-ceiling.py:28  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V03-ceiling.py:28  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V04-ceiling-bias.py:31  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V04-ceiling-bias.py:31  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V05-fact281.py:25  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V05-fact281.py:25  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V05b-fact281-mechanism.py:15  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V05b-fact281-mechanism.py:15  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V05c-acceptance-mechanism.py:5  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V05c-acceptance-mechanism.py:5  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V09-m32.py:18  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V09-m32.py:18  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V11-sigma-audit.py:22  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V11-sigma-audit.py:22  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V13-arms.py:8  G = 50 / 436.8
+      stacks: -
+      -> file names no recognised stack
+  experiments/m36-verification/src/V13-arms.py:8  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m39-verify/src/08-break.py:21  ISO = 160.0
+      stacks: -
+      -> file names no recognised stack
+  experiments/m39-verify/src/08-break.py:21  RN_E = 4.2
+      stacks: -
+      -> file names no recognised stack
+  experiments/m5-diffraction/m5_measure.py:619  iso = 0
+      stacks: -
+      -> file names no recognised stack
+
+==============================================================================
+  RIG / MISMATCH: 2 instance(s)
+==============================================================================
+  Rig constants have no per-stack meaning; a MATCH here is
+  agreement with the AGENTS rig section, nothing more.
+  WHITE = 14848   in 1 file(s)
+      experiments/m34-confidence-vector/src/01-channels.py
+  WHITE = 16383   in 1 file(s)
+      experiments/M87-occlusion/src/m87lib.py
+
+==============================================================================
+  RIG / MATCH: 110 instance(s)
+==============================================================================
+  Rig constants have no per-stack meaning; a MATCH here is
+  agreement with the AGENTS rig section, nothing more.
+  BLACK = 512   in 97 file(s)
+  BLACK_LEVEL = 512   in 2 file(s)
+  WHITE = 15360   in 10 file(s)
+  WHITE_LEVEL = 15360   in 1 file(s)

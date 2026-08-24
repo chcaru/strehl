@@ -1,0 +1,19 @@
+==============================================================================
+M92b S11 -- falsifying control for the S10 constant scanner
+==============================================================================
+  PASS  F1_plain_wrong_iso     want=MISMATCH    got=MISMATCH
+  PASS  F2_plain_right_iso     want=MATCH       got=MATCH
+  PASS  F3_tuple_wrong_iso     want=MISMATCH    got=MISMATCH
+  PASS  F4_docstring_only      want=UNRESOLVED  got=UNRESOLVED
+  PASS  F5_wrong_rn_branch     want=MISMATCH    got=MISMATCH
+  PASS  F6_no_constant         want=None        got=None
+
+  Interpretation of the two shape fixtures:
+    F3 is m57 s7's literal shape. A scanner that only handles
+       `Name = value` reports 0 hits here and silently under-counts
+       the very defect this audit is about.
+    F4 is m61 03-power-control's shape. A scanner that counts stack
+       names inside docstrings reports MISMATCH on a pure synthetic
+       plant that never opens the stack.
+
+  CONTROL PASSED (6/6 fixtures)

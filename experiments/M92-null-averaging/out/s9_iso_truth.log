@@ -1,0 +1,39 @@
+==============================================================================
+M92b S9 -- ground-truth EXIF ISO per capture stack.
+  canonical model: gain_dn_per_e(iso) = max(iso, 100.0) / 436.8
+                   read_noise_e(iso)  = 1.2392 if iso >= 400.0 else 4.2
+==============================================================================
+                              109MSDCF   22 frames   ISO   160   g 0.36630 DN/e-   rn 4.2000 e-
+                              112MSDCF   79 frames   ISO   500   g 1.14469 DN/e-   rn 1.2392 e-
+                              113MSDCF   63 frames   ISO   500   g 1.14469 DN/e-   rn 1.2392 e-
+                              119MSDCF   33 frames   ISO    50   g 0.22894 DN/e-   rn 4.2000 e-
+                             bee-1-cpl  299 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+                             bee-2-cpl  299 frames   ISO   400   g 0.91575 DN/e-   rn 1.2392 e-
+                             bee-3-cpl  299 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+                           coffee-bean  105 frames   ISO    50   g 0.22894 DN/e-   rn 4.2000 e-
+                        coffee-bubbles   19 frames   ISO  1000   g 2.28938 DN/e-   rn 1.2392 e-
+                      couch-fibers-cpl  299 frames   ISO   400   g 0.91575 DN/e-   rn 1.2392 e-
+             dry-erase-marker-head-cpl  299 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+                     flat-on-ruler-cpl   79 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+                  flower-bud-alone-cpl  205 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+   flower-bud-with-background-fern-cpl  299 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+                           flowers-cpl  176 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+                                  foam  100 frames   ISO  1000   g 2.28938 DN/e-   rn 1.2392 e-
+            highly-angled-ruler-mm-cpl  299 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+                          lavendar-cpl  299 frames   ISO   200   g 0.45788 DN/e-   rn 4.2000 e-
+                            lead-1-cpl  123 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+                            leaf-2-cpl  182 frames   ISO   400   g 0.91575 DN/e-   rn 1.2392 e-
+                          tweezers-cpl  100 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+                        wrapped-text-1  130 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+                        wrapped-text-2  120 frames   ISO   400   g 0.91575 DN/e-   rn 1.2392 e-
+                              118MSDCF   22 frames   ISO   100   g 0.22894 DN/e-   rn 4.2000 e-
+                              119MSDCF   22 frames   ISO   400   g 0.91575 DN/e-   rn 1.2392 e-
+                              120MSDCF   22 frames   ISO   800   g 1.83150 DN/e-   rn 1.2392 e-
+                              121MSDCF   22 frames   ISO  1600   g 3.66300 DN/e-   rn 1.2392 e-
+                              122MSDCF   22 frames   ISO    50   g 0.22894 DN/e-   rn 4.2000 e-
+                              123MSDCF   22 frames   ISO   200   g 0.45788 DN/e-   rn 4.2000 e-
+                              124MSDCF   22 frames   ISO   640   g 1.46520 DN/e-   rn 1.2392 e-
+                              125MSDCF   22 frames   ISO   500   g 1.14469 DN/e-   rn 1.2392 e-
+                              126MSDCF   22 frames   ISO   250   g 0.57234 DN/e-   rn 4.2000 e-
+                              127MSDCF   22 frames   ISO  1000   g 2.28938 DN/e-   rn 1.2392 e-
+                              128MSDCF   22 frames   ISO  2000   g 4.57875 DN/e-   rn 1.2392 e-
