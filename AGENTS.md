@@ -568,6 +568,41 @@ monolithic binary and ship only that binary.
     exemption into a check, plant the case it must still catch.**
     (SYNTHESIS facts 1172, 1175; disciplines 585, 586.)
 
+45. **Isolate your registration with `STREHL_WARPMAP`. Never let a run write the
+    shared sidecar.** `strehl align` defaults its output to
+    `<stackdir>/warpmap.txt` *inside the read-only capture library*, `strehl
+    stack` reads that same path, and `align_cmd::load_or_solve` **caches a
+    re-solve back over it**. With several agents live this thrashes: a
+    `--limit 40` run re-solves and overwrites a 299-frame solve, the next full
+    run overwrites it back. `bee-3-cpl` was observed going from
+    `reference 149, 299 placed` to `frames 40, reference 20` inside twenty
+    minutes, and M99 saw the same file at 299 -> 60 -> 2. **The frame-count
+    guard is not the hole; the cache write is.** The residual hazard is sharp:
+    a `--limit N` run that finds a sidecar which happens to have N frames
+    accepts it silently, though it was solved on a different subset from a
+    different reference. **No control can catch this, because it contaminates
+    treatment and control identically.** Set
+    `$env:STREHL_WARPMAP = "<your scratch>\<stack>-warpmap.txt"`
+    (`merge_cmd.rs:1035`): it is hard-validated on stack identity *and* frame
+    count -- both exit 1 with a named error and write no output -- and it
+    **never caches back**. `strehl align --out` alone does **not** isolate you;
+    `stack` has no sidecar argument and will read the shared file anyway.
+    (SYNTHESIS fact 1367; discipline 681.)
+
+46. **Never read a pass/fail gate through a truncating pipeline.**
+    `$LASTEXITCODE` reads **0** after a command that exited **1** whenever
+    `Select-Object -First N` short-circuits the stream -- and that is this
+    project's standard idiom for keeping tool output small. Measured on one
+    failing command in one shell: no pipeline **1**; `| Select-String` **1**;
+    `| Select-String | Select-Object -First 3` with more than 3 matches **0**;
+    `-First 99` **1**. It fails in the dangerous direction -- **failures read as
+    successes and red controls read green** -- and the same truncation swallows
+    the error detail that would have explained it. Capture the output and the
+    code in two statements, then filter the variable:
+    `$out = & $exe ... 2>&1; $code = $LASTEXITCODE`. Never let a display
+    convenience sit between a process and a status you are about to trust.
+    (SYNTHESIS facts 1368, 1369; discipline 680.)
+
 ### Milestone allocation ledger (rule 41 -- written at DISPATCH, not at report time)
 
 A milestone number is an identifier. Allocate here **before** the agent starts, and
