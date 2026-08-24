@@ -634,3 +634,91 @@ Corrected in §12's table and in fact P23. See the attribution note there.
   the verifier's mutated the data, the channel dispatch, the early return and the alignment
   term, and only that wider matrix found the hole. Ask an independent party to choose the
   axes, because the author's blind spot chooses the author's mutants.
+
+---
+
+## 14. Cache-key contamination audit (fact 1446)
+
+`StackIdentity` omits `reference` and `resampler`, so an identical command line can return
+bytes produced under different settings depending on what ran earlier in the session. The
+orchestrator asked every agent to run a re-run-after-an-unrelated-align control.
+
+**I did not run that control, because it does not apply to this milestone, and running it
+would have tested a code path M107b never used.** Saying so is the honest answer; a green
+control on an unexercised path would be theatre.
+
+### 14.1 M107b invoked the renderer zero times
+
+Every measurement in this report is a NumPy transform of a **pre-existing** file. The only
+`subprocess` call anywhere in `experiments/M107-chroma/src/` is `p6_sign_mutation.py`
+invoking **cargo**, not `strehl`:
+
+```
+rg "subprocess|strehl\.exe|Popen|os\.system|check_call" experiments/M107-chroma/src/
+  -> p6_sign_mutation.py:37  import subprocess
+     p6_sign_mutation.py:79      p = subprocess.run(     # ["cargo", "test", ...]
+```
+
+### 14.2 Why the sign finding is immune by construction
+
+All four arms of §12 — uncorrected, as-shipped-inverted, corrected, translation-ablated —
+are transforms of **one file, read once, in one process**. There is no per-arm render, so
+there is no per-arm cache lookup that could differ. A cache defect cannot differentiate arms
+that never re-invoked the binary. **The relative comparison that carries the finding is
+structurally out of reach of fact 1446.**
+
+### 14.3 The control that does apply: input provenance and instrument determinism
+
+| control | result |
+|---|---|
+| input file hash, now | `bee-3-cpl-catmull-rom.tif` **`E400A63AA9F6AB1F`**, 197 797 874 bytes |
+| same file's hash as recorded by the parent milestone | `E400A63A…` (`M107-chroma.md:1005`) — **matches, unchanged under me** |
+| `p1_preview.py` run twice back to back | stdout **byte-identical**, `EXIT=0` both |
+
+So the instrument is deterministic and the input has not moved. **A == B** for the only
+sense in which my arms can be re-run.
+
+### 14.4 What IS exposed, stated rather than defended
+
+- **The fitted coefficients** (`eps_R = -704.5 ppm`, `t = (0.6294, -0.4240)`) come from the
+  **parent milestone's** renders and argmax volumes, not from anything M107b executed. If
+  those renders are contaminated, the *magnitude* of the correction is wrong. **The
+  direction is not** — §12's sign result is a within-image measurement.
+- **`docs/research/M107b-radial-chroma.md`** (the D2 confound work) reads the orchestrator's
+  `ORCH-thennow` HEAD renders (`lavendar-HEAD-8f46f04.tif` `F12B14C4…`,
+  `marker-HEAD-8f46f04.tif` `DB7BAAD2…`). Those are renders I did not produce and cannot
+  vouch for. That report's conclusion is a statement about a *confound in the D2 metric*
+  rather than about a pixel difference between two arms, so it degrades gracefully — but it
+  inherits whatever those two files are.
+- **§12.1's ablation and the "141.1 ppm" baseline** are measured on the file *named*
+  `catmull-rom`. Given fact 1446, **that label is unverified** — I can vouch for the bytes,
+  not for the resampler that produced them. Nothing in this report depends on it being
+  catmull-rom specifically.
+
+### 14.5 A datum for the orchestrator, offered with its limits
+
+The three `ORCH-kernel` arms differ **only** in `resampler` and were rendered in sequence.
+Hashed first-hand just now:
+
+```
+catmull-rom  E400A63AA9F6AB1F
+nearest      50B94F315CA8DCC0
+bilinear     AFDF3BE9CF82DD78
+```
+
+**Three distinct hashes.** If `resampler` were being silently dropped in favour of a cached
+first render, at least two of these would collide. They do not.
+
+**Limits, because this is weaker than it looks:** I have not read the cache internals, I did
+not produce these files, and I do not know whether that run used distinct output paths, a
+cleared cache, or a code path that bypasses it. This is *consistent with* the resampler
+having taken effect on that particular sequence; it is **not** evidence that the key is
+sound, and it does not generalise to `reference`. Route it to M97 as a data point, not as a
+counter-example.
+
+### 14.6 Verdict
+
+**Not contaminated, for a structural reason rather than a lucky one.** No number in §12,
+§12.1 or §13 came from a renderer invocation. The coefficients inherited from the parent
+milestone are exposed and are named as such; the unit is unwired, so nothing downstream
+consumes them yet.
