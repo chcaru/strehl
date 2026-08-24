@@ -70,7 +70,7 @@ now implemented and tested in `strehl-core`.**
    could not transfer and never could have.
 
 **I have not integrated this into the merge**, per my instructions. §11 is the
-recipe for whoever does.
+recipe for whoever does. The module is committed, declared and live at HEAD.
 
 ---
 
@@ -484,8 +484,9 @@ For whoever wires this into the merge. **M85 owns `merge_cmd.rs`; I did not
 touch it.** `align.rs` is committed and green, and is currently inert to cargo
 because its `pub mod align;` declaration is not yet committed (§12).
 
-1. **Declare the module.** Add `pub mod align;` to
-   `crates/strehl-core/src/lib.rs`. See §12 — this is the one blocked step.
+1. **The module is already declared.** `pub mod align;` is committed in
+   `crates/strehl-core/src/lib.rs` (landed via M85's `e59f1b0`, which carried my
+   line alongside its own). Nothing to do — `strehl_core::align` is live.
 2. **Solve globally. Never chain.** Use `solve_global` with
    `Weighting::Unit`, or `solve_poly` with degree 4–6. **MEASURED**: chaining
    costs 2.8x (§5).
@@ -521,14 +522,15 @@ because its `pub mod align;` declaration is not yet committed (§12).
 ## 12. What I did not do, and one blocked step
 
 - **I did not integrate into the merge**, per instruction.
-- **`pub mod align;` is written into `crates/strehl-core/src/lib.rs` in my
-  working tree but I have NOT committed it.** The reason is a hard one: that
-  file's working-tree diff also contains **another agent's uncommitted
-  `pub mod color;` and `pub mod demosaic;` lines**, referencing files not yet in
-  the index. Committing `lib.rs` would commit their work-in-progress and break
-  the build at HEAD. `align.rs` is committed and is inert to cargo while
-  undeclared, so **nothing is broken at HEAD**. This needs one line added by
-  whoever lands after the concurrent module work — flagged to the orchestrator.
+- **The module is committed and declared.** `align.rs` landed as `938c0d1`.
+  Its `pub mod align;` declaration sat uncommitted in my working tree for most
+  of the milestone, because that file's diff also carried **another agent's**
+  in-flight `pub mod color;` / `pub mod demosaic;` lines and committing it would
+  have committed their work-in-progress. I left it alone and re-checked at
+  commit time, as instructed: **M85 has since committed `lib.rs` with all three
+  lines**, so `strehl_core::align` is live at HEAD with no action outstanding.
+  Recording the near-miss because the resolution was luck, not design: had M85
+  landed first and I second, one of us would have clobbered the other.
 - **I did not check the flat-on-ruler physical invariant.** The brief correctly
   identifies straight lines staying straight and graduations staying evenly
   spaced as a strong checkable invariant, and I agree it is the best available
