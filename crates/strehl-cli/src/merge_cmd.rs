@@ -95,6 +95,12 @@ pub struct MergeOptions {
     pub gates: Vec<f32>,
     pub flat_roi: Option<Roi>,
     pub detail_roi: Option<Roi>,
+    /// Also write the **election map**: the per-pixel index of the frame that
+    /// won pass one, as a single-channel 16-bit TIFF. Debug output; `None`
+    /// costs nothing and never touches the merged image.
+    ///
+    /// See [`write_election_map`] for the grid and the index convention.
+    pub index_map: Option<PathBuf>,
     /// Solve the ladder for the gate that achieves this mean `n_eff`.
     ///
     /// **This, not `gates`, is the parameter the project intends to ship.**
@@ -1073,6 +1079,86 @@ fn alignment_for(dir: &Path, paths: &[PathBuf]) -> Result<Option<(WarpMap, &'sta
     Ok(Some((map, "sidecar-override")))
 }
 
+/// The environment variable that asks for an election map without a flag.
+const ELECTION_ENV: &str = "STREHL_DUMP_ELECTION";
+
+/// Where to write the election map, if anywhere: `--index-map` wins, then
+/// [`ELECTION_ENV`].
+///
+/// Two mechanisms because they serve two callers. The flag mirrors
+/// `argmax-baseline --index-map`, and those two subcommands exist to be
+/// compared against each other, so an asymmetry between them is a thumb on the
+/// scale — the same reasoning M104c applied to resolution and M109 to exposure.
+/// The variable is for a harness that drives an already-fixed command line.
+///
+/// Whichever is used, the resolved path is **printed**. Rule 47 binds
+/// environment variables into a hash record precisely because they are
+/// invisible in the invocation, and an unprinted one is the input that makes a
+/// frozen hash unreproducible later.
+fn election_map_path(opts: &MergeOptions) -> Option<PathBuf> {
+    if let Some(p) = &opts.index_map {
+        return Some(p.clone());
+    }
+    let raw = std::env::var(ELECTION_ENV).ok()?;
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        eprintln!("{ELECTION_ENV} is set but empty; not writing an election map");
+        return None;
+    }
+    Some(PathBuf::from(trimmed))
+}
+
+/// Write the pass-one winner field as a single-channel 16-bit TIFF.
+///
+/// **Grid.** The **plane** grid, which is *half* sensor resolution in each axis
+/// ([`PlaneGeometry::from_active`] divides by two): one election per 2x2 CFA
+/// quad, because the focus field the election is computed on lives there. It is
+/// therefore the same size as a binned render and half the size of a
+/// `--demosaic`/`--srgb` one — to overlay it on the latter, scale by two.
+///
+/// **Values.** The literal 0-based frame index into the input order, which
+/// `raw_paths` sorts by filename, so it is capture order and `--limit N` keeps
+/// `0..N-1`. The range is `0..frames-1`, far below the 16-bit ceiling, so
+/// autoscale before looking at it. `u16::MAX` is the never-decided sentinel and
+/// is refused here rather than written, since a map containing it would be
+/// silently misread as a frame index near 65535.
+///
+/// **This is debug output and it does not touch the merged image.** It is a
+/// read of state pass one has already finished computing, taken before pass two
+/// starts, so the byte-frozen path is unaffected whether or not it runs.
+///
+/// What it is for: a blob in the render is not distinguishable from real scene
+/// content by appearance, but it should be distinguishable by *provenance*.
+/// Adjacent pixels electing different frames inherit placements that differ by
+/// the alignment track's frame-to-frame jitter, so election boundaries are
+/// where local geometric incoherence is predicted. Correlating this map's
+/// discontinuities against blob boundaries is a joint statistic between the
+/// output and the merge's internal state — which a single unstacked frame
+/// cannot score at all, because it has no election map.
+fn write_election_map(path: &Path, best: &[u16], geom: PlaneGeometry) -> Result<()> {
+    ensure!(
+        best.len() == geom.pixels(),
+        "winner field is {} long but the plane grid is {}x{}",
+        best.len(),
+        geom.width,
+        geom.height
+    );
+    ensure!(
+        best.iter().all(|&i| i != u16::MAX),
+        "some pixels were never decided; the election map would be meaningless"
+    );
+    image_out::write_gray16(path, geom.width as u32, geom.height as u32, best)?;
+    let hi = best.iter().copied().max().unwrap_or(0);
+    eprintln!(
+        "election map    : wrote {} ({}x{} u16 plane grid, indices 0..{hi})",
+        path.display(),
+        geom.width,
+        geom.height
+    );
+    eprintln!();
+    Ok(())
+}
+
 pub fn run(opts: &MergeOptions) -> Result<()> {
     ensure!(!opts.gates.is_empty(), "at least one --gate is required");
     ensure!(
@@ -1380,6 +1466,10 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         p1.stats.frames_folded(),
         paths.len()
     );
+
+    if let Some(path) = election_map_path(opts) {
+        write_election_map(&path, p1.stats.best_index(), geom)?;
+    }
 
     let n = paths.len() as f64;
     eprintln!("--- pass one: regularised winner field (MEASURED) ---");

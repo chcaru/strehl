@@ -229,6 +229,20 @@ enum Command {
         #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
         detail_roi: Option<Roi>,
 
+        /// Also write the election map: a 16-bit grayscale TIFF holding the
+        /// index of the frame that won pass one, per pixel.
+        ///
+        /// DEBUG OUTPUT. It does not change the merged image by a byte -- it
+        /// reads state pass one has already finished, before pass two starts.
+        ///
+        /// On the PLANE grid, half sensor resolution, one election per 2x2 CFA
+        /// quad; scale by two to overlay a --demosaic render. Values are the
+        /// literal 0-based frame index in filename order, so 0..N-1: autoscale
+        /// it to look at it. `STREHL_DUMP_ELECTION=<path>` does the same for a
+        /// harness that cannot edit the command line; this flag wins.
+        #[arg(long, value_name = "PATH")]
+        index_map: Option<PathBuf>,
+
         /// Report which gate would achieve this mean n_eff. A CALIBRATION AID,
         /// NOT A SECOND KNOB.
         ///
@@ -439,6 +453,7 @@ fn main() -> Result<()> {
             gates,
             flat_roi,
             detail_roi,
+            index_map,
             target_n_eff,
             stats,
             stats_placebo,
@@ -459,6 +474,7 @@ fn main() -> Result<()> {
             gates,
             flat_roi,
             detail_roi,
+            index_map,
             target_n_eff,
             stats,
             stats_placebo,
