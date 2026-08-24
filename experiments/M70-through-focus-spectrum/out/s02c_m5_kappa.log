@@ -1,0 +1,9 @@
+reference_kappa(tile=256, roi=512, GQ, hann, iso) = 0.3620
+M5 report section 4.1 prints `kappa 0.056` for the same geometry.
+
+committed (kappa floored at the MC reference)        f_sig = 0.23754368430485578  kappa 1.2140  dyn 323  floor sd 11.72
+                                                     B_max = 3.563
+kappa floor DISABLED (pre-section-2.6 behaviour)     f_sig = 0.23754368430485578  kappa 1.2140  dyn 323  floor sd 11.72
+                                                     B_max = 3.563
+
+PUBLISHED (M5 section 4.1): f_sig 0.2762, kappa 0.056, dyn 1297, floor 0.950x model, B_max 3.064

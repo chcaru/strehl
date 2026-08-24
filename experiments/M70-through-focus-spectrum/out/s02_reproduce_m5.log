@@ -1,0 +1,36 @@
+stack D:\personal\macro\109MSDCF  n=22
+centre ROI at sensor (r,c)=(2344,3514)  size=512 GQ samples  tile=256
+
+frame               f_sig   mean DN  floor sd  model sd   ratio
+DSC00009.ARW       0.1050     386.5     11.77     12.00   0.981
+DSC00010.ARW       0.0912     386.5     11.83     12.00   0.986
+DSC00011.ARW       0.0829     388.7     11.83     12.03   0.983
+DSC00012.ARW       0.0994     388.3     11.83     12.02   0.984
+DSC00013.ARW       0.1298     387.6     11.84     12.01   0.985
+DSC00014.ARW       0.1851     385.5     11.72     11.98   0.978
+DSC00015.ARW       0.2154     386.1     11.78     11.99   0.982
+DSC00016.ARW       0.2293     386.5     11.82     12.00   0.985
+DSC00017.ARW       0.2293     384.9     11.92     11.97   0.996
+DSC00018.ARW       0.2375     385.0     11.78     11.98   0.984
+DSC00019.ARW       0.2293     387.8     11.82     12.02   0.983
+DSC00020.ARW       0.2154     386.1     11.76     11.99   0.981
+DSC00021.ARW       0.1713     384.8     11.78     11.97   0.984
+DSC00022.ARW       0.1464     386.1     11.77     11.99   0.982
+DSC00023.ARW       0.1050     385.0     11.76     11.97   0.982
+DSC00024.ARW       0.0884     387.3     11.84     12.01   0.986
+DSC00025.ARW       0.0746     387.4     11.85     12.01   0.986
+DSC00026.ARW       0.1105     386.5     11.74     12.00   0.979
+DSC00027.ARW       0.0939     385.1     11.75     11.98   0.981
+DSC00028.ARW       0.0856     385.6     11.79     11.98   0.984
+DSC00029.ARW       0.0773     385.9     11.72     11.99   0.977
+DSC00030.ARW       0.0718     385.2     11.70     11.98   0.977
+
+PUBLISHED (fact 27): best f_sig on the f/11 GQ centre ROI = 0.2762 sensor cyc/px
+REPRODUCED         : best f_sig = 0.2375  (frame DSC00018.ARW)
+PUBLISHED (fact 29): floor / photon-transfer model = 0.950-1.093x over 15 f/11 cases
+REPRODUCED         : floor/model = 0.977-0.996x (median 0.983x) over 22 frames with a detected knee
+
+DERIVED cross-check of the a-priori optics gate (rule 21):
+  marked f/5.6   N_eff =  16.8  f_c(B=3) = 0.5541 cyc/px   GQ reach = 0.3536
+  marked f/8.0   N_eff =  24.0  f_c(B=3) = 0.3879 cyc/px   GQ reach = 0.3536
+  marked f/11.0  N_eff =  33.0  f_c(B=3) = 0.2821 cyc/px   GQ reach = 0.3536

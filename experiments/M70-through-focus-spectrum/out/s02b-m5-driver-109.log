@@ -1,0 +1,151 @@
+==============================================================================================================
+MEASURE  109MSDCF   marked f/11.0   n=22 frames   ROI 512 lattice px   tile 256   sector iso   window hann
+==============================================================================================================
+Predicted cutoffs (sensor cyc/px) at lambda=550 nm:
+   B=2 (bare lens, p=1)   N_eff   22.0   f_c 0.4231   (  82.6 cyc/mm)
+   B=3 (brief, p=1)       N_eff   33.0   f_c 0.2821   (  55.1 cyc/mm)
+   B=5 (brief, p=0.5)     N_eff   55.0   f_c 0.1693   (  33.1 cyc/mm)
+Lattice reach (sensor cyc/px): G1 0.2500  G2 0.2500  GQ 0.3536
+   ... 10/22 frames  (20 s)
+   ... 20/22 frames  (40 s)
+   ... 22/22 frames  (44 s)
+
+--- PRIMARY: highest frequency carrying signal above the noise floor, and the bound it puts on B = (1+m/p) ---
+    f_sig is a LOWER bound on f_c (C1: the crossing rule runs 5-23% low), so B_max is an UPPER bound on B.
+         ROI  lat     pol  reach       dyn  kappa |   f_sig   B_max  atReach |  fit f_c  B_fit  resid   oob | floorSD  nfrm
+      centre   G1    tile  0.249     511.0  1.613 |  0.2012   4.207    False |   0.3330         0.062  True |   13.00     1
+      centre   G1     roi  0.249     511.0  1.613 |  0.2012   4.207    False |   0.3330         0.062  True |   13.00     1
+      centre   G2    tile  0.249     489.5  5.210 |  0.1836   4.610    False |   0.3400         0.066  True |   13.28     1
+      centre   G2     roi  0.249     489.5  5.210 |  0.1836   4.610    False |   0.3400         0.066  True |   13.28     1
+      centre   GQ    tile  0.352     322.6  1.214 |  0.2375   3.563    False |   0.4414         0.063  True |   11.72     1
+      centre   GQ     roi  0.352     322.6  1.214 |  0.2375   3.563    False |   0.4414         0.063  True |   11.72     1
+  upper-left   G1    tile  0.249      22.6  1.965 |  0.1621   5.220    False |   1.4941         0.089  True |   27.08     3
+  upper-left   G1     roi  0.249      21.5 14.055 |  0.1191   7.103    False |   1.4941         0.089  True |   27.91     1
+  upper-left   G2    tile  0.249      21.2  7.474 |  0.1289   6.565    False |   1.4941         0.091  True |   27.86     3
+  upper-left   G2     roi  0.249      20.9  9.549 |  0.1270   6.666    False |   1.4941         0.094  True |   27.98     1
+  upper-left   GQ    tile  0.352      31.2  1.523 |  0.2072   4.085    False |   2.1130         0.133  True |   26.25     3
+  upper-left   GQ     roi  0.352      32.5  0.427 |  0.2375   3.563    False |   2.1130         0.137  True |   26.11     1
+ upper-right   G1    tile  0.249     211.5  9.361 |  0.1582   5.349    False |   0.4772         0.155  True |   23.97     1
+ upper-right   G1     roi  0.249     211.5  9.361 |  0.1582   5.349    False |   0.4772         0.155  True |   23.97     1
+ upper-right   G2    tile  0.249     219.8  0.983 |  0.1836   4.610    False |   0.4674         0.155  True |   23.45     1
+ upper-right   G2     roi  0.249     219.8  0.983 |  0.1836   4.610    False |   0.4674         0.155  True |   23.45     1
+ upper-right   GQ    tile  0.352     339.3  1.152 |  0.2044   4.140    False |   0.3541         0.159  True |   26.15     1
+ upper-right   GQ     roi  0.352     339.3  1.152 |  0.2044   4.140    False |   0.3541         0.159  True |   26.15     1
+  lower-left   G1    tile  0.249     152.3 11.823 |  0.1406   6.018    False |   0.7743         0.056  True |   21.78     2
+  lower-left   G1     roi  0.249     152.3 14.279 |  0.1406   6.018    False |   0.8001         0.055  True |   21.76     1
+  lower-left   G2    tile  0.249     165.7  0.577 |  0.1973   4.290    False |   0.6886         0.052  True |   20.68     2
+  lower-left   G2     roi  0.249     159.0  3.920 |  0.1621   5.220    False |   0.6896         0.054  True |   21.22     1
+  lower-left   GQ    tile  0.352     426.4  0.992 |  0.2127   3.979    False |   0.5914         0.048  True |   19.34     2
+  lower-left   GQ     roi  0.352     428.7  1.325 |  0.2099   4.031    False |   0.8264         0.047  True |   19.42     1
+ lower-right   G1    tile  0.249       6.0  0.739 |  0.1797   4.710    False |   0.7865         0.040  True |   28.45     2
+ lower-right   G1     roi  0.249       5.8  0.604 |  0.1836   4.610    False |   0.8754         0.041  True |   28.35     1
+ lower-right   G2    tile  0.249       6.0  1.019 |  0.1777   4.761    False |   0.5342         0.033  True |   28.45     2
+ lower-right   G2     roi  0.249       5.6  9.828 |  0.1152   7.344    False |   0.8522         0.037  True |   29.46     1
+ lower-right   GQ    tile  0.352      10.5  1.997 |  0.1851   4.573    False |   0.3634         0.041  True |   28.02     2
+ lower-right   GQ     roi  0.352      10.4  2.110 |  0.1851   4.573    False |   0.3705         0.042  True |   28.12     1
+
+--- FALSIFICATION: two independent tests, both one-sided ---
+    (a) signal ABOVE a candidate's predicted cutoff refutes it (there is no signal above f_c).
+    (b) if a candidate predicts f_c above the lattice reach, then the top of the band must still
+        carry optical signal. A floor that matches the photon-transfer model to better than
+        FLOOR_CLEAN refutes it instead. Both directions use only measured quantities.
+             candidate  f_c pred |                 G1                 G2                 GQ
+  B=2 (bare lens, p=1)    0.4231 |     REFUTED(b) 4/5     REFUTED(b) 5/5     REFUTED(b) 5/5
+      B=3 (brief, p=1)    0.2821 |     REFUTED(b) 4/5     REFUTED(b) 5/5           survives
+    B=5 (brief, p=0.5)    0.1693 |     REFUTED(a) 1/4     REFUTED(a) 3/4     REFUTED(a) 5/5
+
+--- Placebo: identical pipeline, tiles chosen by a fixed-seed lottery instead of by focus. Selecting on noise would show up here as an inflated floor or a knee. ---
+         ROI  lat | best f_sig plac f_sig | best floorSD plac floorSD |  best dyn  plac dyn
+      centre   G1 |     0.2012     0.1562 |        13.00        12.79 |     511.0     241.7
+      centre   G2 |     0.1836     0.1035 |        13.28        12.79 |     489.5     105.7
+      centre   GQ |     0.2375     0.2154 |        11.72        11.84 |     322.6     206.8
+  upper-left   G1 |     0.1621     0.0879 |        27.08        26.60 |      22.6      11.2
+  upper-left   G2 |     0.1289     0.0996 |        27.86        26.35 |      21.2       7.9
+  upper-left   GQ |     0.2072     0.1574 |        26.25        26.36 |      31.2      16.7
+ upper-right   G1 |     0.1582     0.1855 |        23.97        22.86 |     211.5     178.9
+ upper-right   G2 |     0.1836     0.1094 |        23.45        23.65 |     219.8      67.8
+ upper-right   GQ |     0.2044     0.1492 |        26.15        26.08 |     339.3     197.6
+  lower-left   G1 |     0.1406     0.1543 |        21.78        20.85 |     152.3      91.8
+  lower-left   G2 |     0.1973     0.1250 |        20.68        20.66 |     165.7      90.5
+  lower-left   GQ |     0.2127     0.1243 |        19.34        19.50 |     426.4     185.8
+ lower-right   G1 |     0.1797     0.1348 |        28.45        27.91 |       6.0       3.9
+ lower-right   G2 |     0.1777     0.1113 |        28.45        28.11 |       6.0       3.9
+ lower-right   GQ |     0.1851     0.1464 |        28.02        27.80 |      10.5       7.6
+
+--- C5: green sublattice replicate. G1 and G2 are disjoint sets of photosites sampling the same optics. ---
+      centre    tile  G1 0.2012  G2 0.1836  difference  -8.74%   floorSD 13.00 / 13.28
+  upper-left    tile  G1 0.1621  G2 0.1289  difference -20.48%   floorSD 27.08 / 27.86
+ upper-right    tile  G1 0.1582  G2 0.1836  difference +16.05%   floorSD 23.97 / 23.45
+  lower-left    tile  G1 0.1406  G2 0.1973  difference +40.28%   floorSD 21.78 / 20.68
+ lower-right    tile  G1 0.1797  G2 0.1777  difference  -1.09%   floorSD 28.45 / 28.45
+      centre     roi  G1 0.2012  G2 0.1836  difference  -8.74%   floorSD 13.00 / 13.28
+  upper-left     roi  G1 0.1191  G2 0.1270  difference  +6.56%   floorSD 27.91 / 27.98
+ upper-right     roi  G1 0.1582  G2 0.1836  difference +16.05%   floorSD 23.97 / 23.45
+  lower-left     roi  G1 0.1406  G2 0.1621  difference +15.28%   floorSD 21.76 / 21.22
+ lower-right     roi  G1 0.1836  G2 0.1152  difference -37.23%   floorSD 28.35 / 29.46
+
+--- C4: ROI independence. Diffraction is near field-invariant; a strong field trend would mean aberration or an ROI artifact. ---
+   G1    tile: n=5  f_sig median 0.1621  min 0.1406  max 0.2012  (cv 12.2%)   B_max median 5.220 [4.207, 6.018]   at-reach 0/5
+   G2    tile: n=5  f_sig median 0.1836  min 0.1289  max 0.1973  (cv 13.5%)   B_max median 4.610 [4.290, 6.565]   at-reach 0/5
+   GQ    tile: n=5  f_sig median 0.2072  min 0.1851  max 0.2375  (cv  8.1%)   B_max median 4.085 [3.563, 4.573]   at-reach 0/5
+   G1     roi: n=5  f_sig median 0.1582  min 0.1191  max 0.2012  (cv 18.3%)   B_max median 5.349 [4.207, 7.103]   at-reach 0/5
+   G2     roi: n=5  f_sig median 0.1621  min 0.1152  max 0.1836  (cv 18.4%)   B_max median 5.220 [4.610, 7.344]   at-reach 0/5
+   GQ     roi: n=5  f_sig median 0.2099  min 0.1851  max 0.2375  (cv  9.4%)   B_max median 4.031 [3.563, 4.573]   at-reach 0/5
+
+--- H4: the high-frequency floor is a structure-free noise estimate. Compared against the project photon-transfer model. ---
+         ROI  lat     pol  mean DN  floorSD  model SD  ratio  Immerkaer  ratio
+      centre   G1    tile    516.7    13.00     13.85  0.939      13.07  0.943
+      centre   G1     roi    518.6    13.00     13.88  0.937      13.40  0.966
+      centre   G2    tile    517.6    13.28     13.86  0.958      13.09  0.945
+      centre   G2     roi    519.7    13.28     13.89  0.956      13.44  0.968
+      centre   GQ    tile    422.0    11.72     12.54  0.935      12.12  0.967
+      centre   GQ     roi    422.1    11.72     12.54  0.935      12.17  0.971
+  upper-left   G1    tile   1771.0    27.08     25.52  1.061      25.30  0.991
+  upper-left   G1     roi   1768.1    27.91     25.50  1.095      25.73  1.009
+  upper-left   G2    tile   1767.7    27.86     25.50  1.093      25.37  0.995
+  upper-left   G2     roi   1764.7    27.98     25.48  1.098      25.67  1.007
+  upper-left   GQ    tile   1835.9    26.25     25.98  1.010      26.26  1.011
+  upper-left   GQ     roi   1828.3    26.11     25.93  1.007      26.21  1.011
+ upper-right   G1    tile   1136.3    23.97     20.47  1.171      18.50  0.904
+ upper-right   G1     roi   1155.4    23.97     20.64  1.162      18.79  0.911
+ upper-right   G2    tile   1134.0    23.45     20.44  1.147      18.32  0.896
+ upper-right   G2     roi   1153.1    23.45     20.62  1.137      18.70  0.907
+ upper-right   GQ    tile   1498.3    26.15     23.48  1.113      22.41  0.954
+ upper-right   GQ     roi   1523.9    26.15     23.68  1.104      22.56  0.953
+  lower-left   G1    tile   1206.0    21.78     21.08  1.033      19.75  0.937
+  lower-left   G1     roi   1207.0    21.76     21.09  1.032      19.90  0.943
+  lower-left   G2    tile   1204.5    20.68     21.07  0.982      19.80  0.940
+  lower-left   G2     roi   1205.4    21.22     21.08  1.007      19.90  0.944
+  lower-left   GQ    tile   1123.7    19.34     20.35  0.950      18.93  0.930
+  lower-left   GQ     roi   1125.2    19.42     20.37  0.954      19.06  0.936
+ lower-right   G1    tile   2027.4    28.45     27.30  1.042      27.50  1.007
+ lower-right   G1     roi   2035.5    28.35     27.35  1.037      27.78  1.016
+ lower-right   G2    tile   2026.3    28.45     27.29  1.042      27.65  1.013
+ lower-right   G2     roi   2020.6    29.46     27.25  1.081      27.63  1.014
+ lower-right   GQ    tile   2027.4    28.02     27.30  1.026      27.60  1.011
+ lower-right   GQ     roi   2035.6    28.12     27.35  1.028      27.66  1.011
+
+==============================================================================================================
+SUMMARY  109MSDCF  f/11.0  ISO 160  n=22 frames (n=1 stack, n=1 camera, n=1 subject)
+==============================================================================================================
+cases with a floor consistent with the photon-transfer model (<1.15x): 12 of 15
+cases with an inflated floor (no reachable noise floor, so the knee is NOT a cutoff): 1, ratio 1.17-1.17x
+
+TIGHTEST VALID BOUND
+   centre / GQ / tile   dyn 323   floor 0.935x model
+   f_sig  = 0.2375 sensor cyc/px = 46.4 cyc/mm
+   f_c   >= f_sig  (C1: crossing biased -8%; C1b on real texture -14 to -40%)
+   B     <= 3.563
+      B=2 (bare lens, p=1)   CONSISTENT
+      B=3 (brief, p=1)       CONSISTENT
+      B=5 (brief, p=0.5)        REFUTED
+
+   Reverse bound: the floor matches the noise model at the top of the band, so no signal is
+   detectable at the reach 0.3522. Taking f_c <~ reach gives B >~ 2.403.
+
+   Out-of-band bound: power at the reach 0.2490 exceeds the photon-transfer noise model on
+   1 case(s), so f_c > 0.2490 and B < 3.398. This uses no knee detection at all.
+
+CONSEQUENCES at B=3.0:
+   N_marked f/11.0 -> N_eff f/33.0;  f_c 0.2821 sensor cyc/px = 55.1 cyc/mm
+   Airy FWHM 18.69 um = 3.65 sensor px;  Nyquist bandwidth used 56.4% (area 31.8%)

@@ -1,0 +1,37 @@
+latent: D:\personal\macro\119MSDCF centre patch, high-band power 1716.1, mean 882.8 DN
+
+==============================================================================
+RULE 20 DISCHARGE - the input that makes n_eff_MF come out LARGE
+==============================================================================
+  b3_mid   analytic  41.000  noiseless  41.000 (= K = 41)   measured raw  40.107  smoothed  40.571   recovery 0.978 / 0.990
+  b4_mid   analytic  41.000  noiseless  41.000 (= K = 41)   measured raw  40.134  smoothed  40.521   recovery 0.979 / 0.988
+  b5_mid   analytic  41.000  noiseless  41.000 (= K = 41)   measured raw  39.723  smoothed  40.343   recovery 0.969 / 0.984
+
+==============================================================================
+NEGATIVE CONTROL - flat latent, noise only
+==============================================================================
+  b3_mid   measured n_eff_MF raw   8.4891  smoothed  13.5330   (a large value here would void every reading)
+  b4_mid   measured n_eff_MF raw   8.2286  smoothed  20.8035   (a large value here would void every reading)
+  b5_mid   measured n_eff_MF raw   4.6848  smoothed  12.8190   (a large value here would void every reading)
+
+==============================================================================
+PLANT - real texture, known through-focus OTF ladder, 16x step-density sweep
+==============================================================================
+delta px/step     band   analyt  noisels      raw   smooth  rec_raw  rec_sm  truthA1  measA1  truthA2  measA2
+        0.125   b3_mid   30.509   30.714   30.690   30.873    0.999   1.005    0.999   0.997    0.996   0.995
+        0.125   b4_mid   24.337   24.625   24.802   24.959    1.007   1.014    0.999   0.997    0.992   0.990
+        0.125   b5_mid   18.192   18.513   18.590   18.703    1.004   1.010    0.998   0.999    0.986   0.990
+        0.250   b3_mid   17.522   17.776   17.803   17.842    1.001   1.004    0.998   0.999    0.984   0.981
+        0.250   b4_mid   12.582   12.759   12.718   12.879    0.997   1.009    0.996   0.994    0.970   0.973
+        0.250   b5_mid    9.255    9.420    9.527    9.634    1.011   1.023    0.992   0.994    0.943   0.947
+        0.500   b3_mid    8.915    9.047    8.989    9.212    0.994   1.018    0.991   0.988    0.937   0.937
+        0.500   b4_mid    6.358    6.452    6.457    6.668    1.001   1.033    0.982   0.984    0.881   0.878
+        0.500   b5_mid    4.652    4.735    4.800    5.110    1.014   1.079    0.966   0.967    0.786   0.793
+        1.000   b3_mid    4.479    4.546    4.542    4.887    0.999   1.075    0.963   0.961    0.766   0.769
+        1.000   b4_mid    3.187    3.234    3.234    3.700    1.000   1.144    0.926   0.925    0.577   0.578
+        1.000   b5_mid    2.329    2.371    2.384    3.033    1.006   1.279    0.856   0.853    0.316   0.309
+        2.000   b3_mid    2.242    2.276    2.280    2.950    1.002   1.296    0.841   0.840    0.289   0.291
+        2.000   b4_mid    1.594    1.618    1.640    2.538    1.014   1.568    0.672   0.673    0.095   0.109
+        2.000   b5_mid    1.169    1.189    1.238    2.297    1.041   1.932    0.382   0.380    0.144   0.134
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M70-through-focus-spectrum\out\s03_plant.json
