@@ -1852,12 +1852,46 @@ teleconverter changes the optical configuration completely, so a profile
 measured without it should not be assumed to apply with it, and right now
 nothing in the pipeline would notice if it were applied wrongly.
 
+### AMENDED AGAIN -- the shipped coefficient is now measured, and this capture is what would extend it
+
+M107 was asked for the **radial support** of its -704.5 ppm coefficient rather
+than its goodness of fit, and answered with the population per annulus (fact
+1462). The result sharpens this request from "more corner detail would be nice"
+into two specific, checkable requirements:
+
+1. **Both outer annuli are empty, not just the last one.** The fit spans
+   `r = 0.208` to `r = 0.788` with **6 of 10 annuli populated**; `0.80-0.90`
+   **and** `0.90-1.00` have no data at all. A target that resolves only in the
+   extreme corner would still leave the `0.80-0.90` band empty. What is needed is
+   detail that is **continuous from centre to corner**, which is why "flat and
+   repeating, filling the frame" above is the right instruction and a subject
+   with a detailed centre and detailed corners is not.
+2. **Shoot it so blue is measurable, because blue is currently not measured at
+   all.** Every ROI in the existing fit was **red**. `eps_b` is `None`, so the
+   blue-green displacement is uncorrected *by construction* -- not estimated as
+   zero, never estimated. Real fringes have both a warm and a cool edge, so at
+   present at most half of a visible fringe can be addressed. A neutral or
+   full-colour target under full-spectrum light supplies blue at no extra cost;
+   a target that is red-on-white does not.
+
+For scale, this is not a request to salvage a bad fit. The corner displacement
+decomposes as **2.98 sensels at `r = 1.0`, of which 2.35 is at or below a
+measured radius and 0.63 comes from the model's shape.** Roughly a fifth of the
+corner correction is extrapolation. This capture converts that fifth into
+measurement and adds a channel that has never been fitted.
+
 ### Why this cannot come from existing files
 
 A demosaiced RAW cannot serve as ground truth for demosaicing: the quantity being
 measured has already been applied to it. Nothing in the library was shot through
 a filter, and no amount of processing recovers a per-channel measurement from a
 CFA mosaic -- that recovery *is* the algorithm under test.
+
+The support limit has the same character. `tweezers-cpl` and `bee-3-cpl` are the
+two subjects the fit could use, and **neither has content past `r = 0.79`** --
+the macro subject sits in a band with defocused background beyond it. This is a
+property of the frames, not of the method, and no reprocessing creates signal
+where the photograph has none.
 
 ### What it unblocks
 
