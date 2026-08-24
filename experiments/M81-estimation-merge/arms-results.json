@@ -1,0 +1,349 @@
+{
+  "bars": {
+    "Q_ratio_min": 1.01,
+    "D_ratio_min": 0.98
+  },
+  "stacks": {
+    "wrapped-text-1": {
+      "frames": 130,
+      "candidate_gate": 38.749996185,
+      "arms": [
+        {
+          "name": "control",
+          "printed_gate": 4.0,
+          "mean_n_eff": 1.238,
+          "singleton_percent": 80.98,
+          "boundary_percent": 0.16,
+          "predicted_sigma_gain": 0.9409,
+          "H_hp_sd_dn": 30.881,
+          "hp_ratio": 2.482,
+          "hp_ratio_range": [
+            0.951,
+            2.534
+          ],
+          "q_signal_power_dn2": 36605.535,
+          "D_signal_amplitude_dn": 191.3257301044478,
+          "retention": 0.994,
+          "detail_structure": 3.702,
+          "detail_raw_rms": 198.7139,
+          "detail_controlled_noise_rms": 53.6813
+        },
+        {
+          "name": "candidate",
+          "printed_gate": 38.75,
+          "mean_n_eff": 4.148,
+          "singleton_percent": 5.2,
+          "boundary_percent": 0.16,
+          "predicted_sigma_gain": 0.6081,
+          "H_hp_sd_dn": 15.528,
+          "hp_ratio": 1.248,
+          "hp_ratio_range": [
+            0.478,
+            1.274
+          ],
+          "q_signal_power_dn2": 31917.341,
+          "D_signal_amplitude_dn": 178.6542498794809,
+          "retention": 0.933,
+          "detail_structure": 4.628,
+          "detail_raw_rms": 182.9765,
+          "detail_controlled_noise_rms": 39.5355
+        }
+      ],
+      "ratios": {
+        "D_candidate_over_control": 0.9337701195858531,
+        "H_candidate_over_control": 0.5028334574657557,
+        "Q_candidate_over_control": 1.8570166835993513
+      },
+      "controls": {
+        "G2_solver_relative_error": 0.00013625128365943903,
+        "G2_fresh_relative_error": 8.197248557213458e-05,
+        "G2_pass": true,
+        "M77_flat_contamination_max": 2.6338869665063966,
+        "M77_flat_control_pass": false,
+        "M77_detail_ratio": 30.990347120992705,
+        "M77_detail_control_pass": true,
+        "M77_flat_stability_pass": true,
+        "M77_detail_stability_pass": true,
+        "M80_detail_readable_at_both_arms": true,
+        "singleton_floor_exposure": true,
+        "M80_flat_precondition_pass": false,
+        "M80_acceptance_readable": false
+      },
+      "numerical_acceptance_pass": false,
+      "acceptance_verdict": "unreadable"
+    },
+    "109MSDCF": {
+      "frames": 22,
+      "candidate_gate": 3.828124762,
+      "arms": [
+        {
+          "name": "control",
+          "printed_gate": 4.0,
+          "mean_n_eff": 4.987,
+          "singleton_percent": 4.62,
+          "boundary_percent": 2.22,
+          "predicted_sigma_gain": 0.4916,
+          "H_hp_sd_dn": 5.142,
+          "hp_ratio": 0.542,
+          "hp_ratio_range": [
+            0.489,
+            0.563
+          ],
+          "q_signal_power_dn2": 10739.987,
+          "D_signal_amplitude_dn": 103.63390854348782,
+          "retention": 0.987,
+          "detail_structure": 4.443,
+          "detail_raw_rms": 106.3635,
+          "detail_controlled_noise_rms": 23.9418
+        },
+        {
+          "name": "candidate",
+          "printed_gate": 3.83,
+          "mean_n_eff": 4.798,
+          "singleton_percent": 4.92,
+          "boundary_percent": 2.22,
+          "predicted_sigma_gain": 0.5005,
+          "H_hp_sd_dn": 5.287,
+          "hp_ratio": 0.557,
+          "hp_ratio_range": [
+            0.503,
+            0.579
+          ],
+          "q_signal_power_dn2": 10744.195,
+          "D_signal_amplitude_dn": 103.65420879057444,
+          "retention": 0.987,
+          "detail_structure": 4.424,
+          "detail_raw_rms": 106.4076,
+          "detail_controlled_noise_rms": 24.0497
+        }
+      ],
+      "ratios": {
+        "D_candidate_over_control": 1.0001958842175493,
+        "H_candidate_over_control": 1.028199144301828,
+        "Q_candidate_over_control": 0.9727647506424513
+      },
+      "controls": {
+        "G2_solver_relative_error": 1.1852411698928822e-05,
+        "G2_fresh_relative_error": 0.00010775870777654596,
+        "G2_pass": true,
+        "M77_flat_contamination_max": 1.1398942110137265,
+        "M77_flat_control_pass": false,
+        "M77_detail_ratio": 18.277248728107885,
+        "M77_detail_control_pass": true,
+        "M77_flat_stability_pass": true,
+        "M77_detail_stability_pass": true,
+        "M80_detail_readable_at_both_arms": true,
+        "singleton_floor_exposure": true,
+        "M80_flat_precondition_pass": false,
+        "M80_acceptance_readable": false
+      },
+      "numerical_acceptance_pass": false,
+      "acceptance_verdict": "unreadable"
+    },
+    "coffee-bean": {
+      "frames": 105,
+      "candidate_gate": 1.191406131,
+      "arms": [
+        {
+          "name": "control",
+          "printed_gate": 4.0,
+          "mean_n_eff": 31.614,
+          "singleton_percent": 55.27,
+          "boundary_percent": 7.6,
+          "predicted_sigma_gain": 0.6655,
+          "H_hp_sd_dn": 10.474,
+          "hp_ratio": 0.432,
+          "hp_ratio_range": [
+            0.399,
+            0.445
+          ],
+          "q_signal_power_dn2": 1112853.823,
+          "D_signal_amplitude_dn": 1054.9188703402742,
+          "retention": 0.994,
+          "detail_structure": 6.628,
+          "detail_raw_rms": 1067.1364,
+          "detail_controlled_noise_rms": 161.0164
+        },
+        {
+          "name": "candidate",
+          "printed_gate": 1.19,
+          "mean_n_eff": 5.435,
+          "singleton_percent": 63.64,
+          "boundary_percent": 7.6,
+          "predicted_sigma_gain": 0.7663,
+          "H_hp_sd_dn": 34.145,
+          "hp_ratio": 1.408,
+          "hp_ratio_range": [
+            1.3,
+            1.449
+          ],
+          "q_signal_power_dn2": 1127771.399,
+          "D_signal_amplitude_dn": 1061.9658181881373,
+          "retention": 1.001,
+          "detail_structure": 8.63,
+          "detail_raw_rms": 1069.1674,
+          "detail_controlled_noise_rms": 123.8854
+        }
+      ],
+      "ratios": {
+        "D_candidate_over_control": 1.0066800851193325,
+        "H_candidate_over_control": 3.2599770861180066,
+        "Q_candidate_over_control": 0.3087997426135565
+      },
+      "controls": {
+        "G2_solver_relative_error": 0.0004716069532103681,
+        "G2_fresh_relative_error": 0.0005264939773657786,
+        "G2_pass": true,
+        "M77_flat_contamination_max": 1.0968355648512351,
+        "M77_flat_control_pass": true,
+        "M77_detail_ratio": 45.57020128266588,
+        "M77_detail_control_pass": true,
+        "M77_flat_stability_pass": false,
+        "M77_detail_stability_pass": false,
+        "M80_detail_readable_at_both_arms": true,
+        "singleton_floor_exposure": true,
+        "M80_flat_precondition_pass": true,
+        "M80_acceptance_readable": true
+      },
+      "numerical_acceptance_pass": false,
+      "acceptance_verdict": "fail"
+    },
+    "foam": {
+      "frames": 100,
+      "candidate_gate": 47.874996185,
+      "arms": [
+        {
+          "name": "control",
+          "printed_gate": 4.0,
+          "mean_n_eff": 1.359,
+          "singleton_percent": 71.07,
+          "boundary_percent": 0.0,
+          "predicted_sigma_gain": 0.9079,
+          "H_hp_sd_dn": 692.398,
+          "hp_ratio": 18.658,
+          "hp_ratio_range": [
+            1.577,
+            23.956
+          ],
+          "q_signal_power_dn2": 432786.693,
+          "D_signal_amplitude_dn": 657.8652544404515,
+          "retention": 0.964,
+          "detail_structure": 1.195,
+          "detail_raw_rms": 1201.6437,
+          "detail_controlled_noise_rms": 1005.565
+        },
+        {
+          "name": "candidate",
+          "printed_gate": 47.87,
+          "mean_n_eff": 5.501,
+          "singleton_percent": 2.95,
+          "boundary_percent": 0.0,
+          "predicted_sigma_gain": 0.5257,
+          "H_hp_sd_dn": 654.646,
+          "hp_ratio": 17.641,
+          "hp_ratio_range": [
+            1.491,
+            22.65
+          ],
+          "q_signal_power_dn2": 115102.37,
+          "D_signal_amplitude_dn": 339.2674019118253,
+          "retention": 0.849,
+          "detail_structure": 1.053,
+          "detail_raw_rms": 1080.2541,
+          "detail_controlled_noise_rms": 1025.5957
+        }
+      ],
+      "ratios": {
+        "D_candidate_over_control": 0.5157095615277475,
+        "H_candidate_over_control": 0.9454764456280924,
+        "Q_candidate_over_control": 0.5454494016349132
+      },
+      "controls": {
+        "G2_solver_relative_error": 0.00020781030089022984,
+        "G2_fresh_relative_error": 0.00027515876732456604,
+        "G2_pass": true,
+        "M77_flat_contamination_max": 15.876900515461388,
+        "M77_flat_control_pass": false,
+        "M77_detail_ratio": 2.332658678925108,
+        "M77_detail_control_pass": false,
+        "M77_flat_stability_pass": true,
+        "M77_detail_stability_pass": true,
+        "M80_detail_readable_at_both_arms": false,
+        "singleton_floor_exposure": true,
+        "M80_flat_precondition_pass": false,
+        "M80_acceptance_readable": false
+      },
+      "numerical_acceptance_pass": false,
+      "acceptance_verdict": "unreadable"
+    },
+    "bee-1": {
+      "frames": 299,
+      "candidate_gate": 1.406249881,
+      "arms": [
+        {
+          "name": "control",
+          "printed_gate": 4.0,
+          "mean_n_eff": 70.146,
+          "singleton_percent": 30.73,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.5448,
+          "H_hp_sd_dn": 11.878,
+          "hp_ratio": 0.576,
+          "hp_ratio_range": [
+            0.565,
+            0.622
+          ],
+          "q_signal_power_dn2": 635541.018,
+          "D_signal_amplitude_dn": 797.2082651352782,
+          "retention": 0.993,
+          "detail_structure": 8.667,
+          "detail_raw_rms": 802.5679,
+          "detail_controlled_noise_rms": 92.597
+        },
+        {
+          "name": "candidate",
+          "printed_gate": 1.41,
+          "mean_n_eff": 11.724,
+          "singleton_percent": 46.19,
+          "boundary_percent": 1.74,
+          "predicted_sigma_gain": 0.6663,
+          "H_hp_sd_dn": 17.977,
+          "hp_ratio": 0.872,
+          "hp_ratio_range": [
+            0.854,
+            0.941
+          ],
+          "q_signal_power_dn2": 642538.498,
+          "D_signal_amplitude_dn": 801.5849911269547,
+          "retention": 0.999,
+          "detail_structure": 15.932,
+          "detail_raw_rms": 803.1686,
+          "detail_controlled_noise_rms": 50.4108
+        }
+      ],
+      "ratios": {
+        "D_candidate_over_control": 1.0054900660004245,
+        "H_candidate_over_control": 1.51347028119212,
+        "Q_candidate_over_control": 0.6643606276883263
+      },
+      "controls": {
+        "G2_solver_relative_error": 0.00038389099044416723,
+        "G2_fresh_relative_error": 0.0004096499176583481,
+        "G2_pass": true,
+        "M77_flat_contamination_max": 1.0666177884715153,
+        "M77_flat_control_pass": true,
+        "M77_detail_ratio": 53.60585755245271,
+        "M77_detail_control_pass": true,
+        "M77_flat_stability_pass": true,
+        "M77_detail_stability_pass": true,
+        "M80_detail_readable_at_both_arms": true,
+        "singleton_floor_exposure": true,
+        "M80_flat_precondition_pass": true,
+        "M80_acceptance_readable": true
+      },
+      "numerical_acceptance_pass": false,
+      "acceptance_verdict": "fail"
+    }
+  },
+  "accepted_stacks": 0
+}

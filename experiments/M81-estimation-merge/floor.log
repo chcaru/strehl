@@ -1,0 +1,13 @@
+COMMIT=4b00dd820de38ed5dc4844d906ada64c833c3699
+COMMAND=cargo test -p strehl-core merge::tests::calibrated_merge_is_never_worse_than_one_frame_on_static_bursts -- --exact --nocapture
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src\lib.rs (experiments\M81-estimation-merge\target-evidence\debug\deps\strehl_core-66b0ede29e9ca8ee.exe)
+
+running 1 test
+M81 floor seed=0x4d36340000000001 candidate_worst=0.319751x selector_worst=1.124191x selector_failed_blocks=7/16
+M81 floor seed=0xd3014db97f4a7c14 candidate_worst=0.294348x selector_worst=1.055965x selector_failed_blocks=7/16
+M81 floor seed=0x9c837e32d192ed02 candidate_worst=0.301695x selector_worst=1.080274x selector_failed_blocks=9/16
+test merge::tests::calibrated_merge_is_never_worse_than_one_frame_on_static_bursts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 145 filtered out; finished in 0.23s
+

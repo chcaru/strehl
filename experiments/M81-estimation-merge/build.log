@@ -1,0 +1,8 @@
+COMMIT=4b00dd820de38ed5dc4844d906ada64c833c3699
+COMMAND=cargo build --release -p strehl-cli
+TARGET=C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\target-evidence
+RUSTC=rustc 1.98.0 (88d9e12ae 2026-08-18)
+   Compiling strehl-core v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core)
+   Compiling strehl-raw v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-raw)
+   Compiling strehl-cli v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli)
+    Finished `release` profile [optimized] target(s) in 23.12s

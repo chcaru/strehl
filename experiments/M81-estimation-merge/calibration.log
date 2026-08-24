@@ -1,0 +1,51 @@
+commit=4b00dd820de38ed5dc4844d906ada64c833c3699
+binary=C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\target-evidence\release\strehl.exe
+sha256=e16fa0d2a4100ba9c534129e781ab869bc93bdf53ff7bc1d7504b7e7ab0aed82
+bytes=8424448
+started_utc=2026-08-24T04:19:38.3034835Z
+
+STACK=wrapped-text-1
+INVOCATION=& 'C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\target-evidence\release\strehl.exe' calibrate-gate 'D:\personal\macro\wrapped-text-1' --analysis-width 7028 --analysis-height 4688
+M81_CONFIG frames=130 workers=6 analysis=7028x4688 patch=256 tile=128
+M81_SPECTRAL scale=0.950 n_eff=4.726371259 bands=4.394296912,4.297435778,5.487381085 textured=24 frames=130
+M81_SPECTRAL scale=1.000 n_eff=4.147660006 bands=4.312737071,3.907537865,4.222705083 textured=24 frames=130
+M81_SPECTRAL scale=1.093 n_eff=3.429686513 bands=4.160682968,3.432428682,2.695947888 textured=24 frames=130
+M81_GATE target=4.147660006 gate=38.749996185 realised=4.148225130 bracket=4.137820354,4.148225130 gate_zero=1.000000000 gate_widest=130.000000000 unreachable=0
+M81_TIMING pass1=7.970 pass2=6.180 total=14.150
+
+STACK=109MSDCF
+INVOCATION=& 'C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\target-evidence\release\strehl.exe' calibrate-gate 'D:\personal\macro\109MSDCF' --analysis-width 7028 --analysis-height 4688
+M81_CONFIG frames=22 workers=6 analysis=7028x4688 patch=256 tile=128
+M81_SPECTRAL scale=0.950 n_eff=7.690964824 bands=5.793580668,6.408572899,10.870740907 textured=23 frames=22
+M81_SPECTRAL scale=1.000 n_eff=4.798517082 bands=5.306069770,4.573925765,4.515555710 textured=22 frames=22
+M81_SPECTRAL scale=1.093 n_eff=-61249054525348073639585245036544.000000000 bands=4.112177292,0.011079895,-183747163576044211911556480368640.000000000 textured=22 frames=22
+M81_GATE target=4.798517082 gate=3.828124762 realised=4.798460208 bracket=4.798460208,4.802716956 gate_zero=1.000000000 gate_widest=22.000000000 unreachable=0
+M81_TIMING pass1=1.511 pass2=1.142 total=2.653
+
+STACK=coffee-bean
+INVOCATION=& 'C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\target-evidence\release\strehl.exe' calibrate-gate 'D:\personal\macro\coffee-bean' --analysis-width 7028 --analysis-height 4688
+M81_CONFIG frames=105 workers=6 analysis=7028x4688 patch=256 tile=128
+M81_SPECTRAL scale=0.950 n_eff=5.522381302 bands=5.997656543,5.351210776,5.218276586 textured=17 frames=105
+M81_SPECTRAL scale=1.000 n_eff=5.432140011 bands=5.843179456,5.297516062,5.155724515 textured=16 frames=105
+M81_SPECTRAL scale=1.093 n_eff=5.389715394 bands=5.831217350,5.274135491,5.063793342 textured=16 frames=105
+M81_GATE target=5.432140011 gate=1.191406131 realised=5.434701846 bracket=5.419045359,5.434701846 gate_zero=1.000000000 gate_widest=105.000000000 unreachable=0
+M81_TIMING pass1=6.332 pass2=5.142 total=11.475
+
+STACK=foam
+INVOCATION=& 'C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\target-evidence\release\strehl.exe' calibrate-gate 'D:\personal\macro\foam' --analysis-width 7028 --analysis-height 4688
+M81_CONFIG frames=100 workers=6 analysis=7028x4688 patch=256 tile=128
+M81_SPECTRAL scale=0.950 n_eff=5.591418939 bands=5.832131418,5.592174062,5.349951335 textured=24 frames=100
+M81_SPECTRAL scale=1.000 n_eff=5.499486768 bands=5.821288106,5.546232177,5.130940020 textured=24 frames=100
+M81_SPECTRAL scale=1.093 n_eff=5.327483868 bands=5.801112997,5.460669336,4.720669270 textured=24 frames=100
+M81_GATE target=5.499486768 gate=47.874996185 realised=5.500629618 bracket=5.493758906,5.500629618 gate_zero=1.000000000 gate_widest=100.000000000 unreachable=0
+M81_TIMING pass1=6.594 pass2=4.971 total=11.564
+
+STACK=bee-1
+INVOCATION=& 'C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\target-evidence\release\strehl.exe' calibrate-gate 'D:\personal\macro\bee-1' --analysis-width 7028 --analysis-height 4688
+M81_CONFIG frames=299 workers=6 analysis=7028x4688 patch=256 tile=128
+M81_SPECTRAL scale=0.950 n_eff=13.069878330 bands=12.692960973,11.611755385,14.904918631 textured=16 frames=299
+M81_SPECTRAL scale=1.000 n_eff=11.719199231 bands=12.608643302,11.089979082,11.458975308 textured=16 frames=299
+M81_SPECTRAL scale=1.093 n_eff=9.256309911 bands=10.767210794,9.840527210,7.161191728 textured=16 frames=299
+M81_GATE target=11.719199231 gate=1.406249881 realised=11.723698126 bracket=11.687590032,11.723698126 gate_zero=1.000000000 gate_widest=299.000000000 unreachable=0
+M81_TIMING pass1=16.741 pass2=13.346 total=30.087
+finished_utc=2026-08-24T04:20:49.1295908Z

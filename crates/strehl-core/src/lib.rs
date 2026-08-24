@@ -11,7 +11,6 @@
 //!   mechanism behind the prior project's measured 2-5x noise defect.
 
 pub mod boxfilter;
-pub mod calibration;
 pub mod clip;
 pub mod flat_ratio;
 pub mod focus;

@@ -1,0 +1,176 @@
+commit=4b00dd820de38ed5dc4844d906ada64c833c3699
+binary=C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\target-evidence\release\strehl.exe
+sha256=e16fa0d2a4100ba9c534129e781ab869bc93bdf53ff7bc1d7504b7e7ab0aed82
+STACK=wrapped-text-1
+INVOCATION=& 'C:\dev\blog\death-of-software\projects\strehl\experiments\M81-estimation-merge\target-evidence\release\strehl.exe' stack 'D:\personal\macro\wrapped-text-1' --gate 4 38.749996185 --flat-roi 32,1312,256,256 --detail-roi 2208,672,256,256
+started_utc=2026-08-24T04:21:05.4518208Z
+strehl stack -- regularised winner + noise-gated average (THE DEFAULT PATH, an estimator)
+camera          : ILCE-7CM2
+iso             : 100
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 100. Trustworthy for ranking.
+                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+                  SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+                  camera's own white level, which checks one relation and is not a PTC; the
+                  PTC now exists and the relation survives it at true gain steps -- the ISO 160
+                  control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+                  READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+                  camera MODEL and nothing here was fitted from this stack. Below the profile's
+                  base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+                  is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+                  -- the corpus holds no ISO 64 or 80 capture).
+regulariser     : 17x17 box on the focus field (fact 84: -35% absolute error; fact 86: width 3 is WORSE than none)
+focus noise sd  : 0.015214 on the regularised field, MEASURED in-crate (facts 310-313)
+gates           : 4.00, 38.75  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)
+planes          : 3516 x 2344 per CFA plane
+frames          : 130 from D:\personal\macro\wrapped-text-1
+workers         : 9 chunks of <= 15 frames (9 allowed by the 6144 MB budget, 32 by CPU)
+working set     : 321 MB/worker pass 1, 668 MB/worker pass 2 (buffers only, a LOWER BOUND)
+  of which detail control: 0.9 MB/worker, CONSTANT in the frame count
+
+--- pass one: regularised winner field (MEASURED) ---
+wall clock      : 4.391 s  (33.8 ms/frame)
+  decode        : 19.081 s summed across workers (146.8 ms/frame)
+  focus + reg   : 14.196 s summed across workers (109.2 ms/frame)
+
+--- pass two: gated average (MEASURED) ---
+wall clock      : 4.504 s  (34.6 ms/frame, 2 accumulators)
+  decode        : 14.197 s summed across workers (109.2 ms/frame)
+  field + gate  : 20.971 s summed across workers (161.3 ms/frame)
+total           : 8.895 s  (+0.095 s prologue), 550.1 MB/s over 4893.2 MB
+in-flight frames: 9 peak, bound 9 (never O(N))
+
+--- gate calibration (MEASURED) ---
+                  n_eff is frames averaged per pixel. Fact 212 measured nwide = 3 at full
+                  sampling density -- frames within 50% of PEAK HEIGHT, which is a different
+                  rule from this NOISE gate, so 3 is a target to land near, not to match.
+  gate   tol(DN-norm)     mean n_eff   n_eff=1 %   boundary %   pred sigma gain (model)
+   4.00      0.086063        1.238      80.98%        0.16%         0.9409x
+  38.75      0.833739        4.148       5.20%        0.16%         0.6081x
+
+gate solve      : not requested. Pass --target-n-eff 3 to solve the ladder for a
+                  gate, which is what fact 324 says you should be setting.
+
+
+--- CLIPPING CENSUS (MEASURED) ---
+container max   : 16383 DN. NOT the usable white level (15360) -- these are
+                  two different numbers for two different purposes and both are right:
+                  15360 bounds the noise model's calibrated range, 16383 is what
+                  "this sample is pinned" means. Do not unify them.
+ever clipped    : 0.0000% of pixels (0 of 8241504) clipped in at least one frame
+always clipped  : 0.0000% of pixels (0 of 8241504) pinned in EVERY frame
+                  No pixel is pinned in every frame, so the maximum-severity case
+                  M26 measured on coffee-bubbles does not arise on this stack.
+                  NOTE 109MSDCF and 119MSDCF are two of the four stacks with NO
+                  saturation, and 109 is also the quietest photometrically (M24).
+                  A clean result on them is systematically weaker evidence than it
+                  looks.
+
+--- PHOTOMETRIC DRIFT SENSITIVITY (DERIVED from a MEASURED response) ---
+winner response : median 4.6929, p10 2.3553, p90 10.7583  (regularised, DN-normalised)
+gate unit       : 0.021516  = sqrt(2) * FOCUS_NOISE_SD, the SD of a difference
+sensitivity     : 1.091 gate units per 1% of per-frame level drift (median pixel),
+                  0.547 at p10 and 2.500 at p90. Shot-limited; in read-noise-
+                  dominated shadow it is 2x this.
+corpus (M24)    : 109MSDCF drifts 0.91% -> 0.99 gate units. 119MSDCF 2.88% -> 3.14.
+                  coffee-bean 11.70% -> 12.76. coffee-bubbles 8.93% -> 9.74.
+                  109MSDCF is the QUIETEST stack in the corpus and is the one most
+                  of this project's numbers were measured on, so a clean 109 result
+                  is NOT evidence that photometric variation is handled.
+STATUS          : NO per-frame gain term is fitted or applied. This merge assumes
+                  constant photometry across the stack. The number above is the size
+                  of that assumption, not a correction for it. Do NOT read gain from
+                  EXIF to fix it: M24 measured two stacks drifting 6.84% and 8.93%
+                  with CONSTANT EXIF, and coffee-bean moving only 16% of what its
+                  EXIF change predicts (1.0443 measured vs 1.2800). Fit it.
+
+--- ACCEPTANCE INVARIANT 1 of 2: flat-ROI noise (MEASURED) ---
+roi             : x 32 y 1312 w 256 h 256 in plane coordinates
+single frame 65 : raw sd   28.934 DN   mean   1316.66 DN   (no stacking at all)
+model predicts  : sigma   12.295 DN for one green-luma sample at that level, so this
+                  ROI's RAW sd is 2.35x the noise in it -- that excess is scene, and it is
+                  why the raw ratio below is a LEGACY column and not the verdict.
+
+reference hp sd : median   12.442 DN over 130 frames   min   12.187 (frame 126)   max   32.468 (frame 17)
+                  NO SINGLE REFERENCE FRAME. Fact 441: holding the merge fixed and sweeping which
+                  frame supplies the denominator moved the old published ratio over a 1.60x range,
+                  so the whole distribution is carried. This stack's own spread is 2.6642x.
+                  high pass is x - box9(x) on the ROI's valid interior, the kernel behind fact 469;
+                  white noise of sd s comes out at s * 0.993808 (DERIVED: sqrt(1 - 1/81)), so the
+                  sd above reads against the calibrated model rather than in arbitrary units.
+                  STRUCTURE FLOOR: median hp sd is 1.0182x the model's per-sample sigma.
+                  Rule 10 -- that is a SPATIAL sd over a TEMPORAL sigma, so it is a one-sided
+                  reading, not an equality: 1.0000x means noise-dominated and the excess is
+                  residual scene. IT IS ALSO THE FACTOR BY WHICH EVERY RATIO BELOW UNDER-REPORTS A
+                  LARGE EXPLOSION, so these ratios are LOWER BOUNDS. The legacy raw ratio's own
+                  floor on this ROI is raw sd / sigma, printed above, and it is the 6.3x of fact 469.
+  gate       hp sd DN     HP RATIO   over every frame     n frames   vs frame 65 alone
+   4.00       30.881       2.482x   [ 0.951x ..  2.534x]        130           2.483x
+  38.75       15.528       1.248x   [ 0.478x ..  1.274x]        130           1.249x
+                  PASS is <= 1.000x against the SAME-OPERATOR baseline: regularised argmax.
+                  Fact 19's 1.253x was a DIFFERENT focus operator and does not reproduce
+                  here; it is not this pipeline's baseline and must not be quoted as one.
+                  A plain unweighted mean measured 0.534x on the LEGACY statistic, which
+                  is a floor and not a target, because of invariant 2. THE BASELINE FOR
+                  THIS COLUMN HAS NOT BEEN RE-MEASURED: fact 343's 1.0739x is a RAW-sd
+                  number and cannot be carried across to a high-pass sd. Run `strehl stack`
+                  on the same frames and ROI for the same-operator argmax figure.
+
+  gate    LEGACY raw sd    mean DN   LEGACY RATIO   winners in roi
+   4.00      41.082       1340.02      1.420x   3 distinct, median 17
+  38.75      40.533       1333.74      1.401x   3 distinct, median 17
+                  DO NOT READ THE LEGACY COLUMN AS NOISE (facts 469/441/442/455, 597). It
+                  is a ratio of two RAW SPATIAL sds against ONE arbitrary frame.
+                  It is structure-dominated -- the corpus's flat reference frames are 50.9-80.0%
+                  scene by variance and this ROI's own excess is printed above -- it moves
+                  over a 1.60x range with the free choice of denominator frame, and on a
+                  planted noise explosion it under-reported by 6.3x. It is printed only so
+                  that reports written before this change stay comparable.
+
+--- ACCEPTANCE INVARIANT 2 of 2: detail retention (MEASURED) ---
+roi             : x 2208 y 672 w 256 h 256 in plane coordinates
+                  THIS IS A ONE-SIDED TEST. It is valid against COLLAPSE and against
+                  nothing else. mean|grad| can be RAISED by ringing, by amplified noise
+                  and by manufactured edges, so an INCREASE is never evidence of quality.
+                  MEASURED in the orchestrator's calibrated 1-D optics simulation (25
+                  frames, oracle depth, latent mean|grad| 0.0392): at sigma 0.010 a Wiener
+                  merge reads 0.0367 against selection's 0.0296 -- 24% MORE gradient --
+                  while its gradient CORRELATION with truth is 0.7538 against 0.8595, i.e.
+                  12% LESS faithful. At sigma 0.050 argmax reads 0.0455, ABOVE the ground
+                  truth. A mean-gradient test scores both of those as wins. It must not.
+                  MEAN |GRAD| IS ALSO CONFOUNDED BY NOISE and selection conditions that
+                  noise on a max over N. A model sigma knows neither the max nor N.
+                  Each row therefore MEASURES its inflation on the flat ROI, separately
+                  in the left/right halves, and applies the OPPOSITE half's scale to detail.
+                  STRUCTURE = raw / controlled-noise: pure noise reads 1.0x; real detail
+                  reads above it. RETENTION compares resolved signal at the SAME selector
+                  noise floor, against the full-stack gate-zero selector -- never one
+                  arbitrary frame. The flat scale is re-measured per gate, so its N and
+                  admission dependence come from this run rather than a transferred bar.
+selector gate 0 : q +37094.557 DN^2   STRUCTURE   3.788x   raw  199.6837   ctrl noise   52.7165   k(L/R)  1.863/ 1.956   m2 105.0444   iso 164.5733
+  gate     q signal    RETENTION   VERDICT    STRUCTURE     raw rms  ctrl noise   k left  k right         m2        iso
+   4.00   +36605.535       0.994x   ok              3.702x    198.7139     53.6813     1.906    2.078   104.4507   163.6430
+  38.75   +31917.341       0.933x   ok              4.628x    182.9765     39.5355     1.919    2.063    95.6933   149.9614
+                  q is SIGNED resolved gradient power. A negative q means the ROI has no
+                  resolved detail above the cross-fitted flat control; it is not clamped
+                  before retention. At high STRUCTURE, RETENTION approaches resolved
+                  signal amplitude. Near 1.0x it honestly shrinks toward no-effect.
+                  A rise is INVESTIGATE, not PASS: see the speckle companion below, which
+                  is two-sided and shares a cause with manufactured detail.
+
+--- COMPANION (two-sided): winner-index speckle (MEASURED) ---
+index speckle   : 0.003% of pixels differ by more than 2 from their 3x3 median index
+                  On the REGULARISED winner, the same statistic and tolerance `strehl stack`
+                  reports for argmax. Unlike mean|grad| this is two-sided: a real scene gives
+                  smooth depth with sharp edges, and BOTH over-smoothing and manufactured
+                  detail move it away from that.
+                  Fact 23's 34.4% -> 0.868% pair is BOTH the retired ring operator, unregularised
+                  then 17x17-regularised (M2-verification section 4; :205 states the measure
+                  was the ring difference, and Tenengrad did not exist until M14). NEITHER is a
+                  Tenengrad number, and no section-4 row publishes a regularised-Tenengrad
+                  speckle at all, so there is no cross-operator reference to quote here. The
+                  operator-matched figure is fact 71's 1.010% for UNREGULARISED Tenengrad on
+                  this ROI; the regularised comparable is this run's own value, above.
+finished_utc=2026-08-24T04:21:14.9411504Z

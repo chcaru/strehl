@@ -1,0 +1,14 @@
+{
+  "commit": "4b00dd820de38ed5dc4844d906ada64c833c3699",
+  "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)",
+  "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+  "build_command": "cargo build --release -p strehl-cli",
+  "cargo_target_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M81-estimation-merge\\target-evidence",
+  "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M81-estimation-merge\\target-evidence\\release\\strehl.exe",
+  "bytes": 8424448,
+  "sha256": "e16fa0d2a4100ba9c534129e781ab869bc93bdf53ff7bc1d7504b7e7ab0aed82",
+  "prior_measured_binary_sha256": "05b5e3c8ed7c6b207844484697397882df188cd02cefb231572af251003344cd",
+  "byte_identical_to_measured_binary": false,
+  "built_utc": "2026-08-24T04:19:25.2149842Z",
+  "tracked_tree_clean": true
+}

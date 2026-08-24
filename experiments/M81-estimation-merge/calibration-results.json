@@ -1,0 +1,324 @@
+{
+  "bars": {
+    "S1_python_relative_error_max": 0.02,
+    "S4_span_over_nominal_max": 0.2,
+    "G2_relative_error_max": 0.01
+  },
+  "stacks": {
+    "wrapped-text-1": {
+      "targets": [
+        {
+          "scale": 0.95,
+          "n_eff": 4.726371259,
+          "per_band_n_eff": [
+            4.394296912,
+            4.297435778,
+            5.487381085
+          ],
+          "textured_patches": 24
+        },
+        {
+          "scale": 1.0,
+          "n_eff": 4.147660006,
+          "per_band_n_eff": [
+            4.312737071,
+            3.907537865,
+            4.222705083
+          ],
+          "textured_patches": 24
+        },
+        {
+          "scale": 1.093,
+          "n_eff": 3.429686513,
+          "per_band_n_eff": [
+            4.160682968,
+            3.432428682,
+            2.695947888
+          ],
+          "textured_patches": 24
+        }
+      ],
+      "frames": 130,
+      "workers": 6,
+      "analysis": [
+        7028,
+        4688
+      ],
+      "gate": {
+        "target": 4.147660006,
+        "value": 38.749996185,
+        "realised": 4.14822513,
+        "bracket": [
+          4.137820354,
+          4.14822513
+        ],
+        "gate_zero": 1.0,
+        "gate_widest": 130.0,
+        "unreachable": 0
+      },
+      "controls": {
+        "S1_python_relative_error": 8.230257121429207e-08,
+        "S1_pass": true,
+        "S4_span_over_nominal": 0.3126304335756108,
+        "S4_pass": false,
+        "S5_pass": true,
+        "G2_relative_error": 0.00013625128365943903,
+        "G2_pass": true,
+        "G3_pass": true,
+        "G4_pass": true
+      }
+    },
+    "109MSDCF": {
+      "targets": [
+        {
+          "scale": 0.95,
+          "n_eff": 7.690964824,
+          "per_band_n_eff": [
+            5.793580668,
+            6.408572899,
+            10.870740907
+          ],
+          "textured_patches": 23
+        },
+        {
+          "scale": 1.0,
+          "n_eff": 4.798517082,
+          "per_band_n_eff": [
+            5.30606977,
+            4.573925765,
+            4.51555571
+          ],
+          "textured_patches": 22
+        },
+        {
+          "scale": 1.093,
+          "n_eff": -6.124905452534807e+31,
+          "per_band_n_eff": [
+            4.112177292,
+            0.011079895,
+            -1.837471635760442e+32
+          ],
+          "textured_patches": 22
+        }
+      ],
+      "frames": 22,
+      "workers": 6,
+      "analysis": [
+        7028,
+        4688
+      ],
+      "gate": {
+        "target": 4.798517082,
+        "value": 3.828124762,
+        "realised": 4.798460208,
+        "bracket": [
+          4.798460208,
+          4.802716956
+        ],
+        "gate_zero": 1.0,
+        "gate_widest": 22.0,
+        "unreachable": 0
+      },
+      "controls": {
+        "S1_python_relative_error": 8.403246073781489e-07,
+        "S1_pass": true,
+        "S4_span_over_nominal": 1.2764163069274674e+31,
+        "S4_pass": false,
+        "S5_pass": true,
+        "G2_relative_error": 1.1852411698928822e-05,
+        "G2_pass": true,
+        "G3_pass": true,
+        "G4_pass": true
+      }
+    },
+    "coffee-bean": {
+      "targets": [
+        {
+          "scale": 0.95,
+          "n_eff": 5.522381302,
+          "per_band_n_eff": [
+            5.997656543,
+            5.351210776,
+            5.218276586
+          ],
+          "textured_patches": 17
+        },
+        {
+          "scale": 1.0,
+          "n_eff": 5.432140011,
+          "per_band_n_eff": [
+            5.843179456,
+            5.297516062,
+            5.155724515
+          ],
+          "textured_patches": 16
+        },
+        {
+          "scale": 1.093,
+          "n_eff": 5.389715394,
+          "per_band_n_eff": [
+            5.83121735,
+            5.274135491,
+            5.063793342
+          ],
+          "textured_patches": 16
+        }
+      ],
+      "frames": 105,
+      "workers": 6,
+      "analysis": [
+        7028,
+        4688
+      ],
+      "gate": {
+        "target": 5.432140011,
+        "value": 1.191406131,
+        "realised": 5.434701846,
+        "bracket": [
+          5.419045359,
+          5.434701846
+        ],
+        "gate_zero": 1.0,
+        "gate_widest": 105.0,
+        "unreachable": 0
+      },
+      "controls": {
+        "S1_python_relative_error": 1.3955742129001956e-09,
+        "S1_pass": true,
+        "S4_span_over_nominal": 0.024422402171400858,
+        "S4_pass": true,
+        "S5_pass": true,
+        "G2_relative_error": 0.0004716069532103681,
+        "G2_pass": true,
+        "G3_pass": true,
+        "G4_pass": true
+      }
+    },
+    "foam": {
+      "targets": [
+        {
+          "scale": 0.95,
+          "n_eff": 5.591418939,
+          "per_band_n_eff": [
+            5.832131418,
+            5.592174062,
+            5.349951335
+          ],
+          "textured_patches": 24
+        },
+        {
+          "scale": 1.0,
+          "n_eff": 5.499486768,
+          "per_band_n_eff": [
+            5.821288106,
+            5.546232177,
+            5.13094002
+          ],
+          "textured_patches": 24
+        },
+        {
+          "scale": 1.093,
+          "n_eff": 5.327483868,
+          "per_band_n_eff": [
+            5.801112997,
+            5.460669336,
+            4.72066927
+          ],
+          "textured_patches": 24
+        }
+      ],
+      "frames": 100,
+      "workers": 6,
+      "analysis": [
+        7028,
+        4688
+      ],
+      "gate": {
+        "target": 5.499486768,
+        "value": 47.874996185,
+        "realised": 5.500629618,
+        "bracket": [
+          5.493758906,
+          5.500629618
+        ],
+        "gate_zero": 1.0,
+        "gate_widest": 100.0,
+        "unreachable": 0
+      },
+      "controls": {
+        "S1_python_relative_error": 2.9122126917230798e-08,
+        "S1_pass": true,
+        "S4_span_over_nominal": 0.04799267315920572,
+        "S4_pass": true,
+        "S5_pass": true,
+        "G2_relative_error": 0.00020781030089022984,
+        "G2_pass": true,
+        "G3_pass": true,
+        "G4_pass": true
+      }
+    },
+    "bee-1": {
+      "targets": [
+        {
+          "scale": 0.95,
+          "n_eff": 13.06987833,
+          "per_band_n_eff": [
+            12.692960973,
+            11.611755385,
+            14.904918631
+          ],
+          "textured_patches": 16
+        },
+        {
+          "scale": 1.0,
+          "n_eff": 11.719199231,
+          "per_band_n_eff": [
+            12.608643302,
+            11.089979082,
+            11.458975308
+          ],
+          "textured_patches": 16
+        },
+        {
+          "scale": 1.093,
+          "n_eff": 9.256309911,
+          "per_band_n_eff": [
+            10.767210794,
+            9.84052721,
+            7.161191728
+          ],
+          "textured_patches": 16
+        }
+      ],
+      "frames": 299,
+      "workers": 6,
+      "analysis": [
+        7028,
+        4688
+      ],
+      "gate": {
+        "target": 11.719199231,
+        "value": 1.406249881,
+        "realised": 11.723698126,
+        "bracket": [
+          11.687590032,
+          11.723698126
+        ],
+        "gate_zero": 1.0,
+        "gate_widest": 299.0,
+        "unreachable": 0
+      },
+      "controls": {
+        "S1_python_relative_error": 2.5333101675974503e-08,
+        "S1_pass": true,
+        "S4_span_over_nominal": 0.32541203061999546,
+        "S4_pass": false,
+        "S5_pass": true,
+        "G2_relative_error": 0.00038389099044416723,
+        "G2_pass": true,
+        "G3_pass": true,
+        "G4_pass": true
+      }
+    }
+  }
+}

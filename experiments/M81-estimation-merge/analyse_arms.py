@@ -112,10 +112,21 @@ def main() -> None:
         result["numerical_acceptance_pass"] = (
             q_ratio >= 1.01 and d_ratio >= 0.98 and fresh_g2_error <= 0.01
         )
+        result["controls"]["M80_flat_precondition_pass"] = m77_row["k1_met"]
+        result["controls"]["M80_acceptance_readable"] = (
+            m77_row["k1_met"]
+            and result["controls"]["M80_detail_readable_at_both_arms"]
+        )
+        if not result["controls"]["M80_acceptance_readable"]:
+            result["acceptance_verdict"] = "unreadable"
+        elif result["numerical_acceptance_pass"]:
+            result["acceptance_verdict"] = "pass"
+        else:
+            result["acceptance_verdict"] = "fail"
         out["stacks"][stack] = result
 
     out["accepted_stacks"] = sum(
-        row["numerical_acceptance_pass"] for row in out["stacks"].values()
+        row["acceptance_verdict"] == "pass" for row in out["stacks"].values()
     )
     (HERE / "arms-results.json").write_text(
         json.dumps(out, indent=2) + "\n", encoding="utf-8"
@@ -127,8 +138,8 @@ def main() -> None:
             f"{stack:16} D={ratios['D_candidate_over_control']:.6f} "
             f"H={ratios['H_candidate_over_control']:.6f} "
             f"Q={ratios['Q_candidate_over_control']:.6f} "
-            f"readable={controls['M80_detail_readable_at_both_arms']} "
-            f"pass={row['numerical_acceptance_pass']}"
+            f"readable={controls['M80_acceptance_readable']} "
+            f"verdict={row['acceptance_verdict']}"
         )
 
 

@@ -1,0 +1,58 @@
+CONTROL=spectral-clip
+PLANTED_READBACK=PASS bytes=let sum: f64 = signal.iter().copied().map(|s| s.max(0.0)).sum();
+COMMAND=cargo test -p strehl-core calibration::tests::summing_before_clipping_returns_zero_on_the_noise_plant -- --exact
+EXIT=101
+
+running 1 test
+test calibration::tests::summing_before_clipping_returns_zero_on_the_noise_plant ... FAILED
+
+failures:
+
+---- calibration::tests::summing_before_clipping_returns_zero_on_the_noise_plant stdout ----
+M81 spectral noise plant: n_eff=7.446820572
+
+thread 'calibration::tests::summing_before_clipping_returns_zero_on_the_noise_plant' (90392) panicked at crates\strehl-core\src\calibration.rs:775:9:
+SpectralTarget { frames: 41, noise_scale: 1.0, textured_patches: 24, per_band_n_eff: [7.479180282947409, 7.136869270932175, 7.724412162366452], n_eff: 7.446820572082012 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    calibration::tests::summing_before_clipping_returns_zero_on_the_noise_plant
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 145 filtered out; finished in 0.00s
+
+
+   Compiling strehl-core v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.02s
+     Running unittests src\lib.rs (experiments\M81-estimation-merge\target-dev\debug\deps\strehl_core-66b0ede29e9ca8ee.exe)
+error: test failed, to rerun pass `-p strehl-core --lib`
+
+
+CONTROL=reverse-cumulative
+PLANTED_READBACK=PASS bytes=cumulative = cumulative.saturating_sub(count);
+COMMAND=cargo test -p strehl-core calibration::tests::admission_histogram_solves_the_measured_monotone_ladder -- --exact
+EXIT=101
+
+running 1 test
+test calibration::tests::admission_histogram_solves_the_measured_monotone_ladder ... FAILED
+
+failures:
+
+---- calibration::tests::admission_histogram_solves_the_measured_monotone_ladder stdout ----
+
+thread 'calibration::tests::admission_histogram_solves_the_measured_monotone_ladder' (108052) panicked at crates\strehl-core\src\calibration.rs:816:35:
+called `Result::unwrap()` on an `Err` value: target was not bracketed by non-empty histogram bins
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    calibration::tests::admission_histogram_solves_the_measured_monotone_ladder
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 145 filtered out; finished in 0.00s
+
+
+   Compiling strehl-core v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.74s
+     Running unittests src\lib.rs (experiments\M81-estimation-merge\target-dev\debug\deps\strehl_core-66b0ede29e9ca8ee.exe)
+error: test failed, to rerun pass `-p strehl-core --lib`
+

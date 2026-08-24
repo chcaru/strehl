@@ -9,16 +9,10 @@ use std::time::Instant;
 
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
-use rayon::prelude::*;
 
 use merge_cmd::MergeOptions;
 use stack::{MemoryModel, Roi, StackOptions, parse_roi};
-use strehl_core::calibration::{AdmissionHistogram, SpectralAccumulator, SpectralConfig};
-use strehl_core::focus::FocusField;
-use strehl_core::merge::{DEFAULT_GATE, FocusStats, regularise};
-use strehl_core::noise::{Levels, NoiseModel};
-use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma};
-use strehl_core::profile;
+use strehl_core::merge::DEFAULT_GATE;
 
 #[derive(Parser)]
 #[command(name = "strehl", version, about = "Noise-aware RAW focus stacking")]
@@ -39,28 +33,6 @@ enum Command {
         /// Decode at most this many frames.
         #[arg(short, long)]
         limit: Option<usize>,
-    },
-
-    /// Measure the stack-specific spectral target and the spatial gate that
-    /// realises it. Experimental M81 calibration; it never writes an image.
-    #[command(name = "calibrate-gate")]
-    CalibrateGate {
-        /// Directory containing RAW files.
-        dir: PathBuf,
-        /// Stack at most this many frames, in filename order.
-        #[arg(short, long)]
-        limit: Option<usize>,
-        /// Width used to place M70's fixed spectral grid. Defaults to the
-        /// decoder's active width.
-        #[arg(long)]
-        analysis_width: Option<usize>,
-        /// Height used to place M70's fixed spectral grid. Defaults to the
-        /// decoder's active height.
-        #[arg(long)]
-        analysis_height: Option<usize>,
-        /// Concurrent calibration workers.
-        #[arg(long, default_value_t = 6)]
-        workers: usize,
     },
 
     /// Stack a directory of RAW files into one image, by noise-gated
@@ -293,13 +265,6 @@ fn main() -> Result<()> {
 
     match Cli::parse().command {
         Command::Probe { dir, limit } => probe(&dir, limit),
-        Command::CalibrateGate {
-            dir,
-            limit,
-            analysis_width,
-            analysis_height,
-            workers,
-        } => calibrate_gate(&dir, limit, analysis_width, analysis_height, workers),
         Command::ArgmaxBaseline {
             dir,
             out,
@@ -343,241 +308,6 @@ fn main() -> Result<()> {
             confidence_tail,
         }),
     }
-}
-
-struct CalibrationScratch {
-    luma: Vec<f32>,
-    field: FocusField,
-    box_scratch: Vec<f32>,
-    regularised: Vec<f32>,
-}
-
-impl CalibrationScratch {
-    fn new(geom: PlaneGeometry) -> Self {
-        let pixels = geom.pixels();
-        Self {
-            luma: vec![0.0; pixels],
-            field: FocusField::new(geom),
-            box_scratch: vec![0.0; pixels],
-            regularised: vec![0.0; pixels],
-        }
-    }
-
-    fn compute(
-        &mut self,
-        frame: &strehl_raw::Frame,
-        geom: PlaneGeometry,
-        levels: Levels,
-        camera: &str,
-        iso: Option<f32>,
-        noise: &NoiseModel,
-        index: u16,
-    ) -> Result<()> {
-        anyhow::ensure!(
-            frame.geometry() == geom,
-            "frame {index} ({}) has geometry {:?}, expected {:?}",
-            frame.path.display(),
-            frame.geometry(),
-            geom
-        );
-        anyhow::ensure!(
-            frame.levels == levels,
-            "frame {index} ({}) has levels {:?}, expected {:?}",
-            frame.path.display(),
-            frame.levels,
-            levels
-        );
-        anyhow::ensure!(
-            frame.camera == camera && frame.iso == iso,
-            "frame {index} ({}) has camera/ISO {:?}/{:?}, expected {:?}/{:?}",
-            frame.path.display(),
-            frame.camera,
-            frame.iso,
-            camera,
-            iso
-        );
-        green_luma(frame, levels.black, &mut self.luma);
-        self.field.compute(&self.luma, noise);
-        regularise(
-            self.field.values(),
-            geom,
-            &mut self.box_scratch,
-            &mut self.regularised,
-        );
-        Ok(())
-    }
-}
-
-struct CalibrationPass1 {
-    stats: FocusStats,
-    spectral: SpectralAccumulator,
-}
-
-fn calibrate_gate(
-    dir: &Path,
-    limit: Option<usize>,
-    analysis_width: Option<usize>,
-    analysis_height: Option<usize>,
-    workers: usize,
-) -> Result<()> {
-    anyhow::ensure!(workers > 0, "--workers must be at least 1");
-    let paths = raw_paths(dir, limit)?;
-    anyhow::ensure!(
-        paths.len() < u16::MAX as usize,
-        "{} frames exceeds the u16 winner-index range",
-        paths.len()
-    );
-    let first = strehl_raw::decode(&paths[0]).context("decoding the calibration prologue")?;
-    let geom = first.geometry();
-    let levels = first.levels;
-    let camera = first.camera.clone();
-    let iso = first.iso;
-    let noise = profile::noise_model_for(&first.camera, first.iso, levels);
-    let spectral_config = SpectralConfig::new(
-        analysis_width.unwrap_or(first.active.width),
-        analysis_height.unwrap_or(first.active.height),
-    )?;
-    drop(first);
-
-    let worker_count = workers.min(paths.len());
-    let chunk_len = paths.len().div_ceil(worker_count);
-    let pool = rayon::ThreadPoolBuilder::new()
-        .num_threads(worker_count)
-        .build()
-        .context("building the calibration worker pool")?;
-
-    let pass1_started = Instant::now();
-    let pass1_parts: Vec<Result<CalibrationPass1>> = pool.install(|| {
-        paths
-            .par_chunks(chunk_len)
-            .enumerate()
-            .map(|(chunk_index, chunk)| {
-                let first_index = chunk_index * chunk_len;
-                let mut scratch = CalibrationScratch::new(geom);
-                let mut stats = FocusStats::new(geom);
-                let mut spectral = SpectralAccumulator::new(spectral_config);
-                for (offset, path) in chunk.iter().enumerate() {
-                    let index = (first_index + offset) as u16;
-                    let frame = strehl_raw::decode(path)
-                        .with_context(|| format!("decoding calibration frame {index}"))?;
-                    scratch.compute(&frame, geom, levels, &camera, iso, &noise, index)?;
-                    stats.fold(index, &scratch.regularised)?;
-                    spectral.observe(index, &frame, levels.black, &noise)?;
-                }
-                Ok(CalibrationPass1 { stats, spectral })
-            })
-            .collect()
-    });
-    let mut pass1_parts = pass1_parts
-        .into_iter()
-        .collect::<Result<Vec<CalibrationPass1>>>()?
-        .into_iter();
-    let mut pass1 = pass1_parts
-        .next()
-        .context("calibration produced no pass-one workers")?;
-    for part in pass1_parts {
-        pass1.stats.absorb(&part.stats)?;
-        pass1.spectral.absorb(part.spectral)?;
-    }
-    anyhow::ensure!(
-        pass1.stats.frames_folded() as usize == paths.len()
-            && pass1.spectral.frames() == paths.len(),
-        "pass one did not fold every frame"
-    );
-    let pass1_seconds = pass1_started.elapsed().as_secs_f64();
-
-    let targets = [
-        pass1.spectral.target(0.950)?,
-        pass1.spectral.target(1.000)?,
-        pass1.spectral.target(1.093)?,
-    ];
-    let nominal = &targets[1];
-    anyhow::ensure!(
-        nominal.n_eff.is_finite() && nominal.n_eff >= 1.0 && nominal.n_eff <= paths.len() as f64,
-        "nominal spectral target {:.6} is outside [1, {}]",
-        nominal.n_eff,
-        paths.len()
-    );
-
-    let pass2_started = Instant::now();
-    let hist_parts: Vec<Result<AdmissionHistogram>> = pool.install(|| {
-        paths
-            .par_chunks(chunk_len)
-            .enumerate()
-            .map(|(chunk_index, chunk)| {
-                let first_index = chunk_index * chunk_len;
-                let mut scratch = CalibrationScratch::new(geom);
-                let mut histogram = AdmissionHistogram::new(geom);
-                for (offset, path) in chunk.iter().enumerate() {
-                    let index = (first_index + offset) as u16;
-                    let frame = strehl_raw::decode(path)
-                        .with_context(|| format!("decoding admission frame {index}"))?;
-                    scratch.compute(&frame, geom, levels, &camera, iso, &noise, index)?;
-                    histogram.fold(index, &pass1.stats, &scratch.regularised)?;
-                }
-                Ok(histogram)
-            })
-            .collect()
-    });
-    let mut hist_parts = hist_parts
-        .into_iter()
-        .collect::<Result<Vec<AdmissionHistogram>>>()?
-        .into_iter();
-    let mut histogram = hist_parts
-        .next()
-        .context("calibration produced no pass-two workers")?;
-    for part in hist_parts {
-        histogram.absorb(part)?;
-    }
-    anyhow::ensure!(
-        histogram.frames_folded() as usize == paths.len(),
-        "pass two folded {} frames, expected {}",
-        histogram.frames_folded(),
-        paths.len()
-    );
-    let (gate_zero_n_eff, widest_gate_n_eff) = histogram.admission_range();
-    let solved = histogram.solve(nominal.n_eff)?;
-    let pass2_seconds = pass2_started.elapsed().as_secs_f64();
-
-    println!(
-        "M81_CONFIG frames={} workers={} analysis={}x{} patch={} tile={}",
-        paths.len(),
-        worker_count,
-        spectral_config.analysis_width,
-        spectral_config.analysis_height,
-        strehl_core::calibration::SPECTRAL_PATCH,
-        strehl_core::calibration::SPECTRAL_TILE
-    );
-    for target in &targets {
-        println!(
-            "M81_SPECTRAL scale={:.3} n_eff={:.9} bands={:.9},{:.9},{:.9} \
-                 textured={} frames={}",
-            target.noise_scale,
-            target.n_eff,
-            target.per_band_n_eff[0],
-            target.per_band_n_eff[1],
-            target.per_band_n_eff[2],
-            target.textured_patches,
-            target.frames
-        );
-    }
-    println!(
-        "M81_GATE target={:.9} gate={:.9} realised={:.9} bracket={:.9},{:.9} \
-             gate_zero={:.9} gate_widest={:.9} unreachable={}",
-        solved.target_n_eff,
-        solved.gate,
-        solved.realised_n_eff,
-        solved.lower_n_eff,
-        solved.upper_n_eff,
-        gate_zero_n_eff,
-        widest_gate_n_eff,
-        solved.unreachable
-    );
-    println!(
-        "M81_TIMING pass1={pass1_seconds:.3} pass2={pass2_seconds:.3} total={:.3}",
-        pass1_seconds + pass2_seconds
-    );
-    Ok(())
 }
 
 /// RAW files in `dir`, sorted by filename so that frame index is capture order.
