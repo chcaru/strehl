@@ -1,0 +1,13 @@
+decoded 105 frames to 3516x2344 green planes in 2127 ms (20.3 ms/frame)
+focus labels: 96 tiles x 105 frames, w [1.837,104.000], peakiness median 0.9302
+[blur/a-q6666667] 20/207 pairs, 1.6 s
+[blur/a-q6666667] 40/207 pairs, 3.2 s
+[blur/a-q6666667] 60/207 pairs, 4.3 s
+[blur/a-q6666667] 80/207 pairs, 5.6 s
+[blur/a-q6666667] 100/207 pairs, 7.0 s
+[blur/a-q6666667] 120/207 pairs, 8.4 s
+[blur/a-q6666667] 140/207 pairs, 11.1 s
+[blur/a-q6666667] 160/207 pairs, 11.4 s
+[blur/a-q6666667] 180/207 pairs, 11.4 s
+[blur/a-q6666667] 200/207 pairs, 11.5 s
+[blur/a-q6666667] 207 pairs at q=0.6666667 in 11.7 s; wrote data/a-q6666667-edges.csv

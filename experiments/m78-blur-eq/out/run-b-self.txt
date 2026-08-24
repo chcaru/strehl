@@ -1,0 +1,4 @@
+decoded 105 frames to 3516x2344 green planes in 2469 ms (23.5 ms/frame)
+[phase/b-self] shifted 105 planes in 0.5 s
+[phase/b-self] 50/52 pairs, 0.8 s
+[phase/b-self] 52 pairs at (4.5,-3.5), integer=false, 0.8 s; wrote data/b-self-edges.csv

@@ -1,0 +1,13 @@
+[field/phase] rep 1/12 in 12.0 s
+[field/phase] rep 2/12 in 24.1 s
+[field/phase] rep 3/12 in 36.2 s
+[field/phase] rep 4/12 in 48.2 s
+[field/phase] rep 5/12 in 60.1 s
+[field/phase] rep 6/12 in 72.1 s
+[field/phase] rep 7/12 in 84.3 s
+[field/phase] rep 8/12 in 96.0 s
+[field/phase] rep 9/12 in 107.6 s
+[field/phase] rep 10/12 in 120.8 s
+[field/phase] rep 11/12 in 134.2 s
+[field/phase] rep 12/12 in 146.9 s
+[field/phase] wrote data/b-phase-field.csv in 146.9 s

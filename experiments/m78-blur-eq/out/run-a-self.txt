@@ -1,0 +1,5 @@
+decoded 105 frames to 3516x2344 green planes in 4087 ms (38.9 ms/frame)
+focus labels: 96 tiles x 105 frames, w [1.837,104.000], peakiness median 0.9302
+[blur/a-self] 20/52 pairs, 0.9 s
+[blur/a-self] 40/52 pairs, 1.0 s
+[blur/a-self] 52 pairs at q=0.1666667 in 1.2 s; wrote data/a-self-edges.csv

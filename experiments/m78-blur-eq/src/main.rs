@@ -33,10 +33,12 @@ mod field;
 mod plane;
 mod synth;
 
-use align::{align_with, build_pyramid, compose, tile_grid_m, AlignCfg, Fit, Pyramid, Stage};
+use align::{
+    align_with, align_with_blur, build_pyramid, compose, tile_grid_m, AlignCfg, Fit, Pyramid, Stage,
+};
 use plane::{green_plane, Plane};
 use rayon::prelude::*;
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::io::Write;
 use std::path::PathBuf;
 use std::time::Instant;
@@ -56,6 +58,12 @@ fn parse_list(s: &str) -> Vec<usize> {
     s.split(',')
         .filter_map(|t| t.trim().parse::<usize>().ok())
         .filter(|d| *d > 0)
+        .collect()
+}
+
+fn parse_float_list(s: &str) -> Vec<f32> {
+    s.split(',')
+        .filter_map(|value| value.trim().parse::<f32>().ok())
         .collect()
 }
 
@@ -345,6 +353,379 @@ fn warp_known(rf: &Plane, truth: Fit) -> Plane {
         w: rf.w,
         h: rf.h,
     }
+}
+
+fn warp_integer(reference: &Plane, ax: i32, ay: i32) -> Plane {
+    let mut out = vec![0.0f32; reference.w * reference.h];
+    out.par_chunks_mut(reference.w)
+        .enumerate()
+        .for_each(|(y, row)| {
+            let source_y = (y as i32 - ay).clamp(0, reference.h as i32 - 1) as usize;
+            for (x, value) in row.iter_mut().enumerate() {
+                let source_x = (x as i32 - ax).clamp(0, reference.w as i32 - 1) as usize;
+                *value = reference.d[source_y * reference.w + source_x];
+            }
+        });
+    Plane {
+        d: out,
+        w: reference.w,
+        h: reference.h,
+    }
+}
+
+fn inverse_fit(fit: Fit) -> Fit {
+    let (real, imag) = (1.0 + fit.g, fit.r);
+    let denominator = real * real + imag * imag;
+    let inverse_real = real / denominator;
+    let inverse_imag = -imag / denominator;
+    Fit {
+        g: inverse_real - 1.0,
+        r: inverse_imag,
+        ax: -(inverse_real * fit.ax - inverse_imag * fit.ay),
+        ay: -(inverse_imag * fit.ax + inverse_real * fit.ay),
+    }
+}
+
+fn remove_known_transform(measured: Fit, planted: Fit) -> Fit {
+    compose(&[measured, inverse_fit(planted)])
+}
+
+fn load_focus_w(path: &str, value_column: &str) -> Vec<f32> {
+    let text = std::fs::read_to_string(path)
+        .unwrap_or_else(|error| panic!("read focus profile {path}: {error}"));
+    let mut lines = text.lines();
+    let header: Vec<&str> = lines.next().expect("focus CSV header").split(',').collect();
+    let column = |name: &str| {
+        header
+            .iter()
+            .position(|value| *value == name)
+            .unwrap_or_else(|| panic!("focus CSV lacks {name}"))
+    };
+    let tile_column = column("tile_id");
+    let frame_column = column("frame");
+    let value_column = column(value_column);
+
+    let mut profiles: BTreeMap<usize, BTreeMap<usize, f32>> = BTreeMap::new();
+    for line in lines {
+        let cells: Vec<&str> = line.split(',').collect();
+        if cells.len() <= value_column || cells[value_column].is_empty() {
+            continue;
+        }
+        let tile: usize = cells[tile_column].parse().expect("tile_id");
+        let frame: usize = cells[frame_column].parse().expect("frame");
+        let value: f32 = cells[value_column].parse().expect("focus value");
+        profiles.entry(tile).or_default().insert(frame, value);
+    }
+    assert!(!profiles.is_empty(), "no focus profiles in {path}");
+    let n_frames = profiles
+        .values()
+        .flat_map(|profile| profile.keys())
+        .copied()
+        .max()
+        .expect("focus frame")
+        + 1;
+    let n_tiles = profiles.keys().copied().max().expect("focus tile") + 1;
+    let mut winners = vec![f32::NAN; n_tiles];
+    let mut peakiness = vec![f32::NAN; n_tiles];
+
+    for tile in 0..n_tiles {
+        let profile = profiles
+            .get(&tile)
+            .unwrap_or_else(|| panic!("missing focus tile {tile}"));
+        assert_eq!(
+            profile.len(),
+            n_frames,
+            "tile {tile} has {} of {n_frames} focus samples",
+            profile.len()
+        );
+        let values: Vec<f32> = (0..n_frames)
+            .map(|frame| *profile.get(&frame).expect("focus sample"))
+            .collect();
+        let (index, &maximum) = values
+            .iter()
+            .enumerate()
+            .max_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap())
+            .expect("focus maximum");
+        let minimum = values.iter().copied().fold(f32::INFINITY, f32::min);
+        peakiness[tile] = if maximum > 0.0 {
+            (maximum - minimum) / maximum
+        } else {
+            0.0
+        };
+        let offset = if index > 0 && index + 1 < values.len() {
+            let (left, centre, right) = (values[index - 1], values[index], values[index + 1]);
+            let denominator = left - 2.0 * centre + right;
+            if denominator.abs() > 1e-12 {
+                (0.5 * (left - right) / denominator).clamp(-1.0, 1.0)
+            } else {
+                0.0
+            }
+        } else {
+            0.0
+        };
+        winners[tile] = index as f32 + offset;
+    }
+    let mut sorted_peakiness = peakiness.clone();
+    sorted_peakiness.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    eprintln!(
+        "focus labels: {n_tiles} tiles x {n_frames} frames, w [{:.3},{:.3}], peakiness median {:.4}",
+        winners.iter().copied().fold(f32::INFINITY, f32::min),
+        winners
+            .iter()
+            .copied()
+            .fold(f32::NEG_INFINITY, f32::max),
+        sorted_peakiness[sorted_peakiness.len() / 2]
+    );
+    winners
+}
+
+/// M78 Arm A: cross-convolve each fine-stage tile by the other frame's
+/// estimated Gaussian defocus PSF.
+fn run_blur_eq(args: &[String]) {
+    let dir = &args[2];
+    let prefix = &args[3];
+    let case = arg_val(args, "--case").unwrap_or_else(|| "case".into());
+    let cfgname = arg_val(args, "--cfg").unwrap_or_else(|| "m10".into());
+    let cfg = cfg_by_name(&cfgname);
+    let spans = parse_list(&arg_val(args, "--spans").unwrap_or_else(|| "1,2".into()));
+    let q: f32 = arg_val(args, "--q")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(1.0 / 6.0);
+    let focus_path =
+        arg_val(args, "--focus").unwrap_or_else(|| "data/coffee-bean-focus.csv".into());
+    let stride: usize = arg_val(args, "--stride")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(1);
+    let limit: usize = arg_val(args, "--limit")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(usize::MAX);
+    let self_pair = has_flag(args, "--self");
+
+    let planes = load_planes(dir, limit);
+    let n = planes.len();
+    let (plane_w, plane_h) = (planes[0].w, planes[0].h);
+    let winners = load_focus_w(&focus_path, "ring");
+    let spots = tile_grid_m(
+        &planes[0],
+        cfg.fine_tile,
+        cfg.fine_grid.0,
+        cfg.fine_grid.1,
+        cfg.margin,
+    )
+    .expect("fine grid");
+    assert_eq!(
+        winners.len(),
+        spots.len(),
+        "focus labels must match M10 fine-grid tile count"
+    );
+    let pyramids: Vec<Pyramid> = planes
+        .par_iter()
+        .map(|plane| build_pyramid(plane, &cfg))
+        .collect();
+
+    let mut pairs = Vec::new();
+    for span in spans {
+        let mut reference = 0;
+        while reference + span < n {
+            pairs.push((reference, reference + span));
+            reference += stride;
+        }
+    }
+    let total = pairs.len();
+    let started = Instant::now();
+    let done = std::sync::atomic::AtomicUsize::new(0);
+    let rows: Vec<String> = pairs
+        .par_iter()
+        .map(|&(reference, labelled_moving)| {
+            let source_moving = if self_pair {
+                reference
+            } else {
+                labelled_moving
+            };
+            let sigmas: Vec<(f32, f32)> = winners
+                .iter()
+                .map(|winner| {
+                    let native_reference = q * (reference as f32 - *winner).abs();
+                    let native_moving = q * (labelled_moving as f32 - *winner).abs();
+                    // Cross-convolution: each side receives the other's PSF.
+                    (native_moving, native_reference)
+                })
+                .collect();
+            let stage = align_with_blur(
+                &pyramids[reference],
+                &pyramids[source_moving],
+                &planes[reference],
+                &planes[source_moving],
+                &spots,
+                &cfg,
+                &sigmas,
+            );
+            let count = done.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
+            if count.is_multiple_of(20) {
+                eprintln!(
+                    "[blur/{case}] {count}/{total} pairs, {:.1} s",
+                    started.elapsed().as_secs_f64()
+                );
+            }
+            edge_row(
+                &case,
+                &cfgname,
+                reference,
+                labelled_moving,
+                &stage,
+                plane_w,
+                plane_h,
+            )
+        })
+        .collect();
+
+    let path = format!("data/{prefix}-edges.csv");
+    let mut output =
+        std::io::BufWriter::new(std::fs::File::create(&path).expect("create blur CSV"));
+    let _ = writeln!(output, "{EDGE_HEADER}");
+    for row in rows {
+        let _ = writeln!(output, "{row}");
+    }
+    let _ = output.flush();
+    eprintln!(
+        "[blur/{case}] {total} pairs at q={q:.7} in {:.1} s; wrote {path}",
+        started.elapsed().as_secs_f64()
+    );
+}
+
+/// M78 Arm B: shift the moving frame to a fixed sampling phase, align, then
+/// remove the known transform exactly in similarity algebra.
+fn run_phase(args: &[String]) {
+    let dir = &args[2];
+    let prefix = &args[3];
+    let case = arg_val(args, "--case").unwrap_or_else(|| "case".into());
+    let cfgname = arg_val(args, "--cfg").unwrap_or_else(|| "m10".into());
+    let cfg = cfg_by_name(&cfgname);
+    let spans = parse_list(&arg_val(args, "--spans").unwrap_or_else(|| "1,2".into()));
+    let ax: f32 = arg_val(args, "--ax")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(4.5);
+    let ay: f32 = arg_val(args, "--ay")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(-3.5);
+    let stride: usize = arg_val(args, "--stride")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(1);
+    let limit: usize = arg_val(args, "--limit")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(usize::MAX);
+    let self_pair = has_flag(args, "--self");
+    let integer = has_flag(args, "--integer");
+    if integer {
+        assert!(
+            ax.fract() == 0.0 && ay.fract() == 0.0,
+            "--integer requires integral --ax/--ay"
+        );
+    }
+    let plant = Fit {
+        ax,
+        ay,
+        g: 0.0,
+        r: 0.0,
+    };
+
+    let planes = load_planes(dir, limit);
+    let n = planes.len();
+    let (plane_w, plane_h) = (planes[0].w, planes[0].h);
+    let shifted_started = Instant::now();
+    let shifted: Vec<Plane> = if integer {
+        planes
+            .par_iter()
+            .map(|plane| warp_integer(plane, ax as i32, ay as i32))
+            .collect()
+    } else {
+        planes
+            .par_iter()
+            .map(|plane| warp_known(plane, plant))
+            .collect()
+    };
+    eprintln!(
+        "[phase/{case}] shifted {n} planes in {:.1} s",
+        shifted_started.elapsed().as_secs_f64()
+    );
+    let base_pyramids: Vec<Pyramid> = planes
+        .par_iter()
+        .map(|plane| build_pyramid(plane, &cfg))
+        .collect();
+    let shifted_pyramids: Vec<Pyramid> = shifted
+        .par_iter()
+        .map(|plane| build_pyramid(plane, &cfg))
+        .collect();
+    let spots = tile_grid_m(
+        &planes[0],
+        cfg.fine_tile,
+        cfg.fine_grid.0,
+        cfg.fine_grid.1,
+        cfg.margin,
+    )
+    .expect("fine grid");
+
+    let mut pairs = Vec::new();
+    for span in spans {
+        let mut reference = 0;
+        while reference + span < n {
+            pairs.push((reference, reference + span));
+            reference += stride;
+        }
+    }
+    let total = pairs.len();
+    let started = Instant::now();
+    let done = std::sync::atomic::AtomicUsize::new(0);
+    let rows: Vec<String> = pairs
+        .par_iter()
+        .map(|&(reference, labelled_moving)| {
+            let source_moving = if self_pair {
+                reference
+            } else {
+                labelled_moving
+            };
+            let mut stage = align_with(
+                &base_pyramids[reference],
+                &shifted_pyramids[source_moving],
+                &planes[reference],
+                &shifted[source_moving],
+                &spots,
+                &cfg,
+            );
+            if let Some(value) = &mut stage {
+                value.fit = remove_known_transform(value.fit, plant);
+            }
+            let count = done.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
+            if count.is_multiple_of(50) {
+                eprintln!(
+                    "[phase/{case}] {count}/{total} pairs, {:.1} s",
+                    started.elapsed().as_secs_f64()
+                );
+            }
+            edge_row(
+                &case,
+                &cfgname,
+                reference,
+                labelled_moving,
+                &stage,
+                plane_w,
+                plane_h,
+            )
+        })
+        .collect();
+
+    let path = format!("data/{prefix}-edges.csv");
+    let mut output =
+        std::io::BufWriter::new(std::fs::File::create(&path).expect("create phase CSV"));
+    let _ = writeln!(output, "{EDGE_HEADER}");
+    for row in rows {
+        let _ = writeln!(output, "{row}");
+    }
+    let _ = output.flush();
+    eprintln!(
+        "[phase/{case}] {total} pairs at ({ax},{ay}), integer={integer}, {:.1} s; wrote {path}",
+        started.elapsed().as_secs_f64()
+    );
 }
 
 /// `P1b`: the estimator's **corner-error floor**, as a distribution rather than
@@ -1158,7 +1539,9 @@ fn run_metacal(args: &[String]) {
         .unwrap_or(4.2);
 
     if field_reps > 0 {
-        run_metacal_field(&case, &cfgnames, &deltas, field_reps, pedestal, noise, prefix);
+        run_metacal_field(
+            &case, &cfgnames, &deltas, field_reps, pedestal, noise, prefix,
+        );
         return;
     }
 
@@ -1347,13 +1730,7 @@ fn mc_row(
     format!(
         "{case},{cfgname},{i},{j},{span},{d:.9},{l0:.10},{:.9},{:.6},{:.6},\
 {:.4},{},{:.2},{:.5},{lps},{lms},{r_two},{r_plus},{r_minus},{rps},{ups},{rms_},{ums},{pw},{ph}",
-        base.fit.r,
-        base.fit.ax,
-        base.fit.ay,
-        base.rms,
-        base.used,
-        base.lever_rms,
-        base.peak_mean
+        base.fit.r, base.fit.ax, base.fit.ay, base.rms, base.used, base.lever_rms, base.peak_mean
     )
 }
 
@@ -1465,11 +1842,221 @@ l_plus,l_minus,r_two,r_plus,r_minus,rms_plus,used_plus,rms_minus,used_minus,plan
             for r in rows {
                 let _ = writeln!(out, "{r}");
             }
-            eprintln!("[mc-field/{cfgname}] rep {rep} done ({:.1} s)", t0.elapsed().as_secs_f64());
+            eprintln!(
+                "[mc-field/{cfgname}] rep {rep} done ({:.1} s)",
+                t0.elapsed().as_secs_f64()
+            );
         }
     }
     let _ = out.flush();
     eprintln!("wrote {path}");
+}
+
+fn field_probe_row(
+    arm: &str,
+    case: &str,
+    rep: usize,
+    truth: Fit,
+    stage: &Option<Stage>,
+    w: usize,
+    h: usize,
+) -> String {
+    match stage {
+        Some(stage) => format!(
+            "{arm},{case},{rep},{:.9},{:.6},{:.6},{:.9},{:.9},{:.6},{:.6},{:.6},{:.6},{:.6},{},{}",
+            truth.g,
+            truth.ax,
+            truth.ay,
+            stage.fit.g,
+            stage.fit.r,
+            stage.fit.ax,
+            stage.fit.ay,
+            stage.fit.g.ln_1p() / truth.g.ln_1p(),
+            align::corner_err(&stage.fit, &truth, w, h),
+            stage.rms,
+            stage.used,
+            stage.total,
+        ),
+        None => format!(
+            "{arm},{case},{rep},{:.9},{:.6},{:.6},,,,,,,,0,0",
+            truth.g, truth.ax, truth.ay
+        ),
+    }
+}
+
+/// M78's interpolator-free controls for both arms.
+///
+/// `blur` renders a common continuous field with distinct analytic native
+/// Gaussian PSFs, then applies Arm A's discrete cross-filter. `phase` renders
+/// the treated moving image directly at the composed transform and therefore
+/// contains no geometric resampling operation.
+fn run_field_probe(args: &[String]) {
+    let prefix = &args[2];
+    let treatment = arg_val(args, "--treatment").unwrap_or_else(|| "blur".into());
+    assert!(
+        treatment == "blur" || treatment == "phase",
+        "--treatment must be blur or phase"
+    );
+    let cfgname = arg_val(args, "--cfg").unwrap_or_else(|| "m10".into());
+    let cfg = cfg_by_name(&cfgname);
+    let reps: usize = arg_val(args, "--reps")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(12);
+    let noise: f32 = arg_val(args, "--noise")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(4.2);
+    let native_reference: f32 = arg_val(args, "--native-ref")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(0.5);
+    let native_moving: f32 = arg_val(args, "--native-mov")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(1.5);
+    let ax: f32 = arg_val(args, "--ax")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(4.5);
+    let ay: f32 = arg_val(args, "--ay")
+        .and_then(|value| value.parse().ok())
+        .unwrap_or(-3.5);
+    let scales = parse_float_list(
+        &arg_val(args, "--scales").unwrap_or_else(|| "0.0001,0.0002,0.0004,0.0008".into()),
+    );
+    assert!(!scales.is_empty(), "empty scale ladder");
+
+    let (w, h) = (3516usize, 2344usize);
+    let spots = tile_grid_m(
+        &Plane { d: vec![], w, h },
+        cfg.fine_tile,
+        cfg.fine_grid.0,
+        cfg.fine_grid.1,
+        cfg.margin,
+    )
+    .expect("field grid");
+    let phase_plant = Fit {
+        g: 0.0,
+        r: 0.0,
+        ax,
+        ay,
+    };
+    let path = format!("data/{prefix}-field.csv");
+    let mut output =
+        std::io::BufWriter::new(std::fs::File::create(&path).expect("create field CSV"));
+    let _ = writeln!(
+        output,
+        "arm,case,rep,g_true,ax_true,ay_true,g,rot,ax,ay,q,corner_err,rms,used,total"
+    );
+
+    let started = Instant::now();
+    for rep in 0..reps {
+        let field = field::Field::new(384, 1.0 / 220.0, 1.0 / 2.6, 0x78F1E1D0 ^ rep as u64);
+        let reference_sigma = if treatment == "blur" {
+            native_reference
+        } else {
+            0.0
+        };
+        let reference = field.render_blurred(
+            w,
+            h,
+            None,
+            reference_sigma,
+            900.0,
+            3000.0,
+            noise,
+            0x7851 ^ rep as u64,
+        );
+        let reference_pyramid = build_pyramid(&reference, &cfg);
+        let rows: Vec<String> = scales
+            .par_iter()
+            .map(|&g| {
+                let mut rng = synth::Rng(0x78B0B ^ ((rep as u64) << 8) ^ g.to_bits() as u64);
+                let truth = Fit {
+                    g,
+                    r: 0.0,
+                    ax: 2.0 * rng.normal(),
+                    ay: 2.0 * rng.normal(),
+                };
+                let moving_sigma = if treatment == "blur" {
+                    native_moving
+                } else {
+                    0.0
+                };
+                let moving = field.render_blurred(
+                    w,
+                    h,
+                    Some(truth),
+                    moving_sigma,
+                    900.0,
+                    3000.0,
+                    noise,
+                    0x7852 ^ rep as u64,
+                );
+                let moving_pyramid = build_pyramid(&moving, &cfg);
+                let raw = align_with(
+                    &reference_pyramid,
+                    &moving_pyramid,
+                    &reference,
+                    &moving,
+                    &spots,
+                    &cfg,
+                );
+
+                let treated = if treatment == "blur" {
+                    let sigmas = vec![(native_moving, native_reference); spots.len()];
+                    align_with_blur(
+                        &reference_pyramid,
+                        &moving_pyramid,
+                        &reference,
+                        &moving,
+                        &spots,
+                        &cfg,
+                        &sigmas,
+                    )
+                } else {
+                    let composed = compose(&[truth, phase_plant]);
+                    let shifted = field.render(
+                        w,
+                        h,
+                        Some(composed),
+                        900.0,
+                        3000.0,
+                        noise,
+                        0x7852 ^ rep as u64,
+                    );
+                    let shifted_pyramid = build_pyramid(&shifted, &cfg);
+                    let mut measured = align_with(
+                        &reference_pyramid,
+                        &shifted_pyramid,
+                        &reference,
+                        &shifted,
+                        &spots,
+                        &cfg,
+                    );
+                    if let Some(stage) = &mut measured {
+                        stage.fit = remove_known_transform(stage.fit, phase_plant);
+                    }
+                    measured
+                };
+                format!(
+                    "{}\n{}",
+                    field_probe_row(&treatment, "raw", rep, truth, &raw, w, h),
+                    field_probe_row(&treatment, "treated", rep, truth, &treated, w, h)
+                )
+            })
+            .collect();
+        for row in rows {
+            let _ = writeln!(output, "{row}");
+        }
+        eprintln!(
+            "[field/{treatment}] rep {}/{} in {:.1} s",
+            rep + 1,
+            reps,
+            started.elapsed().as_secs_f64()
+        );
+    }
+    let _ = output.flush();
+    eprintln!(
+        "[field/{treatment}] wrote {path} in {:.1} s",
+        started.elapsed().as_secs_f64()
+    );
 }
 
 fn main() {
@@ -1482,6 +2069,9 @@ fn main() {
         eprintln!("  m12-shrinkage synth <dir-of-ARW> <out-prefix> --case NAME [--n 105] [--flavour warp|integer] [--spans ...] [--direct0]");
         eprintln!("  m12-shrinkage focus <dir-of-ARW> <out-prefix> --case NAME [--tile 96] [--stride 96] [--fmargin 160] [--frozen] [--step 1] [--phase 0]");
         eprintln!("  m23-metacal   metacal <dir-of-ARW> <out-prefix> --case NAME [--cfgs m10] [--spans 1,2] [--deltas 1e-4,...] [--self] [--pedestal P] [--field REPS] [--noise E] [--stride 1] [--limit N]");
+        eprintln!("  m78-blur-eq   blur-eq <dir-of-ARW> <out-prefix> --case NAME --focus CSV [--q RATE] [--spans 1,2] [--self]");
+        eprintln!("  m78-blur-eq   phase <dir-of-ARW> <out-prefix> --case NAME [--ax 4.5] [--ay -3.5] [--integer] [--self]");
+        eprintln!("  m78-blur-eq   field-probe <out-prefix> --treatment blur|phase [--reps 12] [--scales ...]");
         std::process::exit(2);
     }
     match args[1].as_str() {
@@ -1521,9 +2111,60 @@ fn main() {
             assert!(args.len() >= 4, "pairfit needs <dir-a> <dir-b>");
             run_pairfit(&args);
         }
+        "blur-eq" => {
+            assert!(args.len() >= 4, "blur-eq needs <dir> <out-prefix>");
+            run_blur_eq(&args);
+        }
+        "phase" => {
+            assert!(args.len() >= 4, "phase needs <dir> <out-prefix>");
+            run_phase(&args);
+        }
+        "field-probe" => {
+            assert!(args.len() >= 3, "field-probe needs <out-prefix>");
+            run_field_probe(&args);
+        }
         other => {
             eprintln!("unknown mode {other}");
             std::process::exit(2);
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn assert_fit_close(actual: Fit, expected: Fit) {
+        assert!((actual.g - expected.g).abs() < 2e-6);
+        assert!((actual.r - expected.r).abs() < 2e-6);
+        assert!((actual.ax - expected.ax).abs() < 2e-5);
+        assert!((actual.ay - expected.ay).abs() < 2e-5);
+    }
+
+    #[test]
+    fn removing_a_composed_phase_plant_recovers_the_original_fit() {
+        let truth = Fit {
+            g: -0.0017,
+            r: 0.0003,
+            ax: -2.4,
+            ay: 1.9,
+        };
+        for plant in [
+            Fit {
+                g: 0.0,
+                r: 0.0,
+                ax: 4.5,
+                ay: -3.5,
+            },
+            Fit {
+                g: 0.0,
+                r: 0.0,
+                ax: -4.5,
+                ay: 3.5,
+            },
+        ] {
+            let measured = compose(&[truth, plant]);
+            assert_fit_close(remove_known_transform(measured, plant), truth);
         }
     }
 }

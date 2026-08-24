@@ -1,0 +1,75 @@
+M78 CONTROL AND CONSERVATION ANALYSIS
+
+SELF-PAIR CORNER ERROR (plane px)
+  A-C0         n=52, median=0.009812, p95=0.021414, max=0.023055 -> PASS
+  B-C0         n=52, median=0.017547, p95=0.032370, max=0.044042 -> PASS
+
+INTERPOLATOR-FREE FIELD Q(g)
+
+  A-C1 native sigmas 0.5/1.5:
+    case             g   n   median Q        p25        p75
+    raw        1.0e-04  12   0.987588   0.984385   1.001841
+    raw        2.0e-04  12   1.000946   0.987405   1.003300
+    raw        4.0e-04  12   1.000447   0.994990   1.002203
+    raw        8.0e-04  12   0.998267   0.996819   0.998915
+    treated    1.0e-04  12   0.992008   0.978322   1.000883
+    treated    2.0e-04  12   0.995982   0.989142   1.004144
+    treated    4.0e-04  12   0.998712   0.991897   1.004179
+    treated    8.0e-04  12   0.996837   0.995366   0.998872
+    treated range=0.006704; accuracy=PASS, flatness=PASS
+    treated-minus-raw median-Q range [-0.004963,+0.004420]
+    raw smallest-probe |Q-1|=0.012412; positive mechanism DOES NOT FIRE
+
+  A-C1p native sigmas 1.0/1.0:
+    case             g   n   median Q        p25        p75
+    raw        1.0e-04  12   0.992849   0.984625   1.000625
+    raw        2.0e-04  12   0.998234   0.981656   1.004682
+    raw        4.0e-04  12   1.001175   0.993345   1.004609
+    raw        8.0e-04  12   0.997909   0.995861   0.999547
+    treated    1.0e-04  12   0.993221   0.985750   0.997245
+    treated    2.0e-04  12   0.997904   0.988556   1.004287
+    treated    4.0e-04  12   0.998974   0.992341   1.003673
+    treated    8.0e-04  12   0.996927   0.995623   0.999737
+    treated range=0.005753; accuracy=PASS, flatness=PASS
+    treated-minus-raw median-Q range [-0.002201,+0.000372]
+    raw smallest-probe |Q-1|=0.007151; positive mechanism DOES NOT FIRE
+
+  B-C3 exact composed render:
+    case             g   n   median Q        p25        p75
+    raw        1.0e-04  12   0.984663   0.977355   0.993642
+    raw        2.0e-04  12   1.001003   0.980974   1.013058
+    raw        4.0e-04  12   1.001433   0.997887   1.005798
+    raw        8.0e-04  12   0.999052   0.996188   1.000081
+    treated    1.0e-04  12   1.008315   0.996010   1.037624
+    treated    2.0e-04  12   0.996156   0.986881   1.011608
+    treated    4.0e-04  12   0.999999   0.995282   1.002763
+    treated    8.0e-04  12   1.001365   0.998925   1.001878
+    treated range=0.012158; accuracy=PASS, flatness=PASS
+    treated-minus-raw median-Q range [-0.004847,+0.023651]
+    raw smallest-probe |Q-1|=0.015337; positive mechanism DOES NOT FIRE
+
+CONSERVATION — coffee-bean
+  baseline fixed C_0=3.260389
+  baseline windows n=48, median=2.835638, min=2.606168, max=3.260389; local median=1.181637
+  case                 ok/need    C(0..48)    delta C   denom x  |C-1| improve  windows med   local med
+  A q=1/12           207/207      1.210415  -2.049974  2.693612      +2.049974     1.260290    0.992372
+  A q=1/6 primary    207/207      1.073795  -2.186595  3.036325      +2.186595     1.105110    1.006946
+  A q=1/3            207/207      0.988850  -2.271539  3.297151      +2.249240     0.999053    1.004822
+  A q=2/3            207/207      0.941080  -2.319309  3.464517      +2.201469     0.968732    0.997338
+  B half primary     207/207      2.493648  -0.766741  1.307478      +0.766741     2.234658    1.065493
+  B half mirror      207/207      2.493648  -0.766741  1.307478      +0.766741     2.234658    1.065493
+  B integer          104/104      3.260389  +0.000000  1.000000      +0.000000     2.835637         nan
+  registered A-S1=PASS; B-S1=PASS
+
+PHASE-ARM TRANSFORM COMPARISONS (plane-corner px)
+  primary versus mirror: n=207, median=0.000000000, p95=0.000000000, max=0.056647722
+  integer placebo versus inherited: n=104, median=0.000000000, max=0.000002113
+
+CONSERVATION — 112MSDCF placebo
+  raw=1.048162, half-shift=1.042335, movement=-0.005827, B-C2=PASS
+
+SHORT-EDGE FIT OBSERVABLES
+  case                  n  used med    rms med   peak med
+  inherited           207      90.0   0.535793   0.935340
+  A q=1/6 primary     207      92.0   0.694374   0.995640
+  B half primary      207      91.0   0.533319   0.945860

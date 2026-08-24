@@ -195,6 +195,190 @@ pub fn ncc_tile_full(
     }
 }
 
+fn gaussian_kernel(sigma: f32) -> Vec<f32> {
+    if sigma <= 1e-3 {
+        return vec![1.0];
+    }
+    let radius = (3.0 * sigma).ceil() as i32;
+    let mut kernel: Vec<f32> = (-radius..=radius)
+        .map(|i| (-0.5 * (i as f32 / sigma).powi(2)).exp())
+        .collect();
+    let sum: f32 = kernel.iter().sum();
+    for value in &mut kernel {
+        *value /= sum;
+    }
+    kernel
+}
+
+/// Gaussian-filter one rectangular output region without materialising a
+/// filtered full frame. The requested rectangle is in plane coordinates.
+fn gaussian_region(
+    plane: &Plane,
+    x0: i32,
+    y0: i32,
+    width: usize,
+    height: usize,
+    sigma: f32,
+) -> Vec<f32> {
+    let kernel = gaussian_kernel(sigma);
+    let radius = (kernel.len() / 2) as i32;
+    if radius == 0 {
+        let mut out = vec![0.0; width * height];
+        for y in 0..height {
+            let sy = (y0 + y as i32).clamp(0, plane.h as i32 - 1) as usize;
+            for x in 0..width {
+                let sx = (x0 + x as i32).clamp(0, plane.w as i32 - 1) as usize;
+                out[y * width + x] = plane.d[sy * plane.w + sx];
+            }
+        }
+        return out;
+    }
+
+    // Horizontal filtering is needed for the vertical halo as well as the
+    // requested rows. Keeping only the requested x coordinates is sufficient.
+    let expanded_height = height + 2 * radius as usize;
+    let mut horizontal = vec![0.0f32; width * expanded_height];
+    for ey in 0..expanded_height {
+        let sy = (y0 + ey as i32 - radius).clamp(0, plane.h as i32 - 1) as usize;
+        for x in 0..width {
+            let cx = x0 + x as i32;
+            let mut sum = 0.0f32;
+            for (ki, weight) in kernel.iter().enumerate() {
+                let sx = (cx + ki as i32 - radius).clamp(0, plane.w as i32 - 1) as usize;
+                sum += *weight * plane.d[sy * plane.w + sx];
+            }
+            horizontal[ey * width + x] = sum;
+        }
+    }
+
+    let mut out = vec![0.0f32; width * height];
+    for y in 0..height {
+        for x in 0..width {
+            let mut sum = 0.0f32;
+            for (ki, weight) in kernel.iter().enumerate() {
+                sum += *weight * horizontal[(y + ki) * width + x];
+            }
+            out[y * width + x] = sum;
+        }
+    }
+    out
+}
+
+/// The R5 fine-stage correlation. `reference_sigma` and `moving_sigma` are the
+/// *additional* cross-blurs applied to the two inputs.
+#[allow(clippy::too_many_arguments)]
+pub fn ncc_tile_blurred(
+    rf: &Plane,
+    mv: &Plane,
+    tx: usize,
+    ty: usize,
+    ts: usize,
+    px: f32,
+    py: f32,
+    radius: i32,
+    reference_sigma: f32,
+    moving_sigma: f32,
+) -> TileMeas {
+    if reference_sigma <= 1e-3 && moving_sigma <= 1e-3 {
+        return ncc_tile_full(rf, mv, tx, ty, ts, px, py, radius);
+    }
+    let fail = |status, contrast| TileMeas {
+        status,
+        contrast,
+        dx: f32::NAN,
+        dy: f32::NAN,
+        peak: f32::NAN,
+    };
+    let mut a = gaussian_region(rf, tx as i32, ty as i32, ts, ts, reference_sigma);
+    let mean = a.iter().sum::<f32>() / a.len() as f32;
+    let mut sa = 0.0f32;
+    for value in &mut a {
+        *value -= mean;
+        sa += *value * *value;
+    }
+    let contrast = sa / a.len() as f32;
+    if contrast <= 4.0 {
+        return fail(TileStatus::LowContrast, contrast);
+    }
+
+    let (bx, by) = (px.round() as i32, py.round() as i32);
+    let n = (2 * radius + 1) as usize;
+    let side = ts + 2 * radius as usize;
+    let moving = gaussian_region(
+        mv,
+        tx as i32 + bx - radius,
+        ty as i32 + by - radius,
+        side,
+        side,
+        moving_sigma,
+    );
+    let mut scores = vec![f32::NEG_INFINITY; n * n];
+    let (mut best, mut bi, mut bj) = (f32::NEG_INFINITY, 0usize, 0usize);
+
+    for j in -radius..=radius {
+        for i in -radius..=radius {
+            let ox = tx as i32 + bx + i;
+            let oy = ty as i32 + by + j;
+            if ox < 0 || oy < 0 || ox as usize + ts > mv.w || oy as usize + ts > mv.h {
+                continue;
+            }
+            let patch_x = (i + radius) as usize;
+            let patch_y = (j + radius) as usize;
+            let mut mb = 0.0f32;
+            for y in 0..ts {
+                let row = (patch_y + y) * side + patch_x;
+                mb += moving[row..row + ts].iter().sum::<f32>();
+            }
+            mb /= (ts * ts) as f32;
+
+            let (mut num, mut sb) = (0.0f32, 0.0f32);
+            for y in 0..ts {
+                let row = (patch_y + y) * side + patch_x;
+                for x in 0..ts {
+                    let bv = moving[row + x] - mb;
+                    num += a[y * ts + x] * bv;
+                    sb += bv * bv;
+                }
+            }
+            if sb <= 1e-6 {
+                continue;
+            }
+            let score = num / (sa * sb).sqrt();
+            let (ii, jj) = ((i + radius) as usize, (j + radius) as usize);
+            scores[jj * n + ii] = score;
+            if score > best {
+                best = score;
+                bi = ii;
+                bj = jj;
+            }
+        }
+    }
+
+    if !best.is_finite() {
+        return fail(TileStatus::Oob, contrast);
+    }
+    if best < 0.5 {
+        let mut measurement = fail(TileStatus::LowPeak, contrast);
+        measurement.peak = best;
+        return measurement;
+    }
+    if bi == 0 || bj == 0 || bi == n - 1 || bj == n - 1 {
+        let mut measurement = fail(TileStatus::Border, contrast);
+        measurement.peak = best;
+        return measurement;
+    }
+    let score = |i: usize, j: usize| scores[j * n + i];
+    let ox = parabola(score(bi - 1, bj), score(bi, bj), score(bi + 1, bj));
+    let oy = parabola(score(bi, bj - 1), score(bi, bj), score(bi, bj + 1));
+    TileMeas {
+        status: TileStatus::Ok,
+        contrast,
+        dx: (bx + bi as i32 - radius) as f32 + ox,
+        dy: (by + bj as i32 - radius) as f32 + oy,
+        peak: best,
+    }
+}
+
 fn solve4(mut m: [[f64; 5]; 4]) -> Option<[f64; 4]> {
     for c in 0..4 {
         let mut p = c;
@@ -402,6 +586,130 @@ pub fn fit_stage_at(
     })
 }
 
+/// Fine-stage R5 fit with one cross-blur pair per tile. The coarse stage stays
+/// on the inherited path and supplies only `seed`.
+pub fn fit_stage_blurred_at(
+    rf: &Plane,
+    mv: &Plane,
+    tile: usize,
+    spots: &[(usize, usize)],
+    radius: i32,
+    seed: Option<Fit>,
+    sigmas: &[(f32, f32)],
+) -> Option<Stage> {
+    assert_eq!(spots.len(), sigmas.len(), "one blur pair per tile");
+    let (cx, cy) = (rf.w as f32 * 0.5, rf.h as f32 * 0.5);
+
+    let meas: Vec<(f32, f32, TileMeas)> = spots
+        .par_iter()
+        .enumerate()
+        .map(|(index, &(tx, ty))| {
+            let (mx, my) = (tx as f32 + tile as f32 * 0.5, ty as f32 + tile as f32 * 0.5);
+            let (px, py) = seed
+                .map(|value| value.at(mx, my, cx, cy))
+                .unwrap_or((0.0, 0.0));
+            let (reference_sigma, moving_sigma) = sigmas[index];
+            let measurement = if tx + tile <= rf.w && ty + tile <= rf.h {
+                ncc_tile_blurred(
+                    rf,
+                    mv,
+                    tx,
+                    ty,
+                    tile,
+                    px,
+                    py,
+                    radius,
+                    reference_sigma,
+                    moving_sigma,
+                )
+            } else {
+                TileMeas {
+                    status: TileStatus::Oob,
+                    contrast: f32::NAN,
+                    dx: f32::NAN,
+                    dy: f32::NAN,
+                    peak: f32::NAN,
+                }
+            };
+            (mx - cx, my - cy, measurement)
+        })
+        .collect();
+
+    let mut obs: Vec<Obs> = Vec::new();
+    let mut peaks: Vec<f32> = Vec::new();
+    for (ux, uy, measurement) in &meas {
+        if measurement.status == TileStatus::Ok {
+            obs.push(Obs {
+                ux: *ux,
+                uy: *uy,
+                dx: measurement.dx,
+                dy: measurement.dy,
+            });
+            peaks.push(measurement.peak);
+        }
+    }
+
+    let total = spots.len();
+    if obs.len() < 8 {
+        return None;
+    }
+    let first_fit = fit_similarity(&obs)?;
+    let residual = residuals(&obs, &first_fit);
+    let raw_n = obs.len();
+
+    let mut sorted = residual.clone();
+    sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let median = sorted[sorted.len() / 2];
+    let mut deviations: Vec<f32> = residual
+        .iter()
+        .map(|value| (value - median).abs())
+        .collect();
+    deviations.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let mad = deviations[deviations.len() / 2].max(1e-3);
+    let cut = median + 3.0 * 1.4826 * mad;
+
+    let keep_mask: Vec<bool> = residual.iter().map(|value| *value <= cut).collect();
+    let kept: Vec<Obs> = obs
+        .iter()
+        .zip(&keep_mask)
+        .filter(|(_, keep)| **keep)
+        .map(|(observation, _)| *observation)
+        .collect();
+    if kept.len() < 8 {
+        return None;
+    }
+    let fit = fit_similarity(&kept)?;
+    let kept_residual = residuals(&kept, &fit);
+    let rms = (kept_residual.iter().map(|value| value * value).sum::<f32>()
+        / kept_residual.len() as f32)
+        .sqrt();
+    let lever_rms = (kept
+        .iter()
+        .map(|observation| {
+            (observation.ux * observation.ux + observation.uy * observation.uy) as f64
+        })
+        .sum::<f64>()
+        / kept.len() as f64)
+        .sqrt() as f32;
+    let kept_peaks: Vec<f32> = peaks
+        .iter()
+        .zip(&keep_mask)
+        .filter(|(_, keep)| **keep)
+        .map(|(peak, _)| *peak)
+        .collect();
+    let peak_mean = kept_peaks.iter().sum::<f32>() / kept_peaks.len() as f32;
+
+    Some(Stage {
+        fit,
+        used: kept.len(),
+        total,
+        rms,
+        raw_n,
+        lever_rms,
+        peak_mean,
+    })
+}
+
 /// Estimator configuration. `AlignCfg::m3()` is exactly M3's estimator.
 #[derive(Clone, Debug)]
 pub struct AlignCfg {
@@ -530,6 +838,51 @@ pub fn align_with(
     fit_stage_at(rf, mv, cfg.fine_tile, spots, cfg.fine_radius, seed)
 }
 
+/// R5 alignment: inherited coarse capture followed by cross-blurred fine
+/// correlation. `sigmas[t]` is `(reference_add, moving_add)` for tile `t`.
+pub fn align_with_blur(
+    rp: &Pyramid,
+    mp: &Pyramid,
+    rf: &Plane,
+    mv: &Plane,
+    spots: &[(usize, usize)],
+    cfg: &AlignCfg,
+    sigmas: &[(f32, f32)],
+) -> Option<Stage> {
+    let mut seed: Option<Fit> = None;
+    for (level_index, factor) in rp.factors.iter().enumerate() {
+        let (reference, moving) = (&rp.levels[level_index], &mp.levels[level_index]);
+        let coarse_spots = tile_grid_m(
+            reference,
+            cfg.coarse_tile,
+            cfg.coarse_grid.0,
+            cfg.coarse_grid.1,
+            cfg.coarse_radius as usize + 4,
+        )?;
+        let level_seed = seed.map(|value| Fit {
+            ax: value.ax / *factor as f32,
+            ay: value.ay / *factor as f32,
+            g: value.g,
+            r: value.r,
+        });
+        let stage = fit_stage_at(
+            reference,
+            moving,
+            cfg.coarse_tile,
+            &coarse_spots,
+            cfg.coarse_radius,
+            level_seed,
+        )?;
+        seed = Some(Fit {
+            ax: stage.fit.ax * *factor as f32,
+            ay: stage.fit.ay * *factor as f32,
+            g: stage.fit.g,
+            r: stage.fit.r,
+        });
+    }
+    fit_stage_blurred_at(rf, mv, cfg.fine_tile, spots, cfg.fine_radius, seed, sigmas)
+}
+
 /// Corner error between two similarities, in plane px: the largest difference in
 /// where they send the four plane corners. This is the unit every M10 figure is
 /// quoted in.
@@ -574,5 +927,77 @@ pub fn compose(steps: &[Fit]) -> Fit {
         ay: ai as f32,
         g: (tr - 1.0) as f32,
         r: ti as f32,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn gaussian_region_matches_direct_two_dimensional_convolution() {
+        let plane = Plane {
+            w: 9,
+            h: 7,
+            d: (0..63)
+                .map(|index| {
+                    let x = index % 9;
+                    let y = index / 9;
+                    (x * x + 3 * y + x * y) as f32
+                })
+                .collect(),
+        };
+        let (x0, y0, width, height, sigma) = (2, 1, 4, 3, 1.3);
+        let kernel = gaussian_kernel(sigma);
+        let radius = (kernel.len() / 2) as i32;
+        let actual = gaussian_region(&plane, x0, y0, width, height, sigma);
+        for y in 0..height {
+            for x in 0..width {
+                let mut expected = 0.0f32;
+                for (ky, wy) in kernel.iter().enumerate() {
+                    let sy =
+                        (y0 + y as i32 + ky as i32 - radius).clamp(0, plane.h as i32 - 1) as usize;
+                    for (kx, wx) in kernel.iter().enumerate() {
+                        let sx = (x0 + x as i32 + kx as i32 - radius).clamp(0, plane.w as i32 - 1)
+                            as usize;
+                        expected += *wy * *wx * plane.d[sy * plane.w + sx];
+                    }
+                }
+                assert!((actual[y * width + x] - expected).abs() < 2e-5);
+            }
+        }
+    }
+
+    #[test]
+    fn zero_blur_correlation_is_the_inherited_correlation() {
+        let reference = Plane {
+            w: 40,
+            h: 40,
+            d: (0..1600)
+                .map(|index| {
+                    let x = (index % 40) as f32;
+                    let y = (index / 40) as f32;
+                    100.0 * (0.31 * x).sin() + 70.0 * (0.23 * y).cos() + x * y
+                })
+                .collect(),
+        };
+        let moving = Plane {
+            w: 40,
+            h: 40,
+            d: (0..1600)
+                .map(|index| {
+                    let x: usize = index % 40;
+                    let y: usize = index / 40;
+                    reference.d[y.saturating_sub(1) * 40 + (x + 1).min(39)]
+                })
+                .collect(),
+        };
+        let baseline = ncc_tile_full(&reference, &moving, 10, 10, 16, 0.0, 0.0, 3);
+        let blurred = ncc_tile_blurred(&reference, &moving, 10, 10, 16, 0.0, 0.0, 3, 0.0, 0.0);
+        assert_eq!(blurred.status, baseline.status);
+        assert_eq!(blurred.dx, baseline.dx);
+        assert_eq!(blurred.dy, baseline.dy);
+        assert_eq!(blurred.peak, baseline.peak);
+        assert_eq!(blurred.contrast, baseline.contrast);
     }
 }

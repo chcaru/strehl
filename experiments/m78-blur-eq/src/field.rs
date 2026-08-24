@@ -62,6 +62,25 @@ impl Field {
         v
     }
 
+    /// Evaluate the continuous field after an analytic circular Gaussian blur.
+    ///
+    /// A sinusoid at radial frequency `nu` is attenuated by
+    /// `exp(-2*pi^2*sigma^2*nu^2)`. This supplies a defocus mismatch without
+    /// putting a geometric interpolator anywhere in the control path.
+    fn at_blurred(&self, x: f32, y: f32, sigma: f32) -> f32 {
+        if sigma <= 1e-6 {
+            return self.at(x, y);
+        }
+        let mut value = 0.0f32;
+        let factor = -2.0 * std::f32::consts::PI.powi(2) * sigma * sigma;
+        for &(u, v, phase, amplitude) in &self.comps {
+            let attenuation = (factor * (u * u + v * v)).exp();
+            value +=
+                amplitude * attenuation * (std::f32::consts::TAU * (u * x + v * y) + phase).cos();
+        }
+        value
+    }
+
     /// Sample the field on the integer grid, optionally transformed by `t`.
     ///
     /// `t` maps reference plane coordinates to moving plane coordinates, so the
@@ -83,6 +102,23 @@ impl Field {
         noise: f32,
         rng_seed: u64,
     ) -> Plane {
+        self.render_blurred(w, h, t, 0.0, scale, offset, noise, rng_seed)
+    }
+
+    /// Point-sample a geometrically transformed, analytically Gaussian-blurred
+    /// field. Geometry and blur are both evaluated from the continuous source.
+    #[allow(clippy::too_many_arguments)]
+    pub fn render_blurred(
+        &self,
+        w: usize,
+        h: usize,
+        t: Option<Fit>,
+        sigma: f32,
+        scale: f32,
+        offset: f32,
+        noise: f32,
+        rng_seed: u64,
+    ) -> Plane {
         let (cx, cy) = (w as f32 * 0.5, h as f32 * 0.5);
         let mut d = vec![0f32; w * h];
         d.par_chunks_mut(w).enumerate().for_each(|(y, row)| {
@@ -92,7 +128,7 @@ impl Field {
                     Some(f) => f.inv_at(x as f32, y as f32, cx, cy),
                     None => (x as f32, y as f32),
                 };
-                let v = offset + scale * self.at(sx, sy);
+                let v = offset + scale * self.at_blurred(sx, sy, sigma);
                 *o = if noise > 0.0 {
                     v + noise * rng.normal()
                 } else {

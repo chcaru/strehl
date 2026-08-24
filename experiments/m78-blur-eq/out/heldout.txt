@@ -1,0 +1,36 @@
+M78 FIXED HELD-OUT GATE — coffee-bean
+  test=125 inherited direct edges, span >= 40, used >= 12, spans 40..72
+  repaired edges in test=0
+  unrestricted baseline best E*=6.758243 px (S4-poly6 / span >= 32)
+  reproduction versus 6.758: PASS
+
+ARM A — blur-equalised span-1/2
+  admissible rows=72; best E*=7.266073 px (S4-poly2 / all measurable)
+  train edges=1336, treated=207, cycle rank=1232, coverage=105/105
+  fixed test n=125, robust tail n=35; median=7.435801, p90=13.966347, max=24.191797
+  paired untreated E*=7.241426; delta=+0.024647
+  strict <6.758: FAIL; historical <= 6.358: FAIL
+  top six admissible rows:
+     7.266073  S4-poly2       all measurable     treated=207 cycle=1232
+     7.887656  S5-centre4     all measurable     treated=207 cycle=1232
+     8.118375  S4-poly6       all measurable     treated=207 cycle=1232
+     8.177058  S3-ba-count    all measurable     treated=207 cycle=1232
+     8.236751  S6-ba-smooth   all measurable     treated=207 cycle=1232
+     8.236754  S3-ba-unit     all measurable     treated=207 cycle=1232
+
+ARM B — half-shift span-1/2
+  admissible rows=72; best E*=7.244330 px (S4-poly2 / all measurable)
+  train edges=1336, treated=207, cycle rank=1232, coverage=105/105
+  fixed test n=125, robust tail n=35; median=7.473442, p90=13.953907, max=24.225761
+  paired untreated E*=7.241426; delta=+0.002904
+  strict <6.758: FAIL; historical <= 6.358: FAIL
+  top six admissible rows:
+     7.244330  S4-poly2       all measurable     treated=207 cycle=1232
+     7.846018  S5-centre4     all measurable     treated=207 cycle=1232
+     8.083026  S4-poly6       all measurable     treated=207 cycle=1232
+     8.203396  S6-ba-smooth   all measurable     treated=207 cycle=1232
+     8.203399  S3-ba-unit     all measurable     treated=207 cycle=1232
+     8.298421  S4-poly4       all measurable     treated=207 cycle=1232
+
+  wrote data/heldout-candidates.csv (408 rows)
+  wall clock=34.6 s

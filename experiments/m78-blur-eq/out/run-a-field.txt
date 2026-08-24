@@ -1,0 +1,13 @@
+[field/blur] rep 1/12 in 8.5 s
+[field/blur] rep 2/12 in 17.3 s
+[field/blur] rep 3/12 in 25.9 s
+[field/blur] rep 4/12 in 34.4 s
+[field/blur] rep 5/12 in 42.9 s
+[field/blur] rep 6/12 in 51.5 s
+[field/blur] rep 7/12 in 60.2 s
+[field/blur] rep 8/12 in 69.0 s
+[field/blur] rep 9/12 in 77.6 s
+[field/blur] rep 10/12 in 86.1 s
+[field/blur] rep 11/12 in 94.7 s
+[field/blur] rep 12/12 in 103.4 s
+[field/blur] wrote data/a-mismatch-field.csv in 103.4 s

@@ -1,0 +1,7 @@
+decoded 105 frames to 3516x2344 green planes in 2128 ms (20.3 ms/frame)
+[phase/b-primary] shifted 105 planes in 0.4 s
+[phase/b-primary] 50/207 pairs, 0.9 s
+[phase/b-primary] 100/207 pairs, 1.6 s
+[phase/b-primary] 150/207 pairs, 2.6 s
+[phase/b-primary] 200/207 pairs, 2.7 s
+[phase/b-primary] 207 pairs at (4.5,-3.5), integer=false, 2.7 s; wrote data/b-primary-edges.csv
