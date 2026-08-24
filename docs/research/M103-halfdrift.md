@@ -1694,6 +1694,13 @@ cancels in a first difference and twice over in a second, so everything below is
 gauge-invariant. That is a property of the question, not a virtue of the
 instrument.
 
+**Added after the ownership change**, needing no `align.rs`: §18.6 extends the
+same statistic to the **election lag** the mechanism actually runs on, and finds
+the disagreement **nearly flat in lag** — 0.4829 px at lag 1 rising only to
+0.7191 px at lag 8, against 2.83× for a random walk. The jitter is bounded and
+high-frequency, not accumulating. §18.7 records that the lag sweep's first
+control could not fail and how it was replaced.
+
 ### 18.1 Two routes, because one of them needs no truth data
 
 **R1**, as asked: `de(j) = ds(j) − dt(j)`. The truth ladder exists at 39 of 299
@@ -1808,7 +1815,96 @@ a hypothesis and this section did not test it.
   curvature's contribution at 0.0092 px, which is what makes a truth-free jitter
   measurement trustworthy on a curved track.
 
-### 18.6 Reproducing this section
+### 18.6 Election lag — pricing fact 1411's actual mechanism
+
+Fact 1411 argues that at `n_eff = 1` a placement error cannot blur a detailed
+pixel, only displace it, so the predicted signature is local geometric
+incoherence where **adjacent pixels elect different frames**. The severity of
+that mechanism is not set by the lag-1 increment §18.3 reports. It is set by the
+disagreement between the frames adjacent pixels actually elect — and M96
+measured a **25.247% disconnected competitive set** on this stack, so elections
+jump and the operative lag is not always 1.
+
+The same truth-free second difference, taken at spacing `L`, prices it:
+
+| lag `L` | median px | p90 px | max px | ≥1 px | curvature ceiling | ratio |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | 0.4829 | 1.0772 | 9.7069 | 13.8% | 0.0092 | 52.5× |
+| 2 | 0.4635 | 1.2061 | 4.8287 | 16.3% | 0.0368 | 12.6× |
+| 4 | 0.5635 | 1.3982 | 8.8555 | 27.1% | 0.1472 | 3.8× |
+| 8 | 0.7191 | 2.2032 | 18.0753 | 37.1% | 0.5888 | 1.2× |
+| 16 | 1.6506 | 3.4737 | 11.7409 | 72.7% | 2.3552 | 0.7× |
+| 32 | 4.4863 | 8.3860 | 11.0251 | 83.0% | 9.4208 | 0.5× |
+| 64 | 11.6812 | 25.2607 | 27.3123 | 93.0% | 37.6832 | 0.3× |
+
+`L = 1` reproduces §18.3's 0.4829 exactly, which is the internal consistency
+check that the lag generalisation is the same statistic.
+
+**The ceiling column is what makes this readable, and it is what kills the
+bottom half of the table.** A smooth arc's second difference at spacing `L`
+grows as `f''·L²`, so P39's 0.0092 px bound scales to 0.59 px at `L = 8` and
+37.7 px at `L = 64`. Beyond `L ≈ 8` the statistic can no longer separate genuine
+disagreement from the breathing curve the stack really has, and the rows below
+that line are quoted only to show where the method dies. **Do not read the
+`L = 32` and `L = 64` rows as measurements of jitter.** They are dominated by
+real, correct geometry.
+
+Within the trustworthy band the result is the interesting one:
+
+> **Disagreement is nearly flat in lag.** Median rises only 1.49× from `L = 1`
+> to `L = 8` (0.4829 → 0.7191 px), against **2.83×** for a random walk and
+> **8×** for a linear drift — and a bounded part of even that 1.49× is the
+> curvature ceiling, which reaches 0.59 px by `L = 8`.
+
+So the jitter is a **bounded, high-frequency disturbance, not an accumulating
+one**. Two pixels electing frames anywhere from 1 to 8 apart inherit placements
+disagreeing by ~0.5–0.7 px at the median and 1.1–2.2 px at p90. That is the
+number fact 1411's mechanism runs on, and it does not get worse with election
+distance in the range where elections plausibly land.
+
+### 18.7 A control that could not fail, caught and replaced
+
+The first version of this lag sweep detrended `e(j)` with a degree-4 polynomial
+fit and used, as its control, a "smooth track" **built from that same fit**. It
+read exactly `0.0000` at every one of eight lags. That is not a passing control;
+it is a polynomial subtracted from itself, and it is the identical failure to
+`perspan.py`'s bijection from §16 — the second time this milestone has built a
+control whose output was determined by construction.
+
+Replacing the control track with a genuinely different smooth curve (degree 8
+through the same rungs, detrended by degree 4) made it **fail informatively**:
+trend-model choice alone contributed up to **0.7675 px at `L = 1`** and
+**7.4709 px at `L = 64`** — comparable to the signal being claimed. That is a
+real defect in the polynomial route, and it is why §18.6 above is computed
+truth-free and fit-free instead, in the manner of §18.3's R2.
+
+**The headline numbers of §18.3 were never exposed to this**, because R2 uses no
+truth data and no fit at all. The contamination was confined to the route that
+did, and the fix was to stop using that route rather than to improve its fit.
+
+The generalisable form, and it now has two instances in one milestone:
+
+> **A control built out of the same object as the treatment cannot fail.**
+> Before trusting a control that reads clean, ask what it would take to make it
+> read dirty. If no answer exists, it is decoration. `0.0000` at eight
+> consecutive lags should have been read as an alarm, not a pass.
+
+### 18.8 Candidate facts from the lag sweep
+
+- **P40** (MEASURED) Placement disagreement on `bee-3-cpl` is nearly flat in
+  election lag over the band where the statistic is valid: median 0.4829 px at
+  `L = 1` rising only to 0.7191 px at `L = 8` (1.49×), against 2.83× for a random
+  walk. The jitter is bounded and high-frequency, not accumulating.
+- **P41** (DERIVED) The curvature ceiling scales as `f''·L²`, reaching 0.5888 px
+  at `L = 8` and 37.68 px at `L = 64`, so a truth-free lag sweep on this stack is
+  informative only to `L ≈ 8`. Longer-lag disagreement cannot be separated from
+  real breathing without truth data denser than the 39-rung ladder.
+- **P42** (MEASURED) Detrending against a fitted truth model is not safe for this
+  question: swapping a degree-8 fit for a degree-4 one moves the apparent
+  disagreement by up to 0.7675 px at `L = 1` and 7.4709 px at `L = 64`, which is
+  the same order as the effect. §18.3's headline avoids this by using no fit.
+
+### 18.9 Reproducing this section
 
 ```powershell
 $env:PYTHONIOENCODING='utf-8'
@@ -1820,6 +1916,9 @@ python src\jitter.py data\truth-dense.json `
 
 Runs in seconds and exits non-zero if any of the three controls fails. The solve
 is the shipped `deep()` configuration gauged at reference 149; the gauge is
-recorded for provenance only, since §18 is gauge-invariant by construction.
+recorded for provenance only, since §18 is gauge-invariant by construction. The
+lag sweep of §18.6 prints its curvature ceiling beside every row so the lag at
+which the statistic stops being valid is visible in the output rather than only
+in this prose.
 
 

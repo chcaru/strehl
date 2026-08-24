@@ -22,3 +22,15 @@ R1  FIRST DIFFERENCE OF THE ERROR  e(j) = s(j) - t_hat(j)
   truth fit degree 3 (resid 2.46 px)   0.5560   1.5405   2.2494    8.9838    0.540    0.279
   truth fit degree 4 (resid 1.92 px)   0.5624   1.4945   2.1825    8.7791    0.540    0.279
   truth fit degree 6 (resid 2.07 px)   0.5669   1.4990   2.0635    8.1075    0.560    0.282
+
+R3  DISAGREEMENT AT ELECTION LAG L  (truth-free: s(j+L) - 2s(j) + s(j-L))
+                 median      p90       max    >=1px | curv-ceil    ratio
+  L = 1          0.4829   1.0772    9.7069    0.138 |    0.0092    52.5x
+  L = 2          0.4635   1.2061    4.8287    0.163 |    0.0368    12.6x
+  L = 4          0.5635   1.3982    8.8555    0.271 |    0.1472     3.8x
+  L = 8          0.7191   2.2032   18.0753    0.371 |    0.5888     1.2x
+  L = 16         1.6506   3.4737   11.7409    0.727 |    2.3552     0.7x
+  L = 32         4.4863   8.3860   11.0251    0.830 |    9.4208     0.5x
+  L = 64        11.6812  25.2607   27.3123    0.930 |   37.6832     0.3x
+  -> trustworthy while ratio >> 1; curvature dominates beyond that
+  -> lag readout PASS at L=1 (52x headroom)

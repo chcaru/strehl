@@ -199,13 +199,45 @@ def main():
         print(row("truth fit degree %d (resid %.2f px)" % (deg, res), v))
         r1["deg%d" % deg] = stats(v)
 
+    # ---------------- R3: disagreement at election lag ----------------
+    # Fact 1411's mechanism needs the placement difference between the frames
+    # that ADJACENT PIXELS elect, which is a lag-1 quantity only if adjacent
+    # pixels elect adjacent frames. M96 measured a 25.247% disconnected
+    # competitive set on this stack, so elections jump and the relevant lag is
+    # not always 1. This prices the hypothesis across the range.
+    print("\nR3  DISAGREEMENT AT ELECTION LAG L  (truth-free: s(j+L) - 2s(j) + s(j-L))")
+    print("  %-12s %8s %8s %9s %8s | %9s %8s"
+          % ("", "median", "p90", "max", ">=1px", "curv-ceil", "ratio"))
+    ks = np.array(sorted(s))
+    yv = np.array([s[k] for k in ks])
+    r3 = {}
+    for L in (1, 2, 4, 8, 16, 32, 64):
+        v = np.abs(yv[2 * L:] - 2.0 * yv[L:-L] + yv[:-2 * L]) * R_PLANE
+        # DERIVED: a smooth arc with this stack's measured curvature contributes
+        # f'' * L^2 to a second difference at spacing L, with f'' = 8d/N^2 from
+        # C1's 46.1 px chord departure. Beyond the lag where the ceiling
+        # approaches the signal, this statistic can no longer separate real
+        # disagreement from the breathing curve itself, and says so.
+        ceil = 0.0092 * L * L
+        st = stats(v)
+        st["curvature_ceiling_px"] = ceil
+        st["ratio_to_ceiling"] = st["median_px"] / ceil
+        r3["L%d" % L] = st
+        print("  L = %-8d %8.4f %8.4f %9.4f %8.3f | %9.4f %7.1fx"
+              % (L, st["median_px"], st["p90_px"], st["max_px"],
+                 st["frac_ge_1p0"], ceil, st["ratio_to_ceiling"]))
+    lag_ok = bool(r3["L1"]["ratio_to_ceiling"] > 10.0)
+    print("  -> trustworthy while ratio >> 1; curvature dominates beyond that")
+    print("  -> lag readout %s at L=1 (%.0fx headroom)"
+          % ("PASS" if lag_ok else "FAIL", r3["L1"]["ratio_to_ceiling"]))
+
     out = {"controls": {"placebo_linear": stats(a_v),
                         "positive_planted": stats(b_v),
                         "specificity_curvature": stats(c_v),
                         "positive_recovery_pct": 100.0 * got / want,
                         "pass": ok},
            "R2_all": stats(d2s), "R2_near": stats(near), "R2_far": stats(far),
-           "R1": r1,
+           "R1": r1, "R3_lag": r3, "R3_lag_control_pass": lag_ok,
            "fit_residual_px": {"median": float(np.median(fit_res)),
                                "max": float(fit_res.max())}}
     json.dump(out, open(out_p, "w"), indent=1)
