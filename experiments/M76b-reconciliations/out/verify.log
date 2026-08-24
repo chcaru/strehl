@@ -1,0 +1,11 @@
+PASS M70 exponent reproduces
+PASS registered aggregate fraction
+PASS all six remainders positive
+PASS tile-128 primary fingerprint
+PASS tile-128 placebo fingerprint
+PASS tile-256 primary fingerprint
+PASS tile-256 placebo fingerprint
+PASS M5 report specifies tile 128
+PASS committed driver defaults to tile 256
+PASS bin convention cannot explain discrepancy
+verify: 10/10 PASS

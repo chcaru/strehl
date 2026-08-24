@@ -1,0 +1,92 @@
+{
+  "kappa_primary": 0.003096,
+  "rows": [
+    {
+      "stack": "109MSDCF",
+      "level_dn": 1570.2,
+      "e_flat_dn2": 106.02,
+      "v_prnu_dn2": 23.63261881745664,
+      "fraction": 0.22290717616918165,
+      "remainder_dn2": 82.38738118254335,
+      "remainder_equivalent_kappa": 0.0057806327113091365
+    },
+    {
+      "stack": "112MSDCF",
+      "level_dn": 122.7,
+      "e_flat_dn2": 0.86,
+      "v_prnu_dn2": 0.14430820659264,
+      "fraction": 0.16780024022399997,
+      "remainder_dn2": 0.71569179340736,
+      "remainder_equivalent_kappa": 0.006894748927320285
+    },
+    {
+      "stack": "coffee-bean",
+      "level_dn": 4762.1,
+      "e_flat_dn2": 1104.45,
+      "v_prnu_dn2": 217.36965995067456,
+      "fraction": 0.19681258540511073,
+      "remainder_dn2": 887.0803400493255,
+      "remainder_equivalent_kappa": 0.0062543613050032665
+    },
+    {
+      "stack": "bee-1",
+      "level_dn": 2200.5,
+      "e_flat_dn2": 115.77,
+      "v_prnu_dn2": 46.413535311503985,
+      "fraction": 0.4009115946402694,
+      "remainder_dn2": 69.356464688496,
+      "remainder_equivalent_kappa": 0.00378461843898296
+    },
+    {
+      "stack": "bee-2",
+      "level_dn": 2296.8,
+      "e_flat_dn2": 158.27,
+      "v_prnu_dn2": 50.56479641309184,
+      "fraction": 0.3194844026858649,
+      "remainder_dn2": 107.70520358690817,
+      "remainder_equivalent_kappa": 0.00451850912330393
+    },
+    {
+      "stack": "bee-3",
+      "level_dn": 2574.1,
+      "e_flat_dn2": 113.77,
+      "v_prnu_dn2": 63.51155312786495,
+      "fraction": 0.5582451712038758,
+      "remainder_dn2": 50.258446872135046,
+      "remainder_equivalent_kappa": 0.0027540962708387175
+    }
+  ],
+  "original_exponent": 1.8261325625422993,
+  "original_r2": 0.9712801624536597,
+  "remainder_exponent": 1.7546392311605146,
+  "remainder_r2": 0.9294503941494628,
+  "ratio_of_sums": 0.25115779220530077,
+  "median_fraction": 0.2711957894275233,
+  "fraction_range": [
+    0.16780024022399997,
+    0.5582451712038758
+  ],
+  "aggregate_remainder_dn2": 1197.5035281728153,
+  "aggregate_e_flat_dn2": 1599.1399999999999,
+  "kappa_envelopes": {
+    "m71_pair_min": {
+      "kappa": 0.002908636936540151,
+      "ratio_of_sums": 0.22167860637430672,
+      "cell_fraction_min": 0.14810499437630087,
+      "cell_fraction_max": 0.49272216673454916
+    },
+    "m71_pair_max": {
+      "kappa": 0.003295724724015252,
+      "ratio_of_sums": 0.2846076784480596,
+      "cell_fraction_min": 0.19014833819745378,
+      "cell_fraction_max": 0.6325938000414604
+    }
+  },
+  "fact_1064_reproduction": {
+    "g_measured": 0.22410264743534392,
+    "g_profile": 0.2289377,
+    "sigma0": 0.961538,
+    "crossover_dn": 504.42812813567053,
+    "shipped_error_at_8000": -0.1275165583686596
+  }
+}

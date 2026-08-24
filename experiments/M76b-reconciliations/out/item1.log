@@ -1,0 +1,20 @@
+M76b ITEM 1 — M70 e_flat against M71 PRNU
+kappa primary = 0.3096%
+M71 pair range = 0.2909%..0.3296%
+
+stack              level     e_flat     V_PRNU   fraction   remainder     k_rem
+109MSDCF          1570.2     106.02      23.63      22.3%       82.39   0.5781%
+112MSDCF           122.7       0.86       0.14      16.8%        0.72   0.6895%
+coffee-bean       4762.1    1104.45     217.37      19.7%      887.08   0.6254%
+bee-1             2200.5     115.77      46.41      40.1%       69.36   0.3785%
+bee-2             2296.8     158.27      50.56      31.9%      107.71   0.4519%
+bee-3             2574.1     113.77      63.51      55.8%       50.26   0.2754%
+
+original exponent = 1.8261, R2 = 0.9713
+remainder exponent = 1.7546, R2 = 0.9295
+PRNU/e_flat ratio of sums = 25.12%; median = 27.12%; range = 16.78%..55.82%
+aggregate remainder = 1197.50 DN^2 of 1599.14 DN^2
+m71_pair_min: ratio of sums 22.17%, cell range 14.81%..49.27%
+m71_pair_max: ratio of sums 28.46%, cell range 19.01%..63.26%
+
+M71 model check: crossover 504.4 DN, shipped error at 8000 -12.752%
