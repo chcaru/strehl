@@ -1,0 +1,82 @@
+==============================================================================
+M77 addendum B -- section B.6 applied verbatim
+==============================================================================
+
+============================================================================
+  wrapped-text-1   N=130  ISO 100  NOT blind (declared B.2)
+  M70 spectral n_eff = 4.148   (section 21.3, out/s07_unclipped.log:60-61)
+  T*  = 38.534   (n_eff 3.222 @ gate 32  ..  4.364 @ gate 40)
+  band  T_lo = 17.477 (n_eff 2.074)   T_hi = 54.612 (n_eff 8.296)   [B.5 factor-2 reading of M70 section 21.5]
+  shipped DEFAULT_GATE = 4   -> T*/default = 9.63x
+
+  X1  dD(T*)      = 0.9240   [bar > 0.98 -> NOT MET]
+      dN_ben(T*)  = 1.8740
+      dD across the factor-2 band: 0.9774 .. 0.8812
+  X3  dD_null(T*) = 0.4668   contam_D = |1-0.4668|/|1-0.9240| = 7.017   [bar >= 0.50 -> FIRES]
+  ==> X1 VERDICT: UNREADABLE   (registered consequence B.6: decline to rule)
+
+  X2  rungs with T>4, dN_ben>=1.10, dD>0.98: ['16']   [MET]
+
+  X4  detail ROI mean green luma = 1628.4 DN above black (1549.9..1684.7 over 5 frames)
+      M71 section 8.3 interpolated error at that level: -2.41%  (over-confident)
+      corrected_rms at gate 4: 196.994  ->  196.903 under M71   (model_noise 26.797 -> 27.457)
+      dD(T*) under M71 = 0.9242  vs 0.9240 shipped   -> bar not crossed
+
+  B.7-2  Pearson r(dD, dD_null) over 12 rungs = 0.8869   [bar > 0.95 -> clear]
+
+  POST HOC (not a registered criterion, does not overturn X1):
+        gate  corrected      null    signal   dD_sig
+           0    197.868    44.626   192.770   1.0006
+           2    197.429    43.243   192.635   0.9999
+           4    196.994    41.157   192.646   1.0000
+           8    196.020    36.851   192.525   0.9994
+          16    193.246    28.438   191.142   0.9922
+          24    190.007    24.061   188.477   0.9784
+          32    185.395    21.511   184.143   0.9559
+          40    181.351    18.750   180.379   0.9363
+          48    177.669    16.368   176.913   0.9183
+          64    168.590     9.064   168.346   0.8739
+          96    156.223     6.269   156.097   0.8103
+         128    140.697     6.269   140.557   0.7296
+      dD_sig(T*) = 0.9396   (structure-only, null subtracted in quadrature)
+
+============================================================================
+  wrapped-text-2   N=120  ISO 400  BLIND
+  M70 spectral n_eff = 4.05   (section 21.3, out/s07_unclipped.log:60-61)
+  T*  = 11.642   (n_eff 2.523 @ gate 8  ..  6.048 @ gate 16)
+  band  T_lo = 5.218 (n_eff 2.025)   T_hi = 19.096 (n_eff 8.100)   [B.5 factor-2 reading of M70 section 21.5]
+  shipped DEFAULT_GATE = 4   -> T*/default = 2.91x
+
+  X1  dD(T*)      = 0.9356   [bar > 0.98 -> NOT MET]
+      dN_ben(T*)  = 1.4864
+      dD across the factor-2 band: 0.9896 .. 0.8762
+  X3  dD_null(T*) = 0.6594   contam_D = |1-0.6594|/|1-0.9356| = 5.287   [bar >= 0.50 -> FIRES]
+  ==> X1 VERDICT: UNREADABLE   (registered consequence B.6: decline to rule)
+
+  X2  rungs with T>4, dN_ben>=1.10, dD>0.98: NONE   [NOT MET]
+      closest: gate 8  dN_ben 1.2190  dD 0.9730  (misses the dD bar by 0.0070)
+
+  X4  detail ROI mean green luma = 1969.9 DN above black (1850.5..2099.9 over 5 frames)
+      M71 section 8.3 interpolated error at that level: -2.95%  (over-confident)
+      corrected_rms at gate 4: 252.486  ->  252.099 under M71   (model_noise 56.262 -> 57.970)
+      dD(T*) under M71 = 0.9358  vs 0.9356 shipped   -> bar not crossed
+
+  B.7-2  Pearson r(dD, dD_null) over 12 rungs = 0.8242   [bar > 0.95 -> clear]
+
+  POST HOC (not a registered criterion, does not overturn X1):
+        gate  corrected      null    signal   dD_sig
+           0    259.832    50.841   254.809   1.0216
+           2    255.764    44.486   251.865   1.0098
+           4    252.486    39.149   249.433   1.0000
+           8    245.662    30.901   243.711   0.9771
+          16    228.222    21.508   227.207   0.9109
+          24    212.193    13.596   211.757   0.8490
+          32    197.786     9.334   197.566   0.7921
+          40    188.721     8.997   188.506   0.7557
+          48    179.548     8.997   179.322   0.7189
+          64    161.788     8.997   161.538   0.6476
+          96    135.759     8.997   135.461   0.5431
+         128    106.868     8.997   106.489   0.4269
+      dD_sig(T*) = 0.9412   (structure-only, null subtracted in quadrature)
+
+  wrote out/08-decideB.json

@@ -1,0 +1,13 @@
+==============================================================================
+M77 arm B0 -- ROI selection, wrapped-text-2 (BLIND, declared B.2)
+==============================================================================
+  rule: imported verbatim from 01-rois.py (tile 256, stride 128, edge 32)
+
+  --- wrapped-text-2  ISO 400  plane 3514x2344  400 tiles x 13 frames
+      FLAT   x32,y672  contam(max over frames) = 1.0680   [K1 bar < 1.10 -> MET]
+      DETAIL x3104,y160  cg(max over frames)  = 173.2407
+      K2 detail/flat cg = 33.04x  [bar >= 3x -> MET]
+      K5 even/odd: flat NOT MET   detail NOT MET
+      contam over all 400 tiles: 1.0680 .. 5.8171
+
+  wrote out/06-roi-wt2.json

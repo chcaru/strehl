@@ -4,6 +4,14 @@
 a control that failed, and the consequence registered for that failure is
 honoured rather than argued around.**
 
+**Addendum B (§14–§21), pre-registered separately at `5facf37` after M70 §21
+reported, ran the cross-check against M70's gate-free spectral count. Its
+registered null fired on both stacks and its headline criterion is UNREADABLE —
+because the shipped detail invariant reads 8.8–10.0× "retention" on patches its
+sibling invariant measures as pure noise. Two results survive that: the same
+spectral count costs a 3.31× different gate on two sibling stacks (Fact 39), and
+the free rung does not replicate on a blind one (Fact 33).**
+
 Pre-registration: `experiments/M77-gate-sweep/PREREGISTRATION.md`, committed at
 `00a1900` **before any number in this milestone existed**.
 
@@ -547,3 +555,323 @@ python src\05-selector-n.py        # Fact 17, post hoc: selector cost vs N
 Logs and JSON in `experiments/M77-gate-sweep/out/`; the `--limit` ladder behind
 Fact 17 is `out/ndep-coffee-bean.log`. `D:\personal\macro` is read-only and was
 never written to.
+
+---
+---
+
+# Addendum B — the M70 cross-check, and a null that voided my own headline
+
+**Pre-registration:** `experiments/M77-gate-sweep/PREREGISTRATION-B.md`, committed
+`5facf37` **before any number in this addendum existed**. §1–§13 above are
+unchanged; nothing here edits a published number.
+
+## 14. Why there is an addendum
+
+M70 §21 (folded `6779857`) measured a **gate-free** count of how many frames
+carry mid-band signal, on the two stacks M73 measured admission on, and used it
+to refute reading (b) of fact 1036. That is an independent reference point for
+M77's question obtained by an instrument **that shares no constant with mine**,
+and §6 above had ruled INDETERMINATE and §10 had declined to name an operating
+gate. B.1 asked one thing: **does the spatial variance/bias tradeoff put M70's
+spectrally-implied operating point inside or outside the region where opening
+the gate is free?**
+
+**It did not come out the way the question was posed.** The registered null
+fired on both stacks, the cross-check is **UNREADABLE**, and the reason is a
+defect in the shipped detail instrument that is larger than the effect it was
+asked to measure.
+
+### 14.1 What I read first, and one thing I checked rather than accepted
+
+`docs/research/M70-through-focus-spectrum.md` §21 in full (§21.1–§21.8),
+§18.2–§18.5, §19.1; `docs/research/M71-flat-fields.md` §8.3;
+`crates/strehl-cli/src/merge_cmd.rs:279–330` (the corrected-gradient
+definition). I read M70 §21 at the line rather than from a summary of it,
+because M70's own §19.1 records taking a number from a compressed rendering
+instead of the source and finding it plausible next to its own measurement.
+
+**M70's discipline D-s says to verify a reported gate state at HEAD before
+acting on it, so I did — and it mattered in the other direction.** The commit
+`ee471f0` is titled *"Fold M76, and repair two silent-green defects in the gate
+itself."* Read as the **merge** gate that would have invalidated every number in
+§6, because my binary predates nothing else. `git show --stat ee471f0` lists
+four files — `AGENTS.md`, one report, `SYNTHESIS.md`, `scripts/corpus_lint.py` —
+and **no path under `crates/`**. The "gate" repaired was the **lint** gate.
+
+**Fact 30 (THE MEASURED PATH HAS NOT MOVED).** `git diff --stat 93b785c..HEAD --
+crates/` is **empty**, as is `git diff --stat ee471f0..HEAD -- crates/` and
+`git diff --stat HEAD -- crates/`. **MEASURED.** Every number in §1–§13 and in
+this addendum was produced by a binary whose sources are byte-identical to HEAD's
+`crates/`, and the two titles that suggested otherwise refer to a different gate.
+
+## 15. Arms, and what was blind
+
+| arm | what it is | stacks |
+| --- | --- | --- |
+| **B0** | ROI selection by the §4 rule, imported from `01-rois.py`, not re-implemented | `wrapped-text-2` |
+| **B1** | 12-rung ladder, `--detail-roi` = the detail ROI | both |
+| **B2** | **the null:** the same ladder, `--detail-roi` = **the flat ROI** | both |
+
+**`wrapped-text-2` was declared blind in B.2 before its ROI existed** — M77 had
+never run it, it is not in `m77.STACKS`, and §6's ladder does not contain it.
+**`wrapped-text-1` was declared NOT blind**, its ladder having been published at
+`93b785c` before M70's number reached me. Both declarations are in the commit
+that precedes every number below.
+
+Ladder `0 2 4 8 16 24 32 40 48 64 96 128`, twelve rungs, one CLI pass per arm.
+`--gate` has no cap (`merge_cmd.rs:609–618`). B1 and B2 differ only in
+`--detail-roi`, and the shared columns confirm it:
+
+**Fact 31 (THE NULL PERTURBS NOTHING).** Across all 24 rung-pairs, B1 and B2
+agree on `n_eff` and on `HP RATIO` to **max |Δ| = 0.00e+00** — exact, not
+approximate. **MEASURED**, `out/07-sweepB.log`. The `--detail-roi` diagnostic
+does not touch the merge, so the null and the measurement are the same merge
+read twice.
+
+**B0 result.** `wrapped-text-2`, ISO 400, plane 3514×2344, 400 tiles × 13
+frames: flat ROI `32,672` contamination **1.0680** — **K1 MET**, the only stack
+in this milestone where it is — detail ROI `3104,160`, K2 **33.04×** MET, K5
+NOT MET on both. `out/06-roi-wt2.log`.
+
+## 16. The registered criteria, as they fell
+
+| criterion | bar | `wrapped-text-1` | `wrapped-text-2` (blind) |
+| --- | --- | --- | --- |
+| **X1** cross-check | `dD(T*) > 0.98` | **UNREADABLE** | **UNREADABLE** |
+| **X2** blind replication | a rung `T>4` with `dN_ben ≥ 1.10` and `dD > 0.98` | MET (gate 16) | **NOT MET** |
+| **X3** the null | `contam_D(T*) < 0.50` | **FIRES, 7.017** | **FIRES, 5.287** |
+| **X4** the σ limb | does M71 move `dD(T*)` across 0.98 | not crossed | not crossed |
+| **B.7-2** hazard | `r(dD, dD_null) > 0.95` | clear, 0.8869 | clear, 0.8242 |
+
+**X1 is reported UNREADABLE and nothing else, which is what B.7 hazard 1
+attached to this outcome.** I do not report an X1 verdict on either stack.
+
+**Fact 32 (THE REGISTERED NULL FIRED ON BOTH STACKS).** `contam_D(T*) =
+|1 − dD_null(T*)| / |1 − dD(T*)|` is **7.017** (`wrapped-text-1`) and **5.287**
+(`wrapped-text-2`) against a bar of 0.50. **MEASURED**,
+`out/08-decideB.log`. The registered consequence — decline to rule X1 — is
+honoured. **The cross-check this addendum was written to run did not produce a
+verdict.**
+
+**Fact 33 (THE FREE RUNG DOES NOT REPLICATE BLIND).** On `wrapped-text-2`,
+unseen when the criterion was written, **no rung above the shipped gate**
+satisfies `dN_ben ≥ 1.10` and `dD > 0.98`. The closest is gate 8 at `dN_ben`
+1.2190 and `dD` **0.9730**, missing the bar by **0.0070**. **X2 NOT MET.**
+**MEASURED.** §6's `wrapped-text-1` free rung at gate 16 is reproduced here
+(`dN_ben` 1.3285, `dD` 0.9810) and **does not survive transfer to a sibling
+stack of the same subject class at a different ISO.**
+
+**Fact 34 (M71's σ ERROR DOES NOT REACH THIS STATISTIC).** The detail ROIs sit
+at **1628.4 DN** and **1969.9 DN** green luma above black, where M71 §8.3's
+shipped-model error interpolates to **−2.41%** and **−2.95%** — over-confident,
+as M71 reports for everything above S ≈ 504 DN. Rebuilding `corrected_rms` with
+`noise_rms` inflated by that amount moves `dD(T*)` from **0.9240 → 0.9242** and
+**0.9356 → 0.9358**. **MEASURED/DERIVED**, `out/08-decideB.log`. **The bar is
+not crossed and would not be crossed by an error six times larger**, because
+`noise_rms/raw_rms` is only 0.135 and 0.219 here, so a few per cent of a term
+that small is a few parts in ten thousand of a quadrature difference. **The M71
+limb was free, it is answered, and the answer is no interaction.** It says
+nothing about M71's finding elsewhere; it says this statistic is insensitive to
+it.
+
+## 17. What the null actually found, which is bigger than the cross-check
+
+The null was registered to bound an instrument term. It measured a defect
+instead.
+
+**Fact 35 (THE SHIPPED DETAIL INVARIANT REPORTS ~10× RETENTION ON A PATCH OF
+NOISE).** On `wrapped-text-1`'s flat ROI, the CLI's own INVARIANT 1 reports a
+**STRUCTURE FLOOR of 1.0167×** the model σ and its INVARIANT 2 reference frame
+reads `corrected 4.4794, raw rms 24.9183, model noise 24.5124` — **96.8% of the
+gradient variance is the model's own predicted noise.** On that patch the merged
+image at gate 0 reads `corrected` **44.626**, i.e. **RETENTION 9.963×**. On
+`wrapped-text-2` the flat ROI's structure floor is **0.9903×** — *at or below*
+the model's σ, so it is a genuine structureless control — and it reads
+**RETENTION 8.819×** at gate 0. **MEASURED**, `out/07-B2-wrapped-text-1.log`,
+`out/07-B2-wrapped-text-2.log`. **At the shipped `DEFAULT_GATE = 4.0` the same
+patches still read 9.188× and 6.791×.**
+
+**Fact 36 (`corrected` DOES NOT PROTECT AGAINST THE SELECTOR).** The CLI's own
+header states the case against `mean|grad|` — *"can be RAISED by ringing, by
+amplified noise and by manufactured edges, so an INCREASE is never evidence of
+quality"* — and names `corrected = sqrt(raw² − model²)` as *"the only column
+judged"*. **DERIVED from Fact 35:** the correction subtracts the noise the
+*model* predicts for the merged image, whose σ carries `1/√n_eff`
+(`merge_cmd.rs:302`); at gate 0, `n_eff = 1` and the merge is a per-pixel argmax
+over N frames, which **selects the noise realisation with the largest local
+response**. That inflation is not in the model and is therefore not subtracted.
+**The one column invariant 2 judges is inflated by exactly the mechanism the
+header warns about, in the regime the shipped gate operates in.**
+
+This is the same defect §9 reported through `DETAIL_RISE_FLAG` reading
+`INVESTIG.` on 128 of 160 cells — but §9 could only say the flag was tripped.
+**The null says why: the statistic reads ten on nothing.** It also explains the
+flag's uselessness without appeal: a rise threshold of 1.50 cannot discriminate
+when the null is 8.8–10.
+
+**Fact 37 (OPENING THE GATE REMOVES THE INFLATION).** The same structureless
+patches read RETENTION **9.963 → 1.399** (`wrapped-text-1`, gate 0 → 96) and
+**8.819 → 1.561** (`wrapped-text-2`, gate 0 → 40). **MEASURED.** This is an
+argument for opening the gate that **has nothing to do with detail** and was not
+available to §6: on a flat field the tight gate is not preserving anything, it is
+manufacturing gradient, and averaging removes it.
+
+### 17.1 My registered bar was the wrong comparison, and I say so
+
+**Fact 38 (A DEFECT IN MY OWN PRE-REGISTRATION, DECLARED).** X3 compares two
+*relative* falls — one on a patch that is 97–99% noise, one on a patch that is
+not — and relative falls on those two patches are not commensurable. The correct
+combination is in quadrature, because the terms add in variance:
+`signal = sqrt(max(0, corrected² − corrected_null²))`. At the shipped gate the
+null term is **41.157 DN against a 196.994 DN `corrected`** on `wrapped-text-1`
+and **39.149 against 252.486** on `wrapped-text-2` — **4.4% and 2.4% of the
+corrected variance.** Subtracting it in quadrature moves `dD(T*)` by **+0.0156**
+and **+0.0056**, against effects of **0.0760** and **0.0644**, so the instrument
+term is **0.205× and 0.087× the effect** — where X3 read **7.017 and 5.287**.
+**DERIVED**, `out/08-decideB.log`. **The bar fired and I honour it; the bar as
+written overstated the contamination by 34× and 61×.** This is my second
+registration defect in this milestone, after §6's transposition, and both were
+found by running the registered form verbatim rather than by inspection.
+
+**I do not use Fact 38 to overturn X1.** B.6 registered the post-hoc section as
+not overturning the ruling, and B.7 hazard 1 attached "UNREADABLE and nothing
+else" to this exact outcome. The quadrature numbers below are labelled post hoc
+and carry no verdict.
+
+**POST HOC, labelled.** Structure-only retention `dD_sig = signal(T)/signal(4.0)`:
+
+| stack | T\* | `dD` registered | `dD_sig` post hoc | `dN_ben(T*)` |
+| --- | ---: | ---: | ---: | ---: |
+| `wrapped-text-1` | 38.534 | 0.9240 | **0.9396** | 1.874 |
+| `wrapped-text-2` | 11.642 | 0.9356 | **0.9412** | 1.486 |
+
+**X2 survives the correction:** `dD_sig` at `wrapped-text-1` gate 16 is 0.9922
+and at `wrapped-text-2` gate 8 is 0.9771, so the free rung still exists on one
+stack and still does not on the other. **The blind non-replication is not an
+artefact of the contaminated statistic.**
+
+## 18. The result that needs no criterion, and is immune to the null
+
+The two numbers below are arithmetic on my committed ladder and M70's committed
+count. They do not pass through the detail statistic at all, so X3 does not
+reach them.
+
+**Fact 39 (THE SAME SPECTRAL COUNT COSTS A 3.31× DIFFERENT GATE).** M70's
+gate-free spectral `n_eff` differs between the two stacks by **2.4%** (4.148 vs
+4.050). The gate that admits that many frames, by log–log interpolation on my
+own ladder, is **T\* = 38.534** on `wrapped-text-1` and **11.642** on
+`wrapped-text-2` — **9.63× and 2.91× the shipped `DEFAULT_GATE = 4.0`, and
+3.31× different from each other.** **MEASURED ladder, DERIVED interpolation**,
+`out/08-decideB.log`. Both stacks are wrapped text, both were chosen by other
+milestones for their own reasons, and they differ in ISO (100 vs 400) and frame
+count (130 vs 120).
+
+**This is the sharpest thing M77 can say about whether the gate should be a
+constant, and it is a qualification of M70's own conclusion, not a contradiction
+of it.** M70 §21.6 promoted *"the gate constant is the bigger lever and it is one
+line"*, and Fact 39 does not dispute that the lever is the gate. **It measures
+that the lever has no single setting**: matching a stable, instrument-independent
+count of available frames requires gate values a factor of 3.31 apart on sibling
+stacks. A single `DEFAULT_GATE` cannot deliver a target `n_eff`, and **whatever
+replaces it must take its target from the stack in hand** — which is discipline
+506's shape, and the same conclusion §9.1 of M69 reached for a different
+constant.
+
+**Fact 40 (ADMISSION IS NON-UNIFORM ACROSS THE FRAME, MEASURED BY SATURATION).**
+On `wrapped-text-1` the flat ROI's merged output is **bit-stable between gate 96
+and gate 128** — `HP RATIO` 0.2740 and `RETENTION` 1.399 at both — while the
+frame-average `n_eff` over the same interval rises **25.811 → 39.819** and the
+detail ROI's `corrected` continues to fall **156.223 → 140.697**. On
+`wrapped-text-2` the flat ROI freezes from **gate 40** (`HP RATIO` 0.1910 at
+every rung above) while frame-average `n_eff` rises **24.838 → 86.298**.
+**MEASURED**, `out/07-sweepB.log`. **The flat region has admitted everything it
+will ever admit while the rest of the image is still admitting**, so the shipped
+scalar gate is at a materially different operating point in different parts of
+one frame. This is fact 1045's within-stack dispersion, observed on the shipped
+merge rather than on a plant.
+
+## 19. What this does to fact 1036's two readings
+
+§12 item 1 said fact 1036 needs its configuration attached. That stands. On the
+narrower question of the two readings:
+
+- **Reading (b) — "there is genuinely nothing to average."** M70 refuted it on
+  these two stacks by a gate-free route. **This addendum adds nothing to that
+  refutation and does not need to**; rule 40. What it adds is that **the
+  refutation's operating point is not a single gate** (Fact 39).
+- **Reading (a) — "the gate is too tight."** **X1 was the test and it is
+  UNREADABLE.** I have no registered verdict. What is on the record without a
+  criterion: at `T*` the flat-field noise benefit is **1.874×** and **1.486×**
+  (Fact 32's table, `dN_ben`), the shipped gate is **2.91–9.63×** below `T*`, and
+  the structure-only detail cost there is post hoc **~6%** on both stacks.
+  **Those three numbers are reported, not ruled on.**
+
+**Fact 41 (WHAT THE ADDENDUM DID NOT SETTLE).** The cross-check registered in
+B.1 has no verdict, on either stack, and the instrument defect that voided it
+(Facts 35–36) affects **the same statistic §6 and §9 used**. §6's INDETERMINATE
+ruling is therefore *not* rehabilitated by this addendum; it is joined by a
+second reason to distrust the bias side of M77's ladder. **The variance side —
+`HP RATIO`, INVARIANT 1 — is not implicated**: Fact 35's defect is specific to
+invariant 2's reference-frame denominator, and invariant 1 carries its whole
+per-frame distribution instead of one frame (`out/07-B1-wrapped-text-1.log`,
+*"NO SINGLE REFERENCE FRAME. Fact 441"*).
+
+## 20. Circularity, and what is routed
+
+**The circularity §10 named is unchanged and one side of the cross-check escapes
+it.** Every `T` on my ladder is a multiple of `FOCUS_NOISE_SD`, which M69 showed
+varies **4.06×** with texture, so `T*` is a number in a drifting unit. **M70's
+spectral `n_eff` is not** — it counts frames carrying band-limited signal and
+touches no gate constant. That asymmetry is the only reason the comparison was
+worth running, and it cuts against me: **a disagreement between the two is
+attributable to my side at least as readily as to M70's.** Fact 39's 3.31×
+dispersion is stated in gate units and therefore inherits the drift; **the
+2.4% stability of M70's count does not**, which is what makes the contrast
+readable at all.
+
+**A second circularity, new here.** The null arm's ROI is chosen by a rule that
+scores flatness with the same noise model that builds `noise_rms` in the
+statistic the null is auditing. A patch selected as "flat" by an over-confident
+σ is selected partly *for* having little un-modelled noise. **M71's −2.4 to
+−3.0% at these levels bounds it** (Fact 34), and at that size it cannot produce
+Fact 35's factor of ten.
+
+### 20.1 Routed to the orchestrator, in addition to §12
+
+7. **The shipped detail invariant is defective in the shipped gate's operating
+   regime** (Facts 35–37): `RETENTION` reads **8.8–10.0×** on patches its
+   sibling invariant measures as noise, and **9.188×/6.791× at
+   `DEFAULT_GATE = 4.0`**. `corrected` subtracts the model's noise but not the
+   selector's max-over-N inflation. **This needs a milestone. I did not touch
+   `crates/`.** It supersedes §12 item 2 in sharpness while leaving that item's
+   `DETAIL_COLLAPSE_FLOOR` finding intact.
+8. **Fact 39 qualifies M70 §21.6's promotion.** The gate is the lever; the lever
+   has no single setting. **A gate that targets an `n_eff` must read its target
+   from the stack in hand.** M70 should be asked whether it agrees, since the
+   sentence being qualified is its headline recommendation.
+9. **The M71 limb is closed, negatively** (Fact 34). No routing needed beyond
+   recording that the interaction was looked for and is ~2 parts in ten thousand.
+10. **X2's blind non-replication** (Fact 33) is the first blind transfer test in
+    M77 and it failed by 0.0070. **A per-stack gate is not a hypothesis here, it
+    is what two stacks of one subject class already require.**
+11. **My own X3 bar was mis-specified** (Fact 38). Recorded so the next
+    milestone registering a null against a ratio statistic combines in
+    quadrature, not in relative falls.
+
+## 21. Reproduction — addendum B
+
+```powershell
+$env:PATH = "$env:USERPROFILE\.cargo\bin;$env:PATH"
+$env:CARGO_TARGET_DIR = "experiments\M77-gate-sweep\target-m77"
+cargo build --release --bin strehl
+
+$env:PYTHONIOENCODING = 'utf-8'
+cd experiments\M77-gate-sweep
+python src\06-roi-wt2.py           # arm B0  -- blind ROI, section 4 rule imported
+python src\07-sweepB.py            # arms B1 + B2, 12 rungs, both stacks
+python src\08-decideB.py           # section B.6 applied verbatim
+```
+
+`out/06-roi-wt2.{json,log}`, `out/07-{B1,B2}-{wrapped-text-1,wrapped-text-2}.log`,
+`out/07-sweepB.{json,log}`, `out/08-decideB.{json,log}`. Nothing under `crates/`
+was modified; `D:\personal\macro` was never written to.
