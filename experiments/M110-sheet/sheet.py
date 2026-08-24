@@ -241,6 +241,14 @@ def render_arm(sub: dict, arm: dict, limit: int | None, exposure_flag: str | Non
         "tif": str(tif),
         "tif_sha256": sha256_file(tif),
         "tif_bytes": tif.stat().st_size,
+        # Per ARM, not per run. A partial re-run leaves arms in one manifest that
+        # were made by different binaries, and the run-level block records only
+        # the latest. Without this a preserved arm cannot say what produced it --
+        # which is P10 biting the instrument built to prevent P10.
+        "binary_sha256": sha256_file(BINARY),
+        "binary_mtime": _dt.datetime.fromtimestamp(
+            BINARY.stat().st_mtime).isoformat(timespec="seconds"),
+        "rendered_utc": _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds"),
         "seconds": round(a["seconds"] + m["seconds"], 1),
     }
 
@@ -397,6 +405,11 @@ def cmd_render(args) -> int:
     cfg = load_subjects()
     OUT_ROOT.mkdir(parents=True, exist_ok=True)
     prov = provenance()
+    want = getattr(args, "arm", None)
+    arms = [a for a in ARMS if not want or a["name"] in want]
+    if want and not arms:
+        print(f"no arm matches {want}; known: {[a['name'] for a in ARMS]}")
+        return 2
 
     # Merge into any existing manifest rather than replacing it, so re-running
     # ONE subject does not silently delete the others' entries and leave
@@ -414,11 +427,23 @@ def cmd_render(args) -> int:
     failures = []
 
     for sub in pick(cfg, args.subject):
-        print(f"\n=== rendering {sub['name']} ({sum(1 for a in ARMS if a.get('enabled', True))} "
+        print(f"\n=== rendering {sub['name']} ({sum(1 for a in arms if a.get('enabled', True))} "
               f"of {len(ARMS)} arms enabled) ===")
         entry = {"dir": sub["dir"], "exposure": sub.get("exposure"), "arms": {},
                  "provenance": prov, "limit": args.limit}
-        for arm in ARMS:
+        if want:
+            # An arm-filtered run must not delete the arms it did not run. Keep
+            # their entries, but mark them STALE: they were made by a different
+            # binary, and after P10 that is not a detail.
+            prev = man["subjects"].get(sub["name"], {})
+            for k, v in (prev.get("arms") or {}).items():
+                if k not in want:
+                    v = dict(v)
+                    v["stale"] = True
+                    v["stale_vs"] = prov.get("head")
+                    v["provenance"] = prev.get("provenance")
+                    entry["arms"][k] = v
+        for arm in arms:
             if not arm.get("enabled", True):
                 print(f"  {arm['name']:<12} .. PENDING, skipped (not run, not a no-op arm)")
                 entry["arms"][arm["name"]] = {"ok": False, "pending": True,
@@ -443,28 +468,36 @@ def cmd_render(args) -> int:
 
         # fact 1446 guard: two arms sharing bytes is what the unkeyed cache
         # produces, and it would read as "the kernel makes no difference".
-        good = {k: v["tif_sha256"] for k, v in entry["arms"].items() if v.get("ok")}
-        dupes = [(a, b) for i, a in enumerate(good) for b in list(good)[i + 1:]
-                 if good[a] == good[b]]
+        # Only arms rendered in THIS run can be compared -- a stale arm's hash
+        # came from another binary, so agreement or disagreement with it says
+        # nothing about the cache.
+        fresh = {k: v["tif_sha256"] for k, v in entry["arms"].items()
+                 if v.get("ok") and not v.get("stale")}
+        dupes = [(a, b) for i, a in enumerate(fresh) for b in list(fresh)[i + 1:]
+                 if fresh[a] == fresh[b]]
         entry["distinct_hashes_ok"] = not dupes
         entry["duplicate_pairs"] = dupes
         if dupes:
             print(f"  *** CACHE COLLISION: identical bytes for {dupes} ***")
             failures.append(f"{sub['name']} duplicate arm bytes {dupes}")
         else:
-            print(f"  arms byte-distinct: OK ({len(good)} arms)")
+            print(f"  arms byte-distinct: OK ({len(fresh)} arms)")
 
         # `strehl stack` has no --resampler flag, so a merge's kernel comes only
         # from the sidecar it reads. With ONE arm there is nothing to disagree
         # with it: a lone arm can inherit a kernel from an unrelated earlier
         # command and the byte-distinctness assertion above is vacuous. Say so
         # rather than let a one-armed run look as guarded as a two-armed one.
-        entry["arms_run"] = len(good)
-        entry["comparison_guarded"] = len(good) >= 2
-        if len(good) < 2:
-            print(f"  *** ONLY {len(good)} ARM RAN: byte-distinctness is vacuous and the "
-                  f"kernel is unguarded ***")
-            failures.append(f"{sub['name']} unguarded: {len(good)} arm(s)")
+        # A deliberate --arm run is still unguarded; it is just not a failure.
+        entry["arms_run"] = len(fresh)
+        entry["comparison_guarded"] = len(fresh) >= 2
+        entry["deliberate_single_arm"] = bool(want) and len(fresh) < 2
+        if len(fresh) < 2:
+            print(f"  *** ONLY {len(fresh)} ARM RAN: byte-distinctness is vacuous and the "
+                  f"kernel is unguarded"
+                  + (" (deliberate --arm run) ***" if want else " ***"))
+            if not want:
+                failures.append(f"{sub['name']} unguarded: {len(fresh)} arm(s)")
         man["subjects"][sub["name"]] = entry
 
     man["failures"] = failures
@@ -491,15 +524,91 @@ def load8(p: Path) -> np.ndarray:
     return to8(load_raw(p))
 
 
+def highlight_stats(win: np.ndarray, region: np.ndarray | None = None) -> dict:
+    """Two-sided blown-highlight neutrality.
+
+    The one-sided readout below selects on RED AND BLUE being pinned, then
+    measures green against them. That selection is the blindness: it forces the
+    comparison baseline to the container ceiling, so a green EXCESS has nowhere
+    to register.
+
+    Worse than under-reporting, once you know what the fix does. `e9ad010`
+    applies a saturation ceiling to the colour matrix, so a ceiling computed too
+    low clamps RED AND BLUE DOWN -- which would drop them below the 99% mask
+    entirely and report "too few blown px to score". The instrument would go
+    quiet exactly when the port was worst.
+
+    So select channel-agnostically -- blown in AT LEAST ONE channel -- which is
+    the physical condition "this is a blown highlight" and survives either
+    failure direction:
+
+        magenta   R,B pinned, G below  ->  off < 0
+        green     G pinned, R,B below  ->  off > 0
+
+    Both have the full range of the container available, because whichever
+    channel is low is the one carrying the signal.
+
+    `region` overrides the selection with a frozen mask. THE SELECTION IS NOT
+    INVARIANT UNDER THE THING IT MEASURES: any change that lowers a channel can
+    push a pixel below HOT and out of the population, which moves the mean for
+    a reason that is not the neutrality of the pixels that remain. Freezing the
+    mask on a reference separates the instrument's GAIN from that population
+    shift. On real data there is no reference, so the free selection is what
+    ships and the shift is a systematic -- measured, not assumed, by bars B1/B2
+    in neutrality_control.py. `region_n` is reported so a shift is visible.
+    """
+    if win.dtype != np.uint16:
+        return {"off": None, "region_n": 0, "region_frac": 0.0}
+    r, g, b = (win[:, :, i].astype(np.float32) for i in range(3))
+    if region is None:
+        region = np.maximum(np.maximum(r, g), b) >= HOT
+    n = int(region.sum())
+    out = {"region_frac": float(region.mean()), "region_n": n}
+    if n < 64:
+        out["off"] = None
+        return out
+    rr, gg, bb = r[region], g[region], b[region]
+    out["off"] = float(((gg - 0.5 * (rr + bb)) / FULL).mean())
+
+    # Which channel is actually pinned. This is the most diagnostic single
+    # output: neutral clips all three together, magenta spares green, a
+    # low ceiling spares red and blue.
+    out["c_r"] = float((rr >= HOT).mean())
+    out["c_g"] = float((gg >= HOT).mean())
+    out["c_b"] = float((bb >= HOT).mean())
+    out["asym"] = out["c_g"] - 0.5 * (out["c_r"] + out["c_b"])
+
+    # Headroom for a planted signal, in each direction, as the 5th percentile:
+    # 95% of region pixels have at least this much room. Both directions are
+    # measured by LOWERING a channel, which is how both real failures arise --
+    # magenta leaves green low, a low ceiling leaves red and blue low -- and
+    # lowering always has room where raising hits the container ceiling.
+    out["head_magenta"] = float(np.percentile(gg / FULL, 5))
+    out["head_green"] = float(np.percentile(np.minimum(rr, bb) / FULL, 5))
+
+    # The old one-sided core statistic, kept so earlier numbers stay comparable
+    # and so its disappearance is itself visible.
+    core = (r >= HOT) & (b >= HOT)
+    cn = int(core.sum())
+    out["core_n"] = cn
+    out["core_frac"] = float(core.mean())
+    out["core_off"] = (float(((g[core] - 0.5 * (r[core] + b[core])) / FULL).mean())
+                       if cn >= 64 else None)
+    return out
+
+
 def neutrality(win: np.ndarray) -> tuple[float, float | None]:
     """Blown fraction, and the green offset on blown pixels.
+
+    ONE-SIDED. Superseded as the primary readout by `highlight_stats` above and
+    kept because earlier numbers in the report were taken with it, and because
+    its silence under a green overshoot is itself a result worth being able to
+    reproduce. Do not use it alone to clear a highlight change.
 
     A blown highlight is physically neutral: nothing in the scene is brighter
     than the clip point in two channels and coloured in the third. So on pixels
     where red AND blue are both clipped, mean (G - (R+B)/2) / full-scale should
-    be ~0. M109 measured green pinned ~0.10 BELOW red and blue, which renders
-    those highlights magenta. This reads that number straight off the tile, so
-    the before/after is quantitative and not merely "looks less pink".
+    be ~0.
     """
     if win.dtype != np.uint16:
         return 0.0, None
@@ -542,7 +651,7 @@ def cmd_figure(args) -> int:
         for a in arms:
             raw = load_raw(Path(entry["arms"][a["name"]]["tif"]))
             if clip:
-                neut[a["name"]] = neutrality(
+                neut[a["name"]] = highlight_stats(
                     raw[clip["y"]:clip["y"] + CROP, clip["x"]:clip["x"] + CROP])
             imgs[a["name"]] = to8(raw)
             del raw
@@ -593,14 +702,18 @@ def cmd_figure(args) -> int:
                            fill=(245, 220, 120), font=f_lab)
                     sub2, col2 = c.get("why", ""), (150, 150, 160)
                     if c["role"] == "clipped" and arm in neut:
-                        frac, off = neut[arm]
+                        s = neut[arm]
+                        off = s.get("off")
                         if off is None:
-                            sub2 = f"blown {frac * 100:.2f}% of tile -- too few to score"
+                            sub2 = (f"blown {s['region_frac'] * 100:.2f}% of tile "
+                                    f"-- too few to score")
                         else:
-                            # neutral blown highlight => 0.000; M109 measured ~-0.10
-                            sub2 = (f"blown {frac * 100:.2f}% of tile   "
-                                    f"green offset {off:+.4f}  (neutral = 0.0000)")
-                            col2 = (250, 140, 200) if off < -0.02 else (140, 230, 160)
+                            # neutral clips all three channels together
+                            sub2 = (f"blown {s['region_frac'] * 100:.2f}%   "
+                                    f"off {off:+.4f} (0=neutral, -mag, +green)   "
+                                    f"pinned r{s['c_r']:.2f} g{s['c_g']:.2f} b{s['c_b']:.2f}")
+                            col2 = ((250, 140, 200) if off < -0.02 else
+                                    (150, 250, 150) if off > 0.02 else (140, 230, 160))
                     d.text((x, y + 24), sub2, fill=col2, font=f_lab)
                     d.rectangle([x - 1, y + lab - 1, x + cw, y + lab + cw],
                                 outline=(90, 90, 95))
@@ -616,31 +729,40 @@ def cmd_figure(args) -> int:
 def cmd_survey(args) -> int:
     """Per subject, read the frozen `clipped` tile off the default arm on disk.
 
-    Answers the question the crop site exists to serve: which subjects can
-    actually demonstrate M109's magenta clipping, and which are already neutral
-    there. A subject reading ~0 cannot show the fix working -- not because the
-    fix is absent but because there was nothing to fix in that window.
-    Green offset is one-sided: see neutrality_control.py bar H1.
+    Two-sided: `off` is the channel-agnostic statistic from `highlight_stats`,
+    negative for magenta and positive for a green overshoot, and `c_r/c_g/c_b`
+    say which channel is actually pinned. `core` is the old one-sided number,
+    shown alongside so its silence is visible rather than absent.
     """
     cfg = load_subjects()
-    print(f"{'subject':<20} {'blown%':>8} {'green offset':>14}   verdict")
+    hdr = (f"{'subject':<20} {'blown%':>7} {'off':>9} {'core':>9} "
+           f"{'c_r':>6} {'c_g':>6} {'c_b':>6} {'asym':>7}   verdict")
+    print(hdr)
+    print("-" * len(hdr))
     for sub in pick(cfg, args.subject):
         tif = OUT_ROOT / sub["name"] / "default.tif"
         clip = next((c for c in sub.get("crops", []) if c["role"] == "clipped"), None)
         if not tif.exists() or not clip:
-            print(f"{sub['name']:<20} {'-':>8} {'-':>14}   no default.tif or no clipped crop")
+            print(f"{sub['name']:<20}   no default.tif or no clipped crop")
             continue
         raw = load_raw(tif)
-        frac, off = neutrality(raw[clip["y"]:clip["y"] + CROP, clip["x"]:clip["x"] + CROP])
+        s = highlight_stats(raw[clip["y"]:clip["y"] + CROP, clip["x"]:clip["x"] + CROP])
         del raw
+        off = s.get("off")
         if off is None:
-            verdict = "too few blown px to score"
-            offs = "-"
-        else:
-            offs = f"{off:+.4f}"
-            verdict = ("MAGENTA - can show M109's fix" if off < -0.02
-                       else "already neutral - cannot show the fix")
-        print(f"{sub['name']:<20} {frac * 100:>7.3f}% {offs:>14}   {verdict}")
+            print(f"{sub['name']:<20} {s['region_frac'] * 100:>6.3f}%   "
+                  f"too few blown px to score")
+            continue
+        core = s.get("core_off")
+        verdict = ("MAGENTA" if off < -0.02 else
+                   "GREEN OVERSHOOT" if off > 0.02 else "neutral")
+        print(f"{sub['name']:<20} {s['region_frac'] * 100:>6.3f}% {off:>+9.4f} "
+              f"{(f'{core:+.4f}' if core is not None else 'n/a'):>9} "
+              f"{s['c_r']:>6.3f} {s['c_g']:>6.3f} {s['c_b']:>6.3f} "
+              f"{s['asym']:>+7.3f}   {verdict}")
+    print("\noff < 0 magenta, off > 0 green. c_x = fraction of the blown region "
+          "with channel x pinned;\nneutral clipping pins all three together. "
+          "Headroom both ways is reported by neutrality_control.py.")
     return 0
 
 
@@ -653,6 +775,12 @@ def main() -> int:
         p.add_argument("--subject", action="append")
         if nm in ("scout", "render", "all"):
             p.add_argument("--limit", type=int, default=None)
+        if nm in ("render", "all"):
+            p.add_argument("--arm", action="append",
+                           help="render only these arms. A run of fewer than two "
+                                "arms is recorded as comparison_guarded=false: "
+                                "with no second arm to disagree, the fact-1446 "
+                                "byte-distinctness check is vacuous.")
     args = ap.parse_args()
 
     if args.cmd == "recrop":
