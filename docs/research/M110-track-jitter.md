@@ -145,6 +145,44 @@ Sabotage was applied and removed via a `$env:TEMP` copy with an explicit
 `LastWriteTime` touch; the rebuild after restore recompiled `strehl-core` and
 re-verified 1196/1196 equal with the sabotage env var still set (inert).
 
+### 3.1 Exit-code integrity of the B1 gate (audit against fact 1443)
+
+Fact 1443 refutes the prior belief that "a PASS taken from an observed nonzero
+exit code is safe": under Windows PowerShell 5.1 the `-First` corruption value
+is `-1`, so a red control shaped as `if ($code -ne 0) { pass }` passes on the
+artifact it exists to detect. I audited every arm above against it.
+
+**No arm needs re-measuring, for three independent reasons (MEASURED):**
+
+1. **No `$LASTEXITCODE` read in this milestone follows a filtered pipeline.**
+   Every arm assigns command output to a variable, reads the code on the very
+   next statement, and filters the variable afterwards — the pattern rule 47
+   prescribes.
+2. **Every arm records a literal value** (`exit=$c`), never a predicate. No
+   `if ($code -ne 0)` was written anywhere in this milestone.
+3. **The gate carries a discriminator that does not depend on the exit code
+   at all.** `cmp` prints `differing N`; B1a was scored on `differing 0` and
+   B1b on `differing 823`. Content, not status.
+
+Point 3 is the load-bearing one, and it also settles the direction of any
+residual risk. In the agent shell the corruption value is `0`, so corruption
+can only turn a genuine `1` into `0` — it can only make a **red** arm look
+green, never a green arm look red. My red arms were observed at **`1`**, a
+value this host's corruption cannot manufacture.
+
+I nonetheless re-exercised both paths of the gate under the assertion form
+fact 1443 prescribes — an assertion on the **exact** expected code, not on
+non-zero-ness — on tracks known to differ and known to match. No rebuild and
+no sabotage were required, because the failure path is the same code path:
+
+| path | assertion | result | corroborating content |
+|---|---|---|---|
+| RED (`track-l0` vs `track-l1-robust`) | `if ($code -ne 1) { throw }` | **held** | `differing 1196 -> FAIL` |
+| GREEN (`track-l0-BEFORE` vs `-FINAL`) | `if ($code -ne 0) { throw }` | **held** | `differing 0 -> PASS` |
+
+Both pre-cleared with `cmd /c exit 0` first, per rule 47's note that stale
+values produce false negatives.
+
 ---
 
 ## 4. B2 and B3 — accuracy and the target quantity
