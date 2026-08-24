@@ -1,0 +1,82 @@
+==============================================================================
+A. THE DECOMPOSITION  (x2_pairs.py, 40 in-focus tiles, 0.30-0.48 vs 0.02-0.10 cyc/px)
+==============================================================================
+  B0     mean -2.9963  sd 0.6658  n=40  cc 1.0000  dropped 0
+  B1     mean -3.2814  sd 0.6435  n=40  cc 0.9590  dropped 0
+  D      mean -3.1726  sd 0.3405  n=37  cc 0.8281  dropped 3
+  C      mean -3.3824  sd 0.3935  n=38  cc 0.8058  dropped 2
+  A      mean -2.9632  sd 0.6434  n=40  cc 0.9572  dropped 0
+
+  B0->B1   -0.2851 dex   1.928x power   1.389x amplitude
+  B0->D    -0.1524 dex   1.421x power   1.192x amplitude
+  D->C     -0.2100 dex   1.622x power   1.273x amplitude
+  B0->C    -0.3999 dex   2.511x power   1.585x amplitude
+  A->B0    -0.0332 dex   1.079x power   1.039x amplitude
+
+==============================================================================
+B. CONTROLS
+==============================================================================
+  K7 null (B0 vs B0)            : +0.000000 dex
+  K6/K13 planted Fourier-exact Gaussian blur on B0:
+      sigma = 0.10 px -> -0.0248 dex
+      sigma = 0.25 px -> -0.1530 dex
+      sigma = 0.50 px -> -0.5896 dex
+      sigma = 1.00 px -> -2.1031 dex
+  K8 anchor separation          : 2.1031 dex   gate>=0.30 PASS
+  x3 identity-phase, catmullrom : +0.000000 dex
+  x3 identity-phase, lanczos3   : +0.000000 dex
+  x3 identity-phase, bspline    : +0.000000 dex
+  x3 identity-phase, mitchell   : -0.200830 dex  (approximating, NOT interpolating)
+  x3 ordering mitchell<catmull  : PASS
+  x4 nearest_is_free            : PASS
+  x4 bilinear_worse             : PASS
+  x5 bilinear_zero              : PASS
+  x5 nearest_zero               : PASS
+  x5 ordering                   : PASS
+
+==============================================================================
+C. END TO END THROUGH THE SHIPPED BINARY  (x4, sidecar resampler is the ONLY change)
+==============================================================================
+  nearest      -0.0491 dex  1.120x power  1.058x amplitude  n=40
+  catmull-rom  -0.2851 dex  1.928x power  1.389x amplitude  n=40
+  bilinear     -0.4831 dex  3.042x power  1.744x amplitude  n=40
+
+  INTERPOLATION KERNEL ALONE : -0.2360 dex  1.722x power  1.312x amplitude
+
+==============================================================================
+D. BLUR EQUIVALENT, from the K6 anchors
+==============================================================================
+  response is proportional to sigma^1.946 between 0.25 and 0.50 px
+  one strehl gather, total (B0->B1)        -0.2851 dex  ==  a Gaussian blur of sigma = 0.344 px
+  the interpolation kernel alone           -0.2360 dex  ==  a Gaussian blur of sigma = 0.312 px
+  B0 -> C, single frame to shipped merge   -0.3999 dex  ==  a Gaussian blur of sigma = 0.410 px
+
+==============================================================================
+E. WHAT A KERNEL CHANGE WOULD BUY  (x3, independently written kernels)
+==============================================================================
+  independent Catmull-Rom, phase-averaged : -0.2006 dex
+  independent Catmull-Rom, worst phase    : -0.3897 dex
+  strehl's own gather, measured (B0->B1)  : -0.2851 dex
+  gap (strehl vs independent, phase-avg)  : -0.0845 dex
+
+  lanczos3   recovers +0.1343 dex (1.362x power, 1.167x amplitude)   and rings 9.902x as much
+  bspline    recovers +0.1055 dex (1.275x power, 1.129x amplitude)   and rings 6.274x as much
+
+==============================================================================
+F. RINGING  (x5, mean overshoot as a fraction of the local range, half-pixel phase)
+==============================================================================
+  nearest      mean 0.000000   p99.9 0.000000   negatives 0.0000%
+  bilinear     mean 0.000000   p99.9 0.000000   negatives 0.0000%
+  catmullrom   mean 0.000061   p99.9 0.022139   negatives 0.0000%
+  lanczos3     mean 0.000604   p99.9 0.108394   negatives 0.0000%
+  bspline      mean 0.000383   p99.9 0.084537   negatives 0.0000%
+
+==============================================================================
+G. SHARE OF THE TOTAL LOSS
+==============================================================================
+  interpolation kernel                                 +0.2360 dex   59.0%
+  gather that is not the kernel (nearest baseline)     +0.0491 dex   12.3%
+  election + coverage zoom (remainder)                 +0.1148 dex   28.7%
+  TOTAL B0 -> C                                        +0.3999 dex  100.0%
+
+  demosaic-algorithm difference (A -> B0), NOT part of the above: -0.0332 dex
