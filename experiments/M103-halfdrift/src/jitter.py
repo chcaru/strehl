@@ -241,7 +241,14 @@ def main():
            "fit_residual_px": {"median": float(np.median(fit_res)),
                                "max": float(fit_res.max())}}
     json.dump(out, open(out_p, "w"), indent=1)
-    return 0 if ok else 1
+    # lag_ok is ANDed here rather than into `ok` above because it is computed
+    # after that line. The first version of this file left it out entirely: the
+    # lag control printed PASS/FAIL and was stored in the JSON, but could not
+    # change the exit code, so the section 18.6 gate was decorative. Third
+    # instance of a control that could not fail in this milestone -- the other
+    # two were tautological, this one was merely disconnected, which is harder
+    # to see because the verdict it prints is real.
+    return 0 if (ok and lag_ok) else 1
 
 
 if __name__ == "__main__":

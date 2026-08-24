@@ -1889,6 +1889,42 @@ The generalisable form, and it now has two instances in one milestone:
 > read dirty. If no answer exists, it is decoration. `0.0000` at eight
 > consecutive lags should have been read as an alarm, not a pass.
 
+**A third instance, found by mutation rather than by inspection.** The replaced
+lag control above was computed at line 229 while the exit code was decided at
+line 172 from `a_ok and b_ok and c_ok`. So `lag_ok` was printed, and stored in
+the JSON, and **could not change the exit status**. This is a nastier variant
+than the other two, because the verdict it prints is entirely real — the failure
+is only in whether anything is listening.
+
+It was caught by asking a question this milestone had not asked of its own
+harness: *have I ever seen this gate print a failure?* The answer was no. The
+measurement:
+
+| arm | exit | expected |
+| --- | --- | --- |
+| real run, current | 0 | 0 |
+| lag threshold forced impossible, current | 1 | 1 |
+| control A tolerance forced impossible, current | 1 | 1 |
+| lag threshold forced impossible, **committed `ec50e0c`** | **0** | 1 |
+
+The last row is the counterfactual: the shipped-at-`ec50e0c` script prints
+`-> lag readout FAIL at L=1` and exits **0**. The gate was decoration, and the
+proof is a measurement rather than a reading of the source.
+
+**No number in §18.6 changes.** The lag control passed on its merits, with 52.5×
+headroom; what was broken was only the wiring that would have stopped the run had
+it not. But an unfired gate is an unverified gate, which is the whole content of
+§18.7.
+
+> **A pass/fail gate you have never seen fail is not a gate, it is a print
+> statement.** Mutate the threshold until it fails, once, and watch the exit
+> code move. Three of this milestone's controls were dead in three different
+> ways — two tautological, one disconnected — and all three read `PASS`
+> throughout.
+
+The mutants are kept at `C:\dev\strehl-out\M103\ctl\` so the four rows above can
+be re-run without reconstructing them.
+
 ### 18.8 Candidate facts from the lag sweep
 
 - **P40** (MEASURED) Placement disagreement on `bee-3-cpl` is nearly flat in
@@ -1903,6 +1939,12 @@ The generalisable form, and it now has two instances in one milestone:
   question: swapping a degree-8 fit for a degree-4 one moves the apparent
   disagreement by up to 0.7675 px at `L = 1` and 7.4709 px at `L = 64`, which is
   the same order as the effect. §18.3's headline avoids this by using no fit.
+- **P43** (MEASURED) `jitter.py` at `ec50e0c` computed its lag control after the
+  line that decided its exit status, so the control printed `FAIL` and the
+  process still exited **0**. Verified by mutation against the committed blob,
+  not by inspection. No §18 number changes; the control passed on its merits with
+  52.5× headroom. Three of this milestone's controls were dead in three distinct
+  ways — two tautological, one disconnected — and all read `PASS` throughout.
 
 ### 18.9 Reproducing this section
 
