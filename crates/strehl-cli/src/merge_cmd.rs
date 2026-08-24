@@ -1354,6 +1354,10 @@ fn write_n_eff_map(path: &Path, n_eff: &[u16], frames: u32, geom: PlaneGeometry)
 }
 
 pub fn run(opts: &MergeOptions) -> Result<()> {
+    // Same reason as the --n-eff-map refusal below: fail on configuration
+    // before a frame is read. An invalid STREHL_FIX_CA otherwise surfaces only
+    // after the first decode (53.4 s), which reads as a slow arm in a matrix.
+    align_cmd::preflight_ca_profile()?;
     ensure!(!opts.gates.is_empty(), "at least one --gate is required");
     ensure!(
         opts.gates.iter().all(|g| g.is_finite() && *g >= 0.0),

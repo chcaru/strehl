@@ -274,8 +274,25 @@ fn measure_edges(
     Ok(edges)
 }
 
+/// Resolve the lateral-CA profile once, **before any frame is decoded**.
+///
+/// [`strehl_core::optics::active_profile`] is deliberately re-read per call so a
+/// change between stacks is not silently ignored, and `warp_frame_in_place`
+/// calls it per frame for that reason. The cost of that placement is not the
+/// parse -- it is *when the error arrives*: a typo'd `STREHL_FIX_CA` currently
+/// exits 1 only after a full decode, MEASURED at 53.4 s on `bee-3-cpl`. Inside a
+/// comparison matrix that reads as a slow arm rather than a config error.
+///
+/// This asks the same question once, up front, and throws the answer away. It
+/// caches nothing, so the per-frame re-read contract is untouched.
+pub fn preflight_ca_profile() -> Result<()> {
+    strehl_core::optics::active_profile()?;
+    Ok(())
+}
+
 pub fn run(args: &AlignArgs) -> Result<()> {
     args.guard_subject()?;
+    preflight_ca_profile()?;
     let resampler = args.resampler()?;
 
     if let Some(scale) = args.verify_plant {
