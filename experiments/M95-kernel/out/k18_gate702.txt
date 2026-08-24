@@ -1,0 +1,39 @@
+==============================================================================
+k18 -- discipline 702 on my own verifier: tested in the caller's mode
+==============================================================================
+python   3.12.10
+subject  experiments\M95-kernel\src\verify_s20.py
+hostile  'Δ − → ≤'
+
+-- C0 power control: can this harness reproduce the failure at all? --
+  canary cp1252              rc=1   stdout=14     stderr=522   ok=0   BAD=0   verdict=NONE   UnicodeEncodeError=True
+  canary utf-8               rc=0   stdout=35     stderr=0     ok=0   BAD=0   verdict=NONE   UnicodeEncodeError=False
+  C0 = PASS  (cp1252 must break the canary, utf-8 must not)
+  canary rc under cp1252 = 1, and that rc is THE SAME AS a subject failure's 1
+
+-- B1 exposure: verify_s20.py in both modes, stdout piped --
+  verify cp1252              rc=0   stdout=2377   stderr=0     ok=40  BAD=0   verdict=GREEN  UnicodeEncodeError=False
+  verify utf-8               rc=0   stdout=2377   stderr=0     ok=40  BAD=0   verdict=GREEN  UnicodeEncodeError=False
+  verify (unset)             rc=0   stdout=2377   stderr=0     ok=40  BAD=0   verdict=GREEN  UnicodeEncodeError=False
+  B1 = NOT EXPOSED
+     utf-8  printed 40 ok / 0 BAD, verdict GREEN
+     cp1252 printed 40 ok / 0 BAD, verdict GREEN
+     lost 0 ok lines and 0 characters of report
+  B2 = N/A (nothing to collide)
+
+-- B3 does negctl_s20's CAUGHT predicate fail safe on a tool failure? --
+  predicate read from negctl_s20.py: 'if rc == 1 and bad > 0:'
+  codepage, PYTHONIOENCODING unset     rc=0  BAD=0  -> predicate scores MISSED
+  required artifact removed            rc=2  BAD=0  -> predicate scores MISSED
+  artifact restored byte-identical: True
+  B3 = FAILS SAFE
+  the predicate requires a POSITIVE signal (BAD>0) parsed from stdout,
+  so a crash that prints no BAD line cannot be counted as a catch.
+
+-- B4 post-fix agreement --
+  arms agree line for line: True
+  every induced tool failure exits with a code that is not 1: True (codes seen: [0, 2])
+  B4 = FIXED
+
+wrote out/k18_gate702.json
+==============================================================================

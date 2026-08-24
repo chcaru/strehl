@@ -1,0 +1,21 @@
+============================================================================================
+k18b -- fleet check: read-only gates run in the caller's mode (stdout piped)
+============================================================================================
+gate                               rc(utf8) rc(unset)        lines          verdict  exposed
+--------------------------------------------------------------------------------------------
+M95-coverage/verify_negative_control.py        1         1         9->9         RED->RED  no
+M95-coverage/verify_report.py             1         1       12->12       NONE->NONE  no
+M95-kernel/verify_negative_control.py        1         1         3->3     GREEN->GREEN  no
+M95-kernel/verify_report.py               1         1     116->116         RED->RED  no
+M95-kernel/verify_s14.py                  0         0       28->28     GREEN->GREEN  no
+M95-kernel/verify_s15.py                  1         1       35->35     GREEN->GREEN  no
+M95-kernel/verify_s16.py                  0         1        49->4      GREEN->NONE  YES
+M95-kernel/verify_s18.py                  0         0       32->32     GREEN->GREEN  no
+M95-kernel/verify_s19.py                  1         1       33->33         RED->RED  no
+M95-kernel/verify_s20.py                  0         1       55->47      GREEN->NONE  YES
+--------------------------------------------------------------------------------------------
+2 of 10 read-only gates are EXPOSED
+characters of verification output lost across the exposed gates: 3409
+note: negctl_*.py were not run here, by design -- see the module docstring
+wrote out/k18b_gates.json
+============================================================================================

@@ -1,0 +1,182 @@
+[
+  {
+    "gate": "M95-coverage/verify_negative_control.py",
+    "utf8": {
+      "rc": 1,
+      "lines": 9,
+      "chars": 452,
+      "verdict": "RED",
+      "uerr": false
+    },
+    "unset": {
+      "rc": 1,
+      "lines": 9,
+      "chars": 452,
+      "verdict": "RED",
+      "uerr": false
+    },
+    "exposed": false
+  },
+  {
+    "gate": "M95-coverage/verify_report.py",
+    "utf8": {
+      "rc": 1,
+      "lines": 12,
+      "chars": 527,
+      "verdict": "NONE",
+      "uerr": false
+    },
+    "unset": {
+      "rc": 1,
+      "lines": 12,
+      "chars": 527,
+      "verdict": "NONE",
+      "uerr": false
+    },
+    "exposed": false
+  },
+  {
+    "gate": "M95-kernel/verify_negative_control.py",
+    "utf8": {
+      "rc": 1,
+      "lines": 3,
+      "chars": 153,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "unset": {
+      "rc": 1,
+      "lines": 3,
+      "chars": 153,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "exposed": false
+  },
+  {
+    "gate": "M95-kernel/verify_report.py",
+    "utf8": {
+      "rc": 1,
+      "lines": 116,
+      "chars": 8701,
+      "verdict": "RED",
+      "uerr": false
+    },
+    "unset": {
+      "rc": 1,
+      "lines": 116,
+      "chars": 8701,
+      "verdict": "RED",
+      "uerr": false
+    },
+    "exposed": false
+  },
+  {
+    "gate": "M95-kernel/verify_s14.py",
+    "utf8": {
+      "rc": 0,
+      "lines": 28,
+      "chars": 2003,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "unset": {
+      "rc": 0,
+      "lines": 28,
+      "chars": 2003,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "exposed": false
+  },
+  {
+    "gate": "M95-kernel/verify_s15.py",
+    "utf8": {
+      "rc": 1,
+      "lines": 35,
+      "chars": 2462,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "unset": {
+      "rc": 1,
+      "lines": 35,
+      "chars": 2462,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "exposed": false
+  },
+  {
+    "gate": "M95-kernel/verify_s16.py",
+    "utf8": {
+      "rc": 0,
+      "lines": 49,
+      "chars": 3337,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "unset": {
+      "rc": 0,
+      "lines": 49,
+      "chars": 3337,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "exposed": false
+  },
+  {
+    "gate": "M95-kernel/verify_s18.py",
+    "utf8": {
+      "rc": 0,
+      "lines": 32,
+      "chars": 2338,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "unset": {
+      "rc": 0,
+      "lines": 32,
+      "chars": 2338,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "exposed": false
+  },
+  {
+    "gate": "M95-kernel/verify_s19.py",
+    "utf8": {
+      "rc": 1,
+      "lines": 33,
+      "chars": 2450,
+      "verdict": "RED",
+      "uerr": false
+    },
+    "unset": {
+      "rc": 1,
+      "lines": 33,
+      "chars": 2450,
+      "verdict": "RED",
+      "uerr": false
+    },
+    "exposed": false
+  },
+  {
+    "gate": "M95-kernel/verify_s20.py",
+    "utf8": {
+      "rc": 0,
+      "lines": 56,
+      "chars": 2377,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "unset": {
+      "rc": 0,
+      "lines": 56,
+      "chars": 2377,
+      "verdict": "GREEN",
+      "uerr": false
+    },
+    "exposed": false
+  }
+]

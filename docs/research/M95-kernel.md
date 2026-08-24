@@ -1216,10 +1216,16 @@ old code outright. The third trails the commit by **59 seconds**, which a
 process already running on an already-built binary explains and a fresh
 invocation of fixed source does not.
 
-Read from disk, every quarantined `coffee-bean` file is **187 to 256 minutes
-old**; the newest artifact in the quarantine is `round4-1033` at 10:33:42. None
-of them is recent. "The file returns within minutes" and "just now" describe a
-population roughly three hours old.
+Read from disk, the five quarantined `coffee-bean` files carry mtimes spanning
+09:24:21 to 10:33:42 on 2026-08-24; the newest artifact in the quarantine is
+`round4-1033` at 10:33:42. That span is the durable form of the claim. What
+this paragraph first said was that every one of them was **187 to 256 minutes
+old**, which was true when it was written, at roughly 13:40, and false within
+the hour — an age is a function of `now`, so recording one records a claim with
+an expiry date. `verify_s19.py` duly went RED on it later the same afternoon,
+reading 220 to 290, and the verifier was right. None of these files is recent.
+"The file returns within minutes" and "just now" describe a population that was
+already hours old when the claim was made.
 
 **So the remaining route is stale per-agent binaries built before `8118dd7`** —
 the residual §15 flagged as prediction and §18 confirmed by evidence. No further
@@ -1439,3 +1445,300 @@ Re-run: 5/5 caught, restore byte-identical, post-restore GREEN.
 This is the third time in this milestone that a weak anchor produced a green
 check on a claim it was not actually testing. The rule that survives: an anchor
 must be a *neighbour* of the value, never the value itself.
+
+---
+
+## 21. The gate that could not report its own findings
+
+The orchestrator sent a notice with no task attached: `scripts/corpus_lint.py`
+had been unable to print the violations it found, because Python selects the
+ANSI codepage for redirected stdout and cp1252 cannot encode the characters
+this corpus is written in. `print()` raised mid-loop, the violation list
+truncated to nothing, and the process exited 1 — the same code the linter uses
+for *violations found*. Their closing line was the part addressed to me: *worth
+checking against any harness you have built this session that reports through
+stdout.*
+
+I checked. **It was in mine too, and one of the two gates it broke is the one
+behind this milestone's headline.**
+
+### 21.1 First, their claim, checked rather than accepted
+
+`e3c01aa` is an ancestor of HEAD, and `scripts/corpus_lint.py:1529` carries
+`_stream.reconfigure(encoding="utf-8", errors="backslashreplace")`. Re-run at
+HEAD: 158 markdown files, 53 rust files, 1247 facts, **exit 0, no violations**.
+That capture is pinned at `out/lint_s21.txt`, and it needs to be, because those
+counts and that exit code are properties of the whole shared tree at one
+instant — see §21.9. The seven live violations they routed to M107 were fixed
+in `63d24ca` before I looked. Nothing I have committed is implicated, which is
+the specific question they asked me to answer.
+
+Earlier in this session I saw `corpus_lint` exit 1 once, re-ran it, got exit 0,
+and wrote it off as a concurrent writer mid-edit. That explanation may well have
+been wrong: an exit 1 with no violation text printed is exactly this defect's
+signature. **I recorded a guess where I had no measurement, and the guess was
+comfortable.** I cannot now distinguish the two, and I am not going to
+retrofit a reason.
+
+### 21.2 The same defect, in my own verifier, measured before it was repaired
+
+`k18_gate702.py`. The subject is `verify_s20.py`, the gate behind section 20.
+Both arms run it with stdout on a **pipe**, exactly as an agent tool call or a
+CI log does, differing only in `PYTHONIOENCODING`.
+
+The power control comes first, because without it a clean reading below would
+be vacuous: a canary printing `Δ − → ≤` must break in the hostile arm. It does
+— rc=1, 522 bytes of traceback, `UnicodeEncodeError` — and survives utf-8 at
+rc=0. **The instrument can say otherwise.** Then:
+
+| arm | rc | stdout chars | ok lines | verdict printed |
+|---|---:|---:|---:|---|
+| `PYTHONIOENCODING=utf-8` | 0 | 2300 | 40 | GREEN |
+| `PYTHONIOENCODING=cp1252` | 1 | 1937 | 35 | none |
+| **unset** | **1** | **1937** | **35** | **none** |
+
+**B1 = EXPOSED.** It died at check 36 of 40, lost 363 characters of its own
+report, and never printed a verdict at all.
+
+**B2 = COLLIDING.** The tool failure exits **1**. A subject failure — the
+report being wrong — also exits 1. A caller reading the exit code cannot tell
+"your report is wrong" from "the verifier fell over".
+
+The third row is the one that matters. **Unset is the default**, and unset is
+identical to cp1252. This never showed up because I set `PYTHONIOENCODING=utf-8`
+by habit before every python call in this session. That habit is a convention
+announced, not a convention enforced, and it was the only thing standing
+between me and a silently broken gate.
+
+### 21.3 How wide it was
+
+`k18b_gates.py` runs every read-only `verify_*.py` in this milestone twice,
+utf-8 against unset. A gate is EXPOSED if the two runs disagree on anything a
+caller reads. Absolute pass or fail is not judged: a gate that is RED in both
+modes is consistent and therefore not exposed. The `negctl_*.py` controls are
+deliberately **not** run here — inducing a fault in a script whose job is to
+restore a file on disk is a bad trade for a number available another way.
+
+**2 of 10 exposed, 3409 characters of verification output lost.**
+
+| gate | utf-8 | unset | exposed |
+|---|---|---|---|
+| `verify_s16.py` | GREEN, 49 lines | none, **4 lines** | YES |
+| `verify_s20.py` | GREEN, 55 lines | none, 47 lines | YES |
+| the other eight | unchanged | unchanged | no |
+
+`verify_s16.py` is the worse one and it is already committed. In the caller's
+mode it prints four lines and exits 1. Anyone re-running it — another agent, a
+future me, CI — would read that as *section 16 fails verification*, which is
+precisely the misreading the orchestrator warned about, and would have been
+reasonable.
+
+The other eight are not safe, only lucky. They print report text; the day a
+report they read gains a minus sign they behave like these two.
+
+### 21.4 The finding that could have withdrawn section 20, and did not
+
+Section 20's negative control scores a planted defect CAUGHT on a non-zero exit
+plus a positive BAD count. If a *tool* failure can present the same way, that
+5/5 was counting crashes and proves nothing. This is B3, and I registered
+before running that a CAUGHT reading here means the 5/5 is withdrawn.
+
+The predicate is read out of `negctl_s20.py` at runtime rather than retyped, so
+the arm cannot drift from the control it is testing. A tool-failed run gives
+**rc=1, BAD=0**, and the predicate scores it **MISSED**.
+
+**B3 = FAILS SAFE. Section 20's 5/5 stands.**
+
+I want to be exact about why, because it is not to my credit. The predicate
+required a positive signal parsed from stdout — `bad > 0` — rather than merely
+a non-zero exit. I wrote it that way to count *which* checks failed, not to
+defend against a crashing verifier. **It paid a debt I had not knowingly taken
+out.** Had I written the obvious `if rc != 0`, this section would be a
+withdrawal.
+
+It is now `rc == 1 and bad > 0`, which is strictly stronger, and the control has
+gained a **standing tool-failure arm**: it deletes an artifact the verifier must
+read, requires rc=2 and a MISSED scoring, and restores the artifact
+byte-identically. Discipline 702 is now re-checked on every run rather than
+measured once tonight.
+
+### 21.5 The repair, and the same measurement afterwards
+
+Two lines reconfigure both streams to utf-8 with `errors="backslashreplace"`,
+which cannot itself raise. Then, for the pair behind the live result, the deeper
+half: an `excepthook` that prints the traceback and exits **2**, four explicit
+guards routed through the same path, and a terminator line so a truncated run is
+visible even by eye. `os._exit(2)` was probed first rather than assumed — a
+`sys.exit(2)` inside an excepthook does not set the code.
+
+`k18c_patch_gates.py` applies the shallow half to all 14 gates, byte-compiling
+each and rolling back from memory on failure: 12 patched, 2 already repaired, 0
+failed.
+
+| after the repair | result |
+|---|---|
+| canary still breaks under cp1252 | **yes** — the harness is still reproducing the mode |
+| `verify_s20.py`, all three arms | rc=0, 2377 chars, 40 ok, GREEN, identical |
+| B1 | **NOT EXPOSED** |
+| B4 | **FIXED**, tool-failure codes seen `[0, 2]`, never 1 |
+| fleet | **0 of 10 exposed**, `verify_s16.py` restored 4 → 49 lines, GREEN |
+| `negctl_s20.py` | **5/5** under the stricter predicate, tool arm rc=2 → MISSED, **PASS** |
+
+The canary row is load-bearing. A "0 of 10 exposed" reading is only worth
+something if the harness could still have found an exposure, and the canary
+still dies in the hostile arm.
+
+### 21.6 Two gates that were RED, and both were telling the truth
+
+Restoring the output made me read gates I had stopped reading. Two were RED in
+both modes — consistent, so not exposed, but RED is a claim.
+
+**`verify_s19.py`: I had written a claim with an expiry date.** Section 19 said
+every quarantined `coffee-bean` file was *187 to 256 minutes old*. That was true
+when written, at roughly 13:40. Read again four hours later it is 220 to 290 and
+the gate went RED. **An age is a function of `now`, so recording one records
+something that becomes false without anybody touching it.** The report now
+records the mtime span, 09:24:21 to 10:33:42, which is the same observation in a
+form that does not decay, and the check reads it off the filesystem and requires
+the report to state it. GREEN.
+
+**`verify_report.py`: 91 of 93, and neither failure was a wrong number.** Both
+claims were present; what failed was *decoy discrimination*. The ladder checks
+searched the whole document, and section 20 — written hours later — introduced
+`-0.0003` and a timestamp ending `43`, the decoys for a `0.0002` and a `42`
+belonging to section 4. **A decoy is a property of the entire document, so
+appending a section can retroactively blunt a discriminator written before it
+existed.** Anchoring each ladder figure on its own table row fixes it: **93/93
+numeric and 17/17 structural, GREEN.**
+
+That is a new failure mode for this milestone's running list. The earlier three
+were about anchors being too weak *in place*; this one is about a check that was
+sound when written and was invalidated by text added elsewhere, later. Verifiers
+rot.
+
+### 21.7 What I am not claiming
+
+I have **not** shown that any number I have reported is wrong. The encoding
+defect destroyed output, it did not fabricate it: every arm that printed a
+result printed the same result. Both REDs in §21.6 were instrument scope and one
+report claim that aged out. Section 20's arms are unmoved, and its 5/5 survives
+a control specifically designed to break it.
+
+Residual, stated so it is not discovered later as a surprise: **only
+`verify_s20.py` and `negctl_s20.py` have the distinct tool-failure exit code.**
+The other twelve gates can no longer be silenced by a codepage, but a genuine
+crash in them still exits 1 and is still indistinguishable from a subject
+failure. That is a real remaining hole, it is narrower than the one closed, and
+it is follow-up work rather than something I am going to claim is done.
+
+### 21.8 Verification, and the two holes the control found
+
+`verify_s21.py` re-derives every figure above from the artifact that produced
+it — the pre-fix captures, the post-fix JSON, the negative control's own log,
+the source of the repaired gates, `git merge-base` for the ancestry claim, and
+the filesystem for the mtime span — never from this section's prose. It is
+GREEN, and its run log is `out/verify_s21.txt`. It deliberately does not verify
+its own passing-check count: a verifier that checks how many checks it ran
+changes that number by doing so, and a self-referential figure is not evidence.
+
+`negctl_s21.py` plants seven defects. **On its first run it caught five**, and
+the two it missed were both real holes in the verifier, of two different kinds.
+
+**The first turned a subject failure into a tool failure.** I had anchored the
+cp1252 row's ok-line count on a string that contained the same row's character
+count. Mutating that character count destroyed the anchor, so the verifier
+exited 2 — *I cannot run* — instead of 1, and the control scored it MISSED: the
+planted defect was never reported as a subject failure at all. **An anchor must
+not contain another verified value**, or breaking one claim silences the check
+on its neighbour.
+
+**The second read green on a report that was wrong**, which is the serious one.
+The control changed a table cell from one exposure count to another and every
+check still passed. Three lines below that table, in prose I wrote myself, the
+same figure appears again inside the search window — so the mutation removed
+one copy and the check found the other. Anchor uniqueness, which §20.9 added,
+does not cover this: **the token has to be unique in the window too.** `num()`
+now counts occurrences and treats more than one as a tool failure, which fires
+on the *unmutated* report, at authoring time, where it costs a minute.
+
+That makes four distinct ways a weak check has read green in this milestone:
+a decoy that occurred by chance, an anchor spanning a line break, an anchor
+that was its own token, and now a token with a twin inside its own window. The
+rule accumulated so far: **an anchor must be a neighbour of the value, must not
+be any other checked value, and the value must appear once and only once in the
+window it is checked in.**
+
+After both repairs: **7/7 caught**, every one at `rc=1` with a positive BAD
+count, restore byte-identical, post-restore GREEN, and the standing
+tool-failure arm reporting `rc=2` scored MISSED, PASS. `corpus_lint` reports
+**no violation in any file I own** — the form of that claim is deliberate and
+§21.9 says why.
+
+One more thing about that 5, because it would otherwise be a number I remember
+rather than one I measured: the passing run overwrote the capture file that
+recorded it. `k18d_replay_first.py` regresses exactly the two guards, replays
+the control, and restores the verifier from a copy taken beforehand — checking
+the restore is byte-identical, and hard-erroring if any regression anchor fails
+to land, since a silent no-op would replay 7/7 and let me claim the holes never
+existed. It reproduces **5/7 with the same two misses**, and that capture is
+`out/negctl_s21_FIRST.txt`. The incidental BAD counts differ slightly from the
+original run, because the replay regresses the two guards rather than every
+intermediate edit; the two misses are identical.
+
+### 21.9 A green linter is a claim about the tree, not about your commit
+
+I nearly committed §21.8 saying "`corpus_lint` exit 0", which is the same defect
+as §19's decaying age in a different coat. Measured, minutes apart, with no edit
+of mine in between:
+
+| run | capture | exit | violations |
+|---|---|---|---|
+| first | not saved to a file | 1 | 1, in `docs/research/M87-occlusion.md` |
+| second | `out/lint_s21_now.txt` | 0 | none |
+
+The last commit touching that file **at the time of those two runs** is
+`82a6dbb`, `2026-08-24 13:56:49 -0700`, which is before both of them. So the
+violation was in another agent's **uncommitted working-tree edit**, and it went
+away when they saved a fix. `corpus_lint` reads the working tree of a repository
+that seven agents are writing to, so its exit code is a property of the tree at
+an instant, not of my commit.
+
+Two consequences, and I am acting on both.
+
+**The claim has to be scoped to what I own.** `verify_s21.py` now parses the
+violation lines out of the live capture and requires that none of them names a
+path I own, rather than requiring the run to be globally green. That claim is
+stable under other agents' work; the old one was not, and would have gone RED
+for a reason having nothing to do with me.
+
+That check is green on a capture with no violations in it at all, which makes
+it exactly the kind of null this milestone is not allowed to report. So
+`negctl_s21.py` carries a standing power control: it plants
+`docs/research/M95-kernel.md:1: [S6] planted by the power control` into the
+capture and requires the verifier to notice. It does — **rc=1, BAD=1**, capture
+restored byte-identical, **PASS**. The check can say otherwise, so its silence
+is worth something.
+
+**The first run's output is an observation, not an artifact, and I am marking it
+as one.** I did not save it, and M87's buffer is gone, so I cannot re-derive it.
+It appears in the table above with its capture column reading *not saved*, and
+nothing in §21 depends on it. The rule I broke is my own — capture first, then
+read — and it is worth noting that I broke it on the run I did not expect to be
+interesting.
+
+This section's own verifier check decayed **inside two minutes** of my writing
+it. I checked the attribution by asking git for the *latest* commit touching
+that file; it went RED on the next run because M87 committed again at
+`14:33:27`. The claim I needed was never "this is the latest commit" but "this
+commit predates my runs", which is true forever. So the check now asks whether
+`82a6dbb` exists at that timestamp and is an ancestor of HEAD, and says nothing
+about what is newest. Second time this milestone — §19's age was the first —
+and both times the tell was the same: **the check consulted `now`.**
+
+One thing does fall out of this in my favour. Post-`e3c01aa` the two causes of
+`exit 1` are distinguishable: the encoding defect prints **no** violation text,
+a real violation prints it. My second run printed the offending line and file,
+which is how I could attribute it in one step. Before the fix both causes
+printed nothing and exited 1, so the earlier exit 1 I saw in §21.1 remains
+unattributable — a concurrent writer is now *confirmed to be a mechanism that
+exists*, which is not the same as evidence that it was the cause that time.

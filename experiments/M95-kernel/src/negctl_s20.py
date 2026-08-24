@@ -16,6 +16,11 @@ import sys
 import tempfile
 from pathlib import Path
 
+# Discipline 702: this control reports through stdout and its exit code is read
+# as a claim, so it must survive the caller's codepage. See verify_s20.py.
+sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace")
+sys.stderr.reconfigure(encoding="utf-8", errors="backslashreplace")
+
 ROOT = Path(__file__).resolve().parents[3]
 REPORT = ROOT / "docs" / "research" / "M95-kernel.md"
 VERIFY = Path(__file__).resolve().parent / "verify_s20.py"
@@ -74,7 +79,7 @@ def main():
         for label, old, new in MUTATIONS:
             REPORT.write_text(text.replace(old, new, 1), encoding="utf-8")
             rc, bad = run_verifier()
-            if rc != 0 and bad > 0:
+            if rc == 1 and bad > 0:
                 print(f"  CAUGHT  {label:<45} rc={rc}  BAD={bad}")
                 caught += 1
             else:
@@ -88,10 +93,35 @@ def main():
     rc, _ = run_verifier()
     print(f"post-restore: rc={rc}  {'GREEN' if rc == 0 else 'RED'}")
     print(f"\nnegative control: {caught}/{len(MUTATIONS)} planted defects caught")
+
+    # Discipline 702, made standing rather than measured once. Every arm above
+    # concludes CAUGHT from a NON-ZERO EXIT plus a positive BAD count. That is
+    # only sound if a verifier which breaks as a TOOL cannot present the same
+    # way. Induce a real tool failure by removing an artifact it must read, and
+    # require both that it exits 2 rather than 1 and that the CAUGHT predicate
+    # above scores it MISSED. If this ever flips, every count printed above is
+    # counting crashes.
+    print("\n-- tool-failure arm: a broken verifier must not score as a catch --")
+    jsonp = ROOT / "experiments" / "M95-kernel" / "out" / "k17_crop.json"
+    stash = jsonp.read_bytes()
+    try:
+        jsonp.unlink()
+        tf_rc, tf_bad = run_verifier()
+    finally:
+        jsonp.write_bytes(stash)
+    restored_json = jsonp.read_bytes() == stash
+    scored = tf_rc == 1 and tf_bad > 0
+    print(f"  removed {jsonp.name} -> rc={tf_rc}  BAD={tf_bad}  "
+          f"scored {'CAUGHT' if scored else 'MISSED'}")
+    print(f"  artifact restored byte-identical: {restored_json}")
+    tool_ok = tf_rc == 2 and not scored and restored_json
+    print(f"  tool failure exits {tf_rc}, subject failure exits 1, distinct: "
+          f"{'PASS' if tool_ok else 'FAIL'}")
+
     if not same:
         shutil.copyfile(backup, REPORT)
         sys.exit("RESTORE FAILED -- report recovered from the backup")
-    return 0 if (caught == len(MUTATIONS) and rc == 0) else 1
+    return 0 if (caught == len(MUTATIONS) and rc == 0 and tool_ok) else 1
 
 
 if __name__ == "__main__":

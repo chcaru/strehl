@@ -1,0 +1,129 @@
+========================================================================
+verify section 21 -- the gate that could not report its own findings
+========================================================================
+
+-- 21.1 the orchestrator's claim, re-checked --
+  ok   e3c01aa is an ancestor of HEAD (git says so)
+  ok   report states the ancestry
+  ok   corpus_lint carries the repair: scripts/corpus_lint.py contains it
+  ok   lint markdown files: 158
+  ok   lint fact count: 1247
+  ok   pinned 21.1 lint capture says no violations
+
+-- 21.9 a green linter is a claim about the tree, not about my commit --
+  .. live capture lists 0 violation line(s); 0 in files I own
+  ok   no violation names a path I own
+  ok   the claim is scoped, not global
+  ok   the scoping is justified
+  ok   the unsaved run is marked
+  ok   nothing depends on the unsaved run
+  ok   the earlier exit 1 stays unattributed
+  .. git resolves 82a6dbb: 82a6dbb 2026-08-24 13:56:49 -0700  ancestor rc=0
+  ok   82a6dbb exists at 2026-08-24 13:56:49 -0700 and is an ancestor of HEAD
+  ok   the attribution is scoped to the runs
+  ok   the decayed check is disclosed
+  ok   the shared tell is named
+  ok   the attributed commit: 82a6dbb
+  ok   the attributed commit date: 2026-08-24 13:56:49 -0700
+  ok   the control's power arm passed in the capture
+  ok   the vacuous-null risk is named
+  ok   the power control's planted line
+  ok   the power arm's numbers
+  ok   the guess is owned, not retrofitted
+
+-- 21.2 pre-fix exposure, re-derived from the capture --
+  ok   utf-8 arm chars: | 2300 |
+  ok   utf-8 arm ok lines: | 40 | GREEN |
+  ok   cp1252 arm chars: | 1937 | 35 |
+  ok   cp1252 arm ok lines: | 35 | none |
+  ok   unset arm chars: **1937**
+  ok   canary traceback bytes: 522
+  ok   unset is identical to cp1252 (rc=1, 1937 chars) -- re-derived
+  ok   report says unset is the default and is broken
+  .. recomputed: 2300 - 1937 = 363 chars, 40 - 35 = 5 ok lines
+  ok   characters lost: 363
+  ok   died at check: 36 of 40
+  ok   capture records B1 = EXPOSED
+  ok   capture records B2 = COLLIDING
+  ok   B1 verdict in the report
+  ok   B2 verdict in the report
+
+-- 21.3 fleet, re-derived from the pre-fix capture --
+  .. capture: 2 of 10 exposed, 3409 chars, s16 49->4, s20 55->47
+  ok   fleet exposed: 2 of 10
+  ok   fleet chars lost: 3409
+  ok   s16 pre-fix lines: 49 lines
+  ok   s16 pre-fix broken lines: **4 lines**
+  ok   s20 pre-fix lines: 55 lines
+  ok   s20 pre-fix broken lines: 47 lines
+  ok   negctls deliberately excluded
+  ok   the other eight are lucky
+
+-- 21.4 the arm that could have withdrawn section 20 --
+  ok   JSON B3 = FAILS SAFE
+  ok   B3 verdict
+  ok   the tightened predicate is in the control: experiments/M95-kernel/src/negctl_s20.py contains it
+  ok   predicate in the report: `rc == 1 and bad > 0`
+  ok   credit is declined
+  ok   the counterfactual is stated
+  .. tool-failure exit codes from the JSON: [0, 2]
+  ok   tool failure codes: [0, 2]
+
+-- 21.5 the repair, re-derived post-fix --
+  ok   verify_s20 reconfigures stdout: experiments/M95-kernel/src/verify_s20.py contains it
+  ok   verify_s20 exits 2 on tool failure: experiments/M95-kernel/src/verify_s20.py contains it
+  ok   verify_s20 installs the excepthook: experiments/M95-kernel/src/verify_s20.py contains it
+  ok   all three arms identical post-fix (rc=0, 2377 chars)
+  ok   post-fix chars: 2377
+  ok   post-fix ok lines: 40 ok
+  ok   JSON B1 = NOT EXPOSED, B4 = FIXED
+  ok   the canary still breaks post-fix, so the null is not vacuous
+  ok   the canary row is called load-bearing
+  .. post-fix fleet: 0 of 10 exposed (recomputed from the JSON)
+  ok   post-fix fleet: **0 of 10 exposed**
+  ok   verify_s16 post-fix: 49 lines, GREEN, in the unset arm
+  .. negctl log: 5/5, tool arm rc=2
+  ok   negative control score: 5/5
+  ok   tool arm exit code: rc=2
+  ok   negctl log records MISSED and PASS on the tool arm
+  ok   gates patched: 12 patched
+
+-- 21.6 the two RED gates --
+  .. filesystem: 5 files, span 09:24:21 to 10:33:42
+  ok   mtime span start: 09:24:21
+  ok   mtime span end: 10:33:42
+  ok   the decayed claim is named
+  ok   the gate was right
+  ok   the decayed reading: 220 to 290
+  ok   the original decayed claim: 187 to 256
+  ok   verify_s19 no longer decays: experiments/M95-kernel/src/verify_s19.py contains it
+  ok   verify_report anchors on the row: experiments/M95-kernel/src/verify_report.py contains it
+  ok   neither failure was a wrong number
+  ok   the retroactive mechanism is named
+  ok   verifiers rot
+
+-- 21.7 what is not claimed --
+  ok   no number is claimed wrong
+  ok   the defect destroyed, did not fabricate
+  ok   the residual is stated
+
+-- 21.8 the negative control, re-derived from its own captures --
+  .. final 7/7 over 7 planted defects, replayed first run 5/7
+  ok   planted count stated in words
+  ok   the log shows 7 planted arms, matching that wording
+  ok   first-run score: 5
+  ok   final score: **7/7 caught**
+  ok   every planted defect is caught in the final run (7/7)
+  .. MISSED arms in the replayed first run: 2
+  ok   the replay reproduces exactly two misses
+  ok   the replay restored the report byte-identically
+  ok   the replay hard-errors on a missed anchor: experiments/M95-kernel/src/k18d_replay_first.py contains it
+  ok   the ambiguity guard is live: experiments/M95-kernel/src/verify_s21.py contains it
+  ok   the self-count exclusion is reasoned
+  ok   the four failure modes are counted
+  ok   the accumulated rule
+  ok   the incidental difference is disclosed
+
+========================================================================
+94 checks passed, 0 failed  ->  GREEN
+END OF VERIFIER -- reaching this line is part of the contract (exit 0 or 1)

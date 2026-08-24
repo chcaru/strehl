@@ -11,3 +11,8 @@ restored byte-identical: True
 post-restore: rc=0  GREEN
 
 negative control: 5/5 planted defects caught
+
+-- tool-failure arm: a broken verifier must not score as a catch --
+  removed k17_crop.json -> rc=2  BAD=0  scored MISSED
+  artifact restored byte-identical: True
+  tool failure exits 2, subject failure exits 1, distinct: PASS

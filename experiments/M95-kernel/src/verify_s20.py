@@ -14,10 +14,41 @@ a sentence is not a claim.
 """
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
+import traceback
 from pathlib import Path
+
+# Discipline 702. A gate must work in the mode its callers actually use, and it
+# must distinguish tool failure from subject failure, or a green run and a
+# broken run are the same observation. Python selects the ANSI codepage for
+# PIPED stdout -- every agent tool call, every CI log -- and cp1252 cannot
+# encode the minus signs this report is full of. Measured in k18_gate702.py:
+# without the two lines below, and with PYTHONIOENCODING unset, this file died
+# at check 36 of 40, printed no verdict, and exited 1: the same code it uses for
+# "the report is wrong". It only ever looked healthy because I set utf-8 by
+# habit, which is a convention announced, not a convention enforced.
+sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace")
+sys.stderr.reconfigure(encoding="utf-8", errors="backslashreplace")
+
+
+def tool_failure(msg):
+    """Exit 2. The verifier broke. This is NOT a verdict on the report."""
+    print(f"\nTOOL FAILURE  {msg}")
+    print("exit 2 -- the verifier did not finish; do not read this as a subject verdict")
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os._exit(2)
+
+
+def _unhandled(exc_type, exc, tb):
+    traceback.print_exception(exc_type, exc, tb)
+    tool_failure(f"unhandled {exc_type.__name__}: {exc}")
+
+
+sys.excepthook = _unhandled
 
 ROOT = Path(__file__).resolve().parents[3]
 REPORT = ROOT / "docs" / "research" / "M95-kernel.md"
@@ -37,12 +68,12 @@ def section(raw, n):
     """
     m = re.search(rf"^## {n}\. ", raw, re.M)
     if not m:
-        sys.exit(f"SECTION {n} NOT FOUND")
+        tool_failure(f"SECTION {n} NOT FOUND")
     rest = raw[m.end():]
     nxt = re.search(r"^## \d+\. ", rest, re.M)
     body = rest[: nxt.start()] if nxt else rest
     if len(body.splitlines()) < 40:
-        sys.exit(f"SECTION {n} SUSPICIOUSLY SHORT: {len(body.splitlines())} lines")
+        tool_failure(f"SECTION {n} SUSPICIOUSLY SHORT: {len(body.splitlines())} lines")
     return body
 
 
@@ -62,10 +93,10 @@ def num(label, token, ctx):
     """
     global ok, bad
     if ctx in token or token in ctx:
-        sys.exit(f"SELF-ANCHORED CHECK {label!r}: ctx {ctx!r} overlaps token {token!r}")
+        tool_failure(f"SELF-ANCHORED CHECK {label!r}: ctx {ctx!r} overlaps token {token!r}")
     n = FLAT.count(ctx)
     if n != 1:
-        sys.exit(f"ANCHOR NOT UNIQUE for {label!r} ({n} occurrences): {ctx!r}")
+        tool_failure(f"ANCHOR NOT UNIQUE for {label!r} ({n} occurrences): {ctx!r}")
     i = FLAT.find(ctx)
     hay = FLAT[max(0, i - 300): i + 300]
     if token in hay:
@@ -237,4 +268,5 @@ else:
 
 print("\n" + "=" * 72)
 print(f"{ok} checks passed, {bad} failed  ->  {'GREEN' if bad == 0 else 'RED'}")
+print("END OF VERIFIER -- reaching this line is part of the contract (exit 0 or 1)")
 sys.exit(1 if bad else 0)

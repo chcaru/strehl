@@ -12,6 +12,14 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+# Discipline 702: this gate reports through stdout and its exit code is read as
+# a claim. Python picks the ANSI codepage for piped stdout, which is every agent
+# tool call and every CI log, and cp1252 cannot encode the minus signs and arrows
+# this corpus uses. Without this, print() raises mid-run and the process exits 1:
+# indistinguishable from a real failure. Measured in k18_gate702.py.
+sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace")
+sys.stderr.reconfigure(encoding="utf-8", errors="backslashreplace")
+
 ROOT = Path(r"C:\dev\blog\death-of-software\projects\strehl")
 REPORT = ROOT / "docs" / "research" / "M95-kernel.md"
 QUAR = Path(r"C:\dev\strehl-out\ORCH-quarantine-sidecars")
@@ -90,12 +98,16 @@ for label, derived, token in checks:
     ok &= good
     print(f"  {'OK ' if good else 'BAD'}  {label:<32} derived={derived} present={present} disc={disc}")
 
-ages = [(datetime.now() - datetime.fromtimestamp(f.stat().st_mtime)).total_seconds() / 60
-        for f in QUAR.glob("*coffee-bean*")]
-age_ok = ages and 180 <= min(ages) and max(ages) <= 270
+mt = sorted(datetime.fromtimestamp(f.stat().st_mtime) for f in QUAR.glob("*coffee-bean*"))
+lo = mt[0].strftime("%H:%M:%S") if mt else "none"
+hi = mt[-1].strftime("%H:%M:%S") if mt else "none"
+# An age is a function of now, so it is a claim with an expiry date: the earlier
+# form of this check read the stated 187-256 minute window and went RED four
+# hours later purely because time had passed. The mtime span does not decay.
+age_ok = len(mt) == 5 and lo in flat and hi in flat
 print("-" * 78)
-print(f"  {'OK ' if age_ok else 'BAD'}  quarantine ages inside the stated 187-256 min window "
-      f"(actual {min(ages):.0f}-{max(ages):.0f})")
+print(f"  {'OK ' if age_ok else 'BAD'}  quarantine mtime span read from disk, {lo}-{hi}, "
+      f"is stated in the report ({len(mt)} files)")
 ok &= bool(age_ok)
 
 structural = [

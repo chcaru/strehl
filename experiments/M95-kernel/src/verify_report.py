@@ -18,6 +18,14 @@ import re
 import sys
 from pathlib import Path
 
+# Discipline 702: this gate reports through stdout and its exit code is read as
+# a claim. Python picks the ANSI codepage for piped stdout, which is every agent
+# tool call and every CI log, and cp1252 cannot encode the minus signs and arrows
+# this corpus uses. Without this, print() raises mid-run and the process exits 1:
+# indistinguishable from a real failure. Measured in k18_gate702.py.
+sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace")
+sys.stderr.reconfigure(encoding="utf-8", errors="backslashreplace")
+
 HERE = Path(__file__).resolve().parents[1]
 REPORT = HERE.parents[1] / "docs" / "research" / "M95-kernel.md"
 OUT = HERE / "out"
@@ -89,13 +97,18 @@ def main():
     c.has("B23 p99.9 gradient DN", f"{r['t999_dn']:.2f}")
     for g in r["ladder"]:
         gate = int(g["gate_dn"])
-        c.has(f"B23 gate {gate} population", f"{g['n']:,}".replace(",", " "))
+        # Anchor every ladder figure on its own row. Without this the decoy
+        # search runs document-wide, and section 20 later introduced both
+        # "-0.0003" and a timestamp ending "43", retroactively blunting the
+        # discrimination on two claims written long before it existed.
+        row = f"| {gate} DN |"
+        c.has(f"B23 gate {gate} population", f"{g['n']:,}".replace(",", " "), ctx=row)
         for kk in g["kernels"]:
             if kk["kernel"] not in ("catmull-rom", "lanczos3"):
                 continue
             short = "cr" if kk["kernel"] == "catmull-rom" else "lz"
-            c.has(f"B23 gate {gate} {short} mean", f"{kk['mean_dn']:.4f}")
-            c.has(f"B23 gate {gate} {short} max", f"{kk['max_dn']:.4f}")
+            c.has(f"B23 gate {gate} {short} mean", f"{kk['mean_dn']:.4f}", ctx=row)
+            c.has(f"B23 gate {gate} {short} max", f"{kk['max_dn']:.4f}", ctx=row)
 
     # ---- K22 step --------------------------------------------------------
     for k in ("catmull-rom", "lanczos3"):

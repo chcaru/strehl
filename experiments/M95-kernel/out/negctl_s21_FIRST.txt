@@ -1,0 +1,20 @@
+backed up 89403 bytes to C:\Users\chris\AppData\Local\Temp\M95-kernel.md.s21.bak
+
+baseline: rc=0  GREEN
+  MISSED  cp1252 arm char count                            rc=2  BAD=1
+  CAUGHT  the check it died at                             rc=1  BAD=1
+  CAUGHT  fleet exposure count                             rc=1  BAD=1
+  MISSED  post-fix fleet claim                             rc=0  BAD=0
+  CAUGHT  tool-failure exit codes                          rc=1  BAD=1
+  CAUGHT  the B3 verdict that could withdraw section 20    rc=1  BAD=1
+  CAUGHT  mtime span read off the filesystem               rc=1  BAD=1
+
+restored byte-identical: True
+post-restore: rc=0  GREEN
+
+negative control: 5/7 planted defects caught
+
+-- tool-failure arm: a broken verifier must not score as a catch --
+  removed k18_gate702_PREFIX.txt -> rc=2  BAD=0  scored MISSED
+  capture restored byte-identical: True
+  tool failure exits 2, subject failure exits 1, distinct: PASS

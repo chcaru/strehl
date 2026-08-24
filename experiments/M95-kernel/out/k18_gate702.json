@@ -1,0 +1,74 @@
+{
+  "python": "3.12.10",
+  "C0": "PASS",
+  "B1": "NOT EXPOSED",
+  "B2": "N/A",
+  "B3": "FAILS SAFE",
+  "B4": "FIXED",
+  "canary_cp1252": {
+    "rc": 1,
+    "stdout_chars": 14,
+    "stderr_chars": 522,
+    "ok_lines": 0,
+    "bad_lines": 0,
+    "unicode_error": true,
+    "verdict": "NONE",
+    "env": "PYTHONIOENCODING=cp1252"
+  },
+  "canary_utf8": {
+    "rc": 0,
+    "stdout_chars": 35,
+    "stderr_chars": 0,
+    "ok_lines": 0,
+    "bad_lines": 0,
+    "unicode_error": false,
+    "verdict": "NONE",
+    "env": "PYTHONIOENCODING=utf-8"
+  },
+  "verify_cp1252": {
+    "rc": 0,
+    "stdout_chars": 2377,
+    "stderr_chars": 0,
+    "ok_lines": 40,
+    "bad_lines": 0,
+    "unicode_error": false,
+    "verdict": "GREEN",
+    "env": "PYTHONIOENCODING=cp1252"
+  },
+  "verify_utf8": {
+    "rc": 0,
+    "stdout_chars": 2377,
+    "stderr_chars": 0,
+    "ok_lines": 40,
+    "bad_lines": 0,
+    "unicode_error": false,
+    "verdict": "GREEN",
+    "env": "PYTHONIOENCODING=utf-8"
+  },
+  "verify_unset": {
+    "rc": 0,
+    "stdout_chars": 2377,
+    "stderr_chars": 0,
+    "ok_lines": 40,
+    "bad_lines": 0,
+    "unicode_error": false,
+    "verdict": "GREEN",
+    "env": "PYTHONIOENCODING unset"
+  },
+  "verify_artifact_removed": {
+    "rc": 2,
+    "stdout_chars": 259,
+    "stderr_chars": 905,
+    "ok_lines": 0,
+    "bad_lines": 0,
+    "unicode_error": false,
+    "verdict": "NONE",
+    "env": "PYTHONIOENCODING=utf-8"
+  },
+  "tool_failure_exit_codes": [
+    0,
+    2
+  ],
+  "artifact_restored": true,
+  "predicate": "if rc == 1 and bad > 0:"
+}

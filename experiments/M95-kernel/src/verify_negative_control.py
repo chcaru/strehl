@@ -28,6 +28,14 @@ import sys
 import time
 from pathlib import Path
 
+# Discipline 702: this gate reports through stdout and its exit code is read as
+# a claim. Python picks the ANSI codepage for piped stdout, which is every agent
+# tool call and every CI log, and cp1252 cannot encode the minus signs and arrows
+# this corpus uses. Without this, print() raises mid-run and the process exits 1:
+# indistinguishable from a real failure. Measured in k18_gate702.py.
+sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace")
+sys.stderr.reconfigure(encoding="utf-8", errors="backslashreplace")
+
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 REPORT = ROOT / "docs" / "research" / "M95-kernel.md"
