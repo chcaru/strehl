@@ -14,7 +14,7 @@ genuinely useful and none of it is blocking a fix that is already written.*
 
 | # | what | time | what it unblocks |
 | --- | --- | --- | --- |
-| **1** | **§24** — flat, repeating, **corner-to-corner** subject at working magnification, shot **normal + red + green + blue** (gels or coloured light), plus **a second set with the 2x teleconverter** | ~10 min | **The dominant visible defect in your photographs.** See below. |
+| **1** | **§24** — flat, repeating, **corner-to-corner** subject at working magnification, shot **normal + red + green + blue** (gels or coloured light), plus **a second set with the 2x teleconverter** | ~10 min | Confirms a **measured 1.444x overshoot** in the CA correction on a second scene, and is the **only** path to a blue coefficient or a teleconverter one. See below. |
 | **2** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
 | 3 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document |
 | 4 | **§19** — one hard edge at three apertures | ~10 min | The remaining aperture question |
@@ -59,13 +59,59 @@ rather than by anything measured. The one crop comfortably inside the fitted
 zone, at r = 0.62, is a low-contrast patch where the fringing is barely visible
 anyway.
 
-So the position tonight is: **the defect you can see is living in the region the
-correction was never fitted on.** That leaves three possibilities — the
-extrapolation is fine, it under-corrects, or it overshoots and *reverses* the
-fringe colour — and nothing in the current data can tell them apart. There is a
-hint it may be the third: the author's own registered check wanted 90% of pixels
-to keep their colour sign and got 75.1%, printing `RECOLOURED, NOT REMOVED`. That
-is being checked independently now.
+**LATER THE SAME NIGHT — that question is now answered, and the answer is not the
+one this section was written to expect.** I built an instrument to measure it
+directly rather than wait for the capture: phase correlation on gradient
+magnitude, giving the sub-pixel red-minus-green displacement, projected onto the
+radial direction. It is validated against a positive control that plants a known
+shift by **integer pixel roll** — which moves data without resampling it, so the
+plant cannot change sharpness and contaminate the answer. Recovery error **0.045
+px over ±2 px**, n = 40 per level.
+
+Measured on a byte-controlled `on`/`off` pair of your own frames:
+
+- **The correction overshoots by a factor of 1.444.** It has the right radial
+  *shape* and the wrong *scale* — it removes the fringe and then keeps going,
+  landing ~44 % past zero with the sign flipped. So the third possibility above
+  was the right one.
+- **But not for the reason this section assumed.** The overshoot is **flat in
+  radius**: 1.453 inside the fitted support, 1.381 outside it, across seven rings
+  of 33–240 windows each. An extrapolation failure would grow with radius. This
+  does not. **It is a coefficient scale error, present everywhere, including in
+  the middle of the well-measured zone.** The hypothesis that the corners were
+  the problem is refuted, and the crops at r = 0.879 and r = 0.822 are not
+  special — they are simply where the fringes were brightest.
+- **This mechanically explains `RECOLOURED, NOT REMOVED`.** A 1.44x overshoot
+  inverts the fringe's colour sign at partial amplitude, which is exactly what
+  destroys a check that asks pixels to *keep* their sign. 75.1 % versus a 90 %
+  bar is the predicted signature, not a mystery.
+- Implied fix: scale the red coefficient by **0.692**. Note that **1/√2 = 0.7071
+  falls inside the measured spread**, so the first thing to look for is a
+  principled normalisation bug rather than a fitted fudge factor. That hunt is
+  underway before any number ships.
+
+**So why is §24 still the first thing to shoot?** Because three things remain
+that only a real capture can settle, and the case for it is now *stronger*, not
+weaker:
+
+1. **My number rests on one scene.** A scale error is exactly the kind of finding
+   that can be an artifact of a single subject's structure. §24 gives an
+   independent scene with many clean radii.
+2. **Blue is still not estimated at all** — not by the original fit, and not by
+   me: **0 of 10 rings** cleared my noise floor, so I have no claim in either
+   direction. Real fringes have a warm edge *and* a cool edge. At present at most
+   half of each fringe can be corrected, and no amount of reprocessing changes
+   that.
+3. **The 2x teleconverter is unmeasured**, and it is the one component most
+   likely to change the coefficients outright.
+
+And a fourth reason that emerged from my own failure tonight: **the first metric
+I built for this measured scene hue instead of chromatic aberration.** It
+produced a beautiful radial table and a textbook null, and died on its positive
+control. A colour-separated capture is immune to that entire class of error **by
+construction** — with only one channel lit, there is no scene hue left to
+mistake for a fringe. That is now the strongest argument for shooting §24 the way
+it is specified.
 
 **Ten minutes of a flat corner-to-corner subject decides it.** It is the only
 request on this list that unblocks a fix which is otherwise stuck guessing.
