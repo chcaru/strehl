@@ -87,6 +87,16 @@ def main() -> int:
     print("=" * 78)
     print("M72 step 7 -- C6 against M69's corrected numbers")
     print("=" * 78)
+    print("""
+  Variance convention, fixed after a first run used the wrong one.  The
+  quantity that belongs in the denominator is the variance THE MODEL
+  COMPUTES, because the error being priced is the model's omission of the
+  covariance from its own var(L).  profile.rs models read noise in electrons
+  and shot noise -- pre-quantisation physics, with no 1/12 term -- so the
+  model's variance is the Sheppard-corrected one and that is what facts 16
+  to 18 used.  The uncorrected value is printed beside it because the choice
+  is worth seeing; it moves the error from 4.05 % to 3.72 % and changes no
+  verdict below.""")
 
     t_orig = FRACTION * M72_PREREG_INPUT
     t_med = FRACTION * M69_SCALE_MEDIAN
@@ -101,32 +111,38 @@ def main() -> int:
     M69 worst-stack scale     {M69_SCALE_WORST * 100:6.2f} %  ->  threshold {t_worst * 100:5.3f} %
 """)
 
-    print(f"  {'ISO':>6} {'cov DN^2':>10} {'var DN^2':>10} {'G':>8} "
-          f"{'err@S=0':>9} {'S* median':>10} {'S* worst':>9}")
+    print(f"  {'ISO':>6} {'cov DN^2':>10} {'var model':>10} {'G':>8} "
+          f"{'err@S=0':>9} {'unc.':>7} {'S* median':>10} {'S* worst':>9}")
     rows = []
     for q in groups:
         iso = q["iso"]
         p = q["arms"]["k6"]["pairs"]["G1-G2"]
         cov = p["cov"]
-        var = 0.5 * (p["var_a"] + p["var_b"])
+        var_q = 0.5 * (p["var_a"] + p["var_b"])
+        var = var_q - 1.0 / 12.0
         g = m72c.gain(float(iso))
         e0 = sigma_error(cov, var, g, 0.0)
+        e0u = sigma_error(cov, var_q, g, 0.0)
         worst_measured = max(worst_measured, e0)
         sm = crossover(cov, var, g, t_med)
         sw = crossover(cov, var, g, t_worst)
-        rows.append((iso, sm, sw))
+        rows.append((iso, e0, sm, sw))
         print(f"  {iso:>6} {cov:10.6f} {var:10.5f} {g:8.5f} "
-              f"{e0 * 100:8.3f}% {sm:10.1f} {sw:9.1f}")
+              f"{e0 * 100:8.3f}% {e0u * 100:6.3f}% {sm:10.1f} {sw:9.1f}")
 
-    sm_all = np.array([r[1] for r in rows])
-    sw_all = np.array([r[2] for r in rows])
+    sm_all = np.array([r[2] for r in rows])
+    sw_all = np.array([r[3] for r in rows])
+    n_w = int(np.isfinite(sw_all).sum())
     print(f"""
   S* is the signal in DN above black at which the error falls BELOW the
   threshold.  Above S* the effect is immaterial on C6's own arithmetic;
   below it, it is not.
 
-    against M69's median scale error   S* spans {sm_all.min():6.1f} to {sm_all.max():6.1f} DN
-    against M69's worst-stack error    S* spans {sw_all.min():6.1f} to {sw_all.max():6.1f} DN
+    against M69's median scale error   above threshold at every ISO,
+                                       S* spans {np.nanmin(sm_all):6.1f} to {np.nanmax(sm_all):6.1f} DN
+    against M69's worst-stack error    above threshold at {n_w} of {len(rows)} ISOs,
+                                       S* spans {np.nanmin(sw_all):6.1f} to {np.nanmax(sw_all):6.1f} DN
+                                       (never exceeded at ISO >= 1000)
 """)
 
     print("=" * 78)

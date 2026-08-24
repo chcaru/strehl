@@ -1,0 +1,61 @@
+==============================================================================
+M72 step 7 -- C6 against M69's corrected numbers
+==============================================================================
+
+  Variance convention, fixed after a first run used the wrong one.  The
+  quantity that belongs in the denominator is the variance THE MODEL
+  COMPUTES, because the error being priced is the model's omission of the
+  covariance from its own var(L).  profile.rs models read noise in electrons
+  and shot noise -- pre-quantisation physics, with no 1/12 term -- so the
+  model's variance is the Sheppard-corrected one and that is what facts 16
+  to 18 used.  The uncorrected value is printed beside it because the choice
+  is worth seeing; it moves the error from 4.05 % to 3.72 % and changes no
+  verdict below.
+
+  C6's formula, unchanged:  threshold = 0.25 x (FOCUS_NOISE_SD error)
+
+    input as pre-registered    19.00 %  ->  threshold 4.750 %   [REFUTED]
+    M69 median scale error      1.47 %  ->  threshold 0.367 %
+    M69 worst-stack scale      10.09 %  ->  threshold 2.522 %
+
+     ISO   cov DN^2  var model        G   err@S=0    unc.  S* median  S* worst
+      50   0.075842    0.92379  0.22894    4.024%  3.697%       41.0       2.4
+     100   0.076184    0.92224  0.22894    4.048%  3.719%       41.2       2.5
+     200   0.207562    2.97069  0.45788    3.435%  3.342%       55.1       2.4
+     250   0.301265    4.65970  0.57234    3.182%  3.127%       63.3       2.2
+     400   0.093521    1.38343  0.91575    3.325%  3.139%       12.4       0.5
+     500   0.130926    2.07941  1.14469    3.100%  2.982%       13.7       0.4
+     640   0.188003    3.14599  1.46520    2.945%  2.870%       15.3       0.4
+     800   0.262507    4.87586  1.83150    2.657%  2.613%       16.8       0.1
+    1000   0.351825    7.58303  2.28938    2.294%  2.269%       17.6       nan
+    1600   0.632299   18.58469  3.66300    1.687%  1.679%       18.4       nan
+    2000   0.819075   29.26398  4.57875    1.390%  1.386%       17.9       nan
+
+  S* is the signal in DN above black at which the error falls BELOW the
+  threshold.  Above S* the effect is immaterial on C6's own arithmetic;
+  below it, it is not.
+
+    against M69's median scale error   above threshold at every ISO,
+                                       S* spans   12.4 to   63.3 DN
+    against M69's worst-stack error    above threshold at 8 of 11 ISOs,
+                                       S* spans    0.1 to    2.5 DN
+                                       (never exceeded at ISO >= 1000)
+
+==============================================================================
+  worst measured sigma error 4.048 %
+    vs refuted threshold  4.750 %  -> MET   [the verdict as published]
+    vs median threshold   0.367 %  -> NOT MET
+    vs worst-stack thresh 2.522 %  -> NOT MET
+
+  C6's IMMATERIAL IN PRACTICE verdict is VOID.  Re-applying my own
+  pre-registered formula to the corrected input gives NOT MET under
+  BOTH readings of the comparator, so the outcome does not depend on
+  which reading is chosen.  The adjective is withdrawn; the
+  measurement it was attached to -- facts 16, 17, 18 -- is not.
+
+  C6 also had a DEFECT I did not notice when I wrote it: only the
+  favourable branch carried a consequence.  It said what to conclude
+  if the error was small and said nothing about the other case.  That
+  is discipline 496 in a second guise -- a criterion that can only
+  confirm.  A criterion with one branch is not a criterion.
+==============================================================================

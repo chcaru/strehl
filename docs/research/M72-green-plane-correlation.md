@@ -1,6 +1,6 @@
 # M72 — is ρ(G1,G2) = +0.073 real, and does it belong in the model?
 
-Status: MEASURED (one pre-registered criterion NOT MET, two post-hoc gates NOT MET, all three consequences honoured; one pre-registered verdict qualified by my own post-hoc test)
+Status: MEASURED (two pre-registered criteria NOT MET — one on its own terms, one after its comparator was refuted — and two post-hoc gates NOT MET; all four consequences honoured; one pre-registered verdict qualified by my own post-hoc test). **Amended after publication — see §12.**
 Scope: `experiments/M72-green-correlation/`, 220 dark frames from `D:\macro-dark-frames`
 Predecessor: M62 §9 (P17), the measurement M61 §4.13 designed and did not run
 
@@ -29,11 +29,19 @@ gate required more than +0.010. My own C2 control returned GREEN-SPECIFIC and
 having a correlation. They are distinguished by which control I compared them
 against.
 
-**And it is immaterial.** The error in σ is **over-confident everywhere, never
-changes sign, peaks at 4.04%, and is confined to within about 10 DN of black.**
-By 100 DN it is 0.16%; by 1000 DN it is 0.017%. M69 is currently finding
-`FOCUS_NOISE_SD` running 19–21% off on real texture. This is a twentieth of
-that, in a corner of the signal range, on one term.
+**And its operational weight is smaller than the headline suggests, but it is
+not negligible.** The error in σ is **over-confident everywhere, never changes
+sign, peaks at 4.05%, and decays with signal**: 0.16% by 100 DN, 0.017% by
+1000 DN. That much is measured and is not in question.
+
+The *adjective* is. **C6, my materiality criterion, is VOID** — it was
+pre-registered against an external input that has since been refuted, and
+re-applying my own formula to the corrected input gives **NOT MET** under both
+available readings of the comparator. See §4.7. What survives is the regime:
+the effect exceeds the project's tolerated calibration error **below roughly
+12–63 DN above black**, depending on ISO and on which reading is taken, and is
+below it above that. **Whether the merge adjudicates down there is not something
+this milestone measured, and it is the question that decides the matter.**
 
 **Recommendation, described and not applied: do not patch `green_luma_sigma`.**
 Adding a green covariance constant would be arithmetically right in one place,
@@ -264,7 +272,7 @@ The green covariance is **2.8× more downstream-weighted** than the green varian
 it correlates. That is why ρ falls with ISO, and it is a statement about where in
 the chain the covariance is generated rather than about its size.
 
-### 4.7 C6 — operational regime. **IMMATERIAL IN PRACTICE, by a thin margin.**
+### 4.7 C6 — operational regime. **VOID; re-applied, NOT MET.**
 
 `green_luma_sigma` computes `var(L) = (var G1 + var G2)/4`, i.e. ρ = 0. The truth
 is `var(L) = (var G1 + var G2 + 2 cov)/4`, so the modelled σ is too small by
@@ -280,19 +288,77 @@ each ISO and adding shot noise for a signal level S in DN:
 | 1000 | +2.162% | +0.567% | +0.074% | +0.008% | +0.002% |
 | 2000 | +1.264% | +0.524% | +0.084% | +0.009% | +0.002% |
 
-**Fact 17 (MEASURED).** The worst error anywhere in the 11-ISO × 5-signal table
-is **4.038%**, against a pre-registered materiality threshold of 4.75%
-(= 0.25 × M69's 19%). **C6 passes by a 15% margin and must be read as close, not
-clean.** Had M69 reported 15% rather than 19%, this criterion would have failed.
+**Fact 17 (WITHDRAWN — superseded by facts 33 and 34).** As published, this fact
+read: *"the worst error anywhere in the 11-ISO × 5-signal table is 4.038%,
+against a pre-registered materiality threshold of 4.75% (= 0.25 × M69's 19%).
+C6 passes by a 15% margin."* **The measurement is unchanged and the threshold is
+void.** The 19% was an external input taken from a report in flight; see §4.7.1.
 
 **Fact 18 (MEASURED).** The regime, which is the part that matters and not the
 magnitude. The error is **positive in every cell of the table** — the model is
 over-confident everywhere and **never flips sign**, so no gate anywhere in the
 pipeline can be pushed across a threshold in the dangerous direction by a
-correction that is currently absent. It is **confined to within about 10 DN of
-black**: 4.0% at S=0, 1.2% at S=10, 0.16% at S=100, 0.017% at S=1000. Above
-roughly 100 DN it is smaller than the third significant figure of any noise
-number the project uses.
+correction that is currently absent. It decays with signal: 4.0% at S=0, 1.2% at
+S=10, 0.16% at S=100, 0.017% at S=1000. **This fact does not depend on any
+comparator and is untouched by §4.7.1.**
+
+### 4.7.1 C6's comparator was refuted, and the verdict does not survive it
+
+C6 was pre-registered with an **external input**, in these words:
+
+> *"PRE-DECLARED COMPARISON: M69 is finding `FOCUS_NOISE_SD` 19–21% off on real
+> texture. If the worst-case sigma error over the operating range is below 1/4
+> of that, the item is reported as IMMATERIAL IN PRACTICE regardless of whether
+> ρ is real."*
+
+**That input is false.** M69's report refutes it at its own headline: the 19–21%
+is M66's, it reproduces only on M66's own plant, and it does not generalise — on
+three further real latents the same measurement gives 0.8380, 1.0274 and 1.0246
+and *"the sign is not even consistent"*. M69's finding is that
+`FOCUS_NOISE_SD`'s **value is very nearly right** — per-stack response noise
+between 0.9285× and 1.1009× the shipped number, **median 1.0147×** — and it
+**recommends against changing it**. What M69 refutes is the constant's *form*.
+
+I do not get to keep a verdict whose input has been withdrawn, and I do not get
+to pick a new comparator that rescues it. The formula was pre-registered, so I
+re-applied the formula to the corrected input. The comparator apples-to-apples
+with a multiplicative σ error is `FOCUS_NOISE_SD`'s **scale** error, not its form
+error; both available readings of the scale error are carried through rather than
+one being chosen.
+
+**Fact 33 (MEASURED, supersedes fact 17).** C6's own arithmetic on the corrected
+input:
+
+| comparator | value | threshold = 0.25 × | measured worst 4.048% | verdict |
+| --- | --- | --- | --- | --- |
+| M66's 19%, as pre-registered | 19.00% | 4.750% | below | MET — **REFUTED INPUT** |
+| M69 median scale error | 1.47% | **0.367%** | above | **NOT MET** |
+| M69 worst single stack | 10.09% | **2.522%** | above | **NOT MET** |
+
+**C6's IMMATERIAL IN PRACTICE verdict is VOID.** Re-applying my own formula gives
+**NOT MET under both readings**, so the outcome does not depend on which reading
+is taken. The adjective is withdrawn. Facts 16 and 18, which are measurements of
+my own dark frames, are not.
+
+**Fact 34 (MEASURED).** The two readings agree on the verdict and **disagree on
+the regime**, which is the part that can be acted on. `S*` is the signal in DN
+above black at which the σ error falls below the threshold:
+
+| ISO | σ error at S=0 | `S*` vs median comparator | `S*` vs worst-stack comparator |
+| --- | --- | --- | --- |
+| 100 | 4.048% | 41.2 DN | 2.5 DN |
+| 250 | 3.182% | 63.3 DN | 2.2 DN |
+| 400 | 3.325% | 12.4 DN | 0.5 DN |
+| 1000 | 2.294% | 17.6 DN | never exceeded |
+| 2000 | 1.390% | 17.9 DN | never exceeded |
+
+Against M69's **median** scale error the effect is above threshold at **every
+ISO**, out to 12–63 DN above black. Against its **worst single stack** it is
+above threshold at 8 of 11 ISOs and only within about 2.5 DN of black. **I am not
+choosing between them.** The honest statement is that the effect matters
+somewhere between the first 2 DN and the first 60 DN above black, and that
+**whether the merge adjudicates in that range is the question that settles it —
+a question this milestone did not measure and does not own.**
 
 **Fact 19 (DERIVED).** Fact 895's stated consequence should be updated. The
 measured ρ = +0.08261 gives `var(mean) = 0.5413 σ²` rather than the quoted
@@ -498,10 +564,11 @@ not touch.
 
 ## 8. Recommendation for `noise.rs` — described, not applied
 
-I did not modify anything under `crates/`. M67 and M69 are live in it.
+I did not modify anything under `crates/`. M67 and M69 were live in it when this
+was written; M73 and M74 are now.
 
-**Do not add a green covariance constant to `green_luma_sigma`.** Three reasons,
-in order:
+**Do not add a green covariance constant to `green_luma_sigma`.** Two reasons,
+and the third one this report originally gave has been withdrawn:
 
 1. **It would encode a mechanism that does not exist.** Fact 21 shows the greens
    are not a privileged pair. A constant named for the green pair tells the next
@@ -514,11 +581,21 @@ in order:
    model *less* uniformly calibrated, not more, and that is precisely the failure
    mode M68 found on the B plane: a partial repair that improves one term and
    silently decouples it from the others.
-3. **It is immaterial** (facts 17, 18). Over-confident everywhere, never flips
-   sign, ≤4.04%, confined to within ~10 DN of black, against M69's 19–21% on
-   `FOCUS_NOISE_SD`.
+3. ~~**It is immaterial.**~~ **Withdrawn** (facts 33, 34). C6's comparator was
+   refuted and the criterion is NOT MET on re-application. This reason no longer
+   supports the recommendation and is struck rather than restated. Reasons 1 and
+   2 were the primary ones and are untouched, so the recommendation **not to
+   patch locally** stands on them alone.
 
-**What should change is the documentation, and it should change.**
+**What changes as a result is the urgency, not the direction.** With C6 void, the
+item can no longer be filed as documented-and-deliberately-unmodelled. On the
+median comparator the error exceeds the project's tolerated calibration error at
+**every ISO** below 12–63 DN above black (fact 34). The correct response is to
+**schedule the general fix, not to reach for the local one** — and the input that
+decides how urgently is whether the merge adjudicates in that signal range. **That
+belongs to whoever owns the merge; it is not mine and I have not measured it.**
+
+**What should change now, and is cheap, is the documentation.**
 `noise.rs:122` currently states:
 
 > *"The two greens are separate photosites and their read noise is independent,
@@ -528,8 +605,9 @@ The first clause is true and the second is **measured to be false**. The prose
 asserts as physics something this milestone has now falsified, which is exactly
 the kind of claim that stops the next agent from checking. It should record the
 measured value, the direction of the error, and the regime — that the assumption
-costs at most 4.0% in σ, always in the over-confident direction, and only within
-about 10 DN of black.
+costs up to 4.05% in σ, always in the over-confident direction, decaying to
+0.16% by 100 DN, and that it exceeds the project's tolerated calibration error
+below roughly 12–63 DN above black.
 
 **If it is ever modelled**, the right object is a **spatial correlation length of
 the read-domain noise**, ISO-dependent and signal-dependent, applied wherever
@@ -584,13 +662,28 @@ answering it.**
    instrument that pointed at a specific answer.
 5. **My pre-registered C2 verdict is misleading as stated** and I found that with
    a test I designed to break it (fact 21).
+6. **C6 had two defects that I did not see when I wrote it, and both are worse
+   than a mis-specified band** (facts 33, 34).
+   - **It depended on an external input from a report still in flight.** I quoted
+     M69's 19–21% as a fixed comparator. It was a number M69 was in the middle of
+     refuting. A pre-registered criterion is only as durable as its inputs, and I
+     hard-coded one that belonged to someone else's open question. **Cite an
+     external number as a comparator only if you are willing to void your own
+     verdict when it moves** — and if you are not, do not use it.
+   - **It was asymmetric: only the favourable branch carried a consequence.** C6
+     said what to conclude if the error was small and said *nothing* about the
+     other case. I noticed the missing branch only when I needed it. That is
+     discipline 496 in a second guise — I built a criterion that could only
+     confirm, in the same milestone in which I caught myself doing it to C2.
+     **A criterion with one branch is not a criterion.**
 
-Three of my own gates were mis-specified. Each was audited with a prediction that
-could fail, each audit was committed before it ran, and none of the three
-audits moved a band. That is three mis-specifications in one milestone, which is
-more than I would like, and the pattern in all three is the same: **I wrote
-bands for idealised estimators and then used corrected ones.** A gate should be
-written against the estimator that will actually run.
+Three of my own gates were mis-specified — C0, F1 and F2 — and one, C6, was
+sound in form but built on an input that did not hold. Each was audited with a
+prediction that could fail, each audit was committed before it ran, and none of
+the four audits moved a band. Four defects in one milestone is more than I would
+like. Three share a single cause: **I wrote bands for idealised estimators and
+then used corrected ones.** A gate should be written against the estimator that
+will actually run, and its comparator should be a number you own.
 
 ---
 
@@ -600,15 +693,51 @@ written against the estimator that will actually run.
 against a fragile one, robust across defect arms, repeatable across sessions to
 0.0005.
 
-**Does it belong in the model?** **No.** Not as a green covariance constant. It
-is not a green-pair property, it is immaterial in the regime where the pipeline
-operates, and patching the one place it is convenient to patch would encode a
-mechanism that does not exist while leaving the same error everywhere else.
+**Does it belong in the model?** **Not as a green covariance constant.** It is
+not a green-pair property, and patching the one place it is convenient to patch
+would encode a mechanism that does not exist while leaving the same error
+everywhere else. **It does belong in the model eventually**, as a spatial
+correlation length of the read-domain noise applied wherever neighbours are
+pooled.
 
-**Does 3.6% matter operationally?** No — and it is 4.0%, not 3.6%, at ISO 100 and
-zero signal. It is over-confident everywhere, it never flips sign, and it is
-gone by 100 DN. Against M69's 19–21% on `FOCUS_NOISE_SD`, it is not the thing to
-fix.
+**Does 3.6% matter operationally?** **I do not know, and I can now say exactly
+what would settle it.** The number is 4.05%, not 3.6%, at ISO 100 and zero
+signal. It is over-confident everywhere and never flips sign — so it cannot push
+a gate the dangerous way — and it decays to 0.16% by 100 DN. My materiality
+criterion is void (facts 33, 34) and re-applying it gives NOT MET, so I am not
+entitled to the word "immaterial". What remains is the regime: the error exceeds
+the project's tolerated calibration error **below somewhere between 2 and 63 DN
+above black**, the two available comparators disagreeing about where in that
+range. **Whether the merge adjudicates down there is the deciding input, and it
+is not mine.**
 
-**The item should be closed as measured, understood, documented and deliberately
-unmodelled** — not as an artefact, and not as a defect awaiting repair.
+**The item should be closed as measured, understood and documented — and left
+open as a scheduled model change rather than a deliberate omission.** Not an
+artefact; not a defect awaiting a local patch; a general defect whose priority
+depends on one measurement nobody has taken.
+
+---
+
+## 12. Amendment, after publication
+
+§4.7 originally reported C6 as **IMMATERIAL IN PRACTICE**, and §8 and §11 leaned
+on that word. The orchestrator subsequently reported that M69 had refuted the
+19–21% `FOCUS_NOISE_SD` error I had used as C6's comparator, and asked me to
+correct the sentence.
+
+**The sentence was not the defect.** Correcting it voided the criterion. §4.7.1,
+facts 33 and 34, §8 reason 3, §10 item 6, and this section are the result;
+`src/07-materiality-recheck.py` was committed before it ran, as with every other
+audit in this milestone.
+
+**Nothing measured was changed.** Facts 16 and 18 stand exactly as published;
+fact 17 is withdrawn because it quoted a threshold, not because it quoted a
+measurement. The headline findings — replication, non-specificity, the
+downstream mechanism location — do not touch C6 and are untouched by it.
+
+This is the second time in two milestones that an orchestrator query about a
+single sentence of mine has turned out to be load-bearing. Both times the
+correction went further than asked, and both times the direction was **against**
+my own published conclusion. I note it because the pattern is the useful part:
+**a claim that rests on someone else's number is not my claim until I have
+checked it, and I did not check this one.**
