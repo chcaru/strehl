@@ -135,7 +135,7 @@ Write-Output $d
 Write-Output "`n=== B6 montage ==="
 $g = & python (Join-Path $Root "experiments\M109-highlights\src\montage.py") `
         --before "$Out\stack-marker-before.tif" --after "$Out\stack-marker-after.tif" `
-        --tag "-stack" --cmd "stack --srgb --auto-exposure --gate 4" 2>&1 | Out-String -Width 160
+        "--tag=-stack" --cmd "stack --srgb --auto-exposure --gate 4" 2>&1 | Out-String -Width 160
 if ($LASTEXITCODE -ne 0) { Write-Output "montage.py exited $LASTEXITCODE" }
 Write-Output $g
 

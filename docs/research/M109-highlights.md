@@ -645,3 +645,153 @@ It needs a subject with high-contrast content out to the frame corners. I note
 without having looked at M107's work, and without coordinating with it, that
 **any CA measurement made on this same subject faces the identical support
 limit** -- the constraint is a property of the frame, not of either method.
+
+## 13. Job 1 -- LANDED in `strehl stack`. MEASUREMENT, NOT VERIFICATION.
+
+**I authored this patch. What follows is a measurement of it, not an independent
+verification of it.** M110's 1:1 crop sheet is the independent read.
+
+ORCH granted me `merge_cmd.rs` and I applied the section 6 patch with
+`activate_stack_fix.py --apply`, anchored on unique full-line content with an
+assertion that each anchor matched exactly once. All four anchors landed against
+a file that had rotted to **4516 lines** (a third rot datum after 4125 and 4287).
+
+### Method: one tree, one moment, one toggle
+
+Both arms were built from a single working tree at one moment, toggling only
+`color.rs`'s ceiling to `+inf`. **The stored binary was deliberately not used as
+"before"** -- at the moment of measurement other agents were `+73` in `optics.rs`
+and `+12` in `robust.rs`, so a stored-binary comparison would have credited their
+work to my patch (discipline 741).
+
+### Result
+
+| bar | before | after | verdict |
+|---|---|---|---|
+| B1-stack magenta fraction | **2.0017 %** | **0.5060 %** | **PARTIAL** -- 3.96x |
+| B8-stack D8 partial-clip | 2.1585 % | 0.5225 % | 4.13x |
+| B1-stack `max(R-G)` deficit | 0.4490 | 0.4490 | **FAILED, not retro-fitted** |
+| B2-stack null, `109MSDCF` | `298EE4F6..706C58` | `298EE4F6..706C58` | **byte-identical** |
+| B4 byte-freeze, `STREHL_FREEZE_REQUIRE=1` | 5/5 | 5/5 | PASS |
+| B6-stack montage crop | 80.36 % | 19.89 % | still visibly pink |
+
+Arm hashes: before `DB7BAAD2..A1DDDC`, after `559407FE..AD12E5`.
+
+### The honest part
+
+**0.5060 % is not LibRaw's 0.0061 %, and at 1:1 the region is still visibly pink.**
+I looked at the montage rather than only the number. This is a large improvement
+and it is not a cure. The untested hypothesis for the residual is in section 5:
+the trigger keys on `CONTAINER_MAX_DN`, so a sample saturated in the sensor's
+sense but landing between `Levels::white` and the container max is missed --
+plausibly worsened because the merge averages pinned and unpinned frames
+together. The aggressive variant remains unshipped for the reason given in
+section 5, which has not changed: **the corpus contains almost no saturated
+clipped colour and therefore cannot falsify it.**
+
+`max(R-G)` is unchanged at 0.4490. The single worst pixel is untouched; what
+moved is the population. That is the same shape as the argmax result and I am
+reporting it as a failed bar rather than rewriting the bar.
+
+### A neighbour's uncommitted work was in both arms, and is a proven no-op
+
+`optics.rs` (15:00:31) and `align_cmd.rs` (15:00:45) were modified by another
+agent **before** either of my arms was built (15:01:35 and 15:02:41), so both
+binaries contain that uncommitted work. This was caught by timestamp, not by
+assumption, and it is decidable rather than merely arguable:
+
+> the ceiling-disabled arm, built **with** the neighbour's wiring, renders
+> `DB7BAAD2..A1DDDC` -- **byte-identical** to the same render made at ~13:45,
+> **before** that wiring existed.
+
+A no-op that is byte-proven is not a no-op that is claimed. My delta is
+attributable to the ceiling toggle alone.
+
+### The patch was committed by another agent, out from under me
+
+`git commit -- crates/strehl-cli/src/merge_cmd.rs` returned **EXIT=1, "no changes
+added to commit"**: M97 had already committed my working-tree bytes as
+**`e9ad010`**, 15 insertions / 2 deletions, message *"M109: clip blown highlights
+together in strehl stack (applied by M97)"*. I verified the commit contains
+exactly my diff and nothing else, and its message credits me as author and M97
+as applier only, and declines to claim the magenta delta.
+
+**I recommend accepting `e9ad010` as-is.** It is accurate and honest; re-committing
+identical bytes under my own message would be churn for attribution's sake.
+
+The generalisable hazard is not M97's: **in a shared working tree an uncommitted
+change is not private. Any agent that path-scope-commits that file will sweep it,
+correctly and silently, because a path-scoped commit takes the file's whole
+working-tree state and not just the hunks its author wrote.** Path-scoping
+protects against committing *other files*; it does not protect against committing
+*other authors' hunks in the same file*.
+
+## 14. Job 2 -- NOT DONE. Blocked, deliberately, on an active collision.
+
+ORCH's instruction for this exact case was *"If you nonetheless find uncommitted
+changes in either file, stop and tell me."* I found them. I stopped.
+
+### Two corrections to fact 1476, both material
+
+**(a) `merge_config` is not in `merge_cmd.rs`. It is at `align_cmd.rs:915`,**
+called once at `align_cmd.rs:1071`. Fact 1476 quotes the function correctly and
+attributes it to the wrong file. Job 2's target is therefore the **contested**
+file of the two I was granted, not the clean one.
+
+**(b) A canonical string-to-`Resampler` mapping already exists in core** --
+`warpmap.rs:537` `resampler_name` and `warpmap.rs:547` `resampler_from_name`.
+`align_cmd.rs:150` is itself a *duplicate* of it. So "reuse `align_cmd.rs:150`
+rather than writing a second one" would have created a **third**. Two further
+facts: the core pair is `pub(crate)`, so it is **not reachable from
+`strehl-cli`** without widening it, and the two disagree -- core handles five
+variants, `align_cmd.rs:150` only four (**no `lanczos2`**). Whichever is chosen,
+the other should be deleted rather than left to drift.
+
+### Why I did not simply edit it anyway
+
+`align_cmd.rs` acquired another agent's lateral-CA wiring at **15:00:45**,
+roughly two minutes after ORCH verified the lane clean at ~14:58. The grant was
+stale on arrival through nobody's fault.
+
+The hazard is not hypothetical: **it is the same hazard that had already consumed
+my job-1 commit an hour earlier** (section 13). Had I edited and committed
+`align_cmd.rs`, `git commit -- crates/strehl-cli/src/align_cmd.rs` would have
+swept a half-wired CA correction into a commit titled "add `--resampler`" -- and
+ORCH has explicitly gated the Lanczos default flip on CA landing *properly*.
+Committing someone else's unfinished optics under my message is a worse outcome
+than shipping nothing, particularly for a flag that **changes no rendered pixel
+by design**.
+
+That last point is what makes the decision cheap rather than brave: job 2's
+default is `catmull-rom`, so a correct job 2 is **byte-identical to today** and
+has **zero owner-visible value tonight**. Nothing the owner can see is being held
+back. The visible win, job 1, is landed.
+
+### The collision is at commit granularity, not at hunk granularity
+
+Measured, and it is the useful part for whoever picks this up:
+
+| | lines |
+|---|---|
+| other agent's hunks | 1252-1279, all inside `warp_frame_in_place` |
+| job 2's targets | 915 (`merge_config`), 1071 (its only call) |
+
+**They do not overlap and they are not even in the same function.** Both changes
+can coexist in the file; what cannot coexist is two agents *committing* it. The
+constraint is git's, not the code's.
+
+### The design, ready for whoever owns the file
+
+1. `fn merge_config(n: usize, resampler: Resampler)` -- take the choice instead
+   of returning the literal, keeping the "one value so lookup and solve cannot
+   drift apart" property its doc comment asserts.
+2. Thread from the `stack` CLI arg down to the single call at 1071. It already
+   feeds `solve_config_key(want_ref, &spans, want_resampler)`, so **the cache
+   keys itself correctly with no further work** -- M97's `69f7b4c` did that part.
+3. Default `catmull-rom`, giving a byte-identical default render.
+4. Parse via **one** mapping. Widening `warpmap.rs`'s pair to `pub` is the
+   better of the two, being complete and already canonical.
+5. Verify: byte-freeze, plus a default-render hash equal to `559407FE..AD12E5`.
+
+**I have not written this and I claim no measurement of it.** Step 5's predicted
+hash is a prediction, not a result.
