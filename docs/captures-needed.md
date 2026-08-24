@@ -85,25 +85,62 @@ Measured on a byte-controlled `on`/`off` pair of your own frames:
   inverts the fringe's colour sign at partial amplitude, which is exactly what
   destroys a check that asks pixels to *keep* their sign. 75.1 % versus a 90 %
   bar is the predicted signature, not a mystery.
-- Implied fix: scale the red coefficient by **0.692**. Note that **1/√2 = 0.7071
-  falls inside the measured spread**, so the first thing to look for is a
-  principled normalisation bug rather than a fitted fudge factor. That hunt is
-  underway before any number ships.
+- Implied fix if this is simply a wrong number: scale the red coefficient by
+  **0.692**. **But two later checks have complicated that, and neither is
+  resolved yet — so nothing has been changed in the code.**
+  - **The √2 idea is dead.** I had noted that 1/√2 = 0.7071 sat "inside the
+    measured spread" and suggested hunting a normalisation bug on that basis.
+    That was a statistics error on my part: **the spread I quoted was the raw
+    range of seven per-ring estimates, not a confidence interval on their mean.**
+    Weighted by how much data each ring rests on, the interval is about four
+    times narrower and **excludes √2**. The two rings that made √2 look plausible
+    are the two noisiest and carry 7.4 % of the measurements between them.
+  - **More seriously, I read the correction's provenance only afterwards, and it
+    undercuts my conclusion.** The coefficient was fitted on **`tweezers-cpl` and
+    `bee-3-cpl`** — and I measured the 44 % overshoot on a **different subject**.
+    The profile also records that the aperture and magnification at fit time were
+    **never captured**. Since lateral CA changes with both, there are now two
+    explanations that call for **opposite** fixes: either the number is wrong for
+    everything (scale it down), or the number is right for the conditions it was
+    fitted at and simply does not transfer to other conditions (in which case
+    scaling it would **break** the two stacks it currently works on).
+  - **And there is a third possibility that I now think is the most likely.** The
+    fit reports itself as excellent — 99.7 % of variance explained, a residual of
+    0.073 sensels. **A fit that good does not usually overshoot its own training
+    data by 44 %.** That points away from the fitted number and towards the code
+    that *applies* it: a radius convention, a centre convention, or a
+    full-resolution-versus-output-resolution factor. If so, the correct fix is a
+    one-line bug fix, and shipping my 0.692 would paper over it and then break
+    the day someone found it.
 
-**So why is §24 still the first thing to shoot?** Because three things remain
-that only a real capture can settle, and the case for it is now *stronger*, not
-weaker:
+  The experiment that separates all three is cheap and is running now: **measure
+  the overshoot on `tweezers-cpl` and `bee-3-cpl` themselves.** If it overshoots
+  even there, the number or its application is wrong. If it is correct there and
+  wrong elsewhere, the profile needs to know about aperture and magnification.
 
-1. **My number rests on one scene.** A scale error is exactly the kind of finding
-   that can be an artifact of a single subject's structure. §24 gives an
-   independent scene with many clean radii.
-2. **Blue is still not estimated at all** — not by the original fit, and not by
+**So why is §24 still the first thing to shoot?** Because it is the capture that
+settles this, and three further things that only a real capture can reach:
+
+1. **It is the only way to measure condition-dependence.** If the correction
+   turns out to be right at one magnification and wrong at another, the fix is
+   not a better constant — it is a profile that knows the conditions. §24 asks
+   for a set **with the 2x teleconverter** precisely because that is the largest
+   change of conditions in your kit.
+2. **My number rests on one scene**, and a scale error is exactly the kind of
+   finding that can be an artifact of a single subject's structure.
+3. **Blue is still not estimated at all** — not by the original fit, and not by
    me: **0 of 10 rings** cleared my noise floor, so I have no claim in either
    direction. Real fringes have a warm edge *and* a cool edge. At present at most
    half of each fringe can be corrected, and no amount of reprocessing changes
    that.
-3. **The 2x teleconverter is unmeasured**, and it is the one component most
-   likely to change the coefficients outright.
+
+And a fourth reason that emerged from my own failure tonight: **the first metric
+I built for this measured scene hue instead of chromatic aberration.** It
+produced a beautiful radial table and a textbook null, and died on its positive
+control. A colour-separated capture is immune to that entire class of error **by
+construction** — with only one channel lit, there is no scene hue left to
+mistake for a fringe. That is now the strongest argument for shooting §24 the way
+it is specified.
 
 And a fourth reason that emerged from my own failure tonight: **the first metric
 I built for this measured scene hue instead of chromatic aberration.** It
