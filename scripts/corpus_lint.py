@@ -37,6 +37,7 @@ import os
 import re
 import subprocess
 import sys
+import unicodedata
 
 # --------------------------------------------------------------------------
 # namespaces are defined BY SECTION, never by number. Facts, disciplines and
@@ -713,6 +714,140 @@ def advisory_n3_shape(index):
 
 
 # --------------------------------------------------------------------------
+# Q1 — quote provenance
+# --------------------------------------------------------------------------
+
+_QUOTE_SYM = {
+    "\u03c3": "sigma", "\u03bc": "mu", "\u03bb": "lambda", "\u03b1": "alpha",
+    "\u03b2": "beta", "\u03c1": "rho", "\u03ba": "kappa", "\u03b4": "delta",
+    "\u03b5": "epsilon", "\u03b8": "theta", "\u03c4": "tau", "\u03c6": "phi",
+    "\u03c7": "chi", "\u03b3": "gamma", "\u03c9": "omega", "\u0394": "delta",
+    "\u03a3": "sum", "\u221a": "sqrt", "\u00d7": "x", "\u2248": "~",
+    "\u2264": "<=", "\u2265": ">=", "\u00b2": "2", "\u00b3": "3",
+    "\u2192": "->", "\u00b1": "+/-", "\u2260": "!=",
+}
+
+_QUOTE_PUNCT = (("\u2019", "'"), ("\u2018", "'"), ("\u201c", '"'), ("\u201d", '"'),
+                ("\u2014", "--"), ("\u2013", "-"), ("\u2212", "-"), ("\u00a0", " "))
+
+_ATTR_VERB = (r"(?:says?|said|wrote|writes|reads?|states?|stated|reported|"
+              r"reports?|calls?|claims?|concluded?)")
+
+ATTRIBUTED_QUOTE = re.compile(
+    r"\b(M\d+[a-z]?)\b(?:'s)?[^\"]{0,70}?\b" + _ATTR_VERB + r"\b[^\"]{0,40}?"
+    r"\"([^\"]{20,400}?)\"", re.I)
+
+
+def _quote_norm(s):
+    s = unicodedata.normalize("NFKC", s)
+    for a, b in _QUOTE_PUNCT:
+        s = s.replace(a, b)
+    for a, b in _QUOTE_SYM.items():
+        s = s.replace(a, b)
+    s = re.sub(r"[*`~_]", "", s)
+    s = re.sub(r"\s*%", "%", s)
+    return re.sub(r"\s+", " ", s).strip().lower()
+
+
+def _quote_resolves(q, texts):
+    """An elided quote resolves if every >=4-word fragment appears, in order."""
+    frags = [f.strip() for f in re.split(r"\.{3}|\u2026", q)
+             if len(f.strip().split()) >= 4]
+    if not frags:
+        return True
+    for t in texts:
+        pos = 0
+        ok = True
+        for fr in frags:
+            i = t.find(fr, pos)
+            if i < 0:
+                ok = False
+                break
+            pos = i + len(fr)
+        if ok:
+            return True
+    return False
+
+
+def advisory_q1_quote_provenance(docs):
+    """A quote attributed to a milestone must appear in that milestone's report.
+
+    This exists because of a measured defect in the orchestrator, not in any
+    agent. Six relay errors were made in a single session and agents caught all
+    six by reading sources the orchestrator had summarised. The worst was fact
+    986, which put quotation marks around a sentence M62 never wrote, crediting
+    it with an independent replication it had explicitly disclaimed four lines
+    later. C1 cannot see this: the citation `M62` resolves, because M62 exists.
+    Only comparing the QUOTED TEXT against the cited report can see it.
+
+    Written blind and run before its author was told what it should find, it
+    recovered fact 986 unprompted, along with facts 996 and 1021 -- all three
+    already independently corrected at source. That is the whole argument for
+    it: it re-derived known defects it was not told about.
+
+    TWO FALSE-POSITIVE MECHANISMS, both mechanical and both fixed by rule
+    rather than by threshold:
+
+      - ELISION. `"the sigma_F effect M66 found... measured on my own plant"`
+        is a faithful quote with a clause removed. A substring test fails on it.
+        Fragments are therefore matched independently and IN ORDER.
+      - SYMBOL SPELLING. The corpus writes the same identifier as both `σ_F`
+        and `sigma_F`. Greek and mathematical symbols are transliterated on both
+        sides before comparison, so the two spellings compare equal.
+
+    HONEST LIMITS, and they are why this ships as an advisory:
+
+      - Both exclusions were derived from the corpus they are measured on, so
+        the 0-false-positive residual is IN-SAMPLE, exactly as A4's was.
+      - A quote can fail here for a reason that is nobody's fault: the cited
+        report was CORRECTED AT SOURCE after the quote was folded. Fact 1021
+        flags for precisely this reason. That is still worth surfacing -- a
+        record quoting text that no longer exists is a record that cannot be
+        checked -- but it is not a misquotation and must not be reported as one.
+      - It cannot see the error class that actually caused three of the six:
+        an over-broad claim in the orchestrator's OWN words, with no quotation
+        marks to check. Fact 996's "any per-plane statistic" was a gain null
+        only, and M73 found "surface of revolution" where the invariant needs a
+        cylinder. **No lexical check can catch those**; the two candidate
+        matchers tried before this one fired on 28% and 65% of all fact rows
+        and were abandoned as unusable. Discipline 493 stands: a negative or
+        universal claim cites nothing, and the machine is blind to it.
+
+    Promote to a blocking check only once the residual is zero; until then a
+    RED gate here would block five agents for a defect that is the
+    orchestrator's alone.
+    """
+    reports = {}
+    for d in docs:
+        m = re.match(r"^docs/research/(M\d+[a-z]?)-", d.rel)
+        if m:
+            reports.setdefault(m.group(1), []).append(_quote_norm(d.text))
+    syn = [d for d in docs if d.rel == SYNTHESIS]
+    if not syn:
+        return []
+    out = []
+    for i, line in enumerate(syn[0].lines):
+        if not re.match(r"^\| \d+ \|", line):
+            continue
+        parts = re.split(r"(?<!\\)\|", line)
+        if len(parts) != 6:
+            continue
+        for milestone, quote in ATTRIBUTED_QUOTE.findall(parts[2] + " " + parts[3]):
+            qn = _quote_norm(quote)
+            if len(qn.split()) < 5:
+                continue
+            if _quote_resolves(qn, reports.get(milestone, [])):
+                continue
+            out.append(Violation(
+                SYNTHESIS, i + 1, "Q1",
+                "fact %s attributes a quote to %s that does not appear in %s's "
+                "report (misquotation, or the source was corrected after the "
+                "fold)" % (parts[1].strip(), milestone, milestone),
+                qn[:160]))
+    return out
+
+
+# --------------------------------------------------------------------------
 # C1 — citation resolution
 # --------------------------------------------------------------------------
 
@@ -1123,7 +1258,7 @@ def check_c2_report_paths(md_docs, root):
 
 CHECKS = ["S1", "S2", "S3", "S4", "S5", "N1", "N2", "N4", "N5", "C1", "C2",
           "A1", "A2", "A4"]
-ADVISORIES = ["N3", "A3"]
+ADVISORIES = ["N3", "A3", "Q1"]
 
 
 def collect_files(root):
@@ -1238,7 +1373,8 @@ def main(argv=None):
         print("corpus_lint: OK — no violations")
 
     if args.advisory:
-        adv = advisory_n3_shape(index) + advisory_a3_amendment(index)
+        adv = (advisory_n3_shape(index) + advisory_a3_amendment(index)
+               + advisory_q1_quote_provenance(md_docs))
         print("")
         print("--- ADVISORY (heuristics; these do NOT affect the exit code) ---")
         for v in adv:
