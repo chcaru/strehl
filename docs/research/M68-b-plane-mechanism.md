@@ -27,8 +27,16 @@ The practical consequence for `profile.rs` is sharper than the mechanism
 question: **blue's signal conversion and blue's dark noise do not scale by the
 same factor**, so the defect cannot be repaired with one number.
 The gain is 0.8396× green's; the dark σ is 0.9231× green's.
-**A "fix" that scales only `gain_dn_per_e` by 0.84 would be as wrong as today's
-model and wrong in the over-confident direction** (−9.0% against +8.3%).
+**A "fix" that scales only `gain_dn_per_e` by 0.84 flips the model's residual
+error on blue from conservative to over-confident**, and in the
+read-noise-dominated limit the flipped error is the same size as the one it
+replaces (−9.0% against +8.3%).
+
+> **This paragraph originally read "would be as wrong as today's model … that
+> repair is worse than none". That was an overstatement and it is withdrawn.**
+> See fact 28 and §7.1: the partial fix is strictly *smaller* in magnitude than
+> the shipped model at every signal level except the pure-dark limit. What is
+> defensible is the change of sign, not a claim of greater harm.
 
 ---
 
@@ -41,7 +49,7 @@ band` (5).
 
 | File | Read | What it settled that I did not redo |
 | --- | --- | --- |
-| `M61-ptc-high-iso-measured.md` | in full | The PTC, M61 fact 22 (B/green = 0.8396 ± 0.0112), M61 facts 50–58 (pre-quantisation, three ways), M61 fact 51 (QE cannot do it), the refutation of M48c's 2.174× step, M61 questions 10–11 |
+| `M61-ptc-high-iso-measured.md` | in full | The PTC and the B/green conversion-gain ratio 0.8396 ± 0.0112 (SYNTHESIS fact 921); the 0.84× is applied before quantisation, established three ways (SYNTHESIS fact 955); a PTC ratio cannot separate a pre-quantisation digital scale from a true conversion-gain difference (SYNTHESIS fact 956); QE cannot produce the effect; the refutation of M48c's derived 2.174× dual-gain step; M61 questions 10–11 |
 | `M48c-defect-layer-measured.md` | §1–3 | The defect census, criterion B, the row-parity asymmetry (M48c fact 9), M48c discipline 1 (do not move a threshold with ISO) |
 | `M4-fpn-measured.md` | §1, §2, §5, §8 | The folder→ISO map, the 11-ISO × 4-plane dark-σ table (my gate C0), §8.2 (ISO 50 is a pull setting at base gain) |
 | `crates/strehl-core/src/profile.rs` | in full, **not modified** | `A7C2`, `gain_dn_per_e`, `read_noise_e_low/high`, `DARK_SIGMA_RMS_DN`, and `noise_model()`'s `[p; 4]` |
@@ -50,6 +58,22 @@ band` (5).
 
 M62's and M65's precedent on voiding one's own headline was followed as
 described in §5 and §6.
+
+**Citation namespace — read this before checking any number in this report.**
+A bare `fact N` here means **SYNTHESIS's global numbering**. Where I cite a
+milestone report's own internal numbering I qualify it inline —
+`M61 questions 10–11`, `M48c fact 9`, `M48c discipline 1` — and those are that
+report's local numbers, **not** SYNTHESIS's. **The two namespaces collide
+silently and an earlier draft of this row collided in both directions**: it
+cited M61's local numbering unqualified, and the range it used spanned
+SYNTHESIS's deliberate 55–59 hole, which is what `corpus_lint` C1 caught.
+Concretely: SYNTHESIS fact 22 is about peak RSS under `rayon`, whereas the
+number 22 in M61's own report is the B/green PTC ratio — two unrelated claims
+one digit apart in citation form. M61's findings are folded as **SYNTHESIS
+facts 955–960**; I have deliberately **not** attempted a per-fact mapping from
+M61's local numbering to that range, and none should be inferred from this
+report. Where a SYNTHESIS number was available and verified I have used it
+above; everything else is qualified.
 
 ---
 
@@ -380,16 +404,19 @@ different factors.**
 > For the R plane: gain × 0.985, `read_noise_e` × **1.00945** — a 0.9% effect,
 > below the spatial residual in fact 29, and probably not worth carrying.
 
-> **Fact 28 (DERIVED).** **The obvious repair is not a repair.** Predicted dark σ
-> against truth for the B plane:
+> **Fact 28 (DERIVED). CORRECTED 2026-08-23 after an orchestrator audit; the
+> original claim is quoted and withdrawn below.** Predicted dark σ against truth
+> for the B plane, in the **dark-frame regime this milestone actually measured**:
 > – shipped model (both knobs at 1.0): **+8.3%**, over-stating blue's noise, the
 >   conservative direction;
 > – "scale the gain by 0.84 and leave read noise alone": **−9.0%**,
 >   **under-stating** blue's noise, the over-confident direction.
-> The naive fix trades an 8% conservative error for a 9% over-confident one.
-> Every gate, weight and threshold denominated in this model would become
-> *less* safe on blue than it is today. **If only one knob is going to move,
-> moving it is worse than moving neither.**
+> **This report originally concluded from those two numbers that "the naive fix
+> trades an 8% conservative error for a 9% over-confident one … if only one knob
+> is going to move, moving it is worse than moving neither." The final clause is
+> false and I withdraw it.** Both numbers are correct; the inference from them
+> was not, because it silently generalised a ρ = 1 result to all signal levels.
+> §7.1 gives the corrected statement.
 
 > **Fact 29 (MEASURED).** A single per-plane constant leaves a spatial residual.
 > From the 32 row bands, B's dark-σ ratio to same-parity green runs
@@ -408,6 +435,85 @@ different factors.**
 > unknown origin, it needs two different per-plane numbers**, one for signal and
 > one for noise, because 0.8396 and 0.9231 are separately measured and are not
 > the same quantity. Routing that is the orchestrator's call, not mine.
+
+---
+
+## 7.1 Audit of fact 28, at the orchestrator's request
+
+The orchestrator proposed to record a **standing prohibition on the partial
+fix** and asked two questions first. `06-partial-fix-audit.py` answers both from
+numbers already measured; it introduces no new data. **The audit changed the
+answer, and a prohibition would have been wrong.**
+
+*This section was added after publication, so its facts are numbered 39–41 —
+after the original 38 — rather than renumbering everything downstream. Document
+order therefore runs …30, 39–41, 31…38.*
+
+`PlaneNoise` predicts `var_DN = D·g + σ_r²·g²` for a pedestal-subtracted level
+`D` in DN — a shot term and a read term. With `k = 0.8396` the gain scale and
+`m = 1.09943` the read-noise scale, and writing ρ for the read term's share of
+the **true** variance:
+
+`var_shipped/var_true = (1−ρ)/k + ρ/(m²k²)` … (6)  
+`var_partial/var_true = (1−ρ) + ρ/m²` … (7)
+
+> **Fact 39 (MEASURED).** **The sign is robust, and it does not inherit the
+> withdrawn position estimate.** The partial fix under-predicts iff
+> `k < σ_B/σ_G`, i.e. iff the α ratio exceeds `k² = 0.70493` — **which is
+> verbatim the {P2,P3,P4} band that C3 excluded.** The sign of the −9% and the
+> refusal of the analog-attenuation hypothesis are the same statement. Worst
+> margin anywhere in the instrument: **+7.1%** (arm r6, ISO 400), +7.6% (arm
+> none, ISO 400), +7.7% (lowest of the 32 row bands). The withdrawn quantity was
+> **f**, an interpretation of *where* the scale acts that assumed the spatial
+> uniformity D1 refuted; the α ratio underneath it is the measurement, and E4
+> showed it arm-independent and E5 that 0/32 bands reach either band. `m` is
+> **derived** from σ/k, not an independent input — the partial fix's error is
+> just `X/0.92308 − 1` for whatever `X` is written into the gain slot. **The
+> honest provenance caveat is different from the one asked about**: 0.9231 is
+> mine and survives §6; **0.8396 is M61's and I did not re-measure it.** D2
+> closed the pedestal failure mode for it and nothing else — PRNU leakage into
+> M61's tile variances remains unchecked by me.
+
+> **Fact 40 (MEASURED). This is the correction.** The harm does **not** hold
+> across signal levels, and fact 28's original inference was a ρ = 1 result
+> generalised without warrant. The partial fix makes the **shot term exactly
+> right** — it is a pure gain error — and leaves only the **read term** wrong, by
+> −9.0% in σ. From (6) and (7):
+>
+> | ρ (read share of true variance) | shipped σ error | partial-fix σ error | \|partial\| < \|shipped\| |
+> | --- | --- | --- | --- |
+> | 0.00 (shot limit) | +9.13% | **0.00%** | yes |
+> | 0.25 | +8.93% | −2.18% | yes |
+> | 0.50 | +8.73% | −4.41% | yes |
+> | 0.75 | +8.53% | −6.70% | yes |
+> | 0.90 | +8.41% | −8.10% | yes |
+> | 1.00 (dark frame) | +8.33% | −9.04% | **no** |
+>
+> **The partial fix is strictly smaller in magnitude than the shipped model at
+> every ρ < 1, and larger only in the pure-dark limit, where it is 9.04% against
+> 8.33%.** The shipped model, by contrast, is wrong by +8.3% to +9.1% at *every*
+> signal level, because a 16% gain error corrupts the shot term too. What the
+> partial fix changes is the **sign**: shipped errs conservative everywhere,
+> partial errs over-confident everywhere.
+>
+> Across ISO in the dark (ρ = 1) both are material at every point of the sweep —
+> shipped spans **+7.9% … +10.7%**, partial spans **−7.1% … −9.4%** — so neither
+> error vanishes anywhere in the ISO range.
+
+> **Fact 41 (ARGUED). What I think the standing item should be, given the
+> above.** **Not a prohibition.** A prohibition is not supported: the partial fix
+> reduces total error nearly everywhere, and forbidding it would leave a +9%
+> error standing in order to avoid a smaller one. What *is* supported is a
+> **coupling requirement**: `gain_dn_per_e` and `read_noise_e` must move
+> **together** for a plane, because moving the gain alone converts a conservative
+> residual into an over-confident one, and it does so **most strongly exactly
+> where a noise-denominated gate is most likely to be adjudicating** — dark,
+> read-noise-dominated background, ρ near 1, which is where the −9.0% is at full
+> strength. The full fix (fact 27) costs one extra constant and is exactly right
+> at every ρ, so the coupling requirement is cheap to satisfy and there is no
+> reason to ship the partial one. **I would not describe the partial fix as
+> harmful; I would describe it as leaving the model over-confident on blue in
+> the dark, which is the failure direction this project cares about most.**
 
 ---
 
@@ -468,7 +574,7 @@ different factors.**
 
 ## 9. Errors, and what caught them
 
-> **Fact 37 (ARGUED).** Four self-corrections, all recorded in committed code
+> **Fact 37 (ARGUED).** Six self-corrections, four of them recorded in committed code
 > before the corpus was touched or in the step that followed:
 > 1. `00-derivation.py` v1 used unphysical constants (electron-domain noise 136×
 >    the source-follower term) and returned the wrong answer for **both** P1 and
@@ -484,6 +590,18 @@ different factors.**
 > 4. `03` first assumed a JSON key (`iso_by_folder`) that `01` never wrote; it
 >    crashed rather than silently mis-indexing, and the cache filenames were used
 >    instead.
+> 5. **Post-publication, on orchestrator audit:** fact 28's conclusion that the
+>    partial `profile.rs` fix is "worse than moving neither" was an
+>    overstatement — a ρ = 1 result generalised to all signal levels without
+>    checking. Corrected in §7.1, facts 39–41, and the headline paragraph carries
+>    the withdrawal. The two numbers were right; the inference was not. **The
+>    audit was requested before the claim was acted on, which is the only reason
+>    it was caught before it became a standing rule.**
+> 6. **Post-publication:** the rule-40 row for M61 mixed SYNTHESIS's global fact
+>    numbering with M61's report-local numbering in one sentence, and the range
+>    it used spanned SYNTHESIS's deliberate 55–59 hole. `corpus_lint` C1 caught
+>    it. §0 now carries an explicit citation-namespace note and cites verified
+>    SYNTHESIS numbers where they exist.
 
 > **Fact 38 (ARGUED).** **Nothing under `crates/` was modified**, no binary was
 > measured from a warm `target/`, nothing was pushed, and every commit was
@@ -507,6 +625,7 @@ python src\02-criteria.py                    # C0-C4, the pre-registered verdict
 python src\03-where-is-the-scale.py          # D1-D3, post-hoc
 python src\04-gradient.py                    # E1-E5, post-hoc
 python src\05-profile-numbers.py             # the numbers in section 7
+python src\06-partial-fix-audit.py           # the section 7.1 audit of fact 28
 ```
 
 Outputs are committed under `data/`. `cache/` (11 × ~530 MB) is gitignored and
