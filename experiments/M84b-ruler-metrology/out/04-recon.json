@@ -1,0 +1,24 @@
+{
+  "flat-on-ruler-cpl": {
+    "n_frames": 79,
+    "shape": [
+      586,
+      878
+    ],
+    "frac_conf_gt3": 0.9178166325888033,
+    "idx_p05": 22.0,
+    "idx_p50": 38.0,
+    "idx_p95": 54.0
+  },
+  "highly-angled-ruler-mm-cpl": {
+    "n_frames": 299,
+    "shape": [
+      586,
+      878
+    ],
+    "frac_conf_gt3": 0.4650015160114128,
+    "idx_p05": 1.0,
+    "idx_p50": 194.0,
+    "idx_p95": 298.0
+  }
+}

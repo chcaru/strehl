@@ -1,0 +1,10 @@
+[registered_F_TALL] band y 1100-1980 (880 px)
+  rise per graduation: [364. 366. 370. 365. 362. 370. 370. 378. 377. 373. 374. 377. 240.]
+  frame-to-frame scatter (median): 18.0 px
+  long  : {'n': 0, 'period': None, 'gaps': []}
+  mid|long: {'n': 13, 'indices': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'gaps': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 'period': 1.0, 'period_spread': 0.0}
+[extended] band y 600-1540 (940 px)
+  rise per graduation: [  0.   0.   0.   0.   4. 428.   3.   0.   0.   4.   0.   0.   0.]
+  frame-to-frame scatter (median): 1.5 px
+  long  : {'n': 0, 'period': None, 'gaps': []}
+  mid|long: {'n': 1, 'period': None, 'gaps': [5]}

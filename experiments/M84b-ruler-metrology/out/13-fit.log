@@ -1,0 +1,14 @@
+[flat] ticks 13 (from 14 raw)
+  rejected: [31.6]
+  index steps>1: 0, max frac err 0.005
+  A 299.140  B 266.5060  C 7.671937e-04
+  pitch@k0 266.277 quad px   resid_rms 0.952 px = 0.36% of local pitch
+  similarity resid 2.652 px   P1 0.55   depth ratio 1.0092
+  boot C 7.453807e-04 +/- 1.652519e-04  pitch0 266.257 +/- 0.531
+[ang] ticks 14 (from 16 raw)
+  rejected: [287.7, 1612.9]
+  index steps>1: 0, max frac err 0.060
+  A 599.653  B 66.3930  C 1.268589e-02
+  pitch@k0 58.786 quad px   resid_rms 1.968 px = 4.53% of local pitch
+  similarity resid 7.860 px   P1 1.02   depth ratio 1.1649
+  boot C 1.208704e-02 +/- 1.203950e-03  pitch0 58.460 +/- 0.693

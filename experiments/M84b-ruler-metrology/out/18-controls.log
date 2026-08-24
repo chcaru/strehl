@@ -1,0 +1,17 @@
+  target baseline: {"PITCH_MM": 1.0, "C_SIGN": 1.0, "theta_flat_deg": 3.3235013659706656, "theta_ang_deg": 77.35089220264447, "m_quadpx_per_mm": 265.6047857793761, "m": 2.719793006380811, "f_mm": 205.52302126600782, "dZ_per_grad_um": 975.7294345123827}
+M84b step 18 controls: running 4 tests
+  [PASS] S1 synthetic positive control, two-view closure
+          planted theta_ang 77.351 deg, m 265.605 quad px/mm, noise 0.27 px
+          recovered theta_ang 77.3626 deg (err 0.0116, bar 0.5), m 265.609 quad px/mm (err 0.0014%, bar 1.0%), dZ err 0.0046%
+  [PASS] S2 negative control, single-view inversion must fail
+          single-view theta 76.5928 deg, error 0.7582 deg (conditioning dtheta/dsin = 4.57 rad)
+          single-view inversion must MISS by more than 0.5 deg -> it did
+  [PASS] G1 pitch 1.0 -> 1.1 mm
+          plant PITCH_MM = 1.0 -> PITCH_MM = 1.1; read-back confirms True; hash moved True
+          mutated output {"PITCH_MM": 1.1, "C_SIGN": 1.0, "theta_flat_deg": 3.3235013659706656, "theta_ang_deg": 77.35089220264447, "m_quadpx_per_mm": 241.45889616306917, "m": 2.4725390967098284, "f_mm": 205.52302126600787, "dZ_per_grad_um": 1073.302377963621}
+          detected True; restored byte-identical True; post-restore identical to baseline True
+  [PASS] G2 sign-inverted C
+          plant C_SIGN = 1.0 -> C_SIGN = -1.0; read-back confirms True; hash moved True
+          mutated output {"error": "non-physical closure: m or f non-positive", "m_f": 268.2572602338851, "f_px": -19165.529269076607}
+          detected True; restored byte-identical True; post-restore identical to baseline True
+M84b step 18 controls: 4/4 passed

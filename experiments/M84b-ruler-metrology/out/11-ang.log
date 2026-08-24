@@ -1,0 +1,8 @@
+highly-angled-ruler-mm-cpl: 299 frames, ROI [1400,800,1400,1544]
+  frame   0     0.3s  level   1396.7
+  frame  50    13.9s  level   1491.4
+  frame 100    22.0s  level   1603.8
+  frame 150    30.1s  level   1725.5
+  frame 200    38.3s  level   1861.9
+  frame 250    45.7s  level   2007.7
+  done in 51.6s; conf median 10.44

@@ -1,0 +1,11 @@
+[ang]
+  highly-angled-ruler-mm-cpl: 299 frames
+    pass1 frame   0    0.1s
+    pass1 frame  60    6.4s
+    pass1 frame 120   12.4s
+    pass1 frame 180   18.7s
+    pass1 frame 240   25.4s
+    pass2  13.2s, 160 frames used
+    ticks found: 16
+    n_ticks 16  gap_med 51.47364199316826
+    A 547.561  B 59.9455  C 6.759909e-03  resid_rms 99.171 px  conv True init_ok True

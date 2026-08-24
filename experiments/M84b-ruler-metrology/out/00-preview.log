@@ -1,0 +1,12 @@
+flat-on-ruler-cpl: 79 frames
+  f000 DSC00001.ARW: plane 3514x2344 black=512 white=16383 mean=1222.3 p01=464.0 p99=2152.5 max=2324.0
+  f019 DSC00020.ARW: plane 3514x2344 black=512 white=16383 mean=1236.7 p01=376.0 p99=2226.0 max=5406.0
+  f039 DSC00040.ARW: plane 3514x2344 black=512 white=16383 mean=1253.0 p01=395.0 p99=2330.0 max=9728.5
+  f059 DSC00060.ARW: plane 3514x2344 black=512 white=16383 mean=1275.2 p01=442.0 p99=2423.0 max=5569.5
+  f078 DSC00079.ARW: plane 3514x2344 black=512 white=16383 mean=1296.2 p01=505.0 p99=2381.0 max=2692.0
+highly-angled-ruler-mm-cpl: 299 frames
+  f000 DSC00001.ARW: plane 3514x2344 black=512 white=16383 mean=1414.7 p01=950.5 p99=3555.0 max=3800.5
+  f074 DSC00075.ARW: plane 3514x2344 black=512 white=16383 mean=1544.1 p01=1005.0 p99=3966.5 max=4185.5
+  f149 DSC00150.ARW: plane 3514x2344 black=512 white=16383 mean=1700.8 p01=1066.0 p99=4375.0 max=10887.0
+  f224 DSC00225.ARW: plane 3514x2344 black=512 white=16383 mean=1872.4 p01=1152.0 p99=4831.5 max=6565.0
+  f298 DSC00299.ARW: plane 3514x2344 black=512 white=16383 mean=2051.7 p01=1220.5 p99=5239.0 max=7017.0

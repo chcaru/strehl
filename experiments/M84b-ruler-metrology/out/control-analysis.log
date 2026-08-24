@@ -1,0 +1,25 @@
+CONTROL_FIRST stack=D:\personal\macro\flat-on-ruler-cpl frames=79
+pass1 frame=000 global_focus=0.056524538
+pass1 frame=010 global_focus=0.076639399
+pass1 frame=020 global_focus=0.128578275
+pass1 frame=030 global_focus=0.261131853
+pass1 frame=040 global_focus=0.264305979
+pass1 frame=050 global_focus=0.184478819
+pass1 frame=060 global_focus=0.092235141
+pass1 frame=070 global_focus=0.068435110
+pass1 frame=078 global_focus=0.054022565
+geometry sharp_frame=36 baseline_green=1574.997 slope=-0.005059449 ticks=12 intervals=11
+pass2 frame=000
+pass2 frame=010
+pass2 frame=020
+pass2 frame=030
+pass2 frame=040
+pass2 frame=050
+pass2 frame=060
+pass2 frame=070
+pass2 frame=078
+CONTROL_RESULT=experiments\M84-ruler-metrology\out\control-result.json
+CONTROL_PASS=False
+CONTROL_FAILURES=at_least_20_graduations,at_least_20_accepted_focus_positions,focus_endpoint_change,tick_localisation,two_longitudinal_boundaries,physical_pitch_from_image
+CONTROL_FOCUS endpoint=5.248097 ci95=[4.714059419532579, 5.775578438688112] rms=0.308705
+CONTROL_SPACING median=532.208744 sensor_px min=526.467303 max=540.128980

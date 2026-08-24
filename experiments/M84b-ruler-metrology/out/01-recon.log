@@ -1,0 +1,17 @@
+flat f000: sharpest tile (row 3, col 0) of (18, 27), max=1.224e-03
+flat f019: sharpest tile (row 0, col 1) of (18, 27), max=1.435e-01
+flat f039: sharpest tile (row 6, col 26) of (18, 27), max=6.046e-02
+flat f059: sharpest tile (row 17, col 26) of (18, 27), max=6.610e-03
+flat f078: sharpest tile (row 12, col 2) of (18, 27), max=1.033e-03
+flat f019 y=1875: dominant period 270.308 quad px, rel power 0.510
+flat f019 y=1992: dominant period 270.308 quad px, rel power 0.528
+flat f019 y=2109: dominant period 270.308 quad px, rel power 0.528
+flat f019 y=2226: dominant period 270.308 quad px, rel power 0.532
+ang f000: sharpest tile (row 12, col 13) of (18, 27), max=9.836e-04, col_argmax=13
+ang f040: sharpest tile (row 16, col 13) of (18, 27), max=3.012e-03, col_argmax=13
+ang f080: sharpest tile (row 12, col 14) of (18, 27), max=5.203e-03, col_argmax=14
+ang f120: sharpest tile (row 6, col 14) of (18, 27), max=5.802e-02, col_argmax=14
+ang f160: sharpest tile (row 10, col 15) of (18, 27), max=3.162e-03, col_argmax=15
+ang f200: sharpest tile (row 9, col 16) of (18, 27), max=4.249e-03, col_argmax=16
+ang f240: sharpest tile (row 9, col 17) of (18, 27), max=1.986e-03, col_argmax=17
+ang f298: sharpest tile (row 9, col 18) of (18, 27), max=7.334e-03, col_argmax=18

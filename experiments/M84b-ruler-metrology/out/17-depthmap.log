@@ -1,0 +1,29 @@
+highly-angled-ruler-mm-cpl: 299 frames, 5 bands
+  reusing cached band profiles
+  band shifts (px, vs ref band y=1680): [-13.2, -8.94, -4.25, -0.0, 4.47]
+  shear s = dx/dy = +0.04515 +/- 0.00064  (tick tilt from image-vertical +2.59 deg), line resid rms 0.153 px
+    band 0 raw detections 15, matched to ref 11
+  band 0 (dy -300): 11 matched ticks, offset -14.40 px, spread 2.89 px, drift +6.59 px per 1000 px of x
+    band 1 raw detections 19, matched to ref 12
+  band 1 (dy -200): 12 matched ticks, offset -9.14 px, spread 0.69 px, drift +0.17 px per 1000 px of x
+    band 2 raw detections 19, matched to ref 14
+  band 2 (dy -100): 14 matched ticks, offset -4.30 px, spread 0.58 px, drift -1.19 px per 1000 px of x
+    band 3 raw detections 18, matched to ref 18
+    band 4 raw detections 20, matched to ref 14
+  band 4 (dy +90): 14 matched ticks, offset +4.72 px, spread 0.99 px, drift +0.50 px per 1000 px of x
+  ISO-DEPTH TICKS: True  (max spread 2.89 px < 3.0, max drift 6.59 < 15 px/1000px)
+  step-13: 14 ticks after the quality filter (2 wide blobs dropped pre-fit); 5-sigma rejection drops 1 -> 13 kept (k rejected: [13])
+  step-13 law re-referenced by -1.355 px -> A 1698.139 B 80.8315 C 1.291233e-02
+  L3 coverage 32.2% of A-RULE (bar >= 50%)  span x [1699.4, 2311.5]
+  P1 planarity ratio after rejection 1.013 (bar < 3.0), resid rms 0.271 px
+  n(k) quadratic resid rms 2.71 frames
+  curve bootstrap: 1000 replicates, sigma_k over the graduation span 0.00277 .. 0.01050 grad
+  mask tol   10 frames: 37686 q4 px (7.32% of frame), median sigma_depth 8.21 um
+  mask tol   25 frames: 65900 q4 px (12.81% of frame), median sigma_depth 8.28 um
+  mask tol   50 frames: 76467 q4 px (14.86% of frame), median sigma_depth 9.03 um
+  2-D plane-vs-focus check over 77782 q4 px (no tolerance gate): median -5.46 frames, core fraction 0.886, core rms 12.95 frames = 546.4 um
+  D2 median sigma_depth 8.282 um (bar < 25) -> PASS   [p10 6.09, p90 16.43]
+  D1 literal sigma_k/|k| median 0.1738% (diverges at the k=0 origin); span-relative sigma_k/k_span 0.0701% (bar < 0.5%)
+  depth range over valid mask: -467.2 .. 12225.4 um (12.693 mm)
+  wrote 17-depth.png, 17-sigma.png, 17-valid.png (navigation only, not evidence)
+  wrote depth-truth-params.json and the .npz expansion

@@ -1,0 +1,5 @@
+DSC00001.ARW	index=0	green=3514x2344	black=512	white=16383	p01=464.000	p99=2152.500	output=experiments\M84-ruler-metrology\out\control-previews\flat-on-ruler-cpl-f000.png
+DSC00020.ARW	index=19	green=3514x2344	black=512	white=16383	p01=376.000	p99=2226.000	output=experiments\M84-ruler-metrology\out\control-previews\flat-on-ruler-cpl-f019.png
+DSC00040.ARW	index=39	green=3514x2344	black=512	white=16383	p01=395.000	p99=2330.000	output=experiments\M84-ruler-metrology\out\control-previews\flat-on-ruler-cpl-f039.png
+DSC00060.ARW	index=59	green=3514x2344	black=512	white=16383	p01=442.000	p99=2423.000	output=experiments\M84-ruler-metrology\out\control-previews\flat-on-ruler-cpl-f059.png
+DSC00079.ARW	index=78	green=3514x2344	black=512	white=16383	p01=505.000	p99=2381.000	output=experiments\M84-ruler-metrology\out\control-previews\flat-on-ruler-cpl-f078.png

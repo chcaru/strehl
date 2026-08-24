@@ -1,0 +1,14 @@
+[high] y 850-1050
+  darkness   [728.   0.   0.   2.  33.   6.  11.   0.   5.  25. 729.  33.  18.]
+  thr 365 -> flagged [0, 10]  gaps [10]
+[mid] y 1150-1350
+  darkness   [ 997.   16.   10.    6.   20. 1145.    4.   26.    5.   33. 1095.   14.
+   39.]
+  thr 574 -> flagged [0, 5, 10]  gaps [5, 5]
+[low] y 1400-1500
+  darkness   [1220.    0.   20.    0.    0. 1300.   25.   26.   21.   21. 1266.    0.
+    0.]
+  thr 650 -> flagged [0, 5, 10]  gaps [5, 5]
+
+Q_long 10.0  Q_mid 5.0  Q_low 5.0
+decision: DECIDED  P = 1.0 mm

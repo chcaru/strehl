@@ -1,0 +1,8 @@
+[flat]
+  flat-on-ruler-cpl: 79 frames
+    pass1 frame   0    0.2s
+    pass1 frame  60    7.1s
+    pass2   0.6s, 9 frames used
+    ticks found: 14
+    n_ticks 14  gap_med 263.80796897270375
+    A 32.033  B 266.8801  C 8.051726e-04  resid_rms 0.949 px  conv True init_ok True

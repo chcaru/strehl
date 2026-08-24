@@ -1,0 +1,10 @@
+graduations 13, n* span [8.123233082146616, 290.649971991213]
+  n*(k) slope 23.1225 frames/graduation (resid rms 6.566 frames)
+  um per frame = 42.1983  boot 42.2819 +/- 1.5630
+  pearson real 0.9972   placebo -0.2403  (bars: real > 0.9, |placebo| < 0.2)
+  placebo null over 1000 perms: mean +0.0098 sd 0.2900  p95|r| 0.5611  max|r| 0.7496  real beats every null: True
+  monotone fraction 1.000 (bar >= 0.80)
+  centroid vs parabolic median |diff| 2.946 frames
+  segment um/frame [32.3527, 37.9431, 42.0884, 46.3412, 49.3577]
+  constancy ratio 1.5256 -> DRIFTS (bar < 1.25)
+  photometric: frame mean 1397 -> 2161, corr(level, normalised response) = 0.011

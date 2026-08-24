@@ -1,0 +1,25 @@
+ROI origins lifted to absolute quad coords: {'flat': 0.0, 'ang': 1100.0}
+[flat] kept 13/13  A 299.140 B 266.5060 C 7.671937e-04  resid_rms(kept) 0.952 px = 0.36% of local pitch
+[ang] kept 13/14  A 1699.493 B 80.8490 C 1.291233e-02  resid_rms(kept) 0.271 px = 0.53% of local pitch
+     rejected indices [13] resid [7.77]
+
+centred: flat a -1457.86 b 265.1581 c 7.671937e-04
+         ang  a -57.51 b 58.1620 c 1.291233e-02
+
+=== CLOSURE ===
+  theta_flat_deg                 3.3235   boot 3.2336 +/- 0.7078  [1.6867, 4.7141]
+  theta_ang_deg                 77.3509   boot 77.3544 +/- 0.0414  [77.2876, 77.4633]
+  m                              2.7198   boot 2.7199 +/- 0.0051  [2.7111, 2.7332]
+  m_quadpx_per_mm              265.6048   boot 265.6116 +/- 0.4937  [264.7521, 266.9122]
+  f_mm                         205.5230   boot 205.8918 +/- 3.7599  [200.0095, 216.1907]
+  Z0_flat_mm                    75.5657   boot 75.6991 +/- 1.3633  [73.5599, 79.4779]
+  dZ_per_grad_ang_um           975.7294   boot 975.7426 +/- 0.1577  [975.4870, 976.1570]
+
+  m vs lens VERIFIED ceiling 2.8: 2.9% headroom
+  P=0.5mm would need m=5.440 -> REFUTED
+
+  sensitivity to shared-working-distance assumption:
+    m_ratio=0.95: {'theta_flat_deg': 3.14851, 'theta_ang_deg': 76.67086, 'm': np.float64(2.71932), 'f_mm': np.float64(194.67944), 'Z0_flat_mm': np.float64(71.59113), 'dZ_per_grad_ang_um': np.float64(973.06174)}
+    m_ratio=0.98: {'theta_flat_deg': 3.25356, 'theta_ang_deg': 77.08741, 'm': np.float64(2.7196), 'f_mm': np.float64(201.18845), 'Z0_flat_mm': np.float64(73.97716), 'dZ_per_grad_ang_um': np.float64(974.71212)}
+    m_ratio=1.02: {'theta_flat_deg': 3.39338, 'theta_ang_deg': 77.6038, 'm': np.float64(2.71999), 'f_mm': np.float64(209.85413), 'Z0_flat_mm': np.float64(77.1526), 'dZ_per_grad_ang_um': np.float64(976.68652)}
+    m_ratio=1.05: {'theta_flat_deg': 3.49808, 'theta_ang_deg': 77.96471, 'm': np.float64(2.72029), 'f_mm': np.float64(216.34491), 'Z0_flat_mm': np.float64(79.53018), 'dZ_per_grad_ang_um': np.float64(978.01935)}

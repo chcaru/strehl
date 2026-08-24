@@ -1,0 +1,126 @@
+{
+ "n_tests": 4,
+ "n_pass": 4,
+ "details": [
+  {
+   "planted": {
+    "theta_flat_deg": 3.323,
+    "theta_ang_deg": 77.351,
+    "m_quadpx_per_mm": 265.605,
+    "Z0_mm": 75.566,
+    "x_pp": 1757.0,
+    "pitch_mm": 1.0,
+    "noise_px": 0.27
+   },
+   "recovered": {
+    "theta_flat_deg": 3.3273245709343446,
+    "theta_ang_deg": 77.36263145558193,
+    "m_quadpx_per_mm": 265.6086001770758,
+    "m": 2.719832065813256,
+    "f_mm": 206.16649835239008,
+    "Z0_mm": 75.80118675111814,
+    "dZ_per_grad_ang_um": 975.7742804614217
+   },
+   "theta_ang_error_deg": 0.011631455581934347,
+   "m_error_rel": 1.3554628398494323e-05,
+   "dZ_error_rel": 4.553920182952411e-05,
+   "resid_rms_px": {
+    "flat": 0.20959689489466438,
+    "ang": 0.24024036597501355
+   },
+   "bars": "theta_ang error < 0.5 deg, m error < 1.0 %",
+   "pass": true
+  },
+  {
+   "single_view_theta_deg": 76.59280441176648,
+   "single_view_m_quadpx_per_mm": 250.613491720648,
+   "theta_error_deg": 0.7581955882335194,
+   "expectation": "single-view inversion must MISS by more than 0.5 deg",
+   "conditioning_dtheta_per_dsin_rad": 4.566673456740676,
+   "pass": true
+  },
+  {
+   "name": "G1 wrong physical pitch",
+   "plant": "PITCH_MM = 1.0 -> PITCH_MM = 1.1",
+   "readback_confirms_plant": true,
+   "hash_changed_on_plant": true,
+   "sha_before": "f3add8052779cfcfdda5990c9d537d470fdcf6be95b35ece656a128769c369b7",
+   "sha_planted": "b0959ce1e7291cbceacb4a65a272a8fe2983a1f79a0ce97b0d85ce25044afeb5",
+   "sha_restored": "f3add8052779cfcfdda5990c9d537d470fdcf6be95b35ece656a128769c369b7",
+   "restored_byte_identical": true,
+   "baseline": {
+    "PITCH_MM": 1.0,
+    "C_SIGN": 1.0,
+    "theta_flat_deg": 3.3235013659706656,
+    "theta_ang_deg": 77.35089220264447,
+    "m_quadpx_per_mm": 265.6047857793761,
+    "m": 2.719793006380811,
+    "f_mm": 205.52302126600782,
+    "dZ_per_grad_um": 975.7294345123827
+   },
+   "mutated_output": {
+    "PITCH_MM": 1.1,
+    "C_SIGN": 1.0,
+    "theta_flat_deg": 3.3235013659706656,
+    "theta_ang_deg": 77.35089220264447,
+    "m_quadpx_per_mm": 241.45889616306917,
+    "m": 2.4725390967098284,
+    "f_mm": 205.52302126600787,
+    "dZ_per_grad_um": 1073.302377963621
+   },
+   "post_restore_output": {
+    "PITCH_MM": 1.0,
+    "C_SIGN": 1.0,
+    "theta_flat_deg": 3.3235013659706656,
+    "theta_ang_deg": 77.35089220264447,
+    "m_quadpx_per_mm": 265.6047857793761,
+    "m": 2.719793006380811,
+    "f_mm": 205.52302126600782,
+    "dZ_per_grad_um": 975.7294345123827
+   },
+   "post_restore_matches_baseline": true,
+   "mutation_detected": true,
+   "any_output_change": true,
+   "pass": true
+  },
+  {
+   "name": "G2 inverted projective coefficient",
+   "plant": "C_SIGN = 1.0 -> C_SIGN = -1.0",
+   "readback_confirms_plant": true,
+   "hash_changed_on_plant": true,
+   "sha_before": "f3add8052779cfcfdda5990c9d537d470fdcf6be95b35ece656a128769c369b7",
+   "sha_planted": "88f1c7c069b584e712cb756537b0444d08d84312e216252dff6f8c2177a3d1ac",
+   "sha_restored": "f3add8052779cfcfdda5990c9d537d470fdcf6be95b35ece656a128769c369b7",
+   "restored_byte_identical": true,
+   "baseline": {
+    "PITCH_MM": 1.0,
+    "C_SIGN": 1.0,
+    "theta_flat_deg": 3.3235013659706656,
+    "theta_ang_deg": 77.35089220264447,
+    "m_quadpx_per_mm": 265.6047857793761,
+    "m": 2.719793006380811,
+    "f_mm": 205.52302126600782,
+    "dZ_per_grad_um": 975.7294345123827
+   },
+   "mutated_output": {
+    "error": "non-physical closure: m or f non-positive",
+    "m_f": 268.2572602338851,
+    "f_px": -19165.529269076607
+   },
+   "post_restore_output": {
+    "PITCH_MM": 1.0,
+    "C_SIGN": 1.0,
+    "theta_flat_deg": 3.3235013659706656,
+    "theta_ang_deg": 77.35089220264447,
+    "m_quadpx_per_mm": 265.6047857793761,
+    "m": 2.719793006380811,
+    "f_mm": 205.52302126600782,
+    "dZ_per_grad_um": 975.7294345123827
+   },
+   "post_restore_matches_baseline": true,
+   "mutation_detected": true,
+   "any_output_change": true,
+   "pass": true
+  }
+ ]
+}
