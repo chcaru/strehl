@@ -1,0 +1,25 @@
+{
+  "arw": "C:\\dev\\strehl-out\\M93-frames\\f150\\DSC00150.ARW",
+  "tif": "C:\\dev\\strehl-out\\M93-out\\smoke-f150-binlin.tif",
+  "rawpy_cfa_shape": [
+    4688,
+    7028
+  ],
+  "rawpy_pattern": "RGGB",
+  "rawpy_black": 512.0,
+  "rawpy_white": 16383.0,
+  "tif_shape": [
+    2344,
+    3516
+  ],
+  "fit_scale": 6.734913866807927e-05,
+  "fit_offset": -0.03448275118296365,
+  "implied_black": 511.9998839615014,
+  "implied_range": 14847.999837508822,
+  "max_abs_diff_dn": 1,
+  "mean_abs_diff_dn": 0.00023662055823512387,
+  "frac_exact": 0.9997633794417649,
+  "frac_within_1": 1.0,
+  "residual_rms_dn": 0.2887390014695633,
+  "verdict": "PASS"
+}

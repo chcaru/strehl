@@ -1,0 +1,292 @@
+{
+  "binlin": {
+    "119": {
+      "idx": 119,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f119.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "720436a30e58f2101a828aa2ac85deef87f85dfd526b8732d110e171e4046e4b",
+      "roles": [
+        "ROI-HIGHDRIFT-25"
+      ],
+      "arw": "DSC00120.ARW"
+    },
+    "120": {
+      "idx": 120,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f120.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "c8f931f392c77997821d0c018e1bf1a826c7faa8409b14d67eefe98420d5ee67",
+      "roles": [
+        "ROI-MIDDRIFT-25"
+      ],
+      "arw": "DSC00121.ARW"
+    },
+    "134": {
+      "idx": 134,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f134.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "92472b6e04df739af1483d44de5fdbf96da7735e12ce61d715e99edffc13a608",
+      "roles": [
+        "ROI-HIGHDRIFT-10"
+      ],
+      "arw": "DSC00135.ARW"
+    },
+    "135": {
+      "idx": 135,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f135.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "433ec13f1b8128c5fbca63eebe25ec9095d273c163a9ab6bfb001be1c051266b",
+      "roles": [
+        "ROI-MIDDRIFT-10"
+      ],
+      "arw": "DSC00136.ARW"
+    },
+    "142": {
+      "idx": 142,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f142.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "a198091a4b8bc48f10fc9d3d28970f50da6a1100caf0c7e918c5c153e17ae070",
+      "roles": [
+        "ROI-HIGHDRIFT-2"
+      ],
+      "arw": "DSC00143.ARW"
+    },
+    "143": {
+      "idx": 143,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f143.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "5e6145a1dbd70ce3386a7f32c2fbc3f368a535195317695b70293d80387f510f",
+      "roles": [
+        "ROI-MIDDRIFT-2",
+        "ROI-HIGHDRIFT-1"
+      ],
+      "arw": "DSC00144.ARW"
+    },
+    "144": {
+      "idx": 144,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f144.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "f965ff17b1c6f4ffffd4b453774decdee7ac321292fbb71146763220a969eb94",
+      "roles": [
+        "ROI-MIDDRIFT-1",
+        "ROI-HIGHDRIFT+0"
+      ],
+      "arw": "DSC00145.ARW"
+    },
+    "145": {
+      "idx": 145,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f145.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "38386e112c9fba6d9c94389d94b84163c8fee6a30599212254ce3ad8f8bb40d7",
+      "roles": [
+        "ROI-MIDDRIFT+0",
+        "ROI-HIGHDRIFT+1"
+      ],
+      "arw": "DSC00146.ARW"
+    },
+    "146": {
+      "idx": 146,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f146.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "271ebc67846e52a74a0000feaeac02dd65ce23ddd9d4ad37392ba5a2b6a9424c",
+      "roles": [
+        "ROI-MIDDRIFT+1",
+        "ROI-HIGHDRIFT+2"
+      ],
+      "arw": "DSC00147.ARW"
+    },
+    "147": {
+      "idx": 147,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f147.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "88b95e9b59f97e7e37de42dd6189bd118c6909615ebc0c821cef8c11991469af",
+      "roles": [
+        "ROI-MIDDRIFT+2"
+      ],
+      "arw": "DSC00148.ARW"
+    },
+    "154": {
+      "idx": 154,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f154.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "e7f3756427c6f87f266d3f9cd642d96f9dff3bcdd7a164a6e63e9dfbfb02fb0d",
+      "roles": [
+        "ROI-HIGHDRIFT+10"
+      ],
+      "arw": "DSC00155.ARW"
+    },
+    "155": {
+      "idx": 155,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f155.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "b793630aa7a9d3d36acd83d35a4f95f385940a79ac1171496fdb9524616b7061",
+      "roles": [
+        "ROI-MIDDRIFT+10"
+      ],
+      "arw": "DSC00156.ARW"
+    },
+    "158": {
+      "idx": 158,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f158.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "2626e14c774799f48ff7bd8263583bf9329aac01d3d6c03750c2deaf1c585215",
+      "roles": [
+        "ROI-LOWDRIFT-25"
+      ],
+      "arw": "DSC00159.ARW"
+    },
+    "169": {
+      "idx": 169,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f169.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "2c8d15f20b62f285d961dccbe1633a90b79559f11665e5011d69c343667cc1f7",
+      "roles": [
+        "ROI-HIGHDRIFT+25"
+      ],
+      "arw": "DSC00170.ARW"
+    },
+    "170": {
+      "idx": 170,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f170.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "00d3396d5d9d1fa4131b2b29059aa646f41eb3eef30897208001ade5c39c97a2",
+      "roles": [
+        "ROI-MIDDRIFT+25"
+      ],
+      "arw": "DSC00171.ARW"
+    },
+    "173": {
+      "idx": 173,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f173.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "d5167f78ee2948503ec8219f4515c0bde2d5912f34915d9c530ac2027549a16f",
+      "roles": [
+        "ROI-LOWDRIFT-10"
+      ],
+      "arw": "DSC00174.ARW"
+    },
+    "181": {
+      "idx": 181,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f181.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "f3f621485a6bc2cbffb814e5f77aec273539a021e8e663219484ddbae844f24c",
+      "roles": [
+        "ROI-LOWDRIFT-2"
+      ],
+      "arw": "DSC00182.ARW"
+    },
+    "182": {
+      "idx": 182,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f182.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "39f78c202d94605789408ef1ff67d70f046b0c89d4e8f29558751a401eaf6004",
+      "roles": [
+        "ROI-LOWDRIFT-1"
+      ],
+      "arw": "DSC00183.ARW"
+    },
+    "183": {
+      "idx": 183,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f183.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "55757eb328e7dde34abcfe35972bb171432d410810fdf1a6fd184cb17fd87c8f",
+      "roles": [
+        "ROI-LOWDRIFT+0"
+      ],
+      "arw": "DSC00184.ARW"
+    },
+    "184": {
+      "idx": 184,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f184.tif",
+      "cached": false,
+      "secs": 0.8,
+      "sha": "c43754b93bc8125af1b994819bbe42a48172200263db275f5828aec4c9e82d99",
+      "roles": [
+        "ROI-LOWDRIFT+1"
+      ],
+      "arw": "DSC00185.ARW"
+    },
+    "185": {
+      "idx": 185,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f185.tif",
+      "cached": false,
+      "secs": 0.8,
+      "sha": "ec5374609231506d0cd832cd149783191c10c3067ce736eacde533d77d2ea589",
+      "roles": [
+        "ROI-LOWDRIFT+2"
+      ],
+      "arw": "DSC00186.ARW"
+    },
+    "193": {
+      "idx": 193,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f193.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "2c6d902aba80af4af3c034e65993cda569bdb58b1db4c0ccaf49e4ad3a59df03",
+      "roles": [
+        "ROI-LOWDRIFT+10"
+      ],
+      "arw": "DSC00194.ARW"
+    },
+    "208": {
+      "idx": 208,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f208.tif",
+      "cached": false,
+      "secs": 0.7,
+      "sha": "09af6f3e2ef2a70e4cfe3fee266521ae75b54941a34dfa645d5b16dcace661df",
+      "roles": [
+        "ROI-LOWDRIFT+25"
+      ],
+      "arw": "DSC00209.ARW"
+    }
+  },
+  "demosaic": {
+    "144": {
+      "idx": 144,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f144-demo.tif",
+      "cached": false,
+      "secs": 0.8,
+      "sha": "5b352a200d5d9b03bab0c128bbe3a24d1af13e53f00dfa083b129b16fafe7440",
+      "arw": "DSC00145.ARW"
+    },
+    "145": {
+      "idx": 145,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f145-demo.tif",
+      "cached": false,
+      "secs": 0.8,
+      "sha": "afcde371452788f518a459fe0122141e5bbe073ce128e248e940aeeaaac35d7f",
+      "arw": "DSC00146.ARW"
+    },
+    "183": {
+      "idx": 183,
+      "tif": "C:\\dev\\strehl-out\\M93-out\\armF-f183-demo.tif",
+      "cached": false,
+      "secs": 0.8,
+      "sha": "7b29b256ab8155b894c2255e955233c76b85a00bac0ac72a70b627ac8f168781",
+      "arw": "DSC00184.ARW"
+    }
+  },
+  "peaks": [
+    144,
+    145,
+    183
+  ]
+}

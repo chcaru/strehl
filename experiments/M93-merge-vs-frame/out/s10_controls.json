@@ -1,0 +1,59 @@
+{
+  "R5": {
+    "sha_original": "895e458dd8f4722de0dac57d5f2797b8bbcc1492c65462f526c13e69f5ce8288",
+    "sha_repeat": "895e458dd8f4722de0dac57d5f2797b8bbcc1492c65462f526c13e69f5ce8288",
+    "verdict": "PASS"
+  },
+  "R6": {
+    "a": {
+      "elected_exact": 1.0,
+      "unelected_exact": 0.000518798828125,
+      "unelected_frame": 36,
+      "verdict": "PASS"
+    },
+    "b": {
+      "true": 0.9994125366210938,
+      "shifted": 0.10136032104492188,
+      "verdict": "PASS"
+    },
+    "c": {
+      "before": 4453,
+      "after": 80,
+      "verdict": "PASS"
+    }
+  },
+  "R7": {
+    "ROI-LOWDRIFT": {
+      "frame": 183,
+      "signal_dn": 3142.045928955078,
+      "pred_sd": 18.775354026275014,
+      "meas_sd": 49.805911141171535,
+      "ratio": 2.6527282026997234,
+      "excess_var_frac": 0.8578933208386192
+    },
+    "ROI-MIDDRIFT": {
+      "frame": 145,
+      "signal_dn": 2448.5653190612793,
+      "pred_sd": 16.577345271558,
+      "meas_sd": 38.39066520264302,
+      "ratio": 2.3158512158463918,
+      "excess_var_frac": 0.8135430003886828
+    },
+    "ROI-HIGHDRIFT": {
+      "frame": 144,
+      "signal_dn": 2795.1846256256104,
+      "pred_sd": 17.71009851700265,
+      "meas_sd": 31.556107547414676,
+      "ratio": 1.781814342654227,
+      "excess_var_frac": 0.685025714746901
+    },
+    "ROI-FLAT": {
+      "frame": 103,
+      "signal_dn": 4471.128437042236,
+      "pred_sd": 22.392847238948637,
+      "meas_sd": 24.306545295677825,
+      "ratio": 1.0854602380978435,
+      "excess_var_frac": 0.15126490320021013
+    }
+  }
+}
