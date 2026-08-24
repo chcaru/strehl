@@ -82,9 +82,35 @@ redesign recorded in §5 of the pre-registration.
 `crates/strehl-core/src/merge.rs:185` declares `FOCUS_NOISE_SD = 0.015_214`.
 `merge.rs:310` spends it: `tolerance() = T * SQRT_2 * FOCUS_NOISE_SD`.
 `merge.rs:297` sets `DEFAULT_GATE = 4.0`. Nothing else in the crate sets or
-adjusts it. A **second**, separate focus-noise constant exists and is not
-mentioned anywhere in the research corpus I searched:
-`FINE_FOCUS_NOISE_SD = 0.090_400` at `crates/strehl-core/src/through_focus.rs:153`.
+adjusts it. A **second**, separate focus-noise constant exists at
+`crates/strehl-core/src/through_focus.rs:153`:
+`FINE_FOCUS_NOISE_SD = 0.090_400`.
+
+> **CORRECTED after this report's third commit.** As first written, this fact
+> added that the fine constant was *"not mentioned anywhere in the research
+> corpus I searched"*. **That negative claim is false and I withdraw it.**
+> `git grep -ln FINE_FOCUS_NOISE_SD -- docs/` returns **nine** files besides this
+> one, and the constant is among the most examined in the corpus: SYNTHESIS fact
+> 437 built a conclusion on its ratio to `FOCUS_NOISE_SD`; **fact 500 refuted
+> that ratio** as a units conflation — regularised response over unregularised
+> fine field — correcting `k` from 5.94 to **1.815**; fact 501 recorded the
+> two-target calibration that localised the fault (`+0.20%` fine, `+24.26%`
+> coarse); fact 520 has M45's Rust calibrator reproducing it to **−0.000%
+> (0.00 SEM)**; fact 580 found the refuted ratio still printed twice and asserted
+> three times in code and ruled the constant **CORRECT AS CONSUMED**; fact 753
+> added that changing it to fix the printed ratio **would have broken
+> `bimodality_sigma`**; and fact 768 found that at `through_focus.rs:514` the
+> refuted 5.94 is the *correct* number for that sentence. **What survives, and is
+> the subject of §14, is the form question: facts 500/580/753 settle the fine
+> constant's scale and nobody has asked about its dispersion.**
+>
+> The hedge *"I searched"* was in the original and was doing real work; what was
+> wrong was writing a negative claim at all on a search I had not pasted. **The
+> discipline is not "hedge harder": a hedged negative and a bare negative are
+> both unfalsifiable to a reader, and the corpus's C1 citation check cannot see
+> either, because a negative claim cites nothing.** One `git grep` would have
+> settled it in one call and is now quoted above. Recorded so the next reader
+> knows this fact was wrong before they find it elsewhere.
 
 **Fact 2 (MEASURED, source read).** Its entire calibration is one in-crate test,
 `merge::tests::the_focus_noise_constant_is_the_measured_one` (`merge.rs:1197`).
