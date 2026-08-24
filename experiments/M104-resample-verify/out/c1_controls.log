@@ -1,0 +1,46 @@
+==============================================================================
+M104 C1 -- instrument controls (run before any baseline number)
+  base : flat-on-ruler-cpl-PRE-A0-g0.tif   3520 x 2344
+  ROI  : 384px, 8x6 non-overlapping, sub-bin centroid
+  seed : frozen from this image; search window +/- 15% radial, 0.15 rad angular
+  tol  : +/- 0.004
+==============================================================================
+
+INERT  live ROIs (S/B >= 3.0 on BOTH arms) : 13 of 48
+       S/B  min 3.01  median 3.76  max 9.50
+       bar: >= 8 live ROIs              -> GREEN
+
+SELF   mag = 1.000000000   worst per-ROI deviation 0.000e+00   (n=13)
+       bar: EXACTLY 1.000000000         -> GREEN
+
+  DOSE   planted    measured        SE        err    n  verdict
+        1.000000    1.000000  0.000000  +0.000000   13  GREEN
+        1.010000    1.010140  0.000720  +0.000140   10  GREEN
+        1.030000    1.030740  0.001213  +0.000740   10  GREEN
+        1.075000    1.074744  0.000745  -0.000256    8  GREEN
+       monotone increasing: True
+       bar: every dose within +/- 0.004 and monotone -> GREEN
+
+NCX    planted EXACTLY 1.030000  ->  measured 1.030740 +/- 0.001213
+       read against the POST-FIX bar |mag - 1| <= 2 SE : 25.34 sigma from 1.000
+       bar: MUST GO RED                 -> GREEN (it went red)
+
+DIM    3520x2344 vs 3168x2109 (crop, NO resample)   mag = 1.001408 +/- 0.000952  n=8
+       bar: 1.000 +/- 0.004              -> GREEN
+DIM    3520x2344 vs 2816x1875 (crop, NO resample)   mag = 1.001920 +/- 0.001558  n=4
+       bar: 1.000 +/- 0.004              -> GREEN
+
+PL     per-ROI worst |fwd*rev - 1| = 1.110e-16   over 10 ROIs
+       geometric means 1.030740223 and 0.970176557, product 1.000000000000
+       bar: <= 1e-6                     -> GREEN
+
+------------------------------------------------------------------------------
+  INERT    GREEN
+  SELF     GREEN
+  DOSE     GREEN
+  NCX      GREEN
+  DIM90    GREEN
+  DIM80    GREEN
+  PL       GREEN
+  ALL      GREEN -- instrument admitted
+------------------------------------------------------------------------------

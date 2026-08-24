@@ -1,13 +1,13 @@
-# M101 — PRE-REGISTRATION: independent verification of M95's coverage-rescale fix
+# M104 — PRE-REGISTRATION: independent verification of M95's coverage-rescale fix
 
 **Written and committed BEFORE the fix exists and BEFORE any post-fix number
 exists** (rule 12). Nothing below was chosen after seeing a result. Departures
 are declared in the report as departures, with the reason.
 
-**Milestone number.** `M101` claimed after checking for a stem collision: no
-`docs/research/M101*`, no `experiments/M101*`, no `M101` in any commit subject,
+**Milestone number.** `M104` claimed after checking for a stem collision: no
+`docs/research/M104*`, no `experiments/M104*`, no `M104` in any commit subject,
 and zero mentions in `SYNTHESIS.md` or `docs/`. `M100` is the frontier;
-`M102`/`M103` were checked and are also clear, but `M101` is the next number.
+`M102`/`M103` were checked and are also clear, but `M104` is the next number.
 (The orchestrator warned that `M93` is held by two agents.)
 
 **HEAD at pre-registration:** `6a8ac3078d4c11df7ac9818fda0c381dd7fd625e`

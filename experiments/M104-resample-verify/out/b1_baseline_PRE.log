@@ -1,0 +1,44 @@
+==============================================================================
+M104 B1 -- PRE-FIX baseline
+  reference arm : STREHL_ALIGN=0, gate 0  (no warp, no rescale,
+                  native sampling, strehl's own decoder)
+  test arm      : alignment ON, gate 0
+  gate 0 takes one frame per pixel, so the ONLY difference between
+  the arms is the warp and the coverage rescale.
+==============================================================================
+
+------------------------------------------------------------------------------
+flat-on-ruler-cpl
+  A0  3520 x 2344      ALN 3520 x 2344
+  aligner declares k = 0.9708  ->  predicted mag = 1/k = 1.030078
+  live ROIs                 : 10 of 48
+  mag = f0(A0)/f0(ALN)      : 1.025027 +/- 0.003170
+  vs aligner's own 1/k      : 1.030078   (1.59 sigma)
+  extent ALN / extent A0    : 0.975585 +/- 0.003017   (ticks across frame; expect ~k = 0.9708)
+  object-space modulation   : 1.021387 +/- 0.018096   (+2.14%)
+  comb f0 (median, A0)      : 0.14021 cyc/px  -> object band [0.2103, 0.3505] cyc/px
+  D_hi (comb band, dex)     : +0.0604 +/- 0.0195   (+ve = ALN has less detail)
+                              power ratio 1.1492x
+  D_nyq [0.3, 0.48] cyc/px, object-corrected
+                            : +0.1408 +/- 0.0060 dex   (23.57 sigma)
+                              power ratio 1.3829x
+
+------------------------------------------------------------------------------
+bee-3-cpl
+  A0  3516 x 2344      ALN 3516 x 2344
+  aligner declares k = 0.9315  ->  predicted mag = 1/k = 1.073537
+  live ROIs                 : 8 of 48
+  mag = f0(A0)/f0(ALN)      : 1.068148 +/- 0.006961
+  vs aligner's own 1/k      : 1.073537   (0.77 sigma)
+  extent ALN / extent A0    : 0.936200 +/- 0.006101   (ticks across frame; expect ~k = 0.9315)
+  object-space modulation   : 1.246448 +/- 0.116518   (+24.64%)
+  comb f0 (median, A0)      : 0.03708 cyc/px  -> object band [0.0556, 0.0927] cyc/px
+  D_hi (comb band, dex)     : -0.1910 +/- 0.0644   (+ve = ALN has less detail)
+                              power ratio 0.6442x
+  D_nyq [0.3, 0.48] cyc/px, object-corrected
+                            : -0.0343 +/- 0.0425 dex   (-0.81 sigma)
+                              power ratio 0.9240x
+
+==============================================================================
+PRE-fix baseline frozen.
+==============================================================================
