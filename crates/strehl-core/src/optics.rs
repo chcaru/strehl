@@ -305,6 +305,29 @@ pub const A7C2_FE100GM_2XTC_X4CPL: OpticalProfile = OpticalProfile {
 
 const PROFILES: [&OpticalProfile; 1] = [&A7C2_FE100GM_2XTC_X4CPL];
 
+/// Which colour a CFA site carries, for an **RGGB** mosaic.
+///
+/// This exists so that the wiring patch in the gather loop is one line with no
+/// arithmetic in it. `warp_frame_in_place` deinterleaves the mosaic as
+/// `for dy in 0..2 { for dx in 0..2 { ... } }`, so `(dx, dy)` names the site:
+///
+/// ```text
+/// (0,0) R     (1,0) G1
+/// (0,1) G2    (1,1) B
+/// ```
+///
+/// Both greens map to [`Channel::Green`], which has no coefficient by
+/// construction, so both green gathers stay **bitwise identical** to today
+/// (bar L1). `eps_b` is `None`, so the blue gather is unchanged too. **Only the
+/// red plane's gather changes** — a blast radius of one of four gathers.
+pub fn cfa_site_channel(dx: usize, dy: usize) -> Channel {
+    match (dx, dy) {
+        (0, 0) => Channel::Red,
+        (1, 1) => Channel::Blue,
+        _ => Channel::Green,
+    }
+}
+
 /// Look up a profile by key. Absence is legal and means "apply nothing".
 pub fn by_key(key: &str) -> Option<&'static OpticalProfile> {
     PROFILES.iter().copied().find(|p| p.key == key)
@@ -758,6 +781,45 @@ mod tests {
             observed.re,
             observed.im
         );
+    }
+
+    /// The RGGB site map, and the blast radius it implies.
+    ///
+    /// `warp_frame_in_place` already gathers each of the four CFA sites
+    /// separately (`align_cmd.rs:1253-1287`), so wiring the correction means
+    /// composing a per-site transform inside a loop that already exists.
+    #[test]
+    fn the_cfa_site_map_touches_only_the_red_gather() {
+        assert_eq!(cfa_site_channel(0, 0), Channel::Red);
+        assert_eq!(cfa_site_channel(1, 0), Channel::Green);
+        assert_eq!(cfa_site_channel(0, 1), Channel::Green);
+        assert_eq!(cfa_site_channel(1, 1), Channel::Blue);
+
+        // The claim that matters: with the shipped profile, three of the four
+        // site gathers are bitwise unchanged, so only red can move.
+        let p = Some(&A7C2_FE100GM_2XTC_X4CPL_RADIAL);
+        let t = Similarity::from_params(SimilarityParams {
+            ax: 7.5,
+            ay: -3.25,
+            g: 0.041,
+            rot: 0.012,
+        });
+        let mut moved = 0;
+        for dy in 0..2 {
+            for dx in 0..2 {
+                let c = cfa_site_channel(dx, dy);
+                let got = OpticalProfile::compose(p, c, t);
+                let same = got.a.re.to_bits() == t.a.re.to_bits()
+                    && got.a.im.to_bits() == t.a.im.to_bits()
+                    && got.b.re.to_bits() == t.b.re.to_bits()
+                    && got.b.im.to_bits() == t.b.im.to_bits();
+                if !same {
+                    moved += 1;
+                    assert_eq!(c, Channel::Red, "only red has a coefficient");
+                }
+            }
+        }
+        assert_eq!(moved, 1, "exactly one of the four site gathers may change");
     }
 
     /// The gate is OFF by default and REFUSES rather than guessing.

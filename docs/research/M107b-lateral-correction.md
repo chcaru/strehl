@@ -851,12 +851,17 @@ file, and it is the single thing that decides whether this is a patch or a miles
 
 ### Candidate facts
 
-- **P27.** The lateral-CA correction **cannot compose into the production gather as it
-  stands**: `gather_checked` takes one plane and one `Similarity` with no channel argument,
-  and the planes are CFA mosaics (`align_cmd.rs:1421-1426` walks 2x2 quads). A per-channel
-  radial scale needs three transforms, so it requires a per-channel gather — which costs no
-  sharpness, because each sample is still resampled once, but is a design change rather than
-  a call-site swap. MEASURED (code read; merge's own gather NOT read, see §15.4).
+- **P27. RETRACTED — see §16 and P29. The claim below is false.** ~~The lateral-CA correction
+  **cannot compose into the production gather as it stands**: `gather_checked` takes one plane
+  and one `Similarity` with no channel argument, and the planes are CFA mosaics
+  (`align_cmd.rs:1421-1426` walks 2x2 quads). A per-channel radial scale needs three
+  transforms, so it requires a per-channel gather — which costs no sharpness, because each
+  sample is still resampled once, but is a design change rather than a call-site swap.~~
+  The premise "the planes are CFA mosaics" was inferred from a **statistics** loop and is
+  wrong: the production gather is `warp_frame_in_place`, which already deinterleaves the
+  mosaic and calls `gather_checked` **once per CFA site** on a half-resolution plane. The
+  per-channel gather this fact said was missing **already exists**. Retracted within the hour,
+  by reading the function P27 itself flagged as unread.
 - **P28.** `gather_checked` applies its transform about the plane centre
   (`apply_at(px,py,cx,cy)`, `align.rs:290-293` = `apply(p-c)+c`), so `optics::compose`'s
   centre-relative precondition is satisfied by its intended consumer and the §13.3 hazard
@@ -871,3 +876,137 @@ file, and it is the single thing that decides whether this is a patch or a miles
   free.**
 - **D16.** Put the policy — defaults, gating, refusal — in the lane you own, so the patch
   someone else has to apply to a contended file is two lines with no arithmetic in them.
+
+---
+
+## 16. P27 was wrong: the per-channel gather already exists
+
+§15 shipped the gate and then told the orchestrator that composing the correction into
+the production gather was blocked, because `gather_checked` takes one plane and one
+`Similarity` with no channel argument. I registered that as P27 and I flagged, in the
+fact itself, that I had **not read the merge's own gather**. That caveat was the whole
+result. When I read it, P27 fell over.
+
+### 16.1 What the production gather actually does
+
+`align_cmd.rs:1232-1289`, `warp_frame_in_place`, is the function `merge_cmd.rs:968`
+calls once per frame. Its body is:
+
+```rust
+for dy in 0..2usize {
+    for dx in 0..2usize {
+        // deinterleave CFA site (dx,dy) -> scratch.src, at half-res `geom`
+        let src = PlaneRef::from_geometry(&scratch.src, geom)?;
+        covered_total += strehl_core::warpmap::gather_checked(
+            src, t, geom, resampler, &mut scratch.dst, &mut scratch.cover)?;
+        // re-interleave scratch.dst -> frame.data
+    }
+}
+```
+
+**It already gathers each of the four CFA sites separately.** The mosaic is
+deinterleaved into a half-resolution plane per site, gathered, and written back. Four
+`gather_checked` calls happen per frame today. The only thing shared across them is the
+transform `t`.
+
+So the per-channel gather that P27 said was a design change is **the design already in
+the tree**. What is missing is not a gather — it is a per-site *transform*.
+
+### 16.2 How I got it wrong
+
+P27's premise was "the planes are CFA mosaics", cited to `align_cmd.rs:1421-1426`, which
+walks `2*py+dy, 2*px+dx` over `f.stride`. That code does walk a full-resolution mosaic —
+but it is a **statistics** pass, not the gather. I read a quad-walking loop, recognised
+the mosaic access pattern, and generalised it to a function 190 lines earlier that I had
+not opened. The two loops look almost identical; one of them is the resample and one of
+them is not.
+
+The corpus already has the general form of this — §14 says do not report an inference in
+the register a measurement lives in — and P27 is a repeat offence committed in the same
+report. What limited the damage was **not** judgement: it was that I wrote the boundary
+of my own evidence into the fact ("merge's own gather NOT read"), which made the fact
+cheap to falsify and pointed at the file that falsified it.
+
+### 16.3 The wiring, corrected — and the blast radius
+
+Because the loop already exists, the patch to `align_cmd.rs` (M112's lane) is one line
+inside it plus a hoisted lookup:
+
+```rust
+// hoisted above the dy/dx loops:
+let ca = strehl_core::optics::profile_from_setting(
+    std::env::var("STREHL_FIX_CA").ok().as_deref(),
+)?;
+
+// replacing `t` in the gather_checked call:
+let t_site = strehl_core::optics::OpticalProfile::compose(
+    ca, strehl_core::optics::cfa_site_channel(dx, dy), t);
+```
+
+`cfa_site_channel` is new, in my lane, and exists so that no arithmetic lands in a file I
+do not own. For RGGB it maps `(0,0)` to red, `(1,1)` to blue, and both greens to green.
+
+The blast radius is the part worth stating precisely, and it is now a test
+(`the_cfa_site_map_touches_only_the_red_gather`, 286 passing):
+
+| CFA site | channel | coefficient | gather |
+|---|---|---|---|
+| `(0,0)` | red | `eps_r = -704.5 ppm` | **changes** |
+| `(1,0)` | green | none by construction | bitwise identical |
+| `(0,1)` | green | none by construction | bitwise identical |
+| `(1,1)` | blue | `eps_b = None`, never measured | bitwise identical |
+
+**One of four gathers moves.** With the gate off, all four are bitwise identical to today
+(bar L1). This is a much smaller change than §15 priced.
+
+### 16.4 The consequences for the kernel result
+
+The orchestrator's upgrade said the unwired correction is the blocker on a `-0.2360` dex
+sharpness win that is also 1.5x faster, and asked whether composing rather than adding a
+gather was possible. The answer is stronger than "possible":
+
+- **It costs no additional resample.** Not "one resample instead of two" — the four
+  gathers already happen, and three of them do not change. Each sample is still
+  interpolated exactly once, by the same kernel, into the same buffer.
+- **It rides whatever kernel is selected.** The correction is inside `t`, so a `nearest`
+  arm gets a CA-corrected `nearest` gather with no extra low-pass. That is precisely the
+  combination the kernel milestone could not test.
+- **It is not a chroma suppressor.** It moves the red plane's sampling grid by a radial
+  scale and touches nothing else, so it cannot reduce edge chroma on a scene whose edges
+  are genuinely coloured. That matters for the two-sided validation the orchestrator
+  registered: it is structurally incapable of pulling `marker` below its 2.23x control by
+  suppression, because it has no term that can.
+
+One limit, stated rather than buried: **`eps_b` is `None`.** Blue is unmeasured, so the
+blue gather is unchanged by construction and **cyan fringing is untouched**. The
+`leaf-2-cpl` cyan fringe from the parent milestone's observation is **not** addressed by
+this correction. Anyone validating should expect movement on magenta/orange and none on
+cyan, and should treat a cyan improvement as evidence of something other than this patch.
+
+### Candidate facts
+
+- **P29.** The production gather **already runs per CFA site**: `warp_frame_in_place`
+  (`align_cmd.rs:1253-1287`) deinterleaves the mosaic and calls `gather_checked` four
+  times per frame on half-resolution planes, sharing only the transform. Wiring lateral-CA
+  correction is therefore a per-site *transform*, not a per-channel *gather*: one line in
+  an existing loop, **no additional resample**, and with the shipped profile exactly **one
+  of the four gathers changes** (red). MEASURED (code read; test
+  `the_cfa_site_map_touches_only_the_red_gather`). **Supersedes and retracts P27.**
+- **P30.** The correction is structurally incapable of acting as a global chroma
+  suppressor: its only term is a radial scale on the red sampling grid, so it cannot
+  reduce edge chroma on genuinely coloured edges. It therefore satisfies the
+  orchestrator's two-sided validation by construction on the `marker` side, and the test
+  that matters is whether it moves `lavendar`. MEASURED (by construction from the shipped
+  coefficient set).
+
+### Disciplines
+
+- **D17.** When a fact's own text says "I did not read X", that is not a caveat, it is a
+  to-do with a deadline. **Read X before anyone acts on the fact** — P27 survived nine
+  minutes and would have cost a milestone-sized design detour if it had survived longer.
+- **D18.** Two loops over the same index pattern can be a resample and a statistic. **An
+  access pattern does not identify a function.** Cite the function that runs in
+  production, not the one that looks like it.
+- **D19.** Writing the boundary of your evidence into a fact is what makes it cheap to
+  kill. P27 was wrong, but it was wrong in a way that named its own refutation site — that
+  is the difference between an error that costs an hour and one that costs a week.
