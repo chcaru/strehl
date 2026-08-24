@@ -795,3 +795,76 @@ constraint is git's, not the code's.
 
 **I have not written this and I claim no measurement of it.** Step 5's predicted
 hash is a prediction, not a result.
+
+## 15. Which path was the defect measured on? BOTH. And no green overshoot.
+
+ORCH asked whether the magenta figures were measured on `argmax-baseline` or on
+`strehl stack`. **Both, on the same subject, and the `strehl stack` numbers are
+in section 13.**
+
+| quantity | argmax-baseline | `strehl stack` |
+|---|---|---|
+| argv | `argmax-baseline <dir> --srgb --auto-exposure --gate 4` | `stack <dir> --srgb --auto-exposure --gate 4` |
+| subject | `dry-erase-marker-head-cpl` | `dry-erase-marker-head-cpl` |
+| magenta before | 0.3378 % | **2.0017 %** |
+| magenta after | 0.0944 % | **0.5060 %** |
+| green offset before | -- | **-0.1028** |
+
+**ORCH's `2.002 %` and `-0.10` are `strehl stack` numbers and they are correct.**
+They were ORCH's own, from the reproduce command in the original brief, and I
+reproduced both. The `0.3378 % -> 0.0944 %` pair is the argmax one and was always
+labelled as such.
+
+**The clip is not inert on the default path.** The two arms of an identical
+`strehl stack --srgb --auto-exposure --gate 4` command line render
+`DB7BAAD2..A1DDDC` and `559407FE..AD12E5`. Different bytes, same command line,
+one toggle.
+
+### Why byte-freeze 5/5 is not evidence of inertness
+
+**Byte-freeze exercises the measurement path -- default, binned, linear,
+camera-native RGB. The fix is a viewing-path fix and deliberately does not touch
+it.** ORCH's own brief required exactly this: *"The byte-frozen measurement
+output must not change by a single byte."* So 5/5 HOLD is the **designed** result
+and is evidence the fix did **not** leak where it must not go. It carries no
+information about `--srgb`, because byte-freeze never renders `--srgb`.
+
+A pass on a test that cannot see the change is not a null.
+
+### B14 -- the mirror predicate. ORCH's overshoot caution, measured.
+
+Run because ORCH observed that M110's readout is one-sided by construction. The
+predicate is the **exact mirror** of the registered B1 predicate with the
+channels swapped -- `G-R > 0.06 && G-B > 0.06` -- so it is not a statistic chosen
+after seeing the data. It was, however, **not pre-registered**, and I mark it as
+such rather than implying otherwise.
+
+| | before | after |
+|---|---|---|
+| green excess | 0.0113 % | 0.0113 % |
+| delta | | **-0.0000 pp** |
+| pixels turned green-excess by the clip | | **0** |
+| green offset in the magenta region | -0.1028 | **-0.0260** |
+| most positive green offset, after | | **+0.0000** |
+
+**NO OVERSHOOT, and it is structural rather than lucky.** `K = min_c ceil_c` and
+green's ceiling is the minimum by construction (its WB gain is 1.0), so `K` *is*
+green's ceiling. The clip only ever lowers a channel to `K`, and green already
+sits at or below `K`. Green can therefore never be raised above red or blue by
+this operation. The measured `max` green offset after the clip is exactly
+`+0.0000` -- it lands on neutral and does not cross it.
+
+### A hypothesis of mine that the measurement killed
+
+I predicted M110's selector (R and B >= 99 % full scale) was **structurally
+blind** to this population, reasoning from the raw DN in ORCH's diagnosis: R at
+46.8 % and B at 86.2 % of container full scale. **Measured: it covers 99.04 % of
+the magenta population.** I was wrong, and wrong for a specific reason worth
+recording -- I compared a *raw* criterion against an *output* population. Raw R
+is 46.8 % FS, but after a 2.687x white-balance gain, exposure, the colour matrix
+and the sRGB curve, output R is 0.9944. The same pixel is far from clipping in
+one domain and above 99 % in the other.
+
+So M110's instrument would have found these pixels. **The reason its four
+subjects read neutral is that none of them is this subject.** Subject choice, not
+selector blindness, and it means the two results do not conflict at all.
