@@ -18,7 +18,7 @@ Bars, registered here before the run:
       is the test written specifically for this defect; if the mutation is
       caught only by the older tests, the new one is not earning its place.
   M3  `the_pull_maps_wanted_to_sampled_not_the_reverse` is among the failures.
-  M4  the restored crate passes again with exactly 282 tests, RC exactly 0.
+  M4  the restored crate passes again with exactly 285 tests, RC exactly 0.
   M5  the three translation-datum mutants that SURVIVED independent
       verification (sign flip, x10, axis swap) are now each killed, and killed
       specifically by `the_shipped_coefficients_match_the_fit_they_claim` --
@@ -146,7 +146,7 @@ def main():
     print(f"M4  clean exit code     EXIT={results['clean_code']}  (want exactly 0)")
     print(f"    clean:   {'; '.join(results['clean_tail'])}")
     m4 = results["clean_code"] == 0 and any(
-        "282 passed" in ln for ln in results["clean_tail"]
+        "285 passed" in ln for ln in results["clean_tail"]
     )
     print(f"    M4 {'PASS' if m4 else 'FAIL'}")
 

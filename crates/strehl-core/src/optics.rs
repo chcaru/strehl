@@ -310,6 +310,94 @@ pub fn by_key(key: &str) -> Option<&'static OpticalProfile> {
     PROFILES.iter().copied().find(|p| p.key == key)
 }
 
+/// The same optical path with the **translation term zeroed**, which is the form
+/// that should actually be applied.
+///
+/// Measured on `bee-3-cpl`: the radial term alone removes **99.6 %** of the
+/// render-domain radial R−G slope (141.1 → 0.6 ppm), while adding the fitted
+/// translation leaves **17.3 ppm** — 12x the residual. The translation is also
+/// structurally unattributed: it is degenerate with an optical-centre offset and
+/// is the same order as the ~0.5 px/axis CFA co-siting predicts.
+///
+/// So it is **recorded** in [`A7C2_FE100GM_2XTC_X4CPL`] as provenance and
+/// **not applied** here. `the_two_profiles_differ_only_in_translation` pins the
+/// pair so they cannot drift apart.
+pub const A7C2_FE100GM_2XTC_X4CPL_RADIAL: OpticalProfile = OpticalProfile {
+    translation: (0.0, 0.0),
+    ..A7C2_FE100GM_2XTC_X4CPL
+};
+
+/// Why a CA profile was refused. Refusing loudly is the point: silently applying
+/// the wrong optical profile is worse than applying none.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CaConfigError {
+    /// The operator named a profile that does not exist — most likely a typo.
+    /// Treated as an error rather than as absence, because a typo that silently
+    /// disables the correction looks exactly like the correction not working.
+    UnknownProfile { key: String },
+}
+
+impl core::fmt::Display for CaConfigError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            CaConfigError::UnknownProfile { key } => {
+                write!(f, "unknown lateral-CA profile {key:?}; known profiles: ")?;
+                for (i, p) in PROFILES.iter().enumerate() {
+                    if i > 0 {
+                        write!(f, ", ")?;
+                    }
+                    write!(f, "{}", p.key)?;
+                }
+                Ok(())
+            }
+        }
+    }
+}
+
+/// Resolve the lateral-CA profile from the `STREHL_FIX_CA` setting.
+///
+/// **Off by default, and it must stay that way.** The out-of-sample transfer arm
+/// (L4) **split**: a profile fitted on `tweezers-cpl` recovered 95.0 % of the
+/// in-sample reduction on `bee-3-cpl`, but the reverse direction recovered only
+/// 54.1 % against a registered 60 % bar. Lateral CA *is* an optical constant in
+/// principle, but 8 ROIs are not enough to fit a transferable one, and this
+/// project has fact 52 standing as the warning against transferring a scalar
+/// fitted on one scene. Default-on would be a regression risk taken on a
+/// coefficient whose transfer is measured to be uneven.
+///
+/// **The value must NAME the optical path**, not merely be truthy. The shipped
+/// profile includes a **2x teleconverter**; take it off and the coefficient does
+/// not describe the path. There is no way to detect that from the frames, so the
+/// operator states it or gets nothing:
+///
+/// ```text
+/// STREHL_FIX_CA unset / "" / "0"        -> Ok(None)      silent no-op
+/// STREHL_FIX_CA "a7c2-fe100gm-2xtc-x4cpl" -> Ok(Some(..)) radial term only
+/// STREHL_FIX_CA "1" / "true" / "on"     -> Err(..)       refuses to guess
+/// STREHL_FIX_CA "typo"                  -> Err(..)       refuses silently-off
+/// ```
+///
+/// `1`/`true`/`on` are rejected deliberately. They are the natural thing to type
+/// and they are exactly the request this function cannot honour, because "yes,
+/// correct CA" does not say *which lens*.
+///
+/// Takes the value as an argument rather than reading the environment, so it is
+/// testable without mutating global process state from parallel test threads.
+pub fn profile_from_setting(value: Option<&str>) -> Result<Option<&'static OpticalProfile>, CaConfigError> {
+    let raw = match value {
+        None => return Ok(None),
+        Some(v) => v.trim(),
+    };
+    if raw.is_empty() || raw == "0" || raw.eq_ignore_ascii_case("off") || raw.eq_ignore_ascii_case("false") {
+        return Ok(None);
+    }
+    // The radial-only forms are what get applied; see the const's docs.
+    if raw == A7C2_FE100GM_2XTC_X4CPL.key {
+        return Ok(Some(&A7C2_FE100GM_2XTC_X4CPL_RADIAL));
+    }
+    Err(CaConfigError::UnknownProfile { key: raw.to_string() })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -670,6 +758,70 @@ mod tests {
             observed.re,
             observed.im
         );
+    }
+
+    /// The gate is OFF by default and REFUSES rather than guessing.
+    ///
+    /// L4 split — 0.950 one direction, 0.541 the other against a 0.60 bar — so
+    /// the coefficient's transfer is measured to be uneven and default-on would
+    /// be a regression risk. And the profile includes a 2x teleconverter that
+    /// cannot be detected from the frames, so a truthy value like `1` is a
+    /// request this function cannot honour.
+    #[test]
+    fn the_ca_gate_is_off_by_default_and_refuses_to_guess() {
+        // Absence and the off-forms are silent no-ops.
+        for off in [None, Some(""), Some("  "), Some("0"), Some("off"), Some("OFF"), Some("false")] {
+            assert_eq!(
+                profile_from_setting(off),
+                Ok(None),
+                "{off:?} must be a silent no-op"
+            );
+        }
+
+        // Truthy-but-unspecific values are REFUSED, not accepted.
+        for truthy in ["1", "true", "on", "yes", "TRUE"] {
+            let e = profile_from_setting(Some(truthy)).unwrap_err();
+            assert_eq!(e, CaConfigError::UnknownProfile { key: truthy.to_string() },
+                "{truthy:?} must be refused: it does not say which lens");
+        }
+
+        // A typo is an ERROR, not absence. A silently-disabled correction looks
+        // exactly like a correction that does not work.
+        assert!(profile_from_setting(Some("a7c2-fe100gm-2xtc")).is_err());
+        assert!(profile_from_setting(Some("A7C2-FE100GM-2XTC-X4CPL")).is_err(),
+            "the key is case-sensitive; a near-miss must not silently apply");
+
+        // The error names the known keys, so the operator can fix it.
+        let msg = profile_from_setting(Some("nope")).unwrap_err().to_string();
+        assert!(msg.contains("nope") && msg.contains("a7c2-fe100gm-2xtc-x4cpl"), "{msg}");
+    }
+
+    /// Naming the path resolves to the RADIAL-ONLY form, never the raw record.
+    #[test]
+    fn the_gate_applies_the_radial_term_only() {
+        let got = profile_from_setting(Some("a7c2-fe100gm-2xtc-x4cpl")).unwrap().unwrap();
+        assert_eq!(got.translation, (0.0, 0.0),
+            "the fitted translation is recorded, not applied: it leaves 17.3 ppm vs 0.6 ppm");
+        assert_eq!(got.eps_r, A7C2_FE100GM_2XTC_X4CPL.eps_r);
+        // Whitespace is tolerated; the key is not.
+        assert!(profile_from_setting(Some(" a7c2-fe100gm-2xtc-x4cpl ")).unwrap().is_some());
+    }
+
+    /// The applied profile and the recorded one must not drift apart. They differ
+    /// only in the term §12.1 measured to be harmful.
+    #[test]
+    fn the_two_profiles_differ_only_in_translation() {
+        let rec = &A7C2_FE100GM_2XTC_X4CPL;
+        let app = &A7C2_FE100GM_2XTC_X4CPL_RADIAL;
+        assert_eq!(rec.key, app.key);
+        assert_eq!(rec.optical_path, app.optical_path);
+        assert_eq!(rec.measured_from, app.measured_from);
+        assert_eq!(rec.version, app.version);
+        assert_eq!(rec.eps_r, app.eps_r);
+        assert_eq!(rec.eps_b, app.eps_b);
+        assert_eq!(rec.fit_r.r_squared, app.fit_r.r_squared);
+        assert_ne!(rec.translation, app.translation);
+        assert_eq!(app.translation, (0.0, 0.0));
     }
 
     /// The measured datum itself, pinned — not just the code path that uses it.

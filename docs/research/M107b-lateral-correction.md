@@ -722,3 +722,152 @@ counter-example.
 §12.1 or §13 came from a renderer invocation. The coefficients inherited from the parent
 milestone are exposed and are named as such; the unit is unwired, so nothing downstream
 consumes them yet.
+
+---
+
+## 15. Wiring: the design answer, and why I did not wire it
+
+Asked whether the lateral-CA correction is ready to go default-on, where it belongs in the
+order of operations, and how to handle the teleconverter.
+
+### 15.1 (1) Transferable? **NOT ESTABLISHED. It ships behind a flag.**
+
+I do not have to reason about this: **L4 is exactly that experiment and it split.**
+
+| fit on | applied to | removed | frac of in-sample | vs 0.60 bar |
+|---|---|---|---|---|
+| `tweezers-cpl` (n=12) | `bee-3-cpl` (n=8) | 91.2 % | **0.950** | PASS |
+| `bee-3-cpl` (n=8) | `tweezers-cpl` (n=12) | 53.3 % | **0.541** | **FAIL** |
+
+Neither direction makes anything *worse*, so lateral CA does behave like an optical term
+rather than a scene property — the orchestrator's expectation is supported in the
+well-fitted direction. But the reverse direction misses the registered bar, and the
+asymmetry tracks the fit sets: **8 ROIs predict 12 much worse than 12 predict 8.** The
+honest reading is *"lateral CA transfers; 8 ROIs are not enough to fit a transferable
+profile"*, and fact 52 is not dismissed by that.
+
+Both stacks are also the **same optical configuration**. This says nothing about a second
+configuration, which is the thing that would actually establish a *profile*.
+
+**So: flag-gated, and it stays flag-gated until someone measures a second configuration.**
+Default-on would be a regression risk taken on a coefficient whose transfer is measured to
+be uneven.
+
+### 15.2 (3) The teleconverter — the gate refuses to guess
+
+The shipped profile **was measured with the 2x Viltrox teleconverter fitted**; the record
+names it and `optics.rs` says "remove it and this record does not describe the path". So the
+hazard is the mirror of the one stated: applying it when the TC is **off**.
+
+There is no way to detect that from the frames. So the gate **requires the operator to name
+the optical path** and refuses anything else:
+
+```text
+STREHL_FIX_CA unset / "" / "0" / "off"    -> Ok(None)        silent no-op
+STREHL_FIX_CA "a7c2-fe100gm-2xtc-x4cpl"   -> Ok(Some(..))    radial term only
+STREHL_FIX_CA "1" / "true" / "on"         -> Err(..)         refuses to guess
+STREHL_FIX_CA "a7c2-fe100gm-2xtc"         -> Err(..)         refuses to be silently off
+```
+
+**`1`/`true`/`on` are rejected deliberately.** They are the natural thing to type and they
+are precisely the request the function cannot honour, because "yes, correct CA" does not say
+*which lens*. A typo is an **error**, not absence, because a silently-disabled correction is
+indistinguishable from a correction that does not work.
+
+`profile_from_setting` takes the value as an **argument**, not from the environment, so it
+is testable without mutating global process state from parallel test threads.
+
+It also resolves to `A7C2_FE100GM_2XTC_X4CPL_RADIAL` — **translation zeroed**, per §12.1,
+where the fitted translation left 17.3 ppm against 0.6 ppm for the radial term alone. The
+measured translation stays in the record as provenance;
+`the_two_profiles_differ_only_in_translation` pins the pair so they cannot drift.
+
+### 15.3 (2) Order of operations — **and the finding that blocks the cheap wiring**
+
+The good half first. **L6 says the correction composes into the alignment `Similarity`
+exactly** — worst relative error `<= 1e-12` over 20 000 randomised transforms — so per
+gather it costs **no second kernel application**. And `gather_checked` calls
+`t.apply_at(px, py, cx, cy)` with `cx, cy = width*0.5, height*0.5`, and
+`align.rs:290-293` defines `apply_at(x,y,cx,cy) = apply(p - c) + c`. **The gather already
+centres the transform**, which independently retires the centre-relative precondition I
+recorded as a gap in §13.3. The composition algebra lands exactly:
+`s*a*(p-c) + s*b + t + c`.
+
+**Now the blocker.** `gather_checked` takes **one plane, one `Similarity`, and no channel
+argument**, and the production planes are **CFA mosaics, not separated channel planes** —
+`align_cmd.rs:1421-1426` walks them as 2x2 quads (`2*py + dy`, `2*px + dx`, `f.stride`).
+
+Lateral CA needs **three different transforms**, one per channel. You cannot apply a
+per-channel radial scale to an interleaved Bayer plane in a single gather. **So the
+correction composes exactly into a `Similarity`, but it does not compose into the gather
+that actually runs.** That is the real answer to (2), and it is not the answer I expected
+when I wrote L6.
+
+Two ways out, and they are not equal:
+
+- **(a) Gather per channel.** Split to per-channel subplanes and gather each with its own
+  composed transform. **Each output sample is still resampled exactly once**, so this costs
+  no sharpness — the cost is wall clock and a real change to the gather's shape. Sampling a
+  half-density subplane is a *different* interpolation from sampling the mosaic, so this is
+  a design change that needs its own measurement, not a patch.
+- **(b) Correct after demosaic.** A second, independent resampling pass. **Reject.** Facts
+  1373-1374 price a kernel application at −0.2360 dex and fact 1287 attributes 64.2 % of the
+  merge's sharpness deficit to the coverage rescale. Spending a second kernel to remove
+  ~3 px of red fringing is exactly the trade the orchestrator asked me to watch for, and it
+  is the losing side of it.
+
+**Recommendation: (a), scheduled as its own milestone with its own before/after, not folded
+into someone else's commit tonight.**
+
+### 15.4 Why there is no patch attached
+
+My lane is `optics.rs` and `color.rs`. **`color.rs` is purely colorimetric — it contains no
+geometry at all**, so it is not a seam for this. The gather is `warpmap.rs::gather_checked`,
+called from `align_cmd.rs` (M112's, dispatched an hour ago) and the merge path
+(`merge_cmd.rs`, M97's). **Every candidate site is in someone else's lane, and the change
+that is actually needed is (a), which is a design change to the gather rather than a
+two-line call-site swap.**
+
+So I have put **all the policy in my lane** instead, so that whoever does wire it writes as
+little as possible in a contended file:
+
+```rust
+// at the call site, once the gather is per-channel:
+let profile = strehl_core::optics::profile_from_setting(
+    std::env::var("STREHL_FIX_CA").ok().as_deref(),
+)?;                                    // Ok(None) when unset -- silent no-op
+let t_chan = strehl_core::optics::OpticalProfile::compose(profile, channel, t);
+```
+
+Two lines, no arithmetic, no convention to get wrong, and `Ok(None)` is a bitwise no-op
+(bar L1: 12 012 cases, 0 differing bits).
+
+**Caveat I will not paper over:** I established the mosaic-plane claim from CFA quad
+indexing in a *statistic* function in `align_cmd.rs`, and from `gather_checked`'s signature.
+I did **not** read the merge's own gather, because `merge_cmd.rs` is M97's and currently
+dirty. **If the merge already gathers per-channel planes, then (a) is already done and the
+two lines above are the whole wiring.** That is a five-minute check for whoever owns that
+file, and it is the single thing that decides whether this is a patch or a milestone.
+
+### Candidate facts
+
+- **P27.** The lateral-CA correction **cannot compose into the production gather as it
+  stands**: `gather_checked` takes one plane and one `Similarity` with no channel argument,
+  and the planes are CFA mosaics (`align_cmd.rs:1421-1426` walks 2x2 quads). A per-channel
+  radial scale needs three transforms, so it requires a per-channel gather — which costs no
+  sharpness, because each sample is still resampled once, but is a design change rather than
+  a call-site swap. MEASURED (code read; merge's own gather NOT read, see §15.4).
+- **P28.** `gather_checked` applies its transform about the plane centre
+  (`apply_at(px,py,cx,cy)`, `align.rs:290-293` = `apply(p-c)+c`), so `optics::compose`'s
+  centre-relative precondition is satisfied by its intended consumer and the §13.3 hazard
+  does not arise. MEASURED.
+
+### Disciplines
+
+- **D15.** "It composes exactly" is a claim about the *algebra*, not about the *pipeline*.
+  L6 proved the correction folds into a `Similarity` to 1e-12 and was still not enough to
+  wire it, because the gather that consumes `Similarity` handles one interleaved plane and
+  the correction needs three. **Check the consumer's signature before pricing a change as
+  free.**
+- **D16.** Put the policy — defaults, gating, refusal — in the lane you own, so the patch
+  someone else has to apply to a contended file is two lines with no arithmetic in them.
