@@ -107,7 +107,7 @@ does not degrade. That difference is the whole prize:
 
 | | median | range over 12 stacks |
 | --- | --- | --- |
-| best equal-weight average, over 3 frames | **1.3037** | 1.0197–1.6709 |
+| best equal-weight average, as a gain over a 3-frame average | **1.3037** | 1.0197–1.6709 |
 | **headroom: best matched filter ÷ best equal average** | **1.1100** | **1.0696–1.2037** |
 
 **MEASURED. The entire focus-axis matched-filter prize on this corpus is
