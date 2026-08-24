@@ -531,12 +531,14 @@ record the stem, what it was asked, and where it writes. `experiments/` counts: 
 | `M69` | recalibrate `FOCUS_NOISE_SD` -- the constant every gate is denominated in | `docs/research/M69-focus-noise-sd.md` | live |
 | `M70` | is there harvestable mid-band signal in OFF-PEAK frames? Decides the external review's #3 (multi-frame Wiener deconvolution) **core-vs-plugin**, on measurement. Anchored on fact 27's measured f/11 cutoff at 0.2762 cyc/px. Uses the corpus's 19-299 frame span as a free ~15x step-density design. **Read-only in `crates/`.** | `docs/research/M70-through-focus-spectrum.md`, `experiments/M70-through-focus-spectrum/` | live (`cd71aca9`) |
 | `M71` | **the delivered flat fields.** PRNU `kappa` and whether it enters the noise model; an independent 50x-range PTC cross-check of facts 27/29; CPL transmission and uniformity; dust map. **Central confound: at m~2 the paper's own fibre texture is resolved and mimics PRNU** -- the defocus sweeps are the lever. **Read-only in `crates/`.** | `docs/research/M71-flat-fields.md`, `experiments/M71-flat-fields/` | live (`26f7db42`) |
+| `M72` | **is fact 895's green-plane correlation `rho` = +0.073 real, and does it belong in the model?** Averaging G1/G2 gives `var(mean)` = 0.5365 sigma^2, not 0.5 -- **a ~3.6% sigma error on every averaged-green path**, measured and unmodelled for weeks. Routed to M68 as a follow-up turn: it has just built and validated per-plane noise-covariance machinery and its G2/G1 null is the calibrated instrument for it. **Boundary: flat fields belong to M71; M72 uses dark frames and the corpus.** **Read-only in `crates/`.** | `docs/research/M72-green-plane-correlation.md`, `experiments/M72-green-correlation/` | live (M68 cont.) |
 
 **M63 is reserved** for the bimodality milestone above and must not be reissued.
 
 **Unallocated, and deliberately so.** Three measurements are named and waiting for a
 milestone that did not frame them (discipline 441):
 
+- ~~The green-plane correlation of fact 895~~ -- **dispatched as M72.**
 - ~~The B-plane mechanism's ISO sweep~~ -- **dispatched as M68.** Until it reports,
   `profile.rs` must carry the 0.84x as a **measured per-plane scale of unknown origin**,
   not a conversion gain: the two behave differently when ISO changes.
