@@ -40,6 +40,7 @@ use std::time::Instant;
 use anyhow::{Context, Result, bail, ensure};
 use rayon::prelude::*;
 use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
+use strehl_core::color::{self, AppliedExposure, Exposure};
 use strehl_core::flat_ratio::{self, FrameFlat};
 use strehl_core::focus::FocusField;
 use strehl_core::merge::{
@@ -80,6 +81,15 @@ pub struct MergeOptions {
     /// not legitimate to measure *resolution* on, because some of the detail
     /// in it was inferred rather than recorded.
     pub demosaic: bool,
+    /// Explicit exposure for the viewing render, in stops. Requires `srgb`.
+    ///
+    /// `0.0` is **no exposure at all**, not "a gain of one": it resolves to
+    /// [`Exposure::None`] and the writer's arithmetic is then exactly what it
+    /// was before M100 existed.
+    pub exposure: f32,
+    /// Choose the exposure from the merged image instead, and print the choice.
+    /// Requires `srgb`, and refuses to combine with a non-zero `exposure`.
+    pub auto_exposure: bool,
     /// One or more gate thresholds, in units of the combined focus noise. Every
     /// one is folded in the same pass two.
     pub gates: Vec<f32>,
@@ -1076,6 +1086,12 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             opts.gates.len()
         );
     }
+    // Exposure is validated *here*, before a frame is read, because a refusal
+    // must cost nothing. It is a viewing control and the linear output is the
+    // measurement output, so asking for it without --srgb is an error and not
+    // something to quietly drop: a user who believes they brightened the
+    // measurement file and did not has no way to find out.
+    let exposure = Exposure::resolve(opts.srgb, opts.exposure, opts.auto_exposure)?;
 
     let paths = crate::raw_paths(&opts.dir, opts.limit)?;
     ensure!(
@@ -1586,6 +1602,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             xyz_to_cam.as_ref(),
             opts.srgb,
             opts.demosaic,
+            exposure,
             path,
         )?;
     }
@@ -2708,6 +2725,7 @@ fn write_merged(
     xyz_to_cam: Option<&([[f32; 3]; 3], String)>,
     srgb: bool,
     demosaic: bool,
+    exposure: Exposure,
     path: &Path,
 ) -> Result<()> {
     let geom = est.geometry();
@@ -2771,6 +2789,95 @@ fn write_merged(
     }
     let dev = image_out::Develop { matrix, srgb };
 
+    // ---- exposure ---------------------------------------------------------
+    //
+    // The statistic is ALWAYS taken on the binned quad grid, even under
+    // --demosaic. The demosaic is an interpolation and must not be able to
+    // move the exposure, and MEASURED (docs/research/M100-exposure.md 3) it
+    // does not want to: the binned and demosaiced grids of the same stack put
+    // the luminance percentile at 0.322559 and 0.322549, the same answer to
+    // 1/100 stop. Computing it here is also 4x cheaper and needs no second
+    // full-resolution buffer.
+    //
+    // It reads through `val`/`gmean`, so with the halo correction on it
+    // measures the pixels it is about to write, not a different image.
+    let choose = || {
+        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
+        let mut luma: Vec<f32> = (0..n)
+            .map(|i| {
+                color::display_luminance(
+                    [
+                        norm(val(CfaPlane::R, i), gains[0]),
+                        norm(gmean(i), gains[1]),
+                        norm(val(CfaPlane::B, i), gains[2]),
+                    ],
+                    matrix.as_ref(),
+                )
+            })
+            .collect();
+        color::choose_exposure(&mut luma)
+    };
+    let applied = match exposure {
+        Exposure::None => AppliedExposure::IDENTITY,
+        Exposure::Stops(stops) => AppliedExposure {
+            stops,
+            automatic: false,
+        },
+        Exposure::Auto => choose().unwrap_or_else(|| {
+            eprintln!(
+                "exposure        : --auto-exposure found no positive luminance; leaving it alone."
+            );
+            AppliedExposure::IDENTITY
+        }),
+    };
+    if !applied.is_identity() || applied.automatic {
+        eprintln!(
+            "exposure        : {applied}, {}",
+            if applied.automatic {
+                "chosen from the image"
+            } else {
+                "as asked"
+            }
+        );
+        if applied.automatic {
+            eprintln!(
+                "                  rule: linear-sRGB luma p{} -> {:.2} on the binned grid (M100).",
+                color::AUTO_EXPOSURE_PERCENTILE,
+                color::AUTO_EXPOSURE_TARGET
+            );
+            eprintln!(
+                "                  reproduce this exact file with {}",
+                applied.reproduce_flag()
+            );
+        }
+        eprintln!(
+            "                  ONE multiply in linear light, before the curve. No tone curve, no"
+        );
+        eprintln!("                  saturation, no roll-off: every unclipped ratio is unchanged.");
+    } else if srgb {
+        // ADVISORY ONLY. Nothing is applied and no byte moves; this exists so
+        // that "--srgb looks grey" is answered by the tool rather than by a
+        // bug report. M100 recommends against making --auto-exposure the
+        // default precisely because a silent, scene-dependent gain makes two
+        // renders incomparable -- so the number is offered, not taken.
+        if let Some(would) = choose()
+            && would.stops.abs() >= 0.05
+        {
+            eprintln!(
+                "exposure        : none -- this is a FAITHFUL render of the capture, which is \
+                 not the same",
+            );
+            eprintln!(
+                "                  thing as a flattering one. --auto-exposure would choose {}.",
+                would
+            );
+            eprintln!(
+                "                  Nothing was applied. Pass {} or --auto-exposure to apply it.",
+                would.reproduce_flag()
+            );
+        }
+    }
+
     if demosaic {
         // Full resolution. The merge already estimates all four CFA sites of
         // every quad independently -- `Estimator` carries four accumulators and
@@ -2781,8 +2888,11 @@ fn write_merged(
         let mut mosaic = vec![0.0f32; mw * mh];
         // Normalised but deliberately NOT clamped above: the demosaic and the
         // matrix both need the headroom, and the clamp happens once, after the
-        // matrix, in `image_out`.
-        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
+        // matrix, in `image_out`. The exposure gain rides in the same multiply
+        // -- see the binned branch below for why that is exact and not merely
+        // convenient.
+        let eg = applied.gain();
+        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain * eg / range;
         for py in 0..geom.height {
             let (top, bot) = mosaic[py * 2 * mw..].split_at_mut(mw);
             for px in 0..geom.width {
@@ -2809,10 +2919,22 @@ fn write_merged(
         return Ok(());
     }
 
-    if let Some(m) = matrix {
-        // Binned, with colour. Same 2x2 binning as below; the matrix is the
-        // only difference, and the values are left unclamped until after it.
-        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
+    if matrix.is_some() || !applied.is_identity() {
+        // Binned, with colour and/or exposure. Same 2x2 binning as below; the
+        // matrix and the gain are the only differences, and the values are left
+        // unclamped until after both.
+        //
+        // **The exposure rides in the normalisation multiply, and that is exact
+        // rather than convenient.** The colour matrix and the demosaic are both
+        // LINEAR operators, so `M(g*v) = g*M(v)`: multiplying here and
+        // multiplying between the matrix and the clamp are the same transform
+        // (`strehl_core::color::tests::the_gain_commutes_with_the_colour_matrix`).
+        // What is *not* free is that it must land before the clamp, so a
+        // negative exposure can pull a value back down from above 1.0 instead
+        // of scaling one already flattened to it. Folding it here is also what
+        // lets the byte-frozen branch below stay textually untouched.
+        let eg = applied.gain();
+        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain * eg / range;
         let mut lin = vec![0.0f32; n * 3];
         let (pixels, _) = lin.as_chunks_mut::<3>();
         for (i, px) in pixels.iter_mut().enumerate() {
@@ -2820,10 +2942,7 @@ fn write_merged(
             px[1] = norm(gmean(i), gains[1]);
             px[2] = norm(val(CfaPlane::B, i), gains[2]);
         }
-        let dev = image_out::Develop {
-            matrix: Some(m),
-            srgb,
-        };
+        let dev = image_out::Develop { matrix, srgb };
         image_out::write_binned(path, geom.width, geom.height, &lin, &dev)?;
         eprintln!();
         eprintln!(
@@ -2838,6 +2957,10 @@ fn write_merged(
 
     // ------------------------------------------------------------------
     // The measurement path. **Byte-frozen.**
+    //
+    // Exposure cannot reach here: the branch above claims every case where the
+    // gain is not the identity, precisely so that this arithmetic stays
+    // textually untouched. See docs/research/M100-exposure.md section 4.
     //
     // Every quality number in the corpus was measured on the file this branch
     // writes. The arithmetic below is exactly what shipped before M85 --

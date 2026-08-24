@@ -88,6 +88,15 @@ enum Command {
     /// top-octave green power outright. Pass --binned to get the old
     /// half-resolution viewing render back. Do not measure either file. See
     /// docs/research/M85-output-correctness.md and M95-resolution.md.
+    ///
+    /// --srgb ALONE IS FAITHFUL, NOT FLATTERING. bee-3-cpl's white background
+    /// lands at 0.5734 in sRGB because the RAW background sits at 0.296 of the
+    /// sensor's usable range and NO pixel in any of its 299 frames reaches 0.99
+    /// of white: the capture is ~1.76 stops under-exposed and this reproduces
+    /// it exactly. Pass --auto-exposure to have the gain chosen and PRINTED, or
+    /// --exposure to set it yourself. Both are exposure only -- one multiply in
+    /// linear light -- and both refuse to run without --srgb. See
+    /// docs/research/M100-exposure.md.
     #[command(alias = "merge")]
     Stack {
         /// Directory containing RAW files.
@@ -119,6 +128,58 @@ enum Command {
         /// the byte-frozen measurement output, which is always binned.
         #[arg(long)]
         binned: bool,
+        /// Exposure for the viewing render, in STOPS. Requires --srgb.
+        ///
+        /// A gain of 2^STOPS applied in LINEAR light, before the sRGB transfer
+        /// curve. The order is not a detail: the curve is not homogeneous, so
+        /// f(g*x) != g*f(x), and a gain applied to ENCODED values scales R, G
+        /// and B by different amounts in linear light -- it shifts the colour
+        /// of every non-neutral pixel instead of changing the exposure.
+        /// Exposure is photons times a constant, and photons live before the
+        /// curve. (Where it sits relative to the colour matrix is free, because
+        /// the matrix is linear and the two commute exactly.)
+        ///
+        /// It is exposure ONLY: one multiply. No contrast curve, no
+        /// saturation, no highlight roll-off, nothing local. Every ratio that
+        /// does not clip is preserved exactly, so the file is still a faithful
+        /// render of the capture that differs from the un-exposed one by a
+        /// number you chose.
+        ///
+        /// 0 is not "a gain of one", it is no exposure at all: the file is
+        /// byte-identical to one written without this flag.
+        ///
+        /// Negative values need the = form: --exposure=-1.5
+        #[arg(
+            long,
+            value_name = "STOPS",
+            default_value_t = 0.0,
+            allow_negative_numbers = true
+        )]
+        exposure: f32,
+        /// Choose the exposure from the image and PRINT what was chosen.
+        /// Requires --srgb; mutually exclusive with --exposure.
+        ///
+        /// THE RULE: put the 99.9th percentile of linear-sRGB luminance at
+        /// 0.90, bounded to +/-6 stops and quantised to 1/100 stop so that the
+        /// printed number reproduces the file exactly. Both numbers were
+        /// MEASURED by sweeping 7 percentiles x 5 targets x 2 statistics across
+        /// seven corpus stacks, not chosen by taste
+        /// (docs/research/M100-exposure.md).
+        ///
+        /// Deterministic and never silent: it is an order statistic of the
+        /// merged image, so the same input gives the same answer, and the run
+        /// prints the --exposure=N that reproduces the file byte for byte.
+        ///
+        /// It can DARKEN. coffee-bean and foam are already exposed to the top
+        /// of the range and carry 1.42% and 0.76% blown pixels; this pulls them
+        /// down to 0.00% and 0.53%. It is an exposure, not a highlight rescue:
+        /// what was clipped in the capture stays clipped.
+        ///
+        /// The statistic is always computed on the BINNED grid, so --demosaic
+        /// cannot change the exposure (MEASURED: the two grids put the
+        /// percentile at 0.322559 and 0.322549, the same 1/100-stop answer).
+        #[arg(long)]
+        auto_exposure: bool,
         /// The one knob: how much averaging, in units of the focus noise.
         ///
         /// A frame is averaged in where its regularised focus response is within
@@ -329,6 +390,8 @@ fn main() -> Result<()> {
             srgb,
             demosaic,
             binned,
+            exposure,
+            auto_exposure,
             gates,
             flat_roi,
             detail_roi,
@@ -347,6 +410,8 @@ fn main() -> Result<()> {
             // The measurement path passes neither flag, so this is false for it
             // and the byte-frozen output is untouched.
             demosaic: demosaic || (srgb && !binned),
+            exposure,
+            auto_exposure,
             gates,
             flat_roi,
             detail_roi,
