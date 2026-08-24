@@ -30,6 +30,11 @@ lot. They are argued in §2, §3, §6 and §7.
   **19–34% MTF** there and nonzero MTF all the way to Nyquist. The plateau is a
   floor, not the optics running out — **74 → 97.7 cy/mm is being lost to the
   pipeline**, most likely to per-quad merge seams (ARGUED, §7).
+- **The gate is not what makes this stack look soft.** Asked to render the
+  `--gate` ladder for the owner, M85 measured that 1 → 60.86 frames averaged
+  per pixel costs **0.3–1.5% of high-frequency amplitude on fine detail** while
+  cutting defocused-background noise **6.6×**. The knob works as documented;
+  the softness is elsewhere. `DEFAULT_GATE` untouched (question 90 is open).
 - **A falsifier I was given has been withdrawn, at source.** The
   "any energy above 86.3 cy/mm is artifact" test assumed `p = 1`, which M5's
   measured `B ≤ 3.06` and M84b's `m = 2.7198` exclude. `f_c ≥ 106 cy/mm`, above
@@ -596,6 +601,14 @@ to the pre-plant control. **Byte-planted and byte-restored.**
   continuation meaningful. (Filename kept for stability; it no longer plots a
   predicted cutoff, which was withdrawn — see §7.)
 
+`C:\dev\strehl-out\M85-gate-ladder\` —
+
+- **`gate-ladder.png`** — §12. T = 0, 0.5, 1, 2, 4 across **two** rows: the eye
+  facets and the defocused background. Two rows on purpose — a detail-only
+  ladder would read as "the knob does nothing", when in fact it does something
+  real in the other row. Each panel carries its gate and measured mean `n_eff`
+  and no sharpness number.
+
 ## 11. Verification performed
 
 | gate | result |
@@ -642,7 +655,84 @@ is structural, not a slip. The only reliable mitigations are to commit a
 registration line the moment you add it, or to make registration additive in
 separate files.
 
-## 12. Candidate facts
+## 12. The gate ladder — a requested addition, and a negative result
+
+The owner's ruling (fact 848) is to ship the noise-vs-sharpness tradeoff as
+**one exposed knob**, and `--gate` is that knob — but nothing in the repository
+had ever shown him the two ends on his own photograph. Rendered at
+`C:\dev\strehl-out\M85-gate-ladder\gate-ladder.png`: T = 0, 0.5, 1, 2, 4 on
+`bee-3-cpl`, full-resolution with the colour matrix.
+
+`DEFAULT_GATE` was **not** touched: question 90 is open and it is not M85's to
+settle by eye. No sharpness number appears on any panel, because the corpus has
+no measurement on this gate's axis (`--gate`'s own help says so, and M57's
+0.496–0.740 px is a *different* gate running the opposite way).
+
+**MEASURED — one statistics pass, all five gates:**
+
+| gate | mean `n_eff` | pixels taking one frame |
+|---:|---:|---:|
+| 0 | 1.000 | 100.00% |
+| 0.5 | 2.125 | 67.10% |
+| 1 | 5.244 | 56.62% |
+| 2 | **23.043** | **46.57%** |
+| 4 (shipped default) | 60.860 | 35.02% |
+
+Gate 0 and gate 2 **independently reproduce corpus fact 1145 exactly** (1.000 /
+100.00% and 23.043 / 46.57%).
+
+### The result: the gate is not what makes the output look soft
+
+Going from pure selection to the shipped default — **1 → 60.86 frames averaged
+per pixel, a 61× change** — costs almost no high-frequency content, while
+buying a large noise reduction where there is nothing to lose:
+
+| region | high-frequency amplitude, gate 0 → gate 4 |
+|---|---:|
+| eye facets (6.25 px lattice), sRGB full-res | **0.985×** |
+| hairs, sRGB full-res | 0.973× |
+| eye facets, **binned linear measurement path** | **0.997×** |
+| defocused background, **binned linear measurement path** | **0.151× — a 6.6× noise reduction** |
+
+Measured on the demosaic-free linear path too, so MHC is not masking the
+result. Noise tracks `1/√n_eff` across the ladder within 0.74–1.18×.
+
+**This is the merge behaving exactly as `stack --help` says it should**:
+"where one frame is unambiguously sharpest it degenerates to selection; where
+several are indistinguishable it averages them." On a facet field the focus
+peak is sharp, so the gate admits few frames; on defocused background every
+frame is indistinguishable, so it admits many.
+
+### Why this is believable — the instrument is provably live
+
+The same estimator, on the same five files, reads **0.151×** on background and
+**0.997×** on facets. It fires, so the null is a null and not a dead metric.
+Three further checks, two of which caught my own errors:
+
+1. **Are the files even different?** All five SHA-256 distinct. Run first,
+   because if the flag were inert every number above would be void.
+2. **A planted Gaussian blur that the metric must detect.** σ = 1.0 px drops the
+   r = 0.30–0.50 band to **0.063×** of unblurred. The metric detects smoothing
+   of exactly the kind the gate would cause, an order of magnitude below the
+   effect it reports as absent.
+3. **Two instrument failures, caught and fixed.** A single-peak carrier metric
+   returned a flat 1.000× — it was reading a **47 px shading peak**, not the
+   **6.25 px facet lattice**. A block-high-pass noise estimator predicted 0.128×
+   and measured 0.989×, a **7.7× miss**: it was measuring the defocused
+   background's residual *structure*, which does not average down. Both were
+   replaced before any result was reported.
+
+### Scope, honestly
+
+**One stack, one gate axis.** M52 measured that the gate achieving a given
+`n_eff` varies **28.9×** across the corpus, so this does not transfer to other
+subjects. It does not contradict fact 813 — M57 swept a fractional peak-height
+gate whose axis runs the opposite way — but it is a **tension worth someone's
+milestone**: on this gate and this stack, the price fact 813 measured is not
+being paid. The softness the owner is reacting to is elsewhere; §7's artifact
+floor at 74 cy/mm is a better suspect.
+
+## 13. Candidate facts
 
 Numbered `P1…` per the rule-28 corollary; these are proposals, not corpus
 numbers. **SYNTHESIS.md was not edited.**
@@ -669,8 +759,12 @@ numbers. **SYNTHESIS.md was not edited.**
 | **P18** | On a synthetic scene band-limited **by construction** below the red/blue lattice Nyquist — an invariant that assumes nothing about the optics — Malvar-He-Cutler leaves **0.002463** of super-band amplitude against the raw mosaic's **0.1500**: **61× suppression**, 0.25% of full scale. The demosaic is not the main source of P17's floor; the merge's per-quad selection seams are the remaining candidate. | MEASURED (P18a) + ARGUED (cause) |
 | **P19** | On an RGGB grid red and blue have Nyquist 48.8 cy/mm — identical to the binned Nyquist — while green's quincunx reaches 97.7 on-axis. The whole prize band 48.8–97.7 cy/mm is therefore one where **green is adequately sampled and red and blue are not**: luminance detail recovered there is real, chroma detail is inferred. The measured correction to `f_c` widens this band from 0.82 octaves to a full one. | DERIVED |
 | **P20** | `git commit -- <paths>` scopes a commit to *files*, not to *lines*: it commits each named path's full working-tree content, so a concurrent agent's uncommitted edit to a **shared registration file** lands in your commit. MEASURED: `e59f1b0` carries M86's `pub mod align;`. Rule 42 is necessary and, for shared files like `lib.rs` and `main.rs`, **not sufficient**. | MEASURED |
+| **P21** | On `bee-3-cpl`, `--gate` 0 → 4 moves mean `n_eff` **1.000 → 60.860** (singleton 100.00% → 35.02%). Gate 0 and gate 2 reproduce fact 1145's 1.000/100.00% and 23.043/46.57% **exactly**, independently. | MEASURED |
+| **P22** | **THE GATE IS NOT WHAT MAKES THIS STACK LOOK SOFT.** Across the whole ladder (61× more frames averaged per pixel) high-frequency amplitude falls only **1.5% on the eye facets and 2.7% on the hairs** (sRGB full-res), and **0.3% on the facets** on the demosaic-free binned linear path — while defocused-background noise falls to **0.151×, a 6.6× reduction**, tracking `1/√n_eff` within 0.74–1.18×. The merge averages where there is nothing to lose and selects where there is, exactly as `stack --help` claims. | MEASURED |
+| **P23** | P22's estimator is provably live rather than dead: the same metric on the same five files reads **0.151×** on background and **0.997×** on facets, and a planted Gaussian blur of σ = 1.0 px drops the same band to **0.063×**. Two earlier instruments were refuted first — a single-peak carrier metric that read a 47 px shading peak instead of the 6.25 px lattice, and a block-high-pass noise estimator that missed its own prediction by **7.7×** by measuring defocused structure rather than noise. | MEASURED |
+| **P24** | P22 is **one stack on one gate axis** and does not transfer: M52 measured the gate achieving a given `n_eff` varying **28.9×** across the corpus. It does not contradict fact 813 (M57 swept a fractional peak-height gate whose axis runs the opposite way), but on *this* gate and *this* stack the price fact 813 measured is not being paid. | MEASURED (scope) + ARGUED (the tension) |
 
-## 13. What M85 did not do
+## 14. What M85 did not do
 
 - **No colour-accuracy claim.** §8. It needs a grey card in frame.
 - **`argmax-baseline` got the matrix but not `--demosaic`.** `Selection` exposes
