@@ -1640,6 +1640,14 @@ to the comparison, not to the honesty.
 
 ### 17.9 Reproducing this section
 
+**Provenance of the two inputs.** Both TIFs were rendered by **M97b**, not by this
+milestone, on `dry-erase-marker-head-cpl` at **`--gate 2`** (recorded in M97b's
+report), at 07:21:25 and 07:24:23 on 2026-08-24 — both **after** the `885e9f7`
+alignment watershed of 03:15:23, so both describe an *aligned* merge. The gate is
+non-default (`DEFAULT_GATE = 4.0`), but it is the **same** for both arms, so the
+comparison is internally matched. Recorded here in full because "we used the
+default" is not a record and defaults move.
+
 ```powershell
 $env:PYTHONIOENCODING='utf-8'
 cd experiments\M103-halfdrift
