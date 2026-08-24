@@ -1,0 +1,19 @@
+  decode 0/299
+  decode 100/299
+  decode 200/299
+
+[flower] F0 ISO=0.08155 CI[0.06598,0.09617]  n=2768
+[flower] global k_F=41  subject k spread p10-p90 = 248 frames
+[flower] F1 global-d40 ISO=0.08058 CI[0.05982,0.09845]  (+1.2%)
+[flower] F1 global-d80 ISO=0.06778 CI[0.02903,0.08378]  (+16.9%)
+[flower] F1 local-d40  ISO=0.01255 CI[0.00166,0.01988]  (+84.6%)
+[flower] F1 local-d80  ISO=0.00334 CI[0.00000,0.01269]  (+95.9%)
+
+[bee] F0 ISO=0.06804 CI[0.05981,0.07982]  n=6103
+[bee] global k_F=145  subject k spread p10-p90 = 79 frames
+[bee] F1 global-d40 ISO=0.02491 CI[0.01387,0.03882]  (+63.4%)
+[bee] F1 global-d80 ISO=0.00655 CI[0.00000,0.02179]  (+90.4%)
+[bee] F1 local-d40  ISO=0.00827 CI[0.00264,0.01868]  (+87.9%)
+[bee] F1 local-d80  ISO=0.00000 CI[0.00000,0.00271]  (+100.0%)
+
+wrote data/20-local-partition.json

@@ -1,0 +1,10 @@
+  decode 0/299
+  decode 60/299
+  decode 120/299
+  decode 180/299
+  decode 240/299
+n=299 kF=41 fg=0.353 treat=0.082
+F0  ISO=0.08155 CI[0.06598,0.09617]  n=2768
+F1 d=40  ISO=0.08058 CI[0.05982,0.09845]  (+1.2% vs F0)
+F1 d=80  ISO=0.06778 CI[0.02903,0.08378]  (+16.9% vs F0)
+wrote data/19-flower-fix.json and the flower crops

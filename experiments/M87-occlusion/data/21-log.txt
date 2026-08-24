@@ -1,0 +1,15 @@
+bee F0 ISO=0.06804  n=6103
+  d=20  ISO=0.01320 (+80.6%)  moved=0.679  focus retention med=0.475 p05=0.202  outside |d|max=0.0  profiles worse=0.139 better=0.732
+  d=40  ISO=0.00827 (+87.9%)  moved=0.821  focus retention med=0.388 p05=0.148  outside |d|max=0.0  profiles worse=0.181 better=0.727
+  d=80  ISO=0.00000 (+100.0%)  moved=0.960  focus retention med=0.269 p05=0.102  outside |d|max=0.0  profiles worse=0.145 better=0.797
+
+planted disc: 25445 px, overlaps real fg: 0
+  d=20  moved=0.739  focus retention med=0.436 p05=0.198
+  d=40  moved=0.854  focus retention med=0.356 p05=0.136
+  d=80  moved=0.933  focus retention med=0.281 p05=0.127
+
+flower F0 ISO=0.08155  n=2768
+  d=40  ISO=0.01255 (+84.6%)  outside |d|max=0.0  profiles worse=0.023 better=0.940
+  d=80  ISO=0.00334 (+95.9%)  outside |d|max=0.0  profiles worse=0.047 better=0.931
+
+wrote data/21-cost.json

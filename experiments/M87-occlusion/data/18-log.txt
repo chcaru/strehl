@@ -1,0 +1,20 @@
+  alone 0/205
+  alone 60/205
+  alone 120/205
+  alone 180/205
+
+alone: n=205  tau=2262  fg=0.7259  profiles=1690
+  merge ISO = 0.06313 CI[0.04211,0.09633]
+  single frames ISO: max over sampled k = 0.00083
+  with-fern 0/299
+  with-fern 60/299
+  with-fern 120/299
+  with-fern 180/299
+  with-fern 240/299
+
+with-fern: n=299  tau=2074  fg=0.3527  profiles=2768
+  merge ISO = 0.08155 CI[0.06598,0.09617]
+  single frames ISO: max over sampled k = 0.00000
+
+with-fern / alone = 1.29x
+wrote data/18-ab.json

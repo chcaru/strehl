@@ -1,0 +1,19 @@
+
+[occluding (KB=90, two depths)]  KB=90  KF=40
+  F0            ISO=0.03060  RMSE band=0.0346  far=0.0180
+  F1-local d=10  ISO=0.03391 (-10.8%)  RMSE band=0.0542 (+56.5%)  far=0.0180  moved=0.394
+  F1-local d=20  ISO=0.01312 (+57.1%)  RMSE band=0.0827 (+139.0%)  far=0.0180  moved=0.394
+  F1-local d=40  ISO=0.00618 (+79.8%)  RMSE band=0.1228 (+254.6%)  far=0.0180  moved=0.394
+  F2-unmix      ISO=0.00648  RMSE band=0.0182  far=0.0180  cover band=0.718
+
+[CONTROL non-occluding (KB=KF=40, one depth)]  KB=40  KF=40
+  F0            ISO=0.01367  RMSE band=0.0181  far=0.0179
+  F1-local d=10  ISO=0.03918 (-186.6%)  RMSE band=0.0571 (+215.9%)  far=0.0179  moved=1.000
+  F1-local d=20  ISO=0.03308 (-142.0%)  RMSE band=0.0821 (+354.4%)  far=0.0179  moved=1.000
+  F1-local d=40  ISO=0.00493 (+63.9%)  RMSE band=0.1190 (+558.4%)  far=0.0179  moved=1.000
+  F2-unmix      ISO=0.00805  RMSE band=0.0155  far=0.0179  cover band=0.717
+
+RMSE(band) change at d=40:  occluding +254.6%   non-occluding control +558.4%
+control fails as designed
+
+wrote data/22-plant-truth.json
