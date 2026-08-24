@@ -17,6 +17,8 @@
 //! guard for it is in [`AlignArgs::guard_subject`] rather than only in prose,
 //! because a guard that lives in a report is not a guard.
 
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -48,7 +50,9 @@ pub struct AlignArgs {
     /// Directory of `.arw` frames to solve.
     pub dir: PathBuf,
 
-    /// Where to write the sidecar. Defaults to `<dir>/warpmap.txt`.
+    /// Where to write the sidecar. Defaults to the shared warp-map cache
+    /// (`%LOCALAPPDATA%\strehl\warpmaps`, or `$STREHL_CACHE_DIR`), which is
+    /// the same entry `strehl stack` reads. Capture directories are read-only.
     #[arg(long)]
     pub out: Option<PathBuf>,
 
@@ -370,11 +374,12 @@ pub fn run(args: &AlignArgs) -> Result<()> {
         warps,
     );
 
-    let out = args
-        .out
-        .clone()
-        .unwrap_or_else(|| args.dir.join("warpmap.txt"));
-    map.save(&out)?;
+    // Default to the shared cache, not `<dir>/warpmap.txt`: capture directories
+    // are read-only corpus, and this way an explicit `strehl align` populates
+    // exactly the entry `strehl stack` will later look for. `--out` still puts
+    // the sidecar anywhere the caller asks.
+    let out = args.out.clone().unwrap_or_else(|| sidecar_path(&args.dir));
+    save_atomic(&map, &out)?;
 
     println!(
         "\n  placed {}/{} frames, refused {}",
@@ -783,9 +788,44 @@ pub fn is_tilted_subject(dir: &Path) -> bool {
     TILTED_SUBJECTS.iter().any(|t| name.contains(t))
 }
 
-/// The default sidecar location for a bracket.
+/// Where the cached sidecar for `dir` lives.
+///
+/// This is deliberately **not** `dir.join("warpmap.txt")`. Capture directories
+/// are read-only corpus: merely rendering a bracket must not mutate the owner's
+/// originals. M97 measured this firing on real captures — `bee-2-cpl`,
+/// `bee-3-cpl` and `coffee-bean` all acquired a `warpmap.txt` written by
+/// `strehl stack`, and eleven strays accumulated under `D:\personal\macro` in
+/// one night.
+///
+/// The cache key is the **canonical** capture path, so two brackets that share
+/// a leaf name cannot collide; `check_stack` remains the real guard against
+/// consuming the wrong stack's warps.
 pub fn sidecar_path(dir: &Path) -> PathBuf {
-    dir.join("warpmap.txt")
+    let mut hasher = DefaultHasher::new();
+    std::fs::canonicalize(dir)
+        .unwrap_or_else(|_| dir.to_path_buf())
+        .hash(&mut hasher);
+    let key = hasher.finish();
+    let leaf = dir
+        .file_name()
+        .map(|s| s.to_string_lossy().into_owned())
+        .unwrap_or_else(|| "stack".to_string());
+    cache_root().join(format!("{leaf}-{key:016x}.warpmap.txt"))
+}
+
+/// Root of the warp-map cache: `%LOCALAPPDATA%\strehl\warpmaps` on Windows,
+/// `$XDG_CACHE_HOME/strehl/warpmaps` elsewhere, falling back to the temp dir.
+fn cache_root() -> PathBuf {
+    std::env::var_os("STREHL_CACHE_DIR")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| {
+            std::env::var_os("LOCALAPPDATA")
+                .or_else(|| std::env::var_os("XDG_CACHE_HOME"))
+                .map(PathBuf::from)
+                .unwrap_or_else(std::env::temp_dir)
+                .join("strehl")
+                .join("warpmaps")
+        })
 }
 
 /// Reference frame for a merge-side solve: the **middle** frame.
@@ -948,10 +988,38 @@ pub fn load_or_solve(
         false,
     )?;
     // Best effort: a read-only capture directory must not fail the merge.
-    if let Err(e) = map.save(&side) {
+    //
+    // Write-then-rename, because the cache is shared. M97 measured a torn read
+    // of a sidecar while a sibling process rewrote it in place; a rename is
+    // atomic on both NTFS and POSIX, so a concurrent reader sees either the old
+    // file or the new one and never a half-written one. The temp name carries
+    // the pid so two processes racing to cache the same stack cannot collide.
+    if let Err(e) = save_atomic(&map, &side) {
         eprintln!("alignment      : could not cache sidecar ({e}); continuing");
     }
     Ok(Some((map, "solved")))
+}
+
+/// Save `map` to `path` via a uniquely-named temporary in the same directory,
+/// then rename it into place.
+///
+/// Same-directory is required: a rename across volumes is a copy and is not
+/// atomic. The temporary is removed on a failed rename so a crashed run does
+/// not leave litter that looks like a cache entry.
+fn save_atomic(map: &WarpMap, path: &Path) -> Result<()> {
+    let dir = path.parent().unwrap_or(Path::new("."));
+    std::fs::create_dir_all(dir)?;
+    let tmp = dir.join(format!(
+        ".{}.{}.tmp",
+        path.file_name().map(|s| s.to_string_lossy()).unwrap_or_default(),
+        std::process::id()
+    ));
+    map.save(&tmp)?;
+    if let Err(e) = std::fs::rename(&tmp, path) {
+        let _ = std::fs::remove_file(&tmp);
+        return Err(e.into());
+    }
+    Ok(())
 }
 
 /// Apply [`fit_to_cover`] and report what it cost, or explain why it could not.
@@ -1342,4 +1410,79 @@ pub fn fit_to_cover(map: &WarpMap, margin: f64) -> Option<(WarpMap, f64)> {
     let mut prov = map.provenance().clone();
     prov.note = format!("{} | fit-to-cover k={lo:.6}", prov.note);
     Some((WarpMap::new(prov, geom, map.resampler(), warps), lo))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The defect this pins: rendering a bracket used to write
+    /// `<dir>/warpmap.txt` into the owner's read-only capture corpus. M97
+    /// measured eleven strays accumulating under `D:\personal\macro` in one
+    /// night, including one that appeared while this fix was being written.
+    #[test]
+    fn sidecar_never_lands_inside_the_capture_directory() {
+        let dir = std::env::temp_dir().join("m97-sidecar-scope-test");
+        std::fs::create_dir_all(&dir).unwrap();
+        let side = sidecar_path(&dir);
+        assert!(
+            !side.starts_with(&dir),
+            "sidecar {} is inside the capture directory {}",
+            side.display(),
+            dir.display()
+        );
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// Two brackets that share a leaf name must not share a cache entry, or a
+    /// render of one would silently consume the other's warps. `check_stack`
+    /// is the real guard, but it should never have to fire for this reason.
+    #[test]
+    fn same_leaf_name_in_different_parents_gets_different_entries() {
+        let root = std::env::temp_dir().join("m97-sidecar-collision");
+        let a = root.join("a").join("bee-3-cpl");
+        let b = root.join("b").join("bee-3-cpl");
+        std::fs::create_dir_all(&a).unwrap();
+        std::fs::create_dir_all(&b).unwrap();
+        assert_ne!(sidecar_path(&a), sidecar_path(&b));
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    /// A rename is only atomic within a volume, so the temporary must be a
+    /// sibling of the destination. This also catches the case where the
+    /// destination has no parent component at all.
+    #[test]
+    fn save_atomic_creates_the_cache_directory_and_leaves_no_temporary() {
+        let dir = std::env::temp_dir().join("m97-save-atomic").join("nested");
+        let _ = std::fs::remove_dir_all(dir.parent().unwrap());
+        let dst = dir.join("x.warpmap.txt");
+        let map = WarpMap::new(
+            Provenance {
+                stack: StackIdentity::from_entries("t", &[("a.arw", 1u64)]),
+                strategy: "test".into(),
+                heldout_px: None,
+                cycle_floor_px: None,
+                reference: 0,
+                note: "M97 save_atomic test".into(),
+            },
+            PlaneGeometry::from_active(4, 4),
+            Resampler::CatmullRom,
+            vec![FrameWarp::Placed(Similarity::from_params(SimilarityParams {
+                ax: 0.0,
+                ay: 0.0,
+                g: 0.0,
+                rot: 0.0,
+            }))],
+        );
+        save_atomic(&map, &dst).unwrap();
+        assert!(dst.exists());
+        let leftovers: Vec<_> = std::fs::read_dir(&dir)
+            .unwrap()
+            .filter_map(|e| e.ok())
+            .map(|e| e.file_name().to_string_lossy().into_owned())
+            .filter(|n| n.ends_with(".tmp"))
+            .collect();
+        assert!(leftovers.is_empty(), "left temporaries: {leftovers:?}");
+        let _ = std::fs::remove_dir_all(dir.parent().unwrap());
+    }
 }

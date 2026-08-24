@@ -787,7 +787,100 @@ scale: it lands wherever the highest-contrast region pulls it.
 
 ---
 
-## 13. Status / Changes / Verified / Not verified / Notes
+## 13. The read-only corpus write, and whether a torn sidecar is dangerous
+
+Two defects I reported in `docs/research/M97-warped-merge.md` §9 came back to me
+to land. They turned out to have opposite severities from the ones I assigned.
+
+### 13.1 The corpus write was still firing
+
+`sidecar_path` was `dir.join("warpmap.txt")`, so *rendering* a bracket wrote a
+solve into the bracket. `D:\personal\macro` is the owner's original captures and
+is read-only. I reported 8 strays, then 11.
+
+They were cleaned — and then **a new one appeared**:
+`D:\personal\macro\coffee-bean\warpmap.txt`. So this was not historical debris
+from before the rule was written; the shipped binary was still creating them
+while the fix was being drafted. **MEASURED**, by scanning the corpus before and
+after.
+
+The fix, now landed in `crates/strehl-cli/src/align_cmd.rs`:
+
+- `sidecar_path` hashes `fs::canonicalize(dir)` and returns
+  `<cache>/<leaf>-<key:016x>.warpmap.txt`. The canonical path is hashed, not the
+  leaf name, so `a/bee-3-cpl` and `b/bee-3-cpl` get different entries and a
+  render of one can never consume the other's warps.
+- `cache_root()` honours `STREHL_CACHE_DIR`, else `%LOCALAPPDATA%` /
+  `$XDG_CACHE_HOME`, else the temp directory, `+ strehl/warpmaps`.
+- `strehl align`'s `--out` default changed from `dir.join("warpmap.txt")` to the
+  same `sidecar_path(dir)`, so a hand-run solve populates the entry `stack`
+  reads instead of a file it will not look at.
+
+**Verification, pre-registered at three bars** (`src/corpuswrite.ps1`). A run
+that produces no corpus file is indistinguishable from a solve that crashed, so
+the null needed a companion that proves the write path executed at all:
+
+| bar | what it asserts | result |
+|---|---|---|
+| A null | no new `*.txt` anywhere under `D:\personal\macro` | 1 → 1 file, **0 new** |
+| B positive | the solve *did* write, in the cache, rc=0 | 3037 bytes, tail `end 19` |
+| C plant | the same scanner fires on a directory that does contain one | sees 1 |
+
+and then the half that the patch could have broken, since I changed one of the
+two writers: `strehl stack` on the same bracket reports `alignment: ON
+(sidecar), 19 placed / 0 refused` with **`solve took 0.0 s`**. `align` and
+`stack` agree on the path. Corpus stray count unchanged at 1.
+
+Three unit tests pin the behaviour rather than the implementation: the sidecar
+is not under the capture directory, two directories sharing a leaf name get
+different entries, and `save_atomic` creates its parent and leaves no temporary.
+
+### 13.2 The torn sidecar is an availability bug, not a correctness bug
+
+I measured a half-written read of `bee-3-cpl/warpmap.txt` while a sibling
+rewrote it, and flagged it as potentially serious: a partial registration
+silently applied would corrupt someone else's measurement tonight without ever
+raising an error.
+
+**It does not.** `crates/strehl-cli/examples/m97-tornmap.rs` copies a real
+79-frame sidecar, truncates it at a ladder of byte offsets, and loads each one:
+
+| rung | 10% | 25% | 50% | 75% | 90% | 95% | 99% | mid-line | full | empty |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `WarpMap::load` | rej | rej | rej | rej | rej | rej | rej | rej | **Ok, 79** | rej |
+
+Every truncation is rejected, with one of two messages: *"header declares 79
+frames, N were read, and the terminating `end` record is absent"* or
+*"`placed` needs 4 hex fields, found N"*. The two controls behave: the untouched
+copy loads with 79 frames, the empty file fails.
+
+**This is a positive result about M86's format design, and it is worth stating
+as one.** The format carries both a declared frame count in the header *and* a
+terminating `end` record, which is redundant on a correct file and is exactly
+what makes a truncated one detectable. A format with neither — one frame per
+line, read until EOF — would have accepted every rung above and rendered a
+partial registration in silence.
+
+So the torn read costs a wasted re-solve, not a wrong answer. That downgrades
+the defect from correctness to availability. The write-then-rename is still
+right to land, because with eight agents in one tree the re-solve is a real
+cost and the window is real, but it is a robustness fix and not a data-integrity
+one. `save_atomic` writes to `.{name}.{pid}.tmp` **in the destination
+directory** — a rename is only atomic within a volume — and removes the
+temporary if the rename fails.
+
+### 13.3 What I did not fix
+
+Defect 2, the abort on a single refused frame, should become a drop-with-warning
+and I have **not** written it. It touches the fold and `n_eff` path in
+`merge.rs`, which M87 and M93 are live in; I will not hand over a patch I could
+not compile against a contended file. It is a correctness-of-behaviour issue,
+not of data: today a stack with one refused frame fails loudly rather than
+quietly.
+
+---
+
+## 14. Status / Changes / Verified / Not verified / Notes
 
 ### Status
 **DONE.** The instrument exists, is plant-validated, and answers the question.
@@ -809,8 +902,20 @@ scale: it lands wherever the highest-contrast region pulls it.
 - `experiments/M97-warped-merge/src/signtest.py` — one line: `STACK` now reads
   `M97_STACK` from the environment, defaulting to the previous hard-coded
   bee-3 path, so prior results reproduce byte-identically.
-- **No changes** to `merge_cmd.rs`, `merge.rs`, `align_cmd.rs`, `warpmap.rs`,
-  `lib.rs`, `main.rs`, or any other milestone's tree.
+- **§13 (the corpus write and the torn sidecar):**
+  - `crates/strehl-cli/src/align_cmd.rs` — `sidecar_path` now returns a hashed
+    entry under a cache root instead of `<capture-dir>/warpmap.txt`; new
+    `cache_root()` and `save_atomic()`; both write sites (`load_or_solve` and
+    the `strehl align` `--out` default) go through `save_atomic`; three unit
+    tests added, the file's first.
+  - `crates/strehl-cli/examples/m97-tornmap.rs` — new; the truncation ladder
+    with full/empty controls that answers §13.2.
+  - `experiments/M97b-align-visible/src/corpuswrite.ps1` — the three-bar
+    end-to-end corpus test.
+- **No changes** to `merge_cmd.rs`, `merge.rs`, `align.rs`, `warpmap.rs`,
+  `lib.rs`, `main.rs`, or any other milestone's tree. `align_cmd.rs` is in my
+  lane as of the orchestrator's last message and is the only source file I have
+  touched.
 
 ### Verified
 - Placebo 1.0004/0.9999/0.9996; blur plant 2.8993/1.8618.
@@ -865,6 +970,23 @@ scale: it lands wherever the highest-contrast region pulls it.
   `orchmag2.py` run 1 (C3, selection bias), and the radial annuli (uniform-blur
   plant reproduces 83% of the trend).
 
+- **§13. `cargo test --release -p strehl-cli --bin strehl` → 62 passed, 0
+  failed**, including the three new `align_cmd::tests`.
+- **§13. `cargo build --release -p strehl-cli --bin strehl` rc=0**, and no
+  clippy diagnostic references `align_cmd.rs`.
+- **§13. Corpus test rc=0, all three bars PASS**: 0 new `*.txt` under
+  `D:\personal\macro`; the sidecar landed in the cache at 3037 bytes with tail
+  `end 19`; the same scanner sees a planted `warpmap.txt` in a writable
+  directory. The null is proven with a plant on the same wiring, per discipline
+  598.
+- **§13. `strehl stack` reads what `strehl align` wrote**: `alignment: ON
+  (sidecar), reference frame 0, 19 placed / 0 refused`, **`solve took 0.0 s`**.
+  This is the check that would have caught it if my change to `align`'s default
+  had desynchronised the two.
+- **§13. `WarpMap::load` rejects every rung of an 8-step truncation ladder**
+  (10/25/50/75/90/95/99% and a mid-line cut) on a real 79-frame sidecar, with
+  the untouched copy loading at 79 frames and the empty file failing.
+
 ### Not verified
 - **§12's 1.0306 is conditional on a model §12.3 falsifies.** It is the one
   global scale that passes all four controls; the alternative I tried fails C3.
@@ -900,8 +1022,18 @@ scale: it lands wherever the highest-contrast region pulls it.
   not re-measured with the width metric for lack of time.
 - `cargo clippy --bins --tests` fails: 3 errors in
   `crates/strehl-cli/src/merge_cmd/halo.rs` (M87, `52c6a52`). Test code only;
-  not mine and not touched.
-- Whether `WarpMap::load` rejects the torn sidecar I observed in M97.
+  not mine and not touched. `--bins` alone now also fails on the same file with
+  2 errors, so I verified instead that **no clippy diagnostic names
+  `align_cmd.rs`**; I could not get a clean rc=0 on a crate a sibling is
+  mid-edit in.
+- **§13's corpus test ran on a 19-frame bracket, not on the 299-frame stacks.**
+  The write path is the same code, but the deep-stack render was not re-run
+  under the new binary.
+- **§13 does not prove that no *other* code path writes into the corpus.** It
+  proves `sidecar_path`'s does not. I scanned only for `*.txt`.
+- I did not remove the existing stray `D:\personal\macro\coffee-bean\warpmap.txt`.
+  The corpus is read-only, and deleting from it is a write; that call is the
+  orchestrator's.
 - **§11's S/G dissociation is ARGUED.** I could not measure the elected-frame
   index along versus across a graduation, because `strehl stack` has no option
   to emit an elected-frame map. The dissociation itself is measured; the
@@ -989,13 +1121,39 @@ scale: it lands wherever the highest-contrast region pulls it.
   a σ=1.0 **uniform** blur, which has no radial structure at all, reproduces
   **83%** of the treatment's radial span. Second radial claim this milestone
   has withdrawn to the same control.
+- **P14 (MEASURED).** **`WarpMap::load` rejects a torn sidecar.** Every rung of
+  an 8-step truncation ladder on a real 79-frame file fails to load, against
+  controls where the full copy loads at 79 frames and an empty file fails. The
+  cause is redundancy that is useless on a correct file: the header declares the
+  frame count *and* the body terminates with an `end` record. A read-to-EOF
+  format would have accepted all eight and rendered a partial registration
+  silently. **The torn read is an availability defect, not a correctness one.**
+- **P15 (MEASURED).** The read-only-corpus violation was **still live**, not
+  historical: after the earlier 11 strays were cleaned, a new
+  `D:\personal\macro\coffee-bean\warpmap.txt` appeared. A cleanup is not a fix
+  while the code that creates them still ships. Now fixed at the source —
+  `sidecar_path` hashes the canonical capture path into a cache root, verified
+  end-to-end at 0 new corpus files with a positive control proving the write
+  path ran and a plant proving the scanner fires.
+- **P16 (DERIVED, method).** "No file appeared where it should not" is the
+  weakest possible evidence, because a crash produces it too. Pair every
+  absence-of-write null with a **positive control that shows the write happened
+  somewhere else** — here, a 3037-byte sidecar in the cache ending `end 19`.
+  Same shape as discipline 598, applied to a filesystem side effect rather than
+  to a metric.
 
 ### Notes
-**Corpus pollution has grown from 8 to 11 stray `warpmap.txt` files** under
-`D:\personal\macro`, and `bee-3-cpl\warpmap.txt` was rewritten at 06:03 during
-this session. `dry-erase-marker-head-cpl` was kept clean by solving with
-`strehl align --out` outside the corpus and consuming via `STREHL_WARPMAP`.
-The verbatim `align_cmd.rs` patch is in `docs/research/M97-warped-merge.md` §11.
+**The corpus write is fixed at the source** (§13.1). Pollution had grown 8 → 11
+stray `warpmap.txt` files under `D:\personal\macro`, and `bee-3-cpl\warpmap.txt`
+was rewritten at 06:03 during this session; after those were cleaned a **new**
+one appeared at `coffee-bean`, which is what established the violation was still
+live rather than historical. `sidecar_path` now hashes the canonical capture
+path into a cache root outside the corpus, `strehl align`'s default writes to
+the same entry `strehl stack` reads, and both writers go through a
+write-then-rename. The one remaining stray is `coffee-bean`'s; I left it, since
+deleting from a read-only corpus is itself a write.
+The original verbatim patch is in `docs/research/M97-warped-merge.md` §11; what
+landed differs from it in hashing the *canonical* path rather than the leaf.
 
 **For M86, one item, and it is the whole story:** the solve applies 23.9% of the
 drift on the marker head and 54.3% on bee-3. `E*` is structurally blind to a
