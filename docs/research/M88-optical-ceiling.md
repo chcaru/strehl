@@ -31,7 +31,20 @@ Finding 3 is independent of finding 1 by construction: the pre-registered
 Bar 3 is a *ratio* at two apertures and is free of both `m` and `p`, so the
 pupil correction does not touch it. If anything the correction strengthens it —
 a higher true cutoff means a smaller diffraction blur, and so an even more
-dominant non-diffraction term.
+dominant non-diffraction term. Bar 3 does carry a confound M88 found by
+auditing itself, disclosed in §10.3.
+
+**4. Asked afterwards to adjudicate 87 cy/mm against 106-135, M88 cannot, and
+says so in the units of the question.** Measured edge rise carries two
+unknowns — diffraction and the subject's own softness — and on these subjects
+the second is **three times** the first, so every candidate cutoff fits the
+data exactly. Even granting a shared subject term, the hypotheses differ by
+**1.09 um** of predicted rise against a within-stack ROI scatter of **2.23 um**.
+The blocker is the subject, not the method: the instrument was validated
+model-free to **114.6 cy/mm**, so it can see above sensor Nyquist and could
+resolve both — it has nothing sharp enough to point at. §10 gives the inversion
+`f_c -> N_eff -> p` ready for the capture that would feed it, and shows that
+capture would separate the hypotheses **16x over**.
 
 ---
 
@@ -43,6 +56,15 @@ pupil magnification `p = 1`, hence `N_eff = N(1 + m/p) = 21.07`; Airy diameter
 86.3 cy/mm` at `lambda = 550 nm`; sensor Nyquist 97.66 cy/mm; binned-output
 Nyquist 48.83 cy/mm. Conclusions drawn there: MTF at sensor Nyquist is exactly
 zero, and the binned path discards real detail across 48.83-86.3 cy/mm.
+
+**Superseded input.** The `m = 2.762` above is fact 1149's own figure and is
+retained only to reproduce its arithmetic. Everywhere M88 computes with a
+magnification it uses **M84b's measured `m = 2.7198 +/- 0.0051`**, which
+supersedes it. The distinction is immaterial to every M88 result: the
+pre-registered Bar 3 is a two-aperture ratio and is free of `m` entirely, and
+substituting 2.7198 for 2.762 moves fact 1149's own cutoff by **+1.13%**, from
+86.30 to **87.28 cy/mm** — far too little to affect any verdict here, and in
+the wrong direction to rescue it.
 
 **MEASURED (M88, arithmetic check).** The arithmetic is **correct**.
 `5.6 x 3.762 = 21.0672`; `2.44 x 0.55e-3 mm x 21.0672 = 28.27 um = 5.522 px`;
@@ -223,7 +245,7 @@ diffraction limit. The `MTF(40)` peak is noisy frame to frame (0.112 to 0.172
 over frames 3-8), which is why the pre-registered rule used a 3-frame moving
 average per rule 4; the rise distance is visibly the more stable statistic.
 
-### 4.3 The falsifier that fires
+### 4.3 The falsifier that fires — with a caveat found later
 
 **MEASURED (M88).** The aperture ratio of edge width is
 
@@ -254,6 +276,15 @@ geometry, and the `+5.39 DN/um` bright-wing ramp in the measured ESF is exactly
 that geometry — and lens aberration wide open behind a 2x teleconverter. Both
 would produce what is observed. Distinguishing them requires a subject whose
 own edge is negligible.
+
+**Caveat, established in §10.3 and stated here so this section is not read
+alone.** The two stacks are **not registered**: their edge angles differ by
+2.15 deg and their contrasts by 1.91x, and they were shot eight days apart. The
+ratio therefore compares two *different* edges whose intrinsic softness need
+not match, so the aperture-independent term does not cancel as the
+pre-registration assumed. Bar 3 still fails its registered band, but it is a
+weaker test than it was designed to be. The §4.4 shortfall is unaffected,
+being single-aperture.
 
 ### 4.4 What the shortfall costs
 
@@ -410,7 +441,7 @@ UNIDENTIFIED against any target.
 | --- | --- | --- |
 | Bar 1 — is MTF at sensor Nyquist detectably non-zero? | 0 of 22 ROI-plane results pass 3-sigma / 3-bin | **NOT REFUTED — MEASURED** (uninformative: floor is subject-limited, §4.5) |
 | Bar 2 — does the 95% interval contain 86.3 cy/mm? | no ROI passes the validity gate | **UNIDENTIFIED — MEASURED** |
-| Bar 3 — is `f_c(f/5.6)/f_c(f/11) = 1.9643`? | **1.025** model-free; 1.088-1.204 fitted; bar was [1.67, 2.26] | **FAIL — MEASURED** |
+| Bar 3 — is `f_c(f/5.6)/f_c(f/11) = 1.9643`? | **1.025** model-free; 1.088-1.204 fitted; bar was [1.67, 2.26] | **FAIL — MEASURED**, but see §10.3: the stacks are unregistered, so `c` does not cancel and this is weaker than registered |
 | Bar 4 — UNIDENTIFIED trigger: gate fails on every ROI | gate fails on all 22 | **TRIGGERED — MEASURED** |
 | validity gate, 4 conditions | 21 fail `sigma_fit` (6.3-29.1 um), 1 fails `amp` | **FAIL — MEASURED** |
 | C1 positive control within +/-10% | +1.19% +/- 1.50% | **PASS — MEASURED** |
@@ -473,16 +504,22 @@ not the rig, the sensor, or the method. Required:
   pixels, and **no other structure within 200 um** of the edge on either side.
 - **Flat, even illumination on both sides.** The measured `+5.39 DN/um` wing
   ramp is subject geometry; a flat backlight removes it entirely.
-- **The same edge shot at f/5.6, f/8 and f/11 without moving the subject.**
-  This turns the aperture ratio into a three-point ladder. It is the strongest
-  available test because `f_c(N1)/f_c(N2) = N2/N1` exactly, free of both `m`
-  and `p`.
+- **The same edge shot at f/5.6, f/8 and f/11 in one session, without moving
+  the subject or touching the rig between apertures.** This turns the aperture
+  ratio into a three-point ladder. It is the strongest available test because
+  `f_c(N1)/f_c(N2) = N2/N1` exactly, free of both `m` and `p`. The "one
+  session" clause is not boilerplate: **no aperture bracket on a fixed subject
+  exists anywhere in the corpus** (§10.3), and the pair M88 was forced to use
+  instead was shot eight days apart, which confounded its own Bar 3.
 - **A fine focus bracket** — enough frames that `MTF(40 cy/mm)` changes by less
   than 5% between adjacent frames near the peak, so residual defocus at the
   chosen frame is negligible.
 
 **ARGUED (M88).** With that one capture, this instrument measures the cutoff to
 about `+/-2%` statistical and `+/-9%` systematic on the effective wavelength.
+Concretely, on such an edge the live hypotheses predict rises of **13.65 um
+(f_c = 87), 11.97 um (105.54) and 10.37 um (135.17)** — a 24% spread against
+about 1.5% instrument precision, separating them **16x over** (§10.5).
 A measured cutoff inverts to `N_eff = 1/(lambda f_c)` and thence, with M84b's
 `m`, to `p = m/(N_eff/N - 1)` — **narrowing `p` from fact 1152's factor-1.48
 bracket [1.31, 1.94] to a few per cent**, and doing it from a photograph rather
@@ -507,6 +544,7 @@ All code and results are under `experiments/M88-optical-ceiling/`.
 | `src/s11_exploratory.py` | the labelled post-hoc arm |
 | `src/s12_closing.py` | model-free rise distances and the clause (a) arithmetic |
 | `src/s13_robustness.py` | reference scales and the best-focus plateau sweep |
+| `src/s14_adjudicate.py` | registration audit, dense calibration, discrimination analysis, and the `f_c -> N_eff -> p` inversion |
 
 **MEASURED (M88).** The instrument is unchanged since pre-registration. The
 only edits to `m88lib.py` after `PREREGISTRATION.md` was committed are 50
@@ -520,7 +558,142 @@ byte-identically at SHA-256
 from any commit, and exited **0 with no violations** across 116 markdown files
 and 35 Rust files.
 
-## 10. Candidate facts for owner review
+## 10. Adjudication between fact 1149 and M84b, and the inversion to `p`
+
+M88 was asked, after dispatch, to decide between two live hypotheses and to
+report in a form that inverts to the pupil magnification.
+
+### 10.1 The instrument can reach; the data cannot feed it
+
+**MEASURED (M88).** The reach question is settled and was settled before this
+was asked. A grid-sampled power spectrum stops at 97.66 cy/mm and could not
+see 106-135 cy/mm at all. M88's slanted-edge instrument was validated
+model-free to **114.6 cy/mm** on a sublattice whose own Nyquist is 48.83
+(§2.1, control C1b), so it can resolve both hypotheses. The blocker is the
+subject, not the method.
+
+### 10.2 Quantified: why the corpus cannot adjudicate
+
+**The obstacle is identifiability before it is precision.** Calibrating the
+instrument's response densely over `f_c` = 40-200 cy/mm gives
+`rise(f_c) = sqrt((a/f_c)^2 + b^2)` with **`a = 1009.41 um*cy/mm`** and
+**`b = 7.19 um`**, max residual 0.99 um. Write the measured rise as
+`rise^2 = d^2 + c^2`, with `d = a/f_c` the diffraction term and `c` everything
+aperture-independent — pixel aperture, binning, and the subject's own edge
+softness. One measured rise, two unknowns. Each hypothesis is then merely a
+different bookkeeping of the same 31.7 um:
+
+| hypothesis | `f_c` | diffraction term `d` | implied subject term `c` |
+| --- | ---: | ---: | ---: |
+| fact 1149 | 86.30 | 11.70 um | 29.47 um |
+| fact 1149 | 87.00 | 11.60 um | 29.51 um |
+| M84b | 105.54 | 9.56 um | 30.23 um |
+| M84b | 135.17 | 7.47 um | 30.81 um |
+
+**ARGUED (M88).** Every row fits the data exactly. Nothing in these captures
+constrains `c` independently, and `c` is the larger term by a factor of three,
+so the observable does not identify `d` at all. Separating them needs either a
+subject whose `c` is known to be negligible (§8) or the same `c` held fixed
+across apertures (§10.3, which the corpus does not provide). This is why the
+answer is UNIDENTIFIED rather than imprecise.
+
+**MEASURED (M88).** Even granting a shared `c`, the numbers do not separate.
+The two hypotheses differ in predicted rise by **1.09 um**, while the
+ROI-to-ROI scatter *within a single stack at a single aperture* is **2.23 um**,
+or 7.0% — the sample sd of the four f/5.6 ROI rises about their median of
+31.705 um. The scatter is **2.05x** the separation.
+
+**Stated against interest.** With only four ROIs that sd is badly determined:
+its 95% confidence interval on a chi distribution with 3 degrees of freedom is
+**[0.60, 3.93] um**, and the lower end lies *below* the 1.09 um separation. So
+M88 cannot claim to have *proved* the corpus inseparable on scatter grounds
+alone — it has shown that the best point estimate of the scatter is twice the
+separation, on four samples. The identifiability argument above does not
+depend on this and is the load-bearing one.
+
+**ARGUED (M88).** That is still decisive for the practical question, because
+the burden runs the other way. To adjudicate, one must show the observable
+*can* separate the hypotheses; a scatter estimate whose interval spans a factor
+of six, centred at twice the separation, does not show that.
+
+**MEASURED (M88).** The only bound M88's data supports without assuming
+anything about the subject is the degenerate one: attributing **all** measured
+blur to diffraction gives `f_c >= 31.8 cy/mm`. That lies below both
+hypotheses and excludes neither. M88 cannot deliver the "bounds from below at
+>= 97.7" result that would have killed fact 1149 by measurement.
+
+### 10.3 A confound in M88's own Bar 3, found by auditing it
+
+**MEASURED (M88), against interest.** The aperture ratio of §4.3 does **not**
+compare the same edge. Although ROIs A1/A2 and C1/C2 occupy identical window
+coordinates, their fitted edge angles differ by **2.15 deg** (-2.07/-1.91
+against -4.24/-4.04) and their contrasts by **1.91x** (2853/2899 against
+1508/1505). The stacks were shot **eight days apart** — 119MSDCF on
+2026-05-09, 109MSDCF on 2026-05-17 — and the subject is not in the same pose.
+
+So Bar 3's `c` does not cancel, and its measured 1.025 carries an unmodelled
+difference in subject softness between the two edges. Bar 3 remains **FAIL**
+against its registered [1.67, 2.26] band, but it is a weaker instrument than
+M88 believed when it was registered, and the failure should not be read as a
+clean refutation of the model form.
+
+**The §4.4 conclusion is unaffected**, because it is single-aperture: a
+measured 31.70 um rise against a diffraction-limited 14.11 um at f/5.6 alone
+needs no pairing and no registration.
+
+**MEASURED (M88).** This is a corpus-level gap, not a bad ROI choice. An EXIF
+survey of all 23 stacks finds **no aperture bracket on a fixed subject
+anywhere in the corpus**. Every stack holds one aperture; the only two shot
+minutes apart, `112MSDCF` and `113MSDCF` at 76 seconds' separation, are both
+f/11.
+
+### 10.4 The inversion, and its round-trip check
+
+**DERIVED (M88).** `f_c -> N_eff = 1/(lambda f_c) -> B = N_eff/N ->
+p = m/(B - 1)`, at `lambda = 550 nm`, `N = 5.6`, and M84b's measured
+`m = 2.7198`:
+
+| source | `f_c` (cy/mm) | `N_eff` | `B` | `p` |
+| --- | ---: | ---: | ---: | ---: |
+| fact 1149 | 87.00 | 20.90 | 3.732 | **0.996** |
+| fact 1149 | 86.30 | 21.07 | 3.762 | **0.985** |
+| M84b | 105.54 | 17.23 | 3.076 | **1.310** |
+| M84b | 135.17 | 13.45 | 2.402 | **1.940** |
+
+The inversion **round-trips exactly**: fact 1149's cutoff returns `p = 0.996`,
+recovering the `p = 1` it assumed, and M84b's interval returns
+`p in [1.310, 1.940]`, recovering fact 1152's bracket to three decimals. This
+is a consistency check on both derivations, and it confirms that a measured
+cutoff is a sufficient statistic for `p` given `m`.
+
+**ARGUED (M88).** M88 supplies the inversion but no `f_c` to put into it. The
+machine is built and validated; the corpus has no fuel for it.
+
+### 10.5 What the unblocking capture would deliver, in these units
+
+**DERIVED (M88).** On an edge whose own softness is negligible, `c` falls to
+the instrument floor `b = 7.19 um` and the hypotheses separate:
+
+| hypothesis | `f_c` | predicted rise |
+| --- | ---: | ---: |
+| fact 1149 | 87.00 | 13.65 um |
+| M84b low | 105.54 | 11.97 um |
+| M84b high | 135.17 | 10.37 um |
+
+They span **3.28 um, or 24% of the signal**, against an instrument precision of
+about 1.5% — resolved **16x over**. The capture of §8 is therefore not a hope
+but a calculation: a razor edge would settle this decisively, and would pin `p`
+to a few per cent from a photograph rather than the bench jig
+`captures-needed.md` §18.3 currently asks for.
+
+**ARGUED (M88).** Two requirements, and the second is as important as the
+first: the edge must be **hard** (§8), and it must be shot at **three
+apertures without disturbing the subject**, which nothing in the corpus has
+ever done.
+
+
+
+## 11. Candidate facts for owner review
 
 | candidate | claim | class | source |
 | --- | --- | --- | --- |
@@ -542,3 +715,10 @@ and 35 Rust files.
 | P16 | The conclusion is insensitive to frame selection: across the whole best-focus plateau of 119MSDCF A1 (frames 3-9) the ESF rise stays 30.56-34.18 um, and the sharpest single frame is still 2.17x the diffraction-limited 14.11 um. | MEASURED | §4.2 |
 | P17 | Two-parameter cutoff-plus-blur fits are unreliable on subject-limited edges: the free amplitude pinned at a bound in 6 of 11 exploratory ROIs, and one pre-registered fit ran to the corner of the box at `sigma = 0`, `f_c = 400`, `amp = 2`. Model-free rise distance should be preferred, and an amplitude-bound condition is a necessary gate. | MEASURED / ARGUED | §4.1, §4.4 |
 | P18 | M88's rule-40 prior search was incomplete: it found M5's `B` bound and the 23% tension it creates, but missed fact 1152, which had landed at `875ad9d` before M88's pre-registration `7e32f7d` and already excluded `p = 1`. The pre-registered Bar 3 was `m`- and `p`-free by design, so no measurement was affected. | MEASURED | §5.4 |
+| P19 | **The corpus cannot adjudicate fact 1149's 87 cy/mm against M84b's 106-135, for reasons of identifiability before precision.** Under rise^2 = d^2 + c^2 with d = a/f_c, one measured rise carries two unknowns and the aperture-independent c (~30 um) is 3x the diffraction term (7-12 um); every candidate f_c fits the data exactly. Secondarily, the hypotheses differ by 1.09 um against a 2.23 um within-stack ROI scatter. | MEASURED / ARGUED | `out/s14_adjudicate.json`; §10.2 |
+| P20 | The only subject-free bound M88's data supports is `f_c >= 31.8 cy/mm`, from attributing all measured blur to diffraction. It lies below both hypotheses and excludes neither, so M88 cannot kill fact 1149 by its own measurement. | MEASURED | §10.2 |
+| P21 | **M88's own Bar 3 carries a confound found by auditing it.** ROIs A1/A2 and C1/C2 share window coordinates but differ by 2.15 deg in edge angle and 1.91x in contrast, and the stacks were shot eight days apart. The aperture-independent term does not cancel, so Bar 3 is weaker than registered. The single-aperture shortfall of 3.31x is unaffected. | MEASURED | §10.3 |
+| P22 | **No aperture bracket on a fixed subject exists anywhere in the corpus.** All 23 stacks hold one aperture each; the only pair shot 76 seconds apart, 112MSDCF and 113MSDCF, are both f/11. Any aperture-ratio test on this corpus necessarily compares different subjects. | MEASURED | EXIF survey; §10.3 |
+| P23 | The inversion `f_c -> N_eff = 1/(lambda f_c) -> B -> p = m/(B-1)` round-trips exactly at m = 2.7198: f_c = 87.00 returns p = 0.996, recovering fact 1149's assumed p = 1, and f_c in [105.54, 135.17] returns p in [1.310, 1.940], recovering fact 1152's bracket. A measured cutoff is a sufficient statistic for p given m. | DERIVED | `out/s14_adjudicate.json`; §10.4 |
+| P24 | **The unblocking capture is justified by arithmetic, not hope.** On an edge whose softness falls to the instrument floor, the hypotheses predict rises of 13.65 / 11.97 / 10.37 um -- a 24% spread against ~1.5% instrument precision, resolved 16x over. The capture must vary aperture on a fixed subject, which nothing in the corpus has done. | DERIVED | §10.5 |
+| P25 | M84b's `m = 2.7198 +/- 0.0051` supersedes fact 1149's 2.762. The substitution moves fact 1149's own cutoff by only +1.13%, 86.30 to 87.28 cy/mm, and cannot rescue it; every M88 verdict is independent of `m` regardless. | MEASURED / DERIVED | §1 |
