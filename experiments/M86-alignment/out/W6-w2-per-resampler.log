@@ -1,0 +1,34 @@
+M86b -- W2 plant/undo ratio as a function of resampler (bee-3-cpl)
+
+### resampler = nearest
+M86b GATE W2 -- planted warp undone, on REAL frames
+  D:\personal\macro\bee-3-cpl
+  resampler Nearest
+  gate (correct placement)   ratio   0.0000  (damage 30.50000, residual 0.00000)  OK
+  control: INVERTED          ratio   1.5902  (damage 30.50000, residual 48.50000)  OK
+  control: TRANSPOSED        ratio   1.1311  (damage 30.50000, residual 34.50000)  OK
+
+  GATE W2 (real frames): PASS
+exit=0
+
+### resampler = bilinear
+M86b GATE W2 -- planted warp undone, on REAL frames
+  D:\personal\macro\bee-3-cpl
+  resampler Bilinear
+  gate (correct placement)   ratio   0.2006  (damage 28.39966, residual 5.69604)  OK
+  control: INVERTED          ratio   1.6207  (damage 28.39966, residual 46.02863)  OK
+  control: TRANSPOSED        ratio   1.1470  (damage 28.39966, residual 32.57458)  OK
+
+  GATE W2 (real frames): PASS
+exit=0
+
+### resampler = catmull-rom
+M86b GATE W2 -- planted warp undone, on REAL frames
+  D:\personal\macro\bee-3-cpl
+  resampler CatmullRom
+  gate (correct placement)   ratio   0.1228  (damage 29.18469, residual 3.58527)  OK
+  control: INVERTED          ratio   1.6042  (damage 29.18469, residual 46.81836)  OK
+  control: TRANSPOSED        ratio   1.1421  (damage 29.18469, residual 33.33167)  OK
+
+  GATE W2 (real frames): PASS
+exit=0
