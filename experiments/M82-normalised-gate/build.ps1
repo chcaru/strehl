@@ -21,8 +21,11 @@ try {
     }
     $Commit = (& git rev-parse HEAD).Trim()
     $Started = [DateTime]::UtcNow.ToString("o")
+    $SavedErrorAction = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     $Run = @(& $Cargo build --release --locked -p strehl-cli 2>&1 | ForEach-Object { $_.ToString() })
     $Code = $LASTEXITCODE
+    $ErrorActionPreference = $SavedErrorAction
     $Finished = [DateTime]::UtcNow.ToString("o")
     $Lines = @(
         "commit=$Commit",
