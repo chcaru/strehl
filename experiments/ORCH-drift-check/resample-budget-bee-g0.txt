@@ -1,0 +1,23 @@
+single frame : DSC00150.ARW
+render       : bee-3-cpl-g0.tif
+
+selected 40 sharpest tiles of the single frame
+
+--- CONTROLS ---
+P1 NULL    scale 1.0, offset 0      cost +0.0000 dex   PASS
+P2 DOSE    offset 0/0.125/0.25/0.5   cost +0.0000 / +0.0527 / +0.1938 / +0.5249   PASS
+
+--- ARMS ---
+arm                                              level   cost vs FULL
+FULL  single frame, no resample                -3.0058        +0.0000
+R1    one gather, scale only                   -3.2451        +0.2392
+R1s   one gather, scale + 0.5 px offset        -3.2427        +0.2369
+R2    two gathers, scale then 0.5 px offset    -3.7680        +0.7622
+MERGE strehl gate-0 render                     -3.3751        +0.3693
+
+the deficit to explain: +0.3693 dex
+  R1s (one fused gather)     accounts for +0.2369 dex =  64.2% of it
+  R2 (two gathers)           accounts for +0.7622 dex = 206.4% of it
+
+VERDICT: resampling is a contributor but not the whole story.
+Something else carries the remainder; the cause stays PARTIAL.
