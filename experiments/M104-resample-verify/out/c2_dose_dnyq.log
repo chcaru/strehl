@@ -1,0 +1,34 @@
+==============================================================================
+M104 C2 -- D_nyq responsiveness control and the measured cost law
+  base   : flat-on-ruler-cpl-PRE-A0-g0.tif  (3520 x 2344)
+  kernel : TRUE Catmull-Rom separable 4-tap gather (warpmap.rs:349)
+  band   : [0.3, 0.48] cyc/px, object-corrected by the
+           measured magnification of each planted arm
+==============================================================================
+
+   planted        mag      D_nyq       SE    sigma    power    dex/%  n
+  1.000000   1.000000   +0.00000  0.00000     0.00   1.0000      nan  13
+  1.010000   1.010158   +0.15910  0.00308    51.60   1.4424  0.15910  10
+  1.030078   1.030790   +0.15743  0.00421    37.36   1.4369  0.05234  10
+  1.073537   1.073282   +0.17894  0.00551    32.47   1.5099  0.02433   8
+  1.150000   1.148902   +0.18131  0.01078    16.81   1.5181  0.01209   7
+
+NULL   s = 1.000000 -> D_nyq = +0.000e+00, mag = 1.000000000000
+       bar: both exactly 0 / 1 to machine precision -> GREEN
+DOSE   monotone increasing: False -> RED
+
+------------------------------------------------------------------------------
+CLOSURE -- how much of the real ALN deficit is the resample alone?
+  real ALN vs A0, measured        : +0.1623 +/- 0.0060 dex
+  planted 1.030078 on the A0 arm  : +0.1574 +/- 0.0042 dex
+  unexplained remainder           : +0.0049 +/- 0.0073 dex (0.66 sigma)
+  fraction of the deficit that IS the resample : 97.0%
+
+------------------------------------------------------------------------------
+PREDICTION (j) -- what the resample costs at bee-3-cpl's 7.35%
+  measured directly, planted 1.073537 : +0.1789 +/- 0.0055 dex
+  linear extrapolation from 3.01%     : +0.3849 dex
+  orchestrator's synthetic gather     : +0.2392 dex  (fact 1287)
+  linearity error                     : +0.2060 dex
+  -> post-fix bee-3-cpl D_nyq should fall by 0.1789 dex from -0.0343, i.e. to -0.2132
+------------------------------------------------------------------------------

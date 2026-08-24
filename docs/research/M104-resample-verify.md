@@ -333,3 +333,222 @@ this measurement no longer isolates the fix.
   0.105 dex and the post-fix `bee-3-cpl` reading will discriminate between
   them** — which makes (j) the most informative single number in Phase 2.
 
+---
+
+## 2. `D_nyq` had a bar and no responsiveness control. Closing that found two defects
+
+`D_nyq` carries B6′, B6″ and B7′, and at the end of §1 it had **never been
+shown to move by a known amount when a known amount of resample was planted**.
+That is the precise gap that disqualified M97's tile-wise metric (fact 1273).
+A bar resting on an uncontrolled metric is decoration, so I planted doses
+before trusting it — and it failed.
+
+The dose is a **true Catmull-Rom separable 4-tap gather**, because
+`warpmap.rs:349` states that is the resampler `strehl align` writes. scipy's
+`order=3` is an *interpolating B-spline*, mildly high-boosting and therefore
+cheaper; using it would have understated the cost and flattered the defect.
+Controls that read only the comb's *location* may use scipy, and the ones in
+§1.2 do. Anything reading the comb's *amplitude* may not.
+
+### 2.1 The dose control went RED, and the metric was wrong
+
+| planted | `D_nyq` as first defined |
+|---|---|
+| 1.000000 | `+0.00000` |
+| 1.010000 | **`+0.15032`** |
+| 1.030078 | `+0.13109` |
+| 1.073537 | `+0.11751` |
+| 1.150000 | **`+0.06074`** |
+
+**It ran backwards.** A bigger resample read as *less* damage, monotonically,
+across a 15× range of dose.
+
+My first diagnosis was wrong. I supposed the two arms covered different amounts
+of *object* — same 384 px ROI, but the enlarged arm sees `384/mag` as much
+subject — so I re-cropped the test arm to `round(384·mag)` px so both covered
+the same object. **It changed nothing**: `+0.148, +0.133, +0.110, +0.065`, the
+same shape. That negative is recorded in `c3_matched.py`; the repair was a
+reasonable hypothesis and it was false.
+
+The actual cause is a **Jacobian**, and it is arithmetic, not optics.
+Enlarging by `s` compresses the frequency axis by `1/s`, so the same power
+occupies a `1/s²` smaller region of the 2-D spectrum and its *density* rises by
+`s²`. Comparing power **densities** in each arm's own pixel-frequency units
+therefore credits the enlarged arm with `s²` of power it did not earn. Removing
+it — `D_nyq* = D_nyq + 2·log₁₀(mag)` — converts both arms to **object-frequency
+density**, which is the quantity the two renders physically share.
+
+| planted | `D_nyq*` | σ | power |
+|---|---|---|---|
+| 1.000000 | `+0.00000` | — | 1.0000× |
+| 1.010000 | `+0.15910 ± 0.00308` | 51.60 | 1.4424× |
+| 1.030078 | `+0.15743 ± 0.00421` | 37.36 | 1.4369× |
+| 1.073537 | `+0.17894 ± 0.00551` | 32.47 | 1.5099× |
+| 1.150000 | `+0.18131 ± 0.01078` | 16.81 | 1.5181× |
+
+**Strict monotonicity still fails**, at the 1.010 → 1.030 step, by `0.00167`
+dex against standard errors of `0.00308` and `0.00421` — a **0.32σ**
+inversion. I report that as a miss rather than rounding it to a pass, but the
+right reading is not that the instrument is broken:
+
+**The Catmull-Rom cost is nearly scale-independent, and that is physics.**
+`fit_to_cover` crops and then upsamples, and a crop loses nothing, so the
+damage is one reconstruction-filter pass whose response depends on where the
+*content* sits relative to the **input** grid — not on how far the output is
+stretched. Across a 15× range of dose the cost moves only `+0.159 → +0.181`
+dex. So `D_nyq*` is:
+
+- **a superb detector** — `0.000` with no resample, `+0.159` at the smallest
+  dose tested, **51.6σ**;
+- **not a meter** of the resample's *size*, because the underlying quantity
+  barely depends on size.
+
+### 2.2 That kills B6′, which I registered, on principle rather than on evidence
+
+**B6′ ("the deficit falls by ≥ 50%") silently assumed cost ∝ dose. §2.1 shows
+that assumption is false**, so B6′ could be passed by a fix that removed only a
+sliver, or failed by one that worked. It is **WITHDRAWN**. The surviving bars
+are the ones that ask the question the detector can actually answer:
+
+| bar | test | value |
+|---|---|---|
+| **B6″** | did the resample go away? | \|`D_nyq*`\| ≤ **0.0120** |
+| **B7′** | did something else change too? | `D_nyq*` < **−0.0120** is a **FAIL** |
+
+This is the second bar of mine to fail its own audit in this milestone — B6 was
+unsatisfiable in §1.4, and B6′ is now unfounded. Both were found by measuring
+my own baseline and my own instrument, and both were amended **before any
+post-fix number existed**. Recorded plainly because a milestone that only
+reports the bars that survived is not reporting its bars.
+
+### 2.3 CLOSURE — 97% of the deficit *is* the resample
+
+Same dose, same subject, same band, so the scale-independence caveat does not
+apply: this is one comparison at one value of `s`, not a ranking across values.
+
+```
+real ALN vs A0, measured             +0.1623 +/- 0.0060 dex
+planted 1.030078 CR gather on A0     +0.1574 +/- 0.0042 dex
+unexplained remainder                +0.0049 +/- 0.0073 dex   (0.66 sigma)
+fraction of the deficit that IS the resample            97.0%
+```
+
+Planting the aligner's own coverage scale on the *unregistered* render, through
+the *same kernel*, reproduces the *entire* measured deficit of the registered
+render. **The remainder is 0.66σ — there is nothing significant left over for
+the warp, the merge, or the decoder.**
+
+So on this subject the fix's ceiling is also its floor: it should recover
+essentially all of it, and **post-fix `D_nyq*`(ruler) should land at
+`+0.0049 ± 0.0073`, consistent with zero.** That is a far better-founded
+prediction than the (e) I registered, and it is registered here, pre-fix.
+
+### 2.4 The corrected baseline, and prediction (j) resolved early
+
+| | pre-fix `D_nyq*` | |
+|---|---|---|
+| `flat-on-ruler-cpl` | **`+0.1623 ± 0.0040` dex**, power **1.4530×** | **40.44σ** |
+| `bee-3-cpl` | **`+0.0229 ± 0.0419` dex** | **0.55σ — still a null** |
+
+The `bee-3-cpl` null survives the Jacobian correction, so §1.3's reading holds:
+on the deep bracket, what registration recovers and what the resample destroys
+**cancel**.
+
+**Prediction (j) is answered without waiting for M95, and my own half of it was
+wrong.** Planting `1.073537` — `bee-3-cpl`'s exact `1/k` — directly on a real
+photograph gives **`+0.1789 ± 0.0055` dex**. My linear extrapolation predicted
+`+0.3849`, an error of **+0.206 dex**; the orchestrator's synthetic gather
+predicted `+0.2392`, an error of `+0.060`. **Both extrapolations overshoot, and
+mine by three times as much.** Prediction (j)'s registered range of 0.10–0.45
+dex contains the answer, but only because I made it wide out of doubt, not
+because either model was right.
+
+Revised, from direct measurement rather than extrapolation: **post-fix
+`D_nyq*`(`bee-3-cpl`) should fall by ≈ 0.179 dex, from `+0.0229` to ≈
+`−0.156`.** A negative value there is *not* B7′ overshoot: on `bee-3-cpl` the
+reference arm is unregistered, so registration's genuine benefit is expected to
+show once the resample stops masking it. **B7′ applies to the ruler**, where
+registration has almost nothing to do and the reference is therefore a fair
+ceiling.
+
+---
+
+## 3. Candidate facts (rule 28)
+
+**P1 — MEASURED.** The ruler instrument recovers the aligner's own
+`fit_to_cover` `k` from a photograph at **1.59σ** (`flat-on-ruler-cpl`,
+`mag = 1.025027 ± 0.003170` vs `1/k = 1.030078`) and at **0.77σ** on
+`bee-3-cpl` (`1.068148 ± 0.006961` vs `1.073537`) **with no ruler in the
+frame**, by tracking each ROI's own dominant spatial frequency. M98's P10 is
+confirmed with a **7.5× tighter** standard error and, for the first time, **on
+the owner's actual subject**.
+
+**P2 — MEASURED.** Pre-fix, the registered render of `flat-on-ruler-cpl` is
+**`+0.1623 ± 0.0040` dex (1.4530× in power) below** the unregistered
+native-sampling render over `[0.30, 0.48]` cyc/px in object space — **40.44σ**.
+
+**P3 — MEASURED.** Planting a **true Catmull-Rom** enlargement of exactly the
+aligner's own `1.030078` on the *unregistered* render reproduces
+**`+0.1574 ± 0.0042` dex**. The unexplained remainder is **`+0.0049 ± 0.0073`
+dex (0.66σ)**: **97.0% of the deficit is the coverage resample**, with nothing
+significant left for the warp, the merge or the decoder.
+
+**P4 — MEASURED.** The Catmull-Rom enlargement cost is **nearly
+scale-independent**: `+0.159, +0.157, +0.179, +0.181` dex for doses `1.010,
+1.030, 1.0735, 1.150`. **Cost ∝ enlargement is false.** Linear extrapolation
+from 3.01% to 7.35% overpredicts by **+0.206 dex** (`+0.385` predicted,
+`+0.179` measured). A crop loses nothing, so the damage is one reconstruction
+pass set by the *input* grid, not by the stretch.
+
+**P5 — MEASURED.** The cost is **entirely at high frequency**: a null at the
+comb (0.140 cyc/px, `+2.14% ± 1.81%`), `+0.0604 ± 0.0195` dex over
+`[0.21, 0.35]`, `+0.1623 ± 0.0040` over `[0.30, 0.48]`. **Any metric that
+averages across frequency dilutes this defect toward nothing** — which is how a
++7.35% enlargement of every pixel survived unnoticed.
+
+**P6 — MEASURED.** On `bee-3-cpl`, registered-and-rescaled versus
+unregistered-and-native is a **null** near Nyquist: `+0.0229 ± 0.0419` dex,
+**0.55σ**. What registration recovers and what the resample destroys **cancel
+on the deep bracket**. On the subject where the rescale is worst, its cost is
+masked by the benefit of the thing that causes it.
+
+**P7 — MEASURED, instrument defect, self-reported.** A band-power ratio between
+two arms at different scales carries a **Jacobian of `mag²`** that is not
+detail loss. Uncorrected it made the metric run **backwards** with dose
+(`+0.150 → +0.061` for `1.010 → 1.150`). `+2·log₁₀(mag)` removes it. **Caught
+only by a dose control the metric did not originally have.**
+
+**P8 — self-reported specification defect.** My registered bar B6 was
+**unsatisfiable**. It imported `+0.3693`/`+0.2392` dex from another agent's
+chain — different subject and `k`, different reference arm, different band and
+binning — while my own pre-fix deficit is `+0.1623`, so it demanded a landing
+at `−0.077`. **A bar that cannot be passed by a correct fix is as useless as
+one that cannot be failed by a broken one.**
+
+**P9 — DERIVED.** My replacement bar **B6′ was also unfounded**: "falls by
+≥ 50%" assumes cost ∝ dose, which P4 falsifies. Withdrawn. **Two of my own bars
+failed audit in one milestone**, both found by measuring my own instrument, both
+amended before any post-fix number existed.
+
+**P10 — procedural.** **A stem check is not a lock.** I verified `M101` free
+across four registers and committed first (`599a6e0`); another agent claimed it
+within the hour (`d9019ce`). The check answers *has this been taken* when a
+claimant needs *will this be taken*, and no read can answer that. I moved to
+`M104`. Numbering by verified-free-at-read-time will keep colliding at this
+concurrency.
+
+**P11 — MEASURED.** My first controls run failed **4 of 7**. The **standard
+errors were the diagnostic**: `0.13` and `0.20` against a `0.004` bar is
+bimodality, not noise. Causes: a global peak search that let an ROI's **second
+harmonic** — which shares the fundamental's *angle* — masquerade as the
+fundamental; **arithmetic** averaging of ratios, which makes a swap placebo
+unsatisfiable in principle since `mean(x)·mean(1/x) ≠ 1`; and a one-armed
+admission gate that changed the sample under swap. **My docstring described the
+correct algorithm and my code did not implement it.**
+
+**P12 — DERIVED, registered for Phase 2.** Post-fix predictions from direct
+measurement: ruler `D_nyq*` → **`+0.0049 ± 0.0073`** (consistent with zero);
+ruler `mag` → **1.000 ± 0.0063**; ruler extent ratio **unchanged** at
+`0.9756 ± 0.0098`; `bee-3-cpl` `D_nyq*` → **≈ −0.156**.
+
+

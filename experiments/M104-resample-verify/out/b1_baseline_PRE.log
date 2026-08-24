@@ -19,9 +19,9 @@ flat-on-ruler-cpl
   comb f0 (median, A0)      : 0.14021 cyc/px  -> object band [0.2103, 0.3505] cyc/px
   D_hi (comb band, dex)     : +0.0604 +/- 0.0195   (+ve = ALN has less detail)
                               power ratio 1.1492x
-  D_nyq [0.3, 0.48] cyc/px, object-corrected
-                            : +0.1408 +/- 0.0060 dex   (23.57 sigma)
-                              power ratio 1.3829x
+  D_nyq [0.3, 0.48] cyc/px, object-corrected, Jacobian-corrected (D_nyq*)
+                            : +0.1623 +/- 0.0040 dex   (40.44 sigma)
+                              power ratio 1.4530x
 
 ------------------------------------------------------------------------------
 bee-3-cpl
@@ -35,9 +35,9 @@ bee-3-cpl
   comb f0 (median, A0)      : 0.03708 cyc/px  -> object band [0.0556, 0.0927] cyc/px
   D_hi (comb band, dex)     : -0.1910 +/- 0.0644   (+ve = ALN has less detail)
                               power ratio 0.6442x
-  D_nyq [0.3, 0.48] cyc/px, object-corrected
-                            : -0.0343 +/- 0.0425 dex   (-0.81 sigma)
-                              power ratio 0.9240x
+  D_nyq [0.3, 0.48] cyc/px, object-corrected, Jacobian-corrected (D_nyq*)
+                            : +0.0229 +/- 0.0419 dex   (0.55 sigma)
+                              power ratio 1.0542x
 
 ==============================================================================
 PRE-fix baseline frozen.

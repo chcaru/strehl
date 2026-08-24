@@ -1,0 +1,20 @@
+==============================================================================
+M104 C3 -- D_nyq with matched OBJECT extent (repair of C2's RED)
+  base : flat-on-ruler-cpl-PRE-A0-g0.tif  (3520 x 2344)
+  test ROI enlarged to round(384 * mag) so both cover the same object
+==============================================================================
+
+   planted  ROI_test      D_nyq       SE    sigma    power     dex/%  n
+  1.000000       384   +0.00000  0.00000     0.00   1.0000       nan   3
+  1.010000       388   +0.14778  0.00928    15.92   1.4053   0.14778   3
+  1.030078       396   +0.13268  0.00378    35.06   1.3573   0.04411   3
+  1.073537       412   +0.10979  0.01894     5.80   1.2876   0.01493   3
+  1.150000       442   +0.06505  0.02583     2.52   1.1616   0.00434   3
+
+NULL   s = 1.000000 -> D_nyq = +0.000e+00   -> GREEN
+DOSE   monotone increasing: False -> RED -- D_nyq is a DETECTOR only
+
+NOTE ON THE NULL.  At s = 1.000 every gather offset is exactly
+integer, so Catmull-Rom is the identity and D_nyq is 0 for a trivial
+reason.  This control proves the code path runs; it does NOT prove the
+kernel smooths.  The dose arms are what prove that.

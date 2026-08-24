@@ -145,10 +145,10 @@ def main() -> None:
             f"(+ve = ALN has less detail)")
         say(f"                              power ratio {10**dhm:.4f}x")
 
-        dn = [r["d_nyq"] for r in rows if np.isfinite(r["d_nyq"])]
+        dn = [r["d_nyq_star"] for r in rows if np.isfinite(r["d_nyq_star"])]
         dnm = float(np.mean(dn))
         dnse = float(np.std(dn, ddof=1) / np.sqrt(len(dn)))
-        say(f"  D_nyq [{L.NYQ_LO}, {L.NYQ_HI}] cyc/px, object-corrected")
+        say(f"  D_nyq [{L.NYQ_LO}, {L.NYQ_HI}] cyc/px, object-corrected, Jacobian-corrected (D_nyq*)")
         say(f"                            : {dnm:+.4f} +/- {dnse:.4f} dex   "
             f"({dnm/dnse if dnse>0 else float('nan'):.2f} sigma)")
         say(f"                              power ratio {10**dnm:.4f}x")
@@ -156,7 +156,7 @@ def main() -> None:
         d.update(n=n, mag=mag, mag_se=mag_se, mag_sigma=sig,
                  extent_ratio=er, extent_se=er_se,
                  mod_ratio=mr, mod_se=mr_se, f0_med=f0med,
-                 d_hi=dhm, d_hi_se=dhse, d_nyq=dnm, d_nyq_se=dnse,
+                 d_hi=dhm, d_hi_se=dhse, d_nyq_star=dnm, d_nyq_se=dnse,
                  rois=[{k2: v2 for k2, v2 in r.items() if k2 != "P"}
                        for r in rows])
         res["stacks"][stack] = d

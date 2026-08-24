@@ -339,6 +339,42 @@ def measure_arm(img: np.ndarray, seed: dict, cols=5, rows=4):
 NYQ_LO, NYQ_HI = 0.30, 0.48  # near-Nyquist band, reference arm's pixel units
 
 
+def catmull_rom_scale(a: np.ndarray, s: float) -> np.ndarray:
+    """Enlarge by `s` about the image centre with a TRUE Catmull-Rom gather.
+
+    `warpmap.rs:349` states the resampler `strehl align` writes is
+    `Resampler::CatmullRom`, so a planted dose must use the same kernel.
+    scipy's `order=3` is an INTERPOLATING B-spline, which is mildly
+    high-boosting and therefore cheaper than Catmull-Rom; planting a dose with
+    it would UNDERSTATE the cost of a resample and flatter the defect.  The
+    controls that only need the comb's LOCATION may use scipy; anything that
+    reads the comb's AMPLITUDE may not.
+
+    Implemented as two separable 1-D passes, which is what a separable 4-tap
+    gather is, and is exactly one gather in the orchestrator's accounting.
+    """
+    def w(t):
+        at = np.abs(t)
+        w1 = 1.5 * at**3 - 2.5 * at**2 + 1.0
+        w2 = -0.5 * at**3 + 2.5 * at**2 - 4.0 * at + 2.0
+        return np.where(at <= 1.0, w1, np.where(at < 2.0, w2, 0.0))
+
+    def pass1(x: np.ndarray, n_out: int) -> np.ndarray:
+        n_in = x.shape[1]
+        c = (n_in - 1) / 2.0
+        u = c + (np.arange(n_out) - (n_out - 1) / 2.0) / s
+        i0 = np.floor(u).astype(np.int64)
+        t = u - i0
+        out = np.zeros((x.shape[0], n_out), dtype=np.float64)
+        for k in range(-1, 3):
+            idx = np.clip(i0 + k, 0, n_in - 1)
+            out += w(t - k)[None, :] * x[:, idx]
+        return out
+
+    b = pass1(a, a.shape[1])
+    return pass1(b.T, a.shape[0]).T
+
+
 def measure_pair(ref: np.ndarray, test: np.ndarray, seed: dict, cols=5, rows=4):
     """Paired magnification and object-space modulation, ref vs test.
 
@@ -384,6 +420,21 @@ def measure_pair(ref: np.ndarray, test: np.ndarray, seed: dict, cols=5, rows=4):
                 d_nyq=(
                     float(np.log10(na / nb))
                     if (na and nb and na > 0 and nb > 0)
+                    else float("nan")
+                ),
+                # D_nyq carries a Jacobian that is NOT detail loss.  Enlarging
+                # by `mg` compresses the frequency axis by 1/mg, so the same
+                # power sits in a 1/mg^2 smaller region and its DENSITY rises
+                # by mg^2.  Comparing densities in pixel-frequency units
+                # therefore credits the enlarged arm with mg^2 of spurious
+                # power.  Removing it converts both arms to OBJECT-frequency
+                # density, which is the quantity that is physically shared.
+                # C2's dose control is what exposed this: uncorrected D_nyq
+                # ran BACKWARDS with dose (+0.150 -> +0.061 for 1.010 ->
+                # 1.150) because the Jacobian grows faster than the loss.
+                d_nyq_star=(
+                    float(np.log10(na / nb) + 2.0 * np.log10(mg))
+                    if (na and nb and na > 0 and nb > 0 and mg > 0)
                     else float("nan")
                 ),
             )
