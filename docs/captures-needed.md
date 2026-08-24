@@ -1760,3 +1760,72 @@ the correct render.
 - Fact 1359: a Laplacian sharpness metric rated selection **2.73x sharper** than
   the correct render on this same crop, because selection's excess energy is
   visible polygonal patchwork. Do not judge these stacks by a sharpness number.
+
+## 24. Colour-separated exposures of one static subject -- REQUESTED by M95/M85, ten minutes, and it closes a gap nobody noticed
+
+**Every demosaic number this project has produced is measured against a decode,
+not against a scene.** That is the gap. When M95 compared demosaic algorithms it
+had to treat one algorithm's output as the truth the others were scored against,
+because no capture in the library contains a known per-channel ground truth. The
+comparison still worked -- CDIFF2 was rejected on its artifact clause, and it is
+worse than Malvar-He-Cutler on every channel in pixel error (fact 1422) -- but
+the reference was itself a reconstruction.
+
+This also now blocks something larger. M107 measured two chromatic aberration
+terms on the shipping render (facts 1413, 1414): a lateral term of **-704.5 ppm**
+in red, worth **2.977 output px at the corner**, and an axial term that the merge
+**bakes in permanently** because it elects on green and then gathers red and blue
+at green's frame. Both fixes are per-channel, and both are currently validated
+against demosaiced data rather than against separated channels.
+
+### What to shoot
+
+One static, high-detail, high-contrast subject. Tripod, no wind, nothing alive.
+A printed resolution target, a banknote, a circuit board or a coin all work; a
+subject with fine detail at many orientations is better than one with detail in
+one direction.
+
+Then, **without moving anything between exposures**:
+
+1. One normal exposure.
+2. One through a **red** filter.
+3. One through a **green** filter.
+4. One through a **blue** filter.
+
+Gel filters over the lens are fine -- they do not need to be good filters, or
+even particularly clean. They need only be strongly band-limiting, and identical
+in placement. If you do not have gels, three exposures lit in turn by a red, a
+green and a blue light source are equivalent for this purpose and may be easier.
+
+**Compensate exposure per channel so none of the four clips and none is buried in
+read noise.** The filters will cost between one and three stops each and they
+will not cost the same amount. Shoot at your normal working aperture, and use the
+same aperture for all four.
+
+**Do not focus-bracket this.** A single frame per channel is the whole request.
+
+### Why this cannot come from existing files
+
+A demosaiced RAW cannot serve as ground truth for demosaicing: the quantity being
+measured has already been applied to it. Nothing in the library was shot through
+a filter, and no amount of processing recovers a per-channel measurement from a
+CFA mosaic -- that recovery *is* the algorithm under test.
+
+### What it unblocks
+
+- Demosaic comparison against a **scene** rather than against another algorithm.
+- Independent validation of M107's lateral CA coefficient, which currently rests
+  on a radial fit through demosaiced edges.
+- A direct measurement of the axial term `k_R - k_G` and `k_B - k_G` without the
+  green-election confound that produced it.
+- The per-channel noise model that fact 1417 names as the prerequisite for
+  per-channel election.
+
+### Related
+
+- Fact 1422: the demosaic upgrade rejected on its artifact clause, and the
+  signal-only bar that would have shipped a regression.
+- Facts 1413, 1414: the two chroma mechanisms, and why they ship in the reverse
+  of their discovery order.
+- Fact 1415: demosaic co-siting and the resampler are bounded small and are *not*
+  the fringing you can see.
