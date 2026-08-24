@@ -1,0 +1,74 @@
+
+======================================================================================================================
+ARM A - two GAUSSIAN lobes, symmetric by construction. Sweep the separation.
+======================================================================================================================
+  The PSF here IS a Gaussian. Every departure from 1.8226 is scene depth.
+  w50 = 2.9 frames, matching the bee stacks (2.86 / 3.57 / 3.46).
+
+   sep   w_far    R10_50     vs G   lobes   reaches bees 2.43-2.70?
+     0    0.30    1.8465  +0.0239       1                          
+     0    0.50    1.8465  +0.0239       1                          
+     2    0.30    1.8216  -0.0010       1                          
+     2    0.50    1.8080  -0.0146       1                          
+     4    0.30    1.7967  -0.0259       1                          
+     4    0.50    1.6630  -0.1596       1                          
+     6    0.30    1.8582  +0.0356       1                          
+     6    0.50    1.4470  -0.3756       2                          
+     8    0.30    2.7793  +0.9567       2                      over
+     8    0.50    1.3666  -0.4561       2                          
+    12    0.30    1.8951  +0.0725       2                          
+    12    0.50    3.8247  +2.0020       2                      over
+    16    0.30    1.8468  +0.0242       2                          
+    16    0.50    1.8471  +0.0245       2                          
+    24    0.30    1.8465  +0.0239       2                          
+    24    0.50    1.8465  +0.0239       2                          
+
+  A SYMMETRIC GAUSSIAN PSF over two depths reaches R10_50 = 3.8247.
+  The bee stacks read 2.43-2.70. Scene depth alone FULLY ACCOUNTS FOR that.
+
+======================================================================================================================
+ARM B - direct lobe count on the REAL corpus curves
+======================================================================================================================
+  Lobes = local maxima above 0.10 of peak in the [1,2,1]-smoothed curve.
+  If the mechanism is multimodality, the heavy stacks carry more lobes.
+
+stack              R10_50  mean lobes  % multi  % >=3 lobes     n
+coffee-bubbles     1.8857        1.06     2.8%         1.4%    72
+109MSDCF           1.9741        1.62    36.4%        19.7%    66
+119MSDCF           2.2905        2.31    50.0%        40.3%    72
+113MSDCF           2.1035        2.28    70.8%        36.1%    72
+112MSDCF           2.0490        2.12    68.1%        26.1%    69
+foam               2.1803        1.76    61.1%        11.1%    72
+coffee-bean        1.8161        4.85    25.0%        20.8%    48
+wrapped-text-2     1.8546        1.01     1.4%         0.0%    72
+wrapped-text-1     1.8444        1.00     0.0%         0.0%    72
+bee-1              2.6514        7.52    83.3%        56.2%    48
+bee-2              2.4345        9.15    85.2%        72.2%    54
+bee-3              2.6959        9.49    80.7%        71.9%    57
+
+======================================================================================================================
+ARM C - association across the twelve stacks
+======================================================================================================================
+  corr(mean lobes, R10_50)   Pearson +0.806   Spearman +0.720   n=12
+  corr(% multi-lobed, R10_50) Pearson +0.834   Spearman +0.867   n=12
+
+  near-Gaussian stacks (R10_50 < 1.95, n=4): mean lobes 1.98
+  heavy stacks         (R10_50 >= 2.0, n=7): mean lobes 4.95
+  ratio 2.50x
+
+======================================================================================================================
+ARM D - the two questions are separable: does the SAME patch set carry both?
+======================================================================================================================
+  Within the three bee captures - same rig, same subject, three shoots -
+  does the lobe count reproduce the way R10_50 did, and the way the
+  asymmetry statistic A50 did NOT (section 16.7: +0.042 / -0.036 / -0.070)?
+    bee-1            R10_50 2.6514   mean lobes 7.52   multi 83.3%
+    bee-2            R10_50 2.4345   mean lobes 9.15   multi 85.2%
+    bee-3            R10_50 2.6959   mean lobes 9.49   multi 80.7%
+    wrapped-text-1   R10_50 1.8444   mean lobes 1.00   multi 0.0%
+    wrapped-text-2   R10_50 1.8546   mean lobes 1.01   multi 1.4%
+
+    bee lobe counts spread 1.262x ; bee R10_50 spread 1.107x
+    (section 16.7's A50 on these same three captures CHANGED SIGN.)
+
+wrote out/s23_multimodality.json

@@ -1,0 +1,69 @@
+
+======================================================================================================================
+(1) THE NARROW-CURVE BIAS, at exactly the widths the corpus exhibits
+======================================================================================================================
+  A TRUE GAUSSIAN sampled at each stack's measured w50. Any departure from
+  1.8226 here is the ESTIMATOR, not the optics. Corpus reading shown for
+  comparison; 'excess' is what is left once the instrument is subtracted.
+
+stack               w50   Gauss@w50  inst. bias   corpus   excess  still >G?
+coffee-bubbles     1.61      1.8778     +0.0552   1.8857  +0.0079        yes
+wrapped-text-2     1.96      1.8178     -0.0048   1.8546  +0.0368        yes
+wrapped-text-1     1.99      1.8094     -0.0133   1.8444  +0.0350        yes
+foam               2.19      1.8396     +0.0170   2.1803  +0.3407        yes
+109MSDCF           2.25      1.8439     +0.0213   1.9741  +0.1302        yes
+coffee-bean        2.38      1.8415     +0.0189   1.8161  -0.0254         NO
+bee-1              2.86      1.8485     +0.0259   2.6514  +0.8029        yes
+112MSDCF           2.95      1.8416     +0.0190   2.0490  +0.2074        yes
+113MSDCF           3.14      1.8190     -0.0036   2.1035  +0.2845        yes
+119MSDCF           3.28      1.8270     +0.0044   2.2905  +0.4635        yes
+bee-3              3.46      1.8350     +0.0123   2.6959  +0.8609        yes
+bee-2              3.57      1.8322     +0.0096   2.4345  +0.6023        yes
+
+  instrument bias at corpus widths spans -0.0133 .. +0.0552
+  corpus excess over a same-width Gaussian: median +0.2459, range -0.0254 .. +0.8609
+
+======================================================================================================================
+(1b) how far down is the estimator trustworthy? unbiased-range sweep
+======================================================================================================================
+ w50 frames    R10_50      bias   bias %
+        1.5    1.8480   +0.0254   +1.39%
+        2.0    1.8066   -0.0160   -0.88%
+        2.5    1.8303   +0.0077   +0.42%
+        3.0    1.8362   +0.0136   +0.75%
+        4.0    1.8346   +0.0119   +0.65%
+        6.0    1.8230   +0.0004   +0.02%
+        9.0    1.8254   +0.0028   +0.15%
+       14.0    1.8238   +0.0012   +0.06%
+       24.0    1.8229   +0.0003   +0.02%
+
+======================================================================================================================
+(2) WHAT DOES THE ESTIMATOR RETURN WHEN THERE IS NO CURVE?
+======================================================================================================================
+  s21's shuffle null sat at 1.800-1.809 on every powered stack, and the
+  Gaussian value is 1.8226. Is that a coincidence, or is ~1.80 simply what
+  a structureless narrow blob returns? Pure noise, no curve, 400 draws:
+    K=  19  median 1.5806  sd 0.7116  n 252/400   |median - Gaussian| = 0.2420
+    K=  33  median 1.6444  sd 0.9465  n 313/400   |median - Gaussian| = 0.1782
+    K= 105  median 1.6809  sd 0.6756  n 359/400   |median - Gaussian| = 0.1417
+    K= 299  median 1.7800  sd 0.9812  n 375/400   |median - Gaussian| = 0.0426
+
+  structureless floor = 1.6627   Gaussian = 1.8226   separation = 0.1599
+  The pre-registered bar is 0.11. The floor is 0.1599 from the
+  Gaussian value, i.e. INSIDE the bar. A stack reading 'Gaussian' therefore
+  cannot be distinguished from a stack reading NOTHING.
+
+======================================================================================================================
+(3) WHAT CURVE WIDTH WOULD BE NEEDED? resolving power vs w50
+======================================================================================================================
+  Separation between a Gaussian and a sech2 (the mildest real heavy tail),
+  as a function of curve width. Both sampled at the same w50.
+    w50    Gauss    sech2  separation  > bar 0.11?
+    1.6   1.8766   1.8827     +0.0061           no
+    2.5   1.8303   1.8856     +0.0552           no
+    3.6   1.8307   1.9732     +0.1424          YES
+    5.0   1.8287   2.0272     +0.1985          YES
+    8.0   1.8257   2.0498     +0.2241          YES
+   13.0   1.8236   2.0564     +0.2328          YES
+
+wrote out/s22_estimator_floor.json
