@@ -652,7 +652,142 @@ has no depth, and the angled ruler's straight edges lie at constant depth.
 
 ---
 
-## 12. Status / Changes / Verified / Not verified / Notes
+## 12. The magnification confound: both of us fitted a global scale to a field that is not global
+
+The orchestrator retracted their visual claim (fact 1235) and discipline 605
+after measuring that the two `bee-3` renders differ in magnification by ~1.25%,
+which would make the crops we both judged by eye an unfair comparison. I accept
+that the arms differ. I re-derived the number independently and I get the same
+magnitude. **But the retraction, and my own first attempt to repair it, both
+rest on a model that a plant then falsified.**
+
+### 12.1 Three instruments, three defects, all caught by their own plants
+
+`src/orchmag.py` — resample one arm onto the other's scale, then compare edge
+width. **Killed by its own B3 plant.** Rescaling the null by 1.4% should change
+widths by 1.4%; it changed them by 20% (0.7962 against a theoretical 1.0139).
+The missing 19% is interpolation blur: resampling one arm and not the other
+makes the resampled arm measure blunter no matter what the scene does.
+**I withdraw `orchmag.py`'s 1.2003 "scale-matched" width figure.** The same
+defect applies to any NN-scale-matched comparison — B5 measured that
+nearest-neighbour rescaling *raises* Tenengrad by 0.0087 relative to a smooth
+interpolator, because NN at a non-integer scale duplicates and drops whole
+pixel columns. NN cannot add blur, which is why it is chosen; it can and does
+add aliasing gradient energy, which is fatal for a gradient-energy metric.
+
+`src/orchmag2.py` first run — stop resampling images, absorb the scale into
+*where* each profile is sampled. **Killed by its own C3 plant.** Blurring the
+aligned arm by σ=1.0 barely moved the answer (1.3216 → 1.2406, still far above
+1.0), and a 3% scale detune moved it by 21% — a 7× over-response. One cause:
+I had picked edge locations using the aligned arm's strongest gradients alone,
+so the null regressed to the mean there and the comparison was rigged before
+any physics entered. §10 had avoided this by selecting on the *mean* of two
+co-located arms; that option died when the arms turned out not to be
+co-located. **I withdraw 1.3216.**
+
+`src/orchmag2.py` second run — select on the **union** of each arm's own strong
+edges and report both halves. This is self-validating: the halves must bracket
+the truth from opposite sides.
+
+| | value |
+| --- | ---: |
+| ratio_A, aligned-chosen locations (biased *for* aligned) | 1.3216 |
+| ratio_Z, null-chosen locations (biased *for* null) | 0.8036 |
+| **geometric mean, the unbiased estimate** | **1.0306** |
+| C1 placebo | 1.000000 |
+| C2 detune ±3% | +0.103 / +0.320, both upward |
+| C3 direction, blur(aligned) | 0.9821 **PASS** |
+| C4 swap, product with treatment | 1.000000 |
+
+Both detunes move the ratio **up**, so 1.0306 sits at a minimum with respect to
+the global scale: **any error in the scale estimate inflates it.** 1.0306 is
+therefore a *lower bound* over the family of global-scale models, not a
+best case.
+
+I then tried to bracket it by repeating the whole measurement at the
+convention-free median scale of §12.3 (`M97_S=0.997992`). **That run fails its
+own C3 direction control** — blurring the aligned arm leaves the ratio at
+1.0061, above 1.0, so the instrument cannot tell a blurred image from a sharp
+one under that model. Its 1.0753 is therefore not quotable, and the sensitivity
+analysis could not be completed. What can be said is narrower and I say only
+that: **of the global-scale models tried, exactly one passes all four controls,
+and under it the null's edges are 3.06% wider.**
+
+### 12.2 The radial claim died again, to its own control
+
+The annuli looked like the signature registration must have — a similarity has
+zero residual at its own centre by construction, so the effect should grow with
+radius, and it did: 0.9724 at r≈1250 rising monotonically to 1.0633 at r≈3600.
+
+**The uniform-blur plant reproduces 83% of that span** (+0.0753 against the
+treatment's +0.0909). A σ=1.0 blur is applied everywhere and has no radial
+structure whatever, so the rise is the instrument, not the registration.
+**Withdrawn.** This is the second radial claim this milestone has killed with
+the same control; the first was §6's `radial4.py`. Radial stratification on
+these renders should now be presumed guilty.
+
+### 12.3 The finding: there is no global scale difference to correct
+
+`src/signcheck.py` measures the direction and size of the magnification with no
+resampling convention at all. It takes a 192 px template from the aligned arm
+at a known radius, finds the same texture in the other arm by NCC, and compares
+the two radii. A feature that sits farther from the centre in an arm means that
+arm is the more magnified one. Nothing else enters.
+
+| probe | median radius ratio | spread |
+| --- | ---: | ---: |
+| D1 self | 1.000001 | 0.00005 |
+| D2 planted ×1.02 | 1.01993 | 0.00168 |
+| D3 planted ×0.98 | 0.98006 | 0.00165 |
+| **treatment, null vs aligned** | **1.00201** | **0.06518** |
+
+**MEASURED, and this is the result of §12.** On a genuine global magnification
+the probe returns a spread of 0.0017. On the real pair it returns **0.065 — 38×
+its own demonstrated resolution**, with an IQR of 0.0165–0.0242 that survives
+restricting to NCC > 0.9. At r ≈ 2100 px, tiles with excellent match quality
+disagree from −57.7 px to +35.7 px of radial displacement. A global scale
+produces *the same* radial displacement at *the same* radius. This one does not.
+
+**So the two renders do not differ by a global similarity, and "the
+magnification difference between the arms" is not a well-defined number.**
+That is not a surprise once stated: both arms are *composites*. Each output
+pixel is elected from whichever frame won there; in the aligned arm that frame
+was warped and in the null it was not, so the difference field follows the
+elected-frame map, which follows depth, which follows the subject's
+three-dimensional structure. The difference between two composites of
+differently-warped frames is not itself a warp.
+
+The median is **1.00201** — no net magnification difference worth correcting.
+The 0.9875 the orchestrator applied, and the 0.98625 I measured, are both what
+a single-scale fit returns when it is fitted to a field that has no single
+scale: it lands wherever the highest-contrast region pulls it.
+
+### 12.4 What this licenses, and what it takes back
+
+- **MEASURED:** any comparison of these two renders that first scale-matches
+  them globally — the orchestrator's NN-matched crops, their 0.9747 whole-frame
+  Tenengrad, my 0.9634 analytic correction, my `orchmag.py` 1.2003 — rests on a
+  falsified model. **None of those numbers should be quoted, mine included.**
+- **NOT established, in either direction:** whether the aligned render is
+  visibly sharper. The orchestrator's original claim was confounded, and the
+  correction they applied to retract it is confounded by the same missing
+  model. **Fact 1235's retraction is right to distrust the claim; it is not
+  itself a measurement of the opposite.**
+- **What survives:** §10's edge-width result. Under the one global model that
+  passes all four controls, with selection bias bracketed and removed, the
+  null's edges are **3.06% wider** than the aligned arm's, and every scale
+  perturbation raises the figure. That is a smaller and much more heavily
+  caveated claim than §10's original 1.0179 whole-frame number, and it is the
+  honest one. It is also **not robust**: the one alternative global scale I
+  tried fails its own direction control, so the result is conditional on a
+  model §12.3 shows to be wrong in kind.
+- **What is needed to settle it:** a comparison that compensates displacement
+  **locally** rather than globally — per-region correspondence, not one scale.
+  Every global-scale number on this pair is measuring the model error.
+
+---
+
+## 13. Status / Changes / Verified / Not verified / Notes
 
 ### Status
 **DONE.** The instrument exists, is plant-validated, and answers the question.
@@ -667,6 +802,10 @@ has no depth, and the angled ruler's straight edges lie at constant depth.
   `src/flatruler.ps1`, `src/angthumb.py`, `src/angcrop.py`, `src/angprobe.py`,
   `src/angstraight.py`, `src/angrun.ps1`, `src/angfull.ps1`,
   `src/bothrulers.ps1`, `src/angverdict.py`, logs and JSON.
+- **§12 (the magnification confound):** `src/orchmag.py` (withdrawn by its own
+  B3 plant, kept because the defect is the finding), `src/orchmag2.py`,
+  `src/signcheck.py`, `src/signdist.py`, and `out/orchmag*.json`,
+  `out/signcheck.json`.
 - `experiments/M97-warped-merge/src/signtest.py` — one line: `STACK` now reads
   `M97_STACK` from the environment, defaulting to the previous hard-coded
   bee-3 path, so prior results reproduce byte-identically.
@@ -714,7 +853,30 @@ has no depth, and the angled ruler's straight edges lie at constant depth.
   tick-pairing criterion that slipped four graduations at a fabricated scale of
   1.113. Both are described in §11.2 rather than quietly fixed.
 
+- **§12.** `signcheck.py` D1 self 1.000001 (spread 5.0e-5), D2 planted ×1.02 →
+  1.01993, D3 planted ×0.98 → 0.98006, both to within 0.00007 and with a spread
+  of 0.0017 — so the probe resolves a global scale 38× finer than the 0.065
+  spread it reports on the real pair.
+- **§12.** `orchmag2.py` C1 placebo 1.000000 exactly, C4 swap product 1.000000
+  exactly, C3 direction 0.9821 PASS, C2 detune ±3% moves the answer by 0.10 and
+  0.32, C7 halves bracket the estimate from both sides (1.3216 / 0.8036).
+- **§12. Three of my own instruments were withdrawn on their own plants**
+  before any number reached this report: `orchmag.py` (B3, resampling blur),
+  `orchmag2.py` run 1 (C3, selection bias), and the radial annuli (uniform-blur
+  plant reproduces 83% of the trend).
+
 ### Not verified
+- **§12's 1.0306 is conditional on a model §12.3 falsifies.** It is the one
+  global scale that passes all four controls; the alternative I tried fails C3.
+  A local, per-region compensation is what the question actually needs, and I
+  did not build one.
+- **§12 does not establish that alignment is or is not visible.** It establishes
+  that every global-scale-matched number on this pair — the orchestrator's and
+  mine — is measuring model error. That is a statement about the instruments,
+  not about the photograph.
+- Whether the 0.065 per-tile spread is entirely elected-frame structure or
+  partly parallax and occlusion. The mechanism in §12.3 is ARGUED; the
+  heterogeneity itself is MEASURED.
 - **The 19–32% win is measured on one stack.** It should be repeated on
   `couch-fibers-cpl` (drift 1.2034, edge/centre 1.40) before it is a general
   claim.
@@ -795,6 +957,38 @@ has no depth, and the angled ruler's straight edges lie at constant depth.
   fit absorbs its mean legitimately, so the achievable post-fit residual is
   `0.3078·amp`, not `amp/√2`. Scoring against `amp/√2` makes an honest
   instrument look 44% blind.
+- **P8 (MEASURED).** **Two focus-stack composites of the same frames, one warped
+  and one not, do not differ by a global similarity.** A template probe that
+  recovers a planted ×1.02 with a per-tile spread of 0.0017 reports a spread of
+  **0.065** on `bee-3-ALIGNED` vs `bee3-zoomnull`, with radial displacements at
+  the same radius running from −57.7 px to +35.7 px. Median radius ratio
+  **1.00201** — no net magnification difference. Every global scale-matched
+  comparison of these arms (0.9875, 0.98625, and the metrics computed after
+  applying them) is measuring model error.
+- **P9 (DERIVED).** The mechanism follows from what a composite is: each pixel
+  is elected from whichever frame won there, so the difference field between an
+  aligned and an unaligned composite follows the elected-frame map, which
+  follows depth. **The difference between two composites of differently-warped
+  frames is not itself a warp**, and cannot be removed by one.
+- **P10 (MEASURED, method).** Resampling one arm to scale-match it blurs that
+  arm and biases every width or sharpness comparison: a 1.4% rescale changed
+  measured edge widths by **20%** against a theoretical 1.4%. Absorb a
+  coordinate change into *where* you sample, never into a new image.
+- **P11 (MEASURED, method).** Nearest-neighbour rescaling raises Tenengrad by
+  **0.0087** relative to a smooth interpolator at the same scale. NN cannot add
+  blur — which is why it gets chosen for exactly this job — but at a
+  non-integer scale it duplicates and drops pixel columns and *adds aliasing
+  gradient energy*. It is the wrong choice for scale-matching before a
+  gradient-energy metric.
+- **P12 (MEASURED, method).** Selecting comparison locations by one arm's
+  strongest gradients makes the other arm regress to the mean there: the same
+  pair reads **1.3216** on aligned-chosen edges and **0.8036** on null-chosen
+  edges. Select on the union and take the geometric mean, and report both
+  halves so the bracket is visible.
+- **P13 (MEASURED).** Radial stratification on these renders is presumed guilty:
+  a σ=1.0 **uniform** blur, which has no radial structure at all, reproduces
+  **83%** of the treatment's radial span. Second radial claim this milestone
+  has withdrawn to the same control.
 
 ### Notes
 **Corpus pollution has grown from 8 to 11 stray `warpmap.txt` files** under

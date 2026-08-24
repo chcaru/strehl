@@ -1,0 +1,151 @@
+{
+ "s_null_to_aligned": 0.997992,
+ "d": [
+  3,
+  -4
+ ],
+ "n_edge_candidates": 60000,
+ "n_null_chosen": 60000,
+ "bars": {
+  "C5_withdraw_if_le": 1.005
+ },
+ "C1_placebo": {
+  "ratio": 1.0,
+  "n": 30349,
+  "pass": true
+ },
+ "treatment": {
+  "ratio_aligned_chosen": 1.206020657341361,
+  "n_A": 16620,
+  "ratio_null_chosen": 0.9587915961185441,
+  "n_Z": 13822,
+  "geometric_mean": 1.075324356184802,
+  "brackets_one": true
+ },
+ "C2_detune": {
+  "runs": {
+   "x1.03": {
+    "geo": 1.2042525468870977,
+    "delta": 0.12892819070229566
+   },
+   "x0.97": {
+    "geo": 1.413224363193478,
+    "delta": 0.33790000700867595
+   }
+  },
+  "max_abs_delta": 0.33790000700867595,
+  "pass": true
+ },
+ "C3_direction": {
+  "geo": 1.0060669595720486,
+  "ratio_A": 1.1299961187075176,
+  "ratio_Z": 0.895729383832097,
+  "pass": false
+ },
+ "C4_swap": {
+  "ratio": 0.8291731936038907,
+  "product": 0.9999999999999999,
+  "pass": true
+ },
+ "C6_annuli": [
+  {
+   "r_lo": 0,
+   "r_hi": 500,
+   "ratio_A": NaN,
+   "ratio_Z": NaN,
+   "geo": NaN,
+   "geo_blur_plant": NaN,
+   "n": [
+    37,
+    55
+   ]
+  },
+  {
+   "r_lo": 500,
+   "r_hi": 1000,
+   "ratio_A": NaN,
+   "ratio_Z": NaN,
+   "geo": NaN,
+   "geo_blur_plant": NaN,
+   "n": [
+    129,
+    157
+   ]
+  },
+  {
+   "r_lo": 1000,
+   "r_hi": 1500,
+   "ratio_A": 1.0860692520224473,
+   "ratio_Z": 0.8281501183928441,
+   "geo": 0.9483819798189005,
+   "geo_blur_plant": 0.9244641765853967,
+   "n": [
+    414,
+    488
+   ]
+  },
+  {
+   "r_lo": 1500,
+   "r_hi": 2000,
+   "ratio_A": 1.1772923487503206,
+   "ratio_Z": 0.7818902393898725,
+   "geo": 0.9594338937082916,
+   "geo_blur_plant": 0.8855769003289234,
+   "n": [
+    2165,
+    2156
+   ]
+  },
+  {
+   "r_lo": 2000,
+   "r_hi": 2500,
+   "ratio_A": 1.1220928572257993,
+   "ratio_Z": 0.8659819203798991,
+   "geo": 0.9857545979324497,
+   "geo_blur_plant": 0.9165526762023777,
+   "n": [
+    4033,
+    3489
+   ]
+  },
+  {
+   "r_lo": 2500,
+   "r_hi": 3000,
+   "ratio_A": 1.2336551944068161,
+   "ratio_Z": 1.0614333981085542,
+   "geo": 1.1443088853511083,
+   "geo_blur_plant": 1.0688657155189807,
+   "n": [
+    5655,
+    4497
+   ]
+  },
+  {
+   "r_lo": 3000,
+   "r_hi": 4300,
+   "ratio_A": 1.2880464369891005,
+   "ratio_Z": 1.0689641478792125,
+   "geo": 1.173403367109925,
+   "geo_blur_plant": 1.0795673689545269,
+   "n": [
+    4187,
+    2980
+   ]
+  }
+ ],
+ "C6_radial_control": {
+  "treatment_span": 0.2250213872910246,
+  "blur_plant_span": 0.15510319236913017,
+  "pass": false
+ },
+ "C5_verdict": {
+  "geometric_mean": 1.075324356184802,
+  "withdraw_if_le": 1.005,
+  "survives": true
+ },
+ "tenengrad_analytic": {
+  "raw_aligned_over_null": 0.9904709393159322,
+  "corrected_aligned_over_null": 0.9864972016658569,
+  "note": "null is 1/s more magnified, so its mean |grad|^2 is depressed by s^2; multiplying by s^2 puts both arms at one magnification"
+ }
+}
