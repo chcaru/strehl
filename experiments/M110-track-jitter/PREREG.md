@@ -180,3 +180,50 @@ delta, RMS delta, fraction of pixels differing, and a plain visual verdict.
 | B4b | a purely quadratic penalty at a `lambda` large enough to pass B3 |
 | B5 | a removal that is smooth in `j` |
 | B6 | two byte-identical renders, or a delta below the display quantum |
+
+---
+
+## Amendment A1 — the lambda grid, written after B0 and before any `lambda > 0`
+
+**Reason: rule 13.** Before sweeping I asked what the sweep would have to contain
+for the answer to be anything but an endpoint, and derived the operator's own
+transfer function. It says the grid I registered **cannot express the effect**.
+
+DERIVED. In the log domain the system is `min ||D x - y||^2 + lambda^2 ||L x||^2`
+with `D` the edge incidence rows (weight `rho`) and `L` the `[1,-2,1]` stencil
+(weight `lambda*rho`; the `rho` cancels). For a mode of wavenumber `w`:
+
+```
+|L v|^2 = (n - 2) * 16 sin^4(w/2)
+|D v|^2 = sum over spans s of  n_s * 4 sin^2(w s / 2)
+H(w)    = |D v|^2 / (|D v|^2 + lambda^2 |L v|^2)
+```
+
+At `w = pi` **every even span is blind** (`sin(pi s/2) = 0` for even `s`), so the
+data term is carried by the 298 span-1 edges alone: `|D v|^2 = 298*4 = 1192`
+against `|L v|^2 = 297*16 = 4752`. Hence
+
+```
+H(pi) = 1192 / (1192 + 4752 lambda^2)  =  1 / (1 + 3.987 lambda^2)
+```
+
+which at my registered grid maximum `lambda = 1` attenuates the Nyquist mode by
+only **2.0x**, and at `lambda = 0.02` — M86's setting, the one fact 1181 prices
+at +65% held-out — by **1.0016x**, i.e. **not at all**. A grid topping out at
+1 would report an endpoint argmin, which rule 13 forbids reporting as an
+optimum.
+
+**Grid amended, before any `lambda > 0` was run, to**
+`0, 0.02, 0.1, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 50`.
+`0.02` is kept deliberately: it is M86's value and reproducing its behaviour is
+a cross-check on the whole instrument.
+
+**This is a widening, not a relaxation.** No bar, threshold or selection rule
+changes. B2's `1.02x`, B3's `0.2415 px`, B4's `0.50x`/`+/-20%`/`90%`/`5 frames`
+and B5's `rho_1 <= 0` all stand exactly as registered.
+
+**Second prediction stored before the run** (discipline 717): the same
+derivation says a structure with a 10-frame period retains `H = 0.93` at
+`lambda = 3` while the Nyquist mode retains `0.027` — a **34x** separation. If
+the sweep shows accuracy and jitter falling *together*, that derivation is
+wrong and the design is dead.

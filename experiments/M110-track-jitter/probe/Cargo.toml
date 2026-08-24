@@ -1,0 +1,18 @@
+# Standalone probe for M110. Deliberately OUTSIDE the strehl workspace (its own
+# empty `[workspace]` table) so that adding it cannot touch the shared root
+# `Cargo.toml` while other milestones are live in this tree. Same pattern as
+# M103's probe, for the same reason.
+[package]
+name = "m110probe"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+strehl-core = { path = "../../../crates/strehl-core" }
+anyhow = "1.0"
+
+[profile.release]
+opt-level = 3
