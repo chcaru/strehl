@@ -470,6 +470,11 @@ M95, so the hunks below are also the hunks against `4ff8376`.
 the existing normalisation closure, so the writer, its `Develop::default()`
 tripwire test and the byte-frozen branch are all untouched.
 
+MEASURED: `experiments/M100-exposure/patchcheck.py` locates every `OLD` block
+below in the repo at HEAD and every `NEW` block in the tree that was built and
+measured — **24 blocks, each found exactly once, 0 ambiguous**. The patch can
+be applied mechanically; nothing below is approximate.
+
 ### 4.1 `crates/strehl-cli/src/main.rs` — four hunks, all pure insertions
 
 **Hunk 1 — the `Stack` doc comment. OLD:**
