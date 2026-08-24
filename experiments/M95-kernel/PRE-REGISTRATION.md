@@ -308,3 +308,58 @@ Lanczos-3's mean EDGE excess to be a few hundred DN of 65535 — visible on a
 gradient by eye at 1:1 but not obviously objectionable. If Lanczos-3's excess
 turns out to be under 50 DN, its ringing is not a real objection to shipping it
 as the default and I will say so.
+
+---
+
+# ADDENDUM 5 — arm 12b: the corrected ringing instrument, after R3 failed
+
+Registered before `x9_ringing2.py` was written, and committed before it was run.
+ADDENDUM 4's bars are NOT edited; their verdicts stand as measured (R1 FAIL,
+R2 PASS, R3 FAIL) and are reported in full.
+
+## Why a second instrument
+
+R3 planted +2000 DN on EDGE-bin pixels and the registered instrument recovered
+**144.1 DN, 7.2% of what was planted**. The diagnosis is arithmetic, not
+statistical: `excess(p) = max(0, A(p) - localmax_C(p))` can only report an
+overshoot larger than the local headroom `H(p) = localmax_C(p) - C(p)`, and at
+an edge pixel the 3x3 window already contains the far side of the step, so `H`
+is thousands of DN. The instrument is blind precisely where it was aimed.
+
+**Therefore R1 is unreadable.** Its FAIL (EDGE/FLAT = 0.22x) is a statement
+about the instrument's blind spot, not about lanczos3, and I will not report it
+as evidence that lanczos3 does not ring. R3 is the only reason I know that.
+
+## The corrected instrument
+
+Sensitivity is bounded by headroom, so measure only where headroom is small and
+stated:
+
+  SENSITIVE = pixels with `localmax_C - C < 200 DN` and `C - localmin_C < 200 DN`
+  NEAR      = SENSITIVE, within 2 px of a top-decile-gradient pixel, not itself one
+  FAR       = SENSITIVE, more than 8 px from any top-decile-gradient pixel
+
+The same selection is applied to both bins, so the NEAR/FAR comparison is
+like-for-like. Overshoot is the same `excess` quantity, which is exact.
+
+## Bars
+
+**R4 — is it ringing?** lanczos3 mean excess on NEAR >= 3x its mean excess on
+FAR. FAR is the rule 9 flat control. **If the excess does not concentrate near
+edges it is not ringing and I will not call it ringing.**
+
+**R5 — does B27 transfer?** lanczos2 NEAR excess < 1/3 of lanczos3's NEAR
+excess. **If not, the synthetic step misled me and I must say so.**
+
+**R6 — is it alive?** Plant +2000 DN on NEAR pixels and recover at least 80% of
+it. Headroom on NEAR is under 200 DN by construction, so absorption cannot
+explain a failure here. **If R6 fails, this instrument is retired too and I
+report the ringing question as unanswered by me.**
+
+## What I expect
+
+R6 to pass by construction. R4 to pass. R5 to pass, since lanczos2 and
+catmull-rom share a 2.0 px support and B27 gave them the identical 6.2500%
+overshoot. I expect lanczos3's NEAR excess to be of order 100-400 DN of 65535.
+If it is under 20 DN, lanczos3's ringing is not a real objection to shipping it
+and I will say so.
