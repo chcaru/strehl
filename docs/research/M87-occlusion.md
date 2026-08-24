@@ -24,6 +24,23 @@ such).
 
 ## 0. VERDICT
 
+> **Is the halo a misregistration artifact? NO, and the negative is
+> quantitative.** **(§15, registered `a66ca28` before measuring.)** The
+> orchestrator's hypothesis was given every chance. Its mechanism is **real**:
+> on a single-depth, no-occlusion plant, 30 px p-p of planted drift manufactures
+> **ISO = 0.0645**, against the real bee leg's 0.0680. Its magnitude is
+> **real**: `bee-3-cpl` drifts **63.04 px p-p** (my mask-centroid track) /
+> **70.97 px p-p** (the aligner's own warp solve) inside `ROI_LEG`. So it makes
+> a sharp prediction — alignment cuts the residual to ~12.6 px p-p, which sits
+> in the flat region of the measured `ISO(drift)` ladder, predicting **91.7% of
+> the halo should vanish**. **MEASURED: 6.6%** (0.06805 → 0.06356, CIs
+> overlapping). **92% predicted, 6.6% observed.** The validity gate passed at
+> **21× its bar**, so this is a negative and not an uninformative null.
+> `M63.`'s single-depth side lobe is not the cause either: **+0.0045 over a
+> truth floor of 0.00799**, ~7%. **No agent needs redirecting; alignment is
+> still worth shipping, but it will not fix this.** The brief's premise was also
+> out of date — `main.rs` at `HEAD` says the binary **aligns by default**.
+>
 > **Does the two-layer model explain the occlusion halo?**
 > **Partly, and it is the right physics — but it is not the proximate cause.**
 > The proximate cause is **selection**. All 299 single frames of `bee-3-cpl`
@@ -96,7 +113,11 @@ such).
 >
 > **Two things this closes anyway.** The artifact is measured **on native Bayer
 > green sites**, upstream of demosaic, white balance, colour matrix, resampling
-> and binning — so **none of those is the cause**. And the shipped
+> and binning — so **none of those is the cause**. §15 closes them a second
+> time and independently: a Catmull-Rom gather that destroys ~49% of a frame's
+> gradient energy moves the halo metric by **+0.6%**, because the halo lives at
+> `d*` = 16 px, far below Nyquist. It is not sharpening overshoot, not ringing,
+> not demosaic. And the shipped
 > signal-dependent focus normaliser **suppresses the artifact 3.74× at
 > bright-foreground boundaries** while barely touching dark ones, so **M90's
 > noise-model fix should be expected to make this halo more visible, not less.**
@@ -1034,3 +1055,301 @@ I am not editing `docs/captures-needed.md` (owner's file, rule respected).
   the contour, giving a cut-out quality — is consistent with what I measure at
   normal polarity, but it remains an unmeasured visual impression and nothing
   in this report rests on it.
+
+---
+
+## 15. The registration hypothesis: refuted quantitatively
+
+Registered in `experiments/M87-occlusion/PREREG-ADDENDUM-4-registration.md`,
+commit `a66ca28`, **before any of the measurements below existed.**
+
+### 15.0 Verdict
+
+> **Is the halo a misregistration artifact? NO — and the negative is
+> quantitative, not merely a null.**
+>
+> The hypothesis was not tested by a single A/B. It was given every chance to
+> be true, and it failed a test it could easily have passed:
+>
+> 1. **The mechanism is real.** On a **single-depth, no-occlusion** plant with a
+>    painted step edge, planted drift manufactures a halo indistinguishable in
+>    size from the real one: **ISO = 0.0645 at 30 px p-p**, against the real bee
+>    leg's **0.0680**. Drift is *sufficient*. The orchestrator's mechanism is
+>    not fantasy.
+> 2. **The magnitude is real.** `bee-3-cpl` really does drift that much inside
+>    `ROI_LEG`: **63.04 px p-p** by my mask-centroid tracking and **70.97 px
+>    p-p** by the shipped aligner's own warp solve — two independent
+>    instruments agreeing to **12.6%**.
+> 3. **So the hypothesis makes a sharp prediction.** The drift ladder (§15.3)
+>    measures `ISO(drift)`. Alignment cuts in-ROI drift from ~71 px p-p to a
+>    residual of **~12.6 px p-p**, which sits in the ladder's flat region.
+>    Pure drift therefore predicts **91.7% of the halo should disappear.**
+> 4. **It does not disappear. MEASURED removal: 6.6%**, ISO
+>    **0.06805 [0.05928, 0.08059] → 0.06356 [0.05672, 0.07099]**, CIs heavily
+>    overlapping. Registered bar **R1-C**.
+>
+> **92% predicted, 6.6% observed.** The halo is not misregistration.
+>
+> **The validity gate passed, so this is a negative and not an
+> uninformative one.** There was 63 px p-p of drift inside the ROI to correct —
+> **21× the registered 3 px bar** — and the aligner did correct it.
+>
+> **`M63.`'s side lobe is also not the cause.** At **zero** drift the same
+> plant reads **ISO = 0.01248** against a truth floor of **0.00799**. The focus
+> measure's own side lobe contributes **+0.0045**, about **7%** of the real
+> halo. It is present, it is measurable, and it is small.
+>
+> **Consequence for tonight.** No agent needs redirecting. The occlusion
+> reconstruction remains the right target, and §10's recipe stands.
+> **Alignment is still worth shipping** — it is 20× less drift and it fixes
+> softness — but it will not fix this artifact, and a halo repair tuned after
+> alignment is not being tuned against a registration artifact.
+
+### 15.1 The premise I was given was already out of date
+
+**MEASURED, at source.** The dispatch says "the shipped binary does not align
+(`crates/strehl-cli/src/main.rs:62` says so in as many words)". At `HEAD` that
+file says the opposite, in capitals: it **ALIGNS BY DEFAULT (M86c)**, noting
+that unregistered deep brackets drift **232.7 px** corner-to-corner on
+`bee-3-cpl`, and that `STREHL_ALIGN=0` disables it. `M86.` landed while this
+milestone was running.
+
+This is good news for the experiment, not bad: the discriminating test is a
+switch rather than an aligner I would have had to write, and it uses a
+**validated** instrument instead of a hand-rolled one.
+
+**Fact 1236 is the other thing to correct.** It already claims "the cutout halo
+is occlusion, not misregistration: it survives correct alignment unchanged …
+present and essentially identical". It is marked **MEASURED** but it carries no
+number, no interval and no null — the same form this corpus flags on fact 1145
+as "exactly the kind of claim this project does not accept unmetricated". §15
+supplies the number. **I have not edited its row** (rule: SYNTHESIS is the
+owner's); the proposed correction is `P20` in §15.7.
+
+### 15.2 R1 — the A/B, and the control that makes it readable
+
+One factor changes: same stack, same binary, same `--gate 0`, same metric.
+
+| arm | registration | ISO | 95% CI | n profiles | `d*` |
+|---|---|---|---|---|---|
+| **U** | `STREHL_ALIGN=0` | **0.06805** | [0.05928, 0.08059] | 6348 | 16 |
+| **Uw** | none, but resampled once | 0.06844 | [0.05898, 0.08078] | 6605 | 16 |
+| **A** | `STREHL_ALIGN=1` (M86c) | **0.06356** | [0.05672, 0.07099] | 6197 | 16 |
+
+**MEASURED.** Total change U → A: **−6.6%**. Decomposed by the `C-resample`
+control: **resampling alone +0.6%**, **registration alone −7.2%**.
+
+**Why `C-resample` was not optional.** Arm A resamples and arm U does not. The
+M86c gather is Catmull-Rom, and `M86.`'s fact P23 measured that **one
+Catmull-Rom gather at a half-pixel shift retains only 0.5139 of a frame's
+gradient energy** — an interpolator is a lowpass, so *any* warped arm scores
+lower on an edge metric for reasons that have nothing to do with registration.
+Without this control the −6.6% would have been uninterpretable, and had it come
+out at −55% the control would have been the only thing standing between this
+project and a false `R1-A`.
+
+It also produces a result worth keeping: **a resample that destroys ~49% of
+gradient energy moves the halo metric by 0.6%.** That is not a contradiction —
+it is a measurement that **the halo is a coarse feature**, living at `d* = 16`
+px, far below Nyquist, where a half-pixel gather does almost nothing. It is
+independent confirmation that the halo is not a sharpening or ringing artifact.
+
+The control was verified before use: the identity warp reproduces the input with
+**max |error| = 0** exactly, as a Catmull-Rom gather must at integer positions.
+
+**Cross-instrument agreement, unplanned.** Arm U is the *Rust binary's* gate-0
+merge, scored on the full frame. §5's baseline is my *Python* reimplementation
+of the merge, scored on a 700×1100 crop. They read **0.068050** and
+**0.068042**. Agreement to four decimals is luck — the bootstrap CI is ±13% —
+but agreement at two significant figures across two independent merge
+implementations is not, and it retroactively validates §5's baseline.
+
+### 15.3 The drift ladder — the instrument that actually decided it
+
+`R1` alone cannot settle the question. A 6.6% removal is only evidence against
+the drift hypothesis **if** drift-at-the-residual-level would have produced a
+much smaller halo. That requires knowing the *shape* of `ISO(drift)`, so I
+measured it. **This possibility was registered in advance**: §A4.3 recorded that
+if `ISO(drift)` saturates, `R1`'s null would be uninformative and I would have
+to say so.
+
+Single-depth plant, painted step edge, no occluder, no second layer, integer
+shifts only (so no interpolation touches it).
+
+| drift px p-p | ISO | | drift px p-p | ISO |
+|---|---|---|---|---|
+| 0 | 0.01248 | | 16 | 0.01332 |
+| 1–8 | 0.01248 | | 24 | 0.03592 |
+| 12 | 0.01248 | | 30 | 0.06448 |
+| | | | 45 | 0.14645 |
+| | | | 60 | 0.16133 |
+| | | | 90 | 0.04123 |
+
+**MEASURED. `ISO(drift)` has a threshold near 16–24 px p-p, not a linear ramp.**
+Below ~12 px p-p the metric does not move at all.
+
+**That flat region is the load-bearing part of the argument, so I checked it
+rather than reporting it.** Eight identical printed values is the signature of a
+broken instrument, and this project has produced two of those tonight. It is
+real:
+
+- The frames genuinely differ — max |Δ| = **613.3 DN** between the 0 and 12 px
+  arms.
+- The selection genuinely differs — the argmax field differs, and **72.8%** of
+  pixels select a *defocused* frame even at zero drift.
+- The ISO values are genuinely different, just equal at five decimals:
+  **0.012482189** at 0 px and **0.012477560** at 12 px.
+- The reason is measurable: the sampled edge-normal profiles differ at only
+  **0.05%** of points. Small drift changes *which* frame is elected across most
+  of the field, but not inside the narrow band the metric reads.
+
+**Physically:** drift only manufactures a halo once the edge's displacement is
+comparable to the defocus blur scale, at which point a defocused frame's edge
+can out-gradient the in-focus frame at a neighbouring pixel.
+
+**Two honesty notes.** The ladder is **non-monotone above 60 px p-p** — the
+90 px arm falls back to 0.041 with `d*` collapsing to 3 px, because selection
+becomes incoherent and the overshoot migrates into the profile's first few
+samples. Do not read the ladder as a calibration curve. And the plant
+**over-expresses** relative to reality: at the real in-ROI drift it predicts
+~0.16 where the real merge reads 0.068, because the plant's edge is a
+full-height, straight, maximum-contrast step and a bee's leg is not. The
+argument uses only the ladder's *shape*, within-plant; the 92%-vs-6.6%
+comparison is a within-real-data comparison of removal fractions.
+
+### 15.4 Closing the loop: what the aligner actually achieved in the ROI
+
+The 92% prediction needs the post-alignment residual **inside `ROI_LEG`**, so I
+took it from the aligner's own warp sidecar rather than assuming it.
+
+**A convention bug I caught and fixed.** Read in raw pixel coordinates the
+sidecar puts the solve's fixed point at (−242, −142) — outside the frame — and
+the worst corner reads **351 px** against the tool's own reported **186.702 px**.
+Read in **centred** coordinates the fixed point lands near the plane centre,
+which is what a magnification change about the optical axis must look like, and
+the worst corner reads **186.584 px** — a miss of **0.118 px**. The script now
+*derives* the convention by reproducing the tool's number and asserts on it,
+rather than trusting my first guess. Had I not checked against a number the
+tool prints itself, §15.4 would have reported in-ROI drift as 157 px.
+
+| quantity | value | instrument |
+|---|---|---|
+| in-ROI drift, `ROI_LEG` centre | **70.97 px p-p** | warp sidecar |
+| in-ROI drift, same region | **63.04 px p-p** | my mask-centroid track |
+| worst-corner drift | 186.71 px p-p | warp sidecar |
+| held-out corner error after solve | 13.58 px | `strehl align` |
+| → scaled to `ROI_LEG` radius (984/2113) | **6.32 px** (~12.6 px p-p) | DERIVED |
+
+**Two independent instruments agree on the drift to 12.6%**, which is what
+licenses using either. The residual lands in the ladder's flat region, giving
+the **91.7%** predicted removal against the **6.6%** measured.
+
+**Where this could still be wrong.** `E*` is a median over the top-span quartile
+at the *worst corner*; scaling it by radius assumes the residual is
+scale-dominated. If it is translation-dominated the residual is uniform and
+larger at the ROI, but even the full 13.58 px p-p sits at the ladder's threshold
+and predicts ≥88% removal. The conclusion is not sensitive to this.
+
+### 15.5 R3 — separating `M63.`'s side lobe from everything else
+
+Same plant, **zero** drift, no occlusion. Anything that appears is the focus
+measure's own response.
+
+| arm | ISO | 95% CI |
+|---|---|---|
+| truth (all-in-focus scene, scored identically) | 0.00799 | [0.00776, 0.00826] |
+| merge, zero drift | **0.01248** | [0.01199, 0.01291] |
+| merge, 30 px p-p drift | 0.06448 | [0.05733, 0.07066] |
+| merge, 60 px p-p drift | 0.16133 | [0.15782, 0.17131] |
+
+**MEASURED.** `M63.`'s side lobe is real and it is small: **+0.0045 above the
+truth floor**, ~**7%** of the real bee halo. `M63.` §9.1's law — the boxed
+gradient response at offset `x` peaks at `σ = |x|`, so a pixel `d` px from an
+edge is maximised by a *defocused* frame — is visible here as the **72.8%** of
+pixels electing a defocused frame at zero drift. But that misselection lands
+mostly outside the band the halo occupies. **It is not the cause either.**
+
+The non-zero truth floor of 0.00799 is the metric's own bias on a noisy step
+edge and is why the plant arms are quoted against it rather than against zero.
+
+### 15.6 Placebos, including one of mine that was broken
+
+**I got a placebo wrong and caught it. Disclosed rather than repaired
+silently.** My first pass ran the foreground mask with `hist_roi=ROI_FLAT` —
+Otsu on a region containing **only background**. Otsu dutifully split background
+noise into two classes and manufactured **615 spurious "edges" out of nothing**,
+scoring ISO = **0.0139**. That is an instrument error, not a finding. It is the
+same failure class as §2.4's registered-rule deviation: a two-class rule applied
+where there are not two classes.
+
+Replaced with the **shipped, validated** placebos:
+
+| placebo | arm U | arm A | shipped (§2.3, crop scale) |
+|---|---|---|---|
+| **C3** disc planted in `ROI_FLAT` | 0.00741 [0.00199, 0.01346] | 0.02181 [0.00822, 0.06544] | 0.00622 |
+| **C1** subject mask shifted (+512,+512) | 0.02514 | 0.01834 | 0.01269 |
+
+**C3 passes and reproduces.** Arm U's 0.00741 agrees with the shipped 0.00622
+within overlapping CIs, on a different merge implementation and at a different
+image scale. Arm A's point estimate is higher but its CI spans an order of
+magnitude at n = 631; it is not evidence of anything.
+
+**C1 is invalid at full-frame scale, and I measured why rather than asserting
+it.** The shipped C1 shifts a *crop-scale* leg mask into empty background. At
+full-frame scale the mask is the whole bee — 2,878,468 px — and a (512, 512)
+shift leaves **64.9%** of it still lying on the real subject. Full-frame C1 is
+therefore measuring real edges, which is exactly why it reads high. **No
+conclusion in §15 rests on it.** The valid placebo at this scale is C3.
+
+### 15.7 Candidate facts
+
+| id | claim | label |
+|---|---|---|
+| P20 | **The cutout halo is not misregistration, and the negative is quantitative.** Correcting registration on `bee-3-cpl` (`STREHL_ALIGN` 0→1, gate 0) moves the halo metric from 0.06805 [0.05928, 0.08059] to 0.06356 [0.05672, 0.07099], a **6.6% removal** with overlapping CIs, where the drift hypothesis predicts **91.7%**. Metricates fact 1236, which asserts the same conclusion with no number. | MEASURED |
+| P21 | **Misregistration is nonetheless a sufficient halo mechanism.** On a single-depth, no-occlusion plant, 30 px p-p of planted drift yields ISO 0.0645 — 95% of the real bee-leg halo — and 60 px p-p yields 0.1613. A halo is not evidence of occlusion. | MEASURED |
+| P22 | **`ISO(drift)` has a threshold near 16–24 px p-p, not a linear ramp.** Below 12 px p-p the metric is flat (0.0124822 at 0 px vs 0.0124776 at 12 px) although 72.8% of pixels change their elected frame; the elected-frame changes fall outside the metric's band, differing at 0.05% of sampled profile points. Drift manufactures a halo only once edge displacement is comparable to the defocus blur scale. | MEASURED |
+| P23 | **`bee-3-cpl` drifts 63.04 px p-p (mask-centroid track) / 70.97 px p-p (warp sidecar) inside `ROI_LEG`** — two independent instruments agreeing to 12.6%, at a radius of 984 px against 186.71 px p-p at the worst corner. | MEASURED |
+| P24 | **A Catmull-Rom gather that destroys ~49% of gradient energy (`M86.` P23) moves the halo metric by +0.6%.** The halo lives at `d*` = 16 px, far below Nyquist. This independently eliminates sharpening overshoot, resampling ringing and demosaic artifacts as causes. | MEASURED |
+| P25 | **`M63.`'s single-depth side lobe is present but small**: on a zero-drift, no-occlusion plant it contributes +0.0045 over a truth floor of 0.00799, ~7% of the real halo, while causing 72.8% of pixels to elect a defocused frame. | MEASURED |
+| P26 | **A warp sidecar read in the wrong coordinate origin is silently wrong by 2.2×** (in-ROI drift 157 px vs 71 px). `strehl align` prints its own worst-corner drift; reproducing that number to 0.118 px identifies the convention as centred. Any consumer of `warpmap.txt` should assert against it. | MEASURED |
+
+### 15.8 What would make this wrong
+
+- **If the aligner's in-ROI residual is much larger than 12.6 px p-p** — e.g. if
+  the solve is locally bad at `ROI_LEG` specifically — the residual could sit
+  above the ladder's threshold and the prediction would collapse. Testing this
+  needs per-frame residuals the sidecar does not carry. The `20.1%` refusal rate
+  `M86.` reports on this stack makes it worth checking before P20 is promoted.
+- **If the real halo is a mixture**, drift and occlusion could each contribute
+  and alignment would remove only the drift part. The 6.6% removal *is* that
+  part, and it bounds drift's contribution at ~7% — consistent with, and
+  independent of, the 7% that §15.5 attributes to the side lobe.
+- **If the plant's threshold does not transfer**, because a real leg edge is
+  thin, curved and lower-contrast, the transfer point is the *threshold
+  location*, not the halo size. A real threshold below ~6 px p-p would restore
+  the drift explanation. §15.3's over-expression argues the plant is if anything
+  too sensitive, which pushes the threshold the other way.
+
+### 15.9 Reproduction
+
+```powershell
+$env:PYTHONIOENCODING='utf-8'
+cd experiments\M87-occlusion
+$env:CARGO_TARGET_DIR='C:\dev\strehl-target-m87'   # never the shared tree
+
+# arms U and A (gate 0, one frame per pixel, default byte-frozen output)
+$env:STREHL_ALIGN='0'; strehl.exe stack "D:\personal\macro\bee-3-cpl" --gate 0 --out cache\align\U-unaligned.tif
+$env:STREHL_ALIGN='1'; strehl.exe stack "D:\personal\macro\bee-3-cpl" --gate 0 --out cache\align\A-aligned.tif
+strehl.exe align "D:\personal\macro\bee-3-cpl" --out cache\align\bee3-warpmap.txt
+
+python src\35-registration.py          # R1 + validity gate V
+python src\36-registration-controls.py # C-resample, C1, C3, owner crops
+python src\37-plant-drift.py           # R2 sufficiency + R3 side-lobe
+python src\38-drift-ladder.py          # ISO(drift), the deciding instrument
+python src\39-warpmap-drift.py         # in-ROI drift and residual
+```
+
+Owner crops: `20-REGISTRATION-unaligned.png`, `21-REGISTRATION-aligned.png`,
+`22-REGISTRATION-side-by-side.png` (content-matched, same display levels), and
+`23-PLANT-*`, `24-PLANT-truth-vs-merge.png` for the plant.
+

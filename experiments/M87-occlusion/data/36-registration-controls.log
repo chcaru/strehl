@@ -1,0 +1,19 @@
+=== C-resample: is the 8.1% just the Catmull-Rom lowpass? ===
+  identity-warp max |err| = 0  (Catmull-Rom must reproduce samples exactly at integer positions)
+  U  unaligned, unresampled          ISO=0.06805 CI[0.05928,0.08059] n=6348 d*=16
+  Uw unaligned, resampled once       ISO=0.06844 CI[0.05898,0.08078] n=6605 d*=16
+  A  aligned,   resampled once       ISO=0.06356 CI[0.05672,0.07099] n=6197 d*=16
+
+  resampling alone   : +0.6% of ISO_U
+  registration alone : -7.2% of ISO_U
+  total U -> A       : -6.6% of ISO_U
+
+=== registered placebos (the SHIPPED C1/C3, not step 35's) ===
+  C1 U mask shifted to bg            ISO=0.02514 CI[0.02054,0.03055] n=5089 d*=21
+  C3 U disc in ROI_FLAT              ISO=0.00741 CI[0.00199,0.01346] n=631 d*=24
+  C1 A mask shifted to bg            ISO=0.01834 CI[0.01396,0.02328] n=5178 d*=22
+  C3 A disc in ROI_FLAT              ISO=0.02181 CI[0.00822,0.06544] n=631 d*=28
+
+=== owner crops ===
+  wrote 3 crops to C:\dev\strehl-out\M87-before-after
+wrote data/36-registration-controls.json

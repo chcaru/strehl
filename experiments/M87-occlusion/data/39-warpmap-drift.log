@@ -1,0 +1,29 @@
+warpmap: 299 frames, plane 3516x2344, held-out 13.5776 px
+
+which coordinate origin does the sidecar use?
+  convention raw     : worst-corner drift  351.325 px vs tool's 186.702  (miss 164.623)
+  convention centred : worst-corner drift  186.584 px vs tool's 186.702  (miss  0.118)
+  -> adopting the centred convention
+
+ROI_LEG centre (x=850, y=1550), radius 984 px from plane centre
+  aligner's in-ROI drift  : 70.97 px p-p
+  step-35 mask centroid   : 63.04 px p-p  (independent instrument)
+  ratio                   : 1.126
+
+worst corner, radius 2113 px
+  aligner's corner drift  : 186.71 px p-p
+  radius ratio ROI/corner : 0.4655
+
+residual after alignment, scaled to ROI radius:
+  held-out corner error   : 13.58 px
+  -> at ROI_LEG radius    : 6.32 px (~12.6 px p-p if the error is a full excursion)
+
+drift-ladder prediction (step 38):
+  ISO at 60 px p-p  = 0.16133  (real in-ROI drift is 71 px p-p)
+  ISO at <=16 px p-p= 0.01332  (post-alignment residual)
+  predicted removal = 91.7%
+  MEASURED removal  = 6.6%   (step 36, U -> A)
+
+  VERDICT: the drift hypothesis predicts 92% removal and 6.6% was measured.
+
+wrote data/39-warpmap-drift.json

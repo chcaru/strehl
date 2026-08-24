@@ -1,0 +1,23 @@
+{
+  "n_frames": 299,
+  "plane": [
+    3516,
+    2344
+  ],
+  "roi_centre": [
+    850.0,
+    1550.0
+  ],
+  "roi_radius": 983.5385096680252,
+  "corner_radius": 2112.853047421898,
+  "drift_pp_roi_warpmap": 70.97482944715266,
+  "drift_pp_roi_centroid": 63.04,
+  "ratio": 1.12586975645864,
+  "drift_pp_corner": 186.71409514157983,
+  "heldout_corner_px": 13.5776,
+  "resid_roi_px": 6.32040760485602,
+  "iso_before": 0.16133493802625676,
+  "iso_after": 0.013317615144520623,
+  "predicted_removal_pct": 91.74536197339151,
+  "measured_removal_pct": 6.6
+}

@@ -1,0 +1,40 @@
+  drift   0 px p-p               ISO=0.01248 CI[0.01199,0.01291] n=648 d*=22
+  drift   1 px p-p               ISO=0.01248 CI[0.01199,0.01291] n=648 d*=22
+  drift   2 px p-p               ISO=0.01248 CI[0.01199,0.01291] n=648 d*=22
+  drift   3 px p-p               ISO=0.01248 CI[0.01199,0.01291] n=648 d*=22
+  drift   4 px p-p               ISO=0.01248 CI[0.01199,0.01291] n=648 d*=22
+  drift   6 px p-p               ISO=0.01248 CI[0.01199,0.01291] n=648 d*=22
+  drift   8 px p-p               ISO=0.01248 CI[0.01199,0.01291] n=648 d*=22
+  drift  12 px p-p               ISO=0.01248 CI[0.01198,0.01291] n=648 d*=22
+  drift  16 px p-p               ISO=0.01332 CI[0.01276,0.01402] n=648 d*=22
+  drift  24 px p-p               ISO=0.03592 CI[0.03219,0.03899] n=648 d*=30
+  drift  30 px p-p               ISO=0.06448 CI[0.05733,0.07066] n=648 d*=14
+  drift  45 px p-p               ISO=0.14645 CI[0.14022,0.18950] n=648 d*=5
+  drift  60 px p-p               ISO=0.16133 CI[0.15782,0.17131] n=648 d*=4
+  drift  90 px p-p               ISO=0.04123 CI[0.03693,0.08950] n=648 d*=3
+
+  pp   ISO       fraction of the 90 px value   d*
+    0  0.01248    0.303                   22
+    1  0.01248    0.303                   22
+    2  0.01248    0.303                   22
+    3  0.01248    0.303                   22
+    4  0.01248    0.303                   22
+    6  0.01248    0.303                   22
+    8  0.01248    0.303                   22
+   12  0.01248    0.303                   22
+   16  0.01332    0.323                   22
+   24  0.03592    0.871                   30
+   30  0.06448    1.564                   14
+   45  0.14645    3.552                   5
+   60  0.16133    3.913                   4
+   90  0.04123    1.000                   3
+
+  ISO(0) = 0.01248   ISO(90) = 0.04123
+  drift reaching half the full response: 45 px p-p
+
+  ISO at ~63 px p-p (real unaligned in-ROI drift) = 0.16133
+  ISO at ~12 px p-p (M86 E* = 11.56 px residual)   = 0.01248
+  predicted retention if the halo were pure drift  = 0.077 (+92% removal)
+  R1 MEASURED removal on the real stack            = 6.6%
+  ladder shape: STEEP -- drift predicts a large removal that R1 did not see
+wrote data/38-drift-ladder.json

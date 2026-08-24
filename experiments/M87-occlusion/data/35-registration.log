@@ -1,0 +1,34 @@
+=== V: validity gate -- is there drift inside the ROI at all? ===
+    frame   0: centroid=(  466.61,  851.67)  area=   750709
+    frame  74: centroid=(  428.27,  874.44)  area=   588420
+    frame 149: centroid=(  421.74,  892.50)  area=   496757
+    frame 224: centroid=(  420.29,  894.43)  area=   515650
+    frame 298: centroid=(  434.78,  891.44)  area=   586418
+    ROI centroid excursion: dy=46.32 dx=42.76 -> 63.04 px
+    subject-area scale range: 1.2293x
+  V PASS: 63.04 px p-p against a registered 3 px bar
+
+=== load the two merges ===
+  U (2344, 3516)  mean=10454.7
+  A (2344, 3516)  mean=9709.8
+  subject centroid U=(1184.8,1844.7) area=3497912
+  subject centroid A=(1165.9,1820.2) area=3837279
+  implied A/U scale = 1.0474  (FOV shrink -> content magnified)
+  ROI_LEG  U=(1200, 1900, 300, 1400)  ->  A=(1182, 1915, 202, 1354)
+
+=== R1: the halo metric, both arms ===
+  U unaligned (ALIGN=0)        ISO=0.07227 CI[0.06284,0.08399]  n=6600  d*=16  tau=8289
+  A aligned   (ALIGN=1)        ISO=0.06642 CI[0.05766,0.07403]  n=6380  d*=18  tau=8379
+
+=== placebo: deferred to step 36 ===
+  The placebo that lived here was BROKEN and is disclosed in the
+  report at 15.6: it ran foreground_mask(img, hist_roi=ROI_FLAT),
+  i.e. Otsu on a region containing only background, which split
+  background noise into two classes and manufactured 615 spurious
+  edges scoring ISO=0.0139 out of nothing. The registered placebos
+  are the shipped C1/C3 and they run in 36-registration-controls.py.
+
+  ISO_A/ISO_U = 0.9191  (+8.1% change)  CIs disjoint=False
+  VERDICT: R1-C  registration is NOT the cause
+
+wrote data/35-registration.json

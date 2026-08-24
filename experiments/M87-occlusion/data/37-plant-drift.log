@@ -1,0 +1,23 @@
+=== plant sufficiency checks (rule: show it CAN express the effect) ===
+  sigma_k max          = 16.80 px  (D_ISO reads (3, 40))
+  drift dx range       = -15 .. 15 px, 31 distinct integer positions
+
+=== arms ===
+  R3-drift0                      ISO=0.01248 CI[0.01199,0.01291] n=648 d*=22
+  R3-drift0 TRUTH                ISO=0.00799 CI[0.00776,0.00826] n=648 d*=22
+                                   excess over truth = +0.00449
+  R2-drift30pp                   ISO=0.06448 CI[0.05733,0.07066] n=648 d*=14
+  R2-drift30pp TRUTH             ISO=0.00799 CI[0.00776,0.00826] n=648 d*=22
+                                   excess over truth = +0.05649
+  R2b-drift60pp                  ISO=0.16133 CI[0.15782,0.17131] n=648 d*=4
+  R2b-drift60pp TRUTH            ISO=0.00799 CI[0.00776,0.00826] n=648 d*=22
+                                   excess over truth = +0.15334
+
+  R3 zero-drift halo   : 0.01248 (truth floor 0.00799)
+  R2 30 px p-p         : 0.06448  (+416.6% vs R3)
+  R2b 60 px p-p        : 0.16133  (+1192.5% vs R3)
+  real bee-3 leg halo  : 0.06805
+  zero-drift plant reaches 18% of the real halo with NO occlusion and NO misregistration
+
+  wrote plant crops to C:\dev\strehl-out\M87-before-after
+wrote data/37-plant-drift.json

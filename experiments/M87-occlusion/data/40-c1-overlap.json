@@ -1,0 +1,10 @@
+{
+  "c1_full_frame_overlap_frac": 0.649,
+  "c1_shifted_mask_px": 2878468,
+  "c1_overlap_px": 1868517,
+  "shift_offset": [
+    512,
+    512
+  ],
+  "note": "full-frame C1 is NOT a background placebo: 64.9% of the shifted mask lands on the real subject. Use the crop-scale C1 (shipped, data/10-iso.json) instead."
+}
