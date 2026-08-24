@@ -1,0 +1,143 @@
+{
+  "true_code": 1,
+  "seeds": [
+    0,
+    7,
+    1
+  ],
+  "shells": {
+    "pwsh (7.x)": {
+      "version": "7.6.5",
+      "rows": [
+        {
+          "arm": "no pipeline (control)",
+          "cells": {
+            "0": "1",
+            "7": "1",
+            "1": "1"
+          },
+          "statements_completed": [
+            true,
+            true,
+            true
+          ],
+          "reading": "sets it correctly"
+        },
+        {
+          "arm": "| -First 3 of 10",
+          "cells": {
+            "0": "0",
+            "7": "7",
+            "1": "1"
+          },
+          "statements_completed": [
+            true,
+            true,
+            true
+          ],
+          "reading": "NEVER SETS IT (echoes seed)  <== FALSE GREEN under seed 0"
+        },
+        {
+          "arm": "| -Last 3",
+          "cells": {
+            "0": "1",
+            "7": "1",
+            "1": "1"
+          },
+          "statements_completed": [
+            true,
+            true,
+            true
+          ],
+          "reading": "sets it correctly"
+        },
+        {
+          "arm": "SLOW | -First 3 of 10",
+          "cells": {
+            "0": "0",
+            "7": "7",
+            "1": "1"
+          },
+          "statements_completed": [
+            true,
+            true,
+            true
+          ],
+          "reading": "NEVER SETS IT (echoes seed)  <== FALSE GREEN under seed 0"
+        }
+      ]
+    },
+    "powershell (5.1)": {
+      "version": "5.1.26100.9168",
+      "rows": [
+        {
+          "arm": "no pipeline (control)",
+          "cells": {
+            "0": "1",
+            "7": "1",
+            "1": "1"
+          },
+          "statements_completed": [
+            true,
+            true,
+            true
+          ],
+          "reading": "sets it correctly"
+        },
+        {
+          "arm": "| -First 3 of 10",
+          "cells": {
+            "0": "1",
+            "7": "1",
+            "1": "1"
+          },
+          "statements_completed": [
+            true,
+            true,
+            true
+          ],
+          "reading": "sets it correctly"
+        },
+        {
+          "arm": "| -Last 3",
+          "cells": {
+            "0": "1",
+            "7": "1",
+            "1": "1"
+          },
+          "statements_completed": [
+            true,
+            true,
+            true
+          ],
+          "reading": "sets it correctly"
+        },
+        {
+          "arm": "SLOW | -First 3 of 10",
+          "cells": {
+            "0": "-1",
+            "7": "-1",
+            "1": "-1"
+          },
+          "statements_completed": [
+            true,
+            true,
+            true
+          ],
+          "reading": "mixed/corrupted"
+        }
+      ]
+    }
+  },
+  "verdict": "FALSE-GREEN-CONFIRMED",
+  "false_green": [
+    [
+      "pwsh (7.x)",
+      "| -First 3 of 10"
+    ],
+    [
+      "pwsh (7.x)",
+      "SLOW | -First 3 of 10"
+    ]
+  ]
+}

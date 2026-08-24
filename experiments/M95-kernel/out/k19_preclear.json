@@ -1,0 +1,165 @@
+{
+  "seed": 7,
+  "shells": {
+    "pwsh (7.x)": {
+      "version": "7.6.5",
+      "arm0_unset": true,
+      "arm0_code": "",
+      "rows": [
+        {
+          "arm": "no pipeline",
+          "true_code": 1,
+          "k11_verdict": "correct",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 0.36,
+          "verdict": "set correctly"
+        },
+        {
+          "arm": "| Select-String",
+          "true_code": 1,
+          "k11_verdict": "correct",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 0.34,
+          "verdict": "set correctly"
+        },
+        {
+          "arm": "| -First 3 of 10",
+          "true_code": 1,
+          "k11_verdict": "SPLIT",
+          "code": "7",
+          "statement_completed": true,
+          "seconds": 0.34,
+          "verdict": "STALE - never set"
+        },
+        {
+          "arm": "| -First 99",
+          "true_code": 1,
+          "k11_verdict": "correct",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 0.33,
+          "verdict": "set correctly"
+        },
+        {
+          "arm": "| -Last 3",
+          "true_code": 1,
+          "k11_verdict": "correct",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 0.32,
+          "verdict": "set correctly"
+        },
+        {
+          "arm": "| Out-String",
+          "true_code": 1,
+          "k11_verdict": "untested",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 0.33,
+          "verdict": "set correctly"
+        },
+        {
+          "arm": "SLOW | -First 3 of 10",
+          "true_code": 1,
+          "k11_verdict": "wrong",
+          "code": "7",
+          "statement_completed": true,
+          "seconds": 2.13,
+          "verdict": "STALE - never set"
+        },
+        {
+          "arm": "SLOW | -Last 3",
+          "true_code": 1,
+          "k11_verdict": "untested",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 6.38,
+          "verdict": "set correctly"
+        }
+      ]
+    },
+    "powershell (5.1)": {
+      "version": "5.1.26100.9168",
+      "arm0_unset": true,
+      "arm0_code": "",
+      "rows": [
+        {
+          "arm": "no pipeline",
+          "true_code": 1,
+          "k11_verdict": "correct",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 0.22,
+          "verdict": "set correctly"
+        },
+        {
+          "arm": "| Select-String",
+          "true_code": 1,
+          "k11_verdict": "correct",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 0.2,
+          "verdict": "set correctly"
+        },
+        {
+          "arm": "| -First 3 of 10",
+          "true_code": 1,
+          "k11_verdict": "SPLIT",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 0.19,
+          "verdict": "set correctly"
+        },
+        {
+          "arm": "| -First 99",
+          "true_code": 1,
+          "k11_verdict": "correct",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 0.19,
+          "verdict": "set correctly"
+        },
+        {
+          "arm": "| -Last 3",
+          "true_code": 1,
+          "k11_verdict": "correct",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 0.19,
+          "verdict": "set correctly"
+        },
+        {
+          "arm": "| Out-String",
+          "true_code": 1,
+          "k11_verdict": "untested",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 0.2,
+          "verdict": "set correctly"
+        },
+        {
+          "arm": "SLOW | -First 3 of 10",
+          "true_code": 1,
+          "k11_verdict": "wrong",
+          "code": "-1",
+          "statement_completed": true,
+          "seconds": 1.39,
+          "verdict": "wrong (-1)"
+        },
+        {
+          "arm": "SLOW | -Last 3",
+          "true_code": 1,
+          "k11_verdict": "untested",
+          "code": "1",
+          "statement_completed": true,
+          "seconds": 6.19,
+          "verdict": "set correctly"
+        }
+      ]
+    }
+  },
+  "verdict": "STAND",
+  "void_arms": []
+}

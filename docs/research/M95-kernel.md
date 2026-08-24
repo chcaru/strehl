@@ -774,22 +774,39 @@ truncation actually happened — a truncated arm must finish in ~1–2 s against
 | powershell 5.1 | slow exit0, `-First 3 of 10` | 0 | **-1** | 1.4 | yes |
 | powershell 5.1 | fast exit1, `-First 3 of 10` | 1 | 1 | 0.1 | n/a |
 
-**Verdict: NO-FALSE-GREEN.** Across 20 arms on two shells, **no arm read 0 for
-a probe whose true exit code was 1.** A failing command was never read as
-success. The remedy — capture first, then filter — is right, and I have adopted
-it; the stated mechanism is not what these shells do. What they actually do:
+**Verdict as originally recorded: NO-FALSE-GREEN.** Across 20 arms on two
+shells, no arm read 0 for a probe whose true exit code was 1.
+
+> **RETRACTED 2026-08-24 15:5x — THIS VERDICT IS REFUTED, AND THE ORCHESTRATOR'S
+> ORIGINAL REPORT WAS RIGHT.** K11 could not have produced a false green: every
+> arm ran in a fresh `-Command` session, where the value `-First` leaves behind
+> is `$null`, never 0. The instrument was blind to the disturbance it was aimed
+> at, and I read its silence as evidence of absence. Measured refutation and
+> mechanism in **§15.3**; the false green reproduces on pwsh 7.6.5 the moment
+> the preceding command exits 0, which is the ordinary case in every script.
+> Items 2 and 3 below are wrong and are struck in place rather than deleted.
+
+The remedy — capture first, then filter — is right, and I have adopted it.
+What the shells actually do:
 
 1. **Windows PowerShell 5.1 returns `-1`** when truncation kills a *still
    running* process — wrong for both a true 1 and a true 0. It is wrong in both
    directions, but it is **nonzero**, so a gate written `if ($code -ne 0)
    { throw }` **fails closed**. That is a false *red*, the safe direction.
-2. **pwsh 7.6.5 emitted no exit code at all** in the truncated arms: the
+2. ~~**pwsh 7.6.5 emitted no exit code at all** in the truncated arms: the
    pipeline stop aborted the remaining statements in the command, so the
-   `Write-Output $LASTEXITCODE` after it never ran. **This is the hazard worth
-   broadcasting** — not a gate that reads the wrong value, but a gate that
-   **never executes**, which is how a check gets silently skipped.
-3. **Truncation only bites a process that is still running.** Every fast-probe
-   arm is correct on both shells, including the truncating one.
+   `Write-Output $LASTEXITCODE` after it never ran.~~ **STRUCK — the mechanism
+   is wrong.** §15.3 measures the statement *completing* (`DONE=True`) on every
+   pwsh arm. Nothing was aborted. `-First` simply **never assigns
+   `$LASTEXITCODE`**, so K11's fresh session printed an empty `$null`, which
+   K11's digit parser recorded as "none emitted".
+3. ~~**Truncation only bites a process that is still running.** Every fast-probe
+   arm is correct on both shells, including the truncating one.~~ **STRUCK —
+   false on pwsh.** K11's own artifact contains the disconfirming row
+   (`fast exit1 | -First 3 of 10` → `None`, `wrong (None)`,
+   `out/k11_exitcode.txt` line 9); the §15.1 table above shows 7 of the 20 arms
+   and that row is not among them. **I generalised from the excerpt I had
+   pasted rather than from the artifact I had generated.**
 
 The half of the report that reproduces exactly is the one about **output**:
 the `-First 3` arms saw 3 of 10 lines, so truncation does hide the diagnosis.
@@ -838,6 +855,78 @@ still writes `<stackdir>/warpmap.txt`. The source is fixed; the binaries in
 seven `target-*` directories are not necessarily rebuilt. That, rather than
 current `main`, is the remaining route by which a file could reappear in the
 capture library.
+
+### 15.3 The retraction, measured: `-First` never assigns, and my harness was blind by construction
+
+Instruments: `experiments/M95-kernel/src/k19_preclear.py` and `k19b_seeds.py`,
+raw output in `out/k19_preclear.json` and `out/k19b_seeds.json`. Bars in each
+docstring, written before the run. Prompted by the orchestrator's 15:51
+correction, which added the confound K11 did not control: `$LASTEXITCODE`
+retains the previous command's value, so an un-pre-cleared arm can look correct.
+
+**K11's defence, and why it only half works.** K11 ran each arm in a fresh
+`-Command` process, so there was no previous command to inherit from. That is
+at least as strong as a pre-clear *provided* a fresh session starts unset, so
+K19 measured it rather than assuming it: on both hosts, a fresh session prints
+`CODE=` empty with `DONE=True`. Isolation holds. K19 then re-ran every arm with
+`$LASTEXITCODE` **seeded to 7**, which discriminates four outcomes a pre-clear
+to 0 cannot: *set correctly* (reads 1), *never set* (reads 7), *false green*
+(reads 0), *statement skipped* (nothing printed).
+
+**K19 result — K11's five "safe" arms per host all genuinely set the code**
+(`-First 99`, `-Last 3`, `Select-String`, `Out-String`, no-pipeline all read 1
+against a seed of 7). **VERDICT-STAND.** Those claims were established by
+isolation, not by luck. But the same run showed the two `-First` arms on pwsh
+reading back **7** with `DONE=True` — the statement ran, and the assignment
+never happened.
+
+**K19b — the disturbance K11 was blind to.** One arm, three seeds, probe's true
+exit code always 1. If the cell echoes its seed, `-First` never set the code.
+
+| shell | arm | seed 0 | seed 7 | seed 1 | reading |
+| --- | --- | --- | --- | --- | --- |
+| pwsh 7.6.5 | no pipeline (control) | 1 | 1 | 1 | sets it correctly |
+| pwsh 7.6.5 | `\| -First 3 of 10` | **0** | 7 | 1 | **never sets it — echoes seed** |
+| pwsh 7.6.5 | `\| -Last 3` | 1 | 1 | 1 | sets it correctly |
+| pwsh 7.6.5 | slow `\| -First 3 of 10` | **0** | 7 | 1 | **never sets it — echoes seed** |
+| powershell 5.1 | no pipeline (control) | 1 | 1 | 1 | sets it correctly |
+| powershell 5.1 | `\| -First 3 of 10` | 1 | 1 | 1 | sets it correctly |
+| powershell 5.1 | `\| -Last 3` | 1 | 1 | 1 | sets it correctly |
+| powershell 5.1 | slow `\| -First 3 of 10` | **-1** | **-1** | **-1** | corrupted, but nonzero |
+
+**VERDICT: FALSE-GREEN-CONFIRMED.** On pwsh 7.6.5 a command whose true exit
+code is 1 reads **0** whenever the preceding command succeeded — which is the
+ordinary case in every script. §15.1's `NO-FALSE-GREEN` is refuted, and the
+orchestrator's original report was correct on this shell.
+
+**The two hosts fail by different mechanisms, and each explains one side of an
+argument that has been running all night:**
+
+- **pwsh 7.6.5 — not a race and not a corruption.** `-First` leaves
+  `$LASTEXITCODE` exactly as it found it. The *fast* probe, already exited in
+  0.3 s, loses the code just as the slow one does, so timing is irrelevant; what
+  matters is whether the short-circuit fires at all, which is the quota
+  condition `N ≤ objects` (`-First 99` over 10 lines sets the code correctly).
+  **The hazard is inheritance, and it is a false green.**
+- **Windows PowerShell 5.1.26100.9168 — a genuine race.** The fast arm is
+  correct under all three seeds; only truncation of a *still-running* process
+  corrupts, and it writes **-1** regardless of seed. **That is a false red and
+  a `-ne 0` gate fails closed.**
+
+Both readings in circulation were right about one host and wrong about the
+other. The operative rule is unchanged and now rests on three independent
+routes: **never read `$LASTEXITCODE` after a pipeline containing `-First`.**
+`-Last` and `Out-String` are measured safe here on both hosts, under seeds
+chosen to expose staleness.
+
+**What this cost me, stated plainly.** I told the orchestrator their mechanism
+was wrong. It was right, and my refutation came from an instrument that could
+not have returned the other answer. K11 satisfied the letter of the power
+control — it had a positive control for *truncation* (wall-clock 2.1 s against
+6.3 s) — but no control at all for the thing it concluded about, the inherited
+value. **A positive control for the stimulus is not a positive control for the
+conclusion.** The seeded design is the cheap fix and should be standard in any
+future exit-code work here.
 
 ---
 
