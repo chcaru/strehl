@@ -1,0 +1,33 @@
+python=C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe
+STACK=coffee-bean
+started_utc=2026-08-24T05:50:54.6736235Z
+coffee-bean: FLAT FIRST
+coffee-bean region (32, 288, 512, 512): 1/105 (0.4s)
+coffee-bean region (32, 288, 512, 512): 10/105 (4.6s)
+coffee-bean region (32, 288, 512, 512): 20/105 (9.9s)
+coffee-bean region (32, 288, 512, 512): 30/105 (15.1s)
+coffee-bean region (32, 288, 512, 512): 40/105 (20.2s)
+coffee-bean region (32, 288, 512, 512): 50/105 (25.4s)
+coffee-bean region (32, 288, 512, 512): 60/105 (30.5s)
+coffee-bean region (32, 288, 512, 512): 70/105 (35.7s)
+coffee-bean region (32, 288, 512, 512): 80/105 (40.8s)
+coffee-bean region (32, 288, 512, 512): 90/105 (46.3s)
+coffee-bean region (32, 288, 512, 512): 100/105 (51.5s)
+coffee-bean: DETAIL
+coffee-bean region (1184, 288, 512, 512): 1/105 (0.5s)
+coffee-bean region (1184, 288, 512, 512): 10/105 (4.8s)
+coffee-bean region (1184, 288, 512, 512): 20/105 (9.7s)
+coffee-bean region (1184, 288, 512, 512): 30/105 (14.4s)
+coffee-bean region (1184, 288, 512, 512): 40/105 (19.3s)
+coffee-bean region (1184, 288, 512, 512): 50/105 (24.1s)
+coffee-bean region (1184, 288, 512, 512): 60/105 (29.2s)
+coffee-bean region (1184, 288, 512, 512): 70/105 (34.1s)
+coffee-bean region (1184, 288, 512, 512): 80/105 (39.2s)
+coffee-bean region (1184, 288, 512, 512): 90/105 (44.1s)
+coffee-bean region (1184, 288, 512, 512): 100/105 (49.1s)
+coffee-bean S=0.90: dsig=-0.012076262350661148 corrected_se=0.008363986088618226 raw_rms=1069.239301
+coffee-bean S=0.70: dsig=-0.014998796097520499 corrected_se=0.0428451487200032 raw_rms=1068.019819
+coffee-bean S=0.50: dsig=0.041444819823461425 corrected_se=0.04583221400318729 raw_rms=1048.627996
+coffee-bean: flat contamination max=1.096836 pass=True pins(flat/detail)=0/1
+exit=0
+finished_utc=2026-08-24T05:52:43.8299356Z

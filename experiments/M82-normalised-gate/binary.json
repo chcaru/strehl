@@ -1,0 +1,9 @@
+{
+  "bytes": 8278016,
+  "commit": "79468b971bbf3e7657c86def2ea1b0ddbef78c99",
+  "rustflags": "--cfg m82_private_build",
+  "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)",
+  "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+  "sha256": "2f1ea8904240acca98937f4755354302b53a061c8791d677b721137e45c58a74",
+  "binary": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M82-normalised-gate\\target-m82\\release\\strehl.exe"
+}

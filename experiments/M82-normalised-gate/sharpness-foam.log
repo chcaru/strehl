@@ -1,0 +1,33 @@
+python=C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe
+STACK=foam
+started_utc=2026-08-24T05:52:43.8335287Z
+foam: FLAT FIRST
+foam region (1184, 160, 512, 512): 1/100 (0.5s)
+foam region (1184, 160, 512, 512): 10/100 (4.9s)
+foam region (1184, 160, 512, 512): 20/100 (10.2s)
+foam region (1184, 160, 512, 512): 30/100 (15.6s)
+foam region (1184, 160, 512, 512): 40/100 (21.0s)
+foam region (1184, 160, 512, 512): 50/100 (26.6s)
+foam region (1184, 160, 512, 512): 60/100 (32.1s)
+foam region (1184, 160, 512, 512): 70/100 (37.5s)
+foam region (1184, 160, 512, 512): 80/100 (42.9s)
+foam region (1184, 160, 512, 512): 90/100 (48.4s)
+foam region (1184, 160, 512, 512): 100/100 (53.9s)
+foam: DETAIL
+foam region (32, 1800, 512, 512): 1/100 (0.5s)
+foam region (32, 1800, 512, 512): 10/100 (5.3s)
+foam region (32, 1800, 512, 512): 20/100 (10.5s)
+foam region (32, 1800, 512, 512): 30/100 (15.7s)
+foam region (32, 1800, 512, 512): 40/100 (20.8s)
+foam region (32, 1800, 512, 512): 50/100 (26.0s)
+foam region (32, 1800, 512, 512): 60/100 (30.7s)
+foam region (32, 1800, 512, 512): 70/100 (35.9s)
+foam region (32, 1800, 512, 512): 80/100 (41.0s)
+foam region (32, 1800, 512, 512): 90/100 (46.3s)
+foam region (32, 1800, 512, 512): 100/100 (51.3s)
+foam S=0.90: dsig=None corrected_se=None raw_rms=1195.388716
+foam S=0.70: dsig=None corrected_se=None raw_rms=1130.301613
+foam S=0.50: dsig=None corrected_se=None raw_rms=1000.479844
+foam: flat contamination max=15.876902 pass=False pins(flat/detail)=7874/22623
+exit=0
+finished_utc=2026-08-24T05:54:32.6833493Z

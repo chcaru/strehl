@@ -1,0 +1,37 @@
+{
+  "entries": [
+    {
+      "stack": "wrapped-text-2",
+      "request": "0.70",
+      "iteration": 1,
+      "gate": 11.022407150232759,
+      "bracket": [
+        {
+          "gate": 10.676260075764358,
+          "predicted_sigma_gain": 0.707
+        },
+        {
+          "gate": 16.0,
+          "predicted_sigma_gain": 0.6232
+        }
+      ]
+    },
+    {
+      "stack": "109MSDCF",
+      "request": "0.70",
+      "iteration": 1,
+      "gate": 1.5747571541998866,
+      "bracket": [
+        {
+          "gate": 1.5237777670809494,
+          "predicted_sigma_gain": 0.7079
+        },
+        {
+          "gate": 2.0,
+          "predicted_sigma_gain": 0.6452
+        }
+      ]
+    }
+  ],
+  "registered_update_limit": 2
+}

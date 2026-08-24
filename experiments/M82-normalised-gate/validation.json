@@ -1,0 +1,16 @@
+{
+  "stack": "109MSDCF",
+  "gate": 2.0,
+  "python_mean_n_eff": 2.8911098657539513,
+  "rust_mean_n_eff": 2.891,
+  "relative_error": 3.8002682100080065e-05,
+  "bar": 0.01,
+  "pass": true,
+  "frames": 22,
+  "black": 512.0,
+  "plane": [
+    2344,
+    3514
+  ],
+  "elapsed_seconds": 36.5124409198761
+}

@@ -1,0 +1,33 @@
+python=C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe
+STACK=wrapped-text-1
+started_utc=2026-08-24T05:46:16.5402008Z
+wrapped-text-1: FLAT FIRST
+wrapped-text-1 region (32, 1184, 512, 512): 1/130 (0.4s)
+wrapped-text-1 region (32, 1184, 512, 512): 13/130 (5.7s)
+wrapped-text-1 region (32, 1184, 512, 512): 26/130 (12.6s)
+wrapped-text-1 region (32, 1184, 512, 512): 39/130 (19.4s)
+wrapped-text-1 region (32, 1184, 512, 512): 52/130 (26.1s)
+wrapped-text-1 region (32, 1184, 512, 512): 65/130 (32.8s)
+wrapped-text-1 region (32, 1184, 512, 512): 78/130 (39.7s)
+wrapped-text-1 region (32, 1184, 512, 512): 91/130 (46.4s)
+wrapped-text-1 region (32, 1184, 512, 512): 104/130 (53.2s)
+wrapped-text-1 region (32, 1184, 512, 512): 117/130 (59.8s)
+wrapped-text-1 region (32, 1184, 512, 512): 130/130 (66.3s)
+wrapped-text-1: DETAIL
+wrapped-text-1 region (2080, 544, 512, 512): 1/130 (0.5s)
+wrapped-text-1 region (2080, 544, 512, 512): 13/130 (6.2s)
+wrapped-text-1 region (2080, 544, 512, 512): 26/130 (12.6s)
+wrapped-text-1 region (2080, 544, 512, 512): 39/130 (18.9s)
+wrapped-text-1 region (2080, 544, 512, 512): 52/130 (25.2s)
+wrapped-text-1 region (2080, 544, 512, 512): 65/130 (31.2s)
+wrapped-text-1 region (2080, 544, 512, 512): 78/130 (37.2s)
+wrapped-text-1 region (2080, 544, 512, 512): 91/130 (43.6s)
+wrapped-text-1 region (2080, 544, 512, 512): 104/130 (50.3s)
+wrapped-text-1 region (2080, 544, 512, 512): 117/130 (56.6s)
+wrapped-text-1 region (2080, 544, 512, 512): 130/130 (62.5s)
+wrapped-text-1 S=0.90: dsig=-0.03497043820540618 corrected_se=0.028326107761866618 raw_rms=198.042823
+wrapped-text-1 S=0.70: dsig=0.07900506905495552 corrected_se=0.01971408392234932 raw_rms=190.782302
+wrapped-text-1 S=0.50: dsig=0.1753914790121502 corrected_se=0.008862479328954023 raw_rms=170.448119
+wrapped-text-1: flat contamination max=2.633887 pass=False pins(flat/detail)=0/0
+exit=0
+finished_utc=2026-08-24T05:48:29.3434996Z
