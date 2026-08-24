@@ -371,6 +371,136 @@ the nine, from 0.00441 on tweezers to 0.04225 on leaf-2, while the gain varies
 **0.57%**. The rank correlation is positive (+0.77) but the amplitude it
 explains is 0.0008 dex. Edge density does not drive this number.
 
+## 13. Ringing where `n_eff` is small -- the orchestrator's stated weakest point
+
+Section 5's anti-ringing result rests on a **mean-field** argument: mean `n_eff`
+is 55.3, so each pixel averages many frames at many sub-pixel phases and
+phase-dependent ringing cancels. **That argument has no force where `n_eff` = 1,
+and `n_eff == 1` is 38.77% of quads.** The objection is well-posed and I set out
+to confirm it. Three corrections came out of it, one of them to me.
+
+Everything below is on the **plane grid**, 3516x2344, which is both the merge's
+native output grid and the `n_eff` map's grid -- 1:1, so no resampling of mine
+enters the analysis. Binary rebuilt at `93f10a5` because `--n-eff-map`
+(`8e5eb6e`) is **not** an ancestor of the `e924229` I measured at first. Control:
+the rebuilt binary reproduces `mean n_eff` **55.321 / 53.674** exactly, so 69
+commits have not moved the gate under my earlier numbers.
+
+### 13.1 The number the objection rests on was retired by its own author
+
+`M95-kernel.md` section 22.4 is titled *"The 9.902x ringing figure is stale, and
+it is still being quoted"*, and P95 re-derives it: **1.78x**, not 9.902x, with
+the note that *"the 9.9x figure reproduces at 9.06x only on an ungated
+population that is 99.87% noise"*. My own positive control, on real pixels at a
+half-pixel phase, reads **1.793x**. Two routes, one retired number.
+
+**This matters beyond my brief.** My instructions, and
+`docs/research/ORCH-kernel-decision.md:49`, both still cite 9.902x as the live
+threat. It has not been the live threat since M95 corrected it.
+
+### 13.2 My own power bar failed, and it failed for that reason
+
+I pre-registered "overshoot ratio > 2.0x or the census is a dead instrument".
+It read **1.793x. The bar FAILED**, and I report it failed. It failed because I
+set it from 9.902x -- a number that no longer exists -- so the bar demanded more
+signal than physics supplies. The instrument recovers 1.793x against a true
+value of 1.78x; it is not dead, my calibration was.
+
+### 13.3 Low `n_eff` is where the EDGES are, not where they aren't
+
+The brief carries M111's finding that `n_eff` collapses in **flat** regions. On
+`bee-3-cpl` at gate 4 the association runs the other way:
+
+| stratum | % of quads | median 5x5 range | median grad |
+| --- | --- | --- | --- |
+| `n_eff == 1` | 38.77% | **1654 DN** | 269.6 |
+| 2 | 21.42% | 989 DN | 165.4 |
+| 9-16 | 2.75% | 323 DN | 63.5 |
+| 129+ | 17.88% | **46 DN** | 9.3 |
+
+**36x more local contrast in the `n_eff == 1` stratum than in the flattest one.**
+So the census has full power exactly where the objection lives -- and the
+objection deserved the test it got.
+
+### 13.4 The confound-free measurement
+
+K13's first pass was contaminated and its own table showed it: merged
+**catmull-rom** overshot the nearest arm's envelope by 26.71% where a single
+coherent catmull-rom resample of the same content overshoots by 12.83%. A kernel
+cannot ring twice as hard as itself -- that excursion is the three arms
+**electing different frames**, not interpolating differently.
+
+So I removed the confound instead of modelling it: restrict to quads where
+`idx_cr == idx_l3 == idx_nn` **and** `n_eff == 1` in all three. Every arm then
+folded exactly one frame, the same frame, the same warp; the only remaining
+difference is the kernel. That is **31.61% of all quads (2 605 077)**.
+
+| population | n | cr p99.9 | l3 p99.9 | ratio |
+| --- | --- | --- | --- | --- |
+| clean stratum, all pixels | 2 605 077 | 58.64% | 67.03% | **1.143** |
+| clean stratum, edge pixels | 512 281 | 22.25% | 26.83% | **1.206** |
+| clean stratum, top 1% gradient | 58 260 | 9.39% | 13.62% | **1.450** |
+| ceiling: one resample, phase-averaged | -- | 14.76% | 21.04% | 1.425 |
+
+**Survival of the excess at `n_eff` == 1: 73.1%.** So the answer to the question
+as asked is **yes, ringing is there at low `n_eff`, and section 5's "1.00x, does
+not survive the merge" was too strong.** Section 5 used a blunter statistic
+(extrema census) over unrestricted ROIs, which diluted an edge-only effect.
+
+**But the ratio does not climb toward 9.9x. It climbs to 1.21x, and the ceiling
+it is climbing toward is 1.43x.**
+
+### 13.5 What 1.21x is worth in levels
+
+An averaged edge response over **32 115** clean-stratum profiles, sign-aligned
+and normalised to local amplitude:
+
+```
+offset px   nearest   catmull-rom   lanczos3
+   -2.0     -0.4243     -0.4201     -0.4267   <- deepest
+```
+
+The **-42% is the hair itself** -- it is there in the un-interpolated `nearest`
+arm, which cannot ring. The kernel-attributable part is the difference:
+
+- lanczos3 vs catmull-rom: **0.655% of edge amplitude = 1.67 / 255 levels**
+- lanczos3 vs **un-interpolated nearest**: **0.24% = 0.6 / 255 levels**
+- overshoot on the bright side: **+0.041% vs +0.042%** -- no difference at all
+
+M110 reached **<= 1.47/255** end-to-end by a different route. Two uncorrelated
+instruments, 1.47 and 1.67 levels.
+
+And the sign test that settles it: lanczos3 sits **closer to the un-interpolated
+reference than catmull-rom does** (p99.9 |l3-nn| **45.61/255** against |cr-nn|
+**51.70/255**). A kernel that rings moves *away* from the un-resampled truth.
+
+### 13.6 By eye, at the worst locations the data has
+
+Crops at the densest clusters of (clean stratum AND top-1% gradient) --
+`C:\dev\strehl-out\M113\view3\`, all three arms on one intensity scale.
+These are hair silhouettes on a bright thorax: the adversarial case. Catmull-rom
+is visibly the softest of the three; lanczos3 recovers hairs it merges; **no
+bright fringe hugs any dark hair in either arm.** Amplified 24x, the `l3 - cr`
+residual is a **single-signed ridge centred on each hair** -- a sharpness
+difference -- not the bipolar lobe a ringing artefact makes, and `l3 - nn` is
+not visibly stronger than `cr - nn`.
+
+### 13.7 A mechanism I proposed and then falsified
+
+I hypothesised that at `n_eff` = 1 the anti-ringing work is done by **spatial**
+phase diversity: neighbouring quads electing different frames, so lobes never
+line up. **Measured, and it is false.** Within the clean stratum, horizontally
+adjacent quads elect a different frame **0.09%** of the time. There is no
+decoherence mechanism. The correct explanation is duller: the single-frame
+ringing is 1.4-1.8x, not 9.9x, and 73% of a small number is still small.
+
+### 13.8 What this does not license
+
+**Not an `n_eff`-dependent kernel.** The `n_eff` dependence is real but weak
+(1.02x at high `n_eff` to 1.21x at `n_eff` = 1) and the residual it governs is
+under two display levels. Switching kernels per pixel would add a spatial
+discontinuity worth more than the artefact it removes.
+
 ## 12. Facts and disciplines for the orchestrator
 
 1. **MEASURED.** The Lanczos-3 gain over Catmull-Rom on the shipped 299-frame
@@ -394,7 +524,8 @@ explains is 0.0008 dex. Edge density does not drive this number.
 5. **MEASURED.** The gain is *larger* where the election held still
    (+0.0968 at agreement >= 0.99 against +0.0604 below 0.95;
    `corr` +0.30 to +0.41). The kernel earns the gain; the re-election dilutes it.
-6. **MEASURED.** M95's 9.902x ringing figure **does not survive the merge**:
+6. **CORRECTED, see section 13 -- this fact as originally written was too strong.**
+   M95's 9.902x ringing figure does not survive the merge:
    strict-extrema census gives lanczos3/catmull-rom **0.9924x and 1.0039x**.
    With mean `n_eff` = 55, phase-dependent ringing averages down and
    phase-independent passband gain does not.
@@ -474,3 +605,39 @@ explains is 0.0008 dex. Edge density does not drive this number.
     them.** Run the closed form with no image; if it reproduces the measurement,
     the measurement was never about the data. Pre-register the bar and report it
     failed when it fails — mine did, on an arm I chose badly.
+28. **MEASURED.** **Fact 1374's 9.902x was retired by its own author.**
+    `M95-kernel.md` section 22.4 and P95 give **1.78x** on a clean step and
+    record that 9.9x "reproduces at 9.06x only on an ungated population that is
+    99.87% noise". My independent positive control on real pixels reads
+    **1.793x**. My brief and `ORCH-kernel-decision.md:49` both still cite 9.902x.
+29. **MEASURED.** On `bee-3-cpl` at gate 4, **low `n_eff` is where the detail
+    is**: median 5x5 range **1654 DN** at `n_eff == 1` against **46 DN** at
+    `n_eff >= 129`, a 36x difference. The brief's premise that low `n_eff` sits
+    in flat regions does not hold on this stack.
+30. **MEASURED, AND IT CORRECTS FACT 1465/1466.** Ringing **does** survive at
+    `n_eff` = 1. In the confound-free stratum (same elected frame and
+    `n_eff == 1` in all three arms, **31.61%** of quads) lanczos3 overshoots
+    catmull-rom by **1.143x** overall, **1.206x** at edges, **1.450x** at the
+    sharpest 1% -- **73.1%** of the single-resample excess. "1.00x, does not
+    survive the merge" was measured with a blunter statistic over unrestricted
+    ROIs and was too strong.
+31. **MEASURED.** The ceiling it climbs toward is **1.425x**, not 9.9x. The
+    orchestrator's predicted climb happens; it stops at 1.2-1.45x.
+32. **MEASURED.** In display levels the whole effect is **1.67/255** (lanczos3
+    vs catmull-rom) and **0.6/255** against the un-interpolated `nearest` arm,
+    over 32 115 averaged edge profiles. M110's independent end-to-end figure is
+    **<= 1.47/255**.
+33. **MEASURED.** Lanczos3 sits **closer to the un-interpolated reference** than
+    catmull-rom does (p99.9 |l3-nn| **45.61/255** vs |cr-nn| **51.70/255**). A
+    ringing kernel moves away from the un-resampled truth, not toward it.
+34. **MEASURED, MY OWN HYPOTHESIS FALSIFIED.** Spatial election diversity is
+    **not** the anti-ringing mechanism at `n_eff` = 1: adjacent quads elect a
+    different frame **0.09%** of the time.
+35. **DISCIPLINE.** **Calibrate a power bar against a number you have checked is
+    still current.** My pre-registered bar failed at 1.793x because I set it
+    from 9.902x, which had already been retired. A bar built on a stale figure
+    fails honest instruments.
+36. **RISK.** An `n_eff`-dependent kernel is **not** licensed by this. The
+    dependence is 1.02x to 1.21x and governs under two display levels; a
+    per-pixel kernel switch would introduce a spatial discontinuity worth more
+    than the artefact it removes.
