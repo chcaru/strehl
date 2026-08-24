@@ -425,3 +425,46 @@ and so a reversal is visible as one.
 that *this* residual is not lateral CA and that M107's fix should not be
 expected to remove it -- which is the composition question ORCH asked. It says
 nothing about whether M107's own defect is real.
+
+---
+
+## B13 -- job 2, `--resampler` on `strehl stack` (REGISTERED BEFORE ANY RUN)
+
+Registered 2026-08-24 15:2x, **before** the patch was written and before
+`align_cmd.rs` was touched. ORCH has withheld the go on `align_cmd.rs`; these
+bars exist so that when it arrives the measurement is already defined.
+
+**Harness guard (discipline 740).** The harness MUST refuse to run, non-zero,
+if `git status --porcelain -- crates/strehl-cli/src/align_cmd.rs` is non-empty
+at start. A collision, not a merge, is the failure this protects against.
+
+**Method (discipline 741).** Both arms built from ONE tree at ONE moment. The
+stored binary is NOT the "before". Other agents committed `e8d74c7`, `94621e0`
+and `f886b02` tonight; any baseline rendered before those is a different
+program.
+
+| bar | prediction | fails if |
+|---|---|---|
+| **B13-null** | `strehl stack` with **no** `--resampler` is **byte-identical** to the same tree without the patch | any byte differs |
+| **B13-reach** | `--resampler lanczos3` produces a **different** hash from the default | hashes are equal -- the flag is **inert** |
+| **B13-key** | the lanczos3 run resolves a **different** `solve_config_key` and therefore re-solves rather than reusing the catmull-rom sidecar | the same sidecar is reused -- a warp map solved with the other kernel is served silently |
+| **B13-red** | making `merge_config` ignore its new argument (return the literal) turns **B13-reach RED** | it stays green -- then B13-reach never tested the flag |
+| **B13-freeze** | byte-freeze 5/5 with `STREHL_FREEZE_REQUIRE=1` | fewer than 5 |
+
+**B13-null is the load-bearing one.** ORCH's instruction is that the default
+render must not move, so this bar decides whether the change may ship at all.
+The hash is **not named in advance**: it must be measured on the tree the patch
+is applied to, because naming tonight's `559407FE..AD12E5` would silently assert
+that no other agent's commit has moved the default render since 15:02, which is
+exactly the assumption discipline 741 exists to forbid.
+
+**B13-key is the bar I expect to be hardest**, and it is the one ORCH
+specifically asked for. `solve_config_key` already hashes `format!("{resampler:?}")`,
+so the key *should* vary the moment the value does. But that is a reading of the
+code, not a measurement, and it is only true if the flag reaches
+`solve_config_key` rather than being applied downstream of the cache lookup. A
+flag that changes the gather but not the key is worse than no flag: it would
+serve a cached catmull-rom warp map under a lanczos3 command line.
+
+**What would make me not ship it:** B13-null failing, or B13-red staying green.
+Either one means I cannot tell what the flag does.
