@@ -1,0 +1,53 @@
+
+======================================================================================================================
+TIER 1 ANALYTIC - exact curves in, does the estimator return the exact ratio?
+======================================================================================================================
+  Gaussian ideal:  R25/50 = 1.414214   R10/50 = 1.822616   R10/25 = 1.288784
+
+curve               w50      w25      w10    R25/50    R10/50    R10/25   vs Gauss
+gaussian          9.424   13.336   17.183    1.4150    1.8232    1.2885     1.000x
+sech2             7.053   10.558   14.575    1.4969    2.0664    1.3805     1.134x
+lorentzian        8.000   13.865   24.000    1.7331    3.0000    1.7310     1.646x
+triangle         12.000   18.000   21.600    1.5000    1.8000    1.2000     0.988x
+boxcar           16.500   16.750   16.900    1.0152    1.0242    1.0090     0.562x
+
+  Estimator bias on an exact Gaussian: 0.034%  (1.823239 vs 1.822616)
+  Lorentzian (heavy tails) reads HIGH, boxcar (no tails) reads LOW, as it must.
+
+======================================================================================================================
+TIER 1b - is the ratio SCALE-FREE? Same Gaussian, six different widths.
+======================================================================================================================
+   scale      w50    R10/50
+     2.0    2.378    1.8447
+     3.0    3.545    1.8357
+     5.0    5.889    1.8272
+     8.0    9.424    1.8232
+    13.0   15.309    1.8227
+    21.0   24.727    1.8226
+
+  spread over a 10.5x range of curve width: 1.0121x  (sd 0.0090)
+  This is the property g2 lacked (section 16.4) and it is why the
+  step-density confound cannot reach this statistic.
+
+======================================================================================================================
+TIER 2 PHYSICAL - a real-texture defocus ladder, at fact 471's MEASURED rates
+======================================================================================================================
+  Fact 471 (M67 line 520, read at source): blur growth s = 0.6017 px/frame
+  on 119MSDCF and 1.1856 on 109MSDCF. The sweep below BRACKETS both, so
+  the plant is known to cover the real regime rather than assumed to.
+
+ delta px/step     band      w50      w25      w10    R10/50   vs Gauss    n
+latent: D:\personal\macro\119MSDCF centre patch, high-band power 1716.1, mean 882.8 DN
+        0.2500   mid(3)    6.182                      1.7293     0.949x   36
+        0.5000   mid(3)    3.170                      1.7544     0.963x   36
+        0.6017   mid(3)    2.659                      1.7664     0.969x   36
+        1.0000   mid(3)    1.735                      1.7744     0.974x   36
+        1.1856   mid(3)    1.554                      1.8369     1.008x   36
+        2.0000   mid(3)    1.233                      1.7641     0.968x   36
+
+======================================================================================================================
+TIER 3 NULL-NOISE - flat latent, calibrated noise, no curve at all
+======================================================================================================================
+  no finite draws (144 undefined) - the statistic is undefined where there is no curve, which is the correct behaviour
+
+wrote out/s20_shape_controls.json
