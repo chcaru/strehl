@@ -1,0 +1,146 @@
+{
+  "note_0_92_was_never_swept": "sweep.py:31 TARGETS = [0.80, 0.85, 0.90, 0.95, 1.00]",
+  "POSITIVE_CONTROL": {
+    "reading": "FAIL",
+    "detail": {
+      "bee-3-cpl": {
+        "mine": 1.53,
+        "M100": 1.54,
+        "delta": 0.01
+      },
+      "coffee-bean": {
+        "mine": -0.14,
+        "M100": -0.18,
+        "delta": 0.04
+      }
+    }
+  },
+  "PLACEBO_fixed_point": {
+    "reading": "PASS",
+    "max_abs_stops": 0.01
+  },
+  "median_abs_contribution_stops": {
+    "target": 0.03,
+    "statistic": 0.02,
+    "method": 0.0,
+    "guard": 0.0
+  },
+  "DOMINANT_AXIS": "target",
+  "VERDICT_on_gallery_py": "MATERIAL BUT SMALL",
+  "n_stacks": 7,
+  "n_diverging_over_0_10_stops": 1,
+  "rows": [
+    {
+      "stack": "bee-3-cpl",
+      "shipped_p999_luma": 0.310812,
+      "shipped_stops": 1.53,
+      "shipped_clip_pct": 0.0337,
+      "gallery_p999_pooled": 0.331448,
+      "gallery_stops": 1.4729,
+      "gallery_bisected": false,
+      "gallery_clip_pct": 0.022,
+      "total_divergence_stops": -0.0571,
+      "axis_target_stops": 0.04,
+      "axis_statistic_stops": -0.09,
+      "axis_method_stops": 0.0,
+      "axis_guard_stops": 0.0,
+      "fixed_point_stops": 0.0
+    },
+    {
+      "stack": "coffee-bean",
+      "shipped_p999_luma": 0.99498,
+      "shipped_stops": -0.14,
+      "shipped_clip_pct": 0.0,
+      "gallery_p999_pooled": 1.0,
+      "gallery_stops": -0.1203,
+      "gallery_bisected": false,
+      "gallery_clip_pct": 0.0,
+      "total_divergence_stops": 0.0197,
+      "axis_target_stops": 0.03,
+      "axis_statistic_stops": -0.01,
+      "axis_method_stops": 0.0,
+      "axis_guard_stops": 0.0,
+      "fixed_point_stops": -0.0
+    },
+    {
+      "stack": "flower-bud-alone-cpl",
+      "shipped_p999_luma": 0.320393,
+      "shipped_stops": 1.49,
+      "shipped_clip_pct": 0.0,
+      "gallery_p999_pooled": 0.3246,
+      "gallery_stops": 1.503,
+      "gallery_bisected": false,
+      "gallery_clip_pct": 0.0,
+      "total_divergence_stops": 0.013,
+      "axis_target_stops": 0.03,
+      "axis_statistic_stops": -0.02,
+      "axis_method_stops": 0.0,
+      "axis_guard_stops": 0.0,
+      "fixed_point_stops": 0.0
+    },
+    {
+      "stack": "flowers-cpl",
+      "shipped_p999_luma": 0.235681,
+      "shipped_stops": 1.93,
+      "shipped_clip_pct": 0.3535,
+      "gallery_p999_pooled": 0.264131,
+      "gallery_stops": 1.8004,
+      "gallery_bisected": false,
+      "gallery_clip_pct": 0.0001,
+      "total_divergence_stops": -0.1296,
+      "axis_target_stops": 0.03,
+      "axis_statistic_stops": -0.16,
+      "axis_method_stops": 0.0,
+      "axis_guard_stops": 0.0,
+      "fixed_point_stops": 0.01
+    },
+    {
+      "stack": "lavendar-cpl",
+      "shipped_p999_luma": 0.339325,
+      "shipped_stops": 1.41,
+      "shipped_clip_pct": 0.0546,
+      "gallery_p999_pooled": 0.335656,
+      "gallery_stops": 1.4547,
+      "gallery_bisected": false,
+      "gallery_clip_pct": 0.0721,
+      "total_divergence_stops": 0.0447,
+      "axis_target_stops": 0.03,
+      "axis_statistic_stops": 0.01,
+      "axis_method_stops": 0.0,
+      "axis_guard_stops": 0.0,
+      "fixed_point_stops": -0.0
+    },
+    {
+      "stack": "leaf-2-cpl",
+      "shipped_p999_luma": 0.098864,
+      "shipped_stops": 3.19,
+      "shipped_clip_pct": 0.057,
+      "gallery_p999_pooled": 0.101025,
+      "gallery_stops": 3.1869,
+      "gallery_bisected": false,
+      "gallery_clip_pct": 0.0545,
+      "total_divergence_stops": -0.0031,
+      "axis_target_stops": 0.03,
+      "axis_statistic_stops": -0.03,
+      "axis_method_stops": 0.0,
+      "axis_guard_stops": 0.0,
+      "fixed_point_stops": -0.0
+    },
+    {
+      "stack": "tweezers-cpl",
+      "shipped_p999_luma": 0.411365,
+      "shipped_stops": 1.13,
+      "shipped_clip_pct": 0.0459,
+      "gallery_p999_pooled": 0.410805,
+      "gallery_stops": 1.1632,
+      "gallery_bisected": false,
+      "gallery_clip_pct": 0.0531,
+      "total_divergence_stops": 0.0332,
+      "axis_target_stops": 0.03,
+      "axis_statistic_stops": 0.0,
+      "axis_method_stops": 0.0,
+      "axis_guard_stops": 0.0,
+      "fixed_point_stops": 0.0
+    }
+  ]
+}

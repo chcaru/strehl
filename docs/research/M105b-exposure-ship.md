@@ -628,6 +628,15 @@ operator who did not write the chooser. Per rule 34 the statistic is specified
 from BT.709 luminance coefficients and `numpy.percentile(method=
 "inverted_cdf")`, neither taken from `color.rs`.
 
+> **QUALIFIED BY §4.9, which was measured after this section was written.**
+> The chooser reads luminance *before* the `[0,1]` clamp and this file is
+> written *after* it, so a post-file recomputation is only valid where the
+> chooser's percentile never exceeded 1.0. It does not on `bee-3-cpl`
+> (implied **0.309497** against my measured **0.310812**), so the check above
+> stands. **It would have been meaningless on `coffee-bean` or `foam` and
+> would still have printed a number.** I did not know that when I wrote this
+> paragraph.
+
 **Grey cast: NO EVIDENCE, and my instrument is the reason.** I predicted that
 "no colour management" would present as *missing white balance* — R and B
 depressed relative to G by roughly the `cam_wb` ratios [2631, 1024, 1606]. The
@@ -648,6 +657,129 @@ as `readings_corrected` and is explicitly stamped *"Specified AFTER seeing the
 pre-registered arms fire."* The determinism-style control — the 23:47 files
 still reading half-resolution ten minutes later — **passed as registered**,
 which is the only reason I trust the corrected block at all.
+
+---
+
+### 4.9 Item 5 — reconciling 0.90 and 0.92, and what it exposed (MEASURED)
+
+The 10:22 stand-down asks me to reconcile `gallery.py`'s `TARGET = 0.92`
+against `color.rs`'s `AUTO_EXPOSURE_TARGET = 0.90`, and says *"§3 swept five
+targets, so the answer is probably already measured"*.
+
+**It is not measured.** MEASURED, `experiments/M100-exposure/sweep.py:31`:
+
+```python
+TARGETS = [0.80, 0.85, 0.90, 0.95, 1.00]
+```
+
+**0.92 is not in the grid.** The sweep cannot answer the question, and the
+premise of item 5 is false in the same way the brief's was — an assumption that
+prior work covered a case, made without opening it.
+
+**The two rules differ on four axes, not one.** Read at source,
+`gallery.py:113-131` against `color.rs` / `merge_cmd.rs`:
+
+| axis | `gallery.py` | shipped |
+|---|---|---|
+| target | **0.92** | **0.90** |
+| statistic | `np.percentile(lin, 99.9)` with **no `axis=`** — flattens, so it pools R, G and B samples | BT.709 **luminance** via `display_luminance` |
+| percentile method | numpy default `"linear"` (interpolated) | nearest-rank, `"inverted_cdf"`, matched deliberately |
+| guard | 30-iteration **bisection** against a 0.5% clip budget | none; a single bounded, quantised gain |
+
+M100 swept two statistics — luminance and max-channel. **`gallery.py` uses a
+third that was never swept.** So item 5's "one of them is wrong" cannot be
+settled by comparing two constants.
+
+#### The decomposition is VOID, by the bar I registered for it
+
+`06-reconcile-targets.py` decomposes the divergence one axis at a time. Its
+pre-registered positive control was that my reimplementation of the *shipped*
+rule must reproduce M100 §3.4 on the two stacks the gallery shares with that
+table. **It FAILED**: `bee-3-cpl` +1.53 against +1.54 (one quantum, tolerable)
+but `coffee-bean` **−0.14 against −0.18** — four quanta. My pre-registration
+says *"every decomposition below is void"*, so **I am not reporting the
+decomposition as a result.** The numbers are in
+`data/06-reconcile-targets.json` for a verifier, flagged void.
+
+The fixed-point placebo passed (max |stops| = 0.01 across all seven), so the
+instrument is self-consistent. It is just not measuring the shipped rule.
+
+#### Why it failed, and it is not an accident
+
+The failure is one-sided: tiny on the stack that needs **brightening**, large
+on the stack that needs **darkening**. MEASURED at source, `merge_cmd.rs`'s
+`choose` closure and `image_out`'s order:
+
+```
+linear camera RGB --> display_luminance(rgb, matrix) --> p99.9 --> gain
+                                                                    |
+image_out:        x gain  ->  matrix  ->  CLAMP [0,1]  ->  sRGB curve  ->  file
+```
+
+**The chooser reads luminance before the clamp. The file is written after it.**
+DERIVED from the rule's own definition (`gain = 0.90 / p99.9`, `gain =
+2^stops`, so the percentile the chooser saw is `0.90 / 2^stops`), and checked
+in `07-clamp-blindspot.py` against M100 §3.4's seven published choices:
+
+| stack | published | implied chooser `p99.9` | above the clamp? |
+|---|---|---|---|
+| `lead-1-cpl` | +3.74 | 0.0674 | no |
+| `flat-on-ruler` | +1.96 | 0.2313 | no |
+| **`bee-3-cpl`** | **+1.54** | **0.3095** | no |
+| `bee-2-cpl` | +1.54 | 0.3095 | no |
+| `highly-angled-ruler` | +1.19 | 0.3945 | no |
+| **`coffee-bean`** | **−0.18** | **1.0196** | **YES** |
+| **`foam`** | **−0.32** | **1.1235** | **YES** |
+
+**A post-file instrument is structurally blind to exactly the two stacks that
+need darkening** — which is to say, blind to the two-sidedness this milestone
+was told to protect. Both pre-registered predictions CONFIRMED (coffee-bean
+above the clamp; my error one-sided *brighter*), and both controls PASS
+(`bee-3-cpl` below the clamp, and within one quantum).
+
+**Disclosure: `07-clamp-blindspot.py` first ran with the sign inverted**
+(`TARGET * 2**stops` instead of `TARGET / 2**stops`) and reported an implied
+percentile of **2.617** for a stack that is 1.54 stops too *dark*. **My own
+control caught it** — I had registered *"a mechanism that also explains the
+stack it should not touch explains nothing"*, and `CONTROL_bee3_below_clamp`
+read FAIL. The wrong run is kept as
+`data/07-clamp-blindspot-SIGNERROR.json`.
+
+#### This qualifies my own §4.8 external check
+
+§4.8 claimed the numpy recomputation meant *"V2 no longer rests on a prior
+report's printed number."* **That is now qualified.** The table above gives
+`bee-3-cpl`'s implied chooser percentile as **0.309497**; §4.8 measured
+**0.310812** from the file. **0.42% apart, 0.006 stops** — so the check stands
+*for this stack*, and it stands because `bee-3-cpl` is one of the five stacks
+that never touch the clamp. **On `coffee-bean` or `foam` the same check would
+have been meaningless and would still have looked like a number.** I did not
+know that when I wrote §4.8.
+
+#### The verdict on `gallery.py`, which is what the owner has been shown
+
+`gallery.py` reads the emitted TIF, so **it inherits the blindness above**. On
+`coffee-bean` my reimplementation of its rule returns **−0.120 stops**. And:
+
+```
+log2(0.92) = -0.12029
+```
+
+**`gallery.py`'s darkening on `coffee-bean` is exactly `log2` of its own
+`TARGET`.** That is what a rule returns when its input has been clamped to 1.0
+— it is pinned at the hardest rail it can reach, and the value it prints is a
+parameter of its own source. **Discipline 616: a number that equals a parameter
+of your own code is a bug report.** The shipped rule, reading before the clamp,
+chooses −0.18.
+
+So, plainly, as item 5 asks: **`gallery.py` is the odd one out.** Not because
+0.92 is indefensible — it was never swept, so nobody knows — but because it
+measures the wrong image. It is downstream of a clamp that has already
+destroyed the highlights it is trying to protect, and on the two-sided cases it
+saturates against its own target. **The recommendation in §7.1 stands and is
+now stronger: put the gallery on `--auto-exposure`.** That is not a preference
+between two constants; it moves the measurement to the only place in the
+pipeline where the information still exists.
 
 ---
 
@@ -957,6 +1089,37 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   *Implication:* **the two are numerically similar and informationally
   unrelated.** No report should describe the shipped gain as recovering any
   part of fact 1257's +2.01 median.
+* **P12 (MEASURED).** **TARGET 0.92 WAS NEVER SWEPT.**
+  `experiments/M100-exposure/sweep.py:31` is
+  `TARGETS = [0.80, 0.85, 0.90, 0.95, 1.00]`. `gallery.py`'s `TARGET = 0.92`
+  therefore has no measured backing anywhere in the corpus, and M100's sweep
+  cannot adjudicate it. *Implication:* the standing question *"0.90 or 0.92?"*
+  has never had an answer; it has had an assumption that the sweep covered it.
+* **P13 (MEASURED + DERIVED).** **THE EXPOSURE CHOOSER READS BEFORE THE CLAMP,
+  SO ANY POST-FILE INSTRUMENT IS BLIND TO EXACTLY THE DARKENING CASES.**
+  `merge_cmd.rs`'s `choose` closure takes `display_luminance` on the binned
+  quad grid; `image_out` clamps to `[0,1]` before the transfer curve. DERIVED
+  from `gain = 0.90 / p99.9`: the percentile the chooser saw is
+  `0.90 / 2^stops`, which across M100 §3.4's seven published choices exceeds
+  1.0 on **`coffee-bean` (1.0196)** and **`foam` (1.1235)** and on no others.
+  Confirmed against measurement: a post-file recomputation lands within one
+  quantum on `bee-3-cpl` (implied 0.309497, measured 0.310812) and **four
+  quanta out on `coffee-bean`, always in the brighter direction**.
+  *Implication:* **the two stacks a post-file instrument cannot measure are
+  precisely the two that prove the correction is two-sided.** Any future
+  exposure work that reads the emitted TIF must state which side it is on.
+* **P14 (MEASURED).** **`gallery.py` IS PINNED AT ITS OWN TARGET ON THE
+  DARKENING CASE, AND ITS OUTPUT IS WHAT THE OWNER HAS BEEN SHOWN.** Because it
+  reads the clamped file, its rule returns **−0.120 stops** on `coffee-bean`,
+  and `log2(0.92) = −0.12029` — **the answer equals `log2` of its own
+  `TARGET`**, which is the hardest darkening a post-clamp instrument can reach.
+  The shipped rule chooses **−0.18**. It also differs on three further axes:
+  it pools R, G and B samples (`np.percentile` with no `axis=`, a statistic
+  M100 never swept), uses numpy's interpolated default rather than the
+  nearest-rank the shipped code deliberately matches, and adds a 30-iteration
+  bisection against a 0.5% clip budget. *Implication:* discipline 616 in the
+  field. **The fix is not to reconcile two constants but to move the
+  measurement upstream of the clamp** — i.e. to `--auto-exposure`.
 
 ### Disciplines
 
@@ -1018,6 +1181,20 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   **A placebo whose reading is indistinguishable from the signal's has not
   failed — it has diagnosed a blind instrument.** Report the arm as NO
   EVIDENCE, not as a refutation.
+* **PD9.** **A positive control that fails is worth more than one that passes,
+  if you ask why before discarding it.** §4.9's control failed by four quanta
+  on one stack and one on another. Discarding it would have been correct by my
+  own pre-registration and would have thrown away the finding: the pattern was
+  one-sided, and chasing it produced P13 — a structural blind spot that also
+  **qualified a claim I had already published in §4.8 and believed**. **Read
+  the shape of a control's failure, not just its verdict.**
+* **PD10.** **State which side of an irreversible operation your instrument
+  reads from.** A clamp, a quantiser, a `max(0,·)` and a saturating cast all
+  destroy information, and a statistic taken downstream of one can be
+  numerically fine on most inputs and structurally meaningless on the rest —
+  while printing a number either way. §4.8's recomputation was valid on five of
+  M100's seven stacks and void on two, and nothing in the number said which.
+  **Name the operation and the side, next to the statistic.**
 
 ### Questions
 

@@ -1,0 +1,71 @@
+{
+  "rows": [
+    {
+      "stack": "lead-1-cpl",
+      "published_stops": 3.74,
+      "implied_chooser_p99_9": 0.067358,
+      "above_clamp": false
+    },
+    {
+      "stack": "flat-on-ruler",
+      "published_stops": 1.96,
+      "implied_chooser_p99_9": 0.231326,
+      "above_clamp": false
+    },
+    {
+      "stack": "bee-3-cpl",
+      "published_stops": 1.54,
+      "implied_chooser_p99_9": 0.309497,
+      "above_clamp": false,
+      "my_post_file_stops": 1.53,
+      "error_stops": -0.01,
+      "error_direction": "darker than truth"
+    },
+    {
+      "stack": "bee-2-cpl",
+      "published_stops": 1.54,
+      "implied_chooser_p99_9": 0.309497,
+      "above_clamp": false
+    },
+    {
+      "stack": "highly-angled-ruler",
+      "published_stops": 1.19,
+      "implied_chooser_p99_9": 0.394473,
+      "above_clamp": false
+    },
+    {
+      "stack": "coffee-bean",
+      "published_stops": -0.18,
+      "implied_chooser_p99_9": 1.019595,
+      "above_clamp": true,
+      "my_post_file_stops": -0.14,
+      "error_stops": 0.04,
+      "error_direction": "BRIGHTER than truth"
+    },
+    {
+      "stack": "foam",
+      "published_stops": -0.32,
+      "implied_chooser_p99_9": 1.123497,
+      "above_clamp": true
+    }
+  ],
+  "readings": {
+    "PREDICTION_coffee_bean_above_clamp": "CONFIRMED",
+    "PREDICTION_error_is_one_sided_brighter": "CONFIRMED",
+    "CONTROL_bee3_below_clamp": "PASS",
+    "CONTROL_bee3_within_one_quantum": "PASS",
+    "n_published_stacks_above_clamp": 2,
+    "n_published_stacks": 7,
+    "post_file_instrument_is_valid_for": [
+      "lead-1-cpl",
+      "flat-on-ruler",
+      "bee-3-cpl",
+      "bee-2-cpl",
+      "highly-angled-ruler"
+    ],
+    "post_file_instrument_is_BLIND_for": [
+      "coffee-bean",
+      "foam"
+    ]
+  }
+}
