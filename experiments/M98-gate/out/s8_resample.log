@@ -1,0 +1,49 @@
+==============================================================================
+M98 S8 -- what does registration's resampler cost, in OBJECT space?
+==============================================================================
+  stack flat-on-ruler-cpl, 79 frames.  Tick pitch known a priori, so
+  the equivalent blur can be expressed per TICK and magnification
+  divides out.  ALN vs STREHL_ALIGN=0 at the same gate.
+
+--- gate 0 ---
+   ALN  3520x2344   live ROIs 4/24   tick pitch 5.069-24.353 px  (median 11.420)
+    A0  3520x2344   live ROIs 6/24   tick pitch 7.211-26.947 px  (median 16.059)
+  paired ROIs live in both arms: 3
+  MEASURED magnification ALN/A0 = 1.04630 +/- 0.02390   (i.e. fit_to_cover upsamples by +4.63%)
+  extra blur in ALN, PIXEL space  = -0.8654 +/- 0.0620 px   (n=3)
+  extra blur in ALN, OBJECT space = -0.06278 +/- 0.01584 ticks
+  ... which, expressed back on the A0 pixel grid, is -1.0082 px
+
+--- gate 4 ---
+   ALN  3520x2344   live ROIs 4/24   tick pitch 5.069-24.353 px  (median 11.420)
+    A0  3520x2344   live ROIs 6/24   tick pitch 7.211-26.947 px  (median 16.059)
+  paired ROIs live in both arms: 3
+  MEASURED magnification ALN/A0 = 1.04630 +/- 0.02390   (i.e. fit_to_cover upsamples by +4.63%)
+  extra blur in ALN, PIXEL space  = -0.8516 +/- 0.0539 px   (n=3)
+  extra blur in ALN, OBJECT space = -0.06165 +/- 0.01503 ticks
+  ... which, expressed back on the A0 pixel grid, is -0.9901 px
+
+--- INDEPENDENT CHECK: does the ruler recover the aligner's own k? ---
+  align_cmd.rs fit_to_cover prints the scale it chose.  The ruler's comb
+  frequency ratio is measured from the photograph and knows nothing
+  about that number, so agreement is a real check on the instrument.
+  log says fit_to_cover k = 0.9708  ->  predicted upsample 1.03008x (+3.008%)
+  ruler measures                       1.04630x +/- 0.02390  (+4.630%)
+  agreement: +0.68 sigma  -> PASS
+
+READ THIS CAREFULLY.  The magnification is the solid number here: it is
+a ratio of spectral peak positions and needs no amplitude calibration,
+and it reproduces the aligner's own k.  The object-space blur above is
+EXPLORATORY: n=3 paired ROIs, and the comb amplitude M is not normalised
+between two renders at different scales, so its sign is not a bar and is
+not used in any conclusion.
+What IS concluded: a registered render is an INTERPOLATED ENLARGEMENT of
+the optical image, by 1/k, at every pixel and every gate.  On this stack
+that is +3.0%.
+  bee-3-cpl, 299 frames    k = 0.9315  ->  upsampled 1.0735x  (+7.35%)
+  112MSDCF half A          k = 0.9760  ->  upsampled 1.0246x  (+2.46%)
+bee-3-cpl needs the largest correction because that bracket drifts
+232.7-603 px corner-to-corner and fit_to_cover must throw away enough
+field for EVERY frame to cover EVERY output pixel.
+At 100% on a screen that is softness, it is global, it is new tonight,
+and it is not the gate.

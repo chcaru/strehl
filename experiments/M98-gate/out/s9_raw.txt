@@ -1,0 +1,23 @@
+bee-3-cpl gate 4 / gate 0, band f in [0.15, 0.2762] cyc/px
+  raw   = M85's quantity: single-render band amplitude, noise included
+  clean = the same after subtracting the measured above-cutoff floor
+
+  --- ALN ---
+     LOW hp_sd 331-643   raw 0.6337 +/- 0.1617   clean 0.6475 +/- 0.1617
+     MID hp_sd 646-772   raw 0.8795 +/- 0.0627   clean 0.9016 +/- 0.0558
+    HIGH hp_sd 816-1303   raw 0.9247 +/- 0.0314   clean 0.9397 +/- 0.0266
+    single sharpest ROI #4 (hp_sd 1303): raw 0.9872  clean 0.9904  dsig +0.0984 px
+      gate 0.5  raw 0.9994  clean 1.0001  dsig +0.0083 px  noise 0.9897x
+      gate   1  raw 0.9970  clean 0.9983  dsig +0.0455 px  noise 0.9792x
+      gate   2  raw 0.9944  clean 0.9965  dsig +0.0628 px  noise 0.9658x
+      gate   4  raw 0.9872  clean 0.9904  dsig +0.0984 px  noise 0.9441x
+
+  --- ZOOM ---
+     LOW hp_sd 331-643   raw 0.6222 +/- 0.1613   clean 0.6356 +/- 0.1625
+     MID hp_sd 646-772   raw 0.8772 +/- 0.0573   clean 0.9019 +/- 0.0512
+    HIGH hp_sd 816-1303   raw 0.9165 +/- 0.0326   clean 0.9359 +/- 0.0270
+    single sharpest ROI #4 (hp_sd 1303): raw 0.9790  clean 0.9843  dsig +0.0984 px
+      gate 0.5  raw 0.9986  clean 0.9998  dsig +0.0259 px  noise 0.9828x
+      gate   1  raw 0.9961  clean 0.9984  dsig +0.0422 px  noise 0.9676x
+      gate   2  raw 0.9905  clean 0.9940  dsig +0.0819 px  noise 0.9496x
+      gate   4  raw 0.9790  clean 0.9843  dsig +0.0984 px  noise 0.9173x

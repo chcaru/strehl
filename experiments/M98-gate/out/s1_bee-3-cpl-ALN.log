@@ -1,0 +1,79 @@
+==============================================================================
+M98 S1 -- gate ladder on bee-3-cpl
+  Both metrics from the SAME two half-merges (parity frame split):
+    A_hf  band cross-power over f in [0.15, 0.2762] cyc/px  -- M85's
+          quantity, made noise-free.  Ratio A_hf(T)/A_hf(0).
+    dsig  m57lib equivalent-Gaussian-blur difference, px, over
+          f in [0.05, 0.2762].  M92's quantity.  POSITIVE = gate T is
+          BLURRIER than gate 0.
+==============================================================================
+
+render geometry : 3516 x 2344   ROIs: 24 of 512^2
+stratifier      : m41lib.hp_sd (9x9 high-pass sd) on bee-3-cpl-ALN-g0-A.tif
+terciles        : low ['314.74', '367.24', '369.54', '516.62', '523.56', '525.28', '555.71', '607.83']
+                  mid ['639.13', '665.47', '677.79', '679.69', '703.37', '731.26', '733.33', '752.98']
+                  high ['797.36', '808.45', '821.53', '829.48', '892.49', '1070.24', '1184.37', '1293.93']
+
+==============================================================================
+ARM ALN
+==============================================================================
+
+--- PAIR REGISTRATION (frozen on gate 0, applied at all gates) ---
+  per-ROI phase-correlation peak / median |cc| : min 11.0  med 92.0
+  fitted scale s = +0.011364  (half B is 1.011364x half A about the plane centre)
+  fitted shift   = (+0.228, +3.594) px
+  residual after the similarity: rms 12.632 px, max 52.115 px
+  INDEPENDENT CHECK -- the render logs' fit_to_cover scales are
+    k_A = 0.9227, k_B = 0.9360, so half B should be
+    k_A/k_B - 1 = -0.014209.  Fitted +0.011364.  Difference +0.025573.
+    The fit never sees this number.
+  per-ROI residual after resampling: rms 19.338 px -- removed per ROI by an exact Fourier shift, frozen on gate 0
+
+--- RULE 9 FLAT-ROI CONTROL (run FIRST) --- ROI 23 at (2967, 1795), hp_sd 314.739
+   gate  sigma_flat(DN)    ratio       N_incoh   N ratio  n_eff_loc           A_hf  A_hf ratio
+      0       375.57360   1.0000    3.8994e+09    1.0000      1.000     6.1188e+08      1.0000
+    0.5       275.02636   0.7323    1.8128e+09    0.4649      2.151     5.5515e+08      0.9073
+      1       222.30436   0.5919    1.1937e+09    0.3061      3.267     5.7932e+08      0.9468
+      2       190.60192   0.5075    7.2819e+08    0.1867      5.355     5.4758e+08      0.8949
+      4       179.42504   0.4777    5.0533e+08    0.1296      7.717     5.1717e+08      0.8452
+  PRE-REGISTERED BAR: sigma_flat(4)/sigma_flat(0) <= 0.5  -> 0.4777  PASS
+  REFINED BAR (declared as a departure, see report S9):
+    N_incoh(4)/N_incoh(0) <= 0.25 (= sigma 0.5) -> 0.1296  PASS   [sigma ratio 0.3600]
+  BAR: A_hf(4)/A_hf(0) <= 1.05 on this ROI -> 0.8452  PASS
+  FLAT control (refined): GREEN
+
+--- LADDER, pooled over all 24 ROIs ---
+   gate  A_hf(T)/A_hf(0)   dsig(0->T) px       SE   sigma   n+   n-  n_eff_loc med
+      0          1.00000        +0.00000  0.00000     nan    0    0          1.000
+    0.5          0.99621        +0.00948  0.01842    0.51   12   10          1.043
+      1          0.99863        -0.00039  0.01976    0.02   12   10          1.074
+      2          0.99625        +0.00469  0.02247    0.21   13    9          1.131
+      4          0.98867        +0.06063  0.02541    2.39   18    4          1.243
+
+--- STRATIFIED by detail tercile (discipline 603) ---
+
+  tercile LOW  (hp_sd 314.74 - 607.83, 8 ROIs)
+     gate   A_hf ratio       SE    dsig px       SE   sigma   n<0  n_eff_loc  gof med
+        0      1.00000  0.00000   +0.00000  0.00000     nan     0      1.000      nan
+      0.5      0.98538  0.01564   +0.05816  0.04652    1.25     2      1.752   1.1458
+        1      0.99256  0.00929   +0.05299  0.04854    1.09     2      3.202   1.1094
+        2      0.98222  0.01756   +0.06473  0.06024    1.07     2     16.290   1.5662
+        4      0.97175  0.02538   +0.11126  0.07015    1.59     1    133.302   0.6812
+
+  tercile MID  (hp_sd 639.13 - 752.98, 8 ROIs)
+     gate   A_hf ratio       SE    dsig px       SE   sigma   n<0  n_eff_loc  gof med
+        0      1.00000  0.00000   +0.00000  0.00000     nan     0      1.000      nan
+      0.5      1.00040  0.00078   -0.01082  0.02275    0.48     4      1.220   1.6521
+        1      1.00086  0.00096   -0.03585  0.02431    1.47     5      1.388   1.1022
+        2      1.00101  0.00257   -0.02309  0.02404    0.96     4      1.659   1.6106
+        4      0.98800  0.00344   +0.07950  0.01231    6.46     0      1.834   0.7104
+
+  tercile HIGH  (hp_sd 797.36 - 1293.93, 8 ROIs)
+     gate   A_hf ratio       SE    dsig px       SE   sigma   n<0  n_eff_loc  gof med
+        0      1.00000  0.00000   +0.00000  0.00000     nan     0      1.000      nan
+      0.5      1.00014  0.00028   -0.00673  0.02776    0.24     4      1.167   0.7997
+        1      1.00094  0.00047   -0.00497  0.02964    0.17     3      1.261   0.9843
+        2      1.00201  0.00231   -0.01255  0.03321    0.38     3      1.399   0.8846
+        4      1.00202  0.00565   +0.00378  0.04183    0.09     3      1.660   0.6288
+
+(56s)

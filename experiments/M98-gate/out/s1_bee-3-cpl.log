@@ -1,0 +1,119 @@
+==============================================================================
+M98 S1 -- gate ladder on bee-3-cpl
+  Both metrics from the SAME two half-merges (parity frame split):
+    A_hf  band cross-power over f in [0.15, 0.2762] cyc/px  -- M85's
+          quantity, made noise-free.  Ratio A_hf(T)/A_hf(0).
+    dsig  m57lib equivalent-Gaussian-blur difference, px, over
+          f in [0.05, 0.2762].  M92's quantity.  POSITIVE = gate T is
+          BLURRIER than gate 0.
+==============================================================================
+
+render geometry : 3516 x 2344   ROIs: 24 of 512^2
+stratifier      : m41lib.hp_sd (9x9 high-pass sd) on bee-3-cpl-ALN-g0-A.tif
+terciles        : low ['314.74', '367.24', '369.54', '516.62', '523.56', '525.28', '555.71', '607.83']
+                  mid ['639.13', '665.47', '677.79', '679.69', '703.37', '731.26', '733.33', '752.98']
+                  high ['797.36', '808.45', '821.53', '829.48', '892.49', '1070.24', '1184.37', '1293.93']
+
+==============================================================================
+ARM ALN
+==============================================================================
+
+--- RULE 9 FLAT-ROI CONTROL (run FIRST) --- ROI 23 at (2967, 1795), hp_sd 314.739
+   gate  sigma_flat(DN)    ratio       N_incoh   N ratio  n_eff_loc           A_hf  A_hf ratio
+      0       411.38708   1.0000    4.5006e+09    1.0000      1.000            nan         nan
+    0.5       327.26225   0.7955    2.5437e+09    0.5652      1.769            nan         nan
+      1       289.02847   0.7026    1.9688e+09    0.4375      2.286            nan         nan
+      2       270.33303   0.6571    1.4754e+09    0.3278      3.050            nan         nan
+      4       276.53359   0.6722    1.1789e+09    0.2620      3.817            nan         nan
+  PRE-REGISTERED BAR: sigma_flat(4)/sigma_flat(0) <= 0.5  -> 0.6722  FAIL
+  REFINED BAR (declared as a departure, see report S9):
+    N_incoh(4)/N_incoh(0) <= 0.25 (= sigma 0.5) -> 0.2620  FAIL   [sigma ratio 0.5118]
+  BAR: A_hf(4)/A_hf(0) <= 1.05 on this ROI -> nan  FAIL
+  FLAT control (refined): RED
+
+--- LADDER, pooled over all 24 ROIs ---
+   gate  A_hf(T)/A_hf(0)   dsig(0->T) px       SE   sigma   n+   n-  n_eff_loc med
+      0              nan            +nan      nan     nan    0    0          1.000
+    0.5              nan            +nan      nan     nan    0    0          1.009
+      1              nan            +nan      nan     nan    0    0          1.018
+      2              nan            +nan      nan     nan    0    0          1.031
+      4              nan            +nan      nan     nan    0    0          1.050
+
+--- STRATIFIED by detail tercile (discipline 603) ---
+
+  tercile LOW  (hp_sd 314.74 - 607.83, 8 ROIs)
+     gate   A_hf ratio       SE    dsig px       SE   sigma   n<0  n_eff_loc  gof med
+        0          nan      nan       +nan      nan     nan     0      1.000      nan
+      0.5          nan      nan       +nan      nan     nan     0      1.677      nan
+        1          nan      nan       +nan      nan     nan     0      3.050      nan
+        2          nan      nan       +nan      nan     nan     0     17.914      nan
+        4          nan      nan       +nan      nan     nan     0    203.175      nan
+
+  tercile MID  (hp_sd 639.13 - 752.98, 8 ROIs)
+     gate   A_hf ratio       SE    dsig px       SE   sigma   n<0  n_eff_loc  gof med
+        0          nan      nan       +nan      nan     nan     0      1.000      nan
+      0.5          nan      nan       +nan      nan     nan     0      1.086      nan
+        1          nan      nan       +nan      nan     nan     0      1.126      nan
+        2          nan      nan       +nan      nan     nan     0      1.167      nan
+        4          nan      nan       +nan      nan     nan     0      1.204      nan
+
+  tercile HIGH  (hp_sd 797.36 - 1293.93, 8 ROIs)
+     gate   A_hf ratio       SE    dsig px       SE   sigma   n<0  n_eff_loc  gof med
+        0          nan      nan       +nan      nan     nan     0      1.000      nan
+      0.5          nan      nan       +nan      nan     nan     0      1.042      nan
+        1          nan      nan       +nan      nan     nan     0      1.056      nan
+        2          nan      nan       +nan      nan     nan     0      1.070      nan
+        4          nan      nan       +nan      nan     nan     0      1.088      nan
+
+==============================================================================
+ARM ZOOM
+==============================================================================
+
+--- RULE 9 FLAT-ROI CONTROL (run FIRST) --- ROI 23 at (2967, 1795), hp_sd 314.739
+   gate  sigma_flat(DN)    ratio       N_incoh   N ratio  n_eff_loc           A_hf  A_hf ratio
+      0       506.67049   1.0000    8.4792e+09    1.0000      1.000            nan         nan
+    0.5       397.21246   0.7840     4.255e+09    0.5018      1.993            nan         nan
+      1       338.22217   0.6675    3.2094e+09    0.3785      2.642            nan         nan
+      2       305.83339   0.6036    2.4806e+09    0.2926      3.418            nan         nan
+      4       295.21354   0.5827    2.0107e+09    0.2371      4.217            nan         nan
+  PRE-REGISTERED BAR: sigma_flat(4)/sigma_flat(0) <= 0.5  -> 0.5827  FAIL
+  REFINED BAR (declared as a departure, see report S9):
+    N_incoh(4)/N_incoh(0) <= 0.25 (= sigma 0.5) -> 0.2371  PASS   [sigma ratio 0.4870]
+  BAR: A_hf(4)/A_hf(0) <= 1.05 on this ROI -> nan  FAIL
+  FLAT control (refined): RED
+
+--- LADDER, pooled over all 24 ROIs ---
+   gate  A_hf(T)/A_hf(0)   dsig(0->T) px       SE   sigma   n+   n-  n_eff_loc med
+      0          1.00000        +0.00000      nan     nan    0    0          1.000
+    0.5          0.98525        -0.25390      nan     nan    0    1          1.010
+      1          0.96519        -0.22168      nan     nan    0    1          1.021
+      2          0.91455        -0.16742      nan     nan    0    1          1.041
+      4          0.84719        +0.67619      nan     nan    1    0          1.075
+
+--- STRATIFIED by detail tercile (discipline 603) ---
+
+  tercile LOW  (hp_sd 314.74 - 607.83, 8 ROIs)
+     gate   A_hf ratio       SE    dsig px       SE   sigma   n<0  n_eff_loc  gof med
+        0          nan      nan       +nan      nan     nan     0      1.000      nan
+      0.5          nan      nan       +nan      nan     nan     0      1.813      nan
+        1          nan      nan       +nan      nan     nan     0      3.630      nan
+        2          nan      nan       +nan      nan     nan     0     17.087      nan
+        4          nan      nan       +nan      nan     nan     0     41.447      nan
+
+  tercile MID  (hp_sd 639.13 - 752.98, 8 ROIs)
+     gate   A_hf ratio       SE    dsig px       SE   sigma   n<0  n_eff_loc  gof med
+        0          nan      nan       +nan      nan     nan     0      1.000      nan
+      0.5          nan      nan       +nan      nan     nan     0      1.064      nan
+        1          nan      nan       +nan      nan     nan     0      1.100      nan
+        2          nan      nan       +nan      nan     nan     0      1.130      nan
+        4          nan      nan       +nan      nan     nan     0      1.172      nan
+
+  tercile HIGH  (hp_sd 797.36 - 1293.93, 8 ROIs)
+     gate   A_hf ratio       SE    dsig px       SE   sigma   n<0  n_eff_loc  gof med
+        0      1.00000      nan   +0.00000      nan     nan     0      1.000      nan
+      0.5      0.98525      nan   -0.25390      nan     nan     1      1.053   2.0250
+        1      0.96519      nan   -0.22168      nan     nan     1      1.074   2.9061
+        2      0.91455      nan   -0.16742      nan     nan     1      1.097   6.8899
+        4      0.84719      nan   +0.67619      nan     nan     0      1.116   0.8522
+
+(39s)

@@ -1,0 +1,56 @@
+==============================================================================
+M98 S6 -- AXIS control: are M92 and the shipped knob the same knob?
+==============================================================================
+
+  shipped   merge.rs:319   admits  best - focus <= T*sqrt(2)*0.015214
+                           LARGER T admits MORE frames.  Default 4.0.
+  M57/M92   m57lib.py:510  admits  cf >= gate * peak
+                           LARGER gate admits FEWER frames.
+  They are different acceptance RULES on opposite-running axes, not
+  two settings of one knob.  mean n_eff is the only bridge either
+  report supplies.
+
+--- shipped-axis n_eff calibration: 112MSDCF half A, 40 frames (M92's stack) ---
+   --gate  tol (DN-norm)  mean n_eff  1-frame px  pred sigma
+        0       0.000000       1.000     100.00%     1.0000x
+      0.5       0.010758       1.309      80.87%     0.9330x
+        1       0.021516       1.809      68.00%     0.8750x
+        2       0.043032       3.457      50.66%     0.7879x
+        4       0.086063       6.489      29.89%     0.6812x
+
+--- shipped-axis n_eff calibration: bee-3-cpl half A, 150 frames ---
+   --gate  tol (DN-norm)  mean n_eff  1-frame px  pred sigma
+        0       0.000000       1.000     100.00%     1.0000x
+      0.5       0.010758       1.711      76.25%     0.8945x
+        1       0.021516       3.437      68.84%     0.8234x
+        2       0.043032      11.734      63.44%     0.7570x
+        4       0.086063      28.461      56.61%     0.7099x
+
+--- bee-3-cpl, FULL 299 frames, alignment ON, one statistics pass ---
+   --gate  mean n_eff   M85 (align OFF)    ratio
+        4      55.321            60.860   0.9090
+
+  MEASURED: correcting the registration LOWERS mean n_eff at every
+  rung.  Registered frames are more distinguishable in focus, so
+  fewer of them are statistically indistinguishable from the
+  winner and fewer are admitted.  The gate ladder M85 published
+  was averaging over misregistration as well as defocus.
+
+--- placing M92's contrast on the shipped axis ---
+  M92 MEASURED its near-selector end at mean n_eff 1.45-2.08 on
+  112MSDCF (report S8).  It does not report n_eff at its 0.50 end.
+  On the shipped axis, the SAME stack gives:
+    --gate 0    -> n_eff 1.000
+    --gate 0.5  -> n_eff 1.309
+    --gate 1    -> n_eff 1.809
+    --gate 2    -> n_eff 3.457
+    --gate 4    -> n_eff 6.489
+  So M92's near-selector end sits at shipped --gate ~0.7-1.2, and
+  the shipped DEFAULT reaches n_eff 6.489 -- the whole shipped
+  ladder on this stack spans 1.000 to 6.489.
+  Whatever M92's 0.50 end admits, the shipped knob's ENTIRE range
+  from pure selection to the default is bounded by the 0 -> 4
+  contrast this milestone measured directly on the same stack.
+  AXIS control: GREEN -- the objection stands.  The registered
+  failing value (shipped default admitting FEWER frames than
+  M92's 0.50 end) is not observed.
