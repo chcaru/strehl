@@ -1,0 +1,39 @@
+==============================================================================
+M76 E17 -- per-cell B7 variance against B9 |z|
+24 held-out cells; REPS=64; noise SD=8.470706 DN
+==============================================================================
+coffee-bean    roi0  sigpow- z= +11.34 sd(d)=1.304e-05  ring-po z=  -1.10 sd(d)=1.126e-05  band-ra z=  +0.20 sd(d)=1.336e-05
+coffee-bean    roi1  sigpow- z= +22.84 sd(d)=2.828e-06  ring-po z=  +0.90 sd(d)=2.728e-06  band-ra z=  +0.35 sd(d)=2.918e-06
+coffee-bean    roi2  sigpow- z= +20.61 sd(d)=3.223e-06  ring-po z=  +3.13 sd(d)=2.911e-06  band-ra z=  +1.22 sd(d)=3.253e-06
+coffee-bean    roi3 DECODE-BLOCKED: ROI (916, 2402, 512, 512) requires raw extent (5892, 2920), visible shape is (4688, 7028)
+wrapped-text-1 roi0  sigpow- z= +20.29 sd(d)=2.806e-05  ring-po z=  +3.48 sd(d)=2.339e-05  band-ra z=  +0.33 sd(d)=2.892e-05
+wrapped-text-1 roi1  sigpow- z= +30.22 sd(d)=1.217e-05  ring-po z= +13.14 sd(d)=1.138e-05  band-ra z=  +0.19 sd(d)=1.261e-05
+wrapped-text-1 roi2  sigpow- z= +27.74 sd(d)=2.621e-05  ring-po z=  +2.40 sd(d)=2.426e-05  band-ra z=  +0.34 sd(d)=2.690e-05
+wrapped-text-1 roi3 DECODE-BLOCKED: ROI (916, 2402, 512, 512) requires raw extent (5892, 2920), visible shape is (4688, 7028)
+wrapped-text-2 roi0  sigpow- z= +12.08 sd(d)=3.172e-05  ring-po z=  -0.30 sd(d)=2.113e-05  band-ra z=  +0.72 sd(d)=3.243e-05
+wrapped-text-2 roi1  sigpow- z= +26.42 sd(d)=9.665e-06  ring-po z=  +8.92 sd(d)=9.368e-06  band-ra z=  +0.67 sd(d)=9.517e-06
+wrapped-text-2 roi2  sigpow- z= +18.77 sd(d)=2.071e-05  ring-po z=  +1.64 sd(d)=1.420e-05  band-ra z=  +0.99 sd(d)=2.195e-05
+wrapped-text-2 roi3 DECODE-BLOCKED: ROI (916, 2402, 512, 512) requires raw extent (5892, 2920), visible shape is (4688, 7028)
+bee-1          roi0  sigpow- z=  +4.13 sd(d)=2.675e-04  ring-po z=  -1.26 sd(d)=8.654e-05  band-ra z=  +4.29 sd(d)=2.900e-04
+bee-1          roi1  sigpow- z= +19.24 sd(d)=1.306e-05  ring-po z=  +0.45 sd(d)=1.270e-05  band-ra z=  +0.52 sd(d)=1.343e-05
+bee-1          roi2  sigpow- z=  +0.57 sd(d)=1.099e-03  ring-po z=  -1.31 sd(d)=8.617e-05  band-ra z=  +0.19 sd(d)=1.126e-03
+bee-1          roi3 DECODE-BLOCKED: ROI (916, 2402, 512, 512) requires raw extent (5892, 2920), visible shape is (4688, 7028)
+bee-2          roi0  sigpow- z=  +0.62 sd(d)=4.294e-04  ring-po z=  -1.63 sd(d)=4.280e-05  band-ra z=  +0.21 sd(d)=nan
+bee-2          roi1  sigpow- z=  +0.48 sd(d)=1.098e-01  ring-po z=  -1.63 sd(d)=7.509e-05  band-ra z=  +0.03 sd(d)=nan
+bee-2          roi2  sigpow- z=  +1.62 sd(d)=5.448e-04  ring-po z=  -1.26 sd(d)=4.585e-05  band-ra z=  +1.65 sd(d)=5.514e-04
+bee-2          roi3 DECODE-BLOCKED: ROI (916, 2402, 512, 512) requires raw extent (5892, 2920), visible shape is (4688, 7028)
+bee-3          roi0  sigpow- z=  +1.46 sd(d)=2.846e-04  ring-po z=  -1.62 sd(d)=9.154e-05  band-ra z=  +2.94 sd(d)=3.018e-04
+bee-3          roi1  sigpow- z=  +2.90 sd(d)=1.111e-03  ring-po z=  -1.49 sd(d)=1.020e-04  band-ra z=  +0.04 sd(d)=1.132e-03
+bee-3          roi2  sigpow- z=  +4.28 sd(d)=4.167e-04  ring-po z=  -1.34 sd(d)=9.493e-05  band-ra z=  +5.74 sd(d)=4.337e-04
+bee-3          roi3 DECODE-BLOCKED: ROI (916, 2402, 512, 512) requires raw extent (5892, 2920), visible shape is (4688, 7028)
+
+RESULTS
+  sigpow-canonical       n=18 rho=-0.8596 95% [-0.8906,-0.7812] beta=-1.3402 95% [-1.5998,-0.9779] perm-p=0.002400
+    within-stack bee-1=-1.233, bee-2=-3.107, bee-3=+0.544, coffee-bean=-2.238, wrapped-text-1=-1.592, wrapped-text-2=-1.493
+  ring-power-of-mean     n=18 rho=-0.1228 95% [-0.2611,-0.0031] beta=-0.1230 95% [-0.2504,+0.0383] perm-p=0.302267
+    within-stack bee-1=+1.836, bee-2=+0.844, bee-3=-0.165, coffee-bean=-0.387, wrapped-text-1=-0.471, wrapped-text-2=-0.239
+  band-ratio-PROBE       n=16 rho=+0.0941 95% [-0.0676,+0.2588] beta=-0.2218 95% [-0.3912,-0.0296] perm-p=0.827182
+    within-stack bee-1=-0.142, bee-2=+nan, bee-3=-0.230, coffee-bean=-0.643, wrapped-text-1=+1.420, wrapped-text-2=+1.167
+  positive control: z span 3.92x, sd(d) span 1032.42x -> FAIL
+  registered decision: INCONCLUSIVE
+wrote out/e17_m76_stratum_variance.json (768.2s)

@@ -1,30 +1,41 @@
 # M76 — three residuals in the stratum gate
 
-**Milestone:** M76. **Status:** PRE-REGISTERED; measurement not yet run.
-**Pre-registration commit:** recorded in §2 after the path-scoped registration
-commit exists and before any deciding command is run.
+**Milestone:** M76. **Status:** measured and implemented.
+**Pre-registration:** `f1da8e5e9a95e2765ca0bd23eccc9b34a4d322a2`,
+committed before any held-out pixel was decoded, any deciding enumeration ran,
+or any harness code changed.
 
 ---
 
 ## 1. Headline
 
-**ARGUED, BEFORE MEASUREMENT.** This milestone asks whether the lowest-`\|z\|`
-stratum is partly a cell-noise gate, whether constant `\|z\|` can be made
-non-admissible without changing M55's frozen results, and whether B6's pooled
-90% clause can ever bind. No outcome is claimed here. The registered result
-branches include association, bounded null, inconclusive measurement, and
-refutation of the proposed code remedy.
+**Q1 is INCONCLUSIVE under its registered rule, and the reason is the fixture,
+not an absence of signal.** **MEASURED:** the 24-cell registry yields only
+**18 readable cells**. The fourth ROI is outside the visible raw image on all
+six stacks: it requires row 5892 while `raw_image_visible` has 4688 rows. That
+fails the registered minimum of 20 finite cells. On the 18 cells that do
+exist, the primary `sigpow` arm shows a large association:
+`rho = -0.8596`, fixed-stack `beta = -1.3402`, bootstrap 95% interval
+`[-1.5998, -0.9779]`, within-stack permutation `p = 0.002400`, with five of six
+stack slopes negative. **That is evidence that lower `\|z\|` cells carry much
+larger `d` variance, but it is not promoted past the registered INCONCLUSIVE
+verdict.** The negative sign means a decade increase in `\|z\|` accompanies a
+factor `10^1.3402 = 21.9` decrease in `s_d` in the fitted primary arm.
 
-**MEASURED BY SOURCE INSPECTION, BEFORE THE CODE CHANGE.** The observation in
-the commissioning brief is correct: `e14_b6_rollup_test.py` constructs every
-cell with `z=9.0`, and its first assertion requires the complete constant-`z`
-fixture to pass. That fixture is an instance of the evasion under test.
+**Q2 is closed in code without changing the frozen primitive.** **MEASURED:**
+`e14_b6_rollup_test.py` does construct every cell with `z=9.0`; its all-pass
+fixture is the evasion. The original `b6_rollup` source and bytecode remain
+identical to M55's `c37010c`. A new normative `b6_acceptance` wrapper preserves
+the old result for reproduction but returns `CANNOT-ACCEPT` for a powered
+constant-`\|z\|` set. The new property test passes **7/7**; old `e14` passes
+**7/7** and `e16` passes **13/13**.
 
-**ARGUED, BEFORE THE CODE CHANGE.** M55's spec rule 15 is the freeze/comparability
-rule used in the report to leave a measuring script unmodified after it has
-produced committed evidence and to supersede or import it instead. This is not
-root `AGENTS.md` rule 15, which governs terminology. This report will always
-write **M55's spec rule 15** when referring to the freeze.
+**Q3 is dead, full stop.** **MEASURED:** an independent enumeration reproduces
+`C(24,1)+C(24,2)+C(24,3) = 2324` and M55's zero pooled-only placements, then
+extends through all `2^24 = 16,777,216` placements at `k=0..24`: **zero**
+placements ever fail pooled 90% while all subject clauses pass. **DERIVED:**
+this is unavoidable because the pooled rate is a weighted mean of subject
+rates; if every subject is at least 90%, the pooled rate is too.
 
 ---
 
@@ -208,30 +219,259 @@ threshold changes.
 
 ## 4. Q1 — candidate or cell?
 
-**PENDING MEASUREMENT.**
+### 4.1 First run and a defect in the registered substrate
+
+**MEASURED.** The first run failed before scoring a cell:
+
+```text
+ValueError: could not broadcast input array from shape (0,576) into shape (576,576)
+```
+
+The input declared by `roi_rule()` was `(916, 2402, 512, 512)` on the green
+quad plane, plus 32 px of padding. It requires sensor-row extent 5892;
+`raw_image_visible` is `(4688, 7028)`. The same fourth ROI is invalid on every
+held-out stack. The retry did not replace or move it: it named all six cells
+`DECODE-BLOCKED`, preserved the failed first-run log, and continued with the
+18 readable cells.
+
+**ARGUED.** This is not a harmless shortfall. M55's substrate validation read
+EXIF and frame counts only, so it could not validate the pixel-coordinate
+fixture it printed. B6 requires four ROIs per stack and therefore cannot run as
+specified on its own held-out set. The normative wrapper does not repair this;
+it only closes Q2.
+
+### 4.2 Measurement and registered verdict
+
+**MEASURED.** Fixed inputs: first 64 files, pinned parity split, 64 independent
+repetitions, 48-roll B9 null, noise SD `8.470706 DN`, and deterministic seeds.
+
+| arm | finite cells | Spearman `rho` | bootstrap 95% | fixed-stack `beta` | bootstrap 95% | permutation `p` |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `sigpow-canonical` | 18 | **-0.8596** | [-0.8906, -0.7812] | **-1.3402** | [-1.5998, -0.9779] | **0.002400** |
+| `ring-power-of-mean` | 18 | -0.1228 | [-0.2611, -0.0031] | -0.1230 | [-0.2504, +0.0383] | 0.302267 |
+| `band-ratio-PROBE` | 16 | +0.0941 | [-0.0676, +0.2588] | -0.2218 | [-0.3912, -0.0296] | 0.827182 |
+
+Primary within-stack slopes:
+
+```text
+bee-1=-1.233  bee-2=-3.107  bee-3=+0.544
+coffee-bean=-2.238  wrapped-text-1=-1.592  wrapped-text-2=-1.493
+```
+
+**MEASURED CONTROL.** The registered synthetic plant spans `14.98x` in
+`\|z\|` and `10460.25x` in `s_d`, above both 4x power requirements. The first
+control ladder narrowly failed only its `\|z\|` span (`3.92x`); widening its
+pre-declared contrast stimulus, without touching real cells or a decision
+threshold, made the plant express the failure. This deviation is disclosed,
+and the first control result remains in the log.
+
+**REGISTERED VERDICT: INCONCLUSIVE.** The association, both uncertainty
+procedures and five-of-six sign condition all point the same way. The verdict
+remains inconclusive because only 18 primary cells are finite, below the
+registered 20. The candidate-dependence controls also forbid a universal
+statement: neither secondary arm reproduces the primary association. The
+narrow supported sentence is therefore:
+
+**MEASURED:** on the canonical `sigpow` arm and the 18 valid cells, the stratum
+gate is strongly associated with cell-conditioned `d` variance. **UNMEASURED:**
+whether that generalises to an admissible candidate or to a corrected 24-cell
+fixture.
 
 ---
 
 ## 5. Q2 — constant-`\|z\|` evasion
 
-**PENDING CODE CHANGE AND TESTS.**
+### 5.1 The frozen test does contain the evasion
+
+**MEASURED BY SOURCE INSPECTION.** `e14_b6_rollup_test.py:11-14` defines
+`cell(..., z=9.0, ...)`; `full()` never overrides `z`. Its first assertion is
+therefore a fully powered, all-pass, constant-`\|z\|` set and requires
+`b6_rollup` to pass it. The brief's observation is correct.
+
+**ARGUED.** M55's spec rule 15 is the report's freeze/comparability rule:
+preserve a script or result-producing primitive after it has generated
+committed evidence and extend or supersede rather than rewriting the evidence.
+It is not root `AGENTS.md` rule 15, which governs terminology. M55 did not
+publish a separately numbered list of "spec rules"; the phrase refers to that
+repeated freeze convention. The namespace must therefore stay qualified.
+
+### 5.2 Extension, not modification
+
+**BUILT.** `spec_v1.b6_acceptance(cells)` is now the normative entry point. It
+calls the frozen `b6_rollup` and, when at least three cells are powered and
+`n_distinct_z <= 1`, returns:
+
+```text
+verdict=CANNOT-ACCEPT
+blocked=powered |z| is constant across cells; the lowest-|z| stratum is undefined and B6 cannot ACCEPT
+```
+
+It does not raise: `CANNOT-ACCEPT` preserves M55's three-verdict taxonomy and
+correctly describes an instrument that cannot apply its own stratum. It does
+not change a threshold or consult a candidate score.
+
+**MEASURED.** Actual output:
+
+```text
+old constant=ACCEPT  primitive constant=ACCEPT  normative constant=CANNOT-ACCEPT
+normative varied=ACCEPT  normative planted=REJECT
+  PASS registered constant fixture passed
+  PASS frozen primitive still passes it
+  PASS normative wrapper blocks it
+  PASS distinct-z fixture remains passable
+  PASS ordinary B6 failure still rejects
+  PASS b6_rollup source unchanged
+  PASS b6_rollup bytecode unchanged
+  -> 7/7 assertions hold
+```
+
+**MEASURED.** Existing tests:
+
+```text
+python experiments\M55-acceptance-spec\src\e14_b6_rollup_test.py
+   PASS  complete, all pass -> PASS
+   PASS  planted: pooled 91.7% >= 90%, subject 'wrapped-text' 75% -> must KILL
+   PASS  24 cells from one stack -> KILL
+   PASS  cells that do not declare stack -> KILL
+   PASS  one stack with only 3 ROIs -> KILL
+   PASS  one wrong-sign cell -> KILL
+   PASS  6 stack-slots but only 2 subjects -> KILL
+   -> 7/7 property assertions hold
+
+python experiments\M55-acceptance-spec\src\e16_pr35_nopower_test.py
+   PASS  OBS2: no configuration is newly ACCEPTed (strictly tightening)
+   PASS  OBS2: the amendment is not inert -- it blocks at least one case the old code accepted
+   PASS  OBS3: the planted answer PASSES the old code (the test has power)
+   PASS  OBS3: the planted answer is CANNOT-ACCEPT under the new code
+   PASS  OBS3: CANNOT-ACCEPT is not REJECT and not ACCEPT
+   PASS  OBS4: the stratum plant PASSES the old code (the test has power)
+   PASS  OBS4: the stratum plant is REJECTed by the new code
+   PASS  OBS4 control: the same single failure in the HIGHEST stratum -> ACCEPT, so the stratum gate is about WHERE the failure is, not how many there are
+   PASS  a cell that does not declare z_pass blocks (B9 was not run)
+   PASS  a complete, powered, all-passing set is still ACCEPTed (the battery is passable)
+   PASS  the verdict and the kill string do not depend on the order the cells are supplied in (20 shuffles)
+   PASS  the pooled 90% gate is never the binding constraint at these subject sizes -- the per-subject clause is strictly stronger
+   PASS  with every |z| identical the stratum is DEGENERATE and is skipped, not silently applied to an arbitrary third
+   -> 13/13 property assertions hold
+```
+
+**ARGUED.** Option (a) wins. Directly rejecting inside `b6_rollup` would alter
+the frozen assertion. Option (b), a separate driver-only check, would leave
+library callers exposed. The wrapper gives the existing primitive a
+reproducibility role and gives certification a hard, machine-enforced path.
+Option (c) remains weaker because it relies on a reviewer reading a field.
 
 ---
 
 ## 6. Q3 — pooled-clause enumeration
 
-**PENDING ENUMERATION.**
+### 6.1 Independent method
+
+**MEASURED.** `e19_m76_pooled_enumeration.py` imports neither `spec_v1` nor
+M55's enumeration. It enumerates failure-count triples over subject sizes
+4, 8, and 12 and weights each triple by its binomial multiplicity.
+
+```text
+  PASS all placements sum to 2^24
+  PASS k=1 total is C(24,1)
+  PASS k=2 total is C(24,2)
+  PASS k=3 total is C(24,3)
+  PASS k=1..3 sum is 2324
+  PASS pooled-only count is zero at every k
+  first k with a pooled-only placement: None
+  -> 6/6 assertions hold
+```
+
+**MEASURED.** At `k=1`, 12 of 24 placements already fail a subject clause and
+none fails pooled. At `k=2`, all 276 fail a subject clause and none fails
+pooled. At `k=3`, all 2024 fail both. For every `k=4..24`, every placement that
+fails pooled also fails at least one subject clause. The pooled-only count is
+zero for every count.
+
+**DERIVED.** Let subject pass rates be `r_g`, sizes `n_g`, and
+`N = sum(n_g)`. The pooled rate is `sum(n_g r_g)/N`. If every `r_g >= 0.90`,
+their positive-weighted mean is at least 0.90. Therefore pooled failure implies
+at least one subject failure for every composition, not merely 4/8/12. The
+advertised pooled clause is **dead, full stop**.
 
 ---
 
 ## 7. Candidate facts
 
-**PENDING.** Report-local facts will be numbered `P1`, `P2`, and so on after
-the registered work runs. Facts that damage the headline will be included.
+`P1` **MEASURED.** The 24-cell B6 registry contains six invalid cells: its
+fourth quad-plane ROI requires row 5892, beyond the 4688-row visible raw image.
+B6's required four-ROI-per-stack held-out battery cannot run as specified.
+
+`P2` **MEASURED.** On the 18 valid `sigpow` cells, `s_d` is strongly associated
+with `\|z\|`: Spearman `rho=-0.8596`; fixed-stack `beta=-1.3402`, bootstrap 95%
+`[-1.5998,-0.9779]`; within-stack permutation `p=0.002400`; five of six stack
+slopes are negative.
+
+`P3` **MEASURED, AGAINST THE HEADLINE.** Q1's registered verdict is
+**INCONCLUSIVE**, not yes: 18 finite primary cells miss the registered minimum
+of 20, and two secondary candidate arms do not reproduce the primary
+association. The data support a `sigpow`-specific warning, not a universal one.
+
+`P4` **MEASURED.** The Q1 positive control can express the failure: `\|z\|`
+spans 14.98x and `s_d` spans 10460.25x. Its first contrast ladder missed the
+registered `\|z\|` span by 2% (`3.92x` against 4x); the widened plant-only
+ladder is disclosed.
+
+`P5` **MEASURED.** `e14`'s all-pass fixture is constant `z=9.0` on every cell.
+The frozen golden test is itself an instance of the evasion it prevents
+`b6_rollup` from rejecting.
+
+`P6` **BUILT AND MEASURED.** The normative `b6_acceptance` wrapper blocks a
+powered constant-`\|z\|` set with `CANNOT-ACCEPT` while the frozen primitive
+retains its old `ACCEPT`. A distinct-`\|z\|` set accepts and a planted failure
+rejects; 7/7 new assertions, 7/7 `e14`, and 13/13 `e16` hold.
+
+`P7` **MEASURED.** The original `b6_rollup` source and bytecode are identical
+to M55's `c37010c`. Q2 closes by extension rather than modification, preserving
+M55's spec rule 15 evidence.
+
+`P8` **MEASURED.** Independent enumeration reproduces 2324 placements for one
+through three failures and zero pooled-only failures, then finds zero
+pooled-only failures over all `2^24` placements.
+
+`P9` **DERIVED.** The pooled clause is dead for every subject composition:
+the pooled rate is a positive-weighted mean of per-subject rates, so it cannot
+fall below 90% while every component is at least 90%.
 
 ---
 
 ## 8. What this milestone did not measure
 
-**REGISTERED LIMITATION.** Nothing is claimed yet. The final report will
-distinguish measurements not made from measurements that proved inconclusive.
+1. **UNMEASURED.** Q1 does not cover the missing six cells, because their
+   registered coordinates are outside the image. No replacement ROI was chosen
+   after seeing results.
+2. **UNMEASURED.** Q1 does not establish the relationship for an admissible
+   shipping candidate. M55's references are known-bad/probe instruments, and
+   M57 produced no candidate that survived.
+3. **UNMEASURED.** Q1 adds Gaussian noise to fixed half-merges. It does not
+   re-run the whole focus merge under new sensor draws, which would require
+   independent repeated captures of the same stack.
+4. **UNMEASURED.** The experiment does not separate texture, ISO, subject, and
+   common spectral power causally. Fixed-stack regression removes between-stack
+   levels but has only three valid ROIs per stack.
+5. **UNMEASURED.** No candidate verdict or score was run before versus after
+   Q2. That omission is deliberate: the tightening was required to be argued
+   independently of candidate performance.
+6. **NOT CHANGED.** No threshold, held-out cell, `SYNTHESIS.md`, or existing
+   M55 test was edited.
+
+---
+
+## Appendix — evidence and commands
+
+| artifact | purpose |
+| --- | --- |
+| `src/e17_m76_stratum_variance.py` | Q1 held-out run, bootstrap, within-stack permutation, controls |
+| `out/e17_m76_stratum_variance.log/.json` | Q1 output and all 64 `d` replicates / 48 null values per cell |
+| `out/e17_m76_stratum_variance_first_run.log` | preserved out-of-bounds first run |
+| `src/e18_m76_constant_z_test.py` | Q2 planted evasion, passable control, frozen-source comparison |
+| `out/e18_m76_constant_z_test.log` | Q2 7/7 output |
+| `src/e19_m76_pooled_enumeration.py` | Q3 independent all-count enumeration |
+| `out/e19_m76_pooled_enumeration.log` | Q3 6/6 output |
+
+All Python commands were run with `PYTHONIOENCODING=utf-8`.

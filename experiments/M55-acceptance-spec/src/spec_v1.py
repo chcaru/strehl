@@ -656,6 +656,27 @@ def b6_rollup(cells):
                 kill=None if ok else "; ".join(allr))
 
 
+# Normative entry point added by M76.  The frozen b6_rollup remains available
+# to reproduce M55's committed e14 vectors; new certification must call this.
+def b6_acceptance(cells):
+    """Normative B6 entry point.
+
+    `b6_rollup` is retained unchanged because M55's spec rule 15 freezes its
+    existing input/output assertions.  Certification goes through this wrapper,
+    which closes the constant-|z| escape without rewriting those assertions.
+    """
+    out = dict(b6_rollup(cells))
+    if out["n_powered"] >= TH["b6_strata"] and out["n_distinct_z"] <= 1:
+        block = ("powered |z| is constant across cells; the lowest-|z| stratum "
+                 "is undefined and B6 cannot ACCEPT")
+        old_blocked, old_kill = out.get("blocked"), out.get("kill")
+        out["passed"] = False
+        out["verdict"] = "CANNOT-ACCEPT"
+        out["blocked"] = "; ".join(x for x in (old_blocked, block) if x)
+        out["kill"] = "; ".join(x for x in (block, old_kill) if x)
+    return out
+
+
 # --------------------------------------------------------------------------
 # B8 -- calibration sensitivity.  A candidate MAY consume the sensor model,
 # but then every constant it names is perturbed by x0.5, x0.9, x1.1 and x2.0

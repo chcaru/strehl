@@ -1,0 +1,13 @@
+==============================================================================
+M76 E18 -- constant-|z| normative-wrapper property test
+original frozen source: c37010c317a4526822ce502848bcd574b66d1816
+old constant=ACCEPT  primitive constant=ACCEPT  normative constant=CANNOT-ACCEPT
+normative varied=ACCEPT  normative planted=REJECT
+  PASS registered constant fixture passed
+  PASS frozen primitive still passes it
+  PASS normative wrapper blocks it
+  PASS distinct-z fixture remains passable
+  PASS ordinary B6 failure still rejects
+  PASS b6_rollup source unchanged
+  PASS b6_rollup bytecode unchanged
+  -> 7/7 assertions hold
