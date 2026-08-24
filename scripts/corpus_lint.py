@@ -1256,8 +1256,77 @@ def check_c2_report_paths(md_docs, root):
 # driver
 # --------------------------------------------------------------------------
 
+def check_c3_experiment_dir_attribution(root):
+    """An `experiments/<Mn>-<slug>` directory must not be named for a milestone
+    other than the one whose report owns `<slug>`.
+
+    This exists because of fact 1049. `experiments/M60-bimodality/` holds the
+    work reported in `M63-bimodality.md`; there is no M60 bimodality report and
+    there never was. The orchestrator read the directory's number as the
+    report's and briefed M74 to read a file that does not exist. Rule 40 caught
+    it, because naming prior reports in a brief forces the agent to open them.
+
+    Neither existing check can see this. C1 validates numbered citations
+    against the record, and `M60` is a real milestone. C2 validates
+    `docs/research/...` paths, and a directory is not one. **The misattribution
+    lives in the filesystem, where nothing was looking.**
+
+    ACCEPTED, NOT FIXED, and the distinction is deliberate. The directory holds
+    252 files and is referenced from seventeen files including seven committed
+    reports. Those reports are records of what was run at the time, under the
+    path it was run at; rewriting them to match a rename would trade one stale
+    reference for many falsified ones. The collision is therefore recorded here
+    rather than erased, and any NEW one fails.
+
+    Residual is zero once the accepted entry is excluded, so this ships
+    blocking rather than advisory.
+    """
+    accepted = {
+        "M60-bimodality": "M63 — reported in M63-bimodality.md; see fact 1049. "
+                          "Not renamed: 252 files, 17 referencing files, 7 of "
+                          "them committed reports that record this path.",
+    }
+    exp = os.path.join(root, "experiments")
+    if not os.path.isdir(exp):
+        return []
+    owners = {}
+    research = os.path.join(root, "docs", "research")
+    if os.path.isdir(research):
+        for name in os.listdir(research):
+            m = re.match(r"(M\d+[a-z]?)-(.+)\.md$", name)
+            if m:
+                owners.setdefault(m.group(2).lower(), set()).add(m.group(1))
+    out = []
+    for name in sorted(os.listdir(exp)):
+        if not os.path.isdir(os.path.join(exp, name)):
+            continue
+        m = re.match(r"(M\d+[a-z]?)-(.+)$", name, re.I)
+        if not m:
+            continue
+        milestone, slug = m.group(1), m.group(2).lower()
+        own = [f for f in os.listdir(research)
+               if f.lower().startswith(milestone.lower() + "-")] if os.path.isdir(research) else []
+        if any(slug in f.lower() for f in own):
+            continue
+        holders = owners.get(slug)
+        if not holders:
+            continue
+        if milestone.lower() in {h.lower() for h in holders}:
+            continue
+        if name in accepted:
+            continue
+        out.append(Violation(
+            "experiments/" + name, 0, "C3",
+            "experiment directory is named for %s, but the report owning the "
+            "subject '%s' is %s — a milestone number encoded in a path that "
+            "no citation check validates (fact 1049)"
+            % (milestone, slug, "/".join(sorted(holders))),
+            "experiments/" + name))
+    return out
+
+
 CHECKS = ["S1", "S2", "S3", "S4", "S5", "N1", "N2", "N4", "N5", "C1", "C2",
-          "A1", "A2", "A4"]
+          "C3", "A1", "A2", "A4"]
 ADVISORIES = ["N3", "A3", "Q1"]
 
 
@@ -1338,6 +1407,8 @@ def main(argv=None):
         violations += check_c1_citations(md_docs + rs_docs, index)
     if "C2" in wanted:
         violations += check_c2_report_paths(md_docs, root)
+    if "C3" in wanted:
+        violations += check_c3_experiment_dir_attribution(root)
     if "A1" in wanted:
         violations += check_a1_question_status(md_docs + rs_docs, index)
     if "A2" in wanted:
