@@ -1,0 +1,84 @@
+{
+ "reference_rises": [
+  {
+   "fc_cymm": 43.9,
+   "rise_um": 23.975629339443003
+  },
+  {
+   "fc_cymm": 53.9,
+   "rise_um": 20.39923527517304
+  },
+  {
+   "fc_cymm": 86.3,
+   "rise_um": 14.108849465971218
+  },
+  {
+   "fc_cymm": 106.0,
+   "rise_um": 12.01169169176316
+  }
+ ],
+ "reference_mtf40": [
+  {
+   "aperture": "f/5.6",
+   "fc_cymm": 86.3,
+   "contrast_dn": 2600.0,
+   "mtf40_mean": 0.40795124830505375,
+   "mtf40_sd": 0.02151051656501532
+  },
+  {
+   "aperture": "f/11",
+   "fc_cymm": 43.9,
+   "contrast_dn": 1500.0,
+   "mtf40_mean": 0.046573165896351,
+   "mtf40_sd": 0.011145574067763389
+  }
+ ],
+ "plateau": [
+  {
+   "frame": 3,
+   "file": "DSC00027.ARW",
+   "rise_um": 34.184589799313144,
+   "angle_deg": -2.0469039779779576
+  },
+  {
+   "frame": 4,
+   "file": "DSC00028.ARW",
+   "rise_um": 30.56240479954772,
+   "angle_deg": -2.0506972132710017
+  },
+  {
+   "frame": 5,
+   "file": "DSC00029.ARW",
+   "rise_um": 31.242982213169512,
+   "angle_deg": -2.0579356326106963
+  },
+  {
+   "frame": 6,
+   "file": "DSC00030.ARW",
+   "rise_um": 31.747211111886525,
+   "angle_deg": -2.0645309114682826
+  },
+  {
+   "frame": 7,
+   "file": "DSC00031.ARW",
+   "rise_um": 31.44228295449998,
+   "angle_deg": -2.0668964976529005
+  },
+  {
+   "frame": 8,
+   "file": "DSC00032.ARW",
+   "rise_um": 31.459473082537404,
+   "angle_deg": -2.0670479121791945
+  },
+  {
+   "frame": 9,
+   "file": "DSC00033.ARW",
+   "rise_um": 31.624473872037626,
+   "angle_deg": -2.0711977592175077
+  }
+ ],
+ "plateau_min_um": 30.56240479954772,
+ "plateau_max_um": 34.184589799313144,
+ "reference_rise_86p3_um": 14.108849465971218,
+ "plateau_best_over_diffraction": 2.1661868937832542
+}

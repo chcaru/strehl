@@ -574,3 +574,53 @@ def signal_bound_curve(freq_cymm, mtf, floor_arr, z=3.0, run_len=3,
         if hit[i:i + run_len].all():
             best = f[i + run_len - 1]
     return best
+
+def deramp_esf(centres_um, esf, core_um=48.0):
+    """Remove a DIFFERENT linear ramp from each ESF wing.
+
+    Real subjects are not flat either side of a silhouette: measured on
+    119MSDCF ROI A1, the dark wing falls 527 DN over 154 um while the bright
+    wing climbs 910 DN over 169 um, 32% of the edge contrast.  A single
+    constant pedestal, subtracted from both sides at once, leaves a
+    step-shaped baseline in the LSF and dumps spurious low-frequency energy
+    into mag[0], which deflates the entire normalised MTF.
+
+    Subtracting slope_L*d for d<0 and slope_R*d for d>0 removes both ramps,
+    preserves the step height, and is continuous at d=0 because both
+    corrections vanish there.  It cannot create a transition: it is odd-free
+    and linear on each side.
+    """
+    c = np.asarray(centres_um, float)
+    e = np.asarray(esf, float).copy()
+    out = {}
+    for tag, m in (("L", c < -core_um), ("R", c > core_um)):
+        if m.sum() < 8:
+            out[tag] = 0.0
+            continue
+        A = np.column_stack([np.ones(m.sum()), c[m]])
+        coef, *_ = np.linalg.lstsq(A, e[m], rcond=None)
+        out[tag] = float(coef[1])
+    e = e - np.where(c < 0, out["L"] * c, out["R"] * c)
+    return e, out["L"], out["R"]
+
+
+def sfr_from_sites2(values, X, Y, line, bin_um, half_width_um, taper_frac=0.25,
+                    detrend_iters=2, core_um=48.0, deramp=True):
+    """sfr_from_sites plus the per-wing ESF deramp of deramp_esf."""
+    r = sfr_from_sites(values, X, Y, line, bin_um, half_width_um, taper_frac,
+                       detrend_iters)
+    if not deramp:
+        r["slope_l"] = 0.0
+        r["slope_r"] = 0.0
+        return r
+    e2, sl, sr = deramp_esf(r["centres_um"], r["esf"], core_um)
+    f, mtf = sfr_from_esf(r["centres_um"], e2, taper_frac)
+    r = dict(r)
+    r["esf_raw"] = r["esf"]
+    r["esf"] = e2
+    r["freq_cymm"] = f
+    r["mtf"] = mtf
+    r["slope_l"] = sl
+    r["slope_r"] = sr
+    r["contrast"] = float(np.nanmax(e2) - np.nanmin(e2))
+    return r
