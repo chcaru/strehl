@@ -72,6 +72,7 @@
 use crate::boxfilter::box_mean;
 use crate::noise::NoiseModel;
 use crate::plane::{PlaneGeometry, QuadSource};
+use crate::softgate::{SoftGate, WEIGHT_FLOOR};
 use crate::{CfaPlane, Error, Result};
 
 /// Radius of the merge regulariser: 8, giving the measured 17x17 box.
@@ -321,6 +322,167 @@ impl Gate {
     }
 }
 
+/// Environment switch selecting a soft admission kernel.
+///
+/// Named here so the string lives in exactly one place, for the reason
+/// [`crate::optics::CA_ENV`] gives: a switch spelled independently in the code
+/// and in a harness's argv is a switch that will eventually be set and not
+/// read.
+pub const SOFT_GATE_ENV: &str = "STREHL_SOFT_GATE";
+
+/// Which soft admission kernel the merge is folding, if any.
+///
+/// `None` is the shipped top-hat [`Gate`] and **must remain the default**. Every
+/// byte-freeze in the corpus is taken against it; making a soft kernel default
+/// would break the entire regression net in one commit.
+///
+/// Both kernels share [`Gate::tolerance`] exactly, so the only thing that varies
+/// across this enum is the *shape* of the kernel over an unchanged, calibrated
+/// z-axis. That identity is what makes the comparison in M111 §15.7 a controlled
+/// one rather than two differently-scaled estimators.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SoftKernel {
+    /// `exp(-0.5 (gap/T)^2)` — [`crate::softgate::SoftGate`], M111's kernel.
+    ///
+    /// What you get if the response gap is normal with sd `T`, which is what
+    /// [`FOCUS_NOISE_SD`](crate::focus::FOCUS_NOISE_SD) was calibrated to
+    /// describe, so it is the kernel the existing noise model implies.
+    Gaussian,
+    /// `exp(-gap/T)` — the kernel [`crate::through_focus`] already folds at the
+    /// identical temperature, promoted here from diagnostic to admission.
+    ///
+    /// Heavier-tailed than the Gaussian, so it admits far-off frames more
+    /// readily. That is the direction M111 §15.8 measured `--gate 100000` to
+    /// destroy the photograph in, which is precisely why it is priced rather
+    /// than assumed.
+    Exponential,
+}
+
+/// The gap, in tolerances, at which `exp(-z)` reaches [`WEIGHT_FLOOR`].
+///
+/// `exp(-z) = 2^-16` gives `z = 16 ln 2 = 11.0904`. Derived from the same floor
+/// [`crate::softgate::cutoff_tolerances`] uses so the two kernels truncate at
+/// the same *weight*, not at the same *distance* — truncating both at one
+/// distance would silently make the comparison a comparison of supports.
+pub fn exponential_cutoff_tolerances() -> f32 {
+    -(f64::from(WEIGHT_FLOOR)).ln() as f32
+}
+
+impl SoftKernel {
+    /// The weight a frame with response `focus` earns against a winner at `best`.
+    ///
+    /// `soft` supplies the tolerance and is constructed from the same threshold
+    /// as the [`Gate`], so callers cannot accidentally price two kernels on two
+    /// scales. The [`SoftKernel::Gaussian`] arm delegates to M111's tested
+    /// implementation rather than restating the arithmetic, so this cannot drift
+    /// from the field prediction its cross-language pin is taken against.
+    ///
+    /// Guard-for-guard identical to [`SoftGate::weight`] on the exponential arm:
+    /// non-finite earns `0.0`, a frame at least as good as the winner earns
+    /// `1.0`, and a zero tolerance degenerates to the hard argmax.
+    #[inline]
+    pub fn weight(&self, soft: &SoftGate, focus: f32, best: f32) -> f32 {
+        match self {
+            SoftKernel::Gaussian => soft.weight(focus, best),
+            SoftKernel::Exponential => {
+                if !focus.is_finite() || !best.is_finite() {
+                    return 0.0;
+                }
+                let gap = best - focus;
+                if gap <= 0.0 {
+                    return 1.0;
+                }
+                let tol = soft.tolerance();
+                if tol <= 0.0 {
+                    return 0.0;
+                }
+                let z = gap / tol;
+                if z >= exponential_cutoff_tolerances() {
+                    return 0.0;
+                }
+                let w = (-z).exp();
+                if w < WEIGHT_FLOOR { 0.0 } else { w }
+            }
+        }
+    }
+}
+
+/// A [`SOFT_GATE_ENV`] value that names no kernel.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UnknownSoftKernel {
+    /// The value as the operator wrote it.
+    pub key: String,
+}
+
+impl core::fmt::Display for UnknownSoftKernel {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "unknown soft-gate kernel {:?}; known kernels: gaussian, exponential \
+             (unset, \"\", \"0\", \"off\" or \"false\" run the shipped hard gate)",
+            self.key
+        )
+    }
+}
+
+impl std::error::Error for UnknownSoftKernel {}
+
+/// Resolve the soft kernel from a [`SOFT_GATE_ENV`] value.
+///
+/// **Off by default, and it must stay that way** — see [`SoftKernel`].
+///
+/// The value must **name the kernel**, not merely be truthy, for the reason
+/// [`crate::optics::profile_from_setting`] refuses a bare `1`: there are two
+/// kernels and "yes, soften the gate" does not say which, so a truthy value is
+/// a request this function cannot honour. A typo is an `Err` rather than a
+/// `None`, because a typo that silently disables the fix is indistinguishable
+/// from the fix not working.
+///
+/// ```text
+/// STREHL_SOFT_GATE unset / "" / "0" / "off" / "false" -> Ok(None)   shipped top-hat
+/// STREHL_SOFT_GATE "gaussian"                         -> Ok(Some(Gaussian))
+/// STREHL_SOFT_GATE "exponential"                      -> Ok(Some(Exponential))
+/// STREHL_SOFT_GATE "1" / "true" / "on"                -> Err(..)    refuses to guess
+/// STREHL_SOFT_GATE "typo"                             -> Err(..)    refuses silently-off
+/// ```
+///
+/// Takes the value as an argument rather than reading the environment, so it is
+/// testable without mutating global process state from parallel test threads.
+pub fn kernel_from_setting(
+    value: Option<&str>,
+) -> core::result::Result<Option<SoftKernel>, UnknownSoftKernel> {
+    let raw = match value {
+        None => return Ok(None),
+        Some(v) => v.trim(),
+    };
+    if raw.is_empty()
+        || raw == "0"
+        || raw.eq_ignore_ascii_case("off")
+        || raw.eq_ignore_ascii_case("false")
+    {
+        return Ok(None);
+    }
+    if raw.eq_ignore_ascii_case("gaussian") {
+        return Ok(Some(SoftKernel::Gaussian));
+    }
+    if raw.eq_ignore_ascii_case("exponential") {
+        return Ok(Some(SoftKernel::Exponential));
+    }
+    Err(UnknownSoftKernel {
+        key: raw.to_string(),
+    })
+}
+
+/// [`kernel_from_setting`] applied to [`SOFT_GATE_ENV`] in the process
+/// environment.
+///
+/// A plain function rather than a cached `OnceLock`, matching
+/// [`crate::optics::active_profile`]: the cost is one `getenv` per merge, and a
+/// cache would make the switch un-testable within a process.
+pub fn active_kernel() -> core::result::Result<Option<SoftKernel>, UnknownSoftKernel> {
+    kernel_from_setting(std::env::var(SOFT_GATE_ENV).ok().as_deref())
+}
+
 /// Pass one: the regularised winner field.
 ///
 /// Carries O(1) state per pixel and is a commutative, associative fold, so the
@@ -444,7 +606,25 @@ pub struct Estimator {
     sum: [Vec<f32>; 4],
     /// Number of frames admitted at each pixel. This is `n_eff` for a plain
     /// mean, and it is an output, not a diagnostic — see fact 212.
+    ///
+    /// Under a [`SoftKernel`] this counts the frames earning a **non-zero**
+    /// weight, which is a strictly weaker statement than the count of frames
+    /// that meaningfully contributed. The Kish effective count is
+    /// [`Estimator::soft_n_eff`]; this field keeps its integer meaning so the
+    /// `u16` map format and the exact-equality determinism tests survive.
     n: Vec<u16>,
+    /// The soft admission kernel, if any. `None` is the shipped top-hat and is
+    /// the default.
+    soft: Option<SoftKernel>,
+    /// Per-pixel `sum w` and `sum w^2`.
+    ///
+    /// **Empty unless [`Estimator::new_soft`] built this estimator**, exactly as
+    /// `censor` and `luma_sum` encode their features being off. Emptiness is
+    /// what makes the hard path byte-identical *by construction*: with these
+    /// absent, [`Estimator::value`] takes the original integer divide and no
+    /// weighted arithmetic exists to round differently.
+    wsum: Vec<f32>,
+    wsq: Vec<f32>,
     /// Per-pixel, per-plane censoring state, four bits packed into one byte:
     /// bit `s` of `censor[i]` is set when plane `s` at pixel `i` is censored.
     ///
@@ -480,8 +660,49 @@ pub struct Estimator {
 
 impl Estimator {
     /// Begin pass two against a completed pass one.
+    ///
+    /// **This constructor resolves [`SOFT_GATE_ENV`] from the process
+    /// environment.** That is deliberate and it is the only reason the soft
+    /// kernel is reachable from `strehl stack` at all: the render path
+    /// constructs its estimators here, in `merge_cmd.rs`, which this milestone
+    /// does not own. Reading the switch at the point of use rather than
+    /// threading it through a call site matches
+    /// [`crate::optics::active_profile`], which the CA correction already does
+    /// for the same reason.
+    ///
+    /// With the variable unset — the shipped default — this is exactly the old
+    /// constructor: `soft` is `None`, `wsum`/`wsq` are unallocated, and no
+    /// weighted arithmetic exists anywhere in the fold.
+    ///
+    /// # Panics
+    ///
+    /// If [`SOFT_GATE_ENV`] is set to something that names no kernel. Failing
+    /// loudly is the point: a typo that silently disables the fix is
+    /// indistinguishable from the fix not working. Use [`Estimator::new_soft`]
+    /// to construct one without consulting the environment.
     pub fn new(stats: &FocusStats, gate: Gate) -> Self {
+        let kernel = match active_kernel() {
+            Ok(k) => k,
+            Err(e) => panic!("{e}"),
+        };
+        Self::new_soft(stats, gate, kernel)
+    }
+
+    /// Begin pass two with an explicitly chosen admission kernel.
+    ///
+    /// Ignores the environment, so it is safe to call from parallel tests. The
+    /// kernel shares `gate`'s threshold and therefore its tolerance exactly;
+    /// only the shape of the weight over the response gap changes.
+    ///
+    /// `kernel: None` is identical to the shipped hard gate in every observable
+    /// way, including the bytes of [`Estimator::value`].
+    pub fn new_soft(stats: &FocusStats, gate: Gate, kernel: Option<SoftKernel>) -> Self {
         let n = stats.geom.pixels();
+        let (wsum, wsq) = if kernel.is_some() {
+            (vec![0.0; n], vec![0.0; n])
+        } else {
+            (Vec::new(), Vec::new())
+        };
         Self {
             geom: stats.geom,
             gate,
@@ -490,6 +711,9 @@ impl Estimator {
             max_index: stats.max_index,
             sum: [vec![0.0; n], vec![0.0; n], vec![0.0; n], vec![0.0; n]],
             n: vec![0; n],
+            soft: kernel,
+            wsum,
+            wsq,
             censor: Vec::new(),
             censor_level: None,
             luma_sum: Vec::new(),
@@ -533,8 +757,67 @@ impl Estimator {
         self.frames
     }
     /// Frames admitted per pixel. Compare against fact 212's `nwide = 3`.
+    ///
+    /// **Deliberately still `&[u16]` under a soft kernel.** Row 7 of M111
+    /// §15.6 proposed returning the Kish count from here; it is not done,
+    /// because this accessor has 49 call sites across 10 files, is dumped
+    /// through a `u16` map format, and is compared with `assert_eq!` in the
+    /// determinism tests. Changing its type would ripple into files this
+    /// milestone does not own and would break an exact-equality test that is
+    /// load-bearing. The fractional count is [`Estimator::soft_n_eff`].
     pub fn n_eff(&self) -> &[u16] {
         &self.n
+    }
+
+    /// The admission kernel this estimator is folding, if any.
+    ///
+    /// `None` is the shipped hard [`Gate`].
+    pub fn soft_kernel(&self) -> Option<SoftKernel> {
+        self.soft
+    }
+
+    /// Kish effective sample size `(sum w)^2 / sum w^2` at one pixel.
+    ///
+    /// `None` on the hard path, where [`Estimator::n_eff`] is already exact.
+    /// This is the *exact* generalisation of the integer count: on 0/1 weights
+    /// it returns that count.
+    #[inline]
+    pub fn soft_n_eff_at(&self, i: usize) -> Option<f64> {
+        if self.wsum.is_empty() {
+            return None;
+        }
+        let ws = f64::from(self.wsum[i]);
+        let wq = f64::from(self.wsq[i]);
+        Some(if wq > 0.0 { ws * ws / wq } else { 0.0 })
+    }
+
+    /// [`Estimator::soft_n_eff_at`] over the whole plane.
+    ///
+    /// `None` on the hard path. Allocates, so a caller in a loop wants
+    /// [`Estimator::soft_n_eff_at`].
+    pub fn soft_n_eff(&self) -> Option<Vec<f32>> {
+        if self.wsum.is_empty() {
+            return None;
+        }
+        Some(
+            (0..self.geom.pixels())
+                .map(|i| self.soft_n_eff_at(i).unwrap_or(0.0) as f32)
+                .collect(),
+        )
+    }
+
+    /// Mean over pixels of the Kish effective sample size.
+    ///
+    /// The soft counterpart of [`Estimator::mean_n_eff`], and the number M111
+    /// §15.3's field prediction is stated in. `None` on the hard path.
+    pub fn mean_soft_n_eff(&self) -> Option<f64> {
+        if self.wsum.is_empty() || self.geom.pixels() == 0 {
+            return None;
+        }
+        let total: f64 = (0..self.geom.pixels())
+            .map(|i| self.soft_n_eff_at(i).unwrap_or(0.0))
+            .sum();
+        Some(total / self.geom.pixels() as f64)
     }
     pub fn best_index(&self) -> &[u16] {
         &self.best_index
@@ -542,6 +825,7 @@ impl Estimator {
     pub fn allocated_bytes(&self) -> usize {
         self.geom.pixels() * (4 * size_of::<f32>() + 2 * size_of::<u16>() + size_of::<f32>())
             + self.censor.len()
+            + (self.wsum.len() + self.wsq.len()) * size_of::<f32>()
             + (self.luma_sum.len() + self.luma_sumsq.len()) * size_of::<f64>()
     }
 
@@ -736,6 +1020,10 @@ impl Estimator {
             CfaPlane::G2.rggb_offset(),
         ];
         let w = self.geom.width;
+        // Constructed once per fold, not per pixel. `Gate::new` has already
+        // proved the threshold finite and non-negative, so this cannot trip
+        // `SoftGate::new`'s assert. Shares `Gate::tolerance` bit-for-bit.
+        let soft = SoftGate::new(self.gate.threshold);
 
         for py in 0..self.geom.height {
             let (row0, row1) = src.quad_rows(py);
@@ -743,10 +1031,29 @@ impl Estimator {
             for px in 0..w {
                 let i = base + px;
                 let winner = self.best_index[i] == frame_index;
-                let admitted = winner || self.gate.admits(regularised[i], self.best_focus[i]);
-                if !admitted {
-                    continue;
-                }
+                // `wt`, not `w` -- `w` is the plane width three lines up.
+                let wt = match self.soft {
+                    None => {
+                        if !(winner || self.gate.admits(regularised[i], self.best_focus[i])) {
+                            continue;
+                        }
+                        1.0f32
+                    }
+                    Some(kernel) => {
+                        let raw = kernel.weight(&soft, regularised[i], self.best_focus[i]);
+                        // The winner is *pinned* rather than trusted to score a
+                        // zero gap. `best_focus[i]` is the max of the
+                        // regularised field so a tie is expected and the kernel
+                        // already returns 1.0 -- but "the elected frame always
+                        // contributes in full" is an invariant of the merge and
+                        // must not silently depend on that coincidence.
+                        let raw = if winner { raw.max(1.0) } else { raw };
+                        if raw <= 0.0 {
+                            continue;
+                        }
+                        raw
+                    }
+                };
                 let mut greens = [0u16; 2];
                 for (s, (ox, oy)) in off.iter().enumerate() {
                     let row = if *oy == 0 { row0 } else { row1 };
@@ -762,7 +1069,10 @@ impl Estimator {
                     } else if s == 3 {
                         greens[1] = v;
                     }
-                    self.sum[s][i] += v as f32;
+                    // Multiplying by a `wt` that is exactly 1.0 on the hard path
+                    // is the IEEE-754 identity, so the shipped bytes cannot move
+                    // -- and that is proved by render, not by this comment.
+                    self.sum[s][i] += wt * v as f32;
                 }
                 if !self.luma_sum.is_empty() {
                     // The same `L = (G1 + G2)/2` the output and the noise model
@@ -779,10 +1089,20 @@ impl Estimator {
                     } else {
                         f64::from(raw * luma_scale + luma_offset)
                     };
-                    self.luma_sum[i] += luma;
-                    self.luma_sumsq[i] += luma * luma;
+                    // Weighted in step with `sum` above. If `luma_sum` were
+                    // weighted and its divisor were not -- or vice versa -- the
+                    // noise diagnostic would silently change meaning while still
+                    // returning plausible numbers. `disagreement` divides by
+                    // `wsum`, and both reduce exactly on 0/1 weights.
+                    let wl = f64::from(wt);
+                    self.luma_sum[i] += wl * luma;
+                    self.luma_sumsq[i] += wl * luma * luma;
                 }
                 self.n[i] += 1;
+                if !self.wsum.is_empty() {
+                    self.wsum[i] += wt;
+                    self.wsq[i] += wt * wt;
+                }
             }
         }
         self.frames += 1;
@@ -808,6 +1128,10 @@ impl Estimator {
         );
         assert_eq!(self.gate, other.gate, "estimators used different gates");
         assert_eq!(
+            self.soft, other.soft,
+            "estimators used different admission kernels and cannot be reduced"
+        );
+        assert_eq!(
             self.censor_level, other.censor_level,
             "estimators censored against different container maxima cannot be reduced"
         );
@@ -824,6 +1148,12 @@ impl Estimator {
                 self.sum[s][i] += other.sum[s][i];
             }
             self.n[i] += other.n[i];
+        }
+        if !self.wsum.is_empty() {
+            for i in 0..self.geom.pixels() {
+                self.wsum[i] += other.wsum[i];
+                self.wsq[i] += other.wsq[i];
+            }
         }
         if !other.luma_sum.is_empty() {
             assert!(
@@ -879,14 +1209,28 @@ impl Estimator {
             !self.luma_sum.is_empty(),
             "track_disagreement was not called on this estimator"
         );
-        let n = f64::from(self.n[i]);
-        if n < 2.0 {
+        // Reliability-weighted sufficient statistics. On 0/1 weights `wsum` is
+        // `n`, `wsq` is `n`, `n_eff` is `n`, and the denominator is
+        // `n - n/n = n - 1` -- so every line below reduces *exactly* to the
+        // boolean form and the hard path's numbers cannot move.
+        let (wsum, denom, n_eff) = if self.wsum.is_empty() {
+            let n = f64::from(self.n[i]);
+            (n, n - 1.0, n)
+        } else {
+            let ws = f64::from(self.wsum[i]);
+            let wq = f64::from(self.wsq[i]);
+            if ws <= 0.0 || wq <= 0.0 {
+                return None;
+            }
+            (ws, ws - wq / ws, ws * ws / wq)
+        };
+        if n_eff < 2.0 || denom <= 0.0 {
             return None;
         }
-        let mean = self.luma_sum[i] / n;
+        let mean = self.luma_sum[i] / wsum;
         // Unbiased sample variance, clamped at zero: the two-pass form can go
         // very slightly negative on a pixel whose frames are all identical.
-        let s2 = ((self.luma_sumsq[i] - n * mean * mean) / (n - 1.0)).max(0.0);
+        let s2 = ((self.luma_sumsq[i] - wsum * mean * mean) / denom).max(0.0);
         let sigma = f64::from(noise.green_luma_sigma((mean - f64::from(black_dn)) as f32));
         if sigma <= 0.0 {
             return None;
@@ -909,7 +1253,20 @@ impl Estimator {
             !self.luma_sum.is_empty(),
             "track_disagreement was not called on this estimator"
         );
-        let exposed = self.n.iter().filter(|&&n| n >= 2).count();
+        let exposed = if self.wsum.is_empty() {
+            self.n.iter().filter(|&&n| n >= 2).count()
+        } else {
+            // The same admissibility test `disagreement` applies, so the
+            // exposure and the statistic can never describe different
+            // populations.
+            (0..self.geom.pixels())
+                .filter(|&i| {
+                    let ws = f64::from(self.wsum[i]);
+                    let wq = f64::from(self.wsq[i]);
+                    wq > 0.0 && ws > 0.0 && ws * ws / wq >= 2.0
+                })
+                .count()
+        };
         exposed as f64 / self.geom.pixels() as f64
     }
 
@@ -929,7 +1286,11 @@ impl Estimator {
         }
         let n = self.n[i];
         debug_assert!(n > 0, "pixel {i} admitted no frame");
-        self.sum[s][i] / n as f32
+        if self.wsum.is_empty() {
+            self.sum[s][i] / n as f32
+        } else {
+            self.sum[s][i] / self.wsum[i]
+        }
     }
 
     /// Green as the output uses it, `(G1 + G2) / 2`, still in raw DN.
@@ -953,7 +1314,18 @@ impl Estimator {
     pub fn predicted_sigma(&self, noise: &NoiseModel, i: usize, black_dn: f32) -> f32 {
         let luma = self.green_mean(i) - black_dn;
         let n = self.n[i];
-        noise.green_luma_sigma(luma) * selection_inflation(n) / (n as f32).sqrt()
+        // Under a soft kernel the mean is a *weighted* one, so the variance it
+        // carries falls as `1/n_eff` (Kish), not as `1/n`. Dividing by the raw
+        // admitted count here while `value` divides by `wsum` would report a
+        // noise floor the estimator does not have -- the same silent
+        // change-of-meaning hazard M111 flagged for `disagreement`.
+        // `selection_inflation` still keys off the integer count, because
+        // "exactly one frame contributed" is a discrete fact about selection.
+        let eff = match self.soft_n_eff_at(i) {
+            Some(e) => e,
+            None => f64::from(n),
+        };
+        noise.green_luma_sigma(luma) * selection_inflation(n) / (eff as f32).sqrt()
     }
 
     /// Did this pixel's winner land on the first or last frame of the stack?
@@ -2605,5 +2977,371 @@ mod tests {
              Ladder: {ladder:?}"
         );
         eprintln!("burst ladder (gate, R, mean n_eff): {ladder:?}");
+    }
+
+    // ---- soft admission kernel (M111's hand-off, §15.6) -------------------
+
+    /// A stack whose per-frame focus response is constant over the plane, so
+    /// the response gap — the only thing the kernels see — is exactly what the
+    /// caller asked for.
+    fn soft_stats(g: PlaneGeometry, focus: &[f32]) -> (FocusStats, Vec<Vec<f32>>) {
+        let fields: Vec<Vec<f32>> = focus.iter().map(|f| vec![*f; g.pixels()]).collect();
+        let mut stats = FocusStats::new(g);
+        for (k, f) in fields.iter().enumerate() {
+            stats.fold(k as u16, f).unwrap();
+        }
+        (stats, fields)
+    }
+
+    /// Flat frame `k` carrying luma `1000 + 100k` in both green slots.
+    fn soft_frame(g: PlaneGeometry, k: u16) -> QuadGrid {
+        let v = 1000 + 100 * k;
+        QuadGrid::new(g.width, g.height, move |_, _| [200, v, v, 300])
+    }
+
+    #[test]
+    fn the_soft_gate_switch_names_a_kernel_and_refuses_to_guess() {
+        for off in [
+            None,
+            Some(""),
+            Some("   "),
+            Some("0"),
+            Some("off"),
+            Some("OFF"),
+            Some("false"),
+        ] {
+            assert_eq!(
+                kernel_from_setting(off),
+                Ok(None),
+                "{off:?} must run the shipped hard gate"
+            );
+        }
+        assert_eq!(
+            kernel_from_setting(Some("gaussian")),
+            Ok(Some(SoftKernel::Gaussian))
+        );
+        assert_eq!(
+            kernel_from_setting(Some("Exponential")),
+            Ok(Some(SoftKernel::Exponential))
+        );
+        // Truthy values are refused for the reason `optics::profile_from_setting`
+        // refuses them: there are two kernels and "on" does not say which. A
+        // typo is an error rather than an absence, because a typo that silently
+        // disables the fix looks exactly like the fix not working.
+        for bad in ["1", "true", "on", "yes", "gauss", "gausian", "expo"] {
+            assert!(
+                kernel_from_setting(Some(bad)).is_err(),
+                "{bad:?} must not resolve to a kernel"
+            );
+        }
+    }
+
+    #[test]
+    fn the_two_kernels_cross_at_exactly_two_tolerances() {
+        // `-0.5 z^2 == -z` has roots z = 0 and z = 2. A comparison of the two
+        // kernels anchored at two tolerances therefore measures **nothing**,
+        // and this is pinned as a test so nobody prices them there and reports
+        // a null that is an artefact of the sampling point.
+        let soft = SoftGate::new(1.0);
+        let tol = soft.tolerance();
+        let at = |z: f32, k: SoftKernel| k.weight(&soft, -z * tol, 0.0);
+
+        let (g2, e2) = (at(2.0, SoftKernel::Gaussian), at(2.0, SoftKernel::Exponential));
+        assert!(
+            (g2 - e2).abs() <= 1e-7,
+            "the kernels must agree at the crossing: {g2} vs {e2}"
+        );
+        // Inside the crossing the Gaussian is the heavier of the two...
+        assert!(at(1.0, SoftKernel::Gaussian) > at(1.0, SoftKernel::Exponential));
+        // ...and beyond it the exponential is, which is exactly why it is the
+        // riskier kernel on a stack carrying far-out-of-focus frames.
+        assert!(at(3.0, SoftKernel::Exponential) > at(3.0, SoftKernel::Gaussian));
+        // Both agree with the closed forms, computed here rather than taken
+        // from the implementation under test.
+        assert!((at(1.0, SoftKernel::Gaussian) - (-0.5f32).exp()).abs() < 1e-6);
+        assert!((at(1.0, SoftKernel::Exponential) - (-1.0f32).exp()).abs() < 1e-6);
+    }
+
+    #[test]
+    fn the_exponential_truncates_at_its_own_floor_not_the_gaussians() {
+        // Truncating both kernels at one *distance* would silently turn a
+        // comparison of shapes into a comparison of supports.
+        assert!(exponential_cutoff_tolerances() > crate::softgate::cutoff_tolerances());
+        let soft = SoftGate::new(1.0);
+        let tol = soft.tolerance();
+        let just_inside = exponential_cutoff_tolerances() - 1e-3;
+        let w = SoftKernel::Exponential.weight(&soft, -just_inside * tol, 0.0);
+        assert!(w >= WEIGHT_FLOOR, "just inside the cutoff must survive: {w}");
+        let just_outside = exponential_cutoff_tolerances() + 1e-3;
+        assert_eq!(
+            SoftKernel::Exponential.weight(&soft, -just_outside * tol, 0.0),
+            0.0
+        );
+    }
+
+    #[test]
+    fn a_none_kernel_leaves_every_soft_accessor_absent() {
+        let g = geom(4, 4);
+        let tol = Gate::new(1.0).tolerance();
+        let (stats, fields) = soft_stats(g, &[0.0, -0.5 * tol, -3.0 * tol]);
+        let mut hard = Estimator::new_soft(&stats, Gate::new(1.0), None);
+        for k in 0..3u16 {
+            hard.fold(k, &soft_frame(g, k), &fields[k as usize]).unwrap();
+        }
+        assert_eq!(hard.soft_kernel(), None);
+        assert!(hard.soft_n_eff().is_none());
+        assert!(hard.mean_soft_n_eff().is_none());
+        assert!(hard.soft_n_eff_at(0).is_none());
+        // Rule 36: the fixture must actually exercise the gate. Frames 0 and 1
+        // are inside one tolerance, frame 2 is three tolerances out.
+        assert!(
+            hard.n_eff().iter().all(|n| *n == 2),
+            "fixture must admit exactly two, got {:?}",
+            hard.n_eff()
+        );
+        for i in 0..g.pixels() {
+            assert_eq!(hard.value(CfaPlane::G1, i), 1050.0);
+        }
+    }
+
+    #[test]
+    fn the_soft_kernel_admits_and_down_weights_a_frame_the_hard_gate_drops() {
+        let g = geom(4, 4);
+        let tol = Gate::new(1.0).tolerance();
+        let (stats, fields) = soft_stats(g, &[0.0, -0.5 * tol, -3.0 * tol]);
+
+        let mut soft = Estimator::new_soft(&stats, Gate::new(1.0), Some(SoftKernel::Gaussian));
+        for k in 0..3u16 {
+            soft.fold(k, &soft_frame(g, k), &fields[k as usize]).unwrap();
+        }
+        // The Gaussian's support runs to 4.71 tolerances, so frame 2 at three
+        // tolerances is admitted where the hard gate rejected it outright.
+        assert!(
+            soft.n_eff().iter().all(|n| *n == 3),
+            "the soft kernel must admit all three, got {:?}",
+            soft.n_eff()
+        );
+
+        // Closed-form weights, written here rather than read from the kernel.
+        let w = [1.0f64, (-0.125f64).exp(), (-4.5f64).exp()];
+        let num: f64 = w[0] * 1000.0 + w[1] * 1100.0 + w[2] * 1200.0;
+        let den: f64 = w.iter().sum();
+        let expect = (num / den) as f32;
+        for i in 0..g.pixels() {
+            let got = soft.value(CfaPlane::G1, i);
+            assert!(
+                (got - expect).abs() < 2e-3,
+                "weighted mean at {i}: got {got}, want {expect}"
+            );
+            // And it must not be the boolean answer, or the weighting is inert.
+            assert!((got - 1050.0).abs() > 1.0, "soft value collapsed to the hard mean");
+        }
+
+        // Kish sits strictly below the raw admitted count, because the third
+        // frame contributes almost nothing.
+        let kish = soft.soft_n_eff().unwrap();
+        let expect_kish = (den * den / w.iter().map(|x| x * x).sum::<f64>()) as f32;
+        for k in kish.iter() {
+            assert!((k - expect_kish).abs() < 1e-4, "kish {k} vs {expect_kish}");
+            assert!(*k < 3.0, "kish must be below the raw count of 3");
+        }
+    }
+
+    #[test]
+    fn kish_reduces_exactly_to_the_integer_count_when_every_weight_is_one() {
+        // Four frames tying on focus: every gap is zero, every weight is
+        // exactly 1.0, and the Kish count must return the integer count *to
+        // the bit*. This is the reduction that makes the soft path a
+        // generalisation rather than a replacement.
+        let g = geom(3, 3);
+        let (stats, fields) = soft_stats(g, &[0.0; 4]);
+        for kernel in [SoftKernel::Gaussian, SoftKernel::Exponential] {
+            let mut soft = Estimator::new_soft(&stats, Gate::new(1.0), Some(kernel));
+            for k in 0..4u16 {
+                soft.fold(k, &soft_frame(g, k), &fields[k as usize]).unwrap();
+            }
+            let kish = soft.soft_n_eff().unwrap();
+            for (i, &k_i) in kish.iter().enumerate() {
+                assert_eq!(soft.n_eff()[i], 4, "{kernel:?}");
+                assert_eq!(k_i, 4.0, "{kernel:?} kish must be exactly 4.0");
+                assert_eq!(soft.soft_n_eff_at(i), Some(4.0), "{kernel:?}");
+            }
+            assert_eq!(soft.mean_soft_n_eff(), Some(4.0), "{kernel:?}");
+            // The weighted mean of equal weights is the plain mean, exactly.
+            for i in 0..g.pixels() {
+                assert_eq!(soft.value(CfaPlane::G1, i), 1150.0, "{kernel:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn the_weighted_disagreement_reduces_bit_for_bit_to_the_boolean_form() {
+        // Row 3 of M111 §15.6 is the subtle one: weighting `luma_sum` without
+        // weighting its divisor changes what the noise diagnostic *means* while
+        // still returning plausible numbers. On all-equal weights the weighted
+        // form must return the identical f64, or the reduction is wrong.
+        let g = geom(2, 2);
+        let (stats, fields) = soft_stats(g, &[0.0; 3]);
+        let lumas = [1000u16, 1180, 1090];
+        let frame = |k: u16| {
+            let v = lumas[k as usize];
+            QuadGrid::new(g.width, g.height, move |_, _| [200, v, v, 300])
+        };
+
+        let mut hard = Estimator::new_soft(&stats, Gate::new(1.0), None);
+        let mut soft = Estimator::new_soft(&stats, Gate::new(1.0), Some(SoftKernel::Gaussian));
+        hard.track_disagreement();
+        soft.track_disagreement();
+        for k in 0..3u16 {
+            hard.fold(k, &frame(k), &fields[k as usize]).unwrap();
+            soft.fold(k, &frame(k), &fields[k as usize]).unwrap();
+        }
+        assert!(hard.n_eff().iter().all(|n| *n == 3), "fixture must admit three");
+
+        let m = shot_noise_model();
+        for i in 0..g.pixels() {
+            let a = hard.disagreement(&m, i, 0.0).unwrap();
+            let b = soft.disagreement(&m, i, 0.0).unwrap();
+            assert_eq!(a, b, "disagreement must reduce exactly at pixel {i}");
+            // Rule 36: a reduction test between two `None`s proves nothing.
+            assert!(a > 0.0, "fixture must produce a non-zero disagreement");
+        }
+        assert_eq!(hard.disagreement_exposure(), soft.disagreement_exposure());
+        assert_eq!(hard.disagreement_exposure(), 1.0);
+    }
+
+    #[test]
+    fn predicted_sigma_follows_the_effective_count_not_the_admitted_count() {
+        // `value` divides by `wsum`, so the variance it carries falls as
+        // 1/n_eff. Reporting 1/n here would claim a noise floor the estimator
+        // does not have.
+        let g = geom(2, 2);
+        let tol = Gate::new(1.0).tolerance();
+        let (stats, fields) = soft_stats(g, &[0.0, -0.5 * tol, -3.0 * tol]);
+        let mut soft = Estimator::new_soft(&stats, Gate::new(1.0), Some(SoftKernel::Gaussian));
+        for k in 0..3u16 {
+            soft.fold(k, &soft_frame(g, k), &fields[k as usize]).unwrap();
+        }
+        let m = shot_noise_model();
+        let kish = f64::from(soft.soft_n_eff().unwrap()[0]);
+        assert!(kish < 3.0 && kish > 1.0, "kish {kish} must sit between 1 and 3");
+        let luma = soft.green_mean(0);
+        let expect = m.green_luma_sigma(luma) * selection_inflation(3) / (kish as f32).sqrt();
+        let got = soft.predicted_sigma(&m, 0, 0.0);
+        assert!((got - expect).abs() < 1e-4, "got {got}, want {expect}");
+        // And it must differ from the integer-count answer, or the change is
+        // inert and this test has no power.
+        let inert = m.green_luma_sigma(luma) * selection_inflation(3) / 3.0f32.sqrt();
+        assert!((got - inert).abs() > 1e-3, "predicted_sigma ignored the weights");
+    }
+
+    #[test]
+    fn every_pixel_is_still_decided_when_the_gate_is_degenerate() {
+        // Threshold 0 gives a zero tolerance, so the kernel returns 0.0 for any
+        // positive gap and the merge collapses to the hard argmax. The winner
+        // must still contribute — a merge that admits nothing anywhere is the
+        // failure this pin exists to catch.
+        let g = geom(3, 3);
+        let tol = Gate::new(1.0).tolerance();
+        let (stats, fields) = soft_stats(g, &[-2.0 * tol, 0.0, -tol]);
+        for kernel in [SoftKernel::Gaussian, SoftKernel::Exponential] {
+            let mut soft = Estimator::new_soft(&stats, Gate::new(0.0), Some(kernel));
+            for k in 0..3u16 {
+                soft.fold(k, &soft_frame(g, k), &fields[k as usize]).unwrap();
+            }
+            assert!(soft.every_pixel_is_decided(), "{kernel:?}");
+            assert!(soft.n_eff().iter().all(|n| *n == 1), "{kernel:?}");
+            // Frame 1 wins, carrying luma 1100, and it is returned undiluted.
+            for i in 0..g.pixels() {
+                assert_eq!(soft.value(CfaPlane::G1, i), 1100.0, "{kernel:?}");
+                assert_eq!(soft.soft_n_eff_at(i), Some(1.0), "{kernel:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn the_two_kernels_produce_different_merges_on_the_same_stack() {
+        // If these agreed, pricing them would be theatre.
+        let g = geom(2, 2);
+        let tol = Gate::new(1.0).tolerance();
+        let (stats, fields) = soft_stats(g, &[0.0, -tol, -3.0 * tol]);
+        let mut a = Estimator::new_soft(&stats, Gate::new(1.0), Some(SoftKernel::Gaussian));
+        let mut b = Estimator::new_soft(&stats, Gate::new(1.0), Some(SoftKernel::Exponential));
+        for k in 0..3u16 {
+            a.fold(k, &soft_frame(g, k), &fields[k as usize]).unwrap();
+            b.fold(k, &soft_frame(g, k), &fields[k as usize]).unwrap();
+        }
+        let (va, vb) = (a.value(CfaPlane::G1, 0), b.value(CfaPlane::G1, 0));
+        assert!((va - vb).abs() > 1.0, "kernels must differ: {va} vs {vb}");
+        // Direction, and it is the opposite of the naive "heavier tail admits
+        // more, so it reads higher". Frame 1 sits at z = 1, *inside* the z = 2
+        // crossing, where the Gaussian is the heavier of the two, and it is
+        // also the brighter near frame. The Gaussian therefore pulls the mean
+        // up more than the exponential's fatter tail on the distant frame 2
+        // pulls it. Measured, then explained -- the first version of this
+        // assertion claimed the reverse and the test caught it.
+        assert!(va > vb, "gaussian {va} must exceed exponential {vb}");
+    }
+
+    #[test]
+    #[should_panic(expected = "different admission kernels")]
+    fn absorb_refuses_two_different_kernels() {
+        let g = geom(2, 2);
+        let (stats, fields) = soft_stats(g, &[0.0, 0.0]);
+        let mut a = Estimator::new_soft(&stats, Gate::new(1.0), Some(SoftKernel::Gaussian));
+        let mut b = Estimator::new_soft(&stats, Gate::new(1.0), Some(SoftKernel::Exponential));
+        a.fold(0, &soft_frame(g, 0), &fields[0]).unwrap();
+        b.fold(1, &soft_frame(g, 1), &fields[1]).unwrap();
+        a.absorb(&b).unwrap();
+    }
+
+    #[test]
+    fn absorb_reduces_the_weight_sums_additively() {
+        let g = geom(2, 2);
+        let tol = Gate::new(1.0).tolerance();
+        let (stats, fields) = soft_stats(g, &[0.0, -0.5 * tol, -3.0 * tol]);
+        let k = SoftKernel::Gaussian;
+
+        let mut whole = Estimator::new_soft(&stats, Gate::new(1.0), Some(k));
+        for f in 0..3u16 {
+            whole.fold(f, &soft_frame(g, f), &fields[f as usize]).unwrap();
+        }
+        let mut left = Estimator::new_soft(&stats, Gate::new(1.0), Some(k));
+        let mut right = Estimator::new_soft(&stats, Gate::new(1.0), Some(k));
+        left.fold(0, &soft_frame(g, 0), &fields[0]).unwrap();
+        right.fold(1, &soft_frame(g, 1), &fields[1]).unwrap();
+        right.fold(2, &soft_frame(g, 2), &fields[2]).unwrap();
+        left.absorb(&right).unwrap();
+
+        for i in 0..g.pixels() {
+            // The integer count still reduces exactly, because it is an integer.
+            assert_eq!(left.n_eff()[i], whole.n_eff()[i]);
+
+            // The *weighted* accumulators do not, and that is a property of
+            // f32 addition, not a bug: `1.0 + (w1 + w2)` and `(1.0 + w1) + w2`
+            // round differently. The boolean path never had to face this
+            // because its `n` is an integer; the soft path's `wsum` is a float
+            // sum whose association order follows the chunking. A soft render
+            // is therefore reproducible for a *fixed* chunk length, not across
+            // chunk lengths. The bound below is measured, not guessed.
+            let (l, w) = (
+                left.soft_n_eff_at(i).unwrap(),
+                whole.soft_n_eff_at(i).unwrap(),
+            );
+            let rel = ((l - w) / w).abs();
+            assert!(
+                rel < 1e-6,
+                "kish drifted by {rel:.3e} across the reduction: {l} vs {w}"
+            );
+            let (lv, wv) = (
+                left.value(CfaPlane::G1, i),
+                whole.value(CfaPlane::G1, i),
+            );
+            let vrel = ((lv - wv) / wv).abs();
+            assert!(vrel < 1e-6, "value drifted by {vrel:.3e}: {lv} vs {wv}");
+            if i == 0 {
+                eprintln!("absorb drift: kish rel {rel:.3e}, value rel {vrel:.3e}");
+            }
+        }
     }
 }
