@@ -11,11 +11,13 @@ says exactly what to shoot, why, and what it unblocks.
 > Two things have changed. (a) **The owner has already acted on this advice**:
 > all current stacks are f/5.6 marked, and f/5.6 is *wide open* with the
 > teleconverter fitted, so this lever is spent rather than pending.
-> (b) **The `N_eff` column below assumes m = 2.0.** The rig's verified maximum
-> magnification is **2.8x**, and the captures sit at m ≈ 2.76, so every `N_eff`
-> here is **understated by about 25%** and "critical sampling at marked f/6.21"
-> is really **f/4.95 — off the dial**. The section's direction is unchanged and
-> its conclusions are strengthened; its arithmetic is superseded by §17.
+> (b) **The `N_eff` column below assumes m = 2.0 and p = 1, and both are now
+> measured false.** Magnification is **2.7198 ± 0.0051** and pupil magnification
+> is **p ∈ [1.31, 1.94]**, with **p = 1 excluded** (facts 1151, 1152). Using M5's
+> *measured* bellows factor instead, **critical sampling is at marked f/6.08–7.72,
+> and f/5.6 wide open already sits above it** — the opposite of what an earlier
+> version of this banner said. The section's *direction* is unchanged; its
+> arithmetic is superseded by §17.
 
 Not a capture request. A change to how the existing rig is used, and the
 largest single quality lever measured anywhere in this project.
@@ -677,10 +679,16 @@ fitted from the data itself. So:
 - **It is a null for occlusion.** A plane has no depth discontinuities anywhere,
   so any bimodality, halo or occlusion flag the pipeline raises on it is a **false
   positive**, by construction. The project has no such null today.
-- **It calibrates the focus axis.** Depth is linear across the frame, so the
-  fitted per-frame focus position must be monotone and smooth — an independent
-  check on fact 54's pixel-measured focus index and on the depth-from-breathing
-  idea.
+- **It calibrates the focus axis.** **Careful: it is *inverse* depth that is
+  affine in image coordinates, not depth** — a tilted plane in object space maps
+  to `1/Z` linear in `(x, y)`, and fitting `Z` itself linearly is a systematic
+  error that grows with tilt (M84b, fact 1159; M84b measured this on the ruler,
+  where a linear-in-`Z` fit is wrong by a measurable margin at 77° tilt). Fit
+  `1/Z`, then invert. Done that way, the fitted per-frame focus position must be
+  monotone and smooth — an independent check on fact 54's pixel-measured focus
+  index and on the depth-from-breathing idea. **This bullet said "depth is linear
+  across the frame" until 2026-08-24; that was wrong, and the same error is in
+  both M84 briefs.**
 - **It is the only thing that makes per-pixel focus *admission* correctness
   measurable on real frames.** M67 measured whether the shipped merge admits the
   frames actually in focus at each pixel — `H` = 99.955 % on a simulated tilted
@@ -1139,6 +1147,15 @@ and aperture.
 
 ## 17. Aperture is spent, and the teleconverter is the remaining lever — REQUESTED, one subject, two brackets
 
+> **CORRECTED 2026-08-24, same night, by M84b's measurement.** The first version
+> of this section computed `N_eff` with **pupil magnification `p = 1` assumed**.
+> That assumption is now **measured false** — `p ∈ [1.31, 1.94]`, and `p = 1` is
+> excluded by 0.638 in the bellows factor (fact 1152). **§17.3 originally said
+> critical sampling was "unreachable, off the dial". That was wrong and it is
+> reversed below: f/5.6 wide open already sits ABOVE critical sampling.** The
+> capture request in §17.4 onward is unaffected and still stands. Facts 1151,
+> 1152, 1153 and 1157 record the error and its blast radius.
+
 **Added by the orchestrator 2026-08-24 after auditing the rig's optical
 ceiling at primary source. Two corrections to this document come first,
 because both change what §0 tells you to do.**
@@ -1163,41 +1180,63 @@ spent on the current rig.** Nothing further can be gained along that axis
 without changing hardware, and §0 should be read from here as *satisfied*
 rather than *pending*.
 
-### 17.2 §0's table understates the damage, because it assumes m = 2.0
+### 17.2 §0's table is wrong in both directions, because it assumes m = 2.0 *and* p = 1
 
-§0 derives from "working at 2:1", i.e. `N_eff = N x 3`. **The rig's actual
-maximum magnification is 2.8x** (`F-camera-lens-optics.md:13`, VERIFIED: 1.4x
-native, doubled by the converter — *not* 1:1), and M84b's tick-comb measurement
-places the ruler captures at **m = 2.76**, essentially at that ceiling. At
-m = 2.762 the same table reads:
+§0 derives from "working at 2:1", i.e. `N_eff = N × 3`. **Both inputs behind
+that are now measured, and they push opposite ways.** Magnification is
+**m = 2.7198 ± 0.0051** (M84b, measured from graduation spacing with no lens
+model and no EXIF trust) — *higher* than §0 assumed, which would make things
+worse. But pupil magnification is **p ∈ [1.31, 1.94]**, with **p = 1 excluded**
+— and that makes things *better*, by more than the magnification costs.
 
-| marked | `N_eff` at m=2.0 (§0) | `N_eff` at m=2.762 (actual) | understated by |
+The right move is to stop reconstructing `N_eff` from `m` and `p` at all, and
+use **M5's directly measured bellows factor `B ≡ N_eff/N ∈ [2.41, 3.06]`**,
+which was measured from the cutoff and the marked aperture with **neither `m`
+nor `p` as an input**:
+
+| marked | `N_eff` at m=2.0, p=1 (§0) | `N_eff` from M5's measured `B` | §0 was |
 | --- | --- | --- | --- |
-| f/4 | 12.0 | 15.05 | 25% |
-| f/5.6 | 16.8 | 21.07 | 25% |
-| f/8 | 24.0 | 30.10 | 25% |
-| f/11 | 33.0 | 41.38 | 25% |
+| f/4 | 12.0 | 9.6 – 12.3 | about right at the top of the range |
+| f/5.6 | 16.8 | **13.5 – 17.2** | about right at the top of the range |
+| f/8 | 24.0 | 19.3 – 24.5 | about right at the top of the range |
+| f/11 | 33.0 | 26.5 – 33.7 | about right at the top of the range |
 
-**The situation §0 describes is about 25% worse than §0 says** wherever the
-owner shoots near maximum magnification, which on this evidence is where they
-shoot. §0's headline conclusions are unchanged in direction and strengthened in
-degree; its *numbers* should not be quoted without this correction.
+**§0's numbers turn out to sit at the pessimistic edge of the measured range
+rather than being wrong by 25%**, because its two errors largely cancelled.
+Its direction and its conclusions stand. Quote the measured range, not the
+point estimate.
 
-### 17.3 The consequence: critical sampling is unreachable with the converter on
+### 17.3 The consequence: f/5.6 is already better than critically sampled
 
 Critical sampling — diffraction cutoff placed exactly at sensor Nyquist
-(97.7 cy/mm at 5.12 um pitch) — needs `N_eff <= 18.62`.
+(97.66 cy/mm at 5.12 µm pitch) — needs `N_eff ≤ 18.62`.
 
-- **With the 2x converter at m = 2.762:** requires **marked f/4.95**. The widest
-  available setting is **f/5.6**. **Unreachable.** The rig is diffraction-limited
-  below Nyquist at every legal setting, and `MTF at Nyquist is exactly zero`
-  (cutoff 86.3 cy/mm against Nyquist 97.7).
-- **Without the converter, at maximum native m = 1.4:** requires marked f/7.76,
-  against a widest setting of f/2.8. **Reachable with about 1.5 stops to spare** —
-  the owner could even stop down for depth and remain critically sampled.
+Using M5's measured `B`:
 
-§0 said "critical sampling is at marked f/6.21". That figure inherits the m = 2.0
-assumption; **at the true magnification it is f/4.95, and it is off the dial.**
+| marked | `N_eff` (B = 2.41 → 3.06) | cutoff `f_c` | vs Nyquist | MTF @ Nyquist |
+| --- | --- | --- | --- | --- |
+| **f/5.6 (current)** | 13.5 – 17.2 | **106 – 135 cy/mm** | **above** | **0.026 – 0.165** |
+| f/6.3 | 15.2 – 19.3 | 94 – 120 | borderline | 0.000 – 0.092 |
+| f/7.1 | 17.1 – 21.8 | 84 – 106 | borderline | 0.000 – 0.027 |
+| f/8 | 19.3 – 24.5 | 74 – 94 | **below** | 0.000 |
+
+**Critical sampling is at marked f/6.08 – f/7.72**, depending where `B` falls in
+M5's measured interval. **f/5.6 wide open already sits above it.** The optics
+outrun the sensor at the aperture the owner is already using.
+
+*An earlier version of this section said critical sampling required f/4.95 and
+was "off the dial". That was computed at `p = 1` and is **wrong**. The rig is
+not aperture-starved; it is correctly, even slightly generously, sampled.*
+
+**The practical advice therefore inverts.** Do **not** stop down for depth of
+field — at f/8 the MTF at Nyquist is already zero across the whole measured
+range of `B`. There is at most about one stop of headroom and possibly none.
+**f/5.6 wide open is the right aperture and should stay there.** Depth of field
+should be bought with **more frames at finer focus steps**, which is free in
+capture time terms at 23.6 s per 299-frame stack — and which the rig needs
+anyway: the current bracket **under-samples its own depth of field by 1.8–2.3×**
+(fact 1159, DoF 18.7–23.8 µm at `c` = 1 sensor px against a measured 42.20 µm
+mean step).
 
 ### 17.4 But removing the converter is *not* obviously right — and this is the capture
 
@@ -1205,25 +1244,36 @@ The naive reading of §17.3 is "take the teleconverter off". **A subject-referre
 calculation says the opposite, and the disagreement is exactly why this needs to
 be shot rather than argued.**
 
-Comparing what is resolved *on the subject* (system MTF = diffraction x pixel
-aperture, capped at the `m x Nyquist` sampling limit):
+Comparing what is resolved *on the subject* (system MTF = diffraction × pixel
+aperture, capped at the `m × Nyquist` sampling limit), **recomputed at M5's
+measured bellows factor** rather than at the refuted `p = 1`:
 
-| configuration | m | `N_eff` | detail at MTF>=0.2 | finest feature | detail at MTF>=0.5 |
+| configuration | m | `N_eff` | detail at MTF≥0.2 | finest feature | detail at MTF≥0.5 |
 | --- | --- | --- | --- | --- | --- |
-| **2x TC, f/5.6 wide open (current)** | 2.76 | 21.07 | **156.1 cy/mm** | **3.2 um** | 91.3 cy/mm |
-| bare lens, max mag, f/2.8 wide open | 1.40 | 6.72 | 136.7 cy/mm | 3.7 um | **105.9 cy/mm** |
+| **2× TC, f/5.6 wide open — B = 2.41** | 2.72 | 13.5 | **223.8 cy/mm** | **2.2 µm** | **131.1 cy/mm** |
+| **2× TC, f/5.6 wide open — B = 3.06** | 2.72 | 17.2 | **184.1 cy/mm** | **2.7 µm** | 107.6 cy/mm |
+| bare lens, max mag, f/2.8 — `p` unmeasured | 1.40 | 5.4 – 6.7 | 136.7 cy/mm | 3.7 µm | 105.9 – 116.5 cy/mm |
 
-**The converter wins on fine detail and loses on contrast.** Without it the
-*sensor* badly undersamples the lens — the optics reach 378.8 cy/mm
-subject-referred against a 136.8 cy/mm sampling wall — so the converter moves the
-binding constraint from **sampling** to **optics** and nets finer detectable
-detail, paid for in MTF.
+**The converter wins on fine detail decisively, and the contrast penalty that an
+earlier version of this table reported has largely evaporated.** At `p = 1` the
+ordering reversed at MTF≥0.5 (91.3 against 105.9); at the *measured* bellows
+factor the TC configuration reaches 107.6–131.1 cy/mm and now ties or beats the
+bare lens on contrast as well. Without the converter the *sensor* badly
+undersamples the lens — the sampling wall falls at 136.7 cy/mm subject-referred
+and the optics are nowhere near it — so the converter moves the binding
+constraint from **sampling** to **optics** and buys real detail.
 
-*Caveat, stated honestly: this is diffraction-only. It **ignores teleconverter
-aberrations**, which are real, and the converter is a third-party Viltrox with no
-published MTF, so they cannot be bounded from a datasheet. The table above is
-therefore an upper bound on the converter's case. Real aberrations move it toward
-the bare lens, possibly past it.*
+*Two caveats, stated honestly. (1) This is diffraction-only. It **ignores
+teleconverter aberrations**, which are real, and the converter is a third-party
+Viltrox with no published MTF, so they cannot be bounded from a datasheet. The
+table is an upper bound on the converter's case; real aberrations move it toward
+the bare lens. (2) **The bare-lens row is not measured.** M5's `B` was measured
+with the converter fitted, and a teleconverter changes the system's exit pupil,
+so `p` does not transfer. The bare-lens `N_eff` is bracketed over a plausible
+`p_bare ∈ [1, 1.5]`, and its ordering against the TC is robust across that whole
+range only because the sampling wall — not diffraction — is what binds it.*
+
+**Both caveats are removed by the same capture.** That is the point of §17.4.
 
 ### What to shoot
 
