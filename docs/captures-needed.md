@@ -1824,6 +1824,34 @@ same aperture for all four.
 
 **Do not focus-bracket this.** A single frame per channel is the whole request.
 
+**AMENDED — the frame must have fine detail all the way into the corners, and it
+must be shot at your working magnification.** This is an addition from M95/M85,
+and it is a geometric requirement the rest of this section does not imply.
+Lateral CA is a *radial* magnification error: it is **zero at the optical centre
+by construction** and grows toward the edge, which is why fact 1414 quotes it as
+"2.977 output px **at the corner**". A subject that fills only the middle of the
+frame -- which is what "one static, high-detail subject" naturally produces, and
+what a coin or a banknote shot at macro distance guarantees -- contains almost no
+signal for the term being measured, however sharp it is.
+
+Concretely, `bee-3-cpl` **cannot** supply this measurement: its lateral CA works
+out to **0.0345%**, which exceeds the 200 DN discrimination threshold the
+estimator needs. That is not a flaw in the photograph; it is the wrong geometry
+for this one question.
+
+So: something **flat and repeating that fills the whole frame corner to corner**
+-- graph paper, a printed grid or checkerboard, a screen showing a fine test
+pattern, the weave of a fabric, a page of small text. Flat matters, because a
+subject with depth puts the corners out of focus and a blurred corner cannot
+show a sub-pixel channel offset. Square-on to the sensor, corners in focus,
+**at the magnification you actually shoot at** -- the correction is being fitted
+for your working configuration, not for an optical bench.
+
+**If you use the 2x teleconverter, shoot a second set with it fitted.** A
+teleconverter changes the optical configuration completely, so a profile
+measured without it should not be assumed to apply with it, and right now
+nothing in the pipeline would notice if it were applied wrongly.
+
 ### Why this cannot come from existing files
 
 A demosaiced RAW cannot serve as ground truth for demosaicing: the quantity being
