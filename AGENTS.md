@@ -604,21 +604,30 @@ monolithic binary and ship only that binary.
     (SYNTHESIS facts 1368, 1369; discipline 680.)
 
 47. **Record the whole invocation beside every hash you freeze -- including the
-    flags you left at their default.** A hash without its command is not a weak
-    record, it is **not a record at all**: it cannot be reproduced, cannot be
-    falsified, and cannot be told apart from a different pipeline's hash. Write
-    the stack directory, the `--limit`, and **every flag by value**, especially
-    the ones you did not pass. "We used the default" is not a record, because
-    defaults move and because the next reader cannot distinguish a default from
-    an omission. Measured cost of not doing this: three milestones froze three
-    different invocations (`--gate 2` / 299 frames, `--limit 60` / no gate,
-    `coffee-bean --limit 20 --gate 2.0`), a later dispatch spliced one
-    milestone's flag onto another's command, and a **1.9-hour** investigation
-    was commissioned into a regression that had not happened -- the fabricated
-    comparison being internally consistent in every other respect. **When a
-    freeze does break, re-render the baseline with its own recorded command
-    before you diff a single commit.** (SYNTHESIS facts 1379, 1381, 1382;
-    disciplines 687, 688, 689.)
+    flags you left at their default and the ENVIRONMENT you ran it in.** A hash
+    without its command is not a weak record, it is **not a record at all**: it
+    cannot be reproduced, cannot be falsified, and cannot be told apart from a
+    different pipeline's hash. Write down, every time:
+    - the **absolute stack directory** and the frame range `--limit` selects;
+    - **every CLI flag by value**, especially ones you did not pass;
+    - **every environment variable this tool reads** -- `STREHL_ALIGN`,
+      `STREHL_WARPMAP`, `STREHL_FIX_HALO` -- and the thread count;
+    - the **byte count** and the **commit SHA** you measured at.
+
+    "We used the default" is not a record, because defaults move and because
+    the next reader cannot distinguish a default from an omission. **The
+    environment clause is not hypothetical and it is not theoretical rigour:**
+    an earlier draft of this rule named only "directory, `--limit`, and
+    `--gate` by value", and within two hours a freeze was found that reproduces
+    *exactly* -- but only under `STREHL_ALIGN=0`, which appeared nowhere in its
+    record. That fixture was sound and its record was incomplete, and this rule
+    as first written would have missed it. **Three false breaks in one session
+    came from this single root cause**: `bee-3-cpl` lost `--gate`, `coffee-bean`
+    lost `STREHL_ALIGN`. A frozen hash is a claim about a *whole pipeline*, and
+    an environment variable is as much a part of that pipeline as an argument
+    is. **When a freeze does break, re-render the baseline with its own recorded
+    command and environment before you diff a single commit.**
+    (SYNTHESIS facts 1379, 1381, 1382, 1389; disciplines 687, 688, 689, 692.)
 
 ### Milestone allocation ledger (rule 41 -- written at DISPATCH, not at report time)
 
