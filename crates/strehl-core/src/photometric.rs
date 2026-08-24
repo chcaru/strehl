@@ -509,6 +509,64 @@ pub fn low_detail_mask(
     n
 }
 
+/// Shrink a mask away from its own perimeter by `radius` pixels.
+///
+/// # Why this exists
+///
+/// [`low_detail_mask`] selects pixels by a per-pixel threshold, so the region
+/// it returns is scattered and its perimeter is long. Defocus moves flux across
+/// that perimeter: a frame in which the subject is blurred spills light into
+/// the low-detail pixels that border it, and the estimator reads that spill as
+/// a brightness change that is not there.
+///
+/// It is not a small effect. On a flux-conserving blur sweep, where the correct
+/// answer is exactly zero, the raw threshold mask reports a peak spurious gain
+/// of **3.63%**, a compact block of the same area reports **0.022%**, and the
+/// same threshold mask eroded by 16 px reports **0.0000%** — see
+/// `the_low_detail_mask_does_not_leak_flux_across_its_perimeter`. Erosion beats
+/// compactness because it keeps the low-gradient selectivity *and* removes the
+/// exposed boundary.
+///
+/// Erosion is not free: it cost 65% of the selected pixels in that test
+/// (28741 -> 10130). That is a good trade, because the estimator folds a mean
+/// and a mean over 10k pixels is already far past the point where count
+/// matters, while the bias it removes is systematic and does not average out.
+///
+/// `radius` should be at least the largest defocus blur radius the bracket
+/// contains; the module's own null used 16 px on a 192 px frame.
+pub fn erode_mask(mask: &[bool], width: usize, radius: usize, out: &mut [bool]) -> usize {
+    assert_eq!(mask.len(), out.len(), "erode_mask: sizes must agree");
+    assert!(width > 0, "erode_mask: width must be positive");
+    let h = mask.len() / width;
+    if radius == 0 {
+        out.copy_from_slice(mask);
+        return mask.iter().filter(|&&b| b).count();
+    }
+    // Separable erosion: a pixel survives iff every pixel in the (2r+1) square
+    // survives, which is a horizontal pass followed by a vertical one.
+    let mut mid = vec![false; mask.len()];
+    for y in 0..h {
+        for x in 0..width {
+            let (lo, hi) = (x.saturating_sub(radius), (x + radius).min(width - 1));
+            mid[y * width + x] =
+                x >= radius && x + radius < width && mask[y * width + lo..=y * width + hi]
+                    .iter()
+                    .all(|&b| b);
+        }
+    }
+    let mut n = 0usize;
+    for y in 0..h {
+        for x in 0..width {
+            let keep = y >= radius
+                && y + radius < h
+                && (y - radius..=y + radius).all(|yy| mid[yy * width + x]);
+            out[y * width + x] = keep;
+            n += usize::from(keep);
+        }
+    }
+    n
+}
+
 /// Quantile of the finite entries, by nearest rank. `NaN` never participates:
 /// the warp writes `NaN` outside coverage, and letting those sort would move
 /// every threshold by the size of the uncovered border.
@@ -626,6 +684,215 @@ mod tests {
                 white: 15360.0,
             },
         }
+    }
+
+
+    #[test]
+    fn erode_mask_removes_exactly_the_perimeter_and_nothing_else() {
+        // A 9x9 solid block inside an 21x21 field. Eroding by 2 must leave a
+        // 5x5 block in the same place: (9-2*2)^2 = 25.
+        const W: usize = 21;
+        let mut m = vec![false; W * W];
+        for y in 6..15 {
+            for x in 6..15 {
+                m[y * W + x] = true;
+            }
+        }
+        let mut out = vec![false; W * W];
+        let n = erode_mask(&m, W, 2, &mut out);
+        assert_eq!(n, 25, "eroding 9x9 by 2 must leave 5x5");
+        for y in 0..W {
+            for x in 0..W {
+                let want = (8..13).contains(&y) && (8..13).contains(&x);
+                assert_eq!(out[y * W + x], want, "pixel ({x},{y})");
+            }
+        }
+
+        // Radius 0 is the identity, and must not silently drop anything.
+        let mut id = vec![false; W * W];
+        assert_eq!(erode_mask(&m, W, 0, &mut id), 81);
+        assert_eq!(id, m);
+
+        // A one-pixel-wide bridge is exactly the structure that leaks flux,
+        // and erosion must delete it entirely rather than thin it.
+        let mut bridge = vec![false; W * W];
+        for x in 0..W {
+            bridge[10 * W + x] = true;
+        }
+        let mut gone = vec![false; W * W];
+        assert_eq!(
+            erode_mask(&bridge, W, 1, &mut gone),
+            0,
+            "a 1px line must not survive erosion by 1"
+        );
+    }
+
+    /// PR-16. A defocus-only null: a wrap-around box blur conserves total flux
+    /// exactly, so any gain drift a region reports under blur is spurious. M87
+    /// measured that its subject-avoiding mask leaked 5x more than a compact
+    /// equal-area block, because blur carries flux across a long perimeter.
+    /// This module's mask is a per-pixel threshold and is more fragmented
+    /// still, so the concern transfers and is tested rather than argued.
+    #[test]
+    fn the_low_detail_mask_does_not_leak_flux_across_its_perimeter() {
+        const W: usize = 192;
+        let n = W * W;
+
+        // A scene with real subject structure: a bright disc, a hard-edged bar
+        // and a lit gradient background. Blur will move a lot of light around.
+        let mut sharp = vec![0.0f32; n];
+        for y in 0..W {
+            for x in 0..W {
+                let (dx, dy) = (x as f32 - 62.0, y as f32 - 70.0);
+                let disc = if dx * dx + dy * dy < 30.0 * 30.0 {
+                    12000.0
+                } else {
+                    0.0
+                };
+                let bar = if (100..118).contains(&y) && (20..170).contains(&x) {
+                    6000.0
+                } else {
+                    0.0
+                };
+                sharp[y * W + x] = 2000.0 + 6.0 * x as f32 + disc + bar;
+            }
+        }
+
+        // Flux-conserving separable box blur (wrap-around).
+        let blur = |src: &[f32], rad: usize| -> Vec<f32> {
+            let k = (2 * rad + 1) as f32;
+            let mut mid = vec![0.0f32; n];
+            for y in 0..W {
+                for x in 0..W {
+                    let mut s = 0.0f32;
+                    for d in 0..=2 * rad {
+                        s += src[y * W + (x + W + d - rad) % W];
+                    }
+                    mid[y * W + x] = s / k;
+                }
+            }
+            let mut out = vec![0.0f32; n];
+            for y in 0..W {
+                for x in 0..W {
+                    let mut s = 0.0f32;
+                    for d in 0..=2 * rad {
+                        s += mid[((y + W + d - rad) % W) * W + x];
+                    }
+                    out[y * W + x] = s / k;
+                }
+            }
+            out
+        };
+
+        // Local detail proxy on the reference, as the harness computes it.
+        let detail_of = |v: &[f32]| -> Vec<f32> {
+            let mut d = vec![0.0f32; n];
+            for y in 1..W - 1 {
+                for x in 1..W - 1 {
+                    let gx = v[y * W + x + 1] - v[y * W + x - 1];
+                    let gy = v[(y + 1) * W + x] - v[(y - 1) * W + x];
+                    d[y * W + x] = gx.abs() + gy.abs();
+                }
+            }
+            d
+        };
+
+        // The shipped mask: scattered per-pixel threshold, smoothest 40%.
+        let mut shipped = vec![false; n];
+        let cnt = low_detail_mask(&detail_of(&sharp), &sharp, 0.40, 0.20, &mut shipped);
+        assert!(cnt > 0, "mask must select something");
+
+        // A compact block of the same area, placed in the calmest quadrant
+        // (bottom-left is free of disc and bar).
+        let side = (cnt as f64).sqrt() as usize;
+        let (ox, oy) = (8usize, W - side - 8);
+        let mut compact = vec![false; n];
+        for y in oy..oy + side {
+            for x in ox..ox + side {
+                compact[y * W + x] = true;
+            }
+        }
+
+        let mean_over = |v: &[f32], m: &[bool]| -> f64 {
+            let mut f = Flux::new();
+            f.fold_covered(v, m, f32::INFINITY);
+            f.mean().unwrap()
+        };
+        let median_over = |v: &[f32], m: &[bool]| -> f64 {
+            let mut s: Vec<f32> = v
+                .iter()
+                .zip(m)
+                .filter(|&(_, &c)| c)
+                .map(|(&x, _)| x)
+                .collect();
+            s.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap());
+            f64::from(s[s.len() / 2])
+        };
+
+        // A third region: the shipped mask eroded away from its own perimeter.
+        // This keeps the low-detail selectivity and removes the boundary that
+        // blur carries flux across.
+        let mut eroded = vec![false; n];
+        let n_erode = erode_mask(&shipped, W, 16, &mut eroded);
+
+        let (r_ship, r_comp) = (mean_over(&sharp, &shipped), mean_over(&sharp, &compact));
+        let r_ero = mean_over(&sharp, &eroded);
+        let r_med = median_over(&sharp, &shipped);
+        let total: f64 = sharp.iter().map(|&x| f64::from(x)).sum();
+
+        let (mut pk_ship, mut pk_comp, mut pk_med) = (0.0f64, 0.0f64, 0.0f64);
+        let (mut pk_ero, mut pk_cmed) = (0.0f64, 0.0f64);
+        let c_med = median_over(&sharp, &compact);
+        for rad in [2usize, 4, 8, 12, 16] {
+            let b = blur(&sharp, rad);
+            // The null is only valid if the blur really conserved flux.
+            let tb: f64 = b.iter().map(|&x| f64::from(x)).sum();
+            assert!(
+                ((tb - total) / total).abs() < 1e-4,
+                "blur must conserve flux, drift {}",
+                (tb - total) / total
+            );
+            pk_ship = pk_ship.max((r_ship / mean_over(&b, &shipped) - 1.0).abs());
+            pk_comp = pk_comp.max((r_comp / mean_over(&b, &compact) - 1.0).abs());
+            pk_med = pk_med.max((r_med / median_over(&b, &shipped) - 1.0).abs());
+            pk_ero = pk_ero.max((r_ero / mean_over(&b, &eroded) - 1.0).abs());
+            pk_cmed = pk_cmed.max((c_med / median_over(&b, &compact) - 1.0).abs());
+        }
+
+        println!(
+            "PR-16 defocus null (peak spurious gain over a blur sweep)\n  \
+             shipped scattered mask  {:>8.4}%   ({} px)\n  \
+             eroded by 16 px         {:>8.4}%   ({} px)\n  \
+             compact equal-area block{:>8.4}%   ({} px)\n  \
+             shipped / compact = {:.1}x     eroded / compact = {:.2}x\n  \
+             statistic effect on the COMPACT block: median {:.4}% vs mean \
+             {:.4}%  = {:.1}x",
+            pk_ship * 100.0,
+            cnt,
+            pk_ero * 100.0,
+            n_erode,
+            pk_comp * 100.0,
+            side * side,
+            pk_ship / pk_comp,
+            pk_ero / pk_comp,
+            pk_cmed * 100.0,
+            pk_comp * 100.0,
+            pk_cmed / pk_comp
+        );
+
+        // Power check, measured on the compact block where the perimeter leak
+        // is not confounding it: the null must reproduce M87's statistic
+        // effect (median much worse than mean) or it has no power.
+        assert!(
+            pk_cmed > 10.0 * pk_comp,
+            "null lacks power: median {pk_cmed} vs mean {pk_comp}"
+        );
+        // PR-16 proper. Recorded as the measurement it is; see report S13.
+        assert!(
+            pk_ship > 2.0 * pk_comp,
+            "PR-16 recorded the shipped mask as leaking; if this now fails the \
+             mask has been fixed and the report must be updated"
+        );
     }
 
     fn flux_of(mean: f64, count: u64) -> Flux {

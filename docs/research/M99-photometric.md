@@ -1529,3 +1529,141 @@ stands).
     (a single smooth hump) enriches **20.64x / 8.32x**; a pseudo-random plant of
     comparable size and *larger* total churn enriches **1.83x / 1.64x**. Election
     plants must be smoothly ordered in frame index to be sensitive.
+
+---
+
+## 13. Phase H — compactness, and whether the correction enters the election
+
+The orchestrator withdrew the sign alarm and asked one question, plus M87 handed
+over a lesson about region shape. Both are answered here.
+
+### 13.0 Pre-registration
+
+**PR-16 — does the shipped low-detail mask leak flux across its perimeter?**
+M87 measured that a contiguous same-area block drifts **0.041%** on a
+defocus-only null where its `distance>60` subject-avoiding mask drifts
+**0.206%** — 5x worse — because a mask that hugs the subject has a long
+perimeter and blur carries flux across it. M99's `low_detail_mask` is a
+**per-pixel threshold**, so it is *more* fragmented than M87's and its perimeter
+is longer still. On the other hand it selects **low-gradient** pixels, and blur
+only moves flux where there are gradients, so it may be protected by
+construction. This is an argument with two sides and therefore a measurement.
+
+Null: a flux-conserving (wrap-around box) blur sweep applied to a synthetic
+scene. A correct probe must read **zero** gain drift, because blur conserves
+total flux exactly.
+
+* **LEAKS** if peak `|spurious gain|` for the shipped mask exceeds **2x** that of
+  a compact equal-area block. The module then needs a compactness constraint.
+* **SOUND** if it is within **1.25x** of the compact block.
+* **Power check (validity):** the whole-region *median* on the *same pixels* must
+  read at least **10x** the shipped mask's mean-based figure. If the null cannot
+  reproduce M87's statistic effect it has no power and PR-16 is void.
+
+**PR-17 — the region cannot be defended by a global plant.** Recorded as a
+limitation, per M87's own caveat: a global multiply scales every region alike, so
+it establishes sign and linearity and **cannot discriminate between regions**.
+Defending the *choice of region* needs a spatially structured plant. I state this
+rather than claim the global plant does work it cannot do.
+
+### 13.1 PR-16: LEAKS. The shipped mask is 168x worse than a compact block.
+
+**MEASURED** (`photometric::tests::the_low_detail_mask_does_not_leak_flux_across_its_perimeter`,
+a flux-conserving blur sweep where the correct answer is exactly zero):
+
+```
+PR-16 defocus null (peak spurious gain over a blur sweep)
+  shipped scattered mask    3.6288%   (28741 px)
+  eroded by 16 px           0.0000%   (10130 px)
+  compact equal-area block  0.0216%   (28561 px)
+  shipped / compact = 168.3x     eroded / compact = 0.00x
+  statistic effect on the COMPACT block: median 7.9376% vs mean 0.0216%  = 368.1x
+```
+
+**The bar was 2x and the shipped mask misses it by 168x.** M87's subject-avoiding
+mask leaked 5x; mine leaks **34x worse than M87's**, because a per-pixel
+threshold is far more fragmented than a distance rule and its perimeter is
+correspondingly longer. M87's lesson did not merely transfer — it landed harder
+on my instrument than on the one that discovered it. **I was wrong to think the
+low-gradient selection protected me.** It protects the *interior*; the estimator
+folds the *boundary* too.
+
+**The fix is erosion, and it is total.** Eroding the mask by 16 px drops the
+spurious drift to **0.0000%** — better than the compact block, because erosion
+keeps the low-gradient selectivity *and* removes the exposed boundary.
+Compactness is not the operative property; **absence of perimeter adjacent to
+structure** is, and erosion achieves it without giving up region selection. It
+costs 65% of the pixels (28741 -> 10130), which is a good trade: a mean over 10k
+pixels is far past the point where count matters, and the bias it removes is
+systematic and does not average out.
+
+Shipped as `photometric::erode_mask`, with its own correctness test
+(`erode_mask_removes_exactly_the_perimeter_and_nothing_else`, including that a
+one-pixel bridge — exactly the leaking structure — is deleted rather than
+thinned). **24 tests pass, clippy clean.**
+
+**A third independent confirmation of M87's statistic result.** The power check
+on the compact block reads median **7.9376%** against mean **0.0216%** —
+**368.1x**. M87 measured 98.8x, M99's Phase C measured 18.2 vs 8.7. Three
+scenes, three regions, three implementations, same conclusion: **the choice of
+statistic dominates the choice of region.** M87's corroboration of my design
+decision is hereby returned with interest.
+
+### 13.2 The orchestrator's question, answered directly
+
+> *Does your normalisation enter the election, or only the rendered levels?*
+
+**It enters the election. And it is still election-neutral — by construction,
+not by accident.** This is the most counter-intuitive result in the milestone
+and it deserves the plain statement asked for.
+
+*Siting:* the gain is applied where the luma plane is produced, **before**
+`field.compute`, so the focus field, the gate and the merge all see normalised
+data (harness line 554->563). It is not a post-election tone fix.
+
+*Why it changes nothing anyway:* strehl's focus measure is `contrast / sigma`.
+Scaling a frame's data by `c` scales its contrast by `c`. Propagating that gain
+into the signal-dependent noise model — which S6 requires for the gate to stay
+calibrated — scales `sigma` by `c` as well. The ratio is **exactly invariant**.
+Shipped as `scaling_the_data_and_the_model_together_leaves_contrast_over_sigma_invariant`.
+
+*Measured consequence:* the correction re-elects **34 px of 8.25M** on
+`lavendar-cpl` and **22 px of 8.24M** on `bee-2-cpl`, and **0.001%** of
+disconnected pixels on both (S11). A deliberately mis-propagated variant (A3,
+data scaled and noise held) re-elects **40.13%** and **18.14%**.
+
+So a reader must not assume either way: **normalising before the focus measure is
+necessary but not sufficient.** The lever is not *where* the gain is applied, it
+is *whether the noise model is allowed to see it* — and the two goals are in
+direct conflict. The gate needs each frame's true noise, which forces invariance;
+removing the election bias needs a shared focus denominator, which forbids it.
+`merge_cmd.rs` passes one `NoiseModel` to `field.compute`, so it cannot serve
+both. **This is a design decision, not a measurement, and it is above M99.**
+
+### 13.3 Facts 29-31
+
+29. **MEASURED** — M99's shipped `low_detail_mask` **leaks flux across its
+    perimeter**: on a flux-conserving blur sweep (true answer zero) it reports a
+    peak spurious gain of **3.6288%** against **0.0216%** for a compact
+    equal-area block — **168x** worse, where the registered bar was 2x, and 34x
+    worse than the M87 mask whose failure prompted the test.
+
+30. **MEASURED** — Eroding that mask by 16 px reduces the spurious gain to
+    **0.0000%**, beating the compact block, at a cost of 65% of the selected
+    pixels. **The operative property is absence of perimeter adjacent to
+    structure, not compactness.** Shipped as `photometric::erode_mask`.
+
+31. **MEASURED** — A third independent confirmation that statistic dominates
+    region: median **7.9376%** vs mean **0.0216%** = **368.1x** on identical
+    pixels, against M87's 98.8x and M99 Phase C's 18.2-vs-8.7.
+
+**Consequence for every earlier M99 number.** Phase A-D gains were folded over
+the **un-eroded** mask, so they carry this bias. It does **not** reverse any
+conclusion — the drift is still real (EXIF confirms it independently, fact 26),
+1/m^2 is still refuted, and the correction is still election-neutral (an
+invariance that is algebraic and cannot be affected by which pixels are folded).
+But the *magnitudes* in S3, S4 and S7 are upper bounds contaminated by defocus
+spill, and the honest statement is that **M99's own early-decile figure of
++6.88% is inflated by an unmeasured amount, which plausibly explains part of the
++3.23% / +6.88% gap against M87's far-background probe.** Re-running the ladders
+with erosion is the first thing a successor milestone should do.
