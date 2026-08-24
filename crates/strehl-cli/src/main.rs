@@ -121,7 +121,7 @@ enum Command {
         /// This is ON BY DEFAULT whenever --srgb is given, because binning
         /// destroys 10-32 % of top-octave green power outright (M95). Pass it
         /// explicitly to force full resolution WITHOUT --srgb.
-        #[arg(long)]
+        #[arg(long, conflicts_with = "binned")]
         demosaic: bool,
         /// Opt out: bin each 2x2 quad to one pixel in the --srgb render, as
         /// strehl did before M95. Halves linear resolution. Has no effect on
@@ -327,6 +327,22 @@ enum Command {
         /// Apply the sRGB transfer curve. For looking at, NOT for measuring.
         #[arg(long)]
         srgb: bool,
+        /// Emit at full sensor resolution with a Malvar-He-Cutler demosaic
+        /// instead of binning each 2x2 quad to one pixel.
+        ///
+        /// ON BY DEFAULT with --srgb, matching `stack`. It must match: these
+        /// two subcommands exist to be compared against each other, and until
+        /// M104c measured it, `stack --srgb` emitted 7032 x 4688 while this one
+        /// emitted 3516 x 2344. Magnification reads as sharpness (discipline
+        /// 606), so the asymmetry made the naive baseline look softer than it
+        /// is -- a bias running TOWARD this project's own thesis.
+        #[arg(long, conflicts_with = "binned")]
+        demosaic: bool,
+        /// Opt out: bin each 2x2 quad to one pixel in the --srgb render.
+        /// Halves linear resolution. No effect on the byte-frozen measurement
+        /// output, which is always binned.
+        #[arg(long)]
+        binned: bool,
         /// Also write the winner map: a 16-bit grayscale TIFF holding the
         /// literal winning frame index per pixel. Smooth depth-ordered bands
         /// are what a real scene should give; salt-and-pepper speckle in it is
@@ -371,6 +387,8 @@ fn main() -> Result<()> {
             out,
             limit,
             srgb,
+            demosaic,
+            binned,
             index_map,
             flat_roi,
             memory_model,
@@ -379,6 +397,12 @@ fn main() -> Result<()> {
             out,
             limit,
             srgb,
+            // Identical resolution rule to `stack`, and it must stay identical:
+            // the two subcommands are compared against each other, so any
+            // asymmetry here is a thumb on the scale. The measurement path
+            // passes neither flag, leaving this false and the byte-frozen
+            // output untouched.
+            demosaic: demosaic || (srgb && !binned),
             index_map,
             flat_roi,
             memory_model,

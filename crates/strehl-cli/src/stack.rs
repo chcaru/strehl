@@ -168,6 +168,12 @@ pub struct StackOptions {
     pub out: PathBuf,
     pub limit: Option<usize>,
     pub srgb: bool,
+    /// Emit at full sensor resolution instead of binning each 2x2 quad to one
+    /// pixel. Defaults ON with `--srgb` and OFF otherwise, exactly as in
+    /// `stack`, so the byte-frozen measurement path is never reached by a
+    /// default. See the demosaic branch in `write_selected` for why the two
+    /// subcommands must agree on this.
+    pub demosaic: bool,
     pub index_map: Option<PathBuf>,
     pub flat_roi: Option<Roi>,
     pub memory_model: MemoryModel,
@@ -1011,7 +1017,53 @@ fn write_outputs(
     let r = selection.plane(CfaPlane::R);
     let b = selection.plane(CfaPlane::B);
 
-    if let Some(m) = matrix {
+    if opts.demosaic {
+        // Full resolution, mirroring `merge_cmd::write_merged`'s demosaic
+        // branch. The argmax copies a whole 2x2 quad from the winning frame,
+        // so all four CFA sites are already present -- this is pure
+        // interleaving of data that was already there, not an inference, and
+        // the selection itself is untouched.
+        //
+        // This branch exists because M104c measured an asymmetry that biased
+        // the project's own comparison: `stack --srgb` emitted 7032 x 4688
+        // while `argmax-baseline --srgb` still emitted 3516 x 2344. These two
+        // subcommands exist to be compared against each other, magnification
+        // reads as sharpness (discipline 606), and the bias ran TOWARD the
+        // estimator and away from the baseline it is measured against.
+        let (mw, mh) = (geom.width * 2, geom.height * 2);
+        let mut mosaic = vec![0.0f32; mw * mh];
+        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
+        let g1 = selection.plane(CfaPlane::G1);
+        let g2 = selection.plane(CfaPlane::G2);
+        for py in 0..geom.height {
+            let (top, bot) = mosaic[py * 2 * mw..].split_at_mut(mw);
+            for px in 0..geom.width {
+                let i = py * geom.width + px;
+                // RGGB, matching `CfaPlane::rggb_at`: R G1 on the even row,
+                // G2 B on the odd one.
+                top[px * 2] = norm(r[i] as f32, gains[0]);
+                top[px * 2 + 1] = norm(g1[i] as f32, gains[1]);
+                bot[px * 2] = norm(g2[i] as f32, gains[1]);
+                bot[px * 2 + 1] = norm(b[i] as f32, gains[2]);
+            }
+        }
+        let dev = image_out::Develop {
+            matrix,
+            srgb: opts.srgb,
+        };
+        image_out::write_demosaiced(&opts.out, mw, mh, &mosaic, &dev)?;
+        eprintln!(
+            "wrote           : {} ({mw} x {mh}, 16-bit RGB, {}, Malvar-He-Cutler demosaic)",
+            opts.out.display(),
+            dev.caveat()
+        );
+        eprintln!(
+            "                  Full sensor resolution, matching `stack --srgb` so the two are"
+        );
+        eprintln!(
+            "                  comparable. Interpolated -- do not measure resolution on it."
+        );
+    } else if let Some(m) = matrix {
         let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
         let mut lin = vec![0.0f32; n * 3];
         let (pixels, _) = lin.as_chunks_mut::<3>();
