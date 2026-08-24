@@ -434,6 +434,7 @@ direction that would falsely incriminate M95's correction.**
 > *The CPL is exonerated if lateral CA there is within 2× of the CPL stacks; implicated if
 > it reads < 0.3×.*
 
+
 - **Axial (Instrument B): clean exoneration.** `wrapped-text-1` (no CPL) reads
   `dR = −0.6741` against tweezers' −1.0476 — a ratio of **0.64**, well within 2×. A second
   non-CPL stack, `coffee-bean`, reads −0.8036. **Two non-CPL stacks reproduce the effect
@@ -444,6 +445,13 @@ direction that would falsely incriminate M95's correction.**
   radii, and lateral CA is radius-dependent, so this comparison is not radius-matched and
   I do not read it as evidence against the CPL. **Honest status: CPL not implicated;
   lateral exoneration not cleanly established.**
+
+**Caveat, added after the fact and recorded in §13.5:** `strehl align` warned that
+`coffee-bean`'s solve has a held-out error of **6.613 px, above M86's `T_usable` of 4.0 px**
+— "not a precise solve". I did not record this when I first scored B5. The warp is
+common-mode across all four CFA planes and `coffee-bean`'s G1−G2 null is the tightest of
+the five stacks (+0.0026 frames), which bounds the damage, but the corroborating stack is
+weaker than §4 implies. **B5's axial exoneration rests primarily on `wrapped-text-1`.**
 
 ---
 
@@ -676,6 +684,10 @@ Numbered `P1…` per rule 28. All MEASURED unless marked.
   against a zero-free-parameter prediction), N3 (−0.0034 frames at 2.6× SNR deficit) all pass.
 - Six render arms produced at binary SHA-256 `3C596BC5…`, all `sidecar-override`, all
   `N placed / 0 refused`, all exit 0 (rule 46: exit code read outside any pipeline).
+  **That path has since been rebuilt by another agent and no longer hashes to `3C596BC5…`;
+  the arms are pinned by their own output hashes and full invocations in §13.2.**
+  Every invocation ran at `--gate 4.0` (`DEFAULT_GATE`, `merge.rs:297`) — defaulted, never passed.
+  Sidecar frame counts audited full-bracket in §13.3.
 - Every map rendered and inspected before its median was quoted.
 
 **Not verified:**
@@ -964,3 +976,104 @@ way.
   Reporting `rms_L` at each control point converted a failed control into a calibration
   curve, and motivated the substitution test (K7) that actually settled the question.
 
+## 13. Provenance — every invocation, recorded in full
+
+Added in response to the orchestrator's standing request (2026-08-24) that a recorded hash
+must carry its **entire** invocation, `--gate` stated explicitly even when defaulted,
+because "we used the default" is not a record and defaults move. Three milestones had
+already frozen three different invocations without recording the commands, and splicing one
+milestone's flag onto another's manufactured a fourth invocation nobody had frozen.
+
+**`--gate` was never passed by any invocation below**, so every one ran at
+`DEFAULT_GATE = 4.0` (`crates/strehl-core/src/merge.rs:297`). Stating it, not assuming it.
+
+### 13.1 The binary hash in §11 is stale, and this is exactly the failure mode
+
+§11 records the arms as produced at binary SHA-256 `3C596BC5…`. **The file at
+`.cargo-target-orch\release\strehl.exe` now hashes `3141408CF13150C9D86E0F50D58D80B736DC1B9A51E78DDBB6072EAE0F6C609B`,
+mtime 2026-08-24 11:24:39**, having been rebuilt by another agent after my last render at
+10:25. My renders predate the rebuild and are unaffected — but **the hash I recorded is no
+longer reachable through the path I recorded it against.** A hash plus a mutable path is not
+provenance. The arms are therefore pinned below by **their own output hashes**, which no
+one else's build can move.
+
+### 13.2 Renders analysed
+
+| artifact | invocation | gate | sidecar (frames) | SHA-256 of output |
+|---|---|---|---|---|
+| `ORCH-gallery3\<stack>.tif` (the subject of §3–§7) | `strehl stack <dir> --srgb --auto-exposure -o <tif>` | 4.0 (default) | `ORCH-gallery3\<stack>-warpmap.txt` | orchestrator's; §12 K1 re-verified `bee-3-cpl` byte-identical to the kernel arm |
+| `ORCH-kernel\bee-3-cpl-{catmull-rom,nearest,bilinear}.tif` (§12) | `strehl stack <stack> --srgb --auto-exposure --out <tif>` | 4.0 (default) | per-arm copy, one `resampler` line rewritten | orchestrator's; `E400A63A…`, `50B94F31…`, `AFDF3BE9…` |
+| `M107-chroma\renders\<stack>-linear.tif` | `strehl stack <dir> -o <tif>` | 4.0 (default) | mine, below | tweezers `4881EC4E…`, leaf-2 `AF8E3A05…`, bee-3 `C38FFBA9…` |
+| `M107-chroma\renders\<stack>-binned.tif` | `strehl stack <dir> --srgb --binned --auto-exposure -o <tif>` | 4.0 (default) | mine, below | tweezers `DA64157A…`, leaf-2 `2B3327DD…`, bee-3 `DCDA0AAB…` |
+| `M107-chroma\renders\<stack>-warpmap.txt` | `strehl align <dir> --out <side>`, `STREHL_WARPMAP=<side>` | n/a | — | bee-3 `4B56096D…`, leaf-2 `A1197183…`, tweezers `3E634E28…`, wrapped-text-1 `B3222EB9…`, coffee-bean `5BB3CE0C…` |
+
+Hypotheses **(a)** and **(b)** — §3 and §4, the two REAL verdicts — use **no strehl render at
+all.** They decode raw ARWs with `rawpy` and apply the sidecar warp in Python. The render
+table above is provenance for §5, §7/B4 and §12 only.
+
+### 13.3 Contamination audit against the quarantined sidecars
+
+The orchestrator moved 11 stray `warpmap.txt` files out of `D:\personal\macro`, one of
+which (`bee-3-cpl`, 1560 bytes) held a **40-frame** solve for a **299-frame** bracket. That
+defect contaminates treatment and control identically, so **no control in this milestone
+could have caught it.** The only defence is to count frames, which
+`experiments/M107-chroma/src/verify_sidecars.py` now does:
+
+```
+stack           sidecar  placed   ARWs  verdict
+bee-3-cpl           299     299    299  OK
+leaf-2-cpl          182     182    182  OK
+tweezers-cpl        100     100    100  OK
+wrapped-text-1      130     130    130  OK
+coffee-bean         105     105    105  OK
+ALL SIDECARS FULL-BRACKET: True
+```
+
+Corroborated independently by the render logs, which print
+`alignment : ON (sidecar-override), reference frame 149, 299 placed / 0 refused` for
+`bee-3-cpl` and the full count for every other arm. **Every Python sidecar path in
+`experiments/M107-chroma/src/` resolves under `C:\dev\strehl-out\M107-chroma\renders\`;
+none reads from the capture library.** My own `align_b5.ps1` set `STREHL_WARPMAP` *and*
+`--out` into scratch and its log shows both writes landing there — **none of the 11
+quarantined files was written by M107** (the quarantined `coffee-bean` sidecar is
+timestamped 09:24:21, 75 minutes before my align ran at 10:39:46, and is 2098 bytes against
+my 14606).
+
+### 13.4 The M106 watershed does not reach any number in this report
+
+`885e9f7` (2026-08-24 03:15:23) moves 100 % of pixels in the default render.
+`git merge-base --is-ancestor 885e9f7 865c1ff` exits **0**: the watershed is an ancestor of
+the binary that produced every artifact here, which was built ~6 hours later. All arms are
+on the **aligned** side and are mutually comparable.
+
+Structurally, the exposure is smaller still. §3 and §4 never invoke the merge. §5, §7/B4 and
+§12 are single-binary internal comparisons, and §12's K1 pins the Catmull-Rom arm
+byte-identical to the gallery render across two separate invocations days apart in
+wall-clock terms. **No quality figure from another milestone is used as a baseline anywhere
+in this report** — the external citations (M93's gate, M95's `COSITE_SHIFT`, fact 1378,
+`merge_cmd.rs` line numbers) are all *structural* source facts, which the watershed does not
+move. **Nothing needs retaking.**
+
+### 13.5 A caveat I failed to record the first time
+
+`strehl align` printed a warning on `coffee-bean` that does not appear anywhere in §4 or §7,
+and should have:
+
+> `NOTE: held-out error 6.613 px is above M86's T_usable of 4.0 px. The sidecar is still a
+> large improvement on no registration at all, but it is not a precise solve.`
+
+`coffee-bean` is one of the two non-CPL stacks carrying bar **B5**, so a control I reported
+as passing rests partly on an imprecise solve. Two things bound the damage, and neither was
+arranged after the fact:
+
+- The warp is applied **identically to all four CFA planes** (§12.1: one `Similarity`, one
+  `PlaneGeometry`), so solve error is **common-mode** and cannot manufacture a per-channel
+  difference.
+- The G1−G2 null carries that error in full and is the instrument's own read-out of it.
+  On `coffee-bean` the null is **+0.0026 frames — the tightest of all five stacks** — against
+  signals of −0.8036 and −0.3585. If the imprecise solve were leaking into the channel
+  differences it would have to leak into the null first, and it did not.
+
+I am recording it rather than resting on those arguments: **B5 passes on
+`wrapped-text-1` (a precise solve) and is corroborated by `coffee-bean` (an imprecise one).**
+That is weaker than §4 as written, and §8's list of open items should be read with it.
