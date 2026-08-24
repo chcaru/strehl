@@ -1,0 +1,96 @@
+{
+  "_comment": [
+    "Frozen configuration for the M110 comparison sheet.",
+    "`exposure` and `crops` are written ONCE by `python sheet.py scout` and then",
+    "left alone. Freezing them is the point: an exposure or a crop re-chosen per",
+    "arm lets each arm show itself at its best, which is how a comparison lies.",
+    "Subjects are the owner's own labelled stacks under D:\\personal\\macro,",
+    "which is STRICTLY READ-ONLY -- nothing here ever writes there."
+  ],
+  "subjects": [
+    {
+      "name": "bee-3-cpl",
+      "dir": "D:\\personal\\macro\\bee-3-cpl",
+      "why": "the adversarial case for a negative-lobe kernel: thousands of hairs, every one its own occluding edge (fact 1374)",
+      "exposure": "--exposure=1.54",
+      "crops": [
+        {
+          "role": "detail",
+          "x": 840,
+          "y": 0,
+          "why": "max mean |gradient|"
+        },
+        {
+          "role": "silhouette",
+          "x": 840,
+          "y": 2520,
+          "why": "max luma p95-p05"
+        },
+        {
+          "role": "specular",
+          "x": 2800,
+          "y": 0,
+          "why": "max luma p99.9"
+        },
+        {
+          "role": "smooth",
+          "x": 6440,
+          "y": 280,
+          "why": "min |gradient| above p20 brightness"
+        },
+        {
+          "role": "corner",
+          "x": 48,
+          "y": 4080,
+          "why": "geometric corner, 48px inset; radial max for lateral CA"
+        }
+      ],
+      "shape": [
+        7032,
+        4688
+      ]
+    },
+    {
+      "name": "wrapped-text-1",
+      "dir": "D:\\personal\\macro\\wrapped-text-1",
+      "why": "the non-hair control: hard high-contrast printed edges, where ringing is easiest to see and hardest to excuse",
+      "exposure": "--exposure=2.27",
+      "crops": [
+        {
+          "role": "detail",
+          "x": 4760,
+          "y": 1680,
+          "why": "max mean |gradient|"
+        },
+        {
+          "role": "silhouette",
+          "x": 840,
+          "y": 1960,
+          "why": "max luma p95-p05"
+        },
+        {
+          "role": "specular",
+          "x": 4480,
+          "y": 0,
+          "why": "max luma p99.9"
+        },
+        {
+          "role": "smooth",
+          "x": 0,
+          "y": 2520,
+          "why": "min |gradient| above p20 brightness"
+        },
+        {
+          "role": "corner",
+          "x": 6424,
+          "y": 4080,
+          "why": "geometric corner, 48px inset; radial max for lateral CA"
+        }
+      ],
+      "shape": [
+        7032,
+        4688
+      ]
+    }
+  ]
+}
