@@ -106,13 +106,15 @@ pub fn write_gray16(path: &Path, width: u32, height: u32, data: &[u16]) -> Resul
 /// looking at, and [`Develop::caveat`] is what says so on the terminal.
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Develop {
-    /// Camera RGB to linear sRGB, from [`color::camera_to_srgb`].
+    /// Camera RGB to linear sRGB, from [`color::camera_to_srgb`], together with
+    /// the sensor saturation ceiling it must not be fed past (see
+    /// [`color::Render`]).
     ///
     /// `None` means **camera-native RGB is emitted unchanged**, which is the
     /// pre-M85 behaviour and is what the corpus's measurements were taken on.
     /// It is also what happens when the decoder has no characterisation for the
     /// body: emitting camera-native and saying so beats inventing a matrix.
-    pub matrix: Option<[[f32; 3]; 3]>,
+    pub matrix: Option<color::Render>,
     /// Apply the sRGB transfer curve. For looking at, not for measuring.
     pub srgb: bool,
 }
@@ -131,16 +133,26 @@ impl Develop {
 
 /// One white-balanced, normalised camera-RGB triple to 16-bit output.
 ///
-/// The clamp sits between the matrix and the curve because the matrix has
-/// negative off-diagonal terms and legitimately produces out-of-gamut values
-/// for saturated scene colours: a strong red can land at `B < 0`. Clamping
-/// there is *gamut clipping*, a real and lossy step, and it is the one place
-/// this pipeline discards information it could have kept. Doing it before the
-/// matrix instead would clip in the wrong space and shift hue.
+/// Two clips happen here and they are not the same operation.
+///
+/// [`color::Render::clip_highlights`] runs **before** the matrix and is about
+/// the *sensor*: a sample pinned at the container maximum is not a colour
+/// measurement, and white balance has already carried the unpinned channels
+/// past it, so the matrix must not be allowed to mix a pinned channel with an
+/// unpinned one. Skipping it is what rendered blown neutral white as magenta
+/// (M109). Where nothing is pinned it is exactly the identity.
+///
+/// The `clamp(0, 1)` below runs **after** the matrix and is about the *gamut*:
+/// the matrix has negative off-diagonal terms and legitimately produces
+/// out-of-gamut values for saturated scene colours, so a strong red can land at
+/// `B < 0`. That is a real and lossy step, and it is the one place this pipeline
+/// discards information it could have kept. Doing *that* one before the matrix
+/// instead would clip in the wrong space and shift hue — which is why the
+/// highlight clip has its own explicit ceiling rather than reusing this clamp.
 #[inline]
 fn develop_pixel(lin: [f32; 3], dev: &Develop) -> [u16; 3] {
     let v = match &dev.matrix {
-        Some(m) => color::apply(m, lin),
+        Some(r) => r.develop(lin),
         None => lin,
     };
     let mut out = [0u16; 3];
@@ -362,7 +374,7 @@ mod tests {
         };
 
         let saturated_green = [0.2f32, 1.0, 0.15];
-        let linear = color::apply(&m, saturated_green);
+        let linear = color::apply(m.matrix(), saturated_green);
         assert!(
             linear[2] < 0.0 && linear[0] < 0.0,
             "the fixture is not out of gamut: it developed to {linear:?}"

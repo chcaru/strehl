@@ -60,6 +60,9 @@
 //! curve, are the standard's own numbers, and both are checked in this module's
 //! tests against the primaries they are derived from rather than asserted.
 
+use crate::clip;
+use crate::noise::Levels;
+
 /// Linear sRGB -> CIE XYZ, D65.
 ///
 /// **DERIVED from the standard's chromaticities, not copied from a table.**
@@ -172,7 +175,7 @@ pub fn implied_daylight_wb_gains(xyz_to_cam: [[f32; 3]; 3]) -> Option<[f32; 3]> 
 /// this crate can see, because the corpus contains no grey card.
 ///
 /// Returns `None` if the composed matrix is singular.
-pub fn camera_to_srgb(xyz_to_cam: [[f32; 3]; 3]) -> Option<[[f32; 3]; 3]> {
+pub fn camera_to_srgb(xyz_to_cam: [[f32; 3]; 3]) -> Option<Render> {
     // 1. linear sRGB -> camera RGB
     let mut cam_from_srgb = [[0.0f64; 3]; 3];
     for i in 0..3 {
@@ -208,7 +211,143 @@ pub fn camera_to_srgb(xyz_to_cam: [[f32; 3]; 3]) -> Option<[[f32; 3]; 3]> {
             out[i][j] = inv[i][j] as f32;
         }
     }
-    Some(out)
+    Some(Render::new(out))
+}
+
+/// The colour transform for a viewing render: the matrix, **and** the sensor
+/// saturation ceiling the matrix must not be fed past.
+///
+/// These two travel together because they are one decision. [`camera_to_srgb`]
+/// mixes the channels — its green row is `[-0.115, +1.489, -0.374]` on the
+/// reference body — so handing it a triple in which one channel is pinned at
+/// the container maximum while white balance has carried the others *past* that
+/// maximum does not produce a slightly wrong colour. It produces a confidently
+/// wrong one: neutral white renders **magenta**, because the pinned green is
+/// dragged down by the two unpinned terms while red and blue clamp at 1.0.
+/// (MEASURED: 2.002 % of a 33 MP render of `dry-erase-marker-head-cpl`,
+/// `docs/research/M109-highlights.md`.)
+///
+/// Bundling the ceiling into the same value makes it impossible to supply the
+/// matrix and silently forget the ceiling: the type is the reminder. A caller
+/// that genuinely has no ceiling to state gets [`Render::new`], whose ceiling is
+/// `+inf` on every channel — which is exactly the arithmetic this pipeline did
+/// before the ceiling existed, so no existing output moves.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Render {
+    to_srgb: [[f32; 3]; 3],
+    ceiling: [f32; 3],
+}
+
+impl Render {
+    /// A render with **no stated ceiling**: highlight clipping is disabled and
+    /// the arithmetic is the plain matrix multiply.
+    pub fn new(to_srgb: [[f32; 3]; 3]) -> Self {
+        Self {
+            to_srgb,
+            ceiling: [f32::INFINITY; 3],
+        }
+    }
+
+    /// The same render, with a per-channel saturation ceiling in the render's
+    /// own units. See [`saturation_ceiling`].
+    #[must_use]
+    pub fn with_ceiling(self, ceiling: [f32; 3]) -> Self {
+        Self { ceiling, ..self }
+    }
+
+    /// Camera RGB to linear sRGB. Every row sums to 1.
+    pub fn matrix(&self) -> &[[f32; 3]; 3] {
+        &self.to_srgb
+    }
+
+    /// The per-channel ceiling, `+inf` where none was stated.
+    pub fn ceiling(&self) -> [f32; 3] {
+        self.ceiling
+    }
+
+    /// Bring a white-balanced camera-RGB triple back under the ceiling, *before*
+    /// the matrix sees it.
+    ///
+    /// **Where nothing is pinned this is the identity, exactly.** That is not a
+    /// convenience, it is the whole safety argument: an unsaturated stack takes
+    /// the `else` branch on every pixel, so its render cannot move by one bit.
+    /// An unconditional clamp would not have this property — the ceiling on red
+    /// is only `1/2.687` of the container in *unbalanced* terms, so a plain
+    /// clamp would eat real, unclipped red highlights above roughly 6420 DN.
+    ///
+    /// Where something *is* pinned, every channel is brought down to the
+    /// **neutral** ceiling `min_c ceiling[c]`. All three channels of a blown
+    /// neutral are above it, so all three land on it exactly, and because every
+    /// row of [`camera_to_srgb`] sums to 1 an equal-channel input is an
+    /// equal-channel output: blown neutral renders neutral. A channel that is
+    /// *below* the neutral ceiling is left alone, so a blown **coloured**
+    /// highlight — green pinned, red genuinely low — keeps its hue direction
+    /// instead of being bleached to white.
+    ///
+    /// The cost is real and is not hidden: the headroom above the neutral
+    /// ceiling in the unpinned channels is discarded, which desaturates a
+    /// strongly clipped colour slightly. A pinned channel is not a measurement
+    /// of how saturated the object was, so keeping that headroom would be
+    /// fabricating saturation the sensor never recorded.
+    #[inline]
+    pub fn clip_highlights(&self, v: [f32; 3]) -> [f32; 3] {
+        let pinned = v[0] >= self.ceiling[0] || v[1] >= self.ceiling[1] || v[2] >= self.ceiling[2];
+        if !pinned {
+            return v;
+        }
+        let neutral = self.ceiling[0].min(self.ceiling[1]).min(self.ceiling[2]);
+        [v[0].min(neutral), v[1].min(neutral), v[2].min(neutral)]
+    }
+
+    /// Clip, then transform. The order is the point.
+    #[inline]
+    pub fn develop(&self, v: [f32; 3]) -> [f32; 3] {
+        apply(&self.to_srgb, self.clip_highlights(v))
+    }
+}
+
+/// Where a container-saturated sample lands in a viewing render's units, per
+/// channel.
+///
+/// A render normalises by [`Levels::range`] — `white - black`, the **noise
+/// model's** calibrated range, 14848 DN on the reference body. But the sample
+/// container saturates at [`clip::CONTAINER_MAX_DN`], 16383. `clip.rs` insists
+/// these are different numbers and must not be unified; this function is what
+/// it looks like to *use* both of them for what each one is. A pinned sample
+/// therefore does not land at 1.0 — it lands at
+///
+/// ```text
+/// (CONTAINER_MAX_DN - black) / (white - black)  =  1.068898  on the reference rig
+/// ```
+///
+/// times the channel's white-balance gain and the exposure gain, because the
+/// render applies both after normalising. Green's as-shot gain is 1.0 by
+/// construction, red's is 2.687 and blue's 1.532, so the three channels stop at
+/// three different heights — which is precisely why a blown neutral is not
+/// neutral without [`Render::clip_highlights`].
+///
+/// `wb_gains` are the green-normalised as-shot multipliers actually applied to
+/// the buffer, and `exposure_gain` the linear gain from [`AppliedExposure`], in
+/// the same order the render applies them.
+pub fn saturation_ceiling(levels: Levels, wb_gains: [f32; 3], exposure_gain: f32) -> [f32; 3] {
+    let range = levels.range();
+    if !(range.is_finite() && range > 0.0) {
+        return [f32::INFINITY; 3];
+    }
+    let k0 = (f32::from(clip::CONTAINER_MAX_DN) - levels.black) / range;
+    let mut out = [f32::INFINITY; 3];
+    for c in 0..3 {
+        let k = k0 * wb_gains[c] * exposure_gain;
+        // A non-finite or non-positive ceiling would clip everything to zero.
+        // Refusing to state one is the safe failure: the render is then exactly
+        // what it was before this function existed.
+        out[c] = if k.is_finite() && k > 0.0 {
+            k
+        } else {
+            f32::INFINITY
+        };
+    }
+    out
 }
 
 /// `m * v`, for a 3x3 and a 3-vector.
@@ -313,10 +452,16 @@ pub fn luminance(v: [f32; 3]) -> f32 {
 /// choice — not a correct one, because camera-native RGB has no defined
 /// luminance, and the `--srgb`-without-a-matrix path already prints that it is
 /// not a render of what the sensor saw.
+///
+/// This deliberately does **not** apply [`Render::clip_highlights`]. The
+/// exposure statistic must read the scene as the sensor measured it, and
+/// clipping first would couple the chosen exposure to the highlight fix — so a
+/// before/after comparison of the fix would be confounded by a different
+/// exposure. Keeping them independent is what lets the fix be judged on its own.
 #[inline]
-pub fn display_luminance(cam_rgb: [f32; 3], matrix: Option<&[[f32; 3]; 3]>) -> f32 {
+pub fn display_luminance(cam_rgb: [f32; 3], matrix: Option<&Render>) -> f32 {
     match matrix {
-        Some(m) => luminance(apply(m, cam_rgb)),
+        Some(r) => luminance(apply(r.matrix(), cam_rgb)),
         None => luminance(cam_rgb),
     }
 }
@@ -768,7 +913,9 @@ mod tests {
     /// fail below, so this is not arithmetic (rule 20).
     #[test]
     fn a_neutral_stays_neutral_and_the_unnormalised_matrix_does_not() {
-        let m = camera_to_srgb(A7C2_XYZ_TO_CAM).expect("invertible");
+        let m = *camera_to_srgb(A7C2_XYZ_TO_CAM)
+            .expect("invertible")
+            .matrix();
         for (i, row) in m.iter().enumerate() {
             let s: f32 = row.iter().sum();
             assert!((s - 1.0).abs() < 1e-5, "row {i} sums to {s}, not 1");
@@ -894,7 +1041,7 @@ mod tests {
         let cam = apply(&truth, xyz);
         let wb = implied_daylight_wb_gains(belief).unwrap_or([1.0, 1.0, 1.0]);
         let wbd = [cam[0] * wb[0], cam[1] * wb[1], cam[2] * wb[2]];
-        let m = camera_to_srgb(belief).expect("invertible");
+        let m = *camera_to_srgb(belief).expect("invertible").matrix();
         apply(&m, wbd)
     }
 
@@ -1082,14 +1229,15 @@ mod tests {
     /// *darker* and the auto rule would brighten it for being colourful.
     #[test]
     fn luminance_floors_out_of_gamut_channels_rather_than_subtracting_them() {
-        let m = camera_to_srgb(A7C2_XYZ_TO_CAM).expect("invertible");
+        let render = camera_to_srgb(A7C2_XYZ_TO_CAM).expect("invertible");
+        let m = *render.matrix();
         let saturated_green = [0.2f32, 1.0, 0.15];
         let lin = apply(&m, saturated_green);
         assert!(
             lin[0] < 0.0 && lin[2] < 0.0,
             "fixture is not out of gamut: {lin:?}"
         );
-        let y = display_luminance(saturated_green, Some(&m));
+        let y = display_luminance(saturated_green, Some(&render));
         assert!(y > 0.0, "an out-of-gamut green read as non-positive: {y}");
         // Explicitly: it equals the green term alone, the negatives dropped.
         let want = SRGB_TO_XYZ_D65[1][1] * f64::from(lin[1]);
@@ -1350,7 +1498,9 @@ mod tests {
     /// because the fold would then be wrong.
     #[test]
     fn the_gain_commutes_with_the_colour_matrix() {
-        let m = camera_to_srgb(A7C2_XYZ_TO_CAM).expect("invertible");
+        let m = *camera_to_srgb(A7C2_XYZ_TO_CAM)
+            .expect("invertible")
+            .matrix();
         for stops in [-2.0f32, -0.5, 0.37, 1.57, 3.0] {
             let g = AppliedExposure {
                 stops,
@@ -1433,5 +1583,184 @@ mod tests {
         let after = (a * g) / (b * g);
         assert!((before - after).abs() < 1e-6);
         assert!(a * g < 1.0 && b * g < 1.0, "the fixture clipped");
+    }
+
+    /// The reference rig's levels, from `AGENTS.md`: black 512, white 15360.
+    const RIG: Levels = Levels {
+        black: 512.0,
+        white: 15360.0,
+    };
+    /// As-shot multipliers from `DSC00150.ARW`, `[2751, 1024, 1569, 1024]`,
+    /// green-normalised: R x2.687, G x1.0, B x1.532.
+    const A7C2_WB: [f32; 3] = [2751.0 / 1024.0, 1.0, 1569.0 / 1024.0];
+
+    /// A container-saturated sample does **not** land at 1.0, and the number it
+    /// does land at is the two white levels' ratio.
+    #[test]
+    fn a_pinned_sample_lands_above_one_because_the_two_white_levels_differ() {
+        let c = saturation_ceiling(RIG, [1.0, 1.0, 1.0], 1.0);
+        // (16383 - 512) / (15360 - 512).
+        assert!(
+            (c[1] - 1.068_898).abs() < 1e-5,
+            "neutral ceiling is {}, not 1.068898 -- if this moved, either \
+             CONTAINER_MAX_DN or the rig's levels changed",
+            c[1]
+        );
+        // White balance carries red and blue past where green can reach. This
+        // asymmetry *is* the defect's mechanism.
+        let c = saturation_ceiling(RIG, A7C2_WB, 1.0);
+        assert!(c[0] > c[1] && c[2] > c[1], "ceilings {c:?} are not ordered");
+        assert!((c[0] / c[1] - 2.686_5).abs() < 1e-3, "red ceiling {c:?}");
+    }
+
+    /// **The defect, and the fix, on the numbers that were measured.**
+    ///
+    /// The blob in `DSC00150.ARW` has green pinned at the container maximum
+    /// (16383 DN, 100 % of saturation) while red sits at 7673.2 DN and blue at
+    /// 14116.0 DN — neither anywhere near its own ceiling in *raw* terms, but
+    /// both carried past green's by white balance. The scene is neutral white
+    /// and LibRaw renders it neutral white.
+    ///
+    /// Power to fail (rule 20, discipline 706): the identical input through a
+    /// [`Render`] with no ceiling — which is exactly what shipped — is asserted
+    /// to come out **magenta** by the same predicate. If a future edit made the
+    /// ceiling a no-op, the first half of this test would not notice; the
+    /// second half would still pass and the third would fail loudly.
+    #[test]
+    fn a_blown_neutral_renders_neutral_and_without_the_ceiling_renders_magenta() {
+        let eg = f32::powf(2.0, -0.24); // the exposure `--auto-exposure` chose
+        let render = camera_to_srgb(A7C2_XYZ_TO_CAM).expect("invertible");
+        let fixed = render.with_ceiling(saturation_ceiling(RIG, A7C2_WB, eg));
+
+        // Fact 1432's measured means, pushed through the render's own norm().
+        let norm = |dn: f32, gain: f32| (dn - RIG.black) * gain * eg / RIG.range();
+        let blob = [
+            norm(7673.2, A7C2_WB[0]),
+            norm(16383.0, A7C2_WB[1]),
+            norm(14116.0, A7C2_WB[2]),
+        ];
+
+        let shipped = apply(render.matrix(), blob).map(|v| v.clamp(0.0, 1.0));
+        let magenta = |v: [f32; 3]| v[0] - v[1] > 0.06 && v[2] - v[1] > 0.06;
+        assert!(
+            magenta(shipped),
+            "the defect did not reproduce: {shipped:?} -- this test is then \
+             measuring something other than the reported failure"
+        );
+
+        let out = fixed.develop(blob).map(|v| v.clamp(0.0, 1.0));
+        assert!(!magenta(out), "still magenta after the ceiling: {out:?}");
+        let spread = out[0].max(out[1]).max(out[2]) - out[0].min(out[1]).min(out[2]);
+        assert!(
+            spread < 1e-5,
+            "blown neutral did not render neutral: {out:?}"
+        );
+
+        // ...and it is not neutral because everything went to zero or one.
+        assert!(out[1] > 0.5, "the fix rendered the highlight dark: {out:?}");
+    }
+
+    /// **The null, as an identity rather than an observation.**
+    ///
+    /// Nothing below its own ceiling is touched — bit-for-bit, not to a
+    /// tolerance. This is why an unsaturated stack cannot move by one byte, and
+    /// it is the property an *unconditional* clamp would not have: red's
+    /// ceiling is `1/2.687` of the container in unbalanced terms, so a plain
+    /// clamp at the neutral ceiling would eat real red highlights from about
+    /// 6420 DN upwards, which is well inside `109MSDCF`'s range.
+    #[test]
+    fn nothing_below_its_ceiling_moves_by_a_single_bit() {
+        let ceil = saturation_ceiling(RIG, A7C2_WB, 1.0);
+        let render = camera_to_srgb(A7C2_XYZ_TO_CAM)
+            .expect("invertible")
+            .with_ceiling(ceil);
+        // 109MSDCF's documented maxima are 39-61 % of white; sweep well past
+        // that, up to just under each channel's own ceiling.
+        for i in 0..=200 {
+            let t = i as f32 / 200.0;
+            let v = [
+                t * ceil[0] * 0.999,
+                t * ceil[1] * 0.999,
+                t * ceil[2] * 0.999,
+            ];
+            assert_eq!(render.clip_highlights(v), v, "moved an unpinned triple");
+        }
+        // Power to fail: a triple that IS pinned must move.
+        let pinned = [ceil[0], ceil[1], ceil[2]];
+        assert_ne!(render.clip_highlights(pinned), pinned);
+    }
+
+    /// A blown **coloured** highlight keeps its hue direction.
+    ///
+    /// Green pins but red is genuinely low: this is a clipped green object, not
+    /// a clipped neutral, and bleaching it to white would be a worse lie than
+    /// the magenta was. Only the channels above the neutral ceiling come down.
+    #[test]
+    fn a_blown_colour_is_not_bleached_to_white() {
+        let ceil = saturation_ceiling(RIG, A7C2_WB, 1.0);
+        let render = camera_to_srgb(A7C2_XYZ_TO_CAM)
+            .expect("invertible")
+            .with_ceiling(ceil);
+        let v = [0.20f32, ceil[1], 0.15];
+        let clipped = render.clip_highlights(v);
+        assert_eq!(clipped[0], 0.20, "a low red was pulled up or down");
+        assert_eq!(clipped[2], 0.15, "a low blue was pulled up or down");
+        // Green is the pinned channel and green carries the minimum gain, so
+        // the neutral ceiling *is* green's ceiling and green lands on it.
+        assert_eq!(clipped[1], ceil[1]);
+        // Power to fail: had the rule been "set every channel to the neutral
+        // ceiling" rather than "min", this clipped triple would be neutral.
+        let spread =
+            clipped[0].max(clipped[1]).max(clipped[2]) - clipped[0].min(clipped[1]).min(clipped[2]);
+        assert!(spread > 0.5, "a blown colour was bleached to {clipped:?}");
+    }
+
+    /// The ceiling scales with the exposure gain, so the fold in
+    /// `merge_cmd::write_merged` — which multiplies the gain into `norm()`
+    /// rather than developing twice — still commutes.
+    ///
+    /// `clip_{K*g}(g*v) == g*clip_K(v)`. Without this the fix would make the
+    /// render depend on *where* the exposure was applied, and the linearity
+    /// argument in [`AppliedExposure`] would no longer hold.
+    #[test]
+    fn the_ceiling_commutes_with_the_exposure_gain() {
+        for stops in [-2.0f32, -0.24, 0.0, 1.57] {
+            let g = AppliedExposure {
+                stops,
+                automatic: false,
+            }
+            .gain();
+            let base = camera_to_srgb(A7C2_XYZ_TO_CAM).expect("invertible");
+            let at_gain = base.with_ceiling(saturation_ceiling(RIG, A7C2_WB, g));
+            let at_one = base.with_ceiling(saturation_ceiling(RIG, A7C2_WB, 1.0));
+            for v in [[0.1f32, 0.2, 0.3], [1.4, 1.07, 1.2], [3.0, 1.07, 1.7]] {
+                let folded = at_gain.clip_highlights([v[0] * g, v[1] * g, v[2] * g]);
+                let after = at_one.clip_highlights(v).map(|x| x * g);
+                for c in 0..3 {
+                    assert!(
+                        (folded[c] - after[c]).abs() <= 2e-6 * folded[c].abs().max(1.0),
+                        "stops {stops}: {folded:?} vs {after:?}"
+                    );
+                }
+            }
+        }
+    }
+
+    /// A ceiling that cannot be computed is refused, not guessed. A zero or
+    /// non-finite ceiling would clip every pixel to black.
+    #[test]
+    fn an_uncomputable_ceiling_disables_the_clip_instead_of_clipping_everything() {
+        let bad = Levels {
+            black: 512.0,
+            white: 512.0,
+        };
+        assert!(saturation_ceiling(bad, A7C2_WB, 1.0)[1].is_infinite());
+        assert!(saturation_ceiling(RIG, A7C2_WB, 0.0)[1].is_infinite());
+        assert!(saturation_ceiling(RIG, [f32::NAN; 3], 1.0)[1].is_infinite());
+        let render = camera_to_srgb(A7C2_XYZ_TO_CAM)
+            .expect("invertible")
+            .with_ceiling(saturation_ceiling(bad, A7C2_WB, 1.0));
+        let v = [9.0f32, 9.0, 9.0];
+        assert_eq!(render.clip_highlights(v), v);
     }
 }

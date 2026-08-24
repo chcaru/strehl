@@ -350,6 +350,22 @@ enum Command {
         /// to look at it.
         #[arg(long, value_name = "PATH")]
         index_map: Option<PathBuf>,
+        /// Multiply linear light by `2^STOPS` before the sRGB curve. Requires
+        /// `--srgb`; refuses to combine with `--auto-exposure`.
+        ///
+        /// This exists so that the naive baseline can be compared with `stack`
+        /// **at the same exposure**. It was added by M109 because the defect it
+        /// was chasing -- blown neutral highlights rendering magenta -- is
+        /// amplified 2.8x by a negative exposure, so a comparison run at a
+        /// different gain from `stack`'s measures a different thing. Same
+        /// reasoning as M104c's resolution fix: these two subcommands exist to
+        /// be compared, so an asymmetry between them is a thumb on the scale.
+        #[arg(long, default_value_t = 0.0, allow_negative_numbers = true)]
+        exposure: f32,
+        /// Choose the exposure from the image and print it, exactly as
+        /// `stack --auto-exposure` does. Requires `--srgb`.
+        #[arg(long)]
+        auto_exposure: bool,
         /// Measure the noise penalty over a low-detail region, in PLANE
         /// coordinates (half sensor resolution). Reports the spatial sigma of
         /// the stacked green channel against the same region in the single
@@ -392,6 +408,8 @@ fn main() -> Result<()> {
             index_map,
             flat_roi,
             memory_model,
+            exposure,
+            auto_exposure,
         } => stack::run(&StackOptions {
             dir,
             out,
@@ -406,6 +424,8 @@ fn main() -> Result<()> {
             index_map,
             flat_roi,
             memory_model,
+            exposure,
+            auto_exposure,
         }),
         Command::Stack {
             dir,

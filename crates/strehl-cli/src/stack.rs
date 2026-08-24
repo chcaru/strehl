@@ -32,6 +32,7 @@ use std::time::Instant;
 
 use anyhow::{Context, Result, bail, ensure};
 use rayon::prelude::*;
+use strehl_core::color::{self, AppliedExposure, Exposure};
 use strehl_core::flat_ratio::{self, FrameFlat};
 use strehl_core::focus::FocusField;
 use strehl_core::noise::{Levels, NoiseModel, Provenance};
@@ -177,9 +178,19 @@ pub struct StackOptions {
     pub index_map: Option<PathBuf>,
     pub flat_roi: Option<Roi>,
     pub memory_model: MemoryModel,
+    /// Stops of linear gain before the sRGB curve; `0.0` is the identity and is
+    /// the default, so the byte-frozen measurement path never multiplies.
+    pub exposure: f32,
+    /// Choose the gain from the image instead. Mutually exclusive with a
+    /// non-zero `exposure`; both require `srgb`.
+    pub auto_exposure: bool,
 }
 
 pub fn run(opts: &StackOptions) -> Result<()> {
+    // Refuse an impossible exposure request before decoding 299 frames, exactly
+    // as `merge_cmd::run` does. `write_outputs` resolves it again where it is
+    // used; resolution is pure, so the two cannot disagree.
+    Exposure::resolve(opts.srgb, opts.exposure, opts.auto_exposure)?;
     let paths = crate::raw_paths(&opts.dir, opts.limit)?;
     ensure!(
         paths.len() < u16::MAX as usize,
@@ -1017,6 +1028,72 @@ fn write_outputs(
     let r = selection.plane(CfaPlane::R);
     let b = selection.plane(CfaPlane::B);
 
+    // Exposure, chosen and applied exactly as `merge_cmd::write_merged` does:
+    // the statistic is always taken on the BINNED quad grid even under
+    // --demosaic, so an interpolation cannot move the gain (M100). It is read
+    // through the un-ceilinged matrix on purpose -- see `display_luminance`.
+    let exposure = Exposure::resolve(opts.srgb, opts.exposure, opts.auto_exposure)?;
+    let applied = match exposure {
+        Exposure::None => AppliedExposure::IDENTITY,
+        Exposure::Stops(stops) => AppliedExposure {
+            stops,
+            automatic: false,
+        },
+        Exposure::Auto => {
+            let pre = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
+            let mut luma: Vec<f32> = (0..n)
+                .map(|i| {
+                    color::display_luminance(
+                        [
+                            pre(r[i] as f32, gains[0]),
+                            pre(selection.green_mean(i), gains[1]),
+                            pre(b[i] as f32, gains[2]),
+                        ],
+                        matrix.as_ref(),
+                    )
+                })
+                .collect();
+            color::choose_exposure(&mut luma).unwrap_or_else(|| {
+                eprintln!(
+                    "exposure        : --auto-exposure found no positive luminance; leaving it alone."
+                );
+                AppliedExposure::IDENTITY
+            })
+        }
+    };
+    if !applied.is_identity() || applied.automatic {
+        eprintln!(
+            "exposure        : {applied}, {}",
+            if applied.automatic {
+                "chosen from the image"
+            } else {
+                "as asked"
+            }
+        );
+        if applied.automatic {
+            eprintln!(
+                "                  rule: linear-sRGB luma p{} -> {:.2} on the binned grid (M100).",
+                color::AUTO_EXPOSURE_PERCENTILE,
+                color::AUTO_EXPOSURE_TARGET
+            );
+            eprintln!(
+                "                  reproduce this exact file with {}",
+                applied.reproduce_flag()
+            );
+        }
+    }
+
+    // The matrix now carries the sensor's saturation ceiling (M109). Without it
+    // the matrix is handed triples in which green is pinned at the container
+    // maximum while white balance has carried red and blue past it, and blown
+    // neutral white renders magenta. The ceiling scales with the exposure gain
+    // for the same reason `norm` folds it: `clip_{K*g}(g*v) == g*clip_K(v)`.
+    // See `docs/research/M109-highlights.md`.
+    let matrix = matrix.map(|render| {
+        render.with_ceiling(color::saturation_ceiling(levels, gains, applied.gain()))
+    });
+    let eg = applied.gain();
+
     if opts.demosaic {
         // Full resolution, mirroring `merge_cmd::write_merged`'s demosaic
         // branch. The argmax copies a whole 2x2 quad from the winning frame,
@@ -1032,7 +1109,7 @@ fn write_outputs(
         // estimator and away from the baseline it is measured against.
         let (mw, mh) = (geom.width * 2, geom.height * 2);
         let mut mosaic = vec![0.0f32; mw * mh];
-        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
+        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain * eg / range;
         let g1 = selection.plane(CfaPlane::G1);
         let g2 = selection.plane(CfaPlane::G2);
         for py in 0..geom.height {
@@ -1064,7 +1141,7 @@ fn write_outputs(
             "                  comparable. Interpolated -- do not measure resolution on it."
         );
     } else if let Some(m) = matrix {
-        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain / range;
+        let norm = |raw: f32, gain: f32| ((raw - levels.black).max(0.0)) * gain * eg / range;
         let mut lin = vec![0.0f32; n * 3];
         let (pixels, _) = lin.as_chunks_mut::<3>();
         for (i, px) in pixels.iter_mut().enumerate() {
