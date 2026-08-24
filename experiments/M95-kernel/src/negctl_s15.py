@@ -36,6 +36,7 @@ ROOT = Path(r"C:\dev\blog\death-of-software\projects\strehl")
 REPORT = ROOT / "docs" / "research" / "M95-kernel.md"
 GATE = ROOT / "experiments" / "M95-kernel" / "src" / "verify_s15.py"
 ART = ROOT / "experiments" / "M95-kernel" / "out" / "k19b_seeds.json"
+ART2 = ROOT / "experiments" / "M95-kernel" / "out" / "k19c_quota.json"
 
 
 def sha(p: Path) -> str:
@@ -76,6 +77,15 @@ DEFECTS = [
     ("D3 struck claim un-struck",
      "3. ~~**Truncation only bites a process that is still running.**",
      "3. **Truncation only bites a process that is still running.**"),
+    ("D4 15.4 quota cell altered",
+     "| 1,-1,1 | -1,1,1 |",
+     "| 1,1,1 | -1,1,1 |"),
+    ("D5 15.4 -File cell altered",
+     "| -1,-1,-1 | -1,-1,-1 | -1,1,-1 | -1,1,1 |",
+     "| -1,-1,-1 | -1,-1,-1 | -1,-1,-1 | -1,1,1 |"),
+    ("D6 15.4 prediction un-scored",
+     "**Scoring my registered prediction, which was half wrong.**",
+     "**Scoring my registered prediction.**"),
 ]
 
 caught = 0

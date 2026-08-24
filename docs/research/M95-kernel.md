@@ -928,6 +928,87 @@ value. **A positive control for the stimulus is not a positive control for the
 conclusion.** The seeded design is the cheap fix and should be standard in any
 future exit-code work here.
 
+### 15.4 The quota rule holds on pwsh and is refuted on 5.1 — the mechanism is host-dependent
+
+Instrument: `experiments/M95-kernel/src/k19c_quota.py`, artifact
+`out/k19c_quota.json`, **pre-registered and committed at `817038d` before the
+run**, prediction included so it could be scored. Prompted by the
+orchestrator's correction #2 (16:20), which states the trap is *"deterministic
+on QUOTA: `-First N` loses the exit code whenever `N ≤ the number of objects
+produced`"*, with no volume threshold.
+
+Every arm is pre-cleared to a literal seed and asserted, 3 reps, true exit code
+1, every pipeline emitted as **literal text** — no `switch` and no scriptblock
+dispatch, because the orchestrator's own `scriptblock_masks_the_trap.ps1` shows
+`& $sb` changes the answer.
+
+| host | arm | objects | N | seed 0 | seed 7 | verdict |
+| --- | --- | --- | --- | --- | --- | --- |
+| pwsh 7.6.5 | `-First 3` | 50 | 3 | 0,0,0 | 7,7,7 | LOST (echoes seed) |
+| pwsh 7.6.5 | `-First 49` | 50 | 49 | 0,0,0 | 7,7,7 | LOST (echoes seed) |
+| pwsh 7.6.5 | `-First 50` exact | 50 | 50 | 0,0,0 | 7,7,7 | LOST (echoes seed) |
+| pwsh 7.6.5 | `-First 51` | 50 | 51 | 1,1,1 | 1,1,1 | preserved |
+| pwsh 7.6.5 | `SS \| -First 3` | 50 | 3 | 0,0,0 | 7,7,7 | LOST (echoes seed) |
+| pwsh 7.6.5 | `-Last 3` | 50 | 3 | 1,1,1 | 1,1,1 | preserved |
+| powershell 5.1 | `-First 3` | 50 | 3 | 1,-1,1 | -1,1,1 | **NON-DETERMINISTIC** |
+| powershell 5.1 | `-First 49` | 50 | 49 | -1,-1,1 | 1,1,-1 | **NON-DETERMINISTIC** |
+| powershell 5.1 | `-First 50` exact | 50 | 50 | -1,1,-1 | 1,-1,-1 | **NON-DETERMINISTIC** |
+| powershell 5.1 | `-First 51` | 50 | 51 | 1,1,1 | 1,1,1 | preserved |
+| powershell 5.1 | `SS \| -First 3` | 50 | 3 | 1,1,1 | 1,1,1 | **preserved** |
+| powershell 5.1 | `SS \| -First 3` | 10 | 3 | 1,1,1 | 1,1,1 | **preserved** |
+| powershell 5.1 | `-Last 3` | 50 | 3 | 1,1,1 | 1,1,1 | preserved |
+
+**`-Command` vs `-File`, on the arm the orchestrator cites for the `-1` value:**
+
+| host | `-File` seed 0 | `-File` seed 7 | `-Command` seed 0 | `-Command` seed 7 |
+| --- | --- | --- | --- | --- |
+| pwsh 7.6.5 | 0,0,0 | 7,7,7 | 0,0,0 | 7,7,7 |
+| powershell 5.1 | -1,-1,-1 | -1,-1,-1 | -1,1,-1 | -1,1,1 |
+
+**Four results, in descending order of how much they should change behaviour.**
+
+1. **On pwsh 7.6.5 the quota rule is exactly right,** including the boundary:
+   `-First 50` loses and `-First 51` preserves over 50 objects, 3/3 reps each,
+   under both seeds. This reproduces the orchestrator's 5/5 independently, on a
+   different harness. **Quota confirmed.**
+2. **On Windows PowerShell 5.1 the direct shape is NON-DETERMINISTIC** — three
+   consecutive reps of an identical, pre-cleared command returned `1,-1,1`.
+   Not a quota, not reliably a trap: **a coin flip.** That is strictly more
+   dangerous than a deterministic failure, because it can pass a test and fail
+   in production.
+3. **Interposing `Select-String` PROTECTS on 5.1 and does nothing on pwsh.**
+   `SS | -First 3` preserved 1,1,1 under both seeds at both line counts on 5.1,
+   and lost on pwsh. **This retrospectively vindicates M104c:** its 50-line
+   `Select-String | -First 3` arm reading the true code was dismissed as the
+   stale-value confound, and it reproduces here *under a pre-clear*. M104c was
+   most likely right and measuring 5.1.
+4. **`-File` makes 5.1 deterministic where `-Command` is not** (`-1,-1,-1`
+   against `-1,1,-1`). That is the source of the orchestrator's observation
+   that the corrupted value is `-1` under `powershell -File`: the invocation
+   mode is a real variable, not just the host.
+
+**Scoring my registered prediction, which was half wrong.** I predicted
+`QUOTA-HOLDS` on pwsh — **correct** — and `QUOTA-REFUTED` on 5.1 *at N=3 over
+10 lines, on both shapes* — **wrong on the direct shape**, which is
+non-deterministic rather than preserved. My own registered contingency turned
+out to be nearer the truth: *"if 5.1 loses on the direct shape and preserves
+only via Select-String, the variable is pipeline shape rather than host."* It
+is both, interacting — shape matters **on 5.1 only**.
+
+**The operative rule is untouched and I am not proposing any change to it.**
+`-First` is unsafe on both hosts: deterministically on pwsh, as a coin flip on
+5.1 direct, and safe on 5.1 only through a `Select-String` hop that provides no
+protection whatsoever on the other shell. `-Last 3` preserved 1,1,1 under both
+seeds on both hosts and both modes.
+
+**But the rationale should not become "deterministic on quota" either.** That
+sentence licenses the 5.1 direct case, which is a coin flip, and it licenses an
+agent who tests `SS | -First 3` once on 5.1, sees a clean `1`, and concludes
+the shape is safe. **This is the same failure the previous rationale had, in
+the opposite direction: a mechanism stated more confidently than it was
+measured, licensing the case that actually breaks.** The rule needs no
+mechanism at all to be followed correctly.
+
 ---
 
 ## 16. What each kernel does to the chromatic fringing

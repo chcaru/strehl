@@ -165,6 +165,15 @@ structural = [
     ("library still clean", "count = 0"),
     ("frames-40 file identified", "112MSDCF-A"),
     ("stale binary residual", "8118dd7"),
+    ("15.4 pre-registered", "committed at `817038d` before the"),
+    ("15.4 boundary confirmed on pwsh", "Quota confirmed"),
+    ("15.4 5.1 non-determinism", "a coin flip"),
+    ("15.4 Select-String protects on 5.1", "PROTECTS on 5.1 and does nothing on pwsh"),
+    ("15.4 M104c vindicated", "M104c was\nmost likely right and measuring 5.1"),
+    ("15.4 -File is a real variable", "the invocation\nmode is a real variable"),
+    ("15.4 prediction scored", "which was half wrong"),
+    ("15.4 rule unchanged", "The operative rule is untouched"),
+    ("15.4 rationale warning", "a mechanism stated more confidently than it was"),
 ]
 for label, text in structural:
     good = re.sub(r"\s+", " ", text) in flat
@@ -193,6 +202,60 @@ for label, text in retracted:
     ok &= good
     state = "deleted" if not present else ("struck" if struck else "STILL ASSERTED")
     print(f"  {'OK ' if good else 'BAD'}  {label:<36} {state}")
+
+# ---- pass 5b: 15.4 tables reconstructed row-by-row from k19c ---------------
+print("-" * 82)
+k19c = json.loads((OUT / "k19c_quota.json").read_text(encoding="utf-8"))
+by_version = {b["version"]: b for b in k19c["shells"].values()}
+HOSTNAME = {"pwsh 7.6.5": "7.6.5", "powershell 5.1": "5.1.26100.9168"}
+
+
+def cells_of(line):
+    parts = [c.strip().replace("**", "") for c in re.split(r"(?<!\\)\|", line)]
+    return [c for c in parts[1:-1]] if len(parts) >= 3 else []
+
+
+main_rows, file_rows = 0, 0
+for line in sec.splitlines():
+    line = line.strip()
+    if not line.startswith("| pwsh 7.6.5 |") and not line.startswith("| powershell 5.1 |"):
+        continue
+    c = cells_of(line)
+    if len(c) == 7 and c[2].isdigit():
+        host, arm, objs, n, s0, s7, verdict = c
+        shape = "ss" if "SS" in arm else ("last" if "-Last" in arm else "direct")
+        blk = by_version[HOSTNAME[host]]
+        match = [r for r in blk["rows"]
+                 if r["objects"] == int(objs) and r["N"] == int(n) and r["shape"] == shape]
+        good = (len(match) == 1
+                and ",".join(match[0]["seed0"]) == s0
+                and ",".join(match[0]["seed7"]) == s7
+                and match[0]["verdict"].split(" (")[0] in verdict)
+        ok &= good
+        main_rows += 1
+        if not good:
+            print(f"  BAD  15.4 row {host} {arm} objs={objs} N={n}: report {s0}/{s7}/{verdict!r} "
+                  f"vs artifact {match[0] if len(match) == 1 else match}")
+    elif len(c) == 5:
+        host, f0, f7, c0, c7 = c
+        fm = k19c["file_mode"][next(k for k, v in k19c["shells"].items()
+                                    if v["version"] == HOSTNAME[host])]
+        good = (",".join(fm["File"]["0"]) == f0 and ",".join(fm["File"]["7"]) == f7
+                and ",".join(fm["Command"]["0"]) == c0 and ",".join(fm["Command"]["7"]) == c7)
+        ok &= good
+        file_rows += 1
+        if not good:
+            print(f"  BAD  15.4 -File row {host}: report {f0}/{f7}/{c0}/{c7} vs artifact {fm}")
+
+good = main_rows == 13 and file_rows == 2
+ok &= good
+print(f"  {'OK ' if good else 'BAD'}  {'15.4 rows reconstructed':<36} "
+      f"{main_rows} quota rows (expect 13), {file_rows} -File rows (expect 2)")
+
+quota = {n: b["quota"] for n, b in k19c["shells"].items()}
+good = quota.get("pwsh 7.x") == "HOLDS" and quota.get("powershell 5.1") == "REFUTED"
+ok &= good
+print(f"  {'OK ' if good else 'BAD'}  {'15.4 artifact verdicts':<36} {quota}")
 
 # ---- pass 6: the artifacts must actually support 15.3 ----------------------
 print("-" * 82)

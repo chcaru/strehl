@@ -1,0 +1,477 @@
+{
+  "true_code": 1,
+  "seeds": [
+    0,
+    7
+  ],
+  "reps": 3,
+  "shells": {
+    "pwsh 7.x": {
+      "version": "7.6.5",
+      "rows": [
+        {
+          "arm": "no pipeline (control)",
+          "objects": 50,
+          "N": 0,
+          "shape": "none",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "keep"
+        },
+        {
+          "arm": "50 lines | -First 3",
+          "objects": 50,
+          "N": 3,
+          "shape": "direct",
+          "seed0": [
+            "0",
+            "0",
+            "0"
+          ],
+          "seed7": [
+            "7",
+            "7",
+            "7"
+          ],
+          "verdict": "LOST (echoes seed)",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "50 lines | -First 49",
+          "objects": 50,
+          "N": 49,
+          "shape": "direct",
+          "seed0": [
+            "0",
+            "0",
+            "0"
+          ],
+          "seed7": [
+            "7",
+            "7",
+            "7"
+          ],
+          "verdict": "LOST (echoes seed)",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "50 lines | -First 50 exact",
+          "objects": 50,
+          "N": 50,
+          "shape": "direct",
+          "seed0": [
+            "0",
+            "0",
+            "0"
+          ],
+          "seed7": [
+            "7",
+            "7",
+            "7"
+          ],
+          "verdict": "LOST (echoes seed)",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "50 lines | -First 51",
+          "objects": 50,
+          "N": 51,
+          "shape": "direct",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "keep"
+        },
+        {
+          "arm": "50 lines | -First 99",
+          "objects": 50,
+          "N": 99,
+          "shape": "direct",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "keep"
+        },
+        {
+          "arm": "50 lines | SS | -First 3",
+          "objects": 50,
+          "N": 3,
+          "shape": "ss",
+          "seed0": [
+            "0",
+            "0",
+            "0"
+          ],
+          "seed7": [
+            "7",
+            "7",
+            "7"
+          ],
+          "verdict": "LOST (echoes seed)",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "50 lines | SS | -First 51",
+          "objects": 50,
+          "N": 51,
+          "shape": "ss",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "keep"
+        },
+        {
+          "arm": "10 lines | -First 3",
+          "objects": 10,
+          "N": 3,
+          "shape": "direct",
+          "seed0": [
+            "0",
+            "0",
+            "0"
+          ],
+          "seed7": [
+            "7",
+            "7",
+            "7"
+          ],
+          "verdict": "LOST (echoes seed)",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "10 lines | SS | -First 3",
+          "objects": 10,
+          "N": 3,
+          "shape": "ss",
+          "seed0": [
+            "0",
+            "0",
+            "0"
+          ],
+          "seed7": [
+            "7",
+            "7",
+            "7"
+          ],
+          "verdict": "LOST (echoes seed)",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "50 lines | -Last 3",
+          "objects": 50,
+          "N": 3,
+          "shape": "last",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "keep"
+        }
+      ],
+      "quota": "HOLDS",
+      "violations": []
+    },
+    "powershell 5.1": {
+      "version": "5.1.26100.9168",
+      "rows": [
+        {
+          "arm": "no pipeline (control)",
+          "objects": 50,
+          "N": 0,
+          "shape": "none",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "keep"
+        },
+        {
+          "arm": "50 lines | -First 3",
+          "objects": 50,
+          "N": 3,
+          "shape": "direct",
+          "seed0": [
+            "1",
+            "-1",
+            "1"
+          ],
+          "seed7": [
+            "-1",
+            "1",
+            "1"
+          ],
+          "verdict": "NON-DETERMINISTIC",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "50 lines | -First 49",
+          "objects": 50,
+          "N": 49,
+          "shape": "direct",
+          "seed0": [
+            "-1",
+            "-1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "verdict": "NON-DETERMINISTIC",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "50 lines | -First 50 exact",
+          "objects": 50,
+          "N": 50,
+          "shape": "direct",
+          "seed0": [
+            "-1",
+            "1",
+            "-1"
+          ],
+          "seed7": [
+            "1",
+            "-1",
+            "-1"
+          ],
+          "verdict": "NON-DETERMINISTIC",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "50 lines | -First 51",
+          "objects": 50,
+          "N": 51,
+          "shape": "direct",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "keep"
+        },
+        {
+          "arm": "50 lines | -First 99",
+          "objects": 50,
+          "N": 99,
+          "shape": "direct",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "keep"
+        },
+        {
+          "arm": "50 lines | SS | -First 3",
+          "objects": 50,
+          "N": 3,
+          "shape": "ss",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "50 lines | SS | -First 51",
+          "objects": 50,
+          "N": 51,
+          "shape": "ss",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "keep"
+        },
+        {
+          "arm": "10 lines | -First 3",
+          "objects": 10,
+          "N": 3,
+          "shape": "direct",
+          "seed0": [
+            "-1",
+            "-1",
+            "1"
+          ],
+          "seed7": [
+            "-1",
+            "-1",
+            "-1"
+          ],
+          "verdict": "NON-DETERMINISTIC",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "10 lines | SS | -First 3",
+          "objects": 10,
+          "N": 3,
+          "shape": "ss",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "lose"
+        },
+        {
+          "arm": "50 lines | -Last 3",
+          "objects": 50,
+          "N": 3,
+          "shape": "last",
+          "seed0": [
+            "1",
+            "1",
+            "1"
+          ],
+          "seed7": [
+            "1",
+            "1",
+            "1"
+          ],
+          "verdict": "preserved",
+          "quota_predicts": "keep"
+        }
+      ],
+      "quota": "REFUTED",
+      "violations": [
+        "50 lines | SS | -First 3",
+        "10 lines | SS | -First 3"
+      ]
+    }
+  },
+  "file_mode": {
+    "pwsh 7.x": {
+      "Command": {
+        "0": [
+          "0",
+          "0",
+          "0"
+        ],
+        "7": [
+          "7",
+          "7",
+          "7"
+        ]
+      },
+      "File": {
+        "0": [
+          "0",
+          "0",
+          "0"
+        ],
+        "7": [
+          "7",
+          "7",
+          "7"
+        ]
+      }
+    },
+    "powershell 5.1": {
+      "Command": {
+        "0": [
+          "-1",
+          "1",
+          "-1"
+        ],
+        "7": [
+          "-1",
+          "1",
+          "1"
+        ]
+      },
+      "File": {
+        "0": [
+          "-1",
+          "-1",
+          "-1"
+        ],
+        "7": [
+          "-1",
+          "-1",
+          "-1"
+        ]
+      }
+    }
+  }
+}
