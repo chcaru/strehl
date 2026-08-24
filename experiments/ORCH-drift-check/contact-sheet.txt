@@ -1,0 +1,10 @@
+stack                        shape                crop at             mean
+bee-3-cpl                    (4688, 7032, 3)      (500,1640)        0.6270
+coffee-bean                  (4688, 7032, 3)      (1360,3224)       0.6082
+flower-bud-alone-cpl         (4688, 7040, 3)      (2144,4544)       0.7890
+flowers-cpl                  (4688, 7040, 3)      (3640,500)        0.6308
+lavendar-cpl                 (4688, 7040, 3)      (3144,2336)       0.6880
+leaf-2-cpl                   (4688, 7040, 3)      (3328,3160)       0.6459
+tweezers-cpl                 (4688, 7040, 3)      (2608,3192)       0.6019
+wrote C:\dev\strehl-out\ORCH-gallery\REVIEW-CROPS.png  (2296x2296)  -- 1000px detail region
+wrote C:\dev\strehl-out\ORCH-gallery\REVIEW-FULL.png  (2296x1537)  -- full frame
