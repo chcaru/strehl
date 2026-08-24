@@ -783,7 +783,132 @@ pipeline where the information still exists.
 
 ---
 
-## 5. Where this correction lies
+### 4.10 Sidecar-contamination audit (MEASURED) — prompted by the 10:30 hazard notice
+
+The orchestrator reports `<stackdir>/warpmap.txt` oscillating under seven live
+agents, and asks whether any published number used a shared sidecar. **Every
+render in this report logged its own alignment provenance**, so this is an
+audit rather than an argument. All 18:
+
+| render | frames from | alignment line |
+|---|---|---|
+| `v2-auto-299` | `D:\...\bee-3-cpl` | **sidecar REJECTED** (map was 60 frames, digest `56d8292...`) → re-solved |
+| `v3-repro-299` | `D:\...\bee-3-cpl` | ON (sidecar), ref 149, **299 placed / 0 refused** |
+| `v4-exp0/exp1/plain-299` | `D:\...\bee-3-cpl` | ON (sidecar), ref 149, **299 placed / 0 refused** |
+| `v5a-linear-60` | `D:\...\bee-3-cpl` | **sidecar REJECTED** (map was 30 frames, digest `4d9a244...`) → re-solved |
+| `v5c-A/C`, `v6full-*`, `v6-coffee-bean`, `v6-foam` | isolated `C:\` copies | ON (**solved**) |
+| `v5c-B`, `v6-bee-3-cpl` | isolated `C:\` copies | ON (sidecar), written by the immediately preceding arm |
+| `v5c-D-stale` | isolated `C:\` copy | **sidecar REJECTED**, planted deliberately — see below |
+| `v5d-alignoff` | isolated `C:\` copy | OFF (`STREHL_ALIGN=off`) |
+
+Re-runnable as `08-sidecar-audit.ps1`, which reads only the `.log` files
+committed at the time of each render — **written before this hazard was known,
+so they cannot have been curated in response to it.**
+
+**No number in this report is contaminated, and the two load-bearing ones are
+clean the strong way: both came from renders that *refused* the shared
+sidecar and solved fresh.** `v2-auto-299` — the render that produced the
+headline **+1.54 stops** — rejected a foreign 60-frame map. `v5a-linear-60` —
+the byte-freeze that reproduced M100's published `54A5E20F...` — rejected a
+foreign 30-frame map.
+
+The honest exposure surface is four renders: `v3-repro-299` and the three
+`v4-*-299` arms consumed the 299-frame map that `v2-auto-299` had just written,
+earlier in the same script. I cannot prove no other agent overwrote the file in
+that window. Two things bound the risk, and I state both rather than the
+comfortable one:
+
+* The guard would have refused any map of a different frame count, and all four
+  logged `reference frame 149, 299 placed / 0 refused`. The only undetectable
+  substitution is another agent's **299-frame** solve of the same bracket with
+  a different resampler, inside a few-minute window.
+* **V4's result is differential and therefore immune to that anyway.** Its
+  positive control compares `v4-exp1` against `v4-exp0` — two renders sharing
+  one registration — and recovers the planted ratio as 1.999999967 over 98.9M
+  px. A shared registration cancels. **An absolute measurement rides on the
+  sidecar; a differential one does not**, and that distinction is worth more
+  than my particular escape from it.
+
+The only `D:` writes I made were to `D:\personal\macro\bee-3-cpl\warpmap.txt`;
+**no other stack on `D:` was touched**, because §4.6 moved everything else onto
+isolated copies.
+
+**I am the agent who wrote the state observed at ~09:30.** `v2-auto-299`
+rejected the 60-frame map and rewrote the file with 299 entries at reference
+149 — which is the `ON (sidecar), reference frame 149, 299 placed / 0 refused`
+the notice quotes. Disclosed in §4.6 when I found it, before this notice. I
+never invoked `strehl align` directly and never used `--limit 40`, so the
+`frames 40 / reference 20` state the notice reports is **not** mine.
+
+#### Two corrections to the notice, both measured
+
+**1. Truncated sidecars are NOT silently accepted — they are refused, loudly.**
+The notice states *"a stale or partial sidecar does not announce itself"*. My
+logs contain three refusals, each printing both digests and both frame counts:
+
+```
+alignment      : sidecar rejected (this warp map was fitted on stack "iso60"
+                 (digest 4d9a2441fffe4c05, 30 frames) but was applied to
+                 "iso60" (digest 56d8292576b3fd13, 60 frames)); re-solving
+```
+
+`v5c-D` was a **deliberately planted stale sidecar**, registered in §4.5 as the
+positive control for exactly this hazard. It was rejected, and the resulting
+render was byte-identical (`54A5E20F...`) to the cold solve. MEASURED, not
+inferred: `align_cmd.rs`'s `load_or_solve` accepts only if the map parses, the
+stack digest matches **and** `map.len() == paths.len()`.
+
+**2. The real residual hazard is a different one, and it is M95-sharpness's own
+variable.** MEASURED at source, `warpmap.rs:194`:
+
+```rust
+pub struct StackIdentity {
+    pub name: String,      // human diagnostics only
+    pub digest: u64,       // FNV-1a over (file NAME, file SIZE) per frame
+    pub frames: usize,
+}
+```
+
+**The guard covers *which frames*. It does not cover *how they were solved*.**
+No reference frame, no resampler, no solver parameter is mixed into the digest.
+So a sidecar solved at 299 frames with one resampler is **accepted without
+comment** by another 299-frame run that wanted a different one — and the notice
+itself says 59% of the high-band loss rides on that field. Reference frame
+cannot drift (MEASURED: deterministic `floor(n/2)` across all 18 renders —
+299→149, 105→52, 100→50, 60→30, 30→15), so **the resampler is the live one.**
+
+**This is the finding to assign, and it is narrower than "make it refuse":**
+it already refuses on identity and count. The gap is that **solve parameters
+are not part of the identity.**
+
+#### The proposed rule does not cover the incidents it was written for
+
+Rule 1 says never run `strehl align` without `--out`. But the `bee-3-cpl`
+oscillation was caused by **`strehl stack`**, whose `load_or_solve` writes the
+sidecar as a cache side-effect and which has no `--out` for it. The knob that
+works is **`STREHL_WARPMAP`** (`merge_cmd.rs:1035`), which I reported as PD5
+before this notice. MEASURED at `merge_cmd.rs:1040-1073`, when it is set:
+
+* it loads the named file and **never calls `load_or_solve`**, so nothing is
+  written into the capture directory at all;
+* it validates identity **and** frame count;
+* it **fails hard rather than re-solving** — the doc comment says why:
+  *"silently rendering a different registration than the one requested would
+  make every control here unfalsifiable."*
+
+**The two rules compose and neither is sufficient alone:** `align --out
+<scratch>` to *create* a private sidecar, `STREHL_WARPMAP` to *consume* it
+without writing. I did not use either — I copied 25 GB of frames instead,
+because I found the write in `align_cmd.rs` and the override in `merge_cmd.rs`
+only afterwards (PD5).
+
+**This is the third independent discovery of this defect.** It is already fact
+1296 and discipline 623 (`M97-warped-merge.md` §11, `M103-halfdrift.md` §9);
+§4.6 records that I checked before publishing it as mine. **A defect found
+three times by three agents is evidence the fix belongs in the tool, not in the
+next briefing.**
+
+---
 
 The thing being corrected is a **viewing** transform, and it is worth being
 exact about where it sits, because the project has one hard boundary running
@@ -1120,6 +1245,35 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   bisection against a 0.5% clip budget. *Implication:* discipline 616 in the
   field. **The fix is not to reconcile two constants but to move the
   measurement upstream of the clamp** — i.e. to `--auto-exposure`.
+* **P15 (MEASURED).** **A STALE OR TRUNCATED WARP SIDECAR IS REFUSED, NOT
+  SILENTLY ACCEPTED.** `load_or_solve` accepts only when the file parses, the
+  stack digest matches **and** `map.len() == paths.len()`; on mismatch it prints
+  both digests and both frame counts and re-solves. Observed three times in this
+  report's logs (`v2-auto-299`, `v5a-linear-60`, `v5c-D-stale`), of which
+  `v5c-D` was a **deliberately planted** stale map registered in §4.5 as the
+  positive control for this hazard. Its render was byte-identical
+  (`54A5E20F...`) to the cold solve. *Implication:* the 10:30 notice's claim
+  that *"a stale or partial sidecar does not announce itself"* is refuted for
+  this path; the sidecar's failure mode is wasted re-solving, not wrong numbers.
+* **P16 (MEASURED).** **THE SIDECAR GUARD COVERS WHICH FRAMES, NOT HOW THEY
+  WERE SOLVED.** `StackIdentity` (`warpmap.rs:194`) is `{name, FNV-1a over
+  (file name, file size) per frame, frame count}`. No reference frame, no
+  resampler, no solver parameter enters the digest, so a map solved with one
+  resampler is **accepted without comment** by any run with the same frames and
+  count. Reference frame cannot drift — it is deterministic `floor(n/2)` across
+  all 18 renders here (299→149, 105→52, 100→50, 60→30, 30→15). *Implication:*
+  **the resampler is the one field that can change under a run undetected**,
+  and it is the field the 10:30 notice attributes 59% of the high-band loss to.
+* **P17 (MEASURED).** **`STREHL_WARPMAP` ALREADY SOLVES THE SHARED-STATE
+  HAZARD FOR `strehl stack`, AND `align --out` DOES NOT.** When the env var is
+  set, `alignment_for` (`merge_cmd.rs:1040-1073`) loads the named file and
+  **never calls `load_or_solve`**, so nothing is written into the capture
+  directory; it validates identity and count, and **fails hard rather than
+  re-solving**, by explicit design (`merge_cmd.rs:1030-1034`). The oscillation
+  reported on `bee-3-cpl` came from `strehl stack`, which has no `--out` for
+  its sidecar. *Implication:* the two controls compose — `align --out
+  <scratch>` to create a private map, `STREHL_WARPMAP` to consume it without
+  writing — and **neither alone covers the observed incidents.**
 
 ### Disciplines
 
@@ -1195,6 +1349,13 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   while printing a number either way. §4.8's recomputation was valid on five of
   M100's seven stacks and void on two, and nothing in the number said which.
   **Name the operation and the side, next to the statistic.**
+* **PD11.** **A cache key that covers the inputs but not the parameters is not
+  a cache key.** The warp sidecar validates *which frames* (`StackIdentity` =
+  name + FNV-1a over `(filename, filesize)` + count) and refuses loudly on a
+  mismatch — so the failure everyone fears, a truncated map on a short run, is
+  the one case it *does* catch. What it silently accepts is the same frames
+  solved with different parameters. **When you audit a guard, enumerate what it
+  does not compare; the hazard lives there, not in the case it names.**
 
 ### Questions
 
@@ -1215,6 +1376,12 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   1324, 1341, and the sentence retracted at 10:07). The next attempt should
   probably be a render with the five toggled independently, not a fourth
   argument from a single artefact.
+* **PQ5.** Should `StackIdentity` mix the solve parameters — reference frame,
+  resampler, solver settings — into the sidecar digest? P16 says a resampler
+  change is currently invisible to the guard, and the 10:30 notice attributes
+  59% of the high-band loss to that field. **Reported, not acted on:**
+  `align_cmd.rs` is held by M95-sharpness, and the notice asked for findings
+  rather than fixes.
 
 ---
 

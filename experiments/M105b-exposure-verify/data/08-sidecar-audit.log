@@ -1,0 +1,68 @@
+
+Render             Class    Shared Source                                    
+------             -----    ------ ------                                    
+v2-auto-299        rejected   True D:\personal\macro\bee-3-cpl               
+v3-repro-299       sidecar    True D:\personal\macro\bee-3-cpl               
+v4-exp0-299        sidecar    True D:\personal\macro\bee-3-cpl               
+v4-exp1-299        sidecar    True D:\personal\macro\bee-3-cpl               
+v4-plain-299       sidecar    True D:\personal\macro\bee-3-cpl               
+v5a-linear-60      rejected   True D:\personal\macro\bee-3-cpl               
+v5c-A-cold         solved    False C:\dev\strehl-out\M105\iso60              
+v5c-B-warm         sidecar   False C:\dev\strehl-out\M105\iso60              
+v5c-C-cold2        solved    False C:\dev\strehl-out\M105\iso60              
+v5c-D-stale        rejected  False C:\dev\strehl-out\M105\iso60              
+v5c-D-stale-src    solved    False C:\dev\strehl-out\M105\iso60              
+v5d-alignoff       off       False C:\dev\strehl-out\M105\iso60              
+v6-bee-3-cpl       sidecar   False C:\dev\strehl-out\M105\iso60              
+v6-coffee-bean     solved    False C:\dev\strehl-out\M105\iso-coffee-bean    
+v6-foam            solved    False C:\dev\strehl-out\M105\iso-foam           
+v6full-bee-3-cpl   solved    False C:\dev\strehl-out\M105\isofull-bee-3-cpl  
+v6full-coffee-bean solved    False C:\dev\strehl-out\M105\isofull-coffee-bean
+v6full-foam        solved    False C:\dev\strehl-out\M105\isofull-foam       
+
+
+
+=== provenance summary ===
+off       1
+rejected  3
+sidecar   6
+solved    8
+
+=== renders that CONSUMED a sidecar while reading a SHARED directory ===
+(this is the only class the hazard can contaminate)
+  v3-repro-299  alignment      : ON (sidecar), reference frame 149, 299 placed / 0 refused
+  v4-exp0-299  alignment      : ON (sidecar), reference frame 149, 299 placed / 0 refused
+  v4-exp1-299  alignment      : ON (sidecar), reference frame 149, 299 placed / 0 refused
+  v4-plain-299  alignment      : ON (sidecar), reference frame 149, 299 placed / 0 refused
+
+Each of the above must be shown to have consumed a sidecar written
+by an earlier render of the SAME bracket in the SAME script. See
+section 4.10: v2-auto-299 rejected a foreign 60-frame map and rewrote
+the file at 299 frames, and v3/v4 then consumed that map.
+
+=== refusals: the sidecar guard firing, with both digests ===
+(positive control for the notice claim that stale maps are silent)
+  v2-auto-299  alignment      : sidecar rejected (this warp map was fitted on stack "bee-3-cpl" (digest 56d8292576b3fd13, 60 frames)
+  v5a-linear-60  alignment      : sidecar rejected (this warp map was fitted on stack "bee-3-cpl" (digest 4d9a2441fffe4c05, 30 frames)
+  v5c-D-stale  alignment      : sidecar rejected (this warp map was fitted on stack "iso60" (digest 4d9a2441fffe4c05, 30 frames) but was applied to "iso60" (digest 56d8292576b3fd13, 60 frames)); re-solving
+
+=== reference-frame determinism ===
+(if the reference frame is a function of frame count alone, it cannot
+ drift under a fixed bracket, which narrows the hazard to the resampler)
+  v2-auto-299            n=299  ref=149  floor(n/2)
+  v3-repro-299           n=299  ref=149  floor(n/2)
+  v4-exp0-299            n=299  ref=149  floor(n/2)
+  v4-exp1-299            n=299  ref=149  floor(n/2)
+  v4-plain-299           n=299  ref=149  floor(n/2)
+  v5a-linear-60          n=60   ref=30   floor(n/2)
+  v5c-A-cold             n=60   ref=30   floor(n/2)
+  v5c-B-warm             n=60   ref=30   floor(n/2)
+  v5c-C-cold2            n=60   ref=30   floor(n/2)
+  v5c-D-stale            n=60   ref=30   floor(n/2)
+  v5c-D-stale-src        n=30   ref=15   floor(n/2)
+  v6-bee-3-cpl           n=60   ref=30   floor(n/2)
+  v6-coffee-bean         n=60   ref=30   floor(n/2)
+  v6-foam                n=60   ref=30   floor(n/2)
+  v6full-bee-3-cpl       n=299  ref=149  floor(n/2)
+  v6full-coffee-bean     n=105  ref=52   floor(n/2)
+  v6full-foam            n=100  ref=50   floor(n/2)
