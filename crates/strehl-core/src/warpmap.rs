@@ -535,6 +535,7 @@ pub(crate) fn resampler_name(r: Resampler) -> &'static str {
         Resampler::Nearest => "nearest",
         Resampler::Bilinear => "bilinear",
         Resampler::CatmullRom => "catmull-rom",
+        Resampler::Lanczos2 => "lanczos2",
         Resampler::Lanczos3 => "lanczos3",
     }
 }
@@ -544,6 +545,7 @@ pub(crate) fn resampler_from_name(s: &str) -> Option<Resampler> {
         "nearest" => Some(Resampler::Nearest),
         "bilinear" => Some(Resampler::Bilinear),
         "catmull-rom" => Some(Resampler::CatmullRom),
+        "lanczos2" => Some(Resampler::Lanczos2),
         "lanczos3" => Some(Resampler::Lanczos3),
         _ => None,
     }

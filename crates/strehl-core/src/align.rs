@@ -2784,12 +2784,69 @@ pub fn sample_lanczos3(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
     acc
 }
 
+/// Lanczos-2 weights for the four taps at offsets `-1 ..= 2`.
+///
+/// Normalised for the same reason as [`lanczos3_weights`]: an unnormalised
+/// windowed sinc applies a phase-dependent gain, which is a brightness ripple
+/// keyed to sub-pixel position and invisible to a sharpness metric.
+#[inline]
+fn lanczos2_weights(f: f64) -> [f32; 4] {
+    let mut w = [0f64; 4];
+    let mut sum = 0f64;
+    for (i, o) in w.iter_mut().enumerate() {
+        let t = f - (i as f64 - 1.0);
+        let v = sinc(t) * sinc(t / 2.0);
+        *o = v;
+        sum += v;
+    }
+    let inv = 1.0 / sum;
+    [
+        (w[0] * inv) as f32,
+        (w[1] * inv) as f32,
+        (w[2] * inv) as f32,
+        (w[3] * inv) as f32,
+    ]
+}
+
+/// Lanczos-2 (windowed sinc, `a = 2`) gather.
+///
+/// The intermediate between Catmull-Rom and Lanczos-3, and the one that costs
+/// nothing to try: it is **interpolating**, it uses **four taps like
+/// Catmull-Rom**, and its support is **2.0 px — identical to Catmull-Rom's**,
+/// so unlike Lanczos-3 it does not shrink the valid rectangle by another pixel
+/// per side. Wherever Catmull-Rom can be sampled, this can be sampled.
+///
+/// It exists because the choice was two points and the space between them was
+/// unpriced. Whether it is worth preferring is a measured question, not a
+/// property of the kernel — see the M95 report.
+pub fn sample_lanczos2(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
+    if p.width < 4 || p.height < 4 {
+        return sample_bilinear(p, x, y);
+    }
+    let x = x.clamp(1.0, (p.width - 3) as f64);
+    let y = y.clamp(1.0, (p.height - 3) as f64);
+    let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+    let wx = lanczos2_weights(x - x0 as f64);
+    let wy = lanczos2_weights(y - y0 as f64);
+    let mut acc = 0f32;
+    for (dy, wyv) in wy.iter().enumerate() {
+        let row = (y0 + dy - 1) * p.width + x0 - 1;
+        let mut r = 0f32;
+        for (dx, wxv) in wx.iter().enumerate() {
+            r += p.data[row + dx] * *wxv;
+        }
+        acc += r * *wyv;
+    }
+    acc
+}
+
 /// Which interpolator a gather uses.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Resampler {
     Nearest,
     Bilinear,
     CatmullRom,
+    Lanczos2,
     Lanczos3,
 }
 
@@ -2800,6 +2857,7 @@ impl Resampler {
             Resampler::Nearest => sample_nearest(p, x, y),
             Resampler::Bilinear => sample_bilinear(p, x, y),
             Resampler::CatmullRom => sample_catmull_rom(p, x, y),
+            Resampler::Lanczos2 => sample_lanczos2(p, x, y),
             Resampler::Lanczos3 => sample_lanczos3(p, x, y),
         }
     }
@@ -2811,6 +2869,7 @@ impl Resampler {
             Resampler::Nearest => 0.5,
             Resampler::Bilinear => 1.0,
             Resampler::CatmullRom => 2.0,
+            Resampler::Lanczos2 => 2.0,
             Resampler::Lanczos3 => 3.0,
         }
     }
@@ -3609,6 +3668,50 @@ mod tests {
         assert!((v - 1.0).abs() < 1e-5, "constant plane resampled to {v}");
     }
 
+    /// Lanczos-2 must be interpolating and must cost no more border than
+    /// Catmull-Rom, which is the whole reason to consider it.
+    #[test]
+    fn lanczos2_is_interpolating_and_costs_no_extra_border() {
+        let w = lanczos2_weights(0.0);
+        assert!(
+            (w[1] - 1.0).abs() < 1e-6,
+            "centre tap at zero phase should be 1, got {}",
+            w[1]
+        );
+        for (i, v) in w.iter().enumerate() {
+            if i != 1 {
+                assert!(*v < 1e-6, "tap {i} at zero phase should vanish, got {v}");
+            }
+        }
+        for k in 0..64 {
+            let f = k as f64 / 64.0;
+            let s: f32 = lanczos2_weights(f).iter().sum();
+            assert!(
+                (s - 1.0).abs() < 1e-5,
+                "weights at phase {f} sum to {s}, not 1"
+            );
+        }
+        // Support parity with Catmull-Rom is the claim that distinguishes this
+        // kernel from Lanczos-3, so it is asserted rather than assumed.
+        assert_eq!(Resampler::Lanczos2.support(), Resampler::CatmullRom.support());
+        let data = vec![1.0f32; 32 * 32];
+        let p = PlaneRef {
+            data: &data,
+            width: 32,
+            height: 32,
+        };
+        assert!(
+            Resampler::Lanczos2.sample_checked(p, 2.0, 2.0).is_some(),
+            "Lanczos-2 must accept every position Catmull-Rom accepts"
+        );
+        assert!(
+            Resampler::Lanczos3.sample_checked(p, 2.0, 2.0).is_none(),
+            "the comparison is only meaningful if Lanczos-3 refuses it"
+        );
+        let v = Resampler::Lanczos2.sample(p, 10.3, 7.8);
+        assert!((v - 1.0).abs() < 1e-5, "constant plane resampled to {v}");
+    }
+
     /// Every kernel must round-trip through the warpmap spelling, or a sidecar
     /// written with one is read back as another.
     #[test]
@@ -3617,6 +3720,7 @@ mod tests {
             Resampler::Nearest,
             Resampler::Bilinear,
             Resampler::CatmullRom,
+            Resampler::Lanczos2,
             Resampler::Lanczos3,
         ] {
             let n = crate::warpmap::resampler_name(r);
