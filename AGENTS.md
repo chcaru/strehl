@@ -603,6 +603,23 @@ monolithic binary and ship only that binary.
     convenience sit between a process and a status you are about to trust.
     (SYNTHESIS facts 1368, 1369; discipline 680.)
 
+47. **Record the whole invocation beside every hash you freeze -- including the
+    flags you left at their default.** A hash without its command is not a weak
+    record, it is **not a record at all**: it cannot be reproduced, cannot be
+    falsified, and cannot be told apart from a different pipeline's hash. Write
+    the stack directory, the `--limit`, and **every flag by value**, especially
+    the ones you did not pass. "We used the default" is not a record, because
+    defaults move and because the next reader cannot distinguish a default from
+    an omission. Measured cost of not doing this: three milestones froze three
+    different invocations (`--gate 2` / 299 frames, `--limit 60` / no gate,
+    `coffee-bean --limit 20 --gate 2.0`), a later dispatch spliced one
+    milestone's flag onto another's command, and a **1.9-hour** investigation
+    was commissioned into a regression that had not happened -- the fabricated
+    comparison being internally consistent in every other respect. **When a
+    freeze does break, re-render the baseline with its own recorded command
+    before you diff a single commit.** (SYNTHESIS facts 1379, 1381, 1382;
+    disciplines 687, 688, 689.)
+
 ### Milestone allocation ledger (rule 41 -- written at DISPATCH, not at report time)
 
 A milestone number is an identifier. Allocate here **before** the agent starts, and
