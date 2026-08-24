@@ -9,8 +9,8 @@ from __future__ import annotations
 import json, os, re, sys
 
 ROOT = r"C:\dev\blog\death-of-software\projects\strehl"
-OUT = os.path.join(ROOT, "experiments", "M93-merge-vs-frame", "out")
-REPORT = os.path.join(ROOT, "docs", "research", "M93-merge-vs-frame-sharpness.md")
+OUT = os.path.join(ROOT, "experiments", "M95-merge-vs-frame", "out")
+REPORT = os.path.join(ROOT, "docs", "research", "M95-merge-vs-frame-sharpness.md")
 
 txt = open(REPORT, encoding="utf-8").read()
 # Strip blockquote markers before collapsing whitespace, so a quoted headline

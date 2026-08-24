@@ -1,4 +1,4 @@
-# M93 (merge-vs-frame) — pre-registration
+# M95 (merge-vs-frame) — pre-registration
 
 Frozen **before** any merge/frame comparison number was computed. Written at
 pinned repository sha `1f17c1d547a996d05a412570a9257894005d786b`.
@@ -11,7 +11,7 @@ pinned repository sha `1f17c1d547a996d05a412570a9257894005d786b`.
 ## Arms
 
 All rendering goes through **one binary**, built once from the pinned sha at
-`C:\dev\strehl-out\M93-pin\target\release\strehl.exe`, so no concurrent edit to
+`C:\dev\strehl-out\M95-pin\target\release\strehl.exe`, so no concurrent edit to
 `merge.rs` can desynchronise the arms.
 
 | arm | command | what it is |

@@ -25,8 +25,8 @@ from __future__ import annotations
 import os, re, shutil, subprocess, sys, tempfile
 
 ROOT = r"C:\dev\blog\death-of-software\projects\strehl"
-REPORT = os.path.join(ROOT, "docs", "research", "M93-merge-vs-frame-sharpness.md")
-VERIFY = os.path.join(ROOT, "experiments", "M93-merge-vs-frame", "src", "verify_report.py")
+REPORT = os.path.join(ROOT, "docs", "research", "M95-merge-vs-frame-sharpness.md")
+VERIFY = os.path.join(ROOT, "experiments", "M95-merge-vs-frame", "src", "verify_report.py")
 
 # (anchor, old token inside the anchor, new token, label)
 MUTATIONS = [
@@ -84,7 +84,7 @@ def mutate(text, anchor, old, new, label):
 
 
 def main() -> int:
-    backup = os.path.join(tempfile.gettempdir(), "M93-report-backup.md")
+    backup = os.path.join(tempfile.gettempdir(), "M95-report-backup.md")
     shutil.copyfile(REPORT, backup)
     print(f"backup -> {backup}")
     original = open(REPORT, encoding="utf-8").read()

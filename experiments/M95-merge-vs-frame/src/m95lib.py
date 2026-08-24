@@ -1,4 +1,4 @@
-"""Shared helpers for M93 (merge-vs-frame sharpness).
+"""Shared helpers for M95 (merge-vs-frame sharpness).
 
 Everything here is written for this milestone; nothing is imported from another
 milestone's scratch, because a number recalled from an earlier note is not a
@@ -14,7 +14,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-PIN = r"C:\dev\strehl-out\M93-pin\target\release\strehl.exe"
+PIN = r"C:\dev\strehl-out\M95-pin\target\release\strehl.exe"
 OUT = r"C:\dev\strehl-out\M93-out"
 FRAMES = r"C:\dev\strehl-out\M93-frames"
 STACK = r"D:\personal\macro\bee-3-cpl"

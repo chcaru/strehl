@@ -20,11 +20,11 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 sys.path.insert(0, os.path.dirname(__file__))
-import m93lib as L  # noqa: E402
+import m95lib as L  # noqa: E402
 
 HERE = os.path.dirname(os.path.dirname(__file__))
 OUTDIR = os.path.join(HERE, "out")
-IMGDIR = r"C:\dev\strehl-out\M93-merge-vs-frame"
+IMGDIR = r"C:\dev\strehl-out\M95-merge-vs-frame"
 CROP = 360
 ZOOM = 2
 
@@ -146,13 +146,13 @@ def main() -> int:
     label(
         sheet,
         [
-            f"M93  bee-3-cpl, 299 frames, ILCE-7CM2 + FE 100mm F2.8 Macro GM OSS + 2X TC, f/5.6 (wide open), ISO 100",
+            f"M95  bee-3-cpl, 299 frames, ILCE-7CM2 + FE 100mm F2.8 Macro GM OSS + 2X TC, f/5.6 (wide open), ISO 100",
             f"crop: binned plane ({x0+sx},{y0+sy}) {CROP}x{CROP}, shown at {ZOOM}x nearest-neighbour, sRGB transfer for viewing only",
             "A and B are the same scene through the same code path. C is their difference. D is the same frame, not binned.",
         ],
         xy=(10, W * 2 + 20),
     )
-    dst = os.path.join(IMGDIR, "M93-merged-vs-single-frame.png")
+    dst = os.path.join(IMGDIR, "M95-merged-vs-single-frame.png")
     sheet.save(dst)
     print(f"wrote          : {dst}   {sheet.size[0]}x{sheet.size[1]}")
 
@@ -168,11 +168,11 @@ def main() -> int:
     rgb = (cm.turbo(np.nan_to_num(v, nan=0.0))[:, :, :3] * 255).astype(np.uint8)
     im2 = Image.fromarray(rgb).resize((512 * 2, 512 * 2), Image.NEAREST)
     label(im2, [
-        f"M93  election map read out of the merged file, {nm} 512x512",
+        f"M95  election map read out of the merged file, {nm} 512x512",
         "colour = which of the 299 frames won that pixel (turbo, 2nd-98th pct)",
         f"read by byte-exact match; 99.94% of pixels matched exactly one frame's value",
     ])
-    dst2 = os.path.join(IMGDIR, "M93-election-map.png")
+    dst2 = os.path.join(IMGDIR, "M95-election-map.png")
     im2.save(dst2)
     print(f"wrote          : {dst2}")
 

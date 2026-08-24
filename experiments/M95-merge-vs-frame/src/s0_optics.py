@@ -17,7 +17,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-import m93lib as L  # noqa: E402
+import m95lib as L  # noqa: E402
 
 HERE = os.path.dirname(os.path.dirname(__file__))
 OUTDIR = os.path.join(HERE, "out")

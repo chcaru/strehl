@@ -1,26 +1,51 @@
-# M93 — Is the merge losing sharpness? Merged output vs. the frame that went in
+# M95 — Is the merge losing sharpness? Merged output vs. the frame that went in
 
-**Milestone:** M93 (merge-vs-frame arm)
+**Milestone:** M95 (merge-vs-frame arm)
 **Pinned build:** `1f17c1d547a996d05a412570a9257894005d786b`, built once to
-`C:\dev\strehl-out\M93-pin\target\release\strehl.exe` and used for every render below.
+`C:\dev\strehl-out\M95-pin\target\release\strehl.exe` and used for every render below.
 **Subject:** `D:\personal\macro\bee-3-cpl`, 299 frames, ILCE-7CM2 + `FE 100mm F2.8 Macro
 GM OSS + 2X Teleconverter`, f/5.6, ISO 100, 1/6 s.
-**Code:** `experiments/M93-merge-vs-frame/`. **Images:** `C:\dev\strehl-out\M93-merge-vs-frame\`.
+**Code:** `experiments/M95-merge-vs-frame/`. **Images:** `C:\dev\strehl-out\M95-merge-vs-frame\`.
 
 ---
 
-## 0. Stem collision — read this before filing
+## 0. Renumber: this milestone was dispatched as M93 and is now M95
 
-**`M93` already has two other claimants.** `docs/research/M93-election-gate.md` and
-`experiments/M93-election/` exist in this tree, committed as `9b316d1` by a different
-agent. I did not touch either. To avoid a silent clobber I took the distinct slug
-`M93-merge-vs-frame` for my experiment directory and
-`M93-merge-vs-frame-sharpness.md` for this report.
+**Read this before filing, because part of it is already in the history.**
 
-**Recommendation at fold time:** renumber one of the two milestones, and treat rule 41
-(stem allocation) as having failed here — two agents were independently handed `M93`.
-This is a coordination defect, not a measurement defect, but it will corrupt the corpus
-index if both fold under the same stem.
+I was dispatched as **M93**. That stem was already taken: `docs/research/M93-election-gate.md`
+was added by a different agent in commit `9a17d64` ("M93: pre-register the election gate…"),
+which predates my dispatch, and that agent has since committed again on the same stem
+(`9b316d1`) and owns `crates/strehl-cli/examples/m93-election.rs` and
+`experiments/M93-election/`. I never touched any of those.
+
+I detected the collision at the start of my run and defended against it with a distinct
+*slug* (`M93-merge-vs-frame`), which avoided a file-level clobber but not the stem
+clash. The orchestrator has since corrected the allocation and **reassigned me to M95**.
+
+**What that means for the history, stated plainly:**
+
+- I had **already committed under M93 names**, as `b782da5`
+  ("M93 (merge-vs-frame): the merge loses nothing; the softness is upstream"), 37 files.
+  That commit is in the history and **I did not rewrite it.**
+- The renumber was done as a forward `git mv` in a later commit: 38 tracked paths moved
+  from `M93-merge-vs-frame*` to `M95-merge-vs-frame*`, plus `m93lib.py` → `m95lib.py`.
+- Internal references were rewritten by
+  `experiments/M95-merge-vs-frame/src/renumber_m93_to_m95.py`, which is an **ordered
+  token map with protected tokens**, not a blind search-and-replace: **50 substitutions
+  applied, 48 occurrences deliberately left alone.** The protected set is the other
+  agent's identifiers (`M93-election-gate`, `M93-election`, `m93-election`) and the
+  on-disk scratch paths `C:\dev\strehl-out\M93-out` and `M93-frames`.
+- **The scratch directories keep their M93 names on purpose.** The orchestrator's own
+  `experiments/ORCH-drift-check/m93pair.py` reads `C:\dev\strehl-out\M93-out` and its
+  `m93_crops.npy` / `m93_elected_*.npy` by absolute path. Renaming them would have
+  silently broken a live script for a cosmetic gain. The **deliverable** image directory
+  *was* renamed, to `C:\dev\strehl-out\M95-merge-vs-frame\`.
+- Every number in this report was re-verified after the renumber; see §7.3.
+
+**Rule 41 (stem allocation) still failed here**, and the failure mode is worth keeping
+even though this instance is resolved: the collision was invisible to both agents at
+dispatch time and was only caught because one of them went looking. See P16.
 
 **Corpus-write disclosure.** `warpmap.txt` sidecars now exist inside
 `D:\personal\macro\bee-3-cpl` and `bee-2-cpl`. They were written by a sibling agent, not
@@ -61,7 +86,7 @@ running into.
 
 ## 2. Pre-registered bars, and the verdict against them
 
-Frozen in `experiments/M93-merge-vs-frame/PRE-REGISTRATION.md`, committed as `573b170`
+Frozen in `experiments/M95-merge-vs-frame/PRE-REGISTRATION.md`, committed as `573b170`
 **before any merge-vs-frame comparison number existed**. Quoted verbatim:
 
 > - **CONCLUDE THE MERGE LOSES SHARPNESS** if `σ_eq ≥ 0.25 px` on **≥ 2 of the 3**
@@ -211,7 +236,7 @@ of pixels, which is what a smooth ramp across ~30 frames looks like.
 
 ## 6. The deliverable image
 
-`C:\dev\strehl-out\M93-merge-vs-frame\M93-merged-vs-single-frame.png`
+`C:\dev\strehl-out\M95-merge-vs-frame\M95-merged-vs-single-frame.png`
 
 Four panels on the identical 360×360 binned-plane crop at (415, 84), shown 2× nearest
 neighbour, sRGB transfer for viewing only — every measurement above was on linear data.
@@ -228,7 +253,7 @@ No sharpness number appears on any panel. The only numbers on the panels are the
 byte-identity count — measured on exactly those pixels, by `src/s11_figure.py`, in this
 session — and frame indices.
 
-A second image, `M93-election-map.png`, renders the election read out of the merged
+A second image, `M95-election-map.png`, renders the election read out of the merged
 file for ROI-LOWDRIFT.
 
 **A defect in my own figure, recorded.** The first version selected pixels where the
@@ -335,6 +360,24 @@ wrapping survives, and a non-unique anchor **hard-errors** instead of quietly pa
 *Footnote, because it is the same lesson twice:* writing this section reproduced F7 —
 quoting a checked figure verbatim inside the prose that documents it created a second
 site, and the control went red until the quotation was written with the value elided.
+
+### 7.3 Re-verification after the M93 → M95 renumber
+
+The renumber (§0) rewrote paths inside 24 files, including the report itself and the
+verifier that checks it. That is exactly the kind of edit that can quietly break a
+checker into vacuous success, so both were re-run afterwards rather than assumed:
+
+| Check | Result after renumber |
+| --- | --- |
+| `verify_report.py` — every load-bearing number re-read from `out/*.json` | ALL VERIFIED |
+| `control_verifier2.py` — planted single-digit errors caught | 18 / 18 |
+| `control_verifier2.py` — baseline and post-restore, unmutated | GREEN, GREEN |
+| Report restored after mutation | byte-identical |
+
+The mutation control is the load-bearing one here. A path rewrite that silently pointed
+the verifier at a missing JSON, or at the wrong report, would still print a green
+`verify_report.py` if the checker degraded to "no anchors matched, nothing to fail"; the
+control rules that out by requiring the checker to go **red** on demand.
 
 ---
 
@@ -602,7 +645,7 @@ high-frequency energy, making the unaligned merge read **σ_eq = −0.48 to −0
 *sharper* than any single frame on a power-spectrum metric.
 *Significance:* **any spectral sharpness comparison against an unaligned strehl merge on
 a high-drift stack is confounded and will report a spurious sharpness gain.** This
-invalidated M93's own pre-registered axis and it will invalidate others.
+invalidated M95's own pre-registered axis and it will invalidate others.
 
 **P11 — MEASURED.** Selecting a rule-9 flat control from a coarse frame subsample can
 alias past a focus peak. A 20-frame subsample of a 299-frame stack selected as "flat" a
@@ -640,10 +683,16 @@ max **1 DN**, implied black **511.99988** and range **14847.99984**.
 milestone a validated route to predict strehl's output from outside the binary.
 
 **P16 — ARGUED.** Milestone stem `M93` was allocated to at least two independent agents:
-`docs/research/M93-election-gate.md` + `experiments/M93-election/` (commit `9b316d1`)
-and this work. One must be renumbered before folding.
-*Significance:* rule 41 (stem allocation) did not hold under concurrency. If both fold
-under `M93` the corpus index will be corrupt.
+`docs/research/M93-election-gate.md` + `experiments/M93-election/` (introduced in commit
+`9a17d64`, before my dispatch) and this work, which was dispatched as M93 and committed
+once under that stem as `b782da5` before the orchestrator reassigned it to **M95**.
+The collision was invisible to both agents at dispatch and was caught only because one of
+them searched the tree for its own stem before writing.
+*Significance:* rule 41 (stem allocation) did not hold under concurrency, and a stem
+search performed by the *agent* is currently the only thing that catches it. The
+recovery is cheap while it is caught early — a forward `git mv` plus a protected-token
+reference rewrite, no history rewrite — but it is not cheap once two milestones have
+folded into the corpus index under one stem.
 
 **P17 — MEASURED.** A report-number verifier that searches for bare substrings verifies
 only whichever site it happens to hit. In this report four figures were quoted at 2–4
