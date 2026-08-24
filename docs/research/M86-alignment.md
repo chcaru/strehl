@@ -72,6 +72,10 @@ now implemented and tested in `strehl-core`.**
 **I have not integrated this into the merge**, per my instructions. §11 is the
 recipe for whoever does. The module is committed, declared and live at HEAD.
 
+**§13 answers M84b's question about the uniform focus step**: yes, the
+assumption exists in two places, no, it is not load-bearing for any number
+above, and forcing it costs 18–108% more held-out error on four stacks.
+
 ---
 
 ## 1. What I verified at source before building anything
@@ -475,6 +479,10 @@ Offered for SYNTHESIS.md, which I do not edit.
 | P15 | Axial subject motion is geometrically indistinguishable from focus breathing; a similarity aligner silently corrects it, so a recovered scale track is not a measurement of lens breathing. | ARGUED |
 | P16 | Plane geometry varies across the corpus: `flat-on-ruler-cpl` is 3520×2344 where most stacks are 3516×2344. | MEASURED |
 | P17 | Alignment costs ~55 s for a 299-frame stack on 32 threads (6.3 s decode, 48.8 s measure, <1 s solve) at 9.18 GiB. M10's 13.6 ms/pair is 32-thread throughput, not single-core cost. | MEASURED |
+| P18 | Forcing a constant per-frame log-scale increment costs 18–108% more held-out error on four stacks (bee-3-cpl +44%, foam +108%, coffee-bean +20%, flat-on-ruler-cpl +18%). Alignment data independently refutes a uniform per-frame increment. | MEASURED |
+| P19 | A degree-2 polynomial in frame index is no better than a constant increment (bee-3-cpl 17.325 vs 16.649 px); degree 3+ is required. The per-frame increment does not drift merely linearly. | MEASURED |
+| P20 | The second-difference smoothness prior costs 65% on a well-conditioned deep stack (19.236 vs 11.649 px) but wins outright on `foam` (2.454 px). It is a variance regulariser whose bias is real, not a correct physical prior. | MEASURED |
+| P21 | M84b's DoF under-sampling (adjacent frames focus-disjoint) supplies the physical mechanism for M86's independently-measured short-span attenuation. Two channels, one conclusion. | DERIVED |
 
 ---
 
@@ -541,3 +549,113 @@ because its `pub mod align;` declaration is not yet committed (§12).
 - **I did not run the resampler comparison on real frames** (§9).
 - **I did not write to `experiments/M84-ruler-metrology/`** and did not
   duplicate M84's work. §7.5 is a finding they should have.
+
+## 13. Does this method assume a uniform focus step? (M84b's fact 1154)
+
+M84b measured the per-frame focus step drifting monotonically from 32.35 to
+49.36 µm/frame, a factor of 1.53, on `highly-angled-ruler-mm-cpl`. I was asked
+whether anything in my method is indexed on a uniform step. **The answer is
+(b): yes, in two identifiable places, and I measured the impact.**
+
+### 13.1 Where the assumption lives — audited at source
+
+| site | assumes uniform step? | in my headline results? |
+|---|---|---|
+| pairwise estimator (`align_pair`) | **No.** Frame index never enters; it correlates image content only. | — |
+| index→defocus conversion / blur equalisation | **Not present.** I implemented none; that is M78's territory. | — |
+| `GlobalOptions::smooth` (`align.rs:1748`) | **Yes, directly.** It adds a `[1, −2, 1]` second-difference stencil with zero RHS, which is exactly a penalty on deviation from a *constant per-frame increment*. | **No** — it defaults to `0.0` and is exercised only by the `S6-ba-smooth` candidate row. |
+| `solve_poly` degree | **Only at degree 1**, where log-scale is linear in frame index. | **No** — I ran degrees 2/4/6 and the winner was 6. |
+| `span_bias.py` | **Yes**, it divides `g` by span to get an "implied rate per frame". | Yes — see §13.4. |
+
+So the assumption was never load-bearing for the numbers in the VERDICT, which
+is luck rather than foresight: I chose flexible models for other reasons.
+
+### 13.2 The measured impact
+
+Cheap direct test, as suggested: refit the ladder with a *constant* per-frame
+increment (`S4-poly1`) against increments free to drift, same edges, same
+training set, same held-out test set. Median held-out corner error, plane px:
+
+| stack | frames | `poly1` (uniform) | best free degree | cost of assuming uniform |
+|---|---|---|---|---|
+| bee-3-cpl | 299 | 16.649 | **11.535** (poly6) | **+44%** |
+| foam | 100 | 6.790 | **3.259** (poly6) | **+108%** |
+| coffee-bean | 105 | 11.369 | **9.464** (poly6) | **+20%** |
+| flat-on-ruler-cpl | 79 | 7.116 | **6.017** (poly6) | **+18%** |
+
+**MEASURED: forcing a constant per-frame increment costs 18–108% more held-out
+error, on all four stacks tested, in the same direction every time.** This is
+held-out, not fit, error — a more flexible model that was merely overfitting
+would have scored *worse*, not better.
+
+On bee-3-cpl the two formulations agree: the explicit uniformity prior
+`S6-ba-smooth` scores **19.236 px** against `S3-ba-unit`'s **11.649 px** on the
+same training set, a 65% penalty for the same assumption expressed as a soft
+prior instead of a hard model.
+
+**MEASURED: degree 2 is not enough either.** On bee-3-cpl `poly2` scores 17.325
+— no better than `poly1`'s 16.649 — while `poly3` drops to 12.557. If the focus
+step drifted *linearly* and breathing were locally linear in focus position,
+log-scale would be quadratic and degree 2 would suffice. It does not. Either
+M84b's drift is not linear in frame index, or magnification-vs-focus is itself
+curved, or both. **I cannot separate those from alignment data alone.**
+
+### 13.3 The honest counter-example
+
+**The soft prior is not always harmful, and I will not flatten this.**
+**MEASURED**: on `foam` the overall winning row is `S6-ba-smooth` trained on
+`span <= 2` at **2.454 px**, beating every unregularised alternative; on
+coffee-bean the prior changes nothing at all (9.512 vs 9.512). foam is the stack
+that *moved*, with a 23.8% refusal rate and a weaker edge set.
+
+**ARGUED**: where the uniformity prior helps, it is helping as a *variance*
+regulariser on noisy edges, not because the assumption is true — the hard
+uniform model `poly1` is still 108% worse on that very same stack. The prior
+buys variance reduction at the price of a bias that is real. That is a
+legitimate trade on a noisy stack and a bad one on a well-conditioned deep
+stack.
+
+### 13.4 What this does and does not corroborate
+
+**DERIVED**: alignment data independently refutes a constant per-frame scale
+increment, on four stacks, from a measurement channel (image correlation) with
+nothing in common with M84b's (ruler depth). The *direction* corroborates M84b.
+**It does not confirm the 1.53x**, and it cannot: a non-constant scale increment
+is equally consistent with a uniform focus step plus nonlinear
+magnification-vs-focus. My measured 18–108% is therefore an **upper bound** on
+the error attributable specifically to focus-step non-uniformity.
+
+**A caveat against my own §6.4**, since the orchestrator's point 3 lands on it:
+`span_bias.py` divides `g` by span, which treats the rate as constant. That
+assumption is now known false. It does **not** overturn the finding —
+`g(i, i+s)/s` is the *mean* rate over `[i, i+s]`, and averaging over all
+available `i` at each span recovers approximately the stack mean at every span,
+so the distortion is second-order; and the effect measured there is **7.5x**,
+which a 1.53x drift cannot manufacture. But the span-bias table's exact shape
+should be read as ±25% rather than exact.
+
+**A convergence worth flagging.** M84b's fact 1159 has the bracket
+under-sampling its own depth of field by 1.8–2.3x, so adjacent frames do **not**
+share a focal plane. My §6.4 concluded independently that short-span
+attenuation on real pairs is caused by the defocus difference and *not* by the
+correlator — a synthetic plant of the same magnitude is recovered correctly.
+**These two findings explain each other**: if adjacent frames are focus-disjoint,
+a span-1 pair is a correlation between genuinely different blur states, which is
+exactly the mechanism §6.4 infers. Two channels, one conclusion.
+
+**Not applicable to me**: fact 1159's inverse-depth point. `align.rs` fits a 2D
+similarity in image coordinates and contains no depth or object-plane model, so
+there is no `Z` to fit linearly. One adjacent caveat I will own, though: a
+*global* scale is the correct model only for a subject plane normal to the axis.
+On a steeply tilted subject, magnification varies across the field and a single
+similarity is an approximation — irrelevant to the flat-on stacks I aligned, but
+it means **this module should not be pointed at `highly-angled-ruler-mm-cpl`
+without first measuring that error.**
+
+### 13.5 Consequence for the integration recipe
+
+Add to §11: **do not use `GlobalOptions::smooth` on a well-conditioned deep
+stack** — it costs 65% on bee-3-cpl. Reserve it for stacks with weak or noisy
+edge sets, where §13.3 shows it can pay. And **use `solve_poly` at degree 4–6,
+never 1 or 2**; degree 2 is measurably no better than assuming a constant
+increment outright.
