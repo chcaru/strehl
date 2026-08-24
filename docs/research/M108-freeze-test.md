@@ -266,6 +266,14 @@ numbers are in §8.
 | D | row claims `on-sidecar-override`, runs `align=off` | RED, **no hash compared** | exit 101 |
 | E | a genuinely refused frame in the warp fixture | RED | exit 101, `19 placed / 1 refused` |
 | F | `DSC00016.ARW` copied to `DSC00015.ARW` | RED **before rendering** | exit 101 in 0.2 s |
+| G | absent vs present library, **piped, no `--nocapture`** | the two must be distinguishable | initially **were not** — §9 |
+
+**Check C's result was mode-dependent and is corrected in §9.** It was verified
+under `--nocapture`, which no caller uses; piped, the skip banner was swallowed
+by libtest's capture and a run that verified nothing was indistinguishable from
+one that verified everything. Fixed, re-measured piped, and recorded there. The
+skip *behaviour* (exit 0, and exit 101 under `STREHL_FREEZE_REQUIRE=1`) was
+correct throughout — only its visibility was not.
 
 Check B is the one worth dwelling on, because the hazard reproduced live rather
 than theoretically. `Copy-Item` set the restored file's mtime **backwards**:
@@ -726,6 +734,11 @@ is to matter:
     reference rig. `workers` is reported precisely because cross-host chunking
     is unmeasured, and a second machine is the cheapest experiment nobody has
     run yet.
+17. **A skip is still a pass.** §9 made a skipped run *visible* in a piped log;
+    it did not make it *red*. On a machine with no captures the suite reports
+    `5 passed` and exit 0, and only the banner distinguishes it. CI must set
+    `STREHL_FREEZE_REQUIRE=1` — the exit code alone will not carry this, by
+    design, because a test that fails on a fresh clone gets ignored.
 
 ---
 
@@ -1116,4 +1129,123 @@ cache as a soft failure — it warns and continues with the solve it just comput
 verified fact from ORCH's own reading of the source, and it means the safe
 option is available. It costs correctness nothing and it costs speed only where
 speed was being bought with someone else's data.
+
+---
+
+## 9. Discipline 702, applied to this harness — and it was guilty
+
+ORCH circulated a defect in `scripts/corpus_lint.py`: it could not print the
+violations it found, because Python selects cp1252 for redirected stdout and the
+corpus is full of characters cp1252 cannot encode. The linter worked perfectly
+on an interactive console and was blind in every piped call. The lesson was
+generalised as **discipline 702** — *a gate must be tested in the mode its
+callers actually use, and must distinguish tool failure from subject failure, or
+a green run and a broken run are the same observation* — with an invitation to
+check any harness built this session.
+
+I checked mine. **It had the defect**, in a form I had already looked straight at
+and misread.
+
+### 9.1 The measurement
+
+libtest captures the `print!`/`eprint!` family for tests that **pass** and
+replays it only for tests that **fail**. Every status line in this file went
+through `println!`. So, both arms piped, no `--nocapture`, at `2c13138`:
+
+| arm | what actually happened | output | exit |
+|---|---|---|---|
+| library absent | **nothing rendered, zero freezes checked** | `test result: ok. 5 passed … in 0.00s` | 0 |
+| library present | both freezes rendered twice and verified | `test result: ok. 5 passed … in 17.21s` | 0 |
+
+**Byte-identical but for a duration.** A run that verified nothing and a run that
+verified everything were the same observation, in the mode every caller uses —
+an agent tool call, a CI log, any `cargo test | tee`. That is discipline 702
+exactly, sitting inside the instrument built to enforce this class of rigour.
+
+The `STREHL_FREEZE_REQUIRE=1` escape hatch was real and is unchanged, but it is
+opt-in, and a check that only works when you remember to ask for it is the same
+shape as a freeze that only holds when someone remembers to re-render it. That
+is the thing this milestone exists to stop.
+
+### 9.2 How I had already missed it
+
+I verified the skip path in Check C **with `--nocapture`**, saw the banner, and
+recorded it as *"absent library → loud SKIP exit 0."* The banner was real. The
+mode was not one any caller uses.
+
+Worse, I had the contrary evidence in hand and walked past it. In §8.6 the stray
+canary did not appear in a filtered plain run; I noticed, re-ran with
+`--nocapture`, saw it, and moved on — treating the missing output as *my filter
+being wrong* rather than as *the harness being silent*. The evidence was on
+screen and I explained it away. Discipline 702's value is that it names the
+question that would have stopped me: **not "did the message print?" but "did it
+print to the caller I actually have?"**
+
+### 9.3 The fix, and why it is a `write_all` and not an `eprintln!`
+
+A `note()` helper writes to `std::io::stderr()` directly. libtest's capture is a
+thread-local consulted by the `print!` macro family; a direct write to the
+handle is not routed through it. `eprintln!` would **not** have worked — it is
+captured exactly as `println!` is, which is the trap in this fix and is why the
+distinction is commented at the call site.
+
+It is applied to three places, and the third is the one that matters most:
+
+1. the SKIP banner, now also reporting `0 of N freezes verified`;
+2. the stray-sidecar canary, which by construction *only ever fires on a run that
+   passes* — so printed the ordinary way it could never once have been seen;
+3. **the `HOLDS` lines.** This is the positive half. It is not enough for a
+   broken run to announce itself; a *good* run has to be able to say what it
+   checked, or the reader still cannot tell the two apart from the outside.
+
+Measured after the change, same two arms, still piped, still no `--nocapture`:
+
+```
+ARM 1 (absent):   SKIPPED: the byte-freeze renders were NOT checked. 0 of 2 freezes verified.
+                  test result: ok. 5 passed ... in 0.00s
+
+ARM 2 (present):  freeze `coffee-bean-20-gate2-unaligned` HOLDS: D99F5D82... -- reproduced twice
+                  freeze `coffee-bean-20-gate2-sidecar`   HOLDS: 119936E6... -- reproduced twice
+                  test result: ok. 5 passed ... in 22.87s
+```
+
+One honest cosmetic caveat: because libtest writes its own progress lines to the
+same descriptor without synchronising with a direct write, a `test … ok` line can
+land in the middle of the banner. It is untidy and it hides nothing. I would
+rather have interleaved truth than tidy silence.
+
+### 9.4 The neighbouring hazard, checked while I was here
+
+The corpus_lint defect was an *encoding* failure, so I checked whether this
+harness could suffer the mirror image: failure messages that a cp1252 consumer
+cannot render.
+
+```
+byte-freeze.rs   : 0 non-ASCII byte(s)
+byte-freezes.tsv : 0 non-ASCII byte(s)
+```
+
+Zero, and now deliberately so rather than accidentally. Every message here uses
+`--` and `->` in place of the em dashes and arrows the prose corpus uses freely.
+Rust would not have *raised* on them — it writes UTF-8 to a pipe regardless of
+console codepage — but the reader on the far end of a cp1252 log would have got
+mojibake in the middle of the one paragraph that explains how to re-baseline.
+**This constraint is worth keeping deliberately**: the registry and the test are
+read under failure conditions, through whatever pipeline the reader happens to
+have, and that is the worst moment to garble the instructions. The prose in this
+report is under no such constraint, which is why it reads differently.
+
+### 9.5 What this changes about the earlier claims
+
+§1.5 and Check C claimed a "loud skip". That claim was true only under
+`--nocapture` and is now true unconditionally; the check has been re-run in the
+piped mode and both arms are recorded above. Nothing about the frozen hashes,
+the gates or §8's measurements is affected — those all ran through failure paths,
+which libtest replays.
+
+The general form is worth stating, because it outlives this file: **an
+instrument's output channel is part of the instrument.** I built four gates that
+correctly distinguish six failure modes from each other, and then reported them
+all through a channel that discarded the one case where nothing ran at all.
+
 

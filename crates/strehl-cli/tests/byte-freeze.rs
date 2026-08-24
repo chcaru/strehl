@@ -662,6 +662,35 @@ fn capture_library() -> Result<PathBuf, String> {
     ))
 }
 
+/// Write to the process's real stderr, **bypassing libtest's output capture**.
+///
+/// This exists because of a defect measured in this very file. libtest captures
+/// `print!`/`eprint!` for tests that PASS and only replays it for tests that
+/// fail, so every `println!` here was invisible in the mode all of this test's
+/// callers actually use: a piped `cargo test` in an agent tool call or a CI log.
+/// Measured A/B on the committed test at `2c13138`, both piped, no `--nocapture`:
+///
+/// ```text
+///   library absent, nothing rendered : test result: ok. 5 passed ... in 0.00s   exit 0
+///   library present, both freezes ok : test result: ok. 5 passed ... in 17.21s  exit 0
+/// ```
+///
+/// Byte-identical but for a duration nobody reads. **A run that verified nothing
+/// and a run that verified everything were the same observation**, which is
+/// discipline 702 exactly, in the instrument built to enforce it. I had
+/// "verified" the skip banner with `--nocapture` -- a mode no caller uses.
+///
+/// The capture is a thread-local consulted by the `print!` family; a direct
+/// write to the underlying handle is not routed through it. That is measured
+/// rather than assumed, by the A/B above being re-run after this change.
+fn note(msg: &str) {
+    use std::io::Write;
+    let mut e = std::io::stderr();
+    let _ = e.write_all(msg.as_bytes());
+    let _ = e.write_all(b"\n");
+    let _ = e.flush();
+}
+
 /// Skip, unless the operator has said skipping is a failure.
 ///
 /// A skip is the correct answer on a fresh clone and a *defect* on a machine
@@ -683,18 +712,23 @@ fn skip(reason: &str) {
          Nothing was rendered, so this run is evidence about NOTHING. Unset\n\
          STREHL_FREEZE_REQUIRE if you genuinely do not have the captures.\n"
     );
-    println!(
+    note(&format!(
         "\n\
          ------------------------------------------------------------------------------\n\
-         SKIPPED: the byte-freeze renders were NOT checked.\n\
+         SKIPPED: the byte-freeze renders were NOT checked. 0 of {n} freezes verified.\n\
          ------------------------------------------------------------------------------\n\
          {reason}\n\n\
          The registry rows themselves WERE still validated by the other tests in this\n\
          file -- their completeness, not their hashes. Set STREHL_FREEZE_REQUIRE=1 to\n\
          make this skip a hard failure on a machine that is supposed to have the data,\n\
-         which is what CI should do.\n\
-         ------------------------------------------------------------------------------\n"
-    );
+         which is what CI should do.\n\n\
+         THIS LINE IS WRITTEN TO THE REAL STDERR ON PURPOSE. libtest captures the\n\
+         `print!` family for passing tests, so a skip printed the ordinary way is\n\
+         invisible in a piped `cargo test` -- making a run that verified nothing\n\
+         indistinguishable from one that verified everything (discipline 702).\n\
+         ------------------------------------------------------------------------------",
+        n = parse_registry().len()
+    ));
 }
 
 // ---------------------------------------------------------------------------
@@ -1162,7 +1196,7 @@ fn report_strays(lib: &Path) {
     if strays.is_empty() {
         return;
     }
-    println!(
+    note(&format!(
         "\n\
          ------------------------------------------------------------------------------\n\
          WARNING: the read-only capture library contains {} stray sidecar file(s):\n\
@@ -1171,16 +1205,19 @@ fn report_strays(lib: &Path) {
          STREHL_WARPMAP, neither of which writes anywhere. Some other process did, and\n\
          AGENTS.md rule 45 says nothing may. They should be quarantined out, not left.\n\n\
          This is a WARNING and not a failure because another agent's write is not\n\
-         evidence about this test. It is printed because eleven of these accumulated in\n\
-         one night before anybody looked.\n\
-         ------------------------------------------------------------------------------\n",
+         evidence about this test. It is written to the REAL stderr because libtest\n\
+         captures the `print!` family for passing tests -- and this warning only ever\n\
+         appears on a run that passes, so printed the ordinary way it would never once\n\
+         have been seen. Eleven of these accumulated in one night before anybody\n\
+         looked.\n\
+         ------------------------------------------------------------------------------",
         strays.len(),
         strays
             .iter()
             .map(|s| format!("  {s}"))
             .collect::<Vec<_>>()
             .join("\n")
-    );
+    ));
 }
 
 /// Run the row's own command once, in its own process, and read back everything
@@ -1446,7 +1483,12 @@ fn the_frozen_renders_still_produce_their_recorded_bytes() {
         );
 
         if a.hash == r.sha256 && a.bytes == r.bytes {
-            println!(
+            // Real stderr, not `println!`. This is the POSITIVE half of the
+            // same fix: a passing run has to be able to say what it checked.
+            // Without it, "5 passed" is emitted identically by a run that
+            // verified both freezes and a run that verified none, and the
+            // difference is the whole value of the test.
+            note(&format!(
                 "freeze `{}` HOLDS: {} ({} bytes, alignment {}, {}{}) -- reproduced twice",
                 r.id,
                 r.sha256,
@@ -1457,7 +1499,7 @@ fn the_frozen_renders_still_produce_their_recorded_bytes() {
                     Some((p, f)) => format!(", {p} placed / {f} refused"),
                     None => String::new(),
                 }
-            );
+            ));
             let _ = std::fs::remove_dir_all(&a.scratch);
             let _ = std::fs::remove_dir_all(&b.scratch);
             continue;
