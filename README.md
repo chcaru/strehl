@@ -25,13 +25,18 @@ diffraction-limited ideal.
 > artifact every quality claim is measured against.
 >
 > **Measured end to end on the reference rig:** 299 frames of 33 MP Sony ARW to
-> a 7032 x 4688 16-bit sRGB TIFF in **23.1 s** — decode, focus, elect, merge,
-> demosaic and write (Ryzen 9 9950X3D, warm cache).
+> a 7032 x 4688 16-bit sRGB TIFF in **51.6 s** — decode, align, focus, elect,
+> merge, demosaic and write (Ryzen 9 9950X3D, warm cache, best of 3). That
+> figure was **23.1 s** before alignment was wired into the merge; registration
+> is what the extra ~28 s buys. Full sensor resolution is **free**: the binned
+> render measures 51.4 s, inside the run-to-run spread of the full one.
 >
-> **Not yet built:** alignment into the merge, deconvolution, outlier rejection,
-> occlusion modelling. Those four are what the current output's visible defects
-> come from — most obviously a cutout halo along the subject silhouette. The
-> research corpus is in [`docs/research/`](docs/research/), and
+> **Not yet built:** deconvolution, outlier rejection, occlusion modelling.
+> Those are what the current output's visible defects come from — most obviously
+> a bright veil along the subject silhouette, which is present at `--gate 0`,
+> survives alignment, and has **no established mechanism**: the three obvious
+> explanations are each measured and each refuted (`crates/strehl-cli/src/merge_cmd/halo.rs`).
+> The research corpus is in [`docs/research/`](docs/research/), and
 > [`SYNTHESIS.md`](docs/research/SYNTHESIS.md) is the decision record.
 
 ## Quickstart
@@ -43,14 +48,23 @@ $ cargo build --release -p strehl-cli
 $ strehl probe <DIR>
 
 # Stack, and render something you can actually look at.
-$ strehl stack <DIR> --gate 2 --srgb --demosaic -o out.tif
+$ strehl stack <DIR> --gate 2 --srgb --auto-exposure -o out.tif
 ```
 
-`--srgb` applies the camera's colour matrix and the sRGB transfer curve;
-`--demosaic` emits at full sensor resolution. **Neither is on by default**,
-because the default output is the binned linear camera-native file that every
-number in the corpus was measured on. Use the flags to look, drop them to
-measure.
+`--srgb` applies the camera's colour matrix and the sRGB transfer curve, and
+since M95 it emits at **full sensor resolution by default** — pass `--binned`
+for the old half-resolution render. **None of this is on by default**, because
+the default output is the binned linear camera-native file that every number in
+the corpus was measured on.
+
+`--srgb` alone is *faithful*, not *flattering*: it reproduces the capture, and
+these captures run 1.1–3.2 stops under. `--auto-exposure` picks a gain by
+putting the 99.9th percentile of linear-sRGB luminance at 0.90 and **prints the
+`--exposure=N` that reproduces the file byte for byte**; `--exposure <STOPS>`
+sets it yourself. Both are one multiply in linear light before the transfer
+curve — no tone curve, no saturation, no roll-off — and both refuse to run
+without `--srgb`, because the linear output is the measurement output. Use the
+flags to look, drop them to measure.
 
 ## What is actually different
 
@@ -101,6 +115,18 @@ violated. Both were fixed; see facts 428-431 in
 The honest claim is narrower: **averaging two or more frames is strictly better
 than one, and the gate is what decides when that is safe.**
 
+**On a whole photograph, measured.** `leaf-2-cpl`, 182 frames, both arms at a
+fixed `--exposure=3.19` so the merge is the only difference between them.
+`--gate 0` reports mean `n_eff` 1.000 with 100.00% of pixels at `n_eff` = 1 —
+pure selection, every output pixel exactly one frame's pixel. `--gate 2` reports
+mean `n_eff` 15.077. In a 200x200 flat patch chosen on the *mean of both arms*,
+so neither arm selected the view, noise falls **0.006381 → 0.000987**, a ratio
+of **0.1546x** — equivalent to averaging **41.8 frames** — and the matched
+detail crop is **visually indistinguishable**. That flat-patch figure is a best
+case and is quoted as one: the tool's own model predicts **0.4439x** image-wide
+at this gate, because 21.95% of pixels still average nothing. Both numbers are
+right; they describe different regions.
+
 On resolved detail the expected gain is **~1.2-1.8x** — at a sane focus step only
 about 1.3 to 1.5 frames have any given depth inside their depth of field — but
 that figure is `ARGUED`, not measured, and the noise column above is not a
@@ -119,7 +145,8 @@ and decode alone is 1.78 s cold, 0.91 s warm. See
 strehl probe <DIR> [--limit N]     # sensor geometry, levels, ISO, white balance
 strehl stack <DIR> [--out <PATH>]  # THE THESIS: noise-gated estimation
                    [--gate T...] [--target-n-eff N] [--limit N]
-                   [--srgb] [--demosaic]
+                   [--srgb] [--demosaic] [--binned]
+                   [--exposure <STOPS>] [--auto-exposure]
                    [--flat-roi X,Y,W,H] [--detail-roi X,Y,W,H]
                    [--stats] [--stats-placebo] [--confidence-tail Q]
 strehl argmax-baseline <DIR> --out <PATH>   # the naive argmax, for comparison
@@ -178,7 +205,10 @@ colour matrix is applied, so the output is camera RGB, not colorimetric sRGB.
 
 **Default output is linear** and will look dark in a normal viewer. That is
 correct: it is what measurement needs. `--srgb` applies the sRGB transfer curve
-to produce something viewable — use it for looking at, never for measuring.
+to produce something viewable — use it for looking at, never for measuring. If
+`--srgb` still looks dark, that is the capture rather than the render, and
+`--auto-exposure` will say so with a number: it prints the gain it chose and the
+`--exposure=N` that reproduces the file exactly.
 
 **`--index-map`** writes the winner map as a 16-bit grayscale TIFF holding the
 literal frame index (0..N-1) per pixel, so it needs autoscaling to view. It is
