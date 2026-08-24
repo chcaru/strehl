@@ -769,8 +769,11 @@ orchestrator at fold time.** Before folding, match the first ~70 characters of
 each against the whole of `§4` and require zero matches (rule 28, rule 25). P4
 and P10 are close in subject to facts 27, 28 and 212 and must be checked for
 content collision, not number collision. **P13–P18 are addendum facts (§16–§18);
-P13, P14 and P15 bear directly on existing facts 274, 471 and 19 and must be
-checked against them for contradiction, not just for duplication.**
+P13, P14 and P15 bear directly on existing facts 274, 471, 1006 and 19 and must
+be checked against them for contradiction, not just for duplication. P13 is the
+positive measurement fact 1006 explicitly lacks — 1006 establishes an absence of
+evidence, P13 supplies the evidence — and it is corroborated by fact 471's own
+published half-widths (§16.7).**
 
 | # | Proposed fact | Label | Source |
 | --- | --- | --- | --- |
@@ -786,7 +789,7 @@ checked against them for contradiction, not just for duplication.**
 | **P10** | **At f/11 the top of the mid band is already at the noise floor, inside the nominal passband.** Peak-frame band SNR `(P−σ̂²)/σ̂²` in 0.200–0.2762 cyc/px is 0.08–0.81 (median 0.38) on the three f/11 stacks, against 9.57 median in 0.100–0.150. Fact 27 located the cutoff; this locates where approaching it stops paying. The b6/b5 SNR ratio is aperture-ordered — 0.230 / 0.224 / 0.114 at f/5.6 / f/8 / f/11 — though scene spectrum is not held fixed across the groups | MEASURED (ratio ordering: ARGUED) | `out/s13_bandsnr.log` |
 | **P11** | **`D:\personal\macro` is 75.3% f/5.6 by frame count, not f/11.** Marked apertures: f/5.6 on 119MSDCF, wrapped-text-1/2 and bee-1/2/3 (1,180 frames); f/8 on coffee-bubbles, foam, coffee-bean (224); f/11 on 109MSDCF, 112MSDCF, 113MSDCF (164). Every one of the five stacks captured in the most recent session (2026-08-23, 1,147 frames, 73% of the corpus) is f/5.6. **Fact 27's cutoff, and any claim that ~45% of the sampled band is empty, is an f/11 result covering 10.5% of the corpus** | MEASURED | `out/s01_exif_census.log`, `out/exif-*.tsv` |
 | **P12** | **The band-power estimator's absolute normalisation and sampling error are measured, not assumed:** on synthetic calibrated noise (400 realisations, 256-sample GQ patch, tile 128) band means are 0.998–1.003 σ² and per-realisation sd is 0.0147–0.0678 σ² by band. Halving the patch to 128 GQ samples changes stack-median `n_eff` by 0.832–1.073× on a four-stack subset spanning both frame-count extremes and all three apertures | MEASURED | `out/s08_decisive.log` §0, `out/s12_patchsize.log` |
-| **P13** | **Real through-focus modulus curves are symmetric in frame index to within the scene-geometry envelope; M67's fact 19 ("real through-focus curves are measured asymmetric") is NOT SUPPORTED on this corpus.** The half-width asymmetry index `A = (w_far−w_near)/(w_far+w_near)` has stack medians of **−0.070…+0.077 at half-peak** across all 12 stacks (median-of-medians −0.0131, signs split 6/6), i.e. the worst stack's near and far half-widths differ by a factor of 1.167 and the typical stack's by 1.084. A two-depth scene with a **symmetric** PSF reaches \|A\|=0.073 in control. Pre-registered Criterion E returned **INDETERMINATE** — the SYMMETRIC branch missed by one stack (8/12 vs a 9/12 bar at the 0.25 fraction) and the ASYMMETRIC branch failed 0/12 at every fraction | MEASURED | `out/s15_asym_corpus.log`, `PREREGISTRATION-B.md` §3 |
+| **P13** | **Real through-focus modulus curves are symmetric in frame index to within the scene-geometry envelope; M67's fact 19 ("real through-focus curves are measured asymmetric") is NOT SUPPORTED on this corpus.** The half-width asymmetry index `A = (w_far−w_near)/(w_far+w_near)` has stack medians of **−0.070…+0.077 at half-peak** across all 12 stacks (median-of-medians −0.0131, signs split 6/6), i.e. the worst stack's near and far half-widths differ by a factor of 1.167 and the typical stack's by 1.084. A two-depth scene with a **symmetric** PSF reaches \|A\|=0.073 in control. Independently corroborated by fact 471's own published half-widths (10/9 and 17/17 → \|A\| = 0.053 and 0.000), which sit inside this range next to the corpus median of 0.0404. Pre-registered Criterion E returned **INDETERMINATE** — the SYMMETRIC branch missed by one stack (8/12 vs a 9/12 bar at the 0.25 fraction) and the ASYMMETRIC branch failed 0/12 at every fraction. **This is the positive measurement fact 1006 lacks** | MEASURED (fact 471 conversion: DERIVED) | `out/s15_asym_corpus.log`, `PREREGISTRATION-B.md` §3 |
 | **P14** | **The residual asymmetry is real, highly significant, and does not reproduce across repeat captures of the same setup — so it is scene geometry, not the PSF.** Against per-stack shuffle nulls (100 reps), 7 of 12 stacks lie outside their own null at half-peak at **12.7–125.7 null sd**, and they are exactly the seven with K ≥ 100; the null sd itself spans **188×** across the corpus (0.0766 at K=22 to 0.0004 at K=105), `corr(log K, null sd) = −0.784`. **Three 299-frame f/5.6 captures of the same bee setup, each individually 12.7–32.2 null sd from zero, return −0.036 / +0.042 / −0.070; the two wrapped-text captures return +0.047 (35.5 sd) and −0.062 (125.7 sd).** A PSF asymmetry is a property of the optics and must reproduce; it does not | MEASURED | `out/s16_null_band.log`, `out/s19_report_numbers.log` |
 | **P15** | **Fact 274's through-focus excess kurtosis is confounded with focus-step density and cannot be read as tail weight.** A plant that is **symmetric by construction** returns `g2` = −0.63 / +0.86 / +6.13 at 0.25 / 0.50 / 1.00 px/step, purely because the curve narrows relative to the moment window. The corpus range, **−0.44…+5.80, is contained inside that**, with `corr(log K, g2) = −0.411`. `g2` was pre-registered as NOT TESTABLE against fact 274 for this reason, before the corpus was read. Skew is separately INDETERMINATE (\|g1\|<0.15 on 8/12 against a 9/12 bar; ≥0.45 with consistent sign on 2/12) | MEASURED | `out/s14_asym_controls.log`, `out/s15_asym_corpus.log` |
 | **P16** | **The shipped gate's admitted set corresponds to a ±3-frame window, by two independent routes that agree to 1.1% and neither of which is a free parameter.** M67's simulator measurements `n_eff = 6.84` (at K=25) and `D(A)/D(E) = 0.4895` → mean admitted defocus 1.733 frames map onto an equal average over ±W, which has `n = 2W+1` and mean offset `W(W+1)/(2W+1)`. W=3 gives 7 (1.023× of 6.84) and 1.714 (0.989× of 1.733). No other window in {1,2,3,5,10,20} is within 1.5× on either | DERIVED (from M67 MEASURED + arithmetic) | `out/s18_incumbent.log` §1 |
@@ -1066,7 +1069,12 @@ are discharged below:
   the 0.50 reading *is* an FWHM asymmetry, directly commensurable with fact 471.
 
 The owner's instruction was explicit: **do not treat M67's fact 19 as
-established.** I did not, and I have now measured it.
+established.** I did not, and I have now measured it. SYNTHESIS **fact 1006**,
+folded while this addendum was being written, records the same withdrawal and
+concludes that *"the live hypothesis is now closer to symmetric-with-heavy-tails
+than to asymmetric"* — **but that is an absence of evidence, and §16 supplies the
+measurement.** M73 §619 explicitly leaves through-focus asymmetry to M70 and
+builds nothing on it, so nothing downstream is disturbed either way.
 
 **This was cheap.** It is pure post-processing of `out/tfs-*.npz`, which already
 existed. No new capture, no Rust, no `crates/` access.
@@ -1257,6 +1265,23 @@ would. Recorded because forming and killing it is part of the evidence, and
 because a reader who notices the same pattern deserves to know it was checked.
 
 ### 16.7 What §16 concludes
+
+**Independent corroboration, from a fact I did not use as an input.** SYNTHESIS
+fact 1006 — folded while this addendum was being written — records fact 471's
+through-focus FWHM half-widths as **(10/9) and (17/17)** on two stacks. Converted
+to this addendum's statistic those are `|A₅₀|` = **0.053** and **0.000**. My
+corpus median is **0.0404** with a range of 0.0096–0.0773. **A different
+milestone, a different statistic and different stacks land inside my range and
+next to my median.** This was not a designed check — fact 471's numbers were
+published before M70 existed — which is what makes it worth reporting.
+
+**Where this leaves fact 1006.** Fact 1006 establishes that *no corpus fact
+establishes asymmetry* and concludes that "the live hypothesis is now closer to
+symmetric-with-heavy-tails than to asymmetric". That is an absence of evidence.
+**§16 supplies the positive measurement it lacks** — the modulus family *is*
+symmetric, measured, with controls — and it **removes the basis for the
+"heavy-tails" half** as well, not by showing the tails are light but by showing
+in §16.4 that the statistic which claimed them is not a tail statistic.
 
 **MEASURED.** The modulus of the real through-focus response is symmetric in
 frame index to within **±0.077** in the half-width asymmetry index — the worst
