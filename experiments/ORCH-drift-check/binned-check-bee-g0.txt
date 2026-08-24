@@ -1,0 +1,15 @@
+C:\dev\strehl-out\ORCH-gate\bee-3-cpl-g0.tif  (4688, 7032)
+
+arm                                               R
+NEGATIVE control (white noise, full-res)     0.1088
+the render as shipped                        6.1060
+POSITIVE control (render, known 2x-binned)   1.0000
+
+both controls landed.
+
+On the scale where 0 = full sensor resolution and 1 = 2x binned,
+the render sits at 6.730.
+
+VERDICT: the render is consistent with 2x-BINNED information.
+M95's finding is reproduced independently: the file has 33 MP of
+pixels and far less than 33 MP of detail.
