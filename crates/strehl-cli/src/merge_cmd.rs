@@ -39,6 +39,7 @@ use std::time::Instant;
 
 use anyhow::{Context, Result, bail, ensure};
 use rayon::prelude::*;
+use strehl_core::photometric::{self, Flux, PhotometricMap};
 use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
 use strehl_core::color::{self, AppliedExposure, Exposure};
 use strehl_core::flat_ratio::{self, FrameFlat};
@@ -108,6 +109,15 @@ pub struct MergeOptions {
     ///
     /// See [`write_n_eff_map`] for the grid and the value convention.
     pub n_eff_map: Option<PathBuf>,
+    /// Fit and apply a per-frame affine photometric gain. **Opt-in, default
+    /// off** (M99 §9.2: land the wiring behind a flag until it has been run
+    /// across the whole corpus).
+    ///
+    /// M24 measured real per-frame drift that EXIF does not predict — 0.91%
+    /// peak-to-peak on `109MSDCF`, 11.70% on `coffee-bean` — so a gated
+    /// average without this term is reading an exposure change as a signal
+    /// change. Also settable via `STREHL_PHOTOMETRIC=1`.
+    pub photometric: bool,
     /// Solve the ladder for the gate that achieves this mean `n_eff`.
     ///
     /// **This, not `gates`, is the parameter the project intends to ship.**
@@ -822,6 +832,15 @@ struct Ctx<'a> {
     noise: &'a NoiseModel,
     live: &'a AtomicUsize,
     peak_live: &'a AtomicUsize,
+    /// Per-frame photometric gains, or `None` to merge without a photometric
+    /// term. Built between the two passes from flux accumulated in pass one.
+    ///
+    /// M24 measured real per-frame drift across most of the corpus — 0.91%
+    /// peak-to-peak on `109MSDCF`, **11.70% on `coffee-bean`** — which EXIF
+    /// does not predict, so it must be fitted from the data. A gated average
+    /// that has not corrected an 11.70% gain drift is reading an exposure
+    /// change as a signal change.
+    photometric: Option<&'a PhotometricMap>,
     /// The bracket's solved geometry, or `None` when merging unregistered.
     ///
     /// M86 measured that these stacks drift 232.7 px (bee-3-cpl) and 299.2 px
@@ -879,9 +898,6 @@ impl Timings {
 }
 
 impl Ctx<'_> {
-    /// Decode one frame and produce its regularised focus field into
-    /// `scratch.reg`.
-    ///
     /// Did the alignment solve refuse to place this frame?
     ///
     /// A refused frame is **not** a frame with an identity warp. The solve
@@ -899,6 +915,9 @@ impl Ctx<'_> {
         })
     }
 
+    /// Decode one frame and produce its regularised focus field into
+    /// `scratch.reg`.
+    ///
     /// Both passes go through here, which is the point: pass two's gate is only
     /// meaningful if the field it compares was produced by the same arithmetic
     /// that elected the winner in pass one.
@@ -973,6 +992,45 @@ impl Ctx<'_> {
                 }
             }
         }
+        // Photometric normalisation, at the seam, AFTER registration so the
+        // gain and the geometry describe the same frame, and BEFORE the focus
+        // measure so the field, the gate and the estimator all see normalised
+        // data (M99 §13.2).
+        //
+        // The frame is scaled and the noise model is scaled with it. That
+        // second half is not optional: the model is
+        // `sigma^2(S) = g*S + (RN*g)^2`, so scaling data by `c` without
+        // scaling the model under-estimates sigma by between sqrt(c) and c --
+        // up to 17% on the measured lavendar-cpl gain span -- and the gate,
+        // which is calibrated in units of focus noise, then fires too readily
+        // on exactly the frames that were brightened. M99 calls this "the
+        // single most important sentence in this patch".
+        //
+        // Because focus is `contrast / sigma`, scaling both leaves the focus
+        // response EXACTLY invariant, which is why this is election-neutral by
+        // construction: M99 measured 34 re-elected pixels of 8.25M. A
+        // mis-propagated variant re-elects 40.13%.
+        let scaled_noise;
+        let mut noise = self.noise;
+        if let Some(map) = self.photometric {
+            match map.gain(index as usize) {
+                Ok(g) if g != 1.0 => {
+                    photometric::apply_to_u16(
+                        &mut frame.data,
+                        self.levels.black,
+                        self.levels.white,
+                        g,
+                    );
+                    scaled_noise = photometric::scale_noise_model(self.noise, g);
+                    noise = &scaled_noise;
+                }
+                // A frame the fit refused (clipped, or no usable flux) is
+                // merged UNCORRECTED rather than dropped: its geometry is
+                // still good, and gain 1.0 is exactly the status quo for it.
+                // The refusal is reported once, before the passes run.
+                _ => {}
+            }
+        }
         let frame = frame;
         green_luma_with_clip(
             &frame,
@@ -982,7 +1040,7 @@ impl Ctx<'_> {
             &mut scratch.clipped,
         );
         if scratch.fine.is_empty() {
-            scratch.field.compute(&scratch.luma, self.noise);
+            scratch.field.compute(&scratch.luma, noise);
         } else {
             // One shared gradient pass produces both scales. The selection field
             // is bit-identical either way — pinned by
@@ -990,7 +1048,7 @@ impl Ctx<'_> {
             // — so turning statistics on cannot move the merge.
             scratch.field.compute_with_fine(
                 &scratch.luma,
-                self.noise,
+                noise,
                 STATS_RADIUS,
                 &mut scratch.fine,
             );
@@ -1013,6 +1071,10 @@ impl Ctx<'_> {
 
 struct Pass1 {
     stats: FocusStats,
+    /// Per-frame flux over the fixed low-detail region, for the photometric
+    /// fit. Empty unless the photometric term was asked for. One `Flux` per
+    /// frame decoded by this worker, so it is constant in the region size.
+    flux: Vec<(u16, Flux)>,
     /// Census of samples pinned at the container maximum. Two bytes per pixel,
     /// constant in the frame count, so the ratchet is untouched.
     clip: ClipCensus,
@@ -1191,6 +1253,31 @@ fn write_election_map(path: &Path, best: &[u16], geom: PlaneGeometry) -> Result<
 
 /// The environment variable that asks for an n_eff map without a flag.
 const NEFF_ENV: &str = "STREHL_DUMP_NEFF";
+
+/// Env-var twin of `--photometric`, for A/B harnesses that cannot edit argv.
+const PHOTOMETRIC_ENV: &str = "STREHL_PHOTOMETRIC";
+
+/// Fraction of the reference frame admitted as "low detail".
+const PHOTOMETRIC_DETAIL_Q: f64 = 0.40;
+
+/// Luma quantile a pixel must EXCEED to be admitted. Low detail alone is not
+/// background — an unlit subject is smooth too, and admitting it put the
+/// region's spread at 62% of its mean on `bee-3-cpl`; requiring brightness as
+/// well took that to 20%.
+const PHOTOMETRIC_LUMA_Q: f64 = 0.60;
+
+/// Erosion radius, in plane pixels, applied to the low-detail region.
+///
+/// Defocus spills light across a scattered mask's long perimeter and the fit
+/// reads the spill as a brightness change that is not there. On a
+/// flux-conserving blur sweep whose true answer is exactly zero, M99 measured
+/// 3.63% spurious gain raw against a registered 2x bar — 168x over — and
+/// 0.0000% after eroding. The radius should exceed the largest defocus blur
+/// the bracket contains.
+const PHOTOMETRIC_ERODE_PX: usize = 16;
+
+/// Below this many surviving pixels the fit is refused rather than attempted.
+const PHOTOMETRIC_MIN_PX: usize = 1024;
 
 /// Where to write the n_eff map, if anywhere: `--n-eff-map` wins, then
 /// [`NEFF_ENV`]. Same precedence and same printing rule as
@@ -1521,6 +1608,12 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         live: &live,
         peak_live: &peak_live,
         warps,
+        // Pass one runs UNCORRECTED: the gains are fitted from flux this pass
+        // accumulates, so they cannot exist yet. That costs nothing, because
+        // the correction is election-neutral by construction (M99 §13.2) --
+        // the focus response is exactly invariant under it -- so a winner
+        // elected on uncorrected data is the same winner.
+        photometric: None,
     };
 
     // A refused frame is dropped, not merged unregistered. Counted once here so
@@ -1553,6 +1646,61 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         paths.len()
     );
 
+    // ---- the fixed photometric region -------------------------------------
+    //
+    // Built ONCE, from the reference frame, and then held fixed. A region
+    // re-chosen per frame slides across the scene as magnification breathes
+    // and re-acquires the exact confound the correction exists to remove.
+    //
+    // Whole-frame flux is the wrong corrector. M99 §7.3 measured whole-frame
+    // and background ladders 7.1% and 5.5% apart on the two auto-exposure
+    // decks -- the AE meter holds TOTAL flux roughly constant while defocus
+    // moves light between the sharp core and the smooth surround -- and
+    // correcting with the whole-frame ladder left 44% and 42% of the defect
+    // standing. M28 §6's "mean over all pixels" rule is right about the
+    // STATISTIC (a mean, never a median: M99 measured 368x between them) and
+    // wrong about the region on an AE deck. Its real warning was against a
+    // *subject-centred* region; this one is deliberately subject-avoiding.
+    //
+    // Then eroded, because the threshold mask is scattered and its perimeter
+    // is long: defocus spills light across that perimeter and the estimator
+    // reads the spill as a brightness change that is not there. M99 measured
+    // 3.63% spurious gain on a flux-conserving blur sweep whose true answer is
+    // zero, against a 2x bar -- 168x over. Erosion takes it to 0.0000%.
+    let photometric_on = opts.photometric
+        || std::env::var_os(PHOTOMETRIC_ENV).is_some_and(|v| !v.is_empty() && v != "0");
+    let photometric_region = if photometric_on {
+        let mut t = Timings::default();
+        let mut scratch = Scratch::new_with_warp(geom, false, warps.is_some());
+        let frame = ctx.field_for(&paths[middle as usize], middle, &mut scratch, &mut t)?;
+        ctx.release(frame);
+        let mut raw = vec![false; geom.pixels()];
+        let picked = photometric::low_detail_mask(
+            &scratch.reg,
+            &scratch.luma,
+            PHOTOMETRIC_DETAIL_Q,
+            PHOTOMETRIC_LUMA_Q,
+            &mut raw,
+        );
+        let mut mask = vec![false; geom.pixels()];
+        let kept = photometric::erode_mask(&raw, geom.width, PHOTOMETRIC_ERODE_PX, &mut mask);
+        eprintln!("--- photometric normalisation (M99, OPT-IN) ---");
+        eprintln!(
+            "region          : {picked} px low-detail on frame {middle}, {kept} px after \
+             eroding {PHOTOMETRIC_ERODE_PX} px ({:.1}% kept)",
+            100.0 * kept as f64 / picked.max(1) as f64
+        );
+        ensure!(
+            kept >= PHOTOMETRIC_MIN_PX,
+            "the eroded photometric region keeps only {kept} px (minimum {PHOTOMETRIC_MIN_PX}); \
+             this scene has no background large enough to fit a gain against. Re-run without \
+             --photometric rather than fitting on a sliver."
+        );
+        Some(mask)
+    } else {
+        None
+    };
+
     // ---- pass one: regularised winner field -------------------------------
     let t1 = Instant::now();
     let p1 = paths
@@ -1565,6 +1713,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             let mut scratch = Scratch::new_with_warp(geom, false, warps.is_some());
             let mut flat = None;
             let mut flat_frames: Vec<(u16, FrameFlat)> = Vec::with_capacity(chunk.len());
+            let mut flux: Vec<(u16, Flux)> = Vec::new();
             let mut t = Timings::default();
 
             for (offset, path) in chunk.iter().enumerate() {
@@ -1583,6 +1732,21 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                     }
                 }
                 ctx.release(frame);
+                if let Some(region) = photometric_region.as_deref() {
+                    // Folded from the SAME luma the focus field was computed
+                    // from, so the gain and the election describe one frame.
+                    // No further intersection with warp coverage is needed:
+                    // the merge fits the output grid so that every frame
+                    // covers every pixel (the `fit_to_cover` enlargement), and
+                    // an unregistered merge does not resample at all.
+                    let mut f = Flux::new();
+                    f.fold_covered(
+                        &scratch.luma,
+                        region,
+                        f32::from(CONTAINER_MAX_DN) - levels.black,
+                    );
+                    flux.push((index, f));
+                }
                 stats
                     .fold(index, &scratch.reg)
                     .map_err(|e| map_dim_err(index, e))?;
@@ -1594,6 +1758,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 clip,
                 flat,
                 flat_frames,
+                flux,
                 t,
             })
         })
@@ -1603,6 +1768,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 a.clip.absorb(&b.clip).map_err(|e| map_dim_err(0, e))?;
                 a.flat = a.flat.or(b.flat);
                 a.flat_frames.extend(b.flat_frames);
+                a.flux.extend(b.flux);
                 a.t.add(b.t);
                 Ok(a)
             }
@@ -1660,6 +1826,69 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         1000.0 * p1.t.work / n
     );
     eprintln!();
+
+    // ---- the photometric fit ----------------------------------------------
+    //
+    // Fitted here, between the passes, because the gains cannot be known until
+    // pass one has read every frame. Pass two then merges corrected data while
+    // the gate compares against pass one's uncorrected winner field -- which is
+    // legitimate precisely because the correction is election-neutral: the
+    // corrected regularised response is the uncorrected one.
+    let photometric_map = match photometric_region {
+        None => None,
+        Some(_) => {
+            let mut per_frame: Vec<Flux> = (0..paths.len()).map(|_| Flux::new()).collect();
+            let mut folded = 0usize;
+            for (index, f) in &p1.flux {
+                per_frame[*index as usize] = *f;
+                folded += 1;
+            }
+            ensure!(
+                folded == expected,
+                "photometric flux was folded for {folded} frames but {expected} were merged"
+            );
+            let map = PhotometricMap::from_flux(&per_frame, middle as usize)
+                .context("fitting the photometric gains")?;
+            eprintln!("--- photometric fit (MEASURED) ---");
+            eprintln!(
+                "statistic       : MEAN over the region, never a median. M28 §6 and M99 both \
+                 measured the statistic dominating the region -- 368x between them -- because a \
+                 median over a subject-weighted area absorbs focus signal and calls it gain."
+            );
+            eprintln!(
+                "reference       : frame {middle} (gain 1.0 by definition)\n\
+                 gain span       : {:.4} (max/min across {} frames)",
+                map.span(),
+                map.len()
+            );
+            if map.refused_count() > 0 {
+                eprintln!(
+                    "  REFUSED       : {} frame(s) could not be fitted and are merged \
+                     UNCORRECTED at gain 1.0, not dropped -- their geometry is still good. \
+                     {}",
+                    map.refused_count(),
+                    (0..map.len())
+                        .filter_map(|i| map.refusal(i).map(|why| format!("[{i}: {why}]")))
+                        .take(4)
+                        .collect::<Vec<_>>()
+                        .join(" ")
+                );
+            }
+            eprintln!(
+                "  CAVEAT        : this corrects frame LEVEL. It is not a quality claim. M99's \
+                 headline +6.88% early-decile figure was fitted over an UN-eroded region that \
+                 leaks 3.63% of flux across its own perimeter, so that number is an inflated \
+                 upper bound of unmeasured size and is not reproduced here."
+            );
+            eprintln!();
+            Some(map)
+        }
+    };
+
+    let ctx = Ctx {
+        photometric: photometric_map.as_ref(),
+        ..ctx
+    };
 
     // ---- pass two: gated average ------------------------------------------
     let t2 = Instant::now();

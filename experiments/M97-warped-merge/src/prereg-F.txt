@@ -1,0 +1,73 @@
+M97q -- PRE-REGISTERED BARS for wiring photometric.rs into the merge.
+Written BEFORE any bar was run. Committed alongside the results.
+
+Subject: `--photometric` / STREHL_PHOTOMETRIC. Fits a per-frame affine gain as
+the MEAN over a fixed, reference-derived, ERODED low-detail region, applies it
+after registration and BEFORE the focus measure, and scales the noise model
+with the data.
+
+Fast config (F1, F2, F4, F5):
+  dir   = D:\personal\macro\flat-on-ruler-cpl   --limit 20   --gate 4
+  env   = STREHL_ALIGN=0, private STREHL_CACHE_DIR
+  This is the SAME config that recorded 09FA927898ABF314 at commit 8e5eb6e,
+  so F1 compares against a hash taken before this work existed.
+
+-----------------------------------------------------------------------------
+F1  DEFAULT PATH IS BIT-IDENTICAL
+    Without --photometric and without STREHL_PHOTOMETRIC, the merged image
+    SHA-256[0:16] must equal 09FA927898ABF314 exactly.
+    Plus: `cargo test --release -p strehl-cli` byte-freeze must stay 5/5 HOLD.
+    PASS = exact match. Anything else FAILS; I will not re-baseline.
+    Falsifying input: any leak of the opt-in path into the default path.
+
+F1b PLANT (mandatory -- discipline 598)
+    The SAME command WITH --photometric must produce a DIFFERENT hash.
+    PASS = differs. FAIL = the flag is disconnected and F1 is VACUOUS.
+    A null proven only by F1 would be indistinguishable from a dead flag.
+
+-----------------------------------------------------------------------------
+F2  ELECTION NEUTRALITY
+    --index-map with vs without --photometric.
+    Focus is contrast/sigma; scaling data by c scales contrast by c, and
+    propagating c into the signal-dependent noise model scales sigma by c, so
+    the ratio is EXACTLY invariant. The election must therefore barely move.
+    BAR: differing pixels < 0.01% of plane pixels.
+    (M99 measured 34 px of 8.25M = 0.0004% and 22 px of 8.24M.)
+    This is the claim that lets me tell ORCH the corpus is not invalidated.
+
+F2b PLANT / RED CONTROL (mandatory)
+    Rebuild with the scale_noise_model line DISABLED -- data scaled, noise
+    held -- which is precisely the bug M99 warns is silent.
+    BAR: differing pixels > 1%. (M99's A3 variant measured 40.13%.)
+    PASS = the plant moves it. FAIL = the propagation is not connected to the
+    election at all and F2 measures nothing.
+    Mutation must be anchored on a unique full line and hard-error if the
+    target is not found. Restore in a finally block: the tree is shared.
+
+-----------------------------------------------------------------------------
+F3  THE FIT IS REAL AND REPORTED
+    On a real bracket, span() must be reported, finite, and > 1.0.
+    M24 measured genuine drift (0.91% p-p on 109MSDCF, 11.70% on coffee-bean),
+    so a span of exactly 1.0000 across 20+ frames indicates a dead fit, not a
+    stable camera. Compare against M99: bee-3-cpl 1.1848.
+    NOT A BAR ON IMAGE QUALITY. No quality number is promised (see below).
+
+F4  THE REGION GUARD REFUSES RATHER THAN FITS ON A SLIVER
+    If erosion leaves < PHOTOMETRIC_MIN_PX (1024) pixels, the run must exit
+    non-zero with an explanatory message. Exact code asserted, not "nonzero"
+    (rule 47 as corrected: `-ne 0` passes a corrupted -1 under PS 5.1).
+    If this cannot be provoked on real data it is recorded UNEXERCISED, not
+    PASS -- as E4 was.
+
+F5  ENV TWIN
+    STREHL_PHOTOMETRIC=1 must produce the same bytes as --photometric.
+
+-----------------------------------------------------------------------------
+DECLARED IN ADVANCE, so it cannot be quietly dropped if the images look nice:
+
+  * I am NOT promising a quality number. M99's headline +6.88% early-decile
+    gain was fitted over an UN-eroded region that leaks 3.63% of flux across
+    its own perimeter against a registered 2x bar -- 168x over. That figure is
+    an inflated upper bound of unmeasured size. This milestone corrects frame
+    LEVEL; whether it sharpens anything is for a verifier, not for me.
+  * I do not verify my own work.

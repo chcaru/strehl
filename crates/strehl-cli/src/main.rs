@@ -267,6 +267,22 @@ enum Command {
         #[arg(long, value_name = "PATH")]
         n_eff_map: Option<PathBuf>,
 
+        /// Fit and apply a per-frame affine photometric gain before the focus
+        /// measure. OPT-IN; the default merge is unchanged.
+        ///
+        /// M24 measured real per-frame level drift that EXIF does not predict
+        /// -- 0.91% peak-to-peak on 109MSDCF, 11.70% on coffee-bean -- so a
+        /// gated average without this term is reading an exposure change as a
+        /// signal change. The gain is fitted as the MEAN over a fixed,
+        /// reference-derived, eroded background region, and the noise model is
+        /// scaled with the data so the gate stays calibrated.
+        ///
+        /// This corrects frame LEVEL. It is not a sharpness claim.
+        /// `STREHL_PHOTOMETRIC=1` does the same for a harness that cannot edit
+        /// the command line.
+        #[arg(long)]
+        photometric: bool,
+
         /// Report which gate would achieve this mean n_eff. A CALIBRATION AID,
         /// NOT A SECOND KNOB.
         ///
@@ -479,6 +495,7 @@ fn main() -> Result<()> {
             detail_roi,
             index_map,
             n_eff_map,
+            photometric,
             target_n_eff,
             stats,
             stats_placebo,
@@ -501,6 +518,7 @@ fn main() -> Result<()> {
             detail_roi,
             index_map,
             n_eff_map,
+            photometric,
             target_n_eff,
             stats,
             stats_placebo,
