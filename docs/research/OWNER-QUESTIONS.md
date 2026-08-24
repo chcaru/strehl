@@ -1404,3 +1404,26 @@ instructions conflict -- one says always `claude-opus-5` for research, four say 
 `gpt-5.6-sol`. I have gone with `gpt-5.6-sol` because those four are more recent, more
 numerous, and phrased as a prohibition. **Every milestone tonight -- M79, M80, M81, M82, M83 --
 ran on `gpt-5.6-sol`.** One line from you settles it permanently.
+
+
+## Answered: the model question, and what I did about the agents already running
+
+**63. Item 62 is settled. You said `opus-5` only, and that is now the standing rule.** I have
+recorded it and retired the five conflicting instructions that said `gpt-5.6-sol`. Every
+subagent from here on runs `claude-opus-5`.
+
+**Two were already running when you said it, and I treated them differently.**
+
+- **M84** (the ruler ground-truth milestone) was sixty-five seconds old. I stopped it, asked it
+  for a handover note, and **relaunched it on `claude-opus-5`**. Nothing of value was lost.
+- **M82** (the gate-knob milestone) had been running nearly an hour and **had already committed
+  its report**. Killing it would have destroyed a night of finished work and left its result
+  unfolded, so I let its current turn complete. **Any follow-up work on that question goes to a
+  fresh `claude-opus-5` agent, not back to it.**
+
+If you would rather I had discarded M82's output and redone it on `opus-5`, say so and I will
+re-run it -- the captures and the pre-registration are all on disk, so it is repeatable.
+
+**For the record, tonight's milestones ran on `gpt-5.6-sol`: M79, M80, M81, M82, M83, and the
+retired first M84.** Their results are folded and the reports are on disk, so if you want any
+of them re-done under the new rule, they are all reproducible from their pre-registrations.
