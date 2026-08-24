@@ -40,14 +40,17 @@ is settled well past the standard this project uses for anything else.
 | synthetic accuracy gain | **+0.1366 dex** (M95: +0.1343) | M113 own route, 3 instruments, 117 tiles | yes — re-derived |
 | **end-to-end** gain through the shipped merge | **+0.083 to +0.099 dex**, sem 0.0010-0.0031 | M113, two 299-frame merges | yes |
 | gain where the election held still | **+0.0968** vs **+0.0604** where it did not | M113 stratified | yes |
-| excess local extrema in the merge | **1.00x** (0.9924 / 0.9938 / 1.0039 / 1.0048) | M113 reference-free census | yes |
+| excess local extrema in the merge | **1.00x** (0.9924 / 0.9938 / 1.0039 / 1.0048) — **SUPERSEDED, see §8.2: 1.21x at edges** | M113 reference-free census | yes |
 | edge overshoot end-to-end | **<= 1.47/255, sign-changed** | M110, different route | yes — uncorrelated |
 | by-eye, real hairs and text | **better, no visible ringing** | M113, M110, ORCH | 3 uncorrelated reads |
 | wall-clock cost | **2.478x** (bee, 299 fr) / **3.529x** (text) | M110, flagged unpriced by M113 | yes |
 | ringing mechanism | mean `n_eff` **55.3**; ringing is phase-dependent and averages down, passband gain does not | M113 | yes |
 
 **The objection that gated this for weeks — fact 1374's 9.902x overshoot — has
-been explained rather than contradicted.** It was measured on a *single frame at
+been explained rather than contradicted.** *(**§8.1: the 9.902x figure was
+retired by its own author; the real value is 1.78x.** The explanation below
+stands, but it was explaining a number 5.6x too large.)* It was measured on a
+*single frame at
 a half-pixel phase*. A 299-frame merge is a different object and the quantity
 does not transfer across that boundary. Both M110 and M113 drew that distinction
 independently and both refused to let their result be read as refuting 1374.
@@ -144,9 +147,62 @@ structurally rather than empirically.** That is an argument for kernel-after-gat
 ordering, and I am recording it now so that if the order ends up that way it is
 visibly a plan and not a rationalisation.
 
+## 8. AMENDMENT 2026-08-24 — the weakest point was real, and the threat number was stale
+
+*Added after M113 reported, before the comparison sheet exists. Criteria in §5
+are unchanged; this section corrects two factual inputs to them and records the
+outcome of the prediction in §6.*
+
+**8.1 The 9.902x figure in §3 above is retired and must not be quoted again.**
+Its own author withdrew it: `M95-kernel.md` §22.4 states plainly *"The 9.902x
+ringing figure is stale, and it is still being quoted,"* and P95 gives **1.78x**.
+The 9.9x reproduces at 9.06x only on an ungated population that is **99.87%
+noise**. M113's independent positive control measures **1.793x**. So the sentence
+in §3 — *"the objection that gated this for weeks"* — was gating on a number that
+had already been withdrawn by the person who measured it. **Read 1.78x wherever
+this document says 9.902x.** The explanation offered in §3 still stands; it was
+explaining a figure 5.6x larger than the real one.
+
+**8.2 My stated weakest point in §6 was a genuine weakness. Ringing does survive
+where `n_eff` is small.** M113 stratified its census by `n_eff` using an
+independent third arm's map (discipline 752) rather than either arm under test.
+Over the clean stratum of 2 605 077 quads: **1.143x** overall, **1.206x** at
+edges, **1.450x** at the sharpest 1% of gradients, with **73.1%** of the
+single-resample excess surviving the merge. **The 1.00x row in §3's table is
+therefore too strong** — it used a blunt extrema census over unrestricted ROIs,
+which diluted an edge-only effect to invisibility. I folded that row as a
+structural result and it was not one.
+
+**8.3 But the ratio does not climb toward 9.9x. The measured ceiling is 1.425x.**
+So the `n_eff`-dependent kernel I speculated about in the brief is **not**
+licensed: the span is 1.02x to 1.21x, the whole effect is under two display
+levels, and a per-pixel kernel switch would buy a spatial discontinuity worth
+more than it removes. Recorded so that the idea is visibly rejected on evidence
+rather than quietly dropped.
+
+**8.4 The premise underneath §6's prediction was itself wrong, in my favour.**
+I wrote that `n_eff` collapses *"in exactly the flat regions where the waxy-blob
+artefact lives."* On `bee-3-cpl` the opposite holds: median 5x5 range is **1654
+DN** where `n_eff == 1` versus **46 DN** where `n_eff >= 129`, a factor of
+**36**. **Low `n_eff` is where the detail is, not where the flat regions are.**
+That makes §7's sequencing argument weaker than written — the soft gate raises
+`n_eff` somewhere, but not demonstrably in the regions this document assumed.
+
+**8.5 Net effect on the decision: GO survives, on a repaired argument.** The
+whole ringing effect measures **1.67/255** against catmull-rom and **0.6/255**
+against un-interpolated nearest, over 32 115 edge profiles — independently
+matching M110's `<= 1.47/255` by a different route. Decisively, **lanczos3 sits
+closer to the un-resampled reference than catmull-rom does** (45.61 vs 51.70 per
+255): a kernel that rang would move *away* from truth, not toward it. The GO case
+no longer rests on "ringing does not survive the merge," which is false. It rests
+on "the ringing that survives is 1.2x, under two display levels, and points
+toward the reference rather than away from it."
+
+**8.6 What this changes about §5.** Nothing. No criterion is added, removed or
+loosened. G2's non-author by-eye requirement is now carrying more weight than
+when written, because the numerical anti-ringing argument is weaker than §3
+claimed.
+
 ---
 
-*Do not amend the criteria in this section after the sheet exists. Amend by
-adding a dated section that states what changed and why, per the precedent set
-when M112 refused a bar revision offered after its data had resolved
-(discipline 746).*
+
