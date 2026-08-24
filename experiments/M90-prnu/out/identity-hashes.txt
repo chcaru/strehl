@@ -1,0 +1,55 @@
+M90 identity hash ledger
+========================
+
+The blobs themselves are 173 MB and regenerable in about a minute from the two
+commands in the report's section 11, so they are not committed. Their SHA-256
+hashes are the evidence, and they are here.
+
+All blobs are the serialised output of `m90-prnu identity`, which walks the
+noise model over a synthetic signal sweep and, for the `-real` variants, over
+22 real frames from D:\personal\macro\109MSDCF (mean n_eff 4.986550, sigma gain
+0.491569, gate 4.0).
+
+synthetic + model tables, 8 545 833 bytes, fnv1a64 36821ece6e6fbe0c
+-------------------------------------------------------------------
+baseline   09E274381BFC8A1D5F966AA67D7F2B5139B27203A2C1043C19B99D77BF399EEA
+after      09E274381BFC8A1D5F966AA67D7F2B5139B27203A2C1043C19B99D77BF399EEA
+plant      28F15D9ECE51F5DD708121303E1584693B868940C4C0A12A37371553E0BA5196
+restored   09E274381BFC8A1D5F966AA67D7F2B5139B27203A2C1043C19B99D77BF399EEA
+end-of-night 09E274381BFC8A1D5F966AA67D7F2B5139B27203A2C1043C19B99D77BF399EEA
+
+real stack, 148 347 139 bytes, fnv1a64 f3477529886859b6
+--------------------------------------------------------
+baseline   36C0470838497925889023B86116DCF2C81B3A37E1F8E51381AA2012E02C1FDE
+after      36C0470838497925889023B86116DCF2C81B3A37E1F8E51381AA2012E02C1FDE
+end-of-night 36C0470838497925889023B86116DCF2C81B3A37E1F8E51381AA2012E02C1FDE
+
+Reading the ledger
+------------------
+
+baseline     captured at revision 206c80b5 by a probe written BEFORE any library
+             code was touched, so the reference was produced by code that could
+             not know what the change would be.
+after        the same probe after Deliverable A landed. Equal to baseline: the
+             default path is byte-identical. This is the report's section 7.
+plant        A7C2.gain_divisor moved 436.8 -> 436.9, a 0.023% change chosen to
+             be far smaller than any effect the report claims. NOT equal to
+             baseline, so the harness detects it. This is the report's section
+             8.3.
+
+             Note what this row does not show. The in-crate test
+             `the_shipped_corrections_are_bit_identical_to_the_default_path`
+             still PASSED under the plant, because it compares two code paths
+             that both run through the moved constant. Only this external hash
+             caught it. That is candidate fact P13, and it is the reason the
+             ledger exists as a separate artefact rather than as a unit test.
+restored     after Copy-Item from experiments/M90-prnu/backup/*.bak - never
+             `git checkout --`, which would have reverted to HEAD and could have
+             destroyed a sibling milestone's uncommitted work. Equal to
+             baseline, so the restore was complete.
+end-of-night re-run after four sibling milestones had committed into the same
+             working tree. Still equal to baseline, so the default path is
+             bit-identical as shipped, not merely as of the moment of the change.
+
+The backup/*.bak files were removed once both hashed identical to the live
+source, which is itself the proof that the restore left nothing behind.

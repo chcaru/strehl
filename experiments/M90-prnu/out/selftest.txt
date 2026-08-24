@@ -1,0 +1,27 @@
+=== flats instrument self-test ===
+plant: g = 0.2137, read = 1.0413 DN, 512x512, hp radius 30
+(constants belong to the plant, not to the profile or to M71)
+
+  placebo kappa=0
+    g recovered     0.21400  (planted 0.21370, +0.14%)
+    read recovered  0.9266 DN (planted 1.0413)
+    kappa recovered 0.00011 (0.0110%)  planted 0.00000 (0.0000%)
+    g within 1%: PASS   kappa bar: PASS
+
+  kappa=0.31%
+    g recovered     0.21400  (planted 0.21370, +0.14%)
+    read recovered  0.9266 DN (planted 1.0413)
+    kappa recovered 0.00308 (0.3084%)  planted 0.00310 (0.3100%)
+    g within 1%: PASS   kappa bar: PASS
+
+  planted 10x
+    g recovered     0.21402  (planted 0.21370, +0.15%)
+    read recovered  0.9266 DN (planted 1.0413)
+    kappa recovered 0.03096 (3.0955%)  planted 0.03100 (3.1000%)
+    g within 1%: PASS   kappa bar: PASS
+
+--- self-test verdict ---
+  placebo kappa=0    PASS   g 0.21400, kappa 0.00011
+  kappa=0.31%        PASS   g 0.21400, kappa 0.00308
+  planted 10x        PASS   g 0.21402, kappa 0.03096
+  instrument is sound on synthetic data with a known answer.

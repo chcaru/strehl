@@ -1,0 +1,49 @@
+=== blast: D:\personal\macro\wrapped-text-1 | 60 frames | ILCE-7CM2 | ISO 100 | gate 4 ===
+
+--- whole-image ---
+       arm   mean n_eff      d n_eff     sigma gain     mean sigma
+   shipped     7.257642    +0.000000       0.819765         9.8846
+ gain-only     7.228223    -0.029419       0.820510         9.7895
+ prnu-only     7.257642    +0.000000       0.819765        10.6102
+      both     7.228223    -0.029419       0.820510        10.5195
+
+--- selection: does the correction change which frames are used? ---
+       arm    n_eff moved   winner moved  max |d n_eff|   mean d n_eff
+ gain-only        2.4053%        0.0012%              8      -0.029419
+ prnu-only        0.0000%        0.0000%              0      +0.000000
+      both        2.4053%        0.0012%              8      -0.029419
+
+--- reporting: how much does the stated confidence move? ---
+       arm   mean d sigma median d sigma    p99 d sigma
+ gain-only        -0.912%        -1.059%        +1.459%
+ prnu-only       +19.175%        +3.687%      +157.204%
+      both       +18.345%        +2.667%      +156.807%
+
+--- signal-resolved, by octave of merged green luma (DN above black) ---
+    octave       pixels gain-only ds    n_eff mv prnu-only ds    n_eff mv     both ds    n_eff mv
+      0-64        0.13%      -0.96%      0.072%      +0.12%      0.000%      -0.84%      0.072%
+    64-128        2.14%      -0.99%      0.078%      +0.22%      0.000%      -0.77%      0.078%
+   128-256        4.34%      -1.00%      0.086%      +0.42%      0.000%      -0.58%      0.086%
+   256-512        6.30%      -1.01%      0.150%      +0.92%      0.000%      -0.08%      0.150%
+  512-1024       10.53%      -0.88%      1.459%      +3.85%      0.000%      +3.00%      1.459%
+ 1024-2048       56.83%      -0.91%      1.758%     +10.18%      0.000%      +9.33%      1.758%
+ 2048-4096       19.73%      -0.87%      6.272%     +65.40%      0.000%     +64.76%      6.272%
+4096-16383        0.00%      -1.06%      0.000%      +8.58%      0.000%      +7.61%      0.000%
+
+--- spatially resolved: 'both' vs shipped, 6x6 tiles ---
+  mean merged luma (DN) per tile:
+        907   1081   1315   1628   1731   1571
+        991   1112   1284   1448   1587   2004
+       1013   1008   1074   1838   1417   1826
+       1381   1568   1802   2080   2226   2169
+        917   1036   1345   1552   1630   1593
+        868   1121   1287   1562   1598   1507
+  mean sigma change (%) per tile:
+      +1.74  +1.69  +2.07  +2.70  +5.35 +57.18
+      +1.93  +1.75  +1.96  +2.28  +6.20+107.54
+      +1.98  +1.47  +1.51  +3.23  +8.58 +80.65
+      +3.01  +2.98  +3.35  +3.84 +34.64+149.96
+      +3.09  +1.85  +2.31  +2.65 +18.01 +51.68
+      +2.64  +2.20  +2.28  +2.76 +25.66 +57.62
+  Pearson r(tile mean luma, tile sigma change) = +0.5677 over 36 tiles
+  brightest tile 2226 DN -> +34.64% sigma;  darkest tile 868 DN -> +2.64% sigma
