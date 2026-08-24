@@ -1,0 +1,73 @@
+==========================================================================
+bee-3-cpl  299 frames x 294 candidate patches
+  finite in every frame : 294
+  level in [0.02,0.85]   : 270
+  smooth (relMAD<0.045) in EVERY frame :  78
+  retained after spread selection      :  12
+  worst within-patch relMAD over all retained patch-frames: 0.0436
+  -- PR-1 --
+  sensor-fixed  max/min = 1.1739  (0.2313 stops)   [confounded]
+  scene-fixed   max/min = 1.1818  (0.2410 stops)
+  scene-fixed / exposure-normalised max/min = 1.3079  (0.3872 stops)
+  PR-1 verdict on this stack: REAL (bar 1.02)
+  -- PR-2 --
+  variance of log-level explained by a frame-only scalar : 0.7511
+  variance explained by the leading singular component   : 0.8851
+  PR-2 verdict: FIELD (bar 0.90 on the frame-only scalar)
+  inter-patch spread of E/E[0], max over frames: 0.4368
+
+==========================================================================
+lavendar-cpl  299 frames x 294 candidate patches
+  finite in every frame : 294
+  level in [0.02,0.85]   : 294
+  smooth (relMAD<0.045) in EVERY frame : 167
+  retained after spread selection      :  12
+  worst within-patch relMAD over all retained patch-frames: 0.0312
+  -- PR-1 --
+  sensor-fixed  max/min = 1.4154  (0.5012 stops)   [confounded]
+  scene-fixed   max/min = 1.4098  (0.4954 stops)
+  scene-fixed / exposure-normalised max/min = 1.4098  (0.4954 stops)
+  PR-1 verdict on this stack: REAL (bar 1.02)
+  -- PR-2 --
+  variance of log-level explained by a frame-only scalar : 0.7665
+  variance explained by the leading singular component   : 0.9764
+  PR-2 verdict: FIELD (bar 0.90 on the frame-only scalar)
+  inter-patch spread of E/E[0], max over frames: 0.7309
+
+==========================================================================
+leaf-2-cpl  182 frames x 294 candidate patches
+  finite in every frame : 294
+  level in [0.02,0.85]   : 286
+  smooth (relMAD<0.045) in EVERY frame :  12
+  retained after spread selection      :  12
+  worst within-patch relMAD over all retained patch-frames: 0.0379
+  -- PR-1 --
+  sensor-fixed  max/min = 1.0752  (0.1046 stops)   [confounded]
+  scene-fixed   max/min = 1.0824  (0.1142 stops)
+  scene-fixed / exposure-normalised max/min = 1.0824  (0.1142 stops)
+  PR-1 verdict on this stack: REAL (bar 1.02)
+  -- PR-2 --
+  variance of log-level explained by a frame-only scalar : 0.8740
+  variance explained by the leading singular component   : 0.9869
+  PR-2 verdict: FIELD (bar 0.90 on the frame-only scalar)
+  inter-patch spread of E/E[0], max over frames: 0.1380
+
+==========================================================================
+bee-2-cpl  299 frames x 294 candidate patches
+  finite in every frame : 294
+  level in [0.02,0.85]   : 268
+  smooth (relMAD<0.045) in EVERY frame :  80
+  retained after spread selection      :  12
+  worst within-patch relMAD over all retained patch-frames: 0.0443
+  -- PR-1 --
+  sensor-fixed  max/min = 1.2611  (0.3347 stops)   [confounded]
+  scene-fixed   max/min = 1.2197  (0.2865 stops)
+  scene-fixed / exposure-normalised max/min = 1.3502  (0.4332 stops)
+  PR-1 verdict on this stack: REAL (bar 1.02)
+  -- PR-2 --
+  variance of log-level explained by a frame-only scalar : 0.8833
+  variance explained by the leading singular component   : 0.9392
+  PR-2 verdict: FIELD (bar 0.90 on the frame-only scalar)
+  inter-patch spread of E/E[0], max over frames: 0.3457
+
+wrote data/phaseA.json for 4 stacks

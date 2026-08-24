@@ -1,0 +1,38 @@
+stack           : D:\personal\macro\lavendar-cpl
+frames          : 299   reference 149   plane 3520x2344
+plant amplitude : +0.200 peak-to-peak, per-frame gain ramp
+background      : smoothest 40% of the reference frame
+background mask : 1585735 of 8250880 px (19.2%), reference focus <= 0.56075 and luma >= 2826
+  pass 1: frame 0/299  0.8 s
+  pass 1: frame 50/299  16.3 s
+  pass 1: frame 100/299  32.1 s
+  pass 1: frame 150/299  48.1 s
+  pass 1: frame 200/299  64.2 s
+  pass 1: frame 250/299  80.3 s
+  pass 1 done in 98.5 s
+whole-frame map : span 1.3604 (+0.4440 stops), 0 refused, gains 0.8601 .. 1.1701
+background map  : span 1.3617 (+0.4454 stops), 0 refused, gains 0.8630 .. 1.1752
+planted map     : span 1.6631  (the plant alone would be 1.2222)
+  pass 2: frame 0/299  1.2 s
+  pass 2: frame 50/299  48.6 s
+  pass 2: frame 100/299  95.0 s
+  pass 2: frame 150/299  142.4 s
+  pass 2: frame 200/299  182.4 s
+  pass 2: frame 250/299  243.9 s
+  pass 2 done in 302.7 s
+cost            : per-arm merge seconds [37.0, 36.9, 37.2, 37.4, 38.4]  (A1 - A0 = -0.03 s over 299 frames)
+
+--- Phase D: does the correction improve the photograph? ---
+arm                        SSC  null sd       z   SSC_wf      BSC bg sd/mean  bdy pairs
+A0 shipped              1.0768   0.0580    18.6   1.0631   5.1276    0.34158     300074
+A1 whole-frame gain    -0.0178   0.0485    -0.4  -0.0160   1.4741    0.33223     300072
+A2 background gain     -0.0045   0.0485    -0.1  -0.0027   1.4436    0.33221     300072
+P0 planted              1.0614   0.0440    24.1   1.7452   8.6804    0.35552     300077
+P1 planted + corr      -0.0022   0.0296    -0.1  -0.0027   1.4435    0.33221     300071
+
+--- pre-registered bars ---
+PR-6 plant visible : SSC(P0) =   1.0614 vs SSC(A0) =   1.0768   BSC(P0) = 8.6804 vs BSC(A0) = 5.1276  -> METRIC IS BLIND -- Phase D VOID
+PR-6 plant removed : SSC   1.0614 ->  -0.0022   BSC 8.6804 -> 1.4435  -> REMOVED
+PR-6 defect present: SSC(A0) =   1.0768, permutation null sd 0.0580, z = 18.6  -> DEFECT IS REAL IN THE RENDER
+PR-6 improvement   : A1 whole-frame gain  SSC   1.0768 ->  -0.0178   BSC 5.1276 -> 1.4741   bg sd/mean -2.74%  -> IMPROVED
+PR-6 improvement   : A2 background gain   SSC   1.0768 ->  -0.0045   BSC 5.1276 -> 1.4436   bg sd/mean -2.75%  -> IMPROVED

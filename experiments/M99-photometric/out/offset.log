@@ -1,0 +1,24 @@
+======================================================================
+lavendar-cpl  n=299 frames, 294 patches, level range 0.0248..0.2852
+  gain+offset: beta 0.7591..1.0024   alpha -0.00042..+0.03094 (-6.6..491.0 DN)
+  |alpha| max = 0.03094 of range = 491.0 DN
+  residual RMS: gain-only 0.01357  gain+offset 0.01315  improvement 3.1%
+  offset as a fraction of the gain effect: max|alpha| / (median level * max|beta-1|) = 0.848
+======================================================================
+leaf-2-cpl  n=182 frames, 294 patches, level range 0.0173..0.0567
+  gain+offset: beta 0.9469..1.0086   alpha -0.00144..+0.00281 (-22.8..44.6 DN)
+  |alpha| max = 0.00281 of range = 44.6 DN
+  residual RMS: gain-only 0.00130  gain+offset 0.00128  improvement 2.0%
+  offset as a fraction of the gain effect: max|alpha| / (median level * max|beta-1|) = 1.399
+======================================================================
+bee-3-cpl  n=299 frames, 294 patches, level range 0.0076..0.3120
+  gain+offset: beta 0.7991..1.0356   alpha -0.00006..+0.02298 (-1.0..364.8 DN)
+  |alpha| max = 0.02298 of range = 364.8 DN
+  residual RMS: gain-only 0.01816  gain+offset 0.01743  improvement 4.0%
+  offset as a fraction of the gain effect: max|alpha| / (median level * max|beta-1|) = 0.747
+======================================================================
+bee-2-cpl  n=299 frames, 294 patches, level range 0.0072..0.3082
+  gain+offset: beta 0.7949..1.0309   alpha -0.00008..+0.02308 (-1.2..366.4 DN)
+  |alpha| max = 0.02308 of range = 366.4 DN
+  residual RMS: gain-only 0.01629  gain+offset 0.01542  improvement 5.3%
+  offset as a fraction of the gain effect: max|alpha| / (median level * max|beta-1|) = 0.754

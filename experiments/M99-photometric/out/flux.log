@@ -1,0 +1,28 @@
+bee-3-cpl: 299 frames in 87 s
+  whole-frame GREEN MEAN  0.149452 .. 0.162444  ratio 1.0869 (0.1203 stops)
+  whole-frame GREEN MEDIAN 0.159032 .. 0.178565  ratio 1.1228
+  clipped fraction        0.000000 .. 0.000000
+  at-or-below-black frac  0.000000 .. 0.000000
+  per-plane mean ratios (max/min): R 1.0947 G1 1.0869 B 1.0759 G2 1.0869
+  wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M99-photometric\data\flux-bee-3-cpl.npz
+lavendar-cpl: 299 frames in 93 s
+  whole-frame GREEN MEAN  0.133858 .. 0.183238  ratio 1.3689 (0.4530 stops)
+  whole-frame GREEN MEDIAN 0.133955 .. 0.191733  ratio 1.4313
+  clipped fraction        0.000000 .. 0.000000
+  at-or-below-black frac  0.000000 .. 0.000000
+  per-plane mean ratios (max/min): R 1.3696 G1 1.3689 B 1.3756 G2 1.3688
+  wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M99-photometric\data\flux-lavendar-cpl.npz
+leaf-2-cpl: 182 frames in 42 s
+  whole-frame GREEN MEAN  0.035853 .. 0.039292  ratio 1.0959 (0.1321 stops)
+  whole-frame GREEN MEDIAN 0.036356 .. 0.040073  ratio 1.1023
+  clipped fraction        0.000000 .. 0.000000
+  at-or-below-black frac  0.000000 .. 0.000000
+  per-plane mean ratios (max/min): R 1.1037 G1 1.0959 B 1.1821 G2 1.0959
+  wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M99-photometric\data\flux-leaf-2-cpl.npz
+bee-2-cpl: 299 frames in 74 s
+  whole-frame GREEN MEAN  0.148907 .. 0.161093  ratio 1.0818 (0.1135 stops)
+  whole-frame GREEN MEDIAN 0.157709 .. 0.177052  ratio 1.1227
+  clipped fraction        0.000000 .. 0.000000
+  at-or-below-black frac  0.000000 .. 0.000000
+  per-plane mean ratios (max/min): R 1.0861 G1 1.0818 B 1.0753 G2 1.0818
+  wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M99-photometric\data\flux-bee-2-cpl.npz
