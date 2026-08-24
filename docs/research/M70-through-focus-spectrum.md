@@ -5,6 +5,17 @@ drawn from it is FALSE, and the gap between the two is measured at 1.110×.**
 
 **Verdict: PLUGIN.**
 
+> **Addendum, §16–§18, added after M67 reported (`5cafbee`).** Two things arrived
+> after §0–§15 were written and committed at `69decfc`:
+> **(a)** the owner's correction that the incumbent is *the gated average as it
+> actually behaves*, not a three-frame average — **§18 re-prices it: the matched
+> filter buys 2.38%, not 0.23%, and the verdict is unchanged**; and
+> **(b)** a commission to close M67 §7.3's gap by measuring **real through-focus
+> symmetry** — **§16–§17**, governed by a second pre-registration
+> (`PREREGISTRATION-B.md`, committed at `18efd34` *before* the corpus run).
+> The addendum is appended rather than woven in, so that what was known when each
+> criterion was written stays legible.
+
 Milestone type: measurement. **No Rust was written and nothing under `crates/**`
 was edited** — M67 and M69 are live there. `SYNTHESIS.md`, `AGENTS.md` and
 `crates/**` were read-only. Everything M70 produced lives in
@@ -90,10 +101,17 @@ At every window, measured directly rather than by decomposition
 | --- | --- | --- |
 | ±1 | 3 | **1.0023** (+0.23%) |
 | ±2 | 5 | 1.0117 |
-| ±3 | 7 | 1.0238 |
+| ±3 | 7 | **1.0238** (+2.38%) ← **the width the shipped gate actually operates at (§18)** |
 | ±5 | 11 | 1.0811 |
 | ±10 | 21 | 1.2316 |
 | ±20 | 41 | 1.4150 |
+
+**The ±3 row, not the ±1 row, is the one that prices the proposal.** §18, written
+after M67 reported, shows that M67's two independent measurements of the shipped
+gate's admitted set — `n_eff = 6.84` and a mean defocus of `1.733` frames — both
+land on ±3 and on no other window. The 0.23% figure is the value of a matched
+filter over a *selector-sized* set; the honest number against the merge as it
+ships is **2.38%**. Both are bounded by the same 1.110× headroom below.
 
 The matched filter earns its keep only when forced to merge frames an equal
 average should never have been given — and by then it is competing with *not
@@ -693,6 +711,12 @@ within-stack band ratios are informative, and those are confounded as stated.
    about this rig. `n_eff(±1) ≈ 2.9` is measured to be independent of frame count,
    aperture and subject *within this corpus*; nothing here says it holds on a
    different lens.
+8. **The incumbent in §0.3 was originally the wrong one.** §0.3 as first written
+   led with a comparison against a three-frame average. M67 subsequently measured
+   that the shipped gate admits ~7 frames, and §18 re-prices against that: the
+   matched filter buys **2.38%, not 0.23%**. The 1.1100× ceiling was unaffected
+   and the verdict did not move, but **a reader quoting M70's headline number
+   should quote 1.0238, not 1.0020.**
 
 ---
 
@@ -702,9 +726,20 @@ within-stack band ratios are informative, and those are confounded as stated.
 
 The measurement that decides it, in one line: **over the frames a merge would
 actually admit, a matched filter beats an equal-weight average of those same
-frames by 1.0020 (median, best-3) to 1.1100 (median, best window against best
-window) — while the frames themselves are scaled copies of one another to within
-0.0041 of exact rank-1, against a control that reaches 0.9121 when they are not.**
+frames by 1.0238 (median, at the ±3 width M67 measured the shipped gate to
+operate at) and by at most 1.1100 (median, best window against best window) —
+while the frames themselves are scaled copies of one another to within 0.0041 of
+exact rank-1, against a control that reaches 0.9121 when they are not.**
+
+> **Revised after M67 (§18).** The sentence above originally quoted 1.0020, the
+> value against a *three-frame* average. That was the wrong incumbent, as the
+> owner pointed out: M67's load-bearing result is that focus correctness lives in
+> the **gate**, not the election, so the thing a merge-side matched filter would
+> replace is a **seven-frame gated average**, not a selector. The corrected figure
+> is **1.0238 — a 10.3× larger prize than the number the report originally led
+> with** — and it changes nothing, because the 1.1100× headroom already bounded
+> it and the comparison to fact 19's +5.45 dB is unaffected at this scale. **The
+> correction is recorded rather than silently applied.**
 
 The consequences that follow (ARGUED, from the MEASURED numbers above):
 
@@ -719,17 +754,23 @@ The consequences that follow (ARGUED, from the MEASURED numbers above):
   correctly, since §9.5 is exactly the caveat it names.
 * **The reviewer's physical intuition was sound and their architectural
   conclusion was not.** The mid-band information they described is there, in the
-  quantity they said, in every stack. It is simply not *new* information.
+  quantity they said, in every stack. It is simply not *new* information — and
+  **§18 shows the shipped gate is already harvesting it**: at M67's measured
+  admitted-set defocus of 1.733 frames, the frames the gate is already averaging
+  carry a median **0.800** of peak mid-band amplitude. The proposal's premise is
+  a description of what `merge.rs` already does.
 
 ---
 
 ## 11. Proposed facts
 
-Numbered `P1…P12` per AGENTS rule 28. **Absolute `§4` numbers belong to the
+Numbered `P1…P18` per AGENTS rule 28. **Absolute `§4` numbers belong to the
 orchestrator at fold time.** Before folding, match the first ~70 characters of
 each against the whole of `§4` and require zero matches (rule 28, rule 25). P4
 and P10 are close in subject to facts 27, 28 and 212 and must be checked for
-content collision, not number collision.
+content collision, not number collision. **P13–P18 are addendum facts (§16–§18);
+P13, P14 and P15 bear directly on existing facts 274, 471 and 19 and must be
+checked against them for contradiction, not just for duplication.**
 
 | # | Proposed fact | Label | Source |
 | --- | --- | --- | --- |
@@ -745,6 +786,12 @@ content collision, not number collision.
 | **P10** | **At f/11 the top of the mid band is already at the noise floor, inside the nominal passband.** Peak-frame band SNR `(P−σ̂²)/σ̂²` in 0.200–0.2762 cyc/px is 0.08–0.81 (median 0.38) on the three f/11 stacks, against 9.57 median in 0.100–0.150. Fact 27 located the cutoff; this locates where approaching it stops paying. The b6/b5 SNR ratio is aperture-ordered — 0.230 / 0.224 / 0.114 at f/5.6 / f/8 / f/11 — though scene spectrum is not held fixed across the groups | MEASURED (ratio ordering: ARGUED) | `out/s13_bandsnr.log` |
 | **P11** | **`D:\personal\macro` is 75.3% f/5.6 by frame count, not f/11.** Marked apertures: f/5.6 on 119MSDCF, wrapped-text-1/2 and bee-1/2/3 (1,180 frames); f/8 on coffee-bubbles, foam, coffee-bean (224); f/11 on 109MSDCF, 112MSDCF, 113MSDCF (164). Every one of the five stacks captured in the most recent session (2026-08-23, 1,147 frames, 73% of the corpus) is f/5.6. **Fact 27's cutoff, and any claim that ~45% of the sampled band is empty, is an f/11 result covering 10.5% of the corpus** | MEASURED | `out/s01_exif_census.log`, `out/exif-*.tsv` |
 | **P12** | **The band-power estimator's absolute normalisation and sampling error are measured, not assumed:** on synthetic calibrated noise (400 realisations, 256-sample GQ patch, tile 128) band means are 0.998–1.003 σ² and per-realisation sd is 0.0147–0.0678 σ² by band. Halving the patch to 128 GQ samples changes stack-median `n_eff` by 0.832–1.073× on a four-stack subset spanning both frame-count extremes and all three apertures | MEASURED | `out/s08_decisive.log` §0, `out/s12_patchsize.log` |
+| **P13** | **Real through-focus modulus curves are symmetric in frame index to within the scene-geometry envelope; M67's fact 19 ("real through-focus curves are measured asymmetric") is NOT SUPPORTED on this corpus.** The half-width asymmetry index `A = (w_far−w_near)/(w_far+w_near)` has stack medians of **−0.070…+0.077 at half-peak** across all 12 stacks (median-of-medians −0.0131, signs split 6/6), i.e. the worst stack's near and far half-widths differ by a factor of 1.167 and the typical stack's by 1.084. A two-depth scene with a **symmetric** PSF reaches \|A\|=0.073 in control. Pre-registered Criterion E returned **INDETERMINATE** — the SYMMETRIC branch missed by one stack (8/12 vs a 9/12 bar at the 0.25 fraction) and the ASYMMETRIC branch failed 0/12 at every fraction | MEASURED | `out/s15_asym_corpus.log`, `PREREGISTRATION-B.md` §3 |
+| **P14** | **The residual asymmetry is real, highly significant, and does not reproduce across repeat captures of the same setup — so it is scene geometry, not the PSF.** Against per-stack shuffle nulls (100 reps), 7 of 12 stacks lie outside their own null at half-peak at **12.7–125.7 null sd**, and they are exactly the seven with K ≥ 100; the null sd itself spans **188×** across the corpus (0.0766 at K=22 to 0.0004 at K=105), `corr(log K, null sd) = −0.784`. **Three 299-frame f/5.6 captures of the same bee setup, each individually 12.7–32.2 null sd from zero, return −0.036 / +0.042 / −0.070; the two wrapped-text captures return +0.047 (35.5 sd) and −0.062 (125.7 sd).** A PSF asymmetry is a property of the optics and must reproduce; it does not | MEASURED | `out/s16_null_band.log`, `out/s19_report_numbers.log` |
+| **P15** | **Fact 274's through-focus excess kurtosis is confounded with focus-step density and cannot be read as tail weight.** A plant that is **symmetric by construction** returns `g2` = −0.63 / +0.86 / +6.13 at 0.25 / 0.50 / 1.00 px/step, purely because the curve narrows relative to the moment window. The corpus range, **−0.44…+5.80, is contained inside that**, with `corr(log K, g2) = −0.411`. `g2` was pre-registered as NOT TESTABLE against fact 274 for this reason, before the corpus was read. Skew is separately INDETERMINATE (\|g1\|<0.15 on 8/12 against a 9/12 bar; ≥0.45 with consistent sign on 2/12) | MEASURED | `out/s14_asym_controls.log`, `out/s15_asym_corpus.log` |
+| **P16** | **The shipped gate's admitted set corresponds to a ±3-frame window, by two independent routes that agree to 1.1% and neither of which is a free parameter.** M67's simulator measurements `n_eff = 6.84` (at K=25) and `D(A)/D(E) = 0.4895` → mean admitted defocus 1.733 frames map onto an equal average over ±W, which has `n = 2W+1` and mean offset `W(W+1)/(2W+1)`. W=3 gives 7 (1.023× of 6.84) and 1.714 (0.989× of 1.733). No other window in {1,2,3,5,10,20} is within 1.5× on either | DERIVED (from M67 MEASURED + arithmetic) | `out/s18_incumbent.log` §1 |
+| **P17** | **Against the gated average as it actually behaves, a focus-axis matched filter buys 1.0238× mid-band SNR (median; range 1.0101–1.1489 over 12 stacks) — +0.204 dB, or 3.7% of the +5.45 dB the shipped gated mean already banks per fact 19.** The frames that gate already averages carry a median 0.800 of peak mid-band amplitude at M67's measured 1.733-frame admitted defocus, so **the reviewer's premise describes what `merge.rs` already harvests**. The figure is 10.3× the 1.0020× the best-3 comparator gives and remains bounded by the same 1.1100× headroom | MEASURED (M67's window mapping DERIVED) | `out/s18_incumbent.log` §2–§4 |
+| **P18** | **A half-width asymmetry statistic is robust to the noise calibration in a way the through-focus `n_eff` sum is not.** Corpus median \|A\| at half-peak moves 0.0496 → 0.0404 → 0.0431 → 0.0438 as σ̂ is scaled ×0.91 → ×1.00 → ×1.09 → ×1.25, over the same range where P6's unwindowed `n_eff` goes 13.77 → 6.57 → negative. **The symmetry result therefore survives whatever M69 concludes about `FOCUS_NOISE_SD`**, because it depends on the *shape* of the curve rather than on the absolute level of the subtracted floor | MEASURED | `out/s15_asym_corpus.log` §σ |
 
 ---
 
@@ -782,6 +829,32 @@ a corpus whose design axis is stack depth.* P6: the unwindowed sum's K-scaled
 noise-model error manufactures a +0.32 slope against log K for free, which is
 precisely the "physics or habit" signal Criterion D was built to read. Bound the
 accumulation, or the confound is guaranteed.
+
+**D-f.** *Set a criterion's threshold from the confound control, not from the
+null control.* M70's symmetry work was going to use a 0.10 asymmetry bar chosen
+by taste. The CONFOUND control — a two-depth scene behind a **symmetric** PSF —
+reached 0.145 on the same statistic, so that bar would have declared scene
+geometry to be optics. The null band was 0.0039, i.e. 37× too permissive to
+protect against it. **The question a threshold must survive is "what does the
+strongest innocent explanation produce?", not "what does noise produce?"** §16.2,
+and the threshold was raised *before* the corpus was read.
+
+**D-g.** *Before reading a shape statistic on real data, check what it returns on
+a plant that is correct by construction across the corpus's own design range.*
+Excess kurtosis on a symmetric-by-construction through-focus curve spans −0.63 to
++6.13 as focus-step density varies over the corpus's own range — wider than the
+corpus itself spans. The statistic was therefore declared untestable in advance
+rather than producing a spurious confirmation of fact 274. **A shape statistic
+evaluated over a fixed window is a statistic about the window as much as about
+the shape.** §16.4.
+
+**D-h.** *When a result is significant on some stacks and not others, check
+whether the split is the result or the power.* Seven of twelve stacks cleared
+their own shuffle null on the symmetry statistic — and they were exactly the
+seven with K ≥ 100, with per-stack null sd varying 150× across the corpus
+(`corr(log K, null sd) = −0.784`). Reading the other five as "symmetric" would
+have been reading absent power as present evidence. Build the null **per stack**
+when the stacks differ by 15× in the quantity that sets the null. §16.5.
 
 ---
 
@@ -846,6 +919,25 @@ where the truth is zero — 42× at K=299. That inflation lands in the **denomin
 of the Wiener filter, where it silently reduces the regularisation exactly where
 regularisation matters most. If R3 is ever revisited, this is where to look first.
 
+### 13.5 The asymmetry sign lines up with ISO within repeat-capture groups (addendum)
+
+**MEASURED and UNRULED**, §16.6. Within both of the corpus's repeat-capture
+groups the sign of the half-peak asymmetry tracks ISO perfectly — bees at ISO
+100/400/100 give −/+/−, wrapped-text at ISO 400/100 gives +/−, five for five.
+`corr(log ISO, A₅₀) = +0.577` over all twelve stacks and **+0.755** over the seven
+with power.
+
+**I formed this as a hypothesis about a defect in my own instrument, tested it
+three ways, and it failed two of them** — the correlation vanishes in the tails
+(`−0.085` at A₂₅, `−0.063` at A₁₀) where a noise-subtraction artefact would be
+*strongest*, and the level-drift mechanism does not correlate either (+0.198).
+
+**It is recorded rather than dropped** because the A₅₀ alignment is real, because
+n=12 with ISO confounded against subject, aperture and session cannot separate
+it, and because it would be a defect in *every* through-focus statistic in this
+corpus if it were true. §14 item 5 names the three-capture experiment that would
+settle it in an afternoon.
+
 ---
 
 ## 14. What I would measure next, and what I deliberately did not
@@ -870,6 +962,25 @@ regularisation matters most. If R3 is ever revisited, this is where to look firs
    phase. Registration-aligned complex cross-spectra between adjacent frames would
    bound the phase error and tell you how much of the lower bound is slack. I
    expect little — but that is a guess and it is labelled as one.
+4. **Phase, again, for a different reason (added by the addendum).** §16 measured
+   the **modulus** through-focus family symmetric to ±0.077 and is
+   constitutionally blind to phase, which is where a defocus PSF's asymmetry
+   appears first. The same complex cross-spectrum measurement as (3) would settle
+   both questions at once, and it is now the single highest-value unmeasured thing
+   M70 touched. It would also complete M67 §7.3 rather than half-completing it.
+5. **An ISO-only bracket on one static scene (added by the addendum).** §16.6
+   formed and rejected an ISO hypothesis, but could not separate it cleanly
+   because this corpus confounds ISO with subject, aperture and session. Three
+   captures of one immobile subject at one aperture, varying only ISO, would
+   settle in an afternoon whether the noise-subtraction has a signed effect on
+   curve shape — which matters to every through-focus statistic in the corpus,
+   not just mine.
+6. **A symmetry measurement designed for it (added by the addendum).** §17 item 3:
+   the five stacks with K ≤ 79 have no power on this statistic at all. Anyone
+   re-asking the symmetry question should shoot **dense** — the null sd falls 150×
+   from K=22 to K=130 — and should shoot the **same scene twice**, because
+   non-reproduction across repeat captures is what carried §16.5 and a single
+   stack could not have.
 
 **Deliberately not measured.**
 
@@ -879,6 +990,12 @@ regularisation matters most. If R3 is ever revisited, this is where to look firs
 * **`FOCUS_NOISE_SD`.** M69 is live on it and the brief said not to rely on its
   absolute value. Every noise scale here comes from the photon-transfer model in
   `profile.rs`; `FOCUS_NOISE_SD` appears nowhere in this milestone's code.
+  P18 additionally measures that the addendum's symmetry result is **robust to
+  σ̂ over ×0.91…×1.25**, so it survives whatever M69 concludes.
+* **Re-running M67's simulator with an asymmetric PSF.** §16 says the modulus
+  family is symmetric, which is the input M67 wanted, but `crates/` is contended
+  and M67 owns that experiment. The measurement is delivered; the re-run is
+  M67's to make.
 * **Anything under `crates/`.** M67 and M69 are live there. Nothing was edited,
   nothing was built, and no measurement in this report came from a compiled
   binary — the entire experiment is Python over raw ARW files.
@@ -914,3 +1031,378 @@ python src\s13_bandsnr.py          # the third question, as far as it goes
 minutes from `D:\personal\macro`, which was read-only throughout. Every `out/*.log`
 in this milestone is the verbatim stdout of the script named at the top of it,
 including `s05_analyse.log`, which records the criteria failing.
+
+```powershell
+# --- addendum (section 16-18), added after M67 reported at 5cafbee ---
+python src\s14_asym_controls.py    # symmetry controls: null, power, confound, placebo
+#   PREREGISTRATION-B.md was committed at 18efd34 at this point, before s15.
+python src\s15_asym_corpus.py      # corpus symmetry, Criteria E/F/G, VOID 6/8/9/10
+python src\s16_null_band.py        # per-stack shuffle null bands, 100 reps
+python src\s17_iso_drift.py        # post hoc ISO hypothesis - formed, tested, REJECTED
+python src\s18_incumbent.py        # re-price against the gate as it actually behaves
+python src\s19_report_numbers.py   # exact null-sd multiples quoted in section 16
+```
+
+---
+
+## 16. Addendum: is the real through-focus response symmetric? (M67 §7.3)
+
+### 16.0 Why this is here
+
+M67 registered before running that its forward model's PSF is **symmetric and
+monotone in `|F−k|` by construction**, and declared every accuracy number an
+upper bound in consequence. Its §7.3 then **withdrew its own supporting claim**
+that real through-focus curves are "measured asymmetric", tracing it to an M25
+fit residual on one stack whose fit saturated its grid, under the one gate M25
+failed. It named three prerequisites for whoever measured it properly. All three
+are discharged below:
+
+* **(a) report skew and kurtosis separately** — §16.4, and they disagree;
+* **(b) M25 question 33's depth-range confound is live, one stack is not enough**
+  — §16.5, twelve stacks, and the confound is measured with a control rather than
+  argued about;
+* **(c) fact 471's FWHM agrees on two stacks, so any deviation is in the tails**
+  — the statistic is evaluated at the 0.50, 0.25 and 0.10 fractions of peak, and
+  the 0.50 reading *is* an FWHM asymmetry, directly commensurable with fact 471.
+
+The owner's instruction was explicit: **do not treat M67's fact 19 as
+established.** I did not, and I have now measured it.
+
+**This was cheap.** It is pure post-processing of `out/tfs-*.npz`, which already
+existed. No new capture, no Rust, no `crates/` access.
+
+### 16.1 The instrument, and what it cannot see
+
+`A_f = (w_far − w_near)/(w_far + w_near)`, where `w` are the interpolated
+offsets in frames at which the `[1,2,1]`-smoothed through-focus response first
+falls to `f × peak` searching outward from the peak. **Censored sides are
+returned as censored, never imputed** — a silently right-censored width is what
+killed M41's detail metric. Positive means *slower decay toward higher frame
+index*. Full specification: `PREREGISTRATION-B.md` §1.
+
+Three limits were declared **before** the corpus run, not after:
+
+1. **No phase.** This measures `|H_k|` only. Defocus PSFs on opposite sides of
+   focus differ in the **sign of the wavefront error** — in phase — before they
+   differ in modulus. **The instrument is blind to the most likely form of
+   through-focus asymmetry**, and everything below is a statement about the
+   modulus family only.
+2. **Sweep direction is unknown per stack**, so frame index maps to physical
+   near/far only up to an unknown sign. Magnitudes are load-bearing; signs are
+   secondary, and the cross-stack sign test is read accordingly.
+3. **A per-patch reading is meaningless.** Only stack medians over ≥48
+   patch×band curves are interpreted (§16.2 gives the number).
+
+### 16.2 Controls, run and read before the criteria were written
+
+`out/s14_asym_controls.log`. The plant is built on a **real latent patch**
+(`119MSDCF` centre, high-band power 1716.1, mean 882.8 DN), not synthetic
+texture — rule 3, and the exact failure mode M63 caught.
+
+| control | plants | result |
+| --- | --- | --- |
+| **NULL-SYM** | symmetric ladder, δ ∈ {0.25, 0.5, 1.0} px/step, 216 draws | bias **+0.0001**, **sd 0.0039** |
+| **NULL-NOISE** | flat latent + calibrated noise, no curve, 144 draws | sd **0.3055**, 34/144 censored |
+| **POWER-ASYM** | genuinely asymmetric, 5 rate pairs | sign **5/5**, magnitude **0.965–0.977×** of the analytic ideal at \|A\|≤0.33 |
+| **CONFOUND** | two depths, unequal weights, **symmetric PSF**, noiseless | \|A₅₀\| to **0.0726**, \|A₁₀\| to **0.1451**, \|g1\| to **0.4457** |
+| **REVERSAL** | frame order reversed | worst \|forward+reversed\| = **1.5e−14** |
+
+**Three of these changed the criteria I would otherwise have written, which is
+the point of running controls first.**
+
+* The null band is **not** the binding constraint (3×sd = 0.0117).
+* **The scene-geometry confound is.** A *symmetric* PSF over a two-depth scene
+  reaches \|A\| = 0.073–0.145 with no PSF asymmetry at all. **My originally
+  intended 0.10 asymmetry bar sat inside this envelope and would have been
+  unsound.** It was raised to 0.15 in `PREREGISTRATION-B.md` before the run.
+* The estimator **compresses** large asymmetry — at an ideal of −0.600 it returns
+  −0.106, because the fast side falls below half-peak inside one frame and the
+  half-width hits the sampling floor. **The bias runs against declaring
+  asymmetry, never toward it.** Trustworthy to \|A\| ≈ 0.33.
+
+### 16.3 Criterion E, as it fell: INDETERMINATE, and it missed by one stack
+
+`out/s15_asym_corpus.log`. Twelve stacks, textured patches × three mid bands,
+48–72 curves per stack.
+
+| stack | f/ | K | A₅₀ | 95% CI | A₂₅ | A₁₀ | powered? |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| coffee-bubbles | 8.0 | 19 | +0.0373 | [−0.077, +0.093] | +0.0319 | +0.0256 | no |
+| 109MSDCF | 11.0 | 22 | +0.0096 | [−0.087, +0.108] | +0.0379 | −0.0061 | no |
+| 119MSDCF | 5.6 | 33 | −0.0447 | [−0.084, +0.043] | −0.0411 | −0.0408 | no |
+| 113MSDCF | 11.0 | 63 | −0.0369 | [−0.132, +0.024] | −0.0793 | −0.0595 | no |
+| 112MSDCF | 11.0 | 79 | −0.0389 | [−0.075, +0.000] | −0.0545 | −0.0227 | no |
+| foam | 8.0 | 100 | **+0.0773** | [+0.027, +0.099] | +0.0451 | +0.0472 | **yes** |
+| coffee-bean | 8.0 | 105 | +0.0160 | [−0.076, +0.128] | +0.0809 | +0.0891 | **yes** |
+| wrapped-text-2 | 5.6 | 120 | +0.0474 | [−0.015, +0.115] | +0.0384 | +0.0320 | **yes** |
+| wrapped-text-1 | 5.6 | 130 | −0.0617 | [−0.093, −0.023] | −0.0330 | −0.0105 | **yes** |
+| bee-1 | 5.6 | 299 | −0.0358 | [−0.106, +0.050] | −0.0288 | −0.0150 | **yes** |
+| bee-2 | 5.6 | 299 | +0.0420 | [−0.054, +0.105] | +0.0052 | −0.0080 | **yes** |
+| bee-3 | 5.6 | 299 | −0.0696 | [−0.179, +0.035] | +0.0804 | +0.0481 | **yes** |
+
+Scored exactly as pre-registered:
+
+| fraction | \|A\| < 0.05 | \|A\| ≥ 0.15, consistent sign | signs | inside CONFOUND envelope |
+| --- | --- | --- | --- | --- |
+| A₅₀ | **9/12** | **0/12** | +6 / −6 | 11/12 |
+| A₂₅ | **8/12** | **0/12** | +7 / −5 | 12/12 |
+| A₁₀ | **10/12** | **0/12** | +5 / −7 | 12/12 |
+
+**Criterion E ⇒ INDETERMINATE.** The SYMMETRIC branch required `|A| < 0.05` on
+≥9/12 at *every* fraction and got 9, **8**, 10. **It failed at the 0.25 fraction
+by a single stack, and it is reported as failed.** The ASYMMETRIC branch failed
+0/12 at every fraction, so the two branches did not fail symmetrically — but the
+criterion as written does not permit me to award the SYMMETRIC branch on that
+basis, and I am not going to reinterpret it. M65's standard.
+
+**VOID conditions.** VOID 6 (reversal on real data) does not fire: exact to
+0.000000 on all 12 stacks. VOID 9 (frame-shuffle placebo) does not fire. **VOID
+10 fires on A₁₀ for 119MSDCF** — 54.2% of its curves are censored at the 0.10
+fraction, so that one cell is unusable; excluding it leaves 9/11 and does not
+change E. VOID 5 and VOID 7 were pre-checked in §16.2 and do not fire.
+
+### 16.4 Prerequisite (a): skew and kurtosis disagree, and kurtosis is not a shape statistic
+
+**Skew: INDETERMINATE, and it also missed by one.** `|g1| < 0.15` on **8/12**
+against a 9/12 bar; `|g1| ≥ 0.45` with consistent sign on **2/12**. Median
++0.067. The CONFOUND control reaches `|g1| = 0.4457` with a symmetric PSF, so
+even the two stacks that clear the bar clear it by less than scene geometry can
+manufacture.
+
+**Kurtosis: NOT TESTABLE, and this was pre-registered before the corpus was
+read.** On a plant that is **symmetric by construction**, excess kurtosis runs:
+
+| δ (px/step) | 0.25 | 0.50 | 1.00 |
+| --- | --- | --- | --- |
+| `g2` | **−0.63** | **+0.86** | **+6.13** |
+
+pooled sd 4.77. **`g2` is measuring how narrow the curve is relative to the
+moment window — that is, focus-step density — not tail weight.** The corpus range
+is **−0.44 … +5.80**, which is *contained inside* the range a symmetric plant
+spans, and `corr(log K, g2) = −0.411` in the direction the plant predicts.
+
+**This is the finding for fact 274.** Fact 274 records through-focus curves as
+having heavier shoulders than Gaussian and is flagged NOT INDEPENDENTLY VERIFIED.
+M70 can now say what it is *not*: it is not evidence of an unusual PSF, because
+an ordinary symmetric one produces the same numbers when you step finely enough.
+Two of the three highest corpus `g2` values (coffee-bubbles +5.80, 109MSDCF
++1.26) come from stacks where the ±10-frame moment window hits the stack end on
+**100% of patches** (K=19 and K=22), which compounds it.
+
+### 16.5 Prerequisite (b): the confound, measured — and the refutation
+
+Criterion G asked whether the reading looks like a PSF property or like scene
+geometry.
+
+* Within-stack sign agreement at A₅₀: **median 0.553** across the corpus (range
+  0.511–0.694). A coin flip.
+* Stack medians split **6/6**.
+* **VOID 8 FIRES**: corpus median `|A₅₀|` is **0.0404**, *below* the CONFOUND
+  control's 0.0726. Scene geometry is not separable, so **Criterion G ⇒
+  INDETERMINATE** by pre-registration, notwithstanding that the point reading was
+  SCENE-LIKE.
+
+But the corpus contains something better than a criterion. `out/s16_null_band.log`
+builds a **per-stack null band** for the median statistic by shuffling frame
+order 100 times, which destroys the through-focus curve while preserving
+everything else:
+
+* The null sd itself spans **188×** across the corpus — **0.0766 at K=22 down to
+  0.0004 at K=105**; `corr(log K, null sd) = −0.784`. **The sparse end of the
+  step-density range has two orders of magnitude less power, which is a statement
+  about power, not about symmetry.**
+* **7 of 12 stacks lie outside their own null at A₅₀, and they are exactly the
+  seven with K ≥ 100.** On those the readings sit **12.7–125.7 null sd** from
+  zero (`out/s19_report_numbers.log`). The five that fail sit at 0.1–1.6 sd.
+
+So the asymmetry is **real and unambiguously non-zero wherever there is power to
+see it** — and then:
+
+> **Three 299-frame captures of the same bee setup, same rig, same f/5.6, same
+> session, same step count, each individually 12.7, 19.6 and 32.2 null sd from
+> zero, return A₅₀ = +0.042, −0.036 and −0.070. The two wrapped-text captures,
+> at 35.5 and 125.7 null sd, return +0.047 and −0.062.**
+
+**A PSF asymmetry is a property of the optics. It must reproduce across repeat
+captures of the same optical system. It does not.** That is the refutation, and
+it is the same instrument M63 used to kill occlusion unmixing: non-reproduction
+across repeat captures of the same scene.
+
+### 16.6 A post hoc hypothesis I formed, tested, and rejected
+
+The sign split above lines up with **ISO**: within the bee triple (ISO 100 / 400
+/ 100) the signs are −/+/−, and within the wrapped-text pair (ISO 400 / 100) they
+are +/−. Five for five. A mis-scaled noise floor biasing the curve tails is a
+plausible mechanism, and it would be a defect in *my* instrument, so it needed
+testing.
+
+**It fails.** `out/s17_iso_drift.log`:
+
+| statistic | corr(log ISO, A), all 12 | corr, powered stacks only |
+| --- | --- | --- |
+| A₅₀ | +0.577 | +0.755 |
+| A₂₅ | **−0.085** | **−0.031** |
+| A₁₀ | **−0.063** | **−0.137** |
+
+**A noise-subtraction artefact would be strongest in the tails, where the
+subtracted floor is the largest fraction of the signal. The correlation exists
+only at half-peak and vanishes in the tails — the opposite of the mechanism.**
+The within-group alignment also breaks for the bees at A₂₅ and A₁₀ (−/+/+ and
+−/−/+). The candidate mechanism, monotone level drift through the sweep, also
+fails: `corr(drift, A₅₀) = +0.198` per frame, +0.330 total.
+
+**Hypothesis rejected.** With n=12 and ISO confounded with subject, aperture and
+session, this corpus cannot separate it properly; §18 names the capture that
+would. Recorded because forming and killing it is part of the evidence, and
+because a reader who notices the same pattern deserves to know it was checked.
+
+### 16.7 What §16 concludes
+
+**MEASURED.** The modulus of the real through-focus response is symmetric in
+frame index to within **±0.077** in the half-width asymmetry index — the worst
+stack in the corpus has near and far half-widths differing by a factor of
+**1.167**, and the typical stack by **1.084** — on every stack, at every fraction
+of peak tested. The residual is real where there is power to detect it, is
+bounded above by the scene-geometry control, and **does not reproduce across
+repeat captures of the same setup.**
+
+**ARGUED.** M67's fact 19 is therefore **not supported** on this corpus, and
+M67's simulator is **better than it claimed**: its symmetric, monotone PSF family
+is a good model of the measured modulus, so its 99.955% is less of an upper bound
+than it declared. That is a strengthening of M67, not a correction to it.
+
+**What this does not say.** It says nothing about phase (§16.1 limit 1), and a
+defocus PSF's asymmetry appears in phase first. **It is entirely possible that
+the through-focus PSF family is genuinely asymmetric in a way this measurement is
+constitutionally unable to see.** The honest form of the result is: *the `|H_k|`
+family is symmetric; the `H_k` family is unmeasured.*
+
+**And for a matched filter specifically, this matters less than it looks.** A
+matched filter over measured per-frame responses does not need a *model* of `H`;
+it needs the responses, which are measured per frame regardless of whether the
+family is symmetric. Symmetry is load-bearing for **M67's simulator** and for any
+*parametric* filter; it is close to irrelevant for the non-parametric one §0.3
+priced. **ARGUED.**
+
+---
+
+## 17. Addendum: what §16 could not do, and what it cost
+
+**Cost: four scripts, no new capture, ~12 minutes of compute.** The owner's
+condition — *"if it is not close to free given what you have already computed,
+say so and skip it"* — was comfortably met. `out/tfs-*.npz` already held every
+through-focus curve; §16 is arithmetic on them.
+
+**What it could not do, listed so it is not mistaken for more than it is:**
+
+1. **Phase.** Named in advance. This is the big one and it is not a limitation I
+   can retire without a different measurement (§18.2).
+2. **Separate the PSF from the scene.** VOID 8 fired. The CONFOUND control shows
+   scene geometry alone reaches the magnitudes observed. §16.5's non-reproduction
+   argument is what carries the conclusion, not Criterion G.
+3. **Say anything about the five sparse stacks.** K ≤ 79 has a null sd of
+   0.025–0.077 against observations of 0.010–0.045 — they sit at **0.1–1.6 null
+   sd**. **Those five stacks are consistent with anything**, and reading them as
+   "symmetric" would be reading the absence of power as the presence of a result.
+   **This is the step-density finding of the addendum: the sparse end of the
+   corpus cannot answer the symmetry question at all**, which is worth knowing
+   before anyone designs a capture to answer it.
+4. **Test fact 274.** Pre-registered as not testable, and §16.4 explains why
+   rather than asserting it.
+
+---
+
+## 18. Addendum: re-pricing against the incumbent that actually ships
+
+### 18.1 The correction, and why it matters
+
+The owner's follow-up turn: *"the pathway your proposal would replace is not the
+election — it is the gate […] Fact 19 of the corpus — the gated mean reaching
+0.534× single-frame noise — is the incumbent you are measuring against."* That is
+right, and §0.3 as originally written led with the wrong comparator.
+
+**M67's load-bearing result is that focus correctness lives in the gate, not the
+election**: its `ArgmaxBaseline` elects the correct frame 35.71% of the time, the
+estimator's own argmax 39.70%, and the admitted set contains the correct frame
+99.96%. A merge-side matched filter therefore competes with a **gated average**,
+not with a selector.
+
+### 18.2 Which of my windows is the shipped gate? Two independent routes agree
+
+**DERIVED, from M67's MEASURED figures plus arithmetic.** An equal average over
+±W frames has `n = 2W+1` and mean absolute offset `W(W+1)/(2W+1)`. M67 measured
+two independent properties of the admitted set on its simulator at K=25:
+`n_eff = 6.84`, and `D(A)/D(E) = 0.4895` giving a mean admitted defocus of
+**1.733 frames**. These land on the same window and on no other:
+
+| W | n = 2W+1 | vs `n_eff` 6.84 | mean\|offset\| | vs `D(A)` 1.733 |
+| --- | --- | --- | --- | --- |
+| ±1 | 3 | 0.439× | 0.667 | 0.385× |
+| ±2 | 5 | 0.731× | 1.200 | 0.692× |
+| **±3** | **7** | **1.023×** | **1.714** | **0.989×** |
+| ±5 | 11 | 1.608× | 2.727 | 1.574× |
+| ±10 | 21 | 3.070× | 5.238 | 3.023× |
+
+**Two quantities M67 measured by different means, agreeing to 2.3% and 1.1% on
+the same window, with no free parameter.** That is what makes the mapping
+citable rather than convenient.
+
+**M67's `n_eff` and `D(A)/D(E)` are SIMULATOR figures.** They are used here
+*only* to point at a row of a table measured on the corpus. **No corpus claim in
+this report rests on their value**, and if M67's simulator is wrong about the
+gate's width, the correction is to read a different row of §0.3's table — every
+row of which is measured on real frames.
+
+### 18.3 The price, restated
+
+**MEASURED**, `out/s18_incumbent.log`:
+
+| comparator | MF's gain (median) | range | dB |
+| --- | --- | --- | --- |
+| equal average of the best **3** frames (§0.3 as first written) | 1.0023 | 1.0011–1.0116 | +0.020 |
+| **equal average of the same 7 frames — the gate as it behaves** | **1.0238** | **1.0101–1.1489** | **+0.204** |
+| ceiling: best MF at any W ≤ 10 ÷ best equal average at any W ≤ 10 | 1.1100 | 1.0696–1.2037 | +0.906 |
+
+**The corrected number is 10.3× the one the report originally led with, and the
+verdict does not move.** Three reasons, all from measurements already in this
+report:
+
+1. **The ceiling was always the binding number.** 1.1100× bounds the matched
+   filter at *any* window, and 1.0238 was always inside it. The re-pricing moves
+   the point estimate, not the bound.
+2. **Against fact 19 it is still small.** The shipped gated mean banks
+   **1.873× = +5.45 dB** in every band it admits. The matched filter's mid-band
+   prize at the gate's own width is **+0.204 dB — 3.7% of what the merge already
+   delivers** (DERIVED).
+3. **The mechanism is unchanged.** §6.3's rank-1 collinearity is why the number
+   is small at *every* window, and it is a property of the frames, not of the
+   comparator.
+
+### 18.4 The gate is already harvesting the reviewer's premise
+
+**MEASURED.** Median relative mid-band amplitude off peak, across the corpus:
+
+| steps off peak | 1 | **1.733 (M67's admitted-set mean)** | 2 | 3 | 5 |
+| --- | --- | --- | --- | --- | --- |
+| median `rel_amp` | 0.954 | **0.800** | 0.744 | 0.614 | 0.379 |
+
+The reviewer wrote that *"frames one or two steps off peak still carry
+mid-frequency information at MTF 0.3–0.8, and the matched filter harvests it."*
+**Both halves are true, but the second one is already true of the shipped merge.**
+At the defocus M67 measured the gate to be admitting, those frames carry 0.800 of
+peak mid-band amplitude, and `merge.rs` is averaging them today. The proposal's
+premise is an accurate description of an existing behaviour; what it adds on top
+is the 2.38%.
+
+### 18.5 Verdict, re-weighed
+
+**PLUGIN, unchanged, and now stated against the right incumbent.**
+
+A focus-axis matched filter replacing the shipped gated average buys **1.0238×
+mid-band SNR (median), bounded above by 1.1100× at any window** — against a merge
+that already banks +5.45 dB, on a corpus where moving f/11 → f/5.6 is worth 13.5×
+(M20 §4.4) and where the frames being combined are scaled copies of one another
+to 0.0041 of exact rank-1. **The lever is the gate constant at
+`crates/strehl-core/src/merge.rs:297`, not the merge architecture** — §0.4's
+split of the ±5 gain into ~30 points of reach and ~8 points of weighting is
+unaffected by this correction, since both terms were measured at the same widths.

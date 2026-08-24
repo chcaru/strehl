@@ -1,0 +1,26 @@
+stack               K       obs   null sd         z  powered
+coffee-bubbles     19   +0.0373    0.0257       1.4       no
+109MSDCF           22   +0.0096    0.0766       0.1       no
+119MSDCF           33   -0.0447    0.0580       0.8       no
+113MSDCF           63   -0.0369    0.0328       1.1       no
+112MSDCF           79   -0.0389    0.0249       1.6       no
+foam              100   +0.0773    0.0009      89.1      YES
+coffee-bean       105   +0.0160    0.0004      39.2      YES
+wrapped-text-2    120   +0.0474    0.0013      35.5      YES
+wrapped-text-1    130   -0.0617    0.0005     125.7      YES
+bee-1             299   -0.0358    0.0018      19.6      YES
+bee-2             299   +0.0420    0.0033      12.7      YES
+bee-3             299   -0.0696    0.0022      32.2      YES
+
+powered stacks n=7: z range 12.7 - 125.7
+bees      z: 19.6, 12.7, 32.2
+wrapped   z: 125.7, 35.5
+
+within-stack sign agreement (A50): median 0.5531  range 0.511-0.694
+A50 stack medians: min -0.0696 max +0.0773 median-of-medians -0.0131  max|A50| 0.0773
+max |A50| = 0.0773  ->  worst half-width ratio w_far/w_near = 1.167
+med |A50| = 0.0404  ->  typical ratio 1.084
+
+null sd range 0.0004 - 0.0766  = 188x
+
+wrote out/s19_report_numbers.json
