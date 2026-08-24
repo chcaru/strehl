@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import platform
-import subprocess
 from pathlib import Path
 
 import numpy as np
@@ -236,9 +235,7 @@ def main() -> None:
             },
         ],
         "provenance": {
-            "git_head": subprocess.check_output(
-                ["git", "rev-parse", "HEAD"], cwd=M.REPO, text=True
-            ).strip(),
+            "preregistration_commit": "1a388a383f158806da6af7a740cb88ac5d627eb7",
             "python": platform.python_version(),
             "numpy": np.__version__,
             "scipy": scipy.__version__,
