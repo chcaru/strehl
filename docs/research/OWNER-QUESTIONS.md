@@ -1341,3 +1341,66 @@ If that is the wrong call, it is cheap to reverse and I will relaunch. Worth kno
 project is entirely research and every milestone so far has been run by `claude-opus-5`, so if
 the opus instruction was meant to apply here specifically, M76 is the first one that departs
 from it.
+
+
+## Overnight, part three: your top-ranked build came back NO SHIP, and it corrected me twice
+
+**57. The merge you ranked first does not ship, and its own pre-registered test is what killed
+it.** M81 spent the night on it. The hypothesis was that the gate's wild variation between
+stacks was a *unit* problem -- that each stack's noise scale was being mis-estimated, and
+correcting it would restore one portable constant. It froze a falsification line of 2x before
+measuring. The correction made things **worse**: two sibling stacks of the same subject went
+from 3.25x apart to **3.63x** apart, and across your five stacks the constants span **49.5x**.
+Three independent estimators agree, so it is not an artefact of the estimator. The corrected
+gate then lost the head-to-head against the shipped gate on **0 of 5** stacks.
+
+**It was hopeless before it ran, and I should have seen that.** The corrections available span
+1.38x. The gap they were meant to close spans 49.75x. A 1.38x lever cannot move a 49.75x gap,
+and that comparison needed no experiment at all -- just arithmetic I did not do before spending
+a night of compute on it. There is now a standing rule that a dispatch must state the lever's
+measured range next to the gap's measured size.
+
+**58. Two of my own committed facts were wrong, and the milestone found both.** I want you to
+see these because they are the same disease each time.
+
+- I wrote that a shipped noise constant "varies 4.06x across stacks", and built a whole
+  hypothesis on 4.06x and 3.31x being the same order. **The 4.06x was never a per-stack
+  number.** It is a span across *texture types on a synthetic test pattern*, and it moves when
+  you change the filter radius. The real per-stack spread is 1.186x. Another milestone had
+  asserted the comparison, I lifted it into a fact and into a dispatch, and I never opened the
+  report it came from.
+- An hour before M81 reported, I committed a fact saying an acceptance threshold "is invariant
+  across N = 22-299, so this bar **is** portable". The source's own derived values are 4.75,
+  5.76 and 6.20 -- a 1.31x spread -- and they all land on the same rung only because the ladder
+  doubles at every step. **Those numbers were in the same paragraph I quoted from.**
+
+Both are folded, both amended in place rather than quietly fixed, and both have a new rule
+attached. Fifteenth and sixteenth errors of mine on the record.
+
+**59. Two milestones have now failed to calibrate the gate from focus-sweep data, and the
+capture that unblocks the remaining route takes thirty seconds.** It is section 12 of
+`docs/captures-needed.md` -- a static repeat burst, camera on a tripod, nothing moving, ~20
+frames of the same textured subject at your normal working ISO. No rail, no special setup. Two
+independent milestones have now named it as the minimum measurement, and I have raised its
+urgency in the file. If you shoot one thing this week, shoot that.
+
+**60. An honest note on where the project actually is.** You asked for a state-of-the-art
+stacker. What exists tonight is a very strong research corpus -- 1,133 measured facts, 563
+disciplines, 107 documents -- and a working stacker whose central tuning constant is still the
+arbitrary `4.0` it started with, undefeated by two serious attempts to replace it. That is not
+a failure, and the measurement discipline has repeatedly caught things that would have shipped
+silently in any commercial tool. But I do not want you to read a large corpus as a finished
+product. The gap between them is the gate, and the gate is the next thing.
+
+**61. Running while you sleep.**
+
+| Milestone | What it is doing | Why now |
+|---|---|---|
+| **M82** | Testing whether the gate can be made a *portable knob* rather than a constant | Your own earlier ruling (fact 848) says the gate **is** the noise-versus-sharpness dial, with a sharper near-selector at one end and a quieter mean at the other. Both failed milestones looked for a single correct setting instead. M82 asks a different question: let the user request an outcome -- "0.7x the noise of one frame" -- and solve per stack for the gate that delivers it. Then measure whether the *sharpness price* of that request is the same on every stack. If yes, two nights of failure become a solved presentation problem |
+| **M83** | Auditing the six literature surveys nobody has ever checked | The one survey that *was* audited came back with **two of three** load-bearing claims overstated, plus the nearest prior art missed entirely. Those surveys closed whole workstreams. This decides how much of the architecture rests on unchecked secondary reading, and it needs no captures |
+
+**62. Still unresolved, and still yours: which model my subagents should use.** Your stored
+instructions conflict -- one says always `claude-opus-5` for research, four say only
+`gpt-5.6-sol`. I have gone with `gpt-5.6-sol` because those four are more recent, more
+numerous, and phrased as a prohibition. **Every milestone tonight -- M79, M80, M81, M82, M83 --
+ran on `gpt-5.6-sol`.** One line from you settles it permanently.
