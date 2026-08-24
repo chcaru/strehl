@@ -84,9 +84,8 @@ def tag_of(exp, half):
 
 def box1d(a, w, axis):
     pad = w // 2
-    a = np.apply_along_axis(lambda v: np.pad(v, pad, mode="reflect"), axis, a) \
-        if False else np.pad(a, [(pad, pad) if i == axis else (0, 0)
-                                for i in range(a.ndim)], mode="reflect")
+    a = np.pad(a, [(pad, pad) if i == axis else (0, 0)
+                   for i in range(a.ndim)], mode="reflect")
     c = np.cumsum(a, axis=axis, dtype=np.float64)
     sl_hi = [slice(None)] * a.ndim
     sl_lo = [slice(None)] * a.ndim
@@ -98,14 +97,16 @@ def box1d(a, w, axis):
     return (out / w).astype(np.float32)
 
 
-def smooth(a):
-    for _ in range(NPASS):
-        a = box1d(a, BOX, 0)
-        a = box1d(a, BOX, 1)
+def smooth(a, box=None, npass=None):
+    box = BOX if box is None else box
+    npass = NPASS if npass is None else npass
+    for _ in range(npass):
+        a = box1d(a, box, 0)
+        a = box1d(a, box, 1)
     return a
 
 
-def highpass_response():
+def highpass_response(box=None, npass=None):
     """Fraction of a WHITE input's variance that survives r = a/blur(a) - 1.
 
     Computed by pushing unit-variance white noise through the actual kernel
@@ -114,11 +115,11 @@ def highpass_response():
     """
     rng = np.random.default_rng(71)
     z = rng.standard_normal((512, 512)).astype(np.float32)
-    return float(np.var(z - smooth(z)))
+    return float(np.var(z - smooth(z, box, npass)))
 
 
-def residual(mu):
-    s = smooth(mu.astype(np.float32))
+def residual(mu, box=None, npass=None):
+    s = smooth(mu.astype(np.float32), box, npass)
     return (mu / s - 1.0).astype(np.float32)
 
 
