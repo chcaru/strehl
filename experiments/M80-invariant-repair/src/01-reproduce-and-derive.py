@@ -24,7 +24,7 @@ EXPECTED = {
 
 FRAME_RE = re.compile(r"^frames\s+:\s+(\d+)\s+from", re.MULTILINE)
 BASE_RE = re.compile(
-    r"^single frame\s+\d+:\s+corrected\s+([0-9.]+)\s+"
+    r"^single frame\s+\d+\s*:\s+corrected\s+([0-9.]+)\s+"
     r"raw rms\s+([0-9.]+)\s+model noise\s+([0-9.]+)",
     re.MULTILINE,
 )
@@ -91,14 +91,29 @@ def main() -> None:
             row = d["rows"][gate]
             recomputed = row["corrected"] / base["corrected"]
             expected = EXPECTED[stack][gate]
+            # Both corrected operands are printed to four decimals.  Propagate
+            # that quantisation instead of pretending the displayed endpoints
+            # are exact; the RETENTION column itself is printed from the
+            # unrounded values.
+            half_ulp = 0.00005
+            ratio_interval = [
+                (row["corrected"] - half_ulp) / (base["corrected"] + half_ulp),
+                (row["corrected"] + half_ulp) / (base["corrected"] - half_ulp),
+            ]
+            expected_interval = [expected - 0.0005, expected + 0.0005]
+            intervals_overlap = (
+                ratio_interval[1] >= expected_interval[0]
+                and ratio_interval[0] <= expected_interval[1]
+            )
             ok = (
                 abs(row["retention_printed"] - expected) <= 0.0005
-                and abs(recomputed - expected) <= 0.0005
+                and intervals_overlap
             )
             passed &= ok
             row_out = {
                 **row,
                 "retention_recomputed": recomputed,
+                "retention_interval_from_printed_operands": ratio_interval,
                 "expected": expected,
                 "R1_pass": ok,
             }
@@ -145,7 +160,9 @@ def main() -> None:
             stack_out["gates"][f"{gate:g}"] = row_out
             lines.append(
                 f"  gate {gate:g}: printed={row['retention_printed']:.3f} "
-                f"recomputed={recomputed:.6f} expected={expected:.3f} R1={ok}"
+                f"recomputed={recomputed:.6f} "
+                f"interval=[{ratio_interval[0]:.6f},{ratio_interval[1]:.6f}] "
+                f"expected={expected:.3f} R1={ok}"
             )
         result[stack] = stack_out
 

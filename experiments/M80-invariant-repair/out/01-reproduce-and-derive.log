@@ -1,0 +1,9 @@
+wrapped-text-1: N=130 H_N=5.448591338 sqrt(H_N)=2.334221784
+  gate 0 analytic: observed_excess=1971.418822 analytic=2720.065865 residual=-748.647043 residual_fraction=-0.379750 retention_after=0.000000 A1=False
+  gate 0: printed=9.963 recomputed=9.962495 interval=[9.962373,9.962617] expected=9.963 R1=True
+  gate 4: printed=9.188 recomputed=9.188039 interval=[9.187925,9.188152] expected=9.188 R1=True
+wrapped-text-2: N=120 H_N=5.368868287 sqrt(H_N)=2.317081847
+  gate 0 analytic: observed_excess=2551.532766 analytic=13596.355480 residual=-11044.822713 residual_fraction=-4.328701 retention_after=0.000000 A1=False
+  gate 0: printed=8.819 recomputed=8.818838 interval=[8.818753,8.818923] expected=8.819 R1=True
+  gate 4: printed=6.791 recomputed=6.790876 interval=[6.790808,6.790944] expected=6.791 R1=True
+R1_pass=True

@@ -1,0 +1,103 @@
+{
+  "wrapped-text-1": {
+    "source": "experiments\\M77-gate-sweep\\out\\07-B2-wrapped-text-1.log",
+    "N": 130,
+    "H_N": 5.4485913382659765,
+    "sqrt_H_N": 2.334221784292567,
+    "base": {
+      "corrected": 4.4794,
+      "raw_rms": 24.9183,
+      "model_noise": 24.5124
+    },
+    "gates": {
+      "0": {
+        "corrected": 44.626,
+        "retention_printed": 9.963,
+        "raw_rms": 51.0189,
+        "model_noise": 24.7274,
+        "retention_recomputed": 9.962494977005848,
+        "retention_interval_from_printed_operands": [
+          9.96237261270915,
+          9.96261734403429
+        ],
+        "expected": 9.963,
+        "R1_pass": true,
+        "analytic": {
+          "observed_selection_excess_power": 1971.4188220900003,
+          "analytic_excess_power": 2720.065864678946,
+          "analytic_over_observed": 1.3797503778498308,
+          "signed_power_after_subtraction": -728.5820182289458,
+          "corrected_after": 0.0,
+          "retention_after": 0.0,
+          "residual_power_vs_base": -748.6470425889459,
+          "residual_fraction_of_observed_excess": -0.37975037784983073,
+          "A1_pass": false
+        }
+      },
+      "4": {
+        "corrected": 41.1569,
+        "retention_printed": 9.188,
+        "raw_rms": 46.8073,
+        "model_noise": 22.2943,
+        "retention_recomputed": 9.18803857659508,
+        "retention_interval_from_printed_operands": [
+          9.187924856846264,
+          9.18815229888265
+        ],
+        "expected": 9.188,
+        "R1_pass": true
+      }
+    }
+  },
+  "wrapped-text-2": {
+    "source": "experiments\\M77-gate-sweep\\out\\07-B2-wrapped-text-2.log",
+    "N": 120,
+    "H_N": 5.368868287353395,
+    "sqrt_H_N": 2.317081847357446,
+    "base": {
+      "corrected": 5.765,
+      "raw_rms": 56.8002,
+      "model_noise": 56.5069
+    },
+    "gates": {
+      "0": {
+        "corrected": 50.8406,
+        "retention_printed": 8.819,
+        "raw_rms": 75.4776,
+        "model_noise": 55.7862,
+        "retention_recomputed": 8.818837814397225,
+        "retention_interval_from_printed_operands": [
+          8.818752656091448,
+          8.818922974180175
+        ],
+        "expected": 8.819,
+        "R1_pass": true,
+        "analytic": {
+          "observed_selection_excess_power": 2551.532766319999,
+          "analytic_excess_power": 13596.355479570317,
+          "analytic_over_observed": 5.328701108228346,
+          "signed_power_after_subtraction": -11011.587488250316,
+          "corrected_after": 0.0,
+          "retention_after": 0.0,
+          "residual_power_vs_base": -11044.822713250316,
+          "residual_fraction_of_observed_excess": -4.328701108228345,
+          "A1_pass": false
+        }
+      },
+      "4": {
+        "corrected": 39.1494,
+        "retention_printed": 6.791,
+        "raw_rms": 54.3675,
+        "model_noise": 37.7246,
+        "retention_recomputed": 6.790875975715525,
+        "retention_interval_from_printed_operands": [
+          6.790808405824754,
+          6.790943546778377
+        ],
+        "expected": 6.791,
+        "R1_pass": true
+      }
+    }
+  },
+  "R1_pass": true
+}
