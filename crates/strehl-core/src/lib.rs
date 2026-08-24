@@ -20,6 +20,7 @@ pub mod focus;
 pub mod merge;
 pub mod noise;
 pub mod optics;
+pub mod outlier;
 pub mod photometric;
 pub mod plane;
 pub mod profile;
