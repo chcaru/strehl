@@ -223,48 +223,59 @@ refused.
 
 ---
 
-## 6. The exit-code trap: the rule survives, the mechanism and the consequence do not
+## 6. The exit-code trap: three orthogonal axes, and the danger direction flips
 
 The rule — **never read `$LASTEXITCODE` after a pipeline containing `-First`** —
-is correct and I have adopted it. Three things stated alongside it are not.
+is correct and I have adopted it. Getting to *why* took four wrong mechanisms
+between two agents, and the reason is that there are three independent axes.
 
-All cells below are 5 reps, each pre-cleared to a value that is not the answer
-(`src/racetest.ps1`, `racetest2.ps1`, `racetest3.ps1`).
+All cells 5 reps, pre-cleared to **9** — deliberately neither the true code, nor
+the agent-shell corruption (`0`), nor the `-File` corruption (`-1`), so that
+"never set", "corrupted" and "correct" are three distinguishable observations
+(`src/quota.ps1`, `racetest{,2,3}.ps1`).
 
-| producer | filter | true code | observed |
+**Axis 1 — quota. Deterministic, and the orchestrator's boundary reproduces
+exactly.** 50 lines produced, true exit code 1, python `.exe`:
+
+| `-First N` | 3 | 49 | **50** | **51** | 99 |
+|---|---|---|---|---|---|
+| observed | `-1` | `-1` | **`-1`** | **`1`** | `1` |
+
+`-First N` loses the code precisely when `N <= objects produced`, including at
+the exact boundary. There is no volume threshold: 5 lines with `-First 3` loses
+it just as reliably as 20 000.
+
+**Axis 2 — producer. A `cmd` builtin loop is immune at every `N`.**
+
+| producer | `-First 3` | `-First 50` | `-First 99` |
 |---|---|---|---|
-| `cmd /c` builtin loop, 50–20 000 lines | `-First 3` | 1 | `1` — **immune, 40/40 reps** |
-| python `.exe`, 200 lines | none | 1 | `1` |
-| python `.exe`, 200 lines | `-First 3` | 1 | `-1` (4/5) |
-| python `.exe`, 200 lines | none | **0** | `0` |
-| python `.exe`, 200 lines | `-First 3` | **0** | **`-1`** (4/5) |
-| python `.exe`, 200 lines, 10 ms/line | `-First 3` | **0** | **`-1`** (5/5) |
-| python `.exe`, 20 000 lines | `-Last 3` | 1 | `1` |
+| `cmd /c "for /L … & echo"` | `1` | `1` | `1` |
+| python `.exe` | `-1` | `-1` | `1` |
 
-**1. The corrupted value is `-1`, not `0`.** PowerShell *kills* the child when
-`Select-Object -First` throws `StopUpstreamCommandsException`, and `-1` is the
-exit code of a killed process. The program never returned it.
+25/25 reps here, plus 40/40 across 50–20 000 lines on stdout and through `2>&1`
+earlier. **This is why two carefully pre-cleared probes disagreed** — not the
+shell version, not the line count. My earlier probes used `cmd /c`, which is not
+exposed.
 
-**2. It is not volume-dependent, it is producer-dependent.** A `cmd` builtin
-loop is immune at every size I tried, from 50 to 20 000 lines, on stdout and
-through `2>&1`. A real `.exe` traps at 200. This is why two careful probes of
-the same shell version disagreed: mine used `cmd /c`, and `cmd` is not exposed.
-It *is* a race — `[1 -1 -1 -1 -1]` in one cell — but the race is over process
-teardown, not over how many lines were produced.
+**Axis 3 — host, and it flips which way the gate fails.** The corrupted value is
+`0` in the agent shell and `-1` under `powershell -File`. So:
 
-**3. The dangerous direction is the opposite of the one broadcast.** The claim
-was that this produces false negatives only, because "a truncation artifact
-cannot invent a nonzero". It can, and does: **a command whose true exit code is
-`0` reads `-1`**, 4/5 without a delay and 5/5 with one. So a gate written
-`if ($code -ne 0) { throw }` around a truncated pipeline **fails a command that
-succeeded**. Truncation turns green red, not red green.
+- **agent shell** (`0`): a **failing** command reads `0`. `if ($code -ne 0)`
+  **passes a failure** — red goes green.
+- **`-File`** (`-1`): a **succeeding** command reads `-1`. `if ($code -ne 0)`
+  **fails a success** — green goes red. Measured directly: true code `0`,
+  `-First 3`, reads `-1` 4/5 without a delay and 5/5 with one.
 
-That direction is worse than it sounds in this project, because a phantom
-failure does not sit quietly — it gets investigated, and tonight several
-milestone-hours went into defects that had not happened.
+Both hazards are real; which one you get is a property of the host, not of the
+command. The claim that this "produces false negatives only, because a
+truncation artifact cannot invent a nonzero" holds in the agent shell and is
+**inverted** under `-File`.
 
-The failing arm also reads `-1`, so a `-ne 0` gate stays red on real failures —
-correctly, but by accident rather than by measurement.
+**A pre-clear must not collide with the corruption.** The canonical harness
+seeds with `cmd /c exit 0`. In the agent shell the corruption *is* `0`, so seed,
+corruption, and the true code of any successful command are one observation —
+**that harness is blind to the green→red direction by construction**. Seeding to
+a value outside {0, 1, -1} separates all four states.
 
 ---
 
@@ -346,22 +357,25 @@ applied and verified.
   reads **seven** (`git grep -oh "STREHL_[A-Z_]*"`). At least one omitted
   variable, `STREHL_CACHE_DIR`, moves pixels by Q6. A prose enumeration of an
   environment contract drifts from the source it describes; generate it.
-- **Q9 (MEASURED, method).** The `$LASTEXITCODE`-after-truncation trap is
-  **producer-dependent, not volume-dependent**. A `cmd` builtin loop is immune
-  from 50 to 20 000 lines, on stdout and through `2>&1`, 40/40 reps; a real
-  `.exe` traps at 200 lines. The corrupted value is **`-1`** — PowerShell kills
-  the child on `StopUpstreamCommandsException` — not `0`. Two careful probes of
-  the same shell version disagreed for exactly this reason.
-- **Q9b (MEASURED).** Truncation **can invent a nonzero**. A command whose true
-  exit code is `0` reads `-1` through `-First 3`, 4/5 reps without a delay and
-  5/5 with one. So the hazard runs green→red: a gate written
-  `if ($code -ne 0) { throw }` fails a command that succeeded. The stated
-  consequence — "produces false negatives only" — is backwards.
-- **Q9c (MEASURED, method).** A naive A/B of this trap returns a false negative
-  because `$LASTEXITCODE` retains the previous command's value; every arm must
-  be pre-cleared to a value that is not the answer. My first two probes returned
-  "no trap" for this reason and I nearly filed it. Discipline 598 applies to
-  exit codes.
+- **Q9 (MEASURED).** The `$LASTEXITCODE`/`-First` trap has **three orthogonal
+  axes**. *Quota*: `-First N` loses the code exactly when `N <= objects
+  produced`, deterministic, boundary confirmed at `-First 50` lost / `-First 51`
+  preserved on 50 lines. *Producer*: a `cmd` builtin loop is **immune at every
+  N** (25/25 here, 40/40 across 50–20 000 lines earlier) while a real `.exe`
+  loses it — this, not shell version or line count, is why two pre-cleared
+  probes disagreed. *Host*: the corrupted value is `0` in the agent shell and
+  `-1` under `powershell -File`.
+- **Q9b (MEASURED).** The danger direction **flips with the host**. Corrupt `0`
+  makes `if ($code -ne 0)` pass a failure; corrupt `-1` makes it fail a success
+  — a command with true exit code `0` reads `-1`, 4/5 without a delay and 5/5
+  with one. "Produces false negatives only" is true in the agent shell and
+  inverted under `-File`.
+- **Q9c (MEASURED, method).** A pre-clear must not collide with the corruption.
+  Seeding with `cmd /c exit 0` in a host whose corruption is `0` makes "never
+  set", "corrupted" and "a successful command's true code" one observation, so
+  that harness cannot see the green→red direction at all. Seed outside
+  {0, 1, -1}. My own first two probes returned "no trap" because a stale `1`
+  masked every failure-to-set; discipline 598 applies to exit codes.
 - **Q10 (MEASURED, method).** Re-running a *fixed* linter that now reports zero
   violations cannot verify the fix: the reporter loop never executes, and the
   summary's em dash is encodable in cp1252 anyway. A separate plant printing
