@@ -179,9 +179,12 @@ the **shipped binary** actually wrote, so nothing in §3 rests on the simulation
 
 ### 2.4 Verification harness
 
-* `experiments/M100-exposure/verify2.ps1` — B1, B2, B6, B7 and the advisory,
-  run against **two binaries built from the same current-HEAD tree**, differing
-  only by the M100 patch.
+* `experiments/M100-exposure/verify3.ps1` — B1, B2, B6, B7, the advisory, and
+  the full-corpus before/after renders, run against **two binaries built from
+  the same current-HEAD tree**, differing only by the M100 patch.
+  `verify.ps1` and `verify2.ps1` are the earlier, pre-rebase rounds.
+* `experiments/M100-exposure/measure.py` — the clipping accounting in §3.4,
+  read off the files the binary wrote.
 * `experiments/M100-exposure/gate.ps1` — sensitivity of the automatic choice to
   `--gate` and to `--limit`, which is the evidence for the recommendation in
   §3.6.
@@ -189,11 +192,20 @@ the **shipped binary** actually wrote, so nothing in §3 rests on the simulation
   `a_planted_gain_is_recovered_exactly` and
   `recovering_a_planted_gain_restores_the_developed_pixels`.
 
-**A rebase happened mid-milestone and matters.** The first verify tree was
-archived from the HEAD that preceded M87's occlusion-halo work; M87 then landed
-three commits in `merge_cmd.rs`. Every number in §3 is from the **rebased**
-patch against current HEAD (`4ff8376`), and the two-binary construction above
-is what makes that check meaningful.
+**A rebase happened twice mid-milestone and matters.** The first verify tree
+was archived from the HEAD that preceded M87's occlusion-halo work; M87 then
+landed three commits in `merge_cmd.rs`. M95 then landed a chroma-cositing fix
+in `image_out.rs`, which **moves the bytes of the binned `--srgb` render**.
+Every number in §3 is from the **second** rebase, against `894f9f7`
+(post-M87, post-M95), and the two-binary construction above is what makes that
+check meaningful. `experiments/M100-exposure/verify3.ps1` is the script that
+produced it; `verify.ps1` and `verify2.ps1` are kept as the earlier rounds.
+
+MEASURED, and worth recording because it validates the design: **all seven
+stacks chose exactly the same exposure before and after M95** (+1.54, +1.54,
++3.74, +1.96, +1.19, −0.18, −0.32). DERIVED: the choice is computed in
+`merge_cmd.rs` from the estimator and the matrix, upstream of `image_out`
+entirely, so a change to the writer cannot move it.
 
 ## 3. Results
 
@@ -203,8 +215,8 @@ is what makes that check meaningful.
 |---|---|---|
 | **B1** byte-freeze | **PASS** | §3.3 |
 | **B2** `--exposure 0` round-trip | **PASS** | §3.3 |
-| **B3** clipping ≤0.50% any / ≤0.20% all | **FAIL on 1 of 7** (`foam`, 0.5315% any) | §3.4 |
-| **B4** encoded luma p99.9 ≥ 0.90 | **FAIL on 1 of 7** (`lead-1-cpl`, 0.8905) under one of the two readings of "luma"; PASS on all 7 under the other | §3.4 |
+| **B3** clipping ≤0.50% any / ≤0.20% all | **FAIL on 1 of 7** (`foam`, 0.5111% any) | §3.4 |
+| **B4** encoded luma p99.9 ≥ 0.90 | **FAIL on 1 of 7** (`lead-1-cpl`, 0.8903) under one of the two readings of "luma"; PASS on all 7 under the other | §3.4 |
 | **B5** planted-gain recovery | **PASS** | §3.5 |
 | **B6** printed choice reproduces the file | **PASS** | §3.3 |
 | **B7** refusal without `--srgb` | **PASS** | §3.3 |
@@ -235,38 +247,40 @@ together rather than one at a time. This is why the target is 0.90 and not
 ### 3.3 Byte-freeze, round-trip, reproducibility, refusal (MEASURED)
 
 `bee-3-cpl --limit 60`, SHA-256, three binaries — the pre-M87 HEAD, current
-HEAD, and current HEAD plus this patch:
+HEAD (`894f9f7`), and current HEAD plus this patch:
 
 ```
 ================ B1: BYTE-FREEZE of the default path ================
-bee-3-cpl --limit 60, no flags at all. Three binaries:
   pre-M87 HEAD  : 54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2
-  current HEAD  : 54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2
+  HEAD 894f9f7  : 54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2
   HEAD + M100   : 54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2
-  B1 (M100 moves no byte)    : PASS
-  bonus (M87 moved no byte)  : PASS
+  B1 : PASS
+  advisory silent on the measurement path : yes
 
-================ B2: --exposure 0 is not a gain of one ================
-  --srgb             HEAD : 3EF442AE6C4CF9F59460871F4D09EC6E01F1CC0F5562427B838A384D25C40E31
-  --srgb             M100 : 3EF442AE6C4CF9F59460871F4D09EC6E01F1CC0F5562427B838A384D25C40E31
-  --srgb --exposure 0 M100: 3EF442AE6C4CF9F59460871F4D09EC6E01F1CC0F5562427B838A384D25C40E31
-  --srgb --demosaic  HEAD : 18F5702463C56853C04A4DAE87E4F3315E16C13579A8988875AAE63FFD4D6840
-  --srgb --demosaic  M100 : 18F5702463C56853C04A4DAE87E4F3315E16C13579A8988875AAE63FFD4D6840
-  ... --exposure 0   M100 : 18F5702463C56853C04A4DAE87E4F3315E16C13579A8988875AAE63FFD4D6840
+================ B2: --exposure 0 round trip ================
+  --srgb              HEAD : EB1E0FE7DEE6D63FE1522C6C44B1AB1F13FDB349E4915C4C5261A4F4B1AE4D25
+  --srgb              M100 : EB1E0FE7DEE6D63FE1522C6C44B1AB1F13FDB349E4915C4C5261A4F4B1AE4D25
+  --srgb --exposure 0 M100 : EB1E0FE7DEE6D63FE1522C6C44B1AB1F13FDB349E4915C4C5261A4F4B1AE4D25
+  --srgb --demosaic   HEAD : 18F5702463C56853C04A4DAE87E4F3315E16C13579A8988875AAE63FFD4D6840
+  --srgb --demosaic   M100 : 18F5702463C56853C04A4DAE87E4F3315E16C13579A8988875AAE63FFD4D6840
+  ... --exposure 0    M100 : 18F5702463C56853C04A4DAE87E4F3315E16C13579A8988875AAE63FFD4D6840
 
-================ B6: the printed choice reproduces the file ================
+================ B6 + the advisory ================
   exposure        : +1.48 stops (gain 2.789x), chosen from the image
                     rule: linear-sRGB luma p99.9 -> 0.90 on the binned grid (M100).
                     reproduce this exact file with --exposure=1.48
-                    ONE multiply in linear light, before the curve. No tone curve, no
-                    saturation, no roll-off: every unclipped ratio is unchanged.
-  --auto-exposure : 41AED157E61F6E54CF19F870BA4155A7F25FF9B42F7E27F78E7A77BF0A85C13F
-  --exposure=1.48  : 41AED157E61F6E54CF19F870BA4155A7F25FF9B42F7E27F78E7A77BF0A85C13F
+  --auto-exposure : BEF36AB8DD8E1C00D850BB640F5FAD1E8A5398758B9E952A87038A1B248E5577
+  --exposure=1.48 : BEF36AB8DD8E1C00D850BB640F5FAD1E8A5398758B9E952A87038A1B248E5577
 ```
 
 B1 **PASS**: the default measurement file is bit-identical. As a by-product,
-current HEAD also reproduces a render made before M87 landed, so M87's halo
-work is byte-frozen too on this stack.
+`894f9f7` still reproduces a render made *before* M87 landed, so M87's halo
+work and M95's cositing fix are both byte-frozen on the measurement path — a
+three-milestone freeze, checked rather than assumed.
+
+The `--srgb --demosaic` hash is also unchanged from the pre-M95 round
+(`18F570…`) while the binned `--srgb` hash moved — independent confirmation
+that M95's fix is binned-only, exactly as its doc claims.
 
 B2 **PASS** on both the binned and the demosaiced viewing paths — and note
 `--exposure 0` is not merely *arithmetically* a no-op: `Exposure::resolve`
@@ -293,25 +307,26 @@ CLI crate adds **no** clippy finding (§3.7).
 
 ### 3.4 Clipping accounting on the corpus (MEASURED, `measure.py`)
 
-Seven stacks, full frame counts, on the files the shipped binary wrote.
-`stops` is what the binary chose; `pred` is what `sweep.py` predicted.
+Seven stacks, full frame counts, on the files the shipped binary wrote at
+`894f9f7`. `stops` is what the binary chose; `pred` is what `sweep.py`
+predicted.
 
 | stack | | stops | pred | any-clip % | all-clip % | p99.9 mean-of-ch | p99.9 BT.709 |
 |---|---|---|---|---|---|---|---|
-| bee-2-cpl | before | 0.00 | | 0.0000 | 0.0000 | 0.5914 | 0.5927 |
-| | after | **+1.54** | +1.54 | 0.0416 | 0.0022 | 0.9532 | 0.9555 |
+| bee-2-cpl | before | 0.00 | | 0.0000 | 0.0000 | 0.5913 | 0.5927 |
+| | after | **+1.54** | +1.54 | 0.0376 | 0.0025 | 0.9532 | 0.9555 |
 | bee-3-cpl | before | 0.00 | | 0.0000 | 0.0000 | 0.5937 | 0.5930 |
-| | after | **+1.54** | +1.54 | 0.0422 | 0.0028 | 0.9569 | 0.9558 |
-| coffee-bean | before | 0.00 | | 1.4215 | 0.0086 | 0.9965 | 0.9979 |
-| | after | **−0.18** | −0.14 | 0.0027 | 0.0000 | 0.9530 | 0.9559 |
-| flat-on-ruler-cpl | before | 0.00 | | 0.0001 | 0.0000 | 0.5111 | 0.5179 |
-| | after | **+1.96** | +1.96 | 0.0995 | 0.0281 | 0.9378 | 0.9510 |
-| foam | before | 0.00 | | 0.7553 | 0.0144 | 0.9858 | 0.9801 |
-| | after | **−0.32** | −0.09 | 0.5315 | 0.0000 | 0.9478 | 0.9076 |
-| highly-angled-ruler-mm-cpl | before | 0.00 | | 0.0000 | 0.0000 | 0.6584 | 0.6603 |
-| | after | **+1.19** | +1.19 | 0.0250 | 0.0057 | 0.9508 | 0.9537 |
+| | after | **+1.54** | +1.54 | 0.0372 | 0.0035 | 0.9569 | 0.9558 |
+| coffee-bean | before | 0.00 | | 1.4197 | 0.0065 | 0.9964 | 0.9978 |
+| | after | **−0.18** | −0.14 | 0.0026 | 0.0000 | 0.9530 | 0.9559 |
+| flat-on-ruler-cpl | before | 0.00 | | 0.0000 | 0.0000 | 0.5100 | 0.5174 |
+| | after | **+1.96** | +1.96 | 0.0996 | 0.0256 | 0.9356 | 0.9503 |
+| foam | before | 0.00 | | 0.7246 | 0.0101 | 0.9854 | 0.9766 |
+| | after | **−0.32** | −0.09 | 0.5111 | 0.0000 | 0.9482 | 0.9041 |
+| highly-angled-ruler-mm-cpl | before | 0.00 | | 0.0000 | 0.0000 | 0.6571 | 0.6602 |
+| | after | **+1.19** | +1.19 | 0.0305 | 0.0036 | 0.9490 | 0.9535 |
 | lead-1-cpl | before | 0.00 | | 0.0000 | 0.0000 | 0.2662 | 0.2865 |
-| | after | **+3.74** | +3.74 | 0.0557 | 0.0000 | 0.8905 | 0.9505 |
+| | after | **+3.74** | +3.74 | 0.0543 | 0.0000 | 0.8903 | 0.9506 |
 
 **The two independent routes agree.** The orchestrator derived +1.57 stops for
 `bee-3-cpl` from the RAW background level (0.296 of usable range, targeting
@@ -329,23 +344,29 @@ simulation *toward* insufficient darkening.
 
 #### B3 — FAIL on `foam`, and the bar is the thing that is wrong
 
-`foam` finishes at **0.5315%** any-channel clipping against a ceiling of
-0.50%. The bar is failed. It is failed by 0.03 percentage points, and I am not
+`foam` finishes at **0.5111%** any-channel clipping against a ceiling of
+0.50%. The bar is failed. It is failed by 0.011 percentage points, and I am not
 moving it.
 
-But the same row says `foam` started at **0.7553%** clipped and the rule took
-it **down** to 0.5315%. `coffee-bean` started at **1.4215%** and finished at
-**0.0027%**. **B3 as I wrote it is an absolute ceiling on output clipping, and
+But the same row says `foam` started at **0.7246%** clipped and the rule took
+it **down** to 0.5111%. `coffee-bean` started at **1.4197%** and finished at
+**0.0026%**. **B3 as I wrote it is an absolute ceiling on output clipping, and
 that is not a property of the exposure rule at all** — it is partly a property
 of the capture. Two of the seven stacks are exposed to the top of the range and
 carry blown highlights at *zero* stops, which the identity transform also fails
 the bar on. I should have pre-registered *added* clipping. I did not, so B3 as
 written stands as failed.
 
+Why `foam` cannot be rescued by any exposure: after ×0.801 there are still
+0.51% of pixels at 65535, so those pixels exceed **1/0.801 = 1.25** in linear
+camera RGB — they are specular highlights that were already saturated in the
+capture. An exposure is a multiply, not a highlight reconstruction; what was
+clipped in the RAW stays clipped.
+
 POST-HOC, and labelled as such: the clipping **added** by the exposure change,
-`max(0, after − before)`, has a worst case of **+0.0994%** any-channel and
-**+0.0281%** all-channel across all seven stacks — inside both ceilings with
-5× and 7× margin. On no stack does the rule make clipping worse.
+`max(0, after − before)`, has a worst case of **+0.0996%** any-channel and
+**+0.0256%** all-channel across all seven stacks — inside both ceilings with
+5× and 8× margin. On no stack does the rule make clipping worse.
 
 #### B4 — FAIL on `lead-1-cpl` under one of two readings of "luma"
 
@@ -353,10 +374,10 @@ I wrote "encoded luma p99.9 ≥ 0.90" without saying which luma. There are two
 defensible readings and they disagree:
 
 * **mean-of-channels** — the reading anchored to the orchestrator's 0.5947 for
-  today's `bee-3-cpl`. Minimum across the corpus **0.8905** on `lead-1-cpl`.
-  **The bar is FAILED**, by 0.0095 absolute (1.06% relative).
-* **BT.709 relative luminance of the encoded values** — minimum **0.9076** on
-  `foam`, and 0.9505 on `lead-1-cpl`. **PASS on all seven.**
+  today's `bee-3-cpl`. Minimum across the corpus **0.8903** on `lead-1-cpl`.
+  **The bar is FAILED**, by 0.0097 absolute (1.08% relative).
+* **BT.709 relative luminance of the encoded values** — minimum **0.9041** on
+  `foam`, and 0.9506 on `lead-1-cpl`. **PASS on all seven.**
 
 I declare the **mean-of-channels** result binding, because that is the
 statistic the number in the brief came from, and therefore **B4 is failed on
@@ -425,9 +446,10 @@ default is a one-line change at the `Exposure::resolve` call site.
 ### 3.7 Pre-existing clippy failures in `merge_cmd/halo.rs` — NOT mine
 
 `cargo clippy --release -p strehl-cli --bins -- -D warnings` fails at current
-HEAD with two errors, **both in M87's `merge_cmd/halo.rs` and both present
-before this patch**. Verified by running clippy on the same tree with the M100
-patch reverted and getting the identical two errors:
+HEAD (`894f9f7`) with two errors, **both in M87's `merge_cmd/halo.rs` and both
+present before this patch**. Verified by running clippy on the same tree with
+the M100 patch reverted and getting the identical two errors, and again after
+M95 landed:
 
 ```
 error: the use of negated comparison operators on partially ordered types ...
@@ -441,11 +463,12 @@ edit that file.
 
 ## 4. Verbatim patches for files M100 may not edit
 
-Against **`4ff8376`**. `crates/strehl-cli/src/merge_cmd.rs`: +133 −10.
-`crates/strehl-cli/src/main.rs`: +65 −0. **`image_out.rs` needs no patch** —
-the design deliberately folds the gain into the existing normalisation closure,
-so the writer, its `Develop::default()` tripwire test and the byte-frozen
-branch are all untouched.
+Against **`894f9f7`**. `crates/strehl-cli/src/merge_cmd.rs`: +133 −10.
+`crates/strehl-cli/src/main.rs`: +65 −0. Neither file was touched by M87 or
+M95, so the hunks below are also the hunks against `4ff8376`.
+**`image_out.rs` needs no patch** — the design deliberately folds the gain into
+the existing normalisation closure, so the writer, its `Develop::default()`
+tripwire test and the byte-frozen branch are all untouched.
 
 ### 4.1 `crates/strehl-cli/src/main.rs` — four hunks, all pure insertions
 
@@ -885,6 +908,20 @@ is in play. `Develop { matrix, srgb }` with `matrix: None` performs
 the frozen `encode` closure — `.min(1.0)` equals `.clamp(0.0, 1.0)` there
 because the inputs are already non-negative — so an exposure-only render with
 no characterisation is still correct.
+
+> **Interaction with M95, which the orchestrator should rule on.** M95 gated
+> its chroma cosite resample at the *caller*: `develop_binned` applies it
+> unconditionally, and `write_binned` was only ever reached from inside
+> `if let Some(m) = matrix`. This hunk widens that condition, so
+> `--srgb --exposure X` on a camera with **no** characterisation now reaches
+> `write_binned` and picks up the cosite resample, where `--srgb` alone does
+> not. ARGUED: that is the *more* correct render — the cositing corrects where
+> the R, G and B samples of a quad physically sit, which is a geometric fact
+> independent of any colour matrix — and it cannot arise on this corpus, where
+> `--srgb` always has the A7C II characterisation. It is nevertheless a
+> behaviour change in M95's territory. If it is unwanted, the one-line fix
+> belongs in `image_out::develop_binned` (skip the resample when
+> `dev.matrix.is_none()`), not here.
 
 **Hunk 9 — three comment lines in the byte-frozen block. Optional but
 recommended; it adds no code. OLD:**

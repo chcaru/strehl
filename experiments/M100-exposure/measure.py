@@ -17,10 +17,11 @@ READ-ONLY on D:\\. Writes nothing but stdout.
 import glob
 import json
 import os
+import sys
 import numpy as np
 import tifffile
 
-SRC = r"C:\dev\strehl-out\M100"
+SRC = sys.argv[1] if len(sys.argv) > 1 else r"C:\dev\strehl-out\M100"
 HERE = os.path.dirname(os.path.abspath(__file__))
 # Row 1 of SRGB_TO_XYZ_D65 in crates/strehl-core/src/color.rs.
 YW = np.array([0.2126729, 0.7151522, 0.0722750], dtype=np.float64)
@@ -77,7 +78,10 @@ def main():
     min_mean = min_709 = 1.0
     for f in sorted(glob.glob(os.path.join(SRC, "auto-*.tif"))):
         name = os.path.basename(f)[len("auto-"):-len(".tif")]
-        b = stats(os.path.join(SRC, "tune-%s-srgb.tif" % name))
+        before = os.path.join(SRC, "tune-%s-srgb.tif" % name)
+        if not os.path.exists(before):
+            continue  # e.g. auto-repro.tif, the B6 reproduction render
+        b = stats(before)
         a = stats(f)
         print("  %-28s %7s %7s %9s %9s %9.4f %9.4f"
               % (name + " before", "0.00", "",
