@@ -985,9 +985,99 @@ one line — `self.provenance.stack.check(stack)` — comparing **only** name,
 digest and frame count. **So the resampler is written into the sidecar and
 never validated against the run consuming it.**
 
-Three accounts of this hazard have now been given, and each located the danger
-in **frame selection**, which is guarded, rather than in **solve parameters**,
-which are not. The guard is not weak; **it is guarding the wrong noun.**
+---
+
+### 4.12 The 11:27 notice: an external control, and a gap of my own (MEASURED)
+
+#### (a) My `bee-3-cpl` numbers are verified uncontaminated against an EXTERNAL reference
+
+The notice repeats that *"a control cannot catch this — it contaminates
+treatment and control identically."* That is true of a **passive** control, where
+both arms consume whatever sidecar happens to be present. It is false of a
+control that varies the sidecar deliberately (§4.5), and it is false in a
+second, stronger way that only became visible when every surviving render was
+hashed (`10-freeze-record.ps1`, second pass):
+
+| SHA-256 | render | frames | directory | alignment |
+|---|---|---|---|---|
+| `A559616F…` | `v4-plain-299` | 299 | `D:\personal\macro\bee-3-cpl` | ON (**sidecar**) |
+| `A559616F…` | `v4-exp0-299` | 299 | `D:\personal\macro\bee-3-cpl` | ON (**sidecar**) |
+| `A559616F…` | **`v6full-bee-3-cpl`** | 299 | **`C:\…\M105\isofull-bee-3-cpl`** | ON (**solved**) |
+| `54A5E20F…` | `v5a-linear-60` | 60 | `D:\personal\macro\bee-3-cpl` | sidecar **rejected** |
+| `54A5E20F…` | `v5c-A/B/C/D` | 60 | **`C:\…\M105\iso60`** | solved / sidecar / solved / rejected |
+
+**An isolated copy in private scratch, whose existence no other agent knew of,
+cannot have been perturbed by a shared sidecar.** It is therefore an
+*uncontaminated external reference* — the thing the notice says is unavailable.
+The shared-directory render matches it **byte for byte**, independently at 299
+frames and at 60. Same `gate 4.00`, same reference frame, same placed count.
+
+**VERDICT: no number in this report needs retaking.** This is external
+verification, not internal consistency, and it also confirms the 25 GB isolated
+copies were byte-faithful.
+
+The notice's specific mechanism is refuted for the fourth time. *"Any `stack`
+run on `bee-3-cpl` that picked [the 40-frame sidecar] up was merging 40 frames
+while believing it had 299"* — a 299-frame run **cannot** pick up a 40-frame
+map; `load_or_solve` compares `map.len()` to `paths.len()` and refuses. My own
+`v2-auto-299` log is a direct instance, refusing a 60-frame map and re-solving.
+The narrow case that *would* accept it, a `--limit 40` run, is **legitimate**:
+by P21 `--limit` is a sorted prefix, so a 40-frame map is a correct solve for
+those 40 frames. The exposure is the resampler (P21), not the frame count.
+
+#### (b) A gap in my own artefacts, found by acting on the notice — and closed
+
+Acting on *"check any render you took tonight"* surfaced a real defect **in this
+report**: bar **V3**'s hash `E400A63A…` was asserted in prose and in the §2
+summary table, but **was never retained in any committed data file** — the
+first render batch's manifest covers five renders, and V3 was in a later batch.
+**That is the M106 failure mode reproduced in my own work**: a hash without the
+artefact that would let someone re-derive it.
+
+Closed by hashing the retained render: `v3-repro-299` = `E400A63A…`, **identical
+to `v2-auto-299`**, so V3's PASS stands and is now backed by
+`data/10-all-render-hashes.json` rather than by my say-so. Had the TIF been
+deleted, the bar would have been unrecoverable.
+
+#### (c) The habit is right, but the information was unretained, not unrecorded
+
+`strehl stack` **already prints its own configuration**, including the gate when
+the gate is the default:
+
+```
+gates           : 4.00  (UNCALIBRATED -- question 90; target is fact 212's nwide = 3)
+frames          : 299 from D:\personal\macro\bee-3-cpl
+alignment      : ON (sidecar), reference frame 149, 299 placed / 0 refused
+```
+
+All 18 logs here carry those lines and all 18 are committed, so every hash in
+this report is now attributable to a complete invocation — **all at `gate
+4.00`**, stated explicitly rather than implied, per the new habit.
+
+So the M106 incident is not that the invocation was unrecorded; **the tool
+recorded it.** It is that milestones committed a hash without committing the
+tool's report beside it. **The cheap machine-checkable form of the new rule is
+therefore to require the log, and parse the gate out of it, rather than to ask
+agents to remember to write the gate down** — a rule that depends on memory
+fails the same way the first time someone is tired. Offered to M108-freeze-test;
+`10-freeze-record.ps1` is a working sketch, and it exits non-zero when any
+record lacks directory, frame count or gate.
+
+#### (d) The M86c watershed does not move anything here, and corroborates §5.1
+
+`885e9f7` is `2026-08-24 03:15:23 -0700` (MEASURED, `git show -s`).
+
+* **Unaffected.** Every render in this report was built at HEAD `519203f`, and
+  the M100 hash V5a reproduces was published at `894f9f7`, `05:55:29` — **both
+  after the watershed**. V5a is a comparison between two post-M86c points, so
+  the alignment change is upstream of both sides and cancels.
+* **Corroborated.** The artefacts §4.8 measured are timestamped
+  `2026-08-23 23:37–23:47`, roughly 3.5 hours **before** alignment was wired
+  into `strehl stack` at all. §5.1 listed "no alignment" as the fourth of five
+  defects on the authority of a turn description; **it is now established by
+  commit timestamp** — those renders *could not* have been aligned, because the
+  code path did not exist when they were written. That upgrades §5.1's defect 4
+  from ARGUED to DERIVED.
 
 ---
 
@@ -1384,6 +1474,35 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   stores in provenance as *"the resampler the solve was validated with"* and
   which `check_stack` — a single call to `provenance.stack.check` — never
   compares. **The field is recorded in the file and ignored by the validator.**
+* **P22 (MEASURED).** **A SHARED-DIRECTORY RENDER AND AN ISOLATED-COPY RENDER
+  OF THE SAME BRACKET ARE BYTE-IDENTICAL.** `v4-plain-299` (`D:\personal\macro\
+  bee-3-cpl`, sidecar loaded) and `v6full-bee-3-cpl` (private isolated copy,
+  freshly solved) both hash `A559616F…`; independently, `v5a-linear-60` and all
+  four `v5c-*` arms hash `54A5E20F…` at 60 frames. *Implication:* an isolated
+  copy no other agent knew existed is an **uncontaminated external reference**,
+  so this is external verification rather than internal consistency. No number
+  in this report needs retaking, and the isolated copies were byte-faithful.
+* **P23 (MEASURED).** **THE M106 FAILURE MODE WAS PRESENT IN THIS REPORT'S OWN
+  ARTEFACTS.** Bar V3's hash was published in prose and in the summary table
+  but retained in no committed data file, because the render manifest covered
+  only the first batch. Re-hashing the retained render gives `E400A63A…`,
+  identical to `v2-auto-299`, so the bar stands — but had the file been
+  deleted it would have been unrecoverable. *Implication:* acting on an
+  orchestrator notice, rather than filing it, found a real defect at home.
+* **P24 (MEASURED).** **THE TOOL ALREADY RECORDS THE FULL INVOCATION.**
+  `strehl stack` prints `gates : 4.00` even when 4.0 is the default, plus
+  `frames : N from <dir>`, which together fix directory, effective `--limit`
+  and gate. All 18 logs here carry them and all 18 are committed.
+  *Implication:* the M106 incident is not that the invocation was unrecorded
+  but that the tool's report was not committed beside the hash. **The cheap
+  machine-checkable rule is to require the log and parse the gate from it**,
+  rather than to ask agents to remember to write it down.
+* **P25 (DERIVED).** **THE JUDGED RENDERS COULD NOT HAVE BEEN ALIGNED.**
+  Alignment was wired into `strehl stack` at `885e9f7`, `2026-08-24 03:15:23`;
+  the artefacts §4.8 measured are timestamped `2026-08-23 23:37–23:47`, about
+  3.5 hours earlier. *Implication:* §5.1's fourth defect, previously carried on
+  a turn description, is now established by commit timestamp — the code path
+  did not exist. Upgrades that item from ARGUED to DERIVED.
 
 ### Disciplines
 
@@ -1479,6 +1598,18 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   is a false green. Guidance phrased around the observed value propagates a
   check that misses the other. **Describe the mechanism; let each agent measure
   their own symptom.**
+* **PD14.** **The uncontaminated arm is the one your neighbours cannot reach.**
+  Shared state defeats a control only while both arms share it. A copy in
+  private scratch, whose existence no other agent knows, is outside the
+  contamination channel by construction, so agreement between it and the shared
+  render is external evidence rather than internal consistency. **When shared
+  state is the hazard, buy an arm nobody else can write to** — it converts an
+  unfalsifiable worry into a hash comparison.
+* **PD15.** **A rule that depends on remembering will fail the way the thing it
+  replaced failed.** The instruction "always write the gate beside the hash" is
+  correct and will still be missed at 3am. The tool already prints the gate, so
+  the enforceable form is "commit the tool's report beside the hash" plus a
+  parser. **Prefer a rule a script can check to a rule an agent must recall.**
 
 ### Questions
 * **PQ1.** What produced `M106`'s `CF266004...`? P3 rules out the source

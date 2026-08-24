@@ -1,0 +1,154 @@
+﻿[
+    {
+        "name":  "10-freeze-record",
+        "sha256":  "RENDER NOT RETAINED",
+        "dir":  null,
+        "frames":  null,
+        "gate":  null,
+        "alignment":  null
+    },
+    {
+        "name":  "v2-auto-299",
+        "sha256":  "E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112",
+        "dir":  "D:\\personal\\macro\\bee-3-cpl",
+        "frames":  "299",
+        "gate":  "4.00",
+        "alignment":  "sidecar rejected (this warp map was fitted on stack \"bee-3-cpl\" (digest 56d8292576b3fd13, 60 frames)"
+    },
+    {
+        "name":  "v3-repro-299",
+        "sha256":  "E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112",
+        "dir":  "D:\\personal\\macro\\bee-3-cpl",
+        "frames":  "299",
+        "gate":  "4.00",
+        "alignment":  "ON (sidecar), reference frame 149, 299 placed / 0 refused"
+    },
+    {
+        "name":  "v4-exp0-299",
+        "sha256":  "A559616F85CFAF41FF0A9F8C3067C9B8D80F5C52041F56D141CB793A0182CD00",
+        "dir":  "D:\\personal\\macro\\bee-3-cpl",
+        "frames":  "299",
+        "gate":  "4.00",
+        "alignment":  "ON (sidecar), reference frame 149, 299 placed / 0 refused"
+    },
+    {
+        "name":  "v4-exp1-299",
+        "sha256":  "A4FABFEBD9664691333AA4161CC2E2D3B165B95DBEB0CB8F0D04FDF6AB19988F",
+        "dir":  "D:\\personal\\macro\\bee-3-cpl",
+        "frames":  "299",
+        "gate":  "4.00",
+        "alignment":  "ON (sidecar), reference frame 149, 299 placed / 0 refused"
+    },
+    {
+        "name":  "v4-plain-299",
+        "sha256":  "A559616F85CFAF41FF0A9F8C3067C9B8D80F5C52041F56D141CB793A0182CD00",
+        "dir":  "D:\\personal\\macro\\bee-3-cpl",
+        "frames":  "299",
+        "gate":  "4.00",
+        "alignment":  "ON (sidecar), reference frame 149, 299 placed / 0 refused"
+    },
+    {
+        "name":  "v5a-linear-60",
+        "sha256":  "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+        "dir":  "D:\\personal\\macro\\bee-3-cpl",
+        "frames":  "60",
+        "gate":  "4.00",
+        "alignment":  "sidecar rejected (this warp map was fitted on stack \"bee-3-cpl\" (digest 4d9a2441fffe4c05, 30 frames)"
+    },
+    {
+        "name":  "v5c-A-cold",
+        "sha256":  "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+        "dir":  "C:\\dev\\strehl-out\\M105\\iso60",
+        "frames":  "60",
+        "gate":  "4.00",
+        "alignment":  "ON (solved), reference frame 30, 60 placed / 0 refused"
+    },
+    {
+        "name":  "v5c-B-warm",
+        "sha256":  "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+        "dir":  "C:\\dev\\strehl-out\\M105\\iso60",
+        "frames":  "60",
+        "gate":  "4.00",
+        "alignment":  "ON (sidecar), reference frame 30, 60 placed / 0 refused"
+    },
+    {
+        "name":  "v5c-C-cold2",
+        "sha256":  "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+        "dir":  "C:\\dev\\strehl-out\\M105\\iso60",
+        "frames":  "60",
+        "gate":  "4.00",
+        "alignment":  "ON (solved), reference frame 30, 60 placed / 0 refused"
+    },
+    {
+        "name":  "v5c-D-stale",
+        "sha256":  "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+        "dir":  "C:\\dev\\strehl-out\\M105\\iso60",
+        "frames":  "60",
+        "gate":  "4.00",
+        "alignment":  "sidecar rejected (this warp map was fitted on stack \"iso60\" (digest 4d9a2441fffe4c05, 30 frames) but was applied to \"iso60\" (digest 56d8292576b3fd13, 60 frames)); re-solving"
+    },
+    {
+        "name":  "v5c-D-stale-src",
+        "sha256":  "A7C532EC29CD3C6878D986ABFCA965640B62ECCB470B831933E92AACE6DF8136",
+        "dir":  "C:\\dev\\strehl-out\\M105\\iso60",
+        "frames":  "30",
+        "gate":  "4.00",
+        "alignment":  "ON (solved), reference frame 15, 30 placed / 0 refused"
+    },
+    {
+        "name":  "v5d-alignoff",
+        "sha256":  "2E0AE672A8CE9BEF0C431040CD871DC2CAD8269B19474B64D9CFD1425C352EDB",
+        "dir":  "C:\\dev\\strehl-out\\M105\\iso60",
+        "frames":  "60",
+        "gate":  "4.00",
+        "alignment":  "OFF -- frames are combined unregistered. M86 measured 232.7 px of drift on bee-3-cpl; expect softness that grows with radius."
+    },
+    {
+        "name":  "v6-bee-3-cpl",
+        "sha256":  "18F5702463C56853C04A4DAE87E4F3315E16C13579A8988875AAE63FFD4D6840",
+        "dir":  "C:\\dev\\strehl-out\\M105\\iso60",
+        "frames":  "60",
+        "gate":  "4.00",
+        "alignment":  "ON (sidecar), reference frame 30, 60 placed / 0 refused"
+    },
+    {
+        "name":  "v6-coffee-bean",
+        "sha256":  "990A059CA643174D1F8013258CD0D89F5F952E68DF39860B6044A5C11E71DF75",
+        "dir":  "C:\\dev\\strehl-out\\M105\\iso-coffee-bean",
+        "frames":  "60",
+        "gate":  "4.00",
+        "alignment":  "ON (solved), reference frame 30, 60 placed / 0 refused"
+    },
+    {
+        "name":  "v6-foam",
+        "sha256":  "34902A60CB52C369A35AB47794B0043AB3930B56DAF28CAD0934EBFA38026D5C",
+        "dir":  "C:\\dev\\strehl-out\\M105\\iso-foam",
+        "frames":  "60",
+        "gate":  "4.00",
+        "alignment":  "ON (solved), reference frame 30, 60 placed / 0 refused"
+    },
+    {
+        "name":  "v6full-bee-3-cpl",
+        "sha256":  "A559616F85CFAF41FF0A9F8C3067C9B8D80F5C52041F56D141CB793A0182CD00",
+        "dir":  "C:\\dev\\strehl-out\\M105\\isofull-bee-3-cpl",
+        "frames":  "299",
+        "gate":  "4.00",
+        "alignment":  "ON (solved), reference frame 149, 299 placed / 0 refused"
+    },
+    {
+        "name":  "v6full-coffee-bean",
+        "sha256":  "E40628CC67426979AB7FD6972C8360B53A4A0F10C993FF4C16DE63DC0B5471ED",
+        "dir":  "C:\\dev\\strehl-out\\M105\\isofull-coffee-bean",
+        "frames":  "105",
+        "gate":  "4.00",
+        "alignment":  "ON (solved), reference frame 52, 105 placed / 0 refused"
+    },
+    {
+        "name":  "v6full-foam",
+        "sha256":  "C1E62E244C4D1AB722662C01F4592F64EB6D21768EE627F5450D0DE2151EC95B",
+        "dir":  "C:\\dev\\strehl-out\\M105\\isofull-foam",
+        "frames":  "100",
+        "gate":  "4.00",
+        "alignment":  "ON (solved), reference frame 50, 100 placed / 0 refused"
+    }
+]

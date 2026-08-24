@@ -1,0 +1,69 @@
+
+name          frames gate sha256                                                          
+----          ------ ---- ------                                                          
+v5a-linear-60 60     4.00 54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2
+v2-auto-299   299    4.00 E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112
+v4-plain-299  299    4.00 A559616F85CFAF41FF0A9F8C3067C9B8D80F5C52041F56D141CB793A0182CD00
+v4-exp0-299   299    4.00 A559616F85CFAF41FF0A9F8C3067C9B8D80F5C52041F56D141CB793A0182CD00
+v4-exp1-299   299    4.00 A4FABFEBD9664691333AA4161CC2E2D3B165B95DBEB0CB8F0D04FDF6AB19988F
+
+
+
+
+=== completeness of each freeze record ===
+  all 5 records carry dir, frame count and gate
+  (gate is present because the binary prints it even at the default)
+
+=== distinct invocations behind these hashes ===
+  gate=4.00, 299  n=4 render(s)
+  gate=4.00, 60  n=1 render(s)
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M105b-exposure-verify\data\10-freeze-record.json
+
+=== full freeze record: every surviving render, hashed from disk ===
+
+name               frames gate dir                                        sha256                                                          
+----               ------ ---- ---                                        ------                                                          
+10-freeze-record                                                          RENDER NOT RETAINED                                             
+v2-auto-299        299    4.00 D:\personal\macro\bee-3-cpl                E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112
+v3-repro-299       299    4.00 D:\personal\macro\bee-3-cpl                E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112
+v4-exp0-299        299    4.00 D:\personal\macro\bee-3-cpl                A559616F85CFAF41FF0A9F8C3067C9B8D80F5C52041F56D141CB793A0182CD00
+v4-exp1-299        299    4.00 D:\personal\macro\bee-3-cpl                A4FABFEBD9664691333AA4161CC2E2D3B165B95DBEB0CB8F0D04FDF6AB19988F
+v4-plain-299       299    4.00 D:\personal\macro\bee-3-cpl                A559616F85CFAF41FF0A9F8C3067C9B8D80F5C52041F56D141CB793A0182CD00
+v5a-linear-60      60     4.00 D:\personal\macro\bee-3-cpl                54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2
+v5c-A-cold         60     4.00 C:\dev\strehl-out\M105\iso60               54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2
+v5c-B-warm         60     4.00 C:\dev\strehl-out\M105\iso60               54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2
+v5c-C-cold2        60     4.00 C:\dev\strehl-out\M105\iso60               54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2
+v5c-D-stale        60     4.00 C:\dev\strehl-out\M105\iso60               54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2
+v5c-D-stale-src    30     4.00 C:\dev\strehl-out\M105\iso60               A7C532EC29CD3C6878D986ABFCA965640B62ECCB470B831933E92AACE6DF8136
+v5d-alignoff       60     4.00 C:\dev\strehl-out\M105\iso60               2E0AE672A8CE9BEF0C431040CD871DC2CAD8269B19474B64D9CFD1425C352EDB
+v6-bee-3-cpl       60     4.00 C:\dev\strehl-out\M105\iso60               18F5702463C56853C04A4DAE87E4F3315E16C13579A8988875AAE63FFD4D6840
+v6-coffee-bean     60     4.00 C:\dev\strehl-out\M105\iso-coffee-bean     990A059CA643174D1F8013258CD0D89F5F952E68DF39860B6044A5C11E71DF75
+v6-foam            60     4.00 C:\dev\strehl-out\M105\iso-foam            34902A60CB52C369A35AB47794B0043AB3930B56DAF28CAD0934EBFA38026D5C
+v6full-bee-3-cpl   299    4.00 C:\dev\strehl-out\M105\isofull-bee-3-cpl   A559616F85CFAF41FF0A9F8C3067C9B8D80F5C52041F56D141CB793A0182CD00
+v6full-coffee-bean 105    4.00 C:\dev\strehl-out\M105\isofull-coffee-bean E40628CC67426979AB7FD6972C8360B53A4A0F10C993FF4C16DE63DC0B5471ED
+v6full-foam        100    4.00 C:\dev\strehl-out\M105\isofull-foam        C1E62E244C4D1AB722662C01F4592F64EB6D21768EE627F5450D0DE2151EC95B
+
+
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M105b-exposure-verify\data\10-all-render-hashes.json
+
+=== identical bytes across DIFFERENT source directories ===
+  A559616F85CFAF41...
+      v4-exp0-299          299  D:\personal\macro\bee-3-cpl
+      v4-plain-299         299  D:\personal\macro\bee-3-cpl
+      v6full-bee-3-cpl     299  C:\dev\strehl-out\M105\isofull-bee-3-cpl
+                           ON (sidecar), reference frame 149, 299 placed / 0 refused
+                           ON (sidecar), reference frame 149, 299 placed / 0 refused
+                           ON (solved), reference frame 149, 299 placed / 0 refused
+  54A5E20F44255BB5...
+      v5a-linear-60        60   D:\personal\macro\bee-3-cpl
+      v5c-A-cold           60   C:\dev\strehl-out\M105\iso60
+      v5c-B-warm           60   C:\dev\strehl-out\M105\iso60
+      v5c-C-cold2          60   C:\dev\strehl-out\M105\iso60
+      v5c-D-stale          60   C:\dev\strehl-out\M105\iso60
+                           sidecar rejected (this warp map was fitted on stack "bee-3-cpl" (digest 4d9a2441fffe4c05, 30 frames)
+                           ON (solved), reference frame 30, 60 placed / 0 refused
+                           ON (sidecar), reference frame 30, 60 placed / 0 refused
+                           ON (solved), reference frame 30, 60 placed / 0 refused
+                           sidecar rejected (this warp map was fitted on stack "iso60" (digest 4d9a2441fffe4c05, 30 frames) but was applied to "iso60" (digest 56d8292576b3fd13, 60 frames)); re-solving
