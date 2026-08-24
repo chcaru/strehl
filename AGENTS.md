@@ -695,17 +695,22 @@ monolithic binary and ship only that binary.
     ```
 
     **If you are testing this trap rather than avoiding it, pre-clear
-    `$LASTEXITCODE` first** (`cmd /c exit 0`, then assert it took). It is ambient
-    state that survives across commands, so on a probe whose true code is `1` a
-    stale `1` is indistinguishable from a correct read. **This confound is not
-    hypothetical: it produced two wrong mechanisms for this very defect.** ORCH's
-    first probe reported 7/7 arms safe, and M104c's un-pre-cleared 50-line arm
-    produced a "race, not a count" theory that a pre-cleared re-run refuted 5/5.
-    The confound produces false negatives only, so a PASS taken from an observed
-    *nonzero* code is safe -- but any claim that some pipeline shape *preserves*
-    exit codes is worthless without the pre-clear.
-    (SYNTHESIS facts 1427, 1428, 1429; disciplines 709, 710. Harness:
-    `experiments/ORCH-drift-check/exit_code_trap.ps1`.)
+    `$LASTEXITCODE` first** (`cmd /c exit 0`, then assert it took), **and warm
+    the pipeline path -- a COLD first invocation can preserve the true code.**
+    Measured: 1 anomaly in 320 warm reps, at rep 1, despite a warm-up call;
+    every N from 1 to 50 lost the code 40/40 once warm. **That single cold read
+    is how a careless test concludes `-First` is safe.** `$LASTEXITCODE` is also
+    ambient state that survives across commands, so on a probe whose true code
+    is `1` a stale `1` is indistinguishable from a correct read. **Neither
+    confound is hypothetical: between them they produced two wrong mechanisms
+    for this defect.** ORCH's first probe reported 7/7 arms safe, and M104c's
+    un-pre-cleared 50-line arm produced a "race, not a count" theory that a
+    pre-cleared re-run refuted 5/5. Both confounds produce false negatives only,
+    so a PASS taken from an observed *nonzero* code is safe -- but any claim
+    that some pipeline shape *preserves* exit codes is worthless without the
+    pre-clear and the warm-up.
+    (SYNTHESIS facts 1427, 1428, 1429, 1437; disciplines 709, 710, 717.
+    Harnesses: `experiments/ORCH-drift-check/exit_code_trap{2,3}.ps1`.)
 
 ### Milestone allocation ledger (rule 41 -- written at DISPATCH, not at report time)
 
