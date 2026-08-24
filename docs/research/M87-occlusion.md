@@ -1776,8 +1776,84 @@ namespaced `M87`.
 | P38 | The prototype's crops were ROI crops of an **unaligned gate-0** merge; the shipped binary renders the **full frame, aligned, gate 2**. At that scale the Otsu mask takes 45.31% of pixels and the yoke covers 13.018%, against a small isolated leg edge at crop scale. | A result validated on a crop did not transfer to the full frame. Crop-scale validation is not evidence about the product's output. | MEASURED |
 | P39 | Fine-detail control on the shipped binary: the highest-gradient 600x800 window that the correction left completely unchanged carries **1.66x more** gradient energy than the corrected region and differs by **0 DN**. | Interior detail is structurally unreachable, so the correction's damage is confined to the silhouette. It is a real but narrow safety guarantee. | MEASURED |
 | P40 | PIL silently converts `strehl`'s 16-bit RGB TIFFs to 8-bit on read. The same before/after pair reads `max delta = 163` through PIL and `41887 / 65535` through `tifffile`. | Any measurement in this corpus taken on a `strehl` TIFF via PIL is quantised to 8 bits. Nearly caused M87 to report the correction as having no effect. | MEASURED |
+| P41 | **The registration confound was already separated, and the shipped `d` is clean of it.** Alignment is **already in the merge and ON by default** (`merge_cmd.rs:1199-1283`, `main.rs:71`); it is not pending work. Both shipped renders in §16 set `STREHL_WARPMAP` to a fitted sidecar, so BEFORE and AFTER were **both aligned**. | `d = 40` was **not** tuned against a render whose halo might be misregistration. The concern that a halo repair would bake in a compensation for an alignment bug does not apply to this parameter. | MEASURED |
+| P42 | **Three drift figures for `bee-3-cpl` disagree, and the aligner's own fitted warps sit between them.** Decoding the 299 placed warps (`z' = a z + b`, f64 bit patterns) gives scale `\|a\| = 0.92241` at frame 298 (a **7.76%** shrink) and a **maximum corner displacement of 351.4 px** in the binned 3516x2344 plane = **702.8 px** at full sensor. `main.rs:72` states 232.7 px; the orchestrator measured 603 px full-sensor at scale 0.85715. Under a matched half-diagonal convention the fitted warps give 327.9 px full against the orchestrator's 603 px, a factor **1.84**. | Someone is wrong about the magnification sweep by roughly 2x, and `main.rs` and the orchestrator err in **opposite directions** from the shipped aligner. This is M86/M97's to adjudicate, not M87's, but it should not stay unresolved: it is the number the aligner is judged by. | MEASURED |
+| P43 | **M87's registration negative is robust to P42.** The verdict rests on the measured alignment switch (ISO 0.06805 -> 0.06356, **6.6%** removal, overlapping CIs) and not on any drift magnitude. A *larger* true drift strengthens the drift hypothesis' prediction that alignment should remove the halo, so P42 can only make the observed 6.6% **more** discrepant, never less. | The 2x drift disagreement cannot rescue the registration hypothesis. No re-measurement after M97 is required before accepting §15. | DERIVED |
+| P44 | **The lint failure reported against this file did not exist at `HEAD`.** The quoted S6 row (`ratio \|E\|/\|E_fwd\|`, line 886 not 845) has been escaped since commit `c24e347`, two commits before the shipping commit. `scripts/corpus_lint.py` exits **0**, and an independently written table checker agrees at **0 S6 / 0 S1 over 30 tables** — after a positive control in which a planted unescaped span and a planted extra cell both fired. | A stale lint result was attributed to a milestone by file. Attribution by file is sound only against a current run; re-run before attributing. | MEASURED |
 
 ### Capture request
 
 None. Every measurement in §16-§18 reuses `bee-3-cpl`,
 `flower-bud-with-background-fern-cpl` and synthetic plants already in the tree.
+
+## 19. The registration confound, closed with the aligner's own warps
+
+**Asked by the orchestrator at 06:31**, alongside a measurement of 603 px of
+corner drift and a warning that "some fraction of what currently reads as
+occlusion halo may be misregistration", with the reasonable fear that `d = 40`
+had been tuned against a registration artifact.
+
+**It had not, and the experiment was already done.**
+
+### 19.1 Alignment is not pending; it is the default, and I used it
+
+**MEASURED, at source.** `crates/strehl-cli/src/merge_cmd.rs:1199-1283` performs
+the alignment solve inside `merge`, prints `alignment      : ON (...)`, and
+`main.rs:71` documents `It ALIGNS BY DEFAULT (M86c)`. `STREHL_ALIGN=0` disables
+it. Wiring alignment into the merge is therefore **already landed**, and §15
+tested the halo across that switch on 2026-08-24 rather than waiting for it.
+
+Both §16 renders set `STREHL_WARPMAP` to the fitted sidecar
+(§16.7, line 1549), so the shipped BEFORE and AFTER are **both aligned
+renders**. The ladder that chose `d = 40` was measured on aligned data.
+
+### 19.2 The drift audit
+
+`src/50-drift-audit.py` decodes all 299 placed warps from the sidecar and
+evaluates `|a z + b - z|` at the four plane corners. **MEASURED:**
+
+| quantity | value |
+|---|---|
+| frames placed | 299 of 299 |
+| scale `\|a\|`, frame 298 | 0.922414 (**7.76%** shrink) |
+| rotation, frame 298 | +0.4598 deg |
+| max corner displacement | **351.4 px** binned (3516x2344) |
+| same, at full sensor | **702.8 px** |
+| drift at `ROI_LEG` centre, p-p | 157.2 px binned |
+
+Against the two figures in circulation:
+
+| source | corner drift, full sensor | implied `1 - s` |
+|---|---|---|
+| `main.rs:72` | 232.7 px | 0.0551 |
+| orchestrator, 2026-08-24 | 603 px | 0.1427 |
+| **fitted warps, this audit** | **702.8 px** measured; 327.9 px under a half-diagonal convention | **0.0776** |
+
+The orchestrator's two numbers are self-consistent with each other under
+"corner drift = `(1-s)` x half-diagonal at full resolution"; under that same
+convention the fitted warps give 327.9 px, so the disagreement is a genuine
+**1.84x on scale**, not a units slip. `main.rs` errs the other way. **I am not
+adjudicating this** — it is M86/M97's number — but it should not be left open.
+
+### 19.3 Why none of that moves §15
+
+§15's negative is **not** a claim about drift magnitude. It is a measured
+before/after across the alignment switch: **6.6% of the halo removed**, CIs
+overlapping, where the drift ladder predicted **91.7%**. Drift magnitude enters
+only through the *prediction*, and it enters monotonically — **more** drift
+means alignment has **more** to remove, so a larger true drift makes the
+observed 6.6% more anomalous, not less. **P42 cannot rescue the registration
+hypothesis in either direction.** DERIVED.
+
+Note also §15.2's arm **Uw** — resampled once but *not* aligned, ISO 0.06844
+against unaligned 0.06805. Resampling by itself does not move the metric, which
+removes the obvious alternative reading of the A/B.
+
+### 19.4 On discipline 600
+
+M87's only plant-then-restore on Rust was the six halo unit tests. The restore
+**did** invalidate the build cache: the file was restored from `$env:TEMP`,
+confirmed byte-identical with `Get-FileHash`, **`LastWriteTime` was then set to
+`Get-Date`**, and the control was proven by **re-running it** (3 passed /
+3 failed while planted; 6 passed after restore), never by diffing source.
+Discipline 600's trap was avoided rather than survived by luck.
