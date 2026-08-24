@@ -1,19 +1,37 @@
 # M88 — the optical ceiling, measured
 
-**Verdict: UNIDENTIFIED for the number, REFUTED for clause (a).**
+**Verdict: fact 1149 is REFUTED. M88's own measurement of the cutoff is
+UNIDENTIFIED, and the pre-registered model-form bar FAILED.**
 
-The corpus cannot currently measure the diffraction cutoff of the owner's rig,
-because every usable edge in it is dominated by a blur that does not change
-with aperture. That is a measured statement, not a shrug: the ISO-12233-style
-instrument built for this milestone was validated to `+1.19% +/- 1.50%` on
-planted cutoffs from 60 to 140 cy/mm, and it was pointed at the same physical
-subject photographed at f/11 and at f/5.6. Diffraction theory says the f/11
-edge must be **1.964x** wider than the f/5.6 edge. It is **1.025x**.
+Three separate findings, which should not be collapsed into one.
 
-Separately, and needing no new measurement at all, fact 1149's clause **"MTF
-at sensor Nyquist is exactly zero" is false** — on its own arithmetic once the
-green channel is allowed to be broadband, and much more clearly on M5's
-already-measured bellows factor.
+**1. Fact 1149's number is refuted by the corpus, not by M88.** Its
+`f_c = 86.3 cy/mm` requires `p = 1`. Fact 1152 **excludes `p = 1` by
+measurement**, bracketing `p` in `[1.31, 1.94]`. Recomputing gives
+**`f_c` in [106, 135] cy/mm** at 550 nm by two independent routes that agree to
+0.6%. The whole interval lies **above** sensor Nyquist, 97.66 cy/mm. Fact
+1149's arithmetic is correct; its pupil assumption is not, and fact 1152
+pre-dates this milestone's own pre-registration. M88 missed it and says so in
+§5.3.
+
+**2. Its clause (a) is therefore refuted outright.** "MTF at sensor Nyquist is
+exactly zero" is false at the central wavelength across the entire measured
+interval, not merely at the blue end.
+
+**3. M88's own attempt to measure the cutoff returns UNIDENTIFIED, and the
+one bar that could fire, fired against the model.** The corpus cannot measure
+this: every usable edge in it is dominated by a blur that does not change with
+aperture. That is a measured statement, not a shrug. The ISO-12233-style
+instrument built here was validated to `+1.19% +/- 1.50%` on planted cutoffs
+from 60 to 140 cy/mm, then pointed at the *same physical subject* photographed
+at f/11 and at f/5.6. Diffraction says the f/11 edge must be **1.964x** wider.
+It is **1.025x**.
+
+Finding 3 is independent of finding 1 by construction: the pre-registered
+Bar 3 is a *ratio* at two apertures and is free of both `m` and `p`, so the
+pupil correction does not touch it. If anything the correction strengthens it —
+a higher true cutoff means a smaller diffraction blur, and so an even more
+dominant non-diffraction term.
 
 ---
 
@@ -295,13 +313,39 @@ above the sublattice Nyquist, neither of which improves with exposure. Trap 3
 applies in its strongest form: this crossing is a property of the subject and
 the SNR, not of the lens.
 
-## 5. Clause (a) is false, and no measurement was needed
+## 5. Fact 1149 is refuted by the corpus's own measurements
 
-Fact 1149 concludes that **"MTF at sensor Nyquist is exactly zero"**. That
-conclusion is drawn from a monochromatic cutoff at `lambda = 550 nm`. The Bayer
-green channel is not monochromatic.
+### 5.1 The number: `p = 1` is excluded, so 86.3 cy/mm is excluded
 
-**DERIVED (M88).** Diffraction MTF at the 97.66 cy/mm sensor Nyquist:
+Fact 1149 reaches `f_c = 86.3 cy/mm` through `N_eff = N(1 + m/p)` at
+**`p = 1`**. Fact 1152 excludes that value.
+
+**MEASURED elsewhere (fact 1152, from M84b and M5).** `p` lies in
+`[1.31, 1.94]`. `p = 1` would demand `B = 3.72`, exceeding M5's measured upper
+bound of 3.064.
+
+**DERIVED (M88).** Recomputing the cutoff at 550 nm by two routes that share no
+input:
+
+| route | inputs | `N_eff` | `f_c` at 550 nm |
+| --- | --- | --- | --- |
+| A — M5's measured bellows factor `B` in [2.41, 3.06] | needs **neither** `m` **nor** `p` | 13.50 to 17.14 | **106.10 to 134.72 cy/mm** |
+| B — fact 1152's measured `p`, M84b's `m = 2.7198` | needs both | 13.45 to 17.23 | **105.54 to 135.17 cy/mm** |
+| fact 1149 — assumed `p = 1` | assumption now excluded | 21.07 | 86.30 cy/mm |
+
+The two measured routes agree to **0.6%**, which is a meaningful cross-check
+because route A never touches the ruler that M84 and M84b disagree about.
+**86.3 cy/mm lies outside both intervals.** Fact 1149's number should be
+replaced by `f_c` in **[106, 135] cy/mm** at 550 nm.
+
+### 5.2 Clause (a) collapses with it
+
+**DERIVED (M88).** The entire corrected interval lies **above** sensor Nyquist,
+97.66 cy/mm. So "MTF at sensor Nyquist is exactly zero" is false at the central
+wavelength, on measured inputs, with no appeal to bandwidth at all.
+
+It is false a second time, independently, on wavelength. Fact 1149's cutoff is
+a monochromatic 550 nm figure and the Bayer green channel is not monochromatic:
 
 | `lambda` | `f_c` at `N_eff = 21.07` | MTF at Nyquist | `f_c` at `N_eff = 17.16` | MTF at Nyquist |
 | ---: | ---: | ---: | ---: | ---: |
@@ -312,13 +356,6 @@ green channel is not monochromatic.
 | 600 nm | 79.11 | 0.0000 | 97.13 | 0.0000 |
 | 650 nm | 73.03 | 0.0000 | 89.66 | 0.0000 |
 
-`N_eff = 17.16` is not an invention: it is `5.6 x 3.064`, where 3.064 is
-**M5's MEASURED upper bound** on the composite bellows factor
-`B = 1 + m/p`. Fact 1149 requires `B = 3.762`, which is **23% above M5's
-measured ceiling**, and M5's bias-corrected point estimates of 2.93 and 2.63
-sit further away still. This tension pre-dates M88 and was recorded in the
-pre-registration before any measurement.
-
 **DERIVED (M88).** Weighting by a Bayer-green passband (Gaussian, centre
 535 nm, sd 35 nm):
 
@@ -327,11 +364,45 @@ pre-registration before any measurement.
 | fact 1149, `N_eff = 21.07` | 0.0005 | 0.0139 | **106.1 cy/mm** |
 | M5's measured bound, `N_eff = 17.16` | **0.0437** | 0.1121 | **130.2 cy/mm** |
 
-**ARGUED (M88).** On fact 1149's own numbers the highest cutoff inside the
-green passband is **106.1 cy/mm**, above sensor Nyquist; "exactly zero" is
-already false, though only just, at 0.05%. On M5's measured bellows bound it is
-false by a wide margin: **4.4%** of full modulation survives at sensor Nyquist
-in broadband green, and **14.1%** at 450 nm. Clause (a) should be withdrawn.
+**ARGUED (M88).** Clause (a) fails three ways, in increasing severity: even on
+fact 1149's own `N_eff` the green passband reaches 106.1 cy/mm at its blue end,
+so "exactly zero" is already false; on M5's measured bound 4.4% of modulation
+survives at Nyquist broadband and 14.1% at 450 nm; and on the corrected pupil
+the cutoff is above Nyquist at *every* wavelength in the band. It should be
+withdrawn.
+
+### 5.3 What clause (b) becomes
+
+**DERIVED (M88).** Fact 1149 claims the binned path discards real detail across
+**48.83 to 86.3 cy/mm**. The *direction* of that claim survives and in fact
+strengthens: the band is **48.83 cy/mm to sensor Nyquist, 97.66 cy/mm**, capped
+by the sensor rather than by the optics, because the corrected optical cutoff
+now sits above Nyquist. The band is **wider** than fact 1149 stated, not
+narrower. This is the one part of fact 1149 that comes out ahead.
+
+**ARGUED (M88).** The advice in `docs/captures-needed.md` §17 also survives.
+Critical sampling needs an Airy diameter near two pixels; at the corrected
+`N_eff` in [13.45, 17.23] it is `2.44 x 0.55e-3 x N_eff` = **18.1 to 23.1 um**,
+or **3.5 to 4.5 px**. Still oversampled, so "critical sampling is unreachable
+with the converter fitted" holds — on a number roughly 20% smaller than the one
+originally used to argue it.
+
+### 5.4 Disclosure: M88 missed fact 1152 at pre-registration
+
+**MEASURED (M88), disclosed against interest.** Fact 1152 was folded into the
+corpus at commit `875ad9d`, which precedes M88's own pre-registration
+`7e32f7d`. M88's rule-40 prior search found M5's `B` bound and recorded the
+23% tension it creates with fact 1149, but did **not** find fact 1152's
+explicit `p` bracket, and the pre-registration therefore restates `p = 1`
+without challenge. That was an incomplete prior search, and the finding of §5.1
+belonged to the corpus before this milestone started.
+
+It changes nothing in the measurement. Bar 3 was pre-registered as a **ratio at
+two apertures**, chosen precisely because `f_c(N1)/f_c(N2) = N2/N1` is free of
+both `m` and `p`. The pupil correction cannot move it. It moves the *target*
+of Bar 2 — from 86.3 to the interval [106, 135] — but Bar 2 returned
+UNIDENTIFIED for lack of any gate-passing ROI, and would have returned
+UNIDENTIFIED against any target.
 
 ## 6. Registered bars and disposition
 
@@ -354,40 +425,36 @@ post-hoc, changed nothing, and is not used to support any verdict.
 
 ## 7. What this means for the milestones that depend on it
 
-**ARGUED (M88). M85's acceptance test should not use 86.3 cy/mm.** The
-falsifier "any energy above 86.3 cy/mm in the full-resolution output is
-artifact" is unsafe on three counts, each independent:
+**ARGUED (M88). M85's acceptance test must not use 86.3 cy/mm — it is now
+known to be the wrong number, not merely an uncertain one.** The falsifier
+"any energy above 86.3 cy/mm in the full-resolution output is artifact" is
+unsafe on three independent counts:
 
-1. It is a `lambda = 550 nm` number. The green channel's own passband reaches
-   `f_c = 106.1 cy/mm` at its blue end on fact 1149's own `N_eff`, and the red
-   and blue channels differ again.
-2. It assumes `p = 1`. The corpus flags `p` at `+/-38%`, and M5's measured
-   `B <= 3.064` implies `N_eff <= 17.16` and `f_c <= 105.96 cy/mm` at 550 nm,
-   rising to 130.2 cy/mm at the blue end of green.
-3. It is not the binding constraint anyway. A full-resolution output on the
-   sensor grid cannot legitimately represent anything above **sensor Nyquist,
-   97.66 cy/mm**, whatever the optics do.
+1. **It rests on an excluded assumption.** `p = 1` is refuted by fact 1152.
+   On the measured `p` in [1.31, 1.94], or equivalently on M5's measured `B`,
+   the cutoff is **[106, 135] cy/mm** at 550 nm — the entire interval above
+   86.3, and above sensor Nyquist. A falsifier set at 86.3 would reject real,
+   representable detail across 86.3-97.66 cy/mm as "artifact".
+2. **It is monochromatic.** The green channel's passband reaches 130.2 cy/mm
+   at its blue end on M5's measured bound; red and blue differ again.
+3. **It is not the binding constraint.** A full-resolution output on the sensor
+   grid cannot represent anything above **sensor Nyquist, 97.66 cy/mm**,
+   whatever the optics do.
 
-The defensible falsifier is therefore **97.66 cy/mm**, which is both physically
-binding and independent of `m`, `p` and `lambda`. If a band limit below Nyquist
-is wanted, the honest one is the *upper* end of the plausible range,
-**about 130 cy/mm**, which is above Nyquist and therefore not a constraint at
-all. **86.3 cy/mm is a point estimate of an unmeasured quantity and should not
-be used as a rejection threshold.**
+**The defensible falsifier is sensor Nyquist, 97.66 cy/mm.** It is physically
+binding, independent of `m`, `p` and `lambda`, and — now that the corrected
+optical cutoff sits above it — it is also the *tighter* of the two constraints,
+so nothing is lost by adopting it. There is no longer any band in which
+diffraction limits a full-resolution output before the sensor does.
 
-**ARGUED (M88). The advice in `docs/captures-needed.md` §17 survives, on
-either number.** Critical sampling requires an Airy diameter near two pixels.
-At `N_eff = 21.07` it is 5.52 px; at M5's `N_eff = 17.16` it is 4.50 px. Both
-are heavily oversampled, so "critical sampling is unreachable with the
-converter fitted" holds. The specific cutoff quoted alongside it should become
-a range, and should be marked DERIVED-not-measured until a capture unblocks it.
-
-**ARGUED (M88). The "estimation, not selection" thesis is not damaged, but its
-supporting number is not this one.** In the captures examined, the achieved
-system response is equivalent to a diffraction-limited system at about
-30-31 cy/mm, below even the binned-output Nyquist. The wide band of
-crushed-but-nonzero MTF that the thesis leans on is a property of the *optics*,
-which these subjects cannot reveal, not of these captures.
+**ARGUED (M88). The "estimation, not selection" thesis is unharmed and its
+band gets wider.** Fact 1149 argued real signal across 48.83-86.3 cy/mm; the
+corrected optics give **48.83 cy/mm to Nyquist at 97.66**, a band 43% wider,
+now limited by the sensor rather than the lens. What M88's captures cannot do
+is *demonstrate* signal in that band, because their subjects are soft: the
+achieved system response in them is equivalent to a diffraction-limited system
+at about 30-31 cy/mm, below even the binned-output Nyquist. The band is a
+property of the optics, which these subjects cannot reveal.
 
 ## 8. What would unblock the measurement
 
@@ -396,11 +463,12 @@ not the rig, the sensor, or the method. Required:
 
 - **A hard opaque straight edge in the object plane.** A razor blade
   (edge radius ~0.1 um) or a chrome-on-glass slanted-edge target (~0.5 um)
-  both qualify. The object-side Airy radius here is
-  `28.3 um / 2 / 2.762 = 5.1 um`, so the object's own edge must be well under
-  ~1 um to be negligible. A rounded plastic filament and an etched steel ruler
-  graduation are both **10-25 um** and are disqualified — this is why M88 did
-  not use the ruler stacks.
+  both qualify. On the corrected `N_eff` in [13.45, 17.23] the image-side Airy
+  diameter is 18.1-23.1 um, so the object-side Airy radius at `m = 2.7198` is
+  **3.3 to 4.2 um**, and the object's own edge must be well under ~1 um to be
+  negligible. A rounded plastic filament and an etched steel ruler graduation
+  are both **10-25 um** and are disqualified — this is why M88 did not use the
+  ruler stacks.
 - **Slant 3-7 degrees** from a sensor axis, edge length at least 800 sensor
   pixels, and **no other structure within 200 um** of the edge on either side.
 - **Flat, even illumination on both sides.** The measured `+5.39 DN/um` wing
@@ -414,9 +482,14 @@ not the rig, the sensor, or the method. Required:
   chosen frame is negligible.
 
 **ARGUED (M88).** With that one capture, this instrument measures the cutoff to
-about `+/-2%` statistical and `+/-9%` systematic on the effective wavelength,
-and the three-point aperture ladder **pins `p`** — currently the dominant
-`+/-38%` uncertainty in the optical advisor — without needing `m` at all.
+about `+/-2%` statistical and `+/-9%` systematic on the effective wavelength.
+A measured cutoff inverts to `N_eff = 1/(lambda f_c)` and thence, with M84b's
+`m`, to `p = m/(N_eff/N - 1)` — **narrowing `p` from fact 1152's factor-1.48
+bracket [1.31, 1.94] to a few per cent**, and doing it from a photograph rather
+than the bench measurement `captures-needed.md` §18.3 currently asks for. The
+three-point aperture ladder additionally checks the `N_eff = N x B` model form
+itself, free of both `m` and `p`, which is the check M88 ran and which failed
+on subject-limited edges.
 
 ## 9. Reproduction
 
@@ -451,18 +524,21 @@ and 35 Rust files.
 
 | candidate | claim | class | source |
 | --- | --- | --- | --- |
-| P1 | Fact 1149's arithmetic is correct: `N_eff = 21.0672`, Airy diameter 28.27 um = 5.522 px, `f_c = 86.30 cy/mm`, sensor Nyquist 97.656 cy/mm. The claim fails on its inputs and its wavelength assumption, not its arithmetic. | MEASURED | §1 |
-| P2 | On the same physical subject at two apertures, the measured ESF 10-90% rise is 31.70 um at f/5.6 and 32.49 um at f/11, a ratio of 1.025 against the 1.9643 that `N_eff = N(1+m/p)` predicts free of `m` and `p`. The captures are not diffraction-limited. | MEASURED | `out/s12_closing.json`; §4.3 |
-| P3 | An aperture-independent blur 7.45x the f/5.6 diffraction blur dominates these captures. Object edge softness and wide-open aberration behind the 2x teleconverter are confounded and cannot be separated with these subjects. | DERIVED / ARGUED | §4.3 |
-| P4 | At best focus the f/5.6 captures reach `MTF(40 cy/mm) = 0.1232`, against 0.4080 +/- 0.0215 for a diffraction-limited `f_c = 86.3` system through the same instrument at the same settings: a 3.31x shortfall. At f/11 this statistic cannot discriminate, the diffraction-limited value being 0.0466 +/- 0.0111 against a measured 0.0481. | MEASURED | `out/s11_exploratory.json`; §4.4 |
-| P5 | Fact 1149's clause "MTF at sensor Nyquist is exactly zero" is false. On its own `N_eff = 21.07` the green passband reaches `f_c = 106.1 cy/mm`; on M5's measured `B <= 3.064` the broadband green MTF at sensor Nyquist is 0.0437, and 0.1409 at 450 nm. | DERIVED | `out/s12_closing.json`; §5 |
-| P6 | M5's radial-PSD instrument tops out at 69.1 cy/mm on its best lattice and structurally could not have tested an 86.3 cy/mm cutoff. | MEASURED | M5 §2.2; §2 |
-| P7 | A slanted-edge SFR estimator on a single 10.24 um Bayer green sublattice, with no demosaicing, resolves planted cutoffs of 60-140 cy/mm to +1.19% +/- 1.50% and reports model-free signal to 114.6 cy/mm, 2.35x that sublattice's Nyquist. | MEASURED | `out/s04_instrument_spec.json`; §3 |
-| P8 | A whole-line gradient centroid recovers 1.21 deg from a planted 1.98 deg edge slant under realistic noise; a two-stage windowed estimator recovers 2.0003 deg on the same input. Slanted-edge implementations must use the two-stage form. | MEASURED | §2.2 |
-| P9 | ESF truncation inflates MTF by +3.4% / +1.6% / +0.83% at half-widths of 96 / 192 / 384 um, halving as the half-width doubles, and is flat in frequency over 10-78 cy/mm. | MEASURED | §2.2 |
-| P10 | The high-frequency noise floor of these captures is 3.5-4.2x the photon-only prediction. It is set by subject texture and aliasing, not photons, so a spectral floor crossing here bounds the subject, not the lens. | MEASURED | `out/s08` diagnostics; §4.5 |
-| P11 | None of 22 ROI-plane results across `119MSDCF`, `109MSDCF` and `tweezers-cpl` passes the four-condition validity gate: 21 fail `sigma_fit` at 6.3-29.1 um against a 3.0 um bar, and one is a degenerate corner fit caught by the pre-registered amplitude condition. The corpus contains no edge sharp enough to measure the optical cutoff. | MEASURED | `out/s07_verdict.json`; §4.1 |
-| P12 | M85's acceptance falsifier should be sensor Nyquist, 97.66 cy/mm, not 86.3 cy/mm. 86.3 is a point estimate of an unmeasured quantity, is monochromatic, assumes `p = 1`, and is not the binding constraint on a sensor-grid output. | ARGUED | §7 |
-| P13 | The unblocking capture is a razor blade or chrome-on-glass slanted edge, 3-7 degrees, backlit flat, at least 800 px long, clear of structure within 200 um, shot at f/5.6, f/8 and f/11 without moving the subject, with a focus bracket fine enough that `MTF(40 cy/mm)` changes under 5% between adjacent frames. It would pin `p`. | ARGUED | §8 |
-| P14 | The conclusion is insensitive to frame selection: across the whole best-focus plateau of 119MSDCF A1 (frames 3-9) the ESF rise stays 30.56-34.18 um, and the sharpest single frame is still 2.17x the diffraction-limited 14.11 um. | MEASURED | §4.2 |
-| P15 | Two-parameter cutoff-plus-blur fits are unreliable on subject-limited edges: the free amplitude pinned at a bound in 6 of 11 exploratory ROIs, and one pre-registered fit ran to the corner of the box at `sigma = 0`, `f_c = 400`, `amp = 2`. Model-free rise distance should be preferred, and an amplitude-bound condition is a necessary gate. | MEASURED / ARGUED | §4.1, §4.4 |
+| P1 | **Fact 1149 is refuted at its number.** Its `f_c = 86.3 cy/mm` requires `p = 1`, which fact 1152 excludes by measurement. Recomputing gives `f_c` in **[106, 135] cy/mm** at 550 nm by two routes agreeing to 0.6% -- via M5's measured `B` (needing neither `m` nor `p`) and via fact 1152's measured `p` with M84b's `m`. 86.3 lies outside both intervals. | DERIVED | §5.1 |
+| P2 | **Clause (a), "MTF at sensor Nyquist is exactly zero", is refuted.** The whole corrected interval [106, 135] lies above sensor Nyquist 97.66 cy/mm at the central wavelength. Independently, on M5's measured bound the broadband green MTF at Nyquist is 0.0437, and 0.1409 at 450 nm. | DERIVED | `out/s12_closing.json`; §5.2 |
+| P3 | **Clause (b) survives and widens.** The band the binned path discards is 48.83 cy/mm to sensor Nyquist 97.66, not 48.83-86.3: 43% wider, and now limited by the sensor rather than by diffraction. `captures-needed.md` §17 also survives -- the corrected Airy diameter is 18.1-23.1 um or 3.5-4.5 px, still oversampled. | DERIVED | §5.3 |
+| P4 | Fact 1149's arithmetic is itself correct: `N_eff = 21.0672`, Airy diameter 28.27 um = 5.522 px, `f_c = 86.30 cy/mm`, sensor Nyquist 97.656 cy/mm. It fails on an excluded pupil assumption and on monochromaticity, not on arithmetic. | MEASURED | §1 |
+| P5 | On the same physical subject at two apertures, the measured ESF 10-90% rise is 31.70 um at f/5.6 and 32.49 um at f/11, a ratio of 1.025 against the 1.9643 that `N_eff = N(1+m/p)` predicts free of `m` and `p`. The captures are not diffraction-limited. | MEASURED | `out/s12_closing.json`; §4.3 |
+| P6 | An aperture-independent blur 7.45x the f/5.6 diffraction blur dominates these captures. Object edge softness and wide-open aberration behind the 2x teleconverter are confounded and cannot be separated with these subjects. | DERIVED / ARGUED | §4.3 |
+| P7 | At best focus the f/5.6 captures reach `MTF(40 cy/mm) = 0.1232`, against 0.4080 +/- 0.0215 for a diffraction-limited `f_c = 86.3` system through the same instrument at the same settings: a 3.31x shortfall. At f/11 this statistic cannot discriminate, the diffraction-limited value being 0.0466 +/- 0.0111 against a measured 0.0481. | MEASURED | `out/s11_exploratory.json`; §4.4 |
+| P8 | M5's radial-PSD instrument tops out at 69.1 cy/mm on its best lattice and structurally could not have tested an 86.3 cy/mm cutoff. | MEASURED | M5 §2.2; §2 |
+| P9 | A slanted-edge SFR estimator on a single 10.24 um Bayer green sublattice, with no demosaicing, resolves planted cutoffs of 60-140 cy/mm to +1.19% +/- 1.50% and reports model-free signal to 114.6 cy/mm, 2.35x that sublattice's Nyquist. | MEASURED | `out/s04_instrument_spec.json`; §3 |
+| P10 | A whole-line gradient centroid recovers 1.21 deg from a planted 1.98 deg edge slant under realistic noise; a two-stage windowed estimator recovers 2.0003 deg on the same input. Slanted-edge implementations must use the two-stage form. | MEASURED | §2.2 |
+| P11 | ESF truncation inflates MTF by +3.4% / +1.6% / +0.83% at half-widths of 96 / 192 / 384 um, halving as the half-width doubles, and is flat in frequency over 10-78 cy/mm. | MEASURED | §2.2 |
+| P12 | The high-frequency noise floor of these captures is 3.5-4.2x the photon-only prediction. It is set by subject texture and aliasing, not photons, so a spectral floor crossing here bounds the subject, not the lens. | MEASURED | `out/s08` diagnostics; §4.5 |
+| P13 | None of 22 ROI-plane results across `119MSDCF`, `109MSDCF` and `tweezers-cpl` passes the four-condition validity gate: 21 fail `sigma_fit` at 6.3-29.1 um against a 3.0 um bar, and one is a degenerate corner fit caught by the pre-registered amplitude condition. The corpus contains no edge sharp enough to measure the optical cutoff. | MEASURED | `out/s07_verdict.json`; §4.1 |
+| P14 | M85's acceptance falsifier should be sensor Nyquist, 97.66 cy/mm. With the corrected cutoff above Nyquist, diffraction never binds a full-resolution output before the sensor does, and a falsifier at 86.3 would reject real representable detail across 86.3-97.66 cy/mm. | ARGUED | §7 |
+| P15 | The unblocking capture is a razor blade or chrome-on-glass slanted edge, 3-7 degrees, backlit flat, at least 800 px long, clear of structure within 200 um, shot at f/5.6, f/8 and f/11 without moving the subject, with a focus bracket fine enough that `MTF(40 cy/mm)` changes under 5% between adjacent frames. It would narrow `p` from a factor-1.48 bracket to a few per cent, from a photograph rather than a bench jig. | ARGUED | §8 |
+| P16 | The conclusion is insensitive to frame selection: across the whole best-focus plateau of 119MSDCF A1 (frames 3-9) the ESF rise stays 30.56-34.18 um, and the sharpest single frame is still 2.17x the diffraction-limited 14.11 um. | MEASURED | §4.2 |
+| P17 | Two-parameter cutoff-plus-blur fits are unreliable on subject-limited edges: the free amplitude pinned at a bound in 6 of 11 exploratory ROIs, and one pre-registered fit ran to the corner of the box at `sigma = 0`, `f_c = 400`, `amp = 2`. Model-free rise distance should be preferred, and an amplitude-bound condition is a necessary gate. | MEASURED / ARGUED | §4.1, §4.4 |
+| P18 | M88's rule-40 prior search was incomplete: it found M5's `B` bound and the 23% tension it creates, but missed fact 1152, which had landed at `875ad9d` before M88's pre-registration `7e32f7d` and already excluded `p = 1`. The pre-registered Bar 3 was `m`- and `p`-free by design, so no measurement was affected. | MEASURED | §5.4 |
