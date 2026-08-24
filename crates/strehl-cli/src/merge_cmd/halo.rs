@@ -127,7 +127,7 @@ pub fn otsu(a: &[f32]) -> f32 {
             hi = hi.max(v);
         }
     }
-    if !(hi > lo) {
+    if hi.partial_cmp(&lo) != Some(core::cmp::Ordering::Greater) {
         return lo;
     }
     let scale = OTSU_BINS as f32 / (hi - lo);
@@ -147,9 +147,9 @@ pub fn otsu(a: &[f32]) -> f32 {
         .sum();
     let (mut w0, mut cw) = (0u64, 0f64);
     let (mut best, mut best_b) = (f64::NEG_INFINITY, 0usize);
-    for b in 0..OTSU_BINS {
-        w0 += hist[b];
-        cw += hist[b] as f64 * centre(b) as f64;
+    for (b, &h) in hist.iter().enumerate() {
+        w0 += h;
+        cw += h as f64 * centre(b) as f64;
         let w1 = total - w0;
         if w0 == 0 || w1 == 0 {
             continue;
