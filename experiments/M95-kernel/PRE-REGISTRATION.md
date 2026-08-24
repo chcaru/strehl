@@ -169,3 +169,87 @@ a finding, not absorbed.
 byte-unchanged regardless of what B24 reads. B24 measures what selecting the
 new kernel would do, which is what the later default decision needs.
 
+
+---
+
+# ADDENDUM 3 — the four-point kernel ladder (arm 11)
+
+Written **after** `Resampler::Lanczos2` compiled and its unit tests passed
+(`ac95e1b`), and **before** `lanczos2` was added to any measurement script or
+printed a single number. The orchestrator asked for the two unpriced
+intermediates, Mitchell-Netravali (B=C=1/3) and Lanczos-2, on the same
+instrument as the existing two points, with a flat-region control.
+
+Their stated hypothesis, which I am to kill or confirm by measurement:
+
+> *"If Mitchell recovers most of the sharpness at a fraction of the ringing, it
+> is the default and the trade dissolves."*
+
+## What I already believe, stated now so a confirming result is not a surprise
+
+I hold that **Mitchell B=C=1/3 cannot be the default**, on a structural ground
+rather than a measured one: with `B != 0` the Keys/Mitchell kernel is **not
+interpolating**, so `k(0) != 1` and a zero-phase resample is a blur. It pays a
+cost on a stationary image. If that is right the hypothesis is dead before the
+ringing axis is reached, and no amount of low ringing rescues it. Registering
+this now so that the reader can discount it: **I expect Mitchell to fail, and
+the bar below is written so it can prove me wrong.**
+
+I hold **no prior** on Lanczos-2 beyond it sitting between the two points. Its
+support is 2.0 px, equal to Catmull-Rom's, so on the border-cost axis it is free
+where Lanczos-3 is not. Whether it is worth the default is exactly what this
+measures.
+
+## Bars
+
+**B25 — the identity-phase control, and it is disqualifying.** Every kernel is
+resampled at phase `(0, 0)` on the same tiles. An interpolating kernel must cost
+`|dex| < 0.01` there. **A kernel failing B25 is not eligible to be the default
+at any ringing figure**, because the cost is paid by every pixel of a
+stationary image, and this project's whole complaint is softness. This is not a
+tie-breaker; it is a gate.
+
+**B26 — phase-averaged sharpness, same instrument as arms 4 and 8.**
+`band_ratio` over the same tile selection, averaged over the seven non-zero
+phases. Reported in dex relative to the unresampled tiles. Ranking claim:
+`mitchell < catmullrom < lanczos2 < lanczos3` in recovered sharpness. **If
+Lanczos-2 lands within 0.02 dex of Lanczos-3 it is the better candidate**, since
+it buys nearly the same sharpness for Catmull-Rom's support and tap count.
+
+**B27 — ringing on a clean step, same statistic for all kernels.** A 1000 DN
+ideal step resampled at half-pixel phase; overshoot as a percentage of step
+height. Catmull-Rom's value is **analytically 1/16 = 6.2500%** and that is the
+arithmetic check on the harness — if the harness does not reproduce 6.2500% for
+Catmull-Rom it is broken and every other cell is void.
+
+**B28 — the flat-region control, per rule 9.** The same kernels on a
+**featureless** region. A sharper kernel raises high-band energy on flat ground
+too, which is amplified read and shot noise, not detail. Registered
+requirement: report the flat-region high-band change beside the detail-region
+change for every kernel. **If a kernel's flat-region gain is of the same order
+as its detail-region gain, its sharpness number is noise amplification and I
+must say so.**
+
+**B29 — the negative control on the sharpness instrument.** Mitchell is
+retained as the deliberate known-blurrier kernel from arm 4. The instrument must
+rank it below Catmull-Rom. **If it does not, the instrument cannot rank kernels
+and B26 is void** — this is the arm that makes B26 readable, and it must be
+reported whichever way it falls.
+
+## What would change my mind about Lanczos-2
+
+- **Fails B25** — dead, same as Mitchell, no appeal.
+- **Passes B25 but B26 gain over Catmull-Rom is below +0.02 dex** — not worth a
+  default change; land it as an option and say so.
+- **Passes B25, B26 gain is material, and B27 ringing is at or below
+  Lanczos-3's** — then it is the candidate to take to the owner's eye, and the
+  montage decides.
+- **B28 shows the flat-region gain matching the detail-region gain** — the
+  sharpness number is noise and the whole ladder needs re-reading.
+
+## What I will not do
+
+I will not add Mitchell to the shipped `Resampler` enum in order to measure it.
+It is priced in the measurement harness only. Shipping a kernel I expect to fail
+its own gate, so that it can be measured, would put a knowingly lossy option in
+front of an operator.
