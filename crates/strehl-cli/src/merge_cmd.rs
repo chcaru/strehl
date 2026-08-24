@@ -3312,7 +3312,6 @@ fn write_merged(
             }
         }
     }
-    let dev = image_out::Develop { matrix, srgb };
 
     // ---- exposure ---------------------------------------------------------
     //
@@ -3403,6 +3402,16 @@ fn write_merged(
         }
     }
 
+    // M109: the matrix must not be handed a triple in which one channel is
+    // pinned at the container maximum while white balance has carried the
+    // others past it -- that is what renders blown neutral white magenta.
+    // See `docs/research/M109-highlights.md`.
+    let dev = image_out::Develop {
+        matrix: matrix
+            .map(|r| r.with_ceiling(color::saturation_ceiling(levels, gains, applied.gain()))),
+        srgb,
+    };
+
     if demosaic {
         // Full resolution. The merge already estimates all four CFA sites of
         // every quad independently -- `Estimator` carries four accumulators and
@@ -3467,7 +3476,11 @@ fn write_merged(
             px[1] = norm(gmean(i), gains[1]);
             px[2] = norm(val(CfaPlane::B, i), gains[2]);
         }
-        let dev = image_out::Develop { matrix, srgb };
+        let dev = image_out::Develop {
+            matrix: matrix
+                .map(|r| r.with_ceiling(color::saturation_ceiling(levels, gains, eg))),
+            srgb,
+        };
         image_out::write_binned(path, geom.width, geom.height, &lin, &dev)?;
         eprintln!();
         eprintln!(
