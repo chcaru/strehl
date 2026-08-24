@@ -132,6 +132,30 @@ and are reported whatever they say:
 
 ## 2. Headline
 
+> ### ⚠ RETRACTION — read §13 before quoting anything in this section
+>
+> **The `+97.4σ` in this section and in §4.2 is withdrawn, and so is the
+> election-seam mechanism it was offered as proof of.** Two defects, both mine,
+> both found by my own follow-up audit and neither by a verifier:
+>
+> 1. **The σ is arithmetic, not evidence.** `attribution.py` estimates the null
+>    standard deviation from **three** translations and divides by it. Re-running
+>    the *identical* mask with 64 translations gives a null sd of 0.021 instead of
+>    0.003 and the same effect reads **+11.6σ**, not +97.4σ.
+> 2. **The effect itself does not survive an independent mask.** The `flat` mask
+>    was a percentile of the arm under test. Taking it from the single-frame
+>    control instead — the only mask that cannot be conditioned on the outcome —
+>    the whole-plane statistic is **0.839 against a 0.911 ± 0.101 null, −0.7σ,
+>    p = 0.63**, and at ORCH's own `blobB` it is **1.123, +1.9σ**, marginal at
+>    best. This is exactly the circularity I charged fact 1444 with in §7.2. I
+>    made the same error one section later and did not see it.
+>
+> **What survives is in §13.3 and it is smaller and differently shaped than what
+> this section claims.** The gate's absolute-tolerance collapse (the table below)
+> is a direct reading of the code's behaviour and stands; the claim that it
+> prints *at election seams* does not. **H1, H2 and H7 remain refuted** — their
+> refutations are direct arm-to-arm comparisons that never used the broken null.
+
 **The waxy patches are single elected frames. The merge stops averaging and
 starts electing wherever the winner's focus response rises out of the noise
 floor, because the gate's tolerance is an absolute constant in response units
@@ -251,6 +275,11 @@ and the defect lives entirely in the second.
 
 ### 4.2 The unconfounded attribution
 
+> **⚠ The table in this subsection is retracted. See §13.** The null it quotes
+> is a three-sample standard deviation, and its `flat` mask is a percentile of
+> the arm under test. Both are corrected in §13; the corrected numbers do not
+> support the conclusion stated here.
+
 The coincidence statistic on its own is **confounded, and my own arm caught it.**
 At `--gate 100000` every output pixel is the plain mean of all 299 frames, so
 the election has no influence on the output whatsoever — and election boundaries
@@ -366,7 +395,16 @@ response moves by less than half a tolerance.
 | **H3** admission cliff, blobs are means of many frames | **REFUTED (mine)** | `n_eff` inside the blobs is **low**, not high: median 2.0 against a whole-image mean of 81.9. |
 | **H4** censored highlights | **REFUTED (mine)** | **0.000%** of either blob at or near the 16-bit ceiling in either arm (`audit_probe.py` A3). |
 | **H5** downstream of the merge | **REFUTED (mine)** | the artifact is removed completely by a merge-only change (`--gate`) with demosaic, colour, exposure and the alignment warp bit-for-bit identical. |
-| **H6** intermediate-response admission collapse | **CONFIRMED** | admission 285 → 1 as response rises 0.62 → 5; +12.00 DN of selection-attributable excess at seams in the elected flat population, **+97.4σ** against a translated null, with both negative controls firing *below* their nulls. |
+| **H6** intermediate-response admission collapse | **PARTLY CONFIRMED — see §13** | The admission collapse itself is confirmed and mask-free: 285 → 1 as response rises 0.62 → 5. The seam-attribution that was offered as proof it *causes the visible defect* is **retracted** — the +97.4σ divided by a three-sample null sd and its mask came from the arm under test. Corrected: **+0.5σ, p = 0.65** on the single-frame-control mask. |
+| **H7** heterogeneous-PSF averaging (ORCH) | **REFUTED** | 3 of 4 predictions fail, including its own nominated discriminator. Plateaus in blobs are *smaller* (33.2 px) than the plane average (92.5 px); `n_eff` inside blobs is median **2.0**, not high; tightening the gate makes the artifact **worse** (97.30% of flat pixels elect at gate 0.25). Only P2 survives (seams jump median 3 frames, 17.9% ≥ 10). Shares H2's refuted premise. §14. |
+
+> **What remains proved about the defect after §13:** in regions the single-frame
+> control says are textureless, the shipped render carries **6.1×** that frame's
+> local variation (466.1 DN vs 75.9 DN), measured with no render-derived mask.
+> That is real and it is the user's complaint. **What mechanism produces it is
+> not settled** — it is not the regulariser (H1), not a silent gate (H2), not
+> PSF-heterogeneous averaging (H7), and not, on the corrected numbers, a step
+> printed at election seams (H6's second half).
 
 ---
 
@@ -462,6 +500,12 @@ belong in the record.
 ---
 
 ## 8. Recommended fix
+
+> **⚠ Superseded by §13.4.** This section was motivated by the seam-attribution
+> retracted in §13. With that evidence withdrawn, **§8.2's soft admission weight
+> is unmotivated as well as unbuilt, and should not be implemented on this
+> report.** §8.1 ("what not to do") stands — it is argued from the radius and
+> gate sweeps, which are unaffected. §8.3 stands.
 
 ### 8.1 What not to do
 
@@ -568,7 +612,7 @@ Numbered `P1…` per rule 28; ORCH assigns corpus numbers.
 **Facts**
 
 * **P1 — MEASURED.** The merge's gate tolerance is an absolute constant in focus-response units (`threshold · √2 · FOCUS_NOISE_SD` = 0.086063 at the shipped gate 4.0) while the response itself is contrast-scaled. On `dry-erase-marker-head-cpl`, admission collapses from mean `n_eff` **275.5** in the 0.60–0.65 response band to **1.6** above 5.0 and **1.1** above 20, i.e. the merge is an averager where the response is at the noise floor and a pure selector everywhere else. `experiments/M111-waxy-blobs/mechanism.py`.
-* **P2 — MEASURED.** The waxy patches are selection artefacts, not regulariser artefacts. Differencing the shipped render against a gate-100000 render of the same frames, alignment, colour and exposure isolates what selection added: in the visually flat, elected (`n_eff ≤ 8`) population the luma step across election seams exceeds the off-seam step by **+12.00 DN**, ratio **1.248** against a translated-election null of **1.002 ± 0.003** (**+97.4σ**), while the same detector reads **0.765** where the merge averaged and **0.880** in textured regions — both *below* their nulls. `experiments/M111-waxy-blobs/attribution.py`.
+* **P2 — RETRACTED, see P24.** ~~The waxy patches are selection artefacts, not regulariser artefacts...~~ The published version divided by a three-sample null sd and used a mask taken from the arm under test. Both defects are corrected in §13; the effect does not survive either correction. **Do not fold P2.**
 * **P3 — MEASURED.** `REGULARISER_RADIUS` sets the plateaus' scale and does not create them. Sweeping 0 → 32 moves the plateau equivalent diameter **54.0 → 86.7 px** and the seam density 0.1789 → 0.0598, while the artifact amplitude is flat at **1.213 / 1.239 / 1.203**. At radius 0 — the box removed — the plateaus are still 54.0 px across, because `focus.rs`'s `WINDOW_RADIUS = 13` already smooths the field over 27×27 before the argmax. The merge regulariser contributes **1.12×** of the plateau diameter at its shipped radius. Fact 84 is not implicated.
 * **P4 — MEASURED.** In the elected flat population the winner's response is continuous across the seams it draws: median `|Δ best_focus|` on seam is **0.04023**, **0.467×** the gate's own admission tolerance, while in textured regions it is **0.18823** = **2.187×** tolerance. The merge discards a frame that is within half a tolerance of the winner and paints a hard edge where it changes its mind. `experiments/M111-waxy-blobs/seam_continuity.py`.
 * **P5 — MEASURED.** Opening the gate removes the defect and the photograph together. At `--gate 100000` the flat population that elects falls **14.77% → 0.00%** and the artifact vanishes, but plateau-interior sd falls **153.5 → 74.2** and the subject's texture is gone. At `--gate 0.25`, **97.30%** of flat pixels elect and the seams are at their hardest (1.264).
@@ -590,9 +634,17 @@ Numbered `P1…` per rule 28; ORCH assigns corpus numbers.
 * **P17.** An env-var debug export that would move output bytes belongs in a patch beside the experiment, not in the repository. M111's `STREHL_M111_REG_RADIUS` earned its result and shipped as `experiments/M111-waxy-blobs/reg_radius.patch`; the byte-inert state dump shipped as code.
 * **P19.** In a shared tree, commit a new module and its `mod` line in the **same** commit, and check `git log -S '<the mod line>'` before assuming your edit is still uncommitted. M111's `mod dump;` was swept into another milestone's path-scoped commit and left HEAD un-buildable for six commits, which no agent noticed because everyone was building a working tree that still had the file.
 * **P23.** A cache-contamination control needs a **red** arm on the vulnerable code path, not merely a green one on the arm under test. M111's NC7 green (poisoned cache, override set, bytes unmoved) is worth nothing on its own; it is worth something because the same poisoned cache moved the bytes when the override was removed, and moved them to the exact hash the poison produces when read directly. **Ask "which code path did my render actually take" before asking "is my number contaminated"** — the renderer prints it, and on this fleet it split one milestone's arms into an immune 15 and an exposed 2.
+* **P27.** **Never divide by a standard deviation estimated from fewer than about thirty samples, and prefer a rank p-value that cannot be inflated at all.** M111 reported +97.4σ from a null of **three** translations; the same mask at 64 translations reads +11.6σ. The failure is silent because a small-n sd is biased *downward*, so the defect always flatters the result and never warns you. Report the null's sample size next to every σ, and quote the rank floor — 64 translations cannot license anything below p = 1/65.
+* **P28.** **P13 is not a rule for other people's instruments.** M111 charged fact 1444 with mask circularity in §7.2 and committed the identical defect in §4.2 of the same report, five sections apart, without noticing. A mask-circularity check belongs in the harness that computes the statistic — score every masked statistic under at least one mask drawn from an arm that cannot have been affected by the treatment — not in a reviewer's attention.
+* **P29.** **When an independent mask kills an effect, partition before concluding either way.** The independent mask can be larger and dilute a real effect, or the original mask can be conditioning on the outcome, and the pooled comparison cannot tell them apart. Split into (original ∧ independent), (original only), (independent only). If every firing cell contains the original condition and the independent-only cell is null, it is circularity. M111's independent-only cell read **0.954, −0.2σ** against an original-only **1.169, +8.1σ**, which is the answer.
+* **P30.** **Match the population fraction, not the threshold, when swapping a mask between arms of different contrast.** M111's absolute `local_sd < 300 DN` selects 39.9% of the shipped arm and 81.5% of the softer mean arm, so the mask swap silently swapped the population size too and its result could not have been read either way. Take the same percentile of each arm; then the only thing that varies is which arm decides.
+* **P31.** **A median connected component is not a plateau size.** Counting components equally lets one-pixel islands dominate: on M111's map the median-component figure reads 3.7 px inside `blobB` while the area-weighted equivalent diameter — the plateau the average *pixel* sits in — reads 33.2 px, a 9× difference that reverses which regions look coarse. Weight by area whenever the question is "what does a pixel experience".
 * **P20 — MEASURED.** Fact 1445's election-map statistics do not transfer across stacks and must not be quoted as properties of the map. Re-measured on `dry-erase-marker-head-cpl`, 299 frames, alignment **on** with `STREHL_WARPMAP` pinned: boundary density **9.91% h / 9.03% v** against 1445's 3.33% / 3.34%, median jump **2 frames** against 1445's 1, and **44.1%** single-frame steps against 71.4%. On `lavendar-cpl` the median jump is **20 frames** and single-frame steps fall to **22.5%**. The plane grid is **3520×2344** here, not 1445's 3516×2344 — both solvers' own sidecar headers say so — and the grid follows the common crop, so a milestone that hard-codes either number will index the wrong pixels. Fact 1445's numbers should be **SCOPED** to its 12-frame `STREHL_ALIGN=0` arm.
 * **P21 — MEASURED.** `STREHL_WARPMAP` structurally immunises a render against fact 1446: `merge_cmd.rs`'s `alignment_for` returns to `align_cmd::load_or_solve` — the poisoned function — only when the variable is unset. Measured with a sidecar that passes every identity check and displaces 298 of 299 frames by 2.0 plane px: with the override set, a poisoned cache leaves the render at `DB7BAAD2…`, unchanged; with it unset, the same cache moves the render to `0D41E08B…`, which is *bit-for-bit* what pointing the override at the poison directly produces. The renderer prints which path it took — `sidecar-override` versus `sidecar` — so exposure is readable from any milestone's existing logs without re-running anything.
 * **P22 — MEASURED.** The `lavendar-cpl` cache entry consumed by M111's generality arm is byte-identical (`4D454CCE…`) to a forced fresh solve at the merge's own configuration, header included (`reference 149`, `S3-ba-unit`, `catmull-rom`), and the two render to the same bytes (`F12B14C4…`). Fact 1446's omitted key fields were not exercised on this bracket, so a pre-fix arm is not automatically a contaminated arm — but this can only be established per bracket, by re-solving, not assumed.
+* **P24 — MEASURED. This retracts P2 and supersedes it.** M111's own +97.4σ is an artefact of its instrument, found by M111 in self-audit. Two independent defects: the null standard deviation was estimated from **three** translations (re-running the identical mask with 64 gives null sd 0.021 against 0.003, and the same effect reads **+11.6σ**); and the `flat` mask was a percentile of the arm under test. With the flat population held at the same 40% of the plane but chosen by an arm that cannot be conditioned on the outcome, the low-`n_eff` statistic falls to **0.904 (+1.2σ, rank p = 0.31)** on the gate-100000 mean arm and **0.989 (+0.5σ, p = 0.65)** on the single-frame control. Partitioning shows why: flat-in-render ∧ flat-in-control scores 1.428 (+10.4σ) and flat-in-control ∧ *not* flat-in-render scores **0.954 (−0.2σ)** — every cell that fires contains the render-flatness condition. **The claim that the visible defect is a luma step printed at election seams is withdrawn.** `experiments/M111-waxy-blobs/recheck.py`, `decompose.py`.
+* **P25 — MEASURED. This is what survives of M111's headline.** With "the subject has no texture here" defined on the **single-frame control alone** (flattest 40%, 9×9 local sd ≤ 99.9 DN) and never on the render, the shipped render carries **6.1×** the local variation of that single frame in those regions (466.1 DN against 75.9 DN; the gate-100000 mean arm reads 62.6). A single frame is the noisiest thing available, so this is not explained by having averaged fewer frames. But the same seam detector on the same control-defined mask is **null** — whole plane 0.839 against a 0.911 ± 0.101 null (−0.7σ, p = 0.63), `blobB` interior 1.123 (+1.9σ, p = 0.046, one positive cell in five tests). **The excess structure is real and mask-independent; its attribution to election seams is not.** `experiments/M111-waxy-blobs/blob_interior.py`.
+* **P26 — MEASURED.** ORCH's H7 (smooth regions admit the whole bracket, and averaging heterogeneous PSFs is an extra blur) is refuted on three of its four predictions, including the one it nominated as its discriminator. **P1** — blob plateaus are *smaller* than typical, not larger: `blobB` **33.2 px** area-weighted equivalent diameter against a control-chosen matched no-blob region's **30.0 px** and a whole-plane **92.5 px**, and `blobA`, which is not a defect, has the largest cells at 42.1 px. **P3** — `n_eff` inside the blobs is **median 2.0** and **mean 1.77**, against a plane mean of 81.9; it is low, not high. **P4** — tightening the gate makes the artifact monotonically *worse*, not better, with flat pixels electing 97.30% at gate 0.25 against 14.77% at the shipped 4.0. **P2 survives**: `blobB` seams jump a median of 3 frames with 17.9% jumping ≥ 10, against the matched control's 1 and 7.5%. H7 also shares H2's premise, which §2 measured false — winner response medians 4.305 and 2.961 against a 0.4777 noise ceiling. `experiments/M111-waxy-blobs/h7_orch.py`.
 
 ---
 
@@ -716,3 +768,179 @@ One incidental corroboration: both solvers' own headers report
 §4.2's difference-image attribution — because it is the only arm that carries
 the finding — and §8.2, which is an argument and is labelled one.
 
+
+
+---
+
+## 13. Self-audit — the headline was overstated, and here is the corrected number
+
+I set out to audit ORCH's probe (§7) and charged fact 1444 with mask
+circularity. Reviewing my own `attribution.py` afterwards, I found the same
+defect in it, plus a second one that is worse. This section supersedes §2 and
+§4.2. `experiments/M111-waxy-blobs/recheck.py`,
+`experiments/M111-waxy-blobs/decompose.py`,
+`experiments/M111-waxy-blobs/blob_interior.py`.
+
+### 13.1 Defect one — a standard deviation from three samples
+
+`attribution.py` line 45:
+
+```python
+SHIFTS = [(137, 211), (-263, 89), (451, -337)]
+```
+
+Three translations, then `np.std(..., ddof=1)` over the three resulting ratios,
+then divide. The sd came out at **0.0025**, and 0.246/0.0025 is 97. **The
+sigma measured the sample size of my null, not the strength of my effect.**
+Re-running the byte-identical mask and statistic with **64** translations:
+
+| null size | null mean | null sd | reported significance |
+| --- | --- | --- | --- |
+| 3 (as published) | 1.002 | **0.003** | **+97.4σ** |
+| 64 (corrected) | 1.011 | **0.021** | **+11.6σ** |
+
+A 64-sample null also admits a **rank** p-value — how many nulls are at least as
+extreme — which cannot be inflated by an underestimated sd. It bottoms out at
+1/65 = **0.015**, and that is the strongest claim 64 translations can license.
+Every "σ" in this report that came from `attribution.py` should be read as "at
+most p = 0.015, effect size as tabulated".
+
+### 13.2 Defect two — the mask is the arm under test
+
+`attribution.py` line 118: `flat = (local_sd(y4) < FLAT_SD) & inner`, where `y4`
+is the gate-4 arm. Re-scoring with the flat population held at the same **40%**
+of the plane but chosen by each of three arms in turn:
+
+| `flat` defined on | low (`n_eff ≤ 8`) ratio | null | σ | rank p |
+| --- | --- | --- | --- | --- |
+| **gate 4 — the arm under test** | **1.257** | 1.011 ± 0.021 | +11.6 | 0.015 |
+| gate 1e5 mean — no selection | **0.904** | 0.836 ± 0.058 | **+1.2** | **0.31** |
+| single frame — ORCH's control | **0.989** | 0.935 ± 0.098 | **+0.5** | **0.65** |
+
+**The effect requires the mask to come from the arm under test.** Note the
+population fraction is matched across all three rows, so this is not a
+sample-size artefact — `attribution.py`'s absolute 300 DN threshold would have
+selected 39.9% of the gate-4 arm and 81.5% of the softer mean arm, which is a
+second, independent reason its mask swap could not have been read.
+
+Partitioning the low-`n_eff` population settles whether that is circularity or
+dilution:
+
+| partition | n | ratio | null | σ |
+| --- | --- | --- | --- | --- |
+| flat in render **and** in control | 119 817 | 1.428 | 1.006 ± 0.041 | +10.4 |
+| flat in render, **not** in control | 221 782 | 1.169 | 1.010 ± 0.019 | +8.1 |
+| flat in control, **not** in render | 652 951 | 0.954 | 0.966 ± 0.050 | **−0.2** |
+
+Every cell that fires contains the condition *flat in the render*; the one cell
+that omits it is null. That is the signature of conditioning on the outcome, and
+the mechanism is not subtle: restricting to pixels the render made flat
+suppresses the off-seam denominator harder than the on-seam numerator, so the
+ratio rises whether or not selection drew the seam.
+
+### 13.3 What survives, measured with no render-derived mask at all
+
+Define "the subject has no texture here" on the **single-frame control alone**
+(flattest 40%, 9x9 local sd <= 99.9 DN) and never on the render. Then:
+
+| region | control sd | mean-arm sd | gate-4 sd | gate-4 / control |
+| --- | --- | --- | --- | --- |
+| whole plane, control-smooth | 75.9 | 62.6 | **466.1** | **6.1x** |
+| whole plane, control-textured | 497.7 | 174.4 | 1814.5 | 3.6x |
+| `blobB` interior | 88.5 | 167.1 | 511.5 | 5.8x |
+| `blobA` interior | 90.6 | 71.7 | 611.8 | 6.8x |
+| matched no-blob interior | 89.9 | 374.0 | 3103.1 | 34.5x |
+
+**In regions the single frame says are textureless, the shipped render carries
+6.1x the local variation of that single frame.** A single frame is the noisiest
+thing available — one exposure, one noise realisation — so this cannot be
+explained by having averaged fewer frames. This is ORCH's "inventing structure
+that is in no input frame", measured with no circular mask. It is the one part
+of the headline that is clean.
+
+**But it is not localised to the blobs, and it is not at election seams.** The
+same seam detector, on the same control-defined masks:
+
+| population | n | ratio | null | σ | rank p |
+| --- | --- | --- | --- | --- | --- |
+| whole plane, control-smooth | 3 017 727 | 0.839 | 0.911 ± 0.101 | −0.7 | 0.63 |
+| `blobB` interior | 11 955 | 1.123 | 0.983 ± 0.072 | **+1.9** | 0.046 |
+| `blobA` interior | 2 603 | 0.825 | 0.978 ± 0.266 | −0.6 | 0.56 |
+| matched no-blob interior | 8 850 | 0.945 | 1.010 ± 0.139 | −0.5 | 0.60 |
+| control-smooth but rough in render | 301 773 | 1.002 | 0.985 ± 0.019 | +0.9 | 0.32 |
+
+`blobB`'s +1.9σ is the only positive cell and it would not survive correction
+for the five tests in the table. **The proposition "the visible defect is the
+luma step printed at election seams" is not supported once the mask is honest.**
+
+### 13.4 What that leaves standing, and what it does not
+
+**Stands** — none of these used the null or a render-derived mask:
+
+* The admission collapse in §2 (mean `n_eff` 275.5 -> 1.6 as response goes
+  0.6 -> 5). It is a direct reading of `n_eff` against `best_focus` from the
+  state dump.
+* **6.1x excess local variation** in control-smooth regions (§13.3).
+* **H1 refuted** — the radius sweep is an arm-to-arm comparison of plateau
+  diameters (54.0 px at radius 0 vs 60.3 shipped) and of amplitudes that are
+  indistinguishable from one another (1.213 / 1.239 / 1.203) across a 32x range.
+* **H2 refuted** — median `n_eff` 285 in the weakest band, 151 across flat.
+* **P6** — `blobA` is not a defect (1.477 shipped vs 1.468 control, ORCH's own
+  statistic).
+* **§12 NC7** — hash comparisons, no statistics at all.
+
+**Falls:** P2 as written, the +97.4σ, the +37.5σ variant on the shipped image,
+and the claim in §2 that the plateau seams "print into the image" as the visible
+defect. §8.2's proposed soft gate was motivated by that claim and is now
+**unmotivated as well as unbuilt** — it should not be implemented on this
+report's evidence.
+
+**Unsettled and honestly so:** what does produce the 6.1x excess variation, if
+not seams. It is spatially broad rather than seam-localised, which points at
+per-frame noise and PSF differences being carried through selection rather than
+at the plateau boundaries themselves — but that is a hypothesis, not a
+measurement, and M111 did not test it.
+
+---
+
+## 14. H7 (ORCH's PSF-heterogeneity hypothesis) — REFUTED on three of its four predictions
+
+H7: in smooth regions all frames score near-zero focus, so the gate admits the
+whole bracket, and averaging frames with different PSFs is an extra blur.
+`experiments/M111-waxy-blobs/h7_orch.py`. The matched no-blob region was chosen
+from the **single-frame control alone**, by relative distance in (mean luma,
+mean |grad|), before any map was read, as ORCH required; it landed at plane
+(424, 1984), luma 33 988.8 against `blobB`'s 34 145.5 and |grad| 1238.2 against
+1233.5.
+
+**H7 shares H2's premise, and §2 already measured that premise false.** Inside
+both ROIs the winner's response medians are **4.305** and **2.961** against a
+pure-noise ceiling of **0.4777** — 9.0x and 6.2x the ceiling. The frames there
+are *not* all scoring near-zero, so the gate is not admitting the bracket for
+the reason H7 gives.
+
+| prediction | H7 predicts | measured | verdict |
+| --- | --- | --- | --- |
+| **P1** cells markedly larger in blobs | larger | `blobB` **33.2 px**, matched control **30.0 px** (1.11x), whole plane **92.5 px** | **REFUTED** |
+| **P2** blob seams jump many frames | many | `blobB` median **3**, **17.9%** jump >= 10 frames, only **29.8%** single-frame; control median **1**, 7.5%, 68.4% | **SURVIVES** |
+| **P3** `n_eff` high inside blobs | high | `blobB` median **2.0**, `blobA` mean **1.77**, plane mean 81.9 | **REFUTED** |
+| **P4** tightening the gate shrinks blobs | shrink | tightening makes it **worse**: gate 0.25 -> **97.30%** of flat pixels elect, amplitude 1.264, visually the hardest arm | **REFUTED, wrong sign** |
+
+P1 is refuted twice over: the blobs' plateaus are *smaller* than the plane
+average, and `blobA` — which §7.3 shows is **not** a defect — has the **largest**
+cells of the three at 42.1 px. Cell size does not track the defect.
+
+P4 is H7's own nominated discriminator ("no change is a kill"). It is worse than
+no change: the artifact grows monotonically as the gate tightens, across
+0.25 -> 1 -> 4 -> 16 -> 64 with flat pixels electing 97.30% -> 50.63% -> 14.77%
+-> 5.76% -> 1.67% -> 0.00%.
+
+**Two corrections to the brief that dispatched H7.** (a) P3 was described as
+blocked on an `--n-eff-map` from M97. It is not — per-pixel `n_eff` shipped in
+this milestone's own `dump.rs` at `fc4cbf6`, and the P3 row above is measured
+from it. (b) The plane grid is **3520x2344** for this bracket, not fact 1445's
+3516x2344; see P20.
+
+P2 surviving is worth keeping. It says blob seams are genuinely large index
+jumps, which is a real property of the map — but P1, P3 and P4 between them say
+that property is not what the eye is reacting to.
