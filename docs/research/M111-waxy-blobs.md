@@ -650,6 +650,9 @@ Numbered `P1…` per rule 28; ORCH assigns corpus numbers.
 * **P34 — MEASURED.** A boolean `n_eff` map at gate *g* **is the per-pixel response-gap CDF** sampled at *g*, so a gate ladder evaluates **any** monotone kernel by Stieltjes summation with rigorous two-sided bounds — lower edge for the upper bound, upper edge for the lower — and **no new instrument is needed** to price a proposed weighting before building it. Validated against a known truth: a top-hat at one gate-4 tolerance reconstructs the gate-4 map with `max |diff| = 0` on the lower bound, and its upper-bound slack is **exactly** the gate-4→gate-5 count (`max |diff| = 0`, up to 296 frames). This prices `--photometric`-style proposals against existing dumps for the cost of a ladder.
 * **P35 — MEASURED.** `through_focus.rs` already ships a posterior over frame-of-best-focus on the **identical calibrated temperature** as the merge gate — `temperature() = √2 · FOCUS_NOISE_SD` (line 313), with a doc comment stating the commensurability with `Gate::tolerance` deliberately — but on a **different kernel**: `through_focus.rs:371-373` computes `exp(−gap/T)`, **exponential**, while M111's `softgate.rs` computes `exp(−gap²/2T²)`, **Gaussian**. The codebase therefore now weights one z-axis three ways at one temperature: **top-hat** (`merge.rs`, shipping, decides bytes), **exponential** (`through_focus.rs`, diagnostic, `--stats` only), **Gaussian** (`softgate.rs`, opt-in, unreachable). The Gaussian is what a normal gap of sd `T` implies, which is what `FOCUS_NOISE_SD` was calibrated to describe; the exponential is heavier-tailed and admits far frames more readily — the direction that made `--gate 1e5` destroy the photograph. **That is an argument, not a measurement: both should be priced against the same ladder (P34) before either is integrated.**
 
+* **P41 — MEASURED. Fact 1490 reproduces, and it is sharper than the advisory that relayed it.** On **pwsh 7.6.5**, reading `$LASTEXITCODE` after a pipeline truncated by `Select-Object -First` returns the *previous* command's code. Primed with `exit 0`, a truncated command whose true code is 7 reads **0** (false green); primed with `exit 5`, a truncated command whose true code is 0 reads **5** (false red). **Two refinements.** (a) **The stale value is retained verbatim, not coerced to 1** — the advisory's "reads 1" is an artefact of having primed with 1, so no particular value is the signature of a stale read and a gate cannot detect corruption by testing for one. (b) **`Select-Object -Last` is safe and `-First` is not**: `-Last` cannot emit until the stream ends, so the process is reaped and the same case reads the correct **7**. The mechanism is early termination, and the practical split is `-First` versus `-Last`. M111's own gates capture the code on the line immediately after the call and were additionally re-run under deliberate failure priming — `cargo check --workspace --all-targets` and the 18-test suite both read **0** while primed to **3**, so both reads were live and no number moved.
+* **P42 — MEASURED.** M111's seven committed files carry **0** control characters under check S7 (fact 1489), and that null was only accepted after the instrument was shown to be live: planting a single `0x08` in place of `` `n `` inside `` `n_eff` `` — the exact defect fact 1488 describes — made an independent byte scan report 1 and made `corpus_lint` fail with S7 naming the byte, the column and the remedy. S15 was written with the single-quoted `@'…'@` form. **A clean S7 result on prose full of `` `n_eff` ``, `` `best_focus` `` and `` `experiments/…` `` is only evidence if the checker has been fired at least once on that same text.**
+
 **Disciplines**
 
 * **P36.** **A bound that overlaps is not a refutation — it is an unresolved instrument, and a verdict with two outcomes cannot tell you which you have.** M111's first `n_eff` ladder sampled nothing between z = 1 and z = 4, exactly where the Gaussian falls 0.607 → 0.0003, so one bin spanned a factor of 1800 in weight and bounded nothing: seam 0.96–4.87 against texture 1.00–2.59. The verdict code called that **FAILED** and would have killed a live fix on a null detection from a blind probe. Give any bounded statistic **three** verdicts — separated, separated the other way, and *overlapping* — and when refining, check that the new interval **nests inside** the old one, which is the only cheap proof that refinement did not change the estimand.
@@ -657,6 +660,7 @@ Numbered `P1…` per rule 28; ORCH assigns corpus numbers.
 * **P38.** **When a prediction is computed in one language and the fix ships in another, pin the shared function at the exact points the prediction used.** M111's `n_eff` interval was integrated in Python over fourteen ladder edges while the kernel ships in Rust; nothing structural keeps them in step. The cross-language test agrees to seven significant figures and is load-bearing — the wrong-kernel-width mutation trips it — and if it ever fails the published interval is **stale, not approximate**.
 * **P39.** **In a working tree shared with other agents, a negative control's post-restore green leg can be turned red by somebody else's in-flight edit, and the control will report its own restore as failed.** M111's control restored `softgate.rs` byte-exactly — SHA-256 verified — and then read the suite red because another milestone's uncommitted work had stopped `strehl-core` compiling on `outlier::Discriminator::Shift`. Separate the two: assert the restore by **hash**, decide restore-failure by whether the breakage **names the file under test**, and give the environment case a **distinct exit code** so a harness fault can never be read as a measured hole. Verify the real answer in a `git archive HEAD` extraction with only the file under test overlaid — M111's 18/18 was confirmed that way while the live tree would not build.
 * **P40.** **A control's assertion can be wrong in the direction of being too strong, and the fix is to pin the discrepancy exactly rather than loosen the check.** M111's top-hat ground truth demanded that *both* Stieltjes bounds reconstruct the gate-4 map and failed at 296 frames. The lower bound was exact; the upper bound legitimately over-counts one bin, because a top-hat is discontinuous on a ladder edge and is the loosest possible case for edge-evaluated bounds. Asserting `upper − lower == the gate-4→gate-5 count` exactly is strictly stronger than the assertion that failed, and it passes.
+* **P43.** **Anchor a text edit on a complete line, never on a sentence prefix.** A prefix anchor that ends mid-sentence silently absorbs the remainder of the line into the replacement, and the damage reads as plausible prose rather than as a syntax error. M111 did this **three times in one session** on its own report: twice grafting an existing fact's tail onto a newly inserted bullet (P26 onto P40, P36 onto P42), and once deleting four words by replacing a prefix with a shorter prefix. None of the three produced an error, a failed match, or a `corpus_lint` violation — only reading the joined line aloud found them. This is the same failure as a mutation anchor that does not land, and it takes the same remedy: **match a full line, assert the anchor is unique, and assert the remainder begins where you expect.** M111's repair script caught its own wrong split point that way, on the assertion rather than on review.
 
 ---
 
@@ -1216,3 +1220,75 @@ The soft weight is the only direction left that does not move the default.
 * I did not verify any of this myself beyond the controls stated. `softgate.rs`
   is written to be verifiable independently: 18 tests, a 5/5 mutation control,
   and a three-arm field script with two negative arms.
+
+---
+
+## 16. Fleet-correction audit — neither correction moves a number in this report
+
+Two corrections arrived after S15 was committed at `2ae2944`. Both were applied
+as an audit rather than assumed to be inapplicable, and the audit is recorded
+here because "it did not affect me" is a claim that needs evidence like any
+other.
+
+### 16.1 Backtick-eating here-strings (fact 1488, check S7) — CLEAN, and the check was proven live first
+
+S15 was appended with a here-string, and it is dense with exactly the
+identifiers at risk: `` `n_eff` ``, `` `best_focus` ``, `` `absorb` ``,
+`` `tolerance` ``, `` `experiments/…` ``, `` `regularised` ``. In a
+double-quoted `@"…"@` every one of those loses its backtick **and its first
+letter**.
+
+An independent byte scan of all seven files this milestone committed found
+**0 control characters**. That is a null result from an instrument nobody had
+shown to be live, so it was not accepted on its own: planting a single `0x08`
+in place of `` `n `` inside `` `n_eff` `` — the exact defect — made my scanner
+report **1** and made `corpus_lint` **FAIL with S7** naming the byte, the
+column and the correct remedy. Both instruments fire; the 0 therefore means
+something. The single-quoted `@'…'@` form was used throughout.
+
+### 16.2 `$LASTEXITCODE` after a truncated pipeline (fact 1490) — reproduced, and it is sharper than the advisory
+
+The correction was relayed with an explicit disclosure that it had not been
+independently reproduced. It reproduces. On **pwsh 7.6.5**:
+
+| primed with | command's true code | truncated by `Select-Object -First 1` | untruncated |
+| --- | --- | --- | --- |
+| `exit 0` | 7 | **0** — false GREEN | 7 |
+| `exit 5` | 0 | **5** — false RED | 0 |
+| `exit 0` | 7 | `-Last 1` reads **7** — correct | 7 |
+
+**Two refinements the advisory does not state.**
+
+* **The stale value is retained verbatim, not coerced to 1.** Priming with
+  `exit 5` yields a read of **5**, not 1. The advisory's "reads 1" is an
+  artefact of having primed with 1. So **no specific value can be treated as
+  the signature of a stale read** — a gate that expects to distinguish
+  corruption by seeing 1 will miss every other case, and any *plausible* code
+  is suspect, which is the advisory's own central point taken to its
+  conclusion.
+* **`Select-Object -Last` is safe; `-First` is not.** `-Last` cannot emit
+  until the stream ends, so the process is reaped and the code is live;
+  `-First` short-circuits. The advisory says "truncation itself", which is the
+  right mechanism, but the practical `-First`/`-Last` split is what an author
+  needs, and both appear in this milestone's scripts.
+
+**Audit of this milestone's own gates.** Every script here already captures
+`$LASTEXITCODE` on the line immediately after the native call, into a
+variable, before any filtering — `nc8_byte_inert.ps1:69`,
+`refine_ladder.ps1:53`, `nc4_live_nonperturbation.ps1:24/41/47`,
+`nc6_planted_mutation.ps1:35/47`, `render_baseline.ps1:60/71`,
+`sweep_gate.ps1:35`, `sweep_radius.ps1:50`, `arms_lavendar.ps1:33/46`. The two
+`Select-Object -First` uses operate on already-captured variables **after** the
+read. `softgate_negctl.py` and `softgate_prediction.py` gate on Python's
+`subprocess.returncode`, which has none of this behaviour.
+
+Structural cleanliness is still only an argument, so **both gates this
+milestone reported were re-run under deliberate failure priming**, where a
+stale read shows as a false RED:
+
+| gate | primed to | read | live? |
+| --- | --- | --- | --- |
+| `cargo check --workspace --all-targets` @ `2ae2944` | 3 | **0** | yes |
+| `cargo test -p strehl-core --lib softgate::` | 3 | **0**, 18/18 | yes |
+
+**No number in this report moves.**
