@@ -7,6 +7,16 @@ says exactly what to shoot, why, and what it unblocks.
 
 ## 0. Shooting advice — stop shooting at marked f/11
 
+> **AMENDED 2026-08-24 — read §17 before quoting any number in this section.**
+> Two things have changed. (a) **The owner has already acted on this advice**:
+> all current stacks are f/5.6 marked, and f/5.6 is *wide open* with the
+> teleconverter fitted, so this lever is spent rather than pending.
+> (b) **The `N_eff` column below assumes m = 2.0.** The rig's verified maximum
+> magnification is **2.8x**, and the captures sit at m ≈ 2.76, so every `N_eff`
+> here is **understated by about 25%** and "critical sampling at marked f/6.21"
+> is really **f/4.95 — off the dial**. The section's direction is unchanged and
+> its conclusions are strengthened; its arithmetic is superseded by §17.
+
 Not a capture request. A change to how the existing rig is used, and the
 largest single quality lever measured anywhere in this project.
 
@@ -1125,3 +1135,129 @@ and aperture.
   aperture is far slower than the marked figure and section 0's diffraction
   arithmetic applies with the teleconverter's magnification included. Nothing
   here has been checked for diffraction-limited detail before use.
+---
+
+## 17. Aperture is spent, and the teleconverter is the remaining lever — REQUESTED, one subject, two brackets
+
+**Added by the orchestrator 2026-08-24 after auditing the rig's optical
+ceiling at primary source. Two corrections to this document come first,
+because both change what §0 tells you to do.**
+
+### 17.1 §0's advice has already been taken, and the lever is now empty
+
+§0 tells the owner to stop shooting at marked f/11. **They have.** Every stack
+in the 2026-08-23 delivery is **f/5.6 marked**. More importantly, `exiftool` on
+`bee-3-cpl` reports:
+
+```
+FNumber          : 5.6
+MaxApertureValue : 5.6
+LensSpec         : FE 200mm F5.6 Macro OSS
+LensModel        : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+```
+
+`MaxApertureValue == FNumber` means **f/5.6 is wide open with the teleconverter
+fitted.** There is no wider setting. §0's "raise the aperture" lever, which it
+correctly called the largest single quality lever in the project, **is fully
+spent on the current rig.** Nothing further can be gained along that axis
+without changing hardware, and §0 should be read from here as *satisfied*
+rather than *pending*.
+
+### 17.2 §0's table understates the damage, because it assumes m = 2.0
+
+§0 derives from "working at 2:1", i.e. `N_eff = N x 3`. **The rig's actual
+maximum magnification is 2.8x** (`F-camera-lens-optics.md:13`, VERIFIED: 1.4x
+native, doubled by the converter — *not* 1:1), and M84b's tick-comb measurement
+places the ruler captures at **m = 2.76**, essentially at that ceiling. At
+m = 2.762 the same table reads:
+
+| marked | `N_eff` at m=2.0 (§0) | `N_eff` at m=2.762 (actual) | understated by |
+| --- | --- | --- | --- |
+| f/4 | 12.0 | 15.05 | 25% |
+| f/5.6 | 16.8 | 21.07 | 25% |
+| f/8 | 24.0 | 30.10 | 25% |
+| f/11 | 33.0 | 41.38 | 25% |
+
+**The situation §0 describes is about 25% worse than §0 says** wherever the
+owner shoots near maximum magnification, which on this evidence is where they
+shoot. §0's headline conclusions are unchanged in direction and strengthened in
+degree; its *numbers* should not be quoted without this correction.
+
+### 17.3 The consequence: critical sampling is unreachable with the converter on
+
+Critical sampling — diffraction cutoff placed exactly at sensor Nyquist
+(97.7 cy/mm at 5.12 um pitch) — needs `N_eff <= 18.62`.
+
+- **With the 2x converter at m = 2.762:** requires **marked f/4.95**. The widest
+  available setting is **f/5.6**. **Unreachable.** The rig is diffraction-limited
+  below Nyquist at every legal setting, and `MTF at Nyquist is exactly zero`
+  (cutoff 86.3 cy/mm against Nyquist 97.7).
+- **Without the converter, at maximum native m = 1.4:** requires marked f/7.76,
+  against a widest setting of f/2.8. **Reachable with about 1.5 stops to spare** —
+  the owner could even stop down for depth and remain critically sampled.
+
+§0 said "critical sampling is at marked f/6.21". That figure inherits the m = 2.0
+assumption; **at the true magnification it is f/4.95, and it is off the dial.**
+
+### 17.4 But removing the converter is *not* obviously right — and this is the capture
+
+The naive reading of §17.3 is "take the teleconverter off". **A subject-referred
+calculation says the opposite, and the disagreement is exactly why this needs to
+be shot rather than argued.**
+
+Comparing what is resolved *on the subject* (system MTF = diffraction x pixel
+aperture, capped at the `m x Nyquist` sampling limit):
+
+| configuration | m | `N_eff` | detail at MTF>=0.2 | finest feature | detail at MTF>=0.5 |
+| --- | --- | --- | --- | --- | --- |
+| **2x TC, f/5.6 wide open (current)** | 2.76 | 21.07 | **156.1 cy/mm** | **3.2 um** | 91.3 cy/mm |
+| bare lens, max mag, f/2.8 wide open | 1.40 | 6.72 | 136.7 cy/mm | 3.7 um | **105.9 cy/mm** |
+
+**The converter wins on fine detail and loses on contrast.** Without it the
+*sensor* badly undersamples the lens — the optics reach 378.8 cy/mm
+subject-referred against a 136.8 cy/mm sampling wall — so the converter moves the
+binding constraint from **sampling** to **optics** and nets finer detectable
+detail, paid for in MTF.
+
+*Caveat, stated honestly: this is diffraction-only. It **ignores teleconverter
+aberrations**, which are real, and the converter is a third-party Viltrox with no
+published MTF, so they cannot be bounded from a datasheet. The table above is
+therefore an upper bound on the converter's case. Real aberrations move it toward
+the bare lens, possibly past it.*
+
+### What to shoot
+
+One subject, static, tripod, two brackets back to back. **Do not change the
+subject or the lighting between them.**
+
+1. **With the 2x teleconverter**, f/5.6 (wide open), framed as you normally
+   would at high magnification. Bracket through the subject's full depth.
+2. **Without the teleconverter**, f/2.8 (wide open), **moved closer so the
+   subject fills a similar fraction of the frame** if it can; if it cannot,
+   frame as tightly as the bare lens allows and note the working distance.
+   Bracket through the same depth.
+
+Same ISO, same shutter where possible, same CPL state. Record the working
+distance for both. A ruler or any object with a known dimension somewhere in
+frame makes the magnification recoverable and costs nothing.
+
+### Why this cannot come from existing files
+
+Every stack in the corpus was shot **with** the converter. There is no bare-lens
+capture of any subject at any magnification, so the comparison in §17.4 has no
+empirical leg on either side — it is arithmetic against arithmetic.
+
+### What it unblocks
+
+- **Settles §17.4 empirically**, which is currently the largest open question
+  about how the owner should shoot, and is unanswerable from theory because the
+  deciding term (converter aberrations) is undocumented.
+- **Prices the deconvolution thesis on the owner's real gear.** If the converter
+  configuration really does carry genuine signal at crushed-but-nonzero MTF
+  across a wide band, that is precisely the regime multi-frame Wiener
+  deconvolution with a calibrated noise floor is built to exploit — and the
+  rig would be matched to the project's core idea by accident. If aberrations
+  have eaten that band, the thesis loses its best local demonstration and the
+  advisor should say "take the converter off" instead.
+- **Gives the capture advisor its first real recommendation to make**, with a
+  measured basis rather than a modelled one.
