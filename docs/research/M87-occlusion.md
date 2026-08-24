@@ -65,8 +65,10 @@ such).
 > The proximate cause is **selection**. All 299 single frames of `bee-3-cpl`
 > score **0.000026 ± 0.0000073** on the halo metric (mean ± SE over frames;
 > sd 0.000126, max 0.000861); the merge of those same frames scores
-> **0.06804 [0.05981, 0.07982]**. The artifact is **79× the worst single frame
-> and ~2600 SE above the frame null**. It is manufactured in the merge. The
+> **0.06804 [0.05981, 0.07982]**. The artifact is **79× the worst single frame**
+> (0.0680424 / 0.0008610680 = **79.02**; the ratio is taken against the *worst*
+> frame, not the mean), **2597× the frame mean**, and **9299 SE above it**.
+> It is manufactured in the merge. The
 > two-layer veil is what makes the *selector* go wrong, and it is what makes the
 > defect irreducible — see the next line — but nothing in any single exposure
 > looks like the rim you see in the output.
@@ -648,7 +650,7 @@ be folded into it rather than beside it.
 
 | id | claim | consequence | status |
 | --- | --- | --- | --- |
-| **P1** | **The occlusion halo is manufactured by the merge, not photographed.** All 299 single frames of `bee-3-cpl` score **0.000026 ± 0.0000073** (SE; sd 0.000126, max 0.000861, 94.3% exactly 0) on an edge-normal isotonic-residual metric; their merge scores **0.06804** [0.05981, 0.07982] over 6103 profiles — **79× the worst frame** | The defect is entirely inside the selector's decision rule. Any remedy is a change to how a frame is chosen or to what is reconstructed, never to capture | M87 (MEASURED) |
+| **P1** | **The occlusion halo is manufactured by the merge, not photographed.** All 299 single frames of `bee-3-cpl` score **0.000026 ± 0.0000073** (SE; sd 0.000126, max 0.000861, 94.3% exactly 0) on an edge-normal isotonic-residual metric; their merge scores **0.06804** [0.05981, 0.07982] over 6103 profiles. The headline ratio is **merge ÷ worst single frame = 0.0680424 / 0.0008610680 = 79.02×**; against the frame *mean* it is 2597×, and the merge sits **9299 SE** above that mean | The defect is entirely inside the selector's decision rule. Any remedy is a change to how a frame is chosen or to what is reconstructed, never to capture | M87 (MEASURED) |
 | **P2** | **Fact 1145's gate invariance holds under a metric with a measured null**: gate 0 **0.06804** [0.05981, 0.07982] vs gate 2 **0.06843** [0.05924, 0.08120] | Fold into 1145; it discharges that fact's own *"if this holds under a real metric"* clause | M87 (MEASURED) |
 | **P3** | **The rim is a rank seam.** The elected value sits at percentile **0.675** of its own through-focus distribution in the near band and **0.429** far away; median \|k−k_F\| is **32** near and **96** far | The band is estimated max-like and the far field median-like. Explains the sign: a dark occluder yields a bright rim, and a bright subject on a dark background should yield a **dark** one — a cheap falsifiable capture | M87 (MEASURED + DERIVED) |
 | **P4** | **The rim is part window and part veil, and the split is measured.** Rim width scales with the focus operator support (**30/30/34/46/64 px** at supports 5/8/21/41/65) and the yoked fraction scales **0.155→0.615**, but ISO falls only **9%** from support 21 to support 5 | Shrinking the focus window cannot remove it. A residual survives at a support too small to straddle the edge, and that residual is two-layer veiling | M87 (MEASURED; pre-registered discriminator, prediction committed before the run) |
@@ -1794,7 +1796,11 @@ namespaced `M87`.
 | P49 | **THE PHOTOMETRIC SHARE OF THE HALO IS ZERO OR NEGATIVE AT EVERY CORRECTION STRENGTH.** Re-running the election on gain-normalised frames (`src/53`, lambda sweep of the per-frame gain, `ROI_LEG`, 6103 profiles) gives ISO **0.06804 / 0.06979 / 0.07120 / 0.07225 / 0.07379** at lambda = 0 / 0.25 / 0.5 / 0.75 / 1.0 — **monotone increasing**. Best lambda is **0**, the uncorrected shipped election. | **Per-frame photometric normalisation will not fix the halo**, and a single-point test could not have shown this: the ladder excludes a gentler correction helping. M99 is worth shipping for other reasons, but the halo should not be attributed to photometry. Protects M87's occlusion attribution from being explained away. | MEASURED |
 | P50 | **M96's disconnected population and the orchestrator's enrichment both replicate on `ROI_LEG`, independently implemented.** Re-measured, not inherited: **27.083%** disconnected (M96 whole-frame: 25.247%), mean gap **64.51** frames. Gain normalisation re-elects **31.515%** of disconnected pixels against **3.580%** of connected — **enrichment 8.80x**, inside ORCH's 2.82-32.68x range — with a correctly specified label-shuffle null at **0.989x**. Median frame move among movers: **73** disconnected against **2** connected. | The mechanism ORCH describes is **real and reproduced**: photometric drift does attack precisely the disconnected population. **P49 is therefore the sharper result** — the mechanism fires, moves those pixels a long way, and still does not reduce the halo. Firing on the right population is not the same as fixing the defect. | MEASURED |
 | P51 | **The halo metric cross-validates across two independent implementations.** A pure-Python re-election from the cached 299-frame cube gives ISO **0.06804** on `ROI_LEG`; §15.2's arm U, produced by the shipped Rust binary, gives **0.06805**. | Agreement to 1 part in 6800 between a Rust merge and a NumPy re-implementation of the documented focus formula. The metric and the harness are not encoding an artefact of either code path. | MEASURED |
-| P52 | **My illumination probe disagrees in SIGN with the reported early-frame brightness bias.** Far-background pixels (>60 px from the subject, 29.19% of `ROI_LEG`) give an early-decile level bias of **−3.18%** against the reported **+5.31%**, with total p-p 17.83% and 31-frame-smoothed p-p 12.36%. | Two probes of the same stack disagree on direction. Mine is deliberately restricted to far background because a whole-crop median tracks the subject sweeping through focus — measured at 20.75%, which is why it was rejected. **M99 should confirm which probe its normalisation is built on** before shipping a correction whose sign is in dispute. | MEASURED |
+| P52 | ~~**My illumination probe disagrees in SIGN with the reported early-frame brightness bias.**~~ **SUPERSEDED by P53 — there was no sign conflict.** The −3.18% was quoted in the *brightness* convention (`lev/ref − 1`); M99's +5.31% is the *correction gain* convention (`ref/lev − 1`). They are reciprocals of one signed statement. My own far-background figure in gain form is **+3.23%**. | Retained struck rather than deleted, because the dispatch that followed it stopped M99 shipping. The lesson is that a disagreement in sign between two probes is a **convention** question first and a measurement question second, and it costs one grep at the source to tell them apart. | SUPERSEDED |
+| P53 | **The illumination-probe "sign conflict" was a convention difference, settled at source and not by re-measurement.** `crates/strehl-core/src/photometric.rs:390` computes `let g = (r / f.mean().unwrap_or(r)) as f32` — reference ÷ frame flux, the **correction-gain** convention. M87's −3.18% was the **brightness** convention. In gain form M87 reads **+3.23%**, M99 reads **+5.31%**: same sign, same direction, "the early frames are dim and need boosting". The residual 3.23 vs 5.31 is **region** (far background inside `ROI_LEG` vs a whole-frame low-detail mask ∩ warp coverage), not error. | **M99 is not blocked and should not have been.** ORCH's leading hypothesis — that M99 used a whole-crop median tracking the subject through focus — is **refuted at the source**: `photometric.rs` explicitly rejects patch medians for flux, states why in its header, and carries a unit test `defocus_alone_does_not_move_the_estimated_gain`. Two probes reported in reciprocal conventions look like a contradiction and are not one. | MEASURED (read at source) |
+| P54 | **The far-background probe is an unbiased estimator of a planted signed gain.** `src/54`, a signed ramp materialised into the real 299-frame `bee-3-cpl` cube at amplitudes −8/−4/0/+4/+8%, recovered per frame as `ratio_k = lev_planted[k]/lev_base[k]` against the planted `plant_gain[k]`: **slope 1.000000** at every amplitude, **max relative error 1.8e−07** (float32 rounding), sign correct on every arm. The early-decile summary recovers at slope **1.000000**, residual ≤ 6.8e−06 pp. | Answers the dispatch directly: a planted +4% comes back as +4%, so the probe's sign is sound and its magnitude is not diluted. Note the test proves **sign and linearity only** — a global multiply scales every region alike, so it deliberately cannot discriminate regions. That needs P55. | MEASURED |
+| P55 | **On a defocus-only null, an illumination estimator's STATISTIC dominates its REGION by ~99×.** Blurring one real frame at sigma = 0/1/2/4/8/16, max drift: whole-crop **median 2.942%** against whole-crop **mean 0.030%** — identical pixels, **98.8×** apart. Region, holding the statistic at mean, moves far less: far background **0.206%** vs a same-area contiguous block **0.041%**, **5.0×**. Subject-only reads **8.474%**. | **Independent corroboration of M99's central design decision** — flux as a mean above black rather than a patch median — reached on a different region with a different statistic from M99's own 18.2% vs 8.7%. Anyone building a photometric probe should spend their care on mean-vs-median before agonising over the region. | MEASURED |
+| P56 | **M87's own far-background region is NOT the best available, and its area control failed.** A contiguous same-area block drifts **0.041%** under defocus against far background's **0.206%** — the far-background mask hugs the subject at 60 px and so has a long perimeter adjacent to high contrast, and flux leaks across that perimeter under blur. A registered `SHUF` control (same area, scattered) also beat it at 0.042%, because a uniform scatter estimates the **global mean**, which blur conserves — so `SHUF` was mis-specified as an area control and `BLOCK` replaced it. | Reported against my own instrument. The far-background probe is sound in sign and linearity (P54) and far better than median- or subject-based probes (P55), but **compactness beats subject-avoidance** for blur invariance. A future probe should prefer a compact low-detail patch. | MEASURED |
 
 ### Capture request
 
@@ -2049,6 +2055,11 @@ which is discipline 604 again, from the opposite direction.
 
 ### 21.5 A sign disagreement for M99
 
+> ⚠ **RESOLVED IN §22 — there was never a sign conflict.** The two numbers are
+> reciprocal conventions of the same signed statement. This subsection is kept
+> as written because it is what triggered the dispatch that stopped M99
+> shipping; §22 is the correction.
+
 My far-background probe gives an early-decile bias of **−3.18%**; the
 orchestrator reports **+5.31%**. **The signs are opposite.** Total p-p 17.83%,
 31-frame-smoothed 12.36%. I am not adjudicating this — different probes on
@@ -2062,4 +2073,158 @@ The pure-Python re-election reproduces the shipped Rust binary's halo:
 **0.06804** against §15.2 arm U's **0.06805**, agreement to 1 part in 6800,
 through completely independent code. The metric is not an artefact of either
 implementation.
+
+## 22. The probe sign, settled at source — and the finding it uncovered
+
+**Dispatched by the orchestrator at 07:08**, which held M99 from shipping until
+the sign of the early-frame brightness bias was settled, and asked me for two
+things: the exact region definition my probe uses, and a planted signed gain
+ramp recovered by it.
+
+Both are below. The answer to the dispatch is that **there was never a sign
+conflict**, and the experiment I ran to prove my own probe sound turned up a
+more useful result than the dispatch asked for.
+
+### 22.1 The exact region definition
+
+```python
+mask  = bee3-leg-mask.npy                      # subject mask on ROI_LEG
+probe = distance_transform_edt(~mask) > 60.0   # background, >60 px from subject
+lev[k] = luma[k][probe].mean()                 # mean, not median
+ref    = median(lev)                           # over all 299 frames
+gain[k] = ref / lev[k]                         # CORRECTION-GAIN convention
+```
+
+`ROI_LEG` is `(1200, 1900, 300, 1400)` on the binned 3516x2344 frame, expanded
+by `MARGIN = 22`; the cube is 299x744x1144. The probe covers **29.19%** of the
+crop. Source: `experiments/M87-occlusion/src/52-photometric-share.py`,
+function `per_frame_gain`.
+
+### 22.2 There is no sign conflict — it is a convention, and it is readable
+
+The last line above is the whole dispute. My probe returns the **correction
+gain** `ref/lev`; the number I reported, **−3.18%**, was quoted in the
+**brightness** convention `lev/ref − 1`. Those are reciprocals and they carry
+opposite signs by construction.
+
+I did not need to re-measure anything to settle which convention M99 uses.
+`crates/strehl-core/src/photometric.rs:390`:
+
+```rust
+let g = if k == reference {
+    1.0
+} else {
+    (r / f.mean().unwrap_or(r)) as f32
+};
+```
+
+`r` is the reference frame's flux, so `g` is **reference ÷ frame flux** — the
+correction-gain convention, the same as mine. Converting my figure to match:
+
+| probe | brightness, `lev/ref − 1` | correction gain, `ref/lev − 1` |
+| --- | --- | --- |
+| M87, far background | **−3.13%** | **+3.23%** |
+| M99, as reported | −5.04% | **+5.31%** |
+
+**Same sign, same direction: the early frames are dim and need boosting.** The
+residual 3.23 vs 5.31 is a **region** difference — mine is far background inside
+`ROI_LEG`, M99's is a whole-frame low-detail mask intersected with warp
+coverage — not a disagreement about direction.
+
+**ORCH's leading hypothesis is refuted at the source.** M99 does *not* use a
+whole-crop median tracking the subject through focus. `photometric.rs` rejects
+patch medians for flux explicitly, gives its reason in the module header
+("blur conserves flux… the mean above black over a fixed region is blind to
+redistribution"), reports 18.2% for patch medians against 8.7% for conserved
+flux, and carries a unit test named
+`defocus_alone_does_not_move_the_estimated_gain`.
+
+**M99 is not blocked by me and should not have been held.**
+
+### 22.3 The planted ramp: the probe is unbiased
+
+`src/54-probe-plant.py`. A signed ramp is **materialised** into the real
+299-frame cube — every planted frame is actually multiplied and re-probed, so
+the recovered slope is a property of the pipeline and not of algebra — at
+amplitudes −8 / −4 / 0 / +4 / +8 %.
+
+The primary test involves no median at all: the per-frame ratio
+`lev_planted[k] / lev_base[k]` must equal the planted gain, frame by frame.
+
+| arm | amplitudes | slope | max rel. err | sign |
+| --- | --- | --- | --- | --- |
+| FAR | ±0.04, ±0.08 | **1.000000** | 1.6e−07 … 2.0e−07 | OK |
+| CROP | ±0.04, ±0.08 | **1.000000** | 9.4e−08 … 1.1e−07 | OK |
+| SUBJ | ±0.04, ±0.08 | 1.000000 / 0.999999 | 1.9e−07 … 2.4e−07 | OK |
+
+**A planted +4% comes back as +4%.** The residual is float32 rounding. The
+early-decile summary recovers at slope **1.000000** with residual ≤ 6.8e−06 pp.
+
+**What this test cannot do, stated plainly:** a global multiply scales every
+region alike, so *every* arm passes. It proves sign and linearity; it cannot
+tell me my region is the right one. That needs §22.4.
+
+**An instrument defect, disclosed.** The first version of `src/54` predicted the
+planted shift as `mean(pg[:E])/median(pg) − 1`, which assumes the median of a
+product is the product of medians. It is not, and the FAR arm read a slope of
+**0.8079** and looked 19% diluted when the probe is exactly linear. The
+correction was to make the per-frame ratio primary and to compute the summary's
+prediction by the same route as its measurement.
+
+### 22.4 The defocus-only null — and the finding that matters
+
+Blur conserves flux, so a probe that measures **illumination** must not move
+when only focus changes. This is the property that discriminates regions, and it
+is the same one M99 asserts. One real frame (k = 149), Gaussian blur at
+sigma = 0/1/2/4/8/16, max drift from sigma = 0:
+
+| arm | statistic | region | max drift |
+| --- | --- | --- | --- |
+| GMEAN | mean | whole crop | **0.030%** |
+| BLOCK | mean | contiguous, same area as FAR | **0.041%** |
+| SHUF | mean | scattered, same area as FAR | 0.042% |
+| FAR | mean | background, >60 px from subject | **0.206%** |
+| CROP | **median** | whole crop | **2.942%** |
+| SUBJ | mean | subject only | **8.474%** |
+
+**The estimator's statistic dominates its region by two orders of magnitude.**
+`CROP` and `GMEAN` are the *identical pixels* and differ only in median vs mean:
+**2.942% against 0.030%, a factor of 98.8**. Changing the region while holding
+the statistic at mean moves things **5.0×** (FAR 0.206% vs BLOCK 0.041%).
+
+This is independent corroboration of M99's central design decision, reached on a
+different region with a different statistic from M99's own 18.2% vs 8.7%.
+Anyone building a photometric probe should settle mean-vs-median before
+agonising over the region.
+
+### 22.5 Against my own instrument: my region is not the best one
+
+My registered prediction was that FAR would drift least of the three real
+regions. It did — 0.206% against CROP 2.942% and SUBJ 8.474%, **PASS**.
+
+**My area control FAILED.** A contiguous block of the same area drifts
+**0.041%**, five times less than my far-background mask. The reason is
+geometric: a mask defined by `distance > 60 px` hugs the subject, so it has a
+long perimeter running alongside high-contrast edges, and flux leaks across that
+perimeter under blur. **Compactness beats subject-avoidance.**
+
+**A second mis-specified control, disclosed.** The control I registered first was
+`SHUF` — FAR's pixel count scattered at random — intended as "same area, wrong
+place". It read 0.042% and beat FAR, which looked like a verdict on my region
+and was not: a uniform scatter over the whole crop estimates the **global mean**,
+and blur conserves the global mean, so `SHUF` is the most blur-invariant
+statistic available rather than a same-area control. `BLOCK` replaced it. That
+is the third instrument defect I have disclosed against my own harness tonight,
+after the label-shuffle in §21 and the prediction formula in §22.3.
+
+### 22.6 What this changes
+
+Nothing in the halo verdict. §21's conclusion is untouched: the photometric
+share of the halo is **zero or negative at every correction strength**, and that
+conclusion never depended on the sign convention, because the lambda ladder
+applies whatever gain the probe produces and measures the halo that results. A
+sign error would have shown up as the ladder improving in the other direction;
+it does not improve in either.
+
+What it changes is the dispatch: **M99 should be unblocked.**
 
