@@ -815,8 +815,8 @@ channel that moved.
 - *(d) bounded, now quantitatively:* any kernel-**created** chroma is ≤1.5 % of the fringe
   amplitude at the hair ROI and ≤6.7 % at the wing, and both deficits are *negative* — the
   kernel removes fringe, it does not add it. Calibrating against K3-POWER
-  (0.3 px of pure red shift ⇒ +2.6 % centre, +8.9 % wing), that bounds any kernel-induced
-  **channel-differential displacement** at roughly **≤0.05 px at the centre and ≤0.23 px at
+  (0.3 px of pure red shift ⇒ +2.58 % centre, +8.87 % wing), that bounds any kernel-induced
+  **channel-differential displacement** at roughly **≤0.17 px at the centre and ≤0.23 px at
   the wing** — against the 1.43-sensel median lateral displacement measured in §3.
 - *The sign is preserved across all three kernels* (K6 slopes +0.865 … +0.964, all
   positive), which was the registered falsifier for (b)'s mechanism as described in §4. It
