@@ -2718,3 +2718,245 @@ otherwise — it fired on the first run, on an anchor written with an ASCII hyph
 where the report has U+2212, which would otherwise have been a silent no-op
 scored as a miss. It restores from a byte copy in `%TEMP%` verified by SHA-256,
 never with `git checkout --`.
+
+## 24. The cache-contamination control: my renders were immune, and the fix has already landed
+
+The orchestrator issued a highest-severity warning against every A/B run
+tonight (fact 1446): an identical command line produces one of two different
+output hashes depending only on whether an unrelated `align --reference 40` ran
+first, because `StackIdentity` covers the frame set but not `reference` and not
+`resampler`. `resampler` is the field this milestone attributes its kernel
+numbers to, so the warning names me directly. I was asked to run a control, to
+quote both hashes either way, and to report contamination rather than quietly
+re-running until it looked stable.
+
+**Result: all five bars passed, including the mandatory power control. Nothing
+in this report is contaminated, and I can say why rather than merely that.**
+
+### 24.1 Two things I found before running anything
+
+**The fix already landed.** `69f7b4c`, at 13:41:53 today, *"M97n: key the warp
+cache on the solve configuration, not just the path"*. It adds
+`solve_config_key(reference, spans, resampler)` at `align_cmd.rs:916`, which
+hashes the reference, the span ladder, the resampler's `Debug` token and every
+variable in `SOLVE_ENV`; `sidecar_path` at `align_cmd.rs:878` mixes that digest
+with the canonicalised capture directory. On HEAD, both named inputs are in the
+key. The doc comment describes the defect in the past tense and names this
+milestone as the reason it mattered.
+
+That is a **code reading, not a measurement**, and a fix present in the source
+is not the same as a fix that works. Everything below exists because of that
+distinction.
+
+**My own renders predate it by about six hours.** Every image this milestone
+wrote is timestamped 07:31 to 07:45; the fix landed at 13:41:53. So "the fix is
+in HEAD" clears nothing of mine. The only question that matters for my numbers
+is whether the code path my renders actually took ever consulted the broken key
+at all.
+
+### 24.2 The design, and the two bars the orchestrator did not ask for
+
+The prescribed control is: run the arm, hash A; run something that changes
+`reference`; re-run the byte-identical arm, hash B; `A != B` means contaminated.
+I added two bars to that.
+
+**A determinism baseline (C0).** A hash A/B is meaningless if the merge is not
+run-to-run deterministic in the first place. If C0 had failed I would have
+reported the whole control void and nothing else.
+
+**A power control (C1).** Discipline 594 came from my own predecessor and it
+binds me: a null is a claim about the world only if the instrument could have
+said otherwise, and I must show it saying otherwise. So I built a binary from
+`11e49dd` -- committed at 13:41:44, **nine seconds before the fix** -- and
+verified it contains zero `fn solve_config_key` definitions. If C1 had come back
+identical, the honest report would have been *"my control is blind"*, not *"the
+fix works"*.
+
+Each `(binary, arm)` sequence runs in one fresh `STREHL_CACHE_DIR` shared across
+its steps. A fresh cache per *step* would have made the defect unable to
+manifest by construction, which is a rigged null.
+
+The two arms differ only in whether the sidecar is pinned:
+
+| arm | condition | what it stands for |
+| --- | --- | --- |
+| plain | no `STREHL_WARPMAP` | the code path where the defect lives |
+| override | `STREHL_WARPMAP` pinned | **the path my montage actually took** |
+
+Bars and the interpretation of every outcome were committed at `3d00a3e`,
+before the script had ever been run, and amended at `448e5b3` for the reason in
+§24.5. Neither commit changed a bar.
+
+### 24.3 The measurement
+
+`coffee-bubbles`, 19 frames, merge reference 9, intervening
+`align --reference 0`. Hashes are sha256 of the output TIFF, first 16 hex
+digits; the full digests are in the artifact.
+
+| bar | binary | arm | A | B | | bar was |
+| --- | --- | --- | --- | --- | --- | --- |
+| C0 | POST | plain, **nothing between** | `E43C7F14D1EB0B42` | `E43C7F14D1EB0B42` | same | identical -- PASS |
+| C1 | **PRE** | plain, align between | `2FD1169422E6A6F1` | `B548E32162522F4E` | **DIFFER** | `A != B` -- PASS |
+| C2 | POST | plain, align between | `E43C7F14D1EB0B42` | `E43C7F14D1EB0B42` | same | identical -- PASS |
+| C3 | **PRE** | **override**, align between | `2FD1169422E6A6F1` | `2FD1169422E6A6F1` | same | identical -- PASS |
+| C4 | POST | override, align between | `E43C7F14D1EB0B42` | `E43C7F14D1EB0B42` | same | identical -- PASS |
+
+**C1 is the whole report.** On the pre-fix binary the defect reproduces exactly
+as the orchestrator described it: same command line, different bytes, because an
+unrelated `align --reference 0` overwrote the entry the merge then read. My
+instrument is not blind, so its nulls are admissible.
+
+**C3 is my clearance.** On that same buggy binary, with the override pinned, the
+intervening align changes nothing. The tool says why on its own `alignment`
+line: `ON (sidecar-override), reference frame 9, 19 placed / 0 refused`, against
+`ON (solved)` on the plain arms. `STREHL_WARPMAP` loads the named file and
+hard-validates it with `check_stack`; it never calls `sidecar_path()`, so there
+is no key for a stale entry to collide on. My §22 renders were immune **by
+construction of the path they took, not by luck of ordering** -- and that is
+demonstrated on the binary that carries the defect, which is the strong form of
+the claim.
+
+**C2 is for the fleet, not for me.** M97's landed fix holds under the exact
+sequence that broke the pre-fix binary.
+
+One internal consistency check worth stating, because it could have gone wrong
+quietly: C1's A, C3's A and C3's B are all `2FD1169422E6A6F1`. They should be --
+the pinned sidecar was solved at reference 9, which is the same reference the
+plain arm's own solve uses, so the override and a clean solve must agree. They
+do, to the byte. PRE and POST differ from each other
+(`2FD1169422E6A6F1` vs `E43C7F14D1EB0B42`)
+because roughly two and a half hours of unrelated commits sit between them,
+including M107b's lateral-CA work; that difference is not about the cache.
+
+### 24.4 What this clears, and what it never touched
+
+**§23, tonight's headline, is structurally immune.** Arms 13 through 13g never
+invoke the strehl binary at all. They are Python over `rawpy` decodes read
+directly from the capture library; grepping their source for
+`subprocess|strehl.exe|Popen|os.system` returns only a `git rev-parse` and two
+harnesses that spawn `sys.executable`. No `StackIdentity`, no sidecar, no cache.
+The same is true of the `+0.1160 dex` kernel figure, which comes from a Python
+`resample()` over decoded tiles rather than from the Rust merge.
+
+**§22's montage and B23 ringing are cleared by C3**, on the evidence above.
+
+This also confirms §18.4, which asserted the same immunity from a code reading
+in an earlier arm. It was right, but it was an argument; C3 is the measurement.
+
+### 24.5 A finding that nearly cost me the control: a build artifact's mtime lies
+
+I first pinned the shared `target/release/strehl.exe` as my POST binary because
+its mtime read 15:46:49, comfortably after the 13:41:53 fix. **That binary's own
+`--help` refuted me**: no `--exposure`, no `--demosaic`, no `--binned`, and the
+sentence *"It does not yet align, deconvolve, reject outliers, or model
+occlusion"*. It therefore predates M86c, M95 and M100 by hours, whatever its
+mtime says. Something touched the file without rebuilding it from current
+source.
+
+It failed loudly, on an unknown-argument error, which is the only reason I
+noticed -- had my arm used only arguments that old surface happened to accept,
+I would have reported a stale binary's cache behaviour as HEAD's and never known.
+**In a tree with several agents building concurrently, the mtime of a shared
+build artifact is evidence of when something touched the file, not of which
+source produced it.** Both binaries here are now built from worktrees pinned to
+explicit commits, into target directories nothing else writes, and recorded by
+sha256:
+
+- PRE `11e49dd`, sha256 `816FA76B87F0FB47…`
+- POST `16f2dd2`, sha256 `C9A95492CB675D3A…`
+
+A related honesty note about the artifact: `x18_cachectl.json`'s `post_commit`
+field, as written by the run that produced these numbers, records
+`8e49842` -- the repository HEAD at the moment the file was written, which had
+already moved past the `16f2dd2` the POST binary was built from, because other
+agents commit continuously. The field was misleadingly named and I have renamed
+it to `repo_head_at_write_time` for future runs. I have **not** re-run to
+produce a tidier artifact; the binaries are pinned by sha256, which is a
+stronger identity than a commit string, and re-running until the output looks
+better is the habit the orchestrator explicitly asked us not to develop.
+
+### 24.6 Environment audit: no further unkeyed solve inputs found
+
+The orchestrator asked that further unkeyed inputs be reported rather than
+fixed. Every `STREHL_*` literal in `crates/*/src/*.rs`:
+
+| variable | read at | domain | in the key? |
+| --- | --- | --- | --- |
+| `STREHL_SMOOTH` | `align_cmd.rs:504` | parameterises the solve | yes, `SOLVE_ENV` |
+| `STREHL_SMOOTH_HUBER` | `align_cmd.rs:515` | parameterises the solve | yes, `SOLVE_ENV` |
+| `STREHL_ALIGN` | `align_cmd.rs:840` | **gate**, not a parameter | not needed |
+| `STREHL_CACHE_DIR` | `align_cmd.rs:943` | the cache root itself | not applicable |
+| `STREHL_WARPMAP` | `merge_cmd.rs:1133` | bypasses the cache entirely | not applicable |
+| `STREHL_FIX_CA` | `optics.rs:386` | render domain, post-merge | not cached |
+| `STREHL_SOFT_GATE` | `merge.rs:331` | merge domain | not cached |
+| `STREHL_PHOTOMETRIC` | `merge_cmd.rs:1258` | merge domain | not cached |
+| `STREHL_DUMP_ELECTION` | `merge_cmd.rs:1175` | diagnostic | not cached |
+| `STREHL_DUMP_NEFF` | `merge_cmd.rs:1255` | diagnostic | not cached |
+
+`STREHL_ALIGN` is the only one worth a sentence: it decides *whether*
+registration runs, not *how*, so it cannot produce a differently-configured
+sidecar occupying one key. The merge-domain variables change output bytes but
+are not cached, so they cannot poison anything -- though they do mean an
+identical command line under a different environment still produces different
+bytes, which is worth knowing when comparing across sessions.
+
+**One open question for M97, which I did not measure.** `threads` is a parameter
+of `solve_map` (`align_cmd.rs:969-977`) and is **not** in `solve_config_key`. If
+the pair solve or the global fit is order-dependent across worker counts, thread
+count is an unkeyed input to the warps. If it is order-independent it belongs
+nowhere near the key. I have not tested it and I am not asserting either way;
+it is cheap to settle with the harness in `x18_cachectl.py` and it is M97's
+lane, not mine.
+
+### 24.7 What I did not do
+
+I did not touch the cache. `merge.rs` and the cache-key path are M97's exclusive
+lane, the fix is already in, and C2 says it works.
+
+The capture library was asserted untouched: `D:\personal\macro\coffee-bubbles`
+held 19 files before the control and 19 after. The pre-fix binary honours
+`STREHL_CACHE_DIR` (`align_cmd.rs:872` in that tree, `var_os` first), so no
+sidecar was ever written beside the RAWs.
+
+### 24.8 Artifacts
+
+| file | what |
+| --- | --- |
+| `experiments/M95-resample/src/x18_cachectl.py` | the control; bars in the docstring, registered at `3d00a3e` |
+| `experiments/M95-resample/out/x18_cachectl.json` | full sha256 digests for all ten renders |
+| `experiments/M95-resample/src/verify_s24.py` | reconstructs every number above from that JSON |
+| `experiments/M95-resample/src/negctl_s24.py` | plants defects into this section and requires the gate to catch them |
+
+The two pinned worktrees under `C:\dev\strehl-out\M95-cachectl\` are scratch and
+are not committed; they are reproducible from the commits named above.
+
+### 24.9 Verification, and one hole the negative control found
+
+`verify_s24.py` reconstructs all 29 claims in this section from the artifact
+and reads **29/29 GREEN**. `negctl_s24.py` then plants seven defects into this
+section one at a time and two into the gate's own inputs, and requires the gate
+to fail on each: **7/7 subject defects and 2/2 tool defects caught**, with the
+report restored byte-exact from a `%TEMP%` copy checked by SHA-256 afterwards.
+
+Two design points carried over from the section 23 gate, both of which were
+holes there before they were rules here. Table rows are matched **structurally**
+-- the one line in the section beginning with that bar's cell -- rather than by
+searching the flattened text, because the flattened form of such a cell also
+occurs in ordinary prose about that bar and the check would silently window
+onto the wrong site. And every anchor must occur **exactly once**, a miss being
+a hard error, so that a mutation which fails to land cannot read as a pass.
+
+**The hole this control found is worth stating on its own, because it is a
+class of defect rather than a typo.** One check was anchored on the same phrase
+that another check asserts as a claim. When the negative control mutated that
+phrase, the gate exited 2 -- tool failure -- instead of 1. It noticed the
+change, but it reported *"I cannot run"* when the truth was *"the report is
+wrong"*, and those are different claims: the first invites you to fix the
+harness, the second to fix the number. **An anchor must be prose scaffolding,
+never a value the report also claims.** Re-anchored on a neutral phrase, the
+same mutation is caught as a subject failure.
+
+Both gates were re-run together after this subsection was written, because
+prose that re-quotes a pinned literal recreates the duplicate a check was
+pinned against -- which is exactly how section 23's D1 hole reopened once
+already. Nothing in this subsection quotes a measured value.

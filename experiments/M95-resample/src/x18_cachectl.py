@@ -315,8 +315,15 @@ def main() -> int:
                 "frames": n,
                 "merge_reference": merge_ref,
                 "intervened_reference": intervene_ref,
-                "pre_commit": "11e49dd",
-                "post_commit": subprocess.run(
+                "pre_commit": PRE_COMMIT,
+                "post_commit": POST_COMMIT,
+                # Recorded separately and deliberately: the repo HEAD at the
+                # moment this file is written is NOT the provenance of either
+                # binary. Other agents commit continuously, so HEAD moves under
+                # a running measurement. The binaries are pinned by worktree
+                # commit above and by sha256 below; those are the identities
+                # that mean anything.
+                "repo_head_at_write_time": subprocess.run(
                     ["git", "rev-parse", "HEAD"], capture_output=True, text=True,
                     cwd=str(Path(__file__).resolve().parents[3]),
                 ).stdout.strip(),

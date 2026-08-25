@@ -1,0 +1,65 @@
+{
+  "bracket": "coffee-bubbles",
+  "frames": 19,
+  "merge_reference": 9,
+  "intervened_reference": 0,
+  "pre_commit": "11e49dd",
+  "post_commit": "8e498422a86a4a7d957e17ac5add2c1048a22284",
+  "pre_exe_sha256": "816FA76B87F0FB4734FDFD70CD39983EE267A9932F95080159F2070EDF8617BB",
+  "post_exe_sha256": "C9A95492CB675D3AC4BB7E8BF397D21C77D8FDC0C89049CA8D7E5868A1F59F00",
+  "results": {
+    "C0": {
+      "tag": "c0-post-plain-nointervene",
+      "A": "E43C7F14D1EB0B42F18DE348618792303EC7968959216E4E893E4AB0023598BC",
+      "B": "E43C7F14D1EB0B42F18DE348618792303EC7968959216E4E893E4AB0023598BC",
+      "identical": true,
+      "intervened_reference": null,
+      "alignment_line": "alignment      : ON (solved), reference frame 9, 19 placed / 0 refused",
+      "align_log_head": ""
+    },
+    "C1": {
+      "tag": "c1-pre-plain",
+      "A": "2FD1169422E6A6F1160486F1F29AAE9830A8AAA9674B5D00E22EDEF350FDEC2D",
+      "B": "B548E32162522F4E5A427FACE207B1B1C69DCEBECC84273A13CCE79ED8491B38",
+      "identical": false,
+      "intervened_reference": 0,
+      "alignment_line": "alignment      : ON (solved), reference frame 9, 19 placed / 0 refused",
+      "align_log_head": "stack coffee-bubbles: 19 frames, digest 744fb84e3b2c7df1\n  reference frame 0 (--reference)\n  decoded 19 frames in 1.3 s, plane 3516x2344\n  measured 64/64 edges in 4.1 s (0.0% refused)\n\n  placed 19/19 frames, refused 0"
+    },
+    "C2": {
+      "tag": "c2-post-plain",
+      "A": "E43C7F14D1EB0B42F18DE348618792303EC7968959216E4E893E4AB0023598BC",
+      "B": "E43C7F14D1EB0B42F18DE348618792303EC7968959216E4E893E4AB0023598BC",
+      "identical": true,
+      "intervened_reference": 0,
+      "alignment_line": "alignment      : ON (solved), reference frame 9, 19 placed / 0 refused",
+      "align_log_head": "stack coffee-bubbles: 19 frames, digest 744fb84e3b2c7df1\n  reference frame 0 (--reference)\n  decoded 19 frames in 1.4 s, plane 3516x2344\n  measured 64/64 edges in 4.3 s (0.0% refused)\n\n  placed 19/19 frames, refused 0"
+    },
+    "C3": {
+      "tag": "c3-pre-override",
+      "A": "2FD1169422E6A6F1160486F1F29AAE9830A8AAA9674B5D00E22EDEF350FDEC2D",
+      "B": "2FD1169422E6A6F1160486F1F29AAE9830A8AAA9674B5D00E22EDEF350FDEC2D",
+      "identical": true,
+      "intervened_reference": 0,
+      "alignment_line": "alignment      : ON (sidecar-override), reference frame 9, 19 placed / 0 refused",
+      "align_log_head": "stack coffee-bubbles: 19 frames, digest 744fb84e3b2c7df1\n  reference frame 0 (--reference)\n  decoded 19 frames in 0.8 s, plane 3516x2344\n  measured 64/64 edges in 1.8 s (0.0% refused)\n\n  placed 19/19 frames, refused 0"
+    },
+    "C4": {
+      "tag": "c4-post-override",
+      "A": "E43C7F14D1EB0B42F18DE348618792303EC7968959216E4E893E4AB0023598BC",
+      "B": "E43C7F14D1EB0B42F18DE348618792303EC7968959216E4E893E4AB0023598BC",
+      "identical": true,
+      "intervened_reference": 0,
+      "alignment_line": "alignment      : ON (sidecar-override), reference frame 9, 19 placed / 0 refused",
+      "align_log_head": "stack coffee-bubbles: 19 frames, digest 744fb84e3b2c7df1\n  reference frame 0 (--reference)\n  decoded 19 frames in 1.5 s, plane 3516x2344\n  measured 64/64 edges in 2.4 s (0.0% refused)\n\n  placed 19/19 frames, refused 0"
+    }
+  },
+  "verdicts": {
+    "C0": true,
+    "C1": true,
+    "C2": true,
+    "C3": true,
+    "C4": true
+  },
+  "blind": false
+}
