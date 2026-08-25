@@ -1,0 +1,31 @@
+{
+  "amended": true,
+  "registered_rule_result": "REFUSED (largest 9x9-sd square = 64 px < 128)",
+  "window_box_relative": [
+    290,
+    650,
+    110,
+    610
+  ],
+  "bandpass": [
+    3.0,
+    24.0
+  ],
+  "model_sigma_dn": 17.062253523979326,
+  "bandpass_noise_floor_dn": 2.8947715759277344,
+  "smooth_threshold_dn": 8.684314727783203,
+  "smooth_fraction": 0.0,
+  "bg_square_box_relative": [
+    291,
+    291,
+    111,
+    111
+  ],
+  "bg_square_side": 0,
+  "tx_square_box_relative": [
+    342,
+    406,
+    380,
+    444
+  ]
+}

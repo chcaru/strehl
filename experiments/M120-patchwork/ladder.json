@@ -1,0 +1,54 @@
+{
+  "bound": 1.283858060836792,
+  "ladder": {
+    "0.0": {
+      "mean_neff": 1.0,
+      "Q": 7.1664,
+      "Q_levelnorm": 2.4936,
+      "residual_share": 0.348,
+      "rho": 0.5465,
+      "rho_null": 0.0077
+    },
+    "1.0": {
+      "mean_neff": 9.922119140625,
+      "Q": 4.9042,
+      "Q_levelnorm": 1.8887,
+      "residual_share": 0.3851,
+      "rho": 0.0711,
+      "rho_null": 0.0633
+    },
+    "2.0": {
+      "mean_neff": 44.162353515625,
+      "Q": 4.6153,
+      "Q_levelnorm": 1.7782,
+      "residual_share": 0.3853,
+      "rho": -0.0725,
+      "rho_null": 0.0413
+    },
+    "4.0": {
+      "mean_neff": 166.84320068359375,
+      "Q": 4.3374,
+      "Q_levelnorm": 1.6974,
+      "residual_share": 0.3913,
+      "rho": -0.2424,
+      "rho_null": -0.024
+    },
+    "8.0": {
+      "mean_neff": 262.5999755859375,
+      "Q": 2.8252,
+      "Q_levelnorm": 1.3022,
+      "residual_share": 0.4609,
+      "rho": -0.0553,
+      "rho_null": -0.0431
+    },
+    "16.0": {
+      "mean_neff": 295.1361083984375,
+      "Q": 0.953,
+      "Q_levelnorm": 0.5971,
+      "residual_share": 0.6265,
+      "rho": 0.0136,
+      "rho_null": -0.0576
+    }
+  },
+  "placebo_Q": 0.3085
+}
