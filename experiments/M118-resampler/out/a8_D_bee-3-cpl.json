@@ -1,0 +1,60 @@
+{
+ "subject": "bee-3-cpl",
+ "input_levels": 22623,
+ "rows": [
+  {
+   "stratum": "detail",
+   "stat": "mean DN",
+   "D": 1.0000198186818225,
+   "orch_bin": "[1,1.25)",
+   "orch_pred_pct": 0.68,
+   "measured_pct": 3.483547942180443e-05,
+   "NS": null
+  },
+  {
+   "stratum": "detail",
+   "stat": "sd DN",
+   "D": 1.0033490625089014,
+   "orch_bin": "[1,1.25)",
+   "orch_pred_pct": 0.68,
+   "measured_pct": 0.006197670464916034,
+   "NS": null
+  },
+  {
+   "stratum": "detail",
+   "stat": "band power",
+   "D": 1.2271559152569302,
+   "orch_bin": "[1,1.25)",
+   "orch_pred_pct": 0.68,
+   "measured_pct": -0.8963315904100674,
+   "NS": 0.057334563185900266
+  },
+  {
+   "stratum": "flat",
+   "stat": "mean DN",
+   "D": 1.000230513946768,
+   "orch_bin": "[1,1.25)",
+   "orch_pred_pct": 0.68,
+   "measured_pct": -0.012405526753018214,
+   "NS": null
+  },
+  {
+   "stratum": "flat",
+   "stat": "sd DN",
+   "D": 1.0031275887007818,
+   "orch_bin": "[1,1.25)",
+   "orch_pred_pct": 0.68,
+   "measured_pct": -0.009062066197122316,
+   "NS": null
+  },
+  {
+   "stratum": "flat",
+   "stat": "band power",
+   "D": 1.254781045330184,
+   "orch_bin": "[1.25,1.5)",
+   "orch_pred_pct": 0.9,
+   "measured_pct": -9.92449062115739,
+   "NS": 1.335072421189326
+  }
+ ]
+}

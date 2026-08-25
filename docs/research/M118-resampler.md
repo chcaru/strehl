@@ -553,6 +553,39 @@ lost **49% of the between-arm effect**, while 57.5 levels retained 95%. Count th
 levels in the support your statistic integrates over, *and* apply the threshold
 belonging to your own statistic class.
 
+**Y18 (MEASURED — `D` is necessary but not sufficient).** ORCH's addendum makes
+term inequality `D = max/min` the governing quantity for cancellation, with a
+measured table rising from 0.68% at `D` < 1.25 to 8.04% at `D` ≥ 8. Every
+statistic in this milestone compares the same scene under two kernels, so the
+terms are near-equal by construction and **every one of my 1547-equivalent tiles
+lands in ORCH's two safest bins** (median `D` 1.249 detail, 1.272 flat, **max
+1.362**). `D` alone would clear all of them.
+
+| stratum | statistic | `D` | ORCH predicts | measured | in-band N/S |
+| --- | --- | --- | --- | --- | --- |
+| detail | mean DN | 1.0000 | 0.68% | +0.00% | — |
+| detail | sd DN | 1.0033 | 0.68% | +0.01% | — |
+| detail | band power | 1.2272 | 0.68% | **−0.90%** | 0.057 |
+| flat | mean DN | 1.0002 | 0.68% | −0.01% | — |
+| flat | sd DN | 1.0031 | 0.68% | −0.01% | — |
+| flat | **band power** | **1.2548** | **0.90%** | **−9.92%** | **1.335** |
+
+The detail stratum is consistent with the table (1.3x). **The flat stratum sits
+in the most protected bin and misses by 11x.** `D` and N/S are independent axes:
+`D` asks how unequal the two **terms** are, N/S asks how large the **noise** is
+relative to them. **Near-equal terms that are both small against the noise floor
+cancel their signal along with their noise** — maximal `D`-protection, minimal
+actual protection.
+
+**D10 (discipline).** *Report `D` **and** in-band N/S; neither alone clears a
+statistic.* Three screens have now each false-cleared a real case in this
+corpus — "is it absolute", "is it a ratio", and "is `D` small". They fail in the
+same direction, toward a confident clean number, and they fail on different
+cases, so passing one says nothing about the others. The honest summary is that
+**the syntactic shape of a statistic tells you nothing** (ORCH), what it reads
+tells you its class (value vs position), `D` tells you whether its terms can
+cancel, and **N/S tells you whether there is any signal left to cancel**.
+
 Reproduce with `python experiments/M118-resampler/src/a5_pilcheck.py <subject>`.
 
 ---
