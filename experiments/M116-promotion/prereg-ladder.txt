@@ -1,0 +1,232 @@
+M116-promotion -- PRE-REGISTRATION, ADDENDUM 3: the DELTA dose ladder
+=====================================================================
+Written and committed BEFORE any ladder arm was rendered. Nothing below was
+edited after a ladder number existed. Two bars are registered with their
+FAILURE PREDICTED IN ADVANCE (LB2, LB4); see section 6.
+
+Pinned SHA   4beac7300e318f6f0aaf10b6a88e57f311b9e814
+Worktree     C:\dev\strehl-out\M116-tree   (detached, built once)
+Output       C:\dev\strehl-out\M116\halo\  (D:\ is read-only)
+
+WHY THIS ADDENDUM EXISTS
+------------------------
+ORCH's objection, in full and in its own terms: the correction works by
+FORBIDDING frames within DELTA of the local focus frame inside the yoke, so the
+treated neighbourhood is necessarily reconstructed from more defocused frames.
+The treatment therefore blurs the exact region in which the halo is scored, and
+any halo statistic that is a brightness excess near a silhouette falls under
+blur alone. A binary on/off A/B cannot separate the two. The remedy ORCH
+specifies is a dose ladder plus a fine-structure curve at every rung, compared
+between ADJACENT RUNGS rather than against off.
+
+I accept the objection. It is correct, it is not speculation, and the same
+confound was mispriced tonight in the CA work by a control that under-blurred
+by 93% on oriented content. This addendum registers the ladder.
+
+
+0. PREMISES READ FROM SOURCE AT THE PINNED SHA (discipline 808)
+---------------------------------------------------------------
+Every statement in this section was read out of
+`crates/strehl-cli/src/merge_cmd/halo.rs` at the pinned SHA via `git show`,
+NOT from `--help` and NOT from the working tree. Line numbers are that blob's.
+
+  S1. The knob is `STREHL_FIX_HALO_DELTA` (line 71). It exists. It is read by
+      `delta_in_use()` at lines 109-114.
+
+  S2. *** THE ZERO RUNG SPECIFIED IN THE LADDER IS UNREACHABLE THROUGH THIS
+      KNOB. *** `delta_in_use()` is
+
+          std::env::var(DELTA_ENV).ok()
+              .and_then(|v| v.trim().parse::<u16>().ok())
+              .filter(|d| *d > 0)
+              .unwrap_or(DELTA)
+
+      `.filter(|d| *d > 0)` discards 0, so `STREHL_FIX_HALO_DELTA=0` falls
+      through to `unwrap_or(DELTA)` and renders THE SHIPPED DEFAULT OF 40, with
+      no warning and no diagnostic. A ladder run as `0/10/20/40/80` would
+      therefore have measured 40 twice and reported a flat bottom rung that is
+      an artefact of a filter clause. The same silent fallback swallows any
+      unparseable value, so a typo in the variable name's VALUE also renders 40.
+
+      This matters beyond bookkeeping. `allows(s,k)` is
+      `|k - kf[s]| >= delta` (line 445), so delta = 0 admits every frame and is
+      exactly the no-op that builds the region and forbids nothing -- i.e. the
+      one configuration that would isolate ORCH's confound perfectly. It exists
+      in the arithmetic and is gated off by one `.filter()`. The bottom rung of
+      this ladder is therefore delta = 1, which forbids only the focus frame
+      itself. It is the minimum reachable dose, not zero dose.
+
+  S3. *** THE TREATED REGION IS INVARIANT ACROSS THE LADDER. *** In
+      `Plan::build` (lines 379-437) `treated` is filled by
+      `if !mask[i] && d2[i] <= yoke2 && near[i] != u32::MAX`. `delta` appears
+      nowhere in that predicate; it is stored on the Plan and consulted only
+      later, in `allows()`. `YOKE` is a `pub const` of 40.0 with no environment
+      override (line 75). `mask` comes from `foreground_mask(luma, ...)` where
+      `luma` is pass one's elected winner luma, and the halo fix is pass two, so
+      pass one is identical across rungs.
+
+      Consequence: every rung treats the SAME pixel set and differs ONLY in
+      dose. This is the clean contrast ORCH asked for -- constant region,
+      varying dose -- and it is a property of the code rather than a hope. It
+      is checkable: the tool logs the treated count, so LB6 below tests it.
+
+  S4. `DELTA = 40` (line 86) and the docstring's provenance for 87.9% / 84.6%
+      and for the delta-80 softening claim are as ORCH quoted them.
+
+
+1. ARMS
+-------
+Two subjects carry the ladder. Both are M87's OWN stacks, deliberately: the
+softening claim and the removal claim are both about these, so this is the
+strongest available test of ORCH's confound on the evidence that justifies the
+instrument.
+
+  bee-3-cpl    -- oriented fine structure: hairs, claws, antennae. This is the
+                  stack the "visibly softens hairs and claws" claim is about,
+                  and oriented content is where the analogous CA control failed
+                  worst. It is the fine-structure subject.
+  flower-bud-with-background-fern-cpl
+               -- M87's second stack, a genuine occluding edge, and the stack on
+                  which addendum 2 found the correction carving mush out of the
+                  subject. It is the damage subject.
+
+Rungs, `STREHL_FIX_HALO=1` throughout, `STREHL_FIX_HALO_DELTA` as named:
+
+  L1   delta = 1     minimum reachable dose (see S2)
+  L5   delta = 5
+  L10  delta = 10
+  L20  delta = 20
+  H1   delta = 40    ALREADY RENDERED, reused unchanged
+  H2   delta = 80    ALREADY RENDERED, reused unchanged
+  L160 delta = 160   above the documented softening dose
+
+  H0   FIX_HALO unset -- off. Present as an anchor ONLY. Per ORCH it is NOT the
+       blur reference and no bar below is decided against it.
+  LZ   STREHL_FIX_HALO_DELTA=0, bee only -- the dead-rung probe for LB1.
+
+All arms: `--limit 100`, `--gate 4`, linear (NO `--srgb`; sRGB is for looking
+at, not measuring), `STREHL_WARPMAP` pointing at the frozen per-subject warp
+sidecar so registration is bit-identical across rungs by construction and the
+warp cache is bypassed entirely.
+
+
+2. THE TWO CURVES, AT EVERY RUNG
+--------------------------------
+Reported together at every rung. One without the other is not interpretable.
+
+  HALO(rung)   the halo index of addendum 2 section 3, unchanged, computed over
+               the treated set. Reported as dHALO% against H0 for continuity
+               with addendum 2, AND as the adjacent-rung difference, which is
+               what the bars below are decided on.
+
+  D(rung)      fine-structure retention: log10 of the ratio of high-pass
+               amplitude to H0, over the treated pixels. Negative = detail
+               lost. Its untreated control is the same statistic over pixels
+               eroded by HP_BOX+2 away from any treated pixel; that control read
+               exactly +0.00000 on all four subjects in addendum 2 and must
+               continue to.
+
+  D_or(rung)   fine-structure retention restricted to ORIENTED content: treated
+               pixels whose local structure tensor has coherence
+               (l1-l2)/(l1+l2) >= 0.6 at H0. This is the hairs-and-claws
+               statistic ORCH asked for, and the case the CA control failed on.
+               Selected on H0, which is not a compared arm.
+
+  X(rung)      the exchange rate, dHALO% divided by -D. How much halo the rung
+               buys per unit of detail it spends. See LB4.
+
+
+3. BARS
+-------
+Each bar states its contract, its direction, and what number decides it.
+
+LB1  DEAD RUNG (measured, not argued).
+     `STREHL_FIX_HALO_DELTA=0` renders BYTE-IDENTICAL to delta 40 on bee.
+     PASS = SHA-256 identical. This converts the source read S2 into a
+     measurement. If it FAILS, S2 is wrong and I retract it.
+
+LB2  BLUR IS MONOTONE IN DOSE.
+     D(rung) is non-increasing across L1 -> L5 -> L10 -> L20 -> H1 -> H2 -> L160
+     on bee, allowing each step a tolerance of +0.005 dex for noise.
+     PASS = at most one step violates it. FAIL = two or more do.
+     *** I PREDICT THIS FAILS. *** Addendum 2 measured D at delta 80 as -0.184
+     against -0.237 at delta 40 on bee -- LESS detail loss at the LARGER dose.
+     Registering it anyway because if it fails, the premise that dose maps to
+     blur monotonically is false, and then the ladder cannot separate blur from
+     halo removal by monotonicity and ORCH's remedy does not work as specified.
+     That is the outcome most worth knowing and I will not soften the bar to
+     avoid it.
+
+LB3  HALO CHANGE IS MONOTONE IN DOSE.
+     dHALO%(rung) monotone across the same sequence, same one-violation
+     allowance, on both subjects independently.
+     PASS = at most one violating step per subject.
+
+LB4  THE EXCHANGE RATE IS NOT CONSTANT.
+     If a single mechanism -- blur -- drives both curves, then halo change and
+     detail loss are two readings of one quantity and X(rung) is flat. If halo
+     removal is doing something blur is not, X must vary with dose.
+     Decide on the spread of X over the rungs where both curves are outside
+     their controls: PASS (two mechanisms) = max(X)/min(X) >= 2.0.
+     FAIL (one mechanism, consistent with ORCH's confound) = < 2.0.
+     *** I PREDICT THIS IS UNRESOLVED OR FAILS. *** Addendum 2 already found the
+     halo index moving the WRONG WAY at every dose on three of four subjects, so
+     X's numerator may not have a usable sign. If X cannot be formed, LB4 is
+     VOID and reported as void, not as a pass.
+     This bar is an ADJACENT-RUNG, WITHIN-MECHANISM test: every rung builds the
+     same region by S3, so no rung-to-rung comparison is contaminated by the
+     region-construction difference that separates H0 from the rest.
+
+LB5  VACUITY (fact 1548, and it caught a dead probe in addendum 2).
+     Each of HALO, D and D_or must, on at least one rung, differ from its own
+     untreated control by more than 10x the control's magnitude. A statistic
+     that cannot move is VOID, and any bar decided on it is VOID, not PASS.
+     No "null" result may be reported for a statistic that fails LB5.
+
+LB6  REGION INVARIANCE (tests premise S3).
+     The tool's reported treated-pixel count is identical across ALL rungs on a
+     given subject. PASS = identical. If it FAILS, S3 is wrong, rungs differ in
+     region as well as dose, and LB2/LB3/LB4 are all confounded and must be
+     reported as confounded.
+
+LB7  VISIBLE COST AT THE SHIPPED DOSE.
+     Not a numeric bar: a named deliverable. A 1:1 crop on bee at oriented fine
+     structure, H0 vs delta 40, captioned with the rung, published whether or
+     not it shows a cost. Per ORCH: if delta 40 costs visible detail, show it.
+
+
+4. PROMOTION RULE
+-----------------
+Unchanged from prereg-halo.txt section 5: HB2 already failed at R = 3.054 and
+that decided KEEP-OFF. This addendum CANNOT overturn that; it can only explain
+it. Specifically:
+  - LB4 PASS would show halo removal is not merely blur, which would make the
+    instrument worth repairing rather than discarding, but would not by itself
+    promote anything.
+  - LB4 FAIL would show the 87.9% is priced in blur, which strengthens KEEP-OFF.
+  - LB2 FAIL would show the dose ladder does not separate the two at all, in
+    which case I report that ORCH's remedy is insufficient on this instrument
+    and say why, rather than reporting a separation I did not achieve.
+
+
+5. WHAT I WILL NOT DO
+---------------------
+  - Not edit anything under `crates/`. The delta = 0 no-op of S2 is a one-line
+    change that would make the confound directly testable; it ships as a diff in
+    the report for ORCH to route, unapplied.
+  - Not run the matched-blur placebo. ORCH assigned the metric audit and control
+    design for the halo to M111. My per-rung curves are the input that audit
+    needs and I will hand them over; I will not duplicate it.
+  - Not enable STREHL_FIX_CA in any arm.
+  - Not measure on --srgb renders.
+
+
+6. WHAT WOULD MAKE ME WRONG
+---------------------------
+  - If LB2 passes, my addendum-2 delta-80 number was an artefact of scoring on
+    a pixel subset, and S3 says it should not have been. I would then retract
+    the non-monotonicity claim.
+  - If LB4 passes with a large spread, halo removal is a distinct mechanism and
+    the instrument deserves repair rather than the discard I recommended.
+  - If LB6 fails, my source read S3 is wrong and this entire ladder is
+    confounded by a varying region; I would report the ladder as void.
