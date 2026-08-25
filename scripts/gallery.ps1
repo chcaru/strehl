@@ -211,6 +211,22 @@ if (-not $NoHistory) {
     Copy-Item (Join-Path $OutDir "RUN.txt") $hist -Force -ErrorAction SilentlyContinue
     Copy-Item (Join-Path $OutDir "manifest.tsv") $hist -Force -ErrorAction SilentlyContinue
     Write-Host "history: $hist"
+
+    # Subtract this run from the previous one. The gallery answers "is this
+    # good"; this answers "is this getting better", and the first time it ran
+    # it found 17 of 26 subjects had silently lost sharpness in two hours.
+    # Pass both directories explicitly: trend.py orders runs by their recorded
+    # time, but naming this run's directory here is one less thing to infer.
+    $prevRuns = @(Get-ChildItem -Directory (Split-Path $hist -Parent) |
+        Where-Object { $_.FullName -ne $hist -and (Test-Path (Join-Path $_.FullName "RUN.txt")) })
+    if ($prevRuns.Count -gt 0) {
+        $prior = $prevRuns | Sort-Object {
+            $l = Select-String -Path (Join-Path $_.FullName "RUN.txt") -Pattern '^gallery run' | Select-Object -First 1
+            if ($l) { [datetime]::Parse(($l.Line -split ':', 2)[1].Trim()) } else { $_.CreationTime }
+        } | Select-Object -Last 1
+        Write-Host ""
+        & python (Join-Path $PSScriptRoot "trend.py") $hist $prior.FullName
+    }
 }
 
 Write-Host ""
