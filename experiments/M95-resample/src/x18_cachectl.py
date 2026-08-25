@@ -106,10 +106,29 @@ from pathlib import Path
 BRACKET = Path(r"D:\personal\macro\coffee-bubbles")  # 19 ARW, read-only
 SCRATCH = Path(r"C:\dev\strehl-out\M95-cachectl")
 PRE_EXE = SCRATCH / "target-prefix" / "release" / "strehl.exe"
-POST_EXE = SCRATCH / "strehl-post.exe"  # pinned copy, see below
+POST_EXE = SCRATCH / "target-post" / "release" / "strehl.exe"
 OUT_JSON = Path(__file__).resolve().parents[1] / "out" / "x18_cachectl.json"
 
-STACK_ARGS = ["--srgb", "--exposure", "1.54", "--gate", "4.0"]
+PRE_COMMIT = "11e49dd"   # 13:41:44, nine seconds before the fix
+POST_COMMIT = "16f2dd2"  # HEAD when this control was run
+
+# Both binaries are built from pinned worktrees under SCRATCH, never from the
+# shared target/. That is not fastidiousness -- see the note below.
+#
+# MEASURED, and it nearly cost me this control: the shared
+# `target/release/strehl.exe` carried an mtime of 15:46:49, comfortably after
+# the 13:41:53 fix, and I pinned a copy of it as "POST" on that basis. Its own
+# `--help` refuted me: no `--exposure`, no `--demosaic`, and the sentence "it
+# does not yet align", so it predated M86c, M95 and M100 by hours. A build
+# artifact's mtime is evidence of when something touched the file, not of what
+# source produced it. The arm died on an unknown-argument error instead of
+# silently reporting a stale binary's cache behaviour as HEAD's.
+#
+# Arguments are the intersection of the two CLIs. `--exposure 1.54`, which my
+# montage used, does not exist on the older surface; it is a single multiply in
+# linear light applied after the merge and cannot change which sidecar is read,
+# so dropping it costs the control nothing.
+STACK_ARGS = ["--srgb", "--gate", "4.0"]
 
 
 def sha256(p: Path) -> str:
@@ -118,6 +137,18 @@ def sha256(p: Path) -> str:
         for chunk in iter(lambda: f.read(1 << 20), b""):
             h.update(chunk)
     return h.hexdigest().upper()
+
+
+def die(msg: str) -> None:
+    """Tool failure exits 2, never 1.
+
+    Discipline 702: a harness that cannot run must not be confusable with a
+    subject that failed its bar. Exit 1 here would read as "contamination
+    found", which is a claim about the world; exit 2 reads as "I did not
+    measure anything", which is a claim about me.
+    """
+    print(f"\nTOOL FAILURE: {msg}", file=sys.stderr)
+    sys.exit(2)
 
 
 def run(exe: Path, args: list[str], cache: Path, warpmap: Path | None) -> tuple[int, str]:
@@ -141,9 +172,9 @@ def render(exe: Path, cache: Path, out: Path, warpmap: Path | None) -> tuple[str
         out.unlink()
     code, log = run(exe, ["stack", str(BRACKET), *STACK_ARGS, "-o", str(out)], cache, warpmap)
     if code != 0:
-        raise SystemExit(f"TOOL FAILURE: stack exited {code}\n{log[-4000:]}")
+        die(f"stack exited {code} (expected 0)\n{log[-4000:]}")
     if not out.exists():
-        raise SystemExit(f"TOOL FAILURE: no output at {out}\n{log[-4000:]}")
+        die(f"no output at {out}\n{log[-4000:]}")
     d = sha256(out)
     out.unlink()
     return d, log
@@ -153,7 +184,7 @@ def align_intervene(exe: Path, cache: Path, ref: int) -> str:
     """The UNRELATED command. Must write into the SAME cache dir."""
     code, log = run(exe, ["align", str(BRACKET), "--reference", str(ref)], cache, None)
     if code != 0:
-        raise SystemExit(f"TOOL FAILURE: align exited {code}\n{log[-4000:]}")
+        die(f"align exited {code}\n{log[-4000:]}")
     return log
 
 
@@ -199,7 +230,7 @@ def main() -> int:
 
     for exe in (PRE_EXE, POST_EXE):
         if not exe.exists():
-            raise SystemExit(f"TOOL FAILURE: missing binary {exe}")
+            die(f"missing binary {exe}")
     print(f"PRE  {PRE_EXE}  sha={sha256(PRE_EXE)[:16]}")
     print(f"POST {POST_EXE} sha={sha256(POST_EXE)[:16]}")
 
@@ -220,10 +251,10 @@ def main() -> int:
     print(f"\n--- building pinned sidecar (align --reference {merge_ref}) ---")
     code, log = run(PRE_EXE, ["align", str(BRACKET), "--reference", str(merge_ref)], pin_cache, None)
     if code != 0:
-        raise SystemExit(f"TOOL FAILURE: pin-build align exited {code}\n{log[-4000:]}")
+        die(f"pin-build align exited {code}\n{log[-4000:]}")
     cands = sorted(pin_cache.rglob("*.warpmap.txt"))
     if len(cands) != 1:
-        raise SystemExit(f"TOOL FAILURE: expected 1 sidecar, found {len(cands)}: {cands}")
+        die(f"expected exactly 1 sidecar, found {len(cands)}: {cands}")
     pinned = SCRATCH / "pinned.warpmap.txt"
     shutil.copy2(cands[0], pinned)
     shutil.rmtree(pin_cache, ignore_errors=True)
