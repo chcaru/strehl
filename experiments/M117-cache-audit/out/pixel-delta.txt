@@ -1,0 +1,12 @@
+--- prefix-ref3  shape=(2344, 3516, 3) dtype=uint16 ---
+  A2-A   changed px   0.0000%   maxabs      0.0 DN   rms    0.000 DN   rms/mean  0.0000%
+  B-A    changed px  98.6890%   maxabs   4908.0 DN   rms  117.969 DN   rms/mean  1.8965%
+  B-A central 80%: changed px 99.9993%  maxabs 12363.0
+--- pre2-plain  shape=(2344, 3516, 3) dtype=uint16 ---
+  A2-A   changed px   0.0000%   maxabs      0.0 DN   rms    0.000 DN   rms/mean  0.0000%
+  B-A    changed px  98.6491%   maxabs   5326.0 DN   rms  119.708 DN   rms/mean  1.9245%
+  B-A central 80%: changed px 99.9986%  maxabs 10076.0
+--- head-ref3  shape=(2344, 3516, 3) dtype=uint16 ---
+  A2-A   changed px   0.0000%   maxabs      0.0 DN   rms    0.000 DN   rms/mean  0.0000%
+  B-A    changed px   0.0000%   maxabs      0.0 DN   rms    0.000 DN   rms/mean  0.0000%
+  B-A central 80%: changed px 0.0000%  maxabs 0.0

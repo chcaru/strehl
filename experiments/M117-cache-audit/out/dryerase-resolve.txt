@@ -1,0 +1,3 @@
+pre-fix  key entry : 41027 1864A370AE92B377
+post-fix key entry : 41027 1864A370AE92B377
+BYTE-IDENTICAL     : True

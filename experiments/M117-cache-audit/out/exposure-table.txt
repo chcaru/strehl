@@ -1,0 +1,67 @@
+report                                   stackInv ON(sidecar) override ON(solved) ALIGN=0 CACHEDIR WARPMAP
+M100-exposure.md                                2           0        0          0       0        0       0
+M101-defect.md                                  4           0        0          0       2        0       1
+M102-simulator.md                               0           0        0          0       1        0       0
+M103-halfdrift.md                               3           0        0          0       0        0       4
+M104-resample-verify.md                         0           0        0          0       2        0       0
+M104b-demosaic-lever.md                         1           0        0          0       1        0       0
+M104c-m95-binning-verification.md               1           0        0          0       2        0       0
+M104c-mtf.md                                    0           0        1          0       0        0       1
+M105b-exposure-ship.md                         14           5        0          0       0        0       7
+M106-freeze-attribution.md                      4           0        1          4       5        0       1
+M107-chroma.md                                  4           0        2          0       0        0       3
+M107b-lateral-correction.md                     0           0        0          0       0        0       1
+M107b-radial-chroma.md                          0           0        0          0       0        0       0
+M108-freeze-test.md                             5           4       12          4       8        4       8
+M109-highlights.md                             11           1        0          1       0        1       1
+M110-track-jitter.md                            0           0        1          0       0        0       2
+M111-waxy-blobs.md                              1           2        5          1       1        2       6
+M86-alignment.md                                6           0        0          0       2        0       0
+M87-occlusion.md                                7           0        4          0       7        0      12
+M92-null-averaging.md                           0           0        0          0       0        0       0
+M92b-iso-blast-radius.md                        0           0        0          0       0        0       0
+M95-cdiff.md                                    0           0        0          0       0        0       0
+M95-chroma-cositing.md                          1           0        0          0       1        0       0
+M95-coverage.md                                 0           0        0          0       0        0       0
+M95-demosaic.md                                 0           0        0          0       0        0       0
+M95-dose.md                                     0           0        0          0       0        0       0
+M95-kernel.md                                   3           0        5          1       0       10       7
+M95-merge-vs-frame-sharpness.md                 0           0        0          0       3        0       0
+M95-resample.md                                 0           0        0          0       4        0       0
+M95-resolution.md                               1           0        0          0       0        0       0
+M96-election-margin.md                          0           0        0          0       0        0       0
+M97-warped-merge.md                             5           0        1          0       3        0       4
+M97b-align-visible.md                           6           2        0          0       0        1       0
+M97g-m100-handoff.md                            4           2        1          0       2        4       3
+M97m-election-map.md                            2           0        0          0       3        1       2
+M97n-cache-key.md                               3           2        0          0       1        2       1
+M98-gate-adjudication.md                        2           0        0          0       5        0       0
+M99-photometric.md                              0           0        0          0       0        0       0
+SYNTHESIS.md                                   34           1        4          1       5        1       9
+
+in-window reports that never invoke `strehl stack` at all : 16
+    M102-simulator.md
+    M104-resample-verify.md
+    M104c-mtf.md
+    M107b-lateral-correction.md
+    M107b-radial-chroma.md
+    M110-track-jitter.md
+    M92-null-averaging.md
+    M92b-iso-blast-radius.md
+    M95-cdiff.md
+    M95-coverage.md
+    M95-demosaic.md
+    M95-dose.md
+    M95-merge-vs-frame-sharpness.md
+    M95-resample.md
+    M96-election-margin.md
+    M99-photometric.md
+in-window reports that record ON (sidecar) -- a real cache CONSUMPTION: 8
+    M105b-exposure-ship.md
+    M108-freeze-test.md
+    M109-highlights.md
+    M111-waxy-blobs.md
+    M97b-align-visible.md
+    M97g-m100-handoff.md
+    M97n-cache-key.md
+    SYNTHESIS.md

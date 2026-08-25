@@ -1,0 +1,125 @@
+warp sidecars found: 241
+reference != n/2 (poisoning-shaped): 98
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\blog\death-of-software\projects\strehl\experiments\M86-alignment\out\warpmap-foam.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\blog\death-of-software\projects\strehl\experiments\M87-occlusion\cache\align\bee3-warpmap.txt
+  n=  16 ref=   0 (merge would use    8)  resampler=catmull-rom   C:\dev\strehl-out\M102\br1024\warpmap.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\es\IWW-all.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\es\IWW-clean.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\es\IWW-no12.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\es\IWW-nofan-noovershoot.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\es\IWW-nofan.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\es\IWW-noovershoot.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\es\IWW-rule6.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\es\PLACEBO-drop1pct.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\es\PS-perspan.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\es\PS-placebo.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\es\PS-shuffled.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\wm-baseline-r0.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M103\wm-iww-r0.txt
+  n= 105 ref=   0 (merge would use   52)  resampler=catmull-rom   C:\dev\strehl-out\M107-chroma\renders\coffee-bean-warpmap.txt
+  n= 130 ref=   0 (merge would use   65)  resampler=catmull-rom   C:\dev\strehl-out\M107-chroma\renders\wrapped-text-1-warpmap.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M108\final\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M108\final\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M108\final\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M108\head-clean\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M108\head-clean\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M108\head-clean\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M108\v2\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M108\v2\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M108\v2\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M108\verify-914280f\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M108\verify-914280f\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M108\verify-914280f\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M108\verify-fbc67aa\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M108\verify-fbc67aa\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M108\verify-fbc67aa\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M111\iso-softgate\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M111\iso-softgate\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M111\iso-softgate\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M111\verify-2ae2944\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M111\verify-2ae2944\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M111\verify-2ae2944\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M111\verify-536fb17\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M111\verify-536fb17\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M111\verify-536fb17\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M111\verify-HEAD2\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M111\verify-HEAD2\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M111\verify-HEAD2\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M113\tree-93f10a5\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M113\tree-93f10a5\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M113\tree-93f10a5\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M113\tree-head\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M113\tree-head\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M113\tree-head\experiments\M86-alignment\out\warpmap-foam.txt
+  n= 299 ref= 148 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M114-ca-verify\r7\ref_148.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M116-tree\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M116-tree\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M116-tree\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M117-pre2\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M117-pre2\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M117-pre2\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M117-prefix\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M117-prefix\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M117-prefix\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M117-tree\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M117-tree\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M117-tree\experiments\M86-alignment\out\warpmap-foam.txt
+  n=  22 ref=   3 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M117\guards\g1b\109MSDCF-5f811bf7d3f30505.warpmap.txt
+  n=  10 ref=   2 (merge would use    5)  resampler=catmull-rom   C:\dev\strehl-out\M117\guards\g3\109MSDCF-5f811bf7d3f30505.warpmap.txt
+  n=  22 ref=   3 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M117\guards\side.txt
+  n=  22 ref=   3 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M117\pc\head-ref3\cacheB\109MSDCF-ee303d7377af0a64.warpmap.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M117\pc\pre2-plain\cacheB\109MSDCF-5f811bf7d3f30505.warpmap.txt
+  n=  22 ref=   3 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M117\pc\prefix-ref3\cacheB\109MSDCF-5f811bf7d3f30505.warpmap.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M118-tree\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M118-tree\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M118-tree\experiments\M86-alignment\out\warpmap-foam.txt
+  n=   5 ref=   0 (merge would use    2)  resampler=catmull-rom   C:\dev\strehl-out\M95-kernel\k9\side-5-cr.txt
+  n=   6 ref=   0 (merge would use    3)  resampler=catmull-rom   C:\dev\strehl-out\M95-kernel\k9\side-6-cr.txt
+  n=   6 ref=   0 (merge would use    3)  resampler=lanczos3      C:\dev\strehl-out\M95-kernel\k9\side-6-lz.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M95-pin\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M95-pin\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\M95-pin\experiments\M86-alignment\out\warpmap-foam.txt
+  n=   6 ref=   0 (merge would use    3)  resampler=catmull-rom   C:\dev\strehl-out\M95-ref\ref0.warpmap.txt
+  n=  10 ref=   0 (merge would use    5)  resampler=catmull-rom   C:\dev\strehl-out\M97\cache\coffee-bubbles-65bfecf35b808c09.warpmap.txt
+  n=  19 ref=   0 (merge would use    9)  resampler=catmull-rom   C:\dev\strehl-out\M97\cache\coffee-bubbles-96b3af3afca19b77.warpmap.txt
+  n=  79 ref=  40 (merge would use   39)  resampler=catmull-rom   C:\dev\strehl-out\M97\cache\flat-on-ruler-cpl-5ba4cef0c9a73118.warpmap.txt
+  n=  22 ref=   3 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\M97\poison2\cache\109MSDCF-ee303d7377af0a64.warpmap.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M97\warpmap-angruler.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M97\warpmap-bee3-gain1p0.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M97\warpmap-bee3-gain1p9083.txt
+  n=  79 ref=  40 (merge would use   39)  resampler=catmull-rom   C:\dev\strehl-out\M97\warpmap-flatruler-ref40.txt
+  n=  79 ref=   0 (merge would use   39)  resampler=catmull-rom   C:\dev\strehl-out\M97\warpmap-flatruler.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M97b\warpmap-marker-g1.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M97b\warpmap-marker-g45.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M97b\warpmap-marker-jitter.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\M97b\warpmap-marker.txt
+  n=  22 ref=   0 (merge would use   11)  resampler=catmull-rom   C:\dev\strehl-out\ORCH-headcheck\experiments\M86-alignment\out\warpmap-109MSDCF.txt
+  n= 299 ref=   0 (merge would use  149)  resampler=catmull-rom   C:\dev\strehl-out\ORCH-headcheck\experiments\M86-alignment\out\warpmap-bee-3-cpl.txt
+  n= 100 ref=   0 (merge would use   50)  resampler=catmull-rom   C:\dev\strehl-out\ORCH-headcheck\experiments\M86-alignment\out\warpmap-foam.txt
+
+resampler != catmull-rom: 21
+  lanczos3     n=8 ref=4  C:\dev\strehl-out\M113\cache\bee-3-cpl-ea1d38ea5c9523c5.warpmap.txt
+  lanczos3     n=299 ref=149  C:\dev\strehl-out\M113\sidecar\l3.txt
+  nearest      n=299 ref=149  C:\dev\strehl-out\M113\sidecar\nn.txt
+  bilinear     n=299 ref=149  C:\dev\strehl-out\M118\bee-3-cpl\bee-3-cpl--bilinear.txt
+  nearest      n=299 ref=149  C:\dev\strehl-out\M118\bee-3-cpl\bee-3-cpl--nearest.txt
+  bilinear     n=79 ref=39  C:\dev\strehl-out\M118\flat-on-ruler-cpl\flat-on-ruler-cpl--bilinear.txt
+  lanczos2     n=79 ref=39  C:\dev\strehl-out\M118\flat-on-ruler-cpl\flat-on-ruler-cpl--lanczos2.txt
+  lanczos3     n=79 ref=39  C:\dev\strehl-out\M118\flat-on-ruler-cpl\flat-on-ruler-cpl--lanczos3.txt
+  nearest      n=79 ref=39  C:\dev\strehl-out\M118\flat-on-ruler-cpl\flat-on-ruler-cpl--nearest.txt
+  lanczos2     n=24 ref=12  C:\dev\strehl-out\M118\pilot\wt1-24-lanczos2.txt
+  lanczos3     n=24 ref=12  C:\dev\strehl-out\M118\pilot\wt1-24-lanczos3.txt
+  nearest      n=24 ref=12  C:\dev\strehl-out\M118\pilot\wt1-24-nearest.txt
+  bilinear     n=130 ref=65  C:\dev\strehl-out\M118\wrapped-text-1\wrapped-text-1--bilinear.txt
+  lanczos2     n=130 ref=65  C:\dev\strehl-out\M118\wrapped-text-1\wrapped-text-1--lanczos2.txt
+  lanczos3     n=130 ref=65  C:\dev\strehl-out\M118\wrapped-text-1\wrapped-text-1--lanczos3.txt
+  nearest      n=130 ref=65  C:\dev\strehl-out\M118\wrapped-text-1\wrapped-text-1--nearest.txt
+  lanczos3     n=6 ref=0  C:\dev\strehl-out\M95-kernel\k9\side-6-lz.txt
+  lanczos2     n=299 ref=149  C:\dev\strehl-out\M95-montage\lanczos2.warpmap.txt
+  lanczos3     n=299 ref=149  C:\dev\strehl-out\M95-montage\lanczos3.warpmap.txt
+  bilinear     n=299 ref=149  C:\dev\strehl-out\ORCH-kernel\bee-3-cpl-bilinear-warpmap.txt
+  nearest      n=299 ref=149  C:\dev\strehl-out\ORCH-kernel\bee-3-cpl-nearest-warpmap.txt
+
+non-default spans: 0
