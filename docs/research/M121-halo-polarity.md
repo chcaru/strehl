@@ -411,6 +411,109 @@ assumed.
 
 ---
 
+## N8 — `D`, and why it over-predicts this statistic
+
+ORCH's addendum retires *"it's a ratio, so it cancels"* and asks for
+`D = max/min` of the terms alongside any cancellation claim. Two things need
+saying, and only the first is what was asked.
+
+### The `D` values for every two-arm claim M121 makes
+
+**MEASURED** (`n8_dstat.py`). "Margin after" applies ORCH's predicted shift in
+the direction that *shrinks* the separation:
+
+| claim | strong | weak | `D` | ORCH predicts | separation after |
+|---|---|---|---|---|---|
+| headline rim vs bright-object null | 0.0634 | 0.0009 | 70.4 | 8.0 % | 64.8× |
+| N1 merged rim vs single-frame rim | 0.0634 | 0.0023 | 27.6 | 8.0 % | 25.3× |
+| tweezers merged vs its own single frame | 0.1326 | 0.0474 | 2.8 | 6.2 % | 2.6× |
+| N2 sharp-bin rim vs soft-bin rim | 0.0952 | 0.0348 | 2.7 | 6.2 % | 2.6× |
+| **E3 election spill vs flat-bg control** | 10.50 | 6.67 | **1.6** | 3.8 % | **1.5×** |
+| gate 4 vs gate 0 headline rim | 0.0658 | 0.0634 | 1.0 | 0.7 % | 1.0× |
+
+ORCH is right that a defect contrast is lopsided by construction — the top two
+rows are `D` = 70 and `D` = 28. But **no conclusion in this report turns over at
+the predicted shift**, because those same rows carry 25–65× margins.
+
+Two rows deserve comment. **The gate-4/gate-0 row is an *equality* claim** and
+sits at `D` = 1.0, the most protected bin — the one place cancellation genuinely
+does the work, and conveniently the one claim that needs it. **E3 is the thinnest
+claim in the milestone**, 1.6 → 1.5× after the predicted shift; `D` independently
+picks out the result I had already flagged as corroborative rather than decisive.
+That agreement is the best evidence I have that the `D` framework is measuring
+something real.
+
+### Why `D` over-predicts the headline itself
+
+The headline is **not** a two-arm ratio — it is a small first moment over a large
+one, both from the same arm, with no second arm to cancel against. Taken
+literally its terms give `D` between **5.2** (per-edge band median) and **15.8**
+(pooled rim), landing in ORCH's `[5,8)` or `[8,∞)` bins, predicting **7.6–8.0 %**.
+
+**N6 measured 2.4 %.**
+
+The reason is that `D` models **cancellation**, and cancellation is not what
+protects this statistic. **Averaging is.** MEASURED:
+
+| quantity | value |
+|---|---|
+| per-edge rim, n | 70 |
+| per-edge sd | 0.0789 |
+| √n | 8.37× |
+| a fully **independent** per-edge error of 8.04 % pools to | **0.96 %** |
+| a fully **correlated** one stays at | **8.04 %** |
+| **measured pooled shift (N6)** | **2.4 %** — 20 % of the way up |
+
+So the per-edge quantisation error is largely, though not perfectly,
+independent, and **averaging removes about 80 % of the damage `D` predicts.**
+The 1/√N scaling is confirmed directly by bootstrap (with replacement — drawing
+*without* replacement applies a finite-population correction that forces the
+spread to exactly zero at `k = n` and flatters the result; my first version of
+this ladder had that bug):
+
+| n | 5 | 10 | 20 | 35 | 50 | 70 |
+|---|---|---|---|---|---|---|
+| sd(estimate) | 0.0279 | 0.0181 | 0.0118 | 0.0088 | 0.0069 | 0.0061 |
+| ratio to sd/√n | 0.79 | 0.73 | 0.67 | 0.66 | 0.62 | **0.64** |
+
+**The ratio is flat from n = 20 onward**, which is what 1/√N scaling looks like.
+
+**DERIVED — there are three protection mechanisms, not one:**
+
+| mechanism | governed by | applies to |
+|---|---|---|
+| **Cancellation** | `D` = max/min of terms | two-arm contrasts |
+| **Position-insensitivity** | levels per fitted window (~12) | location statistics |
+| **Averaging** | **sample count N** | first moments over many samples |
+
+`D` is necessary but not sufficient: it correctly says M121's headline gets *no
+cancellation protection*, and it is right — the protection comes from somewhere
+else entirely. **A statistic can be deep in the unprotected regime on `D` and
+still be robust, if N is large.** Report `D` *and* N.
+
+### Input provenance (ORCH's ten-minute check)
+
+*"A clean reader on a file that was already narrowed upstream is still a
+narrowed measurement."* MEASURED (`prov_audit.py`) — all twelve inputs M121
+reads are `uint16` at 16 bits per sample, with 11695–32156 distinct levels. The
+strongest evidence is not the dtype but the reproduction: **the M93 gate-4 arm
+is byte-identical (sha256 `e6132cd07b1348c4…`) to M121's own re-render from the
+raw frames**, so it provably was not narrowed anywhere upstream.
+
+`Image.open(` call sites in M121: **zero**. (The `PIL`-vs-`compiling` false
+positive ORCH warns about cannot arise here for that reason, but the check was
+run.)
+
+**My own audit produced a false positive, which is the evening's lesson again.**
+The heuristic "≤ 256 distinct levels means narrowed" flagged
+`tweezers/index.tif` — which has exactly **100** levels because that stack has
+exactly **100 frames**, numbered 0–99. It is complete, not narrowed. bee-3's
+index map has 299 levels for 299 frames and passes the same test. **A level
+count is only interpretable against what the file is supposed to contain**, and
+my detector, like the original grep, went out without a negative control.
+
+---
+
 ## Provenance (discipline 830)
 
 Every arm was identified against the `strehl stack` log beside it, not from its
@@ -838,6 +941,25 @@ Numbered `P1…` per rule 28; ORCH assigns absolute numbers.
   headline is floor-independent (13.7 % spread across the whole sweep). The
   floor's real job is the flat-ROI false positives of N4, where it took
   113 → 0.
+- **P20 (MEASURED).** `D` for M121's two-arm claims runs 1.0 → 70.4. The two
+  headline contrasts sit at `D` = 28 and `D` = 70, deep in ORCH's unprotected
+  regime, but carry 25–65× margins, so no conclusion turns over at the
+  predicted 8 % shift. The thinnest claim is E3 (1.6 → 1.5×) — which `D`
+  independently identifies as the one already flagged corroborative-only.
+- **P21 (MEASURED).** `D` over-predicts the M121 headline by 3.2× (predicts
+  7.6–8.0 %, measured 2.4 %) because the headline gets **no cancellation
+  protection at all** — it has one arm. Its protection is **averaging**:
+  a fully independent per-edge error of 8.04 % pools to 0.96 % over n = 70,
+  a fully correlated one stays at 8.04 %, and the measured 2.4 % sits 20 % of
+  the way between. 1/√N scaling confirmed by bootstrap (ratio flat at ~0.64
+  from n = 20 to 70).
+- **P22 (DERIVED).** There are **three** protection mechanisms, not one:
+  cancellation (governed by `D`), position-insensitivity (levels per window),
+  and **averaging (governed by N)**. A statistic can be deep in the unprotected
+  regime on `D` and still robust if N is large. **Report `D` and N together.**
+- **P23 (MEASURED).** All twelve M121 inputs are uint16/16-bit; the M93 gate-4
+  arm is byte-identical to M121's own re-render, proving it was not narrowed
+  upstream. Zero `Image.open(` call sites.
 
 ---
 
@@ -902,6 +1024,8 @@ alone.
 | `…/n5_quant.py` | `n5-quant.json` — the PIL narrowing planted and commissioned |
 | `…/n6_ladder.py` | `n6-ladder.json` — narrowing ladder; where the rim breaks |
 | `…/n7_floor.py` | `n7-floor.json` — support-floor sweep and saturation audit |
+| `…/n8_dstat.py` | `n8-dstat.json` — `D` for every two-arm claim; the averaging measurement |
+| `…/prov_audit.py` | `input-provenance.json` — were M121's inputs narrowed upstream? |
 
 Renders (invocations recorded beside each):
 `C:\dev\strehl-out\M121\e3\` (bee-3, byte-identical to shipped),
