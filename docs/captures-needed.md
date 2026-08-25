@@ -16,10 +16,49 @@ genuinely useful and none of it is blocking a fix that is already written.*
 | --- | --- | --- | --- |
 | **1** | **§24** — flat, repeating, **corner-to-corner** subject at working magnification, shot **normal + red + green + blue** (gels or coloured light), plus **a second set with the 2x teleconverter** | ~10 min | Confirms a **measured 1.444x overshoot** in the CA correction on a second scene, and is the **only** path to a blue coefficient or a teleconverter one. See below. |
 | **2** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
-| 3 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document |
+| 3 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document — and it **went up in value overnight**: it is the *trap* arm for the election gate now being wired. See the box below. |
 | 4 | **§19** — one hard edge at three apertures | ~10 min | The remaining aperture question |
 | 5 | **§20** — a grey card somewhere in the frame | ~20 s | Add it to *any* session from now on; costs nothing |
 | 6 | **§21** — a straight edge inside a real bracket | — | Decides whether the alignment verdict is about optics or arithmetic |
+
+### Overnight, 2026-08-25: why your stacks don't look good yet
+
+I found the answer, and it is embarrassing rather than hard. **The project keeps
+diagnosing a defect, building the cure, measuring it, writing it up — and never
+connecting it to the code that renders your photo.**
+
+I enumerated every module in the codebase and counted what actually calls it.
+Of 25, **two are unreachable from the binary**: `outlier.rs` (1094 lines) and
+`robust.rs` (544 lines). Both compile. Both have passing tests. Neither has ever
+run when you pressed go. The reason they were invisible is a Rust detail —
+marking a module `pub` silences the compiler's dead-code warning — so every green
+signal was telling the truth about code that did nothing. A third,
+`photometric.rs` (1365 lines, 24 passing tests), had **no caller at all** until
+one was added, and is still off by default.
+
+`robust.rs` is the one that matters, because of something already measured on
+your `foam` stack. When a subject moves between frames, the moved frame shows a
+**displaced** edge — and a displaced edge is *sharper* than the correctly-focused
+stationary one. So motion doesn't just survive the "pick the sharpest frame"
+step, **it wins it**. **4.78 % of that stack's output pixels come from a frame
+more than 8 sigma out of agreement with its neighbours.** That is a sharp, wrong
+pixel, and it is exactly the kind of thing that makes a render look subtly bad
+without looking obviously broken.
+
+The same measurement priced the fix at two possible places: catching it at the
+election removes **100 %** of those pixels, catching it later in the averaging
+recovers **6 %**. `robust.rs` is the election-time version. It is being wired in
+tonight, default-off first, with a requirement that output be byte-identical when
+it is switched off.
+
+**What this needs from you: §12.** A static repeat burst is the arm that proves
+the gate *doesn't* fire when nothing moved. Right now that has to be simulated.
+Thirty seconds of your time replaces a simulation with your actual camera, your
+actual sensor, your actual noise.
+
+**Also running tonight:** a campaign measuring every default-off improvement on
+your real captures and writing before/after 1:1 crops to `C:\dev\strehl-out\M116\`
+— look there first in the morning.
 
 ### Why §24 is first, and why it got more specific overnight
 
