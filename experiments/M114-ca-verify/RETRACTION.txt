@@ -6,10 +6,19 @@ measured on TIFFs rendered with `--srgb --auto-exposure`. M113 (commit aa6e7ec)
 established that this space contains two cross-channel operators that forge the
 very quantity being measured:
 
-  1. camera_to_srgb is non-diagonal. Output red carries camera green at 10.4%
-     of its own weight and output green carries camera red at 20.3%, BOTH AT
-     ZERO DISPLACEMENT -- a synthetic zero-lag inter-channel signal sitting on
-     top of the displacement being measured.
+  1. camera_to_srgb is non-diagonal. Output red carries camera GREEN at 27.4%
+     of its own weight, BOTH AT ZERO DISPLACEMENT -- a synthetic zero-lag
+     inter-channel signal sitting on top of the displacement being measured.
+     Full leak table, each channel as a fraction of its own diagonal term,
+     re-derived by M114 from the crate source and the capture's own metadata:
+         green -> red   27.42%      red  -> green   7.73%
+         blue  -> green 25.10%      green-> blue   24.36%
+         blue  -> red   11.46%      red  -> blue    0.36%
+     An earlier revision of this file quoted 10.4% and 20.3%, taken from a
+     corpus value that computed rownorm(inv(A@S)). color.rs:191-208 computes
+     inv(rownorm(A@S)) -- normalise THEN invert. The two do not commute. The
+     wrong ordering reproduces 10.44% / 20.32% exactly, which identifies the
+     mechanism rather than merely the discrepancy.
   2. Malvar-He-Cutler's gradient correction assumes R-G is smoother than either
      channel (demosaic.rs:482). A lateral-CA fringe IS R-G roughness at an edge.
 
@@ -30,8 +39,14 @@ RETRACTED
   consolidated "~1.28", and the proposed ~0.78 scalar.
 * The blue claim that 6/7 and 4/7 rings clear the tangential noise floor, and
   that hp|B-Y| exceeds hp|R-Y| after correction. The sRGB matrix mixes blue into
-  output green at 34.8% of green's own weight; blue is the WORST contaminated
-  channel in this space and M114 flagged it loudest.
+  output green at 25.10% of green's own weight and green into output blue at
+  24.36%, which is ample to invalidate both readings.
+  CORRECTED SUPERLATIVE: an earlier revision of this file called blue "the WORST
+  contaminated channel in this space", on the strength of a 34.8% figure from
+  the mis-ordered corpus matrix. With the correct matrix the largest single leak
+  is green -> red at 27.42%, which EXCEEDS blue -> green at 25.10%. Blue is
+  heavily contaminated but it is not the worst. The retraction stands; the
+  superlative did not, and it rested on a number M114 did not re-derive.
 * Recovered translation |t.u| = 0.375 / 0.250 / 0.450 px (r23 Y3). The pairing
   METHOD is sound and space-independent; the numbers are not.
 
