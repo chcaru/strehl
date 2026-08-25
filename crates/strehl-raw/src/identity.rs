@@ -26,11 +26,20 @@
 //!
 //! # What was measured, and on what
 //!
-//! Verified against `exiftool` — a second, independent reader — on **56 real
-//! files**: both ends of all 24 macro stacks plus four non-macro sets, 448
-//! fields compared, **0 disagreements** (M119). The domain of that verification
-//! is **one body, ILCE-7CM2, and two lenses**; the strings themselves are in
-//! the tests below, verbatim.
+//! Verified against `exiftool` — a second, independent reader — on **52 real
+//! files**: both ends of every macro stack plus three non-macro sets, 8 fields
+//! each, **416 comparisons, 0 disagreements**, none of them vacuous (every
+//! field was populated on every file, so none was an agreement on absence).
+//!
+//! **Read the coverage, not the count.** Those 416 comparisons span only **20
+//! distinct values**, across **one body (ILCE-7CM2) and two lenses**. The file
+//! count establishes that this parser is *deterministic* over the corpus; the
+//! distinct-value count is what bounds the claim that it is *correct*, and it
+//! is the smaller of the two. A large comparison count over a homogeneous
+//! corpus proves repeatability and is easily misread as proving coverage.
+//!
+//! The strings themselves are in the tests below, verbatim, and in
+//! `docs/research/M119-gear-identity.md`.
 //!
 //! # The teleconverter
 //!
