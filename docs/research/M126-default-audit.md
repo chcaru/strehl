@@ -28,6 +28,17 @@ built to a private `--target-dir`. Every number below comes from that one binary
 > **frame-count floor** below which `STREHL_FIX_HALO` cannot act, and reports
 > one refuted prediction of my own. The verdicts in §0 do not change; one of the
 > reasons behind them changes completely.
+>
+> ### ⚠ Addendum 2 — quantisation exposure (§14)
+>
+> ORCH subsequently withdrew its absolute-vs-ratio triage rule. **§14 re-derives
+> exposure for this milestone's own statistic and finds `dQ` inverts sign under
+> narrowing** (β = −1.03), reproducing ORCH's M115 phenomenon on a metric I had
+> predicted would be immune. My published numbers are unaffected — the data sits
+> two orders inside the safe regime, with 294–1009 distinct levels per flat tile
+> against V-M113's threshold of 12 — but **the `Q` in M116's inherited `N`/`D`/`Q`
+> metric is fragile and should not carry conclusions.** Three more predictions
+> missed; §14.6 scores them.
 
 ---
 
@@ -894,3 +905,198 @@ git grep -n "STREHL_ROBUST_ELECTION" -- crates/           # one line: merge.rs:5
 **New handoff — `STREHL_ROBUST_ELECTION` → whoever owns `merge_cmd.rs`.** The
 gate needs wiring or removing. Either is defensible; the current state, where it
 parses, validates, documents a starvation contract and is never called, is not.
+
+---
+
+## 14. Addendum 2 — quantisation exposure of this milestone's own estimator
+
+ORCH withdrew its absolute-vs-ratio triage rule and asked every agent resting on
+it to re-derive exposure for its own statistic. **I never cited the rule, but I
+used its species of reasoning**: my renders are 16-bit `uint16`, `score.py`
+asserts it, and I treated that as sufficient. That is triage by the *shape* of
+the data rather than by where the perturbation lands. So I re-derived it, then
+measured it against a dose-response control.
+
+Six predictions were written into `quant.py`'s header before it ran. **Three
+missed.** They are the interesting ones and they are reported first.
+
+### 14.1 Which of ORCH's three hazards applies to me
+
+My statistic is
+
+```
+hp = g - box5(g)                      # SPATIAL high-pass, within ONE image
+N  = log10( sd(hp) over FLAT tiles )
+D  = log10( sd(hp) over DETAIL tiles )
+Q  = D - N          (published effect sizes are dN, dD, dQ against A0)
+```
+
+`N` is **not** a split-half, frame-difference or paired estimator. Nothing is
+differenced across samples, so the mechanism ORCH described — the same value
+rounds the same way in two frames, so the error cancels and is booked as signal
+— has no direct purchase. **Measured: it is the reverse.** `N(A0)` rises
+monotonically with narrowing dose on both subjects
+(`bee-3-cpl` 1.16471 → 1.59136; `tweezers-cpl` 2.11991 → 2.14536). My estimator
+*absorbs* quantisation rather than hiding it, which is V-M113's dispersion
+hazard and is the safe direction: a narrowed dataset looks **noisier** to me,
+not cleaner. **P-B confirmed.**
+
+That means ORCH's most alarming consequence — *"a narrowed dataset looks LESS
+noisy than it is, and the clearance is invalid"* — **does not apply to this
+milestone's `N`.** I flag it anyway for anyone reusing M116's metric elsewhere.
+
+### 14.2 The number that does not fit: `dQ` inverts sign
+
+I predicted (P-C) that `dQ` would attenuate toward zero, on the algebra that a
+common variance floor `v = q²/12` enters `sd_det` and `sd_flat` alike:
+
+```
+Q' = 0.5 * log10( (sd_det² + v) / (sd_flat² + v) )  ->  0   as v -> inf
+```
+
+**That algebra is right about `Q` and wrong about `dQ`, and `dQ` is what I
+published.** Measured on `bee-3-cpl`, `G4-softgate`:
+
+| dose | `dN` | `dD` | `dQ` | β = `dQ`/`dQ`(0) |
+|---|---|---|---|---|
+| 0 | −0.01956 | −0.01597 | **+0.00359** | 1.0000 |
+| 3 | −0.01907 | −0.01597 | +0.00310 | 0.8626 |
+| 4 | −0.01783 | −0.01598 | +0.00185 | 0.5145 |
+| 5 | −0.01419 | −0.01594 | **−0.00174** | **−0.4851** |
+| 6 | −0.01205 | −0.01575 | −0.00370 | **−1.0309** |
+| 8 | −0.01174 | −0.01443 | −0.00268 | −0.7476 |
+
+**A sign reversal, not a compression** — ORCH's M115 shape exactly, on the
+statistic I said would be immune. The mechanism is visible in the table and is
+ORCH's own prescription (*expand it and see which factor the perturbation lands
+in*): the floor is common in **absolute** terms and wildly asymmetric in
+**relative** terms, because `sd_flat` (14.61 DN) is an order below `sd_det`. So
+the flat term saturates first — `dN` attenuates 40 % while `dD` attenuates 10 %
+— and `dQ = dD − dN` flips as soon as `|dN|` falls below `|dD|`.
+
+`tweezers-cpl` shows the same mechanism producing the opposite pathology:
+
+| dose | `dN` | `dD` | `dQ` | β |
+|---|---|---|---|---|
+| 0 | −0.00239 | −0.00232 | +0.00007 | 1.0000 |
+| 6 | −0.00235 | −0.00232 | +0.00003 | 0.3553 |
+| 7 | −0.00299 | −0.00231 | +0.00068 | **9.1526** |
+| 8 | −0.00441 | −0.00233 | +0.00208 | **27.9546** |
+
+A near-null effect **inflated 28×**. Inversion and inflation are one phenomenon:
+`dQ` is a difference of two terms that attenuate at different rates, so it is
+governed by whichever term moves, not by the effect it was meant to measure.
+
+**P-C refuted.** ORCH's warning applies to me, and my own algebra false-cleared
+me before I measured.
+
+### 14.3 But my published numbers are not exposed
+
+The dose-response only bites once the quantisation error is an appreciable
+fraction of `sd_flat`:
+
+| dose | step | quant-error sd | as % of `bee` `sd_flat` (14.61 DN) | β (`G4`) |
+|---|---|---|---|---|
+| **0 (as published)** | 1 DN | 0.289 DN | **1.98 %** | **1.0000** |
+| 3 | 8 DN | 2.309 DN | 15.80 % | 0.8626 |
+| 4 | 16 DN | 4.619 DN | 31.61 % | 0.5145 |
+| 5 | 32 DN | 9.238 DN | 63.22 % | −0.4851 |
+
+And the level census says the data is nowhere near the regime where this starts
+(V-M113's threshold is **12** distinct levels per fitted window):
+
+| subject | flat-tile levels: min / median | detail median | fraction of flat tiles under 12 |
+|---|---|---|---|
+| `bee-3-cpl` | 155 / **294** | 2492 | **0.0000** |
+| `lead-1-cpl` | 33 / **519** | 1010 | **0.0000** |
+| `leaf-2-cpl` | 58 / **829** | 1508 | **0.0000** |
+| `coffee-bean` | 1 / **1009** | 3036 | 0.0054 |
+| `tweezers-cpl` | 135 / **616** | 2614 | **0.0000** |
+
+**P-A refuted, in the pessimistic direction**: I predicted median flat-tile
+levels below 100 and expected at least one subject under the threshold. The real
+median runs 294–1009, roughly 25–80× clear. Two tiles out of 1 829 across five
+subjects fall under 12, both on `coffee-bean` (one is a clipped tile with a
+single level). At dose 0 my quantisation error is **2.0 %** of `sd_flat` on the
+worst subject, and β is 1.0000.
+
+**Conclusion: no published number in §§0–13 changes.** The exposure is real,
+steep, and begins around dose 4; the data sits at dose 0 with two orders of
+margin.
+
+### 14.4 The robustness ordering of the statistics I published
+
+This is the part worth carrying to other milestones, because the metric is
+inherited from `M116-promotion` verbatim:
+
+| statistic | β at dose 8 | verdict |
+|---|---|---|
+| per-tile **improved fraction** | `G6` 0.7316 → 0.7241 | **most robust** — barely moves |
+| **`dD`** | −0.01597 → −0.01443 (10 % attenuation) | **robust** |
+| **`dN`** | −0.01956 → −0.01174 (40 % attenuation) | fragile |
+| **`dQ`** | +0.00359 → −0.00268 | **fragile — inverts** |
+
+**My verdicts happen to rest on the robust end.** §4.4's soft-gate refusal is
+carried by `dD` and by an improved-fraction of 0.0–2.9 %, not by `dQ`; §4.5's
+halo result is `dD +0.03640` with β = 0.9992 at dose 4 and 0.851 at dose 8. That
+is luck as much as design, and I would not have been able to say it before
+running this.
+
+**Handoff:** anyone reusing the M116 `N`/`D`/`Q` metric should treat `Q` as a
+presentation statistic and rest conclusions on `D` and the per-tile fraction.
+
+### 14.5 Equal-power dither is a bad model here too — by 4.2×, not 16×
+
+ORCH measured random dither adding **63.3×** the noise that 8-bit narrowing did,
+against **3.9×**, a 16× discrepancy, and warned that a control built that way is
+invalid. I predicted (P-F) my spatial high-pass would show a gap **within about
+1.5×**, since it does not difference across samples.
+
+| subject | dose 4 | dose 6 | dose 8 |
+|---|---|---|---|
+| `bee-3-cpl` | 0.995 | 1.398 | **4.197** |
+| `tweezers-cpl` | 0.973 | 1.043 | **2.548** |
+
+**P-F refuted on magnitude, confirmed on direction.** Equal-power dither adds up
+to **4.2×** the variance real narrowing does — smaller than ORCH's 16×, but far
+outside my predicted 1.5×.
+
+The reason matters, and it partly overturns my own §14.1 framing. I argued that
+neighbouring pixels hold different values, so their rounding errors do not
+cancel in a spatial high-pass. **That is true in detail tiles and false in flat
+tiles** — and `sd_flat` is precisely where `N` is measured. In a flat tile
+neighbours hold *similar* values, so they round *similarly*, and my high-pass
+cancels part of the error exactly as a frame-difference would. ORCH's mechanism
+does reach my estimator; it is attenuated, not absent. My header reasoning was
+too clean and the measurement corrected it.
+
+### 14.6 Scoring, and the answer to ORCH's direct question
+
+| prediction | result |
+|---|---|
+| P-A flat tiles level-starved | **REFUTED** — 25–80× clear of the threshold (pessimistic error) |
+| P-B `N` rises with dose | CONFIRMED |
+| P-C `dQ` attenuates, does not invert | **REFUTED** — inverts at dose 5, β = −1.03 at dose 6 (flattering error) |
+| P-D byte-identical placebo reads exact 0 | CONFIRMED — 0.00000 at all 9 doses, both subjects |
+| P-E improved-fraction drifts toward 0.5 | partly — drifts, but far slower than predicted |
+| P-F dither/narrow gap under 1.5× | **REFUTED** — 4.20× (pessimistic about my own reasoning) |
+
+Three misses: one flattering, two pessimistic. Combined with §9 and §13 this
+milestone now stands at **10 of 25 predictions refuted, 4 flattering and 6
+pessimistic** — still no detectable optimism bias.
+
+**Have I published a clearance resting on a differencing noise estimate applied
+to possibly-narrowed data?** No. `N` is spatial, not differencing; the data is
+native 16-bit at 294–1009 levels per flat tile; and the dose-response is flat
+(β ∈ [0.86, 1.00]) across everything up to dose 3. **But I did clear myself by
+the shape of the data rather than by where the perturbation lands**, which is
+the error ORCH withdrew the rule over, and it happened to come out fine. The
+`dQ` inversion in §14.2 is what that habit would have cost me had the captures
+been 8-bit.
+
+Reproduce with:
+
+```powershell
+cd experiments\M126-default-audit; python quant.py
+```
+
