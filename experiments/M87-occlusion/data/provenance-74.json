@@ -1,0 +1,76 @@
+{
+ "registered": {
+  "R1_min_levels": 1000,
+  "R3_factor": 100,
+  "pil_max_delta": 163,
+  "pil_changed_frac": 0.13445276493222597
+ },
+ "R2": {
+  "chain": [
+   "70-veil.py",
+   "m87lib.py"
+  ],
+  "ship_delta_touchers": [
+   "40-ship-delta.py",
+   "41-delta-stats.py",
+   "45-locate.py",
+   "fix_audit.py",
+   "probe_provenance74.py"
+  ],
+  "overlap": [],
+  "pass": true
+ },
+ "R1": {
+  "arrays": {
+   "bee3-leg-luma.npy": {
+    "dtype": "float32",
+    "shape": [
+     299,
+     744,
+     1144
+    ],
+    "min": 722.5,
+    "max": 4294.5,
+    "levels_slice": 7093
+   },
+   "bee3-leg-sel.npy": {
+    "dtype": "float32",
+    "shape": [
+     744,
+     1144
+    ],
+    "min": 90.5,
+    "max": 8684.5,
+    "levels_slice": 8492
+   },
+   "bee3-leg-argbest.npy": {
+    "dtype": "int32",
+    "shape": [
+     744,
+     1144
+    ],
+    "min": 0.0,
+    "max": 298.0,
+    "levels_slice": 299
+   }
+  },
+  "pass": true
+ },
+ "reader": {
+  "rawpy": true,
+  "pil": false
+ },
+ "R3": {
+  "true_max_delta": 41887,
+  "pil_max_delta": 163,
+  "factor": 256.97546012269936,
+  "pass": true
+ },
+ "R4": {
+  "true_changed_frac": 0.13666067504183702,
+  "pil_changed_frac": 0.13445276493222597,
+  "ratio": 1.0164214555998459,
+  "pass": true
+ },
+ "verdict": "HEADLINE IS NOT DESCENDED FROM THE LAUNDERED PATH"
+}

@@ -55,6 +55,41 @@ a = json.loads((DATA / "93-audit.json").read_text(encoding="utf-8"))
 scripts = sorted(SRC.glob("*.py"))
 sys.path.insert(0, str(SRC))
 import fix_audit  # noqa: E402  -- single owner of the harness/measurement split
+
+def _measures_image(t):
+    """True if the SOURCE CALLS a frame reader, not merely mentions one.
+
+    The original form of this check was a regex over raw source text. It
+    flagged fix_s36_provenance.py, which never opens an image and only quotes
+    the reader's name inside a fact row describing which reader the headline
+    uses. A quotation is not a call, and a check that cannot tell them apart
+    is testing spelling.
+
+    Matching on the AST is not enough on its own either: rendering each call
+    back to source and re-applying the regex would flag this very file, whose
+    own re.compile() argument necessarily contains the pattern. So the match
+    is STRUCTURAL -- an attribute call of the right shape -- which a string
+    literal cannot satisfy no matter what it spells.
+    """
+    import ast
+    try:
+        tree = ast.parse(t)
+    except SyntaxError:
+        return True  # unparseable: flag rather than silently pass
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        f = node.func
+        if not isinstance(f, ast.Attribute) or not isinstance(f.value, ast.Name):
+            continue
+        if f.value.id == "rawpy" and f.attr == "imread":
+            return True
+        if f.value.id == "np" and f.attr == "load" and node.args:
+            seg = ast.get_source_segment(t, node.args[0]) or ""
+            if "CACHE" in seg:
+                return True
+    return False
+
 harness = fix_audit.HARNESS
 measure = [p for p in scripts if not p.name.startswith(harness)]
 # A shared constant makes the two sides agree by construction, so agreement is
@@ -67,7 +102,7 @@ for p in scripts:
     if not p.name.startswith(harness):
         continue
     t = p.read_text(encoding="utf-8")
-    if re.search(r"rawpy\.imread|np\.load\(\s*CACHE", t):
+    if _measures_image(t):
         smuggled.append(p.name)
 chk(not smuggled, f"a harness-excluded script measures an image: {smuggled[:5]}")
 hits, invoke = [], []

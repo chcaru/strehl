@@ -2014,6 +2014,9 @@ namespaced `M87`.
 | P149 | **My own 74.76% veil-removal headline is a band average over a profile that varies six-fold, and it flatters the merge exactly where the eye looks.** Removal fraction by distance, merge against the mean single frame: **34.6%** at d = 2, **82.3%** at d = 13, **59.5%** at d = 22. The residual itself runs from &#8722;24.97% at d = 2 to a minimum of &#8722;4.38% at d = 14 and then deepens again to &#8722;7.29% at d = 22. | **The pooled figure is correctly computed and misleadingly read, including by me.** At the boundary pixels a viewer actually resolves as the halo edge the election removes about a third of the veil, not three quarters. This strengthens the mechanism rather than weakening it -- the merge fails hardest precisely where the focus window's support straddles the occluding edge -- but the number I have been quoting to the orchestrator all night is a band average and I should have said so. The outer re-deepening beyond d = 17 is **not** explained by the window and I have no account of it. | MEASURED |
 | P150 | **Sections 33 and 34 rest on `--srgb` renders and are therefore not measurement-grade, and the right response is to retire the pins rather than refresh them.** Four scripts read the pinned gate TIFFs -- `100-gate-veildepth.py:158`, `96-gate-final.py:73`, `97-gate-attrib.py:76`, `102-robust.py:84` -- and those pins were rendered `--srgb --demosaic`. Every gate-ladder magnitude in this report, **+2.3463 pp** and **0.0572 pp**, is an sRGB-space number. | **The conclusion those numbers carry survives; their magnitudes do not transfer.** A monotone per-channel transfer curve preserves sign and rank order, so a swing that came back at 11.86% of prediction with the sign reversed, and at 0.289% of prediction once the reference is pinned, cannot be turned into a confirmation by any gamma. What cannot be quoted in linear terms is the pp magnitude. Section 25's mechanism claim is untouched, because it reads `raw_image_visible` through `m87lib.py:139` and never sees a developed pixel. | MEASURED |
 | P151 | **Hypothesis for whoever takes the gate work: the plateau seam and the occlusion rim are the same defect seen on two subjects.** A boolean admission gate must choose among frames whose through-focus response is genuinely bimodal at an occluding edge, because the veil is present in every frame and no observation contains clean background. On a flat plateau the same boolean choice elects one frame per region and renders a seam; at an edge it elects one layer and renders a rim. Both would be relieved by a soft or contrast-scaled admission rather than by any edge-specific fix. | **ARGUED, and deliberately not measured here.** The orchestrator asked for the lead without spending this milestone's remaining budget on it, and the supporting measurements belong to others: M121's finding that gate 0 and gate 4 are equivalent, and the separate diagnosis that the gate's admission tolerance is absolute while the focus response is contrast-scaled. I have re-derived neither. What M87 contributes is the edge half of the claim: removal happens at `n_eff = 1.000`, so averaging is not the mechanism on either subject. | ARGUED |
+| P152 | **The veil headline is structurally incapable of descending from the 8-bit laundered path, and this is established by trace and by level count rather than by my reading my own code.** M120 named `40-ship-delta.py` a laundering victim and concluded M87 must re-render before any halo number is trusted. The transitive source chain of `70-veil.py`, which produces the headline, is exactly `{70-veil.py, m87lib.py}`; the five files in the milestone that name `ship-delta.npy` are `40-ship-delta.py`, `41-delta-stats.py`, `45-locate.py`, `fix_audit.py` and this probe. **The overlap is empty.** | The trace is a necessary condition, not a sufficient one, so it is paired with a positive test the arrays cannot fake: an 8-bit-laundered array holds at most 256 distinct values. `bee3-leg-luma.npy` holds **7093** and `bee3-leg-sel.npy` holds **8492** on a single slice, at `float32` over 90 to 8684 DN. The reader of record is `rawpy.imread` into `raw_image_visible` at `m87lib.py:124`, and `m87lib.py` contains no `Image.open` at all, so the headline path never opens a TIFF by any route. `111-provenance.py`, R1 and R2, both PASS. | MEASURED |
+| P153 | **The delta M120 reported as unrecomputable was recomputable the whole time, because the source renders were never gone -- they were in a different directory.** M120 could not recompute the true ship delta and recorded the sources as absent from `out/`. They are 198 MB each in `C:\dev\strehl-out\M87-before-after\`, which is where `40-ship-delta.py` wrote them and where its own path constant still points. Recomputed with `tifffile.imread` and a `uint16` assert: true `max abs delta` **41887** of 65535, against the laundered **163**, a factor of **257.0x** -- which is exactly 65535/255, so the discrepancy is the quantisation itself and nothing else. **No re-render was required.** | **The same measurement retracts a magnitude I gave ORCH earlier tonight.** I said the 13.445% changed-pixel fraction was also an undercount, since any pixel moving under about 128 counts would read as unchanged. The direction is right and the size is not: the true fraction is **13.666%**, a ratio of **1.016x**, not the large undercount my phrasing implied. The reason is that where this correction moves a pixel at all it moves it far, so almost every changed pixel already cleared the 8-bit quantum. A correct sign with an uncalibrated magnitude is still an overstatement. | MEASURED |
+| P154 | **A registered prediction of mine failed: 8-bit laundering does not push every small-signal statistic toward zero, and on the merge it pushed the opposite way.** ORCH broadcast the hazard as a false-null risk, then corrected itself via M120 to add a false-alarm risk on band-pass statistics. I registered Q1 (band-pass inflates) and Q2 (small-signal falls toward zero) before measuring, on the same array with quantisation as the only difference between arms, so scale cannot confound it. **Q1 PASS**: `mean abs grad` on the real render reads **75.4914** laundered against **73.8319** true, a ratio of **1.0225x**, independently replicating M120's **1.0161x** on different operands. **Q2 FAIL.** | The merge veil went **&#8722;6.6810%** true to **&#8722;7.4718%** laundered -- **deeper**, by 0.79 pp -- while frame 0 went **&#8722;28.5999%** to **&#8722;28.3776%**, toward zero, as predicted. **So the two arms of one statistic moved in opposite directions**, which rules out a floor and rules out an inflation. A median of binned medians is a rank statistic: quantisation snaps each median onto a lattice, displacing it by up to half a quantum with **arbitrary sign**. Half a quantum here is 33.70/2 DN against a far pedestal of 3143 DN, i.e. 0.536% per median and about **1.07 pp** when both move; the observed 0.79 pp sits inside that bound. The headline gap it would have to threaten is 19.79 pp, so the conclusion survives with margin -- but it survives on a bound I had to derive after my prediction broke, not on the prediction. | MEASURED |
 
 ### Capture request
 
@@ -4501,7 +4504,7 @@ For the renders where I kept no provenance line, the argument is the guard
 rather than a record: a full-bracket invocation meets a 40-frame sidecar,
 the frame count disagrees, `load_or_solve` re-solves, and the stale file is
 refused. The trap needs `--limit N` to meet a sidecar of exactly N frames,
-and `--limit` appears **0** times in the 105 measurement scripts
+and `--limit` appears **0** times in the 107 measurement scripts
 here. §30 separately retook the one render exposed to the *align*
 default and found it byte-identical to a pinned-sidecar render, 0 DN, which
 settled that one by hash rather than by argument (`P124`).
@@ -4511,7 +4514,7 @@ I hold no claim that needs retaking on this account.
 **A correction to my own first draft of this section,** because it is the
 kind that reads as evidence and is not. I first wrote that `--limit` "appears
 0 times across all 30 M87 scripts" and rested the finding on it. There are
-**142** scripts, not 30 — and, more to the point,
+**151** scripts, not 30 — and, more to the point,
 **0** of them invoke the binary. Every render here was hand-run
 from PowerShell, so a count over the Python tree is a true statement about a
 population that does not contain the thing being claimed. My own verifier
@@ -5173,7 +5176,7 @@ growing document is the same class of mistake as the unterminated slice.
 disk rather than trusting `93-audit.json`, because `P124`'s safety argument --
 that no measurement script passes the flag that would let a 40-frame sidecar
 apply -- is a standing claim about the whole tree, not a snapshot. Tonight's
-new scripts moved the measurement denominator from 97 to 105. **The zeros both
+new scripts moved the measurement denominator from 97 to 107. **The zeros both
 re-derived as zero**, so the claim itself survived intact; only its denominator
 was stale. §32 already records this same mechanism catching me when I had
 written "30 scripts" and there were 116. The running total is deliberately
@@ -5588,6 +5591,58 @@ defect on two subjects, and both would be relieved by a soft or
 contrast-scaled admission rather than by anything edge-specific. M87
 contributes only the edge half of that claim and has deliberately not
 re-derived the plateau measurements, which belong to other milestones.
+
+### The provenance challenge, and the third direction
+
+M120 read `cache/ship-delta.npy` as `(4688,7032) uint16, max 163, mean
+1.621`, correctly identified those as 8-bit units wearing a 16-bit dtype, and
+concluded that M87 must re-render before any halo number could be trusted.
+The first half of that is right and this milestone had already published it
+as P40. The second half is not, and the difference matters more than the
+agreement does.
+
+The headline cannot descend from that path, and the argument is not that I
+remember writing it differently. `70-veil.py` reaches exactly one other
+module, `m87lib.py`, and neither names `ship-delta.npy`; the overlap between
+the headline's source closure and the set of files that touch the laundered
+array is empty. A trace alone would only show that I had not found a link, so
+it is paired with a test the data itself has to pass: the inputs carry 7093
+and 8492 distinct levels, and no array that has been through an 8-bit reader
+can carry more than 256. The reader of record is `rawpy.imread`, which does
+not open TIFFs.
+
+The part worth keeping is what happened when I checked M120's own blocked
+measurement instead of stopping at my own clearance. The renders it needed
+were never deleted; they sit in `M87-before-after`, 198 MB each, at the path
+`40-ship-delta.py` still points to. Recomputing takes seconds and gives
+**41887** against the laundered **163** -- a factor of **257.0x**, which is
+65535/255 to four figures and therefore the quantisation exactly. **A
+milestone concluded that another milestone must repeat hours of rendering,
+on the strength of a file not being in the first directory it looked in.**
+The cheap check is to look for the artefact before prescribing the work that
+would recreate it.
+
+Two corrections against myself came out of the same run. I had told ORCH the
+13.445% changed-pixel fraction was likewise an undercount; it is **13.666%**,
+a ratio of **1.016x**. My sign was right and my magnitude was invented, and
+an uncalibrated magnitude presented as an implication is an overstatement
+even when the direction holds. And my registered Q2 -- that laundering pulls
+a small-signal statistic toward zero -- **failed**: the merge veil deepened
+from **&#8722;6.6810%** to **&#8722;7.4718%** while a single frame moved the
+predicted way. Two arms of the same statistic moving in opposite directions
+is not a floor and not an inflation but a third thing: a rank statistic
+snapped onto a quantisation lattice, displaced by up to half a quantum in
+**whichever direction the lattice happens to fall**. That bound, 1.07 pp,
+contains the observed 0.79 pp, and the 19.79 pp gap the headline rests on is
+far outside it. The conclusion holds. It holds on an error bound I only
+derived because the prediction broke, which is not the same as having been
+right.
+
+None of this touches a published number, because none of the published
+numbers were ever read through a TIFF. It is a counterfactual robustness
+check on an exposure that did not occur, and it is reported at that strength
+and no higher.
+
 
 Three limits, stated rather than buried.
 

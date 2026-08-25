@@ -1,0 +1,27 @@
+{
+ "registered": {
+  "Q1": "laundered/true > 1.000 (band-pass inflates)",
+  "Q2": "|V_laundered| < |V_true| (small-signal -> zero)",
+  "Q3": "residual survives; quantum ~14 DN vs signal ~76 DN",
+  "m120_ratio": 1.0161401890707864
+ },
+ "Q1": {
+  "true": 73.83186090340298,
+  "laundered": 75.49139257292346,
+  "ratio": 1.0224771751546626,
+  "pass": true
+ },
+ "Q2": {
+  "v_true": -6.680983058935815,
+  "v_laundered": -7.471818166494002,
+  "far_dn": 3143.25,
+  "f0_true": -28.599907989572152,
+  "f0_laundered": -28.37755112822652,
+  "pass": false
+ },
+ "Q3": {
+  "quantum_dn": 33.70196078431373,
+  "retained_frac": 1.11837106913487,
+  "pass": true
+ }
+}

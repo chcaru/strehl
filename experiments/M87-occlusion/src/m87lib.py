@@ -123,6 +123,12 @@ def read_planes(path, box=None):
     """
     with rawpy.imread(path) as rr:
         v = rr.raw_image_visible
+        # P40 / M120: assert the width of what was actually loaded, at the
+        # load site. PIL returns uint8 for a 16-bit RGB TIFF with no warning,
+        # and nothing downstream can tell a narrowed array from a real one.
+        # rawpy cannot make that mistake, but the assert is the check that
+        # would have caught it and it costs nothing to state.
+        assert v.dtype == np.uint16, f"raw plane is {v.dtype}, expected uint16"
         h = (v.shape[0] // 2) * 2
         w = (v.shape[1] // 2) * 2
         if box is None:
