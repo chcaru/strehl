@@ -249,7 +249,28 @@ Numbered `P1…` per rule 28; absolute numbers belong to ORCH. I have not edited
 
 ---
 
-## 8. Housekeeping for ORCH
+## 9. Bit-depth exposure check (ORCH's PIL 16-bit RGB hazard)
+
+**M115 is not exposed.** Every input is camera RAW read through `rawpy.imread`; a full grep of the milestone finds no PIL, imageio, cv2, skimage, tifffile, or any `.tif` path. That is an absence claim, so it is backed by a positive verification (`bitdepth_check.py`, all asserts pass):
+
+| source | dtype at the reader | distinct levels | after `load_cube` |
+| --- | --- | --- | --- |
+| `109MSDCF` | `uint16` | 2420 | `float32`, 4239 levels |
+| `119MSDCF` | `uint16` | 4906 | `float32`, 9379 levels |
+| flat-field null | `uint16` | 7367 | — |
+
+The check is commissioned by `negctl_bitdepth.py`, which plants the exact narrowing PIL performs (keep the high byte) into M115's own loader and re-runs the headline on `109MSDCF`. Three results, all measured, all relevant to the fleet triage:
+
+1. **The damage scales with the file's *occupied* range, not the full 16-bit range.** The detail ROI spans ~2100 DN, so the narrowing left **9 distinct levels, not 256**. On low-contrast crops this hazard is far worse than the 241× headline suggests.
+2. **Absolute noise and SNR readings are destroyed.** Measured noise power rose **3.5×** (σ off by **1.9×**) and measured band SNR fell to **0.438×** of its true value — a real SNR would read less than half of what it is.
+3. **A ratio of two arms on the same data is largely protected by cancellation**: `R_SNR(WIENER)/R_SNR(GATE)` moved only **−1.0 %** (0.9340 → 0.9248). This is the useful triage discriminator — ratio-of-arms statistics survive, absolute noise/sd/SNR/quantisation-limited statistics do not.
+4. **The OTF self-calibration in §5 would have been corrupted**: fitted `s` moved 1.0164 → 1.2577, **+23.7 %**.
+
+Since M115's smallest measured quantity is a per-pixel σ of 6.5–14.6 DN, and an 8-bit narrowing imposes a quantisation sd of ~37 DN on a full-range file, every SNR in this report would have been fiction had any input been narrowed. None was.
+
+---
+
+## 10. Housekeeping for ORCH
 
 - **`M115` is not in the `AGENTS.md` milestone ledger**, which ends at `M113`. The allocation needs recording.
 - **The dispatching brief named no prior research.** M20 (`M20-deconvolution-ceiling-measured.md`), M41 (`M41-r3-kill-measured.md`) and M70 (`M70-through-focus-spectrum.md`) all bear directly on this question — M41 tested this exact proposal and killed it on the noise axis. Rule 43: an assertion of absence is a claim. All three were found by the rule-40 search and are cited throughout.
