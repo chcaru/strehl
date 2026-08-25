@@ -1,0 +1,213 @@
+M116-promotion — CAMPAIGN 6 PRE-REGISTRATION
+photometric normalisation, scored on ORCH's patchwork invariant
+================================================================
+
+Written and committed BEFORE any arm of this campaign was rendered or scored.
+Pinned build SHA: 4beac7300e318f6f0aaf10b6a88e57f311b9e814
+Worktree: C:\dev\strehl-out\M116-tree   Outputs: C:\dev\strehl-out\M116\invariant
+
+
+1. THE QUESTION
+---------------
+ORCH pre-registered a prediction: turning on STREHL_PHOTOMETRIC / --photometric
+should move the patchwork invariant from the shipped 1.114x toward 1.0, and
+should help most on stacks with the largest inter-frame level drift.
+
+The mechanism ORCH gives: the merge gathers different frames in different
+regions; M24 measured 2.88 / 6.84 / 8.93 / 11.70 percent peak-to-peak drift
+across four stacks; if neighbouring regions elect frames differing by that much
+in level, the region boundaries become visible steps. Photometric normalisation
+removes the level difference, so the steps should shrink.
+
+This campaign answers that on the owner's real capture, end to end.
+
+
+2. PRIOR ART THAT CONTRADICTS THE PREDICTION — DECLARED BEFORE I RUN
+---------------------------------------------------------------------
+I am registering this in advance so that a HARM result cannot be read as me
+having found what I already expected to find, and so that a HELP result cannot
+be read as me having quietly dropped inconvenient prior work.
+
+  - M120 section 36.2 measured --photometric on this exact stack (bee-3-cpl)
+    and found HARM: ratio 1.0946, i.e. +9.5 percent worse, on 12 rule-chosen
+    windows. Not a median dragged by outliers: 12 of 12 windows harmed, range
+    1.066 to 1.112.
+  - M122 measured B12 = 1.0638 independently, a different statistic with a
+    different window rule, same direction.
+  - M120 section 36.4 measured bee-3-cpl's own drift at 14.03 percent
+    peak-to-peak — larger than any figure in the corpus, larger than all four
+    of M24's stacks. So bee-3-cpl is precisely the stack where ORCH's mechanism
+    predicts the largest gain, and it is the stack where the shipped
+    implementation was measured to lose.
+  - M120 section 36.5 states plainly that its comparison is a ratio-of-ratios
+    across two builds, that this is its main limitation, and that the clean
+    experiment was not run for want of budget.
+
+So my honest prior is HARM, against ORCH. The bars in section 5 are therefore
+written symmetrically, and the HELP bar is no harder to clear than the HARM bar.
+
+I also note the one respect in which M120 leaves the door open: section 36.3
+item 3 measured --photometric at -0.9 percent (a slight HELP) on a pure
+background ROI and +9.5 percent (HARM) on the rule-chosen windows. The sign
+flips with ROI choice. ORCH's instrument uses its own window rule, which is
+neither of those two, so the outcome here is genuinely not determined by M120.
+
+
+3. WHY THIS RUN IS THE EXPERIMENT M120 ASKED FOR AND COULD NOT AFFORD
+----------------------------------------------------------------------
+M120 section 36.5 names the settling experiment: render the stack once with
+--index-map, again with --photometric, and score both on identical pixels
+within one frozen build. That removes the ratio-of-ratios and the cross-build
+step in one move.
+
+That is exactly the shape of this campaign. If the result here disagrees with
+M120's, mine is the stronger design and M120's should be down-weighted; if it
+agrees, M120's limitation was not load-bearing. Either way I will say which.
+
+
+4. ARMS
+-------
+All arms: same capture (D:\personal\macro\bee-3-cpl, read-only), same 299
+frames, same binary at the pinned SHA, --gate 4 (merge.rs DEFAULT_GATE = 4.0,
+read at the pin, not assumed from a name — discipline 830), STREHL_ALIGN=0,
+private cache directory per arm.
+
+  P0-default       the shipped default path. No instrument switches.
+  P1-photometric   P0 plus --photometric. The ONLY difference. ORCH's arm.
+  P2-placebo       byte-for-byte the same configuration as P0, differing only
+                   in the cache directory path — a change that cannot affect an
+                   image.
+
+Held constant, stated explicitly per discipline 832: capture, frame set, frame
+count, binary, SHA, gate, alignment mode, output geometry, window reference.
+Varying: --photometric (P1), cache path (P2).
+
+
+5. WHY STREHL_ALIGN=0, AND THE REGISTRATION DEFECT THAT FORCES IT
+-------------------------------------------------------------------
+ORCH's instrument scores a merge against M93's single frames at identical
+(x, y). M116's existing arms (A0..A4) carry a frozen warp map and CANNOT be
+scored that way. Measured, by integer-only phase correlation:
+
+  - M116's arms sit (287, -154) px from the M93 singles. Both A0 and A1 sit at
+    the same offset, confirming my arms share one frozen warp.
+  - Scoring M116's A0 — nominally the same shipped configuration ORCH scored at
+    1.114x — against the M93 singles returns median 0.090 and HOLDS in all 12
+    windows. That 12x gap is a registration artefact, not a treatment effect.
+    Reporting it as a win would have been a spectacular false positive.
+  - M120 reached the same refusal independently by a different route:
+    NCC(A0, M93-gate4) = 0.7136, and it declined to mix M93 pixels with M116
+    pixels.
+
+M93's armM4-gate4-binlin and all 23 armF-f*.tif are logged `alignment : OFF`.
+So rendering P0/P1/P2 with STREHL_ALIGN=0 puts them on that same unwarped grid,
+and ORCH's instrument becomes valid on them UNMODIFIED. That is the entire
+reason for this constraint.
+
+Registered in advance: I will verify P0 reproduces M93's armM4 before I quote
+any absolute ratio. If it does not, absolute positioning against ORCH's 1.114
+baseline is withdrawn and only the P0-vs-P1 contrast is reported.
+
+
+6. METRIC
+---------
+ORCH's instrument, unmodified, at experiments/ORCH-drift-check/
+patchwork_invariant.py:
+
+    python patchwork_invariant.py <merged.tif> <tag> <window-reference.tif>
+
+Primary readouts, reported for EVERY arm as ORCH asked:
+  (a) median ratio of merged fine-scale structure to the fine-scale structure
+      of the NOISIEST single input frame over the same pixels;
+  (b) the violation count — windows of 12 reading above 1.0.
+
+The window reference is P0-default for every arm without exception. Passing a
+different reference per arm makes each arm choose its own most-background
+windows, which is not an A/B.
+
+Published baselines this must be positioned against:
+  gate 0 (a negative control, merge.rs:3027)  2.134x   12 of 12 violating
+  gate 4 (the shipped default, merge.rs:298)  1.114x    7 of 12 violating
+
+Secondary, reported but not bar-bearing: per-window ratios, so that a median
+cannot hide a split, and the unanimity check M120 used (how many of 12 move in
+the reported direction).
+
+
+7. BARS — FIXED NOW, NOT NARROWABLE LATER
+------------------------------------------
+Let d = median_ratio(P1) - median_ratio(P0), and v = violations(P1) -
+violations(P0).
+
+  PROMOTE  ("HELP")  requires  d <= -0.02  AND  v <= 0.
+  REJECT   ("HARM")  requires  d >= +0.02  OR   v > 0 with d > 0.
+  NULL                otherwise — no detectable effect, no promotion.
+
+0.02 is chosen as roughly one fifth of the distance the shipped gate already
+travels from the gate-0 negative control (2.134 -> 1.114), i.e. an effect small
+enough to be worth acting on but large enough not to be a rounding artefact. It
+is fixed here so it cannot be moved after the numbers exist.
+
+Additional registered claim, stated so it can fail: ORCH predicts photometric
+helps MOST where drift is largest. bee-3-cpl carries the largest drift in the
+corpus (14.03 percent, M120 section 36.4). So if photometric does not help
+HERE, the drift-magnitude form of the mechanism is refuted, not merely
+unsupported. I will say so if that is what happens.
+
+
+8. CONTROLS
+-----------
+NULL / byte-freeze. P2-placebo must be byte-identical to P0-default. If it is
+not, the renderer is not deterministic, and I will quantify the run-to-run
+spread FIRST and treat any effect smaller than that spread as null, loudly,
+before reporting anything else.
+
+TRAP T-A (discipline 831 — the null that matters is a real instance of the
+population minus the mechanism under test). A single unmerged input frame in
+the same unwarped grid, armF-f173.tif, scored as though it were a merge. A
+single frame contains no merge and therefore CANNOT contain the merge defect.
+Registered expectation: the ratio must read at or below 1.0. ORCH's earlier
+kurtosis detector failed exactly this test — it fired on 3 of 12 windows of a
+real unmerged photograph, harder than it fired on the merge. If ORCH's
+invariant fails T-A too, the whole campaign's numbers are void and I report
+that instead of a promotion recommendation.
+
+TRAP T-B (identity). P0 scored against itself as the window reference must give
+exactly the same numbers on a re-run. A metric that moves when nothing moved is
+measuring the harness.
+
+COMMISSIONING. ORCH's instrument commissions itself in-run against an iid null,
+a ramp null and a planted Voronoi mosaic, and exits 4 if the plant does not
+fire. I will not suppress or bypass that, and I will record that it passed on
+every arm. A green from an uncommissioned instrument is not a green.
+
+READER. Every TIFF is read with tifffile and asserted uint16 on the line after
+loading (fact 1615). PIL.Image.open silently returns uint8 for 16-bit RGB.
+ORCH's loader already asserts this; I will not add a second reader.
+
+
+9. WHAT I WILL REPORT REGARDLESS OF OUTCOME
+--------------------------------------------
+  - The ratio and the violation count for every arm, including the placebo.
+  - Whether P0 reproduced M93's armM4, with the number.
+  - The registration defect in section 5, and the 0.090-vs-1.114 near-miss,
+    because it is the most transferable thing this campaign found and it would
+    have produced a false positive in anyone's hands, not just mine.
+  - Agreement or disagreement with M120 section 36.2 and M122's B12, explicitly
+    named, with a statement of which design is stronger and why.
+  - If photometric harms: that is the headline, stated as a failure, and the
+    promotion recommendation is REJECT. I will not narrow a bar to rescue it.
+
+Not in scope, and I will not spend renders on them: any halo arm (ORCH
+withdrew the priority; M121 owns the mechanism), and promotion of STREHL_FIX_CA
+(V-CA adjudication pending). Neither is affected by anything in this campaign.
+
+
+10. WHAT WOULD MAKE ME WITHDRAW THIS CAMPAIGN
+----------------------------------------------
+  - P2-placebo differs from P0-default and the spread exceeds the bar.
+  - T-A fires: the instrument reads above 1.0 on a single unmerged frame.
+  - P0 fails to reproduce M93's armM4 AND the P0-vs-P1 contrast is smaller than
+    the P0-vs-armM4 discrepancy, in which case I cannot separate treatment from
+    build.
+  - The instrument's own commissioning plant fails to fire on any arm.
