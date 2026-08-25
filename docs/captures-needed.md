@@ -78,15 +78,16 @@ variable, so you can try any of them without a rebuild.*
 | `STREHL_SMOOTH_HUBER` | robust threshold for the above | 1.0 when `STREHL_SMOOTH` is on | Don't set it independently. It only does anything when the line above is on. |
 | `STREHL_FIX_HALO` | fringe around silhouettes | off | **Leave off.** Off for a good reason, unlike the rest — see the withdrawal above. It replaces the fringe with a milky scalloped band and fires hardest on scenes with no halo in them. |
 | `STREHL_SOFT_GATE` | soft frame-admission gate | off | **Leave off.** Rejected twice now, by two independent methods. It scores beautifully and it is a blur — see tonight's near-miss below. |
-| `STREHL_FIX_CA` | chromatic aberration | off | **Verdict pending, and it has a bug.** An audit of this one is still running as I write. Separately, it was found tonight to be a **silent no-op when `STREHL_ALIGN=0`** — the output comes out byte-identical with no warning at all, so anyone A/B-ing it with registration off would measure nothing and conclude it does nothing. Don't enable it on my say-so until the audit lands. |
+| `STREHL_FIX_CA` | chromatic aberration | off | **Worth turning on for your own frames — but it is not set like the others.** The audit landed; see below. It takes a **profile name**, not `1`. Two known bugs: typing `STREHL_FIX_CA=1` is a deliberate *error* (it refuses to guess which lens you used), and it is a **silent no-op when `STREHL_ALIGN=0`** — byte-identical output, no warning. |
 
-So of seven switches, exactly **one** is worth flipping this morning, one is
-awaiting an audit, two are actively harmful, one does nothing you can see, one is
-subordinate to another and one is already on. That ratio is the honest state of
-the project: the measurement machinery is far ahead of what has been proven safe
-to ship.
+So of seven switches, **two** are worth flipping this morning — the
+exposure-drift fit on any stack, and the chromatic-aberration correction on
+frames shot with your own rig — two are actively harmful, one does nothing you
+can see, one is subordinate to another and one is already on. That ratio is the
+honest state of the project: the measurement machinery is far ahead of what has
+been proven safe to ship.
 
-To try the one that works:
+To try the first of those two:
 
 ```powershell
 $env:STREHL_PHOTOMETRIC = "1"
@@ -96,6 +97,50 @@ and unset it with `Remove-Item Env:\STREHL_PHOTOMETRIC`. It costs about
 **+3.7 s** on a stack, and on `tweezers-cpl` it was actually *faster* than the
 default. **Look at it at 100% on a smooth out-of-focus background** — it is a
 correction to flat areas and it is invisible at full-frame scale.
+
+#### The chromatic-aberration correction: turn it on for *your* frames
+
+*The audit finished after I wrote the table above, and it changed the verdict
+from "pending" to a qualified yes — plus it caught me overstating the case.*
+
+**The correction is finished and it works.** It is off by default because it was
+fitted on your gear alone, and the software has no way to tell whether a given
+file came from that gear. On your A7C II + FE 100 GM + 2× TC + X4 CPL shots:
+
+```powershell
+$env:STREHL_FIX_CA = "a7c2-fe100gm-2xtc-x4cpl"
+```
+
+**Type it exactly** — the key is case-sensitive, and `STREHL_FIX_CA=1` is a
+deliberate *error* rather than an on-switch, because the code refuses to guess
+which lens you were using. A typo is also an error rather than a silent
+no-op, which is the right call. One real bug to know about: with
+`STREHL_ALIGN=0` it does nothing at all and says nothing about it.
+
+What you should expect to see: edge chroma down **~29%** right at the fringe,
+**~20%** in the near-edge region, and **~5%** across the whole frame on
+`bee-3-cpl`. Two agents and I looked at 5× crops and independently thought it
+clearly better.
+
+**Three caveats, and I want to be straight about the third.** Fringes get
+**fainter, not thinner** — the width is unchanged. What residual remains is
+**red-biased** rather than neutral. And it has never been tested against the one
+control that would prove the improvement comes from the correction rather than
+from the resampling it happens to do along the way.
+
+**I also have to correct myself here.** I earlier described this as a "61.0%
+edge chroma reduction". The audit established that number is real but that I
+described it wrongly, and that I had quoted **the largest of five available
+numbers for the same effect** without the qualifier that makes it mean what it
+means: it is the fall in edge-localised chroma *excess*, measured as a contrast
+against a baseline five pixels away — not the amount of chroma removed. The
+honest numbers are the ~29% / ~20% / ~5% above. This is the second time tonight
+that a headline in this document turned out to be the most flattering member of
+a family of numbers, and both times it was an agent auditing my work that caught
+it rather than me.
+
+**Worth turning on for your own frames. Not safe as a default for anyone
+else's** — and that distinction is the whole reason it stays off.
 
 #### The near-miss: why the soft gate says "leave off" twice
 
