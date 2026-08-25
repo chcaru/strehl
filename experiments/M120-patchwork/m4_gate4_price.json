@@ -1,0 +1,31 @@
+{
+ "validation": {
+  "gain": 4.481244176769928,
+  "ncc": 0.7288705220063019,
+  "resid": 0.04369735715048955
+ },
+ "q_bound": 1.283858060836792,
+ "den": 0.0033143344335258007,
+ "arms": {
+  "C4  window ON  reg ON  gate 4 (SHIPPED)": {
+   "Q": 5.479908265272016,
+   "n_eff": 3.4085693359375,
+   "passes": false
+  },
+  "B4  window ON  reg OFF gate 4": {
+   "Q": 5.868061992174477,
+   "n_eff": 2.86334228515625,
+   "passes": false
+  },
+  "A4  window OFF reg OFF gate 4": {
+   "Q": 3.3244195030290924,
+   "n_eff": 1.0750732421875,
+   "passes": false
+  },
+  "B4n window ON  reg OFF gate 4.72 (n_eff-matched)": {
+   "Q": 5.634257298124799,
+   "n_eff": 3.4112548828125,
+   "passes": false
+  }
+ }
+}

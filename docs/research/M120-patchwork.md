@@ -7,6 +7,10 @@
 > current headline: the election itself, measured.** If you are citing one number from
 > this document, cite §31 (ρ = −0.7165 between manufactured structure and admission
 > breadth) or §29 (patch size = 0.507 × focus-window diameter, R² = 0.974).
+> **Part V (§35–§38)** answers ORCH's three items of `b51b948`: the PIL/`np.iinfo`
+> exposure answer (**clean, checked**), the `--photometric` vs idealised-level-removal
+> comparison (**idealised wins by 12–17% relative; the harm replicates 12/12 windows**),
+> and the pre-registered design for weight-field smoothing.
 
 **ORCH's fact 1604 is wrong in two of its three limbs. But fact 1603 is right, and it is
 worse than ORCH thought: the patchwork is in the SHIPPED default render, not only in the
@@ -1276,3 +1280,183 @@ wants to inspect or revert.
 
 **Not mine:** M103's four scripts are on ORCH's original list; I have no visibility into
 them and am not answering for that milestone.
+
+---
+
+# Part V — ORCH's three items (commit `b51b948`)
+
+Three questions, answered in ORCH's order of stated priority. Item 3 is a one-line
+disclosure and is answered first because it gates whether anything else here is quotable.
+
+## §35 Item 3 — `np.iinfo` exposure in M120's own tree: **CLEAN, checked not assumed**
+
+**MEASURED.** `grep -rn "np.iinfo" experiments/M120-patchwork/` returns exactly one hit,
+in `26_orch_patchwork_audit.py`, where it appears **deliberately, inside the reproduction of
+ORCH's fault** — the script's job was to measure the damage `patchwork_16bit.py` did, which
+required replicating `np.iinfo(a.dtype).max` on the PIL-narrowed array to reproduce the
+255-instead-of-65535 ceiling.
+
+It cannot have contaminated a reported number, for two independent reasons:
+
+1. **It never touches a reported quantity.** In `26_` the value feeds a *window-selection
+   threshold* only. The threshold is scale-invariant: it selects windows by relative
+   brightness, so a 257× error in the ceiling cancels.
+2. **Confirmed empirically rather than argued.** `26_` asserts and prints
+   `same windows selected by both readers: True` — the tifffile path and the PIL path chose
+   the identical 12 windows. The reported kurtosis figures (`40.53` vs `7.70`) are computed
+   from `tifffile` pixels in both arms.
+
+Every `.tif` read in `experiments/M120-patchwork/**` is `tifffile.imread` with an immediate
+`assert dtype == np.uint16` (audited in §12, `13_pil_audit.py`, 0 exposed). **No folded fact
+from M120 needs amending.** Record as *checked*, not *assumed*.
+
+## §36 Item 1 — is idealised level removal better than `--photometric` on `bee-3-cpl`?
+
+**Answer: YES, and it is a real tension, not a not-comparable.** But the comparison is
+weaker than it looks and I state the weakness before the number.
+
+### §36.1 The geometry refusal that shaped the experiment
+
+`m13`'s first job was to check whether M116's `A0` and M93's gate-4 arm are the same build.
+**They are not: NCC(A0, M93-gate4) = 0.7136.** NCC(A0, A1) = 0.999830 — same run, same
+frozen warp, valid to difference. **I refused to mix M93 pixels with M116 pixels**, which
+forced the design into a **ratio-of-ratios**: `--photometric` scored within the M116 build,
+idealised level removal scored within an M93-geometry replication, the two ratios compared.
+
+**This is the result's main limitation and I am not going to bury it.** ORCH's own §3 note
+is the justification — *"a ratio of two arms on the same data is largely protected by
+cancellation"* — but a ratio-of-ratios across two builds is one step weaker than that, and
+**the clean experiment has not been run.** See §36.5 for the command that would settle it.
+
+### §36.2 The numbers
+
+Estimator `q(a) = lapRMS(a) / median(a)`, dimensionless and gain-invariant. Same election,
+same admission, same pixels within each arm.
+
+| arm pair | ROI (128×128 pure background) | 12 rule-chosen windows |
+| --- | --- | --- |
+| `--photometric` ÷ default (M116 build) | **0.9912** (−0.9%) | **1.0946 (+9.5% HARM)** |
+| idealised level removal ÷ raw (M93 geometry) | **0.8499 (−15.0%)** | **0.9783 (−2.2%)** |
+| **ratio of ratios (idealised advantage)** | **1.166×** | **1.119×** |
+
+**Idealised removal beats the fitted correction by 12–17% relative, and the ordering is the
+same under both ROI choices.** That is the answer to ORCH's question.
+
+### §36.3 Three things in the per-window breakdown that matter more than the headline
+
+1. **The harm replicates, independently and unanimously.** M122 measured `B12 = 1.0638` on
+   rule-chosen windows; I measure `1.0946` on a *different statistic* with a *different
+   window rule*. And it is not a median dragged by outliers — **`--photometric` harms 12 of
+   12 windows**, range 1.066–1.112. A unanimous 12/12 across two independent estimators is
+   not noise. **`--photometric` genuinely harms `bee-3-cpl`.**
+2. **Idealised removal harms exactly the windows where it should.** 10 of 12 windows improve
+   (0.976–0.999); the 2 that worsen (1.011, 1.032) are **windows 5 and 8 — the two highest
+   raw-`q` windows in the set**, i.e. the most structured. A pure level correction is
+   expected to be neutral-to-slightly-negative where real structure dominates. The effect has
+   the right shape, not just the right sign.
+3. **`--photometric`'s sign flips with ROI: −0.9% on pure background, +9.5% on the
+   windows.** The fitted correction is **not** failing on flat background — that is where it
+   is roughly neutral. It fails on the rule-chosen windows, which carry structure and edges.
+   **That localises the implementation defect**: the fit is being pulled by, or is
+   mis-applying to, non-flat content. That is the most specific lead in this section.
+
+### §36.4 Drift on this stack is larger than any figure in the corpus
+
+**MEASURED.** Per-frame background level on `bee-3-cpl`: **14.03% peak-to-peak** across
+frames. ORCH measured 3.2–8.4% on M93; M24 measured 2.88 / 6.84 / 8.93 / 11.70% on four
+other stacks. **`bee-3-cpl` has the largest drift measured in the project.** So this is the
+stack where a level correction has the most to gain — and it is the stack where the shipped
+one loses. That sharpens the indictment rather than softening it.
+
+### §36.5 Verdict, and the experiment that would settle it
+
+**Record as TENSION, resolving against the implementation — not as not-comparable.** ORCH
+offered me the not-comparable escape and I am declining it: the two arms disagree in the
+same direction under two ROI choices and two independent estimators, and the idealised arm's
+per-window pattern is physically coherent.
+
+**ARGUED, not measured:** that the defect is in the *fitting*, not in the *idea*. The
+idealised arm removes a per-frame scalar known exactly; `--photometric` estimates it. If the
+estimate is being fit over regions containing structure, item 3 above predicts precisely the
+observed failure.
+
+**The clean experiment, which I did not have the budget to run:** render `bee-3-cpl` once
+with `--index-map`, then apply *both* corrections to that single frozen build —
+
+```
+strehl stack <bee-3-cpl inputs> --out A0.tif --index-map A0-idx.tif
+strehl stack <bee-3-cpl inputs> --photometric --out A1.tif --index-map A1-idx.tif
+# then score q(A0), q(A1), and q(idealised-from-A0) on identical pixels
+```
+
+That removes the ratio-of-ratios and the cross-build step in one move. **Until it is run,
+§36.2 is a two-build comparison and should be cited as such.**
+
+### §36.6 On ORCH's amendment to fact 1686
+
+**ORCH's correction is right and the original headline was wrong.** 60.9% is a majority.
+"The minority of the effect" and "on `bee-3-cpl` it is not the dominant one" were both
+false. Fact 1686 as amended in `314fb92` — drift is the **majority** cause — matches what I
+measured. Nothing further to amend.
+
+## §37 Item 2 — spatial smoothing of the weight field
+
+The design is pre-registered in full at
+`experiments/M120-patchwork/PREREGISTRATION-M120e-weight-smoothing.md`, written and
+committed **before** any implementation exists. Summary of the four things ORCH asked for:
+
+**Prior art gate: run, no refusal found.** `prior_art.py weight smoothing spatial merge`
+returns M111 at score 160. The two neighbours are distinct objects: the shipped regulariser
+smooths the elected **index**; `STREHL_SOFT_GATE` broadens the **admitted set** per pixel
+along the focus axis. This proposal smooths the **K-vector of weights across space**.
+
+**It is structurally distinct from the soft gate, and provably not a blur.** With
+`out(p) = Σ_k w_k(p)·f_k(p)`, replacing `w` by `S ∗ w` leaves `out(p)` a convex combination
+of **`{f_k(p)}` — the same pixel `p`**. No neighbouring pixel *value* ever enters, so the
+operator cannot transport detail spatially or create a halo. A blur of the output,
+`Σ_k S ∗ (w_k f_k)`, does mix neighbouring values. **These are different operators.** Its
+real failure mode is *loss of focus selectivity*, not blur — which needs a different control
+than the one M87 used, and gets one.
+
+**The endpoint that makes this honest, and which I put in the pre-registration rather than
+discovering later.** At `S = ∞`, `w` is spatially constant, `Q ≤ 1.284` by §7's bound, and
+the merge is the plain mean — **which §23 already measured at 0/40 windows over bar and
+which is useless as a photograph** (Laplacian RMS 92.6 → 33.0). So the fix provably works at
+one endpoint and provably destroys the image there. **The question is not whether weight
+smoothing removes the patchwork — I already know it does. It is whether a usable operating
+point exists.** The design is therefore a **trade-curve measurement over σ ∈ {0,2,4,8,16,32,
+64,∞} with a pre-declared acceptable region**, and any result reported at a single radius is
+uninterpretable.
+
+**What `Q` in a textured ROI must do, stated in advance (ORCH's non-negotiable):**
+`Q_tex` must fall by **< 5%** at the σ that first brings `Q_flat` below 1.284; and the
+selectivity ratio `(ΔQ_flat/Q_flat) / (ΔQ_tex/Q_tex)` must exceed **3**. Below 3 I will
+report the operator as non-selective **even if `Q_flat` passes**. Plus BMF > 2.0 (M87's
+blur-matched fidelity, reused verbatim), MTF50 drop < 2%, halo ISO move < 1%, `n_eff` move
+< 10% (the anti-soft-gate gate), a permutation null, a frame-shuffle placebo, and a
+**named-feature veto** on the bee's abdomen hairs at 1:1 — because M87's metrics said 72.9%
+improvement while the picture said otherwise.
+
+**My own prediction, registered so it can be held against me: I expect G1 to pass and G2 to
+fail**, with selectivity landing between 1 and 3. §31 found the defect concentrated where
+`n_eff` is *small* (ρ = −0.7165), and those are the pixels near silhouettes where the weight
+field's spatial variation is **real**. Smoothing cannot distinguish real variation from
+spurious. If I am right, §36's level lever is the better place to spend the next milestone.
+
+## §38 M111 §14 P3 is a prior replication of §31 and I should have found it earlier
+
+**Quoted as ORCH asked.** M111 §14, refuting H7:
+
+> *"`n_eff` high inside blobs — predicted high; `blobB` median **2.0**, `blobA` mean
+> **1.77**, plane mean **81.9** — **REFUTED**."*
+
+M111 measured `n_eff` ≈ 2 inside blobs against a plane mean of 81.9 **one milestone before
+§31 did**, while refuting a different hypothesis, and the finding was folded under the
+refutation rather than as a result in its own right. **§31 (`R` vs `n_eff`, ρ = −0.7165,
+p = 2e-07) should be recorded as a replication, not a discovery.** M111 §14 P4 also already
+refuted gate-tightening with the wrong sign, which is consistent with §26's finding that the
+gate benefit is weaker near silhouettes.
+
+**Discipline for the corpus:** a number measured while refuting a hypothesis is still a
+number. M111's P3 was a negative result for H7 and a positive result about `n_eff`, and only
+the first was indexed.
