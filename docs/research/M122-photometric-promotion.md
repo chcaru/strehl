@@ -654,6 +654,142 @@ read-only to this milestone by standing constraint. `patchwork16.py`,
 `patchwork_16bit.py` and `patchwork_look.py` are M120's lane and `blobs`/`crop2`/
 `waxmap`/`waxsweep` are M103's; M122 consumed no number from any of them.
 
+## 13. Re-derivation after the triage rule was withdrawn
+
+The orchestrator has withdrawn the two-question triage rule and replaced it with:
+do not triage by the *form* of the expression — expand it algebraically to see
+which factor the perturbation lands in, or measure it with a dose-response
+control. §12 was written partly in the withdrawn rule's vocabulary, so this
+section re-derives the exposure both ways.
+
+**First, what does not change.** M122's clearance never rested on the withdrawn
+rule. It rests on provenance: no reported number came from pixels PIL returned
+(M23). The rule appears in §12 only as the framing of STEP 3, and STEP 3's own
+conclusion already said the rule was insufficient. **M23–M26 stand.**
+
+### M28 (MEASURED). Dose-response: no sign reversal is available to this estimator
+
+`quant_doseresponse.py` re-quantises the real 16-bit pixels to step `s` and
+refits M115's β — the Theil–Sen slope of `log R(dose)` on `log R(truth)` across
+all 180 corpus windows. β = 1 faithful, 0 collapsed to a null, **negative =
+ranking inverted.**
+
+| step (DN) | levels/window | β quantised | β equal-power dither | `tweezers-cpl` | `bee-3-cpl` |
+|---:|---:|---:|---:|---:|---:|
+| 1 (truth) | 10739 | 1.0000 | 1.0000 | 0.7102 | 1.0638 |
+| 4 | 1342 | 0.9930 | 0.9932 | 0.7125 | 1.0623 |
+| 16 | 346 | 0.9124 | 0.9037 | 0.7436 | 1.0519 |
+| 24 | 234 | 0.8027 | 0.8006 | 0.7760 | 1.0470 |
+| 32 | 176 | 0.7184 | 0.7185 | 0.8072 | 1.0369 |
+| 48 | 118 | 0.6536 | 0.5652 | 0.8584 | 1.0250 |
+| 64 | 90 | 0.5787 | 0.4430 | 0.8822 | 1.0141 |
+| **257 (the PIL path)** | **24** | **0.4062** | **0.1073** | **0.9252** | **1.0192** |
+| 1024 | 7 | 0.2482 | 0.0306 | 0.9388 | 0.9985 |
+| 4096 | 3 | *not estimable (M31)* | 0.0074 | 0.9647 | 1.0063 |
+
+**β never goes negative at any dose**, and no per-stack `B12` crosses 1 (range
+0.7102–1.0811). The algebra says why, and it is checkable rather than assumed.
+The laplacian is linear, so an error `e` of variance `s²/12` puts a floor
+`q = 5s²/3` on `hf²`, giving
+
+```
+R_meas = sqrt( (hf1² + q) / (hf0² + q) )
+```
+
+— **one factor, with `q` in both the numerator and the denominator.** M115's
+band SNR is a *product of two* factors with `q` in only one, so it tends to the
+untouched signal-power ratio and can invert. Here, if `hf1 < hf0` then
+`hf1²+q < hf0²+q` for every `q ≥ 0`: the ratio rises toward 1 and cannot cross
+it. **The distinguishing feature is the number of factors the perturbation
+enters, not whether the statistic is a ratio.**
+
+### M29 (MEASURED). But the verdict is far more level-hungry than a location statistic
+
+K2 — the criterion that produced KEEP-OFF — fires while `bee-3-cpl` exceeds
+1.03. It survives down to step 32 (**176 levels/window**) and dies at step 48
+(**118 levels**). V-M113 puts the immunity limit for *location* statistics at
+**12 levels**. So on the same corpus, a **threshold test on a small deviation
+from unity needs roughly 15× more levels to survive than a position estimator
+does.** Nothing here is a clearance for other milestones — but it does order the
+fragility, and threshold-based promotion decisions sit at the fragile end.
+
+### M30 (MEASURED). Equal-power dither is not a model of quantisation — corroborated on a different statistic
+
+The two β columns are **identical to three decimals down to step 32** (0.7184 vs
+0.7185) and then diverge, reaching **3.8×** apart at the PIL dose (0.4062 vs
+0.1073). The divergence begins exactly where the error stops being independent:
+
+| step | corr(e₀,e₁) between arms | corr(lap e₀, lap e₁) |
+|---:|---:|---:|
+| 24 | 0.0052 | 0.0061 |
+| 32 | 0.0407 | 0.0393 |
+| 48 | 0.0875 | 0.0730 |
+| 64 | 0.1860 | 0.1543 |
+| **257** | **0.4211** | 0.1587 |
+| 1024 | 0.7447 | 0.2328 |
+| 4096 | 0.9306 | 0.5369 |
+
+The dither null at the same step measures **−0.0001** — independent, as designed.
+The orchestrator measured cross-**half** `r` = +0.5109 on `109MSDCF` frames; this
+is cross-**arm** `r` = **+0.4211** on two renderings of the same scene. Different
+axis, same phenomenon, comparable magnitude. Equal-power dither over-states the
+damage here (it is the *harsher* control), because independent error cannot
+cancel in a same-scene ratio and correlated error can.
+
+### M31 (MEASURED). The number that does not fit, and my first explanation for it was wrong
+
+β falls monotonically to 0.2482 at step 1024 and then **rises to 0.3151** at
+4096, which the algebra forbids. My hypothesis was survivorship: 26 of 180
+windows are annihilated (`hf` = 0) at that dose and silently dropped, leaving a
+biased high-contrast subset. **Tested and refuted** — on the 154 windows alive at
+every dose the rise persists (0.2720 → 0.3151).
+
+The second hypothesis is that β itself is no longer estimable at 3 levels per
+window. A bootstrap over windows (200 resamples) supports it:
+
+| step | levels | β | 95 % CI |
+|---:|---:|---:|---|
+| 257 | 24 | 0.4162 | [0.3009, 0.5443] |
+| 1024 | 7 | 0.2720 | [0.1906, 0.4003] |
+| 4096 | 3 | 0.3151 | [0.1720, 0.5139] |
+
+The last two intervals overlap heavily, so **the rise is not significant and
+there is no anomaly in the physics** — what the dose destroyed is β. This is the
+orchestrator's own observation recursing one level: the instrument best placed to
+measure the damage is disabled by the same dose it is measuring. β is not quoted
+above step 1024.
+
+### M32 (MEASURED). The algebra's residual has the sign the correlated-error mechanism predicts
+
+Per stack, with `q = 5s²/3` and no free parameters:
+
+| stack | step 16 | step 64 | step 257 |
+|---|---:|---:|---:|
+| `tweezers-cpl` predicted | 0.7429 | 0.9034 | 0.9912 |
+| `tweezers-cpl` measured | 0.7436 | 0.8822 | **0.9252** |
+| residual | +0.0007 | −0.0211 | **−0.0660** |
+
+The independent-noise model predicts `tweezers-cpl`'s effect is all but erased at
+the PIL dose (0.9912). It is measured at 0.9252 — the effect **survives better
+than the model says**, and the residual grows monotonically with corr(e₀,e₁)
+(0.006 → 0.186 → 0.421). Correlated error partly cancels in a same-scene ratio.
+So M26's compression figure is, if anything, conservative in this direction while
+remaining conservative in the other (M26 held windows fixed).
+
+*(These numbers were produced by
+`python experiments\M122-photometric-promotion\quant_doseresponse.py`, log at
+`C:\dev\strehl-out\M122\quant-doseresponse.log`.)*
+
+### A2b (ARGUED). Withdrawing the triage question I proposed last turn
+
+In §12 I proposed a third triage question — *"does a decision turn on a threshold
+applied to a small deviation from unity?"* **I withdraw it as a clearance rule.**
+It is a form-based shortcut of exactly the kind now abolished, and offering a
+third question invites the fleet to keep triaging by shape. M29 is what survives:
+not a rule that can clear anyone, but a **measured fragility ordering** — 176
+levels for a unity-threshold verdict against 12 for a location statistic — which
+says who should measure *first*, never who may skip measuring.
+
 ---
 
 ## Proposed facts for folding (numbered locally, per rule 28's corollary)
@@ -708,9 +844,32 @@ read-only to this milestone by standing constraint. `patchwork16.py`,
 - **P15** Narrowing does not announce itself as a null. Re-scored through
   `Image.open`, M122 returns ρ = +0.6484 (p = 0.0062, still passing), **no stack
   above the 1.03 harm threshold**, and therefore the verdict **PROMOTE** instead
-  of KEEP-OFF. **Rank statistics survive narrowing; threshold criteria do not** —
-  so the triage must ask "does a decision turn on a threshold applied to a small
-  deviation from unity?" alongside the two existing questions.
+  of KEEP-OFF. *(Amended after the triage rule was withdrawn: the compression I
+  observed is a property of THIS estimator, not a general law — see P16. The
+  general claim is only that the failure is silent and can be favourable.)*
+- **P16** Whether a shared degradation compresses a ratio toward 1 or inverts it
+  depends on **how many factors the perturbation enters**, not on the ratio's
+  form. M122's `hf1/hf0` is one factor with the floor `q = 5s²/3` in both terms,
+  so `R = sqrt((hf1²+q)/(hf0²+q))` rises toward 1 and provably cannot cross;
+  M115's band SNR is a product of two factors with `q` in one, so it tends to the
+  signal-power ratio and reverses. Measured β over 180 windows: 1.0000 → 0.4062
+  at the 8-bit dose, **never negative**.
+- **P17** A verdict that is a **threshold on a small deviation from unity** is
+  far more level-hungry than a location statistic. M122's K2 criterion survives
+  to 176 distinct levels per window and dies at 118, against V-M113's 12 for
+  position estimators — roughly 15× more levels needed on the same corpus.
+- **P18** Equal-power random dither over-states quantisation damage on a
+  same-scene ratio, corroborating the orchestrator's cross-frame result on a
+  different axis: quantisation error between **two arms of the same scene** is
+  correlated at **r = +0.4211** at the 8-bit dose (dither null −0.0001), and the
+  two β curves are identical to three decimals until that correlation leaves
+  zero, then diverge to 3.8× apart.
+- **P19** M122's own dose-response contains an apparent anomaly — β rises at the
+  largest dose, which the algebra forbids. The survivorship hypothesis was tested
+  on a fixed window sample and **refuted**; a bootstrap then showed the rise is
+  not significant (CIs [0.1906, 0.4003] and [0.1720, 0.5139] overlap). At 3
+  levels per window β is not estimable: the instrument measuring the damage is
+  disabled by the dose it is measuring.
 
 ---
 
