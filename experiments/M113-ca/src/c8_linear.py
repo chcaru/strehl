@@ -8,11 +8,19 @@ the camera colour matrix, and that matrix is NOT diagonal. Computed from
 color.rs's own A7C2_XYZ_TO_CAM (my derivation reproduces the crate's asserted
 neutral-response constant 1.0730 to 5e-7):
 
-    R_out = +1.1975*R_cam -0.1250*G_cam -0.0725*B_cam
-    G_out = -0.4530*R_cam +2.2300*G_cam -0.7770*B_cam
+    R_out = +1.636062*R_cam -0.448619*G_cam -0.187443*B_cam
+    G_out = -0.115165*R_cam +1.488971*G_cam -0.373806*B_cam
 
-So output red carries camera green at 10.4 % of its own weight and output green
-carries camera red at 20.3 % of its own weight -- both AT ZERO DISPLACEMENT.
+So output red carries camera green at 27.4 % of its own weight and output green
+carries camera red at 7.7 % of its own weight -- both AT ZERO DISPLACEMENT.
+
+CORRECTED 2026-08-24: this docstring is where the wrong matrix originated. It
+first read +1.1975/-0.1250/-0.0725 with leaks of 10.4 % and 20.3 %, which is
+rownorm(inv(A@S)). color.rs:191-208 computes inv(rownorm(A@S)) -- normalise then
+invert -- and they do not commute. Settled against the crate's own doc comment at
+color.rs:221 by c12_matrixcheck.py. The matrix is NOT applied anywhere in this
+script; it is context for why --srgb is an unfit measurement space, and that
+argument is strengthened, since the green-to-red leak is 27.4 % and not 10.4 %.
 The CLI's own --srgb help says "For looking at, NOT for measuring".
 
 This re-measures on the byte-frozen LINEAR camera-native render, where R is R and

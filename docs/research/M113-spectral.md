@@ -424,3 +424,64 @@ low-contrast condition instead of hoping to find it.
 7. **A control whose sampling saturates has not tested anything.** `s12` swept a
    threshold whose loosest setting already admitted every candidate window; the
    giveaway was a window count that stopped changing.
+
+## What the +/-15 ppm figure actually is
+
+ORCH has retracted a "+/-15 ppm" radial-flatness tolerance and reported it as
+spliced in from `M113-ca.md`. The retraction is right; **the provenance is not,
+and the number is mine.**
+
+It does not appear in `M113-ca.md`, which prints the real per-annulus bootstrap
+sd (`80, 23, 12, 9, 8, 8, 12` ppm, the 80 at r=0.11 being exactly the figure ORCH
+now quotes as correct). It does not appear in this report either. It came from a
+prose line in my chat report -- *"Rival 4 - REFUTED (+/-15 ppm)"* -- and it
+describes a **different quantity** from radial flatness.
+
+`+/-15 ppm` is the largest absolute change in `needed_R` when every stack is
+refitted using only windows in the **common radial band 0.30-0.70 r_max**
+instead of the full field, across all 8 stacks:
+
+| stack | full field | common band | delta |
+| --- | --- | --- | --- |
+| tweezers-cpl | 616.4 | 610.4 | -6.0 |
+| leaf-2-cpl | 674.7 | 673.1 | -1.6 |
+| bee-1-cpl | 536.2 | 533.2 | -3.0 |
+| couch-fibers-cpl | 654.9 | 653.7 | -1.2 |
+| lavendar-cpl | 580.6 | 565.3 | **-15.3** |
+| dry-erase-marker-head-cpl | 542.1 | 554.7 | **+12.6** |
+| bee-2-cpl | 549.4 | 549.4 | -0.0 |
+| bee-3-cpl | 529.9 | 526.9 | -3.0 |
+
+So it is a bound on **radial window-selection bias at n=8** -- the rival-4
+control -- and it is sound for that. It is not a statement about the flatness of
+`eps(r)`, it is not from the n=1 experiment, and it must not be quoted as a
+tolerance on the radial shape. Both quantities are in ppm and both concern
+radius, which is presumably how they merged.
+
+## Further facts
+
+19. **The corpus `camera_to_srgb` error originated in my `c8_linear.py`
+    docstring**, not in ORCH's fold. `inv(rownorm(A@S))` reproduces the crate's
+    own witness at `color.rs:221` (`[-0.115, +1.489, -0.374]`) to **1.94e-4**;
+    the `rownorm(inv(A@S))` form I published misses it by **0.741**. Corrected in
+    `M113-ca.md` and `c8_linear.py`; recomputed by `c12_matrixcheck.py`.
+20. **No measured number of mine consumed that matrix.** It appeared only in
+    prose; every figure was measured on files the crate rendered with its own
+    correct matrix. The sRGB-contamination finding is strengthened: the
+    green-to-red leak is **27.4 %**, not 10.4 %.
+21. **`+/-15 ppm` is the rival-4 common-radial-band bound at n=8**, not a
+    radial-flatness tolerance, and it is not from `M113-ca.md`.
+
+## Further disciplines
+
+8. **A number quoted in a chat report, without the artefact it came from, is a
+   number that will be re-attached to the wrong quantity.** `+/-15 ppm` travelled
+   from a rival-4 window-selection control to a radial-flatness tolerance in one
+   hop, because both were in ppm and both mentioned radius. Cite the artefact.
+9. **When a constant is also computed by the code, the code's own doc comment is
+   an independent witness** -- written to describe behaviour, not derived from
+   either candidate formula, so it can discriminate between them without
+   circularity. It settled this in one script run.
+10. **Two matrix operations that each preserve an invariant can still differ.**
+    Both `rownorm(inv(M))` and `inv(rownorm(M))` produce rows summing to 1, so
+    the obvious sanity check passes on the wrong one.
