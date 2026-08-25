@@ -3,7 +3,7 @@
 **Verdict, in one line: the multi-band merge removes the cut-out rim on both
 polarities, and leaves `couch-fibers-cpl` intact.**
 
-Two things must be true for that sentence to be worth anything, so they are
+Three things must be true for that sentence to be worth anything, so they are
 stated before anything else:
 
 * **It is not blur.** A blurred render has no rim either. The do-no-harm frame,
@@ -15,6 +15,11 @@ stated before anything else:
 * **It is not a framing artefact.** The two arms were checked to share a pixel
   grid exactly (`geometry_check.py`, best integer shift `0, 0`) before any
   conclusion was drawn from a side-by-side.
+* **It is not a develop-path artefact.** Both arms are built from one archived
+  SHA and run back to back from that one build, so they share the demosaic, the
+  tone curve and the colour path exactly. My first comparison did *not* have this
+  property; I caught it and redid all six renders. See "The confound I shipped,
+  and then caught".
 
 ## Look at these
 
@@ -23,18 +28,43 @@ about a defect that is already visible at full frame.
 
 | | full frame (primary) | 1:1 at the largest disagreement |
 |---|---|---|
-| flower-bud (bright rim) | `C:\dev\strehl-out\BUILD-BLEND\sxs-flower-bud-with-background-fern-cpl-FINAL.jpg` | `rim-flower-bud-with-background-fern-cpl-FINAL.jpg` |
-| lavendar (dark rim) | `sxs-lavendar-cpl-FINAL.jpg` | `rim-lavendar-cpl-FINAL.jpg` |
-| couch-fibers (do-no-harm) | `sxs-couch-fibers-cpl-FINAL.jpg` | `rim-couch-fibers-cpl-FINAL.jpg` |
+| flower-bud (bright rim) | `C:\dev\strehl-out\BUILD-BLEND\sxs-flower-bud-with-background-fern-cpl-PAIRED.jpg` | `rim-flower-bud-with-background-fern-cpl-PAIRED.jpg` |
+| lavendar (dark rim) | `sxs-lavendar-cpl-PAIRED.jpg` | `rim-lavendar-cpl-PAIRED.jpg` |
+| couch-fibers (do-no-harm) | `sxs-couch-fibers-cpl-PAIRED.jpg` | `rim-couch-fibers-cpl-PAIRED.jpg` |
 
 All in `C:\dev\strehl-out\BUILD-BLEND\`. Left panel is the shipped pipeline,
 right panel is this merge. Both arms go through the **identical**
 `gallery_view.py` recipe — `tifffile`, assert `uint16`, `>> 8`, Lanczos — so a
 tone difference cannot be an artefact of the viewer.
 
-The `-FINAL` files are the ones to judge. Earlier `sxs-*` and `*-v2` files in the
-same directory are intermediate arms, kept as the record of how the parameters
-were chosen; they are not the result.
+**Judge the `-PAIRED` files.** They supersede the earlier `-FINAL` set, which was
+confounded — see below. Earlier `sxs-*`, `*-v2` and `*-FINAL` files in the same
+directory are intermediate arms kept as the record of how the parameters were
+chosen; they are not the result.
+
+### The confound I shipped, and then caught
+
+The `-FINAL` pair was **not a like-for-like comparison and should not be used.**
+Its control came from the then-current gallery pin `pin-859edac`, but between
+that binary being built and my renderer being built, a sibling agent landed
+`1cacb61 tone: place black and white on luminance, not per channel` — a change to
+`image_out.rs`, which is the develop path my renderer `#[path]`-includes. The
+tone change landed 14:32; my binary was built 15:14. So the two arms were
+developed through **different tone curves**, and every tonal difference I
+reported between them was partly that change rather than my merge.
+
+This is exactly the "builds land mid-run" hazard the brief warned about, and I
+walked into it. The fix, which is what the brief prescribes: `git archive` a
+single SHA to a directory outside the tree, build **both** arms there, and run
+all six renders back to back from those two binaries.
+
+- tree: `C:\dev\strehl-out\BUILD-BLEND\tree-d4b8644\` (from `d4b8644`)
+- control binary sha256 `E1708B9A30423F283B1D99268411B74302517FA25A1AC9AF93523EC38770B449`
+- blend binary sha256 `0A44CADBC0F343699D1812FE553B0B3AA5B73412F08B3D9D2CFDB78E6139416D`
+
+The rim verdict was **unchanged** by this correction, which is the reassuring
+part: a tone curve cannot create or remove a hard-edged mask stain. Two other
+claims of mine did not survive it, and both are corrected below.
 
 ### What the frames show
 
@@ -49,11 +79,23 @@ On **lavendar**, the opposite polarity, the dark rim around the white flower is
 likewise gone, and the mottled hard-edged blotches in the control's background
 are replaced by a smooth gradient.
 
-On **couch-fibers**, the two are indistinguishable at full frame. At 1:1 I can
-still see marginally less high-frequency sparkle in the specular highlights of
-the blend, offset by noticeably less colour fringing on fibre edges.
+On **couch-fibers**, the two are indistinguishable at full frame. At 1:1, in the
+window of *largest low-frequency disagreement* — a crop chosen to be maximally
+unflattering to the blend, not hand-picked to flatter it — fibre edges are
+equally crisp in both, and the blend holds slightly deeper contrast in the dark
+inter-fibre gaps with less colour fringing on the specular highlights.
 
-**I am deliberately not putting a number on that residual softness.** The
+**Correction to my own earlier claim.** In the confounded `-FINAL` round I
+reported "marginally less high-frequency sparkle" on `couch-fibers` and flagged
+a residual softness. **In the matched-tree `-PAIRED` round I cannot reproduce
+it.** The most likely explanation is that it was the tone-curve mismatch:
+per-channel versus luminance black/white placement changes local contrast, and
+lower local contrast reads as softness. I am not claiming the softness is
+definitively gone — I am reporting that the better-controlled comparison does
+not show it, and that my earlier flag rested on a comparison I now know was
+invalid.
+
+**I am still deliberately not putting a number on acuity here.** The
 statistics available for it — gradient energy, high-pass energy — have both
 lied on this project by being satisfied by injected structure, and
 `edge_overshoot` gets pinned by a single specular highlight. A number here would
@@ -181,21 +223,40 @@ full SNR range a real stack contains.
 
 ## Honest numbers
 
-Ryzen 9 9950X3D, 299 frames at 33 MP, four workers, warm warpmap cache. Renders
-made from a binary pinned outside the tree (sha256
-`CA8C1F91FAE1EF294F5A2A85D669DFADBDF93DCB96E5E471B678C502B3A41C59`), because
-builds land mid-run on this shared tree.
+### Timing — and why I now distrust my own first table
 
-| subject | blend fold | blend total | control total |
-|---|---|---|---|
-| flower-bud | 248.4 s | 252.4 s | 208.6 s |
-| lavendar | 205.4 s | 207.4 s | 168.7 s |
-| couch-fibers | 210.7 s | 213.0 s | 185.0 s |
+Ryzen 9 9950X3D, 299 frames at 33 MP, warm warpmap cache. I have two rounds, and
+**they disagree in sign**, so I am reporting both rather than the flattering one.
 
-**This merge is 15–25% slower than the shipped one, and it is doing that on four
-workers against the control's thirteen.** Per-frame cost is 0.69–0.83 s wall at
-four workers. The control is not a like-for-like comparison of algorithmic cost
-and I am not claiming it is.
+Round 1 (confounded `-FINAL`, blend on 4 workers, control a separately-built pin):
+
+| subject | blend total | control total |
+|---|---|---|
+| flower-bud | 252.4 s | 208.6 s |
+| lavendar | 207.4 s | 168.7 s |
+| couch-fibers | 213.0 s | 185.0 s |
+
+Round 2 (matched tree `d4b8644`, both binaries from one build, six renders back
+to back, blend self-limits to **3 workers**, control uses **13**):
+
+| subject | blend total | control total |
+|---|---|---|
+| flower-bud | 163 s | 259 s |
+| lavendar | 141 s | 213 s |
+| couch-fibers | 141 s | 163 s |
+
+Round 1 says the blend is 15–25% *slower*; round 2 says it is 14–35% *faster*,
+on a quarter of the workers. **Both cannot be right, and the honest conclusion is
+that wall-clock timing is not reliably measurable on this machine right now**:
+five sibling agents are building and rendering concurrently, and the load during
+either round is unknown. The same contamination showed up in my memory
+measurements (below).
+
+What I will state with confidence is only the shape: the fold is O(frames) with a
+small constant, the merge self-limits its worker count from a memory budget so it
+runs fewer workers than the control, and it is **not** catastrophically slower —
+it is in the same order. Anyone deciding on cost should re-measure at equal
+worker counts on a quiet machine. I am not claiming a speed win.
 
 Peak working set, measured by sampling the process, against frame count:
 
@@ -236,6 +297,16 @@ structurally different second arm.
 
 Before this goes anywhere near the ship path it needs: photometric normalisation,
 clip and outlier handling, an independent verification pass (in this project's
-doctrine the author does not verify their own work), and a decision about the
-15–25% cost. The residual 1:1 softness on `couch-fibers` should be re-examined by
-someone who did not build this.
+doctrine the author does not verify their own work), and a decision about cost
+that rests on a like-for-like re-measurement at equal worker counts on a quiet
+machine — my two timing rounds disagree in sign and neither should be trusted.
+
+Acuity on `couch-fibers` should be re-examined by someone who did not build this.
+I flagged a residual 1:1 softness in the first round and could not reproduce it
+in the second, better-controlled round; that is the kind of claim that most needs
+an independent eye, precisely because the person who built the thing is the
+person most likely to be relieved when it disappears.
+
+It is also untested on subjects beyond these three. Bees, tweezers and text all
+stress different parts of a merge — specular highlights, hard synthetic edges,
+and fine periodic detail respectively — and none of them are represented here.
