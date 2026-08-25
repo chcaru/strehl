@@ -184,6 +184,20 @@ which lens you were using. A typo is also an error rather than a silent
 no-op, which is the right call. One real bug to know about: with
 `STREHL_ALIGN=0` it does nothing at all and says nothing about it.
 
+**One more thing about that key, found overnight, and it changes when you should
+use it.** The name claims four pieces of gear — body, lens, teleconverter,
+polariser. Your camera records the first three: every one of your 24 stacks says
+`ILCE-7CM2` and `FE 100mm F2.8 Macro GM OSS + 2X Teleconverter`, and the
+teleconverter is even recorded twice, in two independent fields. **But the CPL is
+invisible.** Your `-cpl` stacks and your bare stacks are *byte-identical* in every
+identity field — a filter screwed onto the front of the lens is not something the
+body can see. So the software cannot check the last quarter of that key, and I
+have to tell you what follows from that: **every chroma number I quoted you was
+measured on frames shot through the CPL.** Whether the same correction is right
+for a frame shot *without* it is untested, and — this is the uncomfortable part —
+**not something the tool can detect and warn you about.** Use it on CPL frames,
+where it is evidenced. On bare-lens frames, treat it as a guess and compare.
+
 What you should expect to see: edge chroma down **~29%** right at the fringe,
 **~20%** in the near-edge region, and **~5%** across the whole frame on
 `bee-3-cpl`. Two agents and I looked at 5× crops and independently thought it
