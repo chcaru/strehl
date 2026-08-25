@@ -546,4 +546,91 @@ The ratio is the point, not an embarrassment. Every one of the five was killed b
 instrument built to kill it, before it reached the crate — which is the only reason the
 shipping specification is four lines long and every line of it is measured.
 
+---
+
+## 12. Two subjects, two defects, and a negative control that came free
+
+§10 asserted from a picture that the subject-side wash is an election artifact rather
+than the veiling term. That was **ARGUED**. This section measures it, and the measurement
+separates the two defects cleanly enough to give each one an acceptance test.
+
+### The design
+
+The gallery renders with `--srgb`, and this document has a standing warning that tone
+amplifies the rim. That warning cuts both ways: **a monotone veil with a steep inner
+shoulder reads as a bright line after an S-curve even when no bright band exists in the
+data.** So every visual claim about a "rim" made on a gallery JPEG is unfalsified.
+
+The discriminator is a signed-distance profile of backdrop luminance, measured on the
+**linear** 16-bit render, outward from the silhouette. A monotone rise toward the far
+field means one optical term. An interior local maximum means the merge emitted a ring.
+
+Two subjects were chosen to differ in exactly one property:
+
+- **`coffee-bean`** — one convex silhouette, **smooth**, no fringe. 105 frames.
+- **`flower-bud-alone-cpl`** — dense **trichome fringe** along the entire silhouette.
+  205 frames.
+
+Both rendered from the same pin (`1cacb61`, `git archive` + clean build), same command,
+no tone curve. Instrument: `rimprofile.py`.
+
+### The result
+
+| | darkening at silhouette (0–4 px) | interior ring | ring prominence |
+| --- | --- | --- | --- |
+| `coffee-bean` (smooth) | −21346 DN = **−38.2%** | d = 450 px | +130 DN = **0.23%** |
+| `flower-bud` (fringed) | −6951 DN = **−36.5%** | **d = 18 px** | +2279 DN = **12.0%** |
+
+Two things fall out, and they point in opposite directions.
+
+**1. The veiling term is confirmed on a second subject, at the same relative strength.**
+−38.2% and −36.5% of the far-field backdrop, on subjects that share no morphology, no
+frame count and no scene. A term that lands within 1.7 points on two unrelated captures
+is behaving like optics, which is what §8 assumed and had only measured once. The
+absolute numbers differ by 3x; the **relative** numbers do not.
+
+**2. The bright ring exists, it is real in linear light, and it appears only with a
+fringe.** `coffee-bean`'s only interior peak is 0.23% at 450 px — far-field wobble, not a
+ring, and nowhere near the silhouette. `flower-bud`'s is **12.0% at 18 px**, sitting
+exactly where the "poured liquid" band is visible. **52x apart in relative prominence.**
+
+### Why this matters more than the numbers
+
+The two subjects differ in one property and the artifact tracks it. That converts a
+morphological observation into a **prediction that held**, and it is direct support for
+the mechanism proposed in §10 and routed to the election lane: a box-summed gradient
+focus measure scores edge *density*, not edge *sharpness*, so a defocused fringe of fine
+hairs can outscore a sharply focused one. A smooth silhouette has no fringe to smear,
+therefore no ring. A trichome fringe has nothing but.
+
+It also hands the election lane two things it did not have:
+
+> **A target.** A fix must drive `flower-bud`'s ring prominence from 12.0% toward
+> `coffee-bean`'s 0.23%.
+>
+> **A negative control that costs nothing.** `coffee-bean` has no ring to remove, so any
+> change that moves *its* profile is doing something other than what it claims. This is
+> the placebo the veiling work had to construct deliberately; here it is free.
+
+### The detector was wrong first, and the profile caught it
+
+The first version of the verdict test asked whether the peak exceeded the **far field**.
+It reported **NO BAND on flower-bud** — a profile that visibly turns over twice.
+
+The ring sits *inside* the veil. It is brighter than the trough beside it and still
+darker than the far field, so a far-field comparison **cannot see it by construction**.
+That is this project's own recorded failure mode — an auto-detector built on a guessed
+threshold returns zero and looks exactly like a clean negative — committed here, in a
+script written to avoid it.
+
+It was caught only because the script **prints the whole profile above its verdict**, and
+the printed rows disagreed with the conclusion. The lesson is cheap and general:
+
+> **A verdict line must never be the only output. Print the evidence it was computed
+> from, above it, where a disagreement is visible without re-running anything.**
+
+The corrected test looks for an interior local maximum and scores it by prominence above
+the trough outside it, which is also the quantity that makes a ring visible to the eye.
+
+
 
