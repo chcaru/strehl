@@ -865,3 +865,152 @@ magnification.
 - **Still owed from §9:** the demosaic-before-gather decision (1.50× contrast,
   549 ms/frame) should be taken in the *same* merge rewrite as ORCH's two-pass
   decision, or the merge gets rewritten twice.
+## 11. RETRACTION — my "polygonal election patchwork" reading was wrong
+
+In section 10.5 I described the `bee-1-cpl` leg artefacts as "flat, textureless
+grey polygonal patches with hard straight boundaries -- election patchwork.
+The boundaries are tile-shaped, not anatomy-shaped." **That is retracted.** I
+observed it on crops of 900x700 and 700x600.
+
+ORCH pointed me at corpus fact 1372, which records the identical mistake being
+made and overturned once already: a 520 px crop read as flat-shaded grey with
+hard piecewise-linear boundaries, and enlarging the same region to 1100x900
+"refuted it outright: **there is no polygon.** Every boundary is curved and
+organic and follows the subject silhouette."
+
+Re-cropped at 1400x1100 (`pictures/bee-1-cpl/legs-1400.png`), fact 1372 is right
+and I was wrong. Every boundary is curved and follows the hair silhouettes.
+There are no tiles. **This is now the fourth occasion in this project where a
+smaller view produced a confident wrong answer that a larger view overturned**
+(facts 1359, 1362, 1372, and this). The discipline is not "look at the picture";
+it is "look at a large enough picture", and 900 px is not large enough.
+
+What is actually there, on `bee-1-cpl` and `bee-3-cpl` alike, is **flat pale
+ghost copies of the subject's own features** -- hair-shaped and segment-shaped
+lozenges -- pasted into the defocused background, displaced from their parents
+and with soft curved boundaries. This is one artefact with three names in this
+project: BUILD-RENDER's "outline ghosts", the corpus's "patchwork", and my own
+retracted "polygons".
+
+**And the flat background is not crazy paving.** Choosing the flattest 1100 px
+window of `bee-3-cpl` by a rule that consults only the reference arm
+(`flat.py`), the background at 100% is a **smooth gradient** with a handful of
+soft blob ghosts in it. There are no visible brightness steps between flat
+regions. Corpus fact 1682's `Q` bound proves the merge manufactures structure
+and I do not dispute it -- but the structure's visual character is **localised
+ghost copies, not crazy paving**, and the corpus's description should be
+corrected.
+
+## 12. `--photometric` does not fix it — hypothesis dead, cheaply
+
+ORCH's proposal: the gate averages 166.8 of 299 frames per pixel (fact 1685) and
+per-frame photometric drift is 0.91% peak-to-peak, so neighbouring regions
+averaging different subsets land on different means and step visibly. The cure
+(`photometric.rs`) is written and defaults to `Off`, and had only ever been
+judged on statistics.
+
+Six renders, `bee-1-cpl` and `bee-3-cpl` x {off, on, auto}, back to back from one
+commissioned pin at `b001f22`, all `--linear-srgb` with the viewing curve applied
+afterwards **identically** across arms -- because photometric correction changes
+brightness and a per-arm `--auto-exposure` would have normalised away the very
+difference under test.
+
+| | mean level shift | spatial residual | flat-crop SD | flat-crop lapRMS |
+|---|---|---|---|---|
+| `bee-1-cpl` off→on | +0.016% | 2.59% | 0.063868 → 0.063670 | 4.421e-3 → **4.681e-3** |
+| `bee-3-cpl` off→on | +0.737% | 3.47% | 0.009382 → **0.010686** | 1.801e-3 → 1.766e-3 |
+
+`auto` is **byte-identical to `off`** on `bee-1-cpl` (MD5 `398C5BCA…`), so Auto
+decides OFF there and there are really two arms, not three.
+
+**Verdict: dead.** The correction is not inert -- it restructures the image by
+2.6-3.5% of mean level, far more than the 0.016-0.74% global shift -- but it does
+not touch the ghosts, which are visually unchanged. And on `bee-3-cpl` the flat
+background's SD gets **14% WORSE**, independently reproducing corpus fact 1678's
+"6.4% worse on the low-drift stack" on a different metric. M122's KEEP-OFF
+verdict survives contact with a photograph.
+
+The mechanism fails because the artefact is not a brightness step between
+subsets. It is a **geometric** mis-selection: the merge is electing, for a
+background pixel, a frame in which a defocused foreground feature covered that
+pixel. No photometric correction can fix a wrong-content choice.
+
+## 13. Deconvolution, round 2 — the target is real, the noise calibration is not
+
+ORCH is right that section 4's negative was too narrow. That arm set `H` to the
+**resampling kernel** MTF, which is nearly perfect, so there was nothing to
+invert. The optics are a different matter: aperture-independent aberration is
+**60.1% of the blur variance**, and at the merged image's measured 35.69 um rise
+(sigma = 2.72 px on the 5.12 um full-res grid) the modelled MTF is **0.232 at
+f=0.10 and 0.037 at f=0.15 c/px**. There is real contrast to buy back.
+
+**Attempt 1 — scalar noise SD. Catastrophic, and I looked.** Laplacian-MAD gives
+sigma = 8.45e-5 on `bee-1-cpl`, the Wiener denominator barely throttles, and the
+filter runs to **29.4x peak gain, 23.6x at f=0.15**. The result
+(`pictures/deconv/legs-ringing.png`) is destroyed -- covered in ring and worm
+artefacts. **A high-pass energy metric would have scored this as a large
+sharpness win.** It is the exact failure corpus fact 1359 warns about, and the
+only reason it did not become a reported success is that the standing rule made
+me open the file.
+
+**Why it ran away.** The Laplacian-MAD estimator assumes **white** noise. The
+noise in a merged frame is strongly **correlated** -- it is an average of ~167
+frames resampled through a Catmull-Rom kernel, both of which suppress high
+frequency. Measured, by fitting the image's own power spectrum above f=0.28
+where the optics guarantee no signal survives, the noise spectral exponent is
+**-3.53** on `bee-1-cpl` and **-1.52** on `couch-fibers-cpl`. White noise would
+be **0.00**. So a scalar sigma taken from a high-pass operator under-reports the
+noise at exactly the mid frequencies the filter amplifies.
+
+**Attempt 2 — measured noise power spectrum. Over-corrects.** Replacing the
+scalar with the fitted spectrum removes the runaway but replaces it with the
+opposite failure: peak gain falls to **0.70x on `bee-1-cpl`** -- the filter now
+attenuates. Extrapolating a slope of -3.53 from f=0.28 down to f=0.05 inflates
+the low-frequency noise estimate by roughly 470x, and the power-law fit is not
+valid that far outside the band it was fitted in.
+
+**So the two calibrations bracket the answer uselessly: 29.4x and 0.70x.** I am
+not going to pick a number between them and call it calibrated.
+
+**What the picture does support.** Throttled empirically to **2.29x** peak gain,
+`bee-1-cpl` shows genuinely crisper hairs with the worms gone
+(`pictures/deconv/legs-2x.png`) -- but new **dark rims appear at the
+high-contrast leg silhouettes**, and the veil boundaries are **hardened**.
+Deconvolution sharpens the artefact as readily as the detail, which is an
+argument for fixing the ghosts before restoring anything.
+
+**Do-no-harm guard: PASS.** On `couch-fibers-cpl` the noise-spectrum calibration
+yields 2.68x gain and the fibres at 100% are crisp with **no ringing and no
+worms** (`pictures/deconv/guard-couch-{base,ns}.png`). Notably the guard also
+passes at the attempt-1 settings, but for an instructive reason: that subject's
+measured noise is **7.3x higher**, so the same filter collapses to gain 1.0001 --
+the identity. The safety property ORCH predicted does hold; it is the
+*calibration*, not the *guard*, that is unresolved.
+
+**The correct next instrument, costed.** Stop inferring the noise spectrum from
+the signal. Measure it: render two merges from **disjoint halves** of the frame
+set and difference them. The difference contains only noise, at every frequency,
+with no extrapolation and no dead-band assumption. Two extra renders per subject
+at ~290 s each. This is the experiment that would settle it, and it is the one I
+would run next.
+
+## 14. The optics floor, as capture advice for the owner
+
+Passing these up as requested; they are measurements, not opinions.
+
+- On a **printed ruler** (target RU1) the system's 10-90 edge rise is **30.44 um**
+  against a **14.11 um** diffraction limit at f/5.6 -- the rig is **2.16x**
+  worse than diffraction-limited. This independently matches M88's 2.25x.
+- **Stopping down does not help.** The measured f/11 : f/5.6 edge-width ratio is
+  **1.025x**, where diffraction alone predicts **1.964x**. A system whose blur
+  is unchanged by aperture is aberration-limited, not diffraction-limited.
+- Apportioned by variance, **76.6%** of the total blur is optics, of which
+  **60.1% is the aperture-independent part** and only 16.5% is diffraction.
+
+The practical readings: closing the aperture further is spending light and
+diffraction for nothing, so the sharpest aperture on this rig is the widest one
+that still gives the depth step needed. And since the aberration term is
+**2.16x diffraction and does not respond to aperture**, the 2x teleconverter is
+the first thing to test by removal -- a bare-lens bracket of target RU1 at the
+same magnification would separate the converter's contribution from the prime's
+in a single afternoon. I would want that measurement before advising a purchase.
