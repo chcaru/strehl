@@ -1,0 +1,196 @@
+M116-promotion — CAMPAIGN 5 ADDENDUM (patchwork, replacement metric)
+=====================================================================
+Written after prereg-patchwork.txt's G1 FAILED and before any number from
+the replacement metric exists. prereg-patchwork.txt is NOT amended: its
+verdict stands as written and is reported as a failure. This file registers a
+SECOND, separate instrument, with its own bars.
+
+
+0. WHY THERE IS AN ADDENDUM AT ALL
+----------------------------------
+G1 was a plant: excess Laplacian kurtosis K had to read at least 2.0x higher
+on the gate-0 arm M0, where the patchwork is known largest, than on the
+shipped arm A0. Measured on bee-3-cpl: K(M0) = 2.911, K(A0) = 26.660. The
+bar required >= 53.32. G1 FAILED, and it failed with the sign reversed.
+
+The crop adjudicates the failure and it is unambiguous. images-patch/
+bee-3-cpl__roiG1__A0-A1-A2-M0.png shows M0 as textbook patchwork -- irregular
+flat polygons with hard brightness steps, their boundaries drawn explicitly in
+the Laplacian panel -- while A0 in the same ROI is smooth. So the PLANT IS
+VALID AND THE METRIC CANNOT READ IT.
+
+Diagnosis. Excess kurtosis measures how heavy the tails are RELATIVE TO the
+distribution's own scale, which is what made it immune to the denoising
+confound. That same property makes it blind here. At gate 0 the polygons fill
+the ROI: every pixel is inside a patch or on a boundary, so the Laplacian is
+broadly distributed and the tails are not heavy relative to that width. K
+stays low while lap_sd goes to 467.24 against A0's 32.78, a factor of 14 in
+the correct direction. Kurtosis reads SPARSE outliers. The patchwork is DENSE.
+
+Second, independent defect in the same run: K(A0) = 26.660 was not reading
+patchwork at all. The registered ROI selector took the lowest coarse-gradient
+decile, which on this subject is the pure white out-of-focus background, and
+that ROI contains one small localised blob at its right edge. The blob is a
+sparse outlier, so it alone produced the heavy tail. The metric's headline
+number on the shipped arm was a dust-scale feature.
+
+Both defects were caught by the registered plant. Neither would have been
+caught by the primary comparison, which read K(A2)/K(A0) = 0.0013 and would
+have been reported as a spectacular win for the soft gate. That number is
+hereby VOID.
+
+
+1. WHAT CHANGED IN MY UNDERSTANDING OF WHERE THE ARTEFACT IS
+------------------------------------------------------------
+Selecting the ROI as "flattest" was wrong, and the n_eff map says why. On
+bee-3-cpl the median n_eff over the frame is 36.00, but in the pure white
+background it is 99.00: the shipped hard gate already admits essentially every
+frame there. Where every frame is admitted the elected winner is irrelevant,
+so a random election CANNOT propagate to the output. The flattest region is
+therefore the one region in the frame where the artefact is structurally
+impossible.
+
+The artefact instead lives in MID-TONE, PARTIALLY STRUCTURED DEFOCUSED
+regions -- defocused limbs and wings -- which carry enough local contrast to
+narrow the gate but not enough real detail for the election to mean anything.
+13.39 % of the frame has n_eff < 2.
+
+Consequence for ORCH's hypothesis, which I will report either way: its first
+half is confirmed and its second half is refuted where it was aimed. The
+election IS a random patchwork in the flat background -- directly visible in
+maps/bee-3-cpl__A0-index.tif -- but it does not reach the shipped output
+there, because n_eff = 99.
+
+
+2. ROI SELECTION, AND ITS HONEST STATUS
+---------------------------------------
+Two named ROIs, fixed here by coordinate, both on bee-3-cpl:
+
+  ROI-W  y=256  x=768   384x384   defocused wing, narrow gate
+  ROI-N  y=1024 x=2560  256x256   defocused, median n_eff(A0) = 2.00
+
+DISCLOSURE, stated before results: these ROIs are NOT blind to the artefact. I
+found them by eye, from the n_eff map and a contact sheet, and I have already
+seen an A0/A2/M0 crop of ROI-W. They ARE blind to the replacement metric,
+which did not exist when they were chosen. Anyone reading a per-ROI number
+should treat it as a case study, not as evidence of prevalence.
+
+Prevalence is carried by a third, mechanical set, chosen with no eye at all:
+
+  ROI-AUTO  every non-overlapping 256x256 tile whose coarse contrast is below
+            the frame median AND whose median n_eff(A0) is below 10.
+
+ROI-AUTO's selection depends only on A0 and on the n_eff map. Both are
+properties of the untreated arm, so the selection cannot favour the treatment.
+The headline claim of this addendum must rest on ROI-AUTO. If ROI-AUTO
+disagrees with ROI-W, ROI-AUTO wins and I say so.
+
+
+3. THE REPLACEMENT METRIC
+-------------------------
+The artefact is COHERENT CONTOUR STRUCTURE in a region whose scene content
+cannot supply it. The confound is that the soft gate averages more frames and
+therefore denoises, so any plain magnitude metric -- lap_sd, lap p99.5 --
+falls under the treatment whether or not a single contour is removed.
+
+  F4  =  fraction of coarse-scale gradient-magnitude pixels that exceed
+         4.0x the MEDIAN gradient magnitude of the same ROI.
+
+  Coarse scale = 4x box bin before the gradient, which removes per-pixel noise
+  while preserving contours several binned pixels long.
+
+F4 is a ratio of the ROI's own gradient distribution to itself, so multiplying
+every gradient by a constant leaves it unchanged. Uniform denoising is
+approximately such a multiplication.
+
+F4's residual bias is stated in advance and it runs AGAINST the soft gate.
+Removing noise lowers the median more than it lowers a contour, so the
+threshold falls and F4 tends to RISE on a denoised field. A soft-gate arm that
+still wins on F4 wins despite the instrument leaning the other way.
+
+Secondary, reported alongside and never alone:
+  L995 = 99.5th percentile of |Laplacian| at full resolution. Magnitude-based
+         and therefore confounded by denoising BY CONSTRUCTION. It is reported
+         only so the confound's size can be seen, never as evidence.
+
+
+4. BARS. Registered now, decided before any F4 value exists.
+------------------------------------------------------------
+H1  PLANT. DECIDING. The metric must read the artefact where the crop proves
+    it is largest.
+      PASS = F4(M0) >= 1.5 * F4(A0) on ROI-W and on ROI-N.
+    If H1 fails, the replacement metric is dead too, campaign 5 reports "no
+    working instrument", and NO soft-gate recommendation is made. I will not
+    write a third prereg for this artefact tonight.
+
+H2  NULL. F4(N1) - F4(A0) == 0.0 exactly, every ROI. Exact, not approximate:
+    N1 is a byte-identical re-render.
+
+H3  PLACEBO. F4(P1) - F4(A0) == 0.0 exactly, every ROI. P1 differs from A0
+    only in its private cache directory.
+
+H4  TRAP. F4(T2) - F4(A0) == 0.0 exactly, every ROI. STREHL_SOFT_GATE="0" is
+    read at merge.rs:483 as Ok(None), the shipped hard gate, so T2 is a
+    source-pinned no-op. A metric that moves here is measuring my harness.
+    Note also that STREHL_SOFT_GATE=1 would PANIC (merge.rs:684-687), so a
+    truthy value could never have served as the OFF arm.
+
+H5  BLUR CONTROL. DECIDING, and this is the bar the whole addendum turns on.
+    The soft gate must beat what pure blur buys for free. Take A0's ROI and
+    Gaussian-blur it at sigma bisected so that its L995 MATCHES A2's L995 to
+    within 1 %. Blur creates no contours and removes no election error, so any
+    F4 improvement it shows is the confound, priced.
+      PASS = the soft gate's F4 improvement exceeds the blur's by at least 2x:
+             (F4(A0) - F4(A2)) >= 2.0 * (F4(A0) - F4(blur_matched(A0)))
+    If blur reproduces most of A2's F4 gain, the soft gate is a denoiser
+    wearing a fix's clothes and I report it as such. This mirrors the test
+    M87 ran on itself for the halo, which is the strongest form of this
+    control in the corpus.
+
+H6  PRIMARY. F4(A2) <= 0.90 * F4(A0), median over ROI-AUTO.
+
+H7  COST. Subject detail must not be averaged away. D = median over the
+    detail ROI of the log10 ratio of high-band energy, same instrument as
+    CB6/CD7 in campaign 4.
+      PASS = D(A2) >= -0.02 dex.
+    A2 already measured D_worst = -0.01868 dex on bee under the previous
+    scorer, so this bar is live and close: it can fail.
+
+H8  PHOTOMETRIC HALF. ORCH's mechanism blames frame-to-frame background
+    brightness drift for the steps. A1 normalises exactly that and nothing
+    else. If the steps are drift, A1 alone should reduce F4. Registered
+    prediction, no pass/fail attached: I expect A1 to move F4 much less than
+    A2, because the contours in the M0 crop are boundaries between DIFFERENT
+    SCENE CONTENT, not between different exposures of the same content.
+
+H9  ELECTION INVARIANCE. The soft gate acts in pass two only; it does not
+    change which frame wins pass one. So the election polygon count in the
+    ROI must be unchanged between A0 and A2. If it moves, my reading of
+    merge.rs is wrong and every mechanistic claim here is void.
+
+
+5. PROMOTION RULE
+-----------------
+Recommend promoting STREHL_SOFT_GATE only if H1 and H5 both PASS, H2 H3 H4
+are all exactly zero, and H6 and H7 both PASS. Any other combination is
+reported as a measurement, not a recommendation.
+
+H1 and H5 are admission gates on the INSTRUMENT, evaluated on the ROIs named
+in section 2 -- not universal quantifiers over subjects. This is the D-t
+repair applied prospectively: campaign 4's CD1 was registered as "on every
+subject scored" and became arithmetically unsatisfiable the moment two
+subjects failed. I am not repeating that.
+
+
+6. WHAT WOULD MAKE ME WRONG
+---------------------------
+- If F4 moves on N1, P1 or T2 at all, everything below H4 is harness noise.
+- If blur matched on L995 reproduces most of A2's F4 gain, the soft gate is
+  not fixing the election, it is smoothing the output, and the honest
+  recommendation is to say so and leave it off.
+- If the election polygon count changes between A0 and A2, I have misread
+  merge.rs and the mechanism section must be withdrawn.
+- If ROI-AUTO shows no effect while ROI-W does, the artefact is rare and a
+  default-on recommendation is not supported by two hand-found crops.
+- If D(A2) < -0.02 dex the soft gate is buying background smoothness with
+  subject detail, which is the trade the owner would notice first.
