@@ -1,0 +1,410 @@
+#!/usr/bin/env python3
+"""Audit every runtime switch in the crates, and refuse to let a new one hide.
+
+# Why this exists
+
+On 2026-08-25 three separate lanes discovered, within two hours of each other,
+that a measured and tested subsystem was not reachable in the product's default
+path:
+
+  * lateral-CA correction (`STREHL_FIX_CA`) was unset in `gallery.ps1`, in
+    `render_all.ps1`, and in **every render the owner had ever seen**. Commit
+    b914f31: "The algorithm was finished months ago; nothing turned it on."
+  * the gear-aware optical profile (`profile_for_capture_env`, 283ccf4) was
+    written, tested, and called by nothing.
+  * the multi-band merge (d4b8644) removed the cut-out rim on both polarities
+    and was "not wired into the CLI".
+
+The owner's verdict on the resulting gallery was "horrible" and "entirely
+unusable". He was looking at a binary running with its best measured machinery
+switched off. None of those three defects was an algorithm defect, none was
+visible in any test, and all three were invisible in the source unless you went
+looking for the absence of a caller.
+
+A prose note saying "remember to wire things up" would have rotted within a
+week. This is a ratchet instead: every switch must be declared here with its
+intended default, and an undeclared switch is a hard failure. A new feature
+cannot be added behind a dark switch without this script noticing.
+
+# What it does NOT do
+
+It does not prove a switch is honoured. Static analysis cannot tell you that,
+and this script does not pretend to: `STATUS_WIRED` below is a *declaration of
+intent by a human*, cross-checked by hand against the call sites named in
+`evidence`. The only instrument that can prove a switch reaches output pixels is
+rendering the same stack two ways and diffing the result, and that belongs in a
+verifier, not here.
+
+So this script answers exactly one question — "is there a switch nobody has
+thought about?" — and it answers it exhaustively.
+
+# The summary contract
+
+Every switch found is counted into exactly one outcome, and the outcomes sum to
+the total found. A switch that was skipped must never be able to read as a
+switch that passed. See the note in `main` for why that rule is written down.
+
+Usage:  python scripts/check-defaults.py          (from the repo root)
+Exit:   0 = every switch accounted for, no quality switch dark
+        1 = an undeclared switch, or a quality switch defaulting off
+"""
+
+from __future__ import annotations
+
+import re
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+# --------------------------------------------------------------------------
+# The declared registry.
+#
+# KIND:
+#   "diagnostic" - writes a debug artifact or restricts the run for diagnosis.
+#                  Default-off is CORRECT; these must never be on in a product
+#                  render.
+#   "quality"    - changes output pixels in a way that was measured to be
+#                  better. Default-off is a DEFECT: it is the exact class of
+#                  bug this script exists to catch.
+#   "control"    - selects between arms for a controlled comparison, or is
+#                  infrastructure (cache location, test gating). Default-off is
+#                  correct, but the reason must be stated.
+#
+# DEFAULT: what the product does when the variable is unset, as a human read it
+#          from the code cited in `evidence`. Not inferred by this script.
+# --------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class Declared:
+    kind: str
+    default: str
+    evidence: str
+    note: str
+
+
+REGISTRY: dict[str, Declared] = {
+    # ---------------- quality ----------------
+    "STREHL_FIX_CA": Declared(
+        kind="quality",
+        default="off",
+        evidence="optics.rs:470 (CA_ENV); main.rs:183-185,619 (--fix-ca)",
+        note=(
+            "Lateral-CA correction. Removes 61-67% of corner colour fringing "
+            "(b914f31, R^2=0.9969) and 0.363px -> 0.059px of blue displacement "
+            "(283ccf4). THE ORIGINAL DARK FEATURE. Being made default-on behind "
+            "the EXIF gear guard by BUILD-RENDER."
+        ),
+    ),
+    "STREHL_PHOTOMETRIC": Declared(
+        kind="quality",
+        default="auto",
+        evidence="merge_cmd.rs:1922; main.rs:325-354,648-650 (--photometric)",
+        note=(
+            "Per-frame affine photometric normalisation. Three-valued "
+            "off|on|auto; the flag wins over the env var and 'neither can mean "
+            "ON by accident'. Verify the resolved default is genuinely 'auto' "
+            "and not None-means-off."
+        ),
+    ),
+    "STREHL_EDGE_AWARE": Declared(
+        kind="quality",
+        default="on",
+        evidence="merge_cmd.rs:1241; GUIDE_RADIUS at merge_cmd.rs:1256",
+        note=(
+            "Adaptive-radius edge handling. Reported default-ON at pin-859edac. "
+            "The shipped merge's winner field has its depth step displaced "
+            "outward by exactly one window radius, and that displacement IS the "
+            "halo."
+        ),
+    ),
+    "STREHL_EDGE_TAU": Declared(
+        kind="quality",
+        default="built-in",
+        evidence="merge_cmd.rs:1243",
+        note="Depth-step tolerance override, in frames. Unset uses edge_tau().",
+    ),
+    "STREHL_EDGE_CONF": Declared(
+        kind="quality",
+        default="2.0",
+        evidence="merge_cmd.rs:1246",
+        note="Confidence veto, in multiples of the plane's low-percentile guide response.",
+    ),
+    "STREHL_EDGE_FEATHER": Declared(
+        kind="quality",
+        default="built-in",
+        evidence="edgeaware.rs:779",
+        note="Feather width for the edge-aware support.",
+    ),
+    "STREHL_FIX_HALO": Declared(
+        kind="quality",
+        default="off",
+        evidence="merge_cmd/halo.rs:69 (FIX_ENV), :71 (DELTA_ENV)",
+        note=(
+            "Veiling-glare subtraction. DARK. Two instrument defects reported "
+            "and unresolved: report()/report_statistics() at merge_cmd.rs:2083-2085 "
+            "run BEFORE the halo pass at :2088, which would make every A/B on "
+            "printed statistics null by construction; and '=1' without --out is "
+            "a silent no-op that still prints an ON banner. BUILD-HALO owns both."
+        ),
+    ),
+    "STREHL_WINDOW_RADIUS": Declared(
+        kind="quality",
+        default="13",
+        evidence="focus.rs:101 (WINDOW_RADIUS_ENV)",
+        note="Focus-measure window radius. Unset uses the shipped WINDOW_RADIUS=13.",
+    ),
+    # ---------------- control ----------------
+    "STREHL_SOFT_GATE": Declared(
+        kind="control",
+        default="off",
+        evidence="merge.rs:457-465 (SOFT_GATE_ENV)",
+        note=(
+            "DELIBERATE. merge.rs states it: 'None is the shipped top-hat Gate "
+            "and must remain the default. Every byte-freeze in the corpus is "
+            "taken against it; making a soft kernel default would break the "
+            "entire regression net in one commit.' Selects kernel SHAPE over an "
+            "unchanged calibrated z-axis, which is what makes M111 15.7 a "
+            "controlled comparison."
+        ),
+    ),
+    "STREHL_ROBUST_ELECTION": Declared(
+        kind="control",
+        default="off",
+        evidence="merge.rs:633 (ROBUST_ENV); arm_from_setting at :635",
+        note=(
+            "Four-valued: off | soft | hard | ungated, and an unknown key is a "
+            "hard error, not off - 'a typo that disables a gate you believe is "
+            "running looks exactly like the gate doing nothing.' 'ungated' runs "
+            "the whole ring and declines only to let weight reach the argmax, "
+            "which is the control separating 'the gate changed the picture' from "
+            "'the new plumbing changed the picture'."
+        ),
+    ),
+    "STREHL_ALIGN": Declared(
+        kind="control",
+        default="off",
+        evidence="align_cmd.rs:928 (ALIGN_ENV)",
+        note="Selects the alignment arm.",
+    ),
+    "STREHL_SMOOTH": Declared(
+        kind="control",
+        default="built-in",
+        evidence="align_cmd.rs:585",
+        note="Warp-field smoothness lambda override.",
+    ),
+    "STREHL_SMOOTH_HUBER": Declared(
+        kind="control",
+        default="built-in",
+        evidence="align_cmd.rs:603",
+        note="Huber threshold, in pixels, for the smoothness term.",
+    ),
+    "STREHL_CACHE_DIR": Declared(
+        kind="control",
+        default="platform default",
+        evidence="align_cmd.rs:1058",
+        note="Alignment sidecar cache location. Infrastructure, not quality.",
+    ),
+    "STREHL_CAPTURES": Declared(
+        kind="control",
+        default="unset",
+        evidence="tests/byte-freeze.rs:656",
+        note="Points the byte-freeze net at the corpus. Test infrastructure.",
+    ),
+    "STREHL_FREEZE_REQUIRE": Declared(
+        kind="control",
+        default="unset",
+        evidence="tests/byte-freeze.rs:717",
+        note=(
+            "Forces the byte-freeze net to fail rather than skip when captures "
+            "are absent. Unset means a missing corpus SKIPS - so a green "
+            "byte-freeze run does not by itself mean the net ran."
+        ),
+    ),
+    # ---------------- diagnostic ----------------
+    "STREHL_ONLY_FRAME": Declared(
+        kind="diagnostic",
+        default="off",
+        evidence="merge_cmd.rs:1258 (ONLY_FRAME_ENV)",
+        note=(
+            "Renders one frame with no election. TRAP: it changes the digest, so "
+            "the alignment sidecar is rejected and alignment re-solves."
+        ),
+    ),
+    "STREHL_DUMP_ELECTION": Declared(
+        kind="diagnostic",
+        default="off",
+        evidence="merge_cmd.rs:1839 (ELECTION_ENV)",
+        note=(
+            "Dumps the pass-one winner field. The elected frame index IS a depth "
+            "ordering, which is what BUILD-HALO's depth-coherence silhouette is "
+            "built on (017e7c6). Also available as --election-map."
+        ),
+    ),
+    "STREHL_DUMP_NEFF": Declared(
+        kind="diagnostic",
+        default="off",
+        evidence="merge_cmd.rs:1919 (NEFF_ENV)",
+        note="Dumps the n_eff map. Env twin of a flag.",
+    ),
+    "STREHL_DUMP_MERGE_STATE": Declared(
+        kind="diagnostic",
+        default="off",
+        evidence="merge_cmd/dump.rs:42 (DUMP_ENV)",
+        note="Dumps merge internals.",
+    ),
+    "STREHL_BIMODAL_DUMP": Declared(
+        kind="diagnostic",
+        default="off",
+        evidence="merge_cmd.rs:1443 (BIMODAL_DUMP_ENV)",
+        note="Dumps the through-focus bimodality statistic.",
+    ),
+    "STREHL_WARPMAP": Declared(
+        kind="diagnostic",
+        default="off",
+        evidence="merge_cmd.rs:1773 (WARPMAP_ENV)",
+        note="Dumps the per-frame warp field.",
+    ),
+    "STREHL_FIX_HALO_DELTA": Declared(
+        kind="diagnostic",
+        default="off",
+        evidence="merge_cmd/halo.rs:71 (DELTA_ENV)",
+        note="Writes the halo correction's delta image, for inspection.",
+    ),
+}
+
+# Matches a STREHL_* literal anywhere in the crates. Deliberately broad: the
+# point is to find switches nobody declared, so a narrow pattern that only
+# matched the tidy `pub const X_ENV` form would miss exactly the ad-hoc
+# `std::env::var("STREHL_SMOOTH")` cases that are most likely to be forgotten.
+SWITCH_RE = re.compile(r'"(STREHL_[A-Z0-9_]+)"')
+
+
+def find_switches(crates: Path) -> dict[str, list[str]]:
+    """Every STREHL_* literal in the crates, mapped to where it appears."""
+    found: dict[str, list[str]] = {}
+    for rs in sorted(crates.rglob("*.rs")):
+        try:
+            text = rs.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            print(f"  ! could not decode {rs}, skipping", file=sys.stderr)
+            continue
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            for name in SWITCH_RE.findall(line):
+                found.setdefault(name, []).append(f"{rs.name}:{lineno}")
+    return found
+
+
+def main() -> int:
+    root = Path(__file__).resolve().parent.parent
+    crates = root / "crates"
+    if not crates.is_dir():
+        print(f"FAIL: no crates/ under {root}", file=sys.stderr)
+        return 1
+
+    found = find_switches(crates)
+
+    undeclared = sorted(set(found) - set(REGISTRY))
+    stale = sorted(set(REGISTRY) - set(found))
+    known = sorted(set(found) & set(REGISTRY))
+
+    quality_dark = [
+        n for n in known if REGISTRY[n].kind == "quality" and REGISTRY[n].default == "off"
+    ]
+    quality_on = [
+        n for n in known if REGISTRY[n].kind == "quality" and REGISTRY[n].default != "off"
+    ]
+    control = [n for n in known if REGISTRY[n].kind == "control"]
+    diagnostic = [n for n in known if REGISTRY[n].kind == "diagnostic"]
+
+    # ---- evidence first, verdict last. -----------------------------------
+    # A verdict line must never be a script's only output. An earlier detector
+    # on this project returned a confident false negative that was caught ONLY
+    # because it printed its rows above the verdict; a wrong conclusion has to
+    # be visible without a re-run.
+    print("=" * 74)
+    print("RUNTIME SWITCH AUDIT")
+    print("=" * 74)
+
+    if quality_dark:
+        print("\n--- QUALITY SWITCHES DEFAULTING OFF (the defect class) ---")
+        for n in quality_dark:
+            d = REGISTRY[n]
+            print(f"  {n}")
+            print(f"      default : {d.default}")
+            print(f"      code    : {d.evidence}")
+            print(f"      seen at : {', '.join(found[n])}")
+            print(f"      {d.note}")
+
+    if quality_on:
+        print("\n--- QUALITY SWITCHES REACHABLE BY DEFAULT ---")
+        for n in quality_on:
+            print(f"  {n:28s} default={REGISTRY[n].default:16s} {REGISTRY[n].evidence}")
+
+    if control:
+        print("\n--- CONTROL / INFRASTRUCTURE (default-off is correct) ---")
+        for n in control:
+            print(f"  {n:28s} default={REGISTRY[n].default:16s} {REGISTRY[n].evidence}")
+
+    if diagnostic:
+        print("\n--- DIAGNOSTIC (default-off is required) ---")
+        for n in diagnostic:
+            print(f"  {n:28s} {REGISTRY[n].evidence}")
+
+    if undeclared:
+        print("\n--- UNDECLARED (nobody has thought about these) ---")
+        for n in undeclared:
+            print(f"  {n}")
+            print(f"      seen at : {', '.join(found[n])}")
+
+    if stale:
+        print("\n--- DECLARED BUT NO LONGER IN THE CODE ---")
+        for n in stale:
+            print(f"  {n:28s} {REGISTRY[n].evidence}")
+
+    # ---- the partition. --------------------------------------------------
+    # Every switch found lands in exactly one bucket and the buckets sum to the
+    # total. A count that does not move is the same glyph whether nothing was
+    # wrong or nothing was examined, so a skipped switch must never be able to
+    # read as a passed one.
+    total = len(found)
+    partition = len(quality_dark) + len(quality_on) + len(control) + len(diagnostic) + len(undeclared)
+
+    print("\n" + "=" * 74)
+    print(f"  quality, dark (DEFECT)     {len(quality_dark):3d}")
+    print(f"  quality, reachable         {len(quality_on):3d}")
+    print(f"  control / infrastructure   {len(control):3d}")
+    print(f"  diagnostic                 {len(diagnostic):3d}")
+    print(f"  undeclared (FAIL)          {len(undeclared):3d}")
+    print(f"  {'-' * 40}")
+    print(f"  partition sums to          {partition:3d}")
+    print(f"  switches found in crates/  {total:3d}")
+    print(f"  declared but absent        {len(stale):3d}  (not counted above)")
+
+    if partition != total:
+        print("\nFAIL: the partition does not sum to the total found.")
+        print("      This script's own bookkeeping is broken; fix it before")
+        print("      believing any other line it printed.")
+        return 1
+
+    rc = 0
+    if undeclared:
+        print(f"\nFAIL: {len(undeclared)} switch(es) are not declared in REGISTRY.")
+        print("      Add each one with its kind, its default and the code that")
+        print("      proves the default, then re-run. A switch nobody has")
+        print("      declared is a switch nobody has decided the default for,")
+        print("      and that is how three measured fixes shipped turned off.")
+        rc = 1
+    if quality_dark:
+        print(f"\nFAIL: {len(quality_dark)} quality switch(es) default to OFF.")
+        print("      Each one is a measured improvement the product does not")
+        print("      apply. Either wire it on, or change its kind to 'control'")
+        print("      and state in `note` why off is the right default.")
+        rc = 1
+    if rc == 0:
+        print("\nPASS: every switch accounted for, no quality switch dark.")
+    return rc
+
+
+if __name__ == "__main__":
+    sys.exit(main())

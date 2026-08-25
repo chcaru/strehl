@@ -2400,6 +2400,21 @@ empirical leg on either side — it is arithmetic against arithmetic.
   so both variables are currently held fixed everywhere.
 - **Gives the capture advisor its first real recommendation to make**, with a
   measured basis rather than a modelled one.
+- **ADDED 2026-08-25 by the orchestrator, on behalf of BUILD-CHROMA: it is the
+  only capture that can test the optical profile's gear guard.** `optics.rs`
+  now selects the lateral-CA profile by matching the capture's EXIF
+  `body_model` (`ILCE-7CM2`) and `lens_type3` (`33094`) and returns a
+  three-valued `Match` / `Mismatch` / `Unknown`, so that a correction measured
+  on one rig is never silently applied to another. Because **every stack in the
+  corpus is the same body, lens and converter, the guard has never once
+  declined a real file.** Three synthetic negatives cover the *matcher*; the
+  *parse* is untested — nobody knows whether a real bare-lens ARW yields
+  `Some(32893)` or `None`, and `None` must reach `Unknown` rather than
+  collapsing to `Match`. A guard that has only ever said yes is not a tested
+  guard, and lateral-CA correction is about to become default-on behind it.
+  Bracket 2 above satisfies this exactly as written; no extra shooting is
+  needed beyond what this section already asks for. Note the guard cannot see
+  the X4 polariser at all — a filter is invisible to EXIF and always will be.
 
 ---
 
