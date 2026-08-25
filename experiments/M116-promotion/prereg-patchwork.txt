@@ -1,0 +1,249 @@
+M116-promotion — PRE-REGISTRATION: CAMPAIGN 5, THE BACKGROUND PATCHWORK
+========================================================================
+
+Written and committed BEFORE any patchwork number exists. Bars, arms, metric
+and predicted directions are all fixed here.
+
+
+DISCLOSURE, STATED UP FRONT RATHER THAN LEFT TO BE NOTICED
+-----------------------------------------------------------
+THE PIXELS EXIST AND THE NUMBERS DO NOT.
+
+Arms A0, A1, A2, A3, A4, M0, N1, P1, T1, T2, B0, B1u, M0u were rendered on
+2026-08-24 for campaign 1, at pinned SHA 4beac7300e318f6f0aaf10b6a88e57f311b9e814,
+on the isolated worktree C:\dev\strehl-out\M116-tree, with a frozen
+STREHL_WARPMAP, a frozen exposure and a private cache per arm. Every one has a
+recorded SHA256 in ledger-measure.csv. They are byte-frozen and I am not
+re-rendering them.
+
+What has NEVER been computed on them is any measure of background patchwork.
+Campaign 1 scored those same files on a DETAIL bar (B2) and returned KEEP-OFF
+for the soft gate. Section 11 of the report then recorded, before ORCH raised
+the background at all:
+
+    "The soft gate deserves one more milestone with a flat-field bar rather
+     than a detail bar, starting from dN -0.02044 (P4)."
+
+So the arms are old, the question is new, and the metric below has produced no
+number on any of them. Registering it now is legitimate. Registering it AFTER
+computing it would not be, which is why this file is committed first.
+
+Two things do need new renders and they are declared here:
+  (a) an A2 render with STREHL_DUMP_NEFF, to test the MECHANISM rather than
+      the outcome. A0's n_eff map already exists (T1).
+  (b) four additional single frames, unaligned, for the manufacturing control
+      G7. One (B0) already exists.
+
+
+THE CLAIM UNDER TEST
+--------------------
+ORCH, having looked at the render, reports irregular flat polygonal patches
+with brightness steps between them across the defocused background, and
+hypothesises (explicitly ARGUED, not measured):
+
+  1. in a region defocused in EVERY frame the through-focus response is flat,
+     so pass one's argmax is decided by noise;
+  2. the spatial regulariser snaps that random field into piecewise-constant
+     regions, i.e. polygons;
+  3. each polygon gathers from a different frame, and frames differ in
+     background brightness, so polygon boundaries become brightness steps.
+
+I am not accepting this. I am testing it. Note that M116 section 5b already
+measured half of it independently and BEFORE ORCH raised it: P17 established
+flat-region argmax indeterminacy (outlier pixels sit at structure ratio 0.443
+on bee and 0.487 on tweezers; foam, which has no flat region, reads 20.1%
+against a 20.0% chance rate), and P18 recorded that a residual mottle survives
+the shipped gate. Campaign 5 is the first test of whether anything FIXES it.
+
+Why the soft gate is the candidate, from the source at the pinned SHA
+(merge.rs:331-484, read directly, not from --help, per discipline 808):
+
+  * STREHL_SOFT_GATE names a kernel. "gaussian" and "exponential" are the only
+    accepted values. unset / "" / "0" / "off" / "false" -> Ok(None), the
+    shipped hard gate. "1" / "true" / "on" -> Err, and Estimator::new PANICS.
+    A truthy value would therefore not have measured the feature; it would
+    have aborted the run. This is the same refuse-to-guess design as
+    optics::profile_from_setting.
+  * The kernel weights each frame by its response gap from the elected winner.
+    Where every frame is nearly equally defocused the gap is small for all of
+    them, so all weights approach 1 and the estimator becomes a BROAD average.
+    Where one frame is decisively sharper the others carry a large gap and are
+    suppressed, so admission stays NARROW.
+  * Both kernels share Gate::tolerance exactly (merge.rs:339-342), so only the
+    SHAPE of the weight varies, not its scale.
+
+PREDICTED MECHANISM, registered so it can be wrong: the soft gate does NOT
+change which frame wins pass one. It changes how many frames pass two averages.
+So it should leave the ELECTION polygons intact while removing their VISIBLE
+brightness steps, because every polygon ends up averaging nearly the same broad
+set of frames. If the election-map polygon count is unchanged between A0 and A2
+while the brightness patchwork falls, that is the mechanism confirmed. If the
+polygon count itself changes, my reading of the source is wrong.
+
+
+THE METRIC, AND THE CONFOUND IT IS CHOSEN TO DEFEAT
+----------------------------------------------------
+PRIMARY: K = excess kurtosis of the Laplacian over a fixed background ROI,
+computed on LINEAR renders (never --srgb, which applies a non-diagonal colour
+matrix and a guided demosaic and whose own --help says "For looking at, NOT for
+measuring").
+
+Why kurtosis and not gradient energy or step count. The soft gate averages more
+frames, so it reduces noise by roughly sqrt(n_eff). ANY metric that is a
+magnitude of local difference therefore falls under the treatment WHETHER OR
+NOT a single polygon is removed. That is the same confound class as the
+halo/blur problem of section 5e, and it would hand me a large fake win.
+
+Excess kurtosis is SCALE-INVARIANT: multiplying the field by any constant
+leaves it unchanged. So uniform noise reduction cannot move it. What moves it
+is a change in the SHAPE of the Laplacian distribution:
+
+  * pure Gaussian noise            -> Laplacian is Gaussian -> excess kurt ~ 0
+  * piecewise-constant + noise     -> near-zero inside patches, spikes at the
+                                      boundaries -> heavy tails -> kurt >> 0
+
+Direction: LOWER K = less patchwork. A treatment that merely blurs or merely
+denoises must read ~0 change. That is the point of choosing it.
+
+SUPPORTING, all descriptive unless a bar is stated:
+  E = number of connected components of constant elected index in the election
+      map over the background ROI (polygon count, direct from A0-index.tif).
+  Neff_bg, Neff_detail = median effective frame count in each ROI.
+  D = log10(highpass ON / highpass OFF) on oriented content, coherence >= 0.6,
+      worst of R/B/luminance. IDENTICAL instrument to campaign 1's and campaign
+      4's CB6/CD7, deliberately, so the cost is comparable across the milestone.
+
+
+THE ROI, AND WHY ITS SELECTION CANNOT FAVOUR AN ARM
+-----------------------------------------------------
+The background ROI is selected as the largest connected region whose COARSE
+gradient energy (Gaussian derivative, sigma = 32 binned px) is in the lowest
+decile of the frame, excluding a 64 px frame margin, and at least 256x256.
+
+sigma = 32 measures "is this region defocused", which is a property of the
+SCENE. It is deliberately far coarser than the patchwork being scored, so the
+selection statistic is nearly invariant across arms.
+
+REGISTERED CHECK, not an assumption: the ROI is computed INDEPENDENTLY from
+every compared arm (A0, A1, A2, A3, A4, M0) and the resulting rectangles must
+be IDENTICAL. If they are not, selection is arm-dependent, I will say so
+loudly, and I will fall back to the ROI selected on M0 -- which is the arm the
+treatment is expected to be FURTHEST from, so the fallback is the conservative
+one and it is named here in advance rather than chosen later.
+
+The detail ROI for D is the established oriented-content mask (coherence
+>= 0.6), unchanged from campaigns 1 and 4.
+
+
+BARS
+----
+G1  PLANT / positive control.  DECIDING.
+    The metric must READ the artefact where the artefact is known to be
+    largest. P18 established that gate 0 shows the patchwork strongly and that
+    the shipped gate suppresses most of it.
+    PASS = K(M0) >= 2.0 * K(A0), on bee-3-cpl.
+    If this fails the metric is dead and campaign 5 reports "no instrument".
+    This is the fact-1548 guard: a null is worthless unless its own plant shows
+    the number can move on this exact wiring.
+
+G2  NULL.  DECIDING.
+    N1 is a byte-for-byte repeat of A0. PASS = identical SHA256 AND K(N1) -
+    K(A0) == 0.0 exactly. Not "small". Exactly.
+
+G3  PLACEBO.  DECIDING.
+    P1 is A0 run against a different private cache directory -- a change that
+    cannot affect the image. PASS = identical SHA256 to A0 and dK == 0.0.
+
+G4  TRAP.  DECIDING.  (discipline 797)
+    T2 sets STREHL_SOFT_GATE="0", which the source says names no kernel and
+    runs the shipped hard gate. A detector needs an arm it must NOT fire on.
+    PASS = T2 byte-identical to A0 and dK == 0.0.
+    Pinned to a value fixed by the source (merge.rs:458-464), not to the data.
+
+G5  PRIMARY.  Does the soft gate reduce the patchwork?
+    PASS = K(A2) <= 0.90 * K(A0) on bee-3-cpl.
+    Registered prediction, so it can be wrong: I expect a LARGE reduction,
+    K(A2) <= 0.5 * K(A0), because in a uniformly defocused region every gap is
+    small and the kernel should admit nearly every frame.
+
+G6  COST.  DECIDING for promotion.
+    PASS = D >= -0.02 dex on every subject scored.
+    Campaign 1 already measured the soft gate LOSING on a detail bar
+    (dD -0.01218 on bee). That number stands and it is a real cost. G6 asks the
+    narrower question of whether the cost breaches the do-no-harm floor used
+    everywhere else in this milestone.
+
+G7  MANUFACTURING CONTROL.  ORCH's, and it is the strongest thing here.
+    In a region where every input frame is smooth, the merge CANNOT
+    legitimately create spatial structure. Compare high-frequency energy over
+    the background ROI in the merged output against >= 5 single input frames.
+    Run on the UNALIGNED pair (B1u merge vs unaligned singles) so that the
+    geometry is pixel-exact and no resampling enters the comparison -- an
+    aligned merge against an unaligned frame would compare two different
+    grids and the difference would be partly interpolation.
+    Registered prediction: merged HF energy > max single-frame HF energy, i.e.
+    the merge manufactures structure. Ratio reported either way.
+
+G8  THE OTHER HALF OF ORCH'S MECHANISM.  Descriptive.
+    Step (3) of the hypothesis is that frames differ in BACKGROUND BRIGHTNESS.
+    That is exactly what --photometric normalises, so A1 is a direct test of
+    the second half of the mechanism and A4 of both halves together. ORCH did
+    not ask for this; it follows from ORCH's own stated mechanism.
+    Registered prediction: A1 reduces K by LESS than A2 does, because A1
+    corrects the step heights but leaves the random election that creates the
+    polygons. If A1 alone removes the patchwork, the mechanism is a brightness
+    defect and not an election defect, and the soft gate is the wrong fix.
+
+G9  ELECTION INVARIANCE.  Descriptive, mechanism test.
+    Registered prediction: E(A2) ~ E(A0). The soft gate acts in pass two and
+    must not change which frame wins pass one. A large change in E would refute
+    my reading of merge.rs.
+
+
+PROMOTION RULE
+--------------
+Recommend flipping STREHL_SOFT_GATE=gaussian on by default ONLY IF
+    G1 and G2 and G3 and G4 PASS   (the metric is alive, nulled, and trapped)
+  AND G5 PASS                       (it reduces the patchwork)
+  AND G6 PASS                       (it does not breach do-no-harm)
+
+Note the asymmetry with campaign 4 deliberately: G1 is registered as a bar on
+ONE subject, bee-3-cpl, and the promotion rule quantifies over the subjects
+scored for G6 only. This is the D-t repair from section 5g applied
+prospectively: the plant is an ADMISSION GATE for the instrument, not a bar
+that every subject must satisfy, and I am not repeating the CD1 error of making
+a universal quantifier out of a calibration check.
+
+If G5 passes and G6 fails, the verdict is a TRADE, not a win, and I will report
+the exchange rate rather than recommending anything.
+
+
+WHAT WOULD MAKE ME WRONG
+------------------------
+- G1 fails: the metric cannot see the artefact even at gate 0, where it is
+  known to be worst. No instrument, campaign ends, and that is publishable.
+- K falls on A2 but the crops still show polygons: the metric is measuring
+  something other than the artefact ORCH saw. The IMAGES adjudicate, not the
+  number. I will show the crops either way.
+- A1 alone removes the patchwork (G8): the mechanism is photometric drift, not
+  election indeterminacy, and ORCH's proposed fix is aimed at the wrong stage.
+- G7 shows merged HF <= single-frame HF: the merge is not manufacturing
+  structure and the polygons must come from somewhere else entirely.
+- E changes a lot between A0 and A2 (G9): I have misread merge.rs and the soft
+  gate is not a pass-two-only change.
+- The soft gate reduces K but visibly softens the bee's hairs at 1:1. The
+  owner shoots insects. That would be a repeat of the halo trade and I would
+  report it as one.
+
+
+CONSTRAINTS CARRIED FORWARD, UNCHANGED
+---------------------------------------
+- Pinned SHA 4beac7300e318f6f0aaf10b6a88e57f311b9e814, isolated worktree.
+- Nothing under crates/ is edited. This campaign sets environment gates only.
+- D:\ is READ-ONLY. Source frames are read from it and copied out to
+  C:\dev\strehl-out\M116\; nothing is ever written there.
+- Private cache path per arm.
+- Linear renders for every number; --srgb only for pictures shown to a human,
+  and labelled as such.
+- No halo arm is run. The halo correction is withdrawn (facts 1595-1601).
+- The CA crops are produced but labelled UN-ADJUDICATED pending V-CA.
