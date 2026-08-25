@@ -16,7 +16,7 @@ and #3.)*
 
 | # | what | time | what it unblocks |
 | --- | --- | --- | --- |
-| **1** | **§24** — flat, **achromatic** (grey/black/white, *no colour in the target*), **corner-to-corner** detail, square-on and never moved, shot **normal + red + green + blue** (gels or coloured light) | ~10 min | **Design changed again overnight, and it is now a controlled experiment.** The spectral hypothesis I built this on was tested against eight of your existing stacks and **the correlation came out backwards** (rho −0.69, n=8). What survived is bigger: the correction really does vary by subject, **27.3%** against a 19.5 ppm noise floor, cause unknown. Four rival explanations died on your existing data; aperture and the teleconverter died on your EXIF (**every `-cpl` stack is f/5.6 + 2× TC — there is no aperture variation in the corpus**, so no teleconverter set is needed). A **flat** target makes the stacker a measured 4.8 ppm no-op, so what this sees is optics. See below. |
+| **1** | **§24** — flat, **achromatic** (grey/black/white, *no colour in the target*), **corner-to-corner** detail, square-on and never moved, shot **normal + red + green + blue** (gels or coloured light) | ~10 min | **Design changed again overnight, and it is now a controlled experiment.** The spectral hypothesis I built this on was tested against eight of your existing stacks and **the correlation came out backwards** (rho −0.69, n=8). What survived is bigger: the correction really does vary by subject, **27.3%** against a 19.5 ppm noise floor, cause unknown. Four rival explanations died on your existing data; aperture and the teleconverter died on your EXIF (**every `-cpl` stack is f/5.6 + 2× TC — there is no aperture variation among the CPL stacks**, so no teleconverter set is needed). A **flat** target makes the stacker a measured 4.8 ppm no-op, so what this sees is optics. See below. |
 | **2** | **§26** — a **bright** subject against a **deeply defocused dark** background, exposed **1–2 stops down** so nothing clips, 100–300 frames | ~1 afternoon | **The halo.** As of last night the rim around every edge in your renders has a measured fingerprint — it is exactly as wide as the software's frame-choosing window — but **two explanations survive that predict the same thing on every stack you already own.** They differ only on bright-object-on-dark-ground edges, and your corpus contains **5** usable ones. This is the capture that separates them, and the halo is the largest visible defect in your pictures. |
 | **3** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
 | 4 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document — and it **went up in value overnight**: it is the *trap* arm for the election gate now being wired. See the box below. |
@@ -834,7 +834,12 @@ refuted by an independent check. Read the correction, not the original claim:**
 **What survived the refutation, and is now better supported than when I claimed
 it:**
 
-- **The radial shape is correct** — flat within ±15 ppm from r = 0.11 to 0.87.
+- **The radial shape is correct** — flat across r = 0.11 to 0.87.
+  **Corrected overnight:** an audit of my own notes found the "±15 ppm" figure I
+  previously quoted here was **spliced in from a different experiment** (a
+  single-scene run), and the real scatter is much larger at the inner radius —
+  the bootstrap sd on the innermost ring is **80 ppm**, not 15. The *shape*
+  finding survives; the tightness I claimed for it did not.
   The model's form is right; only its magnitude and its scene-independence were
   wrong.
 - **`RECOLOURED, NOT REMOVED` is real**, now confirmed on **two** stacks under
@@ -2697,7 +2702,11 @@ the correct render.
 >
 > **Aperture and the teleconverter were killed by your own EXIF**, and this is
 > worth knowing: **every one of your `-cpl` stacks is f/5.6 on the 100mm GM with
-> the 2× teleconverter.** There is no aperture variation anywhere in the corpus.
+> the 2× teleconverter.** There is no aperture variation among the `-cpl` stacks.
+> (Corrected overnight: I previously wrote "no aperture variation anywhere in the
+> corpus", which is **wrong** — `coffee-bean`, `coffee-bubbles` and `foam` are
+> f/8, and `109/112/113MSDCF` are f/11. All of those are non-CPL, which is why
+> the point below still holds, but the wider claim was mine and it was false.)
 > So an aperture ladder would be varying something you have in fact been holding
 > fixed, and the "second set with the teleconverter" I asked for above is
 > confused — the teleconverter *is* your normal configuration.
