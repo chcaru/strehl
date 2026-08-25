@@ -316,3 +316,97 @@ session is confounded.** Every comparison in this document has both arms rendere
 back-to-back from one binary for that reason. The earlier `WINDOW_RADIUS` ladder
 is internally consistent for the same reason — all seven rungs came from one
 build.
+
+---
+
+## 9. The frozen-ROI campaign — the authoritative result
+
+Section 5 measured with M121's `scan()`, which re-detects edges per arm and is
+therefore unpaired. BUILD-RENDER has since frozen a ROI plan
+(`C:\dev\strehl-out\roi-plan.json`) and captured a 26-subject baseline. That is a
+genuinely **paired** instrument at fixed coordinates, which is what §5.2 said was
+missing. Everything below uses it, via BUILD-RENDER's `scripts/crop_set.py` — its
+code, not a reimplementation.
+
+### 9.1 The baseline is reproducible from this tree
+
+The confound recorded in §8 is **resolved**. `bee-2-cpl` rendered from HEAD with
+`STREHL_EDGE_AWARE` unset is **byte-identical** to BUILD-RENDER's frozen
+baseline (`D2DC0272 8033E359 035C5BB1 C122A5F8`). Their colour work genuinely
+moves zero pixels on the measurement path, and the frozen baseline can be used
+as the "before" arm without re-rendering it.
+
+All numbers below are at the **product default gate (4.0)**, not the gate 0 used
+in §5. `MeanNeff` is unchanged by the fix (66.5 -> 66.9 on `bee-2-cpl`), so the
+gate is not disturbed. Cost at the default gate is **2.07x** wall clock
+(51.5 s -> 106.8 s), better than the 3.3x measured at gate 0.
+
+### 9.2 Sharpness: clean, again
+
+Over 15 detail crops on 5 subjects, `hp_energy` (std of the Laplacian):
+**0 of 15 worse, mean +6.7%**, range +0.0% to +23.1%. Flat-region `noise_sd`
+rises **+4.6%**, consistent with masked support lowering the effective sample
+count at treated pixels (the `FOCUS_NOISE_SD` miscalibration in §6). **The fix
+is not a blur; it costs a little background noise.**
+
+### 9.3 Halo: uneven, and the scalar cannot see it
+
+`edge_overshoot` over 15 edge crops: **3 improved** (-97.9%, -102.5%, and one
+marginal), **12 unchanged within +/-0.2%**.
+
+**Do not read that as "no effect."** The operator masked 9-20% of the plane on
+every subject, and the pictures show large changes at ROIs the scalar reports as
+unchanged. `flower-inner-edge-cpl` edge0 scores **+0.1%** while the composite
+shows the dark background going from a muddy grey-green veil to genuinely dark
+with crisp trichome silhouettes — one of the clearest improvements in the set.
+`edge_overshoot` is `max(g[band]) - p90(g)`: a **single-pixel** statistic, which
+on these subjects is pinned by a specular highlight that the merge never
+touched. BUILD-RENDER already warned it disagrees with the eye and must not be
+gated on; this is a second, independent confirmation from the other direction.
+
+### 9.4 Where it works and where it does not — the real boundary
+
+Sorted by how much of the plane the operator treated:
+
+| subject | masked | verdict by eye |
+|---|---|---|
+| `bee-2-cpl` | 19.97% | veil around claw substantially reduced; hairs crisper |
+| `bee-3-cpl` | 19.43% | improved |
+| `flower-inner-edge-cpl` | 17.19% | **large** — dark background recovered |
+| `flower-bud-…-fern-cpl` | 10.62% | **rim not removed** |
+| `lavendar-cpl` | 9.15% | minimal change |
+
+The two subjects where the halo survives are the two where the operator barely
+fires, which looked like a too-conservative guard. **It is not.** Re-rendering
+`flower-bud` with the confidence veto at 1.15 instead of 2.0 raised firing
+**10.62% -> 16.81%** and the thick white sheath around the bud is **unchanged**
+by eye.
+
+That is the honest boundary of this fix:
+
+- it removes **veiling** halo — the smoky, low-contrast wash the box window
+  drags across a defocused background, whose lobed/scalloped boundary is the
+  window's own footprint;
+- it does **not** remove a **tight bright sheath** hugging a high-contrast
+  silhouette, as on `flower-bud`. That rim is a few px wide, narrower than the
+  radius-4 guide, so the guide is itself haloed at that scale and assigns the
+  rim to the foreground layer — the mask cannot exclude what it has already
+  mislabelled. Fixing it needs a guide that resolves finer than the rim, or
+  fix 3/4 from the brief (bimodality / two-layer unmixing).
+
+### 9.5 New artefact introduced
+
+Mild **blotchiness** at treated transitions, visible on `bee-2-cpl` edge2. This
+is the `N_LAYERS = 6` bin quantisation with no interpolation between bins. It is
+much less objectionable than the halo it replaces but it is not nothing, and a
+verifier should look for it.
+
+### 9.6 Verdict
+
+**Not print-worthy yet.** The disqualifier is materially reduced on 3 of 5
+subjects and one of those is a large, obvious win, but it survives on
+`flower-bud-…-fern-cpl` and `lavendar-cpl`. Reported as PARTIAL.
+
+Artefacts: `C:\dev\strehl-out\BUILD-HALO\compare-halo-on\` (45 side-by-side
+composites at frozen ROIs), `…\compare-conf115\`, `…\halo-on\<subject>\linear.tif`
+(16-bit linear), `…\halo-off\bee-2-cpl\linear.tif` (byte-identity control).
