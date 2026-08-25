@@ -1134,3 +1134,116 @@ exactly `the_window_collapses_at_a_silhouette...` and nothing else; breaking the
 guided filter's edge term failed exactly
 `domain_transform_does_not_carry_focus_across_a_luma_step` while the flat-region
 smoothing test still passed. Every arm rendered back-to-back from one binary.
+
+---
+
+## 15. Two mechanisms? Neither. The wide aura is not ours.
+
+ORCH looked at a full frame of `lavendar-cpl`, saw an aura far wider than
+`SOBEL_RADIUS + WINDOW_RADIUS` could explain, and proposed a second mechanism:
+defocus spill from the near subject veiling the backdrop over the blur radius,
+present in every frame and therefore unfixable by any selector. The proposed
+consequence was that two-layer unmixing was promoted from optional to
+mandatory. The test was: measure the aura's radial extent and compare it
+against (a) `SOBEL + WINDOW` and (b) the defocus blur diameter.
+
+**It matches neither, because the wide feature is not produced by the merge at
+all.** ORCH's observation was right and the attribution was wrong.
+
+### 15.1 The measurement needs no PSF model
+
+Mechanism (i) has a **hard ceiling**. The focus measure is a box mean of radius
+`WINDOW_RADIUS` over a gradient of radius `SOBEL_RADIUS`, so a pixel further
+than their sum from a depth edge has *no* foreground content in its window --
+not weakly, not attenuated, none. Window contamination cannot reach past 14 px.
+
+So the only thing needed is a reference with no election in it. `STREHL_ONLY_FRAME`
+renders one frame of the bracket; one frame is trivially its own winner at
+every pixel. An aura present there is optics and no selector can remove it; an
+aura in the merge and absent from every frame is entirely ours.
+
+Four arms per subject -- `off`, `on`, `frame000`, `frame298` -- all rendered
+back-to-back from one pinned binary (`0BB7BCDD4A58`, `git archive` of an
+explicit SHA, commissioned with a planted sabotage that went red), all four
+byte-distinct.
+
+### 15.2 The answer, from a raw line cut with no segmentation
+
+Across `lavendar-cpl` rows 800 and 1150, from open backdrop into the left
+silhouette:
+
+| x, native | 150 | 300 | 450 | 600 | 655 (silhouette) |
+| --- | --- | --- | --- | --- | --- |
+| `off` | 1.000 | 1.006 | 1.024 | 1.038 | steps to 0.85 |
+| `on` | 1.000 | 1.006 | 1.025 | 1.040 | steps to 0.85 |
+| `frame000` (no election) | 1.000 | 1.005 | 1.022 | 1.035 | declines smoothly |
+| `frame298` (no election) | 1.000 | 1.007 | 1.026 | 1.042 | stays ~1.02 |
+
+The backdrop brightens ~4% over ~470 px approaching the subject, and **all four
+arms are superimposed within noise over that entire span** -- including two
+arms that contain no election whatsoever. A feature identical in a single
+exposure and in the merge is not something the merge did. It is the scene's own
+illumination field (and/or lens veiling glare), and it is ~34x the mechanism
+(i) ceiling because it is not an artefact of any kind.
+
+The merged arms depart from the single frames **only within ~10-20 px of the
+silhouette**, which is the mechanism (i) zone and nowhere else.
+
+### 15.3 What this kills
+
+**Do not build two-layer unmixing to chase the wide aura.** There is nothing
+there to unmix. Fitting `I_k = a(F conv PSF_k) + (1-a)(B conv PSF_k)` to that
+region and "removing the foreground's contribution" would be *editing the
+scene's real illumination gradient out of the photograph* -- inventing a
+change, in the smooth regions where V-HALO has already caught this build
+inventing structure once.
+
+This is the second gate in a row that the pictures failed after the summary
+statistics passed. Section 14.4's bimodality table was monotone and beautiful
+and wrong; this one had a plausible mechanism, a named prediction and an
+authoritative source, and the raw line cut refuted it in one plot.
+
+### 15.4 The instrument failed twice first, silently, and both were caught by drawing it
+
+The radial profile needs a silhouette, and segmentation is where this nearly
+went wrong:
+
+1. Threshold at a multiple of the backdrop spread, pooled over four corners.
+   The frame has an illumination gradient, so the pooled spread measured the
+   difference *between* corners (3377 DN) rather than noise within one. The
+   threshold landed outside the data range: **0.00% of the plane selected.**
+   Loud, caught immediately.
+2. Otsu on luma. **Reported a plausible 39-49% and was garbage:** the backdrop
+   gradient exceeds the subject-to-backdrop step in places, so Otsu split *the
+   backdrop's own gradient* and labelled the entire right half of the empty
+   background as subject. Drawing the contour showed it running through open
+   sky.
+
+Failure 2 is the dangerous one, and nothing but `maskcheck.py` -- which draws
+the boundary on the picture -- would have caught it. Brightness cannot separate
+these classes because the illumination gradient is confounded with them.
+**Local standard deviation can,** and it is invariant to any additive
+low-frequency field, which is precisely the thing that broke both attempts. It
+also fails in the right direction: the halo is a smooth glow with no texture,
+so it lands on the backdrop side, which is what makes "distance 0" the
+silhouette rather than the outer edge of the thing being measured.
+
+### 15.5 Per-channel election: refuted as posed, but there is a real per-plane path
+
+The winner field is computed on a **single luma plane** -- green-only,
+`L = (G1+G2)/2` -- so R, G and B cannot elect different frames. The gate's
+`continue` is at *pixel* scope, above the plane loop, so the admitted frame set
+and the weight `wt` are per-pixel scalars shared by all four CFA planes. R/G/B
+diverging by differential selection is **structurally impossible**.
+
+One real per-plane path survives, and it lands exactly where the fringing was
+seen. `Estimator::value` substitutes `CONTAINER_MAX_DN` verbatim for a plane
+whose *winner's own sample* was pinned, while sibling planes return their
+weighted means -- so at a pixel where one plane clips and its siblings do not,
+the three channels come from different estimators and the colour exists in no
+frame. It activates only on the `fold_censored` path, which ships, and only at
+clipped samples: specular highlights and bright fine hairs.
+
+**Not changed.** It is M109's deliberate highlight design, it is outside this
+mandate, and its own doc already flags that the post-warp clip test under-counts
+"which is where the residual fringe lives". Routed to ORCH rather than touched.

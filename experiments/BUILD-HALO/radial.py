@@ -61,46 +61,77 @@ def read_linear(path):
 
 
 def subject_mask(luma):
-    """Segment the subject from the backdrop, sign-agnostically.
+    """Segment the subject from the backdrop by LOCAL TEXTURE, not brightness.
 
-    The bee is dark on white and the lavender is white on grey, so a fixed
-    threshold direction would work on one and invert on the other.  Instead the
-    backdrop level is read from the image corners -- which are background on
-    every subject in the plan -- and the subject is whatever departs from it,
-    in EITHER direction.
+    Two earlier attempts failed here, and both failed *silently*, which is why
+    this docstring is long and why `maskcheck.py` exists to draw the result.
+
+    1. Thresholding at a multiple of the backdrop's spread, with the spread
+       pooled over all four corners.  The frame has an illumination gradient,
+       so the pooled spread measured the difference BETWEEN corners (3377 DN)
+       rather than noise within one.  The threshold landed outside the data
+       range and selected 0.00% of the plane.
+
+    2. Otsu on the luma.  The backdrop is not uniform -- it is brighter on the
+       right than the left by more than the subject-to-backdrop step in places
+       -- so Otsu split the BACKDROP'S OWN GRADIENT and labelled the entire
+       right half of the empty background as subject.  It reported a plausible
+       49.32% and drawing the contour showed it running through open sky.
+
+    Brightness cannot separate these classes because the illumination gradient
+    is confounded with them.  Texture can: every subject in this plan is
+    intensely detailed (hairs, trichomes, chitin) and every backdrop is a
+    smooth sweep.  Local standard deviation is invariant to any additive
+    low-frequency gradient, so it is immune to the thing that broke both
+    earlier attempts.
+
+    It also fails in the RIGHT direction for this measurement.  The halo is a
+    smooth glow with no texture, so it lands on the backdrop side -- which is
+    what makes "distance 0" the silhouette rather than the outer edge of the
+    thing being measured.
     """
+    from scipy import ndimage
+
+    # Local sd over an 11x11 window, via the E[x^2] - E[x]^2 identity.
+    k = 11
+    mean = ndimage.uniform_filter(luma, k)
+    meansq = ndimage.uniform_filter(luma * luma, k)
+    sd_local = np.sqrt(np.maximum(meansq - mean * mean, 0.0))
+
+    # Threshold in units of the BACKDROP's own texture, read from the corners.
+    # The corners are backdrop on every subject in the plan; that is a far
+    # weaker assumption than a polarity or a uniform illumination field.
     h, w = luma.shape
     c = max(h, w) // 12
-    corners = np.concatenate(
-        [
-            luma[:c, :c].ravel(),
-            luma[:c, -c:].ravel(),
-            luma[-c:, :c].ravel(),
-            luma[-c:, -c:].ravel(),
-        ]
+    corner_sd = np.concatenate([
+        sd_local[:c, :c].ravel(), sd_local[:c, -c:].ravel(),
+        sd_local[-c:, :c].ravel(), sd_local[-c:, -c:].ravel(),
+    ])
+    base = float(np.median(corner_sd))
+    m = sd_local > 6.0 * max(base, 1e-6)
+
+    # Close across the smooth interior of a bud, drop isolated dust specks,
+    # keep the one big blob, fill it.
+    m = ndimage.binary_closing(m, np.ones((15, 15)))
+    m = ndimage.binary_opening(m, np.ones((7, 7)))
+    lab, n = ndimage.label(m)
+    if n > 1:
+        sizes = ndimage.sum(m, lab, range(1, n + 1))
+        m = lab == (1 + int(np.argmax(sizes)))
+    m = ndimage.binary_fill_holes(m)
+    # The local-sd operator reports texture over its own window, so it dilates
+    # the subject by half a window.  Take that back, or "distance 0" sits ~5 px
+    # outside the silhouette and the first bins measure nothing.
+    m = ndimage.binary_erosion(m, np.ones((2 * (k // 2) + 1, 2 * (k // 2) + 1)))
+
+    bg = float(np.median(luma[~m]))
+    # Backdrop noise from ONE corner patch, never pooled across corners.
+    patch = luma[:c, :c]
+    sd = float(np.median(np.abs(patch - np.median(patch)))) * 1.4826
+    assert 0.02 < m.mean() < 0.80, (
+        f"segmentation implausible: subject is {100*m.mean():.2f}% of the plane"
     )
-    bg = float(np.median(corners))
-    # A robust spread of the backdrop itself, so the threshold is in units of
-    # backdrop variation rather than of absolute DN.
-    sd = float(np.median(np.abs(corners - bg))) * 1.4826
-    sd = max(sd, 1e-6)
-    m = np.abs(luma - bg) > 12.0 * sd
-
-    # Close pinholes and drop speckle: the silhouette wanted here is the gross
-    # outline of the subject, not its internal texture.
-    try:
-        from scipy import ndimage
-
-        m = ndimage.binary_closing(m, np.ones((9, 9)))
-        m = ndimage.binary_opening(m, np.ones((5, 5)))
-        lab, n = ndimage.label(m)
-        if n > 1:
-            sizes = ndimage.sum(m, lab, range(1, n + 1))
-            m = lab == (1 + int(np.argmax(sizes)))
-        m = ndimage.binary_fill_holes(m)
-    except ImportError:
-        sys.exit("scipy is required (distance transform + morphology)")
-    return m, bg, sd
+    return m, bg, max(sd, 1e-6)
 
 
 def distance_outward(mask):
@@ -201,20 +232,36 @@ def plot(payload, png, title):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    fig, ax = plt.subplots(figsize=(11, 6), dpi=130)
-    for name, r in payload["arms"].items():
+    arms = payload["arms"]
+    fig, (ax, bx) = plt.subplots(2, 1, figsize=(11, 9), dpi=130, sharex=True)
+    for name, r in arms.items():
         ax.plot(r["centres"], r["excess"], marker=".", ms=3, lw=1.4, label=name)
     ax.axhline(0, color="k", lw=0.7)
     c = payload["ceiling_mechanism_i"]
-    ax.axvspan(0, c, color="tab:green", alpha=0.10)
-    ax.axvline(c, color="tab:green", ls="--", lw=1.6,
-               label=f"(a) mechanism (i) HARD ceiling = SOBEL+WINDOW = {c} px")
-    ax.set_xscale("symlog", linthresh=20)
-    ax.set_xlabel("distance outward from the frozen silhouette (px, native)")
-    ax.set_ylabel("background excess over the arm's own far field (backdrop sd)")
+    for a in (ax, bx):
+        a.axvspan(0, c, color="tab:green", alpha=0.10)
+        a.axvline(c, color="tab:green", ls="--", lw=1.6)
+        a.grid(alpha=0.3)
+    ax.set_ylabel("excess over the arm's own far field (backdrop sd)")
     ax.set_title(title or "aura radial profile")
-    ax.legend(fontsize=8)
-    ax.grid(alpha=0.3)
+    ax.legend(fontsize=8, loc="best")
+    ax.text(c * 1.15, ax.get_ylim()[1] * 0.92,
+            f"mechanism (i) HARD ceiling\nSOBEL+WINDOW = {c} px",
+            fontsize=8, color="tab:green", va="top")
+
+    # The paired difference. Both arms are profiled at IDENTICAL pixels in
+    # IDENTICAL bins, so this curve isolates what the ELECTION changed, with
+    # the optics -- which are common to both -- differenced away exactly.
+    if "off" in arms and "on" in arms:
+        d = np.array(arms["off"]["excess"]) - np.array(arms["on"]["excess"])
+        bx.plot(arms["off"]["centres"], d, color="crimson", marker=".", ms=3, lw=1.6,
+                label="off - on  (what the election changed)")
+        bx.axhline(0, color="k", lw=0.7)
+        bx.legend(fontsize=8)
+    bx.set_xscale("symlog", linthresh=20)
+    bx.set_xlabel("distance outward from the frozen silhouette (px, native)")
+    bx.set_ylabel("off - on (backdrop sd)")
+
     fig.tight_layout()
     fig.savefig(png)
     assert png.read_bytes()[:4] == b"\x89PNG", f"{png} is not a PNG"
