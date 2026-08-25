@@ -33,7 +33,7 @@ def chk(label, value, pattern, tol=0.02):
     if not m:
         fails.append(f"{label}: ANCHOR NOT FOUND -> {pattern}")
         return
-    got = float(m.group(1).replace("\u2212", "-").rstrip("."))
+    got = float(m.group(1).replace("\u2212", "-").replace(" ", "").rstrip("."))
     ok = abs(got - value) <= tol * max(abs(value), 1e-9)
     print(f"  {'ok ' if ok else 'BAD'} {label:44s} recomputed {value:10.4f}  "
           f"document {got:10.4f}")
@@ -171,6 +171,58 @@ chk("P20 P_sig x, dither", s9["dither_pinned"]["dP_sig"],
 # section 10.3 -- the back-solve that says no effect hides under the compression
 chk("10.3 back-solved true ratio", float(np.exp(np.log(1.0014) / s8["beta_narrowed"])),
     r"back-solves to a true ratio of `[^`]+` = \*\*([\d.]+)\*\*", tol=1e-4)
+
+# ---------------------------------------------------------------------------
+# section 11 -- ORCH rule #2 replication.  Breakpoints and the R2 verdict are
+# recomputed here from the raw sweep rows, not read back from s10's own scoring.
+# ---------------------------------------------------------------------------
+s10 = json.load(open(os.path.join(OUT, "s10_positionstat.json")))
+rows = {r["step"]: r for r in s10["rows"]}
+
+def brk(key, thr=0.10):
+    for r in s10["rows"][1:]:
+        if abs(r[key]) > thr:
+            return r["step"]
+    return None
+
+chk("P21 breakpoint 5x5 (bias)", float(brk("bias_fine")),
+    r"a 5×5 window breaks at quantisation step \*\*(\d+)\*\*", tol=1e-9)
+chk("P21 breakpoint 27x27 (bias)", float(brk("bias_coarse")),
+    r"and over a 27×27 window at step \*\*(\d+)\*\*", tol=1e-9)
+chk("P21 levels/win at 5x5 break", rows[brk("bias_fine")]["levels_fine"],
+    r"step \*\*64\*\* \(([\d.]+) levels/window\)", tol=1e-9)
+chk("P22 position MAD 5x5 at 256", rows[256]["mad_fine"],
+    r"off by \*\*([\d.]+) frames\*\* \(5×5\)")
+chk("P22 position MAD 27x27 at 256", rows[256]["mad_coarse"],
+    r"and \*\*([\d.]+) frames\*\* \(27×27\) while a signal-dominated")
+chk("P22 dispersion pct at 256", 100.0 * abs(rows[256]["disp_ratio"] - 1.0),
+    r"same data was off by \*\*([\d.]+) ?%\*\*", tol=0.05)
+chk("P24 bias at step 16", rows[16]["bias_fine"],
+    r"fit had bias \*\*\+([\d.]+) frames\*\*", tol=0.05)
+chk("P24 MAD at step 16", rows[16]["mad_fine"],
+    r"but MAD \*\*([\d.]+) frames\*\*")
+chk("P24 levels/win at step 16", rows[16]["levels_fine"],
+    r"At step 16 \(([\d.]+) levels/window\)", tol=1e-9)
+chk("P25 dispersion spread factor",
+    3.937 / rows[256]["disp_ratio"],
+    r"a \*\*([\d.]+)×\*\* spread\. Fragility tracks", tol=0.05)
+chk("P26 support floor 5x5 min", float(rows[2048]["n_valid_fine"]),
+    r"fell \*\*404 623 → ([\d ]+)\*\*", tol=1e-9)
+chk("P26 support floor 5x5 max",
+    float(max(r["n_valid_fine"] for r in s10["rows"])),
+    r"admitted samples fell \*\*([\d ]+) →", tol=1e-9)
+
+# R2's verdict must be a FAIL for section 11.2's claim to stand
+r2_fail = rows[256]["mad_fine"] >= 0.5
+print(f"  {'ok ' if r2_fail else 'BAD'} {'P22 R2 verdict is FAIL (rule inverted)':44s} "
+      f"recomputed {float(r2_fail):10.4f}  document     1.0000")
+if not r2_fail:
+    fails.append("P22: R2 did not fail on re-derivation; section 11.2 is wrong")
+if not re.search(r"\*\*R2 FAILS", flat):
+    fails.append("P22: document does not record R2 as failing")
+# the saturation control must genuinely vary
+if len({r["n_valid_fine"] for r in s10["rows"]}) <= 1:
+    fails.append("P26: saturation control did not vary on re-derivation")
 
 print()
 if fails:

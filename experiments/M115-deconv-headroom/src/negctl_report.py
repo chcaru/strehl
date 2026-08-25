@@ -55,6 +55,26 @@ DEFECTS = [
     ("D13 true log-ratio spread",
      "spread **widens** from \u00b11.886 to \u00b12.810",
      "spread **widens** from \u00b11.286 to \u00b12.810"),
+    # ---- section 11: ORCH rule #2 replication -----------------------------
+    ("D14 per-window breakpoint, 5x5",
+     "integrated over a 5\u00d75 window breaks at quantisation step **64**",
+     "integrated over a 5\u00d75 window breaks at quantisation step **32**"),
+    ("D15 per-window breakpoint, 27x27",
+     "and over a 27\u00d727 window at step **128** \u2014 same file",
+     "and over a 27\u00d727 window at step **256** \u2014 same file"),
+    ("D16 position MAD at step 256",
+     "position was off by **3.550 frames** (5\u00d75)",
+     "position was off by **1.550 frames** (5\u00d75)"),
+    ("D17 bias-hides-MAD pair",
+     "fit had bias **+0.014 frames** but MAD **0.622 frames**",
+     "fit had bias **+0.514 frames** but MAD **0.622 frames**"),
+    ("D18 support-floor sample count",
+     "admitted samples fell **404 623 \u2192 56 616** (5\u00d75)",
+     "admitted samples fell **404 623 \u2192 356 616** (5\u00d75)"),
+    # structural, not numeric: the verdict itself must be checkable
+    ("D19 R2 verdict flipped (non-numeric)",
+     "**R2 FAILS, and it fails in the direction that matters.**",
+     "**R2 holds, and it holds in the direction that matters.**"),
 ]
 
 

@@ -228,6 +228,12 @@ Numbered `P1…` per rule 28; absolute numbers belong to ORCH. I have not edited
 18. **P18 — MEASURED, `109MSDCF`, the fleet-relevant one.** **Quantisation error is not noise.** Rounding is a deterministic function of the pixel value, so frames of the same scene receive correlated rounding error: measured cross-half correlation **r = +0.5109**, versus **−0.0007** for an independent dither of identical power. Any paired, split-half or frame-difference noise estimator therefore books roughly half of it as *signal*.
 19. **P19 — MEASURED, `109MSDCF`.** Consequence of P18 at matched perturbation power (2.581e4): an 8-bit narrowing raised measured `P_noise` **×3.937** while an independent dither of the *same* power raised it **×63.311** — a **16× under-report**. A narrowed dataset looks *less* noisy than it is, and the difference-based estimator best placed to detect the hazard is disabled by it. This is not in ORCH's current triage list.
 20. **P20 — MEASURED.** The narrowing's departure from noise-floor behaviour is not a calibration confound: pinning self-calibrated `s` to its intact value moved `β` by only **0.0071**, while `P_sig` still rose ×1.262 (quantisation) against ×1.022 (matched dither).
+21. **P21 — MEASURED, `109MSDCF` detail ROI, replicates ORCH/M113.** The bit-depth bound is genuinely **per fitted window**, not per file or per ROI. The same focus-peak statistic integrated over a 5×5 window breaks at quantisation step **64** (3.0 levels/window) and over a 27×27 window at step **128** — same file, same ROI, breakpoint moving with the window.
+22. **P22 — MEASURED, `109MSDCF`, contradicts ORCH's replacement rule.** A statistic is **not** a location statistic merely because its output is a position. At step 256 the per-pixel focus-peak position was off by **3.550 frames** (5×5) and **1.268 frames** (27×27) while a signal-dominated dispersion statistic on the same data was off by **5.5 %**. The position statistic was destroyed where the dispersion statistic was nearly intact.
+23. **P23 — ARGUED from P22.** The mechanism is that the focus peak is the **argmax of a gradient-energy field**, and gradient energy is itself fragile. Locating the peak of a fragile quantity inherits its fragility. This matters directly: **`strehl`'s merge election is argmax-of-gradient-energy**, so it must not be triaged as an immune location statistic.
+24. **P24 — MEASURED, `109MSDCF`.** Bias conceals damage that MAD reveals, because signed errors cancel. At step 16 (6.5 levels/window) the 5×5 focus-peak fit had bias **+0.014 frames** but MAD **0.622 frames**. An immunity claim resting on bias is valid only for a statistic that is itself an average over windows.
+25. **P25 — MEASURED, `109MSDCF`.** "Dispersion statistic" is too coarse a triage category: at step 256 on identical data, a difference-based `P_noise` read **×3.937** while total high-frequency energy read **×1.055**, a **3.7×** spread. Fragility tracks whether the statistic **isolates a small residual from a large signal**, not whether it is a dispersion measure.
+26. **P26 — MEASURED, `109MSDCF`.** A minimum-support floor converts silent corruption into refusal, progressively: admitted samples fell **404 623 → 56 616** (5×5) and **408 004 → 134 651** (27×27) across the sweep, and the count varied at every level, so the control was not saturated in ORCH's sense.
 
 ---
 
@@ -333,7 +339,49 @@ It does not threaten the headline, for three independent reasons:
 
 ---
 
-## 11. Housekeeping for ORCH
+## 11. Independent replication of ORCH's replacement triage rule
+
+ORCH's correction #2 replaced the triage questions with *"does the statistic read pixel **value** or feature **position**?"*, claiming location statistics are largely immune and dispersion statistics are destroyed, with immunity ending near **12 distinct levels per fitted window**. That rule rests on one milestone (M113), and it decides whether other agents discard correct work. M115 can test it independently, because it contains both statistic types over the same pixels — and, uniquely, integrates the **same** statistic over **two window sizes** (`FINE_W = 5`, `COARSE_W = 27`, area ratio 29×), which makes the *per-window* claim sharply falsifiable.
+
+Predictions R1–R4 were registered in the script header before the sweep ran (`s10_positionstat.py`). Position statistic: per-pixel sub-frame focus peak (argmax along the focus axis, parabolic refinement) — the direct analogue of a sub-pixel alignment offset. `109MSDCF` detail ROI, span 2150 DN.
+
+| quantisation step | levels/window 5×5 | levels/window 27×27 | position MAD 5×5 | position MAD 27×27 | dispersion |
+| --- | --- | --- | --- | --- | --- |
+| 1 (intact) | 23.00 | 258.00 | — | — | 1.000× |
+| 16 | 6.50 | 15.50 | **0.622** | 0.101 | 1.000× |
+| 64 | 3.00 | 5.00 | 2.215 | 0.499 | 1.004× |
+| 256 | 2.00 | 2.00 | **3.550** | 1.268 | **1.055×** |
+| 2048 | 1.00 | 1.00 | 4.445 | 3.341 | 1.940× |
+
+### 11.1 What replicates — the bound is genuinely per-window
+
+**R3 PASSES.** The 5×5 fit breaks at step **64** (3.0 levels/window); the 27×27 fit at step **128**. Same file, same ROI, same narrowing — only the window differs, and the breakpoint moves with it. ORCH's insistence on counting levels in *the window the statistic integrates over*, not the file or the ROI, is **independently confirmed**. **R4 PASSES**: the fit returned finite, plausible numbers at every step, never refusing. The failure is quiet, as ORCH warned.
+
+**The support floor is confirmed as a real defence.** Admitted samples fell 404 623 → 56 616 (5×5) and 408 004 → 134 651 (27×27) across the sweep: the floor converts damage into refusal, progressively. ORCH's saturation check was applied to my own control and **passes** — the admitted count varies at every level, so the control was not testing nothing.
+
+### 11.2 What does not replicate — the rule inverts on the estimator this project runs
+
+**R2 FAILS, and it fails in the direction that matters.** At step 256 the *position* statistic is off by **3.550 frames** (5×5) and **1.268 frames** (27×27), while the signal-dominated *dispersion* statistic is off by **5.5 %**. **The position statistic is destroyed where the dispersion statistic is nearly intact** — the exact opposite of the rule.
+
+The mechanism is specific and, I think, the important part: **my position statistic is the argmax of a gradient-energy field.** Gradient energy is on ORCH's own "destroyed" list. Locating the peak of a fragile quantity inherits its fragility; the fact that the *output* is a position does not make the *input* value-robust.
+
+> **A statistic is not a location statistic merely because its output is a position.** What matters is whether the field whose position is being located is itself value-robust. M113 locates a peak in image intensity; M115 locates a peak in gradient energy. Same output type, opposite behaviour.
+
+This is not an edge case for `strehl`. **"Which frame is sharpest" is exactly argmax-of-gradient-energy, and it is the core operation of the entire merge.** Under ORCH's rule as written, an agent would classify the focus election as a location statistic and call it immune. Measured: at 3 levels/window the per-pixel election moves **2.2 frames**.
+
+### 11.3 Two further corrections, both measured
+
+**Bias hides what MAD reveals.** ORCH quoted M113's *bias* (+2.1 % at a step of 8192 DN). Bias is a mean of signed errors and they cancel. At step 16 my 5×5 fit has bias **+0.014 frames** — apparently pristine — while its MAD is **0.622 frames**, at 6.5 levels/window. **An immunity claim resting on bias can be clean while every individual window is badly wrong.** Bias is the right measure only for a statistic that is itself an average over windows; anything consuming the per-window value needs MAD.
+
+**"Dispersion statistic" is too coarse a category.** At the *same* step 256 on the *same* data, two dispersion statistics differ by **3.7×**: the difference-based `P_noise` of §10.2 reads **×3.937**, the total high-frequency energy here reads **×1.055**. The first isolates a small residual; the second is signal-dominated. What predicts fragility is not "dispersion" but **whether the statistic isolates a small quantity from a large one** — which is, awkwardly, close to the second question ORCH just retracted. My registered **R1 also fails in part**: I predicted no immune plateau for dispersion, and steps 16 and 64 sit within 1 % of intact. (R1's registered *direction* was also wrong — quantisation *adds* high-frequency energy; rescored on monotone departure from intact it passes.)
+
+### 11.4 The corrected one-line reason ORCH asked for
+
+> **M115: NOT EXPOSED — and not by location-statistic immunity.** Its statistics are dispersion statistics (band `P_sig`/`P_noise`/SNR), which ORCH's rule correctly calls fragile; the milestone is safe because every input is `rawpy` uint16 camera RAW that was never narrowed, verified by assert at 2420/4906/7367 distinct levels (§9). Its one position-like statistic, the focus-peak election, is **not** immune — it is argmax of gradient energy and moves 2.2 frames at 3 levels/window.
+
+---
+
+## 12. Housekeeping for ORCH
 
 - **`M115` is not in the `AGENTS.md` milestone ledger**, which ends at `M113`. The allocation needs recording.
 - **The dispatching brief named no prior research.** M20 (`M20-deconvolution-ceiling-measured.md`), M41 (`M41-r3-kill-measured.md`) and M70 (`M70-through-focus-spectrum.md`) all bear directly on this question — M41 tested this exact proposal and killed it on the noise axis. Rule 43: an assertion of absence is a claim. All three were found by the rule-40 search and are cited throughout.
