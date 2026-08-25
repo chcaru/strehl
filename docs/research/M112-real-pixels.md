@@ -561,3 +561,121 @@ folding any percentage-of-deficit claim, ask whether the underlying effect is
 additive; if it is a threshold, record the counterfactual **and** the marginal
 recovery, because only the second one is a fix.
 
+---
+
+## 10. Quantisation re-derivation, after the triage rule was withdrawn
+
+M112 cannot clear itself by the shape of its expression. Its statistic is a
+**band power ratio** — M115's exact algebraic case — and it reads pixel **value**,
+not feature **position**, which is V-M113's exposed class. So this section does
+both things the withdrawal asks for: expand the algebra, then measure a
+dose-response control (`src/p0c_quant.py`, `src/p0d_decomp.py`).
+
+### 10.1 Measured exposure of the actual input
+
+`single-noalign.tif` is `uint16` with **22 425 distinct levels**; after luma
+conversion the **median 256 px tile holds 65 486 distinct levels**, against
+V-M113's stated hazard threshold of **12**. No tile is below it.
+
+### 10.2 Dose-response ladder — the decision never flips
+
+40 tiles pinned on the undosed image, 24 frames, band and arms unchanged:
+
+| measured levels / tile | `NOW` | `FIX` | **recovery** | `REFONLY` control | decision |
+| --- | --- | --- | --- | --- | --- |
+| 65 486 (the real data) | +0.1813 | +0.1855 | **−0.0042** | +0.1836 | DEAD |
+| 1 425 | +0.1813 | +0.1855 | **−0.0042** | +0.1836 | DEAD |
+| 380 | +0.1816 | +0.1857 | **−0.0041** | +0.1839 | DEAD |
+| 98 | +0.1852 | +0.1886 | **−0.0034** | +0.1875 | DEAD |
+| 25 | +0.1968 | +0.1973 | **−0.0005** | +0.1984 | DEAD |
+| 7 | +0.2002 | +0.1921 | **+0.0082** | +0.2055 | DEAD |
+| 5 | +0.2027 | +0.1907 | **+0.0120** | +0.2099 | DEAD |
+| 4 | +0.2105 | +0.1950 | **+0.0155** | +0.2144 | DEAD |
+| 2 | −0.0152 | −0.0753 | **+0.0602** | +0.0766 | DEAD |
+
+**A 46× narrowing moves the decision number by 0.0001 dex**, against a `+0.10`
+bar. `REFONLY` stays alive at every rung, so a small reading means a small
+effect and not a dead instrument (P-D held).
+
+**The direction is the clearance.** Quantisation drives the measured recovery
+**more positive — toward "ship"**. It works *against* a no-go, so it cannot have
+manufactured one, and the real data sits at the undosed end of the curve.
+
+### 10.3 The registered prediction that failed, and where it led
+
+**P-A was CONTRADICTED and is reported rather than dropped.** I registered, from
+M115's factorisation, that the cost would **compress toward zero**. It
+**inflates**, `+0.1813 → +0.2105`.
+
+`p0d_decomp.py` separates the two terms of `cost = BR(base) − BR(gathered)`:
+
+| measured levels / tile | `BR(base)` | `BR(gathered)` | Δ`BR(base)` |
+| --- | --- | --- | --- |
+| 65 486 | −3.1296 | −3.1631 | +0.0000 |
+| 98 | −3.0545 | −3.0979 | +0.0751 |
+| 25 | −2.6033 | −2.6981 | +0.5263 |
+| 5 | −2.1779 | −2.3174 | +0.9518 |
+| 2 | −2.0059 | −2.0024 | **+1.1237** |
+
+**The control's own high-band power inflates by +1.1237 dex.** A common additive
+floor cannot do that — it enters control and arm alike and cancels.
+
+**The error was writing `|H|²` as a scalar.** `band_ratio` is a **mean over a
+band**, and the gather's transfer falls across that band, so a band mean is a
+**spectrum-weighted average** of `|H|²`. The image's spectrum is red and sits
+where `|H|²` is high; a quantisation floor is white and puts relatively more
+power at the band's **upper** edge where `|H|²` is **lowest**. The floor is
+therefore attenuated *more* than the signal it displaces, and the cost rises as
+the floor takes over the band. **The perturbation lands in the band weighting,
+not in a common factor.**
+
+### 10.4 The differencing hazard, and one flag that is not mine
+
+The measured statistic is `abs(fft2(...))**2` with **no split-half, no
+frame-difference and no paired estimator anywhere in the chain** — there is no
+noise estimate to be fooled, so the 16× under-report does not reach it.
+
+**Flagged, not buried:** `m95cov.pick_tiles` ranks tiles by
+`np.diff(t, axis=0).var() + np.diff(t, axis=1).var()` — a **differencing
+dispersion statistic of exactly the exposed kind**. It cannot bias these arms,
+because the selection is pinned once on the **undosed, native-precision** image
+and applied identically to every arm and every dose. But it is shared
+instrumentation, and **any milestone that runs `pick_tiles` on narrowed data is
+exposed.**
+
+### 10.5 Additional candidates from this section
+
+**P11 — MEASURED.** M112's verdict is not quantisation-exposed. The input holds
+**65 486 distinct levels per tile** against a hazard threshold of 12; a 46×
+narrowing moves the decision number by **0.0001 dex**; and the decision does not
+flip anywhere on a ladder down to 1 level per tile. **Quantisation drives the
+measured recovery *more positive*, toward "ship", so it works against a no-go
+and cannot have produced one.**
+
+**P12 — MEASURED, and it contradicts a registered prediction.** A quantisation
+floor **inflates** this band-ratio cost (`+0.1813 → +0.2105`) rather than
+compressing it. The control's own high-band ratio rises **+1.1237 dex**, which a
+common additive floor cannot do. **A band-mean statistic weights `|H(f)|²` by
+the spectrum that dominates the band**, so a white floor — concentrated where
+`|H|²` is lowest — is attenuated more than the red signal it displaces. M115's
+compression result and this inflation are **not in conflict**: they are the same
+factorisation with the perturbation landing in different factors.
+
+**D6 — In a band-averaged statistic, never write a transfer function as a
+scalar; the perturbation's own spectrum decides which part of the band it lands
+in.** My expansion said the floor cancels exactly and predicted a flat ladder;
+the measurement moved 0.19 dex. The step that hid it was replacing `|H(f)|²`
+with a constant, which silently assumes the perturbation has the same spectral
+shape as the signal — and quantisation, being white against a red signal, is the
+case where that assumption is worst. This is the concrete form of *"expand it
+algebraically and see which factor the perturbation actually lands in"*: the
+factor can be a **weighting inside an average**, not a term in a product.
+
+**D7 — Tile or window SELECTION is instrumentation and carries the hazards of
+its own statistic.** `pick_tiles` scores by a differencing dispersion, so a
+milestone that selects windows on narrowed data inherits the under-report even
+if its measured statistic is immune. Pinning the selection to the undosed,
+full-precision image and reusing it across every arm and dose costs nothing and
+removes the exposure.
+
+
