@@ -1,0 +1,165 @@
+M116-promotion — PRE-REGISTRATION ADDENDUM: CAMPAIGN 4b, THE DISPLACEMENT
+INSTRUMENT
+=========================================================================
+
+Written and committed BEFORE this instrument has scored anything. The renders
+it reads already exist (campaign 4, run under prereg-ca.txt @ 188b55c), so
+this file cannot be fitted to a result it has not yet seen — but the reader is
+entitled to that caveat and it is stated here rather than left to be noticed:
+THE PIXELS EXIST AND THE NUMBERS DO NOT. The controls below are designed to be
+decidable without me choosing anything after the fact, and CD1/CD2 are pinned
+to values fixed by the source, not by the data.
+
+
+WHY THIS ADDENDUM EXISTS: THE REGISTERED INSTRUMENT FAILED ITS OWN PLANT
+------------------------------------------------------------------------
+prereg-ca.txt registered a chroma-excess metric
+
+    X = median|R-G|(edge band 0) - median|R-G|(far band 5)
+    dX% = 100 * (X_off - X_on) / X_off
+
+and registered CB3, a plant: displace R radially outward by 0.5 px and require
+the metric to read dX% <= -20%. I predicted it would pass, and wrote "if it
+fails, the campaign stops here."
+
+IT FAILED.
+
+    flat-on-ruler-cpl   plant reads  -16.45%   (bar: <= -20%)   FAIL
+    bee-3-cpl           plant reads +104.05%   -- wrong SIGN entirely
+
+The diagnosis, and it condemns the metric rather than the correction:
+
+    bee-3-cpl, in-support band:  X_off = -133.0 DN
+
+X IS NEGATIVE. The construction assumes chroma peaks at edges and decays to a
+clean far-field baseline. On a bee that is false: the subject is strongly and
+largely coloured, so median |R-G| five pixels from an edge is dominated by
+SUBJECT COLOUR, not by fringe, and it exceeds the value at the edge. A
+percentage reduction of a negative baseline is not a reduction of anything.
+
+CONSEQUENCE, applied without negotiation: every dX% figure from campaign 4 is
+VOID, including the ones that flattered the correction — bee's +35.34% and
+flat-on-ruler's +66.79%. They are not reported as results. CB4 (the centre
+trap) also failed, at -4.05% on bee against a +/-3.0 bar, and it is void by the
+same defect: it is a ratio of the same broken quantity.
+
+This is the fact-1548 failure mode caught in the direction it is supposed to be
+caught in — by the plant, before a positive was published, rather than after.
+
+
+THE REPLACEMENT, AND WHY IT CANNOT FAIL THE SAME WAY
+----------------------------------------------------
+Lateral chromatic aberration IS a displacement: the red image is formed at a
+slightly different magnification from the green one, so red is displaced
+radially with respect to green, by an amount proportional to radius. That is
+what `OpticalProfile::displacement_at` returns and it is what the correction
+undoes.
+
+So measure the displacement, not a colour proxy for it.
+
+    For each annulus of normalised radius r, in each of 8 azimuthal sectors,
+    take a window of the R plane and the G plane and compute the sub-pixel
+    shift of R relative to G by phase correlation at 1/100 px resolution.
+    Project that shift onto the RADIAL direction of the sector.
+    RD(r) = median over sectors of the radial R-vs-G displacement, in px.
+
+Properties that matter, and each is why it replaces the proxy:
+  - It cannot go negative-baseline. It is a signed displacement with a true
+    zero, not a difference of two medians of an unsigned quantity.
+  - It is immune to subject colour. Phase correlation keys on STRUCTURE. A
+    large flat yellow region carries no registration information and cannot
+    masquerade as a fringe.
+  - Its units are the same units the profile is written in, so the prediction
+    is quantitative rather than directional: the correction should drive RD to
+    zero, and by a known amount.
+  - It has a free, exact trap: at r = 0 the radial term vanishes by
+    construction, so RD(centre) must read ~0 both arms.
+  - It has a free, exact plant: displace R by a known 0.5 px and the
+    instrument must recover 0.5 px, not merely "something".
+
+Already established, before this addendum was written, and carried forward:
+  - The applied profile is TRANSLATION-FREE. `profile_from_setting`
+    (optics.rs:456-458) resolves the key `a7c2-fe100gm-2xtc-x4cpl` to
+    `A7C2_FE100GM_2XTC_X4CPL_RADIAL`, whose `translation` is (0,0). The
+    non-zero (0.6294, -0.4240) in the named constant is recorded as provenance
+    and NOT applied.
+  - Measured, independently and before that line was found: the red plane's
+    displacement at the frame centre is 0.0224 px, against 0.7589 px if the
+    translation were applied. The measurement corrected my source reading and
+    the source then confirmed the measurement.
+  - Green does not move at all: 0.0000 px on both subjects scored.
+
+
+BARS — fixed here, before the instrument has produced a number
+---------------------------------------------------------------
+CD1  PLANT / calibration.  Deciding.
+     Take the OFF render, displace R radially outward by a known +0.50 px at
+     the corner, and score. The instrument must RECOVER that displacement.
+     PASS = measured change in RD at the outermost annulus is within
+     +/-0.10 px of the planted +0.50 px, on every subject scored.
+     This is stronger than campaign 4's CB3, which only required "some large
+     movement in the right direction". A calibrated instrument must return the
+     number, not the sign.
+
+CD2  TRAP.  Deciding.  (discipline 797)
+     |RD(centre annulus)| <= 0.10 px in BOTH arms, on every subject.
+     The applied profile is radial-only and vanishes at r = 0, so a correction
+     that moves the centre is not correcting lateral CA.
+     Pinned to a value fixed by the source (the radial term is exactly zero at
+     r=0), not chosen from the data.
+
+CD3  NULL.  Deciding.
+     Green must not move: |GD| <= 0.02 px in every annulus, both arms.
+     Green is the profile's reference channel and has no coefficient. If green
+     moves, the gather is doing something the profile does not describe.
+
+CD4  PRIMARY.  Does the correction reduce lateral CA?
+     PASS = |RD_on(r)| < |RD_off(r)| in the in-support band (0.55 <= r <=
+     0.788) on at least 3 of the 4 subjects, AND on at least one TRANSFER
+     subject (tweezers-cpl, flower-bud-with-background-fern-cpl), which M110
+     never used.
+
+CD5  MAGNITUDE.  How much, and does it match the profile?
+     Report the fraction of lateral CA removed,
+         Q(r) = 1 - |RD_on(r)| / |RD_off(r)|,
+     per annulus. DESCRIPTIVE, no bar, because I have no independent prior for
+     it: M99's +6.88% is retracted (fact 1551) and M110's 61.0/58.7 are a
+     DIFFERENT quantity (chroma amplitude, not displacement) and must not be
+     read as a prediction of this one.
+     Registered prediction, so it can be wrong: Q > 0.5 in the in-support band.
+
+CD6  OVERSHOOT.
+     Report the sign of RD_on. If RD_off > 0 and RD_on < 0 the correction has
+     pushed red past green — over-correction, which M107/M114 dispute at
+     1.06-1.25x. DESCRIPTIVE; I do not adjudicate their dispute, I only report
+     what this instrument reads.
+
+CD7  DO-NO-HARM carries over unchanged from CB6, which did NOT depend on the
+     broken quantity: D = log10(highpass ON / OFF) on oriented content,
+     PASS = D >= -0.02 dex on every subject, scored on R, B and luminance and
+     decided on the WORST of the three.
+     Campaign 4 already measured D_worst = -0.00169 (bee) and -0.00101
+     (flat-on-ruler). Those stand; they are not ratios of X.
+
+
+PROMOTION RULE — unchanged in structure from prereg-ca.txt section 5
+--------------------------------------------------------------------
+Recommend flipping STREHL_FIX_CA on by default ONLY IF
+    CD1 and CD2 and CD3 PASS   (the instrument is calibrated, trapped, nulled)
+  AND CD4 PASS                 (it transfers to a subject M110 never used)
+  AND CD7 PASS                 (it costs no fine structure)
+
+AND EVEN THEN the recommendation stays conditional on the gear caveat from
+prereg-ca.txt S7, which is not weakened by anything here: the profile
+describes ONE optical path, the binary cannot detect gear, and the CPL rests
+on the owner's filename convention rather than on any metadata.
+
+WHAT WOULD MAKE ME WRONG
+------------------------
+- CD1 fails. The instrument cannot recover a planted displacement and I have
+  no business reporting displacements. The campaign then ends with "no
+  instrument", which is a legitimate and publishable outcome.
+- CD4 passes on the two reproduction subjects and fails on both transfer
+  subjects: the coefficients are fitted to their own subjects.
+- Q comes out small, or RD_on flips sign: the correction is real but badly
+  scaled, which would corroborate M107/M114's over-correction reading.
