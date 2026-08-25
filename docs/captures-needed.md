@@ -97,6 +97,48 @@ and unset it with `Remove-Item Env:\STREHL_PHOTOMETRIC`. It costs about
 default. **Look at it at 100% on a smooth out-of-focus background** — it is a
 correction to flat areas and it is invisible at full-frame scale.
 
+#### The near-miss: why the soft gate says "leave off" twice
+
+*This is the most instructive thing that happened tonight and it is the reason
+the table above has only one recommendation in it.*
+
+Having found that the exposure-drift fix removes the background blotches, I
+scored the other candidates on the same statistic to see whether any did better.
+**Three of them did — all of them, on every subject, by a wide margin.** Lower is
+better here, since the number is how much of the blotchiness survives:
+
+| switch | on `bee-3-cpl` | on `tweezers-cpl` |
+| --- | --- | --- |
+| exposure-drift fit (the one I'd just verified) | 1.064 | 0.710 |
+| soft gate, gaussian | **0.808** | **0.553** |
+| soft gate, exponential | 0.819 | 0.562 |
+| both together | 0.809 | **0.544** |
+
+On the numbers I had just used to promote a fix, the soft gate beat it
+everywhere. I came very close to writing it up as the better answer.
+
+**It is a blur.** The check that caught it costs almost nothing: alongside the
+smooth patches where blotches live, measure a **textured** patch where removing
+detail is forbidden. The exposure-drift fix leaves texture alone — **1.037** on
+bee, **1.027** on tweezers, i.e. untouched. The gaussian soft gate cuts the
+textured patch by **30.5%**, as much as it cuts the smooth ones. Then I looked at
+it: leg hairs smeared, a small highlight gone entirely. It scores well on
+"blotchiness removed" for the same reason a smear of vaseline would.
+
+Two things worth taking from this:
+
+- **It agrees with a completely separate rejection.** An earlier milestone had
+  already turned the soft gate down using a different statistic, on different
+  pixels, for a different reason. Two independent methods reaching the same
+  verdict is far stronger evidence than either alone, and it is why that row says
+  "leave off" rather than "not yet".
+- **The general form, which now applies to every future candidate here:** any
+  measure that rewards *removing* something is maximised by removing
+  everything. It has to be paired with somewhere removal is forbidden — and that
+  pairing has to **decide the ranking, not sit beside it as a footnote.** Had I
+  reported the control as a caveat rather than a gate, the table above would be
+  recommending a blur to you this morning.
+
 **I then spent two hours promoting the wrong one, and the correction is worth
 recording because you would otherwise have read it here as fact.** I picked out
 the halo correction — the fringe around silhouettes — because its source notes
