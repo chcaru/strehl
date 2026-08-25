@@ -106,6 +106,28 @@ merge is doing in two specific and now well-characterised ways:
    than asserted — see the correction further down. Caused by the blending
    recipe changing from place to place across the frame.
 
+**A third measurement landed at the end of the night, and it is the bluntest one
+yet.** An independent check re-rendered *all 100 frames* of three of your stacks
+and scored the merge against the best single frame — not on sharpness alone,
+which turns out to reward leftover noise, but on sharpness *minus* what the merge
+does to your flat backgrounds. Both sides were run **with alignment switched
+off**, so this is not a verdict on the default path, and I want that limitation
+in the sentence rather than in a footnote. With that said:
+
+| your stack | lighting drift | merge vs. best single frame |
+| --- | --- | --- |
+| `bee-3-cpl` | 1.6% | **merge wins, and not narrowly** — 0.61 vs 0.15 |
+| `tweezers-cpl` | 13.8% | **the single frame wins** — 0.84 vs 0.37 |
+
+On `bee-3-cpl` the merge does exactly what it should: it *quietens* the
+background while keeping detail. On `tweezers-cpl` it does the opposite — it
+makes the background **worse** than the single frame it started from, and that
+is the blotching you can see. Two subjects is not a law, but it points the same
+way as the 14-stack result below, from a completely different statistic: **the
+merge is helping you on stacks where the light held still, and hurting you on
+stacks where it moved.** That is the most useful thing I learned all night,
+because it tells you which of your own pictures to trust it on today.
+
 And one genuine gain, the only thing tonight that both explains a defect you can
 see *and* hands you something to do about it: **the background blotching is
 caused by your lighting drifting between frames**, confirmed across 14 of your
