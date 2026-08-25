@@ -378,6 +378,77 @@ measured the average-side specification at **-5.21%** against a registered
 happened, and fact 1189's ruling — **"Do not re-specify the average-side mask;
 gate the election"** — stands unchallenged by anything in this milestone.
 
+**M16 — MEASURED, in response to the withdrawal of the absolute-vs-ratio triage
+rule. Two of this report's three clearance legs were invalid; the surviving one
+is the direct read, and the position statistics clear on the replacement axis by
+a 4.7x margin.**
+
+The withdrawn rule triaged on statistic *form*. The replacement axis is
+**value vs position** (V-M113), and this report contains both, so it splits:
+
+*Value.* `chi2 = (1/N) sum (a-b)^2 / (var_a+var_b)` is a dispersion statistic
+**and a frame-difference one**. It therefore cannot clear itself: a differencing
+estimator books the frame-correlated half of quantisation error as *signal*, so
+a narrowed set reads **less** noisy than it is. My original clearance offered
+three legs and **two of them were exactly this** — "the null's spread matches
+`sqrt(2/N)`" and "the radius law holds across 25x in `m`". Both are dispersion
+estimates on frame differences. **They are withdrawn as evidence of input
+integrity.** They remain valid as *findings*, conditional on the input being
+intact; they simply cannot be what establishes that it is.
+
+The surviving leg is the one that estimates no noise at all: sort the distinct
+values, take the minimum gap. Measured **0.5000 DN exactly**, the native
+half-integer lattice of `0.5*(G1+G2)`, at 95.8% occupancy. A direct lattice read
+is immune to the correlation mechanism because it never differences anything.
+
+*Position.* `shift_tiles`' Lucas-Kanade displacement, and everything derived from
+it — the `rms|s|` separation (M5), the similarity-fit residuals (M6), the
+planted-translation response (M8), `foam`'s mean `|s| = 4.84 px` (M12). V-M113
+puts immunity at **>12 distinct levels per fitted window**, inverting at 2. The
+window here is one 32x32 tile:
+
+| stack | min | median | max | <12 levels | <2 levels |
+|---|---:|---:|---:|---:|---:|
+| flat-null | **56** | 62 | 68 | **0.00%** | 0.00% |
+| `109MSDCF` | 64 | 238 | 882 | **0.00%** | 0.00% |
+| `foam` | 210 | 447 | 858 | **0.00%** | 0.00% |
+
+The worst single tile in the entire measurement set carries **56 levels** —
+**4.7x** the immunity threshold and 28x the inversion point. Zero tiles below
+either bound on any stack. The position statistics are cleared on the
+replacement axis, by measurement rather than by form.
+
+*And the law is not itself a quantisation artefact.* A 0.5 DN step has error
+variance `0.25/12 = 0.0208 DN^2`; the flat's per-sample noise variance is
+`sigma^2 ~ 53 DN^2` (58.5 DN span over ~8 sigma). The ratio is **3.9e-4**, at
+most **5.1%** of the measured `c = 0.0076`. Structurally it is smaller still:
+quantisation error varies pixel to pixel, so box-averaging attenuates it by `m`
+like any white term — it lands in the law's **intercept**, not in its slope.
+The coherent term must be correlated over tens of pixels, and quantisation is
+not.
+
+**M17 — THE NUMBER THAT DOES NOT FIT, reported rather than rounded.** The law
+`chi2 = 1 + c*m` fits `m = 25..625` at `c = 0.0072, 0.0075, 0.0076, 0.0077,
+0.0076` — flat to 3% over a 25x range. **The first low-pass point does not
+join it:** at `m = 9`, `(chi2-1)/m = 0.0056`, **27% below** the asymptote, and
+the approach is monotone rather than scattered.
+
+A short correlation length explains the low point — at `r=1` the 3x3 box is
+smaller than the coherent component's correlation scale, so it still attenuates
+it, and the term only behaves as pure DC once the box exceeds that scale. That
+puts the scale at roughly the `r=2..3` box, **5-7 px**.
+
+**But that explanation is incomplete, and I would rather say so than bank the
+fit.** A component with a 5-7 px correlation length must *itself* begin
+averaging down once the box greatly exceeds it, bending the law below linear by
+`r=12` (25x25). It does not bend: `m=625` sits within 1% of the linear
+prediction. A single finite correlation length cannot produce both facts. The
+honest reading is **two** coherent components — one at ~5 px that averages out
+by `r=3`, and one effectively global that never averages, most plausibly the
+frame-to-frame level drift that also moves the per-pair means 0.9427 to 1.2758
+across this burst. That is a prediction, it is falsifiable by measuring the
+difference's spatial autocorrelation directly, and I have not done it.
+
 **M14 — DERIVED, and it is the most useful thing in this report. My result and
 M89's are not in conflict; the difference between them localises exactly why
 `outlier.rs` cannot work as designed.** M89 asked the same question — does a

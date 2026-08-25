@@ -313,7 +313,78 @@ fn main() -> Result<()> {
     println!("  If the within-pair ratios are ~1x and the between-pair sd is large,");
     println!("  fact M2's 2.82x was MY POOLING, not the sensor, and M2 must be retracted.\n");
 
-    // ---- the foam reconciliation, in the denominator that makes it readable --
+    // ---- RE-DERIVATION ON THE VALUE/POSITION AXIS -------------------------
+    //
+    // The absolute-vs-ratio triage is withdrawn. The axis that matters is
+    // whether a statistic reads pixel VALUE or feature POSITION: location
+    // statistics dither away because quantisation error is zero-mean and
+    // uncorrelated with sub-pixel position, and they average over many windows;
+    // dispersion statistics absorb the variance directly. Immunity ends near
+    // **12 distinct levels per fitted window** and inverts sign at 2.
+    //
+    // This milestone reports both kinds, so it must be split:
+    //
+    //   VALUE  - `chi2 = (1/N) sum (a-b)^2 / (var_a+var_b)`. A dispersion
+    //            statistic, and a frame-difference one. Maximally exposed in
+    //            principle, and it CANNOT clear itself: a differencing
+    //            estimator books the frame-correlated half of quantisation
+    //            error as signal, so a narrowed set looks LESS noisy than it
+    //            is. Cleared instead by the direct lattice read above, which
+    //            estimates no noise at all.
+    //
+    //   POSITION - `shift_tiles`' Lucas-Kanade displacement `s`, and every
+    //            number derived from it: the rms|s| separation, the similarity
+    //            fit residuals, the planted-translation response, foam's mean
+    //            |s| = 4.84 px. Immune per V-M113 **only while the fitted
+    //            window carries more than ~12 distinct levels.** The window
+    //            here is one 32x32 tile, which is small, and the flat crop
+    //            showed only 113 levels over its whole span - so this is a
+    //            live question rather than a formality, and it is measured.
+    println!("-- levels per 32x32 LK window (V-M113 immunity: >12 ok, 2 inverts)");
+    println!(
+        "{:>18} {:>9} {:>9} {:>9} {:>10} {:>10}",
+        "stack", "min", "median", "max", "<12 lvls", "<2 lvls"
+    );
+    println!("{}", "-".repeat(70));
+    for (label, dir) in [
+        ("flat-null", r"D:\personal\macro\flat-fields\flat-fields"),
+        ("109MSDCF", r"D:\personal\macro\109MSDCF"),
+        ("foam", r"D:\personal\macro\foam"),
+    ] {
+        let d = Path::new(dir);
+        if !d.exists() {
+            continue;
+        }
+        let paths = arws(d)?;
+        let (a, geom, _) = load(&paths[0])?;
+        let grid = TileGrid::new(geom, 32);
+        let mut counts: Vec<usize> = Vec::with_capacity(grid.len());
+        for ty in 0..grid.rows {
+            for tx in 0..grid.cols {
+                let mut v: Vec<f32> = Vec::with_capacity(1024);
+                for row in 0..32 {
+                    let src = (ty * 32 + row) * geom.width + tx * 32;
+                    v.extend_from_slice(&a[src..src + 32]);
+                }
+                v.sort_by(|x, y| x.partial_cmp(y).unwrap());
+                v.dedup();
+                counts.push(v.len());
+            }
+        }
+        counts.sort_unstable();
+        let n = counts.len();
+        println!(
+            "{label:>18} {:>9} {:>9} {:>9} {:>9.2}% {:>9.2}%",
+            counts[0],
+            counts[n / 2],
+            counts[n - 1],
+            counts.iter().filter(|c| **c < 12).count() as f64 / n as f64 * 100.0,
+            counts.iter().filter(|c| **c < 2).count() as f64 / n as f64 * 100.0
+        );
+    }
+    println!();
+
+
     //
     // A tile fires if motion touches ANY part of its 32x32 = 1024 pixels, so a
     // per-tile rate is an upper bound on a per-pixel rate. Fact 1189's 4.78% is
