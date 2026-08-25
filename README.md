@@ -31,11 +31,38 @@ diffraction-limited ideal.
 > is what the extra ~28 s buys. Full sensor resolution is **free**: the binned
 > render measures 51.4 s, inside the run-to-run spread of the full one.
 >
-> **Not yet built:** deconvolution, outlier rejection, occlusion modelling.
-> Those are what the current output's visible defects come from — most obviously
-> a bright veil along the subject silhouette, which is present at `--gate 0`,
-> survives alignment, and has **no established mechanism**: the three obvious
-> explanations are each measured and each refuted (`crates/strehl-cli/src/merge_cmd/halo.rs`).
+> **Measured and refused, not pending.** Two items previously listed here as
+> "not yet built" have since been built, measured against the merge that already
+> ships, and declined:
+>
+> - **Multi-frame deconvolution.** `R_SNR = 1.0014`, CI **[0.965, 1.038]** — the
+>   interval excludes a useful effect rather than merely failing to find one.
+>   The apparent sharpening was **2.51x** contrast bought with **2.03x** noise,
+>   and **29.5-36.4%** of output pixels fell outside the convex hull of their own
+>   sources (invented values) against **exactly 0.0000%** for every convex arm.
+>   The proposed safety guard — self-calibrating the OTF from the through-focus
+>   curve — is separately **refuted**. See
+>   [`M115`](docs/research/M115-deconv-headroom.md).
+> - **Outlier rejection.** Built or specified and refused **four independent
+>   times**. Most recently it fired on **29.55%** of a *stationary* subject and
+>   **4.3x less** on the moving one. See
+>   [`M123`](docs/research/M123-robustness-mask.md).
+>
+> **Still open, and correctly attributed:** occlusion modelling — a bright veil
+> along the subject silhouette, present at `--gate 0`, surviving alignment, with
+> **no established mechanism** (the three obvious explanations are each measured
+> and each refuted,
+> `crates/strehl-cli/src/merge_cmd/halo.rs`) — and a **polygonal patchwork in
+> defocused backgrounds**, which is now *proved* rather than observed: in a ROI
+> where all 299 input frames are featureless, the shipped render carries **3.4x
+> more fine structure than any spatially constant convex weighting can produce**,
+> so the cause is the *spatial variation* of the merge weights
+> ([`M120`](docs/research/M120-patchwork.md)).
+>
+> **The honest consequence:** there is currently **no measured route to resolving
+> detail beyond the sharpest captured frame.** The claim this project defends is
+> narrower and testable — that estimating from all frames under a calibrated
+> noise model degrades what was captured less than selection does.
 > The research corpus is in [`docs/research/`](docs/research/), and
 > [`SYNTHESIS.md`](docs/research/SYNTHESIS.md) is the decision record.
 
