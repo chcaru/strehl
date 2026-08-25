@@ -1421,3 +1421,64 @@ backdrop level shift and the fern. The bee's tight bright sheath -- the leg, the
 free claws, the antenna, the wing tips -- is the thing that disqualifies the
 print, and it is unchanged by every arm here. The broad aura is gone; the sheath
 is not, and I can see it without looking for it.
+
+
+## 17. The texture guard rejects the fix
+
+ORCH made `couch-fibers-cpl` a required do-no-harm guard: a pure-texture subject,
+dense fibres filling the frame, **no depth silhouettes anywhere**, currently good.
+If it gets worse the change is rejected regardless of what it does to the halo.
+
+Rendered `off` and `on` back-to-back from pin `1fbf95c`, judged at **100%** --
+identical crop origin (1310, 722), identical display gain 4.0318, and the two
+arms share a pixel grid, so this is a fair paired look.
+
+**It gets worse.** The `on` arm is softer: adjacent filaments are less separated,
+the specular glints along the fibres are duller, and micro-contrast is down
+across the crop. It is not subtle once the two are seen side by side, and it is
+invisible in the 1400 px full frame, because downsampling is a low-pass filter
+and this is a high-frequency loss.
+
+**The change is rejected on this evidence.** No halo result outweighs it.
+
+### 17.1 Why it fails there, and why that unifies the whole section
+
+`couch-fibers-cpl` is a subject where **every pixel is a depth step**: a tangle of
+fibres at many depths, interleaved at pixel scale. So `from_silhouettes` finds a
+step nearly everywhere and collapses the radius nearly everywhere -- and a 1 px
+focus measure on a noisy texture is a bad estimator. The winner field goes noisy
+at fine scale, the election is wrong at fine scale, and the result is mush.
+
+That is exactly the failure ORCH predicted for this guard ("an adaptive window
+that shrinks too far"), and it is the **same root cause as section 16**, seen
+from the opposite side:
+
+- over **dead ground** the radius collapses because the guide is noise;
+- over **dense texture** it collapses because there genuinely are steps
+  everywhere;
+- in both cases collapsing **buys nothing** and costs the estimator.
+
+So the rule is not "collapse where the guide varies". It has to be **collapse
+only where collapsing buys something** -- at a genuine occluding boundary, where
+a large window would straddle two depths that are actually separated. Local guide
+variation does not distinguish that case from either failure above, and every
+veto attempted so far has been an attempt to patch that one deficiency from
+outside.
+
+### 17.2 What this retracts, and what it does not
+
+Section 16.2 attributed the fern's blotchy interior to the dead-ground collapse.
+**Partly wrong.** Comparing the arms full-frame, the fern renders blotchy in the
+`off` arm too -- shipped baseline, no adaptive radius at all -- so the blotches
+are mostly the out-of-bracket fern itself, not something this rule did. That also
+answers ORCH's standing question about the fern: it is not the merge destroying
+texture, it is a subject with no sharp frame anywhere in the bracket.
+
+The **cut-out sticker outline is likewise present in the `off` arm**, and there
+it is *thicker* and carries a dark band outside it that the `on` arm reduces. So
+the sticker edge is not the radius quantisation either, and the adaptive window
+does help the rim -- just not nearly enough, and now at a price this guard says
+is too high.
+
+What section 16 still establishes stands: the control ratios of ~1, the
+retraction of "harmless to the image", and the two reasons the luma veto fails.
