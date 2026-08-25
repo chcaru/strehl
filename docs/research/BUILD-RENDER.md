@@ -1066,6 +1066,65 @@ columns above supersede it.
 
 ---
 
+## 14. The sharpness metric was reading the tone curve
+
+§12's tripwire — gradient RMS at viewing scale, subtracted between two dated
+gallery runs — reported **20 of 26 subjects "SOFTER"** on the run that carried
+the §13 tone fix. It was substantially wrong, and the way it was wrong is worth
+recording because the same trap is available to anyone who measures sharpness on
+a developed image.
+
+**Gradient RMS scales linearly with global contrast.** Multiply an image by 0.95
+and the statistic reports 0.95, with no blur anywhere. A tone change and a
+defocus are therefore *indistinguishable* under it. `TONE_BLACK_FRACTION = 0.85`
+removes less of the flare floor than the previous code, which makes
+`white − black` larger and the gain smaller, so the fix lowers global contrast by
+1–3.5% across the library — and the tripwire dutifully called that a
+library-wide regression and told everyone to stop and bisect.
+
+The isolation was already available: the §13 A/B pair, two binaries from base
+`a59ad57` differing only in `image_out.rs`. Measured on it —
+
+| subject | raw | **norm** | global contrast |
+|---|---|---|---|
+| `couch-fibers-cpl` | 0.9806 | **1.0020** | 0.9787 |
+| `flower-inner-edge-cpl` | 1.0247 | **1.0344** | 0.9907 |
+| `foam` | 0.9906 | **1.0021** | 0.9885 |
+| `lavendar-cpl` | 0.9701 | **1.0044** | 0.9658 |
+| `coffee-bubbles` | 0.9549 | 0.9840 | 0.9705 |
+
+— where `norm` is the same statistic after standardising each image to zero mean
+and unit variance. Raw falls; normalised **holds or rises**. There is no blur.
+`coffee-bubbles` is the one genuine drop and it is the correct one: its "before"
+carried 88% zero-blue, and clipping manufactures edges, so removing the clipping
+removes false high-frequency content. That is detail the render never had.
+
+`trend.py` now computes both and **takes its verdict from the normalised ratio**,
+printing the raw one beside it. A large gap between them earns the note
+`tone only`, which is itself a useful signal: it says the tone moved and the
+optics did not. Re-run on the same two directories, the count falls from **20
+softer to 11**, and `couch-fibers-cpl`, `foam`, `lavendar-cpl` and
+`flower-inner-edge-cpl` are all correctly reclassified — matching the isolated
+A/B on every one.
+
+Two consequences, and neither is comfortable:
+
+- **The 11 that remain are real, and they are not mine.** That window contains
+  commits from two other lanes. This is routed to ORCH rather than investigated
+  here, because those files are not mine to bisect.
+- **§12's finding inherits the caveat.** "17 of 26 softer, bisected to
+  `57e4554`" was measured with the confounded statistic. That conclusion was also
+  confirmed by looking at 100% crops, which is why I still believe it, but the
+  *magnitude* quoted there should be treated as an upper bound until it is
+  re-measured with the normalised ratio.
+
+The general form is the one this project keeps re-learning: **a statistic
+computed on a developed image measures the development as well as the thing you
+meant to measure.** It is the same error as measuring quality on an `--srgb`
+render, which this project already has a rule against, wearing different clothes.
+
+---
+
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
