@@ -731,7 +731,7 @@ impl FocusStats {
     /// at each end of every chunk are unavoidably starved, so a healthy run
     /// shows `2 * Z_HALF * chunks`. A run in which this equals
     /// [`FocusStats::frames_folded`] scored `z` exactly zero times and the gate
-    /// was inert — see [`RobustPassOne`] on why `merge_cmd`'s memory-derived
+    /// was inert — see `RobustPassOne` on why `merge_cmd`'s memory-derived
     /// `chunk_len` makes that a routine outcome rather than an exotic one.
     pub fn window_starved_frames(&self) -> Option<u32> {
         self.robust.as_ref().map(|r| r.starved)

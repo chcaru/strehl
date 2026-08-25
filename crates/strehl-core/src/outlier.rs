@@ -18,20 +18,43 @@
 //! destroying the render.
 //!
 //! So the discriminator has to be **blind to focus difference and sensitive to
-//! motion**. This module implements two and is built so they can be measured
-//! against each other rather than assumed:
+//! motion**. This module implements **four**, and is built so they can be
+//! measured against each other rather than assumed. **Three of the four are
+//! measured failures, and the fourth does not survive real captures.** Read the
+//! enum before believing any of them; each variant carries its own verdict.
 //!
-//! - [`Discriminator::Raw`] — disagreement on the samples as they are. This is
-//!   the naive port. It is included **because it is the thing that must fail**:
-//!   a null from `LowFreq` means nothing unless `Raw` fires on the same input.
+//! - [`Discriminator::Raw`] — disagreement on the samples as they are. The
+//!   naive port. It is included **because it is the thing that must fail**: a
+//!   null from any other arm means nothing unless `Raw` fires on the same
+//!   input. It is the inertness control, not a candidate.
 //! - [`Discriminator::LowFreq`] — disagreement after both planes are low-pass
-//!   filtered. Defocus is approximately a low-pass, so it largely cancels;
-//!   motion *translates* content, which moves low frequencies too and does not.
+//!   filtered. **MEASURED FAILURE.** The intuition is that defocus is a
+//!   low-pass so it should cancel; it does reduce the residual, but it reduces
+//!   the *noise* far more, and the statistic is their ratio. M97r W3 derives
+//!   that the ratio is independent of the filter radius, so **no radius helps.**
+//! - [`Discriminator::Shift`] — displacement significance. **MEASURED
+//!   FAILURE.** The symmetry argument holds for a straight edge and fails for a
+//!   curved one; a disc genuinely shrinks under blur, so pure defocus reads as
+//!   motion.
+//! - [`Discriminator::ShiftFree`] — displacement with the defocus direction
+//!   fitted out as an explicit nuisance parameter via a Schur complement. It
+//!   survives every **synthetic** control. **It does not survive real
+//!   captures** — see the enum and [`DEFAULT_MIN_SHIFT_PX`].
 //!
-//! A third form — comparing against the running estimate re-blurred to the
+//! A fifth form — comparing against the running estimate re-blurred to the
 //! frame's own focus — is the only one where focus difference is absent from
 //! the data term by construction. It is not implemented here; it needs the
 //! merge's running estimate, and this module is deliberately free of the merge.
+//!
+//! **Do not read the paragraphs above as a recommendation to wire any of this
+//! into the merge.** Five reports have now asked that question on real data —
+//! M28, M60, M89, M123 and M97e — and none of them concluded yes. M89:
+//! *"The metric works and should be adopted. The mask, as specified, should not
+//! ship."* That header claim used to say the module "implements two" and
+//! described `LowFreq` as an arm where defocus "largely cancels", forty lines
+//! above an enum that said the opposite. A commissioning brief was written from
+//! it. A stale header is not a cosmetic defect; it is the part of the file a
+//! reader hits first.
 //!
 //! # The statistic
 //!
@@ -150,6 +173,19 @@ pub enum Discriminator {
     /// the statistic stops firing. It abstains exactly where the ambiguity is
     /// real, which is the correct behaviour and not something that had to be
     /// special-cased.
+    ///
+    /// **MEASURED ON REAL CAPTURES, AND IT DOES NOT SURVIVE THEM (M123).**
+    /// Everything above is true of the four synthetic cases it was designed
+    /// against, and M97r §6 says so: *"The gate configuration is in-sample."*
+    /// On real frames the arm fires **29.55%** on a stationary tripod trap
+    /// (`109MSDCF`, focus changing, nothing moving) against **6.87%** on `foam`,
+    /// a stack with independently measured motion — **it fires 4.3x harder on
+    /// the stack that did not move.** The positive control is worse: a planted
+    /// translation on a real defocus pair reads **24.51% gated at 0.00 px
+    /// planted**, so a quarter of the tiles fire on no motion at all.
+    ///
+    /// Do not read "survives every control" as "ready". It survived every
+    /// control that existed when it was written, all of which it also chose.
     ShiftFree,
 }
 
@@ -571,8 +607,26 @@ pub fn mask(chi2: &[f32], thresholds: &[f32]) -> Vec<bool> {
 /// **It is a default, not a constant of nature.** The defocus-induced shift
 /// scales with the curvature of the scene and with how far apart in focus the
 /// two frames are, so a bracket with finer focus steps could tolerate a smaller
-/// bar and a coarser one may need a larger. It has not yet been measured on
-/// real frames; see the `NOT VERIFIED` note in the milestone record.
+/// bar and a coarser one may need a larger.
+///
+/// **IT HAS NOW BEEN MEASURED ON REAL FRAMES, AND THE BAR DOES NOT SAVE THE
+/// ARM (M123).** This doc previously ended *"It has not yet been measured on
+/// real frames"*; that is what the measurement was commissioned against. A
+/// planted-translation sweep on a real `109MSDCF` defocus pair reads:
+///
+/// ```text
+/// planted px   gated%    mean |s|
+///     0.00     24.51%     0.9521
+///     0.35     23.54%     1.2153
+///     1.00     34.77%     1.9326
+///     2.00     34.57%     3.6231
+/// ```
+///
+/// The firing rate at **zero** planted motion is 24.51%, and planting a
+/// displacement six times the bar moves it to 34.57%. **The bar separates
+/// almost nothing on real data**, because real defocus already produces a mean
+/// `|s|` of 0.95 px — nearly 3x this constant — before anything moves. Raising
+/// the bar does not fix that; it deletes the plant along with the trap.
 pub const DEFAULT_MIN_SHIFT_PX: f32 = 0.35;
 
 /// How many times better than the magnitude bar a tile must be able to resolve
