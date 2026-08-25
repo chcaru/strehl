@@ -53,8 +53,23 @@ a = json.loads((DATA / "93-audit.json").read_text(encoding="utf-8"))
 # append/verify/control/fix harness quotes both `--limit` and the binary
 # name in prose and plant payloads, and counting those measures nothing.
 scripts = sorted(SRC.glob("*.py"))
-harness = ("append", "verify", "control", "fix")
+sys.path.insert(0, str(SRC))
+import fix_audit  # noqa: E402  -- single owner of the harness/measurement split
+harness = fix_audit.HARNESS
 measure = [p for p in scripts if not p.name.startswith(harness)]
+# A shared constant makes the two sides agree by construction, so agreement is
+# no longer evidence the split is CORRECT. This is the check that a shared
+# constant cannot fake: a script excluded as harness must genuinely measure
+# nothing about an image -- it may not decode a raw or open a frame cube. The
+# prefix is a convention; this is the property the convention stands for.
+smuggled = []
+for p in scripts:
+    if not p.name.startswith(harness):
+        continue
+    t = p.read_text(encoding="utf-8")
+    if re.search(r"rawpy\.imread|np\.load\(\s*CACHE", t):
+        smuggled.append(p.name)
+chk(not smuggled, f"a harness-excluded script measures an image: {smuggled[:5]}")
 hits, invoke = [], []
 for p in measure:
     t = p.read_text(encoding="utf-8")

@@ -30,6 +30,14 @@ the flag in prose and in a regex, which is the exact false positive the
 prefix filter was built for, and it measures nothing about any image.  The
 first draft was called `refresh_audit.py`, landed in the measurement set, and
 its own assertion correctly reported `P124 IS NOW FALSE` against itself.
+
+`probe` joined the prefix list when `probe_cachekey.py` was added.  It meets
+the stated criterion -- it hashes files and greps Rust source, and measures
+nothing about any image -- and it is the same false positive twice over: it
+carries the binary-detection regex in its own body, and it imports
+`subprocess` to ask git a question.  It escaped the invocation assert only
+because that regex does not happen to match its own text, which is luck rather
+than design, and exactly why the filter is a prefix and not a content scan.
 """
 import json
 import pathlib
@@ -38,7 +46,7 @@ import re
 SRC = pathlib.Path(__file__).resolve().parent
 DATA = SRC.parent / "data"
 DOC = SRC.parents[2] / "docs" / "research" / "M87-occlusion.md"
-HARNESS = ("append", "verify", "control", "fix")
+HARNESS = ("append", "verify", "control", "fix", "probe")
 
 
 def main():

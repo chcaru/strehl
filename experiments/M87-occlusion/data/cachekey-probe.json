@@ -1,0 +1,38 @@
+{
+  "cachekey_fix_is_ancestor_of_head": true,
+  "gate4_matches": true,
+  "gate4_on_disk_now": "E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112",
+  "gate4_recorded_at_measurement_time": "E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112",
+  "measurement_scripts": 104,
+  "pins": {
+    "0.00": {
+      "bytes": 197797874,
+      "sha256": "E1ACFAA7D447AD57DDEE20A4F058C6476B30F13D284F986DA6BAD123A008B5FD"
+    },
+    "0.7078": {
+      "bytes": 197797874,
+      "sha256": "C857E882C528604167C66EAE5F9EA6ECD29385F3FD3E0C8FF2F6CD1AEFC0F5E4"
+    },
+    "2.00": {
+      "bytes": 197797874,
+      "sha256": "62BDBDEECE1BEEDBEF4D8C76BB7EE348D9433AEA168B44408901911B973AA934"
+    },
+    "4.00": {
+      "bytes": 197797874,
+      "sha256": "E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112"
+    }
+  },
+  "pins_distinct": 4,
+  "pins_one_byte_length": true,
+  "rawpy_decode_sites": 2,
+  "scripts_invoking_binary": 0,
+  "solve_config_key_hashes": {
+    "reference": true,
+    "resampler": true,
+    "solve_env": true,
+    "spans": true
+  },
+  "solve_config_key_signature": "reference: usize, spans: &[usize], resampler: Resampler",
+  "warpmap_bypasses_solve": true,
+  "warpmap_env_const": true
+}

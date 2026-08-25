@@ -34,10 +34,11 @@ JSONS = ["100-gate-veildepth.json", "101-attrib.json", "102-robust.json",
          "exitcode-repeat.json",
          "exitcode-quota-child-host.json", "exitcode-quota-agent-shell.json",
          "exitcode-quota-pwsh7-child.json", "exitcode-quota-ps51-dotsource.json",
-         "exitcode-race-ps51-child.json", "exitcode-race-pwsh7-child.json"]
+         "exitcode-race-ps51-child.json", "exitcode-race-pwsh7-child.json",
+         "cachekey-probe.json"]
 
 
-SRCS = ["verify_s29.py", "control_s29.py"]
+SRCS = ["verify_s29.py", "control_s29.py", "verify_s32.py", "probe_cachekey.py"]
 
 
 def backup():
@@ -259,6 +260,42 @@ def main():
                                 "It measured **100.00%** and printed PASS. "
                                 "Three limits, stated rather than buried."),
         want="anchor is unique in the report")
+
+    # ---- P144 operands: the cache-key exposure, from the probe's JSON ----
+    arm("N26", "a measurement script is recorded as invoking the binary, "
+        "which is the whole of ground (a)", "RED",
+        lambda: mutate_json("cachekey-probe.json", ["scripts_invoking_binary"], 1),
+        want="no measurement script invokes the binary")
+    arm("N27", "the pinned gate-4 render no longer matches the digest this "
+        "report recorded when it measured it", "RED",
+        lambda: mutate_json("cachekey-probe.json", ["gate4_matches"], False),
+        want="gate-4 on disk still matches the recorded digest")
+    arm("N28", "two of the four gate arms collapse onto one hash, which is "
+        "the cache serving one arm's bytes for another", "RED",
+        lambda: mutate_json("cachekey-probe.json", ["pins_distinct"], 3),
+        want="four arms, four hashes")
+    arm("N29", "solve_config_key stops hashing the resampler -- the exact "
+        "field fact 1446 names and M95 attributes high-band loss to", "RED",
+        lambda: mutate_json("cachekey-probe.json",
+                            ["solve_config_key_hashes", "resampler"], False),
+        want="solve_config_key hashes resampler")
+    arm("N30", "STREHL_WARPMAP stops bypassing discover-or-solve, which is "
+        "the whole of ground (b)", "RED",
+        lambda: mutate_json("cachekey-probe.json", ["warpmap_bypasses_solve"], False),
+        want="STREHL_WARPMAP bypasses discover-or-solve")
+
+    # ---- P145 operands: one owner for the harness split ----
+    arm("N31", "verify_s32 loses the independent property check, leaving the "
+        "audit and its verifier agreeing purely by shared constant", "RED",
+        lambda: mutate_src("verify_s32.py",
+                           'f"a harness-excluded script measures an image: {smuggled[:5]}"',
+                           '"harness split ok"'),
+        want="the independent property check exists in verify_s32")
+    arm("N32", "the probe goes back to its own private copy of the split, "
+        "which is the drift P145 is about", "RED",
+        lambda: mutate_src("probe_cachekey.py", "HARNESS = fix_audit.HARNESS",
+                           'HARNESS = ("verify_", "control_", "fix_")'),
+        want="probe_cachekey.py imports the split rather than copying it")
 
     for tag, why, expect, fn, want in arms:
         restore()

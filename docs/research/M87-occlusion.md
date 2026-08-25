@@ -2006,6 +2006,8 @@ namespaced `M87`.
 | P141 | **The verification shape this milestone runs on preserves exit codes: 180 of 180 observations reported the true code, on runs where the truncation trap demonstrably fired.** Six pipeline shapes against a process whose true code is 1, at 10/200/5000 lines, pre-cleared per arm, repeated 12 times. `Out-String`, `Out-String -Width`, `Select-Object -Last` and capture-first never lost it; the `-First` arms were corrupted in **12 of 12** runs. | Two corrections to the rule as I received it. The corrupted value is **&#8722;1, never 0** on `PSVersion 5.1.26100.9168`, so a probe looking specifically for 0 records a false INCONCLUSIVE -- mine did. And the corrupted-arm count varied **4 to 6 of 6** across 12 identical runs, which confirms the race framing over the count framing by direct observation. **Scoped by `P142`:** both readings are properties of `PSVersion 5.1`, not of PowerShell -- on 7.6.5 the loss is deterministic and the corrupted value is 0. Annotated, not retracted. | MEASURED |
 | P142 | **Which mechanism governs `-First`'s exit-code loss is decided by the PowerShell engine -- not by counts, races, or process style: 2880 observations across a 2x2 and a causal manipulation.** The strict quota model holds at **720 of 720** observations on PowerShell 7.6.5 and **587 of 720** on Windows PowerShell 5.1.26100.9168, failing in the same 6 of 9 arms whether run as a child process or dot-sourced in-process. Quota is necessary in both engines: the arms it predicts safe lost **0 of 1040**. Making the emitter sleep 300 ms after its last line drives 5.1 from 80.00% and 75.00% to **100.00%** at both volumes, while 7.6.5 stays flat at 100.00%. | Both published mechanisms are right about their own host and neither generalises, so `P141`'s race clause is scoped rather than retracted. The consequence that bites is the corrupted *value*, not the rate: 7.6.5 yields **0** and 5.1 yields **&#8722;1**, so the guard `if ($code -ne 0) { throw }` catches the trap on one engine and silently passes it on the other -- the one the agent shell runs. A guard verified on a single host is not verified. | MEASURED |
 | P143 | **A third verifier broke on the same append, in a third distinct shape, and the common cause is not scope -- it is keying a check to a VALUE instead of to a SITE.** `verify_s29` counted the bolded rendering of its full-coverage figure across the whole document and expected 3 sites; §34's engine ladder quoted two unrelated rates of 100% and pushed the count to 5. The three defects differ in mechanism -- `verify_s33` sliced its scope to end-of-file, `verify_s32` re-counted a denominator from disk, `verify_s29` counted a generic value -- but each was an expectation that any future sentence could move. | Repaired by binding all three real sites to their own anchors rather than bumping 3 to 5, which is strictly stronger than the count it replaces: two of those sites are the same sentence and differ only in whether the verdict word is emphasised, and `control_s29`'s new `N11` collapses one onto the other -- a defect no bare count can see. Three sections appended, three earlier verifiers broken: that is a rate, not an anecdote. | MEASURED |
+| P144 | **M87 is structurally out of reach of the unkeyed stack cache, and the warning that named it is superseded at HEAD.** Fact 1446 reports that `StackIdentity` omits `reference` and `resampler`, so an identical command line can return different bytes. Two grounds, both read in the Rust rather than relayed: (a) **no M87 script invokes the binary** -- every cube is a `rawpy` decode of the `.ARW` files (`m87lib.py:124,145`), and `fix_audit.py:58` *asserts* `scripts_invoking_binary` is 0 across the 104 measurement scripts, so this is a guarded property and not a lucky observation; (b) the one render-dependent line, the §33/§34 gate ladder, consumes ORCH's four pinned TIFFs, which were rendered with `STREHL_WARPMAP` set -- and `merge_cmd.rs:1135` resolves that to *an explicitly named sidecar ... otherwise the normal discover-or-solve path*, so the cache is bypassed, nothing is written, and a bracket mismatch is a refusal (`tests/byte-freeze.rs:69`). | **The control ORCH prescribed would have been the weakest evidence in this row, so I ran a stronger one.** Empirically the gate-4.00 arm still hashes `E400A63A...7112` on disk, matching three independent records: ORCH's provenance note, the `provenance.gate_4_sha256` this report's own §34 run stored at measurement time, and fact 1373's kernel A/B from a *different session and a different exposure code path*. All four arms carry distinct hashes at one byte length, so the cache never collapsed them. But a repeated hash alone cannot separate *correct bytes twice* from *the same stale bytes twice* -- only ground (b) does that, which is why the source read is load-bearing and the hashes are corroboration. Fact 1446 was measured before `69f7b4c`; at HEAD `solve_config_key` hashes `reference`, `spans`, `resampler` and every `SOLVE_ENV` variable, so **both** omitted fields are keyed, exactly as ORCH's own later fact 1476 concluded. | MEASURED |
+| P145 | **A fourth verifier break, and P143's diagnosis does not cover it: the checks were anchored correctly and applied a REPLICATED RULE.** The harness/measurement split that P124's two zeros are scoped by was written out four times -- in `fix_audit.py`, `verify_s32.py`, `verify_s34.py` and a new probe -- and adding one prefix to one copy turned `verify_s32` and `verify_s34` red and moved the published denominator 104 -> 105 -> 104. Neither verifier was keyed to a value: both re-counted from disk exactly as designed, and both counted correctly under a rule that was no longer the one writing the JSON. | **Consolidating the rule fixes the drift and destroys the evidence, so it cannot be the whole repair.** One owner now defines the split and the other three import it -- after which the audit and its verifiers agree *by construction*, and their agreement stops being a measurement of anything. `verify_s32` therefore gained the check a shared constant cannot fake: a script excluded as harness may not decode a raw or open a frame cube, so the convention is tested against the property it stands for rather than against itself (58 -> 59 checks). **A duplicated definition is worse than a duplicated value**, because a value that drifts makes a check fail loudly, while a rule that drifts makes two instruments disagree about what they are counting -- and whichever runs last looks correct. | MEASURED |
 
 ### Capture request
 
@@ -4503,7 +4505,7 @@ I hold no claim that needs retaking on this account.
 **A correction to my own first draft of this section,** because it is the
 kind that reads as evidence and is not. I first wrote that `--limit` "appears
 0 times across all 30 M87 scripts" and rested the finding on it. There are
-**132** scripts, not 30 — and, more to the point,
+**135** scripts, not 30 — and, more to the point,
 **0** of them invoke the binary. Every render here was hand-run
 from PowerShell, so a count over the Python tree is a true statement about a
 population that does not contain the thing being claimed. My own verifier
@@ -5315,6 +5317,93 @@ verifiers broken, and not one of them would have been caught by re-running the
 section being edited. A verifier is not something written once and committed
 green; it is a standing claim that every later section is entitled to
 falsify.
+
+**ORCH's cache-contamination warning does not reach this report, and I
+checked that in the Rust rather than by asserting it.** Fact 1446 measured an
+identical `strehl stack` command line returning either of two hashes depending
+on whether an unrelated `align --reference 40` ran first, because
+`StackIdentity` covers the frame set but not `reference` and not `resampler`.
+M87 was named explicitly, alongside every other milestone running an A/B.
+
+The prescribed control is run the arm, perturb the cache, re-run the arm, and
+compare. I did not make that the primary evidence, because for this report it
+is the weakest thing available. **The first ground is that M87 never calls the
+binary.** Every number in this document is computed in Python from cubes
+decoded straight out of the `.ARW` files with `rawpy`; the merge in §25 is
+*reproduced* from the frame cube and the selection map rather than read back
+from a rendered TIFF. That is not an observation I made once -- `fix_audit.py`
+asserts it on every run, and it currently reports 0 binary invocations across
+104 measurement scripts.
+
+**The second ground covers the one place I do consume a render.** The §33/§34
+gate ladder runs on ORCH's four pinned TIFFs, and those were rendered with
+`STREHL_WARPMAP` pointing at a fixed sidecar. `merge_cmd.rs:1135` documents
+that path as resolving an explicitly named sidecar *instead of* the normal
+discover-or-solve route, and the byte-freeze suite adds that when the variable
+is set nothing is written anywhere and a bracket mismatch is refused rather
+than silently re-solved. So those renders never enter the code path the defect
+lives in. ORCH's own fact 1476 reaches the same exemption for M113 and M110 on
+exactly this reasoning.
+
+**What the hashes add, and what they cannot.** The gate-4.00 TIFF on disk
+still hashes `E400A63A...7112`, which agrees with ORCH's provenance note, with
+the digest §34 recorded at the moment it measured, and with fact 1373's
+catmull-rom arm from a separate session and a separate exposure code path. The
+four arms hash to four distinct values at one byte length. That is a four-way
+agreement where the control asked for a two-way one -- but I want to be exact
+about its limit: **if the cache had served the same wrong bytes on both
+occasions, the hashes would agree just as well.** A repeated digest cannot
+tell a correct render from a consistently stale one. Only the warpmap bypass
+can, which is why the source read carries this and the hashes merely
+corroborate it.
+
+**And the warning is stale, which I would not have known from the row alone.**
+Fact 1446 was measured before commit `69f7b4c`, an ancestor of HEAD; at HEAD
+`solve_config_key` hashes `reference`, `spans`, `resampler` and every
+`SOLVE_ENV` variable into the sidecar path, and a recorded resampler that
+disagrees with the wanted one forces a re-solve. Both fields the warning names
+as missing are now in the key. ORCH had already published that correction as
+fact 1476 -- **the fleet-wide alarm and its own retraction were live in the
+corpus at the same time**, which is the ordinary condition of a corpus a dozen
+agents write concurrently, and the reason a warning is worth re-deriving even
+when it arrives from the coordinator marked highest severity.
+
+**Appending §34.9 broke a fourth verifier, and this one refutes the
+diagnosis I gave three paragraphs ago.** P143 concluded that the shared cause
+of three earlier breaks was keying a check to a *value* rather than to a
+*site*. That was true of those three. It is not true of this one, and the
+difference matters more than the count does.
+
+Recording P144 required a new script, and classifying it moved the denominator
+that P124's two zeros are quoted against. The classification rule -- which
+filename prefixes mark a harness script rather than a measurement -- turned out
+to be written in full four separate times: in the script that writes the audit,
+in the two verifiers that re-derive it, and in the new probe itself. Changing
+one copy moved the disk count to 105 while the JSON said 104, and both
+verifiers went red.
+
+**Neither of them was keyed to a value.** Both re-counted the scripts from
+disk, which is exactly what I had asked them to do, and each counted correctly
+under the rule it was holding. The failure was that they were no longer holding
+the same rule as the script that wrote the number, and nothing in either
+instrument could see that. A stale value fails loudly the moment the document
+moves; a stale *rule* keeps producing a well-formed number, and the last
+instrument to run looks authoritative.
+
+The repair gives the split a single owner and has the other three import it.
+That removes the drift -- and it also removes the evidence, which is the part
+worth being careful about. Once the audit and its verifiers share one
+definition they agree by construction, and their agreement is no longer a
+measurement. So the consolidation is paired with a check that a shared constant
+cannot satisfy: any script excluded as harness must genuinely measure nothing
+about an image, and may not decode a raw or open a frame cube. The prefix is a
+convention; that is the property the convention exists to stand for, and it is
+now tested directly.
+
+**The honest tally is four appends, four broken verifiers, and two distinct
+causes.** I would rather record that the class I named was incomplete than
+present a tidy one. The rate has not changed, but the claim that one diagnosis
+explains it has.
 
 Three limits, stated rather than buried.
 

@@ -275,8 +275,11 @@ def main():
 
     src = pathlib.Path(__file__).resolve().parent
     allp = sorted(src.glob("*.py"))
-    meas = [p for p in allp if not p.name.startswith(
-        ("append", "verify", "control", "fix"))]
+    # One definition of the harness/measurement split, owned by the script that
+    # writes the audit. Three copies had silently drifted apart; see P145.
+    sys.path.insert(0, str(src))
+    import fix_audit
+    meas = [p for p in allp if not p.name.startswith(fix_audit.HARNESS)]
     lim, inv = [], []
     for p in meas:
         t = p.read_text(encoding="utf-8")
@@ -457,6 +460,38 @@ def main():
     for pid in range(133, hi + 1):
         ck(pid in ids, f"fact P{pid} present")
     ck(len(ids) == len(set(ids)), "no duplicated fact ids")
+
+    # P144: re-derived from the probe's JSON and from the Rust source, never
+    # transcribed.  The claim is that M87 cannot reach the stack cache, so the
+    # checks are on the two structural grounds plus the hash agreement.
+    print("== P144: cache-key exposure re-derived ==")
+    cp = json.loads((DATA / "cachekey-probe.json").read_text(encoding="utf-8"))
+    ck(cp["scripts_invoking_binary"] == 0,
+       f"no measurement script invokes the binary ({cp['scripts_invoking_binary']})")
+    ck(cp["rawpy_decode_sites"] >= 1, "the cubes are decoded with rawpy")
+    ck(cp["gate4_matches"], "gate-4 on disk still matches the recorded digest")
+    ck(cp["gate4_on_disk_now"][:8] in sc, "the gate-4 digest is quoted in prose")
+    ck(cp["pins_distinct"] == 4, f"four arms, four hashes ({cp['pins_distinct']})")
+    ck(cp["pins_one_byte_length"], "the four arms share one byte length")
+    ck(cp["cachekey_fix_is_ancestor_of_head"], "the cache-key fix is in HEAD")
+    for field in ("reference", "spans", "resampler", "solve_env"):
+        ck(cp["solve_config_key_hashes"][field], f"solve_config_key hashes {field}")
+    ck(cp["warpmap_bypasses_solve"], "STREHL_WARPMAP bypasses discover-or-solve")
+    ck(f"{cp['measurement_scripts']} measurement scripts" in sc,
+       "the measurement denominator is stated in s34 prose")
+
+    # P145: the harness/measurement split must have exactly ONE live owner, and
+    # the property the prefix stands for must be checked independently of it.
+    print("== P145: one owner for the harness split ==")
+    defs = [p.name for p in allp
+            if re.search(r"^\s*HARNESS\s*=\s*\(", p.read_text(encoding="utf-8"), re.M)]
+    ck(defs == ["fix_audit.py"], f"exactly one live HARNESS definition: {defs}")
+    for name in ("verify_s32.py", "verify_s34.py", "probe_cachekey.py"):
+        t = (src / name).read_text(encoding="utf-8")
+        ck("fix_audit.HARNESS" in t, f"{name} imports the split rather than copying it")
+    ck("a harness-excluded script measures an image"
+       in (src / "verify_s32.py").read_text(encoding="utf-8"),
+       "the independent property check exists in verify_s32")
 
     print(f"\nverify_s34: {checks[0]} checks, {len(fails)} failures")
     for f in fails:
