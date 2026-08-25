@@ -3250,3 +3250,25 @@ three times, by people who were told the rule and checked it anyway.**
 the previous section is still open and still narrowed to one suspect. What
 changed is that two large and expensive directions are now closed, one worry
 about the corpus is closed, and the remaining work is better aimed.
+
+**6. The halo around your subjects is our artefact, not your lens -- and we now
+know what sets its size.** This is the pale fringe you can see hugging edges
+against a defocused background. Its measured width is **10 pixels**, dying out by
+12-13. That number does not match the defocus blur, the object size, or the focus
+step -- **it matches a constant in our own source code**, the radius of the window
+the stacker uses to judge sharpness. Predicted from the code, the spill should
+reach 22 px; measured, it reaches 13. **A defect whose scale is a compile-time
+constant is a defect we can change**, which is a completely different situation
+from one your optics imposed.
+
+The *direction* of the halo -- whether it is always bright, or flips dark when a
+bright subject sits on a dark ground -- is **not settled, and I want to be
+careful here because the agent nearly convinced me it was.** It found a strong
+bright rim on dark-subject-on-bright-background edges (70 cases, consistent 93 %
+of the time). The reverse case had only 18 candidates and **only 5 of those
+actually sit at a depth edge** -- a pale hair on a dark bee is at the *same*
+depth, so the theory predicts nothing there. Its most exciting single measurement
+turned out to be a **background gradient**, caught because it never stopped within
+30 pixels and a single un-stacked frame showed the same shape. It reported that
+against itself. **One capture settles it: a bright, un-blown subject on a deeply
+defocused dark ground, 100-300 frames.** That is now in the request list.
