@@ -280,6 +280,45 @@ pub fn regularise_scaled(
     }
 }
 
+/// Apply the merge regulariser **guided by the frame's own observed luma**.
+///
+/// The shipped regulariser is a radius-8 box mean over the focus field, and it
+/// is 8 of the 22 px of total election spill — `SOBEL_RADIUS + WINDOW_RADIUS +
+/// REGULARISER_RADIUS`. Shrinking the focus window alone therefore cannot
+/// remove the rim: this cascade would average the newly-correct narrow
+/// responses straight back across the silhouette and re-manufacture one at its
+/// own radius.
+///
+/// This replaces the box with an edge-stopping filter of the *same* nominal
+/// scale, so the noise averaging is retained everywhere it is legitimate and
+/// abandoned only where it would cross an occluding edge. That is the trade the
+/// adaptive-radius rule depends on: it deliberately gives up window radius near
+/// silhouettes, and this is what buys the robustness back.
+///
+/// `sigma_s` is `REGULARISER_RADIUS` — the same spatial scale, so away from any
+/// luma step this is the shipped operator to within the difference between a
+/// box and a Gaussian of matched radius.
+pub fn regularise_guided(
+    focus: &[f32],
+    luma: &[f32],
+    geom: PlaneGeometry,
+    scratch: &mut [f32],
+    tmp: &mut [f32],
+    dom: &mut [f32],
+    dst: &mut [f32],
+) {
+    crate::edgeaware::domain_transform(
+        focus,
+        luma,
+        geom,
+        REGULARISER_RADIUS as f32,
+        dst,
+        scratch,
+        tmp,
+        dom,
+    );
+}
+
 /// The rule admitting a frame to the average at a pixel.
 ///
 /// A frame is admitted when its regularised focus response is within

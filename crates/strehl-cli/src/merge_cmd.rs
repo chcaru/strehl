@@ -47,7 +47,7 @@ use strehl_core::edgeaware::{self, BimodalStats, LayerSupport};
 use strehl_core::flat_ratio::{self, FrameFlat};
 use strehl_core::focus::FocusField;use strehl_core::merge::{
     Estimator, FOCUS_NOISE_SD, FocusStats, Gate, REGULARISER_RADIUS, REGULARISER_WIDTH, regularise,
-    regularise_at, regularise_layered,
+    regularise_at, regularise_guided, regularise_layered,
 };
 use strehl_core::noise::{Levels, NoiseModel};
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma_with_clip};
@@ -899,6 +899,14 @@ struct Ctx<'a> {
     /// the treated pixels, so a support that treats nothing is byte-identical
     /// to `None`; the distinction here is about **cost**, not behaviour.
     support: Option<&'a LayerSupport>,
+    /// Per-pixel selection radius solved from the calibrated noise model
+    /// ([`SelectionScale::from_acuity`]), or `None` for a fixed window.
+    ///
+    /// This is the shipping path. When it is `Some`, [`Ctx::field_for`] elects
+    /// on [`FocusField::compute_scaled`] and regularises with
+    /// [`regularise_guided`] — both cascades of the election adapt, which is
+    /// the only configuration that removes the rim rather than relocating it.
+    scale: Option<&'a edgeaware::SelectionScale>,
     /// Elect at this radius with the plain shipped operator, ignoring
     /// `support`. Set only by the depth-guide pass, which needs a narrow
     /// window; `None` everywhere else.
@@ -1136,10 +1144,11 @@ impl Ctx<'_> {
             &mut scratch.clipped,
         );
         if scratch.fine.is_empty() {
-            match (self.guide_radius, self.support) {
-                (Some(r), _) => scratch.field.compute_at_radius(&scratch.luma, noise, r),
-                (None, None) => scratch.field.compute(&scratch.luma, noise),
-                (None, Some(s)) => scratch.field.compute_layered(&scratch.luma, noise, s),
+            match (self.guide_radius, self.scale, self.support) {
+                (Some(r), _, _) => scratch.field.compute_at_radius(&scratch.luma, noise, r),
+                (None, Some(s), _) => scratch.field.compute_scaled(&scratch.luma, noise, s),
+                (None, None, None) => scratch.field.compute(&scratch.luma, noise),
+                (None, None, Some(s)) => scratch.field.compute_layered(&scratch.luma, noise, s),
             }
         } else {
             // One shared gradient pass produces both scales. The selection field
@@ -1154,6 +1163,28 @@ impl Ctx<'_> {
             );
         }
         match self.support.filter(|_| self.guide_radius.is_none()) {
+            None if self.scale.is_some() && self.guide_radius.is_none() => {
+                // The guided regulariser, at the SAME nominal scale as the
+                // shipped box. Away from a luma step this is the shipped
+                // operator; at an occluding silhouette it stops instead of
+                // averaging across, which is what stops the narrow selection
+                // window's win being undone by the second cascade.
+                let px = self.geom.pixels();
+                if scratch.lay_scratch.len() != 3 * px {
+                    scratch.lay_scratch = vec![0.0; 3 * px];
+                }
+                let (tmp, rest) = scratch.lay_scratch.split_at_mut(px);
+                let (dom, extra) = rest.split_at_mut(px);
+                regularise_guided(
+                    scratch.field.values(),
+                    &scratch.luma,
+                    self.geom,
+                    extra,
+                    tmp,
+                    dom,
+                    &mut scratch.reg,
+                );
+            }
             None => match self.guide_radius {
                 // The guide's regulariser is capped to the guide's own window,
                 // or the radius-8 box would displace the step it is looking for.
@@ -1237,12 +1268,60 @@ fn env_num(key: &str, default: f32) -> f32 {
     }
 }
 
-fn edge_aware_enabled() -> bool {
-    matches!(
-        std::env::var(EDGE_AWARE_ENV).ok().as_deref(),
-        Some("1") | Some("on") | Some("true")
-    )
+/// Which edge-aware election is in force.
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+enum EdgeArm {
+    /// The shipped fixed-window operator. An A/B baseline, not a default.
+    Off,
+    /// Per-pixel radius solved from the noise model, plus the luma-guided
+    /// regulariser. **The default.**
+    Acuity,
+    /// The depth-layer masked support. Superseded — kept switchable because it
+    /// is the arm every earlier measurement in this build was taken against,
+    /// and those comparisons have to stay reproducible.
+    Layer,
 }
+
+/// The edge-aware election is **ON by default**.
+///
+/// It was behind an opt-in env var while it was being built, and the direct
+/// consequence was that every render the owner actually looked at still had the
+/// halo in it — the fix was measured, committed, reported, and never once
+/// applied to a picture anybody saw. An environment variable is an A/B
+/// mechanism. It is not a shipping mechanism, and treating it as one cost this
+/// build a full cycle of "why does the render still look like that".
+///
+/// So the default is on, and the variable now selects an *arm*:
+///
+/// | `STREHL_EDGE_AWARE` | arm |
+/// | --- | --- |
+/// | unset, `1`, `on`, `true`, `acuity` | adaptive radius (shipping) |
+/// | `0`, `off`, `false` | shipped fixed window |
+/// | `layer` | the superseded masked-support arm |
+fn edge_aware_arm() -> EdgeArm {
+    match std::env::var(EDGE_AWARE_ENV).ok().as_deref().map(str::trim) {
+        None | Some("") | Some("1") | Some("on") | Some("true") | Some("acuity") => EdgeArm::Acuity,
+        Some("0") | Some("off") | Some("false") => EdgeArm::Off,
+        Some("layer") => EdgeArm::Layer,
+        Some(other) => panic!(
+            "{EDGE_AWARE_ENV}={other:?} is not a known arm; expected one of \
+             on/off/acuity/layer"
+        ),
+    }
+}
+
+/// Confidence the adaptive radius rule demands before it hands a pixel a
+/// smaller window, in standard deviations of a difference of two responses.
+///
+/// **Deliberately the same number as [`Gate::DEFAULT_GATE`], and for the same
+/// reason.** The gate asks "are these two frames distinguishable at this
+/// pixel?"; the radius rule asks "is this pixel's peak distinguishable from its
+/// own baseline at this radius?". Both are the same question about the same
+/// noise model, so a second, independently-tuned constant here would be a
+/// second calibration of one physical quantity — exactly the failure mode this
+/// project exists to avoid. It is not a free parameter and it should not be
+/// swept.
+const ACUITY_MARGIN: f32 = strehl_core::merge::DEFAULT_GATE;
 
 /// How many frames of guide variation a support box may span before it is
 /// judged to cross a depth discontinuity.
@@ -1310,6 +1389,97 @@ fn bimodal_dump() -> Option<std::path::PathBuf> {
 /// A detector that fires everywhere is useless and a detector that fires
 /// nowhere kills the forward model, so both are reported rather than
 /// summarised into a single number.
+/// Mandate (B)'s first deliverable: **where does the detector fire?**
+///
+/// Writes full-plane maps of the mode statistics and the selection radius, so
+/// the answer can be looked at as a picture over the whole subject rather than
+/// inferred from a table at frozen ROIs. Judging on crops is how the severity
+/// of the halo itself stayed hidden for a week, and the same mistake is
+/// available here.
+///
+/// Reports the firing rate against the **adaptive radius**, which is the
+/// question that decides mandate (B). If bimodality concentrates where the
+/// radius rule had to collapse the window, those pixels are exactly the ones
+/// with no clean background sample in any frame, and unmixing is the only thing
+/// left that can help them. If it fires everywhere, or nowhere in particular,
+/// the two-layer model is wrong for this data and must not be forced.
+fn report_bimodality_scaled(
+    modes: &BimodalStats,
+    scale: &edgeaware::SelectionScale,
+    guide: &[u16],
+    geom: PlaneGeometry,
+    dir: &Path,
+) -> Result<()> {
+    let prom = modes.second_mode_z();
+    let first = modes.first_mode_z();
+    let levels = scale.levels();
+    std::fs::create_dir_all(dir).with_context(|| format!("creating {}", dir.display()))?;
+
+    const FIRES: f32 = 1.5;
+    // Bucket by how far the radius rule had to collapse the window: the small
+    // radii are hard against a silhouette, the full radius is untouched ground.
+    let mut buckets = vec![(0usize, 0.0f64, 0usize); edgeaware::LEVEL_RADII.len()];
+    for i in 0..geom.pixels() {
+        let b = levels[i] as usize;
+        buckets[b].0 += 1;
+        buckets[b].1 += f64::from(prom[i]);
+        // BOTH modes must clear the baseline. Requiring only the second is the
+        // defect that made the first detector fire on 54.2% of clean ground:
+        // where neither peak is real the ratio tends to 1 by noise alone.
+        if prom[i] >= FIRES && first[i] >= FIRES {
+            buckets[b].2 += 1;
+        }
+    }
+    eprintln!("--- where the bimodality detector fires, by selection radius (MEASURED) ---");
+    for (b, &(n, sum, hits)) in buckets.iter().enumerate() {
+        if n == 0 {
+            continue;
+        }
+        eprintln!(
+            "r{:<3} : {:>7.3}% of plane   mean z2 {:.3}   fires {:.2}%",
+            edgeaware::LEVEL_RADII[b],
+            100.0 * n as f64 / geom.pixels() as f64,
+            sum / n as f64,
+            100.0 * hits as f64 / n as f64
+        );
+    }
+    eprintln!();
+
+    // Full-plane maps, so a full-frame overlay can be built. Raw u16 LE with
+    // the scaling stated in the log rather than baked into a picture.
+    let dump = |name: &str, v: &[f32], full: f32| -> Result<()> {
+        let p = dir.join(name);
+        let mut raw = Vec::with_capacity(v.len() * 2);
+        for &x in v {
+            let q = ((x / full).clamp(0.0, 1.0) * 65535.0) as u16;
+            raw.extend_from_slice(&q.to_le_bytes());
+        }
+        std::fs::write(&p, &raw).with_context(|| format!("writing {}", p.display()))?;
+        eprintln!(
+            "wrote {}  ({}x{} u16 LE raw, full scale = {full})",
+            p.display(),
+            geom.width,
+            geom.height
+        );
+        Ok(())
+    };
+    dump("second_mode_z.raw", &prom, 6.0)?;
+    dump("first_mode_z.raw", &first, 6.0)?;
+    let lv: Vec<f32> = levels
+        .iter()
+        .map(|&l| edgeaware::LEVEL_RADII[l as usize] as f32)
+        .collect();
+    dump("radius.raw", &lv, strehl_core::focus::WINDOW_RADIUS as f32)?;
+    let g: Vec<f32> = guide
+        .iter()
+        .map(|&k| if k == u16::MAX { 0.0 } else { f32::from(k) })
+        .collect();
+    let gmax = g.iter().copied().fold(1.0f32, f32::max);
+    dump("guide.raw", &g, gmax)?;
+    eprintln!();
+    Ok(())
+}
+
 fn report_bimodality(
     modes: &BimodalStats,
     support: &LayerSupport,
@@ -2070,27 +2240,27 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         // reading is taken once per frame and not twice.
         measure_drift: opts.photometric == PhotometricMode::Auto,
         support: None,
+        scale: None,
         guide_radius: None,
     };
 
-    // ---- pass zero: the depth guide, and the layer masks it builds ---------
+    // ---- pass zero: the depth guide, and the adaptive radius it solves -----
     //
-    // Skipped entirely unless asked for, so the shipped two-pass merge costs
-    // exactly what it costed.
-    let layer_support: Option<LayerSupport> = if edge_aware_enabled() {
+    // Skipped only when explicitly switched off for an A/B arm.
+    let mut acuity: Option<edgeaware::SelectionScale> = None;
+    let layer_support: Option<LayerSupport> = if edge_aware_arm() != EdgeArm::Off {
         let t0 = Instant::now();
         let ctx_guide = Ctx {
             guide_radius: Some(GUIDE_RADIUS),
             measure_drift: false,
             ..ctx
         };
-        let (guide, guide_resp, modes, gt) =
-            guide_winner_field(&paths, &plan, &ctx_guide, geom, bimodal_dump().is_some())?;
+        // The mode statistics are no longer optional: `peak_excess` is what the
+        // adaptive radius is solved from, so the same accumulator now serves
+        // both the radius rule and the bimodality detector.
+        let (guide, guide_resp, modes, gt) = guide_winner_field(&paths, &plan, &ctx_guide, geom, true)?;
         let tau = edge_tau(&guide);
         let conf = edge_conf();
-        let radii = [strehl_core::focus::WINDOW_RADIUS, REGULARISER_RADIUS];
-        let support = LayerSupport::from_guide(&guide, &guide_resp, geom, tau, conf, &radii);
-        let hist = support.histogram();
         eprintln!("--- pass zero: depth guide for the edge-aware election (MEASURED) ---");
         eprintln!(
             "guide radius    : {GUIDE_RADIUS} px box on |grad|, elected NARROW on purpose"
@@ -2103,50 +2273,104 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 "  (an eighth of this bracket's own robust winner span)"
             }
         );
-        eprintln!(
-            "confidence veto : {conf:.1}x the {:.0}th-percentile guide response, so ground with \
-             no sharp content in reach is left alone",
-            100.0 * f64::from(edgeaware::FLOOR_Q)
-        );
-        eprintln!(
-            "support masked  : {} of the plane elects on its own depth layer only, at the \
-             UNCHANGED {} px radius",
-            format_args!("{:.2}%", 100.0 * support.treated_fraction()),
-            strehl_core::focus::WINDOW_RADIUS
-        );
-        eprintln!(
-            "  by layer      : {}",
-            hist.iter()
-                .enumerate()
-                .map(|(l, n)| format!(
-                    "L{l} {:.2}%",
-                    100.0 * *n as f64 / geom.pixels() as f64
-                ))
-                .collect::<Vec<_>>()
-                .join("  ")
-        );
-        eprintln!(
-            "wall clock      : {:.3} s  (decode {:.1} s, work {:.1} s summed across workers)",
-            t0.elapsed().as_secs_f64(),
-            gt.decode,
-            gt.work
-        );
-        eprintln!(
-            "  NOTE          : this is a THIRD pass over the frames. The winner field the \
-             shipped merge elects is haloed by one window radius, so it cannot locate the \
-             silhouettes the support has to avoid; the guide is elected narrow for that reason \
-             and never elects an output pixel."
-        );
-        eprintln!();
-        if let (Some(m), Some(dir)) = (modes.as_ref(), bimodal_dump()) {
-            report_bimodality(m, &support, &guide, geom, &dir)?;
+
+        if edge_aware_arm() == EdgeArm::Acuity {
+            let excess = modes
+                .as_ref()
+                .expect("pass zero always folds mode statistics")
+                .peak_excess();
+            let scale =
+                edgeaware::SelectionScale::from_acuity(&excess, &guide, geom, tau, ACUITY_MARGIN);
+            let hist = scale.histogram();
+            eprintln!(
+                "radius rule     : min(r_noise, r_geom), margin {ACUITY_MARGIN:.1} sigma against \
+                 FOCUS_NOISE_SD scaled from radius {}",
+                strehl_core::focus::WINDOW_RADIUS
+            );
+            eprintln!(
+                "  by radius     : {}",
+                hist.iter()
+                    .enumerate()
+                    .map(|(l, n)| format!(
+                        "r{} {:.2}%",
+                        edgeaware::LEVEL_RADII[l],
+                        100.0 * *n as f64 / geom.pixels() as f64
+                    ))
+                    .collect::<Vec<_>>()
+                    .join("  ")
+            );
+            eprintln!(
+                "  mean radius   : {:.2} px  (shipped is a flat {} px)",
+                scale
+                    .levels()
+                    .iter()
+                    .map(|&l| edgeaware::LEVEL_RADII[l as usize] as f64)
+                    .sum::<f64>()
+                    / geom.pixels() as f64,
+                strehl_core::focus::WINDOW_RADIUS
+            );
+            eprintln!(
+                "regulariser     : guided by each frame's OWN luma at sigma_s = {REGULARISER_RADIUS} \
+                 px, replacing the radius-{REGULARISER_RADIUS} box"
+            );
+            eprintln!(
+                "wall clock      : {:.3} s  (decode {:.1} s, work {:.1} s summed across workers)",
+                t0.elapsed().as_secs_f64(),
+                gt.decode,
+                gt.work
+            );
+            eprintln!();
+            if let Some(dir) = bimodal_dump() {
+                if let Some(m) = modes.as_ref() {
+                    report_bimodality_scaled(m, &scale, &guide, geom, &dir)?;
+                }
+            }
+            acuity = Some(scale);
+            None
+        } else {
+            let radii = [strehl_core::focus::WINDOW_RADIUS, REGULARISER_RADIUS];
+            let support = LayerSupport::from_guide(&guide, &guide_resp, geom, tau, conf, &radii);
+            let hist = support.histogram();
+            eprintln!(
+                "confidence veto : {conf:.1}x the {:.0}th-percentile guide response, so ground with \
+                 no sharp content in reach is left alone",
+                100.0 * f64::from(edgeaware::FLOOR_Q)
+            );
+            eprintln!(
+                "support masked  : {} of the plane elects on its own depth layer only, at the \
+                 UNCHANGED {} px radius",
+                format_args!("{:.2}%", 100.0 * support.treated_fraction()),
+                strehl_core::focus::WINDOW_RADIUS
+            );
+            eprintln!(
+                "  by layer      : {}",
+                hist.iter()
+                    .enumerate()
+                    .map(|(l, n)| format!(
+                        "L{l} {:.2}%",
+                        100.0 * *n as f64 / geom.pixels() as f64
+                    ))
+                    .collect::<Vec<_>>()
+                    .join("  ")
+            );
+            eprintln!(
+                "wall clock      : {:.3} s  (decode {:.1} s, work {:.1} s summed across workers)",
+                t0.elapsed().as_secs_f64(),
+                gt.decode,
+                gt.work
+            );
+            eprintln!();
+            if let (Some(m), Some(dir)) = (modes.as_ref(), bimodal_dump()) {
+                report_bimodality(m, &support, &guide, geom, &dir)?;
+            }
+            (!support.is_empty()).then_some(support)
         }
-        (!support.is_empty()).then_some(support)
     } else {
         None
     };
     let ctx = Ctx {
         support: layer_support.as_ref(),
+        scale: acuity.as_ref(),
         ..ctx
     };
 
