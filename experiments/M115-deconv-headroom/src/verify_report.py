@@ -33,7 +33,7 @@ def chk(label, value, pattern, tol=0.02):
     if not m:
         fails.append(f"{label}: ANCHOR NOT FOUND -> {pattern}")
         return
-    got = float(m.group(1))
+    got = float(m.group(1).replace("\u2212", "-").rstrip("."))
     ok = abs(got - value) <= tol * max(abs(value), 1e-9)
     print(f"  {'ok ' if ok else 'BAD'} {label:44s} recomputed {value:10.4f}  "
           f"document {got:10.4f}")
@@ -105,6 +105,72 @@ chk("P13 FPN pct 109", s7["fpn"]["109MSDCF"]["pct"],
     r"scaled to the detail ROIs it is \*\*(0\.[\d]+) ?%\*\* and \*\*0\.050 ?%\*\*")
 chk("P13 FPN pct 119", s7["fpn"]["119MSDCF"]["pct"],
     r"it is \*\*0\.073 ?%\*\* and \*\*(0\.[\d]+) ?%\*\* of scene signal")
+
+# ---------------------------------------------------------------------------
+# section 10 -- the ratio-compression law.  Re-derived from the stored per-arm
+# P_sig / P_noise, NOT by reading back s08's own beta: the slope fit, the pair
+# enumeration and the dose arithmetic are all recomputed here from scratch.
+# ---------------------------------------------------------------------------
+import itertools
+
+s8 = json.load(open(os.path.join(OUT, "s08_ratiocompress.json")))
+arms, sig, noi = s8["arms"], s8["P_sig"], s8["P_noise"]
+pairs = list(itertools.permutations(arms, 2))
+
+def ratios(q):
+    return np.array([(sig[a] / (noi[a] + q)) / (sig[b] / (noi[b] + q))
+                     for a, b in pairs])
+
+def beta(q):
+    x = np.log(ratios(0.0)); y = np.log(ratios(q))
+    ok = np.isfinite(x) & np.isfinite(y) & (np.abs(x) > 1e-12)
+    return float(np.sum(x[ok] * y[ok]) / np.sum(x[ok] ** 2))
+
+nref = float(np.median([noi[a] for a in arms]))
+chk("P16 n ordered arm pairs", float(len(pairs)),
+    r"over all (\d+) ordered arm pairs", tol=1e-9)
+chk("P16 beta at q=0", beta(0.0), r"\| \*\*β\*\* \| ([\d.]+) \| −0\.0697", tol=1e-6)
+chk("P16 beta at q=0.25", beta(0.25 * nref), r"\| 1\.0000 \| (−?[\d.]+) \| −0\.5674")
+chk("P16 beta at q=4", beta(4.0 * nref), r"−0\.5674 \| (−?[\d.]+) \| −0\.9966")
+chk("P16 beta asymptote", beta(1e30),
+    r"[Tt]he signal factor is \*\*invariant at (−?[\d.]+)\*\* across the entire")
+mono = all(beta(m * nref) <= beta(p * nref) + 1e-9 for p, m in
+           zip([0, .25, .5, 1, 2, 4, 8, 32], [.25, .5, 1, 2, 4, 8, 32, 128]))
+print(f"  {'ok ' if mono else 'BAD'} {'P16 dose sweep monotone':44s} "
+      f"recomputed {float(mono):10.4f}  document     1.0000")
+if not mono:
+    fails.append("P16: dose sweep is not monotone on re-derivation")
+
+lr = np.log(ratios(0.0))
+chk("P17 true log-spread", float(np.abs(lr).max()),
+    r"spread \*\*widens\*\* from ±([\d.]+) to ±2\.810")
+chk("P17 asymptotic log-spread",
+    float(np.abs(np.log(np.array([sig[a] / sig[b] for a, b in pairs]))).max()),
+    r"widens\*\* from ±1\.886 to ±([\d.]+)")
+
+s9 = json.load(open(os.path.join(OUT, "s09_quanterror.json")))
+chk("P18 cross-half corr, quantisation", s9["corr_quant"],
+    r"cross-half correlation \*\*r = \+([\d.]+)\*\*, versus")
+chk("P18 cross-half corr, dither", abs(s9["corr_dither"]),
+    r"versus \*\*−([\d.]+)\*\* for an independent dither", tol=0.15)
+chk("P19 P_noise x, quantisation", s9["narrowed_pinned"]["dP_noise"],
+    r"raised measured `P_noise` \*\*×([\d.]+)\*\* while an independent dither")
+chk("P19 P_noise x, dither", s9["dither_pinned"]["dP_noise"],
+    r"of the \*same\* power raised it \*\*×([\d.]+)\*\* — a \*\*16")
+chk("P19 under-report factor",
+    s9["dither_pinned"]["dP_noise"] / s9["narrowed_pinned"]["dP_noise"],
+    r"×63\.311\*\* — a \*\*(\d+)× under-report\*\*", tol=0.05)
+chk("P20 beta shift from pinning s",
+    abs(s9["narrowed_free"]["beta"] - s9["narrowed_pinned"]["beta"]),
+    r"moved `β` by only \*\*([\d.]+)\*\*", tol=0.10)
+chk("P20 P_sig x, quantisation", s9["narrowed_pinned"]["dP_sig"],
+    r"`P_sig` still rose ×([\d.]+) \(quantisation\)")
+chk("P20 P_sig x, dither", s9["dither_pinned"]["dP_sig"],
+    r"against ×([\d.]+) \(matched dither\)")
+
+# section 10.3 -- the back-solve that says no effect hides under the compression
+chk("10.3 back-solved true ratio", float(np.exp(np.log(1.0014) / s8["beta_narrowed"])),
+    r"back-solves to a true ratio of `[^`]+` = \*\*([\d.]+)\*\*", tol=1e-4)
 
 print()
 if fails:

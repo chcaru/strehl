@@ -223,6 +223,11 @@ Numbered `P1…` per rule 28; absolute numbers belong to ORCH. I have not edited
 13. **P13 — MEASURED.** The fixed-pattern floor is common-mode to any split of one capture and is indistinguishable from static scene by construction. On the flat-field corpus it scales as `SNR ∝ N^1.215` with `P_noise ∝ 1/N`; scaled to the detail ROIs it is **0.073 %** and **0.050 %** of scene signal.
 14. **P14 — MEASURED.** Neither `109MSDCF` nor `119MSDCF` contains a region flat enough to serve as a null: best `sd_s/σ_t` = **3.295** and **10.018**. At 2:1 macro these subjects have no featureless patch; nulls must come from the flat-field corpus. (Corroborates M41's independent 8.7×.)
 15. **P15 — ARGUED.** Facts 12/27/28 are not overturned: the optics genuinely are destroyed near Nyquist. But the inference that *therefore reconstruction has headroom* does not follow, because the information the estimator would need to reconstruct with is not in the off-focus frames either — they are scaled copies of the same degraded latent (P9), so their sum has the same band-limit.
+16. **P16 — MEASURED, instrument, `109MSDCF` detail ROI.** A common additive noise floor does **not** compress an arm-vs-arm SNR ratio toward 1. The ratio factorises exactly into a signal-power factor and a noise factor, and the floor acts only on the latter, so the ratio tends to the **signal-power ratio** of the two arms. Over 42 ordered arm pairs the compression slope `β` fell monotonically 1.0000 → −1.0186 across a dose sweep of 0 → 128× median `P_noise`, with the signal factor invariant at −1.0186.
+17. **P17 — MEASURED, `109MSDCF`.** In M115's arm set that asymptote is a **sign reversal, not a compression**: the measured arm ordering inverts and the residual log-ratio spread *widens* from ±1.886 to ±2.810. A large shared degradation yields a confident wrong ranking, not a clean null. The mechanism is that contrast and SNR are anti-correlated across these arms (`MEAN`: highest SNR 182.2, lowest `P_sig` 8.03e7).
+18. **P18 — MEASURED, `109MSDCF`, the fleet-relevant one.** **Quantisation error is not noise.** Rounding is a deterministic function of the pixel value, so frames of the same scene receive correlated rounding error: measured cross-half correlation **r = +0.5109**, versus **−0.0007** for an independent dither of identical power. Any paired, split-half or frame-difference noise estimator therefore books roughly half of it as *signal*.
+19. **P19 — MEASURED, `109MSDCF`.** Consequence of P18 at matched perturbation power (2.581e4): an 8-bit narrowing raised measured `P_noise` **×3.937** while an independent dither of the *same* power raised it **×63.311** — a **16× under-report**. A narrowed dataset looks *less* noisy than it is, and the difference-based estimator best placed to detect the hazard is disabled by it. This is not in ORCH's current triage list.
+20. **P20 — MEASURED.** The narrowing's departure from noise-floor behaviour is not a calibration confound: pinning self-calibrated `s` to its intact value moved `β` by only **0.0071**, while `P_sig` still rose ×1.262 (quantisation) against ×1.022 (matched dither).
 
 ---
 
@@ -270,7 +275,65 @@ Since M115's smallest measured quantity is a per-pixel σ of 6.5–14.6 DN, and 
 
 ---
 
-## 10. Housekeeping for ORCH
+## 10. Testing ORCH's "ratios compress toward 1" claim
+
+ORCH's correction to the PIL notice folded my two measured findings and added a third, adjacent to them:
+
+> *small-over-large ratios compress toward 1 — they fail toward a clean null, the hardest error here to catch, because nobody re-examines an arm that showed no effect.*
+
+That is ARGUED, not measured, and it implicates this report directly: **the M115 headline is a ratio near 1 reporting a null.** If the claim held in the form stated, my result would be the exact shape an artefact takes. Rule 12 applies to ORCH, so I measured it (`s08_ratiocompress.py`, `s09_quanterror.py`).
+
+### 10.1 The law is not compression toward 1
+
+A band SNR here is a power ratio, so a common additive floor `q` factorises the arm ratio **exactly**:
+
+```
+SNR_A/SNR_B = (P_sig_A/P_sig_B) · ((P_noise_B + q)/(P_noise_A + q))
+              \_____________/     \_________________________/
+               SIGNAL factor        NOISE factor → 1 as q → ∞
+```
+
+Compression acts **only on the noise factor**. The ratio does not tend to 1; it tends to the **signal-power ratio** of the two arms. Where that lands is a property of the arms being compared, not a general law.
+
+Fitting `log r_measured = β · log r_true` over all 42 ordered arm pairs (the set is symmetric under inversion, so the intercept is identically 0), with the dose sweep as the positive control:
+
+| dose `q` (× median `P_noise`) | 0 | 0.25 | 1.0 | 4.0 | 32 | 128 | → ∞ |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **β** | 1.0000 | −0.0697 | −0.5674 | −0.8639 | −0.9966 | −1.0130 | **−1.0186** |
+
+Monotone non-increasing: **PASS**. The signal factor is **invariant at −1.0186** across the entire sweep, as the algebra requires.
+
+**In M115's arm set the asymptote is β = −1.0186 — a sign reversal, not a compression.** The measured arm *ordering inverts*, and the residual log-spread **widens** from ±1.886 to ±2.810. A large shared degradation does not hand you a null here; it hands you a confident, wrong ranking. The reason is specific and already documented in §2: across these arms contrast and SNR are anti-correlated (`MEAN` has the highest SNR at 182.2 and the lowest `P_sig` at 8.03e7), so ranking by signal power is close to the reverse of ranking by SNR.
+
+### 10.2 The real hazard is not a noise floor — quantisation error is not noise
+
+The sweep predicted β = **−0.8515** at the dose the narrowing actually delivers. The narrowing measured β = **+0.5861**. Not the same number, not the same sign. Two candidates, separated:
+
+- **H1, calibration confound** (the narrowing moved self-calibrated `s` by +23.7 %, changing every arm's weights): **ruled out.** Pinning `s` to the intact value moved β by **0.0071**.
+- **H2, correlated error: CONFIRMED.** Rounding is a *deterministic function of the pixel value*, not a random draw, so two frames of the same scene receive correlated rounding error. Measured **cross-half correlation r = +0.5109**, against **−0.0007** for an independent dither of *identical* power.
+
+The consequence, at matched perturbation power:
+
+| perturbation (identical power, 2.581e4) | cross-half `r` | `P_sig` | `P_noise` |
+| --- | --- | --- | --- |
+| quantisation (8-bit narrowing) | **+0.5109** | **×1.262** | **×3.937** |
+| random dither (null) | −0.0007 | ×1.022 | **×63.311** |
+
+**Same injected power; the measured noise power differs by 16×.** Any paired, split-half, or frame-difference noise estimator books the correlated half of quantisation error as *signal*. So a narrowed dataset **looks less noisy than it is**, and the instrument best placed to catch the hazard is the one the hazard disables. This is the opposite of the intuitive reading of ORCH's notice, and it is not in the current triage list.
+
+### 10.3 Verdict, and what it does to this report's null
+
+ORCH's claim is **right in sign for the actual PIL hazard** (β = 0.586 < 1) and **wrong as a general rule and wrong in mechanism**. For a genuine shared noise floor it predicts a null where the measured answer is an inversion.
+
+It does not threaten the headline, for three independent reasons:
+
+1. **The inputs are not narrowed** — §9, verified with asserts, commissioned.
+2. **Even granting β = 0.586**, a measured 1.0014 back-solves to a true ratio of `exp(log(1.0014)/0.5861)` = **1.0024**. There is no effect hiding under the compression.
+3. **The "nobody re-examines an arm that showed no effect" concern is pre-empted by design.** C2 (§2.3) is exactly that re-examination: planted effects are recovered through the same split channel at **0.9938–0.9974**, i.e. β ≈ 0.994 measured on known non-null effects. The null was earned against a positive control, not assumed.
+
+---
+
+## 11. Housekeeping for ORCH
 
 - **`M115` is not in the `AGENTS.md` milestone ledger**, which ends at `M113`. The allocation needs recording.
 - **The dispatching brief named no prior research.** M20 (`M20-deconvolution-ceiling-measured.md`), M41 (`M41-r3-kill-measured.md`) and M70 (`M70-through-focus-spectrum.md`) all bear directly on this question — M41 tested this exact proposal and killed it on the noise axis. Rule 43: an assertion of absence is a claim. All three were found by the rule-40 search and are cited throughout.

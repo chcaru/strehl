@@ -33,6 +33,28 @@ DEFECTS = [
     ("D6 injection-channel phantom SNR",
      "reported mid-band SNR of **84.9** for a per-pixel selector",
      "reported mid-band SNR of **8.49** for a per-pixel selector"),
+    # ---- section 10: the ratio-compression law ----------------------------
+    ("D7 dose-sweep asymptote",
+     "signal factor is **invariant at \u22121.0186** across the entire",
+     "signal factor is **invariant at \u22120.1186** across the entire"),
+    ("D8 mid-sweep beta (table interior)",
+     "| 1.0000 | \u22120.0697 | \u22120.5674 |",
+     "| 1.0000 | \u22120.6970 | \u22120.5674 |"),
+    ("D9 quantisation cross-half correlation",
+     "cross-half correlation **r = +0.5109**, versus",
+     "cross-half correlation **r = +0.0109**, versus"),
+    ("D10 dither noise inflation",
+     "power raised it **\u00d763.311** \u2014 a **16\u00d7 under-report**",
+     "power raised it **\u00d76.3311** \u2014 a **16\u00d7 under-report**"),
+    ("D11 P_sig fabrication under quantisation",
+     "`P_sig` still rose \u00d71.262 (quantisation)",
+     "`P_sig` still rose \u00d71.022 (quantisation)"),
+    ("D12 back-solved true ratio",
+     "back-solves to a true ratio of `exp(log(1.0014)/0.5861)` = **1.0024**",
+     "back-solves to a true ratio of `exp(log(1.0014)/0.5861)` = **1.1024**"),
+    ("D13 true log-ratio spread",
+     "spread **widens** from \u00b11.886 to \u00b12.810",
+     "spread **widens** from \u00b11.286 to \u00b12.810"),
 ]
 
 
