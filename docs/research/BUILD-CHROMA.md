@@ -1435,3 +1435,136 @@ explain and the ratio is meaningless. Only the Moran column is meaningful for th
 
 **Conclusion: the CA coefficients in §14–§19 stand unchanged.** The check was worth running
 and it changed nothing.
+---
+
+## 22. What was landed in `optics.rs`, and what was not
+
+ORCH lifted the no-Rust restriction for `crates/strehl-core/src/optics.rs` only, having
+checked it was clean in the working tree and last touched by `e8d74c7` (M107b, paused, no
+live agent). Everything below is in that one file. **I have not verified this myself and
+am not claiming it verified** — project rule; an independent checker is being sent.
+
+### 22.1 The blast radius was checked before anything was written
+
+Three facts made this safe to do while five other agents hold the tree:
+
+- **`OpticalProfile` is constructed in exactly nine places and all nine are inside
+  `optics.rs`** — the struct definition, the two shipped consts, and six test locals. Every
+  test local uses `..A7C2_FE100GM_2XTC_X4CPL` struct-update syntax, so adding fields cannot
+  break them.
+- **`eps_b` and `Channel::Blue` appear in no other file in the workspace.** The one
+  apparent hit outside `optics.rs` was a substring collision in `softgate.rs`.
+- **`strehl-raw` depends on `strehl-core`, not the reverse.** That is why the guard takes
+  plain scalars instead of a `CaptureIdentity`: naming that type here would invert the
+  dependency graph. `strehl-cli` depends on both and is the correct place to bridge.
+
+`cargo check --workspace --all-targets` is clean, so nothing downstream broke.
+
+### 22.2 Changes
+
+| # | Change | Note |
+|---|---|---|
+| 1 | `eps_b: None` → `Some(174.4e-6)` | LOO median of six de-attenuated stacks; 0.363 px → 0.059 px at the corner |
+| 2 | `fit_b: Option<FitStats>` added | blue's evidence kept **separate** from red's, because merging them would average a strong arm with a weak one |
+| 3 | `body_model` + `lens_type3` added | `"ILCE-7CM2"` / `33094`, the two fields `CaptureIdentity::same_gear_as` compares |
+| 4 | `GearMatch` + `matches_gear` | three-valued, mirroring `same_gear_as`; `Unknown` never collapses to `Match` |
+| 5 | `profile_for_capture` / `_env` | the default-on resolver |
+| 6 | 54.1 % transfer figure corrected | old number **stated, not deleted** |
+| 7 | "cannot be detected from the frames" corrected | it can; `LensType3` 33094 vs 32893 |
+| 8 | Both `eps_b` caveats written into the field docs | weaker arm; possible second-order term |
+| 9 | Four existing tests updated, nine added | see below |
+
+**`active_profile()` is behaviourally untouched.** `merge.rs` documents it and
+`align_cmd.rs:324` calls it to fail fast on a typo'd override; both keep working exactly as
+before. The new function sits alongside rather than replacing it, so nothing live moved.
+
+### 22.3 The two corrections, as they now read in the file
+
+Neither old number was overwritten. The file states M107's figure, states mine, and says
+which is which:
+
+- **Transfer.** M107: 95.0 % one way, **54.1 %** the other, against a 60 % bar. Mine, LOO
+  over six stacks and 1071 tiles: **93.7 % and 93.3 %** — symmetric. The file records this
+  as **unreproduced, not refuted**, because nobody has re-run M107's instrument, and the
+  likeliest reading — that 54.1 % was small-sample scatter — is an inference and is labelled
+  as one.
+- **Teleconverter detection.** The file asserted there was "no way to detect that from the
+  frames". `LensModel` names it in plain text and `LensType3` reads 33094 composed against
+  32893 bare. `strehl_raw::identity` already parsed both. The capability existed the whole
+  time the comment denied it.
+
+### 22.4 Tests: 24 optics tests pass, 432 in `strehl-core`
+
+Four existing tests asserted `eps_b.is_none()` and had to change. One is worth recording,
+because the fix improved the test:
+
+`the_cfa_site_map_touches_only_the_red_gather` required that **exactly one** of the four CFA
+gathers moved. That was a proxy. The invariant actually worth protecting is that **both
+green gathers stay bitwise frozen** — green is what the focus measure and the election run
+on, so a green that moved would change which frame wins and shift every merge number in the
+corpus. Renamed to `the_cfa_site_map_leaves_both_greens_bitwise_frozen` and rewritten to
+assert the real thing: greens frozen, red and blue move, count is 2.
+
+Nine tests added. The three synthetic negatives are `the_guard_declines_the_bare_lens`,
+`the_guard_declines_an_unreadable_file` (including both half-known cases), and
+`the_guard_declines_a_different_body`.
+
+**One test caught a real Rust subtlety in my own code.** I first pinned profile identity
+with `std::ptr::eq`. It failed. `A7C2_FE100GM_2XTC_X4CPL_RADIAL` is a `const`, not a
+`static`, so `&CONST` is const-promoted independently at each use site and two references
+to the same constant need not compare equal by pointer. The behaviour was correct; the
+assertion was meaningless. Replaced with value equality and the reason written into the
+test, since the next person to reach for `ptr::eq` on these consts will hit it too.
+
+### 22.5 What did NOT land: the default is not yet on
+
+**The correction is still off in the render path, and I want that stated rather than
+implied.** `profile_for_capture_env` exists, is tested and is ready, but nothing calls it.
+The render path still calls `active_profile()`, which is env-only.
+
+Turning it on is **one line**, in a file I am not authorised to touch —
+`crates/strehl-cli/src/align_cmd.rs:1393`, inside `warp_frame_in_place`:
+
+```rust
+// now
+let ca = strehl_core::optics::active_profile()?;
+
+// wanted
+let id = strehl_raw::identity::identity(&frame.path);
+let ca = strehl_core::optics::profile_for_capture_env(
+    id.model.as_deref(),
+    id.lens_type3,
+)?;
+```
+
+`frame.path` is already in scope (it is used in the geometry `bail!` twenty lines above),
+and `strehl-cli` already depends on `strehl-raw`, so no `Cargo.toml` change is needed.
+
+Two notes for whoever lands it. **`align_cmd.rs:324` should be left alone** — it validates a
+typo'd override early, and that is still correct under default-on. And `identity()` opens
+the file, so at `1393` it runs **once per frame**; it is documented as cheap (a few hundred
+bytes, no pixel decode) and the existing `active_profile()` call is already per-frame, so
+this is not a regression — but the identity is constant across a bracket and hoisting it to
+the stack level would be strictly better.
+
+### 22.6 The guard is correct by construction, not by experiment
+
+Written into the code, not just here. **All 26 corpus stacks are the same body, same lens,
+same teleconverter**, so the guard has never declined a real file and its negative path has
+no natural test case.
+
+The synthetic negatives are real as far as they go — the matcher takes plain scalars
+precisely so a negative costs nothing to construct — but they exercise the **matcher**, not
+the **parse**. What is untested is whether a genuine non-TC ARW yields
+`lens_type3 == Some(32893)` rather than `None`. `strehl_raw::identity` has its own synthetic
+bare-lens fixture, but no real file has been through the whole path.
+
+The guard also cannot see the **Breakthrough X4 polariser** named in the profile's optical
+path. A filter is invisible to EXIF and always will be. The guard bounds the risk; it does
+not eliminate it, and the code says so.
+
+**Capture ask, for the morning:** *a short bracket shot without the teleconverter.* It would
+exercise the guard's negative path end to end and give the corpus its first non-TC optical
+sample. I have **not** written this into `docs/captures-needed.md` — that file is ORCH's and
+they said they are actively collecting asks into it tonight, so editing it is exactly the
+collision I have avoided all night. Handing it over instead.

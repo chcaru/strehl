@@ -161,11 +161,31 @@ pub struct OpticalProfile {
     pub eps_r: f64,
     /// Blue's radial magnification error relative to green.
     ///
-    /// **`None` on the shipped record**: M107 established red's coefficient but
-    /// did not establish blue's, and an unmeasured coefficient is absent rather
-    /// than zero. `None` makes blue an exact no-op; writing `0.0` would claim
-    /// blue was measured and found uncorrected, which is a different and
-    /// unsupported claim.
+    /// `None` means **never measured**, and is an exact no-op. It is not the
+    /// same as `Some(0.0)`, which claims blue *was* measured and found
+    /// uncorrected. That distinction is the whole reason this is an `Option`,
+    /// and it is why blue shipped uncorrected for as long as it did: M107
+    /// established red and left this `None`, correctly, and nothing afterwards
+    /// noticed that "absent" had quietly become "fine".
+    ///
+    /// **Measured on the shipped record by BUILD-CHROMA** — see that field's
+    /// value for provenance. Two caveats travel with it, and they are recorded
+    /// here rather than in the report because this is where a future reader will
+    /// be standing when they need them:
+    ///
+    /// 1. **Blue is the weaker arm.** Red's coefficient is stable to ~5 % across
+    ///    the structure-gate ladder; blue's moves **26–85 %** over the same
+    ///    ladder, and its per-stack fit `R²` runs 0.32–0.88 against red's
+    ///    0.77–0.99. `174.4e-6` is not as solid a number as `-704.5e-6` and
+    ///    should not be read as one.
+    /// 2. **Blue's radial profile may not be a pure linear scale.** On
+    ///    `coffee-bean` the de-translated per-annulus coefficient falls
+    ///    monotonically from ~242 ppm at `r = 451` plane px to ~164 ppm at
+    ///    `r = 1431`. A single `eps` fits a straight line through that, so it
+    ///    over-corrects the inner field and under-corrects the outer. The
+    ///    residual is still 6x smaller than doing nothing, which is why it
+    ///    ships, but a second-order term is the obvious next measurement and
+    ///    this field cannot express one.
     pub eps_b: Option<f64>,
     /// Uniform displacement of this channel relative to green, in plane px.
     ///
@@ -182,6 +202,32 @@ pub struct OpticalProfile {
     pub translation: (f64, f64),
     /// Evidence for [`eps_r`](Self::eps_r).
     pub fit_r: FitStats,
+    /// Evidence for [`eps_b`](Self::eps_b), or `None` when blue is unmeasured.
+    ///
+    /// Separate from [`fit_r`](Self::fit_r) rather than folded into it because
+    /// the two coefficients on this record were measured by different
+    /// milestones, on different corpora, to different standards. One `FitStats`
+    /// covering both would average a strong arm with a weak one and report a
+    /// confidence neither of them has.
+    pub fit_b: Option<FitStats>,
+    /// EXIF `Model` of the body this profile was measured on, compared
+    /// **verbatim** by [`Self::matches_gear`].
+    ///
+    /// Stored as a plain `&str` rather than as a `strehl_raw::CaptureIdentity`
+    /// because `strehl-raw` depends on `strehl-core` and not the reverse —
+    /// naming that type here would invert the dependency. The bridge belongs in
+    /// the CLI, which depends on both.
+    pub body_model: &'static str,
+    /// Sony `LensType3` of the **composed** optical path, per SYNTHESIS fact 26.
+    ///
+    /// `33094` is the corpus rig — `FE 100mm F2.8 Macro GM OSS + 2X
+    /// Teleconverter`. The same lens **without** the teleconverter is `32893`,
+    /// a different integer, which is precisely what makes the guard possible.
+    ///
+    /// Keyed on `LensType3` and not on `LensModel`: the latter is a display
+    /// string, and fact 26 forbids `LensType` (reads 65535 on every corpus
+    /// frame) and `LensType2` (reads 0 on 22 of 24).
+    pub lens_type3: u16,
 }
 
 impl OpticalProfile {
@@ -306,7 +352,8 @@ pub const A7C2_FE100GM_2XTC_X4CPL: OpticalProfile = OpticalProfile {
     key: "a7c2-fe100gm-2xtc-x4cpl",
     optical_path: "Sony A7C II + FE 100mm F2.8 Macro GM + 2x Viltrox teleconverter \
                    + Breakthrough X4 circular polariser",
-    measured_from: "M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl",
+    measured_from: "M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); \
+                    BUILD-CHROMA: 1071 gated tiles over six stacks (blue)",
     // Not recorded by the capture metadata M107 had to hand. Absent rather than
     // guessed: lateral CA varies with aperture and magnification, so a guess here
     // would silently widen the profile's claimed applicability.
@@ -317,7 +364,22 @@ pub const A7C2_FE100GM_2XTC_X4CPL: OpticalProfile = OpticalProfile {
     // extrapolation. Declared, not enforced.
     support_r_max: Some(0.788),
     eps_r: -704.5e-6,
-    eps_b: None,
+    // MEASURED, where this was `None` until BUILD-CHROMA.
+    //
+    // +174.4 ppm: the leave-one-out median of six de-attenuated per-stack
+    // measurements. Per-stack range 101.3-222.7 ppm. Against the 0.363 plane px
+    // of blue displacement the corner carries today, the LOO median leaves
+    // **0.059 px** -- an 84 % reduction, and it is a leave-one-out figure, so no
+    // stack is scored against a coefficient its own data set.
+    //
+    // The sign opposes red's, and that was not imposed: the two channels were
+    // fitted independently against green, and blue coming out positive while red
+    // is negative is what lateral CA looks like when the two flank green in the
+    // dispersion curve. A sign error in either arm would have broken that.
+    //
+    // Read the field docs before trusting this to the same precision as eps_r.
+    // It is the weaker arm and it may want a second-order term.
+    eps_b: Some(174.4e-6),
     // Unattributed: degenerate with an optical-centre offset, and the same order
     // as the ~0.5 px/axis that CFA co-siting predicts. See the field docs.
     translation: (0.6294, -0.4240),
@@ -327,6 +389,23 @@ pub const A7C2_FE100GM_2XTC_X4CPL: OpticalProfile = OpticalProfile {
         residual_rms_sensel: 0.073,
         n_regions: 20,
     },
+    // Blue's evidence, kept separate from red's because it is weaker and saying
+    // so is the point. `n_regions` counts gated tiles, not M107 ROIs, so the two
+    // counts are not comparable as sample sizes -- they are different
+    // instruments. `r_squared` is the mean of the six per-stack radial fits
+    // (range 0.32-0.88); `permutation_p` is from the pooled tile-permutation
+    // null, which is the same null red's was scored against.
+    fit_b: Some(FitStats {
+        r_squared: 0.579,
+        permutation_p: 0.0005,
+        residual_rms_sensel: 0.152,
+        n_regions: 1071,
+    }),
+    // The gear this profile describes, and the two fields the guard compares.
+    // 33094 is the composed path WITH the 2x teleconverter; the bare lens is
+    // 32893 and must not match.
+    body_model: "ILCE-7CM2",
+    lens_type3: 33094,
 };
 
 const PROFILES: [&OpticalProfile; 1] = [&A7C2_FE100GM_2XTC_X4CPL];
@@ -344,8 +423,13 @@ const PROFILES: [&OpticalProfile; 1] = [&A7C2_FE100GM_2XTC_X4CPL];
 ///
 /// Both greens map to [`Channel::Green`], which has no coefficient by
 /// construction, so both green gathers stay **bitwise identical** to today
-/// (bar L1). `eps_b` is `None`, so the blue gather is unchanged too. **Only the
-/// red plane's gather changes** — a blast radius of one of four gathers.
+/// (bar L1).
+///
+/// **This used to say only red moves.** That was true while `eps_b` was `None`.
+/// BUILD-CHROMA measured blue, so the blast radius is now **two of four
+/// gathers** — red and blue — and the greens remain bitwise frozen. The
+/// green freeze is the invariant that actually matters here, because green is
+/// the channel the focus measure and the election are computed on.
 pub fn cfa_site_channel(dx: usize, dy: usize) -> Channel {
     match (dx, dy) {
         (0, 0) => Channel::Red,
@@ -416,19 +500,47 @@ impl std::error::Error for CaConfigError {}
 
 /// Resolve the lateral-CA profile from the `STREHL_FIX_CA` setting.
 ///
-/// **Off by default, and it must stay that way.** The out-of-sample transfer arm
-/// (L4) **split**: a profile fitted on `tweezers-cpl` recovered 95.0 % of the
-/// in-sample reduction on `bee-3-cpl`, but the reverse direction recovered only
-/// 54.1 % against a registered 60 % bar. Lateral CA *is* an optical constant in
-/// principle, but 8 ROIs are not enough to fit a transferable one, and this
-/// project has fact 52 standing as the warning against transferring a scalar
-/// fitted on one scene. Default-on would be a regression risk taken on a
-/// coefficient whose transfer is measured to be uneven.
+/// **This is the operator override.** The default-on path is
+/// [`default_profile_for_gear`]; this function is what `STREHL_FIX_CA` reaches.
 ///
-/// **The value must NAME the optical path**, not merely be truthy. The shipped
-/// profile includes a **2x teleconverter**; take it off and the coefficient does
-/// not describe the path. There is no way to detect that from the frames, so the
-/// operator states it or gets nothing:
+/// ## Correction: the 54.1 % transfer figure is not reproduced
+///
+/// This doc used to read *"Off by default, and it must stay that way"*, on this
+/// evidence: the out-of-sample transfer arm (L4) **split** — a profile fitted on
+/// `tweezers-cpl` recovered 95.0 % of the in-sample reduction on `bee-3-cpl`,
+/// but the reverse direction recovered only **54.1 %** against a registered 60 %
+/// bar. That asymmetry was the whole case for default-off.
+///
+/// **BUILD-CHROMA does not reproduce it.** Running leave-one-out transfer over
+/// six stacks with 1071 gated tiles, the two directions recover **93.7 %** and
+/// **93.3 %** — symmetric, and both far above the 60 % bar. The measured corner
+/// residual left by the shipped red coefficient is **0.071 plane px** against
+/// **1.519 px** uncorrected.
+///
+/// The old number is **stated, not deleted**. Two instruments disagree: M107 had
+/// 8 ROIs per side, BUILD-CHROMA has ~180 tiles per stack, and the more likely
+/// reading is that 54.1 % was small-sample scatter rather than real asymmetry —
+/// but that is an inference, not a measurement, and nobody has re-run M107's
+/// instrument to settle it. Treat 54.1 % as **unreproduced**, not as refuted.
+///
+/// Fact 52 still stands as written: a scalar fitted on one scene should not be
+/// transferred blind. What changed is that the scalar is no longer fitted on one
+/// scene, and that the thing it is now keyed to is the **gear**, not the scene.
+///
+/// ## Correction: the teleconverter *can* be detected from the frames
+///
+/// **The value must NAME the optical path**, not merely be truthy — that part is
+/// unchanged and still right for this function. The shipped profile includes a
+/// **2x teleconverter**; take it off and the coefficient does not describe the
+/// path.
+///
+/// But this doc also used to assert *"There is no way to detect that from the
+/// frames."* **That is false.** The ARW records it twice over:
+/// `LensModel` reads `FE 100mm F2.8 Macro GM OSS + 2X Teleconverter` in plain
+/// text, and Sony's `LensType3` reads **33094** for the composed path against
+/// **32893** for the bare lens. `strehl_raw::identity` already parses both.
+/// Detection was available the whole time this file said it was not, which is
+/// why [`default_profile_for_gear`] can exist at all.
 ///
 /// ```text
 /// STREHL_FIX_CA unset / "" / "0"        -> Ok(None)      silent no-op
@@ -474,6 +586,152 @@ pub fn profile_from_setting(
 /// escape.
 pub fn active_profile() -> Result<Option<&'static OpticalProfile>, CaConfigError> {
     profile_from_setting(std::env::var(CA_ENV).ok().as_deref())
+}
+
+/// The form of a profile that is actually **applied**: translation zeroed.
+///
+/// The recorded const keeps the fitted translation as provenance; the radial
+/// twin is what touches a render. See [`A7C2_FE100GM_2XTC_X4CPL_RADIAL`].
+fn applied_form(recorded: &'static OpticalProfile) -> &'static OpticalProfile {
+    if recorded.key == A7C2_FE100GM_2XTC_X4CPL.key {
+        return &A7C2_FE100GM_2XTC_X4CPL_RADIAL;
+    }
+    // A profile with no registered radial-only twin. Unreachable today, and
+    // `every_profile_has_a_radial_form` exists to keep it that way: if that test
+    // fails, this line applies an unattributed translation to a real render.
+    recorded
+}
+
+/// Does a capture's gear match a profile's gear? **Three-valued on purpose.**
+///
+/// The middle case is the important one. `Unknown` means *not enough evidence to
+/// say*, and it must never be collapsed into `Match`: treating an unidentifiable
+/// file as a match applies one photographer's measured aberration to someone
+/// else's glass at full strength. Collapsing it into `Mismatch` merely declines
+/// to help, which is the safe direction and the one taken here.
+///
+/// This mirrors `strehl_raw::CaptureIdentity::same_gear_as`, which is
+/// three-valued for the same reason and compares the same two fields.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum GearMatch {
+    /// Body and composed lens id both match. Safe to apply.
+    Match,
+    /// At least one field is present and differs. Do not apply.
+    Mismatch,
+    /// A field the decision needs is absent. Do not apply, and say why.
+    Unknown,
+}
+
+impl OpticalProfile {
+    /// Whether this profile describes the gear that took a given frame.
+    ///
+    /// Compares exactly two fields, both stable across a stack and a session:
+    /// [`body_model`](Self::body_model) verbatim, and
+    /// [`lens_type3`](Self::lens_type3) as an integer (SYNTHESIS fact 26).
+    ///
+    /// Deliberately does **not** consult `LensModel` (a display string),
+    /// `FNumber` or `FocalLength`: identical gear spans f/5.6–f/11 in this
+    /// corpus, so a per-shot field would decline valid frames.
+    ///
+    /// Note that this cannot see everything that matters. The profile's path
+    /// also names a **Breakthrough X4 circular polariser**, and a filter in
+    /// front of the lens is invisible to EXIF and always will be. The guard
+    /// therefore bounds the risk, it does not eliminate it: it can tell a
+    /// different lens from this one, and it cannot tell a filter change.
+    pub fn matches_gear(&self, body_model: Option<&str>, lens_type3: Option<u16>) -> GearMatch {
+        let (Some(model), Some(lens)) = (body_model, lens_type3) else {
+            return GearMatch::Unknown;
+        };
+        if model == self.body_model && lens == self.lens_type3 {
+            GearMatch::Match
+        } else {
+            GearMatch::Mismatch
+        }
+    }
+}
+
+/// Resolve the profile for a capture, **default-on when the gear is recognised**.
+///
+/// This is the function the render path should call. It supersedes
+/// [`active_profile`] for any caller that can supply an identity, and it is the
+/// whole of the default-on change:
+///
+/// ```text
+/// operator set STREHL_FIX_CA   -> the operator's word, in BOTH directions
+/// unset, gear matches a profile -> Ok(Some(..))   the default-on case
+/// unset, gear known but different -> Ok(None)     declines
+/// unset, gear unreadable        -> Ok(None)       declines
+/// ```
+///
+/// **The operator can still turn it off**, and that is not incidental. Under
+/// default-off, `STREHL_FIX_CA=off` was indistinguishable from doing nothing;
+/// under default-on it is the only way to get an uncorrected render, so it has
+/// to keep working. `profile_from_setting` already treats `off`/`0`/`false` as
+/// `Ok(None)`, and routing through it here means the operator's explicit refusal
+/// beats the gear match.
+///
+/// ## Why default-on is defensible now, when it was not before
+///
+/// The objection recorded on [`profile_from_setting`] was transfer: a
+/// coefficient fitted on one scene might not describe another. That objection is
+/// answered not by measuring per-bracket — BUILD-CHROMA built that instrument
+/// and it was **3.6x worse** than the fixed profile — but by observing that
+/// lateral CA is a property of the **glass**, and that the glass is recorded in
+/// the file. A profile keyed to gear is not a scalar transferred across scenes;
+/// it is a constant applied to the instrument it was measured on.
+///
+/// ## The limitation, stated because it is real
+///
+/// **This guard has never declined a real file.** All 26 corpus stacks are the
+/// same body, same lens, same teleconverter, so the negative path has no natural
+/// test case and the guard is correct **by construction, not by experiment**. A
+/// guard that has only ever said yes is a guard that has not been tested where it
+/// matters.
+///
+/// The synthetic negatives below (`the_guard_declines_the_bare_lens`,
+/// `the_guard_declines_an_unreadable_file`, `the_guard_declines_a_different_body`)
+/// exercise the matcher directly and are cheap and real as far as they go — the
+/// matcher takes plain scalars precisely so a negative needs no fabricated EXIF
+/// bytes. What they cannot exercise is the *parse*: whether a genuine non-TC ARW
+/// yields `lens_type3 == Some(32893)` rather than `None`. `strehl_raw::identity`
+/// has its own synthetic bare-lens fixture for that, but no real file has ever
+/// been through the whole path.
+///
+/// **Ask on the capture list: a short bracket shot without the teleconverter.**
+/// It would exercise the negative path end to end and give the corpus its first
+/// non-TC optical sample.
+pub fn profile_for_capture(
+    setting: Option<&str>,
+    body_model: Option<&str>,
+    lens_type3: Option<u16>,
+) -> Result<Option<&'static OpticalProfile>, CaConfigError> {
+    // An operator who said anything at all outranks the gear match. Empty and
+    // whitespace-only are treated as "said nothing", matching the way an unset
+    // variable and `STREHL_FIX_CA=` are indistinguishable in most shells.
+    if setting.is_some_and(|s| !s.trim().is_empty()) {
+        return profile_from_setting(setting);
+    }
+    Ok(PROFILES
+        .iter()
+        .copied()
+        .find(|p| p.matches_gear(body_model, lens_type3) == GearMatch::Match)
+        .map(applied_form))
+}
+
+/// [`profile_for_capture`] with the setting read from [`CA_ENV`].
+///
+/// The entry point for the render path. Like [`active_profile`] it re-reads the
+/// environment per call rather than caching, so a harness can change the switch
+/// between stacks within one process.
+pub fn profile_for_capture_env(
+    body_model: Option<&str>,
+    lens_type3: Option<u16>,
+) -> Result<Option<&'static OpticalProfile>, CaConfigError> {
+    profile_for_capture(
+        std::env::var(CA_ENV).ok().as_deref(),
+        body_model,
+        lens_type3,
+    )
 }
 
 #[cfg(test)]
@@ -604,11 +862,20 @@ mod tests {
             );
         }
         assert_eq!(p.eps(Channel::Green), None);
-        // Blue is unmeasured on this record, so it is also a no-op -- and that
-        // is absence, not a measured zero.
-        assert_eq!(p.eps(Channel::Blue), None);
         assert_eq!(p.displacement_at(Channel::Green, 2112.9), 0.0);
-        assert_eq!(p.displacement_at(Channel::Blue, 2112.9), 0.0);
+        // Blue USED to be a no-op here, because it was unmeasured. It is
+        // measured now, so this asserts the opposite: blue must move, and must
+        // move in the direction opposite to red. If a future edit reverts
+        // `eps_b` to `None`, this fails rather than silently going quiet.
+        assert_eq!(p.eps(Channel::Blue), Some(174.4e-6));
+        assert!(
+            p.displacement_at(Channel::Blue, 2112.9) > 0.0,
+            "blue is imaged LARGE; its displacement must be positive"
+        );
+        assert!(
+            p.displacement_at(Channel::Red, 2112.9) < 0.0,
+            "red is imaged SMALL; the two channels must flank green"
+        );
     }
 
     /// **Bar L6.** Composing then applying once must equal applying then
@@ -871,14 +1138,19 @@ mod tests {
     /// separately (`align_cmd.rs:1253-1287`), so wiring the correction means
     /// composing a per-site transform inside a loop that already exists.
     #[test]
-    fn the_cfa_site_map_touches_only_the_red_gather() {
+    fn the_cfa_site_map_leaves_both_greens_bitwise_frozen() {
         assert_eq!(cfa_site_channel(0, 0), Channel::Red);
         assert_eq!(cfa_site_channel(1, 0), Channel::Green);
         assert_eq!(cfa_site_channel(0, 1), Channel::Green);
         assert_eq!(cfa_site_channel(1, 1), Channel::Blue);
 
-        // The claim that matters: with the shipped profile, three of the four
-        // site gathers are bitwise unchanged, so only red can move.
+        // The claim that matters. This test used to require that exactly ONE of
+        // the four gathers moved, because blue was unmeasured. Blue is measured
+        // now, so the invariant that survives is the one that was always the
+        // real point: BOTH GREEN GATHERS ARE BITWISE FROZEN. Green is the
+        // channel the focus measure and the election run on, so a green that
+        // moved would change which frame wins, and every merge number in the
+        // corpus with it.
         let p = Some(&A7C2_FE100GM_2XTC_X4CPL_RADIAL);
         let t = Similarity::from_params(SimilarityParams {
             ax: 7.5,
@@ -895,13 +1167,15 @@ mod tests {
                     && got.a.im.to_bits() == t.a.im.to_bits()
                     && got.b.re.to_bits() == t.b.re.to_bits()
                     && got.b.im.to_bits() == t.b.im.to_bits();
-                if !same {
+                if same {
+                    assert_eq!(c, Channel::Green, "a frozen gather must be green");
+                } else {
                     moved += 1;
-                    assert_eq!(c, Channel::Red, "only red has a coefficient");
+                    assert_ne!(c, Channel::Green, "green must never move");
                 }
             }
         }
-        assert_eq!(moved, 1, "exactly one of the four site gathers may change");
+        assert_eq!(moved, 2, "red and blue move; the two greens do not");
     }
 
     /// The gate is OFF by default and REFUSES rather than guessing.
@@ -1009,8 +1283,27 @@ mod tests {
             "the components are too close to discriminate an axis swap"
         );
 
-        // Blue was never measured. Absence is not a measured zero.
-        assert!(p.eps_b.is_none(), "eps_b must stay None until blue is measured");
+        // Blue was unmeasured when this record shipped and is measured now.
+        // Pin the value, not merely its presence: a coefficient that drifts is
+        // worse than one that is absent, because it still looks measured.
+        assert_eq!(
+            p.eps_b,
+            Some(174.4e-6),
+            "eps_b is the BUILD-CHROMA leave-one-out median; changing it needs a re-measurement"
+        );
+        let b = p.eps_b.unwrap();
+        assert!(b > 0.0, "blue is over-magnified; eps_b must be positive");
+        assert!(
+            b.signum() != p.eps_r.signum(),
+            "red and blue must flank green in sign; same-sign means a fit error in one arm"
+        );
+        // The evidence for blue must travel with it, and must not be silently
+        // borrowed from red's much stronger fit.
+        let fb = p.fit_b.expect("a measured eps_b must carry its FitStats");
+        assert!(
+            fb.r_squared < p.fit_r.r_squared,
+            "blue is the weaker arm; if its R2 ever exceeds red's, the records have been crossed"
+        );
     }
 
     /// The translation must be documented as unattributed. If a future edit
@@ -1019,8 +1312,6 @@ mod tests {
     fn the_translation_is_not_claimed_to_be_optical() {
         let p = &A7C2_FE100GM_2XTC_X4CPL;
         assert!(p.translation.0 != 0.0 || p.translation.1 != 0.0);
-        // eps_b is absent, not zero: blue was never measured.
-        assert!(p.eps_b.is_none());
     }
 
     #[test]
@@ -1044,5 +1335,193 @@ mod tests {
             );
         }
         assert!(p.measured_from.contains("M107"));
+    }
+
+    // ---------------------------------------------------------------------
+    // The gear guard, and the default-on path it gates.
+    //
+    // These are the tests standing in for an experiment that cannot be run:
+    // every stack in the corpus is the same body, lens and teleconverter, so
+    // the guard has never declined a real file. The matcher takes plain
+    // scalars precisely so that a negative case costs nothing to construct.
+    // ---------------------------------------------------------------------
+
+    /// The corpus rig, as `strehl_raw::identity` reads it off a real ARW.
+    const RIG: (Option<&str>, Option<u16>) = (Some("ILCE-7CM2"), Some(33094));
+
+    /// **The synthetic negative that matters most.** Same body, same glass,
+    /// teleconverter removed.
+    ///
+    /// This is the misuse the whole module was written to prevent: the profile's
+    /// coefficient was fitted *through* a 2x teleconverter, and a teleconverter
+    /// magnifies the prime's residual aberration along with the image. Applied
+    /// to the bare lens it would be roughly twice the correction the path needs,
+    /// which turns a real defect into an equally real one of opposite sign.
+    ///
+    /// `32893` is not invented here: it is the id `strehl_raw::identity`'s own
+    /// bare-lens fixture reports, two bytes different from `33094`.
+    #[test]
+    fn the_guard_declines_the_bare_lens() {
+        let p = &A7C2_FE100GM_2XTC_X4CPL;
+        assert_eq!(
+            p.matches_gear(Some("ILCE-7CM2"), Some(32893)),
+            GearMatch::Mismatch,
+            "the bare lens is a DIFFERENT optical path and must not match"
+        );
+        assert_eq!(
+            profile_for_capture(None, Some("ILCE-7CM2"), Some(32893)).unwrap(),
+            None,
+            "default-on must decline gear it was not measured on"
+        );
+        // And the two ids must stay distinct. If a future edit ever set the
+        // profile's id to the bare lens's, the guard would silently invert.
+        assert_ne!(p.lens_type3, 32893);
+    }
+
+    /// A file that says nothing must be declined, not guessed at.
+    ///
+    /// `Unknown` is a third value and this pins that it does not collapse into
+    /// `Match`. The dangerous direction is unmistakable: an unreadable file
+    /// treated as a match applies a measured aberration to unknown glass.
+    #[test]
+    fn the_guard_declines_an_unreadable_file() {
+        let p = &A7C2_FE100GM_2XTC_X4CPL;
+        assert_eq!(p.matches_gear(None, None), GearMatch::Unknown);
+        // Half-known is still unknown: BOTH fields are required.
+        assert_eq!(p.matches_gear(Some("ILCE-7CM2"), None), GearMatch::Unknown);
+        assert_eq!(p.matches_gear(None, Some(33094)), GearMatch::Unknown);
+
+        for (m, l) in [(None, None), (Some("ILCE-7CM2"), None), (None, Some(33094))] {
+            assert_eq!(
+                profile_for_capture(None, m, l).unwrap(),
+                None,
+                "an unidentified capture must get no profile"
+            );
+        }
+    }
+
+    /// The same lens on a different body is a different path.
+    #[test]
+    fn the_guard_declines_a_different_body() {
+        let p = &A7C2_FE100GM_2XTC_X4CPL;
+        assert_eq!(
+            p.matches_gear(Some("ILCE-7RM5"), Some(33094)),
+            GearMatch::Mismatch
+        );
+        // Verbatim comparison, so a near-miss is a miss. Sensor geometry
+        // differs between bodies and the coefficient is in normalised field
+        // height, so "close enough" is not a thing here.
+        assert_eq!(
+            p.matches_gear(Some("ilce-7cm2"), Some(33094)),
+            GearMatch::Mismatch,
+            "the body model is compared verbatim, as CaptureIdentity does"
+        );
+        assert_eq!(
+            profile_for_capture(None, Some("ILCE-7RM5"), Some(33094)).unwrap(),
+            None
+        );
+    }
+
+    /// **The default-on case.** Recognised gear, operator silent, correction on.
+    #[test]
+    fn matching_gear_gets_the_profile_with_no_environment_set() {
+        let (m, l) = RIG;
+        let got = profile_for_capture(None, m, l).unwrap();
+        assert!(got.is_some(), "this is the default-on change; it must apply");
+        let got = got.unwrap();
+        assert_eq!(got.key, A7C2_FE100GM_2XTC_X4CPL.key);
+        // Empty and whitespace-only mean "said nothing", like an unset variable.
+        for quiet in ["", "   "] {
+            assert!(
+                profile_for_capture(Some(quiet), m, l).unwrap().is_some(),
+                "{quiet:?} must not be read as a refusal"
+            );
+        }
+    }
+
+    /// Default-on must apply the **radial-only** form, not the recorded one.
+    ///
+    /// The recorded const carries a fitted translation that is structurally
+    /// unattributed and measured to be 12x worse than dropping it. Default-on
+    /// silently applying it to every frame would be the worst version of this
+    /// change, and it is a one-word slip away.
+    #[test]
+    fn the_default_on_path_applies_the_radial_form() {
+        let (m, l) = RIG;
+        let got = profile_for_capture(None, m, l).unwrap().unwrap();
+        assert_eq!(got.translation, (0.0, 0.0), "the translation must not ship");
+        // Compared BY VALUE, not by pointer. These profiles are `const`, not
+        // `static`, so `&CONST` is const-promoted independently at each use site
+        // and `ptr::eq` can be false for two references to the same constant.
+        // An identity test written with `ptr::eq` here fails for a reason that
+        // has nothing to do with the profile being right.
+        assert_eq!(*got, A7C2_FE100GM_2XTC_X4CPL_RADIAL);
+        // The env path and the default path must land on the same profile.
+        let via_env = profile_from_setting(Some(A7C2_FE100GM_2XTC_X4CPL.key))
+            .unwrap()
+            .unwrap();
+        assert_eq!(*got, *via_env, "two routes, one profile");
+    }
+
+    /// Every profile must have a registered radial-only twin.
+    ///
+    /// `applied_form` falls back to the recorded profile for an unregistered
+    /// key, which would apply an unattributed translation to a real render.
+    /// This is the test that keeps that branch unreachable.
+    #[test]
+    fn every_profile_has_a_radial_form() {
+        for p in PROFILES {
+            let applied = applied_form(p);
+            assert_eq!(
+                applied.translation,
+                (0.0, 0.0),
+                "profile {} has no radial-only twin registered in applied_form",
+                p.key
+            );
+            assert_eq!(applied.key, p.key);
+            assert_eq!(applied.eps_r, p.eps_r);
+            assert_eq!(applied.eps_b, p.eps_b);
+        }
+    }
+
+    /// **Default-on makes the off switch load-bearing.**
+    ///
+    /// Under default-off, `STREHL_FIX_CA=off` was indistinguishable from doing
+    /// nothing and could have rotted unnoticed. Under default-on it is the only
+    /// way to obtain an uncorrected render, so it is now on the critical path
+    /// for every A/B comparison anyone runs against this correction.
+    #[test]
+    fn the_operator_can_turn_it_off_on_matching_gear() {
+        let (m, l) = RIG;
+        for off in ["0", "off", "false", "OFF", " off "] {
+            assert_eq!(
+                profile_for_capture(Some(off), m, l).unwrap(),
+                None,
+                "{off:?} must defeat the gear match"
+            );
+        }
+    }
+
+    /// The operator's word outranks the gear match in both directions, and a
+    /// typo is still an error rather than a silent fallback to the default.
+    ///
+    /// This is the sharp edge of default-on: a typo'd override must NOT quietly
+    /// resolve to the gear-matched profile, because then the operator's stated
+    /// intent has been discarded without a word.
+    #[test]
+    fn a_typod_override_errors_rather_than_falling_back_to_the_default() {
+        let (m, l) = RIG;
+        assert!(profile_for_capture(Some("nope"), m, l).is_err());
+        // Truthy values are still refused: "yes, correct CA" does not say which
+        // lens, and under default-on it does not need to -- so typing it is a
+        // sign the operator believes something untrue about the switch.
+        for truthy in ["1", "true", "on"] {
+            assert!(profile_for_capture(Some(truthy), m, l).is_err(), "{truthy}");
+        }
+        // An override naming a real profile applies even on unknown gear: the
+        // operator is allowed to know something EXIF does not.
+        let forced = profile_for_capture(Some(A7C2_FE100GM_2XTC_X4CPL.key), None, None)
+            .unwrap();
+        assert!(forced.is_some(), "an explicit profile must not need the guard");
     }
 }
