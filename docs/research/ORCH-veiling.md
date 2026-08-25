@@ -236,3 +236,115 @@ is rejected and alignment re-solves with that frame as its own reference. Measur
 post-alignment sweep requires instrumenting the merge from inside. Noted because the
 merge log states the held-out score "cannot detect a scale error common to every edge",
 which is exactly the shape a systematic breathing under-correction would take.
+
+## The fix as I specified it is WRONG, and a real subject proves it
+
+Every subject in the evidence above — `flower-bud-alone-cpl`, `flower-inner-edge-cpl`,
+and the `109MSDCF` negative — is a **dark subject on a bright backdrop**. There, veiling
+pushes background pixels down and a per-pixel **upper** envelope is right by
+construction. I specified the fix from that set and did not notice the set was
+one-sided.
+
+The two-layer model makes the direction a property of the *subject*, not of the defect:
+
+```
+I_k(p) = a_k · (F ⊛ PSF_k)(p)  +  (1 − a_k) · (B ⊛ PSF_k)(p)
+```
+
+so a **bright** foreground over a **dark** backdrop must veil *upward*, and an upper
+envelope would then select the **most-veiled** sample at every pixel — not a failure to
+fix the defect but a machine for maximising it.
+
+### Finding the missing case
+
+Classifying all 26 subjects by border-versus-centre luma (`polarity.py`) gives 14
+dark-on-bright, 8 low-contrast, and **4 bright-on-dark**, of which two are deep enough
+to show the defect: `pencil-steep-angle-cpl` (299 frames, backdrop 0.369, subject 0.686)
+and `pencil-flatter-angle-cpl` (299 frames, +0.141). The steep one was rendered in the
+same four arms as `flower-bud`: frames 000 / 149 / 298 and the merge, linear, full
+resolution, pin `859edac`.
+
+### Result — the sign reverses, and it is not subtle
+
+Backdrop luminance as excess over each image's *own* far field (d > 420 px), linear DN.
+**Positive means veiled upward.**
+
+| image | 4–12 | 12–30 | 30–60 | 60–120 | 120–200 | 200–300 |
+| --- | --- | --- | --- | --- | --- | --- |
+| frame000 (near end) | **+4082** | +3656 | +3311 | +2918 | +2156 | +1222 |
+| frame149 (middle) | **+3617** | +3142 | +2805 | +2367 | +1407 | +674 |
+| frame298 (far end) | **+4144** | +3325 | +2949 | +2348 | +1138 | −77 |
+| MERGE | +3127 | +2628 | +2252 | +1981 | +1334 | −415 |
+
+Against `flower-bud`'s **−10306 / −5179 / −4604** in the same band. Same instrument,
+same pin, same method; the sign of the near-silhouette displacement follows the
+subject's polarity, exactly as the model requires.
+
+### The confound-free conclusion
+
+Part of the pencil's positive excess may be **real scene shading** rather than veiling:
+unlike `flower-bud`'s featureless sweep, the pencil rests on a receding surface, so
+distance-from-silhouette correlates with genuine scene structure. The between-frame
+spread also *grows* with distance (527 DN at d=4–12 rising to 2133 DN at d=300–420),
+which is the wrong shape for veiling and is most likely the breathing/rescale difference
+between independently-aligned single-frame renders. **So the merge-versus-frames
+comparison on this subject is not clean and no ratio from it should be quoted.**
+
+The design conclusion does not depend on any of that, because it is a statement about
+*which frame gets selected*:
+
+> On `flower-bud`, the upper envelope selects the **middle** frame (−247 is the maximum
+> of −3572 / −247 / −388). On `pencil-steep-angle-cpl`, the upper envelope selects the
+> **end** frames (+4144 and +4082 beat the middle's +3617). The end frames are the ones
+> in which the subject is *most defocused* and therefore spilling *most*.
+
+"Which frame is at the end of the bracket" is a fact about the bracket, not about the
+scene, so the confound cannot rescue it. **An unsigned upper envelope systematically
+prefers the most-veiled frames on bright subjects.** It must not ship.
+
+### The corrected estimator
+
+All samples of a background pixel are convex combinations of two endpoints, so they lie
+on the segment between `B̂` (a = 0, the truth) and `F̂` (a = 1, fully veiled). The
+unveiled value is the endpoint **away from the foreground**:
+
+```
+sign = sign(B̂ − F̂)      # + when the subject is darker than the backdrop
+```
+
+`F̂` is the intensity at the nearby foreground pixels, whose winner index the merge
+already holds — one signed scalar per neighbourhood, no new machinery.
+
+Better than an order statistic: `a_k` is **monotone in the foreground's defocus**, i.e.
+in `|k − k_F|` where `k_F` is the nearby foreground's winner index. So **regress `I_k`
+against `|k − k_F|` and extrapolate to zero**. That uses every sample, is unbiased under
+the model, and has variance ~σ²/n rather than a maximum's bias-plus-variance. The fitted
+**slope is the veiling strength**, so the same fit supplies the detector: slope ≈ 0 means
+nothing is spilling here and the estimator must collapse to the ordinary gated mean —
+a veto with no threshold to tune.
+
+The three-point evidence already fits this shape without having been asked to. On
+`flower-bud` at d=120–200 the middle frame is cleanest (−247) and both ends are far
+worse (−3572, −388); on the pencil the middle frame is likewise the least-displaced of
+the three in five of six bands.
+
+### Acceptance criteria, superseding the earlier list
+
+- **Target:** `flower-bud-alone-cpl` d=120–200 beats **−247 DN**.
+- **Polarity, non-negotiable:** `pencil-steep-angle-cpl` must improve or be a no-op. A
+  regression there means the sign logic is inverted and the fix must not ship.
+- **Placebo:** `109MSDCF` ~no-op (flat, no depth separation, −177 DN aura).
+- **Guard:** `couch-fibers-cpl` unchanged.
+- **Library gate:** a 26-subject gallery sharpness delta, because an over-broad
+  rejection rule would soften everything while looking like a win on one subject.
+- Report rim and surround **separately**; they have opposite signs and a combined score
+  hides the trade.
+
+### What this episode is
+
+I proved a fix numerically before it was built, which was right, and then specified it
+from a one-sided sample, which was wrong — and the error was of a kind that a
+confirmatory test on any subject in my evidence set would have passed. The check that
+caught it was asking what class of subject was *absent*, then going to look for one.
+Cost: one classification pass and four renders.
+
