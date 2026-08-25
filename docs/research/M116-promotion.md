@@ -56,6 +56,16 @@ so it gets its own table:
 | occlusion halo, delta 40 | KEEP-OFF | KEEP-OFF | KEEP-OFF | KEEP-OFF | **KEEP-OFF** | HB2 selectivity `R = 3.054`, bar `<= 0.50`, failed backwards |
 | occlusion halo, delta 80 | KEEP-OFF | KEEP-OFF | KEEP-OFF | KEEP-OFF | **KEEP-OFF** | strictly worse than delta 40 on the registered index on 3 of 4 |
 
+The dose ladder of section 5e does not change that verdict; it explains it, and
+it finds two defects in the knob itself:
+
+| finding | bee-3-cpl | flower-bud-with-background-fern-cpl | verdict | decided by |
+| --- | --- | --- | --- | --- |
+| `DELTA=0` is a silent alias for the shipped 40 | confirmed | not run | **DEFECT** | LB1, SHA `EEC72FA7CFE7` on both |
+| `DELTA >= frame count` is a silent no-op reported as ON | confirmed | confirmed | **DEFECT** | `0 of 585886` and `0 of 573588` re-elected |
+| ORCH's blur confound (treatment blurs the scored region) | **refuted**, `D = +0.14468` | **confirmed**, `D = -0.30177` | **SUBJECT-DEPENDENT** | P43, P44 |
+| halo index degrades monotonically with dose | confirmed | confirmed | **CAUSED, not incidental** | LB3 PASS both |
+
 Supporting verdicts, not instruments:
 
 | comparison | bee-3-cpl | foam | tweezers-cpl | reading |
@@ -83,6 +93,18 @@ python pick_single.py             # sharpest single frame per subject
 pwsh -File .\run_view.ps1         # 24 renders, the viewing grid
 python score.py                   # metrics -> scores.json
 python crops.py                   # crops and contact sheets
+
+powershell -File .\run_halo.ps1   # 30 renders, the occlusion-halo campaign
+python score_halo.py              # -> halo\scores-halo.json
+python bars_halo.py               # the section 5d bar table
+python crops_halo.py              # 8 contact sheets
+
+powershell -File .\run_ladder.ps1 # 17 renders, the DELTA dose ladder
+python score_ladder.py            # -> halo\scores-ladder.json
+python bars_ladder.py             # the section 5e bar verdicts
+python crops_ladder.py            # 4 ladder contact sheets
+python verify_ladder.py           # every section 5e number vs the raw data
+python negctl_ladder.py           # commissions the verifier: 7/7 must be RED
 ```
 
 `4beac73` was HEAD at dispatch and is no longer HEAD; other agents have
@@ -90,7 +112,10 @@ committed since. That is the point of pinning, not a defect. The binary was
 built once, in that worktree, and never rebuilt mid-campaign.
 
 **Registration was frozen before measurement.** `prereg.txt` is commit
-`0235330`, made before any scoring run existed.
+`0235330`, made before any scoring run existed. The occlusion-halo contract is
+`prereg-halo.txt`, committed before any halo arm ran, and the dose-ladder
+contract is `prereg-ladder.txt`, commit `cc515f8`, committed before any ladder
+arm ran.
 
 ---
 
@@ -574,18 +599,286 @@ No patch is recommended. The instrument is already off.
 
 ---
 
+## 5e. Addendum: the DELTA dose ladder
+
+**Registered in `experiments/M116-promotion/prereg-ladder.txt`, committed as
+`cc515f8` before any ladder arm was rendered.** ORCH's objection, in its own
+terms: the correction forbids frames within `DELTA` of the local focus frame, so
+the treated neighbourhood is rebuilt from more defocused ones; the treatment
+therefore blurs the exact region in which the halo is scored, and a brightness
+excess near a silhouette falls under blur alone. A binary on/off A/B cannot
+separate the two. The remedy specified was a dose ladder with a fine-structure
+curve at every rung, read between adjacent rungs rather than against off.
+
+The objection is correct as a hypothesis and the ladder was the right
+instrument. **It is confirmed on one subject and refuted on the other**, and
+the ladder also found two silent no-ops in the knob it was run on.
+
+### The knob's own defects, found before the ladder was designed
+
+**P37. MEASURED. `STREHL_FIX_HALO_DELTA=0` renders byte-identical to the
+shipped `DELTA=40`, silently.** `delta_in_use()` is
+`env::var(..).ok().and_then(parse::<u16>).filter(|d| *d > 0).unwrap_or(DELTA)`.
+The `.filter(|d| *d > 0)` discards zero and `unwrap_or(DELTA)` substitutes 40.
+Predicted from source, then measured: bee at `DELTA=0` hashes `EEC72FA7CFE7`,
+bee at `DELTA=40` hashes `EEC72FA7CFE7`, and off hashes `478387EF2F9A`. The
+tool's own report prints `delta 40 frames` when 40 was never asked for. The
+same fallback swallows any unparseable value, so a typo in the value renders
+the default. **The `0/10/20/40/80` ladder as originally specified would have
+measured 40 twice and reported a flat bottom rung that is an artefact of one
+filter clause.** This is registered bar **LB1: PASS**.
+
+**P38. MEASURED. When `DELTA` reaches the frame count the correction becomes a
+total no-op and still reports itself as ON.** At `--limit 100`, `DELTA=160`
+makes `allows(s,k) = |k - kf| >= 160` unsatisfiable for every frame. The tool
+reports `0 of 585886 treated pixels re-elected; 585886 kept their original
+value`, prints `halo fix : ON (STREHL_FIX_HALO=1). delta 160 frames`, exits 0,
+and writes a file byte-identical to off. Both ends of the knob's range are
+silent no-ops and neither is diagnosed as one.
+
+**P39. MEASURED. At the documented `DELTA=80`, a large share of the yoke is
+silently left untreated at this frame count.** Bee: `66265 of 585886` treated
+pixels (**11.31 %**) kept their original value. Fern: `156036 of 573588`
+(**27.20 %**). `Fix::undecided` counts exactly this and the tool prints it.
+
+**P40. DERIVED. The dose is `DELTA` relative to the frame count, not `DELTA`.**
+From P38 and P39: the fraction of the yoke that can be treated at all depends on
+how many frames sit outside the forbidden band, which depends on the stack
+depth. M87's documented `DELTA=80` result was measured on 299 frames; at
+`--limit 100` the same setting is a partly-degenerate configuration. A user who
+stacks 60 frames and one who stacks 300 get materially different corrections
+from the same number with no indication. This is a caveat on my own ladder's
+top rungs as much as on M87's.
+
+### The ladder
+
+All arms `--limit 100`, `--gate 4`, linear, frozen warps. `dHALO%` is the
+addendum-2 halo index against off; positive means the index got **worse**.
+`D` and `D_or` are log10 high-pass amplitude against off over the treated set,
+`D_or` restricted to oriented content (structure-tensor coherence `>= 0.6`,
+selected on off); negative means detail **lost**.
+
+| subject | rung | delta | `dHALO%` | `D` | `D_or` | re-elected |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| bee-3-cpl | L1 | 1 | `-2.18` | `+0.14468` | `+0.14505` | 585886 |
+| bee-3-cpl | L5 | 5 | `+3.59` | `+0.08641` | `+0.08600` | 585886 |
+| bee-3-cpl | L10 | 10 | `+6.44` | `+0.03344` | `+0.01474` | 585886 |
+| bee-3-cpl | L20 | 20 | `+11.13` | `+0.06231` | `+0.03114` | 585886 |
+| bee-3-cpl | H1 | 40 | `+17.21` | `+0.05740` | `+0.02661` | 585886 |
+| bee-3-cpl | H2 | 80 | `+21.27` | `+0.11914` | `+0.09706` | 519621 |
+| bee-3-cpl | L160 | 160 | `-0.00` | `+0.00000` | `+0.00000` | 0 |
+| fern | L1 | 1 | `-7.38` | `+0.00319` | `+0.02011` | 573588 |
+| fern | L5 | 5 | `+5.07` | `-0.21843` | `-0.12387` | 573588 |
+| fern | L10 | 10 | `+26.46` | `-0.26812` | `-0.15270` | 573588 |
+| fern | L20 | 20 | `+64.00` | `-0.29321` | `-0.19099` | 573588 |
+| fern | H1 | 40 | `+123.79` | `-0.30177` | `-0.22916` | 573588 |
+| fern | H2 | 80 | `+125.84` | `-0.06574` | `-0.05261` | 417552 |
+| fern | L160 | 160 | `-0.00` | `+0.00000` | `+0.00000` | 0 |
+
+**P41. MEASURED. The treated region is identical at every rung, so the ladder
+compares dose and nothing else.** Predicted from source: `Plan::build` fills
+`treated` from `mask` and `YOKE` only and `delta` appears nowhere in the
+predicate; `YOKE` is a `const` with no override; the mask comes from pass one,
+which precedes the correction. Measured off the tool's own per-arm report:
+13 gate-4 arms on bee all report `585886` treated, 10 on fern all report
+`573588`. Registered bar **LB6: PASS**. My independent reconstruction of
+`foreground_mask` reads `585894` and `573594`, `+8` and `+6` px adrift
+(`0.0014 %`, `0.0010 %`) because scipy labels 8-connected and `halo.rs` labels
+4-connected; the bar is decided on the tool's number.
+
+**P42. MEASURED. The halo index degrades monotonically with dose on both
+subjects.** Bee `-2.18 -> +3.59 -> +6.44 -> +11.13 -> +17.21 -> +21.27`; fern
+`-7.38 -> +5.07 -> +26.46 -> +64.00 -> +123.79 -> +125.84`. Every live step
+moves the same way on both stacks. Registered bar **LB3: PASS** (one violation
+each, both the dead rung `L160`). A monotone dose-response is much harder for a
+confound to imitate than a single on/off difference, so this upgrades
+addendum 2's finding from a difference to a **caused** one: the correction, in
+proportion to how hard it is applied, deepens the near-silhouette band relative
+to the far background. Since addendum 2 established there is no bright rim in
+these renders' background profile at all, that is a *dark* halo being created
+where none existed, not a bright one being removed.
+
+**P43. MEASURED. On bee the correction does not blur — it adds high-frequency
+content.** `D` is **positive at every live rung**, peaking at `+0.14468` dex at
+`DELTA=1`, which is a `39.6 %` **rise** in high-pass amplitude over the treated
+band. `D_or`, on oriented content, is positive too (`+0.14505` at `DELTA=1`,
+`+0.02661` at the shipped 40). **ORCH's blur confound cannot be operating on
+this stack**, because the quantity it predicts should fall, rises.
+
+**P44. MEASURED. On fern the correction blurs heavily, monotonically, and the
+confound is real.** `D` falls `+0.00319 -> -0.21843 -> -0.26812 -> -0.29321 ->
+-0.30177` across `DELTA = 1, 5, 10, 20, 40`. At the shipped 40 that is a
+**50.1 % loss of high-pass amplitude** in the treated band, and `-0.22916` dex
+(**41.1 % loss**) on oriented content specifically. Registered bar **LB2** is
+**FAIL as registered on both subjects** (2 violations each), but the disclosed
+live-rung variant is **1 violation on fern** — and both fern violations are at
+or after `H2`, the rung where 27.20 % of the yoke silently falls back
+(P39). Over the rungs where the tool actually treats the whole yoke, fern's
+blur is perfectly monotone in dose. On bee, LB2 fails for a substantive reason:
+there is no blur to be monotone in.
+
+**P45. DERIVED. The mechanism of P43 is that the correction substitutes a
+single frame's raw samples into an averaged image.** `Pass::fold` copies
+`[top[2x], top[2x+1], bot[2x], bot[2x+1]]` from the winning frame's quad — it
+selects, it does not average. At `--gate 4` the untreated surroundings are an
+average over `n_eff` of order 23, while the treated band becomes single-frame
+raw. The correction therefore injects single-frame noise into a denoised
+neighbourhood, which raises high-pass amplitude and produces the visible seams
+and patch boundaries. **M87 measured at `--gate 0`, where the baseline is
+itself 100 % singleton, so this cost is identically zero in M87's
+configuration and appears only at the shipped gate.** `halo.rs` anticipated
+exactly this and called it "an additional, unmeasured cost"; it is now
+measured.
+
+**P46. ARGUED. The blur confound is subject-dependent, so no single control
+retires it.** It dominates on fern (P44) and is absent on bee (P43). The
+difference tracks what the yoke contains: fern's yoke is full of in-focus
+background fern that defocuses badly when its own focus frames are forbidden,
+while bee's yoke is smooth out-of-focus background where the substituted frame
+differs mainly in noise. A blur-matched placebo calibrated on one of these
+stacks would be mis-calibrated on the other. This is handed to M111, which owns
+the metric audit; these per-rung curves are the input it needs.
+
+**P47. MEASURED. Registered bar LB4 is VOID by premise failure, and its
+arithmetic would have read PASS.** `X = dHALO% / (-D)` was registered as "how
+much halo the rung buys per unit of detail it spends". On bee it is not
+formable at any rung (`D >= 0` throughout — no detail was spent). On fern it is
+formable and reads `X(L5) = +23.23`, `X(L10) = +98.68`, `X(L20) = +218.27`,
+`X(H1) = +410.23`, `X(H2) = +1914.10`, spread `82.41`, which clears the
+registered `>= 2.0` bar. **But every formable rung has `dHALO% > 0`: no rung
+buys any halo, so `X` is a ratio of two losses and is not an exchange rate at
+all.** Reported as VOID rather than PASS, with the arithmetic shown. A bar can
+be arithmetically satisfiable while its premise is false — the same class of
+defect as the vacuous HB3 of addendum 2, caught this time by writing the
+premise into the bar's own text rather than only its formula.
+
+**P48. MEASURED. The dead rung is the vacuity plant the null needed.**
+Registered bar **LB5: PASS**. `L160` reads exactly `+0.00000` on `D`, `D_or`
+and `dHALO%` while every live rung on the same wiring reads up to `0.30177`, so
+the statistic demonstrably both can and cannot move, on the same subject and
+the same code path. Disclosed degeneracy: the *untreated control* reads exactly
+`0.000000` at every rung because control pixels are byte-identical to off, which
+makes the registered "10x the control" clause trivially satisfiable; it is the
+dead rung, not the control, that evidences sensitivity here.
+
+### What the ladder does to the picture
+
+`C:\dev\strehl-out\M116\images-ladder\`, four sheets, all 1:1 crops of sRGB
+views at a frozen exposure, windows chosen on the off arm.
+
+- `bee-3-cpl__ladder-SILHOUETTE-edge.png` — **the most honest single image in
+  this milestone.** Four panels: off, `DELTA=1`, `DELTA=40` (shipped),
+  `DELTA=160`. At `DELTA=1` the pale fringe along the leg is *brighter* than
+  off. At the shipped `DELTA=40` **the fringe is genuinely gone — the owner can
+  see that with his own eyes** — but the smooth background it sat in has been
+  replaced by visibly blotchy patches with hard boundaries and a hard vertical
+  seam. `DELTA=160` is indistinguishable from off, as P38 requires. Mean
+  `|delta|` against off, printed on each panel: `0`, `3`, `0` DN/255.
+- `bee-3-cpl__ladder-ORIENTED-fine-structure.png` — the same four rungs on
+  oriented content in the yoke. The shipped rung carves flat amoeba-shaped
+  patches out of what was a smooth gradient. This is P43 and P45 made visible:
+  not softening, but patchwork.
+- `flower-bud-with-background-fern-cpl__ladder-SILHOUETTE-edge.png` and
+  `...__ladder-ORIENTED-fine-structure.png` — off versus the shipped `DELTA=40`.
+  Whole regions of textured bud surface are replaced by flat mush with hard
+  irregular borders; mean `|delta|` is `8` DN/255. This is the `-0.30177` dex
+  of P44 in picture form.
+
+**On ORCH's question 3 — does `DELTA=40` cost visible fine detail?** On bee, at
+1:1, it does not soften hairs; it stipples and seams the background around them.
+On fern it destroys texture outright. Either way the answer to "is 40 safely
+below the threshold at which 80 was said to soften" is that **the threshold is
+not the right frame**: the shipped dose already damages both stacks, in two
+different ways, and neither damage is the softening that `DELTA=80` was rejected
+for.
+
+
+---
+
 ## 6. Patches
 
-**None.** No instrument passed its registered promotion bar, so there is no
-default to flip and nothing to route to an owning agent.
+**No default flips.** No instrument passed its registered promotion bar, so
+there is no default to change and nothing of that kind to route to an owning
+agent.
 
 This is the deliverable. A patch would have been easy to justify — A4 misses by
 `0.00084` dex on bee — and writing one would have meant narrowing a bar after
 seeing the data, which is the one thing this project exists to refuse.
 
-The change I would route if asked for the *most* defensible one is still
-nothing. The nearest thing to an actionable finding is P14, and the correct
-response to it is a measurement milestone, not a patch.
+### Two defect patches, unapplied, for the owner of `merge_cmd/halo.rs`
+
+These are **not** promotions and neither changes any default. Both fix silent
+no-ops found by the dose ladder (P37, P38). Neither is applied; `crates/` is not
+mine to edit. Both are written against
+`crates/strehl-cli/src/merge_cmd/halo.rs` and `.../merge_cmd.rs` at the pinned
+SHA `4beac73`.
+
+**Patch 1 — make `DELTA=0` mean zero dose instead of silently meaning 40.**
+This is what makes ORCH's blur confound directly testable: `DELTA=0` builds the
+region, forbids nothing, and is the exact placebo the ladder could not reach.
+It also stops a typo in the value from rendering the default without a word.
+
+```diff
+--- a/crates/strehl-cli/src/merge_cmd/halo.rs
++++ b/crates/strehl-cli/src/merge_cmd/halo.rs
+@@
+ /// The forbidden half-band actually in use.
+ pub fn delta_in_use() -> u16 {
+-    std::env::var(DELTA_ENV)
+-        .ok()
+-        .and_then(|v| v.trim().parse::<u16>().ok())
+-        .filter(|d| *d > 0)
+-        .unwrap_or(DELTA)
++    // `0` is a legal dose: `allows()` is `|k - kf| >= delta`, so delta 0
++    // admits every frame and the correction becomes the identity while still
++    // building the plan. That is the only configuration that isolates the
++    // treatment from the region it treats, and it was previously unreachable
++    // because `.filter(|d| *d > 0)` mapped it onto the shipped default.
++    match std::env::var(DELTA_ENV) {
++        Err(_) => DELTA,
++        Ok(v) => match v.trim().parse::<u16>() {
++            Ok(d) => d,
++            Err(_) => {
++                eprintln!(
++                    "warning         : {DELTA_ENV}={v:?} is not a number; \
++                     using the default {DELTA}."
++                );
++                DELTA
++            }
++        },
++    }
+ }
+```
+
+**Patch 2 — say so when the correction did nothing.** At `--limit 100`,
+`DELTA=160` re-elects zero pixels, writes a file byte-identical to off, prints
+`halo fix : ON`, and exits 0. The count is already reported; what is missing is
+that nothing distinguishes "worked" from "was structurally impossible".
+
+```diff
+--- a/crates/strehl-cli/src/merge_cmd.rs
++++ b/crates/strehl-cli/src/merge_cmd.rs
+@@
+         eprintln!(
+             "                  This is NOT a fidelity improvement. On a synthetic scene with known \
+              truth it cuts the halo metric 79.8% and raises RMSE against truth 254.6%."
+         );
++        if fix.undecided == fix.treated {
++            eprintln!(
++                "warning         : the halo fix changed NOTHING. delta {} exceeds the frame \
++                 span, so every frame was forbidden at every treated pixel and the output is \
++                 identical to the fix being off.",
++                hplan.delta()
++            );
++        }
+```
+
+Patch 2 needs `delta` readable off the `Plan`; it is a private field at the
+pinned SHA, so the owner should add `pub fn delta(&self) -> u16 { self.delta }`
+beside `treated_len()`, or pass `halo::delta_in_use()` at the call site.
+
+The nearest thing to an actionable *promotion* finding is still P14, and the
+correct response to it remains a measurement milestone, not a patch.
 
 ---
 
@@ -657,6 +950,24 @@ response to it is a measurement milestone, not a patch.
 - **It does not claim wiring `robust` or `outlier` would help or harm.** P19 is
   an argument from documentation. Neither module was ever executed by this
   milestone, because neither can be.
+- **It does not claim that `DELTA=40` is safe on 299 frames.** The whole ladder
+  ran at `--limit 100`. By P40 the effective dose is `DELTA` relative to the
+  frame count, so a 299-frame stack — which is what M87 measured — sits at a
+  different point on this ladder than the same `DELTA` here does. The two dead
+  rungs and the `11.31 %` / `27.20 %` fallbacks at `DELTA=80` are properties of
+  `DELTA=80` **at 100 frames** and would move at another depth.
+- **It does not claim to have reproduced or refuted M87's own halo metric.**
+  `dHALO%` throughout sections 5d and 5e is my independently defined index, not
+  M87's "halo metric ISO", so the `+123.79 %` on fern is a failure of *my*
+  index and is weaker evidence than a same-instrument failure would be.
+  Section 7's earlier statement of this applies unchanged to the ladder.
+- **It does not claim the blur confound is absent in general.** P43 refutes it
+  on bee and P44 confirms it on fern. Two stacks do not establish which case is
+  typical, and P46 argues only that no single control settles both.
+- **It does not adjudicate whether halo removal is a distinct mechanism from
+  blur.** LB4, the bar registered to decide that, is void by premise failure
+  (P47). The question is open and it belongs to M111, which owns the metric
+  audit; these per-rung curves are handed over as its input, not as its answer.
 
 ---
 
@@ -793,9 +1104,51 @@ The same harness had run 39 arms successfully under a different invocation, so
 the defect was in the *composition*, not the script. Drop to `Continue` across
 the native call only, and take `$LASTEXITCODE` into a variable immediately.
 
+**D-q. Enumerate a knob's dead values before you build a ladder on it.** Both
+ends of `STREHL_FIX_HALO_DELTA` are silent no-ops: `0` renders the shipped
+default because of a `.filter(|d| *d > 0)`, and any value at or above the frame
+count re-elects nothing while still reporting the fix as ON. A ladder run
+`0/10/20/40/80` would have measured the shipped dose twice and called the
+duplicate a bottom rung. Read the parser and the predicate that consumes its
+output, then check the ends of the range against the actual data volume — a
+knob measured in frames is dead above the frame count, and `--limit` is
+therefore part of its meaning.
+
+**D-r. A dose ladder is worth its cost even when it disagrees with itself
+across subjects — that disagreement is the result.** The confound under test
+(treatment blurs the region in which the effect is scored) was confirmed on one
+stack, `-0.30177` dex, monotone in dose, and refuted on the other, where the
+same treatment at the same doses *raised* high-pass amplitude by up to
+`+0.14468` dex. A single blur-matched placebo calibrated on either stack would
+have been wrong about the other. Where a confound is subject-dependent, no one
+control retires it and the honest deliverable is the pair of curves, not a
+verdict.
+
+**D-s. A bar can be arithmetically satisfiable while its premise is false.**
+`X = dHALO% / (-D)` was registered as "how much halo a rung buys per unit of
+detail it spends", with a spread bar of `>= 2.0` to distinguish two mechanisms
+from one. It read `82.41` and would have been recorded as a PASS. But every
+formable rung had `dHALO% > 0` — no rung bought any halo — so `X` was a ratio of
+two losses and not an exchange rate at all. Write the premise into the bar's
+text, not only its formula, and check the premise before reading the number.
+Same family as the vacuous HB3, and it needed a different guard to catch.
+
 ---
 
 ## 9. Images
+
+### The dose ladder (section 5e) — `C:\dev\strehl-out\M116\images-ladder\`
+
+Four sheets, 1:1 crops of sRGB views at a frozen exposure, windows chosen on the
+off arm. Every panel is captioned with its ladder position and its mean
+`|delta|` against off in DN/255.
+
+| file | what it shows |
+| --- | --- |
+| `bee-3-cpl__ladder-SILHOUETTE-edge.png` | off / `d1` / `d40` shipped / `d160`. The pale fringe on the leg is **worse** at `d1`, **genuinely gone** at `d40`, and `d160` is indistinguishable from off. The cost at `d40` is a blotched background and a hard seam. |
+| `bee-3-cpl__ladder-ORIENTED-fine-structure.png` | the same four rungs on oriented content: flat amoeba patches carved into a smooth gradient at the shipped dose. |
+| `flower-bud-with-background-fern-cpl__ladder-SILHOUETTE-edge.png` | off vs `d40`. Textured bud surface replaced by flat mush with hard borders. |
+| `flower-bud-with-background-fern-cpl__ladder-ORIENTED-fine-structure.png` | the same, on oriented content; `-0.30177` dex in picture form. |
 
 ### The halo campaign (section 5d) — look at these first
 
@@ -905,7 +1258,29 @@ exit 0.
 
 ## 11. For the orchestrator
 
-- No patch to route.
+- **No default flip to route.** Two *defect* patches are in section 6 for the
+  owner of `merge_cmd/halo.rs`: `DELTA=0` silently means 40 (P37), and
+  `DELTA >= frame count` is a silent no-op that still reports ON (P38). Neither
+  promotes anything; the second is a one-line diagnostic and the first is what
+  makes the blur confound directly testable.
+- **The ladder was run and it changed the picture, not the verdict.** ORCH's
+  blur confound is confirmed on fern (`D = -0.30177` dex at the shipped dose,
+  monotone in dose) and refuted on bee (`D = +0.14468` dex — the treatment
+  *raises* high-pass amplitude). It is subject-dependent, so no single
+  blur-matched placebo retires it (P46). Handing the per-rung curves to M111
+  rather than duplicating its audit, as instructed.
+- The bar registered to decide blur-versus-halo, LB4, is **void by premise
+  failure** and its arithmetic would have read PASS (P47). The question is open.
+- The dose ladder's own bars: LB1 PASS, LB3 PASS both subjects, LB5 PASS,
+  LB6 PASS both subjects, LB2 **FAIL** both subjects as registered (predicted in
+  advance for bee), LB4 VOID, LB7 delivered.
+- Ladder images are in `C:\dev\strehl-out\M116\images-ladder\`. The one to open
+  first is `bee-3-cpl__ladder-SILHOUETTE-edge.png`: at the shipped dose the pale
+  fringe really is gone, and the background it sat in is visibly blotched.
+- **Caveat that bounds all of it:** the ladder ran at `--limit 100` and the
+  effective dose is `DELTA` relative to the frame count (P40). M87 measured at
+  299 frames. The two dead rungs are properties of this depth.
+- No patch to route for any of the four originally dispatched instruments.
 - M114, M115 and M116 are absent from the AGENTS.md milestone allocation ledger,
   which rule 41 requires at dispatch. I did not edit AGENTS.md; it is not an
   owned path for this milestone.
@@ -921,9 +1296,12 @@ exit 0.
   figures ship as `<subject>__ELECTION-OUTLIER__<n>.png`. If ORCH still wants
   the motion question answered, it needs per-frame residuals, not an election
   map — that is a new milestone.
-- The highest-value next milestone is a registered measurement of
-  `STREHL_FIX_HALO` on an occluding edge (P14, P11).
+- P14 is now **discharged**: `STREHL_FIX_HALO` was measured on a genuine
+  occluding edge, across four stacks and a seven-rung dose ladder.
 - The soft gate deserves one more milestone with a flat-field bar rather than a
   detail bar, starting from ΔN `-0.02044` (P4). It should not ship on tonight's
   evidence.
 - `experiments/ORCH-drift-check/reachability.py` was run, not edited.
+- `python scripts/corpus_lint.py` reports 2 violations, both in
+  `docs/research/M95-election-quality.md:241` (S1 and S6, an unescaped `\|` in a
+  code span on a table row). That file is not mine and I did not touch it.
