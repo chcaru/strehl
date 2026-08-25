@@ -101,10 +101,44 @@ shot.** The remaining work is not about out-resolving your camera. It is about
 not degrading what you already captured — which, on the evidence of tonight, the
 merge is doing in two specific and now well-characterised ways:
 
-1. **The halo** around every leg and edge. Structural. No fix.
+1. **The halo** around every leg and edge. Structural — but as of the last hour
+   of the night it is no longer *unexplained*, and that changes what happens
+   next. See *"The halo finally has a cause"* immediately below.
 2. **The background patchwork.** Structural, and as of tonight **proved** rather
    than asserted — see the correction further down. Caused by the blending
    recipe changing from place to place across the frame.
+
+#### The halo finally has a cause
+
+For weeks the honest answer about the bright rim around every leg and antenna
+was "we can see it, we can measure it, we don't know what makes it." That ended
+tonight. Two measurements, and they agree:
+
+**It is exactly as wide as the patch the software uses to decide which frame is
+sharpest.** The rim's half-width measures **10.0 px**, it dies out by **13.3
+px**, and the region where the frame-choice disagrees with its surroundings
+measures **10.5 px** — against a decision window whose radius is **13 px**,
+written into the code as a fixed constant. Nothing else in the pipeline has that
+size: not the blur, not the focus step, not the bugs. The rim also *ends*, which
+matters — a lighting gradient would not.
+
+**And it is a choosing problem, not a blending problem.** Turn the blending off
+entirely — pick one winning frame per pixel, no averaging at all — and the halo
+is unchanged (**+0.066** against **+0.063**). So the rim is not something the
+merge paints on. It is the software **electing the wrong frame** in a band around
+every edge, because the patch it looks at straddles both sides of the edge and
+sees the foreground's sharp contrast leaking across.
+
+That is a real diagnosis and it names the direction of a fix — make the decision
+patch aware of edges rather than a fixed square. I want to be careful about one
+thing, though, because the agent that found this argued against itself and was
+right to: **a window-sized mark only proves a window is involved, not which
+window effect it is.** My own proposed explanation was tested against a
+held-out class of edges and **rejected**. So there is a fix direction, and there
+is not yet a fix.
+
+**There is a ten-minute capture that would settle it** — see §26 at the bottom.
+It is the highest-value thing you could shoot this week.
 
 **A third measurement landed at the end of the night, and it is the bluntest one
 yet.** An independent check re-rendered *all 100 frames* of three of your stacks
@@ -2890,3 +2924,58 @@ apart.
   section is that register.
 - Section 22 asks you to expose to the right and *avoid* clipping. This section
   deliberately contradicts it, for these frames only.
+
+## 26. A bright subject on a deeply defocused dark ground -- REQUESTED by M121, one afternoon, and it decides the halo
+
+This is the capture I would shoot first if I were you. It is the only outstanding
+request that could turn *"we know what size the halo is"* into *"we know what
+makes it, so we can remove it."*
+
+### Why you are being asked
+
+The rim around every edge in your stacks has been measured to be exactly as wide
+as the software's frame-choosing window (facts 1703, 1704). That proves a window
+is involved. It does **not** say *which* window effect it is, and two candidate
+explanations survive that predict the **same** rim on the subjects you have
+already shot. They differ on one case, and your corpus does not contain it.
+
+Every bright-object edge in the corpus is a **pale hair lying on a dark body** --
+same depth, no occlusion. Only **5 of 18** such edges straddle a depth
+discontinuity, so the class reads as a flat null under every theory on the table.
+It is not evidence; it is a sample that cannot answer the question. One attempt
+to fill the gap using `tweezers-cpl` produced a beautiful-looking result that was
+then correctly thrown out: the profile never ended, and a single unmerged frame
+reproduced its shape, so it was a background gradient rather than a rim.
+
+### What to shoot
+
+- **A bright subject against a dark background that is *far* behind it** -- the
+  background must be deeply out of focus, not merely darker. Think a pale insect,
+  a light-coloured flower, or bright metal, with nothing within several
+  centimetres behind it.
+- **Do not clip the highlights.** Expose **1--2 stops down** from your normal
+  placement. This is the one requirement that would waste the session if missed:
+  a clipped bright side destroys exactly the measurement being made.
+- **100--300 frames**, your usual bracket, usual aperture. Nothing exotic.
+- Your usual rig. The CPL is fine either way; note in the folder name whether it
+  was on.
+
+### Why this cannot come from existing files
+
+Checked directly rather than assumed: across all 24 corpus macro stacks the
+bright-object-on-dark-ground class has only five members that straddle a depth
+edge, and the one stack that looked like it could supply them (`tweezers-cpl`)
+was measured and rejected as a gradient at a separation of 2.8x against 28x on
+`bee-3-cpl`.
+
+### What it unblocks
+
+- The halo mechanism, which is the **largest visible defect** in your renders and
+  the one thing I have never been able to offer you a route to fixing.
+- Whether a fix can be built at all, or whether the rim is a price of choosing
+  per-pixel that only a different kind of merge could avoid.
+
+### Related
+
+- Facts 1703--1706; disciplines 867, 868.
+- Section 23's occlusion finding is the same geometry seen from the other side.
