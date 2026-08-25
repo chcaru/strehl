@@ -34,6 +34,19 @@ SINGLES = [
     r"C:\dev\strehl-out\M93-out\armF-f208.tif",
 ]
 
+# Any arm can be scored against the same single frames:
+#   python patchwork_invariant.py <merged.tif> [tag] [window-reference.tif]
+# Windows are chosen from the MERGED image by default. For an A/B between two
+# arms, pass the SAME third argument to both so they are scored on identical
+# pixels -- otherwise each arm picks its own most-background windows and the
+# comparison is between two different sets of pixels, which is not an A/B.
+TAG = "16bit"
+REFWIN = None
+if len(sys.argv) > 1:
+    MERGED = sys.argv[1]
+    TAG = sys.argv[2] if len(sys.argv) > 2 else os.path.splitext(os.path.basename(MERGED))[0]
+    REFWIN = sys.argv[3] if len(sys.argv) > 3 else None
+
 S = 256
 BORDER = 400
 
@@ -111,13 +124,22 @@ if not singles:
     sys.exit(2)
 
 H, W = M.shape
+# Ranking source: either this arm's own background, or a fixed reference arm so
+# that an A/B is scored on identical pixels.
+if REFWIN:
+    _, RM = load(REFWIN)
+    if RM.shape != M.shape:
+        raise SystemExit("window reference %s is %s, arm is %s" % (REFWIN, RM.shape, M.shape))
+    print("windows taken from reference arm: %s" % os.path.basename(REFWIN))
+else:
+    RM = M
 # Rank windows by how background-like they are rather than hard-filtering, so
 # the test reports what it actually found instead of finding nothing.
 STRIDE = 128
 allw = []
 for y in range(BORDER, H - S - BORDER, STRIDE):
     for x in range(BORDER, W - S - BORDER, STRIDE):
-        w = M[y : y + S, x : x + S]
+        w = RM[y : y + S, x : x + S]
         rough_single = max(L[y : y + S, x : x + S][::8, ::8].std() for _, L in singles)
         allw.append((float(w.mean()), float(rough_single), x, y))
 if not allw:
@@ -187,7 +209,7 @@ km, hm, hs, hsx, x, y = recs[0]
 w = M[y : y + S, x : x + S]
 lo, hi = np.percentile(w, [0.5, 99.5])
 st = np.clip((w - lo) / max(hi - lo, 1e-9), 0, 1) * 255.0
-out = r"C:\dev\strehl-out\ORCH-morning\PATCHWORK-16bit-worst.png"
+out = r"C:\dev\strehl-out\ORCH-morning\PATCHWORK-%s-worst.png" % TAG
 Image.fromarray(st.astype(np.uint8)).resize((S * 3, S * 3), Image.NEAREST).save(out)
 print()
 print("wrote %s  (merge, x=%d y=%d, kurt %.2f, stretch span %.0f of %.0f = %.4f%%)"
@@ -196,6 +218,6 @@ name, L = singles[0]
 ws = L[y : y + S, x : x + S]
 lo2, hi2 = np.percentile(ws, [0.5, 99.5])
 st2 = np.clip((ws - lo2) / max(hi2 - lo2, 1e-9), 0, 1) * 255.0
-out2 = r"C:\dev\strehl-out\ORCH-morning\PATCHWORK-16bit-worst-SINGLEFRAME.png"
+out2 = r"C:\dev\strehl-out\ORCH-morning\PATCHWORK-%s-worst-SINGLEFRAME.png" % TAG
 Image.fromarray(st2.astype(np.uint8)).resize((S * 3, S * 3), Image.NEAREST).save(out2)
 print("wrote %s  (%s, same pixels, stretch span %.0f)" % (out2, name, hi2 - lo2))
