@@ -2488,3 +2488,215 @@ the one that gets promoted quietly.
 M93, M96, M97 or M114. Several of those appear on your exposed list; their
 re-derivation belongs to them, and I have not silently inherited a clean bill
 of health from mine.
+
+---
+
+## 12. Campaign 6 — `--photometric`, ORCH's prediction, tested on the shipped path
+
+**Verdict: NULL on the pre-registered statistic. HARM on the paired statistic.
+Do not promote.** Pre-registration: `experiments/M116-promotion/prereg-photometric.txt`,
+committed in `5a9a527`, before any arm of this campaign was rendered.
+
+ORCH pre-registered the prediction that `--photometric` would move the patchwork
+invariant from the shipped `1.114x` toward `1.0`, and would help most where
+inter-frame level drift is largest. This campaign tested it end to end on the
+owner's real capture, on the shipped path, at the pin.
+
+### 12.1 The arms, and what is held constant
+
+Discipline 832. Held constant: capture (`bee-3-cpl`), all 299 frames, the binary
+at pin `4beac7300e318f6f0aaf10b6a88e57f311b9e814`, `--gate 4`, `STREHL_ALIGN=0`,
+output geometry, and the window reference. Varying: `--photometric` in `P1`, and
+the cache directory path in `P2`.
+
+The gate value was read at the pin rather than taken from an arm's name
+(discipline 830): `DEFAULT_GATE: f32 = 4.0`. `P1`'s log carries the M99
+`photometric normalisation` and `photometric fit (MEASURED)` blocks and `P0`'s
+does not, so the treatment demonstrably engaged rather than merely being asked for.
+
+| arm | ratio vs noisiest single | windows violating | sha256 |
+| --- | --- | --- | --- |
+| `P0-default` (shipped) | **1.114** | 7 of 12 | `E6132CD07B13` |
+| `P1-photometric` | **1.101** | 7 of 12 | `891297BF4F60` |
+| `P2-placebo` | **1.114** | 7 of 12 | `E6132CD07B13` |
+
+### 12.2 Two gates passed before any treatment number was believed
+
+**`P0` reproduces ORCH's baseline exactly.** Against M93's `armM4-gate4-binlin`:
+integer shift **(0, 0)**, phase-correlation peak **1.0000**, **NCC 1.0000**, and a
+median of **1.114** against ORCH's published **1.114**. This is an independent
+reproduction of ORCH's number at a named commit, and it is what licenses
+positioning anything else against it.
+
+**`P2-placebo` is byte-identical to `P0-default`** — same sha256, both
+`E6132CD07B13`. The renderer is deterministic across a cache-path change, so no
+difference below is run-to-run noise.
+
+### 12.3 Why these arms had to be rendered with `STREHL_ALIGN=0`
+
+M116's existing arms `A0..A4` carry a frozen warp map and **cannot** be scored on
+this instrument, which compares a merge against M93's singles at identical
+`(x, y)`. Measured by integer-only phase correlation, M116's arms sit
+**(287, -154) px** from the M93 singles. Scoring `A0` — nominally the same
+shipped configuration ORCH scored at `1.114x` — against those singles returns
+median **0.090**, HOLDING in all 12 windows.
+
+**That is a 12x discrepancy for the same nominal treatment, and it is entirely a
+registration artefact.** Reported as an improvement it would have been the
+largest false positive in this milestone. M120 refused the identical mixture by a
+different route, measuring `NCC(A0, M93-gate4) = 0.7136`. Two independent
+refusals, one cause.
+
+Rendering with `STREHL_ALIGN=0` puts these arms on the same unwarped grid M93's
+`armM4` and every `armF-f*.tif` are logged on, which is what makes the instrument
+valid on them unmodified.
+
+### 12.4 The registered result: NULL
+
+`d = median(P1) - median(P0) = -0.0130`. The registered PROMOTE bar was
+`d <= -0.02`. **The movement is in ORCH's predicted direction and falls short of
+the bar. The registered answer is NULL and it stands.**
+
+### 12.5 The headline statistic and the paired statistic disagree in sign
+
+Per-window, `--photometric` **raises** fine-scale structure in **9 of 12
+windows**, median **+4.42%**. The headline says it fell. Both readings are of the
+same twelve windows with identical denominators, so `reconcile.py` was written to
+settle which describes the data.
+
+The headline is a **median of twelve per-window ratios**, so it is decided by the
+two windows straddling the middle. Those two windows are `(656, 1552)` and
+`(2832, 400)` in **both** arms — the median did not move to a different window —
+and `(656, 1552)` is one of only three windows where photometric helped, at
+`0.938`. `P0` median `= (1.108 + 1.120) / 2 = 1.114`; `P1` median
+`= (1.040 + 1.163) / 2 = 1.1015`.
+
+**So the headline fell because one of the two windows that decide it is an
+outlier against the population trend.** The paired statistic uses all twelve, and
+because the denominator is identical in both arms it **cancels exactly** — which
+also makes the paired form immune to the registration defect in 12.3, since it
+does not use the single frames at all.
+
+**P79 (MEASURED).** On this data ORCH's headline statistic reports the opposite
+sign to a paired comparison of the same twelve windows, because it is an unpaired
+median over 12 and is set by 2 of them. **Recommendation to ORCH: report the
+median of per-window ratios, not the ratio of medians.** It is paired, it uses
+every window, its denominator cancels, and it needs no single frames.
+
+### 12.6 The gain confound, discharged
+
+`--photometric` rescales frame level and a Laplacian is a linear operator, so a
+correction that merely rescaled the output would move this metric **without
+touching any structural property of the image**, in the direction that looks like
+success. The instrument's docstring calls `hf_energy` "insensitive to level and
+ramp", which is true of an additive offset and false of a multiplicative gain.
+
+**P80 (MEASURED).** Median level ratio `P1/P0 = 1.0004`, i.e. **+0.04%**. Gain
+explains **0.9%** of the raw movement. The effect is structural, not gain. The
+gain-invariant statistic `q = lapRMS / level` reads **1.0455**.
+
+### 12.7 Three designs, one sign
+
+| source | statistic | result on `bee-3-cpl` |
+| --- | --- | --- |
+| M120 §36.2 | `q = lapRMS / median`, ratio-of-ratios across two builds | **1.0946** (HARM, 12 of 12) |
+| M122 | `B12`, different window rule | **1.0638** (HARM) |
+| **M116 campaign 6** | `q`, one frozen build, identical pixels | **1.0455** (HARM, 10 of 12) |
+
+M120 §36.5 names the settling experiment — render once with `--index-map`, again
+with `--photometric`, score both on identical pixels in one frozen build — and
+records that it lacked the budget to run it. **That is this campaign.** My design
+is the stronger one and it agrees in sign with both priors, at a smaller
+magnitude. The cross-build limitation M120 flagged was real but not load-bearing.
+
+**This also refutes the drift-magnitude form of ORCH's mechanism.** M120 §36.4
+measured `bee-3-cpl` at **14.03% peak-to-peak**, the largest drift in the corpus,
+larger than all four of M24's stacks. ORCH predicted photometric helps most where
+drift is largest. It was tested where drift is largest and it harmed.
+
+### 12.8 The trap: ORCH's instrument fails on its violation count
+
+Registered as T-A; discipline 831 — the null that matters is a real instance of
+the population minus the mechanism under test. Nine real unmerged single frames,
+each a genuine photograph on the same unwarped grid, each containing no merge and
+therefore unable to contain the merge defect.
+
+Design point that makes it a trap at all: every frame scored is drawn from the 18
+`armF-f*.tif` **outside** the instrument's own five-frame denominator set.
+Scoring one of those five would bound the ratio at `1.0` by construction and the
+trap could not fail.
+
+**P81 (MEASURED).**
+
+| readout | on nine merge-free photographs | shipped merge | trap |
+| --- | --- | --- | --- |
+| median ratio | **0.951 – 1.000**, never above 1.0 | 1.114 | **PASSES** |
+| violations | **up to 6 of 12** | 7 of 12 | **FAILS** |
+
+`corr(violations, frame noise) = 0.639`. **Six of the shipped merge's seven
+violated windows are reproducible by a photograph with no merge in it, and the
+count rises with frame noise.** ORCH's "1.114x and 7/12 is the number any
+promotion has to beat" holds for the ratio and does not hold for the count: the
+`7/12` half is very nearly all available without any merge.
+
+This was measured and committed in `0392eb9` **before** the treatment arms
+finished rendering. That ordering is deliberate and it is checkable in the log: a
+control that invalidates an instrument channel is legitimate; the same edit made
+after seeing an inconvenient treatment number is a bar narrowed to fit.
+
+### 12.9 Images
+
+`C:\dev\strehl-out\M116\PHOTOMETRIC-{worst,best,detail}-OFF-vs-ON.png`. Regions
+chosen **from the measurement, not by eye**, so the set cannot be curated: the
+window of largest harm, the window of largest gain at equal size and billing, and
+a subject-detail region. Both halves of every pair carry **one shared stretch
+computed from the OFF arm**; per-image autostretch is the most common way an A/B
+crop lies.
+
+By eye, at 1:1:
+
+- **worst** — ON adds mottled, wispy filaments to a defocused background that is
+  smooth when OFF. The `+25.7%` is plainly visible and it looks worse.
+- **best** — the two are indistinguishable. **The harm is visible; the benefit is
+  not.**
+- **detail** — no sharpness gained, none lost. Photometric does not cost subject
+  detail; it just does not pay for the background it damages.
+
+**On ORCH's #1 defect: in all three pairs the bright scalloped halo tracing the
+leg and hair silhouettes is identical in OFF and ON.** `--photometric` does
+nothing for the halo. Stated because ORCH asked for it to be flagged even if
+modest — here it is not modest, it is zero.
+
+### 12.10 What this campaign does not establish
+
+- It tests one stack. `foam` and `tweezers-cpl` were not rendered in this
+  geometry, so the verdict is `bee-3-cpl` only — chosen because it carries the
+  largest drift in the corpus and is therefore the arm's best case, not its
+  worst.
+- It says nothing about whether the *idea* of photometric normalisation is
+  sound. M120 §36.5 argues, from measurement, that the defect is in the fitting
+  rather than the concept, and §36.3 localises it: the correction is roughly
+  neutral on flat background and fails on windows carrying structure and edges.
+  Nothing here contradicts that, and a repaired fit deserves a fresh test.
+- The `-0.0130` on the registered statistic is not evidence of benefit. It is an
+  artefact of an unpaired median, per 12.5.
+
+### 12.11 Disciplines this campaign would add
+
+**D-bb — an unpaired median over a small window set can report the opposite
+sign to a paired comparison of the same data.** ORCH's headline is a median of
+twelve per-window ratios, so it is decided by the two windows at the middle;
+here one of those two was an outlier against the population, and the headline
+fell while nine of twelve windows worsened. When both arms are scored on
+identical windows with identical denominators, take the **median of the
+per-window ratios**, not the ratio of the medians. It is paired, it uses every
+window, the denominator cancels exactly, and the cancellation makes it immune to
+registration error between the arms and the reference frames.
+
+**D-cc — when the treatment changes level and the metric is a linear operator,
+gain is a confound that moves the metric in the direction of success.** A
+Laplacian scales exactly with the image, so a correction that only rescaled the
+output would improve a Laplacian-ratio metric without altering one structural
+property of the picture. Measure the level ratio alongside the effect and report
+what fraction of the movement it accounts for. Here it was 0.9% and the effect
+survived; the point is that it had to be checked, not that it passed.
