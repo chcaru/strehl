@@ -28,7 +28,7 @@ from scipy import ndimage
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import radial
 
-O = pathlib.Path(r"C:\dev\strehl-out\TWOMECH")
+O = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else r"C:\dev\strehl-out\TWOMECH")
 CEIL = radial.CEILING_I
 
 print(f"{'subject':<40s} {'RAW rim':>10s} {'RAW far':>10s} {'ratio':>7s} {'SM rim':>10s} {'SM far':>10s} {'ratio':>7s}")

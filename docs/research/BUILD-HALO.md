@@ -1362,3 +1362,62 @@ the restore fixes it.
 The direction of the failure is the lucky one: it made a good restore look bad.
 Reversed -- a sabotage that failed to trigger a rebuild -- it would have printed
 a confident GREEN for a pin that never compiled the defect at all.
+
+
+### 16.7 The veto is active, and it does not work. Two reasons, both mine.
+
+Rendered from pin `1fbf95c` (`git archive` of the SHA, commissioned with a
+planted sabotage that went RED rc=101). Controls: the `on` arm changed
+(`779ABB028E55` -> `DC995B3603B8`) so the veto is live, and the `off` arm is
+**byte-identical across both pins** (`6C9A92A82DF5`), which is the untouched
+path agreeing bit-for-bit and confirms the two pins are otherwise equivalent.
+
+The control, re-measured after the veto:
+
+| subject | far, before | far, after |
+|---|---|---|
+| `flower-bud-with-background-fern-cpl` | 0.784 | 0.777 |
+| `lavendar-cpl` | 0.538 | 0.494 |
+| `bee-2-cpl` | 0.184 | 0.183 |
+
+Ratios still 0.94 / 1.02 / 0.89. And the picture is unchanged: the fern still
+has its hard white outline and its blotchy interior.
+
+**Reason one: the threshold passes half of dead ground by construction.**
+`2*sigma*sqrt(2*ln n)` is the *expected* range of `n` Gaussian samples -- near
+the median of the range distribution. So pure noise exceeds it about half the
+time. As a veto that is close to useless, and no amount of correctness in the
+derivation rescues a quantity chosen at the wrong point of its own
+distribution. A veto needs an upper tail, not a mean. The honest version has to
+control the false-pass rate across all `N` pixels of the plane, not the `n`
+samples of one box.
+
+**Reason two, and the deeper one: luma contrast is not focus signal.** The fern
+is a dark object on a bright field. It has enormous luma range in *every* frame,
+including all the frames in which it is hopelessly defocused. A dark blob
+against white is still a large luma step. So the veto passes exactly where it
+was built to refuse.
+
+That kills the premise, not just the constant. "A depth step is accompanied by a
+luma step" is true, but the converse is what a veto actually needs and it is
+false: a luma step is not evidence that anything here is in focus.
+
+**The right quantity is already in hand and I walked past it.** The call site
+holds `guide_resp`, the peak through-focus response per pixel, returned
+alongside the guide by `guide_winner_field`. Over the fern that response is flat
+-- no frame is sharp -- and that is precisely the `starved` state this engine
+already claims to detect and report. Testing the peak response against the
+calibrated noise floor asks the question the veto is for: *is there focus
+information at this pixel at all?*
+
+That is a confidence veto, which is the thing I deleted with `from_guide`. I was
+right that it could not be `from_guide`'s -- a tuned `FLOOR_Q` quantile is not a
+measurement -- and wrong that none was needed. The difference now is that the
+threshold comes from `FOCUS_NOISE_SD`, which is calibrated, and that there is
+direct evidence of the failure it prevents rather than an assumption.
+
+**None of this touches the deliverable.** All of section 16 is about the
+backdrop level shift and the fern. The bee's tight bright sheath -- the leg, the
+free claws, the antenna, the wing tips -- is the thing that disqualifies the
+print, and it is unchanged by every arm here. The broad aura is gone; the sheath
+is not, and I can see it without looking for it.
