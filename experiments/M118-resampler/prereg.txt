@@ -1,0 +1,283 @@
+M118-resampler — PRE-REGISTRATION
+=================================
+
+Status: PRE-REGISTERED. Written and committed BEFORE any outcome number exists.
+Author: M118-resampler. Decision owner for the default: ORCH.
+Pinned SHA: 4beac7300e318f6f0aaf10b6a88e57f311b9e814
+Worktree:   C:\dev\strehl-out\M118-tree   (git worktree add --detach, HEAD)
+Binary:     C:\dev\strehl-out\M118-target\release\strehl.exe
+            CARGO_TARGET_DIR=C:\dev\strehl-out\M118-target, `cargo build --release`,
+            "Compiling strehl-cli v0.0.0" present, finished in 1m22s, exit 0 (rule 33).
+Outputs:    C:\dev\strehl-out\M118\   (nothing is written under D:\, which is read-only)
+
+
+0. WHAT WAS ALREADY KNOWN BEFORE I WROTE THIS — rule 40 and rule 43
+-------------------------------------------------------------------
+
+My dispatch brief asserted that the resampler choice has "never been measured on
+real frames at merge time" and that the comparison is "NOT MEASURED". Rule 43
+requires that an assertion of absence be established by search rather than
+asserted. I ran the search first and the assertion is FALSE. The following
+committed reports already exist and were read before this file was written:
+
+  docs/research/M95-kernel.md          Lanczos-3 landed switchable; default deliberately
+                                       NOT moved. Retired its own 9.902x ringing figure to
+                                       1.78x (§22.4).
+  docs/research/M113-kernel-verify.md  Independent END-TO-END A/B of lanczos3 vs
+                                       catmull-rom on bee-3-cpl, 299 frames, two merges from
+                                       ONE solve with sidecars differing by exactly one line
+                                       — the identical method my brief proposes as novel.
+                                       Result: +0.083 to +0.099 dex. Byte-identical null
+                                       passed. 1:1 crops judged by eye. Cost 5.56x.
+  docs/research/ORCH-kernel-decision.md  A PRE-REGISTERED GO/NO-GO on exactly the question
+                                       "should the default move to Lanczos-3", with criteria
+                                       G1-G4 and N1-N4.
+  docs/research/M95-resample.md        the -0.2360 dex / 59%-of-loss kernel decomposition.
+  docs/research/M104c-mtf.md           a slanted-edge MTF instrument already exists (M88's).
+  docs/research/M110-sheet.md          a committed contact-sheet harness, experiments/M110-sheet/sheet.py.
+
+So the headline question is ANSWERED and I will not re-answer it. What is
+genuinely open, and what this milestone is therefore scoped to, is below.
+
+OPEN 1  ORCH's criterion N4 is explicitly untested. N4 is a NO-GO trigger: "the
+        election-agreement stratification REVERSES on a second subject — i.e.
+        gain becomes larger where the election disagrees. That would mean the
+        measured gain is a reshuffled election rather than better
+        interpolation." M113 measured the stratification on ONE subject
+        (bee-3-cpl: +0.0968 agree>=0.99 vs +0.0604 agree<0.95, corr +0.30/+0.41).
+        M113 itself wrote: "Any future end-to-end kernel A/B must report this
+        split." Nobody has run a second subject. This is the primary target.
+
+OPEN 2  bilinear and lanczos2 have NEVER been measured end-to-end at all, and
+        `nearest` end-to-end exists only as a by-eye remark (M113 §5, fact 1374).
+        There is no end-to-end bracket, so there is no scale to read +0.085 dex
+        against.
+
+OPEN 3  No end-to-end kernel comparison has ever reported a NOISE term beside its
+        sharpness term. Rule 9 demands a flat-ROI control and every prior kernel
+        number in this corpus is a detail-band statistic quoted alone.
+
+OPEN 4  lanczos2 is a `Resampler` variant that `resampler_from_name` accepts
+        (warpmap.rs) but that `AlignArgs::resampler` REJECTS (align_cmd.rs:151-156
+        lists only nearest/bilinear/catmull-rom/lanczos3). It is therefore
+        unreachable from any command line and has never been rendered.
+
+This pre-registration measures OPEN 1-4. It does not re-litigate whether
+lanczos3 beats catmull-rom; it replicates that as a calibration check (B1) so
+that my instrument can be read against M113's.
+
+
+1. METHOD
+---------
+
+ONE solve per subject, then N merges that differ ONLY in the interpolation
+kernel used at gather. Verified live at the pinned SHA before this file was
+written (pilot, wrapped-text-1, --limit 24):
+
+  - `strehl align --out <sidecar>` writes `resampler <name>` as TEXT
+    (warpmap.rs, `resampler_name`).
+  - `STREHL_WARPMAP=<sidecar> strehl stack` loads it through
+    `merge_cmd.rs::alignment_for`, which validates STACK IDENTITY and FRAME
+    COUNT ONLY. It does NOT check the resampler, it never caches back, and it
+    prints `alignment : ON (sidecar-override)`.
+  - The CACHE path (`align_cmd.rs::load_or_solve`) DOES check the resampler and
+    re-solves on a mismatch, and `solve_config_key` now hashes the resampler
+    (the fact-1561 fix). So a hand-edited sidecar is honoured ONLY via
+    STREHL_WARPMAP. Any arm run without that variable would silently revert to
+    catmull-rom. This is the single most important methodological fact in the
+    milestone and it is recorded here before any result.
+
+  Pilot evidence that the edit is not a no-op (feasibility and timing only, no
+  outcome metric computed): four arms on the same 24-frame solve gave four
+  DISTINCT sha256s — catmull-rom 0833DDB6, lanczos3 BA3E3FB8, nearest 2E7C23D6,
+  lanczos2 B543849A — at 8.5 / 36.5 / 6.3 / 26.6 s.
+
+Every arm gets its OWN sidecar file and its OWN STREHL_CACHE_DIR (fact 1561).
+Nothing is written under D:\.
+
+
+2. ARMS
+-------
+
+  nearest       the interpolator-free-ish endpoint; brackets from below on blur
+                and from above on aliasing
+  bilinear      the classical cheap kernel; M23 measured R=0.372 for it on a
+                zero-defocus self-pair
+  catmull-rom   THE SHIPPED DEFAULT — baseline, every gain is quoted against it
+  lanczos2      reachable only by sidecar edit (OPEN 4)
+  lanczos3      the candidate
+
+All five, all subjects. Sidecar edits are anchored on the full unique line
+`resampler catmull-rom` and the script HARD-ERRORS if the anchor does not land
+or if more than one line matches (my own prior burn: a bare replace that misses
+reads GREEN).
+
+
+3. SUBJECTS, and why
+--------------------
+
+  bee-3-cpl          299 frames, --limit 299 (all). REPLICATION ANCHOR: it is
+                     M113's subject, so B1 is commensurable with a published
+                     independent number. Fine high-frequency detail (thorax
+                     hairs) against a smooth white background — the brief's
+                     "fine high-frequency detail" requirement.
+  wrapped-text-1     130 frames, --limit 130 (all). SECOND SUBJECT for N4, and
+                     deliberately different in character: printed ink on paper,
+                     near-binary contrast, dense straight high-frequency edges at
+                     many orientations, and a curved page so focus genuinely
+                     sweeps. Text is the hardest case for a smoothing kernel.
+  flat-on-ruler-cpl   79 frames, --limit 79 (all). THIRD subject, cheap: engraved
+                     steel graduations give long straight high-contrast edges at
+                     a slant, and large genuinely flat metal areas for the rule-9
+                     flat-ROI control. A third subject also makes N4 a 2-of-2
+                     rather than a 1-of-1 replication.
+
+Full stacks, no truncation. `--limit` is stated because M112/M113 established
+that this corpus has already been burned once by an 8-frame quarantined sidecar
+being quoted as an end-to-end result.
+
+`highly-angled-ruler-mm-cpl` is excluded: `TILTED_SUBJECTS` refuses it.
+
+Fixed for all runs: `--gate 4` (the shipped default), reference = middle frame
+(matching `merge_reference`), `DEFAULT_SPANS`, threads default,
+STREHL_ALIGN unset, STREHL_FIX_HALO unset, STREHL_PHOTOMETRIC unset (rule 47).
+
+
+4. METRICS, each with its stated failure direction (rule 18)
+-------------------------------------------------------------
+
+Measured on the BYTE-FROZEN measurement render: `strehl stack` with no --srgb,
+16-bit binned linear camera-native RGB on the PLANE grid (3516x2344). That grid
+is 1:1 with --index-map and --n-eff-map, so no resampling of mine enters any
+analysis. Luma = the green plane, per the corpus convention.
+
+M1  BAND GAIN (dex). log10 of radially-averaged power in 0.30-0.48 cyc/px,
+    per tile, arm minus catmull-rom. Same band as M95/M113 so the numbers are
+    commensurable.
+    FOOLED UPWARD BY: aliasing (nearest will manufacture high-band power that is
+    not signal), passband overshoot, and any sharpening. M113 measured this
+    exact statistic reading +0.3510 dex for a pure x1.5 passband boost that
+    carried NO new information. M1 ALONE CANNOT NAME A WINNER and I pre-commit
+    to never quoting it alone.
+
+M2  FLAT-ROI BAND GAIN (dex). M1 computed on the flat stratum. Rule 9.
+    FOOLED BY: nothing that helps the arm — this is the control. An arm that
+    gains here is amplifying noise or aliasing, not resolving detail.
+
+M3  DISCRIMINATION = M1 - M2 (dex). The paired reading. Sharpness net of the
+    noise/aliasing the same kernel adds.
+    FOOLED BY: a kernel that smooths flat and detail equally reads 0 on M3 while
+    genuinely differing. M3 is a discriminator, not a magnitude.
+
+M4  FLAT-ROI SPATIAL SD, per arm, on the SAME pixels. The plain noise term, so
+    that "sharper and noisier" can be said in those words. This is an
+    arm-to-arm comparison of a spatial sd on one fixed region — like with like.
+    It is NOT compared to any temporal sigma (rule 10).
+
+M5  EXCESS-EXTREMA RATIO vs catmull-rom: count of strict 8-neighbour local
+    extrema, restricted to the top-1% gradient stratum. Reference-free, M113's
+    §5 instrument.
+    FOOLED BY: it rises for ringing AND for staircase aliasing AND for genuine
+    resolved detail. Admissible as a bound on artefact, not as a quality score.
+
+M6  ELECTION AGREEMENT vs catmull-rom, from --index-map: fraction of quads
+    electing the same frame, whole-frame and per 128 px tile. Feeds N4.
+
+TILE / STRATUM CHOICE — fixed before any arm is looked at, and symmetric across
+arms so no arm under test chooses its own scoring region (M113 discipline 752):
+  - fixed geometric grid of 128 px tiles over the CENTRAL HALF of the plane
+    grid. Central half because M113 measured whole-frame readings unstable
+    (range 0.0806 dex across eight defensible tilings) since the border is
+    featureless.
+  - DETAIL stratum = top gradient decile of those tiles; FLAT stratum = bottom
+    gradient decile. Gradient is computed on the ARITHMETIC MEAN OF ALL FIVE
+    ARMS, so the stratification is symmetric by construction and privileges no
+    arm. Deciles, not a DN threshold: an absolute DN tolerance is what produced
+    the waxy-blob artefact (fact 1470).
+
+
+5. BARS — registered now, reported as pass or FAIL either way
+--------------------------------------------------------------
+
+B1  REPLICATION. On bee-3-cpl, M1(lanczos3) over the detail stratum lands in
+    [+0.060, +0.120] dex. M113's end-to-end range is +0.083 to +0.099. Outside
+    this band my instrument disagrees with a published independent measurement
+    and I report that rather than my own number.
+
+B2  N4 — THE PRIMARY RESULT. On EACH of the two subjects M113 did not use
+    (wrapped-text-1, flat-on-ruler-cpl):
+       M1(lanczos3) in tiles with agreement >= 0.95  >  M1(lanczos3) in tiles
+       with agreement < 0.95,   and corr(agreement, M1) > 0.
+    PASS = the kernel earns the gain and the re-election dilutes it, replicating
+    M113. FAIL ON EITHER SUBJECT = ORCH's N4 fires, the gain is a reshuffled
+    election rather than better interpolation, and my report leads with a NO-GO.
+
+B3  RULE-9 CONTROL, run FIRST and reported first. For every arm and subject:
+    if M2 >= M1 the detail metric is measuring noise for that arm/subject and
+    every M1 number for it is declared void rather than quoted.
+
+B4  ORDERING PREDICTION, registered so it can be wrong. On M1 (band power alone)
+    I predict   nearest > lanczos3 > lanczos2 > catmull-rom > bilinear,
+    with nearest ABOVE lanczos3 because nearest aliases. If that ordering holds,
+    it is positive evidence that M1 is aliasing-foolable exactly as stated in §4
+    and it is NOT evidence that nearest is the best kernel. If nearest comes out
+    BELOW catmull-rom, my stated failure direction for M1 is wrong and I must
+    say so.
+
+B5  NULL. One arm per subject re-rendered from a COLD cache with a
+    byte-identical command line must reproduce the same sha256.
+
+B6  PLANT — the null needs one (fact 1548). Two:
+    P1 wiring plant: a sidecar whose resampler line is mutated must change the
+       sha256. Already seen 4/4 in the pilot; repeated per subject.
+    P2 metric plant: a known Gaussian blur of sigma = 0.5 px applied to the
+       catmull-rom render must move M1 by more than 0.05 dex in the NEGATIVE
+       direction, and a x1.5 passband boost must move it POSITIVE. Proves M1 can
+       move on this wiring, in both directions, and re-demonstrates that M1
+       rewards manufactured power.
+
+B7  ADVERSARIAL POISONING. Render arm A cold; render arm B; re-render arm A.
+    The two A renders must be byte-identical. A difference means an arm is
+    receiving a kernel nobody asked for.
+
+B8  COST. Wall clock per arm, reported as a BOUND not a value, since these runs
+    are not thermally controlled and rule 16 applies. Reported because a default
+    change carries it.
+
+FAILURE IS A RESULT. If every arm lands within +/-0.02 dex on M3, I report "the
+resampler choice does not measurably change the merged image on these subjects"
+as the headline and do not narrow a bar to rescue an effect.
+
+
+6. IMAGES — mandatory deliverable
+----------------------------------
+
+For each subject x arm: the full render plus at least two 1:1 (100%) crops of
+the SAME pixel region across arms, and one side-by-side contact sheet per
+subject, at C:\dev\strehl-out\M118\.
+Naming: <subject>__<resampler>__<crop>.png
+
+Viewing renders use `--srgb` (which implies --demosaic, full sensor resolution).
+CONTROL: the exposure is PINNED to a single value per subject, taken from the
+catmull-rom arm's `--auto-exposure` and then passed explicitly as `--exposure=N`
+to EVERY arm. Letting auto-exposure re-choose per arm would put a different gain
+on each panel and make the sheet a comparison of exposures.
+Crop sites are chosen on the catmull-rom BASELINE arm by gradient, then applied
+identically to every arm — the baseline is the incumbent, so choosing sites on
+it cannot flatter the candidate.
+
+
+7. WHAT THIS CANNOT ANSWER
+---------------------------
+
+- It does not test the CA-corrected arm, so it cannot discharge ORCH's G2 (which
+  requires the COMBINED CA + Lanczos-3 arm) and cannot speak to M110's finding
+  that Lanczos-3 makes lateral chromatic aberration more conspicuous. That is
+  the live objection and it is out of scope here.
+- It measures the kernel AT GATHER with the warps held fixed. It does not
+  measure solving WITH a different kernel (`align --resampler`), which changes
+  the warps too.
+- No ground truth exists for a merged image, so every metric here is
+  reference-free or arm-relative. None of them is an accuracy measurement.
+- M86's 0.98 -> 0.29 estimator-gain figure is about the DISPLACEMENT ESTIMATOR,
+  not image sharpness. It is the reason to look. It is not quoted as a result.
