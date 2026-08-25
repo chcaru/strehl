@@ -75,6 +75,28 @@ DEFECTS = [
     ("D19 R2 verdict flipped (non-numeric)",
      "**R2 FAILS, and it fails in the direction that matters.**",
      "**R2 holds, and it holds in the direction that matters.**"),
+    # ---- section 12: the D law --------------------------------------------
+    ("D20 Spearman rho (body site)",
+     "Spearman **\u03c1 = +0.457** (p = 1.9e\u221238, n = 720)",
+     "Spearman **\u03c1 = +0.157** (p = 1.9e\u221238, n = 720)"),
+    ("D20b Spearman rho (fact site)",
+     "Spearman **\u03c1 = +0.457** (p = 1.9e\u221238) against M111's +0.530",
+     "Spearman **\u03c1 = +0.257** (p = 1.9e\u221238) against M111's +0.530"),
+    ("D21 leftmost-bin median shift",
+     "median |shift| under the real narrowing rose **5.80 % \u2192 50.82 %**",
+     "median |shift| under the real narrowing rose **0.80 % \u2192 50.82 %**"),
+    ("D22 headline D",
+     "has `D` = **1.133**, in the protected bin",
+     "has `D` = **6.133**, in the protected bin"),
+    ("D23 per-bin shift of the headline",
+     "Its per-bin shifts are **\u22125.62 %** and **+10.93 %**",
+     "Its per-bin shifts are **\u22120.62 %** and **+10.93 %**"),
+    ("D24 empty right-hand bin count",
+     "| [5,8) | **0** | \u2014 | \u2014 |",
+     "| [5,8) | **41** | \u2014 | \u2014 |"),
+    ("D25 scope limit on D",
+     "`D` never exceeds **3.53**",
+     "`D` never exceeds **9.53**"),
 ]
 
 

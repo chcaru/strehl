@@ -225,6 +225,46 @@ if len({r["n_valid_fine"] for r in s10["rows"]}) <= 1:
     fails.append("P26: saturation control did not vary on re-derivation")
 
 print()
+# ---------------------------------------------------------------------------
+# section 12 -- the D law.  Bin counts, medians and Spearman are recomputed
+# here from the raw point cloud, not read back from s11's own scoring.
+# ---------------------------------------------------------------------------
+s11 = json.load(open(os.path.join(OUT, "s11_dlaw.json")))
+chk("P27 n points", float(s11["n"]), r"Over (\d+) points \(20 arm pairs", tol=1e-9)
+chk("P27 Spearman rho (body)", s11["spearman"],
+    r"Spearman \*\*ρ = \+([\d.]+)\*\* \(p = [^)]*n = 720\)", tol=0.01)
+chk("P27 Spearman rho (fact P27)", s11["spearman"],
+    r"Spearman \*\*ρ = \+([\d.]+)\*\* \(p = [^)]*\) against M111", tol=0.01)
+chk("P27 median shift, leftmost bin", 100.0 * s11["median_abs_shift"][0],
+    r"median \|shift\| under the real narrowing rose \*\*([\d.]+) ?%", tol=0.01)
+chk("P27 median shift, [2,3) bin", 100.0 * s11["median_abs_shift"][3],
+    r"rose \*\*5\.80 ?% → ([\d.]+) ?%\*\* across", tol=0.01)
+chk("P28 M115/M111 leftmost-bin factor",
+    (100.0 * s11["median_abs_shift"][0]) / 0.68,
+    r"a factor of \*\*([\d.]+)\*\*\. ORCH's table must be used", tol=0.05)
+chk("P29 headline D pooled", s11["D_pooled"],
+    r"has `D` = \*\*([\d.]+)\*\*, in the protected bin", tol=1e-3)
+chk("P29 per-bin shift 109", 100.0 * s11["headline"]["109MSDCF"]["shift_mean"],
+    r"per-bin shifts are \*\*(−[\d.]+) ?%\*\*", tol=0.01)
+chk("P29 per-bin shift 119", 100.0 * s11["headline"]["119MSDCF"]["shift_mean"],
+    r"and \*\*\+([\d.]+) ?%\*\* while the band-mean", tol=0.01)
+chk("P31 max D", s11["D_max_global"],
+    r"`D` never exceeds \*\*([\d.]+)\*\*", tol=1e-2)
+chk("P31 count in [3,5)", float(s11["counts"][4]),
+    r"\| \[3,5\) \| (\d+) \|", tol=1e-9)
+for i, lab in [(5, r"\| \[5,8\) \| \*\*(\d+)\*\* \|"),
+               (6, r"\| \[8,∞\) \| \*\*(\d+)\*\* \|")]:
+    chk(f"P31 count {s11['bins'][i]}", float(s11["counts"][i]), lab, tol=1e-9)
+# the degenerate-pair exclusion must actually be in force
+if s11["excluded_pair"] != ["BEST1", "FRAME*"]:
+    fails.append("P27: the degenerate arm pair was not excluded")
+# monotonicity must survive re-derivation on supported bins only
+sup = [i for i, c in enumerate(s11["counts"]) if c >= 10]
+if not all(s11["median_abs_shift"][sup[i]] <= s11["median_abs_shift"][sup[i + 1]]
+           for i in range(len(sup) - 1)):
+    fails.append("P27: D-law monotonicity fails on re-derivation")
+
+print()
 if fails:
     print("FAILURES:")
     for f in fails:

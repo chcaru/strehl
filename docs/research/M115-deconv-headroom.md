@@ -234,6 +234,11 @@ Numbered `P1…` per rule 28; absolute numbers belong to ORCH. I have not edited
 24. **P24 — MEASURED, `109MSDCF`.** Bias conceals damage that MAD reveals, because signed errors cancel. At step 16 (6.5 levels/window) the 5×5 focus-peak fit had bias **+0.014 frames** but MAD **0.622 frames**. An immunity claim resting on bias is valid only for a statistic that is itself an average over windows.
 25. **P25 — MEASURED, `109MSDCF`.** "Dispersion statistic" is too coarse a triage category: at step 256 on identical data, a difference-based `P_noise` read **×3.937** while total high-frequency energy read **×1.055**, a **3.7×** spread. Fragility tracks whether the statistic **isolates a small residual from a large signal**, not whether it is a dispersion measure.
 26. **P26 — MEASURED, `109MSDCF`.** A minimum-support floor converts silent corruption into refusal, progressively: admitted samples fell **404 623 → 56 616** (5×5) and **408 004 → 134 651** (27×27) across the sweep, and the count varied at every level, so the control was not saturated in ORCH's sense.
+27. **P27 — MEASURED, both stacks, replicates ORCH/M111.** Cancellation protection tracks `D` = max/min of a ratio's two terms. Over 720 points (20 arm pairs × 18 mid-band bins × 2 stacks) median |shift| under the real narrowing rose **5.80 % → 50.82 %** across `D` bins, monotone in every bin with n ≥ 10, Spearman **ρ = +0.457** (p = 1.9e−38) against M111's +0.530.
+28. **P28 — MEASURED.** `D` predicts the **ordering** of exposure, not its **magnitude**. In the identical [1.00,1.25) bin M111 reads 0.68 % and M115 reads **5.80 %**, a factor of **8.5**. ORCH's table must be used as a ranking device, not as a lookup table for expected error.
+29. **P29 — MEASURED, both stacks.** M115's headline `R_SNR(WIENER)/R_SNR(GATE)` has `D` = **1.133**, in the protected bin — but its protection is **not** ratio cancellation. Its per-bin shifts are **−5.62 %** and **+10.93 %** while the band-mean moves **−1.0 %**; the stability comes from averaging over 18 frequency bins of both signs.
+30. **P30 — ARGUED from P24 and P29.** A reported number that is an average is stable evidence about the average, not about its terms. The same structure appeared twice in independent measurements here — bias vs MAD in the focus fit, band-mean vs per-bin in the headline ratio. **Any published stability figure should carry the dispersion of its terms**, or it will be generalised into contexts where the averaging does not occur. The fleet-wide generalisation of M115's −1.0 % is an instance of this failure, and the omission was M115's.
+31. **P31 — MEASURED, scope limit.** M115's `D` never exceeds **3.53**: zero points in [5,8) and [8,∞), six in [3,5). **The right-hand half of ORCH's `D` table — where the alarming numbers are — is not corroborated by this milestone.**
 
 ---
 
@@ -381,7 +386,50 @@ This is not an edge case for `strehl`. **"Which frame is sharpest" is exactly ar
 
 ---
 
-## 12. Housekeeping for ORCH
+## 12. `D` — the cancellation claim, corrected
+
+ORCH's addendum retracts the "it is a ratio of two arms, so it cancels" protection and replaces it with a graded law indexed by `D = max/min` of the two terms. M115 supplied the **−1.0 %** that was generalised into the retracted rule, so it owes ORCH the `D` that goes with it. Predictions Q1–Q3 were registered in `s11_dlaw.py` before the sweep ran; 720 points, both stacks, 20 arm pairs × 18 mid-band bins.
+
+**Q3 first, because it decides whether the rest means anything.** `BEST1` and `FRAME*` are the *same estimator* in this instrument (identical `P_sig` and `P_noise`), so that pair contributes a free `D ≈ 1, shift ≈ 0` point at every bin. Left in, it would have added 36 points — **4.8 %** of the sample, all in the leftmost bin — propping up a monotone result with no evidence in it. **The pair is excluded**; everything below survives the exclusion.
+
+| `D` bin | n | median &#124;shift&#124; | IQR |
+| --- | --- | --- | --- |
+| [1.00,1.25) | 289 | **5.80 %** | [1.36, 17.99] |
+| [1.25,1.50) | 215 | 9.47 % | [4.17, 19.27] |
+| [1.50,2) | 179 | 17.31 % | [6.76, 36.15] |
+| [2,3) | 31 | 50.82 % | [42.83, 65.32] |
+| [3,5) | 6 | *67.79 %* | [51.91, 75.08] |
+| [5,8) | **0** | — | — |
+| [8,∞) | **0** | — | — |
+
+### 12.1 The law replicates
+
+**Q1 PASSES.** Monotone across every bin with n ≥ 10, Spearman **ρ = +0.457** (p = 1.9e−38, n = 720), against ORCH's **+0.530** on M111. Two subjects, a different statistic, a different instrument. **`D` is a real predictor and the retraction was correct.**
+
+Two limits on that endorsement, both from my own support counts — which ORCH's table omits, and which decide how much of it is load-bearing:
+
+- **My `D` never exceeds 3.53.** I have **zero** points in [5,8) and [8,∞), and only 6 in [3,5). **M115 does not corroborate the right-hand half of ORCH's table**, which is where the alarming numbers are.
+- **`D` predicts the ordering, not the magnitude.** In the same leftmost bin ORCH reads 0.68 % and I read **5.80 %** — a factor of **8.5**. The table is a *ranking device*, not a lookup table; an agent reading "0.68 %" off it as an expected error for its own low-`D` statistic would be wrong by an order of magnitude in my instrument.
+
+### 12.2 Q2 — and the correction I owe on my own number
+
+**M115's headline sits at `D` = 1.133** (109MSDCF 1.122, 119MSDCF 1.144; per-bin range 1.00–1.50), squarely in ORCH's protected leftmost bin. So the conclusion stands.
+
+**But the reason I gave was wrong, and this is the part worth folding.** The per-bin mean shifts of that very ratio are **−5.62 %** (109MSDCF) and **+10.93 %** (119MSDCF) — while the band-mean moves **−1.0 %**. The headline is not protected by *ratio cancellation between two arms*. It is protected by **averaging over 18 frequency bins whose individual shifts are 6–11 % and of both signs.**
+
+That is exactly the structure of §11.3 one level up: **a mean over sub-measurements can read pristine while every sub-measurement is badly wrong.** It appeared in the focus fit as bias-versus-MAD, and it appears here as band-mean-versus-per-bin. Two different milestones' worth of my own data now say the same thing, and it generalises past bit depth:
+
+> **Whenever a reported number is an average, its stability is evidence about the average, not about its terms.** Report the dispersion of the terms alongside it, or the number will be generalised into contexts where the averaging does not happen.
+
+My −1.0 % was published without that dispersion, and ORCH generalised it fleet-wide. The failure is mine, not ORCH's.
+
+### 12.3 The corrected reason, for folding
+
+> **M115: NOT EXPOSED.** Inputs are `rawpy` uint16 camera RAW, never narrowed, asserted at 2420/4906/7367 distinct levels (§9), with provenance confirmed to `D:\personal\macro\{109MSDCF,119MSDCF,flat-fields}` — camera originals, not another milestone's scratch. **`D` = 1.133** for the headline ratio. The **−1.0 %** I contributed is a band-mean over 18 frequency bins; its per-bin terms move **−5.62 %/+10.93 %**, so it should not be quoted as evidence that ratios cancel — it is evidence that *averages* are stable.
+
+---
+
+## 13. Housekeeping for ORCH
 
 - **`M115` is not in the `AGENTS.md` milestone ledger**, which ends at `M113`. The allocation needs recording.
 - **The dispatching brief named no prior research.** M20 (`M20-deconvolution-ceiling-measured.md`), M41 (`M41-r3-kill-measured.md`) and M70 (`M70-through-focus-spectrum.md`) all bear directly on this question — M41 tested this exact proposal and killed it on the noise axis. Rule 43: an assertion of absence is a claim. All three were found by the rule-40 search and are cited throughout.
