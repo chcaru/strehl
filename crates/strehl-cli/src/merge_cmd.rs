@@ -2307,7 +2307,35 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         );
 
         if edge_aware_arm() == EdgeArm::Acuity {
-            let scale = edgeaware::SelectionScale::from_silhouettes(&guide, geom, tau);
+            // The veto's second signal needs a luma plane on the guide's grid.
+            // Any frame carries the silhouette — the subject is opaque in all of
+            // them — but the guide's own median winner is the frame in focus for
+            // most of the plane, so its steps are the sharpest available.
+            let mut decided: Vec<u16> =
+                guide.iter().copied().filter(|&k| k != u16::MAX).collect();
+            let ref_index = if decided.is_empty() {
+                0u16
+            } else {
+                let mid = decided.len() / 2;
+                *decided.select_nth_unstable(mid).1
+            };
+            drop(decided);
+            let luma: Vec<u16> = {
+                let mut sc = Scratch::new_with_warp(geom, false, ctx_guide.warps.is_some());
+                let mut t = Timings::default();
+                let idx = usize::from(ref_index).min(paths.len().saturating_sub(1));
+                let f = ctx_guide.field_for(&paths[idx], idx as u16, &mut sc, &mut t)?;
+                ctx_guide.release(f);
+                sc.luma.iter().map(|&v| v.clamp(0.0, 65535.0) as u16).collect()
+            };
+            eprintln!(
+                "dead-ground veto: a cap also requires a luma step at that radius exceeding what \
+                 pure noise would reach there (frame {ref_index}, the guide's median winner). \
+                 Measured WITHOUT it: |off - on| over backdrop >150 px from any silhouette equals \
+                 the rim band's, ratio 0.95 / 1.08 / 0.90 -- the rule was changing the whole \
+                 background, not the halo"
+            );
+            let scale = edgeaware::SelectionScale::from_silhouettes(&guide, &luma, geom, tau);
             let hist = scale.histogram();
             eprintln!(
                 "radius rule     : distance to the nearest depth step, capped at the shipped {} px. \

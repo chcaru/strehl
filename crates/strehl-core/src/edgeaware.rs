@@ -446,31 +446,76 @@ impl SelectionScale {
     ///
     /// # What this rule gets WRONG, stated plainly
     ///
-    /// It over-collapses over **dead ground**. Rendering the radius map as a
-    /// picture shows two populations: a fine tracery correctly tracing every
-    /// real silhouette, and *large solid regions covering the empty background*
-    /// where the window is also at 1 px for no good reason. Measured on
-    /// `bee-2-cpl` flat background far from any silhouette: mean radius
-    /// **3.64-5.86** where it should be 13, with **45-61%** of pixels at r1.
+    /// It over-collapses over **dead ground** unless vetoed. Rendering the
+    /// radius map as a picture shows two populations: a fine tracery correctly
+    /// tracing every real silhouette, and *large solid regions covering the
+    /// empty background* where the window is also at 1 px for no good reason.
+    /// Measured on `bee-2-cpl` flat background far from any silhouette: mean
+    /// radius **3.64-5.86** where it should be 13, with **45-61%** of pixels at
+    /// r1.
     ///
     /// The cause is the same one `from_guide`'s veto existed for. Over
     /// featureless ground no frame is in focus, so the narrow guide's argmax is
     /// noise distributed across the whole bracket, its local range is ~N frames
     /// everywhere, and the range test reads that as a depth step.
     ///
-    /// It is **harmless to the image** and that is why it ships: where no frame
-    /// has content, every frame renders the pixel almost identically, so an
-    /// arbitrary election is invisible — which the background noise
-    /// measurements confirm directly. It is **not harmless to inference drawn
-    /// from the radius map**, and it cost this build a wrong conclusion:
-    /// bimodality firing looked beautifully monotone in the collapsed radius
-    /// (99.80% at r1 falling to 13.42% at r13) and that reads as the detector
-    /// finding the rim. It is not. Both quantities are driven by the same
-    /// unreliable guide over dead ground, so they correlate without either one
-    /// locating a silhouette. **Do not use the radius map as a rim mask.**
+    /// # The luma veto, and the claim it replaces
+    ///
+    /// This function previously shipped with no veto and a doc comment
+    /// asserting the over-collapse was "harmless to the image", on the grounds
+    /// that where no frame has content every frame renders the pixel
+    /// identically. **That claim was wrong and is retracted.** Measured
+    /// `|off - on|` restricted to backdrop more than 150 px from any silhouette
+    /// — where the window provably cannot reach — against the same statistic in
+    /// the rim band, on three subjects:
+    ///
+    /// | subject | rim (<=14 px) | far (>150 px) | ratio |
+    /// |---|---|---|---|
+    /// | `flower-bud-with-background-fern-cpl` | 0.748 | 0.784 | 0.95 |
+    /// | `lavendar-cpl` | 0.582 | 0.538 | 1.08 |
+    /// | `bee-2-cpl` | 0.166 | 0.184 | 0.90 |
+    ///
+    /// in units of backdrop sd, after a 9 px box on **both** arms. The smoothing
+    /// matters: a per-pixel difference is satisfied by electing a different but
+    /// equivalent frame, which re-rolls the noise everywhere without changing
+    /// the picture, and the raw numbers are nearly identical (0.777 / 0.631 /
+    /// 0.197) precisely because that is what they measure. Surviving a 9x noise
+    /// reduction makes it a **systematic level shift over the whole backdrop**,
+    /// not a re-roll — and a ratio of ~1 says the change this rule makes is not
+    /// confined to the window at all.
+    ///
+    /// It is also visible. On `flower-bud-with-background-fern-cpl` the fern is
+    /// outside the focus bracket, so it is dead ground *inside a subject*: the
+    /// radius collapsed across its whole area, election went per-pixel random,
+    /// and it renders blotchy with white patches smeared inside the leaf.
+    ///
+    /// So the veto returns — but not `from_guide`'s. That one tested the
+    /// confidence of the elected value and needed a tuned `FLOOR_Q`. This one
+    /// tests a second, independent signal: **a depth step in a photograph is
+    /// accompanied by a luma step.** A pixel may only cap at a radius where the
+    /// guide range exceeds `tau` *and* the luma range at the same radius exceeds
+    /// what pure noise would produce there. The luma threshold is not tuned; it
+    /// is the closed-form expected range of `n` Gaussian samples,
+    /// `2*sigma*sqrt(2*ln n)`, with `sigma` measured from the plane's own
+    /// adjacent-pixel differences. Featureless backdrop is smooth in luma and is
+    /// vetoed; a real occluding edge steps in both and is not.
+    ///
+    /// It remains **not harmless to inference drawn from the radius map**, and
+    /// it cost this build a wrong conclusion: bimodality firing looked
+    /// beautifully monotone in the collapsed radius (99.80% at r1 falling to
+    /// 13.42% at r13) and that reads as the detector finding the rim. It is not.
+    /// Both quantities are driven by the same unreliable guide over dead ground,
+    /// so they correlate without either one locating a silhouette. **Do not use
+    /// the radius map as a rim mask.**
     #[must_use]
-    pub fn from_silhouettes(guide: &[u16], geom: PlaneGeometry, tau: f32) -> Self {
+    pub fn from_silhouettes(
+        guide: &[u16],
+        luma: &[u16],
+        geom: PlaneGeometry,
+        tau: f32,
+    ) -> Self {
         assert_eq!(guide.len(), geom.pixels());
+        assert_eq!(luma.len(), geom.pixels(), "luma must share the guide's grid");
         assert!(tau > 0.0, "tau must be positive, got {tau}");
         let px = geom.pixels();
         let mut scratch = vec![0.0f32; px];
@@ -498,6 +543,28 @@ impl SelectionScale {
         let mut smooth = vec![0.0f32; px];
         box_mean(&w, geom, SPECKLE_RADIUS, &mut scratch, &mut smooth);
 
+        // The veto's second signal. `sigma` is the plane's own noise, taken
+        // from adjacent-pixel differences via the MAD so that real structure
+        // (a minority of pairs, arbitrarily large) cannot inflate it the way a
+        // standard deviation would. 1.4826 converts MAD to sigma for a normal;
+        // the sqrt(2) removes the differencing of two independent samples.
+        let mut adj: Vec<f32> = Vec::with_capacity(px);
+        for y in 0..geom.height {
+            let row = y * geom.width;
+            for x in 1..geom.width {
+                adj.push((f32::from(luma[row + x]) - f32::from(luma[row + x - 1])).abs());
+            }
+        }
+        let sigma = if adj.is_empty() {
+            0.0
+        } else {
+            let mid = adj.len() / 2;
+            adj.select_nth_unstable_by(mid, |a, b| a.partial_cmp(b).unwrap());
+            adj[mid] * 1.482_602 / std::f32::consts::SQRT_2
+        };
+        let mut lhi: Vec<f32> = luma.iter().map(|&v| f32::from(v)).collect();
+        let mut llo = lhi.clone();
+
         let mut hi = smooth.clone();
         let mut lo = smooth;
         let mut level = vec![FULL_LEVEL; px];
@@ -506,11 +573,19 @@ impl SelectionScale {
         for (l, &r) in LEVEL_RADII.iter().enumerate() {
             box_extremum(&mut hi, geom, r - prev, &mut scratch, true);
             box_extremum(&mut lo, geom, r - prev, &mut scratch, false);
+            box_extremum(&mut lhi, geom, r - prev, &mut scratch, true);
+            box_extremum(&mut llo, geom, r - prev, &mut scratch, false);
             prev = r;
+            // What the range of `n` independent Gaussian samples is expected to
+            // reach. Not a tuned threshold: given `sigma` this radius has one
+            // right answer, and it grows with the box exactly as the spurious
+            // range over dead ground does.
+            let n = ((2 * r + 1) * (2 * r + 1)) as f32;
+            let noise_range = 2.0 * sigma * (2.0 * n.ln()).sqrt();
             for i in 0..px {
                 // The range is monotone in the radius, so the first failure is
                 // the cap and no later level may raise it back.
-                if !capped[i] && hi[i] - lo[i] > tau {
+                if !capped[i] && hi[i] - lo[i] > tau && lhi[i] - llo[i] > noise_range {
                     capped[i] = true;
                     level[i] = l.saturating_sub(1) as u8;
                 }
@@ -1998,7 +2073,8 @@ mod tests {
         let guide: Vec<u16> = (0..w * h)
             .map(|i| if i % w < 64 { 250 } else { 10 })
             .collect();
-        let s = SelectionScale::from_silhouettes(&guide, g, 4.0);
+        let luma: Vec<u16> = guide.iter().map(|&k| k * 200).collect();
+        let s = SelectionScale::from_silhouettes(&guide, &luma, g, 4.0);
         let lv = s.levels();
         let at = |x: usize, y: usize| LEVEL_RADII[lv[y * w + x] as usize];
 
@@ -2021,7 +2097,8 @@ mod tests {
     #[test]
     fn a_plane_with_no_depth_step_is_the_shipped_operator() {
         let g = geom(64, 64);
-        let s = SelectionScale::from_silhouettes(&vec![100u16; g.pixels()], g, 4.0);
+        let s =
+            SelectionScale::from_silhouettes(&vec![100u16; g.pixels()], &vec![100u16; g.pixels()], g, 4.0);
         assert!(s.is_full_everywhere(), "histogram {:?}", s.histogram());
     }
 
@@ -2048,7 +2125,8 @@ mod tests {
         let guide: Vec<u16> = (0..w * h)
             .map(|i| if i % w < 64 { 200 } else { 20 })
             .collect();
-        let s = SelectionScale::from_silhouettes(&guide, g, 4.0);
+        let luma: Vec<u16> = guide.iter().map(|&k| k * 200).collect();
+        let s = SelectionScale::from_silhouettes(&guide, &luma, g, 4.0);
         let lv = s.levels();
         let y = 24;
         // Walk from the step out into the background.
@@ -2072,6 +2150,51 @@ mod tests {
             !s.is_full_everywhere(),
             "the fixture must contain a real step: {:?}",
             s.histogram()
+        );
+    }
+
+    /// The dead-ground veto, asserted as behaviour rather than as a number.
+    ///
+    /// Both fixtures have an *identical* guide containing a large, clean step —
+    /// the exact input the range test fires on. They differ only in the luma:
+    /// one has a matching step, the other is featureless plus noise. The rule
+    /// must collapse on the first and must not collapse on the second.
+    ///
+    /// This is the failure the veto exists for. Over ground where no frame is in
+    /// focus the guide's argmax is noise with a range spanning the whole
+    /// bracket, so the guide alone cannot tell that case from a silhouette. It
+    /// shipped once without this test and the consequence was invisible to every
+    /// metric in use: `|off - on|` on backdrop >150 px from any silhouette read
+    /// the same as the rim band (ratio 0.95 / 1.08 / 0.90), so the rule was
+    /// rewriting the whole background while the halo numbers looked fine.
+    #[test]
+    fn a_guide_step_without_a_luma_step_is_dead_ground_and_must_not_collapse() {
+        let (w, h) = (128usize, 48usize);
+        let g = geom(w, h);
+        let guide: Vec<u16> = (0..w * h)
+            .map(|i| if i % w < 64 { 200 } else { 20 })
+            .collect();
+
+        let with_step: Vec<u16> = guide.iter().map(|&k| k * 200).collect();
+        let real = SelectionScale::from_silhouettes(&guide, &with_step, g, 4.0);
+        assert!(
+            !real.is_full_everywhere(),
+            "a guide step backed by a luma step is a silhouette and must collapse: {:?}",
+            real.histogram()
+        );
+
+        // Featureless, but not perfectly flat: a constant plane would make
+        // sigma zero and pass the veto for a degenerate reason rather than the
+        // one under test. A deterministic +/-1 DN dither is the honest fixture.
+        let flat: Vec<u16> = (0..w * h)
+            .map(|i| 8000u16 + u16::from(i.wrapping_mul(2_654_435_761) % 3 == 0))
+            .collect();
+        let dead = SelectionScale::from_silhouettes(&guide, &flat, g, 4.0);
+        assert!(
+            dead.is_full_everywhere(),
+            "the same guide step over featureless luma is dead ground and must keep \
+             the shipped window, got {:?}",
+            dead.histogram()
         );
     }
 }
