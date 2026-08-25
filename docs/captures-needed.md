@@ -83,14 +83,29 @@ the render path — though not unused: four measurement programs import it, whic
 is how its behaviour came to be measured at all.
 
 **And this turns out to be the general shape of the problem, not a one-off.** I
-went through the render path gate by gate this morning. Of the six improvements
-this project has measured and built, **exactly one is switched on when you run
-the tool.** Alignment is on. Chromatic-aberration correction, robust election,
-the smoothing prior, the soft gate and photometric normalisation are all present,
-all tested, and all **off by default** — so the render you have been judging is
+went through the render path gate by gate this morning. Of the six **switchable**
+improvements this project has measured and built, **exactly one is switched on
+when you run the tool.** Alignment is on. Chromatic-aberration correction, robust
+election, the smoothing prior, the soft gate and photometric normalisation are all
+present, all tested, and all **off by default** — so the render you have been judging is
 very nearly the unimproved one. Nobody had ever measured what happens with them
 on, which is a strange gap for a project this careful, and that measurement is
-now running. Two cautions on it, both already found: switching everything on is
+now running.
+
+**One correction to that paragraph, and I am flagging it because it is the second
+time in one night I have made the same mistake.** "Switchable" is doing real work
+in that sentence and my first draft left it out. There is at least one measured
+improvement that is **not** behind a switch and *is* running in your renders: the
+magenta-highlight fix. Blown neutral whites used to render magenta, because white
+balance pushes red and blue past the point where green has already pinned at the
+sensor's maximum, and the colour matrix then reads that as a strong colour. The
+fix brings a clipped pixel back under a neutral ceiling **before** the matrix sees
+it, and it measured **2.00 % of pixels affected down to 0.51 %**, with the
+overshoot eliminated entirely. It is safe by construction rather than by tuning:
+where nothing is clipped it is exactly the identity, so an unsaturated stack
+cannot move by a single bit. So the fair summary is that the *switchable*
+improvements are almost all off, not that only one improvement exists in your
+output. Two cautions on it, both already found: switching everything on is
 *not* obviously right — on a stack that drifted, the merge measurably **loses**
 to a single frame — and at least one gate is a **silent no-op** unless another is
 also on, which means a naive test of it would have read "does nothing" and been
