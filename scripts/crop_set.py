@@ -470,10 +470,25 @@ def cmd_full(a: argparse.Namespace) -> int:
     shrink, a colour disaster, a merge that fell apart across half the frame.
     Those are invisible at 100% and obvious here, and they are the first thing
     to rule out when someone says a stack is unusable.
+
+    These are DIAGNOSTIC images and they land in `annotated/`, never in the
+    gallery. That separation is not tidiness. For weeks every full-frame image
+    this project produced had coloured ROI rectangles burned into it, they were
+    the images the owner was shown, and he had never once seen a clean render of
+    his own photographs. An overlay is a tool for whoever is debugging; it must
+    never be the thing anyone judges the product by. `scripts/gallery.ps1`
+    produces the clean article, straight out of the Rust develop path.
+
+    Note that these previews go through this file's own `to_display`, which is
+    the LINEAR measurement view with a gain -- deliberately not the product's
+    tone rendering. Keeping it fixed is what lets a crop from today be compared
+    against the frozen baseline. So an annotated preview looks flatter than the
+    gallery does, on purpose: the gallery shows the photograph, this shows the
+    measurement.
     """
     root = Path(a.renders)
     plans = json.loads(Path(a.plan).read_text()) if Path(a.plan).exists() else {}
-    outdir = Path(a.out) if a.out else root / "full"
+    outdir = Path(a.out) if a.out else root / "annotated"
     outdir.mkdir(parents=True, exist_ok=True)
     mat = resolve_matrix(a.matrix)
 
@@ -484,7 +499,7 @@ def cmd_full(a: argparse.Namespace) -> int:
             float(np.percentile(luma(lin), DISPLAY_PCT)), 1e-6
         )
         img = Image.fromarray(to_display(lin, gain, mat))
-        if plan and list(lin.shape[:2]) == plan["shape"]:
+        if plan and not a.clean and list(lin.shape[:2]) == plan["shape"]:
             dr = ImageDraw.Draw(img)
             colours = {"edge": (255, 64, 64), "flat": (64, 160, 255), "detail": (255, 220, 0)}
             c = plan["crop"]
@@ -527,11 +542,14 @@ def main() -> int:
     q.add_argument("--matrix", default="a7c2", choices=["a7c2", "none"])
     q.set_defaults(fn=cmd_compare)
 
-    q = sp.add_parser("full", help="whole-frame previews with the crop boxes drawn on")
+    q = sp.add_parser("full", help="whole-frame DIAGNOSTIC previews with the crop boxes drawn on")
     q.add_argument("--renders", required=True)
-    q.add_argument("--out")
+    q.add_argument("--out", help="defaults to <renders>/annotated -- never the gallery")
     q.add_argument("--width", type=int, default=1600)
     q.add_argument("--matrix", default="a7c2", choices=["a7c2", "none"])
+    q.add_argument("--clean", action="store_true",
+                   help="suppress the ROI boxes. For a linear-view full frame without "
+                        "annotations; the deliverable gallery is scripts/gallery.ps1.")
     q.set_defaults(fn=cmd_full)
 
     a = p.parse_args()
