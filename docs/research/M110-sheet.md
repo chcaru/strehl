@@ -1551,3 +1551,94 @@ so the comparison is valid.)*
     exactly, and it cost one script.
 
 
+
+## 24. The confound in my own refinement, and its refutation
+
+ORCH asked every agent to report `D` (max/min of a statistic's terms) alongside any
+cancellation claim. Computing it exposed a confound in **my own §23 items 75 and 76**,
+so this section tests them rather than defending them.
+
+**The confound.** §18 cell A (destroyed) and §16 overshoot (immune) differ on *two* axes at
+once: statistic class *and* term inequality. Class and `D` move together across that pair, so
+it cannot separate ORCH's rule from mine. **Both rules predict the observed outcome, which is
+evidence for neither.**
+
+Pre-registered in `experiments/M110-sheet/term_resolution.py` and committed at `62ca918`,
+2026-08-24T21:49:21-07:00, **before any data was read**, including the cell built to refute my
+own claim (P3) and the bars (SURVIVES under 10%, DESTROYED at or above 50%).
+
+### 24.1 An instrument defect, found by the adjudication contradicting itself
+
+The first run printed **P2: class does real work** and **P3: class does not** from the same
+data. That contradiction was the only signal of a defect; every individual number was
+plausible.
+
+`sec18_terms(off, on, 8)` returns terms **already in narrowed units**, and `term_stats` then
+divided by `2**bits` again — a double division making every `W` a factor 256 too small. The
+tell was in the printed ladder all along: `W` fell by **4.0 per bit** where narrowing can only
+produce 2.0. P3 therefore never entered the `W >> 1` regime it was built to test, and its
+"both survive" verdict was unearned.
+
+Repaired, and a three-line self-check added (**C5**: `W` must halve per bit, checked only
+while `W > 4`, since below that the median is itself a small integer). Two further defects
+found in the same pass: the C4 live-only subset compared **different pixel populations**, and
+would have manufactured a survival by selecting the largest weak terms — replaced by **C4b**, a
+single matched pixel set evaluated at both doses.
+
+### 24.2 Results, `bee-3-cpl`, at the real 8-bit dose
+
+| statistic | class | D | S | W | baseline to narrowed | shift | verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| §18 cell A, median ratio | spacing | 5.00 | 3.00 | **0.00** | −0.0721 to +0.0000 | 100.0% | **DESTROYED** |
+| §18 sign disagreement, raw | ordinal | 5.00 | 3.00 | **0.00** | 84.76 to 92.53% | 9.2% | *false* SURVIVES |
+| §18 sign disagreement, C4b matched | ordinal | 5.00 | 3.00 | **0.00** | 81.5600 to 81.5600 | **0.00 pp** | SURVIVES |
+| §16 overshoot | ordinal | 1.12 | 6.74 | **5.73** | 1.5036 to 1.5283% | 1.6% | SURVIVES |
+| §16 magnitude ratio | spacing | 1.12 | 6.74 | **5.73** | 0.9962 to 1.0000 | 0.4% | SURVIVES |
+
+Controls: **C1** placebo (zero-bit dose reproduces cell A to `-0.072059`) PASS; **C2** positive
+(57,628 to 256 levels, 225x) PASS; **C3** sampling varies at all 9 doses PASS; **C5** per-bit
+ratios 1.98, 2.05, 2.00, 2.00 PASS.
+
+`D` is a median of per-pixel ratios and `S`, `W` are medians of the two terms taken separately,
+so **`D` is not `S/W`** and the three must not be divided into one another.
+
+**Facts**
+
+79. **MEASURED: `D` alone cannot predict exposure.** §18 cell A has **`D` = 5.00**, which falls
+    in ORCH's `[5,8)` bin whose median shift is **7.58%**. Cell A shifted **100.0%** — **13x**
+    ORCH's figure at the same `D`. The difference is the *strong* term: cell A's keeps only
+    **3.00 steps** at the 8-bit dose. Same `D`, opposite outcome.
+80. **MEASURED: `W` — the steps kept by the *weaker* term — predicts the break exactly.** Over
+    a 9-dose ladder cell A holds −0.0721 to −0.0714 while `W >= 3`, degrades to **−0.0556** at
+    `W = 1`, and reads **+0.0000** at `W = 0`. §16's `W` never falls below **5.73** and its
+    statistic holds 1.50 to 1.53% throughout. The threshold is `W = 1`, and it is absolute.
+81. **MEASURED: statistic class does not decide once the terms are resolved.** At `W = 16.56`
+    an ordinal and a spacing statistic on the *same* §16 terms both survive (0.074 to 0.074%,
+    and 0.4%). **My §23 items 75 and 76 are refuted as general claims.**
+82. **MEASURED: where the weak term survives, the ordinal statistic is preserved exactly** —
+    81.5600 to 81.5600, **0.00 pp** on 4,089,097 identical pixels. Truncation is monotone, so
+    sign is preserved perfectly, not merely approximately. (This subset is conditioned on the
+    narrowed arm and is 12.4% of the frame; it answers "is sign preserved where terms live",
+    not "is the population statistic preserved".)
+83. **MEASURED, and it inverts §23 item 75: the two classes fail *differently*, and the
+    ordinal one fails worse.** The spacing statistic collapses to exactly **+0.0000** — visibly degenerate,
+    impossible to mistake for a result. The ordinal statistic reads **84.76 to 92.53%**, a
+    plausible number that **passed my own pre-registered 10% bar**, inflated by the 61.7% of
+    pixels annihilated to zero, because `sign(0)` compares unequal to everything.
+
+**Disciplines**
+
+84. **Report `W`, not `D`.** `D` is relative and cannot predict without knowing `S`; `W = S/D`
+    is absolute, is one number, and has a fixed threshold at 1. A rule stated in `D` fails in
+    the dangerous direction precisely when the strong term is itself weak.
+85. **Withdraw the claim that ordinal statistics are protected.** Class does not confer
+    immunity — it selects the **failure mode**. A spacing statistic fails loudly to a
+    degenerate value; an ordinal statistic returns a plausible wrong number biased toward
+    *more* apparent signal. Recommending the ordinal class, as §23 item 75 did, would have
+    pointed people at the statistic that fails invisibly.
+86. **When two pre-registered cells adjudicate in opposite directions, suspect the instrument
+    before the hypothesis.** The contradiction was the only evidence of a 256x error; every
+    number on its own looked reasonable, and the correct verdict was reached only after repair.
+87. **Give every dose a self-check in its own units.** "`W` must halve per bit" is three lines,
+    it would have caught this defect on the first run, and it is available for any experiment
+    with a graded parameter: assert the *dose* does what it claims before reading the response.

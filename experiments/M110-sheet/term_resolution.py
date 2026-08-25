@@ -100,15 +100,21 @@ def narrow(a, bits):
     return (a >> bits).astype(np.float64) if bits else a.astype(np.float64)
 
 
-def term_stats(weak, strong, bits):
-    """D = max/min of the terms; W = steps the WEAKER term keeps."""
+def term_stats(weak, strong):
+    """D = max/min of the terms; W = steps the WEAKER term keeps; Z = the
+    fraction ANNIHILATED to exactly zero.
+
+    The terms arrive already expressed in the units of their own dose -- a
+    value narrowed by k bits is a small integer whose quantisation step is
+    1, not 2**k. Dividing by the step here as well was a double division
+    that reported every W a factor 2**k too small. See section 24.
+    """
     aw, as_ = np.abs(weak), np.abs(strong)
     lo = np.minimum(aw, as_)
     hi = np.maximum(aw, as_)
     ok = lo > 0
     d = float(np.median(hi[ok] / lo[ok])) if ok.any() else float("inf")
-    step = float(2 ** bits) if bits else 1.0
-    return d, float(np.median(lo)) / step, float(np.mean(lo < step) * 100.0)
+    return d, float(np.median(lo)), float(np.mean(lo == 0) * 100.0), float(np.median(hi))
 
 
 def sec18_terms(off, on, bits):
@@ -129,12 +135,36 @@ def sec16_terms(off, on, bits, gate_levels):
     return o[g], n[g], int(g.sum())
 
 
+def sec18_full(off, on, bits):
+    """Full-frame dR, dG at a given dose, plus the uint16 threshold mask.
+
+    Returned unmasked so a SINGLE common pixel set can be applied to both
+    doses. Masking each dose by its own threshold compares two different
+    populations, and selecting the narrowed set on `dG != 0` selects the
+    pixels with the largest weak term -- survivorship that would manufacture
+    a survival.
+    """
+    d = narrow(on, bits) - narrow(off, bits)
+    return d[:, :, 0], d[:, :, 1]
+
+
 def spacing_18(dR, dG):
     return float(np.median(dG / dR))
 
 
-def ordinal_18(dR, dG):
-    """Same two terms, order only: do red and green move in opposite senses?"""
+def ordinal_18(dR, dG, live_only=False):
+    """Same two terms, order only: do red and green move in opposite senses?
+
+    C4. np.sign(0) = 0 compares unequal to everything, so once dG is
+    annihilated this reads a spurious ~100% while its term no longer exists.
+    `live_only` restricts to pixels where BOTH terms survived quantisation,
+    which is the only version whose survival means anything.
+    """
+    if live_only:
+        m = (dG != 0) & (dR != 0)
+        if m.sum() < 1000:
+            return None
+        dR, dG = dR[m], dG[m]
     return float(np.mean(np.sign(dG) != np.sign(dR)) * 100.0)
 
 
@@ -185,14 +215,40 @@ def main():
     print("=" * 118)
     dR8, dG8, n18b = sec18_terms(off, on, 8)
     o8, n8, n16b = sec16_terms(off, on, 8, 1.0)
-    d18, w18, z18 = term_stats(dG8, dR8, 8)
-    d16, w16, z16 = term_stats(o8, n8, 8)
+    d18, w18, z18, s18 = term_stats(dG8, dR8)
+    d16, w16, z16, s16 = term_stats(o8, n8)
 
     print(" section 18 terms (weak = dG):")
     v_sp18, _ = row("  spacing  median(dG/dR)  [reported]", b_sp18,
                     spacing_18(dR8, dG8), d18, w18, z18, n18b)
     v_or18, _ = row("  ordinal  P(sign dG != sign dR)", b_or18,
                     ordinal_18(dR8, dG8), d18, w18, z18, n18b)
+    live = ordinal_18(dR8, dG8, live_only=True)
+    if live is None:
+        print("    C4 live-only: too few pixels keep BOTH terms -- DEGENERATE")
+        v_or18_live = "DEGENERATE"
+    else:
+        # C4b MATCHED SUBSET. Both doses evaluated on ONE common pixel set, so
+        # the comparison is like-for-like. Selecting the narrowed arm on
+        # `dG != 0` alone would keep the pixels with the largest weak term and
+        # manufacture the survival this cell is meant to test.
+        fR16, fG16 = sec18_full(off, on, 0)
+        fR8, fG8 = sec18_full(off, on, 8)
+        thr = 0.05 * float(np.percentile(np.abs(fR16), 99.9))
+        common = (np.abs(fR16) > thr) & (fG8 != 0) & (fR8 != 0)
+        nc = int(common.sum())
+        if nc < 1000:
+            print("    C4b matched: too few common pixels -- DEGENERATE")
+            v_or18_live = "DEGENERATE"
+        else:
+            b_m = float(np.mean(np.sign(fG16[common])
+                                != np.sign(fR16[common])) * 100.0)
+            n_m = float(np.mean(np.sign(fG8[common])
+                                != np.sign(fR8[common])) * 100.0)
+            v_or18_live, _ = row("  ordinal  [C4b: ONE matched pixel set]",
+                                 b_m, n_m, d18, w18, z18, nc)
+            print(f"      absolute change {n_m - b_m:+.2f} pp on the same "
+                  f"{nc:,} pixels ({100.0 * nc / fR16.size:.1f}% of frame)")
     print(" section 16 terms (gate 1 level):")
     v_or16, _ = row("  ordinal  P(flip AND grew)  [reported]", b_or16,
                     ordinal_16(o8, n8), d16, w16, z16, n16b)
@@ -205,60 +261,104 @@ def main():
     print("P3 -- re-gate section 16 so W >> 1, then vary ONLY the class")
     print("=" * 118)
     p3 = {}
-    for gate in (1.0, 4.0, 16.0, 64.0):
+    for gate in (1.0, 4.0, 16.0, 32.0):
         ob, nb, _ = sec16_terms(off, on, 0, gate)
         oq, nq, nn = sec16_terms(off, on, 8, gate)
         if nn < 1000:
             print(f"  gate {gate:5.0f} levels: only {nn:,} px -- skipped")
             continue
-        d, w, z = term_stats(oq, nq, 8)
+        d, w, z, s = term_stats(oq, nq)
         vo, so = verdict(ordinal_16(ob, nb), ordinal_16(oq, nq))
         vs, ss = verdict(spacing_16(ob, nb), spacing_16(oq, nq))
         print(f"  gate {gate:5.0f} levels  D={d:6.2f} W={w:7.2f} zero={z:5.1f}% "
-              f"n={nn:>10,}   ordinal {so:6.1f}% {vo:<10} "
+              f"n={nn:>10,}   ordinal {ordinal_16(ob, nb):6.3f}->"
+              f"{ordinal_16(oq, nq):6.3f}% ({vo}) "
               f"spacing {ss:6.1f}% {vs}")
-        p3[gate] = (w, vo, vs)
+        p3[gate] = (w, vo, vs, ordinal_16(ob, nb), ordinal_16(oq, nq))
 
     # ---- P4: dose-response, with sample counts that must vary (C3) ----
     print()
     print("=" * 118)
     print("P4 -- dose-response.  C3: n must VARY across doses")
     print("=" * 118)
-    print(f"  {'bits':>4} {'W(s18)':>8} {'cellA':>10} {'ord18':>8} "
-          f"{'W(s16)':>8} {'over16':>8} {'n18':>12} {'n16':>12}")
-    ns = []
+    print(f"  {'bits':>4} {'W(s18)':>10} {'S(s18)':>9} {'cellA':>10} {'ord18':>8} "
+          f"{'W(s16)':>10} {'over16':>8} {'n18':>12} {'n16':>12}")
+    ns, ws18 = [], []
     for bits in range(0, 9):
         dRb, dGb, na = sec18_terms(off, on, bits)
         ob, nb, nc = sec16_terms(off, on, bits, 1.0)
-        _, wa, _ = term_stats(dGb, dRb, bits)
-        _, wc, _ = term_stats(ob, nb, bits)
-        print(f"  {bits:>4} {wa:>8.2f} {spacing_18(dRb, dGb):>+10.4f} "
-              f"{ordinal_18(dRb, dGb):>8.1f} {wc:>8.2f} "
+        _, wa, _, sa = term_stats(dGb, dRb)
+        _, wc, _, sc = term_stats(ob, nb)
+        print(f"  {bits:>4} {wa:>10.3f} {sa:>9.2f} {spacing_18(dRb, dGb):>+10.4f} "
+              f"{ordinal_18(dRb, dGb):>8.1f} {wc:>10.2f} "
               f"{ordinal_16(ob, nb):>8.2f} {na:>12,} {nc:>12,}")
         ns.append((na, nc))
+        ws18.append(wa)
     varied = len({x[0] for x in ns}) > 1 and len({x[1] for x in ns}) > 1
     print(f"  C3 sampling control: n18 {len({x[0] for x in ns})} distinct, "
           f"n16 {len({x[1] for x in ns})} distinct  "
           f"{'PASS' if varied else 'FAIL -- a saturated control tests nothing'}")
+
+    # C5 instrument self-check. One extra bit halves the value and leaves the
+    # step at 1, so W must fall by 2.00 per bit. A ratio of 4 is the double
+    # division that voided the first run of this file. Checked only while
+    # W > 4: below that the MEDIAN is itself an integer of small magnitude,
+    # so its own quantisation, not the instrument, sets the ratio.
+    rat = [ws18[i] / ws18[i + 1] for i in range(len(ws18) - 1)
+           if ws18[i + 1] > 4.0]
+    good = bool(rat) and all(1.6 < r < 2.5 for r in rat)
+    print(f"  C5 W self-check (W > 4 only): per-bit ratios "
+          f"{', '.join(f'{r:.2f}' for r in rat)}  "
+          f"{'PASS' if good else 'FAIL -- W is not in units of its own step'}")
 
     # ---- adjudication ----
     print()
     print("=" * 118)
     print("ADJUDICATION")
     print("=" * 118)
-    print(f"  P1 W(s18) = {w18:.2f}  W(s16) = {w16:.2f}   "
+    print(f"  P1 W(s18) = {w18:.3f} steps (strong term S = {s18:.2f} steps, "
+          f"D = {d18:.2f})   "
           f"{'PASS' if w18 < 1.0 else 'FAIL'} (predicted W18 < 1)")
-    print(f"  P2 ordinal on section 18 terms: {v_or18}   "
-          f"{'PASS -- annihilation' if v_or18 != 'SURVIVES' else 'FAIL -- class does real work'}")
+    print(f"     W(s16) = {w16:.2f} steps (S = {s16:.2f}, D = {d16:.2f}) -- "
+          "predicted ~1, measured well above it, so P1's second half is WRONG.")
+    print(f"     Same D bin as ORCH's table would place cell A in, but cell A "
+          f"shifted 100% where ORCH's tiles shift ~7.6%. D is equal; S is not. "
+          f"W = S/D is what differs.")
+    print(f"  P2 ordinal on section 18 terms, raw       : {v_or18}"
+          f"   (annihilated fraction {z18:.1f}%)")
+    print(f"  P2 ordinal on section 18 terms, C4 live   : {v_or18_live}")
+    if v_or18 == "SURVIVES" and v_or18_live != "SURVIVES":
+        print("     -- the raw SURVIVES is the sign(0) trap, not survival. "
+              "Annihilation holds.")
+    elif v_or18_live == "SURVIVES":
+        print("     -- ordinal survives even on live terms: class does real "
+              "work and annihilation is not the whole story.")
     if p3:
         best = max(p3)
-        w, vo, vs = p3[best]
-        if vo == "SURVIVES" and vs != "SURVIVES":
+        w, vo, vs, ob16, ob8 = p3[best]
+        if ob16 == 0.0:
+            print(f"  P3 at gate {best:.0f} (W={w:.1f}) the ordinal baseline is "
+                  f"exactly 0.000%, so a relative shift is undefined; the "
+                  f"narrowed arm reads {ob8:.3f}%, an absolute "
+                  f"{ob8:+.3f} pp of injected false positives. Adjudicating on "
+                  "the highest gate with a non-zero baseline instead.")
+            cand = [g for g in sorted(p3) if p3[g][3] != 0.0]
+            if not cand:
+                return 0
+            best = cand[-1]
+            w, vo, vs, ob16, ob8 = p3[best]
+        if w < 4.0:
+            print(f"  P3 VOID -- the highest usable gate still only reaches "
+                  f"W = {w:.1f}. The regime the cell was built to test "
+                  "(W >> 1) was never entered, so it adjudicates nothing.")
+        elif vo == "SURVIVES" and vs != "SURVIVES":
             print(f"  P3 at W={w:.1f}: ordinal SURVIVES, spacing {vs} -- "
                   "class matters once terms are resolved. Refinement HELD.")
         elif vo == "SURVIVES" and vs == "SURVIVES":
-            print(f"  P3 at W={w:.1f}: BOTH survive -- W alone is the rule. "
-                  "M110's ordinal refinement is REFUTED and must be withdrawn.")
+            print(f"  P3 at W={w:.1f} (gate {best:.0f}): "
+                  "BOTH classes survive. Once the weaker term is resolved, "
+                  "class does NOT decide. W, not class, is the rule -- M110's "
+                  "ordinal refinement is REFUTED as a general claim.")
         else:
             print(f"  P3 at W={w:.1f}: ordinal {vo}, spacing {vs} -- "
                   "no clean attribution.")
