@@ -325,6 +325,76 @@ owner of `merge.rs` and not for this milestone.
 
 ---
 
+## 5c. Addendum: the warp-cache poisoning check
+
+**Also post-hoc**, prompted by ORCH at 20:24 after the campaign closed. It
+changes no bar and no result. It tests whether the results are real at all.
+
+**P20 — MEASURED. The campaign never used the warp cache, by construction, and
+this is read from the source at the pinned SHA rather than from a `--help`
+text.** `merge_cmd::alignment_for` at `4beac73`:
+
+```rust
+let Some(explicit) = std::env::var_os(WARPMAP_ENV) else {
+    return align_cmd::load_or_solve(dir, paths, 0);   // the cached path
+};
+...
+let map = WarpMap::load(&path)?;                       // direct load, no cache
+```
+
+`load_or_solve` — the entry point M97n found mis-keyed — is on the `else`
+branch, reachable only when `STREHL_WARPMAP` is **unset**. Every arm in this
+campaign set it, to a sidecar solved once per subject and thereafter read-only.
+The cache was never read and never written. Separately, the M97n fix
+`69f7b4c` (2026-08-24 13:41) **is** an ancestor of `4beac73` (17:33), confirmed
+with `git merge-base --is-ancestor`, so the build carries the fix regardless.
+
+**P21 — MEASURED. An adversarial poisoning attempt does not move a single byte,
+and the probe used to test that is demonstrably live.** On bee-3-cpl:
+
+| run | cache | hash | |
+| --- | --- | --- | --- |
+| COLD | private, empty | `478387EF2F9A` | equals the recorded campaign A0 |
+| PRE-A2 | shared, soft gate on | `5D3461A99933` | equals the recorded campaign A2 |
+| POISON | **that same shared cache**, default arm | `478387EF2F9A` | unchanged |
+| PLANT | another subject's sidecar | refused, exit `1` | see below |
+
+Running a differently-configured arm against a shared cache immediately before
+the default arm changed nothing. The plant — pointing the default arm at
+`tweezers-cpl`'s sidecar — was refused rather than silently served, with
+`this warp map was fitted on stack "tweezers-cpl" (digest 392648f1c06e65b8) but
+was applied to "bee-3-cpl" (digest 2a471653355ae126)`. Silent substitution is
+the failure mode M97n describes, and on this path it is loud.
+
+**P22 — MEASURED. Both A0 and A2 reproduce their campaign hashes exactly, hours
+later, from a cold private cache in a separate process.** `478387EF2F9A` and
+`5D3461A99933` were recorded during the campaign and re-derived by
+`run_poison.ps1` afterwards. This is a stronger reproducibility claim than the
+N1 null, which only re-ran within one campaign session.
+
+**P23 — DERIVED. None of the four registered controls is a dead probe, and the
+plant for each is already in the data.** Fact 1548's failure mode is a null
+whose instrument was structurally incapable of expressing a difference. The
+instrument here is the output SHA-256, and the same instrument on the same
+wiring reads *different* for A1–A4. The tightest case is T2: it sets
+`STREHL_SOFT_GATE=0` and reads identical to A0, and its plant is A2, **the same
+environment variable with a different value**, which moves the hash to
+`5D3461A99933`. So "`0` means off" is a real null and not an unwired one.
+
+| control | reads | its plant | plant reads |
+| --- | --- | --- | --- |
+| P1-placebo | `= A0` | A1 `--photometric` | `0D2320544D4D` |
+| N1 null | `= A0` | A1 `--photometric` | `0D2320544D4D` |
+| T1 byte-inert dump | `= A0` | A1 `--photometric` | `0D2320544D4D` |
+| T2 `SOFT_GATE=0` | `= A0` | A2 `SOFT_GATE=gaussian` | `5D3461A99933` |
+
+**P24 — MEASURED. The retracted M99 `+6.88%` photometric figure was never used
+here.** `prereg.txt` and this report contain no reference to it. The photometric
+bars were set in absolute terms (`+0.010` dex) with no prior from M99, so
+fact 1551's retraction leaves every number in section 4 untouched.
+
+---
+
 ## 6. Patches
 
 **None.** No instrument passed its registered promotion bar, so there is no
@@ -454,6 +524,31 @@ for crops named `<subject>__MOTION-ARTEFACT__<n>.png`. Producing them under
 that name would have shipped "motion" as a finding on evidence that had already
 refuted it. The frames ship as `ELECTION-OUTLIER`, and the discrepancy between
 the requested and delivered filename is itself reported.
+
+**D-i. A null is only a null once something has been shown able to move it, and
+the best plant is the same knob set to a different value.** Fact 1548's dead
+probe read `0` for both the real case and its broken plant. Here, T2
+(`STREHL_SOFT_GATE=0`) reads byte-identical to the default, and its plant is A2
+— the same variable set to `gaussian` — which moves the output hash. A plant
+that shares the wiring with the null it certifies cannot be satisfied by an
+unwired path.
+
+**D-j. Immunity by construction still has to be measured, because the
+construction is a claim about code you did not write.** `STREHL_WARPMAP`
+bypasses the mis-keyed cache on the `else` branch, which is a correct reading of
+`alignment_for` and would have been a perfectly good-sounding reason to skip
+ORCH's poisoning check. Running it cost two renders and returned something the
+source reading could not: that A0 and A2 both reproduce their campaign hashes
+exactly from a cold cache in a later process (P22).
+
+**D-k. In PowerShell, never name a local after a parameter — the language will
+not tell you.** `$out = & $EXE @cmdArgs` silently overwrote the `$Out` parameter
+with the captured log, so `Test-Path $Out` tested a block of text and every arm
+reported `(none)`, which the script then read as a failed poisoning check.
+Variables are case-insensitive, so `$out` and `$Out` are one variable. The
+first version of the same script also assigned to `$args`, an automatic
+variable, and produced an argv with an empty `--out`. Both bugs presented as an
+alarming red result rather than as an error.
 
 ---
 
