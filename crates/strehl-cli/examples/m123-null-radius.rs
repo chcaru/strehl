@@ -124,6 +124,72 @@ fn main() -> Result<()> {
     println!("MODEL PREDICTION: mean chi2 = 1.000 at EVERY radius, on a pure-noise null.");
     println!("Predicted null sd = sqrt(2/N_eff) = sqrt(2*m/1024).\n");
 
+    // ---- POSITIVE CONTROL FOR RANGE NARROWING -----------------------------
+    //
+    // This milestone's headline is a NULL: mean chi2 ~ 1.0 on a flat pair. A
+    // narrowed input fails TOWARD exactly that, because chi2 divides a small
+    // quantity (the squared frame difference) by a large one (the predicted
+    // variance), and quantising the input shrinks the numerator while leaving
+    // the model's denominator untouched. A clean null is therefore the one
+    // result that a silent downconversion would manufacture rather than break,
+    // and nobody re-examines an arm that showed no effect.
+    //
+    // Nothing here touches PIL or TIFF - the path is ARW -> `strehl_raw::decode`
+    // -> `green_luma_with_clip` -> f32, with no image-file format in between
+    // that could narrow. But this milestone has already been bitten once by an
+    // input-domain defect it did not anticipate (the `green_luma` zero clamp
+    // that voided the dark-frame null), so the level count is measured rather
+    // than inferred.
+    //
+    // A 16-bit sensor crop must show thousands of distinct levels. The
+    // documented damage signature is 4098 levels collapsing to 17.
+    //
+    // CORRECTION, and the first version of this check got it wrong: a raw LEVEL
+    // COUNT is the wrong instrument, because damage scales with the file's
+    // OCCUPIED range, not the full 16-bit range. A flat field is by construction
+    // a narrow-range image - uniform illumination at ~269 DN with noise of sd
+    // ~16 DN, so it should span only about +/-4 sigma ~ 60 DN and can never show
+    // thousands of levels no matter how intact it is. Thresholding on level
+    // count alone reports a false alarm on exactly the input this milestone
+    // depends on.
+    //
+    // The self-calibrating test is the QUANTISATION STEP. Green luma is
+    // `0.5*(G1+G2)` over integer photosites, so an intact plane lives on a
+    // half-integer lattice and its minimum gap between distinct values is
+    // exactly 0.5 DN. Any downconversion coarsens that step, and the factor by
+    // which it coarsens IS the damage factor - measured, not inferred, and
+    // independent of how wide the scene happens to be.
+    {
+        let p = Path::new(r"D:\personal\macro\flat-fields\flat-fields");
+        if p.exists() {
+            let paths = arws(p)?;
+            let (a, _, _) = load(&paths[0])?;
+            let mut vals: Vec<f32> = a.clone();
+            vals.sort_by(|x, y| x.partial_cmp(y).unwrap());
+            vals.dedup();
+            let step = vals
+                .windows(2)
+                .map(|w| f64::from(w[1] - w[0]))
+                .fold(f64::MAX, f64::min);
+            let (lo, hi) = (vals[0], vals[vals.len() - 1]);
+            let span = f64::from(hi - lo);
+            let occupancy = vals.len() as f64 / (span / step + 1.0) * 100.0;
+            println!("-- input integrity (positive control for range narrowing)");
+            println!("   distinct levels                 : {}", vals.len());
+            println!("   occupied range                  : {lo:.1} .. {hi:.1} DN (span {span:.1})");
+            println!("   minimum quantisation step       : {step:.4} DN  (intact = 0.5)");
+            println!("   lattice occupancy               : {occupancy:.1}% of levels in range");
+            println!(
+                "   VERDICT: {}\n",
+                if step <= 0.5001 {
+                    "16-BIT INTACT - data sits on the native half-integer lattice"
+                } else {
+                    "*** NARROWED - step is coarser than native; every chi2 below is suspect ***"
+                }
+            );
+        }
+    }
+
     for (label, dir) in [
         ("flat-null [PURE NOISE]", r"D:\personal\macro\flat-fields\flat-fields"),
         ("109MSDCF [TRAP]", r"D:\personal\macro\109MSDCF"),
