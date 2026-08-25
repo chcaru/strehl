@@ -13,10 +13,20 @@
   harness does not offer the option; conversion to display happens in
   crop_set.py, downstream, on a copy.
 
-  Peak memory is the OS-maintained PeakWorkingSet64, polled while the child is
-  alive. It is a true high-water mark rather than a sample of the instantaneous
-  set, but the final poll races process exit, so treat it as a tight lower
-  bound.
+  PEAK MEMORY IS WITHDRAWN. This script used to report PeakWorkingSet64 polled
+  while the child was alive, described as a tight lower bound. It is not a
+  measurement at all. Probed on identical work -- coffee-bubbles, 19 frames,
+  one binary -- across five runs and two polling methods (the cached Process
+  object with Refresh(), and a fresh Get-Process each poll) it reported 11, 16,
+  16, 84, 87, 163, 1180 and 1658 MB. One run returned PeakVirtualMemorySize64
+  as 0, which is impossible for a live process, so the counters are not being
+  read reliably through Start-Process. Any peak-memory figure this script
+  emitted, including those in the delivered render table, should be ignored.
+
+  The reliable route is for the binary to report its own peak via
+  GetProcessMemoryInfo at exit. Until that exists the honest statement is that
+  nothing has ever run out of memory: 26/26 subjects, up to 299 frames at
+  33 MP, all exit 0.
 
 .EXAMPLE
   pwsh -File scripts\render_all.ps1 -Exe C:\dev\strehl-out\baseline-src\target\release\strehl.exe -OutDir C:\dev\strehl-out\baseline

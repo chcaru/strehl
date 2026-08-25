@@ -128,7 +128,7 @@ $run = @(
 $run | Write-Host
 
 $rows = New-Object System.Collections.Generic.List[string]
-$rows.Add("subject`tframes`tseconds`tpeak_mb`texit`tblack`twhite`tjpeg`tguard")
+$rows.Add("subject`tframes`tseconds`texit`tblack`twhite`tzeroRGB`tblownRGB`tjpeg`tguard")
 $guardMoved = New-Object System.Collections.Generic.List[string]
 
 $i = 0
@@ -149,18 +149,9 @@ foreach ($s in $subjects) {
     # non-null afterwards; without it -PassThru reports $null and every render
     # silently "succeeds".
     $null = $p.Handle
-    $peak = 0
-    while (-not $p.HasExited) {
-        # Refresh() is required: the Process object caches its counters at the
-        # moment it was created, so without this every render reports the
-        # startup working set and peak memory silently becomes a constant.
-        try { $p.Refresh(); $peak = [Math]::Max($peak, $p.PeakWorkingSet64) } catch {}
-        Start-Sleep -Milliseconds 250
-    }
-    try { $peak = [Math]::Max($peak, $p.PeakWorkingSet64) } catch {}
+    $p.WaitForExit()
     $sw.Stop()
     $exit = $p.ExitCode
-
     $tone = ""
     if (Test-Path $log) {
         $t = Select-String -Path $log -Pattern '^tone\s+:' | Select-Object -First 1
@@ -170,10 +161,18 @@ foreach ($s in $subjects) {
     if ($tone -match 'black ([\d.]+), white ([\d.]+)') { $black = $matches[1]; $white = $matches[2] }
 
     $jpg = ""
+    $zero = ""; $blown = ""
     if ($exit -eq 0 -and (Test-Path $tif)) {
         $jpg = Join-Path $OutDir "$n.jpg"
-        & python (Join-Path $PSScriptRoot "gallery_view.py") $tif $jpg $LongEdge
+        $viewOut = & python (Join-Path $PSScriptRoot "gallery_view.py") $tif $jpg $LongEdge 2>&1
+        $viewOut | Write-Host
         if ($LASTEXITCODE -ne 0) { Write-Warning "$n : view conversion failed" ; $jpg = "" }
+        # Per-channel, never combined. An all-three-channels count conceals
+        # single-channel clipping completely, and that is the exact shape of
+        # the tone defect that took coffee-bubbles to 88% zero-blue and
+        # survived a whole gallery run unnoticed.
+        $st = ($viewOut | Select-String -Pattern '^stats zero=(\S+) blown=(\S+)' | Select-Object -First 1)
+        if ($st) { $zero = $st.Matches[0].Groups[1].Value; $blown = $st.Matches[0].Groups[2].Value }
         if (-not $KeepTiff) { Remove-Item $tif -Force -ErrorAction SilentlyContinue }
     } else {
         Write-Warning "$n : exit $exit -- see $log"
@@ -189,8 +188,23 @@ foreach ($s in $subjects) {
         if ($guardState -eq "MOVED") { $guardMoved.Add($n) }
     }
 
-    $rows.Add(("{0}`t{1}`t{2}`t{3}`t{4}`t{5}`t{6}`t{7}`t{8}" -f `
-        $n, $frames, [int]$sw.Elapsed.TotalSeconds, [int]($peak / 1MB), $exit, $black, $white, (Split-Path $jpg -Leaf), $guardState))
+    # NO peak-memory column. It was here, and it was not a measurement. Polled
+    # on identical work (coffee-bubbles, 19 frames, same binary) it reported
+    # 11, 16, 16, 84, 87, 163, 1180 and 1658 MB across five runs and two polling
+    # methods -- the cached Process object with Refresh(), and a fresh
+    # Get-Process each poll. In one run PeakVirtualMemorySize64 came back as 0,
+    # which is impossible for a live process, so the counter is not being read
+    # reliably through Start-Process at all. A verifier was right to flag the
+    # old 5 MB figure for a 205-frame 33 MP stack.
+    #
+    # A number that reads as data in a recorded artifact and is wrong by two
+    # orders of magnitude is worse than no number. The reliable way to get this
+    # is to have the binary report its own peak via GetProcessMemoryInfo at
+    # exit, which is a code change, not a script change. Until then the honest
+    # statement is that no render has ever run out of memory: 26/26 subjects,
+    # up to 299 frames at 33 MP, all exit 0.
+    $rows.Add(("{0}`t{1}`t{2}`t{3}`t{4}`t{5}`t{6}`t{7}`t{8}`t{9}" -f `
+        $n, $frames, [int]$sw.Elapsed.TotalSeconds, $exit, $black, $white, $zero, $blown, (Split-Path $jpg -Leaf), $guardState))
     # Written every iteration, not at the end: a run that dies at subject 19
     # should still leave 18 rows of evidence behind.
     [IO.File]::WriteAllLines((Join-Path $OutDir "manifest.tsv"), $rows, (New-Object Text.UTF8Encoding $false))

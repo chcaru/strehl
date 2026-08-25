@@ -12,6 +12,16 @@ downconverts a 16-bit RGB TIFF to 8 bits on open, and that has corrupted results
 in this project before. The assert below is the guard, and it is deliberately
 not wrapped in a try/except fallback: a lossier reader that "works" is strictly
 worse than a loud failure.
+
+It also emits a PER-CHANNEL clipping census, on the full 16-bit array rather
+than the JPEG, because that is a fact about the render. This is here because of
+a defect it would have caught on sight: the first tone rendering subtracted a
+luminance-derived black point from all three channels, which took
+`coffee-bubbles` to 88% zero-blue and collapsed it to a one-channel image. It
+survived a full gallery run and 1786 recorded facts, and it was found by a
+verifier reading the code. An all-three-channels "blown" or "crushed" count
+conceals single-channel clipping completely, which is exactly the shape this
+defect had, so every count below is per channel and none of them are combined.
 """
 
 from __future__ import annotations
@@ -43,6 +53,15 @@ def main() -> int:
     # while keeping a 26-image gallery small enough to open at once.
     im.save(dst, quality=95, subsampling=0, optimize=True)
     print(f"{dst.name}  {im.size[0]}x{im.size[1]}")
+
+    # Measured on the 16-bit render, not on the JPEG, and per channel. Parsed
+    # into manifest.tsv by gallery.ps1; kept on one line so it stays parseable.
+    n = a.shape[0] * a.shape[1]
+    zero = [100.0 * float((a[..., c] == 0).sum()) / n for c in range(3)]
+    blown = [100.0 * float((a[..., c] >= 65535).sum()) / n for c in range(3)]
+    print(
+        "stats zero={:.4f}/{:.4f}/{:.4f} blown={:.4f}/{:.4f}/{:.4f}".format(*zero, *blown)
+    )
     return 0
 
 

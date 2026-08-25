@@ -294,6 +294,10 @@ tagging (`np.array_equal` on the `uint16` arrays, read with `tifffile`). Run in
 an isolated copy of the tree at HEAD for BUILD-HALO's in-flight files, because
 the live tree does not currently compile — see §6.
 
+> The byte-freeze claim here was checked by a run at the time. The identical
+> claim later made in §8 was **not**, and is corrected there. The freezes were
+> subsequently broken by `debc8ea` in another lane.
+
 There is also no CLI route to "matrix applied, no transfer curve" — the
 `Develop` struct supports it and `caveat()` even has a string for it, but the
 `stack` flags only offer camera-native-linear or matrix-plus-curve. That mode is
@@ -477,8 +481,19 @@ tone            : black 0.00470, white 0.71107 (linear), contrast 0.55
 The safety argument is the *placement*, not the arithmetic. Tone rides with
 `OutputSpace::applies_curve()`, so it is on for `--srgb` and off for
 `--linear-srgb`, camera-linear and `Develop::measurement`. **Every number in the
-corpus is still measured on exactly the pixels it was measured on before, and
-both byte-freeze rows still hold.**
+corpus is still measured on exactly the pixels it was measured on before.**
+
+> **CORRECTION.** The sentence that stood here also claimed "both byte-freeze
+> rows still hold". That was **false when it was published**, in this document
+> and in commit `5d7a7ba`'s message. I asserted it from the placement argument
+> rather than from a run. V-TONE bisected the actual failure to `debc8ea`, a
+> commit in BUILD-HALO's lane, and ORCH has routed the rebaseline there — so the
+> break is not mine, but the unchecked claim was. What *is* confirmed, by hash
+> rather than by reading, is the narrower and more useful statement: the
+> camera-linear and `--linear-srgb` outputs are byte-identical between the tone
+> and no-tone binaries, which is the property the placement argument actually
+> supports. The lesson is the ordinary one and I had already been told it: a
+> claim about bytes is only worth what the command that checked it is worth.
 
 ### Result
 
@@ -880,11 +895,191 @@ because two dated runs existed to subtract.
 
 ---
 
+## 13. The tone defect — a scalar black point is not a black point
+
+V-TONE audited §8's tone rendering, confirmed it as a large net win, and found a
+HIGH-severity defect in it that destroys one subject outright. It is the more
+instructive half of the tone story, so it gets its own section.
+
+### What was wrong
+
+`Tone::from_luminance` derives **one scalar** black point from `luma709`, and
+`develop_pixel` then subtracted it from **every channel**:
+
+```rust
+(v[c] - t.black) / (t.white - t.black)      // the defect
+```
+
+That does not preserve chromaticity. Subtracting a constant from R, G and B
+changes their ratios — `(R−b)/(G−b) ≠ R/G` — and the error explodes as a channel
+approaches `b`. On a saturated subject the weak channels sit *below* the
+luminance-derived black over most of the frame and hard-clamp to zero.
+
+`coffee-bubbles` is dark red liquid with `black = 0.01563` sitting above its
+green and blue nearly everywhere. At 88% zero-blue the render had stopped being
+a colour image: under a fixed ×6 boost the untoned arm is a neutral, finely
+detailed surface and the toned arm is a flat saturated single-channel red field
+with the swirl texture and the scratches gone. On `foam` the crushed pixels were
+not noise either — in the untoned arm their median was 3360 DN with a median 3×3
+local range of 847 DN against a global median local range of 1774 DN, about half
+the frame's typical structure. That was signal, and the tone deleted it.
+
+### Why no test caught it, which is the part worth keeping
+
+Every tone test in the crate used neutral or scalar-ramp inputs.
+`the_tone_curve_does_not_tint_a_neutral` exercises only
+`develop_pixel([v, v, v], …)`. My own doc-comment shows I considered the
+luminance-scalar versus per-channel choice and picked the scalar *specifically*
+so that it could not tint a neutral. That reasoning is sound as far as it goes.
+The consequence I did not follow through is that a luminance-derived scalar black
+cannot tint a neutral **by construction** — so the test could never fail, for any
+implementation, correct or not. The suite proved the one property the design was
+incapable of violating, and the guard I built is the reason the defect was
+invisible.
+
+This is the same shape as §8's blind spot and it is worth stating as one rule:
+**a test whose property is entailed by the design cannot detect a defect in the
+design.** §8 was invisible because every measurement was on linear crops; this
+was invisible because every test was on neutral inputs. Both were manufactured
+by a discipline that was otherwise correct.
+
+### The fix
+
+Place black and white on **luminance**, then scale the colour vector by the
+ratio. `Tone::gain` computes `L_out / L_in`; `develop_pixel` multiplies all three
+channels by that one number. Chromaticity is exactly preserved, hue and
+saturation cannot shift, and no channel can be driven to zero unless luminance
+itself is zero. The existing neutral test still passes and still means what it
+meant. The per-channel display-space `s_curve` is kept — it is what restores
+saturation, and it cannot zero a channel, since `s_curve(0) = 0` and it is
+monotonic on `[0, 1]`.
+
+Moving to per-channel black points from per-channel percentiles was considered
+and rejected: it reintroduces exactly the neutral tinting the scalar was
+protecting against, and on a saturated subject a per-channel percentile measures
+the *scene* rather than the flare — the same defect in different clothes.
+
+Two things on top:
+
+- **`TONE_BLACK_FRACTION = 0.85`** — remove most of the floor, not all. The floor
+  is flare, not black-level error: G 0.0035 > R 0.0017 despite red white-balance
+  gains of 2.13–2.86×, which is the wrong direction for a DN offset. Flare is
+  not uniform across the frame, so a single global subtraction is the wrong
+  model for it regardless, and is always too large somewhere.
+- **`TONE_TOE = 0.004`** — a soft toe instead of a hard clamp at zero, because a
+  hard clamp is unrecoverable. The first toe I wrote made the knee proportional
+  to the black point, which is fine on real captures but lifted the synthetic
+  test's floor to 17% grey — worse than the original veil. The test caught it.
+  The shipped form is a smooth maximum with a *fixed* narrow knee and a `.min(s)`
+  cap; the cap says the tone may never brighten a pixel more than exposure alone.
+
+A quieter bug the tests caught: the black fraction leaked into the white point.
+Computing `white` from the *measured* floor while subtracting only a *fraction*
+of it put the white percentile at 0.911 instead of 0.90 — a silent exposure
+shift. `Tone.black` is now the effective post-fraction value.
+
+### Result
+
+Matched pairs, `--srgb`, both arms built from base `a59ad57` differing only in
+`image_out.rs`, all ten renders back-to-back from those two binaries:
+
+| subject | zeroG% | zeroB% | median luminance |
+|---|---|---|---|
+| `coffee-bubbles` | 1.5296 → **0.0004** | 88.0512 → **0.0229** | 0.0184 → 0.0348 |
+| `foam` | 0.1519 → **0.0030** | 0.4499 → **0.0213** | 0.1001 → 0.1031 |
+| `flower-inner-edge-cpl` | 0.0992 → **0.0000** | 40.3647 → **11.8354** | 0.3941 → 0.3958 |
+| `couch-fibers-cpl` | 0.1339 → **0.0000** | 0.1116 → **0.0000** | 0.6922 → 0.6970 |
+| `lavendar-cpl` | 0.1239 → **0.0000** | 0.4927 → **0.0000** | 0.7371 → 0.7404 |
+
+Judged on the pictures, which is what decides it. Panels at
+`C:\dev\strehl-out\vtone-ab\panels\`, three rows each: full frame, 100% crop, and
+the same crop at ×6. The crop is chosen automatically as the tile carrying the
+most zeroed pixels in the *before* arm, so the comparison is forced onto the
+ground where the defect actually lived rather than onto flattering ground.
+
+- **`coffee-bubbles`** recovers. The before's ×6 crop looks contrasty, but that
+  contrast is manufactured by clipping — values slamming into zero create edges
+  that are not in the scene. The after has genuine three-channel structure and
+  the surface mottle is back.
+- **`flower-inner-edge-cpl`** keeps §8's confirmed win intact: full frames are
+  indistinguishable at viewing scale and the median luminance moves 0.4%. The
+  anthers read slightly less electric-yellow, which is blue being restored.
+- **`couch-fibers-cpl`**, the do-no-harm control, holds — and at ×6 the colour
+  fringing on the dark fibres is slightly *reduced*.
+- **`foam`** holds, with more structure surviving in the deep cell interiors.
+
+### The residual blue, and a metric that cannot see what it is being asked
+
+`flower-inner-edge-cpl` returns to 11.8354% zero-blue, the genuine pre-tone
+value, which confirms V-TONE's reading that the 40.5% was this defect and not a
+gamut problem. The residual is **not** destroyed colour, and this is a trap worth
+recording: `gamut_map` moves an out-of-gamut pixel by the *smallest* blend toward
+neutral that brings it in range, which lands the offending channel **exactly on
+zero**. A correctly boundary-mapped pixel and a hard-clamped one both read
+`B == 0`. **`zeroB%` counts them identically and cannot distinguish them**, so it
+must not be read as damage on its own — which is also why "0.26% of pixels moved"
+and "11.8% of pixels are out of gamut" are both true at once: most excursions are
+shallow enough that the blend moves R and G by less than one 16-bit step.
+
+What the number *can* still say is where those pixels live, and that is worth
+knowing: their median luminance is 0.3293 and 10.83% of the whole frame is
+zero-blue above 20% luminance, with median R 0.3734 and G 0.3493. These are lit
+midtone anthers, not shadows. They are outside sRGB and they are being held on
+its boundary, correctly. The real remedy is a **wider output gamut** — Display P3
+or ProPhoto — not a different mapping, since print gamuts exceed sRGB in exactly
+this yellow-green region. That is a colour-management feature, not a bug fix, and
+it is flagged in §7 rather than done here.
+
+### Withdrawn: peak memory
+
+V-TONE flagged `peak_mb` as not a measurement — 5 MB for a 205-frame 33 MP stack.
+It is worse than that. Probed on identical work (`coffee-bubbles`, 19 frames, one
+binary) across five runs and two polling methods — the cached `Process` object
+with `Refresh()`, and a fresh `Get-Process` each poll — it reported **11, 16, 16,
+84, 87, 163, 1180 and 1658 MB**. One run returned `PeakVirtualMemorySize64` as 0,
+which is impossible for a live process, so the counters are not being read
+reliably through `Start-Process` at all.
+
+The column is **removed** from `gallery.ps1` and the figures in the delivered
+render table are **withdrawn**, including the ones in §1. The reliable route is
+for the binary to report its own peak via `GetProcessMemoryInfo` at exit, which
+is a code change rather than a script change. Until then the honest statement is
+the one that was always the point: nothing has ever run out of memory — 26/26
+subjects, up to 299 frames at 33 MP, all exit 0.
+
+### Per-channel clipping is now in the heartbeat
+
+`manifest.tsv` gains `zeroRGB` and `blownRGB`, measured on the 16-bit render
+rather than the JPEG, **per channel and never combined**. V-TONE's point stands
+and generalises: an all-three-channels "blown" or "crushed" count conceals
+single-channel clipping completely, and single-channel clipping is precisely the
+shape this defect had. Had the gallery been reporting these columns, one glance
+at `coffee-bubbles` at 88% zero-blue would have caught it the day it landed
+instead of a verifier finding it by reading the code. The two implementations —
+`gallery_view.py` and the independent `experiments/BUILD-RENDER-tone/vtone_ab.py`
+— agree to four decimals on the same file.
+
+Also from V-TONE and accepted: the `crushed 0.118%` figure in §8 does not
+reproduce under the natural reading (V-TONE measures 0.0518%, and ≈0.105% only
+under an undocumented 8-bit threshold). Treat it as unreliable; the per-channel
+columns above supersede it.
+
+---
+
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
   site map is stored (§5); repair is deliberately deferred, with the measured
   reason given there. Detection is *not* a gap — it was measured and answered.
+- **A wider output gamut.** §13 measures 10.83% of `flower-inner-edge-cpl` held
+  on the sRGB blue boundary at above 20% luminance. That is correct behaviour
+  for sRGB and it is still a real limit: those are lit midtone anthers whose
+  colour the output space cannot represent, and print gamuts exceed sRGB in
+  exactly that yellow-green region. Display P3 or ProPhoto as a selectable
+  output space, properly tagged, is the remedy. Not a bug fix.
+- **Peak memory reported by the binary itself**, via `GetProcessMemoryInfo` at
+  exit. The polled figure was withdrawn in §13 as unreliable by two orders of
+  magnitude, so there is currently no memory number at all.
 - The measurement-path colour tag and the highlight-ceiling loss in §4.
 - The FOV upsample in §1.3.
 - The silent-success-on-refused-alignment in §1.1.
