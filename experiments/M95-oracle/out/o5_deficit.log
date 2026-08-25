@@ -1,0 +1,85 @@
+noise model: Noise(gain=0.233696, floor=0.000, black=512.0)  R^2=0.99931
+
+==========================================================================
+ROI-LOWDRIFT
+  elector == oracle        : 78.4632 %
+  within +/-1 frame        : 91.4790 %
+  |offset| mean 2.236  median 0.0  p90 1.0
+  D (elector vs oracle)    : +1.3343 %
+  P1r  power control on the REAL capture (forced offsets):
+      +/- 1 frames -> D = +11.7008 % / +11.0985 %
+      +/- 2 frames -> D = +35.6129 % / +35.0074 %
+      +/- 5 frames -> D = +78.5290 % / +81.3453 %
+      +/-10 frames -> D = +91.3887 % / +93.3368 %
+      +/-25 frames -> D = +97.9985 % / +98.4903 %
+      monotone: True   one-frame sensitivity: +11.7008 %
+  band 0.10-0.20 cyc/px ( 14.7 cy/mm): elector/oracle power 0.9922  amplitude -0.39 %
+  band 0.20-0.30 cyc/px ( 24.5 cy/mm): elector/oracle power 0.9974  amplitude -0.13 %
+  band 0.30-0.40 cyc/px ( 34.3 cy/mm): elector/oracle power 0.9860  amplitude -0.70 %
+  band 0.40-0.50 cyc/px ( 44.0 cy/mm): elector/oracle power 0.9911  amplitude -0.45 %
+
+==========================================================================
+ROI-MIDDRIFT
+  elector == oracle        : 66.4320 %
+  within +/-1 frame        : 82.2480 %
+  |offset| mean 6.400  median 0.0  p90 14.0
+  D (elector vs oracle)    : +2.8310 %
+  P1r  power control on the REAL capture (forced offsets):
+      +/- 1 frames -> D = +12.3642 % / +13.7638 %
+      +/- 2 frames -> D = +38.0617 % / +39.7005 %
+      +/- 5 frames -> D = +79.6764 % / +82.8064 %
+      +/-10 frames -> D = +91.6708 % / +94.3421 %
+      +/-25 frames -> D = +94.5174 % / +96.5568 %
+      monotone: True   one-frame sensitivity: +12.3642 %
+  band 0.10-0.20 cyc/px ( 14.7 cy/mm): elector/oracle power 1.0250  amplitude +1.24 %
+  band 0.20-0.30 cyc/px ( 24.5 cy/mm): elector/oracle power 0.9905  amplitude -0.48 %
+  band 0.30-0.40 cyc/px ( 34.3 cy/mm): elector/oracle power 0.9517  amplitude -2.45 %
+  band 0.40-0.50 cyc/px ( 44.0 cy/mm): elector/oracle power 1.0184  amplitude +0.92 %
+
+==========================================================================
+ROI-HIGHDRIFT
+  elector == oracle        : 66.1340 %
+  within +/-1 frame        : 83.7575 %
+  |offset| mean 4.453  median 0.0  p90 10.0
+  D (elector vs oracle)    : +2.7989 %
+  P1r  power control on the REAL capture (forced offsets):
+      +/- 1 frames -> D = +11.4792 % / +12.7282 %
+      +/- 2 frames -> D = +35.8436 % / +37.3529 %
+      +/- 5 frames -> D = +76.0193 % / +80.3563 %
+      +/-10 frames -> D = +88.2447 % / +91.0703 %
+      +/-25 frames -> D = +94.6338 % / +96.7840 %
+      monotone: True   one-frame sensitivity: +11.4792 %
+  band 0.10-0.20 cyc/px ( 14.7 cy/mm): elector/oracle power 1.0403  amplitude +2.00 %
+  band 0.20-0.30 cyc/px ( 24.5 cy/mm): elector/oracle power 0.9622  amplitude -1.91 %
+  band 0.30-0.40 cyc/px ( 34.3 cy/mm): elector/oracle power 0.9552  amplitude -2.27 %
+  band 0.40-0.50 cyc/px ( 44.0 cy/mm): elector/oracle power 0.9781  amplitude -1.10 %
+
+==========================================================================
+ROI-FLAT
+  elector == oracle        : 66.9705 %
+  within +/-1 frame        : 88.6142 %
+  |offset| mean 1.897  median 0.0  p90 2.0
+  D (elector vs oracle)    : +1.6251 %
+  P1r  power control on the REAL capture (forced offsets):
+      +/- 1 frames -> D = +13.0253 % / +12.0033 %
+      +/- 2 frames -> D = +37.1081 % / +35.9582 %
+      +/- 5 frames -> D = +76.6593 % / +79.2750 %
+      +/-10 frames -> D = +91.1387 % / +92.1426 %
+      +/-25 frames -> D = +98.5441 % / +98.1993 %
+      monotone: True   one-frame sensitivity: +13.0253 %
+  band 0.10-0.20 cyc/px ( 14.7 cy/mm): elector/oracle power 1.0057  amplitude +0.29 %
+  band 0.20-0.30 cyc/px ( 24.5 cy/mm): elector/oracle power 0.9876  amplitude -0.62 %
+  band 0.30-0.40 cyc/px ( 34.3 cy/mm): elector/oracle power 0.9759  amplitude -1.21 %
+  band 0.40-0.50 cyc/px ( 44.0 cy/mm): elector/oracle power 0.9577  amplitude -2.14 %
+
+==========================================================================
+SENSITIVITY: does the conclusion rest on the fitted noise model?
+  gain x0.80 -> D = +1.3337 %
+  gain x1.00 -> D = +1.3343 %
+  gain x1.25 -> D = +1.3351 %
+
+==========================================================================
+detail ROIs D = ['+1.3343 %', '+2.8310 %', '+2.7989 %']
+flat control D = +1.6251 %
+B4 VERDICT: INCONCLUSIVE-BUT-BOUNDED
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-oracle\out\o5_deficit.json

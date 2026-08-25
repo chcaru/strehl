@@ -1,0 +1,23 @@
+C:\dev\blog\death-of-software\projects\strehl\experiments\M95-oracle\src\o1_cube.py:22: SyntaxWarning: invalid escape sequence '\p'
+  Reads D:\personal\macro\bee-3-cpl read-only. Writes only under C:\dev\strehl-out.
+frames: 299
+cube  : C:\dev\strehl-out\M95-oracle
+ROIs  : ['ROI-LOWDRIFT', 'ROI-MIDDRIFT', 'ROI-HIGHDRIFT', 'ROI-FLAT']  win=512 margin=32 side=576
+black=512.0 white=16383.0 pattern=RGGB plane=(2344, 3514)
+  [  1/299]    1.8s  eta  543.1s
+  [ 26/299]   51.2s  eta  538.1s
+  [ 51/299]   87.4s  eta  425.2s
+  [ 76/299]  115.4s  eta  338.7s
+  [101/299]  146.2s  eta  286.7s
+  [126/299]  188.7s  eta  259.1s
+  [151/299]  224.6s  eta  220.1s
+  [176/299]  262.9s  eta  183.8s
+  [201/299]  287.8s  eta  140.3s
+  [226/299]  321.1s  eta  103.7s
+  [251/299]  342.6s  eta   65.5s
+  [276/299]  362.8s  eta   30.2s
+  [299/299]  381.0s  eta    0.0s
+
+done in 381.2s
+distinctness: 299 frames, 299 unique ROI-LOWDRIFT.g1 crops
+G1 vs G2 on frame 183: 3555/331776 equal (1.072 %)

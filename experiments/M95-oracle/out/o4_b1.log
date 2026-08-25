@@ -1,0 +1,29 @@
+rendered single frames: 23  [119, 120, 134, 135, 142, 143, 144, 145, 146, 147, 154, 155, 158, 169, 170, 173, 181, 182, 183, 184, 185, 193, 208]
+merged: (2344, 3516)
+cube ROI shape: (299, 576, 576)
+TIFF vs plane offset: dy=0 dx=0  correlation r=1.000000
+noise model: Noise(gain=0.233696, floor=0.000, black=512.0)  R^2=0.99931
+
+ROI-LOWDRIFT
+  testable pixels 86,319 of 300,304 (28.74 %) [unmatched 70.70 %, ambiguous 0.56 %]
+  modelled elector == shipped election : 85.8838 %
+  within +/-1 frame                    : 95.3232 %
+
+ROI-MIDDRIFT
+  testable pixels 74,633 of 300,304 (24.85 %) [unmatched 74.57 %, ambiguous 0.58 %]
+  modelled elector == shipped election : 78.1786 %
+  within +/-1 frame                    : 86.7418 %
+
+ROI-HIGHDRIFT
+  testable pixels 75,626 of 300,304 (25.18 %) [unmatched 74.35 %, ambiguous 0.47 %]
+  modelled elector == shipped election : 81.0436 %
+  within +/-1 frame                    : 91.3998 %
+
+ROI-FLAT
+  testable pixels 9,565 of 300,304 (3.19 %) [unmatched 96.60 %, ambiguous 0.21 %]
+  modelled elector == shipped election : 24.2656 %
+  within +/-1 frame                    : 31.6257 %
+
+==========================================================================
+B1 overall (detail ROIs): 193,771/236,578 = 81.9058 %
+B1 PASS (pre-registered bar: >= 80 %)

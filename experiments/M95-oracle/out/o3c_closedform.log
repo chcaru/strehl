@@ -1,0 +1,31 @@
+==========================================================================
+C1/C2  transfer of a pure sinusoid vs the closed form exp(-2 pi^2 s^2 f^2)
+ sigma        f      exact   fft_blur     err%      scipy     err%
+  0.25   0.0625   0.995192   0.995192  -0.0000   0.999949  +0.4779
+  0.25   0.1250   0.980908   0.980908  -0.0000   0.999804  +1.9263
+  0.25   0.2500   0.925791   0.925791  -0.0000   0.999330  +7.9433
+  0.50   0.0625   0.980908   0.980908  -0.0000   0.983639  +0.2784
+  0.50   0.1250   0.925791   0.925791  -0.0000   0.937115  +1.2231
+  0.50   0.2500   0.734603   0.734603  -0.0000   0.786043  +7.0024
+  1.00   0.0625   0.925791   0.925791  -0.0000   0.925791  +0.0000
+  1.00   0.1250   0.734603   0.734603  -0.0000   0.734603  +0.0000
+  1.00   0.2500   0.291213   0.291213  -0.0000   0.291228  +0.0052
+  1.50   0.0625   0.840726   0.840726  -0.0000   0.840726  +0.0000
+  1.50   0.1250   0.499595   0.499595  -0.0000   0.499595  +0.0000
+  1.50   0.2500   0.062298   0.062298  -0.0000   0.062298  +0.0000
+
+    worst |err| -- fft_blur 0.0000 %   scipy 7.9433 %
+    C1 fft_blur vs closed form : PASS (bar: < 0.05 %)
+    C2 scipy vs closed form    : DISAGREES by up to 7.94 %
+
+C3  negative control: the repaired estimator must NOT echo its input
+    sigma=1.0 measured against a sigma=0.5 reference
+    expected sqrt(1.0^2 - 0.5^2) = 0.8660   recovered 0.8655  (-0.06 %)
+    an estimator echoing its input would have returned 1.0000
+    C3 PASS
+
+==========================================================================
+VERDICT: fft_blur matches the closed form; scipy's small-sigma kernel
+         discretisation caused TEST 1. The PLANT IS SOUND and the
+         synthetic ramp's ground truth stands. K2's original failure
+         was an unwindowed estimator, now repaired and controlled.

@@ -1,0 +1,64 @@
+==========================================================================
+K0  Sobel noise kernel: Monte Carlo vs closed form
+    measured 1.406117  closed form 1.406250  ratio 0.99991
+    K0 PASS (bar: ratio within 1 %)
+
+P3  G1/G2 independence
+    identical pixels 1.0715 %   scene correlation r=0.9965
+    P3 PASS (bar: < 50 % identical)
+
+--  noise model, fitted from G1-G2 on the FLAT roi of this capture
+    Noise(gain=0.233696, floor=0.000, black=512.0)   R^2=0.99931 over 24 level bins
+
+K1  identity blur must be EXACTLY identity
+    max abs diff at sigma=0: 0
+    K1 PASS (bar: exactly 0)
+
+K2  the plant recovers its own sigma (windowed frequency-domain fit)
+    sigma 0.25 -> recovered 0.2498  (-0.07 %)
+    sigma 0.50 -> recovered 0.4997  (-0.06 %)
+    sigma 1.00 -> recovered 0.9994  (-0.06 %)
+    sigma 1.50 -> recovered 1.4989  (-0.07 %)
+    K2 PASS (bar: within 5 %)
+
+N0  noiseless ramp: does magnitude-vs-energy change the answer?
+    elector==oracle 99.8972 %   elector==truth 99.9131 %   oracle==truth 99.9101 %
+    N0 PASS (bar: >= 99 % agreement)
+
+N2  noiseless ramp: the deficit must have a zero
+    D(elector vs oracle), noiseless = -0.0095 %
+    N2 PASS (bar: |D| < 1 %)
+
+B2  noisy ramp: cross-fitted oracle vs truth
+    oracle within +/-1 of truth : 96.7082 %
+    elector within +/-1 of truth: 95.4246 %
+    median |offset|  oracle 0.00  elector 0.00
+    B2 PASS (bar: >= 90 %)
+
+P1s  deficit must be monotone in a FORCED offset (synthetic)
+    forced + 0 frames -> D =  +0.0000 %
+    forced + 1 frames -> D =  +1.9849 %
+    forced + 2 frames -> D =  +7.1355 %
+    forced + 5 frames -> D = +30.0311 %
+    forced +10 frames -> D = +57.7637 %
+    forced +25 frames -> D = +77.3045 %
+    P1s PASS (bar: strictly increasing)
+    sign convention read off this control: a WORSE choice gives a POSITIVE D
+
+P2  a frame with planted blur must not be elected
+    frame 20 elected before plant: 58.0791 %
+    after sigma=1.0 plant -- elector 0.0004 %   oracle 0.0004 %
+    P2 PASS (bar: both demote it)
+
+==========================================================================
+COMMISSIONING: 9/9 controls passed
+   K0   PASS
+   K1   PASS
+   K2   PASS
+   P3   PASS
+   N0   PASS
+   N2   PASS
+   B2   PASS
+   P1s  PASS
+   P2   PASS
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-oracle\out\o3_commission.json

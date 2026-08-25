@@ -1,0 +1,26 @@
+==========================================================================
+TEST 1  fft_blur vs scipy.ndimage.gaussian_filter (independent algorithm)
+    sigma 0.25  max abs diff 115.7 DN   11.34871 % of the crop's own sd
+    sigma 0.50  max abs diff 76.57 DN   7.52022 % of the crop's own sd
+    sigma 1.00  max abs diff 0.5006 DN   0.04935 % of the crop's own sd
+    sigma 1.50  max abs diff 0.0004525 DN   0.00004 % of the crop's own sd
+    TEST 1 FAIL (bar: < 1 % of sd)
+    -> the PLANT is suspect.
+
+TEST 2  repair the estimator: Hann window + interior only
+    sigma 0.25 -> recovered 0.2498  (-0.07 %)
+    sigma 0.50 -> recovered 0.4997  (-0.06 %)
+    sigma 1.00 -> recovered 0.9994  (-0.06 %)
+    sigma 1.50 -> recovered 1.4989  (-0.07 %)
+    TEST 2 PASS (bar: within 5 %)
+
+TEST 3  what the synthetic ramp's ground truth ACTUALLY depends on
+    (a) peak frame is an exact identity: max abs diff 0
+    (b) detail is strictly monotone away from the peak: True
+        sd at k=KSTAR 964.776, at k=0 945.850, at k=40 945.850
+    TEST 3 PASS
+    -> ground truth is the ORDERING and the peak location, neither of
+       which uses the sigma calibration K2 was testing.
+
+==========================================================================
+VERDICT: UNRESOLVED -- do not report ramp results
