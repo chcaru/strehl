@@ -53,6 +53,21 @@ built to a private `--target-dir`. Every number below comes from that one binary
 > than conflict. §15.3 carries five corrections to the relay, including that
 > SYNTHESIS fact 1750 omits that M97e's binary carried an unlanded seam.
 
+> ### ⚠ Addendum 4 — PQ6, and a correction to §14's stated reason (§16)
+>
+> ORCH forwarded M105b's **PQ6**: *if `FOCUS_NOISE_SD` was calibrated on narrowed
+> data, the gate is set too tight.* **Refuted.** The constant is fitted on
+> synthetic f32 normals with no narrowing anywhere (`merge.rs:2019-2061`), and
+> measured on real sensor data — restricted to regions the crate's own
+> commissioning check accepts as pure noise — the floor is **1.00–1.07×** the
+> shipped value. The banner's *"SD of a difference"* describes an analytic
+> propagation applied at **use** time, not the estimator the constant was fitted
+> with. Pre-registered at `d3ed787`; **my own Q2 prediction was refuted by 3×**,
+> and §16.3 records that my first pass walked into fact 313's documented
+> small-region bias after quoting it. §16.6 re-derives §14's clearance under
+> ORCH's corrected rule: **the verdict survives, one of its two stated reasons
+> does not.**
+
 ---
 
 ## 0. The answer, in one table
@@ -1253,4 +1268,162 @@ which is now a pattern rather than an incident.
 - **New handoff — the prior-art tooling.** `prior_art.py` does not index
   `experiments/**/out/*.txt`. M97e's finding was there, in plain English, and
   neither my rule-40 check nor ORCH's fold found it.
+
+
+---
+
+## 16. Addendum 4 — PQ6: what `FOCUS_NOISE_SD` was fitted on
+
+Pre-registered at **`d3ed787`** (`experiments/M126-default-audit/PREREG-PQ6.md`),
+committed before any outcome value was read.
+
+**Verdict: PQ6 is REFUTED.** The constant was never calibrated on narrowed data,
+and measured on real sensor data it is correct to within 0–7 %.
+
+### 16.1 ORCH's three questions, answered by reading
+
+| question | answer | citation |
+| --- | --- | --- |
+| Fitted on what, at what precision? | **Synthetic f32 standard normals** — SplitMix64 + Box-Muller, 12 seeds, 512×512. Not camera RAW. No integer intermediate at any stage. | `merge.rs:2019-2061`, RNG at `merge.rs:1897-1926` |
+| Differencing or split-half estimator? | **Neither.** A plain one-field sample SD, `sd(reg[interior])` over ~219 000 pixels. | `merge.rs:2049-2060` |
+| Reachable as a default? | **No.** `pub const FOCUS_NOISE_SD: f32 = 0.015_214` (`merge.rs:187`), consumed at `merge.rs:313`. Compile-time; no env var, no flag. | `merge.rs:187`, `merge.rs:313` |
+
+**The banner misled the question, and this is worth stating plainly.** PQ6 was
+raised on the wording *"`sqrt(2) * FOCUS_NOISE_SD`, the SD of a difference"*
+(`merge_cmd.rs:2995`), read as evidence the constant was *fitted* with a
+differencing estimator. It was not. The `sqrt(2)` is an **analytic propagation
+applied at use time** — `Gate::admits` compares two independent frames'
+responses, so the difference of two independent SDs is `sqrt(2)` times one of
+them (`merge.rs:202`, applied at `merge.rs:313`). **The banner names the derived
+quantity, not the fit.** The constant itself never differences anything.
+
+Facts 310–313 state the synthetic provenance accurately and never overclaimed.
+The gap PQ6 correctly identified is a different one: **nobody had asked whether
+the synthetic calibration domain matches the domain the constant is applied in.**
+
+### 16.2 The measurement
+
+`strehl stack <dir> --limit 1` with `STREHL_DUMP_MERGE_STATE`. **With N = 1 the
+winner is the only frame**, so `best_focus` is that frame's regularised response
+with the winner's curse removed by construction — the real-data analogue of what
+`merge.rs:2049` reads off synthetic normals. f32 NPY throughout; no quantised
+container anywhere in the diagnostic.
+
+**The crate's own commissioning check is the discriminator.** `merge.rs:2063-2072`
+refuses its measurement unless the response *mean* sits within 0.97–1.03 of the
+closed-form Rayleigh mean `0.125·sqrt(12)·sqrt(pi/2) = 0.5427`. Pointed at real
+data that check becomes a **structure detector**: pure sensor noise must land on
+the Rayleigh mean, and scene structure can only push it up. It is near-orthogonal
+to the quantity under test, because for a mean-of-Rayleigh field the mean is
+invariant to the effective sample count while the SD scales as `1/sqrt(n_eff)`.
+
+Keeping only the regions the crate itself would accept:
+
+| region | kept / total | SD median | **ratio to 0.015214** | p25 | p75 |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 128² | 932 / 2430 | 0.01520 | **0.999** | 0.01379 | 0.01688 |
+| 192² | 415 / 1080 | 0.01562 | **1.026** | 0.01458 | 0.01715 |
+| 256² | 217 / 585 | 0.01583 | **1.041** | 0.01498 | 0.01694 |
+| 384² | 102 / 270 | 0.01600 | **1.052** | 0.01531 | 0.01775 |
+| 512² | 42 / 120 | 0.01620 | **1.065** | 0.01559 | 0.01847 |
+
+**The real-data response floor is 1.00× to 1.07× the shipped constant.** The
+residual sits in PQ6's predicted direction — a floor slightly *above* the
+constant means a gate slightly too tight — but at ~5 % it is far too small to be
+a patchwork mechanism, and it is dwarfed by the user-facing `--gate` flag whose
+default is `4.0`.
+
+Which subjects can answer at all is itself informative. At 256², regions passing
+the crate's mean check: `leaf-2-cpl` **113/117**, `lead-1-cpl` **98/117**,
+`tweezers-cpl` **6/117**, `bee-3-cpl` **0/117**, `coffee-bean` **0/117**. Three
+of five subjects have no genuinely flat region at that scale, and their
+region-size ladders diverge (to 2.5×, 4.0× and 6.3× at 512²) instead of
+converging — the signature of structure, not of noise.
+
+### 16.3 The number that did not fit, and it was mine
+
+**My first pass used 64×64 tiles and read 0.57–0.93× the constant.** I was one
+step from reporting that the constant is ~40 % too *large*.
+
+It is not. `merge.rs:1957-1968` (fact 313) documents exactly this: *"A sample
+standard deviation taken over a region only a few supports across is biased low
+… At 192 × 192 this measured 0.01366 — 10 % under the truth — and it drifted
+with plane size."* The combined support is 43×43. **A 64² tile is 1.5 supports
+across.** I quoted fact 313 in my own pre-registration and then failed to apply
+it.
+
+The tell was that the region-size ladder *drifted* rather than sitting still —
+1.12× to 5.38× from 64² to 512², against the crate's own synthetic drift of
+1.114× from 192² to 512². Chasing that drift rather than banking the first
+number is what produced §16.2.
+
+### 16.4 Predictions scored
+
+| # | prediction | outcome |
+| --- | --- | --- |
+| **Q1** | Arm S reproduces `0.015214` at the pinned commit | **CONFIRMED** — `the_focus_noise_constant_is_the_measured_one` passes; `merge.rs` differs from `d5ba764` by one doc-link character, constant and test untouched |
+| **Q2** | Real-data floor **≥ 3×** the constant | **REFUTED, and badly** — measured **1.00–1.07×**. See §16.5 |
+| **Q3** | ≥ 2× cross-subject variation, i.e. structure dominates | **REFUTED as posed** — the prediction did not fix a region size, and the answer depends entirely on it (1.28× at 64², 6.4× at 512²). The defensible claim is subject-dependent: structure dominates on 3 of 5 subjects and not on the other 2 |
+| **Q4** | Narrowing moves the result < 10 % | **Settled by reading, not measured.** `green_luma_with_clip` (`plane.rs:109-138`) takes u16 RAW → f32 via `0.5*(g1+g2)`; there is no integer intermediate below native depth anywhere before the operator, so the narrowing dose is nil |
+| **Q5** | Repeat render byte-identical, metric reads exactly zero | **CONFIRMED** — `np.array_equal` true, max abs diff **0.00000** |
+
+Running tally across the milestone: **12 of 30 predictions refuted, 5 flattering
+and 7 pessimistic.** Still no detectable optimism bias.
+
+### 16.5 Why Q2 was wrong, stated as a mechanism and not a story
+
+I predicted a 3× excess because the operator chain is a 43×43 average and
+ORCH's corrected rule says correlated error does not average down. The mechanism
+is real. **The dose is not.** M105b's 79× and ORCH's 16× were both measured *at
+an 8-bit narrowing dose*; §14 measured this data at **294–1009 distinct levels
+per flat tile**, with quantisation error at **2.0 % of `sd_flat`**. I
+extrapolated a dose-dependent effect into a regime where the dose is essentially
+zero. That is the same class of error as triaging by the *form* of a statistic —
+I substituted a mechanism's existence for its magnitude.
+
+### 16.6 Re-deriving §14's clearance under the corrected rule — and a correction to its stated reason
+
+ORCH asked anyone who cleared a default on "my statistic does not difference" to
+re-derive. **§14 gave two reasons and one of them is now void.**
+
+* **Void:** §14 observed that `N = sd(g − box5(g))` is a *spatial* high-pass
+  rather than a cross-sample differencing estimator. Under the corrected rule
+  that is no longer exculpatory — `box5` is an average and `sd` pools samples,
+  so `N` is exposed in principle.
+* **Stands:** the clearance did not rest on that. §14 ran a **measured
+  dose-response** — ORCH's own prescribed replacement — and found `N` *rises*
+  with narrowing dose (1.16471 → 1.59136 on `bee-3-cpl`), so a narrowed dataset
+  reads **noisier** to this estimator, not cleaner. The published numbers sit at
+  dose 0 with β = 1.0000.
+
+**Per discipline 912, recorded separately: the verdict survives, one of its two
+stated reasons does not.** Had §14 offered only the form argument, it would now
+be an unsupported clearance.
+
+### 16.7 What I could not settle here
+
+* **Whether the +0–7 % is real.** The ratio climbs monotonically with region
+  size (0.999 → 1.065). That is what residual structure creeping into larger
+  regions looks like, and it is also what a genuine ~5 % excess would look like.
+  I cannot separate them with this design. If someone wants to, the experiment
+  is a dark-frame or defocused-flat capture, where the whole plane is at the
+  noise floor and the region-size ladder can run to convergence without a
+  structure confound.
+* **Alignment.** Arm R ran `STREHL_ALIGN=0`, because one frame has nothing to
+  register and a resample would correlate neighbours and depress the very
+  dispersion being measured. **The shipped default has alignment ON**, so in
+  production the gate operates on resampled data whose noise is spatially
+  correlated by the interpolation kernel. That would *lower* the effective
+  independent-sample count and *raise* the response SD — in PQ6's direction.
+  **Unmeasured, and it is the one live route by which PQ6 could still be
+  right.** Named as the next experiment.
+* **Whether a ~5 % gate mis-scaling matters at all.** `--gate` is user-facing
+  with a default of 4.0; the corpus has swept it far more coarsely than 5 %.
+
+### 16.8 Consequence for the audit
+
+`FOCUS_NOISE_SD` is **not a gate and not a default** — it is a compile-time
+constant, so it never enters the promote/keep-off table. It is recorded here as
+a **correctness check that passed**, with one named residual (§16.7, alignment)
+that a future milestone should close.
 
