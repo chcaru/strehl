@@ -1642,3 +1642,65 @@ so **`D` is not `S/W`** and the three must not be divided into one another.
 87. **Give every dose a self-check in its own units.** "`W` must halve per bit" is three lines,
     it would have caught this defect on the first run, and it is available for any experiment
     with a graded parameter: assert the *dose* does what it claims before reading the response.
+
+## 25. Scope correction to §16, and a discontinuity I did not report
+
+ORCH narrowed my §16 result from "no overshoot anywhere" to "no discontinuity at the
+boundary". **All three of its factual corrections check out against my own artefact**
+(`ca_overshoot_default_vs_ca.json`): the `0.00%` is the off-vs-off N1 control and not a null
+with the correction on; the inert null runs **4.68 to 25.73%**; and the real `overshoot_pct`
+reaches **18.82%** on `flat-on-ruler-cpl` at r = 0.30 to 0.40. The narrowing is correct and I
+endorse it.
+
+### 25.1 Why the narrow claim is the robust one
+
+The reason is worth stating, because it decides which of the two claims the artefact can ever
+support. **The no-discontinuity claim is a *local differential* comparison between adjacent
+radial bins. The "no overshoot anywhere" claim is *absolute*, and rests on an inert null whose
+radial profile is not matched to the signal** — `ca_overshoot.py:158-163` injects a **single
+global rms** over the whole frame, so as chroma magnitude grows toward the corner the null's
+flip rate falls by construction (bee 11.83% at r = 0.2 down to 4.88% at r = 1.0). Excess over
+that null therefore rises with radius whether or not the correction does anything.
+
+So the outer-field excess of **+4.59 pp** (bee) and **+4.27 pp** (flat) is **not** evidence of
+overshoot: it is confounded with the null's own radial profile. A difference between adjacent
+bins cancels that profile to first order; an absolute level does not.
+
+### 25.2 The measurement, excess over the inert null
+
+| bin | bee excess | bee step | flat excess | flat step |
+| --- | --- | --- | --- | --- |
+| 0.60-0.70 | +2.27 | +1.69 | +1.56 | −1.01 |
+| **0.70-0.80** (holds r = 0.788) | **+2.93** | **+0.66** | **+1.16** | **−0.40** |
+| 0.80-0.90 | +3.88 | **+0.95** | +0.92 | **−0.24** |
+| 0.90-1.00 | +4.59 | +0.71 | **+4.27** | **+3.35** |
+
+**Facts**
+
+88. **MEASURED: no discontinuity at the support boundary, on either subject.** The step in
+    excess-over-null across the bin holding r = 0.788 is **+0.95 pp** on `bee-3-cpl`, bracketed
+    by neighbouring steps of **+0.66** and **+0.71**; and **−0.24 pp** on `flat-on-ruler-cpl`,
+    following **−0.40**. An extrapolation failing at its own support edge would produce a kink
+    there, and there is none. This is the claim §16 supports.
+89. **MEASURED, and I did not report it: `flat-on-ruler-cpl` carries a +3.35 pp step in the
+    outermost decile** (r = 0.90 to 1.00, excess +0.92 to **+4.27**, n = 100,905), against
+    neighbouring steps of −1.01, −0.40 and −0.24. It is **one decile beyond** the support
+    boundary, not at it, so it does not bear on §16's claim — but it is a candidate
+    extrapolation failure at the extreme corner and it was missed. `bee-3-cpl` shows no
+    equivalent (+0.71). **Caveated by §25.1: part of this step may be the null's radial
+    profile rather than the correction.**
+90. **MEASURED: my §14 retraction is unaffected by ORCH's `camera_to_srgb` correction.** The
+    matrix I derived and used, `[−0.115165, +1.488971, −0.373806]`, is the corrected one;
+    §19 item 62 already published red at **7.7%** of green at `6814edc`, against the relayed
+    20.3%. The prediction −0.0704 and the 2.4% agreement stand unchanged.
+
+**Disciplines**
+
+91. **Prefer a differential claim to an absolute one when the control is not matched to the
+    variable you are binning on.** A null injected at one global magnitude has its own profile
+    in radius, brightness or texture; differences between adjacent bins cancel it, absolute
+    levels inherit it. The broad claim was never supportable from this artefact, and the narrow
+    one was, for a reason visible in the null's construction rather than in its output.
+92. **When a fold is narrowed, re-read the artefact for what the narrower statistic shows
+    elsewhere.** Re-reading §16 under the correct scope surfaced item 89 — a real step, in a
+    bin the original over-broad claim had swept up and hidden.
