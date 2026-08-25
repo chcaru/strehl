@@ -219,6 +219,19 @@ pub struct Develop {
     pub matrix: Option<color::Render>,
     /// Apply the sRGB transfer curve. For looking at, not for measuring.
     pub srgb: bool,
+    /// The photographic tone rendering, or `None` for none.
+    ///
+    /// Resolved per image by the writers, because the black and white points
+    /// are order statistics of the frame and cannot be known before it exists.
+    /// [`OutputSpace::develop`] sets [`Develop::wants_tone`]; the writers fill
+    /// this in.
+    pub tone: Option<Tone>,
+    /// Whether a tone rendering should be measured and applied.
+    ///
+    /// Separate from `tone` so that the *decision* travels with the colour
+    /// space -- where it belongs, since it is a rendering intent -- while the
+    /// *numbers* are measured later from the pixels.
+    pub wants_tone: bool,
 }
 
 impl Develop {
@@ -238,6 +251,8 @@ impl Develop {
         Self {
             matrix: None,
             srgb,
+            tone: None,
+            wants_tone: false,
         }
     }
 
@@ -324,12 +339,148 @@ impl OutputSpace {
     /// `matrix` is what the characterisation yielded, or `None` when the body
     /// has none. A missing characterisation degrades to camera-native rather
     /// than inventing a matrix, and [`Develop::caveat`] says so out loud.
+    ///
+    /// The tone rendering rides with the **viewing** render and only with it.
+    /// That placement is the whole safety argument: `--linear-srgb` and the
+    /// default measurement output are untouched by it, so every number the
+    /// corpus rests on is measured on exactly the pixels it always was, while
+    /// the file a human opens is finally rendered like a photograph.
     pub fn develop(self, matrix: Option<color::Render>) -> Develop {
         Develop {
             matrix: if self.wants_matrix() { matrix } else { None },
             srgb: self.applies_curve(),
+            tone: None,
+            wants_tone: self.applies_curve(),
         }
     }
+}
+
+/// The photographic tone rendering, resolved to numbers for one image.
+///
+/// **Why this exists.** Until now the develop path was `black, white balance,
+/// matrix, clamp, sRGB curve` and nothing else. That is colorimetrically
+/// defensible and photographically dead: the sRGB transfer function is an
+/// *encoding*, not a rendering. Every camera and every raw developer applies a
+/// tone rendering on top of it, and without one the result is exactly what the
+/// owner described -- a milky veil, lifted blacks, flat whites, muddy colour.
+///
+/// It went unnoticed through the entire corpus because every measurement this
+/// project has ever made was taken on 16-bit **linear** crops, where the defect
+/// is invisible by construction. The measurement discipline that kept the
+/// numbers honest is precisely what hid this from us.
+///
+/// Three things are wrong with an untoned render, and this fixes them in order:
+///
+/// 1. **The blacks do not reach black.** Measured on `flower-inner-edge-cpl`,
+///    the darkest 0.01% of the frame sits at 0.0038 linear, not 0. The sRGB
+///    curve has a steep toe, so that renders as a **6% grey floor** -- the
+///    veil. Subtracting a black point is what removes it.
+/// 2. **The whites do not reach white.** The 99.9th percentile lands at 0.641
+///    linear, leaving 0.64 stops of the output range simply unused.
+/// 3. **There is no contrast rendering at all**, so midtones sit flat and
+///    colour reads desaturated, because saturation is perceived largely through
+///    local contrast.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Tone {
+    /// Linear value mapped to 0. The measured flare/noise floor of the frame.
+    pub black: f32,
+    /// Linear value mapped to 1.
+    pub white: f32,
+    /// Strength of the display-space S-curve, in `[0, 1]`.
+    pub contrast: f32,
+}
+
+/// Where the black point is taken from, as a percentile of linear luminance.
+///
+/// Deliberately not the minimum: a single dead-black pixel would then set the
+/// point for the whole frame and the subtraction would do nothing. 0.1% is low
+/// enough to sit inside the flare floor and high enough to be a robust
+/// statistic. It is an order statistic, so it is deterministic.
+const TONE_BLACK_PCT: f64 = 0.1;
+
+/// Where the white point is taken from.
+///
+/// The same percentile `--auto-exposure` uses, on purpose: M100 MEASURED that
+/// choice by sweeping 7 percentiles x 5 targets x 2 statistics across seven
+/// corpus stacks, and having two different white-point conventions in one
+/// program is how a render stops being reproducible.
+const TONE_WHITE_PCT: f64 = 99.9;
+
+/// What the white percentile is mapped to. 0.90, again matching M100's
+/// measured rule, leaving a little headroom above it rather than clipping the
+/// brightest 0.1% of the frame flat.
+const TONE_WHITE_TARGET: f32 = 0.90;
+
+/// Default S-curve strength. Chosen by LOOKING at the gallery, which is the
+/// only way this can honestly be chosen -- the standing rule for this build is
+/// that when the pictures and the number disagree, the pictures are right.
+const TONE_CONTRAST: f32 = 0.55;
+
+/// A contrast S-curve applied in **display** space, after the transfer curve.
+///
+/// Display space is where raw developers put the tone curve, and it is the
+/// right place: an S-curve in linear light crushes shadows violently because
+/// linear light is not perceptually spaced.
+///
+/// `smoothstep` is the S: it fixes 0, 0.5 and 1 exactly, is monotonic on
+/// `[0, 1]`, and has zero derivative at both ends, so it cannot introduce a
+/// hard shoulder or a clipped toe. `strength` blends between the identity and
+/// it, so the curve is continuous in the parameter and `0.0` is exactly "no
+/// tone curve" -- which is what keeps the old rendering reachable.
+///
+/// Applied per channel, which is what makes colour come back: a per-channel
+/// contrast curve stretches the distance between channels as well as the
+/// distance between tones, and that is perceived as saturation.
+#[inline]
+fn s_curve(x: f32, strength: f32) -> f32 {
+    let s = x * x * (3.0 - 2.0 * x);
+    x + (s - x) * strength
+}
+
+impl Tone {
+    /// Resolve a tone rendering from a sample of the image's linear luminance.
+    ///
+    /// `lum` is consumed and sorted in place; callers pass a subsample, because
+    /// an order statistic does not need every pixel and the full-resolution
+    /// path deliberately never materialises its float image.
+    fn from_luminance(lum: &mut [f32]) -> Self {
+        if lum.is_empty() {
+            return Self {
+                black: 0.0,
+                white: 1.0,
+                contrast: TONE_CONTRAST,
+            };
+        }
+        lum.sort_unstable_by(f32::total_cmp);
+        let at = |pct: f64| -> f32 {
+            let i = ((pct / 100.0) * (lum.len() - 1) as f64).round() as usize;
+            lum[i.min(lum.len() - 1)]
+        };
+        let black = at(TONE_BLACK_PCT);
+        let white_src = at(TONE_WHITE_PCT);
+        // Map the white percentile to TONE_WHITE_TARGET rather than to 1.0.
+        let white = black + (white_src - black).max(1e-4) / TONE_WHITE_TARGET;
+        Self {
+            black,
+            white,
+            contrast: TONE_CONTRAST,
+        }
+    }
+
+    /// One line for the "wrote" report, so a render can be reproduced and so
+    /// the numbers are visible rather than hidden inside the binary.
+    pub fn report(&self) -> String {
+        format!(
+            "tone            : black {:.5}, white {:.5} (linear), contrast {:.2}",
+            self.black, self.white, self.contrast
+        )
+    }
+}
+
+/// Luminance of a post-matrix linear triple, BT.709 weights.
+#[inline]
+fn luma709(v: [f32; 3]) -> f32 {
+    0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]
 }
 
 /// One white-balanced, normalised camera-RGB triple to 16-bit output.
@@ -358,8 +509,20 @@ fn develop_pixel(lin: [f32; 3], dev: &Develop) -> [u16; 3] {
     };
     let mut out = [0u16; 3];
     for c in 0..3 {
-        let x = v[c].clamp(0.0, 1.0);
+        // The tone rendering is two stages either side of the transfer curve:
+        // black/white placement in LINEAR light, where it is a physical
+        // statement about flare and exposure; contrast in DISPLAY space, where
+        // it is a perceptual one.
+        let x = match &dev.tone {
+            Some(t) => (v[c] - t.black) / (t.white - t.black),
+            None => v[c],
+        };
+        let x = x.clamp(0.0, 1.0);
         let x = if dev.srgb { color::srgb_encode(x) } else { x };
+        let x = match &dev.tone {
+            Some(t) => s_curve(x, t.contrast),
+            None => x,
+        };
         out[c] = (x * u16::MAX as f32 + 0.5) as u16;
     }
     out
@@ -375,6 +538,77 @@ fn develop_pixel(lin: [f32; 3], dev: &Develop) -> [u16; 3] {
 /// Rows are demosaiced in parallel and encoded in the same pass, so the
 /// intermediate float RGB image is never materialised: peak extra memory is the
 /// `u16` output plus one scratch row per worker.
+/// Subsample stride for the tone pre-pass.
+///
+/// An order statistic does not need every pixel: at stride 7 on both axes a
+/// 33 MP frame still contributes ~670k samples, which pins a 0.1th percentile
+/// far tighter than the tone curve can resolve. The stride is coprime with the
+/// 2-pixel CFA period so the sample does not land on one Bayer phase.
+const TONE_STRIDE: usize = 7;
+
+/// Measure the tone rendering from a demosaic-free approximation of the frame.
+///
+/// Each 2x2 quad is collapsed to one RGB triple and pushed through the same
+/// matrix the real develop uses, which is enough for an order statistic and
+/// avoids materialising the full float image the fast path exists to avoid.
+fn tone_from_mosaic(m: &Mosaic, dev: &Develop) -> Tone {
+    let mut lum = Vec::with_capacity((m.width / TONE_STRIDE + 1) * (m.height / TONE_STRIDE + 1));
+    let mut y = 0;
+    while y + 1 < m.height {
+        let mut x = 0;
+        while x + 1 < m.width {
+            let i = y * m.width + x;
+            // RGGB quad -> one triple.
+            let r = m.data[i];
+            let g = 0.5 * (m.data[i + 1] + m.data[i + m.width]);
+            let b = m.data[i + m.width + 1];
+            let v = match &dev.matrix {
+                Some(rr) => rr.develop([r, g, b]),
+                None => [r, g, b],
+            };
+            lum.push(luma709(v));
+            x += 2 * TONE_STRIDE;
+        }
+        y += 2 * TONE_STRIDE;
+    }
+    Tone::from_luminance(&mut lum)
+}
+
+/// Measure the tone rendering from an already-materialised linear RGB image.
+fn tone_from_rgb(width: usize, height: usize, rgb_lin: &[f32], dev: &Develop) -> Tone {
+    let (px, _) = rgb_lin.as_chunks::<3>();
+    let mut lum = Vec::with_capacity((width / TONE_STRIDE + 1) * (height / TONE_STRIDE + 1));
+    let mut y = 0;
+    while y < height {
+        let mut x = 0;
+        while x < width {
+            let v = match &dev.matrix {
+                Some(r) => r.develop(px[y * width + x]),
+                None => px[y * width + x],
+            };
+            lum.push(luma709(v));
+            x += TONE_STRIDE;
+        }
+        y += TONE_STRIDE;
+    }
+    Tone::from_luminance(&mut lum)
+}
+
+/// Fill in the measured tone if this render wants one, and say so on the
+/// terminal. A render that silently invents a tone curve would be unreproducible
+/// and unarguable; the numbers go on stderr with everything else.
+fn resolve_tone(dev: &Develop, measure: impl FnOnce() -> Tone) -> Develop {
+    if !dev.wants_tone || dev.tone.is_some() {
+        return *dev;
+    }
+    let t = measure();
+    eprintln!("{}", t.report());
+    Develop {
+        tone: Some(t),
+        ..*dev
+    }
+}
+
 pub fn write_demosaiced(
     path: &Path,
     width: usize,
@@ -388,6 +622,7 @@ pub fn write_demosaiced(
         width,
         height,
     };
+    let dev = &resolve_tone(dev, || tone_from_mosaic(&m, dev));
     let mut rgb = vec![0u16; width * height * 3];
     rgb.par_chunks_mut(width * 3).enumerate().for_each_init(
         || vec![0.0f32; width * 3],
@@ -503,13 +738,13 @@ pub fn write_binned(
     let rgb = develop_binned(width, height, rgb_lin, dev);
     write_rgb16_described(path, width as u32, height as u32, &rgb, dev)
 }
-
 /// The in-memory half of [`write_binned`]: co-site, develop, quantise.
 ///
 /// Split out so the correction can be tested on values rather than on a file.
 fn develop_binned(width: usize, height: usize, rgb_lin: &[f32], dev: &Develop) -> Vec<u16> {
     assert_eq!(rgb_lin.len(), width * height * 3);
     let (src, _) = rgb_lin.as_chunks::<3>();
+    let dev = &resolve_tone(dev, || tone_from_rgb(width, height, rgb_lin, dev));
 
     let plane = |c: usize| src.iter().map(|p| p[c]).collect::<Vec<f32>>();
     let d = COSITE_SHIFT;
@@ -628,14 +863,17 @@ mod tests {
             Develop {
                 matrix: None,
                 srgb: true,
+                ..Develop::default()
             },
             Develop {
                 matrix: Some(m),
                 srgb: false,
+                ..Develop::default()
             },
             Develop {
                 matrix: Some(m),
                 srgb: true,
+                ..Develop::default()
             },
         ];
         let said: Vec<String> = states.iter().map(color_description).collect();
@@ -683,6 +921,7 @@ mod tests {
         let dev = Develop {
             matrix: Some(m),
             srgb: false,
+            ..Develop::default()
         };
 
         let saturated_green = [0.2f32, 1.0, 0.15];
@@ -730,6 +969,7 @@ mod tests {
         let dev = Develop {
             matrix: Some(color::camera_to_srgb(A7C2).expect("invertible")),
             srgb: true,
+            ..Develop::default()
         };
         for v in [0.02f32, 0.2, 0.5, 0.9] {
             let out = develop_pixel([v, v, v], &dev);
@@ -748,6 +988,7 @@ mod tests {
         let dev = Develop {
             matrix: Some(color::camera_to_srgb(A7C2).expect("invertible")),
             srgb: true,
+            ..Develop::default()
         };
         // A flat mosaic demosaics to a flat image, so the expected answer is
         // known independently of the demosaic.
@@ -889,6 +1130,133 @@ mod tests {
                     "red-blue separation at ({x},{y}) is {diff}, want {want}"
                 );
             }
+        }
+    }
+
+    /// The tone rendering must ride with the **viewing** render and only with
+    /// it.
+    ///
+    /// This is the entire safety argument for adding a tone curve to a project
+    /// whose corpus is 1786 measured facts. Every one of those measurements was
+    /// taken on a linear render; if tone leaked onto the linear path, all of
+    /// them would silently become measurements of something else. The byte-
+    /// freeze tests would catch it for the two frozen rows, but this states the
+    /// rule for every space rather than for the rows that happen to be frozen.
+    #[test]
+    fn tone_rides_with_the_viewing_render_and_never_with_a_measurement() {
+        let m = color::camera_to_srgb(A7C2).expect("invertible");
+        for (space, want) in [
+            (OutputSpace::Srgb, true),
+            (OutputSpace::LinearSrgb, false),
+            (OutputSpace::CameraLinear, false),
+        ] {
+            assert_eq!(
+                space.develop(Some(m)).wants_tone,
+                want,
+                "{space:?} disagrees about whether it is a photograph or a measurement"
+            );
+        }
+        assert!(
+            !Develop::measurement(true).wants_tone,
+            "the measurement path asked for a tone curve"
+        );
+    }
+
+    /// The S-curve is monotonic and endpoint-preserving.
+    ///
+    /// Monotonic because a tone curve that folds would invert local contrast --
+    /// a highlight would render darker than the midtone next to it. Endpoint-
+    /// preserving because black and white have already been placed by the time
+    /// this runs, and a curve that moved them would undo that placement.
+    #[test]
+    fn the_contrast_curve_is_monotonic_and_leaves_the_endpoints_alone() {
+        for strength in [0.0f32, 0.25, TONE_CONTRAST, 1.0] {
+            assert!((s_curve(0.0, strength) - 0.0).abs() < 1e-6);
+            assert!((s_curve(1.0, strength) - 1.0).abs() < 1e-6);
+            assert!(
+                (s_curve(0.5, strength) - 0.5).abs() < 1e-6,
+                "the curve moved middle grey at strength {strength}"
+            );
+            let mut prev = f32::NEG_INFINITY;
+            for i in 0..=1000 {
+                let v = s_curve(i as f32 / 1000.0, strength);
+                assert!(v >= prev - 1e-6, "curve folded at {i} for strength {strength}");
+                prev = v;
+            }
+        }
+        // Strength 0 must be exactly the identity, so the untoned rendering
+        // stays reachable rather than being approximated.
+        for i in 0..=100 {
+            let x = i as f32 / 100.0;
+            assert_eq!(s_curve(x, 0.0), x);
+        }
+    }
+
+    /// The measured black and white points land where the develop claims.
+    ///
+    /// The veil the owner saw was a lifted black floor rendered through the
+    /// steep toe of the sRGB curve. This asserts the two facts that remove it:
+    /// the measured floor develops to 0, and the measured white percentile
+    /// develops to the stated target rather than to some unstated fraction.
+    #[test]
+    fn the_tone_places_the_measured_floor_at_black_and_the_white_at_its_target() {
+        // A floor well above zero -- the defect, reproduced.
+        let mut lum: Vec<f32> = (0..10_000)
+            .map(|i| 0.05 + 0.60 * (i as f32 / 9_999.0))
+            .collect();
+        let t = Tone::from_luminance(&mut lum);
+        assert!(
+            (t.black - 0.05).abs() < 2e-3,
+            "black point {} missed the floor",
+            t.black
+        );
+
+        let dev = Develop {
+            matrix: None,
+            srgb: true,
+            tone: Some(t),
+            wants_tone: true,
+        };
+        let at_floor = develop_pixel([t.black, t.black, t.black], &dev);
+        assert_eq!(at_floor, [0, 0, 0], "the floor did not develop to black");
+
+        // The 99.9th percentile of the ramp must land on TONE_WHITE_TARGET in
+        // linear light, i.e. on the sRGB encoding of 0.90 after the curve --
+        // then unchanged by the S-curve only insofar as the curve maps it.
+        let want = (s_curve(color::srgb_encode(TONE_WHITE_TARGET), t.contrast)
+            * u16::MAX as f32)
+            .round() as i32;
+        let hi = lum[(0.999 * (lum.len() - 1) as f32) as usize];
+        let got = develop_pixel([hi, hi, hi], &dev)[1] as i32;
+        assert!(
+            (got - want).abs() <= 64,
+            "the white percentile developed to {got}, want {want}"
+        );
+    }
+
+    /// A tone curve must not turn a neutral into a colour cast.
+    ///
+    /// It is applied per channel, which is what restores saturation, and that
+    /// is exactly the shape of operation that can tint greys if the three
+    /// channels are given different endpoints. They are not -- the black and
+    /// white points are scalars measured from luminance -- and this pins that
+    /// down, because measuring them per channel would be an easy and
+    /// plausible-looking future "improvement" that silently tints the image.
+    #[test]
+    fn the_tone_curve_does_not_tint_a_neutral() {
+        let mut lum: Vec<f32> = (0..2_000).map(|i| 0.01 + i as f32 / 2_000.0).collect();
+        let dev = Develop {
+            matrix: Some(color::camera_to_srgb(A7C2).expect("invertible")),
+            srgb: true,
+            tone: Some(Tone::from_luminance(&mut lum)),
+            wants_tone: true,
+        };
+        for v in [0.05f32, 0.2, 0.5, 0.9] {
+            let out = develop_pixel([v, v, v], &dev);
+            assert!(
+                out[0].abs_diff(out[1]) <= 1 && out[1].abs_diff(out[2]) <= 1,
+                "neutral {v} developed to {out:?} once toned"
+            );
         }
     }
 }

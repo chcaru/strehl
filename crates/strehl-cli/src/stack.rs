@@ -1124,10 +1124,11 @@ fn write_outputs(
                 bot[px * 2 + 1] = norm(b[i] as f32, gains[2]);
             }
         }
-        let dev = image_out::Develop {
-            matrix,
-            srgb: opts.srgb,
-        };
+        // Route through `OutputSpace` rather than building a `Develop` by hand
+        // so that `stack --srgb` gets the same photographic tone rendering as
+        // `merge --srgb`. `matrix` is already `None` off the `--srgb` path
+        // (L1008), so this is the identity for the byte-frozen linear output.
+        let dev = image_out::OutputSpace::from_flags(opts.srgb, false)?.develop(matrix);
         image_out::write_demosaiced(&opts.out, mw, mh, &mosaic, &dev)?;
         eprintln!(
             "wrote           : {} ({mw} x {mh}, 16-bit RGB, {}, Malvar-He-Cutler demosaic)",
@@ -1149,10 +1150,9 @@ fn write_outputs(
             px[1] = norm(selection.green_mean(i), gains[1]);
             px[2] = norm(b[i] as f32, gains[2]);
         }
-        let dev = image_out::Develop {
-            matrix: Some(m),
-            srgb: opts.srgb,
-        };
+        // As above: `matrix` is `Some` only on the `--srgb` path, so the space
+        // this resolves to is always `Srgb` here.
+        let dev = image_out::OutputSpace::from_flags(opts.srgb, false)?.develop(Some(m));
         image_out::write_binned(&opts.out, geom.width, geom.height, &lin, &dev)?;
         eprintln!(
             "wrote           : {} ({} x {}, 16-bit RGB, {}, binned from one 2x2 quad per pixel -- NOT demosaiced)",
