@@ -1,0 +1,51 @@
+noise model: Noise(gain=0.233696, floor=0.000, black=512.0)  R^2=0.99931
+
+==========================================================================
+ROI-LOWDRIFT
+  scene from frame 172   level spread 8.74 %   contrast 2.50
+  N4   arm A  level-varying null   D = +0.5224 %   agree 63.72 %
+  N4b  arm A2 level-flattened null D = -0.0297 %   agree 33.88 %
+       level contribution to floor = +0.5521 pp
+  D_real (o5) +1.3343 %   minus D_null +0.5224 %   = +0.8119 pp
+  P5   rate 0.05 px/frame  |off from f0|: elector mean   5.414 med   2.0 | oracle mean   5.480 med   2.0  gap -0.065 frames   D +0.2233 %
+  P5   rate 0.20 px/frame  |off from f0|: elector mean   4.554 med   0.0 | oracle mean   3.489 med   0.0  gap +1.065 frames   D +0.2094 %
+  P5b  scene pre-smoothed sigma=0.8, rate 0.20: elector mean   9.933 | oracle mean   8.587  gap +1.346 frames
+
+==========================================================================
+ROI-MIDDRIFT
+  scene from frame 124   level spread 19.80 %   contrast 1.51
+  N4   arm A  level-varying null   D = +0.4695 %   agree 44.08 %
+  N4b  arm A2 level-flattened null D = -0.0228 %   agree 38.96 %
+       level contribution to floor = +0.4922 pp
+  D_real (o5) +2.8310 %   minus D_null +0.4695 %   = +2.3615 pp
+  P5   rate 0.05 px/frame  |off from f0|: elector mean   3.439 med   1.0 | oracle mean   2.892 med   1.0  gap +0.547 frames   D +0.2370 %
+  P5   rate 0.20 px/frame  |off from f0|: elector mean   1.101 med   0.0 | oracle mean   0.845 med   0.0  gap +0.256 frames   D +0.2093 %
+
+==========================================================================
+ROI-HIGHDRIFT
+  scene from frame 144   level spread 49.61 %   contrast 1.87
+  N4   arm A  level-varying null   D = +0.4196 %   agree 45.65 %
+  N4b  arm A2 level-flattened null D = +0.0338 %   agree 36.89 %
+       level contribution to floor = +0.3858 pp
+  D_real (o5) +2.7989 %   minus D_null +0.4196 %   = +2.3793 pp
+  P5   rate 0.05 px/frame  |off from f0|: elector mean   2.417 med   1.0 | oracle mean   2.688 med   1.0  gap -0.271 frames   D +0.1786 %
+  P5   rate 0.20 px/frame  |off from f0|: elector mean   1.365 med   0.0 | oracle mean   1.666 med   0.0  gap -0.301 frames   D +0.0753 %
+
+==========================================================================
+ROI-FLAT
+  scene from frame 104   level spread 12.00 %   contrast 8.86
+  N4   arm A  level-varying null   D = +0.4354 %   agree 46.63 %
+  N4b  arm A2 level-flattened null D = -0.0149 %   agree 36.12 %
+       level contribution to floor = +0.4503 pp
+  D_real (o5) +1.6251 %   minus D_null +0.4354 %   = +1.1897 pp
+  P5   rate 0.05 px/frame  |off from f0|: elector mean   1.640 med   1.0 | oracle mean   1.636 med   1.0  gap +0.004 frames   D +0.0380 %
+  P5   rate 0.20 px/frame  |off from f0|: elector mean   0.313 med   0.0 | oracle mean   0.444 med   0.0  gap -0.131 frames   D +0.0394 %
+
+==========================================================================
+KILL SWITCH: worst oracle mean |offset| at rate 0.20 = 3.489 frames (bar: < 25)
+excess (D_real - D_null) on detail ROIs = ['+0.8119 pp', '+2.3615 pp', '+2.3793 pp']
+N4 VERDICT: REAL ELECTION ERROR
+P5 gaps at rate 0.20 (elector minus oracle, frames) = ['+1.065', '+0.256', '-0.301', '-0.131']  bar: > 2 frames is direct evidence
+
+elapsed 1230.8 s
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-oracle\out\o7_nullarm.json

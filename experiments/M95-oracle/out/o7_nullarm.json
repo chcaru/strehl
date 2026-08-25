@@ -1,0 +1,145 @@
+{
+ "n": 299,
+ "f0": 149,
+ "rois": {
+  "ROI-LOWDRIFT": {
+   "scene_frame": 172,
+   "level_spread_pct": 8.743941243038789,
+   "N4_D_pct": 0.5224140391477339,
+   "N4_agree": 63.715435025840485,
+   "N4b_D_pct": -0.029702068515069513,
+   "N4b_agree": 33.884663540945176,
+   "level_pp": 0.5521161076628034,
+   "D_real_pct": 1.3343,
+   "excess_pp": 0.8118859608522662,
+   "planted": [
+    {
+     "rate": 0.05,
+     "D_pct": 0.22333614999681117,
+     "elector_mean_off": 5.414383424796206,
+     "oracle_mean_off": 5.479850418242847,
+     "elector_med_off": 2.0,
+     "oracle_med_off": 2.0,
+     "gap_frames": -0.0654669934466412,
+     "same_pct": 57.32357877350951
+    },
+    {
+     "rate": 0.2,
+     "D_pct": 0.20936567362221936,
+     "elector_mean_off": 4.553942005434493,
+     "oracle_mean_off": 3.4893208215674782,
+     "elector_med_off": 0.0,
+     "oracle_med_off": 0.0,
+     "gap_frames": 1.0646211838670148,
+     "same_pct": 76.92072033672545
+    }
+   ],
+   "p5b": {
+    "elector_mean_off": 9.933121103947999,
+    "oracle_mean_off": 8.586778730886035,
+    "gap_frames": 1.3463423730619635,
+    "D_pct": 0.33767555169303964
+   }
+  },
+  "ROI-MIDDRIFT": {
+   "scene_frame": 124,
+   "level_spread_pct": 19.79528467292866,
+   "N4_D_pct": 0.46947841863372863,
+   "N4_agree": 44.07933294261815,
+   "N4b_D_pct": -0.022768734891198683,
+   "N4b_agree": 38.96018701049603,
+   "level_pp": 0.4922471535249273,
+   "D_real_pct": 2.831,
+   "excess_pp": 2.3615215813662713,
+   "planted": [
+    {
+     "rate": 0.05,
+     "D_pct": 0.23702357057094892,
+     "elector_mean_off": 3.4387953540412384,
+     "oracle_mean_off": 2.8915399062283553,
+     "elector_med_off": 1.0,
+     "oracle_med_off": 1.0,
+     "gap_frames": 0.547255447812883,
+     "same_pct": 63.00881773136555
+    },
+    {
+     "rate": 0.2,
+     "D_pct": 0.2093385028329786,
+     "elector_mean_off": 1.1008511375139858,
+     "oracle_mean_off": 0.8449604400873781,
+     "elector_med_off": 0.0,
+     "oracle_med_off": 0.0,
+     "gap_frames": 0.25589069742660764,
+     "same_pct": 83.40448345676381
+    }
+   ]
+  },
+  "ROI-HIGHDRIFT": {
+   "scene_frame": 144,
+   "level_spread_pct": 49.608604470007435,
+   "N4_D_pct": 0.41959764799934796,
+   "N4_agree": 45.65007459108104,
+   "N4b_D_pct": 0.03383409335214749,
+   "N4b_agree": 36.88695455271991,
+   "level_pp": 0.38576355464720047,
+   "D_real_pct": 2.7989,
+   "excess_pp": 2.379302352000652,
+   "planted": [
+    {
+     "rate": 0.05,
+     "D_pct": 0.1785861959625712,
+     "elector_mean_off": 2.417470296765944,
+     "oracle_mean_off": 2.6884057488411743,
+     "elector_med_off": 1.0,
+     "oracle_med_off": 1.0,
+     "gap_frames": -0.2709354520752303,
+     "same_pct": 61.96187862965529
+    },
+    {
+     "rate": 0.2,
+     "D_pct": 0.07528885457674939,
+     "elector_mean_off": 1.3649535137727102,
+     "oracle_mean_off": 1.6658019873195162,
+     "elector_med_off": 0.0,
+     "oracle_med_off": 0.0,
+     "gap_frames": -0.300848473546806,
+     "same_pct": 85.17502264372104
+    }
+   ]
+  },
+  "ROI-FLAT": {
+   "scene_frame": 104,
+   "level_spread_pct": 11.996300273646154,
+   "N4_D_pct": 0.43539729987461806,
+   "N4_agree": 46.63207949278065,
+   "N4b_D_pct": -0.014947398960085678,
+   "N4b_agree": 36.12239597208162,
+   "level_pp": 0.45034469883470374,
+   "D_real_pct": 1.6251,
+   "excess_pp": 1.189702700125382,
+   "planted": [
+    {
+     "rate": 0.05,
+     "D_pct": 0.03802573187121627,
+     "elector_mean_off": 1.6404010602589376,
+     "oracle_mean_off": 1.636158692524908,
+     "elector_med_off": 1.0,
+     "oracle_med_off": 1.0,
+     "gap_frames": 0.0042423677340295285,
+     "same_pct": 64.95984069476263
+    },
+    {
+     "rate": 0.2,
+     "D_pct": 0.03942397484326676,
+     "elector_mean_off": 0.31253995950769886,
+     "oracle_mean_off": 0.44354720549842824,
+     "elector_med_off": 0.0,
+     "oracle_med_off": 0.0,
+     "gap_frames": -0.13100724599072938,
+     "same_pct": 88.18397357344557
+    }
+   ]
+  }
+ },
+ "verdict": "REAL ELECTION ERROR"
+}

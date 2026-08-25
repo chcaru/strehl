@@ -1,0 +1,65 @@
+{
+ "ROI-LOWDRIFT": {
+  "rows": [
+   {
+    "offset": 1,
+    "sigma_px": 0.33414609020536934,
+    "max_abs_resid_pct": 4.436094988442774
+   },
+   {
+    "offset": 2,
+    "sigma_px": 0.5143995088473584,
+    "max_abs_resid_pct": 17.43877930619234
+   },
+   {
+    "offset": 5,
+    "sigma_px": 0.6727491868003771,
+    "max_abs_resid_pct": 56.18906906398613
+   }
+  ],
+  "one_step_sigma_px": 0.33414609020536934,
+  "one_step_um": 3.4137032867560944
+ },
+ "ROI-MIDDRIFT": {
+  "rows": [
+   {
+    "offset": 1,
+    "sigma_px": 0.2609443001366022,
+    "max_abs_resid_pct": 7.077850298796418
+   },
+   {
+    "offset": 2,
+    "sigma_px": 0.4012303177613501,
+    "max_abs_resid_pct": 26.43600111033474
+   },
+   {
+    "offset": 5,
+    "sigma_px": 0.5094353385923892,
+    "max_abs_resid_pct": 54.73157056838859
+   }
+  ],
+  "one_step_sigma_px": 0.2609443001366022,
+  "one_step_um": 2.6658591590555556
+ },
+ "ROI-HIGHDRIFT": {
+  "rows": [
+   {
+    "offset": 1,
+    "sigma_px": 0.2341860846635562,
+    "max_abs_resid_pct": 6.731859280513664
+   },
+   {
+    "offset": 2,
+    "sigma_px": 0.37478064545040063,
+    "max_abs_resid_pct": 22.93481225843551
+   },
+   {
+    "offset": 5,
+    "sigma_px": 0.49138264578958024,
+    "max_abs_resid_pct": 49.33084388277681
+   }
+  ],
+  "one_step_sigma_px": 0.2341860846635562,
+  "one_step_um": 2.392491878139823
+ }
+}

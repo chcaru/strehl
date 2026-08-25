@@ -1,0 +1,32 @@
+green plane emitted by the product: 2344 x 3514
+CFA it came from: 4688 x 7028  = 32.9 MP
+green-plane crop dtype uint16, 299 frames
+
+sensor pitch      5.1081 um   Nyquist 97.88 cy/mm
+emitted plane pitch 10.2163 um   Nyquist 48.94 cy/mm
+emitted pixels    8.2 MP from a 32.9 MP capture = 25.0 %
+
+M85's floor at 74 cy/mm sits at 1.512 x the EMITTED Nyquist and 0.756 x the SENSOR Nyquist.
+  -> representable by the sensor, NOT representable by what the product emits.
+
+diffraction, f/5.6 wide open with the 2X TC, lambda = 550 nm:
+  m= 0.5  N_eff= 8.40  cutoff=  216.5 cy/mm   MTF at emitted Nyq 48.9 =  71.5 %   at 74 =  57.3 %   at sensor Nyq 97.9 =  44.4 %
+  m= 1.0  N_eff=11.20  cutoff=  162.3 cy/mm   MTF at emitted Nyq 48.9 =  62.2 %   at 74 =  44.0 %   at sensor Nyq 97.9 =  28.2 %
+  m= 1.4  N_eff=13.44  cutoff=  135.3 cy/mm   MTF at emitted Nyq 48.9 =  55.0 %   at 74 =  34.0 %   at sensor Nyq 97.9 =  16.7 %
+  m= 2.0  N_eff=16.80  cutoff=  108.2 cy/mm   MTF at emitted Nyq 48.9 =  44.4 %   at 74 =  20.3 %   at sensor Nyq 97.9 =   3.5 %
+  m= 2.8  N_eff=21.28  cutoff=   85.4 cy/mm   MTF at emitted Nyq 48.9 =  31.3 %   at 74 =   5.8 %   at sensor Nyq 97.9 =   0.0 %
+
+over the whole plausible magnification range m = 0.5 to 2.8:
+  diffraction MTF at the EMITTED Nyquist: 31.3 % to 71.5 %
+  diffraction MTF at 74 cy/mm           : 5.8 % to 57.3 %
+  M85 section 7 reported 19-34 % at 74 cy/mm; this range CONTAINS it.
+
+ANSWER TO THE SECOND ARM:
+  The 74 cy/mm floor is not in the demosaic, the resample or the merge, because
+  74 cy/mm is 1.51 x the Nyquist frequency of the plane those
+  stages operate on. No stage downstream of the mosaic can represent it, so
+  none of them can be the floor. It is lost at the point the product chooses
+  to emit one pixel per 2x2 Bayer cell, and the optics still deliver 31-71 %
+  MTF at the very edge of what is emitted.
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-oracle\out\o10_optics.json

@@ -1,0 +1,31 @@
+
+==========================================================================
+ROI-LOWDRIFT
+  offset +1: sigma = 0.3341 px   band residuals (model minus measured, amplitude %) -0.62 +2.68 +4.44 -2.95
+  offset +2: sigma = 0.5144 px   band residuals (model minus measured, amplitude %) +7.99 +17.44 +11.47 -9.61
+  offset +5: sigma = 0.6727 px   band residuals (model minus measured, amplitude %) +56.19 +36.06 +10.48 -15.42
+  one focus step  = 0.3341 px of Gaussian blur on the binned plane
+  = 3.414 um at the binned pitch of 10.2162 um
+  quadrature check: two steps should give 0.6683 px if sigma is linear in offset, 0.4726 px if it adds in quadrature; measured 0.5144
+
+==========================================================================
+ROI-MIDDRIFT
+  offset +1: sigma = 0.2609 px   band residuals (model minus measured, amplitude %) +1.43 +7.08 +6.80 -6.09
+  offset +2: sigma = 0.4012 px   band residuals (model minus measured, amplitude %) +12.94 +26.44 +13.25 -16.18
+  offset +5: sigma = 0.5094 px   band residuals (model minus measured, amplitude %) +54.73 +40.68 +11.35 -23.23
+  one focus step  = 0.2609 px of Gaussian blur on the binned plane
+  = 2.666 um at the binned pitch of 10.2162 um
+  quadrature check: two steps should give 0.5219 px if sigma is linear in offset, 0.3690 px if it adds in quadrature; measured 0.4012
+
+==========================================================================
+ROI-HIGHDRIFT
+  offset +1: sigma = 0.2342 px   band residuals (model minus measured, amplitude %) +1.58 +6.73 +4.98 -4.99
+  offset +2: sigma = 0.3748 px   band residuals (model minus measured, amplitude %) +12.13 +22.93 +11.18 -13.82
+  offset +5: sigma = 0.4914 px   band residuals (model minus measured, amplitude %) +49.33 +37.71 +10.51 -20.69
+  one focus step  = 0.2342 px of Gaussian blur on the binned plane
+  = 2.392 um at the binned pitch of 10.2162 um
+  quadrature check: two steps should give 0.4684 px if sigma is linear in offset, 0.3312 px if it adds in quadrature; measured 0.3748
+
+==========================================================================
+one focus step across three ROIs: 0.3341 0.2609 0.2342 px  (mean 0.2764, spread 0.1000)
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-oracle\out\o9_sigma.json

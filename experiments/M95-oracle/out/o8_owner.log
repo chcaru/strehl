@@ -1,0 +1,41 @@
+noise model: Noise(gain=0.233696, floor=0.000, black=512.0)
+
+==========================================================================
+ROI-LOWDRIFT
+  forced +0 frames:  14.7cy/mm  +0.000%   24.5cy/mm  +0.000%   34.3cy/mm  +0.000%   44.0cy/mm  +0.000%
+  forced +1 frames:  14.7cy/mm  -4.218%   24.5cy/mm -15.544%   34.3cy/mm -28.097%   44.0cy/mm -33.047%
+  forced +2 frames:  14.7cy/mm -19.080%   24.5cy/mm -45.290%   34.3cy/mm -58.734%   44.0cy/mm -55.666%
+  forced +5 frames:  14.7cy/mm -74.399%   24.5cy/mm -78.843%   34.3cy/mm -77.009%   44.0cy/mm -68.200%
+  measured election error = 0.8119 pp / 11.7008 pp per frame = 0.0694 frames off peak
+    at  14.7 cy/mm: one frame costs  -4.218 % amplitude -> election costs  -0.293 %
+    at  24.5 cy/mm: one frame costs -15.544 % amplitude -> election costs  -1.079 %
+    at  34.3 cy/mm: one frame costs -28.097 % amplitude -> election costs  -1.950 %
+    at  44.0 cy/mm: one frame costs -33.047 % amplitude -> election costs  -2.293 %
+
+==========================================================================
+ROI-MIDDRIFT
+  forced +0 frames:  14.7cy/mm  +0.000%   24.5cy/mm  +0.000%   34.3cy/mm  +0.000%   44.0cy/mm  +0.000%
+  forced +1 frames:  14.7cy/mm  -4.405%   24.5cy/mm -15.135%   34.3cy/mm -21.978%   44.0cy/mm -17.740%
+  forced +2 frames:  14.7cy/mm -19.844%   24.5cy/mm -44.449%   34.3cy/mm -45.492%   44.0cy/mm -31.279%
+  forced +5 frames:  14.7cy/mm -65.618%   24.5cy/mm -68.077%   34.3cy/mm -57.962%   44.0cy/mm -41.335%
+  measured election error = 2.3615 pp / 12.3642 pp per frame = 0.1910 frames off peak
+    at  14.7 cy/mm: one frame costs  -4.405 % amplitude -> election costs  -0.841 %
+    at  24.5 cy/mm: one frame costs -15.135 % amplitude -> election costs  -2.891 %
+    at  34.3 cy/mm: one frame costs -21.978 % amplitude -> election costs  -4.198 %
+    at  44.0 cy/mm: one frame costs -17.740 % amplitude -> election costs  -3.388 %
+
+==========================================================================
+ROI-HIGHDRIFT
+  forced +0 frames:  14.7cy/mm  +0.000%   24.5cy/mm  +0.000%   34.3cy/mm  +0.000%   44.0cy/mm  +0.000%
+  forced +1 frames:  14.7cy/mm  -3.982%   24.5cy/mm -13.274%   34.3cy/mm -17.396%   44.0cy/mm -14.696%
+  forced +2 frames:  14.7cy/mm -18.177%   24.5cy/mm -38.845%   34.3cy/mm -39.978%   44.0cy/mm -29.140%
+  forced +5 frames:  14.7cy/mm -59.500%   24.5cy/mm -63.470%   34.3cy/mm -54.739%   44.0cy/mm -41.222%
+  measured election error = 2.3793 pp / 11.4792 pp per frame = 0.2073 frames off peak
+    at  14.7 cy/mm: one frame costs  -3.982 % amplitude -> election costs  -0.825 %
+    at  24.5 cy/mm: one frame costs -13.274 % amplitude -> election costs  -2.751 %
+    at  34.3 cy/mm: one frame costs -17.396 % amplitude -> election costs  -3.606 %
+    at  44.0 cy/mm: one frame costs -14.696 % amplitude -> election costs  -3.046 %
+
+==========================================================================
+OWNER-FACING: the worst measured amplitude cost of the election, over three ROIs and four bands, is -4.198 %.
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-oracle\out\o8_owner.json
