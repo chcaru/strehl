@@ -27,6 +27,15 @@ use rayon::prelude::*;
 use strehl_core::noise::Levels;
 use strehl_core::plane::{PlaneGeometry, QuadSource};
 
+/// Camera and lens identity, read from the file's own metadata.
+///
+/// Deliberately **not** part of [`Frame`] and not on the decode path: a gear
+/// profile is optional, and a capture that carries no identity must decode
+/// exactly as it did before this module existed.
+pub mod identity;
+
+pub use identity::{CaptureIdentity, identity};
+
 #[derive(Debug, thiserror::Error)]
 pub enum RawError {
     #[error("decode failed for {path}: {source}")]
