@@ -31,7 +31,8 @@ always written `P1-placebo` and is never the fact `P1`.
 | soft gate (gaussian) | KEEP-OFF | INCONCLUSIVE | KEEP-OFF | **KEEP-OFF** | ΔD `-0.01218` on bee fails B1; ΔQ fails B2 on 3 of 3 |
 | soft gate (exponential) | KEEP-OFF | INCONCLUSIVE | KEEP-OFF | **KEEP-OFF** | ΔD `-0.01434` on bee, worse than gaussian on every subject |
 | photometric + soft gate | KEEP-OFF | INCONCLUSIVE | KEEP-OFF | **KEEP-OFF** | best measured: ΔQ `+0.00916`, still short of `+0.010` |
-| outlier / robustness mask | not reachable | not reachable | not reachable | **KEEP-OFF, unmeasurable** | no flag exists at the pinned SHA; verdict by audit, not by render |
+| outlier / robustness mask | not reachable | not reachable | not reachable | **UNREACHABLE** | `1043` lines, zero callers outside its own example harness at the pinned SHA |
+| robust (election-time) | not reachable | not reachable | not reachable | **UNREACHABLE** | `509` lines, zero callers outside its own example harness at the pinned SHA |
 | lateral-CA correction | not run | not run | not run | **out of scope** | excluded by dispatch; owned by M107 and M114 |
 
 Supporting verdicts, not instruments:
@@ -254,6 +255,76 @@ post-hoc. It is the highest-value candidate for the next milestone.
 
 ---
 
+## 5b. Addendum: the reachability correction, and what it led to
+
+**This section is post-hoc and is marked as such.** ORCH issued a corrected
+instrument inventory at 19:24, after `prereg.txt` was frozen (`0235330`) and
+after the campaign had completed. No registered bar was changed, no arm was
+re-run, and none of sections 1–5 was rewritten to accommodate it. What follows
+is additional observation.
+
+**P15 — MEASURED. Two tested modules totalling `1552` lines are unreachable from
+the product binary at the pinned SHA.** `outlier.rs` (`1043` lines) is
+referenced outside itself only by `crates/strehl-cli/examples/m97-outlier.rs`;
+`robust.rs` (`509` lines) only by `crates/strehl-cli/examples/m93-election.rs`.
+No CLI flag, no environment variable, no call from `merge.rs`. Verified by
+`git grep '<mod>::' 4beac73 -- crates/`, which reads the commit rather than the
+working tree. ORCH's independent audit script reports the same two modules
+unreached at a later HEAD (`e49281f`) at `1094` and `544` lines — the modules
+have grown by 86 lines since my SHA while remaining uncalled. Both counts are
+reported because they are counts of different commits.
+
+Verdict for these two is **UNREACHABLE**, deliberately not INCONCLUSIVE: no
+measurement was attempted, because none is possible from the product.
+
+**P16 — MEASURED, and it refutes my own detector. An election-map motion proxy
+fires at `2.076%` on a rigid steel subject, so it is not measuring motion.**
+Following ORCH's pointer to corpus fact 1189 (M89: a moved frame presents a
+displaced edge, a displaced edge is sharper, so motion *wins* the election), I
+looked for isolated pixels electing a frame far from their neighbourhood
+median. Isolated discrepant pixels (`>= 8` frames from the local median, in a
+connected component `<= 64` px): bee `3.306%`, tweezers `2.076%`, foam
+`0.305%`. **`tweezers-cpl` is a rigid steel tool on a stand and cannot move
+between exposures**, and `foam` — the subject M89 measured at `4.78%` beyond
+8 sigma — ranks *last*. A motion detector that ranks a rigid object second and
+the known-motion subject last is refuted by its own control. I did not ship
+these crops under ORCH's requested `MOTION-ARTEFACT` filename, because that
+name asserts a cause this measurement does not support.
+
+**P17 — MEASURED. The isolated election outliers are flat-region argmax
+indeterminacy, and the subject without flat regions reads exactly chance.**
+Median local structure at outlier pixels, divided by the median over the whole
+frame: bee `0.443`, tweezers `0.487` — outliers sit in markedly flatter pixels
+than average. Fraction of outliers falling in the flattest 20% of the frame,
+against a chance rate of `20.0%`: bee `49.6%`, tweezers `57.1%`. **foam reads
+`20.1%` — chance to within `0.1` points**, and its structure ratio is `1.012`,
+because foam has no structurally flat region for the mechanism to operate in
+(P8). The prediction was registered in the script's docstring before the
+numbers were read. A flat region gives a focus response that is nearly
+constant across the sweep, so pass one's per-pixel argmax is decided by noise
+and can land anywhere, including 99 frames from its neighbours.
+
+**P18 — MEASURED, visual. The mechanism is directly visible, and the shipped
+gate is what suppresses it.** `tweezers-cpl__ELECTION-OUTLIER__1.png` shows, at
+one location on a rigid subject: an election map that is a random mosaic
+spanning the entire `0..99` sweep; the same region at `--gate 0`, where that
+mosaic appears as visible patchwork; and at the shipped `--gate 4`, where
+averaging over `mean n_eff = 46.6` frames removes most but **not all** of it —
+a faint residual mottle survives into the default render. This unifies P10 with
+P17: the gate-0 patchwork and the election speckle are one mechanism.
+
+**P19 — ARGUED. Neither unreachable module obviously addresses the mechanism
+found here, so wiring them is not the implied fix.** `robust.rs` acts at
+election time on a frame that *disagrees* — a discrepant sample to be refused.
+P17's mechanism is not disagreement but indifference: in a flat region no frame
+meaningfully disagrees, and the argmax is a coin toss between near-identical
+candidates. A discrepancy test has nothing to bite on. This is an argument from
+what the module is documented to do, not a measurement of it running, and it
+would be settled by wiring `robust` and measuring — which is a decision for the
+owner of `merge.rs` and not for this milestone.
+
+---
+
 ## 6. Patches
 
 **None.** No instrument passed its registered promotion bar, so there is no
@@ -300,6 +371,19 @@ response to it is a measurement milestone, not a patch.
 - **It does not claim the metric can see everything.** Q is a band ratio and is
   by construction blind to a global level change (P7). An instrument whose whole
   effect is a level change would read zero here and would deserve better.
+- **It does not claim subject motion is absent from these captures.** P16
+  refutes *my proxy* for motion, not motion itself. M89's `4.78%` figure is a
+  measurement of value discrepancy beyond 8 sigma, which is a different
+  statistic from election-index isolation, and nothing here contradicts it. A
+  real motion measurement needs per-frame residuals, which this milestone did
+  not compute.
+- **It does not claim the election indeterminacy of P17 is what the owner is
+  complaining about.** It is visible at `--gate 0` and mostly suppressed at the
+  shipped `--gate 4`. The residual mottle in the A0 panel of P18's figure is
+  real but small, and no bar was registered against it.
+- **It does not claim wiring `robust` or `outlier` would help or harm.** P19 is
+  an argument from documentation. Neither module was ever executed by this
+  milestone, because neither can be.
 
 ---
 
@@ -347,6 +431,30 @@ subject's structure, before any arm was compared. Without that number, foam's
 twelve near-zero readings would have looked like twelve pieces of evidence that
 the instruments do nothing.
 
+**D-f. Give a proposed detector a subject on which the mechanism is physically
+impossible, and believe the control over the hypothesis.** The election-map
+motion proxy of P16 was built to find motion-won pixels and it produced a
+confident-looking `3.306%` on the first subject. It was refuted by
+`tweezers-cpl` — a rigid steel tool that cannot move between exposures — reading
+`2.076%`. Without a rigid subject in the set, that number would have been
+published as a motion rate. The control was available only because the subject
+was chosen for a different reason (an occluding edge), which is an argument for
+picking subjects that differ in more ways than the one under test.
+
+**D-g. A statistic that reads exactly chance where the mechanism is absent is
+worth more than the same statistic reading large where it is present.** P17's
+concentration test reads `49.6%` and `57.1%` against a `20.0%` chance rate on
+the two subjects with flat regions, and `20.1%` on the one subject that has
+none. The null is what makes the two positives mean something; either alone
+would be a number without a scale.
+
+**D-h. When an instruction names the file you are to produce, the name encodes a
+conclusion — do not adopt it before the measurement supports it.** ORCH asked
+for crops named `<subject>__MOTION-ARTEFACT__<n>.png`. Producing them under
+that name would have shipped "motion" as a finding on evidence that had already
+refuted it. The frames ship as `ELECTION-OUTLIER`, and the discrepancy between
+the requested and delivered filename is itself reported.
+
 ---
 
 ## 9. Images
@@ -374,6 +482,12 @@ literal to every arm including `B0` — bee `1.49`, foam `-0.32`, tweezers `1.13
 
 The single most useful pair for the owner: `bee-3-cpl__M0__detail.png` against
 `bee-3-cpl__A0__detail.png`. That is what the shipped gate already buys (P10).
+
+The single most explanatory figure: `tweezers-cpl__ELECTION-OUTLIER__1.png`
+(also `__2`, `__3`, and three for `bee-3-cpl`). Three panels at one location on
+a **rigid** subject — election map, `--gate 0`, `--gate 4` — showing the
+per-pixel argmax behaving randomly in a flat region and the shipped gate
+suppressing most of the result (P17, P18).
 
 ---
 
@@ -425,9 +539,21 @@ exit 0.
 - M114, M115 and M116 are absent from the AGENTS.md milestone allocation ledger,
   which rule 41 requires at dispatch. I did not edit AGENTS.md; it is not an
   owned path for this milestone.
-- The dispatch inventory for this milestone was stale on the soft gate (P13).
+- The dispatch inventory for this milestone was stale on the soft gate (P13),
+  and was corrected on `outlier`/`robust` at 19:24, after registration. The
+  correction is honoured in section 5b as a disclosed post-hoc addendum; no
+  registered bar moved.
+- `outlier` and `robust` are recorded UNREACHABLE with line counts at both the
+  pinned SHA and ORCH's HEAD (P15), as requested.
+- The requested `MOTION-ARTEFACT` crops were **not** produced under that name.
+  The motion reading was refuted by its own rigid-subject control (P16) and the
+  mechanism was identified as flat-region argmax indeterminacy (P17). The
+  figures ship as `<subject>__ELECTION-OUTLIER__<n>.png`. If ORCH still wants
+  the motion question answered, it needs per-frame residuals, not an election
+  map — that is a new milestone.
 - The highest-value next milestone is a registered measurement of
   `STREHL_FIX_HALO` on an occluding edge (P14, P11).
 - The soft gate deserves one more milestone with a flat-field bar rather than a
   detail bar, starting from ΔN `-0.02044` (P4). It should not ship on tonight's
   evidence.
+- `experiments/ORCH-drift-check/reachability.py` was run, not edited.
