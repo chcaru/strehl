@@ -2001,7 +2001,21 @@ in this report is measured on the linear renders, because `--srgb` applies a
 non-diagonal colour matrix and a guided demosaic and its own `--help` says
 "For looking at, NOT for measuring."
 
-### 9c. Lateral chromatic aberration — the ones to open first
+### 9c. Lateral chromatic aberration — UN-ADJUDICATED, and labelled as such
+
+**Every image in this subsection is un-adjudicated pending ORCH's `V-CA`
+verifier**, which is auditing whether the `61.0 %` / `58.7 %` figures come from
+the shipped pipeline and whether the correction was ever raced against a
+negative-strength arm rather than only against OFF. The same eight files are
+duplicated into `C:\dev\strehl-out\M116\` with a
+`CA-UNADJUDICATED--` prefix, so that a reader who opens the output folder
+without reading this report cannot mistake them for a promoted result. Section
+5f's own verdict is **HOLD** on independent grounds — my plant `CD1` failed on
+two of four subjects — so nothing here is blocked on `V-CA` alone.
+
+One caveat to carry into any caption: the correction makes fringes **fainter,
+not thinner**. The peak drops faster than the tail and the half-max width is
+unchanged, so it must not be described as sharpening.
 
 `C:\dev\strehl-out\M116\images-ca\`
 
