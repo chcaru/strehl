@@ -1847,3 +1847,89 @@ the instruments that measured it — and per §21 there is currently **no calibr
 instrument** in the project entitled to say which. My own `k = 1.374` remains
 withdrawn. Nothing here licenses a change to `eps_r`, and nothing here licenses
 shipping 0.692.
+
+## 23. The clean space is necessary and not sufficient — and I still have no instrument
+
+The orchestrator's stop-ship established that `--srgb --auto-exposure` is a
+contaminated measurement space. **R10, R11 and R12 were all rendered
+`--srgb --auto-exposure`.** `stack --help` says of that render, in the tool's own
+words, *"For looking at, NOT for measuring"* — I ignored the same warning the
+orchestrator did, one message after quoting its C3 analogue back at myself.
+
+R13 re-renders the same stack, same sidecar, in the **default binned linear
+camera-native** space — which the help text calls *"what measurement needs …
+the file every number in this project's corpus was measured on"* — and re-runs
+R11's plants there. Bars X1–X4 registered first, including M113's 529.9 ppm
+registered as the number to beat **before** running.
+
+### 23.1 Results
+
+| bar | sRGB (R11) | clean (R13) | registered verdict |
+| --- | --- | --- | --- |
+| X1 `applied / eps_r`, ground truth 1.0 | — | **0.8338** | **FAIL** (band [0.90, 1.05]) |
+| X2 gain, plant −704.5 / −352.2 | 0.584 | **0.940 / 0.927** | — |
+| X2 gain, plant +352.2 / +704.5 | 0.299 | **0.771 / 0.655** | — |
+| X2 sign asymmetry | 48.9% | **30.3%** | **FAIL** |
+| X3 tangential leak | 3.0% | **0.7%** | PASS |
+
+**X4 was not reported.** The gate refused, so I contribute **no competing value**
+for `needed` and nothing that argues with M113's 529.9 ppm.
+
+### 23.2 The space was a large confound, and it was not the only one
+
+Every statistic improved in the clean space — asymmetry 48.9% → 30.3%, tangential
+leak 3.0% → 0.7%. **The orchestrator's diagnosis is confirmed on my data.**
+
+But the residual asymmetry is not noise, and its shape identifies the second
+cause. Ordered by the **total** displacement the estimator faces (the scene's own
++408.5 ppm plus the plant):
+
+| plant | total | total in px | gain |
+| --- | --- | --- | --- |
+| −352.2 | +56.3 ppm | 0.12 | **0.927** |
+| −704.5 | −296.0 ppm | 0.63 | **0.940** |
+| +352.2 | +760.7 ppm | 1.61 | **0.771** |
+| +704.5 | +1113.0 ppm | 2.35 | **0.655** |
+
+**Gain falls monotonically with the magnitude of the displacement being
+measured**, and the fall begins right where a first-order gradient method stops
+being valid, around 1 px. So §21's diagnosis — amplitude saturation — was **right
+in kind and overstated in degree**: in sRGB it was compounded by a reference
+partially anchored to the signal, and the two effects were not separable until
+the space was cleaned.
+
+**The correction to §21 is therefore narrower than a retraction.** "No calibrated
+instrument exists" stands for *my* instrument, but the reason is amplitude
+saturation, not the sRGB matrix alone, and it is not fixed by changing space.
+
+### 23.3 An addendum to the transfer check, offered as a caution not a challenge
+
+The transfer check is the best instrument anyone produced tonight and I have
+adopted it. **But a single transfer number cannot reveal amplitude-dependent
+gain**, because it is measured at one displacement — the one the shipped constant
+happens to apply. My own chain reads `0.8338` while passing a tangential placebo
+at 0.7%; nothing internal to that measurement would have exposed the saturation
+that X2's four plants did.
+
+This bears on the strongest claim of the night, so it is worth one control.
+M113 reports `needed` of **529.9** and **654.9 ppm** on two scenes and concludes
+the ~140 ppm gap is physical, from spectral differences. **If its estimator also
+has amplitude-dependent gain, the two scenes sit at different true displacements
+and would therefore be read at different gains, which produces a scene gap that
+is partly instrumental.** Its two transfer values, 0.9399 and 0.9813, are
+consistent with either story.
+
+**I am not disputing the conclusion** — the spectral mechanism is sound and I
+have no measurement of my own to set against it. The cheap control that would
+settle it: run plants at **two amplitudes and both signs, in the clean space, on
+both stacks**, and show the gain is flat. If it is, the scene difference is
+physical and the "no scalar exists" conclusion is fully armoured. That is worth
+having, because it is the claim everything else now rests on.
+
+### 23.4 State
+
+`eps_r = -704.5e-6` and `support_r_max = Some(0.788)` are **unchanged**; no
+scalar was ever applied; `optics.rs` has not been edited since the wiring and its
+clippy fix. **There is nothing of mine to unwind.** §22's finding is unaffected —
+it is a code read, not a measurement, and the application path remains
+definitively clean regardless of which space anyone measures in.
