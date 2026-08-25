@@ -447,4 +447,103 @@ the envelope is the more forgiving of the two errors.
 4. **No debiasing, no quantile tuning, no regression.** All three were proposed by me and
    all three are refuted above.
 
+---
+
+## 9. The other side of the same term, and why it cannot be fixed the same way
+
+The two-layer model is symmetric on paper:
+
+```
+I_k(p) = a_k · (F ⊛ PSF_k)(p)  +  (1 − a_k) · (B ⊛ PSF_k)(p)
+```
+
+A **background** pixel near a silhouette picks up the foreground term and darkens (for a
+dark subject). That is the aura, and §8 fixes it at 30.3×. A **foreground** pixel near
+the same silhouette picks up the background term and washes pale. Both are the same
+physics with the layers exchanged, so the obvious move is to mirror the rule: reject
+samples displaced *toward the other layer* on whichever side you are standing.
+
+I built it. It is refuted, and the way it fails is more useful than the fact that it does.
+
+`twoside.py`, `flower-bud-alone-cpl`, nine frames, subject-side pixels, rule applied to
+1.4% of the frame by weight. The wash is measured as median luminance in the silhouette
+band; detail is gradient RMS, reported separately for the band the rule acts on and for
+the subject core it must not reach:
+
+| arm | wash DN | detail @ edge | detail @ core |
+| --- | --- | --- | --- |
+| merge | 5124 | 4044.4 | 864.1 |
+| one-sided (§8) | 5124 | 4044.4 | 864.1 |
+| two-sided | 4708 | 3030.4 | 864.1 |
+
+**0.919× of the wash, for 0.749× of the silhouette detail.** Eight percent of the defect
+for a quarter of the structure. The core is untouched at 1.000×, so the gate itself is
+clean — the damage is entirely inside the band the rule was aimed at.
+
+The montage is worse than the number, and this is the reason to look at pictures.
+`preview/twoside-upper-lobe.png` shows merge | one-sided | two-sided. In panel 3 the
+bud's rim is **eaten**: the fine bristle texture along the silhouette is gone, replaced
+by a flat pale band. Panel 2 — the shipping rule — leaves that rim identical to the merge
+while clearing the backdrop behind it.
+
+### Why the mirror fails, and what it fixes in my own specification
+
+The asymmetry is not in the physics. It is in what the two sides have to lose.
+
+> On the backdrop, the content is featureless. Every frame's sample is the same latent
+> value plus veil plus noise, so an extremum over frames costs **nothing** — there is no
+> detail there to destroy, only veil to reject.
+>
+> On the subject, the correct sample is a **specific frame**: the one in focus at that
+> depth. An extremum over frames is emphatically not that frame. The rule competes with
+> the election, and it loses.
+
+That kills item 3 of §8's specification as I wrote it. "Background pixels only" is a
+**mask-geometric** gate, and the variable it stands in for is not geometry:
+
+> **The invariant is whether the election has anything to choose between.** Where the
+> through-focus focus response is flat, selection is arbitrary and the envelope is free.
+> Where it is peaked, the election is carrying real information and nothing may override
+> it.
+
+This is strictly better than the mask formulation in three ways: it is computable from
+the focus volume the merge already builds; its threshold is set against the calibrated
+noise floor rather than tuned by eye, which is the project's whole thesis; and being
+content-based it reaches pixels that a distance-from-silhouette gate can never reach.
+
+**§8 item 3 is superseded. Items 1, 2 and 4 stand unchanged.**
+
+## 10. The pale wash is a different defect, and it is now the largest one visible
+
+The decisive observation is a *null*: the wash is **identical in all three panels** of the
+montage. Neither form of the veiling rule moves it. Whatever it is, it is not the veiling
+term, and no refinement of §8 will remove it.
+
+`preview/twoside-lower-lobe.png` names it. That crop lies entirely inside the subject and
+contains a **straight-edged polygonal patch** of visibly softer, wrong-depth content with
+a hard boundary against its neighbours — present in all three arms. Straight boundaries
+do not occur in defocus; defocus is smooth and isotropic at this scale. A hard polygonal
+seam in a merged image is a **winner-field artifact**: a block elected from a different
+frame than everything around it. The scalloped boundary on the upper lobe's wash is the
+same failure at smaller scale.
+
+This is the mechanism BUILD-SHARP independently named from artifact morphology —
+*geometric mis-selection*, the merge electing for a pixel a frame in which some other
+structure covered it. Two lanes reached it from opposite directions, which is the
+strongest evidence the project has that it is real.
+
+Recorded here, with its evidence, so that it is not confused with the veiling defect
+again and so that no time is spent trying to make §8 remove it. It is its own lane.
+
+## 11. What the two negatives cost, and what they were worth
+
+Five of my own proposals have now died in this document: the unsigned envelope (inverts
+on bright subjects), regression to α=0 (loses in 5 of 6 bands), quantile debiasing
+(unnecessary), the two-sided mirror (§9), and the mask-geometric gate (§9). One survived
+and it is worth 30.3× on the defect the owner called unusable.
+
+The ratio is the point, not an embarrassment. Every one of the five was killed by an
+instrument built to kill it, before it reached the crate — which is the only reason the
+shipping specification is four lines long and every line of it is measured.
+
 
