@@ -386,6 +386,23 @@ monolithic binary and ship only that binary.
     fold only from a committed sha and cite it, and when a milestone reports a
     correction, **re-read the folded row itself** before believing the report's
     account of it.
+31b. **Run `python experiments/ORCH-drift-check/fold_check.py <fold.py>
+    <report.md> docs/research/SYNTHESIS.md` before committing any fold.** This
+    is rule 31's mechanical half, and it exists because discipline 849 does not
+    execute itself: seven folds in one night moved a number or a qualifier
+    toward the claim, and the seventh (fact 1686, a measured **60.9%** folded as
+    a **"MINORITY"**) happened *while its author was writing the discipline
+    forbidding it*. The tool parses the fold with `ast` — it never executes it —
+    lifts every numeric literal, and requires each to appear in a source, with
+    the surrounding context printed so meaning can be checked rather than mere
+    presence. **Its second bucket is the one that matters**: qualifiers
+    (*majority, minority, dominant, only, largest*) sitting next to a number are
+    printed for a human read, because they carry the sign and no presence check
+    can test them. Run retrospectively on the fold that produced 1686, it flags
+    `[MINORITY]` and `[dominant]` against the number they misdescribe. Pass
+    `SYNTHESIS.md` as an extra source when the fold cites existing facts.
+    Commissioned with two sabotages that must read RED; `--commission` self-tests.
+    **A green here is necessary and not sufficient — read the qualifier bucket.**
 32. **`rawpy`'s `raw_image_visible` is a view into LibRaw's buffer, not a
     copy — and its use-after-free does not reliably crash.** It is invalid the
     instant the `RawPy` context manager exits. Allocate *and* copy inside the
