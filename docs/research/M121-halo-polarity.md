@@ -309,6 +309,108 @@ gate is what keeps its detection stable under narrowing.
 
 ---
 
+## N6 — a narrowing ladder, and where a first-moment statistic actually breaks
+
+ORCH's correction #2 replaces the triage with *"does the statistic read pixel
+**value**, or feature **position**?"* — location immune, dispersion destroyed,
+with the immunity bounded at **~12 distinct levels per fitted window**.
+
+**That dichotomy does not contain M121's statistic.** The rim is
+
+```
+rim = mean_band( p(+d) − hi ) / (hi − lo)
+```
+
+Every term is a **first moment** — a mean, or a difference of means. It reads
+pixel value, so the new rule sorts it with the vulnerable half; but it is not a
+dispersion statistic, so the stated mechanism for that vulnerability (absorbing
+the quantisation variance) does not apply. There are three classes, not two:
+
+1. **Location** — immune; error is zero-mean and uncorrelated with sub-pixel position.
+2. **First moment** — *also* largely immune, for a different reason: the error is
+   zero-mean and **averages down over the samples in the estimate**.
+3. **Dispersion** — destroyed; the estimate *is* the variance quantisation adds to.
+
+`n6_ladder.py` runs the full headline at eight narrowing rungs. **MEASURED:**
+
+| bits | levels/edge amplitude | levels/rim signal | headline | retained | n |
+|---|---|---|---|---|---|
+| 0 | 6753.7 | 428.20 | +0.0634 | 100.0 % | 70 |
+| 4 | 422.5 | 26.68 | +0.0632 | 99.6 % | 70 |
+| 6 | 105.6 | 7.39 | +0.0700 | 110.4 % | 69 |
+| **8 (the PIL defect)** | **26.3** | **1.63** | **+0.0619** | **97.7 %** | 69 |
+| 9 | 13.1 | 0.72 | +0.0555 | 87.5 % | 73 |
+| 10 | 6.5 | 0.60 | +0.0926 | **146.0 %** | 57 |
+| 11 | 3.2 | 0.07 | +0.0232 | 36.6 % | 62 |
+| 12 | 2.0 | 0.00 | +0.0000 | 0.0 % | 106 |
+
+**ORCH's 12-level bound is CONFIRMED on a completely different statistic class** —
+the break falls between 13.1 and 6.5 levels, straddling 12 almost exactly.
+
+**But the scope in ORCH's rule is wrong for a ratio statistic.** At the PIL
+defect the *signal* holds **1.63 levels**, seven times below the bound, and the
+statistic still retains 97.7 %. What predicts the break is levels across the
+**normalising denominator** — the edge amplitude — not levels across the
+quantity being measured. For any statistic of the form *small ÷ large*,
+**count the levels in the large one.** Counting the signal would have condemned
+this measurement by a factor of seven.
+
+**"Watch the sample count, not just the result" is directly validated.** The
+first bad value is bits = 10 at 146 % — a plausible-looking 46 % over-read. Its
+only warning is that **n drops 69 → 57**. Past that the failure stops being
+quiet: the rim collapses to an exact `+0.0000` and n jumps to a nonsensical 106.
+So on this estimator the dangerous rung is a single one, and the sample count is
+its leading indicator.
+
+---
+
+## N7 — sweeping the support floor, which falsified a claim I had already made
+
+ORCH: *"a support floor is a real defence… the protection is graded — watch the
+sample count."* M121 has one, `MIN_AMPLITUDE = 2000 DN`, chosen from
+`amp_probe.py` before any verdict was read — but chosen at one value and
+**never swept**. `n7_floor.py` sweeps it. **MEASURED:**
+
+| floor (DN) | headline | n | null | n |
+|---|---|---|---|---|
+| 0 | +0.0634 | 70 | +0.0009 | 18 |
+| 500 | +0.0634 | 70 | +0.0009 | 18 |
+| 1000 | +0.0634 | 70 | +0.0009 | 18 |
+| 1500 | +0.0634 | 70 | +0.0009 | 18 |
+| **2000 (shipped)** | **+0.0634** | **70** | **+0.0009** | **18** |
+| 3000 | +0.0631 | 69 | +0.0009 | 18 |
+| 4000 | +0.0565 | 69 | +0.0044 | 17 |
+| 6000 | +0.0547 | 48 | +0.0052 | 15 |
+
+Two things follow, and the second is a retraction.
+
+**Good news: the headline does not depend on the threshold.** It is *identical*
+across 0 → 2000 DN and varies by 13.7 % across the entire sweep including
+settings that discard a third of the sample. The verdict is not an artifact of
+where I put the floor.
+
+**Retraction (this corrects what I sent ORCH after N5).** I claimed the floor
+was what kept the headline's detection stable under narrowing. **That is false
+and this sweep falsifies it.** `n` is pinned at 70 from 0 DN to 2000 DN — the
+floor excludes **nothing** from the headline class, so it cannot be protecting
+it. All 70 headline edges already sit above 2879 DN, as `amp_probe.py` said.
+What actually protects the headline is that silhouette edges are *intrinsically*
+high-amplitude (median 6754 DN), which keeps them far from N6's ~13-level cliff.
+The floor's real and separate job is killing the flat-ROI false positives that
+N4 caught — a different sample, where it took 113 → 0. Both statements are true;
+I had merged them into one that was not.
+
+**Saturation audit of my own controls (ORCH's new tell).** N2's rise ladder
+`n = [41, 2, 5, 9, 30]` varies; `e2b`'s depth split varies; N7 varies
+(70 → 48); N4's own sampling varied 113 → 0. **One block does read pinned:**
+N3's `a0` rungs hold `n = 93` across every blur setting. That is *not* the
+damaging kind — the swept parameter there is the plant's blur, not an exclusion
+threshold, so a stable edge set is the intended matched design, and the ladder's
+verdict does vary across it (pass → fail at blur 3). Checked rather than
+assumed.
+
+---
+
 ## Provenance (discipline 830)
 
 Every arm was identified against the `strehl stack` log beside it, not from its
@@ -720,6 +822,22 @@ Numbered `P1…` per rule 28; ORCH assigns absolute numbers.
   I measure decided from the narrowed pixels?"** Amplitude does not predict the
   damage — the worst-affected class had the *highest* median amplitude
   (10260 DN), refuting the obvious occupied-range explanation.
+- **P17 (MEASURED).** ORCH's ~12-level bound holds on a **first-moment ratio**
+  statistic, a class its rule does not cover: the M121 headline breaks between
+  **13.1 and 6.5 levels**. But the levels must be counted across the
+  **normalising denominator**, not the signal — at the PIL defect the signal
+  holds **1.63 levels**, 7× below the bound, and the statistic still retains
+  **97.7 %**. For any *small ÷ large* statistic, count the large one.
+- **P18 (MEASURED).** The sample count is the leading indicator of narrowing
+  damage. The one dangerous rung (146 % over-read, a plausible wrong number) is
+  flagged only by `n` dropping 69 → 57; past it the failure is loud (exact
+  `+0.0000`, n jumps to 106).
+- **P19 (MEASURED — corrects an earlier M121 claim).** `MIN_AMPLITUDE = 2000 DN`
+  excludes **nothing** from the headline class (`n = 70` at every floor from 0
+  to 2000), so it is **not** what protects the headline under narrowing. The
+  headline is floor-independent (13.7 % spread across the whole sweep). The
+  floor's real job is the flat-ROI false positives of N4, where it took
+  113 → 0.
 
 ---
 
@@ -782,6 +900,8 @@ alone.
 | `…/e3_election.py` | `e3-election.json` — election spill, byte-identity check |
 | `…/e4_controls.py` | `e4-controls.json` — N1, N1b, N2 ladder, N4 |
 | `…/n5_quant.py` | `n5-quant.json` — the PIL narrowing planted and commissioned |
+| `…/n6_ladder.py` | `n6-ladder.json` — narrowing ladder; where the rim breaks |
+| `…/n7_floor.py` | `n7-floor.json` — support-floor sweep and saturation audit |
 
 Renders (invocations recorded beside each):
 `C:\dev\strehl-out\M121\e3\` (bee-3, byte-identical to shipped),
