@@ -40,6 +40,19 @@ built to a private `--target-dir`. Every number below comes from that one binary
 > metric is fragile and should not carry conclusions.** Three more predictions
 > missed; §14.6 scores them.
 
+> ### ⚠ Addendum 3 — §13 was not mine first (§15)
+>
+> ORCH relayed M97e's trap/plant prior for me to score against. Chasing it to the
+> artefact showed **M97e had already found §13's unwiring — using the same
+> garbage-value reachability proof — and recorded it in
+> `experiments/M97-warped-merge/out/M97e-merge_cmd-seam.diff.txt`.** §13 is a
+> replication, not a discovery, and §15.1 says so. My rule-40 prior-art check
+> missed it because `prior_art.py` does not index `experiments/**/out/*.txt`.
+> **I cannot score against the prior**: promotion is not available as a defaults
+> change, so there is no disagreement to report — the two results compose rather
+> than conflict. §15.3 carries five corrections to the relay, including that
+> SYNTHESIS fact 1750 omits that M97e's binary carried an unlanded seam.
+
 ---
 
 ## 0. The answer, in one table
@@ -1099,4 +1112,145 @@ Reproduce with:
 ```powershell
 cd experiments\M126-default-audit; python quant.py
 ```
+
+
+---
+
+## 15. Addendum 3 — the M97e robust-election prior, and a correction to §13's priority
+
+ORCH sent the M97e trap/plant result as a pre-registered directional prior and
+asked me to score my own robust-election measurement against it, reporting any
+disagreement loudly rather than reconciling it quietly. Chasing it to the
+artefact produced a correction against me, which goes first.
+
+### 15.1 §13 is a replication, not a discovery — M97e found it first
+
+I presented §13's *"`STREHL_ROBUST_ELECTION` is not wired into `strehl stack`"*
+as new work. **It is not.** M97e recorded it, and recorded it more precisely
+than I did, in
+`experiments/M97-warped-merge/out/M97e-merge_cmd-seam.diff.txt` lines 4-18:
+
+> *"STATUS: `crates/strehl-core` is complete, tested and committed. The switch
+> `STREHL_ROBUST_ELECTION` is **read by nothing in the render path**, because the
+> three call sites are in `crates/strehl-cli/src/merge_cmd.rs`, which is M109's
+> file. I have not touched it.*
+>
+> *This is not an inference from reading the code. `arm_from_setting` refuses an
+> unrecognised value with `UnknownArm` rather than silently reading it as off, so
+> a render that SUCCEEDS with a deliberately invalid value is positive proof that
+> nothing calls it. Measured:*
+>
+>     STREHL_ROBUST_ELECTION=sotf  cargo test -p strehl-cli --test byte-freeze
+>     -> exit 0, both frozen hashes reproduced, the value never named in output"
+
+That is my §13.3 — the finding, the objection to inferring it from a null, the
+garbage-value reachability oracle, and the frozen-hash corroboration — written
+before I started. M97e used `sotf`; I used `banana`. I reached it independently
+and did not know it existed.
+
+**Why my rule-40 prior-art check missed it.** `prior_art.py` surfaced
+`M116-promotion` and reshaped the milestone around it, but this finding lives in
+a `.diff.txt` inside an `experiments/**/out/` directory — not in a report, not
+in a `docs/research/` file, and not as a SYNTHESIS fact. **A load-bearing
+negative result was sitting in the tree, unfindable by the corpus's own prior-art
+search.** That is a tooling gap worth more than my duplicated effort cost.
+
+**What §13 does add**, stated narrowly so it is not mistaken for priority:
+
+- The gate is **still** unwired at `d5ba764`, many commits after M97e. The seam
+  never landed and nothing else grew a call site.
+- An external corroboration M97e did not use: `STREHL_ROBUST_ELECTION=banana`
+  renders `119936E6…AD709`, which **is** the committed freeze row
+  `coffee-bean-20-gate2-sidecar` (`byte-freezes.tsv:87`), bit for bit. M97e
+  proved it through `cargo test`; the digest proves it through the artefact.
+- M97e's seam targets `merge_cmd.rs:1715`; at `d5ba764` the same context sits at
+  **`merge_cmd.rs:1871`**, and hunk 2's anchor
+  (`let first_index = (ci * plan.chunk_len) as u16;` immediately above
+  `let mut stats = FocusStats::new(geom);`) is intact. **The seam is still
+  applicable**, so the handoff is live rather than bit-rotted.
+
+### 15.2 I cannot score against the prior, and that is the result
+
+ORCH's instruction was to expect promotion to **hurt**. The honest answer is
+that **promotion is not available as a defaults change.** Setting
+`STREHL_ROBUST_ELECTION` on by default changes no pixel, because the CLI never
+constructs the robust pass. Testing the prior requires first applying M97e's
+three-hunk seam to `merge_cmd.rs` — a `crates/` edit my brief bars, and another
+milestone's unlanded artefact. I did not apply it.
+
+So: **no disagreement, and no score.** The two measurements are not in tension
+and must not be split. M97e measured what the gate would do *if wired*; I
+measured that it *is not wired*, at a much later commit. They compose:
+
+> The robust election would fire 21.5× harder on a stationary stack than on a
+> moving one **if it were connected**, and it is not connected.
+
+The seam diff patches exactly the line §13 identified:
+
+```
+-            let mut stats = FocusStats::new(geom);
++            let mut stats = FocusStats::new_robust(geom, pass1_var)
+```
+
+Two milestones arriving at the same line from opposite directions — M97e writing
+the patch that would close the gap, me finding the gap by reading forward from
+the environment variable.
+
+### 15.3 Five corrections to the relay
+
+1. **Attribution.** The report is `docs/research/M97e-robust-election.md`; the
+   experiment directory is `experiments/M97-warped-merge/`. Both names are in
+   play, but the numbers and the disclosure are M97e's.
+2. **The numbers are not from the shipped binary, and the corpus row hides
+   that.** SYNTHESIS fact 1750 says the arms were *"rendered back-to-back from
+   one pinned binary with command lines identical but for the environment
+   variable"* — true, but the binary carried an **unlanded seam**. M97e
+   disclosed this plainly (its §5, and the seam file's own STATUS header); the
+   fold into SYNTHESIS lost it. **That omission is the entire reason the prior
+   reads as contradicting §13.**
+3. **A verifier already flagged this leg.**
+   `V-M97kill-verification.md:464`: *"The M97e leg was not reproduced… requires
+   … the `merge_cmd` seam that M97e section 5 says was never applied to the
+   shared tree."* And `:474`: fact 1770 *"cites the 21.5× as independent
+   corroboration without carrying that caveat."* The relay repeated the
+   uncaveated version.
+4. **The trap carries an open confound the relay omitted.** M97e's trap
+   `coffee-bean` is the stack with the **largest photometric drift in the
+   corpus** (11.70 % peak-to-peak, fact 180), and M97e states it could not rule
+   that out as the cause of the trap firing. A gate that fires on brightness
+   drift rather than motion would produce exactly this trap/plant ratio.
+   **That is M122's and M125's territory, not mine** — I am flagging it, not
+   adjudicating it.
+5. **Two number pairs, both real.** `6.8735 % / 0.3141 %` (= 21.88×) is the
+   *changed-output-value* pair; `7.3723 % / 0.3431 %` (= 21.49×) is the
+   *changed-elected-frame* pair. Fact 1750 carries both; the relay mixed the
+   ratio of one with the label of the other. Immaterial to the conclusion.
+
+### 15.4 The three method warnings, scored against my scripts
+
+| warning | status |
+|---|---|
+| **1. Silent reader fallback** | **CLEAN.** Hard `import tifffile` at module scope (`score.py:28`, `pick_single.py:27`, `quant.py:99`). No `PIL`, no `Image.open`, no `except ImportError` anywhere in this milestone. `assert dtype == np.uint16` immediately after every load. `masksource.py`, `tables.py` and `derived.py` import from `score.py`, so they inherit the reader rather than re-implementing it. |
+| **2. Non-uniform quantisation bias** | **Already priced — see §14**, and ORCH's version is the same mechanism from the other side. ORCH: a narrowing reader under-measures dense small-amplitude signals (7.9 %) far more than sparse large-amplitude ones (0.25 %). §14.2: a common floor saturates the small term first, so `dN` attenuates 40 % while `dD` attenuates 10 % — and that asymmetry is what inverts `dQ`. My data sits at dose 0, quantisation error **2.0 %** of `sd_flat`, β = 1.0000. |
+| **3. Cache confound** | **Excluded structurally, by a stronger mechanism than private directories — but not the one ORCH prescribed, so stated plainly.** The main campaign sets an explicit `STREHL_WARPMAP` on every aligned arm; `alignment_for()` (`merge_cmd.rs:1216`) uses the named sidecar and **never calls `load_or_solve`**, so no cache path is ever computed. Unaligned arms return at the `!align_enabled()` guard before any cache path. This additionally pins the *exact warp bytes* shared across arms, which a private cache would not. **I did not set a private `STREHL_CACHE_DIR` in `run.ps1`**; `run_nesting.ps1` and `run_reach.ps1` do. |
+
+**And the outlier point:** my matrix names no outlier-mask arm, and `PREREG.md`
+lines 50-51 drew ORCH's exact distinction before the campaign ran — *"`robust.rs`
+(election-time) is a different module"* from the outlier mask that M123/M89/M60/M28
+refused four times. Confirmed at `d5ba764`: `outlier`'s only library or CLI
+reference is `lib.rs:23 pub mod outlier;`. **Two dead modules of the same class**,
+which is now a pattern rather than an incident.
+
+### 15.5 What this changes
+
+- **Verdict unchanged: KEEP OFF**, and §13's sharper framing stands — this is a
+  defect report, not a defaults decision.
+- **The recommendation gains a fork.** Either land M97e's seam — and M97e's own
+  trap/plant says do not — or delete the dead library path. Leaving it as it is
+  is the worst of the three: `strehl-core` carries a tested, documented
+  robustness feature with a written starvation contract that the product cannot
+  reach, and two separate milestones have now spent effort rediscovering that.
+- **New handoff — the prior-art tooling.** `prior_art.py` does not index
+  `experiments/**/out/*.txt`. M97e's finding was there, in plain English, and
+  neither my rule-40 check nor ORCH's fold found it.
 
