@@ -1,343 +1,387 @@
-# V-HALO: independent verification of BUILD-HALO (3315a91, e5e62d4)
+# V-HALO: independent verification of BUILD-HALO
 
 **VERDICT: CONFIRMED WITH QUALIFICATION.**
 
-The fix does what it says on the tin mechanically — I reproduced both of its arms
-byte-for-byte from a pinned tree — but two of its supporting numbers do not
-survive, and its own sharpness evidence is measuring the artefact it introduced.
-**It is not print-worthy, and the disqualifier has changed identity.**
+v2 (`bca6df3`) is a real, reproducible improvement and its reported numbers are
+honest — I reproduced all three of its renders bit-for-bit and its revised noise
+figures to within 0.2 points. But **two of its explanations are wrong**, and the
+load-bearing mechanism claim is weaker than stated:
 
-Scope: everything below verifies commit `e5e62d4` (tree `e5e62d46...`). While I
-worked, `bca6df3` ("halo v2: interpolate the depth grid and feather the treatment
-boundary") landed, plus further uncommitted edits to `edgeaware.rs`. **None of
-v2 is verified here.** That v2 exists is itself corroboration of section 4 below.
+- the empirical dose-response slope **does not survive freezing the edge set**;
+- v2's own gain comes from the depth-grid interpolation, **not** from the
+  treatment-boundary feather it is named after;
+- `FEATHER = 1.25`'s stated rationale is not what the code does, and the shipped
+  diagnostic is mathematically incapable of detecting the failure it guards.
 
-All measurements are mine and are **UNVERIFIED** by anyone else.
+**It is still not print-worthy.** See section 8.
 
----
-
-## 0. Method: the pin, and its commissioning
-
-Two implementers were editing the tree throughout. I did not hash arms; I removed
-the confound. `git archive` of the explicit SHA `e5e62d46...` into
-`C:\dev\strehl-out\V-HALO\pin`, built there, and every arm below rendered from
-that binary. This was the right call: HEAD moved from `e5e62d4` to `bca6df3`
-mid-session and `edgeaware.rs` was modified in the live working tree.
-
-**The pin resolves to its own sources**, proved rather than assumed: planting a
-sabotage caused `cargo` to print
-`Compiling strehl-core v0.0.0 (C:\dev\strehl-out\V-HALO\pin\crates\strehl-core)`.
-
-**Commissioned with two sabotages, both required to go RED:**
-
-| sabotage | target | expected | observed | |
-|---|---|---|---|---|
-| S1 | `LayerSupport::apply_at` discards the masked mean (`edgeaware.rs:614`) | `EDGE_AWARE=1` collapses onto the `off` hash | `sabo-on` = `D2DC0272…` = `off` | **RED** |
-| S2 | `window_radius()` ignores `STREHL_WINDOW_RADIUS` (`focus.rs:111`) | ladder rungs become byte-identical | `sabo-w3` = `sabo-w26` = `895E458D…` | **RED** |
-| control | no sabotage | arms differ | `on` `21191A3B…` != `off` `D2DC0272…`; `w3` `0D25ED22…` != `w26` `FDCA03B0…` | **live** |
-
-Both instruments distinguish a live feature from an inert one. Pin restored from
-`$env:TEMP` copies and confirmed content-identical to the pinned commit (949 and
-1176 lines, exact match).
+This document covers two passes: **v1** (`3315a91`/`e5e62d4`) and **v2**
+(`bca6df3`). All measurements are mine and are **UNVERIFIED** by anyone else.
+Section 0.1 lists errors I made and corrected, including one in the first
+committed version of this file.
 
 ---
 
-## 1. The mechanism slope — CONFIRMED IN SLOPE, TWO NUMBERS KILLED
+## 0. Method
 
-### 1.1 The analytic half is exact and already unit-tested
+Two implementers edit this tree continuously, so I did not hash arms — I removed
+the confound. `git archive` of each explicit SHA into
+`C:\dev\strehl-out\V-HALO\pin` (v1) and `…\pin2` (v2), built and rendered there.
+Both pins proved they resolve to their own sources: patching them made cargo
+print `Compiling strehl-core v0.0.0 (C:\dev\strehl-out\V-HALO\pin2\crates\...)`.
+
+**Commissioned with sabotage; every arm required to go RED:**
+
+| # | sabotage | observed | |
+|---|---|---|---|
+| S1 (v1) | `LayerSupport::apply_at` discards the masked mean | on-arm collapses to the off hash | RED |
+| S2 (v1) | `window_radius()` ignores `STREHL_WINDOW_RADIUS` | all ladder rungs become byte-identical | RED |
+| S1 (v2) | `apply_at:736` blend write discarded | on-arm → `D2DC0272…` = baseline exactly | RED |
+| control | unsabotaged | on `27E1FCD8…` ≠ off `D2DC0272…` | live |
+
+**The render pipeline is deterministic**: three repeat renders of
+`flower-inner-edge-cpl` from one pin gave `50F99118…` every time. That matters,
+because it makes byte-identity a valid instrument here.
+
+### 0.1 My own errors, found and corrected
+
+I report these because an unverified verifier is worth nothing.
+
+1. **A wrong hash in the first committed version of this file.** I wrote that
+   `BUILD-HALO.md` §3's `965AA23B…` was wrong and "the real hash is `895E458D…`,
+   as my own render confirms". **My render is `85213987…`** — I confused two
+   similar hex strings. I have reproduced *neither* `965AA23B` nor `895E458D`.
+   The finding that survives is weaker and is stated in section 2.
+2. **A stale-binary error that nearly produced a false headline.** `Copy-Item`
+   restores a file with the *source's* mtime, so cargo saw it as clean and did
+   not rebuild. Two renders were made with the wrong binary, and I briefly had
+   evidence that BUILD-HALO's `flower-inner-edge` v2 deliverable was
+   unreproducible. It is not — after forcing the rebuild it matches bit-for-bit.
+   **Retracted.** Any build-flag A/B on this repo must assert that
+   `Compiling strehl-core` actually appeared.
+3. **Two measurement instruments discarded for failing their own controls**: a
+   veil metric that selected the baseline's darkest quartile (regression to the
+   mean — it scored *every* arm above baseline, contradicting the pictures), and
+   an earlier blotch metric whose negative control failed. Section 4's blotch
+   instrument is the rebuilt one and its control passes.
+
+---
+
+## 1. The mechanism — the analytic half is exact; the empirical slope is not robust
+
+### 1.1 What is solid
 
 `focus::tests::centre_tap_fraction_and_read_extent_are_what_m13_specified`
-**measures** the read extent by perturbing one pixel and counting how many
-outputs move. It asserts `taps == (2*(SOBEL_RADIUS + WINDOW_RADIUS)+1)^2 == 841`.
-It passes in the pin. So the *support* identity is not a fit, it is exact: the
-focus field at `p` cannot see content beyond Chebyshev radius `1 + w`. Slope 1 is
-an upper bound by construction.
+**measures** the read extent by perturbing one pixel and counting moved outputs,
+asserting `taps == (2*(SOBEL_RADIUS + WINDOW_RADIUS)+1)^2 == 841`. It passes.
+The focus field at `p` provably cannot see past Chebyshev radius `1 + w`. Slope 1
+is an upper bound by construction, not a fit.
 
-### 1.2 The empirical ladder: slope replicates, per-rung values do not
+**Independent confirmation of the scale, without the rim estimator.** On
+`bee-2-cpl` the residual v2 correction, profiled against distance from sharp
+structure, peaks at `d = 0` (511 DN) and falls to half by **d ≈ 12 px**, gone by
+~20. The whole effect lives inside `SOBEL_RADIUS + WINDOW_RADIUS = 14 px`. That
+is the mechanism's spatial signature, measured on a different quantity
+(`|after − before|`) from the one used to derive the slope.
 
-I re-rendered all six rungs from the pin (bee-3-cpl, 299 frames, `--gate 0`,
-`STREHL_ALIGN=0`) and scored them.
+### 1.2 What does not survive: the slope depends on who supplied the edges
 
-| `WINDOW_RADIUS` | 3 | 6 | 9 | 13 | 20 | 26 |
-|---|---|---|---|---|---|---|
-| **published** rim cutoff | 9.25 | 9.75 | 10.75 | 14.00 | 21.25 | 29.00 |
-| **my** rim cutoff | 30.00 | 30.00 | 11.50 | 15.00 | 24.25 | `nan` |
-| **published** rim `w50` | 8.75 | 8.75 | 9.50 | 10.75 | 19.00 | 25.75 |
-| **my** rim `w50` | 17.75 | 26.50 | 11.00 | 13.00 | 20.25 | 28.50 |
-| **my** accepted edge count | 21 | 32 | 44 | 79 | 118 | 129 |
+The brief asked whether the rim estimator is itself a function of window radius.
+Directly, **no**: `scan()` is never passed `w`, and `DMAX`, `DSTEP`, `PLATEAU`,
+`NEAR`, `BANDS` and the classifier are fixed. The risk is indirect —
+`edge_seeds` thresholds on a percentile of *that arm's own* gradient field, so a
+wider window (smoother, more veiled background) admits a different edge set.
 
-My rim `w50` over w9..w26 regresses on `W` with **slope +1.043**. The
-dose-response is real and it is monotone. **The mechanism claim survives.**
+So I froze the edge set and re-measured. Seeds **and** normals taken from one
+donor rung, acceptance decided by the donor alone, applied unchanged to all six
+rungs, with an estimator carrying **no 30 px cap** (I search to `DMAX = 48`):
 
-Four things do not:
+| donor | w3 | w6 | w9 | w13 | w20 | w26 | **slope** | n |
+|---|---|---|---|---|---|---|---|---|
+| **w3** | 24.25 | nan | 24.75 | 27.25 | 27.25 | 27.75 | **+0.161** | 32 |
+| **w13** | nan | 14.75 | 15.25 | 15.25 | 26.00 | 35.75 | **+1.087** | 34 |
+| **w26** | 20.75 | 20.75 | 21.00 | 20.00 | nan | nan | **−0.066** | 30 |
+| *per-arm re-detection (published method)* | | | | | | | *+1.043* | |
 
-**(a) The intercept `1.08` is not in the data.** I refit their own published
-table every way it can be fit — `cutoff`, `rim w50`, `C w50`, against `W`, `W+1`
-and `W+2`, over all 57 subsets of >=3 rungs. **No fit returns an intercept within
-0.05 of 1.08.** The headline fit (`cutoff ~ W`, w9..w26) reproduces their slope
-exactly at **1.0750** and returns an intercept of **0.4750 +/- 1.1761**. With four
-points quantised at 0.25 px the intercept is not measured at all; "intercept 1.08,
-that is `SOBEL_RADIUS`" is an unfalsifiable read of a number that is +/-1.2 wide and
-whose point estimate is closer to 0.5 than to 1. The claim should rest on the
-slope and on section 1.1, and say so.
+**The measured slope is a property of the edge set, not of the image.** Freeze
+the edges on w3 and it is +0.16; freeze on w26 and it is −0.07. Only the w13
+donor — the shipped radius, the middle of the ladder — returns ≈1, and that is
+also the donor whose normals are least wrong for every other rung.
 
-**(b) The ladder is unpaired, three times worse than the read they disqualified
-for it.** Section 5.2 rejects the before/after because "`scan()` re-detects edges
-in each arm's own image, and the edge counts differ by 2x". Across the section 1
-ladder the accepted edge count runs **21 -> 129, a 6.1x drift**, and it rises
-monotonically with `w` — wider window, more veil, smoother far plateaus, more
-edges pass the `sd/A <= 0.10` flatness gate. The population is selected on the
-very quantity the halo produces. The counts are not reported in section 1.
+I cannot separate two explanations: (a) per-arm edge re-detection manufactures
+the slope, or (b) frozen normals degrade the profile for distant rungs. Either
+way the conclusion for the report is the same: **the empirical slope of 1.07 is
+not established.** It is one of several values this family of estimators returns
+depending on a choice that was never reported. Four independent attempts — their
+donor mode, my ring-median reach estimator, my frozen-edge normaliser, and this
+cross-matrix — have failed to produce a stable paired read of this ladder.
 
-**(c) The paired read cannot measure the ladder either.** Scoring every rung on
-one frozen donor edge set returns **`bright: ext=+nan` on 4 of 5 arms**
-(`C_d0` inflates to 54.96 / 49.20 / 49.20 / 43.52 px, all beyond
-`PLATEAU[0] = 30`). There is no paired measurement of this ladder, in either
-direction.
+Realised distinct luminance levels in the measured window: **26 417** across the
+ladder sample, so no quantisation hazard in these pooled statistics.
 
-**(d) The top rung sits on the instrument's ceiling.** `outer_cutoff` searches
-only `dist <= PLATEAU[0] = 30`. Their w26 value of 29.00 is 1 px under the cap;
-mine returns `nan`. The rung carrying the most regression leverage is at the
-ceiling, and `PLATEAU = (30,45)` leaves a w26 rim only 3 px of clearance before
-the "far plateau" it normalises against.
+### 1.3 Other defects in the §1 ladder, unchanged from my v1 pass
 
-**Is the estimator itself a function of `w`?** Not directly — `scan()` is never
-passed `w`, and `DMAX`, `DSTEP`, `PLATEAU`, `NEAR`, `BANDS`, `GRAD_PCT`, `ISO`,
-`FLAT_TOL`, `MIN_AMPLITUDE` and the cached classifier are all fixed. The
-circularity is indirect and is (b): the edge *set* is re-derived per rung from a
-percentile of that rung's own gradient field.
+- **Unpaired, with 6.1× edge-count drift** (21 → 129, monotone in `w`) — three
+  times the 2× drift §5.2 cites as disqualifying its own before/after. Counts
+  are not reported in §1.
+- **The published intercept 1.08 is absent from its own table.** Refitting every
+  published row against `W`, `W+1`, `W+2` over all 57 subsets of ≥3 rungs yields
+  no intercept within 0.05 of 1.08. The headline fit reproduces their slope
+  exactly (1.0750) and gives intercept **0.4750 ± 1.1761** — undetermined.
+- **The top rung sits on the instrument's ceiling.** `outer_cutoff` searches only
+  `dist ≤ PLATEAU[0] = 30`; their w26 = 29.00 is 1 px under it.
+- **§1 and §5.2 disagree about the same render.** Both describe `bee-3-cpl`,
+  gate 0, `ALIGN=0`, radius 13. §1 says `C w50` 13.50; §5.2 says 17.25. My
+  independent render gives **17.25, peak +0.63424, n = 36** — matching §5.2 to
+  five decimals and contradicting §1.
 
-### 1.3 The report contradicts itself on the same arm
-
-Section 1's `w13` rung and section 5.2's `bee-3-cpl` "before" are **the same
-render measured with the same instrument** (bee-3-cpl, gate 0, `ALIGN=0`,
-`WINDOW_RADIUS=13`). The document reports both:
-
-| | rim `w50` | rim cutoff | `C` `w50` | `C` peak | n |
-|---|---|---|---|---|---|
-| section 1, `w13` | 10.75 | 14.00 | 13.50 | — | — |
-| section 5.2, "before" | — | — | 17.25 | +0.634 | 36 |
-| **my render** | 13.00 | 15.00 | **17.25** | **+0.63424** | **36** |
-
-My independent render reproduces **section 5.2 exactly**, to five decimals and to
-the edge count, and hashes to `895E458D…` — the hash `3315a91`'s own commit
-message quotes. **Section 1's ladder does not reproduce from the pinned tree.**
-Section 9 and section 5.2 do. Whatever section 1 was measured on, it was not this
-code; its per-rung numbers should not be quoted.
+**Recommendation:** rest the mechanism on §1.1, which is exact and already
+unit-tested, and on the 14 px reach. Withdraw the slope and intercept figures.
 
 ---
 
-## 2. Dark when unset — CONFIRMED BYTE-EXACTLY, one hash in the report is wrong
+## 2. Dark when unset — CONFIRMED byte-exactly, and still true after v2
 
-Rendered from my pin, `bee-2-cpl`, product default gate, alignment on:
+Rendered from my own pins, `bee-2-cpl`, product default gate, alignment on:
 
 | arm | SHA-256 | |
 |---|---|---|
-| `STREHL_EDGE_AWARE` unset | `D2DC02728033E359035C5BB1C122A5F8F93D50009CBD9F2D41B4885AE013331D` | |
-| `STREHL_EDGE_AWARE=0` | `D2DC0272…E013331D` | identical |
+| `STREHL_EDGE_AWARE` unset (v2 pin) | `D2DC0272…E013331D` | |
+| `STREHL_EDGE_AWARE=0` (v2 pin) | `D2DC0272…E013331D` | identical |
 | BUILD-RENDER frozen baseline | `D2DC0272…E013331D` | identical |
 | BUILD-HALO `halo-off` | `D2DC0272…E013331D` | identical |
-| `STREHL_EDGE_AWARE=1` | `21191A3B81291C9A0C83F694F803768B56DC239E357DDA93AEC00D94FFD20880` | **differs** |
-| BUILD-HALO `halo-on` | `21191A3B…FFD20880` | identical |
-| **S1-sabotaged** `=1` | `D2DC0272…E013331D` | **RED — collapses** |
+| `=1`, v1 pin | `21191A3B…FFD20880` | differs |
+| `=1`, v2 pin | `27E1FCD8…D87F5EC5` | differs, and from v1 |
+| **S1-sabotaged `=1`** | `D2DC0272…E013331D` | **RED — collapses** |
 
-Both of their arms reproduce bit-for-bit from a tree nothing else could write to.
-The feature is genuinely dark when unset; it is genuinely live when set; and the
-instrument tells those two states apart (S1). **Claim confirmed.** As a
-side-effect this retires the section 8 concurrency confound for section 9 — their
-frozen-ROI campaign was not contaminated.
+The v2 dark path is byte-identical to v1's and to pristine HEAD, and the
+flag-unset ladder rung is unchanged between pins (`85213987…` both). The feature
+is genuinely dark when unset and genuinely live when set, and my instrument
+tells those apart. **Claim confirmed.**
 
-**Defect (documentation, low):** `BUILD-HALO.md` section 3 states the flag-unset /
-pristine-HEAD identity as "both `965AA23B...`". The true hash of that arm is
-`895E458D…` — which is what commit `3315a91`'s message says, and what my own
-render of it produces. `965AA23B` appears to be stale. The report and its own
-commit message disagree on the evidence for the same claim.
+**All three v2 deliverables reproduce bit-for-bit** from `bca6df3`:
+`bee-2-cpl` `27E1FCD8…`, `flower-inner-edge-cpl` `9995F6C1…`,
+`flower-bud…-fern-cpl` `0B98147E…`. (Their file timestamps, 02:56–03:04, precede
+the commit at 03:07:22 — they were rendered from the working tree that became
+the commit. Benign, and confirmed benign by the hashes.)
 
-**Cost:** 2.29x on my box (79.8 s -> 183.1 s), against their 2.07x (51.5 s ->
-106.8 s). My box was contended; same order, not contradicted.
+**Residual defect (documentation, low):** `BUILD-HALO.md` §3 states the identity
+as `965AA23B…`; commit `3315a91`'s own message states it as `895E458D…`. They
+cannot both be right. I reproduced neither and cannot say which is correct —
+only that the report and its commit message disagree about the evidence for the
+same claim. **Corrected from my previous version of this file**, which wrongly
+asserted `895E458D` was confirmed.
+
+Cost, v2 on my box: 58.6 s → 140.9 s = **2.40×**.
 
 ---
 
-## 3. "Not a blur: 0 of 15 worse, +6.7%" — REPRODUCED EXACTLY, AND REFUTED AS EVIDENCE
+## 3. `FEATHER = 1.25` — the stated rationale is not what the code does
 
-I recomputed their statistics in linear (`tifffile`, `uint16` asserted, no PIL) on
-their own deliverables at the frozen ROIs:
+The author names this its weakest link: chosen from one synthetic probe, and at
+2.0 "almost nothing cleared all three guards … leaving halo on the plate while
+every metric looked fine". I tested it on real composites by patching the
+constant in my pin and rebuilding (verifying recompilation each time; and
+verifying the patch was live — `bee-2-cpl` at 2.0 gives `9CCBA2EC…` ≠ 1.25's
+`27E1FCD8…`).
 
-- detail crops, `hp_energy` ratio mean **1.0671**, **0 of 15 worse** — their
-  +6.7%, exactly.
-- flat crops, `noise_sd` ratio mean **1.0461** — their +4.6%, exactly.
+**Finding 3a — the treated-pixel count is mathematically invariant to FEATHER.**
+`smoothstep(lo, hi, v) = 0 ⟺ v ≤ lo`, and all three guards use `lo` = the
+un-feathered threshold. So the *set* of treated pixels cannot change with
+FEATHER, only each pixel's strength. Measured on `flower-inner-edge-cpl`:
 
-Their arithmetic is right. The inference is not.
+| FEATHER | 1.0001 | 1.25 | 1.6 | 2.0 |
+|---|---|---|---|---|
+| shipped log "support masked" | 17.37% | 17.37% | 17.37% | 17.37% |
 
-**(a) The same statistic rises on crops chosen for having no structure.**
+**The shipped diagnostic cannot detect the failure mode this constant exists to
+prevent.** The number it prints is constant by construction while the effective
+strength falls by a third. "Almost none [clear all three guards]" is not what
+happens at 2.0 — the same pixels clear them, at reduced amplitude.
 
-| crop class | `hp_energy` all 15 | untouched crops | treated >=10% of pixels |
+**Finding 3b — the sensitivity is real but gentle, and 1.25 is nearly hard.**
+`flower-inner-edge-cpl`, all four hashes distinct:
+
+| arm | flat `noise_sd` vs base | blotch (pp) | mean \|Δ\| |
 |---|---|---|---|
-| detail | **1.0671** | 1.0029 (n=4) | **1.1227** (n=7) |
-| **flat** | **1.1679** | 1.0000 (n=3) | **1.3057** (n=7) |
-| edge | 1.2239 | — | 1.2553 (n=13) |
+| v1 (hard bins, hard guards) | +5.3% | 1.9275 | 28.37 |
+| F = 1.0001 (tent bins, hard guards) | +1.3% | 0.4500 | 15.56 |
+| **F = 1.25 (shipped)** | **+1.2%** | **0.4061** | **14.32** |
+| F = 1.6 | +1.1% | 0.3461 | 12.07 |
+| F = 2.0 | +0.7% | 0.2656 | 9.58 |
 
-High-pass energy rising **+16.8%** on flat crops — and **+30.6%** on the flat
-crops the operator actually fires on — cannot be sharpening. A featureless patch
-has no detail to sharpen. Something is being *added*.
+The shipped value sits 8% below the hard-switch limit in applied magnitude. The
+curve is smooth and monotone — there is no cliff at 2.0, just a 33% dilution.
+The constant is defensible; **the argument given for it is not.**
 
-**(b) The statistic tracks how hard the operator fired, not quality.**
-Pearson r(changed %, `hp_energy` ratio) = **+0.4994**;
-r(changed %, `noise_sd` ratio) = **+0.7935** (n=45).
-
-**(c) The mean is diluted by crops the operator never touched.** 4 of 15 detail
-crops changed <1% of their pixels (three at `p99|delta| = 0 DN`); **3 crops changed
-exactly zero pixels** (`bee-2/flat2`, `lavendar/flat0`, `lavendar/flat1`). They
-score exactly 1.0000 and are counted in "0 of 15 worse". Conditioned on
-treatment, the noise cost is **+12.3% (detail)** and **+5.8% (flat)**, peaking at
-**+36.6%** (`bee-3/detail2`), not +4.6%.
-
-**(d) The decisive case.** `bee-2-cpl detail1` scores `hp_energy` **+23.1%** — one
-of the best in the set. Look at it: the dark leg has a **serrated white edge
-chewed into it**, a row of hard-edged tongues that do not exist in the baseline.
-`flower-inner-edge-cpl edge2` scores **+61.8%**, the largest gain in the entire
-crop set, and is a smooth defocused field carved into hard-edged tonal plates.
-**The statistic ranks as most improved the two crops that are most damaged.**
-
-Crop *selection* is clean — the ROIs are frozen in BUILD-RENDER's plan, derived
-from the baseline, so they were not chosen to flatter. The defect is the
-statistic, not the sampling.
-
-I found **no evidence of blurring**. "Not a blur" is probably true. But the
-evidence offered does not establish it, and the same number would have been
-produced by an operator that only added artefacts.
+**Finding 3c — the unit test tests the wrong geometry, and says so.** Its own
+comment reads: *"A synthetic hard step is the wrong probe here: it crosses tau
+within a single pixel, so a tight feather correctly produces no partial zone at
+all."* The probe was therefore changed to a quadratic depth ramp. But **an
+occluding edge — the entire subject of this work — is a hard step in depth.** By
+the test's own reasoning the feather produces no partial zone at a silhouette.
+It smooths gentle depth ramps, which is not where the artefact was.
 
 ---
 
-## 4. The new artefact — NOT "MILD", NOT CONFINED TO TRANSITIONS, AND A BAD TRADE
+## 4. v2's own causal story is wrong: it is the tent, not the feather
 
-Section 9.5 calls it "mild blotchiness at treated transitions, visible on
-`bee-2-cpl` edge2 … much less objectionable than the halo it replaces". I judged
-this on the pictures, in linear, with my own before | after | delta panels
-(delta full-scale = 1% of range).
+This is the finding I would most want acted on. v2 bundles two changes — tent
+interpolation of the depth grid, and `smoothstep` feathering of the three
+guards. The author now says the grid was "real but minor" and the treatment
+switch was "the larger discontinuity". Setting `FEATHER ≈ 1` isolates them,
+because it leaves the tent in place and restores hard guards:
 
-The correction field is **a mosaic of hard-edged, adjacent, opposite-sign lobes**.
-That is the `N_LAYERS = 6` bin boundary crossing a smooth depth ramp: the layer
-index flips and the masked mean flips with it. A correction that removes a
-box-window veil must be band-limited to the >=13 px window scale; this one is not.
+| step | blotch (pp) | share of the total repair |
+|---|---|---|
+| v1 → tent grid, hard guards (F = 1.0001) | 1.9275 → 0.4500 | **76.6%** |
+| tent grid → + shipped feather (F = 1.25) | 0.4500 → 0.4061 | **2.3%** |
 
-Instrument (band-pass 2–8 px contrast on ground the *before* image says is
-featureless), with a negative control — the identical correction field gaussian-
-smoothed at sigma 8:
+Same ordering in flat noise: +5.3% → +1.3% (tent), then +1.3% → +1.2%
+(feather). **The depth-grid interpolation does essentially all of the work; the
+treatment-boundary feather contributes about a fortieth.** The retraction was
+made in the right direction — v2 is better — but the attribution is inverted.
 
-| arm | mean ratio vs before |
-|---|---|
-| **negative control** (same delta, made smooth) | **0.982x** — control passes |
-| real edge-aware arm | **1.105x** (range 1.01–1.23x) |
-
-(My first attempt at this instrument scored the *control* at 5.2% area — it was
-reading amplitude, not sharpness. I discarded it. Reporting that because an
-uncommissioned version of it would have handed me a large and wrong number.)
-
-The pooled number is modest because the artefact is local; the pictures are not
-modest. On `bee-2-cpl flat1` a smooth surface acquires a dense field of hard-edged
-worm-like patches. On `bee-3-cpl edge1` the soft veil around the claw becomes a
-**hard-edged white cut-out collar with free-floating white islands**. On
-`flower-inner-edge-cpl edge2` a continuous bokeh gradient becomes tonal plates.
-
-**Plain opinion on the trade: on `bee-2-cpl` and `bee-3-cpl` it is a bad one.** A
-soft low-contrast veil reads as optical defocus — wrong, but natural. A hard-edged
-opposite-sign mosaic reads as a processing failure, and the eye finds artificial
-contours in smooth areas far faster than it finds a wash. At print scale, on a
-smooth background, that is the more disqualifying of the two.
-
-That BUILD-HALO has since committed `bca6df3` ("interpolate the depth grid and
-feather the treatment boundary") is independent corroboration that this artefact
-is real and material. That work is not verified here.
+Blotch instrument: 2–8 px DoG contrast restricted to ground the *baseline* says
+is featureless, threshold set from the baseline's own quiet region. Negative
+control — the shipped correction field gaussian-smoothed at σ = 8, i.e. the same
+amplitude made smooth — scores **0.0281 pp** against the shipped arm's **0.4061
+pp**, a 14× separation at comparable magnitude (\|Δ\| 10.00 vs 14.32). The
+instrument reads sharpness of added structure, not amplitude. The baseline
+anchors at 0.0000 by construction, so only comparisons among treated arms are
+meaningful; the control supplies the scale.
 
 ---
 
-## 5. What is genuinely good
+## 5. The revised noise figures — CONFIRMED, and the reattribution holds
 
-Not everything here is a complaint.
+Measured in linear at the frozen ROIs, `tifffile`, `uint16` asserted, raw beside
+ratio, no gate change:
 
-- **`flower-inner-edge-cpl edge0` is a real, large win.** In linear, the muddy
-  grey-green veil goes and the trichome silhouettes come back crisp against a
-  genuinely dark background. It is as good as claimed.
-- **The `flower-bud` rim really does survive**, and the confidence-veto sweep
-  really is a fair test of it: at `conf 1.15` the tight bright sheath is
-  unchanged by eye. The "this is not a too-conservative guard" argument holds.
-- **Section 5.2's refusal to spin `C`** is correct, and I reproduce all three of
-  its reasons independently: edge sets differ per arm (mine: 21–129), the paired
-  read returns `nan` (mine: 4 of 5 arms), and `outer_cutoff` is capped at 30 px.
-  The only fault is that the same three objections apply to section 1's ladder
-  and were not applied there.
-- Treated fractions reproduce exactly from the render logs: 19.97 / 19.43 /
-  17.19 / 10.62 / 9.15 %.
-- 384 `strehl-core` tests pass in the pin, including all 13 new `edgeaware` tests.
+| subject | class | raw base | raw v1 | raw v2 | v1 | v2 | claimed v2 |
+|---|---|---|---|---|---|---|---|
+| bee-2-cpl | flat `noise_sd` | 360.235 | 391.888 | 376.110 | +8.8% | **+4.4%** | +4.5% |
+| flower-inner-edge-cpl | flat `noise_sd` | 155.633 | 163.905 | 157.563 | +5.3% | **+1.2%** | +1.3% |
+| flower-bud…fern-cpl | flat `noise_sd` | 38.142 | 40.295 | 38.642 | +5.6% | **+1.3%** | +1.1% |
+| bee-2-cpl | detail `hp_energy` | 1050.0 | 1161.9 | 1088.4 | +10.7% | +3.7% | — |
+| bee-2-cpl | edge `hp_energy` | 685.8 | 881.7 | 816.9 | +28.6% | +19.1% | — |
+| flower-inner | edge `hp_energy` | 308.9 | 370.9 | 317.5 | +20.1% | +2.8% | — |
+| flower-bud | edge `hp_energy` | 444.0 | 568.9 | 467.6 | +28.1% | +5.3% | — |
+
+All three revised figures reproduce to within 0.2 points. **Confirmed.**
+
+**The reattribution away from `FOCUS_NOISE_SD` is sound**, and for a reason
+stronger than the author gives: v2 changed *only* the smoothness of the blend —
+not `FOCUS_NOISE_SD`, not the window radius — and removed 50–77% of the excess.
+A cause that survives when its supposed driver is untouched is not the driver.
+The FEATHER ladder in section 3b is the dose-response that confirms it. The
+residual +4.4% on `bee-2-cpl` remains unattributed.
+
+**"Is the lower `hp_energy` artefact removal or detail loss?"** Evidence says
+removal: v2 is above baseline on **all nine** rows (+0.2% to +19.1%), so no
+class lost structure relative to the untreated image, while measured blotch fell
+4.7×. There is no evidence of blur. But this is the same statistic that in v1
+ranked the two most damaged crops as most improved — it should not be the
+deciding instrument in either direction, and it isn't here; the pictures are.
 
 ---
 
-## 6. Test coverage gap
+## 6. The coverage-boundary claim — UNVERIFIED, and the pictures sit awkwardly with it
 
-The 13 new tests cover `LayerSupport` and `SelectionScale` as units. **The 279
-new lines in `merge_cmd.rs` have no tests** — the guide election at
-`GUIDE_RADIUS`, the `tau` default (1/8 of the robust winner span), the `conf`
-default, and the two-pass substitution are exercised only by whole-image renders.
-The shipped wiring is an untested change, which is an unverified change.
+The claim: the bright blobs hugging silhouettes are `MIN_LAYER_FRACTION`
+withdrawing where a 13 px window no longer holds enough background.
+
+The geometry is not obviously kind to it. For a **broad** silhouette, a
+background pixel adjacent to the boundary has roughly half its window in the
+background layer — far above `MIN_LAYER_FRACTION = 0.12`. Withdrawal should bite
+on **thin** structures (antennae, claws, trichomes), where a pixel's own layer
+really is a sliver. Yet the strongest surviving collar in the set is on
+`flower-bud-with-background-fern-cpl edge0`, a large smooth convex bud — and the
+Δ map there is a chain of rounded lobes of roughly constant size following the
+outline, which is the signature of a box window, not of a coverage threshold.
+
+I could not turn this into a measurement I trust: my frozen-silhouette reference
+locked onto the trichome hairs rather than the bud outline, so the reach profile
+is interpretable only on `bee-2-cpl`. **I therefore report the claim as
+unverified, not refuted.** It is being used to justify the next phase of work,
+so it deserves a direct test — instrument `blend` and the per-layer fractions and
+dump them as planes, rather than inferring from composites.
 
 ---
 
-## 7. The number that does not fit
+## 7. Test coverage
 
-**`hp_energy` rises +16.8% on the flat crops, and +93.6% on `flower-bud flat1`.**
+388 tests pass in the v2 pin (was 384), including all 17 `edgeaware` tests and
+the read-extent test. The four new v2 tests are real behavioural tests — the
+tent-splat mass conservation and grid-continuity ones are genuine.
 
-BUILD-HALO's account is "every gradient statistic rises slightly, so this is not
-a blur." Nothing in that account explains a 17–94% rise in high-pass energy inside
-regions the ROI plan selected *for containing no structure*. There is exactly one
-thing that can put high-frequency energy into a featureless patch, and it is not
-sharpness. That number was available in the same table as the +6.7% and was not
-read.
-
-Runners-up: the intercept `1.08`, which is absent from every fit of its own
-table; and the 6.1x edge-count drift across the rungs of the ladder that the
-whole thesis rests on.
+**The gap is unchanged:** the 279 new lines in `merge_cmd.rs` — guide election,
+the `tau` and `conf` defaults, the two-pass substitution — still have no tests,
+and `merge_cmd.rs` is untouched by v2. The shipped wiring remains an unverified
+change. `FEATHER` has no test that ties it to a real composite.
 
 ---
 
 ## 8. Is it print-worthy?
 
-**No — and the reason has changed.**
+**No.** The author's own verdict — "veiling halo materially reduced, tight rim
+and coverage-boundary blobs remain" — understates one thing and overstates
+another.
 
-BUILD-HALO's own verdict (NOT print-worthy, PARTIAL) is right, but its reasoning
-is too kind to itself: "materially reduced on 3 of 5 subjects, survives on 2".
-What I see on the images is:
+What I see, judging the linear images at the frozen ROIs:
 
-- `flower-inner-edge-cpl`: **better overall.** Real improvement, plus one invented
-  hard edge in the smooth background.
-- `lavendar-cpl`: **essentially unchanged.** 9.15% treated, minimal visible effect.
-- `flower-bud-…-fern-cpl`: **unchanged where it matters.** Sheath survives; some
-  new hard-edged patches appear on flat ground.
-- `bee-2-cpl`, `bee-3-cpl`: **worse overall.** The veil is genuinely pushed back,
-  and it is replaced by a hard-edged quantisation mosaic and cut-out collars that
-  I would reject in a print faster than I would reject the veil.
+- **`flower-inner-edge-cpl`: genuinely better, and v2 is much better than v1.**
+  The trichome silhouettes are crisp against dark ground, and v1's carving of the
+  smooth bokeh at `edge2` is largely repaired. This is a real win.
+- **`flower-bud…fern-cpl`: unchanged where it matters.** The tight bright sheath
+  survives, and a scalloped lobed collar still rings the bud.
+- **`bee-2-cpl`: still disqualifying.** This is the part the report does not
+  say. At `detail1` the dark leg still has **hard-edged pale plates carved into
+  it** — a serrated bite out of a foreground object that does not exist in the
+  baseline. v2 softened the *edges* of those plates; it did not remove them, and
+  their geometry is essentially unchanged from v1. At `flat1` the smooth ground
+  still carries hard-edged tongues and worm-like patches.
 
-**What specifically disqualifies it:** not the halo any more, but the
-`N_LAYERS = 6` nearest-bin quantisation. It converts a smooth defocus wash into
-hard-edged, opposite-sign plates on smooth ground, including on ROIs the plan
-classified as flat and detail. Until the depth axis is interpolated and the
-treatment boundary feathered, the treated render is not shippable on the two bee
-subjects. `bca6df3` is aimed at exactly this; it needs its own verification pass,
-and it needs one that does not use `hp_energy` as the sharpness proof.
+**What specifically disqualifies it:** on `bee-2-cpl`, structure invented on and
+around foreground objects — pale plates cut into a dark leg, and hard-edged
+mottling on smooth ground. A viewer reads that as damage, not as defocus. The
+original veiling halo was a soft wash; this is a shaped, opaque artefact sitting
+on the subject. At print scale it is the more objectionable of the two, and it
+means the treated `bee-2-cpl` render is worse than its untreated baseline.
+
+The honest summary is that v2 fixed the *background* half of its own artefact
+(smooth bokeh is no longer carved) and left the *foreground* half intact.
 
 ---
 
-## 9. Reproducing this
+## 9. The number that does not fit
+
+**Blotch falls 1.9275 → 0.4500 pp when the depth grid is interpolated with the
+guards still hard, and only 0.4500 → 0.4061 pp when the feather is added.**
+
+v2 is named for the feather and its rationale section is written about the
+treatment boundary. Its own dose-response says the feather is responsible for
+2.3% of the repair and the tent for 76.6%. Nothing in the report's account of v2
+explains that split — and it matters, because the constant now under scrutiny
+(`FEATHER = 1.25`) governs the part that barely does anything, while the part
+that does the work (`N_LAYERS`, the tent) has no sensitivity study at all.
+
+Runners-up: the mechanism slope is +0.16, +1.09 or −0.07 depending on which arm
+supplies the edge set; and the shipped "support masked" diagnostic prints
+17.37% at every value of FEATHER.
+
+---
+
+## 10. Reproducing this
 
 ```powershell
-git archive --format=tar e5e62d46fa30f29a56722d74b536fc13fabc708f -o pin-src.tar
-# extract to a path no other agent can write, build there, render every arm from it
+git archive --format=tar bca6df3 -o pin2-src.tar     # extract somewhere unwritable by others
+# build there; ALWAYS confirm "Compiling strehl-core" appears after any patch
 ```
 
-Artefacts: `C:\dev\strehl-out\V-HALO\` — `pin\` (the frozen tree), `ladder\`
-(6 rungs + election maps), `ident\` (byte-identity arms), `sabo\` (both sabotage
-arms), `look\` (before | after | delta panels), `crop-stats.json`,
-`ladder-m121.json`, `ladder-donor26.json`, `blotch2.json`.
+Artefacts: `C:\dev\strehl-out\V-HALO\` — `pin\`, `pin2\`, `ladder\`, `ident2\`,
+`feather\` (the FEATHER ladder), `sabo\`, `look2\` (base | v1 | v2 | Δ panels),
+`v2-stats.json`.
 
 **Everything in this document is my own measurement and has not been
 independently verified.**
