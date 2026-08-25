@@ -25,11 +25,32 @@ from pathlib import Path
 
 import numpy as np
 
-try:
-    import tifffile
-except ImportError:
-    tifffile = None
 from PIL import Image
+
+# NOT PIL, and NOT a fallback to PIL. `PIL.Image.open` on a 16-bit RGB TIFF
+# reports mode='RGB' and hands back uint8 -- silently, no warning, no error.
+# Measured on this milestone's own renders: 53,515 distinct levels via tifffile
+# against 252 via PIL on `coffee-bean-off.tif`, a 212x loss.
+#
+# This file previously carried `except ImportError: tifffile = None` and fell
+# back to PIL. That fallback is the defect, not the mitigation: had tifffile
+# been absent, every number below would have been computed on 8-bit data and
+# NOTHING would have said so. Priced afterwards on the real files, the 8-bit
+# reader understates the trap by 7.9 % and the plant by 0.25 %, which shrinks
+# the trap/plant ratio from 21.88x to 20.20x -- a bias toward the comfortable
+# answer. A hard import failure is strictly better than a plausible number.
+import tifffile
+
+
+def read16(path):
+    """Read a render at its true bit depth, and refuse anything else."""
+    a = tifffile.imread(str(path))
+    if a.dtype != np.uint16:
+        raise SystemExit(
+            f"{path}: expected uint16, got {a.dtype}. A reader that silently "
+            f"narrows the data is worse than one that fails."
+        )
+    return a.astype(np.float64)
 
 OUT = Path(r"C:\dev\strehl-out\M97e")
 CROPS = OUT / "crops"
@@ -41,11 +62,7 @@ MARGIN = 260        # keep the crop window off the frame edge
 
 
 def load(path):
-    if tifffile is not None:
-        a = tifffile.imread(str(path))
-    else:
-        a = np.array(Image.open(path))
-    return a.astype(np.float64)
+    return read16(path)
 
 
 def find_window(diff, crop, margin):
