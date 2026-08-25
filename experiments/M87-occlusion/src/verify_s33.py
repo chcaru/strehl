@@ -53,7 +53,13 @@ def main():
     flat = re.sub(r"\s+", " ", raw)
 
     i = raw.index("## 33.")
-    sec = re.sub(r"\s+", " ", raw[i:])
+    # The scope MUST end at section 34.  Without an end delimiter this ran to
+    # EOF, so section 34's legitimate citation of `55.321` pushed the count
+    # from 2 to 3.  The docstring above forbids the bump-the-count repair, so
+    # the bug is the missing delimiter, not the expectation.
+    ck("## 34." in raw[i:], "section 34 heading missing; s33 scope has no end")
+    j = raw.index("## 34.", i)
+    sec = re.sub(r"\s+", " ", raw[i:j])
     rows = "\n".join(l for l in raw.splitlines()
                      if re.match(r"^\| P1(2[789]|3[012]) \|", l))
     rowsf = re.sub(r"\s+", " ", rows)

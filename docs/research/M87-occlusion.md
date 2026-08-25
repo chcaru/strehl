@@ -1995,6 +1995,14 @@ namespaced `M87`.
 | P130 | **I wrote a control bar that could not recognise a null: `abs(V_ctl / V_real) < 0.25` on a SIGNED hump amplitude.** The repaired rotated-mask control returns **−0.079502** — negative at every distance in the 2–60 px window, so no hump exists to manufacture — and the absolute-value form reported that as **0.590, FAIL**. Two independent nulls of different construction agree: rotated **−0.079502**, translated **−0.093960**. | The third sign-blindness failure in this milestone's family, after `P95`'s share-of-change ratio and the orchestrator's two-branch bar. **A ratio of magnitudes is not a test of a directional claim.** The control was also contaminated by construction — 30.7% of its ring band lay in the real veil band — so one red control had two independent causes and neither was the metric. | MEASURED |
 | P131 | **A binary-exact invariance control failed at 2.451e−07 because of the ACCUMULATOR, not a leak.** A 251 px box reference sums ~63 001 samples of magnitude ~5×10⁴, reaching **~1.795e+09** against float32's exact-integer ceiling 2²⁴ = 16 777 216 — **107× over**. In float64 the same three exact factors give **3.664e−15**, **6.69e+07× tighter**. | Extends the standing rule that binary-exact factors must reproduce bit for bit: when they do not, the next question is the accumulator width, because a real leak is width-independent and round-off is not. The bar was diagnosed and met, never relaxed. | MEASURED |
 | P132 | **The −28.2% unmix is neither a model failure nor a support failure.** Not the model: with the true `alpha_k` cube the fit captures **+100.59%** of headroom (`P83`). Not the support: the regression runs along the **frame** axis per pixel with **38.000** observations on thin and broad alike, and the arm with **19.8%** coverage beat the one with 12.5% (`P107`). It is a **structure-scale** limiter — **−11.01%** thin against **−32.80%** broad, 21.78 points at 7.3 null sd (`P106`). | Answers the orchestrator's twice-asked routing question with a third option they did not offer. The routing that follows: not a rewrite of the forward model and not a change of support, but whether per-pixel `k_F` is estimable on thin structures at all. `P128` adds that this is unlikely to be a noise-averaging limit, since a 55.3× change in averaging leaves the artifact intact. | DERIVED |
+| P133 | **The orchestrator's prediction is falsified by its own citation: −6.6810% is a gate-0 number.** Verified two ways at source -- §25.7 tabulates the row as `gate-0 merge` and `70-veil.py` prints `merge (gate 0)`, computed on the gate-0 elected merge `cache/bee3-leg-sel.npy`. So **74.76%** of the veil is already removed at `n_eff` = 1 with zero averaging, and §25's `C-RANDV` (−25.8547%, inside the single-frame range) already held the per-pixel mixture fixed while destroying selector information, and found no removal. | §25 had already run the orchestrator's causal experiment in a stronger form: it varies selector *informativeness* with averaging held at zero, which isolates the mechanism, where the gate ladder varies averaging with the selector informative in every arm. **Read the cited section, not the fact row** -- the prediction survived only in the compressed rendering. | MEASURED |
+| P134 | **Veil depth does not depend on the gate, in the statistic the claim was made in.** §25's `V` across the orchestrator's four pinned arms: `dV` = **+2.3463 pp** against a predicted +19.79 pp, i.e. **11.86%** of the predicted swing **and of the opposite sign**. Branch `B19-FLAT`. Spearman rho(gate, `V`) = −1.0000 -- perfectly monotone, but in the direction where *more* averaging gives *more* veil. | A monotone ladder is not confirmation unless its **sign** matches the prediction. A bar checking only monotonicity would have reported this as support for the mechanism it refutes. | MEASURED |
+| P135 | **The entire raw ladder movement is the reference, not the veil.** Signed decomposition of `dV`, taking no ratio of two signed numbers: near-only **−0.0198 pp**, far-only **+2.3667 pp**, cross −0.0006 pp, closure 0.000e+00. The near band spans **0.0673%** across the ladder and the far reference **2.7824%**, a **41.4x** ratio. With the reference pinned to gate 4.00 the ladder range is **0.0572 pp** = **0.289%** of predicted (`B20-NEGLIGIBLE`). | The quantity the mechanism requires to change does not change. Applying the orchestrator's own proposed remedy -- pin the reference -- removes the effect entirely, so their instrument and mine agree once the moving baseline they themselves diagnosed is removed. | MEASURED |
+| P136 | **Robust across region and channel.** Same frozen-mask ladder on `ROI_LEG` and on the BLOB region the orchestrator filed as the flagship figure, in green and mean-RGB: near-band spans 0.1259% / 0.1231% / 0.3071%, pinned ranges 0.1073 / 0.1199 / 0.2993 pp, far-over-near ratios 24.2x / 22.7x / 9.6x. Branch `B22-ROBUST`. | On BLOB the **raw** `V` crosses zero across the ladder (−2.6159% to +0.2311%) while the pinned `V` does not move, so a headline statistic can change sign entirely through its denominator. | MEASURED |
+| P137 | **The orchestrator's photometric drift is neither multiplicative nor additive.** Gate 4.00 -> 0.00: the far field falls −2.707% (−1162.3 DN) while the dark subject falls only −0.086% (−6.1 DN) -- a percent mismatch of 2.621 pp and an absolute mismatch of 1156.2 DN. Verdict `NEITHER`: the drift is confined to the bright background. | Decides whether a ratio metric is safe, and it is not safe by construction here. `V` survives a pure gain exactly (`C-MULT` 7.105e-15) but this is not a gain, so the reference must be pinned rather than assumed immune. `C-ADD` (−0.3267 pp) proves the instrument is responsive to the hazard, not blind to it. | MEASURED |
+| P138 | **The unmix was not fitting an already-removed veil, but the intuition behind that guess is already measured.** Refuted: `P107` and `P132` record that the regression runs along the **frame** axis per pixel, upstream of the election, so the merge's 74.76% removal is invisible to the fit. Sustained in consequence: `P88` measures a **~2.9%** frame-borne veil present in every observation that no selector-side fix can reach. | The headroom available to unmixing on real captures is genuinely small, but because the election already took the reachable part, not because the fit is confused. Right consequence, wrong mechanism -- and the routing from `P132` (structure-scale limiter) is unchanged. | DERIVED |
+| P139 | **A discipline this report had already closed came back three sections later, and only a per-section control caught it.** `verify_s34` passed 90 checks on its first run; `control_s34`'s `N10` altered **one of two** prose instances of a figure and it stayed **GREEN**, because every prose assertion was written as presence rather than count -- the exact blind spot `P105` measured in §28 and `P113` recorded as **closed** at §29. Restoring exact occurrence counts turns `N10` red and raises the suite to 97 checks. | The finding is the regression, not the defect. A clean first run is grounds for suspicion rather than comfort: `verify_s33` failed 14 checks on its first run and was the sounder instrument for it. Closing a discipline in one section does not carry it into the next, so each section needs its own controls even -- especially -- when its verifier looks clean. | MEASURED |
+| P140 | **Appending §34 broke two verifiers that had been committed green; both defects were in the instrument, not the numbers.** `verify_s33` sliced its scope to end-of-file rather than to the §34 heading, so §34's legitimate citation of `55.321` pushed a count 2 -> 3; at the corrected scope every other count in §33 is unchanged. `verify_s32` re-counts scripts from disk by design, and tonight's new scripts moved its measurement denominator 97 -> 104 -- but both zeros re-derived as **0**, so `P124`'s claim survived and only its denominator was stale. | Neither was repaired by bumping an expectation; `verify_s33`'s own docstring forbids that as the road to a presence check. The harness prefix filter was **not** widened to shrink the denominator, since 0-of-N is stronger at larger N. A later section is the natural adversary of an earlier section's verifier, and re-running only the section under edit would have caught neither. | MEASURED |
 
 ### Capture request
 
@@ -4482,7 +4490,7 @@ For the renders where I kept no provenance line, the argument is the guard
 rather than a record: a full-bracket invocation meets a 40-frame sidecar,
 the frame count disagrees, `load_or_solve` re-solves, and the stale file is
 refused. The trap needs `--limit N` to meet a sidecar of exactly N frames,
-and `--limit` appears **0** times in the 97 measurement scripts
+and `--limit` appears **0** times in the 104 measurement scripts
 here. §30 separately retook the one render exposed to the *align*
 default and found it byte-identical to a pinned-sidecar render, 0 DN, which
 settled that one by hash rather than by argument (`P124`).
@@ -4492,7 +4500,7 @@ I hold no claim that needs retaking on this account.
 **A correction to my own first draft of this section,** because it is the
 kind that reads as evidence and is not. I first wrote that `--limit` "appears
 0 times across all 30 M87 scripts" and rested the finding on it. There are
-**116** scripts, not 30 — and, more to the point,
+**128** scripts, not 30 — and, more to the point,
 **0** of them invoke the binary. Every render here was hand-run
 from PowerShell, so a count over the Python tree is a true statement about a
 population that does not contain the thing being claimed. My own verifier
@@ -4867,4 +4875,338 @@ ladder from the orchestrator's `neff-ladder.txt` rather than from my
 transcription of it. `control_s33.py` mutates operands with the prose
 untouched to prove the harness re-derives rather than matching the document
 against itself.
+
+---
+
+## 34. The orchestrator's causal test: does veil removal depend on how many frames are averaged?
+
+The orchestrator sent a sharp prediction derived from this report's own §25
+mechanism, and it is the right kind of message to receive: it names a number,
+a direction, and a falsifier. Their words:
+
+> at **gate 0.00** the merge is one frame per pixel, so it cannot remove a
+> veil by combination and should read close to your single-frame **−26.47%**
+> [...] At **gate 4.00** the flat background averages heavily and should
+> read close to your merge value of **−6.68%**.
+
+They also offered the alternative branch in advance — "if it is *not*
+monotone, that is more interesting still, and it would mean removal is driven
+by the election's choice rather than by averaging" — which is the branch the
+measurement lands in.
+
+### 34.1 This is not the test §33 ran
+
+§33 measured `V_33` = peak **bright** ring residual over contrast, on the BLOB
+region, and found it near-invariant to the gate. That does not settle this
+claim. The orchestrator's prediction is stated in §25's statistic — veil
+**depth**,
+
+```
+V = ( median profile over d in [2,22] - median profile over d in [80,120] )
+    / median profile over d in [80,120]              (70-veil.py, verbatim)
+```
+
+— a signed **darkening**, on `ROI_LEG`, in linear DN. A statistic that
+measures the absence of darkening and a statistic that measures a bright hump
+are different quantities, and answering a claim in a statistic it was not made
+in is a way of appearing to settle it without doing so. So §34 computes §25's
+`V`.
+
+### 34.2 The prediction is falsified by its own citation
+
+The orchestrator reads **−6.68%** as a gate-4 number, the product of heavy
+averaging. It is not. Verified at source two ways, because a fact row is a
+compressed rendering and this report has already been wrong by trusting one:
+
+1. §25.7 of this report tabulates the row as `| gate-0 merge | −6.6810% |`.
+2. `70-veil.py` prints it as `merge (gate 0)` and computes it on
+   `cache/bee3-leg-sel.npy`, the gate-0 elected merge.
+
+So **74.76% of the veil was already removed at `n_eff` = 1, with zero
+averaging.** The prediction that gate 0.00 should show little removal is
+contradicted by the very measurement it cites.
+
+There is more. §25's `C-RANDV` is the control that isolates the cause: a
+uniformly random per-pixel election has the **same** per-pixel mixture
+structure and an **uninformative** selector, and reads **−25.8547%** — inside
+the single-frame range, no removal at all. §25 states the conclusion in as
+many words: "A per-pixel mixture as such does nothing — it is this election."
+
+§25 therefore already ran the orchestrator's causal experiment, in a
+**stronger** form. The gate ladder varies averaging with the selector held
+informative. `C-RANDV` varies selector informativeness with averaging held at
+zero. The second isolates the mechanism; the first cannot, because both arms
+retain an informative selector. Together they complete a 2x2, and this section
+fills the one empty cell: an informative selector at `n_eff` = 55.
+
+### 34.3 The ladder, in §25's statistic
+
+Four registered branches on `dV` = `V`(0.00) − `V`(4.00), signed. The reversal
+branch is not decoration: a bar without one has produced a wrong verdict three
+times in this milestone's family, twice mine.
+
+| gate | `n_eff` | `V` % | near DN | far DN |
+| --- | --- | --- | --- | --- |
+| 4.00 | 55.321 | **−14.9412** | 36519.0 | 42933.9 |
+| 2.00 | 19.182 | **−14.1166** | 36494.5 | 42493.1 |
+| 0.7078 | 3.000 | **−12.9745** | 36497.2 | 41938.5 |
+| 0.00 | 1.000 | **−12.5949** | 36510.5 | 41771.6 |
+
+`dV` = **+2.3463 pp** against a predicted **+19.79 pp**. That is **11.86%** of
+the predicted swing, **and the sign is opposite to the prediction**: gate 0.00
+is *less* veiled, not more. Branch: **B19-FLAT**.
+
+Spearman rho(gate, `V`) = **−1.0000**. The ladder is perfectly monotone — but
+in the direction where **more** averaging gives **more** veil, which is the
+opposite of a removal mechanism. Monotonicity alone would have looked like
+confirmation to a bar that did not check the sign.
+
+### 34.4 The movement is in the reference, not in the veil
+
+The branch understates the result. Look at the two operands separately. The
+**near band** — the veiled band itself, the quantity the orchestrator's
+mechanism requires to brighten — spans **0.0673%** across the whole ladder.
+The **far reference** spans **2.7824%**, which is **41.4x** more.
+
+Since `V` = near/far − 1, a ladder built on a moving reference reports a veil
+change when nothing about the veil has changed. That is precisely the failure
+the orchestrator self-reported in their own ring profile ("the reference
+moved"), and they proposed the remedy: "Pinning the reference to one arm, or
+measuring a shift-invariant quantity, are the two obvious routes." Route one,
+applied:
+
+| gate | `V` raw % | `V` pinned to gate 4.00 % |
+| --- | --- | --- |
+| 4.00 | −14.9412 | **−14.9412** |
+| 2.00 | −14.1166 | **−14.9984** |
+| 0.7078 | −12.9745 | **−14.9920** |
+| 0.00 | −12.5949 | **−14.9610** |
+
+Range over the ladder: **0.0572 pp**, which is **0.289%** of the predicted
+swing. Branch: **B20-NEGLIGIBLE**.
+
+The signed decomposition puts it beyond argument. It takes **no ratio of two
+signed numbers**, because that is the exact construction that produced three
+wrong verdicts here already:
+
+| component | pp |
+| --- | --- |
+| `dV` total | **+2.3463** |
+| near-only (the veiled band) | **−0.0198** |
+| far-only (the reference) | **+2.3667** |
+| cross | −0.0006 |
+| closure &#124;sum − `dV`&#124; | 0.000e+00 |
+
+Both positive attribution controls recover a plant whose true attribution I
+chose: a 3% change planted on the near band alone is assigned **−2.5518 pp**
+to near and **+0.0000 pp** to far; planted on the far band alone it is
+assigned **+2.6307 pp** to far and **+0.0000 pp** to near.
+
+### 34.5 Robustness: two regions, two channels
+
+A result that holds only on the crop it was built on is not a result. The same
+frozen-mask ladder, on `ROI_LEG` and on the **BLOB** region the orchestrator
+filed as the flagship figure, in green and in mean-RGB:
+
+| arm | region | channel | near span % | far span % | ratio | pinned range pp |
+| --- | --- | --- | --- | --- | --- | --- |
+| A1 | ROI_LEG | mean | 0.1259 | 3.0482 | 24.2x | **0.1073** |
+| A2 | BLOB | green | 0.1231 | 2.7969 | 22.7x | **0.1199** |
+| A3 | BLOB | mean | 0.3071 | 2.9567 | 9.6x | **0.2993** |
+
+Branch: **B22-ROBUST**. The far reference outruns the veiled band by between
+9.6x and 24.2x in every combination.
+
+One detail worth flagging rather than smoothing: on the BLOB region the
+**raw** `V` crosses zero, running −2.6159% at gate 4.00 to +0.2311% at gate
+0.00 — the band appears to flip from darker than the far field to brighter.
+Pinned, it does not move at all (−2.6159% to −2.4960%). A sign flip in a
+headline statistic, produced entirely by its denominator, is a good
+illustration of why the orchestrator's instrument could not support their
+claim and why mine would not have either without pinning.
+
+### 34.6 The form of the drift, which decides whether it is a hazard
+
+The orchestrator warned that any statistic normalised to a far window will
+absorb their 2.14% far-field fall, and asked me to check rather than assume
+that `E`-like statistics are immune. Checking, not assuming:
+
+`V` is a ratio, so it is **exactly** invariant to `g` -> `a`·`g` and **not**
+invariant to `g` -> `g` + `b`. Whether the drift is a hazard therefore depends
+entirely on its form, which is measurable: a multiplicative drift moves the
+dark subject by the same **percent** as the bright far field; an additive one
+moves it by the same **DN**.
+
+| quantity | gate 4.00 -> 0.00 |
+| --- | --- |
+| far field | −2.707% (−1162.3 DN) |
+| dark subject | −0.086% (−6.1 DN) |
+| percent mismatch | 2.621 pp |
+| absolute mismatch | 1156.2 DN |
+
+Verdict **NEITHER**. The drift is neither a gain nor an offset — it is
+confined to the bright background, which is consistent with the orchestrator's
+own account of it as unfitted per-frame photometric drift organised spatially
+by the election. The consequence is specific: `V` survives a pure gain exactly
+(`C-MULT` = 7.105e-15, bar 1e−12) but this **is not** a pure gain, so the
+reference has to be pinned explicitly rather than assumed away. `C-ADD`
+confirms the instrument is not merely dead to the hazard: a −918.8 DN offset
+moves `V` by −0.3267 pp.
+
+`C-POS` shows the instrument would have seen the orchestrator's effect if it
+were there. Planting a known extra veil — multiplying the 2–22 px band by 0.90
+— moves `V` from −14.9412% to −23.4471%, against an algebraically expected
+−23.4471%, an error of **0.0000 pp**. That is a planted swing of 8.51 pp, the
+same order as the 19.79 pp the orchestrator predicted, recovered with exact
+calibration. A quiet instrument and a dead one are different claims and this
+separates them.
+
+`C-FROZEN` reports the same ladder with per-arm masks instead of one frozen
+population: `dV` +2.3463 pp frozen against +2.1355 pp free. The verdict does
+not depend on the freezing, which is worth knowing because freezing is my
+repair of the orchestrator's first failure and it would be circular to let the
+repair carry the conclusion.
+
+### 34.7 The unmix question, answered again and differently
+
+The orchestrator speculated that §13's **−28.2%** may have been "an unmix that
+assumes the veil is present [...] fitting something the merge had largely
+already taken out." The mechanism as stated is **refuted at source**, but the
+intuition behind it is sound and this report already contains its measured
+form. Both halves matter.
+
+**Refuted:** the unmix does not operate on the merged output. `P107` and
+`P132` record that the regression runs along the **frame** axis per pixel,
+with 38.000 observations per population. It fits the frame cube, which is
+**upstream** of the election. The merge's 74.76% removal happens downstream of
+the fit and is invisible to it, so the fit cannot be confused by it.
+
+**But the intuition lands, and `P88` already measured it.** The election
+removes the dominant term and leaves a **~2.9% frame-borne veil** that no
+selector-side fix can reach, because it is present in every observation. So
+the *headroom* available to unmixing on real captures is genuinely small — not
+because the unmix is fitting a ghost, but because the election got there first
+and took the part that was reachable. The orchestrator reached the right
+consequence through the wrong mechanism.
+
+The routing answer from `P132` is unchanged: neither model nor support, but a
+**structure-scale** limiter.
+
+### 34.8 What this closes off
+
+Fact 1375 excluded resampling: the veil is invariant across all three
+resampler kernels. §27 excluded demosaic. §33 showed the bright-hump statistic
+is near-invariant to the gate. §34 now shows the **darkening** statistic — the
+one the mechanism is actually stated in — has a veiled band that moves
+**0.0673%** across a **55.3x** change in frames averaged per pixel, in two
+regions and two channels.
+
+Averaging was the last cheap candidate mechanism. What remains is **selection
+itself**, which is where §25's `C-RANDV` pointed before this section was
+written: destroy the selector's information and the removal disappears; change
+how many frames it averages over by a factor of 55 and nothing happens.
+
+### 34.9 Verification and limits
+
+`verify_s34.py` re-derives every figure above from the JSON operands and
+re-hashes the gate-4.00 arm. `control_s34.py` mutates operands with the prose
+untouched, to prove the harness re-derives rather than matching the document
+against itself.
+
+`control_s34.py` runs eleven arms and every operand mutation goes red:
+perturbing a single near or far level by 500 DN fails 10 and 15 checks
+respectively, relabelling a branch or a control verdict fails 2, and
+relabelling §25.7's `gate-0 merge` row fails the source check. `N11` restores
+everything and is green-expected, so the harness is not merely always red.
+
+**`N10` caught me regressing a discipline this report had already closed at
+`P113`, and that is worth more than the patch.** `verify_s34` passed 90 checks
+on its first run. `N10` then altered **one of two** prose instances of a figure
+and it stayed **green**, because I had written every prose assertion as
+`figure in text`. That is presence-checking, and presence-checking is
+instance-blind: a number wrong in one place and right in another passes. This
+is not news to this document. `P105` measured the same blind spot in §28, and
+`P113` recorded it **closed** at §29, where `verify_s29.py` started asserting
+exact occurrence counts. Three sections later I rebuilt the defect from
+scratch.
+
+The repair is the one §29 already established -- exact counts, read off the
+document by a reporting mode rather than guessed, every site annotated -- and
+`N10` now goes red. The transferable part is not the defect but its return: **a
+discipline closed in one section does not propagate to the next by itself.**
+Only a per-section control catches the regression, which is an argument for
+writing the controls even when the verifier looks clean, and especially
+then.
+
+**Appending this section also broke two verifiers that had been committed
+green, and in both cases the number was right and the instrument was wrong.**
+`verify_s33.py` sliced its scope as `raw[i:]` from the §33 heading to the end
+of the file, despite a docstring stating it was scoped to §33 -- so §34's
+legitimate citation of `55.321` raised a count from 2 to 3. That docstring
+also forbids the repair that suggests itself: bumping the expectation "ends in
+someone weakening it to a presence check". The defect was the missing end
+delimiter, so §33 now terminates at the §34 heading, and every other count in
+it is unchanged at the narrower scope. `verify_s34` had the same unterminated
+slice and was correct only by being last; it now looks for a following
+section and falls back to EOF.
+
+**The defect then demonstrated itself.** My first attempt to check this fact
+pinned the broken scope's reading at 3, and it immediately read 4 -- because
+the paragraph you are reading cites the figure again, and the broken scope
+swallows §34 too. So the literal 3 is recorded here as history, and what the
+verifier actually enforces is an identity: the broken scope reads the correct
+count plus however many times §34 quotes the number. A pinned literal in a
+growing document is the same class of mistake as the unterminated slice.
+
+`verify_s32` failed differently and by design. It re-counts M87's scripts from
+disk rather than trusting `93-audit.json`, because `P124`'s safety argument --
+that no measurement script passes the flag that would let a 40-frame sidecar
+apply -- is a standing claim about the whole tree, not a snapshot. Tonight's
+new scripts moved the measurement denominator from 97 to 104. **The zeros both
+re-derived as zero**, so the claim itself survived intact; only its denominator
+was stale. §32 already records this same mechanism catching me when I had
+written "30 scripts" and there were 116. The running total is deliberately
+kept at a **single** live site in §32, maintained by `fix_audit.py`, and is
+not restated here: a second copy would be a second thing to go stale, and it
+would collide with `verify_s32`'s own assertion that the figure appears
+exactly once.
+
+Two notes on how that was repaired, because both could have gone the other
+way. Three of tonight's scripts do document harness work but do not match the
+`append/verify/control/fix` prefix that `verify_s32` uses to exclude harness,
+so they count as measurement scripts. I did **not** widen that filter: "0 of
+N" is a stronger claim at larger N, and shrinking N to flatter my own number
+is the failure mode this report exists to avoid. The refresh script itself
+first landed in the measurement set and **its own assertion fired against it**
+-- it quotes the flag in prose and in a regex -- which is precisely the false
+positive the prefix filter was built for, so it was renamed to the harness
+convention rather than exempted by a new rule.
+
+The generalisation is worth more than either repair: **a later section is the
+natural adversary of an earlier section's verifier.** A checker that passed
+when it was written is not a checker that passes now, and neither of these
+would have been caught by re-running only the section I was working on.
+
+Three limits, stated rather than buried.
+
+**The absolute level is not commensurable with §25's −6.6810%.** My frozen
+mask has an IoU of **59.19%** against the mask §25 derived from its own cached
+merge (subject fraction 41.20% against 37.83%), so the two renders are not the
+same registration. The orchestrator's arms are `--srgb` and I linearise them;
+§25 worked in linear raw DN throughout. Every number in §34 is therefore a
+**within-ladder** comparison, which is what the claim requires, and no
+absolute level here should be quoted against §25's.
+
+**The arms are unbinned.** The orchestrator's renders are 7032x4688, twice the
+binned output §25's geometry is defined in. §34 crops at 2x, linearises, then
+bins 2x2 to land on §25's 744x1144 geometry exactly. A first attempt cropped
+`ROI_LEG` directly from the unbinned arm and was measuring the wrong physical
+region; the probe that caught it is `99-probe.py`.
+
+**`E(d)` is not run here.** `E(d)` references the frame ensemble rather than a
+far window, so it needs the frames rendered through the same path as the arms.
+The orchestrator's arms are merged sRGB TIFFs and the ensemble is not
+available in that space, so an `E(d)` ladder would compare across two
+pipelines. `V` is the statistic the prediction was stated in and it is the one
+answered.
 
