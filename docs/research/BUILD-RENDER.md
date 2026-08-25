@@ -549,6 +549,60 @@ If it started adjusting images the gallery would stop being a picture of what
 and asserts `uint16`; `PIL.Image.open` silently downconverts 16-bit RGB TIFFs
 and has corrupted results in this project before.
 
+### The run
+
+`C:\dev\strehl-out\gallery\`, binary SHA-256
+`AE5F7FA2…` built from a `git archive` of `5d7a7ba`.
+
+**26 of 26 subjects rendered, every one exit 0.** No crash, no hang, no OOM, no
+garbage. 4825 frames, roughly 55 minutes wall clock on a machine simultaneously
+running two other implementation agents, so the per-subject times in
+`manifest.tsv` are contended and are **not** a speed measurement.
+
+`tweezers-cpl` rendered in 70 s, 100 frames, exit 0. It has now been rendered
+successfully three separate times. It was never broken: `--sat` is a flag of
+BUILD-HALO's own `experiments/BUILD-HALO/measure.py`, not of `strehl`.
+
+The `peak_mb` column is **unreliable and should not be quoted** — the 250 ms
+sampler misses the peak on short renders, which is why some rows read 5–11 MB.
+Treat only the large values as meaningful, and take a real measurement before
+anyone claims a memory number.
+
+### Hot pixels: still deferred, now checked against the pictures
+
+ORCH's condition was that repair stays deferred unless the gallery shows them.
+It does not. `foam` and `coffee-bubbles` — the two ISO 1000 subjects, the only
+two where §5 measured hot pixels as material — show no hot-pixel trails at
+viewing scale. Caveat stated plainly: the gallery downsamples about 3×, so this
+is a statement about **viewing scale**, not about 100% crops. The §5 numbers
+still stand at 100%.
+
+### Verdict after the tone fix
+
+The tonal defect is fixed. `pencil-steep-angle-cpl` and `112MSDCF` are, tonally,
+photographs anyone would be happy to print — deep blacks, saturated colour,
+detail that reads as detail.
+
+**But the stacks are still not print-worthy, and the reason is now easier to see
+than it has ever been.** Removing the veil removed the thing that was masking
+the halo. On `coffee-bean` the bean silhouette carries a **pink-magenta glowing
+rim** against the white background, with a bright band outside it, running the
+entire circumference. On `bee-1-cpl` every leg, every antenna and the whole hair
+mass carry a bright outline, and to the left of the left legs there are pale
+**outline ghosts** — the leg edge appearing more than once.
+
+Two things in that are worth routing to BUILD-HALO:
+
+1. **The halo has a colour cast**, it is not a neutral luminance rim. A
+   magenta-tinted halo is per-channel asymmetric, which is a constraint on what
+   can be causing it.
+2. **At viewing scale it is not "a tight bright rim".** It is the first thing
+   the eye lands on. That description came from crop-level judgement; the whole
+   frame does not support it.
+
+This is the gallery earning its keep on the first run: it is the same defect
+already known, but its severity and its colour were both wrong in the record.
+
 ---
 
 ## 7. Not done
