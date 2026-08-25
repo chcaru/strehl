@@ -136,7 +136,11 @@ fn color_description(dev: &Develop) -> String {
 ///
 /// Separate from [`write_rgb16`] so that the older four-argument signature
 /// keeps compiling for its existing callers; new call sites should use this.
-fn write_rgb16_described(
+///
+/// `pub` because the measurement write in `merge_cmd.rs` is the most important
+/// caller there will ever be: that branch emits linear camera-native pixels,
+/// which is precisely the file a reader is most likely to mistake for sRGB.
+pub fn write_rgb16_described(
     path: &Path,
     width: u32,
     height: u32,
@@ -218,6 +222,25 @@ pub struct Develop {
 }
 
 impl Develop {
+    /// The development the **measurement** branch performs: no colour matrix,
+    /// camera-native primaries, transfer curve only if `srgb` was asked for.
+    ///
+    /// Exists so that the byte-frozen write site in `merge_cmd.rs` can state
+    /// its colour space without constructing a `Develop` by hand and without
+    /// having to know that "measurement" means `matrix: None`. That branch has
+    /// `srgb` in scope already, so the call is
+    /// `Develop::measurement(srgb)` and nothing else has to be threaded to it.
+    ///
+    /// This describes pixels, it does not change them: the measurement branch
+    /// does its own arithmetic inline and deliberately does not route through
+    /// [`develop_pixel`].
+    pub fn measurement(srgb: bool) -> Self {
+        Self {
+            matrix: None,
+            srgb,
+        }
+    }
+
     /// One line describing what was done to the pixels, for the "wrote" report.
     pub fn caveat(&self) -> &'static str {
         match (self.matrix.is_some(), self.srgb) {
@@ -225,6 +248,86 @@ impl Develop {
             (true, false) => "linear sRGB (BT.709 primaries, D65, no transfer curve)",
             (false, true) => "camera-native RGB with an sRGB transfer curve -- NO colour matrix",
             (false, false) => "linear camera-native RGB",
+        }
+    }
+}
+
+/// Which colour space the user asked the render to land in.
+///
+/// This type exists to keep a *colour* decision out of the merge code. Before
+/// it, "does the matrix get applied" was spelled `if srgb` at the point of use,
+/// which silently welded two independent choices together: whether to move to
+/// colorimetric primaries, and whether to apply a transfer curve. That weld is
+/// why there was no way to ask for the one mode measurement actually needs.
+///
+/// **`LinearSrgb` is that mode, and it is not a convenience.** This project's
+/// own rule is that quality is never judged on an `--srgb` render, because the
+/// transfer curve is a strong non-linearity that changes every ratio a metric
+/// computes. But the alternative on offer was camera-native RGB, whose
+/// primaries are the sensor's and are *not stated anywhere*. So measurements
+/// were being taken either through a curve or in an undeclared space. Applying
+/// the matrix and stopping before the curve gives a stated colorimetric target
+/// that is still linear, which is what the rule was reaching for.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum OutputSpace {
+    /// Camera-native primaries, linear. The default, and the byte-frozen
+    /// measurement output the corpus was built on.
+    #[default]
+    CameraLinear,
+    /// Colorimetric primaries (sRGB/BT.709, D65), **linear** -- no transfer
+    /// curve. `--linear-srgb`. Stated space, safe to measure in.
+    LinearSrgb,
+    /// Colorimetric primaries and the sRGB transfer curve. `--srgb`. For
+    /// looking at, never for measuring.
+    Srgb,
+}
+
+impl OutputSpace {
+    /// Resolve the two mutually exclusive flags into one space.
+    ///
+    /// Returns an error rather than picking a winner: if both are passed the
+    /// user has asked for two different files and guessing which they meant is
+    /// how a measurement silently ends up in the wrong space.
+    pub fn from_flags(srgb: bool, linear_srgb: bool) -> Result<Self> {
+        match (srgb, linear_srgb) {
+            (true, true) => anyhow::bail!(
+                "--srgb and --linear-srgb ask for different files: --srgb applies the sRGB \
+                 transfer curve, --linear-srgb stops before it. Pass one."
+            ),
+            (true, false) => Ok(Self::Srgb),
+            (false, true) => Ok(Self::LinearSrgb),
+            (false, false) => Ok(Self::CameraLinear),
+        }
+    }
+
+    /// Whether the camera-to-colorimetric matrix should be applied.
+    ///
+    /// The matrix rides with **either** colorimetric mode. Previously it rode
+    /// with the curve, which is the weld this type exists to break.
+    pub fn wants_matrix(self) -> bool {
+        matches!(self, Self::LinearSrgb | Self::Srgb)
+    }
+
+    /// Whether the sRGB transfer curve is applied. Only the viewing render.
+    pub fn applies_curve(self) -> bool {
+        matches!(self, Self::Srgb)
+    }
+
+    /// True for the default path whose bytes are frozen in
+    /// `tests/byte-freezes.tsv`.
+    pub fn is_measurement(self) -> bool {
+        matches!(self, Self::CameraLinear)
+    }
+
+    /// Build the [`Develop`] for this space.
+    ///
+    /// `matrix` is what the characterisation yielded, or `None` when the body
+    /// has none. A missing characterisation degrades to camera-native rather
+    /// than inventing a matrix, and [`Develop::caveat`] says so out loud.
+    pub fn develop(self, matrix: Option<color::Render>) -> Develop {
+        Develop {
+            matrix: if self.wants_matrix() { matrix } else { None },
+            srgb: self.applies_curve(),
         }
     }
 }
@@ -449,6 +552,63 @@ mod tests {
             assert_eq!(got, [want; 3], "value {v} was not passed through");
         }
         assert_eq!(dev.caveat(), "linear camera-native RGB");
+    }
+
+    /// `--linear-srgb` must apply the matrix and stop before the curve.
+    ///
+    /// This is the whole point of the mode, and it is a correctness dependency,
+    /// not a convenience: the standing rule is that quality is never judged on
+    /// an `--srgb` render, because the transfer curve moves every ratio a
+    /// metric computes. The only alternative was camera-native, whose primaries
+    /// are stated nowhere. If a future edit re-welds the matrix to the curve --
+    /// which is exactly how this started, as a bare `if srgb` -- measurement
+    /// silently goes back to happening in an undeclared space.
+    #[test]
+    fn linear_srgb_takes_the_matrix_and_stops_before_the_curve() {
+        let m = color::camera_to_srgb(A7C2).expect("invertible");
+
+        let lin = OutputSpace::LinearSrgb;
+        assert!(lin.wants_matrix(), "linear sRGB must be colorimetric");
+        assert!(!lin.applies_curve(), "linear sRGB must stay linear");
+        assert!(!lin.is_measurement(), "it is not the byte-frozen path");
+        let dev = lin.develop(Some(m));
+        assert!(dev.matrix.is_some());
+        assert!(!dev.srgb);
+        assert_eq!(dev.caveat(), "linear sRGB (BT.709 primaries, D65, no transfer curve)");
+
+        // The default must remain the byte-frozen measurement rendering, with
+        // no matrix even when a characterisation is available.
+        let cam = OutputSpace::CameraLinear;
+        assert!(cam.is_measurement());
+        let dev = cam.develop(Some(m));
+        assert!(dev.matrix.is_none(), "the default must not acquire a matrix");
+        assert!(!dev.srgb);
+
+        // The viewing render keeps both.
+        let dev = OutputSpace::Srgb.develop(Some(m));
+        assert!(dev.matrix.is_some() && dev.srgb);
+
+        // A body with no characterisation degrades to camera-native rather
+        // than inventing a matrix, in every space.
+        for s in [OutputSpace::CameraLinear, OutputSpace::LinearSrgb, OutputSpace::Srgb] {
+            assert!(s.develop(None).matrix.is_none());
+        }
+    }
+
+    /// The two colour flags are mutually exclusive, and asking for both is an
+    /// error rather than a silent preference.
+    #[test]
+    fn asking_for_both_colour_flags_is_refused_rather_than_guessed() {
+        assert_eq!(OutputSpace::from_flags(false, false).unwrap(), OutputSpace::CameraLinear);
+        assert_eq!(OutputSpace::from_flags(true, false).unwrap(), OutputSpace::Srgb);
+        assert_eq!(OutputSpace::from_flags(false, true).unwrap(), OutputSpace::LinearSrgb);
+        assert!(
+            OutputSpace::from_flags(true, true).is_err(),
+            "both flags together must not silently resolve to one of them"
+        );
+        // The default is the measurement space, so a caller that forgets to
+        // set it cannot accidentally move the corpus.
+        assert!(OutputSpace::default().is_measurement());
     }
 
     /// The four development states must produce four *different* colour
