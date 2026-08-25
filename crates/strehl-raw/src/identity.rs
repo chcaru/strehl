@@ -26,11 +26,11 @@
 //!
 //! # What was measured, and on what
 //!
-//! Verified against `exiftool` — a second, independent reader — on **24 stacks
-//! spanning the whole macro corpus** plus four non-macro sets, 28 files, exact
-//! agreement on every field this module extracts (M119). The domain of that
-//! verification is **one body, ILCE-7CM2, and two lenses**; see
-//! `docs/research/M119-gear-identity.md` for the strings themselves.
+//! Verified against `exiftool` — a second, independent reader — on **56 real
+//! files**: both ends of all 24 macro stacks plus four non-macro sets, 448
+//! fields compared, **0 disagreements** (M119). The domain of that verification
+//! is **one body, ILCE-7CM2, and two lenses**; the strings themselves are in
+//! the tests below, verbatim.
 //!
 //! # The teleconverter
 //!
