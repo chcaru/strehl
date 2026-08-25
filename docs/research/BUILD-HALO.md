@@ -229,6 +229,14 @@ is exactly the kind of claim that should not be believed without a verifier.
 
 ### 5.3 Sharpness regression — the fix is not a blur
 
+> **VOID — see §13.2.** This subsection's evidence is `hp_energy`, and
+> `hp_energy` cannot support a sharpness conclusion in either direction. V-HALO
+> killed this claim; §13.2's commissioning then showed the statistic is also
+> nearly blind to the artefact V-HALO cited it for. The conclusion may well be
+> right — §13.4 re-derives it on a seam-excluded statistic and it survives —
+> but **nothing below this line is evidence for it.** Left in place because a
+> deleted claim cannot be audited.
+
 The failure mode to rule out is buying the halo with softness. Checked by
 comparing gradient-magnitude statistics over the whole plane, before vs after,
 with the top decile and p99.9 carrying the fine detail:
@@ -343,6 +351,14 @@ gate is not disturbed. Cost at the default gate is **2.07x** wall clock
 
 ### 9.2 Sharpness: clean, again
 
+> **VOID — see §13.2 and §13.4.** "0 of 15 worse, mean +6.7%" is an `hp_energy`
+> reading, and V-HALO showed the same statistic rises +16.8% on *flat* crops —
+> regions selected for having no structure — so it was scoring the artefact as
+> detail. §13.2 then found `hp_energy` is also ~blind to invented edges (+0.1%)
+> and is dominated by noise (+76.6% for a +33% noise SD), which means the
+> +6.7% here is largely the **+4.6% noise rise reported in the next sentence**,
+> counted twice and with the sign flipped. §13.4 re-derives the claim properly.
+
 Over 15 detail crops on 5 subjects, `hp_energy` (std of the Laplacian):
 **0 of 15 worse, mean +6.7%**, range +0.0% to +23.1%. Flat-region `noise_sd`
 rises **+4.6%**, consistent with masked support lowering the effective sample
@@ -455,8 +471,14 @@ was not where the noise was coming from. Flat-region `noise_sd` versus baseline:
 
 **The noise penalty fell by 65-80% with no change to the gate at all**, because
 most of it was the two discontinuities injecting high-frequency structure, not
-the sample-count miscalibration. `hp_energy` stays above baseline on all three,
-so v2 is still not a blur. Some of v1's *higher* `hp_energy` was the blotch
+the sample-count miscalibration. ~~`hp_energy` stays above baseline on all three,
+so v2 is still not a blur.~~ **That inference is VOID — see §13.2.** The
+`hp_energy` column tracks the `noise_sd` column almost exactly (+4.5/+3.4,
++1.3/+1.9, +1.1/+0.2), which is what §13.2 predicts if it is measuring the
+noise and not detail. It is the *same quantity twice*, not a sharpness result
+next to a noise result. The caution below was right and did not go far enough:
+
+Some of v1's *higher* `hp_energy` was the blotch
 edges themselves reading as detail -- a caution against treating that statistic
 as pure goodness.
 
@@ -707,3 +729,284 @@ That is not a tuning deficit and no further tuning will move it — §10.3 and
 §11 reach the same wall independently. The rim needs the background
 **reconstructed**, not selected, and §11 establishes that the information
 needed to do so is present and measurable.
+
+---
+
+## 13. (d) landed, and the sharpness claim re-derived after V-HALO killed it
+
+Everything in this section is **UNVERIFIED** — my own measurements on my own
+change. It exists to be attacked.
+
+### 13.1 (d): `--linear-srgb` and the described measurement write
+
+Two commits, `9695b3c` (code) and `170433b` (re-baseline).
+
+`fdb69ba` published `OutputSpace`/`Develop` and carried `space` into
+`MergeOptions`, but nothing read it: `write_merged` still took `srgb: bool`,
+and every write site still asked `if srgb` for a question that is really two —
+*move to colorimetric primaries?* and *apply a transfer curve?* Welding those
+together is precisely why the one mode measurement needs was unaskable. The
+write sites now read `space`, the matrix rides with `wants_matrix()`, and both
+developed sites build their `Develop` through `OutputSpace::develop` so the
+space→development mapping exists once, in `image_out`, rather than being
+re-spelled here.
+
+`write_merged` re-derives `srgb` from `space` on the **first line of its body**,
+so the byte-frozen encoder below it was not edited — not semantically and not
+textually.
+
+**HEAD did not compile before `9695b3c`.** `main.rs` sets `space:`, and that
+field has existed in `MergeOptions` since `fdb69ba`, but the `main.rs` side was
+never committed, so `cargo build` at `3afa801` fails with E0063. I carried that
+wiring in. It is BUILD-RENDER's work, not mine, and I committed it only because
+a shared tree nobody can build blocks everyone. My one edit there is the
+deletion of the four-statement interim guard, which BUILD-RENDER's own comment
+authorised.
+
+That guard was protecting a real failure and it does not simply evaporate. If
+the body has no characterisation there is no matrix, and `--linear-srgb`
+degrades silently to camera-native. The measurement branch now **warns** when
+reached with a non-measurement space, so the degradation is loud rather than a
+file that merely looks right.
+
+**Both freeze rows moved and neither moved a pixel.**
+
+| row | before | after |
+|---|---|---|
+| `coffee-bean-20-gate2-unaligned` | `D99F5D82…76CA` | `89958637…C218` |
+| `coffee-bean-20-gate2-sidecar`   | `119936E6…D709` | `2DB8A978…46E5` |
+| bytes | 49449626 | 49450019 (+393) |
+
+Checked, not asserted — "only the tag moved" is exactly the claim that is cheap
+to get wrong:
+
+- a **pinned** build of `3afa801` (`git archive` of the explicit SHA, built in
+  isolation) reproduced **both** previous hashes exactly. That is what
+  *commissions* the comparison: a post-change binary is incapable of producing
+  those two hashes, so reproducing them proves the pin resolved to pre-change
+  sources.
+- `tifffile.imread` of old and new is `array_equal` at `uint16` for both rows.
+  Not a hash comparison, and not PIL, which would have silently downconverted
+  three-channel 16-bit to 8.
+- `--linear-srgb` was then commissioned in the other direction: it differs from
+  the default (so the matrix really applies), and `srgb_encode(--linear-srgb)`
+  agrees with `--srgb` to **max |d| = 3 DN, mean 0.26 DN** out of 65535. It is
+  exactly `--srgb` minus the curve, which is what it claims to be.
+
+### 13.2 The instrument problem — and a correction that cuts both ways
+
+V-HALO killed the v1 "not a blur" claim: `hp_energy` rose **+16.8%** on flat
+crops and **+93.6%** on `flower-bud flat1`, inside regions the ROI plan chose
+*because they contain no structure*. Its verdict — *"its own sharpness evidence
+is measuring the artefact it introduced"* — was right that the claim was void,
+and I accept that without reservation.
+
+**But I then commissioned the replacement instrument on synthetic arms, and the
+commissioning says `hp_energy` does not support V-HALO's inference either.**
+Flat ROI, noise only, one artefact injected per row:
+
+| arm | `hp_energy` | `hp_ncc` | `d_ac1` |
+|---|---|---|---|
+| one invented hard edge | **+0.1%** | 0.9997 | **+0.995** |
+| blotch seams (the v1 signature) | +4.4% | 0.9786 | **+0.739** |
+| a soft invented rim (σ=8) | **+0.0%** | 1.0000 | **+0.996** |
+| **more noise** (a real regression) | **+76.6%** | 0.7537 | +0.001 |
+| less noise (an improvement) | −51.0% | 1.0000 | +0.003 |
+| smoothed (a blur) | −96.4% | −0.2559 | −0.165 |
+
+An invented hard edge moves `hp_energy` by **+0.1%**. Raising the noise moves it
+by **+76.6%**. So a flat-ROI `hp_energy` rise is nearly *blind* to the artefact
+it was cited as evidence for, and is almost entirely a **noise** statistic —
+energy goes as variance, so a +33% noise SD gives +77% energy.
+
+The background noise rise of this fix was already measured and already
+reported: **+8.9%** at v1, which predicts **+18.6%** energy against V-HALO's
+observed **+16.8%**. That is a close enough match that I think the flat-crop
+number is mostly the known noise regression, not invention.
+
+**This does not exonerate v1 and I am not offering it as a defence.** My claim
+was void because `hp_energy` cannot support *any* sharpness conclusion. The
+same fact voids the counter-claim. And it changes nothing about the artefact
+itself, because **V-HALO saw the invented edge in a picture**, and the standing
+rule for this build is that the picture wins. What is wrong is only the number
+that was offered alongside it — by both of us, in opposite directions.
+
+### 13.3 The replacement statistics
+
+`experiments/BUILD-HALO/fidelity.py`. No single column is a verdict.
+
+- **seam-excluded `hp_energy`** — the fix can only change a pixel it treats, so
+  injected structure lives at treatment boundaries. Measure energy *outside* a
+  dilated boundary band. Blur still shows (blur is not confined to boundaries);
+  injection is excluded by construction rather than by hoping it is small.
+- **`hp_ncc`** — correlation of the two arms' high-pass bands. Blur removes
+  detail from one arm; injection adds structure to one arm with no counterpart
+  in the other. **Both push it down.** Two-sided on purpose.
+- **`d_ac1`** — lag-1 spatial autocorrelation of the difference. This is the one
+  that adjudicates, and the table above is why: noise is incoherent (≈0.00),
+  invented structure is coherent (0.74–0.996). It separates the two things
+  `hp_energy` and `hp_ncc` provably cannot.
+
+### 13.4 The re-derived result
+
+Three subjects, six arms, **all rendered back-to-back from one binary**
+(`5C4D7351…`), 299 frames each, `--gate 4.0`, alignment solved, binned linear —
+never `--srgb`. Frozen ROI plan, used as-is; `plan --force` never run.
+
+Median by ROI class, `off` → `on` (v2):
+
+| class | `hp_e` | **seam-excluded `hp_e`** | `hp_ncc` | `d_sd` (DN) | `d_ac1` | treated% |
+|---|---|---|---|---|---|---|
+| edge | +2.6% | **+0.3%** | 0.9531 | 77.2 | 0.826 | 14.98 |
+| detail | +3.5% | **+0.0%** | 0.9694 | 217.9 | 0.808 | 6.63 |
+| flat | +0.9% | **−0.0%** | 0.9825 | 54.9 | 0.836 | 4.53 |
+
+**The "not a blur" claim, re-derived: outside the treatment boundaries the fix
+moves high-frequency energy by +0.3% / +0.0% / −0.0%.** A blur would show there
+and does not. This is the honest version of the claim, and unlike the v1
+version it is made with an instrument that injected structure cannot satisfy.
+
+**And the whole `hp_energy` rise is at the seams.** `bee-2-cpl edge3` is +99.2%
+raw and +10.6% seam-excluded; `flower-inner-edge-cpl flat2` is +31.5% raw and
+**−2.4%** seam-excluded. The energy was never detail.
+
+**`d_ac1` is 0.6–0.9 wherever the fix does anything.** In *edge* and *detail*
+ROIs that is expected and wanted — lifting a veil is a coherent change. In
+**flat** ROIs it is the artefact, and it is real.
+
+### 13.5 V-HALO's invented hard edge: confirmed, and measured
+
+`experiments/BUILD-HALO/whatyousee.py` characterises the difference as
+connected components against a visibility threshold set at 3× the *local* grain
+of the untreated arm — local, because 200 DN is glaring in smooth background and
+invisible in foliage.
+
+`flower-inner-edge-cpl`, flat ROIs — regions the plan selected for having no
+structure:
+
+| roi | visible % | blobs | biggest | length | width | **elongation** | peak DN |
+|---|---|---|---|---|---|---|---|
+| flat1 | 1.21 | 13 | 956 px | 122.3 | 14.8 | **8.28** | 1309 |
+| flat2 | 2.04 | 15 | 1241 px | 134.4 | 18.6 | **7.22** | 6451 |
+| flat3 | 0.77 | 23 | 138 px | 20.1 | 9.8 | 2.05 | 2057 |
+
+Long, thin, coherent, and clearing 3× the local grain. **That is V-HALO's
+invented hard edge, and it is a line, not noise.**
+
+**And its width is 15–19 px, which is `SOBEL_RADIUS + WINDOW_RADIUS`.** The
+artefact I introduced has the width of my own support — the same signature as
+the halo it was built to remove. §1's law applies to the fix as well as to the
+defect. That is not a coincidence and it is not tunable: it is the coverage
+boundary of a window-based treatment, which is the same wall as §10.3 and §11.
+
+`bee-2-cpl flat2` shows the *other* artefact — 92 components, biggest 524 px,
+elongation **1.28**, peak 14304 DN. Compact, not linear: the coverage blob.
+Two different shapes, one cause.
+
+`bee-2-cpl flat1` and `flat3` are clean (0.06% and 0.00% visible).
+
+### 13.6 `lavendar-cpl`: the guards are firing. The subject has almost no edges.
+
+ORCH asked me not to assume it simply has no halo. It does have one, and the
+guards are not silently failing.
+
+Firing: `lavendar-cpl` is treated at **7.25–12.41%** of pixels in its three edge
+ROIs, with **0.21–1.07%** of pixels visibly changed. That is the same order as
+`flower-inner-edge-cpl` (14.98–19.85% treated). **This is not the
+partial-strength failure the `FEATHER` unit test was written to catch.**
+
+What is different is the subject. The M121 edge detector finds, per frame:
+
+| subject | bright edges | dark edges | **paired** |
+|---|---|---|---|
+| `bee-2-cpl` | 216 | 187 | **174** |
+| `flower-inner-edge-cpl` | 118 | 119 | **103** |
+| `lavendar-cpl` | 33 | 31 | **12** |
+
+**`lavendar-cpl` has 12 paired occluding edges against 103 and 174.** There is
+far less of the defect present to remove, which is why the effect is small.
+
+Two of its three flat ROIs have a visibility threshold of **16.9 and 19.7 DN**
+against 200–1000 DN everywhere else, and the fix moves them by **0.0 DN**.
+Those ROIs are essentially grainless — near-black or fully smooth — so there is
+nothing there to either fix or damage.
+
+### 13.7 The halo, in M121's own units, before and after
+
+Paired, same measurement path as M121 (`measure.py`, `C` = the contaminated
+rim):
+
+| subject | read | C peak off | C peak on | Δ | w50 off → on | cutoff off → on | n |
+|---|---|---|---|---|---|---|---|
+| `bee-2-cpl` | own | +0.1837 | +0.1652 | **−10.0%** | 14.75 → 14.25 | 20.75 → 19.50 | 174/149 |
+| `flower-inner-edge-cpl` | own | +0.2075 | +0.1855 | **−10.6%** | 20.00 → 18.50 | 28.75 → 30.00 | 103/91 |
+| `lavendar-cpl` | **donor** | +0.1877 | +0.1924 | **+2.5%** | 13.75 → 13.50 | 30.00 → 30.00 | 12 |
+
+For `lavendar-cpl` the **donor** read is the one to believe: it re-measures the
+*same 12 edges* in both arms. Its `own` read shows +31.9%, but that re-detects
+edges independently per arm (12 vs 11 survive), so it compares different edge
+sets — and the bootstrap CIs, `[−0.033, +0.370]` against `[+0.020, +0.405]`,
+overlap almost completely. **`lavendar-cpl` is unchanged**, which is exactly
+what V-HALO said.
+
+**A caveat I cannot resolve and will not paper over:** the donor read returned
+`nan` for C on `bee-2-cpl` and `flower-inner-edge-cpl`, because the donor edges
+re-measured in the treated arm have a 10–90 rise `p90` of 18.50 and 26.20 px
+against 4.55 and 5.50 in the untreated arm, which pushes the C read start
+beyond the profile. Median rise is unchanged (3.25 → 3.50), so the *typical*
+edge is not softened — but roughly a tenth of donor edges are behaving very
+differently under treatment. That could be genuine dislocation at treatment
+boundaries or a failure of the profile recentring. **I have not determined
+which, and the −10.0% / −10.6% figures above should be read as the `own`-read
+numbers they are.** This is the first thing a verifier should attack.
+
+### 13.8 Where this leaves the deliverable
+
+**Still not print-worthy, and by a wide margin.**
+
+- The rim amplitude falls about **10%** on the two subjects where it moves, and
+  **not at all** on the third. `w50` falls 0.5–1.5 px out of 14.75–20.
+- The fix is **not a blur** — that claim is now re-derived on an instrument the
+  artefact cannot feed (+0.3% / +0.0% / −0.0% seam-excluded).
+- It has introduced **a new visible artefact in smooth background**: line-like
+  on `flower-inner-edge-cpl` (elongation 7–8, up to 6451 DN), blob-like on
+  `bee-2-cpl` (elongation 1.28, up to 14304 DN). On a print that is worse than
+  the veil it replaces, because a viewer forgives softness and does not forgive
+  structure that is not in the subject.
+- **The new artefact is 15–19 px wide, which is the support radius.** The fix
+  is subject to the same law as the defect. No masking or feathering escapes
+  it, because the boundary of a window-based treatment is a window-wide object.
+
+That is the third independent arrival at the same wall (§10.3, §11, and now
+§13.5): **near a silhouette there is not enough background inside the window to
+select from, so it must be reconstructed.** §11's detector establishes the
+information is present. Two-layer unmixing is the remaining route and I have
+not built it.
+
+### 13.9 I did not look at the pictures, and I must say so
+
+The instruction for this build is to judge on pictures. **I cannot render an
+image into my own eyes in this environment**, and I am not going to claim
+otherwise — a claim with no instrument under it is the exact failure this
+project keeps catching.
+
+So §13.5 and §13.6 are a *description*, in numbers a human can check against
+the file, of the things a human would be looking for: how much of the ROI
+changed visibly against local grain, whether the change is a line or a blob,
+how long and how wide, how suddenly it arrives, and how bright it peaks. That
+is the most look-like instrument I could build. **It is not a substitute for
+the owner or a verifier opening the files**, and the invented-edge finding in
+particular should be confirmed by eye before it is acted on.
+
+The 16-bit panels are at `C:\dev\strehl-out\v2-crops\` as
+`<subject>-crop<N>-y<Y>-x<X>-before-after-diff3x.tif` — `before | after | 3×
+signed difference`, 384 px tall, at the frozen ROI centres. 8-bit viewable
+versions are under `C:\dev\strehl-out\v2-crops\view\`; **those are
+sRGB-encoded for looking at only, and nothing in this report was measured on
+them.**
+
+The ones to open first:
+
+- `flower-inner-edge-cpl-crop7-y949-x959-*` — flat2, the invented line.
+- `bee-2-cpl-crop7-y929-x842-*` — flat2, the coverage blobs.
+- `lavendar-cpl-crop0-y499-x995-*` — edge1, where least happens.
