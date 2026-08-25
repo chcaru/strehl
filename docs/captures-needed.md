@@ -3287,18 +3287,82 @@ What the current darks did buy: **8685 persistent hot-pixel sites** characterise
 **Low priority.** It sharpens the noise model; it does not affect the halo, and the halo is the only thing currently disqualifying your stacks.
 
 
-## 29. Your 2x teleconverter is costing more sharpness than your aperture is -- MEASURED 2026-08-25, and it changes how you should shoot
+## 29. CORRECTED 2026-08-25 -- your rig is softer than diffraction alone explains, but my earlier "open up" advice was wrong and is withdrawn
 
-This one is not a request. It is a finding about your instrument, and it is the first result here that says something is wrong with the **gear path** rather than with our software.
+**This section originally told you to open up. Do not act on that. It was based on a
+ratio that, once its uncertainty was propagated, does not support the claim.** The
+correction came from the agent that took the original measurement, checking my summary
+of its own work. What follows is what the evidence actually supports.
 
-**What was measured.** On a printed ruler inside a real bracket, **76.6 % of the blur variance is optical** -- it is in the frames before any of our code runs. Of that optical share, **60.1 % is aperture-independent aberration.** The discriminator is the edge width at two apertures: stopping from f/5.6 to f/11 predicts a **1.964x** widening if diffraction dominates, and the measured ratio is **1.025x**. Essentially flat.
+### What survives
 
-**What that means in plain terms.** Your system is **aberration-limited, not diffraction-limited**, at the magnifications you work at. Stopping down is not buying you the sharpness you are paying for it in light, in diffraction, and in frame count. The most likely cause is the **2x Viltrox teleconverter**: a teleconverter magnifies the prime's residual aberrations along with the image, and the FE 100mm F2.8 Macro GM is a very well corrected lens on its own.
+**Your system is roughly 2.2x softer than diffraction alone would make it**, at the
+magnifications you work at. Two independent measurements agree to within 4%. This is
+the solid result and it is worth knowing: it means the softness in your stacks is not
+something we can blame entirely on physics, and it is not something a smaller aperture
+was ever going to fix.
 
-**Three consequences, in order of how much they matter to you.**
+**It makes reconstruction necessary rather than optional.** Blur that is not diffraction
+is blur that has to be recovered from the frames in software. That is the estimator now
+being built, and this measurement is the strongest argument for it.
 
-1. **Open up.** If f/11 is not measurably sharper than f/5.6, you are spending roughly two stops for nothing. Shoot nearer wide open, take more frames at a finer focus step, and let the stack do the work that stopping down was supposed to do. This also happens to be exactly what the reconstruction merge we are building wants -- more, finer samples of the focus axis.
-2. **Shoot a bracket without the teleconverter when the subject allows it.** If you can frame a subject at native magnification, do one bracket with the 2x and one without, same subject, same light. That is the clean A/B that would confirm or refute the teleconverter as the cause, and I cannot run it from existing captures because every stack in the library was shot the same way. **This is the one thing I would ask you for out of this section**, and it costs one extra bracket.
-3. **It makes deconvolution the only remaining lever, not an optional extra.** Aberration blur that does not respond to aperture cannot be fixed in technique -- so it has to be recovered in software, from the frames. That is the estimator now being built. It is a stronger argument for the reconstruction path than anything in the plan, and it came from your own captures.
+### What does not survive
 
-**Caveat, stated plainly.** This is one measurement on one printed target. It has not been reproduced on a second subject, the teleconverter has not been isolated by the A/B in point 2, and the ruler is a flat high-contrast target which is not representative of everything you shoot. Treat "open up" as a hypothesis worth testing on your next session rather than as settled practice -- and if a wider bracket looks worse to your eye, your eye wins.
+**"f/11 is no sharper than f/5.6" is NOT supported.** The measured edge-width ratio was
+1.025x against 1.964x predicted for pure diffraction. But propagating the instrument's
+own floor gives **1.025 ± 0.017 to ± 0.030**. Against the diffraction prediction of
+1.964 that is 31-54σ, so *"not diffraction-limited"* stands overwhelmingly. Against
+1.000 -- "aperture makes no difference" -- it is only **0.8-1.4σ**, which is
+indistinguishable from having made no measurement at all.
+
+And random error is not even the limiting problem. The two stacks compared were
+**unpaired**: they differ by **1.91x in contrast and 2.15° in edge angle and were shot
+8 days apart**. The corpus had already audited that comparison and recorded the verdict
+*"FAILs weakly rather than cleanly"*. I quoted the number without carrying its audit
+across.
+
+**Therefore "open up" is withdrawn, and it may be exactly backwards.** What was actually
+measured is a large *non-diffraction* blur term. "Aperture-independent" was an inference
+drawn only from the confounded ratio. Spherical aberration, coma, astigmatism and field
+curvature all *improve* when you stop down -- so a large aberration term, on its own,
+argues for stopping down **more**, not less. Until the capture in the next section
+exists, we cannot tell which way it goes, and I should not have told you.
+
+**"76.6% of the blur is optical" is an upper bound, not a point estimate.** It is n = 1
+-- a single ROI in a single stack, with no replicate and no sample deviation. And the
+target was a **printed** ruler: ink spread at a ~3 px rise is real, unbounded and never
+subtracted, so some unknown share of that 76.6% belongs to the paper rather than the
+lens.
+
+| claim | status |
+|---|---|
+| Rig ~2.2x softer than diffraction alone | **Supported** -- two measurements, 4% apart |
+| Softness is mostly optical | **Upper bound only**, ≤76.6%, n = 1, printed target |
+| Only reconstruction can fix it | **Supported** |
+| f/11 no sharper than f/5.6 | **NOT supported** (0.8-1.4σ) |
+| Therefore open up | **WITHDRAWN** |
+| Shoot one bracket without the 2x TC | **Stands** -- still the most valuable capture |
+
+### What I am asking you for
+
+**1. One bracket without the 2x teleconverter.** Same subject, same light, once with the
+2x and once without, framed at matched magnification. Every stack in the library was
+shot the same way, so the teleconverter cannot be isolated from existing captures. A
+teleconverter magnifies the prime's residual aberrations along with the image, and the
+FE 100mm F2.8 Macro GM is very well corrected alone, so it is the leading suspect -- but
+it is a suspect, not a finding.
+
+**2. An aperture bracket on a fixed subject, in one session: f/5.6, f/8, f/11.** Do not
+move the subject or the light between them. This is the capture that settles "open up"
+one way or the other, and no such bracket exists in any of the 23 stacks -- a gap the
+corpus has flagged repeatedly. If the aberration-limited reading is right, edge rise
+should *fall* across those three apertures (roughly 13.65 / 11.97 / 10.37 µm); if
+diffraction dominates it should climb. One session, one subject, three brackets.
+
+**3. If you have a razor blade or a chrome-on-glass edge, shoot that instead of a printed
+ruler.** It removes the ink-spread term and turns the 76.6% upper bound into an actual
+estimate.
+
+**Nothing here should change how you shoot until capture 2 exists.** If a wider bracket
+looks worse to your eye, your eye wins.
+
