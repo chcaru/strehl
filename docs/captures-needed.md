@@ -3161,3 +3161,63 @@ was measured and rejected as a gradient at a separation of 2.8x against 28x on
 
 - Facts 1703--1706; disciplines 867, 868.
 - Section 23's occlusion finding is the same geometry seen from the other side.
+
+---
+
+## 27. What moved while you slept -- the short version
+
+Five things landed overnight. Two of them are **negative results, and those are the
+two that save you the most time.** Read this section and you have the night.
+
+**1. Nobody is going to build the deconvolution merge, and that is settled.** The
+outside review's single biggest proposal was to rebuild the merge around
+multi-frame Wiener deconvolution -- the argument being that at your magnification
+the optics destroy fine detail before the software ever runs, so only
+reconstruction can bring it back. It was a good argument. It is also **wrong on
+your own photographs**: measured against the averaging the code already does, the
+extra sharpness available is a ratio of **1.0014** -- which is to say **none**,
+with an error bar of 0.0184 that is far too tight for the effect to be hiding.
+The instrument was checked first by planting known effects and recovering them at
+0.9938-0.9974, so this is a real null and not a dead gauge. **That is weeks of
+work correctly not started.**
+
+**2. The `odd-frame-out` idea is dead, and the reason is specific to focus
+stacking.** This is the fix for your moved antenna. Two different mechanisms,
+built by different people from different starting points, were both tested
+against a stack that **did** move and a tripod stack that **did not**. Both fired
+hardest on the stack with nothing wrong with it -- **21.5x** the wrong way for one,
+**4.3x** for the other. The reason generalises and is worth knowing: in a focus
+stack the frame that disagrees most with its neighbours is usually the frame that
+is **right**, because it is the one in focus. Techniques borrowed from ordinary
+burst photography keep failing here for exactly that reason. **The moved-frame
+defect is still real and still unfixed** -- what is now well established is which
+whole family of cures does not apply to it.
+
+**3. I audited the audit, and the corpus is clean.** I had warned everyone that
+one of the switches is silently inert when alignment is off -- meaning anyone who
+measured its effect that way measured nothing at all. A full sweep of **163
+reports found zero** affected measurements, and the reviewer reproduced the
+inertness from the source code independently rather than taking my word for it.
+**No published number here is corrupted by it.**
+
+**4. The reviewer found a flaw in its own method and led with it.** Its check for
+one hazard read a field that structurally could not record that hazard -- so the
+clearance it produced could never have failed, whatever the truth was. It caught
+this itself, graded it a defect in its own report, and re-cleared the same
+question against evidence that does carry the quantity. **I would rather show you
+this than a clean sweep**, because it is the difference between a project that
+checks itself and one that only says it does.
+
+**5. Every rule of thumb I issued this week has now been refuted.** Three times, by
+three separate milestones, each of which tested the rule instead of obeying it.
+The sharpest one lands on this project's own core operation: I had a rule that
+would have declared "which frame is sharpest" immune to a certain data hazard,
+and it is **not** immune. There is now no rule of thumb -- the standing
+instruction is to measure the exposure directly every time. **The right lesson is
+not that I was wrong three times; it is that being wrong three times was *caught*
+three times, by people who were told the rule and checked it anyway.**
+
+**Nothing here changes the render you already have.** The sharpness question from
+the previous section is still open and still narrowed to one suspect. What
+changed is that two large and expensive directions are now closed, one worry
+about the corpus is closed, and the remaining work is better aimed.
