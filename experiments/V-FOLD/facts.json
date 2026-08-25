@@ -1,0 +1,744 @@
+{
+ "1560": {
+  "n": 1560,
+  "line": 2118,
+  "label": "MEASURED",
+  "src": "M97o+M97p",
+  "text": "**TWO INDEPENDENT MILESTONES CONVERGED ON THE SAME REFUSAL: a guard that never fired is UNEXERCISED, not PASSED.** M97p's `n_eff` range guard (E4) never saw a value outside `1..=frames_folded`; M97q's region guard (F4) never fired because the ruler stack keeps 68.2 % of pixels after erosion. **Both were recorded as live paths with no real-data evidence rather than marked PASS** -- explicitly invoking the disconnected-probe error (fact 1548), where a bar and its own plant both read exactly 0 and the bar looked like a clean null. |"
+ },
+ "1561": {
+  "n": 1561,
+  "line": 2119,
+  "label": "MEASURED",
+  "src": "M97n",
+  "text": "**THE WARP CACHE KEY DID NOT COVER ITS OWN INPUTS: IDENTICAL COMMAND LINES PRODUCED DIFFERENT RENDERS DEPENDING ON WHAT HAD RUN BEFORE.** The shared warp-map cache was keyed on the **capture path alone**, so two solves of one bracket under different configurations occupied a single entry and a differently-configured solve of the *same frames* passed `check_stack` and was served silently. Identical `stack` command lines gave **`DB43E708...` or `ADF81E01...`** according to whether an `align --reference 40` had run first. Post-fix the same poisoning sequence leaves the render at `07C067E438F74D77` and the poisoning solve occupies a **second** entry. |"
+ },
+ "1562": {
+  "n": 1562,
+  "line": 2120,
+  "label": "DERIVED",
+  "src": "ORCH",
+  "text": "**[CORRECTED by fact 1609: the exposure window stated here is 48 hours; measured from the git history of the READ path it is 10 h 26 m. The rest of the row stands.]** **Fact 1561 is a corpus-validity hazard and the audit HAS NOT BEEN DONE.** Any A/B measurement taken **before** M97n's fix, in which two arms differed by an alignment configuration while sharing a capture path, could have been served a poisoned cache entry -- and the symptom is that the arms agree when they should differ, or differ when they should agree, with **no error and no warning**. M97n establishes only that the fix moves no frozen render (S5); it makes no claim about historical measurements. **Treat any pre-fix cross-configuration comparison on a shared capture path as unverified until re-run**, and prefer private cache paths per arm from here on. |"
+ },
+ "1563": {
+  "n": 1563,
+  "line": 2121,
+  "label": "MEASURED",
+  "src": "M97n",
+  "text": "**A knob added an hour earlier was already poisoning the cache, which is the general shape of this defect.** `STREHL_SMOOTH` and `STREHL_SMOOTH_HUBER` changed the solved warps while **keying nothing**. The fix binds them to a named constant with a comment tying future knobs to it. The fix also preserves the cache **hit** (`alignment: ON (sidecar)`), so removing the silent substitution did not buy a re-solve on every run. |"
+ },
+ "1564": {
+  "n": 1564,
+  "line": 2122,
+  "label": "MEASURED",
+  "src": "M97m",
+  "text": "**The election map is spatially structured at 23.2x a value-preserving shuffle of itself, which is what licenses reading its boundary statistics as a property of the merge.** On 12 frames of `109MSDCF` with alignment off, **3.33 %** of horizontal and **3.34 %** of vertical adjacent pixel pairs elect different frames, against **77.41 %** for a shuffle of the same values; **71.4 %** of boundaries are single-frame steps with median jump 1 frame. The export moves no pixel (`F240C1933CF08A4C` with the flag, without it, and via the env var), planted against a 13-frame arm that does move it. |"
+ },
+ "1565": {
+  "n": 1565,
+  "line": 2123,
+  "label": "MEASURED",
+  "src": "M97n",
+  "text": "**A pre-registered bar that fails may indict the PREDICTION rather than the subject -- and this one failed because its premise came from a STALE BINARY'S `--help`.** Bar C4 predicted behaviour for `align`'s unspecified reference; the source resolves it to the middle frame. The bar was reported failed and the premise corrected, rather than the bar being quietly restated. |"
+ },
+ "1566": {
+  "n": 1566,
+  "line": 2124,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**UNCITED-REPORT SWEEP COMPLETE: seven milestone reports were sitting in `docs/research/` with zero citations in this file** -- `M107b`, `M97r`, `M97q`, `M97p`, `M97o`, `M97m`, `M97n` -- and folding them produced facts 1534-1565 and disciplines 793-808, including the reachability finding (1553-1555), the dead-code mechanism (1547), the retraction of M99's +6.88 % headline (1551) and the cache-poisoning hazard (1561-1562). **A written report is not a folded finding.** The sweep is one command and had the highest yield of the night. |"
+ },
+ "1567": {
+  "n": 1567,
+  "line": 2125,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**ORCH'S 1.444 LATERAL-CA GAIN IS REFUTED. The true gain in an uncontaminated space is 1.2496 on `bee-3-cpl` and 1.0557 on `couch-fibers-cpl`.** `needed` is **529.9** and **654.9 ppm** against the shipped **704.5 ppm**. Facts 1511-1514's headline number does not reproduce. **The implied fix -- multiply the red coefficient by 0.692 -- MUST NOT SHIP: on `couch-fibers-cpl` it converts a 5.6 % over-correction into a 27.0 % UNDER-correction**, worse in magnitude than the defect it removes. |"
+ },
+ "1568": {
+  "n": 1568,
+  "line": 2126,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**THE CAUSE: I MEASURED A CROSS-CHANNEL QUANTITY IN A SPACE CONTAINING TWO CROSS-CHANNEL OPERATORS, ON A FILE WHOSE OWN `--help` SAYS IT IS NOT FOR MEASURING.** The renders were `--srgb --auto-exposure`. (a) `camera_to_srgb` from `A7C2_XYZ_TO_CAM` is **non-diagonal**: `R_out = +1.1975 R -0.1250 G -0.0725 B`, `G_out = -0.4530 R +2.2300 G -0.7770 B`, so output red carries camera green at **10.4 %** and output green carries camera red at **20.3 %**, **both at zero displacement** -- a synthetic zero-lag inter-channel signal on top of the displacement being measured. (b) `demosaic.rs:482` documents that Malvar-He-Cutler **assumes `R - G` is smoother than either channel**, which a lateral-CA fringe violates **by definition**. `main.rs:116` on `--srgb`: **'For looking at, NOT for measuring.'** |"
+ },
+ "1569": {
+  "n": 1569,
+  "line": 2127,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**THE INSTRUMENT THAT CAUGHT IT, AND THE MOST TRANSFERABLE RESULT HERE: a compile-time constant applied by the pipeline is a FREE END-TO-END CALIBRATION OF THE MEASUREMENT CHAIN.** Since `eps_r = -704.5 ppm` is a known constant in `optics.rs`, the quantity `applied = eps_on - eps_off` has a **ground truth**, and `applied / eps_r` calibrates every stage between sensor and file. It reads **1.3073** (sRGB), **0.6963** (demosaic-linear), **0.9399 / 0.9813** (binned linear). **The two contaminated spaces are wrong in OPPOSITE directions, +31 % and -30 %** -- which is why no internal consistency check could have separated them and only the external constant could. |"
+ },
+ "1570": {
+  "n": 1570,
+  "line": 2128,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**NO SCALAR FIX EXISTS, AND THE REASON IS PHYSICAL RATHER THAN STATISTICAL.** `needed` differs by **23.6 %** between two scenes shot through the same glass (529.9 vs 654.9 ppm) while per-ring standard deviations are only **8-23 ppm**, so the ~140 ppm gap is **not noise**. Lateral CA is the separation of each channel's **effective wavelength**, which is its passband centroid **weighted by the scene's own spectrum** -- and the scenes differ (R/G **1.0017 vs 0.9381**, B/G **0.9334 vs 1.0807**). This is fact 52's warning about transferring a scene-fitted scalar, **now measured**. Any improvement must come from a better *model* -- spectral or per-capture estimation -- never a better constant. |"
+ },
+ "1571": {
+  "n": 1571,
+  "line": 2129,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**WHAT SURVIVES, AND IT IS NOW BETTER SUPPORTED THAN WHEN I CLAIMED IT.** (a) The radial **shape** is correct: `eps(r)` is flat within **+/-15 ppm** from r = 0.11 to 0.87 on `couch-fibers-cpl` (bootstrap sd 8-23 ppm). (b) Fact 1514's `RECOLOURED, NOT REMOVED` is **confirmed on two stacks under two independent estimators**: residual `eps` flips sign, **-529.9 -> +132.3** and **-654.9 -> +36.5 ppm**. (c) Fact 1501's refutation stands, though my evidence for it did not: I used **n = 1 ring, 5.3 % beyond support, in the contaminated space**; the clean re-measurement gives outside/inside = **1.0128 on 111 outside-support windows**. **REINTERPRETED by fact 1588 (M110): a flip WITH SHRINKAGE is what a working correction produces, not a defect. The residuals quoted here are 25 % and 5.6 % of the original amplitude, and 5.6 % is exactly this stack's measured gain of 1.0557. The sign flip is real; reading it as failure was the bar's error.** |"
+ },
+ "1572": {
+  "n": 1572,
+  "line": 2130,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**MY ESTIMATOR WAS NOT BROKEN, AND THE EARLIER INDICTMENT OF IT WAS SPACE-SPECIFIC RATHER THAN ESTIMATOR-SPECIFIC.** A previous report's claim that ORCH's estimator is 'blind to 94 % of the field' is withdrawn: run **unmodified** in the clean binned space, `shift_of` returns gain **1.0595** against M113's independent **1.0557** (0.4 % apart) and `eps_off` **-593.2** against **-654.9**. The whitening step `X/\\|X\\|` weights all frequencies equally and therefore **maximally amplifies a zero-lag contaminant** -- which was genuinely present. The estimator was correctly reporting a contaminated input. |"
+ },
+ "1573": {
+  "n": 1573,
+  "line": 2131,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**A DEFECT IN ORCH'S OWN INSTRUMENT: `ca_gain.py` printed a fabricated noise floor.** `resid_pred = abs(R_off * (1.0 - median(g)/median(g)))` is **identically zero by construction** and was captioned *'median abs(residual) if gain were 1.0 ... i.e. at the estimator's floor'*. It printed **0.000 on any input whatsoever**. Repaired: the line now refuses to print rather than emitting a defensible-looking zero, and the script carries a SUPERSEDED banner. |"
+ },
+ "1574": {
+  "n": 1574,
+  "line": 2132,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**Two of ORCH's stated weaknesses were adjudicated in opposite directions.** The one I considered **most likely to be real** -- that my positive control plants a **uniform translation** while the measured quantity is a **radial scale** -- is **REFUTED as a cause**: introducing the real ramp moves the answer by **0.0004 px**. The one I listed fourth -- that `needed = -R_off` assumes no other source of inter-channel radial displacement -- is **CONFIRMED and larger than I thought**, and is fact 1568. **My ranking of my own weaknesses was inverted.** |"
+ },
+ "1575": {
+  "n": 1575,
+  "line": 2133,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**`align` correctly refuses a tilted subject.** `highly-angled-ruler-mm-cpl` exits 1 with *'refusing to solve ... its subject is not normal to the optical axis'*. The refusal is correct and was **not** overridden with `--force-tilted`, so that stack is absent from the CA measurements by design rather than by oversight. |"
+ },
+ "1576": {
+  "n": 1576,
+  "line": 2134,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**The reachability audit of facts 1553-1555 extended from modules down to functions.** Of every `pub fn` in the 107 production `.rs` files at HEAD, exactly **5** have zero references anywhere in the repository including their own file, and **3** more are reached only from tests. The dead five are `align::from_stage`, `merge::tracks_disagreement`, `photometric::fold_u16`, `through_focus::subframe_peak` and `warpmap::set_resampler`. **Three of the five are benign wrappers.** The module-level picture -- two dead modules out of twenty-five -- is therefore not hiding a large population of dead functions inside live modules. |"
+ },
+ "1577": {
+  "n": 1577,
+  "line": 2135,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**THE LOAD-BEARING ONE IS `warpmap::set_resampler`, AND IT GUARDS AN UNMEASURED COST PAID ON EVERY GATHERED PIXEL.** Its own doc comment states that Catmull-Rom versus bilinear **has never been compared on real frames at merge time**, while M86 measured an estimator's gain falling **0.98 -> 0.29** through Catmull-Rom. The default is therefore a choice nobody has priced. **The A/B needs zero code changes:** the resampler round-trips as text through the warp sidecar (`warpmap.rs:601` writes `resampler <name>`, `:810` parses it), so an arm is a text edit to a sidecar file. Dispatched as M118. |"
+ },
+ "1578": {
+  "n": 1578,
+  "line": 2136,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**A DEFECT IN THIS AUDIT'S OWN FIRST DRAFT, CAUGHT BEFORE IT WAS REPORTED.** Version 1 excluded each function's **own file** when counting references, on the theory that a definition should not count as a use. It also excluded every **call** from a sibling function in the same file, so any helper used only locally scored zero. It reported **76** dead functions. Counting same-file references, minus the declaration itself, gives **5**. **The first version was measuring `pub` that should have been private -- a visibility smell -- and reporting it as dead code.** The two are different findings with different remedies and a 15x difference in headline number. |"
+ },
+ "1579": {
+  "n": 1579,
+  "line": 2137,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**THE DEFAULTS AUDIT: of the seven environment gates gating quality machinery on the render path, exactly ONE is on by default.** `STREHL_ALIGN` defaults ON (`align_cmd.rs:845`, `Err(_) => true`). Every other one defaults OFF: `STREHL_FIX_HALO` (`halo.rs:99`, `Err(_) => false`), `STREHL_PHOTOMETRIC` (`main.rs:284`, a bare clap `bool`, plus an env alias), `STREHL_FIX_CA` (`optics.rs:476`, `None` unless a profile is named), `STREHL_SOFT_GATE` (`merge.rs:483`), `STREHL_SMOOTH` and `STREHL_SMOOTH_HUBER` (`align_cmd.rs:504`). **The render the owner is looking at is therefore registration plus a bare gated average, with essentially every measured quality instrument switched off.** |"
+ },
+ "1580": {
+  "n": 1580,
+  "line": 2138,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**[CORRECTED by facts 1596-1597: the 87.9 %/84.6 % figures are from an unshipped unaligned gate-0 pipeline -- the shipped path gives 72.9 % -- and M87's own section 16.9 recommends against enabling it. The gap between measured-and-off and shipped-and-on is real; this correction is not the example of it.]** **THE STANDOUT IS THE HALO CORRECTION, AND IT IS NOT EVEN REACHABLE FROM THE COMMAND LINE.** `halo.rs:58-77` records that M87 section 6.1 ran the ladder on **two real stacks with one parameter set and no refitting**, removing **87.9 % of the halo on `bee-3-cpl`** and **84.6 % on `flower-bud-with-background-fern-cpl`**; `DELTA = 40` is documented as the largest value that did not soften hairs and claws. That is a large, twice-replicated, un-refitted quality win on the exact artifact that makes a macro stack look wrong -- and `git grep -i halo` over `main.rs` returns **nothing**, so there is no `--fix-halo` flag. The only switch is an environment variable that defaults to `false`. |"
+ },
+ "1581": {
+  "n": 1581,
+  "line": 2139,
+  "label": "ARGUED",
+  "src": "ORCH",
+  "text": "**THE PROJECT'S CHARACTERISTIC FAILURE MODE IS NOW MEASURED THREE TIMES OVER, AND IT IS NOT A RESEARCH FAILURE -- IT IS A CONNECTION FAILURE.** (a) Two modules totalling 1638 lines with passing tests are **unreachable** (facts 1553-1555). (b) A `pub fn` guarding an unpriced per-pixel cost has **no caller** (fact 1577). (c) Six of seven quality gates are **reachable but off** (fact 1579). In all three the work was done, measured, tested and committed; only the last step -- making the product actually use it -- was skipped. **This is the most likely single explanation for the owner's report that the renders 'don't look too good yet' while the corpus reports large measured wins**, and it predicts that turning existing machinery on will move the image more than any new research will. ARGUED, and M116 is measuring it. |"
+ },
+ "1582": {
+  "n": 1582,
+  "line": 2140,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**ORCH READ ITS OWN TABLE WITH THE WRONG INTERVAL: the dispersion of seven per-ring estimates is not the standard error of their centre.** ORCH argued a `sqrt(2)` normalisation bug was plausible because 1.4142 *'sits inside the measured spread 1.381-1.505'*. That spread is the **range of the seven estimates**; the uncertainty of their mean is **sem 0.0147**, about **four times narrower**. All seven rings give CI **1.4095-1.4814** (`t = +2.12`, compatible); inside-support only gives **1.4256-1.4867** (`t = +3.53`, excluded); window-weighting moves the centre **away** from `sqrt(2)`. **The verdict flips on the cut**, and the row responsible is the single OUTSIDE ring at **n = 33, ~2.9 % of all windows** -- the only row below `sqrt(2)`. Context: the underlying gain table is itself REFUTED by fact 1567; the reading error is independent of that and was made on whatever table was in front of it. |"
+ },
+ "1583": {
+  "n": 1583,
+  "line": 2141,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**AND THE INTERVAL WAS STILL TOO NARROW, IN THE DIRECTION THAT WEAKENS THE CONCLUSION.** Seven rings of **one capture sharing one estimator** are not seven independent draws, so the true uncertainty is wider than any of the three intervals above. M111 stated this explicitly and drew the correct asymmetric inference: **wider intervals make an exclusion weaker, never stronger**, so the `sqrt(2)` exclusion is the claim that degrades and the compatibility finding is the robust one. It also **caught its own transcription error before reporting**: it had asserted ORCH's figures against the *mean* when ORCH reported *medians*, and re-armed its guard to assert medians plus min and max. |"
+ },
+ "1584": {
+  "n": 1584,
+  "line": 2142,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**A CONTROL ORCH PROPOSED IS DISQUALIFIED, AND ITS BIAS RUNS TOWARD THE ANSWER ORCH WANTED.** ORCH proposed a **tangential** displacement as the placebo for the radial CA correction, reasoning that it shares the code path, the kernel, the sensel count and therefore *'the same blur'*. **The blur claim is false**: interpolation blur is set by the displacement's **sub-pixel phase along each pixel axis**, not by its magnitude, and radial and tangential split an equal magnitude differently between x and y. Measured high-frequency retention at `\\|d\\| = 0.155 px` -- **isotropic content 0.653410 vs 0.655221 (0.28 % apart)**, but **oriented hair-like content 0.514191 vs 0.994494 (93.41 % apart)**. The tangential arm blurs the direction that is already smooth and so pays almost no blur penalty, meaning it **under-blurs the arm it stands in for**. ORCH's crops were hairs and wing membrane: the worst case. |"
+ },
+ "1585": {
+  "n": 1585,
+  "line": 2143,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**THE REPLACEMENT CONTROL IS THE SAME CORRECTION AT NEGATIVE STRENGTH, AND IT IS EXACTLY BLUR-NEUTRAL.** Across 8 magnitudes from 0.069 to 0.450 px, `\\|retention(+d) - retention(-d)\\|` is **1.11e-16** -- floating-point zero. So a sign flip holds interpolation blur constant **per pixel**, at the same location, on the same content, with no new direction logic. It is also a **negative dose rather than a null**: at r = 0.450 the anti arm carries **2.44x** the uncorrected displacement, giving a **monotone three-arm ladder spanning 5.5x** (anti 0.379, off 0.155, on 0.069). M111 validated the instrument before using it: integer shifts retain **1.000000**, half-pixel retention bottoms at **0.338**. |"
+ },
+ "1586": {
+  "n": 1586,
+  "line": 2144,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**AND THE COMPARISON MUST BE `anti` AGAINST `on`, NOT AGAINST `off`.** `anti` and `on` both resample, so **blur cancels exactly between them** while the CA differs by 5.5x -- which makes any difference attributable to the CA and not to the resampler. `off` cannot serve as the blur reference at all, because fact 1517 established that the zero-strength path **short-circuits rather than resampling by zero**, so it omits the very nuisance the control exists to hold constant. If a strict null is wanted instead of a dose, the **round-trip** arm (`+d` then `-d`) has zero net displacement and **2x** blur, which is conservative: if 2x blur does not reduce the artifact, 1x did not either. |"
+ },
+ "1587": {
+  "n": 1587,
+  "line": 2145,
+  "label": "MEASURED",
+  "src": "M110",
+  "text": "**THERE IS NO POLARITY REVERSAL BEYOND THE FIT'S OUTER SUPPORT, AND NO OVERSHOOT ANYWHERE.** M110 scored overshoot as the **conjunction** that the word actually means -- the sign of `R-Y` flips **and** its magnitude grows -- rather than as a flip alone. Gated at one display level. On `bee-3-cpl` the rate across the r = 0.788 support boundary runs **9.73 % / 9.78 % / 9.47 %**; on `flat-on-ruler` it **falls**, **14.22 % / 13.68 % / 11.66 %**. **No discontinuity at the boundary and no upward trend beyond it**, where an over-large `eps_r` would have to climb monotonically. The null control reads **0.00 % exactly**. This is a second, independent burial of fact 1501's extrapolation hypothesis, reached from a different direction than fact 1571's. |"
+ },
+ "1588": {
+  "n": 1588,
+  "line": 2146,
+  "label": "MEASURED",
+  "src": "M110",
+  "text": "**`RECOLOURED, NOT REMOVED` IS WHAT A SIGN-RETENTION BAR PRINTS WHEN THE CORRECTION WORKS. The W3 failure ORCH has cited all night as evidence of a defect is a defect in the BAR.** Flip rates reach **62.9 %** while overshoot is only **9-19 %**, so **most flips are flips WITH SHRINKAGE** -- fringes driven through neutral toward grey, which is exactly what a working correction does and exactly what a keep-sign statistic counts as failure. **M113's independent residuals corroborate this arithmetically**: the sign-flipped remainders are **132.3 ppm against 529.9** (25 %) and **36.5 against 654.9** (5.6 %) -- flips at a quarter and a twentieth of the original amplitude. And 5.6 % is **precisely** M113's measured `couch-fibers-cpl` gain of 1.0557. **A sign-retention bar cannot distinguish 'over-corrected by 44 %' from 'corrected to within 6 %'**, and the project spent a night acting on the first reading. |"
+ },
+ "1589": {
+  "n": 1589,
+  "line": 2147,
+  "label": "MEASURED",
+  "src": "M110",
+  "text": "**THE CORRECTION MAKES FRINGES FAINTER, NOT THINNER -- and the sheet must not claim otherwise.** Chroma reduction **concentrates at the edge** rather than spreading uniformly: `bee-3-cpl` falls **-29.4 % at band 0** decaying to **-9.4 % at band 5**, `flat-on-ruler` **-49.3 %** to **-35.7 %**, so it is not a uniform recolour. Edge-localised chroma excess drops **61.0 %** and **58.7 %**. But **half-max width is unchanged** at 1-px resolution -- the peak falls faster than the tail, taking peak-to-baseline contrast from **2.45x to 1.93x** (flat) and **1.63x to 1.27x** (bee). M110 flagged this pre-emptively against a claim nobody had yet made. |"
+ },
+ "1590": {
+  "n": 1590,
+  "line": 2148,
+  "label": "MEASURED",
+  "src": "M110",
+  "text": "**A DETECTION RULE OF ORCH'S CARRIED A COMPONENT WITH NO SIGNAL IN IT.** ORCH issued the rule *'if an arm completed in roughly full runtime but was byte-identical to the no-correction arm, re-check its profile key'*. **Runtime carries no signal**: across four subjects the live CA arms ran **53.0 -> 60.8 s** (bee), **22.1 -> 23.0**, **21.8 -> 22.0**, and **`wrapped-text-1` 27.7 -> 25.0 s, i.e. the corrected arm ran FASTER than its own control**. **Byte-distinctness is the entire instrument.** M110's own manifest already carried the check: `distinct_hashes_ok = True` and `duplicate_pairs = []` on all four subjects, and it reproduced ORCH's published `off`/`on` hashes exactly. |"
+ },
+ "1591": {
+  "n": 1591,
+  "line": 2149,
+  "label": "MEASURED",
+  "src": "M110",
+  "text": "**ORCH ASSERTED A `HEAD` THAT WAS FIVE COMMITS STALE WHILE VOUCHING FOR A BUILD AGAINST IT.** ORCH told the fleet `HEAD` was `9c279d8` and that it had verified a clean `cargo check` there; `HEAD` was in fact `16f2dd2`. M110's reply: *'if your build-clean verification was against `9c279d8`, it does not cover what agents will actually compile tonight.'* With thirteen agents committing, a `HEAD` quoted in a broadcast is stale before the broadcast is read, so **the commit a verification covers must be captured by the verification itself and reported with it**, never restated from memory. |"
+ },
+ "1592": {
+  "n": 1592,
+  "line": 2150,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**STREHL PARSES NO CAMERA IDENTITY WHATSOEVER. There is no make, model, lens, focal-length or aperture tag read anywhere in the product.** `git grep` over every production `.rs` for `0x010f`, `0x0110`, `\"Make\"`, `\"Model\"`, `LensSpec` and `maker_note` returns **nothing**, and `strehl-raw`'s public surface exposes no such field. `OpticalProfile` (`optics.rs:123`) carries a `key` and is selected **only** by a hand-typed `STREHL_FIX_CA` value. **The optical-profile plugin has its data and no dispatch.** |"
+ },
+ "1593": {
+  "n": 1593,
+  "line": 2151,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**THAT GAP IS WHAT BLOCKS THE PROJECT'S ONE READY-TO-SHIP QUALITY WIN.** The CA correction is measured to cut edge-localised chroma excess by **61.0 %** and **58.7 %** and to be visibly cleaner by eye (facts 1587-1589), and it is default-OFF (fact 1579). **It cannot simply be switched on**, because the shipped profile describes one specific optical path -- A7C2 + FE100GM + 2x TC + X4 CPL -- and the product cannot tell whether the frames in front of it came from that path. Defaulting it on would apply one photographer's measured aberration to everybody's glass. **The correct default is 'on when the capture matches a known profile, off otherwise', and the matching half does not exist.** |"
+ },
+ "1594": {
+  "n": 1594,
+  "line": 2152,
+  "label": "ARGUED",
+  "src": "ORCH",
+  "text": "**AND THE FAILURE IS SILENT IN THE DANGEROUS DIRECTION.** M109's `d142783` preflight validates that a named profile **exists**, which catches a typo in 0.235 s. It cannot catch a **mismatch** -- a correctly-spelled key naming real glass that is not the glass in the capture. That path applies a wrong optical model at full strength, completes successfully, and produces fringes that a user would read as the lens's own. **Key-existence validation and gear-match validation are different checks and only the first is built.** Marked ARGUED: no mismatched render has been measured, and the size of the resulting error is unknown. |"
+ },
+ "1595": {
+  "n": 1595,
+  "line": 2153,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**ORCH'S BLUR CONFOUND FOR THE HALO CORRECTION IS REFUTED, AND M87 HAD ALREADY RUN ORCH'S EXPERIMENT -- BETTER -- BEFORE ORCH PROPOSED IT.** M87 bisected a Gaussian until its **coarse**-band suppression matched the correction's to **4e-12** (`0.9145749511849404` against `0.9145749511806655`), then raced the two on the **fine** band. Pure blur needs **sigma = 5.108 px** and retains only **20.46 %** of the fine band against the correction's **90.58 %** -- a **blur-match factor of 4.428**. **M87 pre-registered BMF <= 1.05 in the script docstring, in ORCH's direction, then measured 4.43 and recorded the refutation against itself.** Independently, the metric is **structurally incapable** of scoring sharpness -- `score_iso` samples image *levels* along edge normals against a far-field baseline, with no gradient or Laplacian term (fact 1307) -- and consistent with that, M87's resampling control moved it **+0.6 %, positive** under a Catmull-Rom similarity warp (`resample_pct` = +0.5792). **ORCH's fold spliced two measurements here:** the *~49 % of gradient energy* is **M86's** (M86 P23), taken on a **half-pixel shift of a single frame** -- the worst case -- and is **not** a measurement of the warp M87 scored; M87's own docstring says that arm *bounds the interpolator's lowpass rather than reproducing arm A's exact path*. The conclusion survives; the number was borrowed from a different experiment (V-M111). |"
+ },
+ "1596": {
+  "n": 1596,
+  "line": 2154,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**THE 87.9 % / 84.6 % HEADLINE IS FROM A PIPELINE THE PROJECT DOES NOT SHIP.** M87 section 16.9 records those figures as **ROI crops of an UNALIGNED, GATE-0 merge**. On the shipped path -- full frame, aligned, gate 2 -- the figure is **72.9 %**. ORCH promoted the headline to the fleet and to the owner's morning brief **fifteen points high**, in two successive messages, without reading the section that qualifies it. |"
+ },
+ "1597": {
+  "n": 1597,
+  "line": 2155,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**AND THE REPORT'S OWN AUTHOR RECOMMENDS AGAINST ENABLING IT.** M87 section 16.9 is *titled* **'why I am telling you not to enable it'**. Its finding: the fringe is replaced by a **'smooth, milky, scalloped band'** and **'it looks worse'**. A later withdrawal softens the proposed *mechanism* only, and explicitly records that **'the conclusion -- do not enable this by default -- stands'**; sections 24.5, 25.9 and 28.7 cite it standing and 25.9 makes it binding on the successor. **ORCH spent two messages promoting a feature whose own author had already concluded the opposite.** |"
+ },
+ "1598": {
+  "n": 1598,
+  "line": 2156,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**THE CORRECTION FIRES HARDEST WHERE THERE IS NOTHING TO FIX.** On M87's **synthetic plant**, the non-occluding control's treated-pixel fraction is **1.000 at every dose** against **0.394** on the plant's **occluding** arm -- but that 1.000 is **forced by the control's construction**: every treated pixel elects within **3** frames of `k_F`, so any delta >= 4 moves all of them. **ORCH's fold called 0.394 'the real occluding scene'. It is the synthetic plant's, and the error was ORCH's, introduced in the fold (V-M111).** **The load-bearing version is on real data**, and it is weaker but still adverse: at a planted non-occluding disc in the bee image the correction moves **85.4 %** of treated pixels against **82.1 %** at the bee's **real** occluding edge -- **1.04x**, so it is *no more* selective on a genuine occlusion than on a silhouette with nothing behind it. Worse, on that control the apparent improvement is **non-monotone in dose** (**-186.6 % / -142.0 % / +63.9 %** at d10/d20/d40) while the error against ground truth rises **monotonically** (**+215.9 % / +354.4 % / +558.4 %**). **It makes a region with no halo 2.9x worse before it appears to improve it**, and the apparent +63.9 % is a band rewritten into flatness. The dose ladder ORCH asked M116 to build already existed, on ground truth, and is pathological. |"
+ },
+ "1599": {
+  "n": 1599,
+  "line": 2157,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**ORCH DESIGNED A SECOND BIASED CONTROL ONE MESSAGE AFTER BEING TAUGHT THE LESSON, BIASED THE SAME WAY.** ORCH proposed forbidding the **far** frames instead of the near ones as a blur-matched placebo. **The count is wrong**: the treatment forbids `\\|k - k_F\\| < 40`, which is **79 of 299** frames, so the complement excludes **220** -- **2.8x** as many. **And it is aimed wrong -- but this half is ARGUED, and ORCH folded it as MEASURED.** M87 \u00a73.3 measures only that near-band pixels elect frames closer to the foreground's (median \\|k_elected - k_F\\| **32** near against **96** far; elected-value percentile rank 0.675 against 0.429) and **explicitly labels the causal reading -- that those pixels are *yoked* to the foreground's election -- ARGUED**. The *consequence* is measured, on the bee: the treatment moves **82.1 %** of treated pixels, so a complement band could forbid at most **17.9 %** -- a **4.6x under-treatment**, scoring near zero by construction. But on the synthetic plant the same comparison **inverts** (complement 60.6 % against treatment 39.4 %), so **the argument is scene-dependent**: it holds on the shipped subject, not universally. The count `79` is additionally a per-pixel **upper bound** -- the band clips wherever `k_F < 39` or `k_F > 259` (V-M111). Same bias structure as the tangential placebo (fact 1584), pointing the same way: **toward vindicating the treatment**. |"
+ },
+ "1600": {
+  "n": 1600,
+  "line": 2158,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**THE REAL CONFOUND IS SILHOUETTE-KEYING, NOT BLUR -- the correction cannot distinguish thin bright structure ATTACHED to the subject from background VEILED by it.** That control already exists and the correction already failed it: at a planted **non-occluding** disc, **85.4 %** of treated pixels moved, against **82.1 %** at a real occluding edge. And the metric cannot police it -- it returns indistinguishable verdicts on reconstructions whose true error differs by **six orders of magnitude** (RMSE **33117** against **0.0171**). M87's binding rule follows: **no halo-removal arm may be certified on that metric alone.** |"
+ },
+ "1601": {
+  "n": 1601,
+  "line": 2159,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**`DELTA = 40` IS NOT BELOW THE BLUR THRESHOLD -- it is merely below the threshold that was visible on the crops inspected.** It destroys **9.4 % of the fine band** at the damage window (`866,1566 x 1050,2150`, 700 x 1100 px) of the shipped full-frame aligned gate-2 render -- **a window of that render, not the whole frame**, a qualifier ORCH's fold dropped (V-M111). M87's own summary: **'none of these three is good; d40 is the least-bad point on a ladder every rung of which raises error against truth.'** ORCH's question of whether `40` was safe or merely untested has the answer **neither**: it is measured, and measured to cost detail. |"
+ },
+ "1602": {
+  "n": 1602,
+  "line": 2160,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**A NEGATIVE CONTROL CAUGHT A DEFECT IN THE VERIFIER ITSELF: seven of seven planted defects were caught, ALL of them by one arm, while the only arm that opens the source file had never once fired.** M111's guard checks a claim by literal presence **and** by numeric comparison; the presence arm short-circuits first, so **7/7 GREEN was reported by an instrument half of which was inert**. Three further plants placed into a *copy* of the source were required to prove the second arm live. **An arm that never fires is indistinguishable from one that cannot.** The same guard also caught its owner writing **-141.9 %** where 141.95215 rounds to **-142.0 %**. **V-M111 then confirmed the numeric arm is now genuinely live and found a SECOND defect in it: it is sign-blind.** The comparison is `abs(abs(stated) - abs(value)) <= tol`, so flipping a source value from **-141.95** to **+141.95** leaves the guard **GREEN** -- a sign flip is exactly the defect a control-vs-treatment comparison exists to catch. **An arm that cannot see sign is inert against the failure it was built for**, which is the same lesson as the inert arm one sentence earlier, wearing a different disguise. |"
+ },
+ "1603": {
+  "n": 1603,
+  "line": 2161,
+  "label": "OBSERVED",
+  "src": "ORCH",
+  "text": "**[UPGRADED to MEASURED by facts 1616-1617.]** **THE WORST ARTIFACT IN THE SHIPPED RENDER IS NOT THE HALO. IT IS A POLYGONAL PATCHWORK IN THE DEFOCUSED BACKGROUND.** On the first occasion in this project that ORCH viewed a rendered pixel, the out-of-focus white background of `bee-3` resolves at 1:1 into **irregular flat polygons with visible brightness steps between them** -- crazy paving. It is unmistakably non-photographic: a smoothly defocused background cannot contain hard-edged polygons. It covers a large fraction of the frame, and it is present **unchanged** in the shipped merge, in the F1 halo arm at d40, and in the F2 two-layer unmix (`C:\\dev\\strehl-out\\M87-before-after\\{00,01,04}-*-tight2x.png`). Every arm the project has built leaves the largest visible defect untouched. |"
+ },
+ "1604": {
+  "n": 1604,
+  "line": 2162,
+  "label": "ARGUED",
+  "src": "ORCH",
+  "text": "**[REFUTED IN TWO OF ITS THREE LIMBS by M120, facts 1682-1687. Limb 1 (the background response is flat and noise-dominated) is FALSE: it stands 15.0x above the pure-noise ceiling and swings 8.6 noise SD through focus. Limb 2 (each polygon gathers from a different frame) is FALSE: the shipped gate averages 166.8 of 299 frames per pixel. Limb 3 (brightness drift makes the steps) is PARTIAL: drift explains 60.9%, and 39.1% survives removing it entirely. The prescribed fix, `STREHL_SOFT_GATE`, has separately been rejected four times. Fact 1603's CLASS survives and is strengthened. This fact was folded as ARGUED and said 'Unverified' in its own text, so its refutation is the labelling system working -- it is NOT an instance of discipline 849, which concerns findings folded as stronger than their source.]** **A MECHANISM FOR THE PATCHWORK, AND IT PREDICTS THAT THE CURE IS ALREADY WRITTEN AND SWITCHED OFF.** Where a region is defocused in *every* frame the through-focus response is flat, so the focus measure is noise-dominated and the argmax is near-random; the spatial regulariser then snaps that random field into **piecewise-constant regions**, which is what makes polygons; each polygon gathers from a different frame, and frames differ slightly in background brightness, which is what makes the **steps** between them visible. If this is right the fix is `STREHL_SOFT_GATE` (`merge.rs:483`, default **OFF**): where the election margin sits below the noise floor there is nothing to elect on and the correct estimator is a broad average, which is smooth *and* buys the sqrt(N) noise reduction. **Unverified.** M96 already computed the `margin-q8` and `confusion-radius` maps that would confirm or kill it. |"
+ },
+ "1605": {
+  "n": 1605,
+  "line": 2163,
+  "label": "OBSERVED",
+  "src": "ORCH",
+  "text": "**M87'S AESTHETIC VERDICT ON THE HALO CORRECTION IS CONFIRMED BY AN INDEPENDENT EYE.** Comparing `09-BEE-BEFORE-shipped-merge.png` against `10-BEE-AFTER-F1-local-d40.png`, the after is **milky**: background structure present in the before is washed out and large regions go featureless. ORCH had already withdrawn the recommendation on M111's word (facts 1596-1601); this is the same conclusion reached from the images rather than from the reports, which makes the withdrawal safe against the possibility that M111 misread M87. |"
+ },
+ "1606": {
+  "n": 1606,
+  "line": 2164,
+  "label": "OBSERVED",
+  "src": "ORCH",
+  "text": "**F2, THE TWO-LAYER UNMIX, IS VISUALLY A NO-OP.** `04-AFTER-F2-two-layer-unmix-tight2x.png` is indistinguishable by eye from `00-BEFORE-shipped-merge-tight2x.png` at the same framing. F2 is the physically-motivated arm -- the one that models the occluding edge as a two-layer composite and subtracts the foreground's defocused contribution. **So the project currently has no halo fix at all**: F1 works and looks worse, F2 does not change the image. This is an open problem, not a solved one. |"
+ },
+ "1607": {
+  "n": 1607,
+  "line": 2165,
+  "label": "OBSERVED",
+  "src": "ORCH",
+  "text": "**AND THE HALO ITSELF IS REAL AND SEVERE, WHICH THE WITHDRAWAL MUST NOT BE READ AS DENYING.** On `crop-leg-halo.png` -- an **unstretched** view, not a contrast-boosted diagnostic -- a bright scalloped band traces the entire silhouette of the leg and both claws, and reads as a **cut-out sticker**. Withdrawing the F1 correction (facts 1596-1601) settles that *that cure* is worse than the disease; it settles nothing about the disease. Ranked by eye the defects are: **(1) background patchwork, (2) silhouette halo, (3) lateral chromatic aberration, (4) general softness.** |"
+ },
+ "1608": {
+  "n": 1608,
+  "line": 2166,
+  "label": "OBSERVED",
+  "src": "ORCH",
+  "text": "**LATERAL CHROMATIC ABERRATION IS CONFIRMED PRESENT BY EYE, INDEPENDENTLY OF THE REPORTS THAT MEASURED IT.** `ORCH-look/crop-head-eye.png` at 1:1 shows clear purple and cyan fringing along the antenna edges against the lighter background. This corroborates the *diagnosis* of M107/M110/M113. It corroborates **nothing about the correction**, which remains un-adjudicated pending an audit of whether its 61.0 %/58.7 % figures come from the shipped pipeline and whether it was ever raced against a negative-strength arm rather than against OFF. |"
+ },
+ "1609": {
+  "n": 1609,
+  "line": 2167,
+  "label": "MEASURED",
+  "src": "M117",
+  "text": "**THE CACHE-POISONING EXPOSURE WINDOW IS 10 h 26 m, NOT 48 HOURS -- fact 1562 was wrong by 4.6x and in the alarming direction.** Dated from git rather than from memory: the consume path landed at `885e9f7` (2026-08-24 03:15:23) and the fix at `69f7b4c` (13:41:53). The window cannot start on 08-22 because **the cache did not exist then** -- `strehl stack` could not read it until M86c. **A defect is dated from when its READ path first existed, not from when the bug was written**, and dating it by the latter inflated the blast radius of every report in between. |"
+ },
+ "1610": {
+  "n": 1610,
+  "line": 2168,
+  "label": "MEASURED",
+  "src": "M117",
+  "text": "**THE CORPUS IS CLEAN: of 163 reports, 155 IMMUNE / 8 EXPOSED / 0 UNDETERMINED, and no poisoning write ever reached the shared cache.** 114 reports landed before the read path existed at all; **7 of the 8 exposed are the milestones investigating this very defect**, and the 8th (M105b) named it 3 h 07 m before the window opened. The write side is clean four independent ways: all 6 live cache entries carry `reference n/2`; the one in-window entry is **byte-identical (`1864A370AE92B377`)** to an independent post-fix re-solve; of 234 sidecars on this machine **104 are poisoning-shaped and zero are in the shared root**; and all 3 no-`--out` `align` invocations in the corpus are hermetic. |"
+ },
+ "1611": {
+  "n": 1611,
+  "line": 2169,
+  "label": "MEASURED",
+  "src": "M117",
+  "text": "**THE EXPOSURE IS CUMULATIVE RATHER THAN PER-RUN, BECAUSE THE CACHE IS A FILE.** It lives at `%LOCALAPPDATA%\\strehl\\warpmaps\\...`, and before 10:32:43 it lived at `<stackdir>\\warpmap.txt` -- **inside the owner's capture drive**. A cache that persists across runs converts a transient defect into a permanent one: one poisoning invocation during the window would have contaminated every later run that hit the same key, including runs made long after the fix landed. This is the property that made the audit necessary at all. |"
+ },
+ "1612": {
+  "n": 1612,
+  "line": 2170,
+  "label": "MEASURED",
+  "src": "M117",
+  "text": "**THE POSITIVE CONTROL FIRED TWICE AND FOUND A WIDER VECTOR THAN THE MILESTONE THAT REPORTED THE DEFECT.** M97n reported the hazard as requiring an explicit non-default reference; M117's control showed `AlignArgs::reference` **defaulted to 0** until `19f1be0` (13:19:52), so **a plain `strehl align <dir>` with no flags at all was a poisoning run for 10 h 04 m of the 10 h 26 m window**. The damage is not subtle -- **98.7 % of pixels change, RMS 1.9 % of mean level** -- and the determinism arm reads exactly 0, so the instrument is not confusing poisoning with run-to-run noise. **A control commissioned to confirm a known hazard enlarged it.** |"
+ },
+ "1613": {
+  "n": 1613,
+  "line": 2171,
+  "label": "MEASURED",
+  "src": "M117",
+  "text": "**THE 449-TEST BYTE-FREEZE REGISTRY COVERS NONE OF THE VULNERABLE PATH, BY DESIGN -- so citing its green here would be a true statement that misleads.** The registry passes and the corpus is clean, and neither fact is evidence for the other. M117 flagged this against its own result rather than letting a passing suite stand in for coverage it does not have. **A green suite is scoped, and its scope is never printed next to its result.** |"
+ },
+ "1614": {
+  "n": 1614,
+  "line": 2172,
+  "label": "MEASURED",
+  "src": "M117",
+  "text": "**THE CORPUS SURVIVED THIS BY LUCK AS MUCH AS BY DISCIPLINE.** What actually prevented contamination was `STREHL_ALIGN=0` and `STREHL_WARPMAP` -- **and both were adopted for unrelated reasons**, neither as a defence against cache poisoning. The one unrecoverable gap M117 names against itself: an uncommitted ad-hoc `strehl align` typed during those ten hours would leave no trace, and its absence is **argued, not proved**. The honest reading is that the clean verdict is real and that the process which produced it was not the process that deserves the credit. |"
+ },
+ "1615": {
+  "n": 1615,
+  "line": 2173,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**`PIL.Image.open()` SILENTLY RETURNS `uint8` FOR A 16-BIT RGB TIFF -- NO WARNING, NO EXCEPTION, NO FLAG.** Confirmed on a controlled file whose contents ORCH chose, so it is not a property of one exporter (`experiments/ORCH-drift-check/pil16_probe.py`): a 16-bit RGB TIFF holding **4098 distinct levels** reads back through PIL as `uint8`, mode `RGB`, with **17 distinct levels** -- a **241x** loss. **16-bit GREYSCALE round-trips exactly** (mode `I;16`, 4096 levels preserved), which is almost certainly why this survived: anyone who sanity-checked the reader on a single-channel TIFF saw it work. **27 scripts across 8 milestones open a `.tif` through PIL** (M103, M114, M87, M95, M96, M97 and ORCH's own). ORCH hit it directly: a measurement reported `dtype=uint8, max=160` on a file holding `uint16, max=41188`, and a conclusion was nearly published from it. |"
+ },
+ "1616": {
+  "n": 1616,
+  "line": 2174,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**[SCOPE CORRECTED by fact 1621: the arm measured here is the gate-0 NEGATIVE CONTROL, not the shipped path. For the shipped path see facts 1623-1624.]** **THE BACKGROUND PATCHWORK IS PRESENT IN 16-BIT DATA, SO 8-BIT QUANTISATION CONTOURING IS DEAD AS AN EXPLANATION.** Measured on `armM-gate0-binlin.tif` read with `tifffile` (`(2344, 3516, 3) uint16`, min 295, max 41188) over 12 interior background windows of 256 px: **Laplacian excess kurtosis median 14.10, worst 31.24, and 12 of 12 windows above the plant-calibrated bar of 10.** A piecewise-constant field is exactly what produces that signature -- near-zero Laplacian inside patches, spikes at the boundaries. Fact 1603's OBSERVED status is hereby upgraded to MEASURED. |"
+ },
+ "1617": {
+  "n": 1617,
+  "line": 2175,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**[SCOPE CORRECTED by fact 1621: the arm measured here is the gate-0 NEGATIVE CONTROL, not the shipped path. For the shipped path see facts 1623-1624.]** **THE MERGE MANUFACTURES SPATIAL STRUCTURE THAT IS IN NO INPUT FRAME, IN 12 OF 12 BACKGROUND WINDOWS.** The invariant: in a region where every input frame is smooth, a merge cannot legitimately create structure. Measured as Laplacian RMS over identical pixels in the merge and in five single input frames of the same geometry and dtype, the merge carries **2.134x the fine-scale structure of the NOISIEST single frame** (median; worst **3.402x**), and 2.268x/3.713x against the quietest. **Every window violates it.** This is a defect statement that needs no aesthetic judgement, and it is the first measured account of the project's largest visible artifact. **It should become a shipped acceptance invariant.** |"
+ },
+ "1618": {
+  "n": 1618,
+  "line": 2176,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**THE INSTRUMENT WAS COMMISSIONED IN THE SAME RUN THAT PRODUCED THE RESULT, AGAINST TWO NULLS AND A PLANT.** At the measured background sd of 1443.87 counts: **iid gaussian -0.00**, **smooth ramp +0.03**, **planted Voronoi mosaic +52.99**. The script refuses to print any result unless both nulls read below 1.0 and the plant reads above 10.0, so a green cannot be produced by an instrument that has not just been shown to respond. **A null alone would only have shown the metric was quiet; only the plant shows it can move at all.** |"
+ },
+ "1619": {
+  "n": 1619,
+  "line": 2177,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**AND THE VISUAL COMPARISON IS BIASED AGAINST THE CONCLUSION, WHICH SURVIVES ANYWAY.** The side-by-side at `C:\\dev\\strehl-out\\ORCH-morning\\PATCHWORK-16bit-worst*.png` stretches each panel to its own range: the merge over **8356** counts, the single frame over **2905**, so **the single frame receives 2.88x MORE contrast amplification than the merge**. Under that handicap the single frame still shows a smooth, faintly noisy defocused background, and the merge over the same pixels shows a cellular mosaic of hundreds of flat blobs. **The panel that should most easily reveal structure is the one that has none.** |"
+ },
+ "1620": {
+  "n": 1620,
+  "line": 2178,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**ORCH'S FIRST VERSION OF THIS MEASUREMENT WAS BIASED TOWARD ITS OWN CONCLUSION, FOR THE FOURTH TIME TONIGHT, AND WAS CAUGHT BEFORE PUBLICATION RATHER THAN AFTER.** The comparison was originally against the **quietest** of five single frames -- the reference most likely to make the merge look bad. Re-run against the **noisiest**, the median ratio falls from **2.268 to 2.134** and the verdict is unchanged. The lesson is not that the bias was small; it is that its size was unknown until it was measured, and the previous three instances (facts 1584, 1599) were only found by other agents. |"
+ },
+ "1621": {
+  "n": 1621,
+  "line": 2179,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**FACTS 1616-1617 MEASURED A NEGATIVE CONTROL AND DESCRIBED IT AS THE MERGE.** `armM-gate0-binlin.tif` is the **gate-0 arm**, and `merge.rs:3027` labels it in so many words: `gate 0 selector : {r0:.4}x at mean n_eff {n0:.3}  (negative control)`. The shipped default is `DEFAULT_GATE: f32 = 4.0` (`merge.rs:298`), which is the `armM4-gate4-binlin.tif` arm. **So the 2.134x invariant violation is the pure selector's, and the project already knew by construction that the pure selector is bad.** Facts 1616-1617 stand as written about the arm they name and must not be quoted as statements about the shipped path. This is ORCH's fifth error in one night and the second of the same shape. |"
+ },
+ "1622": {
+  "n": 1622,
+  "line": 2180,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**[WITHDRAWN by fact 1629: the two images compared are different scenes.]** **THE PATCHWORK DETECTOR IS SILENT ON A REAL PHOTOGRAPH AND FIRES ON EVERY MERGED ARM.** The strongest available negative control is a single unmerged input frame, which is a real defocused background with real noise and no merge anywhere in its history. Over its 12 most background-like windows it reads **median excess kurtosis 0.05, worst 0.08, 0 of 12 above the bar of 10** (`experiments/ORCH-drift-check/shipped_patchwork.py`). Every merged arm reads **two to three orders of magnitude higher**. **A detector that reads 0.05 on the photograph and 34 on the merge of those photographs is not measuring the scene.** |"
+ },
+ "1623": {
+  "n": 1623,
+  "line": 2181,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**[WITHDRAWN by facts 1627-1628: the counting statistic fires on an unmerged photograph, and the metric responds to the halo, not the patchwork.]** **ON THE SHIPPED FULL-RESOLUTION RENDER THE PATCHWORK IS REAL BUT LOCALISED: MEDIAN 2.48, WORST 89.94, 3 OF 12 WINDOWS ABOVE THE BAR.** Measured on `ORCH-morning\\bee-3-strehl.tif` (7032x4688 uint16, the shipped path, 240 windows scanned), instrument commissioned in-run at that image's own sd (nulls -0.03 / +0.01, plant +41.81). **The correct headline is therefore not 'the background is a mosaic' but 'a quarter of the background is a mosaic, and where it is, it is severe'** -- 89.94 against a plant of 41.81 means the worst window is more patchwork-like than the synthetic Voronoi field built to define the defect. This supersedes the stronger phrasing in fact 1603 and in `captures-needed.md`. |"
+ },
+ "1624": {
+  "n": 1624,
+  "line": 2182,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**THE SHIPPED GATE ROUGHLY HALVES THE MANUFACTURED STRUCTURE BUT DOES NOT ELIMINATE IT: 7 OF 12 WINDOWS STILL VIOLATE THE INVARIANT.** A/B on **identical pixels** (both arms scored on window coordinates fixed to one reference arm, which the tool now takes as an argument precisely so an A/B cannot silently become a comparison of two different window sets): merged fine-structure against the **noisiest** single input frame falls from **2.134x to 1.114x** median (worst 3.402x to 2.864x) and violations from **12/12 to 7/12** going from gate 0 to the shipped gate 4. **The shipped path is much better than the selector and still measurably manufacturing structure.** |"
+ },
+ "1625": {
+  "n": 1625,
+  "line": 2183,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**RENDERED ON ONE SHARED STRETCH, THE GATE REMOVES THE MOSAIC AND LEAVES THE HALO COMPLETELY UNTOUCHED.** Same 256 px window, one lo/hi applied to all three panels so a flatter arm looks flatter (`experiments/ORCH-drift-check/ab_shared_stretch.py`; independent per-panel stretching would amplify the winner's residual noise until it looked as bad as the loser). Window sd: **gate0 1455.7 -> gate4 934.4 -> single frame 285.4 counts**, means agreeing to 8 counts in 18730 so the arms are photometrically comparable. The mosaic is visually **gone** at gate 4; the bright outlines around every hair are **identical** in both. **This also explains the kurtosis rising while the RMS falls (fact 1624): with the mosaic removed, the halo edges are what is left in the Laplacian, and they are sparse and hard.** |"
+ },
+ "1626": {
+  "n": 1626,
+  "line": 2184,
+  "label": "DERIVED",
+  "src": "ORCH",
+  "text": "**THE HALO IS NOW THE LEAD DEFECT OF THE SHIPPED PATH, ON THE SHIPPED PATH'S OWN NUMBERS.** Facts 1623-1625 together: the mosaic is localised (3 of 12 windows) and already largely handled by the gate, while the halo is visible on **every** silhouette in **both** gate arms, survives the one mechanism that fixed the mosaic, and has **no working fix** -- F1 is withdrawn as looking worse (facts 1595-1602, 1606) and F2 is a visual no-op (fact 1607). **The defect ranking in `captures-needed.md` should be reordered accordingly**, and the reorder is itself a consequence of the two things nobody had done: looking at the output (discipline 824), and checking what an arm name means before building on it (discipline 830). |"
+ },
+ "1627": {
+  "n": 1627,
+  "line": 2185,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**THE LAPLACIAN-KURTOSIS PATCHWORK DETECTOR IS NOT SPECIFIC, AND EVERY 'N OF 12 ABOVE THE BAR' COUNT ORCH REPORTED IS WITHDRAWN.** Re-run with window selection that does **not** consult the arm under test, a **single unmerged input frame** -- which has no merge anywhere in its history and therefore cannot contain the defect -- scores **3 of 12 windows above the bar, worst 103.31**. That is a higher worst-case than the shipped render's 65.35. **A detector that fires three times on the photograph cannot be used to count how often it fires on the merge.** Only the **median** separates the two populations, and it separates them by a factor of about 390: **0.06 for the single frame against 23.50 for the shipped render.** |"
+ },
+ "1628": {
+  "n": 1628,
+  "line": 2186,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**AND THE DETECTOR WAS MEASURING THE HALO, NOT THE PATCHWORK.** Laid out as twelve labelled windows (`experiments/ORCH-drift-check/background_windows.py`, `BACKGROUND-12-WINDOWS.png`), the shipped render's **high**-kurtosis windows are precisely the ones containing **haloed hairs** (25.8, 65.4, 29.5, 36.2, 32.4, 23.2), and the windows showing the **mottled curdled background** score **low** (1.0, 1.1, 1.8, 2.1, 3.9). Kurtosis responds to **sparse hard edges**, which is what a halo is and what soft mottling is not. This also explains the otherwise inexplicable ordering in fact 1623's table, where the gate-0 **negative control** scored *below* the shipped gate: gate 0's mosaic is dense and broad, gate 4's residual is sparse and hard. |"
+ },
+ "1629": {
+  "n": 1629,
+  "line": 2187,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**FACT 1622'S HEADLINE COMPARISON WAS BETWEEN TWO DIFFERENT SCENES.** The 'single input frame reads 0.05, the merge reads 34' comparison put `bee-3-strehl.tif` (7032x4688) against `armF-f173.tif`, which is a frame of a **different stack of a different subject**. Two images of different scenes may differ for any reason at all. **The only patchwork evidence in this corpus that survives is the matched-pixel comparison inside M93**, where the merged arms and the single frames are the same scene at the same geometry: facts 1624-1625. Everything ORCH inferred about the full-resolution render's background is unsupported, because no single frame at that geometry exists to compare it against, and out-of-focus foliage genuinely does look mottled. |"
+ },
+ "1630": {
+  "n": 1630,
+  "line": 2188,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**THE 'RECTANGULAR TILE SEAM' ORCH THOUGHT IT SAW IN THE SHIPPED RENDER DOES NOT EXIST.** A seam scan looking for a step that is consistent down a whole column (`experiments/ORCH-drift-check/seam_scan.py`) reports the shipped render's strongest column at **z = 18.4** and a **single unmerged photograph's** at **z = 43.8** -- the photograph has 2.4x the straight-column structure of the merge. The positive control landed exactly: a seam planted at x=256 with amplitude 0.25 sd was recovered at **x=256, off by 0 px, z = 33.5** against a median column z of 5.1, so the scan was demonstrably able to see one. **Hypothesis killed in one run, by an instrument that had just been shown to work.** |"
+ },
+ "1631": {
+  "n": 1631,
+  "line": 2189,
+  "label": "DERIVED",
+  "src": "ORCH",
+  "text": "**WHAT SURVIVES THE NIGHT'S RETRACTIONS, STATED ONCE.** (a) Within M93 at **matched pixels**, the shipped gate manufactures **1.114x** the fine structure of the noisiest input frame in **7 of 12** background windows, and the gate-0 negative control manufactures **2.134x** in **12 of 12** (fact 1624). (b) On one shared stretch the gate visually **removes the mosaic** and leaves the halo **untouched** (fact 1625). (c) The **halo is the lead defect**, present on every silhouette in every arm, with no working fix (fact 1626). (d) `PIL` silently downconverts 16-bit RGB TIFFs (fact 1615). **Everything else ORCH produced tonight about the patchwork is withdrawn or unsupported.** |"
+ },
+ "1632": {
+  "n": 1632,
+  "line": 2190,
+  "label": "ARGUED",
+  "src": "ORCH",
+  "text": "**THE PATTERN IN ORCH'S SIX ERRORS TONIGHT IS THAT EVERY ONE OF THEM WAS IN THE SETUP, NOT THE MEASUREMENT.** A tangential placebo that did not perturb what it claimed to (fact 1584); a bar that printed the same string on success and failure (fact 1571); a blur confound measured in the wrong direction (facts 1595-1602); a reference chosen from the flattering end of a set (fact 1620); an arm mistaken for the shipped path (fact 1621); and a comparison between two different scenes (fact 1629). **In every case the metric was sound, the instrument was commissioned, and the arithmetic was right.** The corpus already has strong discipline on validating metrics and almost none on validating **what is being compared to what** -- and on tonight's evidence that is where the errors actually live. |"
+ },
+ "1633": {
+  "n": 1633,
+  "line": 2191,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**INTER-FRAME LEVEL DRIFT IS PRESENT ON M93 AT 3.2-8.4% PEAK-TO-PEAK, INDEPENDENTLY CORROBORATING M24.** Measured over 23 single input frames at six widely separated background windows of 256 px (`experiments/ORCH-drift-check/level_drift_budget.py`), the window mean drifts **3.208% / 3.816% / 6.584% / 6.890% / 7.701% / 8.406%** peak-to-peak. M24 measured **2.88% / 6.84% / 8.93% / 11.70%** on four different stacks by a different method; these land inside that range. **Two independent measurements on different data now agree that the frames a merge gathers differ in level by several percent.** |"
+ },
+ "1634": {
+  "n": 1634,
+  "line": 2192,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**THE DRIFT IS A SMOOTH GLOBAL RAMP IN FRAME INDEX, WHICH IS EXACTLY THE SHAPE A FITTED PER-FRAME GAIN REMOVES.** A straight line in frame index removes **91.8% of the drift's variance**, leaving a residual sd of **0.449% of level**. The sequence is monotone across the whole bracket (19624 counts at f120 falling to 18322 at f208). **This matters for the remedy, not just the diagnosis:** frame-to-frame scatter would need a robust per-frame estimator and would leave residue, whereas a smooth one-parameter-per-frame trend is the case a simple fitted gain handles almost completely. |"
+ },
+ "1635": {
+  "n": 1635,
+  "line": 2193,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**LEVEL DRIFT IS SUFFICIENT TO SUPPLY ROUGHLY HALF THE MERGE'S SPATIAL SWING, AND THAT IS A LOWER BOUND.** Over the same six windows, drift peak-to-peak against the merge's spatial sd expressed as a fraction of level: median **52% of the gate-0 swing and 56% of the gate-4 swing**, ranging 26%-175% window to window. **The figure is a lower bound on drift's share of the ARTIFACT**, because the denominator is the window's total spatial variation and some of those windows contain genuine scene structure (two swing 13-18%, far above any plausible artifact). **Sufficiency is not attribution** -- nothing here shows that removing the drift removes the artifact, only that the drift is large enough to account for a large share of it. |"
+ },
+ "1636": {
+  "n": 1636,
+  "line": 2194,
+  "label": "ARGUED",
+  "src": "ORCH",
+  "text": "**CONFIRMED in part by facts 1637-1638 (visible fix on one of three subjects; the promotion question is now 203).** **ON THIS EVIDENCE `STREHL_PHOTOMETRIC` IS THE BEST-EVIDENCED UNTESTED IMPROVEMENT AVAILABLE TO THE SHIPPED RENDER, AND NOBODY HAS RUN IT.** The chain: the merge gathers different frames in different regions; those frames differ by several percent in level (fact 1633, M24); the difference is a smooth ramp a gain fit removes (fact 1634); and it is large enough to supply about half the observed swing (fact 1635). The correction exists and is **default OFF** (`main.rs:284`). **This is a prediction, not a result** -- it was pre-registered to M116 with the instrument to test it (`patchwork_invariant.py`, baseline 1.114x and 7/12 at the shipped gate) and the instruction not to evaluate it on `109MSDCF`, which M24 measured at 0.91% and is the quietest stack in the corpus. **A null would be valuable**: it would rule out level drift and point at the focus decision itself. |"
+ },
+ "1637": {
+  "n": 1637,
+  "line": 2195,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**`--photometric` REMOVES FINE STRUCTURE FROM SMOOTH BACKGROUND ON ONE OF THREE SUBJECTS AND IS INERT ON THE OTHER TWO.** Scored M116's own A0 (default) and A1 (`--photometric`) arms -- same frozen warp map, so registration is held constant -- on 12 windows per subject chosen from the **symmetric mean of the two arms**, so neither arm picks the pixels it is judged on (`experiments/ORCH-drift-check/photometric_ab.py`). Laplacian-RMS ratio, test over base: **`tweezers-cpl` median 0.710**, and within it the effect tracks window smoothness -- the six smoothest windows fall **0.632 to 0.812** while textured windows sit at **0.99 to 1.03**. `bee-3-cpl` median **1.064** and `foam` **1.013**, both roughly uniform across smooth and textured windows. In the subject that moves, the test arm converges to a **floor near 45-53 counts** from a base of 56-79. |"
+ },
+ "1638": {
+  "n": 1638,
+  "line": 2196,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**AND THE PIXELS SHOW WHAT THE NUMBER MEANS: THE DEFAULT MERGE COVERS A DEFOCUSED BACKGROUND IN BLOTCHES AND `--photometric` REMOVES THEM.** At `tweezers-cpl` x=912 y=400 under a **shared stretch taken from the base arm** (`PHOTOMETRIC-tweezers-cpl-smooth-912x400.png`), the default arm shows dozens of soft oval patches over a smooth tonal gradient; the photometric arm shows the gradient and no patches. **A defocused region cannot contain structure at that scale** -- defocus is a low-pass filter -- so the patches are manufactured, which is the invariant of fact 1631 stated visually. **The blur control passes:** at x=400 y=656 the tweezer edge, its grain and the speckled texture are preserved indistinguishably, so this is not smoothing. Cost is **+3.7 s mean over three subjects (45.81 -> 49.52 s)** and on `tweezers-cpl` the photometric arm was **faster** (52.01 -> 45.80 s), so run-to-run variance exceeds the effect. **This is the first measured, visible removal of the mosaic from a shipped-path render.** |"
+ },
+ "1639": {
+  "n": 1639,
+  "line": 2197,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**M116'S `KEEP-OFF` VERDICT ON PHOTOMETRIC IS NOT REFUTED BY THIS -- ITS BAR WAS ON THE WRONG AXIS.** M116 scored the identical arms with a global sharpness statistic and measured **+0.00477 (bee), -0.00003 (foam), +0.00835 (tweezers) against a +0.010 promotion bar**, and returned KEEP-OFF. **Every one of those numbers is at or above zero** -- its own data says the instrument never hurt sharpness on any subject -- and the arm simply failed a threshold defined on an axis the defect does not live on. The defect is **tonal**: patchy per-region level offsets change tone, not sharpness. Both measurements are correct and they are measuring different things. |"
+ },
+ "1640": {
+  "n": 1640,
+  "line": 2198,
+  "label": "ARGUED",
+  "src": "ORCH",
+  "text": "**THE MECHANISM CHAIN FOR THE MOSAIC IS NOW COMPLETE END TO END, WHICH IS WHY THIS IS MORE THAN ONE SUBJECT'S RESULT.** Frames differ in level by 3.2-8.4% peak-to-peak (fact 1633, corroborating M24); the difference is a smooth ramp in frame index that a per-frame gain fit removes almost entirely (fact 1634, 91.8% of variance); the merge elects different frames in different regions; so regions inherit different levels and the background acquires plateaus (fact 1638's blotches); and fitting the gain removes them (facts 1637, 1638). **Every link is measured.** The prediction that survives is that a subject shows the defect in proportion to its level drift, which explains why `bee-3-cpl` -- whose default background already sits at 33-47 counts, **smoother than the photometric arm on `tweezers-cpl`** -- has nothing to fix. **Untested:** whether that proportionality holds across the corpus. That is the measurement that would justify flipping the default, and it needs the drift figure and the blotch figure on the same stacks. |"
+ },
+ "1641": {
+  "n": 1641,
+  "line": 2199,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**THE SOFT GATE BEATS `--photometric` ON THE TONAL STATISTIC AND IS DISQUALIFIED BY THE BLUR CONTROL.** Scoring M116's remaining arms with the fact-1637 instrument -- laplacian-RMS ratio against the default, identical windows across arms -- the soft-gate arms have the **better headline number on every subject**: `tweezers-cpl` **0.553** (gaussian), **0.562** (exponential), **0.544** (gaussian + photometric) against **0.710** for photometric alone, and `bee-3-cpl` **0.808 / 0.819 / 0.809** against **1.064**. **But on `bee-3-cpl` the gaussian soft gate cuts the TEXTURED control window by 30.5% (500.8 -> 348.0), which is as large as its effect on that subject's smooth windows (0.851 / 0.673 / 0.813).** Photometric's textured windows are **1.037** (bee) and **1.027** (tweezers) -- preserved. Confirmed by eye on a shared stretch: the soft-gate panel smears the fine hairs along the leg edge and erases a highlight that the default resolves. |"
+ },
+ "1642": {
+  "n": 1642,
+  "line": 2200,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**WHICH MEANS THE TWO INSTRUMENTS NOW AGREE ON THE SOFT GATE AND DISAGREE ONLY ON PHOTOMETRIC -- AND THE BLUR CONTROL IS WHAT SEPARATES THE TWO CASES.** M116 rejected the soft gate on a detail statistic at **-0.01218**, and fact 1641 rejects it on a background statistic plus a control, by a different route, on different windows, with a different measure. **Two independent methods converging on the same verdict is much stronger than either alone.** The photometric disagreement (fact 1639) survives this because it is the one arm whose control window is untouched: it is the only candidate that changes smooth regions **without** changing textured ones. `A4` (photometric + gaussian soft gate) inherits the blur -- bee textured **0.711** -- so the combination is not a way to keep both. |"
+ },
+ "1643": {
+  "n": 1643,
+  "line": 2201,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**AND THE RANKING WOULD HAVE BEEN WRONG WITHOUT THE CONTROL.** On the defect statistic alone the correct promotion order is soft-gate-gaussian > soft-gate-exponential > photometric on both subjects that move. After the blur control it is photometric alone, and the top two are defects. **The statistic that identified the defect could not, by itself, tell a fix from a blur** -- removing structure scores identically either way, and only the region where structure is legitimate distinguishes them. |"
+ },
+ "1644": {
+  "n": 1644,
+  "line": 2202,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**THE BLUR CONTROL IS NOW STRUCTURAL, AND IT REPRODUCES THE HAND VERDICT ON ITS OWN.** `experiments/ORCH-drift-check/switch_gate.py` scores a candidate on two axes in one pass -- **removal** on the 8 smoothest windows and **preservation** on the 8 most textured -- both pools drawn from the symmetric mean of the two arms, and returns PASS only when `removal <= 0.97` **and** `preservation >= 0.97`, so the control holds a veto rather than a footnote. On M116's arms it recovers facts 1641-1643 with no human in the loop: `A1` (`--photometric`) shows **no harm on any subject** -- bee `1.0583 / 1.0324`, foam `1.0111 / 1.0080`, tweezers `0.8264 / 1.0208` PASS -- while `A2`, `A3` and `A4` are all REJECTED on `bee-3-cpl` at preservation **0.6703 / 0.6345 / 0.6839**. |"
+ },
+ "1645": {
+  "n": 1645,
+  "line": 2203,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**AND THE HARM IS VISIBLE ON EXACTLY ONE OF THE THREE SUBJECTS.** On `tweezers-cpl` alone every soft-gate variant **passes its own texture control** -- preservation **0.9918 / 0.9911 / 1.0141** -- while posting the **best removal scores in the entire candidate set**, **0.5493 / 0.5622 / 0.5299** against `0.8264` for photometric. On `foam` every arm reads ~`0.99`-`1.01` on both axes, i.e. nothing. **Only `bee-3-cpl` exposes the blur at all.** So a campaign run on tweezers -- the subject that carries the photometric win, and therefore the natural one to test on -- would have ranked the soft gate first, cleared it on its control, and promoted a blur. Taking a median across the three subjects does the same thing, because two of them are silent. |"
+ },
+ "1646": {
+  "n": 1646,
+  "line": 2204,
+  "label": "MEASURED",
+  "src": "ORCH",
+  "text": "**THE INSTRUMENT IS COMMISSIONED BY REJECTING A BLUR, NOT BY DETECTING AN EFFECT.** `switch_gate.py` refuses to print a verdict on a subject until it has scored `PLANT-BLUR` -- the base arm passed through an `r=2` box blur and fed in as though it were a candidate -- and rejected it. It reads removal **0.1130 / 0.2873 / 0.1831** and preservation **0.1908 / 0.2678 / 0.2319** on bee / foam / tweezers and is REJECTED on all three. The null (`A0` against itself) reads exactly **1.0000** on both axes on all three subjects, and the voronoi plant clears its `>1.30` / `<0.77` bars on all three. **A plant that shows an instrument is sensitive says nothing about whether it is specific**; this is the control for specificity and it is the one the earlier instrument lacked. |"
+ },
+ "1647": {
+  "n": 1647,
+  "line": 2205,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**M111 IS NOT EXPOSED TO THE PIL HAZARD, AND IT RE-RAN RATHER THAN ARGUED.** Across all 33 files in the lane there are **zero `Image.open(` call sites**; every TIFF read is `tifffile.imread`, and the three scripts that import PIL use it only on the write path for PNG contact sheets. Rather than rest on that, M111 recomputed its headline `blobB` statistic through **both** readers with every other line identical. The reported values reproduce exactly through `tifffile` (interior ratio **0.094** merged / **0.761** control; boundary p90 **1384.04** / **226.69**), and the level loss on those very files is real -- **62152 -> 256** distinct levels on the merged render (**243x**), 49028 -> 245 on the control. Had PIL been used, `blobB` boundary hardness would have read **5.573x** instead of **6.105x** (**-8.7%**) and `blobA` **2.875x** instead of **3.111x** (-7.6%): **the defect would still have been detected, but understated**. |"
+ },
+ "1648": {
+  "n": 1648,
+  "line": 2206,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**AND THE PIL DISTORTION IS DIRECTIONAL -- IT BIASES TOWARD THE NULL.** Within the same statistic the *small* term moves about **13x more** than the large one: the control's soft boundary p90 shifts **+10.5%** where the merged render's hard boundary shifts **+0.8%**. The mechanism is that quantisation error is an **absolute** floor, so it is a large fraction of a small quantity and a negligible fraction of a large one. **Consequence: every large-over-small ratio compresses toward 1.** That is precisely the direction that manufactures a **false clean null**, which is the hardest error in this project to catch, because nobody re-examines an arm that came back showing no effect. The broadcast hazard's 'most suspect of all' category now has a measured sign and magnitude. |"
+ },
+ "1649": {
+  "n": 1649,
+  "line": 2207,
+  "label": "MEASURED",
+  "src": "M111",
+  "text": "**EXPOSURE DEPENDS ON THE SHAPE OF THE STATISTIC, NOT ONLY ON THE DTYPE OF THE FILE.** In one script, on the **same pixels of the same file**, M111's interior-flatness ratio was nearly immune (**-0.0%**, **+3.0%**) while its boundary-hardness contrast lost **8.7%**. A ratio of two comparably-sized quantities largely survives; a contrast between a strong and a weak signal does not. This splits the hazard's 'suspect' bucket along a line that is not visible from the input file at all -- `gradient/high-frequency energy` and `retention ratios` land on **opposite sides** of it depending only on how they are formed. |"
+ },
+ "1650": {
+  "n": 1650,
+  "line": 2208,
+  "label": "MEASURED",
+  "src": "M115",
+  "text": "**THE MULTI-FRAME WIENER DECONVOLUTION MERGE HAS NO HEADROOM OVER THE MERGE THAT ALREADY SHIPS. DO NOT BUILD IT.** At matched contrast, focus-axis Wiener deconvolution beats the already-shipping noise-gated average by `R_SNR = **1.0014** +/- 0.0184`, 95% CI **[0.965, 1.038]** -- an interval that contains 1 and excludes any worthwhile gain. The diffraction-free matched filter reads **0.9844** +/- 0.0182, i.e. slightly *worse*. It **looks** dramatically better -- contrast reaches **2.51x** +/- 0.63 that of the sharpest frame at f=0.205 -- but noise rises to **2.03x** +/- 0.57 in step. **It reallocates information; it does not create it.** This refutes proposal 3 of the external review (`docs/proposals/2026-08-external-review.md`), which argued deconvolution was the only path to real sharpness at this rig's magnification. |"
+ },
+ "1651": {
+  "n": 1651,
+  "line": 2209,
+  "label": "MEASURED",
+  "src": "M115",
+  "text": "**AND IT RINGS.** The Wiener arms put **29.5-36.4%** of pixels outside the convex hull of the source stack -- values no input frame contains -- with a **halo peaking at 70.7%** of pixels in the 8-16 px shell around edges and a p99.9 excess of **18-26x** the hull width. **All five convex arms read exactly 0.0000%.** So the failure is not a tuning artefact of one parameter choice: it is the signature of the estimator class, and it is the same artefact family as the halo that is already this project's lead defect. |"
+ },
+ "1652": {
+  "n": 1652,
+  "line": 2210,
+  "label": "REFUTED",
+  "src": "M115",
+  "text": "**OTF SELF-CALIBRATION FROM THE THROUGH-FOCUS CURVE DOES NOT WORK.** The external review proposed that per-frame OTF widths could be self-calibrated from the through-focus response curve itself, so that no lens model would be load-bearing. Measured, the curve width **over-estimates `s` by 1.87x and 2.15x**, and the resulting model claims an **OTF magnitude of 0.021** at a frequency where direct measurement reads **0.638** -- wrong by a factor of 30. The guard that was supposed to make the deconvolution safe without a lens database is itself unsound. |"
+ },
+ "1653": {
+  "n": 1653,
+  "line": 2211,
+  "label": "MEASURED",
+  "src": "M115",
+  "text": "**M115'S PRE-REGISTERED PRIMARY CHANNEL FAILED ITS OWN NULL, AND FAILED IN THE DIRECTION OF ITS HYPOTHESIS.** The antithetic-injection channel returned **SNR 84.9 on a scene-free capture**, under-estimating noise **73x**, because the election flips on **100.0%** of tiles. M115 caught it, discarded the channel, and replaced it with a split-stack channel that carries no noise model and reads consistency **1.0000**. **Had the failed channel been trusted, every number in the report would have favoured deconvolution by an order of magnitude** -- i.e. the instrument's failure mode pointed precisely at the conclusion the milestone was dispatched hoping to find. |"
+ },
+ "1654": {
+  "n": 1654,
+  "line": 2212,
+  "label": "MEASURED",
+  "src": "M115",
+  "text": "**A SHARPNESS CLAIM REPORTED AS CONTRAST IS UNFALSIFIABLE; REPORTED AS SNR AT MATCHED CONTRAST IT IS NOT.** M115's gain-invariance control (C3) applied post-filters that changed measured contrast by up to **3.94x**: `R_SNR` moved **<= 0.54%**, while a naive gradient sharpness metric on the same arms was fooled by **8.25x**. The positive control (C2, exact Fourier blur) was monotone with 8/8 recovery ratios in **[0.9938, 0.9974]**. |"
+ },
+ "1655": {
+  "n": 1655,
+  "line": 2213,
+  "label": "MEASURED",
+  "src": "M115",
+  "text": "**THE PIL NARROWING IS WORSE THAN 241x ON LOW-CONTRAST CROPS, AND RATIO-OF-ARMS STATISTICS LARGELY SURVIVE IT.** M115 is not exposed (its only reader is `rawpy.imread`; inputs verified `uint16` at 2420 / 4906 / 7367 distinct levels), but it commissioned the check by planting the narrowing into its own loader. Three refinements to the hazard: (a) **damage scales with the file's OCCUPIED range, not the full 16-bit range** -- a detail ROI spanning ~2100 DN was left with **9 distinct levels, not 256**; (b) absolute readings are destroyed -- noise power **3.5x** too high, sigma off **1.9x**, band SNR **0.438x** of truth, and the OTF fit moved **+23.7%**; (c) **a ratio of two arms on the same data is largely protected by cancellation** -- `R_SNR(WIENER)/R_SNR(GATE)` moved only **-1.0%** (0.9340 -> 0.9248). |"
+ },
+ "1656": {
+  "n": 1656,
+  "line": 2214,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**THE SPECTRAL ATTRIBUTION OF THE CA SCENE-DEPENDENCE IS NOT SUPPORTED, AND ITS ONE FALSIFIABLE PREDICTION CAME OUT BACKWARDS.** The hypothesis required that scenes weighted toward longer wavelengths in red need a *larger* red correction, monotonically. Pre-registered bar S6 required **positive** rho; across n=8 of the owner's stacks the measured Spearman rho is **-0.6905**, p=0.058 -- the wrong sign. It is not noise-limited: R/G spans **10.7%** while `needed` spans **27.3%**. M113 registered the bar as weak in advance and therefore reports NOT SUPPORTED rather than REFUTED, honouring its own pre-registration. |"
+ },
+ "1657": {
+  "n": 1657,
+  "line": 2215,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**BUT THE SCENE-DEPENDENCE ITSELF IS CONFIRMED AND LARGER THAN FIRST THOUGHT.** `needed` runs **529.9 -> 674.7 ppm**, a spread of **27.3%** across eight stacks, against a measured replicate floor of **19.5 ppm** -- an effect roughly fourteen times the repeatability. All eight passed the fact-1569 chain-transfer instrument check at **0.9064-1.0004**. **So the correction genuinely differs between subjects and the mechanism is unidentified**; `scene-dependent` is established, `spectral` is not. |"
+ },
+ "1658": {
+  "n": 1658,
+  "line": 2216,
+  "label": "REFUTED",
+  "src": "M113",
+  "text": "**FOUR RIVAL EXPLANATIONS DIED ON EXISTING DATA, AND TWO OF THEM DIED ON EXIF ALONE.** Aperture and the teleconverter: **every `-cpl` stack in the corpus is f/5.6 on `FE 100mm F2.8 GM + 2X TC`**, so **there is no aperture contrast anywhere in the library** and an aperture ladder would vary a held-fixed variable. Magnification and focus distance: `bee-1-cpl` reads 536.2 ppm, **3.5 ppm** from the bee mean but **118.7 ppm** from `couch` at an identical focus distance. Subject radial structure: refuted to **+/-15 ppm**. A common scale error: refuted, CV of B/R **14.9%** against 24.7%. |"
+ },
+ "1659": {
+  "n": 1659,
+  "line": 2217,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**THE ALIGNMENT RIVAL WAS REFUTED ONLY AFTER M113 CORRECTED ITS OWN FIRST ANSWER, AND THE CORRECTION IS THE TRANSFERABLE PART.** Its S5 test initially read a **64% pipeline contribution**, which would have moved most of the effect out of optics. **That was the test failing, not the pipeline:** defocused windows dilute the global fit. Re-run on `flat-on-ruler-cpl` -- flat, so the confound is **absent by construction** rather than corrected for -- the merge and a single un-aligned frame agree to **4.8 ppm**. Restricting the bee frame to its sharp quartile moves the reading **192.0 -> 623.5 ppm**, confirming the dilution mechanism directly. |"
+ },
+ "1660": {
+  "n": 1660,
+  "line": 2218,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**`STREHL_FIX_CA` IS A SILENT NO-OP WHEN `STREHL_ALIGN=0`.** The arms come out **byte-identical with no warning of any kind**. Anyone A/B-ing the CA correction with registration disabled -- which is the natural way to isolate an optical correction from a geometric one -- would measure exactly nothing and correctly conclude the flag does nothing. This is a live trap for the CA audit and for any future measurement of that switch. |"
+ },
+ "1661": {
+  "n": 1661,
+  "line": 2219,
+  "label": "MEASURED",
+  "src": "M113",
+  "text": "**ORCH'S PIL TRIAGE LIST CONTAINED A FALSE POSITIVE ON A SHARED READER AND WAS INCOMPLETE IN ORCH'S OWN DIRECTORY.** `ca_radial.py`'s `load_tiff_u16` calls `Image.open` **for the tags only** and reads pixels via `np.memmap(dtype='<u2')`, asserting 16-bit and **validating strip contiguity** rather than assuming a flat layout; it is byte-identical to `tifffile` on five files and is imported by several milestones. Five further scripts in `experiments/ORCH-drift-check/` **were** affected and unlisted, of which **`patchwork_16bit.py` is the worst case in the project**: a script named for 16-bit handling that reads pixels through PIL and then derives full scale as `np.iinfo(a.dtype).max`, giving **255 instead of 65535** on top of already quantised data. Separately, fact 1374's `nearest > catmull-rom` hair-resolution result was re-run under both readers and is **reader-independent**. |"
+ },
+ "1662": {
+  "n": 1662,
+  "line": 2220,
+  "label": "MEASURED",
+  "src": "V-CA",
+  "text": "**ORCH'S `61.0 %` CA HEADLINE IS REAL, MEASURED ON A CLEAN ARM, AND MIS-DESCRIBED.** Unlike the halo failure of fact 1596, the figure comes from a **full-frame, aligned, default-gate, default-resampler, full-stack** render -- the audit checked the argv, and that part is clean. But it is **not a chroma reduction**: it is the fall in edge-localised chroma **excess**, a derived contrast against a baseline five pixels away. The same correction on the same file gives raw edge chroma **-29.4 %**, near-edge **-20.5 %**, and whole-frame **-4.9 %**. **ORCH quoted the largest of five available numbers for one effect, without the qualifier that makes it mean what it means.** |"
+ },
+ "1663": {
+  "n": 1663,
+  "line": 2221,
+  "label": "MEASURED",
+  "src": "V-CA",
+  "text": "**NO AUTHOR ANYWHERE RECOMMENDS ENABLING `STREHL_FIX_CA` BY DEFAULT; TWO RECOMMEND AGAINST, AND SO DOES THE CODE.** A whitespace-collapsed sentence scan of all `docs/**/*.md` (`v4_absence_check.py`) found the recommendation has **no source** -- it originated with ORCH. Against it: a fit on **20 ROIs** where its own author says a shipped correction needs 100; a coefficient that differs **23.6 %** between two scenes through the same glass; an out-of-sample transfer that **split 0.950 / 0.541** against a 0.60 bar; over-correction that **flips the residual's sign** on both stacks checked; and movement of **blue**, a channel it declares it does not touch, by >4 display levels on up to **2.26 %** of pixels by an unidentified mechanism. |"
+ },
+ "1664": {
+  "n": 1664,
+  "line": 2222,
+  "label": "ARGUED",
+  "src": "V-CA",
+  "text": "**THE CORRECTION IS NEVERTHELESS BETTER, AND THE BY-EYE CLAIM SURVIVED AUDIT.** The 5x-crop judgement was ruled a real observation rather than an ORCH paraphrase, independently reproduced. The audit's own recommendation is therefore **keep the default OFF and recommend the flag scoped to the owner's own optical path** -- `STREHL_FIX_CA=a7c2-fe100gm-2xtc-x4cpl`, which is **case-sensitive**, with `1` / `true` / `on` **deliberately rejected** so the software never guesses a lens, and a typo raised as an error rather than a silent no-op. Three standing caveats: fringes get **fainter, not thinner**; the residual is **red-biased**; and it has **never been compared against anything but an arm that does no resampling at all**. |"
+ },
+ "1665": {
+  "n": 1665,
+  "line": 2223,
+  "label": "MEASURED",
+  "src": "V-CA",
+  "text": "**THE PROJECT'S HEADLINE CA NUMBER HAS NEVER BEEN MEASURED IN THE SPACE THE PROJECT SAYS TO MEASURE IN.** The `61.0 %` was taken in `--srgb`, whose own `--help` reads *For looking at, NOT for measuring*, and which M113 measured as **cross-channel contaminated** (chain transfer 1.3073 against 0.9399 / 0.9813 binned-linear). The `lin-*.tif` renders already exist, so the re-measurement is cheap. Ranked second of five things that would change the verdict, behind running the **`anti` arm** (negative-strength vs on), which needs only a strength knob in `optics.rs` and **one render**. |"
+ }
+}
