@@ -561,6 +561,99 @@ continuous statistic then acquitted `lavendar-cpl` (`k` = 1.0033) and convicted
 `flower-bud-alone-cpl` (`k` = 0.9444) — it cut both ways, which is the test that
 it is not a knob tuned to a preferred answer.
 
+## 12. PIL narrowing hazard — M122 exposure answer: **NOT EXPOSED**, demonstrated
+
+Answering the fleet-wide notice with a run rather than an assertion, because a
+claim of non-exposure is itself an uncommissioned instrument until it is tested.
+
+**M23 (MEASURED). No number in this report came from pixels PIL returned.** Every
+pixel read in `experiments/M122-photometric-promotion/` is `tifffile.imread` with
+`assert a.dtype == np.uint16` **on the next line** (`blotch_ab.py:49-50`,
+`continuous.py:48-49`, `look.py:32-33`) or `rawpy.imread` (`drift.py:50`). The
+only `PIL` use in the milestone is `Image.fromarray(...).save()` and `.resize()`
+in `look.py:84-87`, applied to an **already-`uint8` stretched sheet** — a write
+path, downstream of every measurement.
+
+```powershell
+Select-String -Path *.py,*.ps1 -Pattern 'PIL|Image\.|imread|memmap|asarray|fromarray'
+```
+
+The three instruments M122 **consumed** numbers from are also clean:
+`photometric_ab.py:52`, `level_drift_budget.py:29` and `photometric_look2.py:29`
+all read pixels with `tifffile.imread`; `photometric_look2.py:77` is
+`Image.fromarray(...).save()`, a write.
+
+**M24 (MEASURED). The audit is not vacuous: the hazard is live on these exact
+files.** `PIL` reports `mode=RGB` and a full-frame max of **255** on
+`tweezers-cpl__A0.tif`, where `tifffile` reports `uint16` and **65535**.
+
+```powershell
+python experiments\M122-photometric-promotion\pil_exposure_audit.py
+```
+
+### M25 (MEASURED). The "ratios cancel" protection **fails on this milestone's statistic**
+
+Same file, same arms, same window rule — only the pixel read changes:
+
+| window | occupied range | distinct levels | absolute `hf(A0)` | same-arm ratio A1/A0 |
+|---|---:|---:|---|---|
+| detail x=400 y=656 | 25 605 DN | 20 516 → 247 | 1056.10 → 4.17 (×0.004) | 1.0218 → 1.0207 (**−0.1 %**) |
+| blotch x=912 y=400 | 11 784 DN | 26 905 → 140 | 78.67 → **0.69** (×0.009) | 0.6321 → **0.8305** (**+31.4 %**) |
+
+The detail window cancels as the notice says. The blotch window — the low-amplitude
+background structure this entire milestone exists to measure — does **not**: it
+moves 31 % **toward 1.0000**. The controlling variable is not "same arms versus
+small-over-large"; it is **whether the measured quantity survives the
+post-narrowing quantisation step**. At `hf` = 78.67 DN in a window whose 8-bit
+step is ~46 DN, the quantity collapses to 0.69 and the ratio of two collapsed
+quantities is dominated by rounding, which is unbiased toward unity.
+
+### M26 (MEASURED). Under the hazard this milestone would have returned PROMOTE
+
+Rescoring all 14 usable stacks through `Image.open` on the **same stored
+windows** (nothing re-selected; only the read changes):
+
+- **12 of 14 stacks compress toward 1.0**; the two that do not move by +0.0016
+  and +0.0007.
+- `tweezers-cpl`, the flagship: `B12` **0.7102 → 0.9212**. 73 % of the effect
+  erased.
+- `bee-3-cpl`, the harm that fired K2: level-normalised **1.0633 → 1.0161**,
+  i.e. **below the 1.03 threshold**.
+- Corpus-wide, **no stack exceeds 1.03** under the hazard. K2 does not fire, P3
+  passes, and with P1/P2/P4/P5 already passing the verdict becomes **PROMOTE**.
+- The correlation, meanwhile, looks **healthy**: ρ **+0.7011 → +0.6484**,
+  one-sided p 0.0028 → 0.0062, still passing P2 comfortably.
+
+So the hazard would not have produced a suspicious null here. It would have
+produced a **significant correlation, no detected harm, and a clean blur
+control** — a confident recommendation to switch on a flag that hard-errors on 2
+of 23 stacks in this corpus.
+
+**A third triage question is therefore needed alongside the notice's two:**
+
+> **Does a decision in my milestone turn on a threshold applied to a small
+> deviation from unity?** If yes, cancellation does not protect you even for a
+> same-arm ratio, because narrowing moves every small deviation toward unity and
+> a threshold is exactly what cannot survive that.
+
+Rank statistics survived here (ρ stayed significant); the **threshold** test did
+not. Promotion decisions are threshold decisions.
+
+*Limitation, stated because it cuts against my own number:* the counterfactual
+holds the 12 windows fixed at the selection made from real pixels. A true
+counterfactual would re-select windows from narrowed pixels, where the coarse
+`std` ranking is itself degraded. That would very likely be **worse**, so M26
+understates the damage rather than overstating it.
+
+**M27 (MEASURED). `ca_radial.py` is confirmed a false positive, by the notice's
+own return-value test.** `Image.open` at line 61 feeds `im.tag_v2` at line 62 —
+tags only. Pixels come from `np.memmap(..., dtype="<u2")` at line 109, and the
+`np.asarray` calls at 176/185/217/218 are on **memmap slices**, not on a PIL
+return. Nothing under `experiments/ORCH-drift-check/` was modified by M122; it is
+read-only to this milestone by standing constraint. `patchwork16.py`,
+`patchwork_16bit.py` and `patchwork_look.py` are M120's lane and `blobs`/`crop2`/
+`waxmap`/`waxsweep` are M103's; M122 consumed no number from any of them.
+
 ---
 
 ## Proposed facts for folding (numbered locally, per rule 28's corollary)
@@ -607,10 +700,22 @@ it is not a knob tuned to a preferred answer.
   σ=0.5 blur plant returns `k_blur` = 1.0038, because that stack's windows span
   too narrow an `hf0` range to support a slope. A corpus-wide power claim would
   have hidden one dead gate among nineteen live ones.
+- **P14** The PIL-narrowing "ratios cancel" protection **is conditional on
+  amplitude, not on ratio form**. A same-arm ratio on a detail window (occupied
+  range 25 605 DN, `hf` 1056) moves −0.1 %; the same ratio on a low-amplitude
+  background window (11 784 DN, `hf` 78.7) moves **+31.4 % toward unity**,
+  because the quantity collapses to 0.69 DN against a ~46 DN step.
+- **P15** Narrowing does not announce itself as a null. Re-scored through
+  `Image.open`, M122 returns ρ = +0.6484 (p = 0.0062, still passing), **no stack
+  above the 1.03 harm threshold**, and therefore the verdict **PROMOTE** instead
+  of KEEP-OFF. **Rank statistics survive narrowing; threshold criteria do not** —
+  so the triage must ask "does a decision turn on a threshold applied to a small
+  deviation from unity?" alongside the two existing questions.
 
 ---
 
 *Instruments: `experiments/M122-photometric-promotion/{run_campaign.ps1, drift.py,
-blotch_ab.py, correlate.py, posthoc.py, look.py}`. Outputs:
-`C:\dev\strehl-out\M122\`. `experiments/ORCH-drift-check/` was read and never
-modified. `docs/research/SYNTHESIS.md` was read and never modified.*
+blotch_ab.py, correlate.py, posthoc.py, look.py, continuous.py,
+pil_exposure_audit.py}`. Outputs: `C:\dev\strehl-out\M122\`.
+`experiments/ORCH-drift-check/` was read and never modified.
+`docs/research/SYNTHESIS.md` was read and never modified.*
