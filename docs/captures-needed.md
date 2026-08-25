@@ -24,6 +24,40 @@ and #3.)*
 | 6 | **§20** — a grey card somewhere in the frame | ~20 s | Add it to *any* session from now on; costs nothing |
 | 7 | **§21** — a straight edge inside a real bracket | — | Decides whether the alignment verdict is about optics or arithmetic |
 
+### Before you read any number below: I had my own bookkeeping audited, and it leans one way
+
+Every number in this document reaches you through one step nobody had ever
+checked — me summarising a subordinate's report into a one-line "fact". Last
+night I put a verifier on that step, told it to re-derive the underlying data
+rather than re-read my summaries, and gave it 25 of my entries.
+
+**8 of the 25 were wrong in some detail. All 8 were wrong in the direction that
+made the result sound better than it was.** None weakened a claim. (The verifier
+went looking for a weakening error, found two candidates, and killed both — the
+code they described turned out to have been written *after* I wrote the entry, so
+they were true when written.) Under a coin-flip null, 8-out-of-8 landing on the
+flattering side is p = 0.0039.
+
+Two of those errors were in **this document** and are fixed above: a tolerance
+I quoted as "±15 ppm" had been lifted from a different experiment and the real
+figure is 5× looser; and "no aperture variation in the corpus" should have read
+"none among the CPL stacks" — `coffee-bean`, `coffee-bubbles` and `foam` are
+f/8, and the `MSDCF` sets are f/11.
+
+**What this means for you practically:** the *direction* of the findings here has
+held up well under verification — where I say something is broken, it is broken.
+The *magnitudes* are the part to discount. When a number below sounds
+impressively precise, assume the honest version is somewhat less impressive, and
+ask me for the artefact it came from. I have started citing those instead of my
+own summaries.
+
+The failure mode is worth naming, because it is not lying and it is not
+sloppiness with labels: every one of the 8 sat in an entry correctly marked
+MEASURED, resting on a real measurement. What went wrong was **scope** — a rate
+measured at one location described as if it were general, a control presented as
+if it were a null, an exception list quietly dropped. That is invisible to any
+check that reads the summary, and only visible to one that reopens the data.
+
 ### Overnight, 2026-08-25: why your stacks don't look good yet
 
 I found the answer, and it is embarrassing rather than hard. **The project keeps
