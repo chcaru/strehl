@@ -1,0 +1,59 @@
+{
+ "bars": {
+  "E1_max": 0.25,
+  "E2_tol": 0.12,
+  "E3_min_span": 2.0,
+  "focus_flat": 1.35,
+  "S_noise": 0.2,
+  "S_real": 0.5
+ },
+ "frames": [
+  "DSC00001.ARW",
+  "DSC00028.ARW",
+  "DSC00055.ARW",
+  "DSC00082.ARW",
+  "DSC00109.ARW",
+  "DSC00136.ARW",
+  "DSC00163.ARW",
+  "DSC00190.ARW",
+  "DSC00217.ARW",
+  "DSC00244.ARW",
+  "DSC00271.ARW",
+  "DSC00299.ARW"
+ ],
+ "n_flat_tiles": 25,
+ "n_grid": 64,
+ "level_span": 4.653199446337464,
+ "p_hat": 1.0751015092327956,
+ "c_hat": -1.1838780223616303,
+ "p_ci": [
+  1.0578517991537895,
+  1.0953065826370214
+ ],
+ "n_fit": 300,
+ "E1_value": 0.018303840373997904,
+ "E1_pass": true,
+ "E2": {
+  "0.50": {
+   "S_hat": 0.48840052302419534,
+   "pass": true
+  },
+  "0.90": {
+   "S_hat": 0.8978592937902204,
+   "pass": true
+  }
+ },
+ "E3_pass": true,
+ "E4_excludes_0": true,
+ "E4_excludes_1": true,
+ "E4_p_ptc": 1.0587905630138759,
+ "E4_excludes_ptc": false,
+ "levelcorr_median": 1.6718471810337836,
+ "S_detail_median": 0.1281106723518608,
+ "S_detail_ci": [
+  0.12163213564933262,
+  0.13359467838012873
+ ],
+ "verdict": "NOISE-DOMINATED",
+ "controls_all_pass": true
+}

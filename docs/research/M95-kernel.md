@@ -331,8 +331,15 @@ before any measurement.
 **For the later decision I would default Lanczos-3**, and the case is stronger
 than my own arm-7 report implied:
 
-- **+0.1160 dex** recovered — 6.5× the coverage lever, on the exact deficit the
-  owner is complaining about.
+- **+0.1160 dex** recovered — 6.5× the coverage lever. ~~on the exact deficit
+  the owner is complaining about~~ **— RETRACTED, see §23.** That clause is
+  wrong. §23 measured the fraction of the 0.30–0.48 cyc/px scoring band that is
+  real captured subject detail, on the same 40 tiles this gain was scored on,
+  and it is **12.8%** (95% CI 12.2–13.4%). The band is **87% sensor noise and
+  the demosaic's response to it**, so recovering energy in it is mostly
+  recovering noise, and it is *not* the owner's deficit. The **+0.1160 dex** is
+  a correct measurement of the kernel's transfer function and is retained as
+  such; the sharpness framing around it is withdrawn.
 - On real gated edges its mean overshoot is **0.0570 DN** against ≥ 200 DN
   edges.
 - Election flips sit **55.6×** below the typical decision margin, and are
@@ -467,6 +474,8 @@ phase-dependent factor.
   under-powered and I would not argue.
 - The +0.1160 dex gain is measured through the band-ratio metric on 40 tiles ×
   8 warps. It is the same instrument arm 8 used and inherits arm 8's scope.
+  **§23 has since measured that band to be 87% sensor noise on those same 40
+  tiles, and the sharpness reading of this number is retracted there.**
 - **Lanczos-3's runtime cost is unmeasured.** 12 `sin()` per sample is a real
   cost on a performance-oriented stacker and nobody has put a number on it.
 
@@ -672,8 +681,9 @@ it, determinism control first:
 
 This matters more than a generic staleness bug because of what this milestone
 just measured and landed. The kernel is worth **+0.1160 dex** on the 0.30–0.48
-cyc/px band — **59% of the high-band loss**, the largest single sharpness
-number on the table — and arm 9 shipped `--resampler`, the flag that writes
+cyc/px band — ~~**59% of the high-band loss**, the largest single sharpness
+number on the table~~ **— the "sharpness" framing is RETRACTED, see §23; the
+59%-of-the-gather's-loss arithmetic itself stands** — and arm 9 shipped `--resampler`, the flag that writes
 this field. **I have made an unguarded field easier to vary.** If one agent
 caches a `lanczos3` solve for a bracket, every later render of that same
 bracket by any agent silently gathers with Lanczos-3, and any sharpness number
@@ -2277,3 +2287,434 @@ times. The script hard-errors on a miss rather than proceeding, which is the
 only reason that did not become a silently green run proving nothing. Same
 failure as the CRLF miss in section 21, and the same fix: anchor on a single
 line, never on prose that the formatter is free to re-wrap.
+
+## 23. The scoring band is 87% noise — my own headline, retracted and replaced
+
+The orchestrator issued a HIGH method defect against the high-band-energy metric
+family and named this milestone's `+0.1160 dex` directly: *"if any published
+sharpness number in this project uses high-band energy without a flat-ROI
+placebo, it is mostly measuring noise suppression."* A sibling, M104c-verify,
+had published a −33.0% headline that inverted when its own pre-registered
+placebo ran, because the flat ROI dropped 30.3% — 92% of the apparent sharpness
+loss was interpolation smoothing *noise*.
+
+**The instruction was to run the placebo and report the result either way. I ran
+it, and the answer is worse for me than the orchestrator's framing predicted.**
+
+### 23.1 The placebo was already answered, twice, and I had buried it
+
+Before spending a decode I checked what was already known, because duplicating a
+live verifier is waste.
+
+- **My own B28 control had already fired.** §22 records a flat-region control at
+  **+0.1368** against **+0.1343** on detail — ratio **1.019**, comfortably past
+  the orchestrator's ≥0.80 "noise-dominated" threshold.
+- **§22.7 had already concluded** that `band_ratio` after a resample measures the
+  kernel's transfer function, having found the gain to be **+0.1332** on 1/f
+  detail, **+0.1366** on a flat spectrum and **+0.1368** on pure white noise — a
+  spread of 0.0036 dex across scenes that share no structure at all.
+- **M113-kernel-verify, an independent audit of my instrument, measured it 97.5%
+  image-blind**: a closed form over a flat power spectrum with *no image in it*
+  reads **+0.1464** against **+0.1428** for nine photographs.
+
+So the placebo question had an answer and I had written two of the three
+sentences that answer it. **The defect in my report was never a missing control.
+It was placement.** The §22.7 rider sits roughly 1,500 lines below the §7 and
+§14.4 headlines it qualifies, and no reader who stops at the executive summary
+will ever reach it. A control that fires into a footnote has not been reported.
+
+### 23.2 What I got wrong about the orchestrator's rule, registered before the data
+
+A linear resampling kernel multiplies signal and noise by the same |H(f)|.
+Therefore the flat/detail gain ratio **must** read ≈1.0 for *any* linear filter
+regardless of what the scene contains. **R ≈ 1 is evidence that the filter is
+linear, not evidence that the band is noise.** The orchestrator's ratio rule is
+sound for an adaptive or nonlinear process and is **non-diagnostic for a linear
+resampler.**
+
+This was registered in commit `c1bd702` *before* any of the data below existed,
+precisely so it could not read as a rationalisation after an inconvenient result.
+It means the question that actually decides the owner's outcome is not the
+placebo ratio at all. It is: **how much of the 0.30–0.48 cyc/px scoring band is
+real captured signal in the first place?** Nobody had measured that. Arms 13
+through 13g exist to measure it.
+
+### 23.3 Arm 13 — the placebo, run a third time, on a dark frame
+
+`src/x11_bandsignal.py`, registered at `c1bd702`, run before results were seen.
+
+| ROI | kernel gain, catmull-rom → lanczos3 |
+| --- | --- |
+| 40 sharpest detail tiles | **+0.1284 dex** |
+| 40 flattest tiles | **+0.1278 dex** |
+| **dark frame, no photograph in it at all** | **+0.1285 dex** |
+
+`R1_flat/detail` = **0.9955**. `R1_dark/detail` = **1.0006**.
+
+**A dark frame reproduces the kernel gain to 0.1%.** This is a stronger form of
+M113's closed-form argument, because it runs the real instrument end to end on
+real sensor data containing zero scene content. Under the orchestrator's rule the
+verdict is NOISE-DOMINATED and the detail claim is not established.
+
+**Controls (P3, P4).** Planting a known signal fraction of 0.90 recovers
+**0.8996**; planting 0.00 recovers **−0.0027**; a σ=1.0 px blur moves the
+statistic **−2.1465 dex**. The instrument responds, and could have said
+otherwise.
+
+**Optics, re-derived from primary rather than recalled (P5).** Decoded
+4688×7028, pitch **5.108 µm**. With `FNumber 5.6` and a 2× teleconverter at this
+magnification, `N_eff = 5.6 × (1 + 2) = 16.80`, giving a diffraction cutoff of
+**108.2 cy/mm** against a Nyquist of **97.9 cy/mm**, so **MTF@Nyquist = 0.0349**
+— against the corpus's independently measured **0.036**. The scoring band spans
+**58.7–94.0 cy/mm** where MTF falls **0.3447 → 0.0563**. **MTF at 74 cy/mm is
+0.2030**, landing inside M85 §7's stated 19–34% range. My predecessor's artifact
+floor sits where the optics still deliver about a fifth of full contrast.
+
+**The CFA geometry, which is the mechanism.** Only **2.82%** of the 0.30–0.48
+cyc/px scoring band lies inside the red/blue Nyquist cell, and **48.99%** inside
+the green quincunx cell. The low band used as the denominator is **100%** inside
+red/blue. **Most of the scoring band is past the point where two of three colour
+channels can carry any real information at all**, so whatever survives there is
+substantially the demosaic's invention plus noise.
+
+**Where arm 13 failed.** Its signal-fraction bracket was **0.1111 to 0.9995** —
+useless. The bar was mine and it was badly designed: at ISO 100 on a lit subject,
+shot noise dominates read noise by orders of magnitude, so a dark frame cannot
+serve as the noise floor for a photograph. Measured near-Nyquist ratio, photograph to
+dark: **1820.5×**. `S_upper = 0.9995` passed my registered bar while
+saying almost nothing. **I did not bank that pass.** My registered prediction of
+0.3–0.7 was **wrong**.
+
+### 23.4 Arm 13b — VOID by its own bar, and the failure was the useful part
+
+`src/x12_bandsnr.py`, registered at `e84082a`. An in-band photon transfer curve,
+fitted over **486** non-clipping tiles from 554 to 14663 DN:
+
+    floor(L) = -91.9393 + 0.1372 · L
+
+| bar | result | |
+| --- | --- | --- |
+| Q1 monotonicity | spearman **+1.0000** | PASS |
+| Q3 negative, held-out flat tiles, true S = 0 | **+0.2506** (bar 0.25) | **FAIL** |
+| Q2 power, plant S = 0.50 | **+0.6253** (bar ±0.12) | **FAIL** |
+| Q2 power, plant S = 0.90 | **+0.9250** | PASS |
+| Q4 extrapolation guard | detail 2145–13770 inside fit 1188–13840 DN | PASS |
+
+**Headline `S_detail = +0.1698` is VOID by pre-registration and is not quoted as
+a result.** My prediction was wrong again.
+
+**One scalar explains both failures, and that is why the arm was worth running.**
+If true noise is *c* × the fitted floor, a pure-noise tile reads `1 − 1/c` and a
+plant at 0.50 reads `1 − 1/(2c)`. Q3 gives `c = 1/(1−0.2506) = 1.3341`, which
+predicts Q2's 0.50 arm at `1 − 1/2.6682 = 0.6252` against the **0.6253**
+observed — **four significant figures**. The model was right and the
+*calibration* was wrong, with an identifiable cause: **"flattest by gradient
+variance" is a spatial-domain criterion that says nothing whatever about power at
+0.30–0.48 cyc/px**, so my calibration set was never the signal-free set I assumed
+it was.
+
+### 23.5 Arm 13c — a null guaranteed by physics instead of by a fit
+
+`src/x13_focusnull.py`, registered at `282ad84`. This is a *focus stack*: at a
+fixed tile position, frames far from focus are low-passed by a defocus disc whose
+cutoff is far below 0.30 cyc/px. Such a tile holds sensor noise and the
+demosaic's response to it and essentially no subject detail — at the same
+position, sensor, illumination and demosaic as the in-focus frame. No fit, no
+sensor constant, no dark frame.
+
+    S = 1 − P_defocus · levelcorr / P_focus
+
+Arm 13b's broken fit is still usable for `levelcorr` alone, because a *ratio* of
+`a + b·L` at two levels cancels any scalar error *c* exactly.
+
+| control | result | |
+| --- | --- | --- |
+| N3 non-degeneracy | **11** distinct sharpest-frames over 40 positions (bar ≥ 4) | PASS |
+| N1 null, two most-defocused frames, true S = 0 | **+0.0033** (bar 0.25) | PASS |
+| N2 power, plant 0.50 | **+0.5004** (bar ±0.12) | PASS |
+| N2 power, plant 0.90 | **+0.8998** | PASS |
+
+**S_detail = +0.1138** (mean +0.1582, min −0.2212, max +0.6167). Verdict
+NOISE-DOMINATED, all controls pass. My registered prediction of 0.35–0.65 was
+**wrong** — the third in a row.
+
+**A defect I caught in this arm before running it.** The first draft of N2
+computed the planted tile's band power *arithmetically* rather than planting a
+field into real pixels and measuring it. That control could not have failed. It
+was rewritten to plant a real image. Arm 12's R3 taught me that one; discipline
+706 names it.
+
+### 23.6 Arm 13d — I attacked my own result and it did not survive
+
+`src/x14_levelsens.py`, registered at `63ba90f`.
+
+One line of arm 13c's own output impeached it. The median focus/defocus band
+power ratio was **1.9649×**, so with a neutral level correction the estimator
+reads `1 − 1/1.9649 = +0.4910` — the *real signal* bucket. The whole distance
+from +0.4910 to +0.1138 was the level correction, whose median was **1.6778×**.
+**The correction was doing more work than the measurement it corrected, and I had
+not tested it.**
+
+Worse: **my own N1 null could not have caught this.** N1 compares the two most
+defocused frames, which sit at nearly the same exposure level, so `levelcorr ≈ 1`
+there and N1 passes whether the correction is right or catastrophically wrong. It
+is a control that cannot fail in the one dimension that matters — the same defect
+I caught in N2 and missed in N1, in the same script.
+
+Measured levels: defocus **5562.4 DN**, focus **9362.3 DN**.
+
+| model | levelcorr | S_detail | bucket | N1 | plants 0.50 / 0.90 | |
+| --- | --- | --- | --- | --- | --- | --- |
+| M-none, `p = 0` | 1.0000× | **+0.4910** | PARTIAL | +0.0827 | +0.4567 / +0.8904 | admissible |
+| M-shot, `p = 1` | 1.6129× | **+0.1573** | NOISE-DOMINATED | +0.0187 | +0.4918 / +0.8983 | admissible |
+| M-ptc | 1.6778× | **+0.1138** | NOISE-DOMINATED | +0.0033 | +0.4953 / +0.8989 | admissible |
+
+**All three passed their own controls, the buckets disagreed, and by the bar I
+registered before running, arm 13c's headline was downgraded to a bracket
+[+0.1138, +0.4910] with the noise-dominated claim NOT asserted.** M-none is the
+model most favourable to my published framing and I included it for that reason.
+
+My prediction was structurally right — the models disagree and D2 forces a
+bracket — and wrong on one of three values (M-shot predicted ≈0.25, measured
++0.1573).
+
+### 23.7 Arm 13e — stop arguing about the level law and measure it
+
+`src/x15_defocusptc.py`, registered at `acc9a98`.
+
+The three models differ in exactly one physical claim: how in-band noise scales
+with exposure level. That is measurable, and I had been arguing about it instead.
+
+**The calibration set, chosen by physics.** A tile position that never comes into
+focus *in any frame of the stack* is defocused in all of them. Detect it as
+band-power swing < 1.35× across the sampled frames: a position that focuses
+somewhere shows a peak, one that never focuses does not. **25 of 64** grid
+positions qualified, and they span exposure level naturally because the
+defocused background is unevenly lit.
+
+    log10(P) = −1.1839 + 1.0751 · log10(L)
+    p = 1.0751,  95% CI [1.0579, 1.0953],  n = 300
+
+| bar | result | |
+| --- | --- | --- |
+| E3 level span | **4.653×** (bar ≥ 2.0) | PASS |
+| E1 held-out null | **0.0183** (bar ≤ 0.25) — arm 13b failed this same bar at +0.2506 | PASS |
+| E2 power, plant 0.50 | **+0.4884** | PASS |
+| E2 power, plant 0.90 | **+0.8979** | PASS |
+| E4 CI excludes `p = 0` (M-none) | **yes** | M-none REFUTED |
+| E4 CI excludes `p = 1` (M-shot) | **yes** | |
+| E4 CI excludes `p = 1.059` (M-ptc) | no | M-ptc consistent |
+
+**The held-out null improved 13.7× over arm 13b's failed one**, which is the
+measurement that vindicates choosing the calibration set by physics rather than
+by gradient variance.
+
+**S_detail = +0.1281**, and propagating the CI on *p* gives **[+0.1216,
++0.1336]** — NOISE-DOMINATED across its entire width. **13d's bracket loses its
+upper end, because M-none is refuted by measurement rather than by preference.**
+First registered prediction of the session to land: I predicted `p` in 0.8–1.1.
+
+### 23.8 Arm 13f — the robustness annex, including a bar I failed
+
+`src/x16_robust.py`, registered at `03dedb0`. `p = 1.0751`, se **0.00585**.
+
+| bar | result | |
+| --- | --- | --- |
+| F1 extrapolation guard | calibration **3208.7–14930.9 DN**, detail **2092.9–14171.2 DN** | **FAIL — headline is EXTRAPOLATED at the dim end** |
+| F2 curvature | quadratic term `q = +0.08001`; S_detail linear **+0.1281**, quadratic **+0.1310**, Δ **0.0028** (bar ≤ 0.02) | PASS |
+| F4 own held-out null | **0.0167** | PASS |
+| F4 own plants | **+0.4920 / +0.8983** | PASS |
+
+**F3, the number that decides whether any of this is robust:**
+
+| | required `p` | distance from the fit |
+| --- | --- | --- |
+| S_detail reaches 0.20 (leaves noise-dominated) | **+0.9000** | **29.9 se** |
+| S_detail reaches 0.50 (becomes "real signal") | **−0.0250** | **188.1 se** |
+
+I predicted F1 would fail. It did — but at the **dim** end, not the bright end I
+guessed, so the prediction was directionally wrong.
+
+### 23.9 Arm 13g — closing the two loose ends with arithmetic, not argument
+
+`src/x17_close.py`. No new bar, no new fitted quantity; every input is a number
+printed by a registered arm above.
+
+**The F1 failure, bounded rather than argued.** 32 of 40 detail tiles lie
+entirely inside the calibration range (80.0%). Dropping the 8 extrapolated ones
+moves S_detail from **+0.1281** to **+0.1188** — a movement of **0.0093**, and
+*toward* more noise. **The extrapolation is harmless and, if anything, the
+headline is conservative.**
+
+**How far below 1 can `p` actually be dragged?** In-band noise power is
+`read + shot·L + prnu·L²`. Read noise is level-independent and drags the log-log
+slope *below* 1; PRNU is ∝ L² and pushes it *above*. Measuring `p = 1.0751`
+therefore says multiplicative structure slightly outweighs read noise in this
+band — which is what one expects at ISO 100 on a well-exposed frame, and it
+means the two mechanisms are bounded in opposite directions. Arm 13 measured the
+read-noise size directly:
+
+| quantity | value |
+| --- | --- |
+| in-band power, 40 detail tiles | 1.3728e+03 |
+| in-band power, dark frame | 6.7027e-01 |
+| read-noise fraction of in-band power | **4.883e-04 (0.0488%)** |
+| ⇒ read noise alone bounds the slope at | **p ≥ 0.999512** |
+| drag below 1 required to flip the verdict | 0.1000 |
+| **required drag ÷ measured read-noise bound** | **205×** |
+
+**Reaching `p = 0.90` would need a level-independent noise term 205× larger than
+the dark frame actually shows.**
+
+**The verdict under every level model considered this session:**
+
+| model | S_detail | bucket |
+| --- | --- | --- |
+| `p = 0` — M-none, refuted at 95% by arm 13e | +0.4910 | PARTIAL |
+| `p = 1` — pure shot noise, read- and PRNU-free | **+0.1573** | NOISE-DOMINATED |
+| `p = 1.0751` — measured | **+0.1281** | NOISE-DOMINATED |
+| 95% CI on `p` propagated | [+0.1216, +0.1336] | NOISE-DOMINATED throughout |
+
+**Only the refuted model escapes the noise-dominated verdict.**
+
+### 23.10 The headline
+
+> **On the same 40 tiles the `+0.1160 dex` kernel gain was scored on, 12.8% of
+> the power in the 0.30–0.48 cyc/px band is real captured subject detail. 87.2%
+> is sensor noise plus the demosaic's response to sensor noise.**
+>
+> 95% CI [12.2%, 13.4%]. Robust to every level model that survives its own
+> controls, to curvature, and to dropping every extrapolated tile.
+
+**What this retracts.** §7's *"on the exact deficit the owner is complaining
+about"* and §14.4's *"the largest single sharpness number on the table"* are
+withdrawn, struck in place at both sites. **The `+0.1160 dex` measurement itself
+stands** — it is a correct measurement of the kernel's transfer function, it
+reproduces to four decimal places, and `x3_kernel.json` re-ran byte-identical.
+What is withdrawn is the claim that it is *sharpness*, and therefore the claim
+that it is the owner's deficit.
+
+**What this does not say.** It does not say Lanczos-3 is a bad default. A linear
+kernel that passes more of the band passes more of *whatever is in* the band, and
+12.8% of something is not nothing. It says the gain is roughly one part detail to
+seven parts noise, so it should be argued on the owner's montage in §22 and on
+ringing, not on a dex figure. **The owner is the only party who has said the
+renders look wrong, and the decision remains theirs.**
+
+**What it says about the project-level question.** M85 (fact 1196) established
+the softness is upstream of the combination stage. This arm says something
+sharper about *why the instrument keeps finding nothing there*: at
+`N_eff = 16.80` the optics deliver **MTF 0.0349 at Nyquist**, only **2.82%** of
+the scoring band is inside the red/blue CFA Nyquist cell, and the band is 87%
+noise. **The scoring band is largely past where this rig records information at
+all.** A metric evaluated there is measuring the pipeline's treatment of noise,
+which is a real property but not the owner's complaint.
+
+### 23.11 Scoring my own predictions, and what I would do differently
+
+| arm | registered prediction | outcome |
+| --- | --- | --- |
+| 13 | `S_upper` 0.3–0.7 | **wrong** — 0.9995, and the bar was badly designed |
+| 13b | (headline) | **VOID** — failed 2 of 3 own controls |
+| 13c | PARTIAL, 0.35–0.65 | **wrong** — +0.1138 |
+| 13d | models disagree, bracket; M-none ≈0.49, M-shot ≈0.25, M-ptc 0.11 | **structurally right**, 2 of 3 values right |
+| 13e | `p` in 0.8–1.1, NOISE-DOMINATED | **right** — 1.0751 |
+| 13f | F1 fails, F2 < 0.01, F3 threshold near `p = 0` | **F1 right but wrong end**, F2 right, F3 right |
+
+Four wrong, one partial, one right. **The predictions were worth registering
+precisely because they were mostly wrong**: each one that failed identified a
+defect in the arm that produced it, and the sequence 13 → 13b → 13c → 13d → 13e
+is a chain of instruments each built to fix the specific failure of the last.
+
+**Two errors I would not repeat.** First, the §22.7 rider was correct and I
+placed it 1,500 lines below the headline it qualifies; a control that fires into
+a footnote has not been reported, and the placement was the defect, not the
+measurement. Second, in arm 13c I caught a control that could not fail (N2) and
+shipped another one in the same script that could not fail in the dimension that
+mattered (N1). **Auditing one control does not audit the others.**
+
+### 23.12 For the orchestrator
+
+- **The placebo you asked for now has three independent answers, all the same.**
+  My own B28 (ratio 1.019), M113's 97.5% image-blindness, and now a **dark frame
+  reproducing the kernel gain to 0.1%** (ratio 1.0006).
+- **Your ratio rule is non-diagnostic for a linear resampler,** and this was
+  registered in `c1bd702` before the data existed. A linear kernel multiplies
+  signal and noise by the same |H(f)|, so `R ≈ 1` is evidence of *linearity*.
+  The rule is sound for adaptive or nonlinear processes — M104c's case — and
+  should carry that scope condition when it is folded.
+- **The quantity that decides the question is the in-band signal fraction, and it
+  is now measured: 12.8%, CI [12.2%, 13.4%].** I recommend that number, not the
+  ratio, as the corpus's test for this metric family.
+- **Your HIGH defect is upheld against my report, on placement rather than on a
+  missing control.** Both sites are struck in place.
+- **A recommendation for the corpus.** M95's `+0.1160 dex`, M104c's `−33.0%`, and
+  any other figure in this metric family should carry the in-band signal fraction
+  next to it. On this rig it is ~1 part in 8, and that ratio — not the dex — is
+  what tells a reader whether a band-energy number is about sharpness.
+- **The slanted-edge MTF you suggested is the right instrument and I did not
+  build it.** `flat-on-ruler-cpl` would support it and it has no failure mode of
+  this kind. That is the single highest-value follow-up here.
+- **I have not verified my own work.** Arms 13c through 13g each attack the arm
+  before them, but the chain is mine end to end and wants an independent
+  verifier.
+
+### 23.13 Artifacts
+
+| file | what |
+| --- | --- |
+| `src/x11_bandsignal.py`, `out/x11_bandsignal.json` | CFA geometry, optics from primary, three-ROI placebo, controls P3/P4/P5 |
+| `src/x12_bandsnr.py`, `out/x12_bandsnr.json` | in-band PTC — **VOID**, retained because its failure is diagnostic |
+| `src/x13_focusnull.py`, `out/x13_focusnull.json` | the defocus null, 4/4 controls |
+| `src/x14_levelsens.py`, `out/x14_levelsens.json` | three level models, the bracket |
+| `src/x15_defocusptc.py`, `out/x15_defocusptc.json` | the measured level law, `p = 1.0751` |
+| `src/x16_robust.py`, `out/x16_robust.json`, `out/x16_tiles.npz` | extrapolation, curvature, overturn thresholds; per-tile cache. **The `.npz` is gitignored by `*.npz` and is not committed — rerun `x16_robust.py` to regenerate it (12 decodes). Nothing in the gate depends on it; `x17_close.py` consumes it but its outputs are committed as `x17_close.json`.** |
+| `src/x17_close.py`, `out/x17_close.json` | closing arithmetic |
+
+Registration commits, each made **before** its script was run: `c1bd702`,
+`e84082a`, `282ad84`, `63ba90f`, `acc9a98`, `03dedb0`.
+
+**No source under `crates/` was changed by any arm in this section.**
+`D:\personal\macro` was read only. Dark frame:
+`D:\macro-dark-frames\118MSDCF\DSC00001.ARW`, same body, ISO 100.
+
+### 23.14 Verification of this section, and two defects the control found in it
+
+`src/verify_s23.py` reconstructs every number above from the JSON artifacts and
+requires it to appear in the section. Nothing is copied from the report into the
+gate, so it fails if the two drift apart in either direction. It reports
+**76/76 GREEN**.
+
+A gate that has never failed is not a gate, so `src/negctl_s23.py` plants defects
+and requires the gate to catch them. Result: **7/7 subject defects caught (rc=1),
+2/2 tool defects distinguished (rc=2), report restored byte-exact, gate green on
+the restored file.**
+
+**The negative control earned its keep: it found two real holes in the gate.**
+
+- **D1** changed the fitted exponent from `1.0751` to `1.0752` on the law line
+  and the gate still read green, because that value appears at three sites and a
+  presence check is satisfied by any of them. Fixed by reconstructing the entire
+  law line from the artifact and requiring it verbatim. **This subsection
+  originally quoted that line back as an example and thereby recreated the very
+  duplicate the fix depends on — the control caught that too, on the next run.
+  A measured value gets one canonical site in the report; restating it in prose
+  is what defeats the check.**
+- **D5** deleted the §7 retraction and the gate still read green, because it
+  searched the whole document for `RETRACTED, see §23` and **§14.4's identical
+  phrase satisfied §7's check**. Fixed by pinning each retraction to its own
+  strikethrough anchor. *A check that can be satisfied by the wrong site is not
+  checking that site.*
+
+Three normalisations were needed before the gate could read this corpus at all,
+each for a failure measured here: **U+2212** minus against Python's ASCII hyphen,
+**blockquote markers** surviving whitespace collapse, and **line wrapping**
+breaking any quoted phrase matched as a plain string. The section is sliced with
+`re.search(r"^## 23\. ", body, re.M)` and never with `split("## 23.")`, which
+would also match `### 23.1` and truncate the section to its opening paragraph.
+
+The harness asserts every mutation anchor occurs **exactly once** and hard-errors
+otherwise — it fired on the first run, on an anchor written with an ASCII hyphen
+where the report has U+2212, which would otherwise have been a silent no-op
+scored as a miss. It restores from a byte copy in `%TEMP%` verified by SHA-256,
+never with `git checkout --`.

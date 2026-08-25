@@ -1,0 +1,89 @@
+{
+ "bars": {
+  "P1_noise": 0.8,
+  "P1_real": 0.3,
+  "P2_noise": 0.2,
+  "P2_real": 0.5,
+  "P3_tol": 0.1,
+  "P4_min_dex": 0.1,
+  "P5_tol": 0.005,
+  "P5_corpus": 0.036
+ },
+ "partA": {
+  "frac_band_sampled_by_RB": 0.02820671374271914,
+  "frac_band_sampled_by_G": 0.4898727389873604,
+  "lowband_frac_RB": 1.0
+ },
+ "partB": {
+  "decoded_shape": [
+   4688,
+   7028
+  ],
+  "pitch_um": 5.1081388730791115,
+  "N_eff": 16.799999999999997,
+  "cutoff_cy_per_mm": 108.22510822510824,
+  "nyquist_cy_per_mm": 97.88300835654597,
+  "mtf_at_nyquist": 0.03494859309244991,
+  "band_cy_per_mm": [
+   58.72980501392758,
+   93.96768802228414
+  ],
+  "mtf_at_band_lo": 0.34465403479791024,
+  "mtf_at_band_hi": 0.056250914668042384,
+  "mtf_at_74_cy_per_mm": 0.20304914946575994,
+  "P5_pass": true
+ },
+ "partC": {
+  "detail": {
+   "base_band_ratio": -2.78870539348266,
+   "catmullrom": -0.21188534504220424,
+   "lanczos3": -0.08349939878885992,
+   "gain": 0.12838594625334432,
+   "n": 40
+  },
+  "flat": {
+   "base_band_ratio": -0.8218824384960177,
+   "catmullrom": -0.212993348426755,
+   "lanczos3": -0.08518219014453421,
+   "gain": 0.12781115828222078,
+   "n": 40
+  },
+  "dark": {
+   "base_band_ratio": -0.477661031790228,
+   "catmullrom": -0.21461294267006026,
+   "lanczos3": -0.08614677541209415,
+   "gain": 0.1284661672579661,
+   "n": 40
+  },
+  "R1_flat_over_detail": 0.9955229681448988,
+  "R1_dark_over_detail": 1.000624842570101,
+  "verdict": "NOISE-DOMINATED, detail claim NOT established"
+ },
+ "partD": {
+  "band_power_detail": 1372.7520979012272,
+  "band_power_flat": 192.30029756511914,
+  "band_power_dark": 0.6702741552157284,
+  "nyq_detail": 826.0091998059361,
+  "nyq_dark": 0.4537153698421855,
+  "shot_scale": 1820.5448938025716,
+  "S_upper": 0.9995117296442376,
+  "S_lower": 0.11108189702171005,
+  "S_flat_upper": 0.9965144403638337,
+  "verdict": "REAL DETAIL, published framing stands"
+ },
+ "partE": {
+  "P3": {
+   "plant_0.90": {
+    "S_hat": 0.8996140673419896,
+    "pass": true
+   },
+   "plant_0.00": {
+    "S_hat": -0.0027060387649366184,
+    "pass": true
+   }
+  },
+  "P4_blur_dex": -2.1464884522765812,
+  "P4_pass": true
+ },
+ "controls_all_pass": true
+}

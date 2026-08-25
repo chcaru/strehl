@@ -1,0 +1,95 @@
+{
+ "bars": {
+  "N1_max": 0.25,
+  "N2_tol": 0.12,
+  "S_noise": 0.2,
+  "S_real": 0.5
+ },
+ "frames": [
+  "DSC00001.ARW",
+  "DSC00028.ARW",
+  "DSC00055.ARW",
+  "DSC00082.ARW",
+  "DSC00109.ARW",
+  "DSC00136.ARW",
+  "DSC00163.ARW",
+  "DSC00190.ARW",
+  "DSC00217.ARW",
+  "DSC00244.ARW",
+  "DSC00271.ARW",
+  "DSC00299.ARW"
+ ],
+ "ptc_a": -91.93931286858492,
+ "ptc_b": 0.13716893525657328,
+ "ratio_median": 1.96489325549132,
+ "level_defocus_median": 5562.39404296875,
+ "level_focus_median": 9362.2880859375,
+ "models": {
+  "M-none": {
+   "levelcorr_median": 1.0,
+   "S_median": 0.4910201033738638,
+   "bucket": "PARTIAL",
+   "N1_median": 0.08266538598795992,
+   "N1_pass": true,
+   "N2": {
+    "0.50": {
+     "S_hat": 0.45666863118269513,
+     "pass": true
+    },
+    "0.90": {
+     "S_hat": 0.890362147643432,
+     "pass": true
+    }
+   },
+   "admissible": true
+  },
+  "M-shot": {
+   "levelcorr_median": 1.6128913557978246,
+   "S_median": 0.15725688971835872,
+   "bucket": "NOISE-DOMINATED",
+   "N1_median": 0.0187096377332151,
+   "N1_pass": true,
+   "N2": {
+    "0.50": {
+     "S_hat": 0.49180367600638103,
+     "pass": true
+    },
+    "0.90": {
+     "S_hat": 0.8983402841063719,
+     "pass": true
+    }
+   },
+   "admissible": true
+  },
+  "M-ptc": {
+   "levelcorr_median": 1.6778043450206606,
+   "S_median": 0.11381857888169422,
+   "bucket": "NOISE-DOMINATED",
+   "N1_median": 0.0033477035396704546,
+   "N1_pass": true,
+   "N2": {
+    "0.50": {
+     "S_hat": 0.49530331358086427,
+     "pass": true
+    },
+    "0.90": {
+     "S_hat": 0.8988972712431124,
+     "pass": true
+    }
+   },
+   "admissible": true
+  }
+ },
+ "admissible": [
+  "M-none",
+  "M-ptc",
+  "M-shot"
+ ],
+ "buckets": [
+  "NOISE-DOMINATED",
+  "PARTIAL"
+ ],
+ "robust": false,
+ "bracket_lo": 0.11381857888169422,
+ "bracket_hi": 0.4910201033738638
+}
