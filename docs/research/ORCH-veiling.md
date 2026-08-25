@@ -634,3 +634,82 @@ the trough outside it, which is also the quantity that makes a ring visible to t
 
 
 
+
+---
+
+## 13. My own headline number is not safe, and another lane found the reason
+
+**Status: my §8 result is impeached. It is not withdrawn, because I have no measurement
+that decides it either way. That is the whole point of this section.**
+
+BUILD-SHARP was commissioned to verify BUILD-HALO's veiling fix. Instead of waiting for
+something to verify, it built the harness first and measured the candidate estimators
+against a known ground truth **before the fix existed**:
+
+| estimator | bias | sd | vs shipped |
+|---|---|---|---|
+| shipped gated mean, 166.8 frames | +0.0000 sigma | 0.0774 sigma | -- |
+| upper envelope of 3 | **+0.845 sigma** | **0.748 sigma** | **9.7x noisier** |
+
+And drew the consequence:
+
+> The bias is **upward** and the defect is a **darkening**, so an undebiased envelope
+> removes veil **arithmetically**. At sigma_frame ~ 200 DN that is **+169 DN** -- the same
+> order as `109MSDCF`'s entire -177 DN aura.
+
+### Why this lands on §8
+
+§8 reported flower-bud backdrop error `-4124 DN -> -149 DN`, a factor of **27.7**.
+
+**A -149 DN residual is smaller in magnitude than the +169 DN bias predicted above.**
+
+So the clean-looking recovery is consistent with at least two states of the world:
+
+1. the veil was removed, and the residual is genuinely small; or
+2. the veil was **partly** removed, and an upward estimator bias filled in the rest.
+
+Nothing in §8 distinguishes them, because §8 measured an **error** and a **ratio**, and an
+additive bias is invisible in both. The 30.3x and 21.4x estimator scores in §11 inherit
+the same doubt for the same reason, and so does the -36.5% / -38.2% target in §12.
+
+This was not caught by re-reading my own work. It was caught by a different agent
+pointing a different instrument at a quantity I had not measured.
+
+### The mechanism is not in dispute
+
+`E[max]` over `n` samples grows like `sqrt(2 ln n)`. The brackets here are ~205 frames.
+An extremum is the order statistic whose expectation drifts with `n` by definition, so
+"take the signed extremum" was a specification for a biased estimator, written by someone
+who had measured its recovery and never measured its level.
+
+### What changes
+
+1. **The spec now prefers the cleanest-third mean over the signed extremum.** §11 called
+   them 5% apart and said take the simpler. A mean over a subset selected on
+   *cleanliness* is near-unbiased in *level*; an extremum is biased by construction. Five
+   percent of recovery is not worth a residual nobody can interpret.
+2. **Any order statistic on the default path must be explicitly debiased**, with the
+   correction derived and its magnitude printed. A debiasing constant fitted to null the
+   veiling number **is** the artifact.
+3. **The veiling metric can no longer certify a fix on its own.** The discriminator is a
+   **placebo subject with no veil**, and the quantity is **absolute background level in
+   DN** -- not the aura, not the error, not a ratio.
+   - `109MSDCF`: dark subject, bright backdrop, **no depth separation**, only a -177 DN
+     aura. The fix must be approximately a no-op. A rise near +169 DN means the estimator
+     is adding light.
+   - `coffee-bean`: veil at -38.2%, **no ring**. Veil must fall, ring must not move, far
+     field must not rise.
+4. **Report levels, not ratios.** §8's own framing is how this would have shipped.
+
+### The general lesson, which is the same one as §12 from the other direction
+
+§12's lesson was that a verdict line must never be a script's only output. This is its
+twin:
+
+> **A metric that can be satisfied by two different mechanisms has not been reduced to
+> one by being satisfied. Measure the quantity that only one of the mechanisms moves.**
+
+The failure mode available here is a **green result on every instrument either lane
+owns**: an upward-biased estimator against a darkening artifact satisfies the veiling
+number, satisfies the aura number, and satisfies any ratio built from them. Only the
+absolute level, on a subject that has no veil to remove, can tell the difference.
