@@ -187,6 +187,43 @@ Consequence for effort allocation:
   reconstruction** — and once the surround rises to where the middle frame already is,
   the *step* that reads as a rim disappears without the rim band being touched.
 
+## The fix, proven before it was built
+
+Taking the three existing single-frame renders, normalising all three to a **common
+far-field level first** (so per-frame exposure drift cannot masquerade as "less
+veiled"), and taking the per-pixel **maximum**:
+
+| estimator | d4–12 | d12–30 | d30–60 | d60–120 | d120–200 | d200–300 |
+|---|---|---|---|---|---|---|
+| MERGE (205 frames, gated) | −4631 | −3825 | −4318 | −4692 | −4066 | −1623 |
+| best single frame (102) | −5179 | −2499 | −1110 | −539 | −247 | −177 |
+| **upper envelope of just 3** | **−3340** | **−1887** | **−899** | **−347** | **−211** | **−129** |
+| gain over merge | 1.4× | 2.0× | **4.8×** | **13.5×** | **19.3×** | **12.6×** |
+
+**Three samples out of 205 recover essentially the entire aura**, and the envelope
+beats even the best single frame at every distance, because different frames are
+least-veiled in different places and a per-pixel max picks the winner locally. A merge
+with 205 frames to choose from can only do better.
+
+At d=4–12 the envelope improves matters (−3340, against −5179 for the best single
+frame) but does **not** reach zero — confirming that band as genuinely
+information-absent. **The envelope solves d>15 px; reconstruction is needed only for
+d<14 px. The split is measured, not assumed.**
+
+Implementation notes that fall out of the measurement:
+
+1. **Normalise to a common level before comparing samples**, or per-frame exposure
+   drift enters the envelope directly.
+2. **A raw max is biased high by noise** — `E[max of n]` grows like `sqrt(2 ln n)`.
+   With 205 frames this is not negligible; use a high percentile or trimmed upper mean
+   and debias it.
+
+Caveats: the single-frame renders are **not co-registered** (`STREHL_ONLY_FRAME`
+changes the stack digest, so the sidecar is rejected and alignment re-solves per
+frame), so the two near-silhouette bins are indicative and the d≥30 bins are sound.
+Three samples is a deliberately weak envelope chosen because it cost nothing; it is a
+lower bound on what 205 can achieve.
+
 ## Caveat on a related number
 
 Raw focus breathing across this bracket measures **13.7%** linear magnification
