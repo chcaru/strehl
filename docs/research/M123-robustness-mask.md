@@ -415,7 +415,7 @@ quantitative law behind M97r's fact W3, which had derived the direction only.
 
 ---
 
-## 4. Pre-registered criteria: 4 of 6 FAIL
+## 4. Pre-registered criteria: 3 of 6 FAIL
 
 | # | criterion | bar | measured | verdict |
 | --- | --- | --- | --- | --- |
@@ -427,10 +427,17 @@ quantitative law behind M97r's fact W3, which had derived the direction only.
 | 5 | inertness (`Raw` fires) | must fire | 29.60% | **PASS** |
 | 6 | plant proportional, no fire at 0 | fire at d>=0.5, not at 0 | **24.51% at d=0, flat to 0.5** | **FAIL** |
 
-Criterion 1b **flipped from FAIL to PASS** on re-measurement; see the M2
-retraction. The verdict is unchanged at **4 of 6 FAIL**, because 1b was never
-pre-registered as a bar and the four genuine failures are all scene
-measurements that the retraction does not touch.
+**This count was 4 of 6 in the first version of this report and is now 3 of 6**,
+because criterion 1b flipped from FAIL to PASS on re-measurement (see the M2
+retraction). Recorded explicitly so the change is not mistaken for a
+transcription error.
+
+The verdict is unchanged. 1b was never pre-registered as a bar, and the three
+remaining failures are the three that decide the question: the mask fires on
+**29.55%** of a still subject against a registered <= 1%, separates motion from
+defocus by **2.12x** against a registered >= 10x, and does not respond
+proportionally to a planted displacement. A mask can survive a mis-stated null;
+it cannot survive failing to tell motion from focus.
 
 Criterion 1b was not pre-registered as a threshold — the pre-registration asked
 only that the null "match the predicted one", per the brief's instruction to
@@ -442,7 +449,8 @@ the prediction is explicit in the module and the measurement contradicts it.
 ## 5. Verdict
 
 **Do not ship the mask, and do not wire it.** Phase 2 was not reached: it was
-conditional on phase 1, and phase 1 fails four of six pre-registered criteria.
+conditional on phase 1, and phase 1 fails three of six pre-registered criteria —
+including both criteria that test the mask's actual purpose.
 
 At the shipped configuration on real captures the mask
 - fires on **29.55%** of a stationary subject,
