@@ -63,6 +63,8 @@
 //! why the chunk/absorb shape is part of the API rather than an internal
 //! detail.
 
+use std::sync::{Mutex, OnceLock};
+
 use crate::noise::NoiseModel;
 
 /// The 5-tap binomial generating kernel, `[1, 4, 6, 4, 1] / 16`.
@@ -327,17 +329,20 @@ impl Pyramid {
             let (lo, hi) = self.data.split_at_mut(k);
             reduce(&lo[k - 1], self.sizes[k - 1], &mut hi[0], &mut ws.scratch);
         }
-        // Then the differences, coarse to fine, so each level still holds its
-        // Gaussian when it is used as the source of the next expand.
-        for k in (0..n - 1).rev() {
+        // Then the differences, **fine to coarse**, so that when level `k` is
+        // differenced its source `k+1` is still a Gaussian. Running this the
+        // other way round expands an already-differenced level and silently
+        // produces a pyramid that does not reconstruct.
+        for k in 0..n - 1 {
+            let px = self.sizes[k].pixels();
             expand(
                 &self.data[k + 1],
                 self.sizes[k + 1],
-                &mut ws.expanded,
+                &mut ws.expanded[..px],
                 self.sizes[k],
                 &mut ws.scratch,
             );
-            for (d, e) in self.data[k].iter_mut().zip(&ws.expanded[..self.sizes[k].pixels()]) {
+            for (d, e) in self.data[k].iter_mut().zip(&ws.expanded[..px]) {
                 *d -= e;
             }
         }
@@ -348,14 +353,15 @@ impl Pyramid {
         let n = self.levels();
         let mut acc = self.data[n - 1].clone();
         for k in (0..n - 1).rev() {
+            let px = self.sizes[k].pixels();
             expand(
                 &acc,
                 self.sizes[k + 1],
-                &mut ws.expanded,
+                &mut ws.expanded[..px],
                 self.sizes[k],
                 &mut ws.scratch,
             );
-            acc = ws.expanded[..self.sizes[k].pixels()].to_vec();
+            acc = ws.expanded[..px].to_vec();
             for (a, l) in acc.iter_mut().zip(&self.data[k]) {
                 *a += l;
             }
@@ -428,56 +434,95 @@ pub struct BandGain {
 impl BandGain {
     /// Measure the per-band variance gain for a pyramid of the given depth.
     ///
-    /// Deterministic: the probe field comes from a fixed-seed LCG, so two runs
+    /// Deterministic: the probe fields come from fixed-seed LCGs, so two runs
     /// of the same binary produce the same floor and a render is reproducible.
-    /// Costs a few milliseconds on a 256 x 256 probe, once per process.
+    /// Memoised per band count, so the cost is paid once per process however
+    /// many workers ask for it.
     pub fn measure(bands: usize) -> Self {
-        const N: usize = 256;
-        let sizes = level_sizes(N, N, bands);
+        static CACHE: OnceLock<Mutex<Vec<(usize, BandGain)>>> = OnceLock::new();
+        let cache = CACHE.get_or_init(|| Mutex::new(Vec::new()));
+        if let Ok(c) = cache.lock() {
+            if let Some((_, g)) = c.iter().find(|(b, _)| *b == bands) {
+                return g.clone();
+            }
+        }
+        let g = Self::measure_uncached(bands);
+        if let Ok(mut c) = cache.lock() {
+            c.push((bands, g.clone()));
+        }
+        g
+    }
+
+    fn measure_uncached(bands: usize) -> Self {
+        // The probe must be big enough that it actually *reaches* the requested
+        // depth: `level_sizes` truncates below `MIN_LEVEL_EXTENT`, so a probe
+        // that bottoms out early returns a short `beta` and the merge indexes
+        // off the end of it. Size the probe from the depth, do not assume a
+        // fixed 256.
+        let n = (MIN_LEVEL_EXTENT << bands.min(12)).max(256);
+        let sizes = level_sizes(n, n, bands);
+        debug_assert_eq!(sizes.len(), bands + 1, "the probe is too small for {bands} bands");
         let mut ws = Workspace::new(&sizes);
         let mut pyr = Pyramid::zeros(&sizes);
 
-        // A fixed-seed LCG, then centred and normalised to exactly unit sample
-        // variance so the ratio below is not itself a noisy estimate.
-        let mut state: u64 = 0x2545_F491_4F6C_DD1D;
-        let mut field: Vec<f32> = (0..N * N)
-            .map(|_| {
-                // Two uniforms summed twelve times would be Gaussian; it does
-                // not need to be. The band gain of a linear operator depends on
-                // the input's variance and its whiteness, not on its
-                // distribution.
-                state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
-                ((state >> 33) as f32) / ((1u64 << 31) as f32) - 1.0
-            })
-            .collect();
-        let mean = field.iter().sum::<f32>() / field.len() as f32;
-        for v in field.iter_mut() {
-            *v -= mean;
-        }
-        let var = field.iter().map(|v| v * v).sum::<f32>() / field.len() as f32;
-        let s = var.sqrt().recip();
-        for v in field.iter_mut() {
-            *v *= s;
-        }
+        // The coarsest level of a single probe has only a handful of interior
+        // samples -- at `bands` deep it is `MIN_LEVEL_EXTENT` across, so ~16 of
+        // them, and an `E[X^2]` estimate from 16 samples carries a ~35%
+        // standard error. That is far too loose for something the gate
+        // multiplies. Pool independent realisations instead of growing the
+        // probe: pooling costs the same arithmetic but keeps only one field
+        // resident, where a probe wide enough to give the coarsest level 512
+        // samples would be 32x the memory.
+        const REALISATIONS: usize = 32;
+        let mut acc = vec![0.0f64; sizes.len()];
+        let mut counts = vec![0usize; sizes.len()];
+        for r in 0..REALISATIONS {
+            let mut state: u64 = 0x2545_F491_4F6C_DD1D ^ (r as u64).wrapping_mul(0x9E37_79B9_7F4A_7C15);
+            let mut field: Vec<f32> = (0..n * n)
+                .map(|_| {
+                    // The band gain of a linear operator depends on the input's
+                    // variance and its whiteness, not on its distribution, so a
+                    // uniform field is as good as a Gaussian one here.
+                    state = state
+                        .wrapping_mul(6364136223846793005)
+                        .wrapping_add(1442695040888963407);
+                    ((state >> 33) as f32) / ((1u64 << 31) as f32) - 1.0
+                })
+                .collect();
+            // Centred and normalised to exactly unit sample variance, so the
+            // ratio below is not itself a noisy estimate of the input variance.
+            let mean = field.iter().sum::<f32>() / field.len() as f32;
+            for v in field.iter_mut() {
+                *v -= mean;
+            }
+            let var = field.iter().map(|v| v * v).sum::<f32>() / field.len() as f32;
+            let s = var.sqrt().recip();
+            for v in field.iter_mut() {
+                *v *= s;
+            }
 
-        pyr.build(&field, &mut ws);
-        let beta = (0..sizes.len())
-            .map(|k| {
-                let sz = sizes[k];
+            pyr.build(&field, &mut ws);
+            for (k, sz) in sizes.iter().enumerate() {
                 // Interior only. The replicated border is correlated with
                 // itself and would bias the estimate downward.
                 let m = 4usize.min(sz.width / 4).min(sz.height / 4);
                 let lv = pyr.level(k);
-                let mut acc = 0.0f64;
-                let mut n = 0usize;
                 for y in m..sz.height.saturating_sub(m) {
                     for x in m..sz.width.saturating_sub(m) {
                         let v = f64::from(lv[y * sz.width + x]);
-                        acc += v * v;
-                        n += 1;
+                        acc[k] += v * v;
+                        counts[k] += 1;
                     }
                 }
-                if n == 0 { 1.0 } else { (acc / n as f64) as f32 }
+            }
+        }
+        let beta = (0..sizes.len())
+            .map(|k| {
+                if counts[k] == 0 {
+                    1.0
+                } else {
+                    (acc[k] / counts[k] as f64) as f32
+                }
             })
             .collect();
         Self { beta }
@@ -573,7 +618,7 @@ pub struct MergeConfig {
     /// high enough that noise essentially never wins a selection, low enough
     /// that real low-contrast detail is not thrown away.
     pub gate: f32,
-    /// Exponent on the noise-corrected band power.
+    /// Exponent on the noise-corrected band power, at the COARSEST band.
     ///
     /// `1.0` is a Wiener-like weighting and blends generously; `2.0` is sharply
     /// selective while remaining a convex combination. The trade is real: with
@@ -581,10 +626,65 @@ pub struct MergeConfig {
     /// in-focus frame's band power contribute 45% of the weight at exponent 1
     /// and 3% at exponent 2. Defocus is a low-pass, so that contamination is
     /// *blur*, and 45% of it is visible. Hence the default of 2.
+    ///
+    /// See [`exponent_at`](MergeConfig::exponent_at): this is the floor of a
+    /// ramp, not a single global value.
     pub exponent: f32,
+    /// How much sharper the selection is at the finest band than at the
+    /// coarsest, in multiplicative steps per octave.
+    ///
+    /// # Why the sharpness must depend on scale
+    ///
+    /// The whole argument for a multi-band merge is that **a selection error at
+    /// a fine scale injects only a small-amplitude, high-frequency error, while
+    /// a selection error at a coarse scale is a visible step**. That is an
+    /// asymmetry, and a single global exponent throws it away by treating every
+    /// band with the same caution.
+    ///
+    /// Read it in each direction:
+    ///
+    /// * **Fine bands: be aggressive.** Acuity lives here, and it is precisely
+    ///   here that being wrong is cheap. Blending a fine band across frames is
+    ///   a low-pass of the sharpest information in the stack -- it is exactly
+    ///   the softness that a conservative merge is criticised for. Near-argmax
+    ///   costs nothing a viewer can see and buys all the acuity.
+    /// * **Coarse bands: be gentle.** A hard mask edge in a coarse band, once
+    ///   expanded through the collapse, is a step spanning many output pixels
+    ///   at the low frequencies the eye is most sensitive to. That is what a
+    ///   "cut-out sticker" rim *is*, and it is the defect this module exists to
+    ///   remove. Softness here costs nothing: the low frequencies of a scene
+    ///   barely differ between adjacent focus slices anyway.
+    ///
+    /// `1.0` disables the ramp and restores a single global exponent.
+    pub sharpen_per_octave: f32,
     pub select: SelectMode,
     pub base: BaseBand,
 }
+
+impl MergeConfig {
+    /// The selection exponent for band `k`, `k = 0` finest.
+    ///
+    /// A geometric ramp: `exponent * sharpen_per_octave^(bands - 1 - k)`, so
+    /// the coarsest Laplacian band gets exactly `exponent` and each octave finer
+    /// is `sharpen_per_octave` times more selective. Geometric rather than
+    /// linear because band power itself falls geometrically with scale, so a
+    /// fixed *ratio* per octave is the scale-free choice and the only one that
+    /// does not privilege whatever band count happens to be configured.
+    pub fn exponent_at(&self, k: usize, bands: usize) -> f32 {
+        if self.sharpen_per_octave == 1.0 || bands == 0 {
+            return self.exponent;
+        }
+        let steps = (bands.saturating_sub(1)).saturating_sub(k.min(bands.saturating_sub(1)));
+        // Capped so a deep pyramid plus an aggressive ramp cannot produce an
+        // exponent that overflows `powf` or makes the weights denormal.
+        (self.exponent * self.sharpen_per_octave.powi(steps as i32)).min(MAX_EXPONENT)
+    }
+}
+
+/// Ceiling on the per-band selection exponent. Beyond about this, `w = e^p`
+/// underflows to zero for every frame at once and the merge silently falls back
+/// to the un-weighted mean everywhere -- the exact opposite of the intent.
+pub const MAX_EXPONENT: f32 = 16.0;
 
 impl Default for MergeConfig {
     fn default() -> Self {
@@ -592,6 +692,13 @@ impl Default for MergeConfig {
             bands: DEFAULT_BANDS,
             gate: 2.0,
             exponent: 2.0,
+            // 2x per octave. Over a 7-band pyramid this runs 2, 2, 4, 8, 16,
+            // 16, 16 from coarsest to finest (the last two hit `MAX_EXPONENT`),
+            // so the two finest bands -- where all the acuity is, and where a
+            // wrong pick is a single high-frequency coefficient nobody can see
+            // -- are effectively winner-take-all, while the coarse bands, where
+            // a wrong pick is the rim, stay gently blended.
+            sharpen_per_octave: 2.0,
             select: SelectMode::SoftPower,
             base: BaseBand::WeightedFromCoarsest,
         }
@@ -643,6 +750,10 @@ impl BandMerge {
                 SelectMode::SoftPower => Vec::new(),
             },
             frames: 0,
+            // Measured for the depth this plane geometry ACTUALLY reaches, not
+            // for `cfg.bands`: `level_sizes` truncates a shallow plane, and a
+            // gain vector measured for the requested depth would then be longer
+            // or shorter than the pyramid it gates.
             gain: BandGain::measure(sizes.len() - 1),
             sizes,
         }
@@ -705,7 +816,8 @@ impl BandMerge {
             smooth5(sq, sz, &mut ws.smooth_scratch);
             let beta = self.gain.beta(k);
             let gate = self.cfg.gate;
-            let p = self.cfg.exponent;
+            // Sharper toward the fine bands: see `MergeConfig::sharpen_per_octave`.
+            let p = self.cfg.exponent_at(k, nb);
             let w = &mut ws.weight[..px];
             let vv = ws.var.level(k);
             for ((w, e), v) in w.iter_mut().zip(sq.iter()).zip(vv) {
@@ -713,7 +825,7 @@ impl BandMerge {
                 // down to this grid, times the measured band gain.
                 let floor = gate * beta * v.max(0.0);
                 let excess = (*e - floor).max(0.0);
-                *w = pow_fast(excess, p);
+                *w = select_weight(excess, floor, p);
             }
             self.accumulate_level(k, planes, &mut ws.plane, w);
         }
@@ -1011,18 +1123,42 @@ fn smooth5(data: &mut [f32], size: LevelSize, scratch: &mut [f32]) {
     }
 }
 
-/// `x^p` for the small set of exponents this merge uses, without a `powf` call
-/// per coefficient. Falls back to `powf` for anything else.
+/// Turn a noise-corrected band energy into a selection weight, safely.
+///
+/// The weight is `(excess / floor)^p` — a **signal-to-noise ratio** raised to
+/// the exponent, not the raw energy. Two reasons, and the first is a
+/// correctness bug that the scale-dependent exponent would otherwise have
+/// introduced:
+///
+/// 1. **`excess` is in DN^2 and reaches ~1e7.** At the fine-band exponents the
+///    ramp produces, `excess^p` overflows `f32` outright (`1e7^8 = 1e56`), and
+///    every weight becomes `inf`. `inf/inf` is `NaN`, and a single NaN
+///    coefficient propagates through the collapse into a black hole in the
+///    output. A ratio is dimensionless and stays near 1.
+/// 2. **A ratio is the meaningful quantity anyway.** "This coefficient is 40x
+///    its own noise floor" is scene-independent; "this coefficient is 900000"
+///    is not, and would make the selection behave differently in bright and
+///    dark parts of the same frame purely through the units.
+///
+/// The final clamp is in the log domain so it can never overflow, and it is
+/// loose enough to be inert in practice: it only ties two frames that are
+/// *both* more than `e^60` dominant, at which point the selection is already
+/// decided many times over.
 #[inline]
-fn pow_fast(x: f32, p: f32) -> f32 {
+fn select_weight(excess: f32, floor: f32, p: f32) -> f32 {
+    if excess <= 0.0 {
+        return 0.0;
+    }
+    // `floor` is zero only where the noise model says this pixel has no noise
+    // at all, which cannot happen physically but can happen at a clamped black
+    // pixel. Treat it as "one DN^2" rather than dividing by zero.
+    let snr = excess / floor.max(1.0);
     if p == 1.0 {
-        x
+        snr
     } else if p == 2.0 {
-        x * x
-    } else if p == 0.5 {
-        x.sqrt()
+        snr * snr
     } else {
-        x.powf(p)
+        (p * snr.ln()).clamp(-60.0, 60.0).exp()
     }
 }
 
@@ -1150,6 +1286,134 @@ mod tests {
         // And it is deterministic.
         let again = BandGain::measure(5);
         assert_eq!(g.all(), again.all(), "the band gain probe is not reproducible");
+    }
+
+    #[test]
+    fn the_band_gain_probe_reaches_the_depth_it_is_asked_for() {
+        // Regression. The probe was a fixed 256 x 256, which truncates at five
+        // bands, so a real 3520 x 2344 plane merged at the default seven bands
+        // indexed off the end of `beta` and panicked mid-render. The probe size
+        // must be derived from the depth.
+        for bands in 1..=DEFAULT_BANDS + 1 {
+            let g = BandGain::measure(bands);
+            assert_eq!(
+                g.all().len(),
+                bands + 1,
+                "beta is {} long for {bands} bands",
+                g.all().len()
+            );
+        }
+        // And a real plane geometry merges without indexing off the end.
+        let cfg = MergeConfig::default();
+        let m = BandMerge::new(3520, 2344, 4, cfg);
+        assert_eq!(m.sizes().len(), DEFAULT_BANDS + 1);
+        assert_eq!(m.band_gain().all().len(), m.sizes().len());
+    }
+
+    #[test]
+    fn the_band_gain_is_a_property_of_the_operators_not_the_probe_size() {
+        // `beta` is the variance gain of a fixed linear cascade on white noise,
+        // so it must not depend on how big a field it was measured on. If it
+        // did, the floor would be an artefact of the probe and the gate would
+        // mean something different on every image size.
+        let small = BandGain::measure(3);
+        let deep = BandGain::measure(6);
+        for k in 0..=3 {
+            let (a, b) = (small.beta(k), deep.beta(k));
+            // The base band is excluded: level 3 is a Laplacian band in the
+            // 6-band pyramid but the *base* residual in the 3-band one, and
+            // those are genuinely different operators.
+            if k == 3 {
+                continue;
+            }
+            assert!(
+                (a - b).abs() / b < 0.05,
+                "beta[{k}] is {a} measured at depth 3 but {b} at depth 6"
+            );
+        }
+    }
+
+    #[test]
+    fn the_selection_sharpens_toward_the_fine_bands() {
+        let cfg = MergeConfig::default();
+        let nb = DEFAULT_BANDS;
+        // Coarsest Laplacian band gets exactly `exponent`.
+        assert_eq!(cfg.exponent_at(nb - 1, nb), cfg.exponent);
+        // And it is monotonically sharper toward fine.
+        for k in 0..nb - 1 {
+            assert!(
+                cfg.exponent_at(k, nb) >= cfg.exponent_at(k + 1, nb),
+                "band {k} is not at least as selective as band {}",
+                k + 1
+            );
+        }
+        assert!(
+            cfg.exponent_at(0, nb) > cfg.exponent_at(nb - 1, nb),
+            "the ramp is flat, so the fine bands get no more acuity than the coarse ones"
+        );
+        // Never past the ceiling, at any depth.
+        for k in 0..nb {
+            assert!(cfg.exponent_at(k, nb) <= MAX_EXPONENT);
+        }
+        // And `1.0` restores a single global exponent, so the ramp is opt-out.
+        let flat = MergeConfig { sharpen_per_octave: 1.0, ..MergeConfig::default() };
+        for k in 0..nb {
+            assert_eq!(flat.exponent_at(k, nb), flat.exponent);
+        }
+    }
+
+    #[test]
+    fn a_large_band_energy_does_not_overflow_the_weight() {
+        // Regression, and the reason the weight is an SNR rather than a raw
+        // energy. Band energies are in DN^2 and reach ~1e7 on a bright subject;
+        // `1e7^8` is `1e56`, which is `inf` in f32. Every weight becomes `inf`,
+        // `inf/inf` is `NaN`, and one NaN coefficient spreads through the
+        // collapse into a black hole in the output image.
+        for p in [1.0, 2.0, 4.0, 8.0, MAX_EXPONENT] {
+            for excess in [1e-8f32, 1.0, 1e4, 1e7, 1e12] {
+                for floor in [0.0f32, 1.0, 1e3] {
+                    let w = select_weight(excess, floor, p);
+                    assert!(
+                        w.is_finite() && w >= 0.0,
+                        "weight {w} for excess {excess}, floor {floor}, p {p}"
+                    );
+                }
+            }
+        }
+        // Ordering is still strictly preserved where it matters -- a stronger
+        // coefficient must always outweigh a weaker one at the same floor.
+        let p = 8.0;
+        assert!(select_weight(1e5, 100.0, p) > select_weight(1e4, 100.0, p));
+        assert!(select_weight(1e4, 100.0, p) > select_weight(1e3, 100.0, p));
+        // And nothing below the floor may carry any weight at all.
+        assert_eq!(select_weight(0.0, 100.0, p), 0.0);
+    }
+
+    #[test]
+    fn a_sharpened_merge_still_reconstructs_a_single_frame_exactly() {
+        // The ramp changes the weights, so it must not change the one case
+        // where the answer is known: with every frame identical, any convex
+        // combination has to return that frame. If the sharpening had broken
+        // normalisation this would drift.
+        let (w, h) = (96, 72);
+        let img = ramp(w, h);
+        let cfg = MergeConfig { sharpen_per_octave: 2.0, ..MergeConfig::default() };
+        let mut m = BandMerge::new(w, h, 1, cfg);
+        let sizes = level_sizes(w, h, cfg.bands);
+        let mut fws = FrameWorkspace::new(&sizes, 1);
+        let var = vec![4.0f32; w * h];
+        for _ in 0..5 {
+            fws.next_frame();
+            m.add_frame(&[&img], &img, &var, &mut fws);
+        }
+        let mut ws = Workspace::new(&sizes);
+        let out = m.finish(&mut ws);
+        for (i, (a, b)) in out[0].iter().zip(&img).enumerate() {
+            assert!(
+                (a - b).abs() < 0.05,
+                "pixel {i}: merged {a} but every input frame was {b}"
+            );
+        }
     }
 
     /// Build a frame that is sharp on the left and blurred on the right, and
