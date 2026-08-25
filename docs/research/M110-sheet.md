@@ -1291,4 +1291,129 @@ narrower fringes would be overselling it.
     quantity in bands of distance from the feature and report peak-to-baseline contrast, so a
     60% amplitude drop is not reported as a fringe that shrank.
 
+## 18. RETRACTION: §14's green/blue coupling was the viewing transform
+
+§14 reported that CA changes green on 94.4% of pixels and blue on 67.7%, with
+`|dG|/|dR|` constant at 0.087–0.110 across radius, and recorded the mechanism as
+**unidentified** — candidates being election response, demosaic coupling, and later an extra
+resampling pass. **All three are wrong. The measurement was taken on a viewing render.**
+
+`merge_cmd.rs:77` states plainly that `--srgb` applies *"the sRGB transfer curve **and** the
+camera's colour matrix. For looking at, NOT for measuring."* Every arm in the matrix was
+rendered `--srgb`. `camera_to_srgb` is non-diagonal, so output green carries camera red **by
+construction**, at zero displacement, with no optics involved.
+
+### 18.1 The prediction, registered before measuring
+
+Replicating `color.rs::camera_to_srgb` gives, for the reference body:
+
+```
+R_out = +1.6361 R  -0.4486 G  -0.1874 B
+G_out = -0.1152 R  +1.4890 G  -0.3738 B
+B_out = -0.0047 R  -0.3236 G  +1.3283 B
+```
+
+reproducing the doc comment at `color.rs:224` exactly, which validates the replication.
+CA displaces **red only** — `eps_r` is fitted, `eps_b` is `None`, green is the reference — so
+if the matrix is the whole mechanism the signed ratio must be a **fixed negative constant**:
+
+`dG_out/dR_out = M[1][0]/M[0][0] = −0.1152/1.6361 = **−0.0704**, independent of radius.`
+
+**The signed ratio is the test, not the magnitude.** Election or demosaic coupling has no
+reason to hold a fixed sign, and a magnitude cannot tell a fixed linear coupling from a
+content-dependent one — the same lesson as scoring the overshoot conjunction in §16.2.
+
+### 18.2 Two factors, because `--srgb` moves two
+
+`--srgb` turns `--demosaic` **on by default** (`stack --help`), so a naive sRGB-vs-linear
+comparison changes two things at once and a collapse could be the demosaic — itself a §14
+candidate. Three cells separate them:
+
+| cell | `\|dG\|/\|dR\|` | signed `dG/dR` | G pixels changed | B pixels changed |
+|---|---|---|---|---|
+| **A** sRGB + demosaic *(what §14 measured)* | 0.0741 | **−0.0721** | 94.4% | 67.7% |
+| **B** linear + demosaic *(matrix off, demosaic held)* | **0.0000** | **+0.0000** | 24.4% | 24.6% |
+| **C** linear + binned *(both off)* | **0.0000** | **+0.0000** | **0.0%** | **0.0%** |
+
+**Cell A matches the matrix prediction to 2.4%** (−0.0721 measured against −0.0704 predicted),
+and the blue channel independently to −0.0033 against −0.0029 predicted. The radial profile is
+flat from −0.0754 at centre to −0.0684 at corner, which is what a fixed linear coupling does
+and what no optical mechanism does.
+
+**Cell C is the decisive one: in camera space CA changes green and blue on 0.0% of pixels —
+exactly zero, not approximately.** CA *is* a pure red-plane operation, precisely as designed.
+Election response, demosaic coupling and resampling are all eliminated: had any been real,
+green would move in camera space.
+
+Confirmed on the hardest case. `wrapped-text-1` had the strongest sRGB coupling in §14 (98.7%
+green, 86.7% blue), and in camera space it behaves identically:
+
+| subject | R changed | G changed | B changed | max abs dG | max abs dB |
+|---|---|---|---|---|---|
+| `bee-3-cpl` | 96.9% | **0 px** | **0 px** | **0** | **0** |
+| `wrapped-text-1` | 97.4% | **0 px** | **0 px** | **0** | **0** |
+
+Not a rounded zero — **zero pixels, and a maximum absolute delta of 0 DN**, while red moves on
+97% of the frame. An exact structural zero on the subject that showed the largest apparent
+coupling is as strong as this evidence gets.
+
+**Cell B prices the demosaic honestly.** It is not nothing — green moves on 24.4% of pixels —
+but the median ratio is **exactly 0.0000** and only 4.7% of ratios are negative, so it is
+sparse, sign-balanced interpolation leakage, not a systematic coupling. It cannot produce
+§14's constant −0.072.
+
+### 18.3 What this costs and what it buys
+
+§14's `|ΔG|` = 36.6 display levels was real arithmetic on the file, but it measured the
+**viewing transform**, not the correction. **Withdraw the claim that CA is not a pure
+red-plane operation.** The finding that survives is smaller and sharper: *the correction does
+exactly what it says in camera space, and the coupling appears only in the render you look
+at.*
+
+## 19. For ORCH — further facts and disciplines
+
+**Facts**
+
+60. **MEASURED: §14's green/blue coupling is the sRGB colour matrix, and the mechanism is now
+    closed.** In **linear camera-native, binned** output CA changes green and blue on **0
+    pixels, with a maximum absolute delta of 0 DN**, while red moves on 96.9% (`bee-3-cpl`) and
+    97.4% (`wrapped-text-1`) of the frame. **CA is a pure red-plane operation in camera space.**
+    Election response, demosaic coupling and resampling are all eliminated. Confirmed on
+    `wrapped-text-1`, the subject with the *largest* apparent coupling in §14. **§14's contrary
+    claim is withdrawn.**
+61. **MEASURED: the coupling matches the matrix quantitatively.** On the `--srgb` render the
+    signed median `dG/dR` is **−0.0721** against **−0.0704** predicted by `M[1][0]/M[0][0]`
+    (2.4% agreement), and `dB/dR` is **−0.0033** against **−0.0029**. Flat across radius
+    (−0.0754 centre to −0.0684 corner).
+62. **CORRECTION: the relayed green row is not this body's.** ORCH relayed
+    `[−0.4530, +2.2300, −0.7770]`, i.e. red at 20.3% of green. The matrix `color.rs` actually
+    computes is `[−0.1152, +1.4890, −0.3738]`, red at **7.7%** — reproducing the doc comment at
+    `color.rs:224` exactly. The relayed figure overstates the coupling **2.6x** and would not
+    have matched the measurement. **The mechanism was right; the magnitude was another body's.**
+63. **MEASURED: the demosaic contributes a real but sparse leak, and cannot explain §14.**
+    With the matrix off and demosaic held, green moves on **24.4%** of pixels but the median
+    ratio is **exactly 0.0000** with only 4.7% of ratios negative — sign-balanced interpolation
+    leakage, not a systematic coupling.
+64. **`--srgb` turns `--demosaic` on by default**, so an sRGB-vs-linear comparison moves two
+    factors at once. Three cells are required to attribute the effect to either.
+
+**Disciplines**
+
+65. **Never diagnose a mechanism on a viewing render.** `merge_cmd.rs:77` says `--srgb` is
+    *"For looking at, NOT for measuring"* and `image_out.rs` calls the default the
+    **measurement** rendering. §14 spent three candidate mechanisms on an artefact of the
+    colour matrix. **Before attributing a cross-channel effect to physics, re-measure it in the
+    pre-matrix space.**
+66. **A constant ratio across a physical coordinate is the signature of a fixed linear
+    operator, not of an optical mechanism.** §14 recorded the constancy and did not read it.
+    When a cross-channel ratio refuses to vary with field height, suspect the colour transform
+    first — it is the only thing in the pipeline with no spatial dependence at all.
+67. **Test a linear-coupling hypothesis on the SIGNED ratio against a predicted coefficient.**
+    A magnitude cannot distinguish a fixed coupling from a content-dependent one. Deriving
+    −0.0704 from the matrix *before* measuring turned a plausible story into a 2.4% agreement
+    that could have failed.
+68. **Verify a relayed constant against the code before building on it.** The relayed green row
+    was 2.6x this body's. Recomputing from source and checking the result against the module's
+    own doc comment cost one script and caught it.
+
 
