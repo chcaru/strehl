@@ -410,3 +410,90 @@ subjects and one of those is a large, obvious win, but it survives on
 Artefacts: `C:\dev\strehl-out\BUILD-HALO\compare-halo-on\` (45 side-by-side
 composites at frozen ROIs), `…\compare-conf115\`, `…\halo-on\<subject>\linear.tif`
 (16-bit linear), `…\halo-off\bee-2-cpl\linear.tif` (byte-identity control).
+
+---
+
+## 10. v2: interpolated grid + feathered treatment
+
+Addresses ORCH decisions (a) blotchiness and (b) the noise cost. Both landed;
+(b) turned out to be mostly a symptom of (a).
+
+### 10.1 Two separate discontinuities, not one
+
+The blotching had **two** causes and I initially only saw the first:
+
+1. **Quantised depth axis.** `bin` was a hard `floor()`, so two neighbours whose
+   guide winners differed by one DN used two unrelated supports. Fixed with a
+   proper bilateral-grid **tent splat**: every pixel contributes to the two
+   bins straddling it with weights summing to 1 (`tent`, `straddle`), and the
+   gather blends the same two. Cost is unchanged -- same number of box filters.
+2. **Hard treatment switch.** `layer[i]` was treated-or-not, so a fully masked
+   pixel sat directly against a fully full-window neighbour. **Interpolating the
+   depth axis cannot fix this** -- the discontinuity is in *whether* the pixel
+   is treated, not in *which bin* it landed in. Fixed by making all three guards
+   ramp (`smoothstep`) instead of veto, and blending the masked response toward
+   the shipped one by `blend[i]`.
+
+`FEATHER = 1.25` and it is load-bearing in a way a unit test caught. The three
+guards **multiply**, so at `FEATHER = 2.0` a pixel had to clear twice the depth
+step *and* twice the confidence floor *and* twice the support floor to be
+treated at full strength -- and essentially none did. That would have applied
+the fix at partial strength everywhere and quietly left halo on the plate.
+`treatment_fades_in_rather_than_switching_on` failed on exactly that and is kept
+as the guard against re-widening it.
+
+### 10.2 The noise cost was the cliff, not the gate
+
+ORCH routed (b) as recalibrating `FOCUS_NOISE_SD` for the masked support. That
+was not where the noise was coming from. Flat-region `noise_sd` versus baseline:
+
+| subject | v1 hard switch | v2 feathered | `hp_energy` v2 vs baseline |
+|---|---|---|---|
+| `bee-2-cpl` | +8.9% | **+4.5%** | +3.4% |
+| `flower-inner-edge-cpl` | +5.3% | **+1.3%** | +1.9% |
+| `flower-bud-…-fern-cpl` | +5.5% | **+1.1%** | +0.2% |
+
+**The noise penalty fell by 65-80% with no change to the gate at all**, because
+most of it was the two discontinuities injecting high-frequency structure, not
+the sample-count miscalibration. `hp_energy` stays above baseline on all three,
+so v2 is still not a blur. Some of v1's *higher* `hp_energy` was the blotch
+edges themselves reading as detail -- a caution against treating that statistic
+as pure goodness.
+
+The `FOCUS_NOISE_SD` miscalibration is **real and still unfixed**; it is simply
+much smaller than the +4.6% originally attributed to it.
+
+### 10.3 What did NOT get fixed, and what it actually is
+
+**The bright blobs hugging silhouettes survive v2 essentially unchanged.** They
+are visible on `bee-2-cpl` edge2 in `cmp-hard-vs-feather/`. I attributed them to
+quantisation in §9.5 and **that attribution was wrong.**
+
+They are the **coverage boundary of the fix itself**. In the baseline that
+region is one smooth grey veil. The operator lifts the veil where a pixel's
+window still holds enough background to average -- and withdraws where it does
+not, which is precisely the pixels closest to the silhouette, via
+`MIN_LAYER_FRACTION`. The result is a patchwork: veil-removed (bright) against
+veil-remaining (grey), with the blob edge sitting exactly on the support floor.
+Feathering that floor softened it and did not remove it, because the underlying
+quantity being thresholded genuinely does fall off a cliff as the window fills
+with foreground.
+
+This is the same structural wall as §9.4: **near the silhouette there is not
+enough background in a 13 px window to reconstruct the background from.** No
+amount of masking or feathering creates information that is not in the window.
+That is what fix 3/4 (bimodality / two-layer unmixing) is for, and it is why
+ORCH's decision (c) is the right next move rather than more tuning here.
+
+### 10.4 Status
+
+Off-path byte identity re-verified after all v2 edits: `bee-2-cpl` with
+`STREHL_EDGE_AWARE` unset is still `D2DC0272…`, identical to the frozen
+baseline. 388 core tests pass (4 added in v2).
+
+Artefacts: `C:\dev\strehl-out\BUILD-HALO\halo-feather\` (renders),
+`…\cmp-base-vs-feather\` (v2 vs baseline, 27 composites),
+`…\cmp-hard-vs-feather\` (v1 vs v2, isolates the artefact work).
+
+**Still not print-worthy.** Veiling halo is materially reduced; the tight rim
+and the coverage-boundary blobs remain.

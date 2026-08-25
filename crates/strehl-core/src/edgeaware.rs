@@ -392,16 +392,72 @@ fn box_extremum(
 /// guard: below it the pixel keeps the shipped full-window response.
 pub struct LayerSupport {
     geom: PlaneGeometry,
-    /// Depth bin of **every** pixel. A treated pixel's window has to be able to
-    /// see which of its untreated neighbours share its depth, so the binning is
-    /// global even though the masking is not.
-    bin: Vec<u8>,
     /// Depth bin per treated pixel, or [`UNTREATED`].
     layer: Vec<u8>,
-    /// `(radius, fractions)` where `fractions[l] = box_mean(bin == l, radius)`:
-    /// the share of each window belonging to layer `l`. Frame-independent, so
-    /// it is computed once per radius and shared across every worker.
+    /// Position on the depth axis in **bin-centre units**, for every pixel.
+    ///
+    /// This is the continuous value `bin` is the rounding of, and it is what
+    /// makes the grid interpolated rather than quantised. Hard-assigning each
+    /// pixel to one bin makes two neighbours whose guide winners differ by a
+    /// hair use two completely different supports, and that discontinuity was
+    /// visible as blotching at treated transitions.
+    pos: Vec<f32>,
+    /// How much of the masked response each pixel takes, in `[0, 1]`.
+    ///
+    /// Treatment used to be a hard switch, and that put a **cliff at the
+    /// treatment boundary**: a masked pixel and its full-window neighbour
+    /// could differ by far more than either differed from the truth, which
+    /// read as hard-edged blobs hugging silhouettes. Interpolating the depth
+    /// axis does not help — the discontinuity is in whether the pixel is
+    /// treated at all, not in which bin it landed. So every guard that used to
+    /// veto now ramps instead, and the three ramps multiply.
+    blend: Vec<f32>,
+    /// `(radius, fractions)` where `fractions[l] = box_mean(tent(pos - l), radius)`:
+    /// the **tent-weighted** share of each window belonging to layer `l`.
+    /// Frame-independent, so it is computed once per radius and shared across
+    /// every worker.
     fractions: Vec<(usize, Vec<Vec<f32>>)>,
+}
+
+/// Width of the feather on every guard, as a multiple of its threshold.
+///
+/// The guards multiply, so a wide feather compounds: at 2.0 a pixel would have
+/// to clear twice the depth step AND twice the confidence floor AND twice the
+/// support floor to be treated at full strength, and almost none do. That
+/// silently applies the fix at partial strength everywhere and leaves halo on
+/// the plate. Keep the transition thin -- enough to remove the cliff, not
+/// enough to dilute the treatment.
+pub const FEATHER: f32 = 1.25;
+
+/// Hermite ramp from 0 at `lo` to 1 at `hi`. Used to turn every hard veto in
+/// this module into a feathered one.
+#[inline]
+#[must_use]
+pub fn smoothstep(lo: f32, hi: f32, v: f32) -> f32 {
+    if !(hi > lo) {
+        return f32::from(u8::from(v >= hi));
+    }
+    let t = ((v - lo) / (hi - lo)).clamp(0.0, 1.0);
+    t * t * (3.0 - 2.0 * t)
+}
+
+/// Triangular (tent) weight of a sample at depth-axis position `p` against bin
+/// `l`. Adjacent bins overlap, and the weights of the two bins straddling any
+/// `p` sum to exactly 1, so the splat conserves mass.
+#[inline]
+#[must_use]
+pub fn tent(p: f32, l: usize) -> f32 {
+    (1.0 - (p - l as f32).abs()).max(0.0)
+}
+
+/// The two bins straddling `p`, and the blend weight of the upper one.
+#[inline]
+#[must_use]
+fn straddle(p: f32) -> (usize, usize, f32) {
+    let c = p.clamp(0.0, (N_LAYERS - 1) as f32);
+    let l0 = c.floor() as usize;
+    let l1 = (l0 + 1).min(N_LAYERS - 1);
+    (l0, l1, c - l0 as f32)
 }
 
 /// Number of quantisation bins on the depth (guide-winner) axis.
@@ -466,6 +522,14 @@ impl LayerSupport {
         // shallow bracket, where all the winners sit in a narrow range.
         let (lo, hi) = (percentile(&smooth, 0.01), percentile(&smooth, 0.99));
         let width = ((hi - lo) / N_LAYERS as f32).max(1.0);
+        // Continuous position on the depth axis, in bin-CENTRE units: bin `l`
+        // is centred at `lo + (l + 0.5) * width`, so a pixel at value `v` sits
+        // at `(v - lo) / width - 0.5`. `bin` is this rounded; `pos` keeps the
+        // remainder, which is what the tent interpolates over.
+        let pos: Vec<f32> = smooth
+            .iter()
+            .map(|&v| ((v - lo) / width - 0.5).clamp(0.0, (N_LAYERS - 1) as f32))
+            .collect();
         let bin_of =
             |v: f32| -> u8 { (((v - lo) / width).floor().clamp(0.0, (N_LAYERS - 1) as f32)) as u8 };
         let bin: Vec<u8> = smooth.iter().map(|&v| bin_of(v)).collect();
@@ -487,9 +551,17 @@ impl LayerSupport {
         let floor = conf * percentile(&sharp, FLOOR_Q);
 
         let mut layer = vec![UNTREATED; px];
+        let mut blend = vec![0.0f32; px];
         for i in 0..px {
-            if hi_b[i] - lo_b[i] > tau && sharp[i] > floor {
+            // Both guards ramp rather than switch. A pixel just over the depth
+            // step or just over the confidence floor now takes only a sliver
+            // of the masked response, so the treated region fades in instead
+            // of starting at full strength against an untreated neighbour.
+            let w = smoothstep(tau, FEATHER * tau, hi_b[i] - lo_b[i])
+                * smoothstep(floor, FEATHER * floor, sharp[i]);
+            if w > 0.0 {
                 layer[i] = bin[i];
+                blend[i] = w;
             }
         }
 
@@ -499,34 +571,46 @@ impl LayerSupport {
             let mut per_layer = vec![vec![0.0f32; px]; N_LAYERS];
             for l in 0..N_LAYERS {
                 for i in 0..px {
-                    ind[i] = f32::from(u8::from(bin[i] as usize == l));
+                    // Soft splat. Every pixel contributes to the two bins that
+                    // straddle it, with weights summing to 1, so no sample is
+                    // lost and no bin boundary is a cliff.
+                    ind[i] = tent(pos[i], l);
                 }
                 box_mean(&ind, geom, r, &mut scratch, &mut per_layer[l]);
             }
             fractions.push((r, per_layer));
         }
 
-        // Withdraw any pixel whose own layer is too thin a slice of its window
-        // to elect on, at ANY radius it will be used at. This is the antenna
-        // case, and it is the scale ladder's failure mode arriving by a
-        // different road.
+        // Withdraw any pixel whose own support is too thin a slice of its
+        // window to elect on, at ANY radius it will be used at. This is the
+        // antenna case, and it is the scale ladder's failure mode arriving by
+        // a different road. The test uses the same interpolated denominator
+        // the merge will divide by, not the hard bin's share, and it too
+        // ramps: support fading out is a fade back to the shipped response.
         for i in 0..px {
             if layer[i] == UNTREATED {
                 continue;
             }
-            let l = layer[i] as usize;
-            if fractions
+            let (l0, l1, a) = straddle(pos[i]);
+            let thinnest = fractions
                 .iter()
-                .any(|(_, f)| f[l][i] < MIN_LAYER_FRACTION)
-            {
+                .map(|(_, f)| (1.0 - a) * f[l0][i] + a * f[l1][i])
+                .fold(f32::INFINITY, f32::min);
+            blend[i] *= smoothstep(
+                MIN_LAYER_FRACTION,
+                FEATHER * MIN_LAYER_FRACTION,
+                thinnest,
+            );
+            if blend[i] <= 0.0 {
                 layer[i] = UNTREATED;
             }
         }
 
         Self {
             geom,
-            bin,
             layer,
+            pos,
+            blend,
             fractions,
         }
     }
@@ -599,21 +683,56 @@ impl LayerSupport {
             })
             .1;
         let hist = self.histogram();
+        // A layer must be filtered if any treated pixel STRADDLES it, which is
+        // not the same as any treated pixel rounding to it: a pixel at 2.4
+        // draws on bins 2 and 3. Skipping on the hard histogram would silently
+        // drop the upper half of every such blend.
+        let mut needed = [false; N_LAYERS];
+        for i in 0..px {
+            if self.layer[i] != UNTREATED {
+                let (l0, l1, _) = straddle(self.pos[i]);
+                needed[l0] = true;
+                needed[l1] = true;
+            }
+        }
+        debug_assert!(
+            hist.iter().enumerate().all(|(l, &n)| n == 0 || needed[l]),
+            "every occupied hard bin must also be straddled"
+        );
+        // Accumulate the interpolated numerator and denominator separately.
+        // `acc` holds one layer's box-filtered numerator at a time; `dst` is
+        // built up as the tent-weighted blend of the two straddling layers,
+        // and `num`/`den` keep the running totals.
+        let mut num = vec![0.0f32; px];
+        let mut den = vec![0.0f32; px];
         for l in 0..N_LAYERS {
-            if hist[l] == 0 {
+            if !needed[l] {
                 continue;
             }
             for i in 0..px {
-                tmp[i] = if self.bin[i] as usize == l { src[i] } else { 0.0 };
+                // Soft splat of the signal, matching the soft splat the
+                // fractions were built from.
+                tmp[i] = tent(self.pos[i], l) * src[i];
             }
             box_mean(tmp, self.geom, radius, scratch, acc);
             for i in 0..px {
-                if self.layer[i] as usize == l {
-                    let f = fractions[l][i];
-                    if f > 0.0 {
-                        dst[i] = acc[i] / f;
-                    }
+                if self.layer[i] == UNTREATED {
+                    continue;
                 }
+                let (l0, l1, a) = straddle(self.pos[i]);
+                let w = if l == l0 { 1.0 - a } else { 0.0 } + if l == l1 { a } else { 0.0 };
+                if w > 0.0 {
+                    num[i] += w * acc[i];
+                    den[i] += w * fractions[l][i];
+                }
+            }
+        }
+        for i in 0..px {
+            if self.layer[i] != UNTREATED && den[i] > 0.0 {
+                // `dst` arrives holding the shipped full-window response, so
+                // this is a fade between the two, not a replacement.
+                let b = self.blend[i];
+                dst[i] = b * (num[i] / den[i]) + (1.0 - b) * dst[i];
             }
         }
     }
@@ -809,20 +928,145 @@ mod tests {
         let s = LayerSupport::from_guide(&winner, &response, g, 8.0, VETO_OFF, &[13, 8]);
         let mut treated = 0usize;
         for i in 0..g.pixels() {
-            let l = s.layer[i];
-            if l == UNTREATED {
+            if s.layer[i] == UNTREATED {
                 continue;
             }
             treated += 1;
+            // The quantity that must clear the floor is the denominator the
+            // merge actually divides by, which since the grid became
+            // interpolated is the tent blend of the two straddling bins --
+            // not the hard bin's own share.
+            let (l0, l1, a) = straddle(s.pos[i]);
             for (r, f) in &s.fractions {
+                let den = (1.0 - a) * f[l0][i] + a * f[l1][i];
                 assert!(
-                    f[l as usize][i] >= MIN_LAYER_FRACTION,
-                    "pixel {i} elects on {:.4} of its radius-{r} window, below the {MIN_LAYER_FRACTION} floor",
-                    f[l as usize][i]
+                    den >= MIN_LAYER_FRACTION,
+                    "pixel {i} elects on {den:.4} of its radius-{r} window, below the {MIN_LAYER_FRACTION} floor",
                 );
             }
         }
         assert!(treated > 0, "nothing was treated, so the invariant is vacuous");
+    }
+
+    #[test]
+    fn the_grid_is_continuous_across_a_bin_boundary() {
+        // The blotching this replaced was a CLIFF: two neighbouring pixels
+        // whose guide winners differ by one DN could land in different hard
+        // bins and then use two unrelated supports. Sweep a depth ramp past
+        // every bin boundary and assert the masked result never jumps.
+        let g = geom(96, 24);
+        let winner: Vec<u16> = (0..g.pixels())
+            .map(|i| (20 + (i % g.width) * 2) as u16)
+            .collect();
+        let response = vec![50.0f32; g.pixels()];
+        let s = LayerSupport::from_guide(&winner, &response, g, 1.0, VETO_OFF, &[8]);
+
+        // A signal that varies with depth, so a change of support is visible.
+        let src: Vec<f32> = winner.iter().map(|&w| f32::from(w)).collect();
+        let mut dst = src.clone();
+        let px = g.pixels();
+        let (mut sc, mut tmp, mut acc) = (vec![0.0; px], vec![0.0; px], vec![0.0; px]);
+        s.apply_at(&src, 8, &mut sc, &mut tmp, &mut acc, &mut dst);
+
+        let y = g.height / 2;
+        let mut worst = 0.0f32;
+        for x in 1..g.width {
+            let (i0, i1) = (y * g.width + x - 1, y * g.width + x);
+            if s.layer[i0] != UNTREATED && s.layer[i1] != UNTREATED {
+                worst = worst.max((dst[i0] - dst[i1]).abs());
+            }
+        }
+        // Adjacent pixels are 2 DN apart on the ramp; the masked mean may lag
+        // but must not step by anything like a bin width (~50 DN here).
+        assert!(
+            worst < 8.0,
+            "masked mean jumps {worst:.2} between adjacent pixels -- grid is quantised, not interpolated"
+        );
+    }
+
+    #[test]
+    fn treatment_fades_in_rather_than_switching_on() {
+        // The blobs hugging silhouettes were the TREATMENT BOUNDARY, not the
+        // depth bins: a fully-masked pixel sat directly against a fully
+        // full-window neighbour. Assert the blend actually takes intermediate
+        // values, so that boundary is a ramp and not a cliff.
+        let g = geom(96, 32);
+        // A depth profile whose STEEPNESS grows across the frame, so the local
+        // range statistic sweeps up through tau. A synthetic hard step is the
+        // wrong probe here: it crosses tau within a single pixel, so a tight
+        // feather correctly produces no partial zone at all.
+        let winner: Vec<u16> = (0..g.pixels())
+            .map(|i| {
+                let x = (i % g.width) as f32;
+                (40.0 + x * x / 24.0) as u16
+            })
+            .collect();
+        let response = vec![80.0f32; g.pixels()];
+        let s = LayerSupport::from_guide(&winner, &response, g, 8.0, VETO_OFF, &[8]);
+
+        let mut partial = 0usize;
+        let mut full = 0usize;
+        for i in 0..g.pixels() {
+            if s.layer[i] == UNTREATED {
+                continue;
+            }
+            let b = s.blend[i];
+            assert!(
+                (0.0..=1.0).contains(&b),
+                "blend {b} out of range at {i}"
+            );
+            if b > 0.02 && b < 0.98 {
+                partial += 1;
+            } else if b >= 0.98 {
+                full += 1;
+            }
+        }
+        assert!(
+            partial > 0,
+            "no pixel is partially treated -- treatment is still a hard switch"
+        );
+        assert!(full > 0, "no pixel is fully treated -- the ramp never reaches strength");
+    }
+
+    #[test]
+    fn an_untreated_pixel_keeps_the_shipped_response_exactly() {
+        // The fade must be an identity where blend is zero, or turning the
+        // feature on would perturb ground it has no business touching.
+        let g = geom(64, 32);
+        let winner: Vec<u16> = vec![100u16; g.pixels()];
+        let response = vec![50.0f32; g.pixels()];
+        let s = LayerSupport::from_guide(&winner, &response, g, 8.0, VETO_OFF, &[8]);
+        let src: Vec<f32> = (0..g.pixels()).map(|i| (i % 17) as f32).collect();
+        let shipped = src.clone();
+        let mut dst = shipped.clone();
+        let px = g.pixels();
+        let (mut sc, mut tmp, mut acc) = (vec![0.0; px], vec![0.0; px], vec![0.0; px]);
+        s.apply_at(&src, 8, &mut sc, &mut tmp, &mut acc, &mut dst);
+        for i in 0..px {
+            if s.layer[i] == UNTREATED {
+                assert!(
+                    (dst[i] - shipped[i]).abs() < f32::EPSILON,
+                    "untreated pixel {i} moved from {} to {}",
+                    shipped[i],
+                    dst[i]
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn the_tent_splat_conserves_mass() {
+        // Every pixel must splat with total weight exactly 1, or the masked
+        // mean's denominator stops being a fraction of the window and
+        // MIN_LAYER_FRACTION stops meaning what it says.
+        for k in 0..=40 {
+            let p = k as f32 * (N_LAYERS - 1) as f32 / 40.0;
+            let total: f32 = (0..N_LAYERS).map(|l| tent(p, l)).sum();
+            assert!(
+                (total - 1.0).abs() < 1e-5,
+                "position {p:.3} splats to total weight {total:.6}, not 1"
+            );
+        }
     }
 
     #[test]
