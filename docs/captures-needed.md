@@ -151,6 +151,29 @@ you about the defect stands. What I told you about the cure was premature, and I
 would rather correct it here than have you discover it by finding the switch
 missing.
 
+**And a fifth confirmation landed overnight, on a different mechanism, which
+makes this about as settled as anything in the project.** Everything above
+concerns one detector. A *separate* piece of machinery — the one that picks
+which frame wins at each pixel — was wired up behind a switch and tested against
+a deliberately unfair pair of your own stacks: a stack **with** real motion
+(`foam`, bubbles moving) and a stationary tripod stack (`coffee-bean`) where any
+firing is wrong by definition, because a frame that disagrees there disagrees
+only because **it is the only frame that resolves that pixel**. The result was
+the same shape as before: it changed **7.4%** of the stationary stack and
+**0.34%** of the moving one — **21.5× more activity on the subject that never
+moved.** The report's own verdict is that this is not a threshold wanting
+tuning, it is a statistic aimed at the wrong quantity.
+
+**Why I am telling you about a negative result twice.** Two different mechanisms,
+built by different agents from different starting points, both fired hardest on
+the stack with nothing wrong with it. That is no longer bad luck. It says the
+*idea* — spot the odd frame out by how much it disagrees — cannot work here,
+because in a focus stack the frame that disagrees most is usually the frame that
+is **right**: it is the one in focus. That is peculiar to focus stacking and it
+is why techniques borrowed from ordinary burst photography keep failing on this
+problem. The moved-antenna defect is still real and still unfixed; what is now
+well established is which family of cures does not apply to it.
+
 ### The answer changed by morning, and you should read this instead
 
 The section above says the reason your stacks don't look good is *unwired code* —
