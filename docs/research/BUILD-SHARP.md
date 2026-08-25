@@ -713,3 +713,155 @@ number.
 
 Bench: `pin-70934bb/crates/strehl-cli/examples/bs_demosaic_cost.rs` (pin tree only —
 it touches nothing shared).
+
+## 10. Routed defect — the "outline ghosts" on `bee-1-cpl`
+
+ORCH routed a visible symptom found by BUILD-RENDER: *"pale outline ghosts left
+of the left legs — a leg edge appearing more than once"*, with the hypothesis
+that the per-frame scale term is **measured but not applied** at render time,
+which would produce doubling that grows with image radius.
+
+**Verdict: the hypothesis is false, and the ghost is not registration. Alignment
+at those legs is sub-pixel. The cause is in the merge, not the geometry.**
+
+ORCH asked to be told quickly if that turned out to be the case. It is the case.
+
+### 10.1 "Measured but not applied" is false — checked in code
+
+`align_pair` (`align.rs:1448`) fits a full `SimilarityParams` including the
+scale term `g`, with the explicit comment *"Scale and rotation are dimensionless
+and carry unchanged."* `warpmap.rs` stores a full `Similarity` and `gather_into`
+applies it. Scale is fitted **and** applied. There is no measured-but-dropped
+term, and my span-1 residual instrument was therefore never blind to one.
+
+### 10.2 The scale ladder is monotone to 1e-5 — `ladder.py`
+
+Focus breathing is a lens property: over a bracket the focus group moves in one
+direction, so magnification must change **monotonically**. That gives a free,
+model-independent error estimator with no image processing in it at all. Read
+the per-frame ladder `g_k` straight out of the warpmap sidecar and split it into
+an isotonic (exact L2 monotone, PAVA) trend plus a residual. The trend is
+physics; every bit of the residual is fit error that is applied to pixels.
+A residual `w` displaces a feature at radius `r` by exactly `w * r` px.
+
+`bee-1-cpl`, 299 frames, total breathing **8.015%** magnification:
+
+| solve | wobble RMS | spurious shift @ r=2100 | span-16 applied | span-16 error |
+|---|---|---|---|---|
+| free (`STREHL_SMOOTH=0`) | 2.44e-5 | 0.051 px | 7.985 px | 0.027 px |
+| shipped (λ=1) | 9.75e-6 | **0.020 px** | 7.978 px | **0.007 px** |
+
+Monotonicity violations fall from 25/298 to 7/298 under the λ=1 prior — an
+independent confirmation, on a different gauge, that the §3 fix was real.
+
+The ~8 px of magnification correction applied across a 16-frame span at the
+frame corner is **genuine breathing, correctly applied**. The spurious component
+is 0.007 px. Scale is exonerated.
+
+### 10.3 Span-1 pixel residual — alignment removes most of the radial term
+
+`ghost.py` gathers adjacent frames both aligned and unaligned, and projects the
+per-tile residual onto the **signed radial** direction, because direction
+discriminates breathing (radial, grows with r) from jitter (isotropic) where
+magnitude alone cannot.
+
+One confound had to be removed first. The aligned arm gathers through a
+placement that displaces content by tens of pixels at large radius, so a corner
+tile can be partly filled from *outside* the source plane. Border fill
+correlates with itself and is read as a residual the identity-gathered arm never
+sees. Excluding a 200 px margin **changed the verdict**, from "alignment is 15×
+worse at the corner" to the table below. The unexcluded reading was an artefact
+of my instrument, not a property of the aligner.
+
+Radial slope, px per 1000 px of radius, margin 200:
+
+| pair | unaligned | aligned | radial term removed |
+|---|---|---|---|
+| 60 | +1.775 | +0.399 | 78% |
+| 120 | +1.532 | +0.054 | 96% |
+| 180 | +0.808 | −0.221 | 73% |
+| 240 | +0.989 | −0.393 | 60% |
+
+Residual after alignment is **0.33–0.42 px mean**, and its **tangential
+component exceeds its radial component** (0.16–0.20 vs 0.01–0.10) — the
+isotropic-jitter signature, not the breathing signature. The plant control has
+the opposite ratio (7:1 radial-dominant), which is what a true scale error looks
+like.
+
+*Not claimed:* the aligned slope's sign flips across the stack (+0.40, +0.05,
+−0.22, −0.39). At n≈81–105 tiles I have not put an error bar on that, so I do
+not report progressive over-correction as a finding.
+
+### 10.4 A third failed instrument — `ghost.py` is invalid at span 16
+
+The merge elects across the whole stack, not just adjacent frames, so I repeated
+the measurement at span 16. It returned an alarming result: paired on identical
+tiles, aligned was **1.07–2.72× worse** than unaligned, with the radial slope
+flipping to large negative. Read naively that says the aligner over-corrects
+scale by 3–4× and is the ghost's cause.
+
+It is not. It is my instrument failing, and the positive control caught it.
+
+I applied the aligner's **own recorded correction** to the unaligned pair
+analytically — same structure as the treatment (pure magnification about the
+scale centre), known-correct magnitude. If the instrument measures registration,
+the correct correction must reduce the residual.
+
+| span-16 pair 240, margin 200 | mean shift |
+|---|---|
+| uncorrected | 1.328 px |
+| + true correction (+dg) | 4.534 px |
+| + true correction (−dg) | 4.337 px |
+
+**Both signs make it worse, by nearly the same amount.** A pure magnification
+cannot worsen registration in both directions; that is arithmetically
+impossible. The instrument is not measuring registration at this span.
+
+Two further tells, both visible in the same run and both missed on first read:
+the reported `slope` (+9.1 px/kpx) is inconsistent with the reported
+`mean_radial` (+0.84 px) from the same tiles; and the unaligned far bin reads
+|shift| = 0.053 px at r=1400–1800 while the near bin reads 3.53 px — backwards
+for breathing, which must grow with radius.
+
+The mechanism is defocus-induced correlation bias. At span 16 the two frames
+differ in **content**, not just placement, because they differ in focus. Plain
+correlation cannot separate a change in what is sharp from a shift, and the
+tile-admission gate then selects on that same changed content. At span 1 the
+content is nearly identical, which is why the instrument commissions cleanly
+there (self = 0.0000 exactly; plant ×1.0005 recovers slope 4.63–5.04 against an
+expected 5.00) and why only the span-1 numbers are reported above.
+
+Recorded as the third failed instrument in this workstream, alongside the band
+census and the paired Laplacian regression of §2. Measuring inter-frame
+registration at large focus separation remains **unsolved** here; it needs a
+focus-invariant feature, not correlation.
+
+### 10.5 What the legs actually show — the pictures
+
+`pictures/bee-1-cpl/ghost-legs-{A,B}.png`, 100% crops, no annotations. Two
+distinct artefacts, and neither is an edge appearing twice from misregistration:
+
+1. **Flat grey polygonal patches** pasted over the leg, with hard straight
+   boundaries and no internal texture — election patchwork. The boundaries are
+   tile-shaped, not anatomy-shaped.
+2. **Pale halo outlines** standing off in the empty background, displaced
+   roughly **50–150 px** from the hairs that cast them.
+
+Set that against the measured span-1 residual of **0.33–0.42 px**: the offending
+displacement is **two orders of magnitude** larger than any residual I can
+measure. Registration cannot produce it. A 0.42 px shift cannot separate an edge
+from itself far enough to read as a second edge — that needs several pixels at
+minimum, and these are at 50–150 px, which is **defocus-blur scale** at 2:1
+magnification.
+
+### 10.6 Routing
+
+- **The ghost is BUILD-HALO's.** It is election patchwork plus defocus-scale
+  halo, at defocus scale, on a subject with depth silhouettes — consistent with
+  the owner's own audit that every silhouette subject is ruined while the pure
+  texture subject `couch-fibers-cpl` is good.
+- `experiments/M120-patchwork.md` exists in the corpus and is unread by me; it
+  should be routed to BUILD-HALO, as the name matches the first artefact exactly.
+- **Still owed from §9:** the demosaic-before-gather decision (1.50× contrast,
+  549 ms/frame) should be taken in the *same* merge rewrite as ORCH's two-pass
+  decision, or the merge gets rewritten twice.
