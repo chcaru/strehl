@@ -101,7 +101,7 @@ under test:
 | chunking | 10 chunks of ≤ 2 frames (reported, not asserted — a property of this host) |
 | output size | 49,449,626 bytes, **every arm** |
 | "before" tree | HEAD `8433f50`-era, unmodified working tree |
-| "after" tree | this commit, on HEAD `581253c` |
+| "after" tree | this change applied on HEAD `581253c` |
 
 | arm | flag | SHA-256 | wall |
 |---|---|---|---|
@@ -144,6 +144,15 @@ registry's own `why` column already asserts (`EF745413...E93B3`). I re-measured 
 the sidecar this run cached is `coffee-bean-55f8b4c1af1e8037.warpmap.txt`, content SHA
 `EF74541395DB1BA6…`, **the same file name and the same content before and after my
 change**.
+
+**Provenance caveat.** HEAD moved four times under me while I worked (other agents are
+active in this tree). The "after" arms were measured with this change applied on
+`581253c`; the commit's parent is `321398f`. The two commits in between
+(`3fb8359`, `321398f`) touch only `docs/research/SYNTHESIS.md` and two
+`experiments/` Python files — **no Rust source**, so the measured tree and the committed
+tree are code-identical. Stated rather than assumed, because "I measured a slightly
+different tree than I committed" is exactly the kind of gap this project's freeze
+registry exists to catch.
 
 ### Cost (MEASURED as a BOUND, not a value — AGENTS rule 16)
 
