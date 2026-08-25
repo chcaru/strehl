@@ -1482,3 +1482,100 @@ is too high.
 
 What section 16 still establishes stands: the control ratios of ~1, the
 retraction of "harmless to the image", and the two reasons the luma veto fails.
+
+
+## 18. `through_focus.rs` is the seam, and it already contains the fix I failed to build
+
+ORCH assigned ownership of `crates/strehl-core/src/through_focus.rs` to this
+workstream, with BUILD-SHARP consuming it read-only. Reading it first was the
+right instruction: it already carries `bimodality`, `bimodality_sigma`,
+`far_index`, `posterior_perplexity`, `at_bracket_boundary`, `PEAK_SEPARATION`
+and a calibrated `FINE_FOCUS_NOISE_SD`. Nothing below needs a new constant.
+
+### 18.1 I had the polarity backwards, and that is why the detector failed
+
+`bimodality` is documented as **an upper bound, not an estimate** -- it is
+`far_max - floor`, where true prominence would subtract the curve's minimum
+*between* the peaks, so it can only read high. The doc states the consequence
+exactly:
+
+> Its complement is what is trustworthy: a small value **proves** there is no
+> separated secondary peak of that size.
+
+My `(B)` gate used it in the **untrustworthy** direction: *collapse where
+bimodal*. An upper bound used as a positive detector fires on everything that
+could possibly be bimodal, which is why it read 45.62% of the plane including
+empty background. That was not a tuning failure, it was a misuse of a
+one-directional statistic, and no threshold would have fixed it.
+
+Section 17 independently concluded the rule must be **"collapse only where
+collapsing buys something"** -- which is a *veto*, and a veto needs precisely the
+direction this statistic can prove. The two findings meet.
+
+### 18.2 The rule
+
+Collapse the selection radius at pixel `i` only where all three hold:
+
+1. **`hi[i] - lo[i] > tau`** -- the existing geometric test. Necessary, not
+   sufficient: it locates candidate boundaries and is what over-fires today.
+2. **`bimodality_sigma(i)` does not prove unimodality** -- the new veto, in the
+   statistic's trustworthy direction. Where it is small there is provably no
+   separated second layer, so there is nothing for a small window to separate
+   and collapsing only costs the estimator.
+3. **not `at_bracket_boundary(i)`** -- no frame in focus, so no depth to resolve.
+
+Predicted behaviour on the three subjects that currently break the rule:
+
+| subject | posterior | rule 2 | outcome |
+|---|---|---|---|
+| `couch-fibers-cpl` | one fibre, one depth per pixel: single peak | proves unimodal | **vetoed, radius stays 13, texture preserved** |
+| dead backdrop | response is noise; the difference is noise-sized in sigma units | proves unimodal | **vetoed, no level shift** |
+| the fern | flat, no sharp frame anywhere | rule 3 | **vetoed** |
+| a true rim | two genuinely separated layers | does not prove unimodal | **collapse allowed** |
+
+Dense texture is the interesting case and the one that makes this more than a
+patch. A tangle of fibres varies in depth *between* pixels, so the guide range
+test fires, but **within** a pixel's own through-focus curve there is one depth
+and one peak. The guide range cannot tell that from an occlusion; the posterior
+shape can. That is the discrimination sections 16 and 17 both concluded was
+missing.
+
+### 18.3 Wiring, and the one real obstacle
+
+The two-pass structure ORCH mandated largely exists: `merge_cmd.rs:2915` already
+builds `ThroughFocus::new(&p1.stats)` and there is already a gather pass, both
+gated on `opts.stats`.
+
+**The obstacle is ordering, and it is the whole cost of this change.** Today:
+
+    guide pass -> SelectionScale -> pass 1 -> ThroughFocus(p1.stats)
+
+but the rule needs the posterior *before* the scale exists:
+
+    guide pass -> ThroughFocus(guide stats) -> SelectionScale -> pass 1
+
+So `guide_winner_field` has to fold a `ThroughFocus` and return it, alongside the
+winner field it already returns. It folds `FocusStats` per chunk and absorbs
+across chunks, and `ThroughFocus` already has `absorb`, so the shape matches; the
+work is threading the fine and regularised fields into the fold and widening the
+return. This is bounded per-pixel statistics, not retained frames, so the
+never-materialise discipline holds.
+
+Note the guide is deliberately NARROW (`GUIDE_RADIUS = 4`), which is the right
+scale here for the same reason the existing detector uses the fine field: a 13 px
+window smears the foreground and background modes into one peak, destroying the
+signal being tested for.
+
+### 18.4 A warning in the source that binds this
+
+`bimodality_sigma`'s doc records that a **global** mean against a
+frame-permutation null cannot detect occlusion -- permutation manufactures
+multi-peakedness and saturates the comparison, so the ratio is pinned below 1
+whatever the scene does. M18 concluded "no bimodality enrichment" from a 0.86x
+global ratio where M21, conditioned on an independent depth-step map, measures
+**4.38x** against a null of 1.01x.
+
+So this must never be reported as a plane-wide fraction. It is binned on an
+independent depth-step map or it is not reported. That is also the error that
+made my `(B)` per-band table look monotone and beautiful while the overlay showed
+it firing on empty background.
