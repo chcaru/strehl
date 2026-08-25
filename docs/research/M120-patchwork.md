@@ -2,10 +2,11 @@
 
 > **READING ORDER.** Part I (§1–§12) is the original existence/invariant investigation.
 > Part II (§13–§21) is the mechanism investigation, **priced at gate 0** — which ORCH
-> later corrected as a labelled negative control. **Part III (§22–§28) is the current,
-> load-bearing result**, re-measured at the shipped gate 4 with an exact replication
-> (NCC 1.000000). Part II's verdicts survive the correction; its magnitudes do not. If
-> you are citing one number from this document, cite §22 and §27.
+> later corrected as a labelled negative control. Part III (§22–§28) re-measured it at
+> the shipped gate 4 with an exact replication (NCC 1.000000). **Part IV (§29–§33) is the
+> current headline: the election itself, measured.** If you are citing one number from
+> this document, cite §31 (ρ = −0.7165 between manufactured structure and admission
+> breadth) or §29 (patch size = 0.507 × focus-window diameter, R² = 0.974).
 
 **ORCH's fact 1604 is wrong in two of its three limbs. But fact 1603 is right, and it is
 worse than ORCH thought: the patchwork is in the SHIPPED default render, not only in the
@@ -998,3 +999,159 @@ edge with a soft kernel. It acts on **Defect A**, which gate 4 has already large
   No experiment isolated an occlusion edge and showed the merge disagreeing across it.
   That is the obvious next milestone and it is not done here.
 - **No render A/B.** `STREHL_SOFT_GATE` is M116's; §27's prediction is untested by me.
+
+---
+
+# Part IV — the election, measured (M120d)
+
+ORCH: *"I have measured the level drift and I have measured that correcting it removes
+the blotches. I have not measured the election."* This part measures it, on `bee-3-cpl`,
+without `--index-map`: the cached pipeline field `bee3-leg-field.npy` (299,744,1144) **is**
+the post-regulariser field the shipped merge elects on, and its argmax reproduces the
+cached `bee3-leg-argbest` at 100.00% (§14). The election is already observable per-pixel.
+
+**Every gate is stated. Every `.tif` read with `tifffile` + a `dtype` assert.**
+
+## 29. T2 — ORCH's kill test. The link holds. (MEASURED)
+
+> *"Its patch size should scale with the focus-measure window radius. If patch size does
+> not move when the window radius moves, my chain has a broken link."*
+
+Sweep `WINDOW_RADIUS`, regulariser OFF, area-weighted equivalent diameter of
+constant-index patches over 347,676 background px. **A pure argmax elects one frame, so
+this arm is gate 0 by construction.**
+
+| window radius r | window D = 2r+1 | #patches | patch eq. diam |
+| ---: | ---: | ---: | ---: |
+| 0 | 1×1 | 220,342 | **3.00 px** |
+| 2 | 5×5 | 80,871 | 6.78 px |
+| 4 | 9×9 | 50,186 | 9.85 px |
+| 8 | 17×17 | 32,820 | 15.23 px |
+| **13 (shipped)** | **27×27** | 29,186 | **20.57 px** |
+| 20 | 41×41 | 30,049 | 26.30 px |
+| 28 | 57×57 | 34,404 | 31.82 px |
+
+**Fit: `eq_diam = 0.507·D + 4.84`, R² = 0.9738, p = 3.8e-05, monotone throughout.**
+Pre-registered rule was *confirm if slope > 0.5 and R² > 0.8 and monotone*.
+
+**Your chain's link is intact. (MEASURED)** Patch size is set by the focus-measure window
+at a ratio of **0.76 of the window diameter** at the shipped radius, and it tracks the
+window across a 57× change in window area. Turning the window off collapses patches to
+**3.0 px** — pixel-scale salt-and-pepper, exactly as the noise-argmax account predicts.
+
+This also independently re-confirms §14: the *regulariser* is not what sets patch size —
+the focus-measure box filter is, and it is the larger operator (27×27 vs 17×17).
+
+## 30. T1 — regions do inherit their elected frame's level. (MEASURED)
+
+This is the link ORCH flagged as unmeasured. It took two self-refusals to measure honestly.
+
+**Refusal 1 (§23).** Validation gate failed: gate-4 `n_eff` 57.9 against a reference of
+166.8. Diagnosis benign — 166.8 was measured over the registered ROI, 57.9 over the whole
+background mask. Re-checked on the ROI: **166.8, exact.** Reported nothing from that run.
+
+**Refusal 2 (§24).** Ran, but the **null was dirty**: shift-null ρ = +0.2218 against a
+pre-registered ceiling of 0.10. A shift-null cannot work when both fields carry a
+frame-wide smooth ramp. The tell was independent: that run implied a **23.7%** level swing,
+~3× the 3.2–8.4% inter-frame drift ORCH measured directly. It was fitting scene structure.
+**Not reported as a number.**
+
+**The measurement.** Per window, plane-detrend both merged luma and effective elected index
+(at gate 4 the merge averages many frames, so the effective index is the
+admission-weighted mean index — the correct generalisation of "which frame did this come
+from"), then Spearman, median over 40 background windows.
+
+| arm | median ρ | \|ρ\|>0.3 | NULL median ρ |
+| --- | ---: | ---: | ---: |
+| **positive control** (5% p-p ramp imposed *through the real election*) | **+0.5202** | 31/40 | −0.0236 |
+| **gate 0 (single winner)** | **−0.6913** | **38/40** | **−0.0237** |
+| **gate 4 (SHIPPED)** | **−0.8206** | 37/40 | −0.0336 |
+
+**CHAIN CONFIRMED against a pre-registered rule of \|ρ\|>0.30 with null <0.10.** The
+instrument has both controls: a plant it recovers and a null it reads as zero.
+
+**Background luminance in the shipped render is a function of which frame the election
+picked. (MEASURED)** That is the middle link, and it closes the chain ORCH assembled:
+drift is real and smooth in frame index (ORCH) → the election partitions smooth background
+into window-sized patches (§29) → each patch's level tracks its elected frame (§30) →
+correcting levels removes the blotches (ORCH/M116).
+
+**One sub-prediction of mine failed:** I predicted the luma–index link would be *weaker*
+where admission is broad (a wide average should wash it out). ρ(\|ρ\|, `n_eff`) = −0.122,
+p = 0.45 — **null**. The link is about as strong at gate 4 as gate 0. Reported as failed.
+
+## 31. T3 — the unifying result, and it was found by accident (MEASURED)
+
+The §23 refusal exposed something worth more than the test it aborted: **admission breadth
+is wildly non-uniform.** Gate-4 `n_eff` over background: **median 27 frames, ROI median
+193, p1–p99 spanning 1–299.** The shipped merge is *not* "an average of 167 frames"
+everywhere. Across much of the background it is close to a **single-winner election** — the
+regime that manufactures structure.
+
+That is a prediction, and it was pre-registered before running: manufactured structure
+should be worst where admission is narrowest.
+
+| test (40 background windows, shipped gate 4) | ρ | p |
+| --- | ---: | ---: |
+| **R vs `n_eff`** | **−0.7165** | **2.0e-07** |
+| R vs distance-to-silhouette (§25) | −0.5896 | 6.3e-05 |
+| partial: R vs `n_eff`, controlling distance | **−0.6213** | — |
+| partial: R vs distance, controlling `n_eff` | −0.4204 | — |
+| `n_eff` vs distance-to-silhouette | +0.4592 | 0.0029 |
+
+| | R (manufactured structure) |
+| --- | ---: |
+| narrow-admission windows (`n_eff` ≤ 72) | **2.714** |
+| broad-admission windows (`n_eff` > 72) | **1.222** |
+
+**This is the strongest single number in M120, and it subsumes the distance result.**
+`n_eff` beats distance in the partials, and `n_eff` correlates with distance (+0.46), so
+the mediation runs: *near a silhouette, frames genuinely disagree about occlusion → fewer
+frames tie → admission narrows → the merge falls back toward a single winner → that
+winner's level is imprinted.* Distance was a proxy; **admission breadth is the mechanism
+variable.**
+
+It also explains the shape of everything else measured tonight. Gate 4 halves the defect
+because it widens admission (§26). It helps *less* near silhouettes because there the
+frames do not tie and no gate setting can make them. The residual concentrates where
+`n_eff` is small. And photometric correction works because it removes the level
+differences that narrow admission imprints — which predicts, falsifiably, that
+**`--photometric` should help most in low-`n_eff` windows and least in high-`n_eff` ones.**
+
+## 32. Revised verdict after Part IV
+
+| claim | verdict |
+| --- | --- |
+| **ORCH: patch size scales with the focus-measure window radius** | **CONFIRMED** (§29): slope 0.507, R² 0.974, monotone over r = 0…28. |
+| **ORCH: the election partitions smooth background into patches** | **CONFIRMED** (§29): 29,186 constant-index patches of 20.6 px in pure background at the shipped window. |
+| **ORCH: regions inherit their elected frame's level** | **CONFIRMED** (§30): median ρ −0.69 (gate 0) / −0.82 (gate 4), null −0.02, plant recovered. |
+| ORCH: the spatial **regulariser** is what dominates | **still REFUTED** (§22): −2.3% / −5.6% at the shipped gate. §29 now names the responsible operator: the **27×27 focus-measure box**, not the 17×17 regulariser. |
+| ORCH: the data term is at the noise floor | **still REFUTED** (§15): response 561.9σ. It is the *margin* that vanishes, not the response — which is what makes the argmax noise-decided while the response stays strong. |
+| M120 (me): the luma–index link weakens where admission is broad | **REFUTED — my error** (§30): ρ −0.12, p = 0.45. |
+
+**The mechanism, restated so it is one sentence (ARGUED from the above MEASURED parts):**
+in smooth background the through-focus *margin* between frames falls below the noise
+floor while the *response* stays strong; the argmax is then decided by noise, the 27×27
+focus-measure box spreads each noise decision into a ~20 px patch, admission narrows to a
+near-single winner wherever frames fail to tie, and each patch inherits its elected
+frame's level from a smooth inter-frame drift ramp — producing flat polygons with visible
+steps between them.
+
+**The §27 prediction for M116's soft gate is moot** — ORCH reports the soft gate is now
+rejected twice independently, including by a blur control that shows it cutting a textured
+control window by 30.5% on `bee-3-cpl`. I did not run it and make no claim about it.
+
+## 33. What Part IV could not verify
+
+- **One stack.** All of §29–§31 is `bee-3-cpl`, inside the M87 leg box (~10% of frame). The
+  `--index-map` route is what generalises this; commands handed to ORCH in the report-back.
+- **T2 measures patch size against window radius in a re-implementation**, not by rebuilding
+  the crate with a different `WINDOW_RADIUS`. The re-implementation reproduces the shipped
+  index field at 96.75% (§14) and the shipped admission exactly (`n_eff` 166.8, §24), but a
+  crate rebuild would be stronger and I was not permitted to touch `crates/`.
+- **T1's gate-4 null is clean at the median (−0.034) but not tight** — 17/40 windows exceed
+  \|ρ\|>0.3 under the null pairing, against 5/40 at gate 0. The median is the pre-registered
+  statistic and it passes, but the gate-4 figure is noisier than the gate-0 one.
+- **`n_eff` is computed from the cached field**, validated against the pipeline on the ROI
+  only (166.8, exact). It is not a dump from a live run.
+- **The photometric prediction in §31 is untested by me.** M122 owns it.
