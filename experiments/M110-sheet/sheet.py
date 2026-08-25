@@ -80,32 +80,60 @@ BINARY = REPO / ".cargo-target-m110" / "release" / "strehl.exe"
 # its owning milestone reports, then set `enabled: True`. Nothing else changes.
 #
 # `enabled: False` exists because a guessed flag is worse than a missing arm.
-# `OpticalProfile` currently has zero consumers outside its own file, so
-# `STREHL_FIX_CA=1` sets a variable no render path reads: an invented CA arm
-# would render bytes identical to the default and the sheet would report
-# "the correction does not help". A silent no-op is a false negative wearing
-# the costume of a result, so pending arms are skipped loudly instead.
+# When `OpticalProfile` had zero consumers, `STREHL_FIX_CA=1` set a variable no
+# render path read: an invented CA arm would have rendered bytes identical to
+# the default and the sheet would have reported "the correction does not help".
+# A silent no-op is a false negative wearing the costume of a result, so pending
+# arms are skipped loudly instead.
+
+# The CA key, copied from the source of truth
+# (crates/strehl-core/src/optics.rs::A7C2_FE100GM_2XTC_X4CPL.key) rather than
+# from a relayed message. It is CASE-SENSITIVE and a near-miss is an ERROR, not
+# a silent no-op -- but the error arrives per frame from
+# `warp_frame_in_place`, AFTER a full decode (~53 s on bee-3-cpl), so in a batch
+# a typo reads as a slow arm rather than a config error. `assert_ca_key()`
+# below fails in milliseconds instead.
+CA_KEY = "a7c2-fe100gm-2xtc-x4cpl"
+
 ARMS: list[dict] = [
     {"name": "default", "align": [], "merge": [], "env": {}, "enabled": True,
-     "note": "shipped default (catmull-rom)"},
+     "note": "shipped default (catmull-rom), CA off"},
     {"name": "lanczos3", "align": ["--resampler", "lanczos3"], "merge": [], "env": {},
      "enabled": True,
      "note": "M95 kernel, landed switchable at 843f6e1. Set on the ALIGN stage because "
              "`strehl stack` has no --resampler flag at all: a merge's kernel comes "
              "entirely from whichever sidecar it reads."},
-    {"name": "ca", "align": [], "merge": [], "env": {}, "enabled": False,
-     "note": "PENDING M107's exact argv/env -- do not guess. Note eps_b is None: the fit "
-             "is red-only while real fringes are red/cyan pairs, so expect a partial fix "
-             "and do not let the sheet imply otherwise."},
-    {"name": "ca+lanczos3", "align": ["--resampler", "lanczos3"], "merge": [], "env": {},
-     "enabled": False,
-     "note": "PENDING M107. The actual candidate configuration and the only arm that "
-             "answers the owner's question: sharpening makes fringes more conspicuous, "
-             "so neither CA nor lanczos3 alone settles it."},
+    {"name": "ca", "align": [], "merge": [], "env": {"STREHL_FIX_CA": CA_KEY},
+     "enabled": True,
+     "note": "M107 lateral-CA, landed 4bc9abf, wired in align_cmd.rs::warp_frame_in_place. "
+             "RADIAL TERM ONLY -- the fitted translation is recorded but zeroed. "
+             "eps_b is None: blue was never fitted, every fitted ROI was red, so this is a "
+             "RED-ONLY correction applied to red/cyan fringe pairs and at most half of each "
+             "fringe can move. Support is r <= 0.788, declared but UNENFORCED, so the "
+             "corner is a 1.27x extrapolation of the model's shape, not data.",
+     "env_note": "environment variable, NOT argv; unset/0/off means off"},
+    {"name": "ca+lanczos3", "align": ["--resampler", "lanczos3"], "merge": [],
+     "env": {"STREHL_FIX_CA": CA_KEY}, "enabled": True,
+     "note": "The actual candidate configuration and the only arm that answers the owner's "
+             "question: sharpening makes fringes more conspicuous, so neither CA nor "
+             "lanczos3 alone settles it. Same eps_b/support caveats as `ca`."},
 ]
 
+# CA is NOT in the warp cache key, and deliberately so: `active_profile()` is
+# read at exactly one site, `warp_frame_in_place`, which is not among
+# `solve_map`'s callers, so no CA setting can change the WarpMap. Adding it
+# would force a full re-solve per toggle for a bit-identical map.
+#
+# The consequence is in our favour and worth stating: ONE CA-unaware sidecar is
+# shared by every arm, so the registration is held EXACTLY fixed across the A/B
+# and the only thing that varies is the gather. This is the opposite of the
+# resampler, which the solve genuinely does read -- hence the sidecar assertion
+# in render_arm, which applies to the kernel and not to CA.
+CA_NULL_SHA = "e400a63aa9f6ab1f1957940d7bd9d4965d67e01f6f0e1a0a7abc30d8e7f17112"
+
 CROP = 560          # 1:1 window, in output pixels
-ROLES = ["detail", "silhouette", "specular", "clipped", "smooth", "corner"]
+ROLES = ["detail", "silhouette", "specular", "clipped", "smooth", "corner",
+         "fringe", "neutral"]
 FULL = 65535        # 16-bit sRGB TIFF full scale
 HOT = 0.99 * FULL   # "genuinely blown", not merely bright
 
@@ -188,6 +216,30 @@ def pick(cfg: dict, names: list[str] | None) -> list[dict]:
 # --------------------------------------------------------------------------
 # render
 # --------------------------------------------------------------------------
+def assert_ca_key() -> None:
+    """Fail in milliseconds on a bad CA key instead of 53 s per frame.
+
+    `active_profile()` is resolved per frame inside `warp_frame_in_place`, not
+    at startup, so a mistyped key exits 1 only AFTER a full decode. In a batch
+    that reads as a slow arm, not a config error.
+
+    The key is checked against the Rust source rather than against this file's
+    own constant, which would only prove the constant equals itself.
+    """
+    src = REPO / "crates" / "strehl-core" / "src" / "optics.rs"
+    text = src.read_text(encoding="utf-8", errors="replace")
+    needle = f'key: "{CA_KEY}"'
+    if needle not in text:
+        sys.exit(f"CA key {CA_KEY!r} does not appear as a `key:` in {src}.\n"
+                 f"The key is CASE-SENSITIVE and a near-miss is an error, not a "
+                 f"no-op. Copy it from the OpticalProfile record.")
+    for arm in ARMS:
+        got = arm["env"].get("STREHL_FIX_CA")
+        if got is not None and got != CA_KEY:
+            sys.exit(f"arm {arm['name']!r} sets STREHL_FIX_CA={got!r}, "
+                     f"expected {CA_KEY!r}")
+
+
 def arm_paths(subject: str, arm: str) -> tuple[Path, Path]:
     d = OUT_ROOT / subject
     d.mkdir(parents=True, exist_ok=True)
@@ -325,9 +377,31 @@ def cmd_recrop(args) -> int:
         print(f"\n=== recropping {sub['name']} from {tif.name} ===")
         raw = load_raw(tif)
         sub["shape"] = [int(raw.shape[1]), int(raw.shape[0])]
-        sub["crops"] = scout_crops(raw)
-        sub["scouted_from"] = {"tif": str(tif), "sha256": sha256_file(tif),
-                               "limit": None, "recrop": True}
+        fresh = scout_crops(raw)
+
+        # Rule 24 is "choose by geometry, ONCE". A crop set that silently moves
+        # when the role list grows destroys every before/after already taken on
+        # it, so adding a role must ADD a role and nothing else. Existing roles
+        # keep their frozen coordinates and their original `why`; only genuinely
+        # new roles are appended. `--refreeze` is the explicit opt-out.
+        old = {c["role"]: c for c in sub.get("crops", [])}
+        if args.refreeze or not old:
+            sub["crops"] = fresh
+            sub["scouted_from"] = {"tif": str(tif), "sha256": sha256_file(tif),
+                                   "limit": None, "recrop": True, "refroze_all": True}
+        else:
+            added = [c for c in fresh if c["role"] not in old]
+            sub["crops"] = list(sub["crops"]) + added
+            sub.setdefault("scouted_from", {})["added_roles"] = {
+                "roles": [c["role"] for c in added],
+                "tif": str(tif), "sha256": sha256_file(tif),
+                "kept_frozen": sorted(old),
+            }
+            for c in sub["crops"]:
+                mark = "NEW  " if c["role"] in {a["role"] for a in added} else "frozen"
+                print(f"  [{mark}] {c['role']:<11} @ ({c['x']},{c['y']})")
+            save_subjects(cfg)
+            continue
         for c in sub["crops"]:
             print(f"  {c['role']:<11} @ ({c['x']},{c['y']})  {c['why']}")
         save_subjects(cfg)
@@ -344,6 +418,9 @@ def scout_crops(raw: np.ndarray) -> list[dict]:
     xs = list(range(0, w - CROP, step))
 
     grad, spread, hi, bright, blown = {}, {}, {}, {}, {}
+    chroma, rnorm = {}, {}
+    cy, cx = h / 2.0, w / 2.0
+    rmax = float(np.hypot(cy, cx))
     for y in ys:
         for x in xs:
             t = g[y:y + CROP:3, x:x + CROP:3]
@@ -353,6 +430,11 @@ def scout_crops(raw: np.ndarray) -> list[dict]:
             hi[(y, x)] = float(np.percentile(t, 99.9))
             bright[(y, x)] = float(t.mean())
             blown[(y, x)] = neutrality(raw[y:y + CROP:3, x:x + CROP:3])[0]
+            tile = img[y:y + CROP:3, x:x + CROP:3].astype(np.float32)
+            luma = (0.2126 * tile[:, :, 0] + 0.7152 * tile[:, :, 1]
+                    + 0.0722 * tile[:, :, 2])
+            chroma[(y, x)] = float(np.abs(tile[:, :, 0] - luma).mean())
+            rnorm[(y, x)] = float(np.hypot(y + CROP / 2 - cy, x + CROP / 2 - cx) / rmax)
 
     out = []
     used: list[tuple[int, int]] = []
@@ -398,6 +480,30 @@ def scout_crops(raw: np.ndarray) -> list[dict]:
     best = max(corners, key=lambda c: grad.get((c[0] // step * step, c[1] // step * step), 0.0))
     out.append({"role": "corner", "x": int(best[1]), "y": int(best[0]),
                 "why": f"geometric corner, {inset}px inset; radial max for lateral CA"})
+
+    # Lateral CA is RADIAL: the correction is eps_r * r, identically zero at the
+    # optical centre. A high-contrast edge in the middle of the frame therefore
+    # cannot show the fix working no matter how sharp it is. So the fringe site
+    # is the strongest edge among tiles that are actually far enough out to
+    # carry a fringe -- geometry first, contrast second, and never appearance.
+    far_out = [c for c in grad if rnorm[c] >= 0.55]
+    take("fringe", sorted(far_out or list(grad), key=grad.get, reverse=True),
+         "max |gradient| among tiles at radius >= 0.55; CA is radial so a centre "
+         "edge cannot show the correction")
+
+    # Where M107's COST lands, and the discriminator for this sheet. The
+    # correction removed 54% of the top |R-Y| decile but changed decile 1 --
+    # near-neutral pixels -- by +583%, with 44.7% of them flipping chroma sign.
+    # A percentage that large on a near-zero baseline can be invisible or a new
+    # artefact and the percentage alone cannot tell you which, so we need a tile
+    # that is near-neutral AND textured: flat neutral hides injected chroma
+    # against nothing, whereas texture gives the eye a reference. Selected on
+    # minimum |R-Y| among tiles with above-median gradient.
+    tex_floor = float(np.median(list(grad.values())))
+    textured = [c for c in chroma if grad[c] >= tex_floor]
+    take("neutral", sorted(textured or list(chroma), key=chroma.get),
+         "min mean |R-Y| among tiles with above-median gradient: near-neutral but "
+         "textured, where M107's +583% decile-1 chroma injection would land")
     return out
 
 
@@ -410,6 +516,9 @@ def cmd_render(args) -> int:
     if want and not arms:
         print(f"no arm matches {want}; known: {[a['name'] for a in ARMS]}")
         return 2
+    if any(a["env"].get("STREHL_FIX_CA") for a in arms if a.get("enabled", True)):
+        assert_ca_key()
+        print(f"CA key verified against optics.rs: {CA_KEY}")
 
     # Merge into any existing manifest rather than replacing it, so re-running
     # ONE subject does not silently delete the others' entries and leave
@@ -781,6 +890,11 @@ def main() -> int:
                                 "arms is recorded as comparison_guarded=false: "
                                 "with no second arm to disagree, the fact-1446 "
                                 "byte-distinctness check is vacuous.")
+        if nm == "recrop":
+            p.add_argument("--refreeze", action="store_true",
+                           help="re-choose EVERY role, moving frozen crops. Off by "
+                                "default: adding a role must add a role and nothing "
+                                "else, or every before/after already taken is void.")
     args = ap.parse_args()
 
     if args.cmd == "recrop":

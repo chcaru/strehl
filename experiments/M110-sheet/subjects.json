@@ -49,6 +49,18 @@
           "x": 48,
           "y": 4080,
           "why": "geometric corner, 48px inset; radial max for lateral CA"
+        },
+        {
+          "role": "fringe",
+          "x": 1400,
+          "y": 0,
+          "why": "max |gradient| among tiles at radius >= 0.55; CA is radial so a centre edge cannot show the correction"
+        },
+        {
+          "role": "neutral",
+          "x": 3920,
+          "y": 3080,
+          "why": "min mean |R-Y| among tiles with above-median gradient: near-neutral but textured, where M107's +583% decile-1 chroma injection would land"
         }
       ],
       "shape": [
@@ -59,7 +71,23 @@
         "tif": "C:\\dev\\strehl-out\\M110-sheet\\bee-3-cpl\\default.tif",
         "sha256": "e400a63aa9f6ab1f1957940d7bd9d4965d67e01f6f0e1a0a7abc30d8e7f17112",
         "limit": null,
-        "recrop": true
+        "recrop": true,
+        "added_roles": {
+          "roles": [
+            "fringe",
+            "neutral"
+          ],
+          "tif": "C:\\dev\\strehl-out\\M110-sheet\\bee-3-cpl\\default.tif",
+          "sha256": "e400a63aa9f6ab1f1957940d7bd9d4965d67e01f6f0e1a0a7abc30d8e7f17112",
+          "kept_frozen": [
+            "clipped",
+            "corner",
+            "detail",
+            "silhouette",
+            "smooth",
+            "specular"
+          ]
+        }
       }
     },
     {
@@ -103,6 +131,18 @@
           "x": 6424,
           "y": 4080,
           "why": "geometric corner, 48px inset; radial max for lateral CA"
+        },
+        {
+          "role": "fringe",
+          "x": 5040,
+          "y": 280,
+          "why": "max |gradient| among tiles at radius >= 0.55; CA is radial so a centre edge cannot show the correction"
+        },
+        {
+          "role": "neutral",
+          "x": 4200,
+          "y": 1400,
+          "why": "min mean |R-Y| among tiles with above-median gradient: near-neutral but textured, where M107's +583% decile-1 chroma injection would land"
         }
       ],
       "shape": [
@@ -113,7 +153,23 @@
         "tif": "C:\\dev\\strehl-out\\M110-sheet\\wrapped-text-1\\default.tif",
         "sha256": "6774f008544527457bea1a0318e451639b66a46db28b86149c127fb1a6d65180",
         "limit": null,
-        "recrop": true
+        "recrop": true,
+        "added_roles": {
+          "roles": [
+            "fringe",
+            "neutral"
+          ],
+          "tif": "C:\\dev\\strehl-out\\M110-sheet\\wrapped-text-1\\default.tif",
+          "sha256": "6774f008544527457bea1a0318e451639b66a46db28b86149c127fb1a6d65180",
+          "kept_frozen": [
+            "clipped",
+            "corner",
+            "detail",
+            "silhouette",
+            "smooth",
+            "specular"
+          ]
+        }
       }
     },
     {
@@ -157,6 +213,18 @@
           "x": 6432,
           "y": 4080,
           "why": "geometric corner, 48px inset; radial max for lateral CA"
+        },
+        {
+          "role": "fringe",
+          "x": 5600,
+          "y": 1960,
+          "why": "max |gradient| among tiles at radius >= 0.55; CA is radial so a centre edge cannot show the correction"
+        },
+        {
+          "role": "neutral",
+          "x": 3920,
+          "y": 1960,
+          "why": "min mean |R-Y| among tiles with above-median gradient: near-neutral but textured, where M107's +583% decile-1 chroma injection would land"
         }
       ],
       "shape": [
@@ -166,7 +234,23 @@
       "scouted_from": {
         "tif": "C:\\dev\\strehl-out\\M110-sheet\\tweezers-cpl\\default.tif",
         "sha256": "a8c07ccdf4fd9947189b57bd32d03adfec8687d52e8c23176f6acf28cb1ae5c7",
-        "limit": null
+        "limit": null,
+        "added_roles": {
+          "roles": [
+            "fringe",
+            "neutral"
+          ],
+          "tif": "C:\\dev\\strehl-out\\M110-sheet\\tweezers-cpl\\default.tif",
+          "sha256": "a8c07ccdf4fd9947189b57bd32d03adfec8687d52e8c23176f6acf28cb1ae5c7",
+          "kept_frozen": [
+            "clipped",
+            "corner",
+            "detail",
+            "silhouette",
+            "smooth",
+            "specular"
+          ]
+        }
       }
     },
     {
@@ -210,6 +294,18 @@
           "x": 48,
           "y": 48,
           "why": "geometric corner, 48px inset; radial max for lateral CA"
+        },
+        {
+          "role": "fringe",
+          "x": 5600,
+          "y": 280,
+          "why": "max |gradient| among tiles at radius >= 0.55; CA is radial so a centre edge cannot show the correction"
+        },
+        {
+          "role": "neutral",
+          "x": 2520,
+          "y": 1680,
+          "why": "min mean |R-Y| among tiles with above-median gradient: near-neutral but textured, where M107's +583% decile-1 chroma injection would land"
         }
       ],
       "shape": [
@@ -219,7 +315,23 @@
       "scouted_from": {
         "tif": "C:\\dev\\strehl-out\\M110-sheet\\flat-on-ruler-cpl\\default.tif",
         "sha256": "c461c0a635f4d835c5cc5fd5372edf2283130712032c1dd3759d989927827751",
-        "limit": null
+        "limit": null,
+        "added_roles": {
+          "roles": [
+            "fringe",
+            "neutral"
+          ],
+          "tif": "C:\\dev\\strehl-out\\M110-sheet\\flat-on-ruler-cpl\\default.tif",
+          "sha256": "c461c0a635f4d835c5cc5fd5372edf2283130712032c1dd3759d989927827751",
+          "kept_frozen": [
+            "clipped",
+            "corner",
+            "detail",
+            "silhouette",
+            "smooth",
+            "specular"
+          ]
+        }
       }
     }
   ]

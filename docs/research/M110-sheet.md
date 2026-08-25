@@ -901,4 +901,274 @@ Continuing from §11.
     each real counter-example to the control as it is found, so the control grows toward the
     corpus instead of staying where it was written.
 
+## 14. The CA matrix: `off` / `ca` / `lanczos3` / `ca+lanczos3`
+
+### 14.1 What ran
+
+Four arms across four subjects, sixteen renders, one binary, back to back.
+
+- Binary `4925B668D03B7F80`, built at HEAD `80898ba8`, which contains M107's CA wiring
+  `4bc9abf`. **HEAD had already moved to `cfe6ac6` by the time the matrix finished**, so the
+  renders are dated to the build, not to the repository. This is my own P10 finding biting
+  again and it is why every arm carries its own `binary_sha256`.
+- Every subject reported `arms byte-distinct: OK (4 arms)`; `comparison_guarded` true
+  throughout. Matrix exit code 0, read directly and not through a truncated pipeline.
+- Sheets: `C:\dev\strehl-out\M110-sheet\<subject>\SHEET-<subject>-{100,200}.png`, eight crop
+  roles each.
+
+**The switch was verified from source, not from the relay.** `optics.rs:306` carries
+`key: "a7c2-fe100gm-2xtc-x4cpl"`; the arm is refused unless that literal is present in the
+Rust. ORCH's warning that a mistyped key costs a full decode before failing is real —
+`active_profile()` resolves per frame inside `warp_frame_in_place` — so the harness checks the
+key against `optics.rs` first. **Control: a deliberately truncated key failed in 0.22 s
+against the 53.4 s a live typo would have cost**, and the true key passed.
+
+**Both of ORCH's hashes reproduced exactly, on a binary of mine**: `off` gave
+`e400a63aa9f6…` (the declared cross-binary null) and `ca` gave `e9580e8a2a85…`, the latter
+reproduced three separate times.
+
+### 14.2 The headline numbers
+
+`default` -> `ca`, near luma edges (top decile of gradient, ~10% of frame), deciles binned on
+the OFF frame. **Absolute magnitudes are given in 8-bit display levels** (1 level = 257 DN of
+the 16-bit render) because that is the unit that decides whether a percentage is visible.
+
+| subject | decile 10 | decile 10 | decile 1 | decile 1 | keep sign, gated |
+|---|---|---|---|---|---|
+| `bee-3-cpl` | −49.75% | **−13.17 lv** | +555.61% | +4.55 lv | 77.65% |
+| `wrapped-text-1` | −75.71% | **−14.62 lv** | +719.03% | +3.99 lv | 56.10% |
+| `tweezers-cpl` | −74.33% | **−19.93 lv** | +319.31% | +2.97 lv | 72.17% |
+| `flat-on-ruler-cpl` | −78.97% | **−24.51 lv** | +679.80% | +5.33 lv | 46.76% |
+
+I reproduce M107's shape closely on `bee-3-cpl` — its −54.08% top decile against my −49.75%,
+its +583% decile 1 against my +555.61%, its 75.1% sign retention against my 76.11% — from an
+instrument that shares no code with its. **The shape is confirmed. The interpretation does not
+survive.**
+
+### 14.3 The decile-1 "cost" is a binning artefact, and the correction beats an inert null
+
+ORCH asked for the absolute magnitude because "+583% on a near-zero baseline can be either
+invisible or a brand-new artefact, and the percentage alone cannot tell you which". The
+absolute number is **+4.55 levels**, which is emphatically not invisible. Taken alone it would
+convict.
+
+**It should not be taken alone, because decile 1 is selected as the smallest |R−Y| in the OFF
+frame, and any perturbation whatever raises a selected-minimum bin.** So I built the floor:
+replace the correction with **zero-mean Gaussian noise in the red plane, RMS-matched to the
+real red-plane change**, and re-run the identical decomposition. Whatever decile-1 rise an
+inert, meaningless change produces is what the real number has to beat.
+
+| subject | decile 1 real | **inert null** | excess | decile 10 real | inert null | excess |
+|---|---|---|---|---|---|---|
+| `bee-3-cpl` | +4.55 lv | **+6.64 lv** | **−2.09 lv** | −13.17 lv | +0.03 lv | −13.20 lv |
+| `wrapped-text-1` | +3.99 lv | **+7.39 lv** | **−3.40 lv** | −14.62 lv | +0.31 lv | −14.92 lv |
+| `tweezers-cpl` | +2.97 lv | **+8.02 lv** | **−5.05 lv** | −19.93 lv | +0.08 lv | −20.02 lv |
+| `flat-on-ruler-cpl` | +5.33 lv | **+11.59 lv** | **−6.25 lv** | −24.51 lv | +0.34 lv | −24.86 lv |
+
+**On all four subjects the real correction raises decile-1 chroma LESS than an inert
+perturbation of the same size does**, by 2.09 to 6.25 levels. Meanwhile the inert null does
+essentially nothing to decile 10 (+0.03 to +0.34 lv) while the correction removes 13 to 25
+levels. **Decile 1 provides no evidence of chroma injection. Decile 10 is entirely real.**
+
+M107's registered bar W3 and its `RECOLOURED, NOT REMOVED` verdict were measured against no
+floor. It reported the failure rather than burying it, which is the right instinct — but the
+bar it failed was not measuring what it was meant to measure.
+
+### 14.4 The radial decomposition is the actual evidence, and nobody had run it
+
+A chroma decile is confounded. **Radius is not** — it is measured on the geometry, not on the
+quantity whose change is being reported. It is also the physically correct axis: the
+correction is `eps_r * r`, identically zero at the optical centre, so **if the effect is really
+lateral CA its magnitude must grow with field height.** A chroma wash would be flat in `r`.
+
+Change in mean |R−Y|, by normalised field height (`r = 1.0` at the corner):
+
+| `r` | `bee-3-cpl` | `wrapped-text-1` | `flat-on-ruler-cpl` |
+|---|---|---|---|
+| 0.0–0.1 | **+0.11%** | **−1.81%** | **+0.97%** |
+| 0.2–0.3 | −9.95% | −16.37% | +0.15% |
+| 0.4–0.5 | −21.68% | −31.85% | −40.66% |
+| 0.6–0.7 | −28.89% | −45.24% | −51.27% |
+| 0.8–0.9 *(extrapolated)* | −25.78% | −52.33% | −55.15% |
+| 0.9–1.0 *(extrapolated)* | **−26.90%** | **−56.19%** | **−64.48%** |
+
+**Zero at the centre and monotone growth to the corner, on three independent subjects.** That
+is the signature of a genuine lateral-CA correction and it is much stronger evidence of
+correctness than any fringe percentage. It is the single cleanest result in this milestone.
+
+### 14.5 The corner extrapolation behaves, and it is where the win is largest
+
+`support_r_max = Some(0.788)` is declared but not enforced, so beyond it the correction is the
+model's shape rather than data — a 1.27x linear extrapolation. `flat-on-ruler-cpl` reaches the
+corner, and out there the correction **keeps improving monotonically to −64.48%**. There is no
+blow-up, no reversal, and no overshoot signature; an over-extrapolated `eps_r` would eventually
+drive |R−Y| back up as red passed through register, and it does not. By eye at x5 the corner
+is the most improved region in the entire matrix.
+
+**This is an argued limit, not a measured one:** the extrapolation is demonstrably not
+harmful and is clearly beneficial, but "much better than nothing" is consistent with a
+coefficient 20% off. The extrapolation is **supported by outcome, still unvalidated as to
+magnitude.**
+
+### 14.6 Two defects in the shared control design
+
+**The `|B−Y|` control is contaminated by construction.** It looks like a control for a
+red-only correction, but
+
+    B − Y = 0.9278·B − 0.2126·R − 0.7152·G
+
+carries an explicit `−0.2126·R` term, so it leaks 21% of the red change even with blue
+untouched — and the leak is proportional to the red change, which is to say it is largest
+exactly when the control matters most. On `bee-3-cpl` it reads −1.87% and looks reassuring; on
+the three high-contrast subjects it reads **−12.27% to −13.42%**, which read naively would
+convict the correction of a general chroma wash. **`B − G` has no `R` term and cannot leak.**
+
+**The sign-retention bar asks the wrong population.** Among pixels whose chroma is a fraction
+of a display level the sign of `R−Y` is decided by rounding, so a bar computed over all pixels
+is mostly counting coin flips — and worse, **driving a fringe through zero to neutral is
+precisely a sign change**, so a correction is penalised for succeeding. Gated to pixels with
+|R−Y| ≥ 1 display level the numbers barely move (76.11 -> 77.65 on `bee`), which tells us the
+retention figure is not a rounding artefact — but the bar remains unsound in principle and
+should not gate a ship decision in either direction.
+
+### 14.7 `eps_b is None` has a larger consequence than a partial fix
+
+Blue was never fitted, so at most half of a red/cyan pair can move. That is stated. What is
+**not** stated anywhere, and is visible at x5, is *what the residual looks like*: the
+correction **converts a two-sided red/cyan pair into a one-sided red-only residual.** The cyan
+member of each pair is largely eliminated and the red member remains. Colour separation
+genuinely improves — but residual chroma is now **biased toward red** rather than balanced.
+That is an improvement and a change in the character of the artefact at the same time.
+
+### 14.8 The correction is not confined to the red plane in the output
+
+`eps_b` is `None` and green is the reference, so neither plane is resampled differently.
+**Both change anyway.**
+
+| subject | pixels changed R / G / B | mean \|ΔG\| | max \|ΔG\| |
+|---|---|---|---|
+| `bee-3-cpl` | 98.66% / **94.41%** / **67.67%** | 50.0 DN | 9418 DN (**36.6 lv**) |
+| `wrapped-text-1` | 98.93% / **98.71%** / **86.65%** | 92.2 DN | 3043 DN (11.8 lv) |
+
+And the coupling is not noise. **`|ΔG| / |ΔR|` is constant at 0.087–0.110 across the entire
+radial range on both subjects** — green tracks red in fixed proportion, at about a tenth of
+its magnitude. An election perturbation would be flat in `r`; this is proportional.
+
+So `STREHL_FIX_CA` is **not a pure red-plane operation on the output**, and `eps_b = None`
+does not mean "blue is untouched in what ships". I have measured the footprint but **not
+identified the mechanism** — frame election responding to a changed sharpness measure, and
+chroma-guided demosaic coupling, are both consistent with what I see and I have not separated
+them. It also qualifies ORCH's framing that "the only thing that varies is the gather": the
+`WarpMap` is indeed held exactly fixed, but the rendered green and blue are not.
+
+### 14.9 By eye, at x5, on the unamplified pixels
+
+- **Fringe sites — clearly better.** Every spicule in `bee-3-cpl` carries a paired red/cyan
+  halo in `default`. In `ca` the cyan members are largely gone. The image reads cleaner and
+  more natural. It does **not** look odd.
+- **Near-neutral textured sites — better, not worse.** At the site chosen specifically as
+  where M107's +583% cost should land, `default` shows magenta mottling along the wing veins
+  and `ca` is visibly flatter and more neutral. **The predicted cost did not appear where it
+  was predicted.** This is the third independent corroboration of §14.3.
+- **Corner — the largest visible win in the matrix**, and it is in the extrapolated zone.
+- **`ca+lanczos3` vs `lanczos3` is almost identical to the catmull-rom pair** (decile 10
+  −50.36% against −49.75%; radial profile unchanged within 0.5 pp). **CA and the kernel are
+  separable**, and CA is very slightly larger under the sharper kernel — consistent with
+  sharpening making fringes more conspicuous and so leaving more to remove.
+
+**Verdict: better, not merely different — but for different and stronger reasons than the
+ones on offer.** The evidence is the radial monotonicity and the inert-null floor, not the
+fringe percentage. I would ship it on this evidence.
+
+### 14.10 What I could not verify
+
+- **The mechanism of the green/blue coupling** (§14.8). Measured, not explained.
+- **Whether `eps_r` is the right magnitude beyond `r = 0.788`.** Outcome supports it; nothing
+  here measures it.
+- **Whether the red-biased residual (§14.7) matters to the owner.** It is a change in the
+  character of the artefact and I can only report that it looks better to me.
+- **`tweezers-cpl` radial profile** — filtered out of my captured output by a pattern that
+  matched `0.0-0.1` against a line printing `0.00-0.10`. Three subjects carry the claim.
+- **No subject isolates CA from election.** Since CA perturbs green and blue, no arm in this
+  matrix is a pure red-plane A/B.
+
+## 15. For ORCH — further facts and disciplines
+
+**Facts**
+
+38. **MEASURED: M107's decile-1 "cost" does not survive an inert null.** Binning on the
+    measured quantity makes a selected-minimum bin rise under *any* perturbation. Against a
+    zero-mean, RMS-matched noise null the real correction raises decile-1 chroma **less** than
+    meaningless noise does, on all four subjects: excess **−2.09, −3.40, −5.05, −6.25 8-bit
+    levels**. The inert null moves decile 10 by only +0.03 to +0.34 lv against the
+    correction's −13.17 to −24.51 lv. **Decile 1 is no evidence of injection; decile 10 is
+    entirely real.** Bar W3 and `RECOLOURED, NOT REMOVED` were measured against no floor.
+39. **MEASURED: the change in |R−Y| is zero at the optical centre and monotone in field
+    height** — `bee-3-cpl` +0.11% -> −26.90%, `wrapped-text-1` −1.81% -> −56.19%,
+    `flat-on-ruler-cpl` +0.97% -> −64.48%, centre to corner. This is the signature of a
+    genuine lateral-CA correction, which a chroma wash cannot produce, and it is far stronger
+    evidence than any fringe statistic. **Radius is unconfounded because it is measured on the
+    geometry, not on the quantity whose change is reported.**
+40. **MEASURED: the unenforced extrapolation beyond `support_r_max = 0.788` does not
+    misbehave.** On the subject that reaches the corner the correction keeps improving to
+    **−64.48%** with no reversal or overshoot signature, and by eye the corner is the most
+    improved region in the matrix. **ARGUED:** this shows the extrapolation is not harmful,
+    not that `eps_r` is correct out there; "much better than nothing" is consistent with a
+    coefficient 20% off.
+41. **MEASURED: the `|B−Y|` control leaks 21% of the red change by construction.**
+    `B − Y = 0.9278·B − 0.2126·R − 0.7152·G` carries an explicit `R` term. It reads −1.87% on
+    `bee-3-cpl` but **−12.27% to −13.42%** on the three high-contrast subjects, where read
+    naively it would convict a red-only correction of a general chroma wash. **`B − G` has no
+    `R` term**; it reads +1.15% to +6.52%.
+42. **MEASURED: `STREHL_FIX_CA` changes green and blue, not just red.** Neither is resampled
+    differently (`eps_b` is `None`, green is the reference), yet **94.4% of green pixels and
+    67.7% of blue pixels change on `bee-3-cpl`** (98.7% / 86.7% on `wrapped-text-1`), with
+    max |ΔG| of **9418 DN = 36.6 display levels**. `|ΔG|/|ΔR|` is **constant at 0.087–0.110
+    across the whole radial range** on both subjects, so the coupling is proportional, not
+    noise. **Mechanism not identified** — election response and demosaic coupling are both
+    consistent. `eps_b = None` does not mean blue is untouched in what ships.
+43. **MEASURED: CA and the resampler are separable.** `lanczos3` -> `ca+lanczos3` reproduces
+    `default` -> `ca` within 0.5 pp on every decile and across the radial profile (decile 10
+    −50.36% against −49.75%). CA is very slightly larger under the sharper kernel.
+44. **MEASURED: both of M107's declared hashes reproduce on an independent binary.** `off` ->
+    `e400a63aa9f6…`, `ca` -> `e9580e8a2a85…`, the latter three times. A key-validity guard
+    reading `optics.rs` fails a truncated key in **0.22 s** against the **53.4 s** a live typo
+    costs, because `active_profile()` resolves per frame rather than at startup.
+45. **MEASURED: the correction converts a two-sided red/cyan pair into a one-sided red
+    residual.** At x5 the cyan member of each pair is largely eliminated and the red member
+    remains. Colour separation improves; residual chroma becomes **biased toward red** rather
+    than balanced. This is the visible consequence of `eps_b is None` and it is a change in
+    the artefact's character as well as an improvement.
+
+**Disciplines**
+
+46. **Never bin a change on the same quantity whose change you are reporting.** The
+    selected-minimum bin rises under any perturbation, so a large positive percentage there is
+    the *expected* reading of an inert change. Either bin on an independent axis — for a
+    radial correction, radius — or floor the result with an RMS-matched inert null and report
+    the **excess**.
+47. **A percentage has no units and the eye does.** Convert to the unit the viewer actually
+    sees — for 8-bit output, `DN / 257` — before deciding whether a change is an artefact.
+    +583% and +4.55 display levels are the same number and only one of them is a claim about
+    what ships.
+48. **Check a control for algebraic leakage before trusting it.** `B − Y` looks independent of
+    red and contains `−0.2126·R`. Write the control out in terms of the channels it actually
+    combines; if the perturbed channel appears, the control leaks in proportion to the effect
+    and is quietest exactly where it is needed most.
+49. **Do not gate on sign retention across a population that includes near-zero values.** The
+    sign is rounding noise there, and a correction that drives a fringe through zero to
+    neutral is penalised for succeeding. Gate the population by magnitude first, and report
+    the gated fraction alongside.
+50. **Verify an env-var key against its source literal, in milliseconds, before a batch.**
+    Where the key is resolved per frame rather than at startup, a typo reads as a slow arm
+    rather than a config error. A guard that greps the defining source costs 0.22 s and
+    removes a 53 s per-frame failure mode.
+51. **"Only X varies" is a claim about the code path, not about the output.** The `WarpMap`
+    was held exactly fixed across this A/B and the rendered green and blue changed anyway.
+    Before asserting an isolated comparison, diff the planes you believe are untouched.
+52. **Adding a crop role must add a role and nothing else.** A crop set that silently
+    re-chooses when the role list grows voids every before/after already taken on it. Make the
+    additive path the default and the re-freeze an explicit flag; then verify against a copy
+    that no frozen coordinate moved.
+
 
