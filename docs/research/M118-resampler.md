@@ -510,6 +510,49 @@ on the pixels is. And the operative triage question is not "did I call it" but
 **"did a number I reported come out of pixels it returned"** — a preview path is
 harmless by design.
 
+**Y17 (MEASURED — what decides the damage, and one model that FAILED).**
+ORCH's later rule is *value vs position*: dispersion statistics absorb the
+quantisation variance and are destroyed, location statistics are largely immune.
+My data agrees in the large but contains an apparent exception: **`sd DN` is a
+dispersion statistic, and its absolute value is destroyed (735.3 → 2.90 DN) while
+its arm ratio is protected to 0.01%** — better than `band power`, also dispersion,
+which lost 9.92% in the flat stratum. Statistic *class* therefore does not decide
+it on its own.
+
+What does, measured on the quantisation residual directly (`a7_nsr.py`): **the
+added quantisation power N, in the band and support the statistic integrates
+over, as a fraction of the signal S there.** The residual is uniform on [0,256)
+as expected (measured mean 127.2, sd 73.9 against 127.5 / 73.9 predicted), and:
+
+| stratum | levels kept / tile | in-band N/S | **effect retained** |
+| --- | --- | --- | --- |
+| detail | 57.5 | **0.057** | **95.2%** |
+| flat | 22.5 | **1.335** | **51.1%** |
+
+A 23x difference in in-band N/S cleanly separates a statistic that survives from
+one that loses half its effect. That is why `sd DN` broadband (N/S ~ 1e-4) and
+`band power` in flat tiles (N/S ~ 1.3) behave oppositely despite being the same
+class: **a common-mode N cancels in an arm ratio only to the extent N ≪ S.**
+
+**The closed form failed its pre-registered bar and I am not rescuing it.** I
+registered `(S1+N)/(S2+N)` as the predicted compression, to be accepted if the
+worst residual fell inside 20% of the between-stratum spread. It predicts the
+detail stratum to **0.0013** and misses flat by **0.0211**, against a 0.0172
+threshold — **NOT PREDICTIVE**. The reason is instructive: PIL's residual is
+`t mod 256`, which is *deterministic in* `t`, not independent noise, so the
+cross-term the model drops is non-negligible exactly where N ~ S.
+
+**So use in-band N/S as a screen, never as a repair.** It reliably tells you
+whether a number is worth re-running. It will not correct one.
+
+**D9 (discipline).** *Do not carry a level-count floor across statistic classes.*
+ORCH measured location-statistic immunity ending near **12 distinct levels per
+fitted window**. For a **dispersion** statistic that floor is far too permissive:
+my flat tiles kept **22.5** levels — nearly double ORCH's bound — and had already
+lost **49% of the between-arm effect**, while 57.5 levels retained 95%. Count the
+levels in the support your statistic integrates over, *and* apply the threshold
+belonging to your own statistic class.
+
 Reproduce with `python experiments/M118-resampler/src/a5_pilcheck.py <subject>`.
 
 ---
