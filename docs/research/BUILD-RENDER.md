@@ -240,16 +240,37 @@ every row summing to 1 and neutral mapping to neutral. The harness renders
 display crops to a **stated** target: linear sRGB / BT.709-6 primaries, D65,
 then the sRGB transfer curve, gain applied in linear light before the curve.
 
-Two real gaps remain on the output path, both mine, neither fixed yet:
+Two real gaps remained on the output path. **The first is now fixed for the
+renders a human actually looks at**; the second is not.
 
-1. **The written TIFF states no colour space at all.** `image_out.rs::write_rgb16`
-   emits bare `RGB16` with no ICC profile and no `WhitePoint` /
-   `PrimaryChromaticities` / `TransferFunction` tags. Every downstream tool —
-   including a print shop's — will assume sRGB. For an `--srgb` render that
-   assumption is accidentally right; for the **default linear camera-native
-   render it is completely wrong**, and the two files are indistinguishable to
-   any reader. This is the "colour path is undefined" item in the risk register
-   and it is the thing that makes a print-worthy claim not credible.
+1. **The written TIFF stated no colour space at all — now fixed on the viewing
+   path.** `image_out.rs` emitted bare `RGB16` with no ICC profile and no
+   colorimetry tags. Every downstream tool — including a print shop's — assumes
+   sRGB when it meets that. For an `--srgb` render the assumption is
+   accidentally right; for the **default linear camera-native render it is
+   completely wrong**, and the two files were byte-indistinguishable to any
+   reader.
+
+   `write_rgb16_described` now writes `ImageDescription` and `Software` on
+   every developed render, naming the exact target — sRGB (IEC 61966-2-1),
+   BT.709-6 primaries, D65 — or, for the camera-native states, saying in
+   capitals that the file **is not sRGB**. The white-balance ordering is stated
+   in the same sentence rather than left as a footnote, because the noise model
+   is calibrated in raw DN *before* any gain: a reader who assumes the opposite
+   order mis-scales per-channel noise by the WB gains, which run 2.13–2.86x in
+   red on this body. A unit test asserts the four `Develop` states describe
+   themselves differently and that both camera-native states carry the warning.
+
+   **Deliberate remaining gap:** the measurement encoder `write_rgb16` is still
+   untagged. It is the encoder behind `merge_cmd.rs`'s measurement branch, and
+   its output is pinned by both rows of `tests/byte-freezes.tsv`. Tagging adds
+   ~393 bytes of metadata and moves both hashes **without changing a pixel** —
+   and those rows are being moved concurrently by BUILD-HALO for a much larger
+   reason. Re-baselining them from here would publish a hash that is stale on
+   arrival and a `why` describing the wrong change, which that registry
+   explicitly calls worse than an empty one. Closing it is a one-line switch to
+   `write_rgb16_described` plus one coordinated re-baseline, once the merge core
+   stops moving. The gap is documented at the function itself, not just here.
 
 2. **The linear file destroys the highlight-clipping information.** The writer
    clamps post-white-balance values to `[0, 1]` before quantisation, so every
@@ -258,6 +279,20 @@ Two real gaps remain on the output path, both mine, neither fixed yet:
    and that per-channel structure is not recoverable from the file. The harness
    reconstructs it approximately (treat any channel at the container top as
    pinned, pull all three to the minimum channel) and says so in the code.
+   Not fixed.
+
+There is also no CLI route to "matrix applied, no transfer curve" — the
+`Develop` struct supports it and `caveat()` even has a string for it, but the
+`stack` flags only offer camera-native-linear or matrix-plus-curve. That mode is
+exactly what the measurement rule wants: a **stated colorimetric space that is
+still linear**. Wiring it needs an edit in `merge_cmd.rs`, which is BUILD-HALO's
+file, so it is flagged rather than done.
+
+Verified for this change: all 71 `strehl-cli` unit tests pass, **both byte-freeze
+rows still HOLD**, and the viewing render is pixel-identical before and after
+tagging (`np.array_equal` on the `uint16` arrays, read with `tifffile`). Run in
+an isolated copy of the tree at HEAD for BUILD-HALO's in-flight files, because
+the live tree does not currently compile — see §6.
 
 There is also no CLI route to "matrix applied, no transfer curve" — the
 `Develop` struct supports it and `caveat()` even has a string for it, but the
@@ -285,6 +320,17 @@ sidecar is worth roughly 1.8x on a 299-frame stack (`bee-3-cpl` 49.9 s vs
   discard the first 2 stabilisation shots). Assigned to me, not started —
   the render table and the instrument took the time. This is the obvious next
   thing in my lane.
-- The two colour gaps in §4.
+- The measurement-path colour tag and the highlight-ceiling loss in §4.
 - The FOV upsample in §1.3.
 - The silent-success-on-refused-alignment in §1.1.
+
+### Note on the shared tree
+
+At the time of writing, the working tree **does not compile**: `merge_cmd.rs`
+calls `regularise_scaled` and `FocusField::compute_scaled`, which do not yet
+exist in `focus.rs` / `merge.rs`. That is BUILD-HALO's lane mid-edit and is not
+a defect I should fix. All verification above was therefore run in a scratch
+copy at `C:\dev\strehl-out\verify-tree`, built from the live `image_out.rs`
+plus **HEAD** versions of BUILD-HALO's four in-flight files, so the numbers
+describe my change alone. No file outside my lane was modified to do this — the
+restore happened in the copy, never in the repo.

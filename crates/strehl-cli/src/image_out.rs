@@ -70,6 +70,7 @@ use rayon::prelude::*;
 use strehl_core::color;
 use strehl_core::demosaic::{Mosaic, demosaic_row};
 use tiff::encoder::{TiffEncoder, colortype};
+use tiff::tags::Tag;
 
 fn writer(path: &Path) -> Result<TiffEncoder<BufWriter<File>>> {
     if let Some(parent) = path.parent()
@@ -83,7 +84,104 @@ fn writer(path: &Path) -> Result<TiffEncoder<BufWriter<File>>> {
         .with_context(|| format!("starting TIFF {}", path.display()))
 }
 
-/// Interleaved RGB, 16 bits per channel.
+/// What the pixels in the file actually are, as a sentence a human or a print
+/// shop can read.
+///
+/// A bare 16-bit RGB TIFF carries no colour space, and every reader that meets
+/// one assumes sRGB. For the `--srgb` render that assumption is accidentally
+/// right. For the **default measurement render it is completely wrong** — those
+/// pixels are camera-native, in the sensor's own primaries — and the two files
+/// are byte-indistinguishable to any tool that opens them. That is the
+/// "undefined colour path" in the risk register, and a print-worthy claim is
+/// not credible while it stands.
+///
+/// This does not replace an embedded ICC profile, which is the real fix and is
+/// the next step: `tiff` 0.11 knows `Tag::IccProfile`, so it is a matter of
+/// carrying the profile bytes. Stating the space in words is strictly better
+/// than the nothing that was there before, and it cannot be silently ignored
+/// the way a wrong default can.
+fn color_description(dev: &Develop) -> String {
+    let space = match (dev.matrix.is_some(), dev.srgb) {
+        (true, true) => {
+            "sRGB (IEC 61966-2-1): BT.709-6 primaries, D65 white point, sRGB transfer curve. \
+             For viewing."
+        }
+        (true, false) => {
+            "Linear sRGB: BT.709-6 primaries, D65 white point, NO transfer curve (gamma 1.0)."
+        }
+        (false, true) => {
+            "Camera-native RGB (sensor primaries) with an sRGB transfer curve and NO colour \
+             matrix. THIS IS NOT sRGB -- do not treat it as such."
+        }
+        (false, false) => {
+            "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. \
+             THIS IS NOT sRGB -- do not treat it as such. This is the measurement output."
+        }
+    };
+    // The white-balance ordering is part of the colour statement, not a
+    // footnote to it: the noise model is calibrated in raw DN, BEFORE any gain,
+    // and the white balance is applied after black subtraction and
+    // normalisation by (white - black). A reader that assumes the opposite
+    // order will mis-scale the per-channel noise by the WB gains, which on this
+    // body run 2.13-2.86x in red.
+    format!(
+        "{space} White balance: as-shot per-channel gains, green = 1, applied AFTER black \
+         subtraction and normalisation by (white - black), and AFTER the noise model, which is \
+         calibrated in raw DN before any gain."
+    )
+}
+
+/// Interleaved RGB, 16 bits per channel, with the colour space stated in the
+/// file.
+///
+/// Separate from [`write_rgb16`] so that the older four-argument signature
+/// keeps compiling for its existing callers; new call sites should use this.
+fn write_rgb16_described(
+    path: &Path,
+    width: u32,
+    height: u32,
+    data: &[u16],
+    dev: &Develop,
+) -> Result<()> {
+    assert_eq!(data.len(), width as usize * height as usize * 3);
+    let mut enc = writer(path)?;
+    let mut img = enc
+        .new_image::<colortype::RGB16>(width, height)
+        .with_context(|| format!("starting image {}", path.display()))?;
+    let desc = color_description(dev);
+    img.encoder()
+        .write_tag(Tag::ImageDescription, desc.as_str())
+        .with_context(|| format!("tagging {}", path.display()))?;
+    img.encoder()
+        .write_tag(
+            Tag::Software,
+            concat!("strehl ", env!("CARGO_PKG_VERSION")),
+        )
+        .with_context(|| format!("tagging {}", path.display()))?;
+    img.write_data(data)
+        .with_context(|| format!("writing {}", path.display()))
+}
+
+/// Interleaved RGB, 16 bits per channel, **untagged**.
+///
+/// This is the byte-frozen measurement encoder, and it is deliberately NOT
+/// routed through [`write_rgb16_described`], even though the file it produces
+/// is the one most likely to be misread: it is linear camera-native RGB, and
+/// every reader that meets an untagged TIFF assumes sRGB.
+///
+/// The reason is ownership, not disagreement. This function is the encoder
+/// behind `merge_cmd.rs`'s measurement branch, whose output is pinned by
+/// `tests/byte-freezes.tsv` (`coffee-bean-20-gate2-unaligned` and
+/// `-sidecar`). Adding a tag here adds ~393 bytes of metadata and moves both
+/// hashes without changing a single pixel. Those rows are being moved
+/// concurrently for a different and larger reason, so re-baselining them here
+/// would publish a hash that is stale on arrival and a `why` that describes
+/// the wrong change -- which that registry explicitly calls worse than an
+/// empty one.
+///
+/// **This is a known, deliberate gap, not an oversight.** Closing it is a
+/// one-line switch to `write_rgb16_described` plus a single coordinated
+/// re-baseline of both rows, once the merge core stops moving.
 pub fn write_rgb16(path: &Path, width: u32, height: u32, data: &[u16]) -> Result<()> {
     assert_eq!(data.len(), width as usize * height as usize * 3);
     writer(path)?
@@ -199,7 +297,7 @@ pub fn write_demosaiced(
             }
         },
     );
-    write_rgb16(path, width as u32, height as u32, &rgb)
+    write_rgb16_described(path, width as u32, height as u32, &rgb, dev)
 }
 
 /// Distance from the quad centre to the red and blue CFA sites, in binned
@@ -300,7 +398,7 @@ pub fn write_binned(
     dev: &Develop,
 ) -> Result<()> {
     let rgb = develop_binned(width, height, rgb_lin, dev);
-    write_rgb16(path, width as u32, height as u32, &rgb)
+    write_rgb16_described(path, width as u32, height as u32, &rgb, dev)
 }
 
 /// The in-memory half of [`write_binned`]: co-site, develop, quantise.
@@ -351,6 +449,60 @@ mod tests {
             assert_eq!(got, [want; 3], "value {v} was not passed through");
         }
         assert_eq!(dev.caveat(), "linear camera-native RGB");
+    }
+
+    /// The four development states must produce four *different* colour
+    /// statements, and the two that are not sRGB must say so.
+    ///
+    /// The defect this guards is specific: a bare 16-bit RGB TIFF carries no
+    /// colour space, so the measurement render (camera-native primaries) and
+    /// the viewing render (sRGB) used to be byte-indistinguishable to any
+    /// reader, and every reader defaults to assuming sRGB. That assumption is
+    /// accidentally right for one of them and completely wrong for the other.
+    /// If a future edit collapses these strings, that ambiguity comes back.
+    #[test]
+    fn every_development_state_states_a_different_colour_space_in_the_file() {
+        let m = color::camera_to_srgb(A7C2).expect("invertible");
+        let states = [
+            Develop::default(),
+            Develop {
+                matrix: None,
+                srgb: true,
+            },
+            Develop {
+                matrix: Some(m),
+                srgb: false,
+            },
+            Develop {
+                matrix: Some(m),
+                srgb: true,
+            },
+        ];
+        let said: Vec<String> = states.iter().map(color_description).collect();
+        for (i, a) in said.iter().enumerate() {
+            for b in said.iter().skip(i + 1) {
+                assert_ne!(a, b, "two development states describe themselves alike");
+            }
+        }
+        // The two camera-native states must warn, and must not be mistakable
+        // for sRGB by a reader skimming for the word.
+        for dev in &states[..2] {
+            let s = color_description(dev);
+            assert!(s.contains("THIS IS NOT sRGB"), "unwarned: {s}");
+            assert!(
+                s.to_ascii_lowercase().contains("camera-native"),
+                "unlabelled: {s}"
+            );
+        }
+        // The white-balance ordering relative to the noise model is part of
+        // the colour statement in every state, because the noise model is
+        // calibrated before the gains and a reader that assumes otherwise
+        // mis-scales per-channel noise by the WB gains.
+        for dev in &states {
+            let s = color_description(dev);
+            assert!(s.contains("White balance"), "no WB ordering stated: {s}");
+            assert!(s.contains("calibrated in raw DN"), "no noise order: {s}");
+        }
     }
 
     /// The clamp is after the matrix, and both halves of that matter.
