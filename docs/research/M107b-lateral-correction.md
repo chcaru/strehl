@@ -1496,3 +1496,126 @@ participate:
 ```
 cargo check --workspace --all-targets   ->  EXIT=0
 ```
+
+## 20. R10 -- the right instrument, and what it says about the over-correction
+
+The orchestrator retracted the √2 steer, told me not to spend hours hunting a
+normalisation bug, and named the instrument my §19 bar should have been: the
+**signed** residual inter-channel radial displacement. I built it
+(`r10_radial_residual.py`, bars T1–T4 registered before the run) and ran it on
+the two renders I already had. It confirms the direction independently, brackets
+the magnitude, validates the wiring end-to-end, and fails one of my own bars in
+a way that turned out to be the most useful result of the four.
+
+### 20.1 The model and the bars
+
+If the correction applies `k×` the true displacement `D`, the residual is
+`(1−k)·D`, so `ratio = residual_on / residual_off = 1 − k`. Under-correction
+gives a positive ratio, over-correction a negative one. Unlike a keep-sign test,
+this cannot confuse "does nothing" with "overshoots past zero".
+
+Estimator: per 64 px window, a 1-D Lucas–Kanade along a chosen unit vector,
+`shift = Σ(g_u·(R−G)) / Σ(g_u²)`, with R and G standardised within the window so
+cross-channel intensity differences do not bias the match. 7 957 windows.
+
+### 20.2 Results
+
+| bar | result |
+| --- | --- |
+| **T1** lateral CA present in the off arm | **PASS** — radial displacement grows with r, through-origin slope **+1.424 px per unit r** |
+| **T2** signed ratio, support-restricted | **OVER-CORRECTED CONFIRMED** — ratio **−0.3738**, implied **k = 1.374** |
+| **T3** tangential null | **PASS** — applied tangential is **5.2%** of applied radial |
+| **T4** applied correction linear in r | **registered FAIL**, R² = −0.590 — see 20.4 |
+
+**T3 is the control that makes T1 and T2 mean something.** A magnification error
+cannot displace anything tangentially, and the estimator confirms it did not:
+applied radial −1.1196 px, applied tangential −0.0582 px. So this is not a
+generic misregistration the estimator would have reported whatever I did.
+
+### 20.3 Three of my statistics bracket k, and I cannot exclude √2
+
+| route | k |
+| --- | --- |
+| T2, window-weighted over support | **1.374** |
+| per-annulus mean, r ≤ 0.6 | 1.383 ± 0.061 |
+| per-annulus mean, all r | 1.397 ± 0.057 |
+| §19 W3 top-decile chroma, back-solved | **1.459** |
+| orchestrator's median / M111 support-restricted mean | 1.444 / 1.456 |
+
+The §19 cross-check is worth stating explicitly because it is a completely
+different statistic — chroma magnitude in the render, not displacement. A 54.08%
+fall in top-decile `|R−Y|` back-solves, under an overshoot, to **k = 1.459**,
+which lands within 0.2% of M111's support-restricted 1.4562.
+
+**But my per-annulus k spans 1.286 to 1.464, and √2 = 1.41421 sits inside it.**
+I therefore **cannot exclude √2 from this scene**, and I record that as a
+disagreement with M111's support-restricted CI rather than resolving it. Both of
+us are on `bee-3-cpl`; a single scene measured two ways is not two scenes. **The
+direction is certain; the magnitude is `k ∈ [1.37, 1.46]` and no tighter.**
+
+### 20.4 T4's failure is the instrument, and the off arm proves it
+
+The registered bar wanted the applied displacement proportional to `r`, because
+that is what a magnification error is. R² came back **−0.590** — worse than a
+constant. Read naively that says the model shape is wrong.
+
+**It does not, and the off arm is what settles it.** Uncorrected lateral CA
+*must* grow monotonically with field height. The off arm does not:
+
+| r | 0.05 | 0.35 | 0.55 | 0.75 | 0.85 |
+| --- | --- | --- | --- | --- | --- |
+| off / r | +2.948 | +2.261 | **+2.047** | +0.813 | +0.729 |
+
+Displacement-per-unit-r is stable to **cv = 0.122** for r ≤ 0.6 and collapses to
+**cv = 0.387** across the full range. Since the physics forbids the off arm's
+true signal from falling, the fall is **attenuation bias in the estimator** —
+regression dilution where the subject is defocused and `Σg_u²` is small. It is
+the same wall as my own P31 (support dies at r = 0.788) and M109's facts
+1457/1458, reached from a third direction.
+
+**So T4 does not falsify the magnification model; restricted to where the data
+lives, a scalar remains the right shape.** But I report the bar as FAILED as
+registered, because it was, and because the honest form of the result is "the
+bar failed and here is why the failure is mine, not the model's".
+
+**T2 survives this, and that is a property of ratios.** Attenuation `a(r)` scales
+both arms, so it divides out — which is exactly why the per-annulus ratios
+(−0.286…−0.464) are far more stable than the displacements they come from. One
+caveat in the direction that matters: the on arm has the smaller true residual
+and therefore the worse SNR, so if anything it is attenuated *more*, which would
+bias my **k = 1.374 low**. That is the direction of the orchestrator's 1.444.
+
+### 20.5 The wiring applies what it claims — an end-to-end check I did not plan
+
+Falling out of the same table: applied displacement over r ≤ 0.6 is **−3.2586 px
+per unit r**. With a half-diagonal of `hypot(3516, 2344) = 4225.7` px, that is
+**771 ppm** of magnification actually reaching rendered pixels, against a
+declared `eps_r = −704.5 ppm` — agreement to **9%**, inside the estimator's
+scatter. **The correction that reaches the pixels is the coefficient that is
+written in `optics.rs`**, in the right direction and at the right magnitude. That
+is independent of whether the coefficient itself is correct, and it is the
+cleanest evidence so far that the §18 wiring does what it says.
+
+### 20.6 §19's explanation was two mechanisms where one will do
+
+§19 concluded that the correction "removes fringes and adds faint chroma to
+near-neutral pixels", treating the top-decile −54% and the decile-1 +583% as
+separate effects. **The overshoot explains both with one mechanism:** an
+over-correction leaves an inverted residual proportional to `r` everywhere, which
+simultaneously shrinks strong fringes and manufactures chroma where there was
+none. I prefer the orchestrator's account to my own and am adopting it.
+
+That also supplies the missing piece of why W3 was the wrong bar, with a
+mechanism rather than just an assertion. Only **14.1%** of top-decile pixels
+flipped sign, which looks incompatible with an inversion — until you notice that
+`R−Y` on a yellow-and-orange bee is dominated by **the subject's own colour**,
+not by the fringe. **W3's sign test was largely measuring subject hue.** A
+keep-sign bar is not merely insensitive to overshoot; on a coloured subject it is
+not measuring the fringe at all.
+
+### 20.7 What I did not do
+
+I did not hunt the √2 normalisation bug beyond reading, per the retraction; I did
+not change the coefficient; `A7C2_FE100GM_2XTC_X4CPL_RADIAL` is untouched and
+`support_r_max = Some(0.788)` remains declared-but-unenforced. No `optics.rs`
+change is proposed here — one scene is not a mandate to re-scale a coefficient.
