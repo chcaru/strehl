@@ -35,11 +35,62 @@ tell ORCH is not "lanczos3 wins" — it is *what that win is made of*.**
 
 ---
 
-## 1. Verdict
+## 0.1 AMENDMENT — the scoring band was retracted, and this report predicted it
+
+**`ORCH-kernel-decision.md` is NO-GO (amendment 3, `97b8710`). The default does
+not move. Nothing in this report should be read as licensing a change.**
+
+M85 retracted the sharpness result the decision rested on: the **0.30–0.48
+cyc/px** band — **the band this entire report scores in**, adopted in §2 for
+commensurability with M95/M113 — measures as **12.8% subject detail (CI
+12.2–13.4), 87.2% noise**, with a **dark frame containing no photograph reading
+essentially the same gain (1.0006)**.
+
+**So every dex figure below is a statement about the kernel and the noise, not
+about the owner's photographs.** I am not restating them as sharpness.
+
+**Y19 (MEASURED — an independent convergence, and why this was already visible
+here).** This milestone reached M85's conclusion by two routes before the
+retraction existed, and one of them is numerically the same measurement:
+
+- **Y3, the datasheet result.** A closed form from `align.rs`'s weights, **using
+  no image at all**, reproduces the end-to-end gain to a mean of 0.0155 dex over
+  12 cells. **The photographs move the answer by 11.9%.** M85's dark-frame
+  placebo puts subject detail at **12.8% (CI 12.2–13.4)**. Two unrelated methods
+  — closed-form kernel algebra versus a physical placebo — land **0.9 points
+  apart**. "A dark frame reads the same gain" and "the answer is computable with
+  no image" are the same finding stated in two idioms.
+- **Y4, the rule-9 control.** The gain was **at least as large on the flattest
+  tiles as on the most detailed ones, on all three subjects**, worst on the
+  subject with the strongest 5.26x stratum separation. The flat decile is the
+  closest thing this experiment had to a dark frame, and it showed the effect
+  undiminished.
+- **Y17** then measured in-band **N/S = 1.335 in the flat stratum** — noise
+  exceeding signal outright in the scoring band, on a real photograph.
+
+**The `--resampler` flag M124 landed makes this reproducible for whoever re-bands
+it.** My §7 recommendation — do not move the default, the metric is 88% a
+datasheet and fails its own control — stands unchanged and is now the corpus
+position rather than a dissent.
+
+**What would reopen it** (ORCH's bar, recorded so this report cannot be misread
+as meeting it): a comparison scored in a band **demonstrated in advance** to
+carry subject detail, with a dark-frame placebo run **first** and reading null.
+This report does neither. Its by-eye §5 read cannot substitute — G2's eye check
+was a guard on a quantitative result, not the result.
+
+**D11 (discipline).** *A decision record that tracks only feasibility converges
+on GO as the engineering lands.* All four gates read GREEN on the night the
+benefit was retracted, because each gate asked whether the change **could** be
+shipped safely and none re-asked whether it was **worth** shipping. Pair every
+feasibility gate with a standing re-validation of the effect it exists to
+deliver, and let the effect's retraction flip the decision by itself.
+
+---
 
 | # | question | verdict |
 | --- | --- | --- |
-| 1 | Does lanczos3 beat the catmull-rom default end-to-end? | **Yes.** +0.0868 dex on `bee-3-cpl`, replicating M113's +0.083–0.099. Across three subjects **+0.0859 to +0.1125** |
+| 1 | Does lanczos3 beat the catmull-rom default end-to-end? | **Superseded — see §0.1.** It raises 0.30–0.48 cyc/px band power by +0.0868 dex on `bee-3-cpl`, but M85 has since measured that band as **87.2% noise**, so this is not evidence about subject detail |
 | 2 | Is that gain a fact about the owner's photographs? | **Largely NO.** A closed form from `align.rs`'s own weights, **with no image at all**, predicts it to a mean of **0.0155 dex** over 12 cells against a mean effect of 0.1300. **The photographs move the answer by 11.9%** |
 | 3 | Is the gain concentrated where the detail is? | **NO, on all three subjects.** Rule 9's flat-decile control **fails** for lanczos3 every time: M2 ≥ M1, by −0.0129 / −0.0002 / −0.0162 dex |
 | 4 | ORCH's **N4** — does the election stratification reverse on a second subject? | **Not reversed on 2 of 3.** It reverses on `wrapped-text-1`, but by **2.5% of the effect**, and the correlation's *sign* is unstable (+0.382 / +0.059 / −0.293). **N4 as written is reading noise** |
