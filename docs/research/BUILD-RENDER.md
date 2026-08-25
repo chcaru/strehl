@@ -785,6 +785,101 @@ day.
 
 ---
 
+## 12. The gallery as heartbeat — and what its first comparison found
+
+Run 2 of the gallery, binary `DF209CE0…` pinned from `859edac`:
+
+**26 of 26 subjects rendered, exit 0, 4825 frames, 59 min 26 s wall.**
+Zero failures. `tweezers-cpl` rendered in 71 s — the fourth independent
+demonstration that it was never broken.
+
+Run 1 is archived at `gallery-history\2026-08-25-tone-fix\`, run 2 at
+`gallery-history\2026-08-25-1327\`. `gallery\` is always the latest, so "open
+the gallery" never changes meaning.
+
+### 12.1 Seventeen of twenty-six subjects got softer
+
+The point of keeping the runs is to be able to subtract them. Doing that for
+the first time, on gradient RMS at viewing scale (run 2 ÷ run 1):
+
+| subject | sharpness ratio | subject | sharpness ratio |
+| --- | --- | --- | --- |
+| `bee-1-cpl` | **0.9287** | `flower-bud-with-background-fern-cpl` | 0.9739 |
+| `highly-angled-ruler-mm-cpl` | **0.9398** | `lead-1-cpl` | 0.9782 |
+| `dry-erase-marker-head-cpl` | **0.9398** | `coffee-bean` | 0.9783 |
+| `bee-2-cpl` | **0.9493** | `pencil-flatter-angle-cpl` | 0.9801 |
+| `bee-3-cpl` | **0.9510** | `flower-bud-alone-cpl` | 0.9827 |
+| `pencil-steep-angle-cpl` | **0.9578** | `foam` | 0.9874 |
+| `couch-fibers-cpl` | **0.9604** | `flower-inner-edge-cpl` | 0.9877 |
+| `leaf-2-cpl` | 0.9692 | `coffee-bubbles` | 1.0279 |
+| `lavendar-cpl` | 0.9711 | (8 others) | 0.996–1.010 |
+| `flowers-cpl` | 0.9726 | | |
+
+Seventeen subjects lost sharpness. Nothing gained more than 2.8%. That is a
+systemic loss across the owner's library in roughly two hours of work, and
+nothing in the commit log announces it — the commits in that window are about
+halos and about alignment priors.
+
+This is the argument for the harness in one table. Every one of those changes
+was reasonable, several were reported as improvements on the subject they were
+aimed at, and the aggregate effect on the library was negative. No crop-level
+report would have shown this, because no crop-level report covers 26 subjects.
+
+### 12.2 The regression bisects cleanly to one commit, and it is not mine
+
+`couch-fibers-cpl` is the do-no-harm control, so it is the one worth costing
+properly. All arms rendered back-to-back, each from a binary built from a
+pinned `git archive` of the SHA named:
+
+| build | gradient RMS ratio vs the audited reference |
+| --- | --- |
+| `5d7a7ba` (the audited-good reference) | 1.0000 |
+| `57e4554` — *halo: delete the noise-driven window shrink* | **0.9342** |
+| `70934bb` — *sharp: track-smoothness prior on by default* | 0.9330 |
+| `859edac`, my gamut map **off** | 0.9323 |
+| `859edac`, my gamut map **on** (= the gallery) | 0.9376 |
+
+**`57e4554` accounts for essentially the whole loss.** Everything landed after
+it adds 0.2% more. The commit deleted the noise-driven focus-window shrink on
+the argument that the geometric cap subsumes it; on this subject it does not,
+and the cost is 6.6% of the gradient energy of the sharpest control in the
+library.
+
+My own change was ruled out by direct isolation rather than by argument: two
+binaries from the *same* SHA `859edac`, differing only in whether `gamut_map`
+is called, rendered back-to-back. It touches 0.26% of pixels on this subject
+and moves sharpness by **+0.56%** — the wrong sign to explain a softening. The
+0.26% is what the theory predicts: `gamut_map` is the identity unless a channel
+leaves `[0, 1]`, and `couch-fibers-cpl` is a neutral white subject with no
+systematically low channel.
+
+At 100% on the sharpest tile (`isolate\couch-100pct-ref-vs-57e4554.png`) the
+softening is visible, not merely measurable: filament edges are less crisp and
+adjacent fibres blend into one another. Tile gradient RMS 1920.6 → 1827.1.
+
+Routed to ORCH. `merge_cmd.rs` and `edgeaware.rs` are BUILD-HALO's lane and I
+have not touched them.
+
+### 12.3 What the pictures say now
+
+The tone rendering is holding across the whole library — the run-2 images read
+as photographs. The disqualifier is unchanged and it is not mine:
+
+- **`coffee-bean`** has a bright pink-magenta rim tracing the entire silhouette
+  of the bean against the white ground. At viewing scale it is the first thing
+  the eye lands on. Tonally the bean is now excellent — rich browns, visible
+  surface texture, real shadow in the crease — which is exactly what makes the
+  rim so conspicuous.
+- The **sharpness regression above** is now a second, independent disqualifier,
+  and it is the more dangerous of the two because it is invisible on any single
+  image. You cannot see 6% softer without something to compare against.
+
+Verdict unchanged: **not print-worthy**, halo first. But the library is now
+also moving in the wrong direction on sharpness, and that was only visible
+because two dated runs existed to subtract.
+
+---
+
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
