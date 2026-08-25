@@ -1129,6 +1129,33 @@ the picture every time. That is a third independent line of evidence for §15, a
 dose ladder itself and the physical argument, and this one is in the render domain where a
 reader can look at it.
 
+### 18.6 Rule 7: I went and looked at the blue fringe
+
+Section 19.1 asks for a change to `optics.rs` on the strength of a chroma statistic, so the
+statistic does not get to stand unless someone has looked. `c9_look.py` crops the
+worst-blue-fringe neighbourhood out of the outer field — chosen on the OFF arm by green
+gradient and B−G swing, beyond 0.75 of the corner radius, so the choice of location is
+independent of whether the correction helps — and writes off and blue-corrected side by
+side at 6x with one shared exposure.
+
+`C:\dev\strehl-out\BUILD-CHROMA\look\blue_tweezers-cpl.png`, crop at r = 0.78 of the
+corner, where the applied `eps_b` = +165.3 ppm is worth 0.27 plane px.
+
+The off panel shows exactly the signature lateral CA must produce: the specular highlights
+along the tweezer edge carry distinct blue-cyan fringing on one side and orange-yellow on
+the other, and the fibres at lower right are edged in cyan. In the corrected panel those
+same highlights are visibly closer to neutral and the cyan edging is muted. Nothing else
+about the crop changes.
+
+| | mean chroma | B−G swing sd |
+|---|---|---|
+| off | 0.2407 | 0.1617 |
+| blue-corrected | 0.2298 | **0.1373** |
+
+A 15% reduction in the blue-minus-green swing, in a crop selected before the correction was
+applied. **The picture and the number agree**, and they agree on the one recommendation
+this report actually makes.
+
 ## 19. The exact Rust change I want
 
 I have not touched a `.rs` file. This is the spec; route it to whoever owns `optics.rs`.
