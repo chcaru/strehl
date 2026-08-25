@@ -350,7 +350,64 @@ visible to **tone**, which nothing was measuring. Its own numbers never went
 below zero on any subject. I only found this because I went looking with a
 different ruler.
 
-### Why §24 is first, and why its purpose changed overnight
+### The big idea I was betting on died last night, and you should know it
+
+**This is the most important thing I learned overnight and it is bad news, so I
+want it stated plainly rather than buried in a fact table.**
+
+The outside review of this project made five ranked recommendations. Its number
+three — and the one I agreed with most, and had already started building toward
+— was that at your magnification **no amount of picking the sharpest frame can
+produce a sharp image, because the sharpness isn't in any frame to begin with.**
+The optics argue it well: at 2:1 on your rig, contrast at fine detail is
+essentially zero at every aperture before any software runs. The proposed answer
+was *reconstruction* rather than selection — a multi-frame Wiener deconvolution
+that uses this project's two genuine assets, the measured lens blur and the
+calibrated noise model, to buy back contrast the optics destroyed. The argument
+was that those two assets are exactly what makes aggressive deconvolution safe
+here and unsafe everywhere else.
+
+I had a milestone measure it rather than build it. **It failed, and it failed
+cleanly:**
+
+- Against the gated average **the stacker already ships**, the signal-to-noise
+  ratio came out at **1.0014**, with a 95% confidence interval of
+  **[0.965, 1.038]**. That interval contains no useful gain in either direction.
+  It is not a close call that better tuning would rescue.
+- It looks sharper because it **moves information around rather than adding
+  any**: contrast up 2.51×, noise up 2.03×. That is the trade every
+  sharpening slider in every photo editor already offers you.
+- It rings. Between **29.5% and 36.4%** of output pixels landed *outside the
+  range of values present anywhere in the source frames* — meaning invented
+  detail — with the halo peaking at **70.7%** in the ring 8–16 px out from an
+  edge. Every non-deconvolution arm tested scored exactly **0.0000%** on that
+  same measure.
+- The safety guard the reviewer proposed — having the algorithm calibrate the
+  blur from the stack itself, so no lens model has to be trusted — **was tested
+  and does not work.** It over-estimates the blur width by 1.9–2.2×, and in one
+  band it claims a value of 0.021 where direct measurement reads 0.638.
+
+There is a detail here I want to flag because it nearly went the other way. The
+milestone's *own primary measurement channel* — the one it registered in advance
+as the thing it would judge by — **failed its control in the exact direction of
+its hypothesis.** It reported a signal-to-noise ratio of 84.9 on a capture with
+no scene in it at all, understating noise by a factor of 73. Had that channel
+been trusted, every number in the report would have favoured deconvolution by
+roughly an order of magnitude, and I would be writing you an excited paragraph
+this morning instead of this one. It was caught because the control was built
+before the result was wanted.
+
+**What this means for you.** The honest position is now that **this project has
+no known route to making your photos sharper than the sharpest frame you shot.**
+Everything it can currently do is about *not degrading* what you captured —
+removing the mosaic, the halo, the blotches, the wrong-frame pixels — which is
+worth doing and is where the remaining work goes. But if you were expecting the
+stacker to eventually out-resolve your optics, it will not, and I would rather
+tell you that in August than let you discover it in December. It also means the
+practical advice in §0 (**stop shooting at marked f/11**) matters more, not less:
+contrast you don't capture is now definitively contrast you don't get.
+
+
 
 Two independent by-eye reads on 1:1 crops of your own stacks — one by an agent
 that had never seen the chromatic-aberration work, one by me — independently
@@ -1857,13 +1914,26 @@ empirical leg on either side — it is arithmetic against arithmetic.
 - **Settles §17.4 empirically**, which is currently the largest open question
   about how the owner should shoot, and is unanswerable from theory because the
   deciding term (converter aberrations) is undocumented.
-- **Prices the deconvolution thesis on the owner's real gear.** If the converter
-  configuration really does carry genuine signal at crushed-but-nonzero MTF
-  across a wide band, that is precisely the regime multi-frame Wiener
-  deconvolution with a calibrated noise floor is built to exploit — and the
-  rig would be matched to the project's core idea by accident. If aberrations
-  have eaten that band, the thesis loses its best local demonstration and the
-  advisor should say "take the converter off" instead.
+- ~~**Prices the deconvolution thesis on the owner's real gear.**~~ **WITHDRAWN
+  2026-08-25 — the thesis it was pricing is dead.** This bullet used to argue
+  that a crushed-but-nonzero MTF band is exactly what multi-frame Wiener
+  deconvolution is built to exploit. M115 measured that claim directly and it
+  failed: `R_SNR = 1.0014` against the **already-shipping** gated average, 95%
+  CI **[0.965, 1.038]** — a confidence interval that contains no useful gain in
+  either direction. It reallocates information rather than creating it
+  (contrast 2.51× bought with noise 2.03×), and it rings, putting **29.5–36.4%**
+  of pixels outside the source stack's convex hull with the halo peaking at
+  **70.7%** in the 8–16 px shell. **So there is no longer a deconvolution engine
+  waiting to be fed, and this capture should not be shot on that basis.**
+- **The underlying gear question survives and is the real reason to shoot it.**
+  Strip the dead thesis away and what is left still matters to you directly:
+  **is the teleconverter costing you resolution you cannot get back?** If
+  aberrations have eaten the band, the honest advice is "take the converter
+  off," and that is a recommendation about your own shooting rather than about
+  the estimator. Note that this is also the only capture that would put **any**
+  aperture or converter contrast into the corpus at all — fact 1658 established
+  that every `-cpl` stack you have shot is f/5.6 on `FE 100mm F2.8 GM + 2X TC`,
+  so both variables are currently held fixed everywhere.
 - **Gives the capture advisor its first real recommendation to make**, with a
   measured basis rather than a modelled one.
 
@@ -1948,7 +2018,11 @@ as the pupil, and the numbers can be read off later. **Rough is useful**: even
   calibration, the truth-linked estimator loss M81 named as one of only two
   remaining routes to a constant that has now defeated three milestones.
 - **The `N_eff` chain, at its root.** `p` currently propagates into diffraction
-  cutoff, into the deconvolution ceiling, and into the shooting advice in §17.
+  cutoff and into the shooting advice in §17. It **used** to propagate into the
+  deconvolution ceiling as well; that consumer died on 2026-08-25 (see §17.5),
+  so this request is now worth somewhat less than when it was written — but the
+  shooting advice is the consumer you actually care about, and it survives
+  intact.
 - **The M84/M84b disagreement**, which is otherwise permanent.
 
 ## 19. A hard edge at three apertures, one session — REQUESTED, the highest-value ten minutes left
