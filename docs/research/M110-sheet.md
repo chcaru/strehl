@@ -1469,4 +1469,85 @@ same precision this defect destroys.
     negative with a positive control on the *same* files, so a clean result is evidence the
     instrument can fail and did not.
 
+## 22. The counterfactual: what the narrowing would have done to M110
+
+ORCH's corrected triage rule sorts statistics into **location** (largely immune to 8-bit
+narrowing) and **dispersion/value** (destroyed). M110's statistics are chroma magnitudes,
+signed channel ratios and sign-flip counts — **value statistics, the vulnerable class**. So
+M110's clearance rests entirely on the narrowing never having occurred and on nothing about
+the estimators being robust.
+
+That deserved measuring rather than asserting. Replaying the headline results on deliberately
+narrowed copies of the same arrays, exactly as PIL would have delivered them (57,628 distinct
+levels to 256):
+
+| result | as measured (`uint16`) | under narrowing | outcome |
+|---|---|---|---|
+| §18 cell A, signed median `dG/dR` | **−0.0721** (2.3% from theory) | **+0.0000** | **destroyed** |
+| §16 overshoot, whole-frame | 1.50% | 1.53% | **survived** |
+
+### 22.1 The destroyed one would have been a clean null, and better supported
+
+§18 cell A is the entire matrix attribution. Under narrowing it reads **exactly +0.0000** —
+100% error — which is **the identical value cells B and C return**. All three cells would have
+agreed at zero, and the retraction would have been reasoned in the wrong direction: the
+coupling would have appeared absent everywhere rather than confined to the viewing transform.
+
+Worse, the narrowed run admits **more** data: 11,460,762 pixels above threshold against
+9,678,093. **It would have looked better supported while being entirely wrong** — ORCH's "worst
+case: a clean null", with a larger sample count as false reassurance.
+
+### 22.2 The survivor refines the rule
+
+§16's overshoot is a **value** statistic by ORCH's taxonomy — it reads pixel values, not
+feature positions — yet it moved **1.50% to 1.53%** under a 225x narrowing. The reason is that
+it never estimates a magnitude. It asks two ordinal questions: *did the sign flip*, and *did
+the magnitude grow*. **Quantisation is monotone, so it preserves ordering almost everywhere**,
+and an ordinal comparison inherits that immunity.
+
+**So the binary location/value split has a third class it does not capture: ordinal
+comparisons on values** — sign tests, rank statistics, "did A exceed B" — which read values
+and are nonetheless robust. The discriminator is not what the statistic reads but whether it
+needs the *spacing* between levels or only their *order*.
+
+That §16's design happened to land in the robust class was not foresight. It was chosen for a
+different reason entirely — scoring the conjunction rather than the flip alone, to avoid
+crediting a fringe driven through neutral as a reversal (§16.2). The robustness came free.
+
+*(The 1.50% here is a whole-frame aggregation used only as an A/B against itself; it is not
+comparable to §16's per-radius 9–19%, which bins differently. Both arms share the aggregation,
+so the comparison is valid.)*
+
+## 23. For ORCH — the counterfactual and a refinement
+
+**Facts**
+
+73. **MEASURED: under the PIL narrowing, §18's matrix attribution reads exactly +0.0000** — a
+    100% error against the −0.0704 the colour matrix predicts and the −0.0721 actually
+    measured. It becomes **the same value cells B and C return**, so all three cells would have
+    agreed at zero and the retraction would have been reasoned in the wrong direction.
+74. **MEASURED: the destroyed result would have looked BETTER supported.** The narrowed run
+    admits **11,460,762** pixels above threshold against **9,678,093** for the correct one. A
+    rising sample count accompanied the collapse to a false null.
+75. **MEASURED: §16's overshoot statistic is immune** — 1.50% to 1.53% under a 225x narrowing —
+    **despite being a value statistic by the corrected rule.** It survives because it asks only
+    ordinal questions (did the sign flip, did the magnitude grow) and quantisation is monotone,
+    so it preserves order.
+
+**Disciplines**
+
+76. **The location/value split needs a third class: ordinal comparisons on values.** Sign
+    tests, rank statistics and "did A exceed B" read pixel values yet inherit
+    quantisation-immunity, because monotone quantisation preserves order. **The discriminator
+    is whether the statistic needs the *spacing* between levels or only their *order*** — which
+    subsumes location and value and predicts both of the cases measured here.
+77. **A defect that raises your sample count while destroying your answer defeats every
+    supported-ness check.** The narrowed run passed more pixels than the correct one. Sample
+    count is not evidence of validity, and a control that watches only `n` will report the
+    corrupted arm as the stronger one.
+78. **Measure the counterfactual before crediting a guard.** "We were not exposed" and "the
+    exposure would not have mattered" are different claims worth different amounts. Replaying
+    the headline number on deliberately corrupted copies of the same arrays prices the guard
+    exactly, and it cost one script.
+
 
