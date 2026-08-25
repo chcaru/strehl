@@ -1092,6 +1092,38 @@ unavailable one. Under a bare "N of M", a dead instrument's void readings get
 counted as data. The gate plus a registered admitted-count is the only form
 that survives both.
 
+**P61. THE VERIFIER FOR THIS SECTION WAS WRONG UNTIL ITS OWN NEGATIVE CONTROL
+BROKE IT, AND THE BLIND SPOT WAS A DUPLICATE**
+
+`verify_ca.py` re-derives all of §5f from the artefacts and located every claim
+at an anchored site: **100 checks, GREEN.** `negctl_ca.py` then planted 13
+defects and required a RED naming the specific check that should catch each.
+**Three walked straight past a green verifier.**
+
+All three for one reason. `90.1 %`, `+0.0332 px` and `on every subject scored`
+each appear at several sites, because §1 summarises what §5f measures. Falsify
+§5f's own table and an anchored presence check is still satisfied — **by the
+duplicate in the summary.** The verifier was reading a true statement about the
+wrong copy.
+
+The repair is `check_exact`: register the number of canonical sites for each
+headline claim and require the count exactly, so **every site is load-bearing**
+and a single-site falsification drops the count. With it, `13/13` are caught.
+
+The inert plant — a prose-only rewording in §5d — correctly did **not** fire.
+A verifier that reddens on any edit is as useless as one that never does
+(discipline 797), and without that arm the `13/13` would only have shown the
+instrument was noisy.
+
+**D-v (proposed discipline). A presence check is satisfied by any duplicate of
+the value, so a report that summarises itself cannot be verified by presence.**
+Pin the occurrence count. The cost — a legitimate edit must update the count —
+is the feature: on a finished report, a changing count *is* a changed claim and
+should require a deliberate keystroke. Same family as the corpus's existing
+one-canonical-site rule, met here from the other direction: I could not give
+these numbers one site, because a report needs a summary, so I made every site
+count instead.
+
 ---
 
 ## 6. Patches
