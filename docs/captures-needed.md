@@ -170,7 +170,7 @@ makes the picture look worse, the other does nothing at all.
 | | defect | status |
 | --- | --- | --- |
 | **1** | Bright halo tracing every silhouette — the "cut-out sticker" look | Real, severe, on every edge, in every configuration. **No working fix.** One candidate looks worse, the other is a no-op. A dedicated agent is on the mechanism tonight. |
-| **2** | Background texture the stacker invents | Real: 1.11x more fine structure than any of your frames, in 7 of 12 patches. Mostly suppressed already by the shipped settings; a residual survives. |
+| **2** | Background texture the stacker invents | Real: 1.11x more fine structure than any of your frames, in 7 of 12 patches. **A fix is now measured and it works — see "One thing I fixed tonight" below.** |
 | **3** | Lateral chromatic aberration — coloured fringes on bright edges | Confirmed by my own eye. Correction exists, switched off, **under audit** — see below. |
 | **4** | General softness | Expected: at your magnification the optics are the limit, not the software. |
 
@@ -199,23 +199,50 @@ camera, your actual sensor, your actual noise.
 your real captures and writing before/after 1:1 crops to `C:\dev\strehl-out\M116\`
 — look there first in the morning.
 
-### Why §24 is first, and why its purpose changed overnight
+### One thing I fixed tonight — look at this first
 
-On **#3**, I am deliberately *not* telling you to turn the chromatic-aberration
-correction on yet. I promoted one correction tonight on a headline number that
-turned out to be fifteen points wrong and to come from a section whose title was
-"why I am telling you not to enable it." A second agent is auditing the CA
-numbers the same way before I put them in front of you again. If it clears, that
-is a real win and it is one line to enable.
+**Open `C:\dev\strehl-out\ORCH-morning\PHOTOMETRIC-tweezers-cpl-smooth-912x400.png`.**
 
-**What this needs from you: §12.** A static repeat burst is the arm that proves
-the protection *doesn't* fire when nothing moved. Right now that has to be
-simulated. Thirty seconds of your time replaces a simulation with your actual
-camera, your actual sensor, your actual noise.
+Left is what the stacker ships today. Right is the same pixels with one switch
+turned on. Both panels have exactly the same brightness stretch, so what you are
+seeing is a difference in the picture and not in how I displayed it.
 
-**Also running tonight:** a campaign measuring every default-off improvement on
-your real captures and writing before/after 1:1 crops to `C:\dev\strehl-out\M116\`
-— look there first in the morning.
+The left panel is a patch of out-of-focus background and it is covered in dozens
+of soft oval blotches. **Those blotches cannot be real.** An out-of-focus region
+is blurred, and blurring cannot put structure *into* a picture — so anything at
+that scale was manufactured by my software. On the right they are gone, and you
+get the smooth gradient a defocused background is supposed to be.
+
+**Why it happens.** Your frames are not all the same brightness. Across one of
+your brackets the level drifts by 3 to 8 percent from the first frame to the
+last, smoothly, and I measured the same thing on four of your other stacks. The
+stacker picks a different frame for different parts of the picture — that is its
+job — but it was pasting those pieces together without correcting for the fact
+that they were lit differently. Each patch arrived at its own brightness, and
+you get blotches. Fitting a per-frame brightness before merging removes them.
+
+**It is not blurring the picture to get there** — that was the first thing I
+checked, because it is the obvious way to fake this result. In
+`PHOTOMETRIC-tweezers-cpl-textured-400x656.png` the tweezer edge, its grain and
+the speckled texture are identical on both sides. It costs about 4 seconds on a
+50-second stack, and on one of the three subjects it was actually *faster*.
+
+**What I am not claiming.** I have this on one of three test subjects. On the
+other two the switch does nothing visible — and for the bee I know why: its
+background is already cleaner than the *fixed* version of the tweezers shot, so
+there was never anything there to remove. That is consistent with the
+explanation rather than a hole in it, but "consistent with" is not "measured".
+A campaign is running now across every stack you have given me, to check whether
+the blotches really do track the brightness drift. **If they do, this becomes the
+default and you never have to think about it again.**
+
+One more thing worth saying plainly: another agent measured this same switch
+tonight, with a careful pre-registered campaign, and concluded *leave it off*. It
+was not wrong. It scored the switch on **sharpness**; the switch does not change
+sharpness, so it failed a sharpness threshold — while doing something quite
+visible to **tone**, which nothing was measuring. Its own numbers never went
+below zero on any subject. I only found this because I went looking with a
+different ruler.
 
 ### Why §24 is first, and why its purpose changed overnight
 
