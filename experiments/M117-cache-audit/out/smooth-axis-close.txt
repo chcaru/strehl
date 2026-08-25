@@ -1,0 +1,7 @@
+A in-window 11:51:27  40812 bytes  sha256/16 4D454CCEAEC2479F
+B HEAD re-solve       40812 bytes  sha256/16 4D454CCEAEC2479F
+WHOLE-FILE IDENTICAL: True
+placement rows parsed: A=299  B=299
+rows differing on f64 BIT PATTERNS: 0 / 299
+negative control: a planted 1-ULP flip in row 0 is detected (1 diff) -- parser is live
+=> 299 placements bit-identical: the 11:51 solve is unpoisoned on ALL axes

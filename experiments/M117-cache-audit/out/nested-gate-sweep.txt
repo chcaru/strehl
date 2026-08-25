@@ -1,0 +1,4 @@
+controls: positive fires (STREHL_FIX_CA), negative silent []
+
+=== corpus measurements with a nested gate SET while alignment OFF ===
+  NONE - 0 reports
