@@ -1,0 +1,92 @@
+{
+ "base": "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif",
+ "step": 0.9315,
+ "band": [
+  0.3,
+  0.48
+ ],
+ "n_tiles": 40,
+ "ladder": [
+  {
+   "levels": null,
+   "measured_levels_per_tile": 65486,
+   "BR_base": -3.1296219558781244,
+   "BR_gathered": -3.163121615529721,
+   "cost": 0.0334996596515964,
+   "d_BR_base": 0.0,
+   "d_BR_gathered": 0.0
+  },
+  {
+   "levels": 4096,
+   "measured_levels_per_tile": 1425,
+   "BR_base": -3.1292751585544365,
+   "BR_gathered": -3.1628054280208913,
+   "cost": 0.033530269466454765,
+   "d_BR_base": 0.0003467973236879196,
+   "d_BR_gathered": 0.0003161875088295574
+  },
+  {
+   "levels": 1024,
+   "measured_levels_per_tile": 380,
+   "BR_base": -3.1243235401936813,
+   "BR_gathered": -3.158554075180969,
+   "cost": 0.034230534987287786,
+   "d_BR_base": 0.005298415684443114,
+   "d_BR_gathered": 0.004567540348751731
+  },
+  {
+   "levels": 256,
+   "measured_levels_per_tile": 98,
+   "BR_base": -3.0545496338876745,
+   "BR_gathered": -3.097896284992264,
+   "cost": 0.04334665110458946,
+   "d_BR_base": 0.07507232199044989,
+   "d_BR_gathered": 0.06522533053745683
+  },
+  {
+   "levels": 64,
+   "measured_levels_per_tile": 25,
+   "BR_base": -2.603317178656146,
+   "BR_gathered": -2.6981007398330243,
+   "cost": 0.09478356117687836,
+   "d_BR_base": 0.5263047772219784,
+   "d_BR_gathered": 0.4650208756966965
+  },
+  {
+   "levels": 16,
+   "measured_levels_per_tile": 7,
+   "BR_base": -2.195288763265861,
+   "BR_gathered": -2.258111319628716,
+   "cost": 0.06282255636285505,
+   "d_BR_base": 0.9343331926122636,
+   "d_BR_gathered": 0.9050102959010049
+  },
+  {
+   "levels": 12,
+   "measured_levels_per_tile": 5,
+   "BR_base": -2.177866078155015,
+   "BR_gathered": -2.317380861905357,
+   "cost": 0.13951478375034165,
+   "d_BR_base": 0.9517558777231092,
+   "d_BR_gathered": 0.845740753624364
+  },
+  {
+   "levels": 8,
+   "measured_levels_per_tile": 4,
+   "BR_base": -2.1437406793163993,
+   "BR_gathered": -2.2383835670516037,
+   "cost": 0.09464288773520435,
+   "d_BR_base": 0.9858812765617251,
+   "d_BR_gathered": 0.9247380484781171
+  },
+  {
+   "levels": 4,
+   "measured_levels_per_tile": 2,
+   "BR_base": -2.00590709394257,
+   "BR_gathered": -2.00244479580249,
+   "cost": -0.0034622981400800334,
+   "d_BR_base": 1.1237148619355546,
+   "d_BR_gathered": 1.160676819727231
+  }
+ ]
+}

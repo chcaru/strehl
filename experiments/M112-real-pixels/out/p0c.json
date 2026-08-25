@@ -1,0 +1,103 @@
+{
+ "base": "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif",
+ "sidecar": "C:\\dev\\strehl-out\\M106\\warpmap-corpus-snapshot.txt",
+ "k_cover": 0.9315,
+ "band": [
+  0.3,
+  0.48
+ ],
+ "n_tiles": 40,
+ "n_frames": 24,
+ "ladder": [
+  {
+   "levels": null,
+   "measured_levels_per_tile": 65486,
+   "NOW": 0.18133608953999233,
+   "FIX": 0.1854992795751689,
+   "recovery": -0.004163190035176567,
+   "REFONLY": 0.18360905005762132,
+   "decision": "DEAD"
+  },
+  {
+   "levels": 4096,
+   "measured_levels_per_tile": 1425,
+   "NOW": 0.18133436411054876,
+   "FIX": 0.18551322698347866,
+   "recovery": -0.0041788628729299004,
+   "REFONLY": 0.1835961810037869,
+   "decision": "DEAD"
+  },
+  {
+   "levels": 1024,
+   "measured_levels_per_tile": 380,
+   "NOW": 0.18161494433084258,
+   "FIX": 0.18574208275183454,
+   "recovery": -0.004127138420991966,
+   "REFONLY": 0.1839258003577265,
+   "decision": "DEAD"
+  },
+  {
+   "levels": 256,
+   "measured_levels_per_tile": 98,
+   "NOW": 0.1851999868114872,
+   "FIX": 0.18861047470528416,
+   "recovery": -0.0034104878937969707,
+   "REFONLY": 0.18745762602248844,
+   "decision": "DEAD"
+  },
+  {
+   "levels": 64,
+   "measured_levels_per_tile": 25,
+   "NOW": 0.19684568683171727,
+   "FIX": 0.19733375045250193,
+   "recovery": -0.0004880636207846567,
+   "REFONLY": 0.19841875440354093,
+   "decision": "DEAD"
+  },
+  {
+   "levels": 16,
+   "measured_levels_per_tile": 7,
+   "NOW": 0.20022253358855532,
+   "FIX": 0.19206493772922245,
+   "recovery": 0.008157595859332872,
+   "REFONLY": 0.2054844682278986,
+   "decision": "DEAD"
+  },
+  {
+   "levels": 12,
+   "measured_levels_per_tile": 5,
+   "NOW": 0.20271136166165646,
+   "FIX": 0.19071974822193888,
+   "recovery": 0.01199161343971758,
+   "REFONLY": 0.2099173052474117,
+   "decision": "DEAD"
+  },
+  {
+   "levels": 8,
+   "measured_levels_per_tile": 4,
+   "NOW": 0.21053809582480784,
+   "FIX": 0.1949972384489443,
+   "recovery": 0.015540857375863554,
+   "REFONLY": 0.21440566504398179,
+   "decision": "DEAD"
+  },
+  {
+   "levels": 4,
+   "measured_levels_per_tile": 2,
+   "NOW": -0.015177744131098011,
+   "FIX": -0.07534410091007814,
+   "recovery": 0.06016635677898012,
+   "REFONLY": 0.07663722243174746,
+   "decision": "DEAD"
+  },
+  {
+   "levels": 2,
+   "measured_levels_per_tile": 1,
+   "NOW": NaN,
+   "FIX": NaN,
+   "recovery": NaN,
+   "REFONLY": NaN,
+   "decision": "DEAD"
+  }
+ ]
+}
