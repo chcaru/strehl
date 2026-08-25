@@ -605,6 +605,186 @@ already known, but its severity and its colour were both wrong in the record.
 
 ---
 
+## 10. The blue clipping — and how my own tone fix quadrupled it
+
+I found this while diagnosing the haze, logged it as "a gamut question, not
+tone", and moved on. That was the wrong call and ORCH overruled it. What
+follows is what measuring it actually showed, including the part that is my
+fault.
+
+### 10.1 Three candidate causes, and how they were separated
+
+A channel clamping to zero on 12% of a frame has at least three explanations
+and they want three different fixes:
+
+1. **Genuinely out-of-gamut colour** — the scene contains saturated hues
+   sRGB cannot hold. Fix: map the gamut.
+2. **White-balance applied on the wrong side of the matrix.** Fix: reorder.
+3. **A wrong matrix.** Fix: correct the matrix.
+
+`experiments/BUILD-RENDER-gamut/diagnose.py` separates them by asking *where*
+in the frame the negatives are and *how far* under they go, because the three
+causes have incompatible signatures. An ordering or matrix error is systematic:
+it would show up on every subject and it would be worst where the signal is
+strongest. Real out-of-gamut colour is the opposite — it lives on the brightest,
+most saturated pixels and goes deeply negative.
+
+On `flower-inner-edge-cpl`, before the tone stage:
+
+| quantity | value |
+| --- | --- |
+| pixels with blue < 0 | 11.80% |
+| median excursion | −0.0018 |
+| p1 excursion | −0.0065 |
+| min | −0.0231 |
+| below −0.01 | 0.002% of frame |
+| below −0.05 | 0.000% |
+| of the negatives: dark / mid / **lit** | 10.7% / 89.3% / **0.0%** |
+
+Not one lit pixel is out of gamut. The excursions are a thousandth of the
+range. And the decisive control: **`coffee-bean` and `lavendar-cpl` show 0.00%
+negative blue** on the same code path. A wrong matrix or a wrong ordering
+cannot be subject-selective, so causes 2 and 3 are dead.
+
+What is left is arithmetic. The camera-native medians are R 0.1083, G 0.0938,
+**B 0.0341** — blue sits at a third of red, because this is a yellow-green
+scene. The blue row of the forward matrix is `1.3283·B − 0.3235·G`, so wherever
+green exceeds roughly four times blue, the result is negative. That is not a
+bug; it is what a colorimetric matrix does at the dark end of a scene with
+almost no blue in it. sRGB's blue primary cannot be reached from those camera
+values without going outside the cube.
+
+### 10.2 The part that is my fault
+
+ORCH predicted the tone fix would make this worse. It does, by more than either
+of us guessed. `experiments/BUILD-RENDER-gamut/tone_interaction.py`:
+
+| subject | blue < 0 before tone | after tone |
+| --- | --- | --- |
+| `flower-inner-edge-cpl` | 11.80% | **40.49%** |
+| `coffee-bean` | 0.00% | 2.73% |
+| `lavendar-cpl` | 0.00% | 0.41% |
+
+The mechanism is direct: the tone stage subtracts a black point in linear
+light, blue is the channel already nearest zero, so subtraction necessarily
+pushes more of it under. Red moves 0.30% and green 0.05% by the same operation.
+The asymmetry is the whole story.
+
+`lavendar-cpl` is the interesting one. Only 0.41% of pixels move, but they move
+by p99.9 = **0.5127** — half the range. That is the other population entirely:
+genuinely saturated purple, genuinely outside sRGB, and catastrophically
+damaged by a clamp. One frame contains both failure modes and they need the
+same fix to handle both.
+
+### 10.3 The defect is the response, not the excursion
+
+A per-channel clamp is the one answer that is certainly wrong, for two separate
+reasons:
+
+- **It moves hue.** It changes only the offending channel, so the ratio between
+  the other two shifts relative to it. The colour that comes out is not a less
+  saturated version of the colour that went in; it is a different colour.
+- **It moves luminance.** Raising a negative blue to zero makes the pixel
+  *lighter* than the value it stands in for. On `flower-inner-edge-cpl` that is
+  40% of the frame being silently lifted — which is, in miniature, the same
+  class of defect as the veil in §8.
+
+Measured luminance error against the unclamped ideal, p99.9:
+
+| response | luminance error |
+| --- | --- |
+| per-channel clamp | 0.00117 |
+| luminance-preserving map | **0.00000** |
+
+Exactly zero, by construction, not by tuning.
+
+### 10.4 The map
+
+`gamut_map()` in `image_out.rs`: blend toward the grey of the same BT.709
+luminance, by the smallest `t` that brings every channel inside `[0, 1]`.
+
+For `v[c] < 0` the requirement is `t ≥ −v/(y−v)`; for `v[c] > 1` it is
+`t ≥ (v−1)/(v−y)`; take the max over channels, guard the denominator. Hue
+direction survives because a straight line to the neutral axis in linear light
+is a desaturation and nothing else. Luminance survives because the endpoint has
+the luminance of the start. Both ends of the range are handled together, since
+a highlight pinned at 1.0 is the same defect as a shadow pinned at 0.0.
+
+Where nothing is out of gamut it is **exactly** the identity — the same safety
+property `clip_highlights` has, tested over an 11³ lattice.
+
+### 10.5 What it does to the picture
+
+Muted, which is correct for a fix whose job is to stop a distortion rather than
+add a look:
+
+| subject | pixels changed | mean \|Δ\| on movers (R/G/B, DN16) | max Δ |
+| --- | --- | --- | --- |
+| `flower-inner-edge-cpl` | 40.48% | 136 / 84 / **0.1** | 27851 |
+| `lavendar-cpl` | 0.76% | 371 / 106 / 671 | 42785 |
+
+The blue delta of 0.1 on the flower is not a null result, it is the mechanism
+made visible: because the blend is *minimal*, the negative channel arrives at
+exactly zero — the same place the clamp put it. What changes is that red and
+green come **down** to keep the luminance honest. The clamp was lightening 40%
+of the frame; the map does not.
+
+At full frame and at the worst-change crop on `lavendar-cpl`, before and after
+are near-indistinguishable to the eye. That is the intended result. A gamut
+map that visibly restyles the image is over-reaching.
+
+### 10.6 Measurement neutrality, proven rather than asserted
+
+The map rides with the tone rendering, so `--linear-srgb`, camera-linear and
+`Develop::measurement` keep the per-channel clamp they have always had.
+Verified on the exact frozen invocation `stack coffee-bean --limit 20
+--gate 2.0`, against a binary built from the *same* HEAD: `480A6B81…7C51` both
+arms, byte-identical.
+
+That "same HEAD" qualifier is load-bearing. My first neutrality test reported
+DIFFER, and it was wrong: the comparison tree predated a commit another lane
+had landed, so I was measuring their change and attributing it to mine. HEAD's
+own hash also moved between two builds of the same code during this session
+(`C8A2995A` → `480A6B81`). **Every arm of a comparison must come from one
+binary, built from a pinned `git archive` of an explicit SHA.** This is now the
+third independent time that rule has been proven in this repository by
+violating it.
+
+### 10.7 Still open
+
+`--linear-srgb` still hard-clips — 11.8% of blue on `flower-inner-edge-cpl`.
+That is deliberate: it is the frozen measurement space and changing it would
+move every stored number. But it means **colour measured there is clipped
+colour**, and any future colorimetric claim taken in that space has to say so.
+Flagged for ORCH rather than fixed unilaterally.
+
+---
+
+## 11. The regression guard
+
+`couch-fibers-cpl` was audited and found genuinely good — sharp to individual
+filaments, no artefacts. That makes it the control proving the core machinery is
+sound and the remaining defects are localised to depth boundaries. It also makes
+it the subject most likely to be damaged *silently*, because work aimed at a
+depth boundary can soften high-frequency texture while the subject it was tuned
+on improves.
+
+`scripts/guard.py`, wired into `gallery.ps1`, compares it against a stored
+reference on every run and prints `MOVED` or `held`. On a move it writes an
+8× amplified difference map and a before/after strip, because a scalar cannot
+distinguish an improvement from a degradation and this project has a documented
+history of green numbers over bad images.
+
+The reference was seeded from the exact gallery image ORCH audited, not from
+the next render — a guard that quietly baselines itself against whatever it
+finds is worse than no guard.
+
+This is not hypothetical: BUILD-HALO's own texture guard rejected its halo fix
+(`859edac`) for softening this subject, from the other direction, on the same
+day.
+
+---
+
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
