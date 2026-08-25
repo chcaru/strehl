@@ -247,6 +247,11 @@ Controls: NULL-1 (plain mean) **0.343**, NULL-2 (single frame) **0.308**, placeb
 > band-pass contrast, the merged output must satisfy
 > `C(out) ≤ Q_bound × max_k C(f_k)` with `Q_bound = max_k mean(f_k) / min_k mean(f_k)`,
 > `C(I) = ||gaussian(I,2) − gaussian(I,8)||_ROI / mean(I)_ROI`.
+>
+> **The implementation must assert the input dtype before computing anything.** See §12:
+> an 8-bit read of the same data inflates Q from 4.337 to 4.407, i.e. quantisation noise
+> pushes this metric in the **false-alarm** direction. A narrowing reader would make this
+> invariant fire on a clean merge.
 
 **Named input that would make it FAIL (rule 20):** a stack of a genuinely textured subject
 where the ROI selector mistakenly admits texture — the invariant then flags legitimate
@@ -424,3 +429,57 @@ preserves selectivity and satisfies the invariant.** (MEASURED)
   is verified**: all three are 2344 × 3516 binned and correlate with `armM-gate0-binlin` over
   the ROI at NCC +0.9998, +0.9046 and +0.8570 respectively — consistent with gate 0, gate 1
   and a wider gate, alignment off. (MEASURED)
+
+---
+
+## 12. PIL 16-bit-RGB hazard audit (ORCH fleet-wide alert)
+
+Script: `experiments/M120-patchwork/13_pil_audit.py`. Run after the report was first
+committed, in response to ORCH's finding that `PIL.Image.open()` silently returns `uint8`
+for 16-bit **RGB** TIFFs.
+
+**M120 is not exposed. (MEASURED)** Every `.tif` read in every M120 script is
+`tifffile.imread` — `01_geometry.py:11`, `02_pc1_shipped.py:68`, `02b_register.py:53`,
+`02c_coarse_register.py:36`, `03_pc1_crops.py:39`, `07_battery.py:132`,
+`08_shipped_grid.py:51,56,58`, `09_geometry_fix.py:50,94`, `10_final.py:60`,
+`11_mechanism.py:62,63`. PIL appears only as `Image.fromarray(...).save(...)` for PNG
+previews. The single `Image.open` (`00_look.py:21`) reads ORCH's three 8-bit grayscale
+**PNG** crops — the harmless preview case. The 299-frame denominator comes from
+`m87lib.read_planes`, which is `rawpy.imread` on the ARW files (`m87lib.py:124,145`), never PIL.
+
+**No file M120 consumed was laundered upstream. (MEASURED)** All eleven TIFFs read carry
+6 199 – 15 019 distinct levels per channel in a 512×512 patch, against the ≤256 that an
+8-bit round-trip would leave. This includes `ship-before-linear.tif` (13 479 levels), so
+the §3 retraction stands on the geometry finding alone and is not a bit-depth artifact.
+
+**The hazard reproduced on this project's own output, in M120's own ROI. (MEASURED)**
+`armM4-gate4-binlin.tif`, green, rows 1654:1782 × cols 720:848:
+
+| reader | dtype | min | max | sd | distinct levels |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `tifffile` | `uint16` | 12081 | 15934 | 940.52 | 2989 |
+| `PIL` | `uint8` | 47 | 62 | 3.70 | **16** |
+
+A 187× loss of level resolution on the exact pixels this milestone's headline rests on.
+
+**Counterfactual, and the part worth keeping. (MEASURED)** Recomputed against the same
+true-16-bit denominator, the shipped default's headline number would have been
+**Q = 4.407 via PIL against the 4.337 reported via `tifffile`** — the violation survives,
+because the patchwork steps span ~3850 DN of a 15934 DN signal (~62 8-bit counts), far
+above the quantisation floor. But note the **direction**: quantisation *added* band-pass
+energy to the numerator and pushed Q **up**. For a small signal it would dominate. So the
+narrowing reader is a **false-alarm** hazard for INV-PATCHWORK specifically, which is why
+§7 now requires the invariant to assert its input dtype. M120 did not write that assert
+either; the lesson is taken, not merely relayed.
+
+**A confirmed downstream victim, for ORCH's triage. (MEASURED)**
+`experiments/M87-occlusion/src/40-ship-delta.py:5-6` reads two 16-bit RGB shipped renders
+through `np.asarray(Image.open(...)).astype(np.int32)` and persists their difference to
+`cache/ship-delta.npy`. That file is `(4688, 7032) uint16, min 0, max 163, mean 1.621` —
+a halo-fix delta whose values are in **8-bit** units despite the `uint16` dtype, with a
+~257 DN-16 floor under every difference. A correction moving pixels by tens of 16-bit
+counts is invisible in it. This is exactly ORCH's "most suspect of all" class.
+Relatedly, `43-ship-crops.py:9` divides that PIL `uint8` array (max 255) by `257.0` and
+casts back to `uint8`, giving max `0.992 → 0`: **those crops are black**. M120 could not
+recompute the true delta — `30-SHIP-BEFORE-default.tif` and `31-SHIP-AFTER-fixhalo.tif`
+are no longer on disk. Owner of M87 should re-render before trusting any halo-fix number.
