@@ -411,3 +411,123 @@ touched**, and the report says so.
   (fact 1635 says this of its own number and it is repeated here).
 - No claim about question 202 (illumination versus breathing). `Dpp` is chosen
   to be robust to it, not to resolve it.
+
+---
+
+# AMENDMENT 1 — 2026-08-24 20:31 local, orchestrator facts 1641-1643, disciplines 836-837
+
+## 1a. Disclosure, first, because it governs how everything below may be read
+
+**This amendment was written AFTER the primary results existed.** The campaign,
+the drift measurement, the A/B, the correlation and the first report were all
+complete and committed (`0ee3ddf`) when the orchestrator's update arrived. This
+is therefore a POST-HOC amendment and nothing in it may be presented as
+pre-registered. Every number it produces is labelled AMENDED and reported
+alongside the original registered number, never instead of it.
+
+The registered verdict of section 6.1 stands as computed: **KEEP-OFF, K2 fired**.
+No amendment below can promote. An amendment made after the fact is allowed to
+make a conclusion *worse*, or to invalidate a control; it is not allowed to
+rescue one. That asymmetry is the only thing that makes this honest, and it is
+adopted deliberately.
+
+## 1b. What changed and why
+
+The orchestrator scored M116's soft-gate arms (A2/A3/A4) with the same
+instrument. They beat `--photometric` on the headline defect statistic on every
+subject that moves (bee-3-cpl 0.808/0.819/0.809 vs 1.064; tweezers-cpl
+0.553/0.562/0.544 vs 0.710) **and the textured-window control disqualifies all
+three** (bee-3-cpl gaussian textured 500.8 -> 348.0, a 30.5% cut, as large as its
+effect on that subject's smooth windows).
+
+The lesson is structural, and my section 6.1 got it wrong:
+
+> Any metric that rewards removing something is maximised by removing
+> everything. A candidate that fails the textured-window control must be
+> excluded BEFORE the ranking, not reported next to its good number.
+
+My registered criteria used the blur control as a **veto on the final verdict**
+(P4/K3) but not as an **exclusion from the correlation**: a stack that failed the
+blur control still contributed its point to `rho`. That is rank-then-check. It is
+now check-then-rank.
+
+## 1c. New exclusion rule E6, applied before `rho` is computed
+
+**E6.** A stack is excluded from the correlation if its A1 arm materially reduces
+fine structure where structure is real. Two forms, both applied:
+
+- **E6a (absolute)** textured-window ratio `T12 < 0.97`, level-normalised.
+- **E6b (selectivity)** for any stack that responds (`B12 < 0.97`), the gap
+  `T12 - B12 < 0.02` after level normalisation. Equal reduction in smooth and
+  textured windows is the soft gate's signature, not a fix.
+
+Level normalisation is applied to both because M20 of the report already showed
+`hf` is an absolute statistic that scales with level, and the orchestrator's
+qualifying observations (bee 1.037, tweezers 1.027) are raw ratios sitting just
+above 1. Normalisation is applied symmetrically: it must be allowed to convict as
+well as acquit, and section 1e records that it does both.
+
+## 1d. The binned control is retired in favour of a continuous covariate
+
+Discipline 837 and the orchestrator's warning: coarse subsampled `std` ranking
+and laplacian smoothness are **different orderings that select different
+pixels**. I hit this twice without recognising it as one fault:
+
+- on `tweezers-cpl` the windows carrying the effect rank 4th-12th, not 1st-3rd,
+  so my first image sheet showed three windows with no effect in them;
+- a window with `hf0` = 55.7 (smooth) entered `tweezers-cpl`'s **textured** set,
+  because `std` ranks by contrast and a large defocus gradient inflates `std`.
+
+Inspection of `flower-bud-alone-cpl` under a shared stretch shows the same fault
+in its worst form: its "textured" windows straddle the subject/background
+boundary, so the window ratio blends real texture with defect-carrying
+background and cannot be attributed to either.
+
+**Therefore the binned smooth/textured split is retired as the blur control.** It
+is replaced by a continuous statistic over ALL windows of a stack, no brightness
+gate and no ranking:
+
+```
+regress  hf1  on  hf0  over every window
+  k  = robust (Theil-Sen) slope over the upper half of hf0
+  c  = the additive offset removed at low hf0
+```
+
+- A **blur** multiplies fine structure by a constant fraction wherever it exists:
+  `k < 1`, and the ratio stays below 1 at every `hf0`.
+- A **background level fix** removes an additive excess that only exists where
+  the background is smooth: `k ~ 1`, with the ratio departing from 1 only at low
+  `hf0` and returning to 1 as `hf0` grows.
+
+**Amended blur gate: a stack fails if `k < 0.97`.** This uses every window
+instead of 24, and is immune to how a window gets labelled.
+
+**Registered now, before this statistic is computed on any stack (this is the
+one part of this amendment that is genuinely pre-result):** if `--photometric`
+returns `k < 0.97` on any stack whose blur-control power plant passed, that is
+evidence against promotion, it is reported in the report's headline section, and
+it is not softened by any smooth-window benefit on the same stack.
+
+## 1e. What this amendment does to the answer, stated in advance of recomputing
+
+Direction check, so the amendment cannot be a quiet rescue. Of the two stacks
+E6 puts in question:
+
+- `lavendar-cpl` (`B12` 0.9705, `T12` 0.9708, gap +0.0003) is a high-drift stack
+  that **supports** the correlation. E6b threatens it, so the amendment costs me
+  a supporting point.
+- `flower-bud-alone-cpl` (`T12` 0.9357, level-normalised 0.9275, 12/12 windows
+  down) is an E4-excluded stack whose **blur** control passed (power plant
+  0.6731) even though its **plateau** control failed. E4 was written to protect
+  the smooth reading; applying it to a textured reading discards a commissioned
+  measurement. It is therefore re-admitted **for the blur control only** and
+  reported as evidence against promotion.
+
+Both moves push against the conclusion. That is the intended direction and the
+test that this amendment is not self-serving.
+
+## 1f. Out of scope, per the orchestrator
+
+The soft gate is settled by two independent routes (M116 detail statistic
+-0.01218; orchestrator background statistic plus control). **No M122 budget is
+spent on it.** No soft-gate arm is rendered, scored or ranked here.

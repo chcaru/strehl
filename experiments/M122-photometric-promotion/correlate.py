@@ -116,9 +116,17 @@ def main():
     blotch = {r["stack"]: r for r in json.load(open(os.path.join(OUT, "blotch-ab.json")))}
     gs = gain_spans()
 
+    # AMENDMENT 1 (sections 1c/1d): the blur control is a GATE APPLIED BEFORE the
+    # ranking, not an annotation reported next to a good number. Any metric that
+    # rewards removing something is maximised by removing everything, so a
+    # candidate that destroys real structure must leave the corpus before rho is
+    # computed. Loaded here, applied in the exclusion loop below as E6.
+    cont = {}
+    cpath = os.path.join(OUT, "continuous.json")
+    if os.path.exists(cpath):
+        cont = {r["stack"]: r for r in json.load(open(cpath))}
+
     hashes = {}
-    for line in open(os.path.join(OUT, "ledger-measure.csv"), encoding="utf-8"):
-        pass
     import csv
     with open(os.path.join(OUT, "ledger-measure.csv"), newline="", encoding="utf-8") as fh:
         for row in csv.DictReader(fh):
@@ -136,6 +144,13 @@ def main():
         if a0[0] and a0[0] == a1[0]:
             excluded.append((s, "E3 A0 == A1 byte-identical (plumbing null: gain span %s, %d frames refused)"
                              % (gs.get(s, {}).get("gain_span"), gs.get(s, {}).get("refused", -1))))
+            continue
+        # E6 is tested BEFORE E4 and before anything else that could let a
+        # structure-destroying stack through on a technicality.
+        c = cont.get(s)
+        if c is not None and c.get("gate_commissioned") and c["gate"] == "FAIL":
+            excluded.append((s, "E6 AMENDED blur gate: k = %.4f < 0.97 (blur plant %.4f, "
+                                "commissioned) -- destroys real structure" % (c["k"], c["k_blur"])))
             continue
         if b is None or "excluded" in b:
             excluded.append((s, b.get("excluded", "no A/B row") if b else "no A/B row"))

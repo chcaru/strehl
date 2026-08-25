@@ -8,9 +8,28 @@ track the measured inter-frame level drift, across the whole capture corpus?*
 pre-registered *no-harm* criterion fails. `STREHL_PHOTOMETRIC` was **not**
 flipped. Nothing under `crates/` was touched.
 
+> ### Reported prominently, as instructed: `--photometric` destroys real structure on one stack
+>
+> On **`flower-bud-alone-cpl`** the level-normalised fine-structure ratio
+> declines *monotonically with the amount of real structure present* — 0.995 in
+> the lowest `hf(A0)` decile, **0.973 and 0.937** in the top two. Robust slope
+> **k = 0.9444 [0.9312, 0.9598]** against a gate of 0.97, with that stack's own
+> blur plant commissioned at 0.7095. Every other stack in the corpus reads a
+> top-decile ratio ≥ 0.9935. This is the blur signature, it is the opposite of
+> the fix signature, and it is a second independent reason not to promote.
+>
+> It was in my first report's *excluded* set, marked "commissioning failed", with
+> its 6.4 % textured-window loss recorded in a column and not acted on. That was
+> rank-then-check and it was wrong.
+
 Pre-registered in `experiments/M122-photometric-promotion/PREREGISTRATION.md`,
-committed `98728d2`, **before any arm was rendered**. Every criterion below is
-quoted from that file; none was renegotiated after the numbers existed.
+committed `98728d2`, **before any arm was rendered**. Amended once —
+**AMENDMENT 1, post-hoc and labelled as such** — after the orchestrator folded
+facts 1641–1643 and disciplines 836–837. The amendment makes the blur control a
+gate applied *before* the ranking, and retires the binned smooth/textured control
+in favour of a continuous covariate. It cannot promote: an amendment written
+after the results exist is allowed to make a conclusion worse, never to rescue
+one. The registered verdict of §6.1 is unchanged by it.
 
 ---
 
@@ -103,7 +122,8 @@ excluded by rules fixed in PREREGISTRATION §6.4 before any of them was scored:
 | `coffee-bubbles` | E2 | A1 **exit 1** — same error, 442 px after eroding |
 | `highly-angled-ruler-mm-cpl` | E2 | `align` exit 1, subject not normal to the optical axis; `--force-tilted` deliberately **not** passed |
 | `dry-erase-marker-head-cpl` | E3 | A0 SHA == A1 SHA. The fit **refused all 100 frames** (`clipped fraction 3.245e-1 exceeds 1.000e-4`), gain span 1.0000 |
-| `109MSDCF`, `flower-bud-alone-cpl`, `flower-bud-with-background-fern-cpl`, `wrapped-text-1`, `wrapped-text-2` | E4 | the in-run commissioning triple failed on that stack's own pixels |
+| `flower-bud-alone-cpl` | **E6** | **amended blur gate: k = 0.9444 < 0.97, blur plant commissioned at 0.7095 — destroys real structure.** Also fails E4, but E6 is tested first and is the substantive reason |
+| `109MSDCF`, `flower-bud-with-background-fern-cpl`, `wrapped-text-1`, `wrapped-text-2` | E4 | the in-run commissioning triple failed on that stack's own pixels |
 
 **M6 (MEASURED).** ***`--photometric` is not safe to switch on for everyone,
 independently of any correlation.*** On 23 stacks it **hard-errors on 2** and
@@ -212,15 +232,22 @@ at hf 56.7, 62.1, 64.7, 68.1, 70.5, 75.6, 78.7, 78.9 and all land within
 everything by a constant. A blur would scale the textured windows too; 11 of the
 12 textured windows (hf0 1624–3565) read 1.013–1.031, i.e. slightly **up**.
 
-*Caveat on the textured set, recorded because it initially looked like a
-problem.* A variant of the texture control that forces ≥ 256 px separation
-between window centres reads 0.8846 on `tweezers-cpl`, which would have failed.
-Inspecting the windows shows why: the textured set has no brightness gate, so one
-window at x=1680 y=528 with `hf0` = 55.7 — smooth background, ranked "textured"
-because a large-scale gradient inflates its `std` — leaks in and reads 0.845, the
-same blotch removal as the smooth set. The genuinely textured windows are
-unanimous. The registered criterion is `T12` and `T12` passes; the separated
-variant fails for a reason that is a defect in the variant.
+*Caveat on the textured set, now resolved by M17a.* A variant of the texture
+control that forces ≥ 256 px separation between window centres reads 0.8846 on
+`tweezers-cpl`, which would have failed. The cause is the labelling fault of
+M17a: one window at x=1680 y=528 with `hf0` = 55.7 — smooth background, ranked
+"textured" because a large-scale gradient inflates its `std` — reads 0.845, the
+same blotch removal as the smooth set. The continuous statistic settles it
+without needing a label at all: `k` = 1.0000 [0.9993, 1.0008].
+
+**Which definition of "smooth" this report uses (discipline 837).** Every
+"smooth window" claim here means **lowest coarse subsampled standard deviation,
+`w[::8,::8].std()`, of the symmetric mean of the two arms**, inside the brightest
+20 % of windows. That is *not* the same ordering as laplacian smoothness and it
+selects different pixels: on `tweezers-cpl` the windows carrying the effect rank
+**4th–12th, not 1st–3rd**, because they are pixel-smooth but sit on a large
+defocus gradient. My first image sheet showed ranks 1–3 and contained no visible
+effect; that was the fault, not the absence of one.
 
 **M15 (MEASURED). Neither fact-1640 broken-link test fired.** L1 needs a null ρ
 with a real responder present — ρ is +0.70, not null. L2 needs a stack with
@@ -242,15 +269,75 @@ excluded as **not interpretable**, not as nulls. `109MSDCF` — my intended
 low-drift control — is among them: plant+ 1.2857 (needs > 1.30), plant− 0.7778
 (needs < 0.77), both just outside.
 
-**M17 (MEASURED). The blur control has power (rule 20 — the input that would
-make the gate fail).** A σ=0.5 gaussian blur of A0, scored as if it were the test
-arm, is caught on **every** stack: textured-window ratios 0.5528–0.8177, median
-0.7287, all far below the 0.90 detection bar. The texture control is not a gate
-that cannot fire.
+**M17 (MEASURED, SUPERSEDED — see M17a). The binned blur control has power.** A
+σ=0.5 gaussian blur of A0, scored as if it were the test arm, is caught on
+**every** stack: textured-window ratios 0.5528–0.8177, median 0.7287, all far
+below the 0.90 detection bar.
 
-**M18 (MEASURED). Blur control clean on every responder.** The three stacks with
-`B12 < 0.97` read `T12` = 1.0199, 1.0008, 1.0424 — all ≥ 0.97. **P4 passes, K3
-does not fire.** The effect is confined to smooth windows.
+**M17a (MEASURED, AMENDMENT 1 §1d — this replaces the binned control).** *The
+smooth/textured split is not a texture control and it is retired.* It ranks
+windows by coarse subsampled `std`, i.e. by **contrast**, not by pixel-level
+texture. Two demonstrated failures in this corpus:
+
+- a window with `hf0` = 55.7 — smooth background under a defocus gradient —
+  entered `tweezers-cpl`'s **textured** set and read 0.845;
+- `flower-bud-alone-cpl`'s "textured" windows straddle the subject/background
+  boundary, so their ratio blends real texture with defect-carrying background.
+  Under a shared stretch the hairs on the bud are **preserved** in both arms and
+  what changed is the background inside the window.
+
+Replaced by a continuous covariate over **all 220 windows** of a stack, no
+brightness gate and no ranking: regress level-normalised `hf1` on `hf0`, take the
+Theil–Sen slope `k` over the upper half of `hf0`. A blur multiplies structure by
+a constant fraction wherever it exists (`k < 1` everywhere); a background level
+fix removes an additive excess that only exists where the background is smooth
+(`k ≈ 1`, ratio departing from 1 only at low `hf0`). **Gate: `k < 0.97` fails.**
+
+```powershell
+python experiments\M122-photometric-promotion\continuous.py
+```
+
+**Power, per stack (rule 20), because a corpus-wide power claim hid a dead
+gate.** The σ=0.5 blur plant returns `k_blur` median 0.7607, worst 0.8506, over
+**19 of 20** stacks — the gate fires hard. On `109MSDCF` it returns 1.0038: that
+stack's windows span too narrow an `hf0` range to support a slope, so its gate is
+**not commissioned** and its `k` is not read. That is a property of the stack.
+
+**M17b (MEASURED). The two signatures are completely distinct, and only one stack
+shows the wrong one.** Median level-normalised ratio by decile of `hf0`:
+
+| stack | d1 | d2 | d3 | d4 | d5 | d6 | d7 | d8 | d9 | d10 | `k` |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `tweezers-cpl` | 1.033 | **0.833** | 0.986 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.001 | 1.0000 |
+| `coffee-bean` | 0.970 | 1.005 | 1.001 | 1.001 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.0000 |
+| `bee-1-cpl` | 0.972 | 1.001 | 1.002 | 0.998 | 1.001 | 1.001 | 0.996 | 0.997 | 1.000 | 0.998 | 0.9969 |
+| **`flower-bud-alone-cpl`** | 0.995 | 0.994 | 0.995 | 0.992 | 0.998 | 0.999 | 0.984 | 0.998 | **0.973** | **0.937** | **0.9444** |
+
+The three responders confine their entire effect to the lowest `hf0` deciles and
+read **exactly 1.000** wherever structure is real — `tweezers-cpl` is flat at
+1.000 from `hf0` = 1420 upward, with `k` = 1.0000 [0.9993, 1.0008]. That is the
+strongest form this control can pass in. `flower-bud-alone-cpl` runs the other
+way: the reduction *grows* with the amount of structure present.
+
+Top-decile ratio across the corpus: `flower-bud-alone-cpl` **0.9365**; the next
+worst is `foam` at 0.9935; 17 of 20 stacks are ≥ 0.997.
+
+**M18 (MEASURED). Blur control clean on every responder, under both the retired
+and the amended control.** Binned: the three stacks with `B12 < 0.97` read `T12`
+= 1.0199, 1.0008, 1.0424, all ≥ 0.97, so registered P4 passes and K3 does not
+fire. Continuous: `k` = 1.0000, 1.0000, 0.9969. The responders are not blurring,
+and this is now established by a statistic that does not depend on how a window
+gets labelled.
+
+**M18a (MEASURED). Applying the gate before the ranking does not change the
+correlation.** With E6 evaluated ahead of E4, `flower-bud-alone-cpl` leaves the
+corpus as a blur-gate failure rather than a commissioning failure. It was already
+outside the n = 14, so **ρ = +0.7011, p = 0.0035 is unchanged**. Of the 14 stacks
+that do enter, the lowest `k` is `foam` at 0.9898 — none is gated out.
+
+```powershell
+python experiments\M122-photometric-promotion\correlate.py   # E6 applied before rho
+```
 
 **M19 (MEASURED). Low-drift control.** With `109MSDCF` excluded by E4, the
 lowest-drift usable stack is `bee-3-cpl` at 1.629 %, and it reads `B12` = 1.0638
@@ -324,7 +411,12 @@ this "a reason not to impose it", not "a reason to warn people off the flag".
 
 Listed because the conclusion is worth less without them.
 
-1. **`foam` is a direct counterexample to proportionality.** 10.617 % drift —
+1. **`--photometric` materially destroys real structure on `flower-bud-alone-cpl`**
+   — `k` = 0.9444 [0.9312, 0.9598], top-decile ratio 0.9365, gate commissioned at
+   0.7095. One stack in twenty, but it is the failure mode that matters most, and
+   my first report had it filed as a commissioning exclusion with its 6.4 %
+   textured loss sitting unremarked in a column. See the box at the top.
+2. **`foam` is a direct counterexample to proportionality.** 10.617 % drift —
    fourth highest — and `B12` = 1.0126, no response at all. Its smooth-window
    `hf0` is 3712 counts, ~90× `bee-3-cpl`'s, so its "smooth" windows are not
    smooth and a blotch could hide under its own texture. That is a floor
@@ -440,6 +532,34 @@ corpus stop rendering entirely when the flag is on.
   it is doing real work.** The recommendation is precisely: keep it opt-in,
   document that it pays off above roughly 8–10 % drift, and fix the hard error
   before anyone considers this question again.
+- Nothing about the soft gate. It is settled twice over — M116 rejected it on a
+  detail statistic at −0.01218, the orchestrator on a background statistic plus a
+  control — and no M122 budget was spent on it. No soft-gate arm was rendered,
+  scored or ranked here.
+
+---
+
+## 11. What changed under AMENDMENT 1, and what it cost
+
+Recorded so the amendment can be audited rather than trusted.
+
+| | before | after |
+|---|---|---|
+| blur control | binned smooth/textured `T12`, checked **after** ranking | continuous `k` over all windows, gated **before** ranking |
+| power check | corpus-wide | **per stack** — exposed one dead gate (`109MSDCF`) |
+| `flower-bud-alone-cpl` | excluded E4, texture loss noted in a column | **excluded E6, reported in the headline** |
+| ρ | +0.7011, p = 0.0035 | **+0.7011, p = 0.0035** (unchanged; the gated stack was already out) |
+| verdict | KEEP-OFF (K2) | **KEEP-OFF (K2), plus a second independent reason** |
+
+The amendment was written **after** the results existed and is labelled post-hoc
+throughout. The one part written before its statistic was computed is the `k`
+gate and its consequence (AMENDMENT 1 §1d, final paragraph). Both stacks the
+amendment put in question were checked in advance for which way they would push:
+`lavendar-cpl` is a high-drift **supporter** that the selectivity form of E6
+threatened, and `flower-bud-alone-cpl` is a stack the amendment **convicts**. The
+continuous statistic then acquitted `lavendar-cpl` (`k` = 1.0033) and convicted
+`flower-bud-alone-cpl` (`k` = 0.9444) — it cut both ways, which is the test that
+it is not a knob tuned to a preferred answer.
 
 ---
 
@@ -469,6 +589,24 @@ corpus stop rendering entirely when the flag is on.
   `tweezers-cpl` (1.0005 vs 0.7102).
 - **P9** M122 verdict: **KEEP-OFF**, on pre-registered criterion K2. Question 203
   is answered yes and the default was still not flipped.
+- **P10** `--photometric` **materially reduces real fine structure on
+  `flower-bud-alone-cpl`**: Theil–Sen slope of level-normalised `hf1` on `hf0`
+  = **0.9444 [0.9312, 0.9598]**, top-`hf0`-decile ratio **0.9365**, gate
+  commissioned on that stack at `k_blur` = 0.7095. Corpus next-worst top-decile
+  ratio is 0.9935. A second, independent reason not to promote.
+- **P11** The smooth/textured **binned** blur control is unsound: it ranks
+  windows by coarse subsampled `std`, i.e. by contrast, so it admits smooth
+  windows (`tweezers-cpl` `hf0` 55.7) and mixed subject/background windows
+  (`flower-bud-alone-cpl`) into the "textured" bin. Replace it with the
+  continuous `k` statistic, which uses all 220 windows and needs no label.
+- **P12** Under the continuous control the three responders confine their effect
+  entirely to low `hf0` and read **exactly 1.000** where structure is real
+  (`tweezers-cpl` `k` = 1.0000 [0.9993, 1.0008], flat at 1.000 from `hf0` = 1420
+  up). Fix signature and blur signature are cleanly separable by `k`.
+- **P13** The `k` gate must be commissioned **per stack**: on `109MSDCF` the
+  σ=0.5 blur plant returns `k_blur` = 1.0038, because that stack's windows span
+  too narrow an `hf0` range to support a slope. A corpus-wide power claim would
+  have hidden one dead gate among nineteen live ones.
 
 ---
 
