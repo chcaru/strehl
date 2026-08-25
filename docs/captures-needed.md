@@ -14,7 +14,7 @@ genuinely useful and none of it is blocking a fix that is already written.*
 
 | # | what | time | what it unblocks |
 | --- | --- | --- | --- |
-| **1** | **§24** — flat, repeating, **corner-to-corner** subject at working magnification, shot **normal + red + green + blue** (gels or coloured light), plus **a second set with the 2x teleconverter** | ~10 min | Confirms a **measured 1.444x overshoot** in the CA correction on a second scene, and is the **only** path to a blue coefficient or a teleconverter one. See below. |
+| **1** | **§24** — flat, repeating, **corner-to-corner** subject at working magnification, shot **normal + red + green + blue** (gels or coloured light), plus **a second set with the 2x teleconverter** | ~10 min | **Purpose changed overnight, and went UP.** It no longer confirms a scalar overshoot — that number was refuted. The **coloured-gel sets are now the experiment**: they test whether the correction must be **spectral**, which is the only remaining path to fixing it. Still the only route to a blue coefficient or a teleconverter one. See below. |
 | **2** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
 | 3 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document — and it **went up in value overnight**: it is the *trap* arm for the election gate now being wired. See the box below. |
 | 4 | **§19** — one hard edge at three apertures | ~10 min | The remaining aperture question |
@@ -60,17 +60,41 @@ actual sensor, your actual noise.
 your real captures and writing before/after 1:1 crops to `C:\dev\strehl-out\M116\`
 — look there first in the morning.
 
-### Why §24 is first, and why it got more specific overnight
+### Why §24 is first, and why its purpose changed overnight
 
 Two independent by-eye reads on 1:1 crops of your own stacks — one by an agent
 that had never seen the chromatic-aberration work, one by me — independently
 concluded that **the worst thing in your renders is lateral chromatic
 aberration**: coloured fringes on every bright edge. Not softness, not noise, not
-ringing. The correction for it is written and is being wired into the render path
-tonight.
+ringing. That diagnosis still stands and is now confirmed on two stacks by two
+independent methods.
 
-**But it is fitted on ground that runs out before the corner, and half of it does
-not exist yet.** Measured, not guessed:
+**What changed is the fix.** Earlier tonight I measured the correction
+over-shooting by 1.444× and recommended scaling the red coefficient by 0.692.
+**An independent check refuted that, and it was my error, not the checker's.** I
+had measured on an `--srgb` render — and lateral CA is a *cross-channel* quantity,
+while that file has had two cross-channel operations applied to it: a colour
+matrix that mixes 10–20 % of one channel into another **at zero displacement**,
+and a demosaic whose stated assumption is that `R − G` is smooth, which is
+precisely what a colour fringe is not. The tool's own help text for `--srgb` says
+**"For looking at, NOT for measuring."** It was right and I ignored it.
+
+Re-measured properly, the correction over-shoots by **1.25×** on one of your
+stacks and **1.06×** on another. **And that spread is the real finding: there is
+no single number to fix.** The two stacks need corrections 23.6 % apart through
+the same lens, because how far a colour separates depends on the *effective
+wavelength* of each channel — which depends on the **colours in the scene**. Your
+bee and your couch fibres are lit differently and coloured differently, so they
+genuinely need different corrections.
+
+**Which is exactly why the coloured-gel sets in §24 are now the point of the
+shoot.** Shooting the same flat target under red, green and blue light measures
+that spectral dependence directly, on your lens, at your magnification. It is the
+difference between a correction that is right on average and one that is right on
+your photograph. Nothing else in this document can substitute for it.
+
+Everything below about the fit's missing support still applies, and still
+matters:
 
 - The fit spans **r = 0.208 to r = 0.788** of the frame radius. **Both outer
   annuli are empty** — `0.80-0.90` *and* `0.90-1.00`. Lateral CA is **zero at the
