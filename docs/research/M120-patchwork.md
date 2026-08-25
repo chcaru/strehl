@@ -483,3 +483,229 @@ Relatedly, `43-ship-crops.py:9` divides that PIL `uint8` array (max 255) by `257
 casts back to `uint8`, giving max `0.992 → 0`: **those crops are black**. M120 could not
 recompute the true delta — `30-SHIP-BEFORE-default.tif` and `31-SHIP-AFTER-fixhalo.tif`
 are no longer on disk. Owner of M87 should re-render before trusting any halo-fix number.
+
+---
+
+# M120b — the mechanism. ORCH's regulariser hypothesis is refuted.
+
+Pre-registered in `experiments/M120-patchwork/PREREGISTRATION-M120b-mechanism.md`
+(commit `f30b513`), **before** any M120b measurement. Existence is settled by facts
+1616–1620 and is not re-litigated. Scripts: `14_probe_field.py`, `15_operators.py`,
+`16_p234.py`, `17_operator_price.py`.
+
+## 13. Headline
+
+**Turning the spatial regulariser completely off removes 3.7% of the visible defect and
+leaves the crazy paving plainly visible. (MEASURED)** With **both** spatial-coherence
+operators off — a pure per-pixel argmax whose index field is 2 px salt-and-pepper — the
+render still violates the no-manufactured-structure invariant by **2.6×**. The regulariser
+is not the cause. Neither is the focus window. **The cause is the election itself.**
+
+ORCH's supporting argument — *"raw argmax noise would be pixel-scale salt-and-pepper…
+the regulariser is the only thing in the pipeline that does that"* — rests on a premise
+that is **false as a matter of code**, checkable without any pixels. The chain is:
+
+| stage | operator | support | source |
+| --- | --- | --- | --- |
+| 1 | Sobel 3×3 magnitude | 3 px | `SOBEL_RADIUS = 1` |
+| 2 | **`box_mean` over the focus window** | **27 × 27** | `WINDOW_RADIUS = 13`; 729 taps, `focus.rs:899` |
+| 3 | `/ σ(luma)`, per pixel | 1 px | `focus.rs:219,272` |
+| 4 | `regularise` = `box_mean` | 17 × 17 | `merge.rs:93,194` |
+| 5 | argmax over frames | — | |
+
+There are **two** coherence operators and the one applied **first is larger**. An argmax
+over a field already box-summed across 27 px cannot be salt-and-pepper.
+
+## 14. M1 — isolating the two operators (MEASURED)
+
+Chain replicated from the 299-frame luma cube; the replication reproduces the shipped
+`bee3-leg-argbest.npy` at **96.75%** exact index agreement over the background mask
+(347,676 px, 40.8% of the plane, max-over-frames local sd < 250 DN). Arm C is taken from
+the **exact cached shipped field**, not the replication, because it has the largest blobs
+and is therefore the reference that argues *against* the prediction (discipline 829).
+
+| arm | window | regulariser | #components | mean area | area-weighted | **eq. diameter** |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| **A** | OFF | OFF | 247,435 | 1.4 | 3.0 | **1.97 px** |
+| **A′** | OFF | **ON** | 26,801 | 12.9 | 264.4 | **18.35 px** |
+| **B** | **27×27** | OFF | 40,035 | 8.7 | 296.0 | **19.41 px** |
+| **C** | 27×27 | ON | 3,331 | 104.3 | 639.5 | **28.54 px** |
+
+- **Positive control passes.** Arm A is 1.97 px — the metric *can* read salt-and-pepper,
+  and `M1-A-window-OFF-reg-OFF.png` is visibly exactly that. Without this arm, "arm B has
+  blobs" would be unfalsifiable.
+- **The window alone (B, 19.41 px) and the regulariser alone (A′, 18.35 px) produce blobs
+  of nearly the same size.** Neither is "the" coherence source; they are interchangeable
+  in magnitude, and the window is marginally the larger.
+- **Pre-registered decision rule, honestly split.** `A(B)/A(C)` = **0.083** on mean area
+  (⇒ "ORCH confirmed") but **0.463** on area-weighted (⇒ "partial"). I registered both and
+  said I would disclose disagreement. The disagreement is explained: mean area is little
+  more than the reciprocal of component count, and arm B fragments into many small
+  components *and* retains large ones. **Neither statistic is decisive, so §16 replaces
+  the whole question with a direct measurement on the render.**
+- **Removing the regulariser does not re-elect a different stack.** Arm B vs shipped over
+  the background: **56.2% identical index, 79.0% within ±3 frames** (64.6% / 83.2% after a
+  5 px median). The macro-layout survives; the edges get ragged.
+
+`M1-B-window-ON-reg-OFF.png` against `M1-C-shipped-window-ON-reg-ON.png` is the picture:
+**the same regions in the same places**, ragged instead of clean.
+
+## 15. P2 — the two quantities ORCH's wording conflates (MEASURED)
+
+| region | winner response | **in noise σ** | margin | **in gate units** |
+| --- | ---: | ---: | ---: | ---: |
+| background | 8.5489 | **561.9** | 0.07365 | **3.42** |
+| subject | 119.0914 | 7827.7 | 1.33043 | 61.84 |
+
+**The data term does not vanish. (MEASURED)** The winner's response in the defocused
+background is **562 noise σ**, and **0.00%** of background pixels fall below 3 σ. "The data
+term is at the noise floor" is false by three orders of magnitude. This replicates M120's
+R1a refutation on an independent construction.
+
+**What *is* small is the margin.** 3.42 gate units against the subject's 61.84 — an **18×**
+smaller discriminative signal — and below 1 gate unit on **21.2%** of background pixels
+(subject: 1.1%). So the election is **degenerate near its peak**, not data-free. That
+distinction is the whole mechanism, and ORCH's phrasing collapses it.
+
+## 16. P3 — the regression. It fires hard, in the direction *opposite* to ORCH's prediction, and refutes my own too. (MEASURED)
+
+Spearman **ρ = +0.6809** (p ≈ 0, n = 347,676) between local margin and the area of the
+constant-index component a pixel belongs to.
+
+| margin decile | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| margin (gate units) | 0.21 | 0.67 | 1.22 | 1.90 | 2.81 | 4.22 | 7.49 | 23.2 | 57.9 | 217.8 |
+| **eq. diameter (px)** | **14.1** | 15.1 | 16.2 | 17.6 | 19.7 | 23.3 | 30.2 | 36.5 | 42.2 | **67.6** |
+
+- ORCH pre-registered `ρ < −0.3`, monotone, *"where the data says less, the regulariser
+  interpolates further"*. **The data says the exact reverse.** Blobs are **smallest**
+  (14.1 px) where the margin is **lowest**, and largest (67.6 px) where it is highest.
+- **My own pre-registered prediction (`|ρ| < 0.2`, size pinned at window scale) is also
+  wrong.** The relationship is strong. What survives of my account is the *floor*: the
+  lowest-margin decile does not fall below ~14 px, which is the window scale, not 1 px.
+- The physical reading (ARGUED): a **high** margin means one frame genuinely dominates over
+  a wide area, so the constant-index region is large. A **low** margin means near-tied
+  frames trade the pixel back and forth, fragmenting the field at the smoothing scale.
+  Region size therefore tracks *real* structure, and the regulariser is not interpolating
+  into a vacuum.
+
+## 17. The operator price, measured on the render, not the index field (MEASURED)
+
+The index field is not the artifact. This gathers the merged luma under each arm's index
+field and applies M120's shipped metric on the registered background ROI (M87-box rows
+476:604, cols 442:570), denominator = max over all 299 single frames, `Q_bound = 1.284`.
+
+| arm | window | reg | **Q** | vs bound | Δ vs shipped |
+| --- | --- | --- | ---: | ---: | ---: |
+| **C — shipped** | 27×27 | ON | **7.166** | 5.58× | — |
+| **B** | 27×27 | **OFF** | **6.902** | 5.38× | **−3.7%** |
+| **A′** | **OFF** | ON | 7.371 | 5.74× | +2.9% |
+| **A** | **OFF** | **OFF** | **3.359** | **2.62×** | −53.1% |
+| NULL-1 plain mean | — | — | 0.343 | ✓ | |
+| NULL-2 single input frame | — | — | 0.308 | ✓ | |
+
+**Every arm violates the invariant, including the one with no spatial coherence at all.**
+`M3-render-B.png` (regulariser off) is still unmistakably crazy paving; `M3-render-A.png`
+(both off) is grain rather than paving, and *still* manufactures 2.6× the bound.
+
+**The lever comparison, which is the actionable number. (MEASURED)** Against M120 §9's
+gate ladder on the identical ROI and denominator:
+
+| lever | range | Q |
+| --- | --- | --- |
+| regulariser ON → OFF | — | 7.166 → 6.902 (**−3.7%**) |
+| admission width, gate 0 → 16 | `STREHL_GATE` | 7.166 → **0.953** (**−86.7%**, first arm to pass) |
+
+**Admission width is the lever; regularisation is not.**
+
+## 18. P1 and P4
+
+- **P1 — CONFIRMED, constructively rather than by correlation.** §17 *builds* the render by
+  gathering pixels through the elected-index field and reproduces the paving. The blobs are
+  constant-index regions by construction, which is stronger evidence than M120 §5's
+  ρ = +0.5465 (null +0.0077) and supersedes the need for it here.
+- **P4 — fires, but *against* ORCH's predicted direction. (MEASURED)** ORCH predicted the
+  subject would show "small or no blobs". Using equal-area compact rectangles (the step-15
+  masked comparison was confounded: the subject mask was 1.6% of the plane against the
+  background's 40.8%, and mask truncation biases small masks' components downward):
+
+  | side | background | subject | ratio |
+  | --- | ---: | ---: | ---: |
+  | 96 px | 16.0 px, margin 1.37 | **36.3 px**, margin 37.4 | 0.44× |
+  | 128 px | 19.9 px, margin 1.61 | **35.3 px**, margin 31.6 | 0.56× |
+
+  Subject blobs are **larger**, consistently with ρ = +0.68. The background is *not*
+  distinguished by having big blobs; it is distinguished by having a **small margin**.
+  The specificity the control was asked to establish holds on **margin** (1.4–1.6 vs
+  31–37 gate units, a 20× separation), not on blob size.
+
+## 19. Verdict on ORCH's hypothesis
+
+**REFUTED.** Taking the hypothesis clause by clause:
+
+| clause | verdict | evidence |
+| --- | --- | --- |
+| "the through-focus response is flat / the data term is at the noise floor" | **REFUTED** | winner response **562 σ**; 0.00% below 3 σ (§15) |
+| "the regulariser then dominates completely" | **REFUTED** | regulariser OFF changes Q by **−3.7%** and leaves the paving visible (§17) |
+| "the regulariser is the only thing imposing spatial coherence" | **REFUTED** | false in the source; the 27×27 window is larger, and alone yields 19.4 px blobs (§14) |
+| "blob size grows as margin falls" | **REFUTED, sign reversed** | ρ = **+0.68**; lowest-margin decile has the **smallest** blobs (§16) |
+| "each region gathers from a different frame, and inter-frame differences are the steps" | **CONFIRMED** | §17 reconstructs the paving by gathering through the index field |
+
+The last row is the part worth keeping, and it was always the sound part.
+
+**What M96 actually established, and why the hypothesis is a plausible over-reach of it.**
+`M96-election-margin.md` §5.2 states *"spatial coherence of the elected-index map is
+manufactured by the regulariser and is not evidence about the election."* That claim is
+**correct and is reproduced here** — arm A′ turns 2 px salt-and-pepper into 18.4 px blobs
+using the regulariser alone. But it is a statement about what the regulariser *can* do to
+an arbitrary election, not about what *did* produce this artifact. The extension does not
+survive contact with arm B.
+
+## 20. The corrected mechanism (ARGUED, and it predicts)
+
+> In the defocused background the through-focus response is **strong** (562 σ) but
+> **nearly degenerate near its peak**: the top few frames are separated by ~3.4 gate units,
+> against ~62 on the subject. Argmax over a near-tied set is therefore decided by small
+> differences, and because the response has already been box-summed over 27 px, the winner
+> is spatially coherent over roughly that scale *before the regulariser is reached*. Frames
+> differ in background level, so each region gathers a different level and the region
+> boundaries become the visible steps. **The spatial operators set the artifact's texture —
+> grain → blocks → clean polygons — but not its magnitude.** Magnitude is owned by the
+> single-winner election, which is why only admission width moves it.
+
+**Falsifiable predictions this makes, in order of cheapness:**
+
+1. **Regularising harder will not help, and may not hurt much either.** Widening
+   `REGULARISER_RADIUS` should move Q by single-digit percent, not fold it.
+2. **M116's soft gate should reduce Q substantially but not to the bound.** M120 §9
+   predicts gaussian → **2.291** (−47.2%) and exponential → **1.744** (−59.8%) from
+   gate 4's 4.337, against a bound of 1.284, affecting 64.8% of the frame. This mechanism
+   is the reason: the soft gate acts on admission, the only lever with authority here.
+3. **If M116's A/B shows no improvement, this mechanism is in trouble** and the next
+   suspect is the *photometric* term — M120 §5 measured 60.9% of the step energy as
+   frame-to-frame level drift, so per-frame photometric normalisation would be the
+   remaining lever.
+4. **A hard prediction that would kill this account:** if someone renders with
+   `REGULARISER_RADIUS = 0` and the background comes out smooth, §17 is wrong. It predicts
+   Q ≈ 6.9 and visible paving.
+
+## 21. What M120b could not verify, and one correction to the brief
+
+- **M96's `elected-index.tif`, `margin-q8.tif` and `confusion-radius.tif` cannot support
+  the quantitative P1/P3 analysis, and the brief's description of them is wrong. (MEASURED)**
+  ORCH's instruction was *"All 16-bit — read them with `tifffile`, not PIL."* Read with
+  `tifffile` they are **`(2344, 3516, 3) uint8`** with R ≠ G ≠ B and **205 distinct RGB
+  triples** — 8-bit **colour-mapped previews**, not index data. They are not PIL-narrowed;
+  they are 8-bit on disk. P1–P4 were therefore run on the 299-frame cube, whose argmax
+  reproduces the shipped `argbest` at 100%, which is better data than the maps would have
+  been. **Anyone computing index statistics from those TIFFs is measuring a colormap.**
+- **Arms A, A′ and B are M120b's replication, not Rust output.** The replication matches
+  the shipped field at 96.75%; the residual 3.25% is unexplained and is most likely the
+  noise-model constants, which were read from `noise.rs` rather than dumped from a run.
+- **One stack.** Everything is `bee-3-cpl`. The M96 maps would have given seven, and they
+  cannot.
+- **The morphology claim is measured only by component count** (40,035 → 3,331, a 12×
+  consolidation) **and by eye.** "The regulariser is what makes it look like *paving*
+  rather than *grain*" is OBSERVED, not measured with a boundary-sharpness metric.
+- **No render A/B was run.** `STREHL_SOFT_GATE` is M116's. The toggles here are the focus
+  window and the regulariser, which nothing else is touching.

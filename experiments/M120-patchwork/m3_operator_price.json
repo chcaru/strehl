@@ -1,0 +1,40 @@
+{
+ "roi": [
+  476,
+  604,
+  442,
+  570
+ ],
+ "den": 0.0033143344335258007,
+ "q_bound": 1.283858060836792,
+ "arms": {
+  "A  window OFF reg OFF": {
+   "contrast": 0.011131794191896915,
+   "Q": 3.358681634325862,
+   "passes": false
+  },
+  "A' window OFF reg ON": {
+   "contrast": 0.02442895621061325,
+   "Q": 7.370697405640396,
+   "passes": false
+  },
+  "B  window ON  reg OFF": {
+   "contrast": 0.022875411435961723,
+   "Q": 6.901962338069421,
+   "passes": false
+  },
+  "C  window ON  reg ON (SHIPPED)": {
+   "contrast": 0.02375187538564205,
+   "Q": 7.166408780412278,
+   "passes": false
+  },
+  "NULL-1 plain mean": {
+   "contrast": 0.0011364102829247713,
+   "Q": 0.3428773727326768
+  },
+  "NULL-2 single frame": {
+   "contrast": 0.0010223989374935627,
+   "Q": 0.30847790348239873
+  }
+ }
+}
