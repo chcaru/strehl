@@ -62,20 +62,24 @@ def norm(s):
 
 
 def scope(raw):
-    """Section 34 body plus its own fact rows P133-P141.
+    """Section 34 body plus its own fact rows, P133 onward.
 
     The body ends at the next top-level section if one exists.  Section 34 is
     currently last, so this is EOF today, but an unterminated slice is the
     exact defect that made verify_s33 miscount when section 34 was appended
     beneath it: the scope silently widens and every count in it is wrong.
+
+    The fact rows are collected by scanning for every id at or above 133
+    rather than over a pinned range.  A pinned upper bound is the same class
+    of mistake P140 recorded: it is correct until the next fact is added, and
+    then it silently drops that fact out of scope without failing.
     """
     i = raw.index("## 34.")
     nxt = re.search(r"^## 3[5-9]\.", raw[i + 6:], re.M)
     body = raw[i:i + 6 + nxt.start()] if nxt else raw[i:]
     rows = []
-    for pid in range(133, 142):
-        m = re.search(rf"^\| P{pid} \|.*$", raw, re.M)
-        if m:
+    for m in re.finditer(r"^\| P(\d+) \|.*$", raw, re.M):
+        if int(m.group(1)) >= 133:
             rows.append(m.group(0))
     return body + "\n" + "\n".join(rows)
 
@@ -313,8 +317,146 @@ def main():
     ck(xp["ps_version"] in sc, "the PowerShell version is recorded")
     ck(str(xp["repeats"]) in sc, "the repeat count is stated in prose")
 
-    for pid in range(133, 142):
-        ck(f"| P{pid} |" in raw, f"fact P{pid} present")
+    # P142: re-derived from the 2x2 and the causal ladder, not transcribed.
+    # Every figure below is recomputed here from the probe JSON; none of these
+    # checks would survive the prose being edited to say something else.
+    print("== P142: exit-code engine 2x2 re-derived ==")
+    QH = ["child-host", "agent-shell", "pwsh7-child", "ps51-dotsource"]
+    ENG = {"child-host": "5.1", "ps51-dotsource": "5.1",
+           "pwsh7-child": "7.6.5", "agent-shell": "7.6.5"}
+    q = {}
+    for h in QH:
+        q[h] = json.loads((DATA / f"exitcode-quota-{h}.json").read_text(encoding="utf-8-sig"))
+        ck(len(q[h]) == 9, f"{h}: 9 arms")
+
+    obs_a = sum(r["reps"] for h in QH for r in q[h])
+    ck(obs_a == 1440, f"part A observations = {obs_a}")
+
+    agree = {}
+    for eng in ("7.6.5", "5.1"):
+        a = t = 0
+        for h in [x for x in QH if ENG[x] == eng]:
+            for r in q[h]:
+                t += r["reps"]
+                a += r["lost"] if r["quota_pred"] else (r["reps"] - r["lost"])
+        agree[eng] = (a, t)
+    ck(agree["7.6.5"] == (720, 720), f"7.6.5 strict quota {agree['7.6.5']}")
+    ck(agree["5.1"] == (587, 720), f"5.1 strict quota {agree['5.1']}")
+    ck(f"**{agree['7.6.5'][0]} of {agree['7.6.5'][1]}**" in sc,
+       "the 7.6.5 tally is stated in prose")
+    ck(f"**{agree['5.1'][0]} of {agree['5.1'][1]}**" in sc,
+       "the 5.1 tally is stated in prose")
+
+    # the engine is the variable: the two styles within an engine must agree
+    # on WHICH arms fail, or "process style contributes nothing" is unearned.
+    for eng in ("7.6.5", "5.1"):
+        hs = [x for x in QH if ENG[x] == eng]
+        sig = [tuple(r["quota_agrees"] for r in q[h]) for h in hs]
+        ck(sig[0] == sig[1],
+           f"{eng}: both process styles fail the same arms")
+    nfail = sum(1 for r in q["child-host"] if not r["quota_agrees"])
+    ck(nfail == 6, f"5.1 fails 6 of 9 arms (got {nfail})")
+    ck(all(r["quota_agrees"] for r in q["pwsh7-child"]), "7.6.5 fails no arm")
+
+    # quota necessity, and the corrupted value, per engine
+    safe_lost = safe_tot = 0
+    for h in QH:
+        for r in q[h]:
+            if not r["quota_pred"]:
+                safe_tot += r["reps"]
+                safe_lost += r["lost"]
+    ck((safe_lost, safe_tot) == (0, 320),
+       f"non-quota arms lost {safe_lost} of {safe_tot}")
+    ck(f"**0 of {safe_tot}**" in sc, "the quota-necessity tally is stated in prose")
+    for h in QH:
+        bad = sorted({v for r in q[h] for v in r["values"] if v != 1})
+        want = [0] if ENG[h] == "7.6.5" else [-1]
+        ck(bad == want, f"{h} corrupts to {want} (saw {bad})")
+
+    print("== P142: the causal sleep ladder ==")
+    rc = {}
+    for h in ("ps51-child", "pwsh7-child"):
+        rc[h] = json.loads((DATA / f"exitcode-race-{h}.json").read_text(encoding="utf-8-sig"))
+        ck(len(rc[h]) == 12, f"{h}: 12 race arms")
+    obs_b = sum(r["reps"] for h in rc for r in rc[h])
+    ck(obs_b == 1440, f"part B observations = {obs_b}")
+    ck(f"**{obs_a + obs_b}" in sc or str(obs_a + obs_b) in sc,
+       f"the total {obs_a + obs_b} is stated in prose")
+
+    ctl_lost = sum(r["lost"] for h in rc for r in rc[h] if r["is_ctl"])
+    ctl_tot = sum(r["reps"] for h in rc for r in rc[h] if r["is_ctl"])
+    ck((ctl_lost, ctl_tot) == (0, 720),
+       f"race negative controls lost {ctl_lost} of {ctl_tot}")
+    ck(f"**0 of {ctl_tot}**" in sc, "the control tally is stated in prose")
+
+    for n in (5, 50):
+        seq = sorted((r["sleep_s"], r["lost_pct"]) for r in rc["ps51-child"]
+                     if not r["is_ctl"] and r["lines"] == n)
+        ck(len(seq) == 3, f"5.1 {n}-line ladder has 3 sleeps")
+        ck(all(seq[i][1] <= seq[i + 1][1] for i in range(2)),
+           f"5.1 {n}-line rate is monotone in sleep: {[v for _, v in seq]}")
+        ck(seq[-1][1] == 100.0, f"5.1 {n}-line reaches 100% at 300 ms")
+        ck(seq[0][1] < 100.0, f"5.1 {n}-line is NOT already 100% at sleep 0")
+        for _, v in seq:
+            ck(f"{v:.2f}%" in sc, f"5.1 {n}-line rate {v:.2f}% is in prose")
+    ck(all(r["lost_pct"] == 100.0 for r in rc["pwsh7-child"] if not r["is_ctl"]),
+       "7.6.5 is 100% at every sleep, so sleep is not a general effect")
+
+    # pooled 5.1 volume ladder -- quoted in prose as evidence that volume is a
+    # poor proxy, so the non-monotonicity has to be re-derived too.
+    vol = []
+    for n in (5, 10, 50, 200, 5000):
+        lost = tot = 0
+        for h in ("child-host", "ps51-dotsource"):
+            for r in q[h]:
+                if r["lines"] == n and r["mode"] == "First" and r["k"] == 3:
+                    lost += r["lost"]
+                    tot += r["reps"]
+        pct = 100.0 * lost / tot
+        vol.append(pct)
+        ck(f"**{pct:.2f}%**" in sc, f"5.1 {n}-line pooled rate {pct:.2f}% is in prose")
+    ck(not all(vol[i] <= vol[i + 1] for i in range(len(vol) - 1)),
+       f"the volume ladder is NOT monotone, as prose claims: {vol}")
+    ck(vol[0] == min(vol) and vol[-1] == max(vol),
+       f"volume ladder is ordered at the extremes only: {vol}")
+
+    # P141 must be scoped, not silently left as a platform-wide claim
+    ck("**Scoped by `P142`:**" in raw, "P141 is annotated in place")
+    ck("Annotated, not retracted." in raw, "the annotation says it is not a retraction")
+
+    # P143: re-derived from the repaired verifier ON DISK, not from prose.
+    # The claim is that verify_s29's document-wide count of a generic value
+    # was replaced by three site anchors, so the check reads the source and
+    # would fail if the repair were reverted or the count quietly restored.
+    print("== P143: the s29 repair re-derived from disk ==")
+    s29 = (HERE / "verify_s29.py").read_text(encoding="utf-8")
+    c29 = (HERE / "control_s29.py").read_text(encoding="utf-8")
+    for site in ("full coverage @ P111 fact row", "full coverage @ 29 prose",
+                 "full coverage @ 29 table"):
+        ck(s29.count(f'"{site}"') == 1, f"verify_s29 anchors {site!r}")
+    ck('chk("full coverage",' not in s29,
+       "the bare document-wide full-coverage count is gone, not merely rebased")
+    ck("N11-COVER-COLLAPSE" in c29,
+       "control_s29 carries the arm that collapses one site onto the other")
+    ck(c29.count("len(entry) > 4") == 1,
+       "control_s29 can pin an arm to the check it targets")
+    # the three anchors must each still match exactly one site in the report,
+    # which is what makes them anchors rather than a second generic count
+    for site in ("It measured **100.00%** and printed PASS.",
+                 "It measured **100.00%** and printed **PASS**.",
+                 "| **100.00%** | 0.4137 |"):
+        ck(raw.count(site) == 1, f"anchor is unique in the report: {site[:34]!r}")
+
+    # Fact ids are checked for contiguity from 133 to whatever the document's
+    # highest id is, rather than against a pinned upper bound.  A literal here
+    # would have to be bumped by hand on every new fact, which is how the
+    # scope defect in P140 was born.
+    ids = sorted(int(m.group(1)) for m in re.finditer(r"^\| P(\d+) \|", raw, re.M))
+    hi = max(ids)
+    ck(hi >= 142, f"the document's highest fact id is P{hi}")
+    for pid in range(133, hi + 1):
+        ck(pid in ids, f"fact P{pid} present")
+    ck(len(ids) == len(set(ids)), "no duplicated fact ids")
 
     print(f"\nverify_s34: {checks[0]} checks, {len(fails)} failures")
     for f in fails:

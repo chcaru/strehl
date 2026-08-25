@@ -1,0 +1,128 @@
+[
+  {
+    "label": "agent-shell",
+    "lines": 50,
+    "mode": "First",
+    "k": 3,
+    "reps": 40,
+    "lost": 40,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ],
+    "quota_pred": true,
+    "quota_agrees": true
+  },
+  {
+    "label": "agent-shell",
+    "lines": 50,
+    "mode": "First",
+    "k": 49,
+    "reps": 40,
+    "lost": 40,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ],
+    "quota_pred": true,
+    "quota_agrees": true
+  },
+  {
+    "label": "agent-shell",
+    "lines": 50,
+    "mode": "First",
+    "k": 50,
+    "reps": 40,
+    "lost": 40,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ],
+    "quota_pred": true,
+    "quota_agrees": true
+  },
+  {
+    "label": "agent-shell",
+    "lines": 50,
+    "mode": "First",
+    "k": 51,
+    "reps": 40,
+    "lost": 0,
+    "lost_pct": 0.0,
+    "values": [
+      1
+    ],
+    "quota_pred": false,
+    "quota_agrees": true
+  },
+  {
+    "label": "agent-shell",
+    "lines": 5,
+    "mode": "First",
+    "k": 3,
+    "reps": 40,
+    "lost": 40,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ],
+    "quota_pred": true,
+    "quota_agrees": true
+  },
+  {
+    "label": "agent-shell",
+    "lines": 50,
+    "mode": "Last",
+    "k": 3,
+    "reps": 40,
+    "lost": 0,
+    "lost_pct": 0.0,
+    "values": [
+      1
+    ],
+    "quota_pred": false,
+    "quota_agrees": true
+  },
+  {
+    "label": "agent-shell",
+    "lines": 10,
+    "mode": "First",
+    "k": 3,
+    "reps": 40,
+    "lost": 40,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ],
+    "quota_pred": true,
+    "quota_agrees": true
+  },
+  {
+    "label": "agent-shell",
+    "lines": 200,
+    "mode": "First",
+    "k": 3,
+    "reps": 40,
+    "lost": 40,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ],
+    "quota_pred": true,
+    "quota_agrees": true
+  },
+  {
+    "label": "agent-shell",
+    "lines": 5000,
+    "mode": "First",
+    "k": 3,
+    "reps": 40,
+    "lost": 40,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ],
+    "quota_pred": true,
+    "quota_agrees": true
+  }
+]

@@ -101,7 +101,19 @@ def main() -> int:
     eq("T3 local amax separation", lo["amax_sep"],
        lo["amax_broad"] - lo["amax_thin"], 1e-7)
     chk("local coverage", f"**{100 * lo['coverage']:.2f}%**", D, 4)
-    chk("full coverage", f"**{100 * fu['coverage']:.2f}%**", D, 3)
+    # The full-coverage figure renders as "**100.00%**", which is a value
+    # generic enough that any later section quoting a rate of 100% inflates a
+    # document-wide count of it -- section 34's engine ladder did exactly that
+    # and turned this check red.  Bumping 3 -> 5 is the repair verify_s33's
+    # docstring forbids and P140 recorded, so each of the three real sites is
+    # pinned to its own anchor instead.  That is immune to any future section,
+    # and it is strictly stronger than the total it replaces: sites 1 and 3
+    # are distinguished only by whether PASS is bolded, which a bare count
+    # could never have told apart.
+    _fc = f"**{100 * fu['coverage']:.2f}%**"
+    chk("full coverage @ P111 fact row", f"It measured {_fc} and printed PASS.", D, 1)
+    chk("full coverage @ 29 prose", f"It measured {_fc} and printed **PASS**.", D, 1)
+    chk("full coverage @ 29 table", f"| {_fc} | {fu['amax_thin']:.4f} |", D, 1)
     chk("local amax thin", f"**{lo['amax_thin']:.4f}**", D, 3)  # +1: 33.7
     chk("local amax broad", f"**{lo['amax_broad']:.4f}**", D, 3)  # +1: 33.7
     chk("full amax thin", f"{fu['amax_thin']:.4f}", D, 1)

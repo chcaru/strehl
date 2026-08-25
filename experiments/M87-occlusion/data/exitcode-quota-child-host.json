@@ -1,0 +1,134 @@
+﻿[
+    {
+        "label":  "child-host",
+        "lines":  50,
+        "mode":  "First",
+        "k":  3,
+        "reps":  40,
+        "lost":  33,
+        "lost_pct":  82.5,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "child-host",
+        "lines":  50,
+        "mode":  "First",
+        "k":  49,
+        "reps":  40,
+        "lost":  31,
+        "lost_pct":  77.5,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "child-host",
+        "lines":  50,
+        "mode":  "First",
+        "k":  50,
+        "reps":  40,
+        "lost":  31,
+        "lost_pct":  77.5,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "child-host",
+        "lines":  50,
+        "mode":  "First",
+        "k":  51,
+        "reps":  40,
+        "lost":  0,
+        "lost_pct":  0,
+        "values":  [
+                       1
+                   ],
+        "quota_pred":  false,
+        "quota_agrees":  true
+    },
+    {
+        "label":  "child-host",
+        "lines":  5,
+        "mode":  "First",
+        "k":  3,
+        "reps":  40,
+        "lost":  20,
+        "lost_pct":  50,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "child-host",
+        "lines":  50,
+        "mode":  "Last",
+        "k":  3,
+        "reps":  40,
+        "lost":  0,
+        "lost_pct":  0,
+        "values":  [
+                       1
+                   ],
+        "quota_pred":  false,
+        "quota_agrees":  true
+    },
+    {
+        "label":  "child-host",
+        "lines":  10,
+        "mode":  "First",
+        "k":  3,
+        "reps":  40,
+        "lost":  35,
+        "lost_pct":  87.5,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "child-host",
+        "lines":  200,
+        "mode":  "First",
+        "k":  3,
+        "reps":  40,
+        "lost":  32,
+        "lost_pct":  80,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "child-host",
+        "lines":  5000,
+        "mode":  "First",
+        "k":  3,
+        "reps":  40,
+        "lost":  40,
+        "lost_pct":  100,
+        "values":  [
+                       -1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  true
+    }
+]

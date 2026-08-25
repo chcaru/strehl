@@ -2003,7 +2003,9 @@ namespaced `M87`.
 | P138 | **The unmix was not fitting an already-removed veil, but the intuition behind that guess is already measured.** Refuted: `P107` and `P132` record that the regression runs along the **frame** axis per pixel, upstream of the election, so the merge's 74.76% removal is invisible to the fit. Sustained in consequence: `P88` measures a **~2.9%** frame-borne veil present in every observation that no selector-side fix can reach. | The headroom available to unmixing on real captures is genuinely small, but because the election already took the reachable part, not because the fit is confused. Right consequence, wrong mechanism -- and the routing from `P132` (structure-scale limiter) is unchanged. | DERIVED |
 | P139 | **A discipline this report had already closed came back three sections later, and only a per-section control caught it.** `verify_s34` passed 90 checks on its first run; `control_s34`'s `N10` altered **one of two** prose instances of a figure and it stayed **GREEN**, because every prose assertion was written as presence rather than count -- the exact blind spot `P105` measured in §28 and `P113` recorded as **closed** at §29. Restoring exact occurrence counts turns `N10` red and raises the suite to 97 checks. | The finding is the regression, not the defect. A clean first run is grounds for suspicion rather than comfort: `verify_s33` failed 14 checks on its first run and was the sounder instrument for it. Closing a discipline in one section does not carry it into the next, so each section needs its own controls even -- especially -- when its verifier looks clean. | MEASURED |
 | P140 | **Appending §34 broke two verifiers that had been committed green; both defects were in the instrument, not the numbers.** `verify_s33` sliced its scope to end-of-file rather than to the §34 heading, so §34's legitimate citation of `55.321` pushed a count 2 -> 3; at the corrected scope every other count in §33 is unchanged. `verify_s32` re-counts scripts from disk by design, and tonight's new scripts moved its measurement denominator 97 -> 104 -- but both zeros re-derived as **0**, so `P124`'s claim survived and only its denominator was stale. | Neither was repaired by bumping an expectation; `verify_s33`'s own docstring forbids that as the road to a presence check. The harness prefix filter was **not** widened to shrink the denominator, since 0-of-N is stronger at larger N. A later section is the natural adversary of an earlier section's verifier, and re-running only the section under edit would have caught neither. | MEASURED |
-| P141 | **The verification shape this milestone runs on preserves exit codes: 180 of 180 observations reported the true code, on runs where the truncation trap demonstrably fired.** Six pipeline shapes against a process whose true code is 1, at 10/200/5000 lines, pre-cleared per arm, repeated 12 times. `Out-String`, `Out-String -Width`, `Select-Object -Last` and capture-first never lost it; the `-First` arms were corrupted in **12 of 12** runs. | Two corrections to the rule as I received it. The corrupted value is **&#8722;1, never 0** on `PSVersion 5.1.26100.9168`, so a probe looking specifically for 0 records a false INCONCLUSIVE -- mine did. And the corrupted-arm count varied **4 to 6 of 6** across 12 identical runs, which confirms the race framing over the count framing by direct observation. | MEASURED |
+| P141 | **The verification shape this milestone runs on preserves exit codes: 180 of 180 observations reported the true code, on runs where the truncation trap demonstrably fired.** Six pipeline shapes against a process whose true code is 1, at 10/200/5000 lines, pre-cleared per arm, repeated 12 times. `Out-String`, `Out-String -Width`, `Select-Object -Last` and capture-first never lost it; the `-First` arms were corrupted in **12 of 12** runs. | Two corrections to the rule as I received it. The corrupted value is **&#8722;1, never 0** on `PSVersion 5.1.26100.9168`, so a probe looking specifically for 0 records a false INCONCLUSIVE -- mine did. And the corrupted-arm count varied **4 to 6 of 6** across 12 identical runs, which confirms the race framing over the count framing by direct observation. **Scoped by `P142`:** both readings are properties of `PSVersion 5.1`, not of PowerShell -- on 7.6.5 the loss is deterministic and the corrupted value is 0. Annotated, not retracted. | MEASURED |
+| P142 | **Which mechanism governs `-First`'s exit-code loss is decided by the PowerShell engine -- not by counts, races, or process style: 2880 observations across a 2x2 and a causal manipulation.** The strict quota model holds at **720 of 720** observations on PowerShell 7.6.5 and **587 of 720** on Windows PowerShell 5.1.26100.9168, failing in the same 6 of 9 arms whether run as a child process or dot-sourced in-process. Quota is necessary in both engines: the arms it predicts safe lost **0 of 1040**. Making the emitter sleep 300 ms after its last line drives 5.1 from 80.00% and 75.00% to **100.00%** at both volumes, while 7.6.5 stays flat at 100.00%. | Both published mechanisms are right about their own host and neither generalises, so `P141`'s race clause is scoped rather than retracted. The consequence that bites is the corrupted *value*, not the rate: 7.6.5 yields **0** and 5.1 yields **&#8722;1**, so the guard `if ($code -ne 0) { throw }` catches the trap on one engine and silently passes it on the other -- the one the agent shell runs. A guard verified on a single host is not verified. | MEASURED |
+| P143 | **A third verifier broke on the same append, in a third distinct shape, and the common cause is not scope -- it is keying a check to a VALUE instead of to a SITE.** `verify_s29` counted the bolded rendering of its full-coverage figure across the whole document and expected 3 sites; §34's engine ladder quoted two unrelated rates of 100% and pushed the count to 5. The three defects differ in mechanism -- `verify_s33` sliced its scope to end-of-file, `verify_s32` re-counted a denominator from disk, `verify_s29` counted a generic value -- but each was an expectation that any future sentence could move. | Repaired by binding all three real sites to their own anchors rather than bumping 3 to 5, which is strictly stronger than the count it replaces: two of those sites are the same sentence and differ only in whether the verdict word is emphasised, and `control_s29`'s new `N11` collapses one onto the other -- a defect no bare count can see. Three sections appended, three earlier verifiers broken: that is a rate, not an anecdote. | MEASURED |
 
 ### Capture request
 
@@ -4501,7 +4503,7 @@ I hold no claim that needs retaking on this account.
 **A correction to my own first draft of this section,** because it is the
 kind that reads as evidence and is not. I first wrote that `--limit` "appears
 0 times across all 30 M87 scripts" and rested the finding on it. There are
-**129** scripts, not 30 — and, more to the point,
+**132** scripts, not 30 — and, more to the point,
 **0** of them invoke the binary. Every render here was hand-run
 from PowerShell, so a count over the Python tree is a true statement about a
 population that does not contain the thing being claimed. My own verifier
@@ -5227,6 +5229,92 @@ control could not fire, and the run came back `INCONCLUSIVE`. That is the
 correct failure mode and it is the only reason the mistake was cheap, but the
 expectation was inherited rather than derived, which is the habit this report
 keeps finding in me.
+
+**And the race framing I just certified is itself engine-scoped.** The rule
+was corrected a second time -- deterministic on quota, no volume threshold,
+`-First 51` over 50 objects safe -- which contradicts the run-to-run variation
+above. Rather than pick an authority, the disagreement was measured as a 2x2:
+engine (Windows PowerShell **5.1.26100.9168** against PowerShell **7.6.5**)
+crossed with process style (child `-File` against dot-sourced in-process),
+nine arms each, 40 repetitions, **1440 observations**.
+
+**The engine is the whole variable and process style contributes nothing.** On
+7.6.5 the strict quota model holds at **720 of 720** observations, in a child
+and in-process alike. On 5.1 it holds at **587 of 720**, and fails in the same
+**6 of 9** arms in both process styles. Quota is **necessary in both**: across
+every arm the model predicts safe -- `-First 51` over 50 objects, and
+`-Last 3` -- **0 of 320** observations lost the code.
+
+That reconciles the two rules, but only by naming the 5.1 variation rather
+than explaining it. The race account says the loss needs the short-circuit to
+land while the native process is **still running**, and that is manipulable:
+make the emitter sleep after its last line but before it exits. Four
+predictions were registered before the data existed -- that on 5.1 the rate
+rises with sleep and reaches 100%, that on 7.6.5 sleep changes nothing, and
+that the non-quota arms stay at zero at every sleep, because a manipulation
+that makes a *safe* shape start losing is not selective and would invalidate
+the rest.
+
+**All four held.** On 5.1, `-First 3` loses the code at **80.00% -> 96.67% ->
+100.00%** at 5 lines and **75.00% -> 98.33% -> 100.00%** at 50 lines, for
+sleeps of 0, 50 and 300 ms. On 7.6.5 it is 100.00% at every sleep.
+The six negative-control arms lost **0 of 720**. So on 5.1 the loss is
+quota-gated *and* racy, and forcing the process to still be running collapses
+it onto exactly the determinism 7.6.5 shows unconditionally. Volume is a proxy
+for the same thing and a poor one: pooled over both 5.1 styles the rate runs
+**60.00%** at 5 lines, **82.50%** at 10, **77.50%** at 50, **76.25%** at 200
+and **100.00%** at 5000 -- ordered at the extremes, flat and out of order in
+the middle, which is why no volume threshold was ever going to be found.
+
+**The operationally dangerous half of this is the value, not the rate.** 7.6.5
+corrupts the code to exactly **0**; 5.1 corrupts it to **−1**. The guard
+published with the rule, `if ($code -ne 0) { throw }`, therefore *catches* the
+trap on 5.1 and is *guaranteed* to pass it silently on 7.6.5 -- and 7.6.5 is
+the shell these milestones are driven from. The two engines fail in opposite
+directions, so no single-host test can establish that a guard is safe, and the
+gates in §29-§34 are safe for the stronger reason that they never form the
+pipeline at all.
+
+**What this costs me.** `P141`'s race clause was measured under `powershell
+-File`, so it is true where it was taken and it is not retracted; but it was
+written as a property of PowerShell when it is a property of 5.1, and it is
+annotated in place. The same holds in the other direction for the rule I was
+given: its quota table is correct in the shell it was measured in. Neither
+reading was wrong about its own data. Both generalised one host to the
+platform -- the same error, in the same week, from opposite sides, and the
+only thing that separated them was crossing the factor instead of arguing
+about it.
+
+**A third verifier broke, and it changes what I think the defect is.**
+Running the full suite after §34.9 grew, `verify_s29` -- green at its last
+commit -- failed exactly one check: it counts the bolded rendering of its
+full-coverage figure across the whole document and expects three sites, and
+the engine ladder above quotes two unrelated rates of 100%.
+
+That is three earlier verifiers broken by three successive appends, in three
+different shapes: `verify_s33` sliced its scope to end-of-file, `verify_s32`
+re-counted its denominator from disk, and now `verify_s29` counted a value
+generic enough for a later sentence to reproduce by coincidence. **I had been
+calling this a scope problem. It is not.** The property the three share is
+that each check was keyed to a *value* rather than to a *site*, and a value is
+not an identifier: 100% belongs to no section, so every sentence written after
+it is a potential collision.
+
+The repair binds each of the three real sites to an anchor that carries its
+neighbouring text, which no future section reproduces by accident. It is also
+strictly stronger than the total it replaced, and `control_s29` now
+demonstrates that rather than asserting it. Two of the three sites are the
+*same sentence*, differing only in whether the verdict word is emphasised, so
+the new `N11` arm rewrites one into the other. The document is then left still
+holding two sentences that quote the figure, and the old count of three would
+have been unmoved -- while both anchors that can tell the sites apart go red,
+one because it now matches twice and one because it no longer matches at all.
+
+**The rate is the part worth keeping.** Three sections appended, three prior
+verifiers broken, and not one of them would have been caught by re-running the
+section being edited. A verifier is not something written once and committed
+green; it is a standing claim that every later section is entitled to
+falsify.
 
 Three limits, stated rather than buried.
 

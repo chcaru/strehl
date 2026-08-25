@@ -93,6 +93,31 @@ CONTROLS = [
     ("N8-ATTENUATION", "RED", "the derived alpha attenuation ratio is wrong",
      lambda: sub(REPORT, "attenuate alpha by **2.1\u00d7**",
                  "attenuate alpha by **2.4\u00d7**", 1)),
+    # N9-N11 cover the three anchored full-coverage checks that replaced a
+    # single document-wide count of "**100.00%**".  Section 34 inflated that
+    # count from 3 to 5 by quoting an unrelated rate of 100%, and bumping the
+    # expectation would have been the repair P140 recorded as wrong.  These
+    # arms carry a `want`, so each has to turn the check it aims at red.
+    ("N9-COVER-P111", "RED", "the P111 fact-row copy of the full-coverage "
+     "figure is altered",
+     lambda: sub(REPORT, "It measured **100.00%** and printed PASS.",
+                 "It measured **99.00%** and printed PASS.", 1),
+     "full coverage @ P111 fact row"),
+    ("N10-COVER-TABLE", "RED", "the 29 table cell holding the full-coverage "
+     "figure is altered",
+     lambda: sub(REPORT, "| **100.00%** | 0.4137 |",
+                 "| **99.00%** | 0.4137 |", 1),
+     "full coverage @ 29 table"),
+    # N11 is the arm the repair exists for.  Un-bolding PASS at the section 29
+    # site makes that sentence textually identical to the P111 one, so the
+    # document still contains two sentences reading 100.00% and a bare count
+    # of the figure would be unchanged.  Only anchors that distinguish the two
+    # sites can see it: the P111 anchor must go to 2x and the 29 anchor to 0x.
+    ("N11-COVER-COLLAPSE", "RED", "PASS un-bolded at the 29 site, collapsing "
+     "it onto the P111 site (a bare count cannot see this)",
+     lambda: sub(REPORT, "It measured **100.00%** and printed **PASS**.",
+                 "It measured **100.00%** and printed PASS.", 1),
+     "full coverage @ 29 prose"),
 ]
 
 
@@ -106,16 +131,26 @@ def main() -> int:
 
     results = []
     try:
-        for name, expect, desc, mutate in CONTROLS:
+        for entry in CONTROLS:
+            name, expect, desc, mutate = entry[:4]
+            want = entry[4] if len(entry) > 4 else None
             mutate()
             r = subprocess.run([sys.executable, str(SRC / "verify_s29.py")],
                                capture_output=True, text=True,
                                encoding="utf-8", errors="replace", cwd=str(ROOT))
             got = "GREEN" if r.returncode == 0 else "RED"
+            failed = [l.strip()[2:] for l in (r.stdout or "").splitlines()
+                      if l.startswith("  - ")]
             ok = got == expect
+            note = ""
+            # A RED from an unrelated check is a false pass of the control: it
+            # certifies a check that was never exercised.
+            if ok and want is not None and not any(want in f for f in failed):
+                ok = False
+                note = f"  [RED BUT NOT FROM {want!r}]"
             results.append((name, expect, got, ok))
             mark = "ok  " if ok else "BAD "
-            print(f"{mark} {name:<14} expected {expect:<5} got {got:<5}  {desc}")
+            print(f"{mark} {name:<19} expected {expect:<5} got {got:<5}  {desc}{note}")
             if not ok:
                 tail = [l for l in r.stdout.splitlines()
                         if "FAIL" in l or "passed;" in l][-4:]

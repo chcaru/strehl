@@ -1,0 +1,182 @@
+[
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 5,
+    "mode": "First",
+    "k": 3,
+    "sleep_s": 0.0,
+    "is_ctl": false,
+    "reps": 60,
+    "lost": 60,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ]
+  },
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 50,
+    "mode": "First",
+    "k": 3,
+    "sleep_s": 0.0,
+    "is_ctl": false,
+    "reps": 60,
+    "lost": 60,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ]
+  },
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 50,
+    "mode": "First",
+    "k": 51,
+    "sleep_s": 0.0,
+    "is_ctl": true,
+    "reps": 60,
+    "lost": 0,
+    "lost_pct": 0.0,
+    "values": [
+      1
+    ]
+  },
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 50,
+    "mode": "Last",
+    "k": 3,
+    "sleep_s": 0.0,
+    "is_ctl": true,
+    "reps": 60,
+    "lost": 0,
+    "lost_pct": 0.0,
+    "values": [
+      1
+    ]
+  },
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 5,
+    "mode": "First",
+    "k": 3,
+    "sleep_s": 0.05,
+    "is_ctl": false,
+    "reps": 60,
+    "lost": 60,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ]
+  },
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 50,
+    "mode": "First",
+    "k": 3,
+    "sleep_s": 0.05,
+    "is_ctl": false,
+    "reps": 60,
+    "lost": 60,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ]
+  },
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 50,
+    "mode": "First",
+    "k": 51,
+    "sleep_s": 0.05,
+    "is_ctl": true,
+    "reps": 60,
+    "lost": 0,
+    "lost_pct": 0.0,
+    "values": [
+      1
+    ]
+  },
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 50,
+    "mode": "Last",
+    "k": 3,
+    "sleep_s": 0.05,
+    "is_ctl": true,
+    "reps": 60,
+    "lost": 0,
+    "lost_pct": 0.0,
+    "values": [
+      1
+    ]
+  },
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 5,
+    "mode": "First",
+    "k": 3,
+    "sleep_s": 0.3,
+    "is_ctl": false,
+    "reps": 60,
+    "lost": 60,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ]
+  },
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 50,
+    "mode": "First",
+    "k": 3,
+    "sleep_s": 0.3,
+    "is_ctl": false,
+    "reps": 60,
+    "lost": 60,
+    "lost_pct": 100.0,
+    "values": [
+      0
+    ]
+  },
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 50,
+    "mode": "First",
+    "k": 51,
+    "sleep_s": 0.3,
+    "is_ctl": true,
+    "reps": 60,
+    "lost": 0,
+    "lost_pct": 0.0,
+    "values": [
+      1
+    ]
+  },
+  {
+    "label": "pwsh7-child",
+    "psver": "7.6.5",
+    "lines": 50,
+    "mode": "Last",
+    "k": 3,
+    "sleep_s": 0.3,
+    "is_ctl": true,
+    "reps": 60,
+    "lost": 0,
+    "lost_pct": 0.0,
+    "values": [
+      1
+    ]
+  }
+]

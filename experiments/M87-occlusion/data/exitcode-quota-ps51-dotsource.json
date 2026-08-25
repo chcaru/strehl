@@ -1,0 +1,134 @@
+﻿[
+    {
+        "label":  "ps51-dotsource",
+        "lines":  50,
+        "mode":  "First",
+        "k":  3,
+        "reps":  40,
+        "lost":  29,
+        "lost_pct":  72.5,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "ps51-dotsource",
+        "lines":  50,
+        "mode":  "First",
+        "k":  49,
+        "reps":  40,
+        "lost":  20,
+        "lost_pct":  50,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "ps51-dotsource",
+        "lines":  50,
+        "mode":  "First",
+        "k":  50,
+        "reps":  40,
+        "lost":  28,
+        "lost_pct":  70,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "ps51-dotsource",
+        "lines":  50,
+        "mode":  "First",
+        "k":  51,
+        "reps":  40,
+        "lost":  0,
+        "lost_pct":  0,
+        "values":  [
+                       1
+                   ],
+        "quota_pred":  false,
+        "quota_agrees":  true
+    },
+    {
+        "label":  "ps51-dotsource",
+        "lines":  5,
+        "mode":  "First",
+        "k":  3,
+        "reps":  40,
+        "lost":  28,
+        "lost_pct":  70,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "ps51-dotsource",
+        "lines":  50,
+        "mode":  "Last",
+        "k":  3,
+        "reps":  40,
+        "lost":  0,
+        "lost_pct":  0,
+        "values":  [
+                       1
+                   ],
+        "quota_pred":  false,
+        "quota_agrees":  true
+    },
+    {
+        "label":  "ps51-dotsource",
+        "lines":  10,
+        "mode":  "First",
+        "k":  3,
+        "reps":  40,
+        "lost":  31,
+        "lost_pct":  77.5,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "ps51-dotsource",
+        "lines":  200,
+        "mode":  "First",
+        "k":  3,
+        "reps":  40,
+        "lost":  29,
+        "lost_pct":  72.5,
+        "values":  [
+                       -1,
+                       1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  false
+    },
+    {
+        "label":  "ps51-dotsource",
+        "lines":  5000,
+        "mode":  "First",
+        "k":  3,
+        "reps":  40,
+        "lost":  40,
+        "lost_pct":  100,
+        "values":  [
+                       -1
+                   ],
+        "quota_pred":  true,
+        "quota_agrees":  true
+    }
+]

@@ -31,19 +31,41 @@ DOC = ROOT / "docs" / "research" / "M87-occlusion.md"
 DATA = HERE.parents[0] / "data"
 TMP = pathlib.Path(tempfile.gettempdir())
 JSONS = ["100-gate-veildepth.json", "101-attrib.json", "102-robust.json",
-         "exitcode-repeat.json"]
+         "exitcode-repeat.json",
+         "exitcode-quota-child-host.json", "exitcode-quota-agent-shell.json",
+         "exitcode-quota-pwsh7-child.json", "exitcode-quota-ps51-dotsource.json",
+         "exitcode-race-ps51-child.json", "exitcode-race-pwsh7-child.json"]
+
+
+SRCS = ["verify_s29.py", "control_s29.py"]
 
 
 def backup():
     shutil.copy2(DOC, TMP / "m87-s34-doc.bak")
     for j in JSONS:
         shutil.copy2(DATA / j, TMP / f"m87-s34-{j}.bak")
+    # P143's checks read these two instruments from disk, so the arms that
+    # exercise them have to be able to mutate and restore source too.
+    for s in SRCS:
+        shutil.copy2(HERE / s, TMP / f"m87-s34-{s}.bak")
 
 
 def restore():
     shutil.copy2(TMP / "m87-s34-doc.bak", DOC)
     for j in JSONS:
         shutil.copy2(TMP / f"m87-s34-{j}.bak", DATA / j)
+    for s in SRCS:
+        shutil.copy2(TMP / f"m87-s34-{s}.bak", HERE / s)
+
+
+def mutate_src(name, old, new):
+    """Mutate one instrument's source, asserting the anchor is unique first."""
+    f = HERE / name
+    t = f.read_text(encoding="utf-8")
+    n = t.count(old)
+    if n != 1:
+        raise SystemExit(f"SRC MUTATION TARGET {old!r} occurs {n}x in {name}, need 1")
+    f.write_text(t.replace(old, new, 1), encoding="utf-8")
 
 
 def run():
@@ -90,6 +112,28 @@ def mutate_json(name, path, value):
     f.write_text(json.dumps(d, indent=1), encoding="utf-8")
 
 
+def mutate_arr(name, index, key, value):
+    """Mutate one field of one element of a top-level JSON ARRAY.
+
+    The quota and race probes write arrays of arm records, not the nested
+    objects mutate_json walks.  Bounds and key existence are hard errors: a
+    mutation that lands nowhere returns GREEN and reads as the verifier
+    failing to notice.
+    """
+    f = DATA / name
+    d = json.loads(f.read_text(encoding="utf-8-sig"))
+    if not isinstance(d, list):
+        raise SystemExit(f"NOT AN ARRAY: {name}")
+    if not (0 <= index < len(d)):
+        raise SystemExit(f"INDEX {index} OUT OF RANGE for {name} (len {len(d)})")
+    if key not in d[index]:
+        raise SystemExit(f"KEY NOT FOUND: {name}[{index}].{key}")
+    if d[index][key] == value:
+        raise SystemExit(f"NO-OP MUTATION: {name}[{index}].{key} is already {value!r}")
+    d[index][key] = value
+    f.write_text(json.dumps(d, indent=1), encoding="utf-8")
+
+
 def main():
     backup()
     results = []
@@ -102,8 +146,8 @@ def main():
 
     arms = []
 
-    def arm(tag, why, expect, fn):
-        arms.append((tag, why, expect, fn))
+    def arm(tag, why, expect, fn, want=None):
+        arms.append((tag, why, expect, fn, want))
 
     arm("N1", "gate-0.00 near_dn perturbed by 500 DN", "RED",
         lambda: mutate_json("100-gate-veildepth.json",
@@ -150,21 +194,96 @@ def main():
     arm("N14", "run-to-run variation denied", "RED",
         lambda: mutate_json("exitcode-repeat.json", ["nondeterministic"], False))
 
-    for tag, why, expect, fn in arms:
+    # ---- P142 operands: the engine 2x2 and the causal sleep ladder ----
+    # Each of these carries a `want`, so the arm has to turn the specific
+    # check it aims at red.  N1-N14 predate that facility.
+    arm("N15", "one PowerShell 7.6.5 quota arm loses an observation, "
+        "breaking the perfect 720/720", "RED",
+        lambda: mutate_arr("exitcode-quota-pwsh7-child.json", 0, "lost", 39),
+        want="7.6.5 strict quota")
+    arm("N16", "the two 5.1 process styles made to disagree about which arm "
+        "fails, which is the whole 'style contributes nothing' claim", "RED",
+        lambda: mutate_arr("exitcode-quota-ps51-dotsource.json", 3,
+                           "quota_agrees", False),
+        want="both process styles fail the same arms")
+    arm("N17", "a NON-quota arm (-First 51 over 50 objects) recorded as "
+        "losing the code, which would break quota necessity", "RED",
+        lambda: mutate_arr("exitcode-quota-child-host.json", 3, "lost", 1),
+        want="non-quota arms lost")
+    arm("N18", "7.6.5 relabelled as corrupting to -1, erasing the "
+        "opposite-directions finding that makes the guard unsafe", "RED",
+        lambda: mutate_arr("exitcode-quota-pwsh7-child.json", 0, "values", [-1]),
+        want="pwsh7-child corrupts to")
+    arm("N19", "5.1's 5-line arm set to 100% at sleep 0, which would make "
+        "'sleep drives it to 100%' vacuously true", "RED",
+        lambda: mutate_arr("exitcode-race-ps51-child.json", 0, "lost_pct", 100.0),
+        want="is NOT already 100% at sleep 0")
+    arm("N20", "7.6.5 made sleep-sensitive, which would mean the "
+        "manipulation acts on both engines and localises nothing", "RED",
+        lambda: mutate_arr("exitcode-race-pwsh7-child.json", 8, "lost_pct", 50.0),
+        want="7.6.5 is 100% at every sleep")
+    arm("N21", "a race negative control recorded as losing the code, so the "
+        "sleep manipulation would not be selective", "RED",
+        lambda: mutate_arr("exitcode-race-ps51-child.json", 2, "lost", 3),
+        want="race negative controls lost")
+    # N22 is deliberately a TWO-operand arm.  The claim under test is about a
+    # SEQUENCE, and the measured ladder contains two independent inversions
+    # (10 > 50 and 50 > 200), so no single-operand mutation can make it
+    # monotone -- that is a property of the data, not a gap in the control.
+    # It also shows why the monotonicity check has to exist at all: the swap
+    # moves the 10-line and 200-line rates onto each other's values, so every
+    # `"**76.25%**" appears in prose` presence check still passes.  Presence
+    # alone would happily certify a ladder that had been reordered.
+    arm("N22", "the 5.1 volume ladder reordered into a monotone one by "
+        "swapping the 10-line and 200-line rates (two operands, see note)",
+        "RED",
+        lambda: (mutate_arr("exitcode-quota-ps51-dotsource.json", 6, "lost", 26),
+                 mutate_arr("exitcode-quota-ps51-dotsource.json", 7, "lost", 34)),
+        want="the volume ladder is NOT monotone")
+
+    # ---- P143 operands: the s29 repair, read from disk ----
+    arm("N23", "the s29 repair reverted to a single document-wide count of "
+        "the full-coverage figure", "RED",
+        lambda: mutate_src("verify_s29.py",
+                           'chk("full coverage @ 29 table"',
+                           'chk("full coverage",'),
+        want="the bare document-wide full-coverage count is gone")
+    arm("N24", "control_s29's collapse arm removed, so the repair would be "
+        "certified by controls that never exercise it", "RED",
+        lambda: mutate_src("control_s29.py", '"N11-COVER-COLLAPSE"',
+                           '"N11-DISABLED"'),
+        want="control_s29 carries the arm that collapses")
+    arm("N25", "a second copy of one s29 anchor planted in the report, which "
+        "is exactly how the original count was inflated", "RED",
+        lambda: mutate_doc_once("Three limits, stated rather than buried.",
+                                "It measured **100.00%** and printed PASS. "
+                                "Three limits, stated rather than buried."),
+        want="anchor is unique in the report")
+
+    for tag, why, expect, fn, want in arms:
         restore()
         n = fn()
         colour, out = run()
+        failed = [l.strip()[2:] for l in out.splitlines() if l.startswith("  - ")]
         if expect == "?":
             verdict = f"OBSERVED {colour}"
             agree = True
         else:
             agree = (colour == expect)
             verdict = "ok" if agree else f"DISAGREES (wanted {expect})"
+            # A RED from an unrelated check is a FALSE PASS of the control: it
+            # certifies a check that was never exercised.  Arms carrying a
+            # `want` must turn the check they aim at red, not merely some check.
+            if agree and want is not None:
+                hit = [l for l in failed if want in l]
+                if not hit:
+                    agree = False
+                    verdict = f"RED BUT NOT FROM {want!r}"
         nfail = ""
         for line in out.splitlines():
             if line.startswith("verify_s34:"):
                 nfail = line.strip()
-        print(f"  {tag:4s} {colour:5s} {verdict:24s} {why}"
+        print(f"  {tag:4s} {colour:5s} {verdict:34s} {why}"
               + (f"  [{n} site(s)]" if isinstance(n, int) else ""))
         if nfail:
             print(f"        {nfail}")
@@ -172,9 +291,10 @@ def main():
 
     restore()
     colour, out = run()
-    print(f"  N15  {colour:5s} {'ok' if colour == 'GREEN' else 'DISAGREES'}"
+    green = "N%d" % (len(results) + 1)
+    print(f"  {green:4s} {colour:5s} {'ok' if colour == 'GREEN' else 'DISAGREES'}"
           f"        restored, no mutation (GREEN-expected arm)")
-    results.append(("N15", colour, "GREEN", colour == "GREEN"))
+    results.append((green, colour, "GREEN", colour == "GREEN"))
 
     bad = [r for r in results if not r[3]]
     print(f"\ncontrol_s34: {len(results)} arms, {len(bad)} disagreements")
