@@ -2009,6 +2009,7 @@ namespaced `M87`.
 | P144 | **M87 is structurally out of reach of the unkeyed stack cache, and the warning that named it is superseded at HEAD.** Fact 1446 reports that `StackIdentity` omits `reference` and `resampler`, so an identical command line can return different bytes. Two grounds, both read in the Rust rather than relayed: (a) **no M87 script invokes the binary** -- every cube is a `rawpy` decode of the `.ARW` files (`m87lib.py:124,145`), and `fix_audit.py:58` *asserts* `scripts_invoking_binary` is 0 across the 104 measurement scripts, so this is a guarded property and not a lucky observation; (b) the one render-dependent line, the §33/§34 gate ladder, consumes ORCH's four pinned TIFFs, which were rendered with `STREHL_WARPMAP` set -- and `merge_cmd.rs:1135` resolves that to *an explicitly named sidecar ... otherwise the normal discover-or-solve path*, so the cache is bypassed, nothing is written, and a bracket mismatch is a refusal (`tests/byte-freeze.rs:69`). | **The control ORCH prescribed would have been the weakest evidence in this row, so I ran a stronger one.** Empirically the gate-4.00 arm still hashes `E400A63A...7112` on disk, matching three independent records: ORCH's provenance note, the `provenance.gate_4_sha256` this report's own §34 run stored at measurement time, and fact 1373's kernel A/B from a *different session and a different exposure code path*. All four arms carry distinct hashes at one byte length, so the cache never collapsed them. But a repeated hash alone cannot separate *correct bytes twice* from *the same stale bytes twice* -- only ground (b) does that, which is why the source read is load-bearing and the hashes are corroboration. Fact 1446 was measured before `69f7b4c`; at HEAD `solve_config_key` hashes `reference`, `spans`, `resampler` and every `SOLVE_ENV` variable, so **both** omitted fields are keyed, exactly as ORCH's own later fact 1476 concluded. | MEASURED |
 | P145 | **A fourth verifier break, and P143's diagnosis does not cover it: the checks were anchored correctly and applied a REPLICATED RULE.** The harness/measurement split that P124's two zeros are scoped by was written out four times -- in `fix_audit.py`, `verify_s32.py`, `verify_s34.py` and a new probe -- and adding one prefix to one copy turned `verify_s32` and `verify_s34` red and moved the published denominator 104 -> 105 -> 104. Neither verifier was keyed to a value: both re-counted from disk exactly as designed, and both counted correctly under a rule that was no longer the one writing the JSON. | **Consolidating the rule fixes the drift and destroys the evidence, so it cannot be the whole repair.** One owner now defines the split and the other three import it -- after which the audit and its verifiers agree *by construction*, and their agreement stops being a measurement of anything. `verify_s32` therefore gained the check a shared constant cannot fake: a script excluded as harness may not decode a raw or open a frame cube, so the convention is tested against the property it stands for rather than against itself (58 -> 59 checks). **A duplicated definition is worse than a duplicated value**, because a value that drifts makes a check fail loudly, while a rule that drifts makes two instruments disagree about what they are counting -- and whichever runs last looks correct. | MEASURED |
 | P146 | **The ladder's Spearman rho of &#8722;1.0000 is worth p = 0.0417, not what a perfect coefficient looks like.** Exact enumeration of all 24 rank permutations of four points: a perfect reversal is a 1-in-24 event under the null, and *some* perfect monotone ordering is 1-in-12. A four-arm ladder cannot support a rank claim at all -- a perfect reversal first clears p < 0.01 at **n = 5** (0.0083). | **This does not move the section's conclusion, and saying why is the point.** The refutation never rested on the rank: it rests on the magnitude, `dV` = **+2.3463 pp** against a predicted **+19.79 pp** with the sign reversed, collapsing to **0.0572 pp** once the far reference is pinned. The rho was already carried as a warning that monotonicity alone would have read as confirmation -- but printing `&#8722;1.0000` to four decimals lends a four-point statistic an authority it has not earned, and a reader who took the rank as the evidence would have been misled by my presentation rather than by my arithmetic. **A coefficient's number of digits is not its number of observations.** | MEASURED |
+| P147 | **P142's corrupted-value claim was an artefact of my own pre-clear, and correcting it splits the two engines by MECHANISM rather than by value.** P142 reported 7.6.5 corrupting to 0 -- measured with a pre-clear of 0, so coercion and stale retention were indistinguishable. Re-primed with sentinel **7**, which is neither 0 nor the true code 1, the three hypotheses separate: **7.6.5 reads 7 in 10 of 10** (the prime survives untouched -- RETAINED), while **5.1 reads &#8722;1 in 9 of 10** and the true code once. &#8722;1 is neither the sentinel nor the true code, so 5.1 **actively writes** a value where 7.6.5 merely fails to update one. | **So fact 1507 is right about 7.6.5 and incomplete about 5.1, and the correction costs P142 nothing that mattered.** The loss *rates* stand: with a prime of 0 against a true code of 1, a read of 0 is unambiguous evidence the live code was not read, which is the only determination the rates ever needed. What dies is the claim about which value the corruption takes. **A sentinel distinct from the true code also repairs ORCH's warning that no observed code proves liveness** -- primed with 7, a read of 1 can only have come from the process. `-Last 3` and `Select-String` read the true code 10 of 10 on **both** engines, independently reproducing the fleet's safe-shape table. | MEASURED |
 
 ### Capture request
 
@@ -4506,7 +4507,7 @@ I hold no claim that needs retaking on this account.
 **A correction to my own first draft of this section,** because it is the
 kind that reads as evidence and is not. I first wrote that `--limit` "appears
 0 times across all 30 M87 scripts" and rested the finding on it. There are
-**137** scripts, not 30 — and, more to the point,
+**138** scripts, not 30 — and, more to the point,
 **0** of them invoke the binary. Every render here was hand-run
 from PowerShell, so a count over the Python tree is a true statement about a
 population that does not contain the thing being claimed. My own verifier
@@ -5437,6 +5438,58 @@ well-supported percentages invites a reader to weight them alike. **A
 coefficient's number of digits is not its number of observations**, and the
 remedy is to publish the null beside the statistic, which this section now
 does.
+
+**A refinement from the fleet invalidated one of my own published
+numbers, and re-measuring it produced a better result than the one it
+replaced.** The correction is that a trapped exit code is *retained verbatim*
+from whatever preceded it rather than coerced to a constant. P142 reported
+PowerShell 7.6.5 "corrupting to 0" -- and P142's probes pre-cleared to 0. Those
+two facts cannot be told apart by any amount of re-reading; the number was
+undetermined by my own design and I did not notice until the refinement
+arrived.
+
+The fix is a prime that is neither the true code nor a plausible corruption.
+With sentinel **7** against an emitter whose true code is **1**, three
+hypotheses become mutually exclusive: a read of 7 means the prime survived, a
+read of 0 means the engine wrote a zero of its own, and a read of 1 means the
+process was reaped. Ten repetitions per shape per engine, with the prime
+asserted before every single arm.
+
+| engine | shape | reads | verdict |
+|---|---|---|---|
+| 7.6.5 | `Select-Object -First 3` | **7**, 10/10 | prime RETAINED |
+| 7.6.5 | `-Last 3`, `Select-String` | **1**, 10/10 | live |
+| 5.1 | `Select-Object -First 3` | **&#8722;1** 9/10, **1** once | genuine WRITE |
+| 5.1 | `-Last 3`, `Select-String` | **1**, 10/10 | live |
+
+**The two engines are not doing the same thing.** 7.6.5 leaves the variable
+untouched, so the previous command's value survives; 5.1 actively writes
+&#8722;1, a value that is neither my sentinel nor the true code and therefore
+cannot be explained by retention at all. The fleet-wide refinement is correct
+for 7.6.5 and incomplete for 5.1, and I would not have been able to say that
+from a probe primed with 0.
+
+**What this costs P142 is exactly the claim about values, and nothing else.**
+The loss *rates* -- 9 of 9 arms clean on 7.6.5, 6 of 9 failing on 5.1, and the
+causal sleep ladder -- were determinations of whether the read differed from
+the true code, and a prime of 0 against a true code of 1 answers that
+unambiguously. The engine-is-the-whole-variable conclusion is untouched.
+
+**Two things this hands back, which is why it was worth the hour.** First, the
+standing warning that no observed exit code proves the read was live is
+defeated by construction: prime with a value distinct from the true code, and a
+read of the true code can only have come from the process. Second, `-Last 3`
+and `Select-String` read the true code ten times out of ten on **both**
+engines under adversarial priming, which independently reproduces the
+safe-shape table rather than inheriting it.
+
+**And the probe caught one defect in itself before it caught anything about
+PowerShell.** The first version emitted its lines from a PowerShell script
+block instead of a native process, and every shape -- including the unsafe one
+-- read the true code, because a script block leaves no process unreaped. Run
+as written it would have certified `Select-Object -First` as safe on both
+engines. **An instrument for a native-process defect must contain a native
+process**, which is obvious once stated and was not obvious while typing it.
 
 Three limits, stated rather than buried.
 

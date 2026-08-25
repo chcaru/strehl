@@ -516,6 +516,33 @@ def main():
     ck(f"{rng:.4f} pp" in row, "P146 itself restates the pinned-reference collapse")
     ck("+19.79 pp" in row, "P146 itself restates what was predicted")
 
+    # P147: the sentinel probe -- re-derived from both engines' JSON.
+    print("== P147: retained vs written, under a distinguishable sentinel ==")
+    s7 = {r["shape"]: r for r in json.loads(
+        (DATA / "exitcode-sentinel-ps7.json").read_text(encoding="utf-8-sig"))}
+    s5 = {r["shape"]: r for r in json.loads(
+        (DATA / "exitcode-sentinel-ps5.json").read_text(encoding="utf-8-sig"))}
+    ck(s7["first3"]["sentinel"] == 7 and s5["first3"]["sentinel"] == 7,
+       "the prime is a sentinel distinct from 0 and from the true code")
+    ck(s7["first3"]["truecode"] == 1, "the emitter's true code is 1")
+    # 7.6.5 RETAINS: every read is the sentinel, none is zero, none is live.
+    ck(s7["first3"]["reads_sentinel"] == 10, "7.6.5 -First reads the sentinel 10/10")
+    ck(s7["first3"]["reads_zero"] == 0,
+       "7.6.5 does NOT coerce to zero -- P142's value claim was the pre-clear")
+    ck(s7["first3"]["reads_true"] == 0, "7.6.5 -First never reads the live code")
+    # 5.1 WRITES: neither sentinel nor (mostly) true.
+    ck(s5["first3"]["reads_sentinel"] == 0,
+       "5.1 does NOT retain the sentinel, so it is not stale retention")
+    ck("-1" in s5["first3"]["distinct"], "5.1 -First writes -1")
+    ck(s5["first3"]["reads_true"] == 1, "5.1 is racy: one live read in ten")
+    # Safe shapes are live on BOTH engines, which is the reproduction that
+    # matters -- primed with 7, a read of 1 can only have come from the process.
+    for eng, d in (("7.6.5", s7), ("5.1", s5)):
+        for shape in ("last3", "selstr"):
+            ck(d[shape]["reads_true"] == 10, f"{eng} {shape} reads the live code 10/10")
+            ck(d[shape]["reads_sentinel"] == 0, f"{eng} {shape} never retains the prime")
+    ck("RETAINED" in sc and "WRITE" in sc, "the mechanism split is stated in prose")
+
     print(f"\nverify_s34: {checks[0]} checks, {len(fails)} failures")
     for f in fails:
         print(f"  - {f}")

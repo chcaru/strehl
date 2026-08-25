@@ -1,0 +1,68 @@
+﻿[
+    {
+        "engine":  "5.1.26100.9168",
+        "shape":  "first3",
+        "sentinel":  7,
+        "truecode":  1,
+        "codes":  [
+                      1,
+                      -1,
+                      -1,
+                      -1,
+                      -1,
+                      -1,
+                      -1,
+                      -1,
+                      -1,
+                      -1
+                  ],
+        "distinct":  "-1,1",
+        "reads_sentinel":  0,
+        "reads_zero":  0,
+        "reads_true":  1
+    },
+    {
+        "engine":  "5.1.26100.9168",
+        "shape":  "last3",
+        "sentinel":  7,
+        "truecode":  1,
+        "codes":  [
+                      1,
+                      1,
+                      1,
+                      1,
+                      1,
+                      1,
+                      1,
+                      1,
+                      1,
+                      1
+                  ],
+        "distinct":  "1",
+        "reads_sentinel":  0,
+        "reads_zero":  0,
+        "reads_true":  10
+    },
+    {
+        "engine":  "5.1.26100.9168",
+        "shape":  "selstr",
+        "sentinel":  7,
+        "truecode":  1,
+        "codes":  [
+                      1,
+                      1,
+                      1,
+                      1,
+                      1,
+                      1,
+                      1,
+                      1,
+                      1,
+                      1
+                  ],
+        "distinct":  "1",
+        "reads_sentinel":  0,
+        "reads_zero":  0,
+        "reads_true":  10
+    }
+]

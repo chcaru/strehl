@@ -35,7 +35,8 @@ JSONS = ["100-gate-veildepth.json", "101-attrib.json", "102-robust.json",
          "exitcode-quota-child-host.json", "exitcode-quota-agent-shell.json",
          "exitcode-quota-pwsh7-child.json", "exitcode-quota-ps51-dotsource.json",
          "exitcode-race-ps51-child.json", "exitcode-race-pwsh7-child.json",
-         "cachekey-probe.json", "rho-null.json"]
+         "cachekey-probe.json", "rho-null.json",
+         "exitcode-sentinel-ps7.json", "exitcode-sentinel-ps5.json"]
 
 
 SRCS = ["verify_s29.py", "control_s29.py", "verify_s32.py", "probe_cachekey.py"]
@@ -310,6 +311,25 @@ def main():
         "actually carries the refutation is dropped from the section", "RED",
         lambda: mutate_doc("+2.3463 pp", "+2.3463 percentage points"),
         want="P146 itself restates the magnitude that refutes")
+
+    # ---- P147 operands: the sentinel probe on both engines ----
+    arm("N36", "7.6.5 is recorded as coercing to zero, which is exactly the "
+        "artefact P147 corrects", "RED",
+        lambda: mutate_arr("exitcode-sentinel-ps7.json", 0, "reads_zero", 10),
+        want="7.6.5 does NOT coerce to zero")
+    arm("N37", "5.1 is recorded as retaining the sentinel, collapsing the two "
+        "engines onto one mechanism", "RED",
+        lambda: mutate_arr("exitcode-sentinel-ps5.json", 0, "reads_sentinel", 9),
+        want="5.1 does NOT retain the sentinel")
+    arm("N38", "the prime is set equal to the true code, which is the design "
+        "flaw that made P142's value claim undecidable", "RED",
+        lambda: mutate_arr("exitcode-sentinel-ps7.json", 0, "sentinel", 1),
+        want="the prime is a sentinel distinct from 0")
+    arm("N39", "a safe shape is recorded as having retained the prime, which "
+        "would break the independent reproduction of the safe-shape table",
+        "RED",
+        lambda: mutate_arr("exitcode-sentinel-ps5.json", 2, "reads_true", 4),
+        want="5.1 selstr reads the live code 10/10")
 
     for tag, why, expect, fn, want in arms:
         restore()
