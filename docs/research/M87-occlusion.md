@@ -2017,6 +2017,9 @@ namespaced `M87`.
 | P152 | **The veil headline is structurally incapable of descending from the 8-bit laundered path, and this is established by trace and by level count rather than by my reading my own code.** M120 named `40-ship-delta.py` a laundering victim and concluded M87 must re-render before any halo number is trusted. The transitive source chain of `70-veil.py`, which produces the headline, is exactly `{70-veil.py, m87lib.py}`; the five files in the milestone that name `ship-delta.npy` are `40-ship-delta.py`, `41-delta-stats.py`, `45-locate.py`, `fix_audit.py` and this probe. **The overlap is empty.** | The trace is a necessary condition, not a sufficient one, so it is paired with a positive test the arrays cannot fake: an 8-bit-laundered array holds at most 256 distinct values. `bee3-leg-luma.npy` holds **7093** and `bee3-leg-sel.npy` holds **8492** on a single slice, at `float32` over 90 to 8684 DN. The reader of record is `rawpy.imread` into `raw_image_visible` at `m87lib.py:124`, and `m87lib.py` contains no `Image.open` at all, so the headline path never opens a TIFF by any route. `111-provenance.py`, R1 and R2, both PASS. | MEASURED |
 | P153 | **The delta M120 reported as unrecomputable was recomputable the whole time, because the source renders were never gone -- they were in a different directory.** M120 could not recompute the true ship delta and recorded the sources as absent from `out/`. They are 198 MB each in `C:\dev\strehl-out\M87-before-after\`, which is where `40-ship-delta.py` wrote them and where its own path constant still points. Recomputed with `tifffile.imread` and a `uint16` assert: true `max abs delta` **41887** of 65535, against the laundered **163**, a factor of **257.0x** -- which is exactly 65535/255, so the discrepancy is the quantisation itself and nothing else. **No re-render was required.** | **The same measurement retracts a magnitude I gave ORCH earlier tonight.** I said the 13.445% changed-pixel fraction was also an undercount, since any pixel moving under about 128 counts would read as unchanged. The direction is right and the size is not: the true fraction is **13.666%**, a ratio of **1.016x**, not the large undercount my phrasing implied. The reason is that where this correction moves a pixel at all it moves it far, so almost every changed pixel already cleared the 8-bit quantum. A correct sign with an uncalibrated magnitude is still an overstatement. | MEASURED |
 | P154 | **A registered prediction of mine failed: 8-bit laundering does not push every small-signal statistic toward zero, and on the merge it pushed the opposite way.** ORCH broadcast the hazard as a false-null risk, then corrected itself via M120 to add a false-alarm risk on band-pass statistics. I registered Q1 (band-pass inflates) and Q2 (small-signal falls toward zero) before measuring, on the same array with quantisation as the only difference between arms, so scale cannot confound it. **Q1 PASS**: `mean abs grad` on the real render reads **75.4914** laundered against **73.8319** true, a ratio of **1.0225x**, independently replicating M120's **1.0161x** on different operands. **Q2 FAIL.** | The merge veil went **&#8722;6.6810%** true to **&#8722;7.4718%** laundered -- **deeper**, by 0.79 pp -- while frame 0 went **&#8722;28.5999%** to **&#8722;28.3776%**, toward zero, as predicted. **So the two arms of one statistic moved in opposite directions**, which rules out a floor and rules out an inflation. A median of binned medians is a rank statistic: quantisation snaps each median onto a lattice, displacing it by up to half a quantum with **arbitrary sign**. Half a quantum here is 33.70/2 DN against a far pedestal of 3143 DN, i.e. 0.536% per median and about **1.07 pp** when both move; the observed 0.79 pp sits inside that bound. The headline gap it would have to threaten is 19.79 pp, so the conclusion survives with margin -- but it survives on a bound I had to derive after my prediction broke, not on the prediction. | MEASURED |
+| P155 | **I retract my own rank framing; it is refuted by a measurement, not by reconsideration.** I reported to ORCH that a median of binned medians is a rank statistic whose quantisation error takes an arbitrary sign, and ORCH proposed routing that to M121 as a mechanism that would break value-locking. Quantisation is a monotone map and medians commute with monotone maps: over 2000 random draws of 51 samples from the real cube, `median(q(X))` equals `q(median(X))` with **0** mismatches. So a median's error is `e(m)` evaluated at its own value -- **value-determined, exactly like a mean's**. | The rank framing was mine and it was wrong, and it was one message away from being folded into another milestone's open contradiction. Fact 1765 is untouched by anything about rank. The error is a sawtooth of period `Delta`: max abs e measures **16.8297 DN** against a predicted `Delta/2` of **16.8510 DN**, and it changes sign inside every cell. `113-rankphase.py`, T1 and T2. | MEASURED |
+| P156 | **My replacement framing failed too, and the law that survived is periodicity rather than decay.** Having lost the rank story I registered that co-movement of quantisation error would DECAY with value separation, predicting correlation above 0.80 under 0.1 `Delta` and under 0.30 beyond 2 `Delta`. **It failed.** Correlation ran **+0.7957** at 0.02 `Delta`, fell to **&#8722;0.4982** at 0.50 `Delta`, then returned to **+0.8205**, **+0.7669**, **+0.8117** and **+0.8194** at 1, 2, 4 and 8 `Delta`. That is not decay. | Registered on a discriminating grid and re-run: correlation is **periodic in the quantum**. Half-integer separations sit in antiphase (**&#8722;0.4972** at 0.5, **&#8722;0.4973** at 1.5, **&#8722;0.5175** at 2.5) and integer separations restore phase (**+0.8166** at 1, **+0.8890** at 2, **+0.8277** at 3). Both registered arms pass. Two of my framings died to get here, and the second died on a grid I chose before seeing its result. `114-phaseperiod.py`, T5 and T6. | MEASURED |
+| P157 | **A value-proximity test that ignores phase must read zero even when every pair in it is perfectly value-determined -- which is a testable account of a failed prediction elsewhere, not a resolution of it.** Drawing separations uniformly over 0 to 2 `Delta` and correlating the errors gives **+0.0038** over 6000 pairs. Nothing is random in that construction: each pair obeys value-determinism exactly, and the bin averages the sawtooth away. **So a null in such a test is a property of the test's bin width, not of the data.** | **ORCH's proposed discriminator is the wrong one and would have misrouted this.** It suggested rank statistics fail while means hold; measured, a mean shows the SAME periodicity and more strongly -- **&#8722;0.9039** at 1.5 `Delta` against a median's **&#8722;0.4973**, **+0.9461** at 2 `Delta` against **+0.8890**. The discriminator is not rank versus mean but **bin width against the quantum**. Registered test for any milestone holding a failed value-locking prediction: if its value-proximity bin spans a non-trivial fraction of `Delta` the null is forced; re-bin by value **modulo** `Delta` and the correlation must reappear. I have not seen that milestone's data and this is offered as a test, not a finding about it. | ARGUED |
 
 ### Capture request
 
@@ -4504,7 +4507,7 @@ For the renders where I kept no provenance line, the argument is the guard
 rather than a record: a full-bracket invocation meets a 40-frame sidecar,
 the frame count disagrees, `load_or_solve` re-solves, and the stale file is
 refused. The trap needs `--limit N` to meet a sidecar of exactly N frames,
-and `--limit` appears **0** times in the 107 measurement scripts
+and `--limit` appears **0** times in the 109 measurement scripts
 here. §30 separately retook the one render exposed to the *align*
 default and found it byte-identical to a pinned-sidecar render, 0 DN, which
 settled that one by hash rather than by argument (`P124`).
@@ -4514,7 +4517,7 @@ I hold no claim that needs retaking on this account.
 **A correction to my own first draft of this section,** because it is the
 kind that reads as evidence and is not. I first wrote that `--limit` "appears
 0 times across all 30 M87 scripts" and rested the finding on it. There are
-**151** scripts, not 30 — and, more to the point,
+**156** scripts, not 30 — and, more to the point,
 **0** of them invoke the binary. Every render here was hand-run
 from PowerShell, so a count over the Python tree is a true statement about a
 population that does not contain the thing being claimed. My own verifier
@@ -5176,7 +5179,7 @@ growing document is the same class of mistake as the unterminated slice.
 disk rather than trusting `93-audit.json`, because `P124`'s safety argument --
 that no measurement script passes the flag that would let a 40-frame sidecar
 apply -- is a standing claim about the whole tree, not a snapshot. Tonight's
-new scripts moved the measurement denominator from 97 to 107. **The zeros both
+new scripts moved the measurement denominator from 97 to 109. **The zeros both
 re-derived as zero**, so the claim itself survived intact; only its denominator
 was stale. §32 already records this same mechanism catching me when I had
 written "30 scripts" and there were 116. The running total is deliberately
@@ -5642,6 +5645,47 @@ None of this touches a published number, because none of the published
 numbers were ever read through a TIFF. It is a counterfactual robustness
 check on an exposure that did not occur, and it is reported at that strength
 and no higher.
+
+
+### Two framings of mine died on the way to this one
+
+ORCH asked me to hand M121 a mechanism: that a rank statistic breaks
+value-locking, because the error's sign is set by which side of a lattice
+boundary the rank falls on. It was my framing and ORCH was quoting it back to
+me. Before writing the bridge I tested it, and it is false. Quantisation is
+monotone, medians commute with monotone maps, and over 2000 draws
+`median(q(X))` equalled `q(median(X))` **every time**. A median's error is
+value-determined exactly as a mean's is. Had I written the paragraph ORCH
+asked for, I would have supplied a plausible mechanism for another
+milestone's open contradiction and it would have been wrong.
+
+My replacement was wrong too. I registered that co-movement decays with value
+separation and it does not: it falls, inverts, and comes **back**. What
+survived, on a grid registered before it ran, is that co-movement is
+**periodic in the quantum**. Two populations separated by a whole number of
+quanta sit at the same phase within their cells and their errors coincide;
+separated by a half-integer they sit in antiphase and their errors oppose.
+Value-locking is not weakened by any of this. It is exact, pairwise, and
+**periodic**, and periodicity is the part that makes it disappear from a
+badly-scaled test.
+
+That is the whole transfer, and it is narrower than the one I was asked for.
+A test that groups pixels by proximity in value, using a bin wider than a
+quantum, averages over every phase and must return zero -- I measured
+**+0.0038** on 6000 pairs constructed to be perfectly value-determined. So a
+null in such a test says the bin was phase-blind; it does not say the data
+lack value-locking. The discriminator ORCH proposed -- rank fails, mean holds
+-- is not the right one, and I would rather say so than let it route
+anything: a mean shows the same periodicity **more** strongly than a median,
+&#8722;0.9039 against &#8722;0.4973 in antiphase. The right discriminator is
+bin width against the quantum, and the sharp version of the test is to re-bin
+by value **modulo** the quantum, where the correlation has to come back.
+
+I am stating this as a test because I have not seen the data it would be run
+against, and because I have now been wrong twice in a row about the mechanism
+behind my own number. The measurements above are mine and they are solid. The
+transfer is a hypothesis with a falsifier attached, and it should be folded at
+that strength and no higher.
 
 
 Three limits, stated rather than buried.

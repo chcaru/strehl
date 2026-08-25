@@ -1,0 +1,83 @@
+{
+ "registered": {
+  "T5": "rho(1.5D) < -0.20",
+  "T6": "rho(2D),rho(3D) > 0.60",
+  "T7": "uniform sep over [0,2D] gives |rho| < 0.25",
+  "T8": "means behave as medians do"
+ },
+ "grid": [
+  {
+   "sep_quanta": 0.0,
+   "rho_median": 0.7549711810959063,
+   "rho_mean": 0.9419819543089987
+  },
+  {
+   "sep_quanta": 0.25,
+   "rho_median": -0.1593029134398709,
+   "rho_mean": -0.040466297771563804
+  },
+  {
+   "sep_quanta": 0.5,
+   "rho_median": -0.497169016681778,
+   "rho_mean": -0.9119095430081878
+  },
+  {
+   "sep_quanta": 0.75,
+   "rho_median": -0.10630332707467002,
+   "rho_mean": -0.040663877687225715
+  },
+  {
+   "sep_quanta": 1.0,
+   "rho_median": 0.8165903482583794,
+   "rho_mean": 0.9457071815145779
+  },
+  {
+   "sep_quanta": 1.25,
+   "rho_median": -0.08881976343723375,
+   "rho_mean": -0.0509800235438377
+  },
+  {
+   "sep_quanta": 1.5,
+   "rho_median": -0.49725491001817884,
+   "rho_mean": -0.9039280540236533
+  },
+  {
+   "sep_quanta": 1.75,
+   "rho_median": -0.17482166630853774,
+   "rho_mean": -0.04156133724224882
+  },
+  {
+   "sep_quanta": 2.0,
+   "rho_median": 0.8890266942577811,
+   "rho_mean": 0.9460730439417793
+  },
+  {
+   "sep_quanta": 2.5,
+   "rho_median": -0.5175243853479035,
+   "rho_mean": -0.9163650734528648
+  },
+  {
+   "sep_quanta": 3.0,
+   "rho_median": 0.8277070979369853,
+   "rho_mean": 0.9421940198358788
+  }
+ ],
+ "T5": {
+  "rho": -0.49725491001817884,
+  "pass": true
+ },
+ "T6": {
+  "rho_2": 0.8890266942577811,
+  "rho_3": 0.8277070979369853,
+  "pass": true
+ },
+ "T7": {
+  "rho": 0.003813773161638252,
+  "pass": true
+ },
+ "T8": {
+  "pass": true
+ },
+ "verdict": "PERIODIC IN THE QUANTUM -- co-movement is a phase relation, value-locking holds pairwise and vanishes under phase-blind binning",
+ "discriminator_rank_vs_mean_survives": false
+}

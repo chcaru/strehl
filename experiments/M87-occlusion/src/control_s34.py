@@ -38,7 +38,8 @@ JSONS = ["100-gate-veildepth.json", "101-attrib.json", "102-robust.json",
          "cachekey-probe.json", "rho-null.json",
          "exitcode-sentinel-ps7.json", "exitcode-sentinel-ps5.json",
          "110-crosscheck.json",
-         "provenance-74.json", "launder-direction.json"]
+         "provenance-74.json", "launder-direction.json",
+         "113-rankphase.json", "114-phaseperiod.json"]
 
 
 SRCS = ["verify_s29.py", "control_s29.py", "verify_s32.py", "probe_cachekey.py"]
@@ -107,13 +108,28 @@ def mutate_json(name, path, value):
     d = json.loads(f.read_text(encoding="utf-8-sig"))
     node = d
     for k in path[:-1]:
-        if k not in node:
+        if not _addressable(node, k):
             raise SystemExit(f"JSON KEY NOT FOUND: {path} (missing {k!r})")
         node = node[k]
-    if path[-1] not in node:
+    if not _addressable(node, path[-1]):
         raise SystemExit(f"JSON KEY NOT FOUND: {path} (missing {path[-1]!r})")
     node[path[-1]] = value
     f.write_text(json.dumps(d, indent=1), encoding="utf-8")
+
+
+def _addressable(node, k):
+    """True if k addresses an existing slot in node, list or dict.
+
+    `k not in node` is wrong for a list: it tests membership of the VALUE k
+    among the elements, not whether k is a valid index. N56 targets
+    grid[6]["rho_median"] and tripped the hard error because 6 is not one of
+    the stored correlations. The hard error was right to fire -- a mutation
+    that silently addresses nothing would have produced a GREEN arm and
+    certified a check that was never exercised.
+    """
+    if isinstance(node, list):
+        return isinstance(k, int) and -len(node) <= k < len(node)
+    return k in node
 
 
 def mutate_arr(name, index, key, value):
@@ -391,6 +407,32 @@ def main():
         "retraction back into the overstatement it retracts", "RED",
         lambda: mutate_json("provenance-74.json", ["R4", "ratio"], 3.4),
         want="the fraction ratio is small, which is what makes it a retraction")
+
+    arm("N53", "the commuting result is broken, which would resurrect the "
+        "rank framing P155 exists to retract", "RED",
+        lambda: mutate_json("113-rankphase.json", ["T1", "mismatches"], 47),
+        want="median commutes with the quantiser, 0 mismatches")
+    arm("N54", "the sawtooth amplitude is pushed above half a quantum, "
+        "breaking the bound P155 rests on", "RED",
+        lambda: mutate_json("113-rankphase.json", ["T2", "max_abs_e"], 41.9),
+        want="the amplitude really is bounded by half a quantum")
+    arm("N55", "my failed decay prediction is quietly recorded as having "
+        "passed", "RED",
+        lambda: mutate_json("113-rankphase.json", ["T3", "pass"], True),
+        want="the decay prediction is recorded as FAILED")
+    arm("N56", "one half-integer separation is flipped positive, destroying "
+        "the antiphase half of the periodicity claim", "RED",
+        lambda: mutate_json("114-phaseperiod.json", ["grid", 6, "rho_median"],
+                            0.31),
+        want="all three half-integer separations are antiphase")
+    arm("N57", "the phase-blind correlation is inflated, removing the "
+        "result that speaks to a failed prediction elsewhere", "RED",
+        lambda: mutate_json("114-phaseperiod.json", ["T7", "rho"], 0.77),
+        want="the phase-blind bin really reads ~0")
+    arm("N58", "the mean is made to behave differently from the median, "
+        "reviving the discriminator P157 kills", "RED",
+        lambda: mutate_json("114-phaseperiod.json", ["T8", "pass"], False),
+        want="the mean shows the same periodicity, killing the discriminator")
 
     for tag, why, expect, fn, want in arms:
         restore()

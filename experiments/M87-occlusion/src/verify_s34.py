@@ -634,6 +634,54 @@ def main():
     ck(p152.rstrip().rstrip("|").rsplit("|", 1)[-1].strip() == "MEASURED",
        "P152's STATUS CELL is MEASURED")
 
+
+    # ---- P155-P157: the rank retraction and the phase law -----------------
+    rp = json.loads((DATA / "113-rankphase.json").read_text(encoding="utf-8"))
+    pp = json.loads((DATA / "114-phaseperiod.json").read_text(encoding="utf-8"))
+    p155 = next(l for l in raw.split("\r\n") if l.startswith("| P155 |"))
+    p156 = next(l for l in raw.split("\r\n") if l.startswith("| P156 |"))
+    p157 = next(l for l in raw.split("\r\n") if l.startswith("| P157 |"))
+    g = {r["sep_quanta"]: r for r in pp["grid"]}
+
+    ck(rp["T1"]["mismatches"] == 0,
+       "P155: median commutes with the quantiser, 0 mismatches")
+    ck("**0** mismatches" in p155, "P155 states the mismatch count")
+    ck("retract" in p155.lower(), "P155 actually retracts, not merely qualifies")
+    ck(f"**{rp['T2']['max_abs_e']:.4f} DN**" in p155,
+       "P155 quotes the measured sawtooth amplitude")
+    ck(rp["T2"]["max_abs_e"] <= rp["T2"]["half_delta"] + 1e-9,
+       "P155: the amplitude really is bounded by half a quantum")
+
+    ck(rp["T3"]["pass"] is False,
+       "P156: the decay prediction is recorded as FAILED")
+    ck("failed" in p156.lower(), "P156 says its own prediction failed")
+    ck(pp["T5"]["pass"] and pp["T6"]["pass"],
+       "P156: both registered periodicity arms passed")
+    ck(g[0.5]["rho_median"] < -0.20 and g[1.5]["rho_median"] < -0.20
+       and g[2.5]["rho_median"] < -0.20,
+       "P156: all three half-integer separations are antiphase")
+    ck(g[1.0]["rho_median"] > 0.60 and g[2.0]["rho_median"] > 0.60
+       and g[3.0]["rho_median"] > 0.60,
+       "P156: all three integer separations restore phase")
+    ck(f"**+{g[2.0]['rho_median']:.4f}**" in p156,
+       "P156 quotes the 2-quanta correlation from the artefact")
+
+    ck(abs(pp["T7"]["rho"]) < 0.25, "P157: the phase-blind bin really reads ~0")
+    ck(f"**+{pp['T7']['rho']:.4f}**" in p157,
+       "P157 quotes the phase-blind correlation")
+    ck(pp["T8"]["pass"] is True,
+       "P157: the mean shows the same periodicity, killing the discriminator")
+    ck(abs(g[1.5]["rho_mean"]) > abs(g[1.5]["rho_median"]),
+       "P157: the mean's antiphase correlation is STRONGER, not weaker")
+    ck(pp["discriminator_rank_vs_mean_survives"] is False,
+       "P157: the rank-vs-mean discriminator is recorded as dead")
+    ck(p157.rstrip().rstrip("|").rsplit("|", 1)[-1].strip() == "ARGUED",
+       "P157's STATUS CELL is ARGUED -- it is a test, not a finding")
+    ck(p155.rstrip().rstrip("|").rsplit("|", 1)[-1].strip() == "MEASURED",
+       "P155's STATUS CELL is MEASURED")
+    ck(p156.rstrip().rstrip("|").rsplit("|", 1)[-1].strip() == "MEASURED",
+       "P156's STATUS CELL is MEASURED")
+
     print(f"\nverify_s34: {checks[0]} checks, {len(fails)} failures")
     for f in fails:
         print(f"  - {f}")

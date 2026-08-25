@@ -1,0 +1,72 @@
+{
+ "registered": {
+  "T1": "median commutes with monotone quantisation",
+  "T2": "median error is a sawtooth, |e| <= D/2",
+  "T3": "rho>0.80 under 0.1D; |rho|<0.30 over 2D",
+  "T4": "means decay on the same separation scale"
+ },
+ "T1": {
+  "mismatches": 0,
+  "pass": true
+ },
+ "T2": {
+  "max_abs_e": 16.829725490196324,
+  "half_delta": 16.850980392156863,
+  "pass": 1.0
+ },
+ "T3": {
+  "rows": [
+   {
+    "sep_quanta": 0.02,
+    "rho_median": 0.7956913796394055,
+    "rho_mean": 0.9419274114766487
+   },
+   {
+    "sep_quanta": 0.05,
+    "rho_median": 0.6693325238986577,
+    "rho_mean": 0.896590996455983
+   },
+   {
+    "sep_quanta": 0.1,
+    "rho_median": 0.45458639267728024,
+    "rho_mean": 0.7568056543792261
+   },
+   {
+    "sep_quanta": 0.25,
+    "rho_median": -0.13566002883850883,
+    "rho_mean": -0.013542379478497414
+   },
+   {
+    "sep_quanta": 0.5,
+    "rho_median": -0.49822351891356154,
+    "rho_mean": -0.9039371329608613
+   },
+   {
+    "sep_quanta": 1.0,
+    "rho_median": 0.820494223833144,
+    "rho_mean": 0.9378426636173454
+   },
+   {
+    "sep_quanta": 2.0,
+    "rho_median": 0.7668633590954088,
+    "rho_mean": 0.9440463806682915
+   },
+   {
+    "sep_quanta": 4.0,
+    "rho_median": 0.8117080242059903,
+    "rho_mean": 0.9481871207049442
+   },
+   {
+    "sep_quanta": 8.0,
+    "rho_median": 0.819386427651424,
+    "rho_mean": 0.9417997525679568
+   }
+  ],
+  "pass": false
+ },
+ "T4": {
+  "pass": false
+ },
+ "verdict": "NO MECHANISM TO OFFER -- separation does not control co-movement",
+ "m87_band_separation_quanta": 7.210262974168024
+}
