@@ -26,6 +26,12 @@ colour that rules axial CA out, because axial CA on this stack predicts a blue
 
 The capability is real. The bug hunt should go elsewhere.
 
+All checks the brief required are complete and clean: planted offsets recover exactly
+noise-free (−0.5000, −1.0000); the instrument's sign consistency collapses to **50.6%**
+(chance) when forced to answer where no peak exists; the G1−G2 null is 60–1600× smaller
+than the effect; and the headline survives a **256× quantisation coarsening** with a shift
+of 0.0048 frames.
+
 ---
 
 ## 1. Prior art — this is a replication, not a discovery
@@ -311,6 +317,71 @@ makes the speckle is largely there before the stacker touches it.
 > does — but the magnitude is an order of magnitude short and the correlation length is
 > wrong. Fixing LoCA will not remove the confetti.
 
+### 5.4 So what does? Two more suspects, both also excluded
+
+Having excluded axial CA I went after the two mechanisms that *can* produce a pixel-scale
+process, because "not LoCA" is only half an answer and the brief asks for the search to be
+redirected.
+
+**Election instability.** The merge elects one frame per pixel. If neighbouring pixels
+along a hair elect frames far apart in the bracket, the merge is stitched from samples at
+different focus depths and different noise realisations — genuinely pixel-scale, with no
+smoothness constraint. The stacker can be asked directly: `strehl stack --index-map` dumps
+the elected 0-based frame index per plane pixel. Roughness is measured as the mean absolute
+difference to the 4-neighbours — a first difference, deliberately, because the elected
+index has a real and wanted large-scale gradient across a tilted subject that any windowed
+variance would misread as roughness.
+
+| | median | p90 | n |
+|---|---:|---:|---:|
+| on hair | **0.000** | 0.500 | 103 617 |
+| off hair (background beside it) | **0.000** | 0.500 | 666 321 |
+| whole field | 0.000 | — | — |
+
+**The election field is smooth at the pixel scale**, and no rougher on the hairs than
+beside them. There is a tail — 22% of ridge pixels sit at roughness > 0.5 frames, with
+excursions to 191 frames — and it does carry more chroma, but only **1.15×** between the
+smoothest and roughest bins. Election jitter is a real but minor contributor.
+
+**CFA co-siting.** In this binned output each pixel is one 2×2 sensor quad, and R, G and
+B are *not co-sited* inside it: R sits at (0,0) and B at (1,1), a full sensel apart on the
+diagonal. For a hair one or two sensels wide the R site and the B site are looking at
+different parts of the structure, and binning asserts they are the same point — ordinary
+Bayer aliasing on detail above Nyquist. It has the right correlation length, exists before
+stacking, and is untouched by defocus dose. It makes a sharp prediction nothing else here
+makes: chroma must scale **inversely with structure width** and vanish for structures
+several sensels wide.
+
+| structure width | n | median &#124;R/G high-pass&#124; |
+|---|---:|---:|
+| 2–3 px | 94 554 | 0.0448 |
+| 4–6 px | 9 063 | 0.0417 |
+
+**1.08×.** Essentially flat. The prediction fails, so this is not the dominant term either
+— though I note the width estimator only populated two bins and is coarse, so this
+exclusion is weaker than the other two.
+
+### 5.5 What is left, stated as ARGUED not measured
+
+Three stratifications — defocus dose, election roughness, structure width — all come back
+nearly flat, at |R/G high-pass| ≈ 0.043–0.049 across every bin. **A quantity that does not
+respond to any structural covariate looks like a noise floor, not an artefact.**
+
+The arithmetic is at least consistent with shot noise. A chroma ratio carries ~√2 times a
+single channel's relative noise, so 4.5% chroma implies ~3.2% per channel, i.e. ~980 e⁻,
+i.e. ~480 ADU above black at gain 2.052 e⁻/ADU (§2.1) — an entirely plausible signal level
+for a thin, dim hair. And it would explain the one number that otherwise looks backwards:
+the merge shows *more* chroma than a single frame (0.0816 vs 0.0495) when stacking ought to
+reduce noise. Electing on `argmax` of gradient energy is a **selection on noise** — it
+preferentially picks the frame where noise happened to inflate the gradient — so a
+max-selecting stacker can amplify chroma noise rather than average it down.
+
+**This is ARGUED, not MEASURED, and I am labelling it that way rather than claiming it.**
+The decisive test is cheap and I did not have time for it: re-render with the election
+replaced by a fixed frame index (removing the selection-on-noise bias while keeping
+everything else), or compare chroma against the per-pixel photon count predicted by the
+measured gain. Either would settle it in one run.
+
 ---
 
 ## 6. Does it explain the magenta rim? — **No**, and the rim is not magenta
@@ -477,15 +548,26 @@ forfeit is 0.01–0.02% against 3.5–7.5%.
 The algebraic argument says this is safe — the raw quantisation step is 1 ADU while shot
 noise at the working level is ~40 ADU, so the input is dithered ~40× over. But rule 5 says
 form-based arguments do not survive here, so a dose-response ladder was planted in the
-quantisation step (1, 4, 16, 64, 256 ADU) and the measurement re-run at each, sharing one
-decode per frame across all five doses.
+quantisation step and the measurement re-run at each dose, sharing one decode per frame
+across all five so that quantisation is the *only* thing varying. The registration track
+was reused from `b1_curves`, so the integer-shift discipline of rule 6 is inherited
+unchanged.
 
-**Status at time of writing: running** (`b4_controls.py b coffee-bean`, results to
-`json/b4_armB_coffee-bean.json`). The headline should be treated as carrying this one
-outstanding check. My expectation, stated in advance so it can be wrong: dR is stable to
-within the instrument floor up to at least 64 ADU, because it is a *location* statistic on
-a curve whose peak-to-median prominence is ~39×, and 256 ADU (a 1/64 of full scale step)
-is where the through-focus curve should start to flatten.
+`coffee-bean`, 105 frames, 31 tiles:
+
+| quantisation step | n confident | dR | dB | NULL |
+|---:|---:|---:|---:|---:|
+| **1 ADU** (native) | 6 154 | **−0.8187** | −0.4791 | +0.0170 |
+| 4 ADU | 6 154 | −0.8189 | −0.4789 | +0.0170 |
+| 16 ADU | 6 156 | −0.8173 | −0.4780 | +0.0176 |
+| 64 ADU | 6 143 | −0.8221 | −0.4817 | +0.0171 |
+| **256 ADU** | 5 821 | **−0.8216** | −0.4788 | +0.0151 |
+
+**dR moves by 0.0048 frames across a 256× coarsening of the input** — well inside the
+instrument floor of ≈0.005 frames, and 170× smaller than the effect. dB moves by 0.0037,
+the null by 0.0025. The pre-registered expectation in §7.4's earlier draft was "stable to
+at least 64 ADU"; it is in fact stable at 256, where a 14-bit sensor has only 64 levels
+left. **The headline is not a quantisation artefact.**
 
 ---
 
@@ -565,22 +647,22 @@ disappear, they will be disappointed and will wrongly conclude the change did no
 
 ## 9. Open questions, logged not blocked on
 
-1. **The quantisation ladder (§7.4) had not finished at the time of writing.** The headline
-   carries this one outstanding check.
-2. **The dB radial trend (§4.4)** is real but under-powered (14/31/11 tiles). It should not
+1. **The dB radial trend (§4.4)** is real but under-powered (14/31/11 tiles). It should not
    be built on without more field coverage.
-3. **`couch-fibers-cpl` lost 51 of 54 tiles on registration** — that stack has real drift,
+2. **`couch-fibers-cpl` lost 51 of 54 tiles on registration** — that stack has real drift,
    unlike the other three which have exactly zero. Its dR (−0.8977) rests on 3 tiles. It is
    consistent with the rest but it is the weakest row in the table.
-4. **What actually causes the rainbow speckle** is unresolved. §5 excludes axial CA and
-   shows 61% of it is pre-stacking. The pixel-scale correlation length points at either a
-   per-pixel demosaic artefact or **election instability** — adjacent pixels electing
-   different frames. The stacker has an `--index-map` flag that dumps the elected frame
-   index per plane pixel; measuring the election's spatial roughness along the hairs would
-   settle it directly and cheaply. **I recommend this as the next milestone** and did not
-   run it only for time.
-5. **The achromatic subject-bleed halo at the rim** (f ≈ 0.61, §6.4) is the dominant term in
+3. **What actually causes the rainbow speckle** is narrowed but not closed. §5 excludes
+   axial CA, election instability and CFA co-siting, and leaves shot noise amplified by
+   selection-on-noise as the surviving candidate — **ARGUED, not measured** (§5.5). The
+   decisive test is one render with the election replaced by a fixed index.
+4. **The achromatic subject-bleed halo at the rim** (f ≈ 0.61, §6.4) is the dominant term in
    that defect and is BUILD-HALO's territory. Coordinate rather than duplicate.
+5. **The election index map contains excursions of up to 191 frames between adjacent
+   pixels** (§5.4). The median is 0.000 so this is a thin tail, but a 191-frame jump across
+   one pixel is a large number and nobody appears to have looked at it. It may be benign —
+   two genuinely different depths meeting at an occlusion edge — or it may be an election
+   pathology. Worth someone's time; it is not mine to chase.
 
 ---
 
@@ -603,10 +685,11 @@ experiments/BUILD-CHROMA/src/
   b3b_rim.py         rim: radial bins, outward vs inward normals, single-frame control
   b7_magenta.py      render-ladder attribution, linear light at every rung
   b8_rimcolour.py    what colour the rim actually is; subject-mixing test
+  b9_election.py     election roughness from --index-map; chroma vs roughness and width
 ```
 
 Order: `b0b_noise` → `b0_validate` → `b1_curves` → `b2_analyse` → `b6_discriminate`,
-`b4_controls`, `b5_hair`, `b7_magenta`, `b8_rimcolour`.
+`b4_controls`, `b5_hair`, `b7_magenta`, `b8_rimcolour`, `b9_election`.
 
 Rules observed: 16-bit TIFFs read only via `tifffile` with a dtype assert (1); quantisation
 dose-response run rather than argued (2); raw statistic beside every control in the same
