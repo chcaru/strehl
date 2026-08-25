@@ -320,3 +320,107 @@ ringing figure actually reported came from `k5`/`k5b`/`k12`, all `tifffile`.
 The one-line guard that would have caught all of it is an assert on `dtype`
 immediately after the load. `load_tiff_u16` effectively has one, in the form of
 its `bits == {16}` tag check, which is why it survived.
+
+## What the narrowing would have cost, measured by planting it
+
+ORCH's triage questions are "is the statistic absolute?" and "does it divide a
+small quantity by a large one?". For my estimator both answers are **yes**: `eps`
+is fitted from `d = t + eps*(p - c)`, a sub-pixel displacement of order 0.1 px
+over a radius of order 2000 px. That predicts maximal vulnerability, and a
+compression toward a clean null would have read as "no difference between
+scenes" -- silently reversing the headline finding rather than degrading it.
+
+So the narrowing was planted rather than reasoned about
+(`experiments/M113-spectral/src/s10_narrowctl.py`). **The prediction is refuted.**
+
+| quantity | truth | narrowed | change |
+| --- | --- | --- | --- |
+| bee-3 `needed_R` | 529.9 | 527.9 | **-0.4 %** |
+| couch `needed_R` | 654.9 | 655.6 | **+0.1 %** |
+| bee-3 transfer | -0.9399 | -0.9354 | -0.5 % |
+| **couch - bee-3** | **+125.0** | **+127.8** | **102.2 % retained** |
+
+That is under a 118x narrowing (6522 to 55 distinct levels in a 256 px window).
+**The triage rule, applied to my statistic, gives a false positive** -- it would
+have sent me to re-run correct work, which is the same direction of error as the
+`ca_radial.py` listing.
+
+### Why, and where it does break
+
+A displacement estimator is a **location** statistic, not a **dispersion** one.
+Quantisation error is zero-mean and uncorrelated with sub-pixel position, and real
+texture spans many steps and acts as dither, so averaging over ~600 windows of
+256^2 px removes it. ORCH's destroyed quantities -- noise power, band SNR -- are
+dispersion statistics, and quantisation variance adds to those *directly*.
+
+A level ladder (`s11`) holds to **+2.1 % at step 8192 DN**, though `rms` degrades
+from 0.0672 to 0.1882 px: bias survives, precision does not.
+
+It does break, and the boundary is the level count spanned by the windows
+actually fitted (`s13`, edge floor disabled):
+
+| levels/window | `needed_R` | error |
+| --- | --- | --- |
+| 55 | 510.3 | +0.4 % |
+| 12 | 518.3 | +2.0 % |
+| 4 | 289.5 | **-43.0 %** |
+| 2 | -288.4 | **-155.4 %, sign inverted** |
+| 2 | -540.5 | **-202.7 %, sign inverted** |
+
+**ORCH's nine-level case sits inside the failing regime**, and the failure is the
+dangerous kind: at 4 levels it returns a confident, plausible, 43 % low number.
+
+### The edge-energy floor is the defence
+
+`grid()` admits a window only if mean gradient magnitude >= `MIN_EDGE_ENERGY =
+60.0`. Re-running the low-contrast ladder at the shipped floor (`s14`):
+
+| K | floor 0.0 | windows | shipped floor 60 | windows |
+| --- | --- | --- | --- | --- |
+| 20 | 289.5 (-45 %) | 693 | 440.8 (-17 %) | **144** |
+| 60 | -288.4 (-154 %) | 693 | **no fit** | 5 |
+| 150 | -540.5 (-202 %) | 693 | **no fit** | 16 |
+
+All three cases where the unfloored estimator returned a confident wrong number
+either refuse to fit or stay accurate under the shipped floor. **A support floor
+converts a silent bias into a loud loss of support**, which is the behaviour an
+instrument should have outside its range. The protection is graded, not absolute:
+at K=20 it still returns a 17 % low value, but the window count collapsing from
+605 to 144 is the visible warning.
+
+### A control of mine that tested nothing
+
+`s12` tried to establish this by lowering the floor on bee-3 and printed **NOT
+CONFIRMED**. That output was wrong. At floors 5.0 and 0.0 the window count
+saturated at **693, which is the entire grid** (21 x 33 positions at STEP=100), so
+no smooth window was ever admitted and the control could not fire. The saturation
+was visible in the window column from the first run. `s13` had to manufacture the
+low-contrast condition instead of hoping to find it.
+
+## Further facts
+
+14. **A planted PIL narrowing moves `needed_R` by -0.4 % / +0.1 % and leaves the
+    between-scene difference at 102.2 % of truth.** My statistic answers YES to
+    both of ORCH's triage questions yet is essentially immune, so the rule as
+    broadcast produces false positives.
+15. **Location statistics are dithered by texture; dispersion statistics are
+    not.** Bias holds to +2.1 % at step 8192 DN while `rms` degrades 2.8x.
+16. **The immunity ends at roughly 12 distinct levels per fitted window**: -43 %
+    at 4 levels and a full **sign inversion** at 2.
+17. **The edge-energy floor is the defence.** It converts the silent -154 % case
+    into a refusal to fit.
+18. **A backtick inside a PowerShell DOUBLE-QUOTED string is an escape**, not
+    only inside `@"..."@`. An anchor written as `"its `bits ..."` silently became
+    a backspace byte plus `its ` and the guarded edit correctly refused.
+
+## Further disciplines
+
+5. **The triage question is not "absolute or ratio" but "value or position".**
+   Ask whether the statistic reads the VALUE of pixels or the POSITION of
+   features, and whether the samples actually fitted still span ~12 levels.
+6. **A support floor is a defence against silent input corruption**, because an
+   instrument that refuses to fit when its inputs degenerate cannot return a
+   plausible wrong number.
+7. **A control whose sampling saturates has not tested anything.** `s12` swept a
+   threshold whose loosest setting already admitted every candidate window; the
+   giveaway was a window count that stopped changing.
