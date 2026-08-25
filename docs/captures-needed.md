@@ -139,6 +139,27 @@ Two things worth taking from this:
   reported the control as a caveat rather than a gate, the table above would be
   recommending a blur to you this morning.
 
+I then built the check so it cannot be skipped next time — one script that scores
+both things at once and refuses to pass anything that fails the texture side. It
+reproduces the verdicts above with nobody looking at the pixels, and before it
+will report on a real candidate it has to be handed a **deliberate blur** and
+caught it. It catches it on all three of your stacks.
+
+**Doing that turned up something I had not seen, and it is the part worth
+remembering.** The soft gate only reveals itself as a blur on **one of your three
+stacks** — the bee. On `foam` it does nothing measurable either way. And on
+`tweezers-cpl` it not only passes the texture check, it posts **the best scores
+of any candidate I have measured**, better than the fix I am actually
+recommending. Tweezers is also the stack where the exposure-drift win showed up,
+so it is the obvious one to test on. **Had I tested on your tweezers stack alone
+— the natural choice — I would have promoted the blur, and its own control would
+have cleared it.** Averaging across the three does the same damage, because two
+of them are silent and dilute the one that saw it. So the rule is now: take the
+*worst* stack, never the average, and a candidate that blurs anywhere is not
+excused by scoring well elsewhere. This is the strongest practical argument for
+you shooting the variety of subjects you have — a defect that is invisible on two
+of three stacks is not a rare defect, it is a defect you got lucky about.
+
 **I then spent two hours promoting the wrong one, and the correction is worth
 recording because you would otherwise have read it here as fact.** I picked out
 the halo correction — the fringe around silhouettes — because its source notes
