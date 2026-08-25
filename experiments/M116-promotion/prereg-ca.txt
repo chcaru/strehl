@@ -1,0 +1,280 @@
+M116-promotion — PRE-REGISTRATION, CAMPAIGN 4: LATERAL CHROMATIC ABERRATION
+===========================================================================
+
+Written and committed BEFORE any CA arm has been rendered. Frozen on commit.
+Nothing in this file may be edited once committed; corrections go in the report
+as a disclosed addendum, the way §5b was handled.
+
+Pinned SHA : 4beac7300e318f6f0aaf10b6a88e57f311b9e814
+Worktree   : C:\dev\strehl-out\M116-tree   (detached, isolated)
+Output     : C:\dev\strehl-out\M116\ca\    (D:\ is READ-ONLY; never written)
+
+
+0. PREMISES READ OUT OF THE SOURCE AT THE PINNED SHA
+----------------------------------------------------
+Discipline 808 says derive a bar's premises from the code, not from a binary's
+`--help` and not from a headline figure in a report. ORCH's message #5 makes
+that a standing instruction after two successive briefs rested on unqualified
+headline numbers. So every premise below was read at the pinned SHA before this
+file was written, and every corpus number quoted was opened at its own source
+section rather than taken from the brief that cited it.
+
+S1. The switch is `STREHL_FIX_CA` (`optics.rs`, `CA_ENV`). It takes a PROFILE
+    KEY, not a truthy value: `merge.rs:3027` records that truthy values are
+    refused deliberately, and `CaConfigError::UnknownProfile` refuses an
+    unknown key loudly and lists the known ones. So `STREHL_FIX_CA=1` does
+    NOT enable the correction — it is an error. The value must be
+    `a7c2-fe100gm-2xtc-x4cpl`. An arm that set `1` would measure OFF while
+    believing it measured ON; that is exactly the M97q F2 failure mode and it
+    is designed out here rather than discovered later.
+
+S2. Exactly one profile exists: `PROFILES: [&OpticalProfile; 1]`. A second
+    constant, `A7C2_FE100GM_2XTC_X4CPL_RADIAL`, is defined but is NOT in
+    `PROFILES` and so is not selectable by key.
+
+S3. The correction is applied inside `align_cmd::warp_frame_in_place`
+    (`align_cmd.rs:1272-1291`) via `OpticalProfile::compose`, per CFA site
+    channel, at GATHER time. `merge_cmd.rs:968` calls that function, so the
+    correction IS reachable from `stack`. This is the arm `outlier` and
+    `robust` did not have.
+
+S4. `active_profile()` is re-read per call, by design (`align_cmd.rs:279`), so
+    the environment variable takes effect per invocation with no caching.
+
+S5. Because CA composes ON TOP of the similarity transform inside
+    `warp_frame_in_place`, supplying a frozen `STREHL_WARPMAP` freezes
+    registration bit-identically while still allowing CA to vary. Registration
+    therefore cannot confound this A/B — the two arms differ in the CA
+    composition and in nothing else.
+
+S6. Corpus premises, each opened at its own source section, not at the brief:
+    - M110 §16.4 measures edge-localised chroma excess falling 61.0% on
+      `bee-3-cpl` and 58.7% on `flat-on-ruler-cpl`. VERIFIED by reading
+      M110-sheet.md:1243-1244 directly.
+    - M110 §16.4 also records that half-maximum width is UNCHANGED or
+      marginally wider: "it gets fainter, not thinner". Discipline 59 requires
+      amplitude and extent be reported separately. Honoured by CB7.
+    - M110 discipline 57: overshoot is the CONJUNCTION flip-AND-growth. A
+      sign-flip bar penalises the correction for succeeding. Honoured by CB8.
+    - M110 fact 56: the fitted support ends at r = 0.788; beyond it the
+      correction extrapolates. Discipline 58 requires testing for a
+      discontinuity AT the boundary. Honoured by reporting the in-support and
+      extrapolated bands separately.
+
+S7. The profile key names a complete optical path: A7C II + FE 100 GM + 2x TC
+    + X4 CPL. The product parses no camera identity, so it will apply the
+    profile to any stack. I audited every subject's EXIF before choosing any
+    (`ca_gear_audit.py`). RESULT: all 23 subjects carrying raws report
+    `ILCE-7CM2` and `FE 100mm F2.8 Macro GM OSS + 2X Teleconverter` at 200 mm.
+    Body, lens and teleconverter are therefore CONFIRMED FROM METADATA for
+    every subject.
+    THE CPL IS NOT CONFIRMABLE. A filter leaves no EXIF trace. The only
+    evidence that the X4 CPL was fitted is the owner's `-cpl` filename
+    convention. This is the weakest link in the applicability chain and it is
+    disclosed here rather than discovered afterwards. CONSEQUENCE: every
+    subject in this campaign is a `-cpl` subject. No claim is made for the
+    non-CPL stacks (`foam`, `coffee-bean`, `wrapped-text-*`, the `*MSDCF`
+    directories), and the report must say the CPL rests on a filename.
+
+
+1. WHY THIS CAMPAIGN EXISTS
+---------------------------
+Three campaigns have now returned negative. Photometric and soft gate failed
+all 12 B2 bars; the occlusion halo failed its selectivity bar backwards at
+R = 3.054; the dose ladder found two silent no-ops and a subject-dependent
+detail cost. Nothing has yet been promoted.
+
+CA is the last instrument with an independent positive measurement behind it.
+It is switched OFF. If it survives, it is the answer to "those stacks don't
+look too good yet". If it does not, then the honest finding of M116 is that
+the default path is already the best configuration the binary can produce, and
+that is a publishable result in its own right.
+
+I am an INDEPENDENT check on M110, not a restatement of it. I therefore
+reimplement the metric rather than reuse M110's, and I test two subjects M110
+NEVER USED. Transfer to an unseen subject is the claim that matters: both of
+M110's subjects are subjects its coefficients were measured against.
+
+
+2. ARMS
+-------
+Subjects — all four confirmed `-cpl`, all on the confirmed body/lens/TC path:
+
+  REPRODUCTION (M110 used these):
+    bee-3-cpl                             598 frames
+    flat-on-ruler-cpl                     158 frames
+  TRANSFER (M110 never used these):
+    tweezers-cpl                          200 frames
+    flower-bud-with-background-fern-cpl   598 frames
+
+Every arm: `--limit 100`, `--gate 4` (the shipped default), frozen
+`STREHL_WARPMAP`, PRIVATE cache directory (discipline 807), linear output.
+Exposure is solved once per subject on a NON-COMPARED arm and passed as a
+literal, so no compared arm can move its own exposure.
+
+  A-OFF     default; `STREHL_FIX_CA` unset
+  A-ON      `STREHL_FIX_CA=a7c2-fe100gm-2xtc-x4cpl`
+  A-PLACEBO identical to A-OFF, different output path and different private
+            cache. Must be BYTE-IDENTICAL to A-OFF.
+  A-VIEW    `--srgb` renders of OFF and ON, for the crops only.
+
+sRGB is used ONLY for pictures. Its own `--help` says "For looking at, NOT for
+measuring." Every number in the report comes from a linear render. The report
+states which is which.
+
+
+3. METRIC
+---------
+Chroma is measured as |R-G| and |B-G|.
+
+NOT |R-Y| and NOT |B-Y|, which is what M110 §16.4 used. Reason, and it is a
+correction to the instrument rather than a preference: Y = 0.2126R + 0.7152G +
+0.0722B, so |B-Y| expands to |0.9278B - 0.2126R - 0.7152G| and carries an
+EXPLICIT R TERM. For a correction whose largest coefficient is on red, a
+"control" channel containing R leaks the treatment in proportion to the effect
+and is quietest exactly where it is most needed. |B-G| has no R term. This is
+the defect measured on the CA work itself (M110 fact 41 / discipline 48), and
+repeating it here would be inexcusable.
+
+E(band) = median |R-G| over the pixels in that band, restricted to strong
+edges (top 2% of luminance gradient), which is where lateral CA lives.
+
+Edge-localised chroma excess, following M110 §16.4's construction but on the
+corrected channel pair:
+    X = E(band 0) - E(band 5)          [band 5 is the far-band baseline]
+    dX% = 100 * (X_off - X_on) / X_off
+
+Radius bands, normalised r = distance from frame centre / half-diagonal:
+    CENTRE       r < 0.15     the trap; CA is radial and must vanish here
+    IN-SUPPORT   0.55 <= r <= 0.788    inside the fitted support (fact 56)
+    EXTRAPOLATED r > 0.788             beyond it (discipline 58)
+
+Fine-structure retention, as in campaign 3:
+    D = log10( highpass amplitude ON / highpass amplitude OFF )
+    measured on oriented content (structure-tensor coherence >= 0.6).
+    D < 0 means the correction destroyed high-frequency content.
+
+
+4. BARS
+-------
+Bars are fixed here. A bar I can widen after seeing the data is not a bar.
+Controls are decided and reported BEFORE any positive result, as in §3 of the
+report.
+
+CB1  NULL / determinism.
+     A-OFF rendered twice, cold private caches, must be byte-identical
+     (SHA-256). If it is not, the renderer is non-deterministic and every
+     difference below is confounded; I say so first and loudly and quantify
+     the run-to-run spread before reporting anything else.
+     PASS = identical digests on all four subjects.
+
+CB2  PLACEBO.
+     A-PLACEBO vs A-OFF: dX% must be EXACTLY 0.000 and the digests identical.
+     If the metric moves on the placebo it is measuring my harness.
+     PASS = |dX%| < 0.001 on all four subjects.
+
+CB3  PLANT / responsiveness.  (fact 1548: a null with no plant is a dead probe)
+     A null is worthless unless the instrument can express a difference on the
+     same wiring. I synthesise a known lateral CA into the A-OFF linear render
+     — resample R radially outward by +0.5 px about the frame centre — and run
+     the identical scorer.
+     PASS = the planted arm reads dX% <= -20% (i.e. the metric registers the
+     planted aberration as a large WORSENING). If it cannot see a planted
+     0.5 px radial red shift, the metric is dead and CB5 is void.
+     PREDICTION: passes. If it fails, the campaign stops here.
+
+CB4  TRAP.  (discipline 797: a detector needs an arm it must NOT fire on)
+     Lateral CA is radial: `displacement_at(ch, radius)` -> 0 as r -> 0. So in
+     the CENTRE band the correction moves nothing and dX% MUST read ~zero.
+     PASS = |dX%(centre)| <= 3.0 on all four subjects.
+     If the centre fires, the metric is reading a global recolour or an
+     exposure/normalisation difference, NOT lateral CA, and CB5 is void
+     regardless of how good the outer numbers look.
+     This is the bar most likely to catch me being wrong.
+
+CB5  PRIMARY PROMOTION BAR — transfer.
+     dX% >= +25.0 in the IN-SUPPORT band on at least 3 of the 4 subjects,
+     AND on at least one of the two TRANSFER subjects.
+     Set at 25%, well below M110's 61.0/58.7, because those two figures come
+     from subjects the coefficients were measured against and I must not
+     import them as an expectation. The bar tests transfer, not replication.
+
+CB6  DO-NO-HARM — fine structure.  Deciding bar.
+     The correction RESAMPLES. Campaign 3 measured a resampling treatment
+     destroying 50.1% of high-pass amplitude on one subject while improving
+     its target metric on another, so this is a live risk and not a formality.
+     PASS = D >= -0.02 dex (<= 4.7% high-pass loss) on EVERY subject.
+     PROMOTION RULE: CB6 failing on any subject means KEEP-OFF, even if CB5
+     passes everywhere. A colour fix that eats hair detail is not a win; the
+     owner shoots insects.
+
+CB7  EXTENT HONESTY.  Not a promotion bar — a caption bar.
+     Report half-maximum width of the chroma profile, off vs on.
+     PREDICTION, registered: unchanged, |dw| <= 0.5 px. M110 §16.4 says the
+     fringe gets fainter, not thinner. If dw is materially negative I have
+     contradicted M110 and must report that as the headline.
+     The crops MUST NOT be captioned as sharpening either way.
+
+CB8  OVERSHOOT.
+     Rate of (chroma sign flip AND magnitude growth), gated to >= 1 display
+     level, in the IN-SUPPORT band.
+     PASS = <= 20%. M110 measured 9-19% by the same conjunction.
+     Sign flips alone are NOT counted: driving a fringe through neutral toward
+     grey is the correction succeeding (M110 discipline 57).
+
+CB9  BOUNDARY.
+     Report dX% separately for IN-SUPPORT and EXTRAPOLATED. Descriptive.
+     PREDICTION: no discontinuity at r = 0.788 (M110 fact 53 disconfirmed
+     radius-dependent over-correction). Recorded so it can be wrong.
+
+
+5. PROMOTION RULE — fixed in advance
+------------------------------------
+Recommend flipping `STREHL_FIX_CA` ON by default ONLY IF:
+    CB1 PASS and CB2 PASS and CB4 PASS      (the harness is sound)
+  AND CB3 PASS                              (the metric is alive)
+  AND CB5 PASS                              (it transfers)
+  AND CB6 PASS                              (it costs no fine structure)
+
+Any of CB1/CB2/CB4 failing VOIDS the campaign — I report the harness defect,
+not a result. CB6 failing means KEEP-OFF regardless of CB5.
+
+AND EVEN THEN the recommendation is conditional and must say so: the profile
+describes ONE optical path, the product cannot detect gear, and the CPL rests
+on a filename. A default-on CA would apply these coefficients to photographs
+taken on glass nobody measured. The most I can recommend on this evidence is
+default-on FOR THIS PATH, gated on a check the binary cannot currently
+perform. That limitation is registered here so it cannot be quietly dropped
+if the numbers come out well.
+
+
+6. WHAT WOULD MAKE ME WRONG
+---------------------------
+- CB4 fires. The metric is not measuring lateral CA and I report a harness
+  failure, not a quality result.
+- CB3 fails. The metric cannot see a planted 0.5 px red shift, so its zeros
+  mean nothing.
+- CB5 passes on the two reproduction subjects and fails on both transfer
+  subjects. That would mean the coefficients are fitted to their own subjects
+  and do not generalise — which is the single most likely negative outcome
+  and the one worth the campaign.
+- CB6 fails. The correction buys colour with detail. Given campaign 3 found
+  exactly that trade on a resampling treatment, this is a real possibility.
+- dX% comes out large and NEGATIVE. The correction makes chroma worse on the
+  owner's stacks, M110's numbers do not survive an independent instrument, and
+  that leads the report.
+
+I expect, honestly: CB1-CB4 pass, CB5 passes on the reproduction subjects,
+and the transfer subjects are the coin toss. I am recording that expectation
+so the report can convict me of it.
+
+
+7. WHAT THIS CAMPAIGN CANNOT DECIDE
+-----------------------------------
+- Whether the coefficients are OPTIMAL. M107/M114 own the over-correction
+  dispute (measured 1.06-1.25x residual). I measure the shipped constant as
+  shipped; I do not refit it and I do not adjudicate their dispute.
+- Anything about non-CPL stacks, or any other lens.
+- Whether CA is what the owner is complaining about. He said the stacks do
+  not look good. This campaign can say whether CA makes them look better; it
+  cannot say it is the largest remaining defect.
