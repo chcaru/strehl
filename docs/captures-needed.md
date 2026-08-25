@@ -136,55 +136,50 @@ shift by **integer pixel roll** — which moves data without resampling it, so t
 plant cannot change sharpness and contaminate the answer. Recovery error **0.045
 px over ±2 px**, n = 40 per level.
 
-Measured on a byte-controlled `on`/`off` pair of your own frames:
+Measured on a byte-controlled `on`/`off` pair of your own frames — **and then
+refuted by an independent check. Read the correction, not the original claim:**
 
-- **The correction overshoots by a factor of 1.444.** It has the right radial
-  *shape* and the wrong *scale* — it removes the fringe and then keeps going,
-  landing ~44 % past zero with the sign flipped. So the third possibility above
-  was the right one.
-- **But not for the reason this section assumed.** The overshoot is **flat in
-  radius**: 1.453 inside the fitted support, 1.381 outside it, across seven rings
-  of 33–240 windows each. An extrapolation failure would grow with radius. This
-  does not. **It is a coefficient scale error, present everywhere, including in
-  the middle of the well-measured zone.** The hypothesis that the corners were
-  the problem is refuted, and the crops at r = 0.879 and r = 0.822 are not
-  special — they are simply where the fringes were brightest.
-- **This mechanically explains `RECOLOURED, NOT REMOVED`.** A 1.44x overshoot
-  inverts the fringe's colour sign at partial amplitude, which is exactly what
-  destroys a check that asks pixels to *keep* their sign. 75.1 % versus a 90 %
-  bar is the predicted signature, not a mystery.
-- Implied fix if this is simply a wrong number: scale the red coefficient by
-  **0.692**. **But two later checks have complicated that, and neither is
-  resolved yet — so nothing has been changed in the code.**
-  - **The √2 idea is dead.** I had noted that 1/√2 = 0.7071 sat "inside the
-    measured spread" and suggested hunting a normalisation bug on that basis.
-    That was a statistics error on my part: **the spread I quoted was the raw
-    range of seven per-ring estimates, not a confidence interval on their mean.**
-    Weighted by how much data each ring rests on, the interval is about four
-    times narrower and **excludes √2**. The two rings that made √2 look plausible
-    are the two noisiest and carry 7.4 % of the measurements between them.
-  - **More seriously, I read the correction's provenance only afterwards, and it
-    undercuts my conclusion.** The coefficient was fitted on **`tweezers-cpl` and
-    `bee-3-cpl`** — and I measured the 44 % overshoot on a **different subject**.
-    The profile also records that the aperture and magnification at fit time were
-    **never captured**. Since lateral CA changes with both, there are now two
-    explanations that call for **opposite** fixes: either the number is wrong for
-    everything (scale it down), or the number is right for the conditions it was
-    fitted at and simply does not transfer to other conditions (in which case
-    scaling it would **break** the two stacks it currently works on).
-  - **And there is a third possibility that I now think is the most likely.** The
-    fit reports itself as excellent — 99.7 % of variance explained, a residual of
-    0.073 sensels. **A fit that good does not usually overshoot its own training
-    data by 44 %.** That points away from the fitted number and towards the code
-    that *applies* it: a radius convention, a centre convention, or a
-    full-resolution-versus-output-resolution factor. If so, the correct fix is a
-    one-line bug fix, and shipping my 0.692 would paper over it and then break
-    the day someone found it.
+- **What I originally reported: the correction overshoots by 1.444×.** Right
+  radial *shape*, wrong *scale* — removing the fringe and then continuing ~44 %
+  past zero with the sign flipped. Implied fix: scale the red coefficient by
+  **0.692**.
+- **That number was wrong, and the reason is that I measured it in the wrong
+  colour space.** Lateral CA is a *cross-channel* quantity — it is about where
+  red sits relative to green. I measured on an `--srgb` render, and that file has
+  had two cross-channel operations applied to it: a colour matrix that mixes
+  **10.4 %** of camera green into output red and **20.3 %** of camera red into
+  output green **at zero displacement**, and a demosaic whose documented
+  assumption is that `R − G` is smoother than either channel — which is exactly
+  what a colour fringe violates. The tool's own help text for `--srgb` reads
+  **"For looking at, NOT for measuring."**
+- **How it was caught, which is worth knowing because it is reusable.** The
+  correction applies a *known constant* from the source code. So the amount
+  applied has a ground truth, and comparing applied-versus-known measures the
+  whole imaging chain end to end. That ratio came out **1.31 in sRGB, 0.70 after
+  demosaic, and 0.94–0.98 in the clean binned space** — the two processed spaces
+  wrong by **+31 % and −30 %**, in opposite directions. No internal consistency
+  check could have found that; only the external constant could.
+- **The corrected numbers: 1.25× on `bee-3-cpl`, 1.06× on `couch-fibers-cpl`.**
+  The needed correction is **529.9** and **654.9 ppm** against a shipped
+  **704.5**.
+- **`0.692` must not ship.** On `couch-fibers-cpl` it would convert a 5.6 %
+  over-correction into a **27.0 % under-correction** — worse than the problem.
+- **And no other single number would work either.** The two stacks disagree by
+  **23.6 %** while the per-ring noise is under 4 %, so that gap is real. How far
+  a colour separates depends on each channel's *effective wavelength*, which is
+  set by the **colours present in the scene**. This is the finding that redirects
+  §24 toward the coloured-gel sets.
 
-  The experiment that separates all three is cheap and is running now: **measure
-  the overshoot on `tweezers-cpl` and `bee-3-cpl` themselves.** If it overshoots
-  even there, the number or its application is wrong. If it is correct there and
-  wrong elsewhere, the profile needs to know about aperture and magnification.
+**What survived the refutation, and is now better supported than when I claimed
+it:**
+
+- **The radial shape is correct** — flat within ±15 ppm from r = 0.11 to 0.87.
+  The model's form is right; only its magnitude and its scene-independence were
+  wrong.
+- **`RECOLOURED, NOT REMOVED` is real**, now confirmed on **two** stacks under
+  **two independent estimators**: the residual flips sign in both.
+- **The over-extrapolation hypothesis is still dead**, and now on 111
+  outside-support windows rather than the single ring I originally used.
 
 **So why is §24 still the first thing to shoot?** Because it is the capture that
 settles this, and three further things that only a real capture can reach:
