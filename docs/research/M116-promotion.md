@@ -1166,6 +1166,18 @@ retroactively make that refusal a matter of convenience rather than of method.
 it.** Record the visual evidence as visual evidence, hand the instrument
 problem to someone who has not seen the answer, and let the verdict stand.
 
+**D-z (proposed discipline). An anchored claim check must scan every occurrence
+of its anchor, and a registered occurrence count must be boundary-aware.**
+Both defects were found in `verify_patch.py` by its own negative control, and
+both silently degrade a verifier into a rubber stamp. `find()` binds a check to
+whichever occurrence of the anchor phrase comes first in the document, which is
+rarely the one the claim lives at; substring counting lets a short numeric
+token be satisfied by a chance match inside a longer number, so the registered
+count drifts under unrelated edits until someone relaxes it. **Commission the
+verifier before trusting its green, and treat a defect the commissioning finds
+in the verifier as the more valuable result** — a plant caught in the report
+confirms the instrument, a plant caught in the instrument repairs it.
+
 ---
 
 ## 5h. Addendum: the background patchwork — two instruments, two failed plants, and a picture that disagrees with both
@@ -1208,7 +1220,7 @@ treatment whether or not a single polygon is removed. Excess kurtosis is
 scale-invariant, so uniform denoising reads zero.
 
 `G1` was the plant: `K(M0) >= 2.0 * K(A0)` on `bee-3-cpl`, where `M0` is the
-gate-0 arm in which P18 established the patchwork is largest. Bar: `>= 53.320`.
+gate-0 arm in which P18 established the patchwork is largest. Bar: `>= 53.321`.
 
 | arm | `K` | `lap_sd` |
 | --- | ---: | ---: |
@@ -1240,7 +1252,7 @@ dense.**
 
 Had the plant not been registered, this campaign's primary comparison read
 
-> `K(A2) / K(A0) = 0.034 / 26.660 = 0.00128`
+> `K(A2) / K(A0) = 0.034 / 26.660 = 0.00127`
 
 — a **99.9 % reduction** in the patchwork metric from switching on the soft
 gate. It is the largest single effect measured anywhere in M116 and it is
@@ -1325,8 +1337,8 @@ threshold falls and `F4` tends to **rise** on a denoised field.
 
 | ROI | `F4(A0)` | `F4(M0)` | ratio | bar `>= 1.5` |
 | --- | ---: | ---: | ---: | --- |
-| ROI-W `y=256 x=768 384px` | `0.00738` | `0.02029` | **`2.749`** | PASS |
-| ROI-N `y=1024 x=2560 256px` | `0.05908` | `0.05811` | **`0.984`** | **FAIL** |
+| ROI-W `y=256 x=768 384px` | `0.00738` | `0.02029` | **`2.750`** | PASS |
+| ROI-N `y=1024 x=2560 256px` | `0.05908` | `0.05811` | **`0.983`** | **FAIL** |
 
 **`H1` FAILED as registered.** The bar is a conjunction over two named ROIs and
 one of them did not fire.
@@ -1482,6 +1494,42 @@ metric *against* the `M0`/`A0` pair until it fires, then freeze it, then choose
 ROIs — and it should be run by someone who has not already seen these crops.
 **I am not the right person to design that instrument, having now failed twice
 and seen the answer I want.**
+
+### P71. THE VERIFIER FOR THIS SECTION, AND THE DEFECT IT FOUND IN ITSELF
+
+`verify_patch.py` re-derives every number in section 5h from
+`scores-patch.json`, `scores-patch2.json` and the raw `n_eff` map — never from
+the report — and locates each claim by proximity to a registered anchor on
+whitespace-collapsed text, with a registered occurrence count per token.
+**141 checks, GREEN.** `negctl_patch.py` then plants 16 defects and one inert
+prose change: **16/16 caught, inert correctly ignored.**
+
+Two of the plants are worth naming because they test different organs. `D15`
+mutates the *measurement* rather than the report — it raises the gate-0 plant's
+kurtosis until `G1` would pass — and is caught because the verifier recomputes
+the bar from the JSON instead of trusting the reported verdict. `D16` breaks
+the null arm's exact equality with the shipped arm in the JSON and is caught by
+the control check, not by any text check.
+
+The verifier found two defects **in itself** before it found any in the report,
+and both are the kind that produce a false GREEN:
+
+1. **Anchoring with `find()` pins the check to the first occurrence of the
+   anchor**, which for any common phrase is not the occurrence the claim lives
+   at. It produced a false RED here, but the same construction produces a false
+   GREEN whenever the first occurrence happens to sit near a *different* number
+   of the same value. Fixed by scanning every occurrence of the anchor.
+2. **Counting occurrences by substring is wrong for short numeric tokens.** A
+   three-digit count matches inside a four-digit number and inside a decimal
+   fraction, so the registered count drifts with unrelated edits and the
+   natural response is to loosen the check. Fixed with a boundary-aware count
+   that refuses a match adjacent to another digit or a decimal point. This is
+   the same failure the corpus already records for last-digit decoy
+   discrimination, reached from the maintenance side rather than the detection
+   side.
+
+`gen_counts.py` emits the occurrence table so that a legitimate edit updates it
+deliberately, in one line, rather than by relaxing the bar.
 
 ---
 
@@ -1689,7 +1737,7 @@ correct response to it remains a measurement milestone, not a patch.
   registered and **not run**: `A2`'s elected-frame index map was never dumped.
   The claim rests on reading `merge.rs:451-483` at the pinned SHA and is
   source-argued only.
-- **It does not claim `K(A2)/K(A0) = 0.00128` means anything.** That `99.9 %`
+- **It does not claim `K(A2)/K(A0) = 0.00127` means anything.** That `99.9 %`
   reduction is the largest effect measured anywhere in M116 and it is VOID by
   its own plant, twice over — see P63. It is stated in this report only so that
   it cannot be quoted from the raw JSON as a result.
@@ -2188,8 +2236,8 @@ exit 0.
   mistakes.
 - **Both metrics failed their plants, and I am reporting NO INSTRUMENT.**
   `G1`: excess Laplacian kurtosis read `2.911` on the gate-0 plant against
-  `26.660` on the shipped arm — reversed. `H1`: `F4` passed on ROI-W (`2.749x`,
-  bar `1.5x`) and failed on ROI-N (`0.984x`); the bar was a conjunction and I am
+  `26.660` on the shipped arm — reversed. `H1`: `F4` passed on ROI-W (`2.750x`,
+  bar `1.5x`) and failed on ROI-N (`0.983x`); the bar was a conjunction and I am
   not narrowing it. Section 5g refused the identical move for CA when the prize
   was a positive result.
 - **You asked me to quantify the patchwork rather than only show it. I could
@@ -2236,3 +2284,11 @@ exit 0.
   them. The linter caught 4 violations of my own in section 5f's tables —
   unescaped `\|` inside code spans on table rows, which the renderer discards
   silently — and they are fixed.
+- **Section 5h is verified and the verifier is commissioned.**
+  `python experiments/M116-promotion/verify_patch.py` re-derives every number
+  from the scorer JSONs and the raw `n_eff` map and reports **GREEN, 141
+  checks**; `python experiments/M116-promotion/negctl_patch.py` plants 16
+  defects — including two that mutate the *measurement* rather than the report —
+  and reports **16/16 caught, 0 missed, inert plant ignored**. Section 5f's pair
+  still reports GREEN 100 / 13-of-13. Nothing in this milestone rests on an
+  unchecked number.
