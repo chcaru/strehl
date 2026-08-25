@@ -135,6 +135,58 @@ outlier mask against the running estimate that the project has listed as missing
 - Report the rim and the aura **separately** — they have opposite signs, and a single
   combined score would let an arm that trades one for the other look like progress.
 
+## Second subject — confirmed, smaller, and it explains the earlier contradiction
+
+`flower-inner-edge-cpl`, 299 frames, merge reference 149. The middle frame is the arm
+the original `STREHL_ONLY_FRAME` comparison lacked; it used `frame000` and `frame298`.
+
+| image | d4–12 | d12–30 | d30–60 | d60–120 | d120–200 | d200–300 | d300–420 |
+|---|---|---|---|---|---|---|---|
+| frame000 (end) | −14067 | −12114 | −11222 | −9470 | −7370 | −5557 | −3697 |
+| frame149 (middle) | −14139 | −12412 | −11476 | −9078 | −7212 | −5477 | −2977 |
+| **MERGE** | −14852 | −14087 | −13370 | −12299 | −10478 | −8029 | −6204 |
+| merge / middle | 1.1× | 1.1× | 1.2× | 1.4× | 1.5× | 1.5× | **2.1×** |
+
+Two honest points:
+
+- **On this subject the end and middle frames genuinely agree** (−7370 vs −7212 at
+  d=120–200), unlike flower-bud where they differ 14×. The original test's
+  "superimposed within noise" reading was therefore a true observation *about this
+  stack*; end-frame choice was not the whole story.
+- **The merge is nevertheless darker than every frame**, by 1.1× rising monotonically
+  to 2.1×. The invariant violation reproduces.
+
+The effect is far smaller here (2.1× vs 16×) because this subject's mask covers **73%
+of the frame**, leaving little clean backdrop and contaminating the far-field
+reference. **The defect is largest where a depth-separated subject sits against a large
+clean backdrop** — which describes most portfolio subjects, including all three bees.
+
+## The rim and the aura are one phenomenon
+
+Consider a background pixel beside a dark, depth-separated structure:
+
+- **d < ~14 px** — the focus window still contains the subject edge, so the election
+  locks onto it and picks the frame where the **subject is sharp**, which is the frame
+  where it spills *least*. The pixel comes out **less veiled than its surroundings**.
+- **d > ~30 px** — the window no longer contains the subject, the election has nothing
+  to lock onto, and the gated average dominates, admitting the many frames where the
+  subject is defocused and veiling. The pixel comes out **heavily veiled**.
+
+**The bright rim is therefore not something added at the edge. It is the one band that
+is nearly correct, standing against a surround that is wrongly dark.** This explains
+why attacking the rim directly has repeatedly failed or cost texture: that band is the
+closest thing to a correct value in the neighbourhood.
+
+Consequence for effort allocation:
+
+- **d < 14 px is genuinely information-absent.** On flower-bud every arm is deep in the
+  hole there (merge −4631, frame102 −5179, frame000 −10306, far field 0). No frame is
+  clean. Reconstruction is the only route.
+- **d = 30–300 px is information-*discarded*, not absent.** A clean sample exists
+  (−247 DN) and the merge produces −4066 DN. **Fixing the surround requires no
+  reconstruction** — and once the surround rises to where the middle frame already is,
+  the *step* that reads as a rim disappears without the rim band being touched.
+
 ## Caveat on a related number
 
 Raw focus breathing across this bracket measures **13.7%** linear magnification
