@@ -1,0 +1,69 @@
+{
+  "subject": "bee-3-cpl",
+  "arms": {
+    "nearest": {
+      "agree_whole": 0.7221179532279545,
+      "agree_tile_min": 0.60186767578125,
+      "agree_tile_max": 0.9527587890625,
+      "median_split_hi": 0.23211840399525155,
+      "median_split_lo": 0.22591015119363528,
+      "decile_split_hi": 0.23323979682342155,
+      "decile_split_lo": 0.22144930294439732,
+      "corr": 0.08089082010470387,
+      "gain_mean": 0.22898774659956472,
+      "gain_sd": 0.05436708222438183,
+      "median_delta": 0.006208252801616271,
+      "decile_delta": 0.011790493879024228,
+      "N4_reversed": false,
+      "reversal_frac_of_effect": 0.027111724945146354
+    },
+    "bilinear": {
+      "agree_whole": 0.8586693642325478,
+      "agree_tile_min": 0.8060302734375,
+      "agree_tile_max": 0.98388671875,
+      "median_split_hi": -0.2078085923507217,
+      "median_split_lo": -0.17060327417089763,
+      "decile_split_hi": -0.2136508005828984,
+      "decile_split_lo": -0.15129158924667122,
+      "corr": -0.5358216301085104,
+      "gain_mean": -0.18904693617457108,
+      "gain_sd": 0.04077101529394511,
+      "median_delta": -0.03720531817982406,
+      "decile_delta": -0.06235921133622718,
+      "N4_reversed": true,
+      "reversal_frac_of_effect": 0.1968046609624377
+    },
+    "lanczos2": {
+      "agree_whole": 0.9830370767277429,
+      "agree_tile_min": 0.97625732421875,
+      "agree_tile_max": 0.99835205078125,
+      "median_split_hi": 0.003468607741191321,
+      "median_split_lo": 0.002016618163565756,
+      "decile_split_hi": 0.003677269313233508,
+      "decile_split_lo": 0.001364707812612079,
+      "corr": 0.2134958003968549,
+      "gain_mean": 0.0027239977013833383,
+      "gain_sd": 0.0034538915130421996,
+      "median_delta": 0.0014519895776255649,
+      "decile_delta": 0.002312561500621429,
+      "N4_reversed": false,
+      "reversal_frac_of_effect": 0.5330362712450878
+    },
+    "lanczos3": {
+      "agree_whole": 0.9191628130011221,
+      "agree_tile_min": 0.8759765625,
+      "agree_tile_max": 0.9927978515625,
+      "median_split_hi": 0.10802919354220474,
+      "median_split_lo": 0.08852182008979245,
+      "decile_split_hi": 0.11080559774046572,
+      "decile_split_lo": 0.07772779136837804,
+      "corr": 0.3819362418231143,
+      "gain_mean": 0.09819214197218487,
+      "gain_sd": 0.02510794907801923,
+      "median_delta": 0.019507373452412283,
+      "decile_delta": 0.03307780637208768,
+      "N4_reversed": false,
+      "reversal_frac_of_effect": 0.19866532148711233
+    }
+  }
+}

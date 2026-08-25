@@ -1,0 +1,21 @@
+[
+  {
+    "subject": "bee-3-cpl",
+    "sites": [
+      [
+        2520,
+        1080
+      ],
+      [
+        3240,
+        5400
+      ],
+      [
+        1080,
+        5400
+      ]
+    ],
+    "sheet_100": "C:\\dev\\strehl-out\\M118\\SHEET-bee-3-cpl-100.png",
+    "sheet_zoom": "C:\\dev\\strehl-out\\M118\\SHEET-bee-3-cpl-300.png"
+  }
+]

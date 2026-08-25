@@ -1,0 +1,75 @@
+M118 CONSOLIDATED DUMP
+SHA 4beac7300e318f6f0aaf10b6a88e57f311b9e814, gate 4, full stacks, sidecar-override
+
+== T1. Band gain vs catmull-rom (dex). M1 = detail decile, M2 = flat decile.
+
+subject            arm              pred       M1       M2       M3   flat sd  extrema  n_eff    secs
+bee-3-cpl          nearest       +0.1889  +0.2300  +0.2126  +0.0174     746.1   1.8037  52.46    74.1
+bee-3-cpl          bilinear      -0.2181  -0.1790  -0.1850  +0.0059     728.6   0.9429  55.61    75.4
+bee-3-cpl          catmull-rom   +0.0000  +0.0000  +0.0000  +0.0000     735.3   1.0000  55.32   108.8
+bee-3-cpl          lanczos2      +0.0047  +0.0027  +0.0036  -0.0009     734.8   1.0479  55.29   311.6
+bee-3-cpl          lanczos3      +0.1082  +0.0868  +0.0997  -0.0129     737.6   1.1438  53.67   316.7
+
+wrapped-text-1     nearest       +0.1889  +0.1922  +0.1677  +0.0245     707.2   2.8807   1.17    41.7
+wrapped-text-1     bilinear      -0.2181  -0.2191  -0.2193  +0.0002     678.5   0.7386   1.22    45.1
+wrapped-text-1     catmull-rom   +0.0000  +0.0000  +0.0000  +0.0000     696.8   1.0000   1.18    70.0
+wrapped-text-1     lanczos2      +0.0047  +0.0038  +0.0043  -0.0005     697.2   1.0203   1.18   164.0
+wrapped-text-1     lanczos3      +0.1082  +0.1125  +0.1127  -0.0002     705.1   1.2513   1.17   224.9
+
+flat-on-ruler-cpl  nearest       +0.1889  +0.1874  +0.1804  +0.0071    2269.4   1.7411   1.14    20.1
+flat-on-ruler-cpl  bilinear      -0.2181  -0.1696  -0.1997  +0.0301    2239.0   0.9109   1.18    30.5
+flat-on-ruler-cpl  catmull-rom   +0.0000  +0.0000  +0.0000  +0.0000    2259.5   1.0000   1.15    54.0
+flat-on-ruler-cpl  lanczos2      +0.0047  +0.0052  +0.0040  +0.0011    2259.6   1.0063   1.15   131.1
+flat-on-ruler-cpl  lanczos3      +0.1082  +0.0859  +0.1021  -0.0162    2267.9   1.1363   1.14   211.8
+
+== T2. Stratum separation and rule-9 verdict (B3)
+
+subject             detail grad  flat grad    sep   rule-9 on lanczos3
+bee-3-cpl                1167.7      222.1   5.26   FAILS -- M2 >= M1, the gain is not concentrated in detail
+wrapped-text-1            931.7      422.2   2.21   FAILS -- M2 >= M1, the gain is not concentrated in detail
+flat-on-ruler-cpl        1435.6      879.0   1.63   FAILS -- M2 >= M1, the gain is not concentrated in detail
+
+== T3. ORCH N4 -- election-agreement stratification, lanczos3
+
+subject              agree%       hi       lo    delta     corr  % of effect  N4
+bee-3-cpl             91.92  +0.1080  +0.0885  +0.0195  +0.3819         19.9  not reversed
+wrapped-text-1        98.20  +0.1125  +0.1154  -0.0029  -0.2926          2.5  REVERSED
+flat-on-ruler-cpl     94.42  +0.1006  +0.0958  +0.0049  +0.0591          4.9  not reversed
+
+== T4. The datasheet test -- how much do the photographs move the answer?
+
+  cells (3 subjects x 4 non-baseline arms) : 12
+  mean |measured - predicted|              : 0.0155 dex
+  max  |measured - predicted|              : 0.0485 dex
+  mean |predicted effect|                  : 0.1300 dex
+  photographs move the answer by           : 11.9%
+
+  per-arm spread of the MEASURED gain across the three subjects:
+    nearest      +0.1874 .. +0.2300   range 0.0426 dex   predicted +0.1889
+    bilinear     -0.2191 .. -0.1696   range 0.0495 dex   predicted -0.2181
+    lanczos2     +0.0027 .. +0.0052   range 0.0025 dex   predicted +0.0047
+    lanczos3     +0.0859 .. +0.1125   range 0.0266 dex   predicted +0.1082
+
+== T5. Nulls, plants and the poisoning check
+
+  bee-3-cpl
+    B5 null + B7 poisoning (catmull-rom cold, re-run after every other arm): BYTE-IDENTICAL
+    B6 P1 wiring plant  : 5/5 distinct hashes
+    B6 P2 metric plant  : blur sigma 0.5 -> -0.3947 dex, unsharp x1.5 -> +0.3259 dex  (pass)
+    pinned viewing exposure: 1.54
+  wrapped-text-1
+    B5 null + B7 poisoning (catmull-rom cold, re-run after every other arm): BYTE-IDENTICAL
+    B6 P1 wiring plant  : 5/5 distinct hashes
+    B6 P2 metric plant  : blur sigma 0.5 -> -0.4000 dex, unsharp x1.5 -> +0.3270 dex  (pass)
+    pinned viewing exposure: 2.27
+  flat-on-ruler-cpl
+    B5 null + B7 poisoning (catmull-rom cold, re-run after every other arm): BYTE-IDENTICAL
+    B6 P1 wiring plant  : 5/5 distinct hashes
+    B6 P2 metric plant  : blur sigma 0.5 -> -0.3649 dex, unsharp x1.5 -> +0.3236 dex  (pass)
+    pinned viewing exposure: 1.96
+
+== T6. Cost, as a BOUND (shared machine, 3 other strehl processes live; rule 16)
+
+  bee-3-cpl           catmull-rom =  108.8s   nearest=0.68x  bilinear=0.69x  catmull-rom=1.00x  lanczos2=2.86x  lanczos3=2.91x
+  wrapped-text-1      catmull-rom =   70.0s   nearest=0.60x  bilinear=0.64x  catmull-rom=1.00x  lanczos2=2.34x  lanczos3=3.21x
+  flat-on-ruler-cpl   catmull-rom =   54.0s   nearest=0.37x  bilinear=0.56x  catmull-rom=1.00x  lanczos2=2.43x  lanczos3=3.92x

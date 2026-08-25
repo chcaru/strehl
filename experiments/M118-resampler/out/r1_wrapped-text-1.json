@@ -1,0 +1,88 @@
+{
+  "subject": "wrapped-text-1",
+  "limit": 130,
+  "gate": "4",
+  "solve_sidecar": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1--solve.txt",
+  "arms": {
+    "catmull-rom": {
+      "measure": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__catmull-rom__measure.tif",
+      "measure_sha": "0319A69117D5BC0D66C7C70DD18DAEE332DA72F13E4D01298B904F9916471EB4",
+      "index": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__catmull-rom__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__catmull-rom__neff.tif",
+      "measure_secs": 70.0,
+      "stats": {
+        "resampler": "CatmullRom",
+        "alignment": "ON (sidecar-override), reference frame 65, 130 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1--catmull-rom.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__catmull-rom__view.tif",
+      "view_sha": "6774F008544527457BEA1A0318E451639B66A46DB28B86149C127FB1A6D65180",
+      "view_secs": 51.7
+    },
+    "nearest": {
+      "measure": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__nearest__measure.tif",
+      "measure_sha": "984142AA5059744E56FFEFAA12E980091DF79D7F07F0A8A7A6A444E5345E17DC",
+      "index": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__nearest__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__nearest__neff.tif",
+      "measure_secs": 41.7,
+      "stats": {
+        "resampler": "Nearest",
+        "alignment": "ON (sidecar-override), reference frame 65, 130 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1--nearest.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__nearest__view.tif",
+      "view_sha": "A886A6F095ED2D7F28BFE2268F7933780819BC5541593E5A1FD2ABF3826DB30D",
+      "view_secs": 33.1
+    },
+    "bilinear": {
+      "measure": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__bilinear__measure.tif",
+      "measure_sha": "0DC6DAF1FBF5B12373D551AA23E12331525A611EB57B271C30E1B7819C7F2687",
+      "index": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__bilinear__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__bilinear__neff.tif",
+      "measure_secs": 45.1,
+      "stats": {
+        "resampler": "Bilinear",
+        "alignment": "ON (sidecar-override), reference frame 65, 130 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1--bilinear.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__bilinear__view.tif",
+      "view_sha": "B14C4A201E89F0890CC7E53B906F344C03592C5B87666877EE1A501842712116",
+      "view_secs": 38.0
+    },
+    "lanczos2": {
+      "measure": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__lanczos2__measure.tif",
+      "measure_sha": "89C9031A659024E5C48EB9F3E6C4BF34C08FA10E1F8BBE575936B155A5812C5D",
+      "index": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__lanczos2__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__lanczos2__neff.tif",
+      "measure_secs": 164.0,
+      "stats": {
+        "resampler": "Lanczos2",
+        "alignment": "ON (sidecar-override), reference frame 65, 130 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1--lanczos2.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__lanczos2__view.tif",
+      "view_sha": "483656C1DE0F9982470B85473C8163566A5D7B360E9CD85537E14E1956AF8DEF",
+      "view_secs": 177.9
+    },
+    "lanczos3": {
+      "measure": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__lanczos3__measure.tif",
+      "measure_sha": "2206502ADD5AD496BF8B6540A6380BE0C1A8830DA4BE1D19AC565084EB7F7151",
+      "index": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__lanczos3__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__lanczos3__neff.tif",
+      "measure_secs": 224.9,
+      "stats": {
+        "resampler": "Lanczos3",
+        "alignment": "ON (sidecar-override), reference frame 65, 130 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1--lanczos3.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\wrapped-text-1\\wrapped-text-1__lanczos3__view.tif",
+      "view_sha": "128E5C40ED2F8A7AAD799E1FC2AABECECD32E82B1F03AC3270EB1CEA3ECF0598",
+      "view_secs": 218.6
+    }
+  },
+  "pinned_exposure": "2.27",
+  "null_repeat_sha": "0319A69117D5BC0D66C7C70DD18DAEE332DA72F13E4D01298B904F9916471EB4",
+  "null_pass": true,
+  "plant_P1_distinct_hashes": 5,
+  "plant_P1_pass": true
+}

@@ -1,0 +1,88 @@
+{
+  "subject": "flat-on-ruler-cpl",
+  "limit": 79,
+  "gate": "4",
+  "solve_sidecar": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl--solve.txt",
+  "arms": {
+    "catmull-rom": {
+      "measure": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__catmull-rom__measure.tif",
+      "measure_sha": "DE0825B75294864EAEF5B8BD4DEA98C4FAD7712066313CCBB80E8FB82B44071D",
+      "index": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__catmull-rom__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__catmull-rom__neff.tif",
+      "measure_secs": 54.0,
+      "stats": {
+        "resampler": "CatmullRom",
+        "alignment": "ON (sidecar-override), reference frame 39, 79 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl--catmull-rom.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__catmull-rom__view.tif",
+      "view_sha": "C461C0A635F4D835C5CC5FD5372EDF2283130712032C1DD3759D989927827751",
+      "view_secs": 26.7
+    },
+    "nearest": {
+      "measure": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__nearest__measure.tif",
+      "measure_sha": "788966C418A4131D5DEE57CEB28EFC6FC074DA017139CB57D5A74782BDF1F1B7",
+      "index": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__nearest__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__nearest__neff.tif",
+      "measure_secs": 20.1,
+      "stats": {
+        "resampler": "Nearest",
+        "alignment": "ON (sidecar-override), reference frame 39, 79 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl--nearest.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__nearest__view.tif",
+      "view_sha": "5034427C7006D9C0C6D960C7401052BE1AE74BA02C1DC803EC54D81470707849",
+      "view_secs": 36.2
+    },
+    "bilinear": {
+      "measure": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__bilinear__measure.tif",
+      "measure_sha": "AA3F072177886A2BE367B5D2AEF0FF1E75D5FBAB274DEF03A7E2C0F98BB97004",
+      "index": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__bilinear__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__bilinear__neff.tif",
+      "measure_secs": 30.5,
+      "stats": {
+        "resampler": "Bilinear",
+        "alignment": "ON (sidecar-override), reference frame 39, 79 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl--bilinear.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__bilinear__view.tif",
+      "view_sha": "5E33183653DD336AB0BAAC20FB2114BACEE32BE8EA91E119C94B11E5E9D9E30D",
+      "view_secs": 28.4
+    },
+    "lanczos2": {
+      "measure": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__lanczos2__measure.tif",
+      "measure_sha": "DB7C1B4B5EFF40463AF747135661E519C9EC4133419D5744B239B1E1A9486D1A",
+      "index": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__lanczos2__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__lanczos2__neff.tif",
+      "measure_secs": 131.1,
+      "stats": {
+        "resampler": "Lanczos2",
+        "alignment": "ON (sidecar-override), reference frame 39, 79 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl--lanczos2.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__lanczos2__view.tif",
+      "view_sha": "38C0108B466DEB9E4F8183801033F62916D2FA682A572EAB992096AD2EF36C8F",
+      "view_secs": 161.5
+    },
+    "lanczos3": {
+      "measure": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__lanczos3__measure.tif",
+      "measure_sha": "0CB873CADE1C0BC090957693DDC25AF69F59D7FD39E0F2BFF9C34174D65A5F57",
+      "index": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__lanczos3__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__lanczos3__neff.tif",
+      "measure_secs": 211.8,
+      "stats": {
+        "resampler": "Lanczos3",
+        "alignment": "ON (sidecar-override), reference frame 39, 79 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl--lanczos3.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\flat-on-ruler-cpl\\flat-on-ruler-cpl__lanczos3__view.tif",
+      "view_sha": "F4AEA77B0604037743A5B4C1E7F3D3BBB714703F71FEF271947767E3C6624A20",
+      "view_secs": 231.6
+    }
+  },
+  "pinned_exposure": "1.96",
+  "null_repeat_sha": "DE0825B75294864EAEF5B8BD4DEA98C4FAD7712066313CCBB80E8FB82B44071D",
+  "null_pass": true,
+  "plant_P1_distinct_hashes": 5,
+  "plant_P1_pass": true
+}

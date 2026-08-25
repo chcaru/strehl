@@ -1,0 +1,88 @@
+{
+  "subject": "bee-3-cpl",
+  "limit": 299,
+  "gate": "4",
+  "solve_sidecar": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl--solve.txt",
+  "arms": {
+    "catmull-rom": {
+      "measure": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__catmull-rom__measure.tif",
+      "measure_sha": "C38FFBA98E2115654D5A4E4E158434A93BF89464D69AADA9A45F0856C42A3F2C",
+      "index": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__catmull-rom__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__catmull-rom__neff.tif",
+      "measure_secs": 108.8,
+      "stats": {
+        "resampler": "CatmullRom",
+        "alignment": "ON (sidecar-override), reference frame 149, 299 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl--catmull-rom.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__catmull-rom__view.tif",
+      "view_sha": "E400A63AA9F6AB1F1957940D7BD9D4965D67E01F6F0E1A0A7ABC30D8E7F17112",
+      "view_secs": 99.9
+    },
+    "nearest": {
+      "measure": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__nearest__measure.tif",
+      "measure_sha": "E78B0AC952865008A48816328270862AC2461FCFC052D7691827BA6A9EEE2E60",
+      "index": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__nearest__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__nearest__neff.tif",
+      "measure_secs": 74.1,
+      "stats": {
+        "resampler": "Nearest",
+        "alignment": "ON (sidecar-override), reference frame 149, 299 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl--nearest.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__nearest__view.tif",
+      "view_sha": "5962CF81CAAE4B5202C3E804223585E128FDEB1F44232866E3AA22AF6CD38CFE",
+      "view_secs": 76.6
+    },
+    "bilinear": {
+      "measure": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__bilinear__measure.tif",
+      "measure_sha": "D04AC66013760DFB20F0EABE67055174BC8F4E161C93B93E4BFB86719728FF4A",
+      "index": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__bilinear__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__bilinear__neff.tif",
+      "measure_secs": 75.4,
+      "stats": {
+        "resampler": "Bilinear",
+        "alignment": "ON (sidecar-override), reference frame 149, 299 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl--bilinear.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__bilinear__view.tif",
+      "view_sha": "AFDF3BE9CF82DD78CFA41D452979D3DE4794F4E56E239402013DA714706F25E8",
+      "view_secs": 76.0
+    },
+    "lanczos2": {
+      "measure": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__lanczos2__measure.tif",
+      "measure_sha": "4B58CE0E681C08CF21FA61C08C80114F6AAAC14763E2EB5A81000F7BADEE9FC5",
+      "index": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__lanczos2__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__lanczos2__neff.tif",
+      "measure_secs": 311.6,
+      "stats": {
+        "resampler": "Lanczos2",
+        "alignment": "ON (sidecar-override), reference frame 149, 299 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl--lanczos2.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__lanczos2__view.tif",
+      "view_sha": "CE1710CED111C419AA02960963B2FD7C422FCABA7DDA0A5F5C2E6F1CE7C03983",
+      "view_secs": 272.8
+    },
+    "lanczos3": {
+      "measure": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__lanczos3__measure.tif",
+      "measure_sha": "0798B598EBFF2ECD2EA1FDA1D6CC0112DE728FFEAA23170BCC5CDB4DE6001B36",
+      "index": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__lanczos3__index.tif",
+      "neff": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__lanczos3__neff.tif",
+      "measure_secs": 316.7,
+      "stats": {
+        "resampler": "Lanczos3",
+        "alignment": "ON (sidecar-override), reference frame 149, 299 placed / 0 refused"
+      },
+      "sidecar": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl--lanczos3.txt",
+      "view": "C:\\dev\\strehl-out\\M118\\bee-3-cpl\\bee-3-cpl__lanczos3__view.tif",
+      "view_sha": "DC6555BCDAE0FC4B334DE31AD130A0C644068647FA77F5FDD94F3271044B26A9",
+      "view_secs": 298.0
+    }
+  },
+  "pinned_exposure": "1.54",
+  "null_repeat_sha": "C38FFBA98E2115654D5A4E4E158434A93BF89464D69AADA9A45F0856C42A3F2C",
+  "null_pass": true,
+  "plant_P1_distinct_hashes": 5,
+  "plant_P1_pass": true
+}
