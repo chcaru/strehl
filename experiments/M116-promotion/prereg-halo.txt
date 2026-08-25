@@ -1,0 +1,214 @@
+M116-promotion — PRE-REGISTRATION, ADDENDUM 2: the occlusion-halo correction
+============================================================================
+
+Written and committed BEFORE any halo arm was run. Timestamp is the commit.
+
+This is a SECOND pre-registration, not an edit of the first. The original
+prereg.txt (commit 0235330) is frozen and its bars are already reported
+PASS/FAIL in docs/research/M116-promotion.md. ORCH dispatched the halo arm
+after that campaign closed, so this addendum registers its own bars in its own
+commit, before its own results, and is reported as clearly post-hoc relative to
+the original campaign.
+
+Pinned build: 4beac7300e318f6f0aaf10b6a88e57f311b9e814
+Binary:       C:\dev\strehl-out\M116-tree\target\release\strehl.exe
+Output root:  C:\dev\strehl-out\M116\halo\
+D:\ IS READ-ONLY. Nothing in this campaign writes to it.
+
+
+0. WHAT I READ BEFORE WRITING THESE BARS (discipline 808)
+---------------------------------------------------------
+
+Per discipline 808 the premises below come from the SOURCE at the pinned SHA,
+read via `git show <SHA>:<path>`, not from `--help` and not from ORCH's brief.
+
+  crates/strehl-cli/src/merge_cmd/halo.rs        lines 1..120
+  crates/strehl-cli/src/merge_cmd.rs             lines 2045..2135
+
+Established facts, quoted from that source:
+
+  (a) The correction is REACHABLE at this SHA. `merge_cmd.rs:2057` reads
+      `if halo::enabled() && opts.out.is_some()`. It is a real third pass.
+      It is gated by STREHL_FIX_HALO; STREHL_FIX_HALO_DELTA overrides DELTA.
+      Defaults: enabled()=false on Err(_); DELTA=40; YOKE=40.0 binned px.
+
+  (b) The module declares itself COSMETIC AND ANTI-FIDELITY, verbatim:
+      "**This is a cosmetic filter. It makes the image measurably more wrong.**"
+      Against synthetic truth at delta=40 it reports halo metric -79.8% with
+      RMSE against truth +254.6%.
+
+  (c) THE CRITICAL PREMISE. The module states it is NOT depth-selective:
+      "On a region with **no defect at all** the correction still 'improves'
+      the halo metric by `63.9%` while raising the error against truth by
+      `558.4%`. It is not depth-selective: it moves `85.4%` of treated pixels
+      at a *planted, non-occluding* disc in the bee's own background against
+      `82.1%` at the real occluding edge. It fires on silhouettes, not on
+      occlusions, and it cannot tell them apart."
+
+  (d) Therefore the number ORCH asked me to reproduce -- the 87.9% halo
+      removal on bee-3-cpl -- is a reading of a metric that the SAME MODULE
+      documents as reading -63.9% where there is no defect. Reproducing 87.9%
+      would therefore NOT be evidence for promotion. A metric that moves that
+      far on a no-defect region is not, on its own, a quality metric.
+      This drives the bar structure below: REMOVAL IS NOT THE DECIDING BAR,
+      SELECTIVITY IS.
+
+  (e) M87's numbers were all taken at gate 0. The module states the noise cost
+      inside the yoke against a GATED merge is "an additional, unmeasured
+      cost". The product default is gated. So the shipped configuration has
+      never been measured, and that gap is what a promotion decision needs.
+
+
+1. ARMS
+-------
+
+Registration is solved ONCE per subject to a scratch sidecar and loaded
+read-only by every arm via STREHL_WARPMAP, exactly as in the main campaign.
+This makes warps bit-identical across arms by construction and, per P20-P22,
+bypasses the warp-map cache entirely, so no arm can serve another arm's warps.
+
+Per subject, at the product gate (--gate 4), limit 100:
+
+  H0   default                      (no halo env set)
+  H1   STREHL_FIX_HALO=1            (delta defaults to 40)
+  H2   STREHL_FIX_HALO=1, DELTA=80  (the documented softening point)
+  H3   STREHL_FIX_HALO=0            TRAP: must be byte-identical to H0
+
+Additionally, on bee-3-cpl only, at gate 0, to attempt M87's reproduction on
+like-for-like terms:
+
+  G0   --gate 0, no halo env
+  G1   --gate 0, STREHL_FIX_HALO=1
+
+STREHL_FIX_CA is set in NO arm. It is under dispute and owned by M107/M114.
+
+
+2. SUBJECTS, AND WHY EACH
+-------------------------
+
+  bee-3-cpl                            M87's own reference stack. Carries the
+                                       87.9% claim. Has hairs and claws, so it
+                                       is also the fine-structure test.
+
+  flower-bud-with-background-fern-cpl  M87's second stack, and the OCCLUDING
+                                       case: a subject against a separate,
+                                       further, out-of-focus background.
+
+  flower-bud-alone-cpl                 THE TRAP SUBJECT. M87 never used it.
+                                       Same subject matter as the above, shot
+                                       WITHOUT the background fern -- so the
+                                       occluding edge that the correction
+                                       exists to fix is absent or much reduced,
+                                       while the silhouette is still present.
+                                       This is the real-data analogue of the
+                                       module's own synthetic "no occluding
+                                       edge" row.
+
+  tweezers-cpl                         TRANSFER. M87 never used it. Rigid steel,
+                                       high-contrast silhouette, no fine
+                                       biological structure. Tests whether one
+                                       unrefitted parameter set carries to a
+                                       third subject of different character.
+
+
+3. METRICS
+----------
+
+All measured on the LINEAR binned output (never --srgb; its own --help says
+"For looking at, NOT for measuring"). --srgb is used only for the crops shown
+to the owner, and every such image is labelled as such.
+
+  L        per-pixel green-channel luma of the linear render.
+  FG       foreground mask: Otsu threshold on L, same two-class rule the
+           module uses, then a 3px morphological close/open, components under
+           2000 px dropped.
+  d(p)     Euclidean distance in binned px from pixel p to the nearest FG px.
+
+  HALO INDEX
+      H = mean over background pixels with 2 <= d <= 40 of  ( L(p)/L_far - 1 )
+      where L_far = median L over background pixels with 60 <= d <= 100.
+      A RATIO, deliberately scale-invariant: an absolute DN tolerance is what
+      produced the "waxy blob" (fact 1470), and a ratio also makes the index
+      immune to the exposure constant.
+
+  dHALO%  = 100 * (H_on - H_off) / H_off.     Negative = halo removed.
+
+  SELECTIVITY RATIO
+      R = dHALO%(flower-bud-alone) / dHALO%(flower-bud-with-background-fern)
+      R near 0  => the correction acts only where there is an occlusion.
+      R near 1  => it acts on any silhouette and cannot tell them apart.
+
+  Q = D - N   the same band-ratio detail statistic as the main campaign,
+      evaluated on a FINE-STRUCTURE window chosen on the H0 render (never on
+      an arm under test) at hairs/claws on bee-3-cpl.
+
+  YOKE NOISE  ratio of local std inside the yoke band (2<=d<=40) to local std
+      outside it (60<=d<=100), background pixels only, on- vs off-arm.
+
+
+4. BARS. These are the contract. They are not adjustable after data exists.
+---------------------------------------------------------------------------
+
+HB1  REPRODUCTION. On bee-3-cpl, dHALO% at delta 40 is <= -50%.
+     (M87 claims -87.9% with its own instrument at gate 0; I use a looser bar
+     because my index is independently defined and mine is gated. If HB1
+     FAILS, M87's headline does not reproduce and that leads the report.)
+
+HB2  SELECTIVITY -- THE DECIDING BAR. R <= 0.50.
+     That is: the correction must remove at most half as much "halo" from the
+     stack with no occluding background as from the stack with one.
+     PRE-REGISTERED PREDICTION, from premise (c): the module's own synthetic
+     numbers give 63.9/79.8 = 0.80, so I EXPECT HB2 TO FAIL. Registering the
+     expected failure in advance is the point: if it fails as predicted, the
+     87.9% removal figure cannot support promotion no matter how well HB1
+     passes, because the instrument cannot distinguish a defect from an edge.
+
+HB3  FINE STRUCTURE. At delta 40, on the bee fine-structure window,
+     dQ >= -0.010 (the same tolerance as main-campaign B1).
+     PLANT (fact 1548): delta 80 MUST fail this bar. The module says delta 80
+     "visibly softens hairs and claws". If delta 80 does NOT read a loss, the
+     Q statistic is a dead probe on this wiring and HB3's pass is vacuous and
+     must be reported as vacuous rather than as a pass.
+
+HB4  YOKE NOISE. The yoke/outside noise ratio rises by <= 20% from H0 to H1.
+     This is the cost the module flags as unmeasured against a gated merge.
+
+HB5  TRAP. H3 (STREHL_FIX_HALO=0) is byte-identical to H0 on all subjects.
+
+HB6  CONTAINMENT. Every pixel with d > 40 (outside YOKE) is bit-identical
+     between H0 and H1. The correction must not reach beyond its stated yoke.
+     A failure here means the implementation exceeds its documented reach.
+
+HB7  VISUAL. I inspect the 1:1 crops myself and state, in the report, whether
+     the fringe is visibly reduced and whether fine structure is visibly
+     softened, separately, per subject.
+
+
+5. PROMOTION RULE
+-----------------
+
+PROMOTE the halo correction to default-ON only if ALL of:
+    HB1 PASS, HB2 PASS, HB3 PASS (non-vacuously), HB4 PASS, HB5 PASS, HB6 PASS.
+
+If HB2 FAILS, the verdict is KEEP-OFF EVEN IF EVERY OTHER BAR PASSES, and the
+report must say that the halo metric is not a quality metric.
+
+A separate, weaker verdict is available and must be stated explicitly if it is
+the one reached:
+    OFFER-AS-CHOICE -- the correction is a defensible cosmetic option to expose
+    to the user, but not to switch on for everyone. This is what the module
+    itself already argues ("removing it is a legitimate thing to *choose*").
+    OFFER-AS-CHOICE is NOT promotion and does not flip a default.
+
+Nothing in this campaign edits anything under crates/. Any recommended change
+ships as a diff in the report for ORCH to route.
+
+
+6. WHAT WOULD MAKE ME WRONG
+---------------------------
+
+If dHALO% on flower-bud-alone-cpl reads near zero while bee and fern read
+strongly negative, then the correction IS occlusion-selective on real data,
+the module's synthetic no-defect row does not transfer, HB2 passes, and the
+promotion case is live. I would then be obliged to report that M87's own
+caution is too harsh, and to say so as plainly as I would report the reverse.
