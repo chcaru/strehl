@@ -2,14 +2,21 @@
 
 R10, R11 and R12 all ran on `--srgb --auto-exposure` renders. The orchestrator
 has just established that this space carries two cross-channel operators -- a
-non-diagonal colour matrix putting camera green into output red at 10.4% and
-camera red into output green at 20.3%, both at ZERO displacement, plus a guided
+non-diagonal colour matrix putting camera green into output red at 27.4% and
+camera red into output green at 7.7%, both at ZERO displacement, plus a guided
 demosaic whose smoothness assumption a fringe violates. `stack --help` says of
 the sRGB render, in the tool's own words: "For looking at, NOT for measuring."
 I ignored that warning exactly as the orchestrator did.
 
-This matters for my own conclusions, not just for the shared number. Matching a
-SHIFTED output-red against an output-green that contains an UN-SHIFTED 20.3%
+This matters for my own conclusions, not just for the shared number. [CORRECTED
+2026-08-24, see section 27: the leak percentages above were wrong in the corpus
+and are now taken from color.rs; the mechanism stated below is ALSO wrong. The
+dominant term is a NEGATIVE coefficient, output red = 1.636 R - 0.449 G, which
+SUBTRACTS the reference from the tracked channel and therefore AMPLIFIES the
+apparent displacement rather than attenuating it -- R18 E4 measured the
+transfer check moving 0.9148 -> 1.4382, away from zero. The original reasoning
+is left below because R13's numbers were computed under it.] Matching a
+SHIFTED output-red against an output-green that contains an UN-SHIFTED 7.7%
 copy of camera red is a reference partially anchored to the thing being tracked.
 That biases any displacement estimate toward zero, which is attenuation, and it
 would produce a sign-dependent gain -- which is precisely the R11 signature I

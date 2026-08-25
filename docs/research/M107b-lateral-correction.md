@@ -2163,3 +2163,110 @@ Had I reported the raw count I would have declared an exposure I do not have.
 render with the r7 sidecar. They did not pass through another milestone's
 scratch directory and were not produced by any Python reader, so there is no
 upstream narrowing to inherit. The `r7` arms have the same provenance.
+
+## 27. The matrix correction, independently confirmed — and the mechanism was backwards
+
+ORCH reports the corpus quoted `rownorm(inv(A@S))` where the crate computes
+`inv(rownorm(A@S))`. Per ORCH's own new instruction — *"if a constant you use is
+also computed by the crate, read the crate's own statement of it before you
+trust the corpus"* — R18 takes neither the corpus value nor the correction on
+trust, and recomputes from the crate's constants
+(`color.rs:79-83`, `color.rs:812-816`, order of operations at `color.rs:180-208`).
+
+**Adjudicated against an artefact, not a fact number:** the doc comment at
+`color.rs:221`.
+
+| bar | registered | measured | verdict |
+| --- | --- | --- | --- |
+| E1 | crate order matches the doc comment, corpus order does not | deviation **1.94e-4** vs **0.741** | **HOLDS** |
+| E2 | green-in-red 27.4%, red-in-green 7.7% | **27.4% / 7.7%** | **HOLDS** |
+
+```
+R row:  1.636062  -0.448619  -0.187443
+G row: -0.115165   1.488971  -0.373806
+B row: -0.004740  -0.323601   1.328341
+```
+
+The corpus ordering yields a green row of `[-0.4530, +2.2300, -0.7770]` —
+exactly the values quoted in the stop-ship message, so the wrong constant is
+confirmed as wrong by an independent route. **ORCH's correction is right.**
+
+`r13_clean_calib.py:5-6` carried the wrong percentages; corrected in place.
+
+### 27.1 The mechanism everyone has been citing, including me, is backwards
+
+**E4 was falsified, and its falsification is the useful part.** I registered
+that the leak biases estimates **toward** zero — the "reference partially
+anchored to the tracked signal" story that appears in §23, in
+`r13_clean_calib.py`'s docstring, and in the stop-ship message.
+
+It does the opposite. `R_out = 1.636 R − 0.449 G` has a **negative** coefficient
+on green: it **subtracts** the reference from the tracked channel. That is an
+unsharp operation on the cross-channel difference and it **amplifies** apparent
+displacement. Measured: **0.9148 → 1.4382, away from zero.**
+
+The conclusion "sRGB is unfit for measuring a cross-channel quantity" is
+untouched. **The stated reason was wrong, and it was wrong in a way that
+predicted the wrong sign.**
+
+### 27.2 Apportioning the two confounded operators
+
+ORCH wrote that *"no internal consistency check could have separated"* the
+matrix from the demosaic. True of a check on a finished render — but not of a
+**forward model**, because the binned linear space contains no demosaic at all,
+so applying the matrix alone isolates it exactly.
+
+R19 completes this inside **one instrument**, because R18's comparison to
+ORCH's 1.3073 crossed instruments and could not support the claim.
+
+**Control (F1):** an absolute floor of 120 DN does not mean the same thing at
+full resolution and auto-exposure as it does binned and linear, so the floor is
+matched on **admitted-window fraction**, not on its value — bisected to 75.3%
+against r13's 75.4% target. Matching the floor's *effect* is the comparison;
+matching its *number* would have been a coincidence.
+
+| stage | transfer (truth = 1.0) |
+| --- | ---: |
+| clean binned-linear | **0.9148** |
+| + colour matrix alone (forward model) | **1.4382** |
+| + demosaic + matrix + tone curve (full sRGB, my estimator) | **1.0543** |
+| full sRGB, ORCH's estimator, different render | 1.3073 |
+
+| bar | registered | measured | verdict |
+| --- | --- | --- | --- |
+| F1 | bisection within 2 pts of 75.4%, ≥200 windows | 75.3%, n=5206 | HOLDS |
+| F2 | full sRGB lands **below** matrix-only 1.4382 | **1.0543** | **HOLDS** |
+| F3 | within 0.25 of ORCH's 1.3073 | **0.2530 apart** | **FALSIFIED** |
+
+**The demosaic and tone curve substantially cancel the matrix error**, 1.4382 →
+1.0543. The two operators are not additive; they oppose.
+
+### 27.3 The trap this creates, which is worse than the contamination
+
+**On this scene the full sRGB path (1.0543) reads *closer to ground truth* than
+my clean measurement (0.9148).** Anyone running a transfer check on this stack
+would find sRGB apparently *outperforming* the space the corpus mandates.
+
+**That is coincidental cancellation, not fitness.** It depends on the scene's
+spectrum, the displacement magnitude and the tone curve's operating point — the
+same three things ORCH established do not transfer between scenes. **A
+measurement space that is wrong by +57% and −27% in opposition is more dangerous
+than one that is simply wrong**, because its error is invisible to the very
+check designed to expose it.
+
+### 27.4 An open disagreement I am not going to explain away
+
+**F3 failed: my full-sRGB transfer is 1.0543 where ORCH measured 1.3073, 0.253
+apart.** Two candidates, and I have no measurement that separates them: a
+**scene** difference (`bee-3-cpl` here, the `M114-ca-verify` render there), or
+an **estimator** difference (mine carries a support floor at matched
+selectivity; §25 showed that alone moved my own number by 0.08). I report it as
+an unresolved disagreement rather than adopting either number.
+
+### 27.5 The two other retractions
+
+Neither touches M107. **±15 ppm** — never cited in this report; my flatness
+claims rest on §20 and §22, both withdrawn or code-based. **Fact 1587's
+overshoot** — never cited. §23.2's "space effect is real and isolated" rests on
+my own measured 48.9% vs 30.3% asymmetry, not on any corpus constant, and
+§27.1's sign correction does not disturb it.
