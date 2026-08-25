@@ -1254,6 +1254,48 @@ pub const EDGE_CONF_ENV: &str = "STREHL_EDGE_CONF";
 /// the masking has to reach.
 const GUIDE_RADIUS: usize = 4;
 
+/// Render exactly one frame of the bracket, by index, with no election at all.
+pub const ONLY_FRAME_ENV: &str = "STREHL_ONLY_FRAME";
+
+/// Restrict the bracket to a single frame, for diagnosis only.
+///
+/// # Why this exists
+///
+/// Every halo argument this build has made compares one *merge* against
+/// another, and every such comparison can only see what the **election** does.
+/// That is structurally unable to answer the question that decides the whole
+/// plan: is the bright aura around a subject something we *chose*, or something
+/// the *lens* did?
+///
+/// A single frame has no election — one frame is trivially its own winner at
+/// every pixel — so whatever aura survives here is optical, and no selection
+/// strategy whatsoever can remove it. Conversely an aura that is present in the
+/// merge and absent from every single frame is entirely ours.
+///
+/// This is a diagnostic, not a feature: it is an environment variable rather
+/// than a flag precisely because it produces a deliberately wrong picture, and
+/// the number it takes is a raw bracket index whose meaning depends on the
+/// capture order of the directory being read.
+fn only_frame(paths: Vec<std::path::PathBuf>) -> Vec<std::path::PathBuf> {
+    let Ok(raw) = std::env::var(ONLY_FRAME_ENV) else {
+        return paths;
+    };
+    let k: usize = raw
+        .trim()
+        .parse()
+        .unwrap_or_else(|_| panic!("{ONLY_FRAME_ENV}={raw:?} is not a frame index"));
+    assert!(
+        k < paths.len(),
+        "{ONLY_FRAME_ENV}={k} but the bracket has {} frames",
+        paths.len()
+    );
+    eprintln!(
+        "{ONLY_FRAME_ENV}={k}: rendering 1 of {} frames, NO election -- diagnostic only",
+        paths.len()
+    );
+    vec![paths[k].clone()]
+}
+
 fn edge_conf() -> f32 {
     env_num(EDGE_CONF_ENV, 2.0)
 }
@@ -1993,6 +2035,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     let exposure = Exposure::resolve(opts.srgb, opts.exposure, opts.auto_exposure)?;
 
     let paths = crate::raw_paths(&opts.dir, opts.limit)?;
+    let paths = only_frame(paths);
     ensure!(
         paths.len() < u16::MAX as usize,
         "{} frames exceeds the u16 winner-index range",
