@@ -5,8 +5,15 @@
 #
 # It was run on `--srgb --auto-exposure` renders. Lateral CA is a CROSS-CHANNEL
 # quantity and that space contains two cross-channel operators:
-#   * camera_to_srgb is non-diagonal -- output red carries camera green at 10.4%
-#     and output green carries camera red at 20.3%, BOTH AT ZERO DISPLACEMENT;
+#   * camera_to_srgb is non-diagonal -- output red carries camera green at 27.4%
+#     and output green carries camera red at 7.7%, BOTH AT ZERO DISPLACEMENT;
+#     (CORRECTED 2026-08-25 by V-FOLD: this header previously said 10.4% / 20.3%,
+#     which was wrong AND swapped. The crate computes inv(rownorm(A@S)) --
+#     color.rs:191-208 row-normalises at step 2 then inverts at step 3 -- while
+#     the corpus everywhere quoted rownorm(inv(A@S)). Verify with
+#     experiments/V-FOLD/matrix.py; its green row matches color.rs:221's own doc
+#     comment to 3 d.p. The supersession below is UNAFFECTED and strengthened:
+#     the green-into-red leak is 27.4%, not 10.4%.)
 #   * Malvar-He-Cutler demosaic assumes `R - G` is smoother than either channel
 #     (demosaic.rs:482), which a CA fringe violates by definition.
 # `main.rs:116` says of --srgb: "For looking at, NOT for measuring." It was right.
@@ -23,9 +30,12 @@
 # because a channel's effective wavelength is its passband centroid weighted by
 # the SCENE's spectrum.
 #
-# WHAT SURVIVES: the radial SHAPE is correct (eps(r) flat within +/-15 ppm over
-# r = 0.11..0.87), and the sign-flip finding (RECOLOURED, NOT REMOVED) is
-# confirmed on two stacks under two independent estimators.
+# WHAT SURVIVES: the radial SHAPE is correct (eps(r) flat over r = 0.11..0.87
+# -- the "+/-15 ppm" tolerance this header used to quote is RETRACTED, it was
+# spliced from a different, n=1 experiment and the real bootstrap sd at the
+# r=0.11 ring is 80.0 ppm; see SYNTHESIS fact 1723), and the sign-flip finding
+# (RECOLOURED, NOT REMOVED) is confirmed on two stacks under two independent
+# estimators.
 #
 # See docs/research/SYNTHESIS.md facts 1567+ and experiments/M113-ca/.
 # Kept, not deleted, because the corpus rule is that a refuted instrument stays
