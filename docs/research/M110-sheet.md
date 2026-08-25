@@ -1682,8 +1682,9 @@ bins cancels that profile to first order; an absolute level does not.
     by neighbouring steps of **+0.66** and **+0.71**; and **−0.24 pp** on `flat-on-ruler-cpl`,
     following **−0.40**. An extrapolation failing at its own support edge would produce a kink
     there, and there is none. This is the claim §16 supports.
-89. **MEASURED, and I did not report it: `flat-on-ruler-cpl` carries a +3.35 pp step in the
-    outermost decile** (r = 0.90 to 1.00, excess +0.92 to **+4.27**, n = 100,905), against
+89. **WITHDRAWN in §26 — it was the null, not the data.** As reported: `flat-on-ruler-cpl`
+    carries a +3.35 pp step in the outermost decile
+    (r = 0.90 to 1.00, excess +0.92 to **+4.27**, n = 100,905), against
     neighbouring steps of −1.01, −0.40 and −0.24. It is **one decile beyond** the support
     boundary, not at it, so it does not bear on §16's claim — but it is a candidate
     extrapolation failure at the extreme corner and it was missed. `bee-3-cpl` shows no
@@ -1702,5 +1703,64 @@ bins cancels that profile to first order; an absolute level does not.
     levels inherit it. The broad claim was never supportable from this artefact, and the narrow
     one was, for a reason visible in the null's construction rather than in its output.
 92. **When a fold is narrowed, re-read the artefact for what the narrower statistic shows
-    elsewhere.** Re-reading §16 under the correct scope surfaced item 89 — a real step, in a
-    bin the original over-broad claim had swept up and hidden.
+    elsewhere.** Re-reading §16 under the correct scope surfaced item 89, and §26 then
+    withdrew it as an artefact of the control. The discipline holds and the episode sharpens
+    it: re-reading found something real, but what was real was a defect in my instrument.
+
+## 26. Item 89 is WITHDRAWN. It was my inert null, not the data.
+
+ORCH's finding that an equal-power random dither is not a valid model of a **deterministic**
+perturbation lands directly on `ca_overshoot.py:158-163`, which builds its inert null by
+injecting `rng.normal(0, rms)` at the rms of the real change. A lateral-CA correction is a
+**radial resample — a deterministic function of position** — and belongs on ORCH's list beside
+fixed-pattern noise, dust and a stuck warp. An additive random null cannot model it.
+
+I did not have to reason about the size of that error, because I could remove the null and
+re-read the raw statistic.
+
+| bin | bee RAW (step) | bee NULL (step) | flat RAW (step) | flat NULL (step) |
+| --- | --- | --- | --- | --- |
+| 0.60-0.70 | 9.94 (+0.28) | 7.67 (−1.41) | 14.69 (−0.54) | 13.13 (+0.47) |
+| **0.70-0.80** (holds r = 0.788) | 9.73 (−0.21) | 6.80 (−0.87) | 14.22 (−0.47) | 13.06 (−0.07) |
+| 0.80-0.90 | 9.78 (**+0.05**) | 5.90 (−0.90) | 13.68 (**−0.54**) | 12.76 (−0.30) |
+| 0.90-1.00 | 9.47 (−0.31) | 4.88 (−1.02) | 11.66 (**−2.02**) | 7.39 (**−5.37**) |
+
+**Facts**
+
+93. **WITHDRAWN: §25 item 89 is an artefact of the inert null.** The "+3.35 pp step in the
+    outermost decile" of `flat-on-ruler-cpl` does not exist in the data. The **raw** statistic
+    *falls* there, −2.02 pp (13.68 to 11.66), continuing a monotone decline running from
+    r = 0.30 outward. The excess rose only because the **null collapsed −5.37 pp** in the same
+    bin, its single global injected rms flipping ever fewer signs as chroma grows toward the
+    corner. `bee-3-cpl` is the same shape (raw −0.31, null −1.02). **There is no step in the
+    real data; there is a collapse in the control.** My §25.1 caveat said "part of this step
+    may be the null's radial profile". The answer is all of it.
+94. **STRENGTHENED: §25 item 88 does not depend on the null at all.** Recomputed on the raw
+    statistic with no control subtracted, the step across the bin holding r = 0.788 is
+    **+0.05 pp** on `bee-3-cpl` (neighbours −0.21, −0.31) and **−0.54 pp** on
+    `flat-on-ruler-cpl` (neighbours −0.47, −2.02). No kink at the support edge, on either
+    subject, without the invalid control. **The claim ORCH narrowed fact 1587 to is the one
+    claim in §16 that never needed the null.**
+95. **MEASURED: nothing else of mine rests on that null.** §17's width profile compares the two
+    real arms directly; §16's flip-versus-shrinkage adjudication (flips to 62.9%, overshoot
+    9-19%) is real-arm-only, with the null used as a floor rather than a subtrahend. The PIL
+    clearance used no noise estimate of any kind — it rests on there being **no `Image.open`
+    call site**, with a positive control confirming the hazard bites the same nine files.
+    **No differencing noise estimator appears anywhere in M110**, so ORCH's split-half warning
+    finds nothing here.
+96. **MEASURED: M110 never set `STREHL_ALIGN`.** All four arms run the default align stage
+    (`sheet.py:99-115`), so the `STREHL_FIX_CA` under `STREHL_ALIGN=0` nesting no-op cannot
+    apply to any M110 arm.
+
+**Disciplines**
+
+97. **A null must match the treatment in its *structure*, not only its magnitude.** Equal power
+    is not equal shape. A deterministic, spatially coherent treatment perturbed against an
+    additive random control differs in correlation length, in edge concentration, and — as
+    here — in radial profile, and any of the three can manufacture a finding.
+98. **Before reporting an excess over a control, report the raw statistic beside it.** The two
+    disagreed in sign here. One extra column would have caught item 89 before I sent it, and
+    the same column showed item 88 to be stronger than I had claimed.
+99. **A control that varies systematically along the axis you are binning on is not a control
+    on that axis.** The null fell monotonically with radius by construction, so every radial
+    conclusion drawn from excess-over-null inherited its slope.
