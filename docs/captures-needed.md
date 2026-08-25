@@ -65,13 +65,35 @@ diagnosing a defect, building the cure, measuring it, writing it up — and neve
 connecting it to the code that renders your photo.**
 
 I enumerated every module in the codebase and counted what actually calls it.
-Of 25, **two are unreachable from the binary**: `outlier.rs` (1094 lines) and
-`robust.rs` (544 lines). Both compile. Both have passing tests. Neither has ever
+Of 25, **two were unreachable from the binary**: `outlier.rs` (1094 lines) and
+`robust.rs` (544 lines). Both compile. Both have passing tests. Neither had ever
 run when you pressed go. The reason they were invisible is a Rust detail —
 marking a module `pub` silences the compiler's dead-code warning — so every green
 signal was telling the truth about code that did nothing. A third,
 `photometric.rs` (1365 lines, 24 passing tests), had **no caller at all** until
 one was added, and is still off by default.
+
+**Corrected at dawn, and the correction is small but it is the kind I said I
+would start flagging.** `robust.rs` is **no longer unreachable** — a gate was
+wired to it at 20:00 last night and `merge.rs` now imports it directly. It is
+still **off unless switched on**, which is the thing that actually matters to
+your pictures, but "unreachable" is no longer the right word and I had written it
+as though nothing had changed. `outlier.rs` (1094 lines) *is* still orphaned:
+nothing but the module declaration refers to it.
+
+**And this turns out to be the general shape of the problem, not a one-off.** I
+went through the render path gate by gate this morning. Of the six improvements
+this project has measured and built, **exactly one is switched on when you run
+the tool.** Alignment is on. Chromatic-aberration correction, robust election,
+the smoothing prior, the soft gate and photometric normalisation are all present,
+all tested, and all **off by default** — so the render you have been judging is
+very nearly the unimproved one. Nobody had ever measured what happens with them
+on, which is a strange gap for a project this careful, and that measurement is
+now running. Two cautions on it, both already found: switching everything on is
+*not* obviously right — on a stack that drifted, the merge measurably **loses**
+to a single frame — and at least one gate is a **silent no-op** unless another is
+also on, which means a naive test of it would have read "does nothing" and been
+believed.
 
 `robust.rs` is the one that matters, because of something already measured on
 your `foam` stack. When a subject moves between frames, the moved frame shows a
