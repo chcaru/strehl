@@ -2270,3 +2270,93 @@ claims rest on §20 and §22, both withdrawn or code-based. **Fact 1587's
 overshoot** — never cited. §23.2's "space effect is real and isolated" rests on
 my own measured 48.9% vs 30.3% asymmetry, not on any corpus constant, and
 §27.1's sign correction does not disturb it.
+
+## 28. The `STREHL_ALIGN=0` trap does not touch M107 — proved two ways
+
+The last item in ORCH's withdrawal is M107's switch: *"`STREHL_FIX_CA` under
+`STREHL_ALIGN=0` is a silent, byte-identical no-op. If you have measured a CA
+effect with alignment off, you measured nothing."* That is a candidate total
+invalidation of this milestone, so it is checked rather than assumed.
+
+**Configuration.** `STREHL_ALIGN` appears **nowhere** in
+`experiments/M107-chroma/src` — never set, so the default applies
+(`align_cmd.rs:875`, on by default). `r7_wiring_ab.ps1:39` runs a real `align`
+and aborts on non-zero exit; the log records `align EXIT=0`, and the resulting
+sidecar is passed explicitly via `STREHL_WARPMAP`.
+
+**Empirically, which is the stronger evidence.** SHA-256 over the five r7 arms:
+
+| arm | `STREHL_FIX_CA` | hash (first 32) |
+| --- | --- | --- |
+| `off1` | unset | `E400A63AA9F6AB1F1957940D7BD9D496` |
+| `off2` | unset | `E400A63AA9F6AB1F1957940D7BD9D496` |
+| `offword` | `off` | `E400A63AA9F6AB1F1957940D7BD9D496` |
+| `zero` | `0` | `E400A63AA9F6AB1F1957940D7BD9D496` |
+| **`on`** | `a7c2-fe100gm-2xtc-x4cpl` | **`E9580E8A2A85009494B2FE5A35441EBE`** |
+
+**The ON arm diverges; all four OFF arms are byte-identical.** The switch reached
+pixels under exactly the conditions every M107 number was measured in.
+
+### 28.1 A correction to "only reading the code tells you which you have"
+
+ORCH writes that a structurally inert gate and a measurably useless gate
+*"produce the same number and mean opposite things, and only reading the code
+tells you which you have."*
+
+**A byte-hash A/B also tells you, and it does not require the code.** The two
+cases are distinguishable at the file level:
+
+- **structurally inert** ⇒ `on` and `off` are **byte-identical**;
+- **measurably useless** ⇒ `on ≠ off` in bytes, but the metric does not move.
+
+The table above contains **both cases in one experiment**. `zero`, `off` and
+`offword` are genuinely inert — proved inert by hash, not argued — and `on` is
+live. The inert arms are the positive control for the discriminator: they show
+the test can produce the inert result, so the `on` arm's divergence is not a
+test that merely cannot fail.
+
+Reading the code remains necessary to explain *why*. It is not necessary to
+*detect*, and the hash is available to an agent who does not own the file.
+
+### 28.2 Re-derived exposure for M107's estimator, per ORCH's request
+
+**M107's exposure claim never rested on the withdrawn rule.** §24 declared NOT
+EXPOSED on the ground that every read is `tifffile.imread` with zero
+`Image.open(` call sites (§26.4) — a property of the reader, not of the
+statistic's form.
+
+**The one form-based screen M107 did propose was its own, and it is already
+retracted.** §24.3 offered *"does the metric differentiate or divide by local
+gradients?"* as a replacement screen. **R15 falsified it** (§25.1): the median
+was 25 levels per fitted window, above the immunity bound, and the bias occurred
+regardless — support was the operative variable. So M107 has **no live claim
+resting on the form of a statistic**, its own or ORCH's.
+
+**On the two new hazards specifically:**
+
+1. **Random dither as a quantisation model — not used.** `r14_pil_hazard.py:57`
+   applies the **actual deterministic rounding**,
+   `(a/257).astype(uint8)*257`, not an equal-power random perturbation. The 16×
+   error ORCH measured does not reach any M107 number.
+
+2. **Differencing noise estimators — none present.** M107's statistic is a
+   **displacement** — a location statistic under V-M113's axis — and no M107
+   result is a noise, variance, SNR or split-half estimate. The transfer check
+   differences two *position* estimates, not two samples of a value, so it does
+   not book correlated rounding error as signal. **No M107 clearance used a
+   differencing noise estimate**, so nothing here needs flagging under that
+   heading.
+
+### 28.3 On reporting the number that does not fit
+
+The M115 standard ORCH asks to be copied is the one this report has been run
+under. Registered bars falsified and reported rather than quietly re-cut:
+**H1** (§24, predicted the signal below the quantum; it was 1.8× above),
+**Y1** (§25, predicted below the 12-level bound; it was 25),
+**Z2** (§25, the support floor did not fix the asymmetry),
+**D3** direction (§26, `D` moved opposite to the shift),
+**E4** (§27, predicted attenuation; measured amplification),
+**F3** (§27, my sRGB transfer disagrees with ORCH's by 0.253, left unresolved).
+
+Six falsifications reported, and **§25's retraction of §23's headline and §21's
+withdrawal of `k = 1.374` both came from bars M107 set against itself.**
