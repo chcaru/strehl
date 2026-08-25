@@ -35,7 +35,7 @@ JSONS = ["100-gate-veildepth.json", "101-attrib.json", "102-robust.json",
          "exitcode-quota-child-host.json", "exitcode-quota-agent-shell.json",
          "exitcode-quota-pwsh7-child.json", "exitcode-quota-ps51-dotsource.json",
          "exitcode-race-ps51-child.json", "exitcode-race-pwsh7-child.json",
-         "cachekey-probe.json"]
+         "cachekey-probe.json", "rho-null.json"]
 
 
 SRCS = ["verify_s29.py", "control_s29.py", "verify_s32.py", "probe_cachekey.py"]
@@ -296,6 +296,20 @@ def main():
         lambda: mutate_src("probe_cachekey.py", "HARNESS = fix_audit.HARNESS",
                            'HARNESS = ("verify_", "control_", "fix_")'),
         want="probe_cachekey.py imports the split rather than copying it")
+
+    # ---- P146 operands: the enumerated rank null ----
+    arm("N33", "the n=4 null is softened to a rarer value, which would make a "
+        "four-point perfect reversal look like evidence", "RED",
+        lambda: mutate_json("rho-null.json", ["4", "p_minus_one"], 0.0083),
+        want="P(rho=-1) at n=4")
+    arm("N34", "the enumeration is recorded as incomplete, so the exact null "
+        "would silently become an estimate", "RED",
+        lambda: mutate_json("rho-null.json", ["4", "permutations"], 20),
+        want="all 24 permutations enumerated")
+    arm("N35", "the disclosure is allowed to stand while the magnitude that "
+        "actually carries the refutation is dropped from the section", "RED",
+        lambda: mutate_doc("+2.3463 pp", "+2.3463 percentage points"),
+        want="P146 itself restates the magnitude that refutes")
 
     for tag, why, expect, fn, want in arms:
         restore()

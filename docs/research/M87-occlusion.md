@@ -2008,6 +2008,7 @@ namespaced `M87`.
 | P143 | **A third verifier broke on the same append, in a third distinct shape, and the common cause is not scope -- it is keying a check to a VALUE instead of to a SITE.** `verify_s29` counted the bolded rendering of its full-coverage figure across the whole document and expected 3 sites; §34's engine ladder quoted two unrelated rates of 100% and pushed the count to 5. The three defects differ in mechanism -- `verify_s33` sliced its scope to end-of-file, `verify_s32` re-counted a denominator from disk, `verify_s29` counted a generic value -- but each was an expectation that any future sentence could move. | Repaired by binding all three real sites to their own anchors rather than bumping 3 to 5, which is strictly stronger than the count it replaces: two of those sites are the same sentence and differ only in whether the verdict word is emphasised, and `control_s29`'s new `N11` collapses one onto the other -- a defect no bare count can see. Three sections appended, three earlier verifiers broken: that is a rate, not an anecdote. | MEASURED |
 | P144 | **M87 is structurally out of reach of the unkeyed stack cache, and the warning that named it is superseded at HEAD.** Fact 1446 reports that `StackIdentity` omits `reference` and `resampler`, so an identical command line can return different bytes. Two grounds, both read in the Rust rather than relayed: (a) **no M87 script invokes the binary** -- every cube is a `rawpy` decode of the `.ARW` files (`m87lib.py:124,145`), and `fix_audit.py:58` *asserts* `scripts_invoking_binary` is 0 across the 104 measurement scripts, so this is a guarded property and not a lucky observation; (b) the one render-dependent line, the §33/§34 gate ladder, consumes ORCH's four pinned TIFFs, which were rendered with `STREHL_WARPMAP` set -- and `merge_cmd.rs:1135` resolves that to *an explicitly named sidecar ... otherwise the normal discover-or-solve path*, so the cache is bypassed, nothing is written, and a bracket mismatch is a refusal (`tests/byte-freeze.rs:69`). | **The control ORCH prescribed would have been the weakest evidence in this row, so I ran a stronger one.** Empirically the gate-4.00 arm still hashes `E400A63A...7112` on disk, matching three independent records: ORCH's provenance note, the `provenance.gate_4_sha256` this report's own §34 run stored at measurement time, and fact 1373's kernel A/B from a *different session and a different exposure code path*. All four arms carry distinct hashes at one byte length, so the cache never collapsed them. But a repeated hash alone cannot separate *correct bytes twice* from *the same stale bytes twice* -- only ground (b) does that, which is why the source read is load-bearing and the hashes are corroboration. Fact 1446 was measured before `69f7b4c`; at HEAD `solve_config_key` hashes `reference`, `spans`, `resampler` and every `SOLVE_ENV` variable, so **both** omitted fields are keyed, exactly as ORCH's own later fact 1476 concluded. | MEASURED |
 | P145 | **A fourth verifier break, and P143's diagnosis does not cover it: the checks were anchored correctly and applied a REPLICATED RULE.** The harness/measurement split that P124's two zeros are scoped by was written out four times -- in `fix_audit.py`, `verify_s32.py`, `verify_s34.py` and a new probe -- and adding one prefix to one copy turned `verify_s32` and `verify_s34` red and moved the published denominator 104 -> 105 -> 104. Neither verifier was keyed to a value: both re-counted from disk exactly as designed, and both counted correctly under a rule that was no longer the one writing the JSON. | **Consolidating the rule fixes the drift and destroys the evidence, so it cannot be the whole repair.** One owner now defines the split and the other three import it -- after which the audit and its verifiers agree *by construction*, and their agreement stops being a measurement of anything. `verify_s32` therefore gained the check a shared constant cannot fake: a script excluded as harness may not decode a raw or open a frame cube, so the convention is tested against the property it stands for rather than against itself (58 -> 59 checks). **A duplicated definition is worse than a duplicated value**, because a value that drifts makes a check fail loudly, while a rule that drifts makes two instruments disagree about what they are counting -- and whichever runs last looks correct. | MEASURED |
+| P146 | **The ladder's Spearman rho of &#8722;1.0000 is worth p = 0.0417, not what a perfect coefficient looks like.** Exact enumeration of all 24 rank permutations of four points: a perfect reversal is a 1-in-24 event under the null, and *some* perfect monotone ordering is 1-in-12. A four-arm ladder cannot support a rank claim at all -- a perfect reversal first clears p < 0.01 at **n = 5** (0.0083). | **This does not move the section's conclusion, and saying why is the point.** The refutation never rested on the rank: it rests on the magnitude, `dV` = **+2.3463 pp** against a predicted **+19.79 pp** with the sign reversed, collapsing to **0.0572 pp** once the far reference is pinned. The rho was already carried as a warning that monotonicity alone would have read as confirmation -- but printing `&#8722;1.0000` to four decimals lends a four-point statistic an authority it has not earned, and a reader who took the rank as the evidence would have been misled by my presentation rather than by my arithmetic. **A coefficient's number of digits is not its number of observations.** | MEASURED |
 
 ### Capture request
 
@@ -4505,7 +4506,7 @@ I hold no claim that needs retaking on this account.
 **A correction to my own first draft of this section,** because it is the
 kind that reads as evidence and is not. I first wrote that `--limit` "appears
 0 times across all 30 M87 scripts" and rested the finding on it. There are
-**135** scripts, not 30 — and, more to the point,
+**137** scripts, not 30 — and, more to the point,
 **0** of them invoke the binary. Every render here was hand-run
 from PowerShell, so a count over the Python tree is a true statement about a
 population that does not contain the thing being claimed. My own verifier
@@ -5404,6 +5405,38 @@ now tested directly.
 causes.** I would rather record that the class I named was incomplete than
 present a tidy one. The rate has not changed, but the claim that one diagnosis
 explains it has.
+
+**I ran the orchestrator's instrument warning against my own headline
+and it found something.** The standing caution is that four instruments
+returned confident numbers tonight while measuring the wrong thing, one of them
+a two-bin Spearman reading a perfect coefficient on random data. The ladder
+above reports Spearman rho(gate, `V`) = &#8722;1.0000 over **four** arms, which
+is the same family of statistic on barely more points.
+
+The null is countable rather than estimable, so there is no excuse for not
+having it: under the null every one of the `n!` rank orderings is equally
+likely, and enumerating all 24 orderings of four points gives **P(rho =
+&#8722;1) = 0.0417** and **P(|rho| = 1) = 0.0833**. A perfect reversal on this
+ladder is a one-in-twenty-four event. It first becomes rarer than 1 in 100 at
+**five** arms (0.0083), and at eight arms it is 0.0000 to four places. **Four
+points cannot carry a rank claim**, and mine was printed to four decimal
+places, which is exactly the kind of false precision the warning is about.
+
+**The section's conclusion does not move, and I want to be precise about why
+rather than merely asserting it.** The refutation was never the rank. It is the
+magnitude: `dV` of **+2.3463 pp** against a predicted **+19.79 pp** -- 11.86%
+of the predicted swing and of the opposite sign -- collapsing to **0.0572 pp**,
+0.289% of predicted, once the far reference is pinned. Those are effect sizes
+on 451008 valid pixels, not orderings of four numbers. The rho was already
+carried here as a caution that a bar checking monotonicity alone would have
+scored this ladder as confirmation of the very mechanism it refutes.
+
+So the correction is to my *presentation*, not my arithmetic, which is the
+easier kind to miss on my own work. Reporting `&#8722;1.0000` next to genuinely
+well-supported percentages invites a reader to weight them alike. **A
+coefficient's number of digits is not its number of observations**, and the
+remedy is to publish the null beside the statistic, which this section now
+does.
 
 Three limits, stated rather than buried.
 

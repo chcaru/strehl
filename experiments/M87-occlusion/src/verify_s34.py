@@ -237,7 +237,7 @@ def main():
     print("== occurrence counts (instance-aware, see control_s34 N10) ==")
     ckn(sc, f"{nspan:.4f}%", 3, "near span sites")          # 34.4, 34.8, P135
     ckn(sc, f"{fspan:.4f}%", 2, "far span sites")           # 34.4, P135
-    ckn(sc, f"{rng:.4f} pp", 2, "pinned range sites")       # 34.4, P135
+    ckn(sc, f"{rng:.4f} pp", 4, "pinned range sites")       # 34.4, P135, 34.9, P146
     ckn(sc, b19["branch"], 2, "B19 branch sites")           # 34.3, P134
     ckn(sc, b20["branch"], 2, "B20 branch sites")           # 34.4, P135
 
@@ -492,6 +492,29 @@ def main():
     ck("a harness-excluded script measures an image"
        in (src / "verify_s32.py").read_text(encoding="utf-8"),
        "the independent property check exists in verify_s32")
+
+    # P146: the rank statistic's null, enumerated exactly rather than sampled.
+    print("== P146: the Spearman null at n=4 ==")
+    rn = json.loads((DATA / "rho-null.json").read_text(encoding="utf-8"))
+    ck(rn["ladder_n"] == 4, f"the ladder has four arms ({rn['ladder_n']})")
+    ck(rn["4"]["permutations"] == 24, "all 24 permutations enumerated")
+    ck(f"{rn['4']['p_minus_one']:.4f}" == "0.0417", "P(rho=-1) at n=4")
+    ck(f"{rn['4']['p_minus_one']:.4f}" in sc, "the p-value is quoted in prose")
+    ck(f"{rn['4']['p_abs_one']:.4f}" in sc, "the two-sided figure is quoted")
+    ck(f"{rn['5']['p_minus_one']:.4f}" in sc, "the n=5 figure is quoted")
+    ck(rn["arms_for_p_below_0_01"] == 5, "a perfect reversal clears p<0.01 at n=5")
+    ck(rn["4"]["p_minus_one"] > rn["5"]["p_minus_one"] > rn["6"]["p_minus_one"],
+       "the null falls monotonically with the number of arms")
+    # The disclosure must not quietly retract the section's actual evidence.
+    # Anchored to the P146 row itself: a bare presence check here would be
+    # satisfied by the pre-existing 34.4 and P135 sites and would prove
+    # nothing about the disclosure (the duplicate-satisfies-presence trap).
+    p146 = [l for l in raw.split("\r\n") if l.startswith("| P146 |")]
+    ck(len(p146) == 1, f"exactly one P146 row ({len(p146)})")
+    row = p146[0] if p146 else ""
+    ck("+2.3463 pp" in row, "P146 itself restates the magnitude that refutes")
+    ck(f"{rng:.4f} pp" in row, "P146 itself restates the pinned-reference collapse")
+    ck("+19.79 pp" in row, "P146 itself restates what was predicted")
 
     print(f"\nverify_s34: {checks[0]} checks, {len(fails)} failures")
     for f in fails:
