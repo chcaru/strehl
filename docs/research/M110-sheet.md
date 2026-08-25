@@ -1171,4 +1171,124 @@ fringe percentage. I would ship it on this evidence.
     additive path the default and the re-freeze an explicit flag; then verify against a copy
     that no frozen coordinate moved.
 
+## 16. Does the extrapolation overshoot, and does the fringe narrow?
+
+Two questions the |R−Y| magnitude cannot answer: a magnitude that falls is consistent both
+with "the fringe was removed" and with "the fringe flipped polarity and regrew smaller".
+
+### 16.1 Where the crops actually sit
+
+Normalised field height of every crop role, `r = 1.0` at the corner:
+
+| subject | `fringe` (high contrast) | `corner` | `neutral` |
+|---|---|---|---|
+| `bee-3-cpl` | 0.654 *inside* | 0.893 *extrapolated* | 0.290 |
+| `wrapped-text-1` | 0.600 *inside* | 0.893 *extrapolated* | 0.277 |
+| `tweezers-cpl` | 0.559 *inside* | 0.893 *extrapolated* | 0.163 |
+| `flat-on-ruler-cpl` | 0.700 *inside* | 0.893 *extrapolated* | 0.193 |
+
+The `fringe` role selects **max gradient among tiles at `r >= 0.55`**, so it is high-contrast
+and inside the fitted support on all four subjects, while `corner` is outside on all four.
+The {inside, outside} x {off, on} 2x2 therefore already exists.
+
+### 16.2 The extrapolation does NOT overshoot
+
+An over-large extrapolated `eps_r` does not leave a fringe alone — it pushes red past
+register and **reverses the fringe's polarity**. That signature is per-pixel and specific:
+the sign of `R−Y` flips **and** the magnitude grows. A flip with *shrinkage* is a fringe
+correctly driven through neutral, and growth without a flip is not a reversal; **only the
+conjunction is overshoot.** Gated to |R−Y|_off >= 1 display level, since below that the sign
+is rounding noise.
+
+P(flip AND grew), by radius:
+
+| `r` | `bee-3-cpl` | `flat-on-ruler-cpl` |
+|---|---|---|
+| 0.3–0.4 | 7.68% | 18.82% |
+| 0.6–0.7 | 9.94% | 14.69% |
+| 0.7–0.8 *(last in-support)* | 9.73% | 14.22% |
+| 0.8–0.9 *(extrapolated)* | **9.78%** | **13.68%** |
+| 0.9–1.0 *(extrapolated)* | **9.47%** | **11.66%** |
+
+**There is no discontinuity at `r = 0.788` and no upward trend beyond it.** On
+`flat-on-ruler-cpl` the overshoot rate *falls* across the boundary (14.22 -> 13.68 -> 11.66);
+on `bee-3-cpl` it is flat (9.73 -> 9.78 -> 9.47). A coefficient too large at high field height
+would climb monotonically. It does not. **Null control: identical input gives exactly 0.00%
+overshoot in every bin.**
+
+**This disconfirms radius-dependent over-correction as the explanation for W3's failure** —
+which was the most plausible mechanism on offer, including to me.
+
+### 16.3 What W3 was actually seeing
+
+The same table explains the failed bar without invoking overshoot. Flip rates are high —
+up to **62.9%** at the corner of `flat-on-ruler-cpl` — but the *overshoot* rate is only
+9–19%. **Most flips are flips with shrinkage: fringes driven through neutral toward grey,
+which is the correction succeeding, not failing.** A bar that counts sign changes cannot tell
+those two apart, and so penalises the correction for working.
+
+### 16.4 The fringe gets fainter, not thinner
+
+|R−Y| in bands of distance from a strong edge (top 2% of gradient = band 0):
+
+| distance | `bee-3-cpl` off -> on | `flat-on-ruler-cpl` off -> on |
+|---|---|---|
+| 0 px | 3127 -> 2209 DN (**−29.4%**) | 4074 -> 2065 DN (**−49.3%**) |
+| 1 px | 2672 -> 2172 (−18.7%) | 3019 -> 1763 (−41.6%) |
+| 3 px | 2110 -> 1846 (−12.5%) | 1941 -> 1195 (−38.4%) |
+| 5 px | 1917 -> 1737 (−9.4%) | 1662 -> 1069 (−35.7%) |
+
+**Not a uniform recolour**, which would scale every band alike — the reduction is strongly
+concentrated at the edge (−3.57 lv at band 0 against −0.70 lv at band 5 on `bee-3-cpl`).
+Taking the far band as baseline, the **edge-localised chroma excess falls 61.0% on
+`bee-3-cpl` and 58.7% on `flat-on-ruler-cpl`.**
+
+But **the profile does not measurably contract.** Peak-to-baseline contrast drops from 2.45x
+to 1.93x (`flat-on-ruler`) and 1.63x to 1.27x (`bee`), and half-maximum width is unchanged or
+marginally wider at 1-pixel band resolution, because the peak falls faster than the tail.
+
+**So the honest answer to "width or colour" is neither, exactly: the fringe's amplitude drops
+by ~60% and its spatial extent stays put.** It gets fainter, not thinner. That is a real
+improvement and it is not what "recoloured, not removed" describes — but a sheet claiming
+narrower fringes would be overselling it.
+
+## 17. For ORCH — further facts and disciplines
+
+**Facts**
+
+53. **MEASURED: the unenforced extrapolation past `support_r_max = 0.788` does not overshoot.**
+    P(chroma sign flip AND magnitude growth), gated to >= 1 display level, shows **no
+    discontinuity at the support boundary and no upward trend beyond it**: `bee-3-cpl` 9.73 ->
+    9.78 -> 9.47% and `flat-on-ruler-cpl` 14.22 -> 13.68 -> **11.66%** across
+    0.7-0.8 / 0.8-0.9 / 0.9-1.0. Null control 0.00% exactly. **This disconfirms
+    radius-dependent over-correction as the mechanism behind W3's failure.**
+54. **MEASURED: most chroma sign flips are flips with SHRINKAGE, not reversals.** Flip rates
+    reach 62.9% while overshoot (flip *and* growth) is only 9–19%. Driving a fringe through
+    neutral toward grey is a sign change, so **a sign-retention bar penalises the correction
+    for succeeding** and cannot distinguish success from reversal.
+55. **MEASURED: the fringe gets fainter, not thinner.** Reduction is concentrated at the edge
+    (−29.4% at band 0 against −9.4% at band 5 on `bee-3-cpl`; −49.3% against −35.7% on
+    `flat-on-ruler-cpl`), so it is **not a uniform recolour**. Edge-localised chroma excess,
+    measured against the far band as baseline, falls **61.0%** and **58.7%**. But half-maximum
+    width is unchanged at 1-px resolution — the peak falls faster than the tail.
+56. **MEASURED: the sheet's `fringe` crops are high-contrast and INSIDE the fitted support**
+    (r = 0.559–0.700 across four subjects) while `corner` crops are outside (r = 0.893), so
+    the {in-support, extrapolated} x {off, on} comparison already exists in the crop set.
+
+**Disciplines**
+
+57. **To test for over-correction, look for the conjunction, not either half.** A sign flip
+    alone is a fringe driven correctly through neutral; a magnitude increase alone is not a
+    reversal. Only *flip AND growth* is overshoot, and only that conjunction distinguishes an
+    over-large coefficient from a working one.
+58. **Test a boundary claim for a discontinuity AT the boundary, not for a bad value beyond
+    it.** "Beyond `support_r_max` is extrapolated" predicts the statistic degrades *at* 0.788.
+    Binning either side of the declared edge tests that directly; a whole-frame aggregate
+    cannot, and an outer-bin value on its own confounds extrapolation with the fact that the
+    effect is genuinely largest out there.
+59. **Separate amplitude from extent before claiming an artefact was removed.** "Narrower" and
+    "fainter" are different results with the same sign in an aggregate statistic. Profile the
+    quantity in bands of distance from the feature and report peak-to-baseline contrast, so a
+    60% amplitude drop is not reported as a fringe that shrank.
+
 
