@@ -70,6 +70,16 @@ all, and that split is the result:**
 | CD7 — do-no-harm | **PASS**, 4/4, worst `−0.00184` dex |
 | CB1 null / CB2 adversarial placebo | **PASS** — byte-identical, placebo run against the ON arm's own cache |
 
+**The promotion rule fails on CD1 alone.** CD2, CD3, CD4 and CD7 all pass. And
+CD1 is quantified `on every subject scored`, so it **cannot be rescued by
+measuring more subjects** — bee's and fern's failures are permanent under a
+universal quantifier. I had that render batch queued and cancelled it. Section
+5g works through the arithmetic, states the admission-gate reading under which
+the rule *would* be satisfied, and declines to adopt it, because choosing
+between two readings of a bar after seeing which one the data favours is the
+move pre-registration exists to prevent. **CA needs a new prereg in a new
+milestone, not more rendering and not a code change.**
+
 The occlusion-halo correction was measured on its own four stacks (section 5d),
 so it gets its own table:
 
@@ -1014,6 +1024,76 @@ identical in both by construction and cannot have been chosen to flatter either.
 
 ---
 
+## 5g. Addendum: my own promotion rule is now unsatisfiable, and I am not going to fix that by measuring more
+
+This section exists because the obvious next move is available, cheap, and
+would have converted the milestone's only positive result from HOLD into a
+recommendation — and it is not legitimate. I had it queued. I am recording why
+I am not making it, because the reasoning is more useful than the render would
+have been.
+
+**P58. CD1, as registered, can no longer pass, and no additional measurement
+can make it pass.** Its text is `PASS = ... within +/-0.10 px of the planted
++0.50 px, **on every subject scored**`. `bee-3-cpl` (`+0.015`) and
+`flower-bud-with-background-fern-cpl` (`+0.120`) are scored, and they failed.
+Under a universal quantifier, a failure is permanent: adding
+`couch-fibers-cpl`, `highly-angled-ruler-mm-cpl` and `lead-1-cpl` would give
+five passes and two failures, and `∀` does not care about the ratio. **The plan
+recorded in my own handoff — "re-run the five arms on three flat subjects, CD1
+passes there, HOLD converts" — is arithmetically wrong about my own bar.** I
+checked the frozen text before spending the forty minutes rather than after,
+and this is the only reason the error is a paragraph instead of a retraction.
+
+**P59. The defect is in how I registered the plant, not in the instrument or
+the data.** A plant is naturally a **per-subject admission gate**: it asks "can
+this instrument read this subject at all?", and a subject that fails it
+contributes nothing — its readings are void, which is exactly how §5f treats
+bee and fern. That is a *filter*. I registered it as a *global deciding bar*.
+Under the gate reading the campaign has two admitted subjects, both passing
+CD4, one of them a transfer subject, and the promotion rule is satisfied. Under
+the registered reading, it is not. **The two readings disagree about the
+headline verdict of this milestone, and I registered the stricter one.**
+
+I am not switching to the gate reading. Choosing between two readings of a bar
+*after seeing which one the data favours* is precisely the move the
+pre-registration exists to prevent, and it would be a worse failure than the
+HOLD. The verdict stays **HOLD**. The gate reading is stated here so a reader
+can see exactly what is being given up and check my arithmetic, and it is
+**not** claimed as a result.
+
+**P60. The same document registered the same class of bar both ways, and the
+inconsistency binds against the correction.** CD4 reads `on at least 3 of the 4
+subjects`; CD1 reads `on every subject scored`. Both were written in one file,
+by me, within an hour. Note that transplanting CD4's proportional form onto CD1
+does *not* rescue it either: CD1 passed on 2 of 4, and `>= 3 of 4` fails at 2.
+**There is no reading of my own prereg under which CD1 passes.** That is worth
+knowing, because it means the universal quantifier is not the whole problem.
+The honest count is that the instrument is dead on half the subjects I chose,
+and that is a real limitation of a phase-correlation displacement reader on
+organic 3-D subjects, where much of each correlation window is low-structure
+bokeh. It does not go away under any quantifier.
+
+**What the correct repair looks like, and why it is not mine to do.** A new
+prereg, in a new milestone, written before its data exists, that registers
+three things separately: (a) the plant as an admission gate with its threshold,
+(b) the *minimum number of admitted subjects* required for a verdict, and (c)
+the primary bar over admitted subjects only. Subject selection must be
+registered too, and it must include organic subjects, so the milestone cannot
+quietly become "the correction works on flat test charts". Re-running M116's
+arms under that prereg would be sound. Re-running them under *this* one would
+not be, and that is the distinction ORCH needs when it routes this.
+
+**D-t (proposed discipline). Register a plant as an admission gate with a
+registered minimum admitted count, not as a bar quantified over every subject
+scored.** Under `∀ subjects scored`, every subject you add is pure liability —
+it can only lose — and one failure is unrecoverable by any amount of further
+measurement, which converts "measure more" from the correct response into an
+unavailable one. Under a bare "N of M", a dead instrument's void readings get
+counted as data. The gate plus a registered admitted-count is the only form
+that survives both.
+
+---
+
 ## 6. Patches
 
 **No default flips.** No instrument passed its registered promotion bar, so
@@ -1371,6 +1451,28 @@ two losses and not an exchange rate at all. Write the premise into the bar's
 text, not only its formula, and check the premise before reading the number.
 Same family as the vacuous HB3, and it needed a different guard to catch.
 
+**D-t. Register a plant as an admission gate with a registered minimum admitted
+count, not as a bar quantified over every subject scored.** CD1 read
+`within +/-0.10 px ... on every subject scored`. Under `∀ subjects scored`
+every subject added is pure liability, since it can only lose, and one failure
+is unrecoverable by any further measurement — which converts "go and measure
+more" from the correct response into an unavailable one, and leaves a positive
+result stranded at HOLD with no legitimate path forward inside its own
+milestone. Under a bare "N of M" the void readings of a dead instrument get
+counted as data. Only the gate plus a separately registered admitted-count
+survives both failure modes. Corollary, and the reason this cost a whole
+section: **check whether your bars are still satisfiable before you plan the
+work that is supposed to satisfy them.** See section 5g, P58–P60.
+
+**D-u. When two readings of your own bar disagree about your headline verdict,
+you must take the one you registered, and you must state the other.** §5g's
+admission-gate reading of CD1 satisfies the promotion rule; the registered
+reading does not. Choosing between them after seeing which the data favours is
+the exact move pre-registration exists to prevent, so the verdict stays HOLD.
+But suppressing the alternative reading is its own dishonesty: it hides the
+size of what the discipline is costing and denies the reader the arithmetic to
+check it. State both, mark which one binds, and claim only that one.
+
 ---
 
 ## 9. Images
@@ -1574,17 +1676,26 @@ exit 0.
 - The soft gate deserves one more milestone with a flat-field bar rather than a
   detail bar, starting from ΔN `-0.02044` (P4). It should not ship on tonight's
   evidence.
-- **Lateral CA is the one to act on, and the action is one more render batch,
-  not a code change.** Section 5f is the only positive result in M116: `90.1%`
-  and `95.2%` of measured lateral CA removed at a fine-structure cost of at most
-  `0.42%`, with a byte-identical null and a byte-identical adversarial placebo.
-  It is HELD, not recommended, because CD1 — my own plant — failed on two of
-  four subjects. **The fix is cheap and specified:** re-run the five arms of
-  `run_ca.ps1` on `couch-fibers-cpl`, `highly-angled-ruler-mm-cpl` and
-  `lead-1-cpl`, which are flat and densely textured and should calibrate. If
-  CD1 passes there and CD4 holds, the frozen promotion rule is satisfied on its
-  own terms and the flip can be recommended without narrowing anything. ~40
-  minutes of rendering.
+- **Lateral CA is the one to act on, and the action is a new pre-registration,
+  not more rendering and not a code change.** Section 5f is the only positive
+  result in M116: `90.1%` and `95.2%` of measured lateral CA removed at a
+  fine-structure cost of at most `0.42%`, with a byte-identical null and a
+  byte-identical adversarial placebo. It is HELD because CD1 — my own plant —
+  failed on two of four subjects.
+- **Do not ask me to fix that by measuring more subjects; I checked, and it
+  cannot work.** CD1 is quantified `on every subject scored`, so bee's and
+  fern's failures are permanent and three more passing subjects would still
+  leave CD1 FAILED. I had that render batch queued and cancelled it. Section 5g
+  and P58–P60 give the arithmetic. **The repair is a new milestone with a
+  prereg that registers the plant as an admission gate plus a minimum admitted
+  count (proposed discipline D-t), and re-runs these arms under it.** Re-running
+  them under *this* prereg would not be sound, and that distinction is the one
+  thing I most need ORCH to carry forward correctly.
+- **The gear caveat survives any of that.** The profile describes one optical
+  path; the binary parses no camera identity at all; EXIF confirms body, lens
+  and 2x TC on all 23 subjects and cannot see a filter. The X4 CPL rests on the
+  owner's `-cpl` filename convention. A default flip would apply a
+  single-optical-path correction to whatever anyone stacks.
 - **Two ORCH claims from message #5 are confirmed at source, and one carries
   something ORCH did not relay.** M87 §16.9 is titled "why I am telling you not
   to enable it", records `72.9%` on the shipped path, and describes the
