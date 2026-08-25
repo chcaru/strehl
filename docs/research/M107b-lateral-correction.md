@@ -2014,3 +2014,85 @@ It is in fact **the one script in the fleet that wrote the check ORCH says none
 of us wrote**, and it is the file measuring the subject under debate tonight.
 That matters for confidence in the CA numbers, so it is worth removing from the
 list explicitly rather than leaving it under suspicion.
+
+## 25. §23's X1 failure retracted — it was a missing support floor, not contamination
+
+ORCH's corrected triage rule says location statistics are largely immune to
+16→8 narrowing. §24 reported a location statistic moving **23%**, which the
+rule says should not happen. Rather than fold either result, R15 and R16 test
+which of us is reading their instrument wrong. The answer is: I was.
+
+### 25.1 The level bound is not the operative variable (R15)
+
+| bar | registered | measured | verdict |
+| --- | --- | --- | --- |
+| Y1 | median levels/window **below** ORCH's bound of 12 | **25.0** (p10 4, p90 54) | **FALSIFIED** |
+| Y3 | admitted-window count varies ≥ 2× | 1707 → 490, **3.5×** | HOLDS (checked first) |
+| Y2 | a support floor collapses bias below 5% | **22.9% → 0.8%** | HOLDS |
+
+§24 quoted **151 levels for the whole image**, which is precisely the count
+ORCH warns is the wrong one. Counting properly gives **25 levels per fitted
+window — above the immunity bound — and the 23% bias happened anyway.**
+
+**So the ~12-levels-per-window bound does not predict this failure.** What
+predicts it is **support**: an M113-style `MIN_EDGE_ENERGY` sweep drives the
+narrowing bias monotonically to nothing.
+
+| floor | n win | levels/win | uint16 | uint8 | bias |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 1707 | 25 | **0.8338** | 0.6430 | 22.9% |
+| 60 | 1396 | 30 | 0.8981 | 0.8459 | 5.8% |
+| 120 | 1287 | 32 | **0.9148** | 0.8760 | 4.2% |
+| 480 | 490 | 48 | **0.9167** | 0.9096 | 0.8% |
+
+### 25.2 The larger finding, which I was not looking for
+
+**Read the `uint16` column — no narrowing anywhere in it.** It moves from
+0.8338 to 0.9167 as the floor rises.
+
+**§23 reported `X1 = 0.8338, FAIL — still contaminated`. That conclusion is
+wrong and I retract it.** The space was clean. My estimator had no support
+floor — only `std < 1e-6` and `den < 1e-3`, both effectively zero — and it was
+integrating low-contrast windows that M113's shipped `MIN_EDGE_ENERGY = 60.0`
+refuses. Worse, it **normalises each window to unit variance**, which amplifies
+whatever noise those windows contain.
+
+### 25.3 R16: the gates re-run with the floor, and two defects separated
+
+Floor selected by a rule fixed before running — smallest floor with narrowing
+bias under 5% admitting ≥1000 windows, i.e. **120** — with 240 alongside as a
+robustness check, not a second chance.
+
+| bar | registered | measured | verdict |
+| --- | --- | --- | --- |
+| Z1 | transfer in [0.90, 1.05] at **both** floors | **0.9148** and **0.9124**, spread 0.0023 | **PASS** |
+| Z2 | four gains in [0.95, 1.05], asymmetry < 10% | 0.967 / 0.647 / 0.939 / 0.763, **asym 33.1%** | **FAIL** |
+| Z3 | tangential leak < 10% | 1.9% | PASS |
+| Z4 | `needed` vs M113's 529.9 | **NOT REPORTED** | gated |
+
+**M107 and M113 now agree on the transfer check: 0.9148 vs 0.9399/0.9813.**
+The apparent disagreement was entirely my missing floor.
+
+**Z2's failure is the useful half, and I registered it as a live possibility
+before running.** The floor barely moves the asymmetry — 30.3% without, 33.1%
+with — so **amplitude saturation is a genuinely separate defect that a support
+floor does not touch.** Two independent faults, now cleanly separated:
+
+| defect | evidence | fixed by a floor |
+| --- | --- | --- |
+| low-support windows | transfer 0.8338 → 0.9148 | **yes** |
+| amplitude saturation | asym 30.3% → 33.1% | **no** |
+
+**I still report no `needed` value.** Z2 gates Z4 and Z4 stayed shut.
+
+### 25.4 What this does to §23
+
+§23.1's `X1 FAIL` and §23.2's "the clean space is necessary and not sufficient"
+survive only in part. **The space effect is real and isolated** — comparing
+like with like, both without a floor, sRGB gave 48.9% asymmetry and clean gave
+30.3%. But **§23's specific claim that the residual 0.8338 proved remaining
+contamination is withdrawn**; that residual was support, not space.
+
+§23.3's caution to M113 is unaffected: it concerns amplitude-dependent gain,
+which R16 shows a support floor does not remove, and which remains the one
+control I would still ask for.
