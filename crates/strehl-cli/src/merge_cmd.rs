@@ -1383,8 +1383,8 @@ enum EdgeArm {
 /// distinguishes those cases and `couch-fibers-cpl` is no worse at 100%.
 fn edge_aware_arm() -> EdgeArm {
     match std::env::var(EDGE_AWARE_ENV).ok().as_deref().map(str::trim) {
-        None | Some("") | Some("0") | Some("off") | Some("false") => EdgeArm::Off,
-        Some("1") | Some("on") | Some("true") | Some("acuity") => EdgeArm::Acuity,
+        None | Some("") | Some("1") | Some("on") | Some("true") | Some("acuity") => EdgeArm::Acuity,
+        Some("0") | Some("off") | Some("false") => EdgeArm::Off,
         Some("layer") => EdgeArm::Layer,
         Some(other) => panic!(
             "{EDGE_AWARE_ENV}={other:?} is not a known arm; expected one of \
@@ -2347,36 +2347,39 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             }
         );
 
-        if edge_aware_arm() == EdgeArm::Acuity {
-            // The veto's second signal needs a luma plane on the guide's grid.
-            // Any frame carries the silhouette — the subject is opaque in all of
-            // them — but the guide's own median winner is the frame in focus for
-            // most of the plane, so its steps are the sharpest available.
-            let mut decided: Vec<u16> =
-                guide.iter().copied().filter(|&k| k != u16::MAX).collect();
-            let ref_index = if decided.is_empty() {
-                0u16
-            } else {
-                let mid = decided.len() / 2;
-                *decided.select_nth_unstable(mid).1
-            };
-            drop(decided);
-            let luma: Vec<u16> = {
-                let mut sc = Scratch::new_with_warp(geom, false, ctx_guide.warps.is_some());
-                let mut t = Timings::default();
-                let idx = usize::from(ref_index).min(paths.len().saturating_sub(1));
-                let f = ctx_guide.field_for(&paths[idx], idx as u16, &mut sc, &mut t)?;
-                ctx_guide.release(f);
-                sc.luma.iter().map(|&v| v.clamp(0.0, 65535.0) as u16).collect()
-            };
+        if edge_aware_arm() != EdgeArm::Off {
+            // The veto. `peak_excess` is the prominence of a separated secondary
+            // peak in the pixel's own through-focus curve, already folded on the
+            // NARROW guide field during the pass above at no extra decode, and
+            // already debiased: the maximum of n noisy responses stands above
+            // the truth by ~sd*sqrt(2 ln n) even with no peak at all, which at
+            // 299 frames is 3.4 sd of pure artefact. Subtracting that makes zero
+            // mean "no resolvable peak".
+            //
+            // Consumed as proof of ABSENCE, which is the only direction a
+            // prominence upper bound supports. Gating *on* it read 45.62% of the
+            // plane including empty sky; refusing to collapse where it proves
+            // there is no second layer is the same statistic used the way it can
+            // be trusted.
+            //
+            // The cut is the merge's own significance gate rather than a new
+            // constant: a secondary peak counts as resolvable at exactly the
+            // confidence every other noise-model decision in this engine
+            // requires.
+            let excess = modes
+                .as_ref()
+                .map(edgeaware::BimodalStats::peak_excess)
+                .unwrap_or_else(|| vec![f32::INFINITY; geom.pixels()]);
+            let cut = opts.gates.iter().copied().fold(f32::INFINITY, f32::min);
+            let may: Vec<bool> = excess.iter().map(|&e| e > cut).collect();
+            let admitted = may.iter().filter(|&&m| m).count();
             eprintln!(
-                "dead-ground veto: a cap also requires a luma step at that radius exceeding what \
-                 pure noise would reach there (frame {ref_index}, the guide's median winner). \
-                 Measured WITHOUT it: |off - on| over backdrop >150 px from any silhouette equals \
-                 the rim band's, ratio 0.95 / 1.08 / 0.90 -- the rule was changing the whole \
-                 background, not the halo"
+                "collapse veto   : a resolvable second layer at gate {cut:.1} sigma. \
+                 {admitted} px admitted ({:.2}% of plane); the rest keep the shipped window \
+                 because there is provably nothing there for a narrow window to separate",
+                100.0 * admitted as f64 / geom.pixels() as f64
             );
-            let scale = edgeaware::SelectionScale::from_silhouettes(&guide, &luma, geom, tau);
+            let scale = edgeaware::SelectionScale::from_silhouettes(&guide, &may, geom, tau);
             let hist = scale.histogram();
             eprintln!(
                 "radius rule     : distance to the nearest depth step, capped at the shipped {} px. \
