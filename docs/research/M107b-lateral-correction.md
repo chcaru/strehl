@@ -1933,3 +1933,84 @@ scalar was ever applied; `optics.rs` has not been edited since the wiring and it
 clippy fix. **There is nothing of mine to unwind.** §22's finding is unaffected —
 it is a code read, not a measurement, and the application path remains
 definitively clean regardless of which space anyone measures in.
+
+## 24. The PIL 16→8 hazard: nil exposure, and a correction to the triage rule
+
+ORCH's fleet notice asks each milestone to declare its exposure and warns
+against arguing from first principles that 8 bits was enough. This section
+declares, then measures rather than argues.
+
+### 24.1 M107 exposure: NIL
+
+Grep over `experiments/M107-chroma/src` for `PIL|Image.open|tifffile|imread`
+returns **46 matches in 19 files and not one PIL read**. Every TIFF read is
+`tifffile.imread`; every raw read is `rawpy.imread`. Verified on the actual
+files rather than assumed:
+
+| file | shape | dtype | distinct levels |
+| --- | --- | --- | --- |
+| `r13/off.tif` | 2344×3516×3 | `uint16` | 23 966 |
+| `r13/on.tif` | 2344×3516×3 | `uint16` | 23 986 |
+| `r7/{off1,off2,offword,on,zero}.tif` | 4688×7032×3 | `uint16` | 58 925 – 59 092 |
+
+### 24.2 What the hazard would have done, measured (`r14_pil_hazard.py`)
+
+The lateral-CA A/B is ORCH's *"most suspect of all"* category by construction —
+the whole signal is a sub-pixel resample difference. Bars H1–H3 registered
+before running.
+
+| bar | registered prediction | measured | verdict |
+| --- | --- | --- | --- |
+| H1 | signal median **below** the 257-count quantum | **465 counts** (p90 1406; 31.4% below one quantum) | **FALSIFIED** |
+| H2 | 8-bit transfer check differs by > 0.05 | **0.6430 vs 0.8338, Δ 0.1908** | HOLDS |
+| H3 | the wrong value looks plausible | finite, same order, no alarm | HOLDS |
+
+Narrowing collapses 23 966 levels to **151, a 159× loss**.
+
+### 24.3 The correction, which is the transferable part
+
+**I predicted the hazard would bite because my signal was smaller than the
+quantum. It is not — it is 1.8× larger — and the hazard bit anyway, by 23%.**
+
+So the severity criterion in the fleet notice, *"a correction that moves pixels
+by tens of counts is entirely inside the quantisation error"*, is a **sufficient
+condition, not a necessary one**, and using it as a screen would have cleared
+my metric while my metric was wrong by 23%.
+
+The reason is the estimator's *form*, not the signal's amplitude. A sub-pixel
+displacement estimator reads a **ratio of a difference to a local gradient**.
+Quantisation damages the numerator *and flattens the denominator*, and the two
+errors are correlated because both derive from the same rounding. Any method
+that differentiates or divides by local structure is exposed at amplitudes far
+above one quantum.
+
+**Proposed screen, replacing amplitude:** ask whether the metric differentiates
+the image or divides by local gradients. If it does, re-run it — whatever its
+signal amplitude. Amplitude only tells you when it is *certainly* broken.
+
+**Direction matters too.** The 8-bit read is biased **toward zero** (0.6430 vs
+0.8338), so PIL-based measurements systematically **understate** a correction's
+effect. Several of the 27 exposed scripts measure retention ratios and deltas,
+where a bias toward zero reads as *"the correction did less than we thought"* —
+a conclusion nobody would find surprising enough to challenge.
+
+**One coincidence worth flagging so it does not mislead anyone.** The 8-bit
+transfer check reads **0.6430**, which is close to M113's **0.6963** for the
+demosaic-linear space. Two unrelated defects land in the same numeric
+neighbourhood, so **a transfer check near 0.7 does not identify its own cause**
+— it must be diagnosed, not pattern-matched.
+
+### 24.4 A false positive on the exposure list
+
+`experiments/ORCH-drift-check/ca_radial.py` appears among the 27 exposed
+scripts. **It is not exposed.** It uses `Image.open` for the TIFF **tags only**
+(`ca_radial.py:59-84`), then reads pixels with
+`np.memmap(path, dtype="<u2", ...)`, after asserting bits/sample == 16,
+samples/pixel == 3, compression == 1, planar == 1, strip contiguity, strip byte
+counts and file size — raising `SystemExit` on each. Its only `Image.fromarray`
+is a PNG preview, harmless by ORCH's own triage.
+
+It is in fact **the one script in the fleet that wrote the check ORCH says none
+of us wrote**, and it is the file measuring the subject under debate tonight.
+That matters for confidence in the CA numbers, so it is worth removing from the
+list explicitly rather than leaving it under suspicion.
