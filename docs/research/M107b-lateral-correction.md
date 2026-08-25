@@ -1619,3 +1619,125 @@ I did not hunt the √2 normalisation bug beyond reading, per the retraction; I 
 not change the coefficient; `A7C2_FE100GM_2XTC_X4CPL_RADIAL` is untouched and
 `support_r_max = Some(0.788)` remains declared-but-unenforced. No `optics.rs`
 change is proposed here — one scene is not a mandate to re-scale a coefficient.
+
+## 21. The application path is clean. My own number is withdrawn.
+
+The orchestrator proposed that `eps_r` is right and the code applying it scales
+it wrong, and offered four candidates. I own the file, so I read it, and then I
+turned the same scepticism on my own instrument. **The application path is
+clean. My `k = 1.374` is not, and I am withdrawing it.**
+
+### 21.1 All four candidates are excluded, three of them structurally
+
+`compose` (`optics.rs:277`) is:
+
+```rust
+let s = 1.0 + eps;
+```
+
+**A pure Similarity scale about the coordinate origin. There is no radius
+normalisation anywhere in the apply path** — no half-diagonal, no field height,
+no `r` at all. `support_r_max` is declared metadata (`:156`) that nothing reads.
+
+| candidate | verdict | why |
+| --- | --- | --- |
+| 1. normalised-radius convention | **excluded by construction** | the apply path performs no normalisation, so there is no convention to mismatch |
+| 2. plane-vs-sensel factor of 2 | **excluded by construction** | a multiplicative scale about the origin is **unit-invariant**: `s·(2z) = 2·(s·z)`. Only the *additive* translation is unit-sensitive, and the shipped `_RADIAL` profile drops translation entirely |
+| 3. centre convention `(w-1)/2` vs `w/2` | **excluded** | a half-pixel centre error produces a *uniform offset* of `eps·δ = 0.00035 px`, not a scale error. A wholly non-centre-relative `z` would give ~3 output px of uniform red offset, which R10's T3 (tangential 5.2% of radial) and R11's C4 (3.0% leak) both bound away |
+| 4. double application | **excluded** | applying twice gives `(1+eps)² ≈ 1 + 2eps`, a factor of **2.0**, not 1.44 |
+
+**The exact-arithmetic check is already in the suite.** `optics.rs:692` asserts
+`compose(...).apply(r) == (1.0 + eps_r) * r` to `1e-9`. The code applies exactly
+`eps_r`, no more and no less — that is a closed-form assertion, not an estimate,
+and it needs no displacement estimator to stand.
+
+**So the tension the orchestrator identified is real, but it does not resolve
+toward an application bug.** Which leaves the instruments.
+
+### 21.2 `r²` is blind to multiplicative bias — there was never a contradiction
+
+> *"A least-squares fit does not overshoot its own training data by 44% while
+> reporting a 0.073-sensel residual."*
+
+**It does exactly that if the training data is scaled.** `r²` measures scatter
+about a line, and a multiplicatively biased observable is *still perfectly
+linear*. A fit to observations that are uniformly 1.44× too large returns
+`r² = 0.9969`, a 0.073-sensel residual, and a coefficient 44% too big. The two
+statements were never in conflict, and the resolution is that **neither `r²` nor
+a permutation `p` can detect a calibration error in the instrument that produced
+the data.** Only a planted recovery can.
+
+### 21.3 So I calibrated my own instrument, and it failed
+
+R11 planted a known magnification on red in a real render and asked R10's
+estimator to recover it:
+
+| bar | result |
+| --- | --- |
+| C1 gain on a planted −704.5 ppm | **0.584** |
+| C2 gain on a planted +704.5 ppm | **0.299** — 48.9% asymmetry, **FAIL** |
+| C3 resample-matched null | **VACUOUS** — see below |
+| C4 tangential placebo | **PASS**, 3.0% radial leakage |
+
+**The gain depends on the amplitude.** At the corner the displacement is
+`704.5e-6 × 4225.7 = 2.98 px`, and a single-step gradient method is valid only
+well below 1 px. R10's estimator was being asked a question outside its domain.
+
+**This has a direction, and it is the opposite of what §20 claimed.** Saturation
+attenuates the *larger* displacement more, so the uncorrected arm is suppressed
+harder than the corrected one, which **inflates** `k`. §20 argued the bias ran
+the other way and was wrong. **`k = 1.374` is withdrawn.** So is §20.5's "723 ppm
+applied vs 704.5 declared, 2.6%" — that was a difference of two reads from the
+same uncalibrated instrument, and its apparent precision is not earned.
+
+**C3 was vacuous and I should have seen it.** It read a resampler drift of
+*exactly* `+0.0 ppm`, which is the tell: an identity `map_coordinates` samples on
+the grid knots and returns the input bit-for-bit, so the zero-strength arm never
+resampled. That is precisely the failure the orchestrator warned about one
+message earlier — *"a strength-zero arm is not a control for a correction that
+resamples"* — and I built it anyway while quoting the warning. **C4, the
+tangential placebo, is the only valid resample-matched control in either script,
+and it is the one the orchestrator specified.**
+
+### 21.4 The iterative replacement failed too, and refused to report
+
+R12 iterates the linearisation so the residual entering it stays small, and gates
+itself on four calibration bars before it is permitted to report a `k`. It
+diverges:
+
+| planted | recovered | gain |
+| --- | --- | --- |
+| −352.2 ppm | −696.5 | 1.977 |
+| −704.5 ppm | −2790.5 | 3.961 |
+| +352.2 ppm | +149.8 | 0.425 |
+| +704.5 ppm | +31.0 | 0.044 |
+
+Recovery scales as roughly the **square** of the planted amplitude (4.006× for a
+2× plant), which is positive feedback — almost certainly a sign error in the
+direction I shift red between iterations. I have not fixed it.
+
+**All four gates failed and the script reported no number**, which is the one
+thing that went right: the gate was written before the data and it held.
+
+### 21.5 Where this leaves the scalar
+
+**There is currently no calibrated instrument for lateral CA in this project, and
+therefore no defensible value of `k` — mine included.** The argument that killed
+my 1.374 is not specific to my code: it applies to any single-step gradient or
+correlation estimator asked about ~3 px displacements, and **Instrument A's
+`r² = 0.9969` provides no protection against it.**
+
+Concretely: **do not ship 0.692.** Not because it is wrong — I cannot say whether
+it is — but because every number it rests on comes from an instrument that has
+not recovered a planted displacement. And a fitted scalar that silently
+compensates an instrument bias looks identical to a correct one until someone
+calibrates the instrument.
+
+**What would settle it**, in order of cost: (1) plant a known magnification and
+require recovery within 5% at two amplitudes and both signs, before any estimator
+is allowed to produce a ppm; (2) a coarse-to-fine pyramidal estimator, so the
+per-level residual is genuinely sub-pixel; (3) M114's fit-scene experiment, which
+is the right design but inherits the same doubt unless its instrument passes (1).
+
+No change to `eps_r`, `A7C2_FE100GM_2XTC_X4CPL_RADIAL`, or
+`support_r_max = Some(0.788)`. `optics.rs` is untouched by this section.
