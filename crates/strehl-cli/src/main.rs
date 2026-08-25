@@ -270,6 +270,9 @@ enum Command {
         /// Fit and apply a per-frame affine photometric gain before the focus
         /// measure. OPT-IN; the default merge is unchanged.
         ///
+        /// Three-valued: `off` (the default), `on`, or `auto`. A bare
+        /// `--photometric` still means `on`, as it always has.
+        ///
         /// M24 measured real per-frame level drift that EXIF does not predict
         /// -- 0.91% peak-to-peak on 109MSDCF, 11.70% on coffee-bean -- so a
         /// gated average without this term is reading an exposure change as a
@@ -277,11 +280,23 @@ enum Command {
         /// reference-derived, eroded background region, and the noise model is
         /// scaled with the data so the gate stays calibrated.
         ///
+        /// `auto` decides per stack from that same measured drift, because the
+        /// unconditional switch is not uniformly good: M122 measured it helping
+        /// tweezers-cpl (13.765% drift) and HARMING bee-3-cpl (1.629%) by 6.4%.
+        /// When it cannot decide -- too few or too many frames, no usable
+        /// drift, no background to fit against -- it says so and falls back to
+        /// off. It never falls back silently.
+        ///
         /// This corrects frame LEVEL. It is not a sharpness claim.
-        /// `STREHL_PHOTOMETRIC=1` does the same for a harness that cannot edit
-        /// the command line.
-        #[arg(long)]
-        photometric: bool,
+        /// `STREHL_PHOTOMETRIC=off|on|auto` does the same for a harness that
+        /// cannot edit the command line; this flag wins.
+        #[arg(
+            long,
+            value_name = "MODE",
+            num_args = 0..=1,
+            default_missing_value = "on"
+        )]
+        photometric: Option<String>,
 
         /// Report which gate would achieve this mean n_eff. A CALIBRATION AID,
         /// NOT A SECOND KNOB.
@@ -550,7 +565,10 @@ fn main() -> Result<()> {
             detail_roi,
             index_map,
             n_eff_map,
-            photometric,
+            // Resolved here, alongside `resampler`, so that an unrecognised
+            // spelling is one error in one place. `--photometric` wins over
+            // `STREHL_PHOTOMETRIC`; neither can mean ON by accident.
+            photometric: merge_cmd::resolve_photometric_mode(photometric.as_deref())?,
             target_n_eff,
             stats,
             stats_placebo,

@@ -138,6 +138,285 @@ pub const GAIN_BAND: (f32, f32) = (0.5, 2.0);
 /// clipped fraction of exactly zero, so this is a guard and not a tuning knob.
 pub const MAX_CLIPPED_FRACTION: f64 = 1e-4;
 
+// ===========================================================================
+// M125: the three-valued mode, the drift estimator, and the auto decision.
+// ===========================================================================
+
+/// What the caller asked the photometric correction to do.
+///
+/// Three-valued on purpose. The two-valued form asks the owner to guess, and
+/// the guess is wrong in both directions: M122 measured `--photometric`
+/// helping `tweezers-cpl` (13.765% drift) to `B12` 0.7102 and *harming*
+/// `bee-3-cpl` (1.629% drift) to 1.0638, which is why its pre-registered
+/// promotion criterion failed and its verdict was KEEP-OFF.
+///
+/// `Auto` decides per stack from the stack's own measured drift. It is
+/// **opt-in**: `Off` remains the default and M122's KEEP-OFF verdict on the
+/// unconditional switch stands untouched.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum PhotometricMode {
+    /// Never correct. The shipped default.
+    #[default]
+    Off,
+    /// Always correct. What `--photometric` has always meant.
+    On,
+    /// Decide per stack, and say out loud which way it went and why.
+    Auto,
+}
+
+impl PhotometricMode {
+    /// Parse a mode from a flag value or an environment variable.
+    ///
+    /// **An unrecognised value is an error, not a silent `On`.** The form this
+    /// replaces was `is_some_and(|v| !v.is_empty() && v != "0")`, under which
+    /// `STREHL_PHOTOMETRIC=banana` — and, worse, `STREHL_PHOTOMETRIC=off` —
+    /// both turned the correction *on*. A typo that silently inverts a
+    /// correction is exactly the class of defect this milestone exists to
+    /// remove.
+    pub fn parse(s: &str) -> Result<Self, PhotometricError> {
+        match s.trim().to_ascii_lowercase().as_str() {
+            "off" | "0" | "no" | "false" => Ok(Self::Off),
+            "on" | "1" | "yes" | "true" => Ok(Self::On),
+            "auto" => Ok(Self::Auto),
+            _ => Err(PhotometricError::BadMode {
+                given: s.to_string(),
+            }),
+        }
+    }
+}
+
+/// The drift threshold `auto` applies at, in per-cent peak-to-peak.
+///
+/// **MEASURED, and it is one number carried by one stack — read the caveat.**
+///
+/// Selected by the leave-one-out procedure pre-registered in
+/// `experiments/M125-photometric-auto/PREREGISTRATION.md` (committed at
+/// `9ff95d5` *before* the score was read) over M122's 14-stack corpus. The
+/// fitted optimum is 1.8392%; 1.84 is that value rounded to three significant
+/// figures, and the rounding changes no decision on the corpus.
+///
+/// What the corpus does and does not pin down (M125 §D1–D3):
+///
+/// * Held out, the rule scores 0.9639 against 0.9683 for always-on and 1.0 for
+///   always-off, and a 2000-shuffle placebo gives p = 0.019. All six
+///   pre-registered acceptance criteria passed.
+/// * **The margin over always-on is +0.0043 and 104% of it is one stack.**
+///   Deleting `bee-3-cpl` — the single stack whose harm the rule avoids —
+///   inverts the comparison to −0.0003. The conclusion survives 12 of 14
+///   single-subject deletions, not 14.
+/// * The training objective is flat to within 0.001 for every threshold from
+///   1.64% to 8.45%, so the corpus cannot distinguish "decline the lowest-drift
+///   stack" from "decline the lowest seven". This constant is one of many that
+///   score alike.
+///
+/// That evidence is enough to offer `auto` as an opt-in and **is not enough to
+/// move the default**, which is why the default did not move.
+pub const AUTO_DRIFT_THRESHOLD_PCT: f64 = 1.84;
+
+/// The frame counts the threshold was measured over, inclusive.
+///
+/// M122's 14 usable stacks were merged at 33, 63, 79 and 100 frames. `Dpp` is
+/// a **peak-to-peak**, so it grows with the number of frames sampled — and it
+/// grows in the direction that makes the *expensive* error more likely, since
+/// a longer stack reads higher and is therefore more likely to be turned on by
+/// a threshold calibrated on shorter ones. Extrapolating it is not allowed;
+/// outside this range `auto` abstains and says so.
+pub const AUTO_FRAMES_DOMAIN: std::ops::RangeInclusive<usize> = 33..=100;
+
+/// Per-frame mean level, and the peak-to-peak drift across them.
+///
+/// This is M24's estimator, promoted into the library unchanged so that the
+/// number `auto` decides on is the same number the correlation was measured
+/// against. M122 reproduced M24's four published figures to within 0.004
+/// percentage points with it; `LevelDrift` carries the same definition and is
+/// commissioned against the same four numbers.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct LevelDrift {
+    levels: Vec<f64>,
+}
+
+impl LevelDrift {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Record one frame's mean level above black.
+    ///
+    /// Non-finite means are dropped rather than poisoning the peak-to-peak:
+    /// a single NaN would make `Dpp` NaN and the abstention that follows would
+    /// blame the whole stack for one frame.
+    pub fn push(&mut self, mean_level: f64) {
+        if mean_level.is_finite() {
+            self.levels.push(mean_level);
+        }
+    }
+
+    pub fn len(&self) -> usize {
+        self.levels.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.levels.is_empty()
+    }
+
+    /// Absorb another accumulator, for folding across parallel workers.
+    ///
+    /// Order-independent: `dpp` is a function of the max, the min and the mean,
+    /// and all three are commutative. A merge that chunks frames differently
+    /// therefore reads the same drift, which is what makes the decision
+    /// reproducible run to run.
+    pub fn absorb(&mut self, other: &Self) {
+        self.levels.extend_from_slice(&other.levels);
+    }
+
+    /// `100 * (max - min) / mean`, in per-cent. `None` when undefined.
+    ///
+    /// M24's definition verbatim, including that the mean is over black-
+    /// subtracted levels and is **not** clamped at zero. A non-positive mean
+    /// means the frames sit at or below black, where a ratio is meaningless,
+    /// and is reported as `None` rather than as a huge drift.
+    pub fn dpp(&self) -> Option<f64> {
+        if self.levels.is_empty() {
+            return None;
+        }
+        let mut lo = f64::INFINITY;
+        let mut hi = f64::NEG_INFINITY;
+        let mut sum = 0.0;
+        for &v in &self.levels {
+            lo = lo.min(v);
+            hi = hi.max(v);
+            sum += v;
+        }
+        let mean = sum / self.levels.len() as f64;
+        // `mean <= 0.0` is false for NaN, so the `is_finite` arm is what
+        // catches a poisoned accumulator; both arms are needed.
+        if mean <= 0.0 || !mean.is_finite() {
+            return None;
+        }
+        let d = 100.0 * (hi - lo) / mean;
+        d.is_finite().then_some(d)
+    }
+}
+
+/// Mean of the CFA **G1** plane over the active area, above black.
+///
+/// G1 is `active[0::2, 1::2]` in an RGGB mosaic — even rows, odd columns —
+/// which is the plane M24 measured and therefore the plane the threshold is
+/// calibrated against.
+///
+/// Read from the **active area only** (rule 7). The full decoded buffer on this
+/// body is 7168x5120 against a 7032x4688 active area, and the padding is zeros:
+/// folding it would pull every level toward black by the padding fraction and
+/// make the drift a function of the sensor's masked border.
+///
+/// `None` when the region admits no samples.
+pub fn g1_mean_above_black(
+    data: &[u16],
+    stride: usize,
+    active: (usize, usize, usize, usize),
+    black: f32,
+) -> Option<f64> {
+    let (x0, y0, width, height) = active;
+    let mut sum = 0.0f64;
+    let mut count = 0u64;
+    let black = f64::from(black);
+    let mut y = 0;
+    while y < height {
+        let start = (y0 + y) * stride + x0;
+        let row = &data[start..start + width];
+        // odd columns of an even row: the G1 site of an RGGB mosaic
+        for &v in row.iter().skip(1).step_by(2) {
+            sum += f64::from(v) - black;
+            count += 1;
+        }
+        y += 2;
+    }
+    (count > 0).then(|| sum / count as f64)
+}
+
+/// Why `auto` could not decide. Each variant is printed, never swallowed.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AutoAbstention {
+    /// U1: the stack's frame count is outside `AUTO_FRAMES_DOMAIN`.
+    FramesOutsideDomain { frames: usize },
+    /// U2: the drift estimator folded nothing, or produced a level at or below
+    /// black where a ratio has no meaning.
+    DriftUnavailable { frames_folded: usize },
+    /// U3: the eroded low-detail region is too small to fit a gain against.
+    RegionTooSmall { kept: usize, minimum: usize },
+    /// U4: the fit produced no correction at all — every frame refused, or a
+    /// gain span of exactly one.
+    NoCorrectionAvailable { refused: usize, frames: usize },
+}
+
+impl std::fmt::Display for AutoAbstention {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::FramesOutsideDomain { frames } => write!(
+                f,
+                "U1 this stack merges {frames} frames, outside the {}..={} the decision rule was \
+                 measured over. Dpp is a peak-to-peak and grows with the frame count, so \
+                 extrapolating it would bias toward turning the correction ON -- the expensive \
+                 direction",
+                AUTO_FRAMES_DOMAIN.start(),
+                AUTO_FRAMES_DOMAIN.end()
+            ),
+            Self::DriftUnavailable { frames_folded } => write!(
+                f,
+                "U2 the drift estimator produced no usable value from {frames_folded} folded \
+                 frame(s); there is no measurement to decide on"
+            ),
+            Self::RegionTooSmall { kept, minimum } => write!(
+                f,
+                "U3 the eroded low-detail region keeps only {kept} px (minimum {minimum}); this \
+                 scene has no background large enough to fit a gain against"
+            ),
+            Self::NoCorrectionAvailable { refused, frames } => write!(
+                f,
+                "U4 the fit produced no correction ({refused} of {frames} frames refused, gain \
+                 span 1.0); there is nothing to apply"
+            ),
+        }
+    }
+}
+
+/// What `auto` decided, and on what evidence.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum AutoDecision {
+    /// Drift is at or above the threshold: correct.
+    Apply { drift_pct: f64 },
+    /// Drift is below the threshold: do not correct. A *decision*, made on a
+    /// measurement — not the same thing as an abstention.
+    Decline { drift_pct: f64 },
+    /// No decision could be made. Falls back to the default, **loudly**.
+    Abstain(AutoAbstention),
+}
+
+impl AutoDecision {
+    /// Whether the correction ends up applied. `Abstain` falls back to the
+    /// current default, which is off.
+    pub fn applies(&self) -> bool {
+        matches!(self, Self::Apply { .. })
+    }
+}
+
+/// Decide from a frame count and a measured drift.
+///
+/// Split out from the merge so it is testable without a decode, and so the
+/// rule is one function rather than a condition smeared across a pipeline.
+pub fn auto_decide(frames: usize, drift: Option<f64>) -> AutoDecision {
+    if !AUTO_FRAMES_DOMAIN.contains(&frames) {
+        return AutoDecision::Abstain(AutoAbstention::FramesOutsideDomain { frames });
+    }
+    match drift {
+        None => AutoDecision::Abstain(AutoAbstention::DriftUnavailable {
+            frames_folded: frames,
+        }),
+        Some(d) if d >= AUTO_DRIFT_THRESHOLD_PCT => AutoDecision::Apply { drift_pct: d },
+        Some(d) => AutoDecision::Decline { drift_pct: d },
+    }
+}
+
 /// What went wrong, when a map cannot be built.
 ///
 /// `Display` and `Error` are written out rather than derived with `thiserror`.
@@ -154,6 +433,7 @@ pub enum PhotometricError {
     NoSamples { index: usize },
     BadReferenceFlux { index: usize, flux: u64 },
     OutOfRange { index: usize, n: usize },
+    BadMode { given: String },
 }
 
 impl std::fmt::Display for PhotometricError {
@@ -175,6 +455,12 @@ impl std::fmt::Display for PhotometricError {
             Self::OutOfRange { index, n } => write!(
                 f,
                 "frame {index} index is out of range for a map of {n} frames"
+            ),
+            Self::BadMode { given } => write!(
+                f,
+                "{given:?} is not a photometric mode; expected off, on or auto. It is refused \
+                 rather than guessed at: the form this replaced treated every unrecognised \
+                 value -- including the word \"off\" -- as ON"
             ),
         }
     }
@@ -673,6 +959,322 @@ pub fn unscaled_sigma_ratio(p: PlaneNoise, gain: f32, signal_dn: f32) -> f32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // ---- M125: the three-valued mode ------------------------------------
+
+    #[test]
+    fn every_documented_mode_spelling_parses_to_the_documented_mode() {
+        for s in ["off", "OFF", " off ", "0", "no", "false"] {
+            assert_eq!(PhotometricMode::parse(s), Ok(PhotometricMode::Off), "{s}");
+        }
+        for s in ["on", "ON", "1", "yes", "true"] {
+            assert_eq!(PhotometricMode::parse(s), Ok(PhotometricMode::On), "{s}");
+        }
+        for s in ["auto", "AUTO", " Auto "] {
+            assert_eq!(PhotometricMode::parse(s), Ok(PhotometricMode::Auto), "{s}");
+        }
+    }
+
+    /// The defect this milestone exists to remove, pinned so it cannot return.
+    ///
+    /// The predecessor was `!v.is_empty() && v != "0"`, under which every one
+    /// of these turned the correction ON -- including the literal word "off".
+    #[test]
+    fn an_unrecognised_mode_is_refused_and_never_silently_on() {
+        for s in ["banana", "", "of", "onn", "auto ]", "2", "-1", "none"] {
+            let got = PhotometricMode::parse(s);
+            assert!(
+                matches!(got, Err(PhotometricError::BadMode { .. })),
+                "{s:?} parsed to {got:?}; an unrecognised mode must be refused"
+            );
+        }
+        // and the negative control for this very test: if `parse` refused
+        // everything, the test above would pass vacuously.
+        assert_eq!(PhotometricMode::parse("on"), Ok(PhotometricMode::On));
+    }
+
+    #[test]
+    fn the_default_mode_is_off() {
+        assert_eq!(PhotometricMode::default(), PhotometricMode::Off);
+    }
+
+    // ---- M125: the drift estimator ---------------------------------------
+
+    /// A flat stack has no drift. Not a tautology: the estimator divides by a
+    /// mean that is nowhere near zero here, so a sign or offset error shows.
+    #[test]
+    fn a_stack_with_no_level_variation_reads_zero_drift() {
+        let mut d = LevelDrift::new();
+        for _ in 0..10 {
+            d.push(1400.0);
+        }
+        assert_eq!(d.dpp(), Some(0.0));
+    }
+
+    /// Independently obtained: for levels 900..=1100 the peak-to-peak is 200
+    /// and the mean is 1000, so Dpp is 100 * 200 / 1000 = 20% exactly, worked
+    /// out by hand and not by running the code (rule 35).
+    #[test]
+    fn dpp_matches_a_hand_computed_peak_to_peak_over_mean() {
+        let mut d = LevelDrift::new();
+        for v in [900.0, 1000.0, 1100.0] {
+            d.push(v);
+        }
+        let got = d.dpp().expect("three finite levels");
+        assert!((got - 20.0).abs() < 1e-12, "got {got}, hand-computed 20.0");
+    }
+
+    /// The estimator must not be a function of how the merge chunked its
+    /// frames across workers, or the same stack decides differently run to run.
+    #[test]
+    fn drift_is_independent_of_the_order_frames_are_folded_in() {
+        let levels = [1391.6, 1404.3, 1397.9, 1393.1, 1402.4, 1395.5];
+        let mut a = LevelDrift::new();
+        for v in levels {
+            a.push(v);
+        }
+        let mut b = LevelDrift::new();
+        for v in levels.iter().rev() {
+            b.push(*v);
+        }
+        let mut c = LevelDrift::new();
+        let mut c2 = LevelDrift::new();
+        for (i, v) in levels.iter().enumerate() {
+            if i % 2 == 0 {
+                c.push(*v);
+            } else {
+                c2.push(*v);
+            }
+        }
+        c.absorb(&c2);
+        assert_eq!(a.dpp(), b.dpp());
+        assert_eq!(a.dpp(), c.dpp());
+        // negative control: a genuinely different set must NOT match, or the
+        // three assertions above would be satisfied by a constant.
+        let mut other = LevelDrift::new();
+        for v in levels {
+            other.push(v + if v > 1400.0 { 50.0 } else { 0.0 });
+        }
+        assert_ne!(a.dpp(), other.dpp());
+    }
+
+    #[test]
+    fn drift_is_undefined_rather_than_huge_when_there_is_nothing_to_divide_by() {
+        assert_eq!(LevelDrift::new().dpp(), None);
+        let mut zero = LevelDrift::new();
+        zero.push(0.0);
+        zero.push(0.0);
+        assert_eq!(zero.dpp(), None, "a mean at black has no ratio");
+        let mut below = LevelDrift::new();
+        below.push(-5.0);
+        below.push(-3.0);
+        assert_eq!(below.dpp(), None, "a mean below black has no ratio");
+    }
+
+    #[test]
+    fn a_non_finite_frame_level_is_dropped_and_does_not_poison_the_stack() {
+        let mut d = LevelDrift::new();
+        d.push(900.0);
+        d.push(f64::NAN);
+        d.push(1100.0);
+        d.push(f64::INFINITY);
+        assert_eq!(d.len(), 2);
+        let got = d.dpp().expect("two finite levels survive");
+        assert!((got - 20.0).abs() < 1e-12, "got {got}");
+    }
+
+    // ---- M125: the G1 fold ------------------------------------------------
+
+    /// The fold must read G1 -- even rows, odd columns -- and nothing else.
+    /// Planted so each plane carries a distinct constant, so reading the wrong
+    /// one is a wrong number rather than a near miss.
+    #[test]
+    fn the_g1_fold_reads_only_the_g1_site_of_an_rggb_mosaic() {
+        // 4x4 active area inside a 6x6 buffer, RGGB: R G / G B
+        let stride = 6;
+        let mut data = vec![0u16; stride * 6];
+        for y in 0..4 {
+            for x in 0..4 {
+                let v = match (y % 2, x % 2) {
+                    (0, 0) => 1000, // R
+                    (0, 1) => 2000, // G1
+                    (1, 0) => 3000, // G2
+                    _ => 4000,      // B
+                };
+                data[(1 + y) * stride + 1 + x] = v;
+            }
+        }
+        let got = g1_mean_above_black(&data, stride, (1, 1, 4, 4), 500.0).expect("samples");
+        assert!((got - 1500.0).abs() < 1e-12, "got {got}, expected 2000-500");
+    }
+
+    /// Rule 7: the padding outside the active area is zeros, and folding it
+    /// drags the level toward black. This is the test that would have caught
+    /// a fold over `frame.data` entire.
+    #[test]
+    fn the_g1_fold_ignores_the_padding_outside_the_active_area() {
+        let stride = 8;
+        let mut data = vec![0u16; stride * 8];
+        for y in 0..4 {
+            for x in 0..4 {
+                if x % 2 == 1 && y % 2 == 0 {
+                    data[(2 + y) * stride + 2 + x] = 2000;
+                }
+            }
+        }
+        let tight = g1_mean_above_black(&data, stride, (2, 2, 4, 4), 500.0).expect("samples");
+        assert!((tight - 1500.0).abs() < 1e-12, "got {tight}");
+        // the same buffer read as if the whole thing were active
+        let loose = g1_mean_above_black(&data, stride, (0, 0, 8, 8), 500.0).expect("samples");
+        assert!(
+            loose < tight - 100.0,
+            "padding must move the level ({loose} vs {tight}); if it does not, \
+             this test has no power"
+        );
+    }
+
+    #[test]
+    fn the_g1_fold_reports_nothing_rather_than_zero_for_an_empty_region() {
+        assert_eq!(
+            g1_mean_above_black(&[0u16; 16], 4, (0, 0, 4, 0), 512.0),
+            None
+        );
+        assert_eq!(
+            g1_mean_above_black(&[0u16; 16], 4, (0, 0, 1, 4), 512.0),
+            None
+        );
+    }
+
+    // ---- M125: the auto decision -----------------------------------------
+
+    #[test]
+    fn auto_applies_at_and_above_the_threshold_and_declines_below_it() {
+        let n = *AUTO_FRAMES_DOMAIN.start() + 1;
+        assert!(auto_decide(n, Some(AUTO_DRIFT_THRESHOLD_PCT)).applies());
+        assert!(auto_decide(n, Some(AUTO_DRIFT_THRESHOLD_PCT + 1e-9)).applies());
+        assert!(!auto_decide(n, Some(AUTO_DRIFT_THRESHOLD_PCT - 1e-9)).applies());
+        assert!(matches!(
+            auto_decide(n, Some(0.5)),
+            AutoDecision::Decline { .. }
+        ));
+    }
+
+    /// The two stacks the threshold was chosen to separate, from M122's own
+    /// measured corpus. `tweezers-cpl` at 13.765% is the large win; the rule
+    /// must take it. `bee-3-cpl` at 1.629% is the 6.4% harm that made M122's
+    /// promotion fail; the rule must decline it.
+    #[test]
+    fn auto_takes_the_measured_win_and_declines_the_measured_harm() {
+        assert!(
+            auto_decide(100, Some(13.765)).applies(),
+            "tweezers-cpl, B12n 0.7183"
+        );
+        assert!(
+            !auto_decide(100, Some(1.629)).applies(),
+            "bee-3-cpl, B12n 1.0633 -- the harm the rule exists to avoid"
+        );
+        // the pair either side of the threshold, from the same corpus
+        assert!(auto_decide(100, Some(2.026)).applies(), "lead-1-cpl");
+        assert!(!auto_decide(100, Some(1.652)).applies(), "bee-2-cpl");
+    }
+
+    /// `unknown` must not collapse into `no` (discipline 862). Abstention is a
+    /// distinct state from a decline, and the two must not be confused by a
+    /// caller that only looks at `applies()`.
+    #[test]
+    fn abstention_is_a_distinct_state_from_a_decline() {
+        let short = auto_decide(*AUTO_FRAMES_DOMAIN.start() - 1, Some(50.0));
+        assert!(matches!(
+            short,
+            AutoDecision::Abstain(AutoAbstention::FramesOutsideDomain { .. })
+        ));
+        assert!(!short.applies());
+
+        let long = auto_decide(*AUTO_FRAMES_DOMAIN.end() + 1, Some(50.0));
+        assert!(matches!(
+            long,
+            AutoDecision::Abstain(AutoAbstention::FramesOutsideDomain { .. })
+        ));
+
+        let blind = auto_decide(100, None);
+        assert!(matches!(
+            blind,
+            AutoDecision::Abstain(AutoAbstention::DriftUnavailable { .. })
+        ));
+
+        // and they are not equal to a decline that happens to also not apply
+        let declined = auto_decide(100, Some(0.1));
+        assert_ne!(short, declined);
+        assert_ne!(blind, declined);
+    }
+
+    /// A high-drift stack outside the domain must abstain rather than apply.
+    /// This is the case that costs the owner something real -- a 299-frame
+    /// `bee-3-cpl` merge -- and it is the honest answer, because Dpp grows with
+    /// the frame count in the direction that would wrongly turn it on.
+    #[test]
+    fn a_stack_outside_the_domain_abstains_even_when_its_drift_is_far_above_the_bar() {
+        let d = auto_decide(299, Some(40.0));
+        assert!(!d.applies(), "extrapolating the rule is not allowed");
+        assert!(matches!(
+            d,
+            AutoDecision::Abstain(AutoAbstention::FramesOutsideDomain { frames: 299 })
+        ));
+    }
+
+    #[test]
+    fn every_abstention_reason_prints_a_reason_and_its_numbers() {
+        let cases = [
+            AutoAbstention::FramesOutsideDomain { frames: 299 },
+            AutoAbstention::DriftUnavailable { frames_folded: 0 },
+            AutoAbstention::RegionTooSmall {
+                kept: 886,
+                minimum: 1024,
+            },
+            AutoAbstention::NoCorrectionAvailable {
+                refused: 100,
+                frames: 100,
+            },
+        ];
+        for c in cases {
+            let s = c.to_string();
+            assert!(s.len() > 40, "abstention {c:?} says too little: {s:?}");
+            assert!(
+                s.starts_with('U'),
+                "abstention {c:?} must name its registered condition: {s:?}"
+            );
+        }
+        // the numbers must actually appear, or the message is decoration
+        assert!(
+            AutoAbstention::FramesOutsideDomain { frames: 299 }
+                .to_string()
+                .contains("299")
+        );
+        assert!(
+            AutoAbstention::RegionTooSmall {
+                kept: 886,
+                minimum: 1024
+            }
+            .to_string()
+            .contains("886")
+        );
+    }
+
+    /// The shipped constant must stay inside the gap the corpus measured it in,
+    /// between `bee-2-cpl` at 1.652% and `lead-1-cpl` at 2.026%. If someone
+    /// edits it out of that gap the decision table changes and this fails.
+    #[test]
+    #[allow(
+        clippy::assertions_on_constants,
+        reason = "the constant value is exactly what is under test: this is a \
+                  tripwire on a shipped tuning constant, not a runtime check"
+    )]
+    fn the_shipped_threshold_sits_in_the_gap_it_was_fitted_in() {
+        assert!(
+            AUTO_DRIFT_THRESHOLD_PCT > 1.652 && AUTO_DRIFT_THRESHOLD_PCT < 2.026,
+            "threshold {AUTO_DRIFT_THRESHOLD_PCT} left the measured gap"
+        );
+    }
     use crate::noise::Provenance;
 
     fn plane(g: f32, rn: f32) -> PlaneNoise {
@@ -685,7 +1287,6 @@ mod tests {
             },
         }
     }
-
 
     #[test]
     fn erode_mask_removes_exactly_the_perimeter_and_nothing_else() {

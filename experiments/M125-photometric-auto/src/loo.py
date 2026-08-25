@@ -370,8 +370,9 @@ def main():
         "sensitivity_B12": {k: (float(v) if isinstance(v, (int, float)) else None)
                             for k, v in sens.items()
                             if k in ("S_auto", "S_on", "T_full", "n_on_full")},
-        "criteria": {"C1": C1, "C2": C2, "C3": C3, "C4": C4, "C5": C5, "power": CP},
-        "ship": ship,
+        "criteria": {"C1": bool(C1), "C2": bool(C2), "C3": bool(C3),
+                     "C4": bool(C4), "C5": bool(C5), "power": bool(CP)},
+        "ship": bool(ship),
         "bootstrap": boot,
         "seed": SEED, "n_placebo": N_PLACEBO,
         "selftest_A_as_registered": "FAILED - unsatisfiable as written; "

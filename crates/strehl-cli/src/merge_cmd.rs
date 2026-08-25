@@ -39,7 +39,7 @@ use std::time::Instant;
 
 use anyhow::{Context, Result, bail, ensure};
 use rayon::prelude::*;
-use strehl_core::photometric::{self, Flux, PhotometricMap};
+use strehl_core::photometric::{self, Flux, PhotometricMap, PhotometricMode};
 use strehl_core::align::Resampler;
 use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
 use strehl_core::color::{self, AppliedExposure, Exposure};
@@ -117,8 +117,14 @@ pub struct MergeOptions {
     /// M24 measured real per-frame drift that EXIF does not predict — 0.91%
     /// peak-to-peak on `109MSDCF`, 11.70% on `coffee-bean` — so a gated
     /// average without this term is reading an exposure change as a signal
-    /// change. Also settable via `STREHL_PHOTOMETRIC=1`.
-    pub photometric: bool,
+    /// change.
+    ///
+    /// Three-valued since M125. [`PhotometricMode::Auto`] decides per stack
+    /// from that same measured drift, because M122 measured the unconditional
+    /// switch helping some stacks and harming others. The default is still
+    /// [`PhotometricMode::Off`] and M122's KEEP-OFF verdict stands.
+    /// Also settable via `STREHL_PHOTOMETRIC=off|on|auto`.
+    pub photometric: PhotometricMode,
     /// Solve the ladder for the gate that achieves this mean `n_eff`.
     ///
     /// **This, not `gates`, is the parameter the project intends to ship.**
@@ -863,6 +869,11 @@ struct Ctx<'a> {
     /// every frame is resampled onto the reference grid before anything reads
     /// it.
     warps: Option<&'a WarpMap>,
+    /// Whether [`Ctx::field_for`] should read each frame's mean level for the
+    /// `auto` decision. False on every other path, so the cost — one pass over
+    /// the G1 sites of the active area — is paid only by the mode that needs
+    /// it, and the `off` and `on` paths are untouched.
+    measure_drift: bool,
 }
 
 /// Per-worker scratch, allocated once per chunk and reused across frames.
@@ -881,6 +892,16 @@ struct Scratch {
     /// Buffers for resampling a frame onto the reference grid. Allocated only
     /// when the merge is registering.
     warp: Option<WarpScratch>,
+    /// The mean G1 level of the frame most recently decoded into this scratch,
+    /// read from the raw mosaic **before** registration and before any
+    /// photometric gain. `None` unless the merge is measuring drift.
+    ///
+    /// Before the warp on purpose: the drift the decision rule was calibrated
+    /// against is a property of the *light*, and reading it after resampling
+    /// would make it a property of the alignment solve as well. M103 measured
+    /// that the alignment solve already recovers about half of the level
+    /// change, so a post-warp reading would systematically under-report.
+    drift_level: Option<f64>,
 }
 
 impl Scratch {
@@ -894,6 +915,7 @@ impl Scratch {
             fine: if fine { vec![0.0; px] } else { Vec::new() },
             clipped: vec![false; px],
             warp: warp.then(|| WarpScratch::new(geom)),
+            drift_level: None,
         }
     }
 }
@@ -967,6 +989,33 @@ impl Ctx<'_> {
                 self.levels.white
             );
         }
+        // M125: the drift reading, taken HERE -- after decode, before
+        // registration, before any photometric gain -- because that is where
+        // M24 took the numbers the decision threshold was calibrated against.
+        //
+        // Reading it after the warp would make it a function of the alignment
+        // solve: M103 measured the solve already recovering about half the
+        // level change, so a post-warp reading under-reports drift and would
+        // push `auto` toward declining stacks it should take. Reading it after
+        // the gain would be circular -- the gain exists to remove exactly this.
+        //
+        // Costs one pass over the G1 sites of the active area, once per frame,
+        // and only when `auto` asked for it.
+        scratch.drift_level = if self.measure_drift {
+            photometric::g1_mean_above_black(
+                &frame.data,
+                frame.stride,
+                (
+                    frame.active.x,
+                    frame.active.y,
+                    frame.active.width,
+                    frame.active.height,
+                ),
+                self.levels.black,
+            )
+        } else {
+            None
+        };
         // Registration happens here, before anything reads a pixel, so that
         // every downstream stage -- focus field, gate, estimator, output --
         // sees frames that describe the same scene points. Doing it here also
@@ -1101,6 +1150,9 @@ struct Pass1 {
     /// Fact 441: one privileged denominator moves the published ratio 1.60x, so
     /// there is no longer a privileged denominator to move.
     flat_frames: Vec<(u16, FrameFlat)>,
+    /// Per-frame mean levels for the `auto` decision. One `f64` per frame, so
+    /// it is constant in the frame size. Empty unless the mode is `auto`.
+    drift: photometric::LevelDrift,
     t: Timings,
 }
 
@@ -1316,6 +1368,29 @@ const PHOTOMETRIC_ERODE_PX: usize = 16;
 
 /// Below this many surviving pixels the fit is refused rather than attempted.
 const PHOTOMETRIC_MIN_PX: usize = 1024;
+
+/// Resolve the photometric mode from the flag and the environment.
+///
+/// Precedence: `--photometric MODE` wins, then [`PHOTOMETRIC_ENV`], then the
+/// default, which is off and did not move.
+///
+/// **An unrecognised spelling is an error in either channel.** The form this
+/// replaces read the environment as `!v.is_empty() && v != "0"`, so
+/// `STREHL_PHOTOMETRIC=off` turned the correction ON — a value whose plain
+/// meaning is the exact opposite of its effect. Nothing in the tree relied on
+/// that: the only script that sets the variable sets it to `1`.
+pub fn resolve_photometric_mode(flag: Option<&str>) -> Result<PhotometricMode> {
+    if let Some(v) = flag {
+        return PhotometricMode::parse(v).with_context(|| format!("reading --photometric {v:?}"));
+    }
+    match std::env::var(PHOTOMETRIC_ENV) {
+        Ok(v) if !v.trim().is_empty() => {
+            PhotometricMode::parse(&v).with_context(|| format!("reading {PHOTOMETRIC_ENV}={v:?}"))
+        }
+        // Unset, empty, or not valid UTF-8: the default, unchanged.
+        _ => Ok(PhotometricMode::Off),
+    }
+}
 
 /// Where to write the n_eff map, if anywhere: `--n-eff-map` wins, then
 /// [`NEFF_ENV`]. Same precedence and same printing rule as
@@ -1656,6 +1731,11 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         // the focus response is exactly invariant under it -- so a winner
         // elected on uncorrected data is the same winner.
         photometric: None,
+        // Only `auto` needs a drift reading, and it needs it from every frame
+        // pass one decodes. Pass two re-uses this Ctx with the field left as
+        // it is, but pass two never reads `scratch.drift_level`, so the
+        // reading is taken once per frame and not twice.
+        measure_drift: opts.photometric == PhotometricMode::Auto,
     };
 
     // A refused frame is dropped, not merged unregistered. Counted once here so
@@ -1709,9 +1789,18 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     // reads the spill as a brightness change that is not there. M99 measured
     // 3.63% spurious gain on a flux-conserving blur sweep whose true answer is
     // zero, against a 2x bar -- 168x over. Erosion takes it to 0.0000%.
-    let photometric_on = opts.photometric
-        || std::env::var_os(PHOTOMETRIC_ENV).is_some_and(|v| !v.is_empty() && v != "0");
-    let photometric_region = if photometric_on {
+    let photometric_mode = opts.photometric;
+    // `auto` has to build the region and fold the flux as if the correction
+    // were on, because the drift it decides on cannot be known until pass one
+    // has read every frame. If it then declines, the map is dropped and pass
+    // two runs the uncorrected path -- byte-identically, which M125 proves by
+    // hash rather than by argument.
+    let photometric_wanted = matches!(
+        photometric_mode,
+        PhotometricMode::On | PhotometricMode::Auto
+    );
+    let mut auto_abstention: Option<photometric::AutoAbstention> = None;
+    let photometric_region = if photometric_wanted {
         let mut t = Timings::default();
         let mut scratch = Scratch::new_with_warp(geom, false, warps.is_some());
         let frame = ctx.field_for(&paths[middle as usize], middle, &mut scratch, &mut t)?;
@@ -1728,17 +1817,46 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         let kept = photometric::erode_mask(&raw, geom.width, PHOTOMETRIC_ERODE_PX, &mut mask);
         eprintln!("--- photometric normalisation (M99, OPT-IN) ---");
         eprintln!(
+            "mode            : {}",
+            match photometric_mode {
+                PhotometricMode::On => "on (unconditional, as asked)",
+                PhotometricMode::Auto => "auto (decides after pass one, from this stack's drift)",
+                PhotometricMode::Off => unreachable!("off does not build a region"),
+            }
+        );
+        eprintln!(
             "region          : {picked} px low-detail on frame {middle}, {kept} px after \
              eroding {PHOTOMETRIC_ERODE_PX} px ({:.1}% kept)",
             100.0 * kept as f64 / picked.max(1) as f64
         );
-        ensure!(
-            kept >= PHOTOMETRIC_MIN_PX,
-            "the eroded photometric region keeps only {kept} px (minimum {PHOTOMETRIC_MIN_PX}); \
-             this scene has no background large enough to fit a gain against. Re-run without \
-             --photometric rather than fitting on a sliver."
-        );
-        Some(mask)
+        if kept < PHOTOMETRIC_MIN_PX {
+            // U3. Under an explicit `on` this stays a hard error: the caller
+            // asked for a correction that cannot be fitted, and quietly not
+            // doing it would be the silent no-op this milestone exists to
+            // remove. Under `auto` the caller asked for a DECISION, and "this
+            // scene has no background" is a legitimate answer to that question
+            // -- so it abstains, says why, and still renders. M122 measured
+            // this hard exit on 112MSDCF (886 px) and coffee-bubbles (442 px).
+            let why = photometric::AutoAbstention::RegionTooSmall {
+                kept,
+                minimum: PHOTOMETRIC_MIN_PX,
+            };
+            ensure!(
+                photometric_mode != PhotometricMode::On,
+                "{why}. Re-run without --photometric, or with --photometric auto, rather than \
+                 fitting on a sliver."
+            );
+            eprintln!("AUTO: ABSTAINED  {why}");
+            eprintln!(
+                "                  falling back to the default (off) LOUDLY, not silently. \
+                 The render continues and is byte-identical to --photometric off."
+            );
+            eprintln!();
+            auto_abstention = Some(why);
+            None
+        } else {
+            Some(mask)
+        }
     } else {
         None
     };
@@ -1756,6 +1874,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             let mut flat = None;
             let mut flat_frames: Vec<(u16, FrameFlat)> = Vec::with_capacity(chunk.len());
             let mut flux: Vec<(u16, Flux)> = Vec::new();
+            let mut drift = photometric::LevelDrift::new();
             let mut t = Timings::default();
 
             for (offset, path) in chunk.iter().enumerate() {
@@ -1764,6 +1883,13 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                     continue;
                 }
                 let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;
+                // Read before `release`, and only ever `Some` under `auto`.
+                // A frame whose level could not be read is simply not pushed:
+                // `LevelDrift` then folds a smaller stack, and if that leaves
+                // nothing the decision abstains rather than guessing.
+                if let Some(level) = scratch.drift_level {
+                    drift.push(level);
+                }
                 if let Some(r) = opts.flat_roi {
                     // Every frame, not only the middle one. The denominator of
                     // the noise invariant is the whole distribution (fact 441).
@@ -1801,6 +1927,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 flat,
                 flat_frames,
                 flux,
+                drift,
                 t,
             })
         })
@@ -1811,6 +1938,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                 a.flat = a.flat.or(b.flat);
                 a.flat_frames.extend(b.flat_frames);
                 a.flux.extend(b.flux);
+                a.drift.absorb(&b.drift);
                 a.t.add(b.t);
                 Ok(a)
             }
@@ -1869,6 +1997,80 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     );
     eprintln!();
 
+    // ---- the auto decision ------------------------------------------------
+    //
+    // Made here, between the passes, because the drift cannot be known until
+    // pass one has read every frame. `auto` therefore builds the region and
+    // folds the flux as if the correction were on, and then either keeps the
+    // map or drops it. Dropping it makes pass two byte-identical to `off`;
+    // that is proved by SHA-256 in M125, not argued from this comment.
+    //
+    // Discipline 862: `unknown` must not collapse into `no`. Every path out of
+    // here prints which of the three states it reached -- APPLIED, DECLINED, or
+    // ABSTAINED with a numbered reason -- and an abstention falls back to the
+    // default loudly. The precedent not to repeat is STREHL_FIX_CA, a
+    // byte-identical no-op under STREHL_ALIGN=0 that says nothing at all.
+    let auto_decision = if photometric_mode == PhotometricMode::Auto {
+        let d = auto_abstention.map_or_else(
+            || photometric::auto_decide(expected, p1.drift.dpp()),
+            photometric::AutoDecision::Abstain,
+        );
+        eprintln!("--- photometric auto decision (M125) ---");
+        eprintln!(
+            "drift estimator : mean CFA G1 level over the active area, per frame, read before \
+             registration and before any gain (M24's estimator, promoted)"
+        );
+        match p1.drift.dpp() {
+            Some(dpp) => eprintln!(
+                "measured drift  : {dpp:.4}% peak-to-peak over {} frame(s)",
+                p1.drift.len()
+            ),
+            None => eprintln!(
+                "measured drift  : UNAVAILABLE from {} folded frame(s)",
+                p1.drift.len()
+            ),
+        }
+        eprintln!(
+            "threshold       : {:.2}% (leave-one-out over M122's 14-stack corpus; \
+             pre-registered before scoring)",
+            photometric::AUTO_DRIFT_THRESHOLD_PCT
+        );
+        match d {
+            photometric::AutoDecision::Apply { drift_pct } => eprintln!(
+                "AUTO: APPLIED    drift {drift_pct:.3}% is at or above the {:.2}% threshold",
+                photometric::AUTO_DRIFT_THRESHOLD_PCT
+            ),
+            photometric::AutoDecision::Decline { drift_pct } => {
+                eprintln!(
+                    "AUTO: DECLINED   drift {drift_pct:.3}% is below the {:.2}% threshold",
+                    photometric::AUTO_DRIFT_THRESHOLD_PCT
+                );
+                eprintln!(
+                    "                  This is a DECISION on a measurement, not a failure to \
+                     decide. The render is byte-identical to --photometric off."
+                );
+            }
+            photometric::AutoDecision::Abstain(why) => {
+                eprintln!("AUTO: ABSTAINED  {why}");
+                eprintln!(
+                    "                  falling back to the default (off) LOUDLY, not silently. \
+                     The render is byte-identical to --photometric off."
+                );
+            }
+        }
+        eprintln!(
+            "  CAVEAT        : the threshold's held-out margin over always-on is +0.0043 on \
+             M122's B12n, and 104% of that margin is a single stack (bee-3-cpl). The rule \
+             survives 12 of 14 single-subject deletions, and the training objective is flat \
+             from 1.64% to 8.45%. This is enough to offer auto as opt-in and NOT enough to \
+             move the default, which is why the default did not move."
+        );
+        eprintln!();
+        Some(d)
+    } else {
+        None
+    };
+
     // ---- the photometric fit ----------------------------------------------
     //
     // Fitted here, between the passes, because the gains cannot be known until
@@ -1876,7 +2078,12 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     // the gate compares against pass one's uncorrected winner field -- which is
     // legitimate precisely because the correction is election-neutral: the
     // corrected regularised response is the uncorrected one.
-    let photometric_map = match photometric_region {
+    let fit_region = match auto_decision {
+        // `auto` declined or abstained: drop the region, and with it the map.
+        Some(d) if !d.applies() => None,
+        _ => photometric_region,
+    };
+    let photometric_map = match fit_region {
         None => None,
         Some(_) => {
             let mut per_frame: Vec<Flux> = (0..paths.len()).map(|_| Flux::new()).collect();
@@ -1922,6 +2129,26 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
                  leaks 3.63% of flux across its own perimeter, so that number is an inflated \
                  upper bound of unmeasured size and is not reproduced here."
             );
+            // U4. The fit ran and produced nothing to apply. This is already a
+            // byte-identical no-op -- every gain is exactly 1.0, and
+            // `field_for` skips the scaling at gain 1.0 -- so nothing about the
+            // render changes here. What changes is that it is now SAID. M122
+            // measured this on `dry-erase-marker-head-cpl`, where all 100
+            // frames were refused and the A0/A1 arms came out byte-identical,
+            // and the previous code reported that as a successful correction.
+            if photometric_mode == PhotometricMode::Auto
+                && (map.span() == 1.0 || map.refused_count() == map.len())
+            {
+                let why = photometric::AutoAbstention::NoCorrectionAvailable {
+                    refused: map.refused_count(),
+                    frames: map.len(),
+                };
+                eprintln!("AUTO: ABSTAINED  {why}");
+                eprintln!(
+                    "                  the map is a no-op, so this render is byte-identical to \
+                     --photometric off. Reported rather than passed off as a correction."
+                );
+            }
             eprintln!();
             Some(map)
         }
@@ -1929,6 +2156,9 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
 
     let ctx = Ctx {
         photometric: photometric_map.as_ref(),
+        // Pass one has already read every level; re-reading them in pass two
+        // would pay the fold twice for one answer that is already decided.
+        measure_drift: false,
         ..ctx
     };
 
