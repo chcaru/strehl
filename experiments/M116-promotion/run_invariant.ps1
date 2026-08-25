@@ -69,10 +69,20 @@ function Invoke-Arm {
     }
 
     Write-Host "[$Tag] $EXE $($args -join ' ')"
+    # NativeCommandError: under $ErrorActionPreference = "Stop", PowerShell
+    # promotes any line a native command writes to stderr into a terminating
+    # error. strehl writes its banner and progress there, so the render dies on
+    # its own startup message before doing any work. Drop to Continue for the
+    # duration of the call and decide success from the exit code instead, which
+    # is the only thing that actually reports it.
+    $prevEAP = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     $sw = [Diagnostics.Stopwatch]::StartNew()
-    & $EXE @args *>&1 | Tee-Object -FilePath $log | Out-Null
+    $stdout = & $EXE @args 2>&1
     $code = $LASTEXITCODE
     $sw.Stop()
+    $ErrorActionPreference = $prevEAP
+    $stdout | Out-String -Width 400 | Set-Content -Path $log
 
     if ($code -ne 0) { throw "$Tag FAILED with exit $code -- see $log" }
     $hash = (Get-FileHash -Algorithm SHA256 $out).Hash
