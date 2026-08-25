@@ -1,0 +1,63 @@
+{
+ "subject": "bee-3-cpl",
+ "R1": {
+  "detail_range_DN": 16926.454545454544,
+  "flat_range_DN": 5796.909090909091,
+  "detail_levels_kept": 57.45454545454545,
+  "flat_levels_kept": 22.545454545454547,
+  "detail_levels_uint16": 5903.727272727273,
+  "flat_levels_uint16": 2316.4545454545455
+ },
+ "R2": [
+  {
+   "stratum": "detail",
+   "stat": "mean DN (1st order, broadband)",
+   "order": "1st",
+   "ratio_true": 0.9999801817109499,
+   "ratio_pil": 0.9999805300588404,
+   "pct": 3.483547942180443e-05
+  },
+  {
+   "stratum": "detail",
+   "stat": "sd DN (1st order, broadband)",
+   "order": "1st",
+   "ratio_true": 1.0033490625089014,
+   "ratio_pil": 1.0034112467774086,
+   "pct": 0.006197670464916034
+  },
+  {
+   "stratum": "detail",
+   "stat": "band power (2nd order, HF band)",
+   "order": "2nd",
+   "ratio_true": 1.2271559152569302,
+   "ratio_pil": 1.2161565291248966,
+   "pct": -0.8963315904100674
+  },
+  {
+   "stratum": "flat",
+   "stat": "mean DN (1st order, broadband)",
+   "order": "1st",
+   "ratio_true": 0.9997695391776656,
+   "ratio_pil": 0.9996455125000144,
+   "pct": -0.012405526753018214
+  },
+  {
+   "stratum": "flat",
+   "stat": "sd DN (1st order, broadband)",
+   "order": "1st",
+   "ratio_true": 1.0031275887007818,
+   "ratio_pil": 1.0030366846146521,
+   "pct": -0.009062066197122316
+  },
+  {
+   "stratum": "flat",
+   "stat": "band power (2nd order, HF band)",
+   "order": "2nd",
+   "ratio_true": 1.254781045330184,
+   "ratio_pil": 1.1302504181703292,
+   "pct": -9.92449062115739
+  }
+ ],
+ "worst_first_order_pct": 0.012405526753018214,
+ "worst_second_order_pct": 9.92449062115739
+}

@@ -431,6 +431,43 @@ floor largely divides out: 6.3–11.5% error on the large effects. But it is
 small signal sits inside the quantisation error, calibrated here against two
 orders of magnitude of effect size.
 
+**Y16 (MEASURED — reconciling this with ORCH's later refinements).** ORCH
+subsequently measured an arm ratio moving **−1.0%** under a planted narrowing,
+against my **6.3%**, and stated that damage follows a file's **occupied** range
+rather than the full 16-bit range. Both refinements test true on my data, and
+together they replace the "the floor divides out" hand-wave above with a
+mechanism (`a6_reconcile.py`):
+
+*Occupied range.* Per 128 px tile on the bee baseline, the detail stratum spans
+**16926 DN** and keeps **57.5** distinct levels through `>>8`; the flat stratum
+spans **5797 DN** and keeps **22.5**. That 2.9x difference in surviving levels —
+not any property of the ratio — is why M2 halves while M1 barely moves.
+
+*Which ratios are protected.* Same files, same two arms, same tiles, varying only
+the statistic:
+
+| stratum | statistic | change under PIL |
+| --- | --- | --- |
+| detail | mean DN (1st order, broadband) | **+0.00%** |
+| detail | sd DN (1st order, broadband) | +0.01% |
+| detail | **band power (2nd order, HF band)** | **−0.90%** |
+| flat | mean DN (1st order, broadband) | −0.01% |
+| flat | sd DN (1st order, broadband) | −0.01% |
+| flat | **band power (2nd order, HF band)** | **−9.92%** |
+
+Cancellation protects a **first-order broadband** arm ratio almost perfectly
+(≤0.01%). It protects a **band-power** ratio far less, because quantisation error
+is roughly white and therefore lands preferentially in a high-frequency band —
+and it protects it **11x less in the low-signal stratum** (−9.92% vs −0.90%).
+
+*And the units.* My detail-stratum band-power ratio moved **−0.90%**, which **is**
+ORCH's −1.0%. The same change expressed as a fraction of the **dex** effect reads
+**−4.4%**; my quoted 6.3% is that figure plus the per-tile-log and stratum
+composition. **ORCH's −1.0% and my 6.3% were never in conflict — they are one
+measurement in two units.** A percentage error on a log-scaled effect size is not
+comparable to one on a linear ratio, and neither number means anything across
+agents unless the unit is stated.
+
 **The dangerous part is M3.** `M3` sign-reverses on **3 of 4 arms on
 `bee-3-cpl`** and **3 of 4 on `wrapped-text-1`**, including lanczos3 both times.
 **Read through PIL, this milestone's central finding would have been inverted:**
@@ -458,6 +495,20 @@ report — not the safest.* Where a control stratum is chosen for having little
 signal, any reader-induced floor lands almost entirely on the control and almost
 not at all on the headline, which flips the control's verdict while leaving the
 headline plausible. Both numbers must come from the same asserted dtype.
+
+**D7 (discipline).** *State the unit of a fractional error, because a percentage
+of a log-scaled effect is not comparable to a percentage of a linear ratio.* One
+−0.90% change in a band-power ratio reads as −4.4% of the same effect in dex — a
+5x apparent disagreement created purely by the scale it is quoted on. Two agents
+comparing "how much did the defect move it" will conclude they contradict each
+other when they agree exactly.
+
+**D8 (discipline).** *Grep for what a call returns, not that it was made.* A
+script may open a file with one library for its tags and read pixels with
+another; `Image.open` on its own is not the hazard, `np.asarray(Image.open(p))`
+on the pixels is. And the operative triage question is not "did I call it" but
+**"did a number I reported come out of pixels it returned"** — a preview path is
+harmless by design.
 
 Reproduce with `python experiments/M118-resampler/src/a5_pilcheck.py <subject>`.
 
