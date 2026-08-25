@@ -1155,3 +1155,124 @@ control window by 30.5% on `bee-3-cpl`. I did not run it and make no claim about
 - **`n_eff` is computed from the cached field**, validated against the pipeline on the ROI
   only (166.8, exact). It is not a dump from a live run.
 - **The photometric prediction in §31 is untested by me.** M122 owns it.
+
+---
+
+## 34. PIL hazard, round 2 — M120's exposure answer, and repair of the two `patchwork*` scripts
+
+### 34.1 M120's own exposure: NOT EXPOSED, re-verified against the new triage questions
+
+§12 established this by grepping my own scripts; ORCH's correction sharpens the test from
+*"did I call `Image.open`"* to **"did a number I reported come out of pixels it returned."**
+Re-checked on that basis:
+
+- Every `.tif` read in `experiments/M120-patchwork/**` is `tifffile.imread` followed by an
+  immediate `assert dtype == np.uint16`. PIL appears only as `.save()` for previews, plus
+  one `Image.open` on ORCH's genuinely 8-bit PNGs.
+- **The two scripts my headline rests on are ORCH's own `patchwork_invariant.py` and
+  `shipped_patchwork.py`, and both are `tifffile` with zero `Image.open`.** So the 2.134×,
+  the 12/12, and the corrected shipped table I built Parts III–IV on are clean at source.
+- ORCH's triage questions applied to my statistics: `Q` and `R` are **ratios of two arms on
+  the same data** (protected by cancellation); `n_eff`, the Spearman ρ values and the patch
+  diameters are **not small-over-large ratios**. The one absolute statistic I quote,
+  Laplacian excess kurtosis, is ORCH's and is computed by ORCH's `tifffile` scripts.
+
+**One correction against myself:** my §12 counterfactual said quantisation pushes `Q`
+*up*, making a narrowing reader a false-alarm hazard. §34.3 measures the same reader
+pushing kurtosis *down* by 2.6×. **The sign of the error is not a property of the reader,
+it is a property of the statistic.** Do not reason about the direction; re-run.
+
+### 34.2 A false positive in my own grep, of exactly the kind ORCH just recorded
+
+Auditing ORCH's directory, my regex flagged `fold144.py`. It is a **false positive**: the
+matches are inside string literals — it is the script that *wrote ORCH's hazard notice*.
+Same failure mode ORCH recorded against the original list, reproduced by me within an hour
+of reading the warning about it. Also checked and cleared: **`viewprep.py`** (`Image.open`
+→ resize → `.save`; a preview, no number from pixels) and **`patchwork_look.py`** (its
+input is a genuinely 8-bit PNG, so PIL is the correct reader — though its kurtosis is
+therefore not comparable to any 16-bit figure and should not be quoted alongside one).
+
+### 34.3 `patchwork16.py` and `patchwork_16bit.py` — measured damage (MEASURED)
+
+`26_orch_patchwork_audit.py` re-runs the statistic through both readers on the same file
+(`bee3-full.tif`, `(2344,3516,3) uint16`; PIL returns `uint8`, mode `RGB`).
+
+| window | excess kurtosis, `tifffile` | via PIL | |
+| --- | ---: | ---: | --- |
+| 2816, 0 | 0.40 | 0.33 | |
+| 3072, 256 | 0.51 | 0.86 | |
+| 256, 512 | 0.80 | 0.28 | |
+| 3072, 0 | 2.30 | 0.94 | |
+| 2560, 0 | **196.80** | 145.10 | |
+| **3072, 512** | **40.53** | **7.70** | **crosses the bar of 10 — violating reads as passing** |
+
+`lapSD` collapses 134.4 → 0.877 (153×, consistent with the 257× scale error). Median
+kurtosis 1.55 → 0.90 (**0.581×**). The end-to-end effect on the script's own headline:
+
+| | over bar (>10) | worst | median |
+| --- | ---: | ---: | ---: |
+| `patchwork16.py` as shipped (PIL) | **2 / 12** | **17.56** | 3.79 |
+| `patchwork16.py` repaired (`tifffile`) | **3 / 12** | **46.06** | 3.90 |
+
+**It understated the worst window by 2.6× and missed a violating window.** The repaired
+3/12 now agrees with `shipped_patchwork.py`'s independent 3/12.
+
+### 34.4 Three findings that outrank the numbers
+
+**(a) The script could not answer its own question.** `patchwork_16bit.py` exists to kill
+one rival, stated in its docstring: *"If the polygons only exist after an 8-bit export,
+they are a display artifact."* Its reader performed an 8-bit conversion before its first
+arithmetic — 3,028 distinct luma levels in its best window became **16**. The treatment arm
+and the control arm were **the same arm**. Its conclusion happens to be correct, but it is
+correct on other evidence (`patchwork_invariant.py`), not on this script's.
+
+**(b) The guard existed, fired, and did not stop the run.** `patchwork16.py:71-74` already
+had the check ORCH said nobody wrote. Every run on a 16-bit RGB TIFF printed:
+
+```
+!! NOT 16-BIT (uint8). Quantisation contouring is NOT ruled out by this run.
+```
+
+and then continued to print a results table. The lesson is therefore **not** "the check
+costs one line and none of us wrote it" — it is stronger and less comfortable:
+**a warning that does not stop the run is not a check.** It scrolled past, under a heading
+that said the run's own premise had failed.
+
+**(c) The commissioning was structurally incapable of catching it, and this is not fixed by
+fixing the reader.** The instrument's null and plant are synthesised **in memory** and never
+pass through the reader. Evidence: the repaired run prints commissioning figures
+**identical** to the broken run — `null iid -0.00`, `null ramp 0.03`, `plant voronoi 52.99`,
+`instrument OK` — before and after. **`52.99` is the commissioning figure quoted in ORCH's
+mechanism brief.** It certified the estimator while the input path was destroying the data.
+
+**This applies to `patchwork_invariant.py` too, whose reader is correct.** A commissioning
+that generates its own controls in memory validates the estimator and nothing else.
+
+### 34.5 Repairs applied
+
+`27_fix_orch_readers.py`, anchored on unique full-line strings, hard-erroring if any anchor
+does not land exactly once, backing each file up to `$env:TEMP\M120-patchwork-backup\`
+first (not `git checkout --`). Per file: a `_read_pixels()` helper that routes `.tif`/`.tiff`
+to `tifffile` and leaves PIL for genuinely 8-bit formats; the dtype guard made **fatal**
+(`sys.exit(3)`); a guard **added** to `patchwork_16bit.py`, which had none. Both re-run
+clean and reproduce §34.3.
+
+**Both files were untracked** (`??`) — ORCH had never committed them, so the repair would
+have been lost. They are committed with this change. Backups remain in `$env:TEMP` if ORCH
+wants to inspect or revert.
+
+### 34.6 Proposed disciplines (ORCH to fold or reject; `SYNTHESIS.md` is ORCH's)
+
+1. **A dtype warning that does not `sys.exit` is not a check.** Assert, do not print.
+2. **Commission the input path, not only the estimator.** A control synthesised in memory
+   cannot detect a broken reader. Add one arm that round-trips a known array through the
+   real reader — write it, read it back, assert equality — or the commissioning certifies
+   only the arithmetic.
+3. **A script whose stated purpose is to rule out a degradation must not perform that
+   degradation.** Worth a standing check when the rival is quantisation, resampling or
+   compression.
+4. **Do not reason about the direction of a reader error.** It pushed `Q` up (§12) and
+   kurtosis down (§34.3) on the same reader. Re-run.
+
+**Not mine:** M103's four scripts are on ORCH's original list; I have no visibility into
+them and am not answering for that milestone.
