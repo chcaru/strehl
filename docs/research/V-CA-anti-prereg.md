@@ -112,3 +112,98 @@ CA is truly merge-only.
 - **No `--srgb` render is measured.** No `PIL.Image.open` + `np.asarray` on 16-bit RGB.
 - **If cost exceeds one build plus six merges, I stop and report** rather than expanding.
 - Outputs under `C:\dev\strehl-out\V-CA-anti\`. **Nothing is written to `D:\`.**
+
+---
+
+# RESULTS — appended after the registration above was committed at `42270f4`
+
+Binary: patched worktree build, `Compiling strehl-core` present, **16/16 optics tests pass**
+including `the_two_profiles_differ_only_in_translation`. Six merges, one shared sidecar,
+default binned-linear output, `assert dtype == np.uint16` on every read.
+
+## R1. The discriminator table — every hash prediction holds
+
+| arm | SHA-256 (16) | bytes | verdict |
+|---|---|---|---|
+| `unset` | `C38FFBA98E211565` | 49 449 626 | reference |
+| `zero` | `C38FFBA98E211565` | 49 449 626 | **identical** |
+| `off` | `C38FFBA98E211565` | 49 449 626 | **identical** |
+| `false` | `C38FFBA98E211565` | 49 449 626 | **identical** |
+| `correct` | `64914FAF1D554B5C` | 49 449 626 | **diverges** |
+| `anti` | `22DBB9C7AA42D08D` | 49 449 626 | **diverges, and from `correct`** |
+
+**The positive control passes** — four inert arms byte-identical, so the discriminator *can*
+return "inert". **The correction is NOT structurally inert.** The failure ORCH ranked as most
+important did not occur.
+
+## R2. The pre-registered test — PASS on all three
+
+| arm | mean \|R−Y\| DN | vs `unset` |
+|---|---|---|
+| `unset` / `zero` / `off` / `false` | 729.10 | 0.000 % |
+| `correct` | 630.58 | **−13.513 %** |
+| `anti` | 1006.08 | **+37.989 %** |
+
+1. `anti` >= +8.0 % -> **+37.989 % PASS**
+2. `anti − correct` >= 20 pp -> **+51.501 pp PASS**
+3. signs oppose -> **PASS**
+4. failure-that-matters (|gap| < 2 pp) -> **not triggered**
+
+**The shipped sign is correct in the render domain.** Fact 1784's open concern is retired.
+
+## R3. The number that does not fit
+
+I pre-registered **+26.7 %**; measured **+37.99 %** — I under-predicted by 11.3 pp. The transfer
+is **asymmetric**: 0.180 chroma-% per geometry-% in the helpful direction, **0.304 in the harmful
+one (1.7x)**. Mechanism, consistent with Addendum 5 §5.2: this subject carries a blue/yellow
+fringe at **1.356x** the red/cyan one, which `eps_b = None` cannot touch. That is a **floor**
+under how far chroma can fall, and no ceiling on how far it can rise.
+
+## R4. The odd/even decomposition — what discipline 816 was actually asking for
+
+A correction is **odd** in `eps`; resampling blur is **even** (both arms resample identically).
+Two arms separate them:
+
+| r | `correct` | `anti` | **ODD** (correction) | **EVEN** (interpolation) | % correction |
+|---|---|---|---|---|---|
+| 0.0–0.1 | −0.57 % | +1.44 % | 1.00 | 0.44 | 69.6 % |
+| 0.1–0.2 | +1.74 % | +8.74 % | 3.50 | 5.24 | 40.0 % |
+| **0.2–0.3** | **+8.53 %** | **+28.59 %** | **10.03** | **18.56** | **35.1 %** |
+| 0.3–0.4 | +0.66 % | +49.46 % | 24.40 | 25.06 | 49.3 % |
+| 0.4–0.5 | −15.75 % | +37.95 % | 26.85 | 11.10 | 70.7 % |
+| 0.5–0.6 | −7.69 % | +39.75 % | 23.72 | 16.03 | 59.7 % |
+| 0.6–0.7 | −17.30 % | +44.59 % | 30.94 | 13.65 | 69.4 % |
+| 0.7–0.8 | −30.08 % | +39.01 % | 34.55 | 4.46 | 88.6 % |
+| **0.8–0.9** | **−31.25 %** | **+38.35 %** | **34.80** | **3.55** | **90.8 %** |
+| **whole edge** | **−13.51 %** | **+37.99 %** | **25.75** | **12.24** | **67.8 %** |
+
+**Three findings, none of which the on-vs-off comparison could produce.**
+
+**(a) On-vs-off UNDERSTATES this correction, it does not overstate it.** The pure correction is
+**−25.75 %**; resampling gives back **+12.24 %**; the observable net is −13.51 %. **Interpolation
+opposes the correction rather than masquerading as it** — the opposite of what discipline 816
+was written to catch. On-vs-off understates the true effect by **1.9x**.
+
+**(b) Addendum 5 §5.2's mid-field lobe is PROVEN to be interpolation.** At r 0.2–0.3 *both* arms
+are positive (+8.53 and +28.59) — an **even** function of `eps`, which a correction cannot be.
+My §5.2 alternative reading was right, and this is the control that proves it rather than
+arguing it.
+
+**(c) There is a radius below which the correction is net-harmful, and nobody has stated it.**
+Inside r ~ 0.4 the interpolation penalty **exceeds** the correction benefit (at r 0.2–0.3,
+18.56 vs 10.03) and net chroma **rises**. Beyond r 0.7 correction dominates 9:1.
+`support_r_max = 0.788` is declared, unenforced, and is an **upper** bound — the measurement says
+the missing guard is a **lower** one.
+
+## R5. Verdict
+
+**Unchanged: NO to default-on** — R1–R4 retire one limb (the untested sign) and touch none of
+the others: no author recommends it, the 0.950/0.541 transfer split, the **23.6 %** scene spread,
+the half-closed dispatch gap, `wrapped-text-1`'s reversal, and §6.4's finding that the shipped
+coefficient over-corrects **both** subjects ever fitted.
+
+**But the correction is better at the corner than anyone has measured** (−31.25 % at r 0.8–0.9,
+90.8 % of it real), and **worse in the mid-field than anyone has measured**. That trade is new,
+and it is an argument for a radius-gated correction rather than for on-or-off.
+
+**One subject, one arm, not self-verified.** Cost was one build plus six merges, as estimated.
