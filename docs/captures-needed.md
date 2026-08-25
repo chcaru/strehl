@@ -145,6 +145,37 @@ merge is doing in two specific and now well-characterised ways:
    than asserted — see the correction further down. Caused by the blending
    recipe changing from place to place across the frame.
 
+#### One suspect left, and finding out which it is settles the whole question
+
+By dawn the search for your missing sharpness had narrowed to a single
+possibility, which is worth more than any of the individual results that got it
+there. Four candidates went in; three are now closed:
+
+- **Reconstruction is out.** The measurement is complete and null (above).
+  There is no clever mathematics that recovers detail the optics never passed.
+- **The blending is out.** A milestone spent the night proving, pixel by pixel,
+  that where the software picks a frame it reproduces **that frame's pixels
+  exactly** — 180,697 pixels checked, 100.0000% identical, maximum error zero.
+  It also proved the check can fail: pixels the software *didn't* pick match at
+  0.0519%. So nothing is being lost or muddied in the act of combining.
+- **The halo is not a blending problem either.** Two milestones, working from
+  opposite directions and different statistics, independently concluded the rim
+  comes from *choosing* rather than from *averaging*.
+
+**What is left is the choosing itself.** The software provably delivers the frame
+it selected — but nobody has yet checked whether it selects the *best* frame. If
+its focus detector systematically settles one or two frames off the true peak,
+every pixel would be faithfully, exactly, reliably slightly soft, and every test
+above would still pass. That measurement is now running.
+
+**Why this is good news rather than bad.** A selection error is *cheap to fix* —
+it is a better focus detector, not new physics, and the machinery to test one
+already exists. It is also the one remaining explanation consistent with what you
+said you saw: results that look *close* to right rather than obviously broken.
+If it comes back clean, then the tool is already extracting everything your
+captures contain, and the remaining gains are in how you shoot rather than in
+the software.
+
 #### The halo finally has a cause
 
 For weeks the honest answer about the bright rim around every leg and antenna
