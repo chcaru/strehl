@@ -167,6 +167,24 @@ it rather than me.
 **Worth turning on for your own frames. Not safe as a default for anyone
 else's** — and that distinction is the whole reason it stays off.
 
+**One more reason to turn it on, which arrived later the same night.** A separate
+milestone tested a sharper resampling kernel (`lanczos-3`) against the one that
+ships, and a non-author looking at 1:1 and ×3 crops found it **visibly crisper**
+on ink grain and on the bee's ommatidia, with no dark rim on silhouettes. It also
+found that the sharper kernel makes **colour fringing more conspicuous** — which
+is the second independent sighting of something this project predicted: the
+kernel that currently ships has been **hiding the fringing with blur**. So the
+chromatic-aberration correction is not a side tidy-up. **It is a prerequisite for
+ever shipping a sharper render**, and tonight is the first night both halves
+exist.
+
+You cannot try the sharper kernel yet — there is no `--resampler` flag on
+`strehl stack`, so its 2.9–3.9× cost cannot be declined, and the milestone that
+measured it correctly refused to promote something you have no way to turn off.
+That flag is the next small thing to land. I mention it because it is the one
+place tonight where two separate results **compose** into a path forward rather
+than cancelling each other out, and there has been little enough of that.
+
 #### The near-miss: why the soft gate says "leave off" twice
 
 *This is the most instructive thing that happened tonight and it is the reason
