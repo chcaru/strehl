@@ -3272,3 +3272,16 @@ turned out to be a **background gradient**, caught because it never stopped with
 30 pixels and a single un-stacked frame showed the same shape. It reported that
 against itself. **One capture settles it: a bright, un-blown subject on a deeply
 defocused dark ground, 100-300 frames.** That is now in the request list.
+
+
+## 28. Dark-frame campaign needs a re-shoot (found by measurement, 2026-08-25)
+
+The 22 dark frames at `D:\macro-dark-frames` are **mis-specified for their purpose**, and this was found by measuring them rather than by inspecting the plan.
+
+They vary **ISO across 11 values at a single 1/100 s exposure**. But dark current is driven by **exposure time**, not by ISO alone -- and your actual macro library shoots between **1/40 s and 2.5 s**. So the campaign characterises a corner of the parameter space your photographs never occupy.
+
+What the current darks did buy: **8685 persistent hot-pixel sites** characterised per-CFA-phase. Their materiality was then measured on real frames: **0 sites exceed 1 % of range at ISO 100**, including a 2.5 s exposure, and only **90-130 sites** do at ISO 1000. Two of twenty-six subjects are affected and **neither is halo-affected**, so hot-pixel *repair* is deliberately deferred with those numbers on record. Nothing is blocked on this.
+
+**What to shoot when convenient** (lens cap on, in darkness): hold ISO at your two working values and **sweep exposure time** across what you actually shoot -- 1/40 s, 1/10 s, 1/2 s, 1 s, 2.5 s -- a few frames at each, so a per-exposure fixed pattern separates from read noise.
+
+**Low priority.** It sharpens the noise model; it does not affect the halo, and the halo is the only thing currently disqualifying your stacks.
