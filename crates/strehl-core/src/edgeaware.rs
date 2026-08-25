@@ -429,6 +429,293 @@ pub struct LayerSupport {
 /// enough to dilute the treatment.
 pub const FEATHER: f32 = 1.25;
 
+/// Environment override for [`FEATHER`], so the constant can be chosen from
+/// real composites rather than from a synthetic probe.
+pub const FEATHER_ENV: &str = "STREHL_EDGE_FEATHER";
+
+/// Feather width actually in force, from [`FEATHER_ENV`] or [`FEATHER`].
+#[must_use]
+pub fn feather() -> f32 {
+    static CACHED: std::sync::OnceLock<f32> = std::sync::OnceLock::new();
+    *CACHED.get_or_init(|| match std::env::var(FEATHER_ENV) {
+        Err(_) => FEATHER,
+        Ok(s) => {
+            let v: f32 = s.trim().parse().unwrap_or_else(|_| {
+                panic!("{FEATHER_ENV}={s:?} is not a number")
+            });
+            assert!(
+                v > 1.0 && v.is_finite(),
+                "{FEATHER_ENV}={v} must exceed 1.0; at 1.0 the guards are hard \
+                 switches again and the treatment boundary is a cliff"
+            );
+            v
+        }
+    })
+}
+
+/// Through-focus bimodality at a pixel, folded over the frames as they stream.
+///
+/// # Why this exists
+///
+/// Masking can only *choose* among samples that exist. The pixels nearest a
+/// silhouette have no clean background sample in **any** frame, which is why
+/// both the tight rim and the coverage-boundary blobs survived every masking
+/// and feathering change. Reconstructing them needs the forward model
+/// `I_k = a*(F conv PSF_k) + (1-a)*(B conv PSF_k)`, and **this is its
+/// detector**: at an occluding edge the through-focus response is genuinely
+/// bimodal, one peak where the foreground is sharp and one where the
+/// background is.
+///
+/// # The streaming approximation
+///
+/// Storing a full response curve per pixel is `frames * 4` bytes per pixel --
+/// 9.8 GB on a 299-frame bracket at this sensor. Instead this keeps the two
+/// strongest peaks that are at least [`MODE_SEPARATION`] frames apart, updated
+/// in one pass. Two `(f32, u16)` pairs is 12 bytes per pixel, constant in the
+/// frame count, so it rides the guide pass at no extra decode cost.
+///
+/// The approximation is that a peak can be absorbed by a stronger neighbour
+/// before its own true maximum arrives. For two well-separated modes -- which
+/// is the only case this is asked about -- that does not change which two
+/// modes are found.
+pub struct BimodalStats {
+    geom: PlaneGeometry,
+    r1: Vec<f32>,
+    k1: Vec<u16>,
+    r2: Vec<f32>,
+    k2: Vec<u16>,
+    /// Running `sum` and `sum of squares` of the through-focus response, for
+    /// the per-pixel baseline both peaks are judged against.
+    ///
+    /// This exists because the obvious statistic is wrong. Measured on
+    /// `bee-2-cpl`: a plain `r2 / r1` ratio fires on **54.2%** of clean
+    /// defocused ground, and at any threshold controlling that false-positive
+    /// rate the near-silhouette pixels fire **3-4x LESS** than clean ground
+    /// (enrichment 0.27x / 0.32x). The reason is that on featureless ground
+    /// *neither* peak is real, so the ratio tends to 1 by noise alone —
+    /// `r2 / r1` measures the ABSENCE of a dominant peak, not the presence of
+    /// two. It is the same defect as `edge_overshoot`: an unnormalised ratio
+    /// reports whatever dominates its denominator.
+    ///
+    /// Normalising against [`crate::merge::FOCUS_NOISE_SD`] would not fix it
+    /// either, because that constant is calibrated for
+    /// [`WINDOW_RADIUS`](crate::focus::WINDOW_RADIUS) and the guide runs at
+    /// radius 4. The pixel's own curve is the only baseline available that is
+    /// correct at whatever radius it is handed.
+    sum: Vec<f64>,
+    sumsq: Vec<f64>,
+    /// `u16::MAX` marks a mode that has not been populated yet.
+    frames: u32,
+}
+
+/// Smallest gap, in frames, between two peaks for them to count as separate
+/// modes rather than one peak sampled twice.
+///
+/// A single in-focus peak has a through-focus width set by the depth of field;
+/// `edge_tau` solves to ~36 frames on `bee-3-cpl` for the depth STEP, so a
+/// separation floor well inside that would re-detect one peak as two.
+pub const MODE_SEPARATION: u16 = 20;
+
+impl BimodalStats {
+    #[must_use]
+    pub fn new(geom: PlaneGeometry) -> Self {
+        let px = geom.pixels();
+        Self {
+            geom,
+            r1: vec![f32::NEG_INFINITY; px],
+            k1: vec![u16::MAX; px],
+            r2: vec![f32::NEG_INFINITY; px],
+            k2: vec![u16::MAX; px],
+            sum: vec![0.0; px],
+            sumsq: vec![0.0; px],
+            frames: 0,
+        }
+    }
+
+    #[inline]
+    fn offer(&mut self, i: usize, r: f32, k: u16) {
+        let far = |a: u16, b: u16| a != u16::MAX && b != u16::MAX && a.abs_diff(b) >= MODE_SEPARATION;
+        if self.k1[i] == u16::MAX || !far(k, self.k1[i]) {
+            // Same mode as the incumbent leader (or the first sample seen).
+            if r > self.r1[i] {
+                self.r1[i] = r;
+                self.k1[i] = k;
+            }
+            return;
+        }
+        if self.k2[i] != u16::MAX && !far(k, self.k2[i]) {
+            if r > self.r2[i] {
+                self.r2[i] = r;
+                self.k2[i] = k;
+            }
+        } else if r > self.r2[i] {
+            self.r2[i] = r;
+            self.k2[i] = k;
+        }
+        if self.r2[i] > self.r1[i] {
+            let (rr, kk) = (self.r1[i], self.k1[i]);
+            self.r1[i] = self.r2[i];
+            self.k1[i] = self.k2[i];
+            self.r2[i] = rr;
+            self.k2[i] = kk;
+        }
+    }
+
+    /// Fold one frame's focus response. `response` must be the **narrow**
+    /// (guide-radius) field: a 13 px window smears the two modes into one and
+    /// is exactly the measurement this is trying to see past.
+    pub fn fold(&mut self, frame_index: u16, response: &[f32]) -> Result<(), String> {
+        if response.len() != self.geom.pixels() {
+            return Err(format!(
+                "frame {frame_index}: response is {} long, want {}",
+                response.len(),
+                self.geom.pixels()
+            ));
+        }
+        for i in 0..response.len() {
+            let r = response[i];
+            if r.is_finite() {
+                self.offer(i, r, frame_index);
+                self.sum[i] += f64::from(r);
+                self.sumsq[i] += f64::from(r) * f64::from(r);
+            }
+        }
+        self.frames += 1;
+        Ok(())
+    }
+
+    pub fn absorb(&mut self, other: &Self) -> Result<(), String> {
+        if other.geom != self.geom {
+            return Err("cannot absorb a different geometry".to_string());
+        }
+        for i in 0..self.geom.pixels() {
+            if other.k1[i] != u16::MAX {
+                self.offer(i, other.r1[i], other.k1[i]);
+            }
+            if other.k2[i] != u16::MAX {
+                self.offer(i, other.r2[i], other.k2[i]);
+            }
+            self.sum[i] += other.sum[i];
+            self.sumsq[i] += other.sumsq[i];
+        }
+        self.frames += other.frames;
+        Ok(())
+    }
+
+    /// Baseline mean and SD of each pixel's own through-focus response.
+    fn baseline(&self, i: usize) -> (f32, f32) {
+        let n = f64::from(self.frames).max(1.0);
+        let mu = self.sum[i] / n;
+        let var = (self.sumsq[i] / n - mu * mu).max(0.0);
+        (mu as f32, (var.sqrt()) as f32)
+    }
+
+    /// Significance of the **second** mode, in standard deviations of the
+    /// pixel's own through-focus response.
+    ///
+    /// This is the discriminating quantity, and the first mode is not: `r1` is
+    /// the maximum by construction, so it is significant almost everywhere. A
+    /// genuine occluding-edge pixel is one where a *second*, well-separated
+    /// peak also stands clear of the pixel's own baseline — the foreground
+    /// coming sharp in one bracket and the background in another.
+    ///
+    /// Returns 0 where no separated second peak exists.
+    #[must_use]
+    pub fn second_mode_z(&self) -> Vec<f32> {
+        (0..self.geom.pixels())
+            .map(|i| {
+                if self.k2[i] == u16::MAX || !self.r2[i].is_finite() {
+                    return 0.0;
+                }
+                let (mu, sd) = self.baseline(i);
+                if !(sd > 0.0) {
+                    return 0.0;
+                }
+                ((self.r2[i] - mu) / sd).max(0.0)
+            })
+            .collect()
+    }
+
+    /// Significance of the first (strongest) mode, same units. Reported only
+    /// so the second can be read against it -- a pixel where *neither* peak
+    /// clears the baseline is featureless ground, not a bimodal edge, and the
+    /// two numbers together say which.
+    #[must_use]
+    pub fn first_mode_z(&self) -> Vec<f32> {
+        (0..self.geom.pixels())
+            .map(|i| {
+                if self.k1[i] == u16::MAX || !self.r1[i].is_finite() {
+                    return 0.0;
+                }
+                let (mu, sd) = self.baseline(i);
+                if !(sd > 0.0) {
+                    return 0.0;
+                }
+                ((self.r1[i] - mu) / sd).max(0.0)
+            })
+            .collect()
+    }
+
+    /// Balance between the two modes: `z2 / z1`, in `[0, 1]`.
+    ///
+    /// **This is the discriminating quantity, and the one to build on.**
+    /// Measured across three subjects, from the silhouette outward:
+    ///
+    /// | subject | rim | far | swing |
+    /// |---|---|---|---|
+    /// | `bee-2-cpl` | 0.838 | 0.115 | 7.3x |
+    /// | `flower-bud-with-background-fern-cpl` | 0.873 | 0.166 | 5.3x |
+    /// | `flower-inner-edge-cpl` | 0.751 | 0.086 | 8.8x |
+    ///
+    /// Monotonic in every distance band in all three. Near 1 at a silhouette,
+    /// where the window holds comparable amounts of two depths and each comes
+    /// sharp in a different bracket; near 0 on ordinary ground, where one
+    /// depth dominates.
+    ///
+    /// It is *not* the naive `r2 / r1` ratio, which fails for the opposite
+    /// reason — see the note on [`Self::sum`]. Both peaks are first referred
+    /// to the pixel's own baseline, so a pixel with no real peak at all scores
+    /// zero instead of one.
+    ///
+    /// The obvious objection — that anything would look elevated near an edge
+    /// because there is more contrast there — is refuted rather than argued:
+    /// [`Self::first_mode_z`] moves the *opposite* way over the same bands
+    /// (3.17 -> 6.28, 3.01 -> 5.57, 3.32 -> 7.41), so the second mode is not
+    /// riding a general rise in contrast.
+    #[must_use]
+    pub fn mode_balance(&self) -> Vec<f32> {
+        let z1 = self.first_mode_z();
+        let z2 = self.second_mode_z();
+        (0..self.geom.pixels())
+            .map(|i| if z1[i] > 0.0 { (z2[i] / z1[i]).clamp(0.0, 1.0) } else { 0.0 })
+            .collect()
+    }
+
+    /// Frame distance between the two modes, or 0 where there is no second.
+    #[must_use]
+    pub fn separation(&self) -> Vec<u16> {
+        (0..self.geom.pixels())
+            .map(|i| {
+                if self.k2[i] == u16::MAX {
+                    0
+                } else {
+                    self.k1[i].abs_diff(self.k2[i])
+                }
+            })
+            .collect()
+    }
+
+    #[must_use]
+    pub fn frames_folded(&self) -> u32 {
+        self.frames
+    }
+
+    #[must_use]
+    pub fn allocated_bytes(&self) -> usize {
+        self.geom.pixels() * (2 * size_of::<f32>() + 2 * size_of::<u16>() + 2 * size_of::<f64>())
+    }
+}
+
 /// Hermite ramp from 0 at `lo` to 1 at `hi`. Used to turn every hard veto in
 /// this module into a feathered one.
 #[inline]
@@ -557,8 +844,8 @@ impl LayerSupport {
             // step or just over the confidence floor now takes only a sliver
             // of the masked response, so the treated region fades in instead
             // of starting at full strength against an untreated neighbour.
-            let w = smoothstep(tau, FEATHER * tau, hi_b[i] - lo_b[i])
-                * smoothstep(floor, FEATHER * floor, sharp[i]);
+            let w = smoothstep(tau, feather() * tau, hi_b[i] - lo_b[i])
+                * smoothstep(floor, feather() * floor, sharp[i]);
             if w > 0.0 {
                 layer[i] = bin[i];
                 blend[i] = w;
@@ -598,7 +885,7 @@ impl LayerSupport {
                 .fold(f32::INFINITY, f32::min);
             blend[i] *= smoothstep(
                 MIN_LAYER_FRACTION,
-                FEATHER * MIN_LAYER_FRACTION,
+                feather() * MIN_LAYER_FRACTION,
                 thinnest,
             );
             if blend[i] <= 0.0 {
@@ -623,6 +910,18 @@ impl LayerSupport {
     #[must_use]
     pub fn layers(&self) -> &[u8] {
         &self.layer
+    }
+
+    /// How much of the masked response each pixel takes, in `[0, 1]`.
+    ///
+    /// Zero is untreated, one is fully masked, everything between is the
+    /// feathered boundary. This is the map to consult when asking *where the
+    /// fix reaches*, which is a different question from where a detector
+    /// fires: the coverage boundary — pixels the guards wanted to treat but
+    /// the layer floor withdrew from — sits at intermediate values here.
+    #[must_use]
+    pub fn blend(&self) -> &[f32] {
+        &self.blend
     }
 
     /// Share of the plane whose support is masked to its own depth layer.
@@ -1051,6 +1350,87 @@ mod tests {
                     dst[i]
                 );
             }
+        }
+    }
+
+    #[test]
+    fn a_single_peak_is_not_bimodal() {
+        // The failure that would waste everyone's time is a detector that
+        // fires everywhere. A pixel with one clean through-focus peak must
+        // report no separated second mode.
+        let g = geom(8, 8);
+        let mut b = BimodalStats::new(g);
+        for k in 0..60u16 {
+            let d = f32::from(k) - 30.0;
+            let r = 100.0 * (-d * d / 50.0).exp();
+            b.fold(k, &vec![r; g.pixels()]).unwrap();
+        }
+        let p = b.second_mode_z();
+        assert!(
+            p.iter().all(|&v| v < 0.5),
+            "single Gaussian peak reported a second mode at z={:.3}",
+            p.iter().cloned().fold(0.0, f32::max)
+        );
+    }
+
+    #[test]
+    fn two_separated_peaks_are_bimodal() {
+        // The occluding-edge case: one peak where the foreground is sharp and
+        // one where the background is. Both must be found, and the reported
+        // separation must be the real one.
+        let g = geom(8, 8);
+        let mut b = BimodalStats::new(g);
+        for k in 0..100u16 {
+            let d1 = f32::from(k) - 20.0;
+            let d2 = f32::from(k) - 75.0;
+            let r = 100.0 * (-d1 * d1 / 40.0).exp() + 80.0 * (-d2 * d2 / 40.0).exp();
+            b.fold(k, &vec![r; g.pixels()]).unwrap();
+        }
+        let p = b.second_mode_z();
+        let s = b.separation();
+        assert!(
+            p.iter().all(|&v| v > 1.5),
+            "two clear modes reported second-mode z as low as {:.3}",
+            p.iter().cloned().fold(f32::INFINITY, f32::min)
+        );
+        assert!(
+            s.iter().all(|&v| (50..=60).contains(&v)),
+            "separation should be ~55 frames, got {:?}",
+            s[0]
+        );
+    }
+
+    #[test]
+    fn absorbing_chunks_finds_the_same_modes_as_one_pass() {
+        // The fold runs per rayon chunk and is then absorbed, so a chunked
+        // run must agree with a single-threaded one or the detector would
+        // depend on thread count.
+        let g = geom(4, 4);
+        let curve = |k: u16| {
+            let (d1, d2) = (f32::from(k) - 15.0, f32::from(k) - 70.0);
+            90.0 * (-d1 * d1 / 30.0).exp() + 70.0 * (-d2 * d2 / 30.0).exp()
+        };
+        let mut whole = BimodalStats::new(g);
+        for k in 0..90u16 {
+            whole.fold(k, &vec![curve(k); g.pixels()]).unwrap();
+        }
+        let mut a = BimodalStats::new(g);
+        let mut c = BimodalStats::new(g);
+        for k in 0..45u16 {
+            a.fold(k, &vec![curve(k); g.pixels()]).unwrap();
+        }
+        for k in 45..90u16 {
+            c.fold(k, &vec![curve(k); g.pixels()]).unwrap();
+        }
+        a.absorb(&c).unwrap();
+        let (pw, pa) = (whole.second_mode_z(), a.second_mode_z());
+        for i in 0..g.pixels() {
+            assert!(
+                (pw[i] - pa[i]).abs() < 1e-3,
+                "chunked second-mode z {:.4} != whole-pass {:.4}",
+                pa[i],
+                pw[i]
+            );
         }
     }
 

@@ -43,7 +43,7 @@ use strehl_core::photometric::{self, Flux, PhotometricMap, PhotometricMode};
 use strehl_core::align::Resampler;
 use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
 use strehl_core::color::{self, AppliedExposure, Exposure};
-use strehl_core::edgeaware::{self, LayerSupport};
+use strehl_core::edgeaware::{self, BimodalStats, LayerSupport};
 use strehl_core::flat_ratio::{self, FrameFlat};
 use strehl_core::focus::FocusField;use strehl_core::merge::{
     Estimator, FOCUS_NOISE_SD, FocusStats, Gate, REGULARISER_RADIUS, REGULARISER_WIDTH, regularise,
@@ -79,6 +79,21 @@ pub struct MergeOptions {
     /// Apply the sRGB transfer curve **and** the camera's colour matrix.
     /// For looking at, NOT for measuring.
     pub srgb: bool,
+    /// Which colour space the output should land in, resolved from `--srgb` /
+    /// `--linear-srgb` in `main.rs` so that the two flags cannot disagree.
+    ///
+    /// **This is the conduit for `--linear-srgb` and nothing reads it yet.**
+    /// It is deliberately additive: it exists so the flag is parsed, validated
+    /// and carried to this struct without any colour decision being taken
+    /// inside the merge code. [`image_out::OutputSpace`] answers the two
+    /// questions the write path needs -- `wants_matrix()` and
+    /// `applies_curve()` -- which before this were welded together as a bare
+    /// `if srgb`, and that weld is why there was no way to ask for a stated
+    /// colorimetric space that is still linear.
+    ///
+    /// `srgb` above is retained and still authoritative for every existing
+    /// call site, so this field changes no behaviour until it is read.
+    pub space: image_out::OutputSpace,
     /// Emit at full sensor resolution, demosaiced, rather than binned 2x2.
     ///
     /// Interpolated output. Legitimate to look at and to measure *colour* on;
@@ -1270,18 +1285,145 @@ fn edge_tau(guide: &[u16]) -> f32 {
 ///
 /// It folds nothing but [`FocusStats`] — no flat ROI, no flux, no drift, no
 /// clip census — because the only thing read off it is `best_index`.
+/// Directory to write the bimodality diagnostic into, if asked.
+///
+/// The detector costs a `frames`-independent 12 B/px riding the guide's decode,
+/// but it is still work nobody needs on a normal render, so it is off unless
+/// this names somewhere to put the answer.
+pub const BIMODAL_DUMP_ENV: &str = "STREHL_BIMODAL_DUMP";
+
+fn bimodal_dump() -> Option<std::path::PathBuf> {
+    std::env::var_os(BIMODAL_DUMP_ENV).map(std::path::PathBuf::from)
+}
+
+/// Answer one question: **does the through-focus response go bimodal on the
+/// pixels the masked-support fix still fails?**
+///
+/// The two survivors are the tight bright rim at the silhouette and the blobs
+/// at the fix's coverage boundary, and §10.3 argued both are the same wall —
+/// a 13 px window near a silhouette does not *contain* enough background to
+/// reconstruct background from. If that is right, those pixels are exactly the
+/// ones whose through-focus curve has two peaks: one where the foreground came
+/// sharp, one where the background did. So this cross-tabulates prominence
+/// against `blend`, which is where the fix reaches.
+///
+/// A detector that fires everywhere is useless and a detector that fires
+/// nowhere kills the forward model, so both are reported rather than
+/// summarised into a single number.
+fn report_bimodality(
+    modes: &BimodalStats,
+    support: &LayerSupport,
+    guide: &[u16],
+    geom: PlaneGeometry,
+    dir: &Path,
+) -> Result<()> {
+    let prom = modes.second_mode_z();
+    let first = modes.first_mode_z();
+    let sep = modes.separation();
+    let blend = support.blend();
+    std::fs::create_dir_all(dir)
+        .with_context(|| format!("creating {}", dir.display()))?;
+
+    // Three populations, by how far the fix reaches. "Boundary" is the blob
+    // population: guards wanted it, the layer floor took it back.
+    let mut buckets = [(0usize, 0.0f64, 0usize); 3];
+    const FIRES: f32 = 1.5;
+    for i in 0..geom.pixels() {
+        let b = match blend[i] {
+            x if x <= 0.001 => 0,
+            x if x >= 0.999 => 2,
+            _ => 1,
+        };
+        buckets[b].0 += 1;
+        buckets[b].1 += f64::from(prom[i]);
+        if prom[i] >= FIRES {
+            buckets[b].2 += 1;
+        }
+    }
+
+    eprintln!("--- bimodality of the through-focus response (MEASURED) ---");
+    eprintln!(
+        "detector        : two strongest peaks >= {} frames apart in the NARROW (r={GUIDE_RADIUS}) \
+         response; significance of the SECOND peak in SDs of the pixel's own through-focus curve",
+        edgeaware::MODE_SEPARATION
+    );
+    eprintln!(
+        "cost            : {:.1} MB, constant in the {} frames folded",
+        modes.allocated_bytes() as f64 / 1e6,
+        modes.frames_folded()
+    );
+    for (b, name) in ["untreated", "boundary", "treated"].iter().enumerate() {
+        let (n, sum, fired) = buckets[b];
+        if n == 0 {
+            eprintln!("{name:<16}: none");
+            continue;
+        }
+        eprintln!(
+            "{name:<16}: {:>7.3}% of plane   mean second-mode z {:.3}   fires (>={FIRES}) on {:.2}% \
+             of them",
+            100.0 * n as f64 / geom.pixels() as f64,
+            sum / n as f64,
+            100.0 * fired as f64 / n as f64
+        );
+    }
+    eprintln!(
+        "  READ          : if the boundary and treated rows fire far above the untreated row, \
+         the two-layer model holds where the fix fails and unmixing is worth building. If every \
+         row is alike, the detector cannot discriminate and the model is wrong too."
+    );
+
+    // 16-bit, because the whole point is to look at it and an 8-bit
+    // prominence map would quantise the very gradient being judged.
+    let quant = |v: &[f32], scale: f32| -> Vec<u16> {
+        v.iter()
+            .map(|&x| (x * scale).clamp(0.0, 65535.0) as u16)
+            .collect()
+    };
+    let (w, h) = (geom.width as u32, geom.height as u32);
+    for (name, data) in [
+        ("bimodal-second-mode-z.tif", quant(&prom, 6553.5)),
+        ("bimodal-first-mode-z.tif", quant(&first, 6553.5)),
+        ("bimodal-mode-balance.tif", quant(&modes.mode_balance(), 65535.0)),
+        (
+            "bimodal-separation.tif",
+            sep.iter().map(|&s| s.saturating_mul(256)).collect(),
+        ),
+        ("edge-aware-blend.tif", quant(blend, 65535.0)),
+        // The depth map the whole argument is about. Without it "distance from
+        // the silhouette" has to be guessed from the render, and the halo is
+        // precisely the thing that makes the render an unreliable guide to
+        // where the silhouette is.
+        (
+            "guide-winner.tif",
+            guide.iter().map(|&k| k.saturating_mul(64)).collect(),
+        ),
+    ] {
+        let path = dir.join(name);
+        image_out::write_gray16(&path, w, h, &data)?;
+        eprintln!("wrote           : {}", path.display());
+    }
+    eprintln!();
+    Ok(())
+}
+
 fn guide_winner_field(
     paths: &[std::path::PathBuf],
     plan: &Plan,
     ctx: &Ctx<'_>,
     geom: PlaneGeometry,
-) -> Result<(Vec<u16>, Vec<f32>, Timings)> {
+    bimodal: bool,
+) -> Result<(Vec<u16>, Vec<f32>, Option<BimodalStats>, Timings)> {
     let out = paths
         .par_chunks(plan.chunk_len)
         .enumerate()
-        .map(|(ci, chunk)| -> Result<(FocusStats, Timings)> {
+        .map(|(ci, chunk)| -> Result<(FocusStats, Option<BimodalStats>, Timings)> {
             let first_index = (ci * plan.chunk_len) as u16;
             let mut stats = FocusStats::new(geom);
+            // Rides the guide's decode. The detector needs the NARROW field
+            // for the same reason the guide does: a 13 px window smears the
+            // foreground and background modes into a single peak, which is
+            // precisely the confusion under investigation.
+            let mut modes = bimodal.then(|| BimodalStats::new(geom));
             let mut scratch = Scratch::new_with_warp(geom, false, ctx.warps.is_some());
             let mut t = Timings::default();
             for (offset, path) in chunk.iter().enumerate() {
@@ -1296,19 +1438,32 @@ fn guide_winner_field(
                 stats
                     .fold(index, &scratch.reg)
                     .map_err(|e| map_dim_err(index, e))?;
+                if let Some(m) = modes.as_mut() {
+                    m.fold(index, &scratch.reg)
+                        .map_err(|e| anyhow::anyhow!("frame {index}: {e}"))?;
+                }
             }
-            Ok((stats, t))
+            Ok((stats, modes, t))
         })
         .reduce_with(|a, b| match (a, b) {
-            (Ok((mut sa, mut ta)), Ok((sb, tb))) => {
+            (Ok((mut sa, mut ma, mut ta)), Ok((sb, mb, tb))) => {
                 sa.absorb(&sb).map_err(|e| map_dim_err(0, e))?;
+                if let (Some(x), Some(y)) = (ma.as_mut(), mb.as_ref()) {
+                    x.absorb(y)
+                        .map_err(|e| anyhow::anyhow!("bimodality merge: {e}"))?;
+                }
                 ta.add(tb);
-                Ok((sa, ta))
+                Ok((sa, ma, ta))
             }
             (Err(e), _) | (Ok(_), Err(e)) => Err(e),
         })
         .expect("at least one chunk")?;
-    Ok((out.0.best_index().to_vec(), out.0.best_focus().to_vec(), out.1))
+    Ok((
+        out.0.best_index().to_vec(),
+        out.0.best_focus().to_vec(),
+        out.1,
+        out.2,
+    ))
 }
 
 struct Pass1 {
@@ -1929,7 +2084,8 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             measure_drift: false,
             ..ctx
         };
-        let (guide, guide_resp, gt) = guide_winner_field(&paths, &plan, &ctx_guide, geom)?;
+        let (guide, guide_resp, modes, gt) =
+            guide_winner_field(&paths, &plan, &ctx_guide, geom, bimodal_dump().is_some())?;
         let tau = edge_tau(&guide);
         let conf = edge_conf();
         let radii = [strehl_core::focus::WINDOW_RADIUS, REGULARISER_RADIUS];
@@ -1982,6 +2138,9 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
              and never elects an output pixel."
         );
         eprintln!();
+        if let (Some(m), Some(dir)) = (modes.as_ref(), bimodal_dump()) {
+            report_bimodality(m, &support, &guide, geom, &dir)?;
+        }
         (!support.is_empty()).then_some(support)
     } else {
         None
