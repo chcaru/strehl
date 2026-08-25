@@ -1014,3 +1014,114 @@ that still gives the depth step needed. And since the aberration term is
 the first thing to test by removal -- a bare-lens bracket of target RU1 at the
 same magnification would separate the converter's contribution from the prime's
 in a single afternoon. I would want that measurement before advising a purchase.
+
+---
+
+## 15. Correction to the owner's brief (`captures-needed.md` §29)
+
+ORCH asked two provenance questions before this goes to the photographer. Both
+answers weaken the brief, and one of them **inverts a piece of the advice**. This
+section is the correction.
+
+### 15.1 -- "one bracket or several?" **One. n = 1.**
+
+The 30.44 um system-optics figure is **a single ROI (`RU1`) in a single stack
+(`ruler`)**. `esf-tw-ru-vs-shipped.json` carries four `RU1` rows, but they are four
+*kernel arms* of the same ESF fit and `rise_ref_um` is identical across all four to
+16 significant figures (`30.441454828260458`). There is no replicate, no second ROI
+on the ruler, and no second bracket. **No sample standard deviation can be formed
+from it**, because there is no sample -- only an instrument floor (0.3859 um for
+this ROI).
+
+So my §14 phrase "one measurement, one printed target" was exact, and it should be
+carried into the brief in those words rather than softened.
+
+### 15.2 -- Uncertainty on 1.025x: random error is fine, the **systematic is disqualifying**
+
+Propagating the ESF floor as random error:
+
+| floor used | ratio | vs 1.000 (no aperture effect) | vs 1.964 (diffraction-limited) |
+|---|---|---|---|
+| 0.386 um (RU1's own) | 1.025 +/- 0.017 | 1.43 sigma -- **indistinguishable** | 53.9 sigma |
+| 0.670 um (paired-ESF scale) | 1.025 +/- 0.030 | 0.83 sigma -- **indistinguishable** | 31.0 sigma |
+
+Read that carefully, because the two columns say different things:
+
+- **"This rig is not diffraction-limited" is overwhelming** (31-54 sigma). That
+  survives.
+- **"Stopping down does not help" is not a measurement at all.** 1.025 sits within
+  1.4 sigma of 1.000 on random error -- but random error is not the limiting term.
+
+**The systematic confound is disqualifying, and the corpus already recorded it.**
+Fact 1183:
+
+> **NO APERTURE BRACKET ON A FIXED SUBJECT EXISTS ANYWHERE IN THE CORPUS -- ALL 23
+> STACKS WERE SURVEYED.** [...] the two stacks share ROI coordinates but differ by
+> **2.15 degrees in edge angle**, **1.91x in contrast**, and were shot **8 days
+> apart** -- so the `c` term does not cancel and the two-aperture ratio result
+> (1.025 against 1.9643 predicted) **FAILs weakly rather than cleanly**.
+
+My own paired instrument is trustworthy precisely because contrast cancels within a
+pair. M88's two-aperture comparison is **unpaired** -- different stacks -- so it
+does not. A 1.91x contrast difference on a contrast-sensitive rise estimate is a
+first-order confound, not a rounding error.
+
+**And I quoted it as if it were clean.** My §1 and §14 say "M88 measured the
+f/11 : f/5.6 edge-width ratio at 1.025x" without the audit attached. That is my
+error, upstream of ORCH's brief.
+
+### 15.3 -- The correction that matters: **"non-diffraction" was measured, "aperture-independent" was inferred**
+
+These are not synonyms, and they point opposite ways.
+
+- **Measured:** the system's blur is ~2.2x larger than diffraction alone predicts.
+  Two independent measurements agree -- M88's 31.70 um (2.25x) and my RU1's
+  30.44 um (2.16x), different data, 4% apart. **This is solid.**
+- **Inferred:** that the excess is *aperture-independent*. That rests entirely on
+  the confounded 1.025x ratio and on nothing else.
+
+The consequence is the part I want changed. **Most aberrations get better when you
+stop down** -- spherical, coma, astigmatism and field curvature all fall with
+aperture. So a large non-diffraction blur term, taken on its own, is an argument
+for stopping down **more**, not less, until diffraction overtakes it. Only the
+confounded ratio says otherwise.
+
+> **Therefore "open up, you are spending two stops for nothing" may be exactly
+> backwards, and it is the one item in the brief that would change how he shoots.**
+> I recommend withdrawing it, or reducing it to: *we cannot yet tell whether
+> stopping down helps you, and here is the one capture that would settle it.*
+
+### 15.4 -- A caveat neither of us has stated: the target's own edge
+
+`RU1` is a **printed** ruler. At the binned pitch of 10.24 um the measured rise is
+~3 px, and the ink-spread/dot structure of a printed edge is itself tens of um.
+**I have not subtracted the target's own unsharpness, and I cannot, without a
+proper edge.** So:
+
+> **76.6% is an upper bound on the optical share, not a point estimate.** Some
+> unknown part of the 30.44 um belongs to the piece of paper.
+
+Fact 1183 independently asks for "a hard edge (razor blade or chrome-on-glass)" --
+the corpus already knows the current target is not good enough for this.
+
+A second, smaller dependency: the **16.5% / 60.1% split within the optics** rests
+on M88's computed 14.11 um diffraction figure and its effective-f-number assumption
+at magnification. I have not re-derived it. The *total* 76.6% does not depend on
+it; the split does.
+
+### 15.5 -- What I will stand behind, in the owner's language
+
+| claim | status |
+|---|---|
+| The rig is ~2.2x softer than diffraction alone would make it | **Supported**, two independent measurements |
+| Most of the softness is optical, not software | **Supported as an upper bound** (76.6%), target unsharpness not subtracted |
+| Software cannot fix it by *selection*; only reconstruction can | **Supported** -- follows from the above |
+| f/11 is no sharper than f/5.6 | **NOT supported.** Confounded, unpaired, corpus-flagged weak FAIL |
+| Therefore shoot nearer wide open | **Withdraw.** May be backwards |
+| Shoot one bracket without the 2x teleconverter | **Stands** -- and is still the single most valuable capture |
+
+**Add one capture request:** an aperture bracket on a *fixed* subject -- same
+scene, same light, same session, f/5.6 / f/8 / f/11, ideally on a razor edge at
+3-7 degrees. Fact 1183 predicts rises of 13.65 / 11.97 / 10.37 um if diffraction
+governs. That single afternoon settles the "open up" question, retires a
+corpus-level gap flagged across all 23 stacks, and it costs him nothing but time.
