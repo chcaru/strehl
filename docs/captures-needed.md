@@ -63,22 +63,33 @@ alignment-smoothing terms are all off. What you have been looking at is
 to improve on, with essentially every improvement it has measured left switched
 off.
 
-**The standout is the halo correction, and I think it is the thing you will
-actually see.** Its own source notes record it removing **87.9 % of the halo on
-`bee-3-cpl`** and **84.6 % on `flower-bud-with-background-fern-cpl`** — two of
-your stacks, one setting, no retuning between them, which is the hardest version
-of that claim to make. The halo is the pale fringe that appears around a
-silhouette where the stacker had to choose between foreground and background; it
-is the artifact people complain about in every commercial stacker, and it is a
-*visible* defect in a way that noise is not. There is a documented trade-off:
-turning it up further removes essentially all of the halo but starts softening
-hairs and claws, so the shipped setting is deliberately the conservative end.
+**I then spent two hours promoting the wrong one, and the correction is worth
+recording because you would otherwise have read it here as fact.** I picked out
+the halo correction — the fringe around silhouettes — because its source notes
+record it removing **87.9 %** and **84.6 %** of the halo on two of your stacks. I
+wrote that it was the thing you would actually see, and put it first in tonight's
+measurement queue. Then one of my own agents checked the claim against the report
+it came from and found three things I had not read:
 
-And the reason nobody noticed it was off: **it has no command-line flag at all.**
-Searching `--help` for it returns nothing. The only way to switch it on is an
-environment variable that defaults to off. It has been sitting there, measured
-and tested, invisible from the interface. It is first in tonight's measurement
-queue and its before/after crops should be the first thing you look at.
+- **Those numbers are from a pipeline that does not ship.** They are crops of an
+  unaligned merge with the gate off. On the path you actually run, the figure is
+  **72.9 %** — I quoted a number fifteen points high.
+- **The report's author explicitly recommends against enabling it.** The relevant
+  section is *titled* "why I am telling you not to enable it." The fringe gets
+  replaced by a **smooth, milky, scalloped band**, and the author's verdict is
+  that **it looks worse**.
+- **It fires hardest where there is nothing to fix.** On a test scene with no
+  occlusion at all, it moves **100 %** of the pixels it looks at, against 39 % on
+  a real occluding edge — two and a half times more aggressive on a scene with no
+  halo in it. Its error against known truth rises monotonically with dose while
+  its apparent improvement does not.
+
+So the halo correction is off, and unlike the other five it is off **for a good
+reason**. I have withdrawn it from the top of the queue.
+
+**The one that does hold up is the chromatic-aberration correction**, and that is
+the section below. It is measured, it is confirmed by eye, and it is switched
+off.
 
 **What this needs from you: §12.** A static repeat burst is the arm that proves
 the gate *doesn't* fire when nothing moved. Right now that has to be simulated.
