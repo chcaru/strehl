@@ -2003,6 +2003,7 @@ namespaced `M87`.
 | P138 | **The unmix was not fitting an already-removed veil, but the intuition behind that guess is already measured.** Refuted: `P107` and `P132` record that the regression runs along the **frame** axis per pixel, upstream of the election, so the merge's 74.76% removal is invisible to the fit. Sustained in consequence: `P88` measures a **~2.9%** frame-borne veil present in every observation that no selector-side fix can reach. | The headroom available to unmixing on real captures is genuinely small, but because the election already took the reachable part, not because the fit is confused. Right consequence, wrong mechanism -- and the routing from `P132` (structure-scale limiter) is unchanged. | DERIVED |
 | P139 | **A discipline this report had already closed came back three sections later, and only a per-section control caught it.** `verify_s34` passed 90 checks on its first run; `control_s34`'s `N10` altered **one of two** prose instances of a figure and it stayed **GREEN**, because every prose assertion was written as presence rather than count -- the exact blind spot `P105` measured in §28 and `P113` recorded as **closed** at §29. Restoring exact occurrence counts turns `N10` red and raises the suite to 97 checks. | The finding is the regression, not the defect. A clean first run is grounds for suspicion rather than comfort: `verify_s33` failed 14 checks on its first run and was the sounder instrument for it. Closing a discipline in one section does not carry it into the next, so each section needs its own controls even -- especially -- when its verifier looks clean. | MEASURED |
 | P140 | **Appending §34 broke two verifiers that had been committed green; both defects were in the instrument, not the numbers.** `verify_s33` sliced its scope to end-of-file rather than to the §34 heading, so §34's legitimate citation of `55.321` pushed a count 2 -> 3; at the corrected scope every other count in §33 is unchanged. `verify_s32` re-counts scripts from disk by design, and tonight's new scripts moved its measurement denominator 97 -> 104 -- but both zeros re-derived as **0**, so `P124`'s claim survived and only its denominator was stale. | Neither was repaired by bumping an expectation; `verify_s33`'s own docstring forbids that as the road to a presence check. The harness prefix filter was **not** widened to shrink the denominator, since 0-of-N is stronger at larger N. A later section is the natural adversary of an earlier section's verifier, and re-running only the section under edit would have caught neither. | MEASURED |
+| P141 | **The verification shape this milestone runs on preserves exit codes: 180 of 180 observations reported the true code, on runs where the truncation trap demonstrably fired.** Six pipeline shapes against a process whose true code is 1, at 10/200/5000 lines, pre-cleared per arm, repeated 12 times. `Out-String`, `Out-String -Width`, `Select-Object -Last` and capture-first never lost it; the `-First` arms were corrupted in **12 of 12** runs. | Two corrections to the rule as I received it. The corrupted value is **&#8722;1, never 0** on `PSVersion 5.1.26100.9168`, so a probe looking specifically for 0 records a false INCONCLUSIVE -- mine did. And the corrupted-arm count varied **4 to 6 of 6** across 12 identical runs, which confirms the race framing over the count framing by direct observation. | MEASURED |
 
 ### Capture request
 
@@ -4500,7 +4501,7 @@ I hold no claim that needs retaking on this account.
 **A correction to my own first draft of this section,** because it is the
 kind that reads as evidence and is not. I first wrote that `--limit` "appears
 0 times across all 30 M87 scripts" and rested the finding on it. There are
-**128** scripts, not 30 — and, more to the point,
+**129** scripts, not 30 — and, more to the point,
 **0** of them invoke the binary. Every render here was hand-run
 from PowerShell, so a count over the Python tree is a true statement about a
 population that does not contain the thing being claimed. My own verifier
@@ -5186,6 +5187,46 @@ The generalisation is worth more than either repair: **a later section is the
 natural adversary of an earlier section's verifier.** A checker that passed
 when it was written is not a checker that passes now, and neither of these
 would have been caught by re-running only the section I was working on.
+
+**A last check on the instrument that certified everything above.** Every
+green reading in this milestone is `python <verifier> 2>&1 | Out-String`
+followed by `$LASTEXITCODE`, and the pass criterion is **0** -- which is the
+direction a lost exit code manufactures, so a genuine failure would read as a
+pass. The rule I was given says `Out-String` is safe because it must drain the
+stream. That rule had already been corrected once, so it was measured:
+`exitcode_probe.ps1` runs six pipeline shapes against a process whose true
+code is **1**, at 10, 200 and 5000 lines, each arm preceded by a `cmd /c
+exit 0` pre-clear so that a failure to set reads 0 rather than the previous
+arm's value, and `exitcode_repeat.ps1` repeats the whole thing 12 times.
+
+**The shapes this report relies on never lost the code: 180 of 180
+observations** of capture-first, `Out-String`, `Out-String -Width`,
+`Select-Object -Last`, and the exact gate shape used tonight all reported the
+true **1**, on runs where the trap demonstrably fired. So §29-§34's 599 checks
+rest on a shape that was verified rather than assumed.
+
+Two results worth passing back. First, **the trap reports −1, never 0**, on
+`PSVersion 5.1.26100.9168` -- in every corrupted observation across all 12
+runs. That matters for anyone re-testing it: a gate written `if ($code -ne 0)
+{ throw }` *catches* the trap here, while a probe that looks specifically for
+0 records a false INCONCLUSIVE. Mine did exactly that on its first run, and
+only refused to certify because the positive control was written as a gate
+rather than as a note.
+
+Second, **the race framing is confirmed against the count framing by direct
+observation**: across 12 identical runs the number of corrupted arms varied
+**4 to 6 of 6**, and a `−First` arm at 10 lines read the true code in one run
+and −1 in the next. Identical inputs disagreeing is what a race looks like;
+no count model can produce it.
+
+**My own error here, since it is the same class as `P139` and `P140`.** I
+registered the positive control as `expect = 0`, which encoded the *value* the
+orchestrator reported instead of the *property* under test -- that the
+observed code differs from the true one. On a host that corrupts to −1 the
+control could not fire, and the run came back `INCONCLUSIVE`. That is the
+correct failure mode and it is the only reason the mistake was cheap, but the
+expectation was inherited rather than derived, which is the habit this report
+keeps finding in me.
 
 Three limits, stated rather than buried.
 

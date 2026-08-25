@@ -1,0 +1,144 @@
+﻿{
+    "ps_version":  "5.1.26100.9168",
+    "true_code":  1,
+    "sizes":  [
+                  10,
+                  200,
+                  5000
+              ],
+    "trap_arms":  6,
+    "trap_hit":  6,
+    "corrupt_values":  [
+                           -1
+                       ],
+    "safe_arms":  15,
+    "safe_ok":  15,
+    "rows":  [
+                 {
+                     "n":  10,
+                     "arm":  "capture-first",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  10,
+                     "arm":  "Out-String",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  10,
+                     "arm":  "Out-String -Width",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  10,
+                     "arm":  "Select-Object -Last 3",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  10,
+                     "arm":  "Select-Object -First 3",
+                     "code":  -1,
+                     "corrupt":  true
+                 },
+                 {
+                     "n":  10,
+                     "arm":  "Select-String |-First 3",
+                     "code":  -1,
+                     "corrupt":  true
+                 },
+                 {
+                     "n":  200,
+                     "arm":  "capture-first",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  200,
+                     "arm":  "Out-String",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  200,
+                     "arm":  "Out-String -Width",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  200,
+                     "arm":  "Select-Object -Last 3",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  200,
+                     "arm":  "Select-Object -First 3",
+                     "code":  -1,
+                     "corrupt":  true
+                 },
+                 {
+                     "n":  200,
+                     "arm":  "Select-String |-First 3",
+                     "code":  -1,
+                     "corrupt":  true
+                 },
+                 {
+                     "n":  5000,
+                     "arm":  "capture-first",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  5000,
+                     "arm":  "Out-String",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  5000,
+                     "arm":  "Out-String -Width",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  5000,
+                     "arm":  "Select-Object -Last 3",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  5000,
+                     "arm":  "Select-Object -First 3",
+                     "code":  -1,
+                     "corrupt":  true
+                 },
+                 {
+                     "n":  5000,
+                     "arm":  "Select-String |-First 3",
+                     "code":  -1,
+                     "corrupt":  true
+                 },
+                 {
+                     "n":  10,
+                     "arm":  "GATE SHAPE (tonight)",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  200,
+                     "arm":  "GATE SHAPE (tonight)",
+                     "code":  1,
+                     "corrupt":  false
+                 },
+                 {
+                     "n":  5000,
+                     "arm":  "GATE SHAPE (tonight)",
+                     "code":  1,
+                     "corrupt":  false
+                 }
+             ]
+}

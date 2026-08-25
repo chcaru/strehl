@@ -62,7 +62,7 @@ def norm(s):
 
 
 def scope(raw):
-    """Section 34 body plus its own fact rows P133-P140.
+    """Section 34 body plus its own fact rows P133-P141.
 
     The body ends at the next top-level section if one exists.  Section 34 is
     currently last, so this is EOF today, but an unterminated slice is the
@@ -73,7 +73,7 @@ def scope(raw):
     nxt = re.search(r"^## 3[5-9]\.", raw[i + 6:], re.M)
     body = raw[i:i + 6 + nxt.start()] if nxt else raw[i:]
     rows = []
-    for pid in range(133, 141):
+    for pid in range(133, 142):
         m = re.search(rf"^\| P{pid} \|.*$", raw, re.M)
         if m:
             rows.append(m.group(0))
@@ -292,7 +292,28 @@ def main():
        "the script total has exactly one live site, and it is not in s34")
     ck(f"**{len(allp)}**" not in sc, "s34 does not restate the script total")
 
-    for pid in range(133, 141):
+    # P141: re-derived from the probe's own aggregate, not transcribed.
+    print("== P141: exit-code shape re-derived ==")
+    xp = json.loads((DATA / "exitcode-repeat.json").read_text(encoding="utf-8-sig"))
+    ck(xp["safe_ok_total"] == xp["safe_observations"],
+       f"safe shapes {xp['safe_ok_total']}/{xp['safe_observations']}")
+    ck(xp["runs_with_safe_loss"] == 0, "no run lost the code on a safe shape")
+    ck(xp["runs_with_a_trap"] == xp["repeats"],
+       "the positive control fired in every run, so the probe is commissioned")
+    ck(xp["nondeterministic"], "corrupted-arm count really does vary run to run")
+    ck(xp["corrupt_values"] == [-1],
+       f"the corrupted value is -1 and only -1 (saw {xp['corrupt_values']})")
+    ck(0 not in xp["corrupt_values"], "the trap never reported 0 on this host")
+    ck(f"{xp['safe_ok_total']} of {xp['safe_observations']}" in sc,
+       "the safe-observation tally is stated in prose")
+    ck(f"{xp['runs_with_a_trap']} of {xp['repeats']}" in sc,
+       "the commissioning tally is stated in prose")
+    ck(f"{xp['trap_hit_min']} to {xp['trap_hit_max']} of {xp['trap_arms_per_run']}"
+       in sc, "the run-to-run variation is stated in prose")
+    ck(xp["ps_version"] in sc, "the PowerShell version is recorded")
+    ck(str(xp["repeats"]) in sc, "the repeat count is stated in prose")
+
+    for pid in range(133, 142):
         ck(f"| P{pid} |" in raw, f"fact P{pid} present")
 
     print(f"\nverify_s34: {checks[0]} checks, {len(fails)} failures")

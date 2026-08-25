@@ -1,0 +1,152 @@
+﻿{
+    "ps_version":  "5.1.26100.9168",
+    "repeats":  12,
+    "trap_hit_per_run":  [
+                             6,
+                             6,
+                             5,
+                             6,
+                             4,
+                             6,
+                             6,
+                             6,
+                             6,
+                             6,
+                             5,
+                             6
+                         ],
+    "trap_hit_min":  4,
+    "trap_hit_max":  6,
+    "trap_arms_per_run":  6,
+    "nondeterministic":  true,
+    "runs_with_a_trap":  12,
+    "corrupt_values":  [
+                           -1
+                       ],
+    "safe_arms_per_run":  15,
+    "safe_observations":  180,
+    "safe_ok_total":  180,
+    "runs_with_safe_loss":  0,
+    "runs":  [
+                 {
+                     "run":  1,
+                     "trap_arms":  6,
+                     "trap_hit":  6,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 },
+                 {
+                     "run":  2,
+                     "trap_arms":  6,
+                     "trap_hit":  6,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 },
+                 {
+                     "run":  3,
+                     "trap_arms":  6,
+                     "trap_hit":  5,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 },
+                 {
+                     "run":  4,
+                     "trap_arms":  6,
+                     "trap_hit":  6,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 },
+                 {
+                     "run":  5,
+                     "trap_arms":  6,
+                     "trap_hit":  4,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 },
+                 {
+                     "run":  6,
+                     "trap_arms":  6,
+                     "trap_hit":  6,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 },
+                 {
+                     "run":  7,
+                     "trap_arms":  6,
+                     "trap_hit":  6,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 },
+                 {
+                     "run":  8,
+                     "trap_arms":  6,
+                     "trap_hit":  6,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 },
+                 {
+                     "run":  9,
+                     "trap_arms":  6,
+                     "trap_hit":  6,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 },
+                 {
+                     "run":  10,
+                     "trap_arms":  6,
+                     "trap_hit":  6,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 },
+                 {
+                     "run":  11,
+                     "trap_arms":  6,
+                     "trap_hit":  5,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 },
+                 {
+                     "run":  12,
+                     "trap_arms":  6,
+                     "trap_hit":  6,
+                     "safe_arms":  15,
+                     "safe_ok":  15,
+                     "corrupt_values":  [
+                                            -1
+                                        ]
+                 }
+             ]
+}

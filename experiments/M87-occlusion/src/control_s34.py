@@ -30,7 +30,8 @@ ROOT = HERE.parents[2]
 DOC = ROOT / "docs" / "research" / "M87-occlusion.md"
 DATA = HERE.parents[0] / "data"
 TMP = pathlib.Path(tempfile.gettempdir())
-JSONS = ["100-gate-veildepth.json", "101-attrib.json", "102-robust.json"]
+JSONS = ["100-gate-veildepth.json", "101-attrib.json", "102-robust.json",
+         "exitcode-repeat.json"]
 
 
 def backup():
@@ -75,7 +76,9 @@ def mutate_doc_once(old, new):
 
 def mutate_json(name, path, value):
     f = DATA / name
-    d = json.loads(f.read_text(encoding="utf-8"))
+    # utf-8-sig: exitcode-repeat.json is written by PowerShell 5.1's
+    # Set-Content -Encoding utf8, which emits a BOM.
+    d = json.loads(f.read_text(encoding="utf-8-sig"))
     node = d
     for k in path[:-1]:
         if k not in node:
@@ -133,6 +136,20 @@ def main():
         "(instance-blindness probe)", "RED",
         lambda: mutate_doc_once("0.0572", "0.9572"))
 
+    # P141 operands.  N12 is the one that matters: it makes the probe's own
+    # positive control silent, which is the state in which "every safe shape
+    # passed" means nothing.  A harness that stays GREEN through N12 would be
+    # certifying the exit-code claim on an uncommissioned instrument.
+    arm("N11", "a safe pipeline shape recorded as having lost the code", "RED",
+        lambda: mutate_json("exitcode-repeat.json", ["safe_ok_total"], 179))
+    arm("N12", "the exit-code probe's positive control silenced", "RED",
+        lambda: mutate_json("exitcode-repeat.json", ["runs_with_a_trap"], 0))
+    arm("N13", "corrupted value relabelled 0, contradicting the -1 finding",
+        "RED", lambda: mutate_json("exitcode-repeat.json",
+                                   ["corrupt_values"], [0]))
+    arm("N14", "run-to-run variation denied", "RED",
+        lambda: mutate_json("exitcode-repeat.json", ["nondeterministic"], False))
+
     for tag, why, expect, fn in arms:
         restore()
         n = fn()
@@ -155,9 +172,9 @@ def main():
 
     restore()
     colour, out = run()
-    print(f"  N11  {colour:5s} {'ok' if colour == 'GREEN' else 'DISAGREES'}"
+    print(f"  N15  {colour:5s} {'ok' if colour == 'GREEN' else 'DISAGREES'}"
           f"        restored, no mutation (GREEN-expected arm)")
-    results.append(("N11", colour, "GREEN", colour == "GREEN"))
+    results.append(("N15", colour, "GREEN", colour == "GREEN"))
 
     bad = [r for r in results if not r[3]]
     print(f"\ncontrol_s34: {len(results)} arms, {len(bad)} disagreements")
