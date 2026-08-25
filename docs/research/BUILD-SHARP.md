@@ -578,3 +578,138 @@ python experiments/BUILD-SHARP/src/worst_tile.py --subject couch-fibers-cpl --to
 
 Pictures: `<subject>\guard-full-{BEFORE,AFTER}.png`,
 `<subject>\guard-crop-roi{0,1,2}-PAIR.png`, `<subject>\guard-worst{0,1}-PAIR.png`.
+
+---
+
+## 9. Architecture decision — compliance, and one API request
+
+ORCH ruled `through_focus.rs` a single shared seam owned by BUILD-HALO, consumed
+read-only by me. **Complied with, and there is nothing to unwind:**
+`git log -- crates/strehl-core/src/through_focus.rs` shows no BUILD-SHARP commit and
+the file is clean in the working tree. `restore.rs` duplicates none of its
+statistics — it is a pure transfer-function module over resampling kernels and does
+not touch the focus axis at all.
+
+### 9.1 Two of ORCH's premises are already true, which de-risks the decision
+
+**The two-pass decision is not a change — it is a ratification, and the count is
+three.** The shipped pipeline already runs *pass zero* (depth guide for the
+edge-aware election), *pass one* (regularised winner field) and *pass two* (gated
+average). Measured on `couch-fibers-cpl`, 299 frames:
+
+| pass | decode, summed across workers | per frame |
+|---|---|---|
+| zero | 23.7 s | — |
+| one | 20.9 s | 69.9 ms |
+| two | 20.1 s | 67.1 ms |
+
+So "a second pass is cheap" is not a projection here, it is a measurement that has
+already been paid three times. Nobody has to be talked into it.
+
+**And `ThroughFocus` is closer to what both lanes need than the brief implies.** It
+already carries `triple` (the fine response at `k*-1, k*, k*+1`), `floor`, `top_val`,
+`top_idx`, `far_val`/`far_idx`, and the posterior sums `z`/`w`. I needed to add
+nothing to it to state my request below.
+
+### 9.2 The one thing I want, and it costs no storage and no fold time
+
+The Wiener estimator self-calibrates the per-frame OTF from **the width of the
+through-focus response curve** — the brief's own instruction not to make a lens model
+load-bearing. That width is already computed inside `through_focus.rs` and then
+thrown away.
+
+`subframe_deficit` fits a log-domain quadratic through the baseline-subtracted triple
+and forms `a = 0.5 * (ln l + ln r) - ln c`. It uses `a` only to bound the height
+deficit and discards it. **That `a` is the curve width**: for a locally Gaussian
+through-focus response, `f(k) ~ f_peak * exp(a * (k - k*)^2)` with `a < 0`, so the
+width in frames is `sigma_k = 1 / sqrt(-2a)`.
+
+Nothing else in the file exposes it. `bimodality_sigma` is a peak *height* above the
+floor, not a width. So the exact request, for ORCH to route to BUILD-HALO:
+
+```rust
+// In `impl ThroughFocus`, alongside `subframe_deficit`.
+
+/// Curvature of the log-domain through-focus fit, in reciprocal frames squared.
+///
+/// Strictly negative where it exists. The local through-focus response is
+/// `f(k) ~ f_peak * exp(a * (k - k*)^2)`, so `1 / sqrt(-2a)` is the curve's
+/// Gaussian width in frames — the local PSF scale as sampled by the focus
+/// operator, which is what a self-calibrated OTF needs.
+///
+/// `None` under exactly the conditions `subframe_deficit` returns `None`:
+/// incomplete triple, non-positive baseline-subtracted sample, or a fit that
+/// is not concave.
+pub fn log_curvature(&self, i: usize) -> Option<f32>;
+```
+
+**Please implement it by extracting the shared fit rather than by copying it**, so
+the two cannot drift:
+
+```rust
+/// The concave log-domain quadratic through the baseline-subtracted triple,
+/// as `(a, b)` in `q(x) = a x^2 + b x + ln c`. The single fit behind both
+/// `subframe_deficit` and `log_curvature`.
+fn log_fit(&self, i: usize) -> Option<(f32, f32)>;
+```
+
+`subframe_deficit` then becomes `self.log_fit(i).map(|(a, b)| 1.0 - (b * b / (4.0 *
+a)).exp())` and is unchanged in behaviour — which a byte-freeze row will confirm.
+
+**Cost: zero.** Pure function of `triple` and `floor`, both already stored. No new
+per-pixel bytes, no change to `fold` or `absorb`, no effect on
+`bytes_per_pixel()`. It cannot perturb bimodality.
+
+### 9.3 Priority: LOW. Please do not let this preempt bimodality
+
+I have to be straight about this rather than bank the API on momentum. **The Wiener
+estimator is a measured negative at this capture's SNR** (§4): its gain cap never
+binds, it cannot undo even our own resampling kernel whose transfer function we know
+exactly, and it scores +0.27 um pooled on a 35.69 um rise. It does not ship.
+
+So `log_curvature` is **not load-bearing for anything that currently ships.** It is
+what the estimator would need *if* the SNR moved — which §5.5 says it can, by a
+factor of 9.6x in contrast, from a capture change. Schedule it at the bottom of
+BUILD-HALO's queue. If it is not there by morning, nothing of mine is blocked.
+
+If ORCH would rather I not have it at all until the Wiener earns its place, that is a
+reasonable call and I will not argue it.
+
+### 9.4 The decision ORCH should make NOW, while the merge is being rewritten once
+
+ORCH's own reason for deciding two-pass now — *"deciding this late means rewriting
+the merge once"* — applies with more force to **gather order** (§5.1), and that one
+has a much larger payoff:
+
+> Gathering on the CFA quad plane puts a feature at 0.25 cycles/**output**-px at 0.5
+> cycles/plane-px, where the kernel MTF is **0.6251**. Demosaicing each frame before
+> the gather puts it at **0.9402** — **1.50x more contrast at the top of the real
+> detail band**, optically free.
+
+That is larger than every merge-side sharpness change in the corpus. **If the merge
+is rewritten for two-pass and the gather order is not moved at the same time, it gets
+rewritten twice.** This is the moment.
+
+I said "for free" in §5.1 about the *optics*. The *compute* is not free and I have
+now measured it rather than estimating it:
+
+| | measured |
+|---|---|
+| Malvar-He-Cutler demosaic, 7032x4688 | **549 ms/frame** best, 724 ms mean |
+| 299 frames, summed across workers | **216 s** |
+| for scale: one decode pass | 20 s summed, 67 ms/frame |
+
+So a per-frame demosaic costs about **8x a decode**, and the gather itself becomes
+**3x** its current work (three full-resolution planes instead of one quad plane).
+Against a ~170 s render wall, expect roughly +20 s wall from the demosaic plus the
+gather multiplier. That is the honest price of the 1.50x.
+
+Two notes for whoever costs this: `demosaic_bilinear_row` already exists and is much
+cheaper — whether a bilinear gather-time demosaic keeps the MTF win is **untested and
+I am not claiming it does**, but it is the obvious first thing to benchmark if cost
+is the blocker. And `strehl_core::restore::gather_mtf` now makes the whole claim
+measurable rather than argued, which is what turned M95 P56 from ARGUED into a
+number.
+
+Bench: `pin-70934bb/crates/strehl-cli/examples/bs_demosaic_cost.rs` (pin tree only —
+it touches nothing shared).
