@@ -526,24 +526,77 @@ fn cycle_floor(edges: &[AlignEdge], geom: PlaneGeometry) -> Option<f64> {
 /// sidecar carries an error at all.
 /// Read the M110 track-smoothness prior from the environment.
 ///
-/// Off by default: `STREHL_SMOOTH` unset reproduces the free solve bit-exactly,
-/// because `GlobalOptions::smooth` stays at 0.0 and the penalty block is gated
-/// on `smooth > 0.0`. `STREHL_SMOOTH_HUBER` sets the robust threshold in plane
-/// px and defaults to 1.0, which is fact 1435's measured p90 second difference
-/// -- so the prior stays quadratic on the noise it is meant to suppress and
-/// goes linear on the rare real step (a bumped tripod), which then survives.
+/// **ON by default at `lambda = 1.0` since BUILD-SHARP.** `STREHL_SMOOTH=0` or
+/// `STREHL_SMOOTH=off` restores the free solve bit-exactly.
+/// `STREHL_SMOOTH_HUBER` sets the robust threshold in plane px and defaults to
+/// 1.0, which is fact 1435's measured p90 second difference -- so the prior
+/// stays quadratic on the noise it is meant to suppress and goes linear on the
+/// rare real step (a bumped tripod), which then survives.
 ///
-/// It is an env var and not a default because M110 measured the win on the
-/// solve but could not show it in a render; see `docs/research/M110-track-jitter.md`.
+/// # Why the default moved
+///
+/// M110 built this prior, measured jitter p90 down 2.05x, and then left it OFF
+/// because it "could not show the win in a render"
+/// (`docs/research/M110-track-jitter.md` B6). That was the right call on the
+/// evidence M110 had, and it was missing one measurement: M110 scored jitter as
+/// the **second difference of the placement track in the solver's own metric**,
+/// which is a property of the solve, not of anything the merge consumes.
+///
+/// BUILD-SHARP measured the quantity the merge actually consumes. Gather two
+/// frames **through their own solved placements** and re-run `align_pair` on the
+/// results: a perfect solve returns the identity, and what it returns instead is
+/// the residual misregistration between two frames the merge will choose
+/// between, pixel by pixel. On `bee-2-cpl` (299 frames, worst-corner plane px,
+/// 96 tiles, 298 pairs, self-control 0.0014 px):
+///
+/// | span | UNALIGNED | `lambda = 0` (was default) | `lambda = 1` (now) |
+/// | --- | --- | --- | --- |
+/// | 1 | 0.6136 | **0.7849** | **0.5883** |
+/// | 2 | 1.6661 | 1.0061 | 0.9575 |
+/// | 4 | 4.1034 | 1.5630 | 1.5152 |
+/// | 8 | 8.3130 | 2.2407 | 2.2849 |
+/// | 16 | 17.7718 | 3.8123 | 3.7415 |
+///
+/// Read span 1. **The free solve was worse than not aligning at all** between
+/// adjacent frames -- 0.7849 px against 0.6136 px -- because at span 1 the true
+/// inter-frame motion is smaller than the estimator's own noise, so the ladder
+/// fits noise and the *difference* of two placement errors exceeds the motion
+/// it removed. That is precisely the regime a smoothness prior is for, and it is
+/// invisible to any end-to-end gauge: at span 16 the free solve already reduces
+/// 17.77 px to 3.81 px, which is why every headline alignment number in this
+/// corpus reads "usable". The prior takes span 1 below the unaligned control and
+/// leaves every longer span unharmed or better (AGENTS rule 6: name the gauge).
+///
+/// `lambda = 3` reads slightly lower still at span 1 (0.5577) and is **not**
+/// chosen: M110 measured the robust prior's real-step recovery degrading to
+/// 83.50% at `lambda = 2` and 61.75% at `lambda = 3`, so a bumped tripod stops
+/// surviving. `lambda* = 1` is M110's own selected value and it is kept.
+///
+/// # What this does not claim
+///
+/// It does **not** claim a visible sharpening. BUILD-SHARP's paired ESF rise
+/// (M88b's instrument, floor 0.67 um) could not resolve the change on the two
+/// admitted ROIs available, and the honest reading of the blur budget says why:
+/// the merge's residual misregistration enters where frames are averaged, and at
+/// a high-contrast edge the gate admits almost nothing to average. The prior is
+/// defended as **a strictly better registration at the span the merge selects
+/// across, at no cost** -- not as a sharpness fix.
 fn apply_smooth_env(opts: &mut GlobalOptions) {
-    let Ok(v) = std::env::var("STREHL_SMOOTH") else {
-        return;
+    let lambda = match std::env::var("STREHL_SMOOTH") {
+        Err(_) => DEFAULT_SMOOTH_LAMBDA,
+        Ok(v) if v.trim().eq_ignore_ascii_case("off") => 0.0,
+        Ok(v) => match v.trim().parse::<f64>() {
+            Ok(x) if x.is_finite() && x >= 0.0 => x,
+            _ => {
+                eprintln!(
+                    "STREHL_SMOOTH={v:?} is not a non-negative number; \
+                     using the default {DEFAULT_SMOOTH_LAMBDA}"
+                );
+                DEFAULT_SMOOTH_LAMBDA
+            }
+        },
     };
-    let Ok(lambda) = v.trim().parse::<f64>() else {
-        eprintln!("STREHL_SMOOTH={v:?} is not a number; ignoring");
-        return;
-    };
-    if !(lambda.is_finite() && lambda > 0.0) {
+    if lambda <= 0.0 {
         return;
     }
     opts.smooth = lambda;
@@ -554,7 +607,7 @@ fn apply_smooth_env(opts: &mut GlobalOptions) {
             .parse::<f64>()
             .ok()
             .filter(|x| x.is_finite() && *x > 0.0),
-        Err(_) => Some(1.0),
+        Err(_) => Some(DEFAULT_SMOOTH_HUBER_PX),
     };
     eprintln!(
         "align: track prior on, lambda={lambda} huber={:?} px",
@@ -931,6 +984,28 @@ pub fn sidecar_path(dir: &Path, config: u64) -> PathBuf {
 /// variable here reopens the defect [`solve_config_key`] exists to close.**
 const SOLVE_ENV: [&str; 2] = ["STREHL_SMOOTH", "STREHL_SMOOTH_HUBER"];
 
+/// Track-smoothness prior strength when `STREHL_SMOOTH` is unset.
+///
+/// M110's selected `lambda* = 1`. See [`apply_smooth_env`] for the merge-side
+/// residual measurement that moved this off zero.
+const DEFAULT_SMOOTH_LAMBDA: f64 = 1.0;
+
+/// Robust threshold for the track prior, plane px, when `STREHL_SMOOTH_HUBER`
+/// is unset. Fact 1435's measured p90 second difference (1.0772 px), rounded
+/// down so ~90% of observed jitter stays in the quadratic regime and only the
+/// tail -- a real step, such as a bumped tripod -- goes linear and survives.
+const DEFAULT_SMOOTH_HUBER_PX: f64 = 1.0;
+
+/// Cache-key generation. **Bump this whenever a solve default changes.**
+///
+/// The env vars in [`SOLVE_ENV`] are hashed by their *value*, and "unset" is a
+/// value. Moving [`DEFAULT_SMOOTH_LAMBDA`] off zero changed what "unset" means
+/// without changing what it hashes to, so every sidecar cached before
+/// BUILD-SHARP would have been served for a request it no longer answers --
+/// silently, because `check_stack` only compares the frame set (M97). The
+/// generation byte closes that: old entries miss and are re-solved.
+const SOLVE_GENERATION: u32 = 2;
+
 /// Digest of every input to [`solve_map`] that can change the warps it returns.
 ///
 /// **Why this exists.** The cache key used to be the capture path alone, so two
@@ -950,6 +1025,7 @@ const SOLVE_ENV: [&str; 2] = ["STREHL_SMOOTH", "STREHL_SMOOTH_HUBER"];
 /// arguments and environment alike.
 fn solve_config_key(reference: usize, spans: &[usize], resampler: Resampler) -> u64 {
     let mut h = DefaultHasher::new();
+    SOLVE_GENERATION.hash(&mut h);
     reference.hash(&mut h);
     spans.hash(&mut h);
     // `Resampler` is not `Hash`; its `Debug` is one token per variant and adding
