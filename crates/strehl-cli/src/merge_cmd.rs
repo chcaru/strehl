@@ -40,6 +40,7 @@ use std::time::Instant;
 use anyhow::{Context, Result, bail, ensure};
 use rayon::prelude::*;
 use strehl_core::photometric::{self, Flux, PhotometricMap};
+use strehl_core::align::Resampler;
 use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
 use strehl_core::color::{self, AppliedExposure, Exposure};
 use strehl_core::flat_ratio::{self, FrameFlat};
@@ -166,6 +167,19 @@ pub struct MergeOptions {
     /// Tail fraction per channel for the "do not trust" union mask. M34 used
     /// 0.05 and measured a 14.278% union.
     pub confidence_tail: f64,
+    /// Interpolator each frame is gathered with when the merge registers.
+    ///
+    /// **Default [`align_cmd::DEFAULT_RESAMPLER_NAME`], which is the literal
+    /// `merge_config` used to return**, so a merge that does not pass
+    /// `--resampler` is byte-identical to every merge rendered before this
+    /// field existed. Whether the default should move is pre-registered in
+    /// `docs/research/ORCH-kernel-decision.md` and is not this field's decision.
+    ///
+    /// It reaches pixels only through the **solve** path: with
+    /// [`WARPMAP_ENV`] set the named sidecar carries its own resampler and wins,
+    /// which [`alignment_for`] says out loud rather than silently ignoring the
+    /// flag.
+    pub resampler: Resampler,
 }
 
 /// The outcome of solving a measured gate ladder for a target mean `n_eff`.
@@ -1134,9 +1148,21 @@ pub const WARPMAP_ENV: &str = "STREHL_WARPMAP";
 
 /// Resolve the bracket's registration: an explicitly named sidecar if
 /// [`WARPMAP_ENV`] is set, otherwise the normal discover-or-solve path.
-fn alignment_for(dir: &Path, paths: &[PathBuf]) -> Result<Option<(WarpMap, &'static str)>> {
+///
+/// `resampler` is what `--resampler` asked for. It reaches the gather only
+/// through the solve path, because a named sidecar already records the kernel it
+/// was solved with and that record wins — the merge gathers with
+/// `map.resampler()`. That is deliberate (it is the method M118's D4 depends
+/// on), so the disagreement is **reported** rather than either silently
+/// dropped or turned into a refusal that would break an existing measurement
+/// route.
+fn alignment_for(
+    dir: &Path,
+    paths: &[PathBuf],
+    resampler: Resampler,
+) -> Result<Option<(WarpMap, &'static str)>> {
     let Some(explicit) = std::env::var_os(WARPMAP_ENV) else {
-        return align_cmd::load_or_solve(dir, paths, 0);
+        return align_cmd::load_or_solve(dir, paths, 0, resampler);
     };
     // `STREHL_ALIGN=0` still wins, so an unregistered baseline can be rendered
     // without first unsetting the override.
@@ -1168,6 +1194,18 @@ fn alignment_for(dir: &Path, paths: &[PathBuf]) -> Result<Option<(WarpMap, &'sta
         map.len(),
         paths.len()
     );
+    // Never silently. The sidecar's kernel is the one that gathers, so if it is
+    // not the one asked for, say which won: a flag that parses and is then
+    // ignored is indistinguishable from a flag that works, and this project has
+    // shipped that failure before.
+    if map.resampler() != resampler {
+        eprintln!(
+            "alignment      : --resampler asked for {resampler:?} but the sidecar named by \
+             {WARPMAP_ENV} was solved with {:?}; THE SIDECAR WINS. Unset {WARPMAP_ENV} to \
+             let --resampler choose.",
+            map.resampler()
+        );
+    }
     Ok(Some((map, "sidecar-override")))
 }
 
@@ -1513,7 +1551,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     // same geometry. M86 fact: every bracket in this corpus drifts far past
     // T_usable, so this is on by default; `STREHL_ALIGN=0` turns it off.
     let t_align = Instant::now();
-    let alignment = alignment_for(&opts.dir, &paths)?;
+    let alignment = alignment_for(&opts.dir, &paths, opts.resampler)?;
     let alignment = alignment.map(|(m, how)| {
         let (m, k) = align_cmd::cover_or_explain(m);
         (m, how, k)

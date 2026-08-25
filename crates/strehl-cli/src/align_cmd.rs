@@ -29,7 +29,9 @@ use strehl_core::align::{
     solve_global, tile_grid, total_drift,
 };
 use strehl_core::plane::{PlaneGeometry, green_luma};
-use strehl_core::warpmap::{FrameWarp, Provenance, StackIdentity, WarpMap};
+use strehl_core::warpmap::{
+    FrameWarp, Provenance, RESAMPLER_NAMES, StackIdentity, WarpMap, resampler_from_name,
+};
 
 /// Brackets whose subject is known not to be normal to the optical axis.
 ///
@@ -44,6 +46,39 @@ const TILTED_SUBJECTS: &[&str] = &["highly-angled-ruler-mm-cpl"];
 /// Kept identical to `AlignArgs::spans`' default so that a sidecar written by
 /// `strehl align` and one solved inside the merge are the same product.
 pub const DEFAULT_SPANS: [usize; 9] = [1, 2, 4, 8, 16, 32, 64, 96, 128];
+
+/// The interpolator both commands gather with unless `--resampler` says
+/// otherwise, as a name so that `strehl align` and `strehl stack` can share one
+/// clap default.
+///
+/// **This value is not a style choice and moving it is not this constant's
+/// decision to make.** Every quality number in the corpus was measured through
+/// it, and whether it should become `lanczos3` is pre-registered as a GO/NO-GO
+/// in `docs/research/ORCH-kernel-decision.md`, whose criterion **G3** is the
+/// flag this constant now backs.
+pub const DEFAULT_RESAMPLER_NAME: &str = "catmull-rom";
+
+/// Parse a `--resampler` name, for **both** `strehl align` and `strehl stack`.
+///
+/// One parser and one vocabulary, delegating to the same
+/// [`resampler_from_name`] the sidecar format round-trips through. This was a
+/// private `match` inside [`AlignArgs`] until M124, and it had already drifted
+/// from the sidecar's list: `lanczos2` was a shipped variant and a legal
+/// sidecar spelling that **no command line could reach** (M118 §7, Y6).
+///
+/// An unknown name is an error that **names the valid choices**, never a quiet
+/// fall back to the default. A resampler that silently is not the one asked for
+/// makes every comparison run through it unfalsifiable, which is the defect
+/// M118's D4 records for the sidecar path.
+pub fn parse_resampler(name: &str) -> Result<Resampler> {
+    match resampler_from_name(name) {
+        Some(r) => Ok(r),
+        None => bail!(
+            "unknown resampler {name:?}; valid choices are {}",
+            RESAMPLER_NAMES.join(", ")
+        ),
+    }
+}
 
 #[derive(Debug, clap::Args)]
 pub struct AlignArgs {
@@ -78,10 +113,16 @@ pub struct AlignArgs {
     #[arg(long, default_value_t = 0)]
     pub threads: usize,
 
-    /// Interpolator recorded in the sidecar for the merge to gather with.
+    /// Interpolator recorded in the sidecar for the merge to gather with:
+    /// nearest, bilinear, catmull-rom, lanczos2 or lanczos3.
     ///
     /// See `WarpMap::set_resampler` for exactly how evidenced this default is.
-    #[arg(long, default_value = "catmull-rom")]
+    ///
+    /// COST: the sharper kernels are not free. Measured as a BOUND on a loaded
+    /// machine (M118 Y10), lanczos3 costs roughly 2.9x-3.9x the default's merge
+    /// wall clock and lanczos2 2.3x-2.9x. nearest and bilinear are cheaper and
+    /// worse.
+    #[arg(long, default_value = DEFAULT_RESAMPLER_NAME)]
     pub resampler: String,
 
     /// Solve a bracket flagged as tilted anyway, knowing the model is wrong.
@@ -148,13 +189,7 @@ impl AlignArgs {
     }
 
     fn resampler(&self) -> Result<Resampler> {
-        Ok(match self.resampler.as_str() {
-            "nearest" => Resampler::Nearest,
-            "bilinear" => Resampler::Bilinear,
-            "catmull-rom" => Resampler::CatmullRom,
-            "lanczos3" => Resampler::Lanczos3,
-            other => bail!("unknown resampler {other:?}"),
-        })
+        parse_resampler(&self.resampler)
     }
 }
 
@@ -929,12 +964,16 @@ fn solve_config_key(reference: usize, spans: &[usize], resampler: Resampler) -> 
 /// The configuration the merge solves with, and therefore the only one it may
 /// read from cache. Returned as one value so the lookup and the solve cannot
 /// drift apart.
-fn merge_config(n: usize) -> (usize, Vec<usize>, Resampler) {
-    (
-        merge_reference(n),
-        DEFAULT_SPANS.to_vec(),
-        Resampler::CatmullRom,
-    )
+///
+/// `resampler` used to be a `Resampler::CatmullRom` **literal** here, which
+/// made the merge's kernel the one thing about the gather no command line could
+/// change: the shipped `Lanczos2` variant was unreachable except by hand-editing
+/// a sidecar, and a default move would have imposed a 2.9x-3.9x cost with no way
+/// to decline it (M118 §7; ORCH's criterion G3). The literal's value now lives
+/// in [`DEFAULT_RESAMPLER_NAME`] as the flag's default, so the shipped merge is
+/// unchanged and the choice is declinable.
+fn merge_config(n: usize, resampler: Resampler) -> (usize, Vec<usize>, Resampler) {
+    (merge_reference(n), DEFAULT_SPANS.to_vec(), resampler)
 }
 
 /// Root of the warp-map cache: `%LOCALAPPDATA%\strehl\warpmaps` on Windows,
@@ -1063,10 +1102,16 @@ pub fn solve_map(
 /// register, distinct from a failure. An existing sidecar whose identity does
 /// not match the bracket is **not** silently reused; it is re-solved, because a
 /// warp map from another stack is worse than none.
+///
+/// `resampler` is the kernel the merge will gather with. It is an argument
+/// rather than a constant so `strehl stack --resampler` can reach it; it enters
+/// [`solve_config_key`], so two kernels occupy two cache entries and neither can
+/// be served the other's warps.
 pub fn load_or_solve(
     dir: &Path,
     paths: &[PathBuf],
     threads: usize,
+    resampler: Resampler,
 ) -> Result<Option<(WarpMap, &'static str)>> {
     if !align_enabled() {
         return Ok(None);
@@ -1085,7 +1130,7 @@ pub fn load_or_solve(
         .map(|s| s.to_string_lossy().into_owned())
         .unwrap_or_default();
     let identity = StackIdentity::from_paths(&name, paths)?;
-    let (want_ref, spans, want_resampler) = merge_config(paths.len());
+    let (want_ref, spans, want_resampler) = merge_config(paths.len(), resampler);
     let side = sidecar_path(dir, solve_config_key(want_ref, &spans, want_resampler));
 
     if side.exists() {
@@ -1568,6 +1613,61 @@ pub fn fit_to_cover(map: &WarpMap, margin: f64) -> Option<(WarpMap, f64)> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Both commands parse `--resampler` here, so this is the one place the
+    /// vocabulary can be checked — and the default must still be the
+    /// `Resampler::CatmullRom` **literal** that `merge_config` returned before
+    /// M124 made it an argument. The independent term is not a copy of the
+    /// constant: it is the frozen behaviour of the corpus, whose
+    /// `coffee-bean-20-gate2-sidecar` row reproduces only under Catmull-Rom.
+    #[test]
+    fn the_merge_default_is_still_the_literal_it_replaced() {
+        assert_eq!(
+            parse_resampler(DEFAULT_RESAMPLER_NAME).unwrap(),
+            Resampler::CatmullRom
+        );
+        // And the flag is a pass-through: `merge_config` must hand back what it
+        // was given, or the flag parses and is then ignored.
+        for want in [
+            Resampler::CatmullRom,
+            Resampler::Lanczos3,
+            Resampler::Nearest,
+        ] {
+            let (_, _, got) = merge_config(20, want);
+            assert_eq!(got, want, "merge_config dropped {want:?}");
+        }
+    }
+
+    /// M118 Y6: `lanczos2` shipped as a variant and as a legal sidecar spelling
+    /// that **no command line could reach**, so its measurement was only
+    /// reproducible by hand-editing a file. Every offered name must reach a
+    /// variant, from both commands, through this one function.
+    #[test]
+    fn every_offered_resampler_name_reaches_a_variant() {
+        use strehl_core::warpmap::RESAMPLER_NAMES;
+        for name in RESAMPLER_NAMES {
+            parse_resampler(name).unwrap_or_else(|e| panic!("{name} is offered but {e}"));
+        }
+        assert_eq!(parse_resampler("lanczos2").unwrap(), Resampler::Lanczos2);
+    }
+
+    /// An unknown name must **refuse and say what is valid**, never fall back.
+    /// A silent fall back would render a kernel nobody asked for and make every
+    /// A/B run through the flag unfalsifiable — the failure M118's D4 records
+    /// for the sidecar path, which is how it nearly measured five renders of
+    /// the default.
+    #[test]
+    fn an_unknown_resampler_is_refused_by_name_and_offers_the_choices() {
+        let e = parse_resampler("lanczos4").expect_err("an unknown name must not resolve");
+        let msg = e.to_string();
+        assert!(
+            msg.contains("lanczos4"),
+            "{msg} does not name what was typed"
+        );
+        for name in strehl_core::warpmap::RESAMPLER_NAMES {
+            assert!(msg.contains(name), "{msg} does not offer {name}");
+        }
+    }
 
     /// The defect this pins: rendering a bracket used to write
     /// `<dir>/warpmap.txt` into the owner's read-only capture corpus. M97

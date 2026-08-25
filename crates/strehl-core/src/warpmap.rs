@@ -530,7 +530,26 @@ fn hex_f64(s: &str, key: &str) -> Result<f64, WarpMapError> {
         })
 }
 
-pub(crate) fn resampler_name(r: Resampler) -> &'static str {
+/// Every resampler spelling this project accepts, in a stable order, for
+/// `--help` text and for the error a bad name earns.
+///
+/// **One vocabulary, one list.** `lanczos2` shipped as a [`Resampler`] variant
+/// and as a name this module round-trips, while the command line kept a
+/// *second* match of its own that never listed it — so the variant was
+/// reachable by hand-editing a sidecar and from no command line at all
+/// (`docs/research/M118-resampler.md` §7, Y6). Two mappings for one vocabulary
+/// is how that happens, so the CLI now parses through
+/// [`resampler_from_name`] and this is the only list.
+pub const RESAMPLER_NAMES: [&str; 5] =
+    ["nearest", "bilinear", "catmull-rom", "lanczos2", "lanczos3"];
+
+/// The sidecar spelling of a resampler. Round-trips with
+/// [`resampler_from_name`], which `every_resampler_survives_a_name_round_trip`
+/// asserts.
+///
+/// The match is exhaustive, so a new [`Resampler`] variant cannot be added
+/// without being named here.
+pub fn resampler_name(r: Resampler) -> &'static str {
     match r {
         Resampler::Nearest => "nearest",
         Resampler::Bilinear => "bilinear",
@@ -540,7 +559,13 @@ pub(crate) fn resampler_name(r: Resampler) -> &'static str {
     }
 }
 
-pub(crate) fn resampler_from_name(s: &str) -> Option<Resampler> {
+/// The resampler a sidecar line or a command line named, or `None` when the
+/// name is not one of [`RESAMPLER_NAMES`].
+///
+/// `None` is the *only* answer for an unrecognised name. Callers must refuse:
+/// falling back to a default here would render a kernel nobody asked for and
+/// make every A/B run through it unfalsifiable.
+pub fn resampler_from_name(s: &str) -> Option<Resampler> {
     match s {
         "nearest" => Some(Resampler::Nearest),
         "bilinear" => Some(Resampler::Bilinear),
@@ -922,6 +947,38 @@ mod tests {
     }
 
     // -- W1: round-trip -----------------------------------------------------
+
+    /// `RESAMPLER_NAMES` is what a user is *told to type*, so a variant missing
+    /// from it is a variant nobody can reach — which is exactly what happened
+    /// to `lanczos2` (M118 §7, Y6: shipped, round-tripping, and unreachable
+    /// from any command line).
+    ///
+    /// The compile-time half of the guard is [`resampler_name`]'s exhaustive
+    /// match; this is the half that catches a variant named but not listed.
+    #[test]
+    fn every_listed_resampler_name_maps_to_a_distinct_variant() {
+        let mut seen = Vec::new();
+        for name in RESAMPLER_NAMES {
+            let r = resampler_from_name(name)
+                .unwrap_or_else(|| panic!("{name} is offered but does not parse"));
+            assert_eq!(resampler_name(r), name, "{name} did not round-trip");
+            assert!(!seen.contains(&r), "{name} is a second spelling of {r:?}");
+            seen.push(r);
+        }
+        for r in [
+            Resampler::Nearest,
+            Resampler::Bilinear,
+            Resampler::CatmullRom,
+            Resampler::Lanczos2,
+            Resampler::Lanczos3,
+        ] {
+            assert!(
+                seen.contains(&r),
+                "{r:?} ships but RESAMPLER_NAMES does not offer it, so no command \
+                 line can select it"
+            );
+        }
+    }
 
     /// Gate W1. A sidecar written then read yields **bit-identical** warps.
     ///

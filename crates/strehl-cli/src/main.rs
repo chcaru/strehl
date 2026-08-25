@@ -341,6 +341,37 @@ enum Command {
         /// Per-channel tail fraction for the confidence union mask.
         #[arg(long, value_name = "Q", default_value_t = 0.05)]
         confidence_tail: f64,
+
+        /// Interpolator each frame is gathered with by the registration:
+        /// nearest, bilinear, catmull-rom, lanczos2 or lanczos3.
+        ///
+        /// THE DEFAULT DOES NOT MOVE. catmull-rom is what every quality number
+        /// in this project's corpus was measured through, and a run that omits
+        /// this flag is byte-identical to one from before the flag existed.
+        /// Whether the default SHOULD move is a pre-registered decision in
+        /// docs/research/ORCH-kernel-decision.md, not a setting.
+        ///
+        /// COST, AND IT IS THE POINT OF THE FLAG. Measured as a BOUND on a
+        /// loaded machine rather than as a value (M118 Y10): lanczos3 costs
+        /// ROUGHLY 2.9x-3.9x the default's whole-merge wall clock (2.91x bee,
+        /// 3.21x text, 3.92x ruler) and lanczos2 2.3x-2.9x. nearest and
+        /// bilinear are cheaper (0.37x-0.69x) and worse. A quality change that
+        /// cannot be declined is a tax rather than a default, which is why this
+        /// flag exists before any default moves.
+        ///
+        /// WHAT LANCZOS-3 BUYS, honestly: +0.0859 to +0.1125 dex in the detail
+        /// decile end-to-end -- of which a closed form over the kernel's own
+        /// coefficients, using no image at all, predicts all but 11.9%. It also
+        /// sharpens lateral chromatic-aberration fringes into visibility. Read
+        /// docs/research/M118-resampler.md before believing the number.
+        /// lanczos2 is measured as dead weight (+0.0027 to +0.0052 dex at
+        /// 2.3x-2.9x) and is offered for reproducibility, not as a setting.
+        ///
+        /// It reaches pixels through the SOLVE only. If STREHL_WARPMAP names a
+        /// sidecar, that sidecar's own recorded resampler wins and the run says
+        /// so on stderr.
+        #[arg(long, value_name = "NAME", default_value = align_cmd::DEFAULT_RESAMPLER_NAME)]
+        resampler: String,
     },
 
     /// Stack by plain per-pixel argmax. THE NAIVE BASELINE, NOT THE DEFAULT.
@@ -500,6 +531,7 @@ fn main() -> Result<()> {
             stats,
             stats_placebo,
             confidence_tail,
+            resampler,
         } => merge_cmd::run(&MergeOptions {
             dir,
             out,
@@ -523,6 +555,10 @@ fn main() -> Result<()> {
             stats,
             stats_placebo,
             confidence_tail,
+            // Parsed here, by the same function `strehl align --resampler`
+            // uses, so an unknown name is one error message in one place and
+            // never a silent fall back to the default.
+            resampler: align_cmd::parse_resampler(&resampler)?,
         }),
     }
 }
