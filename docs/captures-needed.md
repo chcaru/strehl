@@ -7,19 +7,22 @@ says exactly what to shoot, why, and what it unblocks.
 
 ## START HERE — one session, in value order
 
-*This index was added 2026-08-24 overnight. There are now 17 open requests across
+*This index was added 2026-08-24 overnight. There are now 18 open requests across
 this document and that is not a list anyone can act on over coffee. **Shoot the
 first two and stop** if you only have twenty minutes — everything below them is
-genuinely useful and none of it is blocking a fix that is already written.*
+genuinely useful and none of it is blocking a fix that is already written. (Note
+that #2 is an afternoon, not twenty minutes; if you only have twenty, shoot #1
+and #3.)*
 
 | # | what | time | what it unblocks |
 | --- | --- | --- | --- |
 | **1** | **§24** — flat, **achromatic** (grey/black/white, *no colour in the target*), **corner-to-corner** detail, square-on and never moved, shot **normal + red + green + blue** (gels or coloured light) | ~10 min | **Design changed again overnight, and it is now a controlled experiment.** The spectral hypothesis I built this on was tested against eight of your existing stacks and **the correlation came out backwards** (rho −0.69, n=8). What survived is bigger: the correction really does vary by subject, **27.3%** against a 19.5 ppm noise floor, cause unknown. Four rival explanations died on your existing data; aperture and the teleconverter died on your EXIF (**every `-cpl` stack is f/5.6 + 2× TC — there is no aperture variation in the corpus**, so no teleconverter set is needed). A **flat** target makes the stacker a measured 4.8 ppm no-op, so what this sees is optics. See below. |
-| **2** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
-| 3 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document — and it **went up in value overnight**: it is the *trap* arm for the election gate now being wired. See the box below. |
-| 4 | **§19** — one hard edge at three apertures | ~10 min | The remaining aperture question |
-| 5 | **§20** — a grey card somewhere in the frame | ~20 s | Add it to *any* session from now on; costs nothing |
-| 6 | **§21** — a straight edge inside a real bracket | — | Decides whether the alignment verdict is about optics or arithmetic |
+| **2** | **§26** — a **bright** subject against a **deeply defocused dark** background, exposed **1–2 stops down** so nothing clips, 100–300 frames | ~1 afternoon | **The halo.** As of last night the rim around every edge in your renders has a measured fingerprint — it is exactly as wide as the software's frame-choosing window — but **two explanations survive that predict the same thing on every stack you already own.** They differ only on bright-object-on-dark-ground edges, and your corpus contains **5** usable ones. This is the capture that separates them, and the halo is the largest visible defect in your pictures. |
+| **3** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
+| 4 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document — and it **went up in value overnight**: it is the *trap* arm for the election gate now being wired. See the box below. |
+| 5 | **§19** — one hard edge at three apertures | ~10 min | The remaining aperture question |
+| 6 | **§20** — a grey card somewhere in the frame | ~20 s | Add it to *any* session from now on; costs nothing |
+| 7 | **§21** — a straight edge inside a real bracket | — | Decides whether the alignment verdict is about optics or arithmetic |
 
 ### Overnight, 2026-08-25: why your stacks don't look good yet
 
