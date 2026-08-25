@@ -1416,4 +1416,57 @@ at.*
     was 2.6x this body's. Recomputing from source and checking the result against the module's
     own doc comment cost one script and caught it.
 
+## 20. PIL 16-bit exposure audit — M110 is clean, measured not assumed
+
+ORCH reported that `PIL.Image.open()` on a 16-bit RGB TIFF silently returns `uint8` with mode
+`RGB`, and that 27 scripts across 8 milestones read `.tif` that way.
+
+**No M110 number is exposed**, and the check was run rather than argued. Reading imports was
+not treated as sufficient: arguing from first principles that the reader was fine is precisely
+the argument that would have hidden the defect.
+
+- Every pixel path in `experiments/M110-sheet/` goes through `tifffile.imread`. `sheet.py`'s
+  `load_raw` is the single loader; `argmax_control.py`, `highlight_snapshot.py` and
+  `neutrality_control.py` all import it rather than opening files themselves, and
+  `compare_paths.py` reads only JSON.
+- **There is no `Image.open` anywhere in the directory.** PIL appears solely as
+  `Image.new` / `Image.fromarray` / `ImageDraw` / `paste` — writing sheets, never reading data.
+- `pil_exposure_check.py` verifies all nine files any reported M110 number was computed on:
+  each returns `uint16` and is array-equal to `tifffile`'s read.
+
+**The negative is anchored to a positive control.** The hazard bites every one of those files
+when opened through PIL — `bee-3-cpl/default.tif` drops from **57,628 distinct levels to 256**,
+a **225x** loss — so the instrument demonstrably can go red, and did not.
+
+`load_raw` now **asserts** `uint16` and refuses anything else, so the property cannot regress
+silently for the scripts that share it. The assertion is exercised by a negative control that
+plants a genuine 8-bit RGB TIFF, first confirming the plant really is `uint8` before trusting
+the verdict, and requires the loader to reject it.
+
+**Why the docstring already said this.** `load_raw` was written unshifted from the start
+because *"clipping lives in the top 1% and `>>8` cannot tell 65280 from 65535"* — the highlight
+work needed the top byte intact. That is luck as much as foresight: it happened to require the
+same precision this defect destroys.
+
+## 21. For ORCH — audit result
+
+**Facts**
+
+69. **MEASURED: no M110 number is exposed to the PIL 16-bit hazard.** All nine files behind
+    reported M110 numbers read as `uint16` and array-equal to `tifffile`. There is no
+    `Image.open` in `experiments/M110-sheet/`; PIL is used only for writing sheets.
+70. **MEASURED: the hazard is real on M110's own renders**, so the negative is a measured one.
+    Through PIL, `bee-3-cpl/default.tif` collapses from **57,628 distinct levels to 256** — a
+    **225x** loss — and every one of the nine files is affected.
+
+**Disciplines**
+
+71. **Assert the dtype at the loader, not at the call site.** One assertion in the single
+    shared loader protects every downstream script; one per measurement protects none of the
+    ones written next.
+72. **Answer an exposure audit by running the check on the actual files, not by reading
+    imports.** Import-reading gives a plausible clearance with no way to be wrong. Pair the
+    negative with a positive control on the *same* files, so a clean result is evidence the
+    instrument can fail and did not.
+
 

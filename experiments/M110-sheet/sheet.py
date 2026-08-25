@@ -620,8 +620,22 @@ def cmd_render(args) -> int:
 # --------------------------------------------------------------------------
 def load_raw(p: Path) -> np.ndarray:
     """The TIFF as written. 16-bit for --srgb output; needed unshifted because
-    clipping lives in the top 1% and >>8 cannot tell 65280 from 65535."""
-    return tifffile.imread(p)
+    clipping lives in the top 1% and >>8 cannot tell 65280 from 65535.
+
+    The dtype is asserted, not assumed. `PIL.Image.open` on a 16-bit RGB TIFF
+    silently returns uint8 with mode 'RGB' -- no warning, no exception -- which
+    on these renders is a 225x loss of level resolution (57,628 distinct levels
+    to 256) and puts a ~128-count floor under every difference. A correction
+    moving pixels by tens of counts then reads as a clean null. Nothing in the
+    returned array says the file held more, so the check has to be here.
+    """
+    a = tifffile.imread(p)
+    if a.dtype != np.uint16:
+        raise SystemExit(
+            f"{p}: expected uint16, got {a.dtype}. A reader that silently "
+            f"narrows is worse than one that fails -- do not measure this."
+        )
+    return a
 
 
 def to8(a: np.ndarray) -> np.ndarray:
