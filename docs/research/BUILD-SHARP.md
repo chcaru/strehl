@@ -1125,3 +1125,186 @@ scene, same light, same session, f/5.6 / f/8 / f/11, ideally on a razor edge at
 3-7 degrees. Fact 1183 predicts rises of 13.65 / 11.97 / 10.37 um if diffraction
 governs. That single afternoon settles the "open up" question, retires a
 corpus-level gap flagged across all 23 stacks, and it costs him nothing but time.
+
+---
+
+## 16. The disjoint-halves noise measurement (assignment 1)
+
+**Verdict: a real measurement, an honest negative on the goal.** It refutes the
+calibration that failed in §13 and explains exactly why it failed, but it does NOT
+deliver a usable Wiener calibration, and I am not going to pretend otherwise.
+
+### 16.1 -- Mechanism, and why no code change was needed
+
+`stack` takes a DIRECTORY, and `--limit` is a prefix. Disjoint selection therefore
+needs no CLI change at all: two directories of NTFS **hardlinks** (no admin, no disk
+cost) holding the even and the odd frames. Even/odd, never first-half/second-half --
+both arms must span the same focus range or the halves differ in content by
+construction and nothing cancels.
+
+Four renders from the commissioned pin `b001f22`, back to back, `--gate 4.0
+--linear-srgb --demosaic`: `bee-1-cpl` A(150)/B(149), `couch-fibers-cpl`
+A(150)/B(149), plus `Q0`(75)/`Q2`(75) on bee-1 for the scaling control. The full
+merges already on disk from the §12 run share that pin and those settings exactly.
+
+The instrument (`halfspec.py`) was commissioned on synthetic data first, 5/5:
+signal rejection to 0.2%, level linearity 3.98 against 4.0, flatness 1.10,
+**correlation detection** (slope -2.61 blurred against -0.004 white -- the
+capability the whole exercise depends on), and a planted 3,-2 px offset recovered
+exactly.
+
+### 16.2 -- The whole-frame difference is a photograph of the bee
+
+`pictures/halves/bee1-diff-full.png`. Every hair, both legs, the wing, and the
+eye's ommatidia lattice beating as **moire** against a sub-pixel registration
+difference between the arms. An integer offset of `dx=1` was measured and removed;
+what remains is sub-pixel and is not removable without resampling, which would blur
+the very quantity under measurement.
+
+Two mechanisms put signal there and both are structural, not bugs:
+
+1. **The halves elect different winner frames.** Adjacent focus steps genuinely
+   differ in content wherever there is fine detail.
+2. **The two half-merges are not mutually registered.** Each aligns within its own
+   frame set.
+
+So `P_D` is the noise spectrum **only where the scene is flat**.
+
+### 16.3 -- A statistic failed, and the picture caught it
+
+`structure_score` (8x8 box-mean variance over total variance) returned **0.2594**.
+Calibrated against pure noise of known slope it should have read **0.7396** at the
+measured slope -- so the statistic said the field was *less* structured than pure
+noise, i.e. clean. **The picture is a legible bee.** Box-averaging destroys exactly
+the fine hair detail that dominates, so the statistic is blind to the contamination
+it was built to detect.
+
+> **Failed instrument #4.** Recorded, not quietly discarded. It is also the
+> cleanest possible restatement of the house rule: the number said clean, the
+> picture said bee, and the picture was right.
+
+### 16.4 -- The "dead band" is not dead. This is the finding.
+
+§13 fitted a power law to the image spectrum above `f=0.28` on the premise that the
+optics guarantee no signal there, got slope **-3.53**, and extrapolated it down to
+`f=0.05` -- inflating low-frequency noise ~470x and producing the 0.70x
+attenuating calibration.
+
+Measured directly in flat windows, the noise fraction above `f=0.28` is only
+**0.46 to 0.56**, and after the contamination correction of 16.6 it is **0.22 to
+0.27**.
+
+> **The band that was assumed to be pure noise is roughly three-quarters SIGNAL,
+> even in the flattest parts of the frame.** The -3.53 slope was fitted mostly to
+> signal. That is why the two calibrations disagreed by 42x.
+
+Directly measured, the noise spectrum is **not a power law at all**: slope about
+**-2.85** at low frequency, flattening to about **-1.47** near Nyquist. It is white
+noise shaped by the gather kernel and the demosaic, which is flat at low frequency
+and rolls off -- exactly the shape a single power law cannot represent. Fitting one
+in a narrow high band and extrapolating two octaves was wrong in its premise, its
+slope and its direction.
+
+### 16.5 -- couch-fibers-cpl: the method does not work there at all
+
+Every one of its 8 flat-ranked windows is legible fibre
+(`pictures/halves/couch-flatdiff.png`), per-window sd 453-979 DN with `max/median`
+only 1.20 -- uniformly contaminated rather than a clean subset. A pure-texture
+subject has no flat region anywhere, so **this route cannot measure its noise**.
+Stated rather than papered over: the guard subject is exactly where I most want a
+noise number and cannot get one this way.
+
+### 16.6 -- The scaling control, which quantifies what is left
+
+Quarter-set merges admit about half as many frames per pixel, so the noise term
+doubles while any scale-independent floor does not:
+
+    P_half = u + S ,  P_quarter = 2u + S ,  f = S/(u+S)   =>   r = 2 - f
+
+| window | sd half | sd quarter | r | f = 2-r | by eye |
+|---|---|---|---|---|---|
+| 0 | 63 | 73 | 1.366 | 0.634 | clean |
+| 1 | 78 | 93 | 1.440 | 0.560 | clean |
+| 2 | 72 | 92 | 1.599 | 0.401 | clean |
+| 3 | 65 | 79 | 1.498 | 0.502 | clean |
+| 4 | 253 | 551 | 4.729 | **-2.729** | contaminated |
+| 5 | 431 | 478 | 1.226 | 0.774 | contaminated |
+| 6 | 265 | 850 | 10.275 | **-8.275** | contaminated |
+
+**Clean windows: r = 1.476, f = 0.524.** So **52% of the difference power in the
+windows that LOOK like clean noise still does not scale with frame count, and
+therefore is not noise.** The contaminated windows return impossible negative `f`,
+which is a useful internal check that the arithmetic detects contamination rather
+than absorbing it.
+
+Caveat that bounds this: the two comparisons needed different integer offsets
+(`[0,1]` against `[2,-3]`), so the arms are not in identical geometry in both runs
+and `S` is not guaranteed equal between them. `f = 2 - r` assumes it is. Indicative,
+not exact.
+
+### 16.7 -- Why this still does not calibrate the Wiener
+
+The measurement is squeezed from both sides and lands on no point estimate:
+
+- **Lower bound.** Flat windows are where the gate admits the MOST frames
+  (`n_eff` is maximal), so their noise is the floor of the whole image. Where the
+  detail is -- the only place deconvolution matters -- `n_eff -> 1` and the noise is
+  far higher. The halves cannot reach there because signal dominates the difference.
+- **Upper bound.** Even the clean windows are ~52% contaminated (16.6).
+
+Combining flat-window noise with whole-frame signal power gives a noise fraction
+below 1% even at Nyquist, which would license near-total inverse filtering -- the
+runaway that visibly destroyed the picture in §13. **That combination is invalid**,
+and I flag it here precisely because it is the number a less careful reading of this
+data would have shipped.
+
+### 16.8 -- The route that should work, using assets the project already has
+
+Stop trying to measure merged noise empirically. Compute it:
+
+    sigma^2(x) = sigma_frame^2( level(x) ) / n_eff(x)
+
+shaped spectrally by the gather and demosaic transfer functions, which are known
+analytically -- `gather_mtf` already exists in `restore.rs` from §4.
+
+Every term exists today: the **calibrated per-frame sensor noise model**, the
+per-pixel **`n_eff`** the estimator already computes, and the **kernel MTF**. That
+is a per-pixel, spectrally-correct, fully calibrated noise model requiring no
+extrapolation and no dead band, and it is correct precisely where the halves method
+fails -- at high-detail pixels, because `n_eff` is smallest exactly there.
+
+**The disjoint-halves measurement then becomes the validation instrument rather
+than the calibration**: predict the flat-window noise from the model and check it
+against the 63-78 DN measured here. That is the next step, and it needs `n_eff` on
+the render path -- see the hook request in 16.9.
+
+### 16.9 -- Hook needed for the merge integration pass
+
+Adding to the list held for the single-writer `merge.rs` pass:
+
+> **Expose per-pixel `n_eff` alongside the merged image**, as an optional
+> side-channel the render path can emit. `Estimator::n_eff()` already returns
+> `&[u16]` (`merge.rs:1279`) and `soft_n_eff_at` the fractional form -- nothing new
+> needs computing, only surfacing. Without it the calibrated noise model cannot be
+> evaluated per pixel, because `sigma^2 = sigma_frame^2 / n_eff` needs `n_eff`.
+
+### 16.10 -- Assignment 2 preparation: what an upper envelope must cost
+
+Before BUILD-HALO's fix is measured, the prediction is on record
+(`ordstat.py`, 400,000 trials):
+
+| estimator | bias | sd | vs shipped |
+|---|---|---|---|
+| shipped gated mean over 166.8 frames | +0.0000 sigma | 0.0774 sigma | -- |
+| **upper envelope of 3** | **+0.845 sigma** | **0.748 sigma** | **9.7x noisier** |
+
+A maximum is not an unbiased estimator of a mean. Both effects point the wrong way
+here: the bias is **upward** and the defect being removed is a **darkening**, so an
+undebiased envelope removes part of the veil *arithmetically* rather than
+physically -- and would show an improvement on a stack with no veil at all.
+
+At a plausible background `sigma_frame` of 200 DN that bias is **+169 DN**, which is
+the same order as the whole **-177 DN** aura on `109MSDCF`. **The placebo is
+therefore the discriminator**: 109MSDCF has no depth separation and so no veil, and
+any background LEVEL SHIFT there is bias, not repair. I will measure the level, not
+only the aura.
