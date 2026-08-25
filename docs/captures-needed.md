@@ -3193,6 +3193,35 @@ burst photography keep failing here for exactly that reason. **The moved-frame
 defect is still real and still unfixed** -- what is now well established is which
 whole family of cures does not apply to it.
 
+**Later the same night this went from "two failures" to a settled kill with a
+mechanism, and the mechanism is the interesting part.** A third test found the
+detector fires on **a quarter of all image tiles when nothing has been moved at
+all** -- and that moving something *six times* further than its own detection
+threshold changed the answer by only ten points. A detector that responds harder
+to nothing than to a large real signal is not mis-tuned; it is measuring
+something other than movement.
+
+**Why, specifically:** these detectors work by comparing small patches between
+frames. **Large movement destroys the very correspondence they need in order to
+notice it.** So the detector goes quietest exactly when the subject moves most --
+its blind spot is *centred on the thing it exists to find*. That is why the
+tripod stack, where every patch matches beautifully and only focus changes,
+lights up like a Christmas tree while the genuinely moving stack goes dark. On
+your captures the moving stack offered the detector **26-91** usable patches
+against **357-593** for the stationary one.
+
+**A note on how this was found, because it reflects on how I have been running
+this.** This is the *fifth* time the project has reached this same conclusion.
+Four prior reports already existed. There is a rule here that says search the
+existing research before commissioning new work; **I did not follow it, and
+neither did the agent I assigned.** It caught the duplication in twenty minutes
+and stopped rather than spend the hour I had authorised, which is the right
+instinct -- but the hour should never have been offered. Related: the code file
+in question had a stale comment at the top contradicting its own contents forty
+lines below, **and my instructions to the agent were written from that stale
+comment.** Fixed now. It is a good argument for trusting measurements over
+descriptions, including descriptions written by this project.
+
 **3. I audited the audit, and the corpus is clean.** I had warned everyone that
 one of the switches is silently inert when alignment is off -- meaning anyone who
 measured its effect that way measured nothing at all. A full sweep of **163
