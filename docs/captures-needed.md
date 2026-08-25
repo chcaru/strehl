@@ -98,7 +98,7 @@ variable, so you can try any of them without a rebuild.*
 | switch | what it does | default | verdict tonight |
 | --- | --- | --- | --- |
 | `STREHL_ALIGN` | registration | **on** | Leave it. Setting `0` disables it, which is a negative control, not an option. |
-| `STREHL_PHOTOMETRIC` | per-frame exposure-drift fit | off | **The one to try.** Measured tonight to remove manufactured blotches from defocused backgrounds. Also available as `--photometric`. |
+| `STREHL_PHOTOMETRIC` | per-frame exposure-drift fit | off | **The one to try — but not on every stack.** Now measured across 14 stacks: it removes manufactured blotches **when your frames actually drifted in exposure**, and mildly *worsens* them when they didn't. The rule and the numbers are in *"When to turn the exposure fix on"* below. Also available as `--photometric`. |
 | `STREHL_SMOOTH` | alignment track prior | off | Honest verdict, quoting the code: the win was measured *on the solve* but **could not be shown in a render**. Try it; expect to see nothing. Takes a number, e.g. `1.0`. |
 | `STREHL_SMOOTH_HUBER` | robust threshold for the above | 1.0 when `STREHL_SMOOTH` is on | Don't set it independently. It only does anything when the line above is on. |
 | `STREHL_FIX_HALO` | fringe around silhouettes | off | **Leave off.** Off for a good reason, unlike the rest — see the withdrawal above. It replaces the fringe with a milky scalloped band and fires hardest on scenes with no halo in them. |
@@ -420,6 +420,47 @@ photograph as a whole. It is worth having because manufactured texture in
 backgrounds is the kind of thing that looks like grain or mush when you print
 big, but I am not going to pretend it transforms the image. The thing that
 *would* transform the image is the halo at #1, and I do not have that yet.
+
+### When to turn the exposure fix on — the rule, measured across 14 of your stacks
+
+Later the same night a separate milestone asked the question I should have asked
+before recommending anything: **is the blotch actually caused by exposure drift,
+or does the fix just happen to help on the one subject I looked at?**
+
+**It is caused by exposure drift.** Across 14 of your stacks, how much the fix
+helps tracks how much your frames drifted, at a correlation of **+0.70** with a
+1-in-285 chance of arising from luck. Two other things back it up independently:
+the correction the code fits for itself tracks the drift just as strongly
+(+0.77), and the obvious objection — *"smooth backgrounds are just smooth"* —
+was written down in advance and then **refuted**, with the relationship coming
+out *stronger* once baseline smoothness was accounted for, not weaker.
+
+**But it is not free on every stack, and this is the part that changes your
+advice:**
+
+| your stack | how much it drifted | what the fix does to the blotch |
+| --- | ---: | --- |
+| `tweezers-cpl` | 13.8 % | **29 % less blotch** — the big win you can see in the PNG above |
+| `coffee-bean` | 12.1 % | 9 % less |
+| `bee-1-cpl` | 11.3 % | 5 % less |
+| `113MSDCF` | 8.0 % | **7 % worse** |
+| `bee-3-cpl` | 1.6 % | **6 % worse** |
+
+**So: turn it on when the light actually moved between frames; leave it off when
+it didn't.** Flash or steady continuous light on a short bracket won't drift, and
+there the fix has nothing real to correct and gently makes things worse. Daylight
+changing, a battery-powered lamp sagging, or anything long enough for the light
+to wander — that is where it pays, and it pays *well*.
+
+That failure on two stacks is exactly why it is still off by default: a
+pre-registered rule said *no stack may get more than 3 % worse*, and those two
+broke it. **The cause is confirmed; the fix is not yet good enough to impose on
+everyone.** Those are two different questions and I want to be careful not to let
+the strength of the first one argue for the second.
+
+**One honest caveat about your own headline picture:** `bee-3-cpl` — the bee — is
+one of the two that gets *worse*. Its light barely moved (1.6 %). So for the bee,
+leave this off. For the tweezers, turn it on.
 
 **What I am not claiming.** I have this on one of three test subjects. On the
 other two the switch does nothing visible — and for the bee I know why: its
