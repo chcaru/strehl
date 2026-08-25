@@ -46,7 +46,29 @@ always written `P1-placebo` and is never the fact `P1`.
 | photometric + soft gate | KEEP-OFF | INCONCLUSIVE | KEEP-OFF | **KEEP-OFF** | best measured: ΔQ `+0.00916`, still short of `+0.010` |
 | outlier / robustness mask | not reachable | not reachable | not reachable | **UNREACHABLE** | `1043` lines, zero callers outside its own example harness at the pinned SHA |
 | robust (election-time) | not reachable | not reachable | not reachable | **UNREACHABLE** | `509` lines, zero callers outside its own example harness at the pinned SHA |
-| lateral-CA correction | not run | not run | not run | **out of scope** | excluded by dispatch; owned by M107 and M114 |
+| lateral-CA correction | see the CA table below | — | see the CA table below | **HOLD** | best-evidenced instrument in M116; CD1 fails on 2 of 4 subjects |
+
+The lateral-CA correction was measured on its own four `-cpl` stacks (section
+5f), against the displacement that lateral CA physically is, so it gets its own
+table. **The subjects split by whether the instrument could be calibrated at
+all, and that split is the result:**
+
+| subject | instrument | `RD_off` -> `RD_on` | CA removed | fine-structure cost | verdict |
+| --- | --- | ---: | ---: | ---: | --- |
+| `tweezers-cpl` *(TRANSFER, M110 never used it)* | **CALIBRATED** (+0.440 of +0.500) | −0.6861 -> +0.0332 px | **95.2 %** | `−0.00155` dex | **works** |
+| `flat-on-ruler-cpl` | **CALIBRATED** (+0.485 of +0.500) | −0.7478 -> +0.0741 px | **90.1 %** | `−0.00101` dex | **works** |
+| `bee-3-cpl` | **DEAD** (+0.015 of +0.500) | *void* | *void* | `−0.00169` dex | no number claimable |
+| `flower-bud-…-fern-cpl` *(TRANSFER)* | **DEAD** (+0.120 of +0.500) | *void* | *void* | `−0.00184` dex | no number claimable |
+
+| CA bar | result |
+| --- | --- |
+| CB3 — plant on the *chroma-excess* metric | **FAIL** (−16.45 %, and +104.05 % — wrong sign). Voids `+35.34 %` / `+66.79 %` |
+| CD1 — plant on the *displacement* metric | **FAIL**, 2 of 4 subjects |
+| CD2 — centre trap | **PASS**, 4/4, `\|RD\| <= 0.075 px` |
+| CD3 — green null | **PASS**, `0.0 DN`, `0.0000 px`, `0.00000` of pixels moved |
+| CD4 — `\|RD_on\| < \|RD_off\|` in support | **PASS** 4/4 literally; **2/2 on calibrated subjects**, incl. one transfer |
+| CD7 — do-no-harm | **PASS**, 4/4, worst `−0.00184` dex |
+| CB1 null / CB2 adversarial placebo | **PASS** — byte-identical, placebo run against the ON arm's own cache |
 
 The occlusion-halo correction was measured on its own four stacks (section 5d),
 so it gets its own table:
@@ -795,6 +817,203 @@ for.
 
 ---
 
+## 5f. Addendum: lateral chromatic aberration — the first instrument that works
+
+Contract: `prereg-ca.txt` @ `188b55c`, and `prereg-ca2.txt` @ `bc38182` after the
+first instrument failed its own plant. Both were committed before the results
+they govern existed. Four `-cpl` subjects at the shipped `--gate 4`, `--limit
+100`, frozen `STREHL_WARPMAP`, private cache per arm, 21 arms, all exit 0.
+
+**Lead with the failures, because there are two and they are mine.**
+
+### P49. THE REGISTERED METRIC FAILED ITS OWN PLANT, AND THAT VOIDED THE POSITIVES IT HAD ALREADY PRODUCED
+
+`prereg-ca.txt` registered a chroma-excess metric and, with it, CB3: displace R
+radially outward by 0.5 px and require `dX%` to read `<= -20%`. I predicted it
+would pass and wrote "if it fails, the campaign stops here."
+
+| subject | CB3 plant reads | bar | |
+| --- | ---: | ---: | --- |
+| `flat-on-ruler-cpl` | **−16.45 %** | ≤ −20 % | **FAIL** |
+| `bee-3-cpl` | **+104.05 %** | ≤ −20 % | **FAIL — wrong sign** |
+
+The diagnosis, which condemns my metric and not the correction: on `bee-3-cpl`
+the excess baseline is **`X_off = −133.0 DN`, negative**. The construction
+assumes chroma peaks at edges and decays to a clean far field. On a bee that is
+false — the subject is large and strongly coloured, so median `|R−G|` five
+pixels from an edge is dominated by *subject colour* and exceeds the edge value.
+**A percentage reduction of a negative baseline is not a reduction of anything.**
+
+By the time the plant failed, the broken metric had already produced
+`+35.34 %` (bee) and `+66.79 %` (flat-on-ruler) — numbers that flatter the
+correction and sit encouragingly near M110's 61.0/58.7. **Both are VOID and are
+not reported as results.** CB4, the centre trap, failed at −4.05 % against a
+±3.0 bar and is void by the same defect, being a ratio of the same quantity.
+This is fact 1548's failure mode caught in the direction it is meant to be
+caught in: by the plant, before publication, at the cost of the campaign's own
+headline.
+
+### P50. THE REPLACEMENT INSTRUMENT MEASURES THE DISPLACEMENT THAT LATERAL CA PHYSICALLY IS
+
+Lateral CA is not a colour, it is a *geometry*: red is imaged at a slightly
+different magnification from green, displaced radially in proportion to radius.
+So `prereg-ca2.txt` measures that displacement directly — sub-pixel shift of R
+against G by phase correlation, per annulus, per sector, projected radially. It
+has a true zero, it cannot acquire a negative baseline, and phase correlation
+keys on *structure*, so a flat yellow region cannot masquerade as a fringe.
+
+### P51. THE INSTRUMENT IS CALIBRATED ON TWO SUBJECTS AND DEAD ON THE OTHER TWO — AND THAT DISTINCTION IS THE RESULT
+
+CD1 required a planted **+0.500 px** displacement to be recovered to ±0.10 px.
+
+| subject | planted +0.500 px recovered as | radial worst err | verdict |
+| --- | ---: | ---: | --- |
+| `flat-on-ruler-cpl` | **+0.485** | 0.085 px | **CALIBRATED** |
+| `tweezers-cpl` | **+0.440** | 0.075 px | **CALIBRATED** |
+| `bee-3-cpl` | **+0.015** | 0.330 px | **DEAD** |
+| `flower-bud-with-background-fern-cpl` | **+0.120** | 0.310 px | **DEAD** |
+
+**CD1 therefore FAILS as registered**, which required every subject scored.
+
+The two dead subjects are organic and three-dimensional: much of each
+correlation window is low-structure bokeh, so there is nothing for the
+correlator to key on. The two calibrated subjects are flat and densely
+textured.
+
+**The consequence is the point.** `bee-3-cpl`'s `Q = 0.400` and fern's
+`Q = 0.330` are **not small effects — they are VOID**, readings of an
+instrument that demonstrably cannot see a half-pixel shift on those subjects. A
+campaign that reported them as "CA helps less on organic subjects" would have
+published an artefact of its own correlator as a property of the owner's
+photographs.
+
+### P52. ON THE SUBJECTS WHERE IT CAN BE MEASURED, THE CORRECTION REMOVES 90.1 % AND 95.2 % OF LATERAL CA
+
+Radial R-vs-G displacement, in-support band `0.55 <= r <= 0.788`, linear
+renders, calibrated subjects only:
+
+| subject | `RD_off` | `RD_on` | removed | implied factor |
+| --- | ---: | ---: | ---: | ---: |
+| `flat-on-ruler-cpl` | **−0.7478 px** | **+0.0741 px** | **90.1 %** | 1.099× |
+| `tweezers-cpl` *(TRANSFER)* | **−0.6861 px** | **+0.0332 px** | **95.2 %** | 1.048× |
+
+`tweezers-cpl` is a subject **M110 never used**, and it is the better of the
+two. That is the transfer result the campaign was built to get.
+
+The "implied factor" is how far the correction moved red divided by how far it
+needed to: `0.8219 / 0.7478` and `0.7193 / 0.6861`. Both land at or just below
+**M107/M114's disputed 1.06–1.25× over-correction band**, reached by an
+instrument that knows nothing about their dispute. I do not adjudicate it; I
+report that a third method sees the same mild overshoot, and that both arms end
+*past* zero rather than short of it.
+
+### P53. IT COSTS NO MEASURABLE FINE STRUCTURE, AND IT PROVABLY DOES NOT TOUCH GREEN OR BLUE
+
+CD7, worst of R / B / luminance on oriented content (coherence ≥ 0.6):
+
+| subject | `D_R` | `D_B` | `D_L` | worst | bar −0.02 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `bee-3-cpl` | −0.00010 | +0.00000 | −0.00169 | −0.00169 | **PASS** |
+| `flat-on-ruler-cpl` | −0.00101 | +0.00000 | +0.01031 | −0.00101 | **PASS** |
+| `tweezers-cpl` | −0.00155 | +0.00000 | +0.00450 | −0.00155 | **PASS** |
+| `flower-bud-…-fern-cpl` | −0.00184 | +0.00000 | +0.00067 | −0.00184 | **PASS** |
+
+This is the sharpest contrast in M116. The halo correction destroyed **50.1 %**
+of high-pass amplitude on fern (§5e). The CA correction costs at most
+**0.42 %**, on the same subjects, measured by the same instrument. *That* is
+what a correction with an evidenced coefficient looks like next to one without.
+
+`D_B = +0.00000` **exactly**, on all four subjects, is not rounding. It is
+`eps_b: None` in the profile, which `optics.rs:162-168` documents as
+deliberate: M107 measured red's coefficient and never measured blue's, and "an
+unmeasured coefficient is absent rather than zero". The render confirms the
+source from the other side. **Any residual blue/cyan fringing is untouched by
+this correction and is out of its scope.**
+
+### P54. THE TRAP MY TRAP CAUGHT WAS MY OWN SOURCE READING
+
+CB4 was premised on lateral CA being purely radial, so the frame centre must not
+move. Reading `optics.rs` I then found `A7C2_FE100GM_2XTC_X4CPL.translation =
+(0.6294, −0.4240)` and `compose` applying it — a **uniform 0.7589 px red shift
+that does not vanish at r = 0** — and concluded my premise was wrong.
+
+I measured it before writing that up. **The red plane's displacement at the
+frame centre is 0.0224 px**, against 0.7589 px if the translation were applied
+and ~1.5 px for the "absolute coordinates" failure mode the docstring warns of.
+The source then confirmed the measurement: `profile_from_setting`
+(`optics.rs:456-458`) resolves the key to `A7C2_FE100GM_2XTC_X4CPL_RADIAL`,
+whose translation is `(0,0)`. **The translation is recorded as provenance and
+not applied.** The measurement corrected my source reading, and I have kept both
+in this order because the reverse order is how a confident misreading gets
+published.
+
+CD2, the re-premised trap, **PASSES**: `|RD(centre)| <= 0.075 px` in both arms
+on all four subjects.
+
+### P55. CONTROLS, BEFORE THE POSITIVES
+
+| control | result |
+| --- | --- |
+| **CB1 null** — same arm, cold private cache | **byte-identical, 2/2** |
+| **CB2 placebo** — same config, different output path, deliberately reusing *the ON arm's* cache | **byte-identical to OFF**, while ON differs |
+| **CD3 green null** — green has no coefficient | `max\|dG\| = 0.0 DN`, **0.00000** of pixels moved, displacement `+0.0000 px` |
+| **CD2 trap** | PASS, 4/4 |
+| **CD1 plant** | **FAIL — 2 of 4** |
+
+The placebo is the strongest single credential here: it was run *deliberately
+against the ON arm's cache directory* — the M97n poisoning scenario staged on
+purpose — and came back byte-identical to OFF while the ON arm differed.
+
+### P56. THE HONEST VERDICT: HOLD, BY MY OWN FROZEN RULE
+
+`prereg-ca2.txt` says recommend a default flip only if CD1 **and** CD2 **and**
+CD3 **and** CD4 **and** CD7 pass. **CD1 failed on two of four subjects.** So I
+do **not** issue a default-flip recommendation, and I am not going to narrow
+CD1 to the subjects it passed on in order to manufacture one.
+
+What I can say, and it is the strongest positive statement in M116:
+
+> On every subject where the instrument could be calibrated, the lateral-CA
+> correction removed **90.1 %** and **95.2 %** of the measured aberration, one
+> of them a subject the coefficient was never fitted against, at a fine-structure
+> cost of at most **0.42 %**, with a byte-identical null, a byte-identical
+> adversarial placebo, a passing trap, and a green channel that provably does
+> not move.
+
+**What would convert HOLD into a recommendation:** the same 5 arms on two or
+three more flat, densely textured `-cpl` subjects — `couch-fibers-cpl`,
+`highly-angled-ruler-mm-cpl`, `lead-1-cpl` — where the plant should calibrate.
+If CD1 passes there and CD4 holds, the rule is satisfied on its own terms. That
+is roughly 40 minutes of rendering and it is the single highest-value thing
+left in this milestone.
+
+**And the gear caveat is not weakened by any of the above.** EXIF confirms
+`ILCE-7CM2` + `FE 100mm F2.8 Macro GM OSS + 2X Teleconverter` on **all 23**
+subjects in `D:\personal\macro`. It cannot confirm the **X4 CPL**, because a
+filter leaves no metadata. The profile's fourth element rests on the owner's
+`-cpl` filename convention alone. The binary parses no camera identity, so a
+default-on CA would apply a coefficient measured on one optical path to
+photographs taken on any other.
+
+### P57. THE PICTURES
+
+`tweezers-cpl__CA-4x.png` is the one to look at first. The OFF panels carry
+dense red/cyan speckle across the whole metal texture; the ON panels are
+essentially neutral grey. On `bee-3-cpl` — where the *instrument* is dead but
+the *eye* is not — the cyan fringes along the wing edge and the leg silhouettes
+are clearly reduced, and the hairs are not softened, consistent with
+`D = −0.00169`. **The instrument being dead on bee does not mean the effect is
+absent there; it means my correlator could not put a number on it.** The crops
+are captioned accordingly, and none of them is captioned as sharpening: per
+M110 §16.4 the fringes get **fainter, not thinner**.
+
+Crop windows are ranked by **green-plane** gradient energy at `r >= 0.55`.
+Green is measured to move `0.0000 px` between the arms, so the ranking is
+identical in both by construction and cannot have been chosen to flatter either.
+
+
+---
+
 ## 6. Patches
 
 **No default flips.** No instrument passed its registered promotion bar, so
@@ -917,9 +1136,28 @@ correct response to it remains a measurement milestone, not a patch.
   about.** It is the instrument whose purpose is closest to a visible artefact,
   which is why ORCH prioritised it and why I measured it. It failed. The
   complaint remains unexplained by any instrument measured in this milestone.
-- **It does not adjudicate the lateral-CA correction.** `STREHL_FIX_CA` was
-  never enabled in any arm, by instruction. Nothing here bears on the disputed
-  1.444x over-correction.
+- **It does not adjudicate the lateral-CA correction's coefficient.** Section 5f
+  measures the shipped constant as shipped. It does not refit it and it does not
+  settle M107/M114's over-correction dispute; it reports that a third,
+  independent method reads an implied factor of `1.099x` and `1.048x`, which
+  sits at the bottom of their disputed `1.06-1.25x` band.
+- **It does not claim CA helps on `bee-3-cpl` or on fern by any measured
+  amount.** CD1 failed on both: a planted `0.500 px` displacement read back as
+  `0.015` and `0.120 px`. Their `Q = 0.400` and `Q = 0.330` are VOID. The crops
+  show a visible improvement on bee and the report says so, but a visible
+  improvement is not a measurement and it is not reported as one.
+- **It does not claim `90.1%` and `95.2%` are M110's `61.0%` and `58.7%`
+  reproduced.** They are different quantities. M110 measured a chroma
+  *amplitude* against a far-band baseline; section 5f measures a radial
+  *displacement* in pixels. They are consistent in direction and are not
+  comparable in magnitude, and neither was used as a prior for the other.
+- **It does not claim the CA correction removes blue fringing.** `eps_b` is
+  `None` on the shipped profile, and `D_B = +0.00000` exactly on all four
+  subjects confirms blue is an exact no-op. Residual blue/cyan fringing is
+  outside this correction's scope.
+- **It does not confirm the X4 CPL on any stack.** EXIF confirms body, lens and
+  2x teleconverter on all 23 subjects and cannot see a filter. The profile's
+  fourth element rests on the owner's `-cpl` filename convention.
 - **It does not claim `STREHL_FIX_HALO` helps.** It was not measured. P14 is an
   inventory finding and P11 is an argument about artefact class, not evidence
   of a fix.
@@ -1180,6 +1418,41 @@ in this report is measured on the linear renders, because `--srgb` applies a
 non-diagonal colour matrix and a guided demosaic and its own `--help` says
 "For looking at, NOT for measuring."
 
+### 9c. Lateral chromatic aberration — the ones to open first
+
+`C:\dev\strehl-out\M116\images-ca\`
+
+```
+tweezers-cpl__CA-4x.png                       <- OPEN THIS ONE FIRST
+tweezers-cpl__CA-1to1.png                     <- the same crops at 1:1
+flat-on-ruler-cpl__CA-{1to1,4x}.png           <- the second calibrated subject
+bee-3-cpl__CA-{1to1,4x}.png                   <- instrument dead, effect visible
+flower-bud-with-background-fern-cpl__CA-{1to1,4x}.png
+INDEX.txt
+```
+
+Each sheet is three crop pairs, OFF on the left and ON on the right, on an
+identical pixel region, at `r >= 0.55` where lateral CA lives. Both `1:1` and
+`4x` nearest-neighbour versions exist because the aberration is sub-pixel: at
+1:1 it reads as a faint colour grain, and at `4x` it is unmistakable.
+
+On `tweezers-cpl` the OFF panels carry dense red/cyan speckle across the whole
+metal texture and the ON panels are essentially neutral grey. On `bee-3-cpl` the
+cyan fringes along the wing edge and leg silhouettes are clearly reduced while
+the hairs are not softened — **shown despite the instrument being dead there,
+and captioned as such, because the eye and the correlator disagree and the
+reader is entitled to both.**
+
+Crop windows were ranked by **green-plane** gradient energy. Green is the
+profile's reference channel, has no coefficient, and is measured to move
+`0.0000 px` between the arms, so the ranking is bit-identical in both arms and
+cannot have been chosen to flatter the correction. This is M87 §16.10's device,
+reused for the same reason.
+
+**No crop here is captioned as sharpening.** M110 §16.4 measured that the
+correction makes fringes *fainter, not thinner* — the peak falls faster than the
+tail and the half-maximum width is unchanged — and the captions say so.
+
 ### The main campaign
 
 `C:\dev\strehl-out\M116\images\`
@@ -1301,7 +1574,49 @@ exit 0.
 - The soft gate deserves one more milestone with a flat-field bar rather than a
   detail bar, starting from ΔN `-0.02044` (P4). It should not ship on tonight's
   evidence.
+- **Lateral CA is the one to act on, and the action is one more render batch,
+  not a code change.** Section 5f is the only positive result in M116: `90.1%`
+  and `95.2%` of measured lateral CA removed at a fine-structure cost of at most
+  `0.42%`, with a byte-identical null and a byte-identical adversarial placebo.
+  It is HELD, not recommended, because CD1 — my own plant — failed on two of
+  four subjects. **The fix is cheap and specified:** re-run the five arms of
+  `run_ca.ps1` on `couch-fibers-cpl`, `highly-angled-ruler-mm-cpl` and
+  `lead-1-cpl`, which are flat and densely textured and should calibrate. If
+  CD1 passes there and CD4 holds, the frozen promotion rule is satisfied on its
+  own terms and the flip can be recommended without narrowing anything. ~40
+  minutes of rendering.
+- **Two ORCH claims from message #5 are confirmed at source, and one carries
+  something ORCH did not relay.** M87 §16.9 is titled "why I am telling you not
+  to enable it", records `72.9%` on the shipped path, and describes the
+  "smooth, milky, **scalloped** band ... **It looks worse.**" But §16.9's
+  withdrawal notice also records that the correction **FAILS registered bar V3**
+  because "it removes fine structure (0.9058) harder than it removes the veil
+  (0.9146)" — **a selectivity failure**. My HB2 was an independently
+  constructed selectivity bar and it failed at `R = 3.054`. Two instruments
+  built without knowledge of each other convict the same correction on the same
+  axis.
+- **My ladder corroborates ORCH's withdrawal of the blur confound, from the
+  opposite direction.** On bee, `D` is *positive at every rung* (up to
+  `+0.14468` dex): the treatment adds high-frequency content rather than
+  removing it, because it substitutes a single frame's raw quad into a
+  neighbourhood averaged over `n_eff ≈ 23`. A treatment that roughens cannot be
+  a blur. That is a different route to M87's σ-race conclusion and it agrees
+  with it. The ladder was already run and committed at `5a99350` before the
+  withdrawal arrived; it cannot be un-spent, and §5e's two silent-no-op defects
+  stand regardless.
+- **The "milky scalloped band" is in my crops already.**
+  `flower-bud-with-background-fern-cpl__contact-halo-edge1.png` shows flat,
+  amoeba-shaped mush with hard scalloped borders carved out of textured bud
+  surface. I named it differently because I reached it independently; it is the
+  same artefact and it is the visual evidence for *not* shipping the halo fix.
+- **My `+17.21%` / `+123.79%` halo figures are NOT comparable to `87.9%` or
+  `72.9%`.** They are my own index, at `--gate 4`, full frame, on 100 frames.
+  M87's are its own halo-metric ISO at `--gate 2` on 299 frames. I did not
+  reproduce `72.9%` and do not claim to have refuted it.
 - `experiments/ORCH-drift-check/reachability.py` was run, not edited.
-- `python scripts/corpus_lint.py` reports 2 violations, both in
-  `docs/research/M95-election-quality.md:241` (S1 and S6, an unescaped `\|` in a
-  code span on a table row). That file is not mine and I did not touch it.
+- `python scripts/corpus_lint.py` reports **OK — no violations** over 190
+  markdown and 61 rust files. Earlier in this milestone it reported 2, both in
+  `docs/research/M95-election-quality.md:241`; that file's owner has since fixed
+  them. The linter caught 4 violations of my own in this section's tables —
+  unescaped `\|` inside code spans on table rows, which the renderer discards
+  silently — and they are fixed.
