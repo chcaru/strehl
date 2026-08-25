@@ -40,17 +40,22 @@ FLAT = re.sub(r"\s+", " ", RAW)
 # Registered occurrence counts. A count that changes is a changed claim and
 # must be updated deliberately; count_sites.py reports the current values.
 SITE_COUNTS = {
-    "26.660": 7, "2.911": 4, "0.034": 2, "467.24": 2, "32.78": 2,
-    "53.321": 1, "0.00127": 2, "14.3": 3, "116.617": 1, "99.00": 5,
+    "26.660": 8, "2.911": 5, "0.034": 4, "467.24": 2, "32.78": 2,
+    "53.321": 1, "0.00127": 3, "14.3": 5, "116.617": 1, "99.00": 5,
     "36.00": 1, "0.1339": 1, "0.3377": 1, "0.5502": 1, "21.00": 1,
     "0.00738": 4, "0.02029": 1, "2.750": 2, "0.05908": 2, "0.05811": 1,
-    "0.983": 2, "0.00380": 2, "0.00499": 1, "0.06323": 1, "0.05786": 1,
+    "0.983": 4, "0.00380": 2, "0.00499": 1, "0.06323": 1, "0.05786": 1,
     "393.11": 1, "164.53": 1, "1580.66": 1, "1649.91": 1, "0.7932": 1,
     "0.00618": 1, "+0.00358": 1, "+0.00119": 1, "3.000": 2, "0.02026": 4,
     "0.01392": 2, "0.01855": 2, "0.16382": 2, "0.16431": 1, "0.16406": 1,
     "0.00488": 3, "0.00476": 1, "0.687": 1, "0.01733": 1, "-0.01868": 3,
     "-0.02173": 2, "-0.01118": 1, "+0.00733": 1, "0.00132": 1, "66.7": 3,
-    "46.2": 3, "557": 1, "154": 1,
+    "46.2": 3, "557": 1, "154": 1, "28665": 1, "28582": 1, "28133": 1,
+    "22219": 1, "22232": 1, "12597": 1, "231.4": 1, "229.2": 1, "129.9": 1,
+    "17.049": 1, "17.538": 2, "1.729": 1, "-36.0": 1, "-40.6": 1,
+    "+51609.9": 1, "1.029": 1, "808.6": 4, "0.109": 2, "0.101": 2,
+    "0.996": 2, "-1.1": 1, "-14.3": 1, "1.669": 1, "1.830": 1, "0.344": 1,
+    "0.608": 1,
 }
 
 fails, checks = [], 0
@@ -70,6 +75,12 @@ def sites(tok: str) -> int:
         return len(re.findall(re.escape(tok), FLAT))
     before = r"(?<![0-9.])" if tok[0] in "+-" else r"(?<![-+0-9.])"
     return len(re.findall(before + re.escape(tok) + r"(?![0-9])", FLAT))
+
+
+def bump():
+    """Count a data-side guard, which asserts rather than locates a token."""
+    global checks
+    checks += 1
 
 
 def check(name, token, anchor, window=900):
@@ -273,6 +284,102 @@ def main():
     check("P70 verdict", "NO WORKING INSTRUMENT", "Campaign 5 verdict", 400)
     check("P70 no promo", "No promotion recommendation", "Campaign 5 verdict", 400)
     check("s1 table", "NO INSTRUMENT", "soft gate, re-asked on the", 600)
+
+    # ---------- section 5i: the PIL 16-bit truncation audit ----------
+    ap = OUTDIR / "pil16-audit.json"
+    if not ap.exists():
+        fails.append("5i: pil16-audit.json missing — run pil16_audit.py")
+    else:
+        pa = json.loads(ap.read_text(encoding="utf-8"))
+
+        # P72: exposure, re-derived from the static scan rather than restated.
+        n_open = sum(r["Image.open"] for r in pa["part_a"])
+        n_tf = sum(r["tifffile.imread"] for r in pa["part_a"])
+        n_pil = sum(1 for r in pa["part_a"] if r["imports_PIL"])
+        n_from = sum(r["Image.fromarray"] for r in pa["part_a"]
+                     if r["imports_PIL"])
+        bump()
+        if n_open != 0:
+            fails.append(f"P72: report claims zero exposure but the scan "
+                         f"found {n_open} Image.open call(s)")
+        a72 = "static scan of all"
+        check("P72 files", str(len(pa["part_a"])), a72, 400)
+        check("P72 open", "**0** calls", a72, 400)
+        check("P72 tifffile", f"**{n_tf}** calls", a72, 400)
+        check("P72 pil files", f"**{n_pil}** files import PIL", a72, 700)
+        check("P72 fromarray", f"make {n_from} `Image.fromarray", a72, 700)
+        check("P72 hashes", "raw file bytes", a72, 1800)
+
+        # P73: the level table, re-derived from the audit.
+        for r in pa["part_b"]:
+            arm = r["arm"]
+            num(f"P73 {arm} max", r["tifffile_max"], 0, "mode `RGB`", 900)
+            num(f"P73 {arm} levels", r["tifffile_levels"], 0, "mode `RGB`", 900)
+            num(f"P73 {arm} loss", r["level_loss_factor"], 1, "mode `RGB`", 900)
+            if r["pil_dtype"] != "uint8" or r["pil_mode"] != "RGB":
+                fails.append(f"P73 {arm}: the hazard did not reproduce "
+                             f"({r['pil_dtype']}, mode {r['pil_mode']})")
+            bump()
+
+        # P74: the manufactured-signal result, and its headline consequence.
+        kc = pa["part_c"]["kurtosis_G1"]
+        a74 = "MANUFACTURES the signal"
+        for arm in ("A0", "A2", "M0"):
+            num(f"P74 {arm} pilK", kc[arm]["pil_K"], 3, a74, 1400)
+            num(f"P74 {arm} chg",
+                (kc[arm]["pil_K"] / kc[arm]["true_K"] - 1.0) * 100.0, 1,
+                a74, 1400, signed=True)
+        r_true = kc["A2"]["true_K"] / kc["A0"]["true_K"]
+        r_pil = kc["A2"]["pil_K"] / kc["A0"]["pil_K"]
+        num("P74 pil ratio", r_pil, 3, "would have been", 400)
+        num("P74 fold", r_pil / r_true, 1, "a factor of", 400)
+        bump()
+        if not (r_pil > 10.0 * r_true):
+            fails.append("P74: claims a change of kind, but the two ratios "
+                         "are within a factor of ten")
+        bump()
+        if kc["A2"]["pil_K"] <= kc["A2"]["true_K"]:
+            fails.append("P74: claims truncation MANUFACTURES structure, but "
+                         "the treated arm's kurtosis did not rise")
+
+        # P75: the verdict must survive the hazard, checked not asserted.
+        g1_pil = kc["M0"]["pil_K"] / kc["A0"]["pil_K"]
+        h1_pil = (pa["part_c"]["f4_ROI-N"]["M0"]["pil_F4"] /
+                  pa["part_c"]["f4_ROI-N"]["A0"]["pil_F4"])
+        num("P75 G1 pil", g1_pil, 3, "robust to the", 1200)
+        num("P75 H1 pil", h1_pil, 3, "robust to the", 1200)
+        bump()
+        if g1_pil >= 2.0 or h1_pil >= 1.5:
+            fails.append("P75: claims both plants fail under PIL too, but at "
+                         f"least one passes (G1 {g1_pil:.3f}, H1 {h1_pil:.3f})")
+        moves = [(v["pil_F4"] / v["true_F4"] - 1.0) * 100.0
+                 for roi in ("f4_ROI-W", "f4_ROI-N")
+                 for v in pa["part_c"][roi].values() if v["true_F4"]]
+        num("P75 F4 least", max(moves), 1, "moves by between", 400, signed=True)
+        num("P75 F4 most", min(moves), 1, "moves by between", 400, signed=True)
+        num("P75 F4 worst", abs(min(moves)), 1, "at most", 400)
+        bump()
+        k_moves = [abs(kc[a]["pil_K"] / kc[a]["true_K"] - 1.0) * 100.0
+                   for a in kc]
+        if abs(min(moves)) >= min(k_moves):
+            fails.append("P75: claims F4 is comparatively robust, but its "
+                         "worst move is not smaller than K's smallest")
+
+        # P76: the post-hoc probe is reported as failed, in both directions.
+        d = {(r["arm"], r["roi"]): r for r in pa["part_d"]}
+        a76 = "FAILED IN MY FAVOUR"
+        for roi in ("ROI-W", "ROI-N"):
+            lev = d[("A0", roi)]["levels"] / d[("M0", roi)]["levels"]
+            flt = d[("M0", roi)]["flat_frac"] / d[("A0", roi)]["flat_frac"]
+            num(f"P76 lev {roi}", lev, 3, a76, 1800)
+            num(f"P76 flat {roi}", flt, 3, a76, 1800)
+            bump()
+            if lev <= 1.0 or flt >= 1.0:
+                fails.append(f"P76 {roi}: the report describes the two probes "
+                             "as pointing in opposite directions; the data "
+                             "no longer does")
+        check("P76 unusable", "Neither number is usable", a76, 1800)
+        check("P76 picture", "rest on the picture", a76, 2200)
 
     print(f"checks: {checks}")
     if fails:

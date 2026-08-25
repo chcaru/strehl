@@ -1533,7 +1533,146 @@ deliberately, in one line, rather than by relaxing the bar.
 
 ---
 
-## 6. Patches
+## 5i. Addendum: the PIL 16-bit RGB truncation hazard — my exposure, and what it would have cost
+
+ORCH reports fleet-wide that `PIL.Image.open()` on a 16-bit RGB TIFF silently
+returns `uint8`, with no warning and no flag, and asked every milestone to
+declare its exposure rather than reason about it. Audit script:
+`experiments/M116-promotion/pil16_audit.py`. It answers three questions and
+then asks a fourth that it fails.
+
+**P72 — MEASURED. This milestone's exposure is zero, and that is a fact about
+the code rather than a recollection.** A static scan of all 39 Python files in
+`experiments/M116-promotion/` finds **0** calls to `Image.open(...)` and **39**
+calls to `tifffile.imread(...)`. **11** files import PIL; between them they
+make 14 `Image.fromarray(...)` calls and no reads. PIL is used in this
+milestone to *write* PNG previews from arrays already loaded by `tifffile`,
+which is the harmless case in ORCH's triage. Separately, every byte-identity
+check in this milestone — the null, placebo and trap arms, and the ladder's
+identity ledger — hashes the *raw file bytes* through `hashlib.sha256` on a
+binary handle, never a decoded array, so no identity claim passes through an
+image reader at all.
+
+**P73 — MEASURED. The hazard reproduces on this milestone's own renders, so it
+is not a property of somebody else's exporter.** Reading
+`C:\dev\strehl-out\M116\measure\bee-3-cpl__*.tif` both ways:
+
+| arm | `tifffile` | PIL | distinct levels, true / PIL | loss |
+| --- | --- | --- | --- | --- |
+| A0 (shipped) | `uint16`, max 28665 | `uint8`, mode `RGB` | 22219 / 96 | 231.4x |
+| A2 (soft gate) | `uint16`, max 28582 | `uint8`, mode `RGB` | 22232 / 97 | 229.2x |
+| M0 (gate-0 plant) | `uint16`, max 28133 | `uint8`, mode `RGB` | 12597 / 97 | 129.9x |
+
+**P74 — MEASURED, and this is the part worth carrying off this milestone. The
+hazard does not merely blunt a metric; on the metric this campaign registered,
+it MANUFACTURES the signal the metric looks for.** Recomputing the campaign's
+first registered instrument from the arrays PIL would have handed me:
+
+| arm | true K | K via PIL | change |
+| --- | --- | --- | --- |
+| A0 | 26.660 | 17.049 | -36.0 % |
+| A2 | 0.034 | 17.538 | **+51609.9 %** |
+| M0 | 2.911 | 1.729 | -40.6 % |
+
+The treated arm's excess Laplacian kurtosis rises by a factor of five hundred.
+The mechanism is not noise: 8-bit truncation lays down **quantisation
+contours**, which are sparse step edges in an otherwise smooth field, and
+sparse step edges in an otherwise smooth field are the exact structure excess
+kurtosis is built to detect. The smoother the arm, the more of its variance the
+contours own — which is why the effect is largest on A2, the arm with the least
+real structure, and smallest on M0, which has enough real structure to swamp
+them. **A reader that discards precision is therefore most dangerous on
+precisely the arm where the treatment worked.**
+
+Carried into the headline: the void figure `K(A2)/K(A0)` reported in P63 is
+**0.00127** on true data and would have been **1.029** through PIL — a factor
+of **808.6**, and a change of kind rather than degree. A spurious 99.9 %
+improvement becomes a flat null. ORCH's warning that the worst outcome is "a
+clean null" is measured here at 808.6x.
+
+**P75 — MEASURED. The verdict of section 5h is nevertheless robust to the
+hazard, and I checked that rather than assuming it.** Both registered plants
+fail under either reader, which is the only thing the NO INSTRUMENT verdict
+actually rests on:
+
+| plant | bar | true | via PIL |
+| --- | --- | --- | --- |
+| G1, `K(M0)/K(A0)` | >= 2.0 | 0.109 | 0.101 |
+| H1, `F4(M0)/F4(A0)`, ROI-N | >= 1.5 | 0.983 | 0.996 |
+
+The second instrument is comparatively robust: `F4` moves by between **-1.1 %**
+and **-14.3 %** across arms and ROIs, and no bar changes sign. This is what a
+metric built on a threshold *relative to the ROI's own median* buys, and it was
+registered for a different reason — resistance to the denoising confound. It
+happened to buy resistance to this one too.
+
+**P76 — A POST-HOC PROBE THAT FAILED, REPORTED BECAUSE IT FAILED IN MY FAVOUR.**
+While the arrays were loaded I ran an unregistered check on whether M0 is
+piecewise-constant, since section 5h's plant-validity claim rests on a picture
+and a second line of evidence would have been welcome. Two probes, opposite
+answers, both confounded:
+
+- **Distinct 16-bit levels** in the ROI: M0 occupies **1.669x** fewer than A0 on
+  ROI-W and **1.830x** fewer on ROI-N. This flatters the piecewise-constant
+  reading — but it is fully explained by something else. A0 averages ~99 frames
+  in these regions (P66) and averaging *manufactures* intermediate levels,
+  while M0 draws each pixel from a single frame and inherits that frame's
+  quantisation. The observed direction is what frame-count alone predicts, so
+  the probe has no power to separate the two.
+- **Flat-pixel fraction** at `|Laplacian| < 1`: M0 reads **0.344x** A0 on ROI-W
+  and **0.608x** A0 on ROI-N — the *opposite* direction, i.e. M0 looks *less*
+  flat. This is also an artefact: an absolute flatness threshold applied to a
+  single-frame arm is measuring shot noise, not flatness.
+
+Neither number is usable and I am not using either. It is recorded because a
+post-hoc probe that agreed with me would otherwise have been quietly promoted
+into a corroboration, and because it is the third time in this milestone that a
+region-or-threshold choice has landed somewhere the quantity of interest could
+not be read. **Plant validity continues to rest on the picture**
+(`images-patch/bee-3-cpl__roiG1__A0-A1-A2-M0.png`), which is where section 5h
+put it.
+
+**P77 — NOT MEASURED, and stated so it is not mistaken for a clean bill of
+health.** This audit covers the M116 scripts and the M116 renders. It does not
+re-derive any number quoted from another milestone's report. Where this report
+cites M87, M93, M96, M97 or M114 figures, those were computed by their own
+milestones and several of those milestones appear on ORCH's exposed list; their
+re-derivation is theirs to do.
+
+**P78 — VERIFIED. This section is machine-checked to the same standard as the
+rest of the milestone, and the check was commissioned rather than trusted.**
+`verify_patch.py` now runs **211** checks and re-derives every number above
+from `pil16-audit.json` rather than reading it back out of the prose.
+`negctl_patch.py` plants **29** defects and catches all 29, with the inert
+plant still correctly ignored. Thirteen of the plants are new to this section,
+and five of those mutate the *audit JSON* while leaving the report untouched —
+the case where the prose is honest but the measurement underneath it has moved.
+Each of those five now asserts the **specific guard** it targets by message
+text, because the first run showed three of them going red on a token check
+that fired first: a plant that goes red for the wrong reason commissions
+nothing, and would have left the semantic guards untested behind a green.
+
+
+than one that fails, and the correct defence is an assertion on the line after
+the load — but the reason it is urgent is that truncation does not only blunt a
+metric, it can SUPPLY the structure the metric was built to find.** The
+fleet-wide framing of the PIL 16-bit hazard is that precision is lost and small
+effects vanish into a null. That is true and it is the common case. The case
+measured here is worse and less intuitive: quantisation contours are *sparse
+step edges in a smooth field*, so a metric that scores sparse step edges reads
+them as signal. On the smoothest arm — the one where the treatment worked — the
+manufactured structure owned so much of the variance that excess kurtosis rose
+by a factor of five hundred and the headline ratio moved by **808.6x**, from a
+99.9 % improvement to a flat null. **So the triage question is not only "was my
+effect bigger than the quantisation step", it is "does my metric happen to
+detect the shape that quantisation makes".** Metrics scoring sparsity, heavy
+tails, edge counts, or gradient extremes are exposed in this second way even
+when the effect they measure is large. Metrics thresholded relative to their
+own ROI's median were comparatively robust here (`F4` moved by at most 14.3 %),
+and that robustness was bought for an unrelated reason — which is the usual way
+a control earns its keep.
+
+
 
 **No default flips.** No instrument passed its registered promotion bar, so
 there is no default to change and nothing of that kind to route to an owning
@@ -2300,9 +2439,52 @@ exit 0.
   silently — and they are fixed.
 - **Section 5h is verified and the verifier is commissioned.**
   `python experiments/M116-promotion/verify_patch.py` re-derives every number
-  from the scorer JSONs and the raw `n_eff` map and reports **GREEN, 141
-  checks**; `python experiments/M116-promotion/negctl_patch.py` plants 16
-  defects — including two that mutate the *measurement* rather than the report —
-  and reports **16/16 caught, 0 missed, inert plant ignored**. Section 5f's pair
+  from the scorer JSONs and the raw `n_eff` map and reports **GREEN, 211
+  checks**; `python experiments/M116-promotion/negctl_patch.py` plants 29
+  defects — including seven that mutate the *measurement* rather than the report —
+  and reports **29/29 caught, 0 missed, inert plant ignored**. Section 5f's pair
   still reports GREEN 100 / 13-of-13. Nothing in this milestone rests on an
   unchecked number.
+
+### The PIL 16-bit hazard: my exposure, declared
+
+You asked every milestone to state its exposure explicitly rather than reason
+about it. **Mine is zero, and section 5i is the measurement rather than the
+assurance.** A static scan of all 39 Python files in this milestone finds no
+`Image.open` call at all; every TIFF read goes through `tifffile.imread`, and
+every byte-identity claim — the null, placebo and trap arms — hashes raw file
+bytes, never a decoded array. PIL appears only as `Image.fromarray` writing PNG
+previews, which is the harmless case in your triage.
+
+**Two things in section 5i are worth folding beyond my own exposure.**
+
+1. **The hazard has a second mode that your triage does not cover, and it is
+   the more dangerous one.** Your list warns that small effects vanish into a
+   null. On the metric this campaign registered, truncation did the opposite:
+   it *manufactured* the structure the metric detects. Quantisation contours
+   are sparse step edges in a smooth field, which is precisely what excess
+   Laplacian kurtosis is built to score. The treated arm's `K` rose from
+   `0.034` to `17.538` — a factor of five hundred — and the headline ratio
+   would have moved by **808.6x**, turning a 99.9 % improvement into a flat
+   null. **So the triage question is not only "was my effect bigger than the
+   quantisation step" but "does my metric detect the shape quantisation
+   makes".** Anything scoring sparsity, heavy tails, edge counts or gradient
+   extremes is exposed this way *even when its effect is large*. I would add
+   that to the fleet note; it is discipline `D-aa`.
+2. **My verdict survives, and I checked rather than assumed it.** Both
+   registered plants fail under either reader — `G1` `0.109` true against
+   `0.101` via PIL, `H1` `0.983` against `0.996` — so section 5h's NO
+   INSTRUMENT verdict is not an artefact of the reader. `F4` moved by at most
+   `14.3 %`, because it thresholds relative to its own ROI's median. That
+   robustness was bought for an unrelated reason, which is the usual way a
+   control earns its keep.
+
+I also ran a post-hoc probe that agreed with me and then discarded it: both of
+its readings are confounded, in opposite directions, and the details are in
+`P76`. It is recorded because a post-hoc number that flatters you is exactly
+the one that gets promoted quietly.
+
+**What I have not done:** re-derived any figure this report quotes from M87,
+M93, M96, M97 or M114. Several of those appear on your exposed list; their
+re-derivation belongs to them, and I have not silently inherited a clean bill
+of health from mine.

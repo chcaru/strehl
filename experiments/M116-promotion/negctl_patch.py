@@ -34,6 +34,10 @@ REPORT = HERE.parents[1] / "docs" / "research" / "M116-promotion.md"
 SRC_OUT = Path(r"C:\dev\strehl-out\M116\patch")
 VERIFY = HERE / "verify_patch.py"
 
+JSONS = ("scores-patch.json", "scores-patch2.json", "pil16-audit.json")
+JSON_FOR_KIND = {"k": "scores-patch.json", "f": "scores-patch2.json",
+                 "p": "pil16-audit.json"}
+
 # (name, kind, anchor, replacement, must_be_caught)
 # kind: "md" mutates the report, "k"/"f" mutate a scorer JSON by key path.
 PLANTS = [
@@ -79,6 +83,41 @@ PLANTS = [
      "`76.7 %` of `A2`'s `F4` reduction at ROI-W", True),
     ("D14 void headline ratio", "md",
      "0.034 / 26.660 = 0.00127`", "0.034 / 26.660 = 0.00227`", True),
+    # Section 5i: the PIL 16-bit truncation audit.
+    ("D17 P73 level count", "md",
+     "| 22219 / 96 | 231.4x |", "| 22319 / 96 | 231.4x |", True),
+    ("D18 P73 loss factor", "md",
+     "| 12597 / 97 | 129.9x |", "| 12597 / 97 | 139.9x |", True),
+    ("D19 P74 manufactured K", "md",
+     "| 17.538 | **+51609.9 %** |", "| 17.548 | **+51609.9 %** |", True),
+    ("D20 P74 fold", "md",
+     "**808.6**, and a change of kind", "**808.9**, and a change of kind",
+     True),
+    ("D21 P72 exposure count", "md",
+     "finds **0** calls to", "finds **1** calls to", True),
+    ("D22 P75 plant under PIL", "md",
+     "| 0.109 | 0.101 |", "| 0.109 | 2.101 |", True),
+    ("D23 P76 level ratio", "md",
+     "**1.669x** fewer", "**1.069x** fewer", True),
+    ("D24 P76 conclusion flipped", "md",
+     "Neither number is usable and I am not using either.",
+     "Both numbers are usable and I am using them.", True),
+    # Data-side plants for 5i: the report is untouched, the audit moves.
+    ("D25 JSON a TIFF was read by PIL", "p",
+     ("part_a", 0, "Image.open"), 3, True,
+     "report claims zero exposure but the scan"),
+    ("D26 JSON truncation stops manufacturing", "p",
+     ("part_c", "kurtosis_G1", "A2", "pil_K"), 0.01, True,
+     "claims truncation MANUFACTURES structure"),
+    ("D27 JSON hazard fails to reproduce", "p",
+     ("part_b", 0, "pil_dtype"), "uint16", True,
+     "the hazard did not reproduce"),
+    ("D28 JSON plant clears its bar under PIL", "p",
+     ("part_c", "f4_ROI-N", "M0", "pil_F4"), 0.20, True,
+     "claims both plants fail under PIL too"),
+    ("D29 JSON post-hoc probes agree", "p",
+     ("part_d", 4, "levels"), 99999, True,
+     "pointing in opposite directions"),
     # Data-side plants: the report is untouched, the measurement moves.
     ("D15 JSON K(M0) clears its bar", "k",
      ("subjects", "bee-3-cpl", "arms", "M0", "K"), 60.0, True),
@@ -110,7 +149,7 @@ def main():
     try:
         # Baseline must be GREEN, or nothing below means anything.
         shutil.copy2(REPORT, base / "M116-promotion.md")
-        for j in ("scores-patch.json", "scores-patch2.json"):
+        for j in JSONS:
             shutil.copy2(SRC_OUT / j, base / j)
         rc, out = run_verify(base)
         if rc != 0:
@@ -119,10 +158,12 @@ def main():
             return 2
         print(f"baseline: GREEN  ({out.strip().splitlines()[0]})\n")
 
-        for name, kind, anchor, repl, must in PLANTS:
+        for plant in PLANTS:
+            name, kind, anchor, repl, must = plant[:5]
+            expect = plant[5] if len(plant) > 5 else None
             tmp = Path(tempfile.mkdtemp(prefix="m116p_", dir=base))
             shutil.copy2(REPORT, tmp / "M116-promotion.md")
-            for j in ("scores-patch.json", "scores-patch2.json"):
+            for j in JSONS:
                 shutil.copy2(SRC_OUT / j, tmp / j)
 
             if kind == "md":
@@ -136,23 +177,39 @@ def main():
                 (tmp / "M116-promotion.md").write_text(
                     t.replace(anchor, repl), encoding="utf-8")
             else:
-                fn = "scores-patch.json" if kind == "k" else "scores-patch2.json"
+                fn = JSON_FOR_KIND[kind]
                 d = json.loads((tmp / fn).read_text(encoding="utf-8"))
                 node = d
                 for key in anchor[:-1]:
                     node = node[key]
-                if anchor[-1] not in node:
+                last = anchor[-1]
+                ok = (isinstance(last, int) and isinstance(node, list)
+                      and 0 <= last < len(node)) or \
+                     (not isinstance(node, list) and last in node)
+                if not ok:
                     raise SystemExit(f"MUTATION TARGET NOT FOUND for {name}")
-                node[anchor[-1]] = repl
+                if node[last] == repl:
+                    raise SystemExit(
+                        f"INERT MUTATION for {name}: the planted value already "
+                        f"equals the real one, so RED would prove nothing.")
+                node[last] = repl
                 (tmp / fn).write_text(json.dumps(d, indent=2), encoding="utf-8")
 
             rc, out = run_verify(tmp)
             red = (rc != 0)
-            if must and red:
+            if must and red and expect and expect not in out:
+                missed += 1
+                print(f"MISSED   {name}  -> went RED, but not on the guard "
+                      f"this plant targets ({expect!r}). Another check fired "
+                      f"first and masked it.")
+            elif must and red:
                 caught += 1
                 first = next((l.strip() for l in out.splitlines()
                               if l.strip().startswith(("P6", "P7", "s1"))),
                              "(red)")
+                if expect:
+                    first = next(l.strip() for l in out.splitlines()
+                                 if expect in l)
                 print(f"CAUGHT   {name}  -> {first}")
             elif must and not red:
                 missed += 1
