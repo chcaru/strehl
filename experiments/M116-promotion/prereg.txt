@@ -1,0 +1,300 @@
+M116-promotion — PRE-REGISTRATION
+=================================
+
+Written and committed BEFORE any scoring run. Nothing below may be narrowed,
+widened or reinterpreted after a number exists. If a bar fails, it is reported
+as FAILED.
+
+Author: M116 (measurement milestone). Reports to ORCH.
+Written: 2026-08-24, before the campaign.
+
+
+0. WHAT THIS MILESTONE IS
+-------------------------
+
+The project has built, tested and committed four quality instruments and left
+all four off the default render path, because nobody measured what any of them
+does to a real render. This milestone measures that, on the owner's real
+captures, against bars registered here.
+
+It is a MEASUREMENT milestone. It does not edit anything under crates/. Any
+recommended change ships as a diff in the report, for ORCH to route.
+
+
+1. PINNED BUILD
+---------------
+
+Worktree : C:\dev\strehl-out\M116-tree
+Commit   : 4beac7300e318f6f0aaf10b6a88e57f311b9e814
+Created  : git worktree add --detach C:\dev\strehl-out\M116-tree <sha>
+Binary   : C:\dev\strehl-out\M116-tree\target\release\strehl.exe
+Build    : cargo build --release   (Finished release profile in 1m 21s, exit 0)
+
+Five agents hold uncommitted edits in the shared working tree. Every number in
+this milestone comes from the pinned worktree and from nowhere else. If a second
+configuration is needed, a second worktree is created; this one is never mutated
+mid-campaign.
+
+All output goes to C:\dev\strehl-out\M116\. D:\ is read-only and is never
+written. STREHL_WARPMAP is set on every run (AGENTS.md rule 45), so no run can
+write a sidecar into the capture library.
+
+
+2. RUNS ALREADY MADE, BEFORE THIS REGISTRATION (disclosed)
+----------------------------------------------------------
+
+None of these computed a metric defined below. They are disclosed so that no
+reader has to take "before any run" on trust.
+
+  a. `strehl align D:\personal\macro\109MSDCF --limit 22 --out ...` — a timing
+     pilot. Result used: 4.1 s.
+  b. `strehl stack D:\personal\macro\109MSDCF --limit 22 --gate 4 --out ...` —
+     a timing / output-format pilot. Results used: 12.1 s, and the fact that the
+     default output is a 3516x2344 16-bit linear camera-native binned TIFF.
+  c. `strehl stack <subject> --limit 1 --gate 4 --srgb --auto-exposure --out ...`
+     with STREHL_ALIGN=0, for eight candidate subjects — SUBJECT SELECTION. Used
+     only to see what each capture depicts, which section 3 requires.
+
+No merge of any campaign subject at any campaign setting has been rendered, and
+no metric defined in section 5 has been computed on anything.
+
+
+3. SUBJECTS, AND WHY EACH
+-------------------------
+
+Three subjects of deliberately different character, all under D:\personal\macro.
+
+  S1  bee-3-cpl        299 ARW, --limit 100  (first 100 of 299 — PARTIAL sweep)
+      HIGH-CONTRAST INSECT. Dense hair detail against a large, genuinely flat
+      white background, so the flat-ROI control (rule 9) has real estate. It is
+      also the subject M111 measured the owner's "those stacks don't look too
+      good yet" complaint on, which makes it the stack whose verdict matters
+      most. Partial sweep is a stated limitation: frames 100-298 are not merged.
+
+  S2  foam            100 ARW, --limit 100  (FULL stack)
+      LOW-CONTRAST / SMOOTH. Dense, fine, low-amplitude grey texture with no
+      strong edges anywhere. Chosen also because M52 measured that foam CANNOT
+      reach n_eff = 3 anywhere on the 0.5-4.0 gate ladder — so it is the stack
+      where an admission instrument has the least room to act, and a large
+      reading here would be more suspicious than reassuring.
+
+  S3  tweezers-cpl    100 ARW, --limit 100  (FULL stack)
+      OCCLUDING EDGE. A steel tweezer tip crosses in front of a background at a
+      different depth, giving a hard silhouette against a receding surface, plus
+      specular highlights and a large smooth grey field. This is the geometry
+      the stacking literature calls an occlusion halo (AGENTS.md rule 15).
+
+Two of the three are complete stacks. --limit 100 is used uniformly so that
+runtime is bounded and so that the frame count, which STREHL_WARPMAP validates,
+is one value per subject.
+
+
+4. ARMS
+-------
+
+Every arm of a subject uses the SAME frozen warp sidecar, solved once per
+subject by `strehl align --limit 100 --out C:\dev\strehl-out\M116\warp\<S>-l100.txt`
+and thereafter loaded read-only via STREHL_WARPMAP. Registration is therefore
+identical across arms by construction and cannot be a confound.
+
+Common to every arm below: --gate 4 (the shipped default), --limit 100,
+STREHL_WARPMAP=<the frozen sidecar>, STREHL_ALIGN unset (alignment ON),
+STREHL_FIX_CA unset, STREHL_FIX_HALO unset, STREHL_SMOOTH unset, threads
+default. Output is the DEFAULT file (binned, linear, camera-native), because
+`strehl stack --help` states in terms that the --srgb file is not to be
+measured.
+
+  A0  default            no instrument flags
+  A1  +photometric       --photometric
+  A2  +softgate-gauss    STREHL_SOFT_GATE=gaussian
+  A3  +softgate-exp      STREHL_SOFT_GATE=exponential
+  A4  +photo+soft-gauss  --photometric and STREHL_SOFT_GATE=gaussian
+
+  M0  mask arm           --gate 0   (pure selection). NOT compared. Its only job
+                         is to supply the flat and detail masks and the two crop
+                         windows, so that no mask is derived from an arm under
+                         test. This is the circularity M111 charged against its
+                         own headline and retracted for.
+
+  P1  placebo            byte-for-byte the A0 configuration, re-run with a
+                         different --out path and a different STREHL_CACHE_DIR.
+                         With STREHL_WARPMAP set, STREHL_CACHE_DIR cannot reach
+                         a pixel. MUST read exactly zero.
+  N1  null               the A0 invocation repeated verbatim. MUST be
+                         byte-identical to A0.
+  T1  trap (diagnostic)  A0 plus STREHL_DUMP_NEFF=<path>, documented byte-inert
+                         debug output. MUST read exactly zero.
+  T2  trap (instrument)  A0 plus STREHL_SOFT_GATE=0, documented by merge.rs:442
+                         as "shipped top-hat". MUST read exactly zero. This is
+                         the trap aimed at the soft gate specifically: if the
+                         soft-gate arm's improvement also appears when the soft
+                         gate is switched off by a value naming the hard gate,
+                         the improvement is not the soft gate.
+
+  B0  single-frame       the M85 baseline, see section 6.
+
+The lateral-CA correction is NOT an arm. STREHL_FIX_CA is unset on every run.
+It is under active dispute and belongs to M107 and M114.
+
+The outlier / robustness mask is NOT an arm, because it is not reachable: at
+this SHA the only reference to strehl_core::outlier outside the module itself
+and one example binary is `pub mod outlier;`. Its verdict is decided by that
+audit, not by a render.
+
+
+5. METRICS
+----------
+
+All computed on the DEFAULT (binned, linear, camera-native) 16-bit RGB output,
+green channel, which the merge defines as (G1+G2)/2. f64 throughout.
+
+  hp(L)  = L - box5(L), a 5x5 box high-pass.
+
+  Masks, both taken from M0 and from M0 alone, and therefore identical across
+  every compared arm:
+    structure(x,y) = local sd over a 33x33 window of M0's green plane after 4x
+                     box-downsampling (downsampled first so the ranking is
+                     driven by scene structure and not by M0's pixel noise),
+                     nearest-upsampled back to the plane grid.
+    Mflat = the lowest  20% of structure    (the rule-9 flat control)
+    Mdet  = the highest 20% of structure
+
+  N = log10( sd of hp(L) over Mflat )     LOWER is better.
+      FOOLED BY: any blur. A merge that simply softens the image lowers N. N is
+      therefore inadmissible alone and is only ever read beside D.
+
+  D = log10( sd of hp(L) over Mdet )      HIGHER is better.
+      FOOLED BY: ringing, sharpening, and manufactured detail. Rule 18 and
+      M113's finding that a high-band statistic rises with ringing both apply.
+      D is admissible as a test AGAINST COLLAPSE and is NOT evidence of quality
+      on its own.
+
+  Q = D - N   (dex)                       HIGHER is better.
+      A log ratio, so dimensionless and geometric: there is no absolute DN
+      tolerance anywhere in it (the mechanism behind the waxy-blob artefact,
+      fact 1470).
+      FOOLED BY: an operator that adds detail-band ringing while smoothing flat
+      regions raises Q twice over. Q is therefore reported beside the 1:1 crops
+      and never instead of them.
+
+  Reported alongside, descriptively, not as bars: mean n_eff as printed by the
+  binary; the fitted photometric gain spread on the arms that fit one; SHA-256
+  and byte count of every output file (rule 47).
+
+  Delta convention: DELTA-X(arm) = X(arm) - X(A0), on the same subject, same
+  masks, same grid.
+
+
+6. THE M85 BASELINE — IS THE MERGE SHARPER THAN THE BEST SINGLE FRAME?
+----------------------------------------------------------------------
+
+Asked as a separate sub-experiment because an aligned merge and a single frame
+do NOT share a pixel grid: fit_to_cover rescales the merged content by a factor
+k about the frame centre while leaving the grid dimensions alone, so comparing
+across it would require a resampling that adds blur to the quantity being
+measured. Resampling is therefore refused.
+
+Instead both sides are rendered with STREHL_ALIGN=0, which removes the warp and
+the cover fit entirely and puts the merge and the single frame on one identical,
+pixel-exact 3516x2344 grid with no interpolation anywhere.
+
+  B0  the sharpest single source frame, copied out of the read-only library into
+      C:\dev\strehl-out\M116\single\<S>\ and rendered alone with STREHL_ALIGN=0.
+      "Sharpest" is defined as the frame index that wins the most pixels in A0's
+      election map (--index-map, documented as byte-inert). That is a frame
+      CHOICE made by the pipeline; it is not a metric and does not enter any
+      score.
+  B1  the same 100 frames merged at --gate 4 with STREHL_ALIGN=0.
+
+  Masks for this pair come from a third arm on the same unaligned grid: the same
+  100 frames at --gate 0, STREHL_ALIGN=0.
+
+  REGISTERED, and this is the one I lead the report with if it fires:
+  If D(B1) - D(B0) < -0.010 dex on 2 or more of the 3 subjects, the report leads
+  with "the default merge is softer than the best single source frame", above
+  every instrument verdict.
+
+  Stated limitation, registered now: this comparison has alignment switched off,
+  so it does not describe the shipped default path, which aligns. It bounds the
+  merge-versus-single-frame question with zero resampling confound and nothing
+  more.
+
+
+7. BARS
+-------
+
+For an instrument to be recommended PROMOTE on a subject, all four must hold.
+
+  B1  NO DETAIL LOSS       DELTA-D >= -0.010 dex
+  B2  A REAL GAIN          DELTA-Q >= +0.010 dex
+  B3  ABOVE THE FLOOR      |DELTA-Q| >= 3 x max(|DELTA-Q| over P1, T1, T2)
+                           and |DELTA-Q| >= 0.010 dex
+  B4  NO VISUAL REGRESSION the 1:1 crops show no new artefact
+
+0.010 dex is 2.33% in linear sd. It is set here, before any datum, at the level
+below which the project should not be moving a shipped default.
+
+Per-instrument verdict, over the three subjects:
+  PROMOTE       passes B1-B4 on >= 2 of 3 subjects AND DELTA-Q > -0.010 on all 3
+  KEEP-OFF      fails B2 on >= 2 of 3 subjects, OR fails B1 on any subject
+  INCONCLUSIVE  anything else
+
+Milestone-level criteria:
+  SUCCESS  every instrument receives a verdict backed by a number, whether or
+           not any instrument promotes. "None of these measurably improves the
+           render" is a successful outcome and will be reported as the headline
+           if that is what the data say.
+  FAILURE  the null N1 is not byte-identical to A0 and the run-to-run spread
+           cannot be quantified. In that case every difference below is
+           confounded, and the report says so first, loudly, and quantifies the
+           spread before reporting a single positive result.
+
+
+8. CONTROLS THAT MUST NOT FIRE
+------------------------------
+
+  P1 placebo    DELTA-Q must be exactly 0.000000 and the output SHA-256 must
+                equal A0's.
+  N1 null       output SHA-256 must equal A0's.
+  T1 trap       output SHA-256 must equal A0's. A byte-inert diagnostic that
+                moves the image would refute AGENTS.md rule 26 for this path.
+  T2 trap       output SHA-256 must equal A0's, AND DELTA-Q exactly 0.000000.
+
+  Additionally, a predictor with a direction: the photometric arm's effect
+  should scale with the fitted per-frame gain spread. If a subject's fitted
+  gains span ~0 and A1 nevertheless moves Q by more than the B3 floor, the
+  photometric reading on that subject is not the photometric correction and is
+  reported as unexplained rather than as an improvement.
+
+
+9. IMAGES — THE DELIVERABLE THE OWNER LOOKS AT FIRST
+-----------------------------------------------------
+
+Written to C:\dev\strehl-out\M116\, named <subject>__<arm>__<crop>.png.
+
+  Full renders   one per subject per arm, --srgb at a FIXED exposure per subject.
+                 The exposure is solved ONCE, by --auto-exposure on A0, and then
+                 passed as a literal --exposure=N to every arm of that subject
+                 including B0, so that the arms differ in the merge and not in
+                 the gain applied to it. The value is recorded.
+  1:1 crops      two per subject per arm, 512x512 on the plane grid (1024x1024
+                 on the --srgb --demosaic grid), at IDENTICAL pixel coordinates
+                 across all arms of a subject:
+                   crop DETAIL — the 512x512 window of highest mean structure
+                   crop FLAT   — the 512x512 window of lowest mean structure
+                 Both windows are located on M0, the non-compared mask arm, so
+                 the choice of what to look at is not made by an arm under test.
+  Contact sheet  one per subject, all arms side by side at 1:1 for each crop,
+                 labelled with arm, commit SHA and the metric values.
+
+
+10. WHAT THIS MILESTONE WILL NOT CLAIM
+--------------------------------------
+
+  * Nothing about the lateral-CA correction. It is not an arm.
+  * Nothing about frames 100-298 of bee-3-cpl.
+  * No claim that Q is a perceptual quality measure. It is a log ratio of two
+    high-band spreads with two stated failure directions.
+  * No claim that a PROMOTE verdict on three subjects generalises to the corpus.
+    Three subjects is three subjects.
+  * No claim about the shipped aligned path from the section 6 unaligned pair.
