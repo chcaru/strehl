@@ -466,7 +466,13 @@ alone so that other agents' lines do not appear in my commit.
 | **P15** | MEASURED | Three planted mismatches were correctly reported DIFFERENT, showing the hash harness can fail. |
 | **P16** | MEASURED | Test suite 506/0/1 with M125 vs 489/0/1 at HEAD `609cd45`; +17 tests, all `strehl-core`. |
 | **P17** | UNDETERMINED | Whether the 1.84% threshold is the *right* threshold. D1 shows the objective flat over [1.64, 8.45]; the corpus cannot locate it. |
-| **P18** | UNDETERMINED | Whether `auto` helps on stacks with 101–298 frames, or fewer than 33. Outside the measured domain; `auto` abstains (U1) rather than extrapolating. |
+| **P18** | **MEASURED** | **`Dpp` is strongly frame-count dependent** — `bee-3-cpl` reads 1.626% over 100 frames and **8.472% over its full 299** (5.2×). Extrapolating the threshold outside the calibrated `n` is *invalid*, not merely unmeasured. (Upgraded from UNDETERMINED by §14.) |
+| **P19** | DERIVED | For `Dpp`, the correlated component of quantisation error **cancels in the numerator** (a cross-frame difference) and survives only in the denominator over ~10³ DN. The correlation that disables differencing *noise* estimators is **protective** here. |
+| **P20** | MEASURED | `Dpp` bias stays ≤ **0.078 pp** down to 40 distinct levels and ≤ **0.051 pp** at the 8-bit-equivalent dose, against a decision gap of 0.374 pp. First decision flip at **4 levels**. |
+| **P21** | MEASURED | Native distinct G1 levels are **824–6075** across the decision-critical stacks — **69×–506×** V-M113's 12-level immunity figure. |
+| **P22** | MEASURED | Matched-power **random dither leaves `Dpp` unchanged** (13.7653→13.7682 at step 512) where real rounding moves it **−1.23 pp**. A dither-built control would have falsely cleared `Dpp` at *every* dose. |
+| **P23** | MEASURED | `--photometric auto` is **live under `STREHL_ALIGN=0`** (`on`≠`off`, `auto`==`on`). M125's gate does **not** have the `STREHL_FIX_CA` inert-nesting defect. |
+| **P24** | UNDETERMINED | **Frame count is an uncontrolled covariate in the 14-stack corpus** (n = 33…100) and `Dpp` grows with n. Two of three FALSE-ONs are the low-n stacks (n=63, 79) and a FALSE-OFF is the lowest (n=33). |
 
 ---
 
@@ -490,15 +496,163 @@ does not edit it, `SYNTHESIS.md`, `docs/captures-needed.md`, `README.md`,
 
 ---
 
-## 13. What ORCH should do
+## 14. Quantisation exposure, re-derived after the triage rule was withdrawn
 
-1. **Fold P1–P18.** P9, P10 and P11 are the load-bearing ones.
+The orchestrator withdrew the two-question triage rule (*absolute? / small over
+large?*) after three refutations, and replaced it with: **do not triage by the
+form of the expression** — expand it algebraically to see which factor the
+perturbation lands in, or measure it with a dose-response control. M125's two
+statistics are exactly the kind the withdrawn rule would have false-cleared, so
+both were re-derived. Script: `src/quant_doseresponse.py`.
+
+**First, the flag ORCH asked for: M125 published no clearance resting on a
+differencing noise estimate.** The hash proof is exact SHA-256 byte comparison;
+the commissioning is a direct numeric comparison to M24's published values; the
+LOO and placebo consume M122's `B12n`, which M122 cleared with `tifffile.imread`
++ `assert uint16` and its own dose-response. Nothing here needs withdrawing.
+
+### 14.1 `B12n` (the loss) — covered by M122, and the direction is conservative
+
+`hf = sqrt(mean(lap²))`, and the Laplacian is linear, so a shared quantisation
+floor `q` enters as
+
+`B12 = median_w sqrt((hf₁² + q)/(hf₀² + q))`
+
+— **one factor, with `q` in both numerator and denominator.** M115's band-SNR is
+a *product* of two factors with `q` in only one, which is why it can reverse
+sign. Under this form, if `hf₁ < hf₀` then `hf₁²+q < hf₀²+q` for every `q ≥ 0`:
+the ratio rises toward 1 **monotonically and cannot cross it**. No sign reversal
+is algebraically available. M122 measured this and found real data *less*
+compressed than the independent-noise model predicts, because the two arms'
+errors correlate. **Compression toward 1 makes my measured effects
+under-estimates**, so the exposure runs against my own headline, not for it.
+
+### 14.2 `Dpp` (my estimator) — the correlation is *protective* here
+
+With `L_f` the mean G1 level of frame `f` and `ē_f = ē + δ_f` its mean rounding
+error split into a common part and a varying part:
+
+- numerator `max_f(L_f+δ_f) − min_f(L_f+δ_f)` — **`ē` cancels entirely**;
+- denominator `mean_f L_f + ē` — `ē` survives, divided by ~10³ DN.
+
+`Dpp` **differences across frames**, so the correlated component is common-mode.
+The very determinism that disables split-half and frame-difference *noise*
+estimators is what makes this *level* estimator robust. What remains is `δ_f`,
+which is non-zero exactly when frames have different value histograms — i.e. it
+correlates with the drift being measured. That is a prediction, so it was tested.
+
+### 14.3 Measured dose-response
+
+| stack | native levels | bias @ 8-bit-equiv (79–97 lv) | bias @ 40–49 lv | flip? |
+|---|---:|---:|---:|---|
+| bee-3-cpl | 4894 | −0.0009 pp | −0.0057 pp | no |
+| bee-2-cpl | 4977 | −0.0012 pp | −0.0068 pp | no |
+| lead-1-cpl | 824 | +0.0506 pp | −0.0782 pp | no |
+| tweezers-cpl | 6075 | −0.0006 pp | +0.0022 pp | no |
+
+Against a decision gap of **0.374 pp**, the worst bias down to 40 levels is
+**0.078 pp** — a **4.8× margin**. The single flip in the whole ladder is
+`lead-1-cpl` at **4 levels** (2.4267 → 1.7570, ON→OFF), below V-M113's
+12-level immunity figure and near its sign-inversion point of 2.
+
+**A refinement V-M113 may want:** for a **peak-to-peak** statistic the first
+visible non-monotone excursion appears at **21–26 levels**, *above* the 12-level
+figure, because p2p reads the **tails** rather than central tendency and tails
+resolve into distinct bins sooner. 12 is a reasonable figure but not a
+conservative one for extremum statistics.
+
+### 14.4 The dither control — ORCH's finding, confirmed in a different currency
+
+| stack | step | `Dpp` real rounding | `Dpp` matched-power dither |
+|---|---:|---:|---:|
+| tweezers-cpl | 512 | **12.5389** | 13.7682 (baseline 13.7653) |
+| lead-1-cpl | 512 | **4.2001** | 2.4282 (baseline 2.4267) |
+| lead-1-cpl | 256 | **1.7570** (flips) | 2.4245 (no flip) |
+
+**Random dither leaves `Dpp` essentially unchanged at every dose** — it averages
+to zero over ~10⁶ pixels — while real rounding moves it by up to **−1.23 pp** and
+flips a decision. **A dither-built control would have declared `Dpp` perfectly
+immune at every dose: a total false clearance.**
+
+Note the mechanism is the **mirror image** of ORCH's: for a *noise* estimator,
+deterministic error is booked as signal and **under-reports noise**; for this
+*level* estimator, independent dither averages away while deterministic error
+does not, so dither **under-reports the damage**. Same root cause — determinism
+in the value — opposite manifestation. The general lesson is not "dither
+under-states noise" but **"dither and rounding differ wherever the estimator
+aggregates over pixels."**
+
+### 14.5 The number that did not fit, and where it led
+
+Globbing *all* frames rather than the corpus subset gave `bee-3-cpl` = **299
+frames, `Dpp` 8.4664** against a registered **100 frames, 1.6287**. Chasing it
+rather than banking it:
+
+**`Dpp` is a peak-to-peak, so it grows with the frame count by construction** —
+`bee-3-cpl` reads **1.626% at 100 frames and 8.472% at 299** (5.2×). The shipped
+Rust confirms it live: at full frame count `bee-3-cpl` measures 8.4721%, **far
+above the 1.84% threshold**, so a naive rule would **turn the correction ON — on
+the single stack M122 measured as the worst harm in the corpus** (`B12n` 1.0633).
+
+The `AUTO_FRAMES_DOMAIN = 33..=100` guard abstains instead:
+
+```
+measured drift  : 8.4721% peak-to-peak over 299 frame(s)
+AUTO: ABSTAINED  U1 this stack merges 299 frames, outside the 33..=100 the
+                 decision rule was measured over. Dpp is a peak-to-peak and
+                 grows with the frame count, so extrapolating it would bias
+                 toward turning the correction ON -- the expensive direction
+```
+
+**The domain guard is load-bearing, not decorative**, and this converts P18 from
+UNDETERMINED to MEASURED.
+
+**It also exposes a limitation I had not registered (P24).** Frame count is an
+**uncontrolled covariate** *within* the corpus: n ranges 33…100 and `Dpp` grows
+with n, so two stacks with identical physical drift but different n get different
+`Dpp`. Suggestively, two of the three FALSE-ONs are the low-n stacks (n=63, 79)
+and a FALSE-OFF is the lowest (n=33). **Normalising `Dpp` for n, or fixing n
+across the corpus, is a concrete improvement** — and it may be a cheaper route to
+a robust rule than capturing 36 more subjects.
+
+### 14.6 The inert-gate check
+
+ORCH warns that *"a structurally inert gate and a measurably useless gate produce
+the same number and mean opposite things."* `auto` is a gate, and byte-identity
+to `off` is exactly what an inert gate would also produce. Two positive proofs
+that it is live:
+
+1. **It takes both branch values on real stacks.** `auto` ≡ `on` on
+   `tweezers-cpl` and `auto` ≡ `off` on `bee-3-cpl` (§9). An inert gate cannot do
+   that. This is the discriminating test `STREHL_FIX_CA` is missing.
+2. **It survives the nesting that inerts `FIX_CA`.** Under `STREHL_ALIGN=0` on
+   `tweezers-cpl`: `on` ≠ `off` (gain span 1.0459), and **`auto` == `on`**, with
+   the decision logged (`AUTO: APPLIED drift 5.225%`). **M125's gate does not
+   have the `FIX_CA` defect.**
+
+Logs also confirm the proof arms were real decisions, not disguised abstentions:
+`bee-3-cpl` logged `AUTO: DECLINED drift 1.626%` — matching the registered
+1.6287 within the ±0.004 commissioning bar.
+
+---
+
+## 15. What ORCH should do
+
+
+1. **Fold P1–P24.** P9, P10 and P11 are the load-bearing ones for the shipping
+   decision; P18, P22 and P24 are the load-bearing ones for the fleet.
 2. **Raise a capture request for more subjects.** ≈50 to make this rule robust
    enough to *consider* moving the default; ≈20 for C1 alone. Both are optimistic
    floors. **Subject diversity matters more than frame count** — the corpus is
-   short of *subjects*, not of frames.
+   short of *subjects*, not of frames. **But try P24 first**: normalising `Dpp`
+   for frame count may buy some of the same robustness for free.
 3. **Do not schedule a default-promotion GO/NO-GO on this evidence.** P9 and P10
    say it would be premature.
 4. Note the `STREHL_FIX_CA` silent no-op under `STREHL_ALIGN=0` remains
    outstanding — the same `unknown`-collapsed-into-`no` defect that discipline
-   862 exists to prevent, and that M125 fixed only for photometric.
+   862 exists to prevent, and that M125 fixed only for photometric. §14.6 gives
+   the discriminating test that would settle what `FIX_CA` actually is.
+5. **Pass P22 to anyone building a quantisation control.** The dither/rounding
+   divergence is not specific to noise estimators — it appears in any statistic
+   that aggregates over pixels, and it can under-state *or* over-state depending
+   on which side the determinism lands.
