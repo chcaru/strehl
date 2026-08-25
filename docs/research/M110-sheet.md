@@ -1764,3 +1764,127 @@ re-read the raw statistic.
 99. **A control that varies systematically along the axis you are binning on is not a control
     on that axis.** The null fell monotonically with radius by construction, so every radial
     conclusion drawn from excess-over-null inherited its slope.
+
+## §27 — The mismatched-null census, and four instruments of which three lied
+
+ORCH queued this after §26: across `experiments/`, how many nulls are built by injecting
+additive random noise as the control for a treatment that is **deterministic in position**?
+§26's withdrawal of §26 item 89 is the seed case. ORCH's method statement was *"grep is the
+census, not the verdict"*, and the census bore that out harder than expected — **three of the
+four instruments I built returned a confident wrong answer, each by a different mechanism.**
+
+Instruments: `experiments/M110-sheet/null_census.py` (stage 1), `null_census2.py` (2),
+`null_census3.py` (3), `null_census4.py` (4), `null_census5.py` (5, the adjudication sheet).
+
+**Findings**
+
+100. **MEASURED: the census.** 844 i.i.d. draw sites in 379 files under `experiments/`. Of
+     those, **262 sites in 145 files** are *injections* — the draw lands in image data
+     (`arr + rng.…`, `arr += rng.…`, `arr[…] = …rng…`), which is the precondition for standing
+     in for a treatment. Restricted to milestones carrying a report in `docs/research`
+     (ORCH's cap): **252 sites in 136 files across 41 milestones**; 10 sites are unfolded and
+     deferred.
+101. **MEASURED: the name screen false-cleared the known member.** Stage 2 classified an
+     injection as a null when the enclosing `def`, the assignment target or a comment within
+     4 lines said null/control/placebo/inert/sham. It returned 15 candidates and **the seed
+     was not among them.** `ca_overshoot.py`'s `# Inert null:` comment is at line **157**; the
+     draw is at 162; the window began at 158. **One line.** Its enclosing function is called
+     `main`. A screen that misses the one case known in advance to be a member has no
+     measured recall at all.
+102. **MEASURED: both dataflow instruments passed commissioning on a decoy.** Stage 3 (a
+     random-tainted value and a clean value reaching the same callee at the same argument
+     position) and stage 4 (stage 3 plus an output-side difference) each printed
+     `known member detected = True`. Neither detected the real site. Stage 3's cited reasons
+     for the seed are `abs(arg0)`, `float(arg0)`, `str(arg0)` and `print(arg0)` — never
+     `overshoot_by_radius`. Stage 4's cited lines are `[82, 87, 100, 136, 150, 151]`; the
+     actual excess line, `ex = x["overshoot_pct"] - nx.get("overshoot_pct", 0.0)`, is at
+     **186** and is absent. **I commissioned at file granularity, and a file-level presence
+     check is satisfied by any line in the file.**
+103. **MEASURED: stage 4's taint set saturated, and saturation reads as a clean negative.**
+     In `ca_overshoot.py:main()`, **22 of 22 local names are tainted** — including `real`,
+     `d_on`, `off` and `y_off`, none of which touch the generator. Mechanism: `nullmap =
+     {x["r_lo"]: x for x in null}` taints the comprehension variable `x`; `x` is *also* the
+     loop variable over the clean `real`; flow-insensitive taint never untaints it and the
+     fixed point spreads it to everything. At line 186 both operands then read tainted, so
+     the site was skipped as "not an excess". **A flow-insensitive taint analysis saturates
+     on any script that reuses a loop variable name**, and a saturated discriminator returns
+     the null answer while looking like it ran.
+104. **MEASURED: stage 1, the crudest instrument, was the only sound one.** The regex for a
+     draw landing in image data pinned the seed at exactly `ca_overshoot.py:162` — the right
+     file *and* the right line. The three instruments that failed were each more
+     sophisticated than the one that worked.
+105. **MEASURED: adjudicated subset.** I hand-read the **49 sites** whose milestone treats a
+     position-deterministic subject per ORCH's own list — resample, warp, radial/CA
+     correction, fixed-pattern subtraction, dust or hot-pixel repair, quantisation: M50, M72,
+     M95, M97, M103, M105, M107, M110, M111, M113, M114, M115, M120, M121, M122. The
+     remaining 203 folded sites sit in milestones whose treatment is an estimator or metric
+     question (M62 alone holds 84 sites in 39 files, M57 22, M46 12, M60 10) and are **not
+     adjudicated** — see §27 item 110 for the risk that carries.
+106. **MEASURED: the counts ORCH asked for, over the 49 adjudicated sites.**
+     **matched — 47. mismatched-and-load-bearing — 2. mismatched-but-nothing-rests-on-it — 0.**
+     **Both members of the middle class are mine**, in `experiments/M110-sheet/`:
+     `ca_overshoot.py:162` (the seed, withdrawn in §26) and `ca_decile.py:228`. **No other
+     agent's folded file needs re-running on this hazard.** ORCH expected a blast radius; the
+     measured radius beyond the seed is one file, and it is in the same directory.
+107. **MEASURED: `ca_decile.py:228` is the second instance, and its two claims classify
+     oppositely.** `rtm_control()` builds the identical RMS-matched i.i.d. red-plane
+     perturbation as the seed, against the same lateral-CA treatment (a radial resample).
+     From `C:\dev\strehl-out\M110-sheet\ca_decile_default_vs_ca.json`, `bee-3-cpl`:
+
+     | decile | RAW real | NULL | EXCESS |
+     | --- | --- | --- | --- |
+     | 1 | +4.549 | **+6.6412** | −2.0922 |
+     | 10 | **−13.1682** | +0.0313 | −13.1995 |
+
+     **Decile 10: the null is inert** (+0.03 against a raw −13.17) and the excess moves the
+     number by 0.24%. That conclusion is carried by the raw statistic and does not rest on
+     the null. **Decile 1: the null is larger than the effect it floors** (6.64 against 4.55),
+     so the reported −2.09 is entirely a property of the control. The *qualitative* argument
+     there — that `|·|` of a small number plus any perturbation rises, so a decile-1 rise is
+     not evidence of injection — is structural and survives; the **number** does not.
+108. **MEASURED: discipline 924 paid, and I did not have to re-run anything.** Both middle-class
+     sites print the raw statistic beside the excess — `ca_decile.py` returns `real_levels8`
+     and `rtm_null_levels8` alongside `excess_levels8`, and `ca_overshoot.py`'s table prints
+     `OVER%` beside `inert%` beside `excess`. **§27 item 107 was adjudicated entirely from the
+     stored artefact.** The failure in §26 was never that the raw was unrecorded — it was that
+     the *report* quoted the excess alone.
+109. **MEASURED: three sibling milestones independently built the control correctly, and one
+     built the exact structure-matched placebo I lacked.** These are **not** defects and their
+     owners need do nothing:
+     - `M114-ca-verify/src/r3_fringe.py:163` and `r4_adjudicate.py:99` (owner M114) carry an
+       i.i.d. `C-noise` arm — **but alongside `radial_scale_red(r0, -EPS)` / `radial_scale(r0,
+       -EPS)`, a wrong-sign radial scale**: a position-deterministic placebo structurally
+       matched to the treatment. All arms are printed raw and side by side. **This is the
+       control §26 said was missing, and M114 had already written it.**
+     - `m50-fpn-anisotropy/src/00-selftest.py:63-70` (owner M50) draws the plant once at
+       `(H,W)` and broadcasts it across N frames — a genuine fixed pattern, not per-frame
+       noise, with temporal noise added separately.
+     - `M72-green-correlation/src/01-green-correlation.py:440` (owner M72) does the same:
+       the `# fixed pattern` term is drawn once at `(h,w)` and broadcast over `T_FRAMES`.
+     - `M122-photometric-promotion/blotch_ab.py:81` (owner M122) plants **Voronoi** per-region
+       offsets — spatially patchy by construction, matched to the mechanism's predicted shape.
+110. **ARGUED: the unadjudicated 203 sites are a real gap, and my triage of them is exactly
+     the kind of screen that has been dying all week.** I excluded them because their
+     milestone's *subject* is not a position-deterministic treatment. That is a judgement
+     about topic, not about code, and §27 items 101-103 are three demonstrations that my
+     topic and name judgements are unreliable. The honest statement is **not** "203 sites are
+     clean" but "203 sites are unexamined, screened out by the weakest instrument in this
+     report".
+
+**Disciplines**
+
+111. **Commission a detector at the granularity of its verdict.** A census that reports *sites*
+     must be commissioned on the *site*, not the file. Both dataflow instruments here answered
+     "is the known member present?" with a file-level lookup, and both were satisfied by
+     `print()` and `str()` calls that have nothing to do with the hazard. This is the same
+     failure as a presence check satisfied by a duplicate value elsewhere in the document.
+112. **A saturated discriminator returns the null answer and looks like it ran.** Log the size
+     of the discriminating set, not only the result: 22 of 22 names tainted is visible in one
+     line and immediately fatal. ORCH's rule for controls — a sample count that stops changing
+     while its parameter moves is the tell — applies unchanged to static analysis.
+113. **Prefer the crude instrument you can commission over the sophisticated one you cannot.**
+     A regex whose exact matching line you can read beat two AST analyses whose taint sets
+     were too large to inspect. Sophistication that defeats inspection is a cost, not a
+     feature.
+114. **Report what you did not look at, in the same units as what you did.** "49 of 252 folded
+     sites adjudicated" is a usable number; "no problems found" from the same work is not.
