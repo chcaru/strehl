@@ -51,6 +51,35 @@ recovers **6 %**. `robust.rs` is the election-time version. It is being wired in
 tonight, default-off first, with a requirement that output be byte-identical when
 it is switched off.
 
+**Then I found a third instance of the same pattern, and this one is the most
+likely single reason your photos look the way they do.** Code being unreachable
+is one failure. Code being reachable and *switched off* is the same failure
+wearing a disguise, and no compiler or test will ever mention it. So I read every
+quality switch on the render path and wrote down its default. **There are seven.
+One is on.** Registration is on. The halo correction, the exposure-drift
+correction, the chromatic-aberration correction, the soft admission gate and both
+alignment-smoothing terms are all off. What you have been looking at is
+*registration plus a plain average* — the honest baseline the project was built
+to improve on, with essentially every improvement it has measured left switched
+off.
+
+**The standout is the halo correction, and I think it is the thing you will
+actually see.** Its own source notes record it removing **87.9 % of the halo on
+`bee-3-cpl`** and **84.6 % on `flower-bud-with-background-fern-cpl`** — two of
+your stacks, one setting, no retuning between them, which is the hardest version
+of that claim to make. The halo is the pale fringe that appears around a
+silhouette where the stacker had to choose between foreground and background; it
+is the artifact people complain about in every commercial stacker, and it is a
+*visible* defect in a way that noise is not. There is a documented trade-off:
+turning it up further removes essentially all of the halo but starts softening
+hairs and claws, so the shipped setting is deliberately the conservative end.
+
+And the reason nobody noticed it was off: **it has no command-line flag at all.**
+Searching `--help` for it returns nothing. The only way to switch it on is an
+environment variable that defaults to off. It has been sitting there, measured
+and tested, invisible from the interface. It is first in tonight's measurement
+queue and its before/after crops should be the first thing you look at.
+
 **What this needs from you: §12.** A static repeat burst is the arm that proves
 the gate *doesn't* fire when nothing moved. Right now that has to be simulated.
 Thirty seconds of your time replaces a simulation with your actual camera, your
