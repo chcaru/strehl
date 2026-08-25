@@ -1,0 +1,57 @@
+noise model: Noise(gain=0.233696, floor=0.000, black=512.0)
+
+frame-to-frame LEVEL variation, the thing N0 could not see:
+  ROI-FLAT       mean   1100.0 DN  min   1076.4  max   1144.1  spread   6.16 %
+  ROI-LOWDRIFT   mean   3096.6 DN  min   3014.4  max   3233.2  spread   7.07 %
+  ROI-MIDDRIFT   mean   3737.1 DN  min   3368.1  max   3933.5  spread  15.13 %
+  ROI-HIGHDRIFT  mean   3036.7 DN  min   2469.1  max   3440.0  spread  31.97 %
+
+==========================================================================
+ROI-FLAT
+  D(E vs O)      headline            =  +1.6251 %
+  D(E_raw vs O)  divisor off elector =  +1.9058 %
+  D(E vs O_div)  divisor on oracle   =  +1.5253 %
+  D(E_raw vs O_div)                  =  +1.8063 %
+  elector == oracle          66.9705 %
+  elector == oracle+divisor  67.5109 %
+
+==========================================================================
+ROI-LOWDRIFT
+  D(E vs O)      headline            =  +1.3343 %
+  D(E_raw vs O)  divisor off elector =  +1.2396 %
+  D(E vs O_div)  divisor on oracle   =  +1.2921 %
+  D(E_raw vs O_div)                  =  +1.1973 %
+  elector == oracle          78.4632 %
+  elector == oracle+divisor  79.2860 %
+
+==========================================================================
+ROI-MIDDRIFT
+  D(E vs O)      headline            =  +2.8310 %
+  D(E_raw vs O)  divisor off elector =  +2.7823 %
+  D(E vs O_div)  divisor on oracle   =  +2.7948 %
+  D(E_raw vs O_div)                  =  +2.7460 %
+  elector == oracle          66.4320 %
+  elector == oracle+divisor  67.2079 %
+
+==========================================================================
+ROI-HIGHDRIFT
+  D(E vs O)      headline            =  +2.7989 %
+  D(E_raw vs O)  divisor off elector =  +2.7258 %
+  D(E vs O_div)  divisor on oracle   =  +2.7378 %
+  D(E_raw vs O_div)                  =  +2.6647 %
+  elector == oracle          66.1340 %
+  elector == oracle+divisor  66.9345 %
+
+==========================================================================
+DECOMPOSITION on the flat control (no detail, so any D is floor):
+  headline floor            +1.6251 %
+  with divisor on oracle    +1.5253 %
+  with divisor off elector  +1.9058 %
+  -> giving the oracle the same divisor moves the floor by +0.0998 pp
+
+ELECTION ERROR IN EQUIVALENT FRAMES (floor-subtracted, P1r yardstick):
+  ROI-LOWDRIFT   D +1.3343 % - floor +1.6251 % = -0.2908 %  /  11.7008 % per frame  =  -0.0249 frames
+  ROI-MIDDRIFT   D +2.8310 % - floor +1.6251 % = +1.2059 %  /  12.3642 % per frame  =  +0.0975 frames
+  ROI-HIGHDRIFT  D +2.7989 % - floor +1.6251 % = +1.1738 %  /  11.4792 % per frame  =  +0.1023 frames
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-oracle\out\o6_decompose.json
