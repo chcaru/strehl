@@ -1326,3 +1326,112 @@ the structure gate is swept as a ladder (5); no registration anywhere in the mea
 path, so rule 6 holds by construction; the render-domain table run as an independent check
 on the arithmetic, and it agreed against my own hypothesis (7); `git add` of explicit paths
 only, never `-A`, and every commit verified to contain zero `.rs` files (8).
+
+---
+
+## 21. Note for BUILD-ELECT, and a contamination check on my own numbers
+
+Written at ORCH's request during phase 2, out of band. **I did not investigate the
+election defect** — this is only what I already had, plus one check that is mine to run.
+
+### 21.1 First, a correction: my intent line overstated what I have
+
+**I have not seen blocky election seams.** I want that plain before anything else in this
+section is used, because a second lane "independently confirming" something it did not
+actually observe is worse than no confirmation at all.
+
+What I have is not a visual observation. It is a **direct 1:1 read of the winner field
+itself**, from phase 1 — and it says the field is *smooth*, with a tail.
+
+The one crop I emitted in phase 2, `look/blue_tweezers-cpl.png`, is **6× nearest-neighbour
+magnified** (`np.repeat`), so it is blocky by construction. It is not evidence of anything
+about the election and must not be read as such.
+
+### 21.2 What I actually have, and it may still save time
+
+`b9_election.py`, phase 1, §5.4 of this report.
+
+1. **Subject and render.** `lavendar-cpl`. The election index map was dumped by the binary
+   itself via `--election-map`, on the **plane grid** (half sensor resolution, one election
+   per 2×2 CFA quad), alongside a binned linear merge on the same grid. Not `--srgb`, no
+   tone curve, no downsampling.
+2. **It is the winner field, not an inference from the image.** I read the elected frame
+   index per pixel directly. Values are the literal 0-based frame index.
+3. **The artifact is still on disk** — `C:\dev\strehl-out\BUILD-CHROMA\render\lavendar-index.tif`,
+   15.7 MB, plus `lavendar-cpl-merge.tif` on the matching grid. BUILD-ELECT can read both
+   without re-rendering. **That is the part likely to save hours.**
+4. **1:1 on linear data: yes.** Full plane-grid resolution, no resampling, no tone map. So
+   this is the confirmation ORCH could not give from a 3× downsampled JPEG — *for the
+   statistic below*, and only for it.
+5. **What it found.** Roughness = mean absolute difference of the elected index to its four
+   neighbours, deliberately a first difference so the real, wanted large-scale gradient
+   across a tilted subject is not counted as roughness. Result: **the election field is
+   smooth at the pixel scale**, and no rougher on the hairs than beside them. But there is
+   a tail — **22% of ridge pixels above 0.5 frames, with excursions to 191 frames between
+   adjacent pixels.**
+
+**What I did NOT measure, and it is exactly what BUILD-ELECT needs.** I characterised the
+*magnitude* of the excursions and never their *shape*. I do not know whether the
+high-roughness pixels form extended straight or scalloped boundaries or are scattered
+speckle. ORCH's argument — that straight and scalloped boundaries do not occur in defocus —
+turns entirely on that shape, and my statistic is blind to it. A 4-neighbour first
+difference would report a long straight seam and an isolated bad pixel identically.
+
+So: **corroboration on magnitude and on 1:1 linear provenance, none on morphology.** The
+excursions are real, they are large, and they are in a file BUILD-ELECT can open right now.
+Whether they are seams is untested.
+
+One caveat that cuts against over-reading this. In phase 1 I asked whether election jitter
+drove the rainbow speckle and concluded it was a **minor** contributor: chroma rose only
+**1.15×** between the smoothest and roughest roughness bins. Large excursions exist and are
+rare; do not assume a large excursion count implies a large image-domain effect without
+measuring the link.
+
+### 21.3 Could a blocky election be contaminating MY numbers? No, and here is why
+
+ORCH raised this and it deserved a real answer rather than a reassurance.
+
+**The structural reason it cannot.** Two independent barriers.
+
+1. **My coefficient never touches a merged image.** `c1_lateral.py` decodes each RAW frame
+   and measures on its native CFA planes (`common.planes_of(cfa)`), comparing two channels
+   *inside a single frame*. There is no merge, no election and no registration anywhere in
+   the estimation path. The premise of the concern — "a lateral-CA estimate made on a
+   merged image" — does not describe this instrument.
+2. **Even on a merged image it would be common-mode.** Fact 1413: the election is computed
+   from `green_luma` alone and **the one winning index is reused across all four CFA
+   accumulators**. R and G at a given pixel therefore come from the *same* frame whatever
+   that frame is, so an election error displaces both identically and cancels exactly in a
+   channel difference. There is no channel-dependence in the focus measure for it to act
+   through.
+
+**The measured reason, because a structural argument is a claim about code** (`c10_blocky.py`):
+
+| | mean R² of the radial model | mean Moran's I of the residual | significant at p<0.05 |
+|---|---|---|---|
+| R | **0.892** (0.976 and 0.988 on the two cleanest stacks) | +0.076 | 3/6 |
+| B | 0.579 | +0.093 | 4/6 |
+| **G2 (null)** | — | **+0.103** | 3/6 |
+
+A blocky artifact cannot be fitted by a smooth one-parameter radial function, so
+**R² = 0.988 on `coffee-bean` directly bounds how much blockiness can be hiding in the
+measurement at ~1%.**
+
+The residual that remains *is* mildly spatially clustered, and I am reporting that rather
+than burying it — but **the G1−G2 null shows the same clustering or more** (mean I +0.103
+against red's +0.076; on `coffee-bean`, G2 I = 0.275 against red's 0.199). G1 and G2 are the
+same colour read from two sites in the same quad of the same frame: there is no lateral CA
+between them and no chromatic content whatsoever. The clustering is therefore a property of
+the tile geometry and the scene — some regions are simply harder to register, and
+neighbouring tiles in them err together — and not of anything chromatic or electoral. It is
+common-mode, matched by a null that has the same structure and no treatment (rule 3).
+
+Moran's I is tested against a permutation null that reshuffles the residuals over the same
+tile lattice, holding the residual distribution exactly fixed and destroying only the
+spatial arrangement.
+
+(G2's R² is low and is not comparable: its ε is ~0, so there is essentially no signal to
+explain and the ratio is meaningless. Only the Moran column is meaningful for the null.)
+
+**Conclusion: the CA coefficients in §14–§19 stand unchanged.** The check was worth running
+and it changed nothing.
