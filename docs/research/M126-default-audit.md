@@ -8,6 +8,27 @@ frozen before any datum"*, `experiments/M126-default-audit/PREREG.md`.
 built to a private `--target-dir`. Every number below comes from that one binary.
 **No default was changed. No file under `crates/` was modified.**
 
+> ### ⚠ Addendum, after first publication — and a correction to my own §4.2
+>
+> ORCH's follow-up brief pointed out a distinction this campaign was not
+> designed for: a gate can read null because **it ran and the data gave it
+> nothing to do**, or because **it could not run at all**. Both print the same
+> number; only the first is evidence about promotion. I was told to settle it by
+> *reading the code*, not by inferring it from a null.
+>
+> Doing that overturned this milestone's headline mechanism. **`STREHL_ROBUST_ELECTION`
+> is not a gate that runs and finds nothing — it is not wired into `strehl stack`
+> at all.** My §4.2 explanation (that `robust.rs:64`'s weight stays at 1.0
+> because nothing disagrees by 4σ) was an inference drawn from a null, which is
+> precisely the error I was warned against. It is **withdrawn**. §13 has the
+> code trace, an external behavioural proof, and the corrected §4.2.
+>
+> §13 also maps every gate against the thing it is nested inside, finds a
+> nesting **not recorded in M124's report** (`STREHL_SMOOTH`), finds a
+> **frame-count floor** below which `STREHL_FIX_HALO` cannot act, and reports
+> one refuted prediction of my own. The verdicts in §0 do not change; one of the
+> reasons behind them changes completely.
+
 ---
 
 ## 0. The answer, in one table
@@ -15,7 +36,7 @@ built to a private `--target-dir`. Every number below comes from that one binary
 | gate | env var | verdict | why, in one line |
 |---|---|---|---|
 | CA | `STREHL_FIX_CA` | **NEEDS MORE DATA** | The only instrument that can see it says it works, cleanly and on 5/5 subjects — but its effect varies 47× across them and the bar `optics.rs` sets is a transfer fraction I did not measure. |
-| robust election | `STREHL_ROBUST_ELECTION` | **KEEP OFF** | It is a **literal no-op**: byte-identical output on 5/5 subjects, alone *and* in company. Promoting it would change nothing. |
+| robust election | `STREHL_ROBUST_ELECTION` | **KEEP OFF — it is unwired** | Byte-identical on 5/5, alone *and* in company. **§13: not because it runs and finds nothing, but because `strehl stack` never constructs it.** This is a bug report, not a promotion question. |
 | smoothing | `STREHL_SMOOTH` | **KEEP OFF** | Real but ~14× below the promotion bar. Largest \|dQ\| across 5 subjects is 0.00071 dex. |
 | soft gate | `STREHL_SOFT_GATE` | **KEEP OFF** | Fails the detail bar on 3/5 and improves **0.0 %–2.9 %** of detail tiles on 5/5. Independently replicates M116. |
 | photometric | `STREHL_PHOTOMETRIC` | **not mine — M122/M125** | Measured, reported in §7, no verdict issued. |
@@ -235,16 +256,38 @@ five subjects. The drop-one-out arm agrees: `D2-norobust` is byte-identical to
 `ALL-on` on all five. **The gate is inert alone and inert in company**, across a
 7.6× drift range.
 
-This is not a bug — it is what the weight function implies. `robust.rs:64`:
+~~This is not a bug — it is what the weight function implies. `robust.rs:64`:
 `w = 1.0` for `|z| ≤ 4.0`, ramping to 0 at `|z| = 8.0`, in **sigmas of the
 calibrated noise model**. On tripod macro stacks essentially nothing disagrees
 with its temporal neighbours by 4σ, so `w = 1` everywhere and `w · response`
 is `response`. Byte-identity means the soft demotion **never flipped a single
-argmax across 8.25 M pixels × 5 subjects.**
+argmax across 8.25 M pixels × 5 subjects.**~~
 
-**Verdict: KEEP OFF** — but the accurate sentence is *promoting it would be
-free and pointless*. It has never been shown to do anything on real data. See
-§5 for why that statement is currently unfalsifiable-by-design.
+> **WITHDRAWN — see §13.** The struck paragraph is wrong, and it is wrong in the
+> specific way this project keeps getting burned by: I observed a null, reached
+> for the most plausible mechanism, and wrote it down as if I had measured it. I
+> had not. `robust.rs:64`'s weight function is real and its constants are quoted
+> correctly, but **it never executes during `strehl stack`**, so it cannot be
+> the reason for anything.
+>
+> The true mechanism is that `merge::active_arm()` — the only reader of
+> `ROBUST_ENV` — is called from exactly one place, `FocusStats::new_robust`
+> (`merge.rs:710`), and **`new_robust` has no production call site anywhere in
+> the workspace.** The CLI's only `FocusStats` construction is
+> `merge_cmd.rs:1871`, `FocusStats::new(geom)`, which never consults an arm.
+>
+> Byte-identity therefore says nothing whatever about tripod stacks, 4σ, or
+> `bee-3-cpl`. It says the variable is not connected. My claim that the demotion
+> "never flipped a single argmax across 8.25 M pixels × 5 subjects" is
+> unsupported: **no demotion was ever computed.** The corrected verdict is below.
+
+**Verdict: KEEP OFF**, and the accurate sentence is stronger and less
+flattering than the one I first wrote. This is not "an improvement that turned
+out not to help". It is **a documented safeguard that is not attached to the
+product.** Promoting it to on-by-default would change no pixel on any subject
+and would leave the owner believing a robustness feature was protecting his
+stacks when nothing is. That should be raised as a defect against
+`merge_cmd.rs`, not decided as a default. See §13.
 
 ### 4.3 `STREHL_SMOOTH` — real, and ~14× below the bar
 
@@ -355,6 +398,24 @@ working one.** My §4.2 finding — byte-identical output — is consistent both
 frames never got a z-score."* I cannot separate those two with the shipped CLI,
 and neither can anyone else. It is the same class as fact 1449 (*"287 passing
 tests and zero consumers"*).
+
+> **§13 supersedes the diagnosis above, and makes it worse.** I was right that
+> the disclosure cannot be made and right that the two explanations cannot be
+> separated from outside. I was wrong about *why*. There is no third option I
+> considered here, and it is the true one: **there is no production robust pass
+> to be starved.** `window_starved_frames` has zero consumers not because a
+> caller neglected to wire it up, but because nothing in the shipped binary ever
+> constructs the object that would populate it.
+>
+> The derived figure above — *"52 of 100 frames are elected with `z = 0`"* — is
+> therefore **void**. It correctly describes what `RobustPassOne` would do if it
+> ran. It does not run. I am striking the number rather than quietly deleting it,
+> because the arithmetic was sound and the premise was not, and that distinction
+> is the whole lesson. (For the record the arithmetic also hid something: with
+> `chunk_len = 8` and 100 frames the last chunk holds **4** frames, which is
+> below `Z_WINDOW = 5`, so that chunk would have been *entirely* starved. The
+> "healthy" formula `2 · Z_HALF · chunks` returns 52 either way and cannot tell
+> you a whole chunk was dead.)
 
 Related: **only the halo gate prints a banner confirming it is on.** CA, robust,
 soft gate and smoothing print nothing. The exception that proves the value is
@@ -646,3 +707,190 @@ written.
 - **Fact 1702's mask-source sensitivity → the corpus.** §8 measures it 8.3×
   larger than recorded, and large enough to flip the sign of a claim currently
   in circulation.
+
+---
+
+## 13. Addendum — gate nesting, and the retraction of §4.2's mechanism
+
+ORCH's follow-up brief arrived after §§0–12 were committed. It carried one
+instruction that changed the milestone: **a null must be diagnosed by reading
+the code, because a gate that is structurally inert and a gate that is
+measurably useless print the same number and mean opposite things.** Everything
+below is new work. It does not change a verdict; it changes what one of them
+means, and it retracts a mechanism I published.
+
+### 13.1 The load-bearing negative control, and the freeze that pins it
+
+ORCH proposed `STREHL_FIX_CA` under `STREHL_ALIGN=0` as the primary negative
+control: a real flag, really set, really parsed, that provably cannot change a
+byte. It is stronger than my registered `P1`/`P2` placebos because a **committed
+freeze row** fixes the expected bytes independently of me
+(`crates/strehl-cli/tests/byte-freezes.tsv:86`).
+
+| arm | env on top of `STREHL_ALIGN=0` | SHA-256 vs `NC0` | reading |
+|---|---|---|---|
+| `NC0-alignoff` | — | `D99F5D82…76CA` | **reproduces the committed freeze exactly** |
+| `NC1-ca-alignoff` | `STREHL_FIX_CA=a7c2-…-x4cpl` | **identical** | inert — nested under alignment |
+| `NC2-smooth-alignoff` | `STREHL_SMOOTH=1` | **identical** | inert — nested under alignment |
+| `NC3-robust-alignoff` | `STREHL_ROBUST_ELECTION=soft` | **identical** | inert — see §13.3 |
+| `NC4-softgate-alignoff` | `STREHL_SOFT_GATE=gaussian` | **DIFFERS** | **live** — positive control fires |
+| `NC5-halo-alignoff` | `STREHL_FIX_HALO=1` | **identical** | live but *starved* — see §13.4 |
+
+`NC4` is the reason the other rows mean anything. A sweep in which everything
+reads null is indistinguishable from a sweep of broken renders; `NC4` proves the
+harness can see a change under `STREHL_ALIGN=0`, so the nulls are the pipeline's
+and not mine. And `NC0` landing on `D99F5D82…76CA` means the corpus, not I, pins
+this baseline.
+
+**The metric reads exactly zero on the known no-op. The instrument is sound.**
+
+### 13.2 The nesting map, read from the code
+
+| gate | parsed at | applied at | inert when | announces itself? |
+|---|---|---|---|---|
+| `STREHL_FIX_CA` | `align_cmd.rs:324` (**unconditional preflight**) | `align_cmd.rs:1317`, inside the solve | `STREHL_ALIGN=0` | no |
+| `STREHL_SMOOTH` | `align_cmd.rs:1067`, inside `solve_map` | the solve | `STREHL_ALIGN=0` | yes, when it applies |
+| `--resampler` | argv | solve + gather | `STREHL_ALIGN=0`; a named sidecar overrides it | yes (M124) |
+| `STREHL_ROBUST_ELECTION` | **never** | **never** | **always** | no |
+| `STREHL_SOFT_GATE` | `merge.rs:1069`, `Estimator::new` | merge pass two | never | no |
+| `STREHL_FIX_HALO` | `halo.rs:99` | merge pass three, needs `--out` | `frames ≤ 41` at default `delta` | yes, in detail |
+
+Two entries are new relative to what I was told.
+
+**`STREHL_SMOOTH` is nested under alignment, and M124's report does not record
+it.** `apply_smooth_env` is called at `align_cmd.rs:1067`, inside `solve_map`;
+`solve_map` is only reached through `load_or_solve`, which returns at its
+`if !align_enabled()` guard (`align_cmd.rs:1116`) before any solve begins. With
+registration off there is no track to smooth. `NC2` confirms it. ORCH asked
+whether the CA/resampler shape recurred elsewhere — it does, here.
+
+**`STREHL_FIX_CA`'s *validation* is not nested, only its *effect* is.** I
+predicted a garbage profile would be ignored under `STREHL_ALIGN=0`; it is not
+(`R4` below). `preflight_ca_profile()` runs from `run()` before any alignment
+check, deliberately: the doc at `align_cmd.rs:311-322` explains that a typo'd
+profile otherwise surfaces only after a full decode, *"MEASURED at 53.4 s on
+`bee-3-cpl`. Inside a comparison matrix that reads as a slow arm rather than a
+config error."* That is good design and my prediction was simply wrong.
+
+### 13.3 `STREHL_ROBUST_ELECTION` is not wired to anything
+
+The chain is three links long and it ends in nothing:
+
+- `ROBUST_ENV = "STREHL_ROBUST_ELECTION"` is declared at `merge.rs:508` and is
+  read in exactly one place in the workspace, `active_arm()` at `merge.rs:525`.
+- `active_arm()` has exactly one caller: `FocusStats::new_robust`, `merge.rs:710`.
+- **`new_robust` has no production call site.** Its only occurrences are its own
+  definition and doc comment; every `new_robust_with` call is inside
+  `#[cfg(test)]`. The CLI's sole `FocusStats` construction is
+  `merge_cmd.rs:1871` — `FocusStats::new(geom)`, which never consults an arm.
+
+Because "I read the code and concluded X" is exactly the sort of claim this
+corpus keeps catching out, I tested it from **outside** the binary, using the
+parsers' own documented refusal behaviour as a reachability oracle. If a parser
+runs, a garbage value kills the run; if the run survives, the parser never ran.
+
+| probe | env | predicted | exit | result |
+|---|---|---|---|---|
+| `R1-softgate-garbage` | `STREHL_SOFT_GATE=banana` | FAILS | **101** | panic, `merge.rs:1071`: *unknown soft-gate kernel "banana"* |
+| `R2-robust-garbage` | `STREHL_ROBUST_ELECTION=banana` | SUCCEEDS | **0** | **renders normally** |
+| `R3-ca-garbage-alignon` | `STREHL_FIX_CA=banana` | FAILS | 1 | *unknown lateral-CA profile "banana"* |
+| `R4-ca-garbage-alignoff` | `STREHL_FIX_CA=banana`, `STREHL_ALIGN=0` | SUCCEEDS | 1 | ***REFUTED*** — see §13.2 |
+
+`R1` proves a garbage value *can* kill a run. `R2` shows this one does not —
+and the image it produced hashes to
+`119936E656CD4E844F8345F23D8196B6B282C883C4B828318BADC6E222BAD709`, which is
+**the other committed freeze row**, `coffee-bean-20-gate2-sidecar`
+(`byte-freezes.tsv:87`), bit for bit.
+
+> With `STREHL_ROBUST_ELECTION` set to literal nonsense, the binary emits a
+> digest the corpus froze months ago and that I had no hand in choosing. The
+> variable is not merely ineffective on my subjects. **It is not connected.**
+
+One honest caveat on that corroboration: row 87 was recorded with
+`STREHL_WARPMAP` pointing at a committed fixture, whereas `R2` solved its own
+sidecar into scratch. They agree anyway — the same distinction M124's report
+drew, and which ORCH notes it had to correct in its own fold. I am flagging it
+here rather than letting the match look tidier than it is.
+
+**Why this matters more than the verdict.** `KEEP OFF` was already the answer,
+so nothing the owner does changes. But the *reason* moves from a soft one to a
+hard one. This is not a feature that was measured and found not to help. It is
+**a documented safeguard, with 8 passing tests and a written starvation
+contract, that the product never invokes.** Promoting it would ship a
+reassurance rather than a behaviour. It belongs in the defect queue against
+`merge_cmd.rs`, not in a defaults decision — and it retroactively explains §5:
+`window_starved_frames` has no consumers because there is no robust pass to
+report on.
+
+It also convicts my own §4.2. I saw a null, reached for `robust.rs:64`'s weight
+function, and wrote the mechanism down as though I had established it. The
+constants I quoted are real; the code they live in never executes here. That
+paragraph is struck in place.
+
+### 13.4 `STREHL_FIX_HALO` has a frame-count floor, and it announces it
+
+`NC5` was my second predicted positive control and it read null — which I first
+mis-diagnosed as a nesting, because a bad `-SimpleMatch` search of my own log
+(searching for the *literal string* `halo|HALO`) told me the gate had never
+announced itself. It had. The log says exactly what happened:
+
+```
+halo fix        : ON (STREHL_FIX_HALO=1). delta 40 frames, yoke 40 px.
+                  subject 58.55% of pixels at Otsu tau 7563 DN; 261070 treated (3.168%).
+                  0 of 261070 treated pixels re-elected; 261070 kept their
+                  original value because every frame was inside the forbidden band.
+```
+
+The correction forbids a band of `delta = 40` frames either side of each
+pixel's original winner and re-elects from what is left. On a 20-frame stack
+that band covers the entire sweep for every pixel, so there is nothing to
+re-elect. Generally, for `N ≤ 2·delta + 1 = 81` frames the band can swallow the
+whole stack, and for **`N ≤ 41` it is guaranteed to for every pixel** — the gate
+is then a no-op by arithmetic, whatever the image contains.
+
+Measured at the two ends:
+
+| `--limit` | treated pixels re-elected | gate state |
+|---|---|---|
+| 20 | **0 of 261 070 (0.0 %)** | dead by arithmetic |
+| 100 | **100 % on all five subjects** | fully live |
+
+So §4.5's halo numbers were taken with the gate entirely live and stand
+unchanged. But the promotion advice gains a condition the campaign could not
+have seen: **on short stacks `STREHL_FIX_HALO` cannot do anything**, and unlike
+the robust election it is honest about it in the log. Of the six gates it is the
+only one that tells the operator when it did nothing.
+
+### 13.5 What §13 changes, and what it does not
+
+- **No verdict changes.** CA `NEEDS MORE DATA`; robust, smoothing, soft gate and
+  halo `KEEP OFF`; photometric remains M122's and M125's; alignment unsettled.
+- **One mechanism is retracted** (§4.2) and one derived number is void (§5's
+  "52 of 100 starved").
+- **One new nesting is recorded** (`STREHL_SMOOTH` under `STREHL_ALIGN`), absent
+  from M124's report.
+- **One new structural floor is recorded** (`STREHL_FIX_HALO`, `N ≤ 41`).
+- **One further prediction is refuted** (`R4`), which takes this milestone's
+  refuted count to **7 of 22**. The direction audit in §9 is unaffected: `R4`
+  erred toward *understating* how carefully the CA path validates, i.e. against
+  my own convenience, so the flattering/pessimistic split moves to 3 / 4 and the
+  two-sided sign test stays comfortably null.
+
+Reproduce all of §13 with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File experiments\M126-default-audit\run_nesting.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File experiments\M126-default-audit\run_reach.ps1
+```
+
+and the code trace with:
+
+```powershell
+git grep -n "new_robust" -- crates/          # definition + tests only
+git grep -n "FocusStats::new" -- crates/strehl-cli/src/   # merge_cmd.rs:1871, and nothing else
+git grep -n "STREHL_ROBUST_ELECTION" -- crates/           # one line: merge.rs:508
+```
+
+**New handoff — `STREHL_ROBUST_ELECTION` → whoever owns `merge_cmd.rs`.** The
+gate needs wiring or removing. Either is defensible; the current state, where it
+parses, validates, documents a starvation contract and is never called, is not.
