@@ -51,6 +51,19 @@
   Render just these subjects (comma-separated, or a substring match). For
   iterating on one image without paying for the whole library.
 
+.PARAMETER Guard
+  Subjects treated as do-no-harm controls. Each is compared against a stored
+  reference and flagged loudly if it moved. The default is couch-fibers-cpl,
+  which was audited and found genuinely good, which is exactly why it is the
+  one most likely to be degraded silently by work aimed at a different subject.
+
+.PARAMETER GuardDir
+  Where the guard references live. Delete a file here to re-establish it.
+
+.PARAMETER NoHistory
+  Skip the dated copy. The history is what lets anyone see the trajectory at
+  viewing scale instead of trusting a sequence of agent reports.
+
 .EXAMPLE
   pwsh -File scripts\gallery.ps1 -Exe C:\dev\strehl-out\pin\target\release\strehl.exe
 #>
@@ -61,7 +74,10 @@ param(
     [string]$Library = "D:\personal\macro",
     [int]$LongEdge = 2400,
     [switch]$KeepTiff,
-    [string[]]$Only = @()
+    [string[]]$Only = @(),
+    [string[]]$Guard = @('couch-fibers-cpl'),
+    [string]$GuardDir = "C:\dev\strehl-out\gallery-guard",
+    [switch]$NoHistory
 )
 
 $ErrorActionPreference = "Stop"
@@ -112,7 +128,8 @@ $run = @(
 $run | Write-Host
 
 $rows = New-Object System.Collections.Generic.List[string]
-$rows.Add("subject`tframes`tseconds`tpeak_mb`texit`tblack`twhite`tjpeg")
+$rows.Add("subject`tframes`tseconds`tpeak_mb`texit`tblack`twhite`tjpeg`tguard")
+$guardMoved = New-Object System.Collections.Generic.List[string]
 
 $i = 0
 foreach ($s in $subjects) {
@@ -162,8 +179,18 @@ foreach ($s in $subjects) {
         Write-Warning "$n : exit $exit -- see $log"
     }
 
-    $rows.Add(("{0}`t{1}`t{2}`t{3}`t{4}`t{5}`t{6}`t{7}" -f `
-        $n, $frames, [int]$sw.Elapsed.TotalSeconds, [int]($peak / 1MB), $exit, $black, $white, (Split-Path $jpg -Leaf)))
+    # Guarded subjects are checked as they land, not at the end, so a run that
+    # is degrading something can be stopped before it costs another 50 minutes.
+    $guardState = ""
+    if ($Guard -contains $n) {
+        & python (Join-Path $PSScriptRoot "guard.py") `
+            (Join-Path $OutDir "$n.jpg") (Join-Path $GuardDir "$n.jpg") (Join-Path $OutDir "_guard")
+        $guardState = if ($LASTEXITCODE -eq 0) { "held" } else { "MOVED" }
+        if ($guardState -eq "MOVED") { $guardMoved.Add($n) }
+    }
+
+    $rows.Add(("{0}`t{1}`t{2}`t{3}`t{4}`t{5}`t{6}`t{7}`t{8}" -f `
+        $n, $frames, [int]$sw.Elapsed.TotalSeconds, [int]($peak / 1MB), $exit, $black, $white, (Split-Path $jpg -Leaf), $guardState))
     # Written every iteration, not at the end: a run that dies at subject 19
     # should still leave 18 rows of evidence behind.
     [IO.File]::WriteAllLines((Join-Path $OutDir "manifest.tsv"), $rows, (New-Object Text.UTF8Encoding $false))
@@ -171,6 +198,29 @@ foreach ($s in $subjects) {
 
 if (-not $KeepTiff) { Remove-Item $raw -Recurse -Force -ErrorAction SilentlyContinue }
 
+# A dated copy of every run. `gallery/` stays the one path worth bookmarking, so
+# "open the gallery" never changes meaning, and the history is what shows the
+# trajectory -- three lanes are landing changes and the only way to know whether
+# the product is getting better is to be able to put the runs side by side at
+# viewing scale.
+if (-not $NoHistory) {
+    $stamp = Get-Date -Format "yyyy-MM-dd-HHmm"
+    $hist = Join-Path (Split-Path $OutDir -Parent) "gallery-history\$stamp"
+    New-Item -ItemType Directory -Force -Path $hist | Out-Null
+    Copy-Item (Join-Path $OutDir "*.jpg") $hist -Force -ErrorAction SilentlyContinue
+    Copy-Item (Join-Path $OutDir "RUN.txt") $hist -Force -ErrorAction SilentlyContinue
+    Copy-Item (Join-Path $OutDir "manifest.tsv") $hist -Force -ErrorAction SilentlyContinue
+    Write-Host "history: $hist"
+}
+
 Write-Host ""
+if ($guardMoved.Count -gt 0) {
+    Write-Host ""
+    Write-Host "  !! REGRESSION GUARD MOVED: $($guardMoved -join ', ')" -ForegroundColor Red
+    Write-Host "  !! Look at $OutDir\_guard\*-before-after.png BEFORE accepting this run." -ForegroundColor Red
+    Write-Host "  !! These subjects were audited as good. If one moved, something aimed" -ForegroundColor Red
+    Write-Host "  !! at a different picture reached them." -ForegroundColor Red
+    Write-Host ""
+}
 Write-Host "gallery: $OutDir"
 Write-Host "open it and look at the pictures."
