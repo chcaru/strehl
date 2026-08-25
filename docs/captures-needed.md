@@ -339,6 +339,51 @@ patches that fail the test falls from **12 of 12 to 7 of 12**. So: the shipped
 stacker is much better than the crippled one, and **it is still measurably
 inventing texture in more than half the background patches I sampled.**
 
+#### Correction, later the same night: "the paving is gone" was too strong
+
+A milestone went back over this with a better instrument and I have to walk that
+sentence back. **The paving is not gone from the shipped render. It is reduced.**
+That milestone also retracted its own earlier claim that the shipped render was
+clean, so we both had it wrong in the same direction.
+
+What makes the new measurement better than mine is that it does not rely on
+comparing your render to anything. It **derives a ceiling**. Take a patch of
+background where *all 299 of your frames are featureless* — nothing there, in any
+of them. Any stacker that works by blending whole frames together with a fixed
+recipe **cannot** produce more than a certain amount of fine structure in that
+patch. That ceiling works out to **1.284** on their scale, where one of your own
+frames sits at 0.31 and a plain average of all 299 sits at 0.34.
+
+**Your shipped render reads 4.337.** That is **3.4× above a ceiling it should not
+be able to cross at all.**
+
+That is a proof rather than an opinion, and it is worth more than my earlier
+number because nobody can argue with it on taste. It says something specific:
+the structure is not coming from your photographs, and it is not coming from the
+blending *recipe* either — it is coming from the recipe **changing from place to
+place across the frame**. Neighbouring areas get built from different mixtures,
+and the seam between two mixtures is a visible edge.
+
+Three other things they nailed down, all of which kill explanations I had offered
+you:
+
+- **It is not that the background is "just noise" and the stacker is guessing.**
+  I had assumed the out-of-focus background carries no real signal, so the
+  software picks essentially at random. Wrong: the signal there stands **15×**
+  above the noise floor. It is choosing on real information.
+- **It is not that each patch comes from one different frame.** I said that too.
+  In fact the shipped stacker averages **167 of your 299 frames** at each pixel.
+  Averaging 167 photographs is supposed to be what makes artifacts *disappear* —
+  this one survives it, which makes it a more serious defect than I described.
+- **Turning the quality gate up does not fix it.** It reduces it by 39% and
+  leaves it far above the ceiling.
+
+The honest summary: **this defect is real, it is in the picture you are actually
+getting, it is now proved rather than asserted, and I do not have a fix for it.**
+It sits alongside the halo as an open structural problem, and unlike the halo I
+now at least know exactly what to blame — spatially varying weights — which is a
+better starting point than I had this morning.
+
 #### And that demoted the mosaic, because the halo is worse
 
 The same comparison answered a question I had not thought to ask. The protection
