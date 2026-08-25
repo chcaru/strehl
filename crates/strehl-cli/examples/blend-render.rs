@@ -244,6 +244,11 @@ impl Worker {
 
 fn main() -> Result<()> {
     let args = parse_args()?;
+    // Ask once, up front, and throw the answer away. `warp_frame_in_place`
+    // re-reads the profile per frame, so a typo'd STREHL_FIX_CA would otherwise
+    // surface only after a full decode -- which inside a comparison matrix reads
+    // as a slow arm rather than a config error.
+    align_cmd::preflight_ca_profile()?;
     let t_start = Instant::now();
 
     let paths = raw_paths(&args.dir, args.limit)?;
@@ -269,6 +274,13 @@ fn main() -> Result<()> {
 
     eprintln!("strehl BUILD-BLEND -- LAPLACIAN MULTI-BAND MERGE (an experiment, not the ship path)");
     eprintln!("camera          : {camera}");
+    eprintln!(
+        "lateral CA      : {}",
+        match std::env::var(strehl_core::optics::CA_ENV) {
+            Ok(k) if !k.is_empty() && k != "0" => format!("CORRECTING, profile {k:?}"),
+            _ => "off (STREHL_FIX_CA unset)".to_string(),
+        }
+    );
     eprintln!(
         "iso             : {}",
         iso.map(|v| format!("{v:.0}")).unwrap_or("UNKNOWN".into())
