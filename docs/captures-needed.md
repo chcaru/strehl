@@ -63,6 +63,40 @@ alignment-smoothing terms are all off. What you have been looking at is
 to improve on, with essentially every improvement it has measured left switched
 off.
 
+#### The seven switches, by name
+
+*Added later the same night. The paragraph above told you seven switches exist
+and then didn't tell you what any of them were called, which is a report rather
+than something you can use. Here is the switchboard. Every one is an environment
+variable, so you can try any of them without a rebuild.*
+
+| switch | what it does | default | verdict tonight |
+| --- | --- | --- | --- |
+| `STREHL_ALIGN` | registration | **on** | Leave it. Setting `0` disables it, which is a negative control, not an option. |
+| `STREHL_PHOTOMETRIC` | per-frame exposure-drift fit | off | **The one to try.** Measured tonight to remove manufactured blotches from defocused backgrounds. Also available as `--photometric`. |
+| `STREHL_SMOOTH` | alignment track prior | off | Honest verdict, quoting the code: the win was measured *on the solve* but **could not be shown in a render**. Try it; expect to see nothing. Takes a number, e.g. `1.0`. |
+| `STREHL_SMOOTH_HUBER` | robust threshold for the above | 1.0 when `STREHL_SMOOTH` is on | Don't set it independently. It only does anything when the line above is on. |
+| `STREHL_FIX_HALO` | fringe around silhouettes | off | **Leave off.** Off for a good reason, unlike the rest — see the withdrawal above. It replaces the fringe with a milky scalloped band and fires hardest on scenes with no halo in them. |
+| `STREHL_SOFT_GATE` | soft frame-admission gate | off | **Leave off.** Rejected twice now, by two independent methods. It scores beautifully and it is a blur — see tonight's near-miss below. |
+| `STREHL_FIX_CA` | chromatic aberration | off | **Verdict pending.** An audit of this one is still running as I write. Don't enable it on my say-so until that lands; I have already promoted one correction tonight that an audit then took apart. |
+
+So of seven switches, exactly **one** is worth flipping this morning, one is
+awaiting an audit, two are actively harmful, one does nothing you can see, one is
+subordinate to another and one is already on. That ratio is the honest state of
+the project: the measurement machinery is far ahead of what has been proven safe
+to ship.
+
+To try the one that works:
+
+```powershell
+$env:STREHL_PHOTOMETRIC = "1"
+```
+
+and unset it with `Remove-Item Env:\STREHL_PHOTOMETRIC`. It costs about
+**+3.7 s** on a stack, and on `tweezers-cpl` it was actually *faster* than the
+default. **Look at it at 100% on a smooth out-of-focus background** — it is a
+correction to flat areas and it is invisible at full-frame scale.
+
 **I then spent two hours promoting the wrong one, and the correction is worth
 recording because you would otherwise have read it here as fact.** I picked out
 the halo correction — the fringe around silhouettes — because its source notes
