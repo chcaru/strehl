@@ -1238,6 +1238,19 @@ control possible.
 Still an environment variable rather than a `--fix-ca` flag on the CLI. That is
 the right next step for the product and it is in my lane; it is not done yet.
 
+**Update: done.** `--fix-ca <PROFILE>` now exists on `stack`, commissioned four
+ways rather than assumed — it appears in `--help`, a bogus key exits 1 with the
+list of known profiles, the real key renders, and **the same subject rendered
+with and without the flag produces different bytes** (`F4B35407…` vs
+`F85A0950…`). The fourth is the one that matters: a flag that parses and does
+nothing passes the first three, and this project has been burned by inert plants
+before. It is deliberately *not* on by default, because the profile describes one
+specific camera, lens, teleconverter and filter stack and applying it elsewhere
+would add an aberration rather than remove one. `gallery.ps1` still passes the
+environment variable, which keeps it working with older pinned binaries.
+84 tests pass; the byte-freeze rows are untouched because the flag defaults to
+`None` and sets nothing.
+
 The `couch-fibers-cpl` guard is expected to fire on the next run. That is the
 guard working: the develop path changed on purpose.
 
@@ -1246,8 +1259,15 @@ guard working: the develop path changed on purpose.
 ## 7. Not done
 
 - **Hot-pixel *repair* in the Rust IO path.** Characterisation is done and the
-  site map is stored (§5); repair is deliberately deferred, with the measured
-  reason given there. Detection is *not* a gap — it was measured and answered.
+  site map is stored (§5); repair is deliberately deferred. §15 makes the reason
+  stronger than it was: the visible speckles that would have justified it are
+  **not** hot pixels (1.06x enrichment over chance against a random-position
+  null), so repair would not have fixed the defect anyone can see.
+- **Axial CA.** SYNTHESIS fact 1413: baked permanently into every render,
+  because the election is computed from `green_luma` alone and the one winning
+  index is reused across all four CFA accumulators. It is the residual colour on
+  `foam`'s transparent cell walls after lateral CA is corrected (§15). **This is
+  the merge's lane, not mine** — routed to ORCH, not attempted here.
 - **A wider output gamut.** §13 measures 10.83% of `flower-inner-edge-cpl` held
   on the sRGB blue boundary at above 20% luminance. That is correct behaviour
   for sRGB and it is still a real limit: those are lit midtone anthers whose
@@ -1257,9 +1277,17 @@ guard working: the develop path changed on purpose.
 - **Peak memory reported by the binary itself**, via `GetProcessMemoryInfo` at
   exit. The polled figure was withdrawn in §13 as unreliable by two orders of
   magnitude, so there is currently no memory number at all.
+- **Tone parameters in the gallery JPEG.** The TIFF carries them in
+  `ImageDescription` since §13, but `gallery.ps1` deletes the TIFF unless
+  `-KeepTiff`, so the artifact the owner actually opens still records nothing.
+  Copying the description into the JPEG comment is the fix. Not started — and
+  `gallery_view.py` must not be edited while a gallery run is in flight.
 - The measurement-path colour tag and the highlight-ceiling loss in §4.
 - The FOV upsample in §1.3.
 - The silent-success-on-refused-alignment in §1.1.
+
+**Done since this list was last written:** lateral-CA correction is now reachable
+as `--fix-ca <PROFILE>` and is on by default in the gallery (§15).
 
 ### Note on the shared tree
 
