@@ -36,7 +36,8 @@ JSONS = ["100-gate-veildepth.json", "101-attrib.json", "102-robust.json",
          "exitcode-quota-pwsh7-child.json", "exitcode-quota-ps51-dotsource.json",
          "exitcode-race-ps51-child.json", "exitcode-race-pwsh7-child.json",
          "cachekey-probe.json", "rho-null.json",
-         "exitcode-sentinel-ps7.json", "exitcode-sentinel-ps5.json"]
+         "exitcode-sentinel-ps7.json", "exitcode-sentinel-ps5.json",
+         "110-crosscheck.json"]
 
 
 SRCS = ["verify_s29.py", "control_s29.py", "verify_s32.py", "probe_cachekey.py"]
@@ -330,6 +331,36 @@ def main():
         "RED",
         lambda: mutate_arr("exitcode-sentinel-ps5.json", 2, "reads_true", 4),
         want="5.1 selstr reads the live code 10/10")
+
+    # ---- P148-P151 operands: the M121 cross-check ----
+    arm("N41", "the merge's concentration ratio is dropped below its own "
+        "registered bar, which must void the CONCENTRATED verdict", "RED",
+        lambda: mutate_json("110-crosscheck.json", ["X1", "ratio"], 1.4),
+        want="the merge clears the registered ratio bar")
+    arm("N42", "the single-frame control is raised to the merge's ratio, which "
+        "is the exact case where the statistic reads binning not election",
+        "RED",
+        lambda: mutate_json("110-crosscheck.json", ["X2", "single_ratio"], 2.20),
+        want="C-SINGLE separates from the merge")
+    arm("N43", "one frame is allowed above the merge, breaking the claim that "
+        "EVERY single frame falls below it", "RED",
+        lambda: mutate_json("110-crosscheck.json", ["X2", "per_frame_ratio_max"], 2.9),
+        want="EVERY single frame falls below the merge")
+    arm("N44", "the merge half-depth is pushed outside WINDOW_RADIUS, which is "
+        "the geometric heart of the shared-mechanism claim", "RED",
+        lambda: mutate_json("110-crosscheck.json", ["X3", "merge_half_depth_px"], 19),
+        want="the merge's half-depth lies inside WINDOW_RADIUS")
+    arm("N45", "edge removal is made better than window-radius removal, "
+        "reversing the self-correction P149 exists to state", "RED",
+        lambda: mutate_json("110-crosscheck.json", ["X4", "removal_d2"], 95.0),
+        want="removal is genuinely worse at the edge")
+    arm("N46", "the ARGUED status cell on the shared-root hypothesis is "
+        "upgraded to MEASURED, which is the over-claim the label prevents",
+        "RED",
+        lambda: mutate_doc_once(
+            "mechanism on either subject. | ARGUED |",
+            "mechanism on either subject. | MEASURED |"),
+        want="the shared-root hypothesis's STATUS CELL is ARGUED")
 
     for tag, why, expect, fn, want in arms:
         restore()

@@ -237,7 +237,7 @@ def main():
     print("== occurrence counts (instance-aware, see control_s34 N10) ==")
     ckn(sc, f"{nspan:.4f}%", 3, "near span sites")          # 34.4, 34.8, P135
     ckn(sc, f"{fspan:.4f}%", 2, "far span sites")           # 34.4, P135
-    ckn(sc, f"{rng:.4f} pp", 4, "pinned range sites")       # 34.4, P135, 34.9, P146
+    ckn(sc, f"{rng:.4f} pp", 5, "pinned range sites")       # 34.4, P135, 34.9, P146, P150
     ckn(sc, b19["branch"], 2, "B19 branch sites")           # 34.3, P134
     ckn(sc, b20["branch"], 2, "B20 branch sites")           # 34.4, P135
 
@@ -542,6 +542,45 @@ def main():
             ck(d[shape]["reads_true"] == 10, f"{eng} {shape} reads the live code 10/10")
             ck(d[shape]["reads_sentinel"] == 0, f"{eng} {shape} never retains the prime")
     ck("RETAINED" in sc and "WRITE" in sc, "the mechanism split is stated in prose")
+
+    # P148-P151: the wrap-up. Re-derived from 110-crosscheck.json, never
+    # read back out of the prose that quotes it.
+    print("== P148-P151: the M121 cross-check and the wrap-up ==")
+    xc = json.loads((DATA / "110-crosscheck.json").read_text(encoding="utf-8"))
+    x1, x2, x3, x4 = xc["X1"], xc["X2"], xc["X3"], xc["X4"]
+    pre = xc["preregistered"]
+    # The verdict must follow from the registered bars, not from a stored string.
+    ck(x1["ratio"] >= pre["ratio_bar"], "the merge clears the registered ratio bar")
+    ck(x1["frac_of_peak_at_13"] <= pre["decay_bar"], "and the registered decay bar")
+    ck(xc["verdict"].startswith("CONCENTRATED"), "the recorded verdict is CONCENTRATED")
+    # The controls are the whole argument: they must come out the OTHER way.
+    ck(x2["single_ratio"] < x1["ratio"] / 1.5, "C-SINGLE separates from the merge")
+    ck(x2["rand_ratio"] < x1["ratio"] / 1.5, "C-RAND separates from the merge")
+    ck(x2["per_frame_ratio_max"] < x1["ratio"],
+       "EVERY single frame falls below the merge, not merely the average")
+    ck(x3["single_half_depth_px"] > 2 * x3["merge_half_depth_px"],
+       "merge and single-frame half-depths are dissociated")
+    ck(x3["window_radius_rs"] == 13 and x3["merge_half_depth_px"] < 13,
+       "the merge's half-depth lies inside WINDOW_RADIUS")
+    for v in (f"{100 * x1['inner_depth']:.3f}%", f"{100 * x1['outer_depth']:.3f}%",
+              f"{x1['ratio']:.3f}x", f"{x2['single_ratio']:.3f}x",
+              f"{x2['per_frame_ratio_max']:.3f}x"):
+        ck(v in sc, f"the wrap-up quotes {v}")
+    ck(f"{x4['removal_d2']:.1f}%" in sc and f"{x4['removal_d13']:.1f}%" in sc
+       and f"{x4['removal_d22']:.1f}%" in sc,
+       "the removal-by-distance self-correction is quoted in full")
+    ck(x4["removal_d2"] < x4["removal_d13"],
+       "removal is genuinely worse at the edge than at the window radius")
+    # The claim must be scale-agreement, not value-agreement -- P148 says so.
+    p148 = next(l for l in raw.split("\r\n") if l.startswith("| P148 |"))
+    ck("not the same statistic" in p148 or "not the same" in p148,
+       "P148 disclaims value-agreement with M121")
+    ck(next(l for l in raw.split("\r\n") if l.startswith("| P151 |"))
+       .rstrip().rstrip("|").rsplit("|", 1)[-1].strip() == "ARGUED",
+       "the shared-root hypothesis's STATUS CELL is ARGUED, not MEASURED")
+    p150 = next(l for l in raw.split("\r\n") if l.startswith("| P150 |"))
+    ck("srgb" in p150.lower(), "P150 names the sRGB dependency")
+    ck("m87lib.py:139" in p150, "P150 cites the raw-read that exempts s25")
 
     print(f"\nverify_s34: {checks[0]} checks, {len(fails)} failures")
     for f in fails:

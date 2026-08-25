@@ -2010,6 +2010,10 @@ namespaced `M87`.
 | P145 | **A fourth verifier break, and P143's diagnosis does not cover it: the checks were anchored correctly and applied a REPLICATED RULE.** The harness/measurement split that P124's two zeros are scoped by was written out four times -- in `fix_audit.py`, `verify_s32.py`, `verify_s34.py` and a new probe -- and adding one prefix to one copy turned `verify_s32` and `verify_s34` red and moved the published denominator 104 -> 105 -> 104. Neither verifier was keyed to a value: both re-counted from disk exactly as designed, and both counted correctly under a rule that was no longer the one writing the JSON. | **Consolidating the rule fixes the drift and destroys the evidence, so it cannot be the whole repair.** One owner now defines the split and the other three import it -- after which the audit and its verifiers agree *by construction*, and their agreement stops being a measurement of anything. `verify_s32` therefore gained the check a shared constant cannot fake: a script excluded as harness may not decode a raw or open a frame cube, so the convention is tested against the property it stands for rather than against itself (58 -> 59 checks). **A duplicated definition is worse than a duplicated value**, because a value that drifts makes a check fail loudly, while a rule that drifts makes two instruments disagree about what they are counting -- and whichever runs last looks correct. | MEASURED |
 | P146 | **The ladder's Spearman rho of &#8722;1.0000 is worth p = 0.0417, not what a perfect coefficient looks like.** Exact enumeration of all 24 rank permutations of four points: a perfect reversal is a 1-in-24 event under the null, and *some* perfect monotone ordering is 1-in-12. A four-arm ladder cannot support a rank claim at all -- a perfect reversal first clears p < 0.01 at **n = 5** (0.0083). | **This does not move the section's conclusion, and saying why is the point.** The refutation never rested on the rank: it rests on the magnitude, `dV` = **+2.3463 pp** against a predicted **+19.79 pp** with the sign reversed, collapsing to **0.0572 pp** once the far reference is pinned. The rho was already carried as a warning that monotonicity alone would have read as confirmation -- but printing `&#8722;1.0000` to four decimals lends a four-point statistic an authority it has not earned, and a reader who took the rank as the evidence would have been misled by my presentation rather than by my arithmetic. **A coefficient's number of digits is not its number of observations.** | MEASURED |
 | P147 | **P142's corrupted-value claim was an artefact of my own pre-clear, and correcting it splits the two engines by MECHANISM rather than by value.** P142 reported 7.6.5 corrupting to 0 -- measured with a pre-clear of 0, so coercion and stale retention were indistinguishable. Re-primed with sentinel **7**, which is neither 0 nor the true code 1, the three hypotheses separate: **7.6.5 reads 7 in 10 of 10** (the prime survives untouched -- RETAINED), while **5.1 reads &#8722;1 in 9 of 10** and the true code once. &#8722;1 is neither the sentinel nor the true code, so 5.1 **actively writes** a value where 7.6.5 merely fails to update one. | **So fact 1507 is right about 7.6.5 and incomplete about 5.1, and the correction costs P142 nothing that mattered.** The loss *rates* stand: with a prime of 0 against a true code of 1, a read of 0 is unambiguous evidence the live code was not read, which is the only determination the rates ever needed. What dies is the claim about which value the corruption takes. **A sentinel distinct from the true code also repairs ORCH's warning that no observed code proves liveness** -- primed with 7, a read of 1 can only have come from the process. `-Last 3` and `Select-String` read the true code 10 of 10 on **both** engines, independently reproducing the fleet's safe-shape table. | MEASURED |
+| P148 | **The merge's residual veil is concentrated inside one focus-window radius, which merges this milestone's null with M121's rim result into a single mechanism.** Per-distance residual of the gate-0 merge against its own far reference, same cube, mask and distance field as step 70: mean depth **12.250%** over d in 2-13 against **5.506%** over d in 14-22, a concentration ratio of **2.225x** against a preregistered bar of 2.0x, decaying to **18.3%** of peak by d = 13 against a bar of 25%. Half-depth distance **7 px**, against M121's rim w50 of 10.00 px and cutoff of 13.25 px, and `WINDOW_RADIUS = 13` at `focus.rs:83`. | **The controls are what make this mean anything, and they came out the other way.** C-SINGLE: the same statistic on the mean single-frame profile gives **1.482x**, and across all 299 frames individually the ratio is 1.514x +/- 0.193 with a **maximum of 1.962x** -- every single frame falls below the merge. C-RAND: the random per-pixel merge gives **1.472x**. Single-frame half-depth is **22 px** against the merge's 7 px. So the concentration is a property of the election, not of binning a band that is only 20 px wide. The two half-depth numbers are the same scale and are not the same statistic; I claim agreement in scale, not in value. | MEASURED |
+| P149 | **My own 74.76% veil-removal headline is a band average over a profile that varies six-fold, and it flatters the merge exactly where the eye looks.** Removal fraction by distance, merge against the mean single frame: **34.6%** at d = 2, **82.3%** at d = 13, **59.5%** at d = 22. The residual itself runs from &#8722;24.97% at d = 2 to a minimum of &#8722;4.38% at d = 14 and then deepens again to &#8722;7.29% at d = 22. | **The pooled figure is correctly computed and misleadingly read, including by me.** At the boundary pixels a viewer actually resolves as the halo edge the election removes about a third of the veil, not three quarters. This strengthens the mechanism rather than weakening it -- the merge fails hardest precisely where the focus window's support straddles the occluding edge -- but the number I have been quoting to the orchestrator all night is a band average and I should have said so. The outer re-deepening beyond d = 17 is **not** explained by the window and I have no account of it. | MEASURED |
+| P150 | **Sections 33 and 34 rest on `--srgb` renders and are therefore not measurement-grade, and the right response is to retire the pins rather than refresh them.** Four scripts read the pinned gate TIFFs -- `100-gate-veildepth.py:158`, `96-gate-final.py:73`, `97-gate-attrib.py:76`, `102-robust.py:84` -- and those pins were rendered `--srgb --demosaic`. Every gate-ladder magnitude in this report, **+2.3463 pp** and **0.0572 pp**, is an sRGB-space number. | **The conclusion those numbers carry survives; their magnitudes do not transfer.** A monotone per-channel transfer curve preserves sign and rank order, so a swing that came back at 11.86% of prediction with the sign reversed, and at 0.289% of prediction once the reference is pinned, cannot be turned into a confirmation by any gamma. What cannot be quoted in linear terms is the pp magnitude. Section 25's mechanism claim is untouched, because it reads `raw_image_visible` through `m87lib.py:139` and never sees a developed pixel. | MEASURED |
+| P151 | **Hypothesis for whoever takes the gate work: the plateau seam and the occlusion rim are the same defect seen on two subjects.** A boolean admission gate must choose among frames whose through-focus response is genuinely bimodal at an occluding edge, because the veil is present in every frame and no observation contains clean background. On a flat plateau the same boolean choice elects one frame per region and renders a seam; at an edge it elects one layer and renders a rim. Both would be relieved by a soft or contrast-scaled admission rather than by any edge-specific fix. | **ARGUED, and deliberately not measured here.** The orchestrator asked for the lead without spending this milestone's remaining budget on it, and the supporting measurements belong to others: M121's finding that gate 0 and gate 4 are equivalent, and the separate diagnosis that the gate's admission tolerance is absolute while the focus response is contrast-scaled. I have re-derived neither. What M87 contributes is the edge half of the claim: removal happens at `n_eff = 1.000`, so averaging is not the mechanism on either subject. | ARGUED |
 
 ### Capture request
 
@@ -4497,7 +4501,7 @@ For the renders where I kept no provenance line, the argument is the guard
 rather than a record: a full-bracket invocation meets a 40-frame sidecar,
 the frame count disagrees, `load_or_solve` re-solves, and the stale file is
 refused. The trap needs `--limit N` to meet a sidecar of exactly N frames,
-and `--limit` appears **0** times in the 104 measurement scripts
+and `--limit` appears **0** times in the 105 measurement scripts
 here. §30 separately retook the one render exposed to the *align*
 default and found it byte-identical to a pinned-sidecar render, 0 DN, which
 settled that one by hash rather than by argument (`P124`).
@@ -4507,7 +4511,7 @@ I hold no claim that needs retaking on this account.
 **A correction to my own first draft of this section,** because it is the
 kind that reads as evidence and is not. I first wrote that `--limit` "appears
 0 times across all 30 M87 scripts" and rested the finding on it. There are
-**138** scripts, not 30 — and, more to the point,
+**142** scripts, not 30 — and, more to the point,
 **0** of them invoke the binary. Every render here was hand-run
 from PowerShell, so a count over the Python tree is a true statement about a
 population that does not contain the thing being claimed. My own verifier
@@ -5169,7 +5173,7 @@ growing document is the same class of mistake as the unterminated slice.
 disk rather than trusting `93-audit.json`, because `P124`'s safety argument --
 that no measurement script passes the flag that would let a 40-frame sidecar
 apply -- is a standing claim about the whole tree, not a snapshot. Tonight's
-new scripts moved the measurement denominator from 97 to 104. **The zeros both
+new scripts moved the measurement denominator from 97 to 105. **The zeros both
 re-derived as zero**, so the claim itself survived intact; only its denominator
 was stale. §32 already records this same mechanism catching me when I had
 written "30 scripts" and there were 116. The running total is deliberately
@@ -5490,6 +5494,100 @@ block instead of a native process, and every shape -- including the unsafe one
 as written it would have certified `Select-Object -First` as safe on both
 engines. **An instrument for a native-process defect must contain a native
 process**, which is obvious once stated and was not obvious while typing it.
+
+**The cross-check that turns two nulls into one mechanism.** This
+milestone and M121 reached the same conclusion from opposite directions --
+M121 by measuring that the residual rim carries the focus window's length
+scale, M87 by measuring that veil removal happens at `n_eff = 1.000` and so
+cannot be driven by averaging. Two statistics on different fields agreeing is
+worth more than either alone, but only if they are describing the same pixels.
+So: is M87's residual concentrated inside the 0-13 px band where M121's rim
+lives, or spread across M87's full 2-22 px window?
+
+**Concentrated.** Mean residual depth is **12.250%** over d in 2-13 against
+**5.506%** over d in 14-22 -- a ratio of **2.225x** against a bar of 2.0x
+registered before the numbers existed -- and the residual has fallen to
+**18.3%** of its peak by d = 13, against a registered bar of 25%.
+
+**The controls decide whether that sentence means anything, and they were
+built to be able to fail.** A concentration statistic on a band only 20 px
+wide could report "concentrated" for any profile rising toward a far
+asymptote, purely as an artefact of binning. The single frames carry the full
+veil, driven by the defocus blur radius rather than by the focus window, so
+the same statistic run on them must come out the *other* way -- and it does:
+
+| field | inner d 2-13 | outer d 14-22 | ratio | half-depth |
+|---|---|---|---|---|
+| gate-0 merge | **12.250%** | **5.506%** | **2.225x** | **7 px** |
+| mean single frame (C-SINGLE) | 31.303% | 21.125% | 1.482x | 22 px |
+| random per-pixel merge (C-RAND) | 31.041% | 21.094% | 1.472x | -- |
+
+Across all 299 frames taken individually the ratio is 1.514x +/- 0.193 with a
+maximum of **1.962x**, so **every single frame falls below the merge's
+2.225x** rather than merely the average doing so. The merge's half-depth of
+7 px against the single frames' 22 px is a three-fold dissociation on the same
+pixels with the same code.
+
+**The joint statement, then, is a mechanism rather than a pair of nulls:** the
+merge removes the veil everywhere except within roughly one focus-window
+radius of the occluding edge, because that is exactly where the window's
+support straddles the boundary and the election has no frame that is
+unambiguously right. M121's rim w50 of 10.00 px, its cutoff of 13.25 px, and
+`WINDOW_RADIUS = 13` at `focus.rs:83` sit on one side; M87's half-depth of
+7 px sits on the other. **These are the same scale, computed independently,
+and they are not the same number** -- I claim agreement in scale, which is
+what two different statistics on two different fields can support, and not
+agreement in value, which they cannot.
+
+**A correction against my own headline, found while answering that question.**
+The 74.76% veil-removal figure I have quoted all night is a band average, and
+the profile it averages varies six-fold. Removal by distance is **34.6%** at
+d = 2, **82.3%** at d = 13 and **59.5%** at d = 22. At the boundary pixels a
+viewer actually resolves as the halo edge, the election removes about a third
+of the veil, not three quarters. The figure is correctly computed and I have
+been reading it too kindly; the mechanism survives and is in fact sharpened by
+the correction, since the failure is deepest exactly where the window
+straddles the edge. One feature I cannot account for: beyond d = 17 the
+residual stops shrinking and deepens again, to &#8722;7.29% at d = 22. The
+focus window does not predict that and I am not going to invent a reason for
+it.
+
+**On the rank statistic, restated here because it belongs in the body and not
+in a footnote.** This report quoted a Spearman rho of &#8722;1.0000 for the
+gate ladder against veil depth. A coefficient printed to four decimals invites
+the reading that it is strong evidence. It is not: with four rungs there are
+only 24 permutations, so a perfect reversal arises by chance with probability
+**0.0417**, and a perfect coefficient of either sign with probability 0.0833.
+It does not clear p < 0.01 until n = 5. **A coefficient's number of digits is
+not its number of observations.** The gate-ladder conclusion is kept because
+it rests on magnitudes measured over 451,008 pixels -- a swing at 11.86% of
+prediction with the sign reversed, collapsing to 0.289% once the reference is
+pinned -- and not on the rank at all. Had the argument rested on the rho, this
+paragraph would be a retraction instead of a caveat.
+
+**Why the `--srgb` pins are being retired rather than re-rendered.** The
+gate-ladder operands were produced with `--srgb --demosaic`, and a developed
+space is not a measurement space: the output matrix mixes channels and the
+demosaic assumes cross-channel smoothness, neither of which a metric should be
+asked to see through. Every gate-ladder magnitude in this report is therefore
+an sRGB-space number, and refreshing the pins after the colour path changed
+would produce a fresh set of numbers with the same defect. **The correct
+action is to stop quoting the magnitudes, not to regenerate them.** The sign
+and the ordering survive, which is all the refutation needed. Section 25 is
+unaffected for a structural reason rather than a lucky one: it reads
+`raw_image_visible` through `m87lib.py:139` and has never seen a developed
+pixel.
+
+**One lead, ARGUED, handed on rather than pursued.** A boolean admission gate
+at an occluding edge is forced to choose among frames whose through-focus
+response is genuinely bimodal, since the veil is in every frame and no
+observation anywhere in the stack contains clean background. The same boolean
+choice on a flat plateau elects a single frame per region and renders a seam.
+If that is right, the waxy-blob plateau artefact and the occlusion rim are one
+defect on two subjects, and both would be relieved by a soft or
+contrast-scaled admission rather than by anything edge-specific. M87
+contributes only the edge half of that claim and has deliberately not
+re-derived the plateau measurements, which belong to other milestones.
 
 Three limits, stated rather than buried.
 
