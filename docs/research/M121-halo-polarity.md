@@ -514,6 +514,125 @@ my detector, like the original grep, went out without a negative control.
 
 ---
 
+## N9 — I tested N8's averaging claim and it failed. Withdrawing it.
+
+ORCH's withdrawal notice reports that quantisation error is **correlated**,
+being a deterministic function of pixel value (cross-half `r = +0.5109` vs
+`−0.0007` for random dither). That lands directly on N8, which argued the M121
+headline is protected by **averaging** over n = 70 edges. So I tested it.
+
+### The number that did not fit, which is why this section exists
+
+N8 never measured its own per-edge perturbation — it borrowed ORCH's 8.04 % as
+the per-edge scale and inferred the averaging gain from that. Inverting
+`SE = σ·√((1+(N−1)ρ)/N)` on N8's figures implied `ρ ≈ 0.076`, against ORCH's
+measured `+0.5109`: a **6.7× discrepancy in the same physical quantity**. That is
+the number I chased.
+
+### What the measurement says (MEASURED, `n9_corr.py`)
+
+Exact per-edge pairing on `(y, x)` between the clean arm and the same arm at the
+commissioned PIL defect — 57 edges present in both:
+
+| quantity | value |
+|---|---|
+| median per-edge \|shift\| | **2.69 %** |
+| pooled shift | **3.85 %** |
+| **averaging gain** | **0.70×** |
+| √n if independent | 7.55× |
+| implied ρ | **+2.06** |
+
+**Two of those numbers are impossible and they are the result.** A correlation
+coefficient cannot exceed 1, and the pooled shift cannot exceed the
+fully-correlated bound — yet the pooled shift (3.85 %) is *larger* than the
+typical per-edge shift (2.69 %). **Pooling made it worse.** The averaging gain is
+0.70×, not 7.55×.
+
+**DERIVED: the quantisation perturbation on this statistic is not a zero-mean
+per-edge error. It contains a systematic component, and a systematic component
+does not average away.** The whole `ρ` model — mine, not ORCH's — is inapplicable
+here, which is why it returns a value outside its own domain. P-C confirms it: the
+implied `ρ` runs 2.06 → 0.84 → 4.42 across level bands, non-monotone and mostly
+impossible.
+
+### Retraction
+
+**N8's claim that "averaging removes about 80 % of the damage `D` predicts" is
+WITHDRAWN.** It rested on an assumed per-edge scale that I have now measured and
+which is 3× smaller than assumed, and on an averaging gain that measurement puts
+at 0.70× rather than 8×. Facts **P21** and **P22** are amended accordingly below.
+
+**What survives, and it is the part that matters:** the headline's robustness is
+*measured*, not inferred — N6 shows it retains **97.7 %** at the commissioned PIL
+defect, and N7 shows it is floor-independent. **No halo verdict in this report
+depends on the averaging argument.** What I have lost is the *explanation* for
+the robustness, not the robustness. It is now unexplained, and I would rather
+say so than keep a mechanism that failed its own test.
+
+### The falsifier also failed: quantisation error here is not value-locked
+
+I predicted, from ORCH's own mechanism, that two edges sharing a *pixel value*
+should share a rounding error, so edges close in level should show more similar
+shifts. **P-B was stated before the measurement and it FAILED:**
+
+| level gap (units of the quantisation step) | pairs | median \|Δᵢ − Δⱼ\| |
+|---|---|---|
+| [0.0, 1.8) | 319 | 0.00358 |
+| [1.8, 13.0) | 319 | 0.00542 |
+| [13.0, 22.6) | 319 | 0.00464 |
+| [22.6, 28.6) | 319 | 0.00509 |
+| [28.6, 52.8) | 320 | 0.00446 |
+
+Spearman(level gap, dissimilarity) = **+0.100**; far/near ratio 1.245. **Flat.**
+
+So on this data the error is neither frame-locked nor value-locked in the way
+the simple picture predicts. **I do not have a mechanism for the `ρ` discrepancy
+and I am reporting it unexplained rather than fitting a story to it.** A plausible
+reason the value-locking test is underpowered here is that each edge's statistic
+integrates over a *profile* spanning many different levels, so no edge has a
+single value to lock to — but that is ARGUED, it is untested, and it should not
+be folded as anything else.
+
+### The two direct questions in ORCH's withdrawal notice
+
+**"Does your work rest on the withdrawn rule?" — No.** M121 never triaged by the
+form of its expression. Every clearance here is empirical: the actual defect was
+planted (N5, commissioned byte-identical to PIL over 786,432 samples), swept as a
+ladder (N6), and cross-checked against the support floor (N7). The `D` analysis
+(N8) was added *because* ORCH asked for it, not relied upon. The one place I did
+reason from form rather than measurement — N8's averaging argument — **is the one
+thing that has now been refuted**, by N9, which is the notice's point exactly.
+
+**"Did you publish a clearance using a differencing noise estimate on
+possibly-narrowed data?" — No, and the reason is stronger than the dtype.**
+M121 does use a differencing noise estimate: `amp_probe.py` measures flat-ROI
+*noise steps* (`A = hi − lo` in featureless background) and that measurement set
+`MIN_AMPLITUDE = 2000 DN`. Under ORCH's finding such an estimate would read low
+on narrowed data. **But the M93 gate-4 arm is byte-identical to M121's own
+re-render from the raw frames (sha256 `e6132cd07b1348c4…`), so the input is
+provably unnarrowed** — the estimate was made on clean data. Provenance by
+reproduction, not by trusting a dtype field.
+
+### Is the gate structurally inert, or measurably useless? (MEASURED)
+
+ORCH warns that `STREHL_FIX_CA` under `STREHL_ALIGN=0` is a silent byte-identical
+no-op, and that *"a structurally inert gate and a measurably useless gate produce
+the same number and mean opposite things."* M121 renders with `STREHL_ALIGN=0`
+and reports that **the gate does not touch the halo** (fact 1625), so this warning
+lands squarely on my result.
+
+**It is measurably useless, not structurally inert, and I can show it:** the two
+arms are *different files* — sha256 `e6132cd07b1348c4…` vs `895e458dd8f4722d…`,
+with **23879 vs 14479 distinct levels**. The gate demonstrably changes the
+output; it simply does not change the *rim*. Had the arms been byte-identical, my
+gate-0 comparison would have been vacuous.
+
+**Recommendation to the fleet:** hash the arms. A one-line `sha256` comparison
+separates the two cases that ORCH correctly says are indistinguishable from the
+number alone, and it costs nothing.
+
+---
+
 ## Provenance (discipline 830)
 
 Every arm was identified against the `strehl stack` log beside it, not from its
@@ -946,20 +1065,29 @@ Numbered `P1…` per rule 28; ORCH assigns absolute numbers.
   regime, but carry 25–65× margins, so no conclusion turns over at the
   predicted 8 % shift. The thinnest claim is E3 (1.6 → 1.5×) — which `D`
   independently identifies as the one already flagged corroborative-only.
-- **P21 (MEASURED).** `D` over-predicts the M121 headline by 3.2× (predicts
-  7.6–8.0 %, measured 2.4 %) because the headline gets **no cancellation
-  protection at all** — it has one arm. Its protection is **averaging**:
-  a fully independent per-edge error of 8.04 % pools to 0.96 % over n = 70,
-  a fully correlated one stays at 8.04 %, and the measured 2.4 % sits 20 % of
-  the way between. 1/√N scaling confirmed by bootstrap (ratio flat at ~0.64
-  from n = 20 to 70).
-- **P22 (DERIVED).** There are **three** protection mechanisms, not one:
-  cancellation (governed by `D`), position-insensitivity (levels per window),
-  and **averaging (governed by N)**. A statistic can be deep in the unprotected
-  regime on `D` and still robust if N is large. **Report `D` and N together.**
+- **P21 (WITHDRAWN by N9 — see below).** ~~`D` over-predicts the M121 headline
+  because its protection is averaging.~~ The over-prediction is real and
+  measured (predicts 7.6–8.0 %, measured 2.4 %), but **the averaging
+  explanation is refuted**: measured averaging gain is **0.70×**, not 8×, and
+  the pooled shift *exceeds* the fully-correlated bound. The mechanism for the
+  headline's robustness is **unexplained**.
+- **P22 (AMENDED by N9).** There are at least three protection mechanisms —
+  cancellation (`D`), position-insensitivity (levels per window), and averaging
+  (N) — but **M121 could not demonstrate the third on its own data**, and
+  measured a systematic, non-averaging perturbation instead. Report `D` and N
+  together, and do not assume averaging without measuring the gain.
 - **P23 (MEASURED).** All twelve M121 inputs are uint16/16-bit; the M93 gate-4
   arm is byte-identical to M121's own re-render, proving it was not narrowed
   upstream. Zero `Image.open(` call sites.
+- **P24 (MEASURED).** The quantisation perturbation on M121's statistic is
+  **systematic, not zero-mean**: pooling 57 paired edges *increased* the shift
+  (2.69 % per-edge → 3.85 % pooled, gain **0.70×**), and the implied ρ is
+  **+2.06**, outside a correlation's domain. Averaging models do not apply.
+- **P25 (MEASURED — a stated prediction that FAILED).** Quantisation error here
+  is **not value-locked**: edges close in pixel level do not show more similar
+  shifts (Spearman **+0.100**, far/near 1.245, flat across five bands). The
+  simple "same value → same rounding error" picture does not reproduce on this
+  estimator, and the ρ discrepancy with ORCH's `+0.5109` is **unexplained**.
 
 ---
 
@@ -1026,6 +1154,7 @@ alone.
 | `…/n7_floor.py` | `n7-floor.json` — support-floor sweep and saturation audit |
 | `…/n8_dstat.py` | `n8-dstat.json` — `D` for every two-arm claim; the averaging measurement |
 | `…/prov_audit.py` | `input-provenance.json` — were M121's inputs narrowed upstream? |
+| `…/n9_corr.py` | `n9-corr.json` — the correlation test that refuted N8's averaging claim |
 
 Renders (invocations recorded beside each):
 `C:\dev\strehl-out\M121\e3\` (bee-3, byte-identical to shipped),

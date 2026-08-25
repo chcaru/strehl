@@ -206,6 +206,10 @@ def scan(img: np.ndarray, *, label: str, grad_percentile: float = 99.0,
                    if key in meta_side else np.array([m[5] for m in meta])),
             "dz": (np.array([m[6] for m in meta_side[key]])
                    if key in meta_side else np.array([m[6] for m in meta])),
+            "ys": (np.array([m[1] for m in meta_side[key]])
+                   if key in meta_side else np.array([m[1] for m in meta])),
+            "xs": (np.array([m[2] for m in meta_side[key]])
+                   if key in meta_side else np.array([m[2] for m in meta])),
             "stack": M,
         }
     if verbose:
