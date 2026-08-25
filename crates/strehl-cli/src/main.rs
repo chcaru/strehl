@@ -146,6 +146,43 @@ enum Command {
         /// the byte-frozen measurement output, which is always binned.
         #[arg(long)]
         binned: bool,
+        /// Correct lateral chromatic aberration using a named optical profile.
+        ///
+        /// Lateral CA is a radial magnification difference between the colour
+        /// channels: red is imaged at a slightly different scale from green, so
+        /// every edge gains a coloured rim that is absent on axis and grows
+        /// with distance from the centre. On this path M107 measured it as a
+        /// clean one-parameter fit, `eps_R = -704.5 ppm`, worth about three
+        /// output pixels at the corner.
+        ///
+        /// MEASURED, camera-linear, one binary, two subjects. Mean |R-G| at
+        /// strong edges normalised by local green, in six radial bands from
+        /// centre to corner:
+        ///
+        ///   flat-on-ruler-cpl  off  0.070 0.074 0.106 0.150 0.164 0.227
+        ///   flat-on-ruler-cpl  on   0.068 0.075 0.084 0.086 0.087 0.089
+        ///   foam               off  0.167 0.209 0.278 0.348 0.418 0.461
+        ///   foam               on   0.148 0.125 0.127 0.126 0.124 0.152
+        ///
+        /// What marks the correction as right is not that the numbers fall. It
+        /// is that the RADIAL GROWTH is gone and a flat, non-radial floor is
+        /// left behind -- demosaic, noise and axial CA, none of which this
+        /// touches. The frame centre is unchanged, which is the built-in null:
+        /// lateral CA is zero on axis by construction, so anything that moved
+        /// the centre would be doing something other than what it claims.
+        ///
+        /// This is NOT defaulted on. The profile describes one specific
+        /// camera, lens, teleconverter and filter stack, and applying it to a
+        /// different optical path would ADD an aberration rather than remove
+        /// one. It must be asked for.
+        ///
+        /// An unknown key is an error, not a silent no-op -- the failure mode
+        /// worth avoiding is a run that looks like it corrected and did not.
+        /// Pass any invalid name to be told which profiles exist.
+        ///
+        /// Takes precedence over the STREHL_FIX_CA environment variable.
+        #[arg(long, value_name = "PROFILE")]
+        fix_ca: Option<String>,
         /// Exposure for the viewing render, in STOPS. Requires --srgb.
         ///
         /// A gain of 2^STOPS applied in LINEAR light, before the sRGB transfer
@@ -553,6 +590,7 @@ fn main() -> Result<()> {
             linear_srgb,
             demosaic,
             binned,
+            fix_ca,
             exposure,
             auto_exposure,
             gates,
@@ -567,6 +605,21 @@ fn main() -> Result<()> {
             confidence_tail,
             resampler,
         } => {
+            // The lateral-CA profile is selected from the process environment
+            // by `strehl_core::optics::active_profile`, which the merge and the
+            // aligner both read. Publishing the flag into the environment here
+            // keeps that single source of truth and takes no colour decision
+            // inside the merge.
+            //
+            // SAFETY: `set_var` requires that no other thread is touching the
+            // environment concurrently. This is the CLI entry point: argument
+            // parsing is done, and nothing before this line has spawned a
+            // thread. The worker pool is created inside `merge_cmd::run`,
+            // below, so the write strictly happens-before any reader exists.
+            if let Some(key) = fix_ca.as_deref() {
+                unsafe { std::env::set_var(strehl_core::optics::CA_ENV, key) };
+            }
+
             merge_cmd::run(&MergeOptions {
             dir,
             out,
