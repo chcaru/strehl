@@ -19,6 +19,12 @@ import sys
 
 DOC = r"C:\dev\blog\death-of-software\projects\strehl\docs\captures-needed.md"
 
+# Optional override, so the checks can be commissioned against a deliberately
+# broken copy in TEMP. A check that has never been seen to fail is not known to
+# work -- see the plant/counter-plant discipline used throughout this project.
+if len(sys.argv) > 1:
+    DOC = sys.argv[1]
+
 with io.open(DOC, "r", encoding="utf-8") as fh:
     text = fh.read()
 
@@ -65,4 +71,34 @@ if missing_d:
     for p in missing_d:
         print("  x%3d  %s" % (seen[p], p))
 
-sys.exit(1 if missing_c else 0)
+# --- Section cross-references -------------------------------------------
+#
+# The START HERE table -- the first thing the owner reads -- is built almost
+# entirely out of "see SS24" style references. A reference to a section that
+# does not exist turns his top action item into a dead end, and no existing
+# check would notice: `corpus_lint` does not read this file and the path check
+# above only looks at code spans.
+#
+# Added after a real miss of the same shape: a switchboard row said "see
+# tonight's near-miss below" when the near-miss had been written into
+# SYNTHESIS.md and never into this document.
+
+heads = set(re.findall(r"(?m)^#{2,4}[ \t]*(?:\u00a7[ \t]*)?(\d+)[.)]?[ \t]", text))
+refs = {}
+for m in re.finditer(r"\u00a7[ \t]*(\d+)", text):
+    refs[m.group(1)] = refs.get(m.group(1), 0) + 1
+
+dangling = sorted((r for r in refs if r not in heads), key=int)
+
+print()
+print("section refs: %d distinct (%d mentions) against %d numbered headings"
+      % (len(refs), sum(refs.values()), len(heads)))
+if dangling:
+    print()
+    print("DANGLING section refs -- these point at nothing:")
+    for r in dangling:
+        print("  x%3d  \u00a7%s" % (refs[r], r))
+else:
+    print("  all resolve")
+
+sys.exit(1 if (missing_c or dangling) else 0)
