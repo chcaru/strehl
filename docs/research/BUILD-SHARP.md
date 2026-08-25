@@ -511,3 +511,70 @@ blinking between files.
 **Both A/B pairs are visually indistinguishable at 100%, and both were predicted to
 be by their own measurements.** That agreement — instrument says null, eye says null
 — is the reason to trust the instrument when it says something is *not* null.
+
+---
+
+## 8. Do-no-harm guard — `couch-fibers-cpl` (owner-mandated)
+
+The owner audited the full frames and found `couch-fibers-cpl` **good**: pure dense
+texture, no depth silhouettes anywhere, sharp down to individual filaments. It is now
+a required regression guard, judged **by looking**, and a change that degrades it is
+rejected regardless of what it does elsewhere. `109MSDCF` and `bee-1-cpl` ride along.
+
+**Verdict: PASS. No degradation on any of the three, at full frame or at 100%.**
+
+`restore.rs` is on no product path, so it cannot appear in either arm — this run
+tests **the alignment default only**. Both arms of all three subjects were rendered
+back to back from the one pinned binary (`pin-70934bb`, still printing its own path
+on every run), differing only in `STREHL_SMOOTH`: `0` = the free solve = HEAD before
+`70934bb`; unset = shipped, `lambda = 1`.
+
+**Discrimination check first.** All three BEFORE/AFTER pairs have distinct MD5s. A
+guard that compares a file to itself passes trivially and proves nothing.
+
+Because three frozen ROIs can miss a localised defect in a 7040x4688 frame,
+`experiments/BUILD-SHARP/src/worst_tile.py` ranks 256 px tiles by inter-arm
+disagreement and crops the **worst** ones at 100%. The statistic only chooses *where
+to look* — it does not deliver the verdict.
+
+| subject | max abs delta | pixels > 1% FS | at the frame's **worst** tile |
+|---|---|---|---|
+| `couch-fibers-cpl` | 16.4% FS | **0.234%** | indistinguishable |
+| `109MSDCF` | 5.3% FS | **0.004%** | indistinguishable |
+| `bee-1-cpl` | 49.3% FS | **13.376%** | changed — see below |
+
+**`couch-fibers-cpl`, the guard proper:** full frame identical; the three frozen
+detail ROIs identical; and at the single worst-disagreeing tile in the whole frame,
+identical. Filament definition preserved, no added noise, no ringing. **PASS.**
+
+**`109MSDCF`** happens to be the best free ringing control in the set — a hard
+high-contrast edge with genuinely flat approaches on both sides (flat cyan / white
+ridge / flat red). Neither flat field gains an overshoot band or a dark rim.
+Unchanged.
+
+**`bee-1-cpl` is the one that moved, and it is honest to say why.** Its worst tile is
+the tarsus, and it carries **the bright cut-out halo the owner described — in both
+arms, at the same severity.** What my change moves is *where the election patchwork
+polygons fall around it*, not the artefact's presence or amplitude. So that 13.4% is
+BUILD-HALO's defect being perturbed, not BUILD-SHARP degrading detail. Two things
+follow: the guard still passes (AFTER is not worse), and **`bee-1-cpl` is a poor
+guard for anyone until the halo lands** — its inter-arm delta is dominated by an
+artefact rather than by the change under test.
+
+One cautious observation, offered as an observation and **not** as a claim: at
+`bee-1-cpl`'s second-worst tile — thin hairs crossing pale cuticle — several hairs in
+the BEFORE arm show small stepped lateral jogs where they cross an election boundary,
+and in AFTER they run continuously. That is exactly the local geometric incoherence
+M103 measured and the prior was built to remove, now visible. I am not upgrading the
+§3.5 null on the strength of it: the ESF instrument measures edge rise on straight
+slanted edges and is structurally insensitive to lateral jogs in thin filaments, so
+the two do not actually disagree — they measure different things. It would need its
+own instrument and its own control before it counted.
+
+```
+C:\dev\strehl-out\BUILD-SHARP\guard.ps1
+python experiments/BUILD-SHARP/src/worst_tile.py --subject couch-fibers-cpl --top 2
+```
+
+Pictures: `<subject>\guard-full-{BEFORE,AFTER}.png`,
+`<subject>\guard-crop-roi{0,1,2}-PAIR.png`, `<subject>\guard-worst{0,1}-PAIR.png`.
