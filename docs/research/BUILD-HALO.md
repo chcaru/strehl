@@ -497,3 +497,213 @@ Artefacts: `C:\dev\strehl-out\BUILD-HALO\halo-feather\` (renders),
 
 **Still not print-worthy.** Veiling halo is materially reduced; the tight rim
 and the coverage-boundary blobs remain.
+
+---
+
+## 11. (c) Through-focus bimodality — the detector, and the green light
+
+ORCH's question was precise, and so is the answer: **does the through-focus
+response go bimodal on the pixels the masked-support fix still fails** — the
+tight rim (§9.4) and the coverage blobs (§10.3)? If yes, build the unmixing.
+If no, stop and report, because then the forward model is wrong too.
+
+**It does. It replicates on three subjects, monotonically, in every distance
+band.** All numbers UNVERIFIED.
+
+### 11.1 The statistic that was wrong first
+
+The obvious detector is the ratio of the second through-focus peak to the
+first. It is wrong, and it is wrong in a way worth recording because the same
+defect has now bitten this project three times.
+
+Measured on `bee-2-cpl`, `r2/r1` fires on **54.2% of clean defocused ground**
+— ground 41 px from any silhouette. Worse, at any threshold that controls that
+false-positive rate, near-silhouette pixels fire **3–4× LESS** than clean
+ground:
+
+| FPR on clean ground | threshold | blob pixels | treated | enrichment |
+|---|---|---|---|---|
+| 10% | 0.990 | 2.72% | 3.22% | 0.27× |
+| 1% | 0.999 | 0.26% | 0.31% | 0.03× |
+
+The reason is that on featureless background **neither peak is real**. Both are
+noise, so the ratio tends to 1 by construction. `r2/r1` measures *the absence
+of a dominant peak*, not the presence of two — and featureless ground has the
+least dominant peak of anything in the frame.
+
+This is the same defect as `edge_overshoot` (§9.5): **an unnormalised ratio
+reports whatever dominates its denominator.** Normalising against
+`FOCUS_NOISE_SD` would not have rescued it either, because that constant is
+calibrated for `WINDOW_RADIUS = 13` and the guide runs at radius 4 — a
+constant that does not transfer, which is this project's whole thesis.
+
+The fix is to refer **both** peaks to the pixel's own through-focus baseline
+first: `z = (r − μ) / σ` over that pixel's own curve. Self-normalising at any
+radius, on any scene, with no calibrated constant. That inverts the result.
+
+### 11.2 The dose-response
+
+The instrument is the one that settled the mechanism in §1: a ladder, not a
+single number. The axis is distance from a depth step in the guide field —
+external to the fix, and the axis the halo itself lives on.
+
+`z2/z1`, the balance between the two modes, from the silhouette outward:
+
+| distance | `bee-2-cpl` | `flower-bud…fern-cpl` | `flower-inner-edge-cpl` |
+|---|---|---|---|
+| 0–2 px | **0.838** | **0.873** | **0.751** |
+| 4–6 px | 0.368 | 0.649 | 0.461 |
+| 9–13 px | 0.260 | 0.507 | 0.350 |
+| 18–26 px | 0.220 | 0.378 | 0.278 |
+| 80–400 px | 0.115 | 0.166 | 0.086 |
+| **swing** | **7.3×** | **5.3×** | **8.8×** |
+
+Monotonic in every band in all three, including the owner's new stack
+(`flower-inner-edge-cpl`) and the tight-rim subject.
+
+Mode **separation** tells the same story: 93.7 → 43.1, 97.2 → 47.9, 72.3 →
+56.8 frames. At the silhouette the two modes are not merely both present, they
+are nearly a hundred frames apart — the foreground coming sharp at one end of
+the bracket and the background at the other, inside one 13 px window.
+
+### 11.3 The confound, refuted rather than argued
+
+The obvious objection is that *anything* looks elevated near an edge because
+there is more contrast near an edge. That predicts the **first** mode rises at
+the rim too.
+
+It does the opposite, in all three subjects:
+
+| | rim (0–2 px) | far (80–400 px) |
+|---|---|---|
+| `bee-2-cpl` | 3.17 | **6.28** |
+| `flower-bud…fern-cpl` | 3.01 | **5.57** |
+| `flower-inner-edge-cpl` | 3.32 | **7.41** |
+
+`z1` is *weakest* at the rim and strongest on open ground. The second mode is
+therefore not riding a general rise in contrast — the two move in opposite
+directions, and the ratio's 5–9× swing is the difference between them.
+
+### 11.4 What the picture shows that the rate does not
+
+`bimodal_look.py` puts render, detector, firing mask and fix coverage in one
+window at the frozen edge ROIs
+(`C:\dev\strehl-out\bimodal\bee-2-cpl-where-it-fires.tif`).
+
+The detector map shows **clean bright ridges hugging every silhouette**, with
+black (unimodal) foreground interiors — structurally exactly right. But the
+*thresholded* map is swamped by background speckle, and per-pixel recall at a
+1%-false-positive threshold is only ~8%.
+
+So the honest reading is: **the signal is real, correctly located, and
+continuous — but weak per pixel.** Hard-thresholding it into a binary mask
+throws most of it away. It should be used as a continuous weight, which is
+what the unmixing wants anyway, since α is continuous.
+
+That also means the earlier `blend`-stratified reading (untreated 41% /
+boundary 58% / treated 64%) is the weak instrument and should not be quoted:
+the coverage map is derived from the guide, which is itself haloed, so
+stratifying by it is circular. The distance profile is the instrument.
+
+### 11.5 Cost
+
+20 B/px — two `f32` peaks, two `u16` frame indices, two `f64` moments —
+**constant in the frame count**, riding the guide pass at no extra decode.
+230.8 MB on an 8.2 Mpx plane at 299 frames. Allocated only when
+`STREHL_BIMODAL_DUMP` names an output directory; a normal render pays nothing.
+
+### 11.6 Verdict
+
+**Green light for two-layer unmixing.** The forward model
+`I_k = α·(F⊛PSF_k) + (1−α)·(B⊛PSF_k)` is not an assumption at these pixels —
+its signature is measured, replicated and dose-responsive.
+
+`mode_balance()` (`z2/z1`) is the quantity to build on, and `LayerSupport`
+already computes the other half: `fractions[l]` is the tent-weighted share of
+each window belonging to each depth layer, which is a direct estimate of α.
+
+**The halo is still not gone and this changes nothing about that yet** — §11
+is a detector and a decision, not a fix. The rim is still on the plate.
+
+---
+
+## 12. `FEATHER` chosen from images, and a hard number on what remains
+
+ORCH ordered `FEATHER` re-chosen from real composites rather than the single
+synthetic probe it came from, calling a synthetic-picked load-bearing constant
+a liability. The sweep was run at 1.25 / 1.6 / 2.0 on two subjects, **all arms
+from one frozen binary back-to-back** (§8). All numbers UNVERIFIED.
+
+`FEATHER = 1.0` cannot be swept: `feather()` asserts `v > 1.0`, because at 1.0
+the guards are hard switches again and the treatment boundary is the cliff §10
+existed to remove. The hard-switch control is `e5e62d4`, already measured.
+
+### 12.1 The result: it is not load-bearing
+
+| arm | flat noise | edge noise | pixels differing vs 1.25 | max delta |
+|---|---|---|---|---|
+| 1.25 | — | — | — | — |
+| 1.6 | -0.09% | -0.57% | 3.64% | 11377 DN |
+| 2.0 | -0.42% | -0.64% | 5.12% | 12951 DN |
+
+Large *local* deltas, negligible global ones — so the metric cannot adjudicate
+and the composites were the instrument, per the standing rule. The composites
+(`C:\dev\strehl-out\feather\*-feather-compare.tif`) show the arms differ
+**only along the boundary of the treated region**, which is exactly what a
+feather width should touch and nothing more.
+
+The decisive measurement is the rim veil itself:
+
+| arm | rim 0-4 px | far 80+ px | **rim/far** |
+|---|---|---|---|
+| 1.25 | 15665 | 6686 | **2.3431** |
+| 1.6 | 15665 | 6686 | **2.3431** |
+| 2.0 | 15667 | 6686 | **2.3433** |
+
+Identical to four decimal places. **`FEATHER` has no effect on the halo at
+all.** Its influence is confined to the blob-boundary artefact it was
+introduced for.
+
+So the value stays at **1.25** — but the useful outcome is not the value, it
+is that the constant has been **demoted**: it is not a liability for the
+deliverable, because the deliverable does not depend on it. It still matters
+for §10's blotching, and there the narrow setting remains right on the
+multiplication argument.
+
+### 12.2 What remains, in a paired number
+
+Veil profile: mean brightness of each distance band, over distant background.
+Both arms use the **same** pass-zero guide, so although the absolute ratio is
+*not* interpretable as halo strength (near-silhouette pixels are genuinely
+near a bright subject, and the guide mask is haloed exactly where it is being
+asked about), **the delta between arms is a valid paired measurement.**
+
+| subject | 0-2 px | 2-4 px | 4-6 px | 9-13 px |
+|---|---|---|---|---|
+| `bee-2-cpl` | -0.0% | -0.1% | -0.2% | -0.1% |
+| `flower-bud...fern-cpl` | -0.0% | -0.1% | -0.1% | +0.0% |
+| `flower-inner-edge-cpl` | **+1.4%** | +1.2% | +0.6% | +0.1% |
+
+**The shipped masked-support fix changes near-silhouette background brightness
+by <=0.2% on two of three subjects**, while treating 20.29% and 10.70% of those
+planes respectively. That is consistent with §9's frozen-ROI result (halo
+improved at 3/15 ROIs, unchanged at 12/15) and it is the same wall as §10.3
+from a third direction.
+
+`flower-inner-edge-cpl` is the exception and the sign is instructive: the
+plane-averaged change is *positive*, yet the visible win at that subject's
+`edge0` is large and real. **Plane-averaged statistics wash out localised
+wins** — which is the third time on this build that a scalar has disagreed
+with the picture, and the third time the picture was right.
+
+### 12.3 Verdict
+
+**The halo is not gone. The stacks are not print-worthy.** The masked-support
+fix is real but narrow: it works where a 13 px window still holds enough
+background to average, and does essentially nothing at the tight rim, which is
+where the owner's eye goes first.
+
+That is not a tuning deficit and no further tuning will move it — §10.3 and
+§11 reach the same wall independently. The rim needs the background
+**reconstructed**, not selected, and §11 establishes that the information
+needed to do so is present and measurable.
