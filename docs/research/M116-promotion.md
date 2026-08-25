@@ -16,7 +16,20 @@ default merge beats the sharpest single source frame by `+0.152` to `+0.333` dex
 and beats pure per-pixel selection visibly and grossly. The visible defects in
 the owner's renders are waxy tonal plateaus and edge halos, and **not one of the
 four instruments in this milestone's brief targets either of them.** A fifth,
-undocumented, unmeasured instrument does: `STREHL_FIX_HALO`.
+undocumented instrument does: `STREHL_FIX_HALO`.
+
+**Third headline, added after ORCH prioritised that fifth instrument above
+everything else in the workstream (section 5d).** `STREHL_FIX_HALO` has now been
+measured on four stacks, including both of M87's own. **It fails its deciding
+pre-registered bar by a factor of six, and it fails it backwards.** The bar was
+selectivity: the correction should act on an occluding edge and not on a bare
+silhouette. Measured, it changes the halo index **`3.05x` more** on the stack
+with *no* occluding background than on the stack with one. It is not that it
+fails to tell a defect from an edge — on this pair it prefers the edge. And on
+`flower-bud-with-background-fern-cpl`, one of the two stacks whose `84.6%`
+removal figure is the case for shipping it, **it visibly destroys subject
+texture**, replacing it with flat amoeba-shaped blobs. Verdict **KEEP-OFF**, and
+the halo metric is not a quality metric.
 
 Note on numbering: candidate facts below are `P1`…`P14`. The placebo *arm* is
 always written `P1-placebo` and is never the fact `P1`.
@@ -34,6 +47,14 @@ always written `P1-placebo` and is never the fact `P1`.
 | outlier / robustness mask | not reachable | not reachable | not reachable | **UNREACHABLE** | `1043` lines, zero callers outside its own example harness at the pinned SHA |
 | robust (election-time) | not reachable | not reachable | not reachable | **UNREACHABLE** | `509` lines, zero callers outside its own example harness at the pinned SHA |
 | lateral-CA correction | not run | not run | not run | **out of scope** | excluded by dispatch; owned by M107 and M114 |
+
+The occlusion-halo correction was measured on its own four stacks (section 5d),
+so it gets its own table:
+
+| instrument | bee-3-cpl | flower-bud-with-background-fern-cpl | flower-bud-alone-cpl (trap) | tweezers-cpl | verdict | decided by |
+| --- | --- | --- | --- | --- | --- | --- |
+| occlusion halo, delta 40 | KEEP-OFF | KEEP-OFF | KEEP-OFF | KEEP-OFF | **KEEP-OFF** | HB2 selectivity `R = 3.054`, bar `<= 0.50`, failed backwards |
+| occlusion halo, delta 80 | KEEP-OFF | KEEP-OFF | KEEP-OFF | KEEP-OFF | **KEEP-OFF** | strictly worse than delta 40 on the registered index on 3 of 4 |
 
 Supporting verdicts, not instruments:
 
@@ -395,6 +416,164 @@ fact 1551's retraction leaves every number in section 4 untouched.
 
 ---
 
+## 5d. Addendum: the occlusion-halo correction
+
+ORCH dispatched this arm after the main campaign had closed, prioritising it
+above everything else on the grounds that the halo "is the artifact that makes a
+focus stack look wrong to a human" and that the owner's complaint is visual.
+That reasoning is sound. The result does not support the instrument.
+
+Bars were registered in `experiments/M116-promotion/prereg-halo.txt` and
+committed **before any halo arm was run**, in their own commit. The premises
+were read from the source at the pinned SHA per discipline 808, not from
+`--help` and not from the dispatch brief. Arms: `H0` default, `H1`
+`STREHL_FIX_HALO=1` (delta 40), `H2` delta 80, `H3` `STREHL_FIX_HALO=0` (trap),
+plus a gate-0 pair on bee to approach M87's own terms.
+
+### The registered bars
+
+| bar | contract | measured | verdict |
+| --- | --- | --- | --- |
+| HB1 reproduction | bee `dHALO% <= -50%` | `+17.21%` at gate 4, `+19.24%` at gate 0 | **FAIL** |
+| HB2 selectivity | `R <= 0.50` | `R = 3.054` | **FAIL, and backwards** |
+| HB3 fine structure | `dQ >= -0.010`, delta 80 must move it | statistic was structurally `0`; repaired post-hoc | **VACUOUS as registered** |
+| HB4 yoke noise | ratio rises `<= 20%` | ratio *fell* `3.55%` to `69.12%` | PASS, but one-sided and uninformative |
+| HB5 trap | `STREHL_FIX_HALO=0` byte-identical to `H0` | identical on 4 of 4 | **PASS** |
+| HB6 containment | no change beyond the 40 px yoke | 0-26 px on 3 subjects; `12 926` px, max `d = 89.0`, on tweezers | PASS on 3, unresolved on 1 |
+| HB7 visual | inspect the crops and say | done, below | reported |
+
+**The promotion rule registered in advance says HB2 failing means KEEP-OFF even
+if every other bar passes.** HB2 failed by a factor of six.
+
+### The measurements
+
+| subject | `H(H0)` | `dHALO%` d40 | `dHALO%` d80 | bright-edge `dHALO%` | treated |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| bee-3-cpl | `-0.16081` | `+17.21` | `+21.27` | `+36.12` | `7.109%` |
+| flower-bud-with-background-fern-cpl | `-0.09300` | `+123.79` | `+125.84` | `+185.40` | `6.952%` |
+| flower-bud-alone-cpl (trap) | `-0.05300` | `+378.10` | `+544.80` | `+165.81` | `3.190%` |
+| tweezers-cpl | `-0.13421` | `+47.02` | `+26.60` | `-314.54` | `3.857%` |
+
+| subject | `dD` treated d40 | d80 | control | yoke/out `H0` | `H1` |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| bee-3-cpl | `-0.23689` | `-0.18446` | `+0.00000` | `3.6031` | `3.4752` |
+| flower-bud-with-background-fern-cpl | `+0.24330` | `+0.38911` | `+0.00000` | `12.8286` | `4.7640` |
+| flower-bud-alone-cpl | `-0.04380` | `+0.20130` | `+0.00000` | `6.1968` | `3.5605` |
+| tweezers-cpl | `+0.80457` | `+1.01480` | `+0.00000` | `46.8945` | `14.4830` |
+
+### Controls first
+
+**P25. MEASURED.** The trap `H3` (`STREHL_FIX_HALO=0`) is byte-identical to the
+default on all four subjects: bee `478387EF2F9A`, fern `182D38A74A4B`, alone
+`75238075EACF`, tweezers `4881EC4EFA49`. Its plant is `H1`, the same variable
+at a different value, which moves every one of those hashes. The off-switch is
+a real null on live wiring, not an unwired path.
+
+**P26. MEASURED.** `H0` reproduces the main campaign's `A0` hash exactly on both
+subjects the two campaigns share — bee `478387EF2F9A` and tweezers
+`4881EC4EFA49` — from a separate process, hours later, against warp sidecars
+solved once and loaded read-only. Cross-campaign determinism holds.
+
+**P27. MEASURED.** The fine-structure control reads `+0.00000` on all four
+subjects, to five decimals, *after* being repaired. Before repair it read
+`+0.10127` on bee for an arm whose control pixels are byte-identical to the
+reference, because `highpass()` is a 5 px box and an untouched pixel within
+2 px of a touched one still changes value. The control set is now the untreated
+set eroded by the filter's support.
+
+### The findings
+
+**P28. MEASURED. The deciding bar failed backwards.** `dHALO%` is `+123.79` on
+`flower-bud-with-background-fern-cpl`, which has an occluding background, and
+`+378.10` on `flower-bud-alone-cpl`, which does not. `R = 3.054` against a bar
+of `R <= 0.50`. M87's own module predicts non-selectivity at `R ~ 0.80` from
+synthetic data; on this real matched pair the correction acts **three times more
+strongly where there is no occlusion to fix**.
+
+**P29. MEASURED. No bright rim exists in the linear background profile of these
+renders for the registered index to remove.** The background radial profile on
+bee is monotonic in distance from the silhouette, rising from `-0.25065` at
+`d = 2` to `+0.04327` at `d = 98` with no local maximum anywhere. The
+correction drives the near band further down, by `-0.032` to `-0.037` across
+`d = 2..38`, and is exactly `0.00000` from `d = 46` outward. So under an
+independently defined index the correction does not null a rim; it deepens an
+already-monotonic skirt. `dHALO%` is positive — worse by the registered sign
+convention — on all four subjects and at both gates.
+
+**P30. MEASURED. Where a real positive rim does exist, the correction
+overshoots it grossly.** `tweezers-cpl` is the only subject whose bright-edge
+index is positive at all, `+0.02390`. The correction takes it to `-0.19732`:
+past zero and roughly nine times the original excursion in the opposite
+direction. The one case in this campaign that matches the instrument's stated
+premise is also the case where it overcorrects hardest.
+
+**P31. MEASURED, and the image the owner should look at first.** On
+`flower-bud-with-background-fern-cpl` — one of the two stacks that supply the
+`84.6%` figure justifying the instrument — the correction at the shipped delta
+replaces large irregular regions of the bud's surface with flat, blurred mush,
+in amoeba-shaped islands tens of pixels across. The mechanism is visible in the
+mask: `foreground_mask` assumes "the subject is darker than its background", so
+the *bright* parts of a bright subject are classified as background, fall within
+the 40 px yoke of the dark parts, and are re-elected from frames at least 40
+frames away from their own focus frame. The docstring states the assumption; no
+one had checked it against a real bright subject.
+See `flower-bud-with-background-fern-cpl__contact-halo-edge1.png`.
+
+**P32. MEASURED. On the same stack, at the same setting, a different crop shows
+the instrument doing exactly what it claims.** In
+`flower-bud-with-background-fern-cpl__contact-halo-edge2.png` the pale rim
+around the bud is visibly reduced and the edge reads cleaner. The correction is
+not uniformly destructive; it is *indiscriminate*. Where the dark-subject
+assumption holds it helps, and where it does not it guts the subject, on one
+stack, in one run, at one parameter value.
+
+**P33. MEASURED. The documented delta-40-versus-80 trade-off does not reproduce
+as a monotone detail loss.** M87 chose `40` as "the largest value that did not
+visibly soften hairs and claws". Scored on the pixels *both* deltas treat, delta
+80 is *less* negative than delta 40 on bee (`-0.18446` against `-0.23689`) and
+*more positive* on the other three. Whatever `80` does that `40` does not, it is
+not a monotone reduction in detail amplitude by this statistic.
+
+**P34. MEASURED. On bee the correction erases out-of-focus hairs.** In
+`bee-3-cpl__contact-halo-edge1.png` the wispy hair strands crossing the
+background in `H0` are replaced in `H1` by smooth mottled patches, consistent
+with `dD` on treated pixels of `-0.23689`, a 42% fall in high-pass amplitude.
+In `bee-3-cpl__contact-halo-edge2.png` a smooth out-of-focus gradient acquires
+hard-edged polygonal facets and visible seams that are not present in `H0`. That
+second artefact is a *new* defect introduced by the correction, not a failure to
+remove an old one.
+
+**P35. MEASURED, ATTRIBUTION UNRESOLVED.** On `tweezers-cpl`, `12 926` changed
+pixels lie beyond the stated 40 px yoke, out to `d = 89.0`, against 0-26 px on
+the other three subjects. I cannot cleanly attribute this between the
+implementation exceeding its documented reach and my own reimplementation of
+`foreground_mask` disagreeing with the tool's on a subject that is `70.35%`
+foreground. Resolving it needs the tool's own mask dumped, which needs a code
+change I am not permitted to make. Flagged for whoever owns `halo.rs`.
+
+**P36. ARGUED.** The `87.9%` and `84.6%` removal figures are not evidence of
+quality, and the module already contains the reason: on a synthetic region with
+no defect at all the same metric "improves" by `63.9%` while RMSE against truth
+rises `558.4%`. A metric that moves that far where there is nothing to fix
+cannot certify a fix. This campaign's contribution is to show the same
+non-selectivity on real captures, at `R = 3.054`, and to put a picture next to
+it.
+
+### Verdict
+
+**KEEP-OFF**, by the rule registered before the data existed. Not
+OFFER-AS-CHOICE either, on the strength of P31: an option that silently
+destroys subject texture on one of the two stacks used to justify it should not
+be offered without a warning attached to it. The module's own self-assessment —
+cosmetic, anti-fidelity, off by default — is **correct and should stand**. The
+honest summary is that M87 already knew this and wrote it down; what was missing
+was a measurement on a real render, and the measurement agrees with the caution
+rather than with the headline figure.
+
+No patch is recommended. The instrument is already off.
+
+---
+
 ## 6. Patches
 
 **None.** No instrument passed its registered promotion bar, so there is no
@@ -421,6 +600,30 @@ response to it is a measurement milestone, not a patch.
   flat-field benefit is real and visible. A future milestone that registers a
   flat-field bar rather than a detail bar could reach a different verdict
   honestly, and P4 is the number it should start from.
+- **It does not claim M87 was wrong about its own numbers.** My halo index is
+  independently defined and is not M87's "halo metric ISO". A different
+  instrument disagreeing is weaker evidence than the same instrument failing to
+  reproduce. What I claim without qualification is narrower and does not depend
+  on matching M87's definition: the background radial profile of these renders
+  has no local maximum near the silhouette (P29), and the correction acts
+  `3.05x` more strongly on a stack without an occluding background than on one
+  with it (P28).
+- **It does not claim the halo correction always damages an image.** P32 is a
+  crop from the same stack, the same run and the same delta in which it plainly
+  improves the edge. The claim is indiscriminacy, not uniform harm.
+- **It does not resolve the tweezers containment excursion.** `12 926` pixels
+  changed beyond the stated 40 px yoke (P35). That is either the implementation
+  exceeding its documented reach or my reimplementation of `foreground_mask`
+  disagreeing with the tool's, and distinguishing them needs the tool's own mask
+  dumped, which needs a code change this milestone may not make.
+- **It does not claim delta 80 is safe.** P33 reports only that delta 80 is not
+  a monotone *detail-amplitude* loss relative to delta 40 by my statistic. M87's
+  "visibly softens hairs and claws" is a visual claim; I did not design a visual
+  test that isolates it, and the two crops that bear on it disagree.
+- **It does not claim the halo correction is what the owner is complaining
+  about.** It is the instrument whose purpose is closest to a visible artefact,
+  which is why ORCH prioritised it and why I measured it. It failed. The
+  complaint remains unexplained by any instrument measured in this milestone.
 - **It does not adjudicate the lateral-CA correction.** `STREHL_FIX_CA` was
   never enabled in any arm, by instruction. Nothing here bears on the disputed
   1.444x over-correction.
@@ -550,9 +753,81 @@ first version of the same script also assigned to `$args`, an automatic
 variable, and produced an argv with an empty `--out`. Both bugs presented as an
 alarming red result rather than as an error.
 
+**D-l. A pre-registered vacuity clause is worth more than the bar it guards.**
+HB3's registered statistic was `Q = D - N` evaluated with the same pixel set
+passed for both the flat and the detail term, which makes `D` and `N` the same
+number and `Q` identically zero for every arm on every subject. It would have
+been reported as a clean pass. What caught it was the clause registered
+alongside it — that delta 80 *must* move the number, or the bar is vacuous —
+which is fact 1548 written down in advance instead of learned again afterwards.
+
+**D-m. Expand a control in the operations it is built from, not in the
+variable it holds fixed.** The natural control for "did the correction soften
+detail" is the untreated pixels, which are byte-identical to the reference and
+so must read zero. It read `+0.10127`. `highpass()` is a 5 px box, so the
+control's value depends on treated neighbours within 2 px; the perturbed
+quantity appears in the control's own expansion. Eroding the control set by the
+filter's support took it to `+0.00000` on all four subjects.
+
+**D-n. When a brief tells you which number to reproduce, check whether that
+number can distinguish success from failure before you spend a night
+reproducing it.** The dispatch asked for an independent check of `87.9%` halo
+removal. The module defining that metric also records it reading `-63.9%` on a
+region with no defect. Reproducing it would have been a night's work confirming
+a quantity already known to be uninformative. The bar that mattered was
+selectivity, and it was cheap: one extra stack, chosen because it lacks the
+thing the instrument exists to fix.
+
+**D-o. A one-sided bar can pass while the quantity it guards moves violently in
+the unguarded direction.** HB4 registered "the yoke/outside noise ratio rises by
+at most 20%". It fell, by up to `69.12%`, and so passed. The fall is evidence of
+the same flattening the crops show. A bar written as a band would have caught
+what a bar written as a ceiling waved through — the same defect as B3 in the
+main campaign, committed twice in one milestone.
+
+**D-p. `$ErrorActionPreference = "Stop"` turns a native tool's progress output
+into a terminating error.** `strehl` reports to stderr; under `2>&1` PowerShell
+wraps each stderr line in an `ErrorRecord`, and with `Stop` in force the first
+one killed the halo campaign on arm one, having written no output and no log.
+The same harness had run 39 arms successfully under a different invocation, so
+the defect was in the *composition*, not the script. Drop to `Continue` across
+the native call only, and take `$LASTEXITCODE` into a variable immediately.
+
 ---
 
 ## 9. Images
+
+### The halo campaign (section 5d) — look at these first
+
+`C:\dev\strehl-out\M116\images-halo\`
+
+```
+flower-bud-with-background-fern-cpl__contact-halo-edge1.png   <- P31, the damage
+flower-bud-with-background-fern-cpl__contact-halo-edge2.png   <- P32, the benefit
+bee-3-cpl__contact-halo-edge1.png                             <- P34, hairs erased
+bee-3-cpl__contact-halo-edge2.png                             <- P34, new faceting
+flower-bud-alone-cpl__contact-halo-edge{1,2}.png              <- the HB2 trap
+tweezers-cpl__contact-halo-edge{1,2}.png                      <- P30, overshoot
+```
+
+Each sheet is four panels at 1:1 on an identical pixel region: `H0` correction
+OFF (the shipped default), `H1` delta 40, `H2` delta 80, and `|H1 - H0| x 8`
+showing exactly which pixels the correction touched. Individual crops are
+`<subject>__<arm>__halo-edge<n>.png`, full renders `<subject>__<arm>__full.png`.
+
+The crop windows were chosen **on `H0`, the correction-OFF arm**, by maximising
+near-yoke coverage subject to the window straddling a silhouette — never on a
+treated arm, and never by where the arms differ most, which would have selected
+for maximum effect. Exposure was solved once per subject on `H0` and passed as
+a literal to `H1` and `H2` — bee `1.49`, fern `1.89`, alone `1.57`, tweezers
+`1.13`.
+
+The panels are `--srgb` renders because they are for looking at. Every number
+in this report is measured on the linear renders, because `--srgb` applies a
+non-diagonal colour matrix and a guided demosaic and its own `--help` says
+"For looking at, NOT for measuring."
+
+### The main campaign
 
 `C:\dev\strehl-out\M116\images\`
 
