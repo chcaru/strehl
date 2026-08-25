@@ -1,5 +1,12 @@
 # M120 — the background patchwork: what it is, what it is not, and a number for it
 
+> **READING ORDER.** Part I (§1–§12) is the original existence/invariant investigation.
+> Part II (§13–§21) is the mechanism investigation, **priced at gate 0** — which ORCH
+> later corrected as a labelled negative control. **Part III (§22–§28) is the current,
+> load-bearing result**, re-measured at the shipped gate 4 with an exact replication
+> (NCC 1.000000). Part II's verdicts survive the correction; its magnitudes do not. If
+> you are citing one number from this document, cite §22 and §27.
+
 **ORCH's fact 1604 is wrong in two of its three limbs. But fact 1603 is right, and it is
 worse than ORCH thought: the patchwork is in the SHIPPED default render, not only in the
 gate-0 image ORCH was shown, and M120's own intermediate claim that the shipped render was
@@ -495,6 +502,13 @@ Pre-registered in `experiments/M120-patchwork/PREREGISTRATION-M120b-mechanism.md
 
 ## 13. Headline
 
+> **⚠ ARM CORRECTION (ORCH commit `7f6c433`, facts 1621–1626, discipline 830).** §13–§21
+> price the operators on **gate 0**, which `merge.rs:3027` labels verbatim as a *negative
+> control*; the shipped gate is `DEFAULT_GATE = 4.0` (`merge.rs:298`). The numbers below
+> are correct **for the arm they name** and are left standing as the record. The
+> load-bearing re-measurement at the shipped gate is **§22**, and it **reaches the same
+> verdict** (−2.3% / −5.6% instead of −3.7%). Read §22–§28 before citing anything here.
+
 **Turning the spatial regulariser completely off removes 3.7% of the visible defect and
 leaves the crazy paving plainly visible. (MEASURED)** With **both** spatial-coherence
 operators off — a pure per-pixel argmax whose index field is 2 px salt-and-pepper — the
@@ -590,6 +604,10 @@ constant-index component a pixel belongs to.
   into a vacuum.
 
 ## 17. The operator price, measured on the render, not the index field (MEASURED)
+
+> **⚠ SUPERSEDED AS THE HEADLINE — this table is priced at gate 0, the negative control.**
+> It remains valid for gate 0. The shipped-gate price is **§22**. The conclusion is
+> unchanged; only the magnitude moves (−3.7% → −2.3% / −5.6%).
 
 The index field is not the artifact. This gathers the merged luma under each arm's index
 field and applies M120's shipped metric on the registered background ROI (M87-box rows
@@ -709,3 +727,274 @@ survive contact with arm B.
   rather than *grain*" is OBSERVED, not measured with a boundary-sharpness metric.
 - **No render A/B was run.** `STREHL_SOFT_GATE` is M116's. The toggles here are the focus
   window and the regulariser, which nothing else is touching.
+
+---
+
+# Part III — the arm correction (M120c)
+
+ORCH commit `7f6c433` (facts 1621-1626, discipline 830) retracted the arm: everything in
+Part II, and everything in ORCH's own dispatch, was priced on `armM-gate0-binlin.tif`.
+`merge.rs:3027` prints gate 0 with the literal words `(negative control)`, and
+`merge.rs:298` sets `pub const DEFAULT_GATE: f32 = 4.0`. **The shipped arm is gate 4.**
+
+This part re-prices the mechanism at the shipped gate and answers the revised P3/P4.
+Two of my own claims die here as well as ORCH's; both are marked.
+
+## 22. The operator price at the SHIPPED gate (MEASURED)
+
+### 22.1 First attempt refused itself
+
+`18_gate4_price.py` is committed **because it failed**. Its validation gate fired:
+replicating gate-4 admission gave `n_eff = 3.4` frames against the pipeline's known
+`166.8`, and NCC against the shipped render of **0.729**. I did not report its numbers.
+
+The cause is a gotcha worth keeping: **the gate threshold is an absolute offset on the
+normalised focus response**, not a relative one. `scipy.ndimage.sobel` runs at ~8.12× the
+pipeline's kernel scale, so a fixed threshold admitted a small fraction of what it should.
+A relative-margin replication would have looked fine and been wrong.
+
+### 22.2 Corrected, and validated to numerical equality
+
+`19_gate4_price_fixed.py` gates on the **cached pipeline field** with a fitted calibration
+α = 0.1231 (1/α = 8.12, the Sobel kernel norm; corr 0.999925 against the pipeline field).
+
+Validation against the shipped render, on the registered ROI:
+
+| check | value |
+| --- | ---: |
+| NCC, replication vs shipped | **1.000000** |
+| gain | 4.4137 |
+| residual | **0.002%** |
+| `n_eff` | **166.8 / 299** (pipeline: 166.8) |
+
+The replication is now exact, so the arm comparison below is trustworthy in a way §17's
+(96.75%-faithful, gate-0) was not.
+
+| arm | `n_eff` | **Q** | Δ vs shipped |
+| --- | ---: | ---: | ---: |
+| **C4 — shipped (window ON, reg ON, gate 4)** | 166.8 | **4.337** | — |
+| **B4 — regulariser OFF, gate constant kept** | 140.2 | 4.238 | **−2.3%** |
+| **B4n — regulariser OFF, admission re-matched (gate 4.53)** | 166.8 | **4.096** | **−5.6%** |
+
+`Q_bound = 1.284`. B4n is the fair arm: turning the regulariser off narrows admission as a
+side effect, so B4n restores `n_eff` to the shipped 166.8 and isolates the operator.
+
+**The conclusion of Part II survives the arm correction unchanged. (MEASURED)** Removing
+the spatial regulariser entirely buys **5.6%** of a defect that is **3.4× over bound**. The
+regulariser is not the cause at the shipped gate either.
+
+## 23. An instrument control ORCH's commissioning did not have — and it clears ORCH (MEASURED)
+
+I suspected the kurtosis instrument was confounded. §20 rendered the *worst* gate-4 window
+(kurtosis 124) and it looked, to my eye, **smooth**. My hypothesis was that averaging ~167
+frames suppresses the grain that dominates a single frame's Laplacian, leaving sparse real
+features to spike the fourth moment — i.e. that kurtosis was partly scoring *denoising*.
+
+ORCH's commissioning used a null (i.i.d.) and a positive control (planted Voronoi). Neither
+separates "merged" from "manufactured". The missing arm is an **averaging control that
+cannot manufacture anything**: a plain mean of N frames with constant weights.
+
+`21_instrument_control.py`, N = 2 … 299, same 40 windows, same bar of 10:
+
+| arm | kurtosis median | worst | over bar |
+| --- | ---: | ---: | ---: |
+| single frame | 0.03 | 0.10 | **0 / 40** |
+| plain mean, N = 8 | 0.06 | 0.24 | **0 / 40** |
+| plain mean, N = 64 | 0.02 | 0.14 | **0 / 40** |
+| plain mean, N = 299 | 0.04 | 0.19 | **0 / 40** |
+| **gate 4 (shipped)** | **0.65** | **124.02** | **15 / 40** |
+
+Laplacian RMS falls 92.6 → 33.0 across that sweep, so the denoising is real and large.
+**Kurtosis does not follow it. 0/40 at every N.**
+
+> **My hypothesis was wrong, and I am reporting it as wrong. (MEASURED)** Averaging does
+> not inflate this statistic. ORCH's instrument is clean and the localisation finding
+> stands on it. I designed this control to kill ORCH's number and it exonerated it.
+
+One honest caveat against over-reading: across the nine N values, ρ(kurtosis, RMS) = −0.717
+(p = 0.03). That is a nine-point trend across a kurtosis range of 0.01–0.06 — three orders
+of magnitude below the bar. It is not support for confounding and should not be cited as
+such.
+
+## 24. A plainer statistic, and what "localised" is worth (MEASURED)
+
+Kurtosis is a shape moment and hard to argue with. §23 hands us a better reference arm, so
+define
+
+```
+R = lapRMS(arm) / lapRMS(plain mean of all 299 frames)      over a background window
+```
+
+The plain mean has constant weights — it **cannot** manufacture structure — and it averages
+299 frames against the gate's 167, so their noise floors are comparable. `R > 1` is
+manufactured fine structure measured against an arm that has none. No bar to calibrate, no
+plant required, no fourth moment.
+
+Over the same 40 pure-background 96 px windows (`22_p4_settled.py`):
+
+| arm | R median | R worst | R > 1.25 | R > 2 |
+| --- | ---: | ---: | ---: | ---: |
+| gate 0 (negative control) | **4.637** | 8.071 | **40 / 40** | **40 / 40** |
+| **gate 4 (SHIPPED)** | **1.161** | 7.090 | 17 / 40 | **11 / 40 (28%)** |
+
+**This reproduces ORCH's localisation on an independent statistic. (MEASURED)** At gate 0
+the mosaic is universal — every window, without exception, carries 2–8× the fine structure
+of an arm that manufactures none. At gate 4 the median window is within **16%** of a plain
+mean, and the damage concentrates in **28%** of windows. ORCH's "a quarter of the
+background, and where it is present it is severe" is the right sentence, and 28% is the
+number.
+
+## 25. P4 — what distinguishes a window that patchworks (MEASURED)
+
+ORCH set the decision rule: *"the mechanism predicts it should be the flattest-response
+windows … If instead it correlates with proximity to the subject, the mechanism is
+halo-driven and my story is wrong."*
+
+| predictor of R on the shipped arm | Spearman ρ | p |
+| --- | ---: | ---: |
+| **distance to silhouette** | **−0.5896** | **6.3e-05** |
+| **margin** | **+0.4261** | **0.0061** |
+| partial: distance, controlling margin | **−0.6330** | — |
+| partial: margin, controlling distance | +0.4981 | — |
+
+margin vs distance ρ = −0.041 (p = 0.80): **the two predictors are independent**, so the
+partials are essentially the raw correlations and both are real effects.
+
+Three things follow, and the second is the one that matters.
+
+1. **Distance fires, strongly and in ORCH's stated direction.** Windows nearer the
+   silhouette are rougher. By ORCH's own pre-stated rule, this is the branch on which
+   *"my story is wrong"*.
+
+2. **Margin also fires — with the sign reversed against the mechanism.** ORCH's mechanism
+   requires patchwork where the data term is weakest, i.e. **low** margin → high R. The
+   measurement is **ρ = +0.43**: roughness is worst where margin is **highest**. Margin is
+   not merely uninformative here; it points the other way. This is the same sign reversal
+   §16 found for blob size (ρ = +0.68), now reproduced on a different statistic, a
+   different arm and a different spatial scale.
+
+3. **On the gate-0 negative control, distance does not predict** (ρ = −0.235, p = 0.14)
+   while margin still does (+0.360, p = 0.022). That is exactly the signature of two
+   different defects: at gate 0 the mosaic is everywhere and the silhouette is not special;
+   at gate 4 the mosaic is gone and what remains is anchored to the silhouette.
+
+I registered `|ρ_dist| > |ρ_margin| + 0.15` as the threshold for calling P4 for halo. The
+partials give 0.633 − 0.498 = **0.135**, just under my own bar, so the script prints
+**UNDECIDED** and I am reporting it as such rather than moving the line after seeing the
+data. The honest statement is: **distance is the stronger predictor and margin's sign is
+wrong for the mechanism, but distance does not clear my pre-registered margin of
+superiority.**
+
+**Restricted range (stated because it cuts against me):** across pure-background windows
+margin spans only 1.37–15.30 gate units. A null on margin would have been weak evidence. A
+*reversed* correlation is not weakened by restricted range in the same way — but it is
+measured over a narrow slice and should not be extrapolated to the subject.
+
+### Where the residual actually lives (OBSERVED)
+
+`M7-laplacian-where.png` renders the worst window, the second worst, and a quiet one at
+1:1 alongside their plain mean and their `|Laplacian|`.
+
+| window | lapRMS gate 4 | lapRMS plain mean | R |
+| --- | ---: | ---: | ---: |
+| worst (kurt 124) | 315.4 | 146.7 | **2.15** |
+| 2nd worst (kurt 112) | 227.8 | 147.4 | 1.55 |
+| **quiet (kurt 0.0)** | 167.2 | 162.9 | **1.03** |
+
+In the quiet window **the shipped merge is within 3% of a plain mean** — it is, to this
+instrument, doing nothing wrong at all. In the worst window the `|Laplacian|` outliers are
+not spread over the field as a mosaic would be: they lie on **a thin hard arc in one
+corner and one filament**, 0.55% of pixels above 5σ. That arc is a silhouette edge.
+
+This also explains the puzzle in §20 that made me doubt the instrument: the worst window
+looks smooth because it *is* smooth almost everywhere, and kurtosis is precisely the
+statistic that reports "flat with rare hard spikes". It was doing its job.
+
+## 26. P3 sharpened — why the gate halves it, and what survives (MEASURED)
+
+| region (split at median distance 56.3 px) | R gate 0 | R gate 4 | benefit |
+| --- | ---: | ---: | ---: |
+| near silhouette | 5.038 | **2.424** | **−51.9%** |
+| far from silhouette | 4.762 | **1.512** | **−68.2%** |
+
+**The gate helps materially less near the silhouette (−52% vs −68%), and the residual there
+is 1.6× the residual far away. (MEASURED)** ORCH's reading — *"my reading is that the
+residual is halo, not mosaic"* — is **supported**, on both this statistic and on §20's
+kurtosis (near-silhouette Q 3.187 → 1.800, −43.5%, 11/20 still over bar; far 4.542 → 1.873,
+−58.7%, 4/20).
+
+Why widening admission works at all, on the corrected picture: the gate admits every frame
+within `gate·√2·FOCUS_NOISE_SD` of the winner and averages them. Where the background is
+flat in every frame, hundreds of frames tie, so gate 4 averages ~167 of them and the
+inter-frame differences that made the visible steps average away. This is **not** the
+regulariser being overruled — §22 shows removing the regulariser buys 5.6% — it is the
+**single-winner election** being replaced by a broad average. That is the same mechanism
+Part II named, and it now also explains the localisation: near a silhouette the frames do
+**not** tie, because they differ in real occlusion geometry, so averaging them cannot
+cancel what is a genuine disagreement about what is in front of what.
+
+## 27. Revised verdict — it is two defects, not one (ARGUED from MEASURED)
+
+| claim | verdict |
+| --- | --- |
+| ORCH: the **spatial regulariser** dominates and produces the flat regions | **REFUTED at the shipped gate.** Removing it entirely: −2.3%, or −5.6% admission-matched, on a defect 3.4× over bound (§22, validation NCC 1.000000). |
+| ORCH: *"raw argmax noise would be pixel-scale salt-and-pepper"* | **REFUTED as a matter of code** (§13): a 27×27 box mean precedes the 17×17 regulariser. With the regulariser off the field is still 19.4 px blobs. |
+| ORCH: the data term is at the noise floor in the background | **REFUTED** (§15): winner response 561.9 σ; 0.00% of background below 3σ. It is the **margin** that is small, not the response. |
+| ORCH: blob size grows as margin falls | **REFUTED, sign reversed** (§16): ρ = **+0.68**. Reproduced on R at gate 4 (§25): ρ = **+0.43**. |
+| **ORCH: on the shipped render the defect is LOCALISED, not universal** | **CONFIRMED on an independent statistic** (§24): 28% of windows over R > 2, median R 1.161. |
+| **ORCH: the residual at gate 4 is halo, not mosaic** | **SUPPORTED** (§25, §26): distance ρ = −0.59, p = 6e-05; gate benefit −52% near vs −68% far; Laplacian outliers lie on a silhouette arc. |
+| ORCH's own stated kill-switch: *"if it correlates with proximity to the subject, the mechanism is halo-driven and my story is wrong"* | **FIRES.** |
+| **M120 (me): ORCH's kurtosis instrument is confounded by denoising** | **REFUTED — my error** (§23): plain mean 0/40 over bar at every N to 299. |
+| M120 (me, pre-registered): `\|ρ\|` between blob size and margin will be < 0.2 | **REFUTED — my error** (§16): ρ = +0.68. |
+
+**The corrected story (ARGUED).** There are two defects with different owners, which is why
+one knob half-fixes the thing:
+
+- **Defect A — the mosaic.** Owned by the **single-winner election among near-tied frames**,
+  not by either spatial-coherence operator. Where hundreds of frames tie to within the noise
+  floor, picking one and gathering from it imprints that frame's realisation of the
+  background. Universal at gate 0 (R 40/40, median 4.64). **The shipped gate 4 already
+  largely fixes it** by averaging ~167 tied frames (median R 1.161, within 16% of a plain
+  mean). The regulariser's role is cosmetic: it consolidates 40,035 components into 3,331,
+  so it changes grain into *paving* — it makes the defect **legible**, which is very
+  probably why it has been blamed for causing it.
+- **Defect B — the residual.** Concentrated near silhouettes, helped least by the gate,
+  responsible for the 28% of windows still over bar. Frames near an occluding edge do not
+  tie, so no amount of widening admission averages the disagreement away. This is the halo
+  that already sits at #2 in ORCH's defect ranking, and the honest reading is that at gate 4
+  **the patchwork's residual and the halo are the same defect**.
+
+### What this predicts about M116's soft gate (falsifiable, ARGUED)
+
+`STREHL_SOFT_GATE` (`merge.rs:331`, default `None` = top-hat) replaces the hard admission
+edge with a soft kernel. It acts on **Defect A**, which gate 4 has already largely removed.
+
+- **Predicted:** a **small** improvement on the shipped render — of the order of the
+  remaining headroom in the far-field windows (R 1.512 → floor 1.0), i.e. **single-digit to
+  low-tens percent on R, not a fix**. It should improve far-from-silhouette windows more
+  than near ones.
+- **Predicted to leave untouched:** the near-silhouette residual and the halo.
+- **Falsified if:** the soft gate removes the near-silhouette residual, or if it moves the
+  shipped render by more than ~30% on R. Either would mean Defect B is also admission-shaped
+  and my two-defect split is wrong.
+- **Also falsified if** it does nothing at all on the *gate-0* arm, where Defect A is
+  universal — that would mean admission softness is not what governs Defect A either.
+
+## 28. What M120c could not verify
+
+- **One stack, one box.** All 40 windows are inside the M87 leg box of `bee-3-cpl`,
+  roughly 10% of the frame. ORCH's own 12-window shipped-render measurement covers more and
+  agrees in shape, but neither of us has looked at a second stack. The M96 maps would have
+  given five — and §21 explains why they cannot.
+- **"Distance to silhouette" is a proxy.** It is distance to the M87 occlusion mask
+  boundary, not to a verified optical edge. A window can be near the mask and not near a
+  genuine occluding contour.
+- **P1 was never run as ORCH specified it**, because the data it names does not exist in
+  the form the brief assumes (§21: M96's `elected-index.tif` is an 8-bit colour-mapped
+  preview). §14's operator isolation answers the same question from recomputed fields.
+- **Distance does not clear my pre-registered superiority margin** over margin (0.135 vs
+  0.15), so P4 is reported UNDECIDED-leaning-halo, not decided.
+- **The gate-4 residual is attributed to halo by correlation and by one rendered window.**
+  No experiment isolated an occlusion edge and showed the merge disagreeing across it.
+  That is the obvious next milestone and it is not done here.
+- **No render A/B.** `STREHL_SOFT_GATE` is M116's; §27's prediction is untested by me.
