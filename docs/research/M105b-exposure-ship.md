@@ -1137,7 +1137,7 @@ pre-registered reasoning for (i) was refuted by my own measurement**, and one
 of my two methodological predictions was simply wrong. Both are reported below
 in preference to the favourable half.
 
-Pre-registration committed at `7694309` and `dcb9e8d`, each **before** its run.
+Pre-registration committed at `7694309` and `be627db`, each **before** its run.
 Scripts `11-quantisation-exposure.py`, `12-crossover-check.py`.
 
 #### (a) Where the perturbation actually lands
@@ -1314,6 +1314,53 @@ change of image formation moves the percentile by `1.0e-05`; 16-bit
 quantisation moves it by `6.05e-06`. That is an independent, pre-existing bound
 on this exact question, taken by a different milestone for a different reason,
 and it agrees.
+
+#### (j) A fabricated citation in this very section, and the gate that now catches it
+
+While writing (a) above I cited two pre-registration commits. `7694309` was
+real. **`dcb9e8d` was invented** -- written from memory about ten minutes after
+the commit was made, without looking it up. The real hash is `be627db`. It
+passed `corpus_lint`, it passed my own read of the section, and it would have
+shipped as a dead citation into a corpus whose entire verification model is
+grep.
+
+`13-verify-citations.ps1` now resolves **every** backticked hash-like token in
+this report against `git cat-file`. Run over the whole document it found
+**exactly one** bad citation out of seven, which is the useful part: the other
+six were correct, so the failure was not sloppiness in general but a single
+unchecked recall. Exit contract 0 / 1 / 2 per discipline 702, and all three arms
+are exercised.
+
+**The gate's own first run inverted the discipline it was built to honour.** It
+returned `2` (TOOL FAILURE, "nothing was checked") for what was a real subject
+failure, because under `$ErrorActionPreference = 'Stop'` PowerShell promotes a
+native command's stderr to a *terminating* error -- so `git cat-file` printing
+`fatal: Not a valid object name dcb9e8d`, which is precisely the answer being
+asked for, tripped the trap. `01-render.ps1` in this same directory already
+carries a comment documenting that promotion. Knowing a trap is not the same as
+not falling into it, which is the argument for the gate rather than the rule.
+
+**The gate needs one exception, and an exception list is how a gate gets
+neutered.** PD20 and this paragraph *quote* `dcb9e8d` deliberately, as the
+specimen the gate exists to catch, so it must be excused -- and the excuse is
+constrained three ways: each entry carries a written reason, each excused token
+is printed loudly rather than skipped in silence, and **an entry that no longer
+appears in the document is itself a failure**, because a stale excuse narrows a
+gate without anyone noticing. Four arms are exercised, not two:
+
+| arm | expected | observed |
+| --- | --- | --- |
+| healthy | 0 | 0, one excused by name |
+| unlisted bad hash planted (`deadbee1`) | 1 | 1, names `deadbee1`, still excuses `dcb9e8d` |
+| stale exception (`0000000`) | 1 | 1, names the stale entry |
+| report unreadable | 2 | 2, "nothing was checked" |
+
+The planted arm is the one that matters: it is the negative control proving the
+exception list cannot hide an unlisted hash. The report was copied to
+`$env:TEMP` before the mutation and restored from that copy, verified
+byte-identical by SHA-256; the mutation was anchored on a unique full line and
+hard-errors if the anchor does not land, so a green control cannot come from a
+mutation that never applied.
 
 ---
 
@@ -1842,6 +1889,26 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   an unordered bag and discards exactly the structure a dose-response exists to
   reveal. **Report the row where the sign changes; a monotone process does not
   have one.**
+* **PD20.** **A citation written minutes after the action is still a citation
+  written from memory.** §4.14 cited `dcb9e8d` as the commit that pre-registered
+  script `12`; no such object exists, and the real hash is `be627db`. The commit
+  had been made **ten minutes earlier by me**, which is exactly the condition
+  under which looking it up feels unnecessary. Six other hashes in the same
+  report were correct, so the failure mode is not carelessness in general but
+  **the one recall that felt too recent to check**. `corpus_lint` cannot catch
+  it because a well-formed hash is well-formed whether or not it resolves.
+  **Resolve every identifier you cite against the system that owns it, and
+  weight recent memory as less trustworthy than old memory, not more.**
+* **PD21.** **A probe of something expected to fail must not run under
+  `ErrorActionPreference = 'Stop'`.** The citation gate's first run returned
+  `2` (TOOL FAILURE, "nothing was checked") for a genuine subject failure,
+  because PowerShell promotes a native command's stderr to a terminating error
+  under `'Stop'` -- so `git cat-file` printing `fatal: Not a valid object name`,
+  *the very answer being requested*, tripped the trap. **A gate built to honour
+  discipline 702 inverted it on its first run**, in a directory where
+  `01-render.ps1` already documents that promotion in a comment. Knowing a trap
+  is not the same as not falling into it: **set `'Continue'` around any probe
+  whose failure is the measurement.**
 
 * **PD1.** **A brief's premise that a previous dispatch already refuted must be
   checked against the ledger before re-sending, not just against the code.**

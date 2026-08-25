@@ -1,0 +1,23 @@
+checked 10 distinct backticked hash-like token(s) in
+  C:\dev\blog\death-of-software\projects\strehl\docs\research\M105b-exposure-ship.md
+  0000000                                    UNRESOLVED (excused)
+  519203f                                    ok
+  7694309                                    ok
+  8041ce2                                    ok
+  885e9f7                                    ok
+  894f9f7                                    ok
+  925d03d                                    ok
+  be627db                                    ok
+  dcb9e8d                                    UNRESOLVED (excused)
+  deadbee1                                   UNRESOLVED (excused)
+
+EXCUSED: 0000000
+  reason: 4.14(j) control table: the deliberately stale exception used to exercise the stale arm
+
+EXCUSED: dcb9e8d
+  reason: PD20 / 4.14(j): quoted deliberately as the fabricated citation this gate was built to catch
+
+EXCUSED: deadbee1
+  reason: 4.14(j) control table: the planted hash of the negative control, never a real object
+
+OK -- every cited hash resolves (3 excused by name).
