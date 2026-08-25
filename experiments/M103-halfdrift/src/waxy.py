@@ -52,6 +52,7 @@ import json
 import sys
 
 import numpy as np
+import tifffile
 from PIL import Image
 from scipy import ndimage
 
@@ -60,11 +61,17 @@ Image.MAX_IMAGE_PIXELS = None
 SCALE = 1.1278
 SMALL = 5        # px, the window a low-pass cannot leave populated on its own
 LARGE = 31       # px, the window a step still populates
-FLOOR = 0.5      # DN, 8-bit quantisation floor, keeps the ratio finite
+FLOOR = 0.5      # DN, quantisation floor in the DATA'S OWN units, ratio finite
 
 
 def grid(p, decimate):
-    a = np.asarray(Image.open(p))[..., 1].astype(np.float64)
+    if p.lower().endswith((".tif", ".tiff")):
+        a = tifffile.imread(p)[..., 1].astype(np.float64)
+    else:
+        # PNG only. Never point this at a .tif through PIL: PIL.Image.open on a
+        # 16-bit RGB TIFF returns uint8 with mode 'RGB', silently, discarding
+        # 235x of the level resolution (measured: 59278 distinct levels -> 252).
+        a = np.asarray(Image.open(p))[..., 1].astype(np.float64)
     if decimate:
         n = int(round(a.shape[0] / SCALE))
         i = (np.arange(n) * SCALE).astype(np.int64)

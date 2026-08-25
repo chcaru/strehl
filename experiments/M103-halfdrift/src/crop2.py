@@ -31,6 +31,7 @@ import os
 import sys
 
 import numpy as np
+import tifffile
 from PIL import Image
 
 Image.MAX_IMAGE_PIXELS = None
@@ -88,8 +89,8 @@ def lock(A, B, ay, ax, size, by0, bx0, n):
 def main():
     ship_p, corr_p, outdir = sys.argv[1], sys.argv[2], sys.argv[3]
     os.makedirs(outdir, exist_ok=True)
-    A = np.asarray(Image.open(ship_p))
-    B = np.asarray(Image.open(corr_p))
+    A = tifffile.imread(ship_p)
+    B = tifffile.imread(corr_p)
     ha, wa = A.shape[:2]
     hb, wb = B.shape[:2]
     print("shipped %s  corrected %s" % (A.shape, B.shape))
@@ -107,17 +108,26 @@ def main():
         cb = B[by:by + n, bx:bx + n]
         pa = os.path.join(outdir, "%s_SHIP_%dpx.png" % (name, size))
         pb = os.path.join(outdir, "%s_CORR_%dpx.png" % (name, n))
-        Image.fromarray(ca).save(pa)
-        Image.fromarray(cb).save(pb)
-        # SELF control: what was written is what was read, unresized
-        oka = np.array_equal(np.asarray(Image.open(pa)), ca)
-        okb = np.array_equal(np.asarray(Image.open(pb)), cb)
+        ta = os.path.join(outdir, "%s_SHIP_%dpx.tif" % (name, size))
+        tb = os.path.join(outdir, "%s_CORR_%dpx.tif" % (name, n))
+        # The 16-bit crops are what MEASUREMENT reads. The PNGs are previews for
+        # human eyes only, and are written by an explicit >>8 which is exactly
+        # what PIL was doing silently when it opened the source TIF -- so the
+        # PNGs stay byte-identical to the ones this script wrote before the
+        # reader was repaired, and that identity is asserted below.
+        tifffile.imwrite(ta, ca)
+        tifffile.imwrite(tb, cb)
+        Image.fromarray((ca >> 8).astype(np.uint8)).save(pa)
+        Image.fromarray((cb >> 8).astype(np.uint8)).save(pb)
+        # SELF control: what was written is what was read, unresized, 16-bit
+        oka = np.array_equal(tifffile.imread(ta), ca)
+        okb = np.array_equal(tifffile.imread(tb), cb)
         g = cb[..., 1].astype(np.float64)
         gs = ca[..., 1].astype(np.float64)
         print("  %-26s ship(%d,%d,%d) corr(%d,%d,%d)  lock NCC %.4f  self %s/%s"
               % (name, ay, ax, size, by, bx, n, s,
                  "ok" if oka else "FAIL", "ok" if okb else "FAIL"))
-        print("      mean DN  ship %.1f  corr %.1f   |   sd DN  ship %.1f  corr %.1f"
+        print("      mean DN  ship %.1f  corr %.1f   |   sd DN  ship %.1f  corr %.1f   [16-bit]"
               % (gs.mean(), g.mean(), gs.std(), g.std()))
     print("\nwrote to " + outdir)
     return 0

@@ -1469,34 +1469,40 @@ Controls, all three passing:
 | control | reads | verdict |
 |---|---|---|
 | PLACEBO shipped vs itself | `+0.000000` | PASS |
-| POSITIVE hard-edged constant patch, 10.1% of crop | `+0.2004` | PASS |
-| NEGATIVE **natural** blurred patch, same area, feathered | `−0.0021` | PASS |
-| separation piecewise-flat / optically-soft | **97.4×** | — |
+| POSITIVE hard-edged constant patch, 10.1% of crop | `+0.2760` | PASS |
+| NEGATIVE **natural** blurred patch, same area, feathered | `+0.0114` | PASS |
+| separation piecewise-flat / optically-soft | **24.2×** | — |
 
 The negative control is the one that matters and the one my three earlier
 detectors did not have. Without it, an instrument that fires on both waxiness and
 softness would convict the gain correction merely for changing what is in frame.
 
-**Whole matched crop** — shipped `3.6053`, corrected `3.2118`. But this readout is
-confounded: `sigma(5)` differs between arms (0.977 vs 1.155 whole-crop), and the
+**Whole matched crop** — shipped `4.5232`, corrected `4.0261`. But this readout is
+confounded: `sigma(5)` differs between arms, and the
 corrected arm is genuinely sharper in the textured fibres (M97b, MEASURED), which
 raises `sigma(5)` and mechanically depresses the ratio for a reason unrelated to
 waxiness. Median and p90 move in opposite directions (`7.4837` → `7.5435`), which
 is the signature of exactly that split.
 
 **Restricted to the bright low-texture subset**, where the artefact lives and
-where there is little fine texture to sharpen — positive control `+0.5476`,
-natural control `+0.0006`, separation **959.5×**:
+where there is little fine texture to sharpen:
 
 | arm | flatness | sigma(5) | sigma(31) | px |
 |---|---:|---:|---:|---:|
-| shipped | **3.7324** | 1.876 | 8.422 | 50 927 |
-| corrected | **3.0837** | 1.895 | 7.326 | 46 148 |
+| shipped | **4.8411** | 474.153 | 2153.404 | 50 172 |
+| corrected | **3.9515** | 479.690 | 1876.661 | 46 904 |
 
-`sigma(5)` is now matched to within 1% — the sharpness confound is gone — and the
-whole difference sits in `sigma(31)`. **The shipped render is 21% more
+Positive control `+1.0591`, natural control `+0.0117`, separation **90.4×**.
+
+`sigma(5)` is matched to within 1.2% — the sharpness confound is gone — and the
+whole difference sits in `sigma(31)`. **The shipped render is 22.5% more
 piecewise-flat than the corrected one in the region judged disqualifying**, a gap
 larger in magnitude than the positive control's own move.
+
+> **These numbers were re-measured after a reader defect; the originals are
+> retained in §17.10 below.** The conclusion is unchanged and slightly stronger
+> (the ratio moved 0.8262 → 0.8162), but the absolute flatness values and — more
+> seriously — the control separations were both distorted. See §17.10.
 
 ### 17.4 I do not get to keep both readings
 
@@ -1584,13 +1590,13 @@ Failure 2 also generalises, and it is why the whole-frame route was abandoned:
   `dry-erase-marker-head-cpl`. They are not created by the gain correction.
 - **P30** (MEASURED) In a matched crop locked at NCC 0.8242 over the bright
   low-texture region, restricted to that region and with `sigma(5)` matched to
-  within 1%, the shipped render measures `flatness` 3.7324 against the corrected
-  render's 3.0837 — the **shipped** arm is 21% more piecewise-flat.
+  within 1.2%, the shipped render measures `flatness` 4.8411 against the corrected
+  render's 3.9515 — the **shipped** arm is 22.5% more piecewise-flat.
 - **P31** (MEASURED) Lanczos 474→420, the resample in M97b's viewer, produces
   0.288 DN of banding out of 255 on a smooth ramp. It cannot account for the
   artefact, and hypothesis 3 is refuted.
 - **P32** (DERIVED) `sigma(31)/sigma(5)` separates piecewise-flat content from
-  optically-soft content by 97.4× on real render data, because every optical
+  optically-soft content by 24.2× on real render data, because every optical
   degradation is low-pass and attenuates both windows together while a step
   populates only the large one. A useful primitive for any future "is this an
   artefact or is it just out of focus" question.
@@ -1678,6 +1684,74 @@ their docstrings, because §17.6 is worth more to the corpus than a tidy directo
 is not there, P29 is wrong and everything in §17.2 onward falls.
 
 ---
+
+### 17.10 A reader that silently discarded 235× of the data
+
+ORCH found that **`PIL.Image.open()` on a 16-bit RGB TIFF silently returns
+`uint8`** — no warning, no exception, `mode='RGB'`, and an array that looks
+entirely plausible. Four of this section's scripts (`blobs.py`, `crop2.py`,
+`waxmap.py`, `waxsweep.py`) read `.tif` through PIL, and `waxy.py` — **the
+decider** — read PNG crops written by `crop2.py`, so the whole §17 chain was
+downstream of it.
+
+Reproduced on this section's own inputs rather than taken on trust:
+
+| file | `tifffile` | PIL |
+|---|---|---|
+| `marker-TODAY-shipped.tif` | `uint16`, max 65535, **59 278** levels | `uint8`, max 255, **252** levels |
+| `marker-POSSIBLE-gaincorrected.tif` | `uint16`, max 65535, **59 349** levels | `uint8`, max 255, **253** levels |
+
+**235× of the level resolution, gone before the first line of arithmetic.**
+
+The repair reads with `tifffile` and writes 16-bit crop TIFFs for measurement,
+keeping the PNGs as previews via an explicit `>>8`. **Control:** that `>>8` is
+exactly what PIL was doing silently, so the new previews must be byte-identical
+to the committed ones — and all four are, by SHA-256. The geometry is unchanged
+too (lock NCC `0.8243` against `0.8242`; centre control `0.2709` against
+`0.2707`), which confirms the re-run differs only in bit depth.
+
+**What survived, and what did not:**
+
+| quantity | 8-bit (as published) | 16-bit (true) | verdict |
+|---|---:|---:|---|
+| bright shipped flatness | 3.7324 | **4.8411** | absolute value wrong |
+| bright corrected flatness | 3.0837 | **3.9515** | absolute value wrong |
+| **corrected/shipped ratio** | 0.8262 | **0.8162** | **conclusion holds** |
+| whole-crop ratio | 0.8909 | 0.8901 | holds |
+| separation, whole crop | 97.4× | **24.2×** | **inflated 4.0×** |
+| separation, bright subset | 959.5× | **90.4×** | **inflated 10.6×** |
+
+**The finding of §17 stands and is marginally stronger** — the shipped render is
+more piecewise-flat than the gain-corrected one, so the waxy blobs are not
+created by the correction. The ratio is the quantity the argument rests on and it
+moved by 1.2%.
+
+**But the control separations were inflated four- to ten-fold, and that is the
+part worth keeping.** The natural-blurred negative plant read `+0.0006` at 8 bits
+and `+0.0114` at 16. It read *cleaner than the truth*, because the blur's effect
+on `sigma(5)` was **smaller than the quantisation step** and was rounded to
+nothing. This is precisely ORCH's warning — a small signal inside the
+quantisation error reads "as zero, as noise, or worst, as a clean null" — and my
+headline `959.5×` separation was, in the largest part, a measurement of the
+truncation rather than of the instrument.
+
+`waxmap.py` and `waxsweep.py` are also exposed, and are unaffected in practice
+only because §17.6 already committed them unrepaired with their numbers
+explicitly not quoted. `blobs.py` produced 8-bit previews to test whether M97b's
+viewer created the blobs — a question that is genuinely about the 8-bit preview
+path — but it read its source through PIL and any DN-valued statistic in it
+carries the same defect.
+
+> **A reader that silently narrows your data is worse than one that fails**,
+> because the failure mode is a plausible number rather than an error. The
+> one-line check that catches it — assert the dtype you expect immediately after
+> loading — is now in `waxy.py`'s `grid()` as a comment naming the exact
+> measured loss, so the next person to point it at a `.tif` is warned in the
+> place they would be standing.
+
+Note the interaction with §18.7, which is not a coincidence: an artificially
+clean control and a control that cannot fail are the same defect wearing
+different clothes. Both produce a `PASS` that was never at risk.
 
 ## 18. Is `e(j)` smooth or jittery? — jittery, by ~110×
 
@@ -1783,7 +1857,7 @@ shear across an election boundary — and not softness.
 explains a detail §17 could not: the blobs have *hard, closed boundaries*. An
 election boundary between two frames whose placements disagree by ≥1 px is a
 step, and §17.3 measured the artefact as piecewise-flat rather than merely soft,
-with a 97.4× separation from optical softness. Two independent measurements now
+with a 24.2× separation from optical softness. Two independent measurements now
 point at the election boundary.
 
 **What this does NOT establish.** It does not show the jitter is visible; §17's
