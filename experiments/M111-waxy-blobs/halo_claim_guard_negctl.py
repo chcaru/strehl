@@ -114,6 +114,13 @@ SOURCE_DEFECTS = [
     ("S2 fine-band drifts at source", "56-bmf.json", ("regions", "DAMAGE", "fine"), 0.8),
     ("S3 moved_frac drifts at source", "22-plant-truth.json",
      ("occluding (KB=90, two depths)", "local-d40", "moved_frac"), 0.55),
+    # S4 commissions the sign-aware fix for the defect V-M111 found. The old
+    # comparison abs(abs(stated) - abs(value)) passes a pure sign flip. d20 is
+    # deliberately chosen because the structural dose-response check uses d10
+    # and d40 only, so this defect is visible to the numeric arm ALONE.
+    ("S4 control ISO sign flipped", "22-plant-truth.json",
+     ("CONTROL non-occluding (KB=KF=40, one depth)", "local-d20", "iso_delta_pct"),
+     141.952151),
 ]
 env = dict(os.environ, M111_HALO_DATA=sandbox)
 scaught = 0

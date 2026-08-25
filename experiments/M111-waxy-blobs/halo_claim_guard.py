@@ -73,8 +73,8 @@ pin("P50", "1.000", ctl["local-d40"]["moved_frac"], "control moved fraction")
 pin("P50", "0.394", occ["local-d40"]["moved_frac"], "occluding moved fraction")
 pin("P50", "2.5", ctl["local-d40"]["moved_frac"] / occ["local-d40"]["moved_frac"],
     "aggression ratio, control over real")
-pin("P51", "\u2212186.6%", -ctl["local-d10"]["iso_delta_pct"], "control ISO d10")
-pin("P51", "\u2212142.0%", -ctl["local-d20"]["iso_delta_pct"], "control ISO d20")
+pin("P51", "\u2212186.6%", ctl["local-d10"]["iso_delta_pct"], "control ISO d10")
+pin("P51", "\u2212142.0%", ctl["local-d20"]["iso_delta_pct"], "control ISO d20")
 pin("P51", "+63.9%", ctl["local-d40"]["iso_delta_pct"], "control ISO d40")
 pin("P51", "+215.9%", ctl["local-d10"]["rmse_band_delta_pct"], "control RMSE d10")
 pin("P51", "+354.4%", ctl["local-d20"]["rmse_band_delta_pct"], "control RMSE d20")
@@ -94,16 +94,23 @@ for tag, literal, value, note in checks:
     if literal not in row:
         fails.append("%s: literal %r absent from its own fact row (%s)" % (tag, literal, note))
         continue
-    digits = literal.lstrip("*+\u2212-").rstrip("*%\u00d7")
+    # Sign-aware. The earlier form compared abs(stated) against abs(value),
+    # which let a planted sign flip pass unseen; V-M111 found that defect and
+    # it is a defect in this guard's POWER, not in any number it cleared.
+    core = literal.strip("*")
+    negative = core.startswith("\u2212") or core.startswith("-")
+    digits = core.lstrip("+\u2212-").rstrip("*%\u00d7")
     try:
         stated = float(digits)
     except ValueError:
         fails.append("%s: literal %r not numeric" % (tag, literal))
         continue
+    if negative:
+        stated = -stated
     if abs(value) < 1e-9:
         ok = abs(stated) < 1e-9
     else:
-        ok = abs(abs(stated) - abs(value)) <= 0.5 * 10 ** -(len(digits.split(".")[1]) if "." in digits else 0)
+        ok = abs(stated - value) <= 0.5 * 10 ** -(len(digits.split(".")[1]) if "." in digits else 0)
     if not ok:
         fails.append("%s: report says %s, source says %.6f  (%s)" % (tag, literal, value, note))
 
