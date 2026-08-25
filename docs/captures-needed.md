@@ -3285,3 +3285,20 @@ What the current darks did buy: **8685 persistent hot-pixel sites** characterise
 **What to shoot when convenient** (lens cap on, in darkness): hold ISO at your two working values and **sweep exposure time** across what you actually shoot -- 1/40 s, 1/10 s, 1/2 s, 1 s, 2.5 s -- a few frames at each, so a per-exposure fixed pattern separates from read noise.
 
 **Low priority.** It sharpens the noise model; it does not affect the halo, and the halo is the only thing currently disqualifying your stacks.
+
+
+## 29. Your 2x teleconverter is costing more sharpness than your aperture is -- MEASURED 2026-08-25, and it changes how you should shoot
+
+This one is not a request. It is a finding about your instrument, and it is the first result here that says something is wrong with the **gear path** rather than with our software.
+
+**What was measured.** On a printed ruler inside a real bracket, **76.6 % of the blur variance is optical** -- it is in the frames before any of our code runs. Of that optical share, **60.1 % is aperture-independent aberration.** The discriminator is the edge width at two apertures: stopping from f/5.6 to f/11 predicts a **1.964x** widening if diffraction dominates, and the measured ratio is **1.025x**. Essentially flat.
+
+**What that means in plain terms.** Your system is **aberration-limited, not diffraction-limited**, at the magnifications you work at. Stopping down is not buying you the sharpness you are paying for it in light, in diffraction, and in frame count. The most likely cause is the **2x Viltrox teleconverter**: a teleconverter magnifies the prime's residual aberrations along with the image, and the FE 100mm F2.8 Macro GM is a very well corrected lens on its own.
+
+**Three consequences, in order of how much they matter to you.**
+
+1. **Open up.** If f/11 is not measurably sharper than f/5.6, you are spending roughly two stops for nothing. Shoot nearer wide open, take more frames at a finer focus step, and let the stack do the work that stopping down was supposed to do. This also happens to be exactly what the reconstruction merge we are building wants -- more, finer samples of the focus axis.
+2. **Shoot a bracket without the teleconverter when the subject allows it.** If you can frame a subject at native magnification, do one bracket with the 2x and one without, same subject, same light. That is the clean A/B that would confirm or refute the teleconverter as the cause, and I cannot run it from existing captures because every stack in the library was shot the same way. **This is the one thing I would ask you for out of this section**, and it costs one extra bracket.
+3. **It makes deconvolution the only remaining lever, not an optional extra.** Aberration blur that does not respond to aperture cannot be fixed in technique -- so it has to be recovered in software, from the frames. That is the estimator now being built. It is a stronger argument for the reconstruction path than anything in the plan, and it came from your own captures.
+
+**Caveat, stated plainly.** This is one measurement on one printed target. It has not been reproduced on a second subject, the teleconverter has not been isolated by the A/B in point 2, and the ruler is a flat high-contrast target which is not representative of everything you shoot. Treat "open up" as a hypothesis worth testing on your next session rather than as settled practice -- and if a wider bracket looks worse to your eye, your eye wins.
