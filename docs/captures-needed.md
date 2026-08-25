@@ -87,9 +87,66 @@ it came from and found three things I had not read:
 So the halo correction is off, and unlike the other five it is off **for a good
 reason**. I have withdrawn it from the top of the queue.
 
-**The one that does hold up is the chromatic-aberration correction**, and that is
-the section below. It is measured, it is confirmed by eye, and it is switched
-off.
+### Then I looked at your photos, and it reordered everything
+
+This is the part I am least proud of and it is the most useful thing in this
+document. The project has run 119 milestones, written 156 research reports and
+recorded 1600 facts. **Tonight was the first time I opened one of the rendered
+images and looked at it.**
+
+Ten minutes of looking found a defect that has no milestone, no metric and no
+name anywhere in the corpus — and it is, to my eye, the worst thing in your
+pictures.
+
+**Open `C:\dev\strehl-out\M87-before-after\00-BEFORE-shipped-merge-tight2x.png`
+and look at the white background, not the bee.** It is broken into irregular
+flat polygons with faint brightness steps between them. Crazy paving. Once you
+see it you cannot unsee it, and it is everywhere the background is out of focus —
+which is most of the frame area in every stack you have shown me.
+
+It is not photographic. A smoothly out-of-focus background is a smooth gradient;
+it cannot contain hard-edged polygons. **The stacker is manufacturing structure
+that is not in any of your frames.** That, I think, is the honest answer to "those
+stacks don't look too good yet" — better than any of the answers I gave you
+earlier tonight, all of which were about defects somebody had already thought to
+build an instrument for.
+
+**Why I think it happens** — this is a hypothesis, not a measurement, and an agent
+is trying to kill it as I write. Where the background is out of focus in *every*
+frame, no frame is sharper than any other, so the "which frame is sharpest here?"
+question has no answer and the software answers it with noise. A smoothing step
+then tidies that noise into patches. Each patch pulls its pixels from a different
+frame, the frames differ very slightly in brightness, and those differences become
+the visible steps between the patches.
+
+If that is right, the fix is already written and switched off — the same story as
+everything else in this section. It is called the soft gate: where the frames are
+genuinely indistinguishable, stop picking a winner and average them instead, which
+is both smooth *and* less noisy. It is being tested tonight against exactly this.
+
+**The ranking by eye, which is now the ranking I am working to:**
+
+| | defect | status |
+| --- | --- | --- |
+| **1** | Background patchwork / waxy blobs | New tonight. Candidate fix exists, switched off, under test. |
+| **2** | Bright halo tracing every silhouette — the "cut-out sticker" look | Real and severe. **We have no working fix.** One arm works and looks worse; the other does nothing. |
+| **3** | Lateral chromatic aberration — coloured fringes on bright edges | Confirmed by my own eye. Correction exists, switched off, **under audit** — see below. |
+| **4** | General softness | Expected: at your magnification the optics are the limit, not the software. |
+
+On **#2**, one correction: I told you earlier tonight the halo fix was the thing
+you would see. It is not, and I checked that myself rather than taking an agent's
+word for it — I compared the before and after images by eye and the "after" is
+milky, with background detail washed away. The report's author was right. But
+**the halo itself is real** and I want to be clear that withdrawing the cure is
+not withdrawing the diagnosis: look at `C:\dev\strehl-out\crop-leg-halo.png` and
+you will see a bright scalloped band tracing the whole leg and both claws.
+
+On **#3**, I am deliberately *not* telling you to turn the chromatic-aberration
+correction on yet. I promoted one correction tonight on a headline number that
+turned out to be fifteen points wrong and to come from a section whose title was
+"why I am telling you not to enable it." I have a second agent auditing the CA
+numbers the same way before I put them in front of you again. If it clears, that
+is a real win and it is one line to enable.
 
 **What this needs from you: §12.** A static repeat burst is the arm that proves
 the gate *doesn't* fire when nothing moved. Right now that has to be simulated.
