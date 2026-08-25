@@ -631,12 +631,58 @@ pub struct Estimator {
     /// Empty unless [`Estimator::fold_censored`] is used, in which case bits
     /// `0..=3` mean "the **winner's** own sample on this plane was pinned at
     /// the container maximum", and bits `4..=7` mean "some *other* admitted
-    /// frame was pinned there and has been excluded from the sum".
+    /// frame was pinned there".
+    ///
+    /// Bits `4..=7` are a **flag, not a behaviour**: such samples are still
+    /// summed like any other, exactly as [`Estimator::has_censored_contributor`]
+    /// documents. (This sentence previously read "and has been excluded from
+    /// the sum", which the code has never done.)
     censor: Vec<u8>,
     /// The container maximum passed to [`Estimator::fold_censored`], once one
     /// has been passed. `None` means the estimator is running the plain
     /// uncensored mean and [`Estimator::value`] takes its original path.
     censor_level: Option<u16>,
+    /// Per-pixel, per-plane **gate-weighted mass of contributing samples that
+    /// were pinned** at the container maximum. Empty unless
+    /// [`Estimator::fold_censored`] is used, allocated beside `censor` and on
+    /// the same condition, so one accumulator per CFA plane *is* per-channel by
+    /// construction.
+    ///
+    /// This is the quantity [`Estimator::has_censored_contributor`] is the
+    /// boolean shadow of, and the gap between them is the point. On
+    /// `dry-erase-marker-head-cpl` M109 measured **10.31%** of the green plane
+    /// pinned in *at least one* frame, while only **21.02%** of the ever-pinned
+    /// population is pinned in *every* frame. A boolean fires on the former,
+    /// which is far wider than the defect; the discriminating quantity is the
+    /// *fraction* of contributing weight that was pinned, and this is its
+    /// numerator.
+    ///
+    /// **The denominator is [`Estimator::contributing_weight`], which returns
+    /// the exact divisor [`Estimator::value`] uses.** That pairing is not a
+    /// convention the caller must honour — it holds because this is incremented
+    /// by the same `wt` the sum is, on the same branch, *after* the gate's
+    /// `continue`. An unweighted count over a gate-weighted merge is a rate
+    /// against the wrong denominator: the merge averages roughly 55 gated
+    /// contributors, not 299 frames, and M109's bar B15 predicted 74.7% where
+    /// it measured 21.02% for precisely that error.
+    ///
+    /// # Post-warp, and what that costs
+    ///
+    /// The value tested here is **post-warp**: the caller resamples the frame
+    /// in place before folding it, so the pre-warp sensel is not merely out of
+    /// scope — it has been overwritten. Catmull-Rom over a *fully* pinned
+    /// neighbourhood reproduces the maximum, but over a *partially* pinned one
+    /// returns fractionally less, so `v >= level` **under-counts at edges**,
+    /// which is where the residual fringe lives.
+    ///
+    /// That under-count is deliberate and is the safe direction. The consumer
+    /// may only lower a channel toward neutral, so under-counting reaches fewer
+    /// pixels than ideal while **never moving a pixel that was not pinned** —
+    /// the acceptance property this design was chosen for. Transporting a
+    /// pre-warp mask by dilation would over-count and break exactly that. No
+    /// epsilon is applied to the test: that trades a known, bounded, directional
+    /// bias for an unknown one.
+    clip_w: [Vec<f32>; 4],
     /// Per-pixel accumulators for the **admitted-frame green-luma variance**,
     /// in `f64`. Empty unless [`Estimator::track_disagreement`] has been called.
     ///
@@ -716,6 +762,7 @@ impl Estimator {
             wsq,
             censor: Vec::new(),
             censor_level: None,
+            clip_w: [Vec::new(), Vec::new(), Vec::new(), Vec::new()],
             luma_sum: Vec::new(),
             luma_sumsq: Vec::new(),
             frames: 0,
@@ -825,6 +872,7 @@ impl Estimator {
     pub fn allocated_bytes(&self) -> usize {
         self.geom.pixels() * (4 * size_of::<f32>() + 2 * size_of::<u16>() + size_of::<f32>())
             + self.censor.len()
+            + self.clip_w.iter().map(Vec::len).sum::<usize>() * size_of::<f32>()
             + (self.wsum.len() + self.wsq.len()) * size_of::<f32>()
             + (self.luma_sum.len() + self.luma_sumsq.len()) * size_of::<f64>()
     }
@@ -853,6 +901,54 @@ impl Estimator {
     #[inline]
     pub fn has_censored_contributor(&self, p: CfaPlane, i: usize) -> bool {
         !self.censor.is_empty() && self.censor[i] & (1 << (Self::slot(p) + 4)) != 0
+    }
+
+    /// The **gate-weighted mass of contributing samples that were pinned** at
+    /// the container maximum, for this plane at this pixel.
+    ///
+    /// This is the weighted refinement of
+    /// [`Estimator::has_censored_contributor`]. That boolean fires on the whole
+    /// ever-pinned population — 10.31% of the green plane on
+    /// `dry-erase-marker-head-cpl` — which is far wider than the defect it
+    /// would be used to find. This returns the mass instead, so a caller can
+    /// ask *what fraction* of the average was saturated.
+    ///
+    /// `None` when this estimator is not censoring at all, which is a state
+    /// deliberately distinguished from "censoring, and nothing was pinned"
+    /// (`Some(0.0)`). Collapsing the two would make an unwired probe
+    /// indistinguishable from a clean highlight, and a `0.0` that could be
+    /// either is worth nothing.
+    ///
+    /// Pair it with [`Estimator::contributing_weight`] for the denominator.
+    /// **The ratio is deliberately not offered.** The threshold at which a
+    /// pinned fraction should trigger a correction is the consumer's policy;
+    /// baking it in here would put it beyond the reach of the consumer's own
+    /// controls.
+    #[inline]
+    pub fn clipped_weight(&self, p: CfaPlane, i: usize) -> Option<f32> {
+        let s = Self::slot(p);
+        if self.clip_w[s].is_empty() {
+            None
+        } else {
+            Some(self.clip_w[s][i])
+        }
+    }
+
+    /// The total weight [`Estimator::value`] divides by at this pixel — the
+    /// denominator [`Estimator::clipped_weight`] is a numerator for.
+    ///
+    /// Under the shipped top-hat every admitted frame carries weight exactly
+    /// 1.0 and this is the integer admitted count; under a [`SoftKernel`] it is
+    /// `sum w`. Returning `value`'s own divisor rather than recomputing a
+    /// plausible one is what makes the pinned fraction commensurable with the
+    /// merged value by construction rather than by the caller's care.
+    #[inline]
+    pub fn contributing_weight(&self, i: usize) -> f32 {
+        if self.wsum.is_empty() {
+            f32::from(self.n[i])
+        } else {
+            self.wsum[i]
+        }
     }
 
     /// The container maximum this estimator is censoring against, if any.
@@ -1003,6 +1099,8 @@ impl Estimator {
                 None => {
                     self.censor_level = Some(level);
                     self.censor = vec![0u8; self.geom.pixels()];
+                    let px = self.geom.pixels();
+                    self.clip_w = [vec![0.0; px], vec![0.0; px], vec![0.0; px], vec![0.0; px]];
                 }
                 Some(prev) => assert_eq!(
                     prev, level,
@@ -1062,6 +1160,10 @@ impl Estimator {
                         && v >= level
                     {
                         self.censor[i] |= 1 << if winner { s } else { s + 4 };
+                        // The same `wt` the sum below is weighted by, on the
+                        // same branch, after the gate's `continue`. Numerator
+                        // and denominator therefore cannot drift apart.
+                        self.clip_w[s][i] += wt;
                     }
                     // Slots 1 and 3 are G1 and G2 -- see `Estimator::slot`.
                     if s == 1 {
@@ -1141,6 +1243,15 @@ impl Estimator {
             }
             for (a, b) in self.censor.iter_mut().zip(&other.censor) {
                 *a |= *b;
+            }
+            if self.clip_w[0].is_empty() {
+                let px = self.geom.pixels();
+                self.clip_w = [vec![0.0; px], vec![0.0; px], vec![0.0; px], vec![0.0; px]];
+            }
+            for (dst, src) in self.clip_w.iter_mut().zip(&other.clip_w) {
+                for (a, b) in dst.iter_mut().zip(src) {
+                    *a += *b;
+                }
             }
         }
         for i in 0..self.geom.pixels() {
@@ -3342,6 +3453,158 @@ mod tests {
             if i == 0 {
                 eprintln!("absorb drift: kish rel {rel:.3e}, value rel {vrel:.3e}");
             }
+        }
+    }
+
+    // ---- gate-weighted clip mass (M109's residual magenta highlights) ----
+    //
+    // Rule 34 declaration: these reuse `censoring_fixture`, whose pin is
+    // `TEST_PIN = 4095` and never `clip::CONTAINER_MAX_DN`. What makes the
+    // fixture worth reusing here is frame 3: it is folded but sits far outside
+    // a threshold-1 gate, so "the set that was folded" and "the set that
+    // contributed" are different sets and the difference is observable.
+
+    #[test]
+    fn clip_mass_counts_the_contributing_set_and_not_the_folded_set() {
+        let g = geom(4, 4);
+        let (stats, fields) = censoring_fixture(g);
+        let gate = Gate::new(1.0);
+        let mass = |pinned: &[u16]| {
+            let mut e = Estimator::new(&stats, gate);
+            for k in 0..4u16 {
+                let frame = censoring_frame(k, g, pinned);
+                e.fold_censored(k, &frame, &fields[k as usize], TEST_PIN)
+                    .unwrap();
+            }
+            (
+                e.clipped_weight(CfaPlane::G1, 0).unwrap(),
+                e.contributing_weight(0),
+            )
+        };
+
+        // The null. Frame 3 is pinned, is folded, and is *not admitted*. An
+        // accumulator sitting before the gate's `continue` -- a rate against
+        // the frames sampled rather than the frames averaged, which is
+        // M109's bar B15 error -- would read 1.0 here.
+        let (null_mass, denom) = mass(&[3]);
+        assert_eq!(denom, 3.0, "fixture must admit exactly three of four frames");
+        assert_eq!(null_mass, 0.0, "a gate-excluded frame contributed clip mass");
+
+        // The plant, on the same wiring. Without it the 0.0 above is equally
+        // good evidence that the accumulator is simply never written.
+        let (plant_mass, plant_denom) = mass(&[0]);
+        assert_eq!(plant_denom, 3.0);
+        assert_eq!(plant_mass, 1.0, "an admitted pinned frame was not counted");
+    }
+
+    #[test]
+    fn clip_mass_is_per_channel_and_counts_integers_under_the_top_hat() {
+        let g = geom(4, 4);
+        let (stats, fields) = censoring_fixture(g);
+        let mut e = Estimator::new(&stats, Gate::new(1.0));
+        for k in 0..4u16 {
+            // 0 and 1 pin their greens, 2 is admitted and clean, 3 is excluded.
+            let frame = censoring_frame(k, g, &[0, 1]);
+            e.fold_censored(k, &frame, &fields[k as usize], TEST_PIN)
+                .unwrap();
+        }
+        for i in 0..g.pixels() {
+            assert_eq!(e.contributing_weight(i), 3.0);
+            for p in [CfaPlane::G1, CfaPlane::G2] {
+                assert_eq!(e.clipped_weight(p, i), Some(2.0));
+            }
+            // R and B never approach the pin. A per-pixel accumulator would
+            // smear the greens' mass across them and convict a saturated
+            // green highlight of being a saturated red object; one accumulator
+            // per CFA plane cannot.
+            for p in [CfaPlane::R, CfaPlane::B] {
+                assert_eq!(e.clipped_weight(p, i), Some(0.0));
+            }
+        }
+    }
+
+    #[test]
+    fn clip_mass_carries_the_same_weights_the_merged_value_does() {
+        let g = geom(4, 4);
+        let (stats, fields) = censoring_fixture(g);
+        let gate = Gate::new(1.0);
+        let build = |pinned: &[u16]| {
+            let mut e = Estimator::new_soft(&stats, gate, Some(SoftKernel::Gaussian));
+            for k in 0..4u16 {
+                let frame = censoring_frame(k, g, pinned);
+                e.fold_censored(k, &frame, &fields[k as usize], TEST_PIN)
+                    .unwrap();
+            }
+            e
+        };
+
+        // Every admitted frame is pinned, so the pinned mass and the divisor
+        // are the same additions of the same values in the same order. This is
+        // exact equality that appeals to no property of the kernel at all: if
+        // the numerator were counting while the denominator weighted, a
+        // fractional divisor could not equal an integer count.
+        let all = build(&[0, 1, 2]);
+        for i in 0..g.pixels() {
+            let w = all.contributing_weight(i);
+            assert!(w > 1.0 && w < 3.0, "soft weights must be fractional, read {w}");
+            assert_eq!(all.clipped_weight(CfaPlane::G1, i), Some(w));
+        }
+
+        // Only the winner is pinned, and the winner is held at weight exactly
+        // 1.0, so this is exact too -- and it reads that invariant a second
+        // time from the other side.
+        let winner_only = build(&[1]);
+        for i in 0..g.pixels() {
+            assert_eq!(winner_only.clipped_weight(CfaPlane::G1, i), Some(1.0));
+            assert!(winner_only.contributing_weight(i) > 1.0);
+        }
+    }
+
+    #[test]
+    fn clip_mass_is_absent_rather_than_zero_when_nothing_censors() {
+        let g = geom(4, 4);
+        let (stats, fields) = censoring_fixture(g);
+        let mut e = Estimator::new(&stats, Gate::new(1.0));
+        for k in 0..4u16 {
+            e.fold(k, &censoring_frame(k, g, &[0, 1]), &fields[k as usize])
+                .unwrap();
+        }
+        // `None` and `Some(0.0)` are different claims -- "this estimator never
+        // looked" against "it looked and found nothing pinned". Collapsing them
+        // would let a consumer read an unwired producer as a clean highlight,
+        // which is the failure mode a 0.000 always has to answer for.
+        assert_eq!(e.clipped_weight(CfaPlane::G1, 0), None);
+        assert_eq!(e.contributing_weight(0), 3.0);
+    }
+
+    #[test]
+    fn clip_mass_reduces_additively_under_absorb() {
+        let g = geom(4, 4);
+        let (stats, fields) = censoring_fixture(g);
+        let gate = Gate::new(1.0);
+        let fold_set = |ks: &[u16]| {
+            let mut e = Estimator::new(&stats, gate);
+            for k in ks {
+                let frame = censoring_frame(*k, g, &[0, 1]);
+                e.fold_censored(*k, &frame, &fields[*k as usize], TEST_PIN)
+                    .unwrap();
+            }
+            e
+        };
+        let whole = fold_set(&[0, 1, 2, 3]);
+        let mut left = fold_set(&[0, 1]);
+        let right = fold_set(&[2, 3]);
+        // The mass sits entirely in one half, so the union is a real reduction
+        // rather than one side already carrying the answer.
+        assert_eq!(left.clipped_weight(CfaPlane::G1, 0), Some(2.0));
+        assert_eq!(right.clipped_weight(CfaPlane::G1, 0), Some(0.0));
+        left.absorb(&right).unwrap();
+        for i in 0..g.pixels() {
+            assert_eq!(
+                left.clipped_weight(CfaPlane::G1, i),
+                whole.clipped_weight(CfaPlane::G1, i)
+            );
+            assert_eq!(left.contributing_weight(i), whole.contributing_weight(i));
         }
     }
 }
