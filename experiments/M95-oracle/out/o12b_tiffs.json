@@ -1,0 +1,24 @@
+[
+ {
+  "path": "C:\\dev\\strehl-out\\M95-resample\\merge-g0-linear.tif",
+  "dtype": "uint16",
+  "shape": [
+   4688,
+   7032,
+   3
+  ],
+  "levels": 21649,
+  "narrowed": false
+ },
+ {
+  "path": "C:\\dev\\strehl-out\\M95-resample\\merge-g0-noalign.tif",
+  "dtype": "uint16",
+  "shape": [
+   4688,
+   7032,
+   3
+  ],
+  "levels": 21776,
+  "narrowed": false
+ }
+]

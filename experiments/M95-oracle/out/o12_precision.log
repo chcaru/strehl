@@ -1,0 +1,17 @@
+BAR: fewer than 4096 distinct values in a 4M sample = NARROWED
+
+the two call sites o11 flagged, M95-demosaic:
+  truth_AHD.npy                                float32  [2344, 3514, 3]      range [0.0052758, 0.53806]  levels  175477/4118408  native
+  truth_VNG.npy                                float32  [2344, 3514, 3]      range [0.0053864, 0.52865]  levels  174060/4118408  native
+  truth_LINEAR.npy                             float32  [2344, 3514, 3]      range [0.0052911, 0.521]  levels  171771/4118408  native
+
+shared scratch ranked by the 31 pinned call sites:
+  M95-resample/rawpy-A.npy                     uint16   [4688, 7028, 3]      range [5, 40445]  levels    7511/4118408  native
+  M95-coverage                                 no .npy scratch on disk
+  M95-kernel                                   no .npy scratch on disk
+  M95-cdiff                                    no .npy scratch on disk
+
+==============================================================================
+arrays probed: 4   NARROWED: 0
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-oracle\out\o12_precision.json

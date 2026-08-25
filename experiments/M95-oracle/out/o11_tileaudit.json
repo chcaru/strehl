@@ -1,0 +1,650 @@
+{
+ "M95-resample/f1_figure.py": {
+  "sites": [
+   {
+    "line": 58,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "b0",
+    "text": "tiles = X.pick_tiles(b0)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-resample/x11_bandsignal.py": {
+  "sites": [
+   {
+    "line": 270,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "A",
+    "text": "det_c = pick_tiles(A, n=NT)"
+   }
+  ],
+  "readers": [
+   "camera RAW (native)"
+  ],
+  "scratch": [],
+  "arw": true,
+  "cls": "ONCE"
+ },
+ "M95-resample/x12_bandsnr.py": {
+  "sites": [
+   {
+    "line": 185,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "A",
+    "text": "det_c = pick_tiles(A, n=40)"
+   }
+  ],
+  "readers": [],
+  "scratch": [],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-resample/x13_focusnull.py": {
+  "sites": [
+   {
+    "line": 121,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "A",
+    "text": "pos = pick_tiles(A, n=NPOS)"
+   }
+  ],
+  "readers": [
+   "rawpy imported"
+  ],
+  "scratch": [],
+  "arw": true,
+  "cls": "ONCE"
+ },
+ "M95-resample/x14_levelsens.py": {
+  "sites": [
+   {
+    "line": 106,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "A",
+    "text": "pos = pick_tiles(A, n=NPOS)"
+   }
+  ],
+  "readers": [
+   "rawpy imported"
+  ],
+  "scratch": [],
+  "arw": true,
+  "cls": "ONCE"
+ },
+ "M95-resample/x15_defocusptc.py": {
+  "sites": [
+   {
+    "line": 106,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "A",
+    "text": "det = pick_tiles(A, n=NPOS)"
+   }
+  ],
+  "readers": [
+   "rawpy imported"
+  ],
+  "scratch": [],
+  "arw": true,
+  "cls": "ONCE"
+ },
+ "M95-resample/x16_robust.py": {
+  "sites": [
+   {
+    "line": 95,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "A",
+    "text": "det = pick_tiles(A, n=NPOS)"
+   }
+  ],
+  "readers": [
+   "rawpy imported"
+  ],
+  "scratch": [],
+  "arw": true,
+  "cls": "ONCE"
+ },
+ "M95-resample/x1_pairs.py": {
+  "sites": [
+   {
+    "line": 174,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "imgs['B0']",
+    "text": "tiles = pick_tiles(imgs[\"B0\"])"
+   }
+  ],
+  "readers": [
+   "TIFF",
+   "npy scratch",
+   "rawpy imported"
+  ],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample"
+  ],
+  "arw": true,
+  "cls": "ONCE"
+ },
+ "M95-resample/x2_pairs.py": {
+  "sites": [
+   {
+    "line": 164,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "imgs['B0']",
+    "text": "tiles = pick_tiles(imgs[\"B0\"])"
+   }
+  ],
+  "readers": [
+   "TIFF",
+   "npy scratch",
+   "rawpy imported"
+  ],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-resample/x3_kernel.py": {
+  "sites": [
+   {
+    "line": 133,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "b0",
+    "text": "tiles = pick_tiles(b0)"
+   }
+  ],
+  "readers": [],
+  "scratch": [],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-resample/x4_endtoend.py": {
+  "sites": [
+   {
+    "line": 42,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "b0",
+    "text": "tiles = X.pick_tiles(b0)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-resample/x5_ringing.py": {
+  "sites": [
+   {
+    "line": 58,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "b0",
+    "text": "tiles = X.pick_tiles(b0)"
+   }
+  ],
+  "readers": [],
+  "scratch": [],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-resample/x7_ladder.py": {
+  "sites": [
+   {
+    "line": 116,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "b0",
+    "text": "sharp = pick_tiles(b0)"
+   }
+  ],
+  "readers": [],
+  "scratch": [],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-coverage/f2_figure.py": {
+  "sites": [
+   {
+    "line": 84,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img, n=6, tile=CROP, pad=CROP + 64)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-coverage\\M95-coverage-fix.png",
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-coverage/m95cov.py": {
+  "cls": "TEXT-ONLY",
+  "sites": [],
+  "readers": [],
+  "scratch": [],
+  "arw": false
+ },
+ "M95-coverage/x10_planeres.py": {
+  "sites": [
+   {
+    "line": 95,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-coverage/x10b_planeres.py": {
+  "sites": [
+   {
+    "line": 72,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-coverage/x10c_planeres.py": {
+  "sites": [
+   {
+    "line": 57,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-coverage/x11_alias.py": {
+  "sites": [
+   {
+    "line": 58,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-coverage/x7_scale.py": {
+  "sites": [
+   {
+    "line": 31,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-coverage/x7b_scale_field.py": {
+  "sites": [
+   {
+    "line": 91,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-coverage/x8_fix.py": {
+  "sites": [
+   {
+    "line": 125,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif",
+   "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\bee-3-cpl--warpmap.txt"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-demosaic/d2_ladder.py": {
+  "sites": [
+   {
+    "line": 62,
+    "depth": 0,
+    "func": "run_truth",
+    "caller_depth": 1,
+    "arg": "T",
+    "text": "tiles = m95dem.pick_tiles(T, N, COUNT, LO, HI)"
+   },
+   {
+    "line": 95,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "T",
+    "text": "tiles = m95dem.pick_tiles(T, N, COUNT, LO, HI)"
+   }
+  ],
+  "readers": [
+   "npy scratch"
+  ],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-demosaic\\scratch"
+  ],
+  "arw": false,
+  "cls": "RESELECT"
+ },
+ "M95-demosaic/d3_scale.py": {
+  "sites": [
+   {
+    "line": 65,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "L",
+    "text": "tiles = m95dem.pick_tiles(L, N, COUNT, *ALIAS)"
+   },
+   {
+    "line": 73,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "TL",
+    "text": "ttiles = m95dem.pick_tiles(TL, N, COUNT, *ALIAS)"
+   }
+  ],
+  "readers": [
+   "camera RAW (native)",
+   "npy scratch"
+  ],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-demosaic\\scratch"
+  ],
+  "arw": true,
+  "cls": "REVIEW"
+ },
+ "M95-demosaic/f_figure.py": {
+  "sites": [
+   {
+    "line": 71,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "T",
+    "text": "tiles = m95dem.pick_tiles(T, CROP, 24, 0.30, 0.48, margin=CROP)"
+   }
+  ],
+  "readers": [
+   "npy scratch"
+  ],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-demosaic",
+   "C:\\dev\\strehl-out\\M95-demosaic\\scratch"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-demosaic/m95dem.py": {
+  "cls": "TEXT-ONLY",
+  "sites": [],
+  "readers": [],
+  "scratch": [],
+  "arw": false
+ },
+ "M95-kernel/k17_crop.py": {
+  "sites": [
+   {
+    "line": 233,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-crop\\bee-3-cpl-ref149.warpmap.txt",
+   "C:\\dev\\strehl-out\\M95-pin\\experiments\\M86-alignment\\out\\warpmap-bee-3-cpl.txt",
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-kernel/k1_radius.py": {
+  "sites": [
+   {
+    "line": 103,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)[:8]"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-kernel/k5_port.py": {
+  "sites": [
+   {
+    "line": 207,
+    "depth": 0,
+    "func": "check_gain",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif",
+   "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\bee-3-cpl--warpmap.txt"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-kernel/k8_population.py": {
+  "sites": [
+   {
+    "line": 159,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif",
+   "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\bee-3-cpl--warpmap.txt",
+   "Is the arm-8/arm-9 kernel gain a hostage to the shared sidecar?\n\n## Why this exists\n\nThe orchestrator found that `strehl align` writes `<stackdir>/warpmap.txt` by\ndefault, inside the shared read-only capture library, and that seven live\nagents have been silently overwriting each other's. On `bee-3-cpl` that file\nwas observed at 299 placements / reference 149, then at 40 / reference 20, and\nM99 saw 299 -> 60 -> 2.\n\nMy B22 number (+0.1160 dex kernel gain) was measured through warps read from\nthat family of files. It resolved to the quarantined copy\n`C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\bee-3-cpl--warpmap.txt`, which\ndeclares `frames 8`, `reference 4`, 8 placed. So the warps behind my headline\ncame from an **8-frame** solve, not the 299-frame bracket.\n\nThe orchestrator's warning is that a control cannot catch this because it\ncontaminates treatment and control identically. That is exactly right for a\nrender measurement. It is a different question for mine, and the difference is\nworth stating precisely rather than assuming:\n\n* My statistic is a **paired A/B on identical geometry** -- same tiles, same\n  warps, one arm Catmull-Rom, one arm Lanczos-3. A wrong sidecar cannot make\n  one arm look better than the other, because both arms consume it byte for\n  byte.\n* But the sidecar supplies the **population of sub-pixel phases**, and the\n  resampling cost is a function of phase. So a wrong sidecar could still make\n  my number unrepresentative even though it cannot make it biased.\n\nThat is a testable claim, so it gets tested instead of argued.\n\n## Registered bar -- written before this script was run\n\nThe kernel gain is **population-independent**, and therefore not a hostage to\nwhatever the sidecar happened to say, if every arm below lands within\n**+/- 0.02 dex** of the reported **+0.1160**. That is twice B22's own 0.01 dex\ntolerance, chosen so the bar is not simply B22 restated.\n\n**If any arm moves by more than 0.02 dex, my headline is population-dependent,\nthe sidecar's state matters to it, and I report the number as needing a retake\nagainst a trusted sidecar.** I would rather say that than defend a number.\n\nArms, in decreasing dependence on the sidecar:\n\n| arm | phases from |\n| --- | --- |\n| SIDECAR | the quarantined 8-frame sidecar (what I reported) |\n| GRID | a deterministic 5x5 grid of sub-pixel offsets, no sidecar |\n| RANDOM | 24 uniform-random offsets, fixed seed, no sidecar |\n| NOZOOM | 24 random offsets at scale exactly 1.0 -- no coverage zoom |\n\nControl:\n\n* **K25 NULL** -- the same kernel on both sides of every population must read\n  exactly 0.0000 dex. If a population can manufacture a difference from\n  nothing, nothing that population says about kernels is admissible.\n\nRun: `python experiments/M95-kernel/src/k8_population.py`\n"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-cdiff/c1_ladder.py": {
+  "sites": [
+   {
+    "line": 217,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "T",
+    "text": "tiles = M.pick_tiles(T, TILE, NTILES, LO, HI)"
+   }
+  ],
+  "readers": [
+   "npy scratch"
+  ],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-demosaic\\scratch\\truth_AHD.npy"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-cdiff/c2_refine.py": {
+  "sites": [
+   {
+    "line": 164,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "T",
+    "text": "tiles = M.pick_tiles(T, TILE, NTILES, LO, HI)"
+   }
+  ],
+  "readers": [
+   "npy scratch"
+  ],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-demosaic\\scratch\\truth_AHD.npy"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-cdiff/c3_figure.py": {
+  "sites": [
+   {
+    "line": 35,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "T",
+    "text": "tiles = M.pick_tiles(T, CROP, 6, 0.30, 0.48, margin=CROP)"
+   }
+  ],
+  "readers": [
+   "npy scratch"
+  ],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-cdiff",
+   "C:\\dev\\strehl-out\\M95-demosaic\\scratch\\truth_AHD.npy"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-dose/y1_dose.py": {
+  "sites": [
+   {
+    "line": 135,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif",
+   "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\bee-3-cpl--warpmap.txt"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ },
+ "M95-dose/y2_combined.py": {
+  "sites": [
+   {
+    "line": 97,
+    "depth": 0,
+    "func": "main",
+    "caller_depth": 0,
+    "arg": "img",
+    "text": "tiles = M.pick_tiles(img)"
+   }
+  ],
+  "readers": [],
+  "scratch": [
+   "C:\\dev\\strehl-out\\M95-resample\\single-noalign.tif",
+   "C:\\dev\\strehl-out\\ORCH-quarantine-sidecars\\bee-3-cpl--warpmap.txt"
+  ],
+  "arw": false,
+  "cls": "ONCE"
+ }
+}

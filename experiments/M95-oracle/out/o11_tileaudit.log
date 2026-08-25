@@ -1,0 +1,102 @@
+files textually containing pick_tiles in the trees M95 owns: 35
+
+==============================================================================
+M95-resample
+  ONCE        f1_figure.py           sites=1 prov=[SCRATCH] readers=['-']
+      L58    loopdepth=0 in=main callerdepth=0 arg=b0
+  ONCE        x11_bandsignal.py      sites=1 prov=[ARW] readers=['camera RAW (native)']
+      L270   loopdepth=0 in=main callerdepth=0 arg=A
+  ONCE        x12_bandsnr.py         sites=1 prov=[none-literal] readers=['-']
+      L185   loopdepth=0 in=main callerdepth=0 arg=A
+  ONCE        x13_focusnull.py       sites=1 prov=[ARW] readers=['rawpy imported']
+      L121   loopdepth=0 in=main callerdepth=0 arg=A
+  ONCE        x14_levelsens.py       sites=1 prov=[ARW] readers=['rawpy imported']
+      L106   loopdepth=0 in=main callerdepth=0 arg=A
+  ONCE        x15_defocusptc.py      sites=1 prov=[ARW] readers=['rawpy imported']
+      L106   loopdepth=0 in=main callerdepth=0 arg=A
+  ONCE        x16_robust.py          sites=1 prov=[ARW] readers=['rawpy imported']
+      L95    loopdepth=0 in=main callerdepth=0 arg=A
+  ONCE        x1_pairs.py            sites=1 prov=[ARW SCRATCH] readers=['TIFF', 'npy scratch', 'rawpy imported']
+      L174   loopdepth=0 in=main callerdepth=0 arg=imgs['B0']
+  ONCE        x2_pairs.py            sites=1 prov=[SCRATCH] readers=['TIFF', 'npy scratch', 'rawpy imported']
+      L164   loopdepth=0 in=main callerdepth=0 arg=imgs['B0']
+  ONCE        x3_kernel.py           sites=1 prov=[none-literal] readers=['-']
+      L133   loopdepth=0 in=main callerdepth=0 arg=b0
+  ONCE        x4_endtoend.py         sites=1 prov=[SCRATCH] readers=['-']
+      L42    loopdepth=0 in=main callerdepth=0 arg=b0
+  ONCE        x5_ringing.py          sites=1 prov=[none-literal] readers=['-']
+      L58    loopdepth=0 in=main callerdepth=0 arg=b0
+  ONCE        x7_ladder.py           sites=1 prov=[none-literal] readers=['-']
+      L116   loopdepth=0 in=main callerdepth=0 arg=b0
+
+==============================================================================
+M95-coverage
+  ONCE        f2_figure.py           sites=1 prov=[SCRATCH] readers=['-']
+      L84    loopdepth=0 in=main callerdepth=0 arg=img
+  TEXT-ONLY   m95cov.py              mentions pick_tiles but never CALLS it (import, def, or comment)
+  ONCE        x10_planeres.py        sites=1 prov=[SCRATCH] readers=['-']
+      L95    loopdepth=0 in=main callerdepth=0 arg=img
+  ONCE        x10b_planeres.py       sites=1 prov=[SCRATCH] readers=['-']
+      L72    loopdepth=0 in=main callerdepth=0 arg=img
+  ONCE        x10c_planeres.py       sites=1 prov=[SCRATCH] readers=['-']
+      L57    loopdepth=0 in=main callerdepth=0 arg=img
+  ONCE        x11_alias.py           sites=1 prov=[SCRATCH] readers=['-']
+      L58    loopdepth=0 in=main callerdepth=0 arg=img
+  ONCE        x7_scale.py            sites=1 prov=[SCRATCH] readers=['-']
+      L31    loopdepth=0 in=main callerdepth=0 arg=img
+  ONCE        x7b_scale_field.py     sites=1 prov=[SCRATCH] readers=['-']
+      L91    loopdepth=0 in=main callerdepth=0 arg=img
+  ONCE        x8_fix.py              sites=1 prov=[SCRATCH] readers=['-']
+      L125   loopdepth=0 in=main callerdepth=0 arg=img
+
+==============================================================================
+M95-demosaic
+  RESELECT    d2_ladder.py           sites=2 prov=[SCRATCH] readers=['npy scratch']
+      L62    loopdepth=0 in=run_truth callerdepth=1 arg=T
+      L95    loopdepth=0 in=main callerdepth=0 arg=T
+  REVIEW      d3_scale.py            sites=2 prov=[ARW SCRATCH] readers=['camera RAW (native)', 'npy scratch']
+      L65    loopdepth=0 in=main callerdepth=0 arg=L
+      L73    loopdepth=0 in=main callerdepth=0 arg=TL
+  ONCE        f_figure.py            sites=1 prov=[SCRATCH] readers=['npy scratch']
+      L71    loopdepth=0 in=main callerdepth=0 arg=T
+  TEXT-ONLY   m95dem.py              mentions pick_tiles but never CALLS it (import, def, or comment)
+
+==============================================================================
+M95-kernel
+  ONCE        k17_crop.py            sites=1 prov=[SCRATCH] readers=['-']
+      L233   loopdepth=0 in=main callerdepth=0 arg=img
+  ONCE        k1_radius.py           sites=1 prov=[SCRATCH] readers=['-']
+      L103   loopdepth=0 in=main callerdepth=0 arg=img
+  ONCE        k5_port.py             sites=1 prov=[SCRATCH] readers=['-']
+      L207   loopdepth=0 in=check_gain callerdepth=0 arg=img
+  ONCE        k8_population.py       sites=1 prov=[SCRATCH] readers=['-']
+      L159   loopdepth=0 in=main callerdepth=0 arg=img
+
+==============================================================================
+M95-cdiff
+  ONCE        c1_ladder.py           sites=1 prov=[SCRATCH] readers=['npy scratch']
+      L217   loopdepth=0 in=main callerdepth=0 arg=T
+  ONCE        c2_refine.py           sites=1 prov=[SCRATCH] readers=['npy scratch']
+      L164   loopdepth=0 in=main callerdepth=0 arg=T
+  ONCE        c3_figure.py           sites=1 prov=[SCRATCH] readers=['npy scratch']
+      L35    loopdepth=0 in=main callerdepth=0 arg=T
+
+==============================================================================
+M95-dose
+  ONCE        y1_dose.py             sites=1 prov=[SCRATCH] readers=['-']
+      L135   loopdepth=0 in=main callerdepth=0 arg=img
+  ONCE        y2_combined.py         sites=1 prov=[SCRATCH] readers=['-']
+      L97    loopdepth=0 in=main callerdepth=0 arg=img
+
+==============================================================================
+COVERAGE: expected 35 files, audited 35
+SUMMARY over the trees M95 owns:
+  ONCE        31
+  RESELECT    1
+  REVIEW      1
+  TEXT-ONLY   2
+
+  RESELECT (exposed pattern): ['M95-demosaic/d2_ladder.py']
+  REVIEW (script cannot decide, read by hand): ['M95-demosaic/d3_scale.py']
+
+wrote C:\dev\blog\death-of-software\projects\strehl\experiments\M95-oracle\out\o11_tileaudit.json
