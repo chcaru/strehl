@@ -48,12 +48,22 @@ DATA = SRC.parent / "data"
 DOC = SRC.parents[2] / "docs" / "research" / "M87-occlusion.md"
 HARNESS = ("append", "verify", "control", "fix", "probe")
 
+# P40: PIL silently returns uint8 for a 16-bit RGB TIFF.  Measured on M87's
+# own operands: 43776 distinct levels through `tifffile`, 222 through PIL,
+# and the before/after pair reads max delta 163 through PIL against 41887
+# through `tifffile`.  These three scripts predate P40 and are kept as the
+# record of how it was found -- 45-locate.py prints the dtype, which is the
+# read that caught it.  Every number they produced was superseded by a
+# `tifffile` re-run (46, 47, 42) before publication.  The exemption is named
+# rather than silent so that ANY NEW script doing this fails the audit.
+PIL_TIF_EXEMPT = {"40-ship-delta.py", "43-ship-crops.py", "45-locate.py"}
+
 
 def main():
     scripts = sorted(SRC.glob("*.py"))
     measure = [p for p in scripts if not p.name.startswith(HARNESS)]
 
-    hits, invoke = [], []
+    hits, invoke, piltif = [], [], []
     for p in measure:
         t = p.read_text(encoding="utf-8")
         for k, line in enumerate(t.splitlines(), 1):
@@ -61,9 +71,16 @@ def main():
                 hits.append(f"{p.name}:{k}")
         if "subprocess" in t and re.search(r"strehl[-\w]*\.exe", t):
             invoke.append(p.name)
+        if p.name not in PIL_TIF_EXEMPT:
+            for k, line in enumerate(t.splitlines(), 1):
+                if re.search(r"Image\.open\([^)]*\.tif", line):
+                    piltif.append(f"{p.name}:{k}")
 
     assert not hits, f"P124 IS NOW FALSE: --limit appears in {hits}"
     assert not invoke, f"a measurement script invokes the binary: {invoke}"
+    assert not piltif, (
+        "P40 IS NOW LIVE AGAIN: a measurement script reads a 16-bit TIFF "
+        f"through PIL, which silently quantises it to 8 bits: {piltif}")
 
     raw = DOC.read_bytes().decode("utf-8")
     assert raw.count("\n") == raw.count("\r\n"), "document is not pure CRLF"
