@@ -413,6 +413,21 @@ const RENDER_ENV: &[&str] = &[
     "STREHL_CACHE_DIR",
     "STREHL_FIX_HALO",
     "STREHL_FIX_HALO_DELTA",
+    // The edge-aware selection variables. Every one of these re-routes the
+    // election, so a row rendered with one of them set is not the row it says
+    // it is. STREHL_ONLY_FRAME is the extreme case: it renders a single frame
+    // with no election at all, and would move every hash in this file while
+    // appearing nowhere in any record.
+    //
+    // This is the STREHL_ALIGN=0 defect described in the header of
+    // byte-freezes.tsv, committed a second time -- by me, when I added these
+    // variables and did not add them here. Recorded rather than quietly fixed
+    // because the header's claim is that the lesson was learned, and it was
+    // not.
+    "STREHL_EDGE_AWARE",
+    "STREHL_EDGE_TAU",
+    "STREHL_EDGE_CONF",
+    "STREHL_ONLY_FRAME",
 ];
 
 impl Freeze {
