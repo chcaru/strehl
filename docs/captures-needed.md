@@ -76,6 +76,48 @@ you about the defect stands. What I told you about the cure was premature, and I
 would rather correct it here than have you discover it by finding the switch
 missing.
 
+### The answer changed by morning, and you should read this instead
+
+The section above says the reason your stacks don't look good is *unwired code* —
+cures that were built and never connected. I spent the night testing that, and
+**it is not the main answer.** Three of the four things I expected to wire up
+were measured and refused: the motion mask (above), the soft gate (rejected a
+fourth time), and — the big one — **the sharpening idea I had been building the
+whole roadmap around.**
+
+That last one deserves a plain statement, because it changes what I can promise
+you. I had a thesis that at your magnification no stacker can produce a sharp
+image by *choosing* the best frame, and that sharpness had to be *reconstructed*
+across frames instead. Measured against what your stacker already ships, it buys
+**nothing** — a signal-to-noise ratio of 1.0014, with an error bar tight enough
+to rule the effect out rather than merely fail to find it. The apparent
+sharpening was 2.5× more contrast bought with 2.0× more noise, and roughly a
+third of its output pixels were values **that appear in none of the source
+frames** — invented.
+
+**So here is the honest headline, and it is a demotion.** There is currently
+**no known route to producing more detail than the sharpest frame you actually
+shot.** The remaining work is not about out-resolving your camera. It is about
+not degrading what you already captured — which, on the evidence of tonight, the
+merge is doing in two specific and now well-characterised ways:
+
+1. **The halo** around every leg and edge. Structural. No fix.
+2. **The background patchwork.** Structural, and as of tonight **proved** rather
+   than asserted — see the correction further down. Caused by the blending
+   recipe changing from place to place across the frame.
+
+And one genuine gain, the only thing tonight that both explains a defect you can
+see *and* hands you something to do about it: **the background blotching is
+caused by your lighting drifting between frames**, confirmed across 14 of your
+stacks. There is a switch for it, it is a large win on stacks where the light
+really moved, and it slightly *hurts* on stacks where it didn't. The rule and
+your own stack names are under *"When to turn the exposure fix on"* below.
+
+I would rather hand you an accurate demotion than an optimistic roadmap. The
+architecture is sound and the measurement discipline is doing its job — three
+bad ideas died last night before they could ship, and each of them would have
+shipped in a project that didn't test its own cures.
+
 **Then I found a third instance of the same pattern, and this one is the most
 likely single reason your photos look the way they do.** Code being unreachable
 is one failure. Code being reachable and *switched off* is the same failure
