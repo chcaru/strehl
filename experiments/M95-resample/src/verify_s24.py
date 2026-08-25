@@ -56,6 +56,10 @@ m = re.search(r"^## 24\. ", body, re.M)
 if not m:
     die("section 24 heading not found in the report")
 raw = body[m.start():]
+_tail = body[m.end():]
+_nxt = re.search(r"^## ", _tail, re.M)
+if _nxt:
+    raw = body[m.start(): m.end() + _nxt.start()]
 sec = flat(raw)
 art = json.loads(ART.read_text(encoding="utf-8"))
 res = art["results"]
