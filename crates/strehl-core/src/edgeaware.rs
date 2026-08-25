@@ -443,6 +443,31 @@ impl SelectionScale {
     /// [`domain_transform`], which averages along the background instead of
     /// across the silhouette. That is why the veto, `FLOOR_Q` and the `conf`
     /// parameter have no counterpart here.
+    ///
+    /// # What this rule gets WRONG, stated plainly
+    ///
+    /// It over-collapses over **dead ground**. Rendering the radius map as a
+    /// picture shows two populations: a fine tracery correctly tracing every
+    /// real silhouette, and *large solid regions covering the empty background*
+    /// where the window is also at 1 px for no good reason. Measured on
+    /// `bee-2-cpl` flat background far from any silhouette: mean radius
+    /// **3.64-5.86** where it should be 13, with **45-61%** of pixels at r1.
+    ///
+    /// The cause is the same one `from_guide`'s veto existed for. Over
+    /// featureless ground no frame is in focus, so the narrow guide's argmax is
+    /// noise distributed across the whole bracket, its local range is ~N frames
+    /// everywhere, and the range test reads that as a depth step.
+    ///
+    /// It is **harmless to the image** and that is why it ships: where no frame
+    /// has content, every frame renders the pixel almost identically, so an
+    /// arbitrary election is invisible — which the background noise
+    /// measurements confirm directly. It is **not harmless to inference drawn
+    /// from the radius map**, and it cost this build a wrong conclusion:
+    /// bimodality firing looked beautifully monotone in the collapsed radius
+    /// (99.80% at r1 falling to 13.42% at r13) and that reads as the detector
+    /// finding the rim. It is not. Both quantities are driven by the same
+    /// unreliable guide over dead ground, so they correlate without either one
+    /// locating a silhouette. **Do not use the radius map as a rim mask.**
     #[must_use]
     pub fn from_silhouettes(guide: &[u16], geom: PlaneGeometry, tau: f32) -> Self {
         assert_eq!(guide.len(), geom.pixels());

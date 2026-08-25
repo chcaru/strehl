@@ -1010,3 +1010,127 @@ The ones to open first:
 - `flower-inner-edge-cpl-crop7-y949-x959-*` — flat2, the invented line.
 - `bee-2-cpl-crop7-y929-x842-*` — flat2, the coverage blobs.
 - `lavendar-cpl-crop0-y499-x995-*` — edge1, where least happens.
+
+---
+
+## 14. The mandate: full-frame, default-on, and what the pictures said
+
+Everything in this section was judged on **clean full-frame renders at ~1400 px
+wide**, not on crops at frozen ROIs. That change of instrument is the reason
+this section reaches different conclusions from the ones before it.
+
+### 14.0 Two defects that made this build blind
+
+**The fix was never on.** It sat behind `STREHL_EDGE_AWARE`, default OFF, from
+the day it was built. Every render anyone looked at -- including every render
+the owner judged -- was the untreated arm. It was measured, committed, reported,
+and never once applied to a picture. It is now **default ON**; the variable
+selects an arm (`off` / `acuity` / `layer`) for A/B only.
+
+**The previews were not viewable.** Earlier scripts wrote 8-bit output with
+`tifffile.imwrite()` to paths ending in `.png`. `tifffile` ignores the
+extension, so every "PNG" this build produced was a TIFF with a PNG's name --
+magic bytes `49 49 2A 00`, not `89 50 4E 47`. No ordinary viewer would open
+them. `fullframe.py` writes real PNGs and **asserts the magic bytes**, because
+a deliverable nobody can open is not a deliverable.
+
+### 14.1 Mandate (A): the direction was right, the mechanism was not
+
+(A) asked for a per-pixel radius `min(r_noise, r_geom)`, with `r_noise` the
+smallest radius whose through-focus peak clears the calibrated noise floor.
+Built, then rendered against `r_geom` alone as the only difference -- three arms
+of `bee-2-cpl` back-to-back from **one** binary.
+
+| `bee-2-cpl` background sd | shipped | `min(r_noise, r_geom)` | `r_geom` only |
+| --- | --- | --- | --- |
+| flat patch A | 1.000 | 0.986 | **0.878** |
+| flat patch B | 1.000 | 1.070 | **1.005** |
+| flat patch C | 1.000 | **1.187** | 0.996 |
+
+The noise term costs up to **+18.7% background noise for no visible gain** --
+at 1:1 the two treated arms' halos are indistinguishable. The cause is
+structural, so no margin would have fixed it: contamination needs a window
+spanning two depths, which happens only near a silhouette, and there the
+geometric cap already binds. Everywhere else the shrink trades noise for
+nothing.
+
+**The window size IS the halo radius** (confirmed). **Shrinking it everywhere
+is not the fix** (refuted). Refusing to let it cross a silhouette is.
+
+### 14.2 What was deleted
+
+`ACUITY_MARGIN`, `STREHL_ACUITY_MARGIN`, `acuity_margin()`, the `excess` and
+`margin` parameters, and the confidence veto (`FLOOR_Q`, `conf`) which this path
+never needed. `from_acuity` became `from_silhouettes`, whose signature has
+nowhere to put a signal term. Deleted rather than tuned to zero: a constant that
+must be zero is a disabled feature waiting for someone to read its name instead
+of its measurement.
+
+The replacement test asserts **monotonicity of radius in distance from the
+step** rather than a number. Distance is monotone as you walk away from a step;
+signal strength is not. Any term that reads the image rather than the guide
+breaks the walk.
+
+### 14.3 What the pictures show
+
+`bee-2-cpl`: the broad bright aura tracing the whole silhouette -- the thing the
+owner saw first -- is **gone** at full-frame scale. A **tight bright sheath**
+still hugs the claws and the lower-left leg, and it is still faintly visible at
+1400 px. Not yet the bar.
+
+`flower-inner-edge-cpl`: the milky veil along the petal/stamen boundary has
+lifted, stamens separate cleanly from the petal, greens are deeper. **No rim
+visible** on this subject.
+
+### 14.4 Mandate (B): the detector fails its own gate. STOPPED.
+
+The instruction was explicit: produce the firing overlay first, and if it does
+not land on the rim, **stop and report -- do not force it**. It does not.
+
+The per-band table looks like a green light, and it is not:
+
+| radius | % of plane | fires | | radius | % of plane | fires |
+| --- | --- | --- | --- | --- | --- | --- |
+| r1 | 25.03% | **99.80%** | | r1 | 3.49% | 98.18% |
+| r2 | 6.30% | 91.96% | | r2 | 4.32% | 88.18% |
+| r4 | 7.07% | 62.08% | | r4 | 10.15% | 61.61% |
+| r8 | 7.81% | 41.44% | | r8 | 13.00% | 41.54% |
+| r13 | 53.78% | **13.42%** | | r13 | 69.05% | 15.59% |
+
+(`bee-2-cpl` left, `flower-inner-edge-cpl` right.) Monotone in both, 7.4x
+enrichment, and **wrong**. The full-frame overlay shows it firing on **45.62%
+of the plane, including the entire empty background**. On flat ground far from
+any silhouette: **54-87% firing**, mean `z1` 3.32-4.39.
+
+The mechanism is a shared cause, not specificity. Over featureless ground no
+frame is in focus, so the guide's argmax is noise, its local range is ~N frames,
+the range test reads a depth step, **and** the mode statistics are noise with a
+tiny sigma that both z-scores clear. Radius collapse and bimodality firing are
+both driven by an unreliable guide over dead ground, so they correlate
+beautifully without either one locating a silhouette.
+
+This is the **same defect as the first `r2/r1` detector** (fired on 54.2% of
+clean ground) in a different dress. The z-score fixed the normalisation and did
+not fix the specificity.
+
+Gating unmixing on this would apply a two-layer model to half the image
+including flat background -- inventing structure in exactly the no-structure
+regions V-HALO already flagged. **Not built. Reported instead.**
+
+### 14.5 The honest defect in the shipped rule
+
+`from_silhouettes` over-collapses over dead ground: mean radius **3.64-5.86**
+where it should be 13, **45-61%** at r1, on background far from any silhouette.
+It is harmless to the image -- where no frame has content, every frame renders
+the pixel alike, which the noise table above confirms -- and that is why it
+ships. It is **not** harmless to inference, and it cost this build the wrong
+conclusion in 14.4. **The radius map is not a rim mask.**
+
+### 14.6 Method
+
+Pinned `git archive` of an explicit SHA, built in isolation, **commissioned with
+a planted sabotage** before being trusted: breaking the geometric cap failed
+exactly `the_window_collapses_at_a_silhouette...` and nothing else; breaking the
+guided filter's edge term failed exactly
+`domain_transform_does_not_carry_focus_across_a_luma_step` while the flat-region
+smoothing test still passed. Every arm rendered back-to-back from one binary.
