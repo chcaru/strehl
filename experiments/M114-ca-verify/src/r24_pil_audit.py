@@ -99,5 +99,8 @@ for p in needles:
     print("%-44s mode=%-5s dtype=%s" % (ctab[-1]["path"], im.mode, ctab[-1]["dtype"]))
 res["C_needles"] = ctab
 res["C_all_png_8bit"] = all(c["mode"] in ("RGB", "RGBA", "P", "L") for c in ctab)
+res["B_n_tifs"] = len(btab)
 print("PNG contact sheet is natively 8-bit: %s  -> PIL read is LOSSLESS here"
       % res["C_all_png_8bit"])
+json.dump(res, open(OUT, "w"), indent=1)
+print("wrote", OUT)

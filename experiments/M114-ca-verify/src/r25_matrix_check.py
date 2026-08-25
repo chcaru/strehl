@@ -88,6 +88,9 @@ print("VERDICT: ORCH's correction is %s by independent re-derivation."
       % ("CONFIRMED" if allok else "NOT CONFIRMED"))
 json.dump(dict(crate=crate.tolist(), corpus=corpus.tolist(),
                crate_leaks=leaks(crate), corpus_leaks=cl,
-               E1=e1, E2=e2, E3=e3, E4=e4, E5=e5, confirmed=bool(allok)),
+               E1=e1, E2=e2, E3=e3, E4=e4, E5=e5, confirmed=bool(allok),
+               crate_vs_doc_maxabs=float(np.abs(crate[1] - DOC_GREEN).max()),
+               corpus_vs_doc_maxabs=float(np.abs(corpus[1] - DOC_GREEN).max()),
+               fixture_vs_capture_maxabs=float(np.abs(real - FIXTURE).max())),
           open(OUT, "w"), indent=1)
 print("wrote", OUT)
