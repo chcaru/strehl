@@ -14,7 +14,7 @@ genuinely useful and none of it is blocking a fix that is already written.*
 
 | # | what | time | what it unblocks |
 | --- | --- | --- | --- |
-| **1** | **§24** — flat, repeating, **corner-to-corner** subject at working magnification, shot **normal + red + green + blue** (gels or coloured light), plus **a second set with the 2x teleconverter** | ~10 min | **Purpose changed overnight, and went UP.** It no longer confirms a scalar overshoot — that number was refuted. The **coloured-gel sets are now the experiment**: they test whether the correction must be **spectral**, which is the only remaining path to fixing it. Still the only route to a blue coefficient or a teleconverter one. See below. |
+| **1** | **§24** — flat, **achromatic** (grey/black/white, *no colour in the target*), **corner-to-corner** detail, square-on and never moved, shot **normal + red + green + blue** (gels or coloured light) | ~10 min | **Design changed again overnight, and it is now a controlled experiment.** The spectral hypothesis I built this on was tested against eight of your existing stacks and **the correlation came out backwards** (rho −0.69, n=8). What survived is bigger: the correction really does vary by subject, **27.3%** against a 19.5 ppm noise floor, cause unknown. Four rival explanations died on your existing data; aperture and the teleconverter died on your EXIF (**every `-cpl` stack is f/5.6 + 2× TC — there is no aperture variation in the corpus**, so no teleconverter set is needed). A **flat** target makes the stacker a measured 4.8 ppm no-op, so what this sees is optics. See below. |
 | **2** | **§25** — one deliberately **clipped, strongly saturated** subject, plus one clipped neutral | ~5 min | Whether tonight's blown-highlight fix generalises past the one case it was measured on |
 | 3 | **§12** — static repeat burst, no movement between frames | 30 s | Highest value per unit effort in the whole document — and it **went up in value overnight**: it is the *trap* arm for the election gate now being wired. See the box below. |
 | 4 | **§19** — one hard edge at three apertures | ~10 min | The remaining aperture question |
@@ -78,7 +78,7 @@ variable, so you can try any of them without a rebuild.*
 | `STREHL_SMOOTH_HUBER` | robust threshold for the above | 1.0 when `STREHL_SMOOTH` is on | Don't set it independently. It only does anything when the line above is on. |
 | `STREHL_FIX_HALO` | fringe around silhouettes | off | **Leave off.** Off for a good reason, unlike the rest — see the withdrawal above. It replaces the fringe with a milky scalloped band and fires hardest on scenes with no halo in them. |
 | `STREHL_SOFT_GATE` | soft frame-admission gate | off | **Leave off.** Rejected twice now, by two independent methods. It scores beautifully and it is a blur — see tonight's near-miss below. |
-| `STREHL_FIX_CA` | chromatic aberration | off | **Verdict pending.** An audit of this one is still running as I write. Don't enable it on my say-so until that lands; I have already promoted one correction tonight that an audit then took apart. |
+| `STREHL_FIX_CA` | chromatic aberration | off | **Verdict pending, and it has a bug.** An audit of this one is still running as I write. Separately, it was found tonight to be a **silent no-op when `STREHL_ALIGN=0`** — the output comes out byte-identical with no warning at all, so anyone A/B-ing it with registration off would measure nothing and conclude it does nothing. Don't enable it on my say-so until the audit lands. |
 
 So of seven switches, exactly **one** is worth flipping this morning, one is
 awaiting an audit, two are actively harmful, one does nothing you can see, one is
@@ -2317,6 +2317,31 @@ the correct render.
 
 ## 24. Colour-separated exposures of one static subject -- REQUESTED by M95/M85, ten minutes, and it closes a gap nobody noticed
 
+> **UPDATED again, later the same night — the subject changed, the gels stayed.**
+> I told you above that the coloured-gel sets were now the experiment, because
+> they would test whether the colour-fringing correction has to be **spectral**.
+> An agent then went and tested that hypothesis against eight of your existing
+> stacks instead of waiting for you to shoot it, and **it does not hold.** The
+> prediction was that scenes weighted toward longer wavelengths need a larger red
+> correction; measured, the correlation is **backwards** (rho **−0.69**, n=8).
+>
+> **What survived, and got stronger:** the correction genuinely does differ from
+> subject to subject — **27.3%** across your eight stacks, against a repeatability
+> floor of 19.5 ppm, so this is a real effect roughly fourteen times larger than
+> the noise. We simply do not yet know what drives it. Four candidate
+> explanations were killed on your existing data: focus distance, magnification,
+> subject structure, and the alignment step.
+>
+> **Aperture and the teleconverter were killed by your own EXIF**, and this is
+> worth knowing: **every one of your `-cpl` stacks is f/5.6 on the 100mm GM with
+> the 2× teleconverter.** There is no aperture variation anywhere in the corpus.
+> So an aperture ladder would be varying something you have in fact been holding
+> fixed, and the "second set with the teleconverter" I asked for above is
+> confused — the teleconverter *is* your normal configuration.
+>
+> **So: still shoot the gels, but on a different subject, and the change matters.**
+> The design below is now a controlled experiment rather than a fishing trip.
+
 **Every demosaic number this project has produced is measured against a decode,
 not against a scene.** That is the gap. When M95 compared demosaic algorithms it
 had to treat one algorithm's output as the truth the others were scored against,
@@ -2334,10 +2359,39 @@ against demosaiced data rather than against separated channels.
 
 ### What to shoot
 
-One static, high-detail, high-contrast subject. Tripod, no wind, nothing alive.
-A printed resolution target, a banknote, a circuit board or a coin all work; a
-subject with fine detail at many orientations is better than one with detail in
-one direction.
+**A flat, achromatic, high-detail target, square-on to the lens, that never
+moves.** All three of those adjectives are doing work and none is fussiness:
+
+- **Flat**, and normal to the axis, so the whole target is in focus at once. On a
+  flat subject the stacking merge was measured to be a **4.8 ppm no-op** — it
+  changes nothing — so anything the experiment sees is optics, not the stacker.
+  A tilted or three-dimensional subject reintroduces the confound the whole
+  design exists to remove.
+- **Achromatic** — grey, black and white only, **no colour in the target**. This
+  is the change from what I asked for before. If the target is coloured *and* the
+  light is coloured, the two spectral effects are mixed and neither can be
+  measured. A printed resolution chart, a page of small black text, or a grey
+  card with fine print all work.
+- **Corner-to-corner detail**, because the effect being measured grows with
+  distance from the centre and a subject that fills only the middle cannot show
+  it.
+
+Then, **without moving anything between exposures**:
+
+1. One normal exposure.
+2. One through a **red** filter.
+3. One through a **green** filter.
+4. One through a **blue** filter.
+
+**If, and only if, that first set shows the correction moving between gels**, a
+second set becomes worth shooting: the same four exposures on a **coloured**
+target under **fixed white** light. The first set varies the *illumination*
+spectrum; the second varies the *subject* spectrum. They are different claims and
+the corpus cannot presently tell them apart, which is why they need separate
+sets. If the correction does **not** move across gels on the achromatic target,
+the spectral explanation is dead outright and the second set is unnecessary —
+which is the outcome I would bet on given the −0.69 above, and it is worth ten
+minutes to find out.
 
 Then, **without moving anything between exposures**:
 
