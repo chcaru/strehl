@@ -1247,3 +1247,118 @@ clipped samples: specular highlights and bright fine hairs.
 **Not changed.** It is M109's deliberate highlight design, it is outside this
 mandate, and its own doc already flags that the post-warp clip test under-counts
 "which is where the residual fringe lives". Routed to ORCH rather than touched.
+
+
+## 16. The paired subject, and the defect it exposed in my own fix
+
+ORCH sent a paired-subject test: `flower-bud-with-background-fern-cpl` has a
+hard, tight, crisp cut-out rim; `lavendar-cpl` has a soft, wide, diffuse glow.
+Prediction: flower-bud matches `SOBEL_RADIUS + WINDOW_RADIUS`, lavender matches
+the defocus blur diameter. Built-in control: **(A) should materially change
+flower-bud and barely touch lavender.**
+
+I agree with the visual classification completely. The fern reads as a sticker
+pasted onto the backdrop, with a crisp inner *and* outer boundary. Lavender's
+glow has no boundary at all.
+
+The attribution still fails, for the reason in section 15: lavender's glow is
+present, identically and within noise, in single frames rendered with no
+election whatsoever. It is the scene's illumination, not a mechanism.
+
+### 16.1 The control fires, and it fires against my fix
+
+| subject | rim (<=14 px) | far (>150 px) | ratio |
+|---|---|---|---|
+| `flower-bud-with-background-fern-cpl` | 0.748 | 0.784 | 0.95 |
+| `lavendar-cpl` | 0.582 | 0.538 | 1.08 |
+| `bee-2-cpl` | 0.166 | 0.184 | 0.90 |
+
+Mean `|off - on|` in backdrop sd, after a 9 px box on **both** arms.
+
+By ORCH's own stated criterion this is a failure: the change is not confined to
+the window on any subject. Far backdrop is more than ten window-radii from any
+silhouette, where the focus window provably cannot reach, and it moves as much
+as the rim does.
+
+**The smoothing is what makes it readable, and I nearly missed it.** My first
+run was raw per-pixel `|off - on|` and read 0.777 / 0.631 / 0.197 with the same
+~1 ratios. I called that a noise re-roll -- electing a different but
+statistically equivalent frame changes every pixel without changing the picture
+-- and cited the background sd ratios (0.878 / 1.005 / 0.996) as proof the noise
+level was unchanged. That reasoning was sound and the conclusion was wrong. A
+9 px box removes uncorrelated noise by about 9x; the numbers barely moved. It is
+a **systematic level shift over the whole backdrop**.
+
+This is the third time in this build a difference statistic has produced a
+confident wrong reading, after `edge_overshoot` and `hp_energy`. The pattern is
+always the same: the statistic is satisfied by something that is not the defect.
+
+### 16.2 It is visible, which settles it
+
+`ff-flower-bud-with-background-fern-cpl-on.png`, full frame: the fern still has
+its hard white outline, **and its interior is now blotchy**, with white patches
+smeared inside the leaf.
+
+ORCH asked me to confirm rather than assume that the fern's plastic look is
+because it sits outside the focus bracket. Under that reading the two findings
+are one finding. Outside the bracket, no frame has the fern in focus, so the
+narrow guide's argmax there is noise spanning the whole bracket, its local range
+reads as a depth step everywhere, the radius collapses across the fern's whole
+area, and the election goes per-pixel random. Dead ground *inside a subject*.
+
+### 16.3 Retraction
+
+`from_silhouettes` shipped with a doc comment stating the over-collapse was
+"**harmless to the image**", on the grounds that where no frame has content
+every frame renders the pixel almost identically. **That claim is retracted.**
+It was supported by a noise measurement, and noise was the one thing it did not
+damage.
+
+### 16.4 The veto, and why it is not the one I deleted
+
+`from_guide` needed a confidence veto with a tuned `FLOOR_Q`, and I deleted it
+along with `from_guide`. I was right that a mask cannot create information and
+wrong that no veto was needed.
+
+This veto tests a **second, independent signal**: a depth step in a photograph
+is accompanied by a luma step. A pixel may cap at a radius only where the guide
+range exceeds `tau` **and** the luma range at that same radius exceeds what pure
+noise would reach there.
+
+The luma threshold is not tuned. It is the closed-form expected range of `n`
+Gaussian samples, `2*sigma*sqrt(2*ln n)`, with `sigma` measured from the plane's
+own adjacent-pixel differences via the MAD -- robust, because real structure is
+a minority of adjacent pairs and would inflate a standard deviation. Given
+`sigma` each radius has one right answer, and it grows with the box exactly as
+the spurious range over dead ground does. **No new constant enters the build.**
+
+Featureless backdrop is smooth in luma and is vetoed. The fern's interior is
+smooth in luma and is vetoed. A real occluding edge steps in both and is not.
+
+### 16.5 Asserted as behaviour, not as a number
+
+`a_guide_step_without_a_luma_step_is_dead_ground_and_must_not_collapse` gives two
+fixtures an **identical** guide step and differs only in the luma. One must
+collapse; the other must not.
+
+It has to be a behaviour test. The old failure was invisible to every metric in
+use -- background noise unchanged or better, halo numbers fine -- while the rule
+rewrote the entire background. A numeric assertion would have passed.
+
+The featureless fixture is dithered by +/-1 DN rather than left constant. A
+constant plane makes `sigma` zero, which passes the veto for a degenerate reason
+instead of the one under test.
+
+### 16.6 A commissioning trap worth recording
+
+Commissioning the pin caught the sabotage (RED, rc=101) and then reported the
+**restore** as failing with a byte-identical histogram to the sabotage.
+
+That is not a restore failure. `shutil.copy2` preserves the backup's mtime,
+which is the original's -- older than the artifacts the sabotaged build just
+wrote. Cargo compares mtimes and reused the sabotaged object. An `os.utime` after
+the restore fixes it.
+
+The direction of the failure is the lucky one: it made a good restore look bad.
+Reversed -- a sabotage that failed to trigger a rebuild -- it would have printed
+a confident GREEN for a pin that never compiled the defect at all.
