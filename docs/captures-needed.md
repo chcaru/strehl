@@ -78,8 +78,9 @@ would start flagging.** `robust.rs` is **no longer unreachable** — a gate was
 wired to it at 20:00 last night and `merge.rs` now imports it directly. It is
 still **off unless switched on**, which is the thing that actually matters to
 your pictures, but "unreachable" is no longer the right word and I had written it
-as though nothing had changed. `outlier.rs` (1094 lines) *is* still orphaned:
-nothing but the module declaration refers to it.
+as though nothing had changed. `outlier.rs` (1094 lines) *is* still absent from
+the render path — though not unused: four measurement programs import it, which
+is how its behaviour came to be measured at all.
 
 **And this turns out to be the general shape of the problem, not a one-off.** I
 went through the render path gate by gate this morning. Of the six improvements
