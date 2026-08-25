@@ -2809,7 +2809,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             levels,
             wb,
             xyz_to_cam.as_ref(),
-            opts.srgb,
+            opts.space,
             opts.demosaic,
             exposure,
             path,
@@ -3932,11 +3932,17 @@ fn write_merged(
     levels: Levels,
     wb: Option<[f32; 3]>,
     xyz_to_cam: Option<&([[f32; 3]; 3], String)>,
-    srgb: bool,
+    space: image_out::OutputSpace,
     demosaic: bool,
     exposure: Exposure,
     path: &Path,
 ) -> Result<()> {
+    // The transfer curve, and *only* the transfer curve. Bound here so the
+    // byte-frozen arithmetic further down stays textually identical to what
+    // M85 proved: it reads `srgb` exactly as it always did, and the meaning of
+    // that name has not changed -- what changed is that the matrix no longer
+    // rides on it.
+    let srgb = space.applies_curve();
     let geom = est.geometry();
     let n = geom.pixels();
     // The only place the halo correction can reach. Untreated pixels fall
@@ -3959,16 +3965,25 @@ fn write_merged(
     // them on one switch is what leaves the default linear path byte-frozen for
     // the corpus (M85). Without a characterisation there is no matrix and the
     // output stays camera-native, which the report line below says out loud.
-    let matrix = if srgb {
+    // The colour matrix rides with **either** colorimetric space, and the
+    // transfer curve rides only with `--srgb`. Those were one switch until
+    // `OutputSpace` broke the weld, and the weld was why there was no way to
+    // ask for the one mode measurement actually needs: stated primaries,
+    // still linear. Without a characterisation there is no matrix and the
+    // output stays camera-native, which the report line below says out loud.
+    let matrix = if space.wants_matrix() {
         xyz_to_cam.and_then(|(m, _)| strehl_core::color::camera_to_srgb(*m))
     } else {
         None
     };
-    if srgb {
+    if space.wants_matrix() {
         match (matrix, xyz_to_cam) {
             (Some(_), Some((m, src))) => {
                 let neutral = strehl_core::color::neutral_response(*m);
-                eprintln!("colour          : camera RGB -> sRGB (BT.709 primaries, D65 white)");
+                eprintln!(
+                    "colour          : camera RGB -> {} (BT.709 primaries, D65 white)",
+                    if space.applies_curve() { "sRGB" } else { "LINEAR sRGB" }
+                );
                 eprintln!("                  characterisation: {src}");
                 eprintln!(
                     "                  XYZ->cam rows: [{:.4} {:.4} {:.4}] [{:.4} {:.4} {:.4}] [{:.4} {:.4} {:.4}]",
@@ -3982,8 +3997,13 @@ fn write_merged(
                     gains[2]
                 );
                 eprintln!(
-                    "                  Order: black, as-shot WB, {}, matrix, clamp, sRGB curve.",
-                    if demosaic { "demosaic" } else { "2x2 bin" }
+                    "                  Order: black, as-shot WB, {}, matrix, clamp{}.",
+                    if demosaic { "demosaic" } else { "2x2 bin" },
+                    if space.applies_curve() {
+                        ", sRGB curve"
+                    } else {
+                        " -- NO transfer curve, safe to measure on"
+                    }
                 );
             }
             _ => {
@@ -4090,11 +4110,9 @@ fn write_merged(
     // pinned at the container maximum while white balance has carried the
     // others past it -- that is what renders blown neutral white magenta.
     // See `docs/research/M109-highlights.md`.
-    let dev = image_out::Develop {
-        matrix: matrix
-            .map(|r| r.with_ceiling(color::saturation_ceiling(levels, gains, applied.gain()))),
-        srgb,
-    };
+    let dev = space.develop(
+        matrix.map(|r| r.with_ceiling(color::saturation_ceiling(levels, gains, applied.gain()))),
+    );
 
     if demosaic {
         // Full resolution. The merge already estimates all four CFA sites of
@@ -4160,11 +4178,8 @@ fn write_merged(
             px[1] = norm(gmean(i), gains[1]);
             px[2] = norm(val(CfaPlane::B, i), gains[2]);
         }
-        let dev = image_out::Develop {
-            matrix: matrix
-                .map(|r| r.with_ceiling(color::saturation_ceiling(levels, gains, eg))),
-            srgb,
-        };
+        let dev = space
+            .develop(matrix.map(|r| r.with_ceiling(color::saturation_ceiling(levels, gains, eg))));
         image_out::write_binned(path, geom.width, geom.height, &lin, &dev)?;
         eprintln!();
         eprintln!(
@@ -4204,18 +4219,44 @@ fn write_merged(
         px[1] = encode(gmean(i), gains[1]);
         px[2] = encode(val(CfaPlane::B, i), gains[2]);
     }
-    image_out::write_rgb16(path, geom.width as u32, geom.height as u32, &rgb)?;
+    // Describing the bytes is not the same as changing them. `Develop` here is
+    // a *statement* of what this branch did -- camera-native primaries, no
+    // matrix, curve only if asked -- and the arithmetic above deliberately does
+    // not route through `image_out::develop_pixel`. The file gains an
+    // ImageDescription tag and its pixels are untouched, which is why the
+    // byte-freeze rows move for a reason that has to be written down.
+    let dev = image_out::Develop::measurement(srgb);
+    if !space.is_measurement() {
+        // A colorimetric space was asked for and we are in the branch that
+        // cannot deliver one: the body has no characterisation, so there is no
+        // matrix to apply and `--linear-srgb` has just become a no-op. The
+        // caveat below states the space correctly, but a caveat is easy to
+        // scroll past, and the file that results is byte-identical to a default
+        // render while carrying a name that says otherwise. Say it loudly --
+        // this is the one path on which the flag still silently does nothing,
+        // and it is the reason the interim guard in `main.rs` existed.
+        eprintln!();
+        eprintln!(
+            "WARNING         : no colour characterisation for this body, so the requested"
+        );
+        eprintln!(
+            "                  colorimetric space could not be reached. Emitting camera-native"
+        );
+        eprintln!(
+            "                  primaries instead of inventing a matrix. Do NOT treat this file"
+        );
+        eprintln!("                  as being in a stated colour space.");
+    }
+    image_out::write_rgb16_described(path, geom.width as u32, geom.height as u32, &rgb, &dev)?;
     eprintln!();
     eprintln!(
         "wrote           : {} ({} x {}, 16-bit RGB, {}, binned from one 2x2 quad per pixel)",
         path.display(),
         geom.width,
         geom.height,
-        if srgb {
-            "camera-native RGB with an sRGB transfer curve"
-        } else {
-            "linear camera-native RGB"
-        }
+        // One source of truth for the caveat, so the terminal line and the
+        // ImageDescription tag written above can never disagree.
+        dev.caveat()
     );
     Ok(())
 }

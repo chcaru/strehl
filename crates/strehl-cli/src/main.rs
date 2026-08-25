@@ -113,6 +113,24 @@ enum Command {
         /// measuring. Changes what pre-M85 --srgb emitted.
         #[arg(long)]
         srgb: bool,
+        /// Render into linear sRGB: camera colour matrix (to sRGB/BT.709
+        /// primaries, D65) and then STOP. No transfer curve.
+        ///
+        /// THIS IS THE MODE TO MEASURE IN. The standing rule is that quality is
+        /// never judged on an --srgb render, because the transfer curve is a
+        /// strong non-linearity that moves every ratio a metric computes; more
+        /// than one result in this project has been retracted for exactly that.
+        /// But the only alternative used to be the default, whose primaries are
+        /// the sensor's own and are stated nowhere -- so a measurement was
+        /// either taken through a curve or in an undeclared space. This applies
+        /// the matrix and stops before the curve: a STATED colorimetric target
+        /// that is still linear.
+        ///
+        /// The file will look dark in an ordinary viewer. That is correct, and
+        /// it is the same darkness the default has; the difference is that this
+        /// one says what its primaries are, in the file.
+        #[arg(long, conflicts_with = "srgb")]
+        linear_srgb: bool,
         /// Emit at full sensor resolution with a Malvar-He-Cutler demosaic
         /// instead of binning each 2x2 quad to one pixel. Doubles linear
         /// resolution; the extra samples are real, the colour at each is
@@ -532,6 +550,7 @@ fn main() -> Result<()> {
             out,
             limit,
             srgb,
+            linear_srgb,
             demosaic,
             binned,
             exposure,
@@ -547,11 +566,18 @@ fn main() -> Result<()> {
             stats_placebo,
             confidence_tail,
             resampler,
-        } => merge_cmd::run(&MergeOptions {
+        } => {
+            merge_cmd::run(&MergeOptions {
             dir,
             out,
             limit,
             srgb,
+            // Resolved here, once, from the two mutually exclusive flags, so
+            // that no colour decision is taken inside the merge code. clap
+            // already refuses the pair via `conflicts_with`; this re-checks it
+            // because the invariant belongs to the type, not to the argument
+            // parser, and `stack.rs` resolves the same way.
+            space: image_out::OutputSpace::from_flags(srgb, linear_srgb)?,
             // M95: --srgb is the "for looking at" path, and binning it throws
             // away half the linear resolution of the capture. Full resolution
             // is the default there unless --binned asks for the old behaviour.
@@ -577,7 +603,8 @@ fn main() -> Result<()> {
             // uses, so an unknown name is one error message in one place and
             // never a silent fall back to the default.
             resampler: align_cmd::parse_resampler(&resampler)?,
-        }),
+        })
+        }
     }
 }
 
