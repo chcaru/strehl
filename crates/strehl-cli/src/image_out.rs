@@ -124,11 +124,29 @@ fn color_description(dev: &Develop) -> String {
     // normalisation by (white - black). A reader that assumes the opposite
     // order will mis-scale the per-channel noise by the WB gains, which on this
     // body run 2.13-2.86x in red.
-    format!(
-        "{space} White balance: as-shot per-channel gains, green = 1, applied AFTER black \
-         subtraction and normalisation by (white - black), and AFTER the noise model, which is \
-         calibrated in raw DN before any gain."
-    )
+    let wb = "White balance: as-shot per-channel gains, green = 1, applied AFTER black \
+              subtraction and normalisation by (white - black), and AFTER the noise model, which \
+              is calibrated in raw DN before any gain.";
+    // The tone rendering is not reproducible from the pixels, so it has to be
+    // in the file. It was not, and a toned and an untoned --srgb TIFF carried
+    // byte-identical descriptions while looking completely different; the only
+    // record of `contrast` was a stderr line that `gallery.ps1` deletes.
+    //
+    // Written ONLY when a tone rendering was applied. The measurement paths
+    // have no tone, so their description -- and therefore their bytes -- cannot
+    // move because of this.
+    match &dev.tone {
+        Some(t) => format!(
+            "{space} {wb} Tone rendering: black {:.6}, white {:.6} (linear, luminance \
+             percentiles {TONE_BLACK_PCT}/{TONE_WHITE_PCT} with white mapped to \
+             {TONE_WHITE_TARGET}), black fraction removed {TONE_BLACK_FRACTION}, display-space \
+             contrast {:.3}. Placement is a single luminance-derived gain applied to all three \
+             channels, so chromaticity is preserved; the toe is soft, so no channel is clamped \
+             to zero.",
+            t.black, t.white, t.contrast
+        ),
+        None => format!("{space} {wb}"),
+    }
 }
 
 /// Interleaved RGB, 16 bits per channel, with the colour space stated in the
@@ -382,7 +400,11 @@ impl OutputSpace {
 ///    local contrast.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Tone {
-    /// Linear value mapped to 0. The measured flare/noise floor of the frame.
+    /// Linear value mapped to 0 -- the portion of the measured flare floor that
+    /// is actually removed, i.e. the measured percentile already multiplied by
+    /// [`TONE_BLACK_FRACTION`]. It is the effective number, so that everything
+    /// downstream (the white point, the report, the file's description) is
+    /// consistent with what the pixels were actually developed against.
     pub black: f32,
     /// Linear value mapped to 1.
     pub white: f32,
@@ -398,6 +420,24 @@ pub struct Tone {
 /// statistic. It is an order statistic, so it is deterministic.
 const TONE_BLACK_PCT: f64 = 0.1;
 
+/// How much of the measured floor to actually remove.
+///
+/// Not 1.0, and the reason is physical. The floor is **flare**, not a residual
+/// black-level error: the measured floor runs G 0.0035 > R 0.0017 while this
+/// body's as-shot red gains are 2.13-2.86x, and a DN offset scaled by those
+/// gains would put RED highest. Flare is scattered light, and scattered light
+/// is **not uniform across the frame** -- it is worst next to bright subject
+/// matter and near-absent in a corner. A single global constant is therefore
+/// the wrong model for it no matter how well the constant is measured, and the
+/// error it makes is one-sided: wherever the true local flare is less than the
+/// global estimate, the subtraction eats signal.
+///
+/// So remove most of it and leave a margin. This is a deliberate trade of a
+/// slightly less aggressive veil removal for not destroying data in the
+/// regions where the estimate is too high. Chosen by looking at
+/// `coffee-bubbles`, which is the subject where it matters most.
+const TONE_BLACK_FRACTION: f32 = 0.85;
+
 /// Where the white point is taken from.
 ///
 /// The same percentile `--auto-exposure` uses, on purpose: M100 MEASURED that
@@ -410,6 +450,20 @@ const TONE_WHITE_PCT: f64 = 99.9;
 /// measured rule, leaving a little headroom above it rather than clipping the
 /// brightest 0.1% of the frame flat.
 const TONE_WHITE_TARGET: f32 = 0.90;
+
+/// Width of the shadow toe, as a fraction of the black-to-white output range.
+///
+/// The toe replaces the hard clamp at zero. It has to be narrow: a wide toe is
+/// just the veil coming back. The first attempt made the knee proportional to
+/// the black point itself, which is fine when the floor is a fraction of a
+/// percent of the range -- as it is on every real capture here -- and lifts the
+/// floor to 17% grey when the floor is large. Scale-free in the normalised
+/// output, so it behaves the same regardless of exposure.
+///
+/// At 0.004 the measured floor develops to roughly 2% grey on real subjects
+/// (1.7% on `flower-inner-edge-cpl`, 2.2% on `coffee-bubbles`) instead of to a
+/// hard zero, and everything below it stays distinguishable.
+const TONE_TOE: f32 = 0.004;
 
 /// Default S-curve strength. Chosen by LOOKING at the gallery, which is the
 /// only way this can honestly be chosen -- the standing rule for this build is
@@ -456,9 +510,13 @@ impl Tone {
             let i = ((pct / 100.0) * (lum.len() - 1) as f64).round() as usize;
             lum[i.min(lum.len() - 1)]
         };
-        let black = at(TONE_BLACK_PCT);
+        let black = at(TONE_BLACK_PCT) * TONE_BLACK_FRACTION;
         let white_src = at(TONE_WHITE_PCT);
         // Map the white percentile to TONE_WHITE_TARGET rather than to 1.0.
+        // Computed from the EFFECTIVE black, not the measured one: deriving it
+        // from the measured floor while subtracting only a fraction of that
+        // floor leaves the white percentile landing above its target, which is
+        // a silent exposure shift.
         let white = black + (white_src - black).max(1e-4) / TONE_WHITE_TARGET;
         Self {
             black,
@@ -474,6 +532,65 @@ impl Tone {
             "tone            : black {:.5}, white {:.5} (linear), contrast {:.2}",
             self.black, self.white, self.contrast
         )
+    }
+
+    /// The factor that places a pixel's **luminance** between black and white,
+    /// to be applied to all three channels equally.
+    ///
+    /// **This is the whole of the black/white placement, and it is deliberately
+    /// not a per-channel subtraction.** The first version of this tone
+    /// rendering subtracted one luminance-derived scalar from every channel:
+    /// `(v[c] - black) * s`. That destroys chromaticity, because subtracting a
+    /// constant from three numbers changes their ratios -- `(R-b)/(G-b)` is not
+    /// `R/G` -- and the error diverges as a channel approaches `b`. On a
+    /// saturated subject the weak channels sit *below* a luminance-derived
+    /// black over most of the frame, so they clamped to zero and the render
+    /// collapsed to one channel. MEASURED on `coffee-bubbles`, dark red liquid
+    /// with `black = 0.01563` above its green and blue nearly everywhere:
+    /// zero-green went 0.0011% -> 83.90%, zero-blue 0.0297% -> 88.32%, and the
+    /// median luminance fell 5x. The swirl texture and the surface scratches
+    /// were gone -- and on `foam` the crushed pixels had a median 3x3 local
+    /// range of 847 DN against a frame median of 1774 DN, so what was deleted
+    /// was structure, not noise.
+    ///
+    /// Scaling all three channels by one factor fixes it by construction:
+    /// chromaticity is exactly preserved, hue and saturation cannot move, and
+    /// **no channel can reach zero unless luminance itself is zero.**
+    ///
+    /// The honest cost, stated because it is a real trade and not a free win:
+    /// a veiling flare is physically *additive*, so removing it correctly
+    /// would change chromaticity, and this does not. It declines to, because
+    /// the per-channel alternative needs a per-channel floor estimate, and a
+    /// per-channel percentile on a saturated subject measures the SCENE rather
+    /// than the flare -- which is the same defect wearing different clothes.
+    /// Restoring saturation is what `contrast` is for; not destroying the weak
+    /// channel is what this is for.
+    ///
+    /// **The soft toe.** Instead of `max((L - black) * s, 0)`, the placed value
+    /// is smoothed into the floor with
+    /// `(y + sqrt(y^2 + toe^2)) / 2` where `y = (L - black) * s`. For
+    /// `y >> toe` that is exactly `y`, so normal tones are placed precisely as
+    /// before. For `y << -toe` it decays toward zero instead of arriving there,
+    /// and its derivative is positive everywhere, so no two shadow values are
+    /// ever mapped onto one another. A hard clamp is unrecoverable by
+    /// definition, which is what turns "slightly below the estimated black"
+    /// into "no data at all".
+    ///
+    /// The smooth maximum alone tends to a positive constant as `L -> 0`, so
+    /// the gain is capped at `s`, the pure white-point gain. That cap is not a
+    /// patch: it says the tone may never brighten a pixel by more than exposure
+    /// alone, and it makes the deepest shadows fall back to a plain gain with
+    /// no subtraction at all, reaching zero exactly at zero.
+    #[inline]
+    fn gain(&self, lum: f32) -> f32 {
+        let l = lum.max(0.0);
+        if l <= 0.0 {
+            return 0.0;
+        }
+        let s = 1.0 / (self.white - self.black);
+        let y = (l - self.black) * s;
+        let soft = 0.5 * (y + (y * y + TONE_TOE * TONE_TOE).sqrt());
+        (soft / l).min(s)
     }
 }
 
@@ -579,14 +696,15 @@ fn develop_pixel(lin: [f32; 3], dev: &Develop) -> [u16; 3] {
     // black/white placement in LINEAR light, where it is a physical statement
     // about flare and exposure; contrast in DISPLAY space, where it is a
     // perceptual one.
+    //
+    // The placement is a single gain derived from LUMINANCE and applied to all
+    // three channels, not a per-channel subtraction. See `Tone::gain` -- the
+    // per-channel form destroyed the weak channel on saturated subjects and
+    // collapsed `coffee-bubbles` to a one-channel image.
     let v = match &dev.tone {
         Some(t) => {
-            let s = 1.0 / (t.white - t.black);
-            [
-                (v[0] - t.black) * s,
-                (v[1] - t.black) * s,
-                (v[2] - t.black) * s,
-            ]
+            let g = t.gain(luma709(v));
+            [v[0] * g, v[1] * g, v[2] * g]
         }
         None => v,
     };
@@ -1292,9 +1410,14 @@ mod tests {
             .map(|i| 0.05 + 0.60 * (i as f32 / 9_999.0))
             .collect();
         let t = Tone::from_luminance(&mut lum);
+        // `black` is the floor ACTUALLY REMOVED, so it is the measured floor
+        // scaled by TONE_BLACK_FRACTION. The margin is deliberate: the floor is
+        // scattered light, which is not uniform across the frame, so a global
+        // constant is always too large somewhere.
+        let want_black = 0.05 * TONE_BLACK_FRACTION;
         assert!(
-            (t.black - 0.05).abs() < 2e-3,
-            "black point {} missed the floor",
+            (t.black - want_black).abs() < 2e-3,
+            "black point {} missed the effective floor {want_black}",
             t.black
         );
 
@@ -1305,7 +1428,44 @@ mod tests {
             wants_tone: true,
         };
         let at_floor = develop_pixel([t.black, t.black, t.black], &dev);
-        assert_eq!(at_floor, [0, 0, 0], "the floor did not develop to black");
+        // NOT `== [0, 0, 0]`. That assertion encoded the hard clamp, and the
+        // hard clamp was the defect: it is what made everything below the
+        // estimated black indistinguishable from everything else below it, and
+        // on saturated subjects it deleted whole channels. The contract now is
+        // that the floor develops to a genuinely dark value and that nothing
+        // below it is destroyed.
+        //
+        // This ramp's floor is 0.05 against a 0.60 range -- pathological, and
+        // about ten times the fraction any real capture shows. The realistic
+        // case is pinned tightly below.
+        assert!(
+            at_floor[1] < (0.20 * u16::MAX as f32) as u16,
+            "the floor developed to {at_floor:?}, which is not dark"
+        );
+
+        // A realistic floor: `flower-inner-edge-cpl` measures black 0.0047
+        // against white 0.7116. There the toe must be nearly invisible.
+        let real = Tone {
+            black: 0.0047,
+            white: 0.7116,
+            contrast: TONE_CONTRAST,
+        };
+        let real_dev = Develop {
+            matrix: None,
+            srgb: true,
+            tone: Some(real),
+            wants_tone: true,
+        };
+        let real_floor = develop_pixel([real.black, real.black, real.black], &real_dev);
+        assert!(
+            real_floor[1] < (0.04 * u16::MAX as f32) as u16,
+            "a realistic floor developed to {real_floor:?} -- the veil is back"
+        );
+        // And it is not zero, because zero is unrecoverable.
+        assert!(
+            real_floor[1] > 0,
+            "the realistic floor hard-clamped to zero after all"
+        );
 
         // The 99.9th percentile of the ramp must land on TONE_WHITE_TARGET in
         // linear light, i.e. on the sRGB encoding of 0.90 after the curve --
@@ -1344,6 +1504,128 @@ mod tests {
                 "neutral {v} developed to {out:?} once toned"
             );
         }
+    }
+
+    /// **The test that was missing, and why it was missing.**
+    ///
+    /// Every tone test in this crate fed `develop_pixel` a NEUTRAL or a scalar
+    /// ramp. `the_tone_curve_does_not_tint_a_neutral` above was written
+    /// deliberately, to pin down a real risk, and it is correct as far as it
+    /// goes -- but a luminance-derived scalar black cannot tint a neutral *by
+    /// construction*, so it could never fail. The suite proved the one property
+    /// the design could not violate and left the one it did violate untested.
+    ///
+    /// The failing case is a SATURATED pixel, where the weak channels sit below
+    /// the luminance-derived black. Under the old per-channel subtraction they
+    /// went negative and clamped to zero: `coffee-bubbles` reached 83.9%
+    /// zero-green and 88.3% zero-blue and rendered as a flat one-channel red
+    /// field. Nothing here is neutral, so nothing here was covered.
+    #[test]
+    fn the_tone_curve_preserves_chromaticity_on_a_saturated_pixel() {
+        // A realistic tone, and `contrast: 0` with `srgb: false` so the only
+        // stage under test is the black/white placement. The display-space
+        // stages after it are per-channel BY DESIGN -- that is what restores
+        // saturation -- so they must be switched off here or this would be
+        // asserting against the feature instead of against the defect.
+        //
+        // This deliberately runs through `develop_pixel`, not through
+        // `Tone::gain`. An earlier draft called `gain` directly and could never
+        // have failed: `gain` returns one scalar, so chromaticity preservation
+        // is true of it by construction. Reinstating the original defect
+        // verbatim left that draft GREEN. The property only means something
+        // when it is asserted of the pipeline that actually renders pixels.
+        let tone = Tone {
+            black: 0.0047,
+            white: 0.7116,
+            contrast: 0.0,
+        };
+        let dev = Develop {
+            matrix: None,
+            srgb: false,
+            tone: Some(tone),
+            wants_tone: true,
+        };
+
+        // Dark, strongly saturated colours whose weak channels are BELOW the
+        // black point -- exactly the population that was destroyed.
+        for v in [
+            [0.30f32, 0.004, 0.002],
+            [0.004, 0.30, 0.002],
+            [0.002, 0.004, 0.30],
+            [0.12, 0.0045, 0.003],
+        ] {
+            assert!(
+                v.iter().any(|&c| c < tone.black),
+                "test case {v:?} does not exercise the failing regime"
+            );
+            let out = develop_pixel(v, &dev);
+            for (a, b) in [(0, 1), (1, 2), (0, 2)] {
+                let before = (v[a] / v[b]) as f64;
+                let after = out[a] as f64 / out[b] as f64;
+                let rel = (after - before).abs() / before;
+                // The bound is set by 16-bit quantisation of the weak channel,
+                // which lands around 300 DN here, not by the algorithm -- which
+                // preserves the ratio exactly.
+                assert!(
+                    rel < 0.02,
+                    "channel ratio {a}/{b} moved {rel:.4} on {v:?} -> {out:?}"
+                );
+            }
+        }
+    }
+
+    /// No channel carrying signal may be driven to zero.
+    ///
+    /// This is the property whose absence deleted structure rather than noise:
+    /// on `foam` the crushed pixels had a median 3x3 local range of 847 DN
+    /// against a frame median of 1774 DN. A zero is unrecoverable, so this is
+    /// the difference between "darker than I would like" and "gone".
+    #[test]
+    fn the_tone_curve_cannot_zero_a_channel_that_carries_signal() {
+        let mut lum: Vec<f32> = (0..2_000).map(|i| 0.01 + i as f32 / 2_000.0).collect();
+        let dev = Develop {
+            matrix: None,
+            srgb: true,
+            tone: Some(Tone::from_luminance(&mut lum)),
+            wants_tone: true,
+        };
+        for v in [
+            [0.30f32, 0.004, 0.002],
+            [0.20, 0.002, 0.001],
+            [0.05, 0.001, 0.0005],
+        ] {
+            let out = develop_pixel(v, &dev);
+            assert!(
+                out.iter().all(|&c| c > 0),
+                "developed {v:?} to {out:?} -- a channel with signal reached zero"
+            );
+        }
+    }
+
+    /// The toe is strictly monotonic, so shadow detail is compressed and never
+    /// merged.
+    ///
+    /// A hard clamp maps every value below the black point onto the same zero,
+    /// which is exactly how distinct shadow tones stop being distinguishable.
+    /// Two different inputs must never produce the same output.
+    #[test]
+    fn the_tone_toe_never_merges_two_shadow_values() {
+        let mut lum: Vec<f32> = (0..2_000).map(|i| 0.01 + i as f32 / 2_000.0).collect();
+        let tone = Tone::from_luminance(&mut lum);
+        let placed = |l: f32| l * tone.gain(l);
+        let mut prev = placed(0.0);
+        // Sweep from true zero up through and well past the black point.
+        for i in 1..=4_000 {
+            let l = tone.black * 4.0 * i as f32 / 4_000.0;
+            let cur = placed(l);
+            assert!(
+                cur > prev,
+                "toe is flat at luminance {l}: {prev} -> {cur} (black {})",
+                tone.black
+            );
+            prev = cur;
+        }
+        assert_eq!(placed(0.0), 0.0, "true black must stay black");
     }
 
     /// The gamut map is the identity on everything already inside the gamut.
