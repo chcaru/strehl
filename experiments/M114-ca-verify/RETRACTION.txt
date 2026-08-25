@@ -1,0 +1,80 @@
+M114 RETRACTION -- measurement space contamination
+==================================================
+
+Every render-domain number produced by probes r10-r23 in this directory was
+measured on TIFFs rendered with `--srgb --auto-exposure`. M113 (commit aa6e7ec)
+established that this space contains two cross-channel operators that forge the
+very quantity being measured:
+
+  1. camera_to_srgb is non-diagonal. Output red carries camera green at 10.4%
+     of its own weight and output green carries camera red at 20.3%, BOTH AT
+     ZERO DISPLACEMENT -- a synthetic zero-lag inter-channel signal sitting on
+     top of the displacement being measured.
+  2. Malvar-He-Cutler's gradient correction assumes R-G is smoother than either
+     channel (demosaic.rs:482). A lateral-CA fringe IS R-G roughness at an edge.
+
+main.rs:116 documents --srgb as "For looking at, NOT for measuring." M114
+ignored a warning written into the tool.
+
+RETRACTED
+---------
+* The "application factor" of ~1.20 (readings 1.130-1.286 across three stacks)
+  and the H3 "application-path over-delivery" conclusion built on it. M113's
+  transfer check reads applied/eps_r = 1.3073 in sRGB and 0.9399/0.9813 in the
+  clean binned space. The factor was the colour matrix, not the code.
+* The steer to M107 to hunt a quad-grid vs full-resolution radius convention.
+  There is no anomaly left for it to explain.
+* Fit-quality factors 0.903 / 1.040 / 0.847 (r23) and all gains derived from
+  them: 1.161 / 1.279 / 0.957, and the earlier 1.241 / 1.052.
+* All earlier M114 gain estimates: r10e 1.117-1.344, r10d 1.284, r11 1.225-1.416,
+  consolidated "~1.28", and the proposed ~0.78 scalar.
+* The blue claim that 6/7 and 4/7 rings clear the tangential noise floor, and
+  that hp|B-Y| exceeds hp|R-Y| after correction. The sRGB matrix mixes blue into
+  output green at 34.8% of green's own weight; blue is the WORST contaminated
+  channel in this space and M114 flagged it loudest.
+* Recovered translation |t.u| = 0.375 / 0.250 / 0.450 px (r23 Y3). The pairing
+  METHOD is sound and space-independent; the numbers are not.
+
+WHY THE CONTROLS DID NOT CATCH IT
+---------------------------------
+Bars W3 and X3 required the application factor to be SCENE-INDEPENDENT and it
+passed at 3.4% and 7.2% spread. That was read as evidence the factor was a real
+property of the code. A FIXED COLOUR MATRIX IS ALSO SCENE-INDEPENDENT.
+Scene-independence cannot distinguish "property of the system under test" from
+"property of my own transform", because both are constant across scenes. The
+bar was green and proved nothing.
+
+The declared constant eps_r = -704.5 ppm was present in these scripts the whole
+time, as NOMINAL. applied/declared was computed on every ring. A systematic
+departure from 1.0 was attributed to the system under test when it was a
+calibration failure of the measurement chain.
+
+WHAT SURVIVES
+-------------
+Space-independent, unaffected:
+* The byte-identical null across six binaries and five commits (hashes).
+* The decile decomposition being a regression-to-the-mean instrument (a
+  statistical argument about binning on the outcome variable).
+* W3's keep-sign bar having negative power: noise 93.0%, a strictly damaging
+  wrong-sign correction 84.8%, the real correction 75.1%. All placebos traverse
+  the identical transform, so the ORDERING is robust.
+* support_r_max is read at exactly one site, optics.rs:853, inside a test.
+* cfa_site_channel mapping, verified from RAW metadata (claim 4).
+* Gear matching, verified from EXIF (claim 6).
+* The solve-cache-key call graph (claim 7).
+* The tangential placebo's QUALITATIVE result and the 1:1 crops: the placebo
+  moves chroma hard the WRONG way while the correction moves it right, and the
+  corrected dots keep their size and lose their colour. Percentages in that
+  probe are space-contaminated; the sign and ordering are not.
+
+Corroborated by M113 in the clean space:
+* Scene-to-scene variation in native CA. M114 measured a bee-3-cpl to 119MSDCF
+  ratio of 1.227 (22.7%) in the contaminated space; M113 measures 529.9 vs
+  654.9 ppm on bee-3-cpl vs couch-fibers-cpl, 23.6%, in the clean space. A
+  common-mode contaminant partly cancels in a between-scene ratio.
+
+NOT YET INDEPENDENTLY VERIFIED BY M114
+--------------------------------------
+M113's transfer-check numbers are adopted here on report, not on independent
+re-derivation. Under rule 12 and this project's falsification-first standard
+that is a gap, and it is stated rather than hidden.
