@@ -47,9 +47,34 @@ without looking obviously broken.
 
 The same measurement priced the fix at two possible places: catching it at the
 election removes **100 %** of those pixels, catching it later in the averaging
-recovers **6 %**. `robust.rs` is the election-time version. It is being wired in
-tonight, default-off first, with a requirement that output be byte-identical when
-it is switched off.
+recovers **6 %**. `robust.rs` is the election-time version.
+
+**Update, later the same night: I said this was being wired in tonight. It is
+not, and the reason is worth more to you than the fix would have been.**
+
+I commissioned the work. It came back with a flat refusal to ship, and the
+refusal is well-argued. Tested against your real captures rather than a
+synthetic test case, the detector **fires on 29.55% of a perfectly stationary
+subject** — and fires **4.3× *less* on the moving subject than on the stationary
+one.** It is backwards. What looks like a motion detector is substantially a
+**texture** detector: it separates motion from defocus by 2.12× in a case where
+the actual displacement separates by 0.96×, which is to say not at all. It also
+does not react to a planted displacement anywhere below a full pixel. Four of
+its six pre-registered criteria failed.
+
+**This is now the fourth time this project has built or specified this mask and
+then declined to ship it** — and that is the part I got wrong. Three prior
+milestones had already tested it on real captures and reached the same place;
+one of them had *derived* why the answer must be no; and the module's own source
+code carries a regression test whose name says so outright. **I commissioned a
+fourth attempt without reading the three that came before it, which is a rule
+this project has written down and which I broke.** The agent found them in
+twenty minutes, said so, and refused to re-ask the closed question.
+
+So: **the moved-frame problem above is real and remains unfixed.** What I told
+you about the defect stands. What I told you about the cure was premature, and I
+would rather correct it here than have you discover it by finding the switch
+missing.
 
 **Then I found a third instance of the same pattern, and this one is the most
 likely single reason your photos look the way they do.** Code being unreachable
