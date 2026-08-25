@@ -1,0 +1,100 @@
+{
+ "subject": "bee-3-cpl",
+ "q1": {
+  "nearest": {
+   "tifffile_dtype": "uint16",
+   "pil_dtype": "uint8",
+   "pil_mode": "RGB",
+   "levels_tifffile": 22553,
+   "levels_pil": 149,
+   "tf_max": 44808
+  },
+  "bilinear": {
+   "tifffile_dtype": "uint16",
+   "pil_dtype": "uint8",
+   "pil_mode": "RGB",
+   "levels_tifffile": 22477,
+   "levels_pil": 144,
+   "tf_max": 39732
+  },
+  "catmull-rom": {
+   "tifffile_dtype": "uint16",
+   "pil_dtype": "uint8",
+   "pil_mode": "RGB",
+   "levels_tifffile": 22623,
+   "levels_pil": 147,
+   "tf_max": 39765
+  },
+  "lanczos2": {
+   "tifffile_dtype": "uint16",
+   "pil_dtype": "uint8",
+   "pil_mode": "RGB",
+   "levels_tifffile": 22658,
+   "levels_pil": 147,
+   "tf_max": 40408
+  },
+  "lanczos3": {
+   "tifffile_dtype": "uint16",
+   "pil_dtype": "uint8",
+   "pil_mode": "RGB",
+   "levels_tifffile": 22680,
+   "levels_pil": 149,
+   "tf_max": 40781
+  }
+ },
+ "pil_is_shift8": true,
+ "q2": [
+  {
+   "arm": "nearest",
+   "M1_published": 0.23004165922027606,
+   "M1_via_pil": 0.21297710370490194,
+   "error": -0.017064555515374114,
+   "pct_of_effect": 7.418028357652373,
+   "M2_published": 0.21262265499631566,
+   "M2_via_pil": 0.09915867795670465,
+   "M3_published": 0.017419004223960394,
+   "M3_via_pil": 0.1138184257481973,
+   "M3_sign_flip": false
+  },
+  {
+   "arm": "bilinear",
+   "M1_published": -0.1790178196201161,
+   "M1_via_pil": -0.1584161708469417,
+   "error": 0.020601648773174386,
+   "pct_of_effect": 11.508155342798844,
+   "M2_published": -0.18496002176091844,
+   "M2_via_pil": -0.08347314157826012,
+   "M3_published": 0.0059422021408023495,
+   "M3_via_pil": -0.07494302926868159,
+   "M3_sign_flip": true
+  },
+  {
+   "arm": "lanczos2",
+   "M1_published": 0.002714724379422828,
+   "M1_via_pil": 0.004183581487197579,
+   "error": 0.0014688571077747506,
+   "pct_of_effect": 54.107043753997644,
+   "M2_published": 0.0036390024286141642,
+   "M2_via_pil": 0.0018511754747721698,
+   "M3_published": -0.0009242780491913361,
+   "M3_via_pil": 0.002332406012425409,
+   "M3_sign_flip": true
+  },
+  {
+   "arm": "lanczos3",
+   "M1_published": 0.08680723344894455,
+   "M1_via_pil": 0.08132331176063365,
+   "error": -0.005483921688310897,
+   "pct_of_effect": 6.31735567466996,
+   "M2_published": 0.09970707747975367,
+   "M2_via_pil": 0.05047655313869382,
+   "M3_published": -0.012899844030809127,
+   "M3_via_pil": 0.030846758621939828,
+   "M3_sign_flip": true
+  }
+ ],
+ "sep_published": 5.2564659581848225,
+ "sep_via_pil": 5.054179571331337,
+ "sd_published": 735.3188033786518,
+ "sd_via_pil": 2.9022967514851747
+}

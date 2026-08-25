@@ -45,6 +45,14 @@ def green(path: Path) -> np.ndarray:
     a = tifffile.imread(str(path))
     if a.ndim != 3 or a.shape[2] != 3:
         raise SystemExit(f"unexpected shape {a.shape} for {path}")
+    # A reader that silently narrows the data is worse than one that fails:
+    # PIL.Image.open returns uint8 mode=RGB for a 16-bit RGB TIFF, with no
+    # warning, costing 151x of level resolution. tifffile is correct here, but
+    # assert it anyway -- the check is one line and its absence is what makes
+    # the defect publishable. See a5_pilcheck.py for what it would have cost.
+    if a.dtype != np.uint16:
+        raise SystemExit(f"FATAL: {path} read as {a.dtype}, expected uint16 -- "
+                         f"the reader has narrowed the data")
     return a[:, :, 1].astype(np.float64)
 
 

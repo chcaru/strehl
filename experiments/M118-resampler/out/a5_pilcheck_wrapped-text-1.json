@@ -1,0 +1,100 @@
+{
+ "subject": "wrapped-text-1",
+ "q1": {
+  "nearest": {
+   "tifffile_dtype": "uint16",
+   "pil_dtype": "uint8",
+   "pil_mode": "RGB",
+   "levels_tifffile": 12878,
+   "levels_pil": 80,
+   "tf_max": 21334
+  },
+  "bilinear": {
+   "tifffile_dtype": "uint16",
+   "pil_dtype": "uint8",
+   "pil_mode": "RGB",
+   "levels_tifffile": 12865,
+   "levels_pil": 77,
+   "tf_max": 19623
+  },
+  "catmull-rom": {
+   "tifffile_dtype": "uint16",
+   "pil_dtype": "uint8",
+   "pil_mode": "RGB",
+   "levels_tifffile": 12891,
+   "levels_pil": 79,
+   "tf_max": 20244
+  },
+  "lanczos2": {
+   "tifffile_dtype": "uint16",
+   "pil_dtype": "uint8",
+   "pil_mode": "RGB",
+   "levels_tifffile": 12859,
+   "levels_pil": 78,
+   "tf_max": 20215
+  },
+  "lanczos3": {
+   "tifffile_dtype": "uint16",
+   "pil_dtype": "uint8",
+   "pil_mode": "RGB",
+   "levels_tifffile": 12870,
+   "levels_pil": 79,
+   "tf_max": 20583
+  }
+ },
+ "pil_is_shift8": true,
+ "q2": [
+  {
+   "arm": "nearest",
+   "M1_published": 0.19218620989611013,
+   "M1_via_pil": 0.1838149943311233,
+   "error": -0.008371215564986823,
+   "pct_of_effect": 4.355783679542898,
+   "M2_published": 0.16767212978693669,
+   "M2_via_pil": 0.1346515923204877,
+   "M3_published": 0.02451408010917344,
+   "M3_via_pil": 0.0491634020106356,
+   "M3_sign_flip": false
+  },
+  {
+   "arm": "bilinear",
+   "M1_published": -0.21909712888101748,
+   "M1_via_pil": -0.20181860372562238,
+   "error": 0.017278525155395102,
+   "pct_of_effect": 7.886239880750947,
+   "M2_published": -0.21932365586134847,
+   "M2_via_pil": -0.1624638081347818,
+   "M3_published": 0.00022652698033098773,
+   "M3_via_pil": -0.03935479559084057,
+   "M3_sign_flip": true
+  },
+  {
+   "arm": "lanczos2",
+   "M1_published": 0.003836554053195394,
+   "M1_via_pil": 0.004088347765862138,
+   "error": 0.0002517937126667435,
+   "pct_of_effect": 6.5630174676420685,
+   "M2_published": 0.004316026364277335,
+   "M2_via_pil": 0.002202660106060579,
+   "M3_published": -0.0004794723110819405,
+   "M3_via_pil": 0.0018856876598015585,
+   "M3_sign_flip": true
+  },
+  {
+   "arm": "lanczos3",
+   "M1_published": 0.11248746864954016,
+   "M1_via_pil": 0.10760613271200169,
+   "error": -0.004881335937538478,
+   "pct_of_effect": 4.339448648050302,
+   "M2_published": 0.11271135082488039,
+   "M2_via_pil": 0.09256939272378735,
+   "M3_published": -0.00022388217534022314,
+   "M3_via_pil": 0.015036739988214337,
+   "M3_sign_flip": true
+  }
+ ],
+ "sep_published": 2.2069677379801873,
+ "sep_via_pil": 2.167408796775964,
+ "sd_published": 696.7577080284781,
+ "sd_via_pil": 2.7482573753720163
+}

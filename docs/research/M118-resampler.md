@@ -49,6 +49,7 @@ tell ORCH is not "lanczos3 wins" — it is *what that win is made of*.**
 | 8 | By eye at 1:1 and x3, non-author read | **lanczos3 is visibly crisper** than the default on ink grain and on the bee's ommatidia, **with no dark rim on silhouettes**. It also makes the **lateral-CA fringes more conspicuous** — corroborating M110 |
 | 9 | Cost | **2.91x–3.92x** catmull-rom, as a bound |
 | 10 | Should the default move tonight? | **Not on this evidence, and not yet — but not because the kernel is wrong.** See §7 |
+| 11 | ORCH's PIL 16-bit hazard | **Not exposed** — all reads via `tifffile`, hashes on raw bytes. But had I used PIL, **rule 9's control would have sign-reversed and my central finding would have inverted**. See §8 |
 
 **Nulls, plants and the poisoning check all pass on all three subjects**: the
 byte-identical re-render, 5/5 distinct hashes, and a metric plant that moves
@@ -385,7 +386,84 @@ decline, which is the thing G3 exists to prevent.
 
 ---
 
-## 8. What this does NOT claim
+## 8. ORCH's PIL 16-bit RGB hazard — exposure check, and what it would have cost
+
+**Exposure: NONE. Every TIFF read in this milestone goes through
+`tifffile.imread`.** Verified rather than asserted: `Image.open` appears **zero**
+times in my six scripts; `PIL` is imported only in `c1_sheet.py`, as
+`Image, ImageDraw`, to compose contact sheets from arrays that `tifffile` already
+read — a deliberate 8-bit downconversion for human eyes, which is ORCH's
+"harmless" category. My `sha256()` hashes **raw file bytes**, so the B5 null and
+B7 poisoning checks never decoded an image at all and are immune by construction.
+
+I have nevertheless added the one-line check whose absence is the real defect,
+and confirmed it changes nothing (`a1_bee-3-cpl.json` compares equal before and
+after):
+
+```python
+if a.dtype != np.uint16:
+    raise SystemExit(f"FATAL: {path} read as {a.dtype}, expected uint16 "
+                     f"-- the reader has narrowed the data")
+```
+
+**Y13 (MEASURED).** The defect reproduces on this project's own merge outputs,
+5/5 arms on 3/3 subjects. `tifffile` returns `uint16 (2344, 3516, 3)`; PIL
+returns `uint8 mode=RGB` from the same file. Distinct green levels
+**22553 → 149** (bee), **12878 → 80** (text), **17076 → 169** (ruler) — a **101x
+to 161x** loss. PIL's output is exactly `uint16 >> 8`, verified elementwise.
+
+**Y14 (MEASURED — what it would have cost, the part worth keeping).** Because I
+hold the ground-truth `uint16` answer for a real kernel A/B, I re-ran the entire
+pipeline through PIL and diffed. **The headline metric survives; the control does
+not.**
+
+| quantity | published (uint16) | via PIL | |
+| --- | --- | --- | --- |
+| M1 detail, lanczos3, bee | +0.0868 | +0.0813 | **6.3%** error |
+| M1 detail, lanczos2, bee | +0.0027 | +0.0042 | **54.1%** error |
+| **M2 flat, lanczos3, bee** | **+0.0997** | **+0.0505** | **halved** |
+| **M3 = M1 − M2, lanczos3, bee** | **−0.0129** | **+0.0308** | **SIGN REVERSED** |
+| M4 flat sd, catmull-rom, bee | 735.3 DN | 2.90 DN | 254x, wrong units |
+
+M1 is a **log ratio of band powers between two similarly-quantised arms**, so the
+floor largely divides out: 6.3–11.5% error on the large effects. But it is
+**54.1% on lanczos2**, the smallest effect — precisely ORCH's warning that a
+small signal sits inside the quantisation error, calibrated here against two
+orders of magnitude of effect size.
+
+**The dangerous part is M3.** `M3` sign-reverses on **3 of 4 arms on
+`bee-3-cpl`** and **3 of 4 on `wrapped-text-1`**, including lanczos3 both times.
+**Read through PIL, this milestone's central finding would have been inverted:**
+rule 9's control would have *passed*, and I would have reported that lanczos3's
+gain **is** concentrated in the detail — the opposite of §3 Y4, and the flattering
+direction.
+
+**Y15 (DERIVED — the mechanism, and the sting).** The flat stratum is *by
+definition* the low-signal one. An 8-bit floor is a constant, so it dilutes the
+measured gain toward zero *there* while leaving the detail stratum nearly intact.
+`M1 − M2` therefore inflates. **The defect biases a flat-ROI control toward
+passing, and it does so in proportion to how good the control is.**
+
+`flat-on-ruler-cpl` is the proof: **0 of 4 reversals**. It survives *because its
+control is bad* — its "flat" decile has a mean gradient of 879 DN and a spatial
+sd of 2259 DN, so there is enough signal there to survive quantisation. The two
+subjects with genuinely flat flat-regions (sd 735 and 697) are the two that break.
+**A milestone with a well-chosen flat control and a PIL reader is in more danger
+than one with a sloppy control**, which is the reverse of the usual intuition and
+is why I would not have caught this by reasoning.
+
+**D6 (discipline).** *Assert the dtype immediately after loading, and treat a
+flat-ROI or low-signal control as the most quantisation-fragile number in any
+report — not the safest.* Where a control stratum is chosen for having little
+signal, any reader-induced floor lands almost entirely on the control and almost
+not at all on the headline, which flips the control's verdict while leaving the
+headline plausible. Both numbers must come from the same asserted dtype.
+
+Reproduce with `python experiments/M118-resampler/src/a5_pilcheck.py <subject>`.
+
+---
+
+## 9. What this does NOT claim
 
 - **It does not claim lanczos3 is not better.** It is, by every instrument here
   and by eye. It claims the *size* of the win is mostly predictable from the
