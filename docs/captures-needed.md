@@ -720,6 +720,16 @@ roughly an order of magnitude, and I would be writing you an excited paragraph
 this morning instead of this one. It was caught because the control was built
 before the result was wanted.
 
+**Final number, landed overnight.** The measurement is now complete and it is a
+clean null: the headroom deconvolution could recover is **1.0014**, against a
+spread of ±0.0184. One point one four *thousandths* of a percent, inside noise.
+The reason this is a real answer and not just a quiet instrument is that the same
+estimator was made to prove it can respond: planted, known effects come back
+through the identical channel at **0.9938–0.9974**, and the checking harness that
+polices the whole measurement was itself commissioned by planting thirteen
+deliberate defects in it and confirming it caught all thirteen. So the tool
+demonstrably *can* see an effect of this kind; there is not one here to see.
+
 **What this means for you.** The honest position is now that **this project has
 no known route to making your photos sharper than the sharpest frame you shot.**
 Everything it can currently do is about *not degrading* what you captured —
