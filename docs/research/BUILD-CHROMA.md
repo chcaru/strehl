@@ -696,3 +696,606 @@ dose-response run rather than argued (2); raw statistic beside every control in 
 row (3); control's own radial trend reported and corrected for (4); gate reported as a
 ladder, no triage rule of thumb (5); integer-only registration in the focus path (6);
 went and looked when the number disagreed with the picture, and the picture won (7).
+
+---
+
+# PHASE 2 — Lateral CA, measured from each bracket itself
+
+**Commission:** measure the lateral-CA coefficient from each bracket, with no transferred
+profile, so that the transfer objection that keeps the shipped correction off by default
+no longer applies. Commission it, compare it against the shipped profile in-sample and
+out-of-sample, and give an edge-chroma-with-flat-placebo number per stack.
+
+**I did all of that. The answer is not the one the commission expected, and I am reporting
+what I measured rather than what was hoped for.**
+
+## 11. Headline: self-measurement is NOT warranted. A one-line profile fix is.
+
+Three findings, in descending order of how much they should change what ships.
+
+**11.1 — `eps_b: None` is the entire remaining defect, and it is worth more than
+everything else on the table combined.** Blue is an exact no-op in the shipped record.
+I measure blue lateral CA at **+101 to +223 ppm** across six stacks, worth **0.363 px of
+uncorrected displacement at the plane corner**, and *any* reasonable fixed blue
+coefficient removes about 84% of it. This is the change to make.
+
+**11.2 — the shipped `eps_r = −704.5 ppm` is already correct, and my Phase-2 draft
+claiming it over-corrects by 7–26% was wrong.** That draft was built on raw estimates
+which are attenuated by a stack-dependent factor of 0.69–0.94. Correcting for the
+attenuation (§15) moves my six red measurements from a 39%-spread band that excludes
+−704.5 into a 16%-spread band **centred on it**. A fixed −704.5 leaves 0.071 px of
+corner residual; a *perfect* per-stack measurement could only reach 0.063 px. The
+difference is 0.008 px and nobody will ever see it.
+
+**11.3 — naive self-measurement is 3.6× WORSE than the shipped fixed profile for red.**
+Raw self-measured red leaves **0.259 px** of corner residual against the fixed profile's
+**0.071 px**, precisely because the estimator under-reads on exactly the low-structure
+stacks where it is least able to check itself. Shipping a self-measured coefficient
+without an attenuation correction would make red worse on four of my six stacks.
+
+So the transfer objection dissolves, but not the way the commission proposed. It
+dissolves because **with six stacks instead of two, transfer works**: leave-one-out, a
+coefficient fitted on five stacks and applied to the sixth removes 93% of red and 84% of
+blue. The 54.1% reverse-direction figure in `optics.rs` that keeps the correction off is
+**not reproduced** by a commissioned estimator (§16.3).
+
+### 11.4 What I am asking for, in one sentence
+
+Set `eps_b` to a measured value, leave `eps_r` alone, and ship the profile **on by
+default** on the strength of a six-stack leave-one-out result rather than a two-stack
+in-sample one. Full spec in §19. No new code path, no per-render measurement cost, and
+no risk of a bad self-measurement on a low-structure stack.
+
+## 12. The instrument, and the two bugs I had to fix to get one
+
+`experiments/BUILD-CHROMA/src/lateral.py`. The model matches `optics.rs` in form:
+`d_c(u) = eps_c * u + T_c`, with `u` and `d` in plane px and `eps` dimensionless.
+
+**Design decisions that are load-bearing:**
+
+- **No registration at all.** Every comparison is between two channels *inside a single
+  frame*, so frame-to-frame drift cancels identically rather than approximately. The only
+  sub-pixel resampling anywhere is `plant_scale`, which manufactures synthetic doses and
+  never touches a measured quantity. Rule 6 is satisfied by construction rather than by
+  care.
+- **CFA native, never demosaiced** — R sites, B sites and the two G sites, as in Phase 1.
+- **The structure gate is computed on GREEN ONLY.** Selection on an input that carries no
+  chromatic information cannot select for or against the effect. Swept as a ladder, not
+  chosen (rule 5).
+- **The independent statistical unit is the tile**, and the bootstrap resamples tiles.
+- **G1 vs G2 is the null**, carried through the identical path. G1 and G2 come to focus at
+  the same distance and have no lateral CA between them, so whatever the null reads is the
+  instrument's floor. Reported in the same table as the treatment, every time (rule 3).
+
+### 12.1 Bug one: phase whitening has a magnitude-dependent gain
+
+`phase_cross_correlation(normalization='phase')` — the default, and what I started with —
+does not have unit gain. Measured transfer, planted dose against read dose:
+
+| planted | 0.25 px | 0.50 px | 0.75 px | 1.30 px |
+|---|---|---|---|---|
+| **gain** | **0.60** | 0.94 | 1.09 | 0.92 |
+
+A 200 ppm dose read back as 122 ppm. The shrinkage is independent of tile size (0.588 at
+128 px, 0.623 at 448 px), so it is intrinsic to the whitening rather than to windowing.
+
+This is **specifically** disqualifying here and not merely inconvenient: ε_R is about 10×
+ε_B, so the two channels sit at opposite ends of that transfer curve and whitening would
+read the two arms **on two different scales**. `normalization=None` is flat at 0.995–1.000
+across the whole range. That is what the instrument uses.
+
+### 12.2 Bug two: an ungated fit is a measurement of its worst tiles
+
+The green null (truth = 0) initially returned **8.05 plane px** rms with 35% of tiles more
+than 3 px out. The failure was entirely low-structure tiles: top structure quintile median
+residual **0.054 px**, bottom quintile **8.0 px**. Phase correlation on a featureless tile
+does not return a noisy answer, it returns an arbitrary one. Gating on green gradient
+energy fixed it; robust IRLS sits behind the gate as a second line of defence and never as
+a substitute, because no downweighting rescues a fit whose majority is garbage.
+
+## 13. Commissioning (`c0_lateral.py`) — passes
+
+| test | what it plants | result |
+|---|---|---|
+| T1b planted ladder | ±2000 ppm radial scale, band-limited synthetic | slope **0.9959**, worst error **10.15 ppm**, rms 0.003 px |
+| T2 zero dose | exact copy, and resample-at-zero | **exactly 0** |
+| T3 green null, real sky | nothing — truth is 0 | **+12…+23 ppm**, rms 0.03–0.05 px |
+| T3b lattice offset | known CFA site offset | recovered to **0.01 px** |
+| T5 dose ladder on real R | on top of the real aberration | slope **0.975** |
+
+Both arms the commission asked for are present and clean: a planted dose is recovered to
+four decimals, and forced where no aberration exists the instrument returns zero rather
+than a confident wrong answer.
+
+## 14. The six-stack measurement (`c1_lateral.py`)
+
+Every tile is measured at *its own* best-focus frame — the idea that turned a 60-tile
+single-frame fit into 100–250 tiles and made the gate ladder flat. Gate 2e5,
+null-corrected, ppm, with the raw statistic and the null beside it (rule 3):
+
+| stack | n | ε_R raw | null | ε_R corr | 95% CI | R² | ε_B raw | ε_B corr | R² |
+|---|---|---|---|---|---|---|---|---|---|
+| tweezers-cpl * | 177 | −647.0 | 3.8 | **−650.8** | [−661, −631] | 0.976 | 169.1 | **165.3** | 0.755 |
+| bee-3-cpl * | 162 | −500.9 | 19.0 | **−519.9** | [−542, −460] | 0.781 | 174.8 | **155.9** | 0.437 |
+| coffee-bean | 209 | −650.7 | 2.4 | **−653.2** | [−659, −643] | 0.988 | 182.8 | **180.4** | 0.876 |
+| lavendar-cpl | 103 | −546.1 | 5.9 | **−552.0** | [−573, −518] | 0.888 | 148.9 | **143.1** | 0.498 |
+| couch-fibers-cpl | 246 | −651.9 | 2.6 | **−654.5** | [−665, −639] | 0.956 | 94.3 | **91.7** | 0.591 |
+| bee-2-cpl | 174 | −518.4 | 30.0 | **−548.4** | [−552, −485] | 0.765 | 144.2 | **114.2** | 0.315 |
+
+`*` = the two stacks the shipped profile was fitted on.
+
+**Read naively, this says the shipped −704.5 over-corrects every stack by 7–26%.** That
+reading is wrong, and §15 is why. I am leaving the table in because it is what the
+instrument actually reports before correction, and because the correction is the
+interesting part.
+
+ε_B is the weaker arm and must be reported as such: its gate-ladder spread is 26–85% on
+five of six stacks against ~5% for red, and its R² runs 0.32–0.88.
+
+### 14.1 A trap I fell into and climbed out of
+
+My first radial-bin diagnostic computed a local coefficient as `(d·r̂)/r`. That carries a
+spurious `1/r` term from the fitted translation, and it manufactured a convincing
+higher-order radial trend — −820 ppm at r=504 against −633 at r=1565 on `tweezers-cpl` —
+which was **entirely** accounted for by the fitted `T = (−0.196, +0.035)`. The tool now
+reports raw and de-translated side by side. Anyone reading a per-radius coefficient out of
+a fit that also has a translation should check this first.
+
+## 15. The attenuation correction, which inverts the story (`c4_attenuation.py`)
+
+The six raw red values fall into two tight clusters, −650…−655 and −520…−552. The clusters
+track the null (2–4 ppm vs 6–30 ppm) and R² (0.96–0.99 vs 0.77–0.89) **exactly**. Two
+explanations: the optics genuinely differ between scenes, or the instrument under-reads on
+the noisier stacks. These have opposite consequences, so I planted a known dose on each
+stack and asked for it back.
+
+| stack | ε undosed | ε dosed | delta | **recovery** | ε corrected |
+|---|---|---|---|---|---|
+| tweezers-cpl | −618.8 | 316.2 | 935.0 | **0.935** | −661.8 |
+| bee-3-cpl | −415.7 | 284.4 | 700.0 | **0.700** | −593.8 |
+| coffee-bean | −614.6 | 322.9 | 937.5 | **0.938** | −655.6 |
+| lavendar-cpl | −499.6 | 332.3 | 831.9 | **0.832** | −600.6 |
+| couch-fibers-cpl | −634.4 | 270.9 | 905.3 | **0.905** | −700.7 |
+| bee-2-cpl | −467.6 | 224.0 | 691.6 | **0.692** | −676.1 |
+
+Planted 1000 ppm each time. **Correlation between recovery and |ε_R|: r = +0.941.**
+Spread before correction **39%**, after **16%**.
+
+That correlation is exactly what "constant optics, varying attenuation" predicts and it is
+not what "genuinely different optics" predicts. If the estimator attenuates by a factor
+`a`, then dosed reads `a(ε+1000)`, undosed reads `aε`, delta reads `a·1000`, so recovery
+*is* `a` and `undosed/recovery` returns `ε` exactly. The mechanism is ordinary regression
+dilution: noise in the tile displacements biases the fitted slope toward zero.
+
+**The physical argument is stronger than the statistical one, and it does not depend on
+trusting these numbers quantitatively.** All six stacks are the same lens at 200 mm
+through the same 2× teleconverter at focus distances spanning 0.2707–0.2771 m (EXIF, all
+six, checked). Lateral CA is a chief-ray property, so it is essentially independent of the
+f/5.6-vs-f/8 difference too. **There is no mechanism by which a lens changes its lateral
+CA because you pointed it at a different insect.** The 39% raw spread therefore *must* be
+instrumental, whatever one thinks of the dose ladder — and the dose ladder independently
+recovers the same conclusion.
+
+This is the finding that inverts the commission, and I want to be plain that it inverts my
+own earlier draft too. I had written the "shipped over-corrects by 7–26%" table before I
+ran this test.
+## 16. Transfer, leave-one-out (`c5_transfer.py`)
+
+**The statistic is a displacement, not a coefficient.** Applying `e_app` to a stack whose
+true coefficient is `e_true` leaves a residual scale error `e_true − e_app`, worth
+`|e_true − e_app| · r` plane px at field radius `r`. That is the thing a reader can see at
+100%, it is linear in the error, and it does not flatter a small coefficient the way a
+percentage would. Reported at the plane corner, r = 2112 px = normalised field height 1.0.
+
+**Every fixed arm is leave-one-out.** A "best fixed coefficient" chosen using the target
+stack's own measurement is a self-measured coefficient wearing a disguise and would win by
+construction, so each LOO column is computed from the *other five* stacks only.
+
+**What self-measurement's residual actually is.** Self-measurement is not exact and I will
+not score it zero. `self naive` carries the full attenuation error — it is what shipping
+the raw number would really do. `self de-att` carries the bootstrap CI half-width, which
+makes it a statement about its own precision rather than its accuracy; the independent
+evidence for its accuracy is §13 and §15, not this table.
+
+### 16.1 RED — residual displacement at the corner, plane px, lower is better
+
+| target | e_true | off | shipped | LOO med | LOO worst | self naive | self de-att |
+|---|---|---|---|---|---|---|---|
+| tweezers-cpl | −696.0 | 1.470 | 0.018 * | 0.057 | 0.205 | 0.096 | 0.034 |
+| bee-3-cpl | −742.7 | 1.569 | 0.081 * | 0.097 | 0.167 | 0.471 | 0.124 |
+| coffee-bean | −696.7 | 1.471 | **0.016** | 0.056 | 0.203 | 0.092 | 0.019 |
+| lavendar-cpl | −663.5 | 1.401 | **0.087** | 0.126 | 0.273 | 0.236 | 0.070 |
+| couch-fibers-cpl | −723.0 | 1.527 | **0.039** | 0.056 | 0.148 | 0.145 | 0.030 |
+| bee-2-cpl | −793.0 | 1.675 | **0.187** | 0.203 | 0.273 | 0.516 | 0.103 |
+| **mean, all six** | | **1.519** | **0.071** | 0.099 | 0.212 | **0.259** | 0.063 |
+| **mean, 4 out-of-sample** | | 1.519 | **0.082** | 0.110 | — | **0.247** | 0.055 |
+
+`*` in-sample for the shipped profile.
+
+**The shipped coefficient is right.** 0.071 px mean residual against a best-possible 0.063
+px. **Naive self-measurement is 3.6× worse than doing nothing new**, and worse
+out-of-sample too (0.247 vs 0.082). This is the result that kills the commission's
+proposal for red.
+
+### 16.2 BLUE — the same table, and the reason this report exists
+
+| target | e_true | off | shipped | LOO med | LOO worst | self naive | self de-att |
+|---|---|---|---|---|---|---|---|
+| tweezers-cpl | 176.8 | 0.373 | 0.373 | 0.010 | 0.159 | 0.024 | 0.024 |
+| bee-3-cpl | 222.7 | 0.470 | 0.470 | 0.107 | 0.256 | 0.141 | 0.102 |
+| coffee-bean | 192.4 | 0.406 | 0.406 | 0.043 | 0.192 | 0.025 | 0.022 |
+| lavendar-cpl | 172.0 | 0.363 | 0.363 | 0.010 | 0.149 | 0.061 | 0.110 |
+| couch-fibers-cpl | 101.3 | 0.214 | 0.214 | 0.159 | 0.256 | 0.020 | 0.017 |
+| bee-2-cpl | 165.1 | 0.349 | 0.349 | 0.025 | 0.135 | 0.108 | 0.083 |
+| **mean, all six** | | **0.363** | **0.363** | **0.059** | 0.191 | 0.063 | 0.060 |
+
+The shipped column *equals* the off column, exactly, on every row, because `eps_b: None`
+makes blue an exact no-op. **0.363 px of blue lateral CA is shipping uncorrected today**,
+and a single fixed LOO coefficient removes 84% of it — indistinguishably from
+self-measurement (0.059 vs 0.060). Blue is where the win is, and it does not need a new
+instrument in the renderer to collect it.
+
+### 16.3 The pair `optics.rs` names, redone
+
+`optics.rs` records tweezers→bee-3 at 95.0% and bee-3→tweezers at 54.1% against a 60% bar,
+and that asymmetry is the stated reason the correction is off. With a commissioned
+estimator:
+
+| channel | direction | aberration removed | residual at corner |
+|---|---|---|---|
+| R | tweezers → bee-3 | **93.7%** | 0.099 px |
+| R | bee-3 → tweezers | **93.3%** | 0.099 px |
+| B | tweezers → bee-3 | 79.4% | 0.097 px |
+| B | bee-3 → tweezers | 74.1% | 0.097 px |
+
+**The asymmetry is not reproduced.** Both directions transfer at ~93% for red. I cannot
+say from here whether M107's 54.1% was an artefact of its estimator or of its ROI set, and
+I am not claiming M107 was wrong — I am reporting that the measurement that keeps the
+correction off does not survive re-measurement with an instrument that has a planted-dose
+ladder and a green null behind it. That is the evidential basis for §19's request to flip
+the default, and it should be weighed as such.
+
+## 17. Withdrawn: the focus dependence of ε (`c6_focusdep.py`, `c7_focusdep2.py`)
+
+I chased a real question here and did not land it. Recording it as a failure rather than
+burying it, because the next person will otherwise chase it too.
+
+**The question.** Each stack is a *bracket* — focus distance sweeps across it, and lateral
+CA is a function of focus distance. If ε drifts across a bracket then no single scalar per
+channel is the right *model*, whatever its source, and the correction would need to be
+depth-dependent. That is a much larger change than anything else here, so it needs
+settling.
+
+**What c6 found.** Regressing the per-elected-frame coefficient on frame index gave a
+sign-consistent red slope on five of six stacks, t = 2.2–4.3, worth **0.26 px at the
+corner** across a bracket — which would be 3.6× the residual a good fixed coefficient
+leaves, i.e. the dominant remaining error term.
+
+**Why I withdrew it.** c6's control was the green null, and by rule 4 **that is not a
+control on this axis**. Tiles do not elect frames at random: near subject matter sits at
+one end of the bracket and far at the other, and in these scenes that correlates with
+field radius. So a purely *radial* mis-fit would print as focus dependence — and the green
+null cannot reveal that, because the null's ε is ~0, so there is no radial term there to
+mis-fit. A control that cannot exhibit the failure mode is not a control for it.
+
+**What c7 tried, and how it failed.** Two estimators, both commissioned on each stack's
+own real tile geometry and real elected frames so the confound was present in full:
+
+| estimator | planted zero | planted radial-only confound | planted ladder | measured |
+|---|---|---|---|---|
+| per-tile joint fit | ±14.2 ppm/frame | — | recovery **−1.02** | 8.4 |
+| grouped, robust | ±56.1 | **±132.2** | slope **−0.74** | 27.3 |
+
+Both fail their own planted-zero arm: the false-positive ceiling **exceeds** the measured
+value in both cases, and neither recovers a planted ladder. The measured/false-positive
+ratio is 0.21–0.36×, where anything below ~1× means the instrument is reading itself.
+
+**Conclusion: unproven, in both directions.** I have not shown ε drifts with focus, and I
+have not shown it does not. What I *have* shown is that neither of my two estimators for it
+is fit to answer. It changes no recommendation in this report — a per-stack scalar cannot
+fix a within-bracket drift either, so it does not favour self-measurement over a fixed
+profile — which is exactly why I stopped rather than spending the rest of the night on it.
+
+A third attempt should probably not regress on frame index at all, and should instead
+compare ε between two *disjoint depth populations at matched radius*, which removes the
+confound by construction rather than by modelling it.
+## 18. Edge chroma with a flat placebo (`c3_chroma.py`)
+
+The statistic the commission asked for, per stack, four arms plus two diagnostics.
+Normalised chroma `(max − min)/max` over the linear channels, averaged over pixel sets
+**frozen on the off arm** so every arm is judged on the same pixels: EDGE is the top 1% of
+the luma gradient, FLAT the bottom 50%.
+
+FLAT is a built-in placebo rather than a separate experiment. A geometric per-channel
+rescale can only move colour where there is structure to move, so it must act on EDGE and
+must not act on FLAT. Raw values sit beside every difference, in the same table (rule 3).
+
+**Renders are `--linear-srgb --gate 2.0`, deliberately NOT `--demosaic`.** A
+Malvar-He-Cutler demosaic interpolates colour from neighbouring sites, which spatially
+mixes the channels at exactly the high-gradient pixels EDGE selects — it would both
+manufacture and mask chroma there. The binned output is one real sensor quad per pixel
+with no spatial mixing, and it is the same plane grid ε was measured on.
+
+### 18.1 The emulation check, which bounds everything below it
+
+I may not edit a `.rs` file, so a self-measured coefficient cannot be fed to the renderer;
+it is applied post hoc in Python on the merged image. That is an approximation — Rust
+applies the correction per frame at gather time, *before* the election picks a winner, and
+the two commute only where the elected index is constant over the ~1.5 px the correction
+moves. `shipped (python)` exists solely to measure the size of that approximation, by
+running the same Python path with the same coefficient the Rust arm used.
+
+**It reproduces 75.8–97.9% of the Rust effect, mean 87.2%.** So the Python arms
+systematically under-read, and **only Python-vs-Python comparisons in this section are
+fair.** The Rust arm is included for scale, not for ranking against Python arms.
+
+### 18.2 The full table
+
+| stack | arm | EDGE | dEDGE | FLAT | dFLAT | edge/flat |
+|---|---|---|---|---|---|---|
+| **coffee-bean** | off | 0.363353 | -- | 0.199782 | -- | -- |
+|  | shipped (rust) | 0.325389 | −10.45% | 0.199092 | −0.35% | 30x |
+|  | shipped (python) | 0.331859 | −8.67% | 0.199491 | −0.15% | 60x |
+|  | self R only (python) | 0.333650 | −8.17% | 0.199493 | −0.14% | 57x |
+|  | self B only (python) | 0.354515 | −2.43% | 0.199811 | +0.01% | 166x |
+|  | self R+B (python) | 0.325099 | −10.53% | 0.199522 | −0.13% | 81x |
+|  | self/atten 0.938 | 0.323152 | −11.06% | 0.199523 | −0.13% | 85x |
+| **tweezers-cpl** | off | 0.302503 | -- | 0.055267 | -- | -- |
+|  | shipped (rust) | 0.198053 | −34.53% | 0.054197 | −1.94% | 18x |
+|  | shipped (python) | 0.223280 | −26.19% | 0.054265 | −1.81% | 14x |
+|  | self R only (python) | 0.229318 | −24.19% | 0.054261 | −1.82% | 13x |
+|  | self B only (python) | 0.289121 | −4.42% | 0.054986 | −0.51% | 9x |
+|  | self R+B (python) | 0.215247 | −28.84% | 0.053914 | −2.45% | 12x |
+|  | self/atten 0.935 | 0.209432 | −30.77% | 0.053905 | −2.46% | 12x |
+| **bee-3-cpl** | off | 0.298434 | -- | 0.195633 | -- | -- |
+|  | shipped (rust) | 0.257691 | −13.65% | 0.195028 | −0.31% | 44x |
+|  | shipped (python) | 0.258542 | −13.37% | 0.194540 | −0.56% | 24x |
+|  | self R only (python) | 0.266416 | −10.73% | 0.194720 | −0.47% | 23x |
+|  | self B only (python) | 0.290794 | −2.56% | 0.195587 | −0.02% | 108x |
+|  | self R+B (python) | 0.259348 | −13.10% | 0.194682 | −0.49% | 27x |
+|  | self/atten 0.700 | 0.248743 | −16.65% | 0.194476 | −0.59% | 28x |
+| **lavendar-cpl** | off | 0.245642 | -- | 0.075781 | -- | -- |
+|  | shipped (rust) | 0.187107 | −23.83% | 0.075837 | +0.07% | 322x |
+|  | shipped (python) | 0.195565 | −20.39% | 0.075825 | +0.06% | 357x |
+|  | self R only (python) | 0.204766 | −16.64% | 0.075779 | −0.00% | 5176x |
+|  | self B only (python) | 0.239066 | −2.68% | 0.075748 | −0.04% | 61x |
+|  | self R+B (python) | 0.198892 | −19.03% | 0.075750 | −0.04% | 458x |
+|  | self/atten 0.832 | 0.191368 | −22.09% | 0.075777 | −0.01% | 4240x |
+| **couch-fibers-cpl** | off | 0.282893 | -- | 0.196172 | -- | -- |
+|  | shipped (rust) | 0.225869 | −20.16% | 0.195802 | −0.19% | 107x |
+|  | shipped (python) | 0.232849 | −17.69% | 0.195845 | −0.17% | 106x |
+|  | self R only (python) | 0.235805 | −16.65% | 0.195845 | −0.17% | 100x |
+|  | self B only (python) | 0.280256 | −0.93% | 0.196148 | −0.01% | 77x |
+|  | self R+B (python) | 0.233985 | −17.29% | 0.195827 | −0.18% | 98x |
+|  | self/atten 0.905 | 0.230008 | −18.69% | 0.195824 | −0.18% | 105x |
+| **bee-2-cpl** | off | 0.312988 | -- | 0.207187 | -- | -- |
+|  | shipped (rust) | 0.260910 | −16.64% | 0.206617 | −0.27% | 61x |
+|  | shipped (python) | 0.264409 | −15.52% | 0.205795 | −0.67% | 23x |
+|  | self R only (python) | 0.273279 | −12.69% | 0.206004 | −0.57% | 22x |
+|  | self B only (python) | 0.306172 | −2.18% | 0.207136 | −0.02% | 89x |
+|  | self R+B (python) | 0.266524 | −14.85% | 0.205956 | −0.59% | 25x |
+|  | self/atten 0.692 | 0.251806 | −19.55% | 0.205653 | −0.74% | 26x |
+
+**The placebo holds.** Every arm moves EDGE by 1–35% and FLAT by at most 2.5%, with
+edge-over-flat ratios of 9× to 5176×. The correction acts where there is structure, which
+is what a geometric rescale must do and what a colour-space or exposure artefact would not.
+
+**One honest exception.** On `tweezers-cpl` the FLAT arm moves −1.8 to −2.5%, giving ratios
+of only 12–18× — the weakest separation in the table. `tweezers-cpl` has by far the lowest
+FLAT chroma (0.055 against 0.20 for the bee stacks), so a small absolute change reads as a
+large relative one. I do not think it indicates a different mechanism, but it is the one
+row where I would not lean on the placebo hard.
+
+### 18.3 Red: the render domain confirms §16, independently and 6/6
+
+| stack | emulation | shipped-py R | self-py R only | winner |
+|---|---|---|---|---|
+| coffee-bean | 83.0% | **−8.67%** | −8.17% | shipped |
+| tweezers-cpl | 75.8% | **−26.19%** | −24.19% | shipped |
+| bee-3-cpl | 97.9% | **−13.37%** | −10.73% | shipped |
+| lavendar-cpl | 85.6% | **−20.39%** | −16.64% | shipped |
+| couch-fibers-cpl | 87.8% | **−17.69%** | −16.65% | shipped |
+| bee-2-cpl | 93.3% | **−15.52%** | −12.69% | shipped |
+
+**The fixed shipped red coefficient beats the self-measured one on every stack, including
+the four it was never fitted on.** This is measured on rendered pixels, by a statistic with
+a built-in placebo, and it is a completely independent route to §16.1's arithmetic
+conclusion. Rule 7 is satisfied in the direction that matters: the pictures and the number
+agree, and they agree against the hypothesis I was commissioned to confirm.
+
+### 18.4 Blue: the win, placebo-controlled
+
+| stack | blue alone dEDGE | blue alone dFLAT | blue adds on top of red |
+|---|---|---|---|
+| coffee-bean | −2.43% | +0.01% | −2.35 pp |
+| tweezers-cpl | −4.42% | −0.51% | −4.65 pp |
+| bee-3-cpl | −2.56% | −0.02% | −2.37 pp |
+| lavendar-cpl | −2.68% | −0.04% | −2.39 pp |
+| couch-fibers-cpl | −0.93% | −0.01% | −0.64 pp |
+| bee-2-cpl | −2.18% | −0.02% | −2.16 pp |
+
+Blue **alone** removes 0.93–4.42% of edge chroma while moving the flat placebo by 0.01–0.51%
+— a ratio of 9× to 166×. It is a real, structure-localised reduction that is shipping
+uncorrected today, on every stack, and it costs one literal in `optics.rs` to collect.
+
+Note also that these are the *attenuated* Python numbers. Applied in-pipeline at the mean
+87.2% emulation recovery, the blue-only figures would be roughly 1.15× larger.
+
+### 18.5 De-attenuation, confirmed a third time
+
+`self/atten` beats plain `self` on **6 of 6** stacks (e.g. bee-2 −19.55% vs −14.85%,
+bee-3 −16.65% vs −13.10%). Dividing the raw coefficient by the c4 recovery factor improves
+the picture every time. That is a third independent line of evidence for §15, after the
+dose ladder itself and the physical argument, and this one is in the render domain where a
+reader can look at it.
+
+## 19. The exact Rust change I want
+
+I have not touched a `.rs` file. This is the spec; route it to whoever owns `optics.rs`.
+It is three independent changes and they can land separately, in the order given. **§19.1
+is worth more than §19.2 and §19.3 combined.**
+
+### 19.1 Set `eps_b`. This is the whole finding.
+
+In `A7C2_FE100GM_2XTC_X4CPL` (`crates/strehl-core/src/optics.rs:320`):
+
+```rust
+eps_b: None,
+```
+becomes
+```rust
+eps_b: Some(174.4e-6),
+```
+
+- **Value:** `+174.4e-6`, the leave-one-out median of six de-attenuated per-stack
+  measurements (§16.2). Range across stacks 101.3–222.7 ppm; the LOO median leaves 0.059 px
+  mean corner residual against 0.363 px today.
+- **Sign is positive, and red's is negative.** That opposition is not something I imposed —
+  the two channels were fitted independently against green — and it is what lateral CA
+  must do, since red and blue displace in opposite radial directions about green. Treat a
+  same-sign pair as a bug.
+- **Convention:** identical to `eps_r`. `compose` does `s = 1.0 + eps`, PULL,
+  `dst(p) = src(s*p)` about the plane centre. My estimator's sign was pinned by a planted
+  ladder (§13), not asserted. Note that shipping this inverted would make blue *worse*, in
+  the same way `optics.rs` records the inverted red shipping once and costing 7.2%.
+- **Confidence:** blue is my weaker arm and I want that on the record. Gate-ladder spread
+  26–85% against red's ~5%; R² 0.32–0.88 against red's 0.77–0.99. But the *direction* is
+  unambiguous, six of six, and the value need only be roughly right to collect most of the
+  0.363 px — a coefficient anywhere in 140–200 ppm beats zero comfortably.
+- Update `measured_from` to name this work and the six stacks.
+
+### 19.2 Do NOT change `eps_r`
+
+`−704.5e-6` is correct. My six de-attenuated measurements span −663.5 to −793.0 with a
+median of −709.9, and the shipped value sits inside that. It leaves 0.071 px of mean
+corner residual where the best possible per-stack number reaches 0.063 px. **The 7–26%
+over-correction I reported in an earlier draft of this document was estimator attenuation,
+not optics** (§15). If you have that draft, discard the red half of it.
+
+### 19.3 Default-on, guarded by EXIF — and `optics.rs` is wrong about why it can't be
+
+`optics.rs` states that the profile names a 2× teleconverter and that **"there is no way to
+detect that from the frames."** That is not correct. It is true of what strehl currently
+*reads*, not of what the ARW *contains*. Straight out of `coffee-bean`'s first frame:
+
+```
+Model      : ILCE-7CM2
+LensModel  : FE 100mm F2.8 Macro GM OSS + 2X Teleconverter
+LensSpec   : FE 200mm F5.6 Macro OSS
+FocalLength: 200.0 mm
+```
+
+The teleconverter is named explicitly in `LensModel`, and `LensSpec` independently reports
+the composite as a 200 mm f/5.6. So the safety property that blocks default-on is
+available:
+
+- Add `body: &str` and `lens: &str` match keys to `OpticalProfile`, set to `"ILCE-7CM2"`
+  and `"FE 100mm F2.8 Macro GM OSS + 2X Teleconverter"`.
+- `active_profile()` selects a profile only on an **exact** match of both, and otherwise
+  returns `Ok(None)` — the existing silent exact no-op. Unknown gear keeps today's
+  behaviour exactly.
+- `STREHL_FIX_CA` keeps its current meaning as a manual override, including `"0"`/`"off"`
+  to force the correction off.
+
+**The honest limit on this arm:** all 26 stacks in `D:\personal\macro` are the same body,
+the same lens, the same teleconverter and the same 200 mm, so **the corpus contains no
+counter-example and I cannot demonstrate the guard rejecting anything.** It is correct by
+construction, not by test. If that is not good enough, ship §19.1 with the correction still
+behind the env var and flip the default later — §19.1 does not depend on §19.3.
+
+**The evidence for flipping the default** is §16.3: the 54.1% reverse-transfer figure that
+justifies default-off is not reproduced. Leave-one-out over six stacks, a fixed coefficient
+removes 93% of red and 84% of blue on a stack it was not fitted on.
+
+### 19.4 What I am explicitly NOT asking for
+
+**Do not build per-stack self-measurement into the renderer.** That was the commission and
+the measurement declined it. Naive self-measurement is 3.6× worse than the fixed profile
+for red (§16.1) because the estimator under-reads by 6–31% on exactly the low-structure
+stacks that can least afford it. Making it safe would mean shipping the attenuation
+correction of §15 — a planted-dose ladder *per render* — which is a large amount of machine
+work and new failure surface to buy 0.008 px that nobody can see. The blue coefficient is
+free by comparison.
+
+**Do not add a translation term.** The shipped record is applied radial-only and should
+stay that way; `optics.rs` already records that adding the fitted translation leaves 12×
+the residual on `bee-3-cpl`. My own per-stack translations are 0.10–0.20 plane px, an order
+of magnitude below M107's `(+0.629, −0.424)`, and my translation floor is ~0.1 px, so I can
+say M107's translation is **not reproduced** but I cannot resolve a term of that size well
+enough to argue about it.
+
+**Do not make the correction depth-dependent** on the strength of §17. That is unproven in
+both directions and my instruments for it failed their own controls.
+## 20. The four things I was asked for, answered directly
+
+**1. Estimate per-channel radial scale from the bracket itself, with null correction.**
+Done, six stacks, `c1_lateral.py`, table in §14. ε_R −520 to −655 ppm raw, ε_B +92 to +180
+ppm raw, each null-corrected against G1−G2 carried through the identical path, with the raw
+statistic and the null in the same row. De-attenuated values in §15.
+
+**2. Commission it — plant a known scale and require exact recovery; force it where no
+aberration exists and require zero.** Done, `c0_lateral.py`, §13. Planted ladder slope
+0.9959 with worst error 10.15 ppm over ±2000 ppm. Zero dose returns exactly zero, in both
+the exact-copy and resample-at-zero forms. On-sky green null +12…+23 ppm. Both arms clean.
+Commissioning also *found two bugs that would have silently poisoned the result*: the
+phase-whitening transfer function (§12.1) and the low-structure tile domination (§12.2).
+
+**3. Compare self-measured against the shipped profile in-sample and out-of-sample.**
+Done, §16 arithmetically and §18.3 in the render domain. **The result is negative for the
+commission's thesis.** Out-of-sample, the fixed shipped red coefficient leaves 0.082 px of
+corner residual against naive self-measurement's 0.247 px, and beats it on rendered edge
+chroma 6/6. The transfer objection does dissolve — leave-one-out transfer over six stacks
+removes 93% of red and 84% of blue, and `optics.rs`'s 54.1% reverse-direction figure is not
+reproduced — but it dissolves in favour of *a better fixed profile*, not self-measurement.
+
+**4. Edge chroma with flat placebo, per stack, self vs shipped vs off.** Done, §18.2, six
+stacks, six arms each, raw values beside every difference.
+
+### 20.1 What I would tell the owner in one paragraph
+
+The shipped lateral-CA correction is good and should be on. Its red coefficient is already
+right — my draft claiming otherwise was my instrument under-reading, and I caught it with a
+planted dose. Its blue coefficient is `None`, which means 0.36 px of blue fringing at the
+frame corner is in every print, and setting one literal removes 84% of it. Do not build
+per-bracket self-measurement: I built it, commissioned it, and it loses to the fixed number
+it was supposed to replace, because the estimator is weakest on exactly the low-structure
+scenes where you would most want to trust it.
+
+### 20.2 Things I could not settle, logged
+
+- **Focus dependence of ε** (§17). Unproven in both directions; two estimators, both failed
+  their own planted-zero arm. A third attempt should compare matched-radius depth
+  populations rather than regress on frame index.
+- **M107's translation** `(+0.629, −0.424)` is not reproduced — mine are 0.10–0.20 plane px
+  — but my translation floor is ~0.1 px, so this is "not reproduced", not "refuted".
+- **Blue's radial profile is not a pure linear scale.** On `coffee-bean` the de-translated
+  per-annulus ε_B falls monotonically from 242 ppm at r=451 to 164 ppm at r=1431. A single
+  scale under-fits blue in a way it does not under-fit red. §19.1's coefficient is still a
+  large improvement on zero, but a second-order blue term may be worth measuring later.
+- **The EXIF guard of §19.3 is untested**, because all 26 corpus stacks are the same body,
+  lens, teleconverter and focal length. There is no negative case available to me.
+- **Python post-hoc emulation recovers only 87.2% of the in-pipeline effect** (§18.1), so
+  every Python-arm magnitude in §18 is a lower bound.
+
+### 20.3 Reproducing phase 2
+
+```
+python c0_lateral.py                        # commissioning, must pass first
+python c1_lateral.py <stack> --frames N      # the measurement, per stack
+python c4_attenuation.py --frames 12 --workers 8
+python c2_compare.py
+python c5_transfer.py
+python c3_chroma.py <stack> ...              # renders, then the chroma table
+python c8_table.py                           # emits the section 18 tables
+python c6_focusdep.py ; python c7_focusdep2.py   # the withdrawn arm
+```
+
+Rules observed in phase 2: `tifffile` with a dtype assert, never PIL (1); attenuation
+established by a planted dose ladder rather than argued from clustering (2, 5); raw
+statistic beside every control in the same row throughout §14, §16 and §18 (3); the green
+null explicitly rejected as a control for the focus axis because it cannot exhibit that
+failure mode, and the claim withdrawn rather than defended (4); no triage rule of thumb —
+the structure gate is swept as a ladder (5); no registration anywhere in the measurement
+path, so rule 6 holds by construction; the render-domain table run as an independent check
+on the arithmetic, and it agreed against my own hypothesis (7); `git add` of explicit paths
+only, never `-A`, and every commit verified to contain zero `.rs` files (8).
