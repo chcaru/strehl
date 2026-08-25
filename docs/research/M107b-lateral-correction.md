@@ -2096,3 +2096,70 @@ contamination is withdrawn**; that residual was support, not space.
 §23.3's caution to M113 is unaffected: it concerns amplitude-dependent gain,
 which R16 shows a support floor does not remove, and which remains the one
 control I would still ask for.
+
+## 26. D, as asked — and a third term the unified statement still needs
+
+### 26.1 The number ORCH asked for
+
+**M107's `D` is 2.38** at the selected support floor and **2.28** with no floor —
+bin `[2,3)`, the **unprotected** regime by ORCH's table.
+
+M107 never claimed ratio cancellation; §24's stated reason was the reader
+(`tifffile` throughout, no PIL call sites). But the transfer check is
+`applied/eps_r` with `applied = e_on − e_off`, a two-arm contrast, so the `D`
+is owed regardless of what the exposure claim rested on.
+
+### 26.2 The table is right where support is adequate, and under-predicts where it is not
+
+R15's floor sweep already held the data for a sharper question. Bars D1–D3
+registered before running.
+
+| floor | n | `e_off` | `e_on` | `D` | ORCH bin | predicted | **measured** |
+| ---: | ---: | ---: | ---: | ---: | :--- | ---: | ---: |
+| 0 | 1707 | +408.5 | −178.9 | 2.28 | [2,3) | 6.15% | **22.9%** |
+| 60 | 1396 | +440.8 | −191.9 | 2.30 | [2,3) | 6.15% | 5.8% |
+| 120 | 1287 | +453.8 | −190.6 | 2.38 | [2,3) | 6.15% | **4.2%** |
+| 240 | 974 | +491.0 | −151.8 | 3.23 | [3,5) | 6.71% | 1.8% |
+| 480 | 490 | +487.0 | −158.8 | 3.07 | [3,5) | 6.71% | 0.8% |
+
+| bar | registered | measured | verdict |
+| --- | --- | --- | --- |
+| D1 | `D` varies < 1.5× while shift varies > 5× | `D` **1.43×**, shift **29.6×** | **HOLDS** |
+| D2 | at adequate support, measured within 2× of bin median | 4.2% vs 6.15% | **HOLDS — corroborates** |
+| D3 | at inadequate support, table under-predicts by > 2× | 22.9% vs 6.15%, **3.7×** | **HOLDS** |
+
+**Within this sweep `D` and the shift move in opposite directions** — `D` rises
+2.28 → 3.07 while the shift falls 22.9% → 0.8%. So `D` is **necessary but not
+sufficient**, and it fails in the same structural way as *"is it a ratio"* and
+*"is it absolute"* before it: a scalar summarising a statistic's shape cannot
+decide a question that depends on **what the estimator was allowed to
+integrate**.
+
+**This does not refute ORCH's table.** The Spearman +0.530 is a *between-
+statistic* trend across 1547 tiles; my anti-correlation is *within one
+statistic* on one scene, where raising the floor changes which windows are
+admitted. The two are compatible. What my data bounds is the table's **use as a
+clearance test**: at `D` = 2.28 it predicted 6.15% and the truth was 22.9%.
+
+### 26.3 The proposed third term
+
+> The syntactic shape of a statistic tells you nothing about its exposure. What
+> matters is what it reads (**value** vs **position**), how unequal its terms
+> are (**`D`**), **and how much support each fitted window carries.** Report all
+> three; the third dominated M107 by 3.7×.
+
+### 26.4 M111's two checks, applied
+
+**Grep false positives.** Counting `Image.open(` call sites in
+`experiments/M107-chroma/src` returns **1**. Inspecting the return value — as
+M111 instructs — shows it is a **docstring**: `r14_pil_hazard.py:57`,
+`"""Emulate PIL.Image.open()'s silent uint16 -> uint8 RGB collapse."""`.
+**1 textual match, 0 call sites.** Same failure class as matching *"compiling"*,
+merely inverted: a comment *naming* the hazard rather than a word containing it.
+Had I reported the raw count I would have declared an exposure I do not have.
+
+**Input provenance.** M107's inputs are `C:\dev\strehl-out\M107-chroma\r13\{off,on}.tif`,
+49 449 626 bytes each, written **directly by `strehl.exe`** during the §23
+render with the r7 sidecar. They did not pass through another milestone's
+scratch directory and were not produced by any Python reader, so there is no
+upstream narrowing to inherit. The `r7` arms have the same provenance.
