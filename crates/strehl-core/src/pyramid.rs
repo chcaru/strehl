@@ -681,10 +681,21 @@ impl MergeConfig {
     }
 }
 
-/// Ceiling on the per-band selection exponent. Beyond about this, `w = e^p`
-/// underflows to zero for every frame at once and the merge silently falls back
-/// to the un-weighted mean everywhere -- the exact opposite of the intent.
-pub const MAX_EXPONENT: f32 = 16.0;
+/// Ceiling on the per-band selection exponent.
+///
+/// Set by what `f32` can actually represent, not by taste. The weight spans
+/// `(snr/SNR_REF)^p`, and a real stack contains coefficients from around the
+/// noise floor up to `snr ~ 1e5` on a bright, sharp edge — a log range of about
+/// 7.4 either side of the reference. The overflow-safe bound on `p * ln(r)` is
+/// 80, so `p` above about 10 can no longer rank the sharpest coefficients
+/// against each other: they all pin to the ceiling and get averaged.
+///
+/// `8` leaves real headroom and is already close to winner-take-all — a frame
+/// with twice another's band energy gets 256 times the weight. If more
+/// selectivity than this is ever wanted, the right answer is
+/// [`SelectMode::HardMax`], which is exact and cannot overflow, not a larger
+/// exponent.
+pub const MAX_EXPONENT: f32 = 8.0;
 
 impl Default for MergeConfig {
     fn default() -> Self {
@@ -692,13 +703,19 @@ impl Default for MergeConfig {
             bands: DEFAULT_BANDS,
             gate: 2.0,
             exponent: 2.0,
-            // 2x per octave. Over a 7-band pyramid this runs 2, 2, 4, 8, 16,
-            // 16, 16 from coarsest to finest (the last two hit `MAX_EXPONENT`),
-            // so the two finest bands -- where all the acuity is, and where a
-            // wrong pick is a single high-frequency coefficient nobody can see
-            // -- are effectively winner-take-all, while the coarse bands, where
-            // a wrong pick is the rim, stay gently blended.
-            sharpen_per_octave: 2.0,
+            // 1.4x per octave. Over a 7-band pyramid this runs 2, 3, 4, 5, 8,
+            // 8, 8 from coarsest to finest, so the fine bands -- where all the
+            // acuity is, and where a wrong pick is a single high-frequency
+            // coefficient nobody can see -- are near winner-take-all, while the
+            // coarse bands, where a wrong pick is the rim, stay gently blended.
+            //
+            // Chosen by sweeping 1.0 / 1.4 / 2.0 on an 80-frame subsample of
+            // `couch-fibers-cpl` (acuity) and `flower-bud-with-background-fern`
+            // (rim) and looking at the frames. 1.4 and 2.0 were
+            // indistinguishable on both; 1.0 was visibly softer than either on
+            // couch-fibers. The gentler of two equals wins, because the risk
+            // being traded against sits in the coarse bands.
+            sharpen_per_octave: 1.4,
             select: SelectMode::SoftPower,
             base: BaseBand::WeightedFromCoarsest,
         }
@@ -1123,27 +1140,44 @@ fn smooth5(data: &mut [f32], size: LevelSize, scratch: &mut [f32]) {
     }
 }
 
+/// The signal-to-noise ratio at which a coefficient is considered plainly real.
+///
+/// Only a *reference point*: the weight is `(snr / SNR_REF)^p`, and since every
+/// weight at a level is divided by the same constant, the merge is
+/// mathematically unchanged by it. What it buys is dynamic range. Without it,
+/// weights at the fine-band exponents are all astronomically large and, once
+/// clamped, all astronomically large *and equal* — see [`select_weight`].
+const SNR_REF: f32 = 64.0;
+
 /// Turn a noise-corrected band energy into a selection weight, safely.
 ///
-/// The weight is `(excess / floor)^p` — a **signal-to-noise ratio** raised to
-/// the exponent, not the raw energy. Two reasons, and the first is a
-/// correctness bug that the scale-dependent exponent would otherwise have
-/// introduced:
+/// The weight is `(excess / floor / SNR_REF)^p` — a **signal-to-noise ratio**
+/// raised to the exponent, not the raw energy. Two reasons, and the first is a
+/// correctness bug the scale-dependent exponent would otherwise introduce:
 ///
 /// 1. **`excess` is in DN^2 and reaches ~1e7.** At the fine-band exponents the
 ///    ramp produces, `excess^p` overflows `f32` outright (`1e7^8 = 1e56`), and
 ///    every weight becomes `inf`. `inf/inf` is `NaN`, and a single NaN
 ///    coefficient propagates through the collapse into a black hole in the
-///    output. A ratio is dimensionless and stays near 1.
+///    output.
 /// 2. **A ratio is the meaningful quantity anyway.** "This coefficient is 40x
 ///    its own noise floor" is scene-independent; "this coefficient is 900000"
 ///    is not, and would make the selection behave differently in bright and
 ///    dark parts of the same frame purely through the units.
 ///
-/// The final clamp is in the log domain so it can never overflow, and it is
-/// loose enough to be inert in practice: it only ties two frames that are
-/// *both* more than `e^60` dominant, at which point the selection is already
-/// decided many times over.
+/// # The clamp has to be centred, and that is not a detail
+///
+/// A clamp on `p * ln(snr)` alone is worse than useless at high `p`. With
+/// `p = 16` and a bound of 60, everything above `snr = 42` saturates, so every
+/// frame that is clearly in focus receives the *same* weight and the merge
+/// silently averages all of them — maximum blur, produced by the parameter
+/// meant to maximise acuity. This was observed: it turned a sharp render into a
+/// glowing mush.
+///
+/// Dividing by `SNR_REF` first centres the log near zero, so the weights
+/// straddle 1 instead of piling up against the ceiling, and the clamp becomes
+/// what it was meant to be — an overflow guard that never binds in practice
+/// rather than a silent averaging switch.
 #[inline]
 fn select_weight(excess: f32, floor: f32, p: f32) -> f32 {
     if excess <= 0.0 {
@@ -1152,13 +1186,16 @@ fn select_weight(excess: f32, floor: f32, p: f32) -> f32 {
     // `floor` is zero only where the noise model says this pixel has no noise
     // at all, which cannot happen physically but can happen at a clamped black
     // pixel. Treat it as "one DN^2" rather than dividing by zero.
-    let snr = excess / floor.max(1.0);
+    let r = excess / floor.max(1.0) / SNR_REF;
     if p == 1.0 {
-        snr
+        r
     } else if p == 2.0 {
-        snr * snr
+        r * r
     } else {
-        (p * snr.ln()).clamp(-60.0, 60.0).exp()
+        // `exp(+-80)` spans `[2e-35, 6e34]`; summed over even a 1000-frame
+        // stack that stays inside `f32`, so this bound cannot overflow and,
+        // being centred, effectively never binds.
+        (p * r.ln()).clamp(-80.0, 80.0).exp()
     }
 }
 
@@ -1387,6 +1424,47 @@ mod tests {
         assert!(select_weight(1e4, 100.0, p) > select_weight(1e3, 100.0, p));
         // And nothing below the floor may carry any weight at all.
         assert_eq!(select_weight(0.0, 100.0, p), 0.0);
+    }
+
+    #[test]
+    fn a_high_exponent_still_discriminates_between_sharp_frames() {
+        // The bug this is here to stop, which shipped a render of glowing mush:
+        // an UNCENTRED log clamp saturates at high `p`, so every frame above a
+        // modest SNR gets an identical weight and the merge averages all of
+        // them. The parameter meant to maximise acuity produced maximum blur.
+        //
+        // The property that matters is not "no overflow" -- the buggy version
+        // did not overflow either -- it is that the weight keeps ORDERING
+        // frames across the whole range of sharpness a real stack contains.
+        for p in [2.0, 4.0, 8.0, MAX_EXPONENT] {
+            let floor = 100.0;
+            // Two clearly-in-focus frames a factor of 2 apart in band energy.
+            // A 300-frame bracket has many such pairs, and telling them apart
+            // is the entire job.
+            for snr in [10.0f32, 100.0, 1_000.0, 10_000.0, 100_000.0] {
+                let lo = select_weight(snr * floor, floor, p);
+                let hi = select_weight(2.0 * snr * floor, floor, p);
+                assert!(
+                    hi > lo * 1.5,
+                    "at p={p}, snr={snr}: doubling the band energy moved the weight from \
+                     {lo:e} to only {hi:e}. The clamp is averaging frames it should be \
+                     ranking."
+                );
+                assert!(hi.is_finite(), "weight {hi:e} at p={p}, snr={snr}");
+            }
+        }
+    }
+
+    #[test]
+    fn the_weight_sum_cannot_overflow_over_a_long_stack() {
+        // 300 frames is a real bracket here, and every weight is summed into
+        // one f32 accumulator. If that sum saturates to `inf`, the normalised
+        // output is NaN everywhere the sum saturated.
+        let mut sum = 0.0f32;
+        for _ in 0..1000 {
+            sum += select_weight(1e9, 1.0, MAX_EXPONENT);
+        }
+        assert!(sum.is_finite(), "the weight sum overflowed to {sum}");
     }
 
     #[test]
