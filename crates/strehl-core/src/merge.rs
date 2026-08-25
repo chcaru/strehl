@@ -536,6 +536,25 @@ pub fn active_arm() -> core::result::Result<Option<Arm>, UnknownArm> {
 /// frames, and elects the `Z_HALF` frames at each end of a chunk with `z = 0` —
 /// `robust.rs`'s documented convention for an undefined window, which leaves
 /// them ungated rather than rejected.
+///
+/// # The chunk must be at least `Z_WINDOW` frames long, and nothing enforces it
+///
+/// A chunk shorter than the window never produces a centred frame, so **every**
+/// frame in it is elected with `z = 0` and the gate does nothing at all. This is
+/// not hypothetical and it is not rare: `merge_cmd` sets
+/// `chunk_len = frames.div_ceil(workers)` from a *memory* budget, which knows
+/// nothing about this statistic, so a short bracket on a wide machine silently
+/// disables the whole feature. Measured on this rig: 40 frames over 13 workers
+/// gives `chunk_len = 3`, and 22 frames over 11 workers gives `chunk_len = 2`.
+/// Both rendered a byte-identical image, reported every frame as elected, and
+/// scored `z` exactly zero times.
+///
+/// That failure is invisible from the outside — the output is simply the
+/// shipped argmax, which is a perfectly good photograph — so
+/// [`FocusStats::window_starved_frames`] counts it and any caller reporting a
+/// gate's effect **must** report that count beside it. A gate that elected
+/// every frame with an undefined window did not read quiet; it did not read at
+/// all.
 #[derive(Debug, Clone)]
 struct RobustPassOne {
     op: ResidualOp,
@@ -547,6 +566,8 @@ struct RobustPassOne {
     seen: usize,
     zbuf: Vec<f32>,
     zero: Vec<f32>,
+    /// Frames elected with `z = 0` because no centred window existed for them.
+    starved: u32,
 }
 
 impl RobustPassOne {
@@ -563,6 +584,7 @@ impl RobustPassOne {
             seen: 0,
             zbuf: vec![0.0; pixels],
             zero: vec![0.0; pixels],
+            starved: 0,
         }
     }
 
@@ -576,6 +598,9 @@ impl RobustPassOne {
     /// Fold one frame that is already in the ring, with the given `z` field.
     fn fold_slot(&mut self, s: usize, z_is_zero: bool) -> std::result::Result<(), String> {
         let idx = self.ring_index[s];
+        if z_is_zero {
+            self.starved += 1;
+        }
         // Move the response out so its borrow cannot conflict with `zbuf`.
         let resp = std::mem::take(&mut self.ring_reg[s]);
         let z = if z_is_zero { &self.zero } else { &self.zbuf };
@@ -697,6 +722,19 @@ impl FocusStats {
         let mut s = Self::new(geom);
         s.robust = Some(Box::new(RobustPassOne::new(geom.pixels(), arm, var)));
         s
+    }
+
+    /// Frames elected with `z = 0` because no centred window existed for them,
+    /// or `None` with the feature off.
+    ///
+    /// **Report this beside any claim about what the gate did.** `Z_HALF` frames
+    /// at each end of every chunk are unavoidably starved, so a healthy run
+    /// shows `2 * Z_HALF * chunks`. A run in which this equals
+    /// [`FocusStats::frames_folded`] scored `z` exactly zero times and the gate
+    /// was inert — see [`RobustPassOne`] on why `merge_cmd`'s memory-derived
+    /// `chunk_len` makes that a routine outcome rather than an exotic one.
+    pub fn window_starved_frames(&self) -> Option<u32> {
+        self.robust.as_ref().map(|r| r.starved)
     }
 
     /// Frames the robust election actually folded, or `None` with the feature
@@ -859,6 +897,7 @@ impl FocusStats {
                 a.election
                     .absorb(&b.election)
                     .unwrap_or_else(|e| panic!("robust election: {e}"));
+                a.starved += b.starved;
                 let winners = a.election.winners();
                 let resp = a.election.winner_response();
                 self.best_index.copy_from_slice(&winners);
@@ -4181,6 +4220,49 @@ mod tests {
         assert_eq!(a.best_focus(), b.best_focus());
         assert_eq!(b.arm(), None);
         assert_eq!(b.robust_frames_elected(), None);
+    }
+
+    /// A chunk shorter than the window elects EVERY frame with `z = 0`, so the
+    /// gate does nothing whatever while reporting every frame elected and
+    /// producing a perfectly good photograph. This is the defect that made the
+    /// first real-data measurement of this feature a false zero: `merge_cmd`
+    /// derives `chunk_len` from a memory budget, and 40 frames over 13 workers
+    /// gives 3.
+    ///
+    /// The count is asserted at every length either side of the window, because
+    /// the number that matters is not "did it run" but "how much of it ran".
+    #[test]
+    fn a_chunk_shorter_than_the_window_gates_nothing_and_says_so() {
+        for n in 1..=12u16 {
+            let g = geom(2, 2);
+            let mut s =
+                FocusStats::new_robust_with(g, Arm::Soft, AffineVar { a: 0.0, b: 1.0 });
+            for f in 0..n {
+                s.fold_with_luma(f, &vec![1.0 + f as f32; g.pixels()], &vec![100.0; g.pixels()])
+                    .unwrap();
+            }
+            s.finish_chunk();
+            // Z_HALF at each end are unavoidably starved; below the window
+            // length every frame is.
+            let want = if (n as usize) < Z_HALF * 2 + 1 {
+                n as u32
+            } else {
+                (Z_HALF * 2) as u32
+            };
+            assert_eq!(
+                s.window_starved_frames(),
+                Some(want),
+                "chunk of {n} frames: starved count"
+            );
+            if (n as usize) < Z_HALF * 2 + 1 {
+                assert_eq!(
+                    s.window_starved_frames().unwrap(),
+                    s.frames_folded(),
+                    "chunk of {n} is shorter than the window, so the gate must \
+                     report that it scored nothing at all"
+                );
+            }
+        }
     }
 
     #[test]

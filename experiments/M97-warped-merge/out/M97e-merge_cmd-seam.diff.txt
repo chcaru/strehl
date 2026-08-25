@@ -86,8 +86,33 @@ combines the elections rather than the collapsed winner fields. That distinction
 is load-bearing and is mutation-controlled (M4).
 
 -------------------------------------------------------------------------------
-FOUR THINGS TO CARRY WITH THE DIFF
+FIVE THINGS TO CARRY WITH THE DIFF
 -------------------------------------------------------------------------------
+
+0. **`chunk_len` MUST BE >= 5 OR THE FEATURE IS SILENTLY INERT. THIS IS THE
+   BIGGEST THING IN THIS FILE.**
+   `z` needs a centred 5-frame window, so a chunk shorter than 5 never produces
+   a centred frame and EVERY frame in it is elected with `z = 0`. The gate then
+   does nothing at all, while reporting every frame elected, emitting no warning
+   and producing a perfectly good photograph -- the shipped argmax.
+
+   `merge_cmd` sets `chunk_len = frames.div_ceil(workers)` (:785) from a MEMORY
+   budget, which knows nothing about this statistic. Measured on this rig:
+
+       foam --limit 40   -> 13 workers, chunk_len 3 -> z scored 0 times
+       109MSDCF --limit 22 -> 11 workers, chunk_len 2 -> z scored 0 times
+       foam --limit 100  -> 13 workers, chunk_len 8 -> z scored 395,592,192 times
+
+   The first two rendered byte-identically to HEAD and I very nearly reported
+   that as "the gate is correctly quiet on a stationary stack". It was not
+   quiet; it was disconnected. `FocusStats::window_starved_frames()` now counts
+   exactly this, and ANY report of what the gate did must quote it. A healthy
+   run shows `2 * Z_HALF * chunks`; a run where it equals `frames_folded` scored
+   nothing.
+
+   Whoever turns this on should floor `chunk_len` at `Z_WINDOW` when the feature
+   is active, or refuse the run. I have not done it because `chunk_len` is
+   computed in your file, not mine.
 
 1. THE PASS-ONE MEMORY PLANNER AT :738 IS NOW WRONG WHEN THE FEATURE IS ON.
    The ring holds `Z_WINDOW` luma planes plus `Z_WINDOW` regularised planes,
