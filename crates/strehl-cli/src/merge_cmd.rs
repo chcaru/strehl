@@ -1340,10 +1340,51 @@ enum EdgeArm {
 /// | unset, `1`, `on`, `true`, `acuity` | adaptive radius (shipping) |
 /// | `0`, `off`, `false` | shipped fixed window |
 /// | `layer` | the superseded masked-support arm |
+/// Which election arm ships.
+///
+/// # This shipped ON and is back OFF, on a do-no-harm rejection
+///
+/// The adaptive-radius arm reduces the halo -- the broad aura on `bee-2-cpl` is
+/// gone with it and the `off` arm's rim on
+/// `flower-bud-with-background-fern-cpl` is both thicker and carries a dark band
+/// the `on` arm removes. It ships **off** anyway, because it fails the texture
+/// guard.
+///
+/// `couch-fibers-cpl` is dense fibre filling the frame with **no depth
+/// silhouettes anywhere**, and it renders well on the shipped path. Rendered
+/// `off` and `on` from one pinned binary and judged at 100% -- same crop origin,
+/// same display gain, arms sharing a pixel grid -- the `on` arm is visibly
+/// **softer**: adjacent filaments less separated, specular glints along the
+/// fibres duller, micro-contrast down. The standing rule is that a change which
+/// degrades a good subject is rejected regardless of what it does to the halo,
+/// and this one does.
+///
+/// It is invisible at the 1400 px full frame, because downsampling is a low-pass
+/// filter and the loss is high-frequency. It has to be judged at 1:1.
+///
+/// # The cause, which is also section 16's cause
+///
+/// [`SelectionScale::from_silhouettes`](strehl_core::edgeaware::SelectionScale::from_silhouettes)
+/// collapses the radius where the guide varies locally. On this subject every
+/// pixel is a depth step -- fibres at many depths interleaved at pixel scale --
+/// so it collapses nearly everywhere, and a 1 px focus measure on a noisy
+/// texture is a bad estimator.
+///
+/// That is the same defect as the dead-ground over-collapse, from the other
+/// side. Over dead ground the guide is noise; over dense texture the steps are
+/// real. In both cases collapsing **buys nothing** and costs the estimator. The
+/// rule needs to be "collapse only where collapsing buys something" -- at a
+/// genuine occluding boundary, where a large window would straddle two depths
+/// that are actually separated. Local guide variation cannot tell that from
+/// either failure, and every veto tried so far has been an attempt to patch that
+/// one deficiency from outside.
+///
+/// Turn it back on here, not by changing a default elsewhere, once the rule
+/// distinguishes those cases and `couch-fibers-cpl` is no worse at 100%.
 fn edge_aware_arm() -> EdgeArm {
     match std::env::var(EDGE_AWARE_ENV).ok().as_deref().map(str::trim) {
-        None | Some("") | Some("1") | Some("on") | Some("true") | Some("acuity") => EdgeArm::Acuity,
-        Some("0") | Some("off") | Some("false") => EdgeArm::Off,
+        None | Some("") | Some("0") | Some("off") | Some("false") => EdgeArm::Off,
+        Some("1") | Some("on") | Some("true") | Some("acuity") => EdgeArm::Acuity,
         Some("layer") => EdgeArm::Layer,
         Some(other) => panic!(
             "{EDGE_AWARE_ENV}={other:?} is not a known arm; expected one of \
