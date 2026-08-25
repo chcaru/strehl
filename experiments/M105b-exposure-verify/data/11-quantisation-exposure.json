@@ -1,0 +1,475 @@
+{
+  "subjects": [
+    {
+      "name": "v5a-linear-60",
+      "kind": "linear (the measurement output)",
+      "sha256": "54A5E20F44255BB526C61D4397D239D6F1D26A06D54A8A56FBC944B91B37E7A2",
+      "tif": {
+        "shape": [
+          2344,
+          3516,
+          3
+        ],
+        "dtype": "uint16",
+        "container_max": 65535.0
+      },
+      "n_samples": 8241504,
+      "rank_index": 8233262,
+      "p99_9": 0.32739153504371643,
+      "stops": 1.46,
+      "distinct_levels_in_10k_window_at_rank": 9198,
+      "controls": {
+        "C_NULL": {
+          "dstops": 0.0,
+          "reading": "PASS"
+        },
+        "C_POS": [
+          {
+            "planted_gain": 0.5,
+            "expected_dstops": 1.0,
+            "measured_dstops": 1.0,
+            "reading": "PASS"
+          },
+          {
+            "planted_gain": 2.0,
+            "expected_dstops": -1.0,
+            "measured_dstops": -1.0,
+            "reading": "PASS"
+          }
+        ],
+        "C_RESPONSIVE": {
+          "dose": "4-bit",
+          "quant_dstops": -0.03,
+          "reading": "PASS"
+        }
+      },
+      "ladder": [
+        {
+          "dose": "real: 16-bit output",
+          "q": 1.5259021896696422e-05,
+          "q_over_p": 4.660786936552557e-05,
+          "quant": {
+            "p": 0.32739758491516113,
+            "dp": 6.0498714447021484e-06,
+            "max_abs_e": 7.659196853637695e-06,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.3273921310901642,
+            "dp": 5.960464477539062e-07,
+            "max_abs_e": 7.62939453125e-06,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "real: 14-bit ARW",
+          "q": 6.300800201625606e-05,
+          "q_over_p": 0.00019245458502108992,
+          "quant": {
+            "p": 0.32738959789276123,
+            "dp": -1.9371509552001953e-06,
+            "max_abs_e": 3.153085708618164e-05,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.32739266753196716,
+            "dp": 1.1324882507324219e-06,
+            "max_abs_e": 3.150478005409241e-05,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "12-bit",
+          "q": 0.0002442002442002442,
+          "q_over_p": 0.0007458966346446199,
+          "quant": {
+            "p": 0.3274725377559662,
+            "dp": 8.100271224975586e-05,
+            "max_abs_e": 0.00012211501598358154,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.32739225029945374,
+            "dp": 7.152557373046875e-07,
+            "max_abs_e": 0.0001221001148223877,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "10-bit",
+          "q": 0.0009775171065493646,
+          "q_over_p": 0.0029857739187387276,
+          "quant": {
+            "p": 0.32746821641921997,
+            "dp": 7.668137550354004e-05,
+            "max_abs_e": 0.0004887878894805908,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.3273833990097046,
+            "dp": -8.13603401184082e-06,
+            "max_abs_e": 0.0004887580871582031,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "8-bit",
+          "q": 0.00392156862745098,
+          "q_over_p": 0.01197822242694007,
+          "quant": {
+            "p": 0.32549020648002625,
+            "dp": -0.0019013285636901855,
+            "max_abs_e": 0.0019607841968536377,
+            "dstops": 0.01,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.3274703919887543,
+            "dp": 7.88569450378418e-05,
+            "max_abs_e": 0.0019607841968536377,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "6-bit",
+          "q": 0.015873015873015872,
+          "q_over_p": 0.04848328125190029,
+          "quant": {
+            "p": 0.3333333432674408,
+            "dp": 0.005941808223724365,
+            "max_abs_e": 0.0079365074634552,
+            "dstops": -0.03,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.3306586742401123,
+            "dp": 0.003267139196395874,
+            "max_abs_e": 0.0079365074634552,
+            "dstops": -0.02,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "4-bit",
+          "q": 0.06666666666666667,
+          "q_over_p": 0.2036297812579812,
+          "quant": {
+            "p": 0.3333333432674408,
+            "dp": 0.005941808223724365,
+            "max_abs_e": 0.03333333879709244,
+            "dstops": -0.03,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.3512129783630371,
+            "dp": 0.02382144331932068,
+            "max_abs_e": 0.03333333134651184,
+            "dstops": -0.1,
+            "lipschitz_ok": true
+          }
+        }
+      ],
+      "readings": {
+        "P_A_lipschitz": "CONFIRMED",
+        "P_C_real_dose_unmoved": "CONFIRMED",
+        "P_B_quant_larger_than_dither": {
+          "rows_where_quant_larger": 6,
+          "rows": 7,
+          "quant_sign_changes_across_ladder": 4,
+          "reading": "CONFIRMED"
+        }
+      },
+      "arm_comparison": [
+        {
+          "dose": "real: 16-bit output",
+          "abs_dp_quant": 6.0498714447021484e-06,
+          "abs_dp_dither": 5.960464477539062e-07,
+          "ratio_quant_over_dither": 10.15
+        },
+        {
+          "dose": "real: 14-bit ARW",
+          "abs_dp_quant": 1.9371509552001953e-06,
+          "abs_dp_dither": 1.1324882507324219e-06,
+          "ratio_quant_over_dither": 1.7105263157894737
+        },
+        {
+          "dose": "12-bit",
+          "abs_dp_quant": 8.100271224975586e-05,
+          "abs_dp_dither": 7.152557373046875e-07,
+          "ratio_quant_over_dither": 113.25
+        },
+        {
+          "dose": "10-bit",
+          "abs_dp_quant": 7.668137550354004e-05,
+          "abs_dp_dither": 8.13603401184082e-06,
+          "ratio_quant_over_dither": 9.424908424908425
+        },
+        {
+          "dose": "8-bit",
+          "abs_dp_quant": 0.0019013285636901855,
+          "abs_dp_dither": 7.88569450378418e-05,
+          "ratio_quant_over_dither": 24.11111111111111
+        },
+        {
+          "dose": "6-bit",
+          "abs_dp_quant": 0.005941808223724365,
+          "abs_dp_dither": 0.003267139196395874,
+          "ratio_quant_over_dither": 1.81865781240023
+        },
+        {
+          "dose": "4-bit",
+          "abs_dp_quant": 0.005941808223724365,
+          "abs_dp_dither": 0.02382144331932068,
+          "ratio_quant_over_dither": 0.24943107535827552
+        }
+      ]
+    },
+    {
+      "name": "v4-plain-299",
+      "kind": "sRGB (the viewing output)",
+      "sha256": "A559616F85CFAF41FF0A9F8C3067C9B8D80F5C52041F56D141CB793A0182CD00",
+      "tif": {
+        "shape": [
+          4688,
+          7032,
+          3
+        ],
+        "dtype": "uint16",
+        "container_max": 65535.0
+      },
+      "n_samples": 32966016,
+      "rank_index": 32933049,
+      "p99_9": 0.5931817293167114,
+      "stops": 0.6,
+      "distinct_levels_in_10k_window_at_rank": 8503,
+      "controls": {
+        "C_NULL": {
+          "dstops": 0.0,
+          "reading": "PASS"
+        },
+        "C_POS": [
+          {
+            "planted_gain": 0.5,
+            "expected_dstops": 1.0,
+            "measured_dstops": 1.0,
+            "reading": "PASS"
+          },
+          {
+            "planted_gain": 2.0,
+            "expected_dstops": -1.0,
+            "measured_dstops": -1.0,
+            "reading": "PASS"
+          }
+        ],
+        "C_RESPONSIVE": {
+          "dose": "4-bit",
+          "quant_dstops": -0.02,
+          "reading": "PASS"
+        }
+      },
+      "ladder": [
+        {
+          "dose": "real: 16-bit output",
+          "q": 1.5259021896696422e-05,
+          "q_over_p": 2.572402544204009e-05,
+          "quant": {
+            "p": 0.5931792259216309,
+            "dp": -2.5033950805664062e-06,
+            "max_abs_e": 7.68899917602539e-06,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.5931814908981323,
+            "dp": -2.384185791015625e-07,
+            "max_abs_e": 7.62939453125e-06,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "real: 14-bit ARW",
+          "q": 6.300800201625606e-05,
+          "q_over_p": 0.00010622040245378975,
+          "quant": {
+            "p": 0.5931573510169983,
+            "dp": -2.4378299713134766e-05,
+            "max_abs_e": 3.153085708618164e-05,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.5931825637817383,
+            "dp": 8.344650268554688e-07,
+            "max_abs_e": 3.153085708618164e-05,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "12-bit",
+          "q": 0.0002442002442002442,
+          "q_over_p": 0.00041167863427206283,
+          "quant": {
+            "p": 0.5931624174118042,
+            "dp": -1.9311904907226562e-05,
+            "max_abs_e": 0.0001221299171447754,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.5931816101074219,
+            "dp": -1.1920928955078125e-07,
+            "max_abs_e": 0.0001221001148223877,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "10-bit",
+          "q": 0.0009775171065493646,
+          "q_over_p": 0.0016479218058104567,
+          "quant": {
+            "p": 0.5933528542518616,
+            "dp": 0.00017112493515014648,
+            "max_abs_e": 0.0004888176918029785,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.5931912064552307,
+            "dp": 9.47713851928711e-06,
+            "max_abs_e": 0.0004887580871582031,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "8-bit",
+          "q": 0.00392156862745098,
+          "q_over_p": 0.006611074538604302,
+          "quant": {
+            "p": 0.5921568870544434,
+            "dp": -0.0010248422622680664,
+            "max_abs_e": 0.0019608139991760254,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.5934321880340576,
+            "dp": 0.0002504587173461914,
+            "max_abs_e": 0.0019608139991760254,
+            "dstops": 0.0,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "6-bit",
+          "q": 0.015873015873015872,
+          "q_over_p": 0.026759111227684082,
+          "quant": {
+            "p": 0.5873016119003296,
+            "dp": -0.005880117416381836,
+            "max_abs_e": 0.007936537265777588,
+            "dstops": 0.02,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.5963146686553955,
+            "dp": 0.003132939338684082,
+            "max_abs_e": 0.0079365074634552,
+            "dstops": -0.01,
+            "lipschitz_ok": true
+          }
+        },
+        {
+          "dose": "4-bit",
+          "q": 0.06666666666666667,
+          "q_over_p": 0.11238826715627315,
+          "quant": {
+            "p": 0.6000000238418579,
+            "dp": 0.006818294525146484,
+            "max_abs_e": 0.03333336114883423,
+            "dstops": -0.02,
+            "lipschitz_ok": true
+          },
+          "dither": {
+            "p": 0.6165943741798401,
+            "dp": 0.023412644863128662,
+            "max_abs_e": 0.03333333134651184,
+            "dstops": -0.05,
+            "lipschitz_ok": true
+          }
+        }
+      ],
+      "readings": {
+        "P_A_lipschitz": "CONFIRMED",
+        "P_C_real_dose_unmoved": "CONFIRMED",
+        "P_B_quant_larger_than_dither": {
+          "rows_where_quant_larger": 6,
+          "rows": 7,
+          "quant_sign_changes_across_ladder": 3,
+          "reading": "CONFIRMED"
+        }
+      },
+      "arm_comparison": [
+        {
+          "dose": "real: 16-bit output",
+          "abs_dp_quant": 2.5033950805664062e-06,
+          "abs_dp_dither": 2.384185791015625e-07,
+          "ratio_quant_over_dither": 10.5
+        },
+        {
+          "dose": "real: 14-bit ARW",
+          "abs_dp_quant": 2.4378299713134766e-05,
+          "abs_dp_dither": 8.344650268554688e-07,
+          "ratio_quant_over_dither": 29.214285714285715
+        },
+        {
+          "dose": "12-bit",
+          "abs_dp_quant": 1.9311904907226562e-05,
+          "abs_dp_dither": 1.1920928955078125e-07,
+          "ratio_quant_over_dither": 162.0
+        },
+        {
+          "dose": "10-bit",
+          "abs_dp_quant": 0.00017112493515014648,
+          "abs_dp_dither": 9.47713851928711e-06,
+          "ratio_quant_over_dither": 18.056603773584907
+        },
+        {
+          "dose": "8-bit",
+          "abs_dp_quant": 0.0010248422622680664,
+          "abs_dp_dither": 0.0002504587173461914,
+          "ratio_quant_over_dither": 4.091861018562589
+        },
+        {
+          "dose": "6-bit",
+          "abs_dp_quant": 0.005880117416381836,
+          "abs_dp_dither": 0.003132939338684082,
+          "ratio_quant_over_dither": 1.8768692211103077
+        },
+        {
+          "dose": "4-bit",
+          "abs_dp_quant": 0.006818294525146484,
+          "abs_dp_dither": 0.023412644863128662,
+          "ratio_quant_over_dither": 0.291222737328761
+        }
+      ]
+    }
+  ],
+  "target": 0.9,
+  "percentile": 99.9,
+  "report_quantum_stops": 0.01,
+  "q_arw_14bit": 6.300800201625606e-05,
+  "q_tif_16bit": 1.5259021896696422e-05
+}

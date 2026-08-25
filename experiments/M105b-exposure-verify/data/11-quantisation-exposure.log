@@ -1,0 +1,56 @@
+==============================================================================
+v5a-linear-60  --  linear (the measurement output)
+  n=8241504  rank=8233262  p99.9=0.32739154  stops=+1.46  distinct levels near rank=9198
+  C_NULL       PASS
+  C_POS g=0.5  expected +1.0000  measured +1.0000  PASS
+  C_POS g=2.0  expected -1.0000  measured -1.0000  PASS
+  C_RESPONSIVE PASS (4-bit -> -0.0300 stops)
+
+  dose                          q |     dp quant     dstops |    dp dither     dstops
+  real: 16-bit output   1.526e-05 |   +6.050e-06    +0.0000 |   +5.960e-07    +0.0000
+  real: 14-bit ARW      6.301e-05 |   -1.937e-06    +0.0000 |   +1.132e-06    +0.0000
+  12-bit                2.442e-04 |   +8.100e-05    +0.0000 |   +7.153e-07    +0.0000
+  10-bit                9.775e-04 |   +7.668e-05    +0.0000 |   -8.136e-06    +0.0000
+  8-bit                 3.922e-03 |   -1.901e-03    +0.0100 |   +7.886e-05    +0.0000
+  6-bit                 1.587e-02 |   +5.942e-03    -0.0300 |   +3.267e-03    -0.0200
+  4-bit                 6.667e-02 |   +5.942e-03    -0.0300 |   +2.382e-02    -0.1000
+
+  {
+    "P_A_lipschitz": "CONFIRMED",
+    "P_C_real_dose_unmoved": "CONFIRMED",
+    "P_B_quant_larger_than_dither": {
+      "rows_where_quant_larger": 6,
+      "rows": 7,
+      "quant_sign_changes_across_ladder": 4,
+      "reading": "CONFIRMED"
+    }
+  }
+==============================================================================
+v4-plain-299  --  sRGB (the viewing output)
+  n=32966016  rank=32933049  p99.9=0.59318173  stops=+0.60  distinct levels near rank=8503
+  C_NULL       PASS
+  C_POS g=0.5  expected +1.0000  measured +1.0000  PASS
+  C_POS g=2.0  expected -1.0000  measured -1.0000  PASS
+  C_RESPONSIVE PASS (4-bit -> -0.0200 stops)
+
+  dose                          q |     dp quant     dstops |    dp dither     dstops
+  real: 16-bit output   1.526e-05 |   -2.503e-06    +0.0000 |   -2.384e-07    +0.0000
+  real: 14-bit ARW      6.301e-05 |   -2.438e-05    +0.0000 |   +8.345e-07    +0.0000
+  12-bit                2.442e-04 |   -1.931e-05    +0.0000 |   -1.192e-07    +0.0000
+  10-bit                9.775e-04 |   +1.711e-04    +0.0000 |   +9.477e-06    +0.0000
+  8-bit                 3.922e-03 |   -1.025e-03    +0.0000 |   +2.505e-04    +0.0000
+  6-bit                 1.587e-02 |   -5.880e-03    +0.0200 |   +3.133e-03    -0.0100
+  4-bit                 6.667e-02 |   +6.818e-03    -0.0200 |   +2.341e-02    -0.0500
+
+  {
+    "P_A_lipschitz": "CONFIRMED",
+    "P_C_real_dose_unmoved": "CONFIRMED",
+    "P_B_quant_larger_than_dither": {
+      "rows_where_quant_larger": 6,
+      "rows": 7,
+      "quant_sign_changes_across_ladder": 3,
+      "reading": "CONFIRMED"
+    }
+  }
+
+wrote 11-quantisation-exposure.json

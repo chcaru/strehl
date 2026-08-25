@@ -1,0 +1,87 @@
+================================================================================================
+v5a-linear-60 (linear)  p99.9=0.32739154  stops=+1.46
+   bits           q |     quant dp     frac      landed |    dither dp     frac | wins
+      3   1.429e-01 |   -4.168e-02   0.5835    0.285714 |   +5.815e-02   0.8141 | dither
+      4   6.667e-02 |   +5.942e-03   0.1783    0.333333 |   +2.385e-02   0.7155 | dither
+      5   3.226e-02 |   -4.811e-03   0.2983    0.322581 |   +9.404e-03   0.5830 | dither
+      6   1.587e-02 |   +5.942e-03   0.7487    0.333333 |   +3.281e-03   0.4134 | quant
+      7   7.874e-03 |   +3.317e-03   0.8425    0.330709 |   +8.472e-04   0.2152 | quant
+      8   3.922e-03 |   -1.901e-03   0.9697    0.325490 |   +9.457e-05   0.0482 | quant
+      9   1.957e-03 |   -5.814e-04   0.5941    0.326810 |   -7.898e-06   0.0091 | quant
+     10   9.775e-04 |   +7.668e-05   0.1569    0.327468 |   -7.492e-06   0.0161 | quant
+     11   4.885e-04 |   -8.327e-05   0.3409    0.327308 |   -3.971e-06   0.0203 | quant
+     12   2.442e-04 |   +8.100e-05   0.6634    0.327473 |   -2.798e-06   0.0229 | quant
+     13   1.221e-04 |   +4.101e-05   0.6718    0.327433 |   -1.717e-06   0.0405 | quant
+     14   6.104e-05 |   +2.101e-05   0.6884    0.327413 |   +2.645e-07   0.0294 | quant
+     15   3.052e-05 |   +1.103e-05   0.7226    0.327403 |   +3.763e-07   0.0486 | quant
+     16   1.526e-05 |   +6.050e-06   0.7930    0.327398 |   +9.499e-07   0.1245 | quant
+
+  {
+    "ANOMALY1_same_grid_value": {
+      "bits6_landed": 0.3333333333333333,
+      "bits4_landed": 0.3333333333333333,
+      "identical": true,
+      "is_one_third": true,
+      "reading": "CONFIRMED grid coincidence"
+    },
+    "ANOMALY2_crossover": {
+      "depths_where_dither_dominates": [
+        3,
+        4,
+        5
+      ],
+      "is_isolated_to_coarsest": true,
+      "reading": "(a) REAL: dither dominates over a contiguous coarse range"
+    },
+    "NONMONOTONE_quant": {
+      "spearman_q_vs_absdp_quant": 0.9736,
+      "spearman_q_vs_absdp_dither": 0.9824,
+      "gap": 0.0088,
+      "reading": "FALSIFIED: both arms respond to dose alike"
+    },
+    "CONTROL_dither_monotone": "PASS"
+  }
+================================================================================================
+v4-plain-299 (sRGB)  p99.9=0.59318173  stops=+0.60
+   bits           q |     quant dp     frac      landed |    dither dp     frac | wins
+      3   1.429e-01 |   -2.175e-02   0.3045    0.571429 |   +5.743e-02   0.8041 | dither
+      4   6.667e-02 |   +6.818e-03   0.2045    0.600000 |   +2.336e-02   0.7007 | dither
+      5   3.226e-02 |   -1.254e-02   0.7773    0.580645 |   +9.114e-03   0.5650 | quant
+      6   1.587e-02 |   -5.880e-03   0.7409    0.587302 |   +3.109e-03   0.3918 | quant
+      7   7.874e-03 |   -2.631e-03   0.6682    0.590551 |   +9.091e-04   0.2309 | quant
+      8   3.922e-03 |   -1.025e-03   0.5227    0.592157 |   +2.486e-04   0.1268 | quant
+      9   1.957e-03 |   -2.267e-04   0.2317    0.592955 |   +6.426e-05   0.0657 | quant
+     10   9.775e-04 |   +1.711e-04   0.3501    0.593353 |   +1.714e-05   0.0351 | quant
+     11   4.885e-04 |   -1.187e-04   0.4861    0.593063 |   +2.757e-06   0.0137 | quant
+     12   2.442e-04 |   -1.931e-05   0.1582    0.593162 |   -6.557e-07   0.0106 | quant
+     13   1.221e-04 |   +3.034e-05   0.4970    0.593212 |   -9.164e-07   0.0272 | quant
+     14   6.104e-05 |   -5.901e-06   0.1933    0.593176 |   +7.451e-08   0.0269 | quant
+     15   3.052e-05 |   +6.557e-06   0.4297    0.593188 |   -3.651e-07   0.0698 | quant
+     16   1.526e-05 |   -2.503e-06   0.3281    0.593179 |   +7.451e-09   0.0439 | quant
+
+  {
+    "ANOMALY1_same_grid_value": {
+      "bits6_landed": 0.5873015873015872,
+      "bits4_landed": 0.6,
+      "identical": false,
+      "is_one_third": false,
+      "reading": "FALSIFIED"
+    },
+    "ANOMALY2_crossover": {
+      "depths_where_dither_dominates": [
+        3,
+        4
+      ],
+      "is_isolated_to_coarsest": true,
+      "reading": "(b) GRID LUCK: dither dominates only sporadically"
+    },
+    "NONMONOTONE_quant": {
+      "spearman_q_vs_absdp_quant": 0.9868,
+      "spearman_q_vs_absdp_dither": 0.9912,
+      "gap": 0.0044,
+      "reading": "FALSIFIED: both arms respond to dose alike"
+    },
+    "CONTROL_dither_monotone": "PASS"
+  }
+
+wrote 12-crossover-check.json

@@ -1,0 +1,434 @@
+{
+  "dither_seeds": 8,
+  "subjects": [
+    {
+      "name": "v5a-linear-60",
+      "kind": "linear",
+      "p99_9": 0.32739153504371643,
+      "stops": 1.46,
+      "rows": [
+        {
+          "bits": 3,
+          "q": 0.14285714285714285,
+          "bound_q_over_2": 0.07142857142857142,
+          "quant_dp": -0.041677236557006836,
+          "quant_frac_of_bound": 0.5834813117980957,
+          "quant_landed_grid_value": 0.2857142857142857,
+          "quant_dstops": 0.2,
+          "dither_dp_mean": 0.058147139847278595,
+          "dither_dp_sd": 5.6447059139966575e-05,
+          "dither_frac_of_bound": 0.8140599578619003,
+          "dither_dominates": true
+        },
+        {
+          "bits": 4,
+          "q": 0.06666666666666667,
+          "bound_q_over_2": 0.03333333333333333,
+          "quant_dp": 0.005941808223724365,
+          "quant_frac_of_bound": 0.17825424671173096,
+          "quant_landed_grid_value": 0.3333333333333333,
+          "quant_dstops": -0.03,
+          "dither_dp_mean": 0.023851577192544937,
+          "dither_dp_sd": 4.252065733534875e-05,
+          "dither_frac_of_bound": 0.7155473157763481,
+          "dither_dominates": true
+        },
+        {
+          "bits": 5,
+          "q": 0.03225806451612903,
+          "bound_q_over_2": 0.016129032258064516,
+          "quant_dp": -0.004810899496078491,
+          "quant_frac_of_bound": 0.29827576875686646,
+          "quant_landed_grid_value": 0.3225806451612903,
+          "quant_dstops": 0.02,
+          "dither_dp_mean": 0.009403731673955917,
+          "dither_dp_sd": 2.8576639753105294e-05,
+          "dither_frac_of_bound": 0.5830313637852669,
+          "dither_dominates": true
+        },
+        {
+          "bits": 6,
+          "q": 0.015873015873015872,
+          "bound_q_over_2": 0.007936507936507936,
+          "quant_dp": 0.005941808223724365,
+          "quant_frac_of_bound": 0.74866783618927,
+          "quant_landed_grid_value": 0.3333333333333333,
+          "quant_dstops": -0.03,
+          "dither_dp_mean": 0.003281034529209137,
+          "dither_dp_sd": 2.111421754223592e-05,
+          "dither_frac_of_bound": 0.41341035068035126,
+          "dither_dominates": false
+        },
+        {
+          "bits": 7,
+          "q": 0.007874015748031496,
+          "bound_q_over_2": 0.003937007874015748,
+          "quant_dp": 0.003317117691040039,
+          "quant_frac_of_bound": 0.8425478935241699,
+          "quant_landed_grid_value": 0.3307086614173228,
+          "quant_dstops": -0.02,
+          "dither_dp_mean": 0.0008472464978694916,
+          "dither_dp_sd": 1.6501957442719024e-05,
+          "dither_frac_of_bound": 0.21520061045885086,
+          "dither_dominates": false
+        },
+        {
+          "bits": 8,
+          "q": 0.00392156862745098,
+          "bound_q_over_2": 0.00196078431372549,
+          "quant_dp": -0.0019013285636901855,
+          "quant_frac_of_bound": 0.9696775674819946,
+          "quant_landed_grid_value": 0.3254901960784314,
+          "quant_dstops": 0.01,
+          "dither_dp_mean": 9.457394480705261e-05,
+          "dither_dp_sd": 1.3131112709906223e-05,
+          "dither_frac_of_bound": 0.04823271185159683,
+          "dither_dominates": false
+        },
+        {
+          "bits": 9,
+          "q": 0.0019569471624266144,
+          "bound_q_over_2": 0.0009784735812133072,
+          "quant_dp": -0.0005813539028167725,
+          "quant_frac_of_bound": 0.5941436886787415,
+          "quant_landed_grid_value": 0.3268101761252446,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": -7.897615432739258e-06,
+          "dither_dp_sd": 7.697542382802107e-06,
+          "dither_frac_of_bound": 0.009137392044067383,
+          "dither_dominates": false
+        },
+        {
+          "bits": 10,
+          "q": 0.0009775171065493646,
+          "bound_q_over_2": 0.0004887585532746823,
+          "quant_dp": 7.668137550354004e-05,
+          "quant_frac_of_bound": 0.15689009428024292,
+          "quant_landed_grid_value": 0.32746823069403713,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": -7.491558790206909e-06,
+          "dither_dp_sd": 5.730774547740336e-06,
+          "dither_frac_of_bound": 0.016089923679828644,
+          "dither_dominates": false
+        },
+        {
+          "bits": 11,
+          "q": 0.0004885197850512946,
+          "bound_q_over_2": 0.0002442598925256473,
+          "quant_dp": -8.32676887512207e-05,
+          "quant_frac_of_bound": 0.34089791774749756,
+          "quant_landed_grid_value": 0.32730825598436736,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": -3.9711594581604e-06,
+          "dither_dp_sd": 4.0296553150570506e-06,
+          "dither_frac_of_bound": 0.020345285534858704,
+          "dither_dominates": false
+        },
+        {
+          "bits": 12,
+          "q": 0.0002442002442002442,
+          "bound_q_over_2": 0.0001221001221001221,
+          "quant_dp": 8.100271224975586e-05,
+          "quant_frac_of_bound": 0.6634122133255005,
+          "quant_landed_grid_value": 0.3274725274725275,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": -2.7976930141448975e-06,
+          "dither_dp_sd": 2.463309201142022e-06,
+          "dither_frac_of_bound": 0.02291310578584671,
+          "dither_dominates": false
+        },
+        {
+          "bits": 13,
+          "q": 0.00012208521548040532,
+          "bound_q_over_2": 6.104260774020266e-05,
+          "quant_dp": 4.100799560546875e-05,
+          "quant_frac_of_bound": 0.6717929840087891,
+          "quant_landed_grid_value": 0.32743254791844706,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": -1.7173588275909424e-06,
+          "dither_dp_sd": 2.251375468079082e-06,
+          "dither_frac_of_bound": 0.04046136885881424,
+          "dither_dominates": false
+        },
+        {
+          "bits": 14,
+          "q": 6.103888176768602e-05,
+          "bound_q_over_2": 3.051944088384301e-05,
+          "quant_dp": 2.1010637283325195e-05,
+          "quant_frac_of_bound": 0.6884345412254333,
+          "quant_landed_grid_value": 0.3274125618018678,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": 2.644956111907959e-07,
+          "dither_dp_sd": 1.1216173277284062e-06,
+          "dither_frac_of_bound": 0.02941714972257614,
+          "dither_dominates": false
+        },
+        {
+          "bits": 15,
+          "q": 3.051850947599719e-05,
+          "bound_q_over_2": 1.5259254737998596e-05,
+          "quant_dp": 1.1026859283447266e-05,
+          "quant_frac_of_bound": 0.7226341962814331,
+          "quant_landed_grid_value": 0.3274025696584979,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": 3.762543201446533e-07,
+          "dither_dp_sd": 9.082813489999161e-07,
+          "dither_frac_of_bound": 0.04858250170946121,
+          "dither_dominates": false
+        },
+        {
+          "bits": 16,
+          "q": 1.5259021896696422e-05,
+          "bound_q_over_2": 7.629510948348211e-06,
+          "quant_dp": 6.0498714447021484e-06,
+          "quant_frac_of_bound": 0.7929566502571106,
+          "quant_landed_grid_value": 0.32739757381551843,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": 9.499490261077881e-07,
+          "dither_dp_sd": 6.826595379476296e-07,
+          "dither_frac_of_bound": 0.12450981885194778,
+          "dither_dominates": false
+        }
+      ],
+      "readings": {
+        "ANOMALY1_same_grid_value": {
+          "bits6_landed": 0.3333333333333333,
+          "bits4_landed": 0.3333333333333333,
+          "identical": true,
+          "is_one_third": true,
+          "reading": "CONFIRMED grid coincidence"
+        },
+        "ANOMALY2_crossover": {
+          "depths_where_dither_dominates": [
+            3,
+            4,
+            5
+          ],
+          "is_isolated_to_coarsest": true,
+          "reading": "(a) REAL: dither dominates over a contiguous coarse range"
+        },
+        "NONMONOTONE_quant": {
+          "spearman_q_vs_absdp_quant": 0.9736,
+          "spearman_q_vs_absdp_dither": 0.9824,
+          "gap": 0.0088,
+          "reading": "FALSIFIED: both arms respond to dose alike"
+        },
+        "CONTROL_dither_monotone": "PASS"
+      }
+    },
+    {
+      "name": "v4-plain-299",
+      "kind": "sRGB",
+      "p99_9": 0.5931817293167114,
+      "stops": 0.6,
+      "rows": [
+        {
+          "bits": 3,
+          "q": 0.14285714285714285,
+          "bound_q_over_2": 0.07142857142857142,
+          "quant_dp": -0.021753132343292236,
+          "quant_frac_of_bound": 0.3045438528060913,
+          "quant_landed_grid_value": 0.5714285714285714,
+          "quant_dstops": 0.06,
+          "dither_dp_mean": 0.05743218958377838,
+          "dither_dp_sd": 2.0682130775297837e-05,
+          "dither_frac_of_bound": 0.8040506541728973,
+          "dither_dominates": true
+        },
+        {
+          "bits": 4,
+          "q": 0.06666666666666667,
+          "bound_q_over_2": 0.03333333333333333,
+          "quant_dp": 0.006818294525146484,
+          "quant_frac_of_bound": 0.20454883575439453,
+          "quant_landed_grid_value": 0.6,
+          "quant_dstops": -0.02,
+          "dither_dp_mean": 0.023358061909675598,
+          "dither_dp_sd": 2.010094134120629e-05,
+          "dither_frac_of_bound": 0.7007418572902679,
+          "dither_dominates": true
+        },
+        {
+          "bits": 5,
+          "q": 0.03225806451612903,
+          "bound_q_over_2": 0.016129032258064516,
+          "quant_dp": -0.012536585330963135,
+          "quant_frac_of_bound": 0.7772682905197144,
+          "quant_landed_grid_value": 0.5806451612903225,
+          "quant_dstops": 0.03,
+          "dither_dp_mean": 0.00911363959312439,
+          "dither_dp_sd": 1.2928183265629208e-05,
+          "dither_frac_of_bound": 0.5650456547737122,
+          "dither_dominates": false
+        },
+        {
+          "bits": 6,
+          "q": 0.015873015873015872,
+          "bound_q_over_2": 0.007936507936507936,
+          "quant_dp": -0.005880117416381836,
+          "quant_frac_of_bound": 0.7408947944641113,
+          "quant_landed_grid_value": 0.5873015873015872,
+          "quant_dstops": 0.02,
+          "dither_dp_mean": 0.0031092986464500427,
+          "dither_dp_sd": 1.3605122726654973e-05,
+          "dither_frac_of_bound": 0.3917716294527054,
+          "dither_dominates": false
+        },
+        {
+          "bits": 7,
+          "q": 0.007874015748031496,
+          "bound_q_over_2": 0.003937007874015748,
+          "quant_dp": -0.0026305317878723145,
+          "quant_frac_of_bound": 0.6681550741195679,
+          "quant_landed_grid_value": 0.5905511811023622,
+          "quant_dstops": 0.01,
+          "dither_dp_mean": 0.0009091198444366455,
+          "dither_dp_sd": 8.927744611791025e-06,
+          "dither_frac_of_bound": 0.23091644048690796,
+          "dither_dominates": false
+        },
+        {
+          "bits": 8,
+          "q": 0.00392156862745098,
+          "bound_q_over_2": 0.00196078431372549,
+          "quant_dp": -0.0010248422622680664,
+          "quant_frac_of_bound": 0.5226695537567139,
+          "quant_landed_grid_value": 0.592156862745098,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": 0.0002485886216163635,
+          "dither_dp_sd": 1.1746369023352915e-05,
+          "dither_frac_of_bound": 0.1267801970243454,
+          "dither_dominates": false
+        },
+        {
+          "bits": 9,
+          "q": 0.0019569471624266144,
+          "bound_q_over_2": 0.0009784735812133072,
+          "quant_dp": -0.00022673606872558594,
+          "quant_frac_of_bound": 0.23172426223754883,
+          "quant_landed_grid_value": 0.5929549902152642,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": 6.426125764846802e-05,
+          "dither_dp_sd": 9.099896129942528e-06,
+          "dither_frac_of_bound": 0.06567500531673431,
+          "dither_dominates": false
+        },
+        {
+          "bits": 10,
+          "q": 0.0009775171065493646,
+          "bound_q_over_2": 0.0004887585532746823,
+          "quant_dp": 0.00017112493515014648,
+          "quant_frac_of_bound": 0.3501216173171997,
+          "quant_landed_grid_value": 0.5933528836754643,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": 1.7136335372924805e-05,
+          "dither_dp_sd": 6.589943622566603e-06,
+          "dither_frac_of_bound": 0.03506094217300415,
+          "dither_dominates": false
+        },
+        {
+          "bits": 11,
+          "q": 0.0004885197850512946,
+          "bound_q_over_2": 0.0002442598925256473,
+          "quant_dp": -0.00011873245239257812,
+          "quant_frac_of_bound": 0.48609066009521484,
+          "quant_landed_grid_value": 0.5930630190522717,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": 2.7567148208618164e-06,
+          "dither_dp_sd": 3.7390081694672373e-06,
+          "dither_frac_of_bound": 0.013726204633712769,
+          "dither_dominates": false
+        },
+        {
+          "bits": 12,
+          "q": 0.0002442002442002442,
+          "bound_q_over_2": 0.0001221001221001221,
+          "quant_dp": -1.9311904907226562e-05,
+          "quant_frac_of_bound": 0.15816450119018555,
+          "quant_landed_grid_value": 0.5931623931623932,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": -6.556510925292969e-07,
+          "dither_dp_sd": 1.5999949908792003e-06,
+          "dither_frac_of_bound": 0.01061752438545227,
+          "dither_dominates": false
+        },
+        {
+          "bits": 13,
+          "q": 0.00012208521548040532,
+          "bound_q_over_2": 6.104260774020266e-05,
+          "quant_dp": 3.0338764190673828e-05,
+          "quant_frac_of_bound": 0.49700963497161865,
+          "quant_landed_grid_value": 0.5932120620192894,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": -9.164214134216309e-07,
+          "dither_dp_sd": 1.8028205801635454e-06,
+          "dither_frac_of_bound": 0.027218356728553772,
+          "dither_dominates": false
+        },
+        {
+          "bits": 14,
+          "q": 6.103888176768602e-05,
+          "bound_q_over_2": 3.051944088384301e-05,
+          "quant_dp": -5.900859832763672e-06,
+          "quant_frac_of_bound": 0.19334757328033447,
+          "quant_landed_grid_value": 0.5931758530183727,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": 7.450580596923828e-08,
+          "dither_dp_sd": 1.1683335775572431e-06,
+          "dither_frac_of_bound": 0.026853829622268677,
+          "dither_dominates": false
+        },
+        {
+          "bits": 15,
+          "q": 3.051850947599719e-05,
+          "bound_q_over_2": 1.5259254737998596e-05,
+          "quant_dp": 6.556510925292969e-06,
+          "quant_frac_of_bound": 0.4296743869781494,
+          "quant_landed_grid_value": 0.5931882686849574,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": -3.650784492492676e-07,
+          "dither_dp_sd": 1.2593527905261335e-06,
+          "dither_frac_of_bound": 0.06982208788394928,
+          "dither_dominates": false
+        },
+        {
+          "bits": 16,
+          "q": 1.5259021896696422e-05,
+          "bound_q_over_2": 7.629510948348211e-06,
+          "quant_dp": -2.5033950805664062e-06,
+          "quant_frac_of_bound": 0.32811999320983887,
+          "quant_landed_grid_value": 0.5931792172121767,
+          "quant_dstops": 0.0,
+          "dither_dp_mean": 7.450580596923828e-09,
+          "dither_dp_sd": 4.2079057985985055e-07,
+          "dither_frac_of_bound": 0.04394464194774628,
+          "dither_dominates": false
+        }
+      ],
+      "readings": {
+        "ANOMALY1_same_grid_value": {
+          "bits6_landed": 0.5873015873015872,
+          "bits4_landed": 0.6,
+          "identical": false,
+          "is_one_third": false,
+          "reading": "FALSIFIED"
+        },
+        "ANOMALY2_crossover": {
+          "depths_where_dither_dominates": [
+            3,
+            4
+          ],
+          "is_isolated_to_coarsest": true,
+          "reading": "(b) GRID LUCK: dither dominates only sporadically"
+        },
+        "NONMONOTONE_quant": {
+          "spearman_q_vs_absdp_quant": 0.9868,
+          "spearman_q_vs_absdp_dither": 0.9912,
+          "gap": 0.0044,
+          "reading": "FALSIFIED: both arms respond to dose alike"
+        },
+        "CONTROL_dither_monotone": "PASS"
+      }
+    }
+  ]
+}

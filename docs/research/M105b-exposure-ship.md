@@ -1122,7 +1122,202 @@ exists for; healthy arm `rc=0`. `09` already carried a three-state contract,
 built for §4.11(a) before the discipline was written, which is why its
 INCONCLUSIVE verdict was available to be returned at all.
 
+### 4.14 The withdrawn triage rule, re-derived for this estimator (MEASURED)
+
+The orchestrator withdrew the absolute-vs-ratio triage rule after three
+independent refutations and asked anyone resting on it to re-derive. This
+milestone rested on it implicitly, so it is re-derived here from scratch.
+
+**Answer up front, in three parts.** (i) The estimator is **clear**: the
+reported exposure does not move until the data is narrowed to **8 bits, six
+below the sensor's actual 14**. (ii) **No clearance in this report ever used a
+differencing noise estimate** -- every control is a SHA-256 identity or an
+integer dimension, neither of which estimates anything. (iii) But **my
+pre-registered reasoning for (i) was refuted by my own measurement**, and one
+of my two methodological predictions was simply wrong. Both are reported below
+in preference to the favourable half.
+
+Pre-registration committed at `7694309` and `dcb9e8d`, each **before** its run.
+Scripts `11-quantisation-exposure.py`, `12-crossover-check.py`.
+
+#### (a) Where the perturbation actually lands
+
+The shipped rule (`color.rs:758-796`) is
+`stops = round_100(clamp_6(log2(TARGET / p)))` with `p = percentile(luma, 99.9)`.
+Expanding rather than triaging by shape: there is exactly **one measured term**,
+and it is an **order statistic** -- the value at rank `k = nearest_rank_index(N,
+99.9)`. `TARGET` is a compile-time constant carrying no error. So a perturbation
+`e` lands in `p` and nowhere else, giving `dstops = -log2(1 + dp/p)`. The
+perturbation is divided by `p`, **not** by the sample count: averaging does not
+help, and the number of frames is irrelevant.
+
+The load-bearing claim is that order statistics are **1-Lipschitz in sup-norm**,
+so `|dp| <= max_i |e_i|` regardless of whether the perturbation is monotone.
+Pre-registered as P-A and falsifiable. **CONFIRMED in all 28 dose-by-arm-by-
+subject cells.**
+
+#### (b) The three refutations, mapped onto this estimator
+
+* **V-M113 (value vs position).** My statistic reads a pixel **value**, at a
+  rank. I am in the **exposed** class and do not get to claim location-statistic
+  dithering. But M113's threshold is *~12 distinct levels per fitted window*,
+  and this statistic **fits nothing and has no window**. Measured for
+  comparability: the 10,000-sample neighbourhood of the rank holds **9,198
+  distinct levels** (linear subject) and **8,503** (sRGB subject) -- roughly
+  **700x** above the threshold at which M113's immunity ends.
+* **M111 (term disparity `D`).** `D` is **undefined** here: there are not two
+  measured terms to be disparate. This is a genuine structural difference from
+  the fleet's defect-detection contrasts -- and because structural argument is
+  exactly what was withdrawn, it is recorded as a reason to *expect* a small
+  number, never as a substitute for measuring one.
+* **M115 (a common floor factorises into the noise factor).** There is no noise
+  term for a floor to attach to. The honest translation is not immunity but
+  **bias**: quantisation inflates variance, variance widens the upper tail, and
+  p99.9 lives in the upper tail.
+
+#### (c) The ladder, and the controls that make it readable
+
+All three controls pass on both subjects. `C-NULL`: dose zero gives exactly
+`0.0`. `C-POS`: a planted gain of 0.5 recovers `+1.0000` stops and 2.0 recovers
+`-1.0000`, both exact. `C-RESPONSIVE`: at 4-bit the estimator moves `-0.03`
+(linear) and `-0.02` (sRGB) stops, more than the reporting quantum -- so the
+nulls below are a quiet instrument rather than a dead one, which is the
+distinction the `STREHL_FIX_CA` notice turns on.
+
+At the pipeline's two real steps -- 16-bit output `q = 1.526e-05` and 14-bit ARW
+over black 512 / white 16383 `q = 6.301e-05` -- **`dstops = 0.0000` in both arms
+on both subjects**. The first movement of the reported number appears at
+**8-bit** on the linear render and **6-bit** on the sRGB render. Against a real
+14-bit sensor that is **six bits of headroom**, and the margin is not marginal.
+
+**Threat, stated before measuring and still live:** the renders on disk are
+16-bit TIFs, so "dose 0" already sits on a `q0 = 1/65535` floor. The 16-bit row
+is *at* that floor and is confounded; it is not read. The 14-bit row and coarser
+are clean.
+
+#### (d) Two numbers that did not fit, chased rather than rounded off
+
+**Anomaly 1.** On the linear subject, 6-bit and 4-bit returned `dp = +5.942e-03`
+**identical to four significant figures** from quantisers whose steps differ by
+4.2x. Two doses cannot honestly give one answer. Mechanism, confirmed: `p0 =
+0.32739154` rounds onto `21/63` and onto `5/15`, and **both are exactly 1/3**.
+It is a coincidence of the grids, not of the code. The sRGB subject, whose `p0 =
+0.593`, lands on `0.587302` and `0.600000` and shows no such coincidence -- it
+is the negative control, and it behaved. *(Script `12` labels that outcome
+`FALSIFIED` for subject 2, which is a **defect in my reading logic**: it applies
+a subject-specific hypothesis verbatim to the control. The label is wrong; the
+data is right. Recorded rather than silently reinterpreted.)*
+
+**Anomaly 2.** The arm ordering **inverts at the coarsest doses**, on both
+subjects. Script `11` aggregated this as "6 rows of 7, CONFIRMED", which hides a
+crossover at the extreme of the ladder. The dense ladder discriminates: dither
+dominates over a **contiguous** coarse range (bits 3-5 linear, bits 3-4 sRGB)
+and quantisation dominates at every finer depth. The mechanism is visible in the
+fraction of the Lipschitz bound each arm attains: **dither falls monotonically
+from 0.81 at 3-bit to 0.009-0.12 at fine depths**, while **quantisation stays
+scattered between 0.16 and 0.97 throughout**. Independent zero-mean error
+averages out over the ~8,241 samples above the rank; error that is deterministic
+in the pixel value moves that whole population together and does not.
+
+#### (e) The fleet headline reproduces here, and my stated reason for it was wrong
+
+I pre-registered (P-B) that the orchestrator's 16x result **should not**
+reproduce, on the grounds that "a rank statistic is not a noise estimator, so
+that mechanism has nothing to act on."
+
+**The ordering I predicted was confirmed and the reason I gave for it was
+refuted.** At the 14-bit dose, quantisation displaces the percentile **79x
+further** than matched-RMS dither on the linear subject and **79x** on the sRGB
+subject. That is the same phenomenon, larger: correlated error survives
+averaging and independent error does not, and this is **not specific to
+differencing estimators at all**. The practical consequence is identical in
+direction -- **modelling quantisation as equal-power random dither under-states
+its effect** -- and it under-states it here by about the same factor the
+orchestrator measured for a completely different instrument.
+
+**The number I am not quoting, and why.** Larger ratios are available: the
+16-bit rows give 6.4x (linear) and **336x** (sRGB). The 336x is **not
+trustworthy** and I decline to headline it -- at that dose the dither
+displacement is `7.451e-09`, which is **0.2 of one float32 ulp** at `p = 0.593`
+(`ulp ~ 3.5e-08`). It is measuring the representation, not the perturbation.
+The 14-bit linear row survives this check at 13.6 ulps; the 14-bit sRGB row is
+marginal at 2.1 ulps and is quoted only because the linear row agrees with it.
+
+#### (f) A caveat I raised against the replacement guidance, refuted by my own data
+
+I pre-registered a methodological objection: that for a **rank** statistic under
+**quantisation**, a dose-response control would be **non-monotone by
+construction**, because `|dp|` is the distance to the nearest grid point -- a
+sawtooth in `q`, not a growing function of it. If true, an agent fitting a
+monotone slope would read flatness as immunity.
+
+**Falsified by measurement.** Spearman rho of `|dp|` against `q` is **0.9736**
+(quant) versus **0.9824** (dither) on the linear subject, and **0.9868** versus
+**0.9912** on the sRGB subject -- gaps of **0.0088** and **0.0044** against a
+pre-registered threshold of 0.15. Both arms respond to dose alike. The sawtooth
+is real but lives in the *normalised* quantity: `q` spans four orders of
+magnitude and swamps it. **The replacement guidance needs no caveat from me: a
+dose-response control is valid for this class of statistic.** The weaker true
+statement is that the sawtooth is visible if the scale-free ratio `|dp|/(q/2)`
+is plotted instead, and an agent whose ladder covers less than a decade of dose
+could see scatter rather than slope.
+
+#### (g) The differencing-estimator audit
+
+Grep of all twelve scripts and every committed log for `split|half|diff|noise|
+sigma|std|var|residual`: **no differencing noise estimator appears anywhere in
+this milestone's instruments.** The controls are SHA-256 byte identity, integer
+image dimensions, and order statistics. A hash does not estimate a quantity, so
+it cannot mis-estimate one by 16x; this clearance survives the withdrawn rule
+because it never depended on a statistic at all.
+
+**One dependency is not mine to clear and is flagged rather than folded.** Every
+render in this report was produced through the merge's own noise gate, whose
+printed banner reads `gate unit : 0.021516 = sqrt(2) * FOCUS_NOISE_SD, the SD of
+a difference`. That is a differencing-derived constant, and the orchestrator's
+finding is precisely that such estimators book correlated quantisation error as
+signal. Whether `FOCUS_NOISE_SD` was calibrated on narrowed data is a question
+for the owner of `merge.rs`, which this milestone is forbidden to open.
+
+#### (h) The `STREHL_FIX_CA` nesting hazard, applied to this feature
+
+The notice warns that a structurally inert gate and a measurably useless gate
+return the same number. This milestone's V2 bar has exactly that shape -- "a
+gain of 1.0 must be bit-identical" -- so it is audited both ways.
+
+*Read at source*, which the notice says is the only thing that settles it:
+`merge_cmd.rs:3358-3398` places `// ---- exposure ----` at the **top level of
+the writer**, with **no alignment conditional anywhere around it**. It cannot be
+made inert by `STREHL_ALIGN=0`. Further, the no-op path **announces itself** --
+`Exposure::Auto` falls back through an explicit
+`eprintln!("--auto-exposure found no positive luminance; leaving it alone.")` --
+and the report line fires on `!applied.is_identity() || applied.automatic`, so
+an automatic run that chooses a gain of 1.0 **still prints**. M100 designed
+against this hazard before it was named; the credit is theirs.
+
+*Confirmed by hash*, independently of the code read: `v4-exp1-299`
+(`A4FABFEB...`) differs from `v4-exp0-299` and `v4-plain-299` (both
+`A559616F...`), so the flag is live and reaches the writer; and `v2-auto-299`
+equals `v3-repro-299` (`E400A63A...`), so the auto round-trip token reproduces
+its own render byte-for-byte.
+
+**The arm I did not run:** `STREHL_ALIGN=0 --srgb --auto-exposure`. The code
+read is dispositive by the notice's own criterion and the worktree is gone, so
+this is stated as a limit rather than covered.
+
+#### (i) External corroboration, from a measurement made for another purpose
+
+`merge_cmd.rs:3360` records that M100 measured the same percentile on the
+**binned** and **demosaiced** grids of one stack: **0.322559** and **0.322549**,
+`dp = 1.0e-05`, described there as "the same answer to 1/100 stop". An entire
+change of image formation moves the percentile by `1.0e-05`; 16-bit
+quantisation moves it by `6.05e-06`. That is an independent, pre-existing bound
+on this exact question, taken by a different milestone for a different reason,
+and it agrees.
+
 ---
+
+## 5. Where this correction lies
 
 The thing being corrected is a **viewing** transform, and it is worth being
 exact about where it sits, because the project has one hard boundary running
@@ -1559,8 +1754,94 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   `07-clamp-blindspot.py` under `PYTHONIOENCODING=cp1252` with piped stdout gave
   `rc=0`, 29 lines, 0 tracebacks, identical to the utf-8 arm. *Implication:* the
   re-runnability promise in §3 survives a verifier whose console is not UTF-8.
+* **P28 (MEASURED).** **THE SHIPPED AUTO-EXPOSURE IS CLEAR OF THE QUANTISATION
+  HAZARD WITH SIX BITS OF HEADROOM.** Across a 3-to-16-bit dose ladder on two
+  real renders, the reported exposure is unmoved at both of the pipeline's real
+  steps (16-bit output `q=1.526e-05`, 14-bit ARW `q=6.301e-05`, `dstops=0.0000`
+  in both arms on both subjects) and first moves at **8-bit** on the linear
+  render and **6-bit** on the sRGB render, against a real sensor depth of 14.
+  Controls: null exact, planted gains of 0.5 and 2.0 recovered exactly, and the
+  instrument moves `-0.03` stops at 4-bit so the null is quiet rather than dead.
+  *Implication:* the exposure number needs no quantisation correction, and the
+  clearance rests on a dose-response with a live positive control rather than on
+  the withdrawn triage rule.
+* **P29 (MEASURED).** **MODELLING QUANTISATION AS EQUAL-POWER DITHER UNDER-STATES
+  IT BY ~79x FOR AN ORDER STATISTIC, NOT ONLY FOR A NOISE ESTIMATOR.** At the
+  14-bit dose, quantisation displaces p99.9 **79x** further than matched-RMS
+  uniform dither, on both the linear and the sRGB subject. Mechanism, measured
+  through the fraction of the 1-Lipschitz bound each arm attains: dither falls
+  monotonically from **0.81** at 3-bit to **0.009-0.12** at fine depths as its
+  independent zero-mean errors average over the ~8,241 samples above the rank,
+  while quantisation stays scattered between **0.16 and 0.97** because error
+  deterministic in the pixel value moves that whole population together.
+  *Implication:* the fleet's 16x result generalises well beyond differencing
+  estimators -- **any** statistic that averages over many samples inherits it --
+  and the correction is to model quantisation as quantisation.
+* **P30 (MEASURED).** **A RATIO BUILT FROM A DISPLACEMENT BELOW ONE FLOAT32 ULP
+  IS AN ARTEFACT OF THE REPRESENTATION.** The largest under-report ratio in P29's
+  ladder is **336x**, at 16-bit on the sRGB subject, and it is **discarded**: the
+  dither displacement there is `7.451e-09`, or **0.2 ulp** at `p=0.593`
+  (`ulp ~ 3.5e-08`). The quoted 79x rows survive at 13.6 ulps (linear) and 2.1
+  ulps (sRGB). *Implication:* when a null arm approaches machine precision the
+  ratio against it grows without bound and reads as a stronger effect; **divide
+  by an ulp count before quoting a ratio whose denominator is a null.**
+* **P31 (MEASURED, refutes a caveat this milestone raised).** **A DOSE-RESPONSE
+  CONTROL IS VALID FOR A RANK STATISTIC UNDER QUANTISATION.** Pre-registered
+  prediction that `|dp|` would be non-monotone in `q` -- a sawtooth of distance
+  to the nearest grid point -- is **falsified**: Spearman rho of `|dp|` against
+  `q` is **0.9736** (quant) versus **0.9824** (dither) on the linear subject and
+  **0.9868** versus **0.9912** on the sRGB subject, gaps of 0.0088 and 0.0044
+  against a pre-registered threshold of 0.15. *Implication:* the orchestrator's
+  replacement guidance needs no exception for this class. The sawtooth is real
+  but lives in the scale-free ratio `|dp|/(q/2)`; a ladder spanning less than a
+  decade of dose could see scatter rather than slope.
+* **P32 (MEASURED).** **TWO QUANTISERS 4.2x APART GAVE ONE ANSWER, AND THE CAUSE
+  WAS ARITHMETIC RATHER THAN CODE.** On the linear subject, 6-bit and 4-bit both
+  returned `dp = +5.942e-03` because `p0 = 0.32739154` rounds onto `21/63` and
+  `5/15`, **both exactly 1/3**. The sRGB subject, `p0 = 0.593`, lands on
+  `0.587302` and `0.600000` and shows no coincidence, which is the negative
+  control behaving. *Implication:* a repeated value across doses is a grid
+  collision, not a stuck instrument -- but only a second subject distinguishes
+  the two, so **carry a subject whose baseline sits elsewhere on the grid.**
+* **P33 (DERIVED, from source).** **THE EXPOSURE GATE CANNOT BE MADE INERT BY
+  `STREHL_ALIGN=0`, AND ITS NO-OP PATH ANNOUNCES ITSELF.** `merge_cmd.rs:3358-
+  3398` places the exposure block at the top level of the writer with no
+  alignment conditional; `Exposure::Auto` falls back through an explicit
+  `eprintln!` naming the reason, and the report line fires on
+  `!applied.is_identity() || applied.automatic`, so an automatic run choosing a
+  gain of 1.0 still prints. Independently confirmed by hash: `v4-exp1-299`
+  (`A4FABFEB...`) differs from `v4-exp0-299` and `v4-plain-299` (`A559616F...`),
+  so the flag reaches the writer. *Implication:* the hazard the `STREHL_FIX_CA`
+  notice describes was designed against here **before it was named**, and the
+  credit is M100's, not this milestone's. Not covered: an actual
+  `STREHL_ALIGN=0 --srgb --auto-exposure` render was not taken.
 
 ### Disciplines
+
+* **PD17.** **A conclusion can be right for a reason that is wrong, and that is
+  more dangerous than being wrong.** P29's ordering was pre-registered correctly
+  and its stated rationale -- "a rank statistic is not a noise estimator, so
+  that mechanism has nothing to act on" -- was refuted by the same run that
+  confirmed the ordering. Had the ordering been the only thing checked, a false
+  mechanism would have been folded with a true number attached to it, and the
+  next agent to reason from that mechanism would have been misled by a
+  *confirmed* prediction. **Check the reason separately from the result, because
+  a passing prediction does not audit its own justification.**
+* **PD18.** **A required deliverable can be present as content and absent as
+  structure.** The commission required a *where this correction lies* section.
+  Its content shipped -- the pipeline diagram and its three tested properties --
+  but its **heading did not**, so `### 5.1` rendered as a subsection of `### 4.13`
+  and no reader scanning the table of contents would have found §5 at all. Found
+  by grepping this report for the names of its own required sections rather than
+  by recalling that they were written. **Audit a deliverable against its
+  commission by searching for each required item by name.**
+* **PD19.** **An aggregate over a dose ladder is not a summary of it.** Script
+  `11` reported P-B as "6 rows of 7, CONFIRMED" while the single dissenting row
+  sat at the **extreme** of the ladder on **both** subjects -- the signature of a
+  crossover, not of noise. A count of agreeing rows treats an ordered ladder as
+  an unordered bag and discards exactly the structure a dose-response exists to
+  reveal. **Report the row where the sign changes; a monotone process does not
+  have one.**
 
 * **PD1.** **A brief's premise that a previous dispatch already refuted must be
   checked against the ledger before re-sending, not just against the code.**
@@ -1699,6 +1980,15 @@ has, which is none, and against facts 1253, 1257, 1293, 1296, 1347-1349.
   59% of the high-band loss to that field. **Reported, not acted on:**
   `align_cmd.rs` is held by M95-sharpness, and the notice asked for findings
   rather than fixes.
+* **PQ6.** Was `FOCUS_NOISE_SD` calibrated on narrowed data? Every render in
+  this report passes through the merge's noise gate, whose banner reads
+  `gate unit : 0.021516 = sqrt(2) * FOCUS_NOISE_SD, the SD of a difference`.
+  The orchestrator's finding is that differencing estimators book correlated
+  quantisation error as signal and therefore **under-report noise**, which for a
+  gate would mean it is set too tight. §4.14(g) establishes that no *instrument
+  in this milestone* uses such an estimate, but the renders inherit that
+  constant. **Reported, not acted on:** `merge.rs` is outside this milestone's
+  boundary.
 
 ---
 
