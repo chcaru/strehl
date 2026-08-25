@@ -348,3 +348,103 @@ confirmatory test on any subject in my evidence set would have passed. The check
 caught it was asking what class of subject was *absent*, then going to look for one.
 Cost: one classification pass and four renders.
 
+## Scoring the candidates against known truth
+
+`flower-bud-alone-cpl` is shot on a featureless white sweep, so on the backdrop **the
+far-field median is ground truth for every background pixel**. That turns "which
+estimator is right" from an argument into a measurement. Nine frames were rendered
+across the bracket (0, 25, 51, 76, 102, 127, 153, 178, 204), each normalised to the
+common far field before comparison.
+
+`k_F` is estimated from the **subject side only** — local gradient energy on subject
+pixels, argmax over frames — so the test never consults the backdrop and is not
+circular. It recovers `k_F = 102`, which is both the bracket midpoint and the merge's
+own alignment reference, from a monotone single-peaked focus curve
+(426 → 1799 → 631).
+
+### Accuracy — median error against known truth, linear DN
+
+| estimator | 4–12 | 12–30 | 30–60 | 60–120 | **120–200** | 200–300 |
+| --- | --- | --- | --- | --- | --- | --- |
+| merge (shipped) | −4631 | −3825 | −4318 | −4692 | **−4066** | −1623 |
+| mean | −6677 | −5378 | −3830 | −2170 | −1086 | −417 |
+| **signed max** | −1952 | −930 | −420 | −229 | **−134** | −50 |
+| **signed cleanest-third mean** | −3117 | −1789 | −807 | −309 | **−190** | −100 |
+| signed q87.5 | −3306 | −1741 | −735 | −312 | −196 | −106 |
+| regress to a = 0 | −4925 | −2863 | −1141 | −26 | 163 | −61 |
+| wrong tail (lower) | −10500 | −9674 | −8390 | −6311 | −3572 | −1326 |
+| ORACLE best single frame | −1952 | −932 | −460 | −356 | −343 | −227 |
+
+As a gain over the shipped merge, the signed max runs **2.4× / 4.1× / 10.3× / 20.4× /
+30.3× / 32.6×** across the six bands — monotone in distance, and better than the merge
+in *every* band including hard against the silhouette.
+
+**It also beats the oracle single frame** (−134 against −343 at d=120–200). That matters:
+the estimator is not merely "pick the best frame", it genuinely combines, so no
+selection-based fix can reach it.
+
+### Two of my own proposals die here
+
+**"Regress `I_k` against `|k − k_F|` and extrapolate to zero" is refuted.** I argued it
+would beat an order statistic because it uses every sample and is unbiased. Measured, it
+loses to the plain signed envelope in five of six bands on this subject (0.9× against
+2.4× at d=4–12) and in *all six* on the pencil. The model is wrong: veiling is not
+linear in `|k − k_F|`, so a line fitted through mostly-veiled samples overshoots.
+**Withdrawn.**
+
+**"Use a high quantile and debias for `sqrt(2 ln n)`" is unnecessary.** Across the whole
+family the far-field noise spans only **356 → 374 DN, a 5% range** — max, median and
+mean are all within a whisker of each other. In the far field the frames are nearly
+identical, so an order statistic over strongly correlated samples costs almost nothing,
+and there is no reason to back off the tail. Take the aggressive end.
+
+The 1.22–1.28× noise floor that *every* candidate shares, including the plain mean, is
+the **9-frame subsample**, not the estimator — the merge averages ~205. In-crate a
+cleanest-third mean averages ~68 frames rather than 3, so the floor should fall away.
+**That is a prediction, not a measurement, and it must be checked rather than assumed.**
+
+### The guard fires, and it is the most important number here
+
+Gradient RMS inside the subject, eroded 40 px clear of the silhouette:
+
+| estimator | subject detail vs merge |
+| --- | --- |
+| merge (shipped) | 1.000× |
+| signed max | **0.355×** |
+| signed q87.5 | 0.332× |
+| signed cleanest-third mean | 0.261× |
+| mean | 0.184× |
+
+**Every candidate destroys 64–82% of the subject's gradient energy.**
+
+Half of that is a confound and must be said plainly: my estimators are pure per-pixel
+statistics over nine differently-focused frames and perform **no focus selection at
+all**, so of course they are blurry on the subject — that comparison is "focus-stacked"
+against "not focus-stacked". The merge's 1.000× is its election doing exactly the job it
+exists to do.
+
+But the direction is real and the magnitude bounds the risk, so the conclusion is hard:
+
+> **The signed envelope must be gated to background pixels and must never touch pixels
+> the election is handling.** Applied globally it would cost most of the subject detail
+> in the library — the same failure mode BUILD-RENDER caught costing 6.6% across 26
+> subjects, except an order of magnitude larger.
+
+The gate is already available from the same statistic: where no foreground is spilling,
+the through-focus curve has no veiling component and the estimator must collapse to the
+ordinary gated mean. It is worth noting that the signed max preserves nearly **twice**
+the subject detail of the plain mean (0.355× against 0.184×), so if the gate ever leaks,
+the envelope is the more forgiving of the two errors.
+
+### The specification, as measured
+
+1. **Direction** from `sign(B̂ − F̂)`, where `F̂` is the intensity at the nearby
+   foreground pixels whose winner index the merge already holds. Not a tunable.
+2. **Estimator**: mean of the cleanest third in that direction (21.4×) or the plain
+   extremum (30.3×). Noise between them differs by 5%; prefer the third-mean in-crate
+   where it averages ~68 frames.
+3. **Gate**: background pixels only, detected by a non-zero veiling slope. Non-optional.
+4. **No debiasing, no quantile tuning, no regression.** All three were proposed by me and
+   all three are refuted above.
+
+
