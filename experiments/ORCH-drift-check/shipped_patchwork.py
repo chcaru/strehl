@@ -84,17 +84,24 @@ for label, path in TARGETS:
     H, W = L.shape
     border = max(200, min(H, W) // 8)
     stride = max(128, min(H, W) // 16)
+    # Window selection must NOT be computed from the arm under test. Ranking by
+    # the target's own smoothness preferentially selects the windows where the
+    # defect is absent, so every arm scores better than it is -- and two arms
+    # are then scored on two different sets of pixels, which is not an A/B.
+    # Brightness is a property of the scene, so it is safe to rank on.
     cands = []
     for y in range(border, H - S - border, stride):
         for x in range(border, W - S - border, stride):
-            w = L[y : y + S, x : x + S]
-            cands.append((float(w.mean()), float(w[::8, ::8].std()), x, y))
+            cands.append((float(L[y : y + S, x : x + S].mean()), x, y))
     if not cands:
         print("%-30s no windows (image too small)" % label)
         continue
     bright = float(np.percentile([c[0] for c in cands], 80))
-    pool = sorted([c for c in cands if c[0] >= bright], key=lambda t: t[1])[:12]
-    sd = float(np.median([p[1] for p in pool]))
+    pool = [c for c in cands if c[0] >= bright]
+    # Deterministic, arm-independent: the brightest windows, in scan order.
+    pool = sorted(pool, key=lambda t: (-t[0], t[2], t[1]))[:12]
+    pool = [(m, 0.0, x, y) for m, x, y in pool]
+    sd = float(np.median([L[y : y + S, x : x + S].std() for _, _, x, y in pool]))
     print("%s  (%dx%d, %d windows scanned)" % (label, W, H, len(cands)))
     if not commission(sd, rng):
         continue
