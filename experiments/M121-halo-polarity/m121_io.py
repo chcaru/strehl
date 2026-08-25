@@ -30,8 +30,9 @@ ARMS = {
         "bee-3-cpl, alignment OFF, mean n_eff 60.86, 35.02% singleton."
     ),
     "armM-gate0-binlin": (
-        "NEGATIVE CONTROL.  gate 0.00, pure selector.  merge.rs:3027 labels "
-        "gate 0 a negative control.  Same 299 frames, alignment OFF."
+        "NEGATIVE CONTROL.  gate 0.00, pure selector.  merge.rs:3299 and "
+        "merge.rs:3341 label gate 0 a negative control and establish that it "
+        "admits exactly the winner.  Same 299 frames, alignment OFF."
     ),
 }
 FRAMES = ["armF-f143", "armF-f158", "armF-f173", "armF-f193", "armF-f208"]

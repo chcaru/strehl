@@ -221,6 +221,94 @@ belongs in the instrument regardless.)
 
 ---
 
+## N5 — the PIL narrowing, planted rather than assumed
+
+ORCH's fleet correction (2026-08-24) gives two triage questions: *is my
+statistic absolute?* and *does it divide a small quantity by a large one?* My
+answers are **no** and **yes**. The rim is `(p(+d) − hi)/A` with `A = hi − lo`:
+a small overshoot over a large amplitude, both drawn from the same pixels of the
+same read. Dimensionlessness protects it against the first hazard. The second is
+the one ORCH flags as compressing *toward a clean null* — "the hardest error
+here to catch, because nobody re-examines an arm that showed no effect."
+
+**M121 reports a clean null.** Row two of the headline is `+0.0009` at 50 %
+positive. That is precisely the arm nobody would re-examine, so it is re-examined
+here.
+
+**The mechanical answer is NOT EXPOSED, and it is checkable rather than
+asserted.** Every pixel read in this milestone goes through `m121_io.load_u16`
+(`tifffile.imread` + an immediate `assert dtype == np.uint16`) or through one of
+two index-map readers that carry the same assert (`e2d_tweezers.py:62`,
+`e3_election.py:124`). The index assert matters independently of this notice:
+`bee-3-cpl` has **299 frames**, so a uint8 index map would wrap silently. There
+is no `Image.open` anywhere in the milestone; the only uses of the `Image`
+symbol are `Image.fromarray(...).save(...)` in three preview writers
+(`e0b_look.py:33`, `e0c_crops.py:46`, `e2e_shape.py:78`).
+
+But "my reader was correct" is a claim about code. `n5_quant.py` measures the
+consequence instead.
+
+**Fact 1615 reproduced live (MEASURED).** A genuine uint16 RGB TIFF written from
+the shipped arm reads back through `tifffile` byte-exact and through
+`np.asarray(Image.open(p))` as **uint8**: **18202 distinct levels → 80, a 227.5×
+loss.** ORCH's occupied-range refinement is confirmed on independent data — the
+crop occupies 20247 DN of the 65535 available, and it is that occupied span, not
+the full range, that sets the survivors.
+
+**The plant was commissioned before it was used.** A modelled defect that was
+never checked against the real defect is worth nothing, so `commission_model()`
+tries three candidate narrowings and requires one to be **byte-identical to
+PIL's own output over all 786,432 samples**, hard-erroring otherwise. `shift8`
+matched exactly. What follows therefore plants the real defect.
+
+**Result — the headline and the null both hold (MEASURED).** The counterfactual
+re-runs the entire headline on the narrowed arm with the headline's own
+settings, which is what an agent who had used PIL throughout would have
+reported. It reproduces the published clean numbers exactly, which validates the
+path:
+
+| row | clean | narrowed | shift | n |
+|---|---|---|---|---|
+| dark obj / bright surround (**headline**) | +0.0634 | +0.0619 | **−0.0015 (−2.4 %)** | 70/69 |
+| bright obj / dark surround (**the null**) | +0.0009 | −0.0016 | −0.0025 | 18/19 |
+| undecided, bright side | +0.0512 | +0.0515 | +0.0003 | 57/57 |
+| undecided, dark side | +0.2398 | +0.1654 | **−0.0744 (−31 %)** | 38/37 |
+
+The headline moves 2.4 % and keeps its sign, its width and its significance. The
+null stays a null, and the shift is far inside its own CI of
+[−0.0141, +0.0289]. **Neither verdict in this report is a quantisation
+artifact.**
+
+**The fourth row is the interesting one, and it refuted my first explanation.**
+I predicted from ORCH's occupied-range rule that the row which moved most would
+be the one on the lowest-amplitude edges. **Measured, it is the opposite:**
+`undecided_dark_side` has the *highest* median amplitude of the four classes
+(10260 DN, ~40 levels surviving) and still moved −31 %.
+
+The real route is visible because the same class was measured twice under
+different conditions:
+
+| same class, same data, same defect | rim shift |
+|---|---|
+| matched edges, read band **pinned** (`d ≥ 8.92` both arms) | +0.2483 → +0.2492, **+0.4 %** |
+| **free** re-detection, band recomputed | +0.2398 → +0.1654, **−31 %** |
+
+**DERIVED: the narrowing damages a normalised statistic mainly through
+re-detection and band placement, not through the pixel value.** Held at fixed
+positions the statistic barely moves; allowed to re-detect edges and recompute
+its transition-exclusion band on the narrowed data, the same statistic on the
+same class moves two orders of magnitude more. This is a sharper triage question
+than "is it a ratio": **does anything about where I measure get decided from the
+narrowed pixels?** A milestone that scored at fixed coordinates is far less
+exposed than one that found its own features.
+
+It also explains why the headline survived. The headline's edge set is pinned by
+`MIN_AMPLITUDE = 2000 DN` and by the commissioned rise envelope — a gate
+introduced for an entirely unrelated reason (the N4 flat-ROI failure) — and that
+gate is what keeps its detection stable under narrowing.
+
+---
+
 ## Provenance (discipline 830)
 
 Every arm was identified against the `strehl stack` log beside it, not from its
@@ -618,6 +706,20 @@ Numbered `P1…` per rule 28; ORCH assigns absolute numbers.
   an artifact-free edge read as strongly contrast-reducing. The decomposition
   `S = bright − dark` is transition-immune by construction and is the reason the
   headline is trustworthy.
+- **P15 (MEASURED).** The PIL uint8 narrowing was planted on the shipped arm
+  with a model **commissioned byte-identical to PIL over 786,432 samples**. The
+  M121 headline moves **−2.4 %** (+0.0634 → +0.0619) and the bright-object null
+  stays null (+0.0009 → −0.0016, inside its own CI). **Neither M121 verdict is a
+  quantisation artifact.** Fact 1615 also reproduces live at **227.5×** level
+  loss (18202 → 80) on a crop occupying 20247 DN.
+- **P16 (DERIVED).** The narrowing damages a normalised edge statistic mainly
+  through **re-detection and band placement, not through the pixel value**: the
+  same class on the same data moved **+0.4 % with the read band pinned** and
+  **−31 % when allowed to re-detect**. The triage question "does it divide a
+  small quantity by a large one" should be joined by **"is anything about *where*
+  I measure decided from the narrowed pixels?"** Amplitude does not predict the
+  damage — the worst-affected class had the *highest* median amplitude
+  (10260 DN), refuting the obvious occupied-range explanation.
 
 ---
 
@@ -679,6 +781,7 @@ alone.
 | `…/e2e_shape.py` | `e2e-shape.json` — band tables, "does it end", crops |
 | `…/e3_election.py` | `e3-election.json` — election spill, byte-identity check |
 | `…/e4_controls.py` | `e4-controls.json` — N1, N1b, N2 ladder, N4 |
+| `…/n5_quant.py` | `n5-quant.json` — the PIL narrowing planted and commissioned |
 
 Renders (invocations recorded beside each):
 `C:\dev\strehl-out\M121\e3\` (bee-3, byte-identical to shipped),
