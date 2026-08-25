@@ -1741,3 +1741,109 @@ is the right design but inherits the same doubt unless its instrument passes (1)
 
 No change to `eps_r`, `A7C2_FE100GM_2XTC_X4CPL_RADIAL`, or
 `support_r_max = Some(0.788)`. `optics.rs` is untouched by this section.
+
+## 22. The convention question, settled by reading rather than by matching
+
+The orchestrator's enumeration found no simple normalisation ratio inside
+[1.4256, 1.4867], withdrew the "match the number" instruction, and replaced it
+with the right one: **read the code and determine the convention definitively.**
+It then named two candidates its ratio list could not see. Both are settled
+below, and neither is present. This supersedes nothing in §21; it closes the two
+gaps §21 argued from arithmetic with direct evidence from the source.
+
+### 22.1 Double application: excluded by the call graph
+
+At `e49281f`, across the whole workspace:
+
+| symbol | production sites |
+| --- | --- |
+| `OpticalProfile::compose` | **exactly one** — `align_cmd.rs:1289` |
+| `active_profile()` | `align_cmd.rs:1272` (the application) and `align_cmd.rs:289` (a fail-fast validation that **discards** its result) |
+
+Every other occurrence of `compose` is inside `optics.rs`'s own `#[cfg(test)]`
+module. **The aligner does not apply it and the merge does not apply it twice:
+there is one call, in one place.**
+
+At that site the structure is:
+
+```rust
+let ca = active_profile()?;              // once per frame, outside the plane loop
+for dy in 0..2 { for dx in 0..2 {
+    let t_site = compose(ca, cfa_site_channel(dx, dy), t);
+    gather_checked(src, t_site, geom, resampler, ...)
+} }
+```
+
+`t_site` is a **local, recomputed from an unmodified `t` on each pass**. It is
+not accumulated into `t` and it is not re-composed. One composed `Similarity` per
+plane, one `gather_checked` per plane, one resample. There is no path by which a
+correction is applied twice.
+
+### 22.2 The `compose` precondition is satisfied — I checked my own wiring
+
+`compose`'s doc (`optics.rs:233`) states a precondition that the module author
+left for whoever wired it:
+
+> **This function scales about the coordinate ORIGIN, not about the plane
+> centre.** `z` must already be plane-centre-relative. Feeding it absolute
+> warpmap coordinates would introduce a uniform red offset of order
+> `eps * half_diagonal` ~ 1.5 sensels. Nothing in this crate calls `compose`
+> yet; a wiring commit must satisfy that precondition.
+
+**I wrote that wiring commit, so this is a self-audit and it deserved checking
+rather than assuming.** It is satisfied:
+
+```rust
+// warpmap.rs:460
+let (cx, cy) = (geom.width as f64 * 0.5, geom.height as f64 * 0.5);
+let (sx, sy) = t.apply_at(px as f64, py as f64, cx, cy);
+
+// align.rs:290
+pub fn apply_at(self, x: f64, y: f64, cx: f64, cy: f64) -> (f64, f64) {
+    let q = self.apply(Cx::new(x - cx, y - cy));
+    (q.re + cx, q.im + cy)
+}
+```
+
+The similarity acts on `(x - cx, y - cy)`. **The coordinates reaching `compose`'s
+scale are plane-centre-relative, which is exactly what it requires.** The
+1.5-sensel uniform red offset the doc warns about is not present.
+
+### 22.3 "A resolution or CFA-plane factor composed with a convention" cannot exist here
+
+This was the orchestrator's newly highest-weighted candidate, on the reasoning
+that a factor of 2 multiplied by a genuine convention difference "lands
+anywhere". **It cannot, for two independent reasons:**
+
+1. **There is no convention in the apply path to compose with.** `compose`
+   performs no normalisation of any kind — no field height, no diagonal, no `r`.
+   `support_r_max` is declared metadata that nothing reads.
+2. **A scale about the origin is unit-invariant.** `s·(2z) = 2·(s·z)`, so a
+   plane-versus-sensel factor of 2 cancels identically and cannot alter the
+   effective `eps`. The **only** unit-sensitive term in the model is the additive
+   translation — and the shipped profile is `_RADIAL`, which drops it.
+
+So the product the candidate requires has no second factor.
+
+### 22.4 The centre convention, quantified
+
+`cx = width * 0.5`, not `(width - 1) * 0.5`. If the fit assumed the other, the
+resulting centre discrepancy is `delta = 0.5` plane px, and its effect through a
+magnification is a **uniform translation** of `eps * delta = 704.5e-6 * 0.5 =
+0.00035 plane px`. It is not a scale error and it is four orders of magnitude
+below the effect under discussion.
+
+### 22.5 Verdict
+
+**The application path is definitively clean.** One call site, one application,
+correct coordinate frame, no normalisation to get wrong, and unit-invariant with
+respect to the one factor that could plausibly have been mismatched. Combined
+with `optics.rs:692`'s closed-form assertion that
+`compose(...).apply(r) == (1 + eps_r) * r` to `1e-9`, **the code applies exactly
+`eps_r` about the correct centre, once.**
+
+Therefore the measured gain, **if it is real**, lives in the coefficient or in
+the instruments that measured it — and per §21 there is currently **no calibrated
+instrument** in the project entitled to say which. My own `k = 1.374` remains
+withdrawn. Nothing here licenses a change to `eps_r`, and nothing here licenses
+shipping 0.692.
