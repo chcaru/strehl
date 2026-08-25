@@ -393,113 +393,67 @@ impl SelectionScale {
         Self { geom, level }
     }
 
-    /// Choose each pixel's window radius from the **calibrated noise model**,
-    /// capped by its distance to the nearest depth discontinuity.
+    /// Choose each pixel's window radius as its **distance to the nearest
+    /// depth discontinuity**, capped at the shipped radius.
     ///
-    /// # The rule
+    /// # What this is, and what it deliberately is not
     ///
-    /// ```text
-    /// radius(p) = min( r_noise(p), r_geom(p) )
-    /// ```
+    /// The halo is the focus window crossing an occluding silhouette, so the
+    /// rule is simply: never let it. Away from any silhouette the window is the
+    /// shipped 13 px, unchanged; against one it collapses to what fits on the
+    /// pixel's own side.
     ///
-    /// `r_noise` is the **smallest** radius at which this pixel's through-focus
-    /// peak still clears the calibrated noise floor by `margin`. `r_geom` is
-    /// the distance to the nearest depth step, so no window ever spans a
-    /// silhouette. Away from edges the noise term binds and the window is as
-    /// small as the sensor allows; against a silhouette the geometry term binds
-    /// and the window collapses.
+    /// It is **not** a general window shrink, and this is the correction of a
+    /// hypothesis, measured on real pixels rather than argued. The plan was to
+    /// pick, per pixel, the smallest radius whose through-focus peak still
+    /// clears the calibrated noise floor by a stated margin — small in textured
+    /// regions, growing in flat ones. That was built (`min(r_noise, r_geom)`,
+    /// margin = `DEFAULT_GATE`) and rendered against this rule as the only
+    /// difference, three arms from one binary:
     ///
-    /// # Why this is not [`from_guide`](Self::from_guide), which failed
+    /// | `bee-2-cpl` background | shipped | `min(r_noise, r_geom)` | this rule |
+    /// | --- | --- | --- | --- |
+    /// | flat patch A | 1.000 | 0.986 | **0.878** |
+    /// | flat patch B | 1.000 | 1.070 | **1.005** |
+    /// | flat patch C | 1.000 | **1.187** | 0.996 |
     ///
-    /// `from_guide` shrank the window wherever the guide saw an edge, with no
-    /// check that the smaller window could still elect. It cut support from 729
-    /// samples to 81, the argmax of 299 noisy responses became close to random,
-    /// and background `|grad|` rose **31.4%** — a noise explosion traded for a
-    /// halo. The missing half of that rule was any reason to believe the
-    /// smaller window was *sufficient*. That reason is the noise model, which
-    /// this project has calibrated and which is the whole thesis: the radius is
-    /// not a constant to be tuned, it is a quantity to be **solved for** per
-    /// pixel.
+    /// The noise term cost up to **+18.7% background noise and bought nothing
+    /// visible**: the two arms' halos are indistinguishable at 1:1. The reason
+    /// is structural rather than a bad margin, so no margin would have fixed
+    /// it. Contamination requires a window that spans two depths, which only
+    /// happens near a silhouette — and there the geometric cap already binds
+    /// and is the smaller of the two. Everywhere else, shrinking the window
+    /// trades noise for nothing at all. The mandate's direction was right (the
+    /// window size *is* the halo radius); its mechanism was not.
     ///
-    /// # The scaling law
+    /// So the margin, its environment override and its accessor are **deleted**
+    /// rather than tuned to zero, because a constant that must be zero is not a
+    /// constant, it is a disabled feature waiting to be re-enabled by someone
+    /// who reads the name and not the measurement.
     ///
-    /// The focus measure is a box mean of `|grad|` over `(2r+1)^2` samples, so
-    /// its noise falls as the square root of the sample count:
+    /// # Why this survives what [`from_guide`](Self::from_guide) did not
     ///
-    /// ```text
-    /// sd(r) = FOCUS_NOISE_SD * (2 * WINDOW_RADIUS + 1) / (2r + 1)
-    /// ```
-    ///
-    /// [`FOCUS_NOISE_SD`](crate::merge::FOCUS_NOISE_SD) is calibrated *at*
-    /// `WINDOW_RADIUS`, which is why it appears against that reference rather
-    /// than bare. Reading a constant calibrated at radius 13 as though it held
-    /// at another radius is a live miscalibration this build has already paid
-    /// for once; here the radius is explicit on both sides, so it cannot be
-    /// read wrong silently.
-    ///
-    /// `margin` is in the same units as [`crate::merge::Gate`]'s threshold:
-    /// multiples of the standard deviation of a *difference* of two independent
-    /// responses, hence the `sqrt(2)`.
-    ///
-    /// # What binds where, and what pays for it
-    ///
-    /// On flat background near a silhouette the noise term asks for a *large*
-    /// window — correctly; there is nothing there to discriminate with — and
-    /// the geometry term overrides it to a small one. The election there is
-    /// then genuinely under-determined. **That is accepted deliberately.** When
-    /// no frame has content at a pixel, every frame renders it almost
-    /// identically, so an arbitrary election is invisible. What is emphatically
-    /// *not* invisible is electing the frame in which a defocused foreground is
-    /// spilling across that pixel, which is what the uncapped window does, and
-    /// which is the halo. The residual scatter is what the guided regulariser
-    /// ([`domain_transform`]) is for. That is precisely the trade being made:
-    /// buy noise robustness with edge-aware smoothing, not with window radius.
+    /// `from_guide` used the same range test and over-fired badly — 47.53% of
+    /// the plane treated, 24.67% at a 1 px support, background `|grad|` up
+    /// **31.4%** — and needed a confidence veto to hold it back. This rule
+    /// collapses 25.03% of `bee-2-cpl` to 1 px with **no veto at all** and
+    /// measures at or *below* the shipped background noise on every patch. The
+    /// difference is not the cap, it is what happens downstream: the spatial
+    /// averaging the narrow window gives up is bought back by
+    /// [`domain_transform`], which averages along the background instead of
+    /// across the silhouette. That is why the veto, `FLOOR_Q` and the `conf`
+    /// parameter have no counterpart here.
     #[must_use]
-    pub fn from_acuity(
-        excess: &[f32],
-        guide: &[u16],
-        geom: PlaneGeometry,
-        tau: f32,
-        margin: f32,
-    ) -> Self {
-        assert_eq!(excess.len(), geom.pixels());
+    pub fn from_silhouettes(guide: &[u16], geom: PlaneGeometry, tau: f32) -> Self {
         assert_eq!(guide.len(), geom.pixels());
-        assert!(margin > 0.0, "margin must be positive, got {margin}");
         assert!(tau > 0.0, "tau must be positive, got {tau}");
         let px = geom.pixels();
         let mut scratch = vec![0.0f32; px];
 
-        // --- r_noise -------------------------------------------------------
-        //
-        // The *signal* `excess` reports is radius-independent to first order: a
-        // box mean of a locally homogeneous quantity does not depend on the
-        // box. So the same excess can be put to every candidate radius, and the
-        // only question is whether that radius' noise floor is low enough to
-        // resolve it. Ascending order, first hit wins, so this is the SMALLEST
-        // sufficient radius.
-        let sd_at = |r: usize| {
-            crate::merge::FOCUS_NOISE_SD * (2 * WINDOW_RADIUS + 1) as f32 / (2 * r + 1) as f32
-        };
-        let need: Vec<f32> = LEVEL_RADII
-            .iter()
-            .map(|&r| margin * core::f32::consts::SQRT_2 * sd_at(r))
-            .collect();
-        let mut level = vec![FULL_LEVEL; px];
-        for i in 0..px {
-            for (l, n) in need.iter().enumerate() {
-                if excess[i] >= *n {
-                    level[i] = l as u8;
-                    break;
-                }
-            }
-        }
-
-        // --- r_geom --------------------------------------------------------
-        //
         // A pixel sits on a depth step when the guide varies by more than `tau`
         // frames across its box. The dilate/erode pair is a local range, and
         // composing radius steps gives the range at successively larger radii
-        // for a few taps per axis each, exactly as `from_guide` does.
+        // for a few taps per axis each.
         //
         // Reading outward from the silhouette, the first radius at which a
         // pixel's box catches the step is its cap: it may use every radius
@@ -521,6 +475,7 @@ impl SelectionScale {
 
         let mut hi = smooth.clone();
         let mut lo = smooth;
+        let mut level = vec![FULL_LEVEL; px];
         let mut capped = vec![false; px];
         let mut prev = 0usize;
         for (l, &r) in LEVEL_RADII.iter().enumerate() {
@@ -532,13 +487,12 @@ impl SelectionScale {
                 // the cap and no later level may raise it back.
                 if !capped[i] && hi[i] - lo[i] > tau {
                     capped[i] = true;
-                    level[i] = level[i].min(l.saturating_sub(1) as u8);
+                    level[i] = l.saturating_sub(1) as u8;
                 }
             }
         }
         Self { geom, level }
     }
-
     #[must_use]
     pub fn geometry(&self) -> PlaneGeometry {
         self.geom
@@ -988,7 +942,7 @@ impl BimodalStats {
     /// featureless ground the raw excess is pure upward bias — at 299 frames
     /// that is `3.4 sd` of pure artefact. Subtracting the expected bias makes
     /// "zero" mean "no resolvable peak", which is the reading
-    /// [`SelectionScale::from_acuity`] needs. Clamped at zero, because a
+    /// the two-layer model needs. Clamped at zero, because a
     /// negative excess is not evidence of anti-focus.
     #[must_use]
     pub fn peak_excess(&self) -> Vec<f32> {
@@ -2007,88 +1961,92 @@ mod tests {
     // -- the adaptive radius ---------------------------------------------
 
     /// The two terms of `min(r_noise, r_geom)` must each bind where they should.
+    // -- the radius rule -------------------------------------------------
+
+    /// The window must collapse at a silhouette and nowhere else.
     #[test]
-    fn acuity_shrinks_at_a_depth_step_and_at_high_contrast_but_not_on_clean_flat_ground() {
+    fn the_window_collapses_at_a_silhouette_and_is_shipped_size_away_from_one() {
         let (w, h) = (128usize, 64usize);
         let g = geom(w, h);
-        // Guide: foreground (frame 250) left of x = 64, background (frame 10)
-        // right of it. A genuine occluding silhouette.
+        // Foreground (frame 250) left of x = 64, background (frame 10) right of
+        // it: a genuine occluding silhouette.
         let guide: Vec<u16> = (0..w * h)
             .map(|i| if i % w < 64 { 250 } else { 10 })
             .collect();
-        // Excess: strong on the left (sharp foreground), nil on the right
-        // (featureless defocused background).
-        let strong = crate::merge::FOCUS_NOISE_SD * 100.0;
-        let excess: Vec<f32> = (0..w * h)
-            .map(|i| if i % w < 64 { strong } else { 0.0 })
-            .collect();
-
-        let s = SelectionScale::from_acuity(&excess, &guide, g, 4.0, 4.0);
+        let s = SelectionScale::from_silhouettes(&guide, g, 4.0);
         let lv = s.levels();
-        let at = |x: usize, y: usize| lv[y * w + x] as usize;
+        let at = |x: usize, y: usize| LEVEL_RADII[lv[y * w + x] as usize];
 
-        // Hard against the step, both sides: the geometry term binds.
         assert!(
-            LEVEL_RADII[at(63, 32)] <= 2 && LEVEL_RADII[at(65, 32)] <= 2,
+            at(63, 32) <= 2 && at(65, 32) <= 2,
             "support did not collapse at the silhouette: {} | {}",
-            LEVEL_RADII[at(63, 32)],
-            LEVEL_RADII[at(65, 32)]
+            at(63, 32),
+            at(65, 32)
         );
-        // Deep in the featureless background: nothing to discriminate with, so
-        // the noise term asks for — and gets — the full shipped window.
         assert_eq!(
-            LEVEL_RADII[at(120, 32)],
+            at(120, 32),
             WINDOW_RADIUS,
-            "flat clean ground must keep the shipped window"
+            "ground a full window away from the step must keep the shipped radius"
         );
-        // Deep in high-contrast foreground, far from the step: the noise term
-        // binds and hands back radius. THIS is the contamination-radius win —
-        // it happens without any edge being detected at all.
-        assert!(
-            LEVEL_RADII[at(8, 32)] < WINDOW_RADIUS,
-            "strong signal should not need the full window, got {}",
-            LEVEL_RADII[at(8, 32)]
-        );
+        assert_eq!(at(4, 32), WINDOW_RADIUS, "ditto on the foreground side");
     }
 
-    /// With no depth step anywhere, the rule must reduce to the noise term
-    /// alone — and on a plane with no resolvable peak that is the shipped
-    /// operator, byte for byte. A fix that perturbs clean flat ground is not a
-    /// fix.
+    /// With no depth step anywhere the rule must be the shipped operator,
+    /// exactly. A fix that perturbs clean flat ground is not a fix.
     #[test]
-    fn acuity_is_the_shipped_operator_on_a_featureless_plane() {
+    fn a_plane_with_no_depth_step_is_the_shipped_operator() {
         let g = geom(64, 64);
-        let guide = vec![100u16; g.pixels()];
-        let excess = vec![0.0f32; g.pixels()];
-        let s = SelectionScale::from_acuity(&excess, &guide, g, 4.0, 4.0);
+        let s = SelectionScale::from_silhouettes(&vec![100u16; g.pixels()], g, 4.0);
+        assert!(s.is_full_everywhere(), "histogram {:?}", s.histogram());
+    }
+
+    /// **The deletion, pinned.** The radius must be a function of the DEPTH
+    /// GUIDE alone — specifically, of distance to the nearest depth step.
+    ///
+    /// An earlier arm of this rule also shrank the window wherever the
+    /// through-focus peak was strong enough to survive a smaller one. Measured
+    /// on `bee-2-cpl` that cost up to +18.7% background noise and changed the
+    /// halo not at all, because contamination needs a window spanning two
+    /// depths and that only happens where the geometric cap already binds.
+    ///
+    /// Monotonicity is the property that pins the deletion. Distance to a step
+    /// increases monotonically as you walk away from it, so a radius that is a
+    /// function of distance alone must too. Signal strength does not: it varies
+    /// with whatever texture happens to be there. **Any term that reads the
+    /// image rather than the guide will break this walk**, which is what makes
+    /// this a guard against re-introduction rather than a restatement of the
+    /// code.
+    #[test]
+    fn the_radius_is_monotone_in_the_distance_from_the_step() {
+        let (w, h) = (128usize, 48usize);
+        let g = geom(w, h);
+        let guide: Vec<u16> = (0..w * h)
+            .map(|i| if i % w < 64 { 200 } else { 20 })
+            .collect();
+        let s = SelectionScale::from_silhouettes(&guide, g, 4.0);
+        let lv = s.levels();
+        let y = 24;
+        // Walk from the step out into the background.
+        let mut prev = 0u8;
+        for x in 64..w {
+            let cur = lv[y * w + x];
+            assert!(
+                cur >= prev,
+                "radius fell while moving AWAY from the step, at x={x}: {} -> {}",
+                LEVEL_RADII[prev as usize],
+                LEVEL_RADII[cur as usize]
+            );
+            prev = cur;
+        }
+        assert_eq!(
+            LEVEL_RADII[prev as usize],
+            WINDOW_RADIUS,
+            "the walk must reach the shipped radius"
+        );
         assert!(
-            s.is_full_everywhere(),
-            "histogram {:?}",
+            !s.is_full_everywhere(),
+            "the fixture must contain a real step: {:?}",
             s.histogram()
         );
-    }
-
-    /// The margin has to be load-bearing in the right direction: asking for
-    /// more confidence must never *shrink* the window. `FEATHER` was chosen
-    /// from one synthetic probe and turned out not to be load-bearing at all;
-    /// this asserts the monotonicity rather than a number, so it cannot go
-    /// stale the same way.
-    #[test]
-    fn a_stricter_margin_never_asks_for_less_support() {
-        let g = geom(64, 64);
-        let guide = vec![100u16; g.pixels()];
-        let excess: Vec<f32> = (0..g.pixels())
-            .map(|i| crate::merge::FOCUS_NOISE_SD * (i % 40) as f32)
-            .collect();
-        let loose = SelectionScale::from_acuity(&excess, &guide, g, 4.0, 2.0);
-        let tight = SelectionScale::from_acuity(&excess, &guide, g, 4.0, 8.0);
-        for i in 0..g.pixels() {
-            assert!(
-                tight.levels()[i] >= loose.levels()[i],
-                "at {i}: margin 8 gave level {} but margin 2 gave {}",
-                tight.levels()[i],
-                loose.levels()[i]
-            );
-        }
     }
 }

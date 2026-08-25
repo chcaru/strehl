@@ -900,7 +900,7 @@ struct Ctx<'a> {
     /// to `None`; the distinction here is about **cost**, not behaviour.
     support: Option<&'a LayerSupport>,
     /// Per-pixel selection radius solved from the calibrated noise model
-    /// ([`SelectionScale::from_acuity`]), or `None` for a fixed window.
+    /// ([`SelectionScale::from_silhouettes`]), or `None` for a fixed window.
     ///
     /// This is the shipping path. When it is `Some`, [`Ctx::field_for`] elects
     /// on [`FocusField::compute_scaled`] and regularises with
@@ -1310,18 +1310,6 @@ fn edge_aware_arm() -> EdgeArm {
     }
 }
 
-/// Confidence the adaptive radius rule demands before it hands a pixel a
-/// smaller window, in standard deviations of a difference of two responses.
-///
-/// **Deliberately the same number as [`Gate::DEFAULT_GATE`], and for the same
-/// reason.** The gate asks "are these two frames distinguishable at this
-/// pixel?"; the radius rule asks "is this pixel's peak distinguishable from its
-/// own baseline at this radius?". Both are the same question about the same
-/// noise model, so a second, independently-tuned constant here would be a
-/// second calibration of one physical quantity — exactly the failure mode this
-/// project exists to avoid. It is not a free parameter and it should not be
-/// swept.
-const ACUITY_MARGIN: f32 = strehl_core::merge::DEFAULT_GATE;
 
 /// How many frames of guide variation a support box may span before it is
 /// judged to cross a depth discontinuity.
@@ -2255,12 +2243,13 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             measure_drift: false,
             ..ctx
         };
-        // The mode statistics are no longer optional: `peak_excess` is what the
-        // adaptive radius is solved from, so the same accumulator now serves
-        // both the radius rule and the bimodality detector.
-        let (guide, guide_resp, modes, gt) = guide_winner_field(&paths, &plan, &ctx_guide, geom, true)?;
+        // Mode statistics are folded unconditionally now: the same accumulator
+        // that answers "is this pixel bimodal" is the one mandate (B) gates on,
+        // and folding it only when a dump was requested made the detector
+        // something you had to opt into to find out whether you needed it.
+        let (guide, guide_resp, modes, gt) =
+            guide_winner_field(&paths, &plan, &ctx_guide, geom, true)?;
         let tau = edge_tau(&guide);
-        let conf = edge_conf();
         eprintln!("--- pass zero: depth guide for the edge-aware election (MEASURED) ---");
         eprintln!(
             "guide radius    : {GUIDE_RADIUS} px box on |grad|, elected NARROW on purpose"
@@ -2275,16 +2264,12 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
         );
 
         if edge_aware_arm() == EdgeArm::Acuity {
-            let excess = modes
-                .as_ref()
-                .expect("pass zero always folds mode statistics")
-                .peak_excess();
-            let scale =
-                edgeaware::SelectionScale::from_acuity(&excess, &guide, geom, tau, ACUITY_MARGIN);
+            let scale = edgeaware::SelectionScale::from_silhouettes(&guide, geom, tau);
             let hist = scale.histogram();
             eprintln!(
-                "radius rule     : min(r_noise, r_geom), margin {ACUITY_MARGIN:.1} sigma against \
-                 FOCUS_NOISE_SD scaled from radius {}",
+                "radius rule     : distance to the nearest depth step, capped at the shipped {} px. \
+                 NO noise-driven shrink: measured at +18.7% background noise for no visible gain, \
+                 so that term is deleted rather than tuned",
                 strehl_core::focus::WINDOW_RADIUS
             );
             eprintln!(
@@ -2328,6 +2313,7 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
             acuity = Some(scale);
             None
         } else {
+            let conf = edge_conf();
             let radii = [strehl_core::focus::WINDOW_RADIUS, REGULARISER_RADIUS];
             let support = LayerSupport::from_guide(&guide, &guide_resp, geom, tau, conf, &radii);
             let hist = support.histogram();
