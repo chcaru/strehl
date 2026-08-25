@@ -168,6 +168,40 @@ merge is doing in two specific and now well-characterised ways:
    than asserted — see the correction further down. Caused by the blending
    recipe changing from place to place across the frame.
 
+#### The patchwork has a mechanism too, and it is in the render you have
+
+The blotchy, faceted look in your out-of-focus backgrounds is now measured
+rather than guessed at, and the first thing to say is a correction: **it is in
+the tool's normal output**, not only in the debug image I had been looking at.
+I had told you the shipped render was clean. It isn't, and the file I based that
+on turned out to be a different geometry.
+
+There is now a **proof-backed test** for it, which is better than a threshold
+somebody picked. If every pixel of the output were blended the same way, a
+particular contrast ratio cannot mathematically exceed **1.284**. Your render
+measures **4.337** — so the blending demonstrably varies from place to place,
+and no amount of arguing changes that. A plain average scores 0.343 and a single
+frame 0.308, both comfortably legal. It reproduces on a second subject.
+
+**The cause is subtler than I expected, and it explains why it has been so
+stubborn.** The software is not confused about focus — the winning frame stands
+at 15× the noise floor, so it genuinely knows what is sharp. The problem is that
+the *runner-up* is almost as good: the gap between first and second place is
+small, and frames that are nearly tied in focus can differ in **brightness by up
+to 28%**. So the set of frames blended shifts slightly from pixel to pixel, and
+each set averages to a slightly different level. That is a **bias, not noise** —
+which is why it survives averaging **167 frames per pixel** and would survive
+any number.
+
+**What fixes it, and what doesn't.** Normalising the frames' brightness before
+blending is the largest measured lever: it takes 4.337 down to **1.697**, a 61%
+reduction — but 39% of the excess remains, still over the legal bound. The
+smoothing-style gate is predicted to roughly halve it and also not to clear the
+bound. Turning the gate up until it *does* clear only works by averaging
+everything, which throws away the focus stacking. **So the honest position is
+that we know the mechanism, we have one lever worth more than half of it, and
+the last part is not yet solved.** That last part is real work, not a switch.
+
 #### One suspect left, and finding out which it is settles the whole question
 
 By dawn the search for your missing sharpness had narrowed to a single
