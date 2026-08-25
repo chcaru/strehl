@@ -306,9 +306,277 @@ impl RobustElection {
     }
 }
 
+// ---------------------------------------------------------------------------
+// The disagreement statistic, `z`
+// ---------------------------------------------------------------------------
+//
+// `RobustElection::fold` consumes a `z` field but has never had a producer in
+// the library: `loo_residual_kernel` existed only as two copies inside
+// `crates/strehl-cli/examples/`, which is why this module has been dead code
+// since it was written. What follows is that producer, ported so the election
+// can be reached from the product.
+//
+// It keeps this module's contract: plain slices and scalars, no dependency on
+// the rest of the crate. The noise model arrives as the two coefficients of
+// `var(L) = a*L + b` rather than as a linkage.
+
+/// Temporal window for the disagreement statistic. Odd, so it has a centre.
+pub const Z_WINDOW: usize = 5;
+
+/// Polynomial order fitted to the window's *other* members.
+pub const Z_ORDER: usize = 2;
+
+/// Frames at each end of a stack that have no centred window.
+pub const Z_HALF: usize = (Z_WINDOW - 1) / 2;
+
+/// Leave-one-out residual kernel: fit a degree-`p` polynomial to the `w - 1`
+/// neighbours of the centre, predict the centre, and return the kernel whose
+/// dot product with the window is `centre - prediction`.
+///
+/// The centre carries `+1` and the neighbours carry `-k_j` with `sum(k) = 1`,
+/// so the kernel annihilates any polynomial of degree `<= p`. A frame that
+/// merely sits on a smooth through-focus trend therefore scores zero however
+/// bright, sharp or steep that trend is, and only a frame that departs from its
+/// own neighbours scores at all.
+///
+/// Ported unchanged from `examples/m93-election.rs`, which took it from M89.
+/// The two copies there are left in place deliberately: they are committed
+/// instruments behind published numbers and must not start tracking this one.
+pub fn loo_residual_kernel(w: usize, p: usize) -> Vec<f64> {
+    assert!(w >= 3 && w % 2 == 1, "window must be odd and at least 3");
+    let h = (w - 1) / 2;
+    assert!(p < w - 1, "order {p} needs {} neighbours", p + 1);
+    let xs: Vec<f64> = (0..w)
+        .filter(|&j| j != h)
+        .map(|j| j as f64 - h as f64)
+        .collect();
+    let m = p + 1;
+    let mut a = vec![vec![0.0f64; m + 1]; m];
+    for (row, ar) in a.iter_mut().enumerate() {
+        for (col, cell) in ar.iter_mut().enumerate().take(m) {
+            *cell = xs.iter().map(|x| x.powi((row + col) as i32)).sum();
+        }
+        ar[m] = f64::from(u8::from(row == 0));
+    }
+    for col in 0..m {
+        let piv = (col..m)
+            .max_by(|&i, &j| {
+                a[i][col]
+                    .abs()
+                    .partial_cmp(&a[j][col].abs())
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            })
+            .expect("non-empty");
+        a.swap(col, piv);
+        let d = a[col][col];
+        assert!(d.abs() > 1e-12, "singular design");
+        for v in a[col].iter_mut() {
+            *v /= d;
+        }
+        let pivot = a[col].clone();
+        for (row, arow) in a.iter_mut().enumerate() {
+            if row != col {
+                let f = arow[col];
+                if f != 0.0 {
+                    for (t, p) in arow.iter_mut().zip(&pivot).skip(col) {
+                        *t -= f * p;
+                    }
+                }
+            }
+        }
+    }
+    let v: Vec<f64> = (0..m).map(|i| a[i][m]).collect();
+    let mut r = vec![0.0f64; w];
+    let mut ksum = 0.0f64;
+    let mut n = 0usize;
+    for (j, rj) in r.iter_mut().enumerate() {
+        if j == h {
+            *rj = 1.0;
+            continue;
+        }
+        let x = xs[n];
+        n += 1;
+        let kj: f64 = (0..m).map(|q| v[q] * x.powi(q as i32)).sum();
+        ksum += kj;
+        *rj = -kj;
+    }
+    assert!((ksum - 1.0).abs() < 1e-9, "LOO weights sum to {ksum}, not 1");
+    r
+}
+
+/// The residual operator and its squares, built once per merge.
+#[derive(Debug, Clone)]
+pub struct ResidualOp {
+    r: Vec<f32>,
+    r2: Vec<f32>,
+}
+
+impl Default for ResidualOp {
+    fn default() -> Self {
+        Self::new(Z_WINDOW, Z_ORDER)
+    }
+}
+
+impl ResidualOp {
+    pub fn new(w: usize, p: usize) -> Self {
+        let r: Vec<f32> = loo_residual_kernel(w, p)
+            .iter()
+            .map(|&v| v as f32)
+            .collect();
+        let r2 = r.iter().map(|v| v * v).collect();
+        Self { r, r2 }
+    }
+
+    pub fn window(&self) -> usize {
+        self.r.len()
+    }
+
+    /// `z` for one pixel from `window()` luma samples in temporal order.
+    ///
+    /// The numerator is the leave-one-out residual; the denominator is the
+    /// standard deviation the calibrated model predicts for exactly that linear
+    /// combination, `sqrt(sum(r_j^2 * (a*L_j + b)))`. The result is therefore in
+    /// sigmas and carries no constant of its own — an absolute DN bar here is
+    /// what fact 1470 charges with the waxy-blob artefact.
+    ///
+    /// Returns `0.0` when the predicted variance is not positive, which leaves
+    /// the sample ungated rather than rejecting it on a degenerate denominator.
+    #[inline]
+    pub fn z(&self, luma: &[f32], a: f32, b: f32) -> f32 {
+        debug_assert_eq!(luma.len(), self.r.len());
+        let mut num = 0.0f32;
+        let mut var = 0.0f32;
+        for ((&r, &r2), &l) in self.r.iter().zip(self.r2.iter()).zip(luma.iter()) {
+            num += r * l;
+            var += r2 * (a * l + b);
+        }
+        if var > 0.0 { num / var.sqrt() } else { 0.0 }
+    }
+
+    /// Fill `out` with `z` for every pixel, from `window()` whole luma planes
+    /// given in temporal order.
+    pub fn z_field(&self, planes: &[&[f32]], a: f32, b: f32, out: &mut [f32]) {
+        assert_eq!(planes.len(), self.r.len(), "wrong window depth");
+        let mut buf = vec![0.0f32; self.r.len()];
+        for (i, o) in out.iter_mut().enumerate() {
+            for (j, p) in planes.iter().enumerate() {
+                buf[j] = p[i];
+            }
+            *o = self.z(&buf, a, b);
+        }
+    }
+}
+
+/// The two coefficients of `var(L) = a*L + b`, extracted from a calibrated
+/// noise model by the caller.
+///
+/// Kept as scalars rather than a `NoiseModel` so this module stays free of
+/// crate linkage, per its header.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct AffineVar {
+    pub a: f32,
+    pub b: f32,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // ---- the disagreement statistic ------------------------------------
+
+    /// The kernel for the shipped window, worked out by hand from the normal
+    /// equations rather than read back out of the code: fitting a quadratic to
+    /// x = -2,-1,1,2 and predicting x = 0 gives neighbour weights
+    /// k = [-1/6, 2/3, 2/3, -1/6], and the residual kernel is `+1` at the
+    /// centre against `-k`.
+    #[test]
+    fn the_residual_kernel_is_the_hand_computed_one() {
+        let r = loo_residual_kernel(Z_WINDOW, Z_ORDER);
+        let want = [1.0 / 6.0, -2.0 / 3.0, 1.0, -2.0 / 3.0, 1.0 / 6.0];
+        assert_eq!(r.len(), want.len());
+        for (got, w) in r.iter().zip(&want) {
+            assert!((got - w).abs() < 1e-12, "kernel {r:?} != {want:?}");
+        }
+    }
+
+    /// **The trap, at the level of the statistic.** The kernel annihilates any
+    /// polynomial of degree <= Z_ORDER, so a frame sitting on a smooth
+    /// through-focus trend scores exactly zero however steep that trend is.
+    /// Without this the gate would fire hardest exactly where focus is changing
+    /// fastest, which is the whole useful part of a stack.
+    #[test]
+    fn the_kernel_annihilates_any_trend_it_is_allowed_to_fit() {
+        let r = loo_residual_kernel(Z_WINDOW, Z_ORDER);
+        let h = (Z_WINDOW - 1) as f64 / 2.0;
+        for deg in 0..=Z_ORDER {
+            for scale in [1.0f64, 1e4] {
+                let acc: f64 = r
+                    .iter()
+                    .enumerate()
+                    .map(|(j, rj)| rj * scale * (j as f64 - h).powi(deg as i32))
+                    .sum();
+                assert!(
+                    acc.abs() < 1e-9 * scale,
+                    "degree {deg} at scale {scale} left residual {acc}"
+                );
+            }
+        }
+    }
+
+    /// A frame that departs from its own neighbours scores, and the score is in
+    /// sigmas: doubling the noise halves `z` for the same departure.
+    #[test]
+    fn z_is_a_departure_measured_in_sigmas() {
+        let op = ResidualOp::default();
+        let flat = [100.0f32; Z_WINDOW];
+        assert!(op.z(&flat, 0.0, 1.0).abs() < 1e-5, "a flat window must read 0");
+
+        // Unit variance: b = 1, a = 0. sum(r^2) = 1/36 + 4/9 + 1 + 4/9 + 1/36.
+        let r2: f32 = loo_residual_kernel(Z_WINDOW, Z_ORDER)
+            .iter()
+            .map(|v| (v * v) as f32)
+            .sum();
+        let mut bumped = flat;
+        bumped[Z_HALF] += 10.0;
+        let z = op.z(&bumped, 0.0, 1.0);
+        assert!(
+            (z - 10.0 / r2.sqrt()).abs() < 1e-3,
+            "z {z} should be 10/sqrt(sum r^2) = {}",
+            10.0 / r2.sqrt()
+        );
+
+        // Four times the variance is twice the sigma, so half the z.
+        let z4 = op.z(&bumped, 0.0, 4.0);
+        assert!((z4 - 0.5 * z).abs() < 1e-3, "z {z} -> {z4} is not sigma-scaled");
+    }
+
+    /// A degenerate denominator leaves the sample ungated rather than rejecting
+    /// it: `weight(0) == 1`.
+    #[test]
+    fn a_non_positive_variance_reads_zero_and_so_gates_nothing() {
+        let op = ResidualOp::default();
+        let mut w = [0.0f32; Z_WINDOW];
+        w[Z_HALF] = 500.0;
+        assert_eq!(op.z(&w, 0.0, 0.0), 0.0);
+        assert_eq!(weight(op.z(&w, 0.0, 0.0)), 1.0);
+    }
+
+    #[test]
+    fn z_field_agrees_with_z_pixel_by_pixel() {
+        let op = ResidualOp::default();
+        let planes: Vec<Vec<f32>> = (0..Z_WINDOW)
+            .map(|j| (0..7).map(|i| 100.0 + (i * j) as f32 * 3.0).collect())
+            .collect();
+        let refs: Vec<&[f32]> = planes.iter().map(|p| p.as_slice()).collect();
+        let mut out = vec![0.0f32; 7];
+        op.z_field(&refs, 0.5, 4.0, &mut out);
+        for i in 0..7 {
+            let col: Vec<f32> = planes.iter().map(|p| p[i]).collect();
+            assert_eq!(out[i], op.z(&col, 0.5, 4.0));
+        }
+    }
+
+    // ---- the election ---------------------------------------------------
 
     /// Build a tiny synthetic problem: `pixels` pixels, `frames` frames.
     fn run(arm: Arm, pixels: usize, r: &[Vec<f32>], z: &[Vec<f32>]) -> Vec<u16> {

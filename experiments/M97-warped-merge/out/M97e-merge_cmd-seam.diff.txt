@@ -1,0 +1,125 @@
+M97e — the three-line seam that makes the robust election reachable
+===================================================================
+
+STATUS: `crates/strehl-core` is complete, tested and committed. The switch
+`STREHL_ROBUST_ELECTION` is **read by nothing in the render path**, because the
+three call sites are in `crates/strehl-cli/src/merge_cmd.rs`, which is M109's
+file. I have not touched it.
+
+This is not an inference from reading the code. `arm_from_setting` refuses an
+unrecognised value with `UnknownArm` rather than silently reading it as off, so
+a render that SUCCEEDS with a deliberately invalid value is positive proof that
+nothing calls it. Measured:
+
+    STREHL_ROBUST_ELECTION=sotf  cargo test -p strehl-cli --test byte-freeze
+    -> exit 0, both frozen hashes reproduced, the value never named in output
+
+Apply the three hunks below and that arm must go red. If it does not, the
+integration did not land, whatever else the run says.
+
+-------------------------------------------------------------------------------
+HUNK 1 of 3 — the import (merge_cmd.rs, the `strehl_core::merge` use at :48)
+-------------------------------------------------------------------------------
+
+     use strehl_core::merge::{
+    -    Estimator, FOCUS_NOISE_SD, FocusStats, Gate, REGULARISER_WIDTH, regularise,
+    +    Estimator, FOCUS_NOISE_SD, FocusStats, Gate, REGULARISER_WIDTH, regularise,
+     };
+    +use strehl_core::robust::AffineVar;
+
+(Keep whatever else that `use` block already carries; only `AffineVar` is new.)
+
+-------------------------------------------------------------------------------
+HUNK 2 of 3 — the constructor (merge_cmd.rs:1715)
+-------------------------------------------------------------------------------
+
+                 let first_index = (ci * plan.chunk_len) as u16;
+    -            let mut stats = FocusStats::new(geom);
+    +            let mut stats = FocusStats::new_robust(geom, pass1_var)
+    +                .map_err(|e| Error::Config(format!(
+    +                    "STREHL_ROBUST_ELECTION={}: expected one of \
+    +                     off/soft/hard/ungated", e.key
+    +                )))?;
+
+`pass1_var` is computed ONCE, outside the `par_chunks`, from the same
+`NoiseModel` the merge already holds:
+
+    +    // var(L) = a*L + b, reduced from the calibrated model so `robust` stays
+    +    // free of crate linkage. Pass one runs UNCORRECTED (see :1615), so the
+    +    // unit photometric gain assumed here is correct, not a simplification.
+    +    let pass1_var = {
+    +        let b = noise.green_luma_sigma(0.0).powi(2);
+    +        AffineVar { a: noise.green_luma_sigma(1.0).powi(2) - b, b }
+    +    };
+
+Use whatever the local binding for the `NoiseModel` is called; I have written
+`noise`. Substitute the real `Error` variant for `Error::Config` — I did not
+want to guess at your error enum.
+
+With the variable unset, `new_robust` returns exactly `FocusStats::new(geom)`.
+That is asserted, not asserted-by-comment:
+`merge::tests::fold_with_luma_is_fold_when_the_feature_is_off`.
+
+-------------------------------------------------------------------------------
+HUNK 3 of 3 — the fold and the chunk boundary (merge_cmd.rs:1753 and :1759)
+-------------------------------------------------------------------------------
+
+                 stats
+    -                .fold(index, &scratch.reg)
+    +                .fold_with_luma(index, &scratch.reg, &scratch.luma)
+                     .map_err(|e| map_dim_err(index, e))?;
+                 clip.fold(&scratch.clipped)
+                     .map_err(|e| map_dim_err(index, e))?;
+             }
+    +        // The temporal window is centred, so the last Z_HALF frames of a
+    +        // chunk cannot be scored until the chunk is known to be over.
+    +        // A no-op with the feature off.
+    +        stats.finish_chunk();
+             Ok(Pass1 {
+
+`finish_chunk` goes AFTER the `for (offset, path)` loop closes and BEFORE
+`Ok(Pass1 { ... })`. It is idempotent (`merge::tests::finish_chunk_is_idempotent`),
+so a second call at a different site is harmless but unnecessary.
+
+`absorb` needs no change: it detects a robust pass one on both sides and
+combines the elections rather than the collapsed winner fields. That distinction
+is load-bearing and is mutation-controlled (M4).
+
+-------------------------------------------------------------------------------
+FOUR THINGS TO CARRY WITH THE DIFF
+-------------------------------------------------------------------------------
+
+1. THE PASS-ONE MEMORY PLANNER AT :738 IS NOW WRONG WHEN THE FEATURE IS ON.
+   The ring holds `Z_WINDOW` luma planes plus `Z_WINDOW` regularised planes,
+   i.e. 10 * pixels * 4 bytes ~= 330 MB per worker at 3514x2344, on top of what
+   the comment at :738 accounts for. With the feature OFF the ring is not
+   allocated at all and the planner stays correct. Whoever turns this on at full
+   resolution should either reduce `chunk_len` or reduce the ring: the
+   regularised ring only needs depth `Z_HALF + 1`, not `Z_WINDOW`, which would
+   take it to 8 planes. I have not made that optimisation because it is a
+   change to code I would then have to re-control, and the feature is off.
+
+2. `ctx.is_refused(index) { continue; }` AT :1726 PUTS A HOLE IN THE WINDOW.
+   A refused frame is never folded, so the ring's five slots are the five
+   *folded* frames, not five consecutive exposures. The window therefore spans a
+   slightly wider focus baseline across a refusal. This is not wrong — the
+   kernel annihilates any quadratic in the sample index however the samples are
+   spaced in focus — but it is an approximation and it is worth knowing about.
+   M86 recorded frame-level refusal as unit-test-only on real data.
+
+3. `scratch.luma` IS THE WARPED LUMA, AND THAT IS REQUIRED, NOT INCIDENTAL.
+   `field_for` warps the frame in place at :968 before computing luma. If `z`
+   were computed on unregistered luma, focus breathing alone (232.7 px on
+   `bee-3-cpl`, fact from M86) would make every frame disagree with every other
+   and the gate would reject the entire stack. On an unregistered stack the
+   graceful outcome is that every frame goes ineligible and the election falls
+   back to the shipped argmax — `FocusStats::robust_fallbacks()` counts exactly
+   that, and a large number there means the gate did nothing and should be
+   reported beside any claim that it did something.
+
+4. DEFAULT IS `Arm::Soft` AND `Arm::Hard` MUST NOT BECOME THE DEFAULT.
+   `on`/`1`/`true`/`soft` all select Soft. This is measured, not preferred:
+   `merge::tests::trap_soft_keeps_the_only_frame_that_resolves_the_pixel`
+   constructs a frame that disagrees at 6 sigma *because it is the only frame
+   that resolves the pixel*, and asserts that Soft keeps it while Hard discards
+   it on identical evidence.

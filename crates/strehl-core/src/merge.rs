@@ -72,6 +72,7 @@
 use crate::boxfilter::box_mean;
 use crate::noise::NoiseModel;
 use crate::plane::{PlaneGeometry, QuadSource};
+use crate::robust::{AffineVar, Arm, ResidualOp, RobustElection, Z_HALF};
 use crate::softgate::{SoftGate, WEIGHT_FLOOR};
 use crate::{CfaPlane, Error, Result};
 
@@ -483,6 +484,157 @@ pub fn active_kernel() -> core::result::Result<Option<SoftKernel>, UnknownSoftKe
     kernel_from_setting(std::env::var(SOFT_GATE_ENV).ok().as_deref())
 }
 
+/// A [`ROBUST_ENV`] value that names no election arm.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UnknownArm {
+    /// The value as the operator wrote it.
+    pub key: String,
+}
+
+/// Names the pass-one election arm. Unset, `""`, `0`, `off` or `false` is the
+/// shipped argmax and is the default.
+///
+/// `soft`, `hard` and `ungated` name [`Arm`] explicitly; `on`, `1` and `true`
+/// select [`Arm::Soft`], the only arm safe to default to — see `robust.rs`'s
+/// header on why [`Arm::Hard`] cannot tell a frame that moved from the one
+/// frame that resolves a pixel. Anything else is refused rather than silently
+/// read as off: a typo that disables a gate you believe is running looks
+/// exactly like the gate doing nothing.
+///
+/// `ungated` is not a spelling of off. It runs the whole ring, the whole `z`
+/// computation and the whole [`RobustElection`], and only declines to let the
+/// weight reach the argmax. It is the control that separates "the gate changed
+/// the picture" from "the new plumbing changed the picture".
+pub const ROBUST_ENV: &str = "STREHL_ROBUST_ELECTION";
+
+fn arm_from_setting(raw: Option<&str>) -> core::result::Result<Option<Arm>, UnknownArm> {
+    let Some(raw) = raw else { return Ok(None) };
+    match raw.trim().to_ascii_lowercase().as_str() {
+        "" | "0" | "off" | "false" => Ok(None),
+        "on" | "1" | "true" | "soft" => Ok(Some(Arm::Soft)),
+        "hard" => Ok(Some(Arm::Hard)),
+        "ungated" => Ok(Some(Arm::Ungated)),
+        _ => Err(UnknownArm {
+            key: raw.to_string(),
+        }),
+    }
+}
+
+/// The election arm this process is running, from [`ROBUST_ENV`].
+pub fn active_arm() -> core::result::Result<Option<Arm>, UnknownArm> {
+    arm_from_setting(std::env::var(ROBUST_ENV).ok().as_deref())
+}
+
+/// Pass one's robust-election state: the temporal ring, the statistic and the
+/// election. Present only when [`ROBUST_ENV`] asked for it, so with the feature
+/// off `FocusStats` carries exactly the fields it always has.
+///
+/// Frames reach pass one in ascending order within a contiguous chunk
+/// (`par_chunks` in `merge_cmd`), which is what makes a streaming ring possible:
+/// `z` needs a **centred** window, so frame `c` cannot be scored until frame
+/// `c + Z_HALF` has been read. This defers each frame's election by `Z_HALF`
+/// frames, and elects the `Z_HALF` frames at each end of a chunk with `z = 0` —
+/// `robust.rs`'s documented convention for an undefined window, which leaves
+/// them ungated rather than rejected.
+#[derive(Debug, Clone)]
+struct RobustPassOne {
+    op: ResidualOp,
+    var: AffineVar,
+    election: RobustElection,
+    ring_luma: Vec<Vec<f32>>,
+    ring_reg: Vec<Vec<f32>>,
+    ring_index: Vec<u16>,
+    seen: usize,
+    zbuf: Vec<f32>,
+    zero: Vec<f32>,
+}
+
+impl RobustPassOne {
+    fn new(pixels: usize, arm: Arm, var: AffineVar) -> Self {
+        let op = ResidualOp::default();
+        let w = op.window();
+        Self {
+            op,
+            var,
+            election: RobustElection::new(pixels, arm),
+            ring_luma: (0..w).map(|_| vec![0.0; pixels]).collect(),
+            ring_reg: (0..w).map(|_| vec![0.0; pixels]).collect(),
+            ring_index: vec![NO_FRAME; w],
+            seen: 0,
+            zbuf: vec![0.0; pixels],
+            zero: vec![0.0; pixels],
+        }
+    }
+
+    /// Ring slot holding the frame `back` pushes before the most recent one.
+    #[inline]
+    fn slot(&self, back: usize) -> usize {
+        let w = self.op.window();
+        (self.seen + w - 1 - back) % w
+    }
+
+    /// Fold one frame that is already in the ring, with the given `z` field.
+    fn fold_slot(&mut self, s: usize, z_is_zero: bool) -> std::result::Result<(), String> {
+        let idx = self.ring_index[s];
+        // Move the response out so its borrow cannot conflict with `zbuf`.
+        let resp = std::mem::take(&mut self.ring_reg[s]);
+        let z = if z_is_zero { &self.zero } else { &self.zbuf };
+        let r = self.election.fold(idx, &resp, z);
+        self.ring_reg[s] = resp;
+        r
+    }
+
+    /// Score and elect the centre of the currently buffered window.
+    fn elect_centre(&mut self) -> std::result::Result<(), String> {
+        let w = self.op.window();
+        // Oldest first, so the window reaches the kernel in temporal order.
+        let order: Vec<usize> = (0..w).map(|j| self.slot(w - 1 - j)).collect();
+        {
+            let planes: Vec<&[f32]> =
+                order.iter().map(|&s| self.ring_luma[s].as_slice()).collect();
+            self.op
+                .z_field(&planes, self.var.a, self.var.b, &mut self.zbuf);
+        }
+        self.fold_slot(order[Z_HALF], false)
+    }
+
+    fn push(&mut self, index: u16, reg: &[f32], luma: &[f32]) -> std::result::Result<(), String> {
+        let w = self.op.window();
+        let s = self.seen % w;
+        self.ring_luma[s].copy_from_slice(luma);
+        self.ring_reg[s].copy_from_slice(reg);
+        self.ring_index[s] = index;
+        self.seen += 1;
+        if self.seen <= Z_HALF {
+            // The leading Z_HALF frames never become a centre with a full
+            // window, so they are elected at once and ungated.
+            return self.fold_slot(s, true);
+        }
+        if self.seen >= w {
+            return self.elect_centre();
+        }
+        Ok(())
+    }
+
+    /// Elect the trailing frames, which never acquire a centred window.
+    fn flush(&mut self) -> std::result::Result<(), String> {
+        let w = self.op.window();
+        // In a chunk shorter than the window nothing was ever centred, so
+        // everything past the leading Z_HALF is still unelected.
+        let tail = if self.seen < w {
+            self.seen.saturating_sub(Z_HALF)
+        } else {
+            Z_HALF
+        };
+        for back in (0..tail).rev() {
+            let s = self.slot(back);
+            self.fold_slot(s, true)?;
+        }
+        self.seen = 0;
+        Ok(())
+    }
+}
+
 /// Pass one: the regularised winner field.
 ///
 /// Carries O(1) state per pixel and is a commutative, associative fold, so the
@@ -495,6 +647,13 @@ pub struct FocusStats {
     best_index: Vec<u16>,
     frames: u32,
     max_index: u16,
+    /// The robust election, or `None` for the shipped argmax.
+    ///
+    /// `None` is what makes the null byte-identical *by construction*: with it
+    /// absent, `fold` runs the code it has always run and no new arithmetic
+    /// exists to round differently. It mirrors how `Estimator::wsum` and
+    /// `Estimator::censor` encode their features being off.
+    robust: Option<Box<RobustPassOne>>,
 }
 
 /// Sentinel for "no frame has been folded at this pixel yet".
@@ -508,7 +667,52 @@ impl FocusStats {
             best_index: vec![NO_FRAME; geom.pixels()],
             frames: 0,
             max_index: 0,
+            robust: None,
         }
+    }
+
+    /// Pass one with the robust election available, if [`ROBUST_ENV`] asks for
+    /// it. With the variable unset this is [`FocusStats::new`] exactly.
+    ///
+    /// `var` is the calibrated noise model reduced to `var(L) = a*L + b`; the
+    /// caller extracts it so `robust` stays free of crate linkage. It is read
+    /// even when the feature is off only in the sense that the caller computes
+    /// it — nothing here touches it unless an arm was named.
+    pub fn new_robust(
+        geom: PlaneGeometry,
+        var: AffineVar,
+    ) -> core::result::Result<Self, UnknownArm> {
+        Ok(match active_arm()? {
+            Some(arm) => Self::new_robust_with(geom, arm, var),
+            None => Self::new(geom),
+        })
+    }
+
+    /// [`FocusStats::new_robust`] with the arm given directly.
+    ///
+    /// Env-free on purpose, mirroring `Estimator::new_soft`: the test suite runs
+    /// in one process and in parallel, so a test that had to set a variable to
+    /// choose an arm would race every other test in the binary.
+    pub fn new_robust_with(geom: PlaneGeometry, arm: Arm, var: AffineVar) -> Self {
+        let mut s = Self::new(geom);
+        s.robust = Some(Box::new(RobustPassOne::new(geom.pixels(), arm, var)));
+        s
+    }
+
+    /// Frames the robust election actually folded, or `None` with the feature
+    /// off.
+    ///
+    /// Must equal [`FocusStats::frames_folded`] once the chunk is finished. The
+    /// ring defers each frame by `Z_HALF`, so a ring that drops or repeats a
+    /// frame shows up here and nowhere else — an argmax absorbs a duplicate
+    /// silently and only loses a little sharpness when it drops one.
+    pub fn robust_frames_elected(&self) -> Option<u32> {
+        self.robust.as_ref().map(|r| r.election.frames_folded())
+    }
+
+    /// The arm this pass one is running, or `None` for the shipped argmax.
+    pub fn arm(&self) -> Option<Arm> {
+        self.robust.as_ref().map(|r| r.election.arm())
     }
 
     pub fn geometry(&self) -> PlaneGeometry {
@@ -538,8 +742,81 @@ impl FocusStats {
         focus > cur_focus || (focus == cur_focus && index < cur_index)
     }
 
+    /// Fold one frame's **regularised** focus field in, with the frame's green
+    /// luma alongside it so a robust election can score the frame against its
+    /// temporal neighbours.
+    ///
+    /// **With the feature off this is `fold` and nothing else** — the same
+    /// call, not an equivalent one — so the call site may use it
+    /// unconditionally and the shipped path cannot drift from it.
+    ///
+    /// The frames of a chunk must arrive in ascending order, because `z` is a
+    /// centred temporal window. Call [`FocusStats::finish_chunk`] when the
+    /// chunk is exhausted.
+    pub fn fold_with_luma(
+        &mut self,
+        frame_index: u16,
+        regularised: &[f32],
+        luma: &[f32],
+    ) -> Result<()> {
+        if self.robust.is_none() {
+            return self.fold(frame_index, regularised);
+        }
+        if regularised.len() != self.geom.pixels() || luma.len() != self.geom.pixels() {
+            return Err(Error::DimensionMismatch {
+                index: frame_index as usize,
+                got: (regularised.len(), luma.len()),
+                want: (self.geom.pixels(), self.geom.pixels()),
+            });
+        }
+        assert_ne!(frame_index, NO_FRAME, "frame index {NO_FRAME} is reserved");
+        let r = self.robust.as_mut().expect("checked above");
+        r.push(frame_index, regularised, luma)
+            .unwrap_or_else(|e| panic!("robust election: {e}"));
+        self.frames += 1;
+        self.max_index = self.max_index.max(frame_index);
+        Ok(())
+    }
+
+    /// Finish a contiguous chunk: elect its trailing frames and collapse the
+    /// election into the winner field.
+    ///
+    /// A no-op with the feature off, so it is safe to call unconditionally.
+    /// Idempotent, and cheap to repeat.
+    pub fn finish_chunk(&mut self) {
+        let Some(r) = self.robust.as_mut() else {
+            return;
+        };
+        r.flush().unwrap_or_else(|e| panic!("robust election: {e}"));
+        let winners = r.election.winners();
+        let resp = r.election.winner_response();
+        self.best_index.copy_from_slice(&winners);
+        self.best_focus.copy_from_slice(&resp);
+    }
+
+    /// Pixels at which every frame was ineligible and the ungated fallback
+    /// fired, or `None` with the feature off.
+    ///
+    /// A large number means the gate is rejecting wholesale and its output is
+    /// mostly the shipped election anyway — report it beside any claim that the
+    /// gate did something.
+    pub fn robust_fallbacks(&self) -> Option<usize> {
+        self.robust.as_ref().map(|r| r.election.fallbacks())
+    }
+
+    /// The election the shipped code would have made, from the same fold, or
+    /// `None` with the feature off.
+    pub fn ungated_winners(&self) -> Option<&[u16]> {
+        self.robust.as_ref().map(|r| r.election.ungated_winners())
+    }
+
     /// Fold one frame's **regularised** focus field in.
     pub fn fold(&mut self, frame_index: u16, regularised: &[f32]) -> Result<()> {
+        assert!(
+            self.robust.is_none(),
+            "this FocusStats is running a robust election and needs \
+             fold_with_luma; folding without luma would silently elect ungated"
+        );
         if regularised.len() != self.geom.pixels() {
             return Err(Error::DimensionMismatch {
                 index: frame_index as usize,
@@ -572,6 +849,29 @@ impl FocusStats {
                 got: (other.geom.width, other.geom.height),
                 want: (self.geom.width, self.geom.height),
             });
+        }
+        match (self.robust.as_mut(), other.robust.as_ref()) {
+            (Some(a), Some(b)) => {
+                // Cross-chunk reduction must compare **gated scores**, not the
+                // collapsed raw responses: a contaminated winner from one chunk
+                // would otherwise out-argmax a clean winner from another, and
+                // the gate would silently stop applying between chunks.
+                a.election
+                    .absorb(&b.election)
+                    .unwrap_or_else(|e| panic!("robust election: {e}"));
+                let winners = a.election.winners();
+                let resp = a.election.winner_response();
+                self.best_index.copy_from_slice(&winners);
+                self.best_focus.copy_from_slice(&resp);
+                self.frames += other.frames;
+                self.max_index = self.max_index.max(other.max_index);
+                return Ok(());
+            }
+            (None, None) => {}
+            _ => panic!(
+                "cannot reduce a robust pass one into a plain one; \
+                 the two elected against different rules"
+            ),
         }
         for i in 0..self.geom.pixels() {
             if Self::beats(
@@ -3606,5 +3906,297 @@ mod tests {
             );
             assert_eq!(left.contributing_weight(i), whole.contributing_weight(i));
         }
+    }
+
+    // ---- the robust pass-one election ----------------------------------
+
+    /// `|z|` for a centre frame whose luma departs from an otherwise flat
+    /// window by `delta`, with `var(L) = b`.
+    ///
+    /// Hand-derived rather than read back from the code, which is the point of
+    /// having it: the kernel annihilates any polynomial of degree <= 2, so a
+    /// flat window contributes exactly nothing and the numerator is
+    /// `delta * r_centre = delta`. The denominator is `sqrt(b * sum r^2)`, and
+    /// `sum r^2` for `W=5, P=2` is `2*(1/6)^2 + 2*(2/3)^2 + 1 = 35/18`.
+    fn z_for_delta(delta: f32, b: f32) -> f32 {
+        delta / (b * 35.0 / 18.0).sqrt()
+    }
+
+    /// Nine frames, all luma flat at 100 except frame 4 which departs by
+    /// `delta`, and per-frame constant responses from `resp`.
+    ///
+    /// Frame 4 is the only index that is both centred (so `z` is defined) and
+    /// far enough from both ends that its own contamination of the neighbours'
+    /// windows can be reasoned about.
+    fn nine_frames(delta: f32, resp: [f32; 9]) -> (Vec<Vec<f32>>, Vec<Vec<f32>>) {
+        let px = 4;
+        let mut luma = Vec::new();
+        let mut reg = Vec::new();
+        for (f, &r) in resp.iter().enumerate() {
+            let l = if f == 4 { 100.0 + delta } else { 100.0 };
+            luma.push(vec![l; px]);
+            reg.push(vec![r; px]);
+        }
+        (luma, reg)
+    }
+
+    fn run_arm(arm: Arm, luma: &[Vec<f32>], reg: &[Vec<f32>], b: f32) -> FocusStats {
+        let mut s = FocusStats::new_robust_with(geom(2, 2), arm, AffineVar { a: 0.0, b });
+        for f in 0..luma.len() {
+            s.fold_with_luma(f as u16, &reg[f], &luma[f]).unwrap();
+        }
+        s.finish_chunk();
+        s
+    }
+
+    /// The strongest null available: `Ungated` runs the entire ring, the entire
+    /// `z` computation and the entire election, and must still land on the same
+    /// winner field as the shipped argmax, bit for bit.
+    ///
+    /// An env-unset test only proves the feature is off. This proves the new
+    /// plumbing is *neutral*, which is a different and much stronger claim, and
+    /// it is the one that says a difference seen later came from the gate
+    /// rather than from the ring.
+    #[test]
+    fn ungated_arm_reproduces_the_shipped_election_bit_for_bit() {
+        let mut rng = Rng::new(0x5EED_1234);
+        let g = geom(8, 8);
+        let px = g.pixels();
+        let n = 11;
+        let luma: Vec<Vec<f32>> = (0..n)
+            .map(|_| (0..px).map(|_| 100.0 + 10.0 * rng.normal()).collect())
+            .collect();
+        let reg: Vec<Vec<f32>> = (0..n)
+            .map(|_| (0..px).map(|_| rng.normal().abs()).collect())
+            .collect();
+
+        let mut plain = FocusStats::new(g);
+        for (f, r) in reg.iter().enumerate() {
+            plain.fold(f as u16, r).unwrap();
+        }
+
+        let mut rob =
+            FocusStats::new_robust_with(g, Arm::Ungated, AffineVar { a: 0.0, b: 1.0 });
+        for (f, (r, l)) in reg.iter().zip(luma.iter()).enumerate() {
+            rob.fold_with_luma(f as u16, r, l).unwrap();
+        }
+        rob.finish_chunk();
+
+        assert_eq!(rob.best_index(), plain.best_index());
+        assert_eq!(rob.best_focus(), plain.best_focus());
+        assert_eq!(rob.frames_folded(), plain.frames_folded());
+        assert_eq!(rob.robust_fallbacks(), Some(0));
+    }
+
+    /// The ring defers every frame by `Z_HALF` and elects the ends with `z = 0`.
+    /// A ring that drops or repeats a frame is nearly invisible downstream — an
+    /// argmax absorbs a duplicate exactly, and a dropped frame only costs a
+    /// little sharpness — so the count is asserted directly, at every chunk
+    /// length either side of the window.
+    #[test]
+    fn the_ring_elects_every_frame_exactly_once_at_every_chunk_length() {
+        for n in 1..=12u16 {
+            let g = geom(2, 2);
+            let mut s =
+                FocusStats::new_robust_with(g, Arm::Soft, AffineVar { a: 0.0, b: 1.0 });
+            for f in 0..n {
+                let reg = vec![1.0 + f as f32; g.pixels()];
+                let luma = vec![100.0; g.pixels()];
+                s.fold_with_luma(f, &reg, &luma).unwrap();
+            }
+            s.finish_chunk();
+            assert_eq!(
+                s.robust_frames_elected(),
+                Some(n as u32),
+                "chunk of {n} frames"
+            );
+            // Flat luma is annihilated by the kernel, so nothing is penalised
+            // and the plain argmax must survive: the last frame is sharpest.
+            assert!(
+                s.best_index().iter().all(|&i| i == n - 1),
+                "chunk of {n} frames elected {:?}",
+                s.best_index()
+            );
+        }
+    }
+
+    /// `finish_chunk` is called once per chunk by the merge, but a caller that
+    /// calls it twice must not elect the tail twice.
+    #[test]
+    fn finish_chunk_is_idempotent() {
+        let (luma, reg) = nine_frames(0.0, [1.0; 9]);
+        let mut s = run_arm(Arm::Soft, &luma, &reg, 1.0);
+        let before = s.best_index().to_vec();
+        s.finish_chunk();
+        assert_eq!(s.robust_frames_elected(), Some(9));
+        assert_eq!(s.best_index(), &before[..]);
+    }
+
+    /// **The trap.** A stationary stack in which one frame legitimately
+    /// disagrees *because it is the only frame that resolves that pixel*.
+    ///
+    /// This is `robust.rs`'s central warning made executable. Sharper means more
+    /// contrast, which means the uniquely-resolving frame really does depart
+    /// from the smooth through-focus trend — so `z` fires on it and there is no
+    /// statistic on luma alone that can tell it from motion. Only `Soft`'s
+    /// `w * response` survives that, and only because a 100x response beats a
+    /// 4x penalty. `Hard` throws the photograph away on the same evidence,
+    /// which is why it is not and must not become the default.
+    #[test]
+    fn trap_soft_keeps_the_only_frame_that_resolves_the_pixel() {
+        // z = 6.0 -> w = ((8-6)/4)^2 = 0.25, i.e. a 4x penalty.
+        let delta = 6.0 * (35.0f32 / 18.0).sqrt();
+        assert!((z_for_delta(delta, 1.0) - 6.0).abs() < 1e-4);
+        let mut resp = [1.0f32; 9];
+        resp[0] = 1.5; // the runner-up, and ungated because it leads the chunk
+        resp[4] = 100.0; // the frame that resolves the pixel
+
+        let (l0, r0) = nine_frames(delta, resp);
+        let soft = run_arm(Arm::Soft, &l0, &r0, 1.0);
+        assert!(
+            soft.best_index().iter().all(|&i| i == 4),
+            "Soft unseated the only resolving frame: {:?}",
+            soft.best_index()
+        );
+        assert_eq!(soft.robust_fallbacks(), Some(0));
+
+        // The same evidence under Hard destroys it. Asserted, not assumed:
+        // this is the measurement behind the default.
+        let (l, r) = nine_frames(delta, resp);
+        let hard = run_arm(Arm::Hard, &l, &r, 1.0);
+        assert!(
+            hard.best_index().iter().all(|&i| i == 0),
+            "Hard was expected to discard frame 4 (w=0.25 < HARD_ELIGIBLE): {:?}",
+            hard.best_index()
+        );
+    }
+
+    /// **The plant.** The same wiring, the same arm, and a frame that wins the
+    /// ungated election by a hair while disagreeing far beyond the knee — the
+    /// signature fact 1189 measured, where a displaced edge is sharper than the
+    /// stationary alternative and therefore wins.
+    ///
+    /// Proves the trap above is a real null and not a disconnected probe.
+    #[test]
+    fn plant_soft_rejects_a_moved_frame_that_wins_by_a_hair() {
+        // z = 8.6 > Z_KNEE_HI -> w = 0 exactly.
+        let delta = 12.0;
+        assert!(z_for_delta(delta, 1.0) > 8.0);
+        let mut resp = [1.0f32; 9];
+        resp[4] = 2.0; // sharper than everything, because it moved
+
+        let (l, r) = nine_frames(delta, resp);
+        let ungated = run_arm(Arm::Ungated, &l, &r, 1.0);
+        assert!(
+            ungated.best_index().iter().all(|&i| i == 4),
+            "the plant must win the shipped election, or it tests nothing"
+        );
+
+        let soft = run_arm(Arm::Soft, &l, &r, 1.0);
+        assert!(
+            soft.best_index().iter().all(|&i| i != 4),
+            "Soft elected the moved frame: {:?}",
+            soft.best_index()
+        );
+        // It declined a frame, it did not blank the pixel.
+        assert_eq!(soft.robust_fallbacks(), Some(0));
+        assert!(soft.best_focus().iter().all(|&v| v > 0.0));
+    }
+
+    /// Cross-chunk reduction must combine the **elections**, not the collapsed
+    /// winner fields. Collapsing first and then taking an argmax over raw
+    /// responses would compare a gated winner with an ungated one and let a
+    /// rejected frame back in at a chunk boundary.
+    #[test]
+    fn absorb_combines_gated_scores_across_chunks() {
+        let delta = 12.0;
+        let mut resp = [1.0f32; 9];
+        resp[4] = 2.0;
+        let (l, r) = nine_frames(delta, resp);
+        let g = geom(2, 2);
+        let var = AffineVar { a: 0.0, b: 1.0 };
+
+        // Chunk A holds the plant in a full window; chunk B is a clean tail.
+        let mut a = FocusStats::new_robust_with(g, Arm::Soft, var);
+        for f in 0..7 {
+            a.fold_with_luma(f as u16, &r[f], &l[f]).unwrap();
+        }
+        a.finish_chunk();
+        let mut b = FocusStats::new_robust_with(g, Arm::Soft, var);
+        for f in 7..9 {
+            b.fold_with_luma(f as u16, &r[f], &l[f]).unwrap();
+        }
+        b.finish_chunk();
+        a.absorb(&b).unwrap();
+
+        assert_eq!(a.frames_folded(), 9);
+        assert_eq!(a.robust_frames_elected(), Some(9));
+        assert!(
+            a.best_index().iter().all(|&i| i != 4),
+            "the reduce let the rejected frame back in: {:?}",
+            a.best_index()
+        );
+    }
+
+    /// A robust pass one folded without its luma would elect ungated and look
+    /// like the gate doing nothing — the exact failure this project keeps
+    /// finding. It must be loud.
+    #[test]
+    #[should_panic(expected = "fold_with_luma")]
+    fn folding_without_luma_under_a_robust_election_panics() {
+        let g = geom(2, 2);
+        let mut s = FocusStats::new_robust_with(g, Arm::Soft, AffineVar { a: 0.0, b: 1.0 });
+        s.fold(0, &vec![1.0; g.pixels()]).unwrap();
+    }
+
+    /// Reducing a gated pass one into an ungated one would silently discard the
+    /// gate over half the frames.
+    #[test]
+    #[should_panic(expected = "different rules")]
+    fn absorbing_a_robust_pass_one_into_a_plain_one_panics() {
+        let g = geom(2, 2);
+        let mut plain = FocusStats::new(g);
+        let rob = FocusStats::new_robust_with(g, Arm::Soft, AffineVar { a: 0.0, b: 1.0 });
+        plain.absorb(&rob).unwrap();
+    }
+
+    /// `fold_with_luma` must be exactly `fold` with the feature off, so the
+    /// call site can use it unconditionally without the shipped path drifting.
+    #[test]
+    fn fold_with_luma_is_fold_when_the_feature_is_off() {
+        let g = geom(4, 4);
+        let mut rng = Rng::new(7);
+        let reg: Vec<Vec<f32>> = (0..6)
+            .map(|_| (0..g.pixels()).map(|_| rng.normal().abs()).collect())
+            .collect();
+        let mut a = FocusStats::new(g);
+        let mut b = FocusStats::new(g);
+        let zeros = vec![0.0f32; g.pixels()];
+        for (f, r) in reg.iter().enumerate() {
+            a.fold(f as u16, r).unwrap();
+            b.fold_with_luma(f as u16, r, &zeros).unwrap();
+        }
+        b.finish_chunk();
+        assert_eq!(a.best_index(), b.best_index());
+        assert_eq!(a.best_focus(), b.best_focus());
+        assert_eq!(b.arm(), None);
+        assert_eq!(b.robust_frames_elected(), None);
+    }
+
+    #[test]
+    fn arm_settings_parse_and_typos_are_refused() {
+        assert_eq!(arm_from_setting(None), Ok(None));
+        for off in ["", "0", "off", "false", " OFF "] {
+            assert_eq!(arm_from_setting(Some(off)), Ok(None), "{off}");
+        }
+        for on in ["on", "1", "true", "soft", "SOFT"] {
+            assert_eq!(arm_from_setting(Some(on)), Ok(Some(Arm::Soft)), "{on}");
+        }
+        assert_eq!(arm_from_setting(Some("hard")), Ok(Some(Arm::Hard)));
+        assert_eq!(arm_from_setting(Some("ungated")), Ok(Some(Arm::Ungated)));
+        // A typo must not read as off: a gate you believe is running and is
+        // not looks exactly like a gate that does nothing.
+        assert!(arm_from_setting(Some("sotf")).is_err());
+        assert!(arm_from_setting(Some("yes")).is_err());
     }
 }
