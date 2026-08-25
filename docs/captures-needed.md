@@ -227,6 +227,15 @@ checked, because it is the obvious way to fake this result. In
 the speckled texture are identical on both sides. It costs about 4 seconds on a
 50-second stack, and on one of the three subjects it was actually *faster*.
 
+**Set your expectations before you look at the whole frame.** I also put the two
+full pictures side by side in `OWNER-tweezers-cpl-full.jpg`, and at that size
+**you will not be able to tell them apart** — I can't either. This is a
+correction to smooth, out-of-focus areas viewed at 100%, not a change to the
+photograph as a whole. It is worth having because manufactured texture in
+backgrounds is the kind of thing that looks like grain or mush when you print
+big, but I am not going to pretend it transforms the image. The thing that
+*would* transform the image is the halo at #1, and I do not have that yet.
+
 **What I am not claiming.** I have this on one of three test subjects. On the
 other two the switch does nothing visible — and for the bee I know why: its
 background is already cleaner than the *fixed* version of the tweezers shot, so
